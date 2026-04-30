@@ -1,0 +1,299 @@
+program: P-2026-001-ml-cta-engine
+name: ML-Driven CTA Signal Engine
+phase: done               # planning / in-progress / review / done
+status: stopped           # not-started / active / blocked / deployed / stopped
+
+# Conditional flags set after gates fire.
+flags:
+  gate_i_passed: false    # 5m LR / 5m LGBM / 1m LR / 1m LGBM all FAIL on plan acceptance
+  gate_ii_passed: null    # never evaluated — gate (i) failure halts before gate (ii)
+  chosen_cadence: 5m      # 1m strictly worse than 5m on every probe; 30s not tested (presumed even worse)
+  tardis_topup_done: false # NOT purchased — gate (i) failure halts spend
+
+# See workspace/RESULT.md for the full verdict and what was learned.
+
+# Execution staging: derisk before scaling up. Smoke-test the pipeline on a
+# small data slice (kline+tape only) before committing to full Tardis spend
+# or running the formal Phase 0 gates.
+tasks:
+  # ───── Phase 0-smoke: validate pipeline on small data slice ─────
+  - id: p0s-deps
+    phase: 0-smoke
+    name: Add ML deps (requirements-ml.txt) — pyarrow, sklearn, lightgbm, optuna, shap, scipy
+    status: done
+  - id: p0s-scaffolding
+    phase: 0-smoke
+    name: Create directory scaffolding — data_collectors/, features_ml/, ml/research/, tests/ml/, data/ml/
+    status: done
+  - id: p0s-binance-vision-loader
+    phase: 0-smoke
+    name: data_collectors/binance_vision_loader.py — daily-archive downloader + parquet cache
+    status: done
+  - id: p0s-smoke-pull
+    phase: 0-smoke
+    name: ml/research/smoke_pull.py — 60d SOL 5m klines + 7d aggTrades; verify loader end-to-end
+    status: done
+    notes: |
+      Klines: 17,568 rows over 61 days (2026-02-26 → 2026-04-27), 1.6 MB parquet.
+      AggTrades: 2,010,725 rows over 8 days (2026-04-20 → 2026-04-27), 34 MB
+      parquet total (~4 MB/day). Both pulls clean. Total smoke data: ~63 MB.
+      Header-row autodetect added after Binance Vision changed archive format.
+
+  # ───── Phase 0: Data infrastructure & gate (i) ─────
+  # Tardis and snapshot collector are deferred until/unless gate (i) passes.
+  - id: p0-backfill-tape-full
+    phase: 0
+    name: Backfill SOL aggTrades + klines (full 400d) via Binance Vision
+    status: done
+    notes: 115,488 klines + 184M aggTrades, 2.6 GB parquet on disk, 401 daily files.
+  - id: p0-cadence-experiment
+    phase: 0
+    name: Cadence experiment — 5m baseline + 1m linear/LGBM probes (30s skipped)
+    status: done
+    notes: |
+      5m beat 1m strictly. LR best gross: 5m=+0.67, 1m=-0.99. LGBM best gross:
+      5m=+3.70, 1m=+0.19. Microstructure half-life is NOT sub-5m on SOL.
+      30s not run (presumed strictly worse based on 1m vs 5m trend).
+  - id: p0-gate-i
+    phase: 0
+    name: Gate (i) — kline+tape probe vs kline-only baseline (pre-registered acceptance)
+    status: done
+    verdict: FAIL
+    blocking: true        # if fail, Program stops
+    notes: |
+      All 4 probes (5m LR, 5m LGBM, 1m LR, 1m LGBM) plus 10-config label sweep
+      and 4-threshold sweep FAIL the pre-registered acceptance (≥4/5 folds with
+      net_bps≥15, stress_net>0, sharpe≥1.0, n_trig≥150). Best result: 5m LGBM
+      kline-only at q=0.98 → +3.70 bps gross, -9.21 bps net. See workspace/RESULT.md.
+
+  - id: p0-program-stop
+    phase: 0
+    name: Formal Program stop per plan (gate (i) FAIL)
+    status: done
+    notes: |
+      Tardis NOT purchased. Track B (orderbook) NOT started. Snapshot collector
+      NOT deployed. Total external spend on Program: $0. Reusable artifacts:
+      data_collectors/, features_ml/, ml/cv.py, ml/cost_model.py, research scripts.
+
+  # ───── Phase 0-orderbook: triggered ONLY if gate (i) passes ─────
+  - id: p0o-tardis-90d
+    phase: 0-orderbook
+    name: Purchase Tardis SOLUSDT book_snapshot_25, initial 90d slice
+    status: deferred
+    rationale: Skip until gate (i) demonstrates baseline alpha. No Tardis spend before that.
+  - id: p0o-snapshot-collector
+    phase: 0-orderbook
+    name: Stand up REST 5s snapshot collector with systemd auto-restart
+    status: deferred
+    rationale: Defer. Live collector only needed if we proceed to gate (ii) and beyond.
+  - id: p0o-collector-validation
+    phase: 0-orderbook
+    name: 7-day collector continuity validation (gap rate < 1%)
+    status: deferred
+  - id: p0o-skew-distribution
+    phase: 0-orderbook
+    name: Train/serve distribution match — Tardis vs live snapshots, 5% per-feature tolerance
+    status: deferred
+  - id: p0o-skew-timestamp
+    phase: 0-orderbook
+    name: Train/serve timestamp regression — median offset < 1s, 99p < 3s
+    status: deferred
+  - id: p0-gate-ii
+    phase: 0-orderbook
+    name: Gate (ii) — full-feature probe vs gate (i) winner (≥1.0 bps absolute incremental)
+    status: not-started
+    rationale: Gate (i) failed; gate (ii) never evaluated.
+  - id: p0-tardis-topup
+    phase: 0-orderbook
+    name: Tardis top-up to 400d (only if gate (ii) passed on 90d slice)
+    status: not-started
+    rationale: Gate (i) failed; no Tardis purchase happened.
+
+  # ───── Phase 0-smoke: feature library skeleton ─────
+  - id: p0s-features-klines
+    phase: 0-smoke
+    name: features_ml/klines.py — wrap HFFeatureEngine + ATR%, longer-horizon returns, realized vol
+    status: done
+  - id: p0s-features-labels
+    phase: 0-smoke
+    name: features_ml/labels.py — triple-barrier labeler with k·ATR barriers, close-only & intrabar modes
+    status: done
+  - id: p0s-features-trade-flow
+    phase: 0-smoke
+    name: features_ml/trade_flow.py — bar-aggregated TFI/VPIN/Kyle-λ/large-trade/signed-vol features
+    status: done
+  - id: p0s-pipeline-validation
+    phase: 0-smoke
+    name: End-to-end smoke validation — klines → features → labels → trade flow
+    status: done
+    notes: |
+      176 kline cols (166 features), 2,928 triple-barrier labels on 30min sample
+      (40% TP, 58% SL, 2% timeout — expected for random entry on asymmetric
+      barriers k_up=1.5/k_down=1.0). Trade flow: 2.01M raw trades aggregated
+      to 2,304 5min bars × 20 columns.
+
+  # ───── Phase 1: Feature library ─────
+  - id: p1-features-trade-flow
+    phase: 1
+    name: features_ml/trade_flow.py — signed volume, TFI, VPIN, Kyle-λ, aggressor ratio
+    status: pending
+  - id: p1-features-klines
+    phase: 1
+    name: features_ml/klines.py — wrap hf_features.py outputs into ML schema
+    status: pending
+  - id: p1-features-labels
+    phase: 1
+    name: features_ml/labels.py — triple-barrier labeler with k·ATR
+    status: pending
+  - id: p1-features-microstructure
+    phase: 1
+    name: features_ml/microstructure.py — OBI, microprice, depth-imbalance, spread, book slope
+    status: pending
+    conditional_on: gate_ii_passed
+  - id: p1-leak-audit
+    phase: 1
+    name: Per-feature leak audit (shift-by-1 sanity) + unit tests
+    status: pending
+  - id: p1-snapshot-cadence-ablation
+    phase: 1
+    name: Snapshot-cadence ablation 1s/5s/30s — pick lowest cadence within 0.2 fold-Sharpe
+    status: pending
+    conditional_on: gate_ii_passed
+
+  # ───── Phase 2: Labels & research harness ─────
+  - id: p2-walkforward
+    phase: 2
+    name: Walk-forward CV harness — 5 folds × (50d train / 10d cal / 20d test) with embargo + purging
+    status: pending
+  - id: p2-cost-model
+    phase: 2
+    name: Cost model — fees + 0.5×spread + λ·sqrt(size/depth) slippage + maker-fill prob + asymmetric funding + stress
+    status: pending
+  - id: p2-universes
+    phase: 2
+    name: Implement (a) Alpha30-meta and (b) standalone primary universes
+    status: pending
+
+  # ───── Phase 3: Baseline models ─────
+  - id: p3-logreg-baseline
+    phase: 3
+    name: ℓ²-logistic regression baseline-of-baselines on curated features
+    status: pending
+  - id: p3-lgbm
+    phase: 3
+    name: LightGBM with monotonic constraints, depth ≤6, leaves ≤64, early stopping
+    status: pending
+  - id: p3-hyperopt
+    phase: 3
+    name: Hyperopt ≤50 trials with DSR + Bonferroni reporting
+    status: pending
+  - id: p3-calibration
+    phase: 3
+    name: Brier + reliability diagram + isotonic recalibration if it improves validation Brier
+    status: pending
+  - id: p3-feature-analysis
+    phase: 3
+    name: Permutation importance + SHAP on fold-5 held-out test
+    status: pending
+  - id: p3-acceptance
+    phase: 3
+    name: Phase 3 acceptance check — DSR/Sharpe, ≥200 trades/fold, PF (primary + stress), MaxDD, beats Alpha30 majority
+    status: pending
+    blocking: true
+
+  # ───── Phase 4: Meta + sizing + (conditional) sequence models ─────
+  - id: p4-meta-head
+    phase: 4
+    name: Alpha30-meta head finalized (head (a))
+    status: pending
+  - id: p4-sizing
+    phase: 4
+    name: Half-Kelly with clipped calibrated p̂ ∈ [0.5, 0.7], floored at 0
+    status: pending
+  - id: p4-sequence-models
+    phase: 4
+    name: Shallow 1D-CNN / GRU on last N L2 snapshots (only if gate (ii) passed)
+    status: pending
+    conditional_on: gate_ii_passed
+  - id: p4-acceptance
+    phase: 4
+    name: Phase 4 acceptance — sized strategy ≥ Phase 3 baseline Sharpe at lower MaxDD on ≥3/5 folds
+    status: pending
+
+  # ───── Phase 5: Backtest A/B ─────
+  - id: p5-hf-backtest-iface
+    phase: 5
+    name: hf_backtest.py accepts pluggable signal engine for A/B
+    status: pending
+    requires_approval: true   # touches core trading code
+  - id: p5-side-by-side-report
+    phase: 5
+    name: Generate ML vs Alpha30 side-by-side report — PF, Sharpe, DSR, MaxDD, regime breakdown
+    status: pending
+  - id: p5-acceptance
+    phase: 5
+    name: Phase 5 acceptance — ML ≥ Alpha30 on Sharpe + MaxDD on 90d AND 180d, no regime worse by >20%
+    status: pending
+    blocking: true
+
+  # ───── Phase 6: Paper trading + safety ─────
+  - id: p6-inference
+    phase: 6
+    name: ml/inference.py — in-process artifact loader + predict
+    status: pending
+  - id: p6-paper-bot-toggle
+    phase: 6
+    name: realtime_paper_bot.py ML mode toggle (dual-paper books)
+    status: pending
+    requires_approval: true
+  - id: p6-drift-monitor
+    phase: 6
+    name: ml/drift.py — prediction-distribution PSI primary, per-feature diagnostic
+    status: pending
+  - id: p6-kill-switch
+    phase: 6
+    name: ML kill-switch — 5-loss streak or 2× Alpha30 worst-day DD → 24h auto-disable
+    status: pending
+  - id: p6-versioning
+    phase: 6
+    name: Model artifact versioning (semver + train_hash) + symlink rollback
+    status: pending
+  - id: p6-paper-run
+    phase: 6
+    name: 90 calendar days paper trading
+    status: pending
+  - id: p6-acceptance
+    phase: 6
+    name: Phase 6 acceptance — paired bootstrap p<0.05 vs Alpha30, prediction-PSI clean, ≤1 kill-switch w/ post-mortem
+    status: pending
+    blocking: true
+
+  # ───── Phase 7: Production rollout ─────
+  - id: p7-testnet
+    phase: 7
+    name: Production deploy to testnet
+    status: pending
+    requires_approval: true
+  - id: p7-001x
+    phase: 7
+    name: Promote to 0.01x sizing
+    status: pending
+    requires_approval: true
+  - id: p7-01x
+    phase: 7
+    name: Promote to 0.1x sizing
+    status: pending
+    requires_approval: true
+  - id: p7-1x
+    phase: 7
+    name: Promote to 1.0x sizing
+    status: pending
+    requires_approval: true
+  - id: p7-retrain-pipeline
+    phase: 7
+    name: Weekly retrain pipeline with promotion gates (30d beat + 180d non-inferior + 14d min lifetime)
+    status: pending
+  - id: p7-grafana
+    phase: 7
+    name: Grafana panels — prediction-PSI, per-feature PSI, prediction histogram, PnL attribution, kill-switch state, model version
+    status: pending

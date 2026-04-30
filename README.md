@@ -57,6 +57,14 @@ docs/
   METHODOLOGY_REVIEW.md        # full audit trail + findings
   STATUS.md                    # current state
   HANDOFF.md                   # what's next, where to pick up
+orchestrator/PROGRAMS/P-2026-001-ml-cta-engine/
+  PROGRAM.md                   # original program plan (phases, gates, scope)
+  STATUS.yml                   # task tracking + results
+  SCOPE.yml                    # write-scope rules (legacy, ctaBot-rooted)
+  workspace/
+    RESULT.md                  # Phase 0 gate (i) verdict — STOPPED
+    METHODOLOGY_REVIEW.md      # mirror of docs/ (program-relative path)
+    alpha_*_audit.csv          # IC audit outputs
 ```
 
 ## Quick start

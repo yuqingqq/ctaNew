@@ -1,0 +1,72 @@
+# Write-scope control for P-2026-001-ml-cta-engine.
+#
+# write:                paths the agent may modify without explicit approval.
+# write_with_approval:  paths in scope but require explicit user OK before
+#                       each change — these touch core trading code.
+# forbidden:            never write, ever (secrets, prod config, live state).
+
+write:
+  # Program documents
+  - orchestrator/PROGRAMS/P-2026-001-ml-cta-engine/**
+
+  # New ML codebase
+  - data_collectors/binance_vision_loader.py
+  - data_collectors/tardis_loader.py
+  - data_collectors/snapshot_collector.py        # conditional on gate (ii); file may exist for research even if unused in prod
+  - features_ml/**
+  - ml/**
+  - tests/ml/**
+
+  # ML data outputs (regenerable, but big — keep them out of git separately via .gitignore)
+  - data/ml/**
+  - data/tardis/**
+  - data/snapshots/**
+  - data/features_ml/**
+
+# Phase 5/6 will require modifying core trading code. These paths are in scope
+# for the Program, but each individual edit needs the user to confirm — they
+# affect the live trading stack and Alpha30's behavior.
+write_with_approval:
+  - signals.py                                   # add MLSignalEngine alongside Alpha30SignalEngine
+  - hf_backtest.py                               # accept pluggable signal engine for A/B
+  - realtime_paper_bot.py                        # ML mode toggle (Phase 6)
+  - realtime_paper_bot_hl.py                    # only if Hyperliquid paper expansion is ever in scope
+  - realtime_live_bot_hybrid.py                  # ML mode toggle (Phase 7 only — after paper passes)
+  - config.py                                    # any new ML-related config keys
+
+forbidden:
+  # Secrets
+  - .env
+  - .env.*
+  - "**/.env"
+  - "**/credentials*"
+  - "**/*secret*"
+
+  # Production execution server config — touching this can change live trading.
+  - execution_server/exchange_config.yaml
+  - execution_server/exchange_config_hl.yaml
+  - execution_server/*.db
+  - execution_server/*.db-*
+  - execution_server_hl.db
+
+  # Live experiment overrides — driven by current live operations.
+  - experiment_overrides.json
+
+  # Cached market data — regenerable from collectors, do not hand-edit.
+  - cached_*.csv
+  - "**/cached_*.csv"
+
+  # Backtest record artifacts — outputs, not source.
+  - backtest_records/**
+  - backtest_results/**
+  - "*.csv"                                      # at repo root; covers stray backtest outputs
+
+  # External code-relay reference — not part of this repo.
+  - ../code-relay/**
+
+# Notes on ambiguous paths:
+#   - analysis/*.csv: research output. Treat as read-only unless user explicitly
+#     asks for an analysis run that writes there.
+#   - alpha30_strategy/**: not in scope — separate strategy module.
+#   - executor/**: execution engine. Not in scope unless integration discovers a
+#     bug; in that case escalate before patching.
