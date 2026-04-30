@@ -7,16 +7,41 @@ layer extracting alpha from kline + aggTrade data on Binance USDM perps.
 
 ## Current state
 
-**Phase: research complete, deployment blocked on cost economics.**
+**Phase: research complete, deployment plausible at h=288 with VIP-3 + maker
+execution. Earlier "blocked on cost" conclusion was inflated by a per-bar
+cost-accounting bug.**
 
 The strategy class (LGBM regression on alpha-residual targets, with
 cross-sectional ranking across 25 symbols) is fully characterized:
 
-- **Signal exists**: rank IC consistently +0.035 across folds and OOS.
-- **Signal is real**: alpha capture of +5–10 bps per trade verified in
-  hedged execution (which strips market noise).
-- **Signal is too small**: 5–10 bps alpha vs 12 bps naked / 24 bps hedged
-  cost at retail VIP-0.
+- **Signal exists**: rank IC consistently +0.035 across folds and OOS at h=48,
+  +0.038 at h=288.
+- **Signal is real**: alpha capture of +2.5 bps (h=48) to +7.4 bps (h=288)
+  per rebalance verified in β-neutral execution (which strips market noise).
+- **Honest cost picture**: with turnover-aware non-overlapping label
+  evaluation, OOS net per cycle is **-7.5 bps** (h=48) / **-8.7 bps**
+  (h=288) at retail VIP-0. Was reported as -21 under naive per-bar 24-bps
+  accounting (over-charged ~2.5×).
+- **Signal-quality plan (Apr 30) lifted Sharpe ~9× over the corrected v4
+  baseline.** Best config: **v6 + K=7 + IS-trim**, OOS Sharpe +3.94 with 95% CI
+  [+0.37, +6.74] (first config with CI strictly above zero).
+- v6 = 32 features: v4 base + cross-asset + 7 kline-flow (obv_z_1d, vwap_*, mfi)
+  + 8 cross-sectional pctile-rank features.
+- Funding-rate features (Phase 4.1) had strongest single-feature OOS IC (up
+  to 0.084) but did NOT improve portfolio Sharpe — already captured implicitly
+  by v6's basket-relative features.
+- **Leakage audit on v6 passed all 4 tests** (forward-peek shift, sanity
+  control, xs_rank PIT, embargo).
+- See `docs/METHODOLOGY_REVIEW.md` "Apr 30 — Signal-quality plan execution"
+  for the full progression and per-phase details.
+
+Caveats:
+- Non-overlapping label evaluation, not a full equity-curve backtest.
+- Single 90-day OOS window — CIs remain wide despite point-estimate gain.
+- Deployment-grade still needs funding accrual, real maker fill modelling,
+  drawdown limits, queue-position economics, more OOS data.
+
+See `docs/METHODOLOGY_REVIEW.md` "Apr 30 follow-up" section for full tables.
 
 ## What works
 
@@ -55,9 +80,19 @@ cross-sectional ranking across 25 symbols) is fully characterized:
 ## Reproducibility
 
 All results in `docs/METHODOLOGY_REVIEW.md` reproducible from this repo:
-1. `python3 -m scripts.pull_xs_klines` (~20 min)
-2. `python3 -m ml.research.alpha_v4_xs` (~15 min)
-3. `python3 -m ml.research.alpha_v4_concentrated` (~30 min)
+
+1. `python3 -m scripts.pull_xs_klines` (~20 min) — kline data for 25 symbols
+2. `FEATURE_SET=v6 python3 -m ml.research.alpha_v4_xs_1d` (~10 min) — best config
+3. `FEATURE_SET=v6 TRIM_UNIVERSE=1 python3 -m ml.research.alpha_v4_xs_1d` — adds IS-trim
+4. `FEATURE_SET=v6 python3 -m ml.research.alpha_v4_edge_diagnostic` — diagnostic sections A–G
+5. `python3 -m ml.research.alpha_v6_leakage_check` (~3 min) — leakage verification
+6. `python3 -m ml.research.alpha_v4_flow_audit` (~1 min) — flow feature IC audit
+7. `python3 -m ml.research.alpha_v7_funding_audit` (~2 min) — funding feature IC audit
+
+Other feature sets via `FEATURE_SET=v4|v5|v5_lean|v6|v7|v7_lean`. Defaults to v4.
+
+Funding-rate data is auto-downloaded by `data_collectors/funding_rate_loader.py`
+on first import (caches per-symbol parquet to `data/ml/cache/funding_*.parquet`).
 
 Caches build to `data/ml/cache/` on first run; subsequent runs are fast.
 

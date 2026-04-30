@@ -180,7 +180,124 @@ XS_CROSS_FEATURES = [
     "beta_short_vs_bk",
 ]
 
+# v5 flow features. Selected by alpha_v4_flow_audit.py: each passed
+# the gates |IS IC| ≥ 0.015, sign-consistent ≥80% of symbols, and
+# IS-OOS sign match ≥60%. `obv_z_1d` is engineered (rolling 1d z-score
+# of OBV); the rest exist in xs_feats caches from compute_kline_features.
+XS_FLOW_FEATURES = [
+    "obv_z_1d",            # engineered, OOS |IC| 0.066
+    "vwap_slope_96",       # OOS |IC| 0.043
+    "vwap_zscore",         # OOS |IC| 0.044
+    "price_volume_corr_20",  # OOS |IC| 0.032
+    "obv_signal",          # OOS |IC| 0.034
+    "mfi",                 # OOS |IC| 0.027
+    "price_volume_corr_10",  # OOS |IC| 0.025
+]
+
 XS_FEATURE_COLS = XS_BASE_FEATURES + XS_CROSS_FEATURES + ["sym_id"]
+XS_FEATURE_COLS_V5 = XS_BASE_FEATURES + XS_CROSS_FEATURES + XS_FLOW_FEATURES + ["sym_id"]
+
+# v5_lean: drop the 5 flow features with OOS LGBM gain < 0.5% (kept v5 audit
+# IS-OOS gates but the LGBM didn't pick them up) and 2 base features that
+# are useless at h=288 (hour_cos/sin had OOS |IC| ~0). Survivors are the
+# 2 productive flow features + 15 base/cross + sym_id = 18.
+XS_FLOW_FEATURES_LEAN = [
+    "obv_z_1d",       # gain 1.96%
+    "vwap_slope_96",  # gain 0.77%
+    "vwap_zscore",    # gain 0.30% (kept — borderline, has 92% sign consistency)
+]
+XS_BASE_FEATURES_LEAN = [
+    "return_1d", "ema_slope_20_1h", "bars_since_high",
+    "atr_pct", "volume_ma_50",
+    # dropped: hour_cos, hour_sin (useless at 1d horizon)
+]
+XS_FEATURE_COLS_V5_LEAN = (XS_BASE_FEATURES_LEAN + XS_CROSS_FEATURES
+                            + XS_FLOW_FEATURES_LEAN + ["sym_id"])
+
+# v6: v5 + per-bar cross-sectional pctile ranks of select base/flow features.
+# Hypothesis: addresses per-symbol IC heterogeneity (+0.18 to -0.07 across
+# symbols). Per-bar rank is point-in-time by construction (uses only bar-t
+# universe values).
+XS_RANK_FEATURES = [
+    "return_1d_xs_rank",
+    "atr_pct_xs_rank",
+    "volume_ma_50_xs_rank",
+    "bars_since_high_xs_rank",
+    "ema_slope_20_1h_xs_rank",
+    "idio_vol_1d_vs_bk_xs_rank",
+    "obv_z_1d_xs_rank",
+    "vwap_zscore_xs_rank",
+]
+# Source feature → rank-feature name mapping
+XS_RANK_SOURCES = {
+    "return_1d": "return_1d_xs_rank",
+    "atr_pct": "atr_pct_xs_rank",
+    "volume_ma_50": "volume_ma_50_xs_rank",
+    "bars_since_high": "bars_since_high_xs_rank",
+    "ema_slope_20_1h": "ema_slope_20_1h_xs_rank",
+    "idio_vol_1d_vs_bk": "idio_vol_1d_vs_bk_xs_rank",
+    "obv_z_1d": "obv_z_1d_xs_rank",
+    "vwap_zscore": "vwap_zscore_xs_rank",
+}
+XS_FEATURE_COLS_V6 = (XS_BASE_FEATURES + XS_CROSS_FEATURES
+                       + XS_FLOW_FEATURES + XS_RANK_FEATURES + ["sym_id"])
+
+# v7: v6 + 3 funding-rate features. From alpha_v7_funding_audit.py:
+# all 3 passed |IS IC|≥0.015, sign-consistent ≥80%, IS-OOS match ≥60%.
+# OOS |IC| range 0.068-0.084 — strongest single features in the entire set.
+XS_FUNDING_FEATURES = [
+    "funding_rate",         # OOS |IC| 0.068
+    "funding_rate_z_7d",    # OOS |IC| 0.080
+    "funding_streak_pos",   # OOS |IC| 0.084
+]
+XS_FEATURE_COLS_V7 = (XS_BASE_FEATURES + XS_CROSS_FEATURES + XS_FLOW_FEATURES
+                       + XS_RANK_FEATURES + XS_FUNDING_FEATURES + ["sym_id"])
+
+# v7_lean: v6 + only the 2 substantively-used funding features (drop
+# funding_streak_pos which had only 0.15% gain in v7).
+XS_FUNDING_FEATURES_LEAN = ["funding_rate", "funding_rate_z_7d"]
+XS_FEATURE_COLS_V7_LEAN = (XS_BASE_FEATURES + XS_CROSS_FEATURES + XS_FLOW_FEATURES
+                            + XS_RANK_FEATURES + XS_FUNDING_FEATURES_LEAN + ["sym_id"])
+
+
+def add_xs_rank_features(panel: pd.DataFrame, sources: dict = None) -> pd.DataFrame:
+    """Add per-bar cross-sectional pctile ranks of selected features.
+
+    Anti-leakage: per-bar rank uses only that bar's universe values, which
+    are themselves point-in-time. Output is in [0, 1] (NaN preserved when
+    the source value is NaN — the symbol just isn't ranked at that bar).
+
+    Parameters
+    ----------
+    panel : DataFrame with `open_time` and `symbol` columns plus source feature cols.
+    sources : dict {source_col: rank_col_name}. Defaults to XS_RANK_SOURCES.
+    """
+    if sources is None:
+        sources = XS_RANK_SOURCES
+    out = panel.copy()
+    for src, dst in sources.items():
+        if src not in out.columns:
+            log.warning("xs_rank: source col %s missing; skipping", src)
+            continue
+        out[dst] = out.groupby("open_time")[src].rank(pct=True)
+    return out
+
+
+def add_engineered_flow_features(feats: pd.DataFrame) -> pd.DataFrame:
+    """Add features that don't already exist in xs_feats caches but are
+    cheap to compute on-the-fly. Currently: obv_z_1d (rolling 1d z-score
+    of OBV).
+
+    Anti-leakage: the rolling z-score uses left-aligned window — at bar t
+    it includes bar-t OBV value but only past values otherwise. Same
+    pattern as existing dom_z_*_vs_bk features. Not formal leakage.
+    """
+    out = feats.copy()
+    if "obv" in out.columns and "obv_z_1d" not in out.columns:
+        rolling_mean = out["obv"].rolling(288, min_periods=48).mean()
+        rolling_std = out["obv"].rolling(288, min_periods=48).std().replace(0, np.nan)
+        out["obv_z_1d"] = (out["obv"] - rolling_mean) / rolling_std
+    return out
 
 
 def assemble_universe(symbols: list[str], horizon: int = 48) -> dict:
@@ -208,13 +325,24 @@ def assemble_universe(symbols: list[str], horizon: int = 48) -> dict:
     closes = closes.sort_index()
     basket_ret, basket_close = build_basket(closes)
 
-    # Second pass: enrich each symbol's features with basket-relative
+    # Second pass: enrich each symbol's features with basket-relative + flow + funding
     sym_to_id = {s: i for i, s in enumerate(sorted(feats_by_sym.keys()))}
+    # Lazy import: only loaded when funding features are requested
+    try:
+        from features_ml.funding_features import add_funding_features
+    except ImportError:
+        add_funding_features = None
     enriched = {}
     for s, f in feats_by_sym.items():
         # Reindex to full universe time grid (handles symbols that started later)
         f = f.reindex(closes.index)
         f = add_basket_features(f, basket_close, basket_ret)
+        f = add_engineered_flow_features(f)
+        if add_funding_features is not None:
+            try:
+                f = add_funding_features(f, s)
+            except Exception as e:
+                log.warning("[%s] funding features failed: %s", s, e)
         f["sym_id"] = sym_to_id[s]
         enriched[s] = f
 

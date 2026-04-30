@@ -18,11 +18,24 @@ diminishing returns and have been tried.
 The path to a deployable strategy is one of three structural pivots, ranked
 by ROI to attempt:
 
-## Option A: Different horizon (highest expected ROI from this codebase)
+## Option A: Different horizon — TESTED, h=288 IS PREFERRED (Apr 30 corrected)
 
-**Idea**: residual mean-reversion at 1-day or 1-week horizon is documented
-at 30-50 bps in academic literature (Lou & Polk 2014, several others).
-4h is too noisy / too efficient. Move the prediction horizon up.
+Earlier "1d rejected" verdict was wrong: it compared bps-per-cycle without
+normalizing for cycle length. h=48 has 6 cycles/day; h=288 has 1. On a
+per-year basis, h=288 wins at every realistic fee tier:
+
+- VIP-0 retail: h=48 -164%/yr vs **h=288 -32%/yr**
+- VIP-3 taker: h=48 -54%/yr vs **h=288 -2.3%/yr**
+- VIP-3 + maker: h=48 +0.3%/yr vs **h=288 +12.4%/yr (Sharpe 0.42)**
+- VIP-9 maker: h=48 +37%/yr (Sharpe 1.15) vs h=288 +22%/yr (only place
+  h=48 wins, via more cycles per year — note: returns are arithmetic
+  per-cycle bps × cycles/year, not compounded)
+
+Implementation: `alpha_v4_xs_1d.py` at HORIZON=288 with non-overlapping
+sampling (rebalance every h bars). β-neutral OOS captures alpha cleanly
+(ret_BN = +7.41 bps/cycle vs equal-weight ret +4.50, alpha +9.78). See
+`docs/METHODOLOGY_REVIEW.md` Apr 30 follow-up for full fee-sensitivity
+tables.
 
 **Why this could work**: at h=288 (1d), the residual signal benefits from:
 - Slower signal decay (per-trade alpha 30-50 bps vs 5-10)
@@ -38,11 +51,36 @@ at 30-50 bps in academic literature (Lou & Polk 2014, several others).
 **Estimated effort**: 1-2 days. Mostly parameter changes and one round of
 audits. Most code already supports it.
 
-## Option B: Lower-fee venue / maker execution
+## Option B: Lower-fee venue / maker execution — STILL THE DEPLOYMENT LEVER
 
-**Idea**: VIP-3 fee tier (~0.025% taker per leg, ~5 bps RT hedged) would
-flip the strategy from -16 bps to +3-5 bps net OOS. Or, use post-only maker
-orders (~50% fill rate in calm regimes) to roughly halve effective fees.
+**Idea**: VIP-3 fee tier (~0.025% taker per leg, ~5 bps RT) and/or
+post-only maker orders (~50% fill rate in calm regimes) close the remaining
+cost gap.
+
+**With Apr 30 corrected accounting at h=288 OOS β-neutral** (turnover-aware,
+total turnover/cycle = 1.34):
+
+| Tier | Fee/leg | Net/cycle | Net/year | Ann. Sharpe |
+|---|---|---|---|---|
+| VIP-0 retail | 12 bps | -8.69 | -32% | -1.09 |
+| VIP-3 taker | 6 bps | -0.64 | -2.3% | -0.08 |
+| VIP-3 + maker | 3 bps | +3.38 | +12.4% | +0.42 |
+| VIP-9 maker | 1 bps | +6.07 | +22.1% | +0.76 |
+
+Cost saving per tier ≠ per-leg fee saving — saving is `Δfee/leg × turnover_sum`
+where turnover_sum is ~1.34 at h=288 (~0.83 at h=48). So a 6 bps/leg fee cut
+saves ~8 bps net/cycle at h=288 (not 12).
+
+**Open task**: a real maker-fill simulator (require L2 / Tardis data) to
+refine the 50% fill assumption and check queue-position economics. Sharpe
+0.42 at VIP-3+maker is marginal; better fill modelling could move it
+either direction.
+
+**Bootstrap CI caveat (Apr 30)**: at h=288 OOS, only 90 cycles of data.
+Block-bootstrap 95% CI on Sharpe at VIP-3+maker = [-4.9, +4.0] — point
+estimate not statistically distinguishable from zero. The 1d > 4h
+relative ordering is robust; absolute deployment economics are not.
+Require wider OOS sample before deployment.
 
 **Why this works**: alpha is real, just below cost line. Cost reduction is
 direct.
@@ -55,6 +93,35 @@ direct.
 
 **Estimated effort**: maker simulation is 1-2 weeks if including data
 collection and modeling.
+
+## Apr 30 — Plan-driven signal improvements (v4 → v6)
+
+The "feature ceiling" suggested in earlier sections turned out to be partly
+about how features were structured, not whether more existed. After running
+a structured plan:
+
+1. **xs_rank features** (per-bar pctile rank within universe): biggest single
+   win, +1.4 Sharpe at deployment tier. Address scale heterogeneity across symbols.
+2. **Top-K reduction**: K=5 → K=7 was a free +0.7 Sharpe — within-quintile
+   rank carries genuine signal that gets diluted at K=5.
+3. **Kline-flow features** (obv_z_1d, vwap_*, mfi): +0.3 Sharpe, modest.
+4. **Universe trim by IS-IC bottom-quartile**: +0.3 Sharpe, mostly tightens CI.
+5. **Funding-rate features**: regressed despite strongest single-feature IC.
+   Signal already captured by v6's basket-relative features.
+
+**Best config: v6 (32 features) + K=7 + β-neutral + IS-trim** →
+OOS Sharpe +3.94 with 95% CI [+0.37, +6.74] at VIP-3+maker.
+That's 9× over the corrected v4 baseline.
+
+The remaining lever in this codebase is true microstructure data (Phase 3
+in the signal-quality plan): pulling aggTrades for top-N symbols and
+computing TFI / VPIN / Kyle's λ. This is genuinely orthogonal to klines
+and is the next experiment.
+
+Validation gap: 90 OOS cycles is the binding constraint on certainty. CI on
+the best Sharpe spans [+0.37, +6.74] — point estimate is high but the
+window is narrow. Forward testing on data past 2026-04-28 or pulling
+additional history is the rigorous next step before deployment.
 
 ## Option C: Add orderbook L2 features
 

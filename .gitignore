@@ -8,6 +8,10 @@ venv/
 # Data caches and downloads
 data/
 /tmp/
+outputs/
+
+# Claude Code local settings
+.claude/
 
 # Editor / OS
 .vscode/

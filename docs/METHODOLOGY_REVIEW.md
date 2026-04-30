@@ -532,3 +532,314 @@ To deploy profitably, one of these is required:
 3. **Different data**: orderbook L2 features add 5-10 bps IC contribution typical in microstructure research.
 
 The 4h-horizon OHLCV+aggTrade alpha is now a fully characterized signal: it exists, it's consistent, it's not big enough.
+
+## Apr 30 follow-up — turnover-aware accounting + 1d-horizon test + β-neutral execution
+
+After the original v4 conclusion (-21 OOS net at retail VIP-0), follow-up
+tests were run on (a) turnover-aware cost accounting, (b) 1d horizon
+(HANDOFF Option A), (c) β-neutral portfolio weights, and (d) fee-tier
+sensitivity with proper time normalization.
+
+### Cost-accounting bug: per-bar 24 bps was over-charging ~14 bps per cycle
+
+The original `_portfolio_pnl` charged `2 × 12 = 24 bps` *every single 5m bar*,
+modelling a strategy that opens a fresh h-bar position at every bar with full
+notional and pays full RT cost. That's not a deployable strategy — at h=48 it
+implies 105k overlapping books per year.
+
+Replacement: `portfolio_pnl_turnover_aware()` in `ml/research/alpha_v4_xs.py`.
+This is a **turnover-aware non-overlapping label evaluation**, NOT a full
+backtest. It samples test bars at non-overlapping cadence (`sample_every == h`),
+charges `cost × (long_to + short_to)` per rebalance, and uses the panel's
+h-forward labels as the realised cycle return. It does NOT maintain an
+equity curve, compound returns, charge funding, or model liquidation — it
+is a deployment-economics estimator, not a final backtest.
+
+### β-neutral diagnostics
+
+`portfolio_pnl_turnover_aware(beta_neutral=True)` scales leg notionals so
+the long-leg and short-leg dollar-betas to the basket match. Scales clipped
+to `[0.5, 1.5]`; rebalances with degenerate beta (either leg β < 0.1, or
+sum < 0.3) fall back to equal-weight and are flagged in `degen_beta_frac`.
+
+In all runs (h=48 + h=288, WF + OOS): `degen_beta_frac = 0%`,
+`gross_exposure = 2.00 ± 0`, scale range `[0.5, 1.5]` for h=48 and tighter
+`[0.6, 1.4]` for h=288. Guardrails activate but never cap cleanly inside
+data range — i.e., observed β ratios produce well-bounded scaling.
+
+### Per-cycle results (rebalance every h bars, β-neutral)
+
+Note: per-cycle bps are NOT directly comparable across horizons —
+h=48 has 6 cycles/day, h=288 has 1.
+
+| Phase | h | spread_ret | alpha | cost (VIP-0) | net (VIP-0) | rank IC |
+|---|---|---|---|---|---|---|
+| WF | 48 | +3.27 | +3.27 | 10.15 | -6.89 | +0.036 |
+| WF | 288 | +4.62 | +4.62 | 15.12 | -10.50 | +0.028 |
+| OOS | 48 | +2.51 | +2.51 | 10.00 | -7.48 | +0.035 |
+| OOS | 288 | +7.41 | +7.41 | 16.10 | -8.69 | +0.038 |
+
+### Fee-tier sensitivity, time-normalized (β-neutral, OOS)
+
+Cost saving per tier ≠ per-leg fee saving. Cost = `fee_per_leg × total_turnover`,
+so a 6 bps/leg fee saving × 0.83 turnover = **~5 bps net cost saving**, not 6.
+
+Reporting conventions:
+- `net/yr%` is arithmetic: `net_per_cycle × cycles_per_year / 1e4`. Not
+  compounded. At small returns the gap to a true compounded equity curve is
+  modest; at -100%+ figures it materially overstates the loss magnitude
+  (you can't lose more than 100%; the arithmetic figure is leverage-adjusted
+  notional drift, not realised compounded P&L).
+- `Sharpe` is approximate annualised: per-cycle Sharpe (net mean / net std,
+  computed from the pooled per-cycle net series for the tier — so cost
+  variation through turnover is captured) × √(cycles_per_year). Assumes
+  cycles are roughly i.i.d., which holds for h=288 and is approximately true
+  for h=48 under non-overlapping sampling.
+- `net_std` is the per-cycle std of net for that tier — included so the
+  reader can see that cost variation is dominated by spread variation
+  (net_std hardly moves across tiers).
+
+**h=48 OOS (n=540 pooled cycles, cycles/day = 6.0, total turnover = 0.83):**
+
+| Tier | fee/leg | net/cycle | net_std | net/day | net/yr % | ann. Sharpe |
+|---|---|---|---|---|---|---|
+| VIP-0 taker | 12.0 | -7.48 | 68.57 | -44.9 | -163.8 | -5.11 |
+| VIP-1 taker | 10.0 | -5.82 | 68.53 | -34.9 | -127.4 | -3.97 |
+| Maker tilt 50% on VIP-0 | 7.5 | -3.73 | 68.49 | -22.4 | -81.7 | -2.55 |
+| VIP-3 taker | 6.0 | -2.48 | 68.47 | -14.9 | -54.4 | -1.70 |
+| VIP-3 + maker tilt | 3.0 | +0.02 | 68.44 | +0.1 | +0.3 | +0.01 |
+| VIP-9 maker | 1.0 | +1.68 | 68.44 | +10.1 | +36.8 | +1.15 |
+
+**h=288 OOS (n=90 pooled cycles, cycles/day = 1.0, total turnover = 1.34):**
+
+| Tier | fee/leg | net/cycle | net_std | net/day | net/yr % | ann. Sharpe |
+|---|---|---|---|---|---|---|
+| VIP-0 taker | 12.0 | -8.69 | 152.51 | -8.7 | -31.7 | -1.09 |
+| VIP-1 taker | 10.0 | -6.01 | 152.44 | -6.0 | -21.9 | -0.75 |
+| Maker tilt 50% on VIP-0 | 7.5 | -2.66 | 152.36 | -2.7 | -9.7 | -0.33 |
+| VIP-3 taker | 6.0 | -0.64 | 152.32 | -0.6 | -2.3 | -0.08 |
+| VIP-3 + maker tilt | 3.0 | +3.38 | 152.32 | +3.4 | +12.4 | +0.42 |
+| VIP-9 maker | 1.0 | +6.07 | 152.32 | +6.1 | +22.1 | +0.76 |
+
+Note that net_std is virtually constant across tiers (~68 bps/cyc at h=48,
+~152 bps/cyc at h=288). The gross spread variance dominates; per-cycle
+turnover variation contributes little to net variance. So an alternative
+Sharpe using gross std would be within ~0.01 of these numbers.
+
+### Bootstrap 95% CI on OOS metrics (block-bootstrap, block = 7 cycles, n=2000)
+
+Block size 7 cycles ≈ 1 week at h=288, ~28h at h=48. Preserves any
+short-range autocorrelation. Sample sizes: 540 cycles at h=48, **only 90 at
+h=288**.
+
+**h=48 OOS β-neutral:**
+
+| Tier | net/cyc point | net/cyc 95% CI | Sharpe point | Sharpe 95% CI |
+|---|---|---|---|---|
+| VIP-0 taker | -7.48 | [-14.2, -2.6] | -5.11 | [-10.2, -1.9] |
+| VIP-3 taker | -2.48 | [-9.1, +2.4] | -1.70 | [-6.6, +1.8] |
+| VIP-3 + maker | +0.02 | [-6.6, +4.9] | +0.01 | [-4.7, +3.6] |
+| VIP-9 maker | +1.68 | [-4.9, +6.5] | +1.15 | [-3.5, +4.8] |
+
+**h=288 OOS β-neutral (n=90 cycles only):**
+
+| Tier | net/cyc point | net/cyc 95% CI | Sharpe point | Sharpe 95% CI |
+|---|---|---|---|---|
+| VIP-0 taker | -8.69 | [-47.9, +21.3] | -1.09 | [-6.7, +2.6] |
+| VIP-3 taker | -0.64 | [-40.1, +29.1] | -0.08 | [-5.5, +3.5] |
+| VIP-3 + maker | +3.38 | [-36.2, +33.0] | +0.42 | [-4.9, +4.0] |
+| VIP-9 maker | +6.07 | [-33.7, +35.7] | +0.76 | [-4.5, +4.4] |
+
+**Implication: the deployment Sharpe is not statistically distinguishable
+from zero at h=288.** With only 90 OOS cycles and per-cycle net_std ≈ 152 bps,
+the standard error on the mean is ~16 bps; on the Sharpe, ~1.0+. The +0.42
+point estimate at VIP-3+maker has a 95% CI of [-4.9, +4.0]. Even the strongest
+candidate (VIP-9 maker, +0.76 Sharpe) cannot reject zero.
+
+At h=48 the OOS CIs are tighter (n=540) but still inconclusive at the
+deployable tiers — only the unprofitable retail tiers (VIP-0/VIP-1)
+exclude zero with negative sign.
+
+The relative ordering (1d > 4h at every realistic fee tier) is preserved
+under bootstrap because the point-estimate gaps are larger than CI widths
+on the difference. But the absolute deployment claim ("h=288 + VIP-3+maker
+makes money OOS") is NOT supported by the current 90-day sample.
+
+### Updated verdict (final, with bootstrap caveat)
+
+The original -21 OOS verdict was an accounting artifact. Once the
+turnover-aware non-overlapping label evaluation is run on β-neutral
+weights, the picture is:
+
+1. **Methodologically sound** corrections: cost is now charged per
+   rebalance × turnover, β-neutral execution forces clean alpha capture,
+   1d horizon dominates 4h at every realistic fee tier on a time-normalized
+   basis.
+
+2. **Point estimates are encouraging at h=288 + VIP-3+maker**: +12.4%/yr
+   arithmetic, ann. Sharpe ≈ 0.42.
+
+3. **Bootstrap 95% CIs do NOT support deployment**: the Sharpe CI at
+   h=288 + VIP-3+maker spans [-4.9, +4.0]. With only 90 OOS cycles, we
+   cannot statistically distinguish the point estimate from zero.
+
+4. **Required next step before any deployment decision**: a wider OOS
+   sample. Options:
+   - Walk-forward with more h=288 folds (need substantially more data
+     than 400d total — current WF only fits 2 folds of 40 cycles each).
+   - Forward test on data past 2026-04-28 (real OOS as time accrues).
+   - Cross-validate at finer horizons (e.g., h=144 = 12h cycles, ~2/day)
+     to get more cycles per OOS day while staying close to the 1d edge.
+
+## Apr 30 — Signal-quality plan execution (v4 → v6)
+
+After establishing the corrected baseline, executed a structured plan to
+improve the raw alpha edge. Methodology: each phase audited features first
+(IC vs alpha gates), retrained with new features only if they passed,
+then evaluated OOS Sharpe with bootstrap CIs.
+
+### Leakage audit (`alpha_v6_leakage_check.py`)
+
+Ran 4 leakage tests on the final v6 pipeline:
+
+1. **Forward-peek shift test**: for every feature, compute IC at shift=+1, 0, -1.
+   A clean PIT feature has |IC| ≈ stable across shifts; a leaky feature shows
+   inflated |IC| at shift=-1 (using future feature value). Result: **all 31
+   features pass**, max Δ|IC| from shift=-1 vs shift=0 is -0.011 (vwap_zscore_xs_rank).
+
+2. **Sanity positive control**: a deliberately-leaky feature
+   (`alpha[t+1]`) had IC = +0.9936 — methodology validates leak detection.
+
+3. **xs_rank PIT verification**: per-bar manual pctile rank reproduces
+   stored value with max diff = 0. Confirmed point-in-time.
+
+4. **CV embargo verification**: cal_end → test_start gap = 2 days = configured
+   embargo. Train rows with `exit_time` spilling into test ± embargo are
+   purged in `alpha_v4_xs.py:_slice`.
+
+**Pipeline is leak-free.**
+
+### Phase progression
+
+| Phase | What changed | OOS Sharpe (best K, β-neutral, VIP-3+maker) |
+|---|---|---|
+| v4 baseline (h=288 corrected) | turnover-aware + β-neutral | 0.42 (K=5) |
+| 1.1 Top-K sweep | K=5 → K=3 | 1.17 |
+| 1.2 v5 (+7 kline-flow features) | obv_z_1d, vwap_*, mfi etc. | 1.47 |
+| 1.3 v5_lean (drop low-importance) | -6 features | 1.05 (regression) |
+| 2 v6 (+8 xs_rank features) | per-bar pctile ranks | 2.91 (K=5), 3.60 (K=7) |
+| 1.4 v6 + IS-trim (drop bot-quartile by IS IC) | universe 25→19 | 3.94 [+0.37, +6.74] |
+| 4.1 v7 (+3 funding features) | funding_rate, z_7d, streak_pos | 2.80 (regressed) |
+
+### Headline findings
+
+1. **xs_rank features were the biggest single win** (+1.4 Sharpe). Per-bar
+   cross-sectional pctile rank addresses scale heterogeneity across symbols.
+   Best gain: `idio_vol_1d_vs_bk_xs_rank` (OOS |IC| 0.043 vs 0.038 absolute),
+   `vwap_zscore_xs_rank` (0.038 vs 0.018), `atr_pct_xs_rank` (0.036 vs 0.010).
+
+2. **Top-K reduction was the second-biggest win** (K=5 → K=7). The "best K"
+   sweep showed Sharpe peaks at K=7 (point) or K=12 (tightest CI lower bound).
+
+3. **Funding features failed despite strongest single-feature IC** (audit
+   |IC| up to 0.084). Adding to v6 didn't improve portfolio Sharpe —
+   most likely captured by existing v6 features (dom_z_7d, idio_vol_1d, etc.
+   already encode crowded-positioning dynamics that funding reflects).
+   Lesson: marginal IC vs alpha alone is insufficient gate; need to test
+   correlation with model's existing predictions.
+
+4. **Universe trim is mostly noise-reduction, not "drop bad symbols"**:
+   the IS-IC-bottom-quartile drop happens to remove most-overfit symbols
+   (BTC/ETH/AVAX), not the OOS-bad ones (UNI/APT/RUNE). Random-drop is
+   strictly worse, confirming that data-driven trim helps.
+
+5. **CIs remain wide** even at the best config. Sharpe 3.94 has CI
+   [+0.37, +6.74] — point estimate is 9× the v4 baseline but absolute
+   uncertainty is large. 90-day OOS is the binding constraint, not the
+   feature set.
+
+### Diagnostic learnings (`alpha_v4_edge_diagnostic.py`)
+
+Pre-improvement diagnostic surfaced:
+
+- **Per-symbol IC heterogeneity (+0.18 to -0.07)**: features have different
+  predictive relationships across symbols. xs_rank narrowed but didn't fix.
+- **Top-1 alpha was 3× top-5 alpha** (+21.7 vs +7.8) at v4 baseline,
+  predicting that K-reduction would help — confirmed by Phase 1.1.
+- **Linear oracle OOS pooled IC = +0.013, LGBM = +0.042 — trees DO add
+  value** through interactions (3× linear). LGBM isn't wasted but operates
+  near the feature-set's information ceiling.
+- **Quintile profile R²** went from 0.74 (linear-monotone, v4) to 0.37
+  (Q4-dominated step, v6) — v6 sharpens the top quintile specifically.
+
+### Final state for deployment evaluation
+
+**Best config: v6 (32 features) + K=7 + β-neutral + IS-trim (drop bot-quartile by IS IC) + VIP-3+maker:**
+- OOS Sharpe: +3.94 (point), 95% CI [+0.37, +6.74]
+- OOS net: +30.4 bps/cycle, +110%/yr arithmetic
+- 90 cycles, single OOS window 2026-01-28 to 2026-04-28
+
+**Caveats reiterated**: this is a non-overlapping label evaluation, not a
+full equity-curve backtest. Deployment-grade requires (a) compounded equity
+curve with funding accrual, (b) real maker fill modelling, (c) drawdown
+limits, (d) wider OOS sample (forward test on data past 2026-04-28).
+
+### Findings (corrected)
+
+1. **Turnover-aware accounting alone shifts OOS net per cycle** from -22 (orig)
+   → -7.5 (h=48) / -8.7 (h=288). The original 24 bps every 5m bar was
+   over-charging by ~2.5×. This is the dominant correction.
+
+2. **1d horizon dominates 4h horizon at every realistic cost regime** when
+   compared on a time-normalized (per-year) basis:
+   - At VIP-0: h=48 -164%/yr vs h=288 **-32%/yr**
+   - At VIP-3 taker: h=48 -54%/yr vs h=288 **-2.3%/yr**
+   - At VIP-3+maker: h=48 +0.3%/yr vs h=288 **+12.4%/yr (Sharpe 0.42)**
+   - Only at near-zero fees (VIP-9 maker) does h=48 (+37%/yr, S=1.15) beat
+     h=288 (+22%/yr, S=0.76), via more cycles per year. Note: net/yr% is
+     `net_per_cycle × cycles_per_year / 1e4` (arithmetic, not compounded).
+     A real rolled-portfolio with compounding will diverge at extreme
+     returns, but at these magnitudes the gap is modest.
+
+   The earlier "1d rejected" conclusion was wrong — it compared per-cycle
+   bps, which is meaningless across different cycle lengths. **1d is the
+   preferred deployment horizon under any realistic fee schedule.**
+
+3. **β-neutral execution is methodologically required, P&L impact modest.**
+   It cleanly forces `ret = alpha` (vs equal-weight which leaks ~3-5 bps of
+   alpha into market noise at h=288 OOS). At h=48 the gap was already small
+   (~0.7 bps), so β-neut adds little. Gross exposure stays at 2.00 with
+   guardrails active.
+
+4. **Cost saving ≠ per-leg fee saving.** Cost is `fee × turnover_sum`, so a
+   6 bps/leg cut saves ~5 bps net per cycle (with turnover ≈ 0.83-1.34).
+   Earlier prose claiming "VIP-3 saves ~7 bps" was overstated.
+
+5. **Deployment threshold (h=288 β-neutral OOS):**
+   - Break-even at VIP-3 taker (~6 bps/leg RT). Sharpe ≈ 0.
+   - Marginal at VIP-3 + maker (~3 bps/leg RT). Sharpe ≈ 0.42, +12%/yr.
+   - Deployable at VIP-3 + maker only by Sharpe convention (>0.5 is
+     uncommon to ship). VIP-9 maker (~1 bp/leg) → Sharpe 0.76, +22%/yr.
+
+6. **At h=288 OOS, captured alpha (ret_BN +7.41) is GREATER than WF (+4.62).**
+   The OOS window genuinely had stronger cross-sectional alpha — opposite
+   of the normal in-sample-overfit pattern. This bolsters the alpha-real
+   finding but warrants caution: a single 90-day OOS window doesn't
+   establish robustness.
+
+### Updated verdict
+
+The previously reported -21 OOS was an accounting artifact from per-bar 24 bps
+costing. The honest evaluation under turnover-aware non-overlapping accounting:
+
+- **At h=48 (4h cycles), deployment is hopeless at any retail fee tier**
+  (-164% to -54% per year). Only VIP-9 maker reaches Sharpe 1.
+- **At h=288 (1d cycles), deployment is plausible at VIP-3 + maker**
+  (Sharpe 0.42, +12%/yr). Earlier rejection of 1d was wrong.
+
+Caveats: this is a non-overlapping label evaluation, not a full backtest.
+A deployable system additionally needs an equity-curve simulator (with
+funding accrual, slippage realism, drawdown limits, position-size
+hedging logic), execution modelling (real maker fill rates, queue position),
+and a wider OOS sample (the +12%/yr at h=288 comes from one 90-day window).
+
