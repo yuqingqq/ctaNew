@@ -1,0 +1,19 @@
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.venv/
+venv/
+
+# Data caches and downloads
+data/
+/tmp/
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+
+# Local env
+.env
+.env.local
