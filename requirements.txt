@@ -1,7 +1,20 @@
+# Core data & math
 numpy>=1.26
 pandas>=2.0
-scipy>=1.11
-scikit-learn>=1.4
-lightgbm>=4.0
-pyarrow>=14.0
-requests>=2.31
+scipy>=1.11           # block-bootstrap, statistical tests, rolling stats
+pyarrow>=14.0         # parquet I/O for klines / aggTrades / cached features
+requests>=2.31        # Binance Vision archive downloads
+
+# ML
+scikit-learn>=1.3     # baselines, calibration, metrics
+lightgbm>=4.0         # primary gradient-boosting model
+
+# Optional — research / hyperopt / interpretation (not required to reproduce
+# the headline results in ml/research/alpha_v*.py; uncomment if you extend)
+# optuna>=3.4          # hyperopt with pruning
+# shap>=0.45           # feature attribution
+# matplotlib>=3.8      # plots
+# seaborn>=0.13        # plots
+
+# Tests
+pytest>=7.0
