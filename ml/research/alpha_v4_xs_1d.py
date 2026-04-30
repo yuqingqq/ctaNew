@@ -44,6 +44,9 @@ from ml.research.alpha_v4_xs import portfolio_pnl_turnover_aware, block_bootstra
 FEATURE_SET = os.environ.get("FEATURE_SET", "v4").lower()
 # Phase 1.4 universe trim: set TRIM_UNIVERSE=1 to apply IS-only trim at OOS.
 TRIM_UNIVERSE = os.environ.get("TRIM_UNIVERSE", "0") == "1"
+# Multi-OOS validation: set MULTI_OOS=1 to use expanding-window walk-forward
+# with many non-overlapping 30-day test windows instead of one 90-day holdout.
+MULTI_OOS = os.environ.get("MULTI_OOS", "0") == "1"
 if FEATURE_SET == "v5":
     ACTIVE_FEATURE_COLS = XS_FEATURE_COLS_V5
 elif FEATURE_SET == "v5_lean":
@@ -139,6 +142,45 @@ def _holdout_split(panel, *, holdout_days: int = HOLDOUT_DAYS):
     }]
 
 
+def _multi_oos_splits(panel, *, min_train_days: int = 60, cal_days: int = 20,
+                       test_days: int = 30, embargo_days: float = 2.0):
+    """Expanding-window walk-forward producing many non-overlapping OOS windows.
+
+    Train is ANCHORED to data_start (expanding). Cal is the cal_days bars
+    before the embargo. Test is test_days starting after embargo.
+    Successive folds' test windows are non-overlapping (with embargo gap).
+
+    For h=288 with 400 days of data, this produces ~10 folds × 30 days =
+    ~300 cycles of OOS evaluation, vs the single-holdout 90 cycles.
+
+    Anti-leakage: train uses everything before cal_start, then _slice purges
+    rows whose exit_time spills into [test_left, test_right). Same protocol
+    as the existing single OOS holdout.
+    """
+    data_start = panel["open_time"].min()
+    data_end = panel["open_time"].max()
+    embargo = pd.Timedelta(days=embargo_days)
+    # Earliest test_start needs min_train_days + cal_days + embargo of data behind
+    earliest_test_start = data_start + pd.Timedelta(days=min_train_days + cal_days) + embargo
+    test_start = earliest_test_start
+    folds = []
+    fid = 0
+    while test_start + pd.Timedelta(days=test_days) <= data_end:
+        cal_end = test_start - embargo
+        cal_start = cal_end - pd.Timedelta(days=cal_days)
+        train_start = data_start  # anchored expanding train
+        train_end = cal_start
+        test_end = test_start + pd.Timedelta(days=test_days)
+        folds.append({
+            "fid": fid, "train_start": train_start, "train_end": train_end,
+            "cal_start": cal_start, "cal_end": cal_end,
+            "test_start": test_start, "test_end": test_end, "embargo": embargo,
+        })
+        test_start = test_end + embargo
+        fid += 1
+    return folds
+
+
 def _slice(panel, fold):
     test_left = fold["test_start"] - fold["embargo"]
     test_right = fold["test_end"] + fold["embargo"]
@@ -187,8 +229,14 @@ def main():
     print(f"Portfolio sampling every {SAMPLE_EVERY_BARS} bars; turnover-aware cost")
     print("=" * 80)
 
-    for mode, fold_fn in [("walk-forward", lambda: _walk_forward_splits(panel)),
-                           ("OOS holdout", lambda: _holdout_split(panel))]:
+    if MULTI_OOS:
+        # Skip walk-forward; use expanding-window multi-OOS as the headline.
+        modes = [("OOS holdout (multi-window)",
+                   lambda: _multi_oos_splits(panel))]
+    else:
+        modes = [("walk-forward", lambda: _walk_forward_splits(panel)),
+                 ("OOS holdout", lambda: _holdout_split(panel))]
+    for mode, fold_fn in modes:
         print(f"\n--- {mode} ---")
         folds = fold_fn()
         bar_summaries = []
@@ -232,7 +280,7 @@ def main():
             bar_summaries.append({**result, "bn": result_bn,
                                    "_test_f": test_f, "_yt": yt})
 
-            if mode == "OOS holdout":
+            if mode.startswith("OOS holdout"):
                 gains = np.mean([m.feature_importance(importance_type="gain") for m in models], axis=0)
                 share = gains / gains.sum()
                 imp = pd.Series(dict(zip(ACTIVE_FEATURE_COLS, share))).sort_values(ascending=False)
@@ -296,7 +344,7 @@ def main():
 
             # Bootstrap 95% CI on OOS Sharpe and net/cycle for deployment tiers.
             # block=7 cycles ≈ 1 week at h=288 — preserves short-range autocorr.
-            if mode == "OOS holdout":
+            if mode.startswith("OOS holdout"):
                 print(f"\n  Bootstrap 95% CI (block-bootstrap, block=7 cycles, n_boot=2000) — OOS:")
                 print(f"    {'Tier':<32} {'fee/leg':>8} {'net/cyc CI':>20} {'Sharpe_yr CI':>20}")
                 for tier_name, fee_per_leg in [

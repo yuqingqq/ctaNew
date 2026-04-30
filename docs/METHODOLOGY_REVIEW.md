@@ -772,17 +772,81 @@ Pre-improvement diagnostic surfaced:
 - **Quintile profile R²** went from 0.74 (linear-monotone, v4) to 0.37
   (Q4-dominated step, v6) — v6 sharpens the top quintile specifically.
 
-### Final state for deployment evaluation
+### Final state for deployment evaluation (updated after multi-OOS verification)
 
-**Best config: v6 (32 features) + K=7 + β-neutral + IS-trim (drop bot-quartile by IS IC) + VIP-3+maker:**
-- OOS Sharpe: +3.94 (point), 95% CI [+0.37, +6.74]
-- OOS net: +30.4 bps/cycle, +110%/yr arithmetic
+**Single-OOS result (initial)** at v6 + K=7 + β-neutral + IS-trim + VIP-3+maker:
+- OOS Sharpe: +3.94, 95% CI [+0.37, +6.74]
 - 90 cycles, single OOS window 2026-01-28 to 2026-04-28
 
-**Caveats reiterated**: this is a non-overlapping label evaluation, not a
-full equity-curve backtest. Deployment-grade requires (a) compounded equity
-curve with funding accrual, (b) real maker fill modelling, (c) drawdown
-limits, (d) wider OOS sample (forward test on data past 2026-04-28).
+**Multi-OOS validation (corrected)**: 9 expanding-window non-overlapping
+30-day folds spanning 2025-06 to 2026-04 = 270 OOS cycles, 3× the
+original sample. **Headline Sharpe drops materially:**
+
+| Config | Sharpe | net/cycle | 95% CI |
+|---|---|---|---|
+| v6 + K=5 + VIP-3+maker | **+1.20** | +12.51 | [-0.78, +3.30] |
+| v6 + K=7 + VIP-3+maker | +0.96 | +8.35 | [-1.10, +3.37] |
+| v6 + K=12 + VIP-3+maker | +0.22 | +1.32 | [-1.73, +2.48] |
+| v6 + K=5 + VIP-9 maker | +1.46 | +15.22 | [-0.54, +3.62] |
+
+**Key findings from multi-OOS:**
+
+1. **The +3.94 single-OOS Sharpe was largely regime luck.** The
+   2026-01-28 to 2026-04-28 window happened to be especially favorable
+   for v6's xs_rank features. Across 9 OOS windows the honest mean
+   Sharpe is +1.20 at the deployment-relevant tier.
+
+2. **Optimal K shifted from 7 to 5.** Single-OOS suggested K=7;
+   multi-OOS shows K=5 is the Sharpe-optimal point. K=7 was over-fit
+   to the late-2026 regime.
+
+3. **Lower bound is still negative.** Even with 270 cycles, bootstrap
+   95% CI on Sharpe is [-0.78, +3.30] at K=5+VIP-3+maker. Cannot
+   strictly reject zero, but point estimate is clearly positive.
+
+4. **Strategy direction is real.** Sharpe is positive at every tier
+   except VIP-0 retail. Net-positive expected return at VIP-3+maker
+   onwards.
+
+**Caveats reiterated**: still a non-overlapping label evaluation, not a
+full equity-curve backtest. Each OOS fold is a 30-day window with
+expanding train; in production the strategy faces continuous regime
+shifts. Deployment-grade verification additionally requires (a)
+compounded equity curve with funding accrual, (b) real maker fill
+modelling with L2 data, (c) drawdown limits, (d) live forward test.
+
+### Phase 3 attempt: aggTrades microstructure features (negative result)
+
+Pulled aggTrades for top-10 most-liquid USDM perps × 402 days
+(`scripts/pull_aggtrades.py`), built 5min bar features via
+`features_ml/trade_flow.py` cached as `flow_<SYMBOL>.parquet`.
+
+Audit (`alpha_v8_flow_audit.py`) of 19 candidate microstructure
+features against alpha at h=288, IS-only (≥80% sign consistency,
+|IC|≥0.015, IS-OOS sign match ≥60%):
+
+| Feature | OOS |IC| | Verdict |
+|---|---|---|
+| **avg_trade_size** | 0.035 | passes (only one) |
+| vpin | 0.050 | fails — sign 50/50 across symbols |
+| buy_count, sell_count | ~0.04 | fails — sign 70%, gate is 80% |
+| tfi, signed_volume, signed_volume_z | <0.01 | trivial IC |
+| Kyle's λ, tfi_smooth | weak | fails |
+
+**Only 1 of 19 features passed.** The canonical microstructure signals
+(TFI, VPIN, signed-volume z-score) carry **no meaningful cross-sectional
+predictive power at 1d horizon**. They're designed for shorter horizons
+(minutes to hours).
+
+**Why h=288 doesn't benefit from raw flow:** at 1d horizon the
+predictive signal lives in **positioning/dominance dynamics** —
+exactly what v6's basket-relative features (`dom_z_*_vs_bk`,
+`idio_vol_1d_vs_bk`, `corr_change_3d_vs_bk`) already capture. There's
+no orthogonal alpha left in tick-level aggression.
+
+**Phase 3 is exhausted at h=288 on this universe.** True microstructure
+features could help at shorter horizons (h=12 or h=48), but that's a
+separate research thread.
 
 ### Findings (corrected)
 

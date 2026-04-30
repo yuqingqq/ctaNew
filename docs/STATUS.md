@@ -22,9 +22,16 @@ cross-sectional ranking across 25 symbols) is fully characterized:
   evaluation, OOS net per cycle is **-7.5 bps** (h=48) / **-8.7 bps**
   (h=288) at retail VIP-0. Was reported as -21 under naive per-bar 24-bps
   accounting (over-charged ~2.5×).
-- **Signal-quality plan (Apr 30) lifted Sharpe ~9× over the corrected v4
-  baseline.** Best config: **v6 + K=7 + IS-trim**, OOS Sharpe +3.94 with 95% CI
-  [+0.37, +6.74] (first config with CI strictly above zero).
+- **Signal-quality plan (Apr 30) lifted Sharpe ~3× over the corrected v4
+  baseline** at the deployment-relevant tier. Best config under multi-OOS
+  validation: **v6 + K=5 + β-neutral**, Sharpe +1.20 at VIP-3+maker, 95% CI
+  [-0.78, +3.30] over 270 OOS cycles (9 expanding-WF folds).
+- The single-OOS Sharpe of +3.94 (90 cycles, 2026-01-28 to 2026-04-28) was
+  partly regime luck — multi-OOS across 9 windows is the more reliable estimate.
+- Phase 3 (aggTrades microstructure features): pulled 10 symbols × 402 days,
+  audited 19 features. Only `avg_trade_size` passed gates (OOS |IC| 0.035,
+  weak). True microstructure (TFI/VPIN/Kyle's λ) doesn't carry signal at
+  h=288 — it's a shorter-horizon phenomenon. v8 not pursued.
 - v6 = 32 features: v4 base + cross-asset + 7 kline-flow (obv_z_1d, vwap_*, mfi)
   + 8 cross-sectional pctile-rank features.
 - Funding-rate features (Phase 4.1) had strongest single-feature OOS IC (up
