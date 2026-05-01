@@ -42,6 +42,23 @@ cross-sectional ranking across 25 symbols) is fully characterized:
     at portfolio level. ✓
   - Decision: Binance-trained predictions transport to HL execution.
     Proceed to Phase 1 (multi-symbol paper-trade orchestrator).
+- **Phase 1 paper-trade orchestrator (May 1):**
+  - `live/train_v6_clean_artifact.py` → trains v6_clean ensemble on full
+    history, saves to `models/` (regen weekly).
+  - `live/paper_bot.py` → daily-cron rebalance: refreshes klines (fapi
+    or Binance Vision fallback), builds inference panel, predicts, ranks,
+    selects top-5 long / bot-5 short β-neutral, fetches HL mids for
+    fill simulation, persists positions + cycle log to `live/state/`.
+  - `live/replay_paper_bot.py` → validates live code path against the
+    canonical backtest. PASS on holdout fold (Δ spread 0.07 bps, Δ IC
+    0.0026, both within tolerance). Best_iter sequence matches audit
+    exactly (19, 8, 15, 5, 17).
+  - First end-to-end run: long [LTC, LINK, NEAR, DOT, ARB], short [SEI,
+    TIA, OP, FIL, ADA], gross 2.0, β-scales [1.11, 0.89], cost 8 bps.
+  - Note: Binance fapi REST is geo-blocked (HTTP 451) from this dev
+    server; bot auto-falls back to Binance Vision daily archive
+    (`--source vision`, 1-day lag). On a non-blocked VPS, `--source
+    fapi` gives real-time data.
 - Phase 3 (aggTrades microstructure features): pulled 10 symbols × 402 days,
   audited 19 features. Only `avg_trade_size` passed gates (OOS |IC| 0.035,
   weak). True microstructure (TFI/VPIN/Kyle's λ) doesn't carry signal at

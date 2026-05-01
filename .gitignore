@@ -10,6 +10,12 @@ data/
 /tmp/
 outputs/
 
+# Trained model artifacts (regenerated via live/train_v6_clean_artifact.py)
+models/
+
+# Live paper-trade runtime state
+live/state/
+
 # Claude Code local settings
 .claude/
 
