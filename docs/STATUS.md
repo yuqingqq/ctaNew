@@ -88,6 +88,8 @@ cross-sectional ranking across 25 symbols) is fully characterized:
     implemented — paper trades all execute at taker. For realistic
     maker P&L, place actual passive limit orders on a small live HL
     account via executeEngine HL branch.
+  - **To deploy: see `docs/PAPER_TRADE_RUNBOOK.md`** — daily cron at
+    00:01 UTC + weekly retrain, monitor via `python -m live.cycle_summary`.
 - Phase 3 (aggTrades microstructure features): pulled 10 symbols × 402 days,
   audited 19 features. Only `avg_trade_size` passed gates (OOS |IC| 0.035,
   weak). True microstructure (TFI/VPIN/Kyle's λ) doesn't carry signal at
