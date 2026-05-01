@@ -35,38 +35,54 @@ python -m live.paper_bot --check-state
 The bot rebalances daily (h=288 = 1d). The hourly monitor marks open
 positions to current HL mids + funding accrual + sends Telegram.
 
-Edit your crontab (`crontab -e`):
+**Cron's environment is stripped** (no `~/.bashrc`, no shell init), so
+`.env` won't be auto-loaded. We use a small wrapper `live/run_with_env.sh`
+that sources `.env` with auto-export then execs the venv python.
 
-```cron
-# Daily decision at 00:01 UTC
-1 0 * * * cd /path/to/ctaNew && /usr/bin/python3 -m live.paper_bot --source hl >> live/state/run.log 2>&1
-
-# Hourly portfolio snapshot + Telegram (every hour at minute :05)
-5 * * * * cd /path/to/ctaNew && /usr/bin/python3 -m live.hourly_monitor >> live/state/hourly.log 2>&1
-
-# Re-train model artifact weekly (Mondays 00:30 UTC)
-30 0 * * 1 cd /path/to/ctaNew && /usr/bin/python3 -m live.train_v6_clean_artifact >> live/state/train.log 2>&1
-```
-
-Adjust `/usr/bin/python3` to your Python path (`which python3` to check).
-
-### Telegram notifications (optional)
-
-Set these env vars (e.g., in `~/.bashrc` or systemd service file) to enable:
+Set Telegram tokens in `<repo>/.env` (gitignored — never committed):
 
 ```bash
-export TELEGRAM_BOT_TOKEN="123456:ABC..."   # from @BotFather
-export TELEGRAM_CHAT_ID="-100..."            # your chat or channel
+TELEGRAM_BOT_TOKEN=123456:ABC...
+TELEGRAM_CHAT_ID=-100...
 ```
 
-You'll get:
+Make wrapper executable:
+```bash
+chmod +x /path/to/ctaNew/live/run_with_env.sh
+```
+
+Install crontab (`crontab -e`, paste this — adjust paths):
+
+```cron
+# v6_clean paper-trade
+
+# Daily decision at 00:01 UTC (just after the 23:55 5-min bar closes)
+1 0 * * *  /path/to/ctaNew/live/run_with_env.sh -m live.paper_bot --source hl >> /path/to/ctaNew/live/state/run.log 2>&1
+
+# Hourly portfolio + Telegram snapshot at minute :05
+5 * * * *  /path/to/ctaNew/live/run_with_env.sh -m live.hourly_monitor >> /path/to/ctaNew/live/state/hourly.log 2>&1
+
+# Weekly model retrain — Mondays 00:30 UTC
+30 0 * * 1 /path/to/ctaNew/live/run_with_env.sh -m live.train_v6_clean_artifact >> /path/to/ctaNew/live/state/train.log 2>&1
+```
+
+To test the wrapper before installing cron (simulates cron's stripped env):
+```bash
+env -i HOME=$HOME PATH=/usr/bin:/bin /path/to/ctaNew/live/run_with_env.sh \
+    -c "from live.telegram import notify_telegram; print(notify_telegram('test'))"
+# Should print: True (and message arrives in your chat)
+```
+
+### Telegram messages you'll receive
+
 - **Daily** decision summary (after `paper_bot` runs): cycle PnL breakdown
-  (gross / fees / slippage / funding / net), new target portfolio, trade
-  count + notional.
+  (gross MtM / fees / slippage / funding / net), new target portfolio,
+  trade count + notional.
 - **Hourly** portfolio snapshot (after `hourly_monitor` runs): hourly +
   cumulative MtM PnL, hourly funding cost, per-leg cumulative %, etc.
 
-Without these env vars, the bot logs locally and skips Telegram silently.
+Without `TELEGRAM_BOT_TOKEN`/`TELEGRAM_CHAT_ID` set, the bot logs locally
+and skips Telegram silently.
 
 ## Daily monitoring
 
