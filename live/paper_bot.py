@@ -434,12 +434,14 @@ def predict_for_bar(models, panel: pd.DataFrame, target_time: pd.Timestamp,
 class LegPosition:
     symbol: str
     side: str                    # "L" (long) or "S" (short)
-    weight: float                # signed: + for long, - for short, sums to ~scale
-    entry_price_hl: float        # actual fill VWAP from L2 (Phase 2)
-    entry_mid_hl: float          # mid at the moment of entry (for slippage attribution)
-    entry_notional_usd: float    # USD notional executed (for matching exit size)
-    entry_slippage_bps: float    # bps paid to spread+depth at entry (excl. fee)
-    entry_time: str              # iso utc
+    weight: float                # signed magnitude: + for long, - for short
+    entry_price_hl: float        # avg fill VWAP across this position's lifetime
+    entry_mid_hl: float          # mid at original entry (for cumulative slippage attr)
+    entry_notional_usd: float    # current USD notional held
+    entry_slippage_bps: float    # avg slippage paid on this position's entries
+    entry_time: str              # iso utc of original entry
+    last_marked_mid: float = 0.0 # most recent mid; used for per-cycle gross MtM
+    funding_paid_usd: float = 0.0  # cumulative funding paid (negative = received)
 
     def to_dict(self):
         return asdict(self)
@@ -468,126 +470,173 @@ def select_portfolio(preds: pd.DataFrame, top_k: int = TOP_K) -> tuple[pd.DataFr
     return top, bot, scale_L, scale_S
 
 
-def simulate_entries(top: pd.DataFrame, bot: pd.DataFrame, scale_L: float, scale_S: float,
-                      books: dict[str, dict], now_iso: str, n_per_side: int,
-                      equity_usd: float = INITIAL_EQUITY_USD) -> list[LegPosition]:
-    """Build new portfolio leg positions, walking each L2 book to compute the
-    actual taker fill VWAP for the target notional. Records slippage bps."""
-    out = []
+def compute_target_weights(top: pd.DataFrame, bot: pd.DataFrame,
+                             scale_L: float, scale_S: float, n_per_side: int) -> dict:
+    """Returns {symbol: signed weight} — positive = long, negative = short."""
+    w = {}
     for _, row in top.iterrows():
-        coin = _binance_to_hl_coin(row["symbol"])
-        weight = scale_L / n_per_side
-        target_notional = weight * equity_usd
-        book = books.get(coin)
-        if book is None:
-            log.warning("[L %s] no L2 book — skipping", row["symbol"])
-            continue
-        fill = simulate_taker_fill(book, side="buy", target_notional_usd=target_notional)
-        if not np.isfinite(fill["vwap"]):
-            log.warning("[L %s] taker fill returned NaN — skipping", row["symbol"])
-            continue
-        out.append(LegPosition(
-            symbol=row["symbol"], side="L", weight=weight,
-            entry_price_hl=fill["vwap"], entry_mid_hl=fill["mid"],
-            entry_notional_usd=target_notional,
-            entry_slippage_bps=fill["slippage_bps"],
-            entry_time=now_iso,
-        ))
+        w[row["symbol"]] = scale_L / n_per_side
     for _, row in bot.iterrows():
-        coin = _binance_to_hl_coin(row["symbol"])
-        weight = scale_S / n_per_side
-        target_notional = weight * equity_usd
+        w[row["symbol"]] = -scale_S / n_per_side
+    return w
+
+
+def execute_cycle_turnover_aware(prev_positions: list[LegPosition],
+                                  target_weights: dict[str, float],
+                                  books: dict[str, dict],
+                                  now_iso: str,
+                                  equity_usd: float = INITIAL_EQUITY_USD) -> dict:
+    """Trade only the delta between prev and target weight vectors.
+
+    Returns dict with:
+      new_positions      list[LegPosition] reflecting target weights
+      gross_pnl_bps      MtM change of prev positions over the cycle (mid→mid)
+      slippage_bps       weighted slippage cost across delta trades
+      fees_bps           taker fees on trade notional (one-way × notional)
+      n_trades           number of L2 fills executed this cycle
+      trades             list of per-trade records (for logging)
+
+    Cost model: HL_TAKER_FEE_BPS is one-way. Each non-zero |delta| × equity is
+    one market order paying HL_TAKER_FEE_BPS bps + walking the book.
+    """
+    prev_w = {p.symbol: p.weight for p in (prev_positions or [])}
+    prev_by_sym = {p.symbol: p for p in (prev_positions or [])}
+    all_syms = set(prev_w) | set(target_weights)
+
+    # Compute mids from books (best bid/ask midpoint)
+    def _mid_for(sym: str) -> float:
+        coin = _binance_to_hl_coin(sym)
+        b = books.get(coin)
+        if b is None or not b["bids"] or not b["asks"]:
+            return float("nan")
+        return 0.5 * (b["bids"][0][0] + b["asks"][0][0])
+
+    # 1. Mark prev positions to current mid for per-cycle gross PnL
+    gross_pnl_bps = 0.0
+    for p in (prev_positions or []):
+        mid_now = _mid_for(p.symbol)
+        if not np.isfinite(mid_now) or not np.isfinite(p.last_marked_mid) or p.last_marked_mid == 0:
+            continue
+        # weight is signed; for long (+) PnL = (mid_now/start - 1) × |weight|;
+        # for short (-) PnL = (start/mid_now - 1) × |weight|.
+        if p.side == "L":
+            pnl_frac = (mid_now / p.last_marked_mid - 1.0)
+        else:
+            pnl_frac = (p.last_marked_mid / mid_now - 1.0)
+        gross_pnl_bps += pnl_frac * abs(p.weight) * 1e4
+
+    # 2. Compute deltas and execute L2 fills
+    trades = []
+    total_trade_notional = 0.0
+    total_slip_weighted = 0.0  # for weighted-average slippage report
+    new_positions = []
+    for sym in sorted(all_syms):
+        prev_weight = prev_w.get(sym, 0.0)
+        new_weight = target_weights.get(sym, 0.0)
+        delta = new_weight - prev_weight
+        coin = _binance_to_hl_coin(sym)
+        mid_now = _mid_for(sym)
+
+        if abs(delta) < 1e-9:
+            # No trade — carry forward prev position with updated last_marked_mid
+            if sym in prev_by_sym:
+                p = prev_by_sym[sym]
+                new_positions.append(LegPosition(
+                    symbol=sym, side=p.side, weight=p.weight,
+                    entry_price_hl=p.entry_price_hl, entry_mid_hl=p.entry_mid_hl,
+                    entry_notional_usd=p.entry_notional_usd,
+                    entry_slippage_bps=p.entry_slippage_bps,
+                    entry_time=p.entry_time,
+                    last_marked_mid=mid_now if np.isfinite(mid_now) else p.last_marked_mid,
+                    funding_paid_usd=p.funding_paid_usd,
+                ))
+            continue
+
+        # Trade: simulate L2 fill on |delta| × equity in the appropriate direction
+        side_action = "buy" if delta > 0 else "sell"
+        notional = abs(delta) * equity_usd
         book = books.get(coin)
         if book is None:
-            log.warning("[S %s] no L2 book — skipping", row["symbol"])
+            log.warning("[%s] no L2 book — skipping delta=%+.4f", sym, delta)
             continue
-        fill = simulate_taker_fill(book, side="sell", target_notional_usd=target_notional)
+        fill = simulate_taker_fill(book, side=side_action, target_notional_usd=notional)
         if not np.isfinite(fill["vwap"]):
-            log.warning("[S %s] taker fill returned NaN — skipping", row["symbol"])
+            log.warning("[%s] taker fill NaN for delta=%+.4f notional=$%.0f", sym, delta, notional)
             continue
-        out.append(LegPosition(
-            symbol=row["symbol"], side="S", weight=-weight,
-            entry_price_hl=fill["vwap"], entry_mid_hl=fill["mid"],
-            entry_notional_usd=target_notional,
-            entry_slippage_bps=fill["slippage_bps"],
-            entry_time=now_iso,
-        ))
-    return out
+        trades.append({
+            "symbol": sym, "delta_weight": delta, "side_action": side_action,
+            "notional_usd": notional, "fill_vwap": fill["vwap"],
+            "fill_mid": fill["mid"], "slippage_bps": fill["slippage_bps"],
+        })
+        total_trade_notional += notional
+        # weight slippage by trade notional (so aggregate is notional-weighted)
+        total_slip_weighted += abs(fill["slippage_bps"]) * abs(delta)
 
-
-def turnover(prev: list[LegPosition], curr: list[LegPosition]) -> tuple[float, float]:
-    """L1-distance/2 between long-leg and short-leg weight vectors."""
-    prev_long = {p.symbol: p.weight for p in prev if p.side == "L"} if prev else {}
-    prev_short = {p.symbol: -p.weight for p in prev if p.side == "S"} if prev else {}
-    curr_long = {p.symbol: p.weight for p in curr if p.side == "L"}
-    curr_short = {p.symbol: -p.weight for p in curr if p.side == "S"}
-    if not prev_long and not prev_short:
-        sl = sum(curr_long.values())
-        ss = sum(curr_short.values())
-        return float(sl), float(ss)
-    long_to = 0.5 * sum(abs(curr_long.get(s, 0) - prev_long.get(s, 0))
-                          for s in set(curr_long) | set(prev_long))
-    short_to = 0.5 * sum(abs(curr_short.get(s, 0) - prev_short.get(s, 0))
-                          for s in set(curr_short) | set(prev_short))
-    return float(long_to), float(short_to)
-
-
-def simulate_exits(prev: list[LegPosition], books: dict[str, dict]) -> dict:
-    """Mark-to-market by simulating taker exits: longs sell into bids, shorts
-    buy into asks. Walks the L2 book at the same notional as entry. Returns
-    aggregate stats including realized spread, exit slippage, and total fees."""
-    if not prev:
-        return {"long_ret_bps": 0.0, "short_ret_bps": 0.0,
-                "spread_ret_bps": 0.0,
-                "entry_slippage_bps_mean": 0.0, "exit_slippage_bps_mean": 0.0,
-                "fees_bps": 0.0, "n_long": 0, "n_short": 0,
-                "scale_L_realized": 0.0, "scale_S_realized": 0.0}
-    long_rets, short_rets = [], []
-    weights_L, weights_S = [], []
-    entry_slips, exit_slips = [], []
-    n_filled_long, n_filled_short = 0, 0
-    for p in prev:
-        coin = _binance_to_hl_coin(p.symbol)
-        book = books.get(coin)
-        if book is None or not np.isfinite(p.entry_price_hl):
-            continue
-        exit_side = "sell" if p.side == "L" else "buy"
-        fill = simulate_taker_fill(book, side=exit_side,
-                                     target_notional_usd=p.entry_notional_usd)
-        if not np.isfinite(fill["vwap"]):
-            continue
-        exit_px = fill["vwap"]
-        if p.side == "L":
-            ret = (exit_px / p.entry_price_hl) - 1.0
-            long_rets.append(ret)
-            weights_L.append(p.weight)
-            n_filled_long += 1
+        # Build the new position state for this symbol (if it survives)
+        if abs(new_weight) < 1e-9:
+            continue  # fully exited — drop from positions
+        prev_pos = prev_by_sym.get(sym)
+        # If this is an existing position with same sign and weight increase,
+        # blend entry prices. Otherwise (new entry, flip, or weight reduction),
+        # adopt the trade fill VWAP for the new portion's basis.
+        same_side = (prev_pos is not None and (prev_pos.weight * new_weight > 0))
+        if same_side and abs(new_weight) > abs(prev_weight):
+            # Adding to existing position: VWAP of original portion + delta portion
+            old_q = abs(prev_weight)
+            add_q = abs(delta)
+            blended = (old_q * prev_pos.entry_price_hl + add_q * fill["vwap"]) / abs(new_weight)
+            blended_slip = ((old_q * prev_pos.entry_slippage_bps
+                              + add_q * fill["slippage_bps"]) / abs(new_weight))
+            entry_price = blended
+            entry_slip = blended_slip
+            entry_time = prev_pos.entry_time
+            entry_mid = prev_pos.entry_mid_hl
+            funding = prev_pos.funding_paid_usd
+        elif same_side:
+            # Reducing existing position size: keep original entry (PnL on the
+            # reduced portion is realized via the trade slippage + gross MtM)
+            entry_price = prev_pos.entry_price_hl
+            entry_slip = prev_pos.entry_slippage_bps
+            entry_time = prev_pos.entry_time
+            entry_mid = prev_pos.entry_mid_hl
+            funding = prev_pos.funding_paid_usd
         else:
-            ret = (p.entry_price_hl / exit_px) - 1.0
-            short_rets.append(ret)
-            weights_S.append(-p.weight)
-            n_filled_short += 1
-        entry_slips.append(p.entry_slippage_bps)
-        exit_slips.append(fill["slippage_bps"])
-    long_ret = float(np.mean(long_rets)) if long_rets else 0.0
-    short_ret = float(np.mean(short_rets)) if short_rets else 0.0
-    scale_L = float(sum(weights_L)) if weights_L else 0.0
-    scale_S = float(sum(weights_S)) if weights_S else 0.0
-    spread_ret = scale_L * long_ret + scale_S * short_ret
-    n_legs = n_filled_long + n_filled_short
-    # 2 fees per leg (entry+exit) charged on the gross spread P&L base.
-    # Slippage is already embedded in entry/exit VWAPs.
-    fees_bps = 2.0 * HL_TAKER_FEE_BPS * (scale_L + scale_S) / 2.0  # per cycle
+            # New entry or flip — fresh basis
+            entry_price = fill["vwap"]
+            entry_slip = fill["slippage_bps"]
+            entry_time = now_iso
+            entry_mid = fill["mid"]
+            funding = 0.0
+
+        side = "L" if new_weight > 0 else "S"
+        new_positions.append(LegPosition(
+            symbol=sym, side=side, weight=new_weight,
+            entry_price_hl=entry_price, entry_mid_hl=entry_mid,
+            entry_notional_usd=abs(new_weight) * equity_usd,
+            entry_slippage_bps=entry_slip,
+            entry_time=entry_time,
+            last_marked_mid=fill["mid"],
+            funding_paid_usd=funding,
+        ))
+
+    # Cost decomposition (all in bps of equity)
+    fees_bps = HL_TAKER_FEE_BPS * (total_trade_notional / equity_usd)
+    slip_bps_total = total_slip_weighted * 1.0  # already in bps × weight units
+    n_trades = len(trades)
     return {
-        "long_ret_bps": long_ret * 1e4 * scale_L,
-        "short_ret_bps": short_ret * 1e4 * scale_S,
-        "spread_ret_bps": spread_ret * 1e4,
-        "entry_slippage_bps_mean": float(np.mean(entry_slips)) if entry_slips else 0.0,
-        "exit_slippage_bps_mean": float(np.mean(exit_slips)) if exit_slips else 0.0,
+        "new_positions": new_positions,
+        "gross_pnl_bps": gross_pnl_bps,
+        "slippage_bps": slip_bps_total,
         "fees_bps": fees_bps,
-        "n_long": n_filled_long, "n_short": n_filled_short,
-        "scale_L_realized": scale_L, "scale_S_realized": scale_S,
+        "n_trades": n_trades,
+        "trades": trades,
     }
+
+
+# Legacy simulate_exits / simulate_entries / turnover removed in favor of
+# execute_cycle_turnover_aware (above). The old close-all + reopen-all model
+# over-charged fees by 2x and ignored the user's "sometimes we don't need
+# to rebalance" intuition.
 
 
 # =============================================================================
@@ -668,43 +717,32 @@ def run_one_cycle(*, refresh_data: bool = True, source: str = "auto") -> dict:
     # Decide new portfolio
     top, bot, scale_L, scale_S = select_portfolio(preds, top_k=TOP_K)
     n_per_side = TOP_K
+    target_weights = compute_target_weights(top, bot, scale_L, scale_S, n_per_side)
 
-    # Fetch L2 books for ALL coins we care about: previous cycle's open
-    # positions (to simulate exits) + new cycle's selections (to simulate
-    # entries). Single batch keeps timestamps tight.
     prev_positions, _ = load_state()
-    needed_coins = set()
-    if prev_positions:
-        needed_coins.update(_binance_to_hl_coin(p.symbol) for p in prev_positions)
-    needed_coins.update(_binance_to_hl_coin(s) for s in top["symbol"])
-    needed_coins.update(_binance_to_hl_coin(s) for s in bot["symbol"])
-    log.info("Fetching L2 books for %d coins...", len(needed_coins))
-    books = fetch_hl_books(sorted(needed_coins))
 
-    # Realize prior cycle's P&L by walking books (longs sell bids, shorts buy asks)
-    realized = simulate_exits(prev_positions or [], books)
+    # Fetch L2 books for symbols that are in either prev or target.
+    # If a symbol is unchanged we only need its mid for MtM, not a full book —
+    # but for simplicity we fetch books for all and skip those we don't trade.
+    relevant_syms = set(p.symbol for p in (prev_positions or [])) | set(target_weights)
+    relevant_coins = sorted({_binance_to_hl_coin(s) for s in relevant_syms})
+    log.info("Fetching L2 books for %d coins...", len(relevant_coins))
+    books = fetch_hl_books(relevant_coins)
 
-    # Open new positions by walking books (longs buy asks, shorts sell bids)
-    new_positions = simulate_entries(top, bot, scale_L, scale_S, books,
-                                       str(target_time), n_per_side)
+    # Execute the cycle turnover-aware: only trade deltas between prev and target
+    result = execute_cycle_turnover_aware(
+        prev_positions or [], target_weights, books,
+        now_iso=str(target_time), equity_usd=INITIAL_EQUITY_USD,
+    )
+    new_positions = result["new_positions"]
 
-    # Net P&L: realized spread minus fees (both legs × entry+exit fees).
-    # Slippage is embedded in entry/exit VWAPs already.
-    # Note: this uses CLOSE-ALL + REOPEN-ALL accounting which over-charges
-    # fees on names that carry over between cycles. See `tt_*` fields below
-    # for the turnover-aware (realistic) variant.
-    net_bps = (realized["spread_ret_bps"] - realized["fees_bps"]) if prev_positions else 0.0
+    # Per-cycle PnL accounting
+    gross_pnl_bps = result["gross_pnl_bps"]    # MtM change of prev cycle
+    fees_bps = result["fees_bps"]              # fees on actual delta-trades
+    slippage_bps = result["slippage_bps"]      # weighted slippage on delta-trades
+    net_bps = gross_pnl_bps - fees_bps - slippage_bps
 
-    # New-entry slippage (logged for monitoring; not yet realized into PnL)
-    new_entry_slips = [p.entry_slippage_bps for p in new_positions]
-    new_entry_slip_mean = float(np.mean(new_entry_slips)) if new_entry_slips else 0.0
-
-    # Turnover-aware diagnostic: what would costs be if we only traded the
-    # delta between prev and new portfolios? (Matches backtest accounting.)
-    long_to, short_to = turnover(prev_positions or [], new_positions)
-    tt_fees_bps = HL_TAKER_FEE_BPS * (long_to + short_to)
-    tt_net_bps = (realized["spread_ret_bps"] - tt_fees_bps) if prev_positions else 0.0
-
+    # Cycle log row
     cycle_row = {
         "decision_time_utc": str(target_time),
         "wall_time_utc": datetime.now(timezone.utc).isoformat(),
@@ -712,45 +750,32 @@ def run_one_cycle(*, refresh_data: bool = True, source: str = "auto") -> dict:
         "n_symbols_total": int(len(preds)),
         "long_symbols": ",".join(top["symbol"].tolist()),
         "short_symbols": ",".join(bot["symbol"].tolist()),
-        "scale_L": scale_L, "scale_S": scale_S,
-        # Realized PnL of PRIOR cycle (now from L2 fills):
-        "prior_long_ret_bps": realized["long_ret_bps"],
-        "prior_short_ret_bps": realized["short_ret_bps"],
-        "prior_spread_ret_bps": realized["spread_ret_bps"],
-        "prior_entry_slip_bps_mean": realized["entry_slippage_bps_mean"],
-        "prior_exit_slip_bps_mean": realized["exit_slippage_bps_mean"],
-        "prior_fees_bps": realized["fees_bps"],
-        "prior_n_long": realized["n_long"],
-        "prior_n_short": realized["n_short"],
+        "scale_L": float(scale_L), "scale_S": float(scale_S),
+        # Per-cycle PnL components (turnover-aware):
+        "gross_pnl_bps": gross_pnl_bps,         # MtM change of prev positions over cycle
+        "fees_bps": fees_bps,                   # taker fees on actual delta trades
+        "slippage_bps": slippage_bps,           # weighted L2 slippage on delta trades
         "net_bps": net_bps,
-        # Turnover-aware diagnostic (matches backtest cost accounting):
-        "tt_long_turnover": long_to,
-        "tt_short_turnover": short_to,
-        "tt_fees_bps": tt_fees_bps,
-        "tt_net_bps": tt_net_bps,
-        # New entries — for next cycle's evaluation:
-        "new_entry_slip_bps_mean": new_entry_slip_mean,
-        "new_entry_n_legs": len(new_positions),
+        # Trade activity:
+        "n_trades": result["n_trades"],
+        "n_open_positions": len(new_positions),
+        "trade_notional_usd": sum(abs(t["notional_usd"]) for t in result["trades"]),
+        "had_prev_positions": int(bool(prev_positions)),
     }
 
     save_state(new_positions, cycle_row)
 
     log.info("Cycle complete:")
-    log.info("  long top-%d:  %s", TOP_K, top["symbol"].tolist())
-    log.info("  short bot-%d: %s", TOP_K, bot["symbol"].tolist())
+    log.info("  target portfolio: long=%s, short=%s",
+              top["symbol"].tolist(), bot["symbol"].tolist())
     log.info("  β-neutral scales: L=%.3f, S=%.3f", scale_L, scale_S)
-    log.info("  new entries: n_legs=%d, mean_slippage=%+.2f bps",
-              len(new_positions), new_entry_slip_mean)
+    log.info("  trades: %d (%.0f USD notional total)",
+              result["n_trades"], cycle_row["trade_notional_usd"])
     if prev_positions:
-        log.info("  prior cycle realized: spread_ret=%+.2f bps, "
-                  "entry_slip=%+.2f, exit_slip=%+.2f",
-                  realized["spread_ret_bps"],
-                  realized["entry_slippage_bps_mean"], realized["exit_slippage_bps_mean"])
-        log.info("  cost (close-all+reopen-all): fees=%.2f, net=%+.2f bps",
-                  realized["fees_bps"], net_bps)
-        log.info("  cost (turnover-aware):       fees=%.2f, net=%+.2f bps  "
-                  "(long_to=%.2f, short_to=%.2f)",
-                  tt_fees_bps, tt_net_bps, long_to, short_to)
+        log.info("  PnL (turnover-aware): gross=%+.2f, fees=%.2f, slip=%.2f, net=%+.2f bps",
+                  gross_pnl_bps, fees_bps, slippage_bps, net_bps)
+    else:
+        log.info("  first cycle: opened %d positions; no prior PnL", len(new_positions))
     return cycle_row
 
 

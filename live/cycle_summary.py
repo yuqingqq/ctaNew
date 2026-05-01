@@ -70,8 +70,12 @@ def main():
     df["decision_time_utc"] = pd.to_datetime(df["decision_time_utc"], utc=True)
     df = df.sort_values("decision_time_utc").reset_index(drop=True)
 
-    # First cycle has no realized prior P&L — drop for stats.
-    realized = df[df["prior_n_long"] > 0].copy()
+    # First cycle has no realized prior PnL (no positions to mark before it).
+    if "had_prev_positions" in df.columns:
+        realized = df[df["had_prev_positions"] == 1].copy()
+    else:
+        # Legacy schema (pre Phase 2.1): use prior_n_long as proxy
+        realized = df[df.get("prior_n_long", 0) > 0].copy()
     n = len(realized)
 
     _print_section(f"v6_clean paper-trade forward summary  (N={n} realized cycles)")
@@ -87,40 +91,35 @@ def main():
                   - realized["decision_time_utc"].iloc[0]).total_seconds() / 86400
     print(f"  Span:           {span_days:.1f} days")
 
-    # ----- Per-cycle stats: two cost models -----
-    _print_section("Per-cycle PnL (bps), two cost models")
-    for label, col in [("close-all + reopen-all (conservative)", "net_bps"),
-                        ("turnover-aware (matches backtest)", "tt_net_bps")]:
-        arr = realized[col].dropna().to_numpy()
-        if len(arr) == 0:
-            continue
+    # ----- Per-cycle PnL stats -----
+    _print_section("Per-cycle net PnL (bps, turnover-aware)")
+    arr = realized["net_bps"].dropna().to_numpy()
+    if len(arr):
         mean = arr.mean()
         std = arr.std()
         cum = arr.sum()
         sharpe = _sharpe_yr(arr)
         hit_rate = (arr > 0).mean()
-        print(f"\n  [{label}]")
-        print(f"    mean / cycle:     {mean:+.2f} bps")
-        print(f"    std / cycle:      {std:.2f} bps")
-        print(f"    cumulative:       {cum:+.2f} bps  ({cum / 100:+.2f}%)")
-        print(f"    hit rate:         {100 * hit_rate:.1f}%  ({int((arr > 0).sum())}/{len(arr)})")
-        print(f"    Sharpe (annual):  {sharpe:+.2f}")
+        print(f"  mean / cycle:     {mean:+.2f} bps")
+        print(f"  std / cycle:      {std:.2f} bps")
+        print(f"  cumulative:       {cum:+.2f} bps  ({cum / 100:+.2f}%)")
+        print(f"  hit rate:         {100 * hit_rate:.1f}%  ({int((arr > 0).sum())}/{len(arr)})")
+        print(f"  Sharpe (annual):  {sharpe:+.2f}")
         if len(arr) >= 30:
             s, lo, hi = block_bootstrap_ci(arr, statistic=_sharpe_yr,
                                              block_size=min(7, max(2, len(arr) // 4)))
-            print(f"    Sharpe 95% CI:    [{lo:+.2f}, {hi:+.2f}]  (block-bootstrap)")
+            print(f"  Sharpe 95% CI:    [{lo:+.2f}, {hi:+.2f}]  (block-bootstrap)")
         else:
-            print(f"    Sharpe 95% CI:    (need N>=30 for bootstrap)")
+            print(f"  Sharpe 95% CI:    (need N>=30 for bootstrap)")
 
-    # ----- Spread / slippage / fee decomposition -----
-    _print_section("Cost decomposition (means, bps)")
-    print(f"  spread_ret (gross):        {realized['prior_spread_ret_bps'].mean():+.2f}")
-    print(f"  entry slippage:            {realized['prior_entry_slip_bps_mean'].mean():+.2f}")
-    print(f"  exit slippage:             {realized['prior_exit_slip_bps_mean'].mean():+.2f}")
-    print(f"  fees (close-all):          {realized['prior_fees_bps'].mean():.2f}")
-    print(f"  fees (turnover-aware):     {realized['tt_fees_bps'].mean():.2f}")
-    print(f"  long turnover (mean):      {realized['tt_long_turnover'].mean():.3f}")
-    print(f"  short turnover (mean):     {realized['tt_short_turnover'].mean():.3f}")
+    # ----- Cost decomposition -----
+    _print_section("Per-cycle PnL decomposition (means, bps)")
+    print(f"  gross MtM PnL:             {realized['gross_pnl_bps'].mean():+.2f}")
+    print(f"  fees (taker, delta-only):  {realized['fees_bps'].mean():.2f}")
+    print(f"  slippage (L2-walk):        {realized['slippage_bps'].mean():.2f}")
+    print(f"  net:                       {realized['net_bps'].mean():+.2f}")
+    print(f"  trades / cycle (mean):     {realized['n_trades'].mean():.1f}")
+    print(f"  trade notional / cycle:    ${realized['trade_notional_usd'].mean():,.0f}")
 
     # ----- Rolling Sharpe -----
     _print_section("Rolling Sharpe (turnover-aware net_bps)")
@@ -128,7 +127,7 @@ def main():
         if n < window + 1:
             print(f"  {window}d rolling: need {window + 1}+ cycles, have {n}")
             continue
-        rolled = realized["tt_net_bps"].rolling(window).apply(_sharpe_yr, raw=True)
+        rolled = realized["net_bps"].rolling(window).apply(_sharpe_yr, raw=True)
         latest = rolled.iloc[-1]
         worst = rolled.min()
         best = rolled.max()
@@ -137,8 +136,8 @@ def main():
     # ----- Recent cycles -----
     _print_section(f"Last {min(args.last, n)} cycles")
     cols_show = ["decision_time_utc", "long_symbols", "short_symbols",
-                 "prior_spread_ret_bps", "tt_net_bps", "net_bps",
-                 "tt_long_turnover", "tt_short_turnover"]
+                 "gross_pnl_bps", "fees_bps", "slippage_bps", "net_bps",
+                 "n_trades", "trade_notional_usd"]
     cols_show = [c for c in cols_show if c in realized.columns]
     print(realized[cols_show].tail(args.last).to_string(index=False))
 
@@ -148,20 +147,20 @@ def main():
     print(f"  v6_clean multi-OOS net/cycle (backtest):              +26.7 bps")
     print(f"  v6_clean multi-OOS spread/cycle gross:                +30.7 bps")
     print()
-    fwd_spread = realized["prior_spread_ret_bps"].mean()
-    fwd_tt_net = realized["tt_net_bps"].mean()
-    fwd_tt_sharpe = _sharpe_yr(realized["tt_net_bps"].dropna().to_numpy())
-    print(f"  forward spread/cycle gross:    {fwd_spread:+.2f} bps  "
-           f"(backtest: +30.7, Δ {fwd_spread - 30.7:+.2f})")
-    print(f"  forward net/cycle (TT-aware):  {fwd_tt_net:+.2f} bps  "
-           f"(backtest: +26.7, Δ {fwd_tt_net - 26.7:+.2f})")
-    print(f"  forward Sharpe (TT-aware):     {fwd_tt_sharpe:+.2f}     "
-           f"(backtest: +2.95, Δ {fwd_tt_sharpe - 2.95:+.2f})")
+    fwd_gross = realized["gross_pnl_bps"].mean()
+    fwd_net = realized["net_bps"].mean()
+    fwd_sharpe = _sharpe_yr(realized["net_bps"].dropna().to_numpy())
+    print(f"  forward gross MtM/cycle:       {fwd_gross:+.2f} bps  "
+           f"(backtest gross: +30.7, Δ {fwd_gross - 30.7:+.2f})")
+    print(f"  forward net/cycle:             {fwd_net:+.2f} bps  "
+           f"(backtest net: +26.7, Δ {fwd_net - 26.7:+.2f})")
+    print(f"  forward Sharpe:                {fwd_sharpe:+.2f}     "
+           f"(backtest: +2.95, Δ {fwd_sharpe - 2.95:+.2f})")
 
     if n >= 30:
-        if abs(fwd_tt_sharpe - 2.95) < 1.5:
+        if abs(fwd_sharpe - 2.95) < 1.5:
             print(f"\n  ✓ Forward Sharpe is consistent with backtest expectation.")
-        elif fwd_tt_sharpe > 2.95 - 3.0:
+        elif fwd_sharpe > 2.95 - 3.0:
             print(f"\n  ~ Forward Sharpe within wide CI of backtest. Keep running.")
         else:
             print(f"\n  ⚠️  Forward Sharpe materially below backtest. Investigate.")
