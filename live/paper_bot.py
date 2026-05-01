@@ -73,7 +73,8 @@ HORIZON_BARS = 288                          # 1d at 5min cadence
 LOOKBACK_DAYS = 14                          # bars to keep per symbol for features
 TOP_K = 5
 TOP_FRAC = 0.20
-HL_TAKER_BPS_PER_LEG = 4.0                  # HL VIP-0 round-trip per leg
+HL_TAKER_FEE_BPS = 4.5                      # HL VIP-0 one-way taker fee
+INITIAL_EQUITY_USD = 10_000.0               # paper portfolio sizing
 BINANCE_FAPI = "https://fapi.binance.com"
 HL_INFO_URL = "https://api.hyperliquid.xyz/info"
 
@@ -256,6 +257,82 @@ def fetch_hl_mids() -> dict[str, float]:
     return {k: float(v) for k, v in payload.items()}
 
 
+def fetch_hl_l2_book(coin: str) -> dict:
+    """Fetch L2 orderbook snapshot for one coin. Returns
+    {"bids": [(px, sz), ...], "asks": [(px, sz), ...], "ts": ms}.
+    Bids are descending, asks ascending — best is index 0 in each."""
+    r = requests.post(HL_INFO_URL, json={"type": "l2Book", "coin": coin}, timeout=10)
+    r.raise_for_status()
+    payload = r.json()
+    levels = payload.get("levels", [[], []])
+    bids = [(float(l["px"]), float(l["sz"])) for l in levels[0]]
+    asks = [(float(l["px"]), float(l["sz"])) for l in levels[1]]
+    return {"bids": bids, "asks": asks, "ts": int(payload.get("time", 0))}
+
+
+def simulate_taker_fill(book: dict, side: str, target_notional_usd: float) -> dict:
+    """Walk one side of the book to fill `target_notional_usd`.
+
+    side: "buy" walks asks (long entry, short exit);
+          "sell" walks bids (short entry, long exit).
+
+    Returns dict with vwap, mid, slippage_bps (signed: +ve = adverse),
+    qty, levels_consumed, fully_filled.
+
+    Slippage convention: positive = paid more than mid (adverse for taker).
+    Fee NOT included here — added separately in cost stack.
+    """
+    levels = book["asks"] if side == "buy" else book["bids"]
+    if not levels or not book["bids"] or not book["asks"]:
+        return {"vwap": float("nan"), "mid": float("nan"),
+                "slippage_bps": float("nan"), "qty": 0.0,
+                "levels_consumed": 0, "fully_filled": False}
+    mid = 0.5 * (book["bids"][0][0] + book["asks"][0][0])
+    consumed_qty = 0.0
+    consumed_notional = 0.0
+    remaining = target_notional_usd
+    levels_consumed = 0
+    for px, sz in levels:
+        level_notional = px * sz
+        if remaining <= level_notional:
+            qty = remaining / px
+            consumed_qty += qty
+            consumed_notional += remaining
+            remaining = 0.0
+            levels_consumed += 1
+            break
+        consumed_qty += sz
+        consumed_notional += level_notional
+        remaining -= level_notional
+        levels_consumed += 1
+    fully_filled = remaining < 1e-6
+    if consumed_qty == 0:
+        return {"vwap": float("nan"), "mid": mid, "slippage_bps": float("nan"),
+                "qty": 0.0, "levels_consumed": 0, "fully_filled": False}
+    vwap = consumed_notional / consumed_qty
+    sign = 1.0 if side == "buy" else -1.0
+    slippage_bps = sign * (vwap - mid) / mid * 1e4
+    return {
+        "vwap": vwap, "mid": mid, "slippage_bps": slippage_bps,
+        "qty": consumed_qty, "levels_consumed": levels_consumed,
+        "fully_filled": fully_filled,
+    }
+
+
+def fetch_hl_books(coins: list[str]) -> dict[str, dict]:
+    """Fetch L2 book for each coin. Sequential (HL info API has no batch).
+    Coins like 'BTC', 'ETH', not 'BTCUSDT'."""
+    out = {}
+    for c in coins:
+        try:
+            out[c] = fetch_hl_l2_book(c)
+            time.sleep(0.05)
+        except Exception as e:
+            log.warning("[%s] L2 fetch failed: %s", c, e)
+            out[c] = None
+    return out
+
+
 # =============================================================================
 # Feature pipeline + prediction
 # =============================================================================
@@ -356,10 +433,13 @@ def predict_for_bar(models, panel: pd.DataFrame, target_time: pd.Timestamp,
 @dataclass
 class LegPosition:
     symbol: str
-    side: str  # "L" (long) or "S" (short)
-    weight: float  # signed: + for long, - for short, sums to ~scale
-    entry_price_hl: float
-    entry_time: str  # iso utc
+    side: str                    # "L" (long) or "S" (short)
+    weight: float                # signed: + for long, - for short, sums to ~scale
+    entry_price_hl: float        # actual fill VWAP from L2 (Phase 2)
+    entry_mid_hl: float          # mid at the moment of entry (for slippage attribution)
+    entry_notional_usd: float    # USD notional executed (for matching exit size)
+    entry_slippage_bps: float    # bps paid to spread+depth at entry (excl. fee)
+    entry_time: str              # iso utc
 
     def to_dict(self):
         return asdict(self)
@@ -388,23 +468,48 @@ def select_portfolio(preds: pd.DataFrame, top_k: int = TOP_K) -> tuple[pd.DataFr
     return top, bot, scale_L, scale_S
 
 
-def positions_to_dict(top: pd.DataFrame, bot: pd.DataFrame, scale_L: float, scale_S: float,
-                      hl_mids: dict, now_iso: str, n_per_side: int) -> list[LegPosition]:
+def simulate_entries(top: pd.DataFrame, bot: pd.DataFrame, scale_L: float, scale_S: float,
+                      books: dict[str, dict], now_iso: str, n_per_side: int,
+                      equity_usd: float = INITIAL_EQUITY_USD) -> list[LegPosition]:
+    """Build new portfolio leg positions, walking each L2 book to compute the
+    actual taker fill VWAP for the target notional. Records slippage bps."""
     out = []
     for _, row in top.iterrows():
         coin = _binance_to_hl_coin(row["symbol"])
+        weight = scale_L / n_per_side
+        target_notional = weight * equity_usd
+        book = books.get(coin)
+        if book is None:
+            log.warning("[L %s] no L2 book — skipping", row["symbol"])
+            continue
+        fill = simulate_taker_fill(book, side="buy", target_notional_usd=target_notional)
+        if not np.isfinite(fill["vwap"]):
+            log.warning("[L %s] taker fill returned NaN — skipping", row["symbol"])
+            continue
         out.append(LegPosition(
-            symbol=row["symbol"], side="L",
-            weight=scale_L / n_per_side,
-            entry_price_hl=float(hl_mids.get(coin, np.nan)),
+            symbol=row["symbol"], side="L", weight=weight,
+            entry_price_hl=fill["vwap"], entry_mid_hl=fill["mid"],
+            entry_notional_usd=target_notional,
+            entry_slippage_bps=fill["slippage_bps"],
             entry_time=now_iso,
         ))
     for _, row in bot.iterrows():
         coin = _binance_to_hl_coin(row["symbol"])
+        weight = scale_S / n_per_side
+        target_notional = weight * equity_usd
+        book = books.get(coin)
+        if book is None:
+            log.warning("[S %s] no L2 book — skipping", row["symbol"])
+            continue
+        fill = simulate_taker_fill(book, side="sell", target_notional_usd=target_notional)
+        if not np.isfinite(fill["vwap"]):
+            log.warning("[S %s] taker fill returned NaN — skipping", row["symbol"])
+            continue
         out.append(LegPosition(
-            symbol=row["symbol"], side="S",
-            weight=-scale_S / n_per_side,
-            entry_price_hl=float(hl_mids.get(coin, np.nan)),
+            symbol=row["symbol"], side="S", weight=-weight,
+            entry_price_hl=fill["vwap"], entry_mid_hl=fill["mid"],
+            entry_notional_usd=target_notional,
+            entry_slippage_bps=fill["slippage_bps"],
             entry_time=now_iso,
         ))
     return out
@@ -427,35 +532,60 @@ def turnover(prev: list[LegPosition], curr: list[LegPosition]) -> tuple[float, f
     return float(long_to), float(short_to)
 
 
-def realize_pnl(prev: list[LegPosition], hl_mids_now: dict) -> dict:
-    """Mark-to-market the prior cycle's positions at current HL mids."""
+def simulate_exits(prev: list[LegPosition], books: dict[str, dict]) -> dict:
+    """Mark-to-market by simulating taker exits: longs sell into bids, shorts
+    buy into asks. Walks the L2 book at the same notional as entry. Returns
+    aggregate stats including realized spread, exit slippage, and total fees."""
     if not prev:
         return {"long_ret_bps": 0.0, "short_ret_bps": 0.0,
-                 "spread_ret_bps": 0.0, "n_long": 0, "n_short": 0}
+                "spread_ret_bps": 0.0,
+                "entry_slippage_bps_mean": 0.0, "exit_slippage_bps_mean": 0.0,
+                "fees_bps": 0.0, "n_long": 0, "n_short": 0,
+                "scale_L_realized": 0.0, "scale_S_realized": 0.0}
     long_rets, short_rets = [], []
     weights_L, weights_S = [], []
+    entry_slips, exit_slips = [], []
+    n_filled_long, n_filled_short = 0, 0
     for p in prev:
         coin = _binance_to_hl_coin(p.symbol)
-        exit_px = float(hl_mids_now.get(coin, np.nan))
-        if not np.isfinite(exit_px) or not np.isfinite(p.entry_price_hl):
+        book = books.get(coin)
+        if book is None or not np.isfinite(p.entry_price_hl):
             continue
-        ret = (exit_px / p.entry_price_hl) - 1.0
+        exit_side = "sell" if p.side == "L" else "buy"
+        fill = simulate_taker_fill(book, side=exit_side,
+                                     target_notional_usd=p.entry_notional_usd)
+        if not np.isfinite(fill["vwap"]):
+            continue
+        exit_px = fill["vwap"]
         if p.side == "L":
+            ret = (exit_px / p.entry_price_hl) - 1.0
             long_rets.append(ret)
             weights_L.append(p.weight)
+            n_filled_long += 1
         else:
+            ret = (p.entry_price_hl / exit_px) - 1.0
             short_rets.append(ret)
-            weights_S.append(-p.weight)  # short weight stored negative
+            weights_S.append(-p.weight)
+            n_filled_short += 1
+        entry_slips.append(p.entry_slippage_bps)
+        exit_slips.append(fill["slippage_bps"])
     long_ret = float(np.mean(long_rets)) if long_rets else 0.0
     short_ret = float(np.mean(short_rets)) if short_rets else 0.0
     scale_L = float(sum(weights_L)) if weights_L else 0.0
     scale_S = float(sum(weights_S)) if weights_S else 0.0
-    spread_ret = scale_L * long_ret - scale_S * short_ret
+    spread_ret = scale_L * long_ret + scale_S * short_ret
+    n_legs = n_filled_long + n_filled_short
+    # 2 fees per leg (entry+exit) charged on the gross spread P&L base.
+    # Slippage is already embedded in entry/exit VWAPs.
+    fees_bps = 2.0 * HL_TAKER_FEE_BPS * (scale_L + scale_S) / 2.0  # per cycle
     return {
         "long_ret_bps": long_ret * 1e4 * scale_L,
         "short_ret_bps": short_ret * 1e4 * scale_S,
         "spread_ret_bps": spread_ret * 1e4,
-        "n_long": len(long_rets), "n_short": len(short_rets),
+        "entry_slippage_bps_mean": float(np.mean(entry_slips)) if entry_slips else 0.0,
+        "exit_slippage_bps_mean": float(np.mean(exit_slips)) if exit_slips else 0.0,
+        "fees_bps": fees_bps,
+        "n_long": n_filled_long, "n_short": n_filled_short,
         "scale_L_realized": scale_L, "scale_S_realized": scale_S,
     }
 
@@ -506,7 +636,11 @@ def run_one_cycle(*, refresh_data: bool = True, source: str = "auto") -> dict:
     else:
         klines_by_sym = {}
         for s in universe:
-            p = KLINES_DIR / f"{s}.parquet"
+            # Respect --source: read source-specific cache file.
+            p = KLINES_DIR / f"{s}_{source}.parquet"
+            if not p.exists():
+                # Legacy fallback (older cache without source suffix)
+                p = KLINES_DIR / f"{s}.parquet"
             if p.exists():
                 klines_by_sym[s] = pd.read_parquet(p)
 
@@ -531,21 +665,45 @@ def run_one_cycle(*, refresh_data: bool = True, source: str = "auto") -> dict:
     n_active = (preds["autocorr_pctile_7d"] >= 1 - REGIME_CUTOFF).sum()
     log.info("regime-active symbols at target_time: %d/%d", n_active, len(preds))
 
-    # Realize previous cycle's P&L (if any) using current HL mids
-    hl_mids = fetch_hl_mids()
-    prev_positions, _ = load_state()
-    realized = realize_pnl(prev_positions or [], hl_mids)
-
-    # Select new portfolio
+    # Decide new portfolio
     top, bot, scale_L, scale_S = select_portfolio(preds, top_k=TOP_K)
     n_per_side = TOP_K
-    new_positions = positions_to_dict(top, bot, scale_L, scale_S,
-                                       hl_mids, str(target_time), n_per_side)
 
-    # Compute turnover from prev → new portfolio
+    # Fetch L2 books for ALL coins we care about: previous cycle's open
+    # positions (to simulate exits) + new cycle's selections (to simulate
+    # entries). Single batch keeps timestamps tight.
+    prev_positions, _ = load_state()
+    needed_coins = set()
+    if prev_positions:
+        needed_coins.update(_binance_to_hl_coin(p.symbol) for p in prev_positions)
+    needed_coins.update(_binance_to_hl_coin(s) for s in top["symbol"])
+    needed_coins.update(_binance_to_hl_coin(s) for s in bot["symbol"])
+    log.info("Fetching L2 books for %d coins...", len(needed_coins))
+    books = fetch_hl_books(sorted(needed_coins))
+
+    # Realize prior cycle's P&L by walking books (longs sell bids, shorts buy asks)
+    realized = simulate_exits(prev_positions or [], books)
+
+    # Open new positions by walking books (longs buy asks, shorts sell bids)
+    new_positions = simulate_entries(top, bot, scale_L, scale_S, books,
+                                       str(target_time), n_per_side)
+
+    # Net P&L: realized spread minus fees (both legs × entry+exit fees).
+    # Slippage is embedded in entry/exit VWAPs already.
+    # Note: this uses CLOSE-ALL + REOPEN-ALL accounting which over-charges
+    # fees on names that carry over between cycles. See `tt_*` fields below
+    # for the turnover-aware (realistic) variant.
+    net_bps = (realized["spread_ret_bps"] - realized["fees_bps"]) if prev_positions else 0.0
+
+    # New-entry slippage (logged for monitoring; not yet realized into PnL)
+    new_entry_slips = [p.entry_slippage_bps for p in new_positions]
+    new_entry_slip_mean = float(np.mean(new_entry_slips)) if new_entry_slips else 0.0
+
+    # Turnover-aware diagnostic: what would costs be if we only traded the
+    # delta between prev and new portfolios? (Matches backtest accounting.)
     long_to, short_to = turnover(prev_positions or [], new_positions)
-    cost_bps = HL_TAKER_BPS_PER_LEG * (long_to + short_to)
-    net_bps = realized["spread_ret_bps"] - cost_bps if prev_positions else 0.0
+    tt_fees_bps = HL_TAKER_FEE_BPS * (long_to + short_to)
+    tt_net_bps = (realized["spread_ret_bps"] - tt_fees_bps) if prev_positions else 0.0
 
     cycle_row = {
         "decision_time_utc": str(target_time),
@@ -555,14 +713,24 @@ def run_one_cycle(*, refresh_data: bool = True, source: str = "auto") -> dict:
         "long_symbols": ",".join(top["symbol"].tolist()),
         "short_symbols": ",".join(bot["symbol"].tolist()),
         "scale_L": scale_L, "scale_S": scale_S,
-        "long_to": long_to, "short_to": short_to,
-        "cost_bps": cost_bps,
-        # Realized PnL of PRIOR cycle:
+        # Realized PnL of PRIOR cycle (now from L2 fills):
         "prior_long_ret_bps": realized["long_ret_bps"],
         "prior_short_ret_bps": realized["short_ret_bps"],
         "prior_spread_ret_bps": realized["spread_ret_bps"],
-        "prior_n_long": realized["n_long"], "prior_n_short": realized["n_short"],
+        "prior_entry_slip_bps_mean": realized["entry_slippage_bps_mean"],
+        "prior_exit_slip_bps_mean": realized["exit_slippage_bps_mean"],
+        "prior_fees_bps": realized["fees_bps"],
+        "prior_n_long": realized["n_long"],
+        "prior_n_short": realized["n_short"],
         "net_bps": net_bps,
+        # Turnover-aware diagnostic (matches backtest cost accounting):
+        "tt_long_turnover": long_to,
+        "tt_short_turnover": short_to,
+        "tt_fees_bps": tt_fees_bps,
+        "tt_net_bps": tt_net_bps,
+        # New entries — for next cycle's evaluation:
+        "new_entry_slip_bps_mean": new_entry_slip_mean,
+        "new_entry_n_legs": len(new_positions),
     }
 
     save_state(new_positions, cycle_row)
@@ -571,10 +739,18 @@ def run_one_cycle(*, refresh_data: bool = True, source: str = "auto") -> dict:
     log.info("  long top-%d:  %s", TOP_K, top["symbol"].tolist())
     log.info("  short bot-%d: %s", TOP_K, bot["symbol"].tolist())
     log.info("  β-neutral scales: L=%.3f, S=%.3f", scale_L, scale_S)
-    log.info("  turnover: long=%.3f, short=%.3f, cost=%.2f bps", long_to, short_to, cost_bps)
+    log.info("  new entries: n_legs=%d, mean_slippage=%+.2f bps",
+              len(new_positions), new_entry_slip_mean)
     if prev_positions:
-        log.info("  prior cycle realized: spread_ret=%+.2f bps, net=%+.2f bps",
-                  realized["spread_ret_bps"], net_bps)
+        log.info("  prior cycle realized: spread_ret=%+.2f bps, "
+                  "entry_slip=%+.2f, exit_slip=%+.2f",
+                  realized["spread_ret_bps"],
+                  realized["entry_slippage_bps_mean"], realized["exit_slippage_bps_mean"])
+        log.info("  cost (close-all+reopen-all): fees=%.2f, net=%+.2f bps",
+                  realized["fees_bps"], net_bps)
+        log.info("  cost (turnover-aware):       fees=%.2f, net=%+.2f bps  "
+                  "(long_to=%.2f, short_to=%.2f)",
+                  tt_fees_bps, tt_net_bps, long_to, short_to)
     return cycle_row
 
 

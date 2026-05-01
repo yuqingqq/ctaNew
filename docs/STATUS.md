@@ -70,6 +70,24 @@ cross-sectional ranking across 25 symbols) is fully characterized:
     units (much smaller than Binance quote-volume).
   - **Recommended for forward test: `python -m live.paper_bot --source hl`**
     on a 5min cadence cron.
+- **Phase 2 (May 1): L2 orderbook + realistic taker fill simulation.**
+  - paper_bot now fetches HL `info l2Book` snapshots for each leg at
+    entry and exit, walks the book to compute volume-weighted average
+    fill price for the target notional, and records per-leg slippage
+    in bps (signed: positive = adverse).
+  - HL VIP-0 taker fee 4.5 bps per side embedded in cost stack.
+  - Cycle log records BOTH cost models:
+    - `net_bps`: close-all + reopen-all (conservative, over-charges
+       names that carry over between cycles).
+    - `tt_net_bps`: turnover-aware (matches the canonical backtest;
+       only charges the delta between prev and new portfolios).
+  - First-cycle smoke test (10 legs, $10K equity, $1K-2K per name):
+    mean entry slippage **+2.1 bps** per leg (~1 bps half-spread + ~1 bps
+    depth impact on liquid HL books). Exit slippage similar.
+  - L2 maker fill simulation (queue-position tracking) is NOT yet
+    implemented — paper trades all execute at taker. For realistic
+    maker P&L, place actual passive limit orders on a small live HL
+    account via executeEngine HL branch.
 - Phase 3 (aggTrades microstructure features): pulled 10 symbols × 402 days,
   audited 19 features. Only `avg_trade_size` passed gates (OOS |IC| 0.035,
   weak). True microstructure (TFI/VPIN/Kyle's λ) doesn't carry signal at
