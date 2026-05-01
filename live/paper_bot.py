@@ -49,6 +49,7 @@ import requests
 from data_collectors.binance_vision_loader import (
     LoaderConfig as VisionLoaderConfig, fetch_klines as fetch_vision_klines,
 )
+from data_collectors.hl_data_fetcher import HyperliquidDataFetcher
 from features_ml.cross_sectional import (
     XS_FEATURE_COLS_V6_CLEAN, XS_RANK_SOURCES,
     add_basket_features, add_engineered_flow_features, add_xs_rank_features,
@@ -159,12 +160,50 @@ def fetch_vision_klines_for_symbol(symbol: str, days: int) -> pd.DataFrame:
     return df[keep]
 
 
+def fetch_hl_klines_5m(symbol: str, days: int = LOOKBACK_DAYS) -> pd.DataFrame:
+    """Pull last `days` of 5min HL klines via info.candleSnapshot API.
+
+    HL only retains ~15 days at 5min resolution (180d at 1h). For h=288
+    daily-rebalance with 7-day rolling features, 14d lookback is sufficient
+    once the bot has been running long enough to accumulate a continuous cache.
+
+    Note: HL volume is in COIN units (not quote currency) and is much smaller
+    in magnitude than Binance. The model's `volume_ma_50` feature is scale-
+    dependent; predictions may shift slightly vs. Binance-data inference.
+    Validate via live/paper_bot --source hl + --source vision side-by-side.
+    """
+    fetcher = HyperliquidDataFetcher()
+    end = datetime.now(timezone.utc)
+    start = end - timedelta(days=days)
+    df = fetcher.fetch_range(symbol=symbol, interval="5m",
+                              start_time=start, end_time=end)
+    if df.empty:
+        return df
+    if "timestamp" in df.columns:
+        df = df.set_index("timestamp")
+    elif "open_time" in df.columns:
+        df = df.set_index("open_time")
+    df = df.sort_index()
+    if df.index.tz is None:
+        df.index = df.index.tz_localize("UTC")
+    df.index.name = None  # normalize: build_panel_for_inference assumes unnamed index
+    keep = [c for c in ("open", "high", "low", "close", "volume") if c in df.columns]
+    return df[keep].astype(float)
+
+
 def refresh_klines_cache(universe: list[str], days: int = LOOKBACK_DAYS,
                           source: str = "auto") -> dict:
-    """Fetch fresh Binance klines for all symbols, write to local cache.
+    """Fetch fresh klines for all symbols, write to local cache.
 
-    source: "fapi" (real-time, may be geo-blocked), "vision" (1-day lag,
-    always works), or "auto" (try fapi, fall back to vision per-symbol).
+    source:
+      "fapi"   real-time Binance USDM (may be geo-blocked → HTTP 451)
+      "vision" Binance daily archives (1-day lag, always works)
+      "hl"     real-time Hyperliquid (15d max history at 5min)
+      "auto"   try fapi → vision; on first symbol that succeeds, lock in
+               that source for the rest of the cycle
+
+    Cache is keyed by source (separate parquets per source) so switching
+    doesn't cross-contaminate.
 
     Returns dict {symbol: DataFrame indexed by open_time}.
     """
@@ -174,24 +213,29 @@ def refresh_klines_cache(universe: list[str], days: int = LOOKBACK_DAYS,
     for i, s in enumerate(universe):
         log.info("[%d/%d] refreshing %s klines (source=%s)", i + 1, len(universe), s, source)
         df = pd.DataFrame()
-        if source in ("fapi", "auto") and not fapi_blocked:
+        if source == "hl":
             try:
-                df = fetch_binance_klines(s, days=days)
+                df = fetch_hl_klines_5m(s, days=days)
             except Exception as e:
-                log.warning("[%s] fapi failed: %s — falling back to Vision", s, e)
-        if df.empty and source in ("vision", "auto"):
-            try:
-                df = fetch_vision_klines_for_symbol(s, days=days)
-                if source == "auto" and not df.empty:
-                    fapi_blocked = True  # use vision for the rest of the cycle
-                    log.info("[%s] vision OK — using vision for remaining symbols", s)
-            except Exception as e:
-                log.error("[%s] vision fetch failed: %s", s, e)
+                log.error("[%s] hl fetch failed: %s", s, e)
+        else:
+            if source in ("fapi", "auto") and not fapi_blocked:
+                try:
+                    df = fetch_binance_klines(s, days=days)
+                except Exception as e:
+                    log.warning("[%s] fapi failed: %s — falling back to Vision", s, e)
+            if df.empty and source in ("vision", "auto"):
+                try:
+                    df = fetch_vision_klines_for_symbol(s, days=days)
+                    if source == "auto" and not df.empty:
+                        fapi_blocked = True
+                        log.info("[%s] vision OK — using vision for remaining symbols", s)
+                except Exception as e:
+                    log.error("[%s] vision fetch failed: %s", s, e)
         if df.empty:
-            log.warning("[%s] empty kline response from all sources", s)
+            log.warning("[%s] empty kline response from source=%s", s, source)
             continue
-        # Merge with any cached bars to keep continuity
-        cache_path = KLINES_DIR / f"{s}.parquet"
+        cache_path = KLINES_DIR / f"{s}_{source}.parquet"
         if cache_path.exists():
             old = pd.read_parquet(cache_path)
             if old.index.tz is None:
@@ -200,7 +244,7 @@ def refresh_klines_cache(universe: list[str], days: int = LOOKBACK_DAYS,
             df = df.sort_index().tail(days * 288 + 100)
         df.to_parquet(cache_path, compression="zstd")
         out[s] = df
-        time.sleep(0.05)  # be polite to whichever source
+        time.sleep(0.05)
     return out
 
 
@@ -540,9 +584,11 @@ def cli():
                     help="print current open positions and recent cycles, exit")
     ap.add_argument("--no-refresh", action="store_true",
                     help="skip Binance kline REST refresh, use cached state")
-    ap.add_argument("--source", choices=("auto", "fapi", "vision"), default="auto",
-                    help="kline source: auto (default), fapi (real-time, may be "
-                         "geo-blocked), vision (1-day lag, always works)")
+    ap.add_argument("--source", choices=("auto", "fapi", "vision", "hl"), default="auto",
+                    help="kline source: auto (default Binance fapi→vision), fapi "
+                         "(Binance real-time, may be geo-blocked), vision (Binance "
+                         "1-day lag, always works), hl (Hyperliquid real-time, 15d "
+                         "history)")
     ap.add_argument("--replay", type=int, default=0,
                     help="(reserved for live/replay_paper_bot.py)")
     args = ap.parse_args()

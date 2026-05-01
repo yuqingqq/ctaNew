@@ -59,6 +59,17 @@ cross-sectional ranking across 25 symbols) is fully characterized:
     server; bot auto-falls back to Binance Vision daily archive
     (`--source vision`, 1-day lag). On a non-blocked VPS, `--source
     fapi` gives real-time data.
+- **Phase 1.5 (May 1): HL data feed for forward test.**
+  - Added `--source hl` to paper_bot.py — pulls 5min klines from
+    Hyperliquid info API (15-day max retention, real-time, no
+    geo-block).
+  - Validated against Binance Vision side-by-side at aligned
+    target_time: Spearman rank correlation +0.95, long top-5 overlap
+    4/5, short bot-5 overlap 4/5. HL and Binance feeds produce
+    near-identical portfolio choices despite HL volume being in coin
+    units (much smaller than Binance quote-volume).
+  - **Recommended for forward test: `python -m live.paper_bot --source hl`**
+    on a 5min cadence cron.
 - Phase 3 (aggTrades microstructure features): pulled 10 symbols × 402 days,
   audited 19 features. Only `avg_trade_size` passed gates (OOS |IC| 0.035,
   weak). True microstructure (TFI/VPIN/Kyle's λ) doesn't carry signal at
