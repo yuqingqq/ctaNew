@@ -74,6 +74,10 @@ by +1 bar. Anything >+0.10 IC is suspicious and probably has hidden look-ahead.
 - `features_ml/`, `ml/`, `data_collectors/`, `scripts/`, `docs/`
 - `hf_features.py` (legacy but in-repo)
 - `orchestrator/PROGRAMS/P-2026-001-ml-cta-engine/` (research record)
+- `live/` (paper-trading harness, added 2026-05-01) — multi-symbol
+  orchestrator, basis-risk diagnostics, Binance-train / Hyperliquid-execute
+  pipeline. Not production-grade; this is the forward-test layer that
+  validates v6_clean predictions transport from backtest data to real-time.
 
 **Out of scope** (don't add):
 - Live trading code, exchange adapters, execution servers

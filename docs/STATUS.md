@@ -34,6 +34,14 @@ cross-sectional ranking across 25 symbols) is fully characterized:
   multi-OOS Sharpe to +2.95 [+0.85, +4.54] at K=5+VIP-3+maker — CI no longer
   crosses zero. Mean rank IC +0.0606 (vs +0.045 v6). All 9 folds positive IC.
   Even at VIP-0 retail: Sharpe +1.62, net +14.7 bps/cycle.**
+- **Phase 0 paper-trade prep (May 1):**
+  - 0a: All 25 v6_clean symbols available on Hyperliquid via info.meta() ✓
+  - 0b: Binance↔HL basis at 1h resolution, full 90-cycle holdout — gross
+    Sharpe drop −0.13 (Binance +5.08 → HL +4.95, CI overlap is total).
+    Per-symbol return correlations all ≥0.98. Basis is statistically zero
+    at portfolio level. ✓
+  - Decision: Binance-trained predictions transport to HL execution.
+    Proceed to Phase 1 (multi-symbol paper-trade orchestrator).
 - Phase 3 (aggTrades microstructure features): pulled 10 symbols × 402 days,
   audited 19 features. Only `avg_trade_size` passed gates (OOS |IC| 0.035,
   weak). True microstructure (TFI/VPIN/Kyle's λ) doesn't carry signal at
