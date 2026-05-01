@@ -88,8 +88,23 @@ cross-sectional ranking across 25 symbols) is fully characterized:
     implemented — paper trades all execute at taker. For realistic
     maker P&L, place actual passive limit orders on a small live HL
     account via executeEngine HL branch.
-  - **To deploy: see `docs/PAPER_TRADE_RUNBOOK.md`** — daily cron at
-    00:01 UTC + weekly retrain, monitor via `python -m live.cycle_summary`.
+- **Phase 2.1 (May 1): turnover-aware execution.** Replaced close-all +
+  reopen-all with per-symbol delta trading. When target == prev (no
+  rebalance needed), 0 trades, 0 fees, 0 slippage — PnL is pure mid-to-mid
+  MtM. Also fixed a 2× fee bug in the prior accounting.
+- **Phase 2.2 (May 1): hourly funding accrual.** Each cycle fetches
+  HL `info.fundingHistory` for held symbols over the prev → now window,
+  accrues per-position payments (long pays positive rate, short receives),
+  subtracts from net PnL. Standalone test: $0.94 funding cost over 24h on
+  $10K equity ≈ 0.94 bps/day cost in current market state.
+- **Phase 2.3 (May 1): hourly monitor + Telegram.** New
+  `live/hourly_monitor.py` script: marks open positions to current HL mids,
+  fetches funding since last tick, appends to `live/state/hourly_pnl.csv`,
+  sends Telegram with per-leg breakdown. `paper_bot` also sends a daily
+  decision summary at end of cycle. Telegram opt-in via env vars
+  (`TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`); silent fallback otherwise.
+- **To deploy: see `docs/PAPER_TRADE_RUNBOOK.md`** — daily cron at
+  00:01 UTC + hourly monitor at :05, monitor via `python -m live.cycle_summary`.
 - Phase 3 (aggTrades microstructure features): pulled 10 symbols × 402 days,
   audited 19 features. Only `avg_trade_size` passed gates (OOS |IC| 0.035,
   weak). True microstructure (TFI/VPIN/Kyle's λ) doesn't carry signal at

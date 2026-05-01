@@ -30,23 +30,43 @@ python -m live.paper_bot --check-state
 # Should show 10 open positions
 ```
 
-## Daily cron
+## Daily cron + hourly monitor
 
-The bot rebalances on h=288 5-min bars = 1 day. Pick a fixed UTC time and
-run the bot then. Recommended: **00:01 UTC** (just after the 23:55 bar
-closes; HL data is real-time so it's available immediately).
+The bot rebalances daily (h=288 = 1d). The hourly monitor marks open
+positions to current HL mids + funding accrual + sends Telegram.
 
 Edit your crontab (`crontab -e`):
 
 ```cron
-# v6_clean paper trade — daily decision at 00:01 UTC
+# Daily decision at 00:01 UTC
 1 0 * * * cd /path/to/ctaNew && /usr/bin/python3 -m live.paper_bot --source hl >> live/state/run.log 2>&1
+
+# Hourly portfolio snapshot + Telegram (every hour at minute :05)
+5 * * * * cd /path/to/ctaNew && /usr/bin/python3 -m live.hourly_monitor >> live/state/hourly.log 2>&1
 
 # Re-train model artifact weekly (Mondays 00:30 UTC)
 30 0 * * 1 cd /path/to/ctaNew && /usr/bin/python3 -m live.train_v6_clean_artifact >> live/state/train.log 2>&1
 ```
 
 Adjust `/usr/bin/python3` to your Python path (`which python3` to check).
+
+### Telegram notifications (optional)
+
+Set these env vars (e.g., in `~/.bashrc` or systemd service file) to enable:
+
+```bash
+export TELEGRAM_BOT_TOKEN="123456:ABC..."   # from @BotFather
+export TELEGRAM_CHAT_ID="-100..."            # your chat or channel
+```
+
+You'll get:
+- **Daily** decision summary (after `paper_bot` runs): cycle PnL breakdown
+  (gross / fees / slippage / funding / net), new target portfolio, trade
+  count + notional.
+- **Hourly** portfolio snapshot (after `hourly_monitor` runs): hourly +
+  cumulative MtM PnL, hourly funding cost, per-leg cumulative %, etc.
+
+Without these env vars, the bot logs locally and skips Telegram silently.
 
 ## Daily monitoring
 
