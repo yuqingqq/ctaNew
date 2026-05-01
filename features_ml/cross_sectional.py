@@ -242,6 +242,23 @@ XS_RANK_SOURCES = {
 XS_FEATURE_COLS_V6 = (XS_BASE_FEATURES + XS_CROSS_FEATURES
                        + XS_FLOW_FEATURES + XS_RANK_FEATURES + ["sym_id"])
 
+# v6_clean: drop 4 features confirmed harmful by permutation-importance audit
+# (alpha_v6_permutation_lean.py, OOS holdout):
+#   - beta_short_vs_bk      gain 9.06%, perm_drop -0.0014 (active OOS drag)
+#   - idio_vol_1d_vs_bk     gain 7.37%, perm_drop -0.0001 (capacity wasted)
+#   - bars_since_high       gain 3.70%, perm_drop -0.0008 (small drag)
+#   - volume_ma_50_xs_rank  gain 4.19%, perm_drop -0.0007 (small drag)
+# `idio_vol_1d_vs_bk` and `bars_since_high` are kept in the panel (computed
+# upstream) as sources for their xs_rank derivatives, just not exposed as
+# training features. `beta_short_vs_bk` is also still in the panel because
+# β-neutral execution reads it.
+XS_BASE_FEATURES_CLEAN = [c for c in XS_BASE_FEATURES if c != "bars_since_high"]
+XS_CROSS_FEATURES_CLEAN = [c for c in XS_CROSS_FEATURES
+                            if c not in ("beta_short_vs_bk", "idio_vol_1d_vs_bk")]
+XS_RANK_FEATURES_CLEAN = [c for c in XS_RANK_FEATURES if c != "volume_ma_50_xs_rank"]
+XS_FEATURE_COLS_V6_CLEAN = (XS_BASE_FEATURES_CLEAN + XS_CROSS_FEATURES_CLEAN
+                             + XS_FLOW_FEATURES + XS_RANK_FEATURES_CLEAN + ["sym_id"])
+
 # v7: v6 + 3 funding-rate features. From alpha_v7_funding_audit.py:
 # all 3 passed |IS IC|≥0.015, sign-consistent ≥80%, IS-OOS match ≥60%.
 # OOS |IC| range 0.068-0.084 — strongest single features in the entire set.

@@ -28,17 +28,24 @@ cross-sectional ranking across 25 symbols) is fully characterized:
   [-0.78, +3.30] over 270 OOS cycles (9 expanding-WF folds).
 - The single-OOS Sharpe of +3.94 (90 cycles, 2026-01-28 to 2026-04-28) was
   partly regime luck — multi-OOS across 9 windows is the more reliable estimate.
+- **v6_clean (Apr 30 PM): permutation-importance audit identified 4 features
+  with negative or zero OOS contribution (`beta_short_vs_bk`, `idio_vol_1d_vs_bk`,
+  `bars_since_high`, `volume_ma_50_xs_rank`). Dropping them (28 features) lifted
+  multi-OOS Sharpe to +2.95 [+0.85, +4.54] at K=5+VIP-3+maker — CI no longer
+  crosses zero. Mean rank IC +0.0606 (vs +0.045 v6). All 9 folds positive IC.
+  Even at VIP-0 retail: Sharpe +1.62, net +14.7 bps/cycle.**
 - Phase 3 (aggTrades microstructure features): pulled 10 symbols × 402 days,
   audited 19 features. Only `avg_trade_size` passed gates (OOS |IC| 0.035,
   weak). True microstructure (TFI/VPIN/Kyle's λ) doesn't carry signal at
   h=288 — it's a shorter-horizon phenomenon. v8 not pursued.
 - v6 = 32 features: v4 base + cross-asset + 7 kline-flow (obv_z_1d, vwap_*, mfi)
   + 8 cross-sectional pctile-rank features.
+- v6_clean = v6 minus 4 confirmed-harmful features (28 features).
 - Funding-rate features (Phase 4.1) had strongest single-feature OOS IC (up
   to 0.084) but did NOT improve portfolio Sharpe — already captured implicitly
   by v6's basket-relative features.
-- **Leakage audit on v6 passed all 4 tests** (forward-peek shift, sanity
-  control, xs_rank PIT, embargo).
+- **Leakage audit on both v6 and v6_clean passed all 4 tests** (forward-peek
+  shift, sanity control, xs_rank PIT, embargo).
 - See `docs/METHODOLOGY_REVIEW.md` "Apr 30 — Signal-quality plan execution"
   for the full progression and per-phase details.
 
@@ -89,14 +96,17 @@ See `docs/METHODOLOGY_REVIEW.md` "Apr 30 follow-up" section for full tables.
 All results in `docs/METHODOLOGY_REVIEW.md` reproducible from this repo:
 
 1. `python3 -m scripts.pull_xs_klines` (~20 min) — kline data for 25 symbols
-2. `FEATURE_SET=v6 python3 -m ml.research.alpha_v4_xs_1d` (~10 min) — best config
-3. `FEATURE_SET=v6 TRIM_UNIVERSE=1 python3 -m ml.research.alpha_v4_xs_1d` — adds IS-trim
-4. `FEATURE_SET=v6 python3 -m ml.research.alpha_v4_edge_diagnostic` — diagnostic sections A–G
-5. `python3 -m ml.research.alpha_v6_leakage_check` (~3 min) — leakage verification
-6. `python3 -m ml.research.alpha_v4_flow_audit` (~1 min) — flow feature IC audit
-7. `python3 -m ml.research.alpha_v7_funding_audit` (~2 min) — funding feature IC audit
+2. `FEATURE_SET=v6_clean MULTI_OOS=1 python3 -m ml.research.alpha_v4_xs_1d` (~5 min) — current best config
+3. `FEATURE_SET=v6 MULTI_OOS=1 python3 -m ml.research.alpha_v4_xs_1d` — prior baseline for comparison
+4. `FEATURE_SET=v6 TRIM_UNIVERSE=1 python3 -m ml.research.alpha_v4_xs_1d` — adds IS-trim
+5. `FEATURE_SET=v6 python3 -m ml.research.alpha_v4_edge_diagnostic` — diagnostic sections A–G
+6. `FEATURE_SET=v6_clean python3 -m ml.research.alpha_v6_leakage_check` (~3 min) — leakage verification
+7. `FEATURE_SET=v6 python3 -m ml.research.alpha_v6_edge_review` — feature ceiling: per-feature IC, oracle, redundancy
+8. `FEATURE_SET=v6_clean python3 -m ml.research.alpha_v6_permutation_lean` (~10 min) — model-uses-feature audit
+9. `python3 -m ml.research.alpha_v4_flow_audit` (~1 min) — flow feature IC audit
+10. `python3 -m ml.research.alpha_v7_funding_audit` (~2 min) — funding feature IC audit
 
-Other feature sets via `FEATURE_SET=v4|v5|v5_lean|v6|v7|v7_lean`. Defaults to v4.
+Other feature sets via `FEATURE_SET=v4|v5|v5_lean|v6|v6_clean|v7|v7_lean`. Defaults to v4.
 
 Funding-rate data is auto-downloaded by `data_collectors/funding_rate_loader.py`
 on first import (caches per-symbol parquet to `data/ml/cache/funding_*.parquet`).

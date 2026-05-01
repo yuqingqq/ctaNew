@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import gc
 import logging
+import os
 import warnings
 from pathlib import Path
 
@@ -23,7 +24,7 @@ import pandas as pd
 
 from features_ml.cross_sectional import (
     XS_BASE_FEATURES, XS_CROSS_FEATURES, XS_FLOW_FEATURES, XS_RANK_FEATURES,
-    XS_RANK_SOURCES,
+    XS_FEATURE_COLS_V6_CLEAN, XS_RANK_SOURCES,
     add_basket_features, add_engineered_flow_features, add_xs_rank_features,
     build_basket, build_kline_features, list_universe, make_xs_alpha_labels,
 )
@@ -33,7 +34,13 @@ warnings.filterwarnings("ignore")
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 log = logging.getLogger(__name__)
 
-V6_FEATURES = (XS_BASE_FEATURES + XS_CROSS_FEATURES + XS_FLOW_FEATURES + XS_RANK_FEATURES)
+# FEATURE_SET=v6 (default) or v6_clean — chooses which feature list to audit.
+FEATURE_SET = os.environ.get("FEATURE_SET", "v6").lower()
+if FEATURE_SET == "v6_clean":
+    V6_FEATURES = [c for c in XS_FEATURE_COLS_V6_CLEAN if c != "sym_id"]
+else:
+    V6_FEATURES = (XS_BASE_FEATURES + XS_CROSS_FEATURES + XS_FLOW_FEATURES + XS_RANK_FEATURES)
+log.info("Auditing %d features (FEATURE_SET=%s)", len(V6_FEATURES), FEATURE_SET)
 
 
 def _spearman(x, y):

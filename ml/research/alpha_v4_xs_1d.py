@@ -34,7 +34,8 @@ import os
 
 from features_ml.cross_sectional import (
     XS_FEATURE_COLS, XS_FEATURE_COLS_V5, XS_FEATURE_COLS_V5_LEAN,
-    XS_FEATURE_COLS_V6, XS_FEATURE_COLS_V7, XS_FEATURE_COLS_V7_LEAN,
+    XS_FEATURE_COLS_V6, XS_FEATURE_COLS_V6_CLEAN,
+    XS_FEATURE_COLS_V7, XS_FEATURE_COLS_V7_LEAN,
     XS_RANK_SOURCES, add_xs_rank_features,
     assemble_universe, list_universe, make_xs_alpha_labels,
 )
@@ -53,6 +54,8 @@ elif FEATURE_SET == "v5_lean":
     ACTIVE_FEATURE_COLS = XS_FEATURE_COLS_V5_LEAN
 elif FEATURE_SET == "v6":
     ACTIVE_FEATURE_COLS = XS_FEATURE_COLS_V6
+elif FEATURE_SET == "v6_clean":
+    ACTIVE_FEATURE_COLS = XS_FEATURE_COLS_V6_CLEAN
 elif FEATURE_SET == "v7":
     ACTIVE_FEATURE_COLS = XS_FEATURE_COLS_V7
 elif FEATURE_SET == "v7_lean":
