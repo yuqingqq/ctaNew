@@ -114,12 +114,24 @@ def main():
 
     # ----- Cost decomposition -----
     _print_section("Per-cycle PnL decomposition (means, bps)")
+    fund_col = realized.get("funding_bps", pd.Series([0.0] * len(realized)))
+    fund_usd_col = realized.get("funding_usd", pd.Series([0.0] * len(realized)))
     print(f"  gross MtM PnL:             {realized['gross_pnl_bps'].mean():+.2f}")
     print(f"  fees (taker, delta-only):  {realized['fees_bps'].mean():.2f}")
     print(f"  slippage (L2-walk):        {realized['slippage_bps'].mean():.2f}")
+    print(f"  funding (HL hourly):       {fund_col.mean():+.2f}     "
+           f"(${fund_usd_col.mean():+.2f}/cycle in USD)")
     print(f"  net:                       {realized['net_bps'].mean():+.2f}")
     print(f"  trades / cycle (mean):     {realized['n_trades'].mean():.1f}")
     print(f"  trade notional / cycle:    ${realized['trade_notional_usd'].mean():,.0f}")
+    # Funding is often the biggest persistent drag; flag if it's a meaningful
+    # share of gross.
+    gross_mean = realized["gross_pnl_bps"].mean()
+    fund_mean = fund_col.mean()
+    if abs(gross_mean) > 0.01:
+        share = 100 * fund_mean / abs(gross_mean)
+        if abs(share) > 20:
+            print(f"  ⚠️ funding is {share:+.0f}% of |gross PnL| — meaningful drag")
 
     # ----- Rolling Sharpe -----
     _print_section("Rolling Sharpe (turnover-aware net_bps)")
