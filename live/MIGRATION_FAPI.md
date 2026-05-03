@@ -79,32 +79,27 @@ chmod +x /home/yuqing/ctaNew/live/run_with_env.sh
 
 ---
 
-## Get the model artifact (pick ONE of the two paths)
+## Get the model artifact (already in the repo — `git pull` is enough)
 
-### Path A — Copy the pre-trained artifact from the dev server (recommended, ~1 min)
-
-You already have a verified `v6_clean_h48_*` artifact (sanity IC +0.0688
-matches multi-OOS expectation). Skip the bulk data pull and retrain
-this way:
+The h=48 K=7 ORIG25 artifact is committed to the repo:
 
 ```bash
-# From the dev server, push the artifact to the new server:
-scp -r /home/yuqing/ctaNew/models/v6_clean_h48_* \
-  newserver:/home/yuqing/ctaNew/models/
-
-# Verify on the new server:
 ls -la /home/yuqing/ctaNew/models/v6_clean_h48_*
-# Expect: v6_clean_h48_ensemble.pkl (~65 KB) + v6_clean_h48_meta.json
+# Expect:
+#   v6_clean_h48_ensemble.pkl (~65 KB)
+#   v6_clean_h48_meta.json    (~2 KB)
 ```
 
-The artifact's training data ends 2026-04-08. Slightly stale, but the
-weekly Monday cron will refresh it on the new server's data. Good for
-first cycle.
+If those files are missing, your `git pull` didn't pick them up —
+re-run `git pull origin main`.
 
-### Path B — Pull data and retrain from scratch (~25 min)
+The committed artifact's training window ends 2026-04-08. The weekly
+Monday cron (configured below) will refresh it on the new server's
+data, so the only effect of using the committed artifact for the first
+few days is using a slightly older training window. Forward
+performance won't differ meaningfully.
 
-Use this if you want the artifact built on the new server's full data
-(slightly more recent training window).
+### Optional: retrain locally before first cycle (~25 min, only if you want freshest training)
 
 ```bash
 cd /home/yuqing/ctaNew
@@ -112,12 +107,14 @@ cd /home/yuqing/ctaNew
 # 1. Pull Binance Vision daily klines for ORIG25 (~700 MB, ~20 min)
 python3 -m scripts.pull_xs_klines
 
-# 2. Train the h=48 ORIG25 artifact (~1-2 min)
+# 2. Retrain (overwrites models/v6_clean_h48_*)
 HORIZON_BARS=48 UNIVERSE=ORIG25 python3 -m live.train_v6_clean_artifact
-# → writes models/v6_clean_h48_ensemble.pkl + v6_clean_h48_meta.json
 # → final log line: "sanity: mean per-bar XS IC over last ~30d: +0.06xx"
 #   (expect +0.05 to +0.08; matches multi-OOS expectation +0.0627)
 ```
+
+Skip this unless you specifically want the freshest training data
+before the first cycle. Otherwise just let the Monday cron handle it.
 
 ---
 

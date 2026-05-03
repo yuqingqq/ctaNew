@@ -10,8 +10,16 @@ data/
 /tmp/
 outputs/
 
-# Trained model artifacts (regenerated via live/train_v6_clean_artifact.py)
-models/
+# Trained model artifacts (regenerated via live/train_v6_clean_artifact.py).
+# Horizon-suffixed deployment artifacts (v6_clean_h{N}_*) are kept tracked
+# so a fresh git clone is enough to deploy — no scp from another host needed.
+# The legacy unsuffixed v6_clean_ensemble.pkl is NOT tracked (it's whatever
+# the dev server's last weekly retrain produced; not deployment-canonical).
+# Note: must use `models/*` (exclude contents) not `models/` (exclude dir),
+# otherwise the `!` exceptions below cannot re-include files.
+models/*
+!models/v6_clean_h*_ensemble.pkl
+!models/v6_clean_h*_meta.json
 
 # Live paper-trade runtime state
 live/state/
