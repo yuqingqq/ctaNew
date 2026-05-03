@@ -70,16 +70,15 @@ POSITIONS_PATH = STATE_DIR / "positions.json"
 CYCLES_PATH = STATE_DIR / "cycles.csv"
 MODEL_DIR = ROOT / "models"
 
-HORIZON_BARS = 288                          # 1d at 5min cadence
+HORIZON_BARS = int(os.environ.get("HORIZON_BARS", "288"))   # 1d default; override w/ HORIZON_BARS=48 for 4h cadence
 LOOKBACK_DAYS = 14                          # bars to keep per symbol for features
-TOP_K = 5
-TOP_FRAC = 0.20
+TOP_K = int(os.environ.get("TOP_K", "5"))   # K longs / K shorts (default 5; h=48 deployment uses 7)
 HL_TAKER_FEE_BPS = 4.5                      # HL VIP-0 one-way taker fee
 INITIAL_EQUITY_USD = 10_000.0               # paper portfolio sizing
-BINANCE_FAPI = "https://fapi.binance.com"
+BINANCE_FAPI = os.environ.get("BINANCE_FAPI_URL", "https://fapi.binance.com")
 HL_INFO_URL = "https://api.hyperliquid.xyz/info"
 
-REGIME_CUTOFF = 0.33                        # match alpha_v4_xs_1d
+REGIME_CUTOFF = 0.50                        # match alpha_v4_xs_1d (was 0.33; lifted 2026-05-03)
 
 
 def _binance_to_hl_coin(symbol: str) -> str:
@@ -169,10 +168,14 @@ def fetch_hl_klines_5m(symbol: str, days: int = LOOKBACK_DAYS) -> pd.DataFrame:
     daily-rebalance with 7-day rolling features, 14d lookback is sufficient
     once the bot has been running long enough to accumulate a continuous cache.
 
-    Note: HL volume is in COIN units (not quote currency) and is much smaller
-    in magnitude than Binance. The model's `volume_ma_50` feature is scale-
-    dependent; predictions may shift slightly vs. Binance-data inference.
-    Validate via live/paper_bot --source hl + --source vision side-by-side.
+    Note on volume scale: both Binance and HL report `volume` in COIN units.
+    However HL has 5-30x LESS traded volume than Binance for the same coin
+    (real venue liquidity difference). This means the v6_clean features
+    `volume_ma_50` and `obv_signal` (which use raw volume) fall outside the
+    training distribution at inference. Per OOS audit, both have perm_drop ≈ 0
+    so the practical impact is bounded. A clean fix requires either dropping
+    those features (v6_lean+ retrain) or feeding Binance data for inference
+    (requires unblocked FAPI access).
     """
     fetcher = HyperliquidDataFetcher()
     end = datetime.now(timezone.utc)
@@ -490,11 +493,20 @@ def build_panel_for_inference(klines_by_sym: dict, sym_to_id: dict) -> pd.DataFr
 
 
 def load_model_artifact():
-    pkl = MODEL_DIR / "v6_clean_ensemble.pkl"
-    meta = MODEL_DIR / "v6_clean_meta.json"
-    if not pkl.exists() or not meta.exists():
+    # Prefer horizon-suffixed artifact (e.g. v6_clean_h48_ensemble.pkl); fall back
+    # to legacy unsuffixed name to keep the running h=288 bot working.
+    suffixed_pkl = MODEL_DIR / f"v6_clean_h{HORIZON_BARS}_ensemble.pkl"
+    suffixed_meta = MODEL_DIR / f"v6_clean_h{HORIZON_BARS}_meta.json"
+    legacy_pkl = MODEL_DIR / "v6_clean_ensemble.pkl"
+    legacy_meta = MODEL_DIR / "v6_clean_meta.json"
+    if suffixed_pkl.exists() and suffixed_meta.exists():
+        pkl, meta = suffixed_pkl, suffixed_meta
+    elif legacy_pkl.exists() and legacy_meta.exists():
+        pkl, meta = legacy_pkl, legacy_meta
+    else:
         raise FileNotFoundError(
-            f"Model artifact missing. Run: python -m live.train_v6_clean_artifact")
+            f"Model artifact missing (looked for {suffixed_pkl} and {legacy_pkl}). "
+            f"Run: HORIZON_BARS={HORIZON_BARS} python -m live.train_v6_clean_artifact")
     with pkl.open("rb") as f:
         models = pickle.load(f)
     with meta.open() as f:
@@ -530,7 +542,9 @@ class LegPosition:
     entry_notional_usd: float    # current USD notional held
     entry_slippage_bps: float    # avg slippage paid on this position's entries
     entry_time: str              # iso utc of original entry
-    last_marked_mid: float = 0.0 # most recent mid; used for per-cycle gross MtM
+    last_marked_mid: float = 0.0 # most recent mid (mutated hourly by hourly_monitor)
+    last_cycle_mid: float = 0.0  # mid at last cycle decision; ONLY paper_bot updates this.
+                                 # Used for per-cycle gross MtM so hourly marks don't clobber it.
     funding_paid_usd: float = 0.0  # cumulative funding paid (negative = received)
 
     def to_dict(self):
@@ -601,18 +615,23 @@ def execute_cycle_turnover_aware(prev_positions: list[LegPosition],
             return float("nan")
         return 0.5 * (b["bids"][0][0] + b["asks"][0][0])
 
-    # 1. Mark prev positions to current mid for per-cycle gross PnL
+    # 1. Mark prev positions to current mid for per-cycle gross PnL.
+    # Use last_cycle_mid (only updated at cycle time) so hourly_monitor's
+    # ticks between rebalances don't clobber the basis. Falls back to
+    # last_marked_mid for backward compat with state files written before
+    # last_cycle_mid was introduced.
     gross_pnl_bps = 0.0
     for p in (prev_positions or []):
         mid_now = _mid_for(p.symbol)
-        if not np.isfinite(mid_now) or not np.isfinite(p.last_marked_mid) or p.last_marked_mid == 0:
+        basis = p.last_cycle_mid if p.last_cycle_mid else p.last_marked_mid
+        if not np.isfinite(mid_now) or not np.isfinite(basis) or basis == 0:
             continue
         # weight is signed; for long (+) PnL = (mid_now/start - 1) × |weight|;
         # for short (-) PnL = (start/mid_now - 1) × |weight|.
         if p.side == "L":
-            pnl_frac = (mid_now / p.last_marked_mid - 1.0)
+            pnl_frac = (mid_now / basis - 1.0)
         else:
-            pnl_frac = (p.last_marked_mid / mid_now - 1.0)
+            pnl_frac = (basis / mid_now - 1.0)
         gross_pnl_bps += pnl_frac * abs(p.weight) * 1e4
 
     # 2. Compute deltas and execute L2 fills
@@ -628,7 +647,9 @@ def execute_cycle_turnover_aware(prev_positions: list[LegPosition],
         mid_now = _mid_for(sym)
 
         if abs(delta) < 1e-9:
-            # No trade — carry forward prev position with updated last_marked_mid
+            # No trade — carry forward prev position with updated marks.
+            # last_cycle_mid advances to mid_now so the NEXT cycle's
+            # gross_pnl_bps is measured from this cycle's decision time.
             if sym in prev_by_sym:
                 p = prev_by_sym[sym]
                 new_positions.append(LegPosition(
@@ -638,6 +659,7 @@ def execute_cycle_turnover_aware(prev_positions: list[LegPosition],
                     entry_slippage_bps=p.entry_slippage_bps,
                     entry_time=p.entry_time,
                     last_marked_mid=mid_now if np.isfinite(mid_now) else p.last_marked_mid,
+                    last_cycle_mid=mid_now if np.isfinite(mid_now) else (p.last_cycle_mid or p.last_marked_mid),
                     funding_paid_usd=p.funding_paid_usd,
                 ))
             continue
@@ -706,6 +728,7 @@ def execute_cycle_turnover_aware(prev_positions: list[LegPosition],
             entry_slippage_bps=entry_slip,
             entry_time=entry_time,
             last_marked_mid=fill["mid"],
+            last_cycle_mid=fill["mid"],  # next cycle's gross MtM starts from here
             funding_paid_usd=funding,
         ))
 

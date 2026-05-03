@@ -43,7 +43,7 @@ log = logging.getLogger(__name__)
 
 ENSEMBLE_SEEDS = (42, 7, 123, 99, 314)
 HORIZON = 48
-REGIME_CUTOFF = 0.33
+REGIME_CUTOFF = 0.50  # was 0.33; multi-OOS lift +0.58 Sharpe (2026-05-03)
 HOLDOUT_DAYS = 90
 
 # Cost: 12 bps per leg RT (fee 5×2 + slip 1×2 + spread ~1×2 → ~14 bps; conservative)

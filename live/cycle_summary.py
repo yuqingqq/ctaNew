@@ -17,7 +17,9 @@ expected. The point estimate stabilizes around N≈30-60 cycles.
 from __future__ import annotations
 
 import argparse
+import json
 import logging
+import os
 import sys
 import warnings
 from pathlib import Path
@@ -32,7 +34,39 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(mess
 log = logging.getLogger("summary")
 
 CYCLES_PATH = Path("live/state/cycles.csv")
-CYCLES_PER_YEAR = 365.0
+MODEL_DIR = Path("models")
+
+
+def _resolve_horizon_bars() -> int:
+    """Resolve horizon to annualize Sharpe correctly.
+
+    Priority: HORIZON_BARS env (same convention as paper_bot.py) > legacy
+    artifact's meta (preserves the running bot's view) > newest suffixed
+    artifact > 288. The legacy meta wins by default so the production h=288
+    bot's cycles are summarized correctly even when an h=48 artifact exists
+    alongside it (e.g. mid-migration).
+    """
+    env_val = os.environ.get("HORIZON_BARS")
+    if env_val is not None:
+        return int(env_val)
+    legacy = MODEL_DIR / "v6_clean_meta.json"
+    if legacy.exists():
+        try:
+            with legacy.open() as fh:
+                return int(json.load(fh).get("horizon_bars", 288))
+        except Exception:
+            pass
+    for meta_path in sorted(MODEL_DIR.glob("v6_clean_h*_meta.json")):
+        try:
+            with meta_path.open() as fh:
+                return int(json.load(fh).get("horizon_bars", 288))
+        except Exception:
+            pass
+    return 288
+
+
+HORIZON_BARS = _resolve_horizon_bars()
+CYCLES_PER_YEAR = 365.0 * (288.0 / HORIZON_BARS)  # h=288 → 365; h=48 → 2190
 
 
 def _sharpe_yr(arr):
@@ -154,25 +188,34 @@ def main():
     print(realized[cols_show].tail(args.last).to_string(index=False))
 
     # ----- Comparison to backtest expectation -----
-    _print_section("vs backtest expectation")
-    print(f"  v6_clean multi-OOS Sharpe (backtest, K=5+VIP-3+maker): +2.95")
-    print(f"  v6_clean multi-OOS net/cycle (backtest):              +26.7 bps")
-    print(f"  v6_clean multi-OOS spread/cycle gross:                +30.7 bps")
+    # Reference numbers from multi-OOS turnover-aware tests on ORIG25, K matching:
+    #   h=288 K=5 (legacy production):  Sharpe +3.30, net +26.7 bps, spread +30.7 bps
+    #   h=48  K=7 (4h cadence, ORIG25): Sharpe +3.63, net +4.33 bps, spread +7.90 bps
+    if HORIZON_BARS == 48:
+        ref_sharpe, ref_net, ref_gross = 3.63, 4.33, 7.90
+        ref_label = "h=48 K=7 ORIG25 multi-OOS @ 4.5 bps/leg taker"
+    else:
+        ref_sharpe, ref_net, ref_gross = 3.30, 26.7, 30.7
+        ref_label = f"h={HORIZON_BARS} K=5 multi-OOS"
+    _print_section(f"vs backtest expectation ({ref_label})")
+    print(f"  backtest Sharpe:           {ref_sharpe:+.2f}")
+    print(f"  backtest net/cycle:        {ref_net:+.2f} bps")
+    print(f"  backtest spread/cycle:     {ref_gross:+.2f} bps")
     print()
     fwd_gross = realized["gross_pnl_bps"].mean()
     fwd_net = realized["net_bps"].mean()
     fwd_sharpe = _sharpe_yr(realized["net_bps"].dropna().to_numpy())
     print(f"  forward gross MtM/cycle:       {fwd_gross:+.2f} bps  "
-           f"(backtest gross: +30.7, Δ {fwd_gross - 30.7:+.2f})")
+           f"(Δ {fwd_gross - ref_gross:+.2f} vs backtest)")
     print(f"  forward net/cycle:             {fwd_net:+.2f} bps  "
-           f"(backtest net: +26.7, Δ {fwd_net - 26.7:+.2f})")
+           f"(Δ {fwd_net - ref_net:+.2f})")
     print(f"  forward Sharpe:                {fwd_sharpe:+.2f}     "
-           f"(backtest: +2.95, Δ {fwd_sharpe - 2.95:+.2f})")
+           f"(Δ {fwd_sharpe - ref_sharpe:+.2f})")
 
     if n >= 30:
-        if abs(fwd_sharpe - 2.95) < 1.5:
+        if abs(fwd_sharpe - ref_sharpe) < 1.5:
             print(f"\n  ✓ Forward Sharpe is consistent with backtest expectation.")
-        elif fwd_sharpe > 2.95 - 3.0:
+        elif fwd_sharpe > ref_sharpe - 3.0:
             print(f"\n  ~ Forward Sharpe within wide CI of backtest. Keep running.")
         else:
             print(f"\n  ⚠️  Forward Sharpe materially below backtest. Investigate.")

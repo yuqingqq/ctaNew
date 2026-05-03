@@ -2,12 +2,25 @@
 
 How to run the v6_clean live paper trade and check daily PnL.
 
+## Two cadence modes
+
+| Mode | Cadence | Artifact | Cron | Default |
+|---|---|---|---|---|
+| **h=288** (legacy) | 1× per day | `models/v6_clean_ensemble.pkl` (or `v6_clean_h288_*`) | `1 0 * * *` | env unset |
+| **h=48** (recommended) | 6× per day (4h) | `models/v6_clean_h48_*` | `1 */4 * * *` | `HORIZON_BARS=48 TOP_K=7` |
+
+Both share the same v6_clean feature set, ORIG25 universe, β-neutral
+execution. Only HORIZON_BARS, TOP_K, the model artifact, and cron
+schedule differ. See `docs/STATUS.md` for backtest expectations
+(h=288: Sharpe +3.30; h=48: Sharpe +3.63 — both at 4.5 bps/leg taker).
+
 ## What you need
 
-- A machine that's always on (laptop, VPS, server) — bot runs once per day
+- A machine that's always on (laptop, VPS, server) — bot runs every 4h (h=48) or daily (h=288)
 - Python 3.10+ with `requirements.txt` installed
 - ~50 MB disk for caches, ~1 GB RAM during cycle runs
 - Internet access to `api.hyperliquid.xyz` (no Binance fapi needed if using `--source hl`)
+- For `--source binance`: must reach `fapi.binance.com` (geo-blocked from some regions; see `live/MIGRATION_FAPI.md`)
 
 ## One-time setup
 
@@ -17,23 +30,30 @@ cd /path/to/ctaNew
 # 1. Install deps if not already
 pip install -r requirements.txt
 
-# 2. Train the model artifact (~1 minute)
+# 2a. For LEGACY h=288 (default): train model artifact (~1 minute)
 python -m live.train_v6_clean_artifact
-# Writes models/v6_clean_ensemble.pkl + meta.json
+# Writes models/v6_clean_ensemble.pkl + meta.json (legacy unsuffixed names)
+
+# 2b. For NEW h=48 (recommended): train h=48 ORIG25 artifact
+HORIZON_BARS=48 UNIVERSE=ORIG25 python -m live.train_v6_clean_artifact
+# Writes models/v6_clean_h48_ensemble.pkl + v6_clean_h48_meta.json
 
 # 3. Verify the bot can run end-to-end
+# Legacy h=288:
 python -m live.paper_bot --source hl
-# Should fetch klines, fetch L2 books, log a cycle decision
+# New h=48:
+HORIZON_BARS=48 TOP_K=7 python -m live.paper_bot --source hl
 
 # 4. Verify state was saved
 python -m live.paper_bot --check-state
-# Should show 10 open positions
+# Should show 10 open positions (h=288 K=5) or 14 (h=48 K=7)
 ```
 
 ## Daily cron + hourly monitor
 
-The bot rebalances daily (h=288 = 1d). The hourly monitor marks open
-positions to current HL mids + funding accrual + sends Telegram.
+The bot rebalances daily (h=288 = 1d) or every 4h (h=48). The hourly
+monitor marks open positions to current HL mids + funding accrual + sends
+Telegram.
 
 **Cron's environment is stripped** (no `~/.bashrc`, no shell init), so
 `.env` won't be auto-loaded. We use a small wrapper `live/run_with_env.sh`
@@ -53,8 +73,10 @@ chmod +x /path/to/ctaNew/live/run_with_env.sh
 
 Install crontab (`crontab -e`, paste this — adjust paths):
 
+### Option A: Legacy h=288 cadence (1 cycle/day)
+
 ```cron
-# v6_clean paper-trade
+# v6_clean paper-trade — h=288
 
 # Daily decision at 00:01 UTC (just after the 23:55 5-min bar closes)
 1 0 * * *  /path/to/ctaNew/live/run_with_env.sh -m live.paper_bot --source hl >> /path/to/ctaNew/live/state/run.log 2>&1
@@ -65,6 +87,34 @@ Install crontab (`crontab -e`, paste this — adjust paths):
 # Weekly model retrain — Mondays 00:30 UTC
 30 0 * * 1 /path/to/ctaNew/live/run_with_env.sh -m live.train_v6_clean_artifact >> /path/to/ctaNew/live/state/train.log 2>&1
 ```
+
+### Option B: New h=48 cadence (6 cycles/day, 4h cron)
+
+For h=48 deployment, set env vars in `.env` (sourced by `run_with_env.sh`):
+
+```bash
+HORIZON_BARS=48
+TOP_K=7
+UNIVERSE=ORIG25
+```
+
+Then crontab:
+```cron
+# v6_clean paper-trade — h=48 K=7 ORIG25
+
+# Decision every 4 hours at minute :01 (UTC bars at 00:00, 04:00, 08:00, 12:00, 16:00, 20:00)
+1 */4 * * *  /path/to/ctaNew/live/run_with_env.sh -m live.paper_bot --source binance >> /path/to/ctaNew/live/state/run.log 2>&1
+
+# Hourly portfolio + Telegram snapshot at minute :05
+5 * * * *  /path/to/ctaNew/live/run_with_env.sh -m live.hourly_monitor >> /path/to/ctaNew/live/state/hourly.log 2>&1
+
+# Weekly model retrain — Mondays 00:30 UTC (env vars from .env auto-applied)
+30 0 * * 1 /path/to/ctaNew/live/run_with_env.sh -m live.train_v6_clean_artifact >> /path/to/ctaNew/live/state/train.log 2>&1
+```
+
+Note: `--source binance` requires reachable `fapi.binance.com` — won't
+work from geo-blocked regions; use `--source hl` as fallback (15-day HL
+kline retention is enough for h=48 with LOOKBACK_DAYS=14).
 
 To test the wrapper before installing cron (simulates cron's stripped env):
 ```bash
@@ -102,9 +152,11 @@ tail -50 live/state/run.log
 cat live/state/cycles.csv | column -ts,
 ```
 
-The `cycle_summary` output prints both cost models (close-all-reopen-all,
-turnover-aware), per-cycle stats, rolling 7d/30d Sharpe, and a head-to-head
-vs the backtest expectation (+2.95 Sharpe, +26.7 bps/cycle net at K=5).
+The `cycle_summary` output prints per-cycle stats, rolling 7d/30d Sharpe,
+and a head-to-head vs the backtest expectation. The expectation auto-detects
+the active horizon:
+- h=288 K=5: backtest +3.30 Sharpe, +26.7 bps/cycle net
+- h=48 K=7: backtest +3.63 Sharpe, +4.33 bps/cycle net
 
 After **N≥30 cycles** (~1 month of running), the summary includes a bootstrap
 95% CI on Sharpe — that's the empirical answer to "does v6_clean predict

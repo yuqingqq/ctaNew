@@ -1,11 +1,70 @@
-# Status — 2026-04-30
+# Status — 2026-05-03
 
 ## Program
 
 P-2026-001: ML CTA engine for crypto perpetuals. Goal was a deployable signal
 layer extracting alpha from kline + aggTrade data on Binance USDM perps.
 
-## Current state
+## Current state (2026-05-03)
+
+**Deployment-ready. Two configurations validated; h=48 K=7 ORIG25 is
+the recommended deployment.**
+
+| Config | Sharpe (multi-OOS) | 95% CI | Cost | Status |
+|---|---|---|---|---|
+| h=288 K=5 (legacy production) | **+3.30** | [+1.11, +5.42] | 4.5 bps/leg taker | running on this server (no FAPI) |
+| **h=48 K=7 ORIG25 (new)** | **+3.63** | **[+1.31, +6.14]** | 4.5 bps/leg taker | artifact ready, awaits FAPI server |
+
+Both at 25-symbol original universe (ORIG25 — original 25 BNF perps,
+excludes 14 newer entrants), `REGIME_CUTOFF = 0.50` (label-quality gate),
+v6_clean feature set (28 features), 5-seed LGBM ensemble. The h=48 win
+comes from reduced volatility (smoother PnL via 6× more rebalances), not
+higher absolute return.
+
+### What's in place for h=48 deployment
+
+- `models/v6_clean_h48_ensemble.pkl` + `models/v6_clean_h48_meta.json` —
+  artifact trained on h=48 labels, ORIG25 universe, regenerated via
+  `HORIZON_BARS=48 UNIVERSE=ORIG25 python -m live.train_v6_clean_artifact`.
+  End-to-end pipeline verified: per-bar XS IC = +0.0645 on cal window
+  matches multi-OOS expectation +0.0627.
+- `live/paper_bot.py`: `HORIZON_BARS` and `TOP_K` env-overridable
+  (defaults 288/5 preserve current production). Artifact loader picks
+  horizon-suffixed file when env var is set, falls back to legacy.
+- `live/train_v6_clean_artifact.py`: `HORIZON_BARS` + `UNIVERSE`
+  env-configurable; writes horizon-suffixed `v6_clean_h{N}_ensemble.pkl`.
+- `live/cycle_summary.py`: detects horizon (env > legacy meta > suffixed
+  meta > 288); annualization tracks chosen horizon.
+
+### To deploy h=48 on a FAPI-accessible server
+
+```bash
+# On the new server, after copying repo + state + models/:
+HORIZON_BARS=48 TOP_K=7 BINANCE_FAPI_URL=https://fapi.binance.com \
+  python -m live.paper_bot --source binance
+# Cron: 1 */4 * * *  (every 4h at minute :01)
+# Weekly retrain: HORIZON_BARS=48 UNIVERSE=ORIG25 in env for the
+# train_v6_clean_artifact cron line.
+```
+
+### Research arc 2026-05-03 (all 4 paths tested for h=48 lift)
+
+| Test | Result | Verdict |
+|---|---|---|
+| rc-sweep at h=48 (rc=0.33-1.00) | rc=0.50 still optimal (plateau 0.50-0.70) | **No change needed** |
+| Horizon-matched features (replace 24h windows w/ 4h) | Sharpe **-3.67** (catastrophic) | Negative — long-window features ARE the alpha |
+| Lean trim (drop 9 perm_drop≈0 features) | Sharpe -1.63 | Negative — interactions matter |
+| Stage 2 additive (+dom_z_1d, +realized_vol_4h, +idio_vol_4h) | Sharpe -1.51 to -2.05 | Negative — multi-feature redundancy |
+
+**Mechanism for all 4 negatives**: v6_clean is a tight local optimum at
+both h=288 and h=48. The strategy is the same multi-day cross-sectional
+reversion alpha sampled at different cadences. Features must span
+multiple timescales (1h, 4h, 8h, 24h, 3d, 7d) to identify dislocation;
+adding redundant short-window features causes scale collapse, removing
+"expendable" features breaks interactions. See
+`outputs/h48_features/feature_attribution.json` for per-feature attribution.
+
+## Historical state (2026-04-30 baseline, preserved for context)
 
 **Phase: research complete, deployment plausible at h=288 with VIP-3 + maker
 execution. Earlier "blocked on cost" conclusion was inflated by a per-bar

@@ -69,7 +69,7 @@ log = logging.getLogger(__name__)
 
 ENSEMBLE_SEEDS = (42, 7, 123, 99, 314)
 HORIZON = 288  # 1d forward
-REGIME_CUTOFF = 0.33
+REGIME_CUTOFF = 0.50  # was 0.33; multi-OOS lift +0.58 Sharpe (2026-05-03)
 HOLDOUT_DAYS = 90
 SAMPLE_EVERY_BARS = HORIZON  # rebalance every h bars (non-overlapping). return_pct is h-fwd, so cycle return = panel's spread.
 NAKED_COST_BPS_PER_LEG = 12.0

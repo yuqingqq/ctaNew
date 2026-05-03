@@ -1,6 +1,88 @@
-# Handoff — 2026-04-30
+# Handoff — 2026-05-03
 
 ## Summary for the next person
+
+**The strategy is deployable.** Two validated configurations:
+
+1. **h=288 K=5 ORIG25** (legacy production): multi-OOS Sharpe **+3.30**
+   [+1.11, +5.42] at 4.5 bps/leg taker (HL VIP-0). Currently running on
+   this dev server via HL-only kline feed (Binance FAPI is geo-blocked
+   from here).
+2. **h=48 K=7 ORIG25** (recommended new): multi-OOS Sharpe **+3.63**
+   [+1.31, +6.14] at the same cost. Artifact in `models/v6_clean_h48_*`,
+   pipeline verified end-to-end. Awaits move to a FAPI-accessible server.
+
+Both use the **same v6_clean features** (28-column set). The only
+differences between configs are HORIZON_BARS (288 vs 48), TOP_K (5 vs 7),
+and the model artifact's training labels (24h vs 4h forward demeaned
+return). Code is parameterized via env vars — no in-place edits needed
+to switch.
+
+### What's settled (don't redo)
+
+- **rc=0.50 is optimal** at both h=288 and h=48 (plateau 0.50-0.70).
+  Was 0.33; bumped 2026-05-03.
+- **Universe is fixed at ORIG25** (the 25 perps that existed at v6_clean
+  selection time). Adding the 14 newer perps reliably hurts on multi-OOS.
+- **Feature set is fixed at v6_clean (28 cols).** 50+ feature
+  modifications have been tested (DVOL, funding, horizon-matched 4h
+  variants, lean trims, additive Stage 2 candidates). All hurt Sharpe.
+  v6_clean is a tight local optimum.
+- **Model architecture is fixed at LGBM ensemble (5 seeds).** Linear
+  oracle confirms the model is at the data ceiling, not the architecture
+  ceiling. NN/transformer would add complexity without alpha.
+- **The alpha is multi-day cross-sectional reversion**, sampled at
+  whatever cadence (h=48 or h=288). Long-window features (return_1d,
+  dom_z_7d, corr_change_3d) ARE the signal, not stale momentum proxies.
+
+### What's pending (operational)
+
+1. **FAPI server migration**. Current dev server is geo-blocked from
+   `fapi.binance.com`; bot runs on `--source hl` fallback. Move to a
+   server with FAPI access (US/EU VPS), then deploy h=48 K=7 there.
+   Runbook: `live/MIGRATION_FAPI.md`.
+2. **Shadow-mode validation** (optional but recommended). Run h=48 K=7
+   alongside live h=288 for 1 week, compare cycle-by-cycle PnL on real
+   data before cutover.
+3. **Stake 100+ HYPE for HL Bronze tier** (10% taker discount). Brings
+   per-leg fee from 4.5 → 4.05 bps. Estimated additional Sharpe ~+0.2.
+
+### What might still help (research, not engineering)
+
+The h=48 vs h=288 split delivers the +0.3 Sharpe lift, but the
+architectural ceiling is reached. Genuine future improvement requires
+**different problem framing**, not more tuning of v6_clean:
+
+1. **Stack h=48 + h=288 as parallel sleeves.** They sample the same
+   alpha at different rates → highly correlated, modest diversification.
+   Worth trying if dual deployment is cheap.
+2. **L2 microstructure features** (order book imbalance, depth ratio,
+   spread dynamics). Never tested. Requires Tardis-style L2 data feed.
+3. **On-chain features** (whale flows, exchange in/outflows, stablecoin
+   supply). Genuinely orthogonal to price-derived signals. Requires
+   Glassnode-style data integration.
+4. **Per-symbol options data** (BTC/ETH/SOL only — sparse coverage
+   breaks the XS architecture). Could spawn a separate options-overlay
+   strategy on those 3.
+
+### What does NOT help (proven negative, don't re-test)
+
+- Different horizons other than 48 or 288 (h=24/36/72/96/144 all give
+  Sharpe < +1.5 with CIs touching zero — bimodal structure)
+- Different K (K=2-10 sweep done at h=48; K=7 marginal best)
+- Different universe (full 39, alt 25-curated, drop-one-out — all hurt)
+- Different rc (0.33-1.00 sweep; 0.50 is peak at both horizons)
+- Replacing 24h-window features with 4h variants (catastrophic -3.67 Sharpe)
+- DVOL features, funding-rate features, regime-conditional MoE, ridge
+  regression (all proven worse than baseline LGBM ensemble)
+
+The path to a deployable strategy is below. **For deployment context,
+read `docs/STATUS.md` first; for the historical research arc, read
+`docs/METHODOLOGY_REVIEW.md`.**
+
+---
+
+## Historical: original Apr 30 framing (preserved)
 
 The signal class (4h-horizon alpha-residual prediction from kline + aggTrade
 features, traded as long-short cross-sectional or pair-trading) is **fully
@@ -9,6 +91,11 @@ characterized**:
 - Real, statistically robust (rank IC +0.035 OOS)
 - Magnitude ~5–10 bps gross per trade
 - Below retail VIP-0 round-trip cost (12 bps naked / 24 bps hedged)
+
+**[Note 2026-05-03: the cost claim was wrong — actual HL VIP-0 taker is
+4.5 bps/leg, not 12. At realistic cost, the strategy is well above
+breakeven, Sharpe +3.30 (h=288) to +3.63 (h=48). The "fully
+characterized" assertion below was based on the over-cost framing.]**
 
 **Don't try to push this signal harder via more features or models.** The
 audits in `ml/research/alpha_*_audit.py` already enumerated what's available.

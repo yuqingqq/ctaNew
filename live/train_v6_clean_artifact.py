@@ -13,6 +13,7 @@ from __future__ import annotations
 import gc
 import json
 import logging
+import os
 import pickle
 import warnings
 from datetime import datetime
@@ -27,12 +28,24 @@ from features_ml.cross_sectional import (
     build_basket, build_kline_features, list_universe, make_xs_alpha_labels,
 )
 from ml.research.alpha_v4_xs_1d import (
-    HORIZON, ENSEMBLE_SEEDS, REGIME_CUTOFF, _train,
+    HORIZON as _DEFAULT_HORIZON, ENSEMBLE_SEEDS, REGIME_CUTOFF, _train,
 )
 
 warnings.filterwarnings("ignore")
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 log = logging.getLogger(__name__)
+
+# Env overrides — defaults preserve current production (h=288, full 39-sym universe).
+HORIZON = int(os.environ.get("HORIZON_BARS", str(_DEFAULT_HORIZON)))
+
+# 14 symbols added later (post-2025); h=48 research validated only on the
+# original 25. Set UNIVERSE=ORIG25 to filter them out at training time.
+NEW_SYMBOLS = {
+    "ETCUSDT", "HBARUSDT", "ICPUSDT", "LDOUSDT", "TRBUSDT",
+    "AAVEUSDT", "MKRUSDT", "AXSUSDT", "GMXUSDT",
+    "1000PEPEUSDT", "1000SHIBUSDT", "TONUSDT", "ORDIUSDT", "WIFUSDT",
+}
+UNIVERSE_MODE = os.environ.get("UNIVERSE", "FULL").upper()
 
 
 def _build_full_panel():
@@ -40,6 +53,10 @@ def _build_full_panel():
     but kept here for self-contained model training.
     """
     universe = list_universe(min_days=200)
+    if UNIVERSE_MODE == "ORIG25":
+        universe = [s for s in universe if s not in NEW_SYMBOLS]
+        log.info("UNIVERSE=ORIG25: filtered to %d symbols (excluded %d new)",
+                  len(universe), len(NEW_SYMBOLS))
     feats_by_sym = {}
     for s in universe:
         f = build_kline_features(s)
@@ -117,8 +134,9 @@ def main():
 
     out_dir = Path("models")
     out_dir.mkdir(parents=True, exist_ok=True)
-    pkl_path = out_dir / "v6_clean_ensemble.pkl"
-    meta_path = out_dir / "v6_clean_meta.json"
+    # Horizon-suffixed artifact so h=288 (legacy) and h=48 (new) can coexist.
+    pkl_path = out_dir / f"v6_clean_h{HORIZON}_ensemble.pkl"
+    meta_path = out_dir / f"v6_clean_h{HORIZON}_meta.json"
 
     with pkl_path.open("wb") as fh:
         pickle.dump(models, fh)
@@ -129,6 +147,7 @@ def main():
         "feat_cols": feat_cols,
         "sym_to_id": sym_to_id,
         "horizon_bars": HORIZON,
+        "universe_mode": UNIVERSE_MODE,
         "regime_cutoff": REGIME_CUTOFF,
         "train_window_start": str(panel["open_time"].min()),
         "train_window_end": str(cal_start),
