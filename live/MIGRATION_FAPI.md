@@ -192,7 +192,14 @@ crontab -l
 
 ---
 
-## Operational verification (first 24h)
+## Operational verification
+
+For the comprehensive ongoing health checklist (tier-by-tier checks
+covering env vars, state files, cron firing, 24h health, N≥30 forward
+Sharpe with alarm thresholds), see
+[`live/DEPLOYMENT_CHECKS.md`](DEPLOYMENT_CHECKS.md).
+
+Quick first-24h check:
 
 ```bash
 # After ~1 cron tick (4h or less), check the cycle log
@@ -200,10 +207,6 @@ tail -20 /home/yuqing/ctaNew/live/state/run.log
 
 # After ~6 cycles (~24h), check the summary
 HORIZON_BARS=48 ./live/run_with_env.sh -m live.cycle_summary
-# Expect:
-#   - N=5-6 realized cycles
-#   - mean net/cycle in [-10, +20] bps (single-cycle variance is high)
-#   - Sharpe: variable; only meaningful at N≥30 (~5 days of cycles)
 
 # Hourly monitor logs:
 tail -20 /home/yuqing/ctaNew/live/state/hourly.log
