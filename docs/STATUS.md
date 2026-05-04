@@ -47,6 +47,18 @@ HORIZON_BARS=48 TOP_K=7 BINANCE_FAPI_URL=https://fapi.binance.com \
 # train_v6_clean_artifact cron line.
 ```
 
+### Research arc 2026-05-04 (aggTrade microstructure path tested)
+
+| Test | Result | Verdict |
+|---|---|---|
+| 4h-aggregated trade-flow features (signed_volume_4h, tfi_4h, aggr_ratio_4h, buy_count_4h, avg_trade_size_4h) | Univariate IC 0.018-0.026 (6 of 29 passed gates) | Encouraging at feature level |
+| Portfolio additive (v6_clean + 5 aggTrade) | +0.04 Sharpe | Capacity dilution |
+| **Unified paired test (same panel, same cycles, just feature swap)** | **-0.54 bps/cycle, t=-0.54 (p=0.29)** | **Tested negative — no deployable edge** |
+
+5th independent confirmation of saturation hypothesis. aggTrade features
+are information-equivalent to v6_clean's kline-flow proxies for h=48
+prediction. See `docs/AGGTRADE_NEGATIVE_RESULT.md`.
+
 ### Research arc 2026-05-03 (all 4 paths tested for h=48 lift)
 
 | Test | Result | Verdict |
