@@ -589,7 +589,9 @@ def execute_cycle_turnover_aware(prev_positions: list[LegPosition],
                                   target_weights: dict[str, float],
                                   books: dict[str, dict],
                                   now_iso: str,
-                                  equity_usd: float = INITIAL_EQUITY_USD) -> dict:
+                                  equity_usd: float = INITIAL_EQUITY_USD,
+                                  *,
+                                  live_fills_by_sym: Optional[dict[str, dict]] = None) -> dict:
     """Trade only the delta between prev and target weight vectors.
 
     Returns dict with:
@@ -664,17 +666,49 @@ def execute_cycle_turnover_aware(prev_positions: list[LegPosition],
                 ))
             continue
 
-        # Trade: simulate L2 fill on |delta| × equity in the appropriate direction
+        # Trade: simulate or live-execute L2 fill on |delta| × equity in
+        # the appropriate direction.
         side_action = "buy" if delta > 0 else "sell"
         notional = abs(delta) * equity_usd
         book = books.get(coin)
         if book is None:
             log.warning("[%s] no L2 book — skipping delta=%+.4f", sym, delta)
             continue
-        fill = simulate_taker_fill(book, side=side_action, target_notional_usd=notional)
-        if not np.isfinite(fill["vwap"]):
-            log.warning("[%s] taker fill NaN for delta=%+.4f notional=$%.0f", sym, delta, notional)
-            continue
+        if live_fills_by_sym is not None:
+            fill = live_fills_by_sym.get(sym)
+            if fill is None:
+                log.warning("[%s] live executor returned no fill record — skipping", sym)
+                continue
+            if fill.get("over_fill_qty", 0.0) > 0:
+                log.error(
+                    "[%s] OVER_FILL detected by engine: extra=%.6f. State will be "
+                    "reconciled from fetch_positions() after cycle.",
+                    sym, fill["over_fill_qty"],
+                )
+            if fill.get("qty", 0.0) <= 0 or not np.isfinite(fill.get("vwap", float("nan"))):
+                log.warning(
+                    "[%s] live fill produced no qty (status=%s notes=%s) — carrying prev forward",
+                    sym, fill.get("status"), fill.get("notes"),
+                )
+                # Carry the prev position unchanged: treat as if no rebalance happened.
+                if sym in prev_by_sym:
+                    p = prev_by_sym[sym]
+                    new_positions.append(LegPosition(
+                        symbol=sym, side=p.side, weight=p.weight,
+                        entry_price_hl=p.entry_price_hl, entry_mid_hl=p.entry_mid_hl,
+                        entry_notional_usd=p.entry_notional_usd,
+                        entry_slippage_bps=p.entry_slippage_bps,
+                        entry_time=p.entry_time,
+                        last_marked_mid=mid_now if np.isfinite(mid_now) else p.last_marked_mid,
+                        last_cycle_mid=mid_now if np.isfinite(mid_now) else (p.last_cycle_mid or p.last_marked_mid),
+                        funding_paid_usd=p.funding_paid_usd,
+                    ))
+                continue
+        else:
+            fill = simulate_taker_fill(book, side=side_action, target_notional_usd=notional)
+            if not np.isfinite(fill["vwap"]):
+                log.warning("[%s] taker fill NaN for delta=%+.4f notional=$%.0f", sym, delta, notional)
+                continue
         trades.append({
             "symbol": sym, "delta_weight": delta, "side_action": side_action,
             "notional_usd": notional, "fill_vwap": fill["vwap"],
@@ -783,8 +817,71 @@ def save_state(positions: list[LegPosition], cycle_row: dict):
 # One full cycle
 # =============================================================================
 
-def run_one_cycle(*, refresh_data: bool = True, source: str = "auto") -> dict:
-    """Runs one paper-trade rebalance cycle. Returns the cycle row dict."""
+def _live_fill_deltas_via_engine(
+    prev_positions: list[LegPosition],
+    target_weights: dict[str, float],
+    books: dict[str, dict],
+    *,
+    equity_usd: float,
+    mode: str = "signal_limit",
+) -> dict[str, dict]:
+    """Bootstrap an HLExecutor and execute all non-zero deltas. Returns
+    {symbol: fill_dict} keyed by Binance-style symbol (matches the rest of
+    paper_bot's bookkeeping).
+
+    Wraps async work in one asyncio.run so the engine connection is shared
+    across all delta trades in the cycle.
+    """
+    import asyncio
+    from live.hl_executor import HLExecutor
+
+    prev_w = {p.symbol: p.weight for p in prev_positions}
+    deltas: list[dict] = []
+    sym_for_coin: dict[str, str] = {}
+    for sym in sorted(set(prev_w) | set(target_weights)):
+        delta = target_weights.get(sym, 0.0) - prev_w.get(sym, 0.0)
+        if abs(delta) < 1e-9:
+            continue
+        coin = _binance_to_hl_coin(sym)
+        book = books.get(coin)
+        if book is None or not book.get("bids") or not book.get("asks"):
+            log.warning("[%s] no L2 book; cannot compute signal_mid for live execute", sym)
+            continue
+        mid = 0.5 * (book["bids"][0][0] + book["asks"][0][0])
+        deltas.append({
+            "coin": coin,
+            "side": "buy" if delta > 0 else "sell",
+            "target_notional_usd": abs(delta) * equity_usd,
+            "signal_mid": mid,
+        })
+        sym_for_coin[coin] = sym
+
+    if not deltas:
+        log.info("Live execute: no deltas this cycle")
+        return {}
+
+    log.info("Live execute: dispatching %d delta trades via HLExecutor (mode=%s)", len(deltas), mode)
+
+    async def _run():
+        executor = await HLExecutor.create(mode=mode)
+        try:
+            return await executor.batch_fill_deltas(deltas)
+        finally:
+            await executor.close()
+
+    fills_by_coin = asyncio.run(_run())
+    return {sym_for_coin[c]: f for c, f in fills_by_coin.items() if c in sym_for_coin}
+
+
+def run_one_cycle(*, refresh_data: bool = True, source: str = "auto",
+                   live_execute: bool = False,
+                   execution_mode: str = "signal_limit") -> dict:
+    """Runs one paper-trade rebalance cycle. Returns the cycle row dict.
+
+    If live_execute=True, delta trades are routed through the executeEngine
+    on Hyperliquid mainnet using SignalLimitStrategy (real money). If False,
+    fills are simulated against L2 book snapshots (legacy behaviour).
+    """
     log.info("===== v6_clean paper-trade cycle starting =====")
     models, meta = load_model_artifact()
     feat_cols = list(meta["feat_cols"])
@@ -857,10 +954,19 @@ def run_one_cycle(*, refresh_data: bool = True, source: str = "auto") -> dict:
         funding_bps = fund["funding_bps"]
         log.info("Funding accrued: $%.4f (%.2f bps of equity)", funding_usd, funding_bps)
 
+    # Live execution: pre-compute fills via the executeEngine.
+    live_fills_by_sym: Optional[dict[str, dict]] = None
+    if live_execute:
+        live_fills_by_sym = _live_fill_deltas_via_engine(
+            prev_positions or [], target_weights, books,
+            equity_usd=INITIAL_EQUITY_USD, mode=execution_mode,
+        )
+
     # Execute the cycle turnover-aware: only trade deltas between prev and target
     result = execute_cycle_turnover_aware(
         prev_positions or [], target_weights, books,
         now_iso=str(target_time), equity_usd=INITIAL_EQUITY_USD,
+        live_fills_by_sym=live_fills_by_sym,
     )
     new_positions = result["new_positions"]
 
@@ -968,6 +1074,16 @@ def cli():
                          "history)")
     ap.add_argument("--replay", type=int, default=0,
                     help="(reserved for live/replay_paper_bot.py)")
+    ap.add_argument("--live-execute", action="store_true",
+                    help="route delta trades through executeEngine on HL mainnet "
+                         "(REAL MONEY). Off by default. Requires HL_ACCOUNT_ADDRESS "
+                         "and HL_SECRET_KEY in environment (or the executeEngine "
+                         ".env). When off, fills are simulated against L2 books.")
+    ap.add_argument("--execution-mode", choices=("signal_limit", "ioc"),
+                    default="signal_limit",
+                    help="strategy mode passed to the engine when --live-execute. "
+                         "signal_limit = maker-first with IOC fallback (default). "
+                         "ioc = aggressive IOC limits with market sweep.")
     args = ap.parse_args()
 
     if args.check_state:
@@ -987,7 +1103,18 @@ def cli():
         log.error("Use `python -m live.replay_paper_bot --days N` for replay mode.")
         return 2
 
-    run_one_cycle(refresh_data=not args.no_refresh, source=args.source)
+    if args.live_execute:
+        log.warning("=" * 70)
+        log.warning("LIVE EXECUTE MODE — orders will be placed on Hyperliquid mainnet")
+        log.warning("execution_mode=%s", args.execution_mode)
+        log.warning("=" * 70)
+
+    run_one_cycle(
+        refresh_data=not args.no_refresh,
+        source=args.source,
+        live_execute=args.live_execute,
+        execution_mode=args.execution_mode,
+    )
     return 0
 
 
