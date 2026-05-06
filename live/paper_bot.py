@@ -643,19 +643,24 @@ def execute_cycle_turnover_aware(prev_positions: list[LegPosition],
     # ticks between rebalances don't clobber the basis. Falls back to
     # last_marked_mid for backward compat with state files written before
     # last_cycle_mid was introduced.
+    #
+    # Phase 2 honest-state: weight magnitude comes from _prev_weight_for(p)
+    # which returns actual_filled_notional/equity when available, falling
+    # back to p.weight (target) for legacy state files. Without this, a
+    # partially-filled prev cycle would overstate MtM PnL by the under-fill
+    # ratio (target=10%, actual=5% → 2× overstated).
     gross_pnl_bps = 0.0
     for p in (prev_positions or []):
         mid_now = _mid_for(p.symbol)
         basis = p.last_cycle_mid if p.last_cycle_mid else p.last_marked_mid
         if not np.isfinite(mid_now) or not np.isfinite(basis) or basis == 0:
             continue
-        # weight is signed; for long (+) PnL = (mid_now/start - 1) × |weight|;
-        # for short (-) PnL = (start/mid_now - 1) × |weight|.
         if p.side == "L":
             pnl_frac = (mid_now / basis - 1.0)
         else:
             pnl_frac = (basis / mid_now - 1.0)
-        gross_pnl_bps += pnl_frac * abs(p.weight) * 1e4
+        actual_w_magnitude = abs(_prev_weight_for(p))
+        gross_pnl_bps += pnl_frac * actual_w_magnitude * 1e4
 
     # 2. Compute deltas and execute L2 fills
     trades = []
@@ -805,8 +810,16 @@ def execute_cycle_turnover_aware(prev_positions: list[LegPosition],
                 prev_actual_notional * (actual_qty / prev_actual_qty)
                 if prev_actual_qty > 0 else 0.0
             )
+        elif prev_pos is not None and prev_pos.weight * new_weight < 0:
+            # FLIP (e.g., +10% LONG → -10% SHORT). The trade size includes
+            # closing the prev position AND opening the new one, so net new
+            # position = trade_size − prev_actual. Without this branch the
+            # "fresh entry" code below would record the full trade size and
+            # double-count the position size for next cycle.
+            actual_qty = max(0.0, (fill_qty + over_fill) - prev_actual_qty)
+            actual_notional = actual_qty * fill_vwap
         else:
-            # New entry or flip — forget prev (it was the opposite side or zero)
+            # Truly fresh entry (no prev position)
             actual_qty = fill_qty + over_fill
             actual_notional = (fill_qty + over_fill) * fill_vwap
 
