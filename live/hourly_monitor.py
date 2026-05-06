@@ -108,6 +108,7 @@ def main():
     # 2. Per-position MtM + funding accrual since last tick
     per_leg = []
     total_unrealized_usd = 0.0
+    total_since_last_cycle_usd = 0.0
     total_hourly_pnl_usd = 0.0
     total_hourly_funding_usd = 0.0
     total_notional_usd = 0.0
@@ -132,7 +133,10 @@ def main():
         hourly_pnl_usd = hourly_pnl_frac * p.entry_notional_usd
         total_hourly_pnl_usd += hourly_pnl_usd
 
-        # Cumulative MtM since entry
+        # Cumulative MtM since entry — snapshot only; meaning shifts at every
+        # rebalance because closed legs leave and new legs enter at fresh bases.
+        # NOT the same as strategy PnL since deploy. Use cumulative_strategy_pnl_bps
+        # for that (computed below from cycles.csv + since-last-cycle MtM).
         if p.entry_price_hl and np.isfinite(p.entry_price_hl):
             if p.side == "L":
                 cum_pnl_frac = (mid_now / p.entry_price_hl - 1.0)
@@ -141,6 +145,19 @@ def main():
         else:
             cum_pnl_frac = 0.0
         cum_pnl_usd = cum_pnl_frac * p.entry_notional_usd
+
+        # MtM since the last cycle decision — composes correctly with
+        # cycles.csv net_bps to give true strategy PnL since deployment.
+        # last_cycle_mid is the basis at which next cycle's gross_pnl_bps will be computed.
+        if p.last_cycle_mid and np.isfinite(p.last_cycle_mid):
+            if p.side == "L":
+                since_cycle_frac = (mid_now / p.last_cycle_mid - 1.0)
+            else:
+                since_cycle_frac = (p.last_cycle_mid / mid_now - 1.0)
+        else:
+            since_cycle_frac = 0.0
+        since_cycle_usd = since_cycle_frac * p.entry_notional_usd
+        total_since_last_cycle_usd += since_cycle_usd
 
         # Funding since last tick
         if coin not in funding_cache:
@@ -179,8 +196,56 @@ def main():
     _save_positions(positions)
     _save_last_tick({"ts_utc": now.isoformat()})
 
+    # Realized strategy PnL = sum of past cycles' net_bps (closed bookkeeping).
+    # Adding the current cycle's MtM-since-last-cycle gives true total PnL.
+    #
+    # Phase 4 honest-equity update: paper_bot now records the cycle's actual
+    # equity (real HL balance in live mode, INITIAL_EQUITY_USD in sim) as
+    # cycle_row["equity_usd"]. Use the latest cycle's equity as the bps
+    # denominator so hourly alerts reflect real account size, not the
+    # legacy $10k sim assumption.
+    #
+    # Cumulative PnL is filtered to only sum cycles in the SAME execution
+    # mode as the latest cycle (live or sim). Mixing sim cycles at $10k
+    # equity with live cycles at $472 equity in a single bps total is
+    # meaningless because the denominators differ — they'd need to be
+    # converted to dollars first then back. Matching the mode keeps the
+    # cumulative number on a consistent denominator.
+    realized_net_bps_since_deploy = 0.0
+    realized_gross_bps_since_deploy = 0.0
+    current_equity_usd = INITIAL_EQUITY_USD
+    current_mode_is_live = False
+    cycles_path = STATE_DIR / "cycles.csv"
+    if cycles_path.exists():
+        try:
+            cdf = pd.read_csv(cycles_path)
+            # Latest cycle's equity (Phase 4 column; missing in pre-Phase-4
+            # rows → defaults to INITIAL_EQUITY_USD as legacy fallback).
+            if "equity_usd" in cdf.columns and not cdf.empty:
+                last_eq = cdf["equity_usd"].iloc[-1]
+                if pd.notna(last_eq) and float(last_eq) > 0:
+                    current_equity_usd = float(last_eq)
+            if "live_execute" in cdf.columns and not cdf.empty:
+                current_mode_is_live = bool(cdf["live_execute"].iloc[-1] is True
+                                             or cdf["live_execute"].iloc[-1] == "True")
+            # Filter cumulative to only same-mode rows (matching latest).
+            if "live_execute" in cdf.columns:
+                live_mask = cdf["live_execute"].fillna(False).astype(bool)
+                same_mode = cdf[live_mask == current_mode_is_live]
+            else:
+                # Pre-Phase-4 file: assume all rows are sim
+                same_mode = cdf if not current_mode_is_live else cdf.iloc[0:0]
+            realized_net_bps_since_deploy = float(same_mode["net_bps"].sum())
+            realized_gross_bps_since_deploy = float(same_mode["gross_pnl_bps"].sum())
+        except Exception as e:
+            log.warning("could not read cycles.csv: %s", e)
+
     # 3. Append to hourly_pnl.csv
-    bps_per_dollar = 1e4 / INITIAL_EQUITY_USD
+    bps_per_dollar = 1e4 / current_equity_usd if current_equity_usd > 0 else 0.0
+    mtm_since_last_cycle_bps = total_since_last_cycle_usd * bps_per_dollar
+    cumulative_strategy_pnl_bps = (
+        realized_net_bps_since_deploy + mtm_since_last_cycle_bps
+    )
     row = {
         "ts_utc": now.isoformat(),
         "n_positions": len(positions),
@@ -193,6 +258,11 @@ def main():
         "hourly_net_bps": (total_hourly_pnl_usd - total_hourly_funding_usd) * bps_per_dollar,
         "cumulative_unrealized_usd": total_unrealized_usd,
         "cumulative_unrealized_bps": total_unrealized_usd * bps_per_dollar,
+        # New: composes correctly across rebalances. Use this for PnL tracking.
+        "realized_net_bps_since_deploy": realized_net_bps_since_deploy,
+        "realized_gross_bps_since_deploy": realized_gross_bps_since_deploy,
+        "mtm_since_last_cycle_bps": mtm_since_last_cycle_bps,
+        "cumulative_strategy_pnl_bps": cumulative_strategy_pnl_bps,
     }
     df_new = pd.DataFrame([row])
     if HOURLY_PNL_PATH.exists():
@@ -206,6 +276,9 @@ def main():
     bps_h_fund = row["hourly_funding_bps"]
     bps_h_net = row["hourly_net_bps"]
     bps_cum = row["cumulative_unrealized_bps"]
+    bps_realized = row["realized_net_bps_since_deploy"]
+    bps_open_cycle = row["mtm_since_last_cycle_bps"]
+    bps_total = row["cumulative_strategy_pnl_bps"]
 
     # Sort legs by hourly PnL (best first)
     per_leg_sorted = sorted(per_leg, key=lambda d: -d["hourly_pnl_usd"])
@@ -215,10 +288,14 @@ def main():
     msg_lines = [
         f"📊 <b>v6_clean hourly</b>  ({now:%Y-%m-%d %H:%M} UTC)",
         f"",
-        f"Equity: ${INITIAL_EQUITY_USD:,.0f}  •  Open positions: {len(positions)}  •  Notional: ${total_notional_usd:,.0f}",
+        f"Equity: ${current_equity_usd:,.2f}{' (live)' if current_mode_is_live else ' (sim)'}  •  "
+        f"Open positions: {len(positions)}  •  Notional: ${total_notional_usd:,.0f}",
         f"",
         f"<b>Hourly</b>:    PnL {_fmt_bps(bps_h_pnl)} bps  •  funding {_fmt_bps(bps_h_fund)} bps  •  net {_fmt_bps(bps_h_net)} bps  ({_fmt_usd(row['hourly_net_usd'])})",
-        f"<b>Since open</b>: cumulative MtM {_fmt_bps(bps_cum)} bps  ({_fmt_usd(total_unrealized_usd)})",
+        f"<b>Strategy PnL since deploy</b>: <b>{_fmt_bps(bps_total)} bps</b>  "
+        f"= realized {_fmt_bps(bps_realized)} + open-cycle {_fmt_bps(bps_open_cycle)}",
+        f"<i>Held-leg MtM-vs-entry: {_fmt_bps(bps_cum)} bps "
+        f"(snapshot view; resets at rebalance — not strategy PnL)</i>",
         f"",
     ]
     msg_lines.append("<b>Longs</b>:")
