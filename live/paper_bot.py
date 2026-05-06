@@ -890,60 +890,109 @@ def save_state(positions: list[LegPosition], cycle_row: dict):
 # One full cycle
 # =============================================================================
 
-def _live_fill_deltas_via_engine(
+# Honest-state helper. Mirrors the in-cycle prev_w computation in
+# execute_cycle_turnover_aware so live and sim paths agree on baseline.
+def _prev_weight_signed(p: LegPosition, equity_usd: float) -> float:
+    actual_notional = getattr(p, "actual_filled_notional_usd", 0.0) or 0.0
+    if actual_notional > 0 and equity_usd > 0:
+        sign = 1.0 if p.weight > 0 else (-1.0 if p.weight < 0 else 0.0)
+        return sign * (actual_notional / equity_usd)
+    return p.weight
+
+
+# Pre-engine dust floor. The engine has its own ENGINE_MIN_NOTIONAL_USD=$20
+# floor, but we pre-filter at $25 (with $5 headroom for rounding) to avoid
+# round-tripping a doomed plan through HL.
+_DUST_NOTIONAL_FLOOR_USD = 25.0
+
+
+def _live_run_cycle_via_engine(
     prev_positions: list[LegPosition],
     target_weights: dict[str, float],
     books: dict[str, dict],
     *,
-    equity_usd: float,
+    fallback_equity_usd: float,
     mode: str = "signal_limit",
-) -> dict[str, dict]:
-    """Bootstrap an HLExecutor and execute all non-zero deltas. Returns
-    {symbol: fill_dict} keyed by Binance-style symbol (matches the rest of
-    paper_bot's bookkeeping).
+    max_concurrent: int = 5,
+) -> tuple[dict[str, dict], float]:
+    """Bootstrap an HLExecutor for one cycle: fetch real equity, build
+    deltas against the actual balance (with dust pre-filter), execute in
+    parallel, return (fills_by_sym, equity_usd).
 
-    Wraps async work in one asyncio.run so the engine connection is shared
-    across all delta trades in the cycle.
+    `fallback_equity_usd` is the value used if balance fetch fails — set
+    to INITIAL_EQUITY_USD by callers so a bad fetch doesn't silently
+    use $0.
+
+    The single asyncio.run wraps connect → fetch_balance → batch_fill →
+    close, so the engine connection is shared across all delta trades.
     """
     import asyncio
     from live.hl_executor import HLExecutor
 
-    prev_w = {p.symbol: p.weight for p in prev_positions}
-    deltas: list[dict] = []
-    sym_for_coin: dict[str, str] = {}
-    for sym in sorted(set(prev_w) | set(target_weights)):
-        delta = target_weights.get(sym, 0.0) - prev_w.get(sym, 0.0)
-        if abs(delta) < 1e-9:
-            continue
-        coin = _binance_to_hl_coin(sym)
-        book = books.get(coin)
-        if book is None or not book.get("bids") or not book.get("asks"):
-            log.warning("[%s] no L2 book; cannot compute signal_mid for live execute", sym)
-            continue
-        mid = 0.5 * (book["bids"][0][0] + book["asks"][0][0])
-        deltas.append({
-            "coin": coin,
-            "side": "buy" if delta > 0 else "sell",
-            "target_notional_usd": abs(delta) * equity_usd,
-            "signal_mid": mid,
-        })
-        sym_for_coin[coin] = sym
-
-    if not deltas:
-        log.info("Live execute: no deltas this cycle")
-        return {}
-
-    log.info("Live execute: dispatching %d delta trades via HLExecutor (mode=%s)", len(deltas), mode)
-
-    async def _run():
+    async def _run() -> tuple[dict[str, dict], float]:
         executor = await HLExecutor.create(mode=mode)
         try:
-            return await executor.batch_fill_deltas(deltas)
+            try:
+                equity_usd = await executor.fetch_equity_usd()
+                if equity_usd <= 0:
+                    log.warning("Live execute: equity from balance is %.4f, using fallback $%.2f",
+                                equity_usd, fallback_equity_usd)
+                    equity_usd = fallback_equity_usd
+            except Exception as e:
+                log.warning("Live execute: balance fetch failed (%s), using fallback $%.2f",
+                            e, fallback_equity_usd)
+                equity_usd = fallback_equity_usd
+            log.info("Live execute equity (HL account_value): $%.4f", equity_usd)
+
+            # Build deltas against real equity, pre-filter dust.
+            prev_w = {p.symbol: _prev_weight_signed(p, equity_usd) for p in prev_positions}
+            deltas: list[dict] = []
+            sym_for_coin: dict[str, str] = {}
+            n_skipped_dust = 0
+            for sym in sorted(set(prev_w) | set(target_weights)):
+                delta = target_weights.get(sym, 0.0) - prev_w.get(sym, 0.0)
+                if abs(delta) < 1e-9:
+                    continue
+                coin = _binance_to_hl_coin(sym)
+                book = books.get(coin)
+                if book is None or not book.get("bids") or not book.get("asks"):
+                    log.warning("[%s] no L2 book; cannot compute signal_mid for live execute", sym)
+                    continue
+                mid = 0.5 * (book["bids"][0][0] + book["asks"][0][0])
+                target_notional = abs(delta) * equity_usd
+                if target_notional < _DUST_NOTIONAL_FLOOR_USD:
+                    n_skipped_dust += 1
+                    log.info("[%s] dust delta=%+.4f notional=$%.2f below $%.0f floor — skipped",
+                             sym, delta, target_notional, _DUST_NOTIONAL_FLOOR_USD)
+                    continue
+                deltas.append({
+                    "coin": coin,
+                    "side": "buy" if delta > 0 else "sell",
+                    "target_notional_usd": target_notional,
+                    "signal_mid": mid,
+                })
+                sym_for_coin[coin] = sym
+
+            if n_skipped_dust:
+                log.warning("Live execute: %d delta(s) skipped as dust below $%.0f",
+                            n_skipped_dust, _DUST_NOTIONAL_FLOOR_USD)
+
+            if not deltas:
+                log.info("Live execute: no deltas this cycle")
+                return {}, equity_usd
+
+            log.info("Live execute: dispatching %d delta trades via HLExecutor "
+                     "(mode=%s, parallelism=%d)", len(deltas), mode, max_concurrent)
+
+            fills_by_coin = await executor.batch_fill_deltas(
+                deltas, max_concurrent=max_concurrent,
+            )
+            fills_by_sym = {sym_for_coin[c]: f for c, f in fills_by_coin.items() if c in sym_for_coin}
+            return fills_by_sym, equity_usd
         finally:
             await executor.close()
 
-    fills_by_coin = asyncio.run(_run())
-    return {sym_for_coin[c]: f for c, f in fills_by_coin.items() if c in sym_for_coin}
+    return asyncio.run(_run())
 
 
 def run_one_cycle(*, refresh_data: bool = True, source: str = "auto",
@@ -1027,18 +1076,31 @@ def run_one_cycle(*, refresh_data: bool = True, source: str = "auto",
         funding_bps = fund["funding_bps"]
         log.info("Funding accrued: $%.4f (%.2f bps of equity)", funding_usd, funding_bps)
 
-    # Live execution: pre-compute fills via the executeEngine.
+    # Live execution: real equity via fetch_balance, parallel fills, dust skip.
     live_fills_by_sym: Optional[dict[str, dict]] = None
+    cycle_equity_usd = INITIAL_EQUITY_USD  # sim default; overridden in live mode
     if live_execute:
-        live_fills_by_sym = _live_fill_deltas_via_engine(
+        live_fills_by_sym, cycle_equity_usd = _live_run_cycle_via_engine(
             prev_positions or [], target_weights, books,
-            equity_usd=INITIAL_EQUITY_USD, mode=execution_mode,
+            fallback_equity_usd=INITIAL_EQUITY_USD,
+            mode=execution_mode,
         )
+        # If equity is so small that even TOP_K=1 can't clear the dust floor,
+        # warn loudly. The cycle still runs (legs get carried forward) but
+        # the user should clamp TOP_K or fund up.
+        min_leg_notional = cycle_equity_usd / max(1, 2 * TOP_K)
+        if min_leg_notional < _DUST_NOTIONAL_FLOOR_USD:
+            log.warning(
+                "Live execute equity $%.2f / (2*TOP_K=%d) = $%.2f/leg is below "
+                "dust floor $%.0f — many legs will be skipped. Fund up or "
+                "lower TOP_K via env var.",
+                cycle_equity_usd, TOP_K, min_leg_notional, _DUST_NOTIONAL_FLOOR_USD,
+            )
 
     # Execute the cycle turnover-aware: only trade deltas between prev and target
     result = execute_cycle_turnover_aware(
         prev_positions or [], target_weights, books,
-        now_iso=str(target_time), equity_usd=INITIAL_EQUITY_USD,
+        now_iso=str(target_time), equity_usd=cycle_equity_usd,
         live_fills_by_sym=live_fills_by_sym,
     )
     new_positions = result["new_positions"]
@@ -1071,6 +1133,10 @@ def run_one_cycle(*, refresh_data: bool = True, source: str = "auto",
         "n_open_positions": len(new_positions),
         "trade_notional_usd": sum(abs(t["notional_usd"]) for t in result["trades"]),
         "had_prev_positions": int(bool(prev_positions)),
+        # Phase 4: equity used to size this cycle (real balance in live mode,
+        # INITIAL_EQUITY_USD in sim mode).
+        "equity_usd": float(cycle_equity_usd),
+        "live_execute": bool(live_execute),
     }
 
     save_state(new_positions, cycle_row)

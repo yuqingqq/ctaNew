@@ -173,28 +173,43 @@ class HLExecutor:
         return _result_to_fill(result, fallback_mid=signal_mid)
 
     # ------------------------------------------------------------------ #
-    # Batch (sequential) — Phase 4 will add asyncio.gather concurrency    #
+    # Batch fill                                                          #
     # ------------------------------------------------------------------ #
-    async def batch_fill_deltas(self, deltas: list[dict]) -> dict[str, dict]:
-        """Sequentially execute each delta. Returns {coin: fill_dict}.
+    async def batch_fill_deltas(
+        self,
+        deltas: list[dict],
+        *,
+        max_concurrent: int = 5,
+    ) -> dict[str, dict]:
+        """Fan out delta trades in parallel (bounded concurrency). Returns
+        {coin: fill_dict}.
 
         Each delta dict: {"coin", "side", "target_notional_usd", "signal_mid"}.
         Failures are caught per-leg; one bad symbol does not abort the batch.
+
+        Concurrency is bounded by `max_concurrent` so HL rate limits aren't
+        tripped (HL allows ~50 RPS info / 10 RPS exchange — 5 concurrent
+        signal-limit plans is well under). The engine has per-symbol locks,
+        so distinct symbols are safe to run in parallel.
+
+        Wall time goes from N×~60s sequential to ~60s + (N/concurrency)×fan-in.
         """
-        out: dict[str, dict] = {}
-        for d in deltas:
+        import asyncio as _asyncio
+        sem = _asyncio.Semaphore(max(1, int(max_concurrent)))
+
+        async def _one(d: dict) -> tuple[str, dict]:
             coin = d["coin"]
-            try:
-                fill = await self.execute_delta(
-                    coin=coin,
-                    side=d["side"],
-                    target_notional_usd=float(d["target_notional_usd"]),
-                    signal_mid=float(d["signal_mid"]),
-                )
-            except Exception as e:
-                log.exception("[%s] execute_delta unexpected failure", coin)
-                fill = _failed_fill(d.get("signal_mid", 0.0), f"unexpected: {e}")
-            out[coin] = fill
+            async with sem:
+                try:
+                    fill = await self.execute_delta(
+                        coin=coin,
+                        side=d["side"],
+                        target_notional_usd=float(d["target_notional_usd"]),
+                        signal_mid=float(d["signal_mid"]),
+                    )
+                except Exception as e:
+                    log.exception("[%s] execute_delta unexpected failure", coin)
+                    fill = _failed_fill(d.get("signal_mid", 0.0), f"unexpected: {e}")
             log.info(
                 "[%s] %s ${%.2f} -> qty=%.6f vwap=%.6f slip=%.2fbps fully_filled=%s%s",
                 coin, d["side"], d["target_notional_usd"],
@@ -202,7 +217,21 @@ class HLExecutor:
                 fill.get("slippage_bps", 0.0), fill.get("fully_filled", False),
                 f"  notes={fill['notes']}" if fill.get("notes") else "",
             )
-        return out
+            return coin, fill
+
+        results = await _asyncio.gather(*(_one(d) for d in deltas))
+        return dict(results)
+
+    async def fetch_equity_usd(self) -> float:
+        """Account-value (margin equity) in USDC. Used by paper_bot to size
+        delta trades against actual exchange capital."""
+        bal = await self.exchange.fetch_balance()
+        # Hyperliquid surfaces both spot USDC and account_value (incl PnL).
+        # account_value is the right ceiling for new entries.
+        v = bal.get("account_value")
+        if v is None or v <= 0:
+            v = bal.get("USDC", 0.0)
+        return float(v or 0.0)
 
 
 # -------------------------------------------------------------------------- #
