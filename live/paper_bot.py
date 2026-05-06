@@ -1228,6 +1228,35 @@ def run_one_cycle(*, refresh_data: bool = True, source: str = "auto",
     fills are simulated against L2 book snapshots (legacy behaviour).
     """
     log.info("===== v6_clean paper-trade cycle starting =====")
+
+    # Refuse-to-run guard (early): if the previous cycle was live (real money
+    # on HL) and we're being asked to run in sim mode, abort BEFORE doing
+    # any expensive setup (model load, kline refresh, predictions). Sim
+    # mode would overwrite state.json with synthetic positions sized
+    # against the INITIAL_EQUITY_USD = $10k synth, divorcing state from the
+    # actual HL positions still on the exchange.
+    _, _prev_cycles_for_guard = load_state()
+    if (
+        not live_execute
+        and _prev_cycles_for_guard is not None
+        and not _prev_cycles_for_guard.empty
+        and "live_execute" in _prev_cycles_for_guard.columns
+    ):
+        _last = _prev_cycles_for_guard["live_execute"].iloc[-1]
+        _last_was_live = (
+            _last is True or str(_last).strip().lower() == "true"
+        )
+        if _last_was_live:
+            raise RuntimeError(
+                "Refusing to run in sim mode: the previous cycle was "
+                "live_execute=True, so state.json reflects real HL positions. "
+                "Running sim mode now would overwrite that state. Either:\n"
+                "  - pass --live-execute (continue real trading), OR\n"
+                "  - move live/state/positions.json aside before running sim:\n"
+                "      mv live/state/positions.json live/state/positions.json.live\n"
+                "  - then sim runs with empty prev (safe to debug in isolation)."
+            )
+
     models, meta = load_model_artifact()
     feat_cols = list(meta["feat_cols"])
     sym_to_id = meta["sym_to_id"]
