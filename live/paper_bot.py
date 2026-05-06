@@ -419,7 +419,10 @@ def accrue_funding_for_cycle(prev_positions: list[LegPosition],
                             "n_funding_intervals": len(rates), "usd_paid": usd_paid})
         total_usd += usd_paid
 
-    funding_bps = (total_usd / equity_usd) * 1e4
+    if equity_usd > 0:
+        funding_bps = (total_usd / equity_usd) * 1e4
+    else:
+        funding_bps = 0.0
     # Convention: returned funding_bps is COST (positive means we paid).
     # PnL impact is -funding_bps.
     return {"total_funding_usd": total_usd, "funding_bps": funding_bps,
@@ -1284,20 +1287,11 @@ def run_one_cycle(*, refresh_data: bool = True, source: str = "auto",
     log.info("Fetching L2 books for %d coins...", len(relevant_coins))
     books = fetch_hl_books(relevant_coins)
 
-    # Accrue HL hourly funding over the prev → now holding window
-    funding_bps = 0.0
-    funding_usd = 0.0
-    if prev_positions and prev_decision_iso:
-        log.info("Fetching HL funding history for %d positions over [%s, %s]...",
-                  len(prev_positions), prev_decision_iso, str(target_time))
-        fund = accrue_funding_for_cycle(prev_positions, prev_decision_iso,
-                                          str(target_time))
-        funding_usd = fund["total_funding_usd"]
-        funding_bps = fund["funding_bps"]
-        log.info("Funding accrued: $%.4f (%.2f bps of equity)", funding_usd, funding_bps)
-
     # Live execution: real equity via fetch_balance, HL reconcile,
-    # parallel fills, dust skip.
+    # parallel fills, dust skip. Run BEFORE funding accrual so funding
+    # can use real cycle equity rather than the INITIAL_EQUITY_USD default
+    # (a $472-account run reporting funding_bps against $10k would be off
+    # by ~20x — wrong denominator vs. fees/slippage which use real equity).
     live_fills_by_sym: Optional[dict[str, dict]] = None
     cycle_equity_usd = INITIAL_EQUITY_USD  # sim default; overridden in live mode
     cycle_prev_positions = prev_positions or []
@@ -1307,6 +1301,24 @@ def run_one_cycle(*, refresh_data: bool = True, source: str = "auto",
             fallback_equity_usd=INITIAL_EQUITY_USD,
             mode=execution_mode,
         )
+
+    # Accrue HL hourly funding over the prev → now holding window. Use the
+    # cycle's actual equity (live: HL account_value, sim: INITIAL_EQUITY_USD)
+    # so funding_bps is on the same scale as fees/slippage/gross_pnl.
+    # In live mode the prev positions used here are the HL-reconciled set.
+    funding_bps = 0.0
+    funding_usd = 0.0
+    funding_prev = cycle_prev_positions if live_execute else (prev_positions or [])
+    if funding_prev and prev_decision_iso:
+        log.info("Fetching HL funding history for %d positions over [%s, %s]...",
+                  len(funding_prev), prev_decision_iso, str(target_time))
+        fund = accrue_funding_for_cycle(funding_prev, prev_decision_iso,
+                                          str(target_time),
+                                          equity_usd=cycle_equity_usd)
+        funding_usd = fund["total_funding_usd"]
+        funding_bps = fund["funding_bps"]
+        log.info("Funding accrued: $%.4f (%.2f bps of equity $%.2f)",
+                  funding_usd, funding_bps, cycle_equity_usd)
         min_leg_notional = cycle_equity_usd / max(1, 2 * TOP_K)
         if min_leg_notional < _DUST_NOTIONAL_FLOOR_USD:
             log.warning(
