@@ -614,17 +614,12 @@ def execute_cycle_turnover_aware(prev_positions: list[LegPosition],
     one market order paying HL_TAKER_FEE_BPS bps + walking the book.
     """
     # Build prev weights from ACTUAL filled exposure when available (Phase 2).
-    # If a previous cycle PARTIALLY filled or got SKIPPED below min_notional,
-    # the position is smaller than its target weight implied. Using the actual
-    # filled notional ensures next cycle's `delta = target - prev` correctly
-    # accounts for the missing exposure rather than over- or under-trading.
-    # Fallback: legacy `weight` field (sim mode and pre-Phase-2 state files).
+    # Delegate to module-level _prev_weight_signed which correctly handles
+    # weight=0 + side fallback (for HL-only reconciled positions). The earlier
+    # nested helper had a stale sign rule that returned 0 for weight=0
+    # entries, causing prev_w to be 0 even when actual_filled > 0.
     def _prev_weight_for(p: LegPosition) -> float:
-        actual_notional = getattr(p, "actual_filled_notional_usd", 0.0) or 0.0
-        if actual_notional > 0 and equity_usd > 0:
-            sign = 1.0 if p.weight > 0 else (-1.0 if p.weight < 0 else 0.0)
-            return sign * (actual_notional / equity_usd)
-        return p.weight
+        return _prev_weight_signed(p, equity_usd)
 
     prev_w = {p.symbol: _prev_weight_for(p) for p in (prev_positions or [])}
     prev_by_sym = {p.symbol: p for p in (prev_positions or [])}
@@ -788,7 +783,11 @@ def execute_cycle_turnover_aware(prev_positions: list[LegPosition],
         # If this is an existing position with same sign and weight increase,
         # blend entry prices. Otherwise (new entry, flip, or weight reduction),
         # adopt the trade fill VWAP for the new portion's basis.
-        same_side = (prev_pos is not None and (prev_pos.weight * new_weight > 0))
+        # Use signed-actual prev weight so HL-only reconciled positions
+        # (weight=0, real exposure) are correctly treated as same-side
+        # rather than falling through to "fresh entry".
+        prev_signed = _prev_weight_signed(prev_pos, equity_usd) if prev_pos else 0.0
+        same_side = (prev_pos is not None and (prev_signed * new_weight > 0))
         if same_side and abs(new_weight) > abs(prev_weight):
             # Adding to existing position: VWAP of original portion + delta portion
             old_q = abs(prev_weight)
