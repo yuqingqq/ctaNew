@@ -852,12 +852,15 @@ def execute_cycle_turnover_aware(prev_positions: list[LegPosition],
                 prev_actual_notional * (actual_qty / prev_actual_qty)
                 if prev_actual_qty > 0 else 0.0
             )
-        elif prev_pos is not None and prev_pos.weight * new_weight < 0:
+        elif prev_pos is not None and prev_signed * new_weight < 0:
             # FLIP (e.g., +10% LONG → -10% SHORT). The trade size includes
             # closing the prev position AND opening the new one, so net new
             # position = trade_size − prev_actual. Without this branch the
             # "fresh entry" code below would record the full trade size and
             # double-count the position size for next cycle.
+            # Uses signed-actual prev (prev_signed) — same precedence as
+            # same_side test — so HL-only reconciled positions (raw
+            # weight=0, real exposure) trigger the flip path correctly.
             actual_qty = max(0.0, (fill_qty + over_fill) - prev_actual_qty)
             actual_notional = actual_qty * fill_vwap
         else:
