@@ -539,13 +539,21 @@ class LegPosition:
     weight: float                # signed magnitude: + for long, - for short
     entry_price_hl: float        # avg fill VWAP across this position's lifetime
     entry_mid_hl: float          # mid at original entry (for cumulative slippage attr)
-    entry_notional_usd: float    # current USD notional held
+    entry_notional_usd: float    # TARGET USD notional (= |weight| * equity_usd) —
+                                 #   kept for backwards-compat / sim mode bookkeeping.
+                                 #   Live-mode delta math should use actual_filled_notional_usd.
     entry_slippage_bps: float    # avg slippage paid on this position's entries
     entry_time: str              # iso utc of original entry
     last_marked_mid: float = 0.0 # most recent mid (mutated hourly by hourly_monitor)
     last_cycle_mid: float = 0.0  # mid at last cycle decision; ONLY paper_bot updates this.
                                  # Used for per-cycle gross MtM so hourly marks don't clobber it.
     funding_paid_usd: float = 0.0  # cumulative funding paid (negative = received)
+    # Phase 2 honest-state fields. Defaults are zero so existing JSON files
+    # (written before these existed) deserialize cleanly. In sim mode they
+    # mirror entry_*; in live-execute mode they reflect actual exchange fills.
+    actual_filled_qty: float = 0.0          # base coin filled (always positive magnitude)
+    actual_filled_notional_usd: float = 0.0 # USD notional actually filled (positive)
+    last_fill_status: str = "FILLED"        # "FILLED"|"PARTIAL"|"REJECTED"|"SKIPPED"|"OVER_FILL"|"FAILED"|"CARRIED"
 
     def to_dict(self):
         return asdict(self)
@@ -605,7 +613,20 @@ def execute_cycle_turnover_aware(prev_positions: list[LegPosition],
     Cost model: HL_TAKER_FEE_BPS is one-way. Each non-zero |delta| × equity is
     one market order paying HL_TAKER_FEE_BPS bps + walking the book.
     """
-    prev_w = {p.symbol: p.weight for p in (prev_positions or [])}
+    # Build prev weights from ACTUAL filled exposure when available (Phase 2).
+    # If a previous cycle PARTIALLY filled or got SKIPPED below min_notional,
+    # the position is smaller than its target weight implied. Using the actual
+    # filled notional ensures next cycle's `delta = target - prev` correctly
+    # accounts for the missing exposure rather than over- or under-trading.
+    # Fallback: legacy `weight` field (sim mode and pre-Phase-2 state files).
+    def _prev_weight_for(p: LegPosition) -> float:
+        actual_notional = getattr(p, "actual_filled_notional_usd", 0.0) or 0.0
+        if actual_notional > 0 and equity_usd > 0:
+            sign = 1.0 if p.weight > 0 else (-1.0 if p.weight < 0 else 0.0)
+            return sign * (actual_notional / equity_usd)
+        return p.weight
+
+    prev_w = {p.symbol: _prev_weight_for(p) for p in (prev_positions or [])}
     prev_by_sym = {p.symbol: p for p in (prev_positions or [])}
     all_syms = set(prev_w) | set(target_weights)
 
@@ -663,6 +684,9 @@ def execute_cycle_turnover_aware(prev_positions: list[LegPosition],
                     last_marked_mid=mid_now if np.isfinite(mid_now) else p.last_marked_mid,
                     last_cycle_mid=mid_now if np.isfinite(mid_now) else (p.last_cycle_mid or p.last_marked_mid),
                     funding_paid_usd=p.funding_paid_usd,
+                    actual_filled_qty=getattr(p, "actual_filled_qty", 0.0),
+                    actual_filled_notional_usd=getattr(p, "actual_filled_notional_usd", 0.0),
+                    last_fill_status="CARRIED",
                 ))
             continue
 
@@ -702,6 +726,9 @@ def execute_cycle_turnover_aware(prev_positions: list[LegPosition],
                         last_marked_mid=mid_now if np.isfinite(mid_now) else p.last_marked_mid,
                         last_cycle_mid=mid_now if np.isfinite(mid_now) else (p.last_cycle_mid or p.last_marked_mid),
                         funding_paid_usd=p.funding_paid_usd,
+                        actual_filled_qty=getattr(p, "actual_filled_qty", 0.0),
+                        actual_filled_notional_usd=getattr(p, "actual_filled_notional_usd", 0.0),
+                        last_fill_status=str(fill.get("status") or "REJECTED").upper(),
                     ))
                 continue
         else:
@@ -755,6 +782,49 @@ def execute_cycle_turnover_aware(prev_positions: list[LegPosition],
             funding = 0.0
 
         side = "L" if new_weight > 0 else "S"
+
+        # Phase 2: track ACTUAL held position (base coin + USD notional). For
+        # sim mode (no over_fill_qty / status keys), defaults to the target
+        # weight × equity, preserving legacy semantics. For live mode, uses
+        # the engine's real fill qty + any detected over-fill.
+        prev_actual_qty = getattr(prev_pos, "actual_filled_qty", 0.0) if prev_pos else 0.0
+        prev_actual_notional = getattr(prev_pos, "actual_filled_notional_usd", 0.0) if prev_pos else 0.0
+        fill_qty = float(fill.get("qty") or 0.0)
+        fill_vwap = float(fill.get("vwap") or 0.0) if np.isfinite(fill.get("vwap", float("nan"))) else 0.0
+        over_fill = float(fill.get("over_fill_qty") or 0.0)
+
+        if same_side and abs(new_weight) > abs(prev_weight):
+            # Adding: previously held + this fill
+            actual_qty = prev_actual_qty + fill_qty + over_fill
+            actual_notional = prev_actual_notional + (fill_qty + over_fill) * fill_vwap
+        elif same_side:
+            # Reducing: prev held minus what we sold back; notional scales
+            # proportionally so we don't recompute entry pricing.
+            actual_qty = max(0.0, prev_actual_qty - fill_qty - over_fill)
+            actual_notional = (
+                prev_actual_notional * (actual_qty / prev_actual_qty)
+                if prev_actual_qty > 0 else 0.0
+            )
+        else:
+            # New entry or flip — forget prev (it was the opposite side or zero)
+            actual_qty = fill_qty + over_fill
+            actual_notional = (fill_qty + over_fill) * fill_vwap
+
+        if over_fill > 0:
+            fill_status = "OVER_FILL"
+        elif live_fills_by_sym is not None:
+            # Live mode: use engine status, fall back to fully_filled flag
+            fill_status = str(fill.get("status") or "").upper() or (
+                "FILLED" if fill.get("fully_filled") else "PARTIAL"
+            )
+        else:
+            # Sim mode is always 100%
+            fill_status = "FILLED"
+            # Sim doesn't track per-fill qty; mirror target for legacy callers.
+            if actual_qty == 0.0 and fill_qty == 0.0:
+                actual_qty = abs(new_weight) * equity_usd / max(fill_vwap, 1e-12)
+                actual_notional = abs(new_weight) * equity_usd
+
         new_positions.append(LegPosition(
             symbol=sym, side=side, weight=new_weight,
             entry_price_hl=entry_price, entry_mid_hl=entry_mid,
@@ -764,6 +834,9 @@ def execute_cycle_turnover_aware(prev_positions: list[LegPosition],
             last_marked_mid=fill["mid"],
             last_cycle_mid=fill["mid"],  # next cycle's gross MtM starts from here
             funding_paid_usd=funding,
+            actual_filled_qty=actual_qty,
+            actual_filled_notional_usd=actual_notional,
+            last_fill_status=fill_status,
         ))
 
     # Cost decomposition (all in bps of equity)
