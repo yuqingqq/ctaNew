@@ -939,9 +939,130 @@ def save_state(positions: list[LegPosition], cycle_row: dict):
 def _prev_weight_signed(p: LegPosition, equity_usd: float) -> float:
     actual_notional = getattr(p, "actual_filled_notional_usd", 0.0) or 0.0
     if actual_notional > 0 and equity_usd > 0:
-        sign = 1.0 if p.weight > 0 else (-1.0 if p.weight < 0 else 0.0)
+        # Sign comes from the target weight if non-zero; otherwise from the
+        # position side (covers HL-reconciled positions where state.weight=0
+        # but actual exposure is real).
+        if p.weight != 0:
+            sign = 1.0 if p.weight > 0 else -1.0
+        else:
+            sign = 1.0 if p.side == "L" else (-1.0 if p.side == "S" else 0.0)
         return sign * (actual_notional / equity_usd)
     return p.weight
+
+
+async def _reconcile_state_with_hl(
+    prev_positions: list[LegPosition],
+    exchange,
+) -> list[LegPosition]:
+    """Refresh `actual_filled_qty` / `actual_filled_notional_usd` for each
+    prev position from HL's reported position size. Drops state entries
+    HL no longer holds; flags HL positions not in state.
+
+    Why: state.json can drift from HL when sim cycles ran (recording fake
+    positions), when state was written before Phase 2 (zero actual_*),
+    or when external interventions (manual close, liquidation) changed
+    HL state. Without this, _prev_weight_for would compute deltas against
+    a phantom baseline, mis-sizing or losing trades.
+
+    Cost-basis fields (entry_price_hl, entry_time, etc.) are preserved
+    from prev when possible; HL-only positions get reconstructed defaults.
+    """
+    try:
+        hl_positions = await exchange.fetch_positions()
+    except Exception as e:
+        log.error("Reconcile: fetch_positions failed (%s) — using state as-is", e)
+        return list(prev_positions)
+
+    # Map HL "BTC/USDC" → "BTCUSDT" so the keying matches state syms.
+    def _coin_to_binance_sym(s: str) -> str:
+        coin = str(s or "").split("/")[0].split(":")[0]
+        return f"{coin}USDT" if coin else ""
+
+    hl_by_sym: dict[str, dict] = {}
+    for p in hl_positions:
+        sz = float(p.get("size") or p.get("contracts") or p.get("positionAmt") or 0)
+        if sz == 0:
+            continue
+        sym = _coin_to_binance_sym(p.get("symbol", ""))
+        if sym:
+            hl_by_sym[sym] = {
+                "size": abs(sz),
+                "side": "L" if sz > 0 else "S",
+                "mark": float(p.get("mark_price") or p.get("markPx") or 0),
+                "entry": float(p.get("entry_price") or p.get("entryPx") or 0),
+            }
+
+    prev_by_sym = {p.symbol: p for p in (prev_positions or [])}
+    reconciled: list[LegPosition] = []
+
+    # Walk prev; refresh actual_* from HL or drop if HL closed externally.
+    for sym, p in prev_by_sym.items():
+        if sym not in hl_by_sym:
+            if (getattr(p, "actual_filled_notional_usd", 0.0) or 0.0) > 0:
+                log.warning(
+                    "[%s] state has actual=$%.2f but HL has no position — "
+                    "dropping (closed externally or sim/legacy state)",
+                    sym, p.actual_filled_notional_usd,
+                )
+            continue
+        hl = hl_by_sym[sym]
+        hl_notional = hl["size"] * (hl["mark"] or hl["entry"] or p.entry_price_hl or 0)
+        if p.side != hl["side"]:
+            log.warning(
+                "[%s] state side=%s but HL side=%s — using HL",
+                sym, p.side, hl["side"],
+            )
+        reconciled.append(LegPosition(
+            symbol=sym, side=hl["side"], weight=p.weight,
+            entry_price_hl=p.entry_price_hl, entry_mid_hl=p.entry_mid_hl,
+            entry_notional_usd=p.entry_notional_usd,
+            entry_slippage_bps=p.entry_slippage_bps,
+            entry_time=p.entry_time,
+            last_marked_mid=p.last_marked_mid, last_cycle_mid=p.last_cycle_mid,
+            funding_paid_usd=p.funding_paid_usd,
+            actual_filled_qty=hl["size"],
+            actual_filled_notional_usd=hl_notional,
+            last_fill_status="RECONCILED",
+        ))
+
+    # Walk HL; flag any positions not in state and add them with weight=0
+    # (no target — would be reduced/closed if not in next target_weights).
+    for sym, hl in hl_by_sym.items():
+        if sym in prev_by_sym:
+            continue
+        hl_notional = hl["size"] * (hl["mark"] or hl["entry"] or 0)
+        log.warning(
+            "[%s] on HL (%s %.6f) but not in state — adding with weight=0; "
+            "next cycle will treat it as something to close unless targeted",
+            sym, hl["side"], hl["size"],
+        )
+        reconciled.append(LegPosition(
+            symbol=sym, side=hl["side"], weight=0.0,
+            entry_price_hl=hl["entry"] or hl["mark"] or 0,
+            entry_mid_hl=hl["mark"] or hl["entry"] or 0,
+            entry_notional_usd=hl_notional, entry_slippage_bps=0.0,
+            entry_time="reconciled",
+            last_marked_mid=hl["mark"] or 0, last_cycle_mid=hl["mark"] or 0,
+            funding_paid_usd=0.0,
+            actual_filled_qty=hl["size"],
+            actual_filled_notional_usd=hl_notional,
+            last_fill_status="RECONCILED_NEW",
+        ))
+
+    if not reconciled and prev_positions:
+        log.warning(
+            "Reconcile: state had %d positions, HL has 0 — starting fresh",
+            len(prev_positions),
+        )
+    elif reconciled:
+        log.info(
+            "Reconcile: %d state → %d after HL sync (%d state-only dropped, "
+            "%d HL-only added)",
+            len(prev_positions or []), len(reconciled),
+            sum(1 for s in prev_by_sym if s not in hl_by_sym),
+            sum(1 for s in hl_by_sym if s not in prev_by_sym),
+        )
+    return reconciled
 
 
 # Pre-engine dust floor. The engine has its own ENGINE_MIN_NOTIONAL_USD=$20
@@ -958,38 +1079,58 @@ def _live_run_cycle_via_engine(
     fallback_equity_usd: float,
     mode: str = "signal_limit",
     max_concurrent: int = 5,
-) -> tuple[dict[str, dict], float]:
-    """Bootstrap an HLExecutor for one cycle: fetch real equity, build
-    deltas against the actual balance (with dust pre-filter), execute in
-    parallel, return (fills_by_sym, equity_usd).
+) -> tuple[dict[str, dict], float, list[LegPosition]]:
+    """Bootstrap an HLExecutor for one cycle: fetch real equity, RECONCILE
+    state.json against HL's actual position state, build deltas against
+    the reconciled prev (with dust pre-filter), execute in parallel.
+    Returns (fills_by_sym, equity_usd, reconciled_prev_positions).
 
-    `fallback_equity_usd` is the value used if balance fetch fails — set
-    to INITIAL_EQUITY_USD by callers so a bad fetch doesn't silently
-    use $0.
+    Callers should use the returned reconciled_prev (NOT the input
+    prev_positions) when invoking execute_cycle_turnover_aware so that
+    same baseline drives both delta math here and bookkeeping there.
 
-    The single asyncio.run wraps connect → fetch_balance → batch_fill →
-    close, so the engine connection is shared across all delta trades.
+    `fallback_equity_usd` is the value used if balance fetch raises
+    (network error). A fetch that succeeds and returns ≤ 0 ABORTS the
+    cycle — falling back to synthetic equity on a liquidated/empty
+    account would attempt huge over-leveraged trades.
+
+    The single asyncio.run wraps connect → balance → reconcile →
+    batch_fill → close, so the engine connection is shared.
     """
     import asyncio
     from live.hl_executor import HLExecutor
 
-    async def _run() -> tuple[dict[str, dict], float]:
+    async def _run() -> tuple[dict[str, dict], float, list[LegPosition]]:
         executor = await HLExecutor.create(mode=mode)
         try:
+            # Equity-fetch policy:
+            #   - fetch raises (network error) → use fallback (sim equivalent)
+            #   - fetch succeeds, returns ≤ 0 → ABORT cycle (genuine zero/negative
+            #     equity; falling back to synthetic $10k would attempt infinite-
+            #     leverage trades on a liquidated or empty account).
             try:
                 equity_usd = await executor.fetch_equity_usd()
-                if equity_usd <= 0:
-                    log.warning("Live execute: equity from balance is %.4f, using fallback $%.2f",
-                                equity_usd, fallback_equity_usd)
-                    equity_usd = fallback_equity_usd
             except Exception as e:
                 log.warning("Live execute: balance fetch failed (%s), using fallback $%.2f",
                             e, fallback_equity_usd)
                 equity_usd = fallback_equity_usd
+            if equity_usd <= 0:
+                log.error(
+                    "Live execute: HL reports equity = $%.4f (≤ 0). Account may be "
+                    "liquidated or empty. Aborting cycle — no trades will be placed.",
+                    equity_usd,
+                )
+                return {}, equity_usd, list(prev_positions)
             log.info("Live execute equity (HL account_value): $%.4f", equity_usd)
 
+            # Reconcile state.json against HL's actual position snapshot
+            # before computing deltas. Source of truth = HL.
+            reconciled_prev = await _reconcile_state_with_hl(
+                prev_positions, executor.exchange,
+            )
+
             # Build deltas against real equity, pre-filter dust.
-            prev_w = {p.symbol: _prev_weight_signed(p, equity_usd) for p in prev_positions}
+            prev_w = {p.symbol: _prev_weight_signed(p, equity_usd) for p in reconciled_prev}
             deltas: list[dict] = []
             sym_for_coin: dict[str, str] = {}
             n_skipped_dust = 0
@@ -1034,7 +1175,7 @@ def _live_run_cycle_via_engine(
 
             if not deltas:
                 log.info("Live execute: no deltas this cycle")
-                return {}, equity_usd
+                return {}, equity_usd, reconciled_prev
 
             log.info("Live execute: dispatching %d delta trades via HLExecutor "
                      "(mode=%s, parallelism=%d)", len(deltas), mode, max_concurrent)
@@ -1043,7 +1184,7 @@ def _live_run_cycle_via_engine(
                 deltas, max_concurrent=max_concurrent,
             )
             fills_by_sym = {sym_for_coin[c]: f for c, f in fills_by_coin.items() if c in sym_for_coin}
-            return fills_by_sym, equity_usd
+            return fills_by_sym, equity_usd, reconciled_prev
         finally:
             await executor.close()
 
@@ -1131,18 +1272,17 @@ def run_one_cycle(*, refresh_data: bool = True, source: str = "auto",
         funding_bps = fund["funding_bps"]
         log.info("Funding accrued: $%.4f (%.2f bps of equity)", funding_usd, funding_bps)
 
-    # Live execution: real equity via fetch_balance, parallel fills, dust skip.
+    # Live execution: real equity via fetch_balance, HL reconcile,
+    # parallel fills, dust skip.
     live_fills_by_sym: Optional[dict[str, dict]] = None
     cycle_equity_usd = INITIAL_EQUITY_USD  # sim default; overridden in live mode
+    cycle_prev_positions = prev_positions or []
     if live_execute:
-        live_fills_by_sym, cycle_equity_usd = _live_run_cycle_via_engine(
+        live_fills_by_sym, cycle_equity_usd, cycle_prev_positions = _live_run_cycle_via_engine(
             prev_positions or [], target_weights, books,
             fallback_equity_usd=INITIAL_EQUITY_USD,
             mode=execution_mode,
         )
-        # If equity is so small that even TOP_K=1 can't clear the dust floor,
-        # warn loudly. The cycle still runs (legs get carried forward) but
-        # the user should clamp TOP_K or fund up.
         min_leg_notional = cycle_equity_usd / max(1, 2 * TOP_K)
         if min_leg_notional < _DUST_NOTIONAL_FLOOR_USD:
             log.warning(
@@ -1152,9 +1292,11 @@ def run_one_cycle(*, refresh_data: bool = True, source: str = "auto",
                 cycle_equity_usd, TOP_K, min_leg_notional, _DUST_NOTIONAL_FLOOR_USD,
             )
 
-    # Execute the cycle turnover-aware: only trade deltas between prev and target
+    # Execute the cycle turnover-aware: only trade deltas between prev and
+    # target. Use the HL-reconciled prev (in live mode) so bookkeeping
+    # math agrees with the same baseline used to compute deltas.
     result = execute_cycle_turnover_aware(
-        prev_positions or [], target_weights, books,
+        cycle_prev_positions, target_weights, books,
         now_iso=str(target_time), equity_usd=cycle_equity_usd,
         live_fills_by_sym=live_fills_by_sym,
     )
