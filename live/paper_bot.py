@@ -958,7 +958,10 @@ def _live_run_cycle_via_engine(
                 if book is None or not book.get("bids") or not book.get("asks"):
                     log.warning("[%s] no L2 book; cannot compute signal_mid for live execute", sym)
                     continue
-                mid = 0.5 * (book["bids"][0][0] + book["asks"][0][0])
+                bid = book["bids"][0][0]
+                ask = book["asks"][0][0]
+                mid = 0.5 * (bid + ask)
+                spread_bps = (ask - bid) / mid * 1e4 if mid > 0 else None
                 target_notional = abs(delta) * equity_usd
                 if target_notional < _DUST_NOTIONAL_FLOOR_USD:
                     n_skipped_dust += 1
@@ -970,8 +973,16 @@ def _live_run_cycle_via_engine(
                     "side": "buy" if delta > 0 else "sell",
                     "target_notional_usd": target_notional,
                     "signal_mid": mid,
+                    "spread_bps": spread_bps,
                 })
                 sym_for_coin[coin] = sym
+
+            # Schedule longest-job-first: wider spread → longer duration. Ordering
+            # legs that take 300s before legs that take 60s lets the fast ones
+            # slot into the gather queue as the slow ones run, minimising wall
+            # time. (asyncio.gather processes in submission order; semaphore
+            # caps concurrency.)
+            deltas.sort(key=lambda d: -(d.get("spread_bps") or 0.0))
 
             if n_skipped_dust:
                 log.warning("Live execute: %d delta(s) skipped as dust below $%.0f",

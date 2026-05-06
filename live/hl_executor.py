@@ -26,7 +26,7 @@ import logging
 import os
 import sys
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional
 
 # --- sys.path bootstrap to find executeEngine alongside ctaNew ---
 _ENGINE_ROOT = Path(os.environ.get("EXECUTEENGINE_ROOT", "/home/yuqing/executeEngine"))
@@ -61,6 +61,50 @@ ENGINE_MIN_NOTIONAL_USD = 20.0
 
 # Margin above the engine floor — gives rounding headroom.
 DELTA_MIN_NOTIONAL_USD = 25.0
+
+
+# Spread-aware duration tiers. SignalLimitStrategy's maker phase needs time
+# to be hit; a tight HL spread (≤1 bp) means there's no maker price between
+# bid and ask, so any post-only order rests at the bid and waits passively.
+# Longer durations help only when spread is wide enough that the strategy
+# can post inside the spread and chase aggressively.
+#
+# Phase 0 evidence: BTC at 1.2 bp spread → 0% maker fill at 60s, ~10% at
+# 300s. APT at 3 bp spread → 50% maker fill (Phase 1 fired). ARB/DOGE/OP
+# typically 2–5 bp → wide enough for chase to matter.
+DURATION_TIERS = [
+    # (max_spread_bps, max_duration_s, chase_wait_s, initial_wait_s, max_chase_attempts)
+    ( 1.0,  60.0, 2.0, 2.0,  3),   # tight (BTC/ETH/SOL/LTC) — maker rare, IOC quickly
+    ( 3.0, 180.0, 3.0, 3.0,  6),   # mid — partial maker chance
+    (1e9, 300.0, 5.0, 5.0, 10),   # wide — full maker patience
+]
+
+
+def _strategy_params_for_spread(spread_bps: Optional[float]) -> dict:
+    """Pick max_duration / chase tunables based on observed spread.
+
+    None or unknown spread defaults to the wide tier (most patient).
+    """
+    s = spread_bps if (spread_bps is not None and spread_bps >= 0) else 1e9
+    for cap, dur, chase, init, attempts in DURATION_TIERS:
+        if s <= cap:
+            return {
+                "execution_max_duration_seconds": dur,
+                "execution_chase_wait_seconds": chase,
+                "execution_initial_wait_seconds": init,
+                "execution_max_chase_attempts": attempts,
+                "execution_ioc_reserve_seconds": min(5.0, dur * 0.05),
+                "_chosen_tier_max_spread": cap,
+                "_chosen_max_duration": dur,
+            }
+    # Should be unreachable — last tier matches everything.
+    return {
+        "execution_max_duration_seconds": 300.0,
+        "execution_chase_wait_seconds": 5.0,
+        "execution_initial_wait_seconds": 5.0,
+        "execution_max_chase_attempts": 10,
+        "execution_ioc_reserve_seconds": 5.0,
+    }
 
 
 class HLExecutor:
@@ -107,9 +151,14 @@ class HLExecutor:
         side: str,                       # "buy" | "sell"
         target_notional_usd: float,
         signal_mid: float,
+        observed_spread_bps: Optional[float] = None,
     ) -> dict:
         """Execute one delta trade. Returns a fill dict matching the
         `simulate_taker_fill` shape with two extra keys (notes, over_fill_qty).
+
+        observed_spread_bps: tier the SignalLimit max_duration on observed
+        spread. Tight spreads (≤1 bp) → 60s (maker rarely fills, IOC fast).
+        Wide spreads (>3 bp) → 300s (real maker savings possible).
         """
         symbol = f"{coin}/USDC"
 
@@ -143,16 +192,22 @@ class HLExecutor:
             log.debug("[%s] could not read risk cap, using default %.1fbps: %s",
                       symbol, target_slip_bps, e)
 
+        # Tier the strategy params (max_duration, chase wait, etc.) by spread.
+        spread_params = _strategy_params_for_spread(observed_spread_bps)
+        chosen_dur = spread_params.pop("_chosen_max_duration", 300.0)
+        chosen_tier = spread_params.pop("_chosen_tier_max_spread", None)
+        if observed_spread_bps is not None:
+            log.debug(
+                "[%s] spread=%.2fbps → tier_cap=%s, max_duration=%.0fs",
+                symbol, observed_spread_bps, chosen_tier, chosen_dur,
+            )
+
         metadata: dict[str, Any] = {
             "execution_price_mode": self.mode,  # "signal_limit" | "ioc"
             "signal_price": signal_mid,
-            "execution_max_duration_seconds": 300.0,
             "execution_max_slippage_bps": target_slip_bps,
-            "execution_max_chase_attempts": 10,
-            "execution_chase_wait_seconds": 5.0,
-            "execution_initial_wait_seconds": 5.0,
             "execution_chase_fraction": 0.3,
-            "execution_ioc_reserve_seconds": 5.0,
+            **spread_params,
         }
         plan = ExecutionPlan(
             symbol=symbol,
@@ -160,7 +215,7 @@ class HLExecutor:
             total_quantity=qty,
             urgency="low",
             max_slippage_bps=target_slip_bps,
-            time_horizon_seconds=300,
+            time_horizon_seconds=int(chosen_dur),
             metadata=metadata,
         )
 
@@ -206,6 +261,7 @@ class HLExecutor:
                         side=d["side"],
                         target_notional_usd=float(d["target_notional_usd"]),
                         signal_mid=float(d["signal_mid"]),
+                        observed_spread_bps=d.get("spread_bps"),
                     )
                 except Exception as e:
                     log.exception("[%s] execute_delta unexpected failure", coin)
