@@ -882,8 +882,13 @@ def execute_cycle_turnover_aware(prev_positions: list[LegPosition],
             last_fill_status=fill_status,
         ))
 
-    # Cost decomposition (all in bps of equity)
-    fees_bps = HL_TAKER_FEE_BPS * (total_trade_notional / equity_usd)
+    # Cost decomposition (all in bps of equity). Guard against equity_usd ≤ 0
+    # (e.g., aborted cycle returned 0 from _live_run_cycle_via_engine) to
+    # avoid ZeroDivisionError on the no-trades path.
+    if equity_usd > 0:
+        fees_bps = HL_TAKER_FEE_BPS * (total_trade_notional / equity_usd)
+    else:
+        fees_bps = 0.0
     slip_bps_total = total_slip_weighted * 1.0  # already in bps × weight units
     n_trades = len(trades)
     return {
@@ -938,13 +943,18 @@ def save_state(positions: list[LegPosition], cycle_row: dict):
 def _prev_weight_signed(p: LegPosition, equity_usd: float) -> float:
     actual_notional = getattr(p, "actual_filled_notional_usd", 0.0) or 0.0
     if actual_notional > 0 and equity_usd > 0:
-        # Sign comes from the target weight if non-zero; otherwise from the
-        # position side (covers HL-reconciled positions where state.weight=0
-        # but actual exposure is real).
-        if p.weight != 0:
+        # Sign rule: position SIDE wins when set (it's the authoritative
+        # direction of real exposure — e.g., a reconciled HL flip overrode
+        # the target weight). Fall back to weight sign only when side is
+        # neither "L" nor "S".
+        if p.side == "L":
+            sign = 1.0
+        elif p.side == "S":
+            sign = -1.0
+        elif p.weight != 0:
             sign = 1.0 if p.weight > 0 else -1.0
         else:
-            sign = 1.0 if p.side == "L" else (-1.0 if p.side == "S" else 0.0)
+            sign = 0.0
         return sign * (actual_notional / equity_usd)
     return p.weight
 
@@ -970,7 +980,7 @@ async def _reconcile_state_with_hl(
         hl_positions = await exchange.fetch_positions()
     except Exception as e:
         log.error("Reconcile: fetch_positions failed (%s) — using state as-is", e)
-        return list(prev_positions)
+        return list(prev_positions or [])
 
     # Map HL "BTC/USDC" → "BTCUSDT" so the keying matches state syms.
     def _coin_to_binance_sym(s: str) -> str:
@@ -1119,7 +1129,7 @@ def _live_run_cycle_via_engine(
                     "liquidated or empty. Aborting cycle — no trades will be placed.",
                     equity_usd,
                 )
-                return {}, equity_usd, list(prev_positions)
+                return {}, equity_usd, list(prev_positions or [])
             log.info("Live execute equity (HL account_value): $%.4f", equity_usd)
 
             # Reconcile state.json against HL's actual position snapshot
