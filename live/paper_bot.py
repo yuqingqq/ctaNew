@@ -767,14 +767,26 @@ def execute_cycle_turnover_aware(prev_positions: list[LegPosition],
             if not np.isfinite(fill["vwap"]):
                 log.warning("[%s] taker fill NaN for delta=%+.4f notional=$%.0f", sym, delta, notional)
                 continue
+        # Cost reporting uses ACTUAL filled notional, not target. Partial
+        # fills cost less than target; over-fills cost more. Reporting target
+        # would over- or under-state fees and slippage in cycles.csv and the
+        # Telegram daily summary.
+        _fill_qty = float(fill.get("qty") or 0.0)
+        _fill_vwap_for_cost = float(fill.get("vwap") or 0.0) if np.isfinite(fill.get("vwap", float("nan"))) else 0.0
+        _over_fill = float(fill.get("over_fill_qty") or 0.0)
+        actual_trade_notional = (_fill_qty + _over_fill) * _fill_vwap_for_cost
+        actual_trade_weight = (
+            actual_trade_notional / equity_usd if equity_usd > 0 else 0.0
+        )
         trades.append({
             "symbol": sym, "delta_weight": delta, "side_action": side_action,
-            "notional_usd": notional, "fill_vwap": fill["vwap"],
+            "notional_usd": actual_trade_notional,
+            "target_notional_usd": notional,           # diagnostic: what we asked for
+            "fill_vwap": fill["vwap"],
             "fill_mid": fill["mid"], "slippage_bps": fill["slippage_bps"],
         })
-        total_trade_notional += notional
-        # weight slippage by trade notional (so aggregate is notional-weighted)
-        total_slip_weighted += abs(fill["slippage_bps"]) * abs(delta)
+        total_trade_notional += actual_trade_notional
+        total_slip_weighted += abs(fill["slippage_bps"]) * actual_trade_weight
 
         # Build the new position state for this symbol (if it survives)
         if abs(new_weight) < 1e-9:
