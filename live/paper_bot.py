@@ -705,8 +705,39 @@ def execute_cycle_turnover_aware(prev_positions: list[LegPosition],
             continue
         if live_fills_by_sym is not None:
             fill = live_fills_by_sym.get(sym)
+            # Two reasons fill can be None: (a) sym was dust-filtered in
+            # _live_run_cycle_via_engine, (b) sym had no L2 book. Either way,
+            # no trade happened. We MUST carry the prev position forward —
+            # NOT continue silently — otherwise next cycle has no record of
+            # the position and we silently lose track of real exchange exposure.
+            # This was bug B7 found during the second review pass.
             if fill is None:
-                log.warning("[%s] live executor returned no fill record — skipping", sym)
+                if sym in prev_by_sym:
+                    log.warning(
+                        "[%s] live executor produced no fill record (likely dust-"
+                        "filtered or no book) — carrying prev forward to preserve state",
+                        sym,
+                    )
+                    p = prev_by_sym[sym]
+                    new_positions.append(LegPosition(
+                        symbol=sym, side=p.side, weight=p.weight,
+                        entry_price_hl=p.entry_price_hl, entry_mid_hl=p.entry_mid_hl,
+                        entry_notional_usd=p.entry_notional_usd,
+                        entry_slippage_bps=p.entry_slippage_bps,
+                        entry_time=p.entry_time,
+                        last_marked_mid=mid_now if np.isfinite(mid_now) else p.last_marked_mid,
+                        last_cycle_mid=mid_now if np.isfinite(mid_now) else (p.last_cycle_mid or p.last_marked_mid),
+                        funding_paid_usd=p.funding_paid_usd,
+                        actual_filled_qty=getattr(p, "actual_filled_qty", 0.0),
+                        actual_filled_notional_usd=getattr(p, "actual_filled_notional_usd", 0.0),
+                        last_fill_status="DUST_SKIP",
+                    ))
+                else:
+                    log.info(
+                        "[%s] live executor produced no fill record AND no prev "
+                        "position — leg never opened, skipping",
+                        sym,
+                    )
                 continue
             if fill.get("over_fill_qty", 0.0) > 0:
                 log.error(
