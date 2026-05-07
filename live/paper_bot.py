@@ -1042,7 +1042,13 @@ async def _reconcile_state_with_hl(
         reconciled.append(LegPosition(
             symbol=sym, side=hl["side"], weight=p.weight,
             entry_price_hl=p.entry_price_hl, entry_mid_hl=p.entry_mid_hl,
-            entry_notional_usd=p.entry_notional_usd,
+            # Refresh entry_notional from HL's actual size × current mark.
+            # Preserving prev's entry_notional was wrong when prev was a
+            # sim cycle ($10k synthetic equity) — its weight × $10k value
+            # would persist into live state and inflate hourly_monitor's
+            # reported notional by ~20x. Sourcing from HL keeps it honest
+            # against current real exposure.
+            entry_notional_usd=hl_notional,
             entry_slippage_bps=p.entry_slippage_bps,
             entry_time=p.entry_time,
             last_marked_mid=p.last_marked_mid, last_cycle_mid=p.last_cycle_mid,
