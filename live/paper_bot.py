@@ -1104,6 +1104,26 @@ async def _reconcile_state_with_hl(
 _DUST_NOTIONAL_FLOOR_USD = 25.0
 
 
+def _is_reduce_or_close(prev_w_signed: float, target_w_signed: float) -> bool:
+    """True iff the trade purely reduces an existing position (close or
+    same-side reduce). Safe to use HL's reduce_only flag — server-side
+    guarantees no over-fill / no flip.
+
+    False for: pure open (prev=0), same-side add (|target|>|prev| same sign),
+    flip (prev and target opposite signs). For these, HL would reject a
+    reduce_only order ("no position to reduce") or only fill the close-half
+    of a flip, leaving the open-half un-traded.
+    """
+    if prev_w_signed == 0:
+        return False  # opening from flat
+    if target_w_signed == 0:
+        return True   # pure close
+    if prev_w_signed * target_w_signed < 0:
+        return False  # flip — reduce_only would only do close-half
+    # Same sign: reducing iff |target| < |prev|
+    return abs(target_w_signed) < abs(prev_w_signed)
+
+
 def _live_run_cycle_via_engine(
     prev_positions: list[LegPosition],
     target_weights: dict[str, float],
@@ -1186,12 +1206,18 @@ def _live_run_cycle_via_engine(
                     log.info("[%s] dust delta=%+.4f notional=$%.2f below $%.0f floor — skipped",
                              sym, delta, target_notional, _DUST_NOTIONAL_FLOOR_USD)
                     continue
+                # Classify trade for reduce_only flag (HL server-side
+                # over-fill guarantee for closes/reduces).
+                target_w_signed = target_weights.get(sym, 0.0)
+                prev_w_signed = prev_w.get(sym, 0.0)
+                is_reduce_only = _is_reduce_or_close(prev_w_signed, target_w_signed)
                 deltas.append({
                     "coin": coin,
                     "side": "buy" if delta > 0 else "sell",
                     "target_notional_usd": target_notional,
                     "signal_mid": mid,
                     "spread_bps": spread_bps,
+                    "reduce_only": is_reduce_only,
                 })
                 sym_for_coin[coin] = sym
 

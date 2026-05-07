@@ -152,6 +152,7 @@ class HLExecutor:
         target_notional_usd: float,
         signal_mid: float,
         observed_spread_bps: Optional[float] = None,
+        reduce_only: bool = False,
     ) -> dict:
         """Execute one delta trade. Returns a fill dict matching the
         `simulate_taker_fill` shape with two extra keys (notes, over_fill_qty).
@@ -159,6 +160,12 @@ class HLExecutor:
         observed_spread_bps: tier the SignalLimit max_duration on observed
         spread. Tight spreads (≤1 bp) → 60s (maker rarely fills, IOC fast).
         Wide spreads (>3 bp) → 300s (real maker savings possible).
+
+        reduce_only: when True, every order placed by the engine for this
+        delta sets reduce_only=True. HL refuses any fill that would
+        increase abs(position). Use for pure-close and same-side reduce
+        trades — eliminates double-fill risk server-side. Don't set for
+        opens / adds / flips (HL would reject with "no position to reduce").
         """
         symbol = f"{coin}/USDC"
 
@@ -207,6 +214,7 @@ class HLExecutor:
             "signal_price": signal_mid,
             "execution_max_slippage_bps": target_slip_bps,
             "execution_chase_fraction": 0.3,
+            "execution_reduce_only": bool(reduce_only),
             **spread_params,
         }
         plan = ExecutionPlan(
@@ -262,13 +270,15 @@ class HLExecutor:
                         target_notional_usd=float(d["target_notional_usd"]),
                         signal_mid=float(d["signal_mid"]),
                         observed_spread_bps=d.get("spread_bps"),
+                        reduce_only=bool(d.get("reduce_only", False)),
                     )
                 except Exception as e:
                     log.exception("[%s] execute_delta unexpected failure", coin)
                     fill = _failed_fill(d.get("signal_mid", 0.0), f"unexpected: {e}")
             log.info(
-                "[%s] %s ${%.2f} -> qty=%.6f vwap=%.6f slip=%.2fbps fully_filled=%s%s",
+                "[%s] %s ${%.2f}%s -> qty=%.6f vwap=%.6f slip=%.2fbps fully_filled=%s%s",
                 coin, d["side"], d["target_notional_usd"],
+                "  [reduce_only]" if d.get("reduce_only") else "",
                 fill.get("qty", 0.0), fill.get("vwap", 0.0),
                 fill.get("slippage_bps", 0.0), fill.get("fully_filled", False),
                 f"  notes={fill['notes']}" if fill.get("notes") else "",
