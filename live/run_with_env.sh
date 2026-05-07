@@ -12,4 +12,4 @@ if [ -f .env ]; then
   source .env
   set +a
 fi
-exec /home/yuqing/pricer-sol/venv/bin/python3 "$@"
+exec /usr/bin/python3 "$@"
