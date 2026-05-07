@@ -327,13 +327,15 @@ def main():
             print(f"  Note: net/yr% is arithmetic (bps/cyc × cyc/yr / 1e4), not compounded. "
                    f"Sharpe uses per-cycle net std × sqrt(cycles/yr).")
             print(f"    {'Tier':<32} {'fee/leg':>8} {'cost/cyc':>9} {'net/cyc':>8} {'net_std':>8} {'net/day':>9} {'net/yr%':>9} {'Sharpe':>8}")
+            # Tiers below: ONE-WAY taker fee per trade (HL VIP-0 baseline = 4.5).
             for tier_name, fee_per_leg in [
-                ("VIP-0 taker", 12.0),
-                ("VIP-1 taker", 10.0),
-                ("VIP-3 taker", 6.0),
-                ("maker tilt 50% on VIP-0", 7.5),
-                ("VIP-3 + maker tilt", 3.0),
-                ("VIP-9 maker", 1.0),
+                ("HL VIP-0 taker (4.5)", 4.5),
+                ("HYPE Bronze taker (-10%)", 4.05),
+                ("Bronze + referral (-14%)", 3.87),
+                ("HYPE Silver taker (-20%)", 3.6),
+                ("HYPE Gold taker (-30%)", 3.15),
+                ("HL VIP-0 maker (1.5)", 1.5),
+                ("HYPE Diamond maker (~0.75)", 0.75),
             ]:
                 net_series = pooled["spread_ret_bps"] - fee_per_leg * tot_to
                 net_cyc = net_series.mean()
@@ -351,10 +353,10 @@ def main():
                 print(f"\n  Bootstrap 95% CI (block-bootstrap, block=7 cycles, n_boot=2000) — OOS:")
                 print(f"    {'Tier':<32} {'fee/leg':>8} {'net/cyc CI':>20} {'Sharpe_yr CI':>20}")
                 for tier_name, fee_per_leg in [
-                    ("VIP-0 taker", 12.0),
-                    ("VIP-3 taker", 6.0),
-                    ("VIP-3 + maker tilt", 3.0),
-                    ("VIP-9 maker", 1.0),
+                    ("HL VIP-0 taker (4.5)", 4.5),
+                    ("HYPE Silver taker (3.6)", 3.6),
+                    ("HL VIP-0 maker (1.5)", 1.5),
+                    ("HYPE Diamond maker (0.75)", 0.75),
                 ]:
                     ns = (pooled["spread_ret_bps"] - fee_per_leg * tot_to).to_numpy()
                     _, lo_n, hi_n = block_bootstrap_ci(ns, statistic=np.mean, block_size=7)

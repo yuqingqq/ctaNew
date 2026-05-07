@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import logging
 import sys
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from data_collectors.binance_vision_loader import LoaderConfig, fetch_klines
@@ -15,8 +15,9 @@ from data_collectors.binance_vision_loader import LoaderConfig, fetch_klines
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 log = logging.getLogger(__name__)
 
-# Top liquid Binance USDM perps that aren't already pulled.
+# ORIG25 — the 25 BNF perps that v6_clean was selected on.
 SYMBOLS = [
+    "BTCUSDT", "ETHUSDT", "SOLUSDT",
     "BNBUSDT", "XRPUSDT", "ADAUSDT", "AVAXUSDT", "DOGEUSDT",
     "LINKUSDT", "DOTUSDT", "LTCUSDT", "BCHUSDT",
     "NEARUSDT", "UNIUSDT", "ATOMUSDT", "FILUSDT",
@@ -25,7 +26,9 @@ SYMBOLS = [
 ]
 
 START = datetime(2025, 3, 23).date()
-END = datetime(2026, 4, 28).date()
+# END = yesterday UTC. Vision archives publish with ~1-day lag; today's file
+# is usually missing. Dynamic so the weekly cron picks up new bars each run.
+END = (datetime.now(timezone.utc) - timedelta(days=1)).date()
 OUT_DIR = Path("data/ml/test")
 
 

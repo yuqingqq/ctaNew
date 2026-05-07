@@ -46,8 +46,11 @@ HORIZON = 48
 REGIME_CUTOFF = 0.50  # was 0.33; multi-OOS lift +0.58 Sharpe (2026-05-03)
 HOLDOUT_DAYS = 90
 
-# Cost: 12 bps per leg RT (fee 5×2 + slip 1×2 + spread ~1×2 → ~14 bps; conservative)
-NAKED_COST_BPS_PER_LEG = 12.0
+# Cost: ONE-WAY taker fee per trade. HL VIP-0 = 4.5 bps; VIP-3 = 3.0 bps.
+# (Renamed 2026-05-06: prior code used "per leg RT" semantics with a 0.5×
+# factor in long_to/short_to that under-counted fees by 2× when fee was
+# passed as one-way taker. See live.paper_bot.HL_TAKER_FEE_BPS.)
+NAKED_COST_BPS_PER_LEG = 4.5
 
 
 def _train(X_train, y_train, X_cal, y_cal, *, seed):
@@ -187,8 +190,12 @@ def portfolio_pnl_turnover_aware(
       - A maker-fill simulator (taker-rate cost only).
 
     Cost: at each rebalance, `cost_bps_per_leg × (long_to + short_to)` where
-    turnover ∈ [0, 1] is L1-distance/2 between successive weight vectors.
-    First rebalance pays full entry on both legs.
+    long_to/short_to is the L1 distance of the long/short weight vector
+    (sum of |Δw|; matches live's `fees_bps = fee_per_trade × notional/equity`
+    accounting). cost_bps_per_leg is the ONE-WAY taker fee per trade.
+
+    NOTE: prior versions had a 0.5× factor in long_to/short_to that
+    under-counted fees by 2× when one-way fees were used. Fixed 2026-05-06.
 
     Beta-neutral: if True, scale leg notionals so dollar-beta of long leg
     matches dollar-beta of short leg (keeping target gross ≈ 2). Scales
@@ -252,9 +259,9 @@ def portfolio_pnl_turnover_aware(
             long_to, short_to = scale_L, scale_S  # full entry
         else:
             all_l = set(long_w) | set(prev_long_w)
-            long_to = 0.5 * sum(abs(long_w.get(s, 0) - prev_long_w.get(s, 0)) for s in all_l)
+            long_to = sum(abs(long_w.get(s, 0) - prev_long_w.get(s, 0)) for s in all_l)
             all_s = set(short_w) | set(prev_short_w)
-            short_to = 0.5 * sum(abs(short_w.get(s, 0) - prev_short_w.get(s, 0)) for s in all_s)
+            short_to = sum(abs(short_w.get(s, 0) - prev_short_w.get(s, 0)) for s in all_s)
         bar_cost_bps = cost_bps_per_leg * (long_to + short_to)
         net_bps = (spread_ret * 1e4) - bar_cost_bps
         bars.append({
@@ -456,13 +463,17 @@ def main():
             print(f"  Note: net/yr% is arithmetic (bps/cyc × cyc/yr / 1e4), not compounded. "
                    f"Sharpe uses per-cycle net std × sqrt(cycles/yr).")
             print(f"    {'Tier':<32} {'fee/leg':>8} {'cost/cyc':>9} {'net/cyc':>8} {'net_std':>8} {'net/day':>9} {'net/yr%':>9} {'Sharpe':>8}")
+            # Tiers below: ONE-WAY taker fee per trade.
+            # HL VIP-0 = 4.5; HYPE Bronze (-10%) = 4.05; Silver (-20%) = 3.6;
+            # Gold (-30%) = 3.15; HL VIP-0 maker = 1.5; deeper-staked maker ≈ 0.75-1.0.
             for tier_name, fee_per_leg in [
-                ("VIP-0 taker", 12.0),
-                ("VIP-1 taker", 10.0),
-                ("VIP-3 taker", 6.0),
-                ("maker tilt 50% on VIP-0", 7.5),
-                ("VIP-3 + maker tilt", 3.0),
-                ("VIP-9 maker", 1.0),
+                ("HL VIP-0 taker (4.5)", 4.5),
+                ("HYPE Bronze taker (-10%)", 4.05),
+                ("Bronze + referral (-14%)", 3.87),
+                ("HYPE Silver taker (-20%)", 3.6),
+                ("HYPE Gold taker (-30%)", 3.15),
+                ("HL VIP-0 maker (1.5)", 1.5),
+                ("HYPE Diamond maker (~0.75)", 0.75),
             ]:
                 # Per-cycle net for THIS tier from pooled bdf
                 net_series = pooled["spread_ret_bps"] - fee_per_leg * tot_to
@@ -483,10 +494,10 @@ def main():
                 print(f"\n  Bootstrap 95% CI (block-bootstrap, block=7 cycles, n_boot=2000) — OOS:")
                 print(f"    {'Tier':<32} {'fee/leg':>8} {'net/cyc CI':>20} {'Sharpe_yr CI':>20}")
                 for tier_name, fee_per_leg in [
-                    ("VIP-0 taker", 12.0),
-                    ("VIP-3 taker", 6.0),
-                    ("VIP-3 + maker tilt", 3.0),
-                    ("VIP-9 maker", 1.0),
+                    ("HL VIP-0 taker (4.5)", 4.5),
+                    ("HYPE Silver taker (3.6)", 3.6),
+                    ("HL VIP-0 maker (1.5)", 1.5),
+                    ("HYPE Diamond maker (0.75)", 0.75),
                 ]:
                     ns = (pooled["spread_ret_bps"] - fee_per_leg * tot_to).to_numpy()
                     _, lo_n, hi_n = block_bootstrap_ci(ns, statistic=np.mean, block_size=7)

@@ -1,16 +1,34 @@
-# Handoff — 2026-05-03
+# Handoff — 2026-05-06
+
+## ⚠️ Cost-formula correction (2026-05-06)
+
+Previously published Sharpe values (+3.30 / +3.63) assumed `cost_bps_per_leg
+× 0.5 × Σ|Δw|` — the 0.5× was a vestigial "round-trip per leg" factor.
+With HL one-way fees plugged in, fees were under-counted **2×**. Fixed in
+`ml/research/alpha_v4_xs.py`. Live's `paper_bot.py` always used the correct
+`fee × notional/equity` formula and was unaffected.
+
+Corrected backtest economics at HL VIP-0 (4.5 bps one-way taker):
+- net/cycle ≈ +0.7 bps (was claimed +4.33)
+- Sharpe ≈ +0.6 (was claimed +3.63)
+
+The strategy is still positive at corrected costs, but the deployment
+thesis ("backtest CI excludes zero") no longer holds at 4.5 bps. Edge
+becomes meaningful at HYPE-staked tiers (Silver/Gold) or maker fills.
+See "Fee sensitivity" in STATUS.md.
 
 ## Summary for the next person
 
-**The strategy is deployable.** Two validated configurations:
+The strategy is deployable but **edge depends on fee tier**:
 
-1. **h=288 K=5 ORIG25** (legacy production): multi-OOS Sharpe **+3.30**
-   [+1.11, +5.42] at 4.5 bps/leg taker (HL VIP-0). Currently running on
-   this dev server via HL-only kline feed (Binance FAPI is geo-blocked
-   from here).
-2. **h=48 K=7 ORIG25** (recommended new): multi-OOS Sharpe **+3.63**
-   [+1.31, +6.14] at the same cost. Artifact in `models/v6_clean_h48_*`,
-   pipeline verified end-to-end. Awaits move to a FAPI-accessible server.
+1. **h=288 K=5 ORIG25** (legacy): corrected multi-OOS Sharpe **~+0.5**.
+2. **h=48 K=7 ORIG25** (current, running): corrected multi-OOS Sharpe
+   **~+0.6**. Forward-test N=15 cycles: Sharpe +2.6 (above corrected
+   backtest, within sample noise).
+
+Forward-test confirms live pipeline matches backtest mechanically (live
+fees match exactly, live gross alpha is running ABOVE corrected backtest
+gross — possibly favorable regime, possibly real signal in fresh data).
 
 Both use the **same v6_clean features** (28-column set). The only
 differences between configs are HORIZON_BARS (288 vs 48), TOP_K (5 vs 7),

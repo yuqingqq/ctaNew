@@ -1,19 +1,87 @@
-# Status — 2026-05-03
+# Status — 2026-05-06
 
 ## Program
 
 P-2026-001: ML CTA engine for crypto perpetuals. Goal was a deployable signal
 layer extracting alpha from kline + aggTrade data on Binance USDM perps.
 
-## Current state (2026-05-03)
+## ⚠️ Cost-formula correction (2026-05-06)
 
-**Deployment-ready. Two configurations validated; h=48 K=7 ORIG25 is
-the recommended deployment.**
+**Previously published Sharpe values were ~2× too high** because the backtest
+cost formula in `ml/research/alpha_v4_xs.py::portfolio_pnl_turnover_aware`
+applied `cost_bps_per_leg × 0.5 × Σ|Δw|` instead of `× Σ|Δw|`. The 0.5×
+factor was inherited from a "round-trip per leg" cost model; when callers
+later substituted the HL VIP-0 one-way taker fee (4.5 bps) directly, fees
+were under-counted by exactly 2×. **Fixed in commit on 2026-05-06.**
 
-| Config | Sharpe (multi-OOS) | 95% CI | Cost | Status |
-|---|---|---|---|---|
-| h=288 K=5 (legacy production) | **+3.30** | [+1.11, +5.42] | 4.5 bps/leg taker | running on this server (no FAPI) |
-| **h=48 K=7 ORIG25 (new)** | **+3.63** | **[+1.31, +6.14]** | 4.5 bps/leg taker | artifact ready, awaits FAPI server |
+The corrected economics below are now consistent with `live/paper_bot.py`'s
+`HL_TAKER_FEE_BPS × notional_traded / equity` accounting (verified
+deterministically against live cycle data).
+
+## Current state (2026-05-06)
+
+**Deployment running but edge is thinner than originally claimed. h=48 K=7
+ORIG25 is still the recommended config; needs HL fee discounts (HYPE
+staking) to clear cost line comfortably.**
+
+| Config | Sharpe (multi-OOS, **corrected**) | Cost | Status |
+|---|---|---|---|
+| h=288 K=5 (legacy) | **~+0.5** (was reported +3.30) | 4.5 bps/leg taker, one-way | not running |
+| **h=48 K=7 ORIG25** | **~+0.6** (was reported +3.63) | 4.5 bps/leg taker, one-way | running, N=15 forward Sharpe +2.6 |
+
+Forward-test (N=15 cycles, 2.5 days): mean net +2.7 bps/cycle, Sharpe +2.6.
+This is within sample noise of the corrected backtest base case but well
+below the previously-claimed +3.63. See "Fee sensitivity" below for how
+edge scales with HL discount tiers.
+
+## Fee sensitivity (corrected, 2026-05-06)
+
+Per-cycle net at h=48 K=7 ORIG25, both live (N=15 forward, gross+12.56,
+turnover 1.64) and backtest (corrected, gross +7.90, turnover 1.72):
+
+| Tier | fee/leg | Live net/cyc | Live Sharpe | BT net/cyc | BT Sharpe |
+|---|---:|---:|---:|---:|---:|
+| HL VIP-0 taker (current) | 4.50 | +2.78 | +2.69 | +0.16 | +0.13 |
+| + Referral (-4%) | 4.32 | +3.08 | +2.98 | +0.47 | +0.39 |
+| HYPE Bronze (-5%) | 4.28 | +3.15 | +3.05 | +0.55 | +0.46 |
+| Bronze + Referral | 4.10 | +3.44 | +3.33 | +0.85 | +0.71 |
+| HYPE Silver (-10%) | 4.05 | +3.52 | +3.41 | +0.93 | +0.78 |
+| Silver + Referral | 3.89 | +3.78 | +3.66 | +1.21 | +1.01 |
+| HYPE Gold (-15%) | 3.83 | +3.89 | +3.77 | +1.32 | +1.10 |
+| Gold + Referral | 3.67 | +4.14 | +4.01 | +1.59 | +1.33 |
+| HYPE Platinum (-25%) | 3.38 | +4.63 | +4.48 | +2.10 | +1.75 |
+| Platinum + Referral | 3.24 | +4.85 | +4.70 | +2.33 | +1.94 |
+| fee = 3.0 bps | 3.00 | +5.24 | +5.08 | +2.74 | +2.29 |
+| fee = 2.0 bps | 2.00 | +6.88 | +6.67 | +4.46 | +3.73 |
+| HL VIP-0 maker (1.5) | 1.50 | +7.70 | +7.46 | +5.32 | +4.45 |
+| Deep-tier maker (~0.75) | 0.75 | +8.95 | +8.66 | +6.61 | +5.53 |
+
+NOTES:
+- "Live-data view" extrapolates from observed N=15 gross+turnover, with
+  measured slippage 2.52 bps/cycle and funding -0.12 bps/cycle held constant.
+- "Backtest view" uses docs' gross +7.90 and corrected turnover 1.72; assumes
+  slip = funding = 0 (backtest doesn't model them separately).
+- Std assumptions: live std 48.3 bps/cycle (observed), backtest std 56 bps
+  (implied from old docs). Std treats fee changes as ~constant per cycle, so
+  is approximately tier-invariant.
+- N=15 is too small to distinguish live's gross-favorable regime from a
+  durable signal advantage. By N=30 the gap to backtest's +7.90 will be
+  clearer.
+
+Each 1 bps reduction in per-side fee → ~+1.6 bps/cycle improvement in net
+(= turnover × Δfee), which is ~+1.55 annualized Sharpe at h=48 cadence.
+
+## Recommendation
+
+- **Stake 100+ HYPE for Bronze and add a referral link** → gets fees to
+  ~4.10 bps. Boosts live-view Sharpe from ~+2.7 to ~+3.3, and pulls
+  backtest base case from ~+0.13 (essentially zero) to ~+0.71 (mildly
+  positive). Cheapest immediate Sharpe lift.
+- **Sustained edge case**: if forward-test still positive at N=30, stake
+  to Silver/Gold tier and target backtest Sharpe ~+1.0–+1.5.
+- **Maker fills (1.5 bps tier)** would be transformative (Sharpe +4.5),
+  but require post-only execution + L2 fill simulation that doesn't exist
+  in this codebase yet.
 
 Both at 25-symbol original universe (ORIG25 — original 25 BNF perps,
 excludes 14 newer entrants), `REGIME_CUTOFF = 0.50` (label-quality gate),

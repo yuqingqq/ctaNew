@@ -61,32 +61,32 @@
   "universe_mode": "ORIG25",
   "regime_cutoff": 0.5,
   "train_window_start": "2025-03-25 00:00:00+00:00",
-  "train_window_end": "2026-04-08 23:55:00+00:00",
-  "cal_window_start": "2026-04-08 23:55:00+00:00",
-  "cal_window_end": "2026-04-28 23:55:00+00:00",
-  "n_train_rows": 1369221,
-  "n_cal_rows": 71342,
+  "train_window_end": "2026-04-12 23:55:00+00:00",
+  "cal_window_start": "2026-04-12 23:55:00+00:00",
+  "cal_window_end": "2026-05-02 23:55:00+00:00",
+  "n_train_rows": 1382597,
+  "n_cal_rows": 70430,
   "ensemble_seeds_iters": [
     {
       "seed": 42,
-      "best_iter": 1
+      "best_iter": 3
     },
     {
       "seed": 7,
-      "best_iter": 1
+      "best_iter": 6
     },
     {
       "seed": 123,
-      "best_iter": 2
+      "best_iter": 10
     },
     {
       "seed": 99,
-      "best_iter": 1
+      "best_iter": 14
     },
     {
       "seed": 314,
-      "best_iter": 2
+      "best_iter": 1
     }
   ],
-  "trained_at_utc": "2026-05-03T15:17:39.797254Z"
+  "trained_at_utc": "2026-05-04T00:39:32.037355Z"
 }
