@@ -1,0 +1,53 @@
+{
+  "major": [
+    "BTCUSDT",
+    "ETHUSDT",
+    "BNBUSDT",
+    "SOLUSDT"
+  ],
+  "l1_established": [
+    "ADAUSDT",
+    "AVAXUSDT",
+    "DOTUSDT",
+    "NEARUSDT",
+    "ATOMUSDT",
+    "ARBUSDT",
+    "OPUSDT"
+  ],
+  "l1_newer": [
+    "APTUSDT",
+    "SUIUSDT",
+    "TIAUSDT",
+    "INJUSDT",
+    "SEIUSDT",
+    "ICPUSDT",
+    "HBARUSDT",
+    "TONUSDT"
+  ],
+  "defi": [
+    "AAVEUSDT",
+    "MKRUSDT",
+    "LDOUSDT",
+    "UNIUSDT",
+    "LINKUSDT",
+    "RUNEUSDT",
+    "GMXUSDT"
+  ],
+  "memes": [
+    "DOGEUSDT",
+    "1000PEPEUSDT",
+    "1000SHIBUSDT",
+    "ORDIUSDT",
+    "WIFUSDT"
+  ],
+  "other_alt": [
+    "XRPUSDT",
+    "BCHUSDT",
+    "LTCUSDT",
+    "FILUSDT",
+    "ETCUSDT",
+    "AXSUSDT",
+    "TRBUSDT",
+    "WLDUSDT"
+  ]
+}

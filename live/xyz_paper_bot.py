@@ -6,23 +6,33 @@ US RTH close (~21:30 UTC). State persists in live/state/xyz/.
 Cycle steps:
   1. Load v7 model artifact (15 models) and previous state.
   2. Refresh yfinance daily data for full S&P 100 (incremental, last ~10 days).
-  3. If a previous open portfolio exists: fetch current xyz mid prices,
-     mark-to-market against prior entry mids → realized 1d P&L per leg →
-     append to cycles.csv (closing the prior cycle).
-  4. Build full panel (returns, basket, residual, A+B+sector features).
-  5. Predict for today's bar using all 15 models, average.
-  6. Filter to Tier A 8 names, rank, apply hysteresis (K=3, M=1) using prior
-     state's long/short sets.
-  7. Apply dispersion gate (60-pctile of trailing 252d).
-  8. Fetch xyz mids for new long/short → these become next cycle's entry mids.
-  9. Save new state.
+  3. Build full panel (returns, basket, residual, A+B+F_sector features) and
+     validate feature order matches the artifact's frozen feat_cols.
+  4. Predict for the latest bar using all 15 LGBMs (3 horizons × 5 seeds),
+     averaged. NaN features are routed by LGBM's learned default branches.
+  5. Filter to active universe preset, rank, apply hysteresis from prior state.
+  6. Apply dispersion gate (PIT 60-pctile of trailing 252d).
+  7. Fetch xyz L2 books and simulate taker fills:
+       - For ROTATED-OUT names: simulate exit fill against current L2.
+       - For NEWLY-ENTERED names: simulate entry fill, record vwap as next
+         cycle's mark reference (captures entry slippage at first close).
+       - For HELD names: mid-to-mid mark only (no transaction, no slippage).
+     Apply turnover-aware fee on rotation events only (default 0.8 bps/side).
+  8. Save new state.
 
 Run modes:
     python -m live.xyz_paper_bot                   # one cycle now
-    python -m live.xyz_paper_bot --no-refresh      # skip yfinance refresh
-    python -m live.xyz_paper_bot --check-state     # dump current state
+    python -m live.xyz_paper_bot --universe tier_ab  # default 11 names K=4/M=1
+    python -m live.xyz_paper_bot --universe tier_a   # 8 names K=3/M=1
+    python -m live.xyz_paper_bot --universe full15   # 15 names K=5/M=2
+    python -m live.xyz_paper_bot --notional-usd N    # per-leg shadow notional
+    python -m live.xyz_paper_bot --taker-fee-bps F   # override default 0.8
+    python -m live.xyz_paper_bot --no-refresh        # skip yfinance refresh
+    python -m live.xyz_paper_bot --check-state       # dump current state
 
-Cost model (memory): 1.5 bps/side patient maker on xyz growth-mode.
+Cost model: per-side taker fee + walk-the-book slippage simulation.
+Default config: taker fee 0.8 bps, $10k/leg notional. Backtest at 3.5 bps/side
+total cost (slippage 2.7 + fee 0.8) gives active Sharpe +3.11 (CI [+1.79, +4.49]).
 """
 from __future__ import annotations
 
@@ -61,7 +71,15 @@ META_PATH = MODEL_DIR / "v7_xyz_meta.json"
 CACHE = ROOT / "data" / "ml" / "cache"
 
 HL_INFO_URL = "https://api.hyperliquid.xyz/info"
-COST_BPS_PER_SIDE = 1.5
+COST_BPS_PER_SIDE = 1.5  # default for shadow accounting (used if L2 fills fail)
+DEFAULT_NOTIONAL_USD = 10_000.0  # per-leg notional for fill simulation
+DEFAULT_TAKER_FEE_BPS = 0.8  # current xyz growth-mode taker (per user, 2026-05-08)
+
+try:
+    from live.telegram import notify_telegram
+except Exception:
+    def notify_telegram(text, **kw):  # type: ignore
+        return False
 
 
 # ---- model artifact loading -------------------------------------------------
@@ -74,7 +92,10 @@ def load_artifact():
     log.info("loaded artifact: %d models, %d features",
              len(models), len(meta["feat_cols"]))
     log.info("  trained_at=%s", meta.get("trained_at_utc", "?"))
-    log.info("  execution_universe=%s", meta["execution_universe"])
+    log.info("  trained_universe_size=%d  presets_available=%s",
+             len(meta.get("training_universe", [])),
+             list(meta.get("execution_universe_presets", {}).keys())
+              or "(legacy meta)")
     return models, meta
 
 
@@ -100,8 +121,17 @@ def _json_default(o):
 
 
 def save_state(state: dict):
-    with POSITIONS_PATH.open("w") as fh:
+    """Atomic save via tmp + rename — durable against partial writes."""
+    tmp = POSITIONS_PATH.with_suffix(POSITIONS_PATH.suffix + ".tmp")
+    with tmp.open("w") as fh:
         json.dump(state, fh, indent=2, default=_json_default)
+        fh.flush()
+        try:
+            import os as _os
+            _os.fsync(fh.fileno())
+        except (OSError, AttributeError):
+            pass
+    tmp.replace(POSITIONS_PATH)  # POSIX atomic rename
 
 
 def append_cycle_row(row: dict):
@@ -112,13 +142,93 @@ def append_cycle_row(row: dict):
         df.to_csv(CYCLES_PATH, index=False)
 
 
-def append_predictions(ts: pd.Timestamp, preds: pd.DataFrame):
-    out = preds[["symbol", "pred"]].copy()
-    out["ts"] = pd.Timestamp(ts).isoformat()
+def _flush_pending_cycle_row(state: dict) -> dict:
+    """If state has a pending cycle row from a prior run, flush it to
+    cycles.csv and return state with the field removed.
+
+    Exactly-once semantics under crash: dedup by decision_ts before append.
+    If a previous run died after append but before strip+save, this run
+    sees the pending row, observes it's already in cycles.csv, and skips
+    the append while still stripping the field.
+    """
+    pending = state.get("pending_cycle_row")
+    if pending is None:
+        return state
+    decision_ts = str(pending.get("decision_ts"))
+    already_present = False
+    if CYCLES_PATH.exists():
+        try:
+            existing = pd.read_csv(CYCLES_PATH, usecols=["decision_ts"])
+            already_present = (existing["decision_ts"].astype(str) == decision_ts).any()
+        except Exception as e:
+            log.warning("could not read cycles.csv for dedup check: %s", e)
+    if already_present:
+        log.info("pending cycle row for %s already in cycles.csv — skip duplicate append",
+                 decision_ts)
+    else:
+        log.info("flushing pending cycle row from prior cycle (decision_ts=%s)",
+                 decision_ts)
+        append_cycle_row(pending)
+    state = {k: v for k, v in state.items() if k != "pending_cycle_row"}
+    save_state(state)
+    return state
+
+
+def _append_prediction_rows(ts_iso: str, rows: list[dict]):
+    if PREDICTIONS_PATH.exists():
+        try:
+            existing_ts = pd.read_csv(PREDICTIONS_PATH, usecols=["ts"])
+            if (existing_ts["ts"].astype(str) == ts_iso).any():
+                log.info("predictions for %s already logged — skip duplicate append", ts_iso)
+                return
+        except Exception as e:
+            log.warning("could not read predictions.csv for dedup check: %s", e)
+    out = pd.DataFrame(rows)
+    out["ts"] = ts_iso
+    out = out[["symbol", "pred", "ts"]]
     if PREDICTIONS_PATH.exists():
         out.to_csv(PREDICTIONS_PATH, mode="a", header=False, index=False)
     else:
         out.to_csv(PREDICTIONS_PATH, index=False)
+
+
+def _prediction_payload(ts: pd.Timestamp, preds: pd.DataFrame) -> dict:
+    rows = []
+    for _, r in preds[["symbol", "pred"]].iterrows():
+        rows.append({"symbol": str(r["symbol"]), "pred": float(r["pred"])})
+    return {"ts": pd.Timestamp(ts).isoformat(), "rows": rows}
+
+
+def _flush_pending_prediction_rows(state: dict) -> dict:
+    pending = state.get("pending_prediction_rows")
+    if pending is None:
+        return state
+    ts_iso = str(pending.get("ts"))
+    rows = pending.get("rows") or []
+    if rows:
+        _append_prediction_rows(ts_iso, rows)
+    state = {k: v for k, v in state.items() if k != "pending_prediction_rows"}
+    save_state(state)
+    return state
+
+
+def append_predictions(ts: pd.Timestamp, preds: pd.DataFrame):
+    payload = _prediction_payload(ts, preds)
+    _append_prediction_rows(payload["ts"], payload["rows"])
+
+
+def _require_full_fill(fill: dict, symbol: str, side: str,
+                       notional_usd: float) -> dict:
+    """Return fill if complete; otherwise abort before state/accounting changes."""
+    if not np.isfinite(fill.get("vwap", float("nan"))):
+        raise RuntimeError(f"{symbol} {side} fill has no finite vwap")
+    if not fill.get("fully_filled", False):
+        filled = float(fill.get("filled_notional", 0.0) or 0.0)
+        raise RuntimeError(
+            f"{symbol} {side} L2 depth insufficient: filled ${filled:,.2f} "
+            f"of ${notional_usd:,.2f}"
+        )
+    return fill
 
 
 # ---- yfinance incremental refresh ------------------------------------------
@@ -267,19 +377,27 @@ UNIVERSE_PRESETS = {
     "tier_ab": (TIER_AB, 4, 1),
     "full15":  (FULL15,  5, 2),
 }
-DEFAULT_PRESET = "tier_a"
+DEFAULT_PRESET = "tier_ab"
 
 
 def select_with_hysteresis(preds: pd.DataFrame, prev_long: set, prev_short: set,
                              allowed: set, top_k: int,
                              exit_buffer: int) -> tuple[set, set]:
     """Return (new_long, new_short). Same logic as
-    daily_portfolio_hysteresis but stateful across calls."""
+    daily_portfolio_hysteresis but stateful across calls.
+
+    Raises if there are too few non-NaN predictions to satisfy K + M
+    hysteresis depth — this is a fail-loud signal, not a "go flat" trigger.
+    The legitimate flat path is gate-closed, handled separately in run_cycle.
+    """
     bar = preds[preds["symbol"].isin(allowed)].dropna(subset=["pred"]).copy()
     if len(bar) < 2 * top_k + exit_buffer:
-        log.warning("  bar size %d < %d required for K=%d M=%d — skip cycle",
-                    len(bar), 2 * top_k + exit_buffer, top_k, exit_buffer)
-        return set(), set()
+        raise RuntimeError(
+            f"insufficient predictions: {len(bar)} valid names < "
+            f"{2 * top_k + exit_buffer} required for K={top_k} M={exit_buffer}. "
+            f"Aborting before state mutation. Check feature pipeline / NaN "
+            f"distribution / universe membership."
+        )
     bar = bar.sort_values("pred").reset_index(drop=True)
     n = len(bar)
     bar["rank_top"] = n - 1 - bar.index
@@ -316,6 +434,69 @@ def select_with_hysteresis(preds: pd.DataFrame, prev_long: set, prev_short: set,
 
 # ---- xyz mid price fetch ---------------------------------------------------
 
+def fetch_xyz_l2_book(symbol: str) -> dict | None:
+    """Fetch L2 orderbook for one xyz perp. Returns
+    {'bids': [(px,sz),...], 'asks': [(px,sz),...], 'mid': float, 'time_ms': int}
+    or None on failure."""
+    try:
+        r = requests.post(HL_INFO_URL,
+                            json={"type": "l2Book", "coin": f"xyz:{symbol}"},
+                            timeout=10)
+        r.raise_for_status()
+        j = r.json()
+        levels = j.get("levels", [[], []])
+        bids = [(float(l["px"]), float(l["sz"])) for l in levels[0]]
+        asks = [(float(l["px"]), float(l["sz"])) for l in levels[1]]
+        if not bids or not asks:
+            return None
+        return {"bids": bids, "asks": asks,
+                "mid": 0.5 * (bids[0][0] + asks[0][0]),
+                "time_ms": int(j.get("time", 0))}
+    except Exception as e:
+        log.warning("  l2 fetch %s failed: %s", symbol, e)
+        return None
+
+
+def simulate_taker_fill(book: dict, side: str, notional_usd: float) -> dict:
+    """Walk one side of the book to fill `notional_usd`.
+    side: 'buy' walks asks (long entry / short exit);
+          'sell' walks bids (short entry / long exit).
+    Returns vwap, mid, slippage_bps (signed +ve = adverse), qty,
+    levels_consumed, fully_filled.
+    """
+    levels = book["asks"] if side == "buy" else book["bids"]
+    mid = book["mid"]
+    consumed_qty = 0.0
+    consumed_notional = 0.0
+    remaining = notional_usd
+    levels_consumed = 0
+    for px, sz in levels:
+        level_notional = px * sz
+        if remaining <= level_notional:
+            qty = remaining / px
+            consumed_qty += qty
+            consumed_notional += remaining
+            remaining = 0.0
+            levels_consumed += 1
+            break
+        consumed_qty += sz
+        consumed_notional += level_notional
+        remaining -= level_notional
+        levels_consumed += 1
+    fully_filled = remaining < 1e-6
+    if consumed_qty == 0:
+        return {"vwap": float("nan"), "mid": mid, "slippage_bps": float("nan"),
+                "qty": 0.0, "levels_consumed": 0, "fully_filled": False,
+                "filled_notional": 0.0}
+    vwap = consumed_notional / consumed_qty
+    sign = 1.0 if side == "buy" else -1.0
+    slippage_bps = sign * (vwap - mid) / mid * 1e4
+    return {"vwap": vwap, "mid": mid, "slippage_bps": slippage_bps,
+            "qty": consumed_qty, "levels_consumed": levels_consumed,
+            "fully_filled": fully_filled,
+            "filled_notional": consumed_notional}
+
+
 def fetch_xyz_mids(symbols: list[str]) -> dict[str, float]:
     """Return {symbol: mid_price} for active xyz perps. Pulls full universe
     in one call and filters."""
@@ -345,38 +526,89 @@ def fetch_xyz_mids(symbols: list[str]) -> dict[str, float]:
 
 # ---- shadow P&L of prior cycle ---------------------------------------------
 
-def close_prior_cycle(prev_state: dict, current_mids: dict[str, float],
-                        new_long: set, new_short: set) -> dict:
-    """Compute realized 1d P&L of prev_state against current xyz mids.
-    Cost is turnover-aware: fraction of leg notional that rotated to new
-    target × 2 × cost_per_side (matches backtest's daily_portfolio_basic).
-    Returns a row to be appended to cycles.csv."""
+def close_prior_cycle(prev_state: dict, exit_books: dict[str, dict | None],
+                        new_long: set, new_short: set,
+                        notional_usd: float, taker_fee_bps: float) -> dict:
+    """Compute realized 1d P&L of prev_state against current xyz L2 books.
+
+    Uses taker-fill simulation to get realistic exit prices including
+    spread + walk-the-book slippage. Costs include actual fee + slippage
+    on both entry (recorded at decision time) and exit (simulated now).
+
+    Raises before writing accounting rows if a required quote, mark reference,
+    or simulated fill is unavailable.
+    """
     long_set = set(prev_state.get("long", []))
     short_set = set(prev_state.get("short", []))
+    entry_fills = prev_state.get("entry_fills", {})
     entry_mids = prev_state.get("entry_mids", {})
     K = prev_state.get("top_k", 3)
     decision_ts = prev_state.get("decision_ts")
+    per_name_notional = notional_usd / max(K, 1)
 
+    # Per-leg P&L:
+    #   - HELD names (in prev set AND new set): use mid-to-mid (no transaction, no slippage)
+    #   - ROTATED-OUT names (in prev set, NOT in new set): close at exit_vwap (slippage paid)
+    #   - NEW names (NOT in prev, in new): no P&L this cycle — they enter at curr decision
+    #     time (entry slippage attributed to NEXT cycle when they rotate or are first marked)
     long_rets, short_rets, missing = [], [], []
+    entry_slip_total = 0.0
+    exit_slip_total = 0.0
+    n_rotated_fills = 0
+    n_held = 0
+
+    def _per_name_pnl(s, side: str, opp_side: str, target_set: set):
+        """side: 'long' or 'short'. opp_side: 'sell' (long exit) or 'buy' (short exit).
+        Uses entry_mids[s] as the rolling mark-reference: on entry it's set to
+        entry_vwap (captures entry slippage on first close); on subsequent held
+        cycles it gets updated to that cycle's mid (clean mid-to-mid carry).
+        """
+        nonlocal entry_slip_total, exit_slip_total, n_rotated_fills, n_held
+        prev_ref = entry_mids.get(s)
+        bk = exit_books.get(s)
+        if prev_ref is None:
+            raise RuntimeError(f"missing mark reference for open position {s}")
+        if bk is None:
+            raise RuntimeError(f"missing exit book for open position {s}")
+        cur_mid = bk["mid"]
+        if s in target_set:
+            n_held += 1
+            return np.log(cur_mid / prev_ref)
+        else:
+            # ROTATED OUT: close at exit_vwap; mark vs prev ref (which absorbed
+            # entry slippage exactly once at first close)
+            ex = simulate_taker_fill(bk, opp_side, per_name_notional)
+            ex = _require_full_fill(ex, s, opp_side, per_name_notional)
+            ent = entry_fills.get(s) or {}
+            entry_slip_total += ent.get("slippage_bps", 0.0) or 0.0
+            exit_slip_total += ex["slippage_bps"]
+            n_rotated_fills += 1
+            return np.log(ex["vwap"] / prev_ref)
+
+    # For both held and rotated, use entry_mids[s] as the prev-cycle mark
+    # reference (it was set to entry_vwap on the cycle the name first entered,
+    # then updated to that-cycle's mid on subsequent held cycles — see state-
+    # save logic). This way the entry slippage is captured once at first mark.
     for s in long_set:
-        if s in current_mids and s in entry_mids and entry_mids[s] > 0:
-            long_rets.append(np.log(current_mids[s] / entry_mids[s]))
-        else:
-            missing.append(s)
+        r = _per_name_pnl(s, "long", "sell", new_long)
+        if r is not None: long_rets.append(r)
     for s in short_set:
-        if s in current_mids and s in entry_mids and entry_mids[s] > 0:
-            short_rets.append(np.log(current_mids[s] / entry_mids[s]))
-        else:
-            missing.append(s)
+        r = _per_name_pnl(s, "short", "buy", new_short)
+        if r is not None: short_rets.append(r)
+
     long_alpha = float(np.mean(long_rets)) if long_rets else 0.0
     short_alpha = float(np.mean(short_rets)) if short_rets else 0.0
-    spread = long_alpha - short_alpha
+    spread_bps_gross = (long_alpha - short_alpha) * 1e4
 
-    # Turnover-aware cost (backtest formula)
+    avg_entry_slip = entry_slip_total / max(n_rotated_fills, 1)
+    avg_exit_slip = exit_slip_total / max(n_rotated_fills, 1)
+
+    # Turnover-aware fee cost: rotation count × 2 × taker_fee_bps,
+    # normalized to leg notional via /K
     long_chg = len(long_set.symmetric_difference(new_long))
     short_chg = len(short_set.symmetric_difference(new_short))
     turnover = (long_chg + short_chg) / max(2 * K, 1)
-    cost_bps = turnover * 2 * COST_BPS_PER_SIDE
+    fee_bps = (long_chg + short_chg) / max(K, 1) * taker_fee_bps
 
     return {
         "decision_ts": decision_ts,
@@ -387,12 +619,14 @@ def close_prior_cycle(prev_state: dict, current_mids: dict[str, float],
         "n_missing_mid": len(missing),
         "long_alpha_bps": long_alpha * 1e4,
         "short_alpha_bps": short_alpha * 1e4,
-        "spread_bps": spread * 1e4,
+        "spread_bps": spread_bps_gross,
+        "avg_entry_slip_bps": avg_entry_slip,
+        "avg_exit_slip_bps": avg_exit_slip,
         "long_chg": long_chg,
         "short_chg": short_chg,
         "turnover": turnover,
-        "cost_bps": cost_bps,
-        "net_bps": spread * 1e4 - cost_bps,
+        "fee_bps": fee_bps,
+        "net_bps": spread_bps_gross - fee_bps,
         "missing": ",".join(sorted(missing)) if missing else "",
         "prev_long_set": ",".join(sorted(long_set)),
         "prev_short_set": ",".join(sorted(short_set)),
@@ -401,11 +635,22 @@ def close_prior_cycle(prev_state: dict, current_mids: dict[str, float],
 
 # ---- main cycle ------------------------------------------------------------
 
-def run_cycle(refresh: bool = True) -> dict:
-    log.info("=== xyz paper bot cycle start ===")
+def run_cycle(refresh: bool = True, preset: str = DEFAULT_PRESET,
+               notional_usd: float = DEFAULT_NOTIONAL_USD,
+               taker_fee_bps: float = DEFAULT_TAKER_FEE_BPS) -> dict:
+    if preset not in UNIVERSE_PRESETS:
+        raise ValueError(f"unknown preset {preset!r}; valid: {list(UNIVERSE_PRESETS)}")
+    universe, top_k, exit_buffer = UNIVERSE_PRESETS[preset]
+    log.info("=== xyz paper bot cycle start (preset=%s, N=%d, K=%d, M=%d, "
+             "notional=$%.0f/leg, fee=%.2fbps/side) ===",
+             preset, len(universe), top_k, exit_buffer, notional_usd, taker_fee_bps)
     models, meta = load_artifact()
     prev_state = load_state()
     if prev_state:
+        # Flush any pending cycle row from prior run that died between
+        # save_state and append_cycle_row (transactional recovery).
+        prev_state = _flush_pending_cycle_row(prev_state)
+        prev_state = _flush_pending_prediction_rows(prev_state)
         log.info("loaded prev state: decision_ts=%s long=%d short=%d",
                  prev_state.get("decision_ts"),
                  len(prev_state.get("long", [])),
@@ -422,13 +667,28 @@ def run_cycle(refresh: bool = True) -> dict:
     log.info("building panel + features...")
     panel, regime, _anchors, feats = build_panel()
     panel = map_sym_id(panel, meta)
+
+    # Defensive: training and inference feature order MUST match. Without this
+    # guard, a future refactor that reorders features in add_features_A/B/F
+    # would silently corrupt predictions (LGBM fit was on column index, not
+    # column name). Abort loudly if mismatch.
+    if feats != meta["feat_cols"]:
+        diff_idx = [i for i, (a, b) in enumerate(zip(feats, meta["feat_cols"]))
+                      if a != b]
+        raise RuntimeError(
+            f"feat_cols mismatch between inference ({len(feats)}) and "
+            f"trained meta ({len(meta['feat_cols'])}). Diffs at indices "
+            f"{diff_idx[:5]}. Inference: {feats}. Trained: {meta['feat_cols']}. "
+            f"Retrain the artifact, or fix the feature pipeline to match."
+        )
     log.info("  panel: %d rows, %d symbols, latest ts=%s",
              len(panel), panel["symbol"].nunique(), panel["ts"].max())
 
     log.info("predicting for latest bar...")
     decision_ts, preds = predict_for_latest_bar(panel, models, feats)
     log.info("  decision_ts=%s, %d predictions", decision_ts, len(preds))
-    append_predictions(decision_ts, preds)
+    # NOTE: predictions log appended only on first run for this decision_ts;
+    # see same-day guard below.
 
     is_open, gate_info = gate_open_at(regime, decision_ts)
     log.info("  dispersion gate: %s  disp=%.4f thresh=%.4f",
@@ -437,66 +697,296 @@ def run_cycle(refresh: bool = True) -> dict:
              gate_info.get("thresh", float("nan")))
 
     # Compute new target weights first (so cost calc can be turnover-aware)
+    prev_long = set(prev_state.get("long", [])) if prev_state else set()
+    prev_short = set(prev_state.get("short", [])) if prev_state else set()
+    ranked = preds[preds["symbol"].isin(universe)].sort_values("pred", ascending=False)
+    ranking_pairs: list[tuple[str, float]] = [
+        (r.symbol, float(r.pred)) for _, r in ranked.iterrows()
+    ]
+    same_day = (prev_state is not None
+                  and str(prev_state.get("decision_ts", "")) == str(decision_ts))
+    if same_day:
+        log.info("  same decision_ts as prev (%s) — state/P&L left unchanged",
+                 decision_ts)
+        # Idempotent append fills a missing predictions log if a prior run
+        # committed state but died before writing predictions.
+        append_predictions(decision_ts, preds)
+        _send_rebalance_telegram(
+            decision_ts=decision_ts, preset=preset, top_k=top_k,
+            exit_buffer=exit_buffer, gate_open=bool(is_open),
+            gate_disp=gate_info.get("disp", float("nan")),
+            gate_thresh=gate_info.get("thresh", float("nan")),
+            new_long=prev_long, new_short=prev_short,
+            ranking_pairs=ranking_pairs, cycle_row=None,
+            entry_fills=prev_state.get("entry_fills", {}) if prev_state else {},
+            prev_long=prev_long, prev_short=prev_short,
+            notional_usd=notional_usd, same_day=True,
+        )
+        return prev_state
+
     if not is_open:
         log.info("  gate closed — flat next cycle (no positions)")
         new_long, new_short = set(), set()
     else:
-        prev_long = set(prev_state.get("long", [])) if prev_state else set()
-        prev_short = set(prev_state.get("short", [])) if prev_state else set()
         new_long, new_short = select_with_hysteresis(
-            preds, prev_long, prev_short, set(TIER_A))
+            preds, prev_long, prev_short, set(universe),
+            top_k=top_k, exit_buffer=exit_buffer)
         log.info("  new long  = %s", sorted(new_long))
         log.info("  new short = %s", sorted(new_short))
-        ranked = preds[preds["symbol"].isin(TIER_A)].sort_values("pred", ascending=False)
-        log.info("  ranking (Tier A): %s",
-                 ", ".join(f"{r.symbol}:{r.pred:+.4f}" for _, r in ranked.iterrows()))
+        log.info("  ranking (%s): %s", preset,
+                 ", ".join(f"{s}:{p:+.4f}" for s, p in ranking_pairs))
 
-    # Fetch current xyz mids (used for both prior-cycle close and new-cycle entries)
-    current_mids = {}
-    try:
-        current_mids = fetch_xyz_mids(TIER_A)
-        log.info("  fetched xyz mids: %d/%d names", len(current_mids), len(TIER_A))
-    except Exception as e:
-        log.warning("  xyz mid fetch failed: %s", e)
+    # Fetch L2 books for: (a) prior-cycle exit fills, (b) new-cycle entry fills
+    # Cover both prev positions (need exit fills) and new positions (need entry fills).
+    book_symbols = sorted(set(universe) | set(prev_state.get("long", []) if prev_state else [])
+                            | set(prev_state.get("short", []) if prev_state else [])
+                            | new_long | new_short)
+    books: dict[str, dict | None] = {}
+    for s in book_symbols:
+        books[s] = fetch_xyz_l2_book(s)
+        time.sleep(0.05)
+    n_book_ok = sum(1 for b in books.values() if b is not None)
+    log.info("  fetched L2 books: %d/%d names", n_book_ok, len(book_symbols))
+    current_mids = {s: b["mid"] for s, b in books.items() if b}
+
+    required_books = sorted(prev_long | prev_short | new_long | new_short)
+    missing_books = [s for s in required_books if books.get(s) is None]
+    if missing_books:
+        raise RuntimeError(
+            "missing xyz L2 books for required position symbols; refusing to "
+            f"mutate state: {missing_books}"
+        )
 
     # Close prior cycle (if any) — but skip if same decision_ts as prev
-    # (re-run on same day; we'd be marking against unchanged entry mids)
     cycle_row = None
-    same_day = (prev_state is not None
-                  and str(prev_state.get("decision_ts", "")) == str(decision_ts))
-    if same_day:
-        log.info("  same decision_ts as prev (%s) — re-run on same day, skip cycle close",
-                 decision_ts)
-    elif prev_state and (prev_state.get("long") or prev_state.get("short")):
-        cycle_row = close_prior_cycle(prev_state, current_mids, new_long, new_short)
+    if prev_state and (prev_state.get("long") or prev_state.get("short")):
+        cycle_row = close_prior_cycle(prev_state, books, new_long, new_short,
+                                        notional_usd=notional_usd,
+                                        taker_fee_bps=taker_fee_bps)
         cycle_row["gate_open_now"] = bool(is_open)
         cycle_row["disp_now"] = gate_info.get("disp")
         cycle_row["thresh_now"] = gate_info.get("thresh")
-        log.info("  prior cycle closed: spread=%+.2fbps turnover=%.2f cost=%+.2fbps net=%+.2fbps",
-                 cycle_row["spread_bps"], cycle_row["turnover"],
-                 cycle_row["cost_bps"], cycle_row["net_bps"])
-        append_cycle_row(cycle_row)
+        cycle_row["notional_usd"] = notional_usd
+        cycle_row["taker_fee_bps"] = taker_fee_bps
+        log.info("  prior cycle closed: spread=%+.2fbps slip(in/out)=%+.2f/%+.2fbps "
+                 "turnover=%.2f fee=%+.2fbps net=%+.2fbps",
+                 cycle_row["spread_bps"],
+                 cycle_row["avg_entry_slip_bps"], cycle_row["avg_exit_slip_bps"],
+                 cycle_row["turnover"], cycle_row["fee_bps"], cycle_row["net_bps"])
 
-    # New entry mids (only for selected names)
-    new_entry_mids = {s: current_mids[s] for s in (new_long | new_short)
-                        if s in current_mids}
+    # Simulate entry fills for newly-entered names only. Preserve prev entry
+    # fills for held names so their original slippage diagnostic isn't lost.
+    per_name_notional = notional_usd / max(top_k, 1)
+    prev_fills = prev_state.get("entry_fills", {}) if prev_state else {}
+    entry_fills: dict[str, dict] = {}
+    n_new_sims = 0
+    for s in new_long:
+        if s in prev_long and s in prev_fills:
+            entry_fills[s] = prev_fills[s]  # held: preserve original
+            continue
+        bk = books.get(s)
+        if bk is None: continue
+        f = simulate_taker_fill(bk, "buy", per_name_notional)
+        f = _require_full_fill(f, s, "buy", per_name_notional)
+        entry_fills[s] = {"vwap": f["vwap"], "mid": f["mid"],
+                            "slippage_bps": f["slippage_bps"],
+                            "qty": f["qty"], "fully_filled": f["fully_filled"]}
+        n_new_sims += 1
+    for s in new_short:
+        if s in prev_short and s in prev_fills:
+            entry_fills[s] = prev_fills[s]
+            continue
+        bk = books.get(s)
+        if bk is None: continue
+        f = simulate_taker_fill(bk, "sell", per_name_notional)
+        f = _require_full_fill(f, s, "sell", per_name_notional)
+        entry_fills[s] = {"vwap": f["vwap"], "mid": f["mid"],
+                            "slippage_bps": f["slippage_bps"],
+                            "qty": f["qty"], "fully_filled": f["fully_filled"]}
+        n_new_sims += 1
+    if n_new_sims:
+        new_slips = [entry_fills[s]["slippage_bps"] for s in (new_long | new_short)
+                       if s not in (prev_long | prev_short) and s in entry_fills]
+        avg_slip = float(np.mean(new_slips)) if new_slips else 0.0
+        log.info("  entry fills: %d new sims (avg slip=%+.2fbps), %d preserved",
+                 n_new_sims, avg_slip, len(entry_fills) - n_new_sims)
+    else:
+        log.info("  no rotations — all %d positions held with preserved fills",
+                 len(entry_fills))
+
+    # Mark-reference rule for next cycle's close:
+    #   - newly entered names: ref = entry_vwap (first close picks up entry slippage)
+    #   - held names: ref = today's mid (clean mid-to-mid carry, no slippage re-paid)
+    next_mark_refs = {}
+    for s in new_long:
+        if s in prev_long:
+            if s in current_mids:
+                next_mark_refs[s] = current_mids[s]
+        else:
+            f = entry_fills.get(s)
+            if f and np.isfinite(f["vwap"]):
+                next_mark_refs[s] = f["vwap"]
+    for s in new_short:
+        if s in prev_short:
+            if s in current_mids:
+                next_mark_refs[s] = current_mids[s]
+        else:
+            f = entry_fills.get(s)
+            if f and np.isfinite(f["vwap"]):
+                next_mark_refs[s] = f["vwap"]
+
     state = {
         "decision_ts": str(decision_ts),
         "decision_at_utc": datetime.now(timezone.utc).isoformat(),
         "long": sorted(new_long),
         "short": sorted(new_short),
-        "entry_mids": new_entry_mids,
-        "top_k": TOP_K,
-        "exit_buffer": EXIT_BUFFER,
-        "tier": "A",
+        "entry_fills": entry_fills,
+        "entry_mids": next_mark_refs,
+        "top_k": top_k,
+        "exit_buffer": exit_buffer,
+        "preset": preset,
+        "universe": universe,
+        "notional_usd": notional_usd,
+        "taker_fee_bps": taker_fee_bps,
         "gate_open": is_open,
         "gate_disp": gate_info.get("disp"),
         "gate_thresh": gate_info.get("thresh"),
         "missing_mids": [s for s in (new_long | new_short) if s not in current_mids],
     }
+    # Transactional commit: stage cycle_row inside state, save atomically.
+    # The next run's load_state() will flush pending_cycle_row to cycles.csv
+    # before processing. Guarantees we never write cycles.csv without an
+    # accompanying durable state update — and never lose a realized row to
+    # a half-completed save.
+    if cycle_row is not None:
+        state["pending_cycle_row"] = cycle_row
+    state["pending_prediction_rows"] = _prediction_payload(decision_ts, preds)
     save_state(state)
+    if cycle_row is not None:
+        # Try to flush immediately; if this dies, next load will retry. Either
+        # way the row will reach cycles.csv exactly once.
+        state = _flush_pending_cycle_row(state)
+    state = _flush_pending_prediction_rows(state)
     log.info("=== cycle done. state saved to %s ===", POSITIONS_PATH)
+
+    _send_rebalance_telegram(
+        decision_ts=decision_ts, preset=preset, top_k=top_k, exit_buffer=exit_buffer,
+        gate_open=bool(is_open),
+        gate_disp=gate_info.get("disp", float("nan")),
+        gate_thresh=gate_info.get("thresh", float("nan")),
+        new_long=new_long, new_short=new_short,
+        ranking_pairs=ranking_pairs,
+        cycle_row=cycle_row,
+        entry_fills=entry_fills,
+        prev_long=prev_long, prev_short=prev_short,
+        notional_usd=notional_usd,
+        same_day=False,
+    )
     return state
+
+
+def _send_rebalance_telegram(*, decision_ts, preset, top_k, exit_buffer,
+                                gate_open, gate_disp, gate_thresh,
+                                new_long, new_short, ranking_pairs,
+                                cycle_row, entry_fills, prev_long, prev_short,
+                                notional_usd, same_day: bool = False):
+    """Daily rebalance summary for Telegram."""
+    def _bps(x):
+        if x is None or not np.isfinite(x): return "n/a"
+        return f"{x:+.2f}"
+
+    rows = [
+        f"📊 <b>v7 xyz rebalance</b>  ({datetime.now(timezone.utc):%Y-%m-%d %H:%M} UTC)",
+        f"decision_ts: {pd.Timestamp(decision_ts).strftime('%Y-%m-%d')}  •  "
+        f"preset: {preset}  •  K={top_k} M={exit_buffer}  •  notional: ${notional_usd:,.0f}/leg",
+        f"",
+    ]
+    rows.append(f"Gate: <b>{'OPEN' if gate_open else 'CLOSED'}</b>  "
+                f"(disp={gate_disp:.4f} vs thresh {gate_thresh:.4f})")
+
+    # Closing prior cycle
+    if same_day:
+        rows += [
+            "",
+            "<i>Same-day re-run; state and realized P&L left unchanged.</i>",
+        ]
+    elif cycle_row is not None:
+        rows += [
+            f"",
+            f"<b>Prior cycle realized</b>:",
+            f"  spread: {_bps(cycle_row['spread_bps'])} bps  "
+            f"(long {_bps(cycle_row['long_alpha_bps'])} − short {_bps(cycle_row['short_alpha_bps'])})",
+            f"  rotations: long Δ{cycle_row['long_chg']}  short Δ{cycle_row['short_chg']}  "
+            f"turnover {cycle_row['turnover']:.2f}",
+            f"  slippage: in {_bps(cycle_row['avg_entry_slip_bps'])} • out {_bps(cycle_row['avg_exit_slip_bps'])} bps",
+            f"  fee: {_bps(cycle_row['fee_bps'])} bps",
+            f"  <b>net: {_bps(cycle_row['net_bps'])} bps</b>",
+        ]
+    else:
+        rows.append(f"<i>First cycle — no prior to close.</i>")
+
+    # Cumulative shadow stats from cycles.csv
+    if CYCLES_PATH.exists():
+        try:
+            d = pd.read_csv(CYCLES_PATH)
+            n = len(d)
+            cum = float(d["net_bps"].sum())
+            mean = float(d["net_bps"].mean()) if n else 0.0
+            hit = float((d["net_bps"] > 0).mean()) if n else 0.0
+            sh = (d["net_bps"].mean() / d["net_bps"].std() * np.sqrt(252)
+                    if n > 2 and d["net_bps"].std() > 0 else 0.0)
+            rows += [
+                f"",
+                f"<b>Cumulative</b> (N={n}): {cum:+.1f} bps  •  "
+                f"mean/cyc {mean:+.2f} bps  •  hit {hit:.0%}  •  Sh~{sh:+.2f}",
+            ]
+        except Exception:
+            pass
+
+    # Ranking
+    if ranking_pairs:
+        rows += ["", f"<b>Ranking ({preset})</b>:"]
+        for sym, pred in ranking_pairs:
+            mark = ""
+            if sym in new_long: mark = " 🟢"
+            elif sym in new_short: mark = " 🔴"
+            rows.append(f"  {sym:<6} {pred:+.4f}{mark}")
+
+    # New target weights
+    if same_day:
+        rows += [
+            "",
+            f"<b>Open Long</b>: {', '.join(sorted(new_long)) or '(none)'}",
+            f"<b>Open Short</b>: {', '.join(sorted(new_short)) or '(none)'}",
+        ]
+    elif gate_open:
+        long_changes = sorted(set(new_long) - set(prev_long))
+        long_drops = sorted(set(prev_long) - set(new_long))
+        short_changes = sorted(set(new_short) - set(prev_short))
+        short_drops = sorted(set(prev_short) - set(new_short))
+
+        rows += ["", f"<b>Long</b>: {', '.join(sorted(new_long))}"]
+        if long_changes: rows.append(f"  +new: {', '.join(long_changes)}")
+        if long_drops:   rows.append(f"  -drop: {', '.join(long_drops)}")
+        rows.append(f"<b>Short</b>: {', '.join(sorted(new_short))}")
+        if short_changes: rows.append(f"  +new: {', '.join(short_changes)}")
+        if short_drops:   rows.append(f"  -drop: {', '.join(short_drops)}")
+
+        # Entry fill quality for new positions
+        new_names = (set(new_long) | set(new_short)) - (set(prev_long) | set(prev_short))
+        if new_names and entry_fills:
+            slips = [entry_fills[s].get("slippage_bps", 0)
+                     for s in new_names if s in entry_fills]
+            if slips:
+                rows.append(f"<i>New-entry avg slip: {np.mean(slips):+.2f} bps</i>")
+    else:
+        rows += ["", f"<b>Flat next cycle</b> (gate closed)"]
+
+    text = "\n".join(rows)
+    sent = notify_telegram(text)
+    log.info("telegram rebalance: %s (%d chars)",
+             "sent" if sent else "skipped", len(text))
+    return sent
 
 
 def cli_check_state():
@@ -517,12 +1007,21 @@ def main():
                      help="skip yfinance refresh (use cached data only)")
     ap.add_argument("--check-state", action="store_true",
                      help="print current state and exit")
+    ap.add_argument("--universe", default=DEFAULT_PRESET,
+                     choices=list(UNIVERSE_PRESETS),
+                     help=f"universe preset (default {DEFAULT_PRESET})")
+    ap.add_argument("--notional-usd", type=float, default=DEFAULT_NOTIONAL_USD,
+                     help=f"per-leg shadow notional (default ${DEFAULT_NOTIONAL_USD:.0f})")
+    ap.add_argument("--taker-fee-bps", type=float, default=DEFAULT_TAKER_FEE_BPS,
+                     help=f"per-side taker fee bps (default {DEFAULT_TAKER_FEE_BPS})")
     args = ap.parse_args()
 
     if args.check_state:
         cli_check_state(); return
 
-    run_cycle(refresh=not args.no_refresh)
+    run_cycle(refresh=not args.no_refresh, preset=args.universe,
+                notional_usd=args.notional_usd,
+                taker_fee_bps=args.taker_fee_bps)
 
 
 if __name__ == "__main__":

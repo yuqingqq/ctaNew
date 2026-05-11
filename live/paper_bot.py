@@ -80,6 +80,31 @@ HL_INFO_URL = "https://api.hyperliquid.xyz/info"
 
 REGIME_CUTOFF = 0.50                        # match alpha_v4_xs_1d (was 0.33; lifted 2026-05-03)
 
+# Validated production stack (audit 2026-05-08):
+#   Conv-gate skips cycles when prediction dispersion is below the trailing
+#   30th-percentile (lookback 252 cycles). State persisted to disk.
+USE_CONV_GATE = os.environ.get("USE_CONV_GATE", "1") == "1"
+CONV_GATE_PCTILE = float(os.environ.get("CONV_GATE_PCTILE", "0.30"))
+CONV_GATE_LOOKBACK = int(os.environ.get("CONV_GATE_LOOKBACK", "252"))
+CONV_GATE_MIN_HISTORY = int(os.environ.get("CONV_GATE_MIN_HISTORY", "30"))
+
+#   PM_M2_b1 entry gate (validated 2026-05-08, multi-OOS Sharpe +2.75 stacked
+#   with conv_gate, hard-split frozen Δsh +2.64 CI [+0.15, +5.69] survives).
+#   Filters NEW top-K entries that weren't in top-K at the previous cycle.
+#   Held names auto-keep on sharp boundary. Variable K downward when rejections
+#   happen — don't backfill into non-persistent names.
+USE_PM_GATE = os.environ.get("USE_PM_GATE", "1") == "1"
+PM_M_CYCLES = int(os.environ.get("PM_M_CYCLES", "2"))   # need persistence in past M-1 cycles
+PM_BAND_MULT = float(os.environ.get("PM_BAND_MULT", "1.0"))   # band size = mult × top_k
+
+#   Regime capital multiplier scales gross exposure by trailing 30d basket vol
+#   to throttle deployment in unfavorable regimes. clip([(vol - lo)/(hi - lo)], min, max).
+USE_REGIME_MULT = os.environ.get("USE_REGIME_MULT", "1") == "1"
+REGIME_MULT_VOL_LO = float(os.environ.get("REGIME_MULT_VOL_LO", "0.40"))
+REGIME_MULT_VOL_HI = float(os.environ.get("REGIME_MULT_VOL_HI", "0.70"))
+REGIME_MULT_MIN = float(os.environ.get("REGIME_MULT_MIN", "0.30"))
+REGIME_MULT_MAX = float(os.environ.get("REGIME_MULT_MAX", "1.00"))
+
 
 def _binance_to_hl_coin(symbol: str) -> str:
     sym = symbol.upper()
@@ -448,12 +473,208 @@ def build_kline_features_inmem(klines: pd.DataFrame) -> pd.DataFrame:
     return feats
 
 
+def _fetch_funding_from_vision(symbol: str, months_back: int = 4) -> pd.DataFrame:
+    """Fallback funding fetcher using Binance Vision monthly archives.
+    Useful when fapi is geo-blocked. Returns DataFrame with calc_time,
+    interval_hours, funding_rate columns. Skips months not yet published.
+    """
+    import io, zipfile
+    from datetime import date
+    today = datetime.now(timezone.utc).date()
+    rows = []
+    for offset in range(months_back):
+        # Last published month is usually previous month
+        m = today.month - offset - 1
+        y = today.year
+        while m <= 0:
+            m += 12; y -= 1
+        url = f"https://data.binance.vision/data/futures/um/monthly/fundingRate/{symbol}/{symbol}-fundingRate-{y:04d}-{m:02d}.zip"
+        try:
+            r = requests.get(url, timeout=20)
+            if r.status_code == 404:
+                continue
+            r.raise_for_status()
+            with zipfile.ZipFile(io.BytesIO(r.content)) as z:
+                with z.open(z.namelist()[0]) as f:
+                    df = pd.read_csv(f)
+            # Columns: calc_time (ms), funding_interval_hours, last_funding_rate
+            for c in ("calc_time", "fundingTime"):
+                if c in df.columns:
+                    df["calc_time"] = pd.to_datetime(df[c], unit="ms", utc=True, errors="coerce")
+                    break
+            ih_col = next((c for c in df.columns if "interval" in c.lower()), None)
+            fr_col = next((c for c in df.columns if "funding_rate" in c.lower() or c == "last_funding_rate"), None)
+            if not (ih_col and fr_col and "calc_time" in df.columns):
+                continue
+            rows.append(pd.DataFrame({
+                "calc_time": df["calc_time"],
+                "interval_hours": df[ih_col].astype(int),
+                "funding_rate": df[fr_col].astype(float),
+            }))
+        except Exception:
+            continue
+    if not rows:
+        return pd.DataFrame()
+    return pd.concat(rows, ignore_index=True).drop_duplicates(subset=["calc_time"]).sort_values("calc_time")
+
+
+def refresh_positioning_caches(universe: list[str]) -> dict:
+    """Refresh funding rate + metrics caches for the universe up to now.
+
+    Funding: Binance public /fapi/v1/fundingRate first; falls back to Binance
+             Vision monthly archives if fapi is geo-blocked (HTTP 451).
+    Metrics: Binance Vision /metrics/ archive (1-day publish lag — fetches
+             through yesterday).
+
+    Returns dict {sym: status} for logging.
+    """
+    from datetime import date, timedelta
+    cache_dir = Path("data/ml/cache")
+    cache_dir.mkdir(parents=True, exist_ok=True)
+    status = {}
+
+    # ---- Funding: Binance fundingRate API → fall back to Vision monthly ----
+    for sym in universe:
+        f_path = cache_dir / f"funding_{sym}.parquet"
+        existing = None
+        if f_path.exists():
+            existing = pd.read_parquet(f_path)
+        try:
+            if existing is not None and not existing.empty and "calc_time" in existing.columns:
+                last_t = pd.to_datetime(existing["calc_time"]).max()
+                if last_t.tz is None:
+                    last_t = last_t.tz_localize("UTC")
+                start_ms = int(last_t.timestamp() * 1000) + 1
+            else:
+                start_ms = int((pd.Timestamp.now(tz="UTC") - pd.Timedelta(days=400)).timestamp() * 1000)
+            url = f"{BINANCE_FAPI}/fapi/v1/fundingRate"
+            params = {"symbol": sym, "startTime": start_ms, "limit": 1000}
+            r = requests.get(url, params=params, timeout=15)
+            r.raise_for_status()
+            new = r.json()
+            df_new = pd.DataFrame([{
+                "calc_time": pd.to_datetime(row["fundingTime"], unit="ms", utc=True),
+                "interval_hours": 8,
+                "funding_rate": float(row["fundingRate"]),
+            } for row in new]) if new else pd.DataFrame()
+            funding_source = "fapi"
+        except Exception as e_fapi:
+            # Fallback to Vision archives (geo-block tolerant)
+            try:
+                df_new = _fetch_funding_from_vision(sym, months_back=4)
+                if existing is not None and not existing.empty:
+                    last_t = pd.to_datetime(existing["calc_time"]).max()
+                    if last_t.tz is None:
+                        last_t = last_t.tz_localize("UTC")
+                    df_new = df_new[df_new["calc_time"] > last_t]
+                funding_source = "vision"
+            except Exception as e_vision:
+                status[sym] = f"funding_err:{str(e_fapi)[:20]}/{str(e_vision)[:20]}"
+                log.warning("[%s] funding refresh failed (fapi+vision): %s / %s",
+                             sym, e_fapi, e_vision)
+                continue
+        if df_new.empty:
+            status[sym] = f"funding={funding_source}_no_new"
+            continue
+        if existing is not None and not existing.empty:
+            combined = pd.concat([existing, df_new], ignore_index=True)
+        else:
+            combined = df_new
+        combined = combined.drop_duplicates(subset=["calc_time"], keep="last").sort_values("calc_time")
+        combined.to_parquet(f_path, compression="zstd")
+        status[sym] = f"funding+{len(df_new)}({funding_source})"
+
+    # ---- Metrics: Binance Vision daily archive (1-day lag) ----
+    try:
+        from data_collectors.metrics_loader import fetch_metrics
+        end_d = (datetime.now(timezone.utc) - timedelta(days=1)).date()
+        for sym in universe:
+            try:
+                m_path = cache_dir / f"metrics_{sym}.parquet"
+                # Determine start: last cached date + 1 (or 14 days back if no cache)
+                if m_path.exists():
+                    existing_m = pd.read_parquet(m_path)
+                    last_d = existing_m.index.max().date() if len(existing_m) else None
+                    start_d = (last_d + timedelta(days=1)) if last_d else end_d - timedelta(days=14)
+                else:
+                    start_d = end_d - timedelta(days=14)
+                if start_d > end_d:
+                    status[sym] = (status.get(sym, "") + " metrics=current").strip()
+                    continue
+                fetch_metrics(sym, start_d, end_d)  # writes to cache_dir directly
+                status[sym] = (status.get(sym, "") + f" metrics+{(end_d - start_d).days}d").strip()
+            except Exception as e:
+                status[sym] = (status.get(sym, "") + f" metrics_err:{str(e)[:30]}").strip()
+                log.warning("[%s] metrics refresh failed: %s", sym, e)
+    except ImportError:
+        log.warning("metrics_loader not importable; skipping metrics cache refresh")
+
+    return status
+
+
+def _build_positioning_features_inmem(symbol: str,
+                                        kline_index: pd.DatetimeIndex) -> pd.DataFrame:
+    """Build raw positioning pack features (funding-z, ls-ratio-z, oi-change)
+    for one symbol on the kline 5min cadence.
+
+    Reads from cached parquets in data/ml/cache/. Returns DataFrame with
+    columns funding_z_24h, ls_ratio_z_24h, oi_change_24h (all PIT-shifted).
+    Missing data → NaN columns (Ridge head will fall back if features absent).
+    """
+    cache_dir = Path("data/ml/cache")
+    out = pd.DataFrame(index=kline_index)
+
+    # Funding rate (8h cadence settlements)
+    f_path = cache_dir / f"funding_{symbol}.parquet"
+    if f_path.exists():
+        try:
+            f_df = pd.read_parquet(f_path).set_index("calc_time")["funding_rate"]
+            if f_df.index.tz is None:
+                f_df.index = f_df.index.tz_localize("UTC")
+            f_df = f_df[~f_df.index.duplicated(keep="last")].sort_index()
+            f5m = f_df.reindex(f_df.index.union(kline_index)).sort_index().ffill().reindex(kline_index)
+            window = 7 * 288
+            rmean = f5m.rolling(window, min_periods=window // 4).mean()
+            rstd = f5m.rolling(window, min_periods=window // 4).std().replace(0, np.nan)
+            out["funding_z_24h"] = ((f5m - rmean) / rstd).clip(-5, 5)
+        except Exception as e:
+            log.warning("[%s] funding load failed: %s", symbol, e)
+            out["funding_z_24h"] = np.nan
+    else:
+        out["funding_z_24h"] = np.nan
+
+    # Metrics (Binance Vision metrics archive: 5min cadence)
+    m_path = cache_dir / f"metrics_{symbol}.parquet"
+    if m_path.exists():
+        try:
+            m = pd.read_parquet(m_path)
+            if m.index.tz is None:
+                m.index = m.index.tz_localize("UTC")
+            ls = m["sum_toptrader_long_short_ratio"].copy()
+            ls5m = ls.reindex(ls.index.union(kline_index)).sort_index().ffill().reindex(kline_index)
+            rmean = ls5m.rolling(288, min_periods=72).mean()
+            rstd = ls5m.rolling(288, min_periods=72).std().replace(0, np.nan)
+            out["ls_ratio_z_24h"] = ((ls5m - rmean) / rstd).clip(-5, 5)
+            oi = m["sum_open_interest_value"].copy()
+            oi5m = oi.reindex(oi.index.union(kline_index)).sort_index().ffill().reindex(kline_index)
+            out["oi_change_24h"] = oi5m.pct_change(288).clip(-2, 2)
+        except Exception as e:
+            log.warning("[%s] metrics load failed: %s", symbol, e)
+            out["ls_ratio_z_24h"] = np.nan
+            out["oi_change_24h"] = np.nan
+    else:
+        out["ls_ratio_z_24h"] = np.nan
+        out["oi_change_24h"] = np.nan
+
+    return out.shift(1)
+
+
 def build_panel_for_inference(klines_by_sym: dict, sym_to_id: dict) -> pd.DataFrame:
     """Build the v6_clean cross-sectional panel for live inference.
 
     Mirrors alpha_v6_permutation_lean._build_v6_panel_lean exactly, but on
     in-memory klines + only returning the most-recent bars where features
-    are valid.
+    are valid. Now also adds positioning pack features for the Ridge head.
     """
     feats_by_sym = {}
     for s, kl in klines_by_sym.items():
@@ -461,6 +682,10 @@ def build_panel_for_inference(klines_by_sym: dict, sym_to_id: dict) -> pd.DataFr
             continue
         f = build_kline_features_inmem(kl)
         if not f.empty:
+            # Add positioning pack columns (raw; will be xs-ranked below)
+            pos = _build_positioning_features_inmem(s, f.index)
+            for c in ["funding_z_24h", "ls_ratio_z_24h", "oi_change_24h"]:
+                f[c] = pos[c]
             feats_by_sym[s] = f
 
     closes = pd.DataFrame({s: f["close"] for s, f in feats_by_sym.items()}).sort_index()
@@ -478,9 +703,10 @@ def build_panel_for_inference(klines_by_sym: dict, sym_to_id: dict) -> pd.DataFr
 
     rank_cols = [c for c in XS_FEATURE_COLS_V6_CLEAN if c.endswith("_xs_rank")]
     src_cols = list({s for s, d in XS_RANK_SOURCES.items() if d in rank_cols})
+    pos_raw = ["funding_z_24h", "ls_ratio_z_24h", "oi_change_24h"]
     needed = list(set(list(XS_FEATURE_COLS_V6_CLEAN)
                        + ["sym_id", "autocorr_pctile_7d", "beta_short_vs_bk", "close"]
-                       + src_cols) - set(rank_cols))
+                       + src_cols + pos_raw) - set(rank_cols))
 
     frames = []
     for s, f in enriched.items():
@@ -491,11 +717,24 @@ def build_panel_for_inference(klines_by_sym: dict, sym_to_id: dict) -> pd.DataFr
         frames.append(df)
     panel = pd.concat(frames, ignore_index=True, sort=False)
     panel = add_xs_rank_features(panel, sources=XS_RANK_SOURCES)
+    # Add xs_rank features for positioning pack
+    POS_RANK_SOURCES = {
+        "funding_z_24h": "funding_z_24h_xs_rank",
+        "ls_ratio_z_24h": "ls_ratio_z_24h_xs_rank",
+        "oi_change_24h": "oi_change_24h_xs_rank",
+    }
+    panel = add_xs_rank_features(panel, sources=POS_RANK_SOURCES)
     panel = panel.dropna(subset=rank_cols + ["autocorr_pctile_7d"])
     return panel
 
 
 def load_model_artifact():
+    """Load LGBM ensemble + meta. Optionally also loads Ridge head if present.
+
+    Returns: (models, meta, ridge_artifact_or_None)
+       ridge_artifact: {"model": Ridge, "scaler": StandardScaler,
+                         "features": [list of xs_rank cols], "blend_weight": float}
+    """
     # Prefer horizon-suffixed artifact (e.g. v6_clean_h48_ensemble.pkl); fall back
     # to legacy unsuffixed name to keep the running h=288 bot working.
     suffixed_pkl = MODEL_DIR / f"v6_clean_h{HORIZON_BARS}_ensemble.pkl"
@@ -514,20 +753,79 @@ def load_model_artifact():
         models = pickle.load(f)
     with meta.open() as f:
         meta_d = json.load(f)
-    return models, meta_d
+
+    # Try to load Ridge head (optional — falls back to LGBM-only if missing).
+    ridge_artifact = None
+    ridge_path = MODEL_DIR / f"v6_clean_h{HORIZON_BARS}_ridge_pos.pkl"
+    if ridge_path.exists():
+        try:
+            with ridge_path.open("rb") as f:
+                ridge_artifact = pickle.load(f)
+            log.info("Loaded Ridge head: %s, blend_weight=%.2f",
+                      ridge_artifact.get("features", []),
+                      ridge_artifact.get("blend_weight", 0.10))
+        except Exception as e:
+            log.warning("Failed to load Ridge artifact at %s: %s — proceeding LGBM-only",
+                         ridge_path, e)
+            ridge_artifact = None
+    else:
+        log.info("No Ridge head artifact at %s — using LGBM-only predictions", ridge_path)
+    return models, meta_d, ridge_artifact
+
+
+def _z(p: np.ndarray) -> np.ndarray:
+    """Z-score (per-fold std normalization). Matches research framework."""
+    s = float(p.std())
+    return (p - float(p.mean())) / (s if s > 1e-8 else 1.0)
 
 
 def predict_for_bar(models, panel: pd.DataFrame, target_time: pd.Timestamp,
-                    feat_cols: list) -> pd.DataFrame:
-    """Predict alpha for each symbol at the given open_time. Returns
-    DataFrame with [symbol, pred, beta_short_vs_bk, autocorr_pctile_7d]."""
+                    feat_cols: list, ridge_artifact: dict | None = None) -> pd.DataFrame:
+    """Predict alpha for each symbol at target_time.
+
+    If ridge_artifact is provided AND all positioning features are present in
+    the panel, blends LGBM and Ridge predictions:
+       final = (1 - w) × z(lgbm_pred) + w × z(ridge_pred)
+    Falls back to LGBM-only if Ridge features are missing.
+
+    Returns DataFrame with [symbol, pred, beta_short_vs_bk, autocorr_pctile_7d, close,
+                             pred_lgbm, pred_ridge].
+    """
     bar = panel[panel["open_time"] == target_time]
     if bar.empty:
         return pd.DataFrame()
     X = bar[feat_cols].to_numpy(dtype=np.float32)
-    yt = np.mean([m.predict(X, num_iteration=m.best_iteration) for m in models], axis=0)
+    yt_lgbm = np.mean([m.predict(X, num_iteration=m.best_iteration) for m in models], axis=0)
+
     out = bar[["symbol", "beta_short_vs_bk", "autocorr_pctile_7d", "close"]].copy()
-    out["pred"] = yt
+    out["pred_lgbm"] = yt_lgbm
+
+    # Ridge blend if available
+    if ridge_artifact is not None and ridge_artifact.get("model") is not None:
+        ridge_features = ridge_artifact.get("features", [])
+        missing = [c for c in ridge_features if c not in bar.columns]
+        if missing:
+            log.warning("Ridge features missing in panel: %s — using LGBM-only", missing)
+            out["pred_ridge"] = np.nan
+            out["pred"] = yt_lgbm
+        else:
+            X_ridge = bar[ridge_features].to_numpy(dtype=np.float64)
+            X_ridge = np.nan_to_num(X_ridge, nan=0.0)
+            scaler = ridge_artifact["scaler"]
+            ridge_model = ridge_artifact["model"]
+            Xs = scaler.transform(X_ridge)
+            Xs = np.nan_to_num(Xs, nan=0.0)
+            yt_ridge = ridge_model.predict(Xs)
+            w = float(ridge_artifact.get("blend_weight", 0.10))
+            blended = (1.0 - w) * _z(yt_lgbm) + w * _z(yt_ridge)
+            out["pred_ridge"] = yt_ridge
+            out["pred"] = blended
+            log.info("hybrid prediction blend: w_ridge=%.2f, lgbm_std=%.4f, ridge_std=%.4f",
+                      w, yt_lgbm.std(), yt_ridge.std())
+    else:
+        out["pred_ridge"] = np.nan
+        out["pred"] = yt_lgbm
+
     return out.reset_index(drop=True)
 
 
@@ -583,6 +881,253 @@ def select_portfolio(preds: pd.DataFrame, top_k: int = TOP_K) -> tuple[pd.DataFr
         scale_L = float(np.clip(2.0 * beta_S / denom, 0.5, 1.5))
         scale_S = float(np.clip(2.0 * beta_L / denom, 0.5, 1.5))
     return top, bot, scale_L, scale_S
+
+
+# =============================================================================
+# Conv-gate state persistence (validated production rule from audit 2026-05-08)
+# =============================================================================
+
+CONV_GATE_STATE_PATH = Path("live/state") / "conv_gate_history.json"
+
+
+def load_conv_gate_history() -> list[float]:
+    """Load trailing dispersion history from disk. Returns [] on cold start."""
+    if not CONV_GATE_STATE_PATH.exists():
+        return []
+    try:
+        with CONV_GATE_STATE_PATH.open() as f:
+            d = json.load(f)
+        # Trim to current lookback length in case env var changed
+        return list(d.get("dispersion_history", []))[-CONV_GATE_LOOKBACK:]
+    except Exception as e:
+        log.warning("Failed to load conv_gate state at %s: %s — cold-starting", CONV_GATE_STATE_PATH, e)
+        return []
+
+
+def save_conv_gate_history(history: list[float]):
+    CONV_GATE_STATE_PATH.parent.mkdir(parents=True, exist_ok=True)
+    with CONV_GATE_STATE_PATH.open("w") as f:
+        json.dump({
+            "dispersion_history": history[-CONV_GATE_LOOKBACK:],
+            "saved_at_utc": datetime.now(timezone.utc).isoformat(),
+            "config": {"lookback": CONV_GATE_LOOKBACK,
+                       "pctile": CONV_GATE_PCTILE,
+                       "min_history": CONV_GATE_MIN_HISTORY,
+                       "top_k": TOP_K},
+        }, f, indent=2)
+
+
+def conv_gate_decision(preds: pd.DataFrame, history: list[float],
+                        top_k: int = TOP_K) -> tuple[bool, float, float]:
+    """Compute today's dispersion and decide whether to skip the cycle.
+
+    Returns (skip: bool, dispersion: float, threshold: float). The history
+    list is APPENDED in-place with today's dispersion (caller persists it).
+    """
+    g = preds.dropna(subset=["pred"])
+    if len(g) < 2 * top_k + 1:
+        return False, float("nan"), float("nan")
+    sorted_g = g.sort_values("pred")
+    bot = sorted_g.head(top_k)
+    top = sorted_g.tail(top_k)
+    dispersion = float(top["pred"].mean() - bot["pred"].mean())
+
+    skip = False
+    threshold = float("nan")
+    if len(history) >= CONV_GATE_MIN_HISTORY:
+        threshold = float(np.quantile(history, CONV_GATE_PCTILE))
+        if dispersion < threshold:
+            skip = True
+
+    history.append(dispersion)
+    return skip, dispersion, threshold
+
+
+# =============================================================================
+# PM_M2_b1 entry gate state (validated production rule from audit 2026-05-08)
+# Filters new entries that weren't in top-K (or top-band-K) at past M-1 cycles.
+# Held names pass through on sharp boundary. K shrinks downward when needed.
+# =============================================================================
+
+PM_GATE_STATE_PATH = Path("live/state") / "pm_gate_history.json"
+
+
+def load_pm_gate_state() -> dict:
+    """Load PM gate state. Returns dict with:
+        history:        list of past cycles' band-K sets (length ≤ PM_M_CYCLES)
+        logical_long:   names "logically held" from last non-skipped cycle
+        logical_short:  same for short leg
+    Cleared (logical sets emptied) on conv-skip cycles to match research impl.
+    Returns empty defaults on cold start.
+    """
+    default = {"history": [], "logical_long": [], "logical_short": []}
+    if not PM_GATE_STATE_PATH.exists():
+        return default
+    try:
+        with PM_GATE_STATE_PATH.open() as f:
+            d = json.load(f)
+        return {
+            "history": list(d.get("history", []))[-PM_M_CYCLES:],
+            "logical_long": list(d.get("logical_long", [])),
+            "logical_short": list(d.get("logical_short", [])),
+        }
+    except Exception as e:
+        log.warning("Failed to load PM gate state at %s: %s — cold-starting",
+                    PM_GATE_STATE_PATH, e)
+        return default
+
+
+def save_pm_gate_state(state: dict):
+    PM_GATE_STATE_PATH.parent.mkdir(parents=True, exist_ok=True)
+    with PM_GATE_STATE_PATH.open("w") as f:
+        json.dump({
+            "history": state.get("history", [])[-PM_M_CYCLES:],
+            "logical_long": list(state.get("logical_long", [])),
+            "logical_short": list(state.get("logical_short", [])),
+            "saved_at_utc": datetime.now(timezone.utc).isoformat(),
+            "config": {"M_cycles": PM_M_CYCLES, "band_mult": PM_BAND_MULT,
+                       "top_k": TOP_K},
+        }, f, indent=2)
+
+
+def _compute_band_sets(preds: pd.DataFrame, top_k: int,
+                       band_k: int) -> tuple[list[str], list[str]]:
+    """Compute current cycle's top-band_k and bot-band_k symbol sets from preds.
+    Used to update PM history regardless of trade decision."""
+    g = preds.dropna(subset=["pred"])
+    n = len(g)
+    if n < 2 * top_k + 1:
+        return [], []
+    band_k = min(band_k, n)
+    sorted_g = g.sort_values("pred")
+    bot_band = sorted_g.head(band_k)["symbol"].tolist()
+    top_band = sorted_g.tail(band_k)["symbol"].tolist()
+    return top_band, bot_band
+
+
+def _bn_scale_from_legs(top_df: pd.DataFrame, bot_df: pd.DataFrame) -> tuple[float, float]:
+    """β-neutral scale factors (clipped [0.5, 1.5]; falls back to 1.0 on degenerate β).
+    Mirrors the math in select_portfolio."""
+    if top_df.empty or bot_df.empty:
+        return 1.0, 1.0
+    beta_L = float(top_df["beta_short_vs_bk"].mean())
+    beta_S = float(bot_df["beta_short_vs_bk"].mean())
+    if beta_L < 0.1 or beta_S < 0.1 or (beta_L + beta_S) < 0.3:
+        return 1.0, 1.0
+    denom = beta_L + beta_S
+    return (float(np.clip(2.0 * beta_S / denom, 0.5, 1.5)),
+            float(np.clip(2.0 * beta_L / denom, 0.5, 1.5)))
+
+
+def pm_gate_filter(preds: pd.DataFrame, history: list[dict],
+                    prev_long_syms: set, prev_short_syms: set,
+                    top_k: int = TOP_K, M_cycles: int = PM_M_CYCLES,
+                    band_mult: float = PM_BAND_MULT,
+                   ) -> tuple[pd.DataFrame, pd.DataFrame, float, float, dict]:
+    """Apply PM_M2_b1 entry-persistence filter to top-K / bot-K candidates.
+
+    Held names that remain in current top/bot-K auto-keep (sharp boundary).
+    NEW entries (not in prev held set) require persistence in past M-1 cycles'
+    band-K sets. K can shrink below top_k if rejections occur — no fallback.
+
+    Returns:
+      top_df:   DataFrame of long-leg names (≤ top_k rows, sorted by pred desc)
+      bot_df:   DataFrame of short-leg names (≤ top_k rows, sorted by pred asc)
+      scale_L:  β-neutral scale factor for long leg (clipped [0.5, 1.5])
+      scale_S:  β-neutral scale factor for short leg
+      info:     dict with rejection counts + current band-K sets for state
+    """
+    g = preds.dropna(subset=["pred"]).copy()
+    if len(g) < 2 * top_k + 1:
+        return g.head(0), g.head(0), 1.0, 1.0, {
+            "n_rejected_long": 0, "n_rejected_short": 0,
+            "current_top_band": [], "current_bot_band": [],
+            "K_long_actual": 0, "K_short_actual": 0,
+        }
+
+    band_k = max(top_k, int(round(band_mult * top_k)))
+    sorted_g = g.sort_values("pred")
+    cand_bot = set(sorted_g.head(top_k)["symbol"])
+    cand_top = set(sorted_g.tail(top_k)["symbol"])
+
+    new_long = cand_top & prev_long_syms
+    new_short = cand_bot & prev_short_syms
+    n_rejected_long = 0
+    n_rejected_short = 0
+
+    if len(history) >= M_cycles - 1 and M_cycles >= 2:
+        past_long = [set(h.get("long", [])) for h in history[-(M_cycles - 1):]]
+        past_short = [set(h.get("short", [])) for h in history[-(M_cycles - 1):]]
+        for s in cand_top - prev_long_syms:
+            if all(s in past for past in past_long):
+                new_long.add(s)
+            else:
+                n_rejected_long += 1
+        for s in cand_bot - prev_short_syms:
+            if all(s in past for past in past_short):
+                new_short.add(s)
+            else:
+                n_rejected_short += 1
+    else:
+        new_long |= cand_top
+        new_short |= cand_bot
+
+    if len(new_long) > top_k:
+        new_long = set(g[g["symbol"].isin(new_long)].nlargest(top_k, "pred")["symbol"])
+    if len(new_short) > top_k:
+        new_short = set(g[g["symbol"].isin(new_short)].nsmallest(top_k, "pred")["symbol"])
+
+    top_df = g[g["symbol"].isin(new_long)].sort_values("pred", ascending=False)
+    bot_df = g[g["symbol"].isin(new_short)].sort_values("pred", ascending=True)
+    scale_L, scale_S = _bn_scale_from_legs(top_df, bot_df)
+
+    top_band, bot_band = _compute_band_sets(preds, top_k=top_k, band_k=band_k)
+    info = {
+        "n_rejected_long": n_rejected_long,
+        "n_rejected_short": n_rejected_short,
+        "current_top_band": top_band,
+        "current_bot_band": bot_band,
+        "K_long_actual": len(new_long),
+        "K_short_actual": len(new_short),
+    }
+    return top_df, bot_df, scale_L, scale_S, info
+
+
+# =============================================================================
+# Regime capital multiplier (audit 2026-05-08): scale gross by trailing 30d
+# basket realized vol. Lower vol regime → smaller deployed exposure.
+# =============================================================================
+
+def compute_regime_multiplier(klines_by_sym: dict) -> tuple[float, float]:
+    """Compute the regime-driven capital multiplier and the underlying
+    basket vol. Returns (multiplier, basket_vol_30d).
+
+    Resamples available kline data to 4h cadence, computes basket as
+    cross-symbol mean of 4h returns, computes annualized vol over the
+    most recent ~30 trading days (180 4h bars).
+    """
+    if not klines_by_sym:
+        return 1.0, float("nan")
+    try:
+        closes = pd.DataFrame({s: kl["close"] for s, kl in klines_by_sym.items() if not kl.empty}).sort_index()
+        closes_4h = closes.resample("4h").last().ffill()
+        rets_4h = closes_4h.pct_change().dropna(how="all")
+        # Cross-symbol mean per 4h bar = basket return
+        basket_h = rets_4h.mean(axis=1, skipna=True).dropna()
+        # Use most recent 180 bars (~30 days at 4h cadence)
+        recent = basket_h.iloc[-180:]
+        if len(recent) < 60:
+            log.warning("regime: only %d 4h bars for vol calc, defaulting mult=1.0", len(recent))
+            return 1.0, float("nan")
+        basket_vol_30d = float(recent.std() * np.sqrt(2190))  # annualized at 4h cadence
+        if not USE_REGIME_MULT:
+            return 1.0, basket_vol_30d
+        raw = (basket_vol_30d - REGIME_MULT_VOL_LO) / max(1e-8, REGIME_MULT_VOL_HI - REGIME_MULT_VOL_LO)
+        mult = float(np.clip(raw, REGIME_MULT_MIN, REGIME_MULT_MAX))
+        return mult, basket_vol_30d
+    except Exception as e:
+        log.warning("Failed to compute regime multiplier: %s — defaulting to 1.0", e)
+        return 1.0, float("nan")
 
 
 def compute_target_weights(top: pd.DataFrame, bot: pd.DataFrame,
@@ -929,11 +1474,133 @@ def execute_cycle_turnover_aware(prev_positions: list[LegPosition],
 # State persistence
 # =============================================================================
 
+def _json_default(o):
+    if isinstance(o, (pd.Timestamp, datetime)):
+        return o.isoformat()
+    if isinstance(o, np.bool_):
+        return bool(o)
+    if isinstance(o, np.integer):
+        return int(o)
+    if isinstance(o, np.floating):
+        return float(o)
+    raise TypeError(f"unserializable: {type(o)}")
+
+
+def _write_positions_atomic(state_dict: dict):
+    """Atomic write of positions.json via tmp + os.replace (POSIX rename).
+    state_dict format: {"positions": [...], "pending_cycle_row": {...} | None}.
+    """
+    STATE_DIR.mkdir(parents=True, exist_ok=True)
+    tmp = POSITIONS_PATH.with_suffix(POSITIONS_PATH.suffix + ".tmp")
+    with tmp.open("w") as f:
+        json.dump(state_dict, f, indent=2, default=_json_default)
+        f.flush()
+        try:
+            os.fsync(f.fileno())
+        except (OSError, AttributeError):
+            pass
+    tmp.replace(POSITIONS_PATH)  # POSIX atomic rename
+
+
+def _append_cycle_row(row: dict):
+    """Append cycle row to cycles.csv with column-safe alignment.
+
+    Three cases:
+      1. File doesn't exist → create with row's columns as header.
+      2. Row keys ⊆ existing header → reindex row to header order, plain
+         append (missing fields = NaN).
+      3. Row has extra fields not in existing header → MIGRATE: read full
+         file, widen schema by adding new columns (NaN for old rows), append
+         new row, write back. Avoids losing skip-specific diagnostic fields
+         like skipped_by_conv_gate that didn't exist when the header was
+         first written.
+
+    Guarantees: new row's `decision_time_utc` and other shared columns land
+    in the correct positions regardless of schema differences across
+    normal/skip cycle rows.
+    """
+    df = pd.DataFrame([row])
+    if not CYCLES_PATH.exists():
+        df.to_csv(CYCLES_PATH, index=False)
+        return
+    try:
+        existing_cols = list(pd.read_csv(CYCLES_PATH, nrows=0).columns)
+    except Exception as e:
+        log.warning("could not read cycles.csv header: %s — appending raw row "
+                    "(potential column misalignment)", e)
+        df.to_csv(CYCLES_PATH, mode="a", header=False, index=False)
+        return
+    extra = [c for c in df.columns if c not in existing_cols]
+    if extra:
+        # Schema widening: rewrite full file with union columns
+        log.info("widening cycles.csv schema with new fields: %s", extra)
+        try:
+            existing_full = pd.read_csv(CYCLES_PATH)
+            union_cols = existing_cols + extra
+            existing_full = existing_full.reindex(columns=union_cols)
+            df_aligned = df.reindex(columns=union_cols)
+            new_df = pd.concat([existing_full, df_aligned], ignore_index=True)
+            new_df.to_csv(CYCLES_PATH, index=False)
+            return
+        except Exception as e:
+            log.warning("schema widening failed: %s — falling back to header-aligned "
+                        "append (extra fields dropped)", e)
+    # Plain aligned append (missing fields → NaN; extras already handled above)
+    df_aligned = df.reindex(columns=existing_cols)
+    df_aligned.to_csv(CYCLES_PATH, mode="a", header=False, index=False)
+
+
+def _flush_pending_cycle_row(state_dict: dict) -> dict:
+    """If state has a pending cycle row from a prior run, flush to cycles.csv.
+
+    Exactly-once semantics: dedup-by-decision_time_utc. If a previous run
+    crashed AFTER appending to cycles.csv but BEFORE clearing the pending
+    field in positions.json, this run sees the pending row, observes it's
+    already in cycles.csv, and skips the append while still clearing the
+    field via atomic state save.
+    """
+    pending = state_dict.get("pending_cycle_row")
+    if pending is None:
+        return state_dict
+    decision_ts = str(pending.get("decision_time_utc"))
+    already_present = False
+    if CYCLES_PATH.exists():
+        try:
+            existing = pd.read_csv(CYCLES_PATH, usecols=["decision_time_utc"])
+            already_present = (existing["decision_time_utc"].astype(str) == decision_ts).any()
+        except Exception as e:
+            log.warning("could not read cycles.csv for dedup check: %s", e)
+    if already_present:
+        log.info("pending cycle row for %s already in cycles.csv — skip duplicate append",
+                 decision_ts)
+    else:
+        log.info("flushing pending cycle row from prior cycle (decision_time_utc=%s)",
+                 decision_ts)
+        _append_cycle_row(pending)
+    new_state = {k: v for k, v in state_dict.items() if k != "pending_cycle_row"}
+    _write_positions_atomic(new_state)
+    return new_state
+
+
 def load_state() -> tuple[Optional[list[LegPosition]], pd.DataFrame]:
+    """Load (positions, cycles_df). Flushes any pending cycle row from a
+    crashed prior run before returning, guaranteeing cycles.csv reflects
+    all durably-saved state.
+    """
     if POSITIONS_PATH.exists():
         with POSITIONS_PATH.open() as f:
-            data = json.load(f)
-        positions = [LegPosition(**d) for d in data] if data else []
+            raw = json.load(f)
+        # Backward compat: legacy format was a bare list of position dicts.
+        # New format wraps in {"positions": [...], "pending_cycle_row": ...}.
+        if isinstance(raw, list):
+            state_dict = {"positions": raw, "pending_cycle_row": None}
+        else:
+            state_dict = raw
+        # Recover from any prior crash: flush pending row to cycles.csv,
+        # then strip it from state_dict and persist via atomic save.
+        state_dict = _flush_pending_cycle_row(state_dict)
+        positions = [LegPosition(**d) for d in state_dict.get("positions", [])] \
+                    if state_dict.get("positions") else []
     else:
         positions = None
     cycles = pd.read_csv(CYCLES_PATH) if CYCLES_PATH.exists() else pd.DataFrame()
@@ -941,15 +1608,23 @@ def load_state() -> tuple[Optional[list[LegPosition]], pd.DataFrame]:
 
 
 def save_state(positions: list[LegPosition], cycle_row: dict):
-    STATE_DIR.mkdir(parents=True, exist_ok=True)
-    with POSITIONS_PATH.open("w") as f:
-        json.dump([p.to_dict() for p in positions], f, indent=2)
-    df_new = pd.DataFrame([cycle_row])
-    if CYCLES_PATH.exists():
-        df = pd.concat([pd.read_csv(CYCLES_PATH), df_new], ignore_index=True)
-    else:
-        df = df_new
-    df.to_csv(CYCLES_PATH, index=False)
+    """Two-phase commit:
+      1. Write positions.json atomically with cycle_row staged inside.
+      2. Append cycle_row to cycles.csv.
+      3. Re-write positions.json without the pending field.
+
+    A crash anywhere in this sequence is recoverable via load_state's
+    _flush_pending_cycle_row dedup. Guarantees that cycles.csv contains
+    every cycle whose positions.json was durably saved, exactly once.
+    """
+    state_dict = {
+        "positions": [p.to_dict() for p in positions],
+        "pending_cycle_row": cycle_row,
+    }
+    # Phase 1: stage the cycle row inside positions.json (atomic).
+    _write_positions_atomic(state_dict)
+    # Phase 2: flush to cycles.csv (handles dedup if we crash here next run).
+    _flush_pending_cycle_row(state_dict)
 
 
 # =============================================================================
@@ -1289,15 +1964,25 @@ def run_one_cycle(*, refresh_data: bool = True, source: str = "auto",
                 "  - then sim runs with empty prev (safe to debug in isolation)."
             )
 
-    models, meta = load_model_artifact()
+    models, meta, ridge_artifact = load_model_artifact()
     feat_cols = list(meta["feat_cols"])
     sym_to_id = meta["sym_to_id"]
     universe = sorted(sym_to_id.keys())
-    log.info("Loaded model artifact: %d symbols, %d features, trained %s",
-              len(universe), len(feat_cols), meta["trained_at_utc"])
+    log.info("Loaded model artifact: %d symbols, %d features, trained %s. "
+              "Ridge head: %s",
+              len(universe), len(feat_cols), meta["trained_at_utc"],
+              "loaded" if ridge_artifact is not None else "absent (LGBM-only)")
 
     if refresh_data:
         klines_by_sym = refresh_klines_cache(universe, days=LOOKBACK_DAYS, source=source)
+        # Also refresh positioning caches (funding + metrics) when ridge head loaded
+        if ridge_artifact is not None:
+            try:
+                pos_status = refresh_positioning_caches(universe)
+                ok = sum(1 for v in pos_status.values() if "err" not in v)
+                log.info("positioning cache refresh: %d/%d ok", ok, len(pos_status))
+            except Exception as e:
+                log.warning("positioning cache refresh failed (non-fatal): %s", e)
     else:
         klines_by_sym = {}
         for s in universe:
@@ -1312,7 +1997,16 @@ def run_one_cycle(*, refresh_data: bool = True, source: str = "auto",
     if len(klines_by_sym) < 10:
         raise RuntimeError(f"insufficient kline coverage: {len(klines_by_sym)}/{len(universe)}")
 
-    # Build inference panel
+    # Compute regime capital multiplier from kline data BEFORE building panel
+    # (so we can log it even if panel build fails)
+    regime_mult, basket_vol_30d = compute_regime_multiplier(klines_by_sym)
+    log.info("regime: basket_vol_30d=%.3f → capital_multiplier=%.3f "
+              "(thresholds [%.2f, %.2f] → [%.2f, %.2f])",
+              basket_vol_30d, regime_mult,
+              REGIME_MULT_VOL_LO, REGIME_MULT_VOL_HI,
+              REGIME_MULT_MIN, REGIME_MULT_MAX)
+
+    # Build inference panel (now includes positioning pack features for Ridge head)
     panel = build_panel_for_inference(klines_by_sym, sym_to_id)
     if panel.empty:
         raise RuntimeError("inference panel is empty")
@@ -1321,8 +2015,8 @@ def run_one_cycle(*, refresh_data: bool = True, source: str = "auto",
               target_time, len(panel),
               panel[panel["open_time"] == target_time]["symbol"].nunique())
 
-    # Predict
-    preds = predict_for_bar(models, panel, target_time, feat_cols)
+    # Predict (hybrid blend if ridge_artifact loaded; LGBM-only otherwise)
+    preds = predict_for_bar(models, panel, target_time, feat_cols, ridge_artifact)
     if preds.empty or len(preds) < 10:
         raise RuntimeError(f"prediction frame too small: {len(preds)}")
 
@@ -1330,8 +2024,200 @@ def run_one_cycle(*, refresh_data: bool = True, source: str = "auto",
     n_active = (preds["autocorr_pctile_7d"] >= 1 - REGIME_CUTOFF).sum()
     log.info("regime-active symbols at target_time: %d/%d", n_active, len(preds))
 
-    # Decide new portfolio
-    top, bot, scale_L, scale_S = select_portfolio(preds, top_k=TOP_K)
+    # Conv-gate decision (validated production rule). State persisted to disk.
+    gate_history = load_conv_gate_history()
+    gate_skip = False
+    gate_dispersion = float("nan")
+    gate_threshold = float("nan")
+    if USE_CONV_GATE:
+        gate_skip, gate_dispersion, gate_threshold = conv_gate_decision(
+            preds, gate_history, top_k=TOP_K,
+        )
+        save_conv_gate_history(gate_history)
+        log.info("conv_gate: dispersion=%.4f threshold=%.4f "
+                  "(history n=%d, pctile=%.2f) → %s",
+                  gate_dispersion, gate_threshold,
+                  len(gate_history), CONV_GATE_PCTILE,
+                  "SKIP cycle" if gate_skip else "TRADE")
+
+    # PM_M2_b1 entry-gate state. Update history every cycle (regardless of
+    # conv-skip) so persistence checks at the next non-skip cycle have
+    # current data. Logical-held sets are CLEARED on conv-skip to match
+    # validated research impl (`evaluate_stacked` resets cur_long/cur_short
+    # on skip → all candidates next cycle are "new entries" subject to
+    # persistence).
+    pm_state = load_pm_gate_state() if USE_PM_GATE else {
+        "history": [], "logical_long": [], "logical_short": []
+    }
+    band_k_now = max(TOP_K, int(round(PM_BAND_MULT * TOP_K)))
+    top_band_now, bot_band_now = _compute_band_sets(preds, top_k=TOP_K, band_k=band_k_now)
+    pm_state["history"].append({
+        "time": str(target_time),
+        "long": top_band_now,
+        "short": bot_band_now,
+    })
+    pm_state["history"] = pm_state["history"][-PM_M_CYCLES:]
+
+    if gate_skip:
+        # Clear logical-held sets so next non-skip cycle treats all candidates as new entries
+        pm_state["logical_long"] = []
+        pm_state["logical_short"] = []
+        if USE_PM_GATE:
+            save_pm_gate_state(pm_state)
+        # Load prev positions + cycles to keep them held through the skip
+        # (live-model behavior: don't flatten on conv-skip — earn real MtM
+        # via held names, which hourly_monitor tracks via since_cycle_pnl_bps).
+        prev_positions_skip, prev_cycles_skip = load_state()
+        prev_positions_skip = prev_positions_skip or []
+        # Determine equity to use for bps denominator. Prefer carrying the
+        # latest cycle's equity_usd forward (real HL balance from last live
+        # trade); fall back to INITIAL_EQUITY_USD for cold start / sim.
+        skip_equity_usd = float(INITIAL_EQUITY_USD)
+        if not prev_cycles_skip.empty and "equity_usd" in prev_cycles_skip.columns:
+            tail = prev_cycles_skip["equity_usd"].dropna()
+            if not tail.empty:
+                skip_equity_usd = float(tail.iloc[-1])
+        # Accrue funding for the skip period (live-model: held positions
+        # accrue funding through the skip window). Without this, funding
+        # for [prev_decision → skip] is dropped from cycles.csv accounting,
+        # since the next non-skip cycle's prev_decision_iso = this skip's ts.
+        skip_funding_usd = 0.0
+        skip_funding_bps = 0.0
+        prev_decision_iso_skip = None
+        if not prev_cycles_skip.empty:
+            prev_decision_iso_skip = str(prev_cycles_skip["decision_time_utc"].iloc[-1])
+        if prev_positions_skip and prev_decision_iso_skip:
+            try:
+                fund_skip = accrue_funding_for_cycle(
+                    prev_positions_skip, prev_decision_iso_skip,
+                    str(target_time), equity_usd=skip_equity_usd,
+                )
+                skip_funding_usd = fund_skip["total_funding_usd"]
+                skip_funding_bps = fund_skip["funding_bps"]
+                log.info("conv-skip funding accrued: $%.4f (%.2f bps of equity $%.2f)",
+                          skip_funding_usd, skip_funding_bps, skip_equity_usd)
+            except Exception as e:
+                log.warning("conv-skip funding accrual failed: %s — recording 0", e)
+        log.info("CYCLE SKIPPED by conv_gate. Holding prior %d positions; "
+                 "PM logical state cleared.", len(prev_positions_skip))
+        # Net for skip cycle = -funding_bps (no spread, no fees, no slippage;
+        # funding is a cost we paid while holding). Matches sign convention
+        # used in normal cycle accounting.
+        skip_net_bps = -skip_funding_bps
+        skip_row = {
+            "decision_time_utc": str(target_time),
+            "wall_time_utc": datetime.now(timezone.utc).isoformat(),
+            "n_symbols_active": int(n_active),
+            "n_symbols_total": int(len(preds)),
+            "skipped_by_conv_gate": True,
+            "conv_gate_dispersion": gate_dispersion,
+            "conv_gate_threshold": gate_threshold,
+            "regime_mult": regime_mult,
+            "basket_vol_30d": basket_vol_30d,
+            "long_symbols": ",".join(sorted(p.symbol for p in prev_positions_skip if p.side == "L")),
+            "short_symbols": ",".join(sorted(p.symbol for p in prev_positions_skip if p.side == "S")),
+            "scale_L": 0.0, "scale_S": 0.0,
+            "gross_pnl_bps": 0.0, "fees_bps": 0.0, "slippage_bps": 0.0,
+            "funding_bps": skip_funding_bps, "funding_usd": skip_funding_usd,
+            "net_bps": skip_net_bps, "n_trades": 0,
+            "n_open_positions": len(prev_positions_skip),
+            "had_prev_positions": int(bool(prev_positions_skip)),
+            "equity_usd": skip_equity_usd,
+            "live_execute": bool(live_execute),
+        }
+        # Persist: cycle row appended to cycles.csv, positions unchanged but
+        # written via atomic save (matches xyz pattern; recovers from crash).
+        save_state(prev_positions_skip, skip_row)
+        return skip_row
+
+    # Decide new portfolio. Apply PM_M2_b1 entry filter if enabled — uses
+    # history excluding the just-appended current cycle (since PM checks
+    # candidates against past M-1 cycles, not the current one).
+    if USE_PM_GATE:
+        prev_long_syms = set(pm_state.get("logical_long", []))
+        prev_short_syms = set(pm_state.get("logical_short", []))
+        history_for_filter = pm_state["history"][:-1]  # exclude current cycle
+        top, bot, scale_L, scale_S, pm_info = pm_gate_filter(
+            preds, history_for_filter,
+            prev_long_syms=prev_long_syms, prev_short_syms=prev_short_syms,
+            top_k=TOP_K, M_cycles=PM_M_CYCLES, band_mult=PM_BAND_MULT,
+        )
+        log.info(
+            "pm_gate: K_L=%d K_S=%d (rejected %d new long, %d new short)  "
+            "history_n=%d  prev_logical_L=%d/S=%d",
+            pm_info["K_long_actual"], pm_info["K_short_actual"],
+            pm_info["n_rejected_long"], pm_info["n_rejected_short"],
+            len(history_for_filter), len(prev_long_syms), len(prev_short_syms),
+        )
+        # Update logical-held sets for next cycle
+        pm_state["logical_long"] = top["symbol"].tolist() if not top.empty else []
+        pm_state["logical_short"] = bot["symbol"].tolist() if not bot.empty else []
+        save_pm_gate_state(pm_state)
+        # Edge case: if filter empties either leg, fall back to skip-like behavior
+        if top.empty or bot.empty:
+            prev_positions_pm, prev_cycles_pm = load_state()
+            prev_positions_pm = prev_positions_pm or []
+            # Carry latest cycle's equity_usd (or INITIAL on cold start)
+            pm_equity_usd = float(INITIAL_EQUITY_USD)
+            if not prev_cycles_pm.empty and "equity_usd" in prev_cycles_pm.columns:
+                tail = prev_cycles_pm["equity_usd"].dropna()
+                if not tail.empty:
+                    pm_equity_usd = float(tail.iloc[-1])
+            # Accrue funding for the held interval since last cycle (same as
+            # conv-skip path; otherwise the window is dropped from cycles.csv).
+            pm_funding_usd = 0.0
+            pm_funding_bps = 0.0
+            prev_decision_iso_pm = None
+            if not prev_cycles_pm.empty:
+                prev_decision_iso_pm = str(prev_cycles_pm["decision_time_utc"].iloc[-1])
+            if prev_positions_pm and prev_decision_iso_pm:
+                try:
+                    fund_pm = accrue_funding_for_cycle(
+                        prev_positions_pm, prev_decision_iso_pm,
+                        str(target_time), equity_usd=pm_equity_usd,
+                    )
+                    pm_funding_usd = fund_pm["total_funding_usd"]
+                    pm_funding_bps = fund_pm["funding_bps"]
+                    log.info("pm-skip funding accrued: $%.4f (%.2f bps of equity $%.2f)",
+                              pm_funding_usd, pm_funding_bps, pm_equity_usd)
+                except Exception as e:
+                    log.warning("pm-skip funding accrual failed: %s — recording 0", e)
+            log.warning("PM gate produced empty leg (K_L=%d K_S=%d). "
+                        "Holding prior %d positions; no rebalance.",
+                        pm_info["K_long_actual"], pm_info["K_short_actual"],
+                        len(prev_positions_pm))
+            pm_skip_row = {
+                "decision_time_utc": str(target_time),
+                "wall_time_utc": datetime.now(timezone.utc).isoformat(),
+                "n_symbols_active": int(n_active),
+                "n_symbols_total": int(len(preds)),
+                "skipped_by_pm_gate": True,
+                "pm_K_long": pm_info["K_long_actual"],
+                "pm_K_short": pm_info["K_short_actual"],
+                "regime_mult": regime_mult,
+                "basket_vol_30d": basket_vol_30d,
+                "long_symbols": ",".join(sorted(p.symbol for p in prev_positions_pm if p.side == "L")),
+                "short_symbols": ",".join(sorted(p.symbol for p in prev_positions_pm if p.side == "S")),
+                "scale_L": 0.0, "scale_S": 0.0,
+                "gross_pnl_bps": 0.0, "fees_bps": 0.0, "slippage_bps": 0.0,
+                "funding_bps": pm_funding_bps, "funding_usd": pm_funding_usd,
+                "net_bps": -pm_funding_bps, "n_trades": 0,
+                "n_open_positions": len(prev_positions_pm),
+                "had_prev_positions": int(bool(prev_positions_pm)),
+                "equity_usd": pm_equity_usd,
+                "live_execute": bool(live_execute),
+            }
+            save_state(prev_positions_pm, pm_skip_row)
+            return pm_skip_row
+    else:
+        top, bot, scale_L, scale_S = select_portfolio(preds, top_k=TOP_K)
+
+    # Apply regime capital multiplier to leg scales
+    scale_L *= regime_mult
+    scale_S *= regime_mult
+    # n_per_side is FIXED at TOP_K (per-name weight = 1/TOP_K). When PM gate
+    # shrinks K_actual below TOP_K, leg gross naturally drops to K_actual/TOP_K,
+    # which is the validated per-name=1/7 weighting (research test, 2026-05-08).
     n_per_side = TOP_K
     target_weights = compute_target_weights(top, bot, scale_L, scale_S, n_per_side)
 

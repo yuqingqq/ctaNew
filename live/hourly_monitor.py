@@ -43,17 +43,55 @@ HOURLY_LAST_TICK_PATH = STATE_DIR / "hourly_last_tick.json"
 
 
 def _load_positions() -> list[LegPosition]:
+    """Load positions from positions.json. Compatible with both formats:
+      - Legacy: bare list of position dicts
+      - New (paper_bot post-2026-05-09): {"positions": [...], "pending_cycle_row": ...}
+    """
     if not POSITIONS_PATH.exists():
         return []
     with POSITIONS_PATH.open() as f:
         data = json.load(f)
-    return [LegPosition(**d) for d in data] if data else []
+    if isinstance(data, list):
+        # Legacy format
+        return [LegPosition(**d) for d in data] if data else []
+    # New dict format
+    raw_positions = data.get("positions", [])
+    return [LegPosition(**d) for d in raw_positions] if raw_positions else []
 
 
 def _save_positions(positions: list[LegPosition]) -> None:
+    """Atomic save preserving paper_bot's full state schema (positions +
+    pending_cycle_row + any future fields). Reads existing dict if present
+    so we don't clobber a pending cycle row that paper_bot is mid-commit on.
+    """
     POSITIONS_PATH.parent.mkdir(parents=True, exist_ok=True)
-    with POSITIONS_PATH.open("w") as f:
-        json.dump([p.to_dict() for p in positions], f, indent=2)
+    # Read current full state (so we preserve pending_cycle_row etc. that
+    # paper_bot may have staged but not yet flushed).
+    if POSITIONS_PATH.exists():
+        try:
+            with POSITIONS_PATH.open() as f:
+                existing = json.load(f)
+            if isinstance(existing, dict):
+                state = dict(existing)  # shallow copy
+            else:
+                # Legacy bare-list — upgrade to dict format
+                state = {"positions": [], "pending_cycle_row": None}
+        except Exception:
+            state = {"positions": [], "pending_cycle_row": None}
+    else:
+        state = {"positions": [], "pending_cycle_row": None}
+    state["positions"] = [p.to_dict() for p in positions]
+    # Atomic write via tmp + rename (matches paper_bot._write_positions_atomic)
+    tmp = POSITIONS_PATH.with_suffix(POSITIONS_PATH.suffix + ".tmp")
+    with tmp.open("w") as f:
+        json.dump(state, f, indent=2, default=str)
+        f.flush()
+        try:
+            import os as _os
+            _os.fsync(f.fileno())
+        except (OSError, AttributeError):
+            pass
+    tmp.replace(POSITIONS_PATH)
 
 
 def _load_last_tick() -> dict:
@@ -115,11 +153,20 @@ def main():
     funding_cache: dict[str, list[dict]] = {}
     start_ms = int(prev_tick_dt.timestamp() * 1000)
     end_ms = int(now.timestamp() * 1000)
+    # Partial-tick tracking: if any required fetch fails (mid or funding),
+    # don't advance hourly_last_tick so next tick re-tries the same window.
+    # Otherwise we permanently lose funding/MtM for that gap. (Matches the
+    # xyz_hourly_monitor.py pattern.)
+    mark_fetch_failed = False
+    funding_fetch_failed = False
 
     for p in positions:
         coin = _binance_to_hl_coin(p.symbol)
         mid_now = float(all_mids.get(coin, np.nan))
         if not np.isfinite(mid_now):
+            mark_fetch_failed = True
+            funding_fetch_failed = True   # can't fetch funding without per-symbol pass
+            log.warning("[%s] mid missing — treating tick as partial", p.symbol)
             continue
 
         # Hourly MtM (signed by side)
@@ -166,6 +213,7 @@ def main():
             except Exception as e:
                 log.warning("[%s] funding fetch failed: %s", coin, e)
                 funding_cache[coin] = []
+                funding_fetch_failed = True   # don't advance checkpoint
         side_sign = 1.0 if p.side == "L" else -1.0
         hourly_funding_usd = 0.0
         for entry in funding_cache[coin]:
@@ -188,13 +236,59 @@ def main():
         total_unrealized_usd += cum_pnl_usd
         total_notional_usd += p.entry_notional_usd
 
-        # Update position state
-        p.last_marked_mid = mid_now
-        p.funding_paid_usd += hourly_funding_usd
+        # DEFER mid-mark and funding accumulation to end-of-loop. If any
+        # fetch failed (mark or funding for any symbol), we discard pending
+        # updates to avoid checkpoint inconsistency on the retry tick.
+        # See "Why both must be deferred" comment below.
+        p._pending_last_marked_mid = float(mid_now)
+        p._pending_hourly_funding = float(hourly_funding_usd)
 
-    # Save updated positions
+    # Commit (or discard) deferred updates atomically. Why both must be
+    # deferred: if we updated last_marked_mid eagerly but kept the funding
+    # checkpoint frozen, the retried window would refetch funding for
+    # [prev_tick → now] but compute hourly drift only over [partial_tick → now]
+    # (mark moved, funding window didn't). The two checkpoints must advance
+    # together to keep the windows aligned.
+    tick_complete = not (mark_fetch_failed or funding_fetch_failed)
+    if tick_complete:
+        for p in positions:
+            pending_mid = getattr(p, "_pending_last_marked_mid", None)
+            if pending_mid is not None:
+                p.last_marked_mid = pending_mid
+            pending_fund = getattr(p, "_pending_hourly_funding", None)
+            if pending_fund is not None:
+                p.funding_paid_usd += pending_fund
+    else:
+        log.warning("Tick incomplete (mark_fail=%s funding_fail=%s) — "
+                    "discarding pending mid-marks and funding; next tick "
+                    "will retry the full window from prev_tick_iso",
+                    mark_fetch_failed, funding_fetch_failed)
+        total_hourly_funding_usd = 0.0
+        for d in per_leg:
+            d["hourly_funding_usd"] = float("nan")
+    # Always clear pending fields so subsequent calls don't re-apply
+    for p in positions:
+        if hasattr(p, "_pending_last_marked_mid"):
+            delattr(p, "_pending_last_marked_mid")
+        if hasattr(p, "_pending_hourly_funding"):
+            delattr(p, "_pending_hourly_funding")
+
+    # Save updated positions. On complete tick: marks + funding committed.
+    # On partial tick: only previously-committed state is preserved (we
+    # discarded pending updates above). Either way the file reflects a
+    # consistent point-in-time.
     _save_positions(positions)
-    _save_last_tick({"ts_utc": now.isoformat()})
+
+    # Advance hourly_last_tick ONLY if tick was complete (matches the
+    # mark/funding commit decision so both checkpoints stay aligned).
+    # On partial tick, leaving prev tick means next run re-fetches the
+    # full window — and since marks weren't advanced either, hourly drift
+    # over that window will be computed consistently.
+    if tick_complete:
+        _save_last_tick({"ts_utc": now.isoformat()})
+    else:
+        log.warning("Tick incomplete — leaving hourly_last_tick at prev "
+                    "value to retry on next run (next tick covers full window)")
 
     # Realized strategy PnL = sum of past cycles' net_bps (closed bookkeeping).
     # Adding the current cycle's MtM-since-last-cycle gives true total PnL.
@@ -240,7 +334,11 @@ def main():
         except Exception as e:
             log.warning("could not read cycles.csv: %s", e)
 
-    # 3. Append to hourly_pnl.csv
+    # 3. Append to hourly_pnl.csv — but ONLY for COMPLETE ticks. Partial
+    # ticks have already discarded mark/funding updates and don't advance
+    # hourly_last_tick, so writing a row here would overlap with the next
+    # successful tick's window and produce duplicate/inconsistent MtM
+    # entries in the running log. (Issue 3c fix, 2026-05-09)
     bps_per_dollar = 1e4 / current_equity_usd if current_equity_usd > 0 else 0.0
     mtm_since_last_cycle_bps = total_since_last_cycle_usd * bps_per_dollar
     cumulative_strategy_pnl_bps = (
@@ -264,12 +362,16 @@ def main():
         "mtm_since_last_cycle_bps": mtm_since_last_cycle_bps,
         "cumulative_strategy_pnl_bps": cumulative_strategy_pnl_bps,
     }
-    df_new = pd.DataFrame([row])
-    if HOURLY_PNL_PATH.exists():
-        df = pd.concat([pd.read_csv(HOURLY_PNL_PATH), df_new], ignore_index=True)
+    if tick_complete:
+        df_new = pd.DataFrame([row])
+        if HOURLY_PNL_PATH.exists():
+            df = pd.concat([pd.read_csv(HOURLY_PNL_PATH), df_new], ignore_index=True)
+        else:
+            df = df_new
+        df.to_csv(HOURLY_PNL_PATH, index=False)
     else:
-        df = df_new
-    df.to_csv(HOURLY_PNL_PATH, index=False)
+        log.warning("Tick incomplete — NOT appending to hourly_pnl.csv "
+                    "(would overlap with next successful tick's window)")
 
     # 4. Build Telegram message
     bps_h_pnl = row["hourly_pnl_bps"]

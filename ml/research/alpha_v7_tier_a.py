@@ -44,7 +44,10 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(mess
 log = logging.getLogger(__name__)
 
 TIER_A = ["AAPL", "GOOGL", "META", "MSFT", "MU", "NVDA", "PLTR", "TSLA"]
-COST_BPS_SIDE = 1.5
+TIER_B = ["AMZN", "ORCL", "NFLX"]
+TIER_AB = TIER_A + TIER_B
+COST_BPS_SIDE = 1.5  # default patient-maker assumption
+COST_BPS_SIDE_LOW = 0.8  # current xyz taker (<1 bps per user)
 GATE_PCTILE = 0.6
 GATE_WINDOW = 252
 HORIZONS = (3, 5, 10)
@@ -98,11 +101,13 @@ def compute_walkforward_preds(panel, feats, folds) -> pd.DataFrame:
 
 
 def evaluate_config(preds: pd.DataFrame, regime: pd.DataFrame, *,
-                     allowed: set, K: int, M: int, name: str) -> dict | None:
-    log.info(">>> %s  (universe=%d, K=%d, M=%d)", name, len(allowed), K, M)
+                     allowed: set, K: int, M: int, name: str,
+                     cost_bps_side: float = COST_BPS_SIDE) -> dict | None:
+    log.info(">>> %s  (universe=%d, K=%d, M=%d, cost=%.1f bps/side)",
+             name, len(allowed), K, M, cost_bps_side)
     pnl_pre = daily_portfolio_hysteresis(
         preds, "pred", "fwd_resid_1d",
-        allowed, K, M, COST_BPS_SIDE,
+        allowed, K, M, cost_bps_side,
     )
     if pnl_pre.empty:
         log.warning("  empty pnl"); return None
@@ -163,14 +168,21 @@ def main():
         log.info("  cached %d pred rows to %s", len(preds), PRED_CACHE)
 
     out = []
-    out.append(evaluate_config(preds, regime, allowed=set(XYZ_IN_SP100),
-                                 K=5, M=2, name="C1: 15 names ref (K=5, M=2)"))
-    out.append(evaluate_config(preds, regime, allowed=set(TIER_A),
-                                 K=3, M=1, name="C2: 8 Tier A (K=3, M=1) candidate"))
-    out.append(evaluate_config(preds, regime, allowed=set(TIER_A),
-                                 K=2, M=1, name="C3: 8 Tier A (K=2, M=1)"))
-    out.append(evaluate_config(preds, regime, allowed=set(TIER_A),
-                                 K=2, M=2, name="C4: 8 Tier A (K=2, M=2)"))
+    # Cost-sensitivity sweep on Tier A+B (the chosen production preset).
+    # Real per-side cost = slippage + fee. Today's L2 measurement showed
+    # avg slippage +2.87 bps/side at $10k/leg + 0.8 bps fee = ~3.67 bps/side.
+    for cost in (0.8, 1.5, 2.5, 3.5, 5.0, 7.0):
+        out.append(evaluate_config(
+            preds, regime, allowed=set(TIER_AB), K=4, M=1,
+            cost_bps_side=cost,
+            name=f"Tier A+B (K=4, M=1) @{cost:.1f}bps/side"))
+    # Reference: 15-name backtest at low and realistic cost
+    out.append(evaluate_config(
+        preds, regime, allowed=set(XYZ_IN_SP100), K=5, M=2,
+        cost_bps_side=0.8, name="15 names (K=5, M=2) @0.8 (ref)"))
+    out.append(evaluate_config(
+        preds, regime, allowed=set(XYZ_IN_SP100), K=5, M=2,
+        cost_bps_side=3.5, name="15 names (K=5, M=2) @3.5 (real)"))
 
     log.info("\n=== SUMMARY ===")
     log.info("  %-50s %5s %10s %18s %10s %10s",

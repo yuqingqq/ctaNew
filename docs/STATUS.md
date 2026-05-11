@@ -1,4 +1,425 @@
-# Status — 2026-05-06
+# Status — 2026-05-09
+
+## TL;DR
+
+Two programs. **xyz US-equity v7 shadow harness ready for forward-test.**
+**Crypto v6_clean session was closed in the morning of 2026-05-08, but a new validated
+finding (PM_M2_b1 entry gate, multi-OOS Sharpe +1.96 alone, +2.75 stacked
+with conv_gate, hard-split survives) emerged in the afternoon — see
+"v6_clean PM gate addendum" below before re-deciding crypto deployment.**
+
+**2026-05-09 update: v7 architectural audit concluded.** 15 architectural
+additions tested across two days (intraday Ridge head, intraday port-blend,
+rolling-24mo blend, rolling regime-conditional with 5 indicators, pred_disp
+risk-sizing, regime MoE retraining, disp_22d as feature, disp_pctile as
+feature, xs_rank replace/add, ts_pct add, xs+ts combo, B_xs_add, F_xs_add,
+ABF_xs_add). **All FAIL discipline gates** under full-ensemble validation.
+Best candidate (gap-skip overlay) at +0.43 ΔSh fails 2/5 gates. Free-data
+signal-level optimization on this universe is now decisively closed.
+v7 alone (Sharpe +3.29, 533 cycles 2016-2026) remains production. See
+"2026-05-09 architectural audit" section below.
+
+| | crypto v6_clean h=48 | xyz v7 alpha-residual |
+|---|---|---|
+| Status | session closed AM; **PM gate finding PM** — see addendum | shadow harness deployed, awaiting cron + forward-test cycles |
+| Last live activity | 2026-05-03 (3 closed cycles, last 2 negative) | not yet |
+| Backtest Sharpe (corrected) | +0.6 active @ 4.5bps; +1.5+ at HYPE-staked tiers; **+2.75 with PM_M2_b1 + conv_gate (validated multi-OOS, NOT YET DEPLOYED)** | +3.11 active @ 3.5bps realistic; +3.25 @ 1.5bps maker |
+| Universe | ORIG25 crypto perps (HL) | 11 xyz Tier A+B US-equity perps |
+| Cadence | 4h | daily (avg ~7-8 trading days/cycle, gate-dependent) |
+| Why closed AM (crypto) | edge thinner than originally claimed at corrected costs; awaiting fee-tier upgrades | n/a |
+
+## xyz v7 status (the active program)
+
+### Spec (locked 2026-05-08)
+- **Universe**: tier_ab — 11 names (AAPL, AMZN, GOOGL, META, MSFT, MU, NFLX, NVDA, ORCL, PLTR, TSLA)
+- **Position rule**: top-K=4 long, K=4 short, hysteresis exit at K+M=5
+- **Cadence**: daily, 1d hold, dispersion gate ≥ 60-pctile of trailing 252d (PIT)
+- **Cost assumption**: 3.5 bps/side realistic (slip 2.7 + fee 0.8)
+- **Backtest**: walk-forward 11-fold OOS 2016-2026, +3.11 active Sharpe [+1.79, +4.49]
+- **Hard-split**: train ≤2019 frozen → +1.67 Sh on 2020-2026 (vs original baseline -0.28)
+
+### Operational layer (built this session)
+
+| component | path | status |
+|---|---|---|
+| Model artifact | `models/v7_xyz_ensemble.pkl` (15 models, 18 features) | trained 2026-05-08 |
+| Trainer | `live/train_v7_xyz_artifact.py` | mirrors crypto pattern; annual retrain mandatory |
+| Daily bot | `live/xyz_paper_bot.py` (~930 lines) | end-to-end tested; defensive guards in place |
+| Hourly monitor | `live/xyz_hourly_monitor.py` | tested; sends Telegram snapshot with $/bps P&L |
+| Cron wrapper | `live/run_xyz.sh` | sources `.env`, auto-detects venv |
+| Runbook | `docs/xyz_PAPER_TRADE_RUNBOOK.md` | 250+ lines |
+| Telegram integration | `live/telegram.py` (shared) | confirmed working — rebalance + hourly messages |
+
+### Defensive engineering (transactional / fail-closed semantics)
+
+Built into `xyz_paper_bot.py` after multiple audit passes:
+- **Atomic state save**: tmp + `os.replace` (POSIX atomic rename)
+- **Pending-cycle-row in state**: cycles.csv append + state save are exactly-once via dedup-by-decision_ts
+- **L2 book pre-check**: refuses to mutate state if any required position symbol's book is missing
+- **`_require_full_fill`**: raises if simulated taker fill is partial (depth insufficient)
+- **Same-day re-run guard**: state/P&L unchanged if rerun on same decision_ts
+- **Insufficient predictions**: raises (not silent flat) if bar size < 2K+M
+- **Feature-order validation**: load_artifact + build_panel verify feat_cols match meta
+- **Predictions dedup**: skip duplicate append for same decision_ts
+- **Funding checkpoint hold**: hourly_last_tick doesn't advance if any mid/funding fetch failed
+
+### What's NOT yet done (forward-test prerequisites)
+
+- ❌ Cron entries not installed (user task; commands in runbook)
+- ❌ Zero forward-test cycles logged
+- ❌ HL fee schedule not officially verified (using user-provided 0.8 bps/side)
+- ❌ No risk overlay (drawdown brake, kill-switch)
+- ❌ No real executor (shadow only; would be a separate file when promoted)
+
+### Tier C names (excluded from tier_ab)
+
+The basis-quality probe (`xyz_data_quality.py`, run 2026-05-08, all 15 candidates) flagged
+4 names with concerning behavior:
+- AMD: 4.3 min basis half-life, slow mean-revert
+- INTC: 247 bps daily basis std, 6 single-1h moves >5% in 90 days
+- COST: 19% frozen 3hr runs (illiquid)
+- LLY: 14% frozen runs (recent listing)
+
+Backtest at 3.5 bps/side: full15 gives +2.88 Sh; tier_ab (drops Tier C) gives +3.11. Tier C
+hurts more than it helps. Re-run probe quarterly to track liquidity build.
+
+## Research dead-ends (this session)
+
+### Intraday redesign (definitively negative)
+
+Goal: increase trade frequency above ~3 cycles/month. Tested:
+- 30min cadence cross-sectional residual on Polygon 5m × 2y: composite IC -0.006
+- Multi-horizon forward target (30m/1h/2h/4h): naive reversal IC up to +0.022 at 2h
+- Hour-of-day filter (closing 30min only): IC +0.048 — real signal but small
+- 72-config sweep (cadence × signal × horizon × K × M × cost): **all configs lose at 3.5 bps/side**
+
+Root cause: gross intraday alpha 1-4 bps/cycle, vs minimum realistic round-trip cost 5-7 bps.
+Hysteresis cuts turnover 1.44 → 0.20 but per-cycle gross is too small to clear costs.
+
+**Conclusion**: cross-sectional residual on liquid US mega-caps cannot support sub-daily
+cadence at xyz taker cost economics. Higher frequency requires different alpha class
+(microstructure data, news/events, options flow) or different cost regime (paid maker
+rebates), neither feasible currently.
+
+Files (kept for reproducibility): `ml/research/alpha_intraday_*.py` (4 scripts)
+
+## 2026-05-09 architectural audit (definitively negative)
+
+Goal: find any architectural addition that improves v7's deployable Sharpe.
+15 variants tested, all fail discipline gates with full-ensemble validation.
+
+### Audit table
+
+| # | Architecture | ΔSh | Verdict |
+|---|---|---|---|
+| 1 | Intraday Ridge head (signal-level blend) | ≈0 | FAIL — perturbs strong rankings in 11-name universe |
+| 2 | Intraday portfolio-level blend | regime-dep | FAIL — H1-trained ΔSh negative on H2 |
+| 3 | Rolling-24mo static blend with v7 | +0.17 IS | FAIL — below +0.20 gate, fails OOS |
+| 4 | Rolling regime-conditional (5 indicators × hard-switch) | varies | FAIL — overfits 2024Q3 single event |
+| 5 | pred_disp_TAB risk-sizing overlay | +0.05 | FAIL Sharpe; max-DD −33% (DD-only useful) |
+| 6 | Regime-conditional MoE retraining (3 bins) | **−2.27** | FAIL hard — data fragmentation kills LGBM |
+| 7 | disp_22d as model feature (Path A) | −0.13 | FAIL — drift in absolute scale |
+| 8 | disp_22d_pctile as feature (Path A') | −0.32 | FAIL — even percentile-stationary doesn't help |
+| 9 | xs_rank_replace A features | −0.61 | FAIL — strips info raw scales carry |
+| 10 | xs_rank_add A features | +0.05 | FAIL Sharpe; max-DD −36% (DD-only useful) |
+| 11 | ts_pct_add (vol features only) | −0.35 | FAIL |
+| 12 | xs+ts combo | −0.52 | FAIL — most max-DD reduction (−65%) at biggest Sh cost |
+| 13 | B_xs_add (PEAD ranks) | −0.41 | FAIL |
+| 14 | F_xs_add (sector ranks) | −0.85 | FAIL |
+| 15 | **ABF_xs_add** (1-horizon × 3-seed test) | **+0.49** | **borderline 4/5 — flipped on validation** |
+| 15v | **ABF_xs_add** (3-horizon × 5-seed VALIDATION) | **−0.72** | **FAIL 0/5** |
+| (★) | gap-skip overlay (skip first cycle after 30d+ gap) | +0.43 | borderline 3/5 — fails G2 (CI), G4 (event-dep) |
+
+### The validation lesson (critical)
+
+ABF_xs_add looked like the audit's strongest result at +0.49 ΔSh / 4/5 gates
+on a 3-seed × 1-horizon ensemble. **Validation at full v7 ensemble (5 seeds
+× 3 horizons = 15 models) flipped the sign to −0.72.** The +0.49 was
+seed/horizon-mix noise from undersized ensembles.
+
+**Discipline going forward**: never trust architectural claims from
+sub-production ensemble configs. The v7 production spec (5 seeds × 3
+horizons) exists for exactly this reason — smaller ensembles produce
+spurious +0.4-0.5 Sh "improvements" that don't survive scaling.
+
+### Cross-cutting structural findings
+
+1. **Drawdown smoothing is buyable; Sharpe lift is not.** Multiple variants
+   (5, 10, 12) reduce max-DD by 30-65% with neutral-to-negative Sharpe. The
+   tradeoff is roughly 1:1 — adding 30% DD reduction costs ~0.4 Sharpe.
+   Only the gate's filter-and-skip mechanism gets DD reduction at zero cost.
+
+2. **Regime info belongs at gate layer, not model layer.** The dispersion
+   gate (60th-pctile of 252d) contributes +2.19 Sh to v7 — the dominant
+   alpha lever. Encoding the same info as model features (disp_22d as feat,
+   disp_pctile, xs_rank, ts_pct) all hurt or wash. Discrete cycle decision
+   ≠ continuous prediction input.
+
+3. **Tree-greedy splits don't extract regime info beyond what
+   per-name vol features already encode.** LGBM uses xs-rank features at
+   ~40% of model importance but the splits don't translate to OOS Sharpe.
+   sym_id + raw A_vol_* implicitly does name-conditional normalization
+   already.
+
+4. **Regime-stationary feature ≠ regime-stationary label.** Percentile
+   transformations stabilize feature distribution but the conditional
+   label distribution still varies across regimes; LGBM averages across
+   them and gets noise.
+
+5. **Features that bias predictions conservative help drawdowns and
+   hurt bull years.** Per-year ΔSh shows the same pattern across tests:
+   wins in 2021 (drawdown), loses in 2023/2025/2026 (strong years).
+   No indicator distinguishes "good time to be conservative" from "bad
+   time to be conservative" reliably.
+
+### Production decision
+
+**v7 alone is the production strategy on Tier A+B.** Spec unchanged from
+2026-05-08:
+- LGBM ensemble (15 models: 3 horizons × 5 seeds)
+- 18 raw features (10 A + 4 B + 3 F + sym_id)
+- K=4 long / K=4 short with hysteresis M=1
+- Dispersion gate ≥60-pctile of trailing 252d
+- 0.8 bps/side taker fee
+- Daily rebalance after US close
+
+**Optional drawdown overlay (operational decision):**
+- pred_disp_kill gate: max-DD −33% at +0.05 Sh (within noise)
+- xs_rank_add features: max-DD −36% at +0.05 Sh (within noise)
+- Either deployable IF downstream cares about drawdown smoothing
+  (capital allocation rules, leverage caps) — neither adds Sharpe
+
+### Files (kept for reproducibility)
+
+- `ml/research/alpha_v9_xyz_ridge_blend.py` — Test 1
+- `ml/research/alpha_v9_xyz_portfolio_blend.py` — Test 2
+- `ml/research/alpha_v9_xyz_rolling.py` — Test 3
+- `ml/research/alpha_v9_xyz_regime_blend.py` — Test 4
+- `ml/research/alpha_v9_xyz_risk_sizing.py` — Test 5
+- `ml/research/alpha_v9_xyz_regime_moe.py` — Test 6
+- `ml/research/alpha_v9_xyz_disp_feature.py` — Test 7
+- `ml/research/alpha_v9_xyz_disp_pctile_feature.py` — Test 8
+- `ml/research/alpha_v9_xyz_feature_norm.py` — Tests 9-12
+- `ml/research/alpha_v9_xyz_BF_norm.py` — Tests 13-15
+- `ml/research/alpha_v9_xyz_ABF_validate.py` — Test 15v (validation)
+- `ml/research/alpha_v9_xyz_gap_skip.py` — Gap-skip overlay
+- Cached: `data/ml/cache/v9_rolling_24mo_preds.parquet`, `data/ml/cache/v7_regime.parquet`
+
+### Forward-look — what's left for v7
+
+Free-data signal-level optimization is closed. Remaining productive paths:
+
+1. **Wire cron + start gathering forward observations** (operational, blocking).
+   Real forward data resolves the +2.2-2.6 long-run vs +5-7 recent-regime gap.
+2. **Gap-skip overlay deployment** — only candidate to reach borderline status.
+   3/5 gates pass; ΔSh +0.43 (event-dependent on 2021-22). Could deploy at small
+   live weight as a probe, but not as production. Honest path: wait for forward
+   data to confirm the 2021-22 mechanism replicates.
+3. **Different inputs**: paid orthogonal data (L2 microstructure, options flow,
+   alternative data). $50-1000/mo + integration weeks. Uncertain payoff.
+4. **Different problem framing**: weekly horizon, pair trading, sector rotation.
+   Qualitative pivot. Weeks of work.
+5. **Different universe**: Russell mid-caps, intl equities — requires xyz to
+   list those names (it doesn't currently for most candidates).
+
+## Crypto v6_clean — closed
+
+Last live cycle: 2026-05-03. State archived to `live/state/closed_session_20260508/`.
+Three closed cycles in May 2026: net -12.6, -94.5, -139.0 bps. Real positions cleared
+on Hyperliquid manually. No cron, no background processes.
+
+To re-deploy: restore from `live/state/crontab.backup.20260503.txt`.
+
+## v6_clean PM gate addendum (2026-05-08, post-closure)
+
+After session closure, a **new turnover-reduction lever validated**:
+**PM_M2_b1** (pred-momentum entry gate). It filters NEW entries that
+weren't in top-K at the previous cycle, treating one-cycle blip predictions
+as noise. Mechanistically distinct from retention/hysteresis (which held
+*stale* alpha) — this filters *fresh noise* at entry. K is variable
+downward when persistence rejects entries.
+
+### Validated numbers (paired multi-OOS, 10 folds, 1800 cycles)
+
+| variant | Sharpe | net bps/cyc | paired Δsh vs baseline | folds + |
+|---|---|---|---|---|
+| baseline | +0.33 | +0.39 | — | — |
+| conv_p30 (current production) | +1.16 | +1.25 | +1.88 | — |
+| **PM_M2_b1** | **+1.96** | +2.33 | +1.98 | 9/10 |
+| **conv+PM stacked** | **+2.75** | **+3.01** | **+2.55** | — |
+
+- Bootstrap CI on Δnet for conv+PM: **[+0.37, +4.95]** — first variant to clear lower bound > 0
+- Compositionality: 93% additive (gates capture mostly orthogonal signals)
+- Hard-split frozen test PM_M2_b1: ΔSharpe **+2.01** (4/5 folds positive) — **survives** structural test that conv_gate did not
+
+### Mechanism: implicit regime detection
+
+In sample-period analysis (1369 active cycles), short-heavy bias correlated
+with steep down regimes (S+3+ bucket: 49 cycles, basket avg −29 bps,
+strategy net **+24 bps** Sharpe **+7.27**). The gate is doing
+persistence-as-conviction: when many same-direction names persist in
+top/bot-K, the model has high directional confidence, and that direction
+tends to continue. The +2.75 Sharpe includes both pure spread alpha AND
+this directional regime alpha; constant-per-name (1/7 fixed) weighting
+produces non-market-neutral leg gross when K asymmetry is high.
+
+### Caveats before deploying
+
+1. **Not market-neutral when K_L ≠ K_S.** With current per-name=1/7
+   weighting, leg gross varies with K_actual. A constant-gross variant
+   (always invest full $10k/leg) would restore strict neutrality but
+   probably reduces Sharpe to ~+2.0-2.4 by removing the regime-tilt alpha.
+   Decision is policy, not math.
+2. **CI lower bound on Δnet is just barely > 0** (+0.37 bps). Strong
+   point estimate (+2.62) but not 5σ.
+3. **conv+PM hasn't been hard-split-tested directly.** PM alone passed.
+4. **Tail behavior unknown.** S+3+ contributed ~33% of total bps from
+   3.6% of cycles. No 2008-magnitude tails in training data; flash
+   recoveries during S+3+ regime would whipsaw a concentrated short book.
+5. **Concentration when K is small.** K_min=1 occurred in 2.6% of active
+   cycles. Add capital sizing (50-60% of theoretical max notional).
+
+### Files
+
+- Gate impl: `ml/research/alpha_v9_pred_momentum.py` (function `portfolio_pnl_pred_momentum_bn`)
+- Multi-OOS paired: `ml/research/alpha_v9_pred_momentum_multioos.py`
+- Hard-split frozen: `ml/research/alpha_v9_pred_momentum_hardsplit.py`
+- Stacking with conv_gate (LGBM-only): `ml/research/alpha_v9_pred_momentum_stack.py`
+- **Stack on production hybrid (LGBM+Ridge)**: `ml/research/alpha_v9_pm_hybrid_stack.py`
+- **Ridge weight sweep with PM active**: `ml/research/alpha_v9_ridge_weight_with_pm.py` (drop Ridge)
+- **Hard-split conv+PM frozen**: `ml/research/alpha_v9_pm_stack_hardsplit.py` (SURVIVES Δsh +2.64)
+- **Weighting policy test**: `ml/research/alpha_v9_const_gross_pm.py` (keep per-name 1/7)
+- Cycle-level CSVs: `outputs/pred_momentum_stack/`, `outputs/pm_hybrid_stack/`, `outputs/ridge_weight_with_pm/`, `outputs/pm_stack_hardsplit/`, `outputs/const_gross_pm/`
+
+### Deploy-blockers RESOLVED 2026-05-08
+
+All four research deploy-blockers passed on this session:
+
+1. **[done]** Tier 1A — conv+PM on production hybrid: Sharpe +2.35 (CI > 0). But LGBM-only +2.75. Ridge head and PM gate partially conflict.
+2. **[done]** Ridge weight sweep with PM active: w=0 optimal, w=0.025 marginal +0.11 Sh n.s. **→ drop Ridge for deployment.**
+3. **[done]** Hard-split conv+PM frozen: ΔSharpe **+2.64**, Δnet +2.83 bps, CI **[+0.15, +5.69]** (statistically significant). 4/5 test folds positive. Stronger structural pass than the multi-OOS result.
+4. **[done]** Weighting policy test: constant per-name (current) wins by Δsh **+1.57** over constant-gross. const_gross wins only 1/10 folds. **→ keep per-name = 1/7 weighting.**
+
+### Validated deployment config
+
+```
+LGBM v6_clean ensemble (5 seeds, no Ridge head)
++ conv_p30 (skip cycle if dispersion < trailing 30th-pctile)
++ PM_M2_b1 (filter new entries needing 2-cycle persistence)
++ per-name weighting at 1/7 (variable leg gross)
++ β-neutral execution clip [0.5, 1.5]
++ TAKER fills only
+
+CORRECTED 2026-05-09 — original research evaluator reset positions on
+conv-skip and PM-empty cycles, while paper_bot.py holds prior positions.
+evaluate_stacked() now supports execution_model="live" (default) which
+matches deployment behavior. Re-validated numbers below.
+
+Multi-OOS Sharpe:    +2.47  (was +2.75 research-model)  CI [+0.56, +4.44]
+Hard-split frozen:   Δsh +2.92  (was +2.64) — stronger; CI [+0.28, +6.20]
+Net per cycle:       +2.94 bps (vs baseline +0.39)
+Cost per cycle:      ~3.0 bps  (vs baseline 7.13)
+K_avg:               ~3.4 per leg (vs baseline 7.00)
+Skip rate:           ~24% conv + entry rejections within active cycles
+Production lift:     +1.1 Sh over current LGBM+Ridge+conv production
+```
+
+The −0.28 multi-OOS Sharpe shift is from variance addition (held positions
+during conv-skipped cycles add real MtM with no expected alpha). The +0.28
+hard-split shift is the same mechanism in a regime where the frozen baseline
+is broken — held basket-residual exposure happens to be better than 0.
+
+### Remaining steps
+
+1. **[done 2026-05-08]** Wire conv+PM into `live/paper_bot.py`.
+2. **[done 2026-05-09]** Production-readiness audit (10 issues fixed across 3 review passes):
+   - Backtest/live divergence (Issues 1+2): live-model evaluator (`execution_model="live"` default in `evaluate_stacked`); re-validated +2.47 multi-OOS / +2.92 hard-split.
+   - Atomic state with crash recovery (Issues 3 + 1b): two-phase commit, pending-row dedup, schema-compat with hourly_monitor.
+   - Partial-tick discipline (Issues 4 + 4b + 3c): defer mark+funding, gate `hourly_last_tick` AND `hourly_pnl.csv` on `tick_complete`.
+   - Skip-cycle persistence (Issues 2b + 3b + 2c): conv-skip + PM-empty paths now save cycle row, carry `equity_usd`, accrue funding for held interval.
+   - Schema alignment (Issue 1c): `_append_cycle_row` auto-widens cycles.csv schema for new diagnostic fields without misaligning numeric columns.
+3. **[done 2026-05-09]** Pred-disp size-overlay test (port from xyz). DD reduction works on v6 but xyz's "zero Sharpe cost" only partially replicates. **Best zero-cost: overlay 0.50-1.00** (Δsh −0.14, 17% DD reduction, Δnet CI crosses 0). **Best DD reduction: 0.30-0.70** (Δsh −0.13, 33% DD reduction = xyz target, Δnet CI < 0). Strong absorption of losing months (Dec 2025 −1.43→−0.51, Apr 2026 −2.30→−0.96). Decision pending on whether to deploy with overlay; baseline still available.
+4. Forward-validate live N=15 → N=30 (5 days runtime).
+
+### Ridge/PM conflict (2026-05-08)
+
+Tested in `ml/research/alpha_v9_pm_hybrid_stack.py`. Ridge head's contribution
+to Sharpe by gate level (10-fold multi-OOS):
+
+| Gate level | LGBM-only Sh | Hybrid Sh | Ridge Δ |
+|---|---|---|---|
+| baseline | +0.33 | +0.61 | **+0.28** (Ridge helps) |
+| conv_p30 | +1.16 | +1.33 | **+0.17** (Ridge helps) |
+| PM_M2_b1 | +1.96 | +1.89 | −0.08 |
+| conv+PM | **+2.75** | +2.35 | **−0.40** (Ridge HURTS) |
+
+Mechanism: Ridge head tilts predictions cycle-to-cycle using positioning
+features. PM gate filters based on rank persistence. Ridge's small per-cycle
+perturbations push names in/out of the top-K threshold → PM gate sees
+"unstable rankings" and rejects what would otherwise be persistent LGBM
+signals. The two are partially redundant in role (both favor stable,
+well-positioned names) but mechanistically antagonistic when stacked.
+
+Composition (hybrid): 83% additive (vs 93% in pure LGBM). Some additivity
+preserved but weaker.
+
+**Open production decision**: drop Ridge entirely (deploy LGBM+conv+PM at
++2.75 Sh) vs keep hybrid (deploy hybrid+conv+PM at +2.35 Sh). Quick
+follow-up: sweep Ridge blend weight w ∈ {0.0, 0.05, 0.10, 0.15} with PM
+gate active to find the new optimum (~10 min test, not yet done).
+
+## Universe expansion exploration (2026-05-09, all paths CLOSED)
+
+Comprehensive 1-day exploration of whether ORIG25 can be expanded.
+**Conclusion: ORIG25 stays. Workflow is universe-specific, not generalizable.**
+
+### TL;DR
+
+| Path | Result |
+|---|---|
+| Bundled additions (FULL39, +DeFi3, +L1_3, +Quality6, +NonMeme10, +MemesOnly4) | All hurt by 2.0-3.3 Sh |
+| Per-symbol leave-one-in (14 candidates) | Only LDO (+0.12) and 1000SHIB (+0.35) individually compatible |
+| Joint LDO+1000SHIB (27 syms) | **ANTAGONISTIC**: Δsh −2.03, Sharpe drops to +0.72 |
+| Forced cluster-bucketed K_c=1 | **Failed**: Sharpe −2.12 (forces weak-cluster picks) |
+| Capped per-cluster cap=2/3/4 | **Failed**: Sharpe +0.21 (worse than uncapped FULL +0.88) |
+| **Workflow generalization (5 alt 25-name baskets)** | **Mean Sharpe −0.38**, ORIG25 +2.75 is rank 1/6 by 1.96 margin |
+
+### Root cause: rank-competition + workflow overfit
+
+Two compounding mechanisms:
+
+1. **Rank-competition destabilizes PM gate** (per-symbol diagnostic): adding names to universe → more rank churn cycle-to-cycle → PM rejects more entries → K_avg drops 20% → effective deployment shrinks. Per-symbol IC and selection are unchanged; only K_actual collapses.
+
+2. **Workflow is overfit to ORIG25** (workflow generalization test, 5 alternative 25-name baskets): ORIG25 +2.75 is rank 1 of 6 by 1.96 Sh margin. Other 25-name baskets average **−0.38 Sh**. The +2.75 is a property of ORIG25 specifically through the workflow, NOT a property of the workflow itself. The 30+ test audit selected feature set, hyperparameters, K, and gate parameters all on ORIG25 → universe-specific configuration.
+
+### Implication: "v6_clean" isn't a workflow, it's a configuration
+
+The audit produced a configuration that works on ORIG25. Other universes need their own audit (~3-4 weeks per universe). Adding/removing names from ORIG25 breaks the configuration.
+
+### What this means for future planning
+
+- **Path 1 (deploy ORIG25 + 1000SHIB)**: viable single-name expansion, +0.35 Sh expected. ~1 day to deploy.
+- **Path 2 (architecture change)**: failed — selection-layer changes can't fix universe expansion under current model.
+- **Path 3 (full retrain on FULL39)**: was estimated at +2.0-3.0 Sh. Workflow generalization test downgrades this expectation substantially. Random 25-name baskets retrained with same workflow average −0.38 Sh.
+- **Default**: stay at ORIG25. Forward live N=30 to confirm validated +2.75 transfers.
+
+### Files
+
+- `ml/research/alpha_v9_universe_expand.py` — FULL39 + curated subsets (all bundled additions hurt)
+- `ml/research/alpha_v9_universe_curated.py` — 6 quality-filtered subsets (all hurt)
+- `ml/research/alpha_v9_universe_diag.py` — root-cause diagnostic (rank-competition mechanism)
+- `ml/research/alpha_v9_universe_leave_one_in.py` — per-symbol compatibility (only LDO + 1000SHIB pass)
+- `ml/research/alpha_v9_universe_27sym.py` — joint LDO+1000SHIB (antagonistic)
+- `ml/research/alpha_v9_clustered_backtest.py` — forced cluster-bucketed K_c=1 (failed)
+- `ml/research/alpha_v9_capped_backtest.py` — capped cap=2-4 (failed)
+- `ml/research/alpha_v9_workflow_generalization.py` — alternative 25-name baskets (workflow doesn't generalize)
+- `ml/research/portfolio_clustered.py` — cluster-bucketed and cluster-capped selection backends
+- `config/clusters_v1.json` — 6-cluster sector definitions (only 3 are correlation-cohesive)
+- Outputs: `outputs/universe_expand/`, `outputs/universe_curated/`, `outputs/universe_diag/`, `outputs/universe_leave_one_in/`, `outputs/universe_27sym/`, `outputs/clustered_backtest/`, `outputs/capped_backtest/`, `outputs/workflow_generalization/`
+
+---
+
+# Status — 2026-05-06 (previous, crypto-focused — kept for history)
 
 ## Program
 

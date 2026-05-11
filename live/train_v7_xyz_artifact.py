@@ -111,6 +111,23 @@ def main() -> None:
         pickle.dump(models, fh)
     log.info("Wrote %s (%d models)", pkl_path, len(models))
 
+    # Mirrors the UNIVERSE_PRESETS dict in xyz_paper_bot.py — kept here for
+    # documentation. Source of truth for runtime is the harness, not meta.
+    universe_presets = {
+        "tier_a": {
+            "names": ["AAPL", "GOOGL", "META", "MSFT", "MU", "NVDA", "PLTR", "TSLA"],
+            "K": 3, "M": 1,
+        },
+        "tier_ab": {
+            "names": ["AAPL", "AMZN", "GOOGL", "META", "MSFT", "MU", "NFLX",
+                       "NVDA", "ORCL", "PLTR", "TSLA"],
+            "K": 4, "M": 1, "is_default": True,
+        },
+        "full15": {
+            "names": list(XYZ_IN_SP100),
+            "K": 5, "M": 2,
+        },
+    }
     meta = {
         "feature_set": "v7_xyz",
         "feat_cols": feats,
@@ -121,11 +138,16 @@ def main() -> None:
         "seeds": list(SEEDS),
         "ensemble_size": len(models),
         "lgb_params": LGB_PARAMS,
-        "execution_universe": list(XYZ_IN_SP100),
+        "execution_universe_note": (
+            "Universe selected at runtime by --universe flag in xyz_paper_bot.py "
+            "(default: tier_ab). The presets below are reference; source of truth "
+            "is UNIVERSE_PRESETS in xyz_paper_bot.py."
+        ),
+        "execution_universe_presets": universe_presets,
         "training_universe": sorted(panel["symbol"].dropna().unique().tolist()),
-        "top_k": TOP_K,
-        "exit_buffer": EXIT_BUFFER,
-        "cost_bps_side": COST_BPS_SIDE,
+        "default_top_k": TOP_K,
+        "default_exit_buffer": EXIT_BUFFER,
+        "cost_bps_side_assumption": COST_BPS_SIDE,
         "gate_pctile": GATE_PCTILE,
         "gate_window": GATE_WINDOW,
         "sector_map": SECTOR_MAP,
