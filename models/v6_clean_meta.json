@@ -1,0 +1,91 @@
+{
+  "feature_set": "v6_clean",
+  "feat_cols": [
+    "return_1d",
+    "ema_slope_20_1h",
+    "atr_pct",
+    "volume_ma_50",
+    "hour_cos",
+    "hour_sin",
+    "dom_level_vs_bk",
+    "dom_z_7d_vs_bk",
+    "dom_change_288b_vs_bk",
+    "bk_ret_48b",
+    "bk_ema_slope_4h",
+    "idio_ret_48b_vs_bk",
+    "corr_change_3d_vs_bk",
+    "obv_z_1d",
+    "vwap_slope_96",
+    "vwap_zscore",
+    "price_volume_corr_20",
+    "obv_signal",
+    "mfi",
+    "price_volume_corr_10",
+    "return_1d_xs_rank",
+    "atr_pct_xs_rank",
+    "bars_since_high_xs_rank",
+    "ema_slope_20_1h_xs_rank",
+    "idio_vol_1d_vs_bk_xs_rank",
+    "obv_z_1d_xs_rank",
+    "vwap_zscore_xs_rank",
+    "sym_id"
+  ],
+  "sym_to_id": {
+    "ADAUSDT": 0,
+    "APTUSDT": 1,
+    "ARBUSDT": 2,
+    "ATOMUSDT": 3,
+    "AVAXUSDT": 4,
+    "BCHUSDT": 5,
+    "BNBUSDT": 6,
+    "BTCUSDT": 7,
+    "DOGEUSDT": 8,
+    "DOTUSDT": 9,
+    "ETHUSDT": 10,
+    "FILUSDT": 11,
+    "INJUSDT": 12,
+    "LINKUSDT": 13,
+    "LTCUSDT": 14,
+    "NEARUSDT": 15,
+    "OPUSDT": 16,
+    "RUNEUSDT": 17,
+    "SEIUSDT": 18,
+    "SOLUSDT": 19,
+    "SUIUSDT": 20,
+    "TIAUSDT": 21,
+    "UNIUSDT": 22,
+    "WLDUSDT": 23,
+    "XRPUSDT": 24
+  },
+  "horizon_bars": 288,
+  "regime_cutoff": 0.33,
+  "train_window_start": "2025-03-25 00:00:00+00:00",
+  "train_window_end": "2026-04-08 23:55:00+00:00",
+  "cal_window_start": "2026-04-08 23:55:00+00:00",
+  "cal_window_end": "2026-04-28 23:55:00+00:00",
+  "n_train_rows": 907679,
+  "n_cal_rows": 47099,
+  "ensemble_seeds_iters": [
+    {
+      "seed": 42,
+      "best_iter": 1
+    },
+    {
+      "seed": 7,
+      "best_iter": 1
+    },
+    {
+      "seed": 123,
+      "best_iter": 1
+    },
+    {
+      "seed": 99,
+      "best_iter": 1
+    },
+    {
+      "seed": 314,
+      "best_iter": 1
+    }
+  ],
+  "trained_at_utc": "2026-05-01T07:21:54.286534Z"
+}
