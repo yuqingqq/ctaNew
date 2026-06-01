@@ -37,9 +37,10 @@ ARTIFACT = REPO/"live/models/convexity_portable.pkl"
 PANEL    = REPO/"outputs/vBTC_features/panel_expanded_v0.parquet"
 DEFAULT_PREDS = REPO/"research/convexity_portable_2026-05-20/results/_cache/x132_expanded_v0_preds.parquet"
 PREDS    = Path(os.environ.get("CONVEXITY_PREDS_PATH", str(DEFAULT_PREDS)))
-# Universe-meta source is ALWAYS the full preds file (for maturity calc) — the override
-# preds file may be a narrow window (e.g. H2 only) which would falsely fail maturity.
-UNIVERSE_META_PREDS = DEFAULT_PREDS
+# Universe-meta source (for maturity calc) — the trading preds (PREDS) may be a narrow window which
+# would falsely fail maturity. Env-overridable so the live pipeline points it at a dedicated maturity
+# meta (live/build_maturity_meta.py, onboardDate-based) instead of clobbering the shared x132 preds file.
+UNIVERSE_META_PREDS = Path(os.environ.get("CONVEXITY_UNIV_META", str(DEFAULT_PREDS)))
 KLINES   = REPO/"data/ml/test/parquet/klines"
 RESEARCH_LOG = STATE/"replay_vs_research.csv"
 
@@ -114,7 +115,8 @@ if DYN_ALLOW_PATH and Path(DYN_ALLOW_PATH).exists():
 LIQ_FLOOR_DOLLAR_VOL_30D = 3_000_000.0     # $3M/day exec floor
 DEDUP_CORR_THRESHOLD = 0.90                # drop high-corr names; keep longer-history one
 
-INITIAL_EQUITY = 10_000.0
+INITIAL_EQUITY = float(os.environ.get("CONVEXITY_EQUITY", "10000"))   # env-overridable; keeps ALL state
+                                                                      # (equity/peak/eq_hist/stop) on one scale
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 log = logging.getLogger("convexity_paper_bot")
@@ -879,15 +881,23 @@ def run_cycle() -> dict:
             regime_at_entry=regime, ret_bps=np.nan, cost_bps=np.nan, pnl_bps=np.nan))
         prev_agg = net_after; last_regime = regime
 
-    # APPEND to existing logs
-    def _append(rows, fname):
+    # APPEND to existing logs, dedup-safe so a crash between this append and _save_state below can't
+    # produce duplicate rows when --cycle re-runs the same bar on restart. cycles/regime/equity are
+    # 1-row-per-open_time → dedup on open_time; sleeves is many-rows-per-cycle → exact-row dedup.
+    def _append(rows, fname, key="open_time"):
         if not rows: return
         df = pd.DataFrame(rows); path = STATE/fname
-        df.to_csv(path, mode="a", header=not path.exists(), index=False)
-    _append(cycles_rows, "cycles.csv")
-    _append(regime_rows, "regime.csv")
-    _append(equity_rows, "equity.csv")
-    _append(sleeves_rows, "sleeves.csv")
+        if path.exists():
+            comb = pd.concat([pd.read_csv(path), df], ignore_index=True)
+            comb = comb.drop_duplicates(key, keep="last") if (key and key in comb.columns) \
+                   else comb.drop_duplicates(keep="last")
+            comb.to_csv(path, index=False)          # full rewrite (these logs are small)
+        else:
+            df.to_csv(path, index=False)
+    _append(cycles_rows, "cycles.csv", "open_time")
+    _append(regime_rows, "regime.csv", "open_time")
+    _append(equity_rows, "equity.csv", "open_time")
+    _append(sleeves_rows, "sleeves.csv", None)      # None → exact-row dedup (many rows per cycle)
     if pred_rows:
         new = pd.concat(pred_rows, ignore_index=True)
         path = STATE/"predictions.parquet"

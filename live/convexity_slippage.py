@@ -61,11 +61,17 @@ def log_latest_cycle(state: Path, book: str, out: Path):
     longs = [s for s in str(row.get("top_k_long", "") or "").split(",") if s]
     shorts = [s for s in str(row.get("bot_k_short", "") or "").split(",") if s]
     equity = float(row.get("equity_post", 10000.0))
-    gross = float(row.get("gross_after_stop", row.get("gross_target", 1.0)) or 1.0)
     legs = [(s, "buy") for s in longs] + [(s, "sell") for s in shorts]
     if not legs:
         return
-    leg_notional = equity * gross / max(1, len(legs))   # per-leg target notional
+    # PER-LEG order = the MARGINAL sleeve leg actually traded each cycle, NOT the whole book. The book
+    # is gross×equity held across HOLD overlapping sleeves, each K legs/side; a leg enters at weight
+    # (1/K)/HOLD, so one order ≈ equity/(K*HOLD) (~$556 on 10k, K=3, HOLD=6). The old equity*gross/n_legs
+    # sized each leg as if one sleeve held the entire gross book → ~6x too big → overstated slippage.
+    import os
+    HOLD = int(os.environ.get("STRAT_HOLD", "6"))
+    K = max(len(longs), len(shorts), 1)
+    leg_notional = equity / (K * HOLD)
     out.parent.mkdir(parents=True, exist_ok=True)
     new = not out.exists()
     with open(out, "a", newline="") as f:
