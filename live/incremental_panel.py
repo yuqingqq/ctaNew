@@ -122,16 +122,47 @@ def _cohort_window(new, since):
     return new
 
 
-def run(panel_path=PANEL, workers=6):
+def _btc_completeness_ok(btc, since, lookback_days=8, min_frac=0.90):
+    """beta_to_btc_change_5d needs a DENSE BTC 5m series over its lookback (BETA_WINDOW=1d + diff=5d ≈ 6d).
+    If BTC's recent days are only partially backfilled at build time, beta is computed on a sparse series
+    and silently wrong (the exact bug that flipped NIL's beta_to_btc_change_5d −0.95 vs the correct +0.80).
+    Require every COMPLETE day in [since-lookback, latest] to have ≥ min_frac×288 bars; the latest
+    (in-progress) day is exempt. Returns (ok, msg)."""
+    lo = (since - pd.Timedelta(days=lookback_days)).normalize()
+    hi = btc.index.max()
+    w = btc[(btc.index >= lo) & (btc.index <= hi)]
+    if w.empty:
+        return False, f"no BTC 5m bars in [{lo.date()}..{hi.date()}]"
+    bpd = w.groupby(w.index.normalize()).size()
+    today = hi.normalize()                                              # latest day may be in-progress
+    sparse = {str(d.date()): int(n) for d, n in bpd.items() if d < today and n < min_frac * 288}
+    ok = len(sparse) == 0
+    msg = (f"5m days {bpd.index.min().date()}..{bpd.index.max().date()} (latest bar {hi:%m-%d %H:%M}): "
+           + ("dense" if ok else f"SPARSE {sparse}"))
+    return ok, msg
+
+
+def run(panel_path=PANEL, workers=6, rebuild_days=0):
     global _BTC_FULL
     t0 = time.time()
     panel = pd.read_parquet(panel_path)
     panel["open_time"] = pd.to_datetime(panel["open_time"], utc=True)
-    since = panel["open_time"].max()
+    full_max = panel["open_time"].max()
+    if rebuild_days > 0:                                  # recompute the last N days of rows from current klines
+        since = full_max - pd.Timedelta(days=rebuild_days)
+        base = panel[panel["open_time"] <= since].copy()
+        print(f"[inc_panel] REBUILD: dropping {len(panel)-len(base)} rows after {since} → recompute from current data", flush=True)
+    else:
+        since = full_max
+        base = panel
     syms = sorted(s for s in panel["symbol"].unique() if s != "BTCUSDT")
     _BTC_FULL = X70.load_closes("BTCUSDT")
     _BTC_FULL.index = pd.DatetimeIndex(_BTC_FULL.index).tz_convert("UTC")
-    print(f"[inc_panel] panel last={since}, {len(syms)} syms, warmup={WARMUP_DAYS}d", flush=True)
+    ok, msg = _btc_completeness_ok(_BTC_FULL, since)
+    print(f"[inc_panel] panel last={full_max}, {len(syms)} syms, warmup={WARMUP_DAYS}d | BTC {msg}", flush=True)
+    if not ok:                                            # fail-closed: never write beta computed on a partial BTC series
+        print("[inc_panel] FAIL-CLOSED: BTC 5m sparse over the beta window — skip (no corrupt beta_to_btc written)", flush=True)
+        raise SystemExit(3)
     def _w(s):
         try: return _build_sym_window(s, since)
         except Exception as e: print(f"  {s} ERR {str(e)[:60]}", flush=True); return None
@@ -150,7 +181,7 @@ def run(panel_path=PANEL, workers=6):
     for c in new.columns:
         if c not in KEEP_OBJ and pd.api.types.is_float_dtype(panel[c]):
             new[c] = new[c].astype("float32")
-    combined = pd.concat([panel, new], ignore_index=True)
+    combined = pd.concat([base, new], ignore_index=True)
     combined = x6.build_target_z(combined)            # cheap full recompute (expanding mean, 1 col)
     combined = combined.reindex(columns=panel.columns) if set(panel.columns)<=set(combined.columns) else combined
     combined.to_parquet(panel_path, index=False)
@@ -197,6 +228,8 @@ def validate(workers=6):
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--validate", action="store_true"); ap.add_argument("--workers", type=int, default=6)
+    ap.add_argument("--rebuild-days", type=int, default=0,
+                    help="recompute the last N days of panel rows from current klines (repairs rows built on incomplete data)")
     a = ap.parse_args()
     if a.validate: validate(a.workers)
-    else: run(workers=a.workers)
+    else: run(workers=a.workers, rebuild_days=a.rebuild_days)
