@@ -323,13 +323,13 @@ def compute_realized_pnl(
 ) -> float:
     """Compute realized spread PnL between two cycles (paper mode).
 
-    Uses prior cycle's positions and the realized return_pct on the current
-    cycle's panel (which represents the forward return from prior cycle).
+    Uses prior cycle's positions and the realized return_pct on the prior
+    cycle's panel, because return_pct is the forward return from that bar to
+    current_cycle_ts.
     """
     if not positions.long or not positions.short or positions.is_flat:
         return 0.0
-    # We look at return_pct at current_cycle_ts which is fwd-return from prior
-    sub = features_panel[features_panel["open_time"] == current_cycle_ts]
+    sub = features_panel[features_panel["open_time"] == prior_cycle_ts]
     long_g = sub[sub["symbol"].isin(positions.long)]
     short_g = sub[sub["symbol"].isin(positions.short)]
     if long_g.empty or short_g.empty:
@@ -376,6 +376,17 @@ def fetch_features_panel_for_cycle(cycle_ts: pd.Timestamp) -> pd.DataFrame:
     return sub
 
 
+def fetch_features_panel_for_cycles(cycle_ts_list: list[pd.Timestamp]) -> pd.DataFrame:
+    """Return feature panel rows for one or more cycle timestamps."""
+    panel = pd.read_parquet(PANEL_PATH)
+    ts_set = set(cycle_ts_list)
+    sub = panel[panel["open_time"].isin(ts_set)]
+    missing = sorted(ts for ts in ts_set if sub[sub["open_time"] == ts].empty)
+    if missing:
+        raise ValueError(f"No panel rows for cycle_ts={missing}")
+    return sub
+
+
 # =========================================================================
 # Execution — STUB (wire to broker)
 # =========================================================================
@@ -386,11 +397,13 @@ def place_orders_paper(decision: dict, size_multiplier: float, notional_per_leg:
         logging.info(f"  no trades ({decision['decision']})")
         return
     sized_notional = notional_per_leg * size_multiplier
-    logging.info(f"  PAPER ORDERS (size_mult={size_multiplier:.2f}, notional/leg=${sized_notional:,.0f}):")
+    logging.info(f"  PAPER ORDERS (size_mult={size_multiplier:.2f}, notional/side=${sized_notional:,.0f}):")
+    long_count = max(len(decision["long_syms"]), 1)
+    short_count = max(len(decision["short_syms"]), 1)
     for sym in decision["long_syms"]:
-        logging.info(f"    BUY {sym}: target ${sized_notional / TOP_K:,.0f}")
+        logging.info(f"    BUY {sym}: target ${sized_notional / long_count:,.0f}")
     for sym in decision["short_syms"]:
-        logging.info(f"    SELL {sym}: target ${sized_notional / TOP_K:,.0f}")
+        logging.info(f"    SELL {sym}: target ${sized_notional / short_count:,.0f}")
 
 
 def place_orders_live(decision: dict, size_multiplier: float, notional_per_leg: float):
@@ -477,18 +490,34 @@ def main():
                  f"cum_pnl={cum_pnl_d['cum_pnl_bps']:+.0f}bps, "
                  f"peak={cum_pnl_d['peak_bps']:+.0f}bps")
 
-    # Fetch features for this cycle
-    features_panel = fetch_features_panel_for_cycle(cycle_ts)
+    # Fetch features for this cycle and, when positions are open, the prior
+    # cycle whose forward return realizes at this timestamp.
+    prior_cycle_ts = cycle_ts - pd.Timedelta(minutes=HORIZON * 5)
+    if positions.entry_cycle_ts and (positions.long or positions.short):
+        features_panel = fetch_features_panel_for_cycles([prior_cycle_ts, cycle_ts])
+    else:
+        features_panel = fetch_features_panel_for_cycle(cycle_ts)
 
     # Compute realized PnL from prior cycle (paper bookkeeping)
     realized_bps = 0.0
     if positions.entry_cycle_ts and (positions.long or positions.short):
         try:
-            realized_bps = compute_realized_pnl(positions, None, cycle_ts, features_panel)
+            realized_bps = compute_realized_pnl(positions, prior_cycle_ts, cycle_ts, features_panel)
         except Exception as e:
             logging.warning(f"PnL bookkeeping skipped: {e}")
     if realized_bps != 0:
         logging.info(f"Realized PnL from prior cycle: {realized_bps:+.1f} bps (gross)")
+
+    # Prior positions earned the size selected before this cycle. Update the
+    # realized PnL first, so the rebalance decision sizes the next hold using
+    # drawdown information actually known at rebalance time.
+    prior_size = compute_dd_size(cum_pnl_d["cum_pnl_bps"], cum_pnl_d["peak_bps"])
+    realized_net_bps = 0.0 if positions.is_flat else realized_bps * prior_size
+    if realized_net_bps != 0:
+        cum_pnl_d["cum_pnl_bps"] += realized_net_bps
+        cum_pnl_d["peak_bps"] = max(cum_pnl_d["peak_bps"], cum_pnl_d["cum_pnl_bps"])
+        logging.info(f"Applied realized PnL: {realized_bps:+.1f} * prior_size={prior_size:.2f} "
+                     f"= {realized_net_bps:+.1f} bps")
 
     # Run strategy decision
     state = {
@@ -505,7 +534,7 @@ def main():
         logging.info(f"  shorts: {decision['short_syms']}")
         logging.info(f"  dispersion: {decision.get('dispersion', 0):.4f}")
 
-    # Apply realized PnL (with prior cycle's size multiplier — already-realized)
+    # Apply rebalance cost at the next-cycle size.
     new_positions: Positions = decision["new_positions"]
     new_size = decision["size_multiplier"]
     # Cost for THIS cycle's rebalance
@@ -516,16 +545,12 @@ def main():
         cost_bps = 2 * COST_PER_LEG
     else:
         cost_bps = 0.0
-    # Cycle net (size applied to gross spread; cost ALSO scaled by size since it's notional)
-    net_cycle = realized_bps * new_size - cost_bps * new_size if not positions.is_flat else 0 - cost_bps * new_size
-    # Actually, the standard convention: cost applies to the ENTRY being made at this cycle
-    # So net = realized * prior_size - cost * new_size
-    # But to keep it simple here, net = realized * size - cost * size
-    logging.info(f"Cycle net PnL: realized={realized_bps:+.1f} * size={new_size:.2f} "
-                 f"- cost={cost_bps:.1f} * size={new_size:.2f} = {net_cycle:+.1f} bps")
+    cost_net_bps = cost_bps * new_size
+    logging.info(f"Rebalance cost: cost={cost_bps:.1f} * next_size={new_size:.2f} "
+                 f"= {cost_net_bps:.1f} bps")
 
     # Update cum_pnl
-    cum_pnl_d["cum_pnl_bps"] += net_cycle
+    cum_pnl_d["cum_pnl_bps"] -= cost_net_bps
     cum_pnl_d["peak_bps"] = max(cum_pnl_d["peak_bps"], cum_pnl_d["cum_pnl_bps"])
     cum_pnl_d["n_cycles"] += 1
 
@@ -541,8 +566,9 @@ def main():
         "decision": decision["decision"],
         "realized_bps": realized_bps,
         "cost_bps": cost_bps,
+        "prior_size_multiplier": prior_size,
         "size_multiplier": new_size,
-        "net_cycle_bps": net_cycle,
+        "net_cycle_bps": realized_net_bps - cost_net_bps,
         "cum_pnl_bps": cum_pnl_d["cum_pnl_bps"],
         "peak_bps": cum_pnl_d["peak_bps"],
         "n_long": len(new_positions.long),

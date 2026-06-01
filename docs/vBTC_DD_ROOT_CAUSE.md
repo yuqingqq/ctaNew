@@ -3,6 +3,14 @@
 Date: 2026-05-10
 Strategy: alpha_vBTC (cross-sectional residual on Binance USDM, 25-name universe)
 
+> **Stale investigation note (superseded 2026-05-10, timing-audited 2026-05-11).**
+> This file captures an earlier hypothesis from the DD investigation. The newer
+> consolidated status in `docs/vBTC_STRATEGY_STATUS.md` supersedes it: later
+> attribution found the drawdown was primarily a single regime drift with
+> ICP/ORDI/HBAR/TAO/AAVE drag, while VVV/WIF/WLD were net positive contributors.
+> Do not use the headline Sharpe/DD numbers below as production evidence until
+> the corrected `alpha_vBTC_final_simulation.py` has been rerun.
+
 ## TL;DR
 
 Drawdowns are a **fat-tail problem**, not a chronic-underperformance problem.

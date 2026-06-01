@@ -87,10 +87,14 @@ def compute_rolling_ic_universe(panel, train_pred_panel, boundary_ts, listings,
                   if listings.get(s) and listings[s] <= cutoff}
 
     window_start = boundary_ts - pd.Timedelta(days=ic_window_days)
-    past = train_pred_panel[
-        (train_pred_panel["open_time"] >= window_start) &
-        (train_pred_panel["open_time"] < boundary_ts) &
-        (train_pred_panel["symbol"].isin(eligible))
+    pred_panel = train_pred_panel.copy()
+    if "exit_time" not in pred_panel.columns:
+        pred_panel["exit_time"] = pred_panel["open_time"] + pd.Timedelta(minutes=HORIZON * 5)
+    past = pred_panel[
+        (pred_panel["open_time"] >= window_start) &
+        (pred_panel["open_time"] < boundary_ts) &
+        (pred_panel["exit_time"] <= boundary_ts) &
+        (pred_panel["symbol"].isin(eligible))
     ].dropna(subset=["alpha_A"])
     if len(past) < 1000:
         return set()
@@ -179,7 +183,10 @@ def main():
         for s in SEEDS:
             m = _train(Xt_f[mt_f], yt_f[mt_f], Xc_f[mc_f], yc_f[mc_f], seed=s)
             preds.append(m.predict(Xtest_f, num_iteration=m.best_iteration))
-        df_f = test_r[["symbol", "open_time", "alpha_A"]].copy()
+        pred_cols = ["symbol", "open_time", "alpha_A"]
+        if "exit_time" in test_r.columns:
+            pred_cols.append("exit_time")
+        df_f = test_r[pred_cols].copy()
         df_f["pred"] = np.mean(preds, axis=0)
         df_f["fold"] = f["fid"]
         prior_oos_preds.append(df_f)

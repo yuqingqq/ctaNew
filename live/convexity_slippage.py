@@ -1,0 +1,96 @@
+"""Per-cycle realized-slippage logger for the convexity two-book forward test.
+
+Measures TRUE execution cost off the live Hyperliquid L2 orderbook (fee + book-walk impact +
+fill-completeness), so the forward test reflects ~12 bps reality instead of the flat 4.5 bps model.
+Ported from live/paper_bot.py (fetch_hl_l2_book + simulate_taker_fill).
+
+Usage (per book, after its --cycle advances):
+  python3 live/convexity_slippage.py --state live/state/convexity_bookA --book A \
+      --out live/state/convexity_twobook/slippage.csv
+Reads the latest cycle's legs (top_k_long / bot_k_short) + equity from the book's cycles.csv, sizes
+each leg by equity*gross/(n_legs), probes HL L2, simulates the taker fill, appends realized cost rows.
+Additive: logs realized vs modeled; does not alter core PnL.
+"""
+import argparse, csv, json
+from pathlib import Path
+import pandas as pd, requests
+
+HL_INFO = "https://api.hyperliquid.xyz/info"
+HL_TAKER_FEE_BPS = 4.5
+
+
+def _binance_to_hl_coin(symbol: str) -> str:
+    sym = symbol.upper()
+    for suf in ("USDT", "USDC", "USD", "PERP"):
+        if sym.endswith(suf):
+            return sym[:-len(suf)]
+    return sym
+
+
+def fetch_hl_l2_book(coin: str) -> dict:
+    r = requests.post(HL_INFO, json={"type": "l2Book", "coin": coin}, timeout=10)
+    r.raise_for_status()
+    lv = r.json().get("levels", [[], []])
+    return {"bids": [(float(x["px"]), float(x["sz"])) for x in lv[0]],
+            "asks": [(float(x["px"]), float(x["sz"])) for x in lv[1]]}
+
+
+def simulate_taker_fill(book: dict, side: str, notional: float) -> dict:
+    levels = book["asks"] if side == "buy" else book["bids"]
+    if not levels or not book["bids"] or not book["asks"]:
+        return {"slippage_bps": float("nan"), "fully_filled": False, "spread_bps": float("nan")}
+    mid = 0.5 * (book["bids"][0][0] + book["asks"][0][0])
+    cq = cn = 0.0; rem = notional
+    for px, sz in levels:
+        ln = px * sz
+        if rem <= ln:
+            cq += rem / px; cn += rem; rem = 0.0; break
+        cq += sz; cn += ln; rem -= ln
+    if cq == 0:
+        return {"slippage_bps": float("nan"), "fully_filled": False, "spread_bps": float("nan")}
+    vwap = cn / cq; sign = 1.0 if side == "buy" else -1.0
+    return {"slippage_bps": sign * (vwap - mid) / mid * 1e4, "fully_filled": rem < 1e-6,
+            "spread_bps": (book["asks"][0][0] - book["bids"][0][0]) / mid * 1e4}
+
+
+def log_latest_cycle(state: Path, book: str, out: Path):
+    cyc = pd.read_csv(state / "cycles.csv")
+    if not len(cyc):
+        return
+    row = cyc.iloc[-1]
+    longs = [s for s in str(row.get("top_k_long", "") or "").split(",") if s]
+    shorts = [s for s in str(row.get("bot_k_short", "") or "").split(",") if s]
+    equity = float(row.get("equity_post", 10000.0))
+    gross = float(row.get("gross_after_stop", row.get("gross_target", 1.0)) or 1.0)
+    legs = [(s, "buy") for s in longs] + [(s, "sell") for s in shorts]
+    if not legs:
+        return
+    leg_notional = equity * gross / max(1, len(legs))   # per-leg target notional
+    out.parent.mkdir(parents=True, exist_ok=True)
+    new = not out.exists()
+    with open(out, "a", newline="") as f:
+        w = csv.writer(f)
+        if new:
+            w.writerow(["open_time", "book", "symbol", "side", "leg_notional_usd",
+                        "spread_bps", "slippage_bps", "total_cost_bps", "fully_filled"])
+        for sym, side in legs:
+            try:
+                bk = fetch_hl_l2_book(_binance_to_hl_coin(sym))
+                fl = simulate_taker_fill(bk, side, leg_notional)
+                tot = (fl["slippage_bps"] + HL_TAKER_FEE_BPS) if fl["slippage_bps"] == fl["slippage_bps"] else float("nan")
+                w.writerow([row["open_time"], book, sym, side, round(leg_notional, 1),
+                            round(fl["spread_bps"], 2) if fl["spread_bps"] == fl["spread_bps"] else "",
+                            round(fl["slippage_bps"], 2) if fl["slippage_bps"] == fl["slippage_bps"] else "",
+                            round(tot, 2) if tot == tot else "", fl["fully_filled"]])
+            except Exception as e:
+                w.writerow([row["open_time"], book, sym, side, round(leg_notional, 1), "", "", "", f"ERR:{str(e)[:30]}"])
+
+
+if __name__ == "__main__":
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--state", required=True)
+    ap.add_argument("--book", required=True)
+    ap.add_argument("--out", required=True)
+    args = ap.parse_args()
+    log_latest_cycle(Path(args.state), args.book, Path(args.out))
+    print(f"[slippage] logged latest cycle for book {args.book} -> {args.out}")

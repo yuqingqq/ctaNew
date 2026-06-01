@@ -243,7 +243,15 @@ def build_rolling_ic_universe_pit(all_pred_df, target_times, ic_window_days, upd
     bar_ms = 5 * 60 * 1000
     window_ms = ic_window_days * 288 * bar_ms
     update_ms = update_days * 288 * bar_ms
-    all_pred_clean = all_pred_df.dropna(subset=["alpha_A"])
+    all_pred_clean = all_pred_df.dropna(subset=["alpha_A"]).copy()
+    if "exit_time" not in all_pred_clean.columns:
+        all_pred_clean["exit_time"] = all_pred_clean["open_time"] + pd.Timedelta(minutes=HORIZON * 5)
+    exit_ts = all_pred_clean["exit_time"]
+    if hasattr(exit_ts.dtype, "tz") and exit_ts.dtype.tz is not None:
+        exit_ts_naive = exit_ts.dt.tz_convert("UTC").dt.tz_localize(None)
+    else:
+        exit_ts_naive = exit_ts
+    all_pred_clean["exit_t_int"] = exit_ts_naive.astype("datetime64[ms]").astype("int64").to_numpy()
     if not target_times: return {}, {}
     t0_ms = int(pd.Timestamp(target_times[0]).timestamp() * 1000)
     boundaries = []
@@ -258,6 +266,7 @@ def build_rolling_ic_universe_pit(all_pred_df, target_times, ic_window_days, upd
         eligible = eligibility_at_t(b)
         past = all_pred_clean[(all_pred_clean["t_int"] >= b - window_ms) &
                                 (all_pred_clean["t_int"] < b) &
+                                (all_pred_clean["exit_t_int"] <= b) &
                                 (all_pred_clean["symbol"].isin(eligible))]
         if len(past) < 1000:
             boundary_to_universe[b] = set()
@@ -272,19 +281,21 @@ def build_rolling_ic_universe_pit(all_pred_df, target_times, ic_window_days, upd
 
 def apply_dd_tier_aggressive(net):
     """dd>10%→0.6, dd>20%→0.3, dd>30%→0.1"""
-    n = len(net); sizes = np.ones(n)
-    cum = np.cumsum(net); peak = -np.inf
+    n = len(net); sizes = np.ones(n); scaled = np.zeros(n)
+    cum = 0.0; peak = 0.0
     for i in range(n):
-        peak = max(peak, cum[i] if i > 0 else 0)
         if peak > 0:
-            dd_pct = (peak - cum[i]) / peak
+            dd_pct = (peak - cum) / peak
             if dd_pct > 0.30: sizes[i] = 0.1
             elif dd_pct > 0.20: sizes[i] = 0.3
             elif dd_pct > 0.10: sizes[i] = 0.6
             else: sizes[i] = 1.0
         else:
             sizes[i] = 1.0
-    return sizes * net, sizes
+        scaled[i] = sizes[i] * net[i]
+        cum += scaled[i]
+        peak = max(peak, cum)
+    return scaled, sizes
 
 
 def main():
@@ -343,7 +354,10 @@ def main():
         eligible = eligibility_at(folds_all[fid]["cal_start"])
         td, p = train_fold_restricted(panel, folds_all[fid], feat_set, eligible)
         if td is None: continue
-        df = td[["symbol", "open_time", "alpha_A", "return_pct"]].copy()
+        pred_cols = ["symbol", "open_time", "alpha_A", "return_pct"]
+        if "exit_time" in td.columns:
+            pred_cols.append("exit_time")
+        df = td[pred_cols].copy()
         df["pred"] = p; df["fold"] = fid
         all_preds.append(df)
         print(f"  fold {fid}: train_eligible={len(eligible)}, n_test={len(td):,} ({time.time()-t0:.0f}s)",
@@ -377,7 +391,10 @@ def main():
 
     # === Evaluate ===
     print(f"\n=== EVALUATION (flat_real + dd_tier_aggressive) ===", flush=True)
-    test_data = oos_pred[["symbol", "open_time", "pred", "return_pct", "alpha_A"]].copy()
+    test_cols = ["symbol", "open_time", "pred", "return_pct", "alpha_A"]
+    if "exit_time" in oos_pred.columns:
+        test_cols.append("exit_time")
+    test_data = oos_pred[test_cols].copy()
     df_v = evaluate_flat_real(test_data, rolling_universe)
     df_v["time"] = pd.to_datetime(df_v["time"])
     for fid in OOS_FOLDS:

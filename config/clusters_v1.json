@@ -22,7 +22,10 @@
     "SEIUSDT",
     "ICPUSDT",
     "HBARUSDT",
-    "TONUSDT"
+    "TONUSDT",
+    "ASTERUSDT",
+    "HYPEUSDT",
+    "STRKUSDT"
   ],
   "defi": [
     "AAVEUSDT",
@@ -31,14 +34,27 @@
     "UNIUSDT",
     "LINKUSDT",
     "RUNEUSDT",
-    "GMXUSDT"
+    "GMXUSDT",
+    "ENAUSDT",
+    "JTOUSDT",
+    "JUPUSDT",
+    "ONDOUSDT",
+    "PENDLEUSDT"
   ],
   "memes": [
     "DOGEUSDT",
     "1000PEPEUSDT",
     "1000SHIBUSDT",
     "ORDIUSDT",
-    "WIFUSDT"
+    "WIFUSDT",
+    "BIOUSDT",
+    "PENGUUSDT",
+    "PUMPUSDT"
+  ],
+  "ai": [
+    "TAOUSDT",
+    "VIRTUALUSDT",
+    "VVVUSDT"
   ],
   "other_alt": [
     "XRPUSDT",
@@ -48,6 +64,7 @@
     "ETCUSDT",
     "AXSUSDT",
     "TRBUSDT",
-    "WLDUSDT"
+    "WLDUSDT",
+    "ZECUSDT"
   ]
 }

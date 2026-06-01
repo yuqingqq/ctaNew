@@ -5,12 +5,12 @@ Procedure:
      distribution at each time but breaks the features→target relationship)
   2. Re-train all 10 folds with shuffled target
   3. Generate predictions
-  4. Run through SAME production evaluator + DD overlay
+  4. Run through SAME research evaluator + corrected DD overlay
   5. Report Sharpe — should be ≈ 0 if pipeline is leak-free
 
 Multiple random shuffles for robustness. Reports distribution of null-Sharpe.
 
-Compares to real-target Sharpe from the production run (+4.46).
+Compares to the corrected 2026-05-11 real-target rerun.
 """
 from __future__ import annotations
 import sys, time, warnings
@@ -235,7 +235,15 @@ def build_rolling_ic_universe_pit(all_pred_df, target_times, ic_window_days, upd
     bar_ms = 5 * 60 * 1000
     window_ms = ic_window_days * 288 * bar_ms
     update_ms = update_days * 288 * bar_ms
-    all_pred_clean = all_pred_df.dropna(subset=["alpha_A"])
+    all_pred_clean = all_pred_df.dropna(subset=["alpha_A"]).copy()
+    if "exit_time" not in all_pred_clean.columns:
+        all_pred_clean["exit_time"] = all_pred_clean["open_time"] + pd.Timedelta(minutes=HORIZON * 5)
+    exit_ts = all_pred_clean["exit_time"]
+    if hasattr(exit_ts.dtype, "tz") and exit_ts.dtype.tz is not None:
+        exit_ts_naive = exit_ts.dt.tz_convert("UTC").dt.tz_localize(None)
+    else:
+        exit_ts_naive = exit_ts
+    all_pred_clean["exit_t_int"] = exit_ts_naive.astype("datetime64[ms]").astype("int64").to_numpy()
     if not target_times: return {}
     t0_ms = int(pd.Timestamp(target_times[0]).timestamp() * 1000)
     boundaries = []
@@ -250,6 +258,7 @@ def build_rolling_ic_universe_pit(all_pred_df, target_times, ic_window_days, upd
         eligible = eligibility_at_t(b)
         past = all_pred_clean[(all_pred_clean["t_int"] >= b - window_ms) &
                                 (all_pred_clean["t_int"] < b) &
+                                (all_pred_clean["exit_t_int"] <= b) &
                                 (all_pred_clean["symbol"].isin(eligible))]
         if len(past) < 1000:
             boundary_to_universe[b] = set()
@@ -263,19 +272,21 @@ def build_rolling_ic_universe_pit(all_pred_df, target_times, ic_window_days, upd
 
 
 def apply_dd_tier_aggressive(net):
-    n = len(net); sizes = np.ones(n)
-    cum = np.cumsum(net); peak = -np.inf
+    n = len(net); sizes = np.ones(n); scaled = np.zeros(n)
+    cum = 0.0; peak = 0.0
     for i in range(n):
-        peak = max(peak, cum[i] if i > 0 else 0)
         if peak > 0:
-            dd_pct = (peak - cum[i]) / peak
+            dd_pct = (peak - cum) / peak
             if dd_pct > 0.30: sizes[i] = 0.1
             elif dd_pct > 0.20: sizes[i] = 0.3
             elif dd_pct > 0.10: sizes[i] = 0.6
             else: sizes[i] = 1.0
         else:
             sizes[i] = 1.0
-    return sizes * net, sizes
+        scaled[i] = sizes[i] * net[i]
+        cum += scaled[i]
+        peak = max(peak, cum)
+    return scaled, sizes
 
 
 def run_pipeline_with_target(panel_input, listings, label):
@@ -299,7 +310,10 @@ def run_pipeline_with_target(panel_input, listings, label):
         eligible = eligibility_at(folds_all[fid]["cal_start"])
         td, p = train_fold_restricted(panel_input, folds_all[fid], feat_set, eligible)
         if td is None: continue
-        df = td[["symbol", "open_time", "alpha_A", "return_pct"]].copy()
+        pred_cols = ["symbol", "open_time", "alpha_A", "return_pct"]
+        if "exit_time" in td.columns:
+            pred_cols.append("exit_time")
+        df = td[pred_cols].copy()
         df["pred"] = p; df["fold"] = fid
         all_preds.append(df)
     apd = pd.concat(all_preds, ignore_index=True).sort_values(["open_time", "symbol"])
@@ -330,7 +344,7 @@ def main():
     print(f"{'=' * 90}\n", flush=True)
     print(f"Method: shuffle target_A within each open_time → re-train → re-evaluate.", flush=True)
     print(f"Expected: if pipeline is leak-free, Sharpe should drop to ≈ 0.", flush=True)
-    print(f"Production reference (real target): Sharpe +4.46 (with overlay).", flush=True)
+    print(f"Corrected real-target reference: Sharpe +0.26 (with overlay).", flush=True)
     print(f"\nUsing {len(NULL_SEEDS)} different shuffle seeds for robustness.\n", flush=True)
 
     panel = pd.read_parquet(PANEL_PATH)
@@ -341,9 +355,9 @@ def main():
             ts = t.tz_convert("UTC") if t.tz is not None else t.tz_localize("UTC")
             listings[sym] = ts
 
-    # Skip real-target rerun; reference Sharpe is cached as +4.46 (no_overlay +1.56)
-    sh_real_raw = 1.56
-    sh_real_overlay = 4.46
+    # Skip real-target rerun; reference from corrected 2026-05-11 final simulation.
+    sh_real_raw = 0.19
+    sh_real_overlay = 0.26
     print(f"=== Real target (cached reference) ===", flush=True)
     print(f"  Sharpe (no overlay): {sh_real_raw:+.2f}", flush=True)
     print(f"  Sharpe (+ overlay):  {sh_real_overlay:+.2f}", flush=True)
