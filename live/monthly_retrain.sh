@@ -12,8 +12,8 @@ $PY live/incremental_xs_feats.py --workers 6 || log "xs_feats warn"
 $PY live/incremental_panel.py --workers 6 || log "panel warn"
 # 2. retrain on the latest data (default fit_cut = latest panel - 1d embargo)
 $PY live/train_twobook_models.py || { log "train FAILED"; exit 1; }
-# 3. commit + push the fresh models
-git add live/models/twobook_flow_models.pkl live/models/twobook_price_models.pkl
+# 3. commit + push the fresh models + the frozen vol-split (flow-book set, static for the month)
+git add live/models/twobook_flow_models.pkl live/models/twobook_price_models.pkl live/models/twobook_split.json
 if git diff --cached --quiet; then log "models unchanged, nothing to push"; else
   CUT=$($PY -c "import pickle;print(pickle.load(open('live/models/twobook_flow_models.pkl','rb'))['meta']['fit_cut'][:10])")
   git commit -q -m "monthly retrain: two-book models @ fit_cut $CUT" && git push -q origin main && log "pushed models @ $CUT"

@@ -8,7 +8,7 @@ fitted model + preprocessing to live/models/twobook_{flow,price}_models.pkl.
 
 Usage: python3 live/train_twobook_models.py [--fit-cut 2026-05-26]  (default: latest panel date - 1d embargo)
 """
-import sys, glob, pickle, argparse, importlib.util
+import sys, glob, pickle, json, argparse, importlib.util
 from pathlib import Path
 import numpy as np, pandas as pd
 from sklearn.linear_model import RidgeCV
@@ -77,8 +77,33 @@ def main():
     meta = {"fit_cut": str(fit_cut), "t_end": str(t_end), "HL": HL, "flowcols": flowcols}
     pickle.dump({"models": flow_models, "meta": meta}, open(MODELS/"twobook_flow_models.pkl", "wb"))
     pickle.dump({"models": price_models, "meta": meta}, open(MODELS/"twobook_price_models.pkl", "wb"))
+
+    # FROZEN volatility split (champion = STATIC ranking at retrain; rolling re-rank hurts). The top-N by
+    # trailing-30d rvol_7d as-of fit_cut go to the flow book; computed ONCE here on the training box (full
+    # history) and shipped via git so the live server uses the IDENTICAL 80-set rather than recomputing
+    # off its own warmup data (which would drift the split day-to-day). Daily script LOADS this, no recompute.
+    SPLIT_N = 80; OOS_START = pd.Timestamp("2025-10-04", tz="UTC")
+    lo = fit_cut - pd.Timedelta(days=30)
+    rv = (pan[(pan.open_time >= lo) & (pan.open_time < fit_cut)]
+          .groupby("symbol")["rvol_7d"].mean())
+    # universe = the SAME set the validated daily logic ranks: symbols present in the flow-preds file since
+    # OOS start (excludes brand-new thin listings that just crossed the 300-bar model threshold). Fall back
+    # to flow-model keys only if the preds file is absent (fresh box before first predict run).
+    fp = REPO/"live/state/convexity/hl/fullflow_hl60.parquet"
+    if fp.exists():
+        op = pd.read_parquet(fp, columns=["symbol", "open_time"]); op["open_time"] = pd.to_datetime(op["open_time"], utc=True)
+        oos_univ = set(op[op.open_time >= OOS_START].symbol.unique())
+    else:
+        oos_univ = set(flow_models)
+    cand = [s for s in oos_univ if np.isfinite(rv.get(s, np.nan))]
+    ranked = sorted(cand, key=lambda s: -rv[s])
+    flow_book = ranked[:SPLIT_N]
+    split = {"asof": str(fit_cut), "n": len(flow_book), "rvol_window_days": 30, "flow_book": flow_book}
+    json.dump(split, open(MODELS/"twobook_split.json", "w"), indent=0)
     print(f"trained: {nf} flow models, {npr} price models; fit_cut={fit_cut.date()} t_end={t_end} "
           f"→ live/models/twobook_*_models.pkl")
+    print(f"frozen split: flow_book N={len(flow_book)} (top rvol_7d as-of {fit_cut.date()}) "
+          f"→ live/models/twobook_split.json")
 
 
 if __name__ == "__main__":

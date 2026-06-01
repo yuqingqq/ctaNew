@@ -25,21 +25,17 @@ log "2b. INCREMENTAL xs_feats (append new bars; 6w, mem-safe)"; $PY live/increme
 log "2c. INCREMENTAL panel (append new 4h bars only; 6w, append-only → no full-history frames, no OOM)"; $PY live/incremental_panel.py --workers 6 >> $LOG 2>&1 && log "  panel OK" || log "  panel FAIL"
 # (build_panel_fast.py remains for a full from-scratch rebuild, e.g. monthly retrain or universe change.)
 log "3. INCREMENTAL preds (cached models → predict new bars only, ~7s vs ~4min refit)"; $PY live/predict_twobook_incremental.py >> $LOG 2>&1 && log "  preds OK" || log "  preds FAIL"
-log "4. rvol-split top-80"; $PY - >> $LOG 2>&1 << 'PY' || log "  split FAIL"
-import pandas as pd, numpy as np
-asof=pd.Timestamp.utcnow().normalize()+pd.Timedelta(days=1)
-lo=asof-pd.Timedelta(days=30)
-p=pd.read_parquet("outputs/vBTC_features/panel_expanded_v0.parquet",columns=["symbol","open_time","rvol_7d"])
-p["open_time"]=pd.to_datetime(p["open_time"],utc=True); p=p[(p.open_time>=lo)&(p.open_time<asof)]
-rv=p.groupby("symbol")["rvol_7d"].mean().to_dict()
+log "4. apply FROZEN rvol-split (static-at-retrain; shipped via git in twobook_split.json — NOT recomputed)"; $PY - >> $LOG 2>&1 << 'PY' || log "  split FAIL"
+import json, pandas as pd
+# Champion design is STATIC ranking at retrain (rolling re-rank hurts). The flow-book set is frozen at
+# train time (train_twobook_models.py) as-of the model's fit_cut and shipped in git, so it stays fixed all
+# month and is IDENTICAL across the train/live boxes. Daily cycle only applies it — no re-ranking.
+A=set(json.load(open("live/models/twobook_split.json"))["flow_book"])
 ff=pd.read_parquet("live/state/convexity/hl/fullflow_hl60.parquet"); v0=pd.read_parquet("live/state/convexity/hl/v0full_hl60.parquet")
 for d in (ff,v0): d["open_time"]=pd.to_datetime(d["open_time"],utc=True)
-oos=sorted(set(ff[ff.open_time>=pd.Timestamp("2025-10-04",tz="UTC")].symbol.unique()))
-ranked=sorted([s for s in oos if np.isfinite(rv.get(s,np.nan))],key=lambda s:-rv[s])
-A=set(ranked[:80])
 ff[ff.symbol.isin(A)].to_parquet("live/state/convexity/split2/bookA_hv80.parquet")
 v0[~v0.symbol.isin(A)].to_parquet("live/state/convexity/split2/bookB_hv80.parquet")
-print(f"   split: flow {len(A)}, price {len([s for s in ranked if s not in A])}")
+print(f"   frozen split: flow {len(A)}, price {v0[~v0.symbol.isin(A)].symbol.nunique()}")
 PY
 log "5. advance both books"
 for bk in A B; do

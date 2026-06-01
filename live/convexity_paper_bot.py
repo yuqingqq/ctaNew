@@ -94,6 +94,9 @@ STOP_HEAL_FRAC = 0.5
 STOP_TIMEOUT_BARS = 90
 # Universe filter (deploy-spec: maturity≥180d + hygiene + liquidity_floor + dedup; iter-036)
 MIN_HISTORY_DAYS = 180
+# PIT_DVOL=1 (DEFAULT) → per-cycle trailing-30d liquidity gate (honest, validated 2026-06-01: removes the
+# end-of-sample dvol look-ahead; combined two-book +3.38 honest vs +3.71 look-ahead). Set 0 for legacy.
+PIT_DVOL = os.environ.get("CONVEXITY_PIT_DVOL", "1") == "1"
 HYGIENE_EXCLUDE = {"USDCUSDT","BUSDUSDT","TUSDUSDT","DAIUSDT","FDUSDUSDT",   # stables
                    "PAXGUSDT","XAUTUSDT",                                     # non-crypto-beta
                    "WBTCUSDT","WBETHUSDT","WSTETHUSDT","WETHUSDT","STETHUSDT"} # wrapped
@@ -196,8 +199,11 @@ def eligible_universe_at(univ_meta: dict, asof: pd.Timestamp, dvol_cache: dict) 
     """Cheap per-cycle filter using precomputed meta."""
     out = {}
     for sym, m in univ_meta.items():
-        rec = {"in_universe": False, "reason": "", "trailing_days": 0,
-               "dvol30": dvol_cache.get(sym, np.nan)}
+        if PIT_DVOL:
+            s = dvol_cache.get(sym); dv0 = float(s.asof(asof)) if (s is not None and len(s)) else np.nan
+        else:
+            dv0 = dvol_cache.get(sym, np.nan)
+        rec = {"in_universe": False, "reason": "", "trailing_days": 0, "dvol30": dv0}
         if SYM_ALLOWLIST is not None and sym not in SYM_ALLOWLIST:
             rec["reason"] = "allowlist"; out[sym] = rec; continue
         # dynamic per-cycle allowlist takes precedence
@@ -210,7 +216,7 @@ def eligible_universe_at(univ_meta: dict, asof: pd.Timestamp, dvol_cache: dict) 
         td = (asof - m["earliest"]).days; rec["trailing_days"] = td
         if td < MIN_HISTORY_DAYS:
             rec["reason"] = f"maturity_{td}d_<180"; out[sym] = rec; continue
-        dv = dvol_cache.get(sym, np.nan)
+        dv = dv0
         if np.isfinite(dv) and dv < LIQ_FLOOR_DOLLAR_VOL_30D:
             rec["reason"] = f"liquidity_{dv:.0f}_<{LIQ_FLOOR_DOLLAR_VOL_30D:.0f}"; out[sym] = rec; continue
         rec["in_universe"] = True; out[sym] = rec
@@ -218,7 +224,10 @@ def eligible_universe_at(univ_meta: dict, asof: pd.Timestamp, dvol_cache: dict) 
 
 
 def precompute_dvol_cache(syms: list[str]) -> dict[str, float]:
-    """One-shot 30d dollar-volume per sym, computed from the most-recent daily kline files."""
+    """One-shot 30d dollar-volume per sym, computed from the most-recent daily kline files.
+    NOTE: this is END-OF-SAMPLE (a single value used for every cycle) → look-ahead in the liquidity
+    gate (~+0.17 Sharpe, see docs/convexity_system_review_loop.md item 3). Set CONVEXITY_PIT_DVOL=1 to
+    use the PIT trailing-30d version below instead (honest; recommended for any reported backtest)."""
     cache = {}
     for sym in syms:
         sd = KLINES/sym/"5m"
@@ -230,6 +239,30 @@ def precompute_dvol_cache(syms: list[str]) -> dict[str, float]:
                       for f in files[-30:]]
             r = pd.concat(recent, ignore_index=True)
             cache[sym] = float((r["close"]*r["volume"]).sum() / max(1, len(files[-30:])))
+        except Exception:
+            pass
+    return cache
+
+
+def precompute_dvol_cache_pit(syms: list[str], last_n_files: int | None = None) -> dict[str, pd.Series]:
+    """PIT liquidity gate: per-sym date-indexed series of trailing-30d MEAN DAILY dollar-volume.
+    eligible_universe_at(asof) reads .asof(asof) → each cycle sees only data available at that time.
+    last_n_files: live --cycle only needs the trailing window (~60d) — full-history reads are wasted there;
+    replay/bootstrap pass None for the whole series."""
+    cache = {}
+    for sym in syms:
+        sd = KLINES/sym/"5m"
+        if not sd.exists(): continue
+        files = sorted(sd.glob("*.parquet"))
+        if last_n_files is not None: files = files[-last_n_files:]
+        if len(files) < 5: continue
+        try:
+            df = pd.concat([pd.read_parquet(f, columns=["open_time","close","volume"]) for f in files], ignore_index=True)
+            df["open_time"] = pd.to_datetime(df["open_time"], utc=True)
+            daily = (df.assign(dv=df["close"]*df["volume"]).set_index("open_time")["dv"]
+                       .resample("1D").sum())
+            trail = daily.rolling(30, min_periods=10).mean().dropna()   # mean daily $vol over trailing 30d
+            if len(trail): cache[sym] = trail
         except Exception:
             pass
     return cache
@@ -570,7 +603,7 @@ def run_replay(start: pd.Timestamp | None, end: pd.Timestamp | None) -> dict:
     # universe meta + dvol cache precomputed ONCE (meta uses FULL preds file, not slice)
     log.info("precomputing universe meta + 30d dvol cache (one-shot)")
     univ_meta = precompute_universe_meta()
-    dvol_cache = precompute_dvol_cache(syms)
+    dvol_cache = precompute_dvol_cache_pit(syms) if PIT_DVOL else precompute_dvol_cache(syms)
     log.info(f"  univ_meta: {len(univ_meta)} syms; dvol_cache: {len(dvol_cache)} syms")
     last_univ = {}
     last_regime = None
@@ -778,7 +811,8 @@ def run_cycle() -> dict:
     last_regime = None
 
     univ_meta = precompute_universe_meta()
-    dvol_cache = precompute_dvol_cache(syms)
+    # live: only need the trailing window for the new cycles' PIT dvol → windowed read (full-history is wasted)
+    dvol_cache = precompute_dvol_cache_pit(syms, last_n_files=70) if PIT_DVOL else precompute_dvol_cache(syms)
 
     cycles_rows, regime_rows, equity_rows, sleeves_rows, pred_rows = [], [], [], [], []
     bar_idx_base = last_cycle_id + 1

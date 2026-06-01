@@ -50,3 +50,4 @@ live/state/
 live/models/*
 !live/models/twobook_flow_models.pkl
 !live/models/twobook_price_models.pkl
+!live/models/twobook_split.json

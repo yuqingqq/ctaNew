@@ -184,3 +184,45 @@ lucky-original-partition +3.71. Cost-robust. ONLY ADOPTED CHANGE vs entry = the 
 (+0.7-0.9 over the liquidity split); every other component re-confirmed at/near its existing optimum.
 LESSON: the system was already well-tuned; the one real lever was WHERE flow is informative (high-vol names).
 LOOP COMPLETE — 12 items, 1 adopted change, rest verified, ~4 mild tuned-candidates noted-not-adopted (discipline).
+
+---
+
+## 2026-06-01 — HONEST RE-VALIDATION (dvol look-ahead fixed + split-policy + model decomposition)
+
+Triggered by finding that the live daily script re-ranked the vol split every cycle (asof=today+1) instead of
+holding it static, and that Item-3's recommended PIT-dvol fix was NEVER applied (`precompute_dvol_cache` still
+end-of-sample). Re-ran everything through the identical replay+combine with the fixes. Predictions were already
+clean (monthly walk-forward, expanding window + recency-60; iter28_fwd `fit_cut=month_start−1d`, old-data-only).
+
+FIXES APPLIED:
+- `precompute_dvol_cache_pit` — per-cycle trailing-30d mean-daily dollar-volume; `CONVEXITY_PIT_DVOL=1` now DEFAULT.
+- Frozen vol split — computed once at retrain (`train_twobook_models.py` → `live/models/twobook_split.json`),
+  shipped via git, loaded by `run_convexity_daily.sh` (no daily re-rank). Re-rank = monthly (at retrain) only.
+
+SPLIT-POLICY A/B (combined two-book, PIT honest, K=3, full OOS 2025-10-04→05-30). Tools: `live/ab_split_rerank.py`.
+  policy       end-of-sample   PIT(honest)  maxDD     re-rank steps
+  never           +2.53          +3.26      −2726     0
+  monthly         +2.69          +3.38      −2471     7    ← best Sharpe (production)
+  daily           +2.49          +3.35      −1640     188  ← best DD (near-zero book corr)
+  frozen_end      +2.26          +3.36      −2744     0
+  → VERDICT: under the honest gate ALL policies sit in [+3.26,+3.38] — re-rank cadence BARELY MATTERS. The prior
+    "static clearly beats daily (+0.20)" was mostly the dvol look-ahead. Keep monthly (best Sharpe, simplest,
+    matches retrain). The frozen-split fix is cleanliness/reproducibility — NOT a Sharpe lever (≈0 impact).
+
+MODEL DECOMPOSITION (PIT honest, K=3). Tools: `live/ab_model_compare.py`.
+  config                 Sharpe  totPnL   maxDD      prior(look-ahead)
+  combined (two-book)    +3.38    9578    −2471      +3.71   ← WINS, decisively
+  flow_hv80 (BookA)      +2.99   13341   −24902      +3.50
+  flow_full (all syms)   +2.52   10806   −14889      (claimed harmful)
+  price_full (all syms)  +2.39   10977   −13771      +3.01
+  price_rest (BookB)     +1.95    5814    −3461      +2.95
+  → VERDICT: COMBINED still wins, honestly. It wins on RISK not return — flow_hv80 makes more gross PnL (+13341)
+    but −24902 DD; price book is low-return ballast (−3461 DD); the two are near-uncorrelated so 50/50 keeps the
+    return while drawdowns cancel (−2471). Diversification is structural, survives the fix. Flow helps only when
+    routed to high-vol (hv80 +2.99 > flow-on-everything +2.52); "harmful" was overstated (worse, not negative).
+
+NET HONEST HEADLINE: combined two-book + monthly-frozen vol split + PIT dvol = **Sharpe +3.38, maxDD −2471**
+(modeled 4.5bps/leg, single 8-month OOS, universe-overfit risk). Forward quote ~+2.5..+3.4, central ~+3.0.
+Look-ahead was config-dependent (inflated combined ~−0.33, but SUPPRESSED single-book/never configs → PIT raised
+them). Ordering UNCHANGED vs prior → all architecture decisions (two-book, vol-split, K=3) were directionally correct.
+ACTION: PIT_DVOL=1 is now the production default; live server must run with it (or pull this commit).
