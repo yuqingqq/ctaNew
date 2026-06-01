@@ -44,5 +44,9 @@ live/state/
 .env
 .env.local
 
-# Live model artifacts (regenerated via live/train_*.py on each server)
-live/models/
+# Live model artifacts: ignore all EXCEPT the two-book production models (~44MB, published via git so
+# the live server pulls fresh models each month). Use `live/models/*` (contents) not `live/models/` (dir),
+# else the `!` re-includes below can't take effect. Other ~940MB old vBTC/convexity .pkl stay local.
+live/models/*
+!live/models/twobook_flow_models.pkl
+!live/models/twobook_price_models.pkl
