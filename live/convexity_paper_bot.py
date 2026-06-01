@@ -919,6 +919,73 @@ def run_cycle() -> dict:
                 last_open_time=str(cycles_rows[-1]["open_time"]))
 
 
+def run_decide() -> dict:
+    """Predict-at-close DECIDE: select legs for the LATEST (unlabeled) bar without marking PnL or
+    advancing/saving state. Writes decision.json (legs + per-symbol turnover vs the live book) so the
+    HL probe can measure the REAL execution price at the bar — the settle --cycle books PnL 4h later.
+    Faithful by construction: decide-preds == settle-preds (verified 3e-8), and select_legs is
+    deterministic, so these legs equal what --cycle will trade when the bar settles."""
+    state = _load_state()
+    if state is None:
+        log.error("no positions.json — bootstrap first."); sys.exit(2)
+    d = load_preds(start=pd.Timestamp(state["last_open_time"]) if state["last_open_time"] else None)
+    if state["last_open_time"]:
+        d = d[d["open_time"] > pd.Timestamp(state["last_open_time"])]
+    if len(d) == 0:
+        log.info(f"no unlabeled bar past {state['last_open_time']} to decide."); return {"decided": 0}
+    ot = d["open_time"].max()                                  # the just-opened bar
+    d = d[d["open_time"] == ot]
+    syms = sorted(d["symbol"].unique())
+    mom, betas = compute_mom30_and_beta(syms, lookback_days=45)
+    btc30 = compute_btc_30d()
+    d = d.merge(mom, on=["symbol", "open_time"], how="left")
+    d = d.merge(btc30.reset_index(), on="open_time", how="left")
+    # regime + hysteresis, seeded from cycles.csv exactly like run_cycle
+    seed_raw = []
+    cyc_path = STATE/"cycles.csv"
+    if cyc_path.exists():
+        old = pd.read_csv(cyc_path).sort_values("open_time").tail(REGIME_HYSTERESIS_N+5)
+        seed_raw = [regime_for_cycle(b) for b in old["btc_ret_30d"]]
+    raw = regime_for_cycle(float(d["btc_ret_30d"].iloc[0])) if len(d) and np.isfinite(d["btc_ret_30d"].iloc[0]) else "side"
+    regime = apply_hysteresis(seed_raw + [raw], n=REGIME_HYSTERESIS_N)[-1]
+    # restore sleeve/stop state (read-only — we don't save)
+    active_sleeves = deque([{k: float(v) for k, v in w.items()} for w in state["active_sleeves"]], maxlen=HOLD)
+    prev_agg = {k: float(v) for k, v in state["prev_agg"].items()}
+    equity = float(state["equity"])
+    stop = VolNormStop()
+    stop.peak = float(state["stop"]["peak"]); stop.engaged = bool(state["stop"]["engaged"])
+    stop.engage_dd = float(state["stop"]["engage_dd"]); stop.engage_age = int(state["stop"]["engage_age"])
+    stop.trough = float(state["stop"]["trough"])
+    stop.eq_hist = deque([float(x) for x in state["stop"]["eq_hist"]], maxlen=STOP_SIGMA_WINDOW+1)
+    univ_meta = precompute_universe_meta()
+    dvol_cache = precompute_dvol_cache_pit(syms, last_n_files=70) if PIT_DVOL else precompute_dvol_cache(syms)
+    univ = eligible_universe_at(univ_meta, ot, dvol_cache)
+    eligible_syms = {s for s, r in univ.items() if r["in_universe"]}
+    g_elig = d[d["symbol"].isin(eligible_syms)].copy()
+    betas_at_t = {s: float(ser.loc[ot]) for s, ser in betas.items()
+                  if ot in ser.index and np.isfinite(ser.loc[ot])}
+    new_w = select_legs(g_elig, regime, betas_at_t)
+    active_sleeves.append(new_w)
+    net_target_raw = aggregate_active_sleeves(active_sleeves)
+    gross_mult, _ = stop.update(equity, equity, len(stop.eq_hist))
+    net_after = {s: w*gross_mult for s, w in net_target_raw.items()}
+    all_keys = set(net_after) | set(prev_agg)
+    turnover = {s: round(net_after.get(s, 0) - prev_agg.get(s, 0), 6) for s in all_keys
+                if abs(net_after.get(s, 0) - prev_agg.get(s, 0)) > 1e-6}
+    decision = dict(
+        open_time=str(ot), regime=regime, equity=round(equity, 2), gross_mult=round(gross_mult, 4),
+        n_eligible=len(eligible_syms),
+        longs=sorted(s for s, w in new_w.items() if w > 0),
+        shorts=sorted(s for s, w in new_w.items() if w < 0),
+        net_after={s: round(w, 6) for s, w in net_after.items()},
+        turnover=turnover)
+    (STATE/"decision.json").write_text(json.dumps(decision, indent=2))
+    log.info(f"DECIDE {ot} [{regime}]: L={[s.replace('USDT','') for s in decision['longs']]} "
+             f"S={[s.replace('USDT','') for s in decision['shorts']]} | {len(turnover)} legs to execute "
+             f"(equity {equity:.0f}, gross_mult {gross_mult:.2f}) → decision.json")
+    return decision
+
+
 def bootstrap_state_from_replay():
     """After --replay-all (or --replay N) runs, snapshot final state into positions.json
     so subsequent --cycle calls can resume."""
@@ -958,6 +1025,8 @@ def main():
                    help="after a replay, snapshot final state into positions.json")
     g.add_argument("--cycle", action="store_true",
                    help="process new cycles since positions.json last_open_time (append)")
+    g.add_argument("--decide", action="store_true",
+                   help="predict-at-close: select legs for the latest unlabeled bar → decision.json (no mark/save)")
     g.add_argument("--check-state", action="store_true")
     args = ap.parse_args()
     if args.check_state:
@@ -973,6 +1042,8 @@ def main():
         bootstrap_state_from_replay(); return
     if args.cycle:
         run_cycle(); return
+    if args.decide:
+        run_decide(); return
     start = None; end = None
     if args.replay_all:
         start = None

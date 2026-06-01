@@ -42,8 +42,11 @@ def _closes_tail(sym, since):
     return c.set_index("open_time")["close"].astype(float)
 
 
-def _build_sym_window(sym, since):
-    """Windowed replica of X70.build_sym: returns new 4h rows (open_time > since) with V0 features."""
+def _build_sym_window(sym, since, drop_unlabeled=True):
+    """Windowed replica of X70.build_sym: returns new 4h rows (open_time > since) with V0 features.
+    drop_unlabeled=True (default, the settle/panel path) drops bars whose forward label hasn't settled.
+    Set False for the predict-at-close DECIDE path: the latest just-opened bar has PIT features but a
+    NaN label (return_pct/alpha_vs_btc_realized) — keep it so we can predict and trade it immediately."""
     xs_path = CACHE/f"xs_feats_{sym}.parquet"
     if not xs_path.exists(): return None
     cutoff = since - pd.Timedelta(days=WARMUP_DAYS)
@@ -94,7 +97,8 @@ def _build_sym_window(sym, since):
     }).reset_index(drop=True)
     out["open_time"] = pd.to_datetime(out["open_time"], utc=True)
     out["exit_time"] = pd.to_datetime(out["exit_time"], utc=True)
-    out = out.dropna(subset=["alpha_vs_btc_realized"])
+    if drop_unlabeled:
+        out = out.dropna(subset=["alpha_vs_btc_realized"])
     m = (out["open_time"].dt.hour % 4 == 0) & (out["open_time"].dt.minute == 0) & (out["open_time"] > since)
     return out[m]
 
