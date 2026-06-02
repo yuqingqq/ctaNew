@@ -226,3 +226,33 @@ NET HONEST HEADLINE: combined two-book + monthly-frozen vol split + PIT dvol = *
 Look-ahead was config-dependent (inflated combined ~−0.33, but SUPPRESSED single-book/never configs → PIT raised
 them). Ordering UNCHANGED vs prior → all architecture decisions (two-book, vol-split, K=3) were directionally correct.
 ACTION: PIT_DVOL=1 is now the production default; live server must run with it (or pull this commit).
+
+---
+
+## 2026-06-02 — FUNDING DATA FIX + FEATURE PRUNING (lean production model)
+
+DISCOVERY (via NIL @ 05-29 20:00 pred mismatch vs live box): production funding froze. ROOT CAUSE: funding
+loader only pulls Binance Vision MONTHLY archives + daily pipeline never refreshed funding → all 217 caches
+ended 2026-04-30 → panel ffilled stale 5e-5 → funding_rate_z_7d collapsed to 0 for ~100% of symbols post-April.
+
+FIX: (1) re-fetched May funding (212/217 caches → 05-31); (2) recomputed the 3 funding panel columns,
+VALIDATED 0.000e+00 vs pipeline on the fresh region; (3) `live/ingest_funding.py` + wired into
+monthly_retrain.sh (durable — can't re-freeze). NIL funding_rate_z_7d now +0.45 (matches live box).
+
+FUNDING ABLATION (fixed panel, monthly two-book, PIT): monotonic dose-response real +3.125 < muted +3.38
+< NONE +3.475. Funding HURTS. Mechanism: xs-z target already absorbs carry; funding_rate IC +0.0138 (weak),
+funding_rate_z_7d +0.0039 (marginal), funding_rate_1d_change −0.0009 (noise). → DROP all 3 funding features.
+
+PRUNE STUDY (28 LOO/group configs + combined, no-funding base). Per-fold robustness was decisive:
+- drop_v0_rvol_7d (+3.738) and stacked lean_norvol_vpintfi (+3.824) look best BUT 78% of lift = ONE fold
+  (Oct), lose 4/8 folds → SNOOPING, REJECTED (keep rvol_7d).
+- flow→VPIN/TFI-only: +3.599 aggregate but +0.12 lift is 93%-one-fold → NOT a proven Sharpe lift, but the
+  other 10 flow feats are noise (IC+coef+LOO) and it never loses catastrophically → ADOPT as PARSIMONY.
+- return_1d most important V0 feat (dropping = worst −0.55). All other V0 LOO neutral → keep.
+LESSON: single-OOS feature pruning yields fold-concentrated aggregate "lifts"; adopt only mechanism/parsimony-
+grounded changes, reject Sharpe-chasing (same trap as K2/K3/Q).
+
+ADOPTED PRODUCTION FEATURE SET (lean): price book = V0−funding (14); flow book = +VPIN/TFI (18, was 31).
+rvol_7d KEPT. Honest forward Sharpe ≈ +3.5 (wins are CORRECTNESS = fresh funding + PARSIMONY, not a Sharpe
+jump). Removing funding also eliminates the train/serve funding skew entirely (model now funding-independent).
+Retrained twobook_*.pkl on fixed panel. Scripts: live/prune_study.py, live/ingest_funding.py.
