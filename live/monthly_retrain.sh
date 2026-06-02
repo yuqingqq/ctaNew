@@ -6,6 +6,7 @@ ROOT=/home/yuqing/ctaNew; export PYTHONPATH=$ROOT; cd $ROOT; PY=python3
 log(){ echo "[$(date -u '+%F %T')] $*"; }
 log "monthly retrain start"
 # 1. ensure data current (the daily pipeline keeps klines/flow/panel fresh; refresh defensively)
+$PY live/ingest_funding.py --months 2 || log "funding ingest warn"   # durable fix for the 2026-04 funding stall
 $PY live/ingest_flow_daily.py --workers 4 || log "flow ingest warn"
 $PY -m live.refresh_convexity_panel --days-back 10 --skip-rebuild || log "klines warn"
 $PY live/incremental_xs_feats.py --workers 6 || log "xs_feats warn"

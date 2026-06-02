@@ -19,6 +19,11 @@ x6 = importlib.util.module_from_spec(spec); spec.loader.exec_module(x6)
 PANEL = REPO/"outputs/vBTC_features/panel_expanded_v0.parquet"
 MODELS = REPO/"live/models"
 V0 = x6.BASE + x6.COHORT_EXTRAS; EMB = pd.Timedelta(days=1); HL = 60.0
+# LEAN feature set (2026-06-02 funding-fix + prune study): drop funding (redundant with xs-z target +
+# 2/3 noise), keep only VPIN/TFI flow (the other 10 flow feats are noise by IC+coef+LOO). rvol_7d KEPT
+# (its LOO "improvement" was 78%-one-fold snooping). Price book = V0_LEAN(14); flow book = +VPIN/TFI(18).
+V0_LEAN = [f for f in V0 if not f.startswith("funding")]
+FLOW_KEEP = ["fl_vpin", "fl_vpin_1d", "fl_tfi", "fl_tfi_1d"]
 
 
 def build_flow():
@@ -59,22 +64,24 @@ def main():
         if len(g) < 300: continue
         w = np.exp(-((t_end - g["open_time"]).dt.total_seconds().to_numpy()/86400.0)/HL)
         y = g["xs_z"].to_numpy()
-        # price model (V0)
+        # price model (V0_LEAN: V0 minus funding)
         try:
-            s, h = x6.fit_preproc(g, V0); X = x6.apply_preproc(g, V0, s, h)
+            s, h = x6.fit_preproc(g, V0_LEAN); X = x6.apply_preproc(g, V0_LEAN, s, h)
             m = RidgeCV(alphas=x6.RIDGE_ALPHAS).fit(X, y, sample_weight=w)
-            price_models[sym] = (m, s, h, V0); npr += 1
+            price_models[sym] = (m, s, h, V0_LEAN); npr += 1
         except Exception: pass
-        # flow model (V0+flow) if flow populated
-        if (sym in flowsyms) and g[flowcols].notna().any().all():
+        # flow model (V0_LEAN + VPIN/TFI flow only) if those flow cols populated
+        fk = [c for c in FLOW_KEEP if c in flowcols]
+        if (sym in flowsyms) and g[fk].notna().any().all():
             try:
-                feats = V0 + flowcols
+                feats = V0_LEAN + fk
                 s, h = x6.fit_preproc(g, feats); X = x6.apply_preproc(g, feats, s, h)
                 m = RidgeCV(alphas=x6.RIDGE_ALPHAS).fit(X, y, sample_weight=w)
                 flow_models[sym] = (m, s, h, feats); nf += 1
             except Exception: pass
     MODELS.mkdir(parents=True, exist_ok=True)
-    meta = {"fit_cut": str(fit_cut), "t_end": str(t_end), "HL": HL, "flowcols": flowcols}
+    meta = {"fit_cut": str(fit_cut), "t_end": str(t_end), "HL": HL,
+            "flowcols": [c for c in FLOW_KEEP if c in flowcols], "v0_lean": V0_LEAN, "funding_dropped": True}
     pickle.dump({"models": flow_models, "meta": meta}, open(MODELS/"twobook_flow_models.pkl", "wb"))
     pickle.dump({"models": price_models, "meta": meta}, open(MODELS/"twobook_price_models.pkl", "wb"))
 
