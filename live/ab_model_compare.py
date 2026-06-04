@@ -22,7 +22,7 @@ import warnings; warnings.filterwarnings("ignore")
 REPO = Path("/home/yuqing/ctaNew"); sys.path.insert(0, str(REPO))
 HLDIR  = REPO/"live/state/convexity/hl"
 OUT    = REPO/"live/state/ab_model"
-RERUN  = REPO/"live/state/ab_split_pit/monthly"   # source of the two-book pieces (monthly split, PIT)
+RERUN  = REPO/os.environ.get("AB_RERUN","live/state/ab_split_pit/monthly")   # two-book pieces (monthly split, PIT)
 OOS_START = pd.Timestamp("2025-10-04", tz="UTC")
 
 

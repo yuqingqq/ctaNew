@@ -19,16 +19,18 @@ import warnings; warnings.filterwarnings("ignore")
 REPO = Path("/home/yuqing/ctaNew"); sys.path.insert(0, str(REPO))
 
 PANEL  = REPO/"outputs/vBTC_features/panel_expanded_v0.parquet"
-HLDIR  = REPO/"live/state/convexity/hl"
+HLDIR  = REPO/os.environ.get("AB_HLDIR", "live/state/convexity/hl")
 OUTBASE= REPO/os.environ.get("AB_OUTBASE", "live/state/ab_split")
 OOS_START = pd.Timestamp("2025-10-04", tz="UTC")
 FIT_CUT   = pd.Timestamp("2026-05-29", tz="UTC")
 
 
+SPLIT_FEAT = os.environ.get("AB_SPLIT_FEAT", "rvol_7d")   # axis to partition flow vs price book (high -> flow book)
+
 def trailing_rvol_asof(p, asof, win=30):
     lo = asof - pd.Timedelta(days=win)
     q = p[(p.open_time >= lo) & (p.open_time < asof)]
-    return q.groupby("symbol")["rvol_7d"].mean()
+    return q.groupby("symbol")[SPLIT_FEAT].mean()
 
 
 def top_n_asof(p, oos, asof, n):
@@ -73,9 +75,14 @@ def write_books(policy, memb, ff, v0, outdir):
     return a, b, ffA.symbol.nunique(), v0B.symbol.nunique()
 
 
-def run_replay(preds_path, state_dir):
+def run_replay(preds_path, state_dir, hold=None, sidemode=None, k=None, skip=None, rrgate=None, preds_long=None):
     env = dict(os.environ, PYTHONPATH=str(REPO), CONVEXITY_PREDS_PATH=str(preds_path),
-               CONVEXITY_STATE=str(state_dir), STRAT_K="3", SIDE_MODE="default")
+               CONVEXITY_STATE=str(state_dir), STRAT_K=str(k) if k is not None else os.environ.get("STRAT_K", "3"),
+               SIDE_MODE=(sidemode or os.environ.get("SIDE_MODE", "default")))
+    if preds_long: env["CONVEXITY_PREDS_LONG"] = str(preds_long)   # dual-pred long-leg ranker
+    if hold is not None: env["STRAT_HOLD"] = str(hold)   # per-book hold override (bucket-specific sleeve count)
+    if skip is not None: env["LONG_IDIO_SKIP_PCT"] = str(skip)   # per-book idio-vol long-skip pctile
+    if rrgate is not None: env["LONG_RESIDREV_GATE"] = str(rrgate)   # per-book resid-rev long gate (0/1)
     Path(state_dir).mkdir(parents=True, exist_ok=True)
     r = subprocess.run([sys.executable, "-m", "live.convexity_paper_bot", "--replay-all"],
                        env=env, cwd=str(REPO), capture_output=True, text=True)
@@ -110,7 +117,7 @@ def main():
     a = ap.parse_args()
     policies = a.policies.split(",")
 
-    p = pd.read_parquet(PANEL, columns=["symbol", "open_time", "rvol_7d"]); p["open_time"] = pd.to_datetime(p["open_time"], utc=True)
+    p = pd.read_parquet(PANEL, columns=["symbol", "open_time", SPLIT_FEAT]); p["open_time"] = pd.to_datetime(p["open_time"], utc=True)
     ff = pd.read_parquet(HLDIR/"fullflow_hl60.parquet"); v0 = pd.read_parquet(HLDIR/"v0full_hl60.parquet")
     for d in (ff, v0):
         d["open_time"] = pd.to_datetime(d["open_time"], utc=True)
@@ -127,7 +134,11 @@ def main():
         od = OUTBASE/pol
         ba, bb, nA, nB = write_books(pol, memb, ff, v0, od)
         print(f"[{pol}] flow≈{nA} price≈{nB} syms-ever | re-rank steps={steps} avg-churn={ch:.1f} syms/step ... running replays")
-        ca = run_replay(ba, od/"stateA"); cb = run_replay(bb, od/"stateB")
+        _hl_long = os.environ.get("AB_HLDIR_LONG")   # dual-pred: long-leg ranker preds dir (per-book file)
+        plA = (REPO/_hl_long/"fullflow_hl60.parquet") if _hl_long else None
+        plB = (REPO/_hl_long/"v0full_hl60.parquet") if _hl_long else None
+        ca = run_replay(ba, od/"stateA", os.environ.get("AB_HOLD_A"), os.environ.get("AB_SIDEMODE_A"), os.environ.get("AB_K_A"), os.environ.get("AB_SKIP_A"), os.environ.get("AB_RRGATE_A"), plA)   # A = high-vol/flow book
+        cb = run_replay(bb, od/"stateB", os.environ.get("AB_HOLD_B"), os.environ.get("AB_SIDEMODE_B"), os.environ.get("AB_K_B"), os.environ.get("AB_SKIP_B"), os.environ.get("AB_RRGATE_B"), plB)   # B = low-vol/price book
         summ = combine(ca, cb, od/"combine")
         rows.append({"policy": pol, "sharpe": summ["sharpe_both_active"], "totPnL": summ["totPnL_both_active"],
                      "maxDD": summ["maxDD_both_active"], "sharpe_A": summ["sharpe_bookA"], "sharpe_B": summ["sharpe_bookB"],
