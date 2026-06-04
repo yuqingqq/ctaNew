@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Convexity v1 REAL-TIME forward test — one boundary loop that fires at each 4h close + ~90s (klines flush):
+# Convexity v1 REAL-TIME forward test — one boundary loop that fires as soon as each 4h close bar flushes
+# (event-driven via wait_bar_ready, not a fixed grace):
 #   1. refresh realtime data (collector klines → xs_feats → panel; funding)
 #   2. SETTLE the just-labeled bar = the MODELED reference track (bot --cycle, close-to-close − flat cost)
 #   3. DECIDE the current bar at the boundary (decide_v1 → bot --decide → decision.json: legs + turnover)
@@ -27,23 +28,18 @@ for src,dst in [("hl/v0full_hl60.parquet","base.parquet"),("hl_residrev/v0full_h
 PY
 }
 
-# sleep to the next 4h boundary + 90s grace (so the boundary's 5m klines have flushed to the collector files)
-wait_boundary(){
-  S=$($PY -c "
-import datetime as dt
-now=dt.datetime.now(dt.timezone.utc)
-nb=now.replace(minute=0,second=0,microsecond=0)+dt.timedelta(hours=1)
-while nb.hour%4!=0: nb+=dt.timedelta(hours=1)
-print(max(5,int((nb-now).total_seconds())+90))" 2>/dev/null)
-  [ -z "$S" ] && S=600; log "-- sleep ${S}s to next boundary+90s --"; sleep "$S"; }
+# EVENT-DRIVEN: block until the next boundary's CLOSING 5m kline has actually flushed to the collector files,
+# then return immediately (≈ the few-second flush latency) — not a guessed fixed grace.
+wait_ready(){ log "-- waiting for next boundary's close bar --"; \
+  $PY live/wait_bar_ready.py >> "$LOG" 2>&1 || { log " wait_bar_ready err — fallback sleep 900"; sleep 900; }; }
 
 log "== convexity v1 REAL-TIME (settle ref + decide@boundary → HL execute → real-fill round-trip PnL) =="
 while true; do
   log "-- cycle start --"
   # 1) refresh realtime data
   $PY live/ingest_funding_fapi.py >> "$LOG" 2>&1 && log " funding OK" || log " funding WARN"
-  if ! $PY live/incremental_xs_feats.py --workers 6 >> "$LOG" 2>&1; then log " xs_feats FAIL"; wait_boundary; continue; fi
-  if ! $PY live/incremental_panel.py    --workers 6 >> "$LOG" 2>&1; then log " panel FAIL"; wait_boundary; continue; fi
+  if ! $PY live/incremental_xs_feats.py --workers 6 >> "$LOG" 2>&1; then log " xs_feats FAIL"; wait_ready; continue; fi
+  if ! $PY live/incremental_panel.py    --workers 6 >> "$LOG" 2>&1; then log " panel FAIL"; wait_ready; continue; fi
   $PY live/build_maturity_meta.py >> "$LOG" 2>&1 || true
 
   # 2) SETTLE the modeled reference track (advance any newly-labeled bar)
@@ -55,7 +51,7 @@ while true; do
   else log " settle-predict WARN"; fi
 
   # 3) DECIDE the current bar at the boundary
-  if ! $PY live/decide_v1.py >> "$LOG" 2>&1; then log " decide_v1 FAIL"; wait_boundary; continue; fi
+  if ! $PY live/decide_v1.py >> "$LOG" 2>&1; then log " decide_v1 FAIL"; wait_ready; continue; fi
   if CONVEXITY_STATE=$OUT/state CONVEXITY_PREDS_PATH=$OUT/decide/base_decide.parquet CONVEXITY_PREDS_LONG=$OUT/decide/long_decide.parquet \
        $PY -m live.convexity_paper_bot --decide >> "$LOG" 2>&1; then
     log " decided: $($PY -c "import json;d=json.load(open('$OUT/state/decision.json'));print(d['open_time'],d['regime'],'-',len(d.get('turnover',{})),'legs to execute')" 2>/dev/null)"
@@ -66,5 +62,5 @@ while true; do
     # 6) snapshot (real-fill + modeled reference)
     $PY live/convexity_notify_v1.py >> "$LOG" 2>&1 && log " tg snapshot sent" || log " tg snapshot WARN"
   else log " decide FAIL"; fi
-  wait_boundary
+  wait_ready
 done
