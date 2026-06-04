@@ -49,16 +49,22 @@ def _predict(panel, models, outpath):
 
 
 def main():
-    flow = pickle.load(open(MODELS/"twobook_flow_models.pkl", "rb"))["models"]
-    price = pickle.load(open(MODELS/"twobook_price_models.pkl", "rb"))["models"]
+    price = pickle.load(open(MODELS/"convexity_v1_short_model.pkl", "rb"))["models"]      # base V0 -> ranks shorts
+    residrev = pickle.load(open(MODELS/"convexity_v1_long_model.pkl", "rb"))["models"]    # V0+resid_rev -> ranks longs
     F, flowcols = tt.build_flow();
     pan = pd.read_parquet(tt.PANEL, columns=["symbol", "open_time", "exit_time", "return_pct", "alpha_vs_btc_realized"]+V0)
     pan["open_time"] = pd.to_datetime(pan["open_time"], utc=True); pan["exit_time"] = pd.to_datetime(pan["exit_time"], utc=True)
     pan = pan[(pan.open_time.dt.hour % 4 == 0) & (pan.open_time.dt.minute == 0)].merge(F, on=["symbol", "open_time"], how="left")
     pan = pan.sort_values(["symbol", "open_time"])
-    nf = _predict(pan, flow, HLDIR/"fullflow_hl60.parquet")
-    npr = _predict(pan, price, HLDIR/"v0full_hl60.parquet")
-    print(f"[predict_twobook] appended flow +{nf}, price +{npr} rows (cached-model inference)")
+    # resid_rev features (PIT) for the v1 long-ranker — same definition as the frozen trainer
+    _a = pan.groupby("symbol")["alpha_vs_btc_realized"]
+    pan["resid_rev_2"] = -_a.transform(lambda s: s.shift(1).rolling(2).sum())
+    pan["resid_rev_3"] = -_a.transform(lambda s: s.shift(1).rolling(3).sum())
+    for c in tt.RR: pan[c] = pan[c].fillna(0.0)
+    npr = _predict(pan, price, HLDIR/"v0full_hl60.parquet")        # base preds -> short ranker
+    rrdir = REPO/"live/state/convexity/hl_residrev"; rrdir.mkdir(parents=True, exist_ok=True)
+    nrr = _predict(pan, residrev, rrdir/"v0full_hl60.parquet")     # resid_rev preds -> long ranker (CONVEXITY_PREDS_LONG)
+    print(f"[predict_convexity_v1] appended base(short) +{npr}, resid_rev(long) +{nrr} rows (cached-model inference)")
 
 
 if __name__ == "__main__":

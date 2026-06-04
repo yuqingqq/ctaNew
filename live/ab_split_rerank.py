@@ -27,7 +27,8 @@ FIT_CUT   = pd.Timestamp("2026-05-29", tz="UTC")
 
 SPLIT_FEAT = os.environ.get("AB_SPLIT_FEAT", "rvol_7d")   # axis to partition flow vs price book (high -> flow book)
 
-def trailing_rvol_asof(p, asof, win=30):
+RVOL_WIN = int(os.environ.get("AB_RVOL_WIN", "30"))   # #180: ranking lookback (longer = smoother, less churn)
+def trailing_rvol_asof(p, asof, win=RVOL_WIN):
     lo = asof - pd.Timedelta(days=win)
     q = p[(p.open_time >= lo) & (p.open_time < asof)]
     return q.groupby("symbol")[SPLIT_FEAT].mean()
