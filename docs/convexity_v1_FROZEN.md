@@ -64,3 +64,18 @@ Runner: `live/run_bookB_residrev.sh` · preds gen: `live/gen_residrev_wf_preds.p
 ## Open optimization (v2 candidates — do NOT alter v1)
 #180 rvol rank stability/persistence · #181 cutoff ensemble · #182 breadth/higher-K — all target the
 composition-variance risk (robustness, not Sharpe). #178 forward paper-test is the decisive arbiter.
+
+## UPDATE 2026-06-04 — deploy reconciliation (corrections to above)
+- **Funding RESTORED (full-V0).** The earlier V0_LEAN (funding-dropped) was a two-book result; on book-B-only funding
+  HELPS (+0.68 baseline / +0.95 with resid_rev, walk-forward). Deploy = full V0.
+- **Single book.** Flow model / book A fully dropped. No two-book combine.
+- **Artifacts RENAMED** (no "twobook"): `convexity_v1_short_model.pkl` (V0 base → shorts),
+  `convexity_v1_long_model.pkl` (V0+resid_rev → longs), `convexity_v1_universe.json` (exclude top-80 high-vol).
+- **Deploy cut = fit_cut 2026-05-29** (latest − 1d embargo). The "5.26" that appeared earlier was only the
+  walk-forward backtest's last-fold training cut, NOT a deploy model.
+- **Reproduction:** model@5.29 + split@5.29 is DETERMINISTIC (run1==run2 post-cutoff). Live box reproduces exactly.
+  Golden (`docs/golden_cycles_v1.json`) regenerated from this aligned config.
+- **Honest Sharpe = walk-forward +3.46** (monthly-rerank, no look-ahead). The frozen full-OOS replay (+9.49) is
+  LOOK-AHEAD (frozen model on its own training data) — discard; only its post-cutoff tail is valid.
+- **Runner:** `live/run_convexity_v1.sh` (single book). `run_convexity_daily.sh` still has legacy two-book logic →
+  needs single-book rewrite on the exec server (#179).

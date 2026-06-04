@@ -1,161 +1,177 @@
 {
-  "strategy": "convexity_v1 book-B-only + resid_rev",
-  "model_fit_cut": "2026-05-29",
-  "panel_end": "2026-05-30",
-  "config": "exclude top-80 rvol, K=3 L/S beta-neutral, 24h/6-sleeve, regime gate, resid_rev long-ranker ON",
-  "commit": "d373838",
-  "cycles": [
+  "strategy": "convexity v1 single low-vol book + resid_rev (dual-pred)",
+  "config": "model@fit_cut=2026-05-29 (full-V0, funding) + split@2026-05-29 (exclude top-80 rvol); K=3 L/S beta-neutral, 24h/6-sleeve",
+  "artifacts": [
+    "convexity_v1_short_model.pkl",
+    "convexity_v1_long_model.pkl",
+    "convexity_v1_universe.json"
+  ],
+  "note": "ALIGNED model+split @5.29. Deterministic (run1==run2). Live box reproduces exactly. Strategy OOS Sharpe = walk-forward +3.46 (NOT the look-ahead frozen full-replay).",
+  "post_cutoff_cycles": [
     {
-      "open_time": "2026-05-29 12:00:00+00:00",
+      "open_time": "2026-05-29 00:00:00+00:00",
       "regime": "side",
-      "n_universe": 154,
       "longs": [
         "HYPEUSDT",
-        "NEARUSDT",
-        "PENDLEUSDT"
+        "SEIUSDT",
+        "XLMUSDT"
       ],
       "shorts": [
         "BCHUSDT",
-        "SOPHUSDT",
-        "STXUSDT"
+        "MEUSDT",
+        "XMRUSDT"
       ],
-      "pred_disp": 0.10498,
-      "gross_pnl_bps": 101.255,
-      "cost_bps": 1.006,
-      "pnl_bps": 100.249
+      "pnl_bps": 9.647
+    },
+    {
+      "open_time": "2026-05-29 04:00:00+00:00",
+      "regime": "side",
+      "longs": [
+        "FETUSDT",
+        "HYPEUSDT",
+        "XLMUSDT"
+      ],
+      "shorts": [
+        "BCHUSDT",
+        "MEUSDT",
+        "XMRUSDT"
+      ],
+      "pnl_bps": -5.078
+    },
+    {
+      "open_time": "2026-05-29 08:00:00+00:00",
+      "regime": "side",
+      "longs": [
+        "ASTERUSDT",
+        "HYPEUSDT",
+        "XLMUSDT"
+      ],
+      "shorts": [
+        "BCHUSDT",
+        "MEUSDT",
+        "RSRUSDT"
+      ],
+      "pnl_bps": 34.524
+    },
+    {
+      "open_time": "2026-05-29 12:00:00+00:00",
+      "regime": "side",
+      "longs": [
+        "HYPEUSDT",
+        "RUNEUSDT",
+        "XLMUSDT"
+      ],
+      "shorts": [
+        "MEUSDT",
+        "STXUSDT",
+        "SUPERUSDT"
+      ],
+      "pnl_bps": 153.361
     },
     {
       "open_time": "2026-05-29 16:00:00+00:00",
       "regime": "side",
-      "n_universe": 154,
       "longs": [
+        "FETUSDT",
         "HYPEUSDT",
-        "NEARUSDT",
-        "PENDLEUSDT"
+        "XLMUSDT"
       ],
       "shorts": [
         "BERAUSDT",
-        "GMTUSDT",
-        "ZKUSDT"
+        "IPUSDT",
+        "MEUSDT"
       ],
-      "pred_disp": 0.1219,
-      "gross_pnl_bps": 4.314,
-      "cost_bps": 1.254,
-      "pnl_bps": 3.06
+      "pnl_bps": 425.448
     },
     {
       "open_time": "2026-05-29 20:00:00+00:00",
       "regime": "side",
-      "n_universe": 154,
       "longs": [
+        "CCUSDT",
         "HYPEUSDT",
-        "NEARUSDT",
-        "PENDLEUSDT"
+        "XLMUSDT"
       ],
       "shorts": [
         "BCHUSDT",
-        "GMTUSDT",
-        "INJUSDT"
+        "MEUSDT",
+        "SYRUPUSDT"
       ],
-      "pred_disp": 0.11047,
-      "gross_pnl_bps": -469.512,
-      "cost_bps": 0.8,
-      "pnl_bps": -470.313
+      "pnl_bps": 129.854
     },
     {
       "open_time": "2026-05-30 00:00:00+00:00",
       "regime": "side",
-      "n_universe": 152,
       "longs": [
         "HYPEUSDT",
-        "KAITOUSDT",
-        "POLYXUSDT"
+        "POLYXUSDT",
+        "XLMUSDT"
       ],
       "shorts": [
         "BCHUSDT",
-        "GMTUSDT",
-        "XMRUSDT"
+        "MEUSDT",
+        "SYRUPUSDT"
       ],
-      "pred_disp": 0.11102,
-      "gross_pnl_bps": -298.946,
-      "cost_bps": 1.011,
-      "pnl_bps": -299.957
+      "pnl_bps": 343.985
     },
     {
       "open_time": "2026-05-30 04:00:00+00:00",
       "regime": "side",
-      "n_universe": 152,
       "longs": [
         "HYPEUSDT",
-        "KAITOUSDT",
-        "STRKUSDT"
+        "RUNEUSDT",
+        "XLMUSDT"
       ],
       "shorts": [
         "BCHUSDT",
-        "GMTUSDT",
-        "ZKUSDT"
+        "MEMEUSDT",
+        "SYRUPUSDT"
       ],
-      "pred_disp": 0.11309,
-      "gross_pnl_bps": 135.307,
-      "cost_bps": 1.065,
-      "pnl_bps": 134.242
+      "pnl_bps": -286.396
     },
     {
       "open_time": "2026-05-30 08:00:00+00:00",
       "regime": "side",
-      "n_universe": 152,
       "longs": [
+        "FETUSDT",
         "HYPEUSDT",
-        "KAITOUSDT",
-        "NEARUSDT"
+        "XLMUSDT"
       ],
       "shorts": [
         "BCHUSDT",
-        "GMTUSDT",
-        "TONUSDT"
+        "MEMEUSDT",
+        "TNSRUSDT"
       ],
-      "pred_disp": 0.10731,
-      "gross_pnl_bps": 30.57,
-      "cost_bps": 0.783,
-      "pnl_bps": 29.788
+      "pnl_bps": 115.473
     },
     {
       "open_time": "2026-05-30 12:00:00+00:00",
       "regime": "side",
-      "n_universe": 152,
       "longs": [
+        "ALGOUSDT",
         "HYPEUSDT",
-        "KAITOUSDT",
-        "NEARUSDT"
+        "XLMUSDT"
       ],
       "shorts": [
         "BCHUSDT",
-        "ZKUSDT",
+        "MEMEUSDT",
         "ZORAUSDT"
       ],
-      "pred_disp": 0.11026,
-      "gross_pnl_bps": -140.188,
-      "cost_bps": 0.802,
-      "pnl_bps": -140.99
+      "pnl_bps": -73.277
     },
     {
       "open_time": "2026-05-30 16:00:00+00:00",
       "regime": "side",
-      "n_universe": 152,
       "longs": [
         "HYPEUSDT",
-        "KAITOUSDT",
-        "NEARUSDT"
+        "RUNEUSDT",
+        "XLMUSDT"
       ],
       "shorts": [
-        "ARUSDT",
         "ASTERUSDT",
-        "BCHUSDT"
+        "BCHUSDT",
+        "MEMEUSDT"
       ],
-      "pred_disp": 0.10877,
-      "gross_pnl_bps": -9.617,
-      "cost_bps": 1.05,
-      "pnl_bps": -10.667
+      "pnl_bps": -28.69
     }
   ]
 }
