@@ -60,6 +60,28 @@ def _portfolio(top=8, hold=6):
             f"  gross {gross*100:.0f}% • {len(net)} names")
 
 
+def _realfill_block():
+    """Real-fill (HL round-trip) summary from the ledger: equity, last-cycle realized/unrealized, and the
+    execution-cost decomposition (book slip + latency drift + fee). None if the ledger isn't running yet."""
+    lp = OUT / "realfill" / "ledger.json"
+    if not lp.exists():
+        return None
+    led = json.loads(lp.read_text())
+    cyc = led.get("cycles", [])
+    e0 = float(led.get("equity0", BASE))
+    if not cyc:
+        return "💵 <b>Real-fill</b> (HL execution): armed — no fills yet"
+    r = cyc[-1]
+    eq = float(r["equity"])
+    out = [f"💵 <b>Real-fill</b> (HL round-trip) — eq ${eq:,.0f} ({(eq/e0-1)*100:+.1f}%) • open {r['n_open_syms']} syms",
+           f"  last cycle: realized {r['realized_pnl']:+.2f} • unreal {r['unrealized_pnl']:+.2f}"]
+    if r.get("n_trades", 0):
+        out.append(f"  exec cost {r['exec_cost_bps']:.1f}bps = slip {r['book_slip_bps']:.1f} "
+                   f"+ lat {r['latency_drift_bps']:.1f} + fee {r['fee_bps']:.1f} ({r['n_trades']} legs"
+                   + (f", {r['n_unfilled']} unfilled" if r.get('n_unfilled') else "") + ")")
+    return "\n".join(out)
+
+
 def build_message() -> str:
     c = _fwd()
     if len(c) == 0:
@@ -87,8 +109,11 @@ def build_message() -> str:
     arrow = "🟢" if float(r["pnl_bps"]) >= 0 else "🔴"
     L_str, S_str = str(r.get("top_k_long", "")), str(r.get("bot_k_short", ""))
     flat = L_str in ("nan", "") and S_str in ("nan", "")
-    out = [
-        f"{arrow} <b>Convexity v1</b> (paper, LIVE) — {r['open_time']} • {r['regime']}",
+    out = [f"{arrow} <b>Convexity v1</b> (paper, LIVE) — {r['open_time']} • {r['regime']}"]
+    rfb = _realfill_block()
+    if rfb:
+        out += [rfb, "— modeled reference —"]
+    out += [
         f"Equity ${eq[-1]:,.0f} • fwd cycle {len(c)}",
         f"Sharpe: realtime {sh_all:+.2f} (n={len(c)}) • trailing-30 {sh_30:+.2f}",
         f"Cycle PnL {float(r['pnl_bps']):+.0f}bps modeled / {net_pnl:+.0f} net-of-slip",
