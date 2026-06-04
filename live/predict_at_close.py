@@ -38,23 +38,39 @@ def _latest_closed_boundary():
     return now.floor("4h")
 
 
-def build_bar(boundary, drop_unlabeled=False):
-    """Build the V0 panel rows for a single 4h `boundary` (one row per sym), PIT features, label may be NaN."""
+def _build_one(args):
+    """Pool worker: build one sym's window and keep only the boundary row. Inherits ip._BTC_FULL via fork
+    (set in build_bar before the pool is created), so no per-worker BTC reload."""
+    s, since, boundary, drop_unlabeled = args
+    try:
+        g = ip._build_sym_window(s, since, drop_unlabeled=drop_unlabeled)
+    except Exception:
+        return None
+    if g is not None and len(g):
+        g = g[g["open_time"] == boundary]
+        if len(g):
+            return g
+    return None
+
+
+def build_bar(boundary, drop_unlabeled=False, workers=6):
+    """Build the V0 panel rows for a single 4h `boundary` (one row per sym), PIT features, label may be NaN.
+    Per-sym builds are independent → fanned across `workers` processes (forked so they share the loaded BTC
+    series). The cross-sectional cohort/xs_rank below still run over ALL syms, so values are unchanged."""
+    import multiprocessing as mp
     t0 = time.time()
     ip._BTC_FULL = ip.X70.load_closes("BTCUSDT")
     ip._BTC_FULL.index = pd.DatetimeIndex(ip._BTC_FULL.index).tz_convert("UTC")
     panel_syms = pd.read_parquet(ip.PANEL, columns=["symbol"])["symbol"].unique()
     syms = sorted(s for s in panel_syms if s != "BTCUSDT")
     since = boundary - pd.Timedelta(hours=4)                       # so open_time > since keeps exactly `boundary`
-    parts = []
-    for s in syms:
-        try:
-            g = ip._build_sym_window(s, since, drop_unlabeled=drop_unlabeled)
-        except Exception as e:
-            print(f"  {s} ERR {str(e)[:50]}"); continue
-        if g is not None and len(g):
-            g = g[g["open_time"] == boundary]
-            if len(g): parts.append(g)
+    args = [(s, since, boundary, drop_unlabeled) for s in syms]
+    if workers > 1:
+        with mp.get_context("fork").Pool(min(workers, len(syms))) as pool:   # fork → workers inherit _BTC_FULL
+            results = pool.map(_build_one, args)
+    else:
+        results = [_build_one(a) for a in args]
+    parts = [g for g in results if g is not None]
     if not parts:
         print(f"[predict_at_close] no rows built for {boundary}"); return None
     new = pd.concat(parts, ignore_index=True)
