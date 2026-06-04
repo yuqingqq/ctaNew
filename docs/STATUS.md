@@ -1,5 +1,12 @@
 # Status — 2026-05-09
 
+## Convexity v1 FROZEN (2026-06-04) — see docs/convexity_v1_FROZEN.md
+**Book-B-only** (low-vol; drop alpha-barren high-vol book A) + **resid_rev** long-ranker overlay.
+Universe = exclude top ~46% by trailing-30d rvol (percentile), K=3 L/S beta-neutral, 24h/6-sleeve, regime gate.
+Honest expected Sharpe ~+2.0–2.55 baseline (nested-OOS→static), ~+3.4 with prompt-executed resid_rev — *as a range*;
+high universe-composition variance (placebo p83). Validated: leakage-clean, cost-robust to 13bps, latency budget ~15min.
+Runner: `live/run_bookB_residrev.sh`. Next: forward paper-test on execution server (real-time feeds). v2 opt queued (#180-182).
+
 ## TL;DR
 
 Two programs. **xyz US-equity v7 shadow harness ready for forward-test.**

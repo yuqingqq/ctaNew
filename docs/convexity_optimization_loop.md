@@ -609,3 +609,155 @@ ONE adopted change; everything else re-confirmed sound.
   inflates ~+0.17). Mild tuned-candidates noted, NOT adopted (discipline): hyst N=5, stop k=1.5, HL=90.
 HONEST FORWARD ≈ +3.5 PIT. The system was already near-optimal; the one real lever was WHERE flow is
 informative (high-vol names), now captured by the volatility split.
+
+## ============ PHASE X — non-stop diagnosis-driven loop (2026-06-03) ============
+User: "Launch a non-stop loop to optimize performance, especially the weaknesses (high-vol long,
+low-vol short); diagnose root cause each iteration, then optimize from data-driven insight."
+
+**Baseline this loop** (honest universe `hl_wfund175`, monthly cadence via `ab_split_rerank.py`):
+two-book 50/50 = **Sharpe +2.135 / totPnL +6087 / maxDD −2121**. Per-book: high-vol (flow) bookA
+**+1.03**, low-vol (price) bookB **+2.55**, corr 0.14.  NOTE the gap vs Phase IX's +3.48 PIT — that
+is the universe + timing honesty corrections (this +2.13 is the current honest number, per memory).
+
+### ROOT CAUSE (iter1 + iter3): both weak legs are the SAME idiosyncratic-vol exposure.
+- iter1 (high-vol LONG, win-rate 0.45): falling-knife **cascades** are the HIGH-idio-vol, HIGH-atr,
+  LOW-corr-to-BTC (idiosyncratic) names; **bounces** are market-linked (high corr, low idio-vol).
+  Discriminators: corr_to_btc_1d IC +0.055, idio_vol_to_btc z+0.86, atr_pct z+0.88.
+- iter3 (low-vol SHORT, short-win 0.55): **squeezes** (rip up against the short) have the IDENTICAL
+  signature — HIGH idio_vol (z+0.33), HIGH atr (z+0.31), LOW corr (z−0.30). Twist: idio_vol has a
+  POSITIVE short-PnL mean IC (+0.034) — high-vol pumps mostly fade (good short) but carry a fat
+  squeeze tail. So idio_vol is risk/return on the short, pure-bad on the long.
+- UNIFIED: strategy weakness = exposure to idiosyncratic high-idio-vol/low-corr tail names. All
+  discriminators are V0 features the per-symbol Ridge already sees.
+
+### REJECTED / NEUTRAL (selection & construction layer — model already at ceiling):
+- **iter2 defensive-long filter** (rank-composite corr/idio_vol/atr among top-N pred) → bookA +0.81
+  vs +1.03 default. HURTS — overrides the model's pred ordering. (= vBTC Phase H lesson: univariate
+  discriminators don't beat the model that already uses them.)
+- **iter4 high-vol SHORT-ONLY + BTC hedge** (`short_btc_hedge`) → bookA +1.037 vs +1.031. NEUTRAL.
+  The broken alt-long is NOT a fixable drag — the high-vol book is **structurally capped ~+1.03**
+  (must carry offsetting beta; high-vol universe is noisier). The +3.07 short selection-alpha dilutes
+  to +1.03 at book level regardless of long construction (mean-rev / defensive / BTC-hedge all equal).
+
+### THE FINDING (iter5): the lever is the COMBINE WEIGHT, not the books or the legs.
+The 50/50 book weight is badly suboptimal for two lowly-correlated (corr 0.09) sleeves of unequal
+Sharpe (1.03 vs 2.55). Static weight sweep (wA = high-vol weight):
+| wA | Sharpe | totPnL | maxDD |
+|----|--------|--------|-------|
+| 0.00 (low-vol only) | +2.55 | +7557 | −2408 |
+| ~0.20 (optimal)     | **+2.63** | +6969 | **−2076** |
+| 0.50 (PRODUCTION)   | +2.13 | +6087 | −2121 |
+- Low-vol-only (+2.55) beats production 50/50 (+2.13); the true peak is a *small* ~20% high-vol tilt
+  (+2.63) which ALSO minimizes maxDD. Smooth concave curve = portfolio theory, not a fold artifact.
+- VALIDATION (nested-OOS, harder sub-period — Oct used as train-only): parameter-free **inverse-vol**
+  weighting **+1.14 / maxDD −1766** beats 50/50 **+0.45 / −2121** (Δ +0.70, lower DD). A grid-TUNED
+  weight gives +0.99 < inverse-vol → tuned overfits (same K3/decay-weight lesson). invvol beats 50/50
+  in 3/7 OOS months; aggregate + DD + parameter-free carry it.
+- **CANDIDATE PRODUCTION CHANGE: replace the 50/50 book combine with inverse-vol (risk-parity)
+  weighting.** Forward-confirm before locking.
+- ⚠ TENSION with Phase IX (which re-confirmed 50/50): Phase IX tested PIT-*dynamic* weights that added
+  book-churn/noise; inverse-vol is a smoother static-principled rule on the honest +2.13 baseline.
+  Must reconcile on the production replay (full daily cadence + per-fold) before adoption.
+
+**Scripts:** live/diag_hivol_long_rootcause.py, live/diag_lovol_short_rootcause.py;
+modes added to convexity_paper_bot.py (longdef_shortmr, LONGDEF_FEATS); analysis inline.
+Ledger: live/state/opt_loop/insights.md.
+
+### iter6 — *** CORRECTION to iter5 (PIT-honest reconciliation) ***
+iter5's +2.63 was in-sample weight-choice look-ahead. PIT-implementable inverse-vol (trailing 180-cycle
+vol, shift-1, mean wA=0.36): Sharpe **+2.171 vs 50/50 +2.134 (Δ +0.04)**; maxDD **−1826 vs −2121 (−14%)**.
+Block-bootstrap (block=30, 2000×) Sharpe-diff mean +0.014, **CI95 [−0.60,+0.66], P(>0)=0.52 — NOT
+significant.** Once the weight is PIT, the Sharpe lift VANISHES; only DD reduction survives. This RECONCILES
+with Phase IX (50/50 fine for Sharpe; PIT-dynamic weights underperform; two-book value = DD reduction).
+**REVISED CONCLUSION: the book combine weight is a DRAWDOWN DIAL, not an alpha lever.** Keep 50/50 for Sharpe;
+inverse-vol is an OPTIONAL parameter-free, PIT-safe, Sharpe-neutral DD-reduction overlay (−14% maxDD). The
+low-vol-only +2.55 was likewise a full-sample artifact (per-month it won only 4/8; Oct strongly favored 50/50).
+**NET PHASE X: root cause = idiosyncratic-vol tail exposure (both legs); no robust Sharpe lift found at the
+selection, construction, or combine-weight layer; strategy confirmed at its honest ceiling (~+2.13 two-book).
+The one usable artifact is the inverse-vol DD overlay. Consistent with the established statistical ceiling.**
+
+### iter11-13 — META-LABELING / resid-rev signal (the loop's real lead)
+ROOT CAUSE (diag_along_signals): model's reversal feats (return_1d/ret_3d) are RAW returns ≈ BTC beta for high-vol
+names, so it longs beta-down names that cascade. It MISSES the short-horizon (8-12h) BTC-RESIDUAL reversal —
+orthIC(vs pred) ≈ rawIC ≈ -0.04..-0.05, ~100% orthogonal, UNIVERSE-WIDE, and a stronger per-cycle predictor than the
+model's own pred (+0.006, iter8). resid_rev[t] = -Σ alpha_A[t-1..t-3]; PIT-clean (label horizon = 4h = 1 bar, zero
+overlap with forward window — audited).
+- iter11 resid_rev as GLOBAL model feature: fixes A-long (-0.19→+0.41) but CORRUPTS the 3 working legs → combined
+  +1.33. Empirical proof of the user's principle: don't rank alpha + manage tail state in one model.
+- iter12 resid_rev as HARD leg-gate: craters book A (+1.03→+0.26), doesn't even improve A-long. Hard filters fail
+  (same as iter2/iter7).
+- iter13 DUAL-PRED (resid_rev model ranks LONG, base model ranks SHORT = #172 separation): MONTHLY +2.135→+2.82
+  (Δ+0.69), lower DD, improves both books. PIT-clean, parameter-free (discrete architecture, the kind that generalizes).
+  BUT daily-cadence stress = -0.18 (book A flips: alpha-barren, resid_rev there is noise). Isolated book-B-only dual-pred
+  (resid_rev long-ranker on the alpha-rich low-vol book only): MONTHLY Δ+0.38 (5/8mo, bootP 0.88), DAILY Δ+0.20 (3/8mo,
+  bootP 0.68) — CONSISTENTLY POSITIVE both cadences but neither clears P>0.90.
+VERDICT: strongest, cleanest, mechanistically-grounded lead of the entire loop. resid_rev adds robustly only where alpha
+exists (book B long); on alpha-barren book A it's noise. FORWARD-TEST candidate, NOT a locked adoption (borderline
+significance). #172 meta-labeling architecture validated as the correct frame; full leg-specific build is the next step.
+Scripts: diag_along_filter.py, diag_along_signals.py, gen_residrev_wf_preds.py; dual-pred via CONVEXITY_PREDS_LONG
+(bot) + AB_HLDIR_LONG (harness).
+
+### iter14-15 — four-leg meta + enriched resid_rev (both REJECTED) → CONVERGENCE
+- iter14 four-leg meta-CLASSIFIER (P(good) blended with base pred): LAM=1.0 cratered (+0.70, destroys strong shorts);
+  LAM sweep monotonic-bad (0.15→+1.68 < base +2.135). Meta-classifier DOMINATED by iter13's Ridge-feature approach.
+  #172 principle (separate alpha/tradeability) correct as diagnosis; cleanest realization = iter13, not a bolt-on classifier.
+- iter15 enriched resid_rev (rr2/3/6/12+accel): WORSE than minimal rr2/3 (book-B +2.13 vs iter13 +2.52). Correlated
+  extra horizons dilute the Ridge. Candidate orthIC ≠ model lift.
+CONVERGED: strategy at ceiling on Binance OHLCV+funding. ONE defensible lead = iter13 book-B resid_rev(rr2/3) long-ranker
+(+0.2-0.4, both cadences +, PIT-clean, parameter-free). MULTIPLE-TESTING CAVEAT: ~15 directions tried → borderline P
+(0.88/0.68) is NOT clearly real after correction; ONLY forward paper-test confirms. Genuine further progress needs NEW
+DATA (orderbook/liquidations/on-chain/options-IV), not more in-sample search. Scripts: gen_metalabels.py,
+gen_residrev2_wf_preds.py, diag_short_signals.py, diag_more_signals.py.
+
+## ============ PHASE XI — book-B-only + resid_rev + leakage audit (2026-06-03/04) ============
+Driven by user Qs: high-vol-long fix, "just run B book", liquidation, and a hard leakage audit.
+
+### HEADLINE CONCLUSIONS (corrected, evidence-anchored)
+1. **Book A (high-vol) is ALPHA-BARREN — drop it.** Authoritative per-leg PnL (iter8, leg-attribution logged in bot):
+   A-long −0.19, A-short +0.82 alpha-resid (its +2.16 RAW Sharpe is ~2/3 BTC beta), B-long +1.75, B-short +2.09.
+   No fix works: mean-rev filters HURT (iter2/7), momentum-long is REGIME-LUCK (iter19: +2.0 but 100% Oct-Nov, neg 6 mo
+   since), BTC-hedge NEUTRAL (iter4/20). High-vol names = idiosyncratic noise + beta, no stable XS alpha.
+2. **BOOK-B-ONLY beats the two-book** (drop the dead book): +2.55 monthly / +2.82 daily vs two-book +2.13/+2.29, more
+   months-positive, comparable DD. The two-book was over-engineered; book A's only value was DD-diversification, not worth
+   the ~0.4-1.3 Sharpe drag. Simpler too (1 book, low-vol universe, NO flow data).
+3. **resid_rev = BTC-RESIDUAL short-horizon reversal — the one genuine new signal.** Model's reversal feats are RAW returns
+   (≈ BTC beta for high-vol); it misses the residual reversal (orthIC ~-0.05, universe-wide). *** CORRECTED twice: it is
+   NOT bid-ask bounce *** — at 4h bars bounce≈0 (raw 4h autocorr +0.012, Roll implied spread 0.0 bps, mean|4h ret| 129bps).
+   It IS genuine FAST residual reversion (resid-alpha lag-1 autocorr −0.05, concentrated at lag-1). EXECUTION-LATENCY-
+   SENSITIVE: book-B-only +resid_rev = +3.45/+3.63 PROMPT, +2.96/+2.85 if 1-bar(4h)-late. Realizable gain ≈ +0.5-0.85
+   Sharpe IF execution is prompt (seconds-min after 4h close). Real overlay, gated on execution speed — confirm live.
+4. **LEAKAGE AUDIT: clean.** Walk-forward purge + 1d embargo (exit_time<cut-EMB), PIT dvol gate (precompute_dvol_cache_pit
+   + .asof, PIT_DVOL=1 default), PIT betas/mom (.shift(1)), resid_rev PIT (4h label, strictly-past bars). Book-B baseline
+   SURVIVES 1-bar execution delay (daily −2%, monthly −22% graceful) = genuine signal, not microstructure. resid_rev's
+   delay-collapse (+0.81→+0.03) = fast SIGNAL DECAY, not leakage (bounce ruled out by direct measurement).
+
+### REJECTED this phase (all on honest validation)
+4-leg meta-CLASSIFIER (iter14, LAM monotonic-bad, dominated by resid_rev-as-feature); enriched resid_rev rr6/12/accel
+(iter15, correlated→dilutes); new signal families (iter16: peer-rev REDUNDANT orthIC+0.006, funding/vol/autocorr/momentum
+noise); time-of-day (iter17: 20h short +30bps 8/8mo eye-catching but placebo rank 66% = multiple-testing chance);
+OI-flush liquidation proxy (iter18: doesn't stack on resid_rev, +0.93 candidate edge too rare/redundant); momentum-long A
+(iter19 regime-luck); BTC-hedge A (iter20 neutral).
+
+### NEW FEATURES / CODE (this phase)
+- **resid_rev** (gen_residrev_wf_preds.py): -Σ alpha_A[t-1..t-N], N=2/3 (8h/12h), added to per-sym Ridge.
+- **dual-pred** separation (convexity_paper_bot.py CONVEXITY_PREDS_LONG → pred_long/pred_short cols; harness AB_HLDIR_LONG):
+  rank LONG by resid_rev model, SHORT by base model. The clean realization of meta-labeling (#172 principle).
+- **per-leg PnL attribution** logged in replay: long/short_ret_bps + long/short_alpha_bps (raw + BTC-resid).
+- bot modes: longdef_shortmr, LONG_RESIDREV_GATE/_N/_THR, LONG_IDIO_SKIP_PCT; longmom_shortmr/longmr_shortmom mom→mom30 BUGFIX.
+- meta-labels: gen_metalabels.py (4 leg-specific LogReg P(tradable), REJECTED).
+- harness ab_split_rerank: per-book AB_K_A/B, AB_SKIP_A/B, AB_RRGATE_A/B, AB_HOLD_A/B, AB_SIDEMODE_A/B.
+- diagnostics: diag_along_signals/short_signals/more_signals/newfamily_signals/tod_rigor/along_filter; eval_lowvol_rules.
+
+### OPEN (in progress / forward)
+- Low-vol SYMBOL-SELECTION RULE: rank vs absolute-rvol-threshold vs multi-factor(low idio_vol + high corr_btc) — testing
+  (eval_lowvol_rules.py), matched ~94 size, comparing Sharpe + churn. Goal: replace arbitrary top-80 cutoff w/ stable rule.
+- HOLD-horizon matching for the fast resid_rev edge (iter24 sweep): prelim HOLD=1(4h)=+2.22 < HOLD=6(24h) → cost dominates.
+- FORWARD-TEST book-B-only baseline + measure real execution latency (gates whether resid_rev is worth adding).
+
+### SYMBOL-SELECTION RULE — SETTLED (2026-06-04)
+Tested rank vs absolute-rvol-threshold vs multi-factor(low idio+high corr) at matched ~94 size: rank +1.55 > abs_rvol
++0.54 (set drifted to 40) > multifac -0.18. **KEEP RELATIVE-RANK (bottom-N by trailing-30d rvol_7d).** WHY (decisive):
+rvol is NON-STATIONARY — the top-80 boundary swings 2.49→6.86 (×1000) across months (calm vs Nov vol spike), so a frozen
+absolute threshold gives 4-89 names (unusable); relative rank auto-adapts to the calmest ~N regardless of regime. Multi-factor
+HURTS because high-corr-to-BTC selection collapses the cross-sectional residual DISPERSION the L/S needs. HOLD=24h confirmed
+optimal (cost amortization > fast-edge capture: HOLD=2 +2.93 < HOLD=6). Cutoff: tighter=better so far (N=40<55<80; full curve pending).

@@ -37,10 +37,13 @@ ARTIFACT = REPO/"live/models/convexity_portable.pkl"
 PANEL    = REPO/"outputs/vBTC_features/panel_expanded_v0.parquet"
 DEFAULT_PREDS = REPO/"research/convexity_portable_2026-05-20/results/_cache/x132_expanded_v0_preds.parquet"
 PREDS    = Path(os.environ.get("CONVEXITY_PREDS_PATH", str(DEFAULT_PREDS)))
-# Universe-meta source (for maturity calc) — the trading preds (PREDS) may be a narrow window which
-# would falsely fail maturity. Env-overridable so the live pipeline points it at a dedicated maturity
-# meta (live/build_maturity_meta.py, onboardDate-based) instead of clobbering the shared x132 preds file.
-UNIVERSE_META_PREDS = Path(os.environ.get("CONVEXITY_UNIV_META", str(DEFAULT_PREDS)))
+# iter13 (meta-labeling #172): optional SECOND preds file whose pred ranks the LONG leg only (e.g. resid_rev-blended
+# model). Base PREDS ranks shorts. Separates alpha-direction (short) from long-tradeability without one global model.
+PREDS_LONG = os.environ.get("CONVEXITY_PREDS_LONG", "")
+# Universe-meta source = the LIVE PANEL (full-history, grows as new symbols list). MUST NOT be a frozen
+# research preds cache (the old x132 file froze at 160 syms on 2026-05-20 → silently capped eligibility,
+# excluding ~15 newer listings that ARE in the panel: ASTER/CC/etc.). Env-overridable for tests.
+UNIVERSE_META_PREDS = Path(os.environ.get("CONVEXITY_UNIVERSE_META", str(PANEL)))
 KLINES   = REPO/"data/ml/test/parquet/klines"
 RESEARCH_LOG = STATE/"replay_vs_research.csv"
 
@@ -73,8 +76,34 @@ SIDE_SHORT_K = int(os.environ.get("SIDE_SHORT_K", "3"))   # used by short_btc_he
 # (high corr_to_btc, low rvol, low atr) — parameter-free rank composite (iter-038/039).
 SIDE_DEF_N = int(os.environ.get("SIDE_DEF_N", "12"))
 DEF_FEATS = ["corr_to_btc_1d", "rvol_7d", "atr_pct"]   # defensive-tilt features (PIT, in panel)
+# longdef_shortmr (iter2 of 2026-06-03 non-stop loop): high-vol-long ROOT CAUSE = idiosyncratic cascades.
+# iter1 diag (within high-vol long candidates): bounce-vs-cascade discriminated by corr_to_btc_1d (IC +0.055,
+# cascades LOW-corr), idio_vol_to_btc_1h (cascades HIGH, z+0.86), atr_pct (cascades HIGH, z+0.88). So among the
+# top-N pred fallers pick the K most MARKET-LINKED / lowest-idio-vol (bounce-prone), skip idiosyncratic knives.
+LONGDEF_FEATS = ["corr_to_btc_1d", "idio_vol_to_btc_1h", "atr_pct"]
+SIDE_LONGDEF_N = int(os.environ.get("SIDE_LONGDEF_N", "12"))
+# iter7 (2026-06-03): HARD-SKIP the extreme-idio-vol long candidates (cascade-prone per iter1) BEFORE
+# the top-K pred pick — keeps the model's pred ordering among survivors (unlike iter2 which re-ranked).
+# A nonlinear tail-skip the linear Ridge can't express. 1.0 = off; e.g. 0.80 drops top-20% idio-vol longs.
+LONG_IDIO_SKIP_PCT = float(os.environ.get("LONG_IDIO_SKIP_PCT", "1.0"))
+# iter12 (2026-06-03): LEG-SPECIFIC resid-rev tradeability gate for the LONG leg only (meta-labeling #172).
+# iter11 proved resid_rev as a GLOBAL feature fixes A-long (-0.19→+0.41) but corrupts the 3 working legs.
+# So apply it ONLY to the long pool: keep only "washed-out" names (resid_rev>=thr = recent BTC-residual LOSS),
+# fallback to top-pred if <K pass. Base pred ranker preserved for shorts + other book. 0=off.
+LONG_RESIDREV_GATE = os.environ.get("LONG_RESIDREV_GATE", "0") == "1"
+LONG_RESIDREV_N = int(os.environ.get("LONG_RESIDREV_N", "3"))      # trailing bars (3=12h)
+LONG_RESIDREV_THR = float(os.environ.get("LONG_RESIDREV_THR", "0.0"))
+# vol-aware leg sizing (2026-06-02 root-cause: tail losses concentrate in high-idio-vol QUALITY names
+# that pass all gates; volatility is ungated. Scale each leg's weight by inverse-vol, normalized to
+# keep the SAME basket gross -> de-concentrates the tail without excluding liquid names).
+# SIZING_MODE: equal (DEFAULT, = current 1/K behavior) | inv_vol | inv_sqrt_vol | inv_atr | volcap
+SIZING_MODE = os.environ.get("SIZING_MODE", "equal")
+SIZING_FEAT = os.environ.get("SIZING_FEAT", "idio_vol_to_btc_1h")  # PIT feature in panel
+VOLCAP_PCTILE = float(os.environ.get("VOLCAP_PCTILE", "0.80"))     # for volcap mode: halve weight above this cross-sec pctile
+_SIZING_FEATS = ([] if SIZING_MODE == "equal" else [SIZING_FEAT])
 # regime_switch: pred_disp (model conviction) threshold; >=THR -> model-long, else defensive-long.
 SIDE_SWITCH_THR = float(os.environ.get("SIDE_SWITCH_THR", "1.0"))
+RANDSHORT_SEED = int(os.environ.get("RANDSHORT_SEED", "1"))   # for randshort isolation test (short=random-K)
 BTC_HEDGE_KEY = "_BTC_HEDGE_"   # sentinel key in weight dict for the synthetic BTC long
 # V7: per-name confidence threshold gate (only trade alt when |pred| > threshold;
 # else fallback to BTC). Applies in SIDE_MODE=confidence_btc_hedge.
@@ -94,11 +123,12 @@ STOP_WARMUP = 60
 STOP_HEAL_FRAC = 0.5
 STOP_TIMEOUT_BARS = 90
 # Universe filter (deploy-spec: maturity≥180d + hygiene + liquidity_floor + dedup; iter-036)
-MIN_HISTORY_DAYS = 180
+MIN_HISTORY_DAYS = int(os.environ.get("CONVEXITY_MIN_HISTORY_DAYS", "180"))  # env-sweepable for the gating study
 # PIT_DVOL=1 (DEFAULT) → per-cycle trailing-30d liquidity gate (honest, validated 2026-06-01: removes the
 # end-of-sample dvol look-ahead; combined two-book +3.38 honest vs +3.71 look-ahead). Set 0 for legacy.
 PIT_DVOL = os.environ.get("CONVEXITY_PIT_DVOL", "1") == "1"
 HYGIENE_EXCLUDE = {"USDCUSDT","BUSDUSDT","TUSDUSDT","DAIUSDT","FDUSDUSDT",   # stables
+                   "STABLEUSDT","STBLUSDT",                                   # stablecoin tokens (~0 crypto beta)
                    "PAXGUSDT","XAUTUSDT",                                     # non-crypto-beta
                    "WBTCUSDT","WBETHUSDT","WSTETHUSDT","WETHUSDT","STETHUSDT"} # wrapped
 # Optional ALLOW-list restriction: comma-sep symbols. Useful for per-sym signal-decay tests.
@@ -133,11 +163,23 @@ def load_artifact() -> dict:
 def load_preds(start: pd.Timestamp | None = None) -> pd.DataFrame:
     """Walk-forward preds from research (used by replay mode)."""
     cols = ["symbol","open_time","alpha_A","return_pct","exit_time","pred","fold"]
+    _avail = set(pd.read_parquet(PREDS, columns=None).columns) if False else None
+    try:
+        import pyarrow.parquet as _pq; _have = set(_pq.ParquetFile(PREDS).schema.names)
+    except Exception:
+        _have = set()
+    if "mom" in _have: cols = cols + ["mom"]      # optional momentum col for longmom_shortmr mode
+    for _c in ("pred_long", "pred_short"):        # iter14 meta-labeling: embedded per-leg rankers
+        if _c in _have: cols = cols + [_c]
     d = pd.read_parquet(PREDS, columns=cols)
     d["open_time"] = pd.to_datetime(d["open_time"], utc=True)
     d["exit_time"] = pd.to_datetime(d["exit_time"], utc=True)
     d = d[(d["open_time"].dt.hour%4==0) & (d["open_time"].dt.minute==0)].copy()
     if start is not None: d = d[d["open_time"] >= start]
+    if PREDS_LONG:   # dual-pred: merge long-leg ranker's pred as 'pred_long'
+        dl = pd.read_parquet(PREDS_LONG, columns=["symbol","open_time","pred"]).rename(columns={"pred":"pred_long"})
+        dl["open_time"] = pd.to_datetime(dl["open_time"], utc=True)
+        d = d.merge(dl, on=["symbol","open_time"], how="left")
     return d.sort_values(["open_time","symbol"]).reset_index(drop=True)
 
 
@@ -332,6 +374,31 @@ def _long_plus_basket_hedge(gg, L, betas_at_t):
     return w
 
 
+def _vol_scaled_weights(syms, gg, gross):
+    """{sym: weight} summing to `gross`, scaled per SIZING_MODE. equal/missing-feat => gross/N each.
+    Higher SIZING_FEAT (vol) -> smaller weight; normalized so basket gross is unchanged (beta-neut a,b hold approx)."""
+    n = len(syms)
+    if n == 0: return {}
+    if SIZING_MODE == "equal" or SIZING_FEAT not in gg.columns:
+        return {s: gross/n for s in syms}
+    fmap = gg.set_index("symbol")[SIZING_FEAT].to_dict()
+    vals = {s: fmap.get(s, np.nan) for s in syms}
+    present = [v for v in vals.values() if np.isfinite(v) and v > 0]
+    med = float(np.median(present)) if present else 1.0
+    vol = {s: (v if (np.isfinite(v) and v > 0) else med) for s, v in vals.items()}
+    if SIZING_MODE in ("inv_vol", "inv_atr"):
+        raw = {s: 1.0/vol[s] for s in syms}
+    elif SIZING_MODE == "inv_sqrt_vol":
+        raw = {s: 1.0/np.sqrt(vol[s]) for s in syms}
+    elif SIZING_MODE == "volcap":
+        thr = float(gg[SIZING_FEAT].quantile(VOLCAP_PCTILE))
+        raw = {s: (0.5 if vol[s] > thr else 1.0) for s in syms}
+    else:
+        raw = {s: 1.0 for s in syms}
+    tot = sum(raw.values()) or 1.0
+    return {s: gross*raw[s]/tot for s in syms}
+
+
 def select_legs(grp: pd.DataFrame, regime: str, betas_at_t: dict[str, float],
                 pred_disp_full: float | None = None) -> dict:
     """Returns sleeve weight dict for this cycle (empty in bear).
@@ -465,6 +532,77 @@ def select_legs(grp: pd.DataFrame, regime: str, betas_at_t: dict[str, float],
         w[BTC_HEDGE_KEY] = -float(net_basket_beta)   # BTC long when basket net-short, vice versa
         return w
 
+    # SURGICAL hybrid (2026-06-03): long by MOMENTUM (fix the knife), short by MEAN-REV pred (keep +3.07 short). Beta-neutral.
+    if regime == "side" and SIDE_MODE == "longmom_shortmr":
+        gg = grp.dropna(subset=["pred"])
+        if "mom30" not in gg.columns: return {}
+        gg2 = gg.dropna(subset=["mom30"])
+        if len(gg2) < K_LONG or len(gg) < K_SHORT: return {}
+        L = gg2.nlargest(K_LONG, "mom30")["symbol"].tolist()      # long top-momentum (uptrends, not knives)
+        S = gg.nsmallest(K_SHORT, "pred")["symbol"].tolist()    # short bottom-pred (mean-rev short-the-pumps, the +3.07 gem)
+        bL = np.nanmean([betas_at_t.get(s, np.nan) for s in L]); bS = np.nanmean([betas_at_t.get(s, np.nan) for s in S])
+        a = b = 1.0
+        if np.isfinite(bL) and np.isfinite(bS) and bL > 0 and bS > 0: a = 2*bS/(bL+bS); b = 2*bL/(bL+bS)
+        w = {}
+        for s in L: w[s] = w.get(s, 0) + a/K_LONG
+        for s in S: w[s] = w.get(s, 0) - b/K_SHORT
+        return w
+
+    # LONGDEF_SHORTMR (iter2 2026-06-03): long = DEFENSIVE pick among top-N pred fallers (most market-linked /
+    # lowest idio-vol — bounce-prone, NOT idiosyncratic knives), short = bottom-K pred (the +3.07 mean-rev gem).
+    if regime == "side" and SIDE_MODE == "longdef_shortmr":
+        gg = grp.dropna(subset=["pred"])
+        if len(gg) < (K_LONG + K_SHORT): return {}
+        cand = gg.nlargest(SIDE_LONGDEF_N, "pred")
+        if set(LONGDEF_FEATS).issubset(cand.columns) and cand[LONGDEF_FEATS].notna().all(axis=1).sum() >= K_LONG:
+            dscore = (cand["corr_to_btc_1d"].rank(pct=True) - cand["idio_vol_to_btc_1h"].rank(pct=True)
+                      - cand["atr_pct"].rank(pct=True))                    # high corr, low idio-vol, low atr
+            L = cand.assign(_d=dscore).nlargest(K_LONG, "_d")["symbol"].tolist()
+        else:
+            L = cand.nlargest(K_LONG, "pred")["symbol"].tolist()           # fallback: plain top-pred
+        S = gg.nsmallest(K_SHORT, "pred")["symbol"].tolist()
+        bL = np.nanmean([betas_at_t.get(s, np.nan) for s in L]); bS = np.nanmean([betas_at_t.get(s, np.nan) for s in S])
+        a = b = 1.0
+        if np.isfinite(bL) and np.isfinite(bS) and bL > 0 and bS > 0: a = 2*bS/(bL+bS); b = 2*bL/(bL+bS)
+        w = {}
+        for s in L: w[s] = w.get(s, 0) + a/K_LONG
+        for s in S: w[s] = w.get(s, 0) - b/K_SHORT
+        return w
+
+    # RANDSHORT isolation (2026-06-03): identical to default, but SHORT = RANDOM-K (not bottom-K by pred).
+    # Isolates whether the bottom-K short SELECTION helps the book vs an uninformed random short (same long, weights, gross).
+    if regime == "side" and SIDE_MODE == "randshort":
+        gg = grp.dropna(subset=["pred"])
+        if len(gg) < (K_LONG + K_SHORT): return {}
+        gg = gg.sort_values("pred")
+        L = gg.tail(K_LONG)["symbol"].tolist()
+        pool = gg.iloc[:-K_LONG]
+        seed = (RANDSHORT_SEED * 1000003 + int(pd.Timestamp(gg["open_time"].iloc[0]).value % 1000000)) % (2**31)
+        S = pool.sample(min(K_SHORT, len(pool)), random_state=seed)["symbol"].tolist()
+        bL = np.nanmean([betas_at_t.get(s, np.nan) for s in L]); bS = np.nanmean([betas_at_t.get(s, np.nan) for s in S])
+        a = b = 1.0
+        if np.isfinite(bL) and np.isfinite(bS) and bL > 0 and bS > 0: a = 2*bS/(bL+bS); b = 2*bL/(bL+bS)
+        w = {}
+        for s in L: w[s] = w.get(s, 0) + a/K_LONG
+        for s in S: w[s] = w.get(s, 0) - b/K_SHORT
+        return w
+
+    # BEAR-MOMENTUM short (mirror of surgical): long by mean-rev pred, SHORT by lowest momentum (downtrends).
+    if regime == "side" and SIDE_MODE == "longmr_shortmom":
+        gg = grp.dropna(subset=["pred"])
+        if "mom30" not in gg.columns: return {}
+        gg2 = gg.dropna(subset=["mom30"])
+        if len(gg) < K_LONG or len(gg2) < K_SHORT: return {}
+        L = gg.nlargest(K_LONG, "pred")["symbol"].tolist()      # long mean-rev (oversold dips)
+        S = gg2.nsmallest(K_SHORT, "mom30")["symbol"].tolist()    # short lowest momentum (downtrends = bear momentum)
+        bL = np.nanmean([betas_at_t.get(s, np.nan) for s in L]); bS = np.nanmean([betas_at_t.get(s, np.nan) for s in S])
+        a = b = 1.0
+        if np.isfinite(bL) and np.isfinite(bS) and bL > 0 and bS > 0: a = 2*bS/(bL+bS); b = 2*bL/(bL+bS)
+        w = {}
+        for s in L: w[s] = w.get(s, 0) + a/K_LONG
+        for s in S: w[s] = w.get(s, 0) - b/K_SHORT
+        return w
+
     # Default path (and bull regime)
     if regime == "bull":
         key = "pred" if BULL_MODE == "sidealpha" else "mom30"
@@ -475,8 +613,26 @@ def select_legs(grp: pd.DataFrame, regime: str, betas_at_t: dict[str, float],
     if len(gg) < 2*K: return {}
     if len(gg) < (K_LONG + K_SHORT): return {}
     gg = gg.sort_values(key)
-    L = gg.tail(K_LONG)["symbol"].tolist()
-    S = gg.head(K_SHORT)["symbol"].tolist()
+    # iter7: hard-skip cascade-prone (extreme idio-vol) names from the LONG pool only, keep pred ranking
+    long_pool = gg
+    if LONG_IDIO_SKIP_PCT < 1.0 and "idio_vol_to_btc_1h" in gg.columns:
+        iv = gg["idio_vol_to_btc_1h"]
+        thr = iv.quantile(LONG_IDIO_SKIP_PCT)
+        keep = gg[(iv <= thr) | iv.isna()]
+        if len(keep) >= K_LONG: long_pool = keep
+    # iter12 leg-specific resid-rev gate: long only washed-out names (recent BTC-residual loss), base pred preserved
+    if LONG_RESIDREV_GATE and "resid_rev" in long_pool.columns:
+        keep = long_pool[long_pool["resid_rev"] >= LONG_RESIDREV_THR]
+        if len(keep) >= K_LONG: long_pool = keep
+    # iter13/14 dual-pred + meta-labels: long ranked by pred_long, short by pred_short (embedded or via PREDS_LONG).
+    if "pred_long" in long_pool.columns and long_pool["pred_long"].notna().sum() >= K_LONG:
+        L = long_pool.dropna(subset=["pred_long"]).nlargest(K_LONG, "pred_long")["symbol"].tolist()
+    else:
+        L = long_pool.tail(K_LONG)["symbol"].tolist()
+    if "pred_short" in gg.columns and gg["pred_short"].notna().sum() >= K_SHORT:
+        S = gg.dropna(subset=["pred_short"]).nsmallest(K_SHORT, "pred_short")["symbol"].tolist()
+    else:
+        S = gg.head(K_SHORT)["symbol"].tolist()
     a = b = 1.0
     if do_bn:
         bL = np.nanmean([betas_at_t.get(s, np.nan) for s in L])
@@ -484,8 +640,10 @@ def select_legs(grp: pd.DataFrame, regime: str, betas_at_t: dict[str, float],
         if np.isfinite(bL) and np.isfinite(bS) and bL > 0 and bS > 0:
             a = 2*bS/(bL+bS); b = 2*bL/(bL+bS)
     w = {}
-    for s in L: w[s] = w.get(s, 0) + a/K_LONG   # long basket gross = a
-    for s in S: w[s] = w.get(s, 0) - b/K_SHORT  # short basket gross = b
+    lw = _vol_scaled_weights(L, gg, a)          # long basket gross = a (vol-scaled within basket)
+    sw = _vol_scaled_weights(S, gg, b)          # short basket gross = b
+    for s in L: w[s] = w.get(s, 0) + lw[s]
+    for s in S: w[s] = w.get(s, 0) - sw[s]
     return w
 
 
@@ -554,13 +712,24 @@ def run_replay(start: pd.Timestamp | None, end: pd.Timestamp | None) -> dict:
     if end is not None: d = d[d["open_time"] <= end]
     syms = sorted(d["symbol"].unique())
     log.info(f"replay: {len(d):,} rows × {len(syms)} syms × {d['open_time'].min().date()}→{d['open_time'].max().date()}")
+    # iter12: PIT resid-rev = -(trailing sum of PAST per-bar realized residual alpha); higher = more washed-out
+    if LONG_RESIDREV_GATE and "alpha_A" in d.columns:
+        d = d.sort_values(["symbol","open_time"])
+        d["resid_rev"] = -d.groupby("symbol")["alpha_A"].transform(
+            lambda s: s.shift(1).rolling(LONG_RESIDREV_N).sum())
+        log.info(f"resid-rev gate ON (N={LONG_RESIDREV_N} bars, thr={LONG_RESIDREV_THR}): "
+                 f"{d['resid_rev'].notna().mean()*100:.0f}% rows have resid_rev")
     mom, betas = compute_mom30_and_beta(syms)
     btc30 = compute_btc_30d()
     d = d.merge(mom, on=["symbol","open_time"], how="left")
     d = d.merge(btc30.reset_index(), on="open_time", how="left").dropna(subset=["btc_ret_30d"])
-    # defensive-tilt features (only needed by SIDE_MODE=long_defensive_basket_hedge; harmless otherwise)
-    if SIDE_MODE in ("long_defensive_basket_hedge", "regime_switch"):
-        _pf = pd.read_parquet(PANEL, columns=["symbol","open_time"]+DEF_FEATS)
+    # defensive-tilt + vol-sizing features (PIT, from panel; merged only when needed)
+    _need = list(dict.fromkeys(
+        (DEF_FEATS if SIDE_MODE in ("long_defensive_basket_hedge", "regime_switch") else [])
+        + (LONGDEF_FEATS if SIDE_MODE == "longdef_shortmr" else [])
+        + (["idio_vol_to_btc_1h"] if LONG_IDIO_SKIP_PCT < 1.0 else []) + _SIZING_FEATS))
+    if _need:
+        _pf = pd.read_parquet(PANEL, columns=["symbol","open_time"]+_need)
         _pf["open_time"] = pd.to_datetime(_pf["open_time"], utc=True)
         d = d.merge(_pf, on=["symbol","open_time"], how="left")
     d["regime_raw"] = d["btc_ret_30d"].apply(regime_for_cycle)
@@ -660,6 +829,14 @@ def run_replay(start: pd.Timestamp | None, end: pd.Timestamp | None) -> dict:
             rmap[BTC_HEDGE_KEY] = float(btc_fwd_map.get(ot, 0.0))
         gross_pnl = sum(net_after.get(s, 0) * rmap.get(s, 0.0)
                         for s in net_after if np.isfinite(rmap.get(s, 0.0)))
+        # per-leg attribution (authoritative — actual sleeve-aggregated, regime-gated, beta-neutral positions).
+        # raw = tradeable return_pct; alpha = BTC-beta-residualized alpha_A (matches "alpha-resid" leg numbers).
+        amap = dict(zip(g["symbol"], g["alpha_A"]))
+        _lk = [s for s in net_after if net_after[s] > 0]; _sk = [s for s in net_after if net_after[s] < 0]
+        long_ret_bps   = sum(net_after[s]*rmap.get(s,0.0) for s in _lk if np.isfinite(rmap.get(s,np.nan)))*1e4
+        short_ret_bps  = sum(net_after[s]*rmap.get(s,0.0) for s in _sk if np.isfinite(rmap.get(s,np.nan)))*1e4
+        long_alpha_bps = sum(net_after[s]*amap.get(s,0.0) for s in _lk if np.isfinite(amap.get(s,np.nan)))*1e4
+        short_alpha_bps= sum(net_after[s]*amap.get(s,0.0) for s in _sk if np.isfinite(amap.get(s,np.nan)))*1e4
         cost_unit = turn * 0.5 * COST
         pnl_unit = gross_pnl - cost_unit
         equity_pre = equity
@@ -684,6 +861,8 @@ def run_replay(start: pd.Timestamp | None, end: pd.Timestamp | None) -> dict:
             equity_pre=equity_pre, equity_post=equity,
             pnl_bps=(equity-equity_pre)/equity_pre*1e4 if equity_pre>0 else np.nan,
             gross_pnl_bps=gross_pnl*1e4, cost_bps=cost_bps_cycle, turnover=turn,
+            long_ret_bps=long_ret_bps, short_ret_bps=short_ret_bps,
+            long_alpha_bps=long_alpha_bps, short_alpha_bps=short_alpha_bps,
             n_trades=int(sum(1 for s in all_keys if abs(net_after.get(s,0)-prev_agg.get(s,0))>1e-6)),
             univ_hash=univ_hash,
             notes=""))
