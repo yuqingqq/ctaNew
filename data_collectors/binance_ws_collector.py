@@ -25,7 +25,7 @@ Usage:
   PYTHONPATH=. .venv/bin/python data_collectors/binance_ws_collector.py --syms BTCUSDT ETHUSDT --no-backfill
 """
 from __future__ import annotations
-import argparse, asyncio, json, sys, time, signal
+import argparse, asyncio, json, sys, time, signal, subprocess, threading
 from collections import defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
@@ -44,6 +44,9 @@ FAPI = "https://fapi.binance.com"
 STREAMS_PER_CONN = 150     # well under the 1024/conn cap; a few conns for resilience
 FLUSH_SECONDS = 30
 RECONNECT_24H = 23 * 3600  # proactively cycle before Binance's 24h connection limit
+FOUR_H_MS = 4 * 3600 * 1000
+TRIGGER_GRACE = 3.0        # s after a 4h boundary bar closes: let stragglers arrive, then flush + fire
+CYCLE_SCRIPT = REPO / "live/convexity_v1_cycle_once.sh"   # decision pipeline, push-triggered on boundary
 
 AGG_COLS = ["agg_trade_id", "price", "quantity", "first_trade_id", "last_trade_id",
             "transact_time", "is_buyer_maker"]
@@ -71,6 +74,8 @@ class Collector:
         self.stop = False
         self.msg_count = 0
         self._sess = requests.Session()
+        self.triggered_B = 0                  # last 4h-boundary (ms) we push-triggered (dedupe across syms)
+        self._flush_lock = threading.Lock()   # serialize _flush (30s flusher vs boundary-trigger flush)
 
     # ---- persistence ---------------------------------------------------------
     def _agg_path(self, sym, day): return AGG_ROOT / sym / f"{day}.parquet"
@@ -93,6 +98,7 @@ class Collector:
                 print(f"[ws] skip corrupt kl {sym} {today}: {type(e).__name__}", flush=True)
 
     def _flush(self):
+      with self._flush_lock:                  # serialize: 30s flusher vs boundary-trigger flush (no race on dirty sets)
         n = 0
         for (sym, day) in list(self.dirty_agg):
             rows = list(self.agg[sym][day].values())
@@ -162,6 +168,29 @@ class Collector:
             "quote_volume": float(k["q"]), "count": int(k["n"]),
             "taker_buy_volume": float(k["V"]), "taker_buy_quote_volume": float(k["Q"])}
         self.dirty_kl.add((sym, day))
+        # PUSH TRIGGER: when this 5m bar's close lands on a 4h boundary, the 4h bar just completed → fire the
+        # decision pipeline DIRECTLY (deduped across all syms via triggered_B). Guarded so any trigger error
+        # stays out of the WS feed; the fallback watchdog re-runs cycle_once if this ever misses.
+        B = t + 300_000
+        if B % FOUR_H_MS == 0 and B > self.triggered_B:
+            self.triggered_B = B
+            try:
+                asyncio.create_task(self._fire_boundary(B))
+            except RuntimeError:
+                pass   # no running loop (e.g. during backfill) — fallback covers it
+
+    async def _fire_boundary(self, B: int):
+        """Push the decision the instant a 4h bar closes: brief grace for stragglers, flush so the reader
+        sees the bar on disk, then spawn cycle_once detached. Never raises into the WS loop."""
+        try:
+            await asyncio.sleep(TRIGGER_GRACE)
+            await asyncio.get_event_loop().run_in_executor(None, self._flush)
+            subprocess.Popen(["bash", str(CYCLE_SCRIPT), "collector"],
+                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)
+            ts = datetime.fromtimestamp(B / 1000, tz=timezone.utc).strftime("%Y-%m-%d %H:%M")
+            print(f"[ws] boundary {ts} → flushed + push-triggered cycle_once", flush=True)
+        except Exception as e:
+            print(f"[ws] boundary trigger err: {type(e).__name__} {e}", flush=True)
 
     def _on_markprice(self, d):
         """@markPrice: capture SETTLED funding via subscription (replaces the FAPI pull). When the
