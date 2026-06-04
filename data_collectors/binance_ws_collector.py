@@ -168,14 +168,16 @@ class Collector:
             "quote_volume": float(k["q"]), "count": int(k["n"]),
             "taker_buy_volume": float(k["V"]), "taker_buy_quote_volume": float(k["Q"])}
         self.dirty_kl.add((sym, day))
-        # PUSH TRIGGER: when this 5m bar's close lands on a 4h boundary, the 4h bar just completed → fire the
-        # decision pipeline DIRECTLY (deduped across all syms via triggered_B). Guarded so any trigger error
-        # stays out of the WS feed; the fallback watchdog re-runs cycle_once if this ever misses.
-        B = t + 300_000
-        if B % FOUR_H_MS == 0 and B > self.triggered_B:
-            self.triggered_B = B
+        # PUSH TRIGGER: fire when the FIRST 5m bar of a new 4h period closes — i.e. this bar's OPEN is the
+        # boundary (t % 4h == 0). That is exactly when the 4h decide-bar `t` first becomes buildable: its
+        # features come from this 5m row (_build_sym_window anchors the 4h bar to the 5m row at that
+        # open_time). Firing on the bar that closes AT the boundary is ~5min too early — the 4h row doesn't
+        # exist yet → build_bar fails → stale preds. Deduped via triggered_B; guarded so any error stays out
+        # of the WS feed; the fallback watchdog covers a miss.
+        if t % FOUR_H_MS == 0 and t > self.triggered_B:
+            self.triggered_B = t
             try:
-                asyncio.create_task(self._fire_boundary(B))
+                asyncio.create_task(self._fire_boundary(t))
             except RuntimeError:
                 pass   # no running loop (e.g. during backfill) — fallback covers it
 

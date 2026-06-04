@@ -130,4 +130,10 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--verify", action="store_true")
     a = ap.parse_args()
-    verify() if a.verify else run()
+    if a.verify:
+        verify()
+    else:
+        r = run()
+        # exit non-zero if the current bar isn't buildable yet → cycle_once aborts instead of letting
+        # bot --decide read a STALE base_decide from a prior boundary.
+        sys.exit(0 if r else 1)

@@ -34,7 +34,9 @@ def main():
     s = (nb - now).total_seconds()
     if s > 0:
         time.sleep(s)
-    need = nb - pd.Timedelta(minutes=5)                     # the 5m bar that CLOSES at nb (open_time nb-5m)
+    need = nb                                               # the FIRST 5m bar of the new period (open_time nb,
+    #                                                         closes nb+5m) — that's when the 4h decide-bar nb
+    #                                                         is buildable (its features come from this 5m row)
     quorum = max(1, int(0.8 * len(REF)))
     cap = nb + pd.Timedelta(minutes=CAP_MIN)
     ready = 0
