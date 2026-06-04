@@ -37,6 +37,7 @@ import websockets
 REPO = Path("/home/yuqing/ctaNew")
 KL_ROOT = REPO / "data/ml/test/parquet/klines"
 AGG_ROOT = REPO / "data/ml/test/parquet/aggTrades"
+FUND_ROOT = REPO / "data/ml/cache"                # funding_{sym}.parquet — fed by @markPrice subscription
 WS_BASE = "wss://fstream.binance.com/market/ws"   # ROUTED — required for market data
 FAPI = "https://fapi.binance.com"
 
@@ -64,6 +65,9 @@ class Collector:
         self.dirty_agg = set()   # (sym, day)
         self.dirty_kl = set()
         self.last_aggid = {}     # sym → last aggId seen (for gap backfill)
+        self.fund = defaultdict(dict)   # sym → {calc_time_ms: row}  (settled funding via @markPrice)
+        self.dirty_fund = set()
+        self.last_fund = {}      # sym → {"r": float, "T": int}  (track settlement transitions)
         self.stop = False
         self.msg_count = 0
         self._sess = requests.Session()
@@ -76,21 +80,17 @@ class Collector:
         """Seed buffers from any existing current-day file so we continue, not clobber."""
         today = _day(int(time.time() * 1000))
         for sym in self.syms:
-            p = self._agg_path(sym, today)
-            if p.exists():
-                df = pd.read_parquet(p)
-                for r in df.to_dict("records"):
-                    aid = int(r["agg_trade_id"])
-                    r["transact_time"] = int(pd.Timestamp(r["transact_time"]).timestamp() * 1000)
-                    self.agg[sym][today][aid] = r
-                    self.last_aggid[sym] = max(self.last_aggid.get(sym, 0), aid)
-            p = self._kl_path(sym, today)
-            if p.exists():
-                df = pd.read_parquet(p)
-                for r in df.to_dict("records"):
-                    t = int(pd.Timestamp(r["open_time"]).timestamp() * 1000)
-                    r["open_time"] = t; r["close_time"] = int(pd.Timestamp(r["close_time"]).timestamp() * 1000)
-                    self.kl[sym][today][t] = r
+            # NOTE: aggTrade not loaded — v1 collector streams only klines + markPrice (no flow).
+            try:                                          # robust: a corrupt day-file must not crash startup
+                p = self._kl_path(sym, today)
+                if p.exists():
+                    df = pd.read_parquet(p)
+                    for r in df.to_dict("records"):
+                        t = int(pd.Timestamp(r["open_time"]).timestamp() * 1000)
+                        r["open_time"] = t; r["close_time"] = int(pd.Timestamp(r["close_time"]).timestamp() * 1000)
+                        self.kl[sym][today][t] = r
+            except Exception as e:
+                print(f"[ws] skip corrupt kl {sym} {today}: {type(e).__name__}", flush=True)
 
     def _flush(self):
         n = 0
@@ -118,6 +118,21 @@ class Collector:
             df.to_parquet(p, compression="zstd", index=False)
             n += 1
         self.dirty_kl.clear()
+        for sym in list(self.dirty_fund):
+            rows = list(self.fund[sym].values())
+            if not rows:
+                continue
+            new = pd.DataFrame(rows); new["calc_time"] = pd.to_datetime(new["calc_time"], unit="ms", utc=True)
+            new = new[["calc_time", "interval_hours", "funding_rate"]]
+            p = FUND_ROOT / f"funding_{sym}.parquet"
+            if p.exists():
+                old = pd.read_parquet(p); old["calc_time"] = pd.to_datetime(old["calc_time"], utc=True)
+                comb = pd.concat([old, new], ignore_index=True)
+            else:
+                comb = new
+            comb = comb.drop_duplicates("calc_time").sort_values("calc_time").reset_index(drop=True)
+            comb.to_parquet(p, index=False); n += 1
+        self.dirty_fund.clear()
         # evict any day older than today (already flushed) to bound memory
         today = _day(int(time.time() * 1000))
         for store in (self.agg, self.kl):
@@ -147,6 +162,19 @@ class Collector:
             "quote_volume": float(k["q"]), "count": int(k["n"]),
             "taker_buy_volume": float(k["V"]), "taker_buy_quote_volume": float(k["Q"])}
         self.dirty_kl.add((sym, day))
+
+    def _on_markprice(self, d):
+        """@markPrice: capture SETTLED funding via subscription (replaces the FAPI pull). When the
+        nextFundingTime T advances, the funding for the prior T settled at the rate active just before
+        it (≈ the predicted rate `r`, which has converged to the realized rate by settlement)."""
+        sym = d["s"]; r = float(d["r"]); T = int(d["T"])
+        prev = self.last_fund.get(sym)
+        if prev is not None and prev["T"] != T and prev["T"] > 0:
+            iv = round((T - prev["T"]) / 3_600_000)
+            self.fund[sym][prev["T"]] = {"calc_time": prev["T"], "funding_rate": prev["r"],
+                                         "interval_hours": iv if iv in (4, 8) else 8}
+            self.dirty_fund.add(sym)
+        self.last_fund[sym] = {"r": r, "T": T}
 
     # ---- REST gap backfill ---------------------------------------------------
     def _backfill_agg(self, sym, from_id):
@@ -205,6 +233,8 @@ class Collector:
                             self._on_aggtrade(m); self.msg_count += 1
                         elif e == "kline":
                             self._on_kline(m); self.msg_count += 1
+                        elif e == "markPriceUpdate":
+                            self._on_markprice(m)
                         if time.time() - t_start > RECONNECT_24H:
                             break   # cycle before the 24h cap
             except Exception as ex:
@@ -228,7 +258,9 @@ class Collector:
         self._load_existing_today()
         if self.backfill:
             await self._backfill_all("startup")
-        streams = [f"{s.lower()}@aggTrade" for s in self.syms] + [f"{s.lower()}@kline_5m" for s in self.syms]
+        # v1 needs only klines (V0 features) + markPrice (funding). NO aggTrade — no flow features.
+        streams = ([f"{s.lower()}@kline_5m" for s in self.syms]
+                   + [f"{s.lower()}@markPrice@1s" for s in self.syms])
         chunks = [streams[i:i + STREAMS_PER_CONN] for i in range(0, len(streams), STREAMS_PER_CONN)]
         print(f"[ws] {len(streams)} streams over {len(chunks)} connection(s)", flush=True)
         tasks = [asyncio.create_task(self._conn(c, i)) for i, c in enumerate(chunks)]

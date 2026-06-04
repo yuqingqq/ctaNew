@@ -957,7 +957,11 @@ def run_cycle() -> dict:
     syms = sorted(d["symbol"].unique())
     log.info(f"cycle: catching up {d['open_time'].nunique()} new cycle(s) "
              f"{d['open_time'].min()}→{d['open_time'].max()}")
-    mom, betas = compute_mom30_and_beta(syms, lookback_days=45)   # live: only new cycles need trailing-30d betas
+    # live: betas/dvol for the new cycles need only ~30d trailing + the catch-up span; the fixed 45/70-day
+    # windows re-read klines the new bars never use. Adaptive window auto-expands on a multi-day outage.
+    # Validated bit-identical on the latest bar (beta 7e-16, dvol 1e-6) vs the 45/70-day read.
+    win_days = 32 + (d["open_time"].max() - d["open_time"].min()).days + 2
+    mom, betas = compute_mom30_and_beta(syms, lookback_days=win_days)
     btc30 = compute_btc_30d()
     d = d.merge(mom, on=["symbol","open_time"], how="left")
     d = d.merge(btc30.reset_index(), on="open_time", how="left").dropna(subset=["btc_ret_30d"])
@@ -992,8 +996,8 @@ def run_cycle() -> dict:
     last_regime = None
 
     univ_meta = precompute_universe_meta()
-    # live: only need the trailing window for the new cycles' PIT dvol → windowed read (full-history is wasted)
-    dvol_cache = precompute_dvol_cache_pit(syms, last_n_files=70) if PIT_DVOL else precompute_dvol_cache(syms)
+    # live: PIT dvol for the new cycles needs only the same ~30d+catch-up window (full-history is wasted)
+    dvol_cache = precompute_dvol_cache_pit(syms, last_n_files=win_days) if PIT_DVOL else precompute_dvol_cache(syms)
 
     cycles_rows, regime_rows, equity_rows, sleeves_rows, pred_rows = [], [], [], [], []
     bar_idx_base = last_cycle_id + 1

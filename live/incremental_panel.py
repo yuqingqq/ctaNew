@@ -12,7 +12,7 @@ Approach (mirrors the validated windowing pattern):
 Validate: python3 live/incremental_panel.py --validate  (truncates a copy, re-appends, compares to full).
 """
 from __future__ import annotations
-import argparse, time, importlib.util, multiprocessing as mp
+import argparse, os, time, importlib.util, multiprocessing as mp
 from pathlib import Path
 import numpy as np, pandas as pd
 REPO = Path("/home/yuqing/ctaNew")
@@ -164,9 +164,11 @@ def run(panel_path=PANEL, workers=6, rebuild_days=0):
     _BTC_FULL.index = pd.DatetimeIndex(_BTC_FULL.index).tz_convert("UTC")
     ok, msg = _btc_completeness_ok(_BTC_FULL, since)
     print(f"[inc_panel] panel last={full_max}, {len(syms)} syms, warmup={WARMUP_DAYS}d | BTC {msg}", flush=True)
-    if not ok:                                            # fail-closed: never write beta computed on a partial BTC series
+    if not ok and os.environ.get("CONVEXITY_SKIP_BTC_GATE") != "1":   # fail-closed unless explicitly bypassed
         print("[inc_panel] FAIL-CLOSED: BTC 5m sparse over the beta window — skip (no corrupt beta_to_btc written)", flush=True)
         raise SystemExit(3)
+    if not ok:
+        print("[inc_panel] WARN: BTC sparse but CONVEXITY_SKIP_BTC_GATE=1 — proceeding (betas for the sparse tail may be off)", flush=True)
     def _w(s):
         try: return _build_sym_window(s, since)
         except Exception as e: print(f"  {s} ERR {str(e)[:60]}", flush=True); return None

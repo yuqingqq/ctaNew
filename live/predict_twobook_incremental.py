@@ -59,12 +59,9 @@ def _predict(panel, models, outpath):
 def main():
     price = pickle.load(open(MODELS/"convexity_v1_short_model.pkl", "rb"))["models"]      # base V0 -> ranks shorts
     residrev = pickle.load(open(MODELS/"convexity_v1_long_model.pkl", "rb"))["models"]    # V0+resid_rev -> ranks longs
-    F, flowcols = tt.build_flow();
     pan = pd.read_parquet(tt.PANEL, columns=["symbol", "open_time", "exit_time", "return_pct", "alpha_vs_btc_realized"]+V0)
     pan["open_time"] = pd.to_datetime(pan["open_time"], utc=True); pan["exit_time"] = pd.to_datetime(pan["exit_time"], utc=True)
     pan = pan[(pan.open_time.dt.hour % 4 == 0) & (pan.open_time.dt.minute == 0)]
-    if F is not None:
-        pan = pan.merge(F, on=["symbol", "open_time"], how="left")
     pan = pan.sort_values(["symbol", "open_time"])
     # resid_rev features (PIT) for the v1 long-ranker — same definition as the frozen trainer
     _a = pan.groupby("symbol")["alpha_vs_btc_realized"]

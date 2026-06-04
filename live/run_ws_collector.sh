@@ -10,16 +10,20 @@ set -uo pipefail
 ROOT=/home/yuqing/ctaNew; export PYTHONPATH=$ROOT; cd $ROOT
 PY=$ROOT/.venv/bin/python
 LOG=$ROOT/live/state/ws_collector.log
-SYMS=$ROOT/live/state/universe174.txt
+SYMS=$ROOT/live/state/collector_syms.txt   # only what we MONITOR: low-vol book + BTC (no high-vol, no flow)
 
-# universe = price-model keys (authoritative; survives retrains) + BTCUSDT (regime/cross reference —
-# excluded from traded legs but its klines drive the bull/side/bear regime, so we must stream them).
+# Two lists: universe174.txt = full model set (kept for the maturity gate); collector_syms.txt = the
+# subset we actually stream = low-vol book (model keys MINUS the frozen top-80 high-vol) + BTCUSDT
+# (regime/cross-asset ref). v1 trades only the low-vol book, so the high-vol 80 aren't worth streaming.
 $PY - <<'PYEOF'
-import pickle
-syms=set(pickle.load(open("/home/yuqing/ctaNew/live/models/twobook_price_models.pkl","rb"))["models"].keys())
-syms.add("BTCUSDT")
-open("/home/yuqing/ctaNew/live/state/universe174.txt","w").write(" ".join(sorted(syms)))
-print(f"universe: {len(syms)} syms (incl BTCUSDT regime ref)")
+import pickle, json
+R = "/home/yuqing/ctaNew"
+mk = set(pickle.load(open(R+"/live/models/convexity_v1_short_model.pkl","rb"))["models"].keys()); mk.add("BTCUSDT")
+open(R+"/live/state/universe174.txt","w").write(" ".join(sorted(mk)))            # full set — maturity gate
+excl = set(json.load(open(R+"/live/models/convexity_v1_universe.json"))["exclude_high_vol"])
+mon = (mk - excl); mon.add("BTCUSDT")                                            # low-vol + BTC — what we stream
+open(R+"/live/state/collector_syms.txt","w").write(" ".join(sorted(mon)))
+print(f"monitor: {len(mon)} low-vol+BTC syms (dropped {len(excl)} high-vol; kline+markPrice only, no aggTrade)")
 PYEOF
 
 while true; do
