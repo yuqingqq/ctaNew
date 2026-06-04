@@ -34,7 +34,19 @@ LED=$($PY -c "import json,os;p='$OUT/realfill/ledger.json';print(json.load(open(
 
 log "=== boundary $B: cycle start ==="
 # 1) refresh realtime data (collector already flushed the boundary bar)
-$PY live/ingest_funding_fapi.py >> "$LOG" 2>&1 && log "funding OK" || log "funding WARN"
+# Funding comes from the @markPrice subscription (collector writes the caches on each settlement). Skip the
+# ~39s FAPI pull when the caches are fresh; FAPI only as a fallback if the subscription ever went stale
+# (funding settles every 4h → fresh if the newest cached settlement is < 5h old).
+FAGE=$($PY -c "
+import pandas as pd, glob
+fs=glob.glob('data/ml/cache/funding_*.parquet')
+mx=max((pd.to_datetime(pd.read_parquet(f,columns=['calc_time'])['calc_time'],utc=True).max() for f in fs[:30]), default=None)
+print(round((pd.Timestamp.utcnow()-mx).total_seconds()/3600,1) if mx is not None else 999)" 2>/dev/null)
+if $PY -c "import sys;sys.exit(0 if float('${FAGE:-999}')<5 else 1)" 2>/dev/null; then
+  log "funding fresh via subscription (${FAGE}h old)"
+else
+  log "funding STALE (${FAGE}h) — FAPI fallback"; $PY live/ingest_funding_fapi.py >> "$LOG" 2>&1 || log "funding WARN"
+fi
 $PY live/incremental_xs_feats.py --workers 6 >> "$LOG" 2>&1 || { log "xs_feats FAIL — abort"; exit 1; }
 $PY live/incremental_panel.py    --workers 6 >> "$LOG" 2>&1 || { log "panel FAIL — abort"; exit 1; }
 $PY live/build_maturity_meta.py >> "$LOG" 2>&1 || true

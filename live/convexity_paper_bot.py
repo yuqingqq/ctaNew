@@ -1119,7 +1119,7 @@ def run_decide() -> dict:
     ot = d["open_time"].max()                                  # the just-opened bar
     d = d[d["open_time"] == ot]
     syms = sorted(d["symbol"].unique())
-    mom, betas = compute_mom30_and_beta(syms, lookback_days=45)
+    mom, betas = compute_mom30_and_beta(syms, lookback_days=34)   # decide: one bar; 34d≡45d at latest (validated)
     btc30 = compute_btc_30d()
     d = d.merge(mom, on=["symbol", "open_time"], how="left")
     d = d.merge(btc30.reset_index(), on="open_time", how="left")
@@ -1141,7 +1141,7 @@ def run_decide() -> dict:
     stop.trough = float(state["stop"]["trough"])
     stop.eq_hist = deque([float(x) for x in state["stop"]["eq_hist"]], maxlen=STOP_SIGMA_WINDOW+1)
     univ_meta = precompute_universe_meta()
-    dvol_cache = precompute_dvol_cache_pit(syms, last_n_files=70) if PIT_DVOL else precompute_dvol_cache(syms)
+    dvol_cache = precompute_dvol_cache_pit(syms, last_n_files=34) if PIT_DVOL else precompute_dvol_cache(syms)  # decide: one bar
     univ = eligible_universe_at(univ_meta, ot, dvol_cache)
     eligible_syms = {s for s, r in univ.items() if r["in_universe"]}
     g_elig = d[d["symbol"].isin(eligible_syms)].copy()
