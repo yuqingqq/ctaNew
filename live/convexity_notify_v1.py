@@ -35,7 +35,7 @@ def _fwd():
     c = pd.read_csv(ST / "cycles.csv"); c["open_time"] = pd.to_datetime(c["open_time"], utc=True)
     mk = OUT / "launch_marker.txt"
     if mk.exists():
-        c = c[c["open_time"] > pd.Timestamp(mk.read_text().strip())]
+        c = c[c["open_time"] > pd.to_datetime(mk.read_text().strip(), utc=True)]   # marker → UTC-aware
     return c.sort_values("open_time")
 
 
@@ -87,9 +87,12 @@ def build_message() -> str:
     if len(c) == 0:
         mk = OUT / "launch_marker.txt"
         settle = (pd.Timestamp(mk.read_text().strip()) + pd.Timedelta(hours=8)) if mk.exists() else "next settle"
-        return ("⏳ <b>Convexity v1</b> (low-vol + resid_rev) — WARM-UP (not live yet)\n"
-                "$10k base • K=3 long/short • 6 overlapping sleeves • regime-gated\n"
-                f"First LIVE snapshot ~{settle} UTC once the 4h return settles.")
+        # real-fill track is live from go-live even while the MODELED track warms up (it lags the 4h settle)
+        rfb = _realfill_block()
+        head = (rfb + "\n— modeled reference —\n") if rfb else ""
+        return (head + "⏳ <b>Convexity</b> — modeled track WARM-UP (forward measured from launch marker)\n"
+                "$10k base • 6 overlapping sleeves • regime-gated\n"
+                f"First modeled fwd snapshot ~{settle} UTC once the 4h return settles.")
     eq = BASE * (1 + c["pnl_bps"].values / 1e4).cumprod()
     r = c.iloc[-1]
     # net-of-real-slip: scale this cycle's modeled cost by measured/modeled HL slippage
