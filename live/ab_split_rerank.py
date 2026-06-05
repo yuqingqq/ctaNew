@@ -55,6 +55,24 @@ def build_membership(policy, times, p, oos, n):
     if policy == "daily":
         cache = {d: top_n_asof(p, oos, d + pd.Timedelta(days=1), n) for d in days}  # asof=day+1 (matches old bug)
         return {t: cache[t.normalize()] for t in times}
+    if policy == "monthly_hyst":   # #180: band-hysteresis exclude set — enter high-vol at rank<=N_HI, leave below N_LO
+        N_HI = int(os.environ.get("AB_HYST_HI", str(n)))          # enter-exclude threshold (clearly high-vol)
+        N_LO = int(os.environ.get("AB_HYST_LO", str(n + 20)))     # leave-exclude threshold (clearly low-vol); band = [HI,LO]
+        anchors = sorted({OOS_START} | {d for d in days if d.day == 1})
+        rank = {a: {s: i for i, s in enumerate(  # rvol-desc rank (0 = highest vol) as-of anchor
+                    sorted([s for s in oos if np.isfinite(trailing_rvol_asof(p, a).get(s, np.nan))],
+                           key=lambda s: -trailing_rvol_asof(p, a).get(s, -np.inf)))} for a in anchors}
+        cache = {}; prev = frozenset()
+        for a in anchors:
+            r = rank[a]
+            excl = set()
+            for s, rk in r.items():
+                was = s in prev
+                if (was and rk < N_LO) or ((not was) and rk < N_HI): excl.add(s)
+            prev = frozenset(excl); cache[a] = prev
+        def pick(t):
+            a = max([x for x in anchors if x <= t], default=OOS_START); return cache[a]
+        return {t: pick(t) for t in times}
     raise ValueError(policy)
 
 

@@ -57,6 +57,9 @@ HOLD = int(os.environ.get("STRAT_HOLD", "6"))
 COST = float(os.environ["COST_BPS_LEG"])*1e-4 if "COST_BPS_LEG" in os.environ else 4.5e-4
 REGIME_BULL_THR = float(os.environ.get("REGIME_BULL_THR", "0.10"))
 REGIME_BEAR_THR = float(os.environ.get("REGIME_BEAR_THR", "-0.10"))
+SIDE_BETA_NEUT = os.environ.get("SIDE_BETA_NEUT","1")=="1"   # beta-neut reweight in side (else equal-weight)
+MOM_WINDOW = int(os.environ.get("MOM_WINDOW","180"))   # bull momentum lookback in 4h bars (180=30d)
+BEAR_MODE = os.environ.get("BEAR_MODE", "flat")   # flat (production: sit out bear) | side (trade bear via mean-rev L/S)
 # Hysteresis: require N consecutive raw-bull cycles before SWITCHING IN to bull (and same
 # for bear). Reduces boundary-flip whipsaw. Empirically (OOS 2025-10→2026-05): 9 of 14
 # bull episodes lasted <1d at Sharpe −18.86 due to boundary chatter.
@@ -66,6 +69,7 @@ REGIME_HYSTERESIS_N = int(os.environ.get("REGIME_HYSTERESIS_N", "3"))
 #   "betaneut_mom" : mom_30d trend-follow, beta-neutral leg sizing (kills the long-beta leak)
 #   "sidealpha"    : V0 pred mean-rev with beta-neutral (treat bull EXACTLY like side)
 BULL_MODE = os.environ.get("BULL_MODE", "mom")
+BULL_K = int(os.environ.get("BULL_K","0"))   # bull-specific K (0=use global K_LONG/K_SHORT)
 # SIDE_MODE: which construction in SIDE regime.
 #   "default"          : current top-K=5 long / bot-K=5 short, beta-neutral
 #   "short_btc_hedge"  : drop the (broken) long leg; trade only bot-K=3 alt shorts + BTC long
@@ -116,6 +120,7 @@ DISP_GATE_PCTILE = float(os.environ.get("DISP_GATE_PCTILE", "0.30"))
 DISP_GATE_LOOKBACK = int(os.environ.get("DISP_GATE_LOOKBACK", "252"))
 DISP_GATE_MIN_HISTORY = int(os.environ.get("DISP_GATE_MIN_HISTORY", "60"))
 # iter-012 vol-norm stop overlay
+STOP_SKIP_REGIMES = set(x for x in os.environ.get("STOP_SKIP_REGIMES", "").split(",") if x)  # regimes where DD-stop is OFF (e.g. "bear")
 STOP_K_SIGMA = float(os.environ.get("STOP_K_SIGMA", "2.0"))
 STOP_G_FLOOR = float(os.environ.get("STOP_G_FLOOR", "0.40"))
 STOP_SIGMA_WINDOW = int(os.environ.get("STOP_SIGMA_WINDOW", "180"))
@@ -207,7 +212,7 @@ def compute_mom30_and_beta(syms: list[str], lookback_days: int | None = None) ->
         c = load_close_4h(sym, nfiles)
         if c.empty: continue
         mom_rows.append(pd.DataFrame({"symbol": sym, "open_time": c.index,
-                                       "mom30": (c/c.shift(180)-1).shift(1).values}))
+                                       "mom30": (c/c.shift(MOM_WINDOW)-1).shift(1).values}))
         r = np.log(c/c.shift(1)); ri, bi = r.align(br, join="inner")
         cov = ri.rolling(180, min_periods=42).cov(bi); var = bvar.reindex(ri.index).replace(0, np.nan)
         betas[sym] = (cov/var).shift(1)
@@ -414,7 +419,24 @@ def select_legs(grp: pd.DataFrame, regime: str, betas_at_t: dict[str, float],
       default          : 5L/5S beta-neutral (current behavior)
       short_btc_hedge  : K=3 alt shorts + BTC long sized to neutralize basket beta
     """
-    if regime == "bear": return {}
+    if regime == "bear":
+        if BEAR_MODE == "flat": return {}              # production default — sit out bear
+        if BEAR_MODE == "equal":                       # bear: EQUAL-weight K=3 L/S (dollar-neutral, NO beta reweighting)
+            gg = grp.dropna(subset=["pred"])
+            if len(gg) < (K_LONG + K_SHORT): return {}
+            if "pred_long" in gg.columns and gg["pred_long"].notna().sum() >= K_LONG:
+                L = gg.dropna(subset=["pred_long"]).nlargest(K_LONG, "pred_long")["symbol"].tolist()
+            else:
+                L = gg.nlargest(K_LONG, "pred")["symbol"].tolist()
+            if "pred_short" in gg.columns and gg["pred_short"].notna().sum() >= K_SHORT:
+                S = gg.dropna(subset=["pred_short"]).nsmallest(K_SHORT, "pred_short")["symbol"].tolist()
+            else:
+                S = gg.nsmallest(K_SHORT, "pred")["symbol"].tolist()
+            w = {}
+            for s in L: w[s] = w.get(s, 0) + 1.0/K_LONG     # +$ equal per name
+            for s in S: w[s] = w.get(s, 0) - 1.0/K_SHORT    # -$ equal per name (gross 1 each side = dollar-neutral)
+            return w
+        if BEAR_MODE in ("side", "shortbias"): regime = "side"   # trade bear via the side mean-rev (beta-neut) path
 
     # SIDE regime with short_btc_hedge mode — no longs, K=3 shorts + BTC hedge
     if regime == "side" and SIDE_MODE == "short_btc_hedge":
@@ -608,10 +630,11 @@ def select_legs(grp: pd.DataFrame, regime: str, betas_at_t: dict[str, float],
         key = "pred" if BULL_MODE == "sidealpha" else "mom30"
         do_bn = BULL_MODE in ("sidealpha", "betaneut_mom")
     else:  # side default
-        key = "pred"; do_bn = True
+        key = "pred"; do_bn = SIDE_BETA_NEUT
+    kL, kS = (BULL_K, BULL_K) if (regime == "bull" and BULL_K > 0) else (K_LONG, K_SHORT)
     gg = grp.dropna(subset=[key])
     if len(gg) < 2*K: return {}
-    if len(gg) < (K_LONG + K_SHORT): return {}
+    if len(gg) < (kL + kS): return {}
     gg = gg.sort_values(key)
     # iter7: hard-skip cascade-prone (extreme idio-vol) names from the LONG pool only, keep pred ranking
     long_pool = gg
@@ -625,14 +648,14 @@ def select_legs(grp: pd.DataFrame, regime: str, betas_at_t: dict[str, float],
         keep = long_pool[long_pool["resid_rev"] >= LONG_RESIDREV_THR]
         if len(keep) >= K_LONG: long_pool = keep
     # iter13/14 dual-pred + meta-labels: long ranked by pred_long, short by pred_short (embedded or via PREDS_LONG).
-    if "pred_long" in long_pool.columns and long_pool["pred_long"].notna().sum() >= K_LONG:
-        L = long_pool.dropna(subset=["pred_long"]).nlargest(K_LONG, "pred_long")["symbol"].tolist()
+    if "pred_long" in long_pool.columns and long_pool["pred_long"].notna().sum() >= kL:
+        L = long_pool.dropna(subset=["pred_long"]).nlargest(kL, "pred_long")["symbol"].tolist()
     else:
-        L = long_pool.tail(K_LONG)["symbol"].tolist()
-    if "pred_short" in gg.columns and gg["pred_short"].notna().sum() >= K_SHORT:
-        S = gg.dropna(subset=["pred_short"]).nsmallest(K_SHORT, "pred_short")["symbol"].tolist()
+        L = long_pool.tail(kL)["symbol"].tolist()
+    if "pred_short" in gg.columns and gg["pred_short"].notna().sum() >= kS:
+        S = gg.dropna(subset=["pred_short"]).nsmallest(kS, "pred_short")["symbol"].tolist()
     else:
-        S = gg.head(K_SHORT)["symbol"].tolist()
+        S = gg.head(kS)["symbol"].tolist()
     a = b = 1.0
     if do_bn:
         bL = np.nanmean([betas_at_t.get(s, np.nan) for s in L])
@@ -670,8 +693,12 @@ class VolNormStop:
         self.engage_dd = 0.0
         self.engage_age = 0
         self.trough = INITIAL_EQUITY
-    def update(self, equity_pre_t: float, equity_post_t: float, bar_idx: int) -> tuple[float, dict]:
-        """Returns (gross_mult, diag_dict). PIT — uses equity through t-1 for sigma threshold."""
+    def update(self, equity_pre_t: float, equity_post_t: float, bar_idx: int, regime: str | None = None) -> tuple[float, dict]:
+        """Returns (gross_mult, diag_dict). PIT — uses equity through t-1 for sigma threshold.
+        If `regime` is in STOP_SKIP_REGIMES, the de-gross is disabled (pro-cyclical vs mean-rev in volatile regimes)."""
+        if regime is not None and regime in STOP_SKIP_REGIMES:
+            self.eq_hist.append(equity_post_t)   # keep sigma history continuous
+            return 1.0, dict(sigma=0.0, threshold=0.0, dd=0.0, peak=self.peak, engaged=False, engage_age=0, skipped=True)
         # threshold uses equity through t-1 only
         if len(self.eq_hist) >= self.warmup:
             inc = np.diff(np.array(self.eq_hist))
@@ -814,7 +841,7 @@ def run_replay(start: pd.Timestamp | None, end: pd.Timestamp | None) -> dict:
         gross_target = sum(abs(w) for w in aggregate_active_sleeves(active_sleeves).values())
         net_target_raw = aggregate_active_sleeves(active_sleeves)
         # stop overlay
-        gross_mult, stop_diag = stop.update(equity, equity, bar_idx)   # pre-MtM call; equity_post fills later
+        gross_mult, stop_diag = stop.update(equity, equity, bar_idx, regime)   # pre-MtM call; equity_post fills later
         net_after = {s: w*gross_mult for s, w in net_target_raw.items()}
 
         # cost from turnover (prev_agg -> net_after)
@@ -1016,7 +1043,7 @@ def run_cycle() -> dict:
         active_sleeves.append(new_w); sleeve_serial += 1
         gross_target = sum(abs(w) for w in aggregate_active_sleeves(active_sleeves).values())
         net_target_raw = aggregate_active_sleeves(active_sleeves)
-        gross_mult, stop_diag = stop.update(equity, equity, len(stop.eq_hist))
+        gross_mult, stop_diag = stop.update(equity, equity, len(stop.eq_hist), regime)
         net_after = {s: w*gross_mult for s, w in net_target_raw.items()}
         all_keys = set(net_after) | set(prev_agg)
         turn = sum(abs(net_after.get(s,0) - prev_agg.get(s,0)) for s in all_keys)
