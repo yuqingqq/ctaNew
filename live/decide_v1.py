@@ -12,7 +12,7 @@ Usage:
   python3 live/decide_v1.py --verify   # build a PAST labeled bar, assert its base/long preds == the panel's
 """
 from __future__ import annotations
-import argparse, json, pickle, sys
+import argparse, json, os, pickle, sys
 from pathlib import Path
 import numpy as np, pandas as pd
 import warnings; warnings.filterwarnings("ignore")
@@ -22,7 +22,7 @@ import live.train_twobook_models as tt
 
 x6 = pac.x6; V0 = tt.V0; RR = tt.RR
 MODELS = REPO/"live/models"
-STATE = REPO/"live/state/convexity_v1"
+STATE = REPO/"live/state"/os.environ.get("CONVEXITY_BOOK", "convexity_v1")
 UNIV = REPO/"live/models/convexity_v1_universe.json"
 
 

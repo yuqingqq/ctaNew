@@ -18,8 +18,8 @@ for envf in (REPO/".env", REPO/"live/.env"):                 # load TELEGRAM_BOT
                 k, v = line.split("=", 1); os.environ.setdefault(k.strip(), v.strip().strip('"').strip("'"))
 from live.telegram import notify_telegram
 
-ST = REPO/"live/state/convexity_v1/state"
-OUT = REPO/"live/state/convexity_v1"
+OUT = REPO/"live/state"/os.environ.get("CONVEXITY_BOOK", "convexity_v1")
+ST = OUT/"state"
 BASE = 10000.0          # forward-test starting equity
 MODELED = 4.5           # bps/leg modeled cost (for net-of-real-slip scaling)
 ANN = np.sqrt(6 * 365)  # 6 cycles/day annualization

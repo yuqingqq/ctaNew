@@ -22,7 +22,7 @@ for envf in (REPO/".env", REPO/"live/.env"):
                 k, v = line.split("=", 1); os.environ.setdefault(k.strip(), v.strip().strip('"').strip("'"))
 from live.telegram import notify_telegram
 
-OUT = REPO/"live/state/convexity_v1"
+OUT = REPO/"live/state"/os.environ.get("CONVEXITY_BOOK", "convexity_v1")
 RTLOG = OUT/"realtime.log"
 MONLOG = OUT/"monitor.log"
 
