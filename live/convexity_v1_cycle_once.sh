@@ -11,6 +11,12 @@ ROOT=/home/yuqing/ctaNew; export PYTHONPATH=$ROOT; cd "$ROOT"; PY=$ROOT/.venv/bi
 OUT=$ROOT/live/state/convexity_v1; mkdir -p "$OUT/realfill"; LOG=$OUT/realtime.log
 export COST_BPS_LEG=4.5 STRAT_K=3 SIDE_MODE=default XS_LEAN=1 CONVEXITY_PIT_DVOL=1
 export CONVEXITY_UNIVERSE_META=$ROOT/live/state/convexity/maturity_meta.parquet
+# === v2 candidate (2026-06-05 mechanism audit) — trade the bear edge instead of sitting flat ===
+#   BEAR_MODE=equal      : trade bear via equal-weight K=3 L/S (was flat) — the bear edge the DD-stop hid
+#   STOP_SKIP_REGIMES=bear: DD-stop OFF in bear (it's pro-cyclical vs mean-rev; engaged 78% of bear)
+#   SIDE_BETA_NEUT=0     : equal-weight sizing (drop the noisy beta-neutral a/b reweighting)
+# Scorecard: gross +3.82 / net-of-funding +3.33 Sharpe (vs v1 +2.92); CAVEAT ~2x maxDD. Forward test = arbiter.
+export BEAR_MODE=equal STOP_SKIP_REGIMES=bear SIDE_BETA_NEUT=0
 SRC="${1:-manual}"
 log(){ echo "[$(date -u '+%F %T')] [cycle/$SRC] $*" | tee -a "$LOG"; }
 bot_edge(){ $PY -c "import json;print(json.load(open('$OUT/state/positions.json')).get('last_open_time') or '')" 2>/dev/null; }
