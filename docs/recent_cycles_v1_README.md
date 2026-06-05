@@ -1,26 +1,27 @@
-# Recent cycles — production v1 (for cross-checking)
+# Recent cycles — production v1 (DEPLOY model, for cross-checking)
 
-`recent_cycles_v1.csv` = the **last 15 cycles** of the **production v1 config**, for verifying the live forward system
-reproduces the intended trades/PnL.
+`recent_cycles_v1.csv` = the **post-cutoff cycles from the FROZEN DEPLOY model** — what the live box should reproduce
+**exactly**. Mirrors `golden_cycles_v1.json`.
 
-## Config that produced these
-Deployed v1 (NOT the v2 candidate — all v2 env flags OFF):
-- Universe: book-B (low-vol, exclude top-80 rvol), maturity≥180d + liquidity + hygiene.
-- Signal: dual-pred — **long** leg ranked by resid_rev model, **short** leg by base model.
-- Construction: K=3 L/S, **beta-neutral** in side, **mom** in bull, **flat** in bear (BEAR_MODE=flat), 24h/6-sleeve.
-- Risk: equity DD-stop (k=2, g_floor=0.40) active.
-- Cost: 4.5 bps/leg.
+## Source (corrected — must match live)
+- **Model: convexity_v1_{short,long}_model.pkl @ fit_cut 2026-05-29** (full-V0 + funding). NOT the walk-forward
+  backtest model.
+- **Split: single FROZEN split @ 2026-05-29** (exclude top-80 rvol). NOT a monthly re-rank.
+- **Deterministic**: model@5.29 + split@5.29 → these cycles reproduce byte-for-byte on the same data.
+- Config: book-B + resid_rev dual-pred (long=resid_rev, short=base), K=3 L/S beta-neutral side / mom bull / **flat bear**,
+  24h/6-sleeve, DD-stop on, 4.5 bps/leg.
 
-## Source & caveat
-- These are from the **walk-forward backtest replay** on data **through 2026-05-30** (the last bar in the local panel).
-  The **live forward cycles past 2026-05-30 are on the exec server** — not reproducible here without that feed.
-- So use this to cross-check: (a) the *logic* (which symbols get picked long/short given the preds), (b) the PnL/cost
-  computation, (c) any overlapping dates with the live system. It is NOT the live feed itself.
-- Deterministic: model@fit_cut 2026-05-29 + monthly universe re-rank → these cycles reproduce exactly on the same data.
+> ⚠️ An earlier version of this file used the walk-forward backtest's last fold (model@**5.26**, **monthly** split) —
+> WRONG for live cross-check; its picks differed (NEAR/JTO/KAITO vs the deploy model's XLM/FET/SEI/HYPE). Corrected here.
+
+## Coverage & the current-regime caveat
+- Cycles span **2026-05-29 00:00 → 2026-05-30 16:00** (11 cycles) — the end of the local panel.
+- **All 11 are `side`** because BTC-30d ≈ −6% through 5/30 (above the −10% bear threshold).
+- **BUT the CURRENT live regime (2026-06-05) is BEAR: BTC-30d < −15%.** Production v1 is `BEAR_MODE=flat` → it is
+  **FLAT (not trading) right now.** These golden cycles predate the early-June bear drop; the current bear cycles live
+  only on the **exec server** (where the live feed is). This is exactly the flat-in-bear gap the v2 candidate (equal-weight
+  + stop-off-bear + bearK2) is designed to fill.
 
 ## Columns
-`top_k_long` / `bot_k_short` = the 3 long / 3 short symbols selected that cycle · `regime` bull/side/bear ·
-`gross_target` pre-stop gross · `gross_after_stop` post DD-stop · `stop_engaged` · `turnover` · `cost_bps` ·
-`long_ret_bps`/`short_ret_bps` per-leg realized · `gross_pnl_bps` pre-cost · `pnl_bps` net · `equity_post`.
-
-Note: all 15 recent cycles are **side** regime (BTC-30d ≈ −6% as of 2026-05-30, above the −10% bear threshold).
+`open_time` · `regime` · `longs` (3 symbols) · `shorts` (3 symbols) · `pnl_bps` (net per cycle).
+Richer per-leg/cost/stop detail is reproducible by running the deploy model (`live/run_convexity_v1.sh`).
