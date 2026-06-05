@@ -34,3 +34,19 @@ operational validation. No remaining feature-layer or model-architecture upside.
 **P1 is the single most likely real win** (flagged-but-untested, env-runnable, low overfit). P2–P4 are honest-but-modest
 bear/transition refinements (the one layer still producing wins) — expect small Sharpe/DD gains, mirage-prone → nested-OOS
 + p95-placebo mandatory. P5 is the only swing-for-the-fences, with a strong prior *against*. Everything else proposed = re-tread.
+
+## ===== v3 RESEARCH RESULTS (2026-06-05) =====
+- **Bear trend-filter (live-motivated)** — ❌ REJECTED offline. Bucketing v2 OOS bear cycles by BTC 1d/3d trend:
+  corr ≈ +0.02, non-monotone (3d q1 negative but q0/q2/q3 positive). BTC short-term trend does NOT predict bear-cycle
+  PnL → confirms DDI "per-cycle IC unpredictable from regime" (R²=0.005). The live 6/4 drawdown is inherent bear-book
+  variance, not a filterable regime. No bot surgery spent.
+- **P1 wide-spread exclude** — marginal. 12 names (~7%, ANIME/ARK/BSV/GMX/MELANIA/SKR…) >9bps RT; slightly LOWER alpha
+  dispersion (192 vs 207 bps), rarely the K=3 extremes → tiny direct win, subsumed by realistic cost below.
+- **Realistic per-symbol cost (#177)** — ✅ POSITIVE realism finding. v2 traded-name avg RT spread = **4.1 bps** vs the
+  harness's flat **9 bps** → over-charges ~2×. v2 OOS net under realistic cost = **+4.55 Sharpe (vs +4.32 flat), +0.23
+  lift**; net-of-funding ≈ **+4.0** (above the +3.86 quoted). v2's TRUE net is better than the flat-cost backtest shows.
+
+**v3 verdict:** no new ALPHA (trend-filter rejected, P1 marginal) — confirms the "space nearly exhausted" call. But the
+realism pass RAISES v2's net estimate (+0.23 from correct cost). Remaining queue (P2 regime-hold, P3 asym-hyst, P4 flip
+de-gross, P5 regime-Ridge, P6 sleeve-decay) are modest + surgery-heavy + mirage-prone. The decisive arbiter is the live
+bear forward test — which is currently choppy/negative on the bear leg (variance, not filterable).
