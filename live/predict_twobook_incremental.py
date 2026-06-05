@@ -8,7 +8,7 @@ append rows in the baseline schema (symbol, open_time, alpha_A, return_pct, exit
 Usage: python3 live/predict_twobook_incremental.py
 Outputs: appends to live/state/convexity/hl/fullflow_hl60.parquet (flow models) + v0full_hl60.parquet (price).
 """
-import sys, pickle, importlib.util
+import os, sys, pickle, importlib.util
 from pathlib import Path
 import numpy as np, pandas as pd
 import warnings; warnings.filterwarnings("ignore")
@@ -19,12 +19,21 @@ HLDIR = REPO/"live/state/convexity/hl"
 MODELS = REPO/"live/models"
 
 
+# Recompute (not just append) a trailing window each run. Binance Vision daily archives publish ~1-2d
+# late and the most-recent days arrive INCOMPLETE, so a bar appended once from a partial pull would freeze
+# a stale pred forever (e.g. XLM 5/29 froze at -0.13 pre-rip; correct value +1.28 once the move published).
+# Recomputing the trailing window overwrites stale rows once the panel completes. Historical seed (older
+# than the window) is untouched — recomputing it with the frozen model would be look-ahead.
+RECOMPUTE_DAYS = int(os.environ.get("PREDICT_RECOMPUTE_DAYS", "10"))
+
+
 def _predict(panel, models, outpath):
     if not outpath.exists():
         print(f"  {outpath.name} missing — run iter28 once to seed, then incremental appends"); return 0
     ex = pd.read_parquet(outpath); ex["open_time"] = pd.to_datetime(ex["open_time"], utc=True)
     L = ex["open_time"].max()
-    newp = panel[panel["open_time"] > L]
+    floor = L - pd.Timedelta(days=RECOMPUTE_DAYS)          # recompute trailing window, not just > L
+    newp = panel[panel["open_time"] > floor]
     if newp.empty: return 0
     rec = []
     for sym, g in newp.groupby("symbol"):
@@ -64,7 +73,8 @@ def main():
     npr = _predict(pan, price, HLDIR/"v0full_hl60.parquet")        # base preds -> short ranker
     rrdir = REPO/"live/state/convexity/hl_residrev"; rrdir.mkdir(parents=True, exist_ok=True)
     nrr = _predict(pan, residrev, rrdir/"v0full_hl60.parquet")     # resid_rev preds -> long ranker (CONVEXITY_PREDS_LONG)
-    print(f"[predict_convexity_v1] appended base(short) +{npr}, resid_rev(long) +{nrr} rows (cached-model inference)")
+    print(f"[predict_convexity_v1] recomputed base(short) {npr}, resid_rev(long) {nrr} rows "
+          f"(trailing {RECOMPUTE_DAYS}d window from current panel; stale partial-pull preds overwritten)")
 
 
 if __name__ == "__main__":
