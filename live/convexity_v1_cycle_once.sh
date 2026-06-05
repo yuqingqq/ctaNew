@@ -33,6 +33,8 @@ PY
 # ---- no overlap: only one cycle at a time ----
 exec 9>"$OUT/.cycle.lock"
 flock -n 9 || { log "another cycle holds the lock — skip"; exit 0; }
+# PAUSE switch: if PAUSE file present, skip (e.g. preds under investigation) — collector trigger + fallback both no-op
+[ -f "$OUT/PAUSE" ] && { log "PAUSED ($OUT/PAUSE present) — skip cycle"; exit 0; }
 
 # ---- idempotent: skip if this 4h boundary is already booked ----
 B=$($PY -c "import pandas as pd; print(pd.Timestamp.utcnow().floor('4h'))" 2>/dev/null)
