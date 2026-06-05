@@ -56,8 +56,13 @@ if $PY -c "import sys;sys.exit(0 if float('${FAGE:-999}')<5 else 1)" 2>/dev/null
 else
   log "funding STALE (${FAGE}h) — FAPI fallback"; $PY live/ingest_funding_fapi.py >> "$LOG" 2>&1 || log "funding WARN"
 fi
+# Repair 5m bars the WS feed dropped (FAPI backfill) BEFORE features — gaps make row-offset features
+# (return_1d=pct_change(288), bars_since_high, obv) reach back the wrong distance / use wrong values.
+$PY live/backfill_klines_gaps.py >> "$LOG" 2>&1 || log "backfill WARN"
+# xs_feats + panel recompute a trailing window (not append-only) so klines corrected/backfilled after a bar
+# was first built get repaired downstream — else stale features freeze (return_1d, bars_since_high, …).
 $PY live/incremental_xs_feats.py --workers 6 >> "$LOG" 2>&1 || { log "xs_feats FAIL — abort"; exit 1; }
-$PY live/incremental_panel.py    --workers 6 >> "$LOG" 2>&1 || { log "panel FAIL — abort"; exit 1; }
+$PY live/incremental_panel.py    --workers 6 --rebuild-days 10 >> "$LOG" 2>&1 || { log "panel FAIL — abort"; exit 1; }
 $PY live/build_maturity_meta.py >> "$LOG" 2>&1 || true
 
 # 2) settle the modeled reference track (advance any newly-labeled bar)

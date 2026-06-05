@@ -23,6 +23,31 @@ KLINES_DIR = REPO / "data/ml/test/parquet/klines"
 CACHE = REPO / "data/ml/cache"
 WARMUP_DAYS = 45          # > max lookback (8640 bars ≈ 30d) + autocorr-2016 (7d) + buffer; valid tail ≈ 15d
 DAILY_FILES = WARMUP_DAYS + 5
+# Overwrite (not just append) the trailing valid tail each run, so derived features at EXISTING bars get
+# repaired when an underlying kline was later corrected/backfilled (append-only left them stale forever —
+# e.g. XLM 6/4 return_1d froze at a pre-correction close). 14d < the ~20d valid tail, > any realistic
+# correction lag, and ≥ the panel/predict recompute windows so the repair propagates downstream.
+RECOMPUTE_TAIL_DAYS = int(os.environ.get("XS_RECOMPUTE_TAIL_DAYS", "14"))
+
+
+def _fill_grid(kl: pd.DataFrame) -> pd.DataFrame:
+    """Reindex to a complete 5m grid so ROW-offset features align to wall-clock time. The live feed
+    intermittently drops 5m bars (e.g. XLM lost 8 bars on 6/4) — without this, pct_change(288) / rolling(288)
+    / bars_since_high reach back the wrong distance (return_1d came out −0.086 vs the true −0.065, off by
+    exactly the gap). ffill prices (a no-trade bar = price unchanged), 0 for volume/other raw cols. No-op for
+    gapless symbols, so it can't change anything except the bars that were actually missing."""
+    if len(kl) < 2:
+        return kl
+    grid = pd.date_range(kl.index.min(), kl.index.max(), freq="5min")
+    if len(grid) == len(kl):                            # already gapless — identity
+        return kl
+    px = [c for c in ("open", "high", "low", "close") if c in kl.columns]
+    kl = kl.reindex(grid)
+    kl[px] = kl[px].ffill()
+    for c in kl.columns:
+        if c not in px:
+            kl[c] = kl[c].fillna(0.0)
+    return kl
 
 
 def _xs_from_klines_lean(kl: pd.DataFrame) -> pd.DataFrame:
@@ -34,6 +59,7 @@ def _xs_from_klines_lean(kl: pd.DataFrame) -> pd.DataFrame:
     kl = kl.drop_duplicates("open_time").sort_values("open_time").set_index("open_time")
     for c in ("open", "high", "low", "close", "volume"):
         kl[c] = pd.to_numeric(kl[c], errors="coerce")
+    kl = _fill_grid(kl)                                # gapless grid before any row-offset feature
     c, h, l, v = kl["close"], kl["high"], kl["low"], kl["volume"]
     o = pd.DataFrame(index=kl.index); o["close"] = c
     o["return_1d"] = c.pct_change(288)
@@ -63,6 +89,7 @@ def _xs_from_klines(kl: pd.DataFrame) -> pd.DataFrame:
         if c in kl.columns: kl = kl.drop(columns=[c])
     for c in ["open", "high", "low", "close", "volume"]:
         kl[c] = pd.to_numeric(kl[c], errors="coerce")
+    kl = _fill_grid(kl)                                # gapless grid before any row-offset feature
     feats = compute_kline_features(kl)
     feats = add_regime_features(feats)
     ret = feats["close"].pct_change()
@@ -101,14 +128,23 @@ def update_sym(sym: str) -> str:
     if kl is None: return "no-klines"
     feats = _xs_from_klines(kl)
     feats.index = pd.to_datetime(feats.index, utc=True)
-    new = feats[feats.index > last]
-    if len(new) == 0: return "current"
-    # align columns to existing schema, append, dedup
-    new = new.reindex(columns=ex.columns)
-    comb = pd.concat([ex, new])
+    # RECOMPUTE the trailing valid tail (not append-only): repair existing bars whose lookback included a
+    # kline that was later corrected/backfilled. Keep only the valid tail (recompute's early bars are warmup).
+    valid_from = feats.index.max() - pd.Timedelta(days=RECOMPUTE_TAIL_DAYS)
+    fresh = feats[feats.index >= valid_from].reindex(columns=ex.columns)
+    if len(fresh) == 0: return "current"
+    n_new = int((fresh.index > last).sum())
+    ov = ex.index.intersection(fresh.index)
+    num = [c for c in fresh.columns if np.issubdtype(fresh[c].dtype, np.number)]
+    repaired = 0
+    if len(ov) and num:                                   # existing bars whose features changed = repaired
+        chg = (fresh.loc[ov, num] - ex.loc[ov, num].reindex(columns=num)).abs().max(axis=1)
+        repaired = int((chg > 1e-9).sum())
+    if n_new == 0 and repaired == 0: return "current"     # no new bars + no corrections → nothing to write
+    comb = pd.concat([ex[ex.index < valid_from], fresh])  # keep history; overwrite tail with fresh recompute
     comb = comb[~comb.index.duplicated(keep="last")].sort_index()
     comb.to_parquet(cache, compression="zstd", row_group_size=5000)
-    return f"+{len(new)} → {comb.index.max()}"
+    return f"+{n_new}new/{repaired}fix → {comb.index.max()}"
 
 
 def validate(sym: str, overlap_bars: int = 300):
