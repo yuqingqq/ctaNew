@@ -83,6 +83,31 @@ def _with_residrev(bar: pd.DataFrame, boundary) -> pd.DataFrame:
     return comb[comb["open_time"] == boundary].copy()
 
 
+def _freshness(univ_syms) -> dict:
+    """Inputs for the decision gate: funding age + residual klines gaps among the decision universe (the latter
+    from backfill_klines_gaps' data_health.json). Lets us REFUSE a decision on degraded data instead of trading
+    on ffill-patched/stale features — the live-test analogue of the gap bug we just fixed historically."""
+    import glob
+    fa_h = 999.0
+    try:
+        fs = glob.glob(str(REPO / "data/ml/cache/funding_*.parquet"))
+        mx = max((pd.to_datetime(pd.read_parquet(f, columns=["calc_time"])["calc_time"], utc=True).max()
+                  for f in fs[:40]), default=None)
+        if mx is not None:
+            fa_h = (pd.Timestamp.utcnow() - mx).total_seconds() / 3600
+    except Exception:
+        pass
+    gappy = []
+    hp = REPO / "live/state/data_health.json"
+    if hp.exists():
+        try:
+            h = json.load(open(hp))
+            gappy = sorted((set(h.get("residual_gappy", [])) | set(h.get("fapi_errors", []))) & set(univ_syms))
+        except Exception:
+            pass
+    return {"funding_age_h": round(fa_h, 1), "gappy_universe": gappy}
+
+
 def run(boundary=None) -> dict:
     boundary = boundary if boundary is not None else pac._latest_closed_boundary()
     bar = pac.build_bar(boundary, drop_unlabeled=False)
@@ -97,6 +122,20 @@ def run(boundary=None) -> dict:
     excl = set(json.load(open(UNIV))["exclude_high_vol"])                             # low-vol universe only
     base = base[~base["symbol"].isin(excl)]; longp = longp[~longp["symbol"].isin(excl)]
     ddir = STATE/"decide"; ddir.mkdir(parents=True, exist_ok=True)
+    # FRESHNESS GATE — refuse to decide on a degraded feed (systematic gaps FAPI couldn't fill, or stale funding)
+    fr = _freshness(set(base["symbol"]) | set(longp["symbol"]))
+    fund_max = float(os.environ.get("FRESHNESS_FUNDING_MAX_H", "5"))
+    gap_max = int(os.environ.get("FRESHNESS_GAP_MAX", "10"))
+    degraded = fr["funding_age_h"] > fund_max or len(fr["gappy_universe"]) > gap_max
+    json.dump({**fr, "degraded": degraded, "open_time": str(ot)}, open(ddir/"freshness.json", "w"))
+    if degraded:
+        print(f"[decide_v1] DEGRADED FEED @ {ot}: funding {fr['funding_age_h']}h "
+              f"(max {fund_max}), {len(fr['gappy_universe'])} gappy univ syms "
+              f"{fr['gappy_universe'][:8]} (max {gap_max}) → ABORT (no decision this cycle)")
+        return {}
+    if fr["gappy_universe"]:
+        print(f"[decide_v1] feed OK but {len(fr['gappy_universe'])} univ syms on ffill-patched bars: "
+              f"{fr['gappy_universe'][:8]}")
     base.to_parquet(ddir/"base_decide.parquet", index=False)
     longp.to_parquet(ddir/"long_decide.parquet", index=False)
     # Binance bar-close per sym = the price the signal saw at B; the ledger uses it for the latency-drift

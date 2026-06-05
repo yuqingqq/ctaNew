@@ -20,6 +20,7 @@ from pathlib import Path
 import pandas as pd
 REPO = Path("/home/yuqing/ctaNew"); sys.path.insert(0, str(REPO))
 KLINES = REPO / "data/ml/test/parquet/klines"
+HEALTH = REPO / "live/state/data_health.json"   # read by decide_v1's freshness gate + cycle_monitor
 LOOKBACK_DAYS = 8                  # ≥ the longest V0 feature lookback (autocorr 7d, beta-change ~6d) so the
                                    # CURRENT decision bar's features are gapless; older gaps are settled history
 THROTTLE = 0.45                    # ≥0.4s between FAPI calls (ban-safe)
@@ -74,23 +75,26 @@ def _fapi(sym, start_ms, end_ms):
 
 
 def backfill_sym(sym):
+    """Returns (status, residual_gaps): residual_gaps = bars STILL missing after the FAPI fetch
+    (FAPI down/banned or genuinely missing). 0 = fully repaired."""
     paths = _recent_files(sym)
     if not paths:
-        return "no-data"
+        return "no-data", 0
     df = _load(paths)
     since = df["open_time"].max().floor("5min") - pd.Timedelta(days=LOOKBACK_DAYS)
-    if _count_gaps(df, since) == 0:
-        return "gapless"
+    g0 = _count_gaps(df, since)
+    if g0 == 0:
+        return "gapless", 0
     start_ms = int(since.timestamp() * 1000)
     end_ms = int(df["open_time"].max().timestamp() * 1000)
     fa = _fapi(sym, start_ms, end_ms)
     time.sleep(THROTTLE)
     if fa is None or fa.empty:
-        return "fapi-empty"
+        return "fapi-empty", g0
     have = set(df["open_time"])
     new = fa[~fa["open_time"].isin(have)].copy()
     if new.empty:
-        return "no-new"
+        return "no-new", g0
     new["__day"] = new["open_time"].dt.strftime("%Y-%m-%d")          # merge each bar into its day's file
     n = 0
     for day, g in new.groupby("__day"):
@@ -104,14 +108,16 @@ def backfill_sym(sym):
             comb = g.sort_values("open_time")
         comb.to_parquet(fp, index=False)
         n += len(g)
-    return f"filled {n}"
+    resid = _count_gaps(_load(_recent_files(sym)), since)            # FAPI may not have every bar either
+    return f"filled {n}/resid {resid}", resid
 
 
 def _safe(sym):
     try:
-        return sym, backfill_sym(sym)
+        st, resid = backfill_sym(sym)
+        return sym, st, resid
     except Exception as e:
-        return sym, f"FAIL {str(e)[:70]}"
+        return sym, f"FAIL {str(e)[:70]}", -1                        # -1 = FAPI/exception (counts as error)
 
 
 def main():
@@ -120,19 +126,29 @@ def main():
     a = ap.parse_args()
     syms = a.symbols or sorted(set(pd.read_parquet(
         REPO / "outputs/vBTC_features/panel_expanded_v0.parquet", columns=["symbol"]).symbol.unique()))
-    t0 = time.time(); filled = gapless = other = 0
+    t0 = time.time(); filled = gapless = 0
+    residual_gappy = []; errors = []
     for s in syms:                                                   # serial: throttle the FAPI calls
-        _, r = _safe(s)
+        _, r, resid = _safe(s)
         if r == "gapless":
             gapless += 1
         elif str(r).startswith("filled"):
             filled += 1; print(f"  {s}: {r}", flush=True)
-        else:
-            other += 1
-            if str(r).startswith("FAIL"):
-                print(f"  {s}: {r}", flush=True)
-    print(f"[backfill_klines_gaps] {filled} backfilled, {gapless} gapless, {other} other [{time.time()-t0:.0f}s]",
-          flush=True)
+        if resid == -1:
+            errors.append(s)
+        elif resid > 0:
+            residual_gappy.append(s)
+    # health report for the freshness gate (decide_v1) + monitor: what the feed couldn't repair this cycle
+    try:
+        HEALTH.parent.mkdir(parents=True, exist_ok=True)
+        HEALTH.write_text(json.dumps({
+            "ts": pd.Timestamp.utcnow().isoformat(), "n_syms": len(syms),
+            "backfilled": filled, "gapless": gapless,
+            "residual_gappy": sorted(residual_gappy), "fapi_errors": sorted(errors)}, indent=0))
+    except Exception:
+        pass
+    print(f"[backfill_klines_gaps] {filled} backfilled, {gapless} gapless, "
+          f"{len(residual_gappy)} still-gappy, {len(errors)} errors [{time.time()-t0:.0f}s]", flush=True)
 
 
 if __name__ == "__main__":

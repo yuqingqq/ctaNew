@@ -58,6 +58,12 @@ def review_block(block: list) -> dict:
     issues = []
     if dec and not fresh: issues.append(f"STALE: decided {dec} ≠ boundary {B}")
     if "funding STALE" in text: issues.append("funding stale→FAPI")
+    # data-health: residual gaps FAPI couldn't fill + degraded-feed decision aborts
+    bf = re.search(r"backfilled, \d+ gapless, (\d+) still-gappy, (\d+) errors", text)
+    if bf and (int(bf.group(1)) > 0 or int(bf.group(2)) > 0):
+        issues.append(f"feed gaps: {bf.group(1)} still-gappy / {bf.group(2)} FAPI-err after backfill")
+    if "DEGRADED FEED" in text: issues.append("⛔ DEGRADED feed — decision ABORTED (no trade)")
+    if "on ffill-patched bars" in text: issues.append("some picks on ffill-patched bars")
     if "FAIL" in text: issues.append("step FAILed")
     if "settle WARN" in text: issues.append("settle warn")
     if "ledger WARN" in text: issues.append("ledger warn")
