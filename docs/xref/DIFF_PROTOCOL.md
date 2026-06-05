@@ -27,3 +27,12 @@ used at decision time — that's the freshness audit).
 - **The other 14 price features + resid_rev_2/3** — should MATCH within fp tolerance if same vintage.
   - If they match → divergence was 100% panel vintage (funding + the already-fixed stale-preds freeze). Done.
   - If they DON'T match → a real generation-vs-live pipeline/computation difference → chase that feature.
+
+## ⚠️ float32 vs float64 when re-scoring (verified 2026-06-05)
+The deploy pipeline runs in **float32** (panel dtype) and `apply_preproc` rank-transforms via `searchsorted`
+(a step function). Re-scoring the **CSV's float64-widened** feature values flips rank buckets at boundaries →
+spurious pred Δ up to 0.16 (mean ~0.05). The preds themselves are scored with the frozen pickle's
+`apply_preproc` (NOT fresh-fit) and reproduce `base.parquet`/`long.parquet` to ~3e-8.
+
+**To diff correctly:** use the `.parquet` (preserves float32), OR `.astype('float32')` before re-scoring, OR
+compare ranks/picks (unaffected). The float32 re-score reproduces the dumped preds to 5.7e-08 — no real skew.
