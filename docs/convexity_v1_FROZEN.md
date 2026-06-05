@@ -62,8 +62,39 @@ Runner: `live/run_bookB_residrev.sh` · preds gen: `live/gen_residrev_wf_preds.p
 `live/state/opt_loop/insights.md`.
 
 ## Open optimization (v2 candidates — do NOT alter v1)
-#180 rvol rank stability/persistence · #181 cutoff ensemble · #182 breadth/higher-K — all target the
-composition-variance risk (robustness, not Sharpe). #178 forward paper-test is the decisive arbiter.
+**★ LEAD v2 CANDIDATE (2026-06-05, mechanism re-audit) — equal-weight + regime-aware stop:**
+Two structural fixes vs the side/bull-tuned production: (1) **equal-weight sizing** (drop beta-neutral a/b reweighting —
+noise on near-matched leg betas), (2) **DD-stop OFF in bear** (`STOP_SKIP_REGIMES=bear` — the equity-DD stop is
+pro-cyclical against mean-reversion: de-grosses into the bounce; engaged 78% in bear). Root weakness was flat-in-bear
+forgoing a real edge; true cause was the stop, not the regime. **Assembled: gross +3.82 / NET-OF-FUNDING +3.33 Sharpe (+0.41 vs production's +2.92 net)**; passes per-fold 7/9,
+bootstrap P=0.96, robust to spread 13.5 bps/leg AND funding (bear edge +2,721 gross → +2,195 net; funding is a modest
+symmetric cost ~−1.4 bps/cyc paid by both configs — the 3.82→3.33 move is purely funding). **CAVEAT — Sharpe win, not
+maxDD win:** maxDD doubles (−4,135, bear = fat-tail drawdowns); at matched maxDD, levering production ×1.85 (+15,091)
+≈ v2 (+13,662) → v2's +68% PnL is mostly leverage; the real un-leverable edge is **+0.41 Sharpe** (pays off only if
+vol/Sharpe is the binding constraint, not maxDD). Env-gated (`SIDE_BETA_NEUT`,`STOP_SKIP_REGIMES`,`BEAR_MODE`); production
+byte-unchanged. Decisive arbiter: forward bear test (live now). Full scorecard: `docs/convexity_mechanism_audit.md`.
+
+**v2 composition-variance levers — TESTED, mostly REJECTED (2026-06-04):**
+- **#181 cutoff ensemble** — ADOPT for v2 cutoff form (parameter-free blend N=55/70/85 = +2.58 nested-OOS,
+  beats single-N +2.01; fixes cutoff non-generalization, not composition variance).
+- **#182 breadth/higher-K** — REJECTED. K=3 +3.46 > K4 +2.73 > K5 +2.51 > K6 +2.00. Alpha concentrated in
+  top-3 ranks; breadth dilutes alpha faster than composition risk.
+- **#180 rank stability** — REJECTED (both halves). Window-smoothing −0.2 Sharpe; band-hysteresis −1.25
+  Sharpe at matched book size for 22% churn cut. Monthly re-rank churn is *productive* (rvol non-stationary).
+- **Maturity gate** (user hypothesis: redundant with rvol-exclude) — KEEP 180d. gate-sweep 180/+3.46,
+  90/+2.65, 0/+3.10 (non-monotone = composition noise); no evidence dropping helps.
+
+**Conclusion:** composition variance (placebo p83) is **irreducible via construction levers** on free data —
+it's cross-sectional (which names), not temporal (churn) or breadth (K). Honest mitigation = forward test
+with wide expectations + kill-switch.
+- **#185 cross-exchange spread FEATURE** (Coinbase/OKX-vs-Binance premium) — **REJECTED**. Real univariate XS IC
+  (okx_level −0.04, t−8) but: 36% redundant with resid_rev (corr −0.55), hurts as a model feature on every leg
+  (−0.26 to −0.56), tilt form craters. Orthogonal remainder (residual IC −0.021) too small to lift Sharpe. The 4h
+  residual-alpha extraction is at ceiling even with external orthogonal data. "Free orthogonal signal" question answered.
+
+**v2 verdict: no construction/feature lever beats book-B + resid_rev + K=3 (+3.46).** Composition variance is
+irreducible on free data. The decisive next step is the forward paper-test, not another backtest.
+- **#178 forward paper-test** — the decisive arbiter.
 
 ## UPDATE 2026-06-04 — deploy reconciliation (corrections to above)
 - **Funding RESTORED (full-V0).** The earlier V0_LEAN (funding-dropped) was a two-book result; on book-B-only funding
