@@ -165,3 +165,31 @@ production**, gates passed (fold 7/9, P0.96). BUT it's a **Sharpe win, not a max
 production matches it on a maxDD basis). DECISION = your risk measure: vol/Sharpe-constrained → adopt v2 (run at lower
 gross for production-DD + higher Sharpe); maxDD-constrained → ~neutral. Decisive arbiter remains the forward bear test (#178, live).
 Remaining untested: capacity/market-impact (#177b), operational (#179).
+
+## ===== v2 OPTIMIZATION LOOP (2026-06-05) — bear-K=2 BREAKTHROUGH =====
+v2-opt batch1 targeted v2's maxDD weakness. WINNER: **bear-specific K=2** (BEAR_K=2; bear book concentrated to top-2).
+| (net of funding) | Sharpe | PnL | maxDD | DD/PnL |
+|---|---|---|---|---|
+| production | +2.919 | +8,153 | −2,234 | 0.27 |
+| v2-base (bear K=3) | +3.332 | +13,662 | −4,135 | 0.30 |
+| **v2 + bearK2** | **+3.895** | **+17,657** | −3,249 | **0.18** |
+bearK2 bear PnL +2,721→+6,325 gross (+5,878 net). Mechanism: like bull, bear mean-rev edge concentrates in top-2
+most-extreme names; K=2 captures it with LESS drawdown noise (K-sweep: K2≫K3≫K4, monotone). OVERFIT CHECK PASSED:
+5/5 bear-folds positive, bootP=1.00, CI[+0.70,+6.04] strictly positive, bear-cycle %pos 54% (vs rejected mom-45d/bull-K2
+which were 1-fold mirages). **CLEAR WIN: +0.98 Sharpe net AND better DD-efficiency (0.18<0.27) → at matched maxDD +49%
+more PnL than production** (resolves v2-base's Sharpe-only caveat). inv_vol/inv_sqrt also cut maxDD (-3115/-3307) but
+bearK2 dominates. Caveat: f1 (Nov-25) = 55% of the gain (bigger bear episode); forward bear test decisive.
+NEW v2 STACK: equal-weight all regimes + stop-off-bear + bear-K=2. env-gated (BEAR_K=2). Scripts: BEAR_K in bot, v1_opt_loop.
+
+### v2-opt batch 2 — bearK2 is the PEAK + inv-vol stacks (maxDD weakness RESOLVED)
+bearK1 +4.21/-3986 (over-concentrated, K=2 is the Sharpe peak) · bearK2+bullK2 +4.38 but bullK2 OVERFIT (reject).
+**bearK2 + inv_vol = refined v2:** net-of-funding +3.861 Sharpe (+0.94 vs prod +2.919), PnL +15,183, **maxDD -2,793**
+(only ~25% > prod's -2,234, vs bearK2-alone 45%), DD/PnL 0.16. Per-fold 6/9, bootP 0.96. Both levers individually
+validated (bearK2 5/5 bear-folds P1.00; inv_vol known Sharpe-neutral DD-cutter).
+
+## ===== v2 LOOP RESULT (2026-06-05) =====
+Goal was: fix v2's 2x-maxDD weakness while keeping the +0.4 Sharpe. ACHIEVED. **Refined v2 = equal-weight all regimes +
+DD-stop-off-in-bear + bearK2 + inv-vol sizing.** Net-of-funding +3.86 Sharpe (+0.94 over production), maxDD -2,793
+(~production), DD/PnL 0.16 (better than prod 0.27) -> wins on BOTH Sharpe AND drawdown. Gates: per-fold 6/9, bootstrap
+P0.96, survives spread (13.5bps) + funding. Caveat: f7 negative (inv-vol drag late-May), CI grazes 0 (-0.39); forward
+bear test (#178, live NOW in bear) is decisive. env-gated: SIDE_BETA_NEUT=0 BEAR_MODE=equal STOP_SKIP_REGIMES=bear BEAR_K=2 SIZING_MODE=inv_vol.

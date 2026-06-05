@@ -70,6 +70,7 @@ REGIME_HYSTERESIS_N = int(os.environ.get("REGIME_HYSTERESIS_N", "3"))
 #   "sidealpha"    : V0 pred mean-rev with beta-neutral (treat bull EXACTLY like side)
 BULL_MODE = os.environ.get("BULL_MODE", "mom")
 BULL_K = int(os.environ.get("BULL_K","0"))   # bull-specific K (0=use global K_LONG/K_SHORT)
+BEAR_K = int(os.environ.get("BEAR_K","0"))   # bear-specific K (0=use global)
 # SIDE_MODE: which construction in SIDE regime.
 #   "default"          : current top-K=5 long / bot-K=5 short, beta-neutral
 #   "short_btc_hedge"  : drop the (broken) long leg; trade only bot-K=3 alt shorts + BTC long
@@ -420,20 +421,21 @@ def select_legs(grp: pd.DataFrame, regime: str, betas_at_t: dict[str, float],
     """
     if regime == "bear":
         if BEAR_MODE == "flat": return {}              # production default — sit out bear
-        if BEAR_MODE == "equal":                       # bear: EQUAL-weight K=3 L/S (dollar-neutral, NO beta reweighting)
+        if BEAR_MODE == "equal":                       # bear: EQUAL-weight L/S (dollar-neutral, NO beta reweighting)
+            kbL, kbS = (BEAR_K, BEAR_K) if BEAR_K > 0 else (K_LONG, K_SHORT)
             gg = grp.dropna(subset=["pred"])
-            if len(gg) < (K_LONG + K_SHORT): return {}
-            if "pred_long" in gg.columns and gg["pred_long"].notna().sum() >= K_LONG:
-                L = gg.dropna(subset=["pred_long"]).nlargest(K_LONG, "pred_long")["symbol"].tolist()
+            if len(gg) < (kbL + kbS): return {}
+            if "pred_long" in gg.columns and gg["pred_long"].notna().sum() >= kbL:
+                L = gg.dropna(subset=["pred_long"]).nlargest(kbL, "pred_long")["symbol"].tolist()
             else:
-                L = gg.nlargest(K_LONG, "pred")["symbol"].tolist()
-            if "pred_short" in gg.columns and gg["pred_short"].notna().sum() >= K_SHORT:
-                S = gg.dropna(subset=["pred_short"]).nsmallest(K_SHORT, "pred_short")["symbol"].tolist()
+                L = gg.nlargest(kbL, "pred")["symbol"].tolist()
+            if "pred_short" in gg.columns and gg["pred_short"].notna().sum() >= kbS:
+                S = gg.dropna(subset=["pred_short"]).nsmallest(kbS, "pred_short")["symbol"].tolist()
             else:
-                S = gg.nsmallest(K_SHORT, "pred")["symbol"].tolist()
+                S = gg.nsmallest(kbS, "pred")["symbol"].tolist()
             w = {}
-            for s in L: w[s] = w.get(s, 0) + 1.0/K_LONG     # +$ equal per name
-            for s in S: w[s] = w.get(s, 0) - 1.0/K_SHORT    # -$ equal per name (gross 1 each side = dollar-neutral)
+            for s in L: w[s] = w.get(s, 0) + 1.0/kbL     # +$ equal per name
+            for s in S: w[s] = w.get(s, 0) - 1.0/kbS     # -$ equal per name (gross 1 each side = dollar-neutral)
             return w
         if BEAR_MODE in ("side", "shortbias"): regime = "side"   # trade bear via the side mean-rev (beta-neut) path
 
@@ -630,7 +632,9 @@ def select_legs(grp: pd.DataFrame, regime: str, betas_at_t: dict[str, float],
         do_bn = BULL_MODE in ("sidealpha", "betaneut_mom")
     else:  # side default
         key = "pred"; do_bn = SIDE_BETA_NEUT
-    kL, kS = (BULL_K, BULL_K) if (regime == "bull" and BULL_K > 0) else (K_LONG, K_SHORT)
+    if regime == "bull" and BULL_K > 0: kL, kS = BULL_K, BULL_K
+    elif regime == "bear" and BEAR_K > 0: kL, kS = BEAR_K, BEAR_K
+    else: kL, kS = K_LONG, K_SHORT
     gg = grp.dropna(subset=[key])
     if len(gg) < 2*K: return {}
     if len(gg) < (kL + kS): return {}
