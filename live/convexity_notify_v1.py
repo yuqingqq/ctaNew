@@ -91,6 +91,20 @@ def _modeled_ret():
     return (float((1 + c["pnl_bps"].values / 1e4).prod()) - 1) * 100, len(c)
 
 
+def _exec_latency():
+    """Real decision→fill wall-clock for the latest cycle: HL decision-mids snapshot (cycle start) → the HL
+    fill probe. This IS the window the latency slippage is measured over."""
+    try:
+        dm = json.loads((OUT / "decide" / "decision_mids.json").read_text())
+        t0 = pd.to_datetime(dm["captured_at"], utc=True)
+        sl = pd.read_csv(OUT / "realfill" / "decide_slip.csv")
+        last = sl["bar_open_time"].astype(str).iloc[-1]
+        t1 = pd.to_datetime(sl[sl["bar_open_time"].astype(str) == last]["captured_at"], utc=True).max()
+        return (t1 - t0).total_seconds()
+    except Exception:
+        return None
+
+
 def _new_legs():
     """This cycle's new sleeve picks (longs/shorts) + bar/regime. Uses the decision's longs/shorts lists,
     NOT the turnover signs (turnover mixes new entries with closing/rolling old sleeves)."""
@@ -119,7 +133,10 @@ def build_message() -> str:
            f"New L: {L}  ·  S: {S}"]
     if rf["n_trades"]:
         unf = f", {rf['n_unfilled']} unfilled" if rf["n_unfilled"] else ""
-        out.append(f"this cycle: {rf['n_trades']} fills · exec cost {rf['exec']:.0f}bps{unf}")
+        lat_s = _exec_latency()
+        tstr = f" · {lat_s:.0f}s decision→fill" if lat_s is not None else ""
+        out.append(f"⚙️ <b>execution</b>: {rf['n_trades']} filled{unf}{tstr}")
+        out.append(f"   {rf['exec']:+.1f}bps = book-slip {rf['slip']:+.1f} + latency {rf['lat']:+.1f} + fee {rf['fee']:+.1f}")
     return "\n".join(out)
 
 
