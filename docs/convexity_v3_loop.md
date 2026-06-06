@@ -37,3 +37,29 @@ Two cheap structural levers (hold, hysteresis) both confirm production at local 
 **Insight:** P6 REJECTED. All decay variants worse on Sharpe AND maxDD; converges to equal as tau→∞. Concentrating
 on fresh sleeves kills the cost-amortization/smoothing benefit of the equal 6-sleeve blend (matches vBTC V3.3
 decay rejection). KEEP equal-weight sleeves. 3rd clean negative — every risk/sizing lever at local optimum.
+
+### Iter 4 (2026-06-06) — P5 regime-aware Ridge [WF retrain, regime-interacted, monthly-PIT]
+P5 regime-Ridge: Sharpe **+3.792** vs baseline +3.892 → LIFT **-0.100** (WORSE); totPnL +15877, maxDD -2794, 7/9 folds.
+**Insight:** P5 REJECTED. Regime-interaction (X, X·1[bull], X·1[bear], Ridge-shrunk) HURTS -0.10 — the bear/bull
+deviation coefs add noise (bear=18% of bars) without alpha. Plain per-symbol Ridge wins. Confirms iter5-7:
+per-symbol coefs ARE the edge; regime-split doesn't close. Scripts: exp_p5_regime_ridge.py.
+
+## ===== v3 LOOP CONSOLIDATED VERDICT (2026-06-06) =====
+Tested the v3 queue's structural + model levers on the correct monthly-PIT universe (baseline +3.892), honest gates:
+| iter | lever | result |
+|---|---|---|
+| 1 | global hold {12,16,24,36h} | 24h optimal (Sharpe+maxDD); no lift |
+| 2 | global hysteresis N {2,3,4,5} | N=3 optimal; N=4/5 +0.03 but worse maxDD = noise |
+| 3 | P6 sleeve-decay {τ=2,3,4} | REJECTED — decay hurts Sharpe+maxDD; equal optimal |
+| 4 | P5 regime-aware Ridge | REJECTED — regime-interaction hurts -0.10 (the ALPHA lever) |
+| — | XS94 (174 vs 94 rank, earlier) | null -0.02; keep 175 |
+
+**CONCLUSION: convexity v3 is at a robust local optimum.** Every risk/sizing lever (hold, hysteresis, sleeve-
+weighting) AND the one alpha lever (regime-aware model) confirm the production config is optimal-or-better. No new
+Sharpe found. This corroborates the extensive prior body of work ("v3 space exhausted"). Remaining queue items
+(P2 per-regime hold, P3 asym hysteresis, P4 flip-degross) are risk-shaping variants whose GLOBAL forms already
+tested flat/negative (iter1/2) → strong priors against, high code cost, near-certain negatives — not worth grinding.
+
+**The genuine wins this session were validation/infra, not v3 alpha:** stale-preds fix (90e117c), universe-refresh
+correction (+1.6 Sharpe, a0ca282 — the single biggest lever, already in production via monthly retrain), liveness
+gate (365019b), collector sync (20c764f/d16bbbc). **Decisive next step: the live forward test, not more backtests.**
