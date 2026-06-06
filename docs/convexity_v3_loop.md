@@ -26,3 +26,14 @@ so per-regime isolation still needed before closing P2. No global lift. KEEP HOL
 | 5 | +3.926 | +16174 | -2925 |
 **Insight:** N=3 near-optimal; N=4/5 +0.03 Sharpe but WORSE maxDD + flat PnL = within noise. No lift. KEEP N=3.
 Two cheap structural levers (hold, hysteresis) both confirm production at local optimum → "v3 exhausted" prior holding.
+
+### Iter 3 (2026-06-06) — P6 sleeve-maturity decay [code, env SLEEVE_DECAY_TAU, monthly-PIT]
+| tau | Sharpe | totPnL | maxDD |
+|---|---|---|---|
+| 2 | +3.327 | +16029 | -3129 |
+| 3 | +3.552 | +16211 | -3061 |
+| 4 | +3.659 | +16270 | -3010 |
+| **equal** | **+3.892** | +16222 | **-2793** |
+**Insight:** P6 REJECTED. All decay variants worse on Sharpe AND maxDD; converges to equal as tau→∞. Concentrating
+on fresh sleeves kills the cost-amortization/smoothing benefit of the equal 6-sleeve blend (matches vBTC V3.3
+decay rejection). KEEP equal-weight sleeves. 3rd clean negative — every risk/sizing lever at local optimum.

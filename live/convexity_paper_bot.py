@@ -694,11 +694,19 @@ def select_legs(grp: pd.DataFrame, regime: str, betas_at_t: dict[str, float],
     return w
 
 
+SLEEVE_DECAY_TAU = float(os.environ.get("SLEEVE_DECAY_TAU", "0"))   # P6: 0=equal (current); >0 = exp(-age/tau) age-decay
+
 def aggregate_active_sleeves(sleeves: deque) -> dict:
-    """net position = sum/HOLD over active sleeves."""
-    net = {}
-    for w in sleeves:
-        for s, wt in w.items(): net[s] = net.get(s, 0.0) + wt/HOLD
+    """net position = weighted sum over active sleeves. Default equal (1/HOLD). SLEEVE_DECAY_TAU>0 weights
+    fresher sleeves more via exp(-age/tau), normalized to the same total gross (age 0 = newest=last appended)."""
+    net = {}; n = len(sleeves)
+    if SLEEVE_DECAY_TAU > 0 and n:
+        wts = np.array([np.exp(-((n-1-i))/SLEEVE_DECAY_TAU) for i in range(n)]); wts = wts/wts.sum()
+        for sl, ww in zip(sleeves, wts):
+            for s, wt in sl.items(): net[s] = net.get(s, 0.0) + wt*ww
+    else:
+        for w in sleeves:
+            for s, wt in w.items(): net[s] = net.get(s, 0.0) + wt/HOLD
     return net
 
 
