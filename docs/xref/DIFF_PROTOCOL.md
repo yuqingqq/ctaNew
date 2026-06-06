@@ -36,3 +36,28 @@ spurious pred Δ up to 0.16 (mean ~0.05). The preds themselves are scored with t
 
 **To diff correctly:** use the `.parquet` (preserves float32), OR `.astype('float32')` before re-scoring, OR
 compare ranks/picks (unaffected). The float32 re-score reproduces the dumped preds to 5.7e-08 — no real skew.
+
+## Exact 41/41 reconstruction — my funding panel (added 2026-06-05)
+`MY_funding_panel_94syms.{csv,parquet}` — the gen-side funding inputs for ALL 94 low-vol symbols, 5/15→6/4
+(incl. 7d trailing context for the z-window). Columns: `symbol, open_time, funding_rate, funding_rate_z_7d,
+funding_rate_1d_change`.
+
+Substitute these into your panel for the 94 symbols and you reproduce `recent_cycles_v2.csv` **to the cycle
+(41/41)** — funding is the only differing input (price features are settled / same vintage; the validated
+mechanism already gets you 36/41, the remaining ~6% is funding-driven pred shifts).
+
+⚠️ This is my **stale-funding vintage** (June = forward-filled 5/31, distinct-values/symbol = 1). It reproduces
+MY records exactly; it is NOT settled truth. Settled funding comes from your live feed / the July monthly
+archive. Use float32 when re-scoring (see the dtype note above).
+
+## Funding vintage — precise characterization (2026-06-06)
+Re-examined after a "mixed stale/fresh?" question. It is **uniformly stale, not a mix**:
+- **0/94 symbols have real June funding** — all forward-filled from their last May settlement.
+- **93/94 caches end 2026-05-31** (16:00–20:00, the last May archive settlement). The apparent 5/15→6/1
+  "freeze-point" spread is **flat funding values** (e.g. TNSR/YGG/PROVE pinned at 5e-05), not data staleness —
+  a change-detector artifact, not a vintage mix.
+- **1 genuine outlier: VINEUSDT** cache ends **2026-04-28** (~5wk stale, likely delisted/illiquid). **NOT traded**
+  in the records → zero impact.
+
+So `MY_funding_panel_94syms` is the single 5/31 vintage end-to-end; substituting it reproduces the records
+deterministically. Real June funding for all symbols comes only from the live feed / July monthly archive.
