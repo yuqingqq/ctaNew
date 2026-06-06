@@ -76,9 +76,11 @@ def _realfill_block():
     out = [f"💵 <b>Real-fill</b> (HL round-trip) — eq ${eq:,.0f} ({(eq/e0-1)*100:+.1f}%) • open {r['n_open_syms']} syms",
            f"  last cycle: realized {r['realized_pnl']:+.2f} • unreal {r['unrealized_pnl']:+.2f}"]
     if r.get("n_trades", 0):
+        bz = r.get("basis_bps")
         out.append(f"  exec cost {r['exec_cost_bps']:.1f}bps = slip {r['book_slip_bps']:.1f} "
                    f"+ lat {r['latency_drift_bps']:.1f} + fee {r['fee_bps']:.1f} ({r['n_trades']} legs"
-                   + (f", {r['n_unfilled']} unfilled" if r.get('n_unfilled') else "") + ")")
+                   + (f", {r['n_unfilled']} unfilled" if r.get('n_unfilled') else "") + ")"
+                   + (f"  [HL↔Bin basis {bz:+.1f} cancels]" if bz else ""))
     return "\n".join(out)
 
 

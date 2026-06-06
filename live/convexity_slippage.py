@@ -56,6 +56,30 @@ def simulate_taker_fill(book: dict, side: str, notional: float) -> dict:
             "mid": mid, "fill_px": vwap}
 
 
+def snapshot_mids(symbols, out: Path, workers: int = 16) -> int:
+    """Capture the HL mid for each symbol CONCURRENTLY → {symbol: mid} + captured_at. Run at cycle START
+    (~bar close), so the realfill ledger can measure the TRUE HL→HL latency drift (exec_mid − decision_mid),
+    which is basis-free — unlike comparing the HL exec mid to the Binance bar-close (that injects the static
+    HL↔Binance basis, which actually cancels on the round trip and is not a real cost)."""
+    import concurrent.futures as cf, datetime as _dt
+    def one(sym):
+        try:
+            bk = fetch_hl_l2_book(_binance_to_hl_coin(sym))
+            if bk["bids"] and bk["asks"]:
+                return sym, 0.5 * (bk["bids"][0][0] + bk["asks"][0][0])
+        except Exception:
+            pass
+        return sym, None
+    mids = {}
+    with cf.ThreadPoolExecutor(max_workers=workers) as ex:
+        for sym, mid in ex.map(one, symbols):
+            if mid is not None and mid > 0:
+                mids[sym] = mid
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps({"captured_at": _dt.datetime.now(_dt.timezone.utc).isoformat(), "mids": mids}))
+    return len(mids)
+
+
 def log_latest_cycle(state: Path, book: str, out: Path):
     cyc = pd.read_csv(state / "cycles.csv")
     if not len(cyc):
@@ -136,13 +160,21 @@ def log_decision(state: Path, book: str, out: Path):
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    ap.add_argument("--state", required=True)
-    ap.add_argument("--book", required=True)
+    ap.add_argument("--state")
+    ap.add_argument("--book")
     ap.add_argument("--out", required=True)
     ap.add_argument("--decide", action="store_true",
                     help="probe HL on decision.json turnover (decide-time real execution) instead of cycles.csv")
+    ap.add_argument("--snapshot-mids", action="store_true",
+                    help="capture HL DECISION mids for the candidate universe (run at cycle start, ~bar close)")
+    ap.add_argument("--preds", help="parquet with a 'symbol' col → candidate universe for --snapshot-mids")
     args = ap.parse_args()
-    if args.decide:
+    if args.snapshot_mids:
+        import pandas as pd
+        syms = sorted(pd.read_parquet(args.preds, columns=["symbol"]).symbol.unique()) if args.preds else []
+        n = snapshot_mids(syms, Path(args.out))
+        print(f"[snapshot-mids] captured {n}/{len(syms)} HL decision mids -> {args.out}")
+    elif args.decide:
         log_decision(Path(args.state), args.book, Path(args.out))
     else:
         log_latest_cycle(Path(args.state), args.book, Path(args.out))

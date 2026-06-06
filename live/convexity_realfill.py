@@ -80,11 +80,13 @@ def mark_to_market(lots_by_sym: dict, mids: dict) -> tuple[float, float, int]:
 
 
 def update_cycle(led: dict, decision: dict, fills: dict, mids: dict, close_ref: dict,
-                 fee_bps: float = TAKER_FEE_BPS) -> dict:
+                 decision_mids: dict | None = None, fee_bps: float = TAKER_FEE_BPS) -> dict:
     """Book one cycle: apply the decided turnover at real HL fills, realize round-trips, mark open lots.
-    fills:     {sym: {"fill_px","mid","slippage_bps","fully_filled"}}  real HL fill per traded leg
-    mids:      {sym: hl_mid}   current HL mid for ALL open symbols (for MtM); falls back to fills' mid
-    close_ref: {sym: binance_close_px}   bar-close the signal saw (for latency-drift decomposition)"""
+    fills:         {sym: {"fill_px","mid","slippage_bps","fully_filled"}}  real HL fill per traded leg
+    mids:          {sym: hl_mid}   current HL mid for ALL open symbols (for MtM); falls back to fills' mid
+    close_ref:     {sym: binance_close_px}   Binance bar-close the signal saw (for BASIS reporting only)
+    decision_mids: {sym: hl_mid_at_bar_close}  HL mid at the decision instant → TRUE HL→HL latency ref.
+                   If absent, latency falls back to the Binance cref (basis-contaminated — flagged)."""
     ot = decision["open_time"]
     # size off the real-fill book's OWN equity (independent $10k track), not the modeled strategy equity —
     # the bot's weights are equity-independent fractions, so only the $ scale differs (bps stay comparable).
@@ -93,8 +95,9 @@ def update_cycle(led: dict, decision: dict, fills: dict, mids: dict, close_ref: 
     turnover = {s for s, w in decision.get("turnover", {}).items() if abs(float(w)) > 1e-9}
     lots = led["lots"]
     realized = fees = 0.0
-    book_cost = lat_cost = traded_notional = 0.0
+    book_cost = lat_cost = basis_cost = traded_notional = 0.0
     n_filled = n_unfilled = 0
+    decision_mids = decision_mids or {}
     for sym in turnover:                                                # rebalance each symbol the bot traded
         f = fills.get(sym)
         fill_px = f.get("fill_px") if f else None
@@ -119,10 +122,19 @@ def update_cycle(led: dict, decision: dict, fills: dict, mids: dict, close_ref: 
         fees += notional * fee_bps / 1e4
         traded_notional += notional
         side = 1.0 if trade_units > 0 else -1.0
-        book_cost += notional * side * (fill_px - mid) / mid            # adverse fill vs mid (>0 = cost)
+        book_cost += notional * side * (fill_px - mid) / mid            # adverse fill vs HL mid (>0 = cost)
+        # LATENCY = HL exec mid vs HL DECISION mid — both HL, so basis-free (the real drift in the latency
+        # window). BASIS (HL decision mid vs Binance cref) is reported separately; it CANCELS on the round
+        # trip (entry & exit both on HL) so it is NOT charged in exec_cost. Fall back to cref only if no
+        # decision mid was captured (then latency is basis-contaminated — a degraded measurement).
+        dmid = decision_mids.get(sym)
         cref = close_ref.get(sym)
-        if cref and np.isfinite(cref) and cref > 0:
-            lat_cost += notional * side * (mid - cref) / cref           # drift bar-close -> exec mid
+        if dmid is not None and np.isfinite(dmid) and dmid > 0:
+            lat_cost += notional * side * (mid - dmid) / dmid
+            if cref and np.isfinite(cref) and cref > 0:
+                basis_cost += notional * side * (dmid - cref) / cref
+        elif cref and np.isfinite(cref) and cref > 0:
+            lat_cost += notional * side * (mid - cref) / cref           # fallback: basis-contaminated
     realized -= fees
     led["realized_cum"] = float(led.get("realized_cum", 0.0)) + realized
     # carry-forward mids for open syms not traded this cycle so MtM still works (use last-known via fills mid)
@@ -140,6 +152,7 @@ def update_cycle(led: dict, decision: dict, fills: dict, mids: dict, close_ref: 
         "fee_bps": round(fees / traded_notional * 1e4, 2) if traded_notional else 0.0,
         "book_slip_bps": round(book_cost / traded_notional * 1e4, 2) if traded_notional else 0.0,
         "latency_drift_bps": round(lat_cost / traded_notional * 1e4, 2) if traded_notional else 0.0,
+        "basis_bps": round(basis_cost / traded_notional * 1e4, 2) if traded_notional else 0.0,  # cancels round-trip
         "exec_cost_bps": round((fees + book_cost + lat_cost) / traded_notional * 1e4, 2) if traded_notional else 0.0,
         "traded_notional": round(traded_notional, 1),
     }
@@ -218,12 +231,15 @@ if __name__ == "__main__":
         close_ref = json.loads(cref_path.read_text()) if cref_path.exists() else {}
         # mids for MtM of ALL open syms: use this cycle's probe mids (open-but-untraded syms carry last mid)
         mids = {s: f["mid"] for s, f in fills.items() if np.isfinite(f.get("mid", np.nan))}
-        rec = update_cycle(led, dec, fills, mids=mids, close_ref=close_ref)
+        # HL DECISION mids (captured at cycle start) → true HL→HL latency; absent → basis-contaminated fallback
+        dmids_path = st / "decide" / "decision_mids.json"
+        decision_mids = json.loads(dmids_path.read_text()).get("mids", {}) if dmids_path.exists() else {}
+        rec = update_cycle(led, dec, fills, mids=mids, close_ref=close_ref, decision_mids=decision_mids)
         save_ledger(led_path, led)
         print(f"[realfill] {rec['open_time']} [{rec['regime']}]: {rec['n_trades']} fills "
               f"({rec['n_unfilled']} unfilled) | realized {rec['realized_pnl']:+.2f} "
               f"unreal {rec['unrealized_pnl']:+.2f} eq ${rec['equity']:,.0f} | "
               f"exec cost {rec['exec_cost_bps']:.1f}bps (slip {rec['book_slip_bps']:.1f} + "
-              f"lat {rec['latency_drift_bps']:.1f} + fee {rec['fee_bps']:.1f})")
+              f"lat {rec['latency_drift_bps']:.1f} + fee {rec['fee_bps']:.1f}) | basis {rec['basis_bps']:+.1f} (cancels)")
     else:
         ap.error("need --state or --selftest")

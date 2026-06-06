@@ -42,6 +42,10 @@ LED=$($PY -c "import json,os;p='$OUT/realfill/ledger.json';print(json.load(open(
 [ -n "$B" ] && [ "$B" = "$LED" ] && { log "boundary $B already booked — skip"; exit 0; }
 
 log "=== boundary $B: cycle start ==="
+# Capture HL DECISION mids NOW (~bar close) for the candidate universe → realfill measures the TRUE HL→HL
+# latency drift (exec_mid − decision_mid), basis-free. Async/non-blocking; finishes long before the ledger reads it.
+[ -f "$OUT/long.parquet" ] && $PY live/convexity_slippage.py --snapshot-mids --preds "$OUT/long.parquet" \
+    --out "$OUT/decide/decision_mids.json" >> "$LOG" 2>&1 &
 # 1) refresh realtime data (collector already flushed the boundary bar)
 # Funding comes from the @markPrice subscription (collector writes the caches on each settlement). Skip the
 # ~39s FAPI pull when the caches are fresh; FAPI only as a fallback if the subscription ever went stale
