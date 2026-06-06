@@ -71,8 +71,16 @@ def review_block(block: list) -> dict:
     if "ledger WARN" in text: issues.append("ledger warn")
     if re.search(r"tg (snapshot )?WARN", text): issues.append("snapshot warn")
     if "HL probe WARN" in text: issues.append("HL probe warn")
+    # backfill perf — should be a fast no-op now the WS streams the full universe (≈4s/0 fetched). If it
+    # creeps back up, the collector is dropping klines again (the 350-stream overload regression) and the
+    # decision→fill latency balloons.
+    bfp = re.search(r"backfill_klines_gaps\].*?(\d+) gap-filled, (\d+) stale-refreshed.*?\[(\d+)s\]", text)
+    bf_s = int(bfp.group(3)) if bfp else None
+    bf_fetched = (int(bfp.group(1)) + int(bfp.group(2))) if bfp else None
+    if bf_s is not None and (bf_s > 25 or (bf_fetched or 0) > 40):
+        issues.append(f"⏱ backfill {bf_s}s / {bf_fetched} fetched — WS dropping klines? (healthy ≈ 4s/0)")
     return {"src": src, "B": B, "decided": dec, "regime": reg, "legs": legs,
-            "fresh": fresh, "lat": lat, "issues": issues}
+            "fresh": fresh, "lat": lat, "bf_s": bf_s, "bf_fetched": bf_fetched, "issues": issues}
 
 
 def _hl_fills(boundary) -> tuple:
@@ -86,6 +94,20 @@ def _hl_fills(boundary) -> tuple:
         return (0, 0)
 
 
+def _exec_time(boundary):
+    """decision-mids snapshot (cycle start) → HL fill probe wall-clock for this boundary — the real
+    decision→fill latency window. None if not available for this cycle."""
+    try:
+        dm = json.loads((OUT/"decide"/"decision_mids.json").read_text())
+        t0 = pd.to_datetime(dm["captured_at"], utc=True)
+        s = pd.read_csv(OUT/"realfill"/"decide_slip.csv")
+        s = s[s["bar_open_time"].astype(str) == str(boundary)]
+        if not len(s): return None
+        return (pd.to_datetime(s["captured_at"], utc=True).max() - t0).total_seconds()
+    except Exception:
+        return None
+
+
 def build_message(r: dict) -> str:
     ok = r["fresh"] and not r["issues"]
     latstr = f"+{int(r['lat']//60)}m{int(r['lat']%60):02d}s" if r["lat"] is not None else "?"
@@ -95,6 +117,11 @@ def build_message(r: dict) -> str:
            f"regime {r['regime']} • {r['legs']} legs"]
     f, n = _hl_fills(r["B"])
     if n: out.append(f"HL fills {f}/{n}")
+    if r.get("bf_s") is not None:
+        out.append(f"⏱ backfill {r['bf_s']}s ({r['bf_fetched']} fetched) {'✓' if r['bf_s'] <= 25 else '⚠️ slow'}")
+    et = _exec_time(r["B"])
+    if et is not None:
+        out.append(f"⚙️ execution {et:.0f}s decision→fill")
     out.append("issues: " + "; ".join(r["issues"]) if r["issues"] else "all steps OK ✓")
     return "\n".join(out)
 
