@@ -41,8 +41,8 @@ FUND_ROOT = REPO / "data/ml/cache"                # funding_{sym}.parquet — fe
 WS_BASE = "wss://fstream.binance.com/market/ws"   # ROUTED — required for market data
 FAPI = "https://fapi.binance.com"
 
-STREAMS_PER_CONN = 150     # well under the 1024/conn cap; a few conns for resilience
-FLUSH_SECONDS = 30
+STREAMS_PER_CONN = 60      # smaller per-conn so a drop loses fewer syms; lighter queue (was 150 → kline drops)
+FLUSH_SECONDS = 5          # write closed bars to disk fast so the cycle backfill doesn't race a slow flush
 RECONNECT_24H = 23 * 3600  # proactively cycle before Binance's 24h connection limit
 FOUR_H_MS = 4 * 3600 * 1000
 TRIGGER_GRACE = 3.0        # s after a 4h boundary bar closes: let stragglers arrive, then flush + fire
@@ -290,8 +290,17 @@ class Collector:
         if self.backfill:
             await self._backfill_all("startup")
         # v1 needs only klines (V0 features) + markPrice (funding). NO aggTrade — no flow features.
+        # markPrice@1s is high-rate (1 msg/sym/sec); subscribing it for all 175 floods the WS queue and
+        # drops kline bars. The 80 high-vol PEERS are klines-only (xs-rank cohort, never scored/traded), so
+        # they need NO funding — stream markPrice only for the traded low-vol book.
+        try:
+            _excl = set(json.load(open(REPO / "live/models/convexity_v1_universe.json"))["exclude_high_vol"])
+        except Exception:
+            _excl = set()
+        mp_syms = [s for s in self.syms if s not in _excl]
         streams = ([f"{s.lower()}@kline_5m" for s in self.syms]
-                   + [f"{s.lower()}@markPrice@1s" for s in self.syms])
+                   + [f"{s.lower()}@markPrice@1s" for s in mp_syms])
+        print(f"[ws] streams: {len(self.syms)} kline_5m + {len(mp_syms)} markPrice (skipped {len(self.syms)-len(mp_syms)} peer funding)", flush=True)
         chunks = [streams[i:i + STREAMS_PER_CONN] for i in range(0, len(streams), STREAMS_PER_CONN)]
         print(f"[ws] {len(streams)} streams over {len(chunks)} connection(s)", flush=True)
         tasks = [asyncio.create_task(self._conn(c, i)) for i, c in enumerate(chunks)]
