@@ -49,3 +49,15 @@ mechanism already gets you 36/41, the remaining ~6% is funding-driven pred shift
 ⚠️ This is my **stale-funding vintage** (June = forward-filled 5/31, distinct-values/symbol = 1). It reproduces
 MY records exactly; it is NOT settled truth. Settled funding comes from your live feed / the July monthly
 archive. Use float32 when re-scoring (see the dtype note above).
+
+## Funding vintage — precise characterization (2026-06-06)
+Re-examined after a "mixed stale/fresh?" question. It is **uniformly stale, not a mix**:
+- **0/94 symbols have real June funding** — all forward-filled from their last May settlement.
+- **93/94 caches end 2026-05-31** (16:00–20:00, the last May archive settlement). The apparent 5/15→6/1
+  "freeze-point" spread is **flat funding values** (e.g. TNSR/YGG/PROVE pinned at 5e-05), not data staleness —
+  a change-detector artifact, not a vintage mix.
+- **1 genuine outlier: VINEUSDT** cache ends **2026-04-28** (~5wk stale, likely delisted/illiquid). **NOT traded**
+  in the records → zero impact.
+
+So `MY_funding_panel_94syms` is the single 5/31 vintage end-to-end; substituting it reproduces the records
+deterministically. Real June funding for all symbols comes only from the live feed / July monthly archive.
