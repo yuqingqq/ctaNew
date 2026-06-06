@@ -62,15 +62,32 @@ else
   log "funding STALE (${FAGE}h) — FAPI fallback"; $PY live/ingest_funding_fapi.py >> "$LOG" 2>&1 || log "funding WARN"
 fi
 # Repair 5m bars the WS feed dropped (FAPI backfill) BEFORE features — gaps make row-offset features
-# (return_1d=pct_change(288), bars_since_high, obv) reach back the wrong distance / use wrong values.
+# (return_1d=pct_change(288), bars_since_high, obv) reach back the wrong distance / use wrong values. With the
+# WS streaming the full universe this is a fast SAFETY NET (≈4s no-op) — it only fetches the just-closed bar
+# that the WS hasn't flushed yet at cycle time, plus any reconnect-dropped bars. Still required: a silent gap
+# corrupts the row-offset features with no error.
 $PY live/backfill_klines_gaps.py >> "$LOG" 2>&1 || log "backfill WARN"
-# xs_feats + panel recompute a trailing window (not append-only) so klines corrected/backfilled after a bar
-# was first built get repaired downstream — else stale features freeze (return_1d, bars_since_high, …).
+# xs_feats recomputes a trailing window so corrected/backfilled klines propagate. build_bar (decide) reads ONLY
+# the xs_feats caches + the panel SYMBOL LIST (not the panel data), so the panel rebuild + modeled settle are
+# DEFERRED below — off the decision→fill critical path — to minimise execution latency.
 $PY live/incremental_xs_feats.py --workers 6 >> "$LOG" 2>&1 || { log "xs_feats FAIL — abort"; exit 1; }
-$PY live/incremental_panel.py    --workers 6 --rebuild-days 10 >> "$LOG" 2>&1 || { log "panel FAIL — abort"; exit 1; }
-$PY live/build_maturity_meta.py >> "$LOG" 2>&1 || true
 
-# 2) settle the modeled reference track (advance any newly-labeled bar)
+# 2) DECIDE + EXECUTE FIRST, so the fill lands ASAP after the signal (cuts decision→fill latency ~40s→~20s)
+$PY live/decide_v1.py >> "$LOG" 2>&1 || { log "decide_v1 FAIL — abort"; exit 1; }
+if CONVEXITY_STATE=$OUT/state CONVEXITY_PREDS_PATH=$OUT/decide/base_decide.parquet CONVEXITY_PREDS_LONG=$OUT/decide/long_decide.parquet \
+     $PY -m live.convexity_paper_bot --decide >> "$LOG" 2>&1; then
+  log "decided: $($PY -c "import json;d=json.load(open('$OUT/state/decision.json'));print(d['open_time'],d['regime'],'-',len(d.get('turnover',{})),'legs')" 2>/dev/null)"
+  # 3) probe live HL L2 for the turnover legs (real execution price at the boundary)
+  $PY live/convexity_slippage.py --decide --state $OUT/state --book v1 --out $OUT/realfill/decide_slip.csv >> "$LOG" 2>&1 || log "HL probe WARN"
+  # 4) book the real-fill round-trip PnL (THE FILL — latency window ends here)
+  $PY live/convexity_realfill.py --state $OUT >> "$LOG" 2>&1 && log "ledger updated" || log "ledger WARN"
+else log "decide FAIL"; fi
+
+# 5) DEFERRED (post-fill): panel rebuild + maturity meta + settle the modeled REFERENCE track. None feed the
+# decision (build_bar uses only the panel symbol list + xs_feats; decide uses the prior-cycle panel/meta, both
+# slow-changing), so they run AFTER the fill. Failures here are WARN, not abort — the trade is already booked.
+$PY live/incremental_panel.py --workers 6 --rebuild-days 10 >> "$LOG" 2>&1 || log "panel WARN"
+$PY live/build_maturity_meta.py >> "$LOG" 2>&1 || true
 BOT0=$(bot_edge)
 if $PY live/predict_twobook_incremental.py >> "$LOG" 2>&1 && apply_universe >> "$LOG" 2>&1; then
   CONVEXITY_STATE=$OUT/state CONVEXITY_PREDS_PATH=$OUT/base.parquet CONVEXITY_PREDS_LONG=$OUT/long.parquet \
@@ -78,16 +95,6 @@ if $PY live/predict_twobook_incremental.py >> "$LOG" 2>&1 && apply_universe >> "
   BOT1=$(bot_edge); [ "$BOT1" != "$BOT0" ] && log "settled modeled $BOT0 -> $BOT1" || true
 else log "settle-predict WARN"; fi
 
-# 3) decide the current bar at the boundary
-$PY live/decide_v1.py >> "$LOG" 2>&1 || { log "decide_v1 FAIL — abort"; exit 1; }
-if CONVEXITY_STATE=$OUT/state CONVEXITY_PREDS_PATH=$OUT/decide/base_decide.parquet CONVEXITY_PREDS_LONG=$OUT/decide/long_decide.parquet \
-     $PY -m live.convexity_paper_bot --decide >> "$LOG" 2>&1; then
-  log "decided: $($PY -c "import json;d=json.load(open('$OUT/state/decision.json'));print(d['open_time'],d['regime'],'-',len(d.get('turnover',{})),'legs')" 2>/dev/null)"
-  # 4) probe live HL L2 for the turnover legs (real execution price at the boundary)
-  $PY live/convexity_slippage.py --decide --state $OUT/state --book v1 --out $OUT/realfill/decide_slip.csv >> "$LOG" 2>&1 || log "HL probe WARN"
-  # 5) book the real-fill round-trip PnL
-  $PY live/convexity_realfill.py --state $OUT >> "$LOG" 2>&1 && log "ledger updated" || log "ledger WARN"
-  # 6) snapshot (real-fill + modeled reference)
-  $PY live/convexity_notify_v1.py >> "$LOG" 2>&1 && log "tg snapshot sent" || log "tg WARN"
-else log "decide FAIL"; fi
+# 6) snapshot (real-fill primary)
+$PY live/convexity_notify_v1.py >> "$LOG" 2>&1 && log "tg snapshot sent" || log "tg WARN"
 log "=== boundary $B: done ==="
