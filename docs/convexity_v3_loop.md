@@ -91,3 +91,24 @@ return = **-0.86**: helps all DOWN folds (+0.1..+1.2), CRUSHED in UP folds (f6 -
 "lean net-short in weak regimes" DIRECTIONAL bet that paid only because the sample is bear-heavy; blows up in bull.
 **Insight:** the long-bleed/short-squeeze/net-short weaknesses are all BETA/directional — unhedgeable OR directional
 mirage. Equal-weight book is regime-robust. Real alpha = short-leg cross-sectional residual (already captured).
+
+### Iter 8 (2026-06-06) — short "rocket" filter [analytical, cross-sectional]
+Squeezed shorts have ret_3d 3.5× the average (+0.112 vs +0.032) → tested filtering shorts with high ret_3d.
+ret_3d<={0.20,0.15,0.10,0.07}: Δsh -0.47, -1.57, -1.85, -2.12 — ALL HURT badly. REJECTED.
+**Insight:** shorting recent winners IS the short edge (mean-reversion works on the BODY of high-ret_3d names);
+squeezes are the irreducible TAIL. Filtering rockets removes the profitable reversions too. (= falling-knife #162-164.)
+
+## ===== DATA-DRIVEN LOOP VERDICT (2026-06-06) =====
+Did a full failure-decomposition of the +3.89 book (leg/regime/tail/beta) + tested every fix the data suggested:
+| weakness found in data | proposed fix | result |
+|---|---|---|
+| long leg net-negative in side/bear (beta drag) | beta-neutral sizing | REJECTED -0.24 (per-name betas un-estimable at 4h) |
+| book carries -0.178 net-short beta | BTC-beta hedge (trailing) | REJECTED -0.29+ (betas non-stationary) |
+| long bleeds in down regimes | downweight long in side/bear | REJECTED — directional mirage (corr lift·BTC -0.86, blows up in bull) |
+| short squeezes = worst 5% of cycles | filter high-ret_3d (rocket) shorts | REJECTED -1.8 (shorting winners IS the edge; squeeze is its tail) |
+
+**DECISIVE: every weakness is INTRINSIC — either unhedgeable beta (non-stationary at 4h) or the irreducible tail
+of the mean-reversion edge. The obvious "fixes" all either kill the edge or are hidden directional bets.** The
+short-leg cross-sectional residual is the real alpha (+11905); the long leg is a weak +alpha/+beta hedge; losses
+are the cost of doing business. Equal-weight book is regime-robust and at its achievable optimum.
+**Known monitored risk: -0.178 net-short BTC beta → would underperform in a sustained bull (folds 6,7 show it).**
