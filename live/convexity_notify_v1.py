@@ -71,9 +71,13 @@ def _realfill_summary():
         return {"armed": True}
     e0 = float(led.get("equity0", BASE))
     cum_real = sum(float(c.get("realized_pnl", 0) or 0) for c in cyc)   # locked P&L over ALL cycles
+    # perfect-fill = the SAME book/marks but zero execution cost: add back every cycle's exec cost ($) =
+    # exec_cost_bps × traded_notional. This is the clean apples-to-apples "what if fills were perfect".
+    cum_cost = sum((float(c.get("exec_cost_bps", 0) or 0) / 1e4) * float(c.get("traded_notional", 0) or 0) for c in cyc)
     r = cyc[-1]; eq = float(r["equity"]); open_un = float(r.get("unrealized_pnl", 0) or 0)
     return {"armed": False, "n": len(cyc), "eq": eq, "ret": (eq / e0 - 1) * 100,
             "locked": cum_real / e0 * 100, "open": open_un / e0 * 100, "n_open": int(r.get("n_open_syms", 0)),
+            "perfect_ret": ((eq + cum_cost) / e0 - 1) * 100, "drag": cum_cost / e0 * 100,
             "exec": r.get("exec_cost_bps"), "slip": r.get("book_slip_bps"),
             "lat": r.get("latency_drift_bps"), "fee": r.get("fee_bps"),
             "n_trades": int(r.get("n_trades", 0)), "n_unfilled": int(r.get("n_unfilled", 0))}
@@ -111,6 +115,7 @@ def build_message() -> str:
     out = [f"{arrow} <b>Convexity v2</b> (paper, LIVE) — {ot} • {regime}",
            f"💰 <b>Real PnL since launch: {rf['ret']:+.2f}%</b>  (equity ${rf['eq']:,.0f} / ${BASE/1e3:.0f}k · {rf['n']} cycles)",
            f"   {rf['locked']:+.2f}% locked + {rf['open']:+.2f}% open ({rf['n_open']} positions still held)",
+           f"✨ Perfect-fill (same trades, no slip/fee): <b>{rf['perfect_ret']:+.2f}%</b>  → execution cost {-rf['drag']:+.2f}%",
            f"New L: {L}  ·  S: {S}"]
     if rf["n_trades"]:
         unf = f", {rf['n_unfilled']} unfilled" if rf["n_unfilled"] else ""
