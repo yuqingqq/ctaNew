@@ -60,77 +60,62 @@ def _portfolio(top=8, hold=6):
             f"  gross {gross*100:.0f}% • {len(net)} names")
 
 
-def _realfill_block():
-    """Real-fill (HL round-trip) summary from the ledger: equity, last-cycle realized/unrealized, and the
-    execution-cost decomposition (book slip + latency drift + fee). None if the ledger isn't running yet."""
+def _realfill_summary():
+    """CUMULATIVE real-fill P&L since launch + this-cycle exec cost. Equity = base + Σrealized + open MtM,
+    split so the headline isn't confused by open unrealized swings. None if the ledger isn't running yet."""
     lp = OUT / "realfill" / "ledger.json"
     if not lp.exists():
         return None
-    led = json.loads(lp.read_text())
-    cyc = led.get("cycles", [])
-    e0 = float(led.get("equity0", BASE))
+    led = json.loads(lp.read_text()); cyc = led.get("cycles", [])
     if not cyc:
-        return "💵 <b>Real-fill</b> (HL execution): armed — no fills yet"
-    r = cyc[-1]
-    eq = float(r["equity"])
-    out = [f"💵 <b>Real-fill</b> (HL round-trip) — eq ${eq:,.0f} ({(eq/e0-1)*100:+.1f}%) • open {r['n_open_syms']} syms",
-           f"  last cycle: realized {r['realized_pnl']:+.2f} • unreal {r['unrealized_pnl']:+.2f}"]
-    if r.get("n_trades", 0):
-        bz = r.get("basis_bps")
-        out.append(f"  exec cost {r['exec_cost_bps']:.1f}bps = slip {r['book_slip_bps']:.1f} "
-                   f"+ lat {r['latency_drift_bps']:.1f} + fee {r['fee_bps']:.1f} ({r['n_trades']} legs"
-                   + (f", {r['n_unfilled']} unfilled" if r.get('n_unfilled') else "") + ")"
-                   + (f"  [HL↔Bin basis {bz:+.1f} cancels]" if bz else ""))
-    return "\n".join(out)
+        return {"armed": True}
+    e0 = float(led.get("equity0", BASE))
+    cum_real = sum(float(c.get("realized_pnl", 0) or 0) for c in cyc)   # locked P&L over ALL cycles
+    r = cyc[-1]; eq = float(r["equity"]); open_un = float(r.get("unrealized_pnl", 0) or 0)
+    return {"armed": False, "n": len(cyc), "eq": eq, "ret": (eq / e0 - 1) * 100,
+            "locked": cum_real / e0 * 100, "open": open_un / e0 * 100, "n_open": int(r.get("n_open_syms", 0)),
+            "exec": r.get("exec_cost_bps"), "slip": r.get("book_slip_bps"),
+            "lat": r.get("latency_drift_bps"), "fee": r.get("fee_bps"),
+            "n_trades": int(r.get("n_trades", 0)), "n_unfilled": int(r.get("n_unfilled", 0))}
+
+
+def _modeled_ret():
+    """Cumulative modeled forward return % since launch (settled reference cycles). (None, 0) if none yet."""
+    c = _fwd()
+    if len(c) == 0:
+        return None, 0
+    return (float((1 + c["pnl_bps"].values / 1e4).prod()) - 1) * 100, len(c)
+
+
+def _new_legs():
+    """This cycle's new sleeve picks (longs/shorts) + bar/regime. Uses the decision's longs/shorts lists,
+    NOT the turnover signs (turnover mixes new entries with closing/rolling old sleeves)."""
+    dj = ST / "decision.json"
+    if not dj.exists():
+        return "—", "—", "FLAT", "FLAT"
+    d = json.loads(dj.read_text())
+    L = [s.replace("USDT", "") for s in d.get("longs", [])]
+    S = [s.replace("USDT", "") for s in d.get("shorts", [])]
+    return d.get("open_time", "—"), d.get("regime", "—"), ", ".join(L) or "FLAT", ", ".join(S) or "FLAT"
 
 
 def build_message() -> str:
-    c = _fwd()
-    if len(c) == 0:
-        mk = OUT / "launch_marker.txt"
-        settle = (pd.Timestamp(mk.read_text().strip()) + pd.Timedelta(hours=8)) if mk.exists() else "next settle"
-        # real-fill track is live from go-live even while the MODELED track warms up (it lags the 4h settle)
-        rfb = _realfill_block()
-        head = (rfb + "\n— modeled reference —\n") if rfb else ""
-        return (head + "⏳ <b>Convexity</b> — modeled track WARM-UP (forward measured from launch marker)\n"
-                "$10k base • 6 overlapping sleeves • regime-gated\n"
-                f"First modeled fwd snapshot ~{settle} UTC once the 4h return settles.")
-    eq = BASE * (1 + c["pnl_bps"].values / 1e4).cumprod()
-    r = c.iloc[-1]
-    # net-of-real-slip: scale this cycle's modeled cost by measured/modeled HL slippage
-    slip = "n/a"; net_pnl = float(r["pnl_bps"]); sf = OUT / "slippage.csv"
-    if sf.exists() and os.path.getsize(sf) > 0:
-        s = pd.read_csv(sf)
-        if len(s):
-            s = s[s["open_time"] == s["open_time"].iloc[-1]]
-            tc = pd.to_numeric(s["total_cost_bps"], errors="coerce").dropna()
-            nf = (s["fully_filled"].astype(str) != "True").sum()
-            if len(tc):
-                slip = f"med {tc.median():.0f}bps p90 {np.percentile(tc,90):.0f} • unfilled {nf}/{len(s)}"
-                g, cost = float(r.get("gross_pnl_bps", r["pnl_bps"])), float(r.get("cost_bps", 0))
-                net_pnl = g - cost * (tc.median() / MODELED)
-    sh_all = _sh(c["pnl_bps"].values)        # realtime: since-launch forward Sharpe (all fwd cycles)
-    sh_30 = _sh(c["pnl_bps"].values[-30:])   # recent form: trailing ≤30 cycles (noisier)
-    arrow = "🟢" if float(r["pnl_bps"]) >= 0 else "🔴"
-    L_str, S_str = str(r.get("top_k_long", "")), str(r.get("bot_k_short", ""))
-    flat = L_str in ("nan", "") and S_str in ("nan", "")
-    out = [f"{arrow} <b>Convexity v1</b> (paper, LIVE) — {r['open_time']} • {r['regime']}"]
-    rfb = _realfill_block()
-    if rfb:
-        out += [rfb, "— modeled reference —"]
-    out += [
-        f"Equity ${eq[-1]:,.0f} • fwd cycle {len(c)}",
-        f"Sharpe: realtime {sh_all:+.2f} (n={len(c)}) • trailing-30 {sh_30:+.2f}",
-        f"Cycle PnL {float(r['pnl_bps']):+.0f}bps modeled / {net_pnl:+.0f} net-of-slip",
-        f"  gross {float(r.get('gross_pnl_bps',0)):+.0f} − cost {float(r.get('cost_bps',0)):.0f}"
-        f" • turnover {float(r.get('turnover',0))*100:.0f}%",
-    ]
-    if flat:
-        out.append("New entries: FLAT (regime gate — no positions)")
-    else:
-        out += [f"New L: {L_str[:60]}", f"New S: {S_str[:60]}"]
-    out += ["<b>Portfolio</b> (net across 6 sleeves):", _portfolio(), f"Slip: {slip}"]
-    return "\n".join([x for x in out if x])
+    """Simple snapshot: ONE cumulative P&L since launch (real-fill, marked now), split into locked vs open,
+    plus the modeled reference as a single line, this cycle's new legs, and the execution cost."""
+    rf = _realfill_summary()
+    ot, regime, L, S = _new_legs()
+    if rf is None or rf.get("armed"):
+        return (f"⏳ <b>Convexity v2</b> (paper) — {ot} • {regime}\n"
+                "Real-fill armed — no fills booked yet.")
+    arrow = "🟢" if rf["ret"] >= 0 else "🔴"
+    out = [f"{arrow} <b>Convexity v2</b> (paper, LIVE) — {ot} • {regime}",
+           f"💰 <b>Real PnL since launch: {rf['ret']:+.2f}%</b>  (equity ${rf['eq']:,.0f} / ${BASE/1e3:.0f}k · {rf['n']} cycles)",
+           f"   {rf['locked']:+.2f}% locked + {rf['open']:+.2f}% open ({rf['n_open']} positions still held)",
+           f"New L: {L}  ·  S: {S}"]
+    if rf["n_trades"]:
+        unf = f", {rf['n_unfilled']} unfilled" if rf["n_unfilled"] else ""
+        out.append(f"this cycle: {rf['n_trades']} fills · exec cost {rf['exec']:.0f}bps{unf}")
+    return "\n".join(out)
 
 
 if __name__ == "__main__":
