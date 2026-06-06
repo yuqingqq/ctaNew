@@ -132,6 +132,13 @@ def main():
     print(f"universe: exclude top-{len(flow_book)} high-vol (rvol_7d as-of {fit_cut.date()}) "
           f"→ live/models/convexity_v1_universe.json")
 
+    # regenerate the exec-server WS collector feed list (full universe minus dead/halted) so it stays in sync
+    # with this retrain's universe — the 175-XS cross-section needs every live symbol fed.
+    try:
+        import live.gen_collector_universe as gcu; gcu.main()
+    except Exception as e:
+        print(f"WARN collector_universe regen failed: {e}")
+
 
 if __name__ == "__main__":
     main()
