@@ -10,20 +10,23 @@ set -uo pipefail
 ROOT=/home/yuqing/ctaNew; export PYTHONPATH=$ROOT; cd $ROOT
 PY=$ROOT/.venv/bin/python
 LOG=$ROOT/live/state/ws_collector.log
-SYMS=$ROOT/live/state/collector_syms.txt   # only what we MONITOR: low-vol book + BTC (no high-vol, no flow)
+SYMS=$ROOT/live/state/collector_syms.txt   # what we stream: FULL live universe + BTC (xs-rank cohort)
 
-# Two lists: universe174.txt = full model set (kept for the maturity gate); collector_syms.txt = the
-# subset we actually stream = low-vol book (model keys MINUS the frozen top-80 high-vol) + BTCUSDT
-# (regime/cross-asset ref). v1 trades only the low-vol book, so the high-vol 80 aren't worth streaming.
+# Stream the FULL canonical live universe, NOT just the traded low-vol book. bars_since_high_xs_rank is
+# ranked over the whole 175-XS panel (validated 2026-06-06), so the live cross-section must see EVERY symbol
+# or the feature drifts from the backtest — the 174->94 cohort collapse that came from streaming only the 94
+# traded names while the 80 high-vol peers froze. collector_universe.txt (panel syms minus durably-dead/halted,
+# e.g. VINE) is the canonical list, regenerated at each retrain and git-pulled here. universe174.txt = full
+# model set (maturity gate). The high-vol 80 are klines-only peers — never scored, never traded.
 $PY - <<'PYEOF'
-import pickle, json
+import pickle
 R = "/home/yuqing/ctaNew"
 mk = set(pickle.load(open(R+"/live/models/convexity_v1_short_model.pkl","rb"))["models"].keys()); mk.add("BTCUSDT")
-open(R+"/live/state/universe174.txt","w").write(" ".join(sorted(mk)))            # full set — maturity gate
-excl = set(json.load(open(R+"/live/models/convexity_v1_universe.json"))["exclude_high_vol"])
-mon = (mk - excl); mon.add("BTCUSDT")                                            # low-vol + BTC — what we stream
+open(R+"/live/state/universe174.txt","w").write(" ".join(sorted(mk)))            # full model set — maturity gate
+canon = open(R+"/live/collector_universe.txt").read().split()                    # canonical live-feed set (dead dropped)
+mon = set(canon); mon.add("BTCUSDT")                                             # full live universe + BTC ref
 open(R+"/live/state/collector_syms.txt","w").write(" ".join(sorted(mon)))
-print(f"monitor: {len(mon)} low-vol+BTC syms (dropped {len(excl)} high-vol; kline+markPrice only, no aggTrade)")
+print(f"monitor: {len(mon)} live-universe syms (collector_universe.txt + BTC; kline+markPrice)")
 PYEOF
 
 while true; do
