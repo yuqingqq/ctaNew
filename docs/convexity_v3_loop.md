@@ -63,3 +63,13 @@ tested flat/negative (iter1/2) → strong priors against, high code cost, near-c
 **The genuine wins this session were validation/infra, not v3 alpha:** stale-preds fix (90e117c), universe-refresh
 correction (+1.6 Sharpe, a0ca282 — the single biggest lever, already in production via monthly retrain), liveness
 gate (365019b), collector sync (20c764f/d16bbbc). **Decisive next step: the live forward test, not more backtests.**
+
+### Iter 5 (2026-06-06) — DATA-DRIVEN failure analysis [diagnostic]
+Decomposed baseline_mpit (+3.89) by leg/regime/tail/beta:
+- **Long leg LOSES net (-2389, Sh -0.51)**; short leg carries all (+20318, Sh +3.59). Long has +alpha (+6580) but
+  +1.04 BTC beta drags it negative in side(-2117)/bear(-1554); only bull long is +.
+- **Book carries -0.178 net-short BTC beta** (long beta +1.04, short -1.22 → shorts higher-beta). corr(net,btc_fwd)=-0.13.
+- **Worst 5% cycles (135% of net) are short SQUEEZES** (BTC rips up; corr short vs btc_fwd -0.65; worst-50 btc_fwd +102bps).
+- **KEY: alpha-only (beta-neutral proxy) book = Sharpe +4.53 vs actual +4.30 (+0.23), PnL +18485 vs +17929** — net-short
+  beta is DRAG not bet (market ~flat over sample → beta added variance/squeezes, no return). Better in ALL regimes.
+**→ Test: beta-neutralize the book (the v2 "near-matched betas" assumption is FALSE; 1.04 vs 1.22).**
