@@ -61,3 +61,17 @@ Re-examined after a "mixed stale/fresh?" question. It is **uniformly stale, not 
 
 So `MY_funding_panel_94syms` is the single 5/31 vintage end-to-end; substituting it reproduces the records
 deterministically. Real June funding for all symbols comes only from the live feed / July monthly archive.
+
+## The last cycle: klines-vintage in the cross-section (2026-06-06)
+With funding matched, the residual 40/41→41/41 gap is **klines vintage in the 94-symbol cross-section**.
+`bars_since_high_xs_rank` is **cross-sectional**, so even ONE symbol's klines differing (a missing recent bar
+or a different rolling high) shifts the rank of others → can flip a borderline pick on a single cycle.
+
+`MY_PANEL_features_ALL94_0529_0604.{parquet,csv}` — full V0+resid_rev feature vectors for **all 94 low-vol
+symbols**, 5/29→6/4 (3,854 rows), incl. the kline-derived `bars_since_high, bars_since_high_xs_rank, atr_pct,
+vwap_slope_96` + `pred_long/pred_short`.
+
+**To close to 41/41:** diff `bars_since_high` (raw count, vintage-robust — no float issue) per symbol against
+yours → the ~8-9 symbols that differ are the klines-vintage set. Reconcile those klines and the cross-sectional
+rank matches → 41/41. The one miss is this residual, **not a logic error**. (Use parquet/float32 for the
+continuous feats per the dtype note; `bars_since_high` itself is an integer count so it diffs cleanly.)
