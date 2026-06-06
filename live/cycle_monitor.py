@@ -63,6 +63,8 @@ def review_block(block: list) -> dict:
     if bf and (int(bf.group(1)) > 0 or int(bf.group(2)) > 0):
         issues.append(f"feed gaps: {bf.group(1)} still-gappy / {bf.group(2)} FAPI-err after backfill")
     if "DEGRADED FEED" in text: issues.append("⛔ DEGRADED feed — decision ABORTED (no trade)")
+    cm = re.search(r"xs-rank cohort (\d+) < 174", text)
+    if cm: issues.append(f"xs-rank cohort {cm.group(1)}/174 — peer klines stale, rank drifting")
     if "on ffill-patched bars" in text: issues.append("some picks on ffill-patched bars")
     if "FAIL" in text: issues.append("step FAILed")
     if "settle WARN" in text: issues.append("settle warn")

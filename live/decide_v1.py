@@ -126,13 +126,24 @@ def run(boundary=None) -> dict:
     fr = _freshness(set(base["symbol"]) | set(longp["symbol"]))
     fund_max = float(os.environ.get("FRESHNESS_FUNDING_MAX_H", "5"))
     gap_max = int(os.environ.get("FRESHNESS_GAP_MAX", "10"))
-    degraded = fr["funding_age_h"] > fund_max or len(fr["gappy_universe"]) > gap_max
-    json.dump({**fr, "degraded": degraded, "open_time": str(ot)}, open(ddir/"freshness.json", "w"))
+    # COHORT GUARD: bars_since_high_xs_rank is ranked over the symbols predict_at_close builds for THIS bar
+    # (predict_at_close.py:78), and the model trained on 174. The 80 non-traded high-vol names are peers in that
+    # rank; if their klines go stale they don't build a current bar and silently drop out, mis-scaling the rank
+    # for the traded names (the 174→94 collapse on 06-04). The traded-universe gappy check above is blind to it
+    # (those peers aren't in the decision universe), so guard directly on the built-bar cohort size.
+    cohort_n = int(bar["symbol"].nunique())
+    cohort_min = int(os.environ.get("FRESHNESS_COHORT_MIN", "150"))
+    cohort_bad = 0 < cohort_n < cohort_min
+    degraded = fr["funding_age_h"] > fund_max or len(fr["gappy_universe"]) > gap_max or cohort_bad
+    json.dump({**fr, "cohort_n": cohort_n, "degraded": degraded, "open_time": str(ot)}, open(ddir/"freshness.json", "w"))
     if degraded:
         print(f"[decide_v1] DEGRADED FEED @ {ot}: funding {fr['funding_age_h']}h "
               f"(max {fund_max}), {len(fr['gappy_universe'])} gappy univ syms "
-              f"{fr['gappy_universe'][:8]} (max {gap_max}) → ABORT (no decision this cycle)")
+              f"{fr['gappy_universe'][:8]} (max {gap_max}), xs-rank cohort {cohort_n} (min {cohort_min}) "
+              f"→ ABORT (no decision this cycle)")
         return {}
+    if 0 < cohort_n < 170:
+        print(f"[decide_v1] WARN: xs-rank cohort {cohort_n} < 174 (some peer klines stale) — rank may drift")
     if fr["gappy_universe"]:
         print(f"[decide_v1] feed OK but {len(fr['gappy_universe'])} univ syms on ffill-patched bars: "
               f"{fr['gappy_universe'][:8]}")

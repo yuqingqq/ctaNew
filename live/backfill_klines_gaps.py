@@ -39,12 +39,13 @@ def _load(paths):
     return df.drop_duplicates("open_time").sort_values("open_time")
 
 
-def _count_gaps(df, since):
-    s = df[df["open_time"] >= since]
-    if len(s) < 2:
-        return 0
-    grid = pd.date_range(s["open_time"].min(), s["open_time"].max(), freq="5min")
-    return len(grid) - len(s)
+def _missing_bars(df, since, target):
+    """Bars missing in [max(since, first_present) .. target] — counts BOTH internal gaps AND a
+    stale tail (a symbol frozen before `target`). Returns the sorted list of missing timestamps."""
+    lo = max(since, df["open_time"].min())
+    grid = pd.date_range(lo, target, freq="5min")
+    present = set(df.loc[df["open_time"] >= lo, "open_time"])
+    return [t for t in grid if t not in present]
 
 
 def _fapi(sym, start_ms, end_ms):
@@ -74,27 +75,34 @@ def _fapi(sym, start_ms, end_ms):
     return df
 
 
-def backfill_sym(sym):
-    """Returns (status, residual_gaps): residual_gaps = bars STILL missing after the FAPI fetch
-    (FAPI down/banned or genuinely missing). 0 = fully repaired."""
+def backfill_sym(sym, target=None):
+    """Bring `sym`'s recent klines current up to `target` (the universe's freshest closed bar).
+    Fills internal gaps AND a stale tail — a non-traded symbol the WS collector stopped feeding
+    (its klines freeze in the past) must still be carried forward, because it's a peer in the
+    cross-sectional bars_since_high_xs_rank cohort (drop it and the whole rank mis-scales).
+
+    Returns (status, residual): residual = bars STILL missing after the FAPI fetch (0 = repaired).
+    If `target` is None, falls back to the symbol's own last bar (legacy gap-only behaviour)."""
     paths = _recent_files(sym)
     if not paths:
         return "no-data", 0
     df = _load(paths)
-    since = df["open_time"].max().floor("5min") - pd.Timedelta(days=LOOKBACK_DAYS)
-    g0 = _count_gaps(df, since)
-    if g0 == 0:
+    tgt = (target or df["open_time"].max()).floor("5min")
+    since = tgt - pd.Timedelta(days=LOOKBACK_DAYS)
+    miss = _missing_bars(df, since, tgt)
+    if not miss:
         return "gapless", 0
-    start_ms = int(since.timestamp() * 1000)
-    end_ms = int(df["open_time"].max().timestamp() * 1000)
+    stale = df["open_time"].max() < tgt - pd.Timedelta(minutes=5)    # frozen tail vs just internal holes
+    start_ms = int(miss[0].timestamp() * 1000)                       # fetch from the first hole forward
+    end_ms = int(tgt.timestamp() * 1000)
     fa = _fapi(sym, start_ms, end_ms)
     time.sleep(THROTTLE)
     if fa is None or fa.empty:
-        return "fapi-empty", g0
+        return "fapi-empty", len(miss)
     have = set(df["open_time"])
     new = fa[~fa["open_time"].isin(have)].copy()
     if new.empty:
-        return "no-new", g0
+        return "no-new", len(miss)
     new["__day"] = new["open_time"].dt.strftime("%Y-%m-%d")          # merge each bar into its day's file
     n = 0
     for day, g in new.groupby("__day"):
@@ -108,16 +116,28 @@ def backfill_sym(sym):
             comb = g.sort_values("open_time")
         comb.to_parquet(fp, index=False)
         n += len(g)
-    resid = _count_gaps(_load(_recent_files(sym)), since)            # FAPI may not have every bar either
-    return f"filled {n}/resid {resid}", resid
+    resid = len(_missing_bars(_load(_recent_files(sym)), since, tgt))  # FAPI may not have every bar either
+    tag = "refreshed" if stale else "filled"
+    return f"{tag} {n}/resid {resid}", resid
 
 
-def _safe(sym):
+def _safe(sym, target=None):
     try:
-        st, resid = backfill_sym(sym)
+        st, resid = backfill_sym(sym, target)
         return sym, st, resid
     except Exception as e:
         return sym, f"FAIL {str(e)[:70]}", -1                        # -1 = FAPI/exception (counts as error)
+
+
+def _latest_bar(sym):
+    files = sorted((KLINES / sym / "5m").glob("*.parquet"))
+    if not files:
+        return None
+    try:
+        m = pd.to_datetime(pd.read_parquet(files[-1], columns=["open_time"])["open_time"], utc=True)
+        return m.max()
+    except Exception:
+        return None
 
 
 def main():
@@ -126,12 +146,20 @@ def main():
     a = ap.parse_args()
     syms = a.symbols or sorted(set(pd.read_parquet(
         REPO / "outputs/vBTC_features/panel_expanded_v0.parquet", columns=["symbol"]).symbol.unique()))
-    t0 = time.time(); filled = gapless = 0
-    residual_gappy = []; errors = []
+    # Universe-wide TARGET = the freshest closed bar any symbol has reached (the traded set, fed by the WS
+    # collector). Stale non-traded peers (high-vol names kept only for the xs-rank cohort) are pulled UP to
+    # it; max() ignores their frozen tails. Without this, a non-traded symbol frozen in the past reads
+    # "gapless" against its own last bar and silently drops out of the cross-sectional cohort.
+    lat = [x for x in (_latest_bar(s) for s in syms) if x is not None]
+    target = max(lat) if lat else None
+    t0 = time.time(); filled = gapless = refreshed = 0
+    residual_gappy = []; errors = []; stale_refreshed = []
     for s in syms:                                                   # serial: throttle the FAPI calls
-        _, r, resid = _safe(s)
+        _, r, resid = _safe(s, target)
         if r == "gapless":
             gapless += 1
+        elif str(r).startswith("refreshed"):
+            refreshed += 1; stale_refreshed.append(s); print(f"  {s}: {r}", flush=True)
         elif str(r).startswith("filled"):
             filled += 1; print(f"  {s}: {r}", flush=True)
         if resid == -1:
@@ -143,12 +171,14 @@ def main():
         HEALTH.parent.mkdir(parents=True, exist_ok=True)
         HEALTH.write_text(json.dumps({
             "ts": pd.Timestamp.utcnow().isoformat(), "n_syms": len(syms),
-            "backfilled": filled, "gapless": gapless,
-            "residual_gappy": sorted(residual_gappy), "fapi_errors": sorted(errors)}, indent=0))
+            "target_bar": str(target), "backfilled": filled, "stale_refreshed": refreshed,
+            "gapless": gapless, "residual_gappy": sorted(residual_gappy),
+            "stale_refreshed_syms": sorted(stale_refreshed), "fapi_errors": sorted(errors)}, indent=0))
     except Exception:
         pass
-    print(f"[backfill_klines_gaps] {filled} backfilled, {gapless} gapless, "
-          f"{len(residual_gappy)} still-gappy, {len(errors)} errors [{time.time()-t0:.0f}s]", flush=True)
+    print(f"[backfill_klines_gaps] target={target} | {filled} gap-filled, {refreshed} stale-refreshed, "
+          f"{gapless} gapless, {len(residual_gappy)} still-gappy, {len(errors)} errors [{time.time()-t0:.0f}s]",
+          flush=True)
 
 
 if __name__ == "__main__":
