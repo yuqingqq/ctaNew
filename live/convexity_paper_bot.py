@@ -150,6 +150,14 @@ if DYN_ALLOW_PATH and Path(DYN_ALLOW_PATH).exists():
         _DYN_ALLOW[_ot] = set(_g["symbol"])
 LIQ_FLOOR_DOLLAR_VOL_30D = 3_000_000.0     # $3M/day exec floor
 DEDUP_CORR_THRESHOLD = 0.90                # drop high-corr names; keep longer-history one
+# Liveness gate: drop DELISTED/HALTED names from the universe. A halted symbol's klines forward-fill a flat
+# price -> zero returns -> rvol_7d≈0, the *calmest* possible, so the high-vol exclude never catches it and it
+# lands in the low-vol book. The 30d-dvol floor eventually catches it (volume decays) but lags ~30d; this gate
+# catches it in ~LIVENESS_WIN_DAYS. PIT (trailing window, .asof). (caught: VINEUSDT, delisted ~2026-04-28.)
+LIVENESS_GATE = os.environ.get("CONVEXITY_LIVENESS_GATE", "1") == "1"
+LIVENESS_WIN_DAYS = int(os.environ.get("CONVEXITY_LIVENESS_WIN_DAYS", "7"))
+LIVENESS_MAX_ZERO_FRAC = float(os.environ.get("CONVEXITY_LIVENESS_MAX_ZERO_FRAC", "0.85"))  # >85% flat days = dead
+_LIVENESS_CACHE: dict = {}                 # sym -> date-indexed trailing zero-return fraction (set in precompute)
 
 INITIAL_EQUITY = float(os.environ.get("CONVEXITY_EQUITY", "10000"))   # env-overridable; keeps ALL state
                                                                       # (equity/peak/eq_hist/stop) on one scale
@@ -269,6 +277,12 @@ def eligible_universe_at(univ_meta: dict, asof: pd.Timestamp, dvol_cache: dict) 
         dv = dv0
         if np.isfinite(dv) and dv < LIQ_FLOOR_DOLLAR_VOL_30D:
             rec["reason"] = f"liquidity_{dv:.0f}_<{LIQ_FLOOR_DOLLAR_VOL_30D:.0f}"; out[sym] = rec; continue
+        if LIVENESS_GATE:                                  # drop delisted/halted (flat price over trailing window)
+            zs = _LIVENESS_CACHE.get(sym)
+            if zs is not None and len(zs):
+                zf = float(zs.asof(asof))
+                if np.isfinite(zf) and zf > LIVENESS_MAX_ZERO_FRAC:
+                    rec["reason"] = f"dead_{zf:.2f}flat_>{LIVENESS_MAX_ZERO_FRAC}"; out[sym] = rec; continue
         rec["in_universe"] = True; out[sym] = rec
     return out
 
@@ -309,10 +323,16 @@ def precompute_dvol_cache_pit(syms: list[str], last_n_files: int | None = None) 
         try:
             df = pd.concat([pd.read_parquet(f, columns=["open_time","close","volume"]) for f in files], ignore_index=True)
             df["open_time"] = pd.to_datetime(df["open_time"], utc=True)
-            daily = (df.assign(dv=df["close"]*df["volume"]).set_index("open_time")["dv"]
-                       .resample("1D").sum())
+            di = df.set_index("open_time")
+            daily = (di["close"]*di["volume"]).resample("1D").sum()
             trail = daily.rolling(30, min_periods=10).mean().dropna()   # mean daily $vol over trailing 30d
             if len(trail): cache[sym] = trail
+            # liveness (same pass): trailing fraction of FLAT days (daily close unchanged = halted/delisted)
+            if LIVENESS_GATE:
+                dclose = di["close"].resample("1D").last().dropna()
+                flat = (dclose.diff().abs() < 1e-12).astype(float)      # 1 = no price change that day
+                zf = flat.rolling(LIVENESS_WIN_DAYS, min_periods=max(3, LIVENESS_WIN_DAYS//2)).mean().dropna()
+                if len(zf): _LIVENESS_CACHE[sym] = zf
         except Exception:
             pass
     return cache
