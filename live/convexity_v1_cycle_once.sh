@@ -22,11 +22,12 @@ SRC="${1:-manual}"
 log(){ echo "[$(date -u '+%F %T')] [cycle/$SRC] $*" | tee -a "$LOG"; }
 bot_edge(){ $PY -c "import json;print(json.load(open('$OUT/state/positions.json')).get('last_open_time') or '')" 2>/dev/null; }
 apply_universe(){ $PY - << 'PY'
-import json, pandas as pd
+import json, os, pandas as pd
+book=os.environ.get("CONVEXITY_BOOK","convexity_v1")   # write to the ACTIVE book dir, not a hardcoded v1
 excl=set(json.load(open("live/models/convexity_v1_universe.json"))["exclude_high_vol"])
 for src,dst in [("hl/v0full_hl60.parquet","base.parquet"),("hl_residrev/v0full_hl60.parquet","long.parquet")]:
     d=pd.read_parquet("live/state/convexity/"+src); d["open_time"]=pd.to_datetime(d["open_time"],utc=True)
-    d[~d["symbol"].isin(excl)].to_parquet("live/state/convexity_v1/"+dst)
+    d[~d["symbol"].isin(excl)].to_parquet(f"live/state/{book}/"+dst)
 PY
 }
 
