@@ -73,3 +73,21 @@ Decomposed baseline_mpit (+3.89) by leg/regime/tail/beta:
 - **KEY: alpha-only (beta-neutral proxy) book = Sharpe +4.53 vs actual +4.30 (+0.23), PnL +18485 vs +17929** — net-short
   beta is DRAG not bet (market ~flat over sample → beta added variance/squeezes, no return). Better in ALL regimes.
 **→ Test: beta-neutralize the book (the v2 "near-matched betas" assumption is FALSE; 1.04 vs 1.22).**
+
+### Iter 5b (2026-06-06) — beta-neutral sizing test [env SIDE_BETA_NEUT, monthly-PIT]
+BN=0 equal-wt +3.893 (control, reproduces) | BN=1 beta-neutral side **+3.657** (-0.24, worse maxDD -3288).
+**Insight:** ideal beta-neutral helps (+0.23 ceiling) but realized per-name beta sizing HURTS -0.24 — trailing
+per-name betas too noisy at 4h. v2 was right to drop it (wrong stated reason: noise, not matched betas).
+
+### Iter 6 (2026-06-06) — BTC-beta hedge [analytical, PIT trailing beta]
+Trailing-window (60/90/120/180) book-beta BTC hedge: ALL hurt (-0.29 to -0.53). Both neutralization paths fail
+(per-name -0.24, aggregate hedge -0.29+). The +0.23 "ideal alpha-only" was LOOK-AHEAD (uses contemporaneous beta).
+**Insight:** crypto betas non-stationary at 4h → net-short -0.178 beta is REAL but UNHEDGEABLE risk. Monitor, accept.
+Equal-weight is the best achievable book. Beta-neutralization direction CLOSED.
+
+### Iter 7 (2026-06-06) — long-downweight in side/bear [analytical + directional check]
+Analytical long×0.7 in side/bear: +0.25 Sharpe / maxDD -2131 (looked great). BUT per-fold lift corr with fold BTC
+return = **-0.86**: helps all DOWN folds (+0.1..+1.2), CRUSHED in UP folds (f6 -1.25, f7 -1.41). REJECTED — it's a
+"lean net-short in weak regimes" DIRECTIONAL bet that paid only because the sample is bear-heavy; blows up in bull.
+**Insight:** the long-bleed/short-squeeze/net-short weaknesses are all BETA/directional — unhedgeable OR directional
+mirage. Equal-weight book is regime-robust. Real alpha = short-leg cross-sectional residual (already captured).
