@@ -131,3 +131,14 @@ XS94 174-vs-94(✗), + global hold/hysteresis/K all at optimum.
 (c) directional or fold-concentrated mirage.** The +3.89 monthly-PIT book is a ROBUST local optimum on 4h free data.
 Diagnostic value: short leg = alpha (+11905, Sh +3.59); long = weak +alpha/+beta hedge; net -0.178 short beta =
 monitored bull-market risk; squeezes = irreducible edge tail. Real lift needs a new INPUT, not a new knob.
+
+### Iter 11 (2026-06-07) — short-squeeze stop [analytical, position-level paths]
+Reactive stop: exit a short when name rips >X% adverse mid-hold. X={10,15,20,25}%: Δsh -0.79,-0.32,-0.26,-0.17 — ALL
+HURT (monotone toward no-stop). REJECTED. Squeezed shorts mostly RECOVER (rip then mean-revert = the edge); the stop
+cuts winning reversals more than it saves squeezes. Can't separate squeeze from edge even reactively. (15th mechanism.)
+
+## ===== FINAL: 15 mechanisms, 0 robust wins — convexity v3 is a proven local optimum =====
+Exhaustive data-driven + structural search on the monthly-PIT universe (+3.89), all honest-gated. Every lever rejected,
+each MECHANISTICALLY explained (at-optimum / kills-edge / directional / fold-concentrated / unhedgeable). The strategy's
+weaknesses are INTRINSIC to a 4h cross-sectional mean-reversion book and cannot be optimized away without new INPUT data.
+Production stack is final. Engineering effort → deployment + live forward test + monitor the -0.178 net-short beta.
