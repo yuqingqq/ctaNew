@@ -112,3 +112,22 @@ of the mean-reversion edge. The obvious "fixes" all either kill the edge or are 
 short-leg cross-sectional residual is the real alpha (+11905); the long leg is a weak +alpha/+beta hedge; losses
 are the cost of doing business. Equal-weight book is regime-robust and at its achievable optimum.
 **Known monitored risk: -0.178 net-short BTC beta → would underperform in a sustained bull (folds 6,7 show it).**
+
+### Iter 9 (2026-06-06/07) — edge-predictability + vol-conditional sizing [analytical]
+Ex-ante edge predictors all weak (btc_rvol corr +0.020 best, pred_disp +0.035; recent-edge persistence +0.008=none).
+Sharpe is U-shaped in BTC-vol (Q0 +5.79, mid ~+2.4, Q4 +6.14) — real structural pattern. BUT PIT vol-conditional
+half-size of the middle band: aggregate +0.66 Sharpe yet only 5/9 folds, f9 alone +5.22 → FOLD-CONCENTRATED MIRAGE.
+Per-rank alpha non-monotone, all positive → K=3 breadth justified. Vol-sizing REJECTED (fails 6/9 + f9-dominated).
+
+### Iter 10 (2026-06-07) — asymmetric K [env STRAT_K_LONG/SHORT, monthly-PIT]
+3/4 +3.48 | 3/5 +3.36 | 2/3 +3.60 | 2/4 +3.20 — ALL below symmetric 3/3 (+3.89). Wider short dilutes (rank4/5 weak);
+concentrating long loses strong rank-3. K=3/3 optimal. REJECTED. (Short alpha 2× long, but breadth past 3 dilutes.)
+
+## ===== FULL v3 LOOP LEDGER (2026-06-06/07) — 14 mechanisms, 0 robust wins =====
+Param/structure: hold(1), hysteresis(2), sleeve-decay(3✗), regime-Ridge(4✗), beta-neutral(5✗), BTC-hedge(6✗),
+long-downweight(7✗ directional), rocket-filter(8✗ kills edge), vol-sizing(9✗ fold-concentrated), asym-K(10✗),
+XS94 174-vs-94(✗), + global hold/hysteresis/K all at optimum.
+**Every lever rejected for one of 3 reasons: (a) at optimum already, (b) kills the edge / intrinsic tail,
+(c) directional or fold-concentrated mirage.** The +3.89 monthly-PIT book is a ROBUST local optimum on 4h free data.
+Diagnostic value: short leg = alpha (+11905, Sh +3.59); long = weak +alpha/+beta hedge; net -0.178 short beta =
+monitored bull-market risk; squeezes = irreducible edge tail. Real lift needs a new INPUT, not a new knob.
