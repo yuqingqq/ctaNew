@@ -45,7 +45,11 @@ STREAMS_PER_CONN = 60      # smaller per-conn so a drop loses fewer syms; lighte
 FLUSH_SECONDS = 5          # write closed bars to disk fast so the cycle backfill doesn't race a slow flush
 RECONNECT_24H = 23 * 3600  # proactively cycle before Binance's 24h connection limit
 FOUR_H_MS = 4 * 3600 * 1000
-TRIGGER_GRACE = 3.0        # s after a 4h boundary bar closes: let stragglers arrive, then flush + fire
+TRIGGER_GRACE = 22.0       # s after the 4h boundary bar closes: COLLECT the boundary bar for ~all syms before
+                           # flush+fire. Binance pushes closed klines over a ~20s spread; firing at +3s left ~48
+                           # syms' boundary bar uncollected, and once the heavy cycle runs they don't land in
+                           # time → partial xs-rank cohort → decide aborts. The sleep is async (non-blocking) so
+                           # the WS loop keeps receiving+flushing throughout.
 CYCLE_SCRIPT = REPO / "live/convexity_v1_cycle_once.sh"   # decision pipeline, push-triggered on boundary
 
 AGG_COLS = ["agg_trade_id", "price", "quantity", "first_trade_id", "last_trade_id",
