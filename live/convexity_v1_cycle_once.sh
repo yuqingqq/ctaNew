@@ -61,10 +61,13 @@ if $PY -c "import sys;sys.exit(0 if float('${FAGE:-999}')<5 else 1)" 2>/dev/null
 else
   log "funding STALE (${FAGE}h) — FAPI fallback"; $PY live/ingest_funding_fapi.py >> "$LOG" 2>&1 || log "funding WARN"
 fi
+# Wait (bounded) for the just-closed boundary 5m bar to propagate to ~the full cohort BEFORE features. The fast
+# cycle otherwise decides at boundary+5m+~3s, before the slow (thin/illiquid) symbols' bar arrives via WS/FAPI,
+# collapsing the xs-rank cohort and tripping the decide guard (the old 89s backfill hid this by waiting).
+$PY live/wait_boundary_bar.py "$B" 160 45 >> "$LOG" 2>&1 || true
 # Repair 5m bars the WS feed dropped (FAPI backfill) BEFORE features — gaps make row-offset features
-# (return_1d=pct_change(288), bars_since_high, obv) reach back the wrong distance / use wrong values. With the
-# WS streaming the full universe this is a fast SAFETY NET (≈4s no-op) — it only fetches the just-closed bar
-# that the WS hasn't flushed yet at cycle time, plus any reconnect-dropped bars. Still required: a silent gap
+# (return_1d=pct_change(288), bars_since_high, obv) reach back the wrong distance / use wrong values. After the
+# wait FAPI has the boundary bar, so this fills any genuine remaining gaps. Still required: a silent gap
 # corrupts the row-offset features with no error.
 $PY live/backfill_klines_gaps.py >> "$LOG" 2>&1 || log "backfill WARN"
 # xs_feats recomputes a trailing window so corrected/backfilled klines propagate. build_bar (decide) reads ONLY

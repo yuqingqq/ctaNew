@@ -131,8 +131,12 @@ def run(boundary=None) -> dict:
     # rank; if their klines go stale they don't build a current bar and silently drop out, mis-scaling the rank
     # for the traded names (the 174→94 collapse on 06-04). The traded-universe gappy check above is blind to it
     # (those peers aren't in the decision universe), so guard directly on the built-bar cohort size.
+    # ABORT only on a SEVERE collapse (most of the cohort gone — the original 94-collapse bug). A moderate dip
+    # (e.g. the transient boundary-bar race leaving the slowest peers behind) WARNS but still trades — freezing
+    # the book on every boundary is worse than a slightly-drifted xs-rank. The wait_boundary_bar step normally
+    # keeps the cohort ≈174; this guard is the floor for genuine data failure.
     cohort_n = int(bar["symbol"].nunique())
-    cohort_min = int(os.environ.get("FRESHNESS_COHORT_MIN", "150"))
+    cohort_min = int(os.environ.get("FRESHNESS_COHORT_MIN", "130"))
     cohort_bad = 0 < cohort_n < cohort_min
     degraded = fr["funding_age_h"] > fund_max or len(fr["gappy_universe"]) > gap_max or cohort_bad
     json.dump({**fr, "cohort_n": cohort_n, "degraded": degraded, "open_time": str(ot)}, open(ddir/"freshness.json", "w"))
@@ -142,8 +146,8 @@ def run(boundary=None) -> dict:
               f"{fr['gappy_universe'][:8]} (max {gap_max}), xs-rank cohort {cohort_n} (min {cohort_min}) "
               f"→ ABORT (no decision this cycle)")
         return {}
-    if 0 < cohort_n < 170:
-        print(f"[decide_v1] WARN: xs-rank cohort {cohort_n} < 174 (some peer klines stale) — rank may drift")
+    if 0 < cohort_n < 165:
+        print(f"[decide_v1] WARN: xs-rank cohort {cohort_n} < 174 (some peer klines stale) — rank may drift, trading anyway")
     if fr["gappy_universe"]:
         print(f"[decide_v1] feed OK but {len(fr['gappy_universe'])} univ syms on ffill-patched bars: "
               f"{fr['gappy_universe'][:8]}")
