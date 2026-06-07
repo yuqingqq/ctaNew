@@ -178,3 +178,12 @@ ENTRY_HOUR_REGIMES=side,bear. Default OFF (production byte-unchanged).
 +0.28 Sharpe / -31% maxDD. Real, placebo-validated, structural (active US/EU hours = long-leg bleed in down-markets).
 CAVEAT: per-fold 5/9 (borderline, f9-contributory) → adopt SOFT, confirm in live before full weight. The -31% maxDD
 is the most robust benefit. All 16 other mechanisms rejected (at-optimum / kills-edge / directional / fold-mirage).
+
+### Iter 13 (2026-06-07) — detail-mining continued (option A): 3 more probes, all negative
+- **Day-of-week**: Sat standout (+200) but pattern is CONFOUNDED with hour (flips when controlling for hour: Tue
+  weak overall→strong in off-hours). No clean independent gate. Can't exploit "up-weight Sat" w/o levering.
+- **Hold-age profile**: edge flat bars 1-5 (~+15-20bp), decays bar 6 (20-24h, +4.5; long goes -4.2). But global
+  hold sweep already optimal at 24h (smoothing>weak-bar6); leg-specific short hold = directional. Not exploitable.
+- **Per-symbol persistence**: H1↔H2 contribution corr -0.010 (NOISE); 47% sign-persistence = coin-flip. No
+  structural name-drag to exclude (= vBTC CAL). 
+**Detail vein now also largely tapped: entry-hour gate (iter12c, +0.28/-31%) remains the SINGLE real edge found.**
