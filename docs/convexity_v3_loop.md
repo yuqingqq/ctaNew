@@ -155,3 +155,14 @@ skip STRONG hours {0,4,20} ALL hurt (+3.58/+3.60/+3.84). Monotone with cohort ra
 First mechanism this session to PASS placebo (vBTC TOD-skip failed it). VERDICT: GENUINE structural edge, modest
 (+0.18 Sharpe) but strong & consistent maxDD cut (-31%). Per-fold 5/9 borderline → adopt SOFT down-weight, confirm
 in live forward test before full weight. Env: WEAK_ENTRY_HOURS + ENTRY_HOUR_SCALE (or SKIP_ENTRY_HOURS).
+
+### Iter 12b (2026-06-07) — entry-hour edge: leg/regime decomposition [HONEST REVISION]
+Split the entry-hour cohort by leg & regime:
+- **Concentrated in the LONG leg**: long +26@04:00 but -25@12:00; SHORT works all hours (+72..+111). The hour
+  weakness IS the long-leg bleed, sliced by hour.
+- **Regime-dependent**: bear strong-weak gap +126 (n=409), side +15 (n=917), BULL **-36 REVERSES** (n=137).
+**Revised verdict:** the entry-hour gate passes placebo and cuts maxDD -31% REAL, but its driver is the bear/down-
+market long-bleed in active US/EU hours — it HELPS in bear/side, mildly HURTS in bull. So it's a bear-tilted risk
+reducer, NOT regime-robust alpha; it ADDS to the existing net-short/bull-underperformance exposure. Adopt SOFT +
+ideally regime-conditional (down-weight weak hours only in side/bear, full size in bull). Modest, live-confirm.
+Net session result: 1 real-but-regime-tilted edge (entry-hour) out of 16 mechanisms. maxDD benefit is the prize.
