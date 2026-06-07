@@ -166,3 +166,15 @@ market long-bleed in active US/EU hours — it HELPS in bear/side, mildly HURTS 
 reducer, NOT regime-robust alpha; it ADDS to the existing net-short/bull-underperformance exposure. Adopt SOFT +
 ideally regime-conditional (down-weight weak hours only in side/bear, full size in bull). Modest, live-confirm.
 Net session result: 1 real-but-regime-tilted edge (entry-hour) out of 16 mechanisms. maxDD benefit is the prize.
+
+### Iter 12c (2026-06-07) — entry-hour gate, REGIME-CONDITIONAL (side/bear) [BEST FORM] ★
+Limiting the weak-hour down-weight to side/bear (full size in bull, where it reverses):
+**Sharpe +4.171 (+0.28 vs baseline) / maxDD -1936 (-31%), per-fold 5/9 (ex-f9 4/8, f9 +1.46).**
+Beats the all-regime form (+4.070) by keeping bull intact. Env: ENTRY_HOUR_SCALE=0.5, WEAK_ENTRY_HOURS=8,12,16,
+ENTRY_HOUR_REGIMES=side,bear. Default OFF (production byte-unchanged).
+
+## ===== SESSION RESULT: 1 real edge in 17 mechanisms =====
+**Entry-hour gate (regime-conditional)** is the ONLY mechanism to pass placebo + improve both Sharpe & maxDD:
++0.28 Sharpe / -31% maxDD. Real, placebo-validated, structural (active US/EU hours = long-leg bleed in down-markets).
+CAVEAT: per-fold 5/9 (borderline, f9-contributory) → adopt SOFT, confirm in live before full weight. The -31% maxDD
+is the most robust benefit. All 16 other mechanisms rejected (at-optimum / kills-edge / directional / fold-mirage).

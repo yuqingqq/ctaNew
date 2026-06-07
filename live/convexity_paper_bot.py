@@ -158,6 +158,7 @@ DEDUP_CORR_THRESHOLD = 0.90                # drop high-corr names; keep longer-h
 SKIP_ENTRY_HOURS = set(int(x) for x in os.environ.get("SKIP_ENTRY_HOURS", "").split(",") if x.strip())
 WEAK_ENTRY_HOURS = set(int(x) for x in os.environ.get("WEAK_ENTRY_HOURS", "8,12,16").split(",") if x.strip())
 ENTRY_HOUR_SCALE = float(os.environ.get("ENTRY_HOUR_SCALE", "1.0"))   # down-weight WEAK_ENTRY_HOURS entries
+ENTRY_HOUR_REGIMES = set(x for x in os.environ.get("ENTRY_HOUR_REGIMES", "").split(",") if x.strip())  # limit gate to these regimes
 LIVENESS_GATE = os.environ.get("CONVEXITY_LIVENESS_GATE", "1") == "1"
 LIVENESS_WIN_DAYS = int(os.environ.get("CONVEXITY_LIVENESS_WIN_DAYS", "7"))
 LIVENESS_MAX_ZERO_FRAC = float(os.environ.get("CONVEXITY_LIVENESS_MAX_ZERO_FRAC", "0.85"))  # >85% flat days = dead
@@ -862,10 +863,12 @@ def run_replay(start: pd.Timestamp | None, end: pd.Timestamp | None) -> dict:
 
         # build new sleeve weights for THIS cycle
         new_w = select_legs(g_elig, regime, betas_at_t, pred_disp_full=disp_per_t.get(ot))
-        # entry-hour gate: skip/scale entries in weak UTC hours (cohort attribution: 08/12/16 < 00/04/20)
-        if SKIP_ENTRY_HOURS and ot.hour in SKIP_ENTRY_HOURS:
+        # entry-hour gate: scale down weak UTC hours (08/12/16 < 00/04/20; long-leg bleed in active US/EU hours).
+        # ENTRY_HOUR_REGIMES limits it to regimes where robust (side/bear; reverses in bull) — empty = all regimes.
+        _hr_ok = (not ENTRY_HOUR_REGIMES) or (regime in ENTRY_HOUR_REGIMES)
+        if _hr_ok and SKIP_ENTRY_HOURS and ot.hour in SKIP_ENTRY_HOURS:
             new_w = {}
-        elif ENTRY_HOUR_SCALE != 1.0 and ot.hour in WEAK_ENTRY_HOURS:
+        elif _hr_ok and ENTRY_HOUR_SCALE != 1.0 and ot.hour in WEAK_ENTRY_HOURS:
             new_w = {s: w*ENTRY_HOUR_SCALE for s, w in new_w.items()}
         # disp-gate override: if model dispersion is in the bottom pctile, side regime goes flat
         if DISP_GATE and regime == "side" and disp_skip.get(ot, False):
