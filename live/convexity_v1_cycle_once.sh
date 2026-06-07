@@ -64,7 +64,7 @@ fi
 # Wait (bounded) for the just-closed boundary 5m bar to propagate to ~the full cohort BEFORE features. The fast
 # cycle otherwise decides at boundary+5m+~3s, before the slow (thin/illiquid) symbols' bar arrives via WS/FAPI,
 # collapsing the xs-rank cohort and tripping the decide guard (the old 89s backfill hid this by waiting).
-$PY live/wait_boundary_bar.py "$B" 160 45 >> "$LOG" 2>&1 || true
+$PY live/wait_boundary_bar.py "$B" 155 25 >> "$LOG" 2>&1 || true
 # Repair 5m bars the WS feed dropped (FAPI backfill) BEFORE features — gaps make row-offset features
 # (return_1d=pct_change(288), bars_since_high, obv) reach back the wrong distance / use wrong values. After the
 # wait FAPI has the boundary bar, so this fills any genuine remaining gaps. Still required: a silent gap

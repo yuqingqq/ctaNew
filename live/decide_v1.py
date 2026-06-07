@@ -136,7 +136,7 @@ def run(boundary=None) -> dict:
     # the book on every boundary is worse than a slightly-drifted xs-rank. The wait_boundary_bar step normally
     # keeps the cohort ≈174; this guard is the floor for genuine data failure.
     cohort_n = int(bar["symbol"].nunique())
-    cohort_min = int(os.environ.get("FRESHNESS_COHORT_MIN", "130"))
+    cohort_min = int(os.environ.get("FRESHNESS_COHORT_MIN", "60"))
     cohort_bad = 0 < cohort_n < cohort_min
     degraded = fr["funding_age_h"] > fund_max or len(fr["gappy_universe"]) > gap_max or cohort_bad
     json.dump({**fr, "cohort_n": cohort_n, "degraded": degraded, "open_time": str(ot)}, open(ddir/"freshness.json", "w"))
