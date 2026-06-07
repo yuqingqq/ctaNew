@@ -142,3 +142,16 @@ Exhaustive data-driven + structural search on the monthly-PIT universe (+3.89), 
 each MECHANISTICALLY explained (at-optimum / kills-edge / directional / fold-concentrated / unhedgeable). The strategy's
 weaknesses are INTRINSIC to a 4h cross-sectional mean-reversion book and cannot be optimized away without new INPUT data.
 Production stack is final. Engineering effort → deployment + live forward test + monitor the -0.178 net-short beta.
+
+### Iter 12 (2026-06-07) — ENTRY-HOUR gate [REAL EDGE — passes placebo] ★
+Entry-cohort attribution: 24h cohort PnL by ENTRY hour — 00/04/20 strong (+103..118bps), 08/12/16 weak (+66..81),
+12:00 worst in 7/9 folds. Mechanism: mean-reversion works in low-liq off-hours, fails in active US/EU hours (trend).
+Tests (monthly-PIT, baseline +3.892/-2793):
+- skip 12+16: +4.070 / maxDD -1851 (-34%) but per-fold only 3/9 (f9-dominated).
+- **downweight 8/12/16 ×0.5: +4.070 / maxDD -1936 (-31%), per-fold 5/9 (ex-f9 4/8), f9 +1.46.**
+- skip 12 alone: +4.016 / -2156, 5/9.
+**PLACEBO (single-hour skip) = SIGNAL-ALIGNED (decisive):** skip WEAK hours {8,12,16} ALL help (+3.91/+4.02/+3.93);
+skip STRONG hours {0,4,20} ALL hurt (+3.58/+3.60/+3.84). Monotone with cohort rank → NOT "less-trading" mirage.
+First mechanism this session to PASS placebo (vBTC TOD-skip failed it). VERDICT: GENUINE structural edge, modest
+(+0.18 Sharpe) but strong & consistent maxDD cut (-31%). Per-fold 5/9 borderline → adopt SOFT down-weight, confirm
+in live forward test before full weight. Env: WEAK_ENTRY_HOURS + ENTRY_HOUR_SCALE (or SKIP_ENTRY_HOURS).
