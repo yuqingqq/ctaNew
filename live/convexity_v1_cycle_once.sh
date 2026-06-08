@@ -81,15 +81,19 @@ $PY live/backfill_klines_gaps.py >> "$LOG" 2>&1 || log "backfill WARN"
 $PY live/incremental_xs_feats.py --workers 6 >> "$LOG" 2>&1 || { log "xs_feats FAIL — abort"; exit 1; }
 
 # 2) DECIDE + EXECUTE FIRST, so the fill lands ASAP after the signal (cuts decision→fill latency ~40s→~20s)
-$PY live/decide_v1.py >> "$LOG" 2>&1 || { log "decide_v1 FAIL — abort"; exit 1; }
-if CONVEXITY_STATE=$OUT/state CONVEXITY_PREDS_PATH=$OUT/decide/base_decide.parquet CONVEXITY_PREDS_LONG=$OUT/decide/long_decide.parquet \
+# decide_v1 aborts (exit 1) on a DEGRADED feed (cohort collapse). That must SKIP this cycle's decide+book but
+# must NOT abort the script — else the DEFERRED modeled settle (step 5) is skipped and cycles.csv + the
+# since-5.29 benchmark FREEZE on every degraded boundary. So treat a decide failure as "no trade this cycle"
+# and fall through to the settle, which settles the PRIOR (labeled) cycle independently of this decision.
+if $PY live/decide_v1.py >> "$LOG" 2>&1 && \
+   CONVEXITY_STATE=$OUT/state CONVEXITY_PREDS_PATH=$OUT/decide/base_decide.parquet CONVEXITY_PREDS_LONG=$OUT/decide/long_decide.parquet \
      $PY -m live.convexity_paper_bot --decide >> "$LOG" 2>&1; then
   log "decided: $($PY -c "import json;d=json.load(open('$OUT/state/decision.json'));print(d['open_time'],d['regime'],'-',len(d.get('turnover',{})),'legs')" 2>/dev/null)"
   # 3) probe live HL L2 for the turnover legs (real execution price at the boundary)
   $PY live/convexity_slippage.py --decide --state $OUT/state --book v1 --out $OUT/realfill/decide_slip.csv >> "$LOG" 2>&1 || log "HL probe WARN"
   # 4) book the real-fill round-trip PnL (THE FILL — latency window ends here)
   $PY live/convexity_realfill.py --state $OUT >> "$LOG" 2>&1 && log "ledger updated" || log "ledger WARN"
-else log "decide FAIL"; fi
+else log "decide_v1/decide FAILED or DEGRADED — no trade booked this cycle; deferred modeled settle below STILL runs"; fi
 
 # 5) DEFERRED (post-fill): panel rebuild + maturity meta + settle the modeled REFERENCE track. None feed the
 # decision (build_bar uses only the panel symbol list + xs_feats; decide uses the prior-cycle panel/meta, both

@@ -180,7 +180,7 @@ def run(boundary=None) -> dict:
     longp.to_parquet(ddir/"long_decide.parquet", index=False)
     # Binance bar-close per sym = the price the signal saw at B; the ledger uses it for the latency-drift
     # leg of the execution-cost decomposition (HL exec mid at B+~90s vs this).
-    cref = _close_ref_at(base["symbol"].tolist(), ot)
+    cref = _close_ref_at(sorted(set(base["symbol"]) | set(longp["symbol"])), ot)   # longs too, not just base/shorts
     json.dump(cref, open(ddir/"close_ref.json", "w"))
     print(f"[decide_v1] bar {ot}: scored base {len(base)} / long {len(longp)} syms (low-vol) → {ddir}")
     return {"open_time": str(ot), "n_base": len(base), "n_long": len(longp)}

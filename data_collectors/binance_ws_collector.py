@@ -121,7 +121,7 @@ class Collector:
             df["is_buyer_maker"] = df["is_buyer_maker"].astype(bool)
             df = df[AGG_COLS].sort_values("agg_trade_id").reset_index(drop=True)
             p = self._agg_path(sym, day); p.parent.mkdir(parents=True, exist_ok=True)
-            df.to_parquet(p, compression="zstd", index=False)
+            tmp = p.with_name(p.name + ".tmp"); df.to_parquet(tmp, compression="zstd", index=False); tmp.replace(p)
             n += 1
         self.dirty_agg.difference_update(snap_agg)
         snap_kl = list(self.dirty_kl)
@@ -134,7 +134,7 @@ class Collector:
             df["close_time"] = pd.to_datetime(df["close_time"], unit="ms", utc=True)
             df = df[KL_COLS].sort_values("open_time").reset_index(drop=True)
             p = self._kl_path(sym, day); p.parent.mkdir(parents=True, exist_ok=True)
-            df.to_parquet(p, compression="zstd", index=False)
+            tmp = p.with_name(p.name + ".tmp"); df.to_parquet(tmp, compression="zstd", index=False); tmp.replace(p)
             n += 1
         self.dirty_kl.difference_update(snap_kl)
         snap_fund = list(self.dirty_fund)
@@ -151,7 +151,7 @@ class Collector:
             else:
                 comb = new
             comb = comb.drop_duplicates("calc_time").sort_values("calc_time").reset_index(drop=True)
-            comb.to_parquet(p, index=False); n += 1
+            tmp = p.with_name(p.name + ".tmp"); comb.to_parquet(tmp, index=False); tmp.replace(p); n += 1
         self.dirty_fund.difference_update(snap_fund)
         # evict any day older than today (already flushed) to bound memory
         today = _day(int(time.time() * 1000))

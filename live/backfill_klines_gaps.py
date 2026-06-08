@@ -114,7 +114,7 @@ def backfill_sym(sym, target=None):
                     .drop_duplicates("open_time").sort_values("open_time"))
         else:
             comb = g.sort_values("open_time")
-        comb.to_parquet(fp, index=False)
+        tmp = fp.with_name(fp.name + ".tmp"); comb.to_parquet(tmp, index=False); tmp.replace(fp)  # atomic vs collector
         n += len(g)
     resid = len(_missing_bars(_load(_recent_files(sym)), since, tgt))  # FAPI may not have every bar either
     tag = "refreshed" if stale else "filled"

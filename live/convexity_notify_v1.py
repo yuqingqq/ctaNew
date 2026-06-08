@@ -143,7 +143,7 @@ def build_message() -> str:
     out = [f"{arrow} <b>Convexity v2</b> (paper, LIVE) — {ot} • {regime}",
            f"💰 <b>Real PnL since $10k restart ({rf['start'][:10]}): {rf['ret']:+.2f}%</b>  (equity ${rf['eq']:,.0f} / ${BASE/1e3:.0f}k · {rf['n']-1} real cycles)",
            f"   {rf['locked']:+.2f}% locked + {rf['open']:+.2f}% open ({rf['n_open']} positions still held)",
-           f"✨ Perfect-fill (same trades, no slip/fee): <b>{rf['perfect_ret']:+.2f}%</b>  → execution cost {-rf['drag']:+.2f}%",
+           f"✨ Perfect-fill (same trades, zero fee/slip/latency): <b>{rf['perfect_ret']:+.2f}%</b>  → execution cost {-rf['drag']:+.2f}%",
            f"New L: {L}  ·  S: {S}"]
     m529, n529 = _modeled_since(TRAIN_CUTOFF)
     if m529 is not None:

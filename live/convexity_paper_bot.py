@@ -1127,6 +1127,9 @@ def run_cycle() -> dict:
         all_keys = set(net_after) | set(prev_agg)
         turn = sum(abs(net_after.get(s,0) - prev_agg.get(s,0)) for s in all_keys)
         rmap = dict(zip(g["symbol"], g["return_pct"]))
+        _nan_legs = [s for s in net_after if abs(net_after.get(s, 0)) > 1e-9 and not np.isfinite(rmap.get(s, np.nan))]
+        if _nan_legs:   # held legs with no settled return are booked as 0% — surface incomplete labels, don't hide them
+            log.warning(f"settle {ot}: {len(_nan_legs)} held legs have NaN return_pct, booked as 0%: {_nan_legs[:6]}")
         gross_pnl = sum(net_after.get(s,0) * rmap.get(s,0.0)
                         for s in net_after if np.isfinite(rmap.get(s,0.0)))
         cost_unit = turn * 0.5 * COST
@@ -1256,8 +1259,8 @@ def run_decide() -> dict:
     new_w = select_legs(g_elig, regime, betas_at_t)
     active_sleeves.append(new_w)
     net_target_raw = aggregate_active_sleeves(active_sleeves)
-    gross_mult, _ = stop.update(equity, equity, len(stop.eq_hist))
-    net_after = {s: w*gross_mult for s, w in net_target_raw.items()}
+    gross_mult, _ = stop.update(equity, equity, len(stop.eq_hist), regime)   # pass regime so STOP_SKIP_REGIMES
+    net_after = {s: w*gross_mult for s, w in net_target_raw.items()}          # is honored on decide as on settle
     all_keys = set(net_after) | set(prev_agg)
     turnover = {s: round(net_after.get(s, 0) - prev_agg.get(s, 0), 6) for s in all_keys
                 if abs(net_after.get(s, 0) - prev_agg.get(s, 0)) > 1e-6}
