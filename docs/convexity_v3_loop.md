@@ -311,3 +311,11 @@ per-pick conviction edge is REAL but it's a HIGH-VARIANCE return, correctly trad
 sizing direction CLOSED. (env-gated SHORT_CONV_TILT kept in bot, default 0=off — tested infra.)
 ### [12h LOOP] iter6 (asymmetric short-K: short=engine, widen the short basket) — running
 K_LONG=3 fixed, K_SHORT in {3,4,5,6}. Short side carries the alpha (iter3); does diversifying the short leg help?
+
+### [12h LOOP] iter6 (asymmetric short-K, widen the alpha-engine short leg) — REJECTED
+K_LONG=3 fixed, K_S sweep: K_S=3 +4.22/+16731 | 4 +3.81 (lift -0.41, totPnL 14632, 1/9) | 5 +3.69 (-0.53, 13857, 1/9)
+| 6 +3.58 (-0.64, 13302, 2/9). Monotone HURT; totPnL DROPS (return dilution, not variance). Mechanism: short alpha
+concentrated in top-3 (iter3: rank0 short +176bp vs rank2 +67); widening includes the weak +67 shorts -> basket
+mean falls. K=3 confirmed optimal on SHORT side (can't tilt toward top-1 [iter5 variance] NOR widen past 3 [dilution]).
+### [12h LOOP] iter7 (drawdown anatomy — target the -2777 maxDD weakness) — running
+Find worst-PnL cycles in the +4.22 baseline; their regime/BTC-return/turnover; is a PIT-observable flag present?
