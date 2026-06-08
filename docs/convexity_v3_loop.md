@@ -319,3 +319,11 @@ concentrated in top-3 (iter3: rank0 short +176bp vs rank2 +67); widening include
 mean falls. K=3 confirmed optimal on SHORT side (can't tilt toward top-1 [iter5 variance] NOR widen past 3 [dilution]).
 ### [12h LOOP] iter7 (drawdown anatomy — target the -2777 maxDD weakness) — running
 Find worst-PnL cycles in the +4.22 baseline; their regime/BTC-return/turnover; is a PIT-observable flag present?
+
+### [12h LOOP] iter7 (drawdown anatomy) — WEAKNESS LOCATED: bear-regime tail
+maxDD -2777bps = 15/15 BEAR cycles (2025-11-18->20). Per-regime Sharpe: bear +3.12 (WORST) vs side +5.04, bull +7.39
+— bear mean PnL fine (+12.1) but high-variance. 7/10 worst cycles are bear; single worst -1065bps = 2026-06-04
+(MOST RECENT data). Top-20 worst cycles = -8572bps = 51% of net +16731 given back. v2 trades bear (BEAR_MODE=equal
+K=2) for +4959 totPnL but carries the entire maxDD + the tail. -> iter8 tests the bear risk-return frontier.
+### [12h LOOP] iter8 (bear-handling frontier: flat / K=1 / K=2 / K=3) — running
+Does cutting bear exposure trade the +4959 bear PnL for a much smaller maxDD at acceptable Sharpe? (task #171)
