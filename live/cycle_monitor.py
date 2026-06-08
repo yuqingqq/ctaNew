@@ -79,7 +79,14 @@ def review_block(block: list) -> dict:
     bf_fetched = (int(bfp.group(1)) + int(bfp.group(2))) if bfp else None
     if bf_s is not None and (bf_s > 25 or (bf_fetched or 0) > 40):
         issues.append(f"⏱ backfill {bf_s}s / {bf_fetched} fetched — WS dropping klines? (healthy ≈ 4s/0)")
-    return {"src": src, "B": B, "decided": dec, "regime": reg, "legs": legs,
+    # WS disk-readiness: "N gapless" = symbols whose boundary bar the collector WROTE without needing FAPI.
+    # Low gapless = the collector orphan-race (dirty_kl.clear dropping bars added mid-flush-write) regressed.
+    # Healthy ≈ 170-175 since the difference_update fix; <168 means boundary klines are going un-written again.
+    gp = re.search(r"(\d+) gapless", text)
+    gapless = int(gp.group(1)) if gp else None
+    if gapless is not None and gapless < 168:
+        issues.append(f"⚠️ WS disk-readiness {gapless} gapless (<168) — collector orphan-race regression?")
+    return {"src": src, "B": B, "decided": dec, "regime": reg, "legs": legs, "gapless": gapless,
             "fresh": fresh, "lat": lat, "bf_s": bf_s, "bf_fetched": bf_fetched, "issues": issues}
 
 

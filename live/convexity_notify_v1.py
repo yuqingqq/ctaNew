@@ -23,6 +23,7 @@ ST = OUT/"state"
 BASE = 10000.0          # forward-test starting equity
 MODELED = 4.5           # bps/leg modeled cost (for net-of-real-slip scaling)
 ANN = np.sqrt(6 * 365)  # 6 cycles/day annualization
+TRAIN_CUTOFF = "2026-05-29"   # frozen-model training cutoff → out-of-sample modeled benchmark line
 
 
 def _sh(x):
@@ -75,7 +76,7 @@ def _realfill_summary():
     # exec_cost_bps × traded_notional. This is the clean apples-to-apples "what if fills were perfect".
     cum_cost = sum((float(c.get("exec_cost_bps", 0) or 0) / 1e4) * float(c.get("traded_notional", 0) or 0) for c in cyc)
     r = cyc[-1]; eq = float(r["equity"]); open_un = float(r.get("unrealized_pnl", 0) or 0)
-    return {"armed": False, "n": len(cyc), "eq": eq, "ret": (eq / e0 - 1) * 100,
+    return {"armed": False, "n": len(cyc), "start": str(cyc[0].get("open_time"))[:16], "eq": eq, "ret": (eq / e0 - 1) * 100,
             "locked": cum_real / e0 * 100, "open": open_un / e0 * 100, "n_open": int(r.get("n_open_syms", 0)),
             "perfect_ret": ((eq + cum_cost) / e0 - 1) * 100, "drag": cum_cost / e0 * 100,
             "exec": r.get("exec_cost_bps"), "slip": r.get("book_slip_bps"),
@@ -86,6 +87,19 @@ def _realfill_summary():
 def _modeled_ret():
     """Cumulative modeled forward return % since launch (settled reference cycles). (None, 0) if none yet."""
     c = _fwd()
+    if len(c) == 0:
+        return None, 0
+    return (float((1 + c["pnl_bps"].values / 1e4).prod()) - 1) * 100, len(c)
+
+
+def _modeled_since(start: str):
+    """Cumulative modeled (perfect-fill) return % from `start` to now, off cycles.csv — the out-of-sample
+    benchmark for the frozen models since the training cutoff. (None, 0) if cycles.csv missing / empty."""
+    p = ST / "cycles.csv"
+    if not p.exists():
+        return None, 0
+    c = pd.read_csv(p); c["open_time"] = pd.to_datetime(c["open_time"], utc=True)
+    c = c[c["open_time"] >= pd.to_datetime(start, utc=True)].sort_values("open_time")
     if len(c) == 0:
         return None, 0
     return (float((1 + c["pnl_bps"].values / 1e4).prod()) - 1) * 100, len(c)
@@ -127,10 +141,13 @@ def build_message() -> str:
                 "Real-fill armed — no fills booked yet.")
     arrow = "🟢" if rf["ret"] >= 0 else "🔴"
     out = [f"{arrow} <b>Convexity v2</b> (paper, LIVE) — {ot} • {regime}",
-           f"💰 <b>Real PnL since launch: {rf['ret']:+.2f}%</b>  (equity ${rf['eq']:,.0f} / ${BASE/1e3:.0f}k · {rf['n']} cycles)",
+           f"💰 <b>Real PnL since $10k restart ({rf['start'][:10]}): {rf['ret']:+.2f}%</b>  (equity ${rf['eq']:,.0f} / ${BASE/1e3:.0f}k · {rf['n']-1} real cycles)",
            f"   {rf['locked']:+.2f}% locked + {rf['open']:+.2f}% open ({rf['n_open']} positions still held)",
            f"✨ Perfect-fill (same trades, no slip/fee): <b>{rf['perfect_ret']:+.2f}%</b>  → execution cost {-rf['drag']:+.2f}%",
            f"New L: {L}  ·  S: {S}"]
+    m529, n529 = _modeled_since(TRAIN_CUTOFF)
+    if m529 is not None:
+        out.append(f"📊 Modeled since 5.29 training (perfect-fill, OOS): <b>{m529:+.2f}%</b> · {n529} cycles")
     if rf["n_trades"]:
         unf = f", {rf['n_unfilled']} unfilled" if rf["n_unfilled"] else ""
         lat_s = _exec_latency()

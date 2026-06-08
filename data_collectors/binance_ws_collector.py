@@ -45,11 +45,13 @@ STREAMS_PER_CONN = 60      # smaller per-conn so a drop loses fewer syms; lighte
 FLUSH_SECONDS = 5          # write closed bars to disk fast so the cycle backfill doesn't race a slow flush
 RECONNECT_24H = 23 * 3600  # proactively cycle before Binance's 24h connection limit
 FOUR_H_MS = 4 * 3600 * 1000
-TRIGGER_GRACE = 22.0       # s after the 4h boundary bar closes: COLLECT the boundary bar for ~all syms before
-                           # flush+fire. Binance pushes closed klines over a ~20s spread; firing at +3s left ~48
-                           # syms' boundary bar uncollected, and once the heavy cycle runs they don't land in
-                           # time → partial xs-rank cohort → decide aborts. The sleep is async (non-blocking) so
-                           # the WS loop keeps receiving+flushing throughout.
+# FIXED GRACE after the 4h boundary bar closes, before flush+fire. The PRIMARY fix is the _flush orphan-race
+# (difference_update not .clear) so late-arriving boundary klines are no longer silently dropped; this grace is
+# the belt-and-suspenders margin so the bars are ON DISK before the cycle reads — receipt (~4s spread) + at least
+# one 5s drain flush. 24s spans ~4 flush cycles. The earlier "adaptive" grace fired on RECEIPT at ~+4s, before
+# the tail was persisted → cohorts 130/126/161 at 00/04/12:00; the only full cohort (173 @ 08:00) happened to
+# fire late at +22s. (NOT a 15-20s disk-write latency — a flush is sub-second; it's the drain-flush count.)
+GRACE_SECONDS = 24.0       # s fixed wait — receipt spread + ≥1 drain flush, with margin (was the +4s regression)
 CYCLE_SCRIPT = REPO / "live/convexity_v1_cycle_once.sh"   # decision pipeline, push-triggered on boundary
 
 AGG_COLS = ["agg_trade_id", "price", "quantity", "first_trade_id", "last_trade_id",
@@ -102,9 +104,15 @@ class Collector:
                 print(f"[ws] skip corrupt kl {sym} {today}: {type(e).__name__}", flush=True)
 
     def _flush(self):
-      with self._flush_lock:                  # serialize: 30s flusher vs boundary-trigger flush (no race on dirty sets)
-        n = 0
-        for (sym, day) in list(self.dirty_agg):
+      with self._flush_lock:                  # serializes flush-vs-flush. NOTE: does NOT serialize against
+        n = 0                                 # _on_kline on the loop thread — to_parquet() below releases the GIL,
+        # ORPHAN-RACE FIX: snapshot the dirty set, write it, then remove ONLY the snapshot (difference_update),
+        # NOT a blanket .clear(). A boundary bar that _on_kline adds DURING the write window would have its
+        # (sym,day) flag wiped by .clear() and never get written until the symbol's next bar re-dirties it ~5min
+        # later — that was the 13-symbol boundary-cohort drop (06-07 00/04/12:00). difference_update keeps those
+        # late flags so the NEXT 5s flush writes them. (kl is what the decide cohort reads; agg/fund same hazard.)
+        snap_agg = list(self.dirty_agg)
+        for (sym, day) in snap_agg:
             rows = list(self.agg[sym][day].values())
             if not rows:
                 continue
@@ -115,8 +123,9 @@ class Collector:
             p = self._agg_path(sym, day); p.parent.mkdir(parents=True, exist_ok=True)
             df.to_parquet(p, compression="zstd", index=False)
             n += 1
-        self.dirty_agg.clear()
-        for (sym, day) in list(self.dirty_kl):
+        self.dirty_agg.difference_update(snap_agg)
+        snap_kl = list(self.dirty_kl)
+        for (sym, day) in snap_kl:
             rows = list(self.kl[sym][day].values())
             if not rows:
                 continue
@@ -127,8 +136,9 @@ class Collector:
             p = self._kl_path(sym, day); p.parent.mkdir(parents=True, exist_ok=True)
             df.to_parquet(p, compression="zstd", index=False)
             n += 1
-        self.dirty_kl.clear()
-        for sym in list(self.dirty_fund):
+        self.dirty_kl.difference_update(snap_kl)
+        snap_fund = list(self.dirty_fund)
+        for sym in snap_fund:
             rows = list(self.fund[sym].values())
             if not rows:
                 continue
@@ -142,7 +152,7 @@ class Collector:
                 comb = new
             comb = comb.drop_duplicates("calc_time").sort_values("calc_time").reset_index(drop=True)
             comb.to_parquet(p, index=False); n += 1
-        self.dirty_fund.clear()
+        self.dirty_fund.difference_update(snap_fund)
         # evict any day older than today (already flushed) to bound memory
         today = _day(int(time.time() * 1000))
         for store in (self.agg, self.kl):
@@ -172,6 +182,20 @@ class Collector:
             "quote_volume": float(k["q"]), "count": int(k["n"]),
             "taker_buy_volume": float(k["V"]), "taker_buy_quote_volume": float(k["Q"])}
         self.dirty_kl.add((sym, day))
+        # INSTRUMENTATION: log how many boundary klines have been RECEIVED, and when (vs the flush logs which
+        # show when they're WRITTEN). At a 4h funding-settlement boundary this separates "Binance pushes the
+        # boundary bar slowly" (received late) from "collector stalls writing it" (received on time, written late).
+        if t % FOUR_H_MS == 0:
+            # MEASURE the cohort fill: DISTINCT symbols (set) vs RAW messages (counter). If msgs > distinct at
+            # fire time, the closed bar is arriving more than once (duplicates — source TBD); if msgs == distinct
+            # but distinct < ~171, the bars are genuinely arriving slowly. The grace waits on DISTINCT either way.
+            self._brx = getattr(self, "_brx", {}); self._bmsg = getattr(self, "_bmsg", {})
+            seen = self._brx.setdefault(t, set()); fresh = sym not in seen; seen.add(sym)
+            self._bmsg[t] = self._bmsg.get(t, 0) + 1
+            n = len(seen)
+            if fresh and n in (1, 40, 80, 120, 150, 170, 174):
+                print(f"[ws-instr] boundary {datetime.fromtimestamp(t/1000, tz=timezone.utc):%H:%M}: "
+                      f"{n} distinct / {self._bmsg[t]} msgs at +{time.time()-(t/1000+300):.0f}s after close", flush=True)
         # PUSH TRIGGER: fire when the FIRST 5m bar of a new 4h period closes — i.e. this bar's OPEN is the
         # boundary (t % 4h == 0). That is exactly when the 4h decide-bar `t` first becomes buildable: its
         # features come from this 5m row (_build_sym_window anchors the 4h bar to the 5m row at that
@@ -189,12 +213,22 @@ class Collector:
         """Push the decision the instant a 4h bar closes: brief grace for stragglers, flush so the reader
         sees the bar on disk, then spawn cycle_once detached. Never raises into the WS loop."""
         try:
-            await asyncio.sleep(TRIGGER_GRACE)
+            # FIXED GRACE: wait the disk-spread window so the boundary klines are WRITTEN (not just received)
+            # before the cycle reads them. Receipt-based early-fire was the 12:00 regression (see GRACE_SECONDS).
+            t_close = B / 1000 + 300                                  # the boundary 5m bar closes at B+5min
+            await asyncio.sleep(GRACE_SECONDS)
             await asyncio.get_event_loop().run_in_executor(None, self._flush)
             subprocess.Popen(["bash", str(CYCLE_SCRIPT), "collector"],
                              stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, start_new_session=True)
+            for k in [k for k in getattr(self, "_brx", {}) if k < B]:           # bound memory: drop old boundaries
+                self._brx.pop(k, None); getattr(self, "_bmsg", {}).pop(k, None)
             ts = datetime.fromtimestamp(B / 1000, tz=timezone.utc).strftime("%Y-%m-%d %H:%M")
-            print(f"[ws] boundary {ts} → flushed + push-triggered cycle_once", flush=True)
+            seen = getattr(self, "_brx", {}).get(B, set()); rx = len(seen); waited = time.time() - t_close
+            msgs = getattr(self, "_bmsg", {}).get(B, 0)
+            missing = [s for s in self.syms if s not in seen][:10]              # WHO is absent at fire time
+            print(f"[ws] boundary {ts} → {rx} distinct / {msgs} msgs in {waited:.0f}s | missing[{len(self.syms)-rx}]: "
+                  f"{missing} → flushed + push-triggered cycle_once", flush=True)
+            print(f"[ws] boundary {ts} → {rx}/175 received in {waited:.0f}s → flushed + push-triggered cycle_once", flush=True)
         except Exception as e:
             print(f"[ws] boundary trigger err: {type(e).__name__} {e}", flush=True)
 

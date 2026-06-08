@@ -61,9 +61,10 @@ if $PY -c "import sys;sys.exit(0 if float('${FAGE:-999}')<5 else 1)" 2>/dev/null
 else
   log "funding STALE (${FAGE}h) — FAPI fallback"; $PY live/ingest_funding_fapi.py >> "$LOG" 2>&1 || log "funding WARN"
 fi
-# NOTE: the boundary 5m bar is collected for ~all syms by the COLLECTOR's TRIGGER_GRACE (it waits ~22s for
-# Binance's push spread before firing this cycle), so no in-cycle wait is needed. The fallback watchdog fires
-# at boundary+2min by which time all bars have long landed.
+# NOTE: the boundary 5m bar is collected for ~all syms by the COLLECTOR's ADAPTIVE GRACE — it fires this cycle
+# the instant ~all boundary klines are received (GRACE_TARGET=171/175), ~3s on a fast boundary up to a 28s cap on
+# a slow one, so no in-cycle wait is needed and fast boundaries don't over-wait. The fallback watchdog fires at
+# boundary+2min by which time all bars have long landed.
 # Repair 5m bars the WS feed dropped (FAPI backfill) BEFORE features — gaps make row-offset features
 # (return_1d=pct_change(288), bars_since_high, obv) reach back the wrong distance / use wrong values. After the
 # wait FAPI has the boundary bar, so this fills any genuine remaining gaps. Still required: a silent gap
