@@ -201,6 +201,8 @@ def load_preds(start: pd.Timestamp | None = None) -> pd.DataFrame:
     if "mom" in _have: cols = cols + ["mom"]      # optional momentum col for longmom_shortmr mode
     for _c in ("pred_long", "pred_short"):        # iter14 meta-labeling: embedded per-leg rankers
         if _c in _have: cols = cols + [_c]
+    if "ret_3d" in _have: cols = cols + ["ret_3d"]   # LIVE long-winner gate input (decide-preds carry it;
+                                                     # the labeled PANEL lags the decide bar so its ret_3d is NaN)
     d = pd.read_parquet(PREDS, columns=cols)
     d["open_time"] = pd.to_datetime(d["open_time"], utc=True)
     d["exit_time"] = pd.to_datetime(d["exit_time"], utc=True)
@@ -820,7 +822,7 @@ def run_replay(start: pd.Timestamp | None, end: pd.Timestamp | None) -> dict:
         (DEF_FEATS if SIDE_MODE in ("long_defensive_basket_hedge", "regime_switch") else [])
         + (LONGDEF_FEATS if SIDE_MODE == "longdef_shortmr" else [])
         + (["idio_vol_to_btc_1h"] if LONG_IDIO_SKIP_PCT < 1.0 else [])
-        + (["ret_3d"] if LONG_MAX_RET3D < 999 else []) + _SIZING_FEATS))
+        + (["ret_3d"] if (LONG_MAX_RET3D < 999 and "ret_3d" not in d.columns) else []) + _SIZING_FEATS))
     if _need:
         _pf = pd.read_parquet(PANEL, columns=["symbol","open_time"]+_need)
         _pf["open_time"] = pd.to_datetime(_pf["open_time"], utc=True)

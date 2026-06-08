@@ -46,6 +46,27 @@ def _close_ref_at(syms, boundary) -> dict:
     return out
 
 
+def _ret3d_at(syms, boundary) -> dict:
+    """3-day backward return per sym from the xs_feats close (5m close.asof) — the long-winner gate input,
+    computed LIVE for the CURRENT decide bar. The labeled panel lags a cycle (the decide bar isn't in it yet,
+    its forward label needs the next boundary), so the bot's panel-merged ret_3d is NaN here and the gate
+    silently no-ops; this supplies it from the same live close source as _close_ref_at."""
+    from live.incremental_xs_feats import CACHE
+    out = {}
+    for s in syms:
+        p = CACHE / f"xs_feats_{s}.parquet"
+        if not p.exists():
+            continue
+        try:
+            c = pd.read_parquet(p, columns=["close"]); c.index = pd.to_datetime(c.index, utc=True)
+            now = c["close"].asof(boundary); ago = c["close"].asof(boundary - pd.Timedelta(days=3))
+            if np.isfinite(now) and np.isfinite(ago) and ago > 0:
+                out[s] = float(now / ago - 1.0)
+        except Exception:
+            continue
+    return out
+
+
 def _score(bar_feats: pd.DataFrame, models: dict) -> pd.DataFrame:
     """Apply frozen per-sym models to the bar — identical path to predict_twobook_incremental._predict."""
     rec = []
@@ -151,6 +172,8 @@ def run(boundary=None) -> dict:
     if fr["gappy_universe"]:
         print(f"[decide_v1] feed OK but {len(fr['gappy_universe'])} univ syms on ffill-patched bars: "
               f"{fr['gappy_universe'][:8]}")
+    r3 = _ret3d_at(sorted(set(base["symbol"]) | set(longp["symbol"])), ot)   # LIVE long-winner gate input
+    base["ret_3d"] = base["symbol"].map(r3); longp["ret_3d"] = longp["symbol"].map(r3)
     base.to_parquet(ddir/"base_decide.parquet", index=False)
     longp.to_parquet(ddir/"long_decide.parquet", index=False)
     # Binance bar-close per sym = the price the signal saw at B; the ledger uses it for the latency-drift
