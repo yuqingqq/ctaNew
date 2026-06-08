@@ -394,3 +394,9 @@ cycles (only btc_ret_30d marginally neg = near bear boundary, already covered). 
 noise (per-cycle IC unpredictable). Thread (c) closed — no 2nd maxDD lever exists.
 ### [12h LOOP] iter16 (training-window length: expanding+HL60 vs trailing 120/180/365d) — running
 Last untested model lever. Prior: HL=60 already discounts >180d data to <5% weight, so trailing ≈ expanding.
+
+### [12h LOOP] iter16 (training-window length) — REJECTED (flat, HL dominates)
+Per-cycle IC: trail-120d +0.0293, 180d +0.0298, 365d +0.0302, expanding +0.0298. 0.0009 spread = noise. HL=60 already
+discounts >180d data to <5% weight -> window length irrelevant. All 3 model-freshness levers (cadence/HL/window) exhausted.
+### [12h LOOP] iter17 (fit-cutoff ensemble: avg fresh + 30d-stale fit per fold) — running
+Last named thread. Does averaging two fit-cutoffs reduce pred variance enough to lift IC? Prior: iter1 showed staler dilutes.
