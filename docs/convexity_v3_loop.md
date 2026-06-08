@@ -400,3 +400,28 @@ Per-cycle IC: trail-120d +0.0293, 180d +0.0298, 365d +0.0302, expanding +0.0298.
 discounts >180d data to <5% weight -> window length irrelevant. All 3 model-freshness levers (cadence/HL/window) exhausted.
 ### [12h LOOP] iter17 (fit-cutoff ensemble: avg fresh + 30d-stale fit per fold) — running
 Last named thread. Does averaging two fit-cutoffs reduce pred variance enough to lift IC? Prior: iter1 showed staler dilutes.
+
+### [12h LOOP] iter17 (fit-cutoff ensemble for long leg) — REJECTED (marginal/noise)
+Ensemble(fresh+30d-stale) IC +0.0310 vs single-fresh +0.0298 = +0.0012 (noise-scale; %>0 DROPPED 61->60). Even if
+real, IC bumps this size don't move strategy Sharpe (per-cycle IC noise-dominated, iter1/2/16). Not worth 2x fit cost.
+
+## ============ 12h LOOP CONSOLIDATION (iter1-17) ============
+**2 WINS, 15 negatives. Search converged — every construction/sizing/regime/conviction/freshness/tail lever mapped.**
+
+WINS:
+- **bear-degross BEAR_GROSS_MULT=0.5** (iter8-10, ADOPTED): bot +4.63 Sharpe (+0.40) / maxDD -1729 (-38%). Bear-specific
+  (p98 vs matched random-degross placebo), robust in BOTH OOS halves, sound mechanism (de-allocate lowest-Sharpe regime
+  bear +3.12 vs side +5.04). COST: ~17% total PnL (risk-preference). bg=0.75 = gentler (+0.23/-25%, keeps +3671 bear PnL).
+  Env-gated in bot (default 1.0=off). READY to wire: `export BEAR_GROSS_MULT=0.5` in convexity_v1_cycle_once.sh (user sign-off).
+- (pre-loop) long-winner gate LONG_MAX_RET3D=0.20: +0.33 Sharpe, already wired live.
+
+NEGATIVES (15): weekly retrain (i1), recency HL (i2), conviction-tilt sizing (i5), asym short-K (i6), short ret_3d cap
+(i12), vol-targeting degross (i13), pred_disp gating (i14), 2nd-maxDD-lever/side-grind signal (i15), training-window
+length (i16), fit-cutoff ensemble (i17). KEY MECHANISMS LEARNED: (a) conviction is real at signal level (+109bp) but
+inv_vol already extracts it — tilting trades Sharpe for variance; (b) shorting rockets (ret_3d>20%) is the BEST short
+edge (mean +368/Sh+0.33) — squeeze tail is intrinsic, not removable; (c) directional-bear (not vol) is the low-Sharpe
+regime; (d) per-cycle IC is noise — no freshness/cadence/window lever helps; (e) residual side-grind DD is unpredictable.
+
+PRODUCTION v2 = WINNER stack + LONG_MAX_RET3D=0.20 + (recommend) BEAR_GROSS_MULT=0.5. Honest forward: +4.2 Sharpe
+(or +4.6 with bear-degross at -17% PnL), maxDD -2777 (or -1729 with bear-degross). Remaining work is OPERATIONAL
+(live forward test = arbiter), not research — the 4h-horizon free-data construction layer is at a local optimum.
