@@ -116,6 +116,11 @@ def _rand_drop_fires(ot):   # deterministic per (cycle, seed)
 SIZING_MODE = os.environ.get("SIZING_MODE", "equal")
 SIZING_FEAT = os.environ.get("SIZING_FEAT", "idio_vol_to_btc_1h")  # PIT feature in panel
 VOLCAP_PCTILE = float(os.environ.get("VOLCAP_PCTILE", "0.80"))     # for volcap mode: halve weight above this cross-sec pctile
+# 2026-06-08 short-conviction tilt: within the K short legs, tilt weight toward higher conviction (more-negative
+# short pred). Stacks MULTIPLICATIVELY on inv_vol then renormalizes to the same short gross. factor = conv_rank^TILT
+# (most-conviction short -> rank K). 0 = OFF (production default; weights = pure inv_vol). iter3 found per-pick
+# |pred| predicts SHORT success (+109bp Q4-Q0); iter4 gross replay convrank +1.50 Sharpe / 9-9 folds / placebo p100.
+SHORT_CONV_TILT = float(os.environ.get("SHORT_CONV_TILT", "0"))
 _SIZING_FEATS = ([] if SIZING_MODE == "equal" else [SIZING_FEAT])
 # regime_switch: pred_disp (model conviction) threshold; >=THR -> model-long, else defensive-long.
 SIDE_SWITCH_THR = float(os.environ.get("SIDE_SWITCH_THR", "1.0"))
@@ -724,6 +729,15 @@ def select_legs(grp: pd.DataFrame, regime: str, betas_at_t: dict[str, float],
     w = {}
     lw = _vol_scaled_weights(L, gg, a)          # long basket gross = a (vol-scaled within basket)
     sw = _vol_scaled_weights(S, gg, b)          # short basket gross = b
+    # short-conviction tilt (env-gated; 0=off): multiply inv_vol weights by conv_rank^TILT, renorm to gross b.
+    if SHORT_CONV_TILT > 0 and len(S) > 1:
+        skey = "pred_short" if ("pred_short" in gg.columns and gg["pred_short"].notna().any()) else key
+        pv = gg.set_index("symbol")[skey].to_dict()
+        order = sorted(S, key=lambda s: pv.get(s, 0.0))           # ascending pred: most-negative (conviction) first
+        fac = {s: float(len(S) - i) ** SHORT_CONV_TILT for i, s in enumerate(order)}  # rank K..1, ^TILT
+        sw = {s: sw[s] * fac[s] for s in S}
+        tot = sum(sw.values()) or 1.0
+        sw = {s: b * sw[s] / tot for s in S}                      # renorm to same short gross
     for s in L: w[s] = w.get(s, 0) + lw[s]
     for s in S: w[s] = w.get(s, 0) - sw[s]
     return w

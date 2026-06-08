@@ -299,3 +299,15 @@ Simplified GROSS replay (1458 cyc, no cost/inv_vol/gate, long equal): equal +6.8
 beat random mean +5.95, p95 +7.04 -> **p100**. CAVEATS: gross (no cost — top1 churns hardest), no inv_vol (prod
 sizes by inverse-vol; conviction-tilt may CONFLICT since extreme shorts are high-vol), top1=single-name squeeze
 risk -> prefer convrank. iter5 = convrank through full monthly-PIT harness WITH cost + inv_vol interaction.
+
+### [12h LOOP] iter5 (short-conviction tilt through FULL v2 stack) — REJECTED
+PANEL-meta replay (tilt=0 reproduces production +4.22 / -2777 exactly). SHORT_CONV_TILT sweep:
+  tilt=0.0 +4.22 / -2777 | 0.5 +4.10 (lift -0.12, 5/9) | 1.0 +3.98 (-0.24, 6/9) | 2.0 +3.76 (-0.46, maxDD -3269).
+Every tilt HURTS Sharpe; totPnL flat (~16.7k); maxDD worsens at tilt=2. MECHANISM: tilt reweights the SAME 3 picks
+(can't add return), and high-conviction shorts = high-vol names that inv_vol already down-weights for variance —
+tilting toward them undoes the vol control (same return, more variance -> lower Sharpe). iter4's +1.50 gross lift
+was because the gross replay had NO inv_vol; production already extracts the productive part. The iter3 +109bp
+per-pick conviction edge is REAL but it's a HIGH-VARIANCE return, correctly traded away by inv_vol. Conviction
+sizing direction CLOSED. (env-gated SHORT_CONV_TILT kept in bot, default 0=off — tested infra.)
+### [12h LOOP] iter6 (asymmetric short-K: short=engine, widen the short basket) — running
+K_LONG=3 fixed, K_SHORT in {3,4,5,6}. Short side carries the alpha (iter3); does diversifying the short leg help?
