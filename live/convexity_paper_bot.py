@@ -400,6 +400,22 @@ def apply_hysteresis(raw_regimes: list[str], n: int = REGIME_HYSTERESIS_N) -> li
     return out
 
 
+def effective_regime_series(upto=None) -> pd.Series:
+    """Gap-free post-hysteresis regime per 4h bar, derived PURELY from compute_btc_30d so decide / settle /
+    replay are bit-identical regardless of cycles.csv coverage or catch-up length after an outage (the old
+    cycles.csv-seeded hysteresis left a gap on catch-up -> decide/settle could disagree at a transition and
+    pick different legs/stop-skip). dropna() drops warmup (regime_for_cycle(NaN)='unknown'); index<=upto so a
+    stray later bar cannot leak in."""
+    b30 = compute_btc_30d().dropna()
+    if upto is not None:
+        b30 = b30[b30.index <= upto]
+    if b30.empty:
+        return pd.Series(dtype=object)
+    raw = [regime_for_cycle(float(x)) for x in b30.values]
+    eff = apply_hysteresis(raw, n=REGIME_HYSTERESIS_N)
+    return pd.Series(eff, index=b30.index)
+
+
 def _defensive_long_syms(gg):
     """Stage-2 defensive pick among gg (expects DEF_FEATS cols). Falls back to top-pred."""
     cand = gg.nlargest(SIDE_DEF_N, "pred")
@@ -842,12 +858,10 @@ def run_replay(start: pd.Timestamp | None, end: pd.Timestamp | None) -> dict:
         _pf["open_time"] = pd.to_datetime(_pf["open_time"], utc=True)
         d = d.merge(_pf, on=["symbol","open_time"], how="left")
     d["regime_raw"] = d["btc_ret_30d"].apply(regime_for_cycle)
-    # apply N=3 hysteresis on raw regime labels in time order — kills the boundary-flip whipsaw.
-    raw_by_t = d.sort_values("open_time").groupby("open_time")["regime_raw"].first()
-    eff = apply_hysteresis(raw_by_t.tolist(), n=REGIME_HYSTERESIS_N)
-    regime_eff = dict(zip(raw_by_t.index, eff))
-    d["regime"] = d["open_time"].map(regime_eff)
-    log.info(f"hysteresis (N={REGIME_HYSTERESIS_N}): raw {d['regime_raw'].value_counts().to_dict()} -> eff {d['regime'].value_counts().to_dict()}")
+    # gap-free hysteresis from the full btc_ret_30d series (decide/settle/replay identical) — see effective_regime_series
+    reg_ser = effective_regime_series(upto=d["open_time"].max())
+    d["regime"] = d["open_time"].map(reg_ser)
+    log.info(f"hysteresis (N={REGIME_HYSTERESIS_N}, gap-free): raw {d['regime_raw'].value_counts().to_dict()} -> eff {d['regime'].value_counts().to_dict()}")
 
     # BTC forward 4h return for the BTC_HEDGE position (used only by SIDE_MODE=short_btc_hedge)
     btc_close = load_close_4h("BTCUSDT")
@@ -1088,17 +1102,10 @@ def run_cycle() -> dict:
     d["regime_raw"] = d["btc_ret_30d"].apply(regime_for_cycle)
     # hysteresis: seed from the last N+5 raw regimes already logged (need to recompute raw
     # from cycles.csv's btc_ret_30d since we only persist the effective regime).
-    cyc_path = STATE/"cycles.csv"; seed_raw = []
-    if cyc_path.exists():
-        old = pd.read_csv(cyc_path).sort_values("open_time").tail(REGIME_HYSTERESIS_N+5)
-        seed_raw = [regime_for_cycle(b) for b in old["btc_ret_30d"]]
-    raw_by_t = d.sort_values("open_time").groupby("open_time")["regime_raw"].first()
-    all_raw = seed_raw + raw_by_t.tolist()
-    all_eff = apply_hysteresis(all_raw, n=REGIME_HYSTERESIS_N)
-    eff_new = all_eff[len(seed_raw):]
-    regime_eff = dict(zip(raw_by_t.index, eff_new))
-    d["regime"] = d["open_time"].map(regime_eff)
-    log.info(f"hysteresis seeded with {len(seed_raw)} prior raw cycles; new cycles regime: {pd.Series(eff_new).value_counts().to_dict()}")
+    # gap-free hysteresis from the full btc_ret_30d series — identical to what decide computed for the same bar
+    reg_ser = effective_regime_series(upto=d["open_time"].max())
+    d["regime"] = d["open_time"].map(reg_ser)
+    log.info(f"hysteresis (gap-free btc-series): cycles regime {d['regime'].value_counts().to_dict()}")
     by_t = {ot: g for ot, g in d.groupby("open_time")}
     times = sorted(by_t.keys())
 
@@ -1246,14 +1253,11 @@ def run_decide() -> dict:
     btc30 = compute_btc_30d()
     d = d.merge(mom, on=["symbol", "open_time"], how="left")
     d = d.merge(btc30.reset_index(), on="open_time", how="left")
-    # regime + hysteresis, seeded from cycles.csv exactly like run_cycle
-    seed_raw = []
-    cyc_path = STATE/"cycles.csv"
-    if cyc_path.exists():
-        old = pd.read_csv(cyc_path).sort_values("open_time").tail(REGIME_HYSTERESIS_N+5)
-        seed_raw = [regime_for_cycle(b) for b in old["btc_ret_30d"]]
-    raw = regime_for_cycle(float(d["btc_ret_30d"].iloc[0])) if len(d) and np.isfinite(d["btc_ret_30d"].iloc[0]) else "side"
-    regime = apply_hysteresis(seed_raw + [raw], n=REGIME_HYSTERESIS_N)[-1]
+    # regime via the shared gap-free hysteresis series (compute_btc_30d-derived) — see effective_regime_series.
+    # NOT a cycles.csv seed: that lags the settle path and leaves a gap on catch-up, so decide and settle could
+    # disagree on the regime at a transition and pick different legs / stop-skip.
+    reg_ser = effective_regime_series(upto=ot)
+    regime = reg_ser.loc[ot] if ot in reg_ser.index else "side"
     # restore sleeve/stop state (read-only — we don't save)
     active_sleeves = deque([{k: float(v) for k, v in w.items()} for w in state["active_sleeves"]], maxlen=HOLD)
     prev_agg = {k: float(v) for k, v in state["prev_agg"].items()}

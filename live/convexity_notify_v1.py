@@ -76,7 +76,8 @@ def _realfill_summary():
     # exec_cost_bps × traded_notional. This is the clean apples-to-apples "what if fills were perfect".
     cum_cost = sum((float(c.get("exec_cost_bps", 0) or 0) / 1e4) * float(c.get("traded_notional", 0) or 0) for c in cyc)
     r = cyc[-1]; eq = float(r["equity"]); open_un = float(r.get("unrealized_pnl", 0) or 0)
-    return {"armed": False, "n": len(cyc), "start": str(cyc[0].get("open_time"))[:16], "eq": eq, "ret": (eq / e0 - 1) * 100,
+    n_real = sum(1 for c in cyc if "RESET" not in str(c.get("note", "")) and "RESTART" not in str(c.get("note", "")))
+    return {"armed": False, "n": len(cyc), "n_real": n_real, "start": str(cyc[0].get("open_time"))[:16], "eq": eq, "ret": (eq / e0 - 1) * 100,
             "locked": cum_real / e0 * 100, "open": open_un / e0 * 100, "n_open": int(r.get("n_open_syms", 0)),
             "perfect_ret": ((eq + cum_cost) / e0 - 1) * 100, "drag": cum_cost / e0 * 100,
             "exec": r.get("exec_cost_bps"), "slip": r.get("book_slip_bps"),
@@ -141,7 +142,7 @@ def build_message() -> str:
                 "Real-fill armed — no fills booked yet.")
     arrow = "🟢" if rf["ret"] >= 0 else "🔴"
     out = [f"{arrow} <b>Convexity v2</b> (paper, LIVE) — {ot} • {regime}",
-           f"💰 <b>Real PnL since $10k restart ({rf['start'][:10]}): {rf['ret']:+.2f}%</b>  (equity ${rf['eq']:,.0f} / ${BASE/1e3:.0f}k · {rf['n']-1} real cycles)",
+           f"💰 <b>Real PnL since $10k restart ({rf['start'][:10]}): {rf['ret']:+.2f}%</b>  (equity ${rf['eq']:,.0f} / ${BASE/1e3:.0f}k · {rf['n_real']} real cycles)",
            f"   {rf['locked']:+.2f}% locked + {rf['open']:+.2f}% open ({rf['n_open']} positions still held)",
            f"✨ Perfect-fill (same trades, zero fee/slip/latency): <b>{rf['perfect_ret']:+.2f}%</b>  → execution cost {-rf['drag']:+.2f}%",
            f"New L: {L}  ·  S: {S}"]
