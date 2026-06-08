@@ -218,3 +218,22 @@ PLACEBO: inverse "drop recent-LOSER longs" DOESN'T FIRE at any threshold (-0.005
 loser-longs → the error is ASYMMETRIC (winner-only). long_ret +631 (removes net-negative picks, not random variance).
 **VERDICT: GENUINE edge. +0.33 Sharpe / 7/9 folds / recent-positive / fixes long leg. Env LONG_MAX_RET3D=0.20,
 default off. Surgical (11% of cycles). Random-drop placebo + live = final confirmation. Best result of the push.**
+
+### Iter 16 (2026-06-08) — STACKED: long-winner + entry-hour ★★★ [BEST — the optimized v3 candidate]
+LONG_MAX_RET3D=0.20 + ENTRY_HOUR_SCALE=0.5/WEAK=8,12,16/REGIMES=side,bear (both validated edges together):
+| config | Sharpe | maxDD | folds | f9 |
+|---|---|---|---|---|
+| baseline | +3.892 | -2793 | — | — |
+| long-winner 0.20 | +4.224 | -2777 | 7/9 | +1.62 |
+| entry-hour side/bear | +4.171 | -1936 | 5/9 | — |
+| **STACKED** | **+4.487 (+0.60)** | **-1920 (-31%)** | **6/9** | **+3.45** |
+ADDITIVE (different mechanisms: selection-error fix + timing). Keeps long-winner's Sharpe AND entry-hour's maxDD.
+totPnL +13996 (lower — both filters cut deployment; at matched risk this levers up). f8 -1.62 the one weak fold.
+**OPTIMIZED v3 CANDIDATE: baseline +3.892/-2793 -> +4.487/-1920 (+0.60 Sharpe, -31% maxDD). Both env-gated,
+default off, production byte-unchanged. Final confirmation: random-drop placebo (long-winner) + live forward test.**
+
+## ===== SESSION FINAL: 2 real edges from data-driven weakness-hunting =====
+After 18 mechanisms (16 rejected), the deep PnL/feature/cohort analysis found 2 GENUINE edges by targeting measured
+weaknesses: (1) LONG-WINNER suppression (model's momentum-contaminated long-ranker longs rockets that revert down)
++0.33 Sharpe/7-9 folds; (2) ENTRY-HOUR gate (mean-rev fails in active US/EU hours) -31% maxDD/placebo-clean.
+Stacked: +0.60 Sharpe / -31% maxDD. The push paid off; persistence + honest gates found what aggregate sweeps missed.
