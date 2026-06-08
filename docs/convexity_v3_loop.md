@@ -264,3 +264,15 @@ Pending: random-drop placebo (final backtest check) + live forward test (decisiv
 5. Long leg net improved +631 (long_ret -2389 -> -1758): removes net-negative picks, not random variance.
 6. Mechanism: principled non-linear veto for the linear ranker's structural blind spot (long-side falling-knife).
 **VERDICT: VALIDATED on all backtest gates. Only remaining check = live forward test (decisive). Adopt LONG_MAX_RET3D=0.20.**
+
+### Iter 17 (2026-06-08) — FROZEN-forward test (deployed-model proxy) + alpha-capture decay
+Generated forward data the live way: fit deploy models ONCE @ 2026-02-01, run FROZEN 4 months (743 cycles).
+- Per-cycle IC (pred vs fwd xs_z): mean +0.0257, 60% >0. **NO model-aging decay** — IC holds +0.02-0.04 across all
+  age buckets (0-30d +0.031 ... 120-150d +0.041). A deployed model is robust over 4 months (good for live).
+- Refit DOES help ranking: WF (monthly-refit) IC +0.0392 vs frozen +0.0257 over 2/01-6/04 = **+0.013 (~50% sharper
+  fresh)**. So the live system (frozen between monthly retrains, 0-30d stale, IC ~+0.031) runs below the fresh +0.039.
+- Alpha capture +29bp spread (top3-bot3 fwd), varies by PERIOD not age (Feb+43/Mar+13/Apr+47/May+12 = irreducible
+  IC noise, matches DDI).
+**WEAKNESS/LEVER (live): retrain CADENCE. Model is sharpest fresh (+0.039) vs monthly-stale (~+0.031). Test WEEKLY
+retrain to recover ~+0.008 IC — tradeoff vs universe churn + compute. The one live-relevant optimization this surfaces.**
+Scripts: exp_frozen_forward.py.
