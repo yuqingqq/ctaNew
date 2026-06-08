@@ -187,3 +187,19 @@ is the most robust benefit. All 16 other mechanisms rejected (at-optimum / kills
 - **Per-symbol persistence**: H1↔H2 contribution corr -0.010 (NOISE); 47% sign-persistence = coin-flip. No
   structural name-drag to exclude (= vBTC CAL). 
 **Detail vein now also largely tapped: entry-hour gate (iter12c, +0.28/-31%) remains the SINGLE real edge found.**
+
+### Iter 14 (2026-06-08) — feature → cohort-PnL distribution screen [deep]
+Screened entry-time basket/market features vs cohort 24h PnL (quintile spread + per-fold + Sharpe + PIT placebo):
+| feature | spread | fold-consist | risk-adj? |
+|---|---|---|---|
+| **bk_atr_pct** (basket vol) | +72 (top) | 6/9 | Q0 Sh +2.19 < Q4 +4.54 (real in-sample) |
+| bk_rvol_7d | +57 | 7/9 | Q0 +1.54 < Q3 +4.37 |
+| pred_disp | +39 | 5/9 | (existing gate) |
+| bk_funding_z (crowding) | -38 | 5/9 | high-crowded shorts worse |
+| bk_corr_to_btc | -16 | 8/9 | high-beta basket worse (= unhedgeable beta, tiny) |
+**Top signal = basket VOLATILITY** (mean-reversion needs vol to revert). Strong in-sample + risk-adjusted. BUT the
+PIT gate (down-weight low-vol-basket cycles, trailing pctile) FAILS: Δ-0.04..-0.26 Sharpe, 2-4/9 folds, **placebo
+p80 (random skips do as well)**. In-sample vol→PnL is real but NOT PIT-exploitable (trailing threshold too noisy;
+skipping positive low-Sharpe cohorts doesn't help blend). 4th vol-conditioning attempt to fail honest gates.
+**Conclusion: the model already extracts available per-symbol signal; basket-level conditioning on features does
+not add robustly. The entry-hour gate (iter12c) remains the ONE PIT/placebo-validated edge of the entire push.**
