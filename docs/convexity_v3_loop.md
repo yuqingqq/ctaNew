@@ -237,3 +237,12 @@ After 18 mechanisms (16 rejected), the deep PnL/feature/cohort analysis found 2 
 weaknesses: (1) LONG-WINNER suppression (model's momentum-contaminated long-ranker longs rockets that revert down)
 +0.33 Sharpe/7-9 folds; (2) ENTRY-HOUR gate (mean-rev fails in active US/EU hours) -31% maxDD/placebo-clean.
 Stacked: +0.60 Sharpe / -31% maxDD. The push paid off; persistence + honest gates found what aggregate sweeps missed.
+
+### Iter 15b (2026-06-08) — CORRECTION: the model error is a LINEAR-VETO limitation, not momentum contamination
+Verified the long-ranker: corr(pred_long, ret_3d) = -0.10 (return_1d -0.13) → the model is CORRECTLY mean-reverting
+on average (recent winners get LOWER pred; extreme rockets mean pred -0.11). NOT a momentum-long.
+The real error: the RidgeCV is LINEAR, so the (correct) negative recent-return term is just one additive piece.
+For ~12% of extreme rockets (ret_3d>20%), the OTHER features (resid_rev + V0) sum bullish enough to OVERRIDE it →
+those names land in the top pred-decile → longed → fwd -230bp Sharpe -4.38 (catastrophic). A linear model CANNOT
+encode "extreme recent move ⟹ hard-veto long regardless of all else" — that's a non-linearity. LONG_MAX_RET3D=0.20
+IS the missing non-linear hinge/veto (long-side analog of falling-knife #162-163). Principled fix, not a curve-fit.
