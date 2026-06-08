@@ -25,7 +25,7 @@ Usage:
   PYTHONPATH=. .venv/bin/python data_collectors/binance_ws_collector.py --syms BTCUSDT ETHUSDT --no-backfill
 """
 from __future__ import annotations
-import argparse, asyncio, json, sys, time, signal, subprocess, threading
+import argparse, asyncio, json, os, sys, time, signal, subprocess, threading
 from collections import defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
@@ -111,48 +111,47 @@ class Collector:
         # (sym,day) flag wiped by .clear() and never get written until the symbol's next bar re-dirties it ~5min
         # later — that was the 13-symbol boundary-cohort drop (06-07 00/04/12:00). difference_update keeps those
         # late flags so the NEXT 5s flush writes them. (kl is what the decide cohort reads; agg/fund same hazard.)
-        snap_agg = list(self.dirty_agg)
-        for (sym, day) in snap_agg:
-            rows = list(self.agg[sym][day].values())
-            if not rows:
-                continue
-            df = pd.DataFrame(rows)
-            df["transact_time"] = pd.to_datetime(df["transact_time"], unit="ms", utc=True)
-            df["is_buyer_maker"] = df["is_buyer_maker"].astype(bool)
-            df = df[AGG_COLS].sort_values("agg_trade_id").reset_index(drop=True)
-            p = self._agg_path(sym, day); p.parent.mkdir(parents=True, exist_ok=True)
-            tmp = p.with_name(p.name + ".tmp"); df.to_parquet(tmp, compression="zstd", index=False); tmp.replace(p)
-            n += 1
-        self.dirty_agg.difference_update(snap_agg)
-        snap_kl = list(self.dirty_kl)
-        for (sym, day) in snap_kl:
-            rows = list(self.kl[sym][day].values())
-            if not rows:
-                continue
-            df = pd.DataFrame(rows)
-            df["open_time"] = pd.to_datetime(df["open_time"], unit="ms", utc=True)
-            df["close_time"] = pd.to_datetime(df["close_time"], unit="ms", utc=True)
-            df = df[KL_COLS].sort_values("open_time").reset_index(drop=True)
-            p = self._kl_path(sym, day); p.parent.mkdir(parents=True, exist_ok=True)
-            tmp = p.with_name(p.name + ".tmp"); df.to_parquet(tmp, compression="zstd", index=False); tmp.replace(p)
-            n += 1
-        self.dirty_kl.difference_update(snap_kl)
-        snap_fund = list(self.dirty_fund)
-        for sym in snap_fund:
-            rows = list(self.fund[sym].values())
-            if not rows:
-                continue
-            new = pd.DataFrame(rows); new["calc_time"] = pd.to_datetime(new["calc_time"], unit="ms", utc=True)
-            new = new[["calc_time", "interval_hours", "funding_rate"]]
-            p = FUND_ROOT / f"funding_{sym}.parquet"
-            if p.exists():
-                old = pd.read_parquet(p); old["calc_time"] = pd.to_datetime(old["calc_time"], utc=True)
-                comb = pd.concat([old, new], ignore_index=True)
-            else:
-                comb = new
-            comb = comb.drop_duplicates("calc_time").sort_values("calc_time").reset_index(drop=True)
-            tmp = p.with_name(p.name + ".tmp"); comb.to_parquet(tmp, index=False); tmp.replace(p); n += 1
-        self.dirty_fund.difference_update(snap_fund)
+        # ATOMIC + ORPHAN-RACE-SAFE: write to a tmp UNIQUE PER PROCESS (collector pid != backfill pid, else they
+        # collide on a shared ".tmp" and publish a torn file), then rename. And clear each (sym,day) flag ONLY if
+        # nothing arrived during the write (len unchanged) — a bar appended by _on_kline while to_parquet had the
+        # GIL keeps its flag so the NEXT 5s flush writes it (the bulk difference_update would have wiped it).
+        def _aw(df, p, **kw):
+            tmp = p.with_name(f"{p.name}.{os.getpid()}.tmp"); df.to_parquet(tmp, **kw); tmp.replace(p)
+        for (sym, day) in list(self.dirty_agg):
+            d = self.agg[sym][day]; rows = list(d.values()); nk = len(d)
+            if rows:
+                df = pd.DataFrame(rows)
+                df["transact_time"] = pd.to_datetime(df["transact_time"], unit="ms", utc=True)
+                df["is_buyer_maker"] = df["is_buyer_maker"].astype(bool)
+                df = df[AGG_COLS].sort_values("agg_trade_id").reset_index(drop=True)
+                p = self._agg_path(sym, day); p.parent.mkdir(parents=True, exist_ok=True); _aw(df, p, compression="zstd", index=False); n += 1
+            if len(d) == nk:
+                self.dirty_agg.discard((sym, day))
+        for (sym, day) in list(self.dirty_kl):
+            d = self.kl[sym][day]; rows = list(d.values()); nk = len(d)
+            if rows:
+                df = pd.DataFrame(rows)
+                df["open_time"] = pd.to_datetime(df["open_time"], unit="ms", utc=True)
+                df["close_time"] = pd.to_datetime(df["close_time"], unit="ms", utc=True)
+                df = df[KL_COLS].sort_values("open_time").reset_index(drop=True)
+                p = self._kl_path(sym, day); p.parent.mkdir(parents=True, exist_ok=True); _aw(df, p, compression="zstd", index=False); n += 1
+            if len(d) == nk:
+                self.dirty_kl.discard((sym, day))
+        for sym in list(self.dirty_fund):
+            d = self.fund[sym]; rows = list(d.values()); nk = len(d)
+            if rows:
+                new = pd.DataFrame(rows); new["calc_time"] = pd.to_datetime(new["calc_time"], unit="ms", utc=True)
+                new = new[["calc_time", "interval_hours", "funding_rate"]]
+                p = FUND_ROOT / f"funding_{sym}.parquet"
+                if p.exists():
+                    old = pd.read_parquet(p); old["calc_time"] = pd.to_datetime(old["calc_time"], utc=True)
+                    comb = pd.concat([old, new], ignore_index=True)
+                else:
+                    comb = new
+                comb = comb.drop_duplicates("calc_time").sort_values("calc_time").reset_index(drop=True)
+                _aw(comb, p, index=False); n += 1
+            if len(d) == nk:
+                self.dirty_fund.discard(sym)
         # evict any day older than today (already flushed) to bound memory
         today = _day(int(time.time() * 1000))
         for store in (self.agg, self.kl):

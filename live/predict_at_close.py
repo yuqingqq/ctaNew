@@ -15,7 +15,7 @@ Usage:
   python3 live/predict_at_close.py --verify    # build a past bar, assert V0 matches the labeled panel
 """
 from __future__ import annotations
-import argparse, json, pickle, time
+import argparse, json, os, pickle, time
 from pathlib import Path
 import numpy as np, pandas as pd
 import warnings; warnings.filterwarnings("ignore")
@@ -64,6 +64,15 @@ def build_bar(boundary, drop_unlabeled=False, workers=6):
     panel_syms = pd.read_parquet(ip.PANEL, columns=["symbol"])["symbol"].unique()
     syms = sorted(s for s in panel_syms if s != "BTCUSDT")
     since = boundary - pd.Timedelta(hours=4)                       # so open_time > since keeps exactly `boundary`
+    # BTC-completeness gate — the DECIDE side (which books fills) must refuse a sparse BTC series just like the
+    # settle path does (incremental_panel: SystemExit(3)); otherwise beta_to_btc_change_5d / idio-vol are computed
+    # on a gappy BTC tail and silently wrong (the NIL -0.95 vs +0.80 beta flip). None -> decide_v1 returns {} ->
+    # cycle_once falls through to the settle without booking a trade.
+    _ok, _msg = ip._btc_completeness_ok(ip._BTC_FULL, since)
+    if not _ok and os.environ.get("CONVEXITY_SKIP_BTC_GATE") != "1":
+        print(f"[predict_at_close] BTC SPARSE — refusing to decide ({_msg})", flush=True); return None
+    if not _ok:
+        print(f"[predict_at_close] WARN: BTC sparse but CONVEXITY_SKIP_BTC_GATE=1 — proceeding ({_msg})", flush=True)
     args = [(s, since, boundary, drop_unlabeled) for s in syms]
     if workers > 1:
         with mp.get_context("fork").Pool(min(workers, len(syms))) as pool:   # fork → workers inherit _BTC_FULL

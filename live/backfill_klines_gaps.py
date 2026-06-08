@@ -15,7 +15,7 @@ Usage:
   python3 live/backfill_klines_gaps.py --symbols XLMUSDT SEIUSDT
 """
 from __future__ import annotations
-import argparse, sys, time, json, urllib.request
+import argparse, os, sys, time, json, urllib.request
 from pathlib import Path
 import pandas as pd
 REPO = Path("/home/yuqing/ctaNew"); sys.path.insert(0, str(REPO))
@@ -114,7 +114,7 @@ def backfill_sym(sym, target=None):
                     .drop_duplicates("open_time").sort_values("open_time"))
         else:
             comb = g.sort_values("open_time")
-        tmp = fp.with_name(fp.name + ".tmp"); comb.to_parquet(tmp, index=False); tmp.replace(fp)  # atomic vs collector
+        tmp = fp.with_name(f"{fp.name}.{os.getpid()}.tmp"); comb.to_parquet(tmp, index=False); tmp.replace(fp)  # unique-per-proc atomic
         n += len(g)
     resid = len(_missing_bars(_load(_recent_files(sym)), since, tgt))  # FAPI may not have every bar either
     tag = "refreshed" if stale else "filled"
