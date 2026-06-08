@@ -370,3 +370,11 @@ revert down — long-winner gate, short side). Capping would kill it. Squeeze ta
 bucket) is intrinsic cost of a profitable edge, not removable. Short tail NOT cheaply addressable via ret_3d cap.
 ### [12h LOOP] iter13 (vol-targeting de-gross — principled generalization of bear-degross) — running
 Scale gross by trailing btc_rvol_7d (all regimes). Does vol-targeting beat/complement bear-only de-gross?
+
+### [12h LOOP] iter13 (vol-targeting de-gross) — REJECTED (blunter than regime-based bear-degross)
+Scale gross by trailing btc_rvol_7d: vol-target alone Sharpe +4.02-4.06 (< baseline +4.22, << bear-degross +4.77);
+bear x0.5 + vol-target (min) +4.54 (< bear-only +4.77). Vol-targeting de-grosses high-vol SIDE/BULL cycles that are
+still high-Sharpe. It's the DIRECTIONAL bear regime that's low-Sharpe, not vol per se. Bear-degross is the sharper
+lever — beats the obvious vol-targeting alternative. Reinforces iter8-10.
+### [12h LOOP] iter14 (pred_disp conviction gating for the side-grind DD) — running
+Residual maxDD = side grind. Does low model-conviction (pred_disp) flag the bad side cycles? gating signal?
