@@ -276,3 +276,8 @@ Generated forward data the live way: fit deploy models ONCE @ 2026-02-01, run FR
 **WEAKNESS/LEVER (live): retrain CADENCE. Model is sharpest fresh (+0.039) vs monthly-stale (~+0.031). Test WEEKLY
 retrain to recover ~+0.008 IC — tradeoff vs universe churn + compute. The one live-relevant optimization this surfaces.**
 Scripts: exp_frozen_forward.py.
+
+### [12h LOOP] iter1 (2026-06-08) — weekly retrain cadence — REJECTED
+Weekly-refit WF (35 cuts) per-cycle IC 2/01-6/04 = +0.0269 vs monthly +0.0392 (-0.012, WORSE). Frequent refits =
+less/noisier training data per fold; monthly wins. Frozen-forward "fresh>stale" implies "weight recent data more",
+NOT "refit more often". Keep monthly retrain. (iter2 tests recency half-life as the cheaper freshness lever.)
