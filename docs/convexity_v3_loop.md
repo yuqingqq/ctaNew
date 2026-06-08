@@ -355,3 +355,10 @@ total return, so it's the user's risk call — like LONG_MAX_RET3D, not auto-wir
 
 ### [12h LOOP] iter11 (residual maxDD anatomy after bear-degross) — running
 With bear x0.5 the maxDD floor is ~-1729 (NON-bear). Where/what regime is it? Is there a 2nd addressable tail?
+
+### [12h LOOP] iter11 (residual maxDD anatomy) — short-squeeze tail identified
+Post-bear-degross maxDD -1729 = a SIDE-regime slow grind (53 cyc, 2025-12-27->01-04). But the worst INDIVIDUAL
+cycles are SHORT-SQUEEZE losses: short_ret -1242 (06-04), -651 (10-21, long +357!), -517 (11-02), -423 (04-24) —
+longs often POSITIVE, the short leg craters. Short leg = alpha engine (iter3) AND tail (squeeze when shorted rockets
+keep ripping). Mirror of long-winner gate, short side. -> iter12 diagnoses if extreme-ret_3d shorts carry a fat
+squeeze tail a cap could trim.
