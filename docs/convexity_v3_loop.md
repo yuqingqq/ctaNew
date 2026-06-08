@@ -254,3 +254,13 @@ Entry-hour gate dropped (more borderline: 5/9 folds, regime-dependent). Trade-of
 **Chosen performance: Sharpe +3.892 -> +4.224 (+0.33), maxDD ~-2780 (≈ baseline), 7/9 folds, recent-positive.**
 Single clean rule (non-linear veto for the linear ranker's blind spot). Env LONG_MAX_RET3D=0.20; entry-hour OFF.
 Pending: random-drop placebo (final backtest check) + live forward test (decisive).
+
+### VALIDATION (2026-06-08) — long-winner gate (LONG_MAX_RET3D=0.20) PASSES all backtest gates
+1. Aggregate: Sharpe +3.892 -> +4.224 (+0.33), monthly-PIT.
+2. Per-fold: 7/9 (recent-positive, f9 +1.62).
+3. Random-drop placebo (drop top-long 11% cycles, 8 seeds): random mean +3.973 (deploy effect +0.08), winner-gate
+   +4.224 beats 8/8 seeds (p100); winner-SPECIFICITY = +0.25 over random. NOT just less-deployment.
+4. Inverse "drop-loser" placebo: never fires (error is winner-asymmetric — model doesn't pick loser-longs).
+5. Long leg net improved +631 (long_ret -2389 -> -1758): removes net-negative picks, not random variance.
+6. Mechanism: principled non-linear veto for the linear ranker's structural blind spot (long-side falling-knife).
+**VERDICT: VALIDATED on all backtest gates. Only remaining check = live forward test (decisive). Adopt LONG_MAX_RET3D=0.20.**

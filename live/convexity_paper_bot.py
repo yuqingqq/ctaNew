@@ -103,6 +103,12 @@ LONG_RESIDREV_THR = float(os.environ.get("LONG_RESIDREV_THR", "0.0"))
 # losers +54/+1.33; filtering the ~14% winner-longs lifts long-leg Sharpe +0.19 (8/9 folds). 999=off.
 LONG_MAX_RET3D = float(os.environ.get("LONG_MAX_RET3D", "999"))
 LONG_MIN_RET3D = float(os.environ.get("LONG_MIN_RET3D", "-999"))   # placebo/inverse: drop recent-LOSER longs (ret_3d<thr)
+RAND_LONG_DROP_PCT = float(os.environ.get("RAND_LONG_DROP_PCT", "0"))   # placebo: drop TOP long in PCT% of cycles (random)
+RAND_LONG_DROP_SEED = int(os.environ.get("RAND_LONG_DROP_SEED", "0"))
+def _rand_drop_fires(ot):   # deterministic per (cycle, seed)
+    if RAND_LONG_DROP_PCT <= 0: return False
+    h = (int(ot.value // 10**9) * 2654435761 + RAND_LONG_DROP_SEED * 40503) % 100000
+    return (h / 100000.0) < RAND_LONG_DROP_PCT
 # vol-aware leg sizing (2026-06-02 root-cause: tail losses concentrate in high-idio-vol QUALITY names
 # that pass all gates; volatility is ungated. Scale each leg's weight by inverse-vol, normalized to
 # keep the SAME basket gross -> de-concentrates the tail without excluding liquid names).
@@ -460,6 +466,9 @@ def select_legs(grp: pd.DataFrame, regime: str, betas_at_t: dict[str, float],
             if LONG_MAX_RET3D < 999 and "ret_3d" in gg.columns:
                 _k = gg[(gg["ret_3d"] <= LONG_MAX_RET3D) | gg["ret_3d"].isna()]
                 if len(_k) >= kbL: lpool = _k
+            if RAND_LONG_DROP_PCT > 0 and len(lpool) > kbL and _rand_drop_fires(grp["open_time"].iloc[0]):
+                _rc = "pred_long" if "pred_long" in lpool.columns and lpool["pred_long"].notna().any() else "pred"
+                lpool = lpool.drop(lpool[_rc].idxmax())
             if "pred_long" in lpool.columns and lpool["pred_long"].notna().sum() >= kbL:
                 L = lpool.dropna(subset=["pred_long"]).nlargest(kbL, "pred_long")["symbol"].tolist()
             else:
@@ -692,6 +701,9 @@ def select_legs(grp: pd.DataFrame, regime: str, betas_at_t: dict[str, float],
     if LONG_MIN_RET3D > -999 and "ret_3d" in long_pool.columns:      # inverse placebo: drop recent-LOSER longs
         keep = long_pool[(long_pool["ret_3d"] >= LONG_MIN_RET3D) | long_pool["ret_3d"].isna()]
         if len(keep) >= kL: long_pool = keep
+    if RAND_LONG_DROP_PCT > 0 and len(long_pool) > kL and _rand_drop_fires(grp["open_time"].iloc[0]):
+        rc = "pred_long" if "pred_long" in long_pool.columns and long_pool["pred_long"].notna().any() else key
+        long_pool = long_pool.drop(long_pool[rc].idxmax())           # placebo: drop the TOP long candidate
     # iter13/14 dual-pred + meta-labels: long ranked by pred_long, short by pred_short (embedded or via PREDS_LONG).
     if "pred_long" in long_pool.columns and long_pool["pred_long"].notna().sum() >= kL:
         L = long_pool.dropna(subset=["pred_long"]).nlargest(kL, "pred_long")["symbol"].tolist()
