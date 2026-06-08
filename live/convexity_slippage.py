@@ -80,6 +80,31 @@ def snapshot_mids(symbols, out: Path, workers: int = 16) -> int:
     return len(mids)
 
 
+def snapshot_exec_marks(net_dir: dict, out: Path, workers: int = 16) -> int:
+    """Realizable CLOSE price per OPEN position off the HL L2 book — the REAL-EXECUTION mark for unrealized PnL
+    (what you'd actually get liquidating now), not the mid. A long closes by SELLING into the bid; a short
+    closes by BUYING the ask. net_dir = {symbol: signed weight/units}. Writes {captured_at, mids} (key 'mids'
+    so the realfill consumes it exactly like snapshot_mids)."""
+    import concurrent.futures as cf, datetime as _dt
+    def one(item):
+        sym, w = item
+        try:
+            bk = fetch_hl_l2_book(_binance_to_hl_coin(sym))
+            if bk["bids"] and bk["asks"]:
+                return sym, (bk["bids"][0][0] if w > 0 else bk["asks"][0][0])   # close long@bid, short@ask
+        except Exception:
+            pass
+        return sym, None
+    marks = {}
+    with cf.ThreadPoolExecutor(max_workers=workers) as ex:
+        for sym, m in ex.map(one, net_dir.items()):
+            if m is not None and m > 0:
+                marks[sym] = m
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps({"captured_at": _dt.datetime.now(_dt.timezone.utc).isoformat(), "mids": marks}))
+    return len(marks)
+
+
 def log_latest_cycle(state: Path, book: str, out: Path):
     cyc = pd.read_csv(state / "cycles.csv")
     if not len(cyc):

@@ -174,6 +174,8 @@ def run(boundary=None) -> dict:
               f"{fr['gappy_universe'][:8]}")
     r3 = _ret3d_at(sorted(set(base["symbol"]) | set(longp["symbol"])), ot)   # LIVE long-winner gate input
     base["ret_3d"] = base["symbol"].map(r3); longp["ret_3d"] = longp["symbol"].map(r3)
+    if not r3:    # empty -> ret_3d all-NaN -> the long-winner gate keeps everything (silent no-op); surface it
+        print(f"[decide_v1] WARN: live ret_3d EMPTY @ {ot} — long-winner gate input all-NaN, gate NO-OPS this cycle")
     base.to_parquet(ddir/"base_decide.parquet", index=False)
     longp.to_parquet(ddir/"long_decide.parquet", index=False)
     # Binance bar-close per sym = the price the signal saw at B; the ledger uses it for the latency-drift

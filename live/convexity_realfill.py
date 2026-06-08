@@ -229,11 +229,30 @@ if __name__ == "__main__":
         fills = _read_decide_slip(st / "realfill" / "decide_slip.csv", dec["open_time"])
         cref_path = st / "decide" / "close_ref.json"
         close_ref = json.loads(cref_path.read_text()) if cref_path.exists() else {}
-        # mids for MtM of ALL open syms: use this cycle's probe mids (open-but-untraded syms carry last mid)
-        mids = {s: f["mid"] for s, f in fills.items() if np.isfinite(f.get("mid", np.nan))}
+        # MtM of ALL open positions at the REAL HL ORDERBOOK mid — not just this cycle's traded legs. With 6
+        # overlapping sleeves most open symbols are CARRIED (not in turnover); marking them at entry price left
+        # their unrealized PnL at 0 and the equity wrong. Probe the whole open book (current lots ∪ this cycle's
+        # target net_after) off HL L2; supplement with the fresh traded-leg mids for anything the snapshot missed.
+        from live.convexity_slippage import snapshot_exec_marks
+        net_after = {s: float(w) for s, w in dec.get("net_after", {}).items() if abs(float(w)) > 1e-9}
+        lot_net = {s: sum(u for u, _ in led.get("lots", {}).get(s, [])) for s in led.get("lots", {})}
+        net_dir = {**lot_net, **net_after}                          # every open position w/ direction (target wins)
+        net_dir = {s: w for s, w in net_dir.items() if abs(w) > 1e-12}
+        try:   # mark the whole open book at the REALIZABLE close price (long@bid, short@ask), not entry, not mid
+            snapshot_exec_marks(net_dir, st / "decide" / "open_mids.json")
+            mids = json.loads((st / "decide" / "open_mids.json").read_text()).get("mids", {})
+        except Exception as e:
+            print(f"[realfill] open-book HL exec-mark snapshot failed ({type(e).__name__}); using traded-leg mids only")
+            mids = {}
+        for s, f in fills.items():
+            if s not in mids and np.isfinite(f.get("mid", np.nan)):
+                mids[s] = f["mid"]
         # HL DECISION mids (captured at cycle start) → true HL→HL latency; absent → basis-contaminated fallback
         dmids_path = st / "decide" / "decision_mids.json"
-        decision_mids = json.loads(dmids_path.read_text()).get("mids", {}) if dmids_path.exists() else {}
+        try:   # snapshot-mids is backgrounded + writes non-atomically; a mid-write read must not crash booking
+            decision_mids = json.loads(dmids_path.read_text()).get("mids", {}) if dmids_path.exists() else {}
+        except Exception:
+            decision_mids = {}   # falls back to basis-contaminated latency (flagged), not a crash
         rec = update_cycle(led, dec, fills, mids=mids, close_ref=close_ref, decision_mids=decision_mids)
         save_ledger(led_path, led)
         print(f"[realfill] {rec['open_time']} [{rec['regime']}]: {rec['n_trades']} fills "

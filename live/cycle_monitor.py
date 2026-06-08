@@ -79,14 +79,14 @@ def review_block(block: list) -> dict:
     bf_fetched = (int(bfp.group(1)) + int(bfp.group(2))) if bfp else None
     if bf_s is not None and (bf_s > 25 or (bf_fetched or 0) > 40):
         issues.append(f"⏱ backfill {bf_s}s / {bf_fetched} fetched — WS dropping klines? (healthy ≈ 4s/0)")
-    # WS disk-readiness: "N gapless" = symbols whose boundary bar the collector WROTE without needing FAPI.
-    # Low gapless = the collector orphan-race (dirty_kl.clear dropping bars added mid-flush-write) regressed.
-    # Healthy ≈ 170-175 since the difference_update fix; <168 means boundary klines are going un-written again.
-    gp = re.search(r"(\d+) gapless", text)
-    gapless = int(gp.group(1)) if gp else None
-    if gapless is not None and gapless < 168:
-        issues.append(f"⚠️ WS disk-readiness {gapless} gapless (<168) — collector orphan-race regression?")
-    return {"src": src, "B": B, "decided": dec, "regime": reg, "legs": legs, "gapless": gapless,
+    # Cohort completeness — the real collector/data-regression signal. Use predict_at_close's BUILT-bar count
+    # (161 on the 06-07 12:00 orphan-race boundary, ~174 healthy). Do NOT use the backfill "gapless" count: that
+    # measures 8-day HISTORY completeness (sits ~161 even on a perfectly clean boundary), so it false-alarms.
+    cm2 = re.search(r"built (\d+) syms", text)
+    cohort = int(cm2.group(1)) if cm2 else None
+    if cohort is not None and cohort < 168:
+        issues.append(f"⚠️ cohort {cohort}/174 built (<168) — collector/data regression (boundary klines un-written?)")
+    return {"src": src, "B": B, "decided": dec, "regime": reg, "legs": legs, "cohort": cohort,
             "fresh": fresh, "lat": lat, "bf_s": bf_s, "bf_fetched": bf_fetched, "issues": issues}
 
 
