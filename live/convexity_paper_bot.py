@@ -71,6 +71,9 @@ REGIME_HYSTERESIS_N = int(os.environ.get("REGIME_HYSTERESIS_N", "3"))
 BULL_MODE = os.environ.get("BULL_MODE", "mom")
 BULL_K = int(os.environ.get("BULL_K","0"))   # bull-specific K (0=use global K_LONG/K_SHORT)
 BEAR_K = int(os.environ.get("BEAR_K","0"))   # bear-specific K (0=use global)
+# 2026-06-08 bear de-gross: scale bear-equal basket gross (1.0=full v2; <1 trades bear edge at lower size to cut the
+# bear tail — iter7 found maxDD/51%-loss-concentration all bear). Off by default (1.0). 0.0 == BEAR_MODE=flat.
+BEAR_GROSS_MULT = float(os.environ.get("BEAR_GROSS_MULT","1.0"))
 # SIDE_MODE: which construction in SIDE regime.
 #   "default"          : current top-K=5 long / bot-K=5 short, beta-neutral
 #   "short_btc_hedge"  : drop the (broken) long leg; trade only bot-K=3 alt shorts + BTC long
@@ -501,8 +504,8 @@ def select_legs(grp: pd.DataFrame, regime: str, betas_at_t: dict[str, float],
             else:
                 S = gg.nsmallest(kbS, "pred")["symbol"].tolist()
             w = {}
-            for s in L: w[s] = w.get(s, 0) + 1.0/kbL     # +$ equal per name
-            for s in S: w[s] = w.get(s, 0) - 1.0/kbS     # -$ equal per name (gross 1 each side = dollar-neutral)
+            for s in L: w[s] = w.get(s, 0) + BEAR_GROSS_MULT/kbL     # +$ equal per name (gross scaled by BEAR_GROSS_MULT)
+            for s in S: w[s] = w.get(s, 0) - BEAR_GROSS_MULT/kbS     # -$ equal per name (gross 1 each side = dollar-neutral)
             return w
         if BEAR_MODE in ("side", "shortbias"): regime = "side"   # trade bear via the side mean-rev (beta-neut) path
 

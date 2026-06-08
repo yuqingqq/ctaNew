@@ -327,3 +327,11 @@ maxDD -2777bps = 15/15 BEAR cycles (2025-11-18->20). Per-regime Sharpe: bear +3.
 K=2) for +4959 totPnL but carries the entire maxDD + the tail. -> iter8 tests the bear risk-return frontier.
 ### [12h LOOP] iter8 (bear-handling frontier: flat / K=1 / K=2 / K=3) — running
 Does cutting bear exposure trade the +4959 bear PnL for a much smaller maxDD at acceptable Sharpe? (task #171)
+
+### [12h LOOP] iter8 (bear de-gross frontier) — PARETO SWEET SPOT at bg=0.5 (RISK lever, needs bear-specificity placebo)
+BEAR_GROSS_MULT sweep: bg=1.0 +4.22/-2777/bearPnL+4959 | 0.75 +4.46/-2083(+25%)/+3671 | **0.5 +4.63/-1729(+38%)/+2382**
+| 0.25 +4.60/-1729/+1092 | 0.0(flat) +4.23/-1695/-201. Inverted-U: Sharpe peaks at bg=0.5 (+0.40 lift) AND maxDD
+-38%. BUT folds+ only 2/9 — NOT broad alpha; it's variance reduction (de-allocate the lowest-Sharpe regime: bear
++3.12 vs side +5.04). maxDD floors at ~-1729 for bg<=0.5 (a structural NON-bear drawdown floor). Honest: fails the
+alpha per-fold gate, but is a sound RISK-BUDGETING overlay for task #171. iter9 = matched placebo (de-gross random
+28% of cycles vs bear) to prove bear-SPECIFICITY (else it's just "trade less"). Env-gated BEAR_GROSS_MULT in bot (1.0=off).
