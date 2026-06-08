@@ -386,3 +386,11 @@ DD not flagged by conviction. (Matches vBTC pred_disp/middle-zone findings.)
 === LOOP STATUS @ iter14: 2 wins (long-winner gate pre-loop +0.33; bear-degross bg=0.5 +0.40/-38%maxDD adopted),
 12 negatives. Construction/sizing/regime/conviction axes mapped as local optimum; short tail intrinsic to edge;
 risk win is bear-degross. Diminishing returns — remaining ideas low-probability. ===
+
+### [12h LOOP] iter15 (PIT signal for bad SIDE cycles — 2nd maxDD lever) — REJECTED (side-grind = noise)
+No PIT signal distinguishes bad side cycles: corr(pnl) all tiny — btc_ret_30d +0.012, pred_disp +0.085, btc_rvol
++0.045, xs_ret_disp -0.045, turnover +0.033. In the Dec27-Jan4 grind window every candidate ≈ identical to best
+cycles (only btc_ret_30d marginally neg = near bear boundary, already covered). Residual side DD is irreducible
+noise (per-cycle IC unpredictable). Thread (c) closed — no 2nd maxDD lever exists.
+### [12h LOOP] iter16 (training-window length: expanding+HL60 vs trailing 120/180/365d) — running
+Last untested model lever. Prior: HL=60 already discounts >180d data to <5% weight, so trailing ≈ expanding.
