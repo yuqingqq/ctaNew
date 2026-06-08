@@ -378,3 +378,11 @@ still high-Sharpe. It's the DIRECTIONAL bear regime that's low-Sharpe, not vol p
 lever — beats the obvious vol-targeting alternative. Reinforces iter8-10.
 ### [12h LOOP] iter14 (pred_disp conviction gating for the side-grind DD) — running
 Residual maxDD = side grind. Does low model-conviction (pred_disp) flag the bad side cycles? gating signal?
+
+### [12h LOOP] iter14 (pred_disp conviction gating for side-grind) — REJECTED
+corr(pred_disp,pnl) weak: side +0.085, all +0.041, NON-monotonic (dead zone is MIDDLE Q1-Q2, not bottom; low-disp
+Q0 side Sharpe +5.88 is fine). Bottom-20% disp side +9.5 ≈ rest +10.7 — a low-conviction skip won't help. Side-grind
+DD not flagged by conviction. (Matches vBTC pred_disp/middle-zone findings.)
+=== LOOP STATUS @ iter14: 2 wins (long-winner gate pre-loop +0.33; bear-degross bg=0.5 +0.40/-38%maxDD adopted),
+12 negatives. Construction/sizing/regime/conviction axes mapped as local optimum; short tail intrinsic to edge;
+risk win is bear-degross. Diminishing returns — remaining ideas low-probability. ===
