@@ -292,3 +292,10 @@ Per-pick fwd PnL by |pred| quintile, pooled over picks: **SHORT** Q0(low-conv) +
 spread **+109bp**, corr +0.086 — conviction predicts short success. LONG Q0 -55.9 -> Q4 -33.9, spread +22, corr
 -0.006 (nothing). Equal-weight K=3 under-weights the best shorts. -> iter4 tests conviction-weighted SHORT sizing
 (honest Sharpe/per-fold/placebo, not just pooled mean — extreme shorts may carry more variance).
+
+### [12h LOOP] iter4 (conviction-weighted SHORT sizing) — STRONG LEAD (needs full-harness+cost validation)
+Simplified GROSS replay (1458 cyc, no cost/inv_vol/gate, long equal): equal +6.81 | convlin +8.29 (lift +1.48, 8/9)
+| convrank +8.31 (+1.50, 9/9) | top1 +9.10 (+2.29, 9/9). Placebo (200 random short weights): convrank/convlin
+beat random mean +5.95, p95 +7.04 -> **p100**. CAVEATS: gross (no cost — top1 churns hardest), no inv_vol (prod
+sizes by inverse-vol; conviction-tilt may CONFLICT since extreme shorts are high-vol), top1=single-name squeeze
+risk -> prefer convrank. iter5 = convrank through full monthly-PIT harness WITH cost + inv_vol interaction.
