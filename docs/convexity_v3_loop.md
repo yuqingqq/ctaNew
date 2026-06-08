@@ -352,3 +352,6 @@ choice. bg=0.75 is the gentler option (+4.46, -25% maxDD, retains +3671 bear PnL
 READY to wire into live/convexity_v1_cycle_once.sh as `export BEAR_GROSS_MULT=0.5` pending user sign-off (it reduces
 total return, so it's the user's risk call — like LONG_MAX_RET3D, not auto-wired).
 === LOOP WINS: long-winner gate (pre-loop, +0.33 Sh) + bear de-gross bg=0.5 (iter8-10, +0.40 Sh / -38% maxDD). ===
+
+### [12h LOOP] iter11 (residual maxDD anatomy after bear-degross) — running
+With bear x0.5 the maxDD floor is ~-1729 (NON-bear). Where/what regime is it? Is there a 2nd addressable tail?
