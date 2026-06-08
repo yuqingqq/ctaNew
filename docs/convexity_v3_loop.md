@@ -281,3 +281,8 @@ Scripts: exp_frozen_forward.py.
 Weekly-refit WF (35 cuts) per-cycle IC 2/01-6/04 = +0.0269 vs monthly +0.0392 (-0.012, WORSE). Frequent refits =
 less/noisier training data per fold; monthly wins. Frozen-forward "fresh>stale" implies "weight recent data more",
 NOT "refit more often". Keep monthly retrain. (iter2 tests recency half-life as the cheaper freshness lever.)
+
+### [12h LOOP] iter2 (recency half-life sweep) — REJECTED (HL=60 already optimal)
+Per-cycle IC by HL: 20d +0.0279, 40d +0.0288, **60d +0.0295 (peak)**, 90d +0.0293, 120d +0.0291. Current HL=60 is
+the optimum — shorter (more recent-emphasis) is WORSE, not better. The frozen-fresh IC gap is NOT capturable by
+recency reweighting. Both freshness levers (cadence iter1, HL iter2) exhausted. Keep HL=60. (iter3: per-pick conviction.)
