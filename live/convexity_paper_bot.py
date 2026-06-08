@@ -1057,6 +1057,10 @@ def run_cycle() -> dict:
     syms = sorted(d["symbol"].unique())
     log.info(f"cycle: catching up {d['open_time'].nunique()} new cycle(s) "
              f"{d['open_time'].min()}→{d['open_time'].max()}")
+    if LONG_MAX_RET3D < 999 and "ret_3d" not in d.columns:   # long-winner gate needs ret_3d on the settle track too
+        _r3 = pd.read_parquet(PANEL, columns=["symbol","open_time","ret_3d"])
+        _r3["open_time"] = pd.to_datetime(_r3["open_time"], utc=True)
+        d = d.merge(_r3, on=["symbol","open_time"], how="left")
     # live: betas/dvol for the new cycles need only ~30d trailing + the catch-up span; the fixed 45/70-day
     # windows re-read klines the new bars never use. Adaptive window auto-expands on a multi-day outage.
     # Validated bit-identical on the latest bar (beta 7e-16, dvol 1e-6) vs the 45/70-day read.

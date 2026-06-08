@@ -18,6 +18,11 @@ export CONVEXITY_UNIVERSE_META=$ROOT/live/state/convexity/maturity_meta.parquet
 #   SIDE_BETA_NEUT=0     : equal-weight sizing (drop the noisy beta-neutral a/b reweighting)
 # Scorecard: gross +3.82 / net-of-funding +3.33 Sharpe (vs v1 +2.92); CAVEAT ~2x maxDD. Forward test = arbiter.
 export BEAR_MODE=equal STOP_SKIP_REGIMES=bear SIDE_BETA_NEUT=0 BEAR_K=2 SIZING_MODE=inv_vol
+# === long-winner gate (2026-06-08, VALIDATED) — never long a name that ripped >20% in 3d (it reverts down) ===
+#   Fixes a linear-ranker blind spot: ~12% of >20% rockets slip into the top long-pred and lose -230bp/Sharpe-4.4.
+#   monthly-PIT: +3.892 -> +4.224 Sharpe (+0.33), 7/9 folds, random-drop placebo p100 (winner-specificity +0.25),
+#   long_ret +631. Long-leg only (shorting rockets IS the short edge). Live forward test = final arbiter.
+export LONG_MAX_RET3D=0.20
 SRC="${1:-manual}"
 log(){ echo "[$(date -u '+%F %T')] [cycle/$SRC] $*" | tee -a "$LOG"; }
 bot_edge(){ $PY -c "import json;print(json.load(open('$OUT/state/positions.json')).get('last_open_time') or '')" 2>/dev/null; }
