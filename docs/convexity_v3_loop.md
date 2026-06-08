@@ -246,3 +246,11 @@ For ~12% of extreme rockets (ret_3d>20%), the OTHER features (resid_rev + V0) su
 those names land in the top pred-decile → longed → fwd -230bp Sharpe -4.38 (catastrophic). A linear model CANNOT
 encode "extreme recent move ⟹ hard-veto long regardless of all else" — that's a non-linearity. LONG_MAX_RET3D=0.20
 IS the missing non-linear hinge/veto (long-side analog of falling-knife #162-163). Principled fix, not a curve-fit.
+
+### DECISION (2026-06-08, user): adopt LONG-WINNER gate ALONE; DROP entry-hour gate
+Production v3 candidate = baseline v2 stack + LONG_MAX_RET3D=0.20 (long-winner suppression) ONLY.
+Entry-hour gate dropped (more borderline: 5/9 folds, regime-dependent). Trade-off accepted: forgoes the -31% maxDD
+(that was the entry-hour gate's contribution); keeps the pure Sharpe lift.
+**Chosen performance: Sharpe +3.892 -> +4.224 (+0.33), maxDD ~-2780 (≈ baseline), 7/9 folds, recent-positive.**
+Single clean rule (non-linear veto for the linear ranker's blind spot). Env LONG_MAX_RET3D=0.20; entry-hour OFF.
+Pending: random-drop placebo (final backtest check) + live forward test (decisive).
