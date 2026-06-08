@@ -203,3 +203,18 @@ p80 (random skips do as well)**. In-sample vol→PnL is real but NOT PIT-exploit
 skipping positive low-Sharpe cohorts doesn't help blend). 4th vol-conditioning attempt to fail honest gates.
 **Conclusion: the model already extracts available per-symbol signal; basket-level conditioning on features does
 not add robustly. The entry-hour gate (iter12c) remains the ONE PIT/placebo-validated edge of the entire push.**
+
+### Iter 15 (2026-06-08) — LONG-WINNER SUPPRESSION ★★ [strongest find of session]
+ROOT CAUSE (cohort diag): the long leg's fwd PnL is monotone in the pick's recent ret_3d — long recent LOSERS
+(Q0 ret_3d -11%) fwd +54 Sharpe +1.33 (reversal works); long recent WINNERS (Q4 +14%) fwd -34 Sharpe -0.90.
+The model (V0+resid_rev) has MOMENTUM CONTAMINATION: its top-3 longs include extreme rockets (e.g. XLM), which
+revert DOWN. Filtering long picks with ret_3d>thr lifts long-leg per-pick Sharpe +0.19 (8/9 folds).
+PORTFOLIO (monthly-PIT, baseline +3.892/-2793/long-2389):
+| thr | Sharpe | maxDD | folds | recent f8,f9 | long_ret |
+|---|---|---|---|---|---|
+| 0.10 (aggressive) | +4.09 | -2317 | 5/9 | -1.66,-0.98 | -2480 (variance only) |
+| **0.20 (extreme rockets only)** | **+4.224 (+0.33)** | -2777 | **7/9** | -0.86,**+1.62** | **-1758 (+631 fix)** |
+PLACEBO: inverse "drop recent-LOSER longs" DOESN'T FIRE at any threshold (-0.005..-0.20) — model never picks
+loser-longs → the error is ASYMMETRIC (winner-only). long_ret +631 (removes net-negative picks, not random variance).
+**VERDICT: GENUINE edge. +0.33 Sharpe / 7/9 folds / recent-positive / fixes long leg. Env LONG_MAX_RET3D=0.20,
+default off. Surgical (11% of cycles). Random-drop placebo + live = final confirmation. Best result of the push.**

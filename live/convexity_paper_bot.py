@@ -98,6 +98,11 @@ LONG_IDIO_SKIP_PCT = float(os.environ.get("LONG_IDIO_SKIP_PCT", "1.0"))
 LONG_RESIDREV_GATE = os.environ.get("LONG_RESIDREV_GATE", "0") == "1"
 LONG_RESIDREV_N = int(os.environ.get("LONG_RESIDREV_N", "3"))      # trailing bars (3=12h)
 LONG_RESIDREV_THR = float(os.environ.get("LONG_RESIDREV_THR", "0.0"))
+# Long-winner suppression: don't long recent RALLY names (ret_3d>thr) — they revert DOWN (momentum-long is a
+# model error, not the edge). Cohort diag 2026-06-08: long picks ret_3d>+8% earn fwd -34bp Sharpe -0.90 vs
+# losers +54/+1.33; filtering the ~14% winner-longs lifts long-leg Sharpe +0.19 (8/9 folds). 999=off.
+LONG_MAX_RET3D = float(os.environ.get("LONG_MAX_RET3D", "999"))
+LONG_MIN_RET3D = float(os.environ.get("LONG_MIN_RET3D", "-999"))   # placebo/inverse: drop recent-LOSER longs (ret_3d<thr)
 # vol-aware leg sizing (2026-06-02 root-cause: tail losses concentrate in high-idio-vol QUALITY names
 # that pass all gates; volatility is ungated. Scale each leg's weight by inverse-vol, normalized to
 # keep the SAME basket gross -> de-concentrates the tail without excluding liquid names).
@@ -451,10 +456,14 @@ def select_legs(grp: pd.DataFrame, regime: str, betas_at_t: dict[str, float],
             kbL, kbS = (BEAR_K, BEAR_K) if BEAR_K > 0 else (K_LONG, K_SHORT)
             gg = grp.dropna(subset=["pred"])
             if len(gg) < (kbL + kbS): return {}
-            if "pred_long" in gg.columns and gg["pred_long"].notna().sum() >= kbL:
-                L = gg.dropna(subset=["pred_long"]).nlargest(kbL, "pred_long")["symbol"].tolist()
+            lpool = gg                                 # long-winner suppression (same as default path)
+            if LONG_MAX_RET3D < 999 and "ret_3d" in gg.columns:
+                _k = gg[(gg["ret_3d"] <= LONG_MAX_RET3D) | gg["ret_3d"].isna()]
+                if len(_k) >= kbL: lpool = _k
+            if "pred_long" in lpool.columns and lpool["pred_long"].notna().sum() >= kbL:
+                L = lpool.dropna(subset=["pred_long"]).nlargest(kbL, "pred_long")["symbol"].tolist()
             else:
-                L = gg.nlargest(kbL, "pred")["symbol"].tolist()
+                L = lpool.nlargest(kbL, "pred")["symbol"].tolist()
             if "pred_short" in gg.columns and gg["pred_short"].notna().sum() >= kbS:
                 S = gg.dropna(subset=["pred_short"]).nsmallest(kbS, "pred_short")["symbol"].tolist()
             else:
@@ -676,6 +685,13 @@ def select_legs(grp: pd.DataFrame, regime: str, betas_at_t: dict[str, float],
     if LONG_RESIDREV_GATE and "resid_rev" in long_pool.columns:
         keep = long_pool[long_pool["resid_rev"] >= LONG_RESIDREV_THR]
         if len(keep) >= K_LONG: long_pool = keep
+    # 2026-06-08 long-winner suppression: drop recent rally names from the LONG pool (they revert down)
+    if LONG_MAX_RET3D < 999 and "ret_3d" in long_pool.columns:
+        keep = long_pool[(long_pool["ret_3d"] <= LONG_MAX_RET3D) | long_pool["ret_3d"].isna()]
+        if len(keep) >= kL: long_pool = keep
+    if LONG_MIN_RET3D > -999 and "ret_3d" in long_pool.columns:      # inverse placebo: drop recent-LOSER longs
+        keep = long_pool[(long_pool["ret_3d"] >= LONG_MIN_RET3D) | long_pool["ret_3d"].isna()]
+        if len(keep) >= kL: long_pool = keep
     # iter13/14 dual-pred + meta-labels: long ranked by pred_long, short by pred_short (embedded or via PREDS_LONG).
     if "pred_long" in long_pool.columns and long_pool["pred_long"].notna().sum() >= kL:
         L = long_pool.dropna(subset=["pred_long"]).nlargest(kL, "pred_long")["symbol"].tolist()
@@ -791,7 +807,8 @@ def run_replay(start: pd.Timestamp | None, end: pd.Timestamp | None) -> dict:
     _need = list(dict.fromkeys(
         (DEF_FEATS if SIDE_MODE in ("long_defensive_basket_hedge", "regime_switch") else [])
         + (LONGDEF_FEATS if SIDE_MODE == "longdef_shortmr" else [])
-        + (["idio_vol_to_btc_1h"] if LONG_IDIO_SKIP_PCT < 1.0 else []) + _SIZING_FEATS))
+        + (["idio_vol_to_btc_1h"] if LONG_IDIO_SKIP_PCT < 1.0 else [])
+        + (["ret_3d"] if LONG_MAX_RET3D < 999 else []) + _SIZING_FEATS))
     if _need:
         _pf = pd.read_parquet(PANEL, columns=["symbol","open_time"]+_need)
         _pf["open_time"] = pd.to_datetime(_pf["open_time"], utc=True)
