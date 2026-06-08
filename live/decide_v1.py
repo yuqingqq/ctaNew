@@ -59,7 +59,11 @@ def _ret3d_at(syms, boundary) -> dict:
             continue
         try:
             c = pd.read_parquet(p, columns=["close"]); c.index = pd.to_datetime(c.index, utc=True)
-            now = c["close"].asof(boundary); ago = c["close"].asof(boundary - pd.Timedelta(days=3))
+            now = c["close"].asof(boundary)
+            ago = c["close"].asof(boundary - pd.Timedelta(days=3))
+            if not np.isfinite(ago):                    # <3d history (new listing): use the EARLIEST close so a
+                cc = c["close"].dropna()                # freshly-listed pump reads a high ret_3d and gets gated,
+                ago = float(cc.iloc[0]) if len(cc) else np.nan   # rather than NaN bypassing the long-winner gate
             if np.isfinite(now) and np.isfinite(ago) and ago > 0:
                 out[s] = float(now / ago - 1.0)
         except Exception:

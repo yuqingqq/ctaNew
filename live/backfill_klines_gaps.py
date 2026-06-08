@@ -151,7 +151,8 @@ def main():
     # it; max() ignores their frozen tails. Without this, a non-traded symbol frozen in the past reads
     # "gapless" against its own last bar and silently drops out of the cross-sectional cohort.
     lat = [x for x in (_latest_bar(s) for s in syms) if x is not None]
-    target = max(lat) if lat else None
+    now_bar = pd.Timestamp.utcnow().floor("5min") - pd.Timedelta(minutes=5)   # last legitimately-closed 5m bar
+    target = min(max(lat), now_bar) if lat else None    # cap: one symbol's future/ahead bar can't inflate target
     t0 = time.time(); filled = gapless = refreshed = 0
     residual_gappy = []; errors = []; stale_refreshed = []
     for s in syms:                                                   # serial: throttle the FAPI calls

@@ -176,6 +176,8 @@ class Collector:
         if not k["x"]:    # only persist CLOSED bars (never split a 5m bar across files)
             return
         sym = d["s"]; t = int(k["t"]); day = _day(t)
+        if t % 300_000 != 0 or t > int(time.time() * 1000) + 60_000:   # reject mis-aligned / future open_time so a
+            return                                                     # replay/garbage frame can't poison the buffer
         self.kl[sym][day][t] = {
             "open_time": t, "open": float(k["o"]), "high": float(k["h"]), "low": float(k["l"]),
             "close": float(k["c"]), "volume": float(k["v"]), "close_time": int(k["T"]),
