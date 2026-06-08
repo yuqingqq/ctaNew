@@ -342,3 +342,13 @@ Matched placebo (de-gross random 409 cycles x0.5 vs bear x0.5, 200 seeds): bear 
 De-grossing bear is NOT generic "trade less" — it's bear-SPECIFIC risk-budgeting (de-allocate the lowest-Sharpe
 regime). FIRST adoptable finding of the loop. (analytical x0.5 +4.77 vs bot bg=0.5 +4.63: ~0.14 gap = sleeve
 persistence the analytic ignores; placebo comparison uses same approx for both so valid.) iter10 = temporal OOS robustness.
+
+### [12h LOOP] iter10 (temporal OOS robustness of bg=0.5) — VALIDATED & ADOPTED (risk overlay)
+Per-half: H1(Oct-Feb) Sharpe +2.93->+3.13, maxDD -2777->-1729 | H2(Feb-Jun) +6.00->+6.68, maxDD -1922->-961(-50%).
+Both halves Pareto (+Sharpe, -maxDD). Per-half bg-sweep peaks at 0.5(H1)/0.25-0.5(H2) — NOT over-fit to Nov-2025.
+**ADOPTED: BEAR_GROSS_MULT=0.5 as a risk overlay.** Bot bg=0.5 = Sharpe +4.63 (+0.40), maxDD -1729 (-38%),
+bear-specific p98, robust both halves. COST: trades ~17% total PnL (16731->13846) for the risk cut — a risk-preference
+choice. bg=0.75 is the gentler option (+4.46, -25% maxDD, retains +3671 bear PnL). Env-gated in bot (default 1.0=off);
+READY to wire into live/convexity_v1_cycle_once.sh as `export BEAR_GROSS_MULT=0.5` pending user sign-off (it reduces
+total return, so it's the user's risk call — like LONG_MAX_RET3D, not auto-wired).
+=== LOOP WINS: long-winner gate (pre-loop, +0.33 Sh) + bear de-gross bg=0.5 (iter8-10, +0.40 Sh / -38% maxDD). ===
