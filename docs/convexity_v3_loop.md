@@ -335,3 +335,10 @@ BEAR_GROSS_MULT sweep: bg=1.0 +4.22/-2777/bearPnL+4959 | 0.75 +4.46/-2083(+25%)/
 +3.12 vs side +5.04). maxDD floors at ~-1729 for bg<=0.5 (a structural NON-bear drawdown floor). Honest: fails the
 alpha per-fold gate, but is a sound RISK-BUDGETING overlay for task #171. iter9 = matched placebo (de-gross random
 28% of cycles vs bear) to prove bear-SPECIFICITY (else it's just "trade less"). Env-gated BEAR_GROSS_MULT in bot (1.0=off).
+
+### [12h LOOP] iter9 (bear-specificity placebo) — CONFIRMED bear-specific (ADOPTABLE risk overlay)
+Matched placebo (de-gross random 409 cycles x0.5 vs bear x0.5, 200 seeds): bear Sharpe +4.77 ranks **p98** vs random
+(mean +4.08, p95 +4.55); bear maxDD -1729 vs random mean -2441 / p05 -2815 — bear cuts MORE tail than ANY p05 random.
+De-grossing bear is NOT generic "trade less" — it's bear-SPECIFIC risk-budgeting (de-allocate the lowest-Sharpe
+regime). FIRST adoptable finding of the loop. (analytical x0.5 +4.77 vs bot bg=0.5 +4.63: ~0.14 gap = sleeve
+persistence the analytic ignores; placebo comparison uses same approx for both so valid.) iter10 = temporal OOS robustness.
