@@ -286,3 +286,9 @@ NOT "refit more often". Keep monthly retrain. (iter2 tests recency half-life as 
 Per-cycle IC by HL: 20d +0.0279, 40d +0.0288, **60d +0.0295 (peak)**, 90d +0.0293, 120d +0.0291. Current HL=60 is
 the optimum — shorter (more recent-emphasis) is WORSE, not better. The frozen-fresh IC gap is NOT capturable by
 recency reweighting. Both freshness levers (cadence iter1, HL iter2) exhausted. Keep HL=60. (iter3: per-pick conviction.)
+
+### [12h LOOP] iter3 (per-pick conviction diagnostic) — LEAD FOUND (short side)
+Per-pick fwd PnL by |pred| quintile, pooled over picks: **SHORT** Q0(low-conv) +67.3 -> Q4(high-conv) +176.6bp,
+spread **+109bp**, corr +0.086 — conviction predicts short success. LONG Q0 -55.9 -> Q4 -33.9, spread +22, corr
+-0.006 (nothing). Equal-weight K=3 under-weights the best shorts. -> iter4 tests conviction-weighted SHORT sizing
+(honest Sharpe/per-fold/placebo, not just pooled mean — extreme shorts may carry more variance).
