@@ -362,3 +362,11 @@ cycles are SHORT-SQUEEZE losses: short_ret -1242 (06-04), -651 (10-21, long +357
 longs often POSITIVE, the short leg craters. Short leg = alpha engine (iter3) AND tail (squeeze when shorted rockets
 keep ripping). Mirror of long-winner gate, short side. -> iter12 diagnoses if extreme-ret_3d shorts carry a fat
 squeeze tail a cap could trim.
+
+### [12h LOOP] iter12 (short ret_3d cap to trim squeeze tail) — REJECTED (caps the BEST shorts)
+Short picks bucketed by entry ret_3d: Q5(ret_3d>+0.14) short_pnl mean +275 vs ~+50 elsewhere; ret_3d>0.20 shorts
+mean **+368 / Sharpe +0.33** (4x the +0.075 of ret_3d<=0.20). Shorting rockets is the BEST short edge (rockets
+revert down — long-winner gate, short side). Capping would kill it. Squeeze tail (worst -8229, in the MODERATE
+bucket) is intrinsic cost of a profitable edge, not removable. Short tail NOT cheaply addressable via ret_3d cap.
+### [12h LOOP] iter13 (vol-targeting de-gross — principled generalization of bear-degross) — running
+Scale gross by trailing btc_rvol_7d (all regimes). Does vol-targeting beat/complement bear-only de-gross?
