@@ -1099,9 +1099,7 @@ def run_cycle() -> dict:
     btc30 = compute_btc_30d()
     d = d.merge(mom, on=["symbol","open_time"], how="left")
     d = d.merge(btc30.reset_index(), on="open_time", how="left").dropna(subset=["btc_ret_30d"])
-    d["regime_raw"] = d["btc_ret_30d"].apply(regime_for_cycle)
-    # hysteresis: seed from the last N+5 raw regimes already logged (need to recompute raw
-    # from cycles.csv's btc_ret_30d since we only persist the effective regime).
+    d["regime_raw"] = d["btc_ret_30d"].apply(regime_for_cycle)   # logged to cycles.csv; not used for the regime now
     # gap-free hysteresis from the full btc_ret_30d series — identical to what decide computed for the same bar
     reg_ser = effective_regime_series(upto=d["open_time"].max())
     d["regime"] = d["open_time"].map(reg_ser)
