@@ -103,6 +103,26 @@ class Collector:
             except Exception as e:
                 print(f"[ws] skip corrupt kl {sym} {today}: {type(e).__name__}", flush=True)
 
+    @staticmethod
+    def _merge_existing(p, df, key, is_time=True):
+        """Union the existing day-file with our in-memory buffer, OUR rows winning on conflict. Preserves bars on
+        disk that the WS buffer never saw — i.e. the per-cycle FAPI backfill's repairs of klines the websocket
+        dropped. The flush OVERWRITES the file, and the buffer only ever holds WS-delivered bars, so without this
+        merge every backfilled gap is re-dropped on the next 5m flush: one WS-missed bar becomes an all-day
+        universe-wide gap (every 4h cycle re-fetches all 174 syms, ~89s) until the midnight buffer eviction. The
+        funding flush already does this; klines/agg did not. Buffer is authoritative for bars it holds (keep=last)."""
+        if not p.exists():
+            return df.sort_values(key).reset_index(drop=True)
+        try:
+            old = pd.read_parquet(p)
+            if is_time:
+                old[key] = pd.to_datetime(old[key], utc=True)
+            old = old.reindex(columns=df.columns)
+            df = pd.concat([old, df], ignore_index=True).drop_duplicates(key, keep="last")   # buffer last → wins
+        except Exception:
+            pass                                # a corrupt/locked file must not crash the flush — overwrite from buffer
+        return df.sort_values(key).reset_index(drop=True)
+
     def _flush(self):
       with self._flush_lock:                  # serializes flush-vs-flush. NOTE: does NOT serialize against
         n = 0                                 # _on_kline on the loop thread — to_parquet() below releases the GIL,
@@ -123,8 +143,10 @@ class Collector:
                 df = pd.DataFrame(rows)
                 df["transact_time"] = pd.to_datetime(df["transact_time"], unit="ms", utc=True)
                 df["is_buyer_maker"] = df["is_buyer_maker"].astype(bool)
-                df = df[AGG_COLS].sort_values("agg_trade_id").reset_index(drop=True)
-                p = self._agg_path(sym, day); p.parent.mkdir(parents=True, exist_ok=True); _aw(df, p, compression="zstd", index=False); n += 1
+                df = df[AGG_COLS]
+                p = self._agg_path(sym, day); p.parent.mkdir(parents=True, exist_ok=True)
+                df = self._merge_existing(p, df, "agg_trade_id", is_time=False)   # (dormant: aggTrades not streamed in v1)
+                _aw(df, p, compression="zstd", index=False); n += 1
             if len(d) == nk:
                 self.dirty_agg.discard((sym, day))
         for (sym, day) in list(self.dirty_kl):
@@ -133,8 +155,10 @@ class Collector:
                 df = pd.DataFrame(rows)
                 df["open_time"] = pd.to_datetime(df["open_time"], unit="ms", utc=True)
                 df["close_time"] = pd.to_datetime(df["close_time"], unit="ms", utc=True)
-                df = df[KL_COLS].sort_values("open_time").reset_index(drop=True)
-                p = self._kl_path(sym, day); p.parent.mkdir(parents=True, exist_ok=True); _aw(df, p, compression="zstd", index=False); n += 1
+                df = df[KL_COLS]
+                p = self._kl_path(sym, day); p.parent.mkdir(parents=True, exist_ok=True)
+                df = self._merge_existing(p, df, "open_time")    # preserve FAPI-backfilled bars our WS buffer never saw
+                _aw(df, p, compression="zstd", index=False); n += 1
             if len(d) == nk:
                 self.dirty_kl.discard((sym, day))
         for sym in list(self.dirty_fund):
