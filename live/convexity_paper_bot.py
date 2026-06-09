@@ -74,6 +74,10 @@ BEAR_K = int(os.environ.get("BEAR_K","0"))   # bear-specific K (0=use global)
 # 2026-06-08 bear de-gross: scale bear-equal basket gross (1.0=full v2; <1 trades bear edge at lower size to cut the
 # bear tail — iter7 found maxDD/51%-loss-concentration all bear). Off by default (1.0). 0.0 == BEAR_MODE=flat.
 BEAR_GROSS_MULT = float(os.environ.get("BEAR_GROSS_MULT","1.0"))
+# depth-conditional bear de-gross band (toxic mid-bear). Default [-99,99] => BEAR_GROSS_MULT applies to ALL bear
+# (backward-compatible). Set e.g. LO=-0.22 HI=-0.13 to de-gross ONLY the grinding mid-bear zone, keep deep/mild full.
+BEAR_MID_LO = float(os.environ.get("BEAR_MID_LO","-99"))
+BEAR_MID_HI = float(os.environ.get("BEAR_MID_HI","99"))
 # SIDE_MODE: which construction in SIDE regime.
 #   "default"          : current top-K=5 long / bot-K=5 short, beta-neutral
 #   "short_btc_hedge"  : drop the (broken) long leg; trade only bot-K=3 alt shorts + BTC long
@@ -503,9 +507,17 @@ def select_legs(grp: pd.DataFrame, regime: str, betas_at_t: dict[str, float],
                 S = gg.dropna(subset=["pred_short"]).nsmallest(kbS, "pred_short")["symbol"].tolist()
             else:
                 S = gg.nsmallest(kbS, "pred")["symbol"].tolist()
+            # depth-conditional de-gross: by default BEAR_GROSS_MULT applies to ALL bear; if BEAR_MID_LO/HI are set,
+            # it applies ONLY when btc_ret_30d is in the toxic mid-bear band [LO,HI), full size (1.0) elsewhere.
+            # iter18 finding: bear is U-shaped — deep capitulation (Sh +10.6) & near-side bear (+10.5) thrive, the
+            # GRINDING middle (~btc_ret_30d -0.22..-0.13, Sh -5) is the toxic zone that owns the maxDD.
+            bg = BEAR_GROSS_MULT
+            if (BEAR_MID_LO > -90 or BEAR_MID_HI < 90) and "btc_ret_30d" in grp.columns:
+                b30 = float(grp["btc_ret_30d"].iloc[0])
+                bg = BEAR_GROSS_MULT if (BEAR_MID_LO <= b30 < BEAR_MID_HI) else 1.0
             w = {}
-            for s in L: w[s] = w.get(s, 0) + BEAR_GROSS_MULT/kbL     # +$ equal per name (gross scaled by BEAR_GROSS_MULT)
-            for s in S: w[s] = w.get(s, 0) - BEAR_GROSS_MULT/kbS     # -$ equal per name (gross 1 each side = dollar-neutral)
+            for s in L: w[s] = w.get(s, 0) + bg/kbL     # +$ equal per name (gross scaled, depth-conditional)
+            for s in S: w[s] = w.get(s, 0) - bg/kbS     # -$ equal per name (gross 1 each side = dollar-neutral)
             return w
         if BEAR_MODE in ("side", "shortbias"): regime = "side"   # trade bear via the side mean-rev (beta-neut) path
 

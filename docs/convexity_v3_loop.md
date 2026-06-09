@@ -425,3 +425,20 @@ regime; (d) per-cycle IC is noise — no freshness/cadence/window lever helps; (
 PRODUCTION v2 = WINNER stack + LONG_MAX_RET3D=0.20 + (recommend) BEAR_GROSS_MULT=0.5. Honest forward: +4.2 Sharpe
 (or +4.6 with bear-degross at -17% PnL), maxDD -2777 (or -1729 with bear-degross). Remaining work is OPERATIONAL
 (live forward test = arbiter), not research — the 4h-horizon free-data construction layer is at a local optimum.
+
+### [12h LOOP] iter18 (DEEPER: bear is U-shaped — surgical mid-bear de-gross) — REFINEMENT, supersedes blunt bg=0.5
+Re-opened on user request to dig deeper into the bear-degross win. Bear is NOT uniformly bad — it's U-shaped by depth:
+deep capitulation (btc_ret_30d<-0.23) Sharpe +10.6, near-side mild bear (>-0.16) +3-8, GRINDING MIDDLE (~-0.22..-0.13)
+Sharpe -5 = toxic zone owning the maxDD. Blunt bg=0.5 threw away half the deep-bear gold (+4418) to dilute the poison.
+REAL BOT (depth-conditional de-gross, new env BEAR_MID_LO/HI gating BEAR_GROSS_MULT):
+  baseline +4.22/+16731/-2777 | bear-ALL x0.5 +4.63/13846/-1729 | mid-bear SKIP +5.72/+17901/-1729 (lift +1.49) |
+  mid-bear x0.5 +5.08/+17318/-1729 | mid-skip-wide(-0.25) +5.16/+14843 (wide eats deep-bear gold -> edges matter).
+mid-bear SKIP PARETO-DOMINATES baseline (higher Sharpe, HIGHER PnL, lower maxDD) and beats blunt bg=0.5 on all.
+VALIDATION: matched placebo (skip random bear cycles, 300 seeds) -> mid-skip ranks **p100 Sharpe / p99 totPnL**; toxic-mid
+holds in BOTH OOS halves; not driven by the 06-04 outlier. CAVEATS (honest): (1) fold-concentrated — inactive in 4/9
+folds (no harm), big wins in folds 1/2/8, but HURTS fold4 -768 (Feb mid-bear was profitable) -> not a universal law;
+(2) band edges [-0.22,-0.13] are CALIBRATED (wide band worse) = overfitting boundary; (3) still a risk/variance lever.
+RECOMMEND the softer **mid-bear x0.5** (BEAR_GROSS_MULT=0.5 BEAR_MID_LO=-0.22 BEAR_MID_HI=-0.13): +5.08 Sharpe,
++17318 PnL (>baseline), -1729 maxDD — strictly beats baseline AND blunt bg=0.5, hedges band/fold4 risk by not fully
+skipping. Aggressive full-skip (+5.72) available if trusting the band. Env-gated in bot (default LO/HI=-99/99 => all-bear
+=> backward-compatible). Live forward test = arbiter. SUPERSEDES the bg=0.5 recommendation.
