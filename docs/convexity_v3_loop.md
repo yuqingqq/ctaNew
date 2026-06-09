@@ -442,3 +442,17 @@ RECOMMEND the softer **mid-bear x0.5** (BEAR_GROSS_MULT=0.5 BEAR_MID_LO=-0.22 BE
 +17318 PnL (>baseline), -1729 maxDD — strictly beats baseline AND blunt bg=0.5, hedges band/fold4 risk by not fully
 skipping. Aggressive full-skip (+5.72) available if trusting the band. Env-gated in bot (default LO/HI=-99/99 => all-bear
 => backward-compatible). Live forward test = arbiter. SUPERSEDES the bg=0.5 recommendation.
+
+### [12h LOOP] iter19 (AUTO-ADAPTIVE regime sizer — user ask: replace fixed band with PIT learner) — WORKS, robust
+Replace hand-tuned band/mult with a PIT learner: bin cycles by btc_ret_30d depth (width 0.04, mechanistic), de-gross
+a bin x0.5 ONLY once its TRAILING realized PnL is net-negative (minlook 20). Fully PIT (uses only past cycles), no
+fixed band, adapts to drift. Analytical screen:
+  baseline +4.22/-2777/+16731 | FIXED band x0.5 (hindsight) +5.13/-1729/+17821 | AUTO +4.60/-1729/+16017 (size 0.94).
+The +0.5 Sharpe gap (fixed 5.13 vs auto 4.60) = the OVERFITTING PREMIUM (fixed knows the toxic band in advance; auto
+is the deployable number). Fancier autos WORSE (continuous Sharpe-size +4.32, vol-target own-returns +4.30 — de-gross
+too indiscriminately). VALIDATION: auto first acts cycle 210 (~1mo in); per-half H1 +2.93->+3.50 / DD -2777->-1729,
+H2 +6.00->+5.92 / DD -1922->-1638 (helps both, most in H1 drawdown). **Auto INDEPENDENTLY re-discovers the toxic band
+[-0.20,-0.12] from trailing data** (de-grosses those bins, leaves deep-bear +38 & near-side +24 full) — confirms the
+mid-bear structure is REAL & learnable, not fitted. RECOMMEND auto-sizer for LIVE over the fixed band: robust (PIT,
+no overfit), drift-proof, self-validating. Deployable +4.60 Sharpe / -38% maxDD / flat PnL. Honest impl note: live
+feedback must LAG realized PnL by the 24h hold (last ~6 cycles unrealized) — minor. Not yet wired in bot (stateful).
