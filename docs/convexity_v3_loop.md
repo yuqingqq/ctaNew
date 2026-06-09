@@ -456,3 +456,13 @@ H2 +6.00->+5.92 / DD -1922->-1638 (helps both, most in H1 drawdown). **Auto INDE
 mid-bear structure is REAL & learnable, not fitted. RECOMMEND auto-sizer for LIVE over the fixed band: robust (PIT,
 no overfit), drift-proof, self-validating. Deployable +4.60 Sharpe / -38% maxDD / flat PnL. Honest impl note: live
 feedback must LAG realized PnL by the 24h hold (last ~6 cycles unrealized) — minor. Not yet wired in bot (stateful).
+
+### [12h LOOP] iter20 (in-MODEL regime conditioning — user ask: bake adaptiveness into the model) — REJECTED
+Added btc_ret_30d + btc30² + interactions (btc30×return_1d, btc30×resid_rev_2/3) as MODEL features so the per-symbol
+RidgeCV can learn regime-conditional mean-rev. Monthly-WF per-cycle IC: baseline (V0+RR) +0.0295 (62%>0) vs regime-aug
++0.0279 (61%>0) -> **lift -0.0016**, worse in 5-6/9 folds. Adding regime info HURTS ranking (linear fit overfits the
+interactions). Since IC dropped, no strategy replay needed. CONFIRMS the architecture: the model RANKS fine in every
+regime (per-fold IC stable); mid-bear's problem is realized PAYOFF/risk, not ranking — a ranking model has no lever
+for it. Regime-adaptiveness belongs in the SEPARATE sizing layer (the PIT report-card auto-sizer, iter19), not the
+model. Matches strategy history (regime features / SEG / conviction all rejected; meta-labeling #172 = separate
+ranker from sizer). DECISION: keep alpha model untouched; deploy adaptiveness as the auto-sizer overlay.
