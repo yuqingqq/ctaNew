@@ -1166,6 +1166,15 @@ def run_cycle() -> dict:
             log.warning(f"settle {ot}: {len(_nan_legs)} held legs have NaN return_pct, booked as 0%: {_nan_legs[:6]}")
         gross_pnl = sum(net_after.get(s,0) * rmap.get(s,0.0)
                         for s in net_after if np.isfinite(rmap.get(s,0.0)))
+        # per-leg attribution — same as the replay path (line ~979). Was MISSING here, so catch-up/settle rows
+        # logged NaN long/short_(ret|alpha)_bps from ~06-05 onward (pnl_bps was unaffected). alpha_A = realized
+        # BTC-beta-residualized alpha; ret = tradeable return_pct. Empty leg -> sum() is 0.0, never NaN.
+        amap = dict(zip(g["symbol"], g["alpha_A"]))
+        _lk = [s for s in net_after if net_after[s] > 0]; _sk = [s for s in net_after if net_after[s] < 0]
+        long_ret_bps    = sum(net_after[s]*rmap.get(s,0.0) for s in _lk if np.isfinite(rmap.get(s,np.nan)))*1e4
+        short_ret_bps   = sum(net_after[s]*rmap.get(s,0.0) for s in _sk if np.isfinite(rmap.get(s,np.nan)))*1e4
+        long_alpha_bps  = sum(net_after[s]*amap.get(s,0.0) for s in _lk if np.isfinite(amap.get(s,np.nan)))*1e4
+        short_alpha_bps = sum(net_after[s]*amap.get(s,0.0) for s in _sk if np.isfinite(amap.get(s,np.nan)))*1e4
         cost_unit = turn * 0.5 * COST
         equity_pre = equity; equity = equity_pre * (1.0 + gross_pnl - cost_unit)
         if stop.eq_hist: stop.eq_hist[-1] = equity
@@ -1186,6 +1195,8 @@ def run_cycle() -> dict:
             equity_pre=equity_pre, equity_post=equity,
             pnl_bps=(equity-equity_pre)/equity_pre*1e4,
             gross_pnl_bps=gross_pnl*1e4, cost_bps=cost_unit*1e4, turnover=turn,
+            long_ret_bps=long_ret_bps, short_ret_bps=short_ret_bps,
+            long_alpha_bps=long_alpha_bps, short_alpha_bps=short_alpha_bps,
             n_trades=int(sum(1 for s in all_keys if abs(net_after.get(s,0)-prev_agg.get(s,0))>1e-6)),
             univ_hash=univ_hash, notes=""))
         regime_rows.append(dict(cycle_id=cid, open_time=ot,
