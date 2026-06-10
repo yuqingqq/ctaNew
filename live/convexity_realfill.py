@@ -135,6 +135,31 @@ def update_cycle(led: dict, decision: dict, fills: dict, mids: dict, close_ref: 
                 basis_cost += notional * side * (dmid - cref) / cref
         elif cref and np.isfinite(cref) and cref > 0:
             lat_cost += notional * side * (mid - cref) / cref           # fallback: basis-contaminated
+    # RECONCILE the rest of the book to net_after. The turnover loop only touches symbols the bot TRADED this
+    # cycle, so a position the ledger holds but no sleeve owns (a seed/restart sync orphan) is never closed, and
+    # an intended leg the ledger never opened is never filled — they drift forever (the held-count creep). Sweep
+    # them here at the current HL mark: close held syms absent from net_after, open intended syms not yet held.
+    # Carried syms (held AND in net_after, not in turnover) are LEFT at fixed units — we do NOT chase price.
+    held_now = {s for s in list(lots) if abs(sum(u for u, _ in lots[s])) > 1e-9}
+    want = {s for s, w in net_after.items() if abs(w) > 1e-9}
+    for sym in (held_now ^ want) - turnover:                            # symmetric diff minus already-traded legs
+        px = mids.get(sym)
+        if px is None or not np.isfinite(px) or px <= 0:
+            continue                                                    # no mark -> retry next cycle
+        sym_lots = lots.setdefault(sym, [])
+        held = sum(u for u, _ in sym_lots)
+        trade_units = net_after.get(sym, 0.0) * equity / px - held      # orphan target 0 -> full close
+        if abs(trade_units) < 1e-9:
+            if not sym_lots:
+                lots.pop(sym, None)
+            continue
+        realized += _apply_trade(sym_lots, trade_units, px)             # reconcile at HL mid (no slip/latency)
+        if not sym_lots:
+            lots.pop(sym, None)
+        notional = abs(trade_units * px)
+        fees += notional * fee_bps / 1e4
+        traded_notional += notional
+        n_filled += 1
     realized -= fees
     led["realized_cum"] = float(led.get("realized_cum", 0.0)) + realized
     # carry-forward mids for open syms not traded this cycle so MtM still works (use last-known via fills mid)
