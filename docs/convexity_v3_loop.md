@@ -570,3 +570,17 @@ median ~25 bps/leg (5x the assumed flat 4.5), p90 ~138; 40+/152 syms >50 bps@$50
 REALISTIC Sharpe: +4.22 paper -> +2.97@$0.5M, +2.27@$1M, +2.17@$3M (saturates; capacity ceiling ~$1-3M). 3 of top-5
 backtest PnL winners barely tradeable (SOPH 144bps, IMX 100, UMA 56 @$100k). -> capacity-fix test: depth-filtered
 universe (SYM_ALLOWLIST = liquid names by impact@50k) — does trading only liquid names hold the realistic edge at size?
+
+### CAPACITY VERDICT (decisive) — depth filter FAILS; alpha is illiquidity-bound; small-capacity harvester
+Depth-filtered universe (trade only liquid names) makes it WORSE: liq25(76 syms) paper -0.13 / real@1M -0.84;
+liq40(107) paper +2.18 / real@1M +1.12 — both BELOW full-universe real +2.27. The cross-sectional mean-rev alpha
+lives in the THIN names (illiquidity premium); dropping them removes more edge than impact saved. Can't separate
+alpha from illiquidity. PER-LEG realistic Sharpe (accounts for strategy concentrating in thin names, selected-leg
+impact > universe median): +2.45@$0.5M, **+1.19@$1M**, +0.76@$3M (vs paper +4.22). CONCLUSION: convexity v2 is a
+SMALL-CAPACITY (~$0.5-1M) illiquidity-premium harvester; realistic taker-floor Sharpe ~+1.2-2.4 (size-dependent),
+NOT +4.22, and NOT scalable (edge degrades to <+1 by $3M; filtering to liquid kills it). CAVEATS: one-moment HL
+snapshot; TAKER is the pessimistic bound — patient/MAKER execution over the 24h hold recovers some (true number
+between taker-floor +1.2 and paper +4.22). The ONE remaining lever is EXECUTION QUALITY (maker/patient), which is a
+LIVE-fill question measured by the running forward test, NOT a backtest knob. Capacity layer now CHARACTERIZED.
+ACTIONABLE: (1) size small (~$0.5-1M); (2) run capacity_probe.py periodically to monitor depth + flag thin-name
+concentration; (3) maker execution on exec server; (4) the live forward test's realized fills are the true arbiter.
