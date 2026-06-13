@@ -584,3 +584,8 @@ between taker-floor +1.2 and paper +4.22). The ONE remaining lever is EXECUTION 
 LIVE-fill question measured by the running forward test, NOT a backtest knob. Capacity layer now CHARACTERIZED.
 ACTIONABLE: (1) size small (~$0.5-1M); (2) run capacity_probe.py periodically to monitor depth + flag thin-name
 concentration; (3) maker execution on exec server; (4) the live forward test's realized fills are the true arbiter.
+
+### CAPACITY-TIERED PERFORMANCE (2026-06-13) — paper edge concentrated in THIN tiers
+Per-pick paper edge RISES with thinness: deep(<10bps) 1.3 bps/pick (3% of PnL), 20-40bps 5.8 (22%), 40-80 22.5 (25%),
+>80bps THIN 32.7 bps/pick (47% of PnL). ~72% of paper edge in >40bps-impact names. Deep/liquid names have ~no edge.
+Running per-band replays (deep<15 / mid 15-40 / thin>40 impact@50k) for rigorous Sharpe-per-capacity-band.
