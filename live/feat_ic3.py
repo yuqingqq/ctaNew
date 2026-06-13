@@ -27,8 +27,18 @@ def load_ohlcv_4h(sym, last_n=520):
     if not sd.exists(): return None
     files = sorted(sd.glob("*.parquet"))[-last_n:]
     if not files: return None
-    cols=["open_time","high","low","close","volume","quote_volume","taker_buy_quote_volume"]
-    dfs=[pd.read_parquet(f, columns=cols) for f in files]
+    want=["open_time","high","low","close","volume","quote_volume","taker_buy_quote_volume"]
+    dfs=[]
+    for f in files:
+        try:
+            avail=set(pd.read_parquet(f, columns=None).columns) if False else None
+            dfs.append(pd.read_parquet(f, columns=want))
+        except Exception:
+            d=pd.read_parquet(f)                                   # schema lacks taker col -> read all, fill
+            for c in want:
+                if c not in d.columns: d[c]=np.nan
+            dfs.append(d[want])
+    if not dfs: return None
     df=pd.concat(dfs, ignore_index=True).drop_duplicates("open_time")
     df["open_time"]=pd.to_datetime(df["open_time"],utc=True)
     df=df.set_index("open_time").sort_index()
