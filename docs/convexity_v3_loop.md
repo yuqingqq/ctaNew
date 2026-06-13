@@ -489,3 +489,16 @@ Short leg = the whole engine; long leg has positive ALPHA (+7148) but negative T
 Caveat: long drag is partly bearish-sample (long beta would help in bull) — but removing uncompensated beta from a
 "neutral" book is principled. -> iter2 tests beta-neutralize + short_btc_hedge (judge per-fold for bear-artifact).
 ### iter2 (long-leg beta-drag fixes) — running
+
+### iter2 (long-leg beta-drag fixes) — BOTH REJECTED; long-leg flaw NOT actionable, thread closed
+beta-neutralize (SIDE_BETA_NEUT=1): Sharpe +4.03 (lift -0.19), maxDD -2961 (worse), 2/9 folds, loses across most folds
+(not bull/bear split) -> reweighting noise > beta-drag removed. short_btc_hedge (drop alt-longs + BTC hedge): +2.75
+(lift -1.48, CATASTROPHIC), maxDD -3456, 3/9. CONCLUSION: the iter1 "long leg is a drag" framing was half-right — the
+long leg's NEGATIVE TRADEABLE return (-1758) is a bearish-SAMPLE beta artifact, but its ALPHA (+7148) is LOAD-BEARING
+(dropping it via short_btc_hedge = -1.48). Equal-weight long leg is already optimal; both "fixes" make it worse. The
+per-symbol concentration (top-10=77% of net PnL) is likewise INHERENT (the edge lives in certain persistently-mean-
+reverting names = signal, not overfit-fixable without removing edge; cross-time not within-cycle, so no weight cap helps).
+### NEW LOOP (2026-06-13) — STOP after iter2. Long-leg thread closed unfixable; no fresh non-redundant Sharpe lever
+remains (construction/sizing/regime/model/freshness all mapped across 4 loop-sessions; long-leg + concentration now
+added as characterized-but-unfixable). The ONE deployable win remains fixed mid-bear x0.5 (+5.08 bot, beat targeted
+placebo p100). Not manufacturing filler iterations per the honesty bar. Remaining work is operational / beyond-free-data.
