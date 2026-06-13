@@ -466,3 +466,16 @@ regime (per-fold IC stable); mid-bear's problem is realized PAYOFF/risk, not ran
 for it. Regime-adaptiveness belongs in the SEPARATE sizing layer (the PIT report-card auto-sizer, iter19), not the
 model. Matches strategy history (regime features / SEG / conviction all rejected; meta-labeling #172 = separate
 ranker from sizer). DECISION: keep alpha model untouched; deploy adaptiveness as the auto-sizer overlay.
+
+### [12h LOOP] iter21 (auto-sizer BUILT in bot + full-replay validation) — REJECTED by matched placebo
+Built AutoRegimeSizer in the bot (AUTO_SIZER env, default off): PIT report-card throttles a btc_ret_30d bucket to 0.5
+once its trailing realized PnL goes net-negative. REAL-BOT replay: AUTO Sharpe +4.43 / totPnL +15805 / maxDD -1766
+(vs baseline +4.22/+16731/-2777; vs screen est +4.60 -> sleeve/cost dynamics eroded ~0.17 as flagged). MATCHED PLACEBO
+(throttle RANDOM buckets at same ~1/3 freq, 8 seeds): Sharpe mean +4.39 [3.77,4.90] -> AUTO ranks **p50**; maxDD mean
+-2129 [-1618,-2777] -> AUTO -1766 p62. CONCLUSION: the PIT learning adds NO edge over random bucket throttling — the
++0.21 Sharpe / -36% maxDD vs baseline is a GENERIC de-gross/variance-reduction effect, not intelligent targeting.
+Definitive answer to "can we make it auto-adjustable": mechanically yes, but the FIXED band's edge does NOT survive
+being learned in real-time (slow/noisy learning + sleeve-feedback erosion). REGIME-SIZING THREAD CLOSED: fixed
+bear-degross/mid-bear band beats TARGETED placebos (p98-p100) but is hindsight-calibrated; auto version ties random;
+in-model conditioning hurts (iter20). Deployable = fixed mid-bear x0.5 (eyes open re calibration) OR simple bear-degross
+for the generic variance benefit. AUTO_SIZER kept in bot as env-gated/off tested infra documenting the negative.

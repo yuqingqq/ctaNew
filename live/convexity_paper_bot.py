@@ -78,6 +78,15 @@ BEAR_GROSS_MULT = float(os.environ.get("BEAR_GROSS_MULT","1.0"))
 # (backward-compatible). Set e.g. LO=-0.22 HI=-0.13 to de-gross ONLY the grinding mid-bear zone, keep deep/mild full.
 BEAR_MID_LO = float(os.environ.get("BEAR_MID_LO","-99"))
 BEAR_MID_HI = float(os.environ.get("BEAR_MID_HI","99"))
+# AUTO-ADAPTIVE regime sizer (PIT report-card): bucket cycles by btc_ret_30d (width AUTO_BINW), throttle a bucket's
+# new-sleeve gross to AUTO_THROTTLE once that bucket's TRAILING realized per-cycle PnL has gone net-negative (needs
+# >= AUTO_MINLOOK settled cycles). Strictly point-in-time (uses only prior cycles), no hand-set band, adapts to drift.
+# Default OFF => production byte-unchanged. iter21 = the deployable version of the iter19 screen.
+AUTO_SIZER   = os.environ.get("AUTO_SIZER","0") == "1"
+AUTO_BINW    = float(os.environ.get("AUTO_BINW","0.04"))
+AUTO_MINLOOK = int(os.environ.get("AUTO_MINLOOK","20"))
+AUTO_THROTTLE= float(os.environ.get("AUTO_THROTTLE","0.5"))
+AUTO_RAND_SEED = int(os.environ.get("AUTO_RAND_SEED","0"))   # >0 => placebo: throttle RANDOM buckets (matched count)
 # SIDE_MODE: which construction in SIDE regime.
 #   "default"          : current top-K=5 long / bot-K=5 short, beta-neutral
 #   "short_btc_hedge"  : drop the (broken) long leg; trade only bot-K=3 alt shorts + BTC long
@@ -841,6 +850,33 @@ class VolNormStop:
                                 engaged=self.engaged, engage_age=self.engage_age)
 
 
+class AutoRegimeSizer:
+    """PIT regime report-card. Buckets cycles by btc_ret_30d (width binw); throttles a bucket's new-sleeve gross
+    to `throttle` once that bucket's trailing realized per-cycle PnL is net-negative (>= minlook settled cycles).
+    record() is called AFTER each cycle's PnL is known; mult() is called BEFORE -> strictly point-in-time.
+    rand_seed>0 => placebo: pre-assign a RANDOM throttled/full label per bucket (matched throttle frequency)."""
+    def __init__(self, binw, minlook, throttle, rand_seed=0):
+        self.binw, self.minlook, self.throttle = binw, minlook, throttle
+        self._sum, self._cnt = {}, {}
+        self._rand = np.random.RandomState(rand_seed) if rand_seed > 0 else None
+        self._rand_label = {}
+    def _bin(self, b30):
+        return int(np.floor(b30 / self.binw)) if np.isfinite(b30) else None
+    def mult(self, b30):
+        bi = self._bin(b30)
+        if bi is None: return 1.0
+        if self._rand is not None:                       # placebo: random (but persistent) bucket labels
+            if bi not in self._rand_label: self._rand_label[bi] = self._rand.rand()
+            return self.throttle if self._rand_label[bi] < 0.33 else 1.0
+        n = self._cnt.get(bi, 0)
+        if n >= self.minlook and (self._sum[bi] / n) < 0.0: return self.throttle
+        return 1.0
+    def record(self, b30, pnl_bps):
+        bi = self._bin(b30)
+        if bi is None: return
+        self._sum[bi] = self._sum.get(bi, 0.0) + pnl_bps; self._cnt[bi] = self._cnt.get(bi, 0) + 1
+
+
 # =====================================================================
 # Replay engine (Stage A)
 # =====================================================================
@@ -918,6 +954,7 @@ def run_replay(start: pd.Timestamp | None, end: pd.Timestamp | None) -> dict:
     last_regime = None
     sleeve_serial = 0
     sleeve_ids_active: deque = deque(maxlen=HOLD)
+    auto = AutoRegimeSizer(AUTO_BINW, AUTO_MINLOOK, AUTO_THROTTLE, AUTO_RAND_SEED) if AUTO_SIZER else None
 
     t0 = time.time()
     for bar_idx, ot in enumerate(times):
@@ -947,6 +984,11 @@ def run_replay(start: pd.Timestamp | None, end: pd.Timestamp | None) -> dict:
         # disp-gate override: if model dispersion is in the bottom pctile, side regime goes flat
         if DISP_GATE and regime == "side" and disp_skip.get(ot, False):
             new_w = {}
+        # AUTO regime sizer (PIT): throttle this cycle's new-sleeve gross if its btc_ret_30d bucket has been losing
+        _b30 = float(g["btc_ret_30d"].iloc[0]) if len(g) else float("nan")
+        if auto is not None:
+            _am = auto.mult(_b30)
+            if _am != 1.0: new_w = {s: w*_am for s, w in new_w.items()}
         active_sleeves.append(new_w)
         sleeve_serial += 1
         # exit event for sleeve that fell out (if any)
@@ -986,6 +1028,7 @@ def run_replay(start: pd.Timestamp | None, end: pd.Timestamp | None) -> dict:
         pnl_unit = gross_pnl - cost_unit
         equity_pre = equity
         equity = equity_pre * (1.0 + pnl_unit)
+        if auto is not None: auto.record(_b30, pnl_unit*1e4)   # feed realized per-cycle PnL into the report-card (PIT)
         # let stop see post-equity for the next cycle's sigma calc
         stop.eq_hist[-1] = equity if stop.eq_hist else stop.eq_hist
         # log rows
