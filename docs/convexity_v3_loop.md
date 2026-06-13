@@ -524,3 +524,9 @@ Construction/knob space exhausted (13-agent pass). Only surface with a prior = N
 marginal-IC tests new free-data features; IC-robust winners (lift>=+0.004, >=6/9 folds, not fold-concentrated) escalate
 to full strategy replay. Honest gates throughout; low prior (feature-layer historically thin on free data) but covered exhaustively.
 ### feat-iter1 (15 panel-derivable interaction/structure features) — running (marginal nested-OOS IC)
+
+### feat-iter1 (15 panel-derived interaction/structure features) — NO WINNERS
+Marginal nested-OOS IC lift all in [-0.0017,+0.0005] (bar +0.004): best fund_abs +0.0005(5/9), corr_x_ret1d +0.0002(7/9),
+vwap_x_bsh +0.0001(6/9) — all noise-level. Interactions/transforms of existing V0 features add ZERO OOS IC (the linear
+model already spans them). Expected: these recombine known signal, not new info. -> feat-iter2 pivots to NEW signal axes.
+### feat-iter2 (multi-horizon reversal + rel-strength-vs-BTC + funding-carry + vol-of-vol, from raw klines) — running
