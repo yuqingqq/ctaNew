@@ -530,3 +530,10 @@ Marginal nested-OOS IC lift all in [-0.0017,+0.0005] (bar +0.004): best fund_abs
 vwap_x_bsh +0.0001(6/9) — all noise-level. Interactions/transforms of existing V0 features add ZERO OOS IC (the linear
 model already spans them). Expected: these recombine known signal, not new info. -> feat-iter2 pivots to NEW signal axes.
 ### feat-iter2 (multi-horizon reversal + rel-strength-vs-BTC + funding-carry + vol-of-vol, from raw klines) — running
+
+### feat-iter2 (new signal axes: multi-horizon reversal / rel-strength-vs-BTC / funding-carry / vol-of-vol) — NO WINNERS
+All marginal IC lifts in [-0.0009,+0.0002] (bar +0.004): rel_str_14d +0.0002(5/9), funding_carry_7d -0.0003(6/9),
+reversal BLOCK -0.0000(6/9). New signal AXES add zero OOS IC over V0+RR. TWO consecutive empty batches -> model IC
++0.0295 is near the price/funding/vol ceiling; short-horizon residual reversal + funding IS the extractable signal.
+-> feat-iter3 = ONE final genuinely-different batch (microstructure/liquidity: Amihud illiquidity, volume spike,
+intraday range, close-location), then STOP if empty (feature layer exhausted on free data).
