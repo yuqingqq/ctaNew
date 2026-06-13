@@ -563,3 +563,10 @@ adds OOS IC. Combined with construction/sizing/regime/model all separately mappe
 REAL LIFT REQUIRES A NEW INPUT (on-chain/Glassnode, options IV, finer/licensed microstructure), NOT another feature
 or knob. Otherwise remaining value is OPERATIONAL: run the live forward test of the +4.22 stack + long-winner gate;
 monitor the -0.18 net-short BTC beta and the bear-regime maxDD tail. LOOP STOPPED (no reschedule). Files: live/feat_ic{,2,3}.py.
+
+## ===== CAPACITY / ORDERBOOK-DEPTH ANALYSIS (2026-06-13) — THE BINDING CONSTRAINT =====
+HL L2 probe (live/capacity_probe.py) of all 152 traded syms on the EXECUTION venue (Hyperliquid). Real taker impact
+median ~25 bps/leg (5x the assumed flat 4.5), p90 ~138; 40+/152 syms >50 bps@$50k; thin books saturate ~$0.1M depth.
+REALISTIC Sharpe: +4.22 paper -> +2.97@$0.5M, +2.27@$1M, +2.17@$3M (saturates; capacity ceiling ~$1-3M). 3 of top-5
+backtest PnL winners barely tradeable (SOPH 144bps, IMX 100, UMA 56 @$100k). -> capacity-fix test: depth-filtered
+universe (SYM_ALLOWLIST = liquid names by impact@50k) — does trading only liquid names hold the realistic edge at size?
