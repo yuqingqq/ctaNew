@@ -589,3 +589,14 @@ concentration; (3) maker execution on exec server; (4) the live forward test's r
 Per-pick paper edge RISES with thinness: deep(<10bps) 1.3 bps/pick (3% of PnL), 20-40bps 5.8 (22%), 40-80 22.5 (25%),
 >80bps THIN 32.7 bps/pick (47% of PnL). ~72% of paper edge in >40bps-impact names. Deep/liquid names have ~no edge.
 Running per-band replays (deep<15 / mid 15-40 / thin>40 impact@50k) for rigorous Sharpe-per-capacity-band.
+
+### CAPACITY WIN — depth-aware per-name SIZE CAP (keep full cross-section, size each name to its book depth)
+Per-band replays proved the edge is FULL-CROSS-SECTIONAL not band-separable (deep paper -0.18, mid +1.27, thin +1.70,
+FULL +4.22 — no band reproduces full; deep names have ~no standalone edge). No band realizable at $1M (all real<0).
+But CAPPING each name's trade at cap_frac x one-sided book depth (keep full universe for ranking) RECOVERS realistic
+Sharpe: @$1M nocap +1.19 -> cap40% +2.57 -> cap25% +3.01 -> cap15% +3.26; @$3M +0.76 -> cap15% +3.64. Mechanism:
+impact is CONVEX in size, so trading within book depth avoids the thin-name impact blowup while keeping them in the
+cross-section. CAVEAT: tighter caps deploy LESS capital (it's capacity-aware sizing, not more capacity) — report
+effective deployment. This is WIREABLE & principled (param-light): per-name weight = min(inv_vol_weight, depth_budget),
+depth from periodic HL probe (capacity_probe.py). Analytical/taker estimate — needs bot validation + the live forward
+test arbitrates. THE genuine capacity optimization: size-to-depth lifts realistic Sharpe ~+1.2 -> ~+3.0 at $1M.
