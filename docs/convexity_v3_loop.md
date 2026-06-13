@@ -543,3 +543,23 @@ First run reported absurd IC: close_loc +0.5545, taker_imb +0.2823, vol_spike +0
 IC >+0.10 = look-ahead (CLAUDE.md rule); +0.55 is impossible for 4h XS return. CAUSE: the 4h bar at open_time t spans
 [t,t+4h) — its close_loc/taker/range are realized DURING the forward-return window (contemporaneous leak). FIX: shift
 features by 1 bar so decision-time t uses the prior COMPLETED bar [t-4h,t). Re-testing PIT-correct (expect collapse to ~0).
+
+### feat-iter3 (microstructure) PIT-CORRECT — NO WINNERS (the leak WAS the whole signal)
+After shift(1): close_loc +0.5545->+0.0299 (lift +0.0004), taker_imb +0.2823->+0.0279 (-0.0016), vol_spike
++0.0922->+0.0290 (-0.0005), intraday_range +0.0892->+0.0292 (-0.0003), amihud/xsrank flat. The spectacular first-run
+ICs were 100% contemporaneous look-ahead (bar [t,t+4h) features vs forward return). PIT-correct microstructure adds ZERO.
+
+## ===== LONG FEATURE-DISCOVERY LOOP — CLOSED (feature layer exhausted on free data) =====
+Three distinct mechanism families tested by nested-OOS marginal IC over V0+RR, ALL empty (PIT-correct):
+  feat-iter1 price-recombination/interactions (15): best +0.0005 — flat.
+  feat-iter2 new signal axes (multi-horizon reversal, rel-strength-vs-BTC, funding-carry, vol-of-vol; 9): best +0.0002 — flat.
+  feat-iter3 microstructure/liquidity (Amihud, vol-spike, range, close-loc, taker-imb; 6): all flat after a caught
+    look-ahead bug (raw IC +0.55 -> PIT +0.0004). NOTE: the honest-gate discipline (>+0.10 IC = look-ahead) caught
+    a catastrophic false win — exactly what the nested/PIT rigor is for.
+CONCLUSION: model IC +0.0295 is at the FREE-DATA CEILING — short-horizon residual reversal + funding IS the
+extractable 4h signal; nothing orthogonal (longer horizons, relative strength, carry, microstructure, interactions)
+adds OOS IC. Combined with construction/sizing/regime/model all separately mapped as local optimum (5 sessions +
+13-agent pass + this 3-batch feature sweep): the convexity v2 strategy is comprehensively at its free-data optimum.
+REAL LIFT REQUIRES A NEW INPUT (on-chain/Glassnode, options IV, finer/licensed microstructure), NOT another feature
+or knob. Otherwise remaining value is OPERATIONAL: run the live forward test of the +4.22 stack + long-winner gate;
+monitor the -0.18 net-short BTC beta and the bear-regime maxDD tail. LOOP STOPPED (no reschedule). Files: live/feat_ic{,2,3}.py.
