@@ -502,3 +502,19 @@ reverting names = signal, not overfit-fixable without removing edge; cross-time 
 remains (construction/sizing/regime/model/freshness all mapped across 4 loop-sessions; long-leg + concentration now
 added as characterized-but-unfixable). The ONE deployable win remains fixed mid-bear x0.5 (+5.08 bot, beat targeted
 placebo p100). Not manufacturing filler iterations per the honesty bar. Remaining work is operational / beyond-free-data.
+
+## ============ MULTI-AGENT OPT PASS (2026-06-13, anti-overfit, 13 agents) ============
+User dropped the hand-tuned mid-bear band as overfit; ran a workflow (enumerate 5 angles -> test each via real
+--replay-all through opt_eval.py -> adversarial overfit-penalized synthesis). Baseline independently reproduced
+to 3dp (+4.224/-2777/16731, lift 0.0). 7 env candidates tested, ~6 needs-code reviewed. **WINNERS: NONE.**
+Tested (all REJECT): SHORT_MIN_RET3D=-0.20 (lift -0.074, OVERFIT sample-fit cut, portfolio-invisible like iter5/12);
+BEAR_MODE=flat (lift +0.005, maxDD -1695/-39%, totPnL -43% — clean PARAM-FREE risk lever but not an alpha win);
+BEAR_K=1 (lift -0.253, fold-concentrated -> confirms BEAR_K=2 peak, K2>K3>K4 monotone); HOLD=7 (-0.201) / HOLD=8
+(-0.424) -> confirms 24h/6-sleeve interior optimum (HOLD 6>7>8>9 monotone); SIZING_MODE=inv_sqrt_vol (lift +0.051,
+5/9, maxDD byte-identical — only positive, tiny param-free nudge, fails gates); SIZING_FEAT=atr_pct (flat -0.016 ->
+idio_vol sizer optimal). Needs-code review caught 2 "ideas" ALREADY in production (target=alpha_vs_btc_realized
+per-symbol PIT z already demeans intercept). Genuinely-new code item worth ONE run: liqfloor $3M->$5M (execution-
+realism robustness check, needs universe rebuild+re-predict, NOT alpha). Feature-bagging / cross-leg-ERC rejected
+(alpha-model + leg-reweighting families already mapped as noise-dominated). **VERDICT: ship nothing new; +4.22 is a
+robust local optimum; the 4h XS mean-rev construction layer is exhausted — real lift needs a new INPUT, not a knob.
+Decisive next step is OPERATIONAL (live forward test).** Infra: live/opt_eval.py, live/opt_workflow.mjs.
