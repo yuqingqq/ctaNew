@@ -479,3 +479,13 @@ being learned in real-time (slow/noisy learning + sleeve-feedback erosion). REGI
 bear-degross/mid-bear band beats TARGETED placebos (p98-p100) but is hindsight-calibrated; auto version ties random;
 in-model conditioning hurts (iter20). Deployable = fixed mid-bear x0.5 (eyes open re calibration) OR simple bear-degross
 for the generic variance benefit. AUTO_SIZER kept in bot as env-gated/off tested infra documenting the negative.
+
+## ============ NEW LOOP (2026-06-13) — find & fix flaws in current +4.22 stack ============
+### iter1 (flaw-finding diagnostic on current stack) — FLAW FOUND: long leg is a beta drag
+Per-leg (full OOS): LONG tradeable -1758 / Sharpe -0.39 (but alpha +7148) ; SHORT +20200 / Sharpe +3.57 (alpha +11860).
+Short leg = the whole engine; long leg has positive ALPHA (+7148) but negative TRADEABLE return — net long-beta drags
+~-8900bps in the bearish OOS, and v2 runs SIDE_BETA_NEUT=0 (equal-weight, unhedged). Time: folds 0/4/5/6 strong
+(+6 to +12), folds 2/3/8 weak (~0). Per-symbol: top10=77% of net PnL, 61% syms net-positive (concentration secondary).
+Caveat: long drag is partly bearish-sample (long beta would help in bull) — but removing uncompensated beta from a
+"neutral" book is principled. -> iter2 tests beta-neutralize + short_btc_hedge (judge per-fold for bear-artifact).
+### iter2 (long-leg beta-drag fixes) — running
