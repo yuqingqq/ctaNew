@@ -1,0 +1,43 @@
+de-leaked safe superset (denylist applied) — univariate rankIC vs target_A
+n_cols=39  max|IC|=0.0357  mean|IC|=0.0144
+ema_slope_20_1h              -0.0357
+ema_slope_20_1h_xs_rank      -0.0342
+return_1d_xs_rank            -0.0342
+aggr_ratio_4h                -0.0333
+dom_z_7d_vs_bk               -0.0256
+bars_since_high              +0.0247
+idio_ret_to_btc_48b          -0.0246
+vwap_zscore                  -0.0245
+obv_z_1d_xs_rank             -0.0234
+vwap_zscore_xs_rank          -0.0224
+tfi_4h                       -0.0202
+idio_ret_to_btc_12b          -0.0181
+atr_pct_xs_rank              -0.0161
+obv_signal                   -0.0160
+price_volume_corr_10         -0.0152
+signed_volume_4h             -0.0137
+idio_skew_1d                 -0.0134
+btc_ret_288b                 -0.0128
+bk_ret_48b                   -0.0127
+idio_max_abs_12b             -0.0127
+funding_streak_neg           +0.0118
+name_factor_loading_1d       +0.0116
+name_idio_share_1d           -0.0116
+buy_count_4h                 -0.0112
+cluster                      +0.0101
+volume_ma_50_xs_rank         -0.0101
+idio_vol_1d_vs_bk            -0.0101
+volume_ma_50                 -0.0095
+beta_short_vs_bk             -0.0085
+btc_ema_slope_4h             -0.0070
+idio_vol_to_btc_1d           -0.0061
+btc_ret_48b                  -0.0059
+avg_trade_size_4h            -0.0056
+btc_ret_12b                  -0.0040
+idio_kurt_1d                 -0.0016
+hour_sin                     -0.0015
+hour_cos                     -0.0010
+beta_to_btc                  -0.0008
+autocorr_pctile_7d           +0.0006
+LEAK-GUARD: max|IC| 0.036 < 0.10 threshold -> PASS (safe superset is leak-clean)
+SAFE_SUPERSET=["ema_slope_20_1h", "ema_slope_20_1h_xs_rank", "return_1d_xs_rank", "aggr_ratio_4h", "dom_z_7d_vs_bk", "bars_since_high", "idio_ret_to_btc_48b", "vwap_zscore", "obv_z_1d_xs_rank", "vwap_zscore_xs_rank", "tfi_4h", "idio_ret_to_btc_12b", "atr_pct_xs_rank", "obv_signal", "price_volume_corr_10", "signed_volume_4h", "idio_skew_1d", "btc_ret_288b", "bk_ret_48b", "idio_max_abs_12b", "funding_streak_neg", "name_factor_loading_1d", "name_idio_share_1d", "buy_count_4h", "cluster", "volume_ma_50_xs_rank", "idio_vol_1d_vs_bk", "volume_ma_50", "beta_short_vs_bk", "btc_ema_slope_4h", "idio_vol_to_btc_1d", "btc_ret_48b", "avg_trade_size_4h", "btc_ret_12b", "idio_kurt_1d", "hour_sin", "hour_cos", "beta_to_btc", "autocorr_pctile_7d"]

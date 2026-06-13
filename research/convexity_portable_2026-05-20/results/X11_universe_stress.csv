@@ -1,0 +1,4 @@
+universe,n_syms,train_ic,sharpe,ci_lo,ci_hi,totPnL,maxDD,folds_pos,concentration,error
+U1_drop_top10_vol,40,0.0111,0.61,-1.36,2.56,2105,-2549,4/9,52%,
+U2_vol_5M_filter,29,0.0092,0.92,-0.99,2.71,3639,-3215,5/9,46%,
+U3_51panel_with_btc,51,0.01,0.0,-2.23,2.28,10,-3276,4/9,93%,

@@ -1,0 +1,20 @@
+====================================================================================================
+  STEP 87: frozen-structure nested-OOS test of the 24h sqbtcrel edge
+  PRE-REG PASS iff a FROZEN (zero-param) structure: CI excl 0 AND >placebo-p95; in-sample>>nested>=frozen = K3 collapse
+====================================================================================================
+    beta289 30/111
+    beta289 60/111
+    beta289 90/111
+  WARNING: feature bars_since_low_xs_rank not in 111-panel
+  dec: 42 syms, 2460 cyc
+  twogrp_equal         FROZEN netSh=+1.99 CI[-0.17,+4.20] net=+44.3bps ρ=+0.709 f+=6/9 placebo_p95=+1.05
+  sigstable3           FROZEN netSh=+2.19 CI[+0.46,+4.52] net=+49.6bps ρ=+0.770 f+=7/9 placebo_p95=+1.05
+  twogrp_ridge_nest    fitted netSh=+3.21 CI[+1.59,+4.88] net=+80.1bps ρ=+0.782 f+=7/9
+  ref_insample         fitted netSh=+2.29 CI[+0.55,+4.55] net=+53.1bps ρ=+0.673 f+=8/9
+  null_signed_eq       fitted netSh=-3.52 CI[-5.50,-1.99] net=-89.3bps ρ=-0.467 f+=1/9
+
+====================================================================================================
+  VERDICT: PASS — frozen zero-param structure(s) ['sigstable3'] clear: CI-excl-0 AND > placebo-p95 with NO in-sample fitting. First genuine linear edge of the investigation — the 24h sqbtcrel signal survives as a fixed parameter-free structure. Deeper robustness/audit next, still NO backtest. (in-sample +2.29 / nested +3.21 / best-frozen +2.19)
+
+Saved under /home/yuqing/ctaNew/linear_model/results/step87_frozen_structure
+Total: 321s

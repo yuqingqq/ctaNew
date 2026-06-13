@@ -1,0 +1,16 @@
+  base V3.1 uncapped: Sharpe +2.229, total_net +8385 bps
+  gross-risk Herfindahl (|per-cycle pnl|) = 0.0937 (eff ~11 names)  <- R1 metric
+  net-cumulative: top1 VVVUSDT = +86.1% of net PnL; top3 = +132.0%  <- PROGRESS.md metric
+  top names by net cumulative PnL (bps / share-of-total-net):
+    VVVUSDT            +7219  +86.1%
+    ETCUSDT            +2074  +24.7%
+    PENDLEUSDT         +1770  +21.1%
+    AVAXUSDT           +1511  +18.0%
+    INJUSDT            +1295  +15.4%
+    ORDIUSDT           +1279  +15.3%
+    BIOUSDT             +802  +9.6%
+    ATOMUSDT            +579  +6.9%
+  ex_VVVUSDT: Sharpe +1.985 (Δ -0.244 vs base +2.229)
+  ex_top1_VVVUSDT: Sharpe +1.985 (Δ -0.244 vs base +2.229)
+
+R1b done [18.8s]

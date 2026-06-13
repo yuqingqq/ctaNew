@@ -1,0 +1,21 @@
+====================================================================================================
+  STEP 67: per-symbol model on mean-rev-v2 + honest blue-chip alpha
+====================================================================================================
+
+--- POOLED baseline (reuse Step 62 predictions) ---
+  [pooled-44] N=44 IC=-0.0129 | nested Sh +0.38 [-1.99,+2.55] fp=5/9 | per-CYCLE net +1.36 bps CI[-6.82,+9.14] | per-TRADE +12.4 bps CI[-10.3,+35.9] PF 1.11 | tot 2,205
+
+--- PART A: PER-SYMBOL model on mean-rev-v2 (44-sym) ---
+  [persym-44] N=44 IC=-0.0002 | nested Sh -1.18 [-3.67,+1.21] fp=2/9 | per-CYCLE net -2.67 bps CI[-7.85,+2.88] | per-TRADE +2.6 bps CI[-23.3,+27.9] PF 1.02 | tot -4,331
+
+--- de-concentration: drop BIO+VVV, RETRAIN per-symbol ---
+  [persym-drop2-42] N=42 IC=+0.0013 | nested Sh -2.35 [-4.71,-0.07] fp=0/9 | per-CYCLE net -4.89 bps CI[-9.81,+0.10] | per-TRADE -7.2 bps CI[-27.9,+15.6] PF 0.93 | tot -7,914
+
+====================================================================================================
+  ANSWER: how large is the real blue-chip alpha?
+====================================================================================================
+  pooled-44       : per-trade +12.4bps CI[-10.3,+35.9] | per-cycle +1.36bps CI[-6.82,+9.14] | IC -0.0129 | not-significant (CI crosses 0)
+  persym-44       : per-trade +2.6bps CI[-23.3,+27.9] | per-cycle -2.67bps CI[-7.85,+2.88] | IC -0.0002 | not-significant (CI crosses 0)
+  persym-drop2-42 : per-trade -7.2bps CI[-27.9,+15.6] | per-cycle -4.89bps CI[-9.81,+0.10] | IC +0.0013 | not-significant (CI crosses 0)
+
+Total: 287s

@@ -1,0 +1,21 @@
+====================================================================================================
+  FEATURE RE-ENGINEERING — full pipeline (LOCKED, 4h)
+====================================================================================================
+  [FIX] F_core(panel-only)=24 feats; OI=11 oflow=6 spot=6 staged as proper nested supersets. NOTE: §6 '+0.62 reproduce' was a 42-sym anchor; this universe is 19-sym ∩ — gate is WITHIN-universe (abs +1.5 & lift≥+0.5 vs best baseline-set & CI & folds & placebo); thresholds UNCHANGED.
+  Stage0/1: rows=29616 syms=19 BASE=24 ENG=26
+  Stage2 PIT: max|corr(eng,fwdαβ)|=0.038 (<0.10 ok); flagged=none
+  Stage3 redundancy: 56→cluster 48→pruned 48 (eng kept 21/26)
+
+  Stage4 leak-free ceiling (Ridge primary; VIP-0):
+   F_core               Ridge +0.18 [-2.22,+2.28] folds 3/9 | LGBM -2.79 (nfeat=24)
+   F_core+oflow         Ridge +0.37 [-2.24,+2.48] folds 4/9 | LGBM -2.43 (nfeat=30)
+   F_core+oflow+spot    Ridge +0.02 [-2.94,+2.26] folds 3/9 | LGBM -2.83 (nfeat=36)
+   F+ENG_pruned         Ridge -0.28 [-2.47,+2.06] folds 3/9 | LGBM -0.93 (nfeat=48)
+   F+ENG_unpruned       Ridge +0.87 [-1.42,+3.03] folds 4/9 | LGBM -1.05 (nfeat=56)
+  within-universe best baseline (max of F_core/+oflow/+spot) = +0.37
+
+  GATE (PRUNED set, VIP-0): Sh -0.28 CI[-2.47,+2.06] folds 3/9 placebo_p95 -1.14 lift_vs_F+oflow -0.65 → FAIL
+
+  VERDICT: GATE FAIL (Sh -0.28≤+1.5; CI incl 0; lift -0.65<+0.5; 3/9 folds). Systematic engineered-interaction + redundancy-pruned feature set does NOT lift the leak-free ceiling past +1.5 vs F_core+oflow baseline (+0.37). Feature-side closure is now AIRTIGHT: signal, construction, cost, hedge, AND systematic feature-engineering all exhausted. The existing-information conclusion is final from every angle. Production LGBM unaffected.
+
+Saved /home/yuqing/ctaNew/linear_model/composite_study/results/feature_reeng_*.csv

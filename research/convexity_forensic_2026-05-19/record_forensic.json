@@ -1,0 +1,53 @@
+{
+  "Q1_why_entered": {
+    "n_entered_legs": 3448,
+    "hit_rate_all_legs": 0.5067,
+    "corr_pred_vs_contrib": -0.0306,
+    "convex_win_rate": 0.1001,
+    "pred_pctile_mean_convexwin": 0.451,
+    "pred_pctile_mean_rest": 0.476,
+    "top_symbols_by_total_contrib": {
+      "VVVUSDT": 9754.0,
+      "AVAXUSDT": 3829.0,
+      "PENDLEUSDT": 1746.0,
+      "INJUSDT": 1432.0,
+      "ETCUSDT": 1007.0,
+      "FILUSDT": 908.0,
+      "LTCUSDT": 868.0,
+      "LINKUSDT": 807.0
+    },
+    "share_of_total_net_from_top1": 0.62
+  },
+  "Q2_pit_signature": {
+    "auc_OOS_time": 0.7125,
+    "auc_OOS_time_with_pred": 0.6936,
+    "auc_label_shuffled_placebo": 0.547,
+    "auc_OOS_symbol_mean": 0.6805,
+    "auc_OOS_symbol_per_group": [
+      0.628,
+      0.697,
+      0.654,
+      0.699,
+      0.724
+    ],
+    "signature_coefs": {
+      "atr_pct": 0.524,
+      "idio_vol_1d_vs_bk": 0.037,
+      "idio_vol_to_btc_1d": 0.117,
+      "idio_skew_1d": -0.217,
+      "idio_kurt_1d": -0.214,
+      "idio_max_abs_12b": -0.163,
+      "name_idio_share_1d": 0.245,
+      "name_factor_loading_1d": 0.317,
+      "funding_rate_z_7d": -0.001,
+      "return_1d": -0.078,
+      "dom_change_288b_vs_bk": 0.142,
+      "corr_to_btc_1d": -0.047
+    }
+  },
+  "interpretation": {
+    "pred_selects_convex?": "pred barely separates convex winners (pctile 0.451 vs 0.476); corr(pred,contrib)=-0.0306 ~ 0",
+    "signature_predicts_cohort_OOS?": "OOS-time AUC 0.7125 (placebo 0.547), OOS-symbol AUC 0.6805 \u2014 >0.55 on BOTH = a real PIT cohort signature; ~0.5 = hindsight only"
+  },
+  "elapsed_s": 19.2
+}

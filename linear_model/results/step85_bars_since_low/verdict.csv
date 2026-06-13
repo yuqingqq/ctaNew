@@ -1,0 +1,2 @@
+any_clears,verdict
+False,"No config clears the gate (incl the Step-84 estimator-consistency requirement). best bsl-config v2_23_with_bsl ridge K3 +6.17 vs v2_all +5.94 (Δ +0.22); eq -2.13. bars_since_low does not add a robust tradable payoff at 4h on free data. The linear line stays sub-cost; feature engineering (orientation, universe, groups, volume, interactions, non-monotone distance-from-extreme) is exhausted under pre-registered honest gates. NOT a proxy call — direct test. Production LGBM unaffected."

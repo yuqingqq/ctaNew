@@ -1,0 +1,16 @@
+==== [00:24:07] REGEN START (causal-fixed engines) ====
+==== [00:24:07] STEP 64 START: 64_meanrev_v2_backtest.py ====
+==== [00:39:39] STEP 64 DONE ====
+==== [00:39:39] STEP 65 START: 65_tail_attrib_deconc.py ====
+==== [00:47:41] STEP 65 DONE ====
+==== [00:47:41] STEP 67 START: 67_persymbol_meanrev.py ====
+==== [00:52:29] STEP 67 DONE ====
+==== [00:52:29] STEP 68 START: 68_persymbol_selfstd.py ====
+==== [00:56:36] STEP 68 DONE ====
+==== [00:56:36] STEP 69 START: 69_verify_selfstd.py ====
+==== [00:59:37] STEP 69 DONE ====
+==== [00:59:37] STEP 70 START: 70_pit_fix_window.py ====
+==== [01:08:32] STEP 70 DONE ====
+==== [01:08:32] STEP 66 START: 66_coststress_iterdrop.py ====
+==== [01:10:45] STEP 66 DONE ====
+==== [01:10:45] STEP 71 START: 71_battery_alleligible.py ====

@@ -1,0 +1,21 @@
+================================================================================================
+  STEP 92 — Phase 1 (LOCKED): convergence/fade β-resid momentum, hl42, L=24h, VIP-0
+================================================================================================
+  hl42 universe: 42 symbols
+
+--- PART 1: PIT audit (Phase 1 runs only if PASS) ---
+  SOLUSDT: corr(stored,indep_PAST)=1.000000 maxdiff=7.3e-09 -> OK
+  ADAUSDT: corr(stored,indep_PAST)=1.000000 maxdiff=2.6e-08 -> OK
+  look-ahead IC: pooled corr(s_t,fwd αβ)=-0.0273 worst-sym |IC|=0.0771  (<0.10 = not a blatant leak; a legit predictor is ~0.01-0.05) -> OK
+  PIT AUDIT: PASS
+
+  GROSS Sharpe=+0.78 (+1.29 bps/cyc) | NET Sharpe=+0.25 CI[-2.07,+2.47] (+0.41 bps/cyc)
+  symbols NET+=55%  drop-top2(ZECUSDT,STRKUSDT) NET Sh=+0.66  folds NET+=4/9  | placebo p95=-2.23 (mean -3.79)
+  [diag, transparency only] autocorr corr(s_t,fwd αβ) pooled -0.0273 ⇒ reversion-consistent (fade is right sign) — does NOT flip locked direction
+
+================================================================================================
+  GATES: P1 CI-excl-0=False | P2 >placebo-p95=True | P3 ≥60%syms&dropT2=False | P4 ≥6/9 folds=False
+  VERDICT: FAIL (P1=False,P2=True,P3=False,P4=False). NET Sharpe +0.25 CI[-2.07,+2.47], GROSS +0.78, placebo p95 -2.23. GROSS-positive but NET fails on cost ⇒ Phase 1b (cost-amortization) WARRANTED per plan §6. Recorded honestly; no direction flip (anti-p-hack rule). Production LGBM unaffected.
+
+Saved /home/yuqing/ctaNew/linear_model/results/step92_tsmom_base
+Total: 32s

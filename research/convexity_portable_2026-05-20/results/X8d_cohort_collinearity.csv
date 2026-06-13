@@ -1,0 +1,4 @@
+variant,desc,n_feats,use_symid,train_ic,sharpe,ci_lo,ci_hi,totPnL,maxDD,folds_pos,concentration,alpha_median,train_time_s,error
+D1_persym_only,BASE + rvol_7d + ret_3d (drop broadcast btc_rvol_7d) + normalized sym_id,16,True,0.0059,0.8,-0.96,2.62,2327,-2568,5/9,44%,300.0,341.0,
+D2_nosym_full,"BASE + cohort (drop sym_id entirely, reference)",17,False,0.0123,-0.03,-1.81,1.85,-105,-2644,4/9,36%,300.0,134.0,
+D3_persym_vol,BASE + rvol_7d + ret_3d + per_sym_vol_proxy (replace broadcast with per-sym) + norm sym_id,17,True,0.0037,0.26,-1.61,2.14,833,-3732,4/9,86%,300.0,345.0,

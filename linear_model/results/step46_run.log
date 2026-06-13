@@ -1,0 +1,46 @@
+====================================================================================================
+  STEP 46: V2 110-panel UNIVERSE STRESS TEST
+====================================================================================================
+  K_drop ∈ [10, 20, 30, 40], 30 random draws per K
+  Baseline: V2 on 110-panel + V3.1 sleeve = +2.11
+
+Panel has 110 symbols (BTC excluded upstream)
+
+--- K_drop = 10 (universe size = 100) ---
+  draw 10: mean=-1.826
+  draw 20: mean=-1.725
+  draw 30: mean=-1.380
+  K=10: mean=-1.38  std=1.30  p5/p50/p95=-2.96/-1.81/+0.80  min=-3.21  max=+1.30
+           8/30 positive, 0/30 beat baseline +2.11
+
+--- K_drop = 20 (universe size = 90) ---
+  draw 10: mean=-1.223
+  draw 20: mean=-0.823
+  draw 30: mean=-0.715
+  K=20: mean=-0.72  std=1.61  p5/p50/p95=-2.97/-0.89/+1.21  min=-3.27  max=+1.22
+           14/30 positive, 0/30 beat baseline +2.11
+
+--- K_drop = 30 (universe size = 80) ---
+  draw 10: mean=+0.082
+  draw 20: mean=-0.126
+  draw 30: mean=-0.206
+  K=30: mean=-0.21  std=1.38  p5/p50/p95=-2.92/+0.25/+1.36  min=-3.47  max=+1.43
+           16/30 positive, 0/30 beat baseline +2.11
+
+--- K_drop = 40 (universe size = 70) ---
+  draw 10: mean=+0.070
+  draw 20: mean=+0.073
+  draw 30: mean=+0.193
+  K=40: mean=+0.19  std=1.14  p5/p50/p95=-1.52/+0.67/+1.36  min=-2.64  max=+1.84
+           20/30 positive, 0/30 beat baseline +2.11
+
+====================================================================================================
+  STEP 43 SUMMARY (V2 110-panel vs Step 40 V2 51-panel)
+====================================================================================================
+    K_drop |   110 mean |  110 std |  110 worst |  51 mean (ref) | 51 worst (ref)
+        10 |      -1.38 |     1.30 |      -3.21 |          +1.28 |          -1.09
+        20 |      -0.72 |     1.61 |      -3.27 |          +0.69 |          -2.07
+        30 |      -0.21 |     1.38 |      -3.47 |              — |              —
+        40 |      +0.19 |     1.14 |      -2.64 |              — |              —
+
+  Total: 1443s

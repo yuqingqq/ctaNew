@@ -1,0 +1,2 @@
+constrained_rescued,verdict
+False,"Neither NNLS nor positive-Ridge clears the payoff gate (as predicted: 76/77 located the pathology in features->target, not the weighting). LINEAR-ON-CURRENT-FEATURES IS CLOSED. Next = Batch B only (price x volume interactions), dedupe-vs-history recorded, pre-registered payoff gate, no backtest until it clears."

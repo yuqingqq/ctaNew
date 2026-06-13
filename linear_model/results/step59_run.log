@@ -1,0 +1,49 @@
+====================================================================================================
+  STEP 59: clean-108 WITH realized funding PnL (causal aggregator)
+====================================================================================================
+
+Panel symbols: 108 (BTC excluded)
+
+Inferring per-symbol funding cadence from data...
+  funding interval distribution (hours): {8.0: 35, 4.0: 73}
+  fund_block shape (1620, 108), mean |block funding| = 1.19 bps
+
+====================================================================================================
+  REAL clean-108 B_IC_signed — funding impact
+====================================================================================================
+  Sharpe NO funding (== 58b check): +2.34
+  Sharpe WITH funding            : +2.34  [+0.58, +4.46]
+  mean gross   = +9.55 bps/cyc
+  mean funding = -0.02 bps/cyc (>0 = strategy EARNS funding)
+  mean cost    = +0.63 bps/cyc
+  mean net     = +8.91 bps/cyc
+  folds+ (with funding) = 7/9
+
+  Per-fold (gross / funding / cost / net):
+    fold 1: g= +7.83  f= -0.07  c= 0.51  net= +7.26  Sh=+2.48
+    fold 2: g= -0.73  f= -0.12  c= 0.37  net= -1.23  Sh=-1.02
+    fold 3: g= +4.27  f= -0.12  c= 0.59  net= +3.56  Sh=+2.14
+    fold 4: g= +9.26  f= +0.32  c= 0.55  net= +9.03  Sh=+4.44
+    fold 5: g=+10.77  f= +0.01  c= 0.74  net=+10.04  Sh=+3.21
+    fold 6: g=+14.61  f= -0.21  c= 0.76  net=+13.65  Sh=+1.82
+    fold 7: g=+21.42  f= +0.07  c= 0.87  net=+20.62  Sh=+4.79
+    fold 8: g=+27.47  f= +0.15  c= 0.71  net=+26.92  Sh=+5.46
+    fold 9: g= -8.92  f= -0.18  c= 0.59  net= -9.69  Sh=-4.94
+
+  LOFO (with funding, Sharpe=+2.34):
+    excl 1: +2.34 (Δ -0.01)
+    excl 2: +2.53 (Δ +0.19)
+    excl 3: +2.40 (Δ +0.06)
+    excl 4: +2.24 (Δ -0.10)
+    excl 5: +2.26 (Δ -0.08)
+    excl 6: +2.74 (Δ +0.40)
+    excl 7: +1.99 (Δ -0.35)
+    excl 8: +1.83 (Δ -0.51)  ← drives
+    excl 9: +2.83 (Δ +0.49)
+  Loading kline volumes for 108 symbols...
+
+  P1 (liq-univ random) ×100 WITH funding: p95=+1.53  real rank p98  edge +0.81  PASS
+
+  P2 (V2-univ random) ×100 WITH funding: p95=+1.49  real rank p98  edge +0.85  PASS
+
+Total: 806s

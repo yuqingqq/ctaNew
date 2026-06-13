@@ -1,0 +1,37 @@
+====================================================================================================
+  STEP 79: broader-universe payoff + per-symbol attribution
+  GATE: rho>=+0.6 & K3>=+9.0bps & >=6/9 & top5<= 60% pos-gross & drop-top2 K3>0 | decision keyed off hl_all
+====================================================================================================
+  panel 12,809,092 rows, 110 syms; 10 folds (shared)
+
+--- hl42  (42 syms, EXECUTABLE) ---
+  ridge_xsz      IC=+0.0079 rho=+0.552 K1=+10.27 K3= +5.94 K10= +2.22 f+=7/9 | top5=  45%(HL) top2=['TRUMPUSDT', 'ZECUSDT'] | dropT2 K3= +4.84 | FAIL
+      top5 gross: TRUMPUSDT=+2152 ZECUSDT=+2109 PUMPUSDT=+1744 AVAXUSDT=+1719 SPXUSDT=+1684
+  nnls_oriented  IC=+0.0259 rho=+0.370 K1= +7.20 K3= +6.77 K10= +3.06 f+=7/9 | top5=  41%(HL) top2=['ZECUSDT', 'UNIUSDT'] | dropT2 K3= +4.75 | FAIL
+      top5 gross: ZECUSDT=+2942 UNIUSDT=+2157 VIRTUALUSDT=+1922 AVAXUSDT=+1346 ARBUSDT=+1336
+  signed_equal   IC=+0.0505 rho=+0.636 K1= +1.05 K3= +0.81 K10= +1.66 f+=5/9 | top5=  41%(HL) top2=['WIFUSDT', 'JUPUSDT'] | dropT2 K3= -0.41 | FAIL
+      top5 gross: WIFUSDT=+1826 JUPUSDT=+1452 UNIUSDT=+1446 PENGUUSDT=+1396 FILUSDT=+1244
+
+--- hl_all  (70 syms, EXECUTABLE) ---
+  ridge_xsz      IC=-0.0024 rho=+0.382 K1= +0.27 K3= -1.03 K10= +1.18 f+=4/9 | top5=  37%(HL) top2=['GRIFFAINUSDT', 'GMXUSDT'] | dropT2 K3= -3.78 | FAIL
+      top5 gross: GRIFFAINUSDT=+2930 GMXUSDT=+2260 WLDUSDT=+1959 VVVUSDT=+1710 AIXBTUSDT=+1707
+  nnls_oriented  IC=+0.0272 rho=+0.091 K1=+10.37 K3= -1.56 K10= -0.81 f+=5/9 | top5=  39%(HL) top2=['TSTUSDT', 'GRIFFAINUSDT'] | dropT2 K3= -4.61 | FAIL
+      top5 gross: TSTUSDT=+3318 GRIFFAINUSDT=+2729 MELANIAUSDT=+2134 AIXBTUSDT=+1925 ZECUSDT=+1697
+  signed_equal   IC=+0.0544 rho=-0.248 K1= -0.61 K3= -4.01 K10= -1.28 f+=5/9 | top5=  34%(HL) top2=['TSTUSDT', 'ANIMEUSDT'] | dropT2 K3= -7.30 | FAIL
+      top5 gross: TSTUSDT=+4088 ANIMEUSDT=+2034 USUALUSDT=+1591 SPXUSDT=+1561 LAYERUSDT=+1365
+
+--- binance110  (110 syms, RESEARCH-ONLY) ---
+  ridge_xsz      IC=+0.0049 rho=+0.370 K1= +9.62 K3=+16.15 K10= +6.71 f+=7/9 | top5=  37%(NON-HL) top2=['SIRENUSDT', 'SOLVUSDT'] | dropT2 K3= +9.26 | FAIL
+      top5 gross: SIRENUSDT*=+12822 SOLVUSDT*=+5164 AVAAIUSDT*=+3142 JELLYJELLYUSDT*=+3060 TSTUSDT=+2941
+  nnls_oriented  IC=+0.0377 rho=+0.236 K1=+27.73 K3= +8.97 K10= +6.20 f+=5/9 | top5=  38%(NON-HL) top2=['SIRENUSDT', 'SOLVUSDT'] | dropT2 K3= +1.72 | FAIL
+      top5 gross: SIRENUSDT*=+11753 SOLVUSDT*=+4817 TSTUSDT=+2875 AVAAIUSDT*=+2755 GPSUSDT*=+2543
+  signed_equal   IC=+0.0558 rho=-0.661 K1=+15.61 K3= +0.90 K10= -4.85 f+=4/9 | top5=  27%(NON-HL) top2=['BROCCOLIF3BUSDT', 'ZEREBROUSDT'] | dropT2 K3= -4.15 | FAIL
+      top5 gross: BROCCOLIF3BUSDT*=+4593 ZEREBROUSDT*=+3819 SOLVUSDT*=+3522 GPSUSDT*=+3120 TSTUSDT=+2618
+
+====================================================================================================
+  VERDICT
+====================================================================================================
+  Binance-110 shows payoff but it is concentrated in non-HL / top-2 names = the Steps 55-60 MEME-TAIL ARTIFACT, NOT generalization. hl_all (executable) does NOT clear. Linear line stays closed; pivot to Step 80 Batch B.
+
+Saved under /home/yuqing/ctaNew/linear_model/results/step79_broader_universe
+Total: 3001s

@@ -1,0 +1,47 @@
+====================================================================================================
+  STEP 40: V2 fixed UNIVERSE STRESS TEST
+====================================================================================================
+  K_drop ∈ [5, 10, 15, 20], 30 random draws per K
+  Baseline: V2 fixed full 51-panel + V3.1 sleeve = +2.19
+
+Panel has 50 symbols
+
+--- K_drop = 5 (universe size = 45) ---
+  draw 10: mean=+1.293
+  draw 20: mean=+1.183
+  draw 30: mean=+1.162
+  K=5: mean=+1.16  std=0.74  p5/p50/p95=-0.61/+1.36/+2.00  min=-0.99  max=+2.12
+           27/30 positive, 0/30 beat baseline +2.19
+
+--- K_drop = 10 (universe size = 40) ---
+  draw 10: mean=+1.368
+  draw 20: mean=+1.326
+  draw 30: mean=+1.275
+  K=10: mean=+1.28  std=0.83  p5/p50/p95=-0.51/+1.47/+2.26  min=-1.09  max=+2.59
+           27/30 positive, 2/30 beat baseline +2.19
+
+--- K_drop = 15 (universe size = 35) ---
+  draw 10: mean=+0.659
+  draw 20: mean=+0.599
+  draw 30: mean=+0.785
+  K=15: mean=+0.78  std=1.07  p5/p50/p95=-1.04/+1.11/+2.04  min=-1.35  max=+2.31
+           20/30 positive, 1/30 beat baseline +2.19
+  Warning: K_drop=20 leaves only 30 syms, may have universe issues
+
+--- K_drop = 20 (universe size = 30) ---
+  draw 10: mean=+0.489
+  draw 20: mean=+0.573
+  draw 30: mean=+0.689
+  K=20: mean=+0.69  std=1.01  p5/p50/p95=-1.07/+0.83/+1.95  min=-2.07  max=+2.42
+           23/30 positive, 1/30 beat baseline +2.19
+
+====================================================================================================
+  STEP 40 SUMMARY (Ridge V2 vs LGBM Phase UNI)
+====================================================================================================
+    K_drop |  Ridge V2 mean |    std |    worst |  LGBM mean | LGBM worst
+         5 |           1.16 |   0.74 |    -0.99 |       1.82 |       0.21
+        10 |           1.28 |   0.83 |    -1.09 |       1.44 |      -0.18
+        15 |           0.78 |   1.07 |    -1.35 |       1.22 |      -0.35
+        20 |           0.69 |   1.01 |    -2.07 |       0.95 |      -1.40
+
+  Total: 566s

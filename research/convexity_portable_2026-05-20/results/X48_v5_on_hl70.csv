@@ -1,0 +1,3 @@
+universe,n_syms,train_ic,sharpe,ci_lo,ci_hi,totPnL,maxDD,folds_pos,concentration,error
+V5_HL70_full,70,0.0004,0.63,-1.26,2.96,2820,-4912,3/9,48%,
+V5_HL50_sanity,50,0.0018,1.78,0.03,3.74,6564,-2232,5/9,37%,

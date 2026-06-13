@@ -1,0 +1,201 @@
+{
+  "ex_vvv": true,
+  "windows": {
+    "3d": {
+      "all": {
+        "n": 196,
+        "dir_primed": 0.5619,
+        "placebo": 0.4986,
+        "lift": 0.0633,
+        "per_group": [
+          0.583,
+          0.636,
+          0.472,
+          0.556
+        ]
+      },
+      "half1": {
+        "n": 98,
+        "dir_primed": 0.4921,
+        "placebo": 0.5469,
+        "lift": -0.0548,
+        "per_group": [
+          0.492
+        ]
+      },
+      "half2": {
+        "n": 98,
+        "dir_primed": 0.6474,
+        "placebo": 0.5596,
+        "lift": 0.0878,
+        "per_group": [
+          0.704,
+          0.583,
+          0.655
+        ]
+      },
+      "tercile1": {
+        "n": 66,
+        "dir_primed": 0.4281,
+        "placebo": 0.5094,
+        "lift": -0.0813,
+        "per_group": [
+          0.45,
+          0.406
+        ]
+      },
+      "tercile2": {
+        "n": 65,
+        "dir_primed": 0.4348,
+        "placebo": 0.5833,
+        "lift": -0.1486,
+        "per_group": [
+          0.435
+        ]
+      },
+      "tercile3": {
+        "n": 65,
+        "dir_primed": null,
+        "placebo": null,
+        "lift": null,
+        "per_group": []
+      }
+    },
+    "7d": {
+      "all": {
+        "n": 244,
+        "dir_primed": 0.5379,
+        "placebo": 0.4665,
+        "lift": 0.0714,
+        "per_group": [
+          0.56,
+          0.45,
+          0.667,
+          0.513,
+          0.5
+        ]
+      },
+      "half1": {
+        "n": 123,
+        "dir_primed": 0.4801,
+        "placebo": 0.3958,
+        "lift": 0.0843,
+        "per_group": [
+          0.492,
+          0.469
+        ]
+      },
+      "half2": {
+        "n": 121,
+        "dir_primed": 0.6421,
+        "placebo": 0.5421,
+        "lift": 0.1,
+        "per_group": [
+          0.686,
+          0.773,
+          0.55,
+          0.56
+        ]
+      },
+      "tercile1": {
+        "n": 82,
+        "dir_primed": 0.4321,
+        "placebo": 0.4412,
+        "lift": -0.009,
+        "per_group": [
+          0.423,
+          0.441
+        ]
+      },
+      "tercile2": {
+        "n": 81,
+        "dir_primed": 0.5008,
+        "placebo": 0.6331,
+        "lift": -0.1323,
+        "per_group": [
+          0.55,
+          0.452
+        ]
+      },
+      "tercile3": {
+        "n": 81,
+        "dir_primed": 0.6154,
+        "placebo": 0.64,
+        "lift": -0.0246,
+        "per_group": [
+          0.615
+        ]
+      }
+    },
+    "14d": {
+      "all": {
+        "n": 263,
+        "dir_primed": 0.5381,
+        "placebo": 0.5485,
+        "lift": -0.0104,
+        "per_group": [
+          0.537,
+          0.5,
+          0.629,
+          0.558,
+          0.467
+        ]
+      },
+      "half1": {
+        "n": 132,
+        "dir_primed": 0.5281,
+        "placebo": 0.5593,
+        "lift": -0.0312,
+        "per_group": [
+          0.506,
+          0.55
+        ]
+      },
+      "half2": {
+        "n": 131,
+        "dir_primed": 0.57,
+        "placebo": 0.4311,
+        "lift": 0.1389,
+        "per_group": [
+          0.537,
+          0.682,
+          0.462,
+          0.6
+        ]
+      },
+      "tercile1": {
+        "n": 88,
+        "dir_primed": 0.45,
+        "placebo": 0.4667,
+        "lift": -0.0167,
+        "per_group": [
+          0.4,
+          0.5
+        ]
+      },
+      "tercile2": {
+        "n": 87,
+        "dir_primed": 0.5338,
+        "placebo": 0.3474,
+        "lift": 0.1864,
+        "per_group": [
+          0.5,
+          0.568
+        ]
+      },
+      "tercile3": {
+        "n": 88,
+        "dir_primed": 0.5714,
+        "placebo": 0.5926,
+        "lift": -0.0212,
+        "per_group": [
+          0.571
+        ]
+      }
+    }
+  },
+  "mean_lift_half1": -0.0006,
+  "mean_lift_half2": 0.1089,
+  "verdict": "Second-half-only signal \u2014 period-fragile; forward expected lift halved at best; do not adopt",
+  "elapsed_s": 48.1
+}

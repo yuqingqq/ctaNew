@@ -1,0 +1,64 @@
+=== Step 35: P1+P2 placebos on Step 34 fixed V1 and V2 ===
+
+  Loading kline volumes for liq universe...
+  liq universe built for 1620 timestamps
+
+====================================================================================================
+  v1_fixed
+====================================================================================================
+  v1_fixed B_IC_signed Sharpe = +1.21 [-0.97,+3.25], folds+=4/9
+
+--- P1 placebo (liq univ random) × 100 ---
+  seed 25: mean=-0.113
+  seed 50: mean=-0.351
+  seed 75: mean=-0.275
+  seed 100: mean=-0.211
+  P1 mean: -0.211  std: 1.057
+  P1 p5/p25/p50/p75/p95: -1.98/-1.06/-0.17/+0.65/+1.53
+  v1_fixed rank in P1: 89.0%
+  Edge over P1 p95: -0.32
+
+--- P2 placebo (model univ random) × 100 ---
+  seed 25: mean=-0.751
+  seed 50: mean=-0.539
+  seed 75: mean=-0.604
+  seed 100: mean=-0.485
+  P2 mean: -0.485  std: 1.254
+  P2 p5/p25/p50/p75/p95: -2.38/-1.30/-0.53/+0.30/+1.65
+  v1_fixed rank in P2: 90.0%
+  Edge over P2 p95: -0.44
+
+====================================================================================================
+  v2_fixed
+====================================================================================================
+  v2_fixed B_IC_signed Sharpe = +2.19 [-0.07,+4.38], folds+=7/9
+
+--- P1 placebo (liq univ random) × 100 ---
+  seed 25: mean=-0.058
+  seed 50: mean=-0.392
+  seed 75: mean=-0.415
+  seed 100: mean=-0.331
+  P1 mean: -0.331  std: 1.001
+  P1 p5/p25/p50/p75/p95: -1.65/-1.04/-0.36/+0.29/+1.16
+  v2_fixed rank in P1: 99.0%
+  Edge over P1 p95: +1.04
+
+--- P2 placebo (model univ random) × 100 ---
+  seed 25: mean=-0.139
+  seed 50: mean=-0.344
+  seed 75: mean=-0.392
+  seed 100: mean=-0.364
+  P2 mean: -0.364  std: 1.249
+  P2 p5/p25/p50/p75/p95: -2.26/-1.24/-0.54/+0.55/+1.61
+  v2_fixed rank in P2: 97.0%
+  Edge over P2 p95: +0.58
+
+====================================================================================================
+  STEP 35 VERDICT
+====================================================================================================
+  v1_fixed      Sharpe=+1.21  CI=[-0.97,+3.25]
+               P1: FAIL p95=+1.53    P2: FAIL p95=+1.65
+  v2_fixed      Sharpe=+2.19  CI=[-0.07,+4.38]
+               P1: PASS p95=+1.16    P2: PASS p95=+1.61
+
+Total: 1023s

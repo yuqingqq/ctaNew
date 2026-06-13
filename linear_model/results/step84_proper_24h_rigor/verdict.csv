@@ -1,0 +1,2 @@
+all_pass,verdict
+False,"FAIL (G4,G5) — the Step-83 24h headline was a horizon-scale / heavy-tail / unconstrained-ridge artifact, not a real edge (G4 estimator-fragility and/or placebo/CI). Recorded honestly: 24h does NOT revive the linear line under a horizon-fair test. This was the last genuinely-unresolved direction, now cleanly closed by DIRECT rigorous test (not a proxy). Production LGBM unaffected."

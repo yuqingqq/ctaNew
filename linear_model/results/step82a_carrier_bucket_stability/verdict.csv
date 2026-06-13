@@ -1,0 +1,2 @@
+any_pass,verdict
+False,"FAIL — no carrier bucket map is fold-stable (best profile-persist rho +0.06 < +0.3). The bucket calibration would inherit the instability — measured now on the RIGHT carrier (squared/non-monotone), not the Step-77 shrunk-composite proxy. Step 82b NOT well-posed; the non-monotone structure is real but its bucket map does not persist OOS. Pivot to proper-24h (Step-76 bug) as the remaining genuinely-untested direction."

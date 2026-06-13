@@ -1,0 +1,2 @@
+verdict
+"D1-ext-G: LONG-consensus reliable=False (mean +1.92bps hit 50% netSh +0.62); SHORT-consensus reliable=False (mean -0.27bps hit 53% netSh -0.09); |V|-mono ρ=-0.60; placebo fails. Signed-composite consensus does not yield a reliable net-of-cost direction beyond the (sub-cost) convergence collapse — confirms composites are correlated reads of one signal, not independent directional bets. Production LGBM unaffected."

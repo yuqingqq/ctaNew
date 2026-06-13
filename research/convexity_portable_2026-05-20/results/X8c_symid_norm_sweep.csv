@@ -1,0 +1,5 @@
+variant,desc,train_ic,sharpe,ci_lo,ci_hi,totPnL,maxDD,folds_pos,concentration,alpha_median,alpha_min,alpha_max,train_time_s,error
+C1_norm_symid,Normalize sym_id dummies + wider α,0.007,1.38,-0.57,3.12,6221,-3302,5/9,67%,300.0,100.0,300.0,375.0,
+C2_free_symid,Free sym_id intercepts (target demean),0.0081,-0.91,-2.92,1.0,-3484,-4261,2/9,98%,300.0,300.0,300.0,152.0,
+C3_group_alpha_50x,Group α: α_sym = α_main/50,0.0075,0.77,-1.41,2.8,3436,-3228,3/9,96%,300.0,300.0,300.0,172.0,
+C4_drop_symid,Drop sym_id entirely (reference),0.01,0.38,-1.69,2.43,1484,-3760,5/9,80%,300.0,300.0,300.0,148.0,

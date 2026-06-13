@@ -1,0 +1,28 @@
+====================================================================================================
+  STEP 83: PROPER 24h fwd beta-residual (volaug/hl42, beta@289)
+  GATE: rho>=+0.6 & K3>=+9.0 & >=6/9 & drop-top2>0 & top5<= 60% | non-overlap stride 6
+====================================================================================================
+  volaug 12,809,092 rows, 110 syms; building beta289 from klines...
+    beta289 30/111
+    beta289 60/111
+    beta289 90/111
+  resid24 coverage 99.1%  std=0.06478
+  hl42: 42 syms, 2460 cycles (4h grid; eval stride 6)
+
+--- ridge_xsz ---
+  v2_all             IC=+0.0263 rho=+0.685 K1=+23.13 K3=+36.27 K10=+19.83 f+=7/9 dT2=+26.54 top5= 52% | PASS
+  only_squared       IC=+0.0169 rho=+0.467 K1=+83.19 K3=+63.83 K10=+22.56 f+=8/9 dT2=+36.48 top5= 53% | FAIL
+  sqbtcrel           IC=+0.0337 rho=+0.745 K1=+63.17 K3=+59.92 K10=+26.89 f+=9/9 dT2=+21.86 top5= 56% | PASS
+  sqbtcrel_plus_int  IC=+0.0298 rho=+0.612 K1=+50.10 K3=+45.81 K10=+21.30 f+=7/9 dT2=+16.81 top5= 57% | PASS
+
+--- nnls_oriented ---
+  v2_all             IC=+0.0177 rho=-0.176 K1=-108.52 K3=-44.71 K10=-18.06 f+=4/9 dT2=-47.07 top5= 74% | FAIL
+  only_squared       IC=+0.0121 rho=+0.442 K1= -5.34 K3=+31.84 K10=+18.43 f+=4/9 dT2= -1.29 top5= 82% | FAIL
+  sqbtcrel           IC=+0.0241 rho=-0.236 K1= -4.16 K3=-23.12 K10= -2.29 f+=3/9 dT2=-28.45 top5= 62% | FAIL
+  sqbtcrel_plus_int  IC=+0.0227 rho=-0.006 K1=-23.23 K3= -0.37 K10= +4.92 f+=5/9 dT2=-10.21 top5= 54% | FAIL
+
+====================================================================================================
+  VERDICT: PROPER-24h CLEARS — ridge_xsz/v2_all rho +0.68 K3 +36.27 dropT2 +26.54. The 24h horizon revives the line; next = robustness/audit, still NO backtest.
+
+Saved under /home/yuqing/ctaNew/linear_model/results/step83_proper_24h
+Total: 1770s

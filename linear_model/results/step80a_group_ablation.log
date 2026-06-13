@@ -1,0 +1,39 @@
+====================================================================================================
+  STEP 80a: feature-group ablation + group-payoff (hl42 testbed)
+  GATE: rho>=+0.6 & K3>=+9.0 & >=6/9 & drop-top2 K3>0 | group |dK3|>=3.0 = essential/dominating
+====================================================================================================
+  hl42: 42 syms, 22 feats, 5 groups (sizes [6, 5, 4, 3, 4]) — map OK
+
+--- nnls_oriented ---
+  all              IC=+0.0259 rho=+0.370 K1= +7.20 K3= +6.77 K10= +3.06 f+=7/9 dropT2K3= +6.96 FAIL
+  drop_trend       IC=+0.0285 rho=+0.527 K1= +5.60 K3= +8.98 K10= +3.27 f+=6/9 dropT2K3= +8.03 FAIL [neutral dK3=+2.21]
+  drop_squared     IC=+0.0220 rho=+0.455 K1=+10.12 K3= +7.79 K10= +2.88 f+=7/9 dropT2K3= +3.90 FAIL [neutral dK3=+1.02]
+  drop_vol         IC=+0.0249 rho=+0.564 K1= +0.19 K3= +5.75 K10= +2.69 f+=7/9 dropT2K3= +5.48 FAIL [neutral dK3=-1.02]
+  drop_funding     IC=+0.0277 rho=+0.842 K1= +3.77 K3= +6.64 K10= +2.31 f+=7/9 dropT2K3= +3.88 FAIL [neutral dK3=-0.13]
+  drop_btc_rel     IC=+0.0239 rho=+0.430 K1=+19.52 K3= +8.23 K10= +2.99 f+=8/9 dropT2K3= +6.54 FAIL [neutral dK3=+1.46]
+  only_trend       IC=+0.0234 rho=+0.455 K1= +2.61 K3= +3.04 K10= +2.02 f+=7/9 dropT2K3= +4.23 FAIL
+  only_squared     IC=+0.0076 rho=+0.467 K1=+12.87 K3= +4.89 K10= +3.34 f+=5/9 dropT2K3= +1.24 FAIL
+  only_vol         IC=+0.0102 rho=-0.115 K1= +3.08 K3= -0.83 K10= +0.38 f+=4/9 dropT2K3= +1.23 FAIL
+  only_funding     IC=-0.0029 rho=+0.345 K1= +4.14 K3= +3.25 K10= +3.08 f+=5/9 dropT2K3= +0.61 FAIL
+  only_btc_rel     IC=+0.0370 rho=+0.624 K1= +3.01 K3= +5.57 K10= +4.16 f+=7/9 dropT2K3=+10.30 FAIL
+
+--- ridge_xsz ---
+  all              IC=+0.0079 rho=+0.552 K1=+10.27 K3= +5.94 K10= +2.22 f+=7/9 dropT2K3= +8.27 FAIL
+  drop_trend       IC=+0.0144 rho=+0.721 K1= +9.77 K3= +6.03 K10= +4.80 f+=6/9 dropT2K3= +7.62 FAIL [neutral dK3=+0.08]
+  drop_squared     IC=+0.0020 rho=+0.115 K1= +4.63 K3= +0.86 K10= -0.17 f+=5/9 dropT2K3= -2.38 FAIL [ESSENTIAL dK3=-5.08]
+  drop_vol         IC=+0.0134 rho=+0.600 K1= +5.58 K3= +6.90 K10= +3.01 f+=6/9 dropT2K3= +4.49 FAIL [neutral dK3=+0.96]
+  drop_funding     IC=+0.0080 rho=+0.212 K1= +6.84 K3= +8.13 K10= +1.30 f+=7/9 dropT2K3= +4.15 FAIL [neutral dK3=+2.18]
+  drop_btc_rel     IC=+0.0060 rho=+0.333 K1= +8.43 K3= +7.30 K10= +3.46 f+=7/9 dropT2K3= +8.43 FAIL [neutral dK3=+1.36]
+  only_trend       IC=+0.0148 rho=+0.006 K1= -6.64 K3= +1.04 K10= +0.22 f+=5/9 dropT2K3= -4.00 FAIL
+  only_squared     IC=+0.0022 rho=+0.552 K1= +8.82 K3=+10.11 K10= +5.14 f+=8/9 dropT2K3= +8.16 FAIL
+  only_vol         IC=-0.0165 rho=+0.418 K1= -0.29 K3= +5.06 K10= +1.46 f+=7/9 dropT2K3= +5.51 FAIL
+  only_funding     IC=-0.0020 rho=+0.261 K1=+11.16 K3= +9.06 K10= +3.37 f+=8/9 dropT2K3= +6.26 FAIL
+  only_btc_rel     IC=+0.0254 rho=+0.624 K1= +0.67 K3= +2.72 K10= +2.56 f+=4/9 dropT2K3= +1.14 FAIL
+
+====================================================================================================
+  VERDICT
+====================================================================================================
+  No leave-one-group-out config clears the full gate -> the dead payoff is STRUCTURAL across all groups, not one noisy group dominating (best single group = only_squared K3 +10.11 rho +0.55). Step 80b: build price x volume interactions only from the ESSENTIAL / best-single-group features; honest base rate remains low. No backtest.
+
+Saved under /home/yuqing/ctaNew/linear_model/results/step80a_group_ablation
+Total: 3961s

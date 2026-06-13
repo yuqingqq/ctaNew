@@ -1,0 +1,2 @@
+verdict,mean_ic,std_ic,t,placebo_p95,agg_ic,agg_sh
+"Linear alpha model idiosyncratic per-symbol alpha: mean IC +0.0307 (std 0.0212, noise:signal 1:1, t +9.36), 93% syms IC>0, mean > placebo p95 +0.0063. mean per-sym IC beats placebo & t>2 — candidate; requires loop-closed nested-OOS before any claim. Production LGBM unaffected.",0.030666755223331663,0.02122747533088812,9.362549505581843,0.006322004206348725,0.026420424435407847,0.2757417758580871

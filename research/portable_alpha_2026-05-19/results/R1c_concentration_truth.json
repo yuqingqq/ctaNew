@@ -1,0 +1,26 @@
+{
+  "per_cycle_gross_weight_herfindahl": {
+    "median_H": 0.1914,
+    "mean_H": 0.2088,
+    "median_effN": 5.23,
+    "median_n_names": 7,
+    "median_top1_weight": 0.2833
+  },
+  "interpretation": "per-cycle book is ~5.23 effective names (CONCENTRATED), not the ~11 implied by the cumulative-signed-PnL Herfindahl 0.094",
+  "cumulative_signed_top1": {
+    "name": "VVVUSDT",
+    "share": 0.7968
+  },
+  "ex_VVV_rebuild": {
+    "sharpe": 1.89,
+    "new_top1": "AXSUSDT",
+    "new_top1_share": 0.3685
+  },
+  "ex_VVV_and_next_rebuild": {
+    "sharpe": 1.149,
+    "new_top1": "PENDLEUSDT",
+    "new_top1_share": 0.3662
+  },
+  "verdict": "concentration ROTATES to the next tail name under filter_refill \u2014 it is not eliminated; 'robust to VVV' is the adaptive-refill confound, NOT diversification",
+  "elapsed_s": 18.8
+}

@@ -1,0 +1,2 @@
+frozen_pass,k3_collapse,verdict
+True,False,"PASS — frozen zero-param structure(s) ['sigstable3'] clear: CI-excl-0 AND > placebo-p95 with NO in-sample fitting. First genuine linear edge of the investigation — the 24h sqbtcrel signal survives as a fixed parameter-free structure. Deeper robustness/audit next, still NO backtest. (in-sample +2.29 / nested +3.21 / best-frozen +2.19)"

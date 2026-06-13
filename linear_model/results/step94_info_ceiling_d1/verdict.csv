@@ -1,0 +1,2 @@
+PASS,best_net_sh,verdict
+True,23.709998459866636,D1 PASS — best F_core random-CV NET Sharpe +23.71 (LGBM_randCV) > +1.5 gate. Information IS sufficient under stationarity ⇒ Q1=YES; the bottleneck is Q2 (utilization/non-stationarity). PROCEED to D2 (time-nested).

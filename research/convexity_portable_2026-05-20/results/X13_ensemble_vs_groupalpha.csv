@@ -1,0 +1,4 @@
+variant,desc,n_feats,train_ic,alpha_median,sharpe,ci_lo,ci_hi,totPnL,maxDD,folds_pos,concentration,error
+E0_joint_AC,Joint Ridge: BASE+aggT+crossX,24,0.0069,300.0,1.0,-0.92,2.86,4354,-3302,4/9,77%,
+E1_ensemble_avg,"Avg(Ridge_aggT, Ridge_crossX)",24,0.0074,,0.43,-1.57,2.24,1905,-4850,3/9,93%,
+E2_group_alpha,Group α (per-group α from individual fit),24,0.0071,,0.31,-1.57,2.11,1381,-4228,4/9,89%,

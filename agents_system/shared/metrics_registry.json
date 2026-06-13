@@ -1,0 +1,629 @@
+{
+  "schema": {
+    "iteration": "iter-NNN",
+    "hypothesis": "one-line",
+    "verdict": "ADOPT | REJECT",
+    "universe": "HL70 | 44-sym | ...",
+    "metrics": {
+      "sharpe": null,
+      "maxDD_bps": null,
+      "calmar": null,
+      "totPnL_bps": null,
+      "folds_positive": null,
+      "nested_oos_calmar": null,
+      "placebo_percentile": null,
+      "paired_ci": [
+        null,
+        null
+      ],
+      "sharpe_at_1bp": null,
+      "sharpe_at_3bp": null
+    },
+    "gate_results": {
+      "G1": null,
+      "G2": null,
+      "G3": null,
+      "G4": null,
+      "G5": null,
+      "G6": null,
+      "G7": null,
+      "G8": null
+    },
+    "scripts": [],
+    "report": "evaluation/reports/iter-NNN.md",
+    "timestamp": null
+  },
+  "baseline": {
+    "iteration": "iter-000",
+    "verdict": "BASELINE",
+    "universe": "HL70",
+    "metrics": {
+      "sharpe": 1.93,
+      "maxDD_bps": -5674,
+      "calmar": 1.68,
+      "totPnL_bps": 10472,
+      "folds_positive": null,
+      "nested_oos_calmar": 1.68,
+      "placebo_percentile": null,
+      "paired_ci": [
+        null,
+        null
+      ],
+      "sharpe_at_1bp": 2.19,
+      "sharpe_at_3bp": 2.04
+    }
+  },
+  "iterations": [
+    {
+      "iteration": "iter-001",
+      "hypothesis": "De-lever-only parameter-free realized-vol throttle on the held book reduces HL70 maxDD >=20% with <=0.2 Sharpe loss",
+      "verdict": "REJECT",
+      "universe": "HL70",
+      "metrics": {
+        "sharpe": 1.38,
+        "maxDD_bps": -5627,
+        "calmar": 0.91,
+        "totPnL_bps": 5636,
+        "folds_positive": "6/7 folds DD-better (aggregate DD impr only +0.8%)",
+        "nested_oos_calmar": null,
+        "placebo_percentile": "p0 Calmar / p7 maxDD (HL70); p30 Calmar / p75 maxDD (S44)",
+        "paired_ci": [
+          -1.06,
+          -0.1
+        ],
+        "sharpe_at_1bp": 1.69,
+        "sharpe_at_3bp": 1.51
+      },
+      "metrics_S44": {
+        "sharpe": 1.89,
+        "maxDD_bps": -3363,
+        "calmar": 1.93,
+        "totPnL_bps": 18981,
+        "dd_reduction_pct": 19.4,
+        "folds_positive": "7/8 folds DD-better",
+        "placebo_percentile": "p30 Calmar / p75 maxDD",
+        "paired_ci_sharpe": [
+          -0.13,
+          0.3
+        ]
+      },
+      "gate_results": {
+        "G1": "PASS",
+        "G2": "FAIL (HL70 Calmar 1.68->0.91, Sharpe -0.55, DD -0.8%)",
+        "G3": "WAIVED (W=42/FLOOR=0.3 fixed, no sweep)",
+        "G4": "FAIL (HL70 p0, S44 p30; need >=p95 -- random-timing placebo does as well/better)",
+        "G5": "HL70 6/7 folds (hollow, +0.8% agg); S44 7/8 folds +19.4% (not binding gate)",
+        "G6": "FAIL on HL70 (Sharpe-diff CI [-1.06,-0.10] significantly negative)",
+        "G7": "FAIL on HL70 (production); helps S44 only and fails G4 there too",
+        "G8": "FAIL (throttle Calmar < base at 1/3/4.5 bps on both universes)"
+      },
+      "scripts": [
+        "research/convexity_portable_2026-05-20/scripts/X119_delever_throttle.py",
+        "research/convexity_portable_2026-05-20/scripts/X119_eval_gates.py"
+      ],
+      "report": "evaluation/reports/iter-001.md",
+      "timestamp": "2026-05-25"
+    },
+    {
+      "iteration": "iter-002",
+      "hypothesis": "Correlation-aware sideways regime gate: FLAT the held book in BTC-side regime when expanding-pct-rank(trailing-7d cross-asset corr7d, PIT, lag-1) >= THR (tuned in {0.60,0.70,0.80}). Aim: cut HL70 maxDD >=20% and raise Calmar.",
+      "verdict": "REJECT",
+      "universe": "HL70",
+      "metrics": {
+        "sharpe": 2.09,
+        "maxDD_bps": -4795,
+        "calmar": 2.02,
+        "totPnL_bps": 10639,
+        "folds_positive": "3/7 DD-better (lift carried by fold 6; LOFO drop-fold-6 flips Calmar lift to -0.20)",
+        "nested_oos_calmar": 1.79,
+        "placebo_percentile": "G4 re-derived held-book matched side-pool (500 seeds, 446 FLATs): Calmar p27 / maxDD p16 / Sharpe p33 (placebo mean Calmar +2.30, maxDD -4311 -- random side-flatting BEATS the gate)",
+        "paired_ci": [
+          -1.201,
+          1.176
+        ],
+        "sharpe_at_1bp": 2.29,
+        "sharpe_at_3bp": 2.17
+      },
+      "metrics_S44": {
+        "sharpe": 1.26,
+        "maxDD_bps": -4181,
+        "calmar": 1.31,
+        "totPnL_bps": 16001,
+        "nested_oos_calmar": 1.22,
+        "base_calmar": 2.1,
+        "note": "every THR LOSES on S44; nested-OOS Calmar +1.22 vs base +2.10; G6 CI [-2.87,-0.18] significantly negative",
+        "folds_positive": "3/8 DD-better"
+      },
+      "gate_results": {
+        "G1": "PASS (Review PASS; held-book re-derivation matches realized series 1e-18 and gate masks exactly; PIT-correct)",
+        "G2": "PASS necessary-only (HL70 Calmar +1.68->+2.02 @THR=0.70; DD -15.5% short of >=20% target; non-monotone in THR)",
+        "G3": "FAIL (nested-OOS THR Calmar +1.79, only +0.11 over baseline, collapses from in-sample +2.02; target >=+2.2; THR churns fold-to-fold; S44 nested +1.22 negative)",
+        "G4": "FAIL (KILL TEST: real Calmar p27 / maxDD p16 / Sharpe p33; need >=p95; random side-FLAT of matched count does as well or BETTER -- placebo mean Calmar +2.30 vs real +2.02)",
+        "G5": "FAIL (DD better 3/7 folds, need >=6/9; entire lift is fold 6 +74%/+981bps; LOFO drop-fold-6 flips lift to -0.20)",
+        "G6": "FAIL (HL70 paired CI [-1.201,+1.176] crosses zero; S44 CI [-2.87,-0.18] negative)",
+        "G7": "FAIL (fails own gates on HL70; strongly negative on S44 Calmar 2.10->1.31; no universe holds)",
+        "G8": "MOOT (in-sample Calmar improves at 1/3/4.5bps but benefit is turnover-trim reproducible by random flat per G4)"
+      },
+      "scripts": [
+        "research/convexity_portable_2026-05-20/scripts/X120_corr_regime_gate.py",
+        "research/convexity_portable_2026-05-20/scripts/X120_eval_gates.py"
+      ],
+      "report": "evaluation/reports/iter-002.md",
+      "timestamp": "2026-05-25"
+    },
+    {
+      "iteration": "iter-003",
+      "hypothesis": "Parameter-free structural regime-map change: extend bear->FLAT to side->FLAT (never trade the BTC-sideways regime). Aim: cut HL70 maxDD ~60% with ~zero PnL give-up and raise Calmar +1.68->+4.72.",
+      "verdict": "REJECT",
+      "universe": "HL70",
+      "metrics": {
+        "sharpe": 2.75,
+        "maxDD_bps": -2239,
+        "calmar": 4.72,
+        "totPnL_bps": 11610,
+        "folds_positive": "4/7 folds flat Calmar>=base; LOFO drop-f5 collapses lift +3.04->-0.86 (entire win is one catastrophic side fold)",
+        "nested_oos_calmar": 1.65,
+        "placebo_percentile": "G4a matched-active (1000 seeds, re-derived held-book, 1455 FLATs): Calmar p99 / totPnL p100 (PASS but does not resolve hindsight)",
+        "paired_ci": [
+          -0.57,
+          2.44
+        ],
+        "sharpe_at_1bp": 2.76,
+        "sharpe_at_3bp": 2.75
+      },
+      "metrics_S44": {
+        "sharpe": 1.45,
+        "maxDD_bps": -2778,
+        "calmar": 2.09,
+        "totPnL_bps": 16942,
+        "base_calmar": 2.1,
+        "base_sharpe": 1.84,
+        "note": "G7 FAIL: does NOT transport. S44 side regime is net-POSITIVE (f5 +5005, f7 +5043, f2 +1981); flat bleeds -34% PnL, Sharpe -0.39, Calmar flat (-0.02). S44 LOFO full lift -0.02.",
+        "folds_positive": "3/8 folds flat Calmar>=base"
+      },
+      "gate_results": {
+        "G1": "PASS (Review PASS; base reproduces X117 to the bp; deleting a regime branch cannot leak; PIT BTC-30d label unchanged)",
+        "G2": "PASS necessary-only (HL70 Calmar +1.68->+4.72, DD -60.5%, totPnL ~flat)",
+        "G3": "FAIL (forward-decidability: honest nested binary 'flat when past cumulative side-PnL<=0' gives nested-OOS Calmar +1.65 < base +1.68, matches research pre-reg +1.39; net-zero only visible AFTER f5 disaster so forward rule sits through it. A Calmar-tiebreak nested rule reads +4.67 but flips to flat at f4 on 1.6% DD-noise margin by luck before f5 -- not credited)",
+        "G4": "PASS-a (G4a matched-active placebo Calmar p99 / totPnL p100, 1000 seeds re-derived held-book) -- but only proves side IS the in-sample net-zero regime; does NOT resolve hindsight",
+        "G5": "FAIL (4/7 folds; LOFO drop worst fold f5 (side-PnL -2675) collapses lift +3.04->-0.86, base Calmar jumps +6.57; every other fold drop leaves +3.0..+3.7; entire win is one episode; gives up profitable f8 +3273)",
+        "G6": "FAIL (paired CI block-boot by fold 2000: Sharpe-diff [-0.57,+2.44] crosses 0; PnL-diff [-7328,+9389] crosses 0; DD-improvement [-0,+9368] touches 0)",
+        "G7": "FAIL (does NOT transport to S44: side net-positive there, flat Sharpe -0.39 / totPnL -34% / Calmar flat; HL70 benefit composition- + single-fold-specific)",
+        "G8": "PASS but moot (flat Calmar +4.78/+4.75/+4.72 @1/3/4.5bps, not cost-dependent)"
+      },
+      "scripts": [
+        "research/convexity_portable_2026-05-20/scripts/X121_flat_side.py",
+        "/tmp/iter003_gates.py",
+        "/tmp/iter003_g4b.py"
+      ],
+      "report": "evaluation/reports/iter-003.md",
+      "timestamp": "2026-05-25"
+    },
+    {
+      "iteration": "iter-007",
+      "hypothesis": "Parameter-free 2-axis alt-bear SIDE gate (regime=side AND alt_index_30d<btc_30d -> FLAT) reduces HL70 maxDD AND survives multi-episode validation on the EXT 2021-26 panel",
+      "verdict": "REJECT",
+      "universe": "HL70 (prod) + EXT 23-sym 2021-26 (multi-episode) + S44",
+      "metrics": {
+        "sharpe": 2.61,
+        "maxDD_bps": -2239,
+        "calmar": 4.73,
+        "totPnL_bps": 11633,
+        "base_calmar": 1.68,
+        "base_sharpe": 1.93,
+        "base_maxDD_bps": -5674,
+        "folds_positive": "HL70 F1>=base 4/7 folds; fold-LOFO drop-f5 collapses lift +3.05->-0.96 (entire win = single 2025-Q4 episode)",
+        "nested_oos_calmar": null,
+        "placebo_percentile": "G4 matched side-pool placebo (200 seeds, FLAT same count of random side cycles): HL70 Calmar p72 (placebo p95 +5.06 > real +4.73; maxDD p38); EXT Calmar p0 (placebo p50 +0.54 > real +0.25; maxDD p0). FAIL <p95 on BOTH.",
+        "paired_ci": [
+          -2.684,
+          4.111
+        ],
+        "sharpe_at_1bp": 2.71,
+        "sharpe_at_3bp": 2.66
+      },
+      "metrics_EXT": {
+        "sharpe": 0.51,
+        "maxDD_bps": -6837,
+        "calmar": 0.25,
+        "totPnL_bps": 8084,
+        "base_calmar": 0.66,
+        "base_sharpe": 0.87,
+        "base_maxDD_bps": -4953,
+        "note": "MULTI-EPISODE panel - F1 net-HURTS: Calmar +0.66->+0.25, maxDD 38% WORSE, totPnL halved. Per-episode maxDD improvement 1/4 (2022_ftx +61%; HURTS 2024_summer -53% & 2025_q4 -14%; inert 2022_luna). Episode-LOFO lift NEGATIVE dropping every episode (full lift -0.41). Paired CI [-1.63,-0.07] significantly NEGATIVE.",
+        "paired_ci": [
+          -1.627,
+          -0.065
+        ],
+        "sharpe_at_1bp": 0.64,
+        "sharpe_at_3bp": 0.57
+      },
+      "metrics_S44": {
+        "sharpe": 1.43,
+        "maxDD_bps": -3728,
+        "calmar": 1.61,
+        "totPnL_bps": 17506,
+        "base_calmar": 2.1,
+        "base_sharpe": 1.84,
+        "note": "G7 transport FAIL: F1 hurts - Calmar 2.10->1.61, totPnL -32%, Sharpe -0.41. Loses at every cost level."
+      },
+      "gate_results": {
+        "G1": "PASS (Review PASS; alt_index_30d PIT-clean matched-lag .shift(1), per-universe own alts, no cross-universe carry; base reproduces X117 to the bp)",
+        "G2": "PASS necessary-only (HL70 Calmar +1.68->+4.73, maxDD -60%, totPnL ~flat)",
+        "G3": "WAIVED (parameter-free structural +-0 relative boundary alt30<btc30; no swept scalar - Review-confirmed)",
+        "G4": "FAIL on BOTH (matched side-pool placebo 200 seeds: HL70 Calmar p72, maxDD p38; EXT Calmar p0, maxDD p0 - random side-FLATting does as well/better)",
+        "G5": "FAIL on BOTH (HL70 per-fold 4/7, fold-LOFO drop-f5 lift +3.05->-0.96 = single 2025-Q4 episode; EXT per-episode maxDD improvement 1/4, episode-LOFO negative dropping every episode)",
+        "G6": "HL70 paired CI [-2.68,+4.11] CROSSES 0; EXT CI [-1.63,-0.07] significantly NEGATIVE (F1 worse than base)",
+        "G7": "FAIL (net-hurts EXT Calmar+maxDD+totPnL AND S44 Calmar+totPnL+Sharpe; alt-bear separation sign flips between universes - HL70 flags losers, EXT flags winners)",
+        "G8": "Not exculpatory (F1 loses at @1/3/4.5bps on EXT & S44; HL70 level edge is a FLAT-cycles run-smaller confound; binding G4/G5/G7 already fail)"
+      },
+      "scripts": [
+        "research/convexity_portable_2026-05-20/scripts/X122_altbear_gate.py",
+        "research/convexity_portable_2026-05-20/results/X122_percycle_HL70.parquet",
+        "research/convexity_portable_2026-05-20/results/X122_percycle_EXT.parquet",
+        "research/convexity_portable_2026-05-20/results/X122_percycle_S44.parquet"
+      ],
+      "report": "evaluation/reports/iter-007.md",
+      "insight": "Formally retires the alt-complex-bear regime axis (last iter-006 feature hypothesis). Arc iter-001..007: DD is ~92% alpha-residual (side mean-rev = zero-edge fat-left-tail), the big loss is essentially ONE correlated-alt-bear episode per universe, and NO free observable (price/funding/implied-vol/alt-direction) leads it consistently across episodes (per-cycle IC predictability R^2~0.005). Construction/feature/regime DD-fix family exhausted on free data. Remaining: bull-only beta strategy (different risk profile), fundamentally different alpha, paid leading data, or accept DD + kill-switch.",
+      "timestamp": "2026-05-25"
+    },
+    {
+      "iteration": "iter-011",
+      "track": "reactive",
+      "hypothesis": "Reactive equity-drawdown stop (mechanical, PIT, NO forecast): de-gross held book to g_floor=0.40 when own cumulative equity >= X bps below running peak (through t-1); re-enter on 50%-heal OR 90-bar timeout. Recommended X=1600. Cap the HL70 tail for live capital preservation at a bounded, robust cost.",
+      "verdict": "DEPLOYABLE-RISK-OPTION",
+      "universe": "HL70 (prod) + EXT 2021-26 multi-episode + S44",
+      "metrics": {
+        "sharpe": 1.77,
+        "maxDD_bps": -3292,
+        "calmar": 2.19,
+        "totPnL_bps": 7914,
+        "ddRed_pct": 42.0,
+        "totCost_pct": 24.4,
+        "pct_time_stopped": 52.9,
+        "roundtrips": 15,
+        "avg_gross": 0.68,
+        "folds_positive": null,
+        "nested_oos_ddRed_pct_HL70": 21.8,
+        "nested_oos_cost_pct_HL70": 2.6,
+        "placebo_percentile": "R4-PLACEBO matched-%-time (200 seeds): HL70 X=1600 p91, X=2000 p76; EXT X=1600 p52, X=2000 p42 -- all < p95 (proportional, NOT skill)",
+        "paired_ci": [
+          null,
+          null
+        ],
+        "sharpe_at_1bp": 2.01,
+        "sharpe_at_3bp": 1.89,
+        "calmar_at_1bp": 2.62,
+        "calmar_at_3bp": 2.39
+      },
+      "base_metrics_HL70": {
+        "sharpe": 1.93,
+        "maxDD_bps": -5674,
+        "calmar": 1.68,
+        "totPnL_bps": 10472
+      },
+      "gate_results": {
+        "R1": "PASS (Review PASS; trigger reads equity/peak through t-1, PIT cummax peak, re-entry realized-only with eq>trough guard, no forward peek)",
+        "R2": "PASS (HL70 maxDD -5674 -> -3292, -42.0%; >= the 25-30% bar)",
+        "R3": "PASS-stated (totPnL -24.4%, Sharpe +1.93->+1.77, Calmar +1.68->+2.19 IMPROVES; cost-robust 23.2/23.3/24.4% at 1/3/4.5bps)",
+        "R4": "MIXED / skill-claim FAIL (HL70 stop beats const +150..+582 bps maxDD at X=1200-2500; EXT const matches/beats; R4-PLACEBO real ranks HL70 p91 / EXT p42-p52 < p95 -> tail-cap ~proportional to exposure removed, not skill-selective -- expected reactive-track outcome)",
+        "R5": "PASS-DECISIVE (X=1600 caps 3/4 EXT episodes: luna 60%, ftx 46%, 2024_summer 62%, 2025_q4 EXT-slice -0% shallow; episode-LOFO X=2000 ddRed +27.4/+30.1/+28.1/+30.1% dropping luna/ftx/2024/q4 -- does NOT vanish dropping any episode; first DD mechanism in the run to survive LOFO)",
+        "R6": "HL70 PASS (+21.8% forward ddRed / +2.6% cost), EXT FAIL (-7.3% forward ddRed / +44.8% cost; X drifts deep, barely fires)",
+        "R7": "PASS (15 firings/15 re-entries, heal-or-timeout, eq>trough guard no buy-at-trough, g_floor>0 avoids frozen-equity permanent kill)"
+      },
+      "deployment_recommendation": "DEPLOY the equity-stop form (X=1600, g_floor=0.40) as an OPTIONAL risk overlay -- real behavioral advantage over constant-de-gross (full exposure in calm, auto-protect in deep DD) at ~15 whipsaw RT/402d. Simpler near-equivalent: constant ~0.67 gross (no state machine, no whipsaw). ALPHA CHAMPION UNCHANGED (= baseline, Calmar +1.68). Propose 'Risk overlay (optional)' section in current_best.md.",
+      "scripts": [
+        "research/convexity_portable_2026-05-20/scripts/X124_reactive_dd_stop.py",
+        "research/convexity_portable_2026-05-20/results/X124_tradeoff_curve.parquet",
+        "research/convexity_portable_2026-05-20/results/X124_r4_const_degross.parquet"
+      ],
+      "report": "evaluation/reports/iter-011.md",
+      "insight": "First DEPLOYABLE result of the run and the first DD mechanism to survive episode-LOFO -- because it REACTS rather than predicts. Reaction axis now characterized like the prediction axis (iters 5-10): the -57% DD is mechanically reducible at ~PROPORTIONAL cost (reactive stop, robust across episodes), but NOT reducible for free. No skillful tail-selector on free data (R4-PLACEBO p91 < p95; honest equivalent is constant ~0.67 gross). R6 EXT-FAIL shows the specific threshold is HL70-specific. Deliverable = the DD-vs-cost trade-off curve + X=1600 recommendation for the human to pick a risk point. Remaining classes out-of-scope for free-data construction (bull-only beta, different alpha, paid leading data, or accept DD + this stop).",
+      "timestamp": "2026-05-25"
+    },
+    {
+      "iteration": "iter-012",
+      "track": "reactive",
+      "hypothesis": "PORTABLE vol-normalized equity-DD stop: de-gross held book to g_floor=0.40 when (peak-eq) >= k*sigma(trailing-180 equity increments)*sqrt(180), unitless k=2.0; heal-50%/90-bar re-entry. Replaces iter-011 absolute-X bps trigger to gain cross-universe portability.",
+      "verdict": "DEPLOYABLE-RISK-OPTION-PORTABLE",
+      "universe": "HL70 + EXT(2021-26) + S44",
+      "metrics": {
+        "sharpe": 1.8,
+        "maxDD_bps": -3794,
+        "calmar": 2.01,
+        "totPnL_bps": 8385,
+        "folds_positive": null,
+        "nested_oos_ddRed_pct_HL70": 33.4,
+        "nested_oos_cost_pct_HL70": -36.2,
+        "nested_oos_ddRed_pct_EXT": 29.1,
+        "nested_oos_cost_pct_EXT": 27.7,
+        "nested_oos_ddRed_pct_S44": 9.0,
+        "nested_oos_cost_pct_S44": 6.2,
+        "placebo_percentile": "R4-PLACEBO matched-%-time (200 seeds) @k=2.0: HL70 p70, EXT p55, S44 p70 -- all < p95 (tail-cap ~proportional to exposure removed, NOT skill -- expected reactive-track outcome)",
+        "paired_ci": [
+          null,
+          null
+        ],
+        "sharpe_at_1bp": 2.01,
+        "sharpe_at_3bp": 1.89,
+        "calmar_at_1bp": 2.31,
+        "calmar_at_3bp": 2.12
+      },
+      "base_metrics_HL70": {
+        "sharpe": 1.93,
+        "maxDD_bps": -5674,
+        "calmar": 1.68,
+        "totPnL_bps": 10472
+      },
+      "ddRed_k2_pct": {
+        "HL70": 33.1,
+        "EXT": 39.4,
+        "S44": 20.7
+      },
+      "cost_k2_pct_totPnL": {
+        "HL70": -19.9,
+        "EXT": -32.4,
+        "S44": -11.1
+      },
+      "calmar_k2_base_to_stop": {
+        "HL70": "1.68->2.01",
+        "EXT": "0.66->0.74",
+        "S44": "2.10->2.36"
+      },
+      "gate_results": {
+        "R1": "PASS (Review PASS; PIT vol trigger -- dd/sigma/peak through t-1, incr[t] written AFTER gross fixed + pnl realized, HOLD-lagged sleeve book, warmup-60 firing guard, k chosen only in R6 from past folds; no forward peek). Base reproduces X117 EXACT (+1.93/-5674/Calmar1.68/+10472).",
+        "R2": "PASS (maxDD ddRed @4.5bps k=2.0: HL70 +33.1% (-5674->-3794), EXT +39.4% (-4953->-3000), S44 +20.7% (-4170->-3307); >=20% on all three)",
+        "R3": "PASS-stated (totPnL cost HL70 -19.9% / EXT -32.4% / S44 -11.1%; Calmar IMPROVES all three 1.68->2.01, 0.66->0.74, 2.10->2.36; cost-robust {1,3,4.5}bps). k-sweep dial: lower k more DD cut + more firing, deeper k shallower.",
+        "R4": "~PROPORTIONAL / skill-claim FAIL-expected (R4-PLACEBO matched-%-time 200 seeds @k=2.0: real ranks HL70 p70 / EXT p55 / S44 p70 < p95; STOP-CONST maxDD mixed +131/-393/+100. Tail-cap ~proportional to exposure removed, NOT skill-selective -- the expected reactive-track outcome, NOT a disqualifier on this track)",
+        "R5": "PASS-DECISIVE (volnorm k=2.0 caps 4/4 EXT episodes >=10%: luna 60.0%, ftx 56.5%, 2024_summer 55.9%, 2025_q4 10.8% -- beats absolute/pctile which miss shallow q4; episode-LOFO k=2.0 ddRed +37.5/+39.4/+37.7/+39.4% dropping luna/ftx/2024/q4 -- does NOT vanish dropping any one)",
+        "R6": "PASS 3/3 -- PORTABLE (THE HEADLINE; nested-OOS k chosen on PAST folds, applied FORWARD, PER UNIVERSE: HL70 +33.4% ddRed/-36.2% cost, EXT +29.1%/+27.7%, S44 +9.0%/+6.2% -- all PASS ddRed>+5% AND cost<40%; selector lands on low-k 1.5-2.0 every universe/fold. vs iter-011 absolute-X = 1/3, HL70-only, EXT FAILED -7.3%/+44.8%)",
+        "R7": "PASS (HL70 k=2.0: 15 round-trips, 14 re-entries, 51.4% time stopped; g_floor=0.40>0 no frozen-equity kill; eq>trough guard no buy-at-trough; heal-50%-or-90-bar timeout, no buy-back-at-top pathology)"
+      },
+      "deployment_recommendation": "SUPERSEDE the iter-011 absolute-X=1600 risk overlay with this PORTABLE vol-normalized k=2.0 form in current_best.md. Same ~proportional tail-cap + Calmar improvement but PORTABLE across HL70/EXT/S44 under nested-OOS (R6 3/3 vs 1/3) and self-recalibrating to each universe's equity scale -- strictly more robust for a drifting-universe live deployment. ALPHA CHAMPION UNCHANGED (= baseline, Calmar +1.68). HONEST caveats: NOT free DD reduction, NOT skill (R4 p55-p70 < p95; honest equivalent constant ~0.67 gross). The stop's value = asymmetry of WHEN it de-risks + (new) self-normalizing portability. Human picks risk point via k dial.",
+      "insight": "iter-012 closes the PORTABILITY gap of the reactive overlay that iter-011 left open (absolute X was HL70-tuned, R6 EXT-FAIL). The unitless k=2.0 ('sigmas of equity') means the same thing on every universe so it transports under nested-OOS (3/3). Reaction axis now fully characterized like the prediction axis (iters 5-10): the -33/-39% tail is mechanically reducible at ~PROPORTIONAL cost with a one-knob, PIT, portable, episode-LOFO-robust stop -- but NOT for free and NOT via skill. Both axes closed on free data. Remaining DD-reduction classes are out-of-scope (bull-only beta, different alpha, paid leading data) or 'accept DD + deploy this portable stop'. This is the recommended deployable reactive overlay for the live drifting-universe book.",
+      "scripts": [
+        "research/convexity_portable_2026-05-20/scripts/X125_volnorm_stop.py",
+        "research/convexity_portable_2026-05-20/results/X125_tradeoff_curve.parquet",
+        "research/convexity_portable_2026-05-20/results/X125_r4_const_degross.parquet",
+        "research/convexity_portable_2026-05-20/results/X125_r5_episodes.parquet"
+      ],
+      "report": "evaluation/reports/iter-012.md",
+      "timestamp": "2026-05-25"
+    },
+    {
+      "iteration": "iter-019",
+      "track": "ALPHA",
+      "hypothesis": "Transaction-cost-aware no-trade band on held-book net weights: execute weight change only if |target-held|>=delta. Cost-efficiency layer; alpha champion unchanged. SOTA-grounded (Baldi-Lanfranchi FoFI 2024; arXiv:2412.11575).",
+      "verdict": "REJECT",
+      "universe": "HL70 (production) + EXT 2021-26 + S44",
+      "metrics": {
+        "base_delta0_HL70_4.5bps": {
+          "Sharpe": 1.93,
+          "maxDD": -5674,
+          "Calmar": 1.68,
+          "totPnL": 10472,
+          "turnover": 800,
+          "grossPnL": 12272
+        },
+        "delta0.02_cost_only_HL70_4.5bps": {
+          "Sharpe": 1.97,
+          "maxDD": -5512,
+          "Calmar": 1.76,
+          "totPnL": 10663,
+          "turnover": 790,
+          "grossPnL": 12441
+        },
+        "delta0.05_TRAP_HL70_4.5bps": {
+          "Sharpe": 2.31,
+          "maxDD": -4585,
+          "Calmar": 2.48,
+          "totPnL": 12501,
+          "turnover": 491,
+          "grossPnL": 13605
+        }
+      },
+      "gate_results": {
+        "G1_lookahead": "PASS (Review; gross identical across cost levels confirms clean pre-cost path)",
+        "G2_insample": "PASS-marginal (delta=0.02 Calmar +1.76 > base +1.68)",
+        "G3_nested_OOS_DECISIVE": "FAIL \u2014 HL70 fwd Calmar +0.84->+1.08 lift +0.24 (5/6 folds) but EXT +0.65->+0.61 lift -0.03 (1/7 folds); selector leans into delta=0.05 trap (2/6 HL70, 3/7 EXT). Does NOT transport.",
+        "G4_matched_random_skip_placebo": "FAIL \u2014 HL70 p64/p36 (delta 0.02/0.03), EXT p26/p40; all < p95 (200 seeds)",
+        "G5_per_fold": "FAIL/moot \u2014 delta=0.02 HL70 5/7, EXT 5/8, S44 3/8; OOS lift evaporates",
+        "G6_paired_CI": "FAIL \u2014 HL70 delta=0.02 mean +0.080 bps/cyc CI [-0.002,+0.191] crosses 0; EXT crosses 0; S44 delta=0.03 clears 0 but NEGATIVE -0.165 (band hurts S44)",
+        "G7_universe": "FAIL \u2014 improvement does not hold across HL70+EXT+S44",
+        "G8_cost": "cost-only saving holds at 1/3/4.5bps but tiny; delta=0.05 gain is identical gross at every cost = bet change not cost saving"
+      },
+      "gross_pnl_cost_only_analysis": "delta<=0.02 gross flat (+12272->+12441) = genuine cost-only saving (~+191 bps/402d). delta=0.05 gross JUMPS +12272->+13605 (+10.9%) with turnover collapse 800->491 = bet-changing trap (holds stale rank-boundary book). Gross identical across 1/3/4.5 bps confirms +13605 is a pre-cost path change, not a cost saving. Non-reproduced on EXT/S44 (Calmar +0.66->+0.78, +2.10->+2.35).",
+      "insight": "Off-the-shelf SOTA cost-aware no-trade band gives NO robust edge \u2014 structurally: the rank-boundary churn it suppresses carries ~no signal (iter-016), so removing it is statistically indistinguishable from cutting random equal turnover (G4 p26-p64). The 6-sleeve held-book already amortizes turnover -> no cost-for-no-signal pocket to recover. Execution/cost-efficiency levers are EXHAUSTED on this book. Rule for future cost tricks: check GROSS PnL first \u2014 if gross moves, it is a bet change in disguise and must clear nested-OOS + multi-universe transport (this did not). Redirect to risk-side or new-signal work.",
+      "scripts": [
+        "research/convexity_portable_2026-05-20/scripts/X130_notrade_band.py",
+        "research/convexity_portable_2026-05-20/results/X130_band_sweep.parquet",
+        "research/convexity_portable_2026-05-20/results/X130_g4_placebo.parquet",
+        "research/convexity_portable_2026-05-20/results/X130_g6_paired_ci.parquet",
+        "research/convexity_portable_2026-05-20/results/X130_percycle_HL70.parquet",
+        "research/convexity_portable_2026-05-20/results/X130_percycle_EXT.parquet"
+      ],
+      "report": "evaluation/reports/iter-019.md",
+      "champion_after": "UNCHANGED (= baseline, Calmar +1.68)",
+      "timestamp": "2026-05-25"
+    },
+    {
+      "iteration": "iter-022",
+      "track": "ALPHA",
+      "hypothesis": "Short-horizon cross-sectional REVERSAL / cross-crypto lead-lag (seesaw): in sideways regime, re-rank held book by equal-weight ensemble score=z_xs(pred)-z_xs(rel_ret_1d) instead of pred. rel_ret_1d=return_1d-per-cycle XS mean (PIT). Signal PASSED universe-transport IC pre-check (HL70 -0.0360 t-9.76 / EXT -0.0302 t-12.33, same sign both, era-stable, orthogonal to pred corr -0.022, ~8.5x pred IC). Citations: Jia/Wu/Yan/Yin 2023 SSRN 3465924; Guo/Sang/Tu/Wang 2024 JEDC 104863; Hou 2007 RFS.",
+      "verdict": "REJECT",
+      "universe": "HL70 (production) + EXT 2021-26 + S44",
+      "metrics": {
+        "base_HL70_4.5bps": {
+          "Sharpe": 1.93,
+          "maxDD": -5674,
+          "Calmar": 1.68,
+          "totPnL": 10472,
+          "grossPnL": 12272,
+          "turnover": 800
+        },
+        "ens_HL70_4.5bps": {
+          "Sharpe": 0.86,
+          "maxDD": -9818,
+          "Calmar": 0.49,
+          "totPnL": 5301,
+          "grossPnL": 7241,
+          "turnover": 862
+        },
+        "base_EXT_4.5bps": {
+          "Sharpe": 0.87,
+          "maxDD": -4953,
+          "Calmar": 0.66,
+          "totPnL": 15448,
+          "grossPnL": 20656,
+          "turnover": 2315
+        },
+        "ens_EXT_4.5bps": {
+          "Sharpe": 0.19,
+          "maxDD": -9559,
+          "Calmar": 0.08,
+          "totPnL": 3379,
+          "grossPnL": 9604,
+          "turnover": 2767
+        },
+        "base_S44_4.5bps": {
+          "Sharpe": 1.84,
+          "maxDD": -4170,
+          "Calmar": 2.1,
+          "totPnL": 25620,
+          "grossPnL": 29875,
+          "turnover": 1891
+        },
+        "ens_S44_4.5bps": {
+          "Sharpe": 0.56,
+          "maxDD": -8102,
+          "Calmar": 0.34,
+          "totPnL": 8108,
+          "grossPnL": 12913,
+          "turnover": 2135
+        }
+      },
+      "gate_results": {
+        "G1_lookahead": "PASS (Review; PIT verified: rel_ret_1d window [t-288,t] vs forward [t,t+48] share only close[t] known at t; IC -0.036 reproduced << +0.10 leak flag; re-rank LOSES gross = opposite of leak signature)",
+        "G2_insample": "FAIL - Calmar +0.49/+0.08/+0.34 (HL70/EXT/S44) << base +1.68/+0.66/+2.10; maxDD 73-94% deeper",
+        "G3_nested_OOS": "WAIVED (equal-weight 0.5/0.5, untuned/structural)",
+        "G4_matched_placebo": "FAIL p0 - within-cycle rel-shuffle 200 seeds: real ens ranks p0 (WORSE than random re-rank). HL70 real Calmar +0.49 vs placebo p50 +2.27 / p95 +3.65; EXT real +0.08 vs p50 +0.52 / p95 +0.70",
+        "G5_per_fold": "FAIL - ens>base HL70 2/7, EXT 1/8, S44 3/8; fold-LOFO lift stays NEGATIVE dropping each fold (broad loss, not 1-2-fold)",
+        "G6_paired_CI": "FAIL - HL70 obs diff -2.150 bps/cyc CI [-6.407,+1.871] crosses 0; EXT -1.173 CI [-2.379,-0.220] clears 0 NEGATIVE (hurts); no positive CI on any universe",
+        "G7_universe_PnL_transport": "FAIL - fails HL70; EXT per-episode ens>base only 1/4; 2025_q4 INVERTS best base episode (+4834/Sh+4.83 -> -3123/Sh-3.17). IC transports across universes, PnL does not",
+        "G8_cost": "FAIL (no edge to begin with) - GROSS PnL collapses -41/-54/-57% pre-cost => loss NOT a cost artifact; turnover up only +7.8/+19.5/+12.9%; loses even at 1bp (HL70 net +6810 vs base +11872)"
+      },
+      "gross_pnl_analysis": "GROSS PnL falls on every universe with the ensemble: HL70 +12272->+7241 (-41%), EXT +20656->+9604 (-54%), S44 +29875->+12913 (-57%). The -z(rel_ret_1d) re-rank destroys pre-cost return - it does not raise it. Verified independently from per-cycle parquets via cost-slope (net@1bp vs net@4.5bp -> gross at cost=0); Sharpe/Calmar match handoff to the digit; base reproduces X117 exactly.",
+      "decisive_gates": "GROSS-PnL collapse (-41 to -57% pre-cost) + G4 p0 (signal-aligned re-rank WORSE than random shuffle) + G7 EXT per-episode PnL transport 1/4 (2025_q4 inverts). Clean faithful build, no impl defect.",
+      "insight": "CLEANEST DEMONSTRATION YET that univariate cross-sectional IC - even strong, orthogonal, AND universe-transport-stable - does NOT imply tradeable portfolio contribution on this book. Production pred (beta-neutral XS mean-reversion basket) already absorbs the productive reversal; overlaying raw -z(rel_ret_1d) re-ranks the same names from a noisier higher-turnover angle that trades AGAINST pred and destroys gross return (G4 p0 = signal-aligned re-rank worse than random, because it pulls against the order pred already got right). Same IC-transports-PnL-doesnt failure as iter-018. NEW STANDING PRE-CHECK (add alongside PRE-CHECK-G4 and check-GROSS-PnL): an alpha candidate must pass a CONDITIONAL/MARGINAL-CONTRIBUTION pre-check before build - does it add gross PnL GIVEN pred? Use (1) IC of the signal on pred-RESIDUALIZED forward returns (near-zero residual IC predicts PnL reject even at large raw IC; signal-orthogonality corr(rel,pred)=-0.022 is NOT the same as residual-orthogonality on outcomes - this signal looked orthogonal on signals yet redundant on outcomes), and/or (2) a tiny-weight (0.05-0.10) blend that must LIFT gross. Would have fail-fast-killed iter-022 before the 476s build. Construction/feature/cost/execution levers now exhausted on this book (iter-016/018/019/022 converge).",
+      "scripts": [
+        "research/convexity_portable_2026-05-20/scripts/X131_xs_reversal_ensemble.py",
+        "research/convexity_portable_2026-05-20/results/X131_percycle_HL70.parquet",
+        "research/convexity_portable_2026-05-20/results/X131_percycle_EXT.parquet",
+        "research/convexity_portable_2026-05-20/results/X131_percycle_S44.parquet",
+        "research/convexity_portable_2026-05-20/scripts/iter022_leadlag_transport_precheck.py",
+        "research/convexity_portable_2026-05-20/scripts/iter022_orth_fast.py",
+        "research/convexity_portable_2026-05-20/scripts/iter022_era_stability.py"
+      ],
+      "report": "evaluation/reports/iter-022.md",
+      "champion_after": "UNCHANGED (= baseline, Calmar +1.68; + optional iter-012 vol-norm reactive stop)",
+      "timestamp": "2026-05-25"
+    },
+    {
+      "iteration": "iter-032",
+      "track": "deployment (universe-construction, honest gates)",
+      "hypothesis": "Expanding the universe 70->156 (breadth=edge, iter-031) improves the honest transport-validated Sharpe/Calmar of the deploy strategy (regime-hybrid held-book + iter-012 vol-norm stop) vs the narrower 23-sym EXT baseline, robust to thin-history noise.",
+      "verdict": "QUALIFIED ADOPT \u2014 deploy wider universe WITH a per-cycle min-history (~30d) gate; alpha champion UNCHANGED",
+      "universe": "x132 expanded V0 (156 syms, 2021-26, 8 folds) vs x113 EXT-23",
+      "metrics": {
+        "sharpe": 1.03,
+        "maxDD_bps": -3960,
+        "calmar": 1.16,
+        "totPnL_bps": 21611,
+        "folds_positive": "6/8 (FULL-156 +stop); EXT-23-x132 7/8",
+        "nested_oos_calmar": null,
+        "placebo_percentile": "p69 vs random-100 (FAIL >=p95)",
+        "paired_ci": [
+          -0.34,
+          2.276
+        ],
+        "sharpe_at_1bp": 1.21,
+        "sharpe_at_3bp": 1.04
+      },
+      "metrics_best_honest_config": {
+        "name": "FULL-156 + per-cycle min-30d-history gate (+stop)",
+        "sharpe": 1.19,
+        "maxDD_bps": -3960,
+        "calmar": 1.33,
+        "totPnL_bps": 24804
+      },
+      "breadth_N_sweep_stop": {
+        "N23": {
+          "sharpe": 0.38,
+          "calmar": 0.41
+        },
+        "N50": {
+          "sharpe": 0.75,
+          "calmar": 0.68
+        },
+        "N100": {
+          "sharpe": 0.91,
+          "calmar": 1.16
+        },
+        "N156": {
+          "sharpe": 1.03,
+          "calmar": 1.16
+        }
+      },
+      "comparison_decomposition": {
+        "EXT23_x113_stop": {
+          "sharpe": 0.86,
+          "calmar": 0.74,
+          "totPnL": 10450
+        },
+        "EXT23_subset_x132_retrain_stop": {
+          "sharpe": 1.06,
+          "calmar": 1.08,
+          "totPnL": 13467
+        },
+        "FULL156_x132_stop": {
+          "sharpe": 1.03,
+          "calmar": 1.16,
+          "totPnL": 21611
+        },
+        "OLD47_le2023_stop": {
+          "sharpe": 1.15,
+          "calmar": 1.37,
+          "totPnL": 22313
+        },
+        "note": "~all Sharpe lift over x113 EXT is the MODEL RETRAIN; adding 133 names is marginally negative on Sharpe but ~2x totPnL/capacity; OLD-47 beats FULL-156 -> 88 post-2024 thin names dilute."
+      },
+      "thin_history_finding": "winsorizing pred |3|/|1.5| changes NOTHING (rank book invariant to monotone clipping; wide [-34,+45] tails are a red herring, biggest tail-maker LITUSDT has full 2021 history); min-30d-history gate IMPROVES +1.03->+1.19/Cal +1.16->+1.33; OLD-only 47 syms beats full-156 -> breadth gain is the wider OLD set not the 88 thin post-2024 names.",
+      "gate_results": {
+        "G1": "PASS (PIT; X132 reuses X70 pipeline, target_z .shift(HORIZON), no clip-at-+-5 hack, defensive z-clip +-50 only; full-sample IC +0.0146 << +0.10 leak flag)",
+        "G2": "PASS (FULL-156 +stop Calmar +1.16 / Sharpe +1.03 > baseline EXT-23-x113 +0.74/+0.86; min-hist-180b +1.33/+1.19)",
+        "G3": "WAIVED (structural \"trade widest set\"; min-history floor tied to 180-bar warmup, not a fitted knob)",
+        "G4": "FAIL p69 (FULL-156 +1.03 ranks p69 of 100 random-100 draws; random-100 mean +0.92 p95 +1.26; breadth>truncation but the full set is not a special composition)",
+        "G5": "FAIL (6/8 folds; lift f5-concentrated, LOFO drop-f5 -> +0.65; f3 -1.38 & f4 -0.10 turn negative where narrower set is positive; EXT-23-x132 more robust 7/8 LOFO +0.87)",
+        "G6": "FAIL CROSSES ZERO (FULL-156 vs EXT-23-x132 per-cycle diff +0.79 bps, 95% block-bootstrap CI [-0.34, +2.28])",
+        "G7": "HOLDS (breadth-monotone shape reproduces on independent x132 panel; matches iter-031 HL70/EXT)",
+        "G8": "PASS robust (FULL-156 +stop Sharpe +1.21/+1.04/+1.03 at 1/3/4.5 bps)"
+      },
+      "decisive_findings": "Breadth=edge re-confirmed (monotone in N, transports, cost-robust) -> deploy WIDER. BUT (1) most Sharpe lift over x113-EXT is the model RETRAIN not the extra names; (2) full-156 not statistically better than a good narrower retrained set (G4 p69, G6 CI crosses 0) and is f5-concentrated (G5 6/8); (3) the 88 thin post-2024 names DILUTE (OLD-47 +1.15/Cal+1.37 > full-156; min-30d-history gate recovers +1.19/+1.33 = best honest config). Pred-winsorizing unnecessary (rank book tail-invariant).",
+      "insight": "Universe-WIDTH lever now fully characterized across two independent builds (iter-031 HL70/EXT, iter-032 x132): breadth helps via dispersion but SATURATES/DILUTES once sub-30d-history names enter and does NOT buy cross-fold robustness (deep-DD/single-episode-concentration nature unchanged by width). Deploy rule: widest set ABOVE a per-cycle ~30d trailing-history floor + iter-031 hygiene + execution-liquidity floor. Wide V0 z-target tails harmless to rank book but must be winsorized in any |pred|-magnitude-weighted construction. Promising next thread: retrain-on-more-data (EXT-23 +0.86->+1.06) > universe width -> retrain-cadence study.",
+      "scripts": [
+        "agents_system/research/scratch/iter032_expanded_universe.py",
+        "research/convexity_portable_2026-05-20/scripts/X132_build_expanded_panel.py",
+        "research/convexity_portable_2026-05-20/results/_cache/x132_expanded_v0_preds.parquet",
+        "outputs/iter032/iter032_breadthN_x132.csv",
+        "outputs/iter032/iter032_full156_vs_ext23.csv",
+        "outputs/iter032/iter032_perfold.csv",
+        "outputs/iter032/iter032_thinhistory.csv",
+        "outputs/iter032/iter032_cost.csv",
+        "outputs/iter032/run.log"
+      ],
+      "report": "evaluation/reports/iter-032.md",
+      "champion_after": "ALPHA UNCHANGED (= baseline regime-hybrid held-book + iter-012 vol-norm stop). DEPLOY-UNIVERSE rule updated: widest set ABOVE a per-cycle ~30d min-history floor (history-gated wide set = best honest config, +1.19 Sharpe/+1.33 Calmar @4.5bps +stop).",
+      "timestamp": "2026-05-27"
+    }
+  ]
+}

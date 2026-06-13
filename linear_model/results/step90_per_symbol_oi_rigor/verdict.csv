@@ -1,0 +1,2 @@
+all_pass,placebo_p95,verdict
+False,1.3222192255685095,"FAIL (G1,G2,G3,G4) — nested-honest per-symbol OI signing netSh -2.60 CI[-4.86,-0.29], placebo p95 +1.32, ridge_insample -0.73. The V2/V3 per-symbol promise did not convert to a net-of-cost edge under honest (no-hindsight, no-in-sample-fit) evaluation — per-symbol OI is the same non-stationary/fit artifact, just per-symbol. Recorded honestly. Production LGBM unaffected."

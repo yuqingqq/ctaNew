@@ -1,0 +1,88 @@
+============================================================================================
+  STEP 75 (Phase 1.5): cheap falsifiers before orientation composites
+============================================================================================
+
+Building current drop-BIO+VVV HL>=2M testbed (V2, 22 feats)...
+  panel rows=4,811,734, symbols=42, features=22
+
+--- PART 1: feature-IC sign persistence (4h cadence) ---
+  decision frame: 67,579 rows, 1620 cycles, 42 syms
+
+  top-10 |IC| features (sign agreement / 9 folds, rho_lag1):
+    dom_btc_z_1d               IC=-0.0458 sign_agree=9/9 rho=+0.511
+    atr_pct                    IC=-0.0414 sign_agree=9/9 rho=-0.421
+    idio_vol_to_btc_1h         IC=-0.0411 sign_agree=9/9 rho=-0.606
+    vwap_slope_96              IC=-0.0360 sign_agree=9/9 rho=+0.357
+    idio_vol_to_btc_1d         IC=-0.0358 sign_agree=9/9 rho=-0.698
+    return_1d                  IC=-0.0338 sign_agree=9/9 rho=+0.548
+    dom_btc_change_288b        IC=-0.0337 sign_agree=9/9 rho=+0.551
+    obv_z_1d                   IC=-0.0304 sign_agree=9/9 rho=+0.723
+    return_8h_orth             IC=-0.0243 sign_agree=7/9 rho=-0.079
+    corr_to_btc_1d             IC=+0.0230 sign_agree=8/9 rho=-0.400
+
+  SIGN-PERSISTENCE GATE: 10/10 features persist >=7/9 (need >=8); mean rho_lag1=+0.049 (need >=+0.20) -> FAIL
+
+--- PARTS 2&3: pooled-Ridge multivariate reference per horizon ---
+
+  [4h] retraining pooled RidgeCV (n_cyc=1)...
+    fold 0: IC=-0.0049, n_train=319,760, n_test=345,994, 7s
+    fold 1: IC=-0.0216, n_train=503,571, n_test=354,240, 11s
+    fold 2: IC=-0.0051, n_train=693,870, n_test=354,240, 14s
+    fold 3: IC=-0.0143, n_train=879,538, n_test=358,032, 17s
+    fold 4: IC=-0.0023, n_train=1,073,908, n_test=362,880, 21s
+    fold 5: IC=-0.0036, n_train=1,262,550, n_test=362,880, 24s
+    fold 6: IC=-0.0173, n_train=1,452,229, n_test=362,880, 28s
+    fold 7: IC=-0.0240, n_train=1,651,165, n_test=362,880, 30s
+    fold 8: IC=+0.0157, n_train=1,846,954, n_test=362,880, 34s
+    fold 9: IC=-0.0035, n_train=2,039,932, n_test=362,880, 38s
+  [4h] OOS cycle-IC mean=-0.0113 median=-0.0110 t=-2.27 n=1620 | top-bottom=+1.39 bps | folds+=2/9 -> FAIL
+
+  [8h] retraining pooled RidgeCV (n_cyc=2)...
+    fold 0: IC=-0.0076, n_train=319,760, n_test=345,994, 5s
+    fold 1: IC=-0.0133, n_train=503,571, n_test=354,240, 11s
+    fold 2: IC=+0.0050, n_train=693,870, n_test=354,240, 14s
+    fold 3: IC=+0.0029, n_train=879,538, n_test=358,032, 18s
+    fold 4: IC=-0.0051, n_train=1,073,908, n_test=362,880, 21s
+    fold 5: IC=+0.0110, n_train=1,262,550, n_test=362,880, 24s
+    fold 6: IC=-0.0211, n_train=1,452,229, n_test=362,880, 27s
+    fold 7: IC=-0.0275, n_train=1,651,165, n_test=362,880, 31s
+    fold 8: IC=+0.0192, n_train=1,846,954, n_test=362,880, 34s
+    fold 9: IC=-0.0214, n_train=2,039,932, n_test=362,880, 37s
+  [8h] OOS cycle-IC mean=-0.0065 median=-0.0031 t=-0.92 n=810 | top-bottom=+3.11 bps | folds+=3/9 -> FAIL
+
+  [12h] retraining pooled RidgeCV (n_cyc=3)...
+    fold 0: IC=+0.0120, n_train=319,760, n_test=345,994, 4s
+    fold 1: IC=-0.0110, n_train=503,571, n_test=354,240, 6s
+    fold 2: IC=+0.0114, n_train=693,870, n_test=354,240, 13s
+    fold 3: IC=+0.0065, n_train=879,538, n_test=358,032, 13s
+    fold 4: IC=+0.0018, n_train=1,073,908, n_test=362,880, 20s
+    fold 5: IC=+0.0201, n_train=1,262,550, n_test=362,880, 24s
+    fold 6: IC=-0.0110, n_train=1,452,229, n_test=362,880, 27s
+    fold 7: IC=-0.0302, n_train=1,651,165, n_test=362,880, 31s
+    fold 8: IC=+0.0377, n_train=1,846,954, n_test=362,880, 34s
+    fold 9: IC=-0.0402, n_train=2,039,932, n_test=362,880, 38s
+  [12h] OOS cycle-IC mean=-0.0052 median=-0.0148 t=-0.61 n=540 | top-bottom=+13.14 bps | folds+=4/9 -> FAIL
+
+  [24h] retraining pooled RidgeCV (n_cyc=6)...
+    fold 0: IC=+0.0135, n_train=319,760, n_test=345,994, 4s
+    fold 1: IC=-0.0058, n_train=503,571, n_test=354,240, 6s
+    fold 2: IC=+0.0267, n_train=693,870, n_test=354,240, 10s
+    fold 3: IC=+0.0226, n_train=879,538, n_test=358,032, 17s
+    fold 4: IC=-0.0030, n_train=1,073,908, n_test=362,880, 20s
+    fold 5: IC=+0.0332, n_train=1,262,550, n_test=362,880, 24s
+    fold 6: IC=-0.0148, n_train=1,452,229, n_test=362,880, 27s
+    fold 7: IC=-0.0371, n_train=1,651,165, n_test=362,880, 31s
+    fold 8: IC=+0.0510, n_train=1,846,954, n_test=362,880, 34s
+    fold 9: IC=-0.0558, n_train=2,039,932, n_test=362,880, 38s
+  [24h] OOS cycle-IC mean=+0.0055 median=+0.0040 t=+0.45 n=270 | top-bottom=+32.18 bps | folds+=5/9 -> FAIL
+
+============================================================================================
+  PRE-REGISTERED VERDICT (gates fixed in NEXT_PLAN.md before run)
+============================================================================================
+  Sign-persistence gate ........ FAIL (10/10 persist, mean rho +0.049)
+  Multivariate-reference gate .. FAIL (IC>=+0.02 & t>=3.0 at any horizon)
+
+  BOTH FAIL -> orientation/model layer unlikely the fix; no persistent cross-sectional signal in V2 at 4-24h. Skip Phase 2/3; Phase 4 only under the kill clock, or stop.
+
+Saved outputs under /home/yuqing/ctaNew/linear_model/results/step75_signal_probe
+Total: 919s

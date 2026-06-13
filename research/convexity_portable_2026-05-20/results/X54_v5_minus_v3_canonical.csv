@@ -1,0 +1,5 @@
+variant,n_feats,train_ic,sharpe,ci_lo,ci_hi,totPnL,maxDD,folds_pos,concentration,error
+V5_minus_v3_7cx,29,0.0048,1.74,-0.22,4.0,7448,-3378,6/9,36%,
+V5_minus_v3_5cx,27,0.0048,1.22,-0.77,3.32,5236,-3487,5/9,35%,
+V5_full_7cx,33,0.0051,1.13,-0.83,3.18,4101,-3559,5/9,44%,
+V5_full_5cx,31,0.0051,1.61,-0.4,3.71,5768,-2068,6/9,45%,

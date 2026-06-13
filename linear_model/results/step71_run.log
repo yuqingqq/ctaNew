@@ -1,0 +1,18 @@
+============================================================================================
+  STEP 71: investability battery — PIT-clean all-eligible self-std
+============================================================================================
+
+[iter0] build drop-2 (BIO+VVV) all-eligible PIT ...
+  base: Sh -0.20[-2.53,+1.94] fp=6/9 per-cyc -0.47 per-trade +1.2[-2.2,+4.9] PF 1.05 n_open1=-267% tot -754
+  [D] top drivers: PUMPUSDT=+1941, PENDLEUSDT=+1714, NEARUSDT=+1565, SPXUSDT=+1339, WLDUSDT=+1218, JTOUSDT=+1038
+
+--- A. COST-STRESS (drop-2 all-eligible PIT) ---
+  cost 1x (~9bps RT): Sh -0.20[-2.53,+1.94] per-cyc -0.47 per-trade +1.2[-2.2,+4.9] PF 1.05
+  cost 2x (~18bps RT): Sh -1.35[-3.76,+0.79] per-cyc -3.16 per-trade +1.2[-2.2,+4.9] PF 1.05
+  cost 3x (~27bps RT): Sh -2.50[-4.99,-0.36] per-cyc -5.85 per-trade +1.2[-2.2,+4.9] PF 1.05
+
+--- B. ITERATIVE DROP + RETRAIN (does it survive past drop-2?) ---
+  drop 4 (+['PUMPUSDT', 'PENDLEUSDT']) N=40: Sh -0.70[-2.74,+1.43] fp=3/9 per-trade +0.6[-2.4,+3.8] PF 1.03 tot -2,424
+  STOP (per-trade CI crosses 0) at drop 4 -> COLLAPSES like prior variants
+
+--- C. PLACEBO (drop-2 all-eligible PIT, 60 seeds) ---

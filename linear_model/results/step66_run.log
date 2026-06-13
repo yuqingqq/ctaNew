@@ -1,0 +1,15 @@
+====================================================================================================
+  STEP 66: cost-stress + iterative drop-&-retrain (mean-rev-v2 design)
+====================================================================================================
+
+========== PART A: COST-STRESS (44-sym, design) ==========
+  cost 1x (~9bps RT): nested Sharpe +0.38 [-1.99,+2.55] fp=5/9 total 2,205bps body95 -2.57 PFgross 1.11
+  cost 2x (~18bps RT): nested Sharpe -0.24 [-2.74,+2.01] fp=4/9 total -1,421bps body95 -3.27 PFgross 1.11
+  cost 3x (~27bps RT): nested Sharpe -1.32 [-3.89,+0.97] fp=2/9 total -7,600bps body95 -4.96 PFgross 1.09
+  => VERDICT A: at 2x cost net total -1,421bps, Sharpe -0.24, CI_lo -2.74 => DIES (too thin)
+
+========== PART B: ITERATIVE DROP-&-RETRAIN (1x cost) ==========
+  [it0] dropped=[] N=44 -> nested +0.38 [-1.99,+2.55] fp=5/9 total 2,205 PFg 1.11 body95 -2.57 top_drv=BIOUSDT semimeme 91% (33s)
+  STOP (CI_lo<0): edge gone after dropping 0 ([]). Pattern => BIO-fluke
+
+Total: 132s

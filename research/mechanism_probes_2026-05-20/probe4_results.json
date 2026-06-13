@@ -1,0 +1,35 @@
+{
+  "n_legs_with_history": 2950,
+  "symbols": 32,
+  "OOS_symbol_dir_acc_pnl_persistence": 0.5264,
+  "placebo_acc_shuffled": 0.4873,
+  "per_group_acc": [
+    0.554,
+    0.501,
+    0.498,
+    0.537,
+    0.542
+  ],
+  "trail_abs_vs_next_abs_corr": 0.2466,
+  "next_contrib_mean_by_trailing_quintile_bps": {
+    "0": 10.7,
+    "1": -1.82,
+    "2": 5.07,
+    "3": 3.94,
+    "4": 5.0
+  },
+  "next_contrib_n_per_quintile": {
+    "0": 590,
+    "1": 590,
+    "2": 590,
+    "3": 590,
+    "4": 590
+  },
+  "lifecycle_probe_r24_ceiling_for_reference": 0.515,
+  "interpretation": {
+    "if_dir_acc >> 0.515 vs placebo ~0.50": "rotation signal real and tradeable; ex-VVV-positive is forecastable",
+    "if_dir_acc ~ 0.50": "rotation is purely retrospective; ex-VVV-positive is sample-path luck",
+    "mag_corr": "if >>0; past size predicts future size (useful for sizing)"
+  },
+  "elapsed_s": 0.2
+}

@@ -1,0 +1,33 @@
+R1 — honest baseline + concentration frontier
+  building universe + base records ...
+  1620 cycles, 936 traded
+  caches ready (32s); BLOCK=11
+  [  equal|  flat45|cap inf] Sh=+2.23 LCB=+0.29 f+=7/9 DD=-3445 H=0.094 top1=0.25 ret=1.0
+  [  equal|  flat45|cap 1/2] Sh=+2.23 LCB=+0.29 f+=7/9 DD=-3445 H=0.094 top1=0.25 ret=1.0
+  [  equal|  flat45|cap 1/3] Sh=+2.06 LCB=+0.14 f+=8/9 DD=-3580 H=0.094 top1=0.26 ret=0.925
+  [  equal|  flat45|cap 1/5] Sh=+1.87 LCB=-0.15 f+=6/9 DD=-3646 H=0.091 top1=0.25 ret=0.837
+  [  equal|  flat45|cap 1/8] Sh=+1.63 LCB=-0.33 f+=6/9 DD=-2465 H=0.085 top1=0.23 ret=0.733
+  [  equal|   flat9|cap inf] Sh=+1.92 LCB=-0.07 f+=7/9 DD=-3841 H=0.094 top1=0.25 ret=1.0
+  [  equal|   flat9|cap 1/2] Sh=+1.92 LCB=-0.07 f+=7/9 DD=-3841 H=0.094 top1=0.25 ret=1.0
+  [  equal|   flat9|cap 1/3] Sh=+1.75 LCB=-0.24 f+=7/9 DD=-3979 H=0.094 top1=0.26 ret=0.91
+  [  equal|   flat9|cap 1/5] Sh=+1.49 LCB=-0.57 f+=6/9 DD=-4045 H=0.091 top1=0.25 ret=0.778
+  [  equal|   flat9|cap 1/8] Sh=+1.20 LCB=-0.82 f+=6/9 DD=-2804 H=0.085 top1=0.23 ret=0.624
+  [  equal|realized|cap inf] Sh=+2.13 LCB=+0.17 f+=7/9 DD=-3528 H=0.094 top1=0.25 ret=1.0
+  [  equal|realized|cap 1/2] Sh=+2.13 LCB=+0.17 f+=7/9 DD=-3528 H=0.094 top1=0.25 ret=1.0
+  [  equal|realized|cap 1/3] Sh=+1.96 LCB=+0.01 f+=8/9 DD=-3664 H=0.094 top1=0.26 ret=0.921
+  [  equal|realized|cap 1/5] Sh=+1.75 LCB=-0.28 f+=6/9 DD=-3728 H=0.091 top1=0.25 ret=0.823
+  [  equal|realized|cap 1/8] Sh=+1.51 LCB=-0.45 f+=6/9 DD=-2527 H=0.085 top1=0.23 ret=0.711
+  [volnorm|  flat45|cap inf] Sh=+2.13 LCB=+0.09 f+=7/9 DD=-2864 H=0.081 top1=0.22 ret=1.0
+  [volnorm|  flat45|cap 1/2] Sh=+2.13 LCB=+0.09 f+=7/9 DD=-2864 H=0.081 top1=0.22 ret=1.0
+  [volnorm|  flat45|cap 1/3] Sh=+2.04 LCB=+0.06 f+=7/9 DD=-2935 H=0.084 top1=0.23 ret=0.958
+  [volnorm|  flat45|cap 1/5] Sh=+1.94 LCB=-0.15 f+=6/9 DD=-3204 H=0.085 top1=0.23 ret=0.906
+  [volnorm|  flat45|cap 1/8] Sh=+1.61 LCB=-0.41 f+=7/9 DD=-2479 H=0.087 top1=0.24 ret=0.753
+
+  drop-5 robustness (30 draws) ...
+    10/30 (92s)
+    20/30 (144s)
+    30/30 (195s)
+
+  drop5(equal,flat45): capinf: mean+2.14/worst+0.37 cap1/2: mean+2.14/worst+0.37 cap1/3: mean+2.07/worst+0.27 cap1/5: mean+2.12/worst+0.64 cap1/8: mean+2.02/worst+0.44
+
+R1 done [195.0s] -> /home/yuqing/ctaNew/research/portable_alpha_2026-05-19/results/R1_frontier.csv

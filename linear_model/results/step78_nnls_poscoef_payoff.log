@@ -1,0 +1,17 @@
+================================================================================================
+  STEP 78: constrained-linear payoff trial (NNLS / positive-Ridge)
+  PRE-REGISTERED GATE: decile rho>=+0.6  AND  K=3 spread >=+9.0 bps  AND  >=6/9 folds K3+ (IC = context only)
+================================================================================================
+  ridge_xsz            IC=+0.0079 t=+1.54 | decile rho=+0.552 | K1=+10.27 K3= +5.94 K10= +2.22 bps | K3 folds+=7/9 | FAIL
+  signed_equal         IC=+0.0505 t=+9.41 | decile rho=+0.636 | K1= +1.05 K3= +0.81 K10= +1.66 bps | K3 folds+=5/9 | FAIL
+  signed_shrunk        IC=+0.0517 t=+8.46 | decile rho=-0.491 | K1=-15.91 K3= -2.03 K10= -0.95 bps | K3 folds+=6/9 | FAIL  [sanity: must ~+0.0517 vs Step-76]
+  nnls_oriented        IC=+0.0259 t=+4.97 | decile rho=+0.370 | K1= +7.20 K3= +6.77 K10= +3.06 bps | K3 folds+=7/9 | FAIL
+  posridge_oriented    IC=+0.0259 t=+4.97 | decile rho=+0.345 | K1= +6.83 K3= +6.64 K10= +3.05 bps | K3 folds+=7/9 | FAIL
+
+================================================================================================
+  VERDICT
+================================================================================================
+  Neither NNLS nor positive-Ridge clears the payoff gate (as predicted: 76/77 located the pathology in features->target, not the weighting). LINEAR-ON-CURRENT-FEATURES IS CLOSED. Next = Batch B only (price x volume interactions), dedupe-vs-history recorded, pre-registered payoff gate, no backtest until it clears.
+
+Saved under /home/yuqing/ctaNew/linear_model/results/step78_nnls_poscoef_payoff
+Total: 1588s

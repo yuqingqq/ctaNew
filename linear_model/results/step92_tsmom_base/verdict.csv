@@ -1,0 +1,2 @@
+PASS,verdict
+False,"FAIL (P1=False,P2=True,P3=False,P4=False). NET Sharpe +0.25 CI[-2.07,+2.47], GROSS +0.78, placebo p95 -2.23. GROSS-positive but NET fails on cost ⇒ Phase 1b (cost-amortization) WARRANTED per plan §6. Recorded honestly; no direction flip (anti-p-hack rule). Production LGBM unaffected."

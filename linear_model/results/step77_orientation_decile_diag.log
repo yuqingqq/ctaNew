@@ -1,0 +1,67 @@
+============================================================================================
+  STEP 77: A_4h orientation diagnostic (deciles / bands / K-sweep)
+============================================================================================
+
+Reconstructing Step-76 Part-A composite score...
+  67,579 (cycle,symbol) rows, 1620 OOS cycles, 42 syms, 22 feats
+  sanity cycle-IC mean=+0.0517 (Step-76 A_4h was +0.0517)
+
+--- DECILES (0=low score, 9=high; IC>0 ⇒ expect rising) monotonicity ρ=-0.491 ---
+  D0:   +3.11 bps  t=+0.70 pos=  48%
+  D1:   +3.23 bps  t=+0.81 pos=  49%
+  D2:   +2.67 bps  t=+0.75 pos=  49%
+  D3:   -1.76 bps  t=-0.53 pos=  47%
+  D4:   +2.98 bps  t=+0.89 pos=  49%
+  D5:   +1.94 bps  t=+0.63 pos=  49%
+  D6:   +1.36 bps  t=+0.48 pos=  49%
+  D7:   +0.60 bps  t=+0.22 pos=  49%
+  D8:   +3.09 bps  t=+1.19 pos=  49%
+  D9:   +1.34 bps  t=+0.72 pos=  51%
+
+--- QUINTILES  monotonicity ρ=-0.300 ---
+  Q0:   +3.15 bps  t=+0.82
+  Q1:   +0.46 bps  t=+0.14
+  Q2:   +2.46 bps  t=+0.80
+  Q3:   +0.98 bps  t=+0.37
+  Q4:   +2.19 bps  t=+1.05
+
+--- MIDDLE vs EXTREME ---
+  extreme deciles (D0,D9) mean: +2.23 bps
+  inner    deciles (D1-2,7-8): +2.40 bps
+  middle   deciles (D3-6)   : +1.13 bps
+
+--- LONG/SHORT SPREAD by K (the tradability question) ---
+  K= 1: long=  -2.19 short= +13.72 spread= -15.91 t=-1.74 pos=  53%
+  K= 2: long=  -0.27 short=  +3.37 spread=  -3.64 t=-0.59 pos=  53%
+  K= 3: long=  +0.66 short=  +2.68 spread=  -2.03 t=-0.41 pos=  52%
+  K= 5: long=  +1.52 short=  +3.20 spread=  -1.68 t=-0.46 pos=  52%
+  K=10: long=  +2.11 short=  +3.06 spread=  -0.95 t=-0.39 pos=  51%
+
+--- INTERIOR-BAND L/S (does moving off the tail help?) ---
+  D9 / D0                    spread=  -1.77 bps t=-0.49 pos=  52%
+  D8-9 / D0-1                spread=  -0.96 bps t=-0.37 pos=  51%
+  D7-9 / D0-2                spread=  -1.31 bps t=-0.63 pos=  51%
+  D6-8 / D1-3 (interior)     spread=  +0.30 bps t=+0.20 pos=  51%
+  D5-9 / D0-4 (half-split)   spread=  -0.42 bps t=-0.29 pos=  51%
+
+--- FOLD-LEVEL decile monotonicity ---
+  fold 1: ρ=+0.236  D0=  +0.6  D9=  +6.1
+  fold 2: ρ=-0.358  D0= +14.2  D9=  +4.1
+  fold 3: ρ=-0.442  D0=  +8.5  D9=  -3.1
+  fold 4: ρ=-0.539  D0= +49.7  D9=  +6.7
+  fold 5: ρ=+0.758  D0= -25.0  D9=  +3.4
+  fold 6: ρ=+0.212  D0=  -8.4  D9=  -2.2
+  fold 7: ρ=+0.467  D0=  +2.2  D9=  +2.5
+  fold 8: ρ=-0.006  D0=  -6.6  D9=  -2.6
+  fold 9: ρ=-0.188  D0=  -7.1  D9=  -2.7
+
+============================================================================================
+  VERDICT
+============================================================================================
+  decile ρ=-0.491  quintile ρ=-0.300  fold-mono+ 4/9
+  best K spread -0.95 bps (K=10, t -0.39); best band +0.30 bps (D6-8 / D1-3 (interior), t +0.20)
+
+  DECILES NOT MONOTONIC (ρ=-0.49, fold+ 4/9) -> the +0.052 IC is rank noise without a monotone payoff; NOT economically useful. Orientation lever is real statistically but dead economically.
+
+Saved under /home/yuqing/ctaNew/linear_model/results/step77_orientation_decile_diag
+Total: 346s

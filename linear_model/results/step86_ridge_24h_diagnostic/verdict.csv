@@ -1,0 +1,2 @@
+verdict
+"Reference ridge_cv netSh +2.29, gross K3 +62.1bps, rho +0.673. Signed_equal netSh -3.52; 6/6 fixed ridge alphas stay positive. Best variant is drop_corr_to_btc_1d_sq (netSh +2.80). Leave-one sensitivity: beta_to_btc_change_5d: drop changes gross K3 -14.9bps; beta_to_btc_change_5d_sq: drop changes gross K3 -12.2bps; corr_to_btc_1d: drop changes gross K3 -11.7bps."

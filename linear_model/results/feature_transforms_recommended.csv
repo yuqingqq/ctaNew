@@ -1,0 +1,17 @@
+feature,shape,recommendations
+beta_to_btc_change_5d,u_shape,polynomial(2) [non-monotonic]
+funding_rate_z_7d,monotonic_up,rank or winsorize (kurt=+25.5); sign-split (skew=-2.5)
+idio_vol_1d_vs_bk_xs_rank,noisy,rank-transform (rank/pearson = 1162.6×)
+vwap_slope_96,monotonic_up,rank or winsorize (kurt=+579.7); sign-split (skew=+9.7); rank-transform (rank/pearson = 1.8×)
+dom_change_288b_vs_bk,u_shape,rank or winsorize (kurt=+11.1); sign-split (skew=+1.7); polynomial(2) [non-monotonic]; rank-transform (rank/pearson = 3.7×)
+corr_to_btc_1d,u_shape,polynomial(2) [non-monotonic]; rank-transform (rank/pearson = 37.5×)
+corr_change_3d_vs_bk,u_shape,polynomial(2) [non-monotonic]; rank-transform (rank/pearson = 2.1×)
+bars_since_high_xs_rank,noisy,rank-transform (rank/pearson = 2.5×)
+bk_ema_slope_4h,noisy,keep as-is
+obv_z_1d,monotonic_up,keep as-is
+funding_rate,insufficient,rank or winsorize (kurt=+689.2); sign-split (skew=-22.6)
+dom_level_vs_bk,u_shape,polynomial(2) [non-monotonic]; rank-transform (rank/pearson = 205.8×)
+return_1d,u_shape,rank or winsorize (kurt=+6.9); sign-split (skew=+1.6); polynomial(2) [non-monotonic]
+funding_rate_1d_change,insufficient,rank or winsorize (kurt=+429.4); sign-split (skew=-2.0); rank-transform (rank/pearson = 2.6×)
+idio_vol_to_btc_1h,monotonic_up,rank or winsorize (kurt=+42.3); sign-split (skew=+4.2)
+atr_pct,monotonic_up,rank or winsorize (kurt=+11.7); sign-split (skew=+2.4)

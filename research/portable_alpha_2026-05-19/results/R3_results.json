@@ -1,0 +1,136 @@
+{
+  "chosen_config": "equal-weight cap-1/3 (24h 6-sleeve)",
+  "in_sample_sharpe": 2.062,
+  "in_sample_maxDD_bps": -3580.0,
+  "dropk": {
+    "1": {
+      "k": 1,
+      "mean": 2.028,
+      "worst": 0.534,
+      "std": 0.472,
+      "p10": 1.448,
+      "frac_pos": 1.0
+    },
+    "3": {
+      "k": 3,
+      "mean": 1.834,
+      "worst": 0.476,
+      "std": 0.6,
+      "p10": 0.785,
+      "frac_pos": 1.0
+    },
+    "5": {
+      "k": 5,
+      "mean": 2.09,
+      "worst": 0.005,
+      "std": 0.735,
+      "p10": 1.352,
+      "frac_pos": 1.0
+    }
+  },
+  "group_disjoint_no_symid": {
+    "eval_target": "alpha_vs_btc_realized",
+    "no_sym_id": true,
+    "per_group": {
+      "g0": {
+        "n_held": 11,
+        "members": [
+          "AAVEUSDT",
+          "AXSUSDT",
+          "ENAUSDT",
+          "HBARUSDT",
+          "LINKUSDT",
+          "LTCUSDT",
+          "OPUSDT",
+          "PENDLEUSDT",
+          "STRKUSDT",
+          "TRBUSDT",
+          "UNIUSDT"
+        ],
+        "sharpe": 3.609,
+        "mean_spread_bps": 11.915,
+        "n_cyc": 1620
+      },
+      "g1": {
+        "n_held": 10,
+        "members": [
+          "DOGEUSDT",
+          "ETCUSDT",
+          "HYPEUSDT",
+          "NEARUSDT",
+          "SUIUSDT",
+          "TAOUSDT",
+          "TIAUSDT",
+          "VIRTUALUSDT",
+          "VVVUSDT",
+          "XRPUSDT"
+        ],
+        "sharpe": 1.693,
+        "mean_spread_bps": 5.859,
+        "n_cyc": 1620
+      },
+      "g2": {
+        "n_held": 10,
+        "members": [
+          "ASTERUSDT",
+          "ATOMUSDT",
+          "AVAXUSDT",
+          "DOTUSDT",
+          "ETHUSDT",
+          "LDOUSDT",
+          "PENGUUSDT",
+          "PUMPUSDT",
+          "RUNEUSDT",
+          "SOLUSDT"
+        ],
+        "sharpe": 0.463,
+        "mean_spread_bps": 1.468,
+        "n_cyc": 1620
+      },
+      "g3": {
+        "n_held": 10,
+        "members": [
+          "APTUSDT",
+          "ARBUSDT",
+          "BNBUSDT",
+          "BTCUSDT",
+          "FILUSDT",
+          "ICPUSDT",
+          "JUPUSDT",
+          "SEIUSDT",
+          "TONUSDT",
+          "WLDUSDT"
+        ],
+        "sharpe": -0.994,
+        "mean_spread_bps": -2.498,
+        "n_cyc": 1620
+      },
+      "g4": {
+        "n_held": 10,
+        "members": [
+          "ADAUSDT",
+          "BCHUSDT",
+          "BIOUSDT",
+          "GMXUSDT",
+          "INJUSDT",
+          "JTOUSDT",
+          "ONDOUSDT",
+          "ORDIUSDT",
+          "WIFUSDT",
+          "ZECUSDT"
+        ],
+        "sharpe": 1.479,
+        "mean_spread_bps": 7.402,
+        "n_cyc": 1620
+      }
+    },
+    "pooled_alpha_only_sharpe": 1.346,
+    "groups_positive": 4,
+    "n_groups_eval": 5,
+    "mean_group_sharpe": 1.25,
+    "elapsed_s": 579.5
+  },
+  "recommended_deploy_fraction": 0.3,
+  "kill_switch_maxDD_bps": -6265.0,
+  "elapsed_s": 439.8
+}

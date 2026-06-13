@@ -1,0 +1,52 @@
+feature,category,present,status,note
+return_1d,existing horizon/price/volume,True,existing,current V2/derived feature
+return_8h,existing horizon/price/volume,True,existing,current V2/derived feature
+return_8h_orth,existing horizon/price/volume,True,existing,current V2/derived feature
+vol_zscore_4h_over_7d,existing horizon/price/volume,True,existing,current V2/derived feature
+vwap_slope_96,existing horizon/price/volume,True,existing,current V2/derived feature
+atr_pct,existing horizon/price/volume,True,existing,current V2/derived feature
+obv_z_1d,existing horizon/price/volume,True,existing,current V2/derived feature
+bars_since_high,range/extreme timing,True,existing,low-side symmetric feature added to builders if missing
+bars_since_high_xs_rank,range/extreme timing,True,existing,low-side symmetric feature added to builders if missing
+bars_since_low,range/extreme timing,False,missing,low-side symmetric feature added to builders if missing
+bars_since_low_xs_rank,range/extreme timing,False,missing,low-side symmetric feature added to builders if missing
+return_1h,multi-horizon returns,False,missing,candidate trailing return horizon; must shift(1)
+return_2h,multi-horizon returns,False,missing,candidate trailing return horizon; must shift(1)
+return_4h,multi-horizon returns,False,missing,candidate trailing return horizon; must shift(1)
+return_12h,multi-horizon returns,False,missing,candidate trailing return horizon; must shift(1)
+return_24h,multi-horizon returns,False,missing,candidate trailing return horizon; must shift(1)
+return_3d,multi-horizon returns,False,missing,candidate trailing return horizon; must shift(1)
+return_7d,multi-horizon returns,False,missing,candidate trailing return horizon; must shift(1)
+return_1h_orth,orthogonalized/acceleration returns,False,missing,candidate multi-horizon acceleration/orthogonal feature
+return_4h_orth,orthogonalized/acceleration returns,False,missing,candidate multi-horizon acceleration/orthogonal feature
+return_12h_orth,orthogonalized/acceleration returns,False,missing,candidate multi-horizon acceleration/orthogonal feature
+return_24h_orth,orthogonalized/acceleration returns,False,missing,candidate multi-horizon acceleration/orthogonal feature
+ret_8h_minus_1d,orthogonalized/acceleration returns,False,missing,candidate multi-horizon acceleration/orthogonal feature
+ret_accel_8h_1d,orthogonalized/acceleration returns,False,missing,candidate multi-horizon acceleration/orthogonal feature
+ret_accel_1d_3d,orthogonalized/acceleration returns,False,missing,candidate multi-horizon acceleration/orthogonal feature
+realized_vol_1h,multi-horizon volatility,False,missing,candidate realized vol / volume regime horizon
+realized_vol_4h,multi-horizon volatility,False,missing,candidate realized vol / volume regime horizon
+realized_vol_8h,multi-horizon volatility,False,missing,candidate realized vol / volume regime horizon
+realized_vol_24h,multi-horizon volatility,False,missing,candidate realized vol / volume regime horizon
+vol_zscore_1h_over_1d,multi-horizon volatility,False,missing,candidate realized vol / volume regime horizon
+vol_zscore_24h_over_30d,multi-horizon volatility,False,missing,candidate realized vol / volume regime horizon
+distance_from_high_1d,range position,False,missing,candidate distance/range features; compute trailing then shift(1)
+distance_from_low_1d,range position,False,missing,candidate distance/range features; compute trailing then shift(1)
+distance_from_high_3d,range position,False,missing,candidate distance/range features; compute trailing then shift(1)
+distance_from_low_3d,range position,False,missing,candidate distance/range features; compute trailing then shift(1)
+range_position_1d,range position,False,missing,candidate distance/range features; compute trailing then shift(1)
+range_position_3d,range position,False,missing,candidate distance/range features; compute trailing then shift(1)
+qvol_z_1d,volaug volume,False,not in base panel,exists only in volaug panel unless rebuilt/merged
+qvol_z_7d,volaug volume,False,not in base panel,exists only in volaug panel unless rebuilt/merged
+qvol_z_30d,volaug volume,False,not in base panel,exists only in volaug panel unless rebuilt/merged
+qvol_surge_1h_over_1d,volaug volume,False,not in base panel,exists only in volaug panel unless rebuilt/merged
+dollar_vol_log_1d,volaug volume,False,not in base panel,exists only in volaug panel unless rebuilt/merged
+signed_qvol_1h,volaug volume,False,not in base panel,exists only in volaug panel unless rebuilt/merged
+trade_size_z_1d,volaug volume,False,not in base panel,exists only in volaug panel unless rebuilt/merged
+btc_ret_1h,market regime / btc-relative,False,missing,"candidate regime filter, not directional rank feature"
+btc_ret_4h,market regime / btc-relative,False,missing,"candidate regime filter, not directional rank feature"
+btc_ret_12h,market regime / btc-relative,False,missing,"candidate regime filter, not directional rank feature"
+btc_ret_24h,market regime / btc-relative,False,missing,"candidate regime filter, not directional rank feature"
+btc_vol_1d,market regime / btc-relative,False,missing,"candidate regime filter, not directional rank feature"
+market_dispersion_4h,market regime / btc-relative,False,missing,"candidate regime filter, not directional rank feature"
+avg_corr_to_btc_1d,market regime / btc-relative,False,missing,"candidate regime filter, not directional rank feature"

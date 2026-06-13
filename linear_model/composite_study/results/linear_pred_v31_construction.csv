@@ -1,0 +1,2 @@
+control,lin_ridge,lin_lgbm,faithful,verdict
+2.747791758150715,1.567065203810203,-0.1896807516556133,True,"BOTH MATTER: linear under V3.1 machinery +1.57 — well above its naive-book +0.69 (construction adds a lot) but below control +2.75 (WINNER_21 model/features add real, separable value)."

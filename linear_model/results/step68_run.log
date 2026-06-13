@@ -1,0 +1,19 @@
+====================================================================================================
+  STEP 68: per-symbol SELF-STANDARDIZED predictions on mean-rev-v2
+====================================================================================================
+
+--- 44-sym: reuse Step 67 per-symbol preds + self-standardize ---
+  pred_z raw std 3.819 -> self-z std 0.933 (target ~1; nonzero 98%)
+  [persym-selfstd-44] N=44 | IC raw -0.0002 -> self +0.0011 | nested Sh -0.11 [-2.80,+2.25] fp=5/9 | per-CYCLE -0.28bps CI[-5.80,+5.53] | per-TRADE +8.1bps CI[-25.4,+44.0] PF 1.07 | tot -447
+
+--- drop BIO+VVV: retrain per-symbol + self-standardize ---
+  [persym-selfstd-drop2-42] N=42 | IC raw +0.0013 -> self +0.0023 | nested Sh -0.35 [-3.05,+2.06] fp=3/9 | per-CYCLE -0.72bps CI[-5.56,+4.30] | per-TRADE +8.1bps CI[-20.4,+39.5] PF 1.08 | tot -1,165
+
+====================================================================================================
+  VERDICT — did per-symbol self-standardization rescue it?
+====================================================================================================
+  reference: pooled-44 nested +3.51 (artifact); persym-44 (no self-std) +1.90 CI-crosses-0, per-trade NEG, IC -0.0002
+  persym-selfstd-44       : IC -0.0002->+0.0011 | nested -0.11[-2.80,+2.25] | per-trade +8.1bps CI[-25.4,+44.0] => NOT rescued — confirms no signal
+  persym-selfstd-drop2-42 : IC +0.0013->+0.0023 | nested -0.35[-3.05,+2.06] | per-trade +8.1bps CI[-20.4,+39.5] => NOT rescued — confirms no signal
+
+Total: 246s

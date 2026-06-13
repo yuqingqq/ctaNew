@@ -1,0 +1,10 @@
+fold,n_sel,sig
+1,7,-beta_to_btc_change_5d_sq|+corr_to_btc_1d|+corr_to_btc_1d_sq|+corr_to_btc_change_3d|-dom_btc_change_288b_sq|-dom_btc_z_1d|-return_1d_sq
+2,9,-beta_to_btc_change_5d|-beta_to_btc_change_5d_sq|+corr_to_btc_1d|+corr_to_btc_1d_sq|+corr_to_btc_change_3d|+corr_to_btc_change_3d_sq|-dom_btc_change_288b_sq|-dom_btc_z_1d|+return_1d_sq
+3,6,-beta_to_btc_change_5d_sq|+corr_to_btc_1d|+corr_to_btc_change_3d|-dom_btc_change_288b_sq|-dom_btc_z_1d|+return_1d_sq
+4,4,-beta_to_btc_change_5d_sq|-dom_btc_change_288b_sq|-dom_btc_z_1d|+return_1d_sq
+5,3,-beta_to_btc_change_5d_sq|-dom_btc_z_1d|+return_1d_sq
+6,2,-beta_to_btc_change_5d_sq|-dom_btc_z_1d
+7,2,-beta_to_btc_change_5d_sq|-dom_btc_z_1d
+8,2,-beta_to_btc_change_5d_sq|-dom_btc_z_1d
+9,2,-beta_to_btc_change_5d_sq|-dom_btc_z_1d

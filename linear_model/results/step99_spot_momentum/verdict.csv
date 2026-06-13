@@ -1,0 +1,2 @@
+supported,verdict
+False,"D1-ext-D: spot-led momentum structure ABSENT — mono>0.5:False, q4cc>0:False, spread-CI-excl-0:False. Spot-vs-perp volume lead does NOT classify continuation vs reversion at 4h/24h/72h (raw or β-resid). The 'spot volume outperforms ⇒ durable move' intuition is not present in Binance free data at these horizons — definitively, on its own (momentum) terms. Confirms the free-data terminus from the opposite polarity too. Production LGBM unaffected."

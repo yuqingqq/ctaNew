@@ -1,0 +1,375 @@
+/home/yuqing/ctaNew/features_ml/trade_flow.py:252: RuntimeWarning: invalid value encountered in divide
+  imb = np.where(denom > 0, np.abs(b_buy - b_sell) / denom, 0.0)
+2026-05-19 10:35:49,550 [AAVEUSDT] flow 116064 rows 2025-03-30 00:00:00+00:00..2026-05-06 23:55:00+00:00 (1/26, 166s)
+2026-05-19 10:35:49,728 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-03-25.zip
+2026-05-19 10:35:49,739 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-03-24.zip
+2026-05-19 10:35:49,739 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-03-23.zip
+2026-05-19 10:35:49,743 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-03-28.zip
+2026-05-19 10:35:49,744 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-03-29.zip
+2026-05-19 10:35:49,747 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-03-30.zip
+2026-05-19 10:35:49,901 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-03-31.zip
+2026-05-19 10:35:49,909 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-04-03.zip
+2026-05-19 10:35:49,914 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-04-04.zip
+2026-05-19 10:35:49,916 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-04-02.zip
+2026-05-19 10:35:49,921 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-04-01.zip
+2026-05-19 10:35:50,025 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-03-26.zip
+2026-05-19 10:35:50,033 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-03-27.zip
+2026-05-19 10:35:50,069 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-04-06.zip
+2026-05-19 10:35:50,083 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-04-07.zip
+2026-05-19 10:35:50,088 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-04-09.zip
+2026-05-19 10:35:50,088 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-04-08.zip
+2026-05-19 10:35:50,089 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-04-10.zip
+2026-05-19 10:35:50,194 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-04-11.zip
+2026-05-19 10:35:50,202 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-04-12.zip
+2026-05-19 10:35:50,214 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-04-05.zip
+2026-05-19 10:35:50,234 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-04-13.zip
+2026-05-19 10:35:50,248 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-04-14.zip
+2026-05-19 10:35:50,249 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-04-17.zip
+2026-05-19 10:35:50,255 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-04-15.zip
+2026-05-19 10:35:50,375 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-04-20.zip
+2026-05-19 10:35:50,377 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-04-19.zip
+2026-05-19 10:35:50,384 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-04-18.zip
+2026-05-19 10:35:50,407 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-04-21.zip
+2026-05-19 10:35:50,412 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-04-24.zip
+2026-05-19 10:35:50,423 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-04-23.zip
+2026-05-19 10:35:50,543 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-04-16.zip
+2026-05-19 10:35:50,547 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-04-25.zip
+2026-05-19 10:35:50,550 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-04-27.zip
+2026-05-19 10:35:50,553 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-04-26.zip
+2026-05-19 10:35:50,630 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-04-29.zip
+2026-05-19 10:35:50,708 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-04-22.zip
+2026-05-19 10:35:50,722 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-05-02.zip
+2026-05-19 10:35:50,747 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-05-03.zip
+2026-05-19 10:35:50,806 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-05-05.zip
+2026-05-19 10:35:50,869 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-04-28.zip
+2026-05-19 10:35:50,885 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-04-30.zip
+2026-05-19 10:35:50,890 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-05-07.zip
+2026-05-19 10:35:50,920 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-05-08.zip
+2026-05-19 10:35:50,972 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-05-09.zip
+2026-05-19 10:35:51,019 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-05-01.zip
+2026-05-19 10:35:51,022 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-05-04.zip
+2026-05-19 10:35:51,140 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-05-14.zip
+2026-05-19 10:35:51,168 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-05-13.zip
+2026-05-19 10:35:51,176 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-05-06.zip
+2026-05-19 10:35:51,187 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-05-16.zip
+2026-05-19 10:35:51,194 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-05-12.zip
+2026-05-19 10:35:51,331 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-05-10.zip
+2026-05-19 10:35:51,339 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-05-19.zip
+2026-05-19 10:35:51,346 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-05-11.zip
+2026-05-19 10:35:51,363 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-05-21.zip
+2026-05-19 10:35:51,392 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-05-15.zip
+2026-05-19 10:35:51,491 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-05-17.zip
+2026-05-19 10:35:51,500 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-05-22.zip
+2026-05-19 10:35:51,507 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-05-23.zip
+2026-05-19 10:35:51,551 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-05-18.zip
+2026-05-19 10:35:51,570 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-05-26.zip
+2026-05-19 10:35:51,631 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-05-25.zip
+2026-05-19 10:35:51,646 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-05-20.zip
+2026-05-19 10:35:51,667 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-05-27.zip
+2026-05-19 10:35:51,672 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-05-28.zip
+2026-05-19 10:35:51,678 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-05-29.zip
+2026-05-19 10:35:51,736 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-05-31.zip
+2026-05-19 10:35:51,812 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-06-02.zip
+2026-05-19 10:35:51,815 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-05-24.zip
+2026-05-19 10:35:51,817 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-06-01.zip
+2026-05-19 10:35:51,826 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-06-03.zip
+2026-05-19 10:35:51,838 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-06-04.zip
+2026-05-19 10:35:51,845 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-06-05.zip
+2026-05-19 10:35:51,866 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-05-30.zip
+2026-05-19 10:35:51,979 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-06-06.zip
+2026-05-19 10:35:51,980 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-06-09.zip
+2026-05-19 10:35:51,981 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-06-08.zip
+2026-05-19 10:35:51,986 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-06-07.zip
+2026-05-19 10:35:51,993 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-06-10.zip
+2026-05-19 10:35:52,022 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-06-12.zip
+2026-05-19 10:35:52,095 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-06-11.zip
+2026-05-19 10:35:52,156 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-06-13.zip
+2026-05-19 10:35:52,158 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-06-16.zip
+2026-05-19 10:35:52,161 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-06-17.zip
+2026-05-19 10:35:52,161 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-06-15.zip
+2026-05-19 10:35:52,167 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-06-14.zip
+2026-05-19 10:35:52,194 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-06-19.zip
+2026-05-19 10:35:52,267 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-06-20.zip
+2026-05-19 10:35:52,327 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-06-21.zip
+2026-05-19 10:35:52,331 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-06-24.zip
+2026-05-19 10:35:52,332 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-06-25.zip
+2026-05-19 10:35:52,335 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-06-22.zip
+2026-05-19 10:35:52,360 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-06-26.zip
+2026-05-19 10:35:52,459 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-06-18.zip
+2026-05-19 10:35:52,485 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-06-23.zip
+2026-05-19 10:35:52,501 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-06-28.zip
+2026-05-19 10:35:52,505 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-06-29.zip
+2026-05-19 10:35:52,506 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-06-30.zip
+2026-05-19 10:35:52,508 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-07-01.zip
+2026-05-19 10:35:52,528 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-07-02.zip
+2026-05-19 10:35:52,627 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-07-03.zip
+2026-05-19 10:35:52,632 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-06-27.zip
+2026-05-19 10:35:52,649 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-07-04.zip
+2026-05-19 10:35:52,669 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-07-06.zip
+2026-05-19 10:35:52,682 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-07-08.zip
+2026-05-19 10:35:52,697 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-07-09.zip
+2026-05-19 10:35:52,794 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-07-10.zip
+2026-05-19 10:35:52,800 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-07-11.zip
+2026-05-19 10:35:52,807 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-07-05.zip
+2026-05-19 10:35:52,815 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-07-12.zip
+2026-05-19 10:35:52,843 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-07-13.zip
+2026-05-19 10:35:52,862 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-07-15.zip
+2026-05-19 10:35:52,963 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-07-14.zip
+2026-05-19 10:35:52,970 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-07-18.zip
+2026-05-19 10:35:52,972 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-07-16.zip
+2026-05-19 10:35:52,970 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-07-17.zip
+2026-05-19 10:35:52,977 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-07-07.zip
+2026-05-19 10:35:52,990 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-07-19.zip
+2026-05-19 10:35:53,004 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-07-20.zip
+2026-05-19 10:35:53,026 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-07-21.zip
+2026-05-19 10:35:53,138 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-07-22.zip
+2026-05-19 10:35:53,139 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-07-25.zip
+2026-05-19 10:35:53,141 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-07-23.zip
+2026-05-19 10:35:53,150 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-07-24.zip
+2026-05-19 10:35:53,151 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-07-26.zip
+2026-05-19 10:35:53,160 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-07-27.zip
+2026-05-19 10:35:53,174 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-07-28.zip
+2026-05-19 10:35:53,192 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-07-29.zip
+2026-05-19 10:35:53,309 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-07-31.zip
+2026-05-19 10:35:53,313 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-07-30.zip
+2026-05-19 10:35:53,323 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-08-04.zip
+2026-05-19 10:35:53,346 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-08-05.zip
+2026-05-19 10:35:53,370 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-08-06.zip
+2026-05-19 10:35:53,476 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-08-08.zip
+2026-05-19 10:35:53,481 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-08-07.zip
+2026-05-19 10:35:53,512 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-08-10.zip
+2026-05-19 10:35:53,545 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-08-11.zip
+2026-05-19 10:35:53,615 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-08-03.zip
+2026-05-19 10:35:53,617 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-08-01.zip
+2026-05-19 10:35:53,621 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-08-02.zip
+2026-05-19 10:35:53,639 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-08-12.zip
+2026-05-19 10:35:53,683 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-08-14.zip
+2026-05-19 10:35:53,712 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-08-15.zip
+2026-05-19 10:35:53,777 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-08-13.zip
+2026-05-19 10:35:53,800 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-08-09.zip
+2026-05-19 10:35:53,951 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-08-22.zip
+2026-05-19 10:35:53,966 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-08-23.zip
+2026-05-19 10:35:54,083 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-08-16.zip
+2026-05-19 10:35:54,102 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-08-17.zip
+2026-05-19 10:35:54,106 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-08-18.zip
+2026-05-19 10:35:54,117 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-08-19.zip
+2026-05-19 10:35:54,126 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-08-20.zip
+2026-05-19 10:35:54,189 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-08-21.zip
+2026-05-19 10:35:54,250 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-08-26.zip
+2026-05-19 10:35:54,285 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-08-29.zip
+2026-05-19 10:35:54,343 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-08-30.zip
+2026-05-19 10:35:54,351 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-08-28.zip
+2026-05-19 10:35:54,422 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-08-24.zip
+2026-05-19 10:35:54,425 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-09-01.zip
+2026-05-19 10:35:54,449 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-08-25.zip
+2026-05-19 10:35:54,517 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-09-03.zip
+2026-05-19 10:35:54,571 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-08-27.zip
+2026-05-19 10:35:54,578 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-09-04.zip
+2026-05-19 10:35:54,597 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-09-05.zip
+2026-05-19 10:35:54,660 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-08-31.zip
+2026-05-19 10:35:54,703 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-09-08.zip
+2026-05-19 10:35:54,747 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-09-06.zip
+2026-05-19 10:35:54,750 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-09-02.zip
+2026-05-19 10:35:54,751 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-09-09.zip
+2026-05-19 10:35:54,752 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-09-10.zip
+2026-05-19 10:35:54,839 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-09-12.zip
+2026-05-19 10:35:54,885 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-09-13.zip
+2026-05-19 10:35:54,911 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-09-07.zip
+2026-05-19 10:35:54,914 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-09-15.zip
+2026-05-19 10:35:54,918 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-09-11.zip
+2026-05-19 10:35:54,920 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-09-17.zip
+2026-05-19 10:35:54,921 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-09-14.zip
+2026-05-19 10:35:55,006 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-09-18.zip
+2026-05-19 10:35:55,064 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/ASTERUSDT/ASTERUSDT-aggTrades-2025-09-16.zip
+/home/yuqing/ctaNew/features_ml/trade_flow.py:252: RuntimeWarning: invalid value encountered in divide
+  imb = np.where(denom > 0, np.abs(b_buy - b_sell) / denom, 0.0)
+2026-05-19 10:37:59,035 [ASTERUSDT] flow 64080 rows 2025-09-26 12:00:00+00:00..2026-05-06 23:55:00+00:00 (2/26, 296s)
+/home/yuqing/ctaNew/features_ml/trade_flow.py:252: RuntimeWarning: invalid value encountered in divide
+  imb = np.where(denom > 0, np.abs(b_buy - b_sell) / denom, 0.0)
+2026-05-19 10:39:46,760 [AXSUSDT] flow 116064 rows 2025-03-30 00:00:00+00:00..2026-05-06 23:55:00+00:00 (3/26, 403s)
+/home/yuqing/ctaNew/features_ml/trade_flow.py:252: RuntimeWarning: invalid value encountered in divide
+  imb = np.where(denom > 0, np.abs(b_buy - b_sell) / denom, 0.0)
+2026-05-19 10:42:25,305 [BIOUSDT] flow 116064 rows 2025-03-30 00:00:00+00:00..2026-05-06 23:55:00+00:00 (4/26, 562s)
+/home/yuqing/ctaNew/features_ml/trade_flow.py:252: RuntimeWarning: invalid value encountered in divide
+  imb = np.where(denom > 0, np.abs(b_buy - b_sell) / denom, 0.0)
+2026-05-19 10:44:55,797 [ENAUSDT] flow 116064 rows 2025-03-30 00:00:00+00:00..2026-05-06 23:55:00+00:00 (5/26, 712s)
+/home/yuqing/ctaNew/features_ml/trade_flow.py:252: RuntimeWarning: invalid value encountered in divide
+  imb = np.where(denom > 0, np.abs(b_buy - b_sell) / denom, 0.0)
+2026-05-19 10:47:21,039 [ETCUSDT] flow 116064 rows 2025-03-30 00:00:00+00:00..2026-05-06 23:55:00+00:00 (6/26, 858s)
+/home/yuqing/ctaNew/features_ml/trade_flow.py:252: RuntimeWarning: invalid value encountered in divide
+  imb = np.where(denom > 0, np.abs(b_buy - b_sell) / denom, 0.0)
+2026-05-19 10:49:19,110 [GMXUSDT] flow 116064 rows 2025-03-30 00:00:00+00:00..2026-05-06 23:55:00+00:00 (7/26, 976s)
+/home/yuqing/ctaNew/features_ml/trade_flow.py:252: RuntimeWarning: invalid value encountered in divide
+  imb = np.where(denom > 0, np.abs(b_buy - b_sell) / denom, 0.0)
+2026-05-19 10:51:56,190 [HBARUSDT] flow 116064 rows 2025-03-30 00:00:00+00:00..2026-05-06 23:55:00+00:00 (8/26, 1133s)
+2026-05-19 10:51:56,371 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-03-26.zip
+2026-05-19 10:51:56,659 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-03-27.zip
+2026-05-19 10:51:56,660 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-03-24.zip
+2026-05-19 10:51:56,661 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-03-25.zip
+2026-05-19 10:51:56,663 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-03-29.zip
+2026-05-19 10:51:56,669 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-03-23.zip
+2026-05-19 10:51:56,677 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-03-28.zip
+2026-05-19 10:51:56,679 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-03-30.zip
+2026-05-19 10:51:56,823 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-04-02.zip
+2026-05-19 10:51:56,833 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-03-31.zip
+2026-05-19 10:51:56,987 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-04-06.zip
+2026-05-19 10:51:56,992 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-04-08.zip
+2026-05-19 10:51:57,002 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-04-09.zip
+2026-05-19 10:51:57,114 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-04-03.zip
+2026-05-19 10:51:57,122 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-04-04.zip
+2026-05-19 10:51:57,125 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-04-01.zip
+2026-05-19 10:51:57,135 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-04-05.zip
+2026-05-19 10:51:57,145 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-04-07.zip
+2026-05-19 10:51:57,269 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-04-12.zip
+2026-05-19 10:51:57,286 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-04-13.zip
+2026-05-19 10:51:57,298 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-04-16.zip
+2026-05-19 10:51:57,315 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-04-17.zip
+2026-05-19 10:51:57,442 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-04-10.zip
+2026-05-19 10:51:57,454 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-04-11.zip
+2026-05-19 10:51:57,465 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-04-20.zip
+2026-05-19 10:51:57,592 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-04-14.zip
+2026-05-19 10:51:57,594 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-04-15.zip
+2026-05-19 10:51:57,619 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-04-21.zip
+2026-05-19 10:51:57,745 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-04-19.zip
+2026-05-19 10:51:57,749 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-04-18.zip
+2026-05-19 10:51:57,766 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-04-25.zip
+2026-05-19 10:51:57,917 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-04-22.zip
+2026-05-19 10:51:57,917 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-04-29.zip
+2026-05-19 10:51:57,919 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-04-24.zip
+2026-05-19 10:51:57,933 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-04-23.zip
+2026-05-19 10:51:57,939 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-04-30.zip
+2026-05-19 10:51:58,041 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-04-26.zip
+2026-05-19 10:51:58,091 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-04-27.zip
+2026-05-19 10:51:58,091 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-05-01.zip
+2026-05-19 10:51:58,093 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-05-02.zip
+2026-05-19 10:51:58,101 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-05-04.zip
+2026-05-19 10:51:58,104 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-05-05.zip
+2026-05-19 10:51:58,208 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-05-06.zip
+2026-05-19 10:51:58,224 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-04-28.zip
+2026-05-19 10:51:58,257 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-05-09.zip
+2026-05-19 10:51:58,261 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-05-07.zip
+2026-05-19 10:51:58,266 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-05-11.zip
+2026-05-19 10:51:58,275 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-05-10.zip
+2026-05-19 10:51:58,373 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-05-12.zip
+2026-05-19 10:51:58,382 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-05-03.zip
+2026-05-19 10:51:58,393 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-05-13.zip
+2026-05-19 10:51:58,424 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-05-14.zip
+2026-05-19 10:51:58,428 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-05-16.zip
+2026-05-19 10:51:58,553 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-05-19.zip
+2026-05-19 10:51:58,559 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-05-08.zip
+2026-05-19 10:51:58,562 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-05-20.zip
+2026-05-19 10:51:58,589 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-05-17.zip
+2026-05-19 10:51:58,590 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-05-22.zip
+2026-05-19 10:51:58,596 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-05-21.zip
+2026-05-19 10:51:58,725 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-05-15.zip
+2026-05-19 10:51:58,732 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-05-25.zip
+2026-05-19 10:51:58,743 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-05-24.zip
+2026-05-19 10:51:58,757 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-05-26.zip
+2026-05-19 10:51:58,763 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-05-28.zip
+2026-05-19 10:51:58,840 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-05-18.zip
+2026-05-19 10:51:58,894 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-05-29.zip
+2026-05-19 10:51:59,001 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-05-23.zip
+2026-05-19 10:51:59,065 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/HYPEUSDT/HYPEUSDT-aggTrades-2025-05-27.zip
+/home/yuqing/ctaNew/features_ml/trade_flow.py:252: RuntimeWarning: invalid value encountered in divide
+  imb = np.where(denom > 0, np.abs(b_buy - b_sell) / denom, 0.0)
+2026-05-19 10:55:17,274 [HYPEUSDT] flow 96354 rows 2025-06-06 10:30:00+00:00..2026-05-06 23:55:00+00:00 (9/26, 1334s)
+/home/yuqing/ctaNew/features_ml/trade_flow.py:252: RuntimeWarning: invalid value encountered in divide
+  imb = np.where(denom > 0, np.abs(b_buy - b_sell) / denom, 0.0)
+2026-05-19 10:57:22,030 [ICPUSDT] flow 116064 rows 2025-03-30 00:00:00+00:00..2026-05-06 23:55:00+00:00 (10/26, 1459s)
+2026-05-19 10:58:09,740 failed aggTrades 2026-02-11: 503 Server Error: Service Unavailable for url: https://data.binance.vision/data/futures/um/daily/aggTrades/JTOUSDT/JTOUSDT-aggTrades-2026-02-11.zip
+/home/yuqing/ctaNew/features_ml/trade_flow.py:252: RuntimeWarning: invalid value encountered in divide
+  imb = np.where(denom > 0, np.abs(b_buy - b_sell) / denom, 0.0)
+2026-05-19 10:59:42,109 [JTOUSDT] flow 115776 rows 2025-03-30 00:00:00+00:00..2026-05-06 23:55:00+00:00 (11/26, 1599s)
+/home/yuqing/ctaNew/features_ml/trade_flow.py:252: RuntimeWarning: invalid value encountered in divide
+  imb = np.where(denom > 0, np.abs(b_buy - b_sell) / denom, 0.0)
+2026-05-19 11:01:41,498 [JUPUSDT] flow 116064 rows 2025-03-30 00:00:00+00:00..2026-05-06 23:55:00+00:00 (12/26, 1718s)
+/home/yuqing/ctaNew/features_ml/trade_flow.py:252: RuntimeWarning: invalid value encountered in divide
+  imb = np.where(denom > 0, np.abs(b_buy - b_sell) / denom, 0.0)
+2026-05-19 11:03:59,966 [LDOUSDT] flow 116064 rows 2025-03-30 00:00:00+00:00..2026-05-06 23:55:00+00:00 (13/26, 1857s)
+/home/yuqing/ctaNew/features_ml/trade_flow.py:252: RuntimeWarning: invalid value encountered in divide
+  imb = np.where(denom > 0, np.abs(b_buy - b_sell) / denom, 0.0)
+2026-05-19 11:06:08,960 [ONDOUSDT] flow 116064 rows 2025-03-30 00:00:00+00:00..2026-05-06 23:55:00+00:00 (14/26, 1986s)
+/home/yuqing/ctaNew/features_ml/trade_flow.py:252: RuntimeWarning: invalid value encountered in divide
+  imb = np.where(denom > 0, np.abs(b_buy - b_sell) / denom, 0.0)
+2026-05-19 11:08:27,848 [ORDIUSDT] flow 116064 rows 2025-03-30 00:00:00+00:00..2026-05-06 23:55:00+00:00 (15/26, 2124s)
+/home/yuqing/ctaNew/features_ml/trade_flow.py:252: RuntimeWarning: invalid value encountered in divide
+  imb = np.where(denom > 0, np.abs(b_buy - b_sell) / denom, 0.0)
+2026-05-19 11:11:17,695 [PENDLEUSDT] flow 116064 rows 2025-03-30 00:00:00+00:00..2026-05-06 23:55:00+00:00 (16/26, 2294s)
+/home/yuqing/ctaNew/features_ml/trade_flow.py:252: RuntimeWarning: invalid value encountered in divide
+  imb = np.where(denom > 0, np.abs(b_buy - b_sell) / denom, 0.0)
+2026-05-19 11:14:38,091 [PENGUUSDT] flow 116064 rows 2025-03-30 00:00:00+00:00..2026-05-06 23:55:00+00:00 (17/26, 2495s)
+2026-05-19 11:14:38,276 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/PUMPUSDT/PUMPUSDT-aggTrades-2025-03-26.zip
+2026-05-19 11:14:38,283 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/PUMPUSDT/PUMPUSDT-aggTrades-2025-03-29.zip
+2026-05-19 11:14:38,445 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/PUMPUSDT/PUMPUSDT-aggTrades-2025-03-31.zip
+2026-05-19 11:14:38,564 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/PUMPUSDT/PUMPUSDT-aggTrades-2025-03-25.zip
+2026-05-19 11:14:38,576 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/PUMPUSDT/PUMPUSDT-aggTrades-2025-03-27.zip
+2026-05-19 11:14:38,583 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/PUMPUSDT/PUMPUSDT-aggTrades-2025-03-24.zip
+2026-05-19 11:14:38,587 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/PUMPUSDT/PUMPUSDT-aggTrades-2025-03-23.zip
+2026-05-19 11:14:38,589 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/PUMPUSDT/PUMPUSDT-aggTrades-2025-03-28.zip
+2026-05-19 11:14:38,592 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/PUMPUSDT/PUMPUSDT-aggTrades-2025-03-30.zip
+2026-05-19 11:14:38,739 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/PUMPUSDT/PUMPUSDT-aggTrades-2025-04-02.zip
+2026-05-19 11:14:38,761 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/PUMPUSDT/PUMPUSDT-aggTrades-2025-04-01.zip
+2026-05-19 11:14:38,914 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/PUMPUSDT/PUMPUSDT-aggTrades-2025-04-09.zip
+2026-05-19 11:14:38,925 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/PUMPUSDT/PUMPUSDT-aggTrades-2025-04-06.zip
+2026-05-19 11:14:38,937 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/PUMPUSDT/PUMPUSDT-aggTrades-2025-04-10.zip
+2026-05-19 11:14:39,027 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/PUMPUSDT/PUMPUSDT-aggTrades-2025-04-03.zip
+2026-05-19 11:14:39,051 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/PUMPUSDT/PUMPUSDT-aggTrades-2025-04-08.zip
+2026-05-19 11:14:39,053 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/PUMPUSDT/PUMPUSDT-aggTrades-2025-04-07.zip
+2026-05-19 11:14:39,057 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/PUMPUSDT/PUMPUSDT-aggTrades-2025-04-05.zip
+2026-05-19 11:14:39,059 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/PUMPUSDT/PUMPUSDT-aggTrades-2025-04-04.zip
+2026-05-19 11:14:39,366 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/PUMPUSDT/PUMPUSDT-aggTrades-2025-04-11.zip
+2026-05-19 11:14:48,611 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/PUMPUSDT/PUMPUSDT-aggTrades-2025-06-14.zip
+2026-05-19 11:14:48,909 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/PUMPUSDT/PUMPUSDT-aggTrades-2025-06-15.zip
+2026-05-19 11:14:48,924 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/PUMPUSDT/PUMPUSDT-aggTrades-2025-06-16.zip
+2026-05-19 11:14:49,035 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/PUMPUSDT/PUMPUSDT-aggTrades-2025-06-17.zip
+2026-05-19 11:14:49,074 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/PUMPUSDT/PUMPUSDT-aggTrades-2025-06-18.zip
+2026-05-19 11:14:49,077 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/PUMPUSDT/PUMPUSDT-aggTrades-2025-06-20.zip
+2026-05-19 11:14:49,100 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/PUMPUSDT/PUMPUSDT-aggTrades-2025-06-21.zip
+2026-05-19 11:14:49,174 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/PUMPUSDT/PUMPUSDT-aggTrades-2025-06-19.zip
+2026-05-19 11:14:49,194 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/PUMPUSDT/PUMPUSDT-aggTrades-2025-06-22.zip
+2026-05-19 11:14:49,232 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/PUMPUSDT/PUMPUSDT-aggTrades-2025-06-24.zip
+2026-05-19 11:14:49,243 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/PUMPUSDT/PUMPUSDT-aggTrades-2025-06-25.zip
+2026-05-19 11:14:49,251 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/PUMPUSDT/PUMPUSDT-aggTrades-2025-06-26.zip
+2026-05-19 11:14:49,369 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/PUMPUSDT/PUMPUSDT-aggTrades-2025-06-30.zip
+2026-05-19 11:14:49,381 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/PUMPUSDT/PUMPUSDT-aggTrades-2025-06-29.zip
+2026-05-19 11:14:49,430 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/PUMPUSDT/PUMPUSDT-aggTrades-2025-07-03.zip
+2026-05-19 11:14:49,512 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/PUMPUSDT/PUMPUSDT-aggTrades-2025-06-23.zip
+2026-05-19 11:14:49,548 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/PUMPUSDT/PUMPUSDT-aggTrades-2025-06-27.zip
+2026-05-19 11:14:49,550 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/PUMPUSDT/PUMPUSDT-aggTrades-2025-07-04.zip
+2026-05-19 11:14:49,601 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/PUMPUSDT/PUMPUSDT-aggTrades-2025-07-06.zip
+2026-05-19 11:14:49,602 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/PUMPUSDT/PUMPUSDT-aggTrades-2025-06-28.zip
+2026-05-19 11:14:49,679 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/PUMPUSDT/PUMPUSDT-aggTrades-2025-07-02.zip
+2026-05-19 11:14:49,708 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/PUMPUSDT/PUMPUSDT-aggTrades-2025-07-01.zip
+2026-05-19 11:14:49,711 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/PUMPUSDT/PUMPUSDT-aggTrades-2025-07-08.zip
+2026-05-19 11:14:49,716 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/PUMPUSDT/PUMPUSDT-aggTrades-2025-07-09.zip
+2026-05-19 11:14:49,850 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/PUMPUSDT/PUMPUSDT-aggTrades-2025-07-05.zip
+2026-05-19 11:14:49,966 404 (not yet published?): https://data.binance.vision/data/futures/um/daily/aggTrades/PUMPUSDT/PUMPUSDT-aggTrades-2025-07-07.zip
+/home/yuqing/ctaNew/features_ml/trade_flow.py:252: RuntimeWarning: invalid value encountered in divide
+  imb = np.where(denom > 0, np.abs(b_buy - b_sell) / denom, 0.0)
+2026-05-19 11:16:57,918 [PUMPUSDT] flow 102372 rows 2025-04-19 14:30:00+00:00..2026-05-06 23:55:00+00:00 (18/26, 2635s)
+/home/yuqing/ctaNew/features_ml/trade_flow.py:252: RuntimeWarning: invalid value encountered in divide
+  imb = np.where(denom > 0, np.abs(b_buy - b_sell) / denom, 0.0)
+2026-05-19 11:18:47,170 [STRKUSDT] flow 116064 rows 2025-03-30 00:00:00+00:00..2026-05-06 23:55:00+00:00 (19/26, 2744s)
+/home/yuqing/ctaNew/features_ml/trade_flow.py:252: RuntimeWarning: invalid value encountered in divide
+  imb = np.where(denom > 0, np.abs(b_buy - b_sell) / denom, 0.0)
+2026-05-19 11:22:18,903 [TAOUSDT] flow 116064 rows 2025-03-30 00:00:00+00:00..2026-05-06 23:55:00+00:00 (20/26, 2956s)
+/home/yuqing/ctaNew/features_ml/trade_flow.py:252: RuntimeWarning: invalid value encountered in divide
+  imb = np.where(denom > 0, np.abs(b_buy - b_sell) / denom, 0.0)
+2026-05-19 11:24:59,462 [TONUSDT] flow 116064 rows 2025-03-30 00:00:00+00:00..2026-05-06 23:55:00+00:00 (21/26, 3116s)
+/home/yuqing/ctaNew/features_ml/trade_flow.py:252: RuntimeWarning: invalid value encountered in divide
+  imb = np.where(denom > 0, np.abs(b_buy - b_sell) / denom, 0.0)
+2026-05-19 11:27:47,240 [TRBUSDT] flow 116064 rows 2025-03-30 00:00:00+00:00..2026-05-06 23:55:00+00:00 (22/26, 3284s)
+/home/yuqing/ctaNew/features_ml/trade_flow.py:252: RuntimeWarning: invalid value encountered in divide
+  imb = np.where(denom > 0, np.abs(b_buy - b_sell) / denom, 0.0)
+2026-05-19 11:30:44,757 [VIRTUALUSDT] flow 116064 rows 2025-03-30 00:00:00+00:00..2026-05-06 23:55:00+00:00 (23/26, 3461s)
+/home/yuqing/ctaNew/features_ml/trade_flow.py:252: RuntimeWarning: invalid value encountered in divide
+  imb = np.where(denom > 0, np.abs(b_buy - b_sell) / denom, 0.0)
+2026-05-19 11:32:46,501 [VVVUSDT] flow 116064 rows 2025-03-30 00:00:00+00:00..2026-05-06 23:55:00+00:00 (24/26, 3583s)
+/home/yuqing/ctaNew/features_ml/trade_flow.py:252: RuntimeWarning: invalid value encountered in divide
+  imb = np.where(denom > 0, np.abs(b_buy - b_sell) / denom, 0.0)
+2026-05-19 11:35:19,075 [WIFUSDT] flow 116064 rows 2025-03-30 00:00:00+00:00..2026-05-06 23:55:00+00:00 (25/26, 3736s)
+/home/yuqing/ctaNew/features_ml/trade_flow.py:252: RuntimeWarning: invalid value encountered in divide
+  imb = np.where(denom > 0, np.abs(b_buy - b_sell) / denom, 0.0)
+2026-05-19 11:39:50,317 [ZECUSDT] flow 116064 rows 2025-03-30 00:00:00+00:00..2026-05-06 23:55:00+00:00 (26/26, 4007s)
+2026-05-19 11:39:50,317 FLOW fetch done [4007s] done=26 failed=0 failed_syms=[]
+FLOW_FETCH_DONE

@@ -1,0 +1,59 @@
+====================================================================================================
+  STEP 65: tail attribution + de-concentration probe
+====================================================================================================
+  44 syms; β recovered True
+
+--- design ---
+  nested Sharpe +0.38 [-1.99,+2.55] fp=5/9 total 2,205bps
+  body(95%) -8,651bps Sh -2.57 | n_open==1 cycles 571 carry 1,345bps (61%); Sh excl n_open1 +0.24
+  trades 1325 | win 43% | profit-factor 1.11 | mean +297/-202 | best +5744 worst -1740 | mean hold 2.2 cyc
+  TAIL-cycle attribution (top 26 syms, tail=81 cyc):
+                      sum  count  semi_meme
+symbol                                     
+BIOUSDT       4729.467285     21       True
+VVVUSDT       2654.130371     18       True
+ZECUSDT       1809.719116     23      False
+PUMPUSDT      1282.437988      5       True
+WLDUSDT        958.602112      6      False
+TRUMPUSDT      864.178345      3       True
+VIRTUALUSDT    615.489990      9       True
+FARTCOINUSDT    80.533020      2       True
+  semi-meme share of tail PnL: 9,889/10,908 = 91%  (semi-meme set hit: ['BIOUSDT', 'FARTCOINUSDT', 'PENGUUSDT', 'PUMPUSDT', 'SPXUSDT', 'TRUMPUSDT', 'VIRTUALUSDT', 'VVVUSDT'])
+
+--- bothsides ---
+  nested Sharpe +0.33 [-1.93,+2.53] fp=2/9 total 1,174bps
+  body(95%) -2,535bps Sh -2.14 | n_open==1 cycles 0 carry 0bps (0%); Sh excl n_open1 +0.33
+  trades 816 | win 27% | profit-factor 1.15 | mean +302/-217 | best +3424 worst -1740 | mean hold 0.9 cyc
+  TAIL-cycle attribution (top 32 syms, tail=81 cyc):
+                     sum  count  semi_meme
+symbol                                    
+ZECUSDT      2422.196289     30      False
+VIRTUALUSDT  1898.611450     24       True
+WLDUSDT      1355.922363      9      False
+FILUSDT      1134.093750      6      False
+VVVUSDT       696.175354     10       True
+ASTERUSDT     231.091278      7      False
+TONUSDT       218.292023      4      False
+TAOUSDT       214.382706      3      False
+  semi-meme share of tail PnL: 1,301/3,845 = 34%  (semi-meme set hit: ['BIOUSDT', 'FARTCOINUSDT', 'PENGUUSDT', 'PUMPUSDT', 'SPXUSDT', 'TRUMPUSDT', 'VIRTUALUSDT', 'VVVUSDT', 'WIFUSDT'])
+
+--- wtcap ---
+  nested Sharpe +0.55 [-1.73,+2.59] fp=5/9 total 1,470bps
+  body(95%) -5,045bps Sh -3.24 | n_open==1 cycles 795 carry -132bps (-9%); Sh excl n_open1 +1.08
+  trades 909 | win 41% | profit-factor 1.16 | mean +377/-229 | best +5744 worst -1740 | mean hold 2.3 cyc
+  TAIL-cycle attribution (top 30 syms, tail=81 cyc):
+                     sum  count  semi_meme
+symbol                                    
+BIOUSDT      1841.629395     19       True
+VVVUSDT      1095.190918     15       True
+ZECUSDT       967.350281     23      False
+ICPUSDT       785.789307     15      False
+PUMPUSDT      529.512939      5       True
+VIRTUALUSDT   504.383423     11       True
+WLDUSDT       321.249725      7      False
+TRUMPUSDT     284.134491      8       True
+  semi-meme share of tail PnL: 4,407/6,567 = 67%  (semi-meme set hit: ['BIOUSDT', 'FARTCOINUSDT', 'PUMPUSDT', 'SPXUSDT', 'TRUMPUSDT', 'VIRTUALUSDT', 'VVVUSDT'])
+
+  random-pool ref (design, single best cfg, 60 seeds): p95=-0.11 mean=-1.75
+
+Total: 480s

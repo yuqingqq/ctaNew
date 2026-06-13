@@ -1,0 +1,27 @@
+============================================================================================
+  STEP 76: minimal orientation (4h) + proper 24h rebuild — IC gate only
+============================================================================================
+
+Building drop-BIO+VVV HL>=2M testbed (V2 22 feats)...
+  decision frame: 100,244 rows, 2460 cycles, 42 syms, 22 features
+
+--- PART A: minimal orientation, current 4h alpha_beta target ---
+
+  [A_4h] signed_all_shrunk_ic_weighted: OOS cycle-IC mean=+0.0517 median=+0.0507 t=+8.46 n=1620 folds+=9/9 | top-bottom=-2.03 bps | PASS (need IC>=+0.02 & t>=+3.0)
+  [A_4h] (info) signed-equal sibling: IC mean=+0.0505 t=+9.41 folds+=9/9
+
+--- PART B: proper 24h forward beta-residual rebuild ---
+
+  [B_24h_proper] signed_all_shrunk_ic_weighted: OOS cycle-IC mean=+0.0575 median=+0.0371 t=+3.36 n=240 folds+=4/9 | top-bottom=+19.34 bps | PASS (need IC>=+0.02 & t>=+3.0)
+  [B_24h_proper] (info) signed-equal sibling: IC mean=+0.0298 t=+2.19 folds+=4/9
+
+============================================================================================
+  PRE-REGISTERED VERDICT (gate fixed before run: IC>=+0.02 & t>=+3.0)
+============================================================================================
+  A_4h           -> PASS (IC +0.0517, t +8.46, folds+ 9/9)
+  B_24h_proper   -> PASS (IC +0.0575, t +3.36, folds+ 4/9)
+
+  AT LEAST ONE PASS -> orientation/target is a real lever; proceed to the next plan step for the passing config only.
+
+Saved under /home/yuqing/ctaNew/linear_model/results/step76_minimal_orientation
+Total: 590s

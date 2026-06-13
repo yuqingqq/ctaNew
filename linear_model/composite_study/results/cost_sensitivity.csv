@@ -1,0 +1,6 @@
+c_per_unit,meaning,net_sh,ci_lo,ci_hi,net_bps,cumpnl,maxdd,gate_pass
+0.0,zero cost (upper bound),1.72,-0.52,4.24,3.14,5091,-2224,~
+1.0,≈HL-maker ~2bps RT,1.23,-1.03,3.76,2.25,3640,-2570,~
+1.75,**3.5 bps ROUND-TRIP**,0.86,-1.42,3.39,1.57,2551,-2830,~
+2.25,VIP-0 baseline (4.5 RT) [arc default],0.62,-1.68,3.14,1.13,1826,-3003,~
+3.5,3.5 bps per side/unit (7.0 RT),0.0,-2.32,2.49,0.01,12,-3453,~

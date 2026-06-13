@@ -1,0 +1,4 @@
+variant,desc,ref,train_ic,sharpe,ci_lo,ci_hi,totPnL,maxDD,folds_pos,concentration,train_time_s,error
+Ridge_pool+symid_crossX_5m_C1,Ridge Pool+symid +crossX 5m (C1 norm),"('X10 -0.03', 'vs +aggT C1 +1.38')",0.1208,-0.88,-3.24,0.89,-3032,-3942,3/9,92%,365.0,
+Ridge_per-sym_crossX_5m,Ridge Per-sym +crossX 5m,"('X7 +1.12', 'best Per-sym crossX cell')",0.1021,-0.19,-2.47,1.78,-793,-7548,3/9,53%,102.0,
+LGBM_per-sym_crossX_5m,LGBM Per-sym +crossX 5m,"('X7 -0.17', 'best LGBM cell')",0.0576,0.38,-1.79,2.39,1450,-5461,2/9,84%,131.0,

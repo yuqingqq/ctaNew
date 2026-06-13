@@ -1,0 +1,2 @@
+any_clears,verdict
+False,"No config clears the gate even with proper PIT volume features + non-monotone/magnitude interactions (best = ridge_xsz/sqbtcrel_plus_int K3 +6.97 rho +0.47). The linear beta-residual line is CLOSED on free 4h Binance data — feature engineering exhausted (orientation 76-78, universe 79, groups 80a, volume+interactions 80b). Accept the 4h free-data ceiling; LGBM stays production. proper-24h (Step-76 bug) remains the only separately-unresolved item."

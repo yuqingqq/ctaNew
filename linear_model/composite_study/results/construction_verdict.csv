@@ -1,0 +1,2 @@
+naive_base,adopt,verdict
+0.6159406004535607,False,"CONSTRUCTION does NOT rescue: best VIP-0 K3-noSleeve netSh -0.46 CI[-2.9,1.7] folds 5/9 placebo-rank 98.5 vs-naive -1.07 — fails the pre-registered gate (>+1.5 & CI-excl-0 & placebo-p95 & ≥6/9 & lift≥+0.5). Cross-sectional rank-K + sleeve does not turn the real-but-sub-cost idiosyncratic signal into a robust edge — confirms extraction is maxed at the construction layer too (consistent with Steps 01–62 architecture-amplification finding, IC-selector value-negative, production universe-overfit). Production LGBM unaffected."

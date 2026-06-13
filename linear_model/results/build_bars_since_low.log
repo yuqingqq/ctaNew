@@ -1,0 +1,20 @@
+=== Build bars_since_low_xs_rank -> volaug2 ===
+
+volaug spine: 12,809,092 rows x 36 cols, 110 syms
+  30/110 (18s)
+  60/110 (33s)
+  90/110 (49s)
+
+merged 12,809,092 rows (spine preserved); raw bsl non-NaN 100.0%, skipped 0
+
+--- PIT audit (raw shifted bsl) ---
+  ETHUSDT: n=116,880 corr(stored,indep_SHIFT1)=1.00000 maxdiff=0.0e+00  corr(stored,UNSHIFTED)=0.998  -> OK (= t-1 state, not bar t)
+  SOLUSDT: n=116,880 corr(stored,indep_SHIFT1)=1.00000 maxdiff=0.0e+00  corr(stored,UNSHIFTED)=0.998  -> OK (= t-1 state, not bar t)
+
+--- look-ahead IC vs fwd alpha_beta (OOS decision cycles) ---
+  bars_since_low mean cycle-IC = -0.0180  n=1620  ok (<0.10)
+
+PIT audit: PASS
+bars_since_low_xs_rank non-NaN 100.0%  (12,809,092 rows x 37 cols, +1 vs volaug)
+Saved: /home/yuqing/ctaNew/outputs/vBTC_features_btc_only_111_volaug2/panel_btc_only_111_volaug2.parquet
+Total: 114s

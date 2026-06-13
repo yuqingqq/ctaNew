@@ -1,0 +1,3 @@
+pair,best_alpha_B_train,best_alpha_C_train,in_sample_sharpe_train,validate_pergroup_sharpe,validate_uniform_sharpe,lift_validate
+1_train_top25_validate_bot25,100.0,0.01,0.29,,1.53,-1.53
+2_train_bot25_validate_top25,10.0,0.01,2.24,-1.86,1.15,-3.01

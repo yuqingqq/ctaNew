@@ -1,0 +1,12 @@
+max|rankIC|=0.0319
+oi_chg_1h +0.0049
+oi_chg_4h +0.0072
+oi_chg_1d +0.0110
+oi_z_1d +0.0106
+oi_z_7d +0.0062
+oiv_z_1d +0.0319
+ls_count_z_1d +0.0010
+ls_count_chg_4h +0.0024
+ls_top_z_1d +0.0255
+ls_taker_z_1d +0.0008
+ls_taker_chg_4h +0.0003

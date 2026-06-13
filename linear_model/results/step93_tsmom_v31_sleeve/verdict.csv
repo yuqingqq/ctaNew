@@ -1,0 +1,2 @@
+ADOPT,verdict
+False,"Phase 1b NOT adopted (lift -0.23<+0.5; P4 fail (4/9 folds)). V3.1 sleeve NET Sh +0.02 CI[-2.18,+2.06] vs Phase-1 +0.25 (Δ -0.23); cost amortized as designed (68%→93%, |Δ| ratio 0.44) but cost was not the only binding constraint — P3/P4 breadth/fold fragility (cost-independent, confirmed Step-92b) persists. Phase-1 result stands as the headline; gate stays blocked (§6 precondition unmet). No direction flip. Production LGBM unaffected."

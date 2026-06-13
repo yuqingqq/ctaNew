@@ -1,0 +1,22 @@
+================================================================================================
+  STEP 101 — D1-ext-F: MAXIMAL feature set → structural events (closes OI-only loose end), LOCKED
+================================================================================================
+  rows=29494 syms=19 cycles=1560 FEATS=47 (F_core+s_t+OI11+oflow6+comp6 superset of Step-100)
+  base rate E1 = 3.0%
+  base rate E2 = 3.0%
+  base rate E3 = 10.5%
+  [PIT sanity] max|corr(feat, resid_fwd24)|=0.090 (corr_to_btc_1d); >0.15: none (panel/OI/oflow/s_t all pre-audited; forward cols excluded)
+
+  [Stage1] E1: AUC=0.5080 CI[0.4703,0.5545] baserate=3.0% -> not sig
+
+  [Stage1] E2: AUC=0.4890 CI[0.4458,0.5278] baserate=3.0% -> not sig
+
+  [Stage1] E3: AUC=0.5017 CI[0.4756,0.5298] baserate=10.5% -> not sig
+
+  [Stage2] E1: skipped (Stage-1 not sig)
+  [Stage2] E2: skipped (Stage-1 not sig)
+
+  VERDICT: D1-ext-F: NOT predictable with the MAXIMAL feature set either — no event clears Bonferroni AUC (best 0.508). Closes the 'OI-only' loose end: structural forced-deleveraging events are not predictable from ANY free-data feature combination (F_core+s_t+OI+order-flow+composites). Comprehensive free-data terminus is airtight across reduced-form AND structural paradigms. Only levers: paid data or accept closure.
+
+Saved /home/yuqing/ctaNew/linear_model/results/step101_oi_events_fullfeat
+Total: 60s

@@ -1,0 +1,38 @@
+====================================================================================================
+  STEP 61: iterative meme removal — how many 'alpha tokens'?
+====================================================================================================
+    fold 0: IC=-0.0126, n_train=854,676, n_test=916,234, 19s
+    fold 1: IC=-0.0287, n_train=1,340,768, n_test=924,480, 29s
+    fold 2: IC=-0.0119, n_train=1,838,704, n_test=924,480, 38s
+    fold 3: IC=-0.0060, n_train=2,325,147, n_test=927,936, 48s
+    fold 4: IC=+0.0163, n_train=2,831,862, n_test=933,120, 60s
+    fold 5: IC=+0.0001, n_train=3,319,326, n_test=933,120, 69s
+    fold 6: IC=-0.0056, n_train=3,811,291, n_test=933,120, 77s
+    fold 7: IC=+0.0074, n_train=4,325,092, n_test=933,120, 84s
+    fold 8: IC=+0.0035, n_train=4,835,813, n_test=933,120, 95s
+    fold 9: IC=+0.0025, n_train=5,340,549, n_test=933,120, 103s
+
+[iter 0] dropped=2 (2% of 110)  n=108  Sharpe=+2.34 [+0.58,+4.46]  folds+=7/9  top1=38%  top5=74%  top5%cyc=48%  (732s)
+           next drivers: PIPPINUSDT=+11740, BROCCOLI714USDT=+5760, SWARMSUSDT=+1929, PENGUUSDT=+1745
+    fold 0: IC=-0.0148, n_train=829,847, n_test=890,314, 17s
+    fold 1: IC=-0.0282, n_train=1,302,383, n_test=898,560, 26s
+    fold 2: IC=-0.0122, n_train=1,786,334, n_test=898,560, 35s
+    fold 3: IC=-0.0087, n_train=2,259,114, n_test=902,016, 44s
+    fold 4: IC=+0.0109, n_train=2,751,688, n_test=907,200, 53s
+    fold 5: IC=-0.0024, n_train=3,225,394, n_test=907,200, 60s
+    fold 6: IC=-0.0054, n_train=3,703,829, n_test=907,200, 71s
+    fold 7: IC=+0.0121, n_train=4,203,358, n_test=907,200, 78s
+    fold 8: IC=+0.0053, n_train=4,700,189, n_test=907,200, 87s
+    fold 9: IC=+0.0030, n_train=5,191,162, n_test=907,200, 93s
+
+[iter 1] dropped=5 (5% of 110)  n=105  Sharpe=+0.66 [-1.97,+3.00]  folds+=5/9  top1=17%  top5=59%  top5%cyc=34%  (677s)
+           next drivers: BANANAS31USDT=+2248, TRBUSDT=+2129, AEROUSDT=+1341, STRKUSDT=+1004
+
+  STOP: CI crosses 0 and no dominant tail (top1 17%) — exhausted at 5%.
+
+  Final P1/P2 placebo on model with 5 dropped (5% of universe), Sharpe=+0.66:
+  Loading kline volumes for 105 symbols...
+    P1: p95=+1.41  real rank p80  FAIL
+    P2: p95=+1.65  real rank p78  FAIL
+
+Total: 1919s

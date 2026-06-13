@@ -119,6 +119,12 @@ LONG_RESIDREV_THR = float(os.environ.get("LONG_RESIDREV_THR", "0.0"))
 # losers +54/+1.33; filtering the ~14% winner-longs lifts long-leg Sharpe +0.19 (8/9 folds). 999=off.
 LONG_MAX_RET3D = float(os.environ.get("LONG_MAX_RET3D", "999"))
 LONG_MIN_RET3D = float(os.environ.get("LONG_MIN_RET3D", "-999"))   # placebo/inverse: drop recent-LOSER longs (ret_3d<thr)
+# Short-loser suppression (MIRROR of long-winner gate, short side): don't SHORT recent CRASH names (ret_3d<thr) —
+# they violently BOUNCE, squeezing the short. Cohort diag 2026-06-13: short picks ret_3d<-0.20 earn fwd -31bp/pick
+# (Sharpe -0.01) vs rockets ret_3d>+0.20 +76bp/pick (+0.13). Symmetric non-linear tail veto the linear ranker can't
+# encode (same form as LONG_MAX_RET3D=+0.20). -999=off; principled symmetric value = -0.20.
+SHORT_MIN_RET3D = float(os.environ.get("SHORT_MIN_RET3D", "-999"))
+SHORT_MAX_RET3D = float(os.environ.get("SHORT_MAX_RET3D", "999"))   # placebo/inverse: drop recent-WINNER (rocket) shorts (ret_3d>thr)
 RAND_LONG_DROP_PCT = float(os.environ.get("RAND_LONG_DROP_PCT", "0"))   # placebo: drop TOP long in PCT% of cycles (random)
 RAND_LONG_DROP_SEED = int(os.environ.get("RAND_LONG_DROP_SEED", "0"))
 def _rand_drop_fires(ot):   # deterministic per (cycle, seed)
@@ -512,10 +518,17 @@ def select_legs(grp: pd.DataFrame, regime: str, betas_at_t: dict[str, float],
                 L = lpool.dropna(subset=["pred_long"]).nlargest(kbL, "pred_long")["symbol"].tolist()
             else:
                 L = lpool.nlargest(kbL, "pred")["symbol"].tolist()
-            if "pred_short" in gg.columns and gg["pred_short"].notna().sum() >= kbS:
-                S = gg.dropna(subset=["pred_short"]).nsmallest(kbS, "pred_short")["symbol"].tolist()
+            spool = gg                                 # short-loser suppression (mirror of long-winner, bear path)
+            if SHORT_MIN_RET3D > -999 and "ret_3d" in gg.columns:
+                _k = gg[(gg["ret_3d"] >= SHORT_MIN_RET3D) | gg["ret_3d"].isna()]
+                if len(_k) >= kbS: spool = _k
+            if SHORT_MAX_RET3D < 999 and "ret_3d" in spool.columns:
+                _k = spool[(spool["ret_3d"] <= SHORT_MAX_RET3D) | spool["ret_3d"].isna()]
+                if len(_k) >= kbS: spool = _k
+            if "pred_short" in spool.columns and spool["pred_short"].notna().sum() >= kbS:
+                S = spool.dropna(subset=["pred_short"]).nsmallest(kbS, "pred_short")["symbol"].tolist()
             else:
-                S = gg.nsmallest(kbS, "pred")["symbol"].tolist()
+                S = spool.nsmallest(kbS, "pred")["symbol"].tolist()
             # depth-conditional de-gross: by default BEAR_GROSS_MULT applies to ALL bear; if BEAR_MID_LO/HI are set,
             # it applies ONLY when btc_ret_30d is in the toxic mid-bear band [LO,HI), full size (1.0) elsewhere.
             # iter18 finding: bear is U-shaped — deep capitulation (Sh +10.6) & near-side bear (+10.5) thrive, the
@@ -751,15 +764,23 @@ def select_legs(grp: pd.DataFrame, regime: str, betas_at_t: dict[str, float],
     if RAND_LONG_DROP_PCT > 0 and len(long_pool) > kL and _rand_drop_fires(grp["open_time"].iloc[0]):
         rc = "pred_long" if "pred_long" in long_pool.columns and long_pool["pred_long"].notna().any() else key
         long_pool = long_pool.drop(long_pool[rc].idxmax())           # placebo: drop the TOP long candidate
+    # short-loser suppression: drop recent CRASH names from the SHORT pool (they bounce/squeeze). Mirror of long-winner.
+    short_pool = gg
+    if SHORT_MIN_RET3D > -999 and "ret_3d" in gg.columns:
+        keep = gg[(gg["ret_3d"] >= SHORT_MIN_RET3D) | gg["ret_3d"].isna()]
+        if len(keep) >= kS: short_pool = keep
+    if SHORT_MAX_RET3D < 999 and "ret_3d" in short_pool.columns:      # inverse placebo: drop recent-WINNER (rocket) shorts
+        keep = short_pool[(short_pool["ret_3d"] <= SHORT_MAX_RET3D) | short_pool["ret_3d"].isna()]
+        if len(keep) >= kS: short_pool = keep
     # iter13/14 dual-pred + meta-labels: long ranked by pred_long, short by pred_short (embedded or via PREDS_LONG).
     if "pred_long" in long_pool.columns and long_pool["pred_long"].notna().sum() >= kL:
         L = long_pool.dropna(subset=["pred_long"]).nlargest(kL, "pred_long")["symbol"].tolist()
     else:
         L = long_pool.tail(kL)["symbol"].tolist()
-    if "pred_short" in gg.columns and gg["pred_short"].notna().sum() >= kS:
-        S = gg.dropna(subset=["pred_short"]).nsmallest(kS, "pred_short")["symbol"].tolist()
+    if "pred_short" in short_pool.columns and short_pool["pred_short"].notna().sum() >= kS:
+        S = short_pool.dropna(subset=["pred_short"]).nsmallest(kS, "pred_short")["symbol"].tolist()
     else:
-        S = gg.head(kS)["symbol"].tolist()
+        S = short_pool.head(kS)["symbol"].tolist()
     a = b = 1.0
     if do_bn:
         bL = np.nanmean([betas_at_t.get(s, np.nan) for s in L])
@@ -903,7 +924,8 @@ def run_replay(start: pd.Timestamp | None, end: pd.Timestamp | None) -> dict:
         (DEF_FEATS if SIDE_MODE in ("long_defensive_basket_hedge", "regime_switch") else [])
         + (LONGDEF_FEATS if SIDE_MODE == "longdef_shortmr" else [])
         + (["idio_vol_to_btc_1h"] if LONG_IDIO_SKIP_PCT < 1.0 else [])
-        + (["ret_3d"] if (LONG_MAX_RET3D < 999 and "ret_3d" not in d.columns) else []) + _SIZING_FEATS))
+        + (["ret_3d"] if ((LONG_MAX_RET3D < 999 or LONG_MIN_RET3D > -999 or SHORT_MIN_RET3D > -999
+                           or SHORT_MAX_RET3D < 999) and "ret_3d" not in d.columns) else []) + _SIZING_FEATS))
     if _need:
         _pf = pd.read_parquet(PANEL, columns=["symbol","open_time"]+_need)
         _pf["open_time"] = pd.to_datetime(_pf["open_time"], utc=True)
@@ -1145,7 +1167,8 @@ def run_cycle() -> dict:
     syms = sorted(d["symbol"].unique())
     log.info(f"cycle: catching up {d['open_time'].nunique()} new cycle(s) "
              f"{d['open_time'].min()}→{d['open_time'].max()}")
-    if LONG_MAX_RET3D < 999 and "ret_3d" not in d.columns:   # long-winner gate needs ret_3d on the settle track too
+    if (LONG_MAX_RET3D < 999 or LONG_MIN_RET3D > -999 or SHORT_MIN_RET3D > -999 or SHORT_MAX_RET3D < 999) \
+            and "ret_3d" not in d.columns:   # long-winner / short-loser gates need ret_3d on the settle track too
         _r3 = pd.read_parquet(PANEL, columns=["symbol","open_time","ret_3d"])
         _r3["open_time"] = pd.to_datetime(_r3["open_time"], utc=True)
         d = d.merge(_r3, on=["symbol","open_time"], how="left")

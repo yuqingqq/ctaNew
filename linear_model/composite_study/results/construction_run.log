@@ -1,0 +1,23 @@
+====================================================================================================
+  COMPOSITE STUDY — construction: rank → top/bottom-K on the leak-free alpha model (LOCKED)
+====================================================================================================
+  rows=67099 syms=42 cycles=1620  median syms/cyc=42
+  NAIVE baseline (all-sym sign(pred), VIP-0) Sharpe = +0.62 (the established result to beat by ≥+0.5)
+
+  variant                 cost  netSh              CI fold+  plcP95  rank  vsBASE
+  K3-noSleeve               mk  +0.58 [ -1.9, +2.7]  6/9     +nan   nan   -0.04
+  K3-noSleeve              3.5  -0.04 [ -2.5, +2.1]  6/9     +nan   nan   -0.66
+  K3-noSleeve               v0  -0.46 [ -2.9, +1.7]  5/9    -1.66    98   -1.07
+  K3-V3.1sleeve             mk  -0.92 [ -3.1, +1.2]  4/9     +nan   nan   -1.54
+  K3-V3.1sleeve            3.5  -1.14 [ -3.3, +1.0]  4/9     +nan   nan   -1.76
+  K3-V3.1sleeve             v0  -1.29 [ -3.4, +0.8]  4/9    +0.79    53   -1.91
+  K5-noSleeve               mk  -0.27 [ -2.7, +2.1]  5/9     +nan   nan   -0.89
+  K5-noSleeve              3.5  -1.05 [ -3.5, +1.3]  4/9     +nan   nan   -1.67
+  K5-noSleeve               v0  -1.57 [ -4.1, +0.8]  4/9    -2.27    98   -2.19
+  K5-V3.1sleeve             mk  -0.93 [ -3.2, +1.3]  2/9     +nan   nan   -1.55
+  K5-V3.1sleeve            3.5  -1.21 [ -3.4, +1.0]  1/9     +nan   nan   -1.83
+  K5-V3.1sleeve             v0  -1.40 [ -3.6, +0.8]  1/9    +0.36    58   -2.01
+
+  VERDICT: CONSTRUCTION does NOT rescue: best VIP-0 K3-noSleeve netSh -0.46 CI[-2.9,1.7] folds 5/9 placebo-rank 98.5 vs-naive -1.07 — fails the pre-registered gate (>+1.5 & CI-excl-0 & placebo-p95 & ≥6/9 & lift≥+0.5). Cross-sectional rank-K + sleeve does not turn the real-but-sub-cost idiosyncratic signal into a robust edge — confirms extraction is maxed at the construction layer too (consistent with Steps 01–62 architecture-amplification finding, IC-selector value-negative, production universe-overfit). Production LGBM unaffected.
+
+Saved /home/yuqing/ctaNew/linear_model/composite_study/results/construction_rankK.csv

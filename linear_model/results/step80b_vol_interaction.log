@@ -1,0 +1,27 @@
+====================================================================================================
+  STEP 80b: non-monotone x VOLUME interaction payoff (hl42, volaug)
+  GATE: rho>=+0.6 & K3>=+9.0 & >=6/9 & drop-top2 K3>0 & top5<= 60% pos-gross
+====================================================================================================
+  hl42: 42 syms, 2460 cycles | 22 V2 + 9 vol + 12 interactions
+
+--- nnls_oriented ---
+  v2_all               (22f) IC=+0.0259 rho=+0.370 K1= +7.20 K3= +6.77 K10= +3.06 f+=7/9 dT2= +4.75 top5= 41% | FAIL
+  vol_only             ( 9f) IC=+0.0081 rho=-0.248 K1= -8.97 K3= -3.47 K10= -0.63 f+=4/9 dT2= -4.76 top5= 52% | FAIL
+  int_only             (12f) IC=+0.0005 rho=+0.503 K1= +1.95 K3= +0.12 K10= +2.75 f+=4/9 dT2= -0.75 top5= 52% | FAIL
+  sqbtcrel_plus_int    (21f) IC=+0.0187 rho=+0.430 K1= +1.42 K3= +3.66 K10= +1.42 f+=6/9 dT2= +2.44 top5= 45% | FAIL
+  v2_all_plus_int      (34f) IC=+0.0196 rho=+0.430 K1= +2.57 K3= +2.10 K10= +0.82 f+=6/9 dT2= +1.09 top5= 50% | FAIL
+
+--- ridge_xsz ---
+  v2_all               (22f) IC=+0.0079 rho=+0.552 K1=+10.27 K3= +5.94 K10= +2.22 f+=7/9 dT2= +4.84 top5= 45% | FAIL
+  vol_only             ( 9f) IC=-0.0129 rho=-0.479 K1= -1.68 K3= -5.01 K10= -2.96 f+=3/9 dT2= -7.98 top5= 78% | FAIL
+  int_only             (12f) IC=-0.0069 rho=+0.248 K1= +0.05 K3= +1.05 K10= +2.25 f+=5/9 dT2= -0.76 top5= 53% | FAIL
+  sqbtcrel_plus_int    (21f) IC=+0.0142 rho=+0.467 K1= +5.24 K3= +6.97 K10= +3.85 f+=7/9 dT2= +4.32 top5= 46% | FAIL
+  v2_all_plus_int      (34f) IC=+0.0080 rho=+0.648 K1= +4.87 K3= +3.68 K10= +3.38 f+=6/9 dT2= +1.63 top5= 48% | FAIL
+
+====================================================================================================
+  VERDICT
+====================================================================================================
+  No config clears the gate even with proper PIT volume features + non-monotone/magnitude interactions (best = ridge_xsz/sqbtcrel_plus_int K3 +6.97 rho +0.47). The linear beta-residual line is CLOSED on free 4h Binance data — feature engineering exhausted (orientation 76-78, universe 79, groups 80a, volume+interactions 80b). Accept the 4h free-data ceiling; LGBM stays production. proper-24h (Step-76 bug) remains the only separately-unresolved item.
+
+Saved under /home/yuqing/ctaNew/linear_model/results/step80b_vol_interaction
+Total: 2874s

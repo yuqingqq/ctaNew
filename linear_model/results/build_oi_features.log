@@ -1,0 +1,37 @@
+=== Build PIT OI/positioning features (23 syms) ===
+
+symbols: 23 (panel∩cached, ETHUSDT dropped)
+
+oi_panel: 2,688,240 rows, 23 syms, 11 feats
+  oi_chg_1h          non-NaN  98.0%  mean=-5.15e-05 std=0.0145
+  oi_chg_4h          non-NaN  98.0%  mean=+0.000273 std=0.0218
+  oi_chg_1d          non-NaN  97.8%  mean=+0.00264 std=0.0519
+  oi_z_1d            non-NaN  97.3%  mean=-0.0127 std=1.49
+  oi_z_7d            non-NaN  92.9%  mean=+0.143 std=1.44
+  oiv_z_1d           non-NaN  97.3%  mean=-0.0371 std=1.45
+  ls_count_z_1d      non-NaN  97.0%  mean=+0.0139 std=1.45
+  ls_count_chg_4h    non-NaN  98.0%  mean=+0.00122 std=0.0524
+  ls_top_z_1d        non-NaN  97.0%  mean=+0.0562 std=1.46
+  ls_taker_z_1d      non-NaN  97.3%  mean=+0.0031 std=1.01
+  ls_taker_chg_4h    non-NaN  98.0%  mean=+0.488 std=6.69
+
+--- AUDIT A: PIT recompute + shift proof (oi_chg_1d) ---
+  SOLUSDT: n=114,317 corr(stored,indep_SHIFT1)=1.000000 maxdiff=0.0e+00  corr(stored,UNSHIFTED)=nan corr(stored,oi[t])=+0.133 -> OK (= t-1 snapshot, not t)
+  ADAUSDT: n=114,316 corr(stored,indep_SHIFT1)=1.000000 maxdiff=0.0e+00  corr(stored,UNSHIFTED)=nan corr(stored,oi[t])=+0.135 -> OK (= t-1 snapshot, not t)
+
+--- AUDIT B: look-ahead IC vs fwd alpha_beta ---
+  oi_chg_1h          mean cycle-IC=-0.0083 n=1609 ok
+  oi_chg_4h          mean cycle-IC=-0.0050 n=1609 ok
+  oi_chg_1d          mean cycle-IC=-0.0120 n=1609 ok
+  oi_z_1d            mean cycle-IC=-0.0101 n=1603 ok
+  oi_z_7d            mean cycle-IC=-0.0041 n=1567 ok
+  oiv_z_1d           mean cycle-IC=-0.0414 n=1603 ok
+  ls_count_z_1d      mean cycle-IC=+0.0045 n=1596 ok
+  ls_count_chg_4h    mean cycle-IC=+0.0051 n=1609 ok
+  ls_top_z_1d        mean cycle-IC=-0.0187 n=1596 ok
+  ls_taker_z_1d      mean cycle-IC=-0.0028 n=1603 ok
+  ls_taker_chg_4h    mean cycle-IC=-0.0077 n=1609 ok
+
+PIT AUDIT: PASS
+Saved: /home/yuqing/ctaNew/outputs/vBTC_features_oi/oi_panel.parquet (2,688,240 rows x 13 cols)
+Total: 35s

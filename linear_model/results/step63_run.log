@@ -1,0 +1,25 @@
+====================================================================================================
+  STEP 63: mean-reversion-exit / ranked-pool backtest + validation
+====================================================================================================
+  universe 44 syms, 3,762,586 rows
+
+  grid sweep (in-sample ceiling, NOT headline):
+    [ 0] {'decay': 0.3, 'tgt': 50, 'mh': 6, 'stop': 80, 'N': 3} -> Sh=-2.50 fp=2/9 top5%cyc=3%
+    [ 4] {'decay': 0.3, 'tgt': 100, 'mh': 6, 'stop': 80, 'N': 3} -> Sh=-2.18 fp=3/9 top5%cyc=8%
+    [ 8] {'decay': 0.5, 'tgt': 50, 'mh': 6, 'stop': 80, 'N': 3} -> Sh=-2.20 fp=2/9 top5%cyc=-2%
+    [12] {'decay': 0.5, 'tgt': 100, 'mh': 6, 'stop': 80, 'N': 3} -> Sh=-2.10 fp=2/9 top5%cyc=-3%
+  in-sample BEST [13] {'decay': 0.5, 'tgt': 100, 'mh': 6, 'stop': 80, 'N': 5} Sh=-0.60 (ceiling only)
+
+====================================================================================================
+  VERDICT
+====================================================================================================
+  nested-OOS Sharpe   : -0.67 [-2.89,+1.63]  folds+=-0.6672022576268245/9  top5%cyc=-3%
+  in-sample ceiling   : -0.60 (NOT headline)
+  fixed-24h baseline  : +0.77  -> nested beats it? NO
+  random-exit  p95    : -0.33  -> FAIL
+  random-pool  p95    : -2.29  -> PASS
+
+  criteria [CI>0, >baseline, >randexit, >randpool, fp>=6, not-tail]: [False, False, False, True, False, np.True_]
+  FAIL — document & close
+
+Total: 677s

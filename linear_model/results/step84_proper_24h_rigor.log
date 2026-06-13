@@ -1,0 +1,30 @@
+====================================================================================================
+  STEP 84: rigorous horizon-fair gate for the flagged 24h result
+  PRE-REG: G1 netSharpe CI excl 0 | G2 > placebo p95 | G3 ρ>=+.60 ≥6/9 | G4 signed_equal sign-consistent CI-excl-0 | G5 leak-clean
+====================================================================================================
+    beta289 30/111
+    beta289 60/111
+    beta289 90/111
+  hl42 dec: 42 syms, 2460 cyc; resid24 std 0.04284
+  v2_all     ridge_xsz      netSh=+1.21 CI[-0.89,+3.06] net=+27.3bps/cyc ρ=+0.685 f+=7/9 IC=+0.0148
+  v2_all     signed_equal   netSh=+1.83 CI[-0.28,+4.08] net=+34.5bps/cyc ρ=+0.564 f+=6/9 IC=-0.0023
+  v2_all     nnls_oriented  netSh=-2.19 CI[-4.62,+0.09] net=-53.7bps/cyc ρ=-0.176 f+=4/9 IC=+0.0212
+  sqbtcrel   ridge_xsz      netSh=+2.21 CI[+0.49,+4.35] net=+50.9bps/cyc ρ=+0.745 f+=9/9 IC=+0.0228
+  sqbtcrel   signed_equal   netSh=-0.26 CI[-2.26,+2.03] net=-4.7bps/cyc ρ=+0.067 f+=6/9 IC=-0.0193
+  sqbtcrel   nnls_oriented  netSh=-1.35 CI[-3.28,+0.79] net=-32.1bps/cyc ρ=-0.236 f+=3/9 IC=+0.0283
+
+  G2 placebo: real netSh +2.21 vs placebo p95 +1.05 (mean -0.64 max +3.40) -> PASS
+
+  G5 leakage audit:
+    β289 indep-recompute corr=1.00000 (>0.999)
+    max feature->resid24 |cycle-IC|=0.0484 (<0.10)
+    fold train/test gap=22.0d (>> 1d/24h)
+    shuffle-score netSh=-1.61 (~0); negate netSh=-2.99 (<0)  -> G5 FAIL
+
+====================================================================================================
+  GATES: G1 netSh-CI-excl0=True | G2 >placebo-p95=True | G3 ρ≥.60&≥6/9=True | G4 signed_equal-consistent=False | G5 leak-clean=False
+
+  VERDICT: FAIL (G4,G5) — the Step-83 24h headline was a horizon-scale / heavy-tail / unconstrained-ridge artifact, not a real edge (G4 estimator-fragility and/or placebo/CI). Recorded honestly: 24h does NOT revive the linear line under a horizon-fair test. This was the last genuinely-unresolved direction, now cleanly closed by DIRECT rigorous test (not a proxy). Production LGBM unaffected.
+
+Saved under /home/yuqing/ctaNew/linear_model/results/step84_proper_24h_rigor
+Total: 1720s

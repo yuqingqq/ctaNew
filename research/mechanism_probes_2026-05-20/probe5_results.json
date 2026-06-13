@@ -1,0 +1,119 @@
+{
+  "windows": {
+    "3d": {
+      "n": 2403,
+      "dir_acc_full": 0.5228,
+      "dir_acc_primed": 0.5663,
+      "placebo_full": 0.4946,
+      "lift_vs_placebo_full": 0.0282,
+      "per_group_full": [
+        0.522,
+        0.534,
+        0.516,
+        0.53,
+        0.512
+      ],
+      "per_group_primed": [
+        0.605,
+        0.606,
+        0.5,
+        0.554
+      ],
+      "mag_corr_full": 0.2456,
+      "mag_corr_primed": 0.228,
+      "n_primed": 347
+    },
+    "7d": {
+      "n": 2950,
+      "dir_acc_full": 0.5264,
+      "dir_acc_primed": 0.5499,
+      "placebo_full": 0.4873,
+      "lift_vs_placebo_full": 0.0391,
+      "per_group_full": [
+        0.554,
+        0.501,
+        0.498,
+        0.537,
+        0.542
+      ],
+      "per_group_primed": [
+        0.576,
+        0.625,
+        0.552,
+        0.447
+      ],
+      "mag_corr_full": 0.2466,
+      "mag_corr_primed": 0.2085,
+      "n_primed": 405
+    },
+    "14d": {
+      "n": 3149,
+      "dir_acc_full": 0.5181,
+      "dir_acc_primed": 0.5593,
+      "placebo_full": 0.4832,
+      "lift_vs_placebo_full": 0.0349,
+      "per_group_full": [
+        0.515,
+        0.538,
+        0.551,
+        0.497,
+        0.49
+      ],
+      "per_group_primed": [
+        0.484,
+        0.765,
+        0.484,
+        0.505
+      ],
+      "mag_corr_full": 0.249,
+      "mag_corr_primed": 0.2157,
+      "n_primed": 427
+    },
+    "30d": {
+      "n": 3297,
+      "dir_acc_full": 0.4904,
+      "dir_acc_primed": 0.5235,
+      "placebo_full": 0.4878,
+      "lift_vs_placebo_full": 0.0026,
+      "per_group_full": [
+        0.512,
+        0.469,
+        0.521,
+        0.478,
+        0.472
+      ],
+      "per_group_primed": [
+        0.588,
+        0.487,
+        0.519,
+        0.5
+      ],
+      "mag_corr_full": 0.2238,
+      "mag_corr_primed": 0.1769,
+      "n_primed": 445
+    }
+  },
+  "robustness": {
+    "dir_acc_per_window": {
+      "3d": 0.5228,
+      "7d": 0.5264,
+      "14d": 0.5181,
+      "30d": 0.4904
+    },
+    "placebo_per_window": {
+      "3d": 0.4946,
+      "7d": 0.4873,
+      "14d": 0.4832,
+      "30d": 0.4878
+    },
+    "mag_corr_per_window": {
+      "3d": 0.2456,
+      "7d": 0.2466,
+      "14d": 0.249,
+      "30d": 0.2238
+    },
+    "n_windows_with_dir_acc>=0.52": 2,
+    "verdict": "FRAGILE/likely-noise \u2014 single-window result, not a mechanism"
+  },
+  "elapsed_s": 49.2
+}

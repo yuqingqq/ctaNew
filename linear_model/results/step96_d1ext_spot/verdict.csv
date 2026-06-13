@@ -1,0 +1,2 @@
+PASS,best_F,best_FO,best_FS,best_FOS,verdict
+False,0.4561784409543958,1.088101741366436,0.3299697972429323,0.9064374518913615,"D1-ext-B FAIL — STACKED F_core+oflow+spot best NET Sharpe +0.91 (Ridge|F_core+oflow+spot (GATED), IC +0.025) ≤ +1.5. Marginals: F +0.46 → +oflow +1.09 → +spot +0.33 → stacked +0.91. The FULL free-data stack (perp-OHLCV + order-flow + spot microstructure) does NOT clear the leak-free ceiling ⇒ **free-data information bound is DEFINITIVE; TERMINUS.** Only remaining lever = paid/orthogonal data domain. Production LGBM unaffected."

@@ -1,0 +1,422 @@
+{
+  "rules": {
+    "long": "idio_vol_vs_bk_xsz>+2.0 AND corr_btc_xsz<-1.5 AND funding_xsz<-1.5 AND return_1d_xsz>0",
+    "short": "idio_vol_vs_bk_xsz>+2.0 AND corr_btc_xsz<-1.5 AND funding_xsz>+1.5 AND return_1d_xsz>+0.5"
+  },
+  "cost_rt_bps": 9.0,
+  "panel_51": {
+    "panel": "51-PANEL",
+    "panel_rows": 121798,
+    "n_syms": 51,
+    "long": {
+      "eval": {
+        "n_fires": 893,
+        "fire_rate_pct": 0.7332,
+        "gross_mean_bps": 56.4,
+        "net_mean_bps": 47.4,
+        "median_bps": -6.8,
+        "std_bps": 533.9,
+        "sharpe_gross_4h_ann": 4.947,
+        "sharpe_net_4h_ann": 4.158,
+        "long_share_outcome": 0.486
+      },
+      "per_fold": [
+        {
+          "fold": 0,
+          "n": 82,
+          "mean_bps": -33.3,
+          "net_mean_bps": -42.3,
+          "sharpe_net": -6.517,
+          "from": "2025-03-27",
+          "to": "2025-05-10"
+        },
+        {
+          "fold": 1,
+          "n": 55,
+          "mean_bps": 70.8,
+          "net_mean_bps": 61.8,
+          "sharpe_net": 8.249,
+          "from": "2025-05-11",
+          "to": "2025-06-24"
+        },
+        {
+          "fold": 2,
+          "n": 100,
+          "mean_bps": 24.2,
+          "net_mean_bps": 15.2,
+          "sharpe_net": 1.961,
+          "from": "2025-06-25",
+          "to": "2025-08-08"
+        },
+        {
+          "fold": 3,
+          "n": 123,
+          "mean_bps": 101.9,
+          "net_mean_bps": 92.9,
+          "sharpe_net": 7.245,
+          "from": "2025-08-09",
+          "to": "2025-09-22"
+        },
+        {
+          "fold": 4,
+          "n": 77,
+          "mean_bps": 151.6,
+          "net_mean_bps": 142.6,
+          "sharpe_net": 12.92,
+          "from": "2025-09-23",
+          "to": "2025-11-06"
+        },
+        {
+          "fold": 5,
+          "n": 99,
+          "mean_bps": 38.6,
+          "net_mean_bps": 29.6,
+          "sharpe_net": 2.87,
+          "from": "2025-11-07",
+          "to": "2025-12-21"
+        },
+        {
+          "fold": 6,
+          "n": 127,
+          "mean_bps": 51.0,
+          "net_mean_bps": 42.0,
+          "sharpe_net": 4.245,
+          "from": "2025-12-22",
+          "to": "2026-02-04"
+        },
+        {
+          "fold": 7,
+          "n": 112,
+          "mean_bps": 17.1,
+          "net_mean_bps": 8.1,
+          "sharpe_net": 0.747,
+          "from": "2026-02-05",
+          "to": "2026-03-21"
+        },
+        {
+          "fold": 8,
+          "n": 118,
+          "mean_bps": 88.0,
+          "net_mean_bps": 79.0,
+          "sharpe_net": 4.471,
+          "from": "2026-03-22",
+          "to": "2026-05-06"
+        }
+      ],
+      "placebo": {
+        "p05": -3.44,
+        "p50": -1.472,
+        "p95": 1.118,
+        "mean": -1.459,
+        "max": 1.824,
+        "min": -5.714
+      }
+    },
+    "short": {
+      "eval": {
+        "n_fires": 65,
+        "fire_rate_pct": 0.0534,
+        "gross_mean_bps": 122.3,
+        "net_mean_bps": 113.3,
+        "median_bps": 29.6,
+        "std_bps": 718.1,
+        "sharpe_gross_4h_ann": 8.034,
+        "sharpe_net_4h_ann": 7.443,
+        "long_share_outcome": 0.554
+      },
+      "per_fold": [
+        {
+          "fold": 0,
+          "n": 6,
+          "mean_bps": 831.5,
+          "net_mean_bps": 822.5,
+          "sharpe_net": 22.263,
+          "from": "2025-03-27",
+          "to": "2025-05-10"
+        },
+        {
+          "fold": 1,
+          "n": 5,
+          "mean_bps": 214.6,
+          "net_mean_bps": 205.6,
+          "sharpe_net": 41.25,
+          "from": "2025-05-11",
+          "to": "2025-06-24"
+        },
+        {
+          "fold": 2,
+          "n": 18,
+          "mean_bps": 214.7,
+          "net_mean_bps": 205.7,
+          "sharpe_net": 16.043,
+          "from": "2025-06-25",
+          "to": "2025-08-08"
+        },
+        {
+          "fold": 3,
+          "n": 9,
+          "mean_bps": 19.3,
+          "net_mean_bps": 10.3,
+          "sharpe_net": 1.381,
+          "from": "2025-08-09",
+          "to": "2025-09-22"
+        },
+        {
+          "fold": 4,
+          "n": 23,
+          "mean_bps": -82.5,
+          "net_mean_bps": -91.5,
+          "sharpe_net": -12.346,
+          "from": "2025-09-23",
+          "to": "2025-11-06"
+        },
+        {
+          "fold": 5,
+          "n": 2,
+          "mean": null,
+          "sharpe_net": null
+        },
+        {
+          "fold": 6,
+          "n": 0,
+          "mean": null,
+          "sharpe_net": null
+        },
+        {
+          "fold": 7,
+          "n": 1,
+          "mean": null,
+          "sharpe_net": null
+        },
+        {
+          "fold": 8,
+          "n": 1,
+          "mean": null,
+          "sharpe_net": null
+        }
+      ],
+      "placebo": {
+        "p05": -3.245,
+        "p50": 6.461,
+        "p95": 14.227,
+        "mean": 5.876,
+        "max": 16.805,
+        "min": -4.844
+      }
+    }
+  },
+  "panel_110": {
+    "panel": "110-PANEL",
+    "panel_rows": 265363,
+    "n_syms": 110,
+    "long": {
+      "eval": {
+        "n_fires": 1266,
+        "fire_rate_pct": 0.4771,
+        "gross_mean_bps": -6.9,
+        "net_mean_bps": -15.9,
+        "median_bps": -59.4,
+        "std_bps": 686.0,
+        "sharpe_gross_4h_ann": -0.471,
+        "sharpe_net_4h_ann": -1.085,
+        "long_share_outcome": 0.435
+      },
+      "per_fold": [
+        {
+          "fold": 0,
+          "n": 83,
+          "mean_bps": -70.8,
+          "net_mean_bps": -79.8,
+          "sharpe_net": -6.757,
+          "from": "2025-03-27",
+          "to": "2025-05-10"
+        },
+        {
+          "fold": 1,
+          "n": 103,
+          "mean_bps": -45.5,
+          "net_mean_bps": -54.5,
+          "sharpe_net": -4.708,
+          "from": "2025-05-11",
+          "to": "2025-06-24"
+        },
+        {
+          "fold": 2,
+          "n": 96,
+          "mean_bps": -29.4,
+          "net_mean_bps": -38.4,
+          "sharpe_net": -2.324,
+          "from": "2025-06-25",
+          "to": "2025-08-08"
+        },
+        {
+          "fold": 3,
+          "n": 128,
+          "mean_bps": 35.4,
+          "net_mean_bps": 26.4,
+          "sharpe_net": 2.221,
+          "from": "2025-08-09",
+          "to": "2025-09-22"
+        },
+        {
+          "fold": 4,
+          "n": 72,
+          "mean_bps": -74.2,
+          "net_mean_bps": -83.2,
+          "sharpe_net": -5.633,
+          "from": "2025-09-23",
+          "to": "2025-11-06"
+        },
+        {
+          "fold": 5,
+          "n": 177,
+          "mean_bps": -11.0,
+          "net_mean_bps": -20.0,
+          "sharpe_net": -1.044,
+          "from": "2025-11-07",
+          "to": "2025-12-21"
+        },
+        {
+          "fold": 6,
+          "n": 270,
+          "mean_bps": 5.1,
+          "net_mean_bps": -3.9,
+          "sharpe_net": -0.376,
+          "from": "2025-12-22",
+          "to": "2026-02-04"
+        },
+        {
+          "fold": 7,
+          "n": 221,
+          "mean_bps": -2.6,
+          "net_mean_bps": -11.6,
+          "sharpe_net": -0.774,
+          "from": "2026-02-05",
+          "to": "2026-03-21"
+        },
+        {
+          "fold": 8,
+          "n": 116,
+          "mean_bps": 56.9,
+          "net_mean_bps": 47.9,
+          "sharpe_net": 2.542,
+          "from": "2026-03-22",
+          "to": "2026-05-06"
+        }
+      ],
+      "placebo": {
+        "p05": -3.487,
+        "p50": -1.095,
+        "p95": 1.079,
+        "mean": -1.133,
+        "max": 1.431,
+        "min": -4.621
+      }
+    },
+    "short": {
+      "eval": {
+        "n_fires": 469,
+        "fire_rate_pct": 0.1767,
+        "gross_mean_bps": 72.9,
+        "net_mean_bps": 63.9,
+        "median_bps": 61.0,
+        "std_bps": 993.5,
+        "sharpe_gross_4h_ann": 3.439,
+        "sharpe_net_4h_ann": 3.015,
+        "long_share_outcome": 0.554
+      },
+      "per_fold": [
+        {
+          "fold": 0,
+          "n": 70,
+          "mean_bps": -139.3,
+          "net_mean_bps": -148.3,
+          "sharpe_net": -6.419,
+          "from": "2025-03-27",
+          "to": "2025-05-10"
+        },
+        {
+          "fold": 1,
+          "n": 17,
+          "mean_bps": 96.0,
+          "net_mean_bps": 87.0,
+          "sharpe_net": 5.665,
+          "from": "2025-05-11",
+          "to": "2025-06-24"
+        },
+        {
+          "fold": 2,
+          "n": 25,
+          "mean_bps": 264.5,
+          "net_mean_bps": 255.5,
+          "sharpe_net": 16.022,
+          "from": "2025-06-25",
+          "to": "2025-08-08"
+        },
+        {
+          "fold": 3,
+          "n": 87,
+          "mean_bps": 116.5,
+          "net_mean_bps": 107.5,
+          "sharpe_net": 6.397,
+          "from": "2025-08-09",
+          "to": "2025-09-22"
+        },
+        {
+          "fold": 4,
+          "n": 112,
+          "mean_bps": -92.3,
+          "net_mean_bps": -101.3,
+          "sharpe_net": -3.861,
+          "from": "2025-09-23",
+          "to": "2025-11-06"
+        },
+        {
+          "fold": 5,
+          "n": 54,
+          "mean_bps": 192.9,
+          "net_mean_bps": 183.9,
+          "sharpe_net": 10.547,
+          "from": "2025-11-07",
+          "to": "2025-12-21"
+        },
+        {
+          "fold": 6,
+          "n": 43,
+          "mean_bps": 98.5,
+          "net_mean_bps": 89.5,
+          "sharpe_net": 6.562,
+          "from": "2025-12-22",
+          "to": "2026-02-04"
+        },
+        {
+          "fold": 7,
+          "n": 43,
+          "mean_bps": 357.1,
+          "net_mean_bps": 348.1,
+          "sharpe_net": 13.74,
+          "from": "2026-02-05",
+          "to": "2026-03-21"
+        },
+        {
+          "fold": 8,
+          "n": 18,
+          "mean_bps": 328.6,
+          "net_mean_bps": 319.6,
+          "sharpe_net": 22.438,
+          "from": "2026-03-22",
+          "to": "2026-05-06"
+        }
+      ],
+      "placebo": {
+        "p05": -3.983,
+        "p50": -0.723,
+        "p95": 1.895,
+        "mean": -0.942,
+        "max": 3.472,
+        "min": -5.213
+      }
+    }
+  },
+  "elapsed_s": 22.2
+}

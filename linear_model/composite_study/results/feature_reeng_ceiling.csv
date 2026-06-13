@@ -1,0 +1,6 @@
+name,ridge_sh,ci_lo,ci_hi,folds,lgbm_sh,nfeat
+F_core,0.18,-2.22,2.28,3/9,-2.787,24
+F_core+oflow,0.369,-2.24,2.48,4/9,-2.429,30
+F_core+oflow+spot,0.024,-2.94,2.26,3/9,-2.827,36
+F+ENG_pruned,-0.284,-2.47,2.06,3/9,-0.928,48
+F+ENG_unpruned,0.871,-1.42,3.03,4/9,-1.046,56

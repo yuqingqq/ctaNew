@@ -1,0 +1,32 @@
+====================================================================================================
+  STEP 88: nested per-fold feature/sign selection — close the hindsight loop
+  PRE-REG PASS: V1 CI-excl-0 V2 >placebo-p95 V3 modal subset >=6/9 V4 shuffle~placebo & negate<0  (pool=9 TAU=0.005)
+====================================================================================================
+    beta289 30/111
+    beta289 60/111
+    beta289 90/111
+  WARNING: feature bars_since_low_xs_rank not in 111-panel
+  dec: 42 syms, 2460 cyc
+
+  per-fold nested selection:
+    fold 1: n=7  -beta_to_btc_change_5d_sq|+corr_to_btc_1d|+corr_to_btc_1d_sq|+corr_to_btc_change_3d|-dom_btc_change_288b_sq|-dom_btc_z_1d|-return_1d_sq
+    fold 2: n=9  -beta_to_btc_change_5d|-beta_to_btc_change_5d_sq|+corr_to_btc_1d|+corr_to_btc_1d_sq|+corr_to_btc_change_3d|+corr_to_btc_change_3d_sq|-dom_btc_change_288b_sq|-dom_btc_z_1d|+return_1d_sq
+    fold 3: n=6  -beta_to_btc_change_5d_sq|+corr_to_btc_1d|+corr_to_btc_change_3d|-dom_btc_change_288b_sq|-dom_btc_z_1d|+return_1d_sq
+    fold 4: n=4  -beta_to_btc_change_5d_sq|-dom_btc_change_288b_sq|-dom_btc_z_1d|+return_1d_sq
+    fold 5: n=3  -beta_to_btc_change_5d_sq|-dom_btc_z_1d|+return_1d_sq
+    fold 6: n=2  -beta_to_btc_change_5d_sq|-dom_btc_z_1d
+    fold 7: n=2  -beta_to_btc_change_5d_sq|-dom_btc_z_1d
+    fold 8: n=2  -beta_to_btc_change_5d_sq|-dom_btc_z_1d
+    fold 9: n=2  -beta_to_btc_change_5d_sq|-dom_btc_z_1d
+
+  nested_selected  netSh=-1.05 CI[-3.37,+0.83] net=-20.4bps ρ=-0.091 f+=4/9 placebo_p95=+1.05
+  modal subset recurs 4/9 : -beta_to_btc_change_5d_sq|-dom_btc_z_1d
+  shuffle netSh=+0.32  negate netSh=+0.12
+  [ctx] sigstable3(hindsight)=+2.19  twogrp_equal=+2.32
+
+====================================================================================================
+  GATES: V1 CI-excl-0=False | V2 >placebo-p95=False | V3 modal>=6/9=False (4/9) | V4 sig-dependent=False
+  VERDICT: FAIL (V1,V2,V3,V4) — nested-selected frozen composite netSh -1.05 CI[-3.37,+0.83], placebo p95 +1.05, modal subset 4/9. The Step-87 sigstable3 PASS leaned on step-86 full-period structure selection; under honest nested selection it does not hold up. Milder than K3 (weights frozen, no collapse) but still a structure-level selection bias. 24h linear edge not validated. Production LGBM unaffected.
+
+Saved under /home/yuqing/ctaNew/linear_model/results/step88_nested_selection
+Total: 152s

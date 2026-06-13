@@ -1,0 +1,101 @@
+{
+  "oi_syms": 51,
+  "flow_syms": 51,
+  "leak_oi": 0.0319,
+  "leak_flow": 0.0181,
+  "cov_auc_oi": 0.564,
+  "cov_auc_flow": 0.574,
+  "arms": {
+    "A1_OI|lgbm": {
+      "A0_sharpe": 0.306,
+      "ARM_sharpe": 0.205,
+      "delta_sharpe": -0.101,
+      "mean_diff_bps": -0.126,
+      "diff_ci_bps": [
+        -1.746,
+        1.599
+      ],
+      "diff_excludes_0": false,
+      "n_eff": 1309.5,
+      "mde_bps": 6.088,
+      "n_cyc": 14404,
+      "verdict": "no-portable-lift | underpowered (effect-size, not 'exhausted')"
+    },
+    "A1_OI|ridge": {
+      "A0_sharpe": -0.303,
+      "ARM_sharpe": 0.066,
+      "delta_sharpe": 0.369,
+      "mean_diff_bps": 0.521,
+      "diff_ci_bps": [
+        -1.06,
+        2.148
+      ],
+      "diff_excludes_0": false,
+      "n_eff": 1309.5,
+      "mde_bps": 5.634,
+      "n_cyc": 14404,
+      "verdict": "no-portable-lift | underpowered (effect-size, not 'exhausted')"
+    },
+    "A2_FLOW|lgbm": {
+      "A0_sharpe": -0.172,
+      "ARM_sharpe": -0.227,
+      "delta_sharpe": -0.055,
+      "mean_diff_bps": -0.07,
+      "diff_ci_bps": [
+        -1.501,
+        1.406
+      ],
+      "diff_excludes_0": false,
+      "n_eff": 3681.8,
+      "mde_bps": 3.767,
+      "n_cyc": 40500,
+      "verdict": "no-portable-lift | underpowered (effect-size, not 'exhausted')"
+    },
+    "A2_FLOW|ridge": {
+      "A0_sharpe": 0.083,
+      "ARM_sharpe": 0.116,
+      "delta_sharpe": 0.033,
+      "mean_diff_bps": 0.064,
+      "diff_ci_bps": [
+        -1.213,
+        1.443
+      ],
+      "diff_excludes_0": false,
+      "n_eff": 3681.8,
+      "mde_bps": 3.623,
+      "n_cyc": 40500,
+      "verdict": "no-portable-lift | underpowered (effect-size, not 'exhausted')"
+    },
+    "A3_OIFLOW|lgbm": {
+      "A0_sharpe": -0.116,
+      "ARM_sharpe": 0.107,
+      "delta_sharpe": 0.223,
+      "mean_diff_bps": 0.332,
+      "diff_ci_bps": [
+        -1.264,
+        1.97
+      ],
+      "diff_excludes_0": false,
+      "n_eff": 1309.5,
+      "mde_bps": 6.273,
+      "n_cyc": 14404,
+      "verdict": "no-portable-lift | underpowered (effect-size, not 'exhausted')"
+    },
+    "A3_OIFLOW|ridge": {
+      "A0_sharpe": 0.645,
+      "ARM_sharpe": 0.483,
+      "delta_sharpe": -0.162,
+      "mean_diff_bps": -0.212,
+      "diff_ci_bps": [
+        -1.737,
+        1.329
+      ],
+      "diff_excludes_0": false,
+      "n_eff": 1309.5,
+      "mde_bps": 5.701,
+      "n_cyc": 14404,
+      "verdict": "no-portable-lift | underpowered (effect-size, not 'exhausted')"
+    }
+  },
+  "elapsed_s": 4065.8
+}

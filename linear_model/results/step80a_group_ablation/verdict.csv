@@ -1,0 +1,2 @@
+logo_clears,verdict
+False,"No leave-one-group-out config clears the full gate -> the dead payoff is STRUCTURAL across all groups, not one noisy group dominating (best single group = only_squared K3 +10.11 rho +0.55). Step 80b: build price x volume interactions only from the ESSENTIAL / best-single-group features; honest base rate remains low. No backtest."

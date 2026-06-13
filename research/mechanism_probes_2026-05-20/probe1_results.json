@@ -1,0 +1,149 @@
+{
+  "n_long": 1747,
+  "n_extreme_winners": 175,
+  "n_extreme_losers": 175,
+  "null_max_d_p95_multitest_bar": 0.377,
+  "top_15_features_by_|cohen_d|": [
+    {
+      "feature": "aggr_ratio_4h",
+      "cohen_d": -0.353,
+      "ks": 0.216,
+      "median_W": -0.02078,
+      "median_L": 0.01042,
+      "n_W": 90,
+      "n_L": 91
+    },
+    {
+      "feature": "dom_level_vs_bk",
+      "cohen_d": 0.251,
+      "ks": 0.126,
+      "median_W": 0.9431,
+      "median_L": 0.69267,
+      "n_W": 175,
+      "n_L": 175
+    },
+    {
+      "feature": "btc_realized_vol_30d",
+      "cohen_d": 0.198,
+      "ks": 0.114,
+      "median_W": 0.00142,
+      "median_L": 0.00124,
+      "n_W": 175,
+      "n_L": 175
+    },
+    {
+      "feature": "idio_ret_to_btc_48b",
+      "cohen_d": -0.191,
+      "ks": 0.119,
+      "median_W": -0.00211,
+      "median_L": 0.00022,
+      "n_W": 172,
+      "n_L": 174
+    },
+    {
+      "feature": "buy_count_4h",
+      "cohen_d": 0.186,
+      "ks": 0.102,
+      "median_W": 10861.5,
+      "median_L": 12080.0,
+      "n_W": 90,
+      "n_L": 91
+    },
+    {
+      "feature": "idio_kurt_1d",
+      "cohen_d": -0.184,
+      "ks": 0.133,
+      "median_W": 1.90769,
+      "median_L": 2.60996,
+      "n_W": 172,
+      "n_L": 174
+    },
+    {
+      "feature": "ema_slope_20_1h",
+      "cohen_d": -0.181,
+      "ks": 0.063,
+      "median_W": -0.00025,
+      "median_L": -0.00021,
+      "n_W": 175,
+      "n_L": 175
+    },
+    {
+      "feature": "idio_ret_48b_vs_bk",
+      "cohen_d": -0.178,
+      "ks": 0.126,
+      "median_W": -0.00095,
+      "median_L": -0.00083,
+      "n_W": 175,
+      "n_L": 175
+    },
+    {
+      "feature": "avg_trade_size_4h",
+      "cohen_d": -0.164,
+      "ks": 0.141,
+      "median_W": 427.95004,
+      "median_L": 488.06674,
+      "n_W": 90,
+      "n_L": 91
+    },
+    {
+      "feature": "idio_ret_to_btc_12b",
+      "cohen_d": -0.138,
+      "ks": 0.06,
+      "median_W": -0.00098,
+      "median_L": -0.00013,
+      "n_W": 172,
+      "n_L": 174
+    },
+    {
+      "feature": "r72",
+      "cohen_d": -0.128,
+      "ks": 0.12,
+      "median_W": -0.0192,
+      "median_L": 0.00802,
+      "n_W": 175,
+      "n_L": 175
+    },
+    {
+      "feature": "funding_streak_neg",
+      "cohen_d": 0.126,
+      "ks": 0.063,
+      "median_W": 0.0,
+      "median_L": 0.0,
+      "n_W": 175,
+      "n_L": 175
+    },
+    {
+      "feature": "btc_ret_48b",
+      "cohen_d": 0.117,
+      "ks": 0.109,
+      "median_W": 0.00048,
+      "median_L": -0.0011,
+      "n_W": 175,
+      "n_L": 175
+    },
+    {
+      "feature": "funding_streak_pos",
+      "cohen_d": -0.114,
+      "ks": 0.057,
+      "median_W": 1.0,
+      "median_L": 21.0,
+      "n_W": 175,
+      "n_L": 175
+    },
+    {
+      "feature": "btc_ema_slope_4h",
+      "cohen_d": 0.111,
+      "ks": 0.103,
+      "median_W": 0.0001,
+      "median_L": 2e-05,
+      "n_W": 175,
+      "n_L": 175
+    }
+  ],
+  "interpretation_keys": {
+    "cohen_d_+": "winners have HIGHER value than losers at entry",
+    "cohen_d_-": "winners have LOWER value than losers at entry",
+    "vs_null": "|cohen_d| > null_p95 = the gap exceeds what label-shuffling produces ~95% of the time across the same multi-feature scan"
+  },
+  "elapsed_s": 11.1
+}

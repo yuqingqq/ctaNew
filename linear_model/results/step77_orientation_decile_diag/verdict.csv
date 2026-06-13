@@ -1,0 +1,2 @@
+decile_rho,quintile_rho,fold_mono_pos,best_k_spread,best_band_spread,verdict
+-0.49090909090909085,-0.3,4,-0.9533862515111673,0.29938949440524604,"DECILES NOT MONOTONIC (ρ=-0.49, fold+ 4/9) -> the +0.052 IC is rank noise without a monotone payoff; NOT economically useful. Orientation lever is real statistically but dead economically."

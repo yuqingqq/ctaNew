@@ -1,0 +1,4 @@
+variant,desc,train_ic,sharpe,ci_lo,ci_hi,totPnL,maxDD,folds_pos,concentration,train_time_s,error
+V1_persym_ridge_W21_cohort,Ridge Per-sym on WINNER_21 + cohort,0.0103,-0.33,-2.46,1.77,-1111,-4885,4/9,75%,99.0,
+V2_lgbm_pool_W21_cohort,LGBM Pool+symid on WINNER_21 + cohort (add cohort to production),0.0152,0.43,-1.4,2.22,1450,-2922,4/9,45%,130.0,
+V3_lgbm_pool_W21_crossX,LGBM Pool+symid on WINNER_21 + crossX (add cross-exchange to production),0.0134,0.86,-1.16,2.94,3143,-2333,5/9,50%,130.0,

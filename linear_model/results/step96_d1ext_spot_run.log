@@ -1,0 +1,54 @@
+================================================================================================
+  STEP 96 — D1-ext-B: SPOT microstructure STACKED on order-flow vs leak-free ceiling (+1.5 gate)
+================================================================================================
+  universe (hl42∩aggTrades) = 20; spot span 2025-07-09→2026-04-30
+  [1/20] ADAUSDT      rows=85248 6s
+  [2/20] APTUSDT      rows=85248 6s
+  [3/20] ARBUSDT      rows=85248 5s
+  [4/20] ATOMUSDT     rows=85248 6s
+  [5/20] AVAXUSDT     rows=85248 5s
+  [6/20] BNBUSDT      rows=85248 5s
+  [7/20] DOGEUSDT     rows=85248 6s
+  [8/20] ETHUSDT      rows=85248 5s
+  [9/20] FILUSDT      rows=85248 6s
+  [10/20] INJUSDT      rows=85248 6s
+  [11/20] LINKUSDT     rows=85248 5s
+  [12/20] LTCUSDT      rows=85248 6s
+  [13/20] NEARUSDT     rows=85248 6s
+  [14/20] OPUSDT       rows=85248 6s
+  [15/20] SOLUSDT      rows=85248 6s
+  [16/20] SUIUSDT      rows=85248 6s
+  [17/20] TIAUSDT      rows=85248 6s
+  [18/20] UNIUSDT      rows=85248 6s
+  [19/20] WLDUSDT      rows=85248 6s
+  [20/20] XRPUSDT      rows=85248 6s
+  built+cached spot_panel (1704960, 8) -> /home/yuqing/ctaNew/outputs/vBTC_features_spot/spot_panel.parquet
+  merged dec rows=32160 syms=20 cycles=1608
+  audit SOLUSDT: corr(stored,indep_PAST sp_taker_imb_1d)=1.000000 -> OK
+  audit ADAUSDT: corr(stored,indep_PAST sp_taker_imb_1d)=1.000000 -> OK
+  look-ahead |corr(spot, FWD αβ)| max=0.013 (sp_retdiff_4h); all<0.10=True
+  PIT AUDIT: PASS
+  [validate] rows=31999 syms=20 F_core=24 oflow=6 spot=6
+
+--- F_core (feats=24, OOF 100%) ---
+  [Ridge|F_core] GROSS Sh=+1.57 (+2.61bps) | NET Sh=+0.46 CI[-1.96,+2.94] (+0.76bps) | IC=+0.0183 turn=0.824 syms+=55% folds+=5/9 | NET@maker Sh=+1.32
+  [LGBM|F_core] GROSS Sh=-0.33 (-0.52bps) | NET Sh=-1.64 CI[-4.28,+0.78] (-2.56bps) | IC=+0.0032 turn=0.908 syms+=10% folds+=3/9 | NET@maker Sh=-0.62
+
+--- F_core+oflow (feats=30, OOF 100%) ---
+  [Ridge|F_core+oflow] GROSS Sh=+2.24 (+3.62bps) | NET Sh=+1.09 CI[-1.20,+3.56] (+1.76bps) | IC=+0.0261 turn=0.828 syms+=70% folds+=6/9 | NET@maker Sh=+1.98
+  [LGBM|F_core+oflow] GROSS Sh=-0.14 (-0.21bps) | NET Sh=-1.46 CI[-4.05,+0.90] (-2.26bps) | IC=+0.0072 turn=0.909 syms+=25% folds+=3/9 | NET@maker Sh=-0.43
+
+--- F_core+spot (feats=30, OOF 100%) ---
+  [Ridge|F_core+spot] GROSS Sh=+1.46 (+2.38bps) | NET Sh=+0.33 CI[-2.02,+2.69] (+0.54bps) | IC=+0.0177 turn=0.817 syms+=55% folds+=5/9 | NET@maker Sh=+1.21
+  [LGBM|F_core+spot] GROSS Sh=+0.27 (+0.44bps) | NET Sh=-0.98 CI[-3.67,+1.51] (-1.59bps) | IC=+0.0035 turn=0.902 syms+=35% folds+=3/9 | NET@maker Sh=-0.01
+
+--- F_core+oflow+spot (GATED) (feats=36, OOF 100%) ---
+  [Ridge|F_core+oflow+spot (GATED)] GROSS Sh=+2.07 (+3.30bps) | NET Sh=+0.91 CI[-1.40,+3.40] (+1.44bps) | IC=+0.0253 turn=0.826 syms+=70% folds+=6/9 | NET@maker Sh=+1.81
+  [LGBM|F_core+oflow+spot (GATED)] GROSS Sh=+0.10 (+0.15bps) | NET Sh=-1.21 CI[-3.82,+1.36] (-1.88bps) | IC=+0.0061 turn=0.904 syms+=35% folds+=3/9 | NET@maker Sh=-0.19
+  [s_t_rule(ref)] GROSS Sh=+1.03 (+1.76bps) | NET Sh=+0.51 CI[-1.80,+2.78] (+0.87bps) | IC=+0.0343 turn=0.395 syms+=65% folds+=5/9 | NET@maker Sh=+0.91
+
+  STACK marginals: F=+0.46 +oflow=+1.09 +spot=+0.33 +oflow+spot=+0.91 | GATE(>+1.5): FAIL
+  VERDICT: D1-ext-B FAIL — STACKED F_core+oflow+spot best NET Sharpe +0.91 (Ridge|F_core+oflow+spot (GATED), IC +0.025) ≤ +1.5. Marginals: F +0.46 → +oflow +1.09 → +spot +0.33 → stacked +0.91. The FULL free-data stack (perp-OHLCV + order-flow + spot microstructure) does NOT clear the leak-free ceiling ⇒ **free-data information bound is DEFINITIVE; TERMINUS.** Only remaining lever = paid/orthogonal data domain. Production LGBM unaffected.
+
+Saved /home/yuqing/ctaNew/linear_model/results/step96_d1ext_spot
+Total: 166s

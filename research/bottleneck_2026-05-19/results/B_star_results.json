@@ -1,0 +1,65 @@
+{
+  "safe_n": 39,
+  "leak_guard": "PASS (<0.10)",
+  "A0_pooled_sharpe": -0.334,
+  "A0_per_group": {
+    "g0": {
+      "sharpe": 0.539,
+      "n_cyc": 1620
+    },
+    "g1": {
+      "sharpe": 0.181,
+      "n_cyc": 1620
+    },
+    "g2": {
+      "sharpe": -0.33,
+      "n_cyc": 1620
+    },
+    "g3": {
+      "sharpe": -1.537,
+      "n_cyc": 1620
+    },
+    "g4": {
+      "sharpe": -0.668,
+      "n_cyc": 1620
+    }
+  },
+  "A0_topk_spread_bps": 2.23,
+  "A1_pooled_sharpe": -0.909,
+  "A1_per_group": {
+    "g0": {
+      "sharpe": -0.989,
+      "n_cyc": 1620
+    },
+    "g1": {
+      "sharpe": -3.405,
+      "n_cyc": 1620
+    },
+    "g2": {
+      "sharpe": 0.37,
+      "n_cyc": 1620
+    },
+    "g3": {
+      "sharpe": -2.174,
+      "n_cyc": 1620
+    },
+    "g4": {
+      "sharpe": 0.902,
+      "n_cyc": 1620
+    }
+  },
+  "A1_topk_spread_bps": 1.09,
+  "paired": {
+    "delta_sharpe": -0.575,
+    "mean_diff_bps": -0.753,
+    "diff_ci_bps": [
+      -2.178,
+      0.692
+    ],
+    "diff_excludes_0": false,
+    "n_eff": 3681.8,
+    "mde_mean_diff_bps": 3.724
+  },
+  "VERDICT": "FEATURE-ENGINEERING-EXHAUSTED (earned) | underpowered: effect-size estimate, NOT a false 'exhausted'",
+  "elapsed_s": 1529.1
+}

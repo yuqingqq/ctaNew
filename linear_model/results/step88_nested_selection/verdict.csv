@@ -1,0 +1,2 @@
+all_pass,verdict
+False,"FAIL (V1,V2,V3,V4) — nested-selected frozen composite netSh -1.05 CI[-3.37,+0.83], placebo p95 +1.05, modal subset 4/9. The Step-87 sigstable3 PASS leaned on step-86 full-period structure selection; under honest nested selection it does not hold up. Milder than K3 (weights frozen, no collapse) but still a structure-level selection bias. 24h linear edge not validated. Production LGBM unaffected."

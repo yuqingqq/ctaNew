@@ -1,0 +1,2 @@
+PASS,pruned_sh,baseline_F_oflow,lift,placebo_p95,verdict
+False,-0.28391396941047753,0.36877775895588183,-0.6526917283663594,-1.1358994599066938,"GATE FAIL (Sh -0.28≤+1.5; CI incl 0; lift -0.65<+0.5; 3/9 folds). Systematic engineered-interaction + redundancy-pruned feature set does NOT lift the leak-free ceiling past +1.5 vs F_core+oflow baseline (+0.37). Feature-side closure is now AIRTIGHT: signal, construction, cost, hedge, AND systematic feature-engineering all exhausted. The existing-information conclusion is final from every angle. Production LGBM unaffected."

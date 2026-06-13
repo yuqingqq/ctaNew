@@ -1,0 +1,13 @@
+from __future__ import annotations
+import sys
+from pathlib import Path
+REPO = Path("/home/yuqing/ctaNew")
+sys.path.insert(0, str(REPO))
+sys.path.insert(0, str(REPO / "scripts"))
+import phase_ah_sleeve as P
+P.APD_PATH = REPO / "research/convexity_portable_2026-05-20/results/_cache/all_predictions_X2_hl50.parquet"
+P.OUT = REPO / "outputs/vBTC_sleeve_X2_hl50"
+P.OUT.mkdir(parents=True, exist_ok=True)
+P.N_PLACEBO_SEEDS = 100
+if __name__ == "__main__":
+    P.main()

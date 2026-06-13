@@ -1,0 +1,22 @@
+============================================================================================
+  STEP 81: PIT / look-ahead verification of volaug volume features
+============================================================================================
+
+--- A. PIT recompute + shift proof (qvol_z_1d) ---
+  ETHUSDT: n=116,880 | corr(volaug, indep_SHIFT1)=1.00000 maxdiff=0.00e+00  corr(volaug, UNSHIFTED)=0.568  corr(volaug, raw_qv[t])=+0.480  -> OK (matches t-1 rolling, not bar t)
+  SOLUSDT: n=116,880 | corr(volaug, indep_SHIFT1)=1.00000 maxdiff=0.00e+00  corr(volaug, UNSHIFTED)=0.584  corr(volaug, raw_qv[t])=+0.472  -> OK (matches t-1 rolling, not bar t)
+
+--- B. look-ahead IC (per-cycle Spearman vs fwd alpha_beta) ---
+  OOS decision frame: 177,733 rows, 1620 cycles
+  qvol_z_1d                mean cycle-IC = -0.0083  n=1620  ok
+  qvol_z_7d                mean cycle-IC = -0.0159  n=1620  ok
+  qvol_z_30d               mean cycle-IC = -0.0251  n=1620  ok
+  qvol_surge_1h_over_1d    mean cycle-IC = -0.0108  n=1620  ok
+  dollar_vol_log_1d        mean cycle-IC = +0.0020  n=1620  ok
+  amihud_illiq_1d          mean cycle-IC = -0.0136  n=1614  ok
+  taker_buy_frac_z_1d      mean cycle-IC = -0.0025  n=1614  ok
+  signed_qvol_1h           mean cycle-IC = -0.0124  n=1620  ok
+  trade_size_z_1d          mean cycle-IC = -0.0053  n=1614  ok
+
+============================================================================================
+  VERDICT: PASS — features match t-1 rolling (no bar-t leak) and no feature exceeds |IC|>0.10. Safe for Step 80b.

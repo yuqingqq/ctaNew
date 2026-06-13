@@ -1,0 +1,113 @@
+{
+  "test": "PROPER portability: full deployable stack, no sym_id, group-disjoint label+features, trailing-288 PIT-beta-to-BTC residual eval, 4.5bps cost, on UNSEEN symbols",
+  "per_group": {
+    "g0": {
+      "n": 11,
+      "members": [
+        "AAVEUSDT",
+        "AXSUSDT",
+        "ENAUSDT",
+        "HBARUSDT",
+        "LINKUSDT",
+        "LTCUSDT",
+        "OPUSDT",
+        "PENDLEUSDT",
+        "STRKUSDT",
+        "TRBUSDT",
+        "UNIUSDT"
+      ],
+      "sharpe": 0.539,
+      "folds_pos": 5,
+      "n_cyc": 1620,
+      "totPnL": 1345.0,
+      "traded_cyc": 912
+    },
+    "g1": {
+      "n": 10,
+      "members": [
+        "DOGEUSDT",
+        "ETCUSDT",
+        "HYPEUSDT",
+        "NEARUSDT",
+        "SUIUSDT",
+        "TAOUSDT",
+        "TIAUSDT",
+        "VIRTUALUSDT",
+        "VVVUSDT",
+        "XRPUSDT"
+      ],
+      "sharpe": 0.181,
+      "folds_pos": 4,
+      "n_cyc": 1620,
+      "totPnL": 488.0,
+      "traded_cyc": 843
+    },
+    "g2": {
+      "n": 10,
+      "members": [
+        "ASTERUSDT",
+        "ATOMUSDT",
+        "AVAXUSDT",
+        "DOTUSDT",
+        "ETHUSDT",
+        "LDOUSDT",
+        "PENGUUSDT",
+        "PUMPUSDT",
+        "RUNEUSDT",
+        "SOLUSDT"
+      ],
+      "sharpe": -0.33,
+      "folds_pos": 1,
+      "n_cyc": 1620,
+      "totPnL": -505.0,
+      "traded_cyc": 777
+    },
+    "g3": {
+      "n": 10,
+      "members": [
+        "APTUSDT",
+        "ARBUSDT",
+        "BNBUSDT",
+        "BTCUSDT",
+        "FILUSDT",
+        "ICPUSDT",
+        "JUPUSDT",
+        "SEIUSDT",
+        "TONUSDT",
+        "WLDUSDT"
+      ],
+      "sharpe": -1.537,
+      "folds_pos": 1,
+      "n_cyc": 1620,
+      "totPnL": -3503.0,
+      "traded_cyc": 920
+    },
+    "g4": {
+      "n": 10,
+      "members": [
+        "ADAUSDT",
+        "BCHUSDT",
+        "BIOUSDT",
+        "GMXUSDT",
+        "INJUSDT",
+        "JTOUSDT",
+        "ONDOUSDT",
+        "ORDIUSDT",
+        "WIFUSDT",
+        "ZECUSDT"
+      ],
+      "sharpe": -0.668,
+      "folds_pos": 4,
+      "n_cyc": 1620,
+      "totPnL": -1788.0,
+      "traded_cyc": 765
+    }
+  },
+  "pooled_fullstack_betaneutral_sharpe": -0.334,
+  "groups_positive": 2,
+  "n_groups": 5,
+  "mean_group_sharpe": -0.363,
+  "std_group_sharpe": 0.719,
+  "vs_STATUS_Test3": "STATUS Test-3 no-sym_id full-stack in-universe = -0.39",
+  "elapsed_s": 487.1
+}

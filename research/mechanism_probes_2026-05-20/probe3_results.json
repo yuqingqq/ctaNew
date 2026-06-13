@@ -1,0 +1,32 @@
+{
+  "trailing_skew_30d_OOS_symbol_dir_acc_full": 0.5044,
+  "trailing_skew_30d_OOS_symbol_dir_acc_primed": 0.4973,
+  "instantaneous_skew_OOS_symbol_dir_acc_full": 0.4969,
+  "instantaneous_skew_OOS_symbol_dir_acc_primed": 0.4978,
+  "placebo_label_shuffled_full": 0.4998,
+  "placebo_label_shuffled_primed": 0.4997,
+  "per_group_acc_trailing_full": [
+    0.509,
+    0.503,
+    0.501,
+    0.5,
+    0.508
+  ],
+  "per_group_acc_trailing_primed": [
+    0.505,
+    0.487,
+    0.498,
+    0.501,
+    0.496
+  ],
+  "skew_30d_vs_|resid|_corr_full": 0.0284,
+  "per_cycle_trailing_skew_quintile_mean_residual": {
+    "0": -3e-06,
+    "1": -0.000166,
+    "2": -6.2e-05,
+    "3": -4.7e-05,
+    "4": 0.000117
+  },
+  "lifecycle_probe_ceiling_for_reference": "r24 0.515, all others ~0.50",
+  "elapsed_s": 135.1
+}

@@ -1,0 +1,57 @@
+====================================================================================================
+  STEP 37: SLEEVE + 24h RETURN PREDICTION
+====================================================================================================
+  Training target: 24h forward β-residual (was 4h)
+  Execution: SAME V3.1 6-sleeve × 24h hold @ 4h cadence (production)
+
+Panel: 5,729,428 rows
+Building α_β_24h...
+  α_β_24h coverage: 5,525,178 (96.4%)
+  α_β_24h std: 0.1005  vs 4h std: 0.0174  (ratio ≈ √6 = 2.45)
+Built target_z_24h; cross-sym fold-0 median σ_idio_24h = 0.0854
+  target_z_24h std: 0.971
+
+Building V2 features (proper preprocessing)...
+  V2 features: 22
+
+Training Ridge on 24h target...
+    fold 0: IC_24h=+0.0030, 7s
+    fold 1: IC_24h=-0.0035, 11s
+    fold 2: IC_24h=+0.0036, 15s
+    fold 3: IC_24h=-0.0092, 19s
+    fold 4: IC_24h=+0.0042, 23s
+    fold 5: IC_24h=-0.0135, 27s
+    fold 6: IC_24h=-0.0146, 31s
+    fold 7: IC_24h=+0.0058, 34s
+    fold 8: IC_24h=+0.0021, 38s
+    fold 9: IC_24h=+0.0049, 43s
+
+Overall IC (pred_z vs α_β_24h): -0.0017
+
+====================================================================================================
+  Run SLEEVE + 24h TARGET — V3.1 6-sleeve overlay on 24h-trained Ridge
+====================================================================================================
+  A baseline (pred_z): Sharpe=+0.18 [-2.20,+2.29]  folds+=3/9  gross=+1.04  traded=1421/1620
+  B IC_signed (pred_B): Sharpe=+1.50 [-0.69,+3.61]  folds+=6/9  gross=+2.55  traded=1397/1620
+
+  LOFO on B (Sharpe = +1.50):
+    excl 1: +1.17 (Δ -0.33)
+    excl 2: +1.81 (Δ +0.32)
+    excl 3: +1.32 (Δ -0.17)
+    excl 4: +0.94 (Δ -0.56)  ← drives
+    excl 5: +1.56 (Δ +0.07)
+    excl 6: +1.60 (Δ +0.11)
+    excl 7: +1.56 (Δ +0.06)
+    excl 8: +1.67 (Δ +0.17)
+    excl 9: +1.83 (Δ +0.34)
+
+====================================================================================================
+  COMPARISON TO PRIOR LINEAR RESULTS
+====================================================================================================
+  4h target + V3.1 sleeve (Step 34/35 V2):  Sharpe +2.19 (placebo p99/p97)
+  4h target + raw 4h cycle  (Step 36 V2):    Sharpe -7.45 (1/9 folds+)
+  24h target + V3.1 sleeve (this script):    Sharpe +1.50 (6/9 folds+)
+
+  LGBM K=3 production (4h target + V3.1):    Sharpe +2.23 (reference)
+
+Total: 341s

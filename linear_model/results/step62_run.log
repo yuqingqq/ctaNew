@@ -1,0 +1,20 @@
+====================================================================================================
+  STEP 62: V2 Ridge on HL blue-chip (on_hl & vol>=$2M = 44 syms)
+====================================================================================================
+  universe: 44 symbols, 5,045,494 rows
+  ['AAVEUSDT', 'ADAUSDT', 'APTUSDT', 'ARBUSDT', 'ASTERUSDT', 'ATOMUSDT', 'AVAXUSDT', 'BIOUSDT', 'BNBUSDT', 'DOGEUSDT', 'ENAUSDT', 'ETHUSDT', 'FARTCOINUSDT', 'FILUSDT', 'HYPEUSDT', 'ICPUSDT', 'INJUSDT', 'JTOUSDT', 'JUPUSDT', 'LDOUSDT', 'LINKUSDT', 'LTCUSDT', 'NEARUSDT', 'ONDOUSDT', 'OPUSDT', 'PAXGUSDT', 'PENDLEUSDT', 'PENGUUSDT', 'PUMPUSDT', 'SOLUSDT', 'SPXUSDT', 'STRKUSDT', 'SUIUSDT', 'TAOUSDT', 'TIAUSDT', 'TONUSDT', 'TRUMPUSDT', 'UNIUSDT', 'VIRTUALUSDT', 'VVVUSDT', 'WIFUSDT', 'WLDUSDT', 'XRPUSDT', 'ZECUSDT']
+  σ_idio fold-0 median 0.01437; target_z std 1.004
+  V2 features: 22
+    fold 0: IC=-0.0124, n_train=336,069, n_test=363,274, 7s
+    fold 1: IC=-0.0237, n_train=529,055, n_test=371,520, 11s
+    fold 2: IC=-0.0218, n_train=728,694, n_test=371,520, 15s
+    fold 3: IC=-0.0166, n_train=923,610, n_test=375,312, 19s
+    fold 4: IC=-0.0040, n_train=1,127,410, n_test=380,160, 25s
+    fold 5: IC=-0.0034, n_train=1,325,027, n_test=380,160, 27s
+    fold 6: IC=-0.0242, n_train=1,523,797, n_test=380,160, 32s
+    fold 7: IC=-0.0288, n_train=1,732,290, n_test=380,160, 36s
+    fold 8: IC=+0.0088, n_train=1,937,443, n_test=380,160, 42s
+    fold 9: IC=-0.0034, n_train=2,139,523, n_test=380,160, 46s
+  overall per-cycle IC: -0.0129
+  saved predictions.parquet (3,762,586 rows, 44 syms)
+Total: 320s

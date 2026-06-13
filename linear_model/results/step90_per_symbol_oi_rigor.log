@@ -1,0 +1,16 @@
+================================================================================================
+  STEP 90 (Stage 4): rigorous per-symbol OI eval — the determinant
+  PRE-REG PASS (signed_nested): G1 CI-excl-0 G2 >placebo-p95 G3 est-consistent & no in-sample>>nested G4 >=60% syms + drop-top2
+================================================================================================
+  23 symbols; preds 1,720,438
+  ridge_insample   netSh=-0.73 CI[-3.12,+1.52] net=-0.61bps/cyc sym+=39% dropT2 Sh=-0.73 f+=5/9
+  signed_train     netSh=-0.91 CI[-3.70,+1.42] net=-0.68bps/cyc sym+=48% dropT2 Sh=-0.09 f+=3/9
+  signed_nested    netSh=-2.60 CI[-4.86,-0.29] net=-1.80bps/cyc sym+=26% dropT2 Sh=-1.88 f+=1/9
+  placebo(random per-sym sign) p95=+1.32 mean=-0.03 max=+1.82
+
+================================================================================================
+  GATES (signed_nested): G1 CI-excl-0=False | G2 >placebo-p95=False | G3 est-consistent&no-collapse=False | G4 >=60%syms&dropT2=False
+  VERDICT: FAIL (G1,G2,G3,G4) — nested-honest per-symbol OI signing netSh -2.60 CI[-4.86,-0.29], placebo p95 +1.32, ridge_insample -0.73. The V2/V3 per-symbol promise did not convert to a net-of-cost edge under honest (no-hindsight, no-in-sample-fit) evaluation — per-symbol OI is the same non-stationary/fit artifact, just per-symbol. Recorded honestly. Production LGBM unaffected.
+
+Saved /home/yuqing/ctaNew/linear_model/results/step90_per_symbol_oi_rigor
+Total: 22s

@@ -1,0 +1,4061 @@
+OI syms=51 flow syms=51 OIcols=11 FLcols=10
+leakguard max|IC| OI=0.0319 flow=0.0181 | coverage->group AUC OI=0.564 flow=0.574
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.14224
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.14204
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.14215
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.14222
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.14193
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[6]	valid_0's rmse: 1.1419
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.14161
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.14194
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.14183
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[7]	valid_0's rmse: 1.14111
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[62]	valid_0's rmse: 1.15211
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[54]	valid_0's rmse: 1.15194
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[57]	valid_0's rmse: 1.15225
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[53]	valid_0's rmse: 1.15208
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[21]	valid_0's rmse: 1.15262
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[90]	valid_0's rmse: 1.15216
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[50]	valid_0's rmse: 1.15206
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[6]	valid_0's rmse: 1.15293
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[47]	valid_0's rmse: 1.15244
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[71]	valid_0's rmse: 1.15233
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[18]	valid_0's rmse: 1.23034
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.23077
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[14]	valid_0's rmse: 1.23028
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[9]	valid_0's rmse: 1.23
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.23076
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[22]	valid_0's rmse: 1.23026
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[26]	valid_0's rmse: 1.23043
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[25]	valid_0's rmse: 1.23048
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[11]	valid_0's rmse: 1.23024
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[10]	valid_0's rmse: 1.23061
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[26]	valid_0's rmse: 2.08279
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[11]	valid_0's rmse: 2.08261
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 2.08272
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[10]	valid_0's rmse: 2.08233
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[15]	valid_0's rmse: 2.08254
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[47]	valid_0's rmse: 2.08229
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[18]	valid_0's rmse: 2.08209
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[63]	valid_0's rmse: 2.08225
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[9]	valid_0's rmse: 2.08279
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[17]	valid_0's rmse: 2.08236
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.26902
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.26921
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.26899
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.26899
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.26888
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[9]	valid_0's rmse: 1.26819
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[6]	valid_0's rmse: 1.26829
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[21]	valid_0's rmse: 1.26771
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[8]	valid_0's rmse: 1.26813
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[13]	valid_0's rmse: 1.26775
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.00893
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.00899
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[7]	valid_0's rmse: 1.00876
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.00893
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.00896
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[10]	valid_0's rmse: 1.00892
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.00879
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[8]	valid_0's rmse: 1.00888
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[9]	valid_0's rmse: 1.00888
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.00883
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.06941
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.06952
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.06942
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.06946
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.06948
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.06945
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.06955
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.06954
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.06956
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.06943
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[13]	valid_0's rmse: 1.21033
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[20]	valid_0's rmse: 1.21095
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[11]	valid_0's rmse: 1.21119
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[26]	valid_0's rmse: 1.21044
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[20]	valid_0's rmse: 1.21048
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.21101
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.21119
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.21079
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.21115
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.21123
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[56]	valid_0's rmse: 1.1272
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[11]	valid_0's rmse: 1.12739
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[25]	valid_0's rmse: 1.12708
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[16]	valid_0's rmse: 1.12741
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.12746
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[6]	valid_0's rmse: 1.12751
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.1275
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.12741
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.12741
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.12749
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.16205
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.16234
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[9]	valid_0's rmse: 1.16203
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[8]	valid_0's rmse: 1.16204
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.16224
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.16228
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[12]	valid_0's rmse: 1.16131
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.16202
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[12]	valid_0's rmse: 1.16168
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.16219
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[18]	valid_0's rmse: 1.15103
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[28]	valid_0's rmse: 1.14964
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[13]	valid_0's rmse: 1.15046
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[14]	valid_0's rmse: 1.15047
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[20]	valid_0's rmse: 1.1494
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[11]	valid_0's rmse: 1.15093
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[12]	valid_0's rmse: 1.15094
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[31]	valid_0's rmse: 1.15087
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[24]	valid_0's rmse: 1.1516
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[26]	valid_0's rmse: 1.15
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.21187
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.21184
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.21188
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.2117
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.21176
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[8]	valid_0's rmse: 1.21178
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[7]	valid_0's rmse: 1.21161
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[6]	valid_0's rmse: 1.2116
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.21172
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.2118
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[42]	valid_0's rmse: 2.0278
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[188]	valid_0's rmse: 2.02605
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[48]	valid_0's rmse: 2.02722
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[128]	valid_0's rmse: 2.02771
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[209]	valid_0's rmse: 2.02471
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[16]	valid_0's rmse: 2.02899
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[30]	valid_0's rmse: 2.02899
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[18]	valid_0's rmse: 2.02921
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[32]	valid_0's rmse: 2.02906
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[39]	valid_0's rmse: 2.02864
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.30379
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.30385
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.30373
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.30361
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.30364
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.30381
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.3036
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[6]	valid_0's rmse: 1.30354
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.30368
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.3036
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[10]	valid_0's rmse: 1.01926
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[6]	valid_0's rmse: 1.0195
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[14]	valid_0's rmse: 1.01919
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[10]	valid_0's rmse: 1.01941
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.01947
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[10]	valid_0's rmse: 1.01942
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[6]	valid_0's rmse: 1.01939
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.01936
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.0196
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.01944
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.12328
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.12342
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.12326
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.12349
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.12342
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.12333
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.12325
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.12338
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.12347
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.12331
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.27061
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.2707
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.27065
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.27068
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.27065
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.2704
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.27046
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.27058
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.27034
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.27066
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[6]	valid_0's rmse: 1.15841
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.15839
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.15848
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.15842
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.15847
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.15851
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.15851
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.15845
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.15831
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.15852
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.16633
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.16642
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.16629
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.16621
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.16624
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.16627
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[9]	valid_0's rmse: 1.16609
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.16634
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.16618
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.16628
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[8]	valid_0's rmse: 1.16828
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[11]	valid_0's rmse: 1.16761
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[11]	valid_0's rmse: 1.16816
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[15]	valid_0's rmse: 1.16821
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[13]	valid_0's rmse: 1.16801
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[10]	valid_0's rmse: 1.16769
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[44]	valid_0's rmse: 1.167
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.16836
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[26]	valid_0's rmse: 1.16762
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[19]	valid_0's rmse: 1.1681
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.21691
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.21699
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.21715
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.21706
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.21705
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.21712
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.21707
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.21708
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.21694
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[8]	valid_0's rmse: 1.21689
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 2.01639
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[38]	valid_0's rmse: 2.01617
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[45]	valid_0's rmse: 2.01566
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[32]	valid_0's rmse: 2.01631
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[11]	valid_0's rmse: 2.0164
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[14]	valid_0's rmse: 2.01692
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[17]	valid_0's rmse: 2.01677
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 2.01701
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 2.01699
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 2.01704
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.2755
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.27521
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.27544
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.27532
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.27503
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.27527
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[15]	valid_0's rmse: 1.27509
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[16]	valid_0's rmse: 1.27464
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[10]	valid_0's rmse: 1.27505
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[9]	valid_0's rmse: 1.27478
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.02581
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.02585
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[16]	valid_0's rmse: 1.02569
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[8]	valid_0's rmse: 1.02581
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[6]	valid_0's rmse: 1.02576
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[32]	valid_0's rmse: 1.02561
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[32]	valid_0's rmse: 1.02529
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[18]	valid_0's rmse: 1.02577
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[9]	valid_0's rmse: 1.02555
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.02572
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.11878
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[6]	valid_0's rmse: 1.11857
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.1186
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.11904
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.11886
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[12]	valid_0's rmse: 1.11899
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[8]	valid_0's rmse: 1.11881
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.1189
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[11]	valid_0's rmse: 1.11884
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.11899
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[104]	valid_0's rmse: 1.25656
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[226]	valid_0's rmse: 1.25658
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[146]	valid_0's rmse: 1.25585
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[72]	valid_0's rmse: 1.25804
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[101]	valid_0's rmse: 1.25722
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[86]	valid_0's rmse: 1.25668
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[11]	valid_0's rmse: 1.25925
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[21]	valid_0's rmse: 1.25985
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.25997
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.26059
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.09176
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.09183
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.09179
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.09187
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.09179
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.09184
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.0918
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.0918
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.09185
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.09183
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[12]	valid_0's rmse: 1.18769
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[11]	valid_0's rmse: 1.18733
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[10]	valid_0's rmse: 1.18713
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.18742
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[7]	valid_0's rmse: 1.18738
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[20]	valid_0's rmse: 1.18716
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[15]	valid_0's rmse: 1.18714
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[12]	valid_0's rmse: 1.18698
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[8]	valid_0's rmse: 1.18743
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[10]	valid_0's rmse: 1.18727
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[7]	valid_0's rmse: 1.14997
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.14993
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[24]	valid_0's rmse: 1.1493
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[53]	valid_0's rmse: 1.1501
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[28]	valid_0's rmse: 1.15014
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[98]	valid_0's rmse: 1.14938
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[25]	valid_0's rmse: 1.14898
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[33]	valid_0's rmse: 1.14815
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[27]	valid_0's rmse: 1.14919
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[23]	valid_0's rmse: 1.14918
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.17432
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.17422
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.17433
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[18]	valid_0's rmse: 1.17398
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.17425
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[23]	valid_0's rmse: 1.17387
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[12]	valid_0's rmse: 1.17341
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.1744
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[21]	valid_0's rmse: 1.17367
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[17]	valid_0's rmse: 1.17394
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.9097
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[8]	valid_0's rmse: 1.90965
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[8]	valid_0's rmse: 1.90947
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.90964
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.90964
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.90966
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.90963
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.90977
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.90964
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.90971
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.26801
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.26851
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[7]	valid_0's rmse: 1.26807
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.26807
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[8]	valid_0's rmse: 1.26844
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[35]	valid_0's rmse: 1.26679
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[45]	valid_0's rmse: 1.26653
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[22]	valid_0's rmse: 1.26698
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[15]	valid_0's rmse: 1.26694
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[17]	valid_0's rmse: 1.26716
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[10]	valid_0's rmse: 1.01769
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[7]	valid_0's rmse: 1.01791
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[12]	valid_0's rmse: 1.01782
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[7]	valid_0's rmse: 1.01778
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[6]	valid_0's rmse: 1.01784
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[14]	valid_0's rmse: 1.01764
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[24]	valid_0's rmse: 1.0175
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[21]	valid_0's rmse: 1.01742
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[15]	valid_0's rmse: 1.01771
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[25]	valid_0's rmse: 1.01759
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.09017
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.09012
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.09024
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.09026
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.09002
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[18]	valid_0's rmse: 1.08991
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[7]	valid_0's rmse: 1.08974
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[15]	valid_0's rmse: 1.08991
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[8]	valid_0's rmse: 1.0899
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[11]	valid_0's rmse: 1.08958
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[14]	valid_0's rmse: 1.28772
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.288
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.28802
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.28788
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[7]	valid_0's rmse: 1.28781
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[6]	valid_0's rmse: 1.28771
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.28774
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.28787
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[6]	valid_0's rmse: 1.28806
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.2876
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.1093
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.10934
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.10936
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.10926
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.10928
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.10937
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.10937
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.10931
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.1093
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.10936
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.13084
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[7]	valid_0's rmse: 1.13016
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.13066
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[8]	valid_0's rmse: 1.13017
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.13037
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.1306
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.13077
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.1307
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.13071
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.13076
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.09933
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.09945
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[8]	valid_0's rmse: 1.09928
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.09939
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.09944
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[6]	valid_0's rmse: 1.09922
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[6]	valid_0's rmse: 1.09885
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.0994
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.09946
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.09941
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.21547
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[26]	valid_0's rmse: 1.21541
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[43]	valid_0's rmse: 1.21507
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[17]	valid_0's rmse: 1.21471
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[7]	valid_0's rmse: 1.21537
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[7]	valid_0's rmse: 1.21548
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[13]	valid_0's rmse: 1.21568
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[11]	valid_0's rmse: 1.21513
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.21572
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[7]	valid_0's rmse: 1.21564
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[40]	valid_0's rmse: 1.92623
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[172]	valid_0's rmse: 1.92496
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[53]	valid_0's rmse: 1.92534
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[110]	valid_0's rmse: 1.92563
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[109]	valid_0's rmse: 1.92508
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[21]	valid_0's rmse: 1.92592
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[123]	valid_0's rmse: 1.92575
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[106]	valid_0's rmse: 1.92475
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[95]	valid_0's rmse: 1.92563
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[44]	valid_0's rmse: 1.92526
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[7]	valid_0's rmse: 1.2852
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.2851
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.28491
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.28532
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[8]	valid_0's rmse: 1.28493
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.28466
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[6]	valid_0's rmse: 1.28487
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[12]	valid_0's rmse: 1.285
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.28515
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[6]	valid_0's rmse: 1.28481
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[9]	valid_0's rmse: 1.02089
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.02092
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.02126
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[48]	valid_0's rmse: 1.02059
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[23]	valid_0's rmse: 1.02066
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.02113
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.02082
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.02127
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[7]	valid_0's rmse: 1.02094
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[7]	valid_0's rmse: 1.02075
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.08548
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.08539
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.08538
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.08538
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.08554
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.08525
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.08538
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.08551
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.0854
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.0855
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.23473
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.23486
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[9]	valid_0's rmse: 1.23466
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.23501
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[6]	valid_0's rmse: 1.23441
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[7]	valid_0's rmse: 1.23476
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.23495
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.23439
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.235
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.23475
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[6]	valid_0's rmse: 1.11648
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.11673
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[19]	valid_0's rmse: 1.11653
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[15]	valid_0's rmse: 1.1166
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[7]	valid_0's rmse: 1.11663
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[17]	valid_0's rmse: 1.11652
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[20]	valid_0's rmse: 1.1161
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[13]	valid_0's rmse: 1.11618
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[17]	valid_0's rmse: 1.11648
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.1167
+  A1_OI|lgbm: A0 +0.306 ARM +0.205 Δ -0.101 CI[-1.746, 1.599] -> no-portable-lift | underpowered (effect-size, not 'exhausted')
+  A1_OI|ridge: A0 -0.303 ARM +0.066 Δ +0.369 CI[-1.06, 2.148] -> no-portable-lift | underpowered (effect-size, not 'exhausted')
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.14299
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[10]	valid_0's rmse: 1.14299
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.14264
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[40]	valid_0's rmse: 1.14273
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.14266
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[8]	valid_0's rmse: 1.14279
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[9]	valid_0's rmse: 1.14274
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.14295
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.14278
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.14293
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[10]	valid_0's rmse: 1.15145
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[65]	valid_0's rmse: 1.1519
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[37]	valid_0's rmse: 1.15177
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[9]	valid_0's rmse: 1.15226
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[24]	valid_0's rmse: 1.15191
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[7]	valid_0's rmse: 1.15185
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[55]	valid_0's rmse: 1.15109
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[22]	valid_0's rmse: 1.15206
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[38]	valid_0's rmse: 1.15192
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[31]	valid_0's rmse: 1.15217
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[17]	valid_0's rmse: 1.15064
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[17]	valid_0's rmse: 1.15026
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[16]	valid_0's rmse: 1.15064
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[13]	valid_0's rmse: 1.15001
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[15]	valid_0's rmse: 1.15012
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[9]	valid_0's rmse: 1.15043
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[8]	valid_0's rmse: 1.15051
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[9]	valid_0's rmse: 1.15086
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[22]	valid_0's rmse: 1.15045
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[11]	valid_0's rmse: 1.15054
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[10]	valid_0's rmse: 2.08264
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 2.08277
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 2.08271
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[11]	valid_0's rmse: 2.08264
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[6]	valid_0's rmse: 2.08258
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[7]	valid_0's rmse: 2.08232
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[9]	valid_0's rmse: 2.08221
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[13]	valid_0's rmse: 2.08263
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 2.08282
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 2.08282
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.26763
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[6]	valid_0's rmse: 1.26742
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.26782
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.26782
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.26752
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[9]	valid_0's rmse: 1.26734
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.26757
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.26775
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.26761
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.26747
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.00703
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.00705
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.0069
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.00711
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.00706
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.0071
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.00712
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[9]	valid_0's rmse: 1.00691
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.00714
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.00709
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.06944
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.06947
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.06937
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.06955
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.06934
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.06954
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.06944
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.06944
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.06961
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.06952
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[6]	valid_0's rmse: 1.21108
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[7]	valid_0's rmse: 1.21094
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[12]	valid_0's rmse: 1.21086
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[10]	valid_0's rmse: 1.21097
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[10]	valid_0's rmse: 1.21057
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[6]	valid_0's rmse: 1.21154
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[14]	valid_0's rmse: 1.21077
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[13]	valid_0's rmse: 1.21066
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.21153
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.21118
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.12582
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[11]	valid_0's rmse: 1.12591
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.12599
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.12593
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[49]	valid_0's rmse: 1.12581
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[9]	valid_0's rmse: 1.12584
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[7]	valid_0's rmse: 1.12587
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[30]	valid_0's rmse: 1.12587
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.1259
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[10]	valid_0's rmse: 1.12589
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.16251
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[8]	valid_0's rmse: 1.16258
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[11]	valid_0's rmse: 1.1622
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[17]	valid_0's rmse: 1.16256
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[15]	valid_0's rmse: 1.1622
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[18]	valid_0's rmse: 1.16214
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[38]	valid_0's rmse: 1.1622
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[6]	valid_0's rmse: 1.16237
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[22]	valid_0's rmse: 1.16268
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[18]	valid_0's rmse: 1.16214
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[34]	valid_0's rmse: 1.14991
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[27]	valid_0's rmse: 1.14954
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[37]	valid_0's rmse: 1.15022
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[26]	valid_0's rmse: 1.15016
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[37]	valid_0's rmse: 1.14918
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[30]	valid_0's rmse: 1.14947
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[20]	valid_0's rmse: 1.14958
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[24]	valid_0's rmse: 1.15069
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[25]	valid_0's rmse: 1.14902
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[38]	valid_0's rmse: 1.15036
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[8]	valid_0's rmse: 1.14239
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[19]	valid_0's rmse: 1.14188
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.14241
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[6]	valid_0's rmse: 1.14179
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[17]	valid_0's rmse: 1.14194
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.14215
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[18]	valid_0's rmse: 1.14192
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.14214
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[18]	valid_0's rmse: 1.14163
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[17]	valid_0's rmse: 1.14198
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[50]	valid_0's rmse: 2.0281
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[65]	valid_0's rmse: 2.02712
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[42]	valid_0's rmse: 2.02752
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[56]	valid_0's rmse: 2.02771
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[178]	valid_0's rmse: 2.02597
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[43]	valid_0's rmse: 2.02732
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[41]	valid_0's rmse: 2.02754
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[78]	valid_0's rmse: 2.02701
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[115]	valid_0's rmse: 2.02677
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[82]	valid_0's rmse: 2.02751
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.30368
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.30366
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.30353
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.30355
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.3038
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.3036
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.30367
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.30369
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.30309
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.30373
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[10]	valid_0's rmse: 1.01907
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[13]	valid_0's rmse: 1.01913
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[26]	valid_0's rmse: 1.01879
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.01913
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[20]	valid_0's rmse: 1.01877
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.01929
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[15]	valid_0's rmse: 1.01905
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[14]	valid_0's rmse: 1.01904
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[19]	valid_0's rmse: 1.01916
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[11]	valid_0's rmse: 1.01919
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.1232
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.12338
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.12321
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.12314
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[6]	valid_0's rmse: 1.12316
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.12336
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.12342
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.12328
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.12324
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[6]	valid_0's rmse: 1.12335
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.27074
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.27054
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.27068
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.27065
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[6]	valid_0's rmse: 1.27054
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.27089
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.2706
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[6]	valid_0's rmse: 1.27071
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.27065
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[8]	valid_0's rmse: 1.27043
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[7]	valid_0's rmse: 1.15709
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.15715
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[10]	valid_0's rmse: 1.15714
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.15714
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.15714
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[11]	valid_0's rmse: 1.15712
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.15713
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.15718
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.15714
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.15714
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.1659
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.1658
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.16603
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[9]	valid_0's rmse: 1.16537
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.16615
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.16572
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[6]	valid_0's rmse: 1.16585
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.16603
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[15]	valid_0's rmse: 1.16547
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.16596
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[20]	valid_0's rmse: 1.16789
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[21]	valid_0's rmse: 1.16682
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[16]	valid_0's rmse: 1.16797
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[22]	valid_0's rmse: 1.16754
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[14]	valid_0's rmse: 1.16772
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[41]	valid_0's rmse: 1.16711
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[32]	valid_0's rmse: 1.1672
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[21]	valid_0's rmse: 1.1677
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[25]	valid_0's rmse: 1.16697
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[19]	valid_0's rmse: 1.16852
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.14414
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[15]	valid_0's rmse: 1.14353
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[18]	valid_0's rmse: 1.14386
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.14401
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[17]	valid_0's rmse: 1.14391
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.14409
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.14396
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[9]	valid_0's rmse: 1.14402
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[7]	valid_0's rmse: 1.14376
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[9]	valid_0's rmse: 1.14394
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[32]	valid_0's rmse: 2.01638
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[33]	valid_0's rmse: 2.01638
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[25]	valid_0's rmse: 2.01656
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[18]	valid_0's rmse: 2.01613
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[19]	valid_0's rmse: 2.01604
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[41]	valid_0's rmse: 2.01602
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[41]	valid_0's rmse: 2.01629
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[23]	valid_0's rmse: 2.0158
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[13]	valid_0's rmse: 2.0162
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[7]	valid_0's rmse: 2.01662
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.27363
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.27372
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.27419
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.27388
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.27413
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.27409
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.27365
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.27396
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[10]	valid_0's rmse: 1.27345
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.27396
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[8]	valid_0's rmse: 1.02389
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.02391
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.02375
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[6]	valid_0's rmse: 1.02401
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[6]	valid_0's rmse: 1.02394
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.02402
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.024
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[14]	valid_0's rmse: 1.02373
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[32]	valid_0's rmse: 1.02382
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[12]	valid_0's rmse: 1.02398
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.11886
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.11876
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.11891
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.11881
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.11888
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.11903
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.11875
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[12]	valid_0's rmse: 1.11866
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.11898
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[6]	valid_0's rmse: 1.11826
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[67]	valid_0's rmse: 1.25549
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[168]	valid_0's rmse: 1.25634
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[105]	valid_0's rmse: 1.25554
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[85]	valid_0's rmse: 1.25695
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[138]	valid_0's rmse: 1.25571
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[58]	valid_0's rmse: 1.25676
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[143]	valid_0's rmse: 1.25778
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[81]	valid_0's rmse: 1.25668
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[88]	valid_0's rmse: 1.25533
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[89]	valid_0's rmse: 1.25769
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.09066
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.09068
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.09068
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.09068
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.09069
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.09067
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.09067
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.09074
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.09067
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.09067
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.18768
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[18]	valid_0's rmse: 1.18708
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[18]	valid_0's rmse: 1.18759
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[15]	valid_0's rmse: 1.18695
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[11]	valid_0's rmse: 1.1874
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[24]	valid_0's rmse: 1.1874
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[20]	valid_0's rmse: 1.187
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[22]	valid_0's rmse: 1.18736
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[15]	valid_0's rmse: 1.18729
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[7]	valid_0's rmse: 1.18721
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[37]	valid_0's rmse: 1.14984
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[15]	valid_0's rmse: 1.15014
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[68]	valid_0's rmse: 1.14994
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[16]	valid_0's rmse: 1.14969
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[23]	valid_0's rmse: 1.15009
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[100]	valid_0's rmse: 1.14928
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[16]	valid_0's rmse: 1.15005
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[23]	valid_0's rmse: 1.14986
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[21]	valid_0's rmse: 1.14957
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[12]	valid_0's rmse: 1.14948
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[10]	valid_0's rmse: 1.11784
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.11797
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[12]	valid_0's rmse: 1.11783
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[9]	valid_0's rmse: 1.11796
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.11796
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[12]	valid_0's rmse: 1.11786
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[6]	valid_0's rmse: 1.11785
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[9]	valid_0's rmse: 1.11784
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.11795
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[9]	valid_0's rmse: 1.1178
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[10]	valid_0's rmse: 1.90945
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.90955
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[9]	valid_0's rmse: 1.90939
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[33]	valid_0's rmse: 1.90938
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.90966
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[15]	valid_0's rmse: 1.90924
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[6]	valid_0's rmse: 1.90943
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[21]	valid_0's rmse: 1.90953
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.90959
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[13]	valid_0's rmse: 1.90911
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[8]	valid_0's rmse: 1.26658
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.2668
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[9]	valid_0's rmse: 1.26666
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.26673
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.26678
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.26687
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[17]	valid_0's rmse: 1.26589
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.26683
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[7]	valid_0's rmse: 1.26679
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.26689
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[10]	valid_0's rmse: 1.016
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.0161
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[28]	valid_0's rmse: 1.01587
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[7]	valid_0's rmse: 1.0161
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[12]	valid_0's rmse: 1.01604
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.01611
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.01615
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[11]	valid_0's rmse: 1.01601
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.01613
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[34]	valid_0's rmse: 1.01593
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.09016
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.09035
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.09019
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.08995
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.09025
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.0901
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.09022
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.08998
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.09006
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.09018
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[34]	valid_0's rmse: 1.28721
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[19]	valid_0's rmse: 1.28761
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[15]	valid_0's rmse: 1.28716
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[11]	valid_0's rmse: 1.28765
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[17]	valid_0's rmse: 1.28745
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[9]	valid_0's rmse: 1.28807
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.288
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[9]	valid_0's rmse: 1.28796
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[16]	valid_0's rmse: 1.28807
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.28804
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.10809
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.10811
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.10808
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.10803
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.10811
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.10811
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.10808
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.10799
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.10801
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.10802
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.13086
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[13]	valid_0's rmse: 1.13045
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[12]	valid_0's rmse: 1.13098
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.13096
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.13081
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[11]	valid_0's rmse: 1.13064
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[16]	valid_0's rmse: 1.13052
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[6]	valid_0's rmse: 1.1311
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.13113
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.13089
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.09922
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.09937
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.09941
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.09929
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.0995
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.09956
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.09943
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.09928
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.09951
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.09946
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[16]	valid_0's rmse: 1.14749
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[24]	valid_0's rmse: 1.14731
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[82]	valid_0's rmse: 1.14741
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[10]	valid_0's rmse: 1.14794
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[13]	valid_0's rmse: 1.14752
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[18]	valid_0's rmse: 1.14764
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[24]	valid_0's rmse: 1.14749
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[20]	valid_0's rmse: 1.14789
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[15]	valid_0's rmse: 1.14726
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[6]	valid_0's rmse: 1.14758
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[36]	valid_0's rmse: 1.92706
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[19]	valid_0's rmse: 1.92658
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[33]	valid_0's rmse: 1.92629
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[48]	valid_0's rmse: 1.9264
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[23]	valid_0's rmse: 1.92662
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[31]	valid_0's rmse: 1.92678
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[30]	valid_0's rmse: 1.92674
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[86]	valid_0's rmse: 1.92523
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[48]	valid_0's rmse: 1.92699
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[51]	valid_0's rmse: 1.9268
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[7]	valid_0's rmse: 1.28349
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[7]	valid_0's rmse: 1.28326
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.28363
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[16]	valid_0's rmse: 1.28322
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[10]	valid_0's rmse: 1.28357
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.28373
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.2835
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.28373
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[11]	valid_0's rmse: 1.28403
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[10]	valid_0's rmse: 1.28386
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[20]	valid_0's rmse: 1.01918
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[62]	valid_0's rmse: 1.01879
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.01921
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[44]	valid_0's rmse: 1.01889
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[24]	valid_0's rmse: 1.01888
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.01908
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[41]	valid_0's rmse: 1.01859
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[11]	valid_0's rmse: 1.01932
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[69]	valid_0's rmse: 1.01889
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[23]	valid_0's rmse: 1.01919
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.08546
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.08559
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.0856
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.0855
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.08541
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.08542
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.08563
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.08557
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.08533
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.08533
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[8]	valid_0's rmse: 1.23469
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[7]	valid_0's rmse: 1.23463
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[13]	valid_0's rmse: 1.23418
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[11]	valid_0's rmse: 1.23459
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.23483
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[6]	valid_0's rmse: 1.23455
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[20]	valid_0's rmse: 1.23451
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.23479
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[9]	valid_0's rmse: 1.23497
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[7]	valid_0's rmse: 1.23458
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[12]	valid_0's rmse: 1.11659
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.1165
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.11656
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.11648
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.1166
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[9]	valid_0's rmse: 1.11642
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.11656
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[21]	valid_0's rmse: 1.11631
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[10]	valid_0's rmse: 1.11635
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.11638
+  A2_FLOW|lgbm: A0 -0.172 ARM -0.227 Δ -0.055 CI[-1.501, 1.406] -> no-portable-lift | underpowered (effect-size, not 'exhausted')
+  A2_FLOW|ridge: A0 +0.083 ARM +0.116 Δ +0.033 CI[-1.213, 1.443] -> no-portable-lift | underpowered (effect-size, not 'exhausted')
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[10]	valid_0's rmse: 1.14206
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.14204
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.14173
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[8]	valid_0's rmse: 1.14213
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.142
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.14195
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.14197
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.14208
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.14212
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[11]	valid_0's rmse: 1.14169
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[70]	valid_0's rmse: 1.15219
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[30]	valid_0's rmse: 1.15196
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[34]	valid_0's rmse: 1.15255
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[25]	valid_0's rmse: 1.15211
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[54]	valid_0's rmse: 1.15192
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[60]	valid_0's rmse: 1.15248
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[65]	valid_0's rmse: 1.15219
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[26]	valid_0's rmse: 1.15282
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[49]	valid_0's rmse: 1.15281
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[7]	valid_0's rmse: 1.15316
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[18]	valid_0's rmse: 1.23061
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[19]	valid_0's rmse: 1.23044
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[16]	valid_0's rmse: 1.2305
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[6]	valid_0's rmse: 1.2301
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.23088
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.23068
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[19]	valid_0's rmse: 1.23028
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[24]	valid_0's rmse: 1.23048
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[9]	valid_0's rmse: 1.23083
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[6]	valid_0's rmse: 1.23029
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[32]	valid_0's rmse: 2.08244
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[14]	valid_0's rmse: 2.08251
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[31]	valid_0's rmse: 2.08217
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 2.08278
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[44]	valid_0's rmse: 2.08272
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[8]	valid_0's rmse: 2.08268
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 2.08274
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[22]	valid_0's rmse: 2.08234
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 2.08279
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 2.08296
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.26904
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.26908
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.269
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.26917
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.2692
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[11]	valid_0's rmse: 1.26856
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.2683
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[12]	valid_0's rmse: 1.26823
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[15]	valid_0's rmse: 1.26848
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.26877
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.00888
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.00895
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.00893
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[7]	valid_0's rmse: 1.00889
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.00894
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.00895
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[11]	valid_0's rmse: 1.00893
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.0089
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.00898
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.00894
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.06946
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.06951
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.06949
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.06954
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.06936
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.06952
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.06953
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.06952
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.06957
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.06951
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[10]	valid_0's rmse: 1.2111
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[19]	valid_0's rmse: 1.21148
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[18]	valid_0's rmse: 1.21122
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[11]	valid_0's rmse: 1.21077
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[14]	valid_0's rmse: 1.21077
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.21136
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[9]	valid_0's rmse: 1.21106
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[14]	valid_0's rmse: 1.21105
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[15]	valid_0's rmse: 1.21136
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.21148
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.12736
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[21]	valid_0's rmse: 1.12721
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[13]	valid_0's rmse: 1.12726
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[99]	valid_0's rmse: 1.12705
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.12753
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.12756
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.12759
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.12758
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.12751
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.12744
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.16224
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.16211
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[11]	valid_0's rmse: 1.16155
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.16215
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.16233
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.16198
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[31]	valid_0's rmse: 1.16216
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[10]	valid_0's rmse: 1.16202
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.16199
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[13]	valid_0's rmse: 1.16159
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[20]	valid_0's rmse: 1.1504
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[40]	valid_0's rmse: 1.14935
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[25]	valid_0's rmse: 1.15105
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[21]	valid_0's rmse: 1.15042
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[20]	valid_0's rmse: 1.15013
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[18]	valid_0's rmse: 1.15026
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[15]	valid_0's rmse: 1.15025
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[33]	valid_0's rmse: 1.15133
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[23]	valid_0's rmse: 1.15061
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[21]	valid_0's rmse: 1.14965
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.21179
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.21175
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.21186
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[6]	valid_0's rmse: 1.21139
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.21183
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.21161
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.21187
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.21173
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[6]	valid_0's rmse: 1.21156
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.21172
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[214]	valid_0's rmse: 2.02757
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[182]	valid_0's rmse: 2.0268
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[28]	valid_0's rmse: 2.02686
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[38]	valid_0's rmse: 2.02689
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[108]	valid_0's rmse: 2.02683
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[43]	valid_0's rmse: 2.02885
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[46]	valid_0's rmse: 2.0293
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[27]	valid_0's rmse: 2.02876
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[19]	valid_0's rmse: 2.02934
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[174]	valid_0's rmse: 2.02808
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.30361
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.30393
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.3037
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.30369
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.30359
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.30332
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.30362
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.30359
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.30367
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.30314
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.01945
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.01934
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.01941
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[7]	valid_0's rmse: 1.01936
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.01947
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.01954
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.01948
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.01947
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.01946
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.01942
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.12332
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.1234
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.12323
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.12354
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[6]	valid_0's rmse: 1.12309
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.1233
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.1231
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[14]	valid_0's rmse: 1.12295
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.12337
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.12333
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.27093
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.2709
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.27089
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.27093
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.27113
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.271
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.27088
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.27086
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.27087
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.27103
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.1584
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.15846
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.15844
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[15]	valid_0's rmse: 1.15833
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.15845
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.15836
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.15838
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[9]	valid_0's rmse: 1.15829
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[10]	valid_0's rmse: 1.15821
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.1586
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.16633
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.16642
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.16629
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.16621
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.16624
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[6]	valid_0's rmse: 1.16628
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.16612
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.16634
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.16601
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.16632
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[8]	valid_0's rmse: 1.16828
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[11]	valid_0's rmse: 1.16761
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[11]	valid_0's rmse: 1.16816
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[15]	valid_0's rmse: 1.16821
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[13]	valid_0's rmse: 1.16801
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[19]	valid_0's rmse: 1.16752
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[45]	valid_0's rmse: 1.16723
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[9]	valid_0's rmse: 1.16745
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[43]	valid_0's rmse: 1.1683
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[16]	valid_0's rmse: 1.16762
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.2171
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.21704
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.21715
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.21691
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.21707
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[6]	valid_0's rmse: 1.21706
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.21709
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.21719
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.21712
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.217
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[38]	valid_0's rmse: 2.01633
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[14]	valid_0's rmse: 2.01618
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[44]	valid_0's rmse: 2.01621
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[24]	valid_0's rmse: 2.01671
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[22]	valid_0's rmse: 2.01619
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 2.01696
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 2.01705
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 2.01692
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 2.01697
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 2.01682
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.27538
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.27531
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.27543
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.27536
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.2753
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[16]	valid_0's rmse: 1.27404
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.27533
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.2752
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.27524
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[12]	valid_0's rmse: 1.27448
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[8]	valid_0's rmse: 1.02578
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.02581
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[16]	valid_0's rmse: 1.02567
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.02579
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[19]	valid_0's rmse: 1.02572
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[23]	valid_0's rmse: 1.02554
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[28]	valid_0's rmse: 1.02489
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[9]	valid_0's rmse: 1.02567
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[16]	valid_0's rmse: 1.02569
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[22]	valid_0's rmse: 1.02569
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.11882
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.11878
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.11881
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.11881
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.11893
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.11881
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.11891
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[9]	valid_0's rmse: 1.11906
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.11899
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[15]	valid_0's rmse: 1.11857
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[94]	valid_0's rmse: 1.25788
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[173]	valid_0's rmse: 1.25733
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[18]	valid_0's rmse: 1.2604
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[168]	valid_0's rmse: 1.25958
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[104]	valid_0's rmse: 1.25958
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[32]	valid_0's rmse: 1.25935
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.26034
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[9]	valid_0's rmse: 1.25995
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[7]	valid_0's rmse: 1.26088
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[59]	valid_0's rmse: 1.25955
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.0917
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.09178
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.09177
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.09183
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.09181
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.09185
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.09182
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.09183
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.0918
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.09178
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.18777
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[18]	valid_0's rmse: 1.18736
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[12]	valid_0's rmse: 1.18728
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.18746
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.18756
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[6]	valid_0's rmse: 1.18742
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.18754
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.18769
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.18758
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[10]	valid_0's rmse: 1.18723
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[28]	valid_0's rmse: 1.15003
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.14994
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[24]	valid_0's rmse: 1.14917
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.1503
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[31]	valid_0's rmse: 1.14995
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[21]	valid_0's rmse: 1.14981
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[19]	valid_0's rmse: 1.14919
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[15]	valid_0's rmse: 1.14915
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[58]	valid_0's rmse: 1.14915
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[28]	valid_0's rmse: 1.14886
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.17438
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.17421
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[6]	valid_0's rmse: 1.17406
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[8]	valid_0's rmse: 1.17401
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.17405
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[24]	valid_0's rmse: 1.17378
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[9]	valid_0's rmse: 1.17384
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.17416
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[28]	valid_0's rmse: 1.1733
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[12]	valid_0's rmse: 1.17383
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[8]	valid_0's rmse: 1.9096
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.90959
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[8]	valid_0's rmse: 1.90946
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.90962
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[8]	valid_0's rmse: 1.90967
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.90974
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.90978
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[7]	valid_0's rmse: 1.90962
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.90973
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.90965
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.26807
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.26804
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.26829
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.26814
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[6]	valid_0's rmse: 1.26815
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[16]	valid_0's rmse: 1.2676
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[24]	valid_0's rmse: 1.26726
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[39]	valid_0's rmse: 1.26693
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[16]	valid_0's rmse: 1.2671
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[12]	valid_0's rmse: 1.26737
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[7]	valid_0's rmse: 1.01788
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.01783
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[8]	valid_0's rmse: 1.01772
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[9]	valid_0's rmse: 1.01781
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[20]	valid_0's rmse: 1.0177
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[15]	valid_0's rmse: 1.01772
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[25]	valid_0's rmse: 1.01708
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[15]	valid_0's rmse: 1.0178
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[23]	valid_0's rmse: 1.01771
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[57]	valid_0's rmse: 1.01752
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.09019
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.09031
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.09009
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.09005
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.09022
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.09005
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[10]	valid_0's rmse: 1.08986
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[14]	valid_0's rmse: 1.08984
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[26]	valid_0's rmse: 1.0899
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[14]	valid_0's rmse: 1.08964
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[12]	valid_0's rmse: 1.28785
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.28842
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.28843
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[10]	valid_0's rmse: 1.28778
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[9]	valid_0's rmse: 1.28803
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[10]	valid_0's rmse: 1.2883
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.28838
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[8]	valid_0's rmse: 1.28819
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.28816
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.28838
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.10928
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.10933
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.10931
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.10924
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.10927
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.10929
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.10936
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.10927
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.10938
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.10934
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.1308
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[7]	valid_0's rmse: 1.13022
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.13028
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[8]	valid_0's rmse: 1.1302
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.13065
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.13049
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.13088
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[9]	valid_0's rmse: 1.13052
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[7]	valid_0's rmse: 1.13083
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.13041
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.09929
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[8]	valid_0's rmse: 1.09935
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.09928
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.09947
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.09939
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[6]	valid_0's rmse: 1.09909
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[16]	valid_0's rmse: 1.09887
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.09938
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.0994
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[6]	valid_0's rmse: 1.09922
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[15]	valid_0's rmse: 1.21533
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[15]	valid_0's rmse: 1.21523
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[17]	valid_0's rmse: 1.2156
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[11]	valid_0's rmse: 1.21559
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[8]	valid_0's rmse: 1.21552
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.21537
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.21563
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[9]	valid_0's rmse: 1.2157
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.21564
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[12]	valid_0's rmse: 1.21536
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[38]	valid_0's rmse: 1.92593
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[7]	valid_0's rmse: 1.92631
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[25]	valid_0's rmse: 1.92613
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[67]	valid_0's rmse: 1.92557
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[21]	valid_0's rmse: 1.92588
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[143]	valid_0's rmse: 1.92567
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[32]	valid_0's rmse: 1.92591
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[26]	valid_0's rmse: 1.92634
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[53]	valid_0's rmse: 1.92611
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[79]	valid_0's rmse: 1.92564
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.28519
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.28531
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.28486
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.28527
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.28522
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.28488
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.28525
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[9]	valid_0's rmse: 1.28484
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[6]	valid_0's rmse: 1.28468
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.2851
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[8]	valid_0's rmse: 1.02077
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[11]	valid_0's rmse: 1.02077
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[60]	valid_0's rmse: 1.02064
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.02089
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[14]	valid_0's rmse: 1.02089
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[9]	valid_0's rmse: 1.02047
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[11]	valid_0's rmse: 1.02095
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.02087
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.02084
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.0209
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.08548
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.08541
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.08551
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.08541
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.08528
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.08527
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.08546
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.08532
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.08554
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.08543
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.23495
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.23478
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[10]	valid_0's rmse: 1.23489
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[7]	valid_0's rmse: 1.23463
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[6]	valid_0's rmse: 1.23449
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.23471
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[6]	valid_0's rmse: 1.23489
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.23485
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.23499
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.23473
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[8]	valid_0's rmse: 1.11644
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.11663
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.11664
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[6]	valid_0's rmse: 1.11668
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[7]	valid_0's rmse: 1.11672
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[30]	valid_0's rmse: 1.11661
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.11676
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[12]	valid_0's rmse: 1.11644
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[12]	valid_0's rmse: 1.11638
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[20]	valid_0's rmse: 1.1164
+  A3_OIFLOW|lgbm: A0 -0.116 ARM +0.107 Δ +0.223 CI[-1.264, 1.97] -> no-portable-lift | underpowered (effect-size, not 'exhausted')
+  A3_OIFLOW|ridge: A0 +0.645 ARM +0.483 Δ -0.162 CI[-1.737, 1.329] -> no-portable-lift | underpowered (effect-size, not 'exhausted')
+
+OI/FLOW test (full) done [4065.8s]
+OIFLOW_DONE

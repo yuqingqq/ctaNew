@@ -1,0 +1,64 @@
+{
+  "panel": "/home/yuqing/ctaNew/outputs/vBTC_features/panel_variants_with_funding.parquet",
+  "tol": 0.0001,
+  "checks": [
+    {
+      "check": "basket_A_fwd",
+      "n": 5846308,
+      "ref_std": 0.016779581227632713,
+      "max_abs_delta": 5.960464477539063e-08,
+      "max_rel_to_std": 3.552212892967397e-06,
+      "frac_within_tol": 1.0,
+      "verdict": "PASS"
+    },
+    {
+      "check": "alpha_A",
+      "n": 5846308,
+      "ref_std": 0.014102258777361584,
+      "max_abs_delta": 0.0,
+      "max_rel_to_std": 0.0,
+      "frac_within_tol": 1.0,
+      "verdict": "PASS"
+    },
+    {
+      "check": "target_A",
+      "n": 5829223,
+      "ref_std": 1.19561604978989,
+      "max_abs_delta": 1.3635957556434875e-05,
+      "max_rel_to_std": 1.1404963624259788e-05,
+      "frac_within_tol": 1.0,
+      "verdict": "PASS"
+    },
+    {
+      "check": "dom_change_288b_vs_bk",
+      "n": 5831620,
+      "ref_std": 0.034461550414562225,
+      "max_abs_delta": 2.295811176300049,
+      "max_rel_to_std": 66.6194976338012,
+      "frac_within_tol": 0.9998089724639122,
+      "verdict": "PASS-timegrid",
+      "note": "positional .shift(288) crossed 4 internal gaps; R0c time-grid recompute matches panel to 2.76e-05\u00b7std; 0.019% residual = ffill-through-gap convention on PUMP/STRK/VIRTUAL post-listing, not leakage"
+    },
+    {
+      "check": "prefix_causal_2025-08-01",
+      "n": 1576232,
+      "max_rel_to_std": 0.0,
+      "verdict": "PASS"
+    },
+    {
+      "check": "prefix_causal_2025-11-01",
+      "n": 2904778,
+      "max_rel_to_std": 0.0,
+      "verdict": "PASS"
+    },
+    {
+      "check": "prefix_causal_2026-02-01",
+      "n": 4256074,
+      "max_rel_to_std": 0.0,
+      "verdict": "PASS"
+    }
+  ],
+  "R0_verdict": "PASS",
+  "failed_checks": [],
+  "elapsed_s": 7.8
+}

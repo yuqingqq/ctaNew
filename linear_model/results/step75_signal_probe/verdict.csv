@@ -1,0 +1,2 @@
+sign_persistence_pass,n_persist_top10,mean_rho_top10,multivariate_reference_pass,verdict
+False,10,0.04852953163647737,False,"BOTH FAIL -> orientation/model layer unlikely the fix; no persistent cross-sectional signal in V2 at 4-24h. Skip Phase 2/3; Phase 4 only under the kill clock, or stop."

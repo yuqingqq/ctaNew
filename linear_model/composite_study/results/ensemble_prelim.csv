@@ -1,0 +1,2 @@
+corr,lin_sh,v31_sh,best_blend_sh,best_w_lin,lift_vs_v31,w_mv,promising,verdict
+0.05620950759487136,1.16843839434872,0.26031114790114923,1.1807215509750488,0.75,0.9204104030738995,0.049160254346125656,True,PRELIMINARY PULSE: low corr (+0.06) + in-sample blend lift +0.92 ≥ +0.3. WARRANTS the clean harness rebuild + nested-OOS §4 (this number is in-sample/contaminated — NOT a verdict; nested + clean σ_idio could erase it).

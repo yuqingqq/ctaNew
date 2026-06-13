@@ -1,0 +1,7 @@
+variant,alpha_grid_size,free_symid_intercept,l1_ratio,train_ic,sharpe,ci_lo,ci_hi,totPnL,maxDD,folds_pos,concentration,alpha_picks_min,alpha_picks_max,alpha_picks_median,train_time_s,error
+A1_baseline,5,False,,0.007,1.22,-0.72,3.0,5438,-3302,5/9,76%,1.0,10.0,10.0,250.0,
+A2_wider_alpha,12,False,,0.007,1.26,-0.68,3.06,5625,-3302,5/9,74%,3.0,30.0,10.0,400.0,
+A3_wider_freesymid,12,True,,0.0081,-0.91,-2.92,1.0,-3484,-4261,2/9,98%,300.0,300.0,300.0,199.0,
+A4_enet_01,,,,,,,,,,,,,,,,"Gram matrix passed in via 'precompute' parameter did not pass validation when a single element was checked - please check that it was computed properly. For element (34,35) we computed -660.4717407226562 but the user-supplied value was -660.6026000976562."
+A5_enet_05,,,,,,,,,,,,,,,,"Gram matrix passed in via 'precompute' parameter did not pass validation when a single element was checked - please check that it was computed properly. For element (34,35) we computed -660.4717407226562 but the user-supplied value was -660.6026000976562."
+A6_enet_09,,,,,,,,,,,,,,,,"Gram matrix passed in via 'precompute' parameter did not pass validation when a single element was checked - please check that it was computed properly. For element (34,35) we computed -660.4717407226562 but the user-supplied value was -660.6026000976562."

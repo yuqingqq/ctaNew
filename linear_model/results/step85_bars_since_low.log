@@ -1,0 +1,17 @@
+====================================================================================================
+  STEP 85: bars_since_low payoff (hl42, volaug2) — Step-84 G4 lesson baked in
+  GATE: ridge ρ>=+0.6 & K3>=+9.0 & >=6/9 & dropT2>0 & top5<= 60%  AND  signed_equal K3 same-sign & >0
+====================================================================================================
+  hl42: 42 syms, 2460 cyc | fc=23 (22 V2 + bsl) +9 vol +13 INT (distlow active=True)
+  v2_22               (22f) ridge: ρ=+0.552 K3= +5.94 dT2= +4.84 f+=7/9 top5= 45% | eq K3= -2.03 nnls K3= +6.77 | FAIL (est-inconsistent)
+  v2_23_with_bsl      (23f) ridge: ρ=+0.503 K3= +6.17 dT2= +4.99 f+=7/9 top5= 44% | eq K3= -2.13 nnls K3= +6.79 | FAIL (est-inconsistent)
+  trend_ext           ( 7f) ridge: ρ=+0.067 K3= +0.93 dT2= -2.87 f+=4/9 top5= 66% | eq K3= -5.76 nnls K3= +2.80 | FAIL (est-inconsistent)
+  bsl_distlow         ( 2f) ridge: ρ=-0.273 K3= -2.17 dT2= -6.87 f+=4/9 top5= 52% | eq K3= +3.06 nnls K3= -3.97 | FAIL (est-inconsistent)
+  sqbtcrel_plus_int   (22f) ridge: ρ=+0.467 K3= +7.28 dT2= +4.97 f+=7/9 top5= 45% | eq K3= -5.74 nnls K3= +2.57 | FAIL (est-inconsistent)
+  v2_23_plus_int      (36f) ridge: ρ=+0.576 K3= +4.75 dT2= +2.81 f+=6/9 top5= 49% | eq K3= -2.61 nnls K3= +1.42 | FAIL (est-inconsistent)
+
+====================================================================================================
+  VERDICT: No config clears the gate (incl the Step-84 estimator-consistency requirement). best bsl-config v2_23_with_bsl ridge K3 +6.17 vs v2_all +5.94 (Δ +0.22); eq -2.13. bars_since_low does not add a robust tradable payoff at 4h on free data. The linear line stays sub-cost; feature engineering (orientation, universe, groups, volume, interactions, non-monotone distance-from-extreme) is exhausted under pre-registered honest gates. NOT a proxy call — direct test. Production LGBM unaffected.
+
+Saved under /home/yuqing/ctaNew/linear_model/results/step85_bars_since_low
+Total: 4651s

@@ -1,0 +1,188 @@
+{
+  "K4": {
+    "dd_K4_c1": [
+      "AAVEUSDT",
+      "ADAUSDT",
+      "APTUSDT",
+      "ARBUSDT",
+      "ATOMUSDT",
+      "AVAXUSDT",
+      "AXSUSDT",
+      "BCHUSDT",
+      "BNBUSDT",
+      "DOGEUSDT",
+      "DOTUSDT",
+      "ENAUSDT",
+      "ETCUSDT",
+      "ETHUSDT",
+      "FILUSDT",
+      "GMXUSDT",
+      "HBARUSDT",
+      "ICPUSDT",
+      "INJUSDT",
+      "JTOUSDT",
+      "JUPUSDT",
+      "LDOUSDT",
+      "LINKUSDT",
+      "LTCUSDT",
+      "NEARUSDT",
+      "ONDOUSDT",
+      "OPUSDT",
+      "ORDIUSDT",
+      "PENDLEUSDT",
+      "PENGUUSDT",
+      "RUNEUSDT",
+      "SEIUSDT",
+      "SOLUSDT",
+      "STRKUSDT",
+      "SUIUSDT",
+      "TAOUSDT",
+      "TIAUSDT",
+      "TONUSDT",
+      "TRBUSDT",
+      "UNIUSDT",
+      "VIRTUALUSDT",
+      "VVVUSDT",
+      "WIFUSDT",
+      "WLDUSDT",
+      "XRPUSDT"
+    ],
+    "dd_K4_c3": [
+      "ASTERUSDT",
+      "HYPEUSDT",
+      "PUMPUSDT"
+    ],
+    "dd_K4_c2": [
+      "BIOUSDT"
+    ],
+    "dd_K4_c4": [
+      "ZECUSDT"
+    ]
+  },
+  "K5": {
+    "dd_K5_c1": [
+      "AAVEUSDT",
+      "ADAUSDT",
+      "APTUSDT",
+      "ARBUSDT",
+      "ATOMUSDT",
+      "AVAXUSDT",
+      "AXSUSDT",
+      "BCHUSDT",
+      "BNBUSDT",
+      "DOGEUSDT",
+      "DOTUSDT",
+      "ENAUSDT",
+      "ETCUSDT",
+      "ETHUSDT",
+      "FILUSDT",
+      "GMXUSDT",
+      "HBARUSDT",
+      "ICPUSDT",
+      "INJUSDT",
+      "JTOUSDT",
+      "JUPUSDT",
+      "LDOUSDT",
+      "LINKUSDT",
+      "LTCUSDT",
+      "NEARUSDT",
+      "ONDOUSDT",
+      "OPUSDT",
+      "ORDIUSDT",
+      "PENDLEUSDT",
+      "PENGUUSDT",
+      "RUNEUSDT",
+      "SEIUSDT",
+      "SOLUSDT",
+      "STRKUSDT",
+      "SUIUSDT",
+      "TAOUSDT",
+      "TIAUSDT",
+      "TONUSDT",
+      "TRBUSDT",
+      "UNIUSDT",
+      "VIRTUALUSDT",
+      "VVVUSDT",
+      "WIFUSDT",
+      "WLDUSDT",
+      "XRPUSDT"
+    ],
+    "dd_K5_c4": [
+      "ASTERUSDT"
+    ],
+    "dd_K5_c2": [
+      "BIOUSDT"
+    ],
+    "dd_K5_c3": [
+      "HYPEUSDT",
+      "PUMPUSDT"
+    ],
+    "dd_K5_c5": [
+      "ZECUSDT"
+    ]
+  },
+  "K6": {
+    "dd_K6_c1": [
+      "AAVEUSDT",
+      "ADAUSDT",
+      "APTUSDT",
+      "ARBUSDT",
+      "ATOMUSDT",
+      "AVAXUSDT",
+      "AXSUSDT",
+      "BCHUSDT",
+      "BNBUSDT",
+      "DOGEUSDT",
+      "DOTUSDT",
+      "ENAUSDT",
+      "ETCUSDT",
+      "ETHUSDT",
+      "FILUSDT",
+      "GMXUSDT",
+      "HBARUSDT",
+      "ICPUSDT",
+      "INJUSDT",
+      "JTOUSDT",
+      "JUPUSDT",
+      "LDOUSDT",
+      "LINKUSDT",
+      "LTCUSDT",
+      "NEARUSDT",
+      "ONDOUSDT",
+      "OPUSDT",
+      "ORDIUSDT",
+      "PENDLEUSDT",
+      "PENGUUSDT",
+      "RUNEUSDT",
+      "SEIUSDT",
+      "SOLUSDT",
+      "STRKUSDT",
+      "SUIUSDT",
+      "TAOUSDT",
+      "TIAUSDT",
+      "TONUSDT",
+      "TRBUSDT",
+      "UNIUSDT",
+      "VIRTUALUSDT",
+      "WIFUSDT",
+      "WLDUSDT",
+      "XRPUSDT"
+    ],
+    "dd_K6_c5": [
+      "ASTERUSDT"
+    ],
+    "dd_K6_c3": [
+      "BIOUSDT"
+    ],
+    "dd_K6_c4": [
+      "HYPEUSDT",
+      "PUMPUSDT"
+    ],
+    "dd_K6_c2": [
+      "VVVUSDT"
+    ],
+    "dd_K6_c6": [
+      "ZECUSDT"
+    ]
+  }
+}

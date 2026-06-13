@@ -1,0 +1,25 @@
+=== Build PIT volume features (volaug panel) ===
+
+spine panel: 12,809,092 rows x 27 cols, 110 symbols
+  20/110 (19s)
+  40/110 (37s)
+  60/110 (55s)
+  80/110 (72s)
+  100/110 (90s)
+  feature build done (99s); skipped 0: []
+
+merged: 12,809,092 rows (spine preserved) x 36 cols (+9 vol)
+
+NaN coverage of new vol features:
+  qvol_z_1d                non-NaN  99.7%  mean=+0.00849 std=1.09
+  qvol_z_7d                non-NaN  99.2%  mean=+0.00465 std=1.14
+  qvol_z_30d               non-NaN  95.7%  mean=-0.00929 std=1.17
+  qvol_surge_1h_over_1d    non-NaN  99.3%  mean=+1.03 std=0.931
+  dollar_vol_log_1d        non-NaN 100.0%  mean=+11.3 std=2.21
+  amihud_illiq_1d          non-NaN  99.0%  mean=+1.85e-07 std=3.9e-07
+  taker_buy_frac_z_1d      non-NaN  99.0%  mean=-0.000112 std=1.01
+  signed_qvol_1h           non-NaN  99.3%  mean=-0.251 std=6.99
+  trade_size_z_1d          non-NaN  99.0%  mean=-0.00149 std=1.03
+
+Saved: /home/yuqing/ctaNew/outputs/vBTC_features_btc_only_111_volaug/panel_btc_only_111_volaug.parquet
+Total: 138s

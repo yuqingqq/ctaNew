@@ -1,0 +1,36 @@
+============================================================================================
+  STEP 69: VERIFY/AUDIT persym-selfstd before validation battery
+============================================================================================
+
+============================================================================================
+  persym-selfstd-44  (N=44)
+============================================================================================
+  nested Sharpe -0.11 [-2.80,+2.25] | per-cycle -0.28 bps | total -447
+  [1] reconcile: Σ portfolio gross 4,002.0 vs Σ per-position weighted contrib 4,002.0  -> OK (consistent)
+  [2] per-trade WEIGHTED-gross (correct): mean +6.29 bps CI[-10.24,+24.40] PF 1.12  win 43%  n=631
+      (misleading UNWEIGHTED cum_bps for contrast: mean +8.1 PF 1.07)
+  [3] per-fold (Sharpe / total bps):
+      f1:-3.2/-1962  f2:+6.4/+3809  f3:+4.8/+1956  f4:+0.1/+27  f5:-4.2/-1658  f6:+0.4/+196  f7:-4.2/-1400  f8:+1.6/+373  f9:-8.7/-1786
+      LOFO worst: drop f2 -> ΔSharpe -1.19  (concentrated)
+  [4] n_open==1: 803 cyc carry 1,671 bps (-374%) ; Sharpe excl = -1.07
+  [5] top contributors: WLDUSDT=+2902, VVVUSDT*=+1991, XRPUSDT=+1156, PUMPUSDT*=+881, JTOUSDT=+820, APTUSDT=+626
+      semi-meme(*) share of gross: 6%
+
+============================================================================================
+  persym-selfstd-drop2-42  (N=42)
+============================================================================================
+  nested Sharpe -0.35 [-3.05,+2.06] | per-cycle -0.72 bps | total -1,165
+  [1] reconcile: Σ portfolio gross 3,415.9 vs Σ per-position weighted contrib 3,415.9  -> OK (consistent)
+  [2] per-trade WEIGHTED-gross (correct): mean +5.11 bps CI[-8.31,+20.01] PF 1.11  win 42%  n=671
+      (misleading UNWEIGHTED cum_bps for contrast: mean +8.1 PF 1.08)
+  [3] per-fold (Sharpe / total bps):
+      f1:-0.9/-286  f2:+5.0/+2852  f3:-1.3/-534  f4:+1.0/+408  f5:-0.9/-350  f6:-3.4/-1150  f7:-3.9/-1288  f8:+2.3/+554  f9:-7.0/-1370
+      LOFO worst: drop f2 -> ΔSharpe -1.13  (concentrated)
+  [4] n_open==1: 783 cyc carry 298 bps (-26%) ; Sharpe excl = -0.97
+  [5] top contributors: WLDUSDT=+2819, APTUSDT=+1079, XRPUSDT=+917, JTOUSDT=+910, TONUSDT=+858, PUMPUSDT*=+590
+      semi-meme(*) share of gross: -5%
+
+============================================================================================
+  [6] trail_ic LOOK-AHEAD test (drop2, subset on LAGGED trail_ic): Sharpe +0.00 [+0.00,+0.00]  vs unlagged -0.35 [-3.05,+2.06]  -> DEGRADES — subset leak
+
+Total: 179s

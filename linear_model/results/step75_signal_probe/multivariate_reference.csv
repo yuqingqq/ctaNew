@@ -1,0 +1,2 @@
+horizon_h,n_cyc,n_cycles,ic_mean,ic_median,ic_t,top_minus_bottom_bps,ls_half_weight_bps,spread_pos_pct,folds_pos,gate_pass
+4,1,1620,-0.011276590750971541,-0.010963455149501663,-2.270521323539502,1.3918979672738063,0.6959489836369032,0.5098765432098765,2,False

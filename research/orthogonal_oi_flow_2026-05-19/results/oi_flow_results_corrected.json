@@ -1,0 +1,425 @@
+{
+  "oi_syms": 51,
+  "flow_syms": 51,
+  "leak_oi": 0.0319,
+  "leak_flow": 0.0181,
+  "cov_auc_oi": 0.564,
+  "cov_auc_flow": 0.574,
+  "BLOCK": 11,
+  "arms": {
+    "A1_OI|lgbm": {
+      "A0_sharpe_mean_of_group": 0.332,
+      "ARM_sharpe_mean_of_group": 0.216,
+      "mean_lift": -0.116,
+      "per_group": [
+        {
+          "g": 0,
+          "A0": 0.208,
+          "ARM": 1.78,
+          "lift": 1.571,
+          "n": 1572
+        },
+        {
+          "g": 1,
+          "A0": 0.254,
+          "ARM": -0.791,
+          "lift": -1.045,
+          "n": 1572
+        },
+        {
+          "g": 2,
+          "A0": 0.142,
+          "ARM": 1.388,
+          "lift": 1.246,
+          "n": 1572
+        },
+        {
+          "g": 3,
+          "A0": 0.789,
+          "ARM": -2.373,
+          "lift": -3.162,
+          "n": 1572
+        },
+        {
+          "g": 4,
+          "A0": 0.265,
+          "ARM": 1.077,
+          "lift": 0.812,
+          "n": 1572
+        }
+      ],
+      "groups_lift_positive": "3/5",
+      "A0_level_CI": [
+        -0.778,
+        1.282
+      ],
+      "ARM_level_CI": [
+        -0.939,
+        1.655
+      ],
+      "paired_diff_mean_bps": 0.055,
+      "paired_diff_CI_bps": [
+        -2.001,
+        2.429
+      ],
+      "diff_excludes_0": false,
+      "lofo_sign_flips": [
+        {
+          "drop_g": 1,
+          "lift_wo": 0.117
+        },
+        {
+          "drop_g": 3,
+          "lift_wo": 0.646
+        }
+      ],
+      "n_eff_honest": 714.5,
+      "mde_bps_honest": 8.337,
+      "n_cyc_honest": 7860,
+      "verdict": "no-portable-lift | underpowered (effect-size, not 'exhausted')"
+    },
+    "A1_OI|ridge": {
+      "A0_sharpe_mean_of_group": -0.461,
+      "ARM_sharpe_mean_of_group": -0.17,
+      "mean_lift": 0.29,
+      "per_group": [
+        {
+          "g": 0,
+          "A0": -1.048,
+          "ARM": 0.317,
+          "lift": 1.365,
+          "n": 1572
+        },
+        {
+          "g": 1,
+          "A0": 1.402,
+          "ARM": 2.133,
+          "lift": 0.73,
+          "n": 1572
+        },
+        {
+          "g": 2,
+          "A0": 0.002,
+          "ARM": -0.712,
+          "lift": -0.714,
+          "n": 1572
+        },
+        {
+          "g": 3,
+          "A0": -1.456,
+          "ARM": -2.423,
+          "lift": -0.967,
+          "n": 1572
+        },
+        {
+          "g": 4,
+          "A0": -1.203,
+          "ARM": -0.165,
+          "lift": 1.038,
+          "n": 1572
+        }
+      ],
+      "groups_lift_positive": "3/5",
+      "A0_level_CI": [
+        -1.603,
+        0.756
+      ],
+      "ARM_level_CI": [
+        -0.98,
+        1.083
+      ],
+      "paired_diff_mean_bps": 0.623,
+      "paired_diff_CI_bps": [
+        -1.112,
+        2.319
+      ],
+      "diff_excludes_0": false,
+      "lofo_sign_flips": [],
+      "n_eff_honest": 714.5,
+      "mde_bps_honest": 6.487,
+      "n_cyc_honest": 7860,
+      "verdict": "no-portable-lift | underpowered (effect-size, not 'exhausted')"
+    },
+    "A2_FLOW|lgbm": {
+      "A0_sharpe_mean_of_group": -0.157,
+      "ARM_sharpe_mean_of_group": -0.254,
+      "mean_lift": -0.097,
+      "per_group": [
+        {
+          "g": 0,
+          "A0": 1.3,
+          "ARM": 0.486,
+          "lift": -0.814,
+          "n": 1620
+        },
+        {
+          "g": 1,
+          "A0": -0.515,
+          "ARM": -0.436,
+          "lift": 0.079,
+          "n": 1620
+        },
+        {
+          "g": 2,
+          "A0": 0.494,
+          "ARM": 0.207,
+          "lift": -0.287,
+          "n": 1620
+        },
+        {
+          "g": 3,
+          "A0": -0.189,
+          "ARM": -1.531,
+          "lift": -1.342,
+          "n": 1620
+        },
+        {
+          "g": 4,
+          "A0": -1.873,
+          "ARM": 0.004,
+          "lift": 1.877,
+          "n": 1620
+        }
+      ],
+      "groups_lift_positive": "2/5",
+      "A0_level_CI": [
+        -1.29,
+        0.929
+      ],
+      "ARM_level_CI": [
+        -1.296,
+        0.879
+      ],
+      "paired_diff_mean_bps": -0.07,
+      "paired_diff_CI_bps": [
+        -1.474,
+        1.39
+      ],
+      "diff_excludes_0": false,
+      "lofo_sign_flips": [
+        {
+          "drop_g": 0,
+          "lift_wo": 0.082
+        },
+        {
+          "drop_g": 3,
+          "lift_wo": 0.214
+        }
+      ],
+      "n_eff_honest": 736.4,
+      "mde_bps_honest": 5.614,
+      "n_cyc_honest": 8100,
+      "verdict": "no-portable-lift | underpowered (effect-size, not 'exhausted')"
+    },
+    "A2_FLOW|ridge": {
+      "A0_sharpe_mean_of_group": 0.099,
+      "ARM_sharpe_mean_of_group": 0.195,
+      "mean_lift": 0.096,
+      "per_group": [
+        {
+          "g": 0,
+          "A0": 0.679,
+          "ARM": 0.48,
+          "lift": -0.199,
+          "n": 1620
+        },
+        {
+          "g": 1,
+          "A0": 1.522,
+          "ARM": 0.964,
+          "lift": -0.558,
+          "n": 1620
+        },
+        {
+          "g": 2,
+          "A0": 0.164,
+          "ARM": -0.065,
+          "lift": -0.228,
+          "n": 1620
+        },
+        {
+          "g": 3,
+          "A0": -1.045,
+          "ARM": 1.083,
+          "lift": 2.128,
+          "n": 1620
+        },
+        {
+          "g": 4,
+          "A0": -0.825,
+          "ARM": -1.486,
+          "lift": -0.661,
+          "n": 1620
+        }
+      ],
+      "groups_lift_positive": "1/5",
+      "A0_level_CI": [
+        -1.007,
+        1.238
+      ],
+      "ARM_level_CI": [
+        -0.897,
+        1.13
+      ],
+      "paired_diff_mean_bps": 0.064,
+      "paired_diff_CI_bps": [
+        -1.524,
+        1.606
+      ],
+      "diff_excludes_0": false,
+      "lofo_sign_flips": [
+        {
+          "drop_g": 3,
+          "lift_wo": -0.412
+        }
+      ],
+      "n_eff_honest": 736.4,
+      "mde_bps_honest": 6.281,
+      "n_cyc_honest": 8100,
+      "verdict": "no-portable-lift | underpowered (effect-size, not 'exhausted')"
+    },
+    "A3_OIFLOW|lgbm": {
+      "A0_sharpe_mean_of_group": -0.161,
+      "ARM_sharpe_mean_of_group": 0.04,
+      "mean_lift": 0.201,
+      "per_group": [
+        {
+          "g": 0,
+          "A0": 0.239,
+          "ARM": -0.112,
+          "lift": -0.351,
+          "n": 1572
+        },
+        {
+          "g": 1,
+          "A0": -0.642,
+          "ARM": 0.867,
+          "lift": 1.51,
+          "n": 1572
+        },
+        {
+          "g": 2,
+          "A0": 0.466,
+          "ARM": 1.596,
+          "lift": 1.129,
+          "n": 1572
+        },
+        {
+          "g": 3,
+          "A0": -0.637,
+          "ARM": -1.666,
+          "lift": -1.029,
+          "n": 1572
+        },
+        {
+          "g": 4,
+          "A0": -0.232,
+          "ARM": -0.485,
+          "lift": -0.253,
+          "n": 1572
+        }
+      ],
+      "groups_lift_positive": "2/5",
+      "A0_level_CI": [
+        -1.205,
+        0.895
+      ],
+      "ARM_level_CI": [
+        -1.054,
+        1.14
+      ],
+      "paired_diff_mean_bps": 0.253,
+      "paired_diff_CI_bps": [
+        -1.664,
+        2.152
+      ],
+      "diff_excludes_0": false,
+      "lofo_sign_flips": [
+        {
+          "drop_g": 1,
+          "lift_wo": -0.126
+        },
+        {
+          "drop_g": 2,
+          "lift_wo": -0.031
+        }
+      ],
+      "n_eff_honest": 714.5,
+      "mde_bps_honest": 8.237,
+      "n_cyc_honest": 7860,
+      "verdict": "no-portable-lift | underpowered (effect-size, not 'exhausted')"
+    },
+    "A3_OIFLOW|ridge": {
+      "A0_sharpe_mean_of_group": 0.432,
+      "ARM_sharpe_mean_of_group": 0.604,
+      "mean_lift": 0.172,
+      "per_group": [
+        {
+          "g": 0,
+          "A0": 0.232,
+          "ARM": 1.476,
+          "lift": 1.244,
+          "n": 1572
+        },
+        {
+          "g": 1,
+          "A0": 2.182,
+          "ARM": 1.263,
+          "lift": -0.919,
+          "n": 1572
+        },
+        {
+          "g": 2,
+          "A0": 0.067,
+          "ARM": 0.254,
+          "lift": 0.186,
+          "n": 1572
+        },
+        {
+          "g": 3,
+          "A0": 0.211,
+          "ARM": -1.425,
+          "lift": -1.635,
+          "n": 1572
+        },
+        {
+          "g": 4,
+          "A0": -0.53,
+          "ARM": 1.454,
+          "lift": 1.984,
+          "n": 1572
+        }
+      ],
+      "groups_lift_positive": "3/5",
+      "A0_level_CI": [
+        -0.597,
+        1.65
+      ],
+      "ARM_level_CI": [
+        -0.419,
+        1.664
+      ],
+      "paired_diff_mean_bps": 0.125,
+      "paired_diff_CI_bps": [
+        -1.516,
+        1.74
+      ],
+      "diff_excludes_0": false,
+      "lofo_sign_flips": [
+        {
+          "drop_g": 0,
+          "lift_wo": -0.096
+        },
+        {
+          "drop_g": 4,
+          "lift_wo": -0.281
+        }
+      ],
+      "n_eff_honest": 714.5,
+      "mde_bps_honest": 7.066,
+      "n_cyc_honest": 7860,
+      "verdict": "no-portable-lift | underpowered (effect-size, not 'exhausted')"
+    }
+  },
+  "elapsed_s": 3619.6
+}

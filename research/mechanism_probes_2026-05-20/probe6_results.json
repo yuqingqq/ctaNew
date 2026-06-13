@@ -1,0 +1,194 @@
+{
+  "window_days": 7,
+  "n_total_primed_history_rows": 405,
+  "median_time_split": "2026-01-01 20:00:00+00:00",
+  "per_group": {
+    "g0": {
+      "n_total": 54,
+      "overall_acc": 0.6296,
+      "rel_learned_sign": -1,
+      "per_symbol": [
+        {
+          "sym": "TRBUSDT",
+          "n": 5,
+          "acc": 0.8,
+          "mean_next_bps": -6.6
+        },
+        {
+          "sym": "ASTERUSDT",
+          "n": 8,
+          "acc": 0.75,
+          "mean_next_bps": 29.8
+        },
+        {
+          "sym": "INJUSDT",
+          "n": 14,
+          "acc": 0.714,
+          "mean_next_bps": -11.3
+        },
+        {
+          "sym": "AVAXUSDT",
+          "n": 16,
+          "acc": 0.562,
+          "mean_next_bps": 9.4
+        },
+        {
+          "sym": "TIAUSDT",
+          "n": 2,
+          "acc": 0.5,
+          "mean_next_bps": 77.6
+        },
+        {
+          "sym": "ORDIUSDT",
+          "n": 9,
+          "acc": 0.444,
+          "mean_next_bps": 57.7
+        }
+      ],
+      "n_syms_evaluable": 5,
+      "frac_syms_acc>=0.55": 0.8,
+      "frac_syms_acc>=0.50": 0.8,
+      "med_sym_acc": 0.714
+    },
+    "g1": {
+      "status": "insufficient",
+      "n": 23
+    },
+    "g2": {
+      "n_total": 76,
+      "overall_acc": 0.5,
+      "rel_learned_sign": -1,
+      "per_symbol": [
+        {
+          "sym": "TONUSDT",
+          "n": 1,
+          "acc": 1.0,
+          "mean_next_bps": 67.8
+        },
+        {
+          "sym": "ARBUSDT",
+          "n": 7,
+          "acc": 0.714,
+          "mean_next_bps": 34.9
+        },
+        {
+          "sym": "NEARUSDT",
+          "n": 13,
+          "acc": 0.538,
+          "mean_next_bps": 34.6
+        },
+        {
+          "sym": "WLDUSDT",
+          "n": 2,
+          "acc": 0.5,
+          "mean_next_bps": -0.1
+        },
+        {
+          "sym": "BIOUSDT",
+          "n": 53,
+          "acc": 0.453,
+          "mean_next_bps": 19.3
+        }
+      ],
+      "n_syms_evaluable": 3,
+      "frac_syms_acc>=0.55": 0.333,
+      "frac_syms_acc>=0.50": 0.667,
+      "med_sym_acc": 0.538
+    },
+    "g3": {
+      "n_total": 176,
+      "overall_acc": 0.5511,
+      "rel_learned_sign": -1,
+      "per_symbol": [
+        {
+          "sym": "DOTUSDT",
+          "n": 3,
+          "acc": 0.667,
+          "mean_next_bps": -87.4
+        },
+        {
+          "sym": "VVVUSDT",
+          "n": 161,
+          "acc": 0.559,
+          "mean_next_bps": 57.2
+        },
+        {
+          "sym": "ICPUSDT",
+          "n": 4,
+          "acc": 0.5,
+          "mean_next_bps": -326.1
+        },
+        {
+          "sym": "TAOUSDT",
+          "n": 8,
+          "acc": 0.375,
+          "mean_next_bps": -13.5
+        }
+      ],
+      "n_syms_evaluable": 2,
+      "frac_syms_acc>=0.55": 0.5,
+      "frac_syms_acc>=0.50": 0.5,
+      "med_sym_acc": 0.467
+    },
+    "g4": {
+      "n_total": 74,
+      "overall_acc": 0.4459,
+      "rel_learned_sign": -1,
+      "per_symbol": [
+        {
+          "sym": "GMXUSDT",
+          "n": 1,
+          "acc": 1.0,
+          "mean_next_bps": 117.5
+        },
+        {
+          "sym": "PENGUUSDT",
+          "n": 24,
+          "acc": 0.542,
+          "mean_next_bps": -59.7
+        },
+        {
+          "sym": "WIFUSDT",
+          "n": 20,
+          "acc": 0.5,
+          "mean_next_bps": 29.2
+        },
+        {
+          "sym": "HBARUSDT",
+          "n": 8,
+          "acc": 0.375,
+          "mean_next_bps": 17.8
+        },
+        {
+          "sym": "PENDLEUSDT",
+          "n": 21,
+          "acc": 0.286,
+          "mean_next_bps": -23.7
+        }
+      ],
+      "n_syms_evaluable": 4,
+      "frac_syms_acc>=0.55": 0.0,
+      "frac_syms_acc>=0.50": 0.5,
+      "med_sym_acc": 0.438
+    }
+  },
+  "sub_period_stability": {
+    "first_half": {
+      "n_rows": 204,
+      "per_group_acc": [
+        0.508,
+        0.559,
+        0.417
+      ],
+      "mean_acc": 0.4945
+    },
+    "second_half": {
+      "n_rows": 201,
+      "per_group_acc": [
+        0.566
+      ],
+      "mean_acc": 0.5662
+    }
+  },
+  "elapsed_s": 45.6
+}

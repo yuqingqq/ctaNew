@@ -1,0 +1,60 @@
+====================================================================================================
+  STEP 57: drop ONLY SIREN+JELLYJELLY (keep other 108) — is the edge just these 2?
+====================================================================================================
+  Causal-immediate: gross[t] = tw × alpha[t] (new weights earn new cycle)
+  vs lagged (Step 47): gross[t] = prev_weights × alpha[t]
+  Reviewer recompute: lagged +3.35 → causal ~+3.11–3.13
+
+[drop-2] removed {'JELLYJELLYUSDT', 'SIRENUSDT'}: 108/110 symbols kept
+
+Panel symbols: 108 (108, SIREN+JELLYJELLY dropped)
+
+--- Real V2 B_IC_signed under CAUSAL aggregator ---
+  V2 110-panel CAUSAL: Sharpe = -0.89 [-3.26, +1.72], folds+=4/9, gross=-1.41, traded=1471/1620
+  (For reference: lagged Step 47 = +3.35; reviewer recompute = +3.11-3.13)
+
+  LOFO on B (causal, Sharpe = -0.89):
+    excl 1: -0.31 (Δ +0.58)
+    excl 2: -0.99 (Δ -0.09)
+    excl 3: -1.22 (Δ -0.33)
+    excl 4: -1.17 (Δ -0.28)
+    excl 5: -1.56 (Δ -0.67)  ← drives
+    excl 6: -0.40 (Δ +0.50)
+    excl 7: -0.59 (Δ +0.30)
+    excl 8: -0.90 (Δ -0.01)
+    excl 9: -0.91 (Δ -0.02)
+  Loading kline volumes for 108 symbols...
+
+--- P1 placebo (liq univ random) × 100 (CAUSAL) ---
+  seed 25: mean=-0.342
+  seed 50: mean=-0.213
+  seed 75: mean=-0.193
+  seed 100: mean=-0.364
+  P1 mean: -0.364  std: 1.128
+  P1 p5/p25/p50/p75/p95: -2.33/-0.97/-0.37/+0.40/+1.36
+  V2 rank in P1: 28.0%
+  Edge over P1 p95: -2.25
+
+--- P2 placebo (V2 univ random) × 100 (CAUSAL) ---
+  seed 25: mean=+0.162
+  seed 50: mean=-0.259
+  seed 75: mean=-0.268
+  seed 100: mean=-0.275
+  P2 mean: -0.275  std: 1.204
+  P2 p5/p25/p50/p75/p95: -2.38/-1.10/-0.27/+0.56/+1.59
+  V2 rank in P2: 29.0%
+  Edge over P2 p95: -2.48
+
+====================================================================================================
+  V2 110-PANEL FULL-PIT + CAUSAL AGGREGATOR — FINAL VERDICT
+====================================================================================================
+  V2 Sharpe (causal): -0.89  CI=[-3.26,+1.72]
+  P1 (liq univ random) p95: +1.36  →  FAIL (edge -2.25)
+  P2 (V2 univ random)  p95: +1.59  →  FAIL (edge -2.48)
+
+  References (lagged aggregator):
+    Step 47 reported (lagged): Sharpe +3.35
+    Step 48 placebos (lagged): P1 p100 (+1.69), P2 p100 (+1.81)
+    V2 51-panel (lagged):      Sharpe +2.19, P1 p99 (+1.04), P2 p97 (+0.58)
+
+Total: 796s

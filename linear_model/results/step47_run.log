@@ -1,0 +1,49 @@
+====================================================================================================
+  STEP 47: V2 on 111-input panel (110 traded after BTC exclusion) + V3.1 sleeve
+====================================================================================================
+Panel: 12,809,092 rows × 110 symbols
+  target_z std: 0.917
+
+Building V2 features...
+  V2 features: 22
+
+Training V2 on 110-symbol expanded universe (BTC excluded from input panel)...
+    fold 0: IC=-0.0146, n_train=870,383, n_test=933,514, 18s
+    fold 1: IC=-0.0307, n_train=1,365,618, n_test=941,760, 28s
+    fold 2: IC=-0.0097, n_train=1,872,865, n_test=941,760, 37s
+    fold 3: IC=-0.0052, n_train=2,368,257, n_test=945,216, 46s
+    fold 4: IC=+0.0156, n_train=2,884,601, n_test=950,400, 56s
+    fold 5: IC=+0.0020, n_train=3,381,072, n_test=950,400, 65s
+    fold 6: IC=-0.0064, n_train=3,882,210, n_test=950,400, 75s
+    fold 7: IC=+0.0069, n_train=4,405,421, n_test=950,400, 81s
+    fold 8: IC=+0.0031, n_train=4,925,225, n_test=950,400, 89s
+    fold 9: IC=-0.0005, n_train=5,439,349, n_test=950,400, 100s
+
+Overall IC: -0.0039
+  Saved: universe_per_cycle.parquet (1620 cycles)
+
+====================================================================================================
+  V2 on 110-symbol expanded universe (BTC excluded) + V3.1 sleeve
+====================================================================================================
+  A baseline (pred_z): Sharpe=+0.75 [-1.76,+2.93]  folds+=4/9  gross=+4.88  traded=1482/1620
+  B IC_signed (pred_B): Sharpe=+3.35 [+1.35,+5.23]  folds+=6/9  gross=+16.66  traded=1472/1620
+
+  LOFO on B (Sharpe = +3.35):
+    excl 1: +3.83 (Δ +0.48)
+    excl 2: +3.53 (Δ +0.17)
+    excl 3: +3.70 (Δ +0.35)
+    excl 4: +2.95 (Δ -0.41)  ← drives
+    excl 5: +2.43 (Δ -0.92)  ← drives
+    excl 6: +3.83 (Δ +0.47)
+    excl 7: +3.47 (Δ +0.11)
+    excl 8: +3.10 (Δ -0.26)
+    excl 9: +3.35 (Δ -0.00)
+
+====================================================================================================
+  COMPARISON LADDER
+====================================================================================================
+  V2 (51-panel, 22 ft) + sleeve (Step 34/35):    +2.19 (7/9 folds+)
+  V2 (110 symbols, 111 input panel minus BTC, full retrain) + sleeve (THIS):  +3.35 (6/9 folds+)
+  LGBM Phase UNI-111 (memory):                   -1.48 (3/9 folds+) — CONTEXTUAL only, not apples-to-apples
+
+Total: 718s

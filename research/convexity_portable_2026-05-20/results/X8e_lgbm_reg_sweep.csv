@@ -1,0 +1,5 @@
+variant,desc,train_ic,sharpe,ci_lo,ci_hi,totPnL,maxDD,folds_pos,concentration,train_time_s,error
+E1_early_stop,"Early stopping (10% val, stop_rounds=30)",0.0077,-1.95,-4.06,0.3,-8216,-8692,1/9,100%,89.0,
+E2_adaptive_leaf,"Adaptive min_data_in_leaf = max(100, n_train//100)",0.0069,-2.63,-4.63,-0.49,-7235,-7730,2/9,87%,123.0,
+E3_higher_reg,"reg_alpha=1.0, reg_lambda=1.0 (vs default 0.1)",0.0088,-2.98,-4.97,-1.06,-9172,-9317,2/9,94%,120.0,
+E4_combined,E1 + E2 + E3 combined,0.0075,-2.8,-4.98,-0.69,-9925,-10643,1/9,100%,77.0,

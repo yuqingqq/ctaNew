@@ -1,0 +1,2 @@
+any_pass,verdict
+True,AT LEAST ONE PASS -> orientation/target is a real lever; proceed to the next plan step for the passing config only.

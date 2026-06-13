@@ -1,0 +1,22 @@
+================================================================================================
+  STEP 89 (Stage 3): per-symbol OI model + per-symbol PIT norm
+================================================================================================
+  joined: 2,688,240 rows, 23 syms (2025-03-27→2026-05-06)
+
+--- V1 per-symbol PIT-normalization audit ---
+  SOLUSDT/oi_z_1d: corr(stored,indep_PAST)=1.000000 maxdiff=2.4e-07  corr(stored,LEAKY)=1.0000 (<1 ⇒ genuinely past-only) -> CHECK
+  ADAUSDT/oi_chg_1d: corr(stored,indep_PAST)=1.000000 maxdiff=8.8e-07  corr(stored,LEAKY)=1.0000 (<1 ⇒ genuinely past-only) -> CHECK
+
+--- per-symbol model (RidgeCV + signed-equal), walk-forward ---
+
+--- V2 per-symbol OOS IC (corr(pred, alpha_beta) within symbol) ---
+  n_syms=23  ic_ridge mean=+0.0149 median=+0.0188 %pos=70  [min -0.042, max +0.059]
+  ic_signed mean=+0.0106 %pos=70 | all finite=True
+
+--- V3 per-symbol feature IC-sign stability (Insight-1 per sym) ---
+  (symbol,feature) pairs sign-consistent ≥7/9 folds: 77%  (mean same-sign frac 0.87)
+  → for comparison, pooled cross-sectional sign-persistence was ≈noise (Step-75 rho +0.05); this measures the per-symbol analog
+
+  INTERMEDIATE VALIDATION: V1(norm-PIT)=FAIL  V2(IC finite/sane)=PASS  V3 recorded
+  preds saved → /home/yuqing/ctaNew/linear_model/results/step89_per_symbol_oi/per_symbol_oi_preds.parquet (1,720,438 rows). NO verdict here — Step 90 does rigorous eval.
+Total: 20s

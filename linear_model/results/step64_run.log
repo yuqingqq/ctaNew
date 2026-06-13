@@ -1,0 +1,33 @@
+====================================================================================================
+  STEP 64: mean-reversion-exit v2 (cross-sectional z, corrected scale)
+====================================================================================================
+  44 syms; σ_idio fold-0 median 0.01269; raw pred_z std 0.077 (shrunk — using cross-sec z)
+  β_pit recovered: yes
+
+  grid sweep (in-sample ceiling, NOT headline):
+    [ 0] {'sub': 'top15', 'zin': 1.5, 'hurdle': 0, 'N': 3} Sh=+0.36 fp=4/9 meanHold=2.1 gate-blk=0%
+    [ 1] {'sub': 'top15', 'zin': 1.5, 'hurdle': 5, 'N': 3} Sh=+0.35 fp=5/9 meanHold=2.0 gate-blk=41%
+    [ 2] {'sub': 'top15', 'zin': 1.5, 'hurdle': 9, 'N': 3} Sh=+0.07 fp=4/9 meanHold=2.0 gate-blk=62%
+    [ 3] {'sub': 'top15', 'zin': 2.0, 'hurdle': 0, 'N': 3} Sh=+0.25 fp=6/9 meanHold=2.5 gate-blk=0%
+    [ 4] {'sub': 'top15', 'zin': 2.0, 'hurdle': 5, 'N': 3} Sh=+0.48 fp=7/9 meanHold=2.4 gate-blk=33%
+    [ 5] {'sub': 'top15', 'zin': 2.0, 'hurdle': 9, 'N': 3} Sh=+0.34 fp=5/9 meanHold=2.4 gate-blk=53%
+    [ 6] {'sub': 'ic_pos', 'zin': 1.5, 'hurdle': 0, 'N': 3} Sh=+1.64 fp=6/9 meanHold=2.1 gate-blk=0%
+    [ 7] {'sub': 'ic_pos', 'zin': 1.5, 'hurdle': 5, 'N': 3} Sh=+1.34 fp=7/9 meanHold=2.1 gate-blk=40%
+    [ 8] {'sub': 'ic_pos', 'zin': 1.5, 'hurdle': 9, 'N': 3} Sh=+0.88 fp=5/9 meanHold=2.1 gate-blk=61%
+    [ 9] {'sub': 'ic_pos', 'zin': 2.0, 'hurdle': 0, 'N': 3} Sh=+1.19 fp=7/9 meanHold=2.4 gate-blk=0%
+    [10] {'sub': 'ic_pos', 'zin': 2.0, 'hurdle': 5, 'N': 3} Sh=+1.13 fp=8/9 meanHold=2.4 gate-blk=31%
+    [11] {'sub': 'ic_pos', 'zin': 2.0, 'hurdle': 9, 'N': 3} Sh=+0.88 fp=7/9 meanHold=2.4 gate-blk=51%
+
+====================================================================================================
+  VERDICT
+====================================================================================================
+  nested-OOS Sharpe : +0.38 [-1.99,+2.55] fp=5/9 top5%cyc=492%
+  in-sample ceiling : +1.64 (NOT headline; best={'sub': 'ic_pos', 'zin': 1.5, 'hurdle': 0, 'N': 3})
+  fixed-24h baseline: +0.50 -> beats? NO
+  random-exit p95   : +1.54 -> FAIL
+  random-pool p95   : -0.87 -> PASS
+
+  [CI>0,>base,>rexit,>rpool,fp>=6,not-tail] = [False, False, False, True, False, np.False_]
+  FAIL — close
+
+Total: 932s

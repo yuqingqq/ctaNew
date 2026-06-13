@@ -1,0 +1,12 @@
+R3 (a) drop-k composition drift on equal cap-1/3 ...
+  k=1: mean +2.03 worst +0.53 p10 +1.45 fracpos 1.0
+  k=3: mean +1.83 worst +0.48 p10 +0.79 fracpos 1.0
+  k=5: mean +2.09 worst +0.01 p10 +1.35 fracpos 1.0
+
+R3 (b) group-disjoint (no sym_id) held-out portability ...
+
+  chosen=equal-weight cap-1/3 (24h 6-sleeve) Sh=+2.06 maxDD=-3580
+  drop5 worst +0.01 -> deploy_fraction 0.3, kill-switch at cum-DD -6265 bps
+  group-disjoint no-symid pooled alpha-only Sharpe: None
+
+R3 done [439.8s]

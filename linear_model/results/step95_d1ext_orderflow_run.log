@@ -1,0 +1,46 @@
+================================================================================================
+  STEP 95 — D1-ext-A: perp aggTrade ORDER-FLOW vs leak-free ceiling (same +1.5 gate)
+================================================================================================
+  universe hl42∩aggTrades = 20 syms
+  [1/20] ADAUSDT      bars=84669 8s
+  [2/20] APTUSDT      bars=84669 10s
+  [3/20] ARBUSDT      bars=84669 6s
+  [4/20] ATOMUSDT     bars=84669 5s
+  [5/20] AVAXUSDT     bars=84669 8s
+  [6/20] BNBUSDT      bars=84669 15s
+  [7/20] DOGEUSDT     bars=84669 11s
+  [8/20] ETHUSDT      bars=84669 69s
+  [9/20] FILUSDT      bars=84669 6s
+  [10/20] INJUSDT      bars=84669 6s
+  [11/20] LINKUSDT     bars=84669 8s
+  [12/20] LTCUSDT      bars=84669 7s
+  [13/20] NEARUSDT     bars=84669 6s
+  [14/20] OPUSDT       bars=84669 6s
+  [15/20] SOLUSDT      bars=84669 14s
+  [16/20] SUIUSDT      bars=84669 11s
+  [17/20] TIAUSDT      bars=84669 7s
+  [18/20] UNIUSDT      bars=84669 7s
+  [19/20] WLDUSDT      bars=84669 8s
+  [20/20] XRPUSDT      bars=84669 13s
+  built+cached oflow_panel (1693380, 8) -> /home/yuqing/ctaNew/outputs/vBTC_features_oflow/oflow_panel.parquet
+  merged dec: rows=32160 syms=20 cycles=1608 (clip ≤ 2026-04-28)
+  audit SOLUSDT: corr(stored,indep_PAST of_tfi_z1d)=1.000000 -> OK
+  audit ADAUSDT: corr(stored,indep_PAST of_tfi_z1d)=1.000000 -> OK
+  look-ahead |corr(oflow, FWD αβ)| max=0.014 (of_imb_1d); all<0.10=True
+  PIT AUDIT: PASS
+  [validate] rows=31999 syms=20 F_core=24 +oflow=6
+
+--- F_core (20-sym baseline) (feats=24, OOF 100%) ---
+  [Ridge|F_core (20-sym baseline)] GROSS Sh=+1.57 (+2.61bps) | NET Sh=+0.46 CI[-1.96,+2.94] (+0.76bps) | IC=+0.0183 turn=0.824 syms+=55% folds+=5/9 | NET@maker Sh=+1.32
+  [LGBM|F_core (20-sym baseline)] GROSS Sh=-0.33 (-0.52bps) | NET Sh=-1.64 CI[-4.28,+0.78] (-2.56bps) | IC=+0.0032 turn=0.908 syms+=10% folds+=3/9 | NET@maker Sh=-0.62
+
+--- F_core+ORDERFLOW (GATED) (feats=30, OOF 100%) ---
+  [Ridge|F_core+ORDERFLOW (GATED)] GROSS Sh=+2.24 (+3.62bps) | NET Sh=+1.09 CI[-1.20,+3.56] (+1.76bps) | IC=+0.0261 turn=0.828 syms+=70% folds+=6/9 | NET@maker Sh=+1.98
+  [LGBM|F_core+ORDERFLOW (GATED)] GROSS Sh=-0.14 (-0.21bps) | NET Sh=-1.46 CI[-4.05,+0.90] (-2.26bps) | IC=+0.0072 turn=0.909 syms+=25% folds+=3/9 | NET@maker Sh=-0.43
+  [s_t_rule(ref)] GROSS Sh=+1.03 (+1.76bps) | NET Sh=+0.51 CI[-1.80,+2.78] (+0.87bps) | IC=+0.0343 turn=0.395 syms+=65% folds+=5/9 | NET@maker Sh=+0.91
+
+  baseline(F_core,20-sym)=+0.46  +orderflow=+1.09  Δ=+0.63  | PRE-REG GATE(>+1.5): FAIL
+  VERDICT: D1-ext-A FAIL — F_core+orderflow best NET Sharpe +1.09 (Ridge|F_core+ORDERFLOW (GATED), IC +0.026) ≤ +1.5; same-universe F_core baseline +0.46, Δ +0.63. Perp aggTrade order-flow does NOT lift the leak-free information ceiling. Information-bound now broadens to include perp order-flow. Remaining untested free family = spot microstructure (D1-ext-B); else terminus. Production LGBM unaffected.
+
+Saved /home/yuqing/ctaNew/linear_model/results/step95_d1ext_orderflow
+Total: 292s

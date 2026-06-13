@@ -1,0 +1,28 @@
+{
+  "safe_n": 39,
+  "ridge": {
+    "A0_portable_sharpe": 0.56,
+    "A0_topk_spread_bps": -0.71,
+    "A1_portable_sharpe": -0.332,
+    "A1_topk_spread_bps": -1.47,
+    "delta_sharpe": -0.892,
+    "diff_ci_bps": [
+      -2.62,
+      0.205
+    ],
+    "diff_excludes_0": false
+  },
+  "biglgbm": {
+    "A0_portable_sharpe": -0.48,
+    "A0_topk_spread_bps": 0.68,
+    "A1_portable_sharpe": -1.375,
+    "A1_topk_spread_bps": 1.04,
+    "delta_sharpe": -0.895,
+    "diff_ci_bps": [
+      -2.754,
+      0.122
+    ],
+    "diff_excludes_0": false
+  },
+  "elapsed_s": 8501.6
+}

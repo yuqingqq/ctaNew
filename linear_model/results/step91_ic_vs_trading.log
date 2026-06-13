@@ -1,0 +1,17 @@
+================================================================================================
+  STEP 91: per-symbol IC-good / trading-bad — mechanism decomposition
+================================================================================================
+
+  n_syms=23  (reproducing V2: ic_allbar mean +0.0149 med +0.0188 %pos 70)
+  ic_dec (non-overlap 4h)   mean +0.0175 med +0.0147 %pos 70
+  GROSS timing (0 cost)     mean +0.794 bps/cyc Sh-syms %pos 57  mean Sh +0.36
+  NET   timing (w/ cost)    mean -0.643 bps/cyc %pos 39  mean Sh -0.15
+  turnover mean 0.639/2  hit mean 50.3%  (cost drag +1.437 bps/cyc)
+
+  PORTFOLIO  gross Sh=+0.98 (+0.827 bps/cyc) | net Sh=-0.73 (-0.611 bps/cyc)  [Step-90 ridge_insample was −0.73 → reconciled]
+
+================================================================================================
+  VERDICT: M2 DOMINANT (cost/turnover). GROSS positive (Sh +0.98, +0.827 bps/cyc) but turnover 0.64 × 2.25 = 1.44 bps/cyc cost flips it NET negative (-0.611). A real but sub-cost micro-edge — not tradable at this turnover/cost.
+
+Saved /home/yuqing/ctaNew/linear_model/results/step91_ic_vs_trading
+Total: 0s

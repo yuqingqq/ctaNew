@@ -1,0 +1,2 @@
+PASS,base,with_oflow,delta,verdict
+False,0.4561784409543958,1.088101741366436,0.6319233004120401,"D1-ext-A FAIL — F_core+orderflow best NET Sharpe +1.09 (Ridge|F_core+ORDERFLOW (GATED), IC +0.026) ≤ +1.5; same-universe F_core baseline +0.46, Δ +0.63. Perp aggTrade order-flow does NOT lift the leak-free information ceiling. Information-bound now broadens to include perp order-flow. Remaining untested free family = spot microstructure (D1-ext-B); else terminus. Production LGBM unaffected."

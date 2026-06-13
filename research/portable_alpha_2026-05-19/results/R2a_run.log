@@ -1,0 +1,165 @@
+R2a — retrain WINNER_21 + [rvol_7d, ret_3d, btc_rvol_7d]
+  features built; NaN frac {'rvol_7d': 0.0, 'ret_3d': 0.0, 'btc_rvol_7d': 0.0}
+  feat_set n=24 (WINNER_21=21 + ['rvol_7d', 'ret_3d', 'btc_rvol_7d'])
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.06303
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.06327
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.06332
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.06311
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.06328
+  fold 0: n=414,720 (6s)
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.16385
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.16268
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.16337
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.16414
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.16388
+  fold 1: n=423,360 (8s)
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[12]	valid_0's rmse: 1.14664
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[12]	valid_0's rmse: 1.14634
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[26]	valid_0's rmse: 1.14684
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[15]	valid_0's rmse: 1.14673
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[7]	valid_0's rmse: 1.14688
+  fold 2: n=432,000 (10s)
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[47]	valid_0's rmse: 1.14068
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[57]	valid_0's rmse: 1.14146
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[32]	valid_0's rmse: 1.14146
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[62]	valid_0's rmse: 1.14094
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[35]	valid_0's rmse: 1.1417
+  fold 3: n=429,024 (14s)
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[197]	valid_0's rmse: 2.02026
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[60]	valid_0's rmse: 2.02036
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[86]	valid_0's rmse: 2.01964
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[83]	valid_0's rmse: 2.02072
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[41]	valid_0's rmse: 2.02062
+  fold 4: n=432,000 (21s)
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.26384
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[4]	valid_0's rmse: 1.26432
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.26415
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.2638
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.26394
+  fold 5: n=432,000 (14s)
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.01756
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[9]	valid_0's rmse: 1.0175
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[6]	valid_0's rmse: 1.01733
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[10]	valid_0's rmse: 1.01754
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.01757
+  fold 6: n=440,640 (16s)
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.09831
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.09845
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.09833
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.09841
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.09843
+  fold 7: n=440,640 (16s)
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[3]	valid_0's rmse: 1.25592
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.25615
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.25636
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[5]	valid_0's rmse: 1.25613
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[6]	valid_0's rmse: 1.25604
+  fold 8: n=440,640 (18s)
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.12206
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[10]	valid_0's rmse: 1.12202
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[2]	valid_0's rmse: 1.12201
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.12205
+Training until validation scores don't improve for 80 rounds
+Early stopping, best iteration is:
+[1]	valid_0's rmse: 1.12213
+  fold 9: n=433,776 (21s)
+
+R2a predictions saved: 4,318,800 rows -> /home/yuqing/ctaNew/research/portable_alpha_2026-05-19/results/_cache/all_predictions_R2a.parquet [153s]

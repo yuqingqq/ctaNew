@@ -1,0 +1,415 @@
+"""Step 33: Validate V1 R3_BTC proper preprocessing Sharpe +1.31.
+
+Reload Step 32's V1 setup, train R3_BTC with proper preprocessing,
+then run:
+  1. Reproduce V1 Sharpe (sanity)
+  2. LOFO (already done in Step 32, replicate)
+  3. P1 placebo: liquidity universe (top-30 by 90d dollar vol) + random picks
+  4. P2 placebo: V1 model universe + random picks
+  5. (skip P3 — caused dtype issues earlier)
+"""
+from __future__ import annotations
+import sys, time, importlib.util, warnings
+from pathlib import Path
+from collections import deque, defaultdict
+import numpy as np
+import pandas as pd
+from sklearn.linear_model import RidgeCV
+
+warnings.filterwarnings("ignore")
+REPO = Path("/home/yuqing/ctaNew")
+sys.path.insert(0, str(REPO))
+
+spec = importlib.util.spec_from_file_location("psl", REPO / "scripts/phase_ah_sleeve.py")
+psl = importlib.util.module_from_spec(spec); spec.loader.exec_module(psl)
+from ml.research.alpha_v4_xs_1d import _multi_oos_splits, _slice
+from ml.research.alpha_v4_xs import block_bootstrap_ci
+
+TARGETS = REPO / "linear_model/data/targets.parquet"
+PANEL = REPO / "outputs/vBTC_features/panel_variants_with_funding.parquet"
+PANEL_BTC = REPO / "outputs/vBTC_features_btc_only/panel_btc_only_clean.parquet"
+KLINES_DIR = REPO / "data/ml/test/parquet/klines"
+OUT = REPO / "linear_model/results"
+
+# V1 R3_BTC proper composition
+FRAME_NEUTRAL = ["return_1d","atr_pct","obv_z_1d","vwap_slope_96",
+                 "bars_since_high_xs_rank","funding_rate","funding_rate_z_7d",
+                 "funding_rate_1d_change",
+                 "corr_to_btc_1d", "idio_vol_to_btc_1h", "beta_to_btc_change_5d"]
+KEEP_USHAPE_R3 = ["beta_to_btc_change_5d", "corr_to_btc_1d", "return_1d"]
+BTC_KEEP = ["dom_btc_z_1d", "dom_btc_change_288b", "corr_to_btc_change_3d",
+            "idio_vol_to_btc_1d"]
+BTC_USHAPE = ["dom_btc_change_288b", "corr_to_btc_change_3d"]
+HEAVY_TAIL = {"funding_rate", "funding_rate_1d_change", "vwap_slope_96",
+              "idio_max_abs_12b", "idio_vol_to_btc_1h", "funding_rate_z_7d"}
+PER_SYMBOL_Z = {"funding_rate", "funding_rate_z_7d", "funding_rate_1d_change"}
+
+ALPHAS = [0.001, 0.01, 0.05, 0.1, 0.5, 1.0, 5.0, 10.0, 100.0]
+SEEDS = (42, 1337, 7, 19, 2718)
+AUTO_THRESH = 0.5
+ALL_FOLDS = list(range(10))
+OOS_FOLDS = list(range(1, 10))
+MIN_HISTORY_DAYS = 60
+CAPITAL = 100.0
+TRAILING_IC_DAYS = 90
+HOLD_BARS = 288
+N_PLACEBO = 100
+
+
+def _sharpe(x):
+    x = np.asarray(x, dtype=float); x = x[~np.isnan(x)]
+    if len(x) < 2 or x.std() == 0: return 0.0
+    return float(x.mean() / x.std() * np.sqrt(psl.CYCLES_PER_YEAR))
+
+
+def folds_positive(df_v):
+    return sum(1 for _, g in df_v.groupby("fold") if _sharpe(g["net_pnl_bps"]) > 0)
+
+
+def get_listings():
+    L = {}
+    for d in KLINES_DIR.iterdir():
+        if not d.is_dir(): continue
+        m5 = d / "5m"
+        if not m5.exists(): continue
+        f = sorted(m5.glob("*.parquet"))
+        if not f: continue
+        try: L[d.name] = pd.Timestamp(f[0].stem, tz="UTC")
+        except Exception: pass
+    return L
+
+
+def winsorize_zscore(s, train_s, p_lo=0.01, p_hi=0.99):
+    s_train = train_s.dropna()
+    lo, hi = s_train.quantile(p_lo), s_train.quantile(p_hi)
+    s_w = s_train.clip(lower=lo, upper=hi)
+    mu, sd = s_w.mean(), s_w.std()
+    if sd < 1e-8: sd = 1.0
+    return ((s.clip(lower=lo, upper=hi) - mu) / sd).astype("float32")
+
+
+def rank_transform(panel_full, train_s):
+    train_vals = train_s.dropna().sort_values().values
+    n_train = len(train_vals)
+    if n_train < 100:
+        return pd.Series(0, index=panel_full.index, dtype="float32")
+    raw = panel_full.values
+    out = (np.searchsorted(train_vals, raw) / n_train - 0.5).astype(np.float32)
+    return pd.Series(out, index=panel_full.index, dtype="float32")
+
+
+def per_symbol_rank(panel, feat_name, train_mask):
+    out = np.zeros(len(panel), dtype=np.float32)
+    panel_idx_pos = {idx: pos for pos, idx in enumerate(panel.index)}
+    for sym, g in panel.groupby("symbol"):
+        idx = g.index
+        train_vals = panel.loc[train_mask & (panel["symbol"]==sym), feat_name].dropna().sort_values().values
+        n_train = len(train_vals)
+        if n_train < 50:
+            train_all = panel.loc[train_mask, feat_name].dropna().sort_values().values
+            if len(train_all) > 100:
+                vals = panel.loc[idx, feat_name].values
+                ranks = (np.searchsorted(train_all, vals) / len(train_all) - 0.5).astype(np.float32)
+                for i, ix in enumerate(idx):
+                    out[panel_idx_pos[ix]] = ranks[i]
+            continue
+        vals = panel.loc[idx, feat_name].values
+        ranks = (np.searchsorted(train_vals, vals) / n_train - 0.5).astype(np.float32)
+        for i, ix in enumerate(idx):
+            out[panel_idx_pos[ix]] = ranks[i]
+    return pd.Series(out, index=panel.index, dtype="float32")
+
+
+def build_v1_features(panel, train_mask):
+    train_panel = panel[train_mask]
+    X = pd.DataFrame({"symbol": panel["symbol"], "open_time": panel["open_time"],
+                      "alpha_beta": panel["alpha_beta"],
+                      "target_z": panel["target_z"],
+                      "autocorr_pctile_7d": panel["autocorr_pctile_7d"]})
+    all_features = list(set(FRAME_NEUTRAL + BTC_KEEP))
+    for f in all_features:
+        if f not in panel.columns: continue
+        if f in PER_SYMBOL_Z:
+            X[f] = per_symbol_rank(panel, f, train_mask)
+        elif f in HEAVY_TAIL:
+            X[f] = rank_transform(panel[f], train_panel[f])
+        else:
+            X[f] = winsorize_zscore(panel[f], train_panel[f])
+    # Squared terms use standard-z-scored base
+    for f in KEEP_USHAPE_R3:
+        base = winsorize_zscore(panel[f], train_panel[f])
+        X[f + "_sq"] = (base ** 2).astype("float32")
+    for f in BTC_USHAPE:
+        base = winsorize_zscore(panel[f], train_panel[f])
+        X[f + "_sq"] = (base ** 2).astype("float32")
+    feat_cols = [c for c in X.columns if c not in
+                  ("symbol","open_time","alpha_beta","target_z","autocorr_pctile_7d")]
+    X[feat_cols] = X[feat_cols].fillna(0)
+    return X, feat_cols
+
+
+def build_liquidity_universe(sampled_t, n_top=30):
+    print(f"  Loading kline volumes...", flush=True)
+    daily_dv = {}
+    for sym_dir in KLINES_DIR.iterdir():
+        if not sym_dir.is_dir(): continue
+        m5 = sym_dir / "5m"
+        if not m5.exists(): continue
+        files = sorted(m5.glob("*.parquet"))
+        if not files: continue
+        sym = sym_dir.name
+        if sym == "BTCUSDT": continue
+        df = pd.concat([pd.read_parquet(f, columns=["open_time","quote_volume"])
+                          for f in files], ignore_index=True)
+        df["open_time"] = pd.to_datetime(df["open_time"], utc=True)
+        df["date"] = df["open_time"].dt.floor("1D")
+        daily = df.groupby("date")["quote_volume"].sum()
+        daily_dv[sym] = daily
+    dv_wide = pd.DataFrame(daily_dv).sort_index()
+    universe = {}
+    for t in sampled_t:
+        cutoff_lo = t - pd.Timedelta(days=90)
+        win = dv_wide[(dv_wide.index >= cutoff_lo) & (dv_wide.index < t)]
+        if len(win) < 10: continue
+        avg_dv = win.mean(axis=0).sort_values(ascending=False)
+        universe[t] = set(avg_dv.head(n_top).index)
+    return universe
+
+
+def compute_trailing_ic(apd, sampled_t, win_days=90):
+    apd_s = apd[apd["open_time"].isin(set(sampled_t))].sort_values(
+        ["symbol","open_time"]).reset_index(drop=True)
+    cycles_per_day = 6
+    win_cycles = win_days * cycles_per_day
+    rows = []
+    for sym, g in apd_s.groupby("symbol"):
+        g = g.sort_values("open_time").reset_index(drop=True)
+        pred = g["pred_z"].to_numpy(); alpha = g["alpha_beta"].to_numpy()
+        n = len(g)
+        ics = np.full(n, np.nan)
+        for i in range(50, n):
+            lo = max(0, i - win_cycles)
+            p, a = pred[lo:i], alpha[lo:i]
+            mask = ~np.isnan(p) & ~np.isnan(a)
+            if mask.sum() < 50: continue
+            pr = pd.Series(p[mask]).rank().to_numpy()
+            ar = pd.Series(a[mask]).rank().to_numpy()
+            if pr.std() < 1e-6 or ar.std() < 1e-6: continue
+            ics[i] = np.corrcoef(pr, ar)[0,1]
+        for j, t in enumerate(g["open_time"]):
+            rows.append({"symbol":sym, "open_time":t, "trail_ic":ics[j]})
+    return pd.DataFrame(rows).fillna(0)
+
+
+def aggregate_hold_through(records, alpha_wide):
+    sleeve_queue = deque(maxlen=psl.N_SLEEVES)
+    prev_weights = {}
+    bar_freq = pd.Timedelta(minutes=5)
+    rows = []
+    for _, rec in records.iterrows():
+        t = rec["time"]; fold = rec["fold"]
+        if rec["traded"]:
+            sleeve_queue.append({"entry_time":t, "longs":list(rec["long_basket"]),
+                                  "shorts":list(rec["short_basket"])})
+        max_age = HOLD_BARS * bar_freq
+        sleeve_queue = deque(
+            [s for s in sleeve_queue if (t - s["entry_time"]) < max_age],
+            maxlen=psl.N_SLEEVES)
+        tw = defaultdict(float)
+        sw = 1.0 / psl.N_SLEEVES
+        for sl in sleeve_queue:
+            nL, nS = len(sl["longs"]), len(sl["shorts"])
+            if nL == 0 or nS == 0: continue
+            for s in sl["longs"]: tw[s] += sw * (1.0/nL)
+            for s in sl["shorts"]: tw[s] -= sw * (1.0/nS)
+        gross = 0.0
+        if t in alpha_wide.index:
+            a = alpha_wide.loc[t]
+            for sym, w in prev_weights.items():
+                if sym in a.index and not pd.isna(a[sym]):
+                    gross += w * a[sym] * 1e4
+        syms = set(tw.keys()) | set(prev_weights.keys())
+        abs_d = sum(abs(tw.get(s,0)-prev_weights.get(s,0)) for s in syms)
+        cost = abs_d * psl.COST_PER_UNIT_ABS_DELTA
+        rows.append({"time":t,"fold":fold,"gross_pnl_bps":gross,"cost_bps":cost,
+                     "net_pnl_bps":gross-cost,"turnover":abs_d})
+        prev_weights = dict(tw)
+    return pd.DataFrame(rows)
+
+
+def main():
+    print("=== Step 33: Validate V1 R3_BTC proper preprocessing ===\n", flush=True)
+    t0 = time.time()
+    listings = get_listings()
+
+    tgt = pd.read_parquet(TARGETS)
+    tgt["open_time"] = pd.to_datetime(tgt["open_time"], utc=True)
+    cols_base = list(set(FRAME_NEUTRAL + KEEP_USHAPE_R3))
+    base = pd.read_parquet(PANEL, columns=["symbol","open_time"] + cols_base)
+    base["open_time"] = pd.to_datetime(base["open_time"], utc=True)
+    btc_panel = pd.read_parquet(PANEL_BTC, columns=["symbol","open_time"] + BTC_KEEP)
+    btc_panel["open_time"] = pd.to_datetime(btc_panel["open_time"], utc=True)
+    panel = tgt.merge(base, on=["symbol","open_time"], how="left")
+    panel = panel.merge(btc_panel, on=["symbol","open_time"], how="left")
+    print(f"Panel: {len(panel):,} rows", flush=True)
+
+    folds_all = _multi_oos_splits(panel)
+    train_mask = panel["open_time"].between(
+        _slice(panel, folds_all[0])[0].open_time.min(),
+        _slice(panel, folds_all[0])[0].open_time.max())
+
+    # Build V1 features
+    print("\nBuilding V1 features (rank transform + per-sym for funding)...",
+          flush=True)
+    X, feat_cols = build_v1_features(panel, train_mask)
+    print(f"  V1 features: {len(feat_cols)}", flush=True)
+
+    panel_x = panel[["symbol","open_time","alpha_beta","target_z","autocorr_pctile_7d"]].merge(
+        X.drop(columns=["alpha_beta","target_z","autocorr_pctile_7d"]),
+        on=["symbol","open_time"], how="left")
+
+    # Train V1
+    print("\nTraining V1...", flush=True)
+    all_preds = []
+    for fid in ALL_FOLDS:
+        if fid >= len(folds_all): continue
+        t_fold = time.time()
+        train_, cal, test = _slice(panel_x, folds_all[fid])
+        tr = train_[train_["autocorr_pctile_7d"] >= AUTO_THRESH].dropna(subset=["target_z"])
+        te = test.dropna(subset=["target_z"]).copy()
+        if len(tr) < 1000 or len(te) < 100: continue
+        Xt = tr[feat_cols].to_numpy(np.float32)
+        Xte = te[feat_cols].to_numpy(np.float32)
+        yt = tr["target_z"].to_numpy(np.float32)
+        mt = ~np.isnan(yt)
+        fold_preds = []
+        for seed in SEEDS:
+            rng = np.random.default_rng(seed)
+            idx = rng.integers(0, mt.sum(), size=mt.sum())
+            m = RidgeCV(alphas=ALPHAS, scoring="r2", cv=None, fit_intercept=True)
+            m.fit(Xt[mt][idx], yt[mt][idx])
+            fold_preds.append(m.predict(Xte).astype(np.float32))
+        pred = np.mean(fold_preds, axis=0)
+        df_pred = te[["symbol","open_time","alpha_beta"]].copy()
+        df_pred["pred_z"] = pred
+        df_pred["fold"] = fid
+        all_preds.append(df_pred)
+        print(f"  fold {fid}: {time.time()-t_fold:.0f}s", flush=True)
+
+    apd = pd.concat(all_preds, ignore_index=True).sort_values(["open_time","symbol"])
+    apd["open_time"] = pd.to_datetime(apd["open_time"], utc=True)
+    apd["alpha_A"] = apd["alpha_beta"]
+    # Merge exit + return_pct
+    extra = pd.read_parquet(PANEL,
+                              columns=["symbol","open_time","exit_time","return_pct"])
+    extra["open_time"] = pd.to_datetime(extra["open_time"], utc=True)
+    extra["exit_time"] = pd.to_datetime(extra["exit_time"], utc=True)
+    apd = apd.merge(extra, on=["symbol","open_time"], how="left")
+    apd.to_parquet(OUT / "v1_validation_preds.parquet", index=False)
+
+    cyc_ic = apd.dropna(subset=["alpha_beta"]).groupby("open_time").apply(
+        lambda g: g["pred_z"].rank().corr(g["alpha_beta"].rank())
+        if len(g) >= 5 else np.nan).dropna()
+    print(f"\nV1 overall IC: {cyc_ic.mean():+.4f}", flush=True)
+
+    # Setup universe
+    panel_syms = set(apd["symbol"].unique())
+    for s, t in apd.groupby("symbol")["open_time"].min().items():
+        if s not in listings:
+            t = t.tz_convert("UTC") if t.tz is not None else t.tz_localize("UTC")
+            listings[s] = t
+    def elig_pit(b):
+        ts = b if isinstance(b, pd.Timestamp) else pd.Timestamp(b, unit="ms", tz="UTC")
+        cutoff = ts - pd.Timedelta(days=MIN_HISTORY_DAYS)
+        return {s for s in panel_syms if listings.get(s) and listings[s] <= cutoff}
+    target_t = sorted(apd[apd["fold"].isin(OOS_FOLDS)]["open_time"].unique())
+    sampled_t = target_t[::psl.HORIZON_ENTRY]
+
+    df_ic = compute_trailing_ic(apd, sampled_t, TRAILING_IC_DAYS)
+    apd_full = apd.merge(df_ic, on=["symbol","open_time"], how="left")
+    apd_full["trail_ic"] = apd_full["trail_ic"].fillna(0)
+    apd_full["pred_B"] = apd_full["pred_z"] * apd_full["trail_ic"]
+    apd_full["pred"] = apd_full["pred_z"]
+    universe_V1 = psl.build_rolling_ic_universe(apd_full, sampled_t, psl.TOP_N, elig_pit)
+    universe_liq = build_liquidity_universe(sampled_t, n_top=30)
+    alpha_wide = apd_full.pivot_table(index="open_time", columns="symbol",
+                                        values="alpha_A", aggfunc="first").sort_index()
+
+    # ===== Test 1: Reproduce V1 +1.31 =====
+    print(f"\n--- Test 1: Reproduce V1 B_IC_signed ---", flush=True)
+    apd_v = apd_full.copy(); apd_v["pred"] = apd_v["pred_B"]
+    records_real = psl.run_production_protocol_save_sleeves(apd_v, universe_V1)
+    df_v_real = aggregate_hold_through(records_real, alpha_wide)
+    net = df_v_real["net_pnl_bps"].to_numpy()
+    sh_real = _sharpe(net)
+    sh_lo, sh_hi = block_bootstrap_ci(net, statistic=_sharpe,
+                                        block_size=7, n_boot=1000)[1:]
+    print(f"  V1 B_IC_signed: Sharpe = {sh_real:+.2f} [{sh_lo:+.2f},{sh_hi:+.2f}], "
+          f"folds+={folds_positive(df_v_real)}/9", flush=True)
+
+    # ===== Test 2: LOFO =====
+    print(f"\n--- Test 2: LOFO ---", flush=True)
+    for excl in range(1, 10):
+        rem = df_v_real[df_v_real["fold"] != excl]["net_pnl_bps"].to_numpy()
+        sh_rem = _sharpe(rem)
+        d = sh_rem - sh_real
+        flag = "  ← drives" if d < -0.4 else ""
+        print(f"  excl {excl}: {sh_rem:+.2f} (Δ {d:+.2f}){flag}", flush=True)
+
+    # ===== Test 3: P1 placebo — liquidity universe =====
+    print(f"\n--- P1 placebo (liquidity universe, random pick × {N_PLACEBO} seeds) ---",
+          flush=True)
+    p1 = []
+    for seed in range(N_PLACEBO):
+        records_p = psl.run_production_protocol_save_sleeves(
+            apd_full, universe_liq, placebo_seed=seed)
+        df_v_p = aggregate_hold_through(records_p, alpha_wide)
+        p1.append(_sharpe(df_v_p["net_pnl_bps"].to_numpy()))
+        if (seed+1) % 25 == 0:
+            print(f"  seed {seed+1}: mean={np.mean(p1):+.3f}", flush=True)
+    p1 = np.array(p1)
+    p5,p25,p50,p75,p95 = np.percentile(p1, [5,25,50,75,95])
+    print(f"  P1 mean: {p1.mean():+.3f}  std: {p1.std():.3f}", flush=True)
+    print(f"  P1 p5/p25/p50/p75/p95: {p5:+.2f}/{p25:+.2f}/{p50:+.2f}/"
+          f"{p75:+.2f}/{p95:+.2f}", flush=True)
+    print(f"  V1 rank in P1: {(p1 < sh_real).mean()*100:.1f}%", flush=True)
+    print(f"  Edge over P1 p95: {sh_real - p95:+.2f}", flush=True)
+
+    # ===== Test 4: P2 placebo — V1 universe =====
+    print(f"\n--- P2 placebo (V1 model universe, random pick × {N_PLACEBO} seeds) ---",
+          flush=True)
+    p2 = []
+    for seed in range(N_PLACEBO):
+        records_p = psl.run_production_protocol_save_sleeves(
+            apd_full, universe_V1, placebo_seed=seed)
+        df_v_p = aggregate_hold_through(records_p, alpha_wide)
+        p2.append(_sharpe(df_v_p["net_pnl_bps"].to_numpy()))
+        if (seed+1) % 25 == 0:
+            print(f"  seed {seed+1}: mean={np.mean(p2):+.3f}", flush=True)
+    p2 = np.array(p2)
+    p5,p25,p50,p75,p95_2 = np.percentile(p2, [5,25,50,75,95])
+    print(f"  P2 mean: {p2.mean():+.3f}  std: {p2.std():.3f}", flush=True)
+    print(f"  P2 p5/p25/p50/p75/p95: {p5:+.2f}/{p25:+.2f}/{p50:+.2f}/"
+          f"{p75:+.2f}/{p95_2:+.2f}", flush=True)
+    print(f"  V1 rank in P2: {(p2 < sh_real).mean()*100:.1f}%", flush=True)
+    print(f"  Edge over P2 p95: {sh_real - p95_2:+.2f}", flush=True)
+
+    pd.DataFrame({"P1":p1, "P2":p2}).to_csv(OUT / "v1_placebos.csv", index=False)
+    print(f"\n{'='*90}", flush=True)
+    print(f"  V1 VALIDATION VERDICT", flush=True)
+    print(f"{'='*90}", flush=True)
+    print(f"  V1 Sharpe: {sh_real:+.2f}", flush=True)
+    print(f"  P1 (liq univ random) p95: {p95:+.2f}  →  "
+          f"V1 {'PASSES' if sh_real > p95 else 'FAILS'} p95", flush=True)
+    print(f"  P2 (V1 univ random) p95: {p95_2:+.2f}  →  "
+          f"V1 {'PASSES' if sh_real > p95_2 else 'FAILS'} p95", flush=True)
+    print(f"\nReferences:", flush=True)
+    print(f"  R3 corrected + IC-signed:  +0.86 (p87 P1, p82 P2, FAILS)", flush=True)
+    print(f"  R3_BTC + IC-signed (Step 19): +1.92 (σ leak-driven)", flush=True)
+    print(f"  R3_BTC standard (Step 32 V0): +0.67", flush=True)
+    print(f"  LGBM production:            +0.74", flush=True)
+    print(f"\nTotal: {time.time()-t0:.0f}s", flush=True)
+
+
+if __name__ == "__main__":
+    main()

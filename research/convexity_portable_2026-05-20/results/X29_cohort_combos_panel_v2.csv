@@ -1,0 +1,7 @@
+variant,desc,n_feats,train_ic,sharpe,ci_lo,ci_hi,totPnL,maxDD,folds_pos,concentration,train_time_s,error
+V0_BASE_cohort_v2,baseline (BASE+cohort),17,0.0062,2.01,-0.28,4.24,6948,-1926,5/9,48%,87.0,
+V1_BASE_cohort_aggT_v2,BASE + cohort + aggT (full coverage),22,0.0049,1.52,-0.43,3.65,6688,-3018,5/9,50%,114.0,
+V2_BASE_cohort_crossX_v2,BASE + cohort + crossX,22,0.0062,1.9,-0.37,4.16,6585,-1962,5/9,46%,94.0,
+V3_BASE_cohort_aggT_crossX_v2,BASE + cohort + aggT + crossX,27,0.0049,1.35,-0.56,3.35,5890,-2717,5/9,45%,120.0,
+V4_BASE_cohort_v3_v2,BASE + cohort + v3_idio,21,0.002,,,,,,,,102.0,IndexError: index -1 is out of bounds for axis 0 with size 0
+V5_BASE_cohort_ALL_v2,BASE + cohort + ALL,31,0.0013,1.66,-0.46,3.78,5875,-2402,7/9,26%,137.0,

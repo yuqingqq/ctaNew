@@ -1,0 +1,84 @@
+====================================================================================================
+  STEP 38: SLEEVE + 24h TARGET + 24h-ALIGNED FEATURES
+====================================================================================================
+  Features (22): 12 R3_BTC base (1d-7d), 5 new long, 5 squared
+  Dropped from V2: atr_pct, vwap_slope_96, idio_vol_to_btc_1h,
+                   return_8h_orth, vol_zscore_4h_over_7d
+  Added: return_3d, return_5d (compound from return_1d),
+         btc_realized_vol_1d, btc_ret_288b, log_dollar_volume_7d
+
+Loading panels...
+Panel: 5,729,428 rows
+Building α_β_24h...
+  α_β_24h coverage: 5,525,178
+Built target_z_24h (median σ_idio_24h = 0.0854)
+Building return_3d, return_5d via compounding...
+  return_3d coverage: 5,728,828
+  return_5d coverage: 5,728,228
+  return_3d std: 0.2028  vs return_1d std: 0.0552
+
+Building feature matrix...
+  Features: 22
+    return_1d                           std=0.904
+    obv_z_1d                            std=1.000
+    bars_since_high_xs_rank             std=0.999
+    funding_rate                        std=1.054
+    funding_rate_z_7d                   std=0.982
+    funding_rate_1d_change              std=1.009
+    corr_to_btc_1d                      std=1.117
+    beta_to_btc_change_5d               std=0.908
+    dom_btc_z_1d                        std=0.999
+    dom_btc_change_288b                 std=0.908
+    corr_to_btc_change_3d               std=1.096
+    idio_vol_to_btc_1d                  std=1.011
+    return_3d                           std=0.891
+    return_5d                           std=0.878
+    btc_realized_vol_1d                 std=1.007
+    btc_ret_288b                        std=0.978
+    log_dollar_volume_7d                std=1.042
+    beta_to_btc_change_5d_sq            std=1.449
+    corr_to_btc_1d_sq                   std=2.127
+    return_1d_sq                        std=1.588
+    dom_btc_change_288b_sq              std=1.769
+    corr_to_btc_change_3d_sq            std=1.814
+
+Training Ridge on 24h target...
+    fold 0: IC_24h=+0.0064, 7s
+    fold 1: IC_24h=+0.0048, 11s
+    fold 2: IC_24h=+0.0065, 15s
+    fold 3: IC_24h=-0.0027, 19s
+    fold 4: IC_24h=+0.0062, 23s
+    fold 5: IC_24h=-0.0105, 26s
+    fold 6: IC_24h=+0.0011, 30s
+    fold 7: IC_24h=+0.0145, 34s
+    fold 8: IC_24h=+0.0099, 38s
+    fold 9: IC_24h=+0.0073, 43s
+
+Overall IC (pred_z vs α_β_24h): +0.0043
+
+====================================================================================================
+  V3.1 sleeve overlay on 24h-aligned + 24h-target Ridge
+====================================================================================================
+  A baseline (pred_z): Sharpe=-0.03 [-2.52,+2.12]  folds+=4/9  gross=+0.66  traded=1422/1620
+  B IC_signed (pred_B): Sharpe=+0.50 [-1.95,+2.80]  folds+=3/9  gross=+1.39  traded=1466/1620
+
+  LOFO on B (Sharpe = +0.50):
+    excl 1: -0.22 (Δ -0.72)  ← drives
+    excl 2: +0.60 (Δ +0.10)
+    excl 3: +0.69 (Δ +0.19)
+    excl 4: +0.09 (Δ -0.41)  ← drives
+    excl 5: +0.68 (Δ +0.19)
+    excl 6: +0.55 (Δ +0.05)
+    excl 7: +0.67 (Δ +0.17)
+    excl 8: +0.29 (Δ -0.21)
+    excl 9: +1.31 (Δ +0.82)
+
+====================================================================================================
+  COMPARISON LADDER
+====================================================================================================
+  4h target + V2 (22 ft) + V3.1 sleeve   (Step 34/35): Sharpe +2.19
+  24h target + V2 (22 ft) + V3.1 sleeve  (Step 37):    Sharpe +1.50
+  24h target + 24h-aligned (22 ft) + sleeve (THIS):    Sharpe +0.50
+  4h target + V2 (22 ft) raw 4h cycle    (Step 36):    Sharpe -7.45
+
+Total: 392s

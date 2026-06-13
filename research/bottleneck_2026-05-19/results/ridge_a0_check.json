@@ -1,0 +1,18 @@
+{
+  "ridge_A0_pooled_sharpe": 0.56,
+  "per_group": {
+    "g0": 0.797,
+    "g1": 1.497,
+    "g2": -0.33,
+    "g3": 1.016,
+    "g4": -0.307
+  },
+  "groups_positive": "3/5",
+  "level_block_bootstrap_CI": [
+    -0.503,
+    1.552
+  ],
+  "lofo_group_sign_flips": [],
+  "verdict": "WITHIN-NOISE ARTIFACT \u2014 dismiss (CI incl 0 / <4 groups+ / LOFO flip; Ridge 0-impute shrinkage + per-fold standardize; topK spread was -0.71)",
+  "elapsed_s": 178.0
+}

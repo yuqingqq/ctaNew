@@ -1,0 +1,43 @@
+====================================================================================================
+  STEP 42: P1+P2 placebos on V2 110-panel (Step 41 rerun)
+====================================================================================================
+  Reference: V2 on 110-panel + sleeve = Sharpe +2.03 (CI [-0.22, +4.14])
+  Real and placebo BOTH gate on pred_B (gate-consistent)
+
+Panel symbols (BTC already excluded): 110
+OOS cycles: 1620
+  Loading kline volumes for 110 110-panel symbols...
+  V2 model universe built (1620 cycles), liq universe (1620 cycles)
+
+V2 110-panel B_IC_signed: Sharpe = +2.03 [-0.22, +4.14], folds+=6/9
+
+--- P1 placebo (liq univ random, gate on pred_B) × 100 ---
+  seed 25: mean=-0.419
+  seed 50: mean=-0.455
+  seed 75: mean=-0.299
+  seed 100: mean=-0.269
+  P1 mean: -0.269  std: 1.073
+  P1 p5/p25/p50/p75/p95: -2.04/-0.97/-0.25/+0.48/+1.43
+  V2 rank in P1: 99.0%
+  Edge over P1 p95: +0.60
+
+--- P2 placebo (V2 model univ random, gate on pred_B) × 100 ---
+  seed 25: mean=+0.155
+  seed 50: mean=-0.115
+  seed 75: mean=-0.034
+  seed 100: mean=-0.112
+  P2 mean: -0.112  std: 1.242
+  P2 p5/p25/p50/p75/p95: -1.94/-1.08/-0.36/+0.71/+2.15
+  V2 rank in P2: 92.0%
+  Edge over P2 p95: -0.13
+
+====================================================================================================
+  V2 110-PANEL PLACEBO VERDICT
+====================================================================================================
+  V2 110-panel Sharpe: +2.03  CI=[-0.22,+4.14]
+  P1 (liq univ random, gate on pred_B) p95: +1.43  →  PASS (edge +0.60)
+  P2 (V2 univ random, gate on pred_B)  p95: +2.15  →  FAIL (edge -0.13)
+
+  V2 51-panel reference (Step 35):  P1 PASS p99 (+1.04), P2 PASS p97 (+0.58)
+
+Total: 818s

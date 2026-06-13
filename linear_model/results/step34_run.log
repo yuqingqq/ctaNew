@@ -1,0 +1,124 @@
+=== Step 34: V1 with NaN fix + re-standardization ===
+
+Panel: 5,729,428 rows
+
+NaN counts in heavy-tail features:
+  funding_rate_1d_change: 14,400 NaNs (0.3%)
+  funding_rate_z_7d: 39,902 NaNs (0.7%)
+  idio_vol_to_btc_1h: 0 NaNs (0.0%)
+  vwap_slope_96: 0 NaNs (0.0%)
+  funding_rate: 0 NaNs (0.0%)
+
+====================================================================================================
+  V0 standard: 20 features
+====================================================================================================
+    fold 0: IC=+0.0140, 7s
+    fold 1: IC=-0.0047, 10s
+    fold 2: IC=+0.0065, 14s
+    fold 3: IC=-0.0054, 18s
+    fold 4: IC=+0.0055, 21s
+    fold 5: IC=-0.0227, 25s
+    fold 6: IC=-0.0086, 28s
+    fold 7: IC=+0.0019, 32s
+    fold 8: IC=-0.0063, 36s
+    fold 9: IC=+0.0007, 39s
+  Overall IC: -0.0019
+  V0 standard A_baseline: Sharpe=+0.52, gross=+1.78, folds+=4/9, end-eq=$117.28
+  V0 standard B_IC_signed: Sharpe=+0.67, gross=+1.47, folds+=5/9, end-eq=$113.17
+  LOFO on B (Sharpe = +0.67):
+    excl 1: +1.36 (Δ +0.69)
+    excl 2: +0.48 (Δ -0.19)
+    excl 3: +0.78 (Δ +0.12)
+    excl 4: +0.01 (Δ -0.66)  ← drives
+    excl 5: +1.05 (Δ +0.38)
+    excl 6: +0.24 (Δ -0.43)  ← drives
+    excl 7: +0.73 (Δ +0.07)
+    excl 8: +0.37 (Δ -0.30)
+    excl 9: +1.03 (Δ +0.36)
+
+V1 feature std (post fix + re-std):
+  funding_rate_1d_change              std=1.009
+  bars_since_high_xs_rank             std=0.999
+  return_1d                           std=0.904
+  idio_vol_to_btc_1d                  std=1.011
+  atr_pct                             std=0.986
+  vwap_slope_96                       std=0.955
+  beta_to_btc_change_5d               std=0.908
+  corr_to_btc_change_3d               std=1.096
+  dom_btc_z_1d                        std=0.999
+  dom_btc_change_288b                 std=0.908
+  funding_rate_z_7d                   std=0.982
+  corr_to_btc_1d                      std=1.117
+  funding_rate                        std=1.054
+  idio_vol_to_btc_1h                  std=1.025
+  obv_z_1d                            std=1.000
+  beta_to_btc_change_5d_sq            std=1.449
+  corr_to_btc_1d_sq                   std=2.127
+  return_1d_sq                        std=1.588
+  dom_btc_change_288b_sq              std=1.769
+  corr_to_btc_change_3d_sq            std=1.814
+
+====================================================================================================
+  V1 proper (fixed): 20 features
+====================================================================================================
+    fold 0: IC=+0.0042, 7s
+    fold 1: IC=-0.0040, 10s
+    fold 2: IC=+0.0030, 14s
+    fold 3: IC=-0.0089, 17s
+    fold 4: IC=+0.0060, 21s
+    fold 5: IC=-0.0118, 24s
+    fold 6: IC=-0.0021, 28s
+    fold 7: IC=+0.0091, 32s
+    fold 8: IC=+0.0058, 35s
+    fold 9: IC=+0.0072, 39s
+  Overall IC: +0.0008
+  V1 proper (fixed) A_baseline: Sharpe=+0.32, gross=+1.41, folds+=4/9, end-eq=$111.39
+  V1 proper (fixed) B_IC_signed: Sharpe=+1.21, gross=+2.17, folds+=4/9, end-eq=$124.43
+  LOFO on B (Sharpe = +1.21):
+    excl 1: +0.39 (Δ -0.82)  ← drives
+    excl 2: +1.53 (Δ +0.33)
+    excl 3: +0.83 (Δ -0.37)
+    excl 4: +1.33 (Δ +0.12)
+    excl 5: +1.54 (Δ +0.33)
+    excl 6: +1.15 (Δ -0.06)
+    excl 7: +1.51 (Δ +0.31)
+    excl 8: +1.05 (Δ -0.16)
+    excl 9: +1.46 (Δ +0.25)
+
+====================================================================================================
+  V2 proper + short: 22 features
+====================================================================================================
+    fold 0: IC=+0.0049, 7s
+    fold 1: IC=-0.0038, 11s
+    fold 2: IC=+0.0040, 15s
+    fold 3: IC=-0.0086, 19s
+    fold 4: IC=+0.0055, 23s
+    fold 5: IC=-0.0126, 26s
+    fold 6: IC=-0.0118, 31s
+    fold 7: IC=+0.0036, 35s
+    fold 8: IC=+0.0043, 39s
+    fold 9: IC=+0.0075, 43s
+  Overall IC: -0.0007
+  V2 proper + short A_baseline: Sharpe=+0.99, gross=+2.79, folds+=5/9, end-eq=$133.94
+  V2 proper + short B_IC_signed: Sharpe=+2.19, gross=+3.40, folds+=7/9, end-eq=$144.22
+  LOFO on B (Sharpe = +2.19):
+    excl 1: +1.51 (Δ -0.69)  ← drives
+    excl 2: +2.41 (Δ +0.22)
+    excl 3: +2.19 (Δ -0.00)
+    excl 4: +1.53 (Δ -0.66)  ← drives
+    excl 5: +2.63 (Δ +0.44)
+    excl 6: +2.18 (Δ -0.02)
+    excl 7: +2.77 (Δ +0.58)
+    excl 8: +2.21 (Δ +0.02)
+    excl 9: +2.28 (Δ +0.08)
+
+====================================================================================================
+  STEP 34 SUMMARY (NaN-fixed + re-standardized)
+====================================================================================================
+  Variant                              A_baseline    B_IC_signed    folds+ (B)    overall_IC
+  V0 standard                                 +0.52         +0.67     5/9       -0.0019
+  V1 proper (fixed)                           +0.32         +1.21     4/9       +0.0008
+  V2 proper + short                           +0.99         +2.19     7/9       -0.0007
+
+  Artifacts in: /home/yuqing/ctaNew/linear_model/results/step34_v1_fixed
+  Total: 879s

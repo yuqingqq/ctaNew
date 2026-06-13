@@ -1,0 +1,4 @@
+variant,desc,train_ic,sharpe,ci_lo,ci_hi,totPnL,maxDD,folds_pos,concentration,train_time_s,error
+P1_winsor_baseline,Standard winsor p1/p99 + z (baseline),0.0101,0.19,-2.07,2.47,664,-3276,5/9,77%,98.0,
+P2_rank_transform,"Rank-transform [-1, 1]",0.0068,-0.18,-1.74,1.61,-607,-2483,4/9,57%,97.0,
+P3_robust_mad,"Robust median/MAD scaling, clip ±5",0.0012,-0.39,-2.37,1.75,-1250,-5892,4/9,86%,62.0,

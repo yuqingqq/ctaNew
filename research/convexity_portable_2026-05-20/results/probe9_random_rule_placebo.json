@@ -1,0 +1,299 @@
+{
+  "real_rule": {
+    "feats": [
+      "idio_vol_to_btc_1d",
+      "corr_to_btc_1d",
+      "funding_rate",
+      "return_1d"
+    ],
+    "thresholds": [
+      2.0,
+      -1.5,
+      -1.5,
+      0.0
+    ],
+    "directions": [
+      "gt",
+      "lt",
+      "lt",
+      "gt"
+    ],
+    "trade_sign": 1,
+    "sharpe": 4.158,
+    "n_fires": 893
+  },
+  "placebo_distribution": {
+    "n_random_rules_kept": 296,
+    "real_sharpe": 4.158,
+    "real_n_fires": 893,
+    "placebo_p05": -5.379,
+    "placebo_p25": -3.623,
+    "placebo_p50": -2.618,
+    "placebo_p75": -1.861,
+    "placebo_p90": -0.511,
+    "placebo_p95": 0.499,
+    "placebo_p99": 2.786,
+    "placebo_max": 8.591,
+    "placebo_min": -8.252,
+    "placebo_mean": -2.596,
+    "real_rank_pct": 98.99,
+    "n_random_geq_real": 3,
+    "n_random_geq_real_abs_value": 44
+  },
+  "verdict": "PASS \u2014 real Sharpe at p99.0 \u2265 p99 of random rules (2.786)",
+  "top_5_random_rules_by_sharpe": [
+    {
+      "rule_id": 5,
+      "feats": [
+        "aggr_ratio_4h",
+        "return_1d",
+        "vwap_slope_96",
+        "dom_change_288b_vs_bk"
+      ],
+      "thresholds": [
+        1.82,
+        -0.95,
+        0.41,
+        0.79
+      ],
+      "directions": [
+        "gt",
+        "gt",
+        "gt",
+        "gt"
+      ],
+      "trade_sign": -1,
+      "n_fires": 208,
+      "net_mean_bps": 29.3,
+      "sharpe": 8.591
+    },
+    {
+      "rule_id": 65,
+      "feats": [
+        "funding_rate_z_7d",
+        "funding_rate_1d_change",
+        "return_1d",
+        "idio_kurt_1d"
+      ],
+      "thresholds": [
+        -3.03,
+        0.19,
+        0.52,
+        0.87
+      ],
+      "directions": [
+        "lt",
+        "lt",
+        "gt",
+        "lt"
+      ],
+      "trade_sign": 1,
+      "n_fires": 303,
+      "net_mean_bps": 64.6,
+      "sharpe": 5.524
+    },
+    {
+      "rule_id": 381,
+      "feats": [
+        "return_1d",
+        "mfi",
+        "beta_to_btc_change_5d",
+        "funding_streak_pos"
+      ],
+      "thresholds": [
+        -0.73,
+        -0.71,
+        0.84,
+        -2.06
+      ],
+      "directions": [
+        "gt",
+        "gt",
+        "gt",
+        "lt"
+      ],
+      "trade_sign": 1,
+      "n_fires": 237,
+      "net_mean_bps": 31.2,
+      "sharpe": 4.229
+    },
+    {
+      "rule_id": 338,
+      "feats": [
+        "atr_pct",
+        "obv_z_1d",
+        "corr_to_btc_1d",
+        "aggr_ratio_4h"
+      ],
+      "thresholds": [
+        0.5,
+        2.23,
+        1.02,
+        -0.6
+      ],
+      "directions": [
+        "gt",
+        "gt",
+        "lt",
+        "gt"
+      ],
+      "trade_sign": -1,
+      "n_fires": 258,
+      "net_mean_bps": 13.4,
+      "sharpe": 2.71
+    },
+    {
+      "rule_id": 55,
+      "feats": [
+        "mfi",
+        "idio_vol_to_btc_1h",
+        "name_idio_share_1d",
+        "funding_rate_1d_change"
+      ],
+      "thresholds": [
+        -0.82,
+        0.82,
+        0.45,
+        0.91
+      ],
+      "directions": [
+        "lt",
+        "gt",
+        "gt",
+        "gt"
+      ],
+      "trade_sign": -1,
+      "n_fires": 382,
+      "net_mean_bps": 19.7,
+      "sharpe": 2.641
+    }
+  ],
+  "bottom_5_random_rules_by_sharpe": [
+    {
+      "rule_id": 347,
+      "feats": [
+        "atr_pct",
+        "mfi",
+        "vwap_slope_96",
+        "corr_to_btc_1d"
+      ],
+      "thresholds": [
+        1.95,
+        -0.37,
+        2.61,
+        1.71
+      ],
+      "directions": [
+        "lt",
+        "gt",
+        "lt",
+        "gt"
+      ],
+      "trade_sign": 1,
+      "n_fires": 260,
+      "net_mean_bps": -12.1,
+      "sharpe": -8.252
+    },
+    {
+      "rule_id": 18,
+      "feats": [
+        "obv_z_1d",
+        "aggr_ratio_4h",
+        "idio_kurt_1d",
+        "vwap_slope_96"
+      ],
+      "thresholds": [
+        -1.55,
+        -1.61,
+        0.62,
+        -5.8
+      ],
+      "directions": [
+        "lt",
+        "gt",
+        "gt",
+        "gt"
+      ],
+      "trade_sign": 1,
+      "n_fires": 272,
+      "net_mean_bps": -21.4,
+      "sharpe": -7.736
+    },
+    {
+      "rule_id": 176,
+      "feats": [
+        "idio_vol_to_btc_1h",
+        "idio_vol_to_btc_1d",
+        "obv_z_1d",
+        "aggr_ratio_4h"
+      ],
+      "thresholds": [
+        2.12,
+        0.26,
+        -0.57,
+        1.69
+      ],
+      "directions": [
+        "lt",
+        "lt",
+        "gt",
+        "gt"
+      ],
+      "trade_sign": 1,
+      "n_fires": 2097,
+      "net_mean_bps": -17.9,
+      "sharpe": -7.352
+    },
+    {
+      "rule_id": 286,
+      "feats": [
+        "aggr_ratio_4h",
+        "corr_to_btc_1d",
+        "idio_kurt_1d",
+        "name_idio_share_1d"
+      ],
+      "thresholds": [
+        1.76,
+        2.49,
+        0.68,
+        -1.48
+      ],
+      "directions": [
+        "gt",
+        "lt",
+        "lt",
+        "gt"
+      ],
+      "trade_sign": 1,
+      "n_fires": 2207,
+      "net_mean_bps": -16.8,
+      "sharpe": -6.773
+    },
+    {
+      "rule_id": 77,
+      "feats": [
+        "return_1d",
+        "idio_vol_to_btc_1d",
+        "atr_pct",
+        "funding_rate_1d_change"
+      ],
+      "thresholds": [
+        0.15,
+        0.05,
+        0.96,
+        -2.62
+      ],
+      "directions": [
+        "lt",
+        "lt",
+        "gt",
+        "gt"
+      ],
+      "trade_sign": -1,
+      "n_fires": 295,
+      "net_mean_bps": -24.3,
+      "sharpe": -6.756
+    }
+  ],
+  "elapsed_s": 12.4
+}
