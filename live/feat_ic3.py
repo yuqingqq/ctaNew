@@ -59,6 +59,9 @@ for sym in syms:
     rng = (o["high"]-o["low"])/(o["close"]+1e-9)
     closeloc = (o["close"]-o["low"])/((o["high"]-o["low"]).replace(0,np.nan))
     takerimb = (2*o["tbq"]-o["qvol"])/(o["qvol"]+1.0)
+    # PIT FIX: the 4h bar at index t spans [t,t+4h) (realized DURING the forward window) -> shift(1) so the feature at
+    # decision-time t uses the PRIOR completed bar [t-4h,t), known at t. (Without this, close_loc/taker leak the move.)
+    amihud, volspike, rng, closeloc, takerimb = (s.shift(1) for s in (amihud, volspike, rng, closeloc, takerimb))
     df=pd.DataFrame({"open_time":o.index,"amihud":amihud.values,"vol_spike":volspike.values,
                      "intraday_range":rng.values,"close_loc":closeloc.values,"taker_imb":takerimb.values})
     df["symbol"]=sym; rows.append(df)

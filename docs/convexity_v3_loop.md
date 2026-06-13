@@ -537,3 +537,9 @@ reversal BLOCK -0.0000(6/9). New signal AXES add zero OOS IC over V0+RR. TWO con
 +0.0295 is near the price/funding/vol ceiling; short-horizon residual reversal + funding IS the extractable signal.
 -> feat-iter3 = ONE final genuinely-different batch (microstructure/liquidity: Amihud illiquidity, volume spike,
 intraday range, close-location), then STOP if empty (feature layer exhausted on free data).
+
+### feat-iter3 (microstructure) — LOOK-AHEAD BUG CAUGHT (not winners), re-testing PIT-correct
+First run reported absurd IC: close_loc +0.5545, taker_imb +0.2823, vol_spike +0.0922, intraday_range +0.0892 (all 9/9).
+IC >+0.10 = look-ahead (CLAUDE.md rule); +0.55 is impossible for 4h XS return. CAUSE: the 4h bar at open_time t spans
+[t,t+4h) — its close_loc/taker/range are realized DURING the forward-return window (contemporaneous leak). FIX: shift
+features by 1 bar so decision-time t uses the prior COMPLETED bar [t-4h,t). Re-testing PIT-correct (expect collapse to ~0).
