@@ -518,3 +518,9 @@ realism robustness check, needs universe rebuild+re-predict, NOT alpha). Feature
 (alpha-model + leg-reweighting families already mapped as noise-dominated). **VERDICT: ship nothing new; +4.22 is a
 robust local optimum; the 4h XS mean-rev construction layer is exhausted — real lift needs a new INPUT, not a knob.
 Decisive next step is OPERATIONAL (live forward test).** Infra: live/opt_eval.py, live/opt_workflow.mjs.
+
+## ============ LONG FEATURE-DISCOVERY LOOP (2026-06-13, "push harder") ============
+Construction/knob space exhausted (13-agent pass). Only surface with a prior = NEW SIGNAL. This loop builds + nested-OOS
+marginal-IC tests new free-data features; IC-robust winners (lift>=+0.004, >=6/9 folds, not fold-concentrated) escalate
+to full strategy replay. Honest gates throughout; low prior (feature-layer historically thin on free data) but covered exhaustively.
+### feat-iter1 (15 panel-derivable interaction/structure features) — running (marginal nested-OOS IC)
