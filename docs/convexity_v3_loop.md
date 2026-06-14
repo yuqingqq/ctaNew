@@ -600,3 +600,31 @@ cross-section. CAVEAT: tighter caps deploy LESS capital (it's capacity-aware siz
 effective deployment. This is WIREABLE & principled (param-light): per-name weight = min(inv_vol_weight, depth_budget),
 depth from periodic HL probe (capacity_probe.py). Analytical/taker estimate — needs bot validation + the live forward
 test arbitrates. THE genuine capacity optimization: size-to-depth lifts realistic Sharpe ~+1.2 -> ~+3.0 at $1M.
+
+## ============ FUNDING-CARRY REALISM (2026-06-14) — uncounted -0.44 Sharpe cost, NOT removable ============
+The +4.22 backtest is PRICE-ONLY (`grep funding live/convexity_paper_bot.py` == empty). Perps charge funding every 8h.
+FINDING (live/funding_carry.py reconstructs the ACTUAL 6-sleeve book from sleeves.csv + panel funding_rate, accrues
+0.5*fr per 4h cycle, book funding = -sum_s w_s*fr_s): carry = **-1758 bps** over the OOS = Sharpe **+4.224 -> +3.784
+(-0.44)**, totPnL 16731 -> 14973 (-11%). Structural: 74% of cycles PAY, broad (not a tail), worst in bear (-1.88/cyc).
+The strategy shorts heavily-shorted (NEGATIVE-funding) squeeze-setup names -> PAYS to hold them. STACKS on top of the
+capacity haircut (separate HOLDING cost; capacity replaced the TRADING cost). [[also the long-leg drag is partly this]]
+COHORT (short picks by entry funding): Q0 most-negative (-9 bps/8h) earn the BEST price alpha (+24.8 bp/pick) but -63.8 bp
+funding -> NET -39 bp (the ONLY losing bucket); corr(funding, price-alpha) = -0.04 => carry is ~PURE DRAG, not buying edge.
+FIX TESTED — carry-aware short veto (env SHORT_FUND_FLOOR, drop shorts paying worse than floor; next-best short refills;
+funding_eval.py scores price+funding per-fold):
+| floor bps/8h | price Sh | funding bps | FUND-ADJ Sh | fund-adj lift | folds+ |
+|---|---|---|---|---|---|
+| baseline    | 4.224 | -1758 | 3.784 | —      | —   |
+| -20 (tail)  | 3.925 | -1223 | 3.616 | -0.168 | 3/9 |
+| -15         | 3.763 | -1154 | 3.471 | -0.313 | 3/9 |
+| -10         | 3.552 | -1071 | 3.281 | -0.503 | 3/9 |
+| -5          | 3.437 |  -925 | 3.201 | -0.583 | 3/9 |
+MONOTONE NEGATIVE at every floor; lift->0 only as floor->-26 (drops nothing). NO floor helps; even the principled
+extreme-tail veto (-20, "carry alone > max plausible alpha ~+25bp") loses -0.168 / 3-9 folds. MECHANISM: the
+negative-funding squeeze-setup shorts carry the HIGHEST price alpha; dropping them + refilling with weaker shorts loses
+more alpha than funding saved. Carry is BOUND to the short edge — same law as rocket-filter (iter8) / short-ret_3d-cap (iter12).
+VERDICT: funding is REAL and must be COUNTED (forward -0.44 lower), but NOT separately removable — it's the price of the
+short edge, paid in carry. The one lever that touches it = EXECUTION QUALITY (maker fills / HL's different funding), a LIVE
+question the forward test arbitrates. Env SHORT_FUND_FLOOR kept in bot (default -999=off; tested infra documenting the
+negative). Scripts: live/funding_carry.py, live/funding_eval.py. REVISED honest forward: paper +4.22 (price) -> +3.78
+(with Binance funding) -> lower again at $1M (taker impact stacks); live HL test (realized HL funding + execution) arbitrates.
