@@ -651,3 +651,24 @@ HONEST FORWARD: headline +4.22 overstates; realistic ~+1.5 to ~+3.0 Sharpe depen
 quality (maker reduces impact but not funding), with funding a firm -0.44 floor on top. Remaining work is OPERATIONAL:
 size-to-depth sizing, maker execution, and the live HL forward test as the true arbiter. Backtest optimization is DONE —
 further iterations would be manufacturing filler against the honesty bar.
+
+### LONG carry-harvest (2026-06-14) — REJECTED; funding -0.44 unrecoverable on the long leg too
+Upside attempt (user: "find a real optimization, not more cost"): short leg PAYS funding (unrecoverable, alpha-bound) but
+the LONG leg can RECEIVE funding if tilted toward negative-funding (carry-paying) names — income the price-ranking model
+ignores. PIT GUARD FIRST (mandatory — panel raw funding_rate is CONTEMPORANEOUS and LEAKS): long Q0-Q3 price spread
++40.5 (contemp) -> +23.7 (4h lag) -> +12.4 (8h lag), corr -0.052 -> +0.01 => the long-funding PRICE edge is ~all
+look-ahead; selection must use LAGGED funding (env FUND_LAG_BARS=2 = 8h settled; fund_pit). [SHORT side OPPOSITE: Q0 alpha
+edge GROWS with lag, +11.8 -> +33.8 => short alpha genuinely bound to carry, PIT-ROBUST -> short-filter failure CONFIRMED
+not a look-ahead artifact.] LONG_FUND_CEIL (drop longs with PIT funding > ceil; carry-harvest), funding-adjusted:
+| ceil bps/8h | price Sh | funding bps | FUND-ADJ Sh | fund-adj lift | folds+ |
+|---|---|---|---|---|---|
+| baseline | 4.224 | -1758 | 3.784 | —      | —   |
+| 0 (~50% drop) | 3.743 | -1427 | 3.378 | -0.406 | 2/9 |
+| +2 (gentle)   | 4.286 | -1732 | 3.851 | +0.067 | 8/9 |
+ceil=0 (real harvest): saves +331 funding but DESTROYS -0.48 price alpha (weak refills) -> net -0.41. ceil=+2: +0.067
+fund-adj / 8-9 folds BUT funding barely moves (+26) => NOT carry-harvest, a tiny price nudge at a hand-tuned +2 boundary;
+<< +0.30 bar, threshold-sensitive, mechanism disproven -> REJECT (overfit). VERDICT: long carry NOT meaningfully
+harvestable — harvesting needs aggressive tilt that costs more alpha than carry gained (same alpha-bound law, milder).
+**Funding -0.44 is UNRECOVERABLE on BOTH legs; +3.78 funding-adjusted is FINAL.** Methodological catch for the record:
+panel raw funding_rate LEAKS (contemporaneous) — any funding SELECTION signal must lag; COST accrual correctly uses the
+current rate. Env SHORT_FUND_FLOOR / LONG_FUND_CEIL / FUND_LAG_BARS kept in bot (default off; tested-negative infra).
