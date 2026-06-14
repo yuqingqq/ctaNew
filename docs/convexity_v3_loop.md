@@ -688,3 +688,67 @@ DEPTH_AUM=1e6, DEPTH_CAP_BPS=10; DEFAULT OFF -> production byte-unchanged; FAIL-
 unchanged). Forward server flips DEPTH_AWARE_SIZING=1 to A/B it; realfill measures realized post-slippage PnL = the
 honest deployable Sharpe (analytical estimate was ~+3.0 @ ~$150-250k effective; live arbitrates). Scripts:
 live/depth_resize.py, live/convexity_v1_cycle_once.sh (+2b step).
+
+## ============ "RECHECK THE DETAILS HARD" AUDIT (2026-06-14) — headline +4.22 is annualization-inflated ~0.5 ============
+User asked to re-audit the +4.22 itself for hidden bugs rather than chase more knobs. Audited the 3 highest-risk spots:
+- **PnL accounting — CLEAN.** Each cycle books gross_pnl = Σ net_after[s]·return_pct[s], i.e. the 4h-FORWARD return of the
+  6-sleeve-AGGREGATE book, marked once per 4h (run_replay ~L1075). Consecutive cycles cover non-overlapping windows
+  (t→t+1, t+1→t+2); the 24h-hold overlap lives in the BLENDED positions (net[s]+=wt/HOLD), NOT in double-counted
+  returns. This is NOT the vBTC AH0 bug (which summed per-sleeve 24h round-trips as independent samples).
+- **Target PIT — CLEAN.** return_pct = my_close.shift(-48)/my_close - 1 (genuine forward 4h, X70.target_alpha L123);
+  beta = (cov/var).shift(1) (trailing, PIT). alpha_A = my_fwd - beta·btc_fwd. Position decided at t from preds≤t earns
+  t→t+4h. No same-bar leak. base_mpit/long_mpit are monthly-PIT.
+- **Annualization — INFLATED ~0.5 Sharpe (the finding).** The 6-sleeve blend turns over only ~1/6 of the book per
+  cycle => the 4h pnl stream is POSITIVELY AUTOCORRELATED (lag1-6 sum +0.207). The reported Sharpe uses naive iid
+  mean/std·√(6·365), which understates variance under positive autocorr. Frequency-robust truth:
+  | stream | 4h-naive | daily-resamp | weekly | Newey-West L6/12 | autocorr haircut |
+  |---|---|---|---|---|---|
+  | price-only  | 4.22 | 3.68 | 3.71 | 3.78 | **-0.54** |
+  | funding-adj | 3.78 | 3.30 | —    | —    | **-0.48** |
+  Daily/weekly/NW all agree ~3.7-3.8 (price-only) => robust, not a resample artifact. **The honest annualized Sharpe
+  is ~0.87× the naive number.** EVERY Sharpe in this ledger uses the naive 4h annualization, so all carry this factor;
+  RELATIVE lifts are unaffected (same method both arms) => the optimization CONCLUSIONS stand, but the ABSOLUTE
+  deployable number is lower than reported. **HONEST STACK: gross price-only ~+3.7 (not +4.22) -> funding-adj ~+3.3
+  -> minus the capacity haircut at deployment size.** Not fraud/leak — an annualization convention that overstated by
+  ~0.5. Recommend reporting daily-resampled or NW Sharpe going forward, and the live forward test (independent 4h
+  marks) will realize the autocorr-correct number directly. Script: ad-hoc (cycles.csv autocorr + resample).
+
+## ============ STRATEGY REVIEW — combined honest numbers + drawbacks + where to optimize (2026-06-14) ============
+Consolidating the audit + funding + decomposition into ONE honest picture.
+
+**HONEST PERFORMANCE STACK (daily-resampled Sharpe, autocorr-correct):**
+| layer | Sharpe | note |
+|---|---|---|
+| headline (4h-naive, price) | +4.22 | the number in all prior ledger entries — autocorr-inflated |
+| price-only, daily-robust    | **+3.68** | strip the 6-sleeve autocorr inflation (×0.87) |
+| **funding-adjusted, daily** | **+3.30** | minus the -1758bps irreducible carry — THE deployable paper Sharpe |
+| at deployment size          | lower | minus capacity/impact haircut (size-to-depth; live forward test arbitrates) |
+Risk-adj (funding-adj): Sortino +4.09, Calmar +8.11, ann_vol ~68%, maxDD ~28% of NAV. Regime daily-Sharpe (fund-adj):
+side +3.40 (917 cyc, the workhorse), bull +2.00, **bear +1.25 (weakest, owns the maxDD)**.
+
+**DRAWBACKS (ranked, data-backed):**
+1. **Fat left tail / squeeze risk (kurtosis 17.4).** The worst 1% of cycles (15 of 1463) erase **-46% of total PnL**.
+   Mechanism: BEAR-regime short-SQUEEZE correlated blowups — in those 15 cycles short_ret -5143 (14/15 negative) AND
+   long_ret -1777 (12/15 negative), 10/15 in bear. A bear relief-rally rips the shorted weak alts up while the
+   defensive longs also fall = both legs lose together. This is the structural cost of the short edge (shorting
+   winners IS the edge; the squeeze is its tail — caps/stops on it were rejected, they remove more edge than tail).
+2. **Total short-side dependence.** short_ret +20200 vs long_ret -1758: the SHORT leg is the ENTIRE engine; the long
+   leg is a load-bearing variance hedge with ZERO net return. Regime risk = a sustained altseason / short-squeeze
+   regime has NO long-side alpha to fall back on. Single point of failure.
+3. **Bear is the weak regime** (fund-adj +1.25) and concentrates the tail + maxDD.
+4. **Funding -0.48 Sharpe**, irreducible (holding cost, both legs, not maker-fixable, not better on HL).
+5. **Capacity** — edge is illiquidity-bound (lives in thin names; can't filter to liquid ones).
+
+**HOW TO OPTIMIZE (honest, given alpha/knob layer is exhausted):**
+- **Tail/bear (drawback 1&3) — RISK lever, available now:** a GENERIC bear de-gross is legitimate (not alpha): the
+  13-agent pass found BEAR_MODE=flat is Sharpe-NEUTRAL (+0.005) but cuts maxDD -39% (costs -43% PnL); bg=0.5 similar.
+  This is a risk-appetite DEPLOYMENT choice, not a Sharpe gain. The "intelligent" mid-bear/auto-sizer versions tie a
+  random placebo (no targeting edge) — so only take the generic variance benefit, eyes open.
+- **The ONE real Sharpe lever = a NEW INPUT that attacks the tail/squeeze directly:** paid crowding/positioning data
+  (OI concentration, liquidation clusters, funding-crowding) to anticipate the bear short-squeeze blowups (drawback
+  1&2). This is the only direction with both a real prior AND alignment to the actual drawback. Free orthogonal
+  signals were below the bar; paid (Glassnode/Coinglass) not yet tested.
+- **Deployable-Sharpe levers (not paper):** size-to-depth (wired) + maker execution (operational, cuts impact not funding).
+**VERDICT: paper edge is real and clean (no leak); honest deployable paper Sharpe ~+3.3 funding-adj (not +4.22),
+tail-heavy and short-dependent. Backtest alpha exhausted; the productive next moves are (a) decide the bear-degross
+risk tradeoff, (b) a squeeze-anticipating paid input, (c) live execution quality. Not knob-fishing.**
