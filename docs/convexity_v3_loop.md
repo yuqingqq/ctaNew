@@ -628,3 +628,26 @@ short edge, paid in carry. The one lever that touches it = EXECUTION QUALITY (ma
 question the forward test arbitrates. Env SHORT_FUND_FLOOR kept in bot (default -999=off; tested infra documenting the
 negative). Scripts: live/funding_carry.py, live/funding_eval.py. REVISED honest forward: paper +4.22 (price) -> +3.78
 (with Binance funding) -> lower again at $1M (taker impact stacks); live HL test (realized HL funding + execution) arbitrates.
+EXEC-VENUE CHECK (live/funding_venue.py, HL `predictedFundings` = HL vs Binance funding per coin, same moment): HL does
+NOT rescue the carry. Short-basket frequency-weighted MEAN funding HL -0.14 vs Bin +0.06 = HL-Bin **-0.19 bps/8h (HL
+marginally WORSE)**; the tail squeeze-names that drive the drag are MUCH worse on HL (TRUMP -9.8 vs -2.7, kLUNC -6.6 vs
+-0.9 bps/8h) — HL perps are thinner so funding swings harder when shorts crowd. KEY: funding is a HOLDING cost — maker
+execution (which fixes the capacity/impact haircut) does NOT reduce it; it's paid on the position regardless of entry/exit,
+on any venue. So funding (-0.44) is the most IRREDUCIBLE realism haircut: bound to the short alpha, not filterable, not
+maker-fixable, not better on the exec venue. Snapshot caveat (current funding, not historical) but the structural verdict
+is robust. Script: live/funding_venue.py.
+
+## ============ SESSION VERDICT (2026-06-14) — "review + keep pushing": 2 realism haircuts, alpha layer confirmed done ============
+This session reviewed the strategy from the full ledger (NOT memory) + pushed on the 2 genuinely-untested axes the prior
+work missed — both are REALISM corrections (downward), not Sharpe gains, and both are now characterized:
+- CAPACITY (HL orderbook depth): paper +4.22 is a small-size artifact; realistic per-leg taker ~+1.2@$1M; size-to-depth
+  recovers ~+3.0 at ~$150-250k effective. Binding constraint = thin books, not alpha. Edge is illiquidity-bound (can't
+  filter to liquid names). Analytical/taker; live fills arbitrate. [prior: not historically backtestable — no L2 history.]
+- FUNDING (-0.44 Sharpe): the +4.22 is price-only; real carry -1758 bps. NOT removable (carry-aware veto monotone-neg at
+  every floor), NOT maker-fixable (holding cost), NOT better on HL (-0.19 worse). The price of the short edge.
+CONFIRMED: alpha/construction layer EXHAUSTED (5 loop-sessions + 13-agent pass + 3 feature batches + this session's
+carry-fix failure = another instance of the "cost is bound to the edge" law that killed iter8/iter11/iter12). REVISED
+HONEST FORWARD: headline +4.22 overstates; realistic ~+1.5 to ~+3.0 Sharpe depending on SIZE (capacity) and EXECUTION
+quality (maker reduces impact but not funding), with funding a firm -0.44 floor on top. Remaining work is OPERATIONAL:
+size-to-depth sizing, maker execution, and the live HL forward test as the true arbiter. Backtest optimization is DONE —
+further iterations would be manufacturing filler against the honesty bar.
