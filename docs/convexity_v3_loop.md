@@ -672,3 +672,19 @@ harvestable — harvesting needs aggressive tilt that costs more alpha than carr
 **Funding -0.44 is UNRECOVERABLE on BOTH legs; +3.78 funding-adjusted is FINAL.** Methodological catch for the record:
 panel raw funding_rate LEAKS (contemporaneous) — any funding SELECTION signal must lag; COST accrual correctly uses the
 current rate. Env SHORT_FUND_FLOOR / LONG_FUND_CEIL / FUND_LAG_BARS kept in bot (default off; tested-negative infra).
+
+## ============ CAPACITY SIZING WIRED FOR LIVE FORWARD TEST (2026-06-14) ============
+The ONE lever that RAISES the deployable number (vs the realism haircuts above which only characterize). Cannot be
+backtested (no historical HL L2) -> wired for the live forward test as the arbiter. **live/depth_resize.py** (self-
+contained, reuses convexity_slippage fetch_hl_l2_book + simulate_taker_fill; does NOT touch the bot decide/realfill):
+runs between `--decide` and the realfill, per leg computes the SLIPPAGE BUDGET = largest notional whose live walk-the-
+book taker slippage <= DEPTH_CAP_BPS (liquidity-PLACEMENT aware — NOT a fraction of total depth, which over-trades
+back-loaded books: live test showed SOPH books only ~$150-900 at 10bps vs SOL/BNB >$2M), scales each leg to
+min(1, budget/(|weight|*DEPTH_AUM)), then BALANCES both sides to the thinner side's gross (stays dollar-neutral —
+per-leg capping alone leaves net directional exposure). Rewrites decision.json net_after+turnover (pre-resize ->
+decision_predepth.json). Validated on LIVE books: synthetic $1M book -> deploys $544k/side (54%), 3/6 legs capped,
+net $0 neutral, every leg within budget. Wired env-gated into convexity_v1_cycle_once.sh (DEPTH_AWARE_SIZING=1,
+DEPTH_AUM=1e6, DEPTH_CAP_BPS=10; DEFAULT OFF -> production byte-unchanged; FAIL-SAFE -> any error leaves decision.json
+unchanged). Forward server flips DEPTH_AWARE_SIZING=1 to A/B it; realfill measures realized post-slippage PnL = the
+honest deployable Sharpe (analytical estimate was ~+3.0 @ ~$150-250k effective; live arbitrates). Scripts:
+live/depth_resize.py, live/convexity_v1_cycle_once.sh (+2b step).

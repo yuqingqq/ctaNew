@@ -89,6 +89,14 @@ if $PY live/decide_v1.py >> "$LOG" 2>&1 && \
    CONVEXITY_STATE=$OUT/state CONVEXITY_PREDS_PATH=$OUT/decide/base_decide.parquet CONVEXITY_PREDS_LONG=$OUT/decide/long_decide.parquet \
      $PY -m live.convexity_paper_bot --decide >> "$LOG" 2>&1; then
   log "decided: $($PY -c "import json;d=json.load(open('$OUT/state/decision.json'));print(d['open_time'],d['regime'],'-',len(d.get('turnover',{})),'legs')" 2>/dev/null)"
+  # 2b) DEPTH-AWARE (slippage-budget) resize — OFF unless DEPTH_AWARE_SIZING=1. Caps each leg to its LIVE HL book
+  #     (notional where taker slippage <= DEPTH_CAP_BPS) at DEPTH_AUM, balances both sides (stays dollar-neutral),
+  #     rewrites decision.json (net_after+turnover; pre-resize -> decision_predepth.json). FAIL-SAFE: any error leaves
+  #     decision.json byte-unchanged. The capacity optimization — converts the un-deployable paper edge to a tradeable
+  #     one at size. Cannot be backtested (no historical L2); this forward test is the arbiter.
+  if [ "${DEPTH_AWARE_SIZING:-0}" = "1" ]; then
+    $PY live/depth_resize.py --state $OUT/state >> "$LOG" 2>&1 && log "depth-resized (AUM ${DEPTH_AUM:-1000000}, cap ${DEPTH_CAP_BPS:-10}bps)" || log "depth_resize WARN (decision.json unchanged)"
+  fi
   # 3) probe live HL L2 for the turnover legs (real execution price at the boundary)
   $PY live/convexity_slippage.py --decide --state $OUT/state --book v1 --out $OUT/realfill/decide_slip.csv >> "$LOG" 2>&1 || log "HL probe WARN"
   # 4) book the real-fill round-trip PnL (THE FILL — latency window ends here)
