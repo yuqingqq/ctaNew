@@ -773,3 +773,30 @@ retrain, embargo, PIT features; only look-ahead = coarse full-sample exclude_hig
 only WITHIN the 8-month window. This RE-FRAMES the whole strategy: it is a REGIME BET (alt weakness), not an
 all-weather alpha. NEW direction surfaced: regime-conditional deployment (trade only in favorable alt-regime) — but
 that requires PIT alt-regime detection (hard; market-timing). Script: live/phase_fullhist.py. preds: live/state/v3loop/fullhist/.
+
+### Regime-timing test (full history) — equity-curve trend filter is BORDERLINE (p90), not decisive
+Root cause = regime dependence (above). TEST: can a PIT signal time the favorable regime? Full-history (2022-2026)
+through-cycle, filter = trade only when signal > trailing-median (PIT), vs matched random-on placebo (200 seeds):
+| PIT signal | filtered dSharpe | placebo p95 | rank |
+|---|---|---|---|
+| trail strategy PnL 60d (equity-curve trend) | +0.60 | +0.75 | p90 |
+| trail strategy PnL 30d | +0.52 | +0.72 | p87 |
+| btc_ret_30d (macro regime) | -0.05 | +0.77 | p26 (useless) |
+The strategy's OWN equity-curve momentum is a borderline timer (p87-90, consistent across lookbacks = not a fluke)
+lifting all-weather +0.21 -> ~+0.6, BUT does NOT clear p95 (partly generic 'trade-less-in-bad-sample'). BTC macro
+regime does NOT time it. CONCLUSION: regime dependence is only PARTIALLY addressable; even with the best filter the
+all-weather Sharpe is ~+0.6, far below the +3.3 recent window. Deploy the equity-curve filter as a KILL-SWITCH /
+de-risk (de-gross when trailing PnL turns negative) — protects against the regime turn (operational, task #179), not
+a Sharpe alpha. Do NOT tune the lookback (overfit). Script: live/phase_fullhist.py (regime-timing block).
+
+## ============ HONEST FORWARD EXPECTATION (revised 2026-06-15) ============
+| measure | Sharpe | basis |
+|---|---|---|
+| production backtest headline | +4.22 | 4h-naive, 8mo window — INFLATED |
+| recent window, honest (daily, funding-adj) | +3.3 | Oct25-Jun26, favorable alt-bear regime |
+| **all-weather (full history 2022-26, honest)** | **+0.21** | through-cycle, 3/5 yrs negative |
+| all-weather + equity-curve regime filter | ~+0.6 | borderline (p90), partial fix |
+The strategy is a REGIME BET on alt weakness, not all-weather alpha. Forward: ~+3 IF the recent alt-bear/chop regime
+persists, ~0-to-negative in an alt-bull, ~+0.2-0.6 through-cycle. Deploy with: bear de-gross bg=0.5 (tail) + equity-
+curve kill-switch (regime-turn protection) + size-to-depth (capacity). The live forward test will reveal which regime
+we are in. Genuine all-weather alpha needs a NEW orthogonal input (paid: liquidations / on-chain / deep order-flow).
