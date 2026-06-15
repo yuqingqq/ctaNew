@@ -905,3 +905,22 @@ CORRECTED CONCLUSIONS (supersede the "all-weather +0.2-0.6 / recency-concentrate
 - NEW REAL ROBUSTNESS FLAG: HUGE sensitivity to the low-vol universe-construction METHOD (+0.49 vs +2.68 same
   window/preds, different vol ranking) -> the universe rule is a load-bearing, possibly recency-fit choice worth
   stress-testing. Scripts: live/phase_fullhist_mpit.py (faithful), phase_fullhist_pit.py (my wrong-universe, retained for the lesson).
+
+## ============ WHY PERFORMANCE DIVERGES (definitive, 2026-06-15) — NOT universe size; tail-reversion is non-stationary ============
+User Q: if the logic is correct it should predict stably — or is it the small early universe?
+TEST 1 (universe size — REJECTED): fixed 20-name random pool EVERY cycle, all years -> divergence PERSISTS:
+2022 +6.7/Sh2.83, 2023 -1.2/-0.51, 2024 +7.1/2.29, 2025 -1.9/-0.59, 2026 +12.1/3.50. Same pool size, 2023/2025 still
+go NEGATIVE. So "fewer symbols to choose from" is NOT the cause.
+TEST 2 (market tail-reversion, NO model — rank by trailing return, loser-minus-winner fwd spread): 2021 -1.0, 2022
++0.8, 2023 -2.8, 2024 -1.1, 2025 +0.3, 2026 +3.6 (Sharpe). The MARKET swings reversion<->momentum: 2023 strong
+MOMENTUM, 2026 strong REVERSION.
+ANSWER: the logic IS correct & the RANKING IS STABLE (IC flat +0.02-0.04 every year; divergence survives fixed pool
+size). But a stable correct RANKING does NOT yield stable PROFIT — profit = magnitude of the tail dislocation that
+actually reverts, which is a MARKET-REGIME property, not the model. High-reversion regimes (2024/2026) -> extreme picks
+revert hard -> big spread; momentum regimes (2023/2025) -> same correct ranks don't revert -> thin/negative. Confirming
+the model is sound: 2024 raw PRICE reversion was negative (momentum) yet strategy +1.48 — because it trades RESIDUAL
+(beta-removed) reversion, which persisted while raw prices trended. NOT a bug, NOT universe size. It is the fundamental
+nature of XS mean-reversion: rank skill stationary, harvestable edge (market reversion strength) non-stationary.
+IMPLICATION: cannot stabilize via features/logic (ranking already good+stable). Levers: (a) size by realized
+opportunity (vol-target/gate, modest — regime only detectable after it appears), (b) accept regime variance
+(through-cycle ~+0.9), (c) orthogonal PAID signal that pays when reversion doesn't. Scripts: inline (fullhist_mpit preds).
