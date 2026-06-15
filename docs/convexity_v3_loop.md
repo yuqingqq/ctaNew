@@ -800,3 +800,27 @@ The strategy is a REGIME BET on alt weakness, not all-weather alpha. Forward: ~+
 persists, ~0-to-negative in an alt-bull, ~+0.2-0.6 through-cycle. Deploy with: bear de-gross bg=0.5 (tail) + equity-
 curve kill-switch (regime-turn protection) + size-to-depth (capacity). The live forward test will reveal which regime
 we are in. Genuine all-weather alpha needs a NEW orthogonal input (paid: liquidations / on-chain / deep order-flow).
+
+## ============ ROOT CAUSE of negative years + REGIME-TAILORING (2026-06-15) ============
+ROOT CAUSE (per-year leg decomposition): the negative years are NOT "MR is wrong" — the GROSS spread (long_ret+
+short_ret, pre-cost) COLLAPSES to ~cost. Gross edge: 2022 +459 / 2023 +3895 / 2024 +577 / 2025 +553 / 2026 +4438;
+annual cost ~1175-2111. Good years have a large dislocation (2023 LONG side = oversold recovery bounce; 2026 SHORT
+side = overbought alt-decline fade); grinding-trend/low-dispersion years (2024 bull "wash": longs & shorts both rise)
+the spread barely clears cost. The alpha is NON-STATIONARY (long-driven 2023, short-driven 2026, neither 2024). So
+the regime axis that matters is OPPORTUNITY (cross-sectional spread vs cost), NOT bull/bear.
+FIX (validated full-history, vs matched placebo 300 seeds): OPPORTUNITY GATE — trade only when recent opportunity is
+large:
+| gate (PIT, > trailing median) | all-weather dSharpe | placebo p95 | rank |
+|---|---|---|---|
+| baseline (always-on) | +0.21 | — | — |
+| trailing gross-spread (30d) | +0.71 | +0.65 | p96 |
+| trailing equity-curve (60d) | +0.60 | +0.64 | p92 |
+| **COMBINED (equity AND spread)** | **+0.84** | +0.77 | **p97** |
+COMBINED gate per-year: 2022 +0.44 (was -0.40), 2023 +0.85, 2024 +1.39 (was -0.29), 2025 -0.14 (was -0.23),
+2026 +2.79 -> 4/5 YEARS POSITIVE (was 2/5), turns the bull-wash 2024 + the bear-cost 2022 positive, preserves good
+years. Trades ~33% of cycles. This is the FIRST regime-conditional gate to clear p95 on the full 4.5y history.
+RECOMMENDED regime-tailored design: opportunity gate (combined) + bear bg=0.5 (tail) + size-to-depth (capacity).
+CAVEATS (honest): (1) signals are feedback-based (strategy's own recent perf+spread) = "trade when MR is paying" -> can
+whipsaw/lag at regime turns; (2) 2025 still ~flat-negative; (3) lookbacks (60d/30d/360-cyc median) are CHOICES ->
+NESTED-OOS validate the lookbacks before live (K2/K3 lesson: untuned discrete OK, tuned continuous params overfit);
+(4) best-of-4 tried -> mild multiple-testing, but the two component signals each independently >p90. Script: live/phase_regime_gate.py.
