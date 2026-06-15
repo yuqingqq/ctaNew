@@ -752,3 +752,24 @@ side +3.40 (917 cyc, the workhorse), bull +2.00, **bear +1.25 (weakest, owns the
 **VERDICT: paper edge is real and clean (no leak); honest deployable paper Sharpe ~+3.3 funding-adj (not +4.22),
 tail-heavy and short-dependent. Backtest alpha exhausted; the productive next moves are (a) decide the bear-degross
 risk tradeoff, (b) a squeeze-anticipating paid input, (c) live execution quality. Not knob-fishing.**
+
+## ============ FULL-HISTORY BACKTEST (2026-06-15) — the +3.3 is RECENCY-CONCENTRATED, not robust ============
+User challenge ("why is free data exhausted? have you pushed every direction?") -> NO. The production backtest covers
+only 243d (Oct2025-Jun2026, net-bearish); the panel has 2021-2026. Regenerated WF preds (same RidgeCV/HL=60/embargo)
+with MONTHLY cuts 2022->2026, replayed the v2 stack, HONEST daily Sharpe per year:
+| year | dSharpe | totPnL | regime |
+|---|---|---|---|
+| 2022 | -0.40 | -1652 | bear-heavy |
+| 2023 | +0.96 | +2720 | recovery |
+| 2024 | -0.29 |  -895 | bull |
+| 2025 | -0.23 |  -825 | chop->bull |
+| 2026(5mo)| +3.02 | +3821 | the production window |
+| **OVERALL 2022-2026** | **+0.21** | +3169 | 9563 cycles |
+THE +3.3 IS ALMOST ENTIRELY Q4-2025-ONWARD. Through-cycle Sharpe +0.21, 3/5 years NEGATIVE. Fair WF test (per-month
+retrain, embargo, PIT features; only look-ahead = coarse full-sample exclude_high_vol filter, which HELPS early years
+-> weak 2022-25 is despite that). ROOT CAUSE: short-alt-mean-reversion thrives in alt-bear/chop, bleeds in alt-bull
+(2024 -0.29). The recent window is a favorable alt-bear regime. HONEST FORWARD EXPECTATION is REGIME-DEPENDENT:
+~+3 if recent regime persists, ~0-to-neg in alt-bull, ~+0.2 through-cycle. The "robust local optimum +3.3" was robust
+only WITHIN the 8-month window. This RE-FRAMES the whole strategy: it is a REGIME BET (alt weakness), not an
+all-weather alpha. NEW direction surfaced: regime-conditional deployment (trade only in favorable alt-regime) — but
+that requires PIT alt-regime detection (hard; market-timing). Script: live/phase_fullhist.py. preds: live/state/v3loop/fullhist/.
