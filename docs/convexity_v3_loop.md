@@ -847,3 +847,18 @@ spot. Opportunity gate on PIT-30d: +0.57 -> +0.76 (still positive, smaller than 
 through-cycle ~+0.5-0.6 with PROPER monthly-PIT universe (the planned production process), recent-regime ~+2.2, only
 deep-soft years (2025-like) negative. Scripts: live/phase_fullhist_pit.py. The monthly-retrain + PIT-symbol-set plan
 is CORRECT and materially improves the honest expectation vs the look-ahead fixed list.
+
+## ============ ROOT CAUSE: signal is STATIONARY, payoff is regime-dependent (2026-06-15) ============
+User Q: "do features predict the edge only recently?" ANSWER: NO. On the PIT-lowvol universe, per-year:
+- IC (Spearman pred vs fwd ret): short +0.038/+0.029/+0.023/+0.023/+0.026 ; long +0.043/.../+0.028 — STABLE every year.
+- hit-rate (K=3 L-S spread>0): 53-55% every year. XS-dispersion 67-95 bps stable.
+- raw K=3 L-S spread (no sleeve/beta): 2022 +9.0, 2023 +1.3, 2024 +7.2, 2025 +2.4, 2026 +6.3 bps/cyc — POSITIVE every year.
+=> The features predict EQUALLY well in 2025 (-0.40 Sh) as 2026 (+2.17). Signal is STATIONARY; "features-only-recently"
+hypothesis REJECTED. The edge is small but persistent (+0.02-0.04 IC).
+WHAT VARIES = PAYOFF CONVERSION (per-leg by regime): 2024 bull LONG leg pays (+6.3, short flat); 2026 alt-decline
+SHORT leg pays (+6.7, long flat); 2025 LONG leg actively LOSES direction (-2.8) + thin spread (+2.4) eroded by cost/
+net-beta -> negative Sharpe; 2022 big spread (+9.0) but HIGH-VOL -> Sharpe diluted to +0.51. Three drivers, none the
+signal: (1) spread VOLATILITY, (2) which leg carries it (regime rotation), (3) thin-spread-vs-cost years.
+IMPLICATION: recent +2.17 is a FAVORABLE PAYOFF REGIME (short paid cleanly) + removed universe look-ahead, NOT better
+prediction. CANNOT lift through-cycle with better features (signal stationary + extracted). Levers = PAYOFF mgmt:
+opportunity gate (+0.57->+0.76) + spread-vol-scaled sizing (untested, motivated by driver #1). Script: inline (per-year IC + spread decomp on fullhist preds).
