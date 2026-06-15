@@ -862,3 +862,19 @@ signal: (1) spread VOLATILITY, (2) which leg carries it (regime rotation), (3) t
 IMPLICATION: recent +2.17 is a FAVORABLE PAYOFF REGIME (short paid cleanly) + removed universe look-ahead, NOT better
 prediction. CANNOT lift through-cycle with better features (signal stationary + extracted). Levers = PAYOFF mgmt:
 opportunity gate (+0.57->+0.76) + spread-vol-scaled sizing (untested, motivated by driver #1). Script: inline (per-year IC + spread decomp on fullhist preds).
+
+### Payoff lever: VOL-TARGETED sizing (motivated by root-cause driver #1, spread-vol dilution) — REAL stabilizer
+Size inversely to the strategy's OWN trailing return-vol (PIT, target=median, cap 2x). On PIT-30d full history:
+| config | through-cycle | 2022 | 2023 | 2024 | 2025 | 2026 |
+|---|---|---|---|---|---|---|
+| PIT-30d baseline | +0.57 | +0.51 | +0.06 | +1.45 | -0.40 | +2.17 |
+| **+ vol-target** | **+0.81** | +1.22 | +0.31 | +1.38 | +0.03 | +1.57 |
+| + opportunity gate only | +0.76 | +1.45 | +0.12 | +0.28 | +0.35 | +2.58 |
+| + vol-target + gate | +1.12 | +2.37 | +0.47 | +0.09 | +1.16 | +2.58 |
+VOL-TARGET lifts +0.57->+0.81, makes ALL 5 years non-negative, fixes exactly the high-vol(2022)/weak(2025) years the
+root cause flagged; consistent across lookbacks (180/360, cap1.5/2.0 -> +0.79-0.82 = not single-knob); placebo p94
+(timing borderline, lift mostly the standard magnitude effect, but principled technique). COMBO vol-target+gate +1.12
+is suggestive BUT (a) stacks two borderline overlays = overfit risk, (b) gate HURTS 2024 (+1.45->+0.09, gates out the
+bull where the long leg pays) -> the two CONFLICT. Adopt VOL-TARGET alone (defensible); combo needs nested-OOS first.
+REVISED HONEST FORWARD: through-cycle ~+0.8 with vol-targeting (all years non-negative), recent-regime ~+1.6-2.2.
+The signal is stationary + extracted; these are PAYOFF-management overlays (risk stabilization), not new alpha.
