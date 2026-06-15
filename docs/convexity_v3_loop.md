@@ -979,3 +979,6 @@ mean-rev edge, already tested as filters & REJECTED (long downtrend filter ret_3
 short squeeze filter -1.8 — "the bounce/the-fade IS the edge, the knife/squeeze is its tail"). Apr-Aug 2025 = a window
 where several of these tails CLUSTERED simultaneously. CORRECTS the earlier "broad momentum rally" framing: not a
 regime flip (IC fine) — per-NAME tail clustering you can't filter without killing the edge. Script: inline (fullhist_mpit symbol attribution).
+
+### Universe-quality loop (2026-06-15) — maturity/fragility gate REJECTED
+Maturity sweep 180/270/365/540 on faithful full history: ALL tighter gates HURT (overall +0.91->+0.36/+0.23/+0.44, PnL -65
