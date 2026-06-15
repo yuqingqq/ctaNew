@@ -964,3 +964,18 @@ beta longs). 2025 low Sharpe is a MEAN problem not vol: daily vol 276 ~ 2026's 2
 +48bps — the Apr-Aug drawdown cancelled an otherwise-strong year (ex-window alpha +6635 ~ 2026's +9024). LESSON: cite
 WINDOWED alpha, not annual, when attributing a sub-period; beta-neutral sizing would have helped Apr-Aug specifically
 (was rejected on 8mo window, but the full-history beta drag -1516/yr makes it worth a faithful-universe re-test).
+
+### 2025 forensic FINAL (symbol-level) — NOT ranking failure / NOT broad momentum; idiosyncratic TAIL clustering
+User: did we select wrong symbols? Per-cycle IC in Apr-Aug 2025 is NORMAL+positive every month (+0.016 to +0.043) ->
+the broad RANKING did NOT invert. The loss is in the EXTREME K=3 picks (specific names), not the signal. Symbol
+attribution (Apr-Aug 2025 K=3 alpha contribution):
+- SHORT squeezes (shorted, ripped UP): CFX -4948 (24x), TRB -2525 (62x), ZEN -2171, STRK -1965, JUP -1579.
+- LONG falling-knives (longed as oversold, kept FALLING): HMSTR -3424 (97x), S -2721 (113x), WCT -2107 (109x),
+  BCH -1518 (181x), LTC -1441 — the bigger drag; memecoins/structural decliners repeatedly bought expecting a bounce.
+ROOT CAUSE: the model selected EXACTLY what its logic dictates (most-oversold longs, most-overbought shorts); a
+SUBSET of those extreme names were in persistent IDIOSYNCRATIC trends (knives/squeezes) that didn't revert. Broad
+cross-section reverted fine (IC+); the TAILS didn't. These two failure modes ARE the irreducible tails of the
+mean-rev edge, already tested as filters & REJECTED (long downtrend filter ret_3d<=0.20..0.07 Δsh -0.47..-2.12;
+short squeeze filter -1.8 — "the bounce/the-fade IS the edge, the knife/squeeze is its tail"). Apr-Aug 2025 = a window
+where several of these tails CLUSTERED simultaneously. CORRECTS the earlier "broad momentum rally" framing: not a
+regime flip (IC fine) — per-NAME tail clustering you can't filter without killing the edge. Script: inline (fullhist_mpit symbol attribution).
