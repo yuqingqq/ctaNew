@@ -933,3 +933,16 @@ DEFINITIVELY NOT the cause. The realized-strategy per-year divergence (2025 +0.3
 its VOLATILITY (Sharpe) on the FULL low-vol set: 2026 big broad reversion (mean +17 overcomes vol), 2025 thin/narrow
 (mean +2.4 drowned in vol; only the very-lowest-vol names reverted). Plus WHICH vol-tier reverts rotates yearly.
 Confirms: market reversion payoff non-stationary (magnitude + breadth + SNR); ranking stable; not size, not a bug.
+
+## ============ 2025 FORENSIC (2026-06-15) — the weak year = an Apr-Aug ALT MOMENTUM rally, NOT feature failure ============
+2025 faithful Sharpe +0.38 (the soft year). Monthly: Jan +3.61/Feb +2.60/Mar +3.23 STRONG (shorts fell, reversion
+working) -> Apr -2.35/May -1.45/Jun -4.16/Jul -5.20/Aug -1.86 CATASTROPHIC -> Sep-Dec recover (+0.6/+1.7/+2.5/+0.8).
+The ENTIRE year's loss is Apr-Aug. In every bad month short_ret is NEGATIVE (Apr -2064, Jul -1314, May -794) = the
+SHORTED (overbought) names RALLIED; long_ret often positive too (Apr +593, Jul +755) = EVERYTHING ROSE = broad alt
+MOMENTUM rally / short-squeeze. ROOT CAUSE = momentum regime, NOT feature failure: 2025 short_ALPHA = +5134 (the
+short picks beat the basket by MORE than 2026's +5001!) and IC stable (+0.023) -> the model correctly identified the
+overbought names; they just kept TRENDING UP instead of reverting for ~5 months. short_ret +3734 (modest) vs
+short_alpha +5134 (large) = picks relatively right but the BASKET rose, so shorting lost on absolute return.
+DIRECT ANSWER: not "features don't predict" (they predicted better than 2026) — it "followed the trend" (Apr-Aug 2025
+was a momentum regime; a mean-reversion strategy structurally bleeds when the market trends, regardless of pick quality).
+The localized proof of the non-stationary-reversion thesis. Script: inline (fullhist_mpit 2025 monthly+leg decomp).
