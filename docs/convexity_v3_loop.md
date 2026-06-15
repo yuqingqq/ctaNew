@@ -824,3 +824,26 @@ CAVEATS (honest): (1) signals are feedback-based (strategy's own recent perf+spr
 whipsaw/lag at regime turns; (2) 2025 still ~flat-negative; (3) lookbacks (60d/30d/360-cyc median) are CHOICES ->
 NESTED-OOS validate the lookbacks before live (K2/K3 lesson: untuned discrete OK, tuned continuous params overfit);
 (4) best-of-4 tried -> mild multiple-testing, but the two component signals each independently >p90. Script: live/phase_regime_gate.py.
+
+## ============ PIT-UNIVERSE CORRECTION (2026-06-15, user insight: per-year symbols differ, fix listing + vol PIT) ============
+The full-history backtest used the FIXED full-sample exclude_high_vol list (asof 2026-05-29) across all years =
+LOOK-AHEAD universe (only 13/80 excluded names existed by 2022; fixed-vs-PIT low-vol overlap just 53% in 2022).
+FIX: PIT universe per bar = MATURE (listed >=180d) AND low-vol by TRAILING vol <= XS-median (matched production
+rvol_window=30d: trailing-180-bar std of realized 4h returns, shifted = strictly PIT). Re-ran full-history replay:
+| year | FIXED (look-ahead) | PIT-7d (noisy) | **PIT-30d (correct)** | note |
+|---|---|---|---|---|
+| 2022 | -0.40 | -0.77 | **+0.51** | fixed-negative was universe artifact |
+| 2023 | +0.96 | +1.08 | +0.06 | weak (vol-window sensitive) |
+| 2024 | -0.29 | +1.44 | **+1.45** | "bull wash" negative was UNIVERSE ARTIFACT — genuinely positive |
+| 2025 | -0.23 | -0.28 | **-0.40** | the ONE genuinely weak year (robust across all universes) |
+| 2026 | +3.02 | +0.51 | +2.17 | fixed flattered recent by ~0.85 look-ahead |
+| **OVERALL** | +0.21 | +0.29 | **+0.57** | PIT universe IMPROVES through-cycle |
+KEY LEARNINGS: (1) the FIXED universe UNDERSTATED through-cycle (+0.21) — it flattered 2026 but hurt 2022/2024; the
+correct PIT-30d is **+0.57**, 4/5 years POSITIVE (only 2025 negative). (2) 2024 "bull-wash" + 2022 negatives were
+look-ahead-universe ARTIFACTS, not real failures — the corrected picture is much more robust. (3) recent 2026 honest-
+PIT = +2.17 (not +3.02/+3.68); the production fixed list inflated recent by look-ahead. (4) vol-WINDOW matters
+hugely (7d noisy churns cohort: 2026 +0.51 vs 30d +2.17) — use production's 30d. (5) 2025 (-0.40) is the genuine soft
+spot. Opportunity gate on PIT-30d: +0.57 -> +0.76 (still positive, smaller than fixed's lift). REVISED HONEST FORWARD:
+through-cycle ~+0.5-0.6 with PROPER monthly-PIT universe (the planned production process), recent-regime ~+2.2, only
+deep-soft years (2025-like) negative. Scripts: live/phase_fullhist_pit.py. The monthly-retrain + PIT-symbol-set plan
+is CORRECT and materially improves the honest expectation vs the look-ahead fixed list.
