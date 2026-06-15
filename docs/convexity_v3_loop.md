@@ -878,3 +878,30 @@ is suggestive BUT (a) stacks two borderline overlays = overfit risk, (b) gate HU
 bull where the long leg pays) -> the two CONFLICT. Adopt VOL-TARGET alone (defensible); combo needs nested-OOS first.
 REVISED HONEST FORWARD: through-cycle ~+0.8 with vol-targeting (all years non-negative), recent-regime ~+1.6-2.2.
 The signal is stationary + extracted; these are PAYOFF-management overlays (risk stabilization), not new alpha.
+
+## ============ CORRECTION (2026-06-15): my earlier full-history numbers used a WRONG universe — faithful = +0.91 ============
+Reconciling "recent +3.68 (docs) vs my +2.17": my regenerated preds are IDENTICAL to production (per-cycle rank
+corr +0.98) — the gap was NOT preds and NOT mainly period. It was my UNIVERSE definition. Production base_mpit uses
+the monthly-PIT rule "exclude top-80 high-vol by trailing-30d-mean rvol_7d, re-ranked each fold" (~91 syms/cyc, this
+is ALREADY PIT — I was wrong earlier to call production look-ahead). My fullhist_pit used bottom-50% by a DIFFERENT
+vol measure (trailing std of return_pct) -> a different cohort -> +0.49 on Oct2025-Jun2026 vs production +3.68.
+FAITHFUL full-history (production mpit rule, exclude top-52% high-vol by trailing-30d rvol_7d, extended to 2022):
+| year | FAITHFUL | (my wrong PIT-30d) |
+|---|---|---|
+| 2022 | -0.01 | +0.51 |
+| 2023 | +0.02 | +0.06 |
+| 2024 | +1.48 | +1.45 |
+| 2025 | +0.38 | -0.40 |
+| 2026 | +4.09 | +2.17 |
+| OVERALL | **+0.91** | +0.57 |
+| recon Oct2025-Jun2026 | +2.68 | +0.49 |
+CORRECTED CONCLUSIONS (supersede the "all-weather +0.2-0.6 / recency-concentrated" claims above):
+- Through-cycle honest Sharpe ~**+0.91** (NOT +0.2-0.6). 2024/2025/2026 POSITIVE (+1.48/+0.38/+4.09); 2022/2023 ~FLAT
+  (thin early universe), not deeply negative. The recency-concentration was OVERSTATED by my universe error.
+- Recon window +2.68 vs production +3.68 (residual = proportional-52% vs fixed-80 + cut boundaries) -> the docs'
+  +3.68 is roughly faithful; my +2.17 was a wrong-universe artifact + a shorter period (Jan-Jun only).
+- STILL VALID: signal IC stationary (universe-independent rank corr); strategy IS regime-sensitive (early years
+  flat, 2024-26 strong); vol-targeting helps (re-test on faithful universe pending).
+- NEW REAL ROBUSTNESS FLAG: HUGE sensitivity to the low-vol universe-construction METHOD (+0.49 vs +2.68 same
+  window/preds, different vol ranking) -> the universe rule is a load-bearing, possibly recency-fit choice worth
+  stress-testing. Scripts: live/phase_fullhist_mpit.py (faithful), phase_fullhist_pit.py (my wrong-universe, retained for the lesson).
