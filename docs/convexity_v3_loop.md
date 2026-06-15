@@ -982,3 +982,10 @@ regime flip (IC fine) — per-NAME tail clustering you can't filter without kill
 
 ### Universe-quality loop (2026-06-15) — maturity/fragility gate REJECTED
 Maturity sweep 180/270/365/540 on faithful full history: ALL tighter gates HURT (overall +0.91->+0.36/+0.23/+0.44, PnL -65
+### Universe-quality loop (2026-06-15) — maturity/fragility gate REJECTED
+Maturity sweep 180/270/365/540 on faithful full history: ALL tighter gates HURT (overall +0.91 -> +0.36/+0.23/+0.44,
+PnL -65%) and none fix Apr-Aug 2025 (-1.5 to -2.2). Faithful traded-name attribution: Apr-Aug 2025 losers are MATURE
+BLUE CHIPS (BCH longed 213x -1998, LTC -1659, ADA -1245) longed as oversold while trending down + a memecoin tail
+(HMSTR -4837). Truly-fragile names already gated (WCT 0d excluded). The loss is the reversion regime hitting names
+BROADLY (incl. blue chips) -> NOT fixable by universe filtering. "Exclude volatile symbols" REJECTED. Levers:
+vol-targeting / K-breadth / orthogonal signal. Scripts: phase_maturity_sweep.py, live/state/v3loop/UNIVERSE_LOOP_LEDGER.md.
