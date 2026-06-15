@@ -946,3 +946,21 @@ short_alpha +5134 (large) = picks relatively right but the BASKET rose, so short
 DIRECT ANSWER: not "features don't predict" (they predicted better than 2026) — it "followed the trend" (Apr-Aug 2025
 was a momentum regime; a mean-reversion strategy structurally bleeds when the market trends, regardless of pick quality).
 The localized proof of the non-stationary-reversion thesis. Script: inline (fullhist_mpit 2025 monthly+leg decomp).
+
+### 2025 forensic CORRECTION (user challenge: short_alpha +5134 positive, how is it momentum?) — validated via WINDOWED alpha
+My earlier claim cited the FULL-YEAR short_alpha (+5134) — that was the wrong evidence (it's positive only because
+Jan-Mar/Sep-Dec were strong). Correct decomposition by window (RAW vs ALPHA=beta-residualized, market-neutral):
+| window | RAW P&L | ALPHA P&L | beta-drag(raw-alpha) |
+|---|---|---|---|
+| 2025 ex-Apr-Aug | +6444 | +6635 | -191 |
+| 2025 Apr-Aug    | -2923 | **-1598** (S -734, L -864) | -1325 |
+| 2025 full       | +3521 | +5037 | -1516 |
+| 2026 full       | +8433 | +9024 | -591 |
+DECISIVE: in Apr-Aug the ALPHA P&L is NEGATIVE (-1598) -> the residual (beta-removed) reversion edge INVERTED = a
+genuine momentum/reversion-failure regime (the reversion picks trended instead of reverting). Proven by WINDOWED alpha,
+NOT the annual +5134. TWO hits in Apr-Aug: (1) alpha inversion -1598 (the real cause, momentum regime); (2) beta drag
+-1325 (alt rally hit the dollar-neutral-but-NOT-beta-neutral book, SIDE_BETA_NEUT=0, higher-beta shorts rose > lower-
+beta longs). 2025 low Sharpe is a MEAN problem not vol: daily vol 276 ~ 2026's 225, but daily mean +5.5bps vs 2026
++48bps — the Apr-Aug drawdown cancelled an otherwise-strong year (ex-window alpha +6635 ~ 2026's +9024). LESSON: cite
+WINDOWED alpha, not annual, when attributing a sub-period; beta-neutral sizing would have helped Apr-Aug specifically
+(was rejected on 8mo window, but the full-history beta drag -1516/yr makes it worth a faithful-universe re-test).
