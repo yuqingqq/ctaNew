@@ -989,3 +989,26 @@ BLUE CHIPS (BCH longed 213x -1998, LTC -1659, ADA -1245) longed as oversold whil
 (HMSTR -4837). Truly-fragile names already gated (WCT 0d excluded). The loss is the reversion regime hitting names
 BROADLY (incl. blue chips) -> NOT fixable by universe filtering. "Exclude volatile symbols" REJECTED. Levers:
 vol-targeting / K-breadth / orthogonal signal. Scripts: phase_maturity_sweep.py, live/state/v3loop/UNIVERSE_LOOP_LEDGER.md.
+
+## ============ DEEP ROOT-CAUSE (2026-06-15, independent agent review + 4 lever-tests on faithful full history) ============
+Independent adversarial agent re-derived the cause from raw data (challenged prior conclusions). VERDICT: the low
+through-cycle +0.918 is NOT regime/universe/symbol — it is a THIN per-cycle edge minus two CONSTRUCTION drags.
+- Market-neutral ALPHA book alone = Sharpe +1.57 (sumPnL +25,211 bps); realized +0.918. Gap = cost(-0.47)+beta(-0.18).
+- Bad years are a MEAN problem, NOT vol/tail (2023 has LOWEST vol 83bps yet ~0 Sharpe). Cost/gross = 1.01(2022),
+  0.97(2023) — cost eats ~100% of gross in thin years. The "extreme K=3 tail-failure" framing was a SYMPTOM.
+- IC stationary+positive every year (bad years highest IC); deciles monotone -> signal is good, failure is downstream.
+- Alpha is FRONT-LOADED: per-bar IC +0.032(4h)->+0.006(24h); the 6-sleeve hold is cost-amortization, not alpha.
+
+FOUR LEVER-TESTS (all faithful full history, baseline +0.911):
+| lever | result | verdict |
+|---|---|---|
+| beta-neutral SIDE_BETA_NEUT=1 (PIT) | +0.772 (-0.14) | FAIL — noisy 4h per-name betas; agent's IDEAL +0.18 is an oracle, not deployable |
+| K-breadth K=4/5/6/8 | +0.65/+0.57/+0.58/+0.70 | FAIL — monotone worse; extremes carry the thin alpha (K=8 smooths bad years, lower overall) |
+| maturity gate 270/365/540 | +0.36/+0.23/+0.44 | FAIL — loss is blue chips not fragile names |
+| **COST 1/2/3/4.5/6 bps** | **+1.22/+1.17/+1.07/+0.91/+0.72** | **WIN — the dominant DEPLOYABLE lever; thin years flip positive below ~3bps** |
+
+DEPLOYABLE CONCLUSION: the single biggest lever on the convexity through-cycle Sharpe is EXECUTION QUALITY (maker),
+NOT alpha/universe/symbol/beta. At HL maker (~1bps) honest through-cycle ~+1.22 (vs +0.91 taker), 2022/2023 flip
+positive, recent regime ~+4.7. This is operational (post maker on HL), already on the roadmap. Both construction
+fixes (beta-neutral, K-breadth) fail deployable; the alpha is stationary+good; cost is the thin-edge killer. Scripts:
+phase_betaneut.py, phase_kbreadth.py, phase_maturity_sweep.py, phase_costsens.py. Independent review: general-purpose agent.
