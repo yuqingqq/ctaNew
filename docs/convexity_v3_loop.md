@@ -924,3 +924,12 @@ nature of XS mean-reversion: rank skill stationary, harvestable edge (market rev
 IMPLICATION: cannot stabilize via features/logic (ranking already good+stable). Levers: (a) size by realized
 opportunity (vol-target/gate, modest — regime only detectable after it appears), (b) accept regime variance
 (through-cycle ~+0.9), (c) orthogonal PAID signal that pays when reversion doesn't. Scripts: inline (fullhist_mpit preds).
+
+### Clarification (user: the pool is the DYNAMIC monthly low-vol set, not random) — conclusion CONFIRMED, stronger
+Redid the size control with the REAL low-vol selection (N lowest-vol mature names) capped to constant size (not random):
+cap=15 lowest-vol/cycle K3 spread: 2022 +5.5/Sh2.88, 2023 +2.8/1.83, 2024 +6.3/2.80, 2025 +11.3/1.25, 2026 +4.3/2.43.
+ALL years POSITIVE at constant low-vol pool size; 2022 (real pool only ~23) is healthy (+5.5/2.88). UNIVERSE SIZE
+DEFINITIVELY NOT the cause. The realized-strategy per-year divergence (2025 +0.38 vs 2026 +4.09) is the MEAN spread /
+its VOLATILITY (Sharpe) on the FULL low-vol set: 2026 big broad reversion (mean +17 overcomes vol), 2025 thin/narrow
+(mean +2.4 drowned in vol; only the very-lowest-vol names reverted). Plus WHICH vol-tier reverts rotates yearly.
+Confirms: market reversion payoff non-stationary (magnitude + breadth + SNR); ranking stable; not size, not a bug.
