@@ -1114,3 +1114,13 @@ is real and CVaR5/std -2.35 = same as 2022's -2.45. 2026 LOOKS clean only becaus
 noisier.) LESSON: judge tail risk by CVaR/std NOT kurtosis (body-fooled). The tail does NOT fade — plan for it as a
 PERMANENT ~-2.4x-std feature; 2026's high Sharpe = enough payoff to swamp the same tail, not less tail. Next thin-
 reversion regime -> same-depth tail dominates again (as 2023/2025). Scripts: inline (per-year CVaR/std).
+
+## ============ VALIDATION: 2026 = MORE edge/cycle + SAME tail (2026-06-16) ============
+Confirmed both halves. (a) EDGE/cycle genuinely higher in 2026: mean_pnl 2023 +0.02 / 2025 +0.98 / 2026 +8.02;
+median +0.78/+0.86/+9.56; gross/cyc +0.55/+1.71/+9.08; win% 51/51/57. Broad (median+gross+winrate all up), not a
+tail artifact = higher IC (+0.038 vs +0.028) x bigger reversion payoff (decile 8.0 vs 3.5). (b) TAIL similar:
+CVaR5/std constant -2.25..-2.45 (2026 -2.35); P(loss<-200bp) 2026 1.9% in-line (2024 1.2%, 2025 2.3%); 2026 worst/std
+-9.6 = MILDEST single worst (why kurt looked low) but overall tail SAME structural depth, NOT reduced. CONCLUSION:
+2026 high Sharpe (+4) = bigger EDGE on top of the SAME permanent tail (~-2.4x std), not less tail. FORWARD: do NOT
+extrapolate 2026's edge — edge/cycle is regime-driven (thin +0.0-1.0 in 2023/25), tail is constant; when edge reverts
+thin, the same-depth tail dominates again -> Sharpe ~0 (as 2023/25). Honest forward must weight thin regimes, not anchor on 2026.
