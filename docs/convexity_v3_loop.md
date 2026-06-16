@@ -1135,3 +1135,16 @@ per-MONTH PIT (trailing-30d-mean rvol_7d as-of each cut): 2023 69 available -> e
 earlier fullhist run's fixed full-sample exclude was the look-ahead, already corrected). CONFIRMS the vintage finding
 (2026 edge from fresh alts) is REAL not look-ahead — fresh alts legitimately PIT-entered as they listed and carried
 the reversion edge. The pick mechanism (full then-universe -> PIT vol-exclude -> K=3 by pred) is honest throughout.
+
+## ============ UNIVERSE SIZE/MATURITY -> FORWARD REVISION (2026-06-16, user insight) ============
+User: early universe much smaller; excluding high-vol works better now with a large universe. VALIDATED with nuance.
+Within-year, universe SIZE per se is NOT the lever (year x size-tercile: 2024/2026 BIG tercile was WORST, mid best).
+BUT the early universe was fundamentally different: 2022-23 avg 27 names (majors-only); the fresh-alt cohort that
+carries the edge didn't exist yet -> not representative of today. It's COMPOSITION (fresh alts selectable) not raw
+size. FORWARD REVISION: full 2022-2026 dailySharpe +0.91 (CVaR5/std -2.34) is DRAGGED by the small-immature-universe
+years. Conditioning on the MATURE universe 2024-2026 (avg 64 names, representative of forward): dailySharpe **+1.37**
+(CVaR5/std -2.29, tail unchanged). 2022-23 only ~0. So honest forward (current large universe) ~+1.4 through-cycle,
+NOT +0.91; ~+1.5 at HL taker (~3bps). CAVEATS: regime-variable (mature period spans 2025 +0.38 thin to 2026 +4.09);
+only ~2.5y mature data (overfit); within-year size not a clean lever so don't over-extrapolate to even bigger
+universes; permanent ~-2.3x tail. The early small-universe years can't recur (universe only grows) -> +0.91
+under-represents forward; +1.37 is the universe-conditioned estimate. Scripts: inline (cycles n_predicted buckets + 2024-26 pooled).
