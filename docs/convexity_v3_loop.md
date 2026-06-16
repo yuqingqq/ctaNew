@@ -1165,3 +1165,19 @@ re-curated universe monthly -> no forward survivorship; the bias is a HISTORICAL
 rebuild panel from FULL historical perp listing incl delisted (needs fapi history; exec server has access, this box
 geo-blocked). Until then: trust recent years more, down-weight early-year conclusions, treat all backtest numbers as
 survivorship-optimistic. Honest forward remains regime-variable; the +0.91/+1.37 both carry this caveat.
+
+## ============ FULL-UNIVERSE TEST — Option A (+25% universe, 217 vs 175) on 2025-26 (2026-06-16) ============
+Built survivorship-free 217-sym panel (175 + 42 extra w/ cached xs_feats+funding), recomputed XS-rank on union,
+regen WF preds (216 syms), re-curated full-universe low-vol cohort (mpit), replayed 2025-26. Identical pipeline to
+the 175 fullhist_mpit (+1.33) — only the universe differs.
+RESULT (dense 2025-01..2026-06): dSharpe +1.33 -> **+1.52** (+0.19); **maxDD -5832 -> -3054 (-48%)**; totPnL +9469 ->
++10480 (+11%); rank pool 75->108; 2025 (weak yr) +0.38 -> +0.73. POSITIVE: more universe helps RISK-ADJUSTED return
+and especially DRAWDOWN (-48%) — bigger pool => same K=3 picks more extreme + book spans more cross-section =>
+diversification + less concentration. (data fetch: Binance Vision, klines+funding, this box; 42 extra already cached.)
+IDIO-TILT (user hypothesis) on the 217-univ: ALL +1.59 vs LOW-corr +1.57 = WASH — idiosyncratic SELECTION is NOT a
+deployable edge even on the richer universe; 2026's idio character was REGIME not a rule. So the value is BREADTH
+(more names), NOT corr-selection.
+VERDICT: +25% universe -> +0.19 Sharpe / -48% maxDD is a real, mechanistically-sound breadth benefit -> JUSTIFIES the
+full fetch (B: ~300 more live symbols -> ~686 universe, survivorship-free). CAVEATS: 42 extra are a non-random
+already-cached slice; no placebo/nested-OOS yet; 2024 shifted (regen side-effect); still only 217/686. Next: full
+fetch B (breadth at full scale + survivorship-free incl delisted, esp. delisted = best missing shorts). Scripts: live/phase_univ218.py, fetch via binance_vision_loader.
