@@ -1028,3 +1028,23 @@ DECISION: optimization direction = TAIL RISK MANAGEMENT (vol-targeting +0.24 / b
 the actual loss shape), NOT alpha/symbol/leg work. Squeeze/knife tails are irreducible cost of the edge (filters
 rejected). Cost (irreducible taker — maker invalid for reversion: adverse-selection fills losers/misses winners) +
 beta (noisy PIT hedge) are the other drags. The signal is good; the only path to a LARGER edge is new paid data.
+
+## ============ TAIL-FIX LOOP (2026-06-16) — fat tail VALIDATED as binding; only MARGINALLY fixable (un-timeable) ============
+VALIDATION: worst cycles are REAL squeeze/knife events (2024-11-10 short GAS/IMX/TRB -1704; 2025-04-18 MEME/POLYX/SAGA
+squeeze -1382; 2022-05-11 long NEO/XMR -1368). Sharpe is STD-LIMITED by the tail: winsorize-oracle p1/p99 +0.911->
++1.19, p5/p95 +1.88, with MEAN UNCHANGED (1.58->1.60) => fat tail inflates std, caps Sharpe. Worst-5% cycles = 41%
+of total variance, kurtosis 80.6. Prize for taming = +0.3..+1.0 (oracle ceiling).
+DEPLOYABLE PIT FIXES (faithful full history, baseline +0.911):
+| fix | Sharpe | maxDD | placebo |
+|---|---|---|---|
+| continuous vol-target (W180/360) | +0.80..+0.85 | -3.6k..-3.9k | p48-53 FAIL (ties random; lowers Sharpe; risk-only) |
+| vol-spike de-gross 0.5x>p90 | +1.002 (+0.09) | -4269 | p88 (helps 2022/23, hurts 2025/26) |
+| **dispersion-spike de-gross 0.5x>p90** | **+1.028 (+0.12)** | -4863 (-16%) | **p94 (best, borderline)** |
+VERDICT: the tail is the binding Sharpe constraint but only MARGINALLY fixable PIT — best deployable = disp-spike
+de-gross +0.12 Sharpe / -16% maxDD / p94 (borderline, doesn't clear p95), capturing only ~+0.1 of the +0.3-1.0
+oracle prize. Reason: squeeze/knife events are SUDDEN — trailing vol/dispersion weakly flag them BEFORE impact
+(matches Phase B/C: tail un-timeable from free PIT signals). Continuous vol-target FAILS (p48, was wrong-universe
+artifact). The fat tail is the IRREDUCIBLE cost of the reversion edge; ~+0.1/-16%maxDD is the deployable ceiling
+(disp-spike), the rest un-capturable. RECOMMEND: adopt disp-spike de-gross as a RISK overlay (robust -16% maxDD even
+if Sharpe lift is marginal) AFTER bot-replay + nested-OOS of the threshold; do NOT expect to capture the oracle prize.
+Scripts: inline (fullhist_mpit cycle overlays). Ledger: TAIL_FIX_LOOP_LEDGER.md.
