@@ -1012,3 +1012,19 @@ NOT alpha/universe/symbol/beta. At HL maker (~1bps) honest through-cycle ~+1.22 
 positive, recent regime ~+4.7. This is operational (post maker on HL), already on the roadmap. Both construction
 fixes (beta-neutral, K-breadth) fail deployable; the alpha is stationary+good; cost is the thin-edge killer. Scripts:
 phase_betaneut.py, phase_kbreadth.py, phase_maturity_sweep.py, phase_costsens.py. Independent review: general-purpose agent.
+
+## ============ Q1 ALPHA-SIZE + Q2 LOSS-ATTRIBUTION (2026-06-16, decision framing) ============
+Q1 — HOW LARGE IS THE EDGE? (decides feature-eng): per-cycle IC +0.030 (56% cycles>0, stationary every year);
+market-neutral ALPHA-book Sharpe +1.57; gross edge +2.37 vs cost 0.79 bps/cycle = 3.0x OVERALL (thin only in
+low-dispersion years 2022/23 where cost~=gross). Alpha is REAL+stationary+3x cost. DECISION: NO more free-data
+feature engineering — IC at free-data ceiling (13-agent + feature loops added ~0 OOS IC from any transform of
+existing klines/funding). Raising IC>+0.03 needs a NEW ORTHOGONAL INPUT (paid on-chain/liquidations/options), not
+new features. Feature work worth it ONLY with new data.
+Q2 — WHAT CAUSES THE LOSS? (decides direction): NOT leg-bias (short alpha Sharpe +0.90, long +0.58, both positive);
+NOT symbols (top-5 win +75.9k/lose -44.9k but persistence +0.06 = NOISE, concentration is trade-count artifact);
+NOT drip (win-rate 52%, mean win +43 ~= loss -44, symmetric). IT IS an EPISODIC FAT TAIL: kurtosis 80.6, worst-5%
+of cycles = -595% of total PnL (both-sided fat tail, skew +0.74). Shortfall vs alpha-ceiling = cost(-0.47)+beta(-0.18).
+DECISION: optimization direction = TAIL RISK MANAGEMENT (vol-targeting +0.24 / bear-degross -38% maxDD — they fit
+the actual loss shape), NOT alpha/symbol/leg work. Squeeze/knife tails are irreducible cost of the edge (filters
+rejected). Cost (irreducible taker — maker invalid for reversion: adverse-selection fills losers/misses winners) +
+beta (noisy PIT hedge) are the other drags. The signal is good; the only path to a LARGER edge is new paid data.
