@@ -1148,3 +1148,20 @@ NOT +0.91; ~+1.5 at HL taker (~3bps). CAVEATS: regime-variable (mature period sp
 only ~2.5y mature data (overfit); within-year size not a clean lever so don't over-extrapolate to even bigger
 universes; permanent ~-2.3x tail. The early small-universe years can't recur (universe only grows) -> +0.91
 under-represents forward; +1.37 is the universe-conditioned estimate. Scripts: inline (cycles n_predicted buckets + 2024-26 pooled).
+
+## ============ DATA-COVERAGE / SURVIVORSHIP LIMITATION (2026-06-16, user catch) ============
+User catch: "there were way more than 20 symbols in 2023" — CORRECT. The panel is a FIXED 175-symbol CURATED list
+(convexity_v1_universe.json: 153 eligible, asof 2026-05-29), BACKFILLED — NOT the real Binance perp universe.
+Coverage: 2023 panel=83 vs real ~200-230 perps (~35%); 2026 panel=175 vs ~330-350 (~50%). DOUBLE BIAS: (1)
+SURVIVORSHIP — symbols delisted 2023->now are absent (panel only has current names); (2) SELECTION — the 175 chosen
+by 2026 criteria, so early coverage biased toward names that became today's universe. IMPLICATIONS: (a) early-year
+(2022/23) backtest is a biased SPARSE subset, NOT the real 2023 cross-section -> early numbers UNRELIABLE; the +0.91
+drag AND the "small universe grew" narrative are PARTLY coverage artifacts (coverage growing 45->175 partly reflects
+MY data collection expanding, not just the real universe) -> I OVERSTATED the universe-size story. (b) the "+1.37
+mature 2024-26" revision is shakier: recent years more representative but still survivorship-biased (current
+survivors). (c) net survivorship direction AMBIGUOUS for L/S: delisted-crashed names = great shorts (missing ->
+understates short edge) but bad longs (overstates long edge). (d) FORWARD less affected: production trades the LIVE
+re-curated universe monthly -> no forward survivorship; the bias is a HISTORICAL-MEASUREMENT problem. CLEAN FIX:
+rebuild panel from FULL historical perp listing incl delisted (needs fapi history; exec server has access, this box
+geo-blocked). Until then: trust recent years more, down-weight early-year conclusions, treat all backtest numbers as
+survivorship-optimistic. Honest forward remains regime-variable; the +0.91/+1.37 both carry this caveat.
