@@ -1090,3 +1090,15 @@ reverts), a regime/market property NOT a feature property. 2023's weak P&L (+0.0
 (spread 3.5, cost ate it), not bad features; 2026's strength is genuine (best IC + best spread + favorable regime).
 CONFIRMS (3rd angle, after the 13-agent feature pass and the Q1 alpha-size check) that the FEATURES ARE GOOD and
 stable -> feature engineering is NOT the lever; year-to-year variation is the reversion regime, not signal decay.
+
+## ============ THIN-EDGE vs TAIL-INFLATED-STD (2026-06-16) — edge is GOOD; tail makes the SHARPE thin ============
+Q: is the edge thin, or thin BECAUSE of the tail? mean cycle +1.58 ~= median +1.55 (trimmed-mean +2.05) -> tail does
+NOT drag the AVERAGE. But full daily Sharpe +0.911 vs BODY(ex worst/best 5%) Sharpe +2.459; tail inflates std 2.2x
+(80->37). SO: the alpha edge is NOT inherently thin (body Sharpe +2.46); realized +0.911 is thin PURELY because the
+fat tail inflates the std 2.2x. Corrects earlier "thin edge" language -> "good edge, tail-inflated std".
+Does 2026 have the tail? YES (worst-5% = 41% of variance, worst cyc -937) but SWAMPED by strong payoff: 2026 mean
++8.0/cyc, kurt only 14.1 (vs 2025 84.3, 2023 34.5) -> the ever-present ~40%-of-variance tail is proportionally small
+when reversion pays big. UNIFIED: edge underneath is good (body +2.46, signal stationary); fat tail is structural+
+ever-present (~40% of variance every year); REALIZED Sharpe = edge-vs-tail tug — reversion-rich regime (2026) edge
+swamps tail (+4); thin-reversion (2023/25) tail swamps edge (~0); through-cycle +0.91. The tail is the binding
+constraint (body +2.46 = the prize) and is irreducible (un-timeable, edge-bound, not symbol-specific). Scripts: inline.
