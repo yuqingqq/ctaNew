@@ -1078,3 +1078,15 @@ P&L noise +0.06, maturity gate, K-breadth, idio-vol exclude +2.245->+2.109, now 
 INSEPARABLE FLIP-SIDE OF THE EDGE — the high-vol names that revert hardest (alpha) are the same ones that occasionally
 squeeze/knife (tail); per-cycle tail events are sudden+unpredictable (AUC~0.5 on crowding/momentum). DEFINITIVE: cannot
 exclude "fat-tail symbols" because they are the alpha symbols. Tail = irreducible cost of the reversion edge. Scripts: inline (fullhist_mpit tail-leg attribution + persistence).
+
+## ============ SIGNAL QUALITY OVER TIME (2026-06-16) — recent = 2023, 2026 BEST; NO feature decay ============
+User Q: is recent signal quality the same as 2023 (are the features still good)? Per-year (faithful universe):
+SHORT ranker IC: 2022 +0.038, 2023 +0.028, 2024 +0.022, 2025 +0.030, 2026 +0.038; hit-rate 54-57% every year;
+decile spread (d9-d0 bps): 2023 3.5, 2025 4.0, 2026 8.0. LONG ranker IC: 2023 +0.032, 2025 +0.034, 2026 +0.040;
+decile 2023 4.4, 2025 4.0, 2026 7.4. ANSWER: signal quality is FLAT-to-IMPROVING — 2025 ~= 2023 on every metric;
+2026 is the STRONGEST (highest IC AND decile spread). NO feature/signal decay. KEY DISTINCTION: IC/hit-rate (rank
+SKILL) is CONSTANT across years; what varies is the PAYOFF (decile spread in bps = how much the market actually
+reverts), a regime/market property NOT a feature property. 2023's weak P&L (+0.02) was a THIN-reversion regime
+(spread 3.5, cost ate it), not bad features; 2026's strength is genuine (best IC + best spread + favorable regime).
+CONFIRMS (3rd angle, after the 13-agent feature pass and the Q1 alpha-size check) that the FEATURES ARE GOOD and
+stable -> feature engineering is NOT the lever; year-to-year variation is the reversion regime, not signal decay.
