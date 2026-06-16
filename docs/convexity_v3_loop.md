@@ -1065,3 +1065,16 @@ overlapping sleeves. So the fat tail is significantly MANUFACTURED by the 24h-ho
 amortization), not just the picks. TENSION: shortening the hold recovers the clean 4h alpha (+2.245/kurt22) but 6x's
 turnover/cost -> same cost wall (clean alpha at 4h, but capturing it costs more than the 24h-hold saves). The raw
 signal is much cleaner than the deployed strategy; the drags (cost, hold) are the price of deployability. Scripts: inline (fullhist_mpit leg attribution + idio-vol quintiles).
+
+## ============ "IS IT THE FAT-TAIL SYMBOLS?" — DEFINITIVE NO: tail symbols ARE the winners (2026-06-16) ============
+Tail legs (worst-5%) = -1,395,585 bps vs net +181,006 -> the tail DOES dominate the loss side (user correct on magnitude).
+BUT: (1) NOT concentrated — spread across 143 symbols, top-5=14%/top-10=24%/top-20=40% of tail loss. (2) Tail-PRODUCTION
+persistence H1->H2 = +0.304 (more than mean-P&L's +0.06) BUT weak: worst-quartile H2 tail-rate 0.072 vs 0.054 baseline
+(chronic tail-producers only tail ~7% vs ~5% of the time). (3) SMOKING GUN: the worst tail-loss symbols ARE the biggest
+WINNERS. XMR = #1 tail-loser (-58,181 in tail legs) AND #1 winner overall (+28,739 net) — makes +87k in normal legs,
+gives -58k in tail legs. Other top tail-producers (BCH/COMP/APE/ZEN) same high-vol frequently-traded names that also
+produce the wins. EXCLUDING them = losing the edge (exclude XMR -> -29k net). 5TH independent confirmation (per-symbol
+P&L noise +0.06, maturity gate, K-breadth, idio-vol exclude +2.245->+2.109, now tail-production) that THE TAIL IS THE
+INSEPARABLE FLIP-SIDE OF THE EDGE — the high-vol names that revert hardest (alpha) are the same ones that occasionally
+squeeze/knife (tail); per-cycle tail events are sudden+unpredictable (AUC~0.5 on crowding/momentum). DEFINITIVE: cannot
+exclude "fat-tail symbols" because they are the alpha symbols. Tail = irreducible cost of the reversion edge. Scripts: inline (fullhist_mpit tail-leg attribution + persistence).
