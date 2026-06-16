@@ -1124,3 +1124,14 @@ CVaR5/std constant -2.25..-2.45 (2026 -2.35); P(loss<-200bp) 2026 1.9% in-line (
 2026 high Sharpe (+4) = bigger EDGE on top of the SAME permanent tail (~-2.4x std), not less tail. FORWARD: do NOT
 extrapolate 2026's edge — edge/cycle is regime-driven (thin +0.0-1.0 in 2023/25), tail is constant; when edge reverts
 thin, the same-depth tail dominates again -> Sharpe ~0 (as 2023/25). Honest forward must weight thin regimes, not anchor on 2026.
+
+## ============ PIT UNIVERSE MECHANISM — VALIDATED (2026-06-16) ============
+User Q: in 2023 do we take the full THEN-universe, PIT-exclude unwanted, then pick? YES, confirmed in fullhist_mpit:
+(1) candidate pool (symbols with preds) GROWS PIT: 2022=37, 2023=56, 2024=84, 2025=142, 2026=138 — no future leak.
+(2) late listings have NO pre-listing preds: HMSTR first 2025-02, WCT 2025-08, S 2025-04, KAITO 2025-08, MEME 2024-09;
+XRP/BCH from 2022-01. Symbols enter only after ~300 bars of history (monthly WF retrain). (3) high-vol exclude applied
+per-MONTH PIT (trailing-30d-mean rvol_7d as-of each cut): 2023 69 available -> excl 13 -> 56 traded; 2026 174 -> excl
+36 -> 138. So 2023 backtest uses the 2023-available universe (69), NOT the 2026 set. fullhist_mpit is PIT-valid (the
+earlier fullhist run's fixed full-sample exclude was the look-ahead, already corrected). CONFIRMS the vintage finding
+(2026 edge from fresh alts) is REAL not look-ahead — fresh alts legitimately PIT-entered as they listed and carried
+the reversion edge. The pick mechanism (full then-universe -> PIT vol-exclude -> K=3 by pred) is honest throughout.
