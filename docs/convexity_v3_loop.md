@@ -1048,3 +1048,20 @@ artifact). The fat tail is the IRREDUCIBLE cost of the reversion edge; ~+0.1/-16
 (disp-spike), the rest un-capturable. RECOMMEND: adopt disp-spike de-gross as a RISK overlay (robust -16% maxDD even
 if Sharpe lift is marginal) AFTER bot-replay + nested-OOS of the threshold; do NOT expect to capture the oracle prize.
 Scripts: inline (fullhist_mpit cycle overlays). Ledger: TAIL_FIX_LOOP_LEDGER.md.
+
+## ============ SYMBOL-SELECTION TAIL CONTROL (2026-06-16) — FAILS; + the 24h-hold AMPLIFIES the tail ============
+Q: can the fat tail be controlled at symbol SELECTION? Tail legs ARE predictable at selection by IDIO-vol (atr_pct
+AUC 0.732, idio_vol_to_btc_1d 0.708, rvol_7d 0.690; funding/ret3d/corr ~0.50 noise) — distinct from the total-vol the
+universe already filters. Per idio-vol quintile of picks (equal-wt legret): q0 mean +0.92/IR+0.006/tail2.7%, q3 mean
++7.85/IR+0.031/tail5.3% (BEST), q4 mean +6.01/IR+0.020/tail8.4%/-379k (worst tail). So alpha RISES with vol to q3;
+q4 is high-mean-but-disproportionate-tail. TEST (drop the top-idio-vol pick/leg, equal-wt): Sharpe +2.245 -> +2.109
+(HURTS), kurt 22->40 (WORSE), maxDD -3587->-4004. REJECTED — the high-vol picks CARRY THE EDGE; excluding removes
+more alpha than tail. 4th confirmation (idio-vol exclude, maturity gate, K-breadth, per-symbol P&L) that the tail
+CANNOT be filtered at selection without killing the edge. The tail is edge-bound.
+BIGGER FINDING (reframes the picture): the RAW equal-weight 4h picks are STRONG — Sharpe +2.245, kurt only 22 (no
+cost). Production +0.911/kurt 80.6 = raw MINUS two ~-0.66 drags: (a) cost+beta -0.66; (b) inv_vol sizing + 24h-HOLD
+(sleeve) -0.68 AND it AMPLIFIES the tail (kurt 22->80.6) — a multi-day squeeze hits the held position across all 6
+overlapping sleeves. So the fat tail is significantly MANUFACTURED by the 24h-hold (which exists for cost-
+amortization), not just the picks. TENSION: shortening the hold recovers the clean 4h alpha (+2.245/kurt22) but 6x's
+turnover/cost -> same cost wall (clean alpha at 4h, but capturing it costs more than the 24h-hold saves). The raw
+signal is much cleaner than the deployed strategy; the drags (cost, hold) are the price of deployability. Scripts: inline (fullhist_mpit leg attribution + idio-vol quintiles).
