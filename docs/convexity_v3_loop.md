@@ -1102,3 +1102,15 @@ when reversion pays big. UNIFIED: edge underneath is good (body +2.46, signal st
 ever-present (~40% of variance every year); REALIZED Sharpe = edge-vs-tail tug — reversion-rich regime (2026) edge
 swamps tail (+4); thin-reversion (2023/25) tail swamps edge (~0); through-cycle +0.91. The tail is the binding
 constraint (body +2.46 = the prize) and is irreducible (un-timeable, edge-bound, not symbol-specific). Scripts: inline.
+
+## ============ IS 2026 LESS FAT-TAILED? — NO, kurtosis is body-fooled; tail depth is CONSTANT (2026-06-16) ============
+User Q: does recent low kurtosis (2026=14 vs 2025=84) mean the strategy is less fat-tailed now? NO. Scale-free tail
+depth CVaR5/std is CONSTANT every year: 2022 -2.45, 2023 -2.45, 2024 -2.37, 2025 -2.25, 2026 -2.35. Downside-tail
+asymmetry |left|/right ~1.0-1.17 every year. The tail is a STABLE STRUCTURAL feature; its size RELATIVE to the
+strategy's own vol is unchanged. Kurtosis (4th moment) is dominated by the single most-extreme outlier: 2025 kurt 84
+= a few mega-outliers (worst -1306); 2026 kurt 14 = no single cycle dwarfed its (high) std — but 2026 worst cyc -937
+is real and CVaR5/std -2.35 = same as 2022's -2.45. 2026 LOOKS clean only because the BODY/mean was large (+8/cyc)
+-> the same-depth tail was SWAMPED by the strong reversion payoff, NOT reduced. (Also 2026 = 5mo/929cyc, kurtosis
+noisier.) LESSON: judge tail risk by CVaR/std NOT kurtosis (body-fooled). The tail does NOT fade — plan for it as a
+PERMANENT ~-2.4x-std feature; 2026's high Sharpe = enough payoff to swamp the same tail, not less tail. Next thin-
+reversion regime -> same-depth tail dominates again (as 2023/2025). Scripts: inline (per-year CVaR/std).
