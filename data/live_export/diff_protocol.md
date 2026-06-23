@@ -43,6 +43,19 @@ All four are **gitignored & geo-block-affected** — transport what the server l
 > concentration experiment. Building **from klines** is required only to also reproduce the preds
 > (Stage B) and to run the liquidity experiment.
 
+### Provided in this repo (`data/live_export/`)
+- **`maturity_meta.parquet`** — the `onboardDate` eligibility grid. **Required** (the replay reads it;
+  can't be regenerated — geo-blocked Binance call). Point the run at it:
+  `export CONVEXITY_UNIVERSE_META=$PWD/data/live_export/maturity_meta.parquet`.
+- **`base_live_golden.parquet`, `long_live_golden.parquet`** — the live preds (`fold=-1`, pure
+  frozen-model). Use as the **Stage-B golden reference**: diff your regenerated `base/long.parquet`
+  against these (`|Δpred| < 1e-5`); or replay straight from them as a deterministic golden run.
+- `convexity_v2_cycles_through_2026-06-21.csv` (the baseline) + `../funding_export/` (funding).
+
+**Models** are tracked in `live/models/` (short + long) — just `git pull`. Still build the **panel**
+from your klines+funding (or request the 13M `panel_expanded_v0.parquet` to skip the rebuild and diff
+Stage A directly). With those, the chain is fully deterministic — nothing else is needed.
+
 ## 3. Staged diff — run in order, stop at the first stage that fails
 **A — klines / panel inputs.** Diff V0 features per (symbol, open_time) vs the live panel (if
 transported); at minimum verify per-symbol `close` matches the live klines over the OOS window
