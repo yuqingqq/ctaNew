@@ -74,6 +74,15 @@ BEAR_K = int(os.environ.get("BEAR_K","0"))   # bear-specific K (0=use global)
 # 2026-06-08 bear de-gross: scale bear-equal basket gross (1.0=full v2; <1 trades bear edge at lower size to cut the
 # bear tail — iter7 found maxDD/51%-loss-concentration all bear). Off by default (1.0). 0.0 == BEAR_MODE=flat.
 BEAR_GROSS_MULT = float(os.environ.get("BEAR_GROSS_MULT","1.0"))
+# scale the bear LONG leg only (1.0=full/byte-identical; 0.0=short-only bear). The bear long leg is negative-alpha
+# (-5bps, <50% hit), the bear short leg positive (+11bps) — cutting bear longs may be a real Sharpe gain, not just
+# insurance. NB: <1.0 makes the bear book net-SHORT (adds short beta — profitable in a falling bear, risk on reversal).
+BEAR_LONG_MULT = float(os.environ.get("BEAR_LONG_MULT","1.0"))
+# symmetric test: scale the BULL long leg (1.0=full/byte-identical). Bull long-alpha is weak/mixed; small sample.
+BULL_LONG_MULT = float(os.environ.get("BULL_LONG_MULT","1.0"))
+# bear: cut alt longs (negative-alpha) and hedge the resulting net-short with a BTC long (beta-neutral) — removes
+# the long drag WITHOUT the directional net-short bet of BEAR_LONG_MULT=0. 0=off (default).
+BEAR_HEDGE_BTC = os.environ.get("BEAR_HEDGE_BTC","0")=="1"
 # depth-conditional bear de-gross band (toxic mid-bear). Default [-99,99] => BEAR_GROSS_MULT applies to ALL bear
 # (backward-compatible). Set e.g. LO=-0.22 HI=-0.13 to de-gross ONLY the grinding mid-bear zone, keep deep/mild full.
 BEAR_MID_LO = float(os.environ.get("BEAR_MID_LO","-99"))
@@ -131,6 +140,24 @@ def _rand_drop_fires(ot):   # deterministic per (cycle, seed)
     if RAND_LONG_DROP_PCT <= 0: return False
     h = (int(ot.value // 10**9) * 2654435761 + RAND_LONG_DROP_SEED * 40503) % 100000
     return (h / 100000.0) < RAND_LONG_DROP_PCT
+# 2026-06-14 CARRY-AWARE funding filters (use PIT-LAGGED funding — the panel's contemporaneous funding_rate LEAKS the
+# forward move: long cohort spread +40->+24->+12 as you lag 0/4/8h, so SELECTION must use settled funding shifted
+# FUND_LAG_BARS). The +4.22 backtest is PRICE-ONLY (credits ZERO funding); strategy book PAYS ~-3.8 bps/8h carry
+# (-0.44 Sharpe). ASYMMETRY (PIT-clean cohorts): SHORT negative-funding names have BETTER alpha that GROWS with lag
+# (Q0-rest +33.8 at lag2) => carry is BOUND to the short edge, filtering FAILS (monotone-neg at every floor, confirmed).
+# LONG negative-funding (heavily-shorted/oversold) names: the price edge was look-ahead (collapses with lag) BUT the
+# CARRY INCOME is real (funding persists) — the model ranks price-alpha and ignores carry, leaving long funding income
+# on the table. LONG_FUND_CEIL drops longs whose PIT funding > ceil (crowded positive-funding longs) to TILT the leg
+# toward carry-harvesting names. SHORT_FUND_FLOOR (BPS/8h, -999=off) kept as tested-negative. LONG_FUND_CEIL (+999=off).
+SHORT_FUND_FLOOR = float(os.environ.get("SHORT_FUND_FLOOR", "-999"))   # BPS/8h; -999=off. drop shorts with PIT funding < floor
+LONG_FUND_CEIL = float(os.environ.get("LONG_FUND_CEIL", "999"))        # BPS/8h; +999=off. drop longs with PIT funding > ceil
+FUND_LAG_BARS = int(os.environ.get("FUND_LAG_BARS", "2"))             # bars to lag funding for PIT selection (2*4h=8h settled)
+RAND_SHORT_DROP_PCT = float(os.environ.get("RAND_SHORT_DROP_PCT", "0"))   # matched placebo: drop TOP short in PCT% cycles
+RAND_SHORT_DROP_SEED = int(os.environ.get("RAND_SHORT_DROP_SEED", "0"))
+def _rand_short_drop_fires(ot):
+    if RAND_SHORT_DROP_PCT <= 0: return False
+    h = (int(ot.value // 10**9) * 2654435761 + RAND_SHORT_DROP_SEED * 92821 + 17) % 100000
+    return (h / 100000.0) < RAND_SHORT_DROP_PCT
 # vol-aware leg sizing (2026-06-02 root-cause: tail losses concentrate in high-idio-vol QUALITY names
 # that pass all gates; volatility is ungated. Scale each leg's weight by inverse-vol, normalized to
 # keep the SAME basket gross -> de-concentrates the tail without excluding liquid names).
@@ -138,6 +165,15 @@ def _rand_drop_fires(ot):   # deterministic per (cycle, seed)
 SIZING_MODE = os.environ.get("SIZING_MODE", "equal")
 SIZING_FEAT = os.environ.get("SIZING_FEAT", "idio_vol_to_btc_1h")  # PIT feature in panel
 VOLCAP_PCTILE = float(os.environ.get("VOLCAP_PCTILE", "0.80"))     # for volcap mode: halve weight above this cross-sec pctile
+# 2026-06-22 per-name concentration cap (live-DD root-cause: a single recurring short — ME in 12/18 cycles —
+# stacks across ~4 of 6 active sleeves so one squeeze bleeds the whole book; validated: most-concentrated short
+# quartile CVaR5 -358 vs -220 with NO mean-return gain). CONC_CAP = max |net weight| per name as a fraction of
+# that SIDE's gross; excess water-fills onto the other same-side names -> per-side gross (hence dollar-neutrality)
+# unchanged. 0 = OFF (production byte-identical). Applied to the aggregated net book each cycle.
+CONC_CAP = float(os.environ.get("CONC_CAP", "0"))
+# regime-scope the concentration cap (squeeze tail is bear-specific). Empty = all regimes; e.g. "bear" = bear-only.
+CONC_CAP_REGIMES = set(x for x in os.environ.get("CONC_CAP_REGIMES", "").split(",") if x)
+RANDCAP_SEED = int(os.environ.get("RANDCAP_SEED", "0"))   # for SIZING_MODE=randcap (volcap placebo)
 # 2026-06-08 short-conviction tilt: within the K short legs, tilt weight toward higher conviction (more-negative
 # short pred). Stacks MULTIPLICATIVELY on inv_vol then renormalizes to the same short gross. factor = conv_rank^TILT
 # (most-conviction short -> rank K). 0 = OFF (production default; weights = pure inv_vol). iter3 found per-pick
@@ -151,6 +187,9 @@ BTC_HEDGE_KEY = "_BTC_HEDGE_"   # sentinel key in weight dict for the synthetic 
 # V7: per-name confidence threshold gate (only trade alt when |pred| > threshold;
 # else fallback to BTC). Applies in SIDE_MODE=confidence_btc_hedge.
 PRED_THRESHOLD = float(os.environ.get("PRED_THRESHOLD", "0.5"))   # abs value in pred z-units
+# EV/conviction floor for SIDE_MODE=default: after top-K selection, drop legs whose |pred| is below
+# this (low-EV in thin regimes). 0.0 = OFF (production no-op). env-gated study knob.
+PRED_FLOOR = float(os.environ.get("PRED_FLOOR", "0.0"))
 # pred-disp adaptive gate: if per-cycle pred_disp is below the trailing-N percentile,
 # the model is producing flat predictions = no tail-edge = go FLAT in side regime.
 # (bull keeps trading regardless — mom_30d signal isn't affected by pred dispersion.)
@@ -186,7 +225,7 @@ if DYN_ALLOW_PATH and Path(DYN_ALLOW_PATH).exists():
     _dyn["open_time"] = pd.to_datetime(_dyn["open_time"], utc=True)
     for _ot, _g in _dyn.groupby("open_time"):
         _DYN_ALLOW[_ot] = set(_g["symbol"])
-LIQ_FLOOR_DOLLAR_VOL_30D = 3_000_000.0     # $3M/day exec floor
+LIQ_FLOOR_DOLLAR_VOL_30D = float(os.environ.get("LIQ_FLOOR_DOLLAR_VOL_30D", "3000000"))  # $3M/day exec floor (env-gated)
 DEDUP_CORR_THRESHOLD = 0.90                # drop high-corr names; keep longer-history one
 # Liveness gate: drop DELISTED/HALTED names from the universe. A halted symbol's klines forward-fill a flat
 # price -> zero returns -> rvol_7d≈0, the *calmest* possible, so the high-vol exclude never catches it and it
@@ -358,6 +397,12 @@ def precompute_dvol_cache_pit(syms: list[str], last_n_files: int | None = None) 
     eligible_universe_at(asof) reads .asof(asof) → each cycle sees only data available at that time.
     last_n_files: live --cycle only needs the trailing window (~60d) — full-history reads are wasted there;
     replay/bootstrap pass None for the whole series."""
+    # Optional pickle cache (loop speed-up; full-history replay only). No-op unless CONVEXITY_DVOL_CACHE_PKL set.
+    _pkl = os.environ.get("CONVEXITY_DVOL_CACHE_PKL", "")
+    if _pkl and last_n_files is None and Path(_pkl).exists():
+        with open(_pkl, "rb") as fh: _d = pickle.load(fh)
+        _LIVENESS_CACHE.update(_d.get("liveness", {}))
+        return _d.get("dvol", {})
     cache = {}
     for sym in syms:
         sd = KLINES/sym/"5m"
@@ -380,6 +425,8 @@ def precompute_dvol_cache_pit(syms: list[str], last_n_files: int | None = None) 
                 if len(zf): _LIVENESS_CACHE[sym] = zf
         except Exception:
             pass
+    if _pkl and last_n_files is None:
+        with open(_pkl, "wb") as fh: pickle.dump({"dvol": cache, "liveness": dict(_LIVENESS_CACHE)}, fh)
     return cache
 
 
@@ -480,6 +527,16 @@ def _vol_scaled_weights(syms, gg, gross):
     elif SIZING_MODE == "volcap":
         thr = float(gg[SIZING_FEAT].quantile(VOLCAP_PCTILE))
         raw = {s: (0.5 if vol[s] > thr else 1.0) for s in syms}
+    elif SIZING_MODE == "randcap":
+        # PLACEBO for volcap: down-weight (×0.5) a RANDOM matched-count subset instead of the high-vol one.
+        # If volcap's edge is real vol-targeting, volcap should beat the randcap seed distribution.
+        import hashlib as _hl
+        k = int(round((1.0 - VOLCAP_PCTILE) * n))
+        if k <= 0: raw = {s: 1.0 for s in syms}
+        else:
+            seed = int(_hl.sha1((",".join(sorted(syms)) + f"|{RANDCAP_SEED}").encode()).hexdigest()[:8], 16)
+            capped = set(np.random.default_rng(seed).choice(list(syms), size=min(k, n), replace=False).tolist())
+            raw = {s: (0.5 if s in capped else 1.0) for s in syms}
     else:
         raw = {s: 1.0 for s in syms}
     tot = sum(raw.values()) or 1.0
@@ -537,9 +594,15 @@ def select_legs(grp: pd.DataFrame, regime: str, betas_at_t: dict[str, float],
             if (BEAR_MID_LO > -90 or BEAR_MID_HI < 90) and "btc_ret_30d" in grp.columns:
                 b30 = float(grp["btc_ret_30d"].iloc[0])
                 bg = BEAR_GROSS_MULT if (BEAR_MID_LO <= b30 < BEAR_MID_HI) else 1.0
+            if BEAR_HEDGE_BTC:                          # cut alt longs (negative-alpha), hedge net-short with BTC long
+                bS = np.nanmean([betas_at_t.get(s, np.nan) for s in S])
+                if not np.isfinite(bS) or bS <= 0: bS = 0.8
+                w = {BTC_HEDGE_KEY: bg*bS}              # BTC long sized to neutralize the short basket's beta
+                for s in S: w[s] = w.get(s, 0) - bg/kbS
+                return w
             w = {}
-            for s in L: w[s] = w.get(s, 0) + bg/kbL     # +$ equal per name (gross scaled, depth-conditional)
-            for s in S: w[s] = w.get(s, 0) - bg/kbS     # -$ equal per name (gross 1 each side = dollar-neutral)
+            for s in L: w[s] = w.get(s, 0) + bg*BEAR_LONG_MULT/kbL  # bear long leg scaled by BEAR_LONG_MULT (negative-alpha in bear)
+            for s in S: w[s] = w.get(s, 0) - bg/kbS     # -$ equal per name (short leg = the bear edge, kept full)
             return w
         if BEAR_MODE in ("side", "shortbias"): regime = "side"   # trade bear via the side mean-rev (beta-neut) path
 
@@ -758,6 +821,11 @@ def select_legs(grp: pd.DataFrame, regime: str, betas_at_t: dict[str, float],
     if LONG_MAX_RET3D < 999 and "ret_3d" in long_pool.columns:
         keep = long_pool[(long_pool["ret_3d"] <= LONG_MAX_RET3D) | long_pool["ret_3d"].isna()]
         if len(keep) >= kL: long_pool = keep
+    # 2026-06-14 long carry-harvest: drop crowded positive-funding longs (PIT funding > ceil); keeps negative-funding
+    # (heavily-shorted/oversold) names that PAY longs -> harvests carry income the price-ranking model ignores.
+    if LONG_FUND_CEIL < 990 and "fund_pit" in long_pool.columns:
+        keep = long_pool[(long_pool["fund_pit"]*1e4 <= LONG_FUND_CEIL) | long_pool["fund_pit"].isna()]
+        if len(keep) >= kL: long_pool = keep
     if LONG_MIN_RET3D > -999 and "ret_3d" in long_pool.columns:      # inverse placebo: drop recent-LOSER longs
         keep = long_pool[(long_pool["ret_3d"] >= LONG_MIN_RET3D) | long_pool["ret_3d"].isna()]
         if len(keep) >= kL: long_pool = keep
@@ -772,6 +840,13 @@ def select_legs(grp: pd.DataFrame, regime: str, betas_at_t: dict[str, float],
     if SHORT_MAX_RET3D < 999 and "ret_3d" in short_pool.columns:      # inverse placebo: drop recent-WINNER (rocket) shorts
         keep = short_pool[(short_pool["ret_3d"] <= SHORT_MAX_RET3D) | short_pool["ret_3d"].isna()]
         if len(keep) >= kS: short_pool = keep
+    # carry-aware short veto (PIT-lagged funding): TESTED-NEGATIVE — short alpha is BOUND to carry (monotone-fails at
+    # every floor; the negative-funding squeeze names carry the most alpha, robust with lag). Kept env-gated/off.
+    if SHORT_FUND_FLOOR > -990 and "fund_pit" in short_pool.columns:
+        keep = short_pool[(short_pool["fund_pit"]*1e4 >= SHORT_FUND_FLOOR) | short_pool["fund_pit"].isna()]
+        if len(keep) >= kS: short_pool = keep
+    if RAND_SHORT_DROP_PCT > 0 and len(short_pool) > kS and _rand_short_drop_fires(grp["open_time"].iloc[0]):
+        short_pool = short_pool.drop(short_pool[key].idxmin())        # placebo: drop the TOP (most-negative-pred) short
     # iter13/14 dual-pred + meta-labels: long ranked by pred_long, short by pred_short (embedded or via PREDS_LONG).
     if "pred_long" in long_pool.columns and long_pool["pred_long"].notna().sum() >= kL:
         L = long_pool.dropna(subset=["pred_long"]).nlargest(kL, "pred_long")["symbol"].tolist()
@@ -781,6 +856,12 @@ def select_legs(grp: pd.DataFrame, regime: str, betas_at_t: dict[str, float],
         S = short_pool.dropna(subset=["pred_short"]).nsmallest(kS, "pred_short")["symbol"].tolist()
     else:
         S = short_pool.head(kS)["symbol"].tolist()
+    # EV/conviction floor (env-gated; 0=off): drop selected legs whose base pred is below floor (long) /
+    # above -floor (short) — sit out low-conviction picks in thin regimes. Missing pred => kept.
+    if PRED_FLOOR > 0 and "pred" in gg.columns:
+        pv = gg.set_index("symbol")["pred"].to_dict()
+        L = [s for s in L if pv.get(s, 1e9) >= PRED_FLOOR]
+        S = [s for s in S if pv.get(s, -1e9) <= -PRED_FLOOR]
     a = b = 1.0
     if do_bn:
         bL = np.nanmean([betas_at_t.get(s, np.nan) for s in L])
@@ -799,7 +880,8 @@ def select_legs(grp: pd.DataFrame, regime: str, betas_at_t: dict[str, float],
         sw = {s: sw[s] * fac[s] for s in S}
         tot = sum(sw.values()) or 1.0
         sw = {s: b * sw[s] / tot for s in S}                      # renorm to same short gross
-    for s in L: w[s] = w.get(s, 0) + lw[s]
+    _lmult = BULL_LONG_MULT if regime == "bull" else 1.0   # symmetric bull-long cut (small/noisy sample)
+    for s in L: w[s] = w.get(s, 0) + lw[s]*_lmult
     for s in S: w[s] = w.get(s, 0) - sw[s]
     return w
 
@@ -818,6 +900,30 @@ def aggregate_active_sleeves(sleeves: deque) -> dict:
         for w in sleeves:
             for s, wt in w.items(): net[s] = net.get(s, 0.0) + wt/HOLD
     return net
+
+
+def apply_conc_cap(net: dict, cap_frac: float) -> dict:
+    """Cap each name's |weight| to cap_frac * (that side's gross), water-filling the excess onto the OTHER
+    same-side names in proportion to their weight. Each side's gross is preserved exactly, so the book stays
+    dollar-neutral. cap_frac in (0,1]; values below 1/n_side just equalize that side."""
+    if not net or cap_frac <= 0: return net
+    out = {}
+    for positive in (True, False):
+        side = {s: abs(w) for s, w in net.items() if (w > 0) == positive and abs(w) > 1e-12}
+        if not side: continue
+        cap = cap_frac * sum(side.values())
+        for _ in range(50):
+            over = {s: m for s, m in side.items() if m > cap + 1e-12}
+            if not over: break
+            excess = sum(m - cap for m in over.values())
+            for s in over: side[s] = cap
+            recv = {s: m for s, m in side.items() if m < cap - 1e-12}
+            base = sum(recv.values())
+            if base <= 1e-12: break                       # all at cap (cap_frac<=1/n) -> already equalized
+            for s in recv: side[s] += excess * side[s] / base
+        sgn = 1.0 if positive else -1.0
+        for s, m in side.items(): out[s] = sgn * m
+    return out
 
 
 # =====================================================================
@@ -930,6 +1036,12 @@ def run_replay(start: pd.Timestamp | None, end: pd.Timestamp | None) -> dict:
         _pf = pd.read_parquet(PANEL, columns=["symbol","open_time"]+_need)
         _pf["open_time"] = pd.to_datetime(_pf["open_time"], utc=True)
         d = d.merge(_pf, on=["symbol","open_time"], how="left")
+    # PIT-lagged funding for carry-aware selection (contemporaneous funding_rate LEAKS the fwd move — see env block)
+    if SHORT_FUND_FLOOR > -990 or LONG_FUND_CEIL < 990:
+        _fp = pd.read_parquet(PANEL, columns=["symbol","open_time","funding_rate"]).sort_values(["symbol","open_time"])
+        _fp["open_time"] = pd.to_datetime(_fp["open_time"], utc=True)
+        _fp["fund_pit"] = _fp.groupby("symbol")["funding_rate"].shift(FUND_LAG_BARS)
+        d = d.merge(_fp[["symbol","open_time","fund_pit"]], on=["symbol","open_time"], how="left")
     d["regime_raw"] = d["btc_ret_30d"].apply(regime_for_cycle)
     # gap-free hysteresis from the full btc_ret_30d series (decide/settle/replay identical) — see effective_regime_series
     reg_ser = effective_regime_series(upto=d["open_time"].max())
@@ -1020,8 +1132,10 @@ def run_replay(start: pd.Timestamp | None, end: pd.Timestamp | None) -> dict:
         sleeve_ids_active.append(sleeve_serial)
 
         # aggregate target across active sleeves
-        gross_target = sum(abs(w) for w in aggregate_active_sleeves(active_sleeves).values())
         net_target_raw = aggregate_active_sleeves(active_sleeves)
+        if CONC_CAP > 0 and (not CONC_CAP_REGIMES or regime in CONC_CAP_REGIMES):
+            net_target_raw = apply_conc_cap(net_target_raw, CONC_CAP)
+        gross_target = sum(abs(w) for w in net_target_raw.values())
         # stop overlay
         gross_mult, stop_diag = stop.update(equity, equity, bar_idx, regime)   # pre-MtM call; equity_post fills later
         net_after = {s: w*gross_mult for s, w in net_target_raw.items()}
