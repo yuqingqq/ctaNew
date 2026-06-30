@@ -53,6 +53,9 @@ K = int(os.environ.get("STRAT_K", "5"))
 K_LONG = int(os.environ.get("STRAT_K_LONG", str(K)))
 K_SHORT = int(os.environ.get("STRAT_K_SHORT", str(K)))
 HOLD = int(os.environ.get("STRAT_HOLD", "6"))
+# Regime-specific hold: bull mean-rev edge REVERSES within 24h (squeeze-back) — validated +40bps@4h -> -21bps@24h —
+# so in bull use a SHORTER hold (aggregate only the freshest BULL_HOLD sleeves). side/bear edge compounds -> keep HOLD.
+BULL_HOLD = int(os.environ.get("STRAT_HOLD_BULL", str(HOLD)))
 # COST per leg in fraction (4.5e-4 = 4.5 bps). Env override COST_BPS_LEG (in bps).
 COST = float(os.environ["COST_BPS_LEG"])*1e-4 if "COST_BPS_LEG" in os.environ else 4.5e-4
 REGIME_BULL_THR = float(os.environ.get("REGIME_BULL_THR", "0.10"))
@@ -74,15 +77,77 @@ BEAR_K = int(os.environ.get("BEAR_K","0"))   # bear-specific K (0=use global)
 # 2026-06-08 bear de-gross: scale bear-equal basket gross (1.0=full v2; <1 trades bear edge at lower size to cut the
 # bear tail — iter7 found maxDD/51%-loss-concentration all bear). Off by default (1.0). 0.0 == BEAR_MODE=flat.
 BEAR_GROSS_MULT = float(os.environ.get("BEAR_GROSS_MULT","1.0"))
+BULL_GROSS_MULT = float(os.environ.get("BULL_GROSS_MULT","1.0"))   # scale bull-entry sleeve gross (0=flat in bull)
+# Bull sub-regime gate: the short edge works in MILD/early bull (btc_ret_30d ~0.10-0.15: pump topping -> reverts,
+# +45bps/cyc) but FAILS in DEEP sustained melt-up (squeeze zone, -6bps). Flat the deep-bull cycles. 99=off.
+BULL_DEEP_THR = float(os.environ.get("BULL_DEEP_THR","99"))
+# 5m entry-confirmation (bull short): don't short a name still making a 30m new high (still pumping -> squeeze).
+# Lifts bull short t-stat 0.91->1.25 (validated on 5m). ENTRY_FLAG_PARQUET = {symbol,open_time,made_nh30,off_high2}.
+ENTRY_FLAG_PARQUET = os.environ.get("ENTRY_FLAG_PARQUET","")
+BULL_ENTRY_NH30 = os.environ.get("BULL_ENTRY_NH30","0")=="1"
+# "strong" entry gate: short only names that have ROLLED OVER (no new high AND >x% below 4h high). t->1.98 on 5m.
+BULL_ENTRY_MODE = os.environ.get("BULL_ENTRY_MODE","nh30")   # nh30 (skip new-highs) | strong (require rolled-over)
+BULL_ENTRY_NH_COL  = os.environ.get("BULL_ENTRY_NH_COL","made_nh30")   # new-high column (nh15/nh30/nh60)
+BULL_ENTRY_OFF_COL = os.environ.get("BULL_ENTRY_OFF_COL","off_high2")  # off-high column (off1/off2/off3)
+BULL_ENTRY_PLACEBO_SEED = int(os.environ.get("BULL_ENTRY_PLACEBO_SEED","-1"))  # >=0: keep RANDOM same-size subset
 # scale the bear LONG leg only (1.0=full/byte-identical; 0.0=short-only bear). The bear long leg is negative-alpha
 # (-5bps, <50% hit), the bear short leg positive (+11bps) — cutting bear longs may be a real Sharpe gain, not just
 # insurance. NB: <1.0 makes the bear book net-SHORT (adds short beta — profitable in a falling bear, risk on reversal).
 BEAR_LONG_MULT = float(os.environ.get("BEAR_LONG_MULT","1.0"))
 # symmetric test: scale the BULL long leg (1.0=full/byte-identical). Bull long-alpha is weak/mixed; small sample.
 BULL_LONG_MULT = float(os.environ.get("BULL_LONG_MULT","1.0"))
+BULL_LONG_INSTRUMENT = os.environ.get("BULL_LONG_INSTRUMENT","alt")  # alt (model longs) | btc (same $ into BTC long)
 # bear: cut alt longs (negative-alpha) and hedge the resulting net-short with a BTC long (beta-neutral) — removes
 # the long drag WITHOUT the directional net-short bet of BEAR_LONG_MULT=0. 0=off (default).
 BEAR_HEDGE_BTC = os.environ.get("BEAR_HEDGE_BTC","0")=="1"
+# HONEST ACCOUNTING: charge realized funding carry on the held book (1=on; 0=off/byte-identical). Validated ~-0.7
+# Sharpe on the deploy base. Uses contemporaneous funding_rate (the carry actually paid — not a predictive feature,
+# so no leak), scaled FUND_CYCLE_FRAC of the 8h rate per 4h cycle.
+CHARGE_FUNDING = os.environ.get("CHARGE_FUNDING","0")=="1"
+FUND_CYCLE_FRAC = float(os.environ.get("FUND_CYCLE_FRAC","0.5"))   # 4h bar ≈ half an 8h funding interval
+# PER-SYMBOL depth-aware cost: charge each leg its real per-fill cost (fee+impact) instead of flat turn*0.5*COST.
+# DEPTH_COST_CSV = path to {symbol, cost_10k/50k/100k} (per-fill bps); DEPTH_COST_TIER picks the AUM column.
+# Per-fill (no 0.5): cost = Σ|Δnet[s]|·c_fill(s). Missing symbols -> median. OFF (flat) unless DEPTH_COST_CSV set.
+DEPTH_COST_CSV  = os.environ.get("DEPTH_COST_CSV","")
+DEPTH_COST_TIER = os.environ.get("DEPTH_COST_TIER","cost_10k")
+# TAIL GATE: drop names whose walk-forward tail-risk score (p_tail) is in the top (1-pctile) per cycle.
+TAIL_SCORE_PARQUET = os.environ.get("TAIL_SCORE_PARQUET","")
+TAIL_SKIP_PCTILE   = float(os.environ.get("TAIL_SKIP_PCTILE","1.0"))   # 1.0=off; e.g. 0.90 drops top-10% tail-risk
+BTC_HEDGE_COST_BPS = os.environ.get("BTC_HEDGE_COST_BPS","")   # per-fill bps for the BTC hedge; "" = median fallback
+_PERSYM_COST = None; _PERSYM_COST_MED = None
+def _persym_cost_map():
+    global _PERSYM_COST, _PERSYM_COST_MED
+    if _PERSYM_COST is None and DEPTH_COST_CSV:
+        _df = pd.read_csv(DEPTH_COST_CSV)
+        _PERSYM_COST = {r["symbol"]: float(r[DEPTH_COST_TIER])*1e-4 for _, r in _df.iterrows()}
+        _PERSYM_COST_MED = float(_df[DEPTH_COST_TIER].median())*1e-4
+        if BTC_HEDGE_COST_BPS:   # explicit BTC hedge cost (BTC not in HL capacity file; far more liquid than median)
+            _PERSYM_COST["_BTC_HEDGE_"] = float(BTC_HEDGE_COST_BPS)*1e-4
+    return _PERSYM_COST, _PERSYM_COST_MED
+
+_BTC_FUND = None
+def _btc_funding_at(ot):
+    """8h BTC perp funding rate active at `ot` (PIT .asof) from the cached series. A BTC long pays positive funding.
+    Panel excludes BTC, so this is the only source for charging the BTC-hedge carry. 0.0 if unavailable."""
+    global _BTC_FUND
+    if _BTC_FUND is None:
+        try:
+            _f = pd.read_parquet("data/ml/cache/funding_BTCUSDT.parquet")
+            _f["calc_time"] = pd.to_datetime(_f["calc_time"], utc=True)
+            _BTC_FUND = _f.set_index("calc_time")["funding_rate"].sort_index()
+        except Exception:
+            _BTC_FUND = pd.Series(dtype=float)
+    if len(_BTC_FUND) == 0: return 0.0
+    v = _BTC_FUND.asof(ot)
+    return float(v) if pd.notna(v) else 0.0
+def cost_of(net_after: dict, prev_agg: dict) -> float:
+    """Per-cycle cost (fraction of equity). Per-symbol real per-fill cost if DEPTH_COST_CSV set; else flat turn*0.5*COST."""
+    keys = set(net_after) | set(prev_agg)
+    if DEPTH_COST_CSV:
+        cm, med = _persym_cost_map()
+        return sum(abs(net_after.get(s,0)-prev_agg.get(s,0)) * cm.get(s, med) for s in keys)
+    turn = sum(abs(net_after.get(s,0)-prev_agg.get(s,0)) for s in keys)
+    return turn * 0.5 * COST
 # depth-conditional bear de-gross band (toxic mid-bear). Default [-99,99] => BEAR_GROSS_MULT applies to ALL bear
 # (backward-compatible). Set e.g. LO=-0.22 HI=-0.13 to de-gross ONLY the grinding mid-bear zone, keep deep/mild full.
 BEAR_MID_LO = float(os.environ.get("BEAR_MID_LO","-99"))
@@ -197,6 +262,30 @@ DISP_GATE = os.environ.get("DISP_GATE", "0") == "1"
 DISP_GATE_PCTILE = float(os.environ.get("DISP_GATE_PCTILE", "0.30"))
 DISP_GATE_LOOKBACK = int(os.environ.get("DISP_GATE_LOOKBACK", "252"))
 DISP_GATE_MIN_HISTORY = int(os.environ.get("DISP_GATE_MIN_HISTORY", "60"))
+# REGIME GATE (2026-06-30): de-gross the WHOLE book when the strategy's trailing realized cross-sectional edge
+# (top-K vs bottom-K by pred fwd return) has gone negative — detects momentum (edge-off) vs mean-rev (edge-on)
+# regime. Edge persists at ~10-day scale (rho +0.45), so trailing edge predicts next-block edge. PIT: only uses
+# cycles whose HOLD-bar fwd window has fully closed before the decision bar. threshold=0 (not fitted). Off-by-default.
+REGIME_GATE = os.environ.get("REGIME_GATE", "0") == "1"
+REGIME_GATE_W = int(os.environ.get("REGIME_GATE_W", "180"))        # trailing window (cycles); 180=30d, 120=20d
+REGIME_GATE_FLOOR = float(os.environ.get("REGIME_GATE_FLOOR", "0.0"))  # gross mult when edge<0 (0=flat=validated; 0.3=toehold hedge)
+REGIME_GATE_K = int(os.environ.get("REGIME_GATE_K", "2"))          # K per side for the edge thermometer
+REGIME_GATE_MINHIST = int(os.environ.get("REGIME_GATE_MINHIST", "60"))  # min closed cycles before gating
+REGIME_GATE_MODE = os.environ.get("REGIME_GATE_MODE", "binary")    # binary (full/floor at edge>0) | continuous (pctile-scaled)
+REGIME_GATE_UNIV = os.environ.get("REGIME_GATE_UNIV", "full")      # full (all preds) | eligible (post maturity/liquidity filter)
+SHORT_HYST_N = int(os.environ.get("SHORT_HYST_N", "0"))            # bull short pick-hysteresis band (0=off; retain incumbent if in top kS+N)
+# DATA-DRIVEN bull short ranker: pred (current) underperforms vol features in bull (atr/idio/rvol IC ~2x pred &
+# regime-stable; pred collapses in momentum regime). Rank bull shorts by this feature instead (highest=short).
+BULL_SHORT_RANK = os.environ.get("BULL_SHORT_RANK", "pred")        # pred | rvol_7d | return_1d | atr_pct | comp_rvol | comp_ret1d
+_BULL_RANK_MAP = {"rvol_7d":"rvol_7d","return_1d":"return_1d","atr_pct":"atr_pct","idio_vol_to_btc_1h":"idio_vol_to_btc_1h",
+                  "comp_rvol":"rvol_7d","comp_ret1d":"return_1d","comp_atr":"atr_pct"}
+_BULL_RANK_FEAT = _BULL_RANK_MAP.get(BULL_SHORT_RANK, "") if BULL_SHORT_RANK != "pred" else ""
+REGIME_GATE_PLACEBO_SEED = int(os.environ.get("REGIME_GATE_PLACEBO_SEED", "-1"))  # >=0: de-gross SAME frac at random
+# Phase 2 CAUSE-based leading confirm: de-gross when BTC trend is unusually SMOOTH (momentum regime) — leads the
+# lagging perf signal. Threshold = trailing-EXPANDING percentile of btc_smooth (PIT, non-fitted, adaptive).
+REGIME_CAUSE = os.environ.get("REGIME_CAUSE", "0") == "1"
+REGIME_CAUSE_PCTILE = float(os.environ.get("REGIME_CAUSE_PCTILE", "0.66"))  # de-gross when smoothness above this pctile
+REGIME_CAUSE_MODE = os.environ.get("REGIME_CAUSE_MODE", "or")  # or (perf OR cause) | standalone (cause only)
 # iter-012 vol-norm stop overlay
 STOP_SKIP_REGIMES = set(x for x in os.environ.get("STOP_SKIP_REGIMES", "").split(",") if x)  # regimes where DD-stop is OFF (e.g. "bear")
 STOP_K_SIGMA = float(os.environ.get("STOP_K_SIGMA", "2.0"))
@@ -793,6 +882,36 @@ def select_legs(grp: pd.DataFrame, regime: str, betas_at_t: dict[str, float],
         for s in S: w[s] = w.get(s, 0) - b/K_SHORT
         return w
 
+    # BULL short-the-pumps + BTC-long hedge: bull short edge is +40@4h (over-extended alts revert) but the alt-long
+    # leg is a BAD beta hedge in a melt-up (laggards under-rise) -> short beta bleeds -> squeeze. Hedge with a CLEAN
+    # BTC long instead, to strip the market-driven part of the squeeze and keep the idiosyncratic reversion alpha.
+    if regime == "bull" and BULL_DEEP_THR < 90 and "btc_ret_30d" in grp.columns \
+       and float(grp["btc_ret_30d"].iloc[0]) >= BULL_DEEP_THR:
+        return {}                                       # deep-bull squeeze zone -> sit flat (edge only in mild bull)
+    if regime == "bull" and BULL_MODE == "short_btc_hedge":
+        kbS = BULL_K if BULL_K > 0 else K_SHORT
+        gg = grp.dropna(subset=["pred"])
+        if len(gg) < kbS: return {}
+        spool = gg
+        if SHORT_MAX_RET3D < 999 and "ret_3d" in spool.columns:
+            _k = spool[(spool["ret_3d"] <= SHORT_MAX_RET3D) | spool["ret_3d"].isna()]
+            if len(_k) >= kbS: spool = _k
+        # 5m entry-confirmation gate (mirror of default path): short only ROLLED-OVER names
+        if BULL_ENTRY_NH30 and BULL_ENTRY_NH_COL in spool.columns:
+            _nh = spool[BULL_ENTRY_NH_COL]
+            if BULL_ENTRY_MODE == "strong" and BULL_ENTRY_OFF_COL in spool.columns:
+                _k = spool[((_nh != 1) & (spool[BULL_ENTRY_OFF_COL] == 1)) | _nh.isna()]
+            else:
+                _k = spool[(_nh != 1) | _nh.isna()]
+            if len(_k) >= kbS: spool = _k
+        S = spool.nsmallest(kbS, "pred")["symbol"].tolist()
+        bg = BULL_GROSS_MULT if BULL_GROSS_MULT > 0 else 1.0
+        bS = np.nanmean([betas_at_t.get(s, np.nan) for s in S])
+        if not np.isfinite(bS) or bS <= 0: bS = 0.8
+        w = {BTC_HEDGE_KEY: bg*bS}                      # BTC long sized to neutralize the short basket's beta
+        for s in S: w[s] = w.get(s, 0) - bg/kbS
+        return w
+
     # Default path (and bull regime)
     if regime == "bull":
         key = "pred" if BULL_MODE == "sidealpha" else "mom30"
@@ -847,6 +966,19 @@ def select_legs(grp: pd.DataFrame, regime: str, betas_at_t: dict[str, float],
         if len(keep) >= kS: short_pool = keep
     if RAND_SHORT_DROP_PCT > 0 and len(short_pool) > kS and _rand_short_drop_fires(grp["open_time"].iloc[0]):
         short_pool = short_pool.drop(short_pool[key].idxmin())        # placebo: drop the TOP (most-negative-pred) short
+    # 5m ENTRY-CONFIRMATION (bull only): skip shorts still making a 30m new high (still-pumping -> squeeze-prone)
+    if regime == "bull" and BULL_ENTRY_NH30 and BULL_ENTRY_NH_COL in short_pool.columns:
+        _nh = short_pool[BULL_ENTRY_NH_COL]
+        if BULL_ENTRY_MODE == "strong" and BULL_ENTRY_OFF_COL in short_pool.columns:
+            keep = short_pool[((_nh != 1) & (short_pool[BULL_ENTRY_OFF_COL] == 1)) | _nh.isna()]
+        else:
+            keep = short_pool[(_nh != 1) | _nh.isna()]
+        # matched-fraction placebo: keep a RANDOM subset of the SAME size as the gate (tests if signal>random reduction)
+        if BULL_ENTRY_PLACEBO_SEED >= 0 and kS <= len(keep) < len(short_pool):
+            _ts = int(pd.Timestamp(grp["open_time"].iloc[0]).value)
+            rng = np.random.default_rng(BULL_ENTRY_PLACEBO_SEED * 1_000_003 + (_ts % 1_000_003))
+            keep = short_pool.iloc[np.sort(rng.choice(len(short_pool), size=len(keep), replace=False))]
+        if len(keep) >= kS: short_pool = keep
     # iter13/14 dual-pred + meta-labels: long ranked by pred_long, short by pred_short (embedded or via PREDS_LONG).
     if "pred_long" in long_pool.columns and long_pool["pred_long"].notna().sum() >= kL:
         L = long_pool.dropna(subset=["pred_long"]).nlargest(kL, "pred_long")["symbol"].tolist()
@@ -856,6 +988,23 @@ def select_legs(grp: pd.DataFrame, regime: str, betas_at_t: dict[str, float],
         S = short_pool.dropna(subset=["pred_short"]).nsmallest(kS, "pred_short")["symbol"].tolist()
     else:
         S = short_pool.head(kS)["symbol"].tolist()
+    # DATA-DRIVEN bull short ranker override: rank by vol/return feature instead of pred (stronger & regime-stable)
+    if regime == "bull" and _BULL_RANK_FEAT:
+        _f = _BULL_RANK_FEAT
+        if _f in short_pool.columns and short_pool[_f].notna().sum() >= kS:
+            sp = short_pool.dropna(subset=[_f])
+            if BULL_SHORT_RANK.startswith("comp_"):                       # composite: short low-pred AND high-feature
+                sc = sp["pred"].rank(pct=True) - sp[_f].rank(pct=True)
+                S = sp.assign(_sc=sc).nsmallest(kS, "_sc")["symbol"].tolist()
+            else:                                                          # pure feature: short HIGHEST (high vol/return reverts)
+                S = sp.nlargest(kS, _f)["symbol"].tolist()
+    # SHORT pick-hysteresis (bull churn-reduction): retain last cycle's shorts if still in top-(kS+N) by pred,
+    # fill remaining slots with fresh nsmallest. Cuts turnover without abandoning conviction. Bull-only, env-gated.
+    if SHORT_HYST_N > 0 and regime == "bull":
+        _band = short_pool.head(kS + SHORT_HYST_N)["symbol"].tolist()
+        _inc = [s for s in globals().get("_PREV_SHORTS", []) if s in _band][:kS]
+        S = (_inc + [s for s in S if s not in _inc])[:kS]
+        globals()["_PREV_SHORTS"] = S
     # EV/conviction floor (env-gated; 0=off): drop selected legs whose base pred is below floor (long) /
     # above -floor (short) — sit out low-conviction picks in thin regimes. Missing pred => kept.
     if PRED_FLOOR > 0 and "pred" in gg.columns:
@@ -881,17 +1030,73 @@ def select_legs(grp: pd.DataFrame, regime: str, betas_at_t: dict[str, float],
         tot = sum(sw.values()) or 1.0
         sw = {s: b * sw[s] / tot for s in S}                      # renorm to same short gross
     _lmult = BULL_LONG_MULT if regime == "bull" else 1.0   # symmetric bull-long cut (small/noisy sample)
-    for s in L: w[s] = w.get(s, 0) + lw[s]*_lmult
+    if regime == "bull" and BULL_LONG_INSTRUMENT == "btc":
+        # FAIR-COMPARISON mode: same long DOLLAR (BULL_LONG_MULT × alt-long gross) but allocated to BTC, not alts.
+        w[BTC_HEDGE_KEY] = w.get(BTC_HEDGE_KEY, 0.0) + sum(lw[s]*_lmult for s in L)
+    else:
+        for s in L: w[s] = w.get(s, 0) + lw[s]*_lmult
     for s in S: w[s] = w.get(s, 0) - sw[s]
+    if regime == "bull" and BULL_GROSS_MULT != 1.0:        # de-gross/flat the bull sleeve (bull is -alpha at honest cost)
+        w = {s: v*BULL_GROSS_MULT for s, v in w.items()}
     return w
 
 
 SLEEVE_DECAY_TAU = float(os.environ.get("SLEEVE_DECAY_TAU", "0"))   # P6: 0=equal (current); >0 = exp(-age/tau) age-decay
 
-def aggregate_active_sleeves(sleeves: deque) -> dict:
+def merge_panel_features(d):
+    """Merge the PIT panel features selection/sizing need (defensive-tilt, vol-sizing SIZING_FEAT, bull short ranker,
+    ret_3d gates). MUST be applied identically in run_replay/run_cycle/run_decide — otherwise the live paths silently
+    fall back to defaults (equal-weight sizing, pred ranker). Live-faithfulness bug fix (2026-06-30)."""
+    _need = list(dict.fromkeys(
+        (DEF_FEATS if SIDE_MODE in ("long_defensive_basket_hedge", "regime_switch") else [])
+        + (LONGDEF_FEATS if SIDE_MODE == "longdef_shortmr" else [])
+        + (["idio_vol_to_btc_1h"] if LONG_IDIO_SKIP_PCT < 1.0 else [])
+        + (["ret_3d"] if ((LONG_MAX_RET3D < 999 or LONG_MIN_RET3D > -999 or SHORT_MIN_RET3D > -999
+                           or SHORT_MAX_RET3D < 999) and "ret_3d" not in d.columns) else [])
+        + ([_BULL_RANK_FEAT] if _BULL_RANK_FEAT else []) + _SIZING_FEATS))
+    if _need:
+        _pf = pd.read_parquet(PANEL, columns=["symbol", "open_time"] + _need)
+        _pf["open_time"] = pd.to_datetime(_pf["open_time"], utc=True)
+        d = d.merge(_pf, on=["symbol", "open_time"], how="left")
+    return d
+
+
+def cycle_raw_edge(g) -> float | None:
+    """Regime thermometer for one cycle: top-K vs bottom-K (by pred) forward L/S edge. Used to build the trailing
+    edge history that the REGIME_GATE de-grosses on. Shared by run_replay / run_cycle / run_decide so the live
+    gate is byte-identical to the validated replay gate."""
+    gg = g.dropna(subset=["pred", "return_pct"])
+    if len(gg) < 2 * REGIME_GATE_K or gg["pred"].std() == 0:
+        return None
+    gg = gg.sort_values("pred")
+    return float(gg.tail(REGIME_GATE_K)["return_pct"].mean() - gg.head(REGIME_GATE_K)["return_pct"].mean())
+
+
+def regime_gross_mult(edge_hist, ot) -> float:
+    """PIT whole-book gross multiplier from the trailing realized L/S edge. edge_hist: list of (ts, edge). Only
+    cycles whose HOLD-bar fwd window has fully closed before the decision bar `ot` are used (exit-lagged). Binary:
+    full size if trailing-W edge>0 else REGIME_GATE_FLOOR. Identical formula to run_replay's regime_mult."""
+    if not REGIME_GATE or not edge_hist:
+        return 1.0
+    oti = pd.Timestamp(ot).value
+    hold_ns = int(pd.Timedelta(hours=4 * HOLD).value)
+    avail = [float(e) for (t, e) in edge_hist if pd.Timestamp(t).value + hold_ns <= oti]
+    if len(avail) < REGIME_GATE_MINHIST:
+        return 1.0
+    tr = float(np.mean(avail[-REGIME_GATE_W:]))   # live path supports binary (validated/recommended) mode
+    return 1.0 if tr > 0 else REGIME_GATE_FLOOR
+
+
+def aggregate_active_sleeves(sleeves: deque, regime: str = None) -> dict:
     """net position = weighted sum over active sleeves. Default equal (1/HOLD). SLEEVE_DECAY_TAU>0 weights
-    fresher sleeves more via exp(-age/tau), normalized to the same total gross (age 0 = newest=last appended)."""
+    fresher sleeves more via exp(-age/tau), normalized to the same total gross (age 0 = newest=last appended).
+    In bull (if BULL_HOLD<HOLD): aggregate only the freshest BULL_HOLD sleeves at full gross — bull edge reverses
+    within the hold, so a shorter effective hold captures it before the squeeze-back."""
     net = {}; n = len(sleeves)
+    if regime == "bull" and BULL_HOLD < HOLD and n > 0:
+        for w in list(sleeves)[-BULL_HOLD:]:
+            for s, wt in w.items(): net[s] = net.get(s, 0.0) + wt/BULL_HOLD
+        return net
     if SLEEVE_DECAY_TAU > 0 and n:
         wts = np.array([np.exp(-((n-1-i))/SLEEVE_DECAY_TAU) for i in range(n)]); wts = wts/wts.sum()
         for sl, ww in zip(sleeves, wts):
@@ -907,9 +1112,14 @@ def apply_conc_cap(net: dict, cap_frac: float) -> dict:
     same-side names in proportion to their weight. Each side's gross is preserved exactly, so the book stays
     dollar-neutral. cap_frac in (0,1]; values below 1/n_side just equalize that side."""
     if not net or cap_frac <= 0: return net
-    out = {}
+    # BTC_HEDGE is the synthetic market hedge, not a concentrated alpha name — exempt it. (A single-name side is
+    # degenerate for water-fill: it would shrink the lone name to cap_frac×itself with nowhere to redistribute,
+    # breaking dollar-neutrality — that's why BTC-long deployed at ~10% instead of 25%.)
+    hedge = {k: net[k] for k in (BTC_HEDGE_KEY,) if k in net}
+    work = {k: v for k, v in net.items() if k != BTC_HEDGE_KEY}
+    out = dict(hedge)
     for positive in (True, False):
-        side = {s: abs(w) for s, w in net.items() if (w > 0) == positive and abs(w) > 1e-12}
+        side = {s: abs(w) for s, w in work.items() if (w > 0) == positive and abs(w) > 1e-12}
         if not side: continue
         cap = cap_frac * sum(side.values())
         for _ in range(50):
@@ -1025,23 +1235,33 @@ def run_replay(start: pd.Timestamp | None, end: pd.Timestamp | None) -> dict:
     btc30 = compute_btc_30d()
     d = d.merge(mom, on=["symbol","open_time"], how="left")
     d = d.merge(btc30.reset_index(), on="open_time", how="left").dropna(subset=["btc_ret_30d"])
-    # defensive-tilt + vol-sizing features (PIT, from panel; merged only when needed)
-    _need = list(dict.fromkeys(
-        (DEF_FEATS if SIDE_MODE in ("long_defensive_basket_hedge", "regime_switch") else [])
-        + (LONGDEF_FEATS if SIDE_MODE == "longdef_shortmr" else [])
-        + (["idio_vol_to_btc_1h"] if LONG_IDIO_SKIP_PCT < 1.0 else [])
-        + (["ret_3d"] if ((LONG_MAX_RET3D < 999 or LONG_MIN_RET3D > -999 or SHORT_MIN_RET3D > -999
-                           or SHORT_MAX_RET3D < 999) and "ret_3d" not in d.columns) else []) + _SIZING_FEATS))
-    if _need:
-        _pf = pd.read_parquet(PANEL, columns=["symbol","open_time"]+_need)
-        _pf["open_time"] = pd.to_datetime(_pf["open_time"], utc=True)
-        d = d.merge(_pf, on=["symbol","open_time"], how="left")
+    # defensive-tilt + vol-sizing + ranker features (PIT, from panel) — shared helper (live paths use it too)
+    d = merge_panel_features(d)
     # PIT-lagged funding for carry-aware selection (contemporaneous funding_rate LEAKS the fwd move — see env block)
     if SHORT_FUND_FLOOR > -990 or LONG_FUND_CEIL < 990:
         _fp = pd.read_parquet(PANEL, columns=["symbol","open_time","funding_rate"]).sort_values(["symbol","open_time"])
         _fp["open_time"] = pd.to_datetime(_fp["open_time"], utc=True)
         _fp["fund_pit"] = _fp.groupby("symbol")["funding_rate"].shift(FUND_LAG_BARS)
         d = d.merge(_fp[["symbol","open_time","fund_pit"]], on=["symbol","open_time"], how="left")
+    if CHARGE_FUNDING:
+        # contemporaneous funding_rate = carry actually paid on the held book (cost accounting, not a feature)
+        _fc = pd.read_parquet(PANEL, columns=["symbol","open_time","funding_rate"]).sort_values(["symbol","open_time"])
+        _fc["open_time"] = pd.to_datetime(_fc["open_time"], utc=True)
+        d = d.merge(_fc.rename(columns={"funding_rate":"fund_chg"}), on=["symbol","open_time"], how="left")
+    # TAIL GATE: drop names with high walk-forward tail-risk score (per-cycle pctile) — squeeze/crash filter.
+    if TAIL_SCORE_PARQUET and TAIL_SKIP_PCTILE < 1.0:
+        _ts = pd.read_parquet(TAIL_SCORE_PARQUET, columns=["symbol","open_time","p_tail"])
+        _ts["open_time"] = pd.to_datetime(_ts["open_time"], utc=True)
+        d = d.merge(_ts, on=["symbol","open_time"], how="left")
+        _cut = d.groupby("open_time")["p_tail"].transform(lambda s: s.quantile(TAIL_SKIP_PCTILE))
+        _before = len(d)
+        d = d[(d["p_tail"] <= _cut) | d["p_tail"].isna()].copy()
+        log.info(f"TAIL_GATE pctile={TAIL_SKIP_PCTILE}: dropped {_before-len(d)}/{_before} high-tail-risk rows")
+    if ENTRY_FLAG_PARQUET and BULL_ENTRY_NH30:
+        _efc = ["symbol","open_time", BULL_ENTRY_NH_COL] + ([BULL_ENTRY_OFF_COL] if BULL_ENTRY_MODE=="strong" else [])
+        _ef = pd.read_parquet(ENTRY_FLAG_PARQUET, columns=list(dict.fromkeys(_efc))).drop_duplicates(["symbol","open_time"])
+        _ef["open_time"] = pd.to_datetime(_ef["open_time"], utc=True)
+        d = d.merge(_ef, on=["symbol","open_time"], how="left")
     d["regime_raw"] = d["btc_ret_30d"].apply(regime_for_cycle)
     # gap-free hysteresis from the full btc_ret_30d series (decide/settle/replay identical) — see effective_regime_series
     reg_ser = effective_regime_series(upto=d["open_time"].max())
@@ -1072,17 +1292,77 @@ def run_replay(start: pd.Timestamp | None, end: pd.Timestamp | None) -> dict:
     if DISP_GATE:
         n_skip = sum(disp_skip.values()); log.info(f"disp-gate (pctile {DISP_GATE_PCTILE} lookback {DISP_GATE_LOOKBACK}): {n_skip}/{len(times)} cycles flagged for skip")
 
+    # universe meta + dvol cache precomputed ONCE (also used by the eligible-universe regime thermometer below)
+    log.info("precomputing universe meta + 30d dvol cache (one-shot)")
+    univ_meta = precompute_universe_meta()
+    dvol_cache = precompute_dvol_cache_pit(syms) if PIT_DVOL else precompute_dvol_cache(syms)
+
+    # REGIME GATE: trailing realized cross-sectional edge -> whole-book gross multiplier (PIT, exit-time gated)
+    regime_mult = {ot: 1.0 for ot in times}
+    if REGIME_GATE:
+        K = REGIME_GATE_K; hold_td = pd.Timedelta(hours=4*HOLD)
+        re_ot, re_edge = [], []
+        for ot in times:
+            gg = by_t[ot].dropna(subset=["pred","return_pct"])
+            if REGIME_GATE_UNIV == "eligible":                          # thermometer on the TRADED (eligible) universe
+                _u = eligible_universe_at(univ_meta, ot, dvol_cache)
+                gg = gg[gg["symbol"].isin({s for s, r in _u.items() if r["in_universe"]})]
+            if len(gg) < 2*K or gg["pred"].std() == 0: continue
+            gg = gg.sort_values("pred")
+            re_ot.append(ot); re_edge.append(float(gg.tail(K)["return_pct"].mean() - gg.head(K)["return_pct"].mean()))
+        re_edge = np.array(re_edge)
+        re_exit_i = (pd.DatetimeIndex(re_ot) + hold_td).asi8             # exit time in int64 ns (UTC)
+        trail_hist = []                                                # series of trailing-edge means (for continuous pctile)
+        for ot in times:
+            avail = re_edge[re_exit_i <= pd.Timestamp(ot).value]        # only cycles fully closed before decision bar
+            if len(avail) >= REGIME_GATE_MINHIST:
+                tr = avail[-REGIME_GATE_W:].mean()
+                if REGIME_GATE_MODE == "continuous":
+                    # size = trailing edge's percentile rank within its OWN PIT history -> [floor, 1] (non-fitted)
+                    rank = (np.array(trail_hist) < tr).mean() if trail_hist else 1.0
+                    regime_mult[ot] = REGIME_GATE_FLOOR + (1.0 - REGIME_GATE_FLOOR) * rank
+                else:
+                    regime_mult[ot] = 1.0 if tr > 0 else REGIME_GATE_FLOOR
+                trail_hist.append(tr)
+        if REGIME_GATE_PLACEBO_SEED >= 0:                              # matched-fraction placebo: de-gross same # at random
+            deg = [ot for ot in times if regime_mult[ot] < 1.0]
+            rng = np.random.default_rng(REGIME_GATE_PLACEBO_SEED)
+            elig = [ot for ot in times if regime_mult.get(ot, 1.0) == 1.0 or True]
+            pick = set(rng.choice(len(times), size=len(deg), replace=False).tolist())
+            regime_mult = {ot: (REGIME_GATE_FLOOR if i in pick else 1.0) for i, ot in enumerate(times)}
+        n_deg = sum(1 for ot in times if regime_mult[ot] < 1.0)
+        log.info(f"REGIME_GATE W={REGIME_GATE_W} floor={REGIME_GATE_FLOOR} K={K}: de-grossed {n_deg}/{len(times)} cycles"
+                 + (f" [PLACEBO seed={REGIME_GATE_PLACEBO_SEED}]" if REGIME_GATE_PLACEBO_SEED>=0 else ""))
+        # persist the raw edge history so the LIVE path (run_cycle/run_decide via bootstrap) gates identically
+        (STATE/"edge_hist.json").write_text(json.dumps([[str(t), float(e)] for t, e in zip(re_ot, re_edge)]))
+    # Phase 2 CAUSE-based LEADING confirm: de-gross when BTC trend smoothness is above its trailing-expanding
+    # percentile (momentum regime). PIT: smoothness uses only closes <= decision bar; threshold from past history.
+    if REGIME_CAUSE:
+        bc = load_close_4h("BTCUSDT")
+        r30 = bc/bc.shift(180)-1; vol = bc.pct_change().rolling(180).std()
+        smooth = (r30.abs()/(vol*np.sqrt(180))).dropna()
+        s_ns = smooth.index.values.astype("datetime64[ns]").astype("int64")  # force ns (load_close_4h idx may be us/ms)
+        s_v = smooth.values
+        n_cause = 0
+        for ot in times:
+            oti = np.datetime64(pd.Timestamp(ot)).astype("datetime64[ns]").astype("int64")
+            past = s_v[s_ns <= oti]                                   # PIT: smoothness known through decision bar
+            if len(past) >= REGIME_GATE_MINHIST:
+                thr = np.quantile(past[:-1], REGIME_CAUSE_PCTILE) if len(past) > 1 else np.inf
+                cause_deg = past[-1] > thr                            # current smoothness above trailing pctile
+                if REGIME_CAUSE_MODE == "standalone":
+                    regime_mult[ot] = REGIME_GATE_FLOOR if cause_deg else 1.0
+                elif cause_deg:                                      # "or": de-gross if EITHER perf or cause fires
+                    regime_mult[ot] = REGIME_GATE_FLOOR
+                if regime_mult[ot] < 1.0: n_cause += 1
+        log.info(f"REGIME_CAUSE pctile={REGIME_CAUSE_PCTILE} mode={REGIME_CAUSE_MODE}: total de-grossed {sum(1 for ot in times if regime_mult[ot]<1.0)}/{len(times)}")
+
     # state
     active_sleeves: deque = deque(maxlen=HOLD)
     prev_agg: dict = {}
     equity = INITIAL_EQUITY
     stop = VolNormStop()
     cycles_rows, regime_rows, equity_rows, sleeves_rows, trades_rows, pred_rows, univ_rows = [], [], [], [], [], [], []
-
-    # universe meta + dvol cache precomputed ONCE (meta uses FULL preds file, not slice)
-    log.info("precomputing universe meta + 30d dvol cache (one-shot)")
-    univ_meta = precompute_universe_meta()
-    dvol_cache = precompute_dvol_cache_pit(syms) if PIT_DVOL else precompute_dvol_cache(syms)
     log.info(f"  univ_meta: {len(univ_meta)} syms; dvol_cache: {len(dvol_cache)} syms")
     last_univ = {}
     last_regime = None
@@ -1132,18 +1412,19 @@ def run_replay(start: pd.Timestamp | None, end: pd.Timestamp | None) -> dict:
         sleeve_ids_active.append(sleeve_serial)
 
         # aggregate target across active sleeves
-        net_target_raw = aggregate_active_sleeves(active_sleeves)
+        net_target_raw = aggregate_active_sleeves(active_sleeves, regime)
         if CONC_CAP > 0 and (not CONC_CAP_REGIMES or regime in CONC_CAP_REGIMES):
             net_target_raw = apply_conc_cap(net_target_raw, CONC_CAP)
         gross_target = sum(abs(w) for w in net_target_raw.values())
         # stop overlay
         gross_mult, stop_diag = stop.update(equity, equity, bar_idx, regime)   # pre-MtM call; equity_post fills later
+        gross_mult *= regime_mult.get(ot, 1.0)                                  # REGIME GATE de-gross overlay
         net_after = {s: w*gross_mult for s, w in net_target_raw.items()}
 
         # cost from turnover (prev_agg -> net_after)
         all_keys = set(net_after) | set(prev_agg)
         turn = sum(abs(net_after.get(s, 0) - prev_agg.get(s, 0)) for s in all_keys)
-        cost_bps_cycle = turn * 0.5 * COST * 1e4
+        cost_bps_cycle = cost_of(net_after, prev_agg) * 1e4
 
         # mark to market using realized return_pct (4h-forward, already in panel as alpha_A's return)
         rmap = dict(zip(g["symbol"], g["return_pct"]))
@@ -1160,8 +1441,15 @@ def run_replay(start: pd.Timestamp | None, end: pd.Timestamp | None) -> dict:
         short_ret_bps  = sum(net_after[s]*rmap.get(s,0.0) for s in _sk if np.isfinite(rmap.get(s,np.nan)))*1e4
         long_alpha_bps = sum(net_after[s]*amap.get(s,0.0) for s in _lk if np.isfinite(amap.get(s,np.nan)))*1e4
         short_alpha_bps= sum(net_after[s]*amap.get(s,0.0) for s in _sk if np.isfinite(amap.get(s,np.nan)))*1e4
-        cost_unit = turn * 0.5 * COST
-        pnl_unit = gross_pnl - cost_unit
+        cost_unit = cost_of(net_after, prev_agg)
+        # funding carry: a long pays +rate, a short receives -rate → pnl contribution = -net*rate (per interval)
+        fund_unit = 0.0
+        if CHARGE_FUNDING:
+            fmap = dict(zip(g["symbol"], g["fund_chg"]))
+            if BTC_HEDGE_KEY in net_after: fmap[BTC_HEDGE_KEY] = _btc_funding_at(ot)   # BTC perp carry (panel has no BTC)
+            fund_unit = FUND_CYCLE_FRAC * sum(net_after[s] * fmap.get(s, 0.0)
+                                              for s in net_after if np.isfinite(fmap.get(s, np.nan)))
+        pnl_unit = gross_pnl - cost_unit - fund_unit
         equity_pre = equity
         equity = equity_pre * (1.0 + pnl_unit)
         if auto is not None: auto.record(_b30, pnl_unit*1e4)   # feed realized per-cycle PnL into the report-card (PIT)
@@ -1184,7 +1472,7 @@ def run_replay(start: pd.Timestamp | None, end: pd.Timestamp | None) -> dict:
             stop_k_sigma=float(stop_diag["threshold"]),
             equity_pre=equity_pre, equity_post=equity,
             pnl_bps=(equity-equity_pre)/equity_pre*1e4 if equity_pre>0 else np.nan,
-            gross_pnl_bps=gross_pnl*1e4, cost_bps=cost_bps_cycle, turnover=turn,
+            gross_pnl_bps=gross_pnl*1e4, cost_bps=cost_bps_cycle, fund_bps=fund_unit*1e4, turnover=turn,
             long_ret_bps=long_ret_bps, short_ret_bps=short_ret_bps,
             long_alpha_bps=long_alpha_bps, short_alpha_bps=short_alpha_bps,
             n_trades=int(sum(1 for s in all_keys if abs(net_after.get(s,0)-prev_agg.get(s,0))>1e-6)),
@@ -1237,6 +1525,17 @@ def run_replay(start: pd.Timestamp | None, end: pd.Timestamp | None) -> dict:
         elapsed_s=round(time.time()-t0,1),
     )
     (STATE/"replay_summary.json").write_text(json.dumps(summary, indent=2, default=str))
+    # persist the EXACT final state so live --cycle/--decide resume BYTE-IDENTICALLY (avoids the lossy bootstrap
+    # reconstruction of prev_agg/stop from CSVs, which diverges at the catch-up boundary).
+    if len(cycles_rows):
+        _ehp = STATE/"edge_hist.json"
+        _eh = json.loads(_ehp.read_text()) if _ehp.exists() else []
+        _save_state(_state_from_replay_final(
+            equity, stop.peak, list(stop.eq_hist), list(active_sleeves), prev_agg, sleeve_serial,
+            cycles_rows[-1]["cycle_id"], cycles_rows[-1]["open_time"],
+            dict(peak=stop.peak, engaged=stop.engaged, engage_dd=stop.engage_dd, engage_age=stop.engage_age,
+                 trough=stop.trough, eq_hist=[float(x) for x in stop.eq_hist]),
+            edge_hist=_eh))
     log.info(f"replay done: {summary}")
     return summary
 
@@ -1253,8 +1552,30 @@ def _load_state() -> dict | None:
     return json.loads(POSITIONS.read_text())
 
 
+def _assert_live_supported():
+    """run_cycle/run_decide faithfully reproduce only the SUBSET of replay features wired into the live path.
+    Hard-stop if a replay-only toggle is enabled — silent live/replay divergence is worse than refusing to run.
+    (As live coverage grows, remove items here once they're implemented in cycle/decide.)"""
+    bad = []
+    if REGIME_GATE and REGIME_GATE_MODE != "binary": bad.append("REGIME_GATE_MODE=continuous (live gate is binary-only)")
+    if REGIME_GATE and REGIME_GATE_UNIV != "full":   bad.append("REGIME_GATE_UNIV=eligible (live thermometer is full-universe)")
+    if REGIME_CAUSE:                                 bad.append("REGIME_CAUSE (cause gate not in live)")
+    if TAIL_SCORE_PARQUET and TAIL_SKIP_PCTILE < 1.0: bad.append("TAIL_SCORE gate (tailscore not merged in live)")
+    if SHORT_FUND_FLOOR > -990:                      bad.append("SHORT_FUND_FLOOR (fund_pit not merged in live)")
+    if BULL_ENTRY_NH30:                              bad.append("BULL_ENTRY_NH30 (5m entry flags not merged in live)")
+    if DISP_GATE:                                    bad.append("DISP_GATE (disp-skip precompute is replay-only)")
+    if LONG_FUND_CEIL < 999:                         bad.append("LONG_FUND_CEIL (fund_pit not merged in live)")
+    if AUTO_SIZER:                                   bad.append("AUTO_SIZER (auto-regime sizer is replay-only)")
+    if REGIME_GATE_PLACEBO_SEED >= 0:                bad.append("REGIME_GATE_PLACEBO_SEED (research placebo, replay-only)")
+    if ENTRY_HOUR_SCALE != 1.0 or SKIP_ENTRY_HOURS:  bad.append("entry-hour controls (SKIP/WEAK_ENTRY_HOURS not in live)")
+    if bad:
+        raise SystemExit("LIVE-FAITHFULNESS GUARD: the live path does not implement these replay-only toggles, "
+                         "so --cycle/--decide would DIVERGE from replay: " + "; ".join(bad) +
+                         ". Unset them or wire them into run_cycle/run_decide first.")
+
+
 def _state_from_replay_final(equity, peak, eq_hist, active_sleeves, prev_agg, sleeve_serial,
-                             last_cycle_id, last_open_time, stop_state):
+                             last_cycle_id, last_open_time, stop_state, edge_hist=None):
     return dict(
         equity=float(equity), peak=float(peak), eq_hist=[float(x) for x in eq_hist],
         active_sleeves=[{k: float(v) for k,v in w.items()} for w in active_sleeves],
@@ -1263,12 +1584,14 @@ def _state_from_replay_final(equity, peak, eq_hist, active_sleeves, prev_agg, sl
         last_cycle_id=int(last_cycle_id),
         last_open_time=str(last_open_time) if last_open_time is not None else None,
         stop=stop_state,
+        edge_hist=edge_hist if edge_hist is not None else [],   # REGIME_GATE trailing-edge history (PIT)
     )
 
 
 def run_cycle() -> dict:
     """Single live cycle (or multi-cycle catch-up): load state, find new cycles in
     PREDS since last_open_time, process them, APPEND to state files, save positions.json."""
+    _assert_live_supported()
     state = _load_state()
     if state is None:
         log.error("no positions.json — run --replay-from <date> or --bootstrap-state first."); sys.exit(2)
@@ -1292,8 +1615,14 @@ def run_cycle() -> dict:
     win_days = 32 + (d["open_time"].max() - d["open_time"].min()).days + 2
     mom, betas = compute_mom30_and_beta(syms, lookback_days=win_days)
     btc30 = compute_btc_30d()
+    btc_fwd_map = load_close_4h("BTCUSDT").pct_change().shift(-1).dropna().to_dict()  # BTC hedge fwd return (same as replay)
     d = d.merge(mom, on=["symbol","open_time"], how="left")
     d = d.merge(btc30.reset_index(), on="open_time", how="left").dropna(subset=["btc_ret_30d"])
+    d = merge_panel_features(d)   # vol-sizing / ranker features — same as replay (else live falls back to equal-weight)
+    if CHARGE_FUNDING:            # contemporaneous funding carry charged on the held book — same as run_replay
+        _fc = pd.read_parquet(PANEL, columns=["symbol","open_time","funding_rate"])
+        _fc["open_time"] = pd.to_datetime(_fc["open_time"], utc=True)
+        d = d.merge(_fc.rename(columns={"funding_rate":"fund_chg"}), on=["symbol","open_time"], how="left")
     d["regime_raw"] = d["btc_ret_30d"].apply(regime_for_cycle)   # logged to cycles.csv; not used for the regime now
     # gap-free hysteresis from the full btc_ret_30d series — identical to what decide computed for the same bar
     reg_ser = effective_regime_series(upto=d["open_time"].max())
@@ -1305,6 +1634,7 @@ def run_cycle() -> dict:
     # restore state
     active_sleeves: deque = deque([{k: float(v) for k,v in w.items()} for w in state["active_sleeves"]], maxlen=HOLD)
     prev_agg = {k: float(v) for k,v in state["prev_agg"].items()}
+    edge_hist = list(state.get("edge_hist", []))   # REGIME_GATE trailing-edge history (PIT, exit-lagged)
     equity = float(state["equity"])
     sleeve_serial = int(state["sleeve_serial"])
     stop = VolNormStop()
@@ -1317,7 +1647,10 @@ def run_cycle() -> dict:
 
     univ_meta = precompute_universe_meta()
     # live: PIT dvol for the new cycles needs only the same ~30d+catch-up window (full-history is wasted)
-    dvol_cache = precompute_dvol_cache_pit(syms, last_n_files=win_days) if PIT_DVOL else precompute_dvol_cache(syms)
+    # FAITHFULNESS: use the SAME full-history dvol/liveness cache as run_replay (load the shared pickle), not a
+    # windowed recompute — a windowed/stale cache changes the eligible universe vs replay (n_universe drift).
+    # The pickle must be refreshed (rebuilt) to include the latest klines before the live --cycle is run.
+    dvol_cache = precompute_dvol_cache_pit(syms) if PIT_DVOL else precompute_dvol_cache(syms)
 
     cycles_rows, regime_rows, equity_rows, sleeves_rows, pred_rows = [], [], [], [], []
     bar_idx_base = last_cycle_id + 1
@@ -1334,13 +1667,20 @@ def run_cycle() -> dict:
                 v = ser.loc[ot]; betas_at_t[s] = float(v) if np.isfinite(v) else np.nan
         new_w = select_legs(g_elig, regime, betas_at_t)
         active_sleeves.append(new_w); sleeve_serial += 1
-        gross_target = sum(abs(w) for w in aggregate_active_sleeves(active_sleeves).values())
-        net_target_raw = aggregate_active_sleeves(active_sleeves)
+        net_target_raw = aggregate_active_sleeves(active_sleeves, regime)
+        if CONC_CAP > 0 and (not CONC_CAP_REGIMES or regime in CONC_CAP_REGIMES):   # concentration cap (same as replay)
+            net_target_raw = apply_conc_cap(net_target_raw, CONC_CAP)
+        gross_target = sum(abs(w) for w in net_target_raw.values())
         gross_mult, stop_diag = stop.update(equity, equity, len(stop.eq_hist), regime)
+        gross_mult *= regime_gross_mult(edge_hist, ot)                           # REGIME GATE (same as run_replay)
         net_after = {s: w*gross_mult for s, w in net_target_raw.items()}
+        _re = cycle_raw_edge(g)                                                  # extend trailing-edge history (PIT)
+        if _re is not None: edge_hist.append([str(ot), _re])
         all_keys = set(net_after) | set(prev_agg)
         turn = sum(abs(net_after.get(s,0) - prev_agg.get(s,0)) for s in all_keys)
         rmap = dict(zip(g["symbol"], g["return_pct"]))
+        if BTC_HEDGE_KEY in net_after:                                  # BTC hedge fwd return — same as run_replay
+            rmap[BTC_HEDGE_KEY] = float(btc_fwd_map.get(ot, 0.0))
         _nan_legs = [s for s in net_after if abs(net_after.get(s, 0)) > 1e-9 and not np.isfinite(rmap.get(s, np.nan))]
         if _nan_legs:   # held legs with no settled return are booked as 0% — surface incomplete labels, don't hide them
             log.warning(f"settle {ot}: {len(_nan_legs)} held legs have NaN return_pct, booked as 0%: {_nan_legs[:6]}")
@@ -1355,8 +1695,14 @@ def run_cycle() -> dict:
         short_ret_bps   = sum(net_after[s]*rmap.get(s,0.0) for s in _sk if np.isfinite(rmap.get(s,np.nan)))*1e4
         long_alpha_bps  = sum(net_after[s]*amap.get(s,0.0) for s in _lk if np.isfinite(amap.get(s,np.nan)))*1e4
         short_alpha_bps = sum(net_after[s]*amap.get(s,0.0) for s in _sk if np.isfinite(amap.get(s,np.nan)))*1e4
-        cost_unit = turn * 0.5 * COST
-        equity_pre = equity; equity = equity_pre * (1.0 + gross_pnl - cost_unit)
+        cost_unit = cost_of(net_after, prev_agg)
+        fund_unit = 0.0   # funding carry — same accounting as run_replay (was MISSING in live: overstated equity)
+        if CHARGE_FUNDING and "fund_chg" in g.columns:
+            fmap = dict(zip(g["symbol"], g["fund_chg"]))
+            if BTC_HEDGE_KEY in net_after: fmap[BTC_HEDGE_KEY] = _btc_funding_at(ot)   # BTC perp carry (panel has no BTC)
+            fund_unit = FUND_CYCLE_FRAC * sum(net_after[s]*fmap.get(s,0.0)
+                                              for s in net_after if np.isfinite(fmap.get(s, np.nan)))
+        equity_pre = equity; equity = equity_pre * (1.0 + gross_pnl - cost_unit - fund_unit)
         if stop.eq_hist: stop.eq_hist[-1] = equity
         univ_hash = hashlib.sha1(",".join(sorted(eligible_syms)).encode()).hexdigest()[:8]
         cycles_rows.append(dict(
@@ -1374,7 +1720,7 @@ def run_cycle() -> dict:
             stop_k_sigma=float(stop_diag["threshold"]),
             equity_pre=equity_pre, equity_post=equity,
             pnl_bps=(equity-equity_pre)/equity_pre*1e4,
-            gross_pnl_bps=gross_pnl*1e4, cost_bps=cost_unit*1e4, turnover=turn,
+            gross_pnl_bps=gross_pnl*1e4, cost_bps=cost_unit*1e4, fund_bps=fund_unit*1e4, turnover=turn,
             long_ret_bps=long_ret_bps, short_ret_bps=short_ret_bps,
             long_alpha_bps=long_alpha_bps, short_alpha_bps=short_alpha_bps,
             n_trades=int(sum(1 for s in all_keys if abs(net_after.get(s,0)-prev_agg.get(s,0))>1e-6)),
@@ -1428,7 +1774,8 @@ def run_cycle() -> dict:
         cycles_rows[-1]["cycle_id"], cycles_rows[-1]["open_time"],
         dict(peak=stop.peak, engaged=stop.engaged, engage_dd=stop.engage_dd,
              engage_age=stop.engage_age, trough=stop.trough,
-             eq_hist=[float(x) for x in stop.eq_hist]))
+             eq_hist=[float(x) for x in stop.eq_hist]),
+        edge_hist=edge_hist[-(REGIME_GATE_W + HOLD + 50):])   # keep a bounded tail; gate only needs trailing W
     _save_state(final_state)
     log.info(f"appended {len(cycles_rows)} cycle(s); equity {state['equity']:.2f}→{equity:.2f} "
              f"({(equity-state['equity'])/max(state['equity'],1)*1e4:+.0f} bps)")
@@ -1442,6 +1789,7 @@ def run_decide() -> dict:
     HL probe can measure the REAL execution price at the bar — the settle --cycle books PnL 4h later.
     Faithful by construction: decide-preds == settle-preds (verified 3e-8), and select_legs is
     deterministic, so these legs equal what --cycle will trade when the bar settles."""
+    _assert_live_supported()
     state = _load_state()
     if state is None:
         log.error("no positions.json — bootstrap first."); sys.exit(2)
@@ -1453,10 +1801,11 @@ def run_decide() -> dict:
     ot = d["open_time"].max()                                  # the just-opened bar
     d = d[d["open_time"] == ot]
     syms = sorted(d["symbol"].unique())
-    mom, betas = compute_mom30_and_beta(syms, lookback_days=34)   # decide: one bar; 34d≡45d at latest (validated)
+    mom, betas = compute_mom30_and_beta(syms, lookback_days=34)
     btc30 = compute_btc_30d()
     d = d.merge(mom, on=["symbol", "open_time"], how="left")
     d = d.merge(btc30.reset_index(), on="open_time", how="left")
+    d = merge_panel_features(d)   # vol-sizing / ranker features — same as replay (else decide falls back to equal-weight)
     # regime via the shared gap-free hysteresis series (compute_btc_30d-derived) — see effective_regime_series.
     # NOT a cycles.csv seed: that lags the settle path and leaves a gap on catch-up, so decide and settle could
     # disagree on the regime at a transition and pick different legs / stop-skip.
@@ -1472,7 +1821,7 @@ def run_decide() -> dict:
     stop.trough = float(state["stop"]["trough"])
     stop.eq_hist = deque([float(x) for x in state["stop"]["eq_hist"]], maxlen=STOP_SIGMA_WINDOW+1)
     univ_meta = precompute_universe_meta()
-    dvol_cache = precompute_dvol_cache_pit(syms, last_n_files=34) if PIT_DVOL else precompute_dvol_cache(syms)  # decide: one bar
+    dvol_cache = precompute_dvol_cache_pit(syms) if PIT_DVOL else precompute_dvol_cache(syms)  # full cache = replay-faithful
     univ = eligible_universe_at(univ_meta, ot, dvol_cache)
     eligible_syms = {s for s, r in univ.items() if r["in_universe"]}
     g_elig = d[d["symbol"].isin(eligible_syms)].copy()
@@ -1480,8 +1829,11 @@ def run_decide() -> dict:
                   if ot in ser.index and np.isfinite(ser.loc[ot])}
     new_w = select_legs(g_elig, regime, betas_at_t)
     active_sleeves.append(new_w)
-    net_target_raw = aggregate_active_sleeves(active_sleeves)
+    net_target_raw = aggregate_active_sleeves(active_sleeves, regime)         # pass regime so STRAT_HOLD_BULL is honored
+    if CONC_CAP > 0 and (not CONC_CAP_REGIMES or regime in CONC_CAP_REGIMES):  # concentration cap (same as replay/settle)
+        net_target_raw = apply_conc_cap(net_target_raw, CONC_CAP)
     gross_mult, _ = stop.update(equity, equity, len(stop.eq_hist), regime)   # pass regime so STOP_SKIP_REGIMES
+    gross_mult *= regime_gross_mult(list(state.get("edge_hist", [])), ot)     # REGIME GATE (same as settle/replay)
     net_after = {s: w*gross_mult for s, w in net_target_raw.items()}          # is honored on decide as on settle
     all_keys = set(net_after) | set(prev_agg)
     turnover = {s: round(net_after.get(s, 0) - prev_agg.get(s, 0), 6) for s in all_keys
@@ -1501,8 +1853,14 @@ def run_decide() -> dict:
 
 
 def bootstrap_state_from_replay():
-    """After --replay-all (or --replay N) runs, snapshot final state into positions.json
-    so subsequent --cycle calls can resume."""
+    """Snapshot final replay state into positions.json so --cycle can resume.
+    run_replay now writes the EXACT state (incl. stop internals engage_dd/engage_age/trough + edge_hist) directly,
+    so if positions.json already exists we KEEP it — reconstructing from CSVs is lossy (stop internals are not
+    logged per-cycle). The CSV reconstruction below is a legacy fallback for when no exact state is present."""
+    if POSITIONS.exists():
+        log.info("positions.json already present (exact state from run_replay) — keeping it; --bootstrap-state is a "
+                 "no-op. Delete positions.json first to force a (lossy) CSV reconstruction.")
+        return
     cyc_path = STATE/"cycles.csv"; eq_path = STATE/"equity.csv"
     if not cyc_path.exists() or not eq_path.exists():
         log.error("no cycles.csv/equity.csv — run --replay first."); sys.exit(2)
@@ -1515,14 +1873,30 @@ def bootstrap_state_from_replay():
     active = [json.loads(r["weights_json"]) for _, r in sl_enter.iterrows()]
     # eq_hist from equity.csv last STOP_SIGMA_WINDOW+1
     eq_hist = e["equity"].tail(STOP_SIGMA_WINDOW+1).tolist()
-    prev_agg = aggregate_active_sleeves(deque(active, maxlen=HOLD))
+    # prev_agg must be the DEPLOYED book (what the next cycle trades against), not the raw aggregate: replay applies
+    # conc_cap then a stop×regime-gate gross multiplier. Reconstruct that — apply conc_cap, then scale to the realized
+    # gross_after_stop from cycles.csv (which already folds in stop + regime gate). Else turnover/cost are wrong on
+    # the resume cycle (gross_after_stop != gross_target on ~400/1433 cycles). NOTE: run_replay also writes the EXACT
+    # positions.json directly; this lossy path is only for legacy CSV-only bootstraps.
+    _pa = aggregate_active_sleeves(deque(active, maxlen=HOLD), last.get("regime"))
+    if CONC_CAP > 0 and (not CONC_CAP_REGIMES or last.get("regime") in CONC_CAP_REGIMES):
+        _pa = apply_conc_cap(_pa, CONC_CAP)
+    _g = sum(abs(w) for w in _pa.values()); _ga = float(last.get("gross_after_stop", _g))
+    prev_agg = {s: w*(_ga/_g) for s, w in _pa.items()} if _g > 1e-12 else _pa
+    _eh_path = STATE/"edge_hist.json"
+    edge_hist = json.loads(_eh_path.read_text()) if _eh_path.exists() else []   # REGIME_GATE trailing-edge history
     state = _state_from_replay_final(
         last["equity_post"], e["peak"].max(), eq_hist, active, prev_agg,
         sl["sleeve_id"].max() if len(sl) else 0,
         last["cycle_id"], last["open_time"],
         dict(peak=float(e["peak"].iloc[-1]), engaged=bool(last["stop_engaged"]),
-             engage_dd=0.0, engage_age=0, trough=float(last["equity_post"]),
-             eq_hist=[float(x) for x in eq_hist]))
+             engage_dd=0.0, engage_age=0, trough=float(last["equity_post"]),  # NOT logged per-cycle → placeholders
+             eq_hist=[float(x) for x in eq_hist]),
+        edge_hist=edge_hist)
+    if bool(last["stop_engaged"]):
+        log.warning("CSV reconstruction at a STOP-ENGAGED cutpoint: stop internals (engage_dd/engage_age/trough) "
+                    "are not logged per-cycle, reconstructed as placeholders → stop-release timing may differ from "
+                    "the exact replay state. Prefer run_replay's exact positions.json (do not delete it).")
     _save_state(state)
     log.info(f"bootstrapped positions.json: equity={state['equity']:.2f}, "
              f"last_open_time={state['last_open_time']}, sleeves={len(state['active_sleeves'])}")

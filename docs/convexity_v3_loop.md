@@ -1181,3 +1181,144 @@ VERDICT: +25% universe -> +0.19 Sharpe / -48% maxDD is a real, mechanistically-s
 full fetch (B: ~300 more live symbols -> ~686 universe, survivorship-free). CAVEATS: 42 extra are a non-random
 already-cached slice; no placebo/nested-OOS yet; 2024 shifted (regen side-effect); still only 217/686. Next: full
 fetch B (breadth at full scale + survivorship-free incl delisted, esp. delisted = best missing shorts). Scripts: live/phase_univ218.py, fetch via binance_vision_loader.
+
+## ============ CORRECTION — the +0.19 is a sub-significant RENORMALIZATION ARTIFACT, NOT breadth (2026-06-16) ============
+The "breadth benefit" claim above is REFUTED by mechanism tracing + matched placebo. The 42 new symbols are NEVER
+traded: 0/53,098 traded legs, 0/42 ever in eligible universe.csv (univ_meta locked to 175). So the gain cannot be
+"trading more names." Decomposed the raw +1.33->+1.52 into THREE channels: (1) xs_z label renormalization (per-open_time
+mean/std of return_pct moves when symbols are added -> shifts every OLD symbol's per-symbol Ridge LABEL -> shifts its
+preds, corr 0.9655 -> changes K=3 picks on 65% of cycles); (2) bars_since_high_xs_rank silently DROPPED (panel218 lacked
+it, apply_preproc zero-fills) — vs present in the +1.33 baseline; (3) mpit high-vol cutoff = top-52% of 217 vs of 175.
+ISOLATED pipeline (live/phase_univ218_placebo.py) holding (2) and (3) FIXED over the 175, varying ONLY the added symbols'
+returns feeding xs_z: B0(175)=+1.327 EXACTLY reproduces baseline; real-42=+1.525 -> the +0.198 Sharpe lift IS channel-1
+(renormalization), confirmed. (maxDD only -5832->-4791 here; the original -48% was mostly channels 2/3.)
+MATCHED PLACEBO (11 info-free draws): shuffle x5 (real names, time-scrambled returns) mean +1.086 [0.862,1.454];
+noise x3 (synthetic gaussian, ZERO info) mean +1.278 [0.977,**+1.536**]; subset21 x3 (random half) mean +1.301
+[1.239,1.373]. real +1.525 ranks **p91 (10/11), +1.48 sigma** over placebo mean — FAILS the p95 bar. A pure
+zero-information gaussian draw (noise_s3 +1.536) BEAT real. subset-21 (real, half) gave ~0 lift (+1.301 ~= B0) while
+42-noise gave +0.21 -> the lift does NOT scale monotonically with real-symbol count -> not an information effect.
+VERDICT: the +0.198 is a renormalization COIN-FLIP (placebo sigma 0.22 ~= the lift itself), within noise. Shuffle
+clearly HURTS (-0.24, scrambling injects normalization noise) and real sits atop the cloud, so there may be a faint
+genuine "more-complete cross-section" component, but it is sub-significant and fragile. **Option B (multi-hour ~300-sym
+fetch) is NOT justified on this lift** — expected value is within +-0.22 of B0 and could land below. If universe
+expansion is ever pursued it must be for REAL breadth (extend eligible univ_meta so new names actually TRADE = more
+independent bets) and validated vs a matched random-universe placebo — not symbols dumped into the normalization only.
+CHEAP principled follow-up if the "complete normalization" hypothesis is wanted at full scale: fetch CLOSE-ONLY for all
+~700 Vision USDT perps, compute xs_z mean/std over the full cross-section while still training/trading the curated 175,
+test vs B0 + matched placebo. Low expected value given the +42 result is within noise. Scripts: live/phase_univ218_placebo.py.
+
+## ============ 8h 2025-SHARPE OPTIMIZATION LOOP (2026-06-16) — wave-1 ============
+Goal: a ROBUST 2025 Sharpe lift (baseline daily dense +1.327 / 2025 +0.382). Guardrail: a lever is accepted ONLY if it
+generalizes (all-fold + nested-OOS), NOT if it just fits the 2025 window. Fast env-sweep replays vs canonical
+fullhist_mpit preds; per-fold pnl recorded for nested-OOS. Scripts: live/phase_2025_opt.py, phase_2025_analyze.py.
+**P1 DISP_GATE (dispersion de-gross) — REJECTED (overfit).** In-sample looked great (disp_p0.40_lb252: 2025 +0.67,
+dense +1.58, maxDD -27%) BUT folds_beat only 27/54 (~50%, coin-flip) and the best pctile is unstable across metrics
+(0.30/0.40/0.50 win on 2024/2025/dense resp). NESTED-OOS (pick pctile+lookback from past folds): 2025 +0.270 < baseline
++0.382, dense +1.121 < +1.327 — picker lands on baseline 41/54 folds and the wrong lb504 variant otherwise. The +0.29
+in-sample 2025 lift is pure parameter-selection overfit (same K3/decay pathology). Retro-flags the "+0.12 disp-spike
+pending validation" memory note — likely also fails nested-OOS.
+**P3 L/S K-asymmetry — WIN (nested-OOS robust): CUT THE LONG BOOK.** Mechanism = DDI-2's "shorts carry alpha, longs are
+mostly a beta-hedge drag." ks3_kl2 (longs 3->2, shorts stay 3): dense +1.400 (>base +1.327), 2025 +0.684 (>+0.382),
+folds_beat 31/54 (real majority), median fold +22.7 bps, lifts 4/5 years (2022 +0.10, 2023 +0.35, 2024 +1.86, 2025 +0.68;
+only 2026 down 4.09->3.58). NESTED-OOS over the 6-config K grid: 2025 +0.684 / dense +1.400 — BEATS baseline OOS (picker
+lands on fewer-longs configs: ks3_kl2 30/54, ks4_kl2 11, ks5_kl2 10). Two sub-mechanisms: FEWER LONGS (ks3_kl2, broad
+4/5-yr lift = robust) vs MORE SHORTS (ks5_kl3 2025 +0.857 but hurts 2022-24 = recent-regime tilt). Extreme tilts (ks4_kl2,
+ks5_kl2) hurt dense. K is a DISCRETE architecture choice (no tuned continuous param) -> no nested-OOS pathology, unlike P1.
+**P4 SHORT_FUND_FLOOR — REJECTED.** Monotone-hurts dense (fundfloor_0 dense +0.89, 2026 collapses); nested-OOS = baseline
+(no lift). Confirms short alpha is bound to carry (4th confirmation). Wave-2 (running): long-reduction depth (kl 1/0),
+PRED_FLOOR EV gate, EV+kl2 combos, sleeve-decay, bear-gross.
+
+## ============ 8h 2025-SHARPE LOOP — wave-2 + verdict (2026-06-16) ============
+**THE LEVER = REDUCE BREADTH (K 3->2), NOT a gate.** Symmetric K=2 (ks2_kl2) is the in-sample best AND tail-improving:
+dense +2.022 (base +1.327), 2025 +1.043 (base +0.382), maxDD -4629 (base -5832, BETTER), folds_beat 37/54 (69%),
+and TAIL IMPROVES — per-cycle kurtosis 80.6->44.6, worst-cycle -1457->-1311. Cutting the noisy rank-3 picks (keep only
+top-2 conviction/side) raises Sharpe AND cleans the tail; it stays market-neutral (2L/2S). Monotone in K (prior work:
+K=4/5/6/8 all worse than 3; now 2>3) => continuation of "extremes carry alpha", NOT a random peak. lifts 4/5 years
+(only 2023 -0.47). **PRED_FLOOR (EV floor) — REJECTED:** non-monotone (0.10/0.20 mild, 0.30-0.50 HURT, 0.70 spikes to
+2025 +1.22/maxDD -2758 but that's overfit — at 0.70 the book barely trades, classic disp-gate pattern). Mechanism:
+in THIN 2025 a conviction floor STARVES the book (few legs clear it) — opposite of helping. floor+kl2 combos don't
+stack (floor degrades the already-concentrated book). **Sleeve-decay (P5) — mild broad lift, monotone in tau** (tau1.5
+dense +1.471/2025 +0.593, all 5 yrs positive; tau1.5>3>6>equal) — promising but tuned-continuous (vBTC-style nested-OOS
+risk). **Bear-gross (P6) — REJECTED** (0.5 => 2025 -0.16; bear cycles are productive in 2025). **NESTED-OOS over full
+asymmetric K grid: 2025 +0.706 (robust +0.32 vs base) but dense FLAT +1.313 and maxDD WORSE -6628** — the picker
+over-shoots to kl=1 (deep long-cut) which boosts 2025 but loses the 2026 long-rally and the hedge. So the SPECIFIC
+asymmetry does NOT generalize; the SYMMETRIC K=2 reduction is the clean discrete choice (folds_beat 69%, tail down).
+Wave-3 (running): symmetric K-ladder {1,4,5} (confirm monotonicity, K=2 not a peak) + K2+decay stack.
+Scripts: live/phase_2025_opt_w2.py, phase_2025_verdict.py. Bot: env-gated PRED_FLOOR added (default 0=no-op).
+
+## ============ 8h 2025-SHARPE LOOP — FINAL VERDICT (2026-06-16) ============
+Symmetric K-ladder (dense / 2025 / maxDD / folds_beat): K1 +1.21/+0.49/-9069/33-54 ; **K2 +2.02/+1.04/-4629/37-54** ;
+K3(base) +1.33/+0.38/-5832 ; K4 +1.18/+0.37/-5971/18-54 ; K5 +1.26/+0.52/-5346/23-54. Inverted-U, sharp peak at K=2.
+K2+decay1.5 = +1.64 (WORSE than K2 alone +2.02 -> decay does NOT stack; simpler wins).
+**THE ONE LEVER: halve breadth to K=2** (top-2 conviction picks/side, stays market-neutral). Best result of the loop:
+dense +2.02 (+0.70), 2025 +1.04 (+0.66), folds_beat 37/54 = 69% (highest of any config), kurtosis 80.6->44.6 (tail
+IMPROVES), maxDD -4629 (better than base -5832), lifts 4/5 years (2022/2024/2025/2026; only 2023 -0.47). Mechanism =
+drop the noisy rank-3 pick, keep only the highest-conviction reversion legs; K=1 too concentrated (no diversification,
+maxDD -9069 blowup) so K=2 is the floor.
+**HONEST CAVEAT (decisive):** K=2 is a SHARP ISOLATED PEAK and a data-driven K-selector does NOT land on it — nested-OOS
+over the symmetric ladder (pick K by past-fold cumulative pnl) OVER-SHOOTS to K=1 (29/54 folds, chasing K=1's
+high-variance wins) -> honest 2025 only +0.49, dense +1.41, maxDD -9069 (catastrophic). So K=2 is deployable ONLY as a
+PRE-COMMITTED discrete architecture choice ("halve K"), justified by folds_beat 69% + the concentration/diversification
+mechanism — NOT by letting an optimizer choose K live. Its full +2.02/+1.04 is in-sample-optimistic; the robust portion
+is what the 69% fold-majority + tail-improvement support. Forward expectation: a meaningful but smaller lift than +0.66,
+main risk = the sharp peak partly reflects 2025-26 universe composition (cf. the vBTC universe-overfit lesson).
+**REJECTED this loop:** DISP_GATE (nested-OOS overfit), SHORT_FUND_FLOOR (carry-bound), PRED_FLOOR EV gate (non-monotone,
+starves thin regimes; 0.70 spike is overfit), bear-gross (hurts 2025), sleeve-decay (mild/monotone but doesn't stack &
+tuned-continuous), full-asymmetric-grid nested-OOS (overshoots to kl=1, dense flat). DEPLOY DECISION (pending sign-off):
+set STRAT_K=2 (env only, no code change) as a discrete config; validate forward on the paper bot before trusting +1.04.
+Scripts: live/phase_2025_opt.py, _w2.py, _w3.py, phase_2025_verdict.py.
+
+## ============ 12h PUSH — wave-4: K=2 HARDENED (capacity + bootstrap) (2026-06-16) ============
+**W4a CAPACITY (decisive) — K=2 SURVIVES depth-aware impact.** Replay cost is flat 4.5bps/leg = DEPTH-BLIND; K=2
+concentrates the same gross into 2 names/side (1.5x per-name notional vs K=3) so sqrt-impact => total impact ~1/sqrt(K),
+K=2 pays ~22% more. Built PIT impact overlay (trailing-30d dvol proxy, bar_ADV=daily/6, impact=halfspread+K*sqrt(part),
+reconstruct net book from sleeves.csv). K=2 dense vs K=3 across AUM (IMPACT_K=60): 50k +1.59/+0.86, 156k +1.28/+0.56,
+500k +0.71/+0.02, 1M +0.18/-0.48, 5M -2.05/-2.62. **K=2 BEATS K=3 at EVERY AUM**; ordering ROBUST to harsh impact
+(K=150: 50k +0.98/+0.28, 156k +0.21/-0.46). Concentration penalty real but < K=2's gross-edge advantage. Deployable
+envelope (positive Sharpe) ~$156k-$1M, same as K=3 but always better. Script: live/phase_capacity_k.py, _dvol_pit.parquet.
+**W4b STATISTICAL — K=2>K=3 supported but MODERATE.** Through-cycle daily K2 +1.238 vs K3 +0.911. Stationary block-
+bootstrap (L=10d, 2000) K2-K3 diff-Sharpe 95% CI **[+0.065, +2.009]** median +1.064 — ABOVE 0 but thin lower bound.
+6/9 half-years K2 wins (loses 2023-H1 -1.47 chop, 2024-H1 -1.69 alt-bull, 2025-H2 ~flat); strong 2022-H2 +4.21,
+2025-H1 +2.61, 2026-H1 +2.64. VERDICT: K=2 is a REAL but moderate, regime-dependent improvement (underperforms in some
+alt-bull windows) — adopt-worthy (robustly >= K=3, survives capacity, folds 69%) with honest "moderate edge" framing.
+
+## ============ 12h PUSH — wave-5/6 + FINAL (2026-06-16) ============
+**W5 — NOTHING stacks on K=2.** CONVICTION PLACEBO (decisive +): k2_randshort (random-2 shorts + top-2 longs) dense
+collapses +2.02->+1.33/+1.54 (2 seeds), 2025 +1.04->+0.32/+0.83 => K=2's edge IS the top-2 conviction SHORT selection,
+NOT position-count/variance (re-confirms short-carries-alpha). SIZING (inv_vol already prod-default; inv_sqrt_vol +1.95,
+volcap +1.96) — no gain. HOLD sweep non-monotone (4:+1.69, 6:+2.02, 8:+1.86, 9:+2.12) — HOLD9's +0.10 over HOLD6 is
+within noise (neighbor HOLD8 worse); HOLD8 trades Sharpe for maxDD (-3887). No robust stack. **W6 — REGIME-CONDITIONAL
+bull-K REJECTED (wash).** k2_bullk3 (K=2 side/bear, K=3 bull) recovers the alt-bull weak years (2023 -0.47->+0.03, 2024
++1.44->+1.80, folds 2023 8/12, 2024 9/12) BUT hurts strong years (2022 3/12, 2026 2/6) -> dense +1.954 < K2 +2.022,
+2025 wash, folds_beat_K2 28/54 (coin-flip), nested-OOS does NOT beat plain K=2. Effect is bull-specific (beark3/4 don't
+help). It rebalances regime-variance, not Sharpe. bullk4/5 worse (non-monotone, bullk3 = in-sample peak). Signal/feature
+layer NOT re-probed — documented-exhausted across prior sessions (GBM, LambdaRank, segmentation, calibration, pruning,
+sector, retrain all rejected); the real frontier there needs a NEW orthogonal data source, not another sweep.
+**FINAL 12h-PUSH VERDICT: K=2 (symmetric breadth reduction) is the sole robust lever, now FULLY HARDENED** — survives
+depth-aware capacity at every AUM (W4a), bootstrap CI [+0.065,+2.009]>0 (W4b), conviction-placebo-confirmed real
+selection alpha (W5), folds_beat 69%, tail kurtosis halved. Honest deployable: flat-cost dense +2.02 / 2025 +1.04 is
+SIZE-0 optimistic; capacity-adjusted dense ~+1.3 @ $156k -> ~+0.7 @ $500k (moderate impact), always > K=3. Through-cycle
+daily +1.24 vs K3 +0.91. Edge moderate + regime-dependent (fades alt-bull). **DEPLOY (pending sign-off): STRAT_K=2 env
+only, no code change; forward paper-validate before trusting +1.04.** Scripts: phase_2025_opt_w{5,6}.py, phase_capacity_k.py.
+
+## ============ 12h PUSH — wave-8 SIGNAL-LAYER probe (all REJECTED) (2026-06-16) ============
+Regenerated WF RidgeCV preds (faithful gen(), HL=60 reproduces canonical K=2 EXACTLY +2.022/+1.043) with variations,
+replayed each through K=2. **HL half-life sweep: HL=60 is already OPTIMAL** (inverted-U dense HL30 +1.34, HL60 +2.02,
+HL120 +1.61, HL200 +1.53 — too-short overfits recency, too-long stale). **Feature-subset (drop atr_pct/idio_vol_1d/
+return_1d/corr_to_btc_1d): HURTS** (dense +1.45, 2025 +0.30) — even in Ridge these "redundant" feats carry value (same
+lesson as vBTC Phase H pruning failure). **HL-ENSEMBLE (blend HL30/60/120): REJECTED as 2026 ARTIFACT** — dense-WINDOW
++2.277 looked like a +0.26 lift over HL60, BUT full-period daily Sharpe ens +1.088 < hl60 +1.238 (WORSE -0.27);
+monthly folds 29/54 coin-flip; block-bootstrap ens-hl60 diff-Sharpe CI [-1.143,+0.913] median -0.21 (straddles 0);
+per-year ens wins ONLY 2026 (+2.44, which dominates the 2025-26 dense window) and loses 2022/2023/2024. The dense-window
+metric was inflated by one strong year. SIGNAL LAYER EXHAUSTED this session (directly tested, not just prior-asserted).
+
+## ===== 12h PUSH FINAL CONCLUSION =====
+ONE robust lever from the entire 8h+12h effort: **K=2 symmetric breadth reduction** (STRAT_K=2, env only). Fully
+hardened: survives depth-aware capacity at every AUM ($156k-$1M envelope, always > K=3), bootstrap CI>0, conviction-
+placebo-confirmed real selection alpha, folds_beat 69%, tail kurtosis halved. Honest deployable: flat-cost dense +2.02 /
+2025 +1.04 is SIZE-0 optimistic; capacity-adjusted ~+1.3 @$156k, ~+0.7 @$500k; through-cycle daily +1.24 vs K3 +0.91;
+moderate + regime-dependent (fades alt-bull). REJECTED across both loops: disp gate, EV/pred floor, funding floor,
+bear-gross, sizing modes, sleeve-decay, HOLD, regime-conditional-K, HL tuning, feature pruning, HL ensemble. The strategy
+is at its LOCAL OPTIMUM on free Binance perp data; the remaining frontier (a Sharpe step-change) requires a NEW orthogonal
+data source, not another sweep of this signal. DEPLOY (pending sign-off): STRAT_K=2, forward paper-validate before
+trusting +1.04. Scripts: live/phase_2025_opt_w8.py.
