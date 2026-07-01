@@ -24,6 +24,9 @@ env \
   `# SHORT_MIN=-0.20: veto shorting recent crashers (ret_3d<-20%); they squeeze/bounce (-57bp cohort). side+bear. ` \
   `# BEAR_DEPTH_RAMP: bear gross scales continuously w/ drawdown depth (0 at -10%, full at -30%) — short works only ` \
   `# in deep capitulation (t+3.2), is anti-alpha in the shallow grind (no reversion). Smooth, cliff-free risk control.` \
+  `# D0=0.15 grind-fix TESTED+REJECTED (longtail loop 2026-07-01): +968bps grind in-sample on THIS pred set, but OOS on ` \
+  `# fullhist_mpit (2022-2026) it is pred-set-fragile — helps when grind bleeds, HURTS when grind is profitable (regime- ` \
+  `# conditional, not universal; OOS grind episode hit-rate ~57%). Continuous param, marginal (+0.06 sh). Kept at 0.10.` \
   STRAT_K_LONG=1 SHORT_MIN_RET3D=-0.20 \
   BEAR_DEPTH_RAMP=1 BEAR_DEPTH_D0=0.10 BEAR_DEPTH_D1=0.30 \
   `# CONC_CAP_SINGLE_EXEMPT: with K_LONG=1 a side can aggregate to ONE long; water-fill then shrinks it to 0.4x with ` \
