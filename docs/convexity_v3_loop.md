@@ -1367,3 +1367,19 @@ reproduce prior committed +2.234 exactly.
 The −4,937 maxDD is the May-2026 BULL short squeeze (return_1d shorts the recent gainers that rip in a bull),
 NOT a bear problem. It is the irreducible cost of the bull-short premium (positive-EV, negative-skew) — no
 lever reduces it at return≥original. Bull leg remains large-but-unproven (t+0.9, one episode).
+
+### 2026-07-01b — code-review fixes (conc-cap single-name, ret_3d live guard)
+Three findings from review addressed:
+1. CONC_CAP single-name degeneracy (ADOPTED, CONC_CAP_SINGLE_EXEMPT=1): with STRAT_K_LONG=1 a side can aggregate
+   to ONE long; apply_conc_cap then shrinks the lone name to 0.4x (empty water-fill) while the other side stays full
+   -> hidden net-short (206/900 side cycles net<-0.05, avg -0.066) AND throws away long weight. Exempting single-name
+   sides is a bug fix: +2.61->+2.83 Sh, +19037->+22380 bps, ex-Nov Sh +3.03->+3.21, side net<-.05 206->170. The
+   net-short was HURTING; restoring the long's weight captures Oct long-alpha the clip discarded. Verified reproduce.
+2. ret_3d live guard (ADDED): SHORT_MIN/MAX & LONG_MAX silently no-op if ret_3d missing (filter keeps NaN); decide-bar
+   panel can lag -> veto disabled, live diverges from replay. run_decide now log.warning's when a ret_3d gate is set
+   but ret_3d is missing/all-NaN on the decision bar.
+3. bear double-gated (NOT adopted): driver pins BEAR_DEPTH_RAMP but the perf gate also de-grosses bear. Tested
+   REGIME_GATE_SKIP_REGIMES=bear: total +2110 (bear +2079 = ENTIRELY Nov-25; Feb-deep unchanged) but ex-Nov Sh
+   3.21->2.93 (side path-coupling drag -823). One-episode gain; left OFF pending decision (env-gated, available).
+
+Committed driver now: +2.83 Sharpe / +22,380 bps / maxDD -4,937.

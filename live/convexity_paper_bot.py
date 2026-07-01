@@ -263,6 +263,10 @@ VOLCAP_PCTILE = float(os.environ.get("VOLCAP_PCTILE", "0.80"))     # for volcap 
 CONC_CAP = float(os.environ.get("CONC_CAP", "0"))
 # regime-scope the concentration cap (squeeze tail is bear-specific). Empty = all regimes; e.g. "bear" = bear-only.
 CONC_CAP_REGIMES = set(x for x in os.environ.get("CONC_CAP_REGIMES", "").split(",") if x)
+# 2026-07-01: with STRAT_K_LONG=1 a side can aggregate to a SINGLE name; water-filling then shrinks the lone name to
+# cap_frac×itself (empty recv) while the other side stays full -> hidden net-short tilt (206/900 side cycles net<-0.05).
+# When on, exempt single-name sides from the cap (keep full weight -> book stays neutral). Off=legacy behavior.
+CONC_CAP_SINGLE_EXEMPT = os.environ.get("CONC_CAP_SINGLE_EXEMPT", "0") == "1"
 RANDCAP_SEED = int(os.environ.get("RANDCAP_SEED", "0"))   # for SIZING_MODE=randcap (volcap placebo)
 # 2026-06-08 short-conviction tilt: within the K short legs, tilt weight toward higher conviction (more-negative
 # short pred). Stacks MULTIPLICATIVELY on inv_vol then renormalizes to the same short gross. factor = conv_rank^TILT
@@ -1187,6 +1191,9 @@ def apply_conc_cap(net: dict, cap_frac: float) -> dict:
     for positive in (True, False):
         side = {s: abs(w) for s, w in work.items() if (w > 0) == positive and abs(w) > 1e-12}
         if not side: continue
+        if CONC_CAP_SINGLE_EXEMPT and len(side) <= 1:   # single-name side: water-fill is degenerate (shrinks the lone
+            for s, m in side.items(): out[s] = (1.0 if positive else -1.0) * m   # name, breaking neutrality) -> leave full
+            continue
         cap = cap_frac * sum(side.values())
         for _ in range(50):
             over = {s: m for s, m in side.items() if m > cap + 1e-12}
@@ -1895,6 +1902,14 @@ def run_decide() -> dict:
     univ = eligible_universe_at(univ_meta, ot, dvol_cache)
     eligible_syms = {s for s, r in univ.items() if r["in_universe"]}
     g_elig = d[d["symbol"].isin(eligible_syms)].copy()
+    # LIVE-DATA GUARD (2026-07-01): the ret_3d gates (SHORT_MIN/MAX, LONG_MAX) silently no-op if ret_3d is missing
+    # (the filter keeps NaN). The decide-bar panel can lag -> ret_3d NaN -> veto silently disabled, diverging from
+    # replay. Warn loudly so the operator knows the crasher-veto isn't firing this bar.
+    if (SHORT_MIN_RET3D > -999 or SHORT_MAX_RET3D < 999 or LONG_MAX_RET3D < 999):
+        if "ret_3d" not in g_elig.columns or not g_elig["ret_3d"].notna().any():
+            log.warning("RET3D GATE INACTIVE: SHORT_MIN/MAX or LONG_MAX is set but ret_3d is missing/all-NaN on the "
+                        "decision bar (%s) -> the crasher/rocket veto is NOT firing (live diverges from replay). "
+                        "Ensure decide-preds carry ret_3d.", ot)
     betas_at_t = {s: float(ser.loc[ot]) for s, ser in betas.items()
                   if ot in ser.index and np.isfinite(ser.loc[ot])}
     new_w = select_legs(g_elig, regime, betas_at_t)

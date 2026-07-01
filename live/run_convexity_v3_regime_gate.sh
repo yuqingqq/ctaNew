@@ -26,6 +26,10 @@ env \
   `# in deep capitulation (t+3.2), is anti-alpha in the shallow grind (no reversion). Smooth, cliff-free risk control.` \
   STRAT_K_LONG=1 SHORT_MIN_RET3D=-0.20 \
   BEAR_DEPTH_RAMP=1 BEAR_DEPTH_D0=0.10 BEAR_DEPTH_D1=0.30 \
+  `# CONC_CAP_SINGLE_EXEMPT: with K_LONG=1 a side can aggregate to ONE long; water-fill then shrinks it to 0.4x with ` \
+  `# nowhere to redistribute -> hidden net-short + throws away long weight. Exempt single-name sides (bug fix): ` \
+  `# +3343 bps, +0.22 Sh, ex-Nov Sh 3.03->3.21, side net<-.05 cycles 206->170. Book stays neutral, captures long alpha.` \
+  CONC_CAP_SINGLE_EXEMPT=1 \
   `# --- REGIME GATE (performance-based, binary, full-universe thermometer) ---` \
   REGIME_GATE=1 REGIME_GATE_W=180 REGIME_GATE_FLOOR=0.0 REGIME_GATE_K=2 \
   REGIME_GATE_MINHIST=60 REGIME_GATE_MODE=binary REGIME_GATE_UNIV=full \
