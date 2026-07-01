@@ -37,7 +37,13 @@ env \
   REGIME_GATE=1 REGIME_GATE_W=180 REGIME_GATE_FLOOR=0.0 REGIME_GATE_K=2 \
   REGIME_GATE_MINHIST=60 REGIME_GATE_MODE=binary REGIME_GATE_UNIV=full \
   `# --- BULL: short-only(ish) + 1-sleeve(4h) hold (front-loaded edge); long=0.25 caps net-short risk ---` \
-  BULL_MODE=sidealpha BULL_GROSS_MULT=1 BULL_LONG_MULT=0.25 BULL_LONG_INSTRUMENT=btc BTC_HEDGE_COST_BPS=2 BULL_K=2 STRAT_HOLD_BULL=1 \
+  `# BULL_DEEP_THR=0.15 (longtail loop 2026-07-01, OOS-VALIDATED): open no NEW bull sleeve when btc_ret_30d>=+15% ` \
+  `# (hot melt-up squeezes the short-alt leg; active sleeves roll off via hold, not liquidated). The ONE lever in the ` \
+  `# whole longtail sweep to survive OOS: 2022-2026 fullhist bull maxDD -9974->-2762, loss -9170->-2528 (11/19 bull ` \
+  `# episodes), monotonic plateau on BOTH pred sets. In-sample: Sharpe 3.085->3.443, maxDD -4937->-4276, bull CVaR5 ` \
+  `# -1316->-882. (REGIME_GATE_SKIP_REGIMES=bear tested alongside: REJECTED — in-sample grind +2079 REVERSES to -1804 ` \
+  `# OOS, 1+/10- grind episodes; the perf gate protects grind bleed long-run.)` \
+  BULL_MODE=sidealpha BULL_GROSS_MULT=1 BULL_LONG_MULT=0.25 BULL_LONG_INSTRUMENT=btc BTC_HEDGE_COST_BPS=2 BULL_K=2 STRAT_HOLD_BULL=1 BULL_DEEP_THR=0.15 \
   `# bull long ballast = 25% BTC. funding now CHARGED from data/ml/cache/funding_BTCUSDT.parquet (tiny: 0.21bps/8h, ` \
   `# +7bps total vs alt). BTC cost=2bps (not in HL capacity file; conservative for BTC liquidity). vs alt: tied/slightly ` \
   `# better Sharpe (+2.234), ~4% shallower maxDD, lower cost, less net-short (conc_cap exempts the single-name hedge).` \
