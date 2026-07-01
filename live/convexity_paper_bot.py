@@ -152,6 +152,15 @@ def cost_of(net_after: dict, prev_agg: dict) -> float:
 # (backward-compatible). Set e.g. LO=-0.22 HI=-0.13 to de-gross ONLY the grinding mid-bear zone, keep deep/mild full.
 BEAR_MID_LO = float(os.environ.get("BEAR_MID_LO","-99"))
 BEAR_MID_HI = float(os.environ.get("BEAR_MID_HI","99"))
+# BEAR DEPTH RAMP (2026-07-01): systematic (no hard threshold) bear gross control. The bear short is anti-alpha in
+# the shallow GRIND (shorts stop falling faster than the sinking market / squeeze) and strongly +alpha in DEEP
+# capitulation (short leg t+3.2). Instead of an on/off btc_30d cutoff, scale bear gross CONTINUOUSLY with drawdown
+# depth: bg = FLOOR at depth<=D0 (mild grind), ramps linearly to 1.0 at depth>=D1 (deep). Monotonic, mechanism-
+# grounded, robust to endpoint choice. depth = max(0,-btc_ret_30d). Off by default. Faithful (shared select_legs).
+BEAR_DEPTH_RAMP = os.environ.get("BEAR_DEPTH_RAMP","0") == "1"
+BEAR_DEPTH_D0 = float(os.environ.get("BEAR_DEPTH_D0","0.10"))   # drawdown at which bear gross = FLOOR (bear onset)
+BEAR_DEPTH_D1 = float(os.environ.get("BEAR_DEPTH_D1","0.30"))   # drawdown at which bear gross = full (deep capitulation)
+BEAR_DEPTH_FLOOR = float(os.environ.get("BEAR_DEPTH_FLOOR","0.0"))  # gross at/below D0
 # AUTO-ADAPTIVE regime sizer (PIT report-card): bucket cycles by btc_ret_30d (width AUTO_BINW), throttle a bucket's
 # new-sleeve gross to AUTO_THROTTLE once that bucket's TRAILING realized per-cycle PnL has gone net-negative (needs
 # >= AUTO_MINLOOK settled cycles). Strictly point-in-time (uses only prior cycles), no hand-set band, adapts to drift.
@@ -192,6 +201,10 @@ LONG_RESIDREV_THR = float(os.environ.get("LONG_RESIDREV_THR", "0.0"))
 # model error, not the edge). Cohort diag 2026-06-08: long picks ret_3d>+8% earn fwd -34bp Sharpe -0.90 vs
 # losers +54/+1.33; filtering the ~14% winner-longs lifts long-leg Sharpe +0.19 (8/9 folds). 999=off.
 LONG_MAX_RET3D = float(os.environ.get("LONG_MAX_RET3D", "999"))
+# Regime-conditional LONG_MAX (2026-06-30): rocket-longs (ret_3d>thr) REVERT in side (veto helps +0.30 side Sh) but
+# are the CAPITULATION BOUNCE in bear (veto cuts the +52bp deep-bear long cohort). Restrict the long-winner veto to
+# these regimes. Empty = all regimes (backward compatible). Applies to LONG_MAX/LONG_MIN only.
+LONG_MAX_RET3D_REGIMES = set(x for x in os.environ.get("LONG_MAX_RET3D_REGIMES", "").split(",") if x)
 LONG_MIN_RET3D = float(os.environ.get("LONG_MIN_RET3D", "-999"))   # placebo/inverse: drop recent-LOSER longs (ret_3d<thr)
 # Short-loser suppression (MIRROR of long-winner gate, short side): don't SHORT recent CRASH names (ret_3d<thr) —
 # they violently BOUNCE, squeezing the short. Cohort diag 2026-06-13: short picks ret_3d<-0.20 earn fwd -31bp/pick
@@ -199,6 +212,18 @@ LONG_MIN_RET3D = float(os.environ.get("LONG_MIN_RET3D", "-999"))   # placebo/inv
 # encode (same form as LONG_MAX_RET3D=+0.20). -999=off; principled symmetric value = -0.20.
 SHORT_MIN_RET3D = float(os.environ.get("SHORT_MIN_RET3D", "-999"))
 SHORT_MAX_RET3D = float(os.environ.get("SHORT_MAX_RET3D", "999"))   # placebo/inverse: drop recent-WINNER (rocket) shorts (ret_3d>thr)
+# SHORT rocket-tail SIZE-TAPER (2026-06-30): rocket-shorts (ret_3d>THR) are +EV on AVERAGE (+23..+41bp side/bull) but
+# carry a catastrophic squeeze left-tail (p5=-1193bp; the Nov-25 ZK blowup). A hard SHORT_MAX veto removes the tail
+# but also the +EV (bleeds Feb/Apr/May -1.5..-1.9k each). Instead SHRINK the rocket-short weight (keep the +EV mean,
+# cut the tail's portfolio impact). THR=999=off; principled THR=0.20, MULT~0.4-0.6. Faithful (in shared select_legs).
+SHORT_RET3D_TAPER_THR = float(os.environ.get("SHORT_RET3D_TAPER_THR", "999"))
+SHORT_RET3D_TAPER_MULT = float(os.environ.get("SHORT_RET3D_TAPER_MULT", "1.0"))
+# GRIND-conditional idiosyncratic short (2026-07-01): in the shallow/grinding bear the pred short is anti-alpha
+# (no market-wide reversion), BUT low-corr (idiosyncratic) names still revert on their own (reversion-IC by corr:
+# Q1 lo-corr stays +; within-pool corr-selection lifts grind short +23bp, 3/4 months). Mechanism: when b30 in the
+# grind band, re-pick the K shorts as the LOWEST-corr names within the bottom-POOL-by-pred. Bear-path only. 0=off.
+SHORT_CORR_GRIND_POOL = int(os.environ.get("SHORT_CORR_GRIND_POOL", "0"))    # pred short-pool size to corr-select from (0=off)
+SHORT_CORR_GRIND_THR = float(os.environ.get("SHORT_CORR_GRIND_THR", "-0.25"))  # apply when btc_ret_30d >= this (grind, not deep)
 RAND_LONG_DROP_PCT = float(os.environ.get("RAND_LONG_DROP_PCT", "0"))   # placebo: drop TOP long in PCT% of cycles (random)
 RAND_LONG_DROP_SEED = int(os.environ.get("RAND_LONG_DROP_SEED", "0"))
 def _rand_drop_fires(ot):   # deterministic per (cycle, seed)
@@ -274,6 +299,24 @@ REGIME_GATE_MINHIST = int(os.environ.get("REGIME_GATE_MINHIST", "60"))  # min cl
 REGIME_GATE_MODE = os.environ.get("REGIME_GATE_MODE", "binary")    # binary (full/floor at edge>0) | continuous (pctile-scaled)
 REGIME_GATE_UNIV = os.environ.get("REGIME_GATE_UNIV", "full")      # full (all preds) | eligible (post maturity/liquidity filter)
 SHORT_HYST_N = int(os.environ.get("SHORT_HYST_N", "0"))            # bull short pick-hysteresis band (0=off; retain incumbent if in top kS+N)
+# VOLATILITY TARGETING (2026-07-01): adaptive gross overlay — size INVERSELY to trailing realized vol so RISK (not
+# notional) is held constant. Motivation: trailing vol predicts forward drawdown (rho -0.66) even though per-cycle
+# direction is noise (vol clusters/persists). gross *= clip(VOL_TARGET / trailing_vol_bps, FLOOR, CAP). trailing_vol
+# = std of last WIN cycle equity %-changes (PIT, from stop.eq_hist — faithful across replay/cycle/decide). 0=off.
+VOL_TARGET = float(os.environ.get("VOL_TARGET", "0"))              # target per-cycle vol (bps); 0=off. ~median trailing vol => avg mult~1
+VOL_TARGET_WIN = int(os.environ.get("VOL_TARGET_WIN", "30"))       # trailing window (cycles) for realized-vol estimate
+VOL_TARGET_FLOOR = float(os.environ.get("VOL_TARGET_FLOOR", "0.30"))  # min gross mult (cap leverage-down in calm)
+VOL_TARGET_CAP = float(os.environ.get("VOL_TARGET_CAP", "1.00"))   # max gross mult (1.0 = de-gross-only; >1 allows scaling up)
+def vol_target_mult(eq_hist):
+    """PIT adaptive gross multiplier from trailing realized vol. eq_hist = deque of equity levels (through t-1)."""
+    if VOL_TARGET <= 0 or len(eq_hist) < VOL_TARGET_WIN + 1:
+        return 1.0
+    e = np.asarray(list(eq_hist)[-(VOL_TARGET_WIN + 1):], dtype=float)
+    rets = np.diff(e) / e[:-1]
+    tv = float(np.std(rets)) * 1e4
+    if tv <= 0:
+        return 1.0
+    return float(min(VOL_TARGET_CAP, max(VOL_TARGET_FLOOR, VOL_TARGET / tv)))
 # DATA-DRIVEN bull short ranker: pred (current) underperforms vol features in bull (atr/idio/rvol IC ~2x pred &
 # regime-stable; pred collapses in momentum regime). Rank bull shorts by this feature instead (highest=short).
 BULL_SHORT_RANK = os.environ.get("BULL_SHORT_RANK", "pred")        # pred | rvol_7d | return_1d | atr_pct | comp_rvol | comp_ret1d
@@ -281,6 +324,12 @@ _BULL_RANK_MAP = {"rvol_7d":"rvol_7d","return_1d":"return_1d","atr_pct":"atr_pct
                   "comp_rvol":"rvol_7d","comp_ret1d":"return_1d","comp_atr":"atr_pct"}
 _BULL_RANK_FEAT = _BULL_RANK_MAP.get(BULL_SHORT_RANK, "") if BULL_SHORT_RANK != "pred" else ""
 REGIME_GATE_PLACEBO_SEED = int(os.environ.get("REGIME_GATE_PLACEBO_SEED", "-1"))  # >=0: de-gross SAME frac at random
+# REGIME_GATE_SKIP_REGIMES (2026-06-30): regimes where the trailing-edge gate is NOT applied (mult forced to 1.0).
+# Rationale: the gate assumes edge-PERSISTENCE (calibrated on side, rho+0.45). In BEAR the edge MEAN-REVERTS up —
+# deep-capitulation alpha arrives exactly when the trailing edge is most negative, so the gate de-grosses into it
+# and cuts bear from +1.69 to +0.79 Sharpe (and worsens maxDD). Exempting bear restores the (no-gate) bear book
+# while keeping the validated side/bull gate. Faithful: applied identically in replay/cycle/decide.
+REGIME_GATE_SKIP_REGIMES = set(x for x in os.environ.get("REGIME_GATE_SKIP_REGIMES", "").split(",") if x)
 # Phase 2 CAUSE-based leading confirm: de-gross when BTC trend is unusually SMOOTH (momentum regime) — leads the
 # lagging perf signal. Threshold = trailing-EXPANDING percentile of btc_smooth (PIT, non-fitted, adaptive).
 REGIME_CAUSE = os.environ.get("REGIME_CAUSE", "0") == "1"
@@ -654,7 +703,7 @@ def select_legs(grp: pd.DataFrame, regime: str, betas_at_t: dict[str, float],
             gg = grp.dropna(subset=["pred"])
             if len(gg) < (kbL + kbS): return {}
             lpool = gg                                 # long-winner suppression (same as default path)
-            if LONG_MAX_RET3D < 999 and "ret_3d" in gg.columns:
+            if LONG_MAX_RET3D < 999 and "ret_3d" in gg.columns and (not LONG_MAX_RET3D_REGIMES or regime in LONG_MAX_RET3D_REGIMES):
                 _k = gg[(gg["ret_3d"] <= LONG_MAX_RET3D) | gg["ret_3d"].isna()]
                 if len(_k) >= kbL: lpool = _k
             if RAND_LONG_DROP_PCT > 0 and len(lpool) > kbL and _rand_drop_fires(grp["open_time"].iloc[0]):
@@ -671,10 +720,16 @@ def select_legs(grp: pd.DataFrame, regime: str, betas_at_t: dict[str, float],
             if SHORT_MAX_RET3D < 999 and "ret_3d" in spool.columns:
                 _k = spool[(spool["ret_3d"] <= SHORT_MAX_RET3D) | spool["ret_3d"].isna()]
                 if len(_k) >= kbS: spool = _k
-            if "pred_short" in spool.columns and spool["pred_short"].notna().sum() >= kbS:
-                S = spool.dropna(subset=["pred_short"]).nsmallest(kbS, "pred_short")["symbol"].tolist()
-            else:
-                S = spool.nsmallest(kbS, "pred")["symbol"].tolist()
+            _skey = "pred_short" if ("pred_short" in spool.columns and spool["pred_short"].notna().sum() >= kbS) else "pred"
+            S = spool.dropna(subset=[_skey]).nsmallest(kbS, _skey)["symbol"].tolist() if _skey=="pred_short" else spool.nsmallest(kbS, "pred")["symbol"].tolist()
+            # GRIND-conditional idiosyncratic short: in shallow bear (b30>=THR) pred short fails, but low-corr names
+            # still revert -> re-pick the K shorts as lowest corr_to_btc within the bottom-POOL-by-pred.
+            if SHORT_CORR_GRIND_POOL > 0 and "corr_to_btc_1d" in spool.columns and "btc_ret_30d" in grp.columns:
+                if float(grp["btc_ret_30d"].iloc[0]) >= SHORT_CORR_GRIND_THR:
+                    _sc = spool.dropna(subset=["corr_to_btc_1d", _skey])
+                    _pool = _sc.nsmallest(min(SHORT_CORR_GRIND_POOL, len(_sc)), _skey)
+                    if len(_pool) >= kbS:
+                        S = _pool.nsmallest(kbS, "corr_to_btc_1d")["symbol"].tolist()
             # depth-conditional de-gross: by default BEAR_GROSS_MULT applies to ALL bear; if BEAR_MID_LO/HI are set,
             # it applies ONLY when btc_ret_30d is in the toxic mid-bear band [LO,HI), full size (1.0) elsewhere.
             # iter18 finding: bear is U-shaped — deep capitulation (Sh +10.6) & near-side bear (+10.5) thrive, the
@@ -683,6 +738,10 @@ def select_legs(grp: pd.DataFrame, regime: str, betas_at_t: dict[str, float],
             if (BEAR_MID_LO > -90 or BEAR_MID_HI < 90) and "btc_ret_30d" in grp.columns:
                 b30 = float(grp["btc_ret_30d"].iloc[0])
                 bg = BEAR_GROSS_MULT if (BEAR_MID_LO <= b30 < BEAR_MID_HI) else 1.0
+            if BEAR_DEPTH_RAMP and "btc_ret_30d" in grp.columns:   # systematic continuous depth-ramp (no hard cutoff)
+                depth = max(0.0, -float(grp["btc_ret_30d"].iloc[0]))
+                r = (depth - BEAR_DEPTH_D0) / (BEAR_DEPTH_D1 - BEAR_DEPTH_D0) if BEAR_DEPTH_D1 > BEAR_DEPTH_D0 else 1.0
+                bg = BEAR_DEPTH_FLOOR + (1.0 - BEAR_DEPTH_FLOOR) * min(1.0, max(0.0, r))
             if BEAR_HEDGE_BTC:                          # cut alt longs (negative-alpha), hedge net-short with BTC long
                 bS = np.nanmean([betas_at_t.get(s, np.nan) for s in S])
                 if not np.isfinite(bS) or bS <= 0: bS = 0.8
@@ -937,7 +996,7 @@ def select_legs(grp: pd.DataFrame, regime: str, betas_at_t: dict[str, float],
         keep = long_pool[long_pool["resid_rev"] >= LONG_RESIDREV_THR]
         if len(keep) >= K_LONG: long_pool = keep
     # 2026-06-08 long-winner suppression: drop recent rally names from the LONG pool (they revert down)
-    if LONG_MAX_RET3D < 999 and "ret_3d" in long_pool.columns:
+    if LONG_MAX_RET3D < 999 and "ret_3d" in long_pool.columns and (not LONG_MAX_RET3D_REGIMES or regime in LONG_MAX_RET3D_REGIMES):
         keep = long_pool[(long_pool["ret_3d"] <= LONG_MAX_RET3D) | long_pool["ret_3d"].isna()]
         if len(keep) >= kL: long_pool = keep
     # 2026-06-14 long carry-harvest: drop crowded positive-funding longs (PIT funding > ceil); keeps negative-funding
@@ -1035,7 +1094,13 @@ def select_legs(grp: pd.DataFrame, regime: str, betas_at_t: dict[str, float],
         w[BTC_HEDGE_KEY] = w.get(BTC_HEDGE_KEY, 0.0) + sum(lw[s]*_lmult for s in L)
     else:
         for s in L: w[s] = w.get(s, 0) + lw[s]*_lmult
-    for s in S: w[s] = w.get(s, 0) - sw[s]
+    _r3 = gg.set_index("symbol")["ret_3d"].to_dict() if ("ret_3d" in gg.columns and SHORT_RET3D_TAPER_THR < 999) else {}
+    for s in S:
+        _sw = sw[s]
+        if _r3:                                            # rocket-short size-taper: shrink (not veto) high-ret_3d shorts
+            _v = _r3.get(s, np.nan)
+            if np.isfinite(_v) and _v > SHORT_RET3D_TAPER_THR: _sw *= SHORT_RET3D_TAPER_MULT
+        w[s] = w.get(s, 0) - _sw
     if regime == "bull" and BULL_GROSS_MULT != 1.0:        # de-gross/flat the bull sleeve (bull is -alpha at honest cost)
         w = {s: v*BULL_GROSS_MULT for s, v in w.items()}
     return w
@@ -1053,6 +1118,7 @@ def merge_panel_features(d):
         + (["idio_vol_to_btc_1h"] if LONG_IDIO_SKIP_PCT < 1.0 else [])
         + (["ret_3d"] if ((LONG_MAX_RET3D < 999 or LONG_MIN_RET3D > -999 or SHORT_MIN_RET3D > -999
                            or SHORT_MAX_RET3D < 999) and "ret_3d" not in d.columns) else [])
+        + (["corr_to_btc_1d"] if (SHORT_CORR_GRIND_POOL > 0 and "corr_to_btc_1d" not in d.columns) else [])
         + ([_BULL_RANK_FEAT] if _BULL_RANK_FEAT else []) + _SIZING_FEATS))
     if _need:
         _pf = pd.read_parquet(PANEL, columns=["symbol", "open_time"] + _need)
@@ -1418,7 +1484,9 @@ def run_replay(start: pd.Timestamp | None, end: pd.Timestamp | None) -> dict:
         gross_target = sum(abs(w) for w in net_target_raw.values())
         # stop overlay
         gross_mult, stop_diag = stop.update(equity, equity, bar_idx, regime)   # pre-MtM call; equity_post fills later
-        gross_mult *= regime_mult.get(ot, 1.0)                                  # REGIME GATE de-gross overlay
+        if regime not in REGIME_GATE_SKIP_REGIMES:
+            gross_mult *= regime_mult.get(ot, 1.0)                              # REGIME GATE de-gross overlay (exempt skip-regimes)
+        gross_mult *= vol_target_mult(stop.eq_hist)                             # VOL-TARGET adaptive overlay (PIT, from trailing eq)
         net_after = {s: w*gross_mult for s, w in net_target_raw.items()}
 
         # cost from turnover (prev_agg -> net_after)
@@ -1672,7 +1740,9 @@ def run_cycle() -> dict:
             net_target_raw = apply_conc_cap(net_target_raw, CONC_CAP)
         gross_target = sum(abs(w) for w in net_target_raw.values())
         gross_mult, stop_diag = stop.update(equity, equity, len(stop.eq_hist), regime)
-        gross_mult *= regime_gross_mult(edge_hist, ot)                           # REGIME GATE (same as run_replay)
+        if regime not in REGIME_GATE_SKIP_REGIMES:
+            gross_mult *= regime_gross_mult(edge_hist, ot)                       # REGIME GATE (same as run_replay)
+        gross_mult *= vol_target_mult(stop.eq_hist)                              # VOL-TARGET (same as run_replay)
         net_after = {s: w*gross_mult for s, w in net_target_raw.items()}
         _re = cycle_raw_edge(g)                                                  # extend trailing-edge history (PIT)
         if _re is not None: edge_hist.append([str(ot), _re])
@@ -1833,7 +1903,9 @@ def run_decide() -> dict:
     if CONC_CAP > 0 and (not CONC_CAP_REGIMES or regime in CONC_CAP_REGIMES):  # concentration cap (same as replay/settle)
         net_target_raw = apply_conc_cap(net_target_raw, CONC_CAP)
     gross_mult, _ = stop.update(equity, equity, len(stop.eq_hist), regime)   # pass regime so STOP_SKIP_REGIMES
-    gross_mult *= regime_gross_mult(list(state.get("edge_hist", [])), ot)     # REGIME GATE (same as settle/replay)
+    if regime not in REGIME_GATE_SKIP_REGIMES:
+        gross_mult *= regime_gross_mult(list(state.get("edge_hist", [])), ot)  # REGIME GATE (same as settle/replay)
+    gross_mult *= vol_target_mult(stop.eq_hist)                                # VOL-TARGET (same as settle/replay)
     net_after = {s: w*gross_mult for s, w in net_target_raw.items()}          # is honored on decide as on settle
     all_keys = set(net_after) | set(prev_agg)
     turnover = {s: round(net_after.get(s, 0) - prev_agg.get(s, 0), 6) for s in all_keys

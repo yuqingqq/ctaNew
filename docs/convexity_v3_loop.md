@@ -1322,3 +1322,48 @@ bear-gross, sizing modes, sleeve-decay, HOLD, regime-conditional-K, HL tuning, f
 is at its LOCAL OPTIMUM on free Binance perp data; the remaining frontier (a Sharpe step-change) requires a NEW orthogonal
 data source, not another sweep of this signal. DEPLOY (pending sign-off): STRAT_K=2, forward paper-validate before
 trusting +1.04. Scripts: live/phase_2025_opt_w8.py.
+
+---
+
+## 2026-07-01 — VALIDATED CORE adopted (K_LONG=1 + SHORT_MIN + bear depth-ramp)
+
+Deep bear/side/bull data dig. Frozen driver now bakes in three validated changes on top of the
+regime-gate stack. Backtest (175-sym, cost 9bps/leg, funding charged): **+2.61 Sharpe / +19,037 bps /
+maxDD −4,937** vs prior committed **+2.23 / +15,877 / −4,973** = **+20% return at equal drawdown**.
+
+### Adopted (validated, broad, mechanism-grounded)
+- **STRAT_K_LONG=1** (side only) — side long alpha lives ENTIRELY in the top-conviction pick; the 2nd
+  long is negative-EV (−7.7 bps/pick, per-rank). Interior optimum (K_long 2<1>0). Conviction test: keeping
+  the 2nd long instead of the top = +2,951 vs +18,127. Bull/bear unaffected (they use BULL_K/BEAR_K).
+- **SHORT_MIN_RET3D=−0.20** (side+bear) — veto shorting recent crashers (ret_3d<−20%); −57bp/pick cohort,
+  they squeeze/bounce. Positive in 6/8 months. Pure gross-alpha, cost-neutral.
+- **BEAR_DEPTH_RAMP (0.10→0.30)** — bear gross scales continuously with drawdown depth. Bear short is
+  significant only in deep capitulation (t+3.2); anti-alpha in the shallow grind (gross edge −6bp: the
+  cross-sectional reversion the strategy harvests is ABSENT in the grind — same names, no snap-back;
+  confirmed not-momentum, not-dispersion, not-composition — reversion just doesn't occur). Cliff-free,
+  robust to endpoints (all variants +2.48..+2.61), better ex-Nov than a hard btc_30d cutoff.
+
+Validation: ex-Nov-2025 +3,440/+0.26 Sh (not one-episode) · per-block 6/6 beat baseline · P(ret>base)=0.91
+· universe-robust (6/6 drop-20-random-symbol draws, mean +4,041) · regression: all new knobs default-off
+reproduce prior committed +2.234 exactly.
+
+### REJECTED (this dig; all one-episode or return-costly, kept env-gated OFF)
+- bear-exempt gate (REGIME_GATE_SKIP_REGIMES) — ex-Nov Sharpe 2.77→2.44, pure Nov-2025.
+- SHORT_MAX_RET3D hard veto & SHORT_RET3D_TAPER — squeeze-prone shorts are the HIGHEST-EV decile (+22bp,
+  negative skew); trimming them cuts return, doesn't clear DD-down-at-return-flat.
+- SHORT_CORR_GRIND (short low-corr idiosyncratic names in grind) — paper +23bp within-pool did NOT survive:
+  worsens grind −4,419 and maxDD −6,425 (idiosyncratic reverters ARE the squeeze names).
+- corr/U-shape universe gate — reversion IC is higher for low-corr names but pred already captures it
+  (within-pool lift ≤0 in side/bear-deep/bull); global corr gate adds ~0 (+0.8 bps/cyc) and inverts in bull.
+- reactive DD-stop recalibration — whipsaws at every k (−5..7k return); bull hedge increase — un-hedgeable
+  idiosyncratic trough; BULL_K=3 — one-episode (Apr-May) knife-edge; bull-short pred vs return_1d — return_1d
+  wins return+Sharpe (pred = lower-DD alt, −702 ret).
+
+### Optional risk dials (mechanism-justified, NOT validated on 1 big DD episode; OFF by default)
+- VOL_TARGET (whole-book vol-targeting) & BULL_GROSS_MULT<1 (bull de-gross) — both trade ~5–12% return for
+  ~8–37% shallower maxDD; equivalent frontier in-sample (both only tame the single May-2026 bull squeeze).
+
+### maxDD note
+The −4,937 maxDD is the May-2026 BULL short squeeze (return_1d shorts the recent gainers that rip in a bull),
+NOT a bear problem. It is the irreducible cost of the bull-short premium (positive-EV, negative-skew) — no
+lever reduces it at return≥original. Bull leg remains large-but-unproven (t+0.9, one episode).

@@ -19,6 +19,13 @@ env \
   DEPTH_COST_CSV=live/state/v3loop/persym_cost_cal.csv DEPTH_COST_TIER=cost_10k \
   STRAT_K=2 BEAR_K=2 CONC_CAP=0.40 LONG_MAX_RET3D=999 SIZING_MODE=inv_sqrt_vol \
   BEAR_MODE=equal STOP_SKIP_REGIMES=bear SIDE_BETA_NEUT=0 \
+  `# --- VALIDATED CORE (2026-07-01): +20% return at equal DD, broad (6/6 blocks, ex-Nov +3440), universe-robust 6/6 ---` \
+  `# K_LONG=1: side long alpha lives ENTIRELY in the top-conviction pick; the 2nd long is neg-EV (-7.7bp). side-only. ` \
+  `# SHORT_MIN=-0.20: veto shorting recent crashers (ret_3d<-20%); they squeeze/bounce (-57bp cohort). side+bear. ` \
+  `# BEAR_DEPTH_RAMP: bear gross scales continuously w/ drawdown depth (0 at -10%, full at -30%) — short works only ` \
+  `# in deep capitulation (t+3.2), is anti-alpha in the shallow grind (no reversion). Smooth, cliff-free risk control.` \
+  STRAT_K_LONG=1 SHORT_MIN_RET3D=-0.20 \
+  BEAR_DEPTH_RAMP=1 BEAR_DEPTH_D0=0.10 BEAR_DEPTH_D1=0.30 \
   `# --- REGIME GATE (performance-based, binary, full-universe thermometer) ---` \
   REGIME_GATE=1 REGIME_GATE_W=180 REGIME_GATE_FLOOR=0.0 REGIME_GATE_K=2 \
   REGIME_GATE_MINHIST=60 REGIME_GATE_MODE=binary REGIME_GATE_UNIV=full \
