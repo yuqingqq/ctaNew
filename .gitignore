@@ -64,3 +64,5 @@ live/models/*
 !live/models/twobook_flow_models.pkl
 !live/models/twobook_price_models.pkl
 !live/models/twobook_split.json
+!live/models/convexity_v3_base_model.pkl
+!live/models/convexity_v3_residrev_model.pkl
