@@ -103,6 +103,19 @@ def fetch_metrics(symbol: str, start: date, end: date,
     # downcast
     for c in out.select_dtypes("float64").columns:
         out[c] = out[c].astype("float32")
+    # MERGE with any existing cache — never overwrite history with a partial-range fetch.
+    # (2026-07-07 incident: a 2-month top-up run with the old overwrite behavior clobbered the
+    # 2021→2026 history of 163 symbol caches; new rows win on duplicate timestamps.)
+    if cache.exists():
+        try:
+            ex = pd.read_parquet(cache)
+            ex.index = pd.to_datetime(ex.index, utc=True, format="mixed")
+            ex = ex[[c for c in ex.columns if c in out.columns]]
+            out = pd.concat([ex, out]).sort_index()
+            out = out[~out.index.duplicated(keep="last")]
+        except Exception as e:
+            # Do NOT drop history on a merge failure — abort the write instead.
+            raise RuntimeError(f"[{symbol}] merge with existing cache failed ({e}); refusing to overwrite") from e
     out.to_parquet(cache, compression="zstd")
     log.info("[%s] saved %d rows → %s", symbol, len(out), cache)
     return out

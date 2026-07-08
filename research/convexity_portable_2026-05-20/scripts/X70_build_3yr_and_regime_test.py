@@ -126,6 +126,16 @@ def target_alpha(my_close, btc_close):
     return alpha, my_fwd.astype(np.float32)
 
 
+def _rolling_std_stable(s: pd.Series, window: int, min_periods: int) -> pd.Series:
+    """Sample std from rolling E[x] and E[x^2], depending only on the current window."""
+    x = s.astype("float64")
+    cnt = x.rolling(window, min_periods=min_periods).count()
+    mean = x.rolling(window, min_periods=min_periods).mean()
+    mean2 = (x * x).rolling(window, min_periods=min_periods).mean()
+    var = (mean2 - mean * mean) * cnt / (cnt - 1)
+    return np.sqrt(var.clip(lower=0)).where(cnt > 1)
+
+
 def build_sym(sym, btc_close):
     xs_path = CACHE / f"xs_feats_{sym}.parquet"
     if not xs_path.exists(): return None
@@ -138,8 +148,10 @@ def build_sym(sym, btc_close):
 
     obv = xs.get("obv_signal")
     if obv is not None:
-        obv_z = ((obv - obv.rolling(288, min_periods=72).mean()) /
-                  obv.rolling(288, min_periods=72).std().replace(0, np.nan)).shift(1).astype(np.float32)
+        _sd = _rolling_std_stable(obv, 288, 72)
+        _rng = obv.rolling(288, min_periods=72).max() - obv.rolling(288, min_periods=72).min()
+        _sd = _sd.where(_rng > 0).replace(0, np.nan)   # zero-variance guard (2026-07-08): dead windows -> NaN
+        obv_z = ((obv - obv.rolling(288, min_periods=72).mean()) / _sd).shift(1).astype(np.float32)
     else:
         obv_z = pd.Series(np.nan, index=xs.index, dtype=np.float32)
 

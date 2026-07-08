@@ -66,3 +66,7 @@ live/models/*
 !live/models/twobook_split.json
 !live/models/convexity_v3_base_model.pkl
 !live/models/convexity_v3_residrev_model.pkl
+
+# large regenerable per-decision dumps (feature-window / gate-model audits)
+live/V4_GATE_MODEL_DECISIONS.csv
+live/V4_MODEL_REGIME_EDGE_24H_AUDIT.csv

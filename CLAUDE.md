@@ -65,6 +65,22 @@ orchestrator/PROGRAMS/P-2026-001-ml-cta-engine/  Original program plan + results
 2. **VPIN buckets** — was sized using full-dataset volume; now trailing 7d
    per bar. Fixed in `features_ml/trade_flow.py::_vpin`.
 
+3. **Incremental cache updaters must MERGE, never overwrite** — a partial-range
+   metrics top-up with overwrite semantics destroyed 163/176 symbol histories
+   (2026-07-07; recovered from Binance Vision). Fixed in
+   `data_collectors/metrics_loader.py`; a failed merge now aborts the write.
+4. **Paired replays through path-coupled overlays amplify prediction noise
+   ~10-20x** — the DD-stop and binary regime gate bifurcate on tiny equity-path
+   differences, so variant-vs-incumbent replay deltas can be huge with zero
+   ranking improvement (beta-label A/B, 2026-07-08). Measure label/feature
+   variants at book level (rank-IC, top/bot-K spread); replay only with
+   overlays disabled.
+5. **Windowed recomputes must respect unbounded features** — `bars_since_high`
+   is cumcount-based (not bounded by its 288 window; empirical max ~12d) and its
+   cross-sectional rank depends on the full universe being present. Both have
+   runtime parity guards (`incremental_xs_feats.py`, `incremental_panel.py`,
+   2026-07-08); keep the guards when touching those paths.
+
 When adding a new feature, sanity-check IC against forward return shifted
 by +1 bar. Anything >+0.10 IC is suspicious and probably has hidden look-ahead.
 

@@ -4,7 +4,7 @@ rebuild_xs_feats() recomputes compute_kline_features + add_regime_features + a s
 over the FULL per-symbol history (~1M 5m bars). This module recomputes over only a trailing WARMUP window
 (default 60 days >> the max feature lookback of ~8640 bars / autocorr 2016 bars) and APPENDS the new bars to
 the existing xs_feats_<sym>.parquet. Output matches the full rebuild on the overlap (validated) because every
-feature is bounded-lookback: rolling windows ≤ 8640; bars_since_high resets within 288 bars; obv is cumsum but
+feature is bounded-lookback: rolling windows ≤ 8640; bars_since_high usually resets within ~12d (empirical max 3,441 bars; a runtime guard full-rebuilds if it nears the window bound); obv is cumsum but
 obv_z subtracts a rolling-288 mean so the level offset cancels.
 
 Usage:
@@ -42,8 +42,15 @@ def _fill_grid(kl: pd.DataFrame) -> pd.DataFrame:
     if len(grid) == len(kl):                            # already gapless — identity
         return kl
     px = [c for c in ("open", "high", "low", "close") if c in kl.columns]
+    was_present = pd.Series(True, index=kl.index).reindex(grid).fillna(False)
     kl = kl.reindex(grid)
-    kl[px] = kl[px].ffill()
+    kl["close"] = kl["close"].ffill()
+    # synthetic no-trade bars: price unchanged → open=high=low=close (carrying the PRIOR bar's
+    # high/low fabricated range and contaminated ATR/true-range — user-reported issue #3, 2026-07-08)
+    for c in ("open", "high", "low"):
+        if c in kl.columns:
+            kl[c] = kl[c].where(was_present, kl["close"])
+            kl[c] = kl[c].ffill()
     for c in kl.columns:
         if c not in px:
             kl[c] = kl[c].fillna(0.0)
@@ -128,6 +135,17 @@ def update_sym(sym: str) -> str:
     if kl is None: return "no-klines"
     feats = _xs_from_klines(kl)
     feats.index = pd.to_datetime(feats.index, utc=True)
+    # TRUNCATION GUARD (feature audit 2026-07-08): bars_since_high is cumcount-since-rolling-high and is
+    # NOT bounded by 288 (docstring above corrected) — in a long monotone drawdown the windowed recompute
+    # would truncate it vs full history. Empirical max run = 3,441 bars (~12d) vs the ~36d window bound
+    # (3x margin), so this never fires in normal markets; if it ever does, rebuild that symbol from full
+    # history instead of writing a truncated value.
+    _bound = (DAILY_FILES - RECOMPUTE_TAIL_DAYS - 2) * 288
+    if "bars_since_high" in feats.columns and feats["bars_since_high"].max() >= _bound:
+        kl_full = _load_klines(sym, None)
+        if kl_full is not None:
+            feats = _xs_from_klines(kl_full)
+            feats.index = pd.to_datetime(feats.index, utc=True)
     # RECOMPUTE the trailing valid tail (not append-only): repair existing bars whose lookback included a
     # kline that was later corrected/backfilled. Keep only the valid tail (recompute's early bars are warmup).
     valid_from = feats.index.max() - pd.Timedelta(days=RECOMPUTE_TAIL_DAYS)

@@ -29,6 +29,16 @@ KEEP_OBJ = {"symbol", "open_time", "exit_time"}
 _BTC_FULL = None
 
 
+def _rolling_std_stable(s: pd.Series, window: int, min_periods: int) -> pd.Series:
+    """Sample std from rolling E[x] and E[x^2], depending only on the current window."""
+    x = s.astype("float64")
+    cnt = x.rolling(window, min_periods=min_periods).count()
+    mean = x.rolling(window, min_periods=min_periods).mean()
+    mean2 = (x * x).rolling(window, min_periods=min_periods).mean()
+    var = (mean2 - mean * mean) * cnt / (cnt - 1)
+    return np.sqrt(var.clip(lower=0)).where(cnt > 1)
+
+
 def _closes_tail(sym, since):
     """5m closes for `sym` from daily files on/after (since - WARMUP_DAYS)."""
     sd = KLINES/sym/"5m"
@@ -65,8 +75,13 @@ def _build_sym_window(sym, since, drop_unlabeled=True):
     alpha, my_fwd = X70.target_alpha(my_close, btc)
     obv = xs.get("obv_signal")
     if obv is not None:
-        obv_z = ((obv - obv.rolling(288, min_periods=72).mean()) /
-                 obv.rolling(288, min_periods=72).std().replace(0, np.nan)).shift(1).astype(np.float32)
+        # pandas' rolling std can carry accumulator residue across long OBV histories, making the same
+        # 288-bar window produce different stds in full-history vs sliced recomputes. Compute a window-local
+        # std instead, then mask genuinely flat windows.
+        _sd = _rolling_std_stable(obv, 288, 72)
+        _rng = obv.rolling(288, min_periods=72).max() - obv.rolling(288, min_periods=72).min()
+        _sd = _sd.where(_rng > 0).replace(0, np.nan)
+        obv_z = ((obv - obv.rolling(288, min_periods=72).mean()) / _sd).shift(1).astype(np.float32)
     else:
         obv_z = pd.Series(np.nan, index=xs.index, dtype=np.float32)
     fr = fr_z = fr_c = pd.Series(np.nan, index=xs.index, dtype=np.float32)
@@ -182,6 +197,32 @@ def run(panel_path=PANEL, workers=6, rebuild_days=0):
         print(f"[inc_panel] 0 new bars — panel current [{time.time()-t0:.0f}s]", flush=True); return panel, 0
     new = pd.concat(parts, ignore_index=True)
     new = _cohort_window(new, since)
+    # PARITY GUARD (feature audit 2026-07-08): bars_since_high_xs_rank must be computed over the full
+    # cross-section, or every survivor's rank diverges from the full-rebuild backtest. If a new cycle's
+    # cross-section is thin (late klines / per-sym build failures), DEFER it — the --rebuild-days window
+    # rebuilds it on a later pass once the stragglers arrive.
+    _xs_n = new.groupby("open_time")["symbol"].transform("size")
+    # STRICT parity gate (tightened per user-reported issue #4, 2026-07-08): even ONE missing symbol
+    # shifts every percentile rank. Reference = the last built cycle's count (rolls with legitimate
+    # universe change after at most one deferred cycle). Escape hatch: cycles still deferred after
+    # 48h are built anyway (feed outage must not deadlock the loop) and recorded as DEGRADED in a
+    # sidecar log for audit — live decisions on those cycles used a skewed rank.
+    _prev_n = int(panel.groupby("open_time")["symbol"].size().iloc[-1])
+    _now = pd.Timestamp.now(tz="UTC")
+    _thin = (_xs_n < _prev_n) & (new["open_time"] > _now - pd.Timedelta(hours=48))
+    _degraded = (_xs_n < _prev_n) & ~(new["open_time"] > _now - pd.Timedelta(hours=48))
+    if _degraded.any():
+        _dg = sorted(new.loc[_degraded, "open_time"].unique())
+        with open(panel_path.parent / "degraded_xs_cycles.log", "a") as fh:
+            for t in _dg: fh.write(f"{_now.isoformat()} built-degraded {t} n={int(_xs_n[new.open_time==t].iloc[0])} expected>={_prev_n}\n")
+        print(f"[inc_panel] WARN: building {len(_dg)} DEGRADED cycle(s) after 48h wait (partial XS; ranks skewed; logged)", flush=True)
+    if _thin.any():
+        _def = sorted(new.loc[_thin, "open_time"].unique())
+        print(f"[inc_panel] DEFER {len(_def)} cycle(s) with XS < last built count {_prev_n}: {_def[:3]}...", flush=True)
+        new = new[~_thin]
+        if new.empty:
+            print(f"[inc_panel] all new cycles deferred — panel unchanged [{time.time()-t0:.0f}s]", flush=True)
+            return panel, 0
     new["bars_since_high_xs_rank"] = (new.groupby("open_time")["bars_since_high"].rank(pct=True).astype("float32"))
     new = new.reindex(columns=panel.columns)
     for c in new.columns:
