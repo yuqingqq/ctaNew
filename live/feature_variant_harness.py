@@ -47,6 +47,9 @@ CELLS = {
     "C5": (["corr_to_btc_1d"], "corr_to_btc_12h", "corr12h"),
     # T1 (addendum 6d): ADDITION cell — replaces nothing; adds the lagged taker long/short ratio
     "T1": ([], "taker_ls_24h_lag36h", "takerls"),
+    # B1/B2 (addendum 8c, from the Phase A window×horizon screen): addition cells on the 4h label
+    "B1": ([], "ret_24h", "ret24h"),
+    "B2": ([], "dd_3d", "dd3d"),
 }
 
 def load_closes(sym):
@@ -91,6 +94,10 @@ def build_variant_col(cell, syms):
             t24 = tls.rolling("24h").mean().where(tls.notna().rolling("24h").count() >= 230)
             v = t24.shift(432).rename("taker_ls_24h_lag36h")   # 36h worst-case Vision availability lag
             v.index.name = "open_time"                         # metrics grid index is unnamed (closes' is not)
+        elif cell == "B1":
+            v = c.pct_change(288).shift(1).rename("ret_24h")             # screen convention (8c)
+        elif cell == "B2":
+            v = (c / c.rolling(864).max() - 1).rename("dd_3d")           # C4 basis, 3d window (8c)
         elif cell == "C5":
             my_ret = np.log(c / c.shift(1)); btc_ret = np.log(BTC / BTC.shift(1))
             ci = my_ret.index.intersection(btc_ret.index)
@@ -143,7 +150,7 @@ def main():
         for i in range(len(cuts) - 1):
             c0, c1 = cuts[i], cuts[i + 1]; fc = c0 - EMB
             tr = PAN[(PAN.exit_time < fc) & PAN["xs_z"].notna()]
-            trv = tr.dropna(subset=[vname]) if cell in ("C1", "C2", "C3", "C5", "T1") else tr
+            trv = tr.dropna(subset=[vname]) if cell in ("C1", "C2", "C3", "C5", "T1", "B1", "B2") else tr
             te = PAN[(PAN.open_time >= c0) & (PAN.open_time < c1) & (~PAN.symbol.isin(EXCL))]
             if not len(trv) or not len(te): continue
             t_end = trv["open_time"].max()

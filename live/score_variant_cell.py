@@ -12,6 +12,9 @@ Verdict text auto-generated from the pre-registered bars. Usage (tags as built, 
   python3 live/score_variant_cell.py <tag>   # C1=ret36h C2=retc1 C3=resid3 C4=ddc2 C5=corr12h T1=takerls
 Env: SCORE_BASELINE_TAG=<tag> scores the variant against hl_<tag>_* books instead of the V0_LEAN
 incumbents — used for the 6b population-matched controls (honest Δ = variant vs matched control).
+SCORE_FWD_CYCLES=<k> (default 6) sets the fwd outcome to the k-cycle alpha sum (grid-guarded);
+SCORE_BLOCK_DAYS=<d> (default 1) sets the block length for t/CI (8b-1: ceil(horizon/24h)).
+B3 sleeve scoring: SCORE_FWD_CYCLES=18 SCORE_BLOCK_DAYS=3 SCORE_BASELINE_TAG=slv72base slv72res3.
 """
 import os, sys
 from pathlib import Path
@@ -80,8 +83,13 @@ def per_cycle_stats(base_b, base_l, var_b, var_l, fwd):
         out.append((t, fold, icB, icV, spB, spV))
     return pd.DataFrame(out, columns=["t", "fold", "icB", "icV", "spB", "spV"]).dropna()
 
+BLOCK_DAYS = int(os.environ.get("SCORE_BLOCK_DAYS", "1"))
+FWD_CYCLES = int(os.environ.get("SCORE_FWD_CYCLES", "6"))
+
 def blockci(x, days, n=2000):
-    per = [g.values for _, g in pd.Series(x.values, index=days).groupby(level=0)]
+    # days -> block ids of BLOCK_DAYS calendar days (8b-1: block >= horizon)
+    bid = pd.Series([pd.Timestamp(d).toordinal() // BLOCK_DAYS for d in days], index=range(len(days)))
+    per = [g.values for _, g in pd.Series(x.values, index=bid.values).groupby(level=0)]
     ms = [np.concatenate([per[i] for i in rng.integers(0, len(per), len(per))]).mean() for _ in range(n)]
     return np.percentile(ms, [2.5, 97.5])
 
@@ -91,8 +99,13 @@ def main():
                           columns=["symbol", "open_time", "alpha_vs_btc_realized"])
     pan["open_time"] = pd.to_datetime(pan["open_time"], utc=True)
     pan = pan[(pan.open_time.dt.hour % 4 == 0) & (pan.open_time.dt.minute == 0)].sort_values(["symbol", "open_time"])
-    pan["fwd24"] = pan.groupby("symbol")["alpha_vs_btc_realized"].transform(
-        lambda s: s.rolling(6).sum().shift(-5)) * 1e4
+    k = FWD_CYCLES
+    gp = pan.groupby("symbol")
+    pan["fwd24"] = gp["alpha_vs_btc_realized"].transform(
+        lambda s: s.rolling(k).sum().shift(-(k - 1))) * 1e4
+    if k > 6:  # grid guard for long horizons (8b-7)
+        ok = (gp["open_time"].shift(-(k - 1)) - pan["open_time"]) == (k - 1) * pd.Timedelta(hours=4)
+        pan["fwd24"] = pan["fwd24"].where(ok)
     fwd = {t: g.set_index("symbol")["fwd24"].dropna() for t, g in pan.groupby("open_time")}
     mv = btc_4h_move()
     base_tag = os.environ.get("SCORE_BASELINE_TAG")

@@ -549,3 +549,109 @@ history. Positioning re-screen was already done on full coverage (Iter 3).
   (REJECT on negative OOS delta or era-flip; RISK-LEVER-ONLY if only maxDD improves; ADOPT-candidate
   needs OOS paired CI excluding 0). Acknowledged weaknesses: 4th side lever on same windows
   (multiplicity), threshold-level mismatch vs diagnostic terciles, 3-for-3 diagnostic→bot failures.
+
+## Addendum 8 (2026-07-08, PRE-REGISTERED before any computation) — sleeve-conditional window×horizon program
+
+**Motivation (user):** the closed feature-window program scored every window against the single
+production label (4h entry / 24h tip). A window useless there may serve a different holding
+sleeve. Term-structure prior supports the axis (signal persists past 24h); STRAT_HOLD prior
+constrains it (naive longer holds of the 4h signal did not generalize).
+
+**Phase A — IC surface (SCREEN ONLY, non-verdict-bearing, no multiplicity spend):**
+- Labels: per-symbol forward residual-alpha sums over next {1, 3, 6, 12, 18} cycles
+  (4h, 12h, 24h, 48h, 72h), from panel `alpha_vs_btc_realized` (X70 conventions).
+- Features (all shift(1) at 5m, sampled at 4h cadence, X6b conventions):
+  raw ret {12h, 24h, 36h, 3d, 5d, 7d}; resid_ret {12h, 24h, 36h, 3d, 5d} (incumbent β_288
+  idio sums, C3 construction); resid_rev lagged sums k∈{2,3,6,12} cycles (from panel alpha);
+  corr_to_btc {12h, 1d, 3d}; dd_from_high {1d, 3d, 7d}. ~21 features × 5 horizons × 2 eras.
+- Endpoints per cell: per-cycle XS rank-IC (mean, day-block t) AND pred-orthogonal rank-IC
+  (feature ranks residualized per-cycle on incumbent base-book pred ranks — absorption screen).
+- Eras: recent (2025-10-04→panel end) and OOS (2023-01→2025-09), scored separately.
+- **Ridge rule (flag, not verdict):** a (feature, horizon) cell flags only if pred-orthogonal
+  |t| ≥ 3 in BOTH eras, same sign, AND ≥1 adjacent window (same family, neighboring L) has same
+  sign with |t| ≥ 2 in the pooled frame. Isolated peaks are ignored by construction.
+- Multiplicity note printed with any flag: ~210 cells scored; ~10 false |t|≥3 single-era cells
+  expected; the both-era + adjacency requirement is the control. No promotion from Phase A.
+
+**Phase B (only if Phase A flags): ≤3 pre-registered book-level cells**, chosen by ridge center
+not peak, one change per cell, full 6b machinery (matched-population scorer, all 4 endpoints,
+matched control books whenever row availability changes, promotion bars as 6b per sleeve).
+A cell targeting a NEW sleeve (label horizon ≠ 4h) additionally requires strategy-layer cost
+validation before any adoption (STRAT_HOLD prior; cost per hold, sleeve overlap) — book-level
+pass alone is a forward-test candidacy at most. 2022 holdout is SPENT; dual-era + fold bars are
+the only era defense; stated limitation, not waivable.
+
+**Not tested here:** beta-window label variants (family closed, addendum 5); funding windows
+(dead under residual target); autocorr grids (inert); anything requiring new data classes.
+
+### Addendum 8b (2026-07-08, BEFORE any computation) — design-review amendments (verdict: REVISE, applied)
+
+Adversarial design review returned 13 findings; blocking fixes + pins applied to the
+pre-registration and screen implementation BEFORE the first run:
+
+1. **Horizon-length day blocks (HIGH)**: block = ceil(horizon/24h) days (1/1/1/2/3 per h4..h72)
+   for every t and CI. Daily blocks under-count overlap: VIF ≈ 2 at 48h (t overstated ×1.41),
+   ≈ 3 at 72h (×1.73). The addendum-8 "~10 false |t|≥3" note was itself evidence of the
+   miscalibration; calibrated both-era same-sign flag rate ≈ 4e-4 over 105 alpha cells.
+2. **Marginal labels (HIGH)**: h>24h flags additionally require same-sign |t|≥2 BOTH eras on the
+   24h→h excess label (cycles 7..k: rolling(k−6).sum().shift(−(k−1))). Nested labels otherwise
+   flag the already-harvested first 24h mechanically.
+3. **Phase B sleeve baseline (HIGH)**: for any cell with label horizon ≠ 4h, the baseline arm is
+   pre-registered as V0_LEAN (unchanged features) retrained on the SAME h label with the same
+   cuts; Δ = variant vs that baseline; matched-population control on top per 6b. No comparison
+   against 4h-label incumbent books.
+4. **V0-span orthogonalization (MED-HIGH)**: the flag-bearing column is feature ranks
+   residualized per-cycle on the FULL 16-rank span (V0_LEAN ∪ resid_rev_2/3 — includes the
+   long-book extras, covering the resid_rev pin). Pred-orthogonal (base-book pred) kept as
+   diagnostic only; neither necessary nor sufficient for a retrained sleeve — stated.
+5. **Family-common population masks (MED)**: per cycle, all windows within a family scored on the
+   intersection mask (every family window ∩ pred ∩ V0-span present); per-cell N reported.
+   min_periods pinned: ret = full window (pct_change), resid_ret = w/2 (C3), corr = max(36, w/4)
+   (C5), dd = full window (C4 basis).
+6. **Universe (MED)**: Phase A rows = clean-book universe (pred present in `hl_*_clean` books —
+   enforces EXCL + liveness); stale-print symbols never enter any cycle's XS ranks.
+7. **Label grid guard (MED)**: label NaN where open_time[t+k−1] − open_time[t] ≠ (k−1)·4h
+   (row-based rolling otherwise stretches horizons over gaps, compounding with k).
+8. **Shared-β caveat (LOW-MED)**: resid_* features and the alpha label share β_288 hedge noise
+   (~5.9% of label variance, ~16% top-decile |BTC-move|); any flagged resid_* cell must also
+   show the raw (unhedged) forward-return-label IC as a robustness column (computed for all
+   cells, diagnostic).
+9. **Implementability (LOW)**: the multi-cycle alpha sum is a 4h-rebalanced hedge ladder, not a
+   static-hedge residual; Phase B targets and STRAT_HOLD cost validation refer to the ladder.
+10. **Era tails (LOW)**: per-horizon label masks differ at era tails (up to 3d at 72h); pinned,
+    no post-hoc adjustment.
+11. **Adjacency demoted to cosmetic**: under window correlation (t-stat ρ ≈ 0.7-0.9 between
+    neighbors) adjacency support is nearly free and filters little; it is reported but carries
+    no weight. Flag rule = V0-span-orth |t|≥3 both eras same sign (+ marginal-label test for
+    h>24h). Ridge-shaped false positives remain the norm under correlation — Phase A flags are
+    screen output, never evidence.
+12. **New-sleeve ceiling tightened**: a book-level pass on a new sleeve = candidacy for a
+    SEPARATELY DESIGNED forward experiment (the existing forward ledger runs the 4h stack under
+    the 0.5× gross consequence and cannot adjudicate a new sleeve).
+
+### Addendum 8c (2026-07-08, PRE-REGISTERED before Phase B runs) — Phase A results + Phase B cells
+
+**Phase A outcome** (live/IC_SURFACE_WINDOW_HORIZON.csv, 504 rows; sanity PASSED — deployed
+ret_3d/resid_rev_2/3 read absorbed |t_v0|≤0.9 vs raw |t|8-14): 15 flags in 3 coherent ridges.
+(1) SHORT-MOMENTUM HOLE: 12h-24h return windows × h4-h24, positive sign (continuation), peak
+ret_24h × h4 t_v0 +9.5/+7.0, ic +0.021/+0.010 — V0_LEAN spans 8h reversal (resid_rev_2/3) and
+3d momentum (ret_3d) but nothing between; t collapses to ~0 at 36h+. Survives raw-label
+robustness. (2) dd_3d × h4-h12 (+4.1/+3.0). (3) resid_ret_3d × h72, the only h>24h flag passing
+the marginal 24h→72h test (m72 +4.1/+2.2).
+
+**Phase B cells (≤3 budget, ridge centers, one change each):**
+- **B1: + ret_24h** (addition) on the production 4h label. Full 6b machinery/bars (as T1):
+  matched-population scorer, all 4 endpoints; matched control book if train-row diff >0.5% any
+  fold or symbol entry shifts. Promotion bars identical to 6b additions.
+- **B2: + dd_3d** (addition) on the production 4h label. Same machinery/bars. B1 and B2 are
+  correlated candidates from different families; if both pass, only the stronger is promoted
+  (≤1 promotion/family rule extends: ≤1 promotion for the short-momentum ridge overall).
+- **B3: + resid_ret_3d on a 72h sleeve** — baseline arm per 8b-3: V0_LEAN retrained on the h72
+  label (xs_z of 18-cycle alpha sum, grid-guarded) on the VARIANT row mask (control built in);
+  variant arm: V0_LEAN + resid_ret_3d, same label/cuts. Label purging: exit time for embargo =
+  open_time + 72h (NOT the panel 4h exit_time) — mandatory, else training leaks the label
+  window. Endpoints: same 4 endpoints with fwd = 72h alpha sum and 3-day blocks. Ceiling per
+  8b-12: a pass = candidacy for a separately designed forward experiment only.
+
+Multiplicity: 3 cells, expected false passes ≈ 0.04 (6b bars). No further cells from this
+surface regardless of outcome; unflagged families (corr windows, resid_rev extensions) CLOSED.
