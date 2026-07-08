@@ -261,6 +261,15 @@ sizing/gross variants, vol_target.
   over V0_LEAN on the pre-registered instrument). No verdict changed; improvements,
   if any, are <~0.002 Δrank-IC or in endpoints the bars reject ("locally optimal" NOT claimed
   — bounded, not confirmed). Canonical: live/FEATURE_TUNING_RESULTS.md.
+- **Window×horizon program (2026-07-08, addenda 8-8d): CLOSED, 0/3 Phase B cells.** Sleeve-
+  conditional screen (21 windows × 5 residual horizons, V0-span-orth flag column, horizon-length
+  blocks, marginal 24h→h labels) found 3 real screen-level ridges; all die at book level:
+  B1 +ret_24h — flag was the residual of a near-duplicate of deployed return_1d (corr 0.995),
+  model-inaccessible microstructure, NOT absorption; B2 +dd_3d — noise-floor null; B3
+  resid_ret_3d@72h-sleeve — REJECT, selection-spread Δ non-positive BOTH eras (rec entirely
+  negative, block-robust), OOS rank-IC lift real but thin and streak-concentrated. New law
+  corollaries: check screen flags for near-duplicate parentage before spending a cell; rank-IC
+  lift without spread conversion is not tradeable. Canonical: live/WINDOW_HORIZON_RESULTS.md.
 - **Pipeline audit (2026-07-08): NO look-ahead anywhere in the v4 chain** (label β shift, target
   z-scoring, all 14 V0_LEAN features PIT with |IC| ≤ 0.057; CLAUDE.md's historical bug classes have
   no cousins). Fixes applied same day (definitions unchanged — validated artifacts remain valid):

@@ -655,3 +655,46 @@ the marginal 24h→72h test (m72 +4.1/+2.2).
 
 Multiplicity: 3 cells, expected false passes ≈ 0.04 (6b bars). No further cells from this
 surface regardless of outcome; unflagged families (corr windows, resid_rev extensions) CLOSED.
+
+### Addendum 8d (2026-07-08) — Phase B results: 0/3, program CLOSED (post-review)
+
+All three cells scored on the F1-fixed scorer; adversarial results review reproduced every
+number, stress-tested the new 72h paths (3d-block CIs robust at 6d/9d blocks; purge/control in
+gen_sleeve72.py verified sound, test-row ratio 1.0000 both arms), and REVISED two explanations:
+
+- **B1 +ret_24h: NO ADDITION** (rec Δic −0.0002, OOS −0.0003, spreads −3.9/−5.6, hits 3/9 &
+  13/33). **Mechanism corrected by review (F1): NOT absorption.** ret_24h is a near-duplicate of
+  the DEPLOYED return_1d (per-symbol corr median 0.995; per-cycle XS rank corr 0.986). The
+  Phase A flag (t_v0 +9.5/+7.0) lives entirely in the ~2-3%-variance residual of that pair — the
+  shift(1)-vs-same-bar freshness offset, i.e. a last-5m-bar reversal component, plausibly part
+  bid-ask bounce. The incumbent pred carries NONE of it (pred ⊥ flag-residual corr −0.0018), and
+  a ridge-regularized addition cell splits weight across a 0.99-collinear pair and shrinks
+  exactly the low-variance difference direction — the flag was screen-real but MODEL-INACCESSIBLE
+  to the cell as designed. Do not re-mine: the sharp cell would be the difference feature, whose
+  content is 5m-close microstructure. Screen postmortem: the V0-span orthogonalization DID
+  control return_1d; what survived it is this residual.
+- **B2 +dd_3d: NO ADDITION** (Δic +0.0002/+0.0003 at the noise floor, spread Δ negative both
+  windows, hits 6/9 & 16/33).
+- **B3 resid_ret_3d @ 72h sleeve: REJECT.** Era-independent kill first: selection-spread Δ
+  non-positive in BOTH windows — rec −65.3 bps/cyc CI [−129.1, −6.7] ENTIRELY NEGATIVE (robust
+  at 6d/9d blocks), OOS −2.9 [−33.1, +28.8] — the rank-IC lift never converts to top/bot-K
+  alpha even in the favorable era. Then: recent fails Δ≥0 (Δic −0.0020, hit 3/9). Descriptive:
+  OOS Δic +0.0027 CI [+.0002, +.0052] excludes 0 (lower bound razor-thin at every block length),
+  22/33, big-move Q4 concentrated — but review's monthly decomposition shows the 2025 OOS
+  strength is a Jul-Sep 2025 hot streak (+0.013/+0.011/+0.010) with negative months inside OOS
+  too; the "building trend" read is wrong. Era difference ≈1.9σ, no instrument discontinuity.
+  No sleeve candidacy (8b-12 ceiling would have applied even to a pass).
+
+**Deviations logged (review F5):** B1/B2 matched-control trigger technically fired (test-row
+ratios 0.9993/0.9961, symbol entry-fold shifts) and control books were not built — verdict-safe:
+the scorer intersects populations per cycle, the C2/T1 controls bounded the pure population
+effect at |Δ|≤0.0005, and the handicap direction penalizes the variant, which cannot rescue
+cells failing at 3/9-16/33 hit rates. The k=6 scorer default path has no grid guard (matches all
+prior cells; tiny and arm-symmetric).
+
+**PROGRAM CLOSED (approved wording):** Phase A ridges are real at screen level — with the caveat
+that the short-momentum ridge's flag component is the low-variance residual of a near-duplicate
+of an in-model feature — but 0/3 book cells pass. B3's 72h lift is OOS-only AND never reaches
+the selection layer in either era. No promotable window×horizon variant; no sleeve candidacy;
+V0_LEAN and the 4h stack stay frozen. Unflagged families (corr windows, resid_rev extensions)
+and the ≤3-cell budget are spent; no further cells from this surface.
