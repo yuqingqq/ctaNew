@@ -47,7 +47,7 @@ log "== convexity v3 LIVE (regime-gate stack | parallel forward-test | BULL_DEEP
 while true; do
   $PY live/ingest_funding_fapi.py            >> "$LOG" 2>&1 && log " funding OK" || log " funding WARN"
   if ! $PY live/incremental_xs_feats.py --workers 6 >> "$LOG" 2>&1; then log " xs_feats FAIL — skip"; nap; continue; fi
-  if ! $PY live/incremental_panel.py    --workers 6 >> "$LOG" 2>&1; then log " panel FAIL — skip"; nap; continue; fi
+  if ! $PY live/incremental_panel.py    --workers 6 --rebuild-days 10 >> "$LOG" 2>&1; then log " panel FAIL — skip"; nap; continue; fi  # rebuild>=predict recompute window (audit 2026-07-08)
   if ! $PY live/predict_v3_incremental.py            >> "$LOG" 2>&1; then log " predict FAIL — skip"; nap; continue; fi
   if $PY -m live.convexity_paper_bot --cycle          >> "$LOG" 2>&1; then log " cycle OK"; else log " cycle FAIL"; fi
   nap

@@ -60,6 +60,18 @@ BULL_HOLD = int(os.environ.get("STRAT_HOLD_BULL", str(HOLD)))
 COST = float(os.environ["COST_BPS_LEG"])*1e-4 if "COST_BPS_LEG" in os.environ else 4.5e-4
 REGIME_BULL_THR = float(os.environ.get("REGIME_BULL_THR", "0.10"))
 REGIME_BEAR_THR = float(os.environ.get("REGIME_BEAR_THR", "-0.10"))
+# side_flat skip: sit out side cycles whose |btc_ret_30d| < thr (the flat-middle noise band). 0=off.
+SIDE_FLAT_SKIP_THR = float(os.environ.get("SIDE_FLAT_SKIP_THR", "0"))
+# Q6 placebo instrument (RESEARCH_LOOP_20260707 Iter 7): skip NEW side sleeves on an explicit,
+# pre-computed set of cycle open_times (parquet with an open_time column). Deterministic and
+# auditable — the persistence-matched random blocks are generated OUTSIDE the bot. Empty = off.
+SIDE_SKIP_SET_FILE = os.environ.get("SIDE_SKIP_SET_FILE", "")
+_SIDE_SKIP_SET = None
+if SIDE_SKIP_SET_FILE:
+    _SIDE_SKIP_SET = set(pd.to_datetime(pd.read_parquet(SIDE_SKIP_SET_FILE)["open_time"], utc=True))
+# FRAMEWORK-DERIVED regime gate: trade ONLY when btc_ret_30d falls in one of these bands (from regime_discovery.py's
+# FARM classification), sit out everything else. Format "lo:hi,lo:hi" (use -inf/inf). Empty = off. PIT.
+REGIME_FARM_BANDS = [tuple(float(x) for x in b.split(":")) for b in os.environ.get("REGIME_FARM_BANDS","").split(",") if ":" in b]
 SIDE_BETA_NEUT = os.environ.get("SIDE_BETA_NEUT","1")=="1"   # beta-neut reweight in side (else equal-weight)
 MOM_WINDOW = int(os.environ.get("MOM_WINDOW","180"))   # bull momentum lookback in 4h bars (180=30d)
 BEAR_MODE = os.environ.get("BEAR_MODE", "flat")   # flat (production: sit out bear) | side (trade bear via mean-rev L/S)
@@ -81,6 +93,18 @@ BULL_GROSS_MULT = float(os.environ.get("BULL_GROSS_MULT","1.0"))   # scale bull-
 # Bull sub-regime gate: the short edge works in MILD/early bull (btc_ret_30d ~0.10-0.15: pump topping -> reverts,
 # +45bps/cyc) but FAILS in DEEP sustained melt-up (squeeze zone, -6bps). Flat the deep-bull cycles. 99=off.
 BULL_DEEP_THR = float(os.environ.get("BULL_DEEP_THR","99"))
+BULL_DEEP_MODE = os.environ.get("BULL_DEEP_MODE", "flat")   # flat (legacy sit-out) | mom1d_long (LONG-only top-K by return_1d; V4_PERFORMANCE 6.1)
+BULL_DEEP_K = int(os.environ.get("BULL_DEEP_K", "2"))
+BULL_DEEP_GROSS = float(os.environ.get("BULL_DEEP_GROSS", "0.5"))  # reduced gross: long-vol directional book
+# Adaptive alternative to BULL_DEEP_THR: scale NEW bull sleeves by how stretched btc_ret_30d is versus its trailing
+# PIT distribution. Full size below P0 percentile, linearly ramps to FLOOR at P1. Off by default; use as a research
+# comparator to the OOS-validated hard 0.15 hot-bull cut.
+BULL_ADAPT_RAMP = os.environ.get("BULL_ADAPT_RAMP","0") == "1"
+BULL_ADAPT_W = int(os.environ.get("BULL_ADAPT_W","540"))              # trailing 4h cycles (~90d)
+BULL_ADAPT_MINHIST = int(os.environ.get("BULL_ADAPT_MINHIST","180"))  # need enough prior btc30 observations
+BULL_ADAPT_P0 = float(os.environ.get("BULL_ADAPT_P0","0.75"))
+BULL_ADAPT_P1 = float(os.environ.get("BULL_ADAPT_P1","0.95"))
+BULL_ADAPT_FLOOR = float(os.environ.get("BULL_ADAPT_FLOOR","0.0"))
 # 5m entry-confirmation (bull short): don't short a name still making a 30m new high (still pumping -> squeeze).
 # Lifts bull short t-stat 0.91->1.25 (validated on 5m). ENTRY_FLAG_PARQUET = {symbol,open_time,made_nh30,off_high2}.
 ENTRY_FLAG_PARQUET = os.environ.get("ENTRY_FLAG_PARQUET","")
@@ -140,12 +164,20 @@ def _btc_funding_at(ot):
     if len(_BTC_FUND) == 0: return 0.0
     v = _BTC_FUND.asof(ot)
     return float(v) if pd.notna(v) else 0.0
+# Exchange taker fee per fill, charged ON TOP of depth slippage (cost-audit 2026-07-06: the depth CSV is
+# book-walk slippage vs mid ONLY — simulate_taker_fill has no fee — so runs before this date under-charged
+# by the fee). Default = HL base-tier taker 0.045% = 4.5 bps (verified vs official fee docs 2026-07-06;
+# volume Tier 1-2 at ~$1M AUM churn = 4.0-3.5, HYPE staking discounts stack — override via env if tiered).
+# Applies only in the DEPTH_COST_CSV branch; the flat branch's COST_BPS_LEG is an all-in per-RT convention
+# and is left unchanged. Set FEE_BPS_FILL=0 to reproduce pre-audit numbers.
+FEE_BPS_FILL = float(os.environ.get("FEE_BPS_FILL", "4.5"))*1e-4
 def cost_of(net_after: dict, prev_agg: dict) -> float:
-    """Per-cycle cost (fraction of equity). Per-symbol real per-fill cost if DEPTH_COST_CSV set; else flat turn*0.5*COST."""
+    """Per-cycle cost (fraction of equity). Per-symbol real per-fill cost (slippage + FEE_BPS_FILL) if
+    DEPTH_COST_CSV set; else flat turn*0.5*COST (all-in)."""
     keys = set(net_after) | set(prev_agg)
     if DEPTH_COST_CSV:
         cm, med = _persym_cost_map()
-        return sum(abs(net_after.get(s,0)-prev_agg.get(s,0)) * cm.get(s, med) for s in keys)
+        return sum(abs(net_after.get(s,0)-prev_agg.get(s,0)) * (cm.get(s, med) + FEE_BPS_FILL) for s in keys)
     turn = sum(abs(net_after.get(s,0)-prev_agg.get(s,0)) for s in keys)
     return turn * 0.5 * COST
 # depth-conditional bear de-gross band (toxic mid-bear). Default [-99,99] => BEAR_GROSS_MULT applies to ALL bear
@@ -190,6 +222,7 @@ SIDE_LONGDEF_N = int(os.environ.get("SIDE_LONGDEF_N", "12"))
 # the top-K pred pick — keeps the model's pred ordering among survivors (unlike iter2 which re-ranked).
 # A nonlinear tail-skip the linear Ridge can't express. 1.0 = off; e.g. 0.80 drops top-20% idio-vol longs.
 LONG_IDIO_SKIP_PCT = float(os.environ.get("LONG_IDIO_SKIP_PCT", "1.0"))
+LONG_RVOL_MIN_PCTILE = float(os.environ.get("LONG_RVOL_MIN_PCTILE", "0"))  # veto longs below this cross-sec rvol_7d pctile (regime-disc per-leg 2026-07-07); 0=off
 # iter12 (2026-06-03): LEG-SPECIFIC resid-rev tradeability gate for the LONG leg only (meta-labeling #172).
 # iter11 proved resid_rev as a GLOBAL feature fixes A-long (-0.19→+0.41) but corrupts the 3 working legs.
 # So apply it ONLY to the long pool: keep only "washed-out" names (resid_rev>=thr = recent BTC-residual LOSS),
@@ -224,6 +257,20 @@ SHORT_RET3D_TAPER_MULT = float(os.environ.get("SHORT_RET3D_TAPER_MULT", "1.0"))
 # grind band, re-pick the K shorts as the LOWEST-corr names within the bottom-POOL-by-pred. Bear-path only. 0=off.
 SHORT_CORR_GRIND_POOL = int(os.environ.get("SHORT_CORR_GRIND_POOL", "0"))    # pred short-pool size to corr-select from (0=off)
 SHORT_CORR_GRIND_THR = float(os.environ.get("SHORT_CORR_GRIND_THR", "-0.25"))  # apply when btc_ret_30d >= this (grind, not deep)
+# CORR_CEIL (2026-07-02): drop HIGH-beta names from the selection pool before picking. The strategy farms
+# IDIOSYNCRATIC residual alpha — its edge is concentrated in low-corr names (IC by corr-quartile: idio +0.04 vs
+# beta +0.006 in-sample; idio +0.028 vs mid/high ~0 in 2024). High-corr names' residual is noise -> they dilute the
+# picks (esp. in beta-dominated regimes like 2024 where <10% of names are idio). Keep names corr_to_btc_1d <= CEIL;
+# fallback to full pool if too few remain. 999=off. Regime-scoped (default side,bull — bear has its own grind logic).
+CORR_CEIL = float(os.environ.get("CORR_CEIL", "999"))
+CORR_CEIL_REGIMES = set(x for x in os.environ.get("CORR_CEIL_REGIMES", "side,bull").split(",") if x)
+# DECOUPLE_CEIL (2026-07-02): RELATIVE-decoupling filter. decouple_z = (corr_1d - name's trailing-corr mean)/std,
+# PIT (precomputed parquet). Reversion edge is MONOTONE in decouple_z in every period incl 2024 (most-decoupled
+# quintile IC +0.049 IS / +0.025 2024; coupling-UP quintile IC ~0/neg). Unlike absolute CORR_CEIL it doesn't starve
+# in high-corr regimes (self-normalized). Keep names with decouple_z <= CEIL (veto the coupling-up tail). 99=off.
+DECOUPLE_PARQUET = os.environ.get("DECOUPLE_PARQUET", "")
+DECOUPLE_CEIL = float(os.environ.get("DECOUPLE_CEIL", "99"))
+DECOUPLE_CEIL_REGIMES = set(x for x in os.environ.get("DECOUPLE_CEIL_REGIMES", "side,bull").split(",") if x)
 RAND_LONG_DROP_PCT = float(os.environ.get("RAND_LONG_DROP_PCT", "0"))   # placebo: drop TOP long in PCT% of cycles (random)
 RAND_LONG_DROP_SEED = int(os.environ.get("RAND_LONG_DROP_SEED", "0"))
 def _rand_drop_fires(ot):   # deterministic per (cycle, seed)
@@ -347,6 +394,9 @@ STOP_SIGMA_WINDOW = int(os.environ.get("STOP_SIGMA_WINDOW", "180"))
 STOP_WARMUP = 60
 STOP_HEAL_FRAC = 0.5
 STOP_TIMEOUT_BARS = 90
+# 2022-holdout FAIL consequence (RESEARCH_LOOP_20260707 Iter 4 F10, pre-registered): live gross cap.
+# Applied to EVERY cycle's final gross multiplier in all three paths (replay/settle/decide). 1.0=off.
+GLOBAL_GROSS_MULT = float(os.environ.get("GLOBAL_GROSS_MULT", "1.0"))
 # Universe filter (deploy-spec: maturity≥180d + hygiene + liquidity_floor + dedup; iter-036)
 MIN_HISTORY_DAYS = int(os.environ.get("CONVEXITY_MIN_HISTORY_DAYS", "180"))  # env-sweepable for the gating study
 # PIT_DVOL=1 (DEFAULT) → per-cycle trailing-30d liquidity gate (honest, validated 2026-06-01: removes the
@@ -627,6 +677,29 @@ def effective_regime_series(upto=None) -> pd.Series:
     return pd.Series(eff, index=b30.index)
 
 
+def add_bull_adapt_cols(d: pd.DataFrame, btc30: pd.Series) -> pd.DataFrame:
+    """Attach PIT bull ramp diagnostics. Percentile uses only btc_ret_30d observations strictly before open_time."""
+    if not BULL_ADAPT_RAMP or d.empty:
+        return d
+    s = btc30.dropna().sort_index()
+    if s.empty:
+        return d
+    rows = []
+    for ot in sorted(pd.to_datetime(d["open_time"], utc=True).unique()):
+        ot = pd.Timestamp(ot)
+        cur = s.asof(ot)
+        past = s[s.index < ot].tail(max(1, BULL_ADAPT_W))
+        pct = np.nan; mult = 1.0
+        if pd.notna(cur) and len(past) >= BULL_ADAPT_MINHIST:
+            pct = float((past <= float(cur)).mean())
+            den = BULL_ADAPT_P1 - BULL_ADAPT_P0
+            r = 1.0 if den <= 0 else min(1.0, max(0.0, (pct - BULL_ADAPT_P0) / den))
+            mult = BULL_ADAPT_FLOOR + (1.0 - BULL_ADAPT_FLOOR) * (1.0 - r)
+        rows.append((ot, pct, mult))
+    m = pd.DataFrame(rows, columns=["open_time", "bull_adapt_pct", "bull_adapt_mult"])
+    return d.merge(m, on="open_time", how="left")
+
+
 def _defensive_long_syms(gg):
     """Stage-2 defensive pick among gg (expects DEF_FEATS cols). Falls back to top-pred."""
     cand = gg.nlargest(SIDE_DEF_N, "pred")
@@ -757,6 +830,21 @@ def select_legs(grp: pd.DataFrame, regime: str, betas_at_t: dict[str, float],
             for s in S: w[s] = w.get(s, 0) - bg/kbS     # -$ equal per name (short leg = the bear edge, kept full)
             return w
         if BEAR_MODE in ("side", "shortbias"): regime = "side"   # trade bear via the side mean-rev (beta-neut) path
+
+    # side_flat skip (2026-07-07): the FLAT MIDDLE of side (|btc_ret_30d| < SIDE_FLAT_SKIP_THR) is model-noise — the
+    # regime-discovery framework flags it FRAGILE (net −13.7 bps but period-t only −0.5 = not significant). Sitting it
+    # out removes variance; mean benefit is uncertain (risk-reduction, not alpha). Off by default (0). PIT (btc_ret_30d trailing).
+    if regime == "side" and _SIDE_SKIP_SET is not None \
+       and grp["open_time"].iloc[0] in _SIDE_SKIP_SET:
+        return {}                                       # Q6 placebo skip-set (see env block)
+    if regime == "side" and SIDE_FLAT_SKIP_THR > 0 and "btc_ret_30d" in grp.columns \
+       and abs(float(grp["btc_ret_30d"].iloc[0])) < SIDE_FLAT_SKIP_THR:
+        return {}
+    # FRAMEWORK-DERIVED band gate: sit out any cycle whose btc_ret_30d is outside the framework's FARM bands.
+    if REGIME_FARM_BANDS and "btc_ret_30d" in grp.columns:
+        b30 = float(grp["btc_ret_30d"].iloc[0])
+        if not any(lo <= b30 < hi for lo, hi in REGIME_FARM_BANDS):
+            return {}
 
     # SIDE regime with short_btc_hedge mode — no longs, K=3 shorts + BTC hedge
     if regime == "side" and SIDE_MODE == "short_btc_hedge":
@@ -948,8 +1036,23 @@ def select_legs(grp: pd.DataFrame, regime: str, betas_at_t: dict[str, float],
     # BULL short-the-pumps + BTC-long hedge: bull short edge is +40@4h (over-extended alts revert) but the alt-long
     # leg is a BAD beta hedge in a melt-up (laggards under-rise) -> short beta bleeds -> squeeze. Hedge with a CLEAN
     # BTC long instead, to strip the market-driven part of the squeeze and keep the idiosyncratic reversion alpha.
+    _bull_adapt_mult = 1.0
+    if regime == "bull" and BULL_ADAPT_RAMP and "bull_adapt_mult" in grp.columns:
+        _bm = float(grp["bull_adapt_mult"].iloc[0])
+        _bull_adapt_mult = _bm if np.isfinite(_bm) else 1.0
+        if _bull_adapt_mult <= 1e-12:
+            return {}
     if regime == "bull" and BULL_DEEP_THR < 90 and "btc_ret_30d" in grp.columns \
        and float(grp["btc_ret_30d"].iloc[0]) >= BULL_DEEP_THR:
+        # 2026-07-07 deep-bull momentum-LONG overlay (V4_PERFORMANCE §6.1): the squeeze that kills every short
+        # in deep bull pays 1-DAY momentum LONGS (era-robust at signal level, positive every year 2021-26;
+        # the mom30 horizon died 2026 -> return_1d is the decisive ranker). LONG-ONLY top-K by return_1d,
+        # reduced gross (long-vol profile); shared DD-stop / regime-gate overlays still apply. Default = flat.
+        if BULL_DEEP_MODE == "mom1d_long" and "return_1d" in grp.columns:
+            gg = grp.dropna(subset=["return_1d"])
+            if len(gg) >= BULL_DEEP_K:
+                L = gg.nlargest(BULL_DEEP_K, "return_1d")["symbol"].tolist()
+                return {s: BULL_DEEP_GROSS / BULL_DEEP_K for s in L}
         return {}                                       # deep-bull squeeze zone -> sit flat (edge only in mild bull)
     if regime == "bull" and BULL_MODE == "short_btc_hedge":
         kbS = BULL_K if BULL_K > 0 else K_SHORT
@@ -968,7 +1071,7 @@ def select_legs(grp: pd.DataFrame, regime: str, betas_at_t: dict[str, float],
                 _k = spool[(_nh != 1) | _nh.isna()]
             if len(_k) >= kbS: spool = _k
         S = spool.nsmallest(kbS, "pred")["symbol"].tolist()
-        bg = BULL_GROSS_MULT if BULL_GROSS_MULT > 0 else 1.0
+        bg = (BULL_GROSS_MULT if BULL_GROSS_MULT > 0 else 1.0) * _bull_adapt_mult
         bS = np.nanmean([betas_at_t.get(s, np.nan) for s in S])
         if not np.isfinite(bS) or bS <= 0: bS = 0.8
         w = {BTC_HEDGE_KEY: bg*bS}                      # BTC long sized to neutralize the short basket's beta
@@ -987,6 +1090,15 @@ def select_legs(grp: pd.DataFrame, regime: str, betas_at_t: dict[str, float],
     gg = grp.dropna(subset=[key])
     if len(gg) < 2*K: return {}
     if len(gg) < (kL + kS): return {}
+    # CORR_CEIL: restrict pool to idiosyncratic (low-corr) names — the strategy's edge lives there; high-beta
+    # names' residual is noise. Fallback to full pool if fewer than kL+kS idio names (avoids starving thin regimes).
+    if CORR_CEIL < 9 and "corr_to_btc_1d" in gg.columns and (not CORR_CEIL_REGIMES or regime in CORR_CEIL_REGIMES):
+        _keep = gg[(gg["corr_to_btc_1d"] <= CORR_CEIL) | gg["corr_to_btc_1d"].isna()]
+        if len(_keep) >= (kL + kS): gg = _keep
+    # DECOUPLE_CEIL: relative-decoupling filter — veto names coupling UP (decouple_z > CEIL, where reversion IC is neg).
+    if DECOUPLE_CEIL < 9 and "decouple_z" in gg.columns and (not DECOUPLE_CEIL_REGIMES or regime in DECOUPLE_CEIL_REGIMES):
+        _keep = gg[(gg["decouple_z"] <= DECOUPLE_CEIL) | gg["decouple_z"].isna()]
+        if len(_keep) >= (kL + kS): gg = _keep
     gg = gg.sort_values(key)
     # iter7: hard-skip cascade-prone (extreme idio-vol) names from the LONG pool only, keep pred ranking
     long_pool = gg
@@ -994,6 +1106,14 @@ def select_legs(grp: pd.DataFrame, regime: str, betas_at_t: dict[str, float],
         iv = gg["idio_vol_to_btc_1h"]
         thr = iv.quantile(LONG_IDIO_SKIP_PCT)
         keep = gg[(iv <= thr) | iv.isna()]
+        if len(keep) >= K_LONG: long_pool = keep
+    # 2026-07-07 regime-discovery per-leg finding: LOW-rvol longs reliably lose (long_rvol_7d q0 AVOID, t -3.4,
+    # ALL periods negative) — the long edge lives in washed-out/high-vol names. Veto longs below the cycle's
+    # cross-sectional rvol_7d percentile (PIT: trailing-window feature, contemporaneous cross-sec rank). 0=off.
+    if LONG_RVOL_MIN_PCTILE > 0 and "rvol_7d" in long_pool.columns:
+        rv = long_pool["rvol_7d"]
+        thr = rv.quantile(LONG_RVOL_MIN_PCTILE)
+        keep = long_pool[(rv >= thr) | rv.isna()]
         if len(keep) >= K_LONG: long_pool = keep
     # iter12 leg-specific resid-rev gate: long only washed-out names (recent BTC-residual loss), base pred preserved
     if LONG_RESIDREV_GATE and "resid_rev" in long_pool.columns:
@@ -1105,8 +1225,10 @@ def select_legs(grp: pd.DataFrame, regime: str, betas_at_t: dict[str, float],
             _v = _r3.get(s, np.nan)
             if np.isfinite(_v) and _v > SHORT_RET3D_TAPER_THR: _sw *= SHORT_RET3D_TAPER_MULT
         w[s] = w.get(s, 0) - _sw
-    if regime == "bull" and BULL_GROSS_MULT != 1.0:        # de-gross/flat the bull sleeve (bull is -alpha at honest cost)
-        w = {s: v*BULL_GROSS_MULT for s, v in w.items()}
+    if regime == "bull":
+        _bgm = BULL_GROSS_MULT * _bull_adapt_mult
+        if _bgm != 1.0:
+            w = {s: v*_bgm for s, v in w.items()}
     return w
 
 
@@ -1120,14 +1242,19 @@ def merge_panel_features(d):
         (DEF_FEATS if SIDE_MODE in ("long_defensive_basket_hedge", "regime_switch") else [])
         + (LONGDEF_FEATS if SIDE_MODE == "longdef_shortmr" else [])
         + (["idio_vol_to_btc_1h"] if LONG_IDIO_SKIP_PCT < 1.0 else [])
+        + (["rvol_7d"] if (LONG_RVOL_MIN_PCTILE > 0 and "rvol_7d" not in d.columns) else [])
+        + (["return_1d"] if (BULL_DEEP_MODE == "mom1d_long" and "return_1d" not in d.columns) else [])
         + (["ret_3d"] if ((LONG_MAX_RET3D < 999 or LONG_MIN_RET3D > -999 or SHORT_MIN_RET3D > -999
                            or SHORT_MAX_RET3D < 999) and "ret_3d" not in d.columns) else [])
-        + (["corr_to_btc_1d"] if (SHORT_CORR_GRIND_POOL > 0 and "corr_to_btc_1d" not in d.columns) else [])
+        + (["corr_to_btc_1d"] if ((SHORT_CORR_GRIND_POOL > 0 or CORR_CEIL < 9) and "corr_to_btc_1d" not in d.columns) else [])
         + ([_BULL_RANK_FEAT] if _BULL_RANK_FEAT else []) + _SIZING_FEATS))
     if _need:
         _pf = pd.read_parquet(PANEL, columns=["symbol", "open_time"] + _need)
         _pf["open_time"] = pd.to_datetime(_pf["open_time"], utc=True)
         d = d.merge(_pf, on=["symbol", "open_time"], how="left")
+    if DECOUPLE_CEIL < 9 and DECOUPLE_PARQUET and "decouple_z" not in d.columns:
+        _dz = pd.read_parquet(DECOUPLE_PARQUET); _dz["open_time"] = pd.to_datetime(_dz["open_time"], utc=True)
+        d = d.merge(_dz, on=["symbol", "open_time"], how="left")
     return d
 
 
@@ -1308,6 +1435,7 @@ def run_replay(start: pd.Timestamp | None, end: pd.Timestamp | None) -> dict:
     btc30 = compute_btc_30d()
     d = d.merge(mom, on=["symbol","open_time"], how="left")
     d = d.merge(btc30.reset_index(), on="open_time", how="left").dropna(subset=["btc_ret_30d"])
+    d = add_bull_adapt_cols(d, btc30)
     # defensive-tilt + vol-sizing + ranker features (PIT, from panel) — shared helper (live paths use it too)
     d = merge_panel_features(d)
     # PIT-lagged funding for carry-aware selection (contemporaneous funding_rate LEAKS the fwd move — see env block)
@@ -1494,6 +1622,7 @@ def run_replay(start: pd.Timestamp | None, end: pd.Timestamp | None) -> dict:
         if regime not in REGIME_GATE_SKIP_REGIMES:
             gross_mult *= regime_mult.get(ot, 1.0)                              # REGIME GATE de-gross overlay (exempt skip-regimes)
         gross_mult *= vol_target_mult(stop.eq_hist)                             # VOL-TARGET adaptive overlay (PIT, from trailing eq)
+        gross_mult *= GLOBAL_GROSS_MULT                                         # 2022-holdout gross cap (see env block)
         net_after = {s: w*gross_mult for s, w in net_target_raw.items()}
 
         # cost from turnover (prev_agg -> net_after)
@@ -1693,6 +1822,7 @@ def run_cycle() -> dict:
     btc_fwd_map = load_close_4h("BTCUSDT").pct_change().shift(-1).dropna().to_dict()  # BTC hedge fwd return (same as replay)
     d = d.merge(mom, on=["symbol","open_time"], how="left")
     d = d.merge(btc30.reset_index(), on="open_time", how="left").dropna(subset=["btc_ret_30d"])
+    d = add_bull_adapt_cols(d, btc30)
     d = merge_panel_features(d)   # vol-sizing / ranker features — same as replay (else live falls back to equal-weight)
     if CHARGE_FUNDING:            # contemporaneous funding carry charged on the held book — same as run_replay
         _fc = pd.read_parquet(PANEL, columns=["symbol","open_time","funding_rate"])
@@ -1750,6 +1880,7 @@ def run_cycle() -> dict:
         if regime not in REGIME_GATE_SKIP_REGIMES:
             gross_mult *= regime_gross_mult(edge_hist, ot)                       # REGIME GATE (same as run_replay)
         gross_mult *= vol_target_mult(stop.eq_hist)                              # VOL-TARGET (same as run_replay)
+        gross_mult *= GLOBAL_GROSS_MULT                                          # 2022-holdout gross cap
         net_after = {s: w*gross_mult for s, w in net_target_raw.items()}
         _re = cycle_raw_edge(g)                                                  # extend trailing-edge history (PIT)
         if _re is not None: edge_hist.append([str(ot), _re])
@@ -1882,6 +2013,7 @@ def run_decide() -> dict:
     btc30 = compute_btc_30d()
     d = d.merge(mom, on=["symbol", "open_time"], how="left")
     d = d.merge(btc30.reset_index(), on="open_time", how="left")
+    d = add_bull_adapt_cols(d, btc30)
     d = merge_panel_features(d)   # vol-sizing / ranker features — same as replay (else decide falls back to equal-weight)
     # regime via the shared gap-free hysteresis series (compute_btc_30d-derived) — see effective_regime_series.
     # NOT a cycles.csv seed: that lags the settle path and leaves a gap on catch-up, so decide and settle could
@@ -1921,6 +2053,7 @@ def run_decide() -> dict:
     if regime not in REGIME_GATE_SKIP_REGIMES:
         gross_mult *= regime_gross_mult(list(state.get("edge_hist", [])), ot)  # REGIME GATE (same as settle/replay)
     gross_mult *= vol_target_mult(stop.eq_hist)                                # VOL-TARGET (same as settle/replay)
+    gross_mult *= GLOBAL_GROSS_MULT                                            # 2022-holdout gross cap
     net_after = {s: w*gross_mult for s, w in net_target_raw.items()}          # is honored on decide as on settle
     all_keys = set(net_after) | set(prev_agg)
     turnover = {s: round(net_after.get(s, 0) - prev_agg.get(s, 0), 6) for s in all_keys
