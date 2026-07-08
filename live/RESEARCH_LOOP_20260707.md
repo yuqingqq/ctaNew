@@ -95,7 +95,8 @@ complete in the strict pre-registered-endpoint sense.
 
 - **Endpoint 3 (|BTC-4h-move| quintile split, F5)**: implemented in `score_variant_cell.py`
   (BTC move = |close(t)→close(t+4h)| of the scored cycle, quintiles per window) and computed for
-  all 6 cells. 2 of 24 Q4 CIs exclude 0 (≈ the ~1.2 expected from multiplicity): C3 rec Q4
+  all 6 cells. 2 of 12 Q4 CIs exclude 0 (vs ~0.6 expected at 95%; P(≥2) ≈ 0.12 under
+  independence — weak evidence at best): C3 rec Q4
   +0.0036 [+.0003, +.0069] (mechanism-consistent — residualized momentum helps most when the BTC
   move dominates; still non-promotable on spread/recent-hit bars) and C5 rec Q4 −0.0036
   [−.0062, −.0009] (reinforces KEEP). Diagnostic only, per pre-registration.
@@ -108,6 +109,11 @@ complete in the strict pre-registered-endpoint sense.
   now instrument-backed: ret_6d adds nothing over ret_3d (not "worse"); taker_ls at 36h lag
   carries no incremental information over V0_LEAN. The T1 control also moots the F3 imputation
   deviation for the verdict (both arms share the row mask).
+
+- **Endpoint 4 per-fold tables**: the scorer initially printed per-year/monthly only; per-fold
+  Δrank-IC is now printed on every run and recorded for all 8 comparisons (FEATURE_TUNING_RESULTS
+  "Endpoint 4" table) — fold structure consistent with the monthly tables, no single-fold
+  concentration, no verdict impact.
 
 Final standing verdicts (unchanged): C1/C2/C3/C5 KEEP incumbent, C4 NO SWAP, T1 no addition.
 Remaining open scope: Pack 6 liquidity unscreened; C4 parity question untestable at this noise

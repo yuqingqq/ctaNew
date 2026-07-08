@@ -86,13 +86,34 @@ quintile, day-block CI on Q4 (big-move). Diagnostic per pre-registration — not
 | C5 | −.0016/−.0014/−.0008/−.0001/**−.0036 [−.0062,−.0009]** | +.0000/+.0013/−.0007/−.0010/+.0009 [−.0010,+.0028] |
 | T1 | −.0013/+.0014/−.0005/+.0015/−.0002 [−.0037,+.0034] | +.0005/−.0005/−.0010/+.0002/−.0007 [−.0033,+.0017] |
 
-Two of 24 Q4 CIs exclude zero — roughly what multiplicity predicts (~1.2 expected at 95%), so no
+Two of 12 Q4 CIs exclude zero (6 cells × 2 windows), vs ~0.6 expected at 95%; under
+independence P(≥2) ≈ 0.12 — weak evidence at best, and diagnostic by pre-registration, so no
 verdict moves. Texture worth recording: **C3's recent big-move quintile is where its lift
 concentrates** (+0.0036, CI excludes 0) — mechanism-consistent (residualized momentum should
 matter most when the BTC move dominates raw returns), and consistent with its CI-solid OOS
 rank-IC lift; it remains non-promotable on the selection-spread and recent-hit bars. C5's recent
 big-move degradation (−0.0036) reinforces KEEP. The population-matching defect (F1) is fixed in
 the committed `score_variant_cell.py`, which now also computes this endpoint on every run.
+
+## Endpoint 4 — per-fold delta tables (completed 2026-07-08)
+
+The first-pass scorer printed per-year and monthly tables but not per-fold deltas as
+pre-registered; per-fold Δrank-IC is now printed on every run (folds = the WF cuts, monthly-ish
+in both windows). Recorded (folds Δic≥0; worst/best fold):
+
+| comparison | recent | OOS |
+|---|---|---|
+| C1 vs incumbent | 6/9 (worst f0 −.0057, best f6 +.0069) | 18/33 (worst f1 −.0104, best f26 +.0168) |
+| C2 vs incumbent | 5/9 (f1 −.0076, f4 +.0041) | 13/33 (f13 −.0120, f14 +.0103) |
+| C3 vs incumbent | 4/9 (f1 −.0046, f4 +.0095) | 21/33 (f1 −.0169, f7 +.0106) |
+| C4 vs incumbent | 3/9 (f8 −.0093, f3 +.0104) | 17/33 (f18 −.0093, f4 +.0193) |
+| C5 vs incumbent | 2/9 (f4 −.0045, f7 +.0038) | 17/33 (f8 −.0056, f4 +.0059) |
+| T1 vs incumbent | 4/9 (f3 −.0037, f6 +.0061) | 11/33 (f26 −.0293, f7 +.0107) |
+| C2 vs matched control | 4/9 (f1 −.0064, f7 +.0048) | 15/33 (f0 −.0119, f14 +.0136) |
+| T1 vs matched control | 4/9 (f3 −.0051, f7 +.0060) | 13/33 (f26 −.0268, f6 +.0114) |
+
+Fold-level structure is consistent with the monthly tables everywhere (as expected — folds are
+monthly cuts); no cell shows single-fold concentration that would alter a verdict.
 
 ## Screening outcomes that avoided cells (evidence-based closures)
 

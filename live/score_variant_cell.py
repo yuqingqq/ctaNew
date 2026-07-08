@@ -58,6 +58,7 @@ def per_cycle_stats(base_b, base_l, var_b, var_l, fwd):
         gl = base_l[base_l.open_time == t].set_index("symbol")["pred"]
         f = fwd.get(t)
         if f is None or len(g) < 5: continue
+        fold = int(g["fold"].iloc[0])
         g = g.set_index("symbol")
         try:
             vbt = vb.loc[t]; vlt = vl.loc[t]
@@ -76,8 +77,8 @@ def per_cycle_stats(base_b, base_l, var_b, var_l, fwd):
             return float(f.loc[L].mean() - f.loc[S].mean())
         spB = spread(g["pred"], gl)
         spV = spread(vbt, vlt)
-        out.append((t, icB, icV, spB, spV))
-    return pd.DataFrame(out, columns=["t", "icB", "icV", "spB", "spV"]).dropna()
+        out.append((t, fold, icB, icV, spB, spV))
+    return pd.DataFrame(out, columns=["t", "fold", "icB", "icV", "spB", "spV"]).dropna()
 
 def blockci(x, days, n=2000):
     per = [g.values for _, g in pd.Series(x.values, index=days).groupby(level=0)]
@@ -117,6 +118,10 @@ def main():
         print(f"Δrank-IC by year: {yr}")
         hit = dic.groupby(st.t.dt.to_period('M')).mean()
         print(f"monthly hit rate Δic>0: {(hit>0).sum()}/{len(hit)}")
+        # endpoint 4: per-fold delta table (folds are the WF cuts; monthly-ish in both windows)
+        pf = dic.groupby(st["fold"]).mean()
+        print(f"per-fold Δic≥0: {(pf>=0).sum()}/{len(pf)}  "
+              f"worst f{int(pf.idxmin())} {pf.min():+.4f}  best f{int(pf.idxmax())} {pf.max():+.4f}")
         # endpoint 3: big-|BTC-4h-move| quintile split of the rank-IC delta (diagnostic)
         m = st.t.map(mv)
         ok = m.notna()

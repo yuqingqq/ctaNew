@@ -255,7 +255,7 @@ sizing/gross variants, vol_target.
   Approved closing: no promotable variant AMONG THE TESTED CELLS at the pre-registered bars;
   V0_LEAN stays frozen (decision scoped to the candidate set — Pack 6 liquidity unscreened).
   Pre-registration COMPLETED same day: endpoint 3 (|BTC-move| quintile split) computed for all
-  cells (2/24 Q4 CIs exclude 0 ≈ multiplicity; C3's recent lift concentrates in big-move cycles,
+  cells (2/12 Q4 CIs exclude 0 vs ~0.6 expected — weak; C3's recent lift concentrates in big-move cycles,
   mechanism-consistent, still non-promotable) and the 6b matched control books built for C2/T1
   (honest Δ vs control ≈ 0 all four window-cells — ret_6d and taker_ls confirmed information-free
   over V0_LEAN on the pre-registered instrument). No verdict changed; improvements,
