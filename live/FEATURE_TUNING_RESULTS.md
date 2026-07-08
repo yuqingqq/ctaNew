@@ -11,10 +11,16 @@ finding — the first-pass scorer paired the two arms on *different* per-cycle s
 changed one verdict (C2 REJECT → KEEP-incumbent) and one CI classification (C3 OOS now excludes
 zero). All numbers below are from the **corrected matched-population scorer** (both arms on
 incumbent ∩ variant ∩ fwd per cycle), reproduced locally after the fix. The bottom line is
-unchanged: **6 cells, 0 promotions.** Scope caveats up front: the package is NOT complete in the
-strict pre-registered-endpoint sense (endpoint 3 never computed — see Endpoint accounting), and
-"frozen" means **no promotable variant among the tested cells** — not a claim about the complete
-feature universe (Pack 6 liquidity unscreened).
+unchanged: **6 cells, 0 promotions.** Scope caveat up front: "frozen" means **no promotable
+variant among the tested cells** — not a claim about the complete feature universe (Pack 6
+liquidity unscreened).
+
+**Completion pass (2026-07-08, after the review):** the two open pre-registration gaps were then
+closed — endpoint 3 (|BTC-4h-move| quintile split) computed for all six cells (F5), and the 6b
+population-matched control books built and scored for C2 and T1 (F2). The package is now
+complete in the strict pre-registered-endpoint sense. **No verdict changed**; the C2/T1 verdicts
+now rest on the pre-registered instrument (honest Δ vs matched control), not the scoring-side
+proxy. Details in "Endpoint 3" and the C2/T1 notes below.
 
 ## Scoreboard (matched-population, corrected)
 
@@ -33,12 +39,14 @@ Verdict notes (reviewer-ruled wording):
 
 - **C2**: the first-pass "REJECT — OOS CI entirely negative" was a population artifact (43% of OOS
   cycles had arm-population mismatch because ret_6d's 6-day history shifts symbol entry folds).
-  Matched CI crosses zero. "ret_6d is affirmatively worse" is **unsupported**; the supportable
-  statement is only that it offers no improvement. The pre-registered population-matched *control
-  book* (6b) was never built for C2/T1 — the matched-population scoring above is a scoring-side
-  proxy (it cannot undo train-mask differences). Verdict is KEEP-incumbent either way, but
-  **no mechanism claim about ret_6d is supported** (neither "worse" nor "equivalent") without
-  the control books.
+  Matched CI crosses zero. **Completion pass: the 6b matched control book (incumbent V0_LEAN
+  features on the ret_6d row mask, tag `retc1ctl`) was built and scored. Honest Δ (variant vs
+  matched control): rec −0.0003 [−.0022, +.0017], OOS −0.0005 [−.0019, +.0009] — both cross
+  zero.** The pure population effect (control vs incumbent) is small and CI-crossing (rec
+  +0.0005, OOS −0.0007) and accounts for a good part of the original artifact. Supported
+  mechanism statement (now instrument-backed): **ret_6d is not affirmatively worse; it simply
+  adds nothing over ret_3d** — the 3d→6d momentum window carries no incremental cross-sectional
+  information for this model. KEEP INCUMBENT.
 - **C3**: under the corrected paired estimator the OOS rank-IC lift is CI-solid (+0.0002..+0.0030,
   hit 21/33). Still non-promotable under the pre-registered bars: selection-spread Δ negative in
   BOTH windows, recent hit 4/9 < 5/9, and the recent per-year split is an F8 era-flip (2025
@@ -56,20 +64,35 @@ Verdict notes (reviewer-ruled wording):
   was inflated by the arm-population mismatch (100% of cycles, metric-cache availability), not
   attenuated. KEEP reinforced. Recorded deviation (F3): the pre-registered "NaN ⇒ preproc
   imputation" pin was not implemented — the harness dropped NaN-variant train rows and skipped
-  symbols without metrics caches, changing the training population; effect direction favored the
-  variant, so the KEEP verdict is robust to it. As with C2, the verdict rests on matched
-  *scoring*, not the pre-registered matched control books — sufficient for KEEP / no-addition,
-  **insufficient for any mechanism claim** about taker_ls_24h_lag36h itself.
+  symbols without metrics caches, changing the training population.
+  **Completion pass: the 6b matched control book (tag `takerlsctl`) was built and scored. Honest
+  Δ (variant vs matched control): rec −0.0002 [−.0023, +.0019], OOS −0.0001 [−.0016, +.0014] —
+  both cross zero; K-spread Δ −2.8/−6.1 bps/cyc, CIs cross zero.** The control makes the F3
+  deviation moot for the verdict (both arms share the row mask). Supported mechanism statement:
+  **the lagged taker long/short ratio carries no incremental information over V0_LEAN** at 36h
+  availability lag — its univariate t=23.6 is fully absorbed. KEEP (no addition).
 
-## Endpoint accounting
+## Endpoint 3 — |BTC-4h-move| quintile split (computed 2026-07-08, closing F5)
 
-Pre-registered endpoint 3 (big-|BTC-4h-move| quintile split of the rank-IC Δ) was **never
-computed** for any cell (F5) — the package is therefore not complete in the strict
-pre-registered-endpoint sense; the no-promotion conclusion rests on endpoints 1/2/4 only. Not
-verdict-bearing under the promotion bars, declared here for the record. The scorer's docstring
-and inline comment now say NOT IMPLEMENTED (the first version's comment wrongly implied it was
-computed elsewhere). The population-matching defect (F1) is fixed in the committed
-`score_variant_cell.py`; any future reuse also requires implementing the quintile split first.
+BTC move = |close(t)→close(t+4h)| of the scored cycle; quintiles within each window; Δrank-IC per
+quintile, day-block CI on Q4 (big-move). Diagnostic per pre-registration — not verdict-bearing.
+
+| cell | rec Q0..Q4 (Q4 CI) | OOS Q0..Q4 (Q4 CI) |
+|---|---|---|
+| C1 | +.0028/−.0009/+.0019/+.0021/+.0009 [−.0023,+.0044] | +.0003/−.0003/+.0001/−.0011/+.0017 [−.0008,+.0042] |
+| C2 | +.0002/−.0005/+.0001/+.0007/+.0003 [−.0033,+.0041] | +.0002/−.0015/−.0026/−.0016/−.0004 [−.0031,+.0021] |
+| C3 | +.0007/−.0013/−.0007/+.0006/**+.0036 [+.0003,+.0069]** | +.0023/+.0012/+.0015/+.0018/+.0012 [−.0014,+.0037] |
+| C4 | +.0021/−.0017/−.0039/+.0013/−.0019 [−.0077,+.0046] | +.0034/+.0003/−.0014/−.0007/+.0004 [−.0034,+.0042] |
+| C5 | −.0016/−.0014/−.0008/−.0001/**−.0036 [−.0062,−.0009]** | +.0000/+.0013/−.0007/−.0010/+.0009 [−.0010,+.0028] |
+| T1 | −.0013/+.0014/−.0005/+.0015/−.0002 [−.0037,+.0034] | +.0005/−.0005/−.0010/+.0002/−.0007 [−.0033,+.0017] |
+
+Two of 24 Q4 CIs exclude zero — roughly what multiplicity predicts (~1.2 expected at 95%), so no
+verdict moves. Texture worth recording: **C3's recent big-move quintile is where its lift
+concentrates** (+0.0036, CI excludes 0) — mechanism-consistent (residualized momentum should
+matter most when the BTC move dominates raw returns), and consistent with its CI-solid OOS
+rank-IC lift; it remains non-promotable on the selection-spread and recent-hit bars. C5's recent
+big-move degradation (−0.0036) reinforces KEEP. The population-matching defect (F1) is fixed in
+the committed `score_variant_cell.py`, which now also computes this endpoint on every run.
 
 ## Screening outcomes that avoided cells (evidence-based closures)
 
@@ -122,10 +145,10 @@ construction matches production (1 long by long-book, 2 shorts by base).
 | # | sev | finding | disposition |
 |---|---|---|---|
 | F1 | HIGH | scorer paired arms on different per-cycle populations (C2 43% of OOS cycles mismatched, T1 100%, C1/C3 18-23%) | scorer FIXED (intersect both arms); all cells re-scored; C2 verdict downgraded, C3 CI reclassified, T1 sign flipped |
-| F2 | HIGH | pre-registered 6b population-matched control books never built (C2 trigger: symbol entry-fold shifts; T1 trigger: row ratio 0.9859 > 0.5%) | verdicts annotated as population-confounded with matched-scoring proxy quoted; control outstanding — REJECT wording for C2 withdrawn accordingly |
-| F3 | MED | T1 "NaN ⇒ imputation" pin not implemented (train rows dropped; cache-less symbols skipped) | deviation recorded; direction favored variant → KEEP robust |
+| F2 | HIGH | pre-registered 6b population-matched control books never built (C2 trigger: symbol entry-fold shifts; T1 trigger: row ratio 0.9859 > 0.5%) | CLOSED (completion pass): control books built (`retc1ctl`, `takerlsctl`) and scored; honest Δ ≈ 0 both cells, verdicts confirmed on the pre-registered instrument |
+| F3 | MED | T1 "NaN ⇒ imputation" pin not implemented (train rows dropped; cache-less symbols skipped) | deviation recorded; made moot for the verdict by the T1 control book (both arms share the row mask) |
 | F4 | MED | C4 −2 bps non-inferiority margin unpassable by construction (de facto superiority test; neutral-swap pass prob 0.1-0.2%) | C4 reworded as power outcome; alpha wording forfeited; parity question unresolved by this instrument |
-| F5 | LOW | pre-registered endpoint 3 (BTC-move quintile split) never computed | absence declared; required before scorer reuse |
+| F5 | LOW | pre-registered endpoint 3 (BTC-move quintile split) never computed | CLOSED (completion pass): implemented in the scorer and computed for all 6 cells — 2/24 Q4 CIs exclude 0 (≈ multiplicity), no verdict moves |
 | F6 | LOW | C3 "all OOS years ≥0" degenerate (2023 ≈ +0.0001) | claim demoted in wording |
 | F7 | COSM | C5 rec CI upper bound seed-fragile at ~0.0000; dead `fwd24()` stub; broad KeyError | immaterial to verdicts; noted |
 
@@ -137,6 +160,8 @@ legitimate — corrected C3 numbers do not reopen the program under the bars as 
 ## Artifacts
 
 - Books: `live/state/convexity/hl_{ret36h,retc1,resid3,ddc2,corr12h,takerls}_{base,long}[_oos]/`
-- Generators/scorer: `live/feature_variant_harness.py`, `live/score_variant_cell.py` (F1-fixed),
-  `live/gen_beta_label_ab.py` (all currently untracked — commit together)
+  + matched control books `hl_{retc1ctl,takerlsctl}_{base,long}[_oos]/`
+- Generators/scorer: `live/feature_variant_harness.py` (incl. VARIANT_CONTROL=1 mode),
+  `live/score_variant_cell.py` (F1-fixed, endpoint 3 implemented, SCORE_BASELINE_TAG override),
+  `live/gen_beta_label_ab.py`
 - Full audit trail: `RESEARCH_LOOP_20260707.md` addenda 3-7

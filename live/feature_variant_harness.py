@@ -15,15 +15,20 @@ Output book tags (score with live/score_variant_cell.py <tag>):
   C1=ret36h  C2=retc1  C3=resid3  C4=ddc2  C5=corr12h  T1=takerls
 KNOWN DEVIATIONS (results review 2026-07-08): variant-NaN train rows are DROPPED (line ~130),
 not imputed — this violated the T1 "NaN => preproc imputation" pin and shifts symbol entry folds
-for history-hungry variants (C2); the 6b population-matched control books were never built. Any
-reuse for a cell where the variant changes row coverage must either implement imputation or
-build the matched control book first.
+for history-hungry variants (C2).
+CONTROL MODE (added 2026-07-08, closes review gap F2): VARIANT_CONTROL=1 builds the 6b
+population-matched control book — INCUMBENT features trained on the VARIANT row mask (the
+variant column is built only to mask train rows; models see V0_LEAN[+RR] exactly as the
+incumbents do). Output tags get a "ctl" suffix. Honest Δ = variant vs matched control:
+  VARIANT_CONTROL=1 python3 live/feature_variant_harness.py C2   # -> hl_retc1ctl_*
+  SCORE_BASELINE_TAG=retc1ctl python3 live/score_variant_cell.py retc1
 """
-import sys
+import os, sys
 from pathlib import Path
 import numpy as np, pandas as pd
 from sklearn.linear_model import RidgeCV
 import warnings; warnings.filterwarnings("ignore")
+CONTROL = os.environ.get("VARIANT_CONTROL") == "1"
 REPO = Path("/home/yuqing/ctaNew"); sys.path.insert(0, str(REPO))
 import live.train_twobook_models as tt
 x6 = tt.x6; V0_LEAN = list(tt.V0_LEAN); EMB = pd.Timedelta(days=1); HL = 60.0
@@ -125,6 +130,10 @@ def main():
         feats_variant = [f for f in V0_LEAN if f not in replaced] + ["dd_from_high_288", "dd_from_high_288_xs_rank"]
     else:
         feats_variant = [f for f in V0_LEAN if f not in replaced] + [vname]
+    if CONTROL:  # 6b matched control: incumbent features, variant column ONLY as train-row mask
+        feats_variant = list(V0_LEAN)
+        tag = tag + "ctl"
+        print(f"CONTROL MODE: incumbent V0_LEAN features on the {vname} row mask -> tags hl_{tag}_*")
     PAN = PAN.sort_values(["symbol", "open_time"]).reset_index(drop=True)
     _inc = f" (incumbent {replaced[0]}: {PAN[replaced[0]].notna().mean():.4f})" if replaced else " (ADDITION cell)"
     print(f"variant coverage: {PAN[vname].notna().mean():.4f}" + _inc)

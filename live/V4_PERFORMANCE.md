@@ -253,8 +253,12 @@ sizing/gross variants, vol_target.
   t=23.6 absorbed by the Ridge). Nearest miss C3: matched OOS Δrank-IC +0.0016, CI excludes 0,
   hit 21/33 — but selection-spread Δ negative in both windows + recent era-flip → non-promotable.
   Approved closing: no promotable variant AMONG THE TESTED CELLS at the pre-registered bars;
-  V0_LEAN stays frozen (decision scoped to the candidate set — Pack 6 liquidity unscreened;
-  pre-registered endpoint 3, the |BTC-move| quintile split, was never computed); improvements,
+  V0_LEAN stays frozen (decision scoped to the candidate set — Pack 6 liquidity unscreened).
+  Pre-registration COMPLETED same day: endpoint 3 (|BTC-move| quintile split) computed for all
+  cells (2/24 Q4 CIs exclude 0 ≈ multiplicity; C3's recent lift concentrates in big-move cycles,
+  mechanism-consistent, still non-promotable) and the 6b matched control books built for C2/T1
+  (honest Δ vs control ≈ 0 all four window-cells — ret_6d and taker_ls confirmed information-free
+  over V0_LEAN on the pre-registered instrument). No verdict changed; improvements,
   if any, are <~0.002 Δrank-IC or in endpoints the bars reject ("locally optimal" NOT claimed
   — bounded, not confirmed). Canonical: live/FEATURE_TUNING_RESULTS.md.
 - **Pipeline audit (2026-07-08): NO look-ahead anywhere in the v4 chain** (label β shift, target

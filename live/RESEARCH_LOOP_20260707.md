@@ -88,6 +88,31 @@ the cells bound improvements, they don't confirm optimality). New estimator less
 paired per-cycle deltas are only paired if both arms share the per-cycle population — a
 0.7-symbol mean mismatch flipped one verdict and one CI sign.
 
+## Post-loop addendum 7b (2026-07-08) — pre-registration COMPLETED: endpoint 3 + matched controls
+
+The two gaps the results review left open are closed; **no verdict changed**; the package is now
+complete in the strict pre-registered-endpoint sense.
+
+- **Endpoint 3 (|BTC-4h-move| quintile split, F5)**: implemented in `score_variant_cell.py`
+  (BTC move = |close(t)→close(t+4h)| of the scored cycle, quintiles per window) and computed for
+  all 6 cells. 2 of 24 Q4 CIs exclude 0 (≈ the ~1.2 expected from multiplicity): C3 rec Q4
+  +0.0036 [+.0003, +.0069] (mechanism-consistent — residualized momentum helps most when the BTC
+  move dominates; still non-promotable on spread/recent-hit bars) and C5 rec Q4 −0.0036
+  [−.0062, −.0009] (reinforces KEEP). Diagnostic only, per pre-registration.
+- **6b population-matched controls (F2)**: `VARIANT_CONTROL=1` harness mode builds incumbent-
+  feature books on the variant row mask (`hl_retc1ctl_*`, `hl_takerlsctl_*`); scorer takes
+  `SCORE_BASELINE_TAG` to use them as the baseline arm. Honest Δ (variant vs matched control):
+  **C2 rec −0.0003 [−.0022, +.0017], OOS −0.0005 [−.0019, +.0009]; T1 rec −0.0002
+  [−.0023, +.0019], OOS −0.0001 [−.0016, +.0014]** — all cross zero. Pure population effect
+  (control vs incumbent) is small and CI-crossing in all four window-cells. Mechanism statements
+  now instrument-backed: ret_6d adds nothing over ret_3d (not "worse"); taker_ls at 36h lag
+  carries no incremental information over V0_LEAN. The T1 control also moots the F3 imputation
+  deviation for the verdict (both arms share the row mask).
+
+Final standing verdicts (unchanged): C1/C2/C3/C5 KEEP incumbent, C4 NO SWAP, T1 no addition.
+Remaining open scope: Pack 6 liquidity unscreened; C4 parity question untestable at this noise
+scale (construction-grounds adjudication if ever revisited).
+
 ## Post-loop addendum 6d (2026-07-08) — feature-pack screens + ONE new-modality cell (T1)
 
 User-proposed 8-pack expansion map screened against evidence:

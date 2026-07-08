@@ -3,14 +3,17 @@
 PRIMARY book-level endpoints per the estimator law (no live-overlay replays):
   1. paired per-cycle cross-sectional rank-IC delta (variant − incumbent), day-block bootstrap CI
   2. top/bot-K selection alpha spread delta at production K (1 long by long-book, 2 shorts by base)
-  3. big-|BTC-4h-move| quintile split of (1) — NOT IMPLEMENTED (results-review F5): it was never
-     computed for the 2026-07-08 program (absence declared in FEATURE_TUNING_RESULTS.md);
-     implement it before any reuse of this scorer.
+  3. big-|BTC-4h-move| quintile split of (1) — implemented 2026-07-08 (closing review gap F5;
+     first-pass scoreboard was scored without it, declared in FEATURE_TUNING_RESULTS.md).
+     BTC move = |close(t)->close(t+4h)| of the scored cycle; quintiles within each window;
+     diagnostic (not verdict-bearing under the promotion bars).
   4. per-fold and per-year delta tables; population accounting (test-row & symbol coverage diffs)
 Verdict text auto-generated from the pre-registered bars. Usage (tags as built, one per cell):
   python3 live/score_variant_cell.py <tag>   # C1=ret36h C2=retc1 C3=resid3 C4=ddc2 C5=corr12h T1=takerls
+Env: SCORE_BASELINE_TAG=<tag> scores the variant against hl_<tag>_* books instead of the V0_LEAN
+incumbents — used for the 6b population-matched controls (honest Δ = variant vs matched control).
 """
-import sys
+import os, sys
 from pathlib import Path
 import numpy as np, pandas as pd
 
@@ -18,6 +21,17 @@ REPO = Path("/home/yuqing/ctaNew"); D = REPO / "live/state/convexity"
 INC = {"rec": ("hl_tgt_res_base_clean", "hl_tgt_res_long_clean"),
        "oos": ("hl_v4base_oos_clean", "hl_v4long_oos_clean")}
 rng = np.random.default_rng(7)
+
+def btc_4h_move():
+    """|BTC close(t)->close(t+4h)| per 4h-cadence open_time, from 5m klines (endpoint 3)."""
+    sd = REPO / "data/ml/test/parquet/klines/BTCUSDT/5m"
+    dfs = [pd.read_parquet(f, columns=["open_time", "close"]) for f in sorted(sd.glob("*.parquet"))]
+    c = pd.concat(dfs, ignore_index=True).drop_duplicates("open_time").sort_values("open_time")
+    c["open_time"] = pd.to_datetime(c["open_time"], utc=True)
+    c = c.set_index("open_time")["close"].astype(float)
+    mv = (c.shift(-48) / c - 1).abs()
+    mv = mv[(mv.index.hour % 4 == 0) & (mv.index.minute == 0)]
+    return mv
 
 def load(book):
     d = pd.read_parquet(D / book / "v0full_hl60.parquet",
@@ -79,10 +93,12 @@ def main():
     pan["fwd24"] = pan.groupby("symbol")["alpha_vs_btc_realized"].transform(
         lambda s: s.rolling(6).sum().shift(-5)) * 1e4
     fwd = {t: g.set_index("symbol")["fwd24"].dropna() for t, g in pan.groupby("open_time")}
-    # NB: pre-registered endpoint 3 (|BTC-move| quintile split of the rank-IC delta) was NEVER
-    # computed anywhere for the 2026-07-08 program (F5) — it is not "computed elsewhere".
-    # Implement it here before this scorer is reused.
+    mv = btc_4h_move()
+    base_tag = os.environ.get("SCORE_BASELINE_TAG")
     for win, (ib, il) in INC.items():
+        if base_tag:  # 6b population-matched control as the baseline arm
+            sfx = "_oos" if win == "oos" else ""
+            ib, il = f"hl_{base_tag}_base{sfx}", f"hl_{base_tag}_long{sfx}"
         vb = load(f"hl_{tag}_base" + ("_oos" if win == "oos" else ""))
         vl = load(f"hl_{tag}_long" + ("_oos" if win == "oos" else ""))
         bb = load(ib); bl = load(il)
@@ -101,6 +117,17 @@ def main():
         print(f"Δrank-IC by year: {yr}")
         hit = dic.groupby(st.t.dt.to_period('M')).mean()
         print(f"monthly hit rate Δic>0: {(hit>0).sum()}/{len(hit)}")
+        # endpoint 3: big-|BTC-4h-move| quintile split of the rank-IC delta (diagnostic)
+        m = st.t.map(mv)
+        ok = m.notna()
+        q = pd.qcut(m[ok], 5, labels=False, duplicates="drop")
+        qm = dic[ok].groupby(q).mean()
+        print("Δrank-IC by |BTC-4h-move| quintile (Q0 small..Q4 big): "
+              + "  ".join(f"Q{int(k)} {v:+.4f}" for k, v in qm.items()))
+        big = q == q.max()
+        blo, bhi = blockci(dic[ok][big], days[ok][big])
+        print(f"Q4 (big-move) Δic {dic[ok][big].mean():+.4f}  CI [{blo:+.4f},{bhi:+.4f}]"
+              f"  ({int(big.sum())} cycles)")
 
 if __name__ == "__main__":
     main()
