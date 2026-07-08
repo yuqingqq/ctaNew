@@ -80,8 +80,9 @@ power outcome, not inferiority (−2 bps margin was a de facto superiority test,
 prob ~0.1-0.2%). Also recorded: 6b population-matched control books never built for C2/T1 (F2 —
 matched scoring is a proxy); T1 imputation pin not implemented (F3, direction favored variant);
 endpoint-3 BTC-move quintile split never computed (F5). Final verdicts: C1/C2/C3/C5 KEEP
-incumbent, C4 NO SWAP, T1 no addition. Approved closing: **no promotable variant at the
-pre-registered bars; V0_LEAN stays frozen; improvements, if any, are <~0.002 Δrank-IC or in
+incumbent, C4 NO SWAP, T1 no addition. Approved closing: **no promotable variant among
+the tested cells at the pre-registered bars; V0_LEAN stays frozen (scoped to the candidate set
+— Pack 6 unscreened, endpoint-3 quintile split never computed); improvements, if any, are <~0.002 Δrank-IC or in
 endpoints the bars reject; program CLOSED per cell budget** ("locally optimal" claim withdrawn —
 the cells bound improvements, they don't confirm optimality). New estimator lesson for the law:
 paired per-cycle deltas are only paired if both arms share the per-cycle population — a

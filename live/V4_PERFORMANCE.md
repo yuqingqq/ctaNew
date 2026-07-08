@@ -252,9 +252,11 @@ sizing/gross variants, vol_target.
   parity question unresolved); T1 taker_ls addition rejected (matched OOS Δ −0.0003; univariate
   t=23.6 absorbed by the Ridge). Nearest miss C3: matched OOS Δrank-IC +0.0016, CI excludes 0,
   hit 21/33 — but selection-spread Δ negative in both windows + recent era-flip → non-promotable.
-  Approved closing: no promotable variant at the pre-registered bars; V0_LEAN stays frozen;
-  improvements, if any, are <~0.002 Δrank-IC or in endpoints the bars reject ("locally optimal"
-  NOT claimed — bounded, not confirmed). Canonical: live/FEATURE_TUNING_RESULTS.md.
+  Approved closing: no promotable variant AMONG THE TESTED CELLS at the pre-registered bars;
+  V0_LEAN stays frozen (decision scoped to the candidate set — Pack 6 liquidity unscreened;
+  pre-registered endpoint 3, the |BTC-move| quintile split, was never computed); improvements,
+  if any, are <~0.002 Δrank-IC or in endpoints the bars reject ("locally optimal" NOT claimed
+  — bounded, not confirmed). Canonical: live/FEATURE_TUNING_RESULTS.md.
 - **Pipeline audit (2026-07-08): NO look-ahead anywhere in the v4 chain** (label β shift, target
   z-scoring, all 14 V0_LEAN features PIT with |IC| ≤ 0.057; CLAUDE.md's historical bug classes have
   no cousins). Fixes applied same day (definitions unchanged — validated artifacts remain valid):

@@ -3,10 +3,12 @@
 PRIMARY book-level endpoints per the estimator law (no live-overlay replays):
   1. paired per-cycle cross-sectional rank-IC delta (variant − incumbent), day-block bootstrap CI
   2. top/bot-K selection alpha spread delta at production K (1 long by long-book, 2 shorts by base)
-  3. big-|BTC-4h-move| quintile split of (1)
+  3. big-|BTC-4h-move| quintile split of (1) — NOT IMPLEMENTED (results-review F5): it was never
+     computed for the 2026-07-08 program (absence declared in FEATURE_TUNING_RESULTS.md);
+     implement it before any reuse of this scorer.
   4. per-fold and per-year delta tables; population accounting (test-row & symbol coverage diffs)
-Verdict text auto-generated from the pre-registered bars. Usage:
-  python3 live/score_variant_cell.py <variant_tag>          # e.g. ret36h / retc1 / resid3 / ddc2 / corr12h
+Verdict text auto-generated from the pre-registered bars. Usage (tags as built, one per cell):
+  python3 live/score_variant_cell.py <tag>   # C1=ret36h C2=retc1 C3=resid3 C4=ddc2 C5=corr12h T1=takerls
 """
 import sys
 from pathlib import Path
@@ -77,8 +79,9 @@ def main():
     pan["fwd24"] = pan.groupby("symbol")["alpha_vs_btc_realized"].transform(
         lambda s: s.rolling(6).sum().shift(-5)) * 1e4
     fwd = {t: g.set_index("symbol")["fwd24"].dropna() for t, g in pan.groupby("open_time")}
-    # NB: the |BTC-move| quintile split is computed in the verdict pass from the k4 cycles state
-    # (btc_ret_30d + per-cycle BTC 4h move) — kept out of this module's first version.
+    # NB: pre-registered endpoint 3 (|BTC-move| quintile split of the rank-IC delta) was NEVER
+    # computed anywhere for the 2026-07-08 program (F5) — it is not "computed elsewhere".
+    # Implement it here before this scorer is reused.
     for win, (ib, il) in INC.items():
         vb = load(f"hl_{tag}_base" + ("_oos" if win == "oos" else ""))
         vl = load(f"hl_{tag}_long" + ("_oos" if win == "oos" else ""))

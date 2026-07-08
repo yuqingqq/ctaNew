@@ -10,7 +10,14 @@ Cells (addendum 6b final numbering):
   C4: bars_since_high (+xs_rank) -> dd_from_high_288 (+xs_rank)  [parity ladder]
 
 Population accounting (mandatory): per-fold training rows + symbols, variant vs incumbent.
-Usage: python3 live/feature_variant_harness.py C1|C2
+Usage: python3 live/feature_variant_harness.py C1|C2|C3|C4|C5|T1
+Output book tags (score with live/score_variant_cell.py <tag>):
+  C1=ret36h  C2=retc1  C3=resid3  C4=ddc2  C5=corr12h  T1=takerls
+KNOWN DEVIATIONS (results review 2026-07-08): variant-NaN train rows are DROPPED (line ~130),
+not imputed — this violated the T1 "NaN => preproc imputation" pin and shifts symbol entry folds
+for history-hungry variants (C2); the 6b population-matched control books were never built. Any
+reuse for a cell where the variant changes row coverage must either implement imputation or
+build the matched control book first.
 """
 import sys
 from pathlib import Path

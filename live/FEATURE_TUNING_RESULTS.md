@@ -11,7 +11,10 @@ finding — the first-pass scorer paired the two arms on *different* per-cycle s
 changed one verdict (C2 REJECT → KEEP-incumbent) and one CI classification (C3 OOS now excludes
 zero). All numbers below are from the **corrected matched-population scorer** (both arms on
 incumbent ∩ variant ∩ fwd per cycle), reproduced locally after the fix. The bottom line is
-unchanged: **6 cells, 0 promotions.**
+unchanged: **6 cells, 0 promotions.** Scope caveats up front: the package is NOT complete in the
+strict pre-registered-endpoint sense (endpoint 3 never computed — see Endpoint accounting), and
+"frozen" means **no promotable variant among the tested cells** — not a claim about the complete
+feature universe (Pack 6 liquidity unscreened).
 
 ## Scoreboard (matched-population, corrected)
 
@@ -33,7 +36,9 @@ Verdict notes (reviewer-ruled wording):
   Matched CI crosses zero. "ret_6d is affirmatively worse" is **unsupported**; the supportable
   statement is only that it offers no improvement. The pre-registered population-matched *control
   book* (6b) was never built for C2/T1 — the matched-population scoring above is a scoring-side
-  proxy (it cannot undo train-mask differences). Verdict is KEEP-incumbent either way.
+  proxy (it cannot undo train-mask differences). Verdict is KEEP-incumbent either way, but
+  **no mechanism claim about ret_6d is supported** (neither "worse" nor "equivalent") without
+  the control books.
 - **C3**: under the corrected paired estimator the OOS rank-IC lift is CI-solid (+0.0002..+0.0030,
   hit 21/33). Still non-promotable under the pre-registered bars: selection-spread Δ negative in
   BOTH windows, recent hit 4/9 < 5/9, and the recent per-year split is an F8 era-flip (2025
@@ -52,13 +57,18 @@ Verdict notes (reviewer-ruled wording):
   attenuated. KEEP reinforced. Recorded deviation (F3): the pre-registered "NaN ⇒ preproc
   imputation" pin was not implemented — the harness dropped NaN-variant train rows and skipped
   symbols without metrics caches, changing the training population; effect direction favored the
-  variant, so the KEEP verdict is robust to it.
+  variant, so the KEEP verdict is robust to it. As with C2, the verdict rests on matched
+  *scoring*, not the pre-registered matched control books — sufficient for KEEP / no-addition,
+  **insufficient for any mechanism claim** about taker_ls_24h_lag36h itself.
 
 ## Endpoint accounting
 
 Pre-registered endpoint 3 (big-|BTC-4h-move| quintile split of the rank-IC Δ) was **never
-computed** for any cell (F5). Not verdict-bearing under the promotion bars, declared here for the
-record. The scorer's population-matching defect (F1) is fixed in the committed
+computed** for any cell (F5) — the package is therefore not complete in the strict
+pre-registered-endpoint sense; the no-promotion conclusion rests on endpoints 1/2/4 only. Not
+verdict-bearing under the promotion bars, declared here for the record. The scorer's docstring
+and inline comment now say NOT IMPLEMENTED (the first version's comment wrongly implied it was
+computed elsewhere). The population-matching defect (F1) is fixed in the committed
 `score_variant_cell.py`; any future reuse also requires implementing the quintile split first.
 
 ## Screening outcomes that avoided cells (evidence-based closures)
@@ -78,11 +88,13 @@ record. The scorer's population-matching defect (F1) is fixed in the committed
 
 ## Program conclusions (reviewer-approved wording)
 
-1. **No promotable variant found at the pre-registered bars; V0_LEAN stays frozen.** Improvements,
-   if any, are below the estimator's ~0.002 Δrank-IC resolution or concentrated in endpoints the
-   bars reject (C3: CI-solid OOS rank-IC lift, but negative selection spread in both windows).
-   Program CLOSED per the ≤8-cell budget. *Not claimed*: "locally optimal" / "frozen-optimal" —
-   the cells bound improvements; they do not confirm optimality.
+1. **No promotable variant among the tested cells; V0_LEAN stays frozen.** "Frozen" is a
+   decision scoped to this candidate set, not a statement about the complete feature universe
+   (Pack 6 liquidity was never screened). Improvements, if any, are below the estimator's ~0.002
+   Δrank-IC resolution or concentrated in endpoints the bars reject (C3: CI-solid OOS rank-IC
+   lift, but negative selection spread in both windows). Program CLOSED per the ≤8-cell budget.
+   *Not claimed*: "locally optimal" / "frozen-optimal" — the cells bound improvements; they do
+   not confirm optimality.
 2. **Univariate screening flags do not survive multivariate redundancy.** Measured pattern, not
    suspicion: C5 (3.4× IC flag) and T1 (univariate t=23.6) were both absorbed by the per-symbol
    Ridge — correlated V0_LEAN features already carry the information.
