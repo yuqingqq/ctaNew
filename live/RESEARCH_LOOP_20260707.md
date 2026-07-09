@@ -1882,3 +1882,30 @@ research). Caveat: it helps only if the streams are uncorrelated in the bad eras
 need forward validation — path (C), not a free lunch. Add before calling the runway complete.
 Everything else in 22d signed off: v4 is at a free-data + taker LOCAL OPTIMUM; DATA1 vs operational
 is a genuine user decision.
+
+### Addendum 22e (2026-07-09) — runway CORRECTED per reviewer: add path (C) era-diversification
+
+Reviewer (52e5f41) correctly flags that 22d's "HONEST RUNWAY (complete)" was V4-SCOPED and OMITTED
+the strongest structural attack on limitation #1: **(C) era-DIVERSIFICATION via an uncorrelated
+second stream.** #1 = no single BOOK is both-era positive; the PORTFOLIO answer is an orthogonal
+sleeve so the COMBINED book is positive in eras where v4 alone isn't. One already exists — **xyz
+equity-residual v7** (US EQUITY perps: AAPL/NVDA/TSLA/… ~24-33 S&P names, weekly, dispersion-gated,
++3.11 backtest, shadow harness built). DIFFERENT ASSET CLASS from v4 (crypto perps) → structurally
+plausible orthogonality. Low-cost (portfolio construction + shared kill-switch, NOT new alpha
+research). CORRECT — accepted; runway now (A) DATA1, (B) operational, (C) era-diversification.
+Caveat (the load-bearing test): helps ONLY if the streams are uncorrelated IN THE BAD ERAS (not
+just on average), and both still need forward validation — path (C), not a free lunch.
+
+### Addendum 23 (2026-07-09, PRE-REGISTERED) — DIV1: v4 × xyz-v7 era-diversification test
+
+**Test the reviewer's load-bearing caveat.** Endpoints: (1) correlation of v4 and xyz-v7 net
+returns — OVERALL and CONDITIONED on v4's BAD eras (v4-negative months, and the OOS-side/bear-recent
+buckets where v4 struggles); (2) combined-book (equal-risk or 50/50) net Sharpe/maxDD vs v4-alone,
+dual-era — does the combined book become both-era positive / era-robust? **Bars:** DIV1 supports
+path (C) only if corr ≤ ~0.3 IN v4's bad eras AND the combined book's worst-era Sharpe strictly
+improves over v4-alone's worst-era. **Data need:** xyz-v7 backtest net-return series over a period
+overlapping v4 (2023-26) — the live shadow (1 row, May-2026) is insufficient; must regen from
+alpha_v7_xyz. Cadence align to weekly (xyz's rebalance). **Prior:** ~50% the streams are
+low-correlated (different asset class) — the real question is whether that holds IN the bad eras and
+whether xyz-v7 is itself both-era robust (its own +3.11 may be era-fit, same disease). Honest: this
+diversifies era-risk only if xyz-v7 doesn't share v4's era-dependence.
