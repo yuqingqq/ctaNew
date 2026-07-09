@@ -64,8 +64,8 @@ naked = realized. Diagnosis below holds in both frames.)
    era-trap, not a lever; the deep-bull lottery is the only live bull question.)
 3. **In deep-bull the model's cross-sectional book is weak** (beta-neutral counterfactual −32 rec
    small-n / −0.9 OOS) — which is WHY production abandons it for the mom1d long-only overlay. But
-   that overlay is NOT a dead patch: it EARNS, via generic long-alt BETA — §6.1/Q3: OOS net +54k
-   (gross +62k), essentially matched by random-alt picks (placebo median gross +54k) and ~2× a
+   that overlay is NOT a dead patch: it EARNS, via generic long-alt BETA — §6.1/Q3: OOS signal
+   +62k gross, essentially matched by random-alt picks (placebo median +54k gross) and ~2× a
    BTC-long (+27k). What's unproven is the return_1d RANKING (Q3 p=0.215), not the PnL. So deep-bull
    handling is an UNVALIDATED DIRECTIONAL BETA LOTTERY (§5: deep-bull long median −73/−107, top-3
    cycles ≈ 97-106% of totals), not a broken selection leg. The real question is whether a
