@@ -1487,6 +1487,13 @@ Sharpe is UNRELIABLE — the reliable signal is the maxDD GAP and the A-vs-B pat
 BTC is marginally worse on Sharpe. In REC (smaller drawdowns, stop engages less) BTC still
 retains the advantage on both metrics.
 
+**QUANTIFIED — the DD-stop is the DOMINANT drawdown lever (why BTC-long is redundant):** on the
+alt long's OOS maxDD — vanilla −13,391 → +BTC-swap alone −10,596 (~32%) → **+DD-stop alone −3,229
+(~76%)**. The DD-stop cuts drawdown ~3× more than the BTC-long swap and pulls it BELOW what the
+swap achieves, so with the stop in place the swap has ~nothing left to add (OOS arms converge
+−3,229 vs −3,209). The two attack the SAME drawdowns from two angles (react vs prevent); the
+reactive stop, already deployed, is the stronger tool and makes the preventive swap redundant.
+
 **Verdict DOWNGRADE:** the clean-book HEDGE1 pass (19b: −30% maxDD at equal Sharpe) OVERSTATED the
 production value — the existing DD-stop already does much of that drawdown protection. Under the
 overlays the BTC-long is WINDOW-DEPENDENT: helps REC, ~wash/marginally-worse OOS. It is NOT a
