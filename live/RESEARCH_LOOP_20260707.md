@@ -2020,3 +2020,21 @@ flags, one BLOCKING:
 
 Net: fix #1 (consistent v4 definition) and #3 (block bootstrap) BEFORE running; #2/#4 are
 read-with-caveats.
+
+### Addendum 23d (2026-07-09) — DIV1 CODE-review fixes (1 blocking) applied before re-run
+
+Reviewer (c90a81e) code flags, all accepted:
+1. **BLOCKING — v4 defined inconsistently across eras.** 2023-26 used the RAW ungated 1L/2S
+   alpha_A book; 2022 used the FULL KEEPSET4 stack (holdout pnl_bps) → apples-to-oranges, and
+   era-fragility is a PRODUCTION-STACK property the raw book can't test. FIX: v4 = FULL-STACK
+   pnl_bps for ALL eras — 2022 (holdout2022/B), 2023-25 (DB1 OOS replay), 2025-26 (DB1 recent
+   replay), all the same KEEPSET4 production strategy. Cycles stabilized to
+   live/state/convexity/div1_v4cyc/. This ALSO fixes the invalid combined-book LEVEL (now
+   production v4, not vanilla).
+2. **Look-ahead inverse-vol weights** → trailing/expanding vol (deployable; removes hindsight).
+3. **IID → BLOCK bootstrap** for corr CI (moving-block, honors autocorrelated weekly returns per
+   the 23b-3 promise).
+4. **Lead with xyz-mean-in-v4-bad-weeks** (want >0); conditional corr is range-restricted →
+   secondary.
+Re-running with all fixes; result supersedes 23c's numbers (23c's correlation direction likely
+holds — level-invariant — but the combined book and cross-era consistency are now correct).
