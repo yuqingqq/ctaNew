@@ -1866,3 +1866,19 @@ acquire liquidation data (Coinglass Standard $299 1-mo), re-run the committed SQ
 stationarity; (B) accept the optimum → operational (forward ledger to release the 0.5× cap,
 live-monitor + kill-switch). No further free-data modeling cell has positive honest EV. Decision
 escalated to user.
+
+### Reviewer review (2026-07-09) — addendum 22d runway (flag only; ledger not rewritten)
+
+22d's ROBUST1 kill is CORRECT and converges on the reviewer's ROBUST1 flag (minimax over the
+observed 2023-26 blocks cannot see the spent 2022 + config-snooping + the trade-less solution is
+redundant with the 0.5× cap). BUT "HONEST RUNWAY (complete)" is INCOMPLETE for limitation #1: it
+lists (A) DATA1 and (B) accept-optimum → operational, and OMITS (C) era-DIVERSIFICATION via an
+uncorrelated second stream. #1 = no single book is both-era positive; the portfolio-level answer is
+a genuinely orthogonal sleeve so the BOOK is positive in eras where v4 alone isn't. One already
+exists (xyz equity-residual v7, +3.11 backtest, shadow harness built). It is not a v4-INTERNAL
+change (hence missed by a v4-scoped runway) but it is the strongest structural attack on the
+DEEPEST limitation, and low-cost (portfolio construction + shared kill-switch, no new alpha
+research). Caveat: it helps only if the streams are uncorrelated in the bad eras, and both still
+need forward validation — path (C), not a free lunch. Add before calling the runway complete.
+Everything else in 22d signed off: v4 is at a free-data + taker LOCAL OPTIMUM; DATA1 vs operational
+is a genuine user decision.
