@@ -799,3 +799,94 @@ stack consume book-level ranks (sizing, eligibility, rotation)? Only if such a c
 does the winsorized model's (large, real) ordering edge have a monetizable outlet — and that
 cell's endpoint must be the consumer's, not the tip spread. Until then the winz2 books stay as
 diagnostic state (hl_winz2_*, hl_winz10_*).
+
+## Addendum 10 (2026-07-09, PRE-REGISTERED) — S1: correlation-aware short selection
+
+**Motivation:** the 2 shorts are currently ranks 1-2 by base pred and can be cluster twins
+sharing one squeeze event (joint tail). De-concentrate the short-leg tail with a deterministic,
+parameter-light selection rule. Predictions unchanged — pure selection-layer cell.
+
+**Rule (S1):** short-1 = bottom-1 by base pred (unchanged). Short-2 = of the next two ranks
+(bottom-2, bottom-3), the one with the LOWER trailing correlation to short-1. Longs unchanged.
+Correlation: trailing 180-cycle (30d) pairwise corr of 4h returns, shift(1) (PIT; window pinned
+by the REGIME_GATE W=180 convention, not tuned). No continuous knobs; the only discrete choices
+(pool = ranks 2-3, window = 180 cycles) are pinned here before any computation.
+
+**Machinery:** no retraining — the rule is evaluated directly on the EXISTING incumbent books
+(hl_tgt_res_*_clean / hl_v4*_oos_clean) + a PIT pairwise-corr panel. Estimator-law compliant:
+book-level paired endpoints; overlay replay secondary only, overlays disabled.
+
+**Endpoints (primary intent is TAIL de-concentration, not mean lift):**
+1. Paired per-cycle K-spread Δ (S1 tips vs incumbent tips), day-block CI — GUARDRAIL: point
+   estimate must not be significantly negative (CI upper bound > 0); we do NOT set a
+   non-inferiority margin (C4 lesson: margins below CI width are de facto superiority tests).
+2. TAIL endpoints (verdict-bearing): (a) short-pair joint-tail frequency — fraction of cycles
+   where BOTH shorts realize fwd alpha above +X where X = the incumbent short-leg 90th
+   percentile (fixed from the incumbent distribution, both windows separately); (b) short-leg
+   worst-decile mean (CVaR-style); (c) short-pair realized correlation achieved. Bars: (a)
+   reduced with day-block CI excluding 0 in ≥1 window and point-reduced in both; (b) improved or
+   flat both windows; guardrail (1) holds.
+3. Diagnostic: how often the rule swaps (rank-3 chosen), Δ in the swap cycles only, per-fold.
+
+**Open questions explicitly delegated to the design review (before any run):** power of the
+joint-tail endpoint (event count), whether the corr window/pool pins are adequately justified,
+whether achieving corr-reduction mechanically guarantees endpoint (c) (triviality risk), and
+whether the guardrail phrasing survives the C4 margin critique.
+**Multiplicity:** 1 verdict-bearing cell; adoption (if passed) = forward-test candidate only.
+
+### Addendum 10b (2026-07-09, BEFORE the official run) — S1 design-review amendments (REVISE, applied)
+
+Reviewer measured the incumbent anatomy directly (disclosure: quantifying power required applying
+the rule once — the reviewer run is recorded, and the corr-measure pin below was chosen AGAINST
+the peeked argmax). Key measurements now on record: recent joint-tail events 24 (18 days), OOS
+129 (92 days); always-swap-to-rank-3 counterfactual removes 1 / 7 events (rank-3 marginal tail
+rate 8.3-8.7% ≈ rank-2's 9.0-9.1%) — **the joint tail is regime-driven, not twin-driven; the
+de-concentration ceiling is a few events**. Honest prior: KEEP INCUMBENT. Amendments:
+
+1. **OOS is the sole CI-bearing window for the joint-tail endpoint** (recent = 24 events cannot
+   exclude 0 at any plausible effect; its bar is non-contradiction only: not above placebo p95).
+2. **Matched placebo added (verdict-critical)**: 200-seed random-swap-to-rank-3 at the matched
+   swap rate; promotion requires OOS events strictly < placebo p5, in addition to the paired CI.
+3. **Corr pinned to residual space**: trailing-180-cycle corr of alpha_vs_btc_realized, shift(1),
+   min 120 valid obs else no-swap (fallback frequency reported). Raw-return corr = sensitivity
+   diagnostic only, never verdict-bearing, no post-hoc switch. Known hazard recorded: residual
+   corr level ≈ 2× its estimator SE → ~2/3 of picks are within-noise ties.
+4. **Guardrail relabeled**: K-spread CI-upper>0 is a gross-error catch only (CI width 10-20×
+   the expected drag), NOT mean-neutrality evidence. Expected cost pre-committed: promotion
+   means accepting ~3-11 bps/cyc expected drag for the tail benefit. Swap-cycle-only short-leg
+   Δ with block CI reported as the honest cost readout (non-verdict).
+5. **Endpoint (c) moved to diagnostics**: dose check, mechanically implied by the rule, never
+   supports promotion.
+6. **Threshold**: same-window incumbent p90 primary (treatment-independent, shared by arms);
+   robustness re-reads (other window's X; fixed +700 bps) diagnostic only, cannot flip a verdict.
+7. **Clustering**: endpoint (a) scored with 2-day blocks; event-days reported alongside
+   event-cycles; event-day McNemar as tie-breaker.
+8. Mechanical pins: fwd24 named as the tail outcome; worst-decile = pooled per-window short-leg
+   fwd24, mean of highest-alpha decile; rank-3-missing fallback = keep rank-2 (counted).
+9. **One official run, verbatim, no post-hoc dose/measure/window changes** (W1b-style refusal
+   recorded in advance; a corr-window or pool sweep after a near-miss is refused).
+
+### Addendum 10c (2026-07-09) — S1 RESULT: KEEP INCUMBENT
+
+Official run (live/s1_corr_shorts_eval.py) matches the design-review peek exactly (rec 25 / OOS
+115 events — two independent implementations agree bit-for-bit on event counts; this serves as
+the reproduction check). Verdict under the 10b bars:
+
+- OOS joint-tail paired Δ −0.00238 events/cyc, 2d-block CI [−0.00545, +0.00085] — **crosses 0 →
+  fails**. Events 129 → 115 (92 → 86 days); McNemar 28 incumbent-only vs 22 S1-only days (ns).
+- **Placebo bar fails**: S1's 115 is NOT strictly below the matched random-swap placebo p5 (114)
+  — the corr-based choice does not beat random de-concentration at the same swap rate.
+- Recent non-contradiction: OK (25 within [19, 28]).
+- Worst-decile short-leg mean: marginally WORSE both windows (+1898→+1901, +1475→+1497) — fails
+  improved-or-flat.
+- Guardrail holds (gross-error catch only): Δ −11.2/−1.3 bps/cyc, CIs cross 0 — consistent with
+  the pre-committed ~3-11 bps expected drag.
+- Dose WAS delivered (achieved c(s1,pick) 0.160→0.095 rec, 0.325→0.261 OOS; swap rate ~0.50,
+  zero corr fallbacks) — the rule did what it was designed to do; the tail didn't care.
+
+**Verdict: KEEP INCUMBENT. Mechanism finding (the durable output): the short-pair joint tail is
+regime-driven, not twin-driven** — rank-3's marginal squeeze rate equals rank-2's (8.3-8.7% vs
+9.0-9.1%), the always-swap ceiling is 1/24 rec / 7/129 OOS events, and delivered corr reduction
+moves nothing beyond random swapping. Within-pool selection cannot de-concentrate this tail;
+the levers that address it remain regime-level (CUSUM throttle) and structural (K, bands).
+No re-runs, no corr-window/pool sweeps (refused in advance, 10b-9). Cell closed.

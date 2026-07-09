@@ -281,6 +281,14 @@ sizing/gross variants, vol_target.
   Open design question before any follow-up: does anything in the stack consume book-level
   ranks? (If yes, the winsorized model's ordering edge has a consumer worth one cell.)
   Canonical: ledger addendum 9c; books hl_winz2_* kept as diagnostic state.
+- **S1 correlation-aware short selection (2026-07-09, addenda 10-10c): KEEP INCUMBENT.**
+  Selection-layer cell (no retraining): short-2 = less-correlated of ranks 2-3 to short-1
+  (trailing-180c residual corr, PIT). Dose delivered (pair corr −40%) but the short-pair joint
+  tail didn't move beyond random de-concentration (OOS 129→115 events vs matched placebo p5 114;
+  CI crosses 0; worst-decile flat-to-worse). Durable mechanism finding: **the joint squeeze tail
+  is regime-driven, not twin-driven** (rank-3's marginal squeeze rate = rank-2's; always-swap
+  ceiling 7/129 events) — within-pool selection cannot de-concentrate it; regime-level (CUSUM
+  throttle) and structural (K) levers remain. Canonical: ledger addendum 10c.
 - **Pipeline audit (2026-07-08): NO look-ahead anywhere in the v4 chain** (label β shift, target
   z-scoring, all 14 V0_LEAN features PIT with |IC| ≤ 0.057; CLAUDE.md's historical bug classes have
   no cousins). Fixes applied same day (definitions unchanged — validated artifacts remain valid):
