@@ -1050,3 +1050,57 @@ mechanically; the binding constraint is mean-per-name at depth vs costs, and OOS
 wide books strictly worse. No further K cells from this diagnostic (sweep spent). Liquidity-mix
 tripwire not computable from books (12b-5 deviation, moot under REJECT). Naked-frame re-read
 skipped as moot (REJECT on the favorable frame already).
+
+## Addendum 13 (2026-07-09) — Three-agent strategy consensus: reliable-tip signal
+
+Three independent grounded position papers (tip-reliability architect / dispersion-timing
+specialist / adversarial ceiling reviewer) on "how to generate a model for reliable tip signals."
+
+**CONSENSUS (all three agree):**
+1. The SELECTOR is saturated. Reshuffling picks / target / model-class / windows / K are closed
+   (W1/S1/M1/K1 + the window×horizon and feature programs, 0 promotions).
+2. The tip mean-alpha endpoint is UNDER-POWERED (±18-63 bps/cyc CI vs 10-20 bps effects). The
+   ONLY tip endpoint with power is the discrete, countable squeeze-EVENT rate (129 OOS events,
+   McNemar on event-days).
+3. Crowding/positioning is the missing information channel the ranker structurally can't use
+   (funding predicts squeeze with the right mechanism but wrong GLOBAL sign → a per-symbol linear
+   ranker must discard it). Free proxies (taker ratio, OI-change) were already tested weak/dead;
+   the clean version is paid liquidation/borrow data.
+4. Any learned layer must clear: nested-fold selection + dose-matched placebo (beat p5/p95, not
+   p50) + discrete-not-tuned + endpoint = the consumer's metric, never the mean tip spread.
+
+**KEY EMPIRICAL FINDING (dispersion specialist, PIT tests on 7,487 cycles):**
+- Cross-sectional dispersion IS persistent (autocorr 0.88) UNLIKE per-cycle IC (R²≈0.005) — the
+  reframing's premise holds. BUT trailing dispersion is PAYOFF-INVERTED: high trailing
+  realized-vol dispersion → WORSE next-cycle tips (hi−lo −85 bps net), because high-vol = squeeze
+  regime. "Lean into dispersion" is backwards.
+- The only payoff-linked dispersion is CONTEMPORANEOUS pred_gap (model conviction): hi−lo tercile
+  +40.5 bps, and pred_gap top-2/3 gives side Sharpe +0.88 vs +0.71 always-on. But it's a
+  per-cycle SIZER not a persistent regime (smoothing it into a trailing gate drops Sharpe to
+  +0.61), and the regime framework already found pred_gap terciles FRAGILE in walk-forward.
+
+**CONFLICT — the short-head meta-labeling cell:**
+- Architect: build it (short shortlist ranks 1-3, label = squeeze above incumbent p90, inputs =
+  crowding features EXCLUDING V0_LEAN, endpoint = S1's discrete event-count instrument, prior
+  25-35%). Mechanism: crowding×regime interaction the global ranker averages to zero.
+- Adversary: refuse — re-asks M1; the squeeze tail is regime-driven (S1 ceiling: always-swap
+  removes only 7/129 events); crowding free-proxies already weak; 65k rows are a mirage
+  (~1,080 effective day-blocks, single-digit PnL-carrying events).
+- Resolution: the architect's design partially answers the adversary's main objection (it uses
+  the DISCRETE event endpoint that HAS power, not the mean spread, and excludes V0_LEAN so it
+  isn't M1 re-run). Net honest prior ~15-25%. Its value is as a DECISIVE FALSIFIER: if crowding
+  can't push OOS squeeze events below placebo p5 even IN-sample, the last free-data channel is
+  closed and the pivot to paid-data/execution is justified.
+
+**RESOLVED POSITION:**
+- Modeling the current panel is ~exhausted; the durable levers are (a) the forward ledger
+  (releases the 0.5× gross cap, adjudicates deep-bull ranking), (b) execution/cost reduction
+  (makes the thin between-event grind clear + would re-rate the K question at maker fees), (c)
+  paid positioning data (the crowding state variable — only route to price the bull-squeeze tail).
+- The winz/pooling rank-IC edge (+0.02, CI-solid, 42/42 folds) is genuinely UNMONETIZABLE at the
+  current consumer: its natural consumers are (i) a broad rank-weighted book (K1-killed by costs)
+  or (ii) a conviction/rank-gap sizer (= pred_gap, framework-fragile). Confirms costs, not
+  ordering, are binding.
+- ONE decisive cheap cell worth running before declaring the free-data axis closed: the
+  architect's short-head squeeze-event MVE (committed S1 machinery, discrete endpoint, one-page
+  pre-registration, ~20% prior, clean falsifier either way). Escalated to user.
