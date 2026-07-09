@@ -1436,3 +1436,36 @@ realized-beta matched within reason; no era-flip. Book-level pass = forward-test
 **Prior ~40%** (higher than the learned-layer cells — discrete construction, structural
 turnover/variance mechanism, era-independent — but the bear-forfeit is a mild net-short regime
 bet the windows can't fully certify, 2022 spent).
+
+### Addendum 19b (2026-07-09) — HEDGE1 RESULT: PASS (book-level) — BTC-long hedge cuts maxDD ~30% at equal Sharpe
+
+Book-level, overlays-off, naked, net 9bps, beta-matched (realized alt beta 1.09 rec / 1.36 OOS):
+
+| arm | REC Sharpe / maxDD / netβ | OOS Sharpe / maxDD / netβ |
+|---|---|---|
+| A alt-top1 (incumbent) | +0.84 / −8,253 / −0.04 | −0.22 / −15,630 / −0.07 |
+| B BTC notional | +1.21 / −5,805 / −0.08 | −0.32 / −13,351 / −0.25 |
+| **B_beta BTC beta-matched** | **+1.19 / −5,890 / −0.04** | **−0.22 / −10,596 / −0.06** |
+| HYB BTC+alt-in-bear (diag) | +0.86 / −5,570 | −0.13 / −11,270 |
+
+**Verdict: PASS the pre-registered bar** ("equal Sharpe with materially lower maxDD"): B_beta net
+Sharpe ties A both windows (+1.19 vs +0.84 rec point but paired CI crosses 0; −0.22 vs −0.22 OOS)
+AND cuts maxDD **~29% rec (−8,253→−5,890) / ~32% OOS (−15,630→−10,596)**, beta-matched (netβ −0.04
+/ −0.06 vs A's −0.04 / −0.07 — the guardrail holds; notional-only B drifted to −0.25 OOS, hence
+B_beta is primary). Paired book-return Δ (Bβ−A) +0.1 rec / +0.4 OOS, CIs cross 0 → **it is a
+DRAWDOWN/VARIANCE win, NOT a Sharpe/mean win** (mean is a tie, as the diagnostic predicted).
+
+Mechanism confirmed: killing the 62% turnover + idiosyncratic variance of a skill-less
+single-alt hedge leg (top-8 rank-IC ≈ 0), while BTC earns the same beta. Discrete, forecast-free,
+era-independent — the class that generalizes.
+
+**Honest caveats:** (1) NOT a Sharpe win — the mean CIs cross 0; the value is ~30% maxDD
+reduction at equal return. (2) overlays-OFF — the production DD-stop may already capture part of
+this DD benefit; a FULL-STACK replay (through KEEPSET4) is the required confirmation before any
+adoption. (3) bear forfeit is real but small in book terms (OOS bear A +12 vs Bβ +1) — a mild
+net-short-in-bear regime bet the windows can't fully certify (2022 spent); HYB recovers it (OOS
+best, −0.13) but is a regime switch (diagnostic only). (4) book-level pass = FORWARD-TEST
+CANDIDATE, not deployment.
+
+**First book-level pass of the session.** Recommend: full-stack KEEPSET4 replay of B_beta as the
+confirmation step, then forward-test candidacy. Script: hedge1_btc_long.py.

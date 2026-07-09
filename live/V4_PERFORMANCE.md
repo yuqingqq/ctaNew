@@ -261,15 +261,14 @@ sizing/gross variants, vol_target.
   over V0_LEAN on the pre-registered instrument). No verdict changed; improvements,
   if any, are <~0.002 Δrank-IC or in endpoints the bars reject ("locally optimal" NOT claimed
   — bounded, not confirmed). Canonical: live/FEATURE_TUNING_RESULTS.md.
-- **Window×horizon program (2026-07-08, addenda 8-8d): CLOSED, 0/3 Phase B cells.** Sleeve-
-  conditional screen (21 windows × 5 residual horizons, V0-span-orth flag column, horizon-length
-  blocks, marginal 24h→h labels) found 3 real screen-level ridges; all die at book level:
-  B1 +ret_24h — flag was the residual of a near-duplicate of deployed return_1d (corr 0.995),
-  model-inaccessible microstructure, NOT absorption; B2 +dd_3d — noise-floor null; B3
-  resid_ret_3d@72h-sleeve — REJECT, selection-spread Δ non-positive BOTH eras (rec entirely
-  negative, block-robust), OOS rank-IC lift real but thin and streak-concentrated. New law
-  corollaries: check screen flags for near-duplicate parentage before spending a cell; rank-IC
-  lift without spread conversion is not tradeable. Canonical: live/WINDOW_HORIZON_RESULTS.md.
+- **Window×horizon program (2026-07-08/09, addenda 8-8d + 17-17b): COMPLETE, no promotion.**
+  Original 4h matched controls confirm ret_24h is mildly worse OOS and dd_3d is null; the h72
+  residual-momentum sleeve remains rejected. The sleeve-aligned completion retrained matched
+  V0_LEAN baselines at h12: ret_24h and resid_ret_24h move slightly positive but every primary
+  CI crosses zero; dd_3d is harmful recent (spread −24.3 bps, CI entirely negative). Core
+  conclusion: sleeve alignment largely does not improve this system among the preregistered
+  h12/h72 ridge representatives. This closes that grid under per-symbol Ridge, not all possible
+  window tuning. Canonical: live/WINDOW_HORIZON_RESULTS.md.
 - **W1 training-label winsorization (2026-07-09, addenda 9-9c): KEEP INCUMBENT — the most
   informative null on record.** Clipping the training xs_z at ±2 (4.95% of rows = 38.6% of label
   variance; extreme-leverage removal in a linear model) lifts book-level rank-IC by +0.020..+0.024
@@ -316,6 +315,14 @@ sizing/gross variants, vol_target.
   crowding→squeeze map). Dual-window requirement caught the non-generalization. SQ1's orthogonal
   signal is real OOS but unmonetizable on free data. **Tip axis exhausted (W1/S1/M1/K1/SQ1/SK1);
   levers now = forward ledger, execution, paid positioning-depth data.** Canonical: addendum 15c.
+- **HEDGE1 BTC-long hedge leg (2026-07-09, addenda 19-19b): PASS (book-level) — FIRST positive
+  construction result.** Replacing the top-1 alt long (62% turnover, top-8 rank-IC ≈ 0,
+  net-negative after fees) with a beta-matched BTC long cuts maxDD ~29% rec / ~32% OOS at EQUAL
+  net Sharpe (paired mean Δ CIs cross 0 — a drawdown/variance win, not an alpha win), beta-matched
+  (netβ −0.04/−0.06 vs A −0.04/−0.07). Discrete, forecast-free, era-independent. Caveats:
+  overlays-OFF (DD-stop may already capture some DD benefit → full-stack replay required); bear
+  forfeit is a mild net-short regime bet (OOS bear alt +12 vs BTC +1; HYB recovers it). Forward-
+  test candidate, not deployed. Canonical: ledger addendum 19b; hedge1_btc_long.py.
 - **Pipeline audit (2026-07-08): NO look-ahead anywhere in the v4 chain** (label β shift, target
   z-scoring, all 14 V0_LEAN features PIT with |IC| ≤ 0.057; CLAUDE.md's historical bug classes have
   no cousins). Fixes applied same day (definitions unchanged — validated artifacts remain valid):
