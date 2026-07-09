@@ -1271,3 +1271,22 @@ orthogonal signal was found (crowding→squeeze, SQ1) — it predicts but does n
 levers remain: forward ledger (release 0.5× gross cap), execution/cost reduction, paid
 positioning-depth data (which would strengthen the SQ1 signal and might make it stationary
 enough to monetize). No further free-data tip cells without new data or a new consumer.
+
+### Addendum 16 (2026-07-09, diagnostic) — wider-pool select (pick 1L/2S from ranks 1-N): REJECT, worse
+
+User idea: expand the candidate pool both sides, model-select the final 1L/2S. Tested short side
+(the side with a signal), pools N∈{2,3,5,8}, crowding P(squeeze) selector.
+- **OOS (nested, quasi-in-sample) LOOKED great:** crowd-from-8 gross +33 bps/name at 6.3% squeeze
+  vs naive +10.7/10.1% and random-from-8 +13.5/8.3% — crowding beat random substantially, wider
+  pool = more room.
+- **RECENT forward holdout (train OOS → apply recent) REVERSES it:** naive top-2 net Sharpe +2.13
+  (gross +69.8/name) is BEST; crowd-from-3 +0.24, crowd-from-5 −0.54, crowd-from-8 −0.78 — wider
+  pool = strictly WORSE; and crowd-from-8 LOSES to random-from-8 (+0.92). Crowding neither beats
+  random nor recovers the alpha given up.
+- **Mechanism:** on recent the top-2 shorts are very rich (+69.8/name — the dispersion months);
+  going deeper forfeits that, and the non-stationary crowding map (SK1 lesson) picks lower-alpha
+  names for ~no squeeze reduction. The wider pool AMPLIFIES the SK1 failure by giving the
+  non-generalizing signal more room to shed top-K alpha.
+**Verdict: REJECT. Naive top-K dominates on the forward holdout; a wider pool + learned select is
+worse, monotonically in pool size.** The OOS-vs-recent reversal is the session's core lesson
+again — forward holdout mandatory. Confirms: no free-data selection layer beats naive top-K.
