@@ -1469,3 +1469,30 @@ CANDIDATE, not deployment.
 
 **First book-level pass of the session.** Recommend: full-stack KEEPSET4 replay of B_beta as the
 confirmation step, then forward-test candidacy. Script: hedge1_btc_long.py.
+
+### Addendum 19c (2026-07-09) — HEDGE1 full-stack-lite: DD-stop PARTLY ABSORBS the benefit — downgrade
+
+Applied bull-gross-0 + the FAITHFUL VolNormStop (exact params, verbatim class) + 0.5× cap to both
+arms (hedge1_fullstack.py). Regime-gate + inv_sqrt_vol + bear-mode-equal OMITTED (so absolute
+Sharpe is UNRELIABLE — the reliable signal is the maxDD GAP and the A-vs-B pattern):
+
+| window | A alt-top1 (Sharpe/maxDD) | B_beta BTC (Sharpe/maxDD) | maxDD gap |
+|---|---|---|---|
+| REC | +0.46 / −4,764 | +1.08 / −2,580 | BTC retains advantage (~46% less DD) |
+| OOS | +0.34 / −3,229 | +0.25 / **−3,209** | **GAP GONE** (stop already absorbs it); BTC marginally WORSE Sharpe |
+
+**The DD-stop and the BTC-long are PARTIALLY REDUNDANT — they attack the same drawdowns.** In OOS
+(where the alt long has big vanilla drawdowns, −15.6k) the stop engages and CLOSES the maxDD gap
+(−3,229 vs −3,209 ≈ equal); the clean-book −32% advantage largely EVAPORATES under the stop, and
+BTC is marginally worse on Sharpe. In REC (smaller drawdowns, stop engages less) BTC still
+retains the advantage on both metrics.
+
+**Verdict DOWNGRADE:** the clean-book HEDGE1 pass (19b: −30% maxDD at equal Sharpe) OVERSTATED the
+production value — the existing DD-stop already does much of that drawdown protection. Under the
+overlays the BTC-long is WINDOW-DEPENDENT: helps REC, ~wash/marginally-worse OOS. It is NOT a
+clean production win. Honest status: a book-level curiosity that is largely absorbed by an
+existing lever; a FAITHFUL FULL-BOT replay (regime-gate + inv_sqrt_vol + bear-equal, via
+convexity_paper_bot) is required for any real verdict, and the lite replay already shows enough
+redundancy that the prior on a production win drops to ~15%. NOT a forward-test candidate on this
+evidence. The estimator-law lesson holds: promising overlays-OFF results must be confirmed
+against the path-coupled stack, which here absorbs most of the benefit.

@@ -322,7 +322,10 @@ sizing/gross variants, vol_target.
   (netβ −0.04/−0.06 vs A −0.04/−0.07). Discrete, forecast-free, era-independent. Caveats:
   overlays-OFF (DD-stop may already capture some DD benefit → full-stack replay required); bear
   forfeit is a mild net-short regime bet (OOS bear alt +12 vs BTC +1; HYB recovers it). Forward-
-  test candidate, not deployed. Canonical: ledger addendum 19b; hedge1_btc_long.py.
+  test candidate, not deployed. **DOWNGRADE (19c): full-stack-lite replay shows the existing
+  DD-stop PARTLY-TO-FULLY absorbs the benefit — OOS maxDD gap GONE (−3.2k vs −3.2k), REC retains;
+  window-dependent, NOT a clean production win. Prior on production win ~15%; needs faithful
+  full-bot replay.** Canonical: ledger addenda 19b/19c; hedge1_btc_long.py, hedge1_fullstack.py.
 - **Pipeline audit (2026-07-08): NO look-ahead anywhere in the v4 chain** (label β shift, target
   z-scoring, all 14 V0_LEAN features PIT with |IC| ≤ 0.057; CLAUDE.md's historical bug classes have
   no cousins). Fixes applied same day (definitions unchanged — validated artifacts remain valid):
