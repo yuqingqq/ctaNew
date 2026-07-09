@@ -1365,3 +1365,49 @@ closes THIS defined grid and model class (V0_LEAN + per-symbol Ridge, these ridg
 does NOT establish that all possible window tuning is useless. No strategy-sim run (no cell
 cleared book-level). Fixes 1-6 applied + committed before results (17/17a). B1/B2 4h matched
 controls closed the old deviation (17a). Window×horizon program COMPLETE.
+
+### Addendum 17c (2026-07-09, post-review documentation correction)
+
+The 17b verdict is unchanged, but two claimed implementation fixes were incomplete. First,
+score_variant_cell.py still grid-guards only k>6; an independent k>1 sensitivity removes two
+scored cycles per era and leaves all Q1-Q3 verdicts unchanged (guarded values are recorded in
+WINDOW_HORIZON_RESULTS.md). Second, the attempted Phase-A residual-norm guard checks the V0
+design/prediction norms, not each candidate residual column, so the numerical-residue diagnostic
+remains open. Neither affects the matched h12 book construction or the conclusion: sleeve
+alignment produced no reliable improvement among these representatives.
+
+## Addendum 18 (2026-07-09) — Three-agent long-leg consensus + premise CORRECTION
+
+**PREMISE CORRECTED (verified):** the long leg is NOT "below random." The 45% dir-correct was
+benchmarked against the wrong null (50%). Cross-sectional base rate P(fwd alpha>0) = 46.8% rec /
+46.5% OOS (below 50% because the per-cycle-demeaned residual alpha is right-skewed → negative
+median). Long pick hit 45.2% rec (z=−1.25 vs base, NOT sig) / 47.1% OOS (z=+0.98, NOT sig);
+mean +4.7/+4.3 POSITIVE vs random ~0. Regime split: bull drags it (rec bull 41%, already gated by
+BULL_GROSS_MULT=0); bear is AT/ABOVE base (OOS bear 51.1%). **The long is a lottery-hedge at its
+skew base rate with positive magnitude value — not anti-informative.** (NB: the MEMORY DDI
+"Long 47.8% below random" note must be read with this base-rate correction.)
+
+**CONSENSUS (3 agents):**
+1. A SYMMETRIC / body-ordering long model is dead — the long's edge (if any) is in the TAIL, not
+   the body; every symmetric treatment (W1, pooled Ridge, LambdaRank, M1) optimized the body/mean
+   and failed to convert. The one modelable long-alpha (bear reversion, +26/+130) is ALREADY
+   captured (pooled > best single feature, no headroom).
+2. PASSIVE construction (eq-weight top-3, beta-hedge, drop/shrink long) is a DD/variance lever at
+   BEST, ~zero mean lift (overlay + skeptic agree; q6 lesson: 79-83% of any DD benefit is
+   dose-replicable by random de-gross). AND an alpha-motivated long-shrink is a disguised
+   NET-BETA regime bet that no available window can certify (2022 bear SPENT; recent+OOS lack the
+   bear months that would price a more-net-short tilt). Skeptic: do NOT do alpha-motivated shrink.
+3. THE ONE GENUINELY UNTESTED CHANNEL (architect): long-side crowding. SQ1 validated crowding
+   predicts SHORT squeezes (up-moves = bad for shorts); the SAME signal applied to the LONG pool
+   predicts up-squeezes = GOOD longs — payoff-matched, structurally orthogonal, never run. But it
+   inherits SK1's non-stationarity risk (crowding→squeeze map failed the recent holdout).
+
+**RECOMMENDATION:** (a) the long is an ACCEPTED lottery-hedge, correctly small (K=1, bull0, 0.5×
+cap) — not a broken leg to fix; (b) the ONE cheap decisive probe worth running if pushing: the
+long-side crowding PREDICTIVE SCREEN — does crowding predict long-jackpots (fwd alpha > +500,
+base rate 11.6%, ~16k rows, powered) INCREMENTALLY over base pred, OOS? Reuses SQ1 machinery,
+near-zero code, clean falsifier. A decisive negative closes "long un-modelable on free data"; a
+positive is the first long-side lever — though SK1's precedent warns monetization likely fails
+the recent holdout even then. (c) Do NOT build a symmetric long model or an alpha-motivated
+long-shrink. Real levers unchanged: forward ledger, execution, paid positioning data. Prior on
+the screen passing: ~35%; on it MONETIZING dual-window: ~15%.
