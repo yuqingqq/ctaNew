@@ -2038,3 +2038,30 @@ Reviewer (c90a81e) code flags, all accepted:
    secondary.
 Re-running with all fixes; result supersedes 23c's numbers (23c's correlation direction likely
 holds — level-invariant — but the combined book and cross-era consistency are now correct).
+
+### Reviewer review (2026-07-09) — DIV1 RESULT (23c): verdict SOUND; two precision refinements
+
+Qualified-support verdict is sound and well-caveated (it independently caught the combined-book
+vanilla-v4 issue = script-review flag #1, and reports the wide 2022 CI). The decisive finding —
+2022 crisis corr +0.15 (CI [−0.17,+0.42]) on the FULL-STACK holdout v4 vs xyz-v7 — genuinely
+addresses the headline crisis-spike concern: even the upper CI bound (+0.42) is moderate, not a
+spike, and it is mechanistically sound (two ~market-neutral books in different asset classes). Two
+refinements:
+
+A. **"Correlation is level-invariant, so the corr findings stand" is TOO STRONG (correctness).**
+   Correlation is invariant to AFFINE transforms, but the KEEPSET4 overlays (regime gate ZEROS
+   cycles, DD-stop de-grosses PATH-dependently, bull0, inv_sqrt_vol) are STATE-dependent, not affine
+   — they change WHICH cycles are active and their weights, so production-v4-to-xyz correlation is
+   NOT guaranteed to equal vanilla-v4-to-xyz. Only the 2022 corr (+0.15) is on production v4
+   (holdout pnl_bps); the 2023-26 corrs (+0.057 / −0.037) are on the VANILLA book and may shift
+   under production. So the escalated production-v4 replay must recompute the 2023-26 CORRELATIONS
+   too, not just the combined-book LEVEL. (The decisive 2022 finding stands.)
+B. **2022's crypto and equity stresses were ASYNCHRONOUS** (crypto = idiosyncratic FTX/LUNA cascade;
+   equity = rate-shock bear, different timing) — the low +0.15 partly reflects that the two 2022
+   crises were NOT the same event. A SYNCHRONIZED global liquidity crisis (2008 / 2020-March style)
+   hitting both at once is not in-sample, so +0.15 is the best available crisis evidence but not a
+   guarantee against a synchronized risk-off. Honest residual of the crisis-correlation concern.
+
+Net: verdict unchanged (qualified support, first real-evidence path). Follow-up production-v4 replay
+should recompute BOTH the 2023-26 corrs AND the combined level on production v4; crisis-robustness
+is scoped to 2022's asynchronous stress, not a synchronized global crisis.
