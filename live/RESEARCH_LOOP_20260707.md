@@ -890,3 +890,74 @@ regime-driven, not twin-driven** — rank-3's marginal squeeze rate equals rank-
 moves nothing beyond random swapping. Within-pool selection cannot de-concentrate this tail;
 the levers that address it remain regime-level (CUSUM throttle) and structural (K, bands).
 No re-runs, no corr-window/pool sweeps (refused in advance, 10b-9). Cell closed.
+
+## Addendum 11 (2026-07-09, PRE-REGISTERED) — M1: model-class cell (pooled LGBM vs per-symbol Ridge)
+
+**Motivation:** last untested axis at fixed data. Hypothesis: tips are extreme-feature regions
+where interactions matter and a linear per-symbol model cannot express them; W1 established the
+verdict must ride on the SELECTION endpoints, not mean rank-IC.
+
+**Variant arm:** pooled LGBM across the stacked panel with sym_id (repo convention from the ml/
+pipeline), same V0_LEAN features (+RR for the long book), same xs_z target (clip ±10 incumbent),
+same WF cuts/embargo, two-book structure preserved. LGBM hyperparameters = the repo's pinned set
+(CLAUDE.md: pinned across v1→v4; cite the exact params in the generator) — NO tuning. 3 seeds
+{0,1,2}, predictions averaged. Sample weights: same HL=60 recency exp-decay.
+**Decomposition arm (diagnostic only):** pooled Ridge (same stacking, sym_id one-hot) to
+attribute pooled-vs-per-symbol separately from linear-vs-tree. Never verdict-bearing.
+**Baseline:** incumbent per-symbol Ridge books. Scoring: matched-population scorer, all 4
+endpoints + per-side legs + NO-OP guard.
+**Bars (pinned, as 9b-3):** promotion requires Δrank-IC ≥ 0 both windows; rank-IC CI excludes 0
+(positive) in ≥1 window; K-spread Δ ≥ 0 both windows; no era-flip (F8); recent hit ≥ 5/9; OOS
+≥ 18/33. REJECT if any primary CI entirely negative. Per the W1 law, a rank-IC-only win without
+spread conversion is a KEEP, whatever its size.
+**Open questions delegated to design review:** composite-treatment concern (pooling + model
+class change together — is the pooled-Ridge decomposition arm sufficient attribution?); exact
+pinned LGBM params source; min-rows/population handling for pooled training (target_A-clip
+lesson from the 111-panel: no clipping hacks, symbols enter as-is); seed-count adequacy;
+compute plan. Multiplicity: 1 verdict-bearing cell; gate for the stage-2 shortlist cell (M1
+null ⇒ shortlist cell skipped, conditional structure absent at fixed features).
+
+### Addendum 11b (2026-07-09, BEFORE any computation) — M1 design-review amendments (REVISE, applied)
+
+1. **Params pinned: `x6.LGB_PARAMS_POOLED`** (lr .03, leaves 31, depth 6, min_leaf 300, ff/bf .85,
+   bagging_freq 5, reg .1/.1, n_estimators 400 FIXED — no early stopping, no calibration split).
+   The alpha_v4_xs dict was considered and rejected: it drags in an ES+cal-set protocol the
+   frozen machinery has no analogue of.
+2. **Weights NOT dropped**: the in-repo pooled precedent functions silently omit sample_weight —
+   the M1 generator passes w = exp(−(t_end−open_time)/60d), GLOBAL fold t_end, to every fit.
+   Per-fold Σw and ESS printed (final-fold ESS ≈ 11.5% of rows — accepted under pinned params).
+3. **Preproc/encoding pins**: LGBM arm = NO preproc, raw features + sym_id int32 with
+   categorical_feature, native NaN (X6 convention; trees invariant to monotone transforms —
+   per-symbol standardization would be a second treatment). Pooled-Ridge decomposition arm =
+   global x6.fit_preproc REFIT PER FOLD (not X6's fold-0 reuse), sym one-hots drop_first
+   unstandardized; partially-pooled intercepts noted. Per-symbol-preproc-then-stack REFUSED as
+   post-hoc sensitivity. Unseen-symbol test rows: LGBM default direction; scorer intersection
+   makes it verdict-irrelevant.
+4. **Gate re-pinned**: the stage-2 shortlist cell is skipped ONLY if Δrank-IC CI fails to exclude
+   0 (positive) in BOTH windows. A rank-IC-positive/spread-null KEEP leaves stage-2 alive (W1
+   law: the spread endpoint cannot see structure at 10-20 bps). Stage-2 stub registered NOW:
+   hypothesis = conditional structure among near-tip candidates (grinder vs squeeze) exists and
+   is learnable from V0_LEAN + book context at ~10 candidates/cycle; endpoint = the consumer's
+   (tip selection spread under nested-fold selection with matched-shortlist placebo); full
+   pre-registration required before it runs.
+5. **Priors cited (expectations set BEFORE the run)**: diag_pooling_confirm (#165) — pooled
+   linear >> per-symbol, pooled GBM ≤ pooled linear; gen_pooled_wf_preds/diag (#167) — pooled IC
+   +0.047 vs +0.029 per-symbol BUT loses at the traded top-K legs; X6 24-cell matrix — pooled
+   LGBM replay Sharpe −0.63..−2.55, ≤ pooled Ridge in every feature set; per-symbol LGBM
+   train_ic ≈ 0.001. None had matched-population paired CIs, this target, 42 folds, or HL-60
+   weights — M1 is legitimate, but the prior-consistent outcome is rank-IC-up / spread-null KEEP.
+6. **Per-symbol-LGBM arm REFUSED with the correct claim**: underfit/noise, not overfit — X6
+   cells 8-11 per-sym LGBM train_ic +0.0010/−0.0007/+0.0003; per-symbol ESS under HL-60 ≈ 720
+   rows vs min_data_in_leaf 100-300. Pooled-Ridge decomposition arm is diagnostic-only and
+   CANNOT be promoted this cycle regardless of its numbers.
+7. **Population**: no per-fold min-rows floor for pooled training (part of the treatment; no
+   clipping/exclusion hacks). Scorer intersection drops pooled-only coverage → verdict is
+   conservative w.r.t. pooling's coverage benefit (a KEEP must not be over-read). EXCL test-only,
+   matching incumbent. Flatness tripwires printed per fold: per-cycle pred std, n-unique preds
+   (111-panel lesson).
+8. **Seeds**: 5 = ENSEMBLE_SEEDS (42, 7, 123, 99, 314), all four LGBM seed fields set,
+   deterministic=True, force_row_wise=True, num_threads fixed (8); mean of RAW preds; inter-seed
+   per-cycle pred rank-corr printed.
+9. **Panel-freshness check before the verdict**: panel mtime must predate the W1 winz10 identity
+   books (which were verified bit-exact against the incumbents); if the panel changed since,
+   rerun the identity arm first.
