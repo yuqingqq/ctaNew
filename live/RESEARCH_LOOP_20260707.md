@@ -1290,3 +1290,47 @@ User idea: expand the candidate pool both sides, model-select the final 1L/2S. T
 **Verdict: REJECT. Naive top-K dominates on the forward holdout; a wider pool + learned select is
 worse, monotonically in pool size.** The OOS-vs-recent reversal is the session's core lesson
 again — forward holdout mandatory. Confirms: no free-data selection layer beats naive top-K.
+
+## Addendum 17 (2026-07-09, PRE-REGISTERED — committed BEFORE results) — window×horizon COMPLETION phase (sleeve-aligned h12)
+
+**Gap (user review):** Phase B (8c) tested B1 ret_24h / B2 dd_3d on the 4h PRODUCTION label, but
+the screen flagged them at h12 — so they were never tested at their sleeve. B3 resid_ret_3d@h72
+was sleeve-aligned (retained). This phase runs the sleeve-aligned h12 cells with same-horizon
+matched baselines. NOT another window sweep — a fixed, preregistered completion on the
+deterministic ridge centers.
+
+**Cells (ridge-center representatives, one feature each, addition):**
+- Q1: + ret_24h @ h12 label       Q2: + resid_ret_24h @ h12       Q3: + dd_3d @ h12
+- Retain Q0: resid_ret_3d @ h72 (already REJECT, 8d — carried into the closing statement).
+Each: Baseline = V0_LEAN retrained on that SAME horizon; Variant = baseline + the one feature;
+BOTH arms trained AND tested on IDENTICAL populations (variant row mask = the matched control,
+built into the generator per B3/8b-3).
+
+**h12 construction (pinned):**
+- Label = sum of 3 consecutive 4h residual (beta_288 idio) forward returns = 12h; xs_z per cycle,
+  clip ±10 (production convention).
+- Grid-guard: NaN where open_time[t+2] − open_time[t] ≠ 2·4h (multi-cycle gap guard).
+- Purge: embargo uses exit12 = open_time + 12h (label window must clear cut − 1d embargo).
+- Blocks: 1-day statistical blocks (12h < 24h → ceil = 1, 8b-1).
+- Overlap: entry every 4h, 12h hold = 3-tranche overlapping ladder (for the strategy-sim only).
+- Endpoints on h12 forward alpha: SCORE_FWD_CYCLES=3, SCORE_BLOCK_DAYS=1.
+
+**Before-running fixes (all applied + committed before results):**
+1. Drawdown timing = SAME-BAR (enter-at-close authoritative: the close defining the trailing max
+   is known at the decision bar) — dd_3d = c/c.rolling(864).max()−1, no shift.
+2. Residual-norm guard added to the Phase-A V0-span orthogonalization (skip/zero when the pred or
+   V0-span residual norm is ~0, avoid degenerate lstsq).
+3. Grid-guard every multi-cycle label incl. h12 (above).
+4. Bootstrap RNG fixed PER ENDPOINT in the scorer (independent seeded generators, reproducible).
+5. Build the missing 4h B1/B2 matched controls (close the 8c/8d deviation).
+6. This preregistration committed separately before any result is generated.
+
+**Promotion (ALL required — book-level pass = forward-test CANDIDATE only, not deployment):**
+Δrank-IC ≥ 0 both eras; rank-IC CI excludes 0 in ≥1 era; K-spread ≥ 0 both eras; K-spread CI
+excludes 0 in ≥1 era; ≥5/9 recent AND ≥18/33 OOS positive folds; no material year/era sign
+reversal (F8); survives the matched-control comparison; strategy-sim positive after overlap,
+turnover, cost. No sweeps (W1b).
+
+**Honest closing rule:** if Q1-Q3 all fail — "No sleeve-aligned improvement among the
+preregistered momentum, residual-momentum, and drawdown ridge representatives at h12 or h72."
+This closes THIS grid and model class, NOT all possible window tuning.
