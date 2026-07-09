@@ -1655,3 +1655,17 @@ variance; ew-top3 compresses the distribution) but NOT magnitudes. Any real revi
 production-faithful accounting (PIT beta, `turn×0.5×COST`, correct annualization, funding, full
 overlay stack). Reviewer reproduced the one solid number: deployable OOS maxDD −15,630→−13,351 =
 14.6%.
+
+### Addendum 19f (2026-07-09) — COST CONVENTION pinned + long-leg net VERIFIED
+
+Resolved the recurring 4.5-vs-9-bps confusion (now pinned in V4_PERFORMANCE §8 "COST CONVENTION").
+Definitive: COST=9 bps = all-in ROUND-TRIP per UNIT (weight-1.0) notional; one-way = 4.5; a name
+SWAP of a weight-w leg costs 9w bps (turnover 2w × 0.5 × COST). Both 4.5 (book weight-0.5) and 9
+(standalone weight-1.0) are correct — the docs just never stated the weight, which caused the
+19d flip-flop.
+
+**Long-leg net RE-VERIFIED at the pinned standard (standalone weight-1.0, name-change = full
+9-bps round-trip):** gross +4.7/+4.3, turnover 62%/61%, cost = 9×0.62 = 5.5 bps/cyc, **NET −0.9
+REC / −1.2 OOS** (taker) — CONFIRMED, finding stands. At maker (~2 bps RT): NET +3.4/+3.1
+(POSITIVE) — the long covers its cost only with cheap execution, reinforcing the execution lever.
+HEDGE1's paired A-vs-B verdict is unaffected by the weight normalization (cancels in the delta).

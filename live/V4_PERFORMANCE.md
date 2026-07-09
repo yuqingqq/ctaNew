@@ -315,20 +315,18 @@ sizing/gross variants, vol_target.
   crowding→squeeze map). Dual-window requirement caught the non-generalization. SQ1's orthogonal
   signal is real OOS but unmonetizable on free data. **Tip axis exhausted (W1/S1/M1/K1/SQ1/SK1);
   levers now = forward ledger, execution, paid positioning-depth data.** Canonical: addendum 15c.
-- **HEDGE1 BTC-long hedge leg (2026-07-09, addenda 19-19b): PASS (book-level) — FIRST positive
-  construction result.** Replacing the top-1 alt long (62% turnover, top-8 rank-IC ≈ 0,
-  net-negative after fees) with a beta-matched BTC long cuts maxDD ~29% rec / ~32% OOS at EQUAL
-  net Sharpe (paired mean Δ CIs cross 0 — a drawdown/variance win, not an alpha win), beta-matched
-  (netβ −0.04/−0.06 vs A −0.04/−0.07). Discrete, forecast-free, era-independent. Caveats:
-  overlays-OFF (DD-stop may already capture some DD benefit → full-stack replay required); bear
-  forfeit is a mild net-short regime bet (OOS bear alt +12 vs BTC +1; HYB recovers it). Forward-
-  test candidate, not deployed. **CORRECTED (19d, external review): the headline ~32% OOS maxDD
-  cut used an ORACLE full-window beta — deployable notional-matched is ~15%. The "DD-stop cuts
-  76%/3× stronger" claim was WRONG (mixed bull-off + 0.5× cap + stop); stop-only incremental
-  ≈43%/26% OOS and most of the reduction is the GROSS CAP, not the stop. Lite replay omitted
-  common short costs → cannot prove redundancy. HOLDS: BTC lowers long-leg variance; overlaps
-  production gross-reduction; NOT a candidate. Needs PIT-beta + faithful cost-consistent full-bot
-  replay.** Canonical: ledger 19b/19c/19d; hedge1_btc_long.py, hedge1_fullstack.py.
+- **HEDGE1 BTC-long hedge leg (2026-07-09, addenda 19-19e): NOT A CANDIDATE — risk diagnostic
+  only.** Idea: replace the top-1 alt long (62% turnover, top-8 rank-IC ≈ 0) with a BTC long.
+  **REAL finding (holds):** BTC lowers the long leg's idiosyncratic variance. **NOT deployable /
+  claims retracted:** (1) the headline "~32% OOS maxDD" used an ORACLE full-window beta — the
+  PIT-deployable notional arm is only ~15% (−15,630→−13,351); (2) "DD-stop cuts 76% / 3× stronger"
+  was WRONG (it mixed bull-off + 0.5× cap + stop, and lacked a cap-vs-stop ablation) — RETRACTED;
+  (3) the lite replay omitted common short costs → CANNOT prove the benefit overlaps production
+  machinery (only that it *may*); (4) Sharpe was annualized √365 on per-cycle data → absolute
+  Sharpes understated ~√6 (relative ordering unaffected). The throwaway scripts reliably show
+  DIRECTION, not magnitudes. **Verdict: not a forward-test candidate; no K_long increase; no BTC
+  replacement.** Any revisit needs PIT-beta sizing + a faithful cost-consistent full-bot replay.
+  Canonical: ledger 19b-19e; hedge1_btc_long.py.
 - **KL3 K_long=3 equal-weight long (2026-07-09, addendum 20-20b): KEEP INCUMBENT — 3/4 bars,
   jackpot FAILS.** Equal-weight top-3 (matched gross) cuts long-leg variance −47%/−39% and CVaR
   −46%/−35% both eras and PRESERVES net mean (paired Δ CI crosses 0) — but HALVES the jackpot
@@ -353,6 +351,17 @@ sizing/gross variants, vol_target.
 - **Cost engine**: FEE_BPS_FILL added to cost_of (was slippage-only — all pre-2026-07-06 net numbers
   overstate by ~0.3 Sh); accounting identity exact; replay deterministic; funding 0.5×8h/bar correct.
   Tier caveat: cost_10k ≈ $1M AUM; cost_50k ≈ −0.2 Sh further.
+- **COST CONVENTION (PINNED 2026-07-09 — stop the recurring 4.5-vs-9 confusion):** the flat-branch
+  `COST` (default 9 bps, taker fee+slippage) is **all-in per ROUND-TRIP, per UNIT (weight-1.0)
+  notional**. One-way (a single buy OR sell of a full unit) = COST/2 = 4.5 bps. Bot formula:
+  `cost = turnover × 0.5 × COST` with turnover = Σ|Δw|. Consequences: a **name SWAP of a
+  weight-w leg** = exit(w) + enter(w) = turnover 2w → **cost = 9w bps** (w=1.0 → 9; w=0.5 → 4.5).
+  So both figures are correct at different weights — always state the weight. **Standard for
+  LONG-LEG analysis = standalone weight-1.0 (a name change = full round-trip = 9 bps taker /
+  ~2 bps maker); cost/cyc = COST × turnover-rate.** HEDGE1's book used weight-0.5 (→ 4.5/swap) but
+  it is a PAIRED comparison so the weight cancels in the delta. Sharpe annualization: per-cycle
+  data is 6/day → use √(365·6) or aggregate to daily first (hedge1 scripts used √365 → understated
+  ~√6; K1/addendum-12 aggregated daily, correct).
 - **tip_accuracy_v2.py**: calibrated tip screen (paired-diff block-bootstrap CI, concentration/
   halves/placebo on the diff, production-mirrored selection, regime split). 5-case ledger: zero
   false-PASS; blind spot = construction-layer interactions → verdicts are screens, never adoption.
