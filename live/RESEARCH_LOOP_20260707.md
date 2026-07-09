@@ -1334,3 +1334,11 @@ turnover, cost. No sweeps (W1b).
 **Honest closing rule:** if Q1-Q3 all fail — "No sleeve-aligned improvement among the
 preregistered momentum, residual-momentum, and drawdown ridge representatives at h12 or h72."
 This closes THIS grid and model class, NOT all possible window tuning.
+
+### Addendum 17a (2026-07-09) — 4h B1/B2 matched controls (fix-5, deviation closed)
+B1 ret_24h @ 4h vs matched control: REC Δrank-IC −0.0002 / K-spread +7.4 (both cross 0); OOS
+Δrank-IC −0.0006 [−.0010,−.0003] AND K-spread −9.77 [−17.96,−1.82] — BOTH CI entirely negative →
+ret_24h is mildly WORSE on the 4h production label with the matched control (confirms + sharpens
+the 8d NO ADDITION). B2 dd_3d @ 4h vs matched control: clean null all four (REC Δic −0.0000/spr
+−1.2; OOS +0.0003/−0.24, all cross 0) → NO ADDITION confirmed. The old 8c/8d deviation (controls
+never built) is closed; neither 4h cell promotes. h12 sleeve-aligned cells (17) scoring next.
