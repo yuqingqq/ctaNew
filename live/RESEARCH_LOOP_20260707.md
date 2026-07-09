@@ -1757,3 +1757,25 @@ at the STACK level: the deep-bull mom1d overlay genuinely EARNS (long-alt beta i
 not a droppable lottery. The one endorsed config test resolves to KEEP-incumbent — production v4
 deep-bull handling is validated. First FAITHFUL full-stack replay of the session (WF preds → bot,
 correct cost/sizing/path-coupled stop); the machinery is now available for EXEC1/ROBUST1.
+
+### Addendum 22b (2026-07-09, plan adjustment per user feedback) — EXEC1 demoted (trivial), ROBUST1 elevated to primary
+
+User: "execution cost can obviously improve performance." Correct — a FEE_BPS_FILL sweep is
+trivial arithmetic (lower cost → higher net), not a breakthrough, and the "re-opens rejected
+configs" part is predictable from the cost curve. Adjustment:
+
+- **EXEC1 DEMOTED to an operational/forward-test item, NOT a research cell.** The trivial part
+  (backtest at lower fee) is dropped. The NON-trivial question — does the edge survive REALISTIC
+  maker execution? — cannot be answered by lowering a fee constant: this is a MEAN-REVERSION
+  book, so maker orders fill under ADVERSE SELECTION (you buy the dropping name exactly as it
+  drops further) or MISS entirely. The valuable test is realized fill-rate + adverse-selection +
+  miss-handling, which is a paper/forward execution experiment on HL, not a backtest. Moved to
+  the forward-ledger workstream (measure maker fills live), not the cell queue.
+- **ROBUST1 ELEVATED to the primary research breakthrough.** It attacks the DEEPEST limitation
+  (#1 era-fragility — the actual 2022-holdout-FAIL mechanism), is not dismissible as arithmetic,
+  and is genuinely untested: re-select the KEEPSET4 levers by MINIMAX (best worst-era) rather
+  than point estimates, via combinatorial-purged-CV over the lever grid. Now runnable on the
+  faithful bot-replay machinery proven by DB1 (sweep lever env, score by worst era-block).
+- **DATA1** unchanged (liquidation data, user's call).
+
+Next: pre-register ROBUST1 in detail → design-review → run on the faithful replay → results-review.
