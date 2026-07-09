@@ -1503,3 +1503,32 @@ convexity_paper_bot) is required for any real verdict, and the lite replay alrea
 redundancy that the prior on a production win drops to ~15%. NOT a forward-test candidate on this
 evidence. The estimator-law lesson holds: promising overlays-OFF results must be confirmed
 against the path-coupled stack, which here absorbs most of the benefit.
+
+## Addendum 20 (2026-07-09, PRE-REGISTERED — committed before results) — KL3: K_long=3 equal-weight vs K_long=1
+
+**Hypothesis (user):** the long is a lottery with ~zero within-pool ranking skill (top-8 rank-IC
+≈ 0), so replacing the single top-1 pick with an equal-weight top-3 basket at MATCHED total long
+gross diversifies the idiosyncratic variance (3 lottery draws vs 1) and lowers turnover, WITHOUT
+losing selection skill — IF the jackpot contribution survives the dilution. Preview (per-cycle,
+un-CI'd): variance/CVaR −40-46% both eras; mean preserved REC (+5.6 vs +4.7), drops OOS (+0.6 vs
++4.3) on point estimate — the crux is whether that OOS drop is SIGNIFICANT or noise.
+
+**Cell (single, discrete — NO sweep, NO blends):** long = equal-weight top-3 by long-book pred
+(1/3 weight each) vs incumbent top-1. MATCHED: total long gross, short leg (bottom-2 base pred,
+IDENTICAL), gates, costs. Turnover charged HONESTLY (ew-top3 basket turnover = Σ|Δmembership|/3 —
+LOWER than top-1's jumping pick, a real benefit). Overlays-OFF (estimator law), book-level.
+Realized net beta of each long leg reported (both are alt longs → ~matched by construction).
+
+**Endpoints (dual-era, day-block CI):** long-leg net mean; std; CVaR5% (worst-5% mean);
+top-decile-outcome contribution (jackpot preservation); paired mean-Δ (ew3−top1) day-block CI.
+
+**Promotion (ALL required):**
+1. PRESERVE MEAN: paired mean-Δ (ew3−top1) CI CROSSES 0 or positive in BOTH eras (i.e. NOT
+   significantly worse — CI-based, not point-identical; the C4 unpassable-margin lesson).
+2. REDUCE VARIANCE: ew3 std < top1 std BOTH eras.
+3. REDUCE CVaR: ew3 CVaR5% better BOTH eras.
+4. PRESERVE JACKPOT: ew3 top-decile contribution not materially below top1.
+If book-level passes → REQUIRED full-stack confirmation (does the variance benefit survive the
+DD-stop; prior BETTER than HEDGE1 since the stop absorbs drawdowns not day-to-day variance).
+Book-level pass = forward-test candidate. **Prior ~40%** (variance/CVaR clearly down; hinges on
+OOS mean-Δ significance + the turnover credit).
