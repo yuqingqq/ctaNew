@@ -2093,3 +2093,27 @@ liquidity crisis (not in-sample; correlations there could be higher); (3) Sharpe
 the win is DRAWDOWN/variance, not return. **Next: forward-validate BOTH streams live (the only
 thing that confirms), and build the combined-book construction (inverse-vol, shared kill-switch).
 Path (C) promoted from research to portfolio-construction + forward-test.**
+
+### Reviewer review (2026-07-09) — DIV1 CORRECTED (23e): verdict SOUND; re-headline the maxDD at matched vol
+
+23e correctly re-runs on production v4 (resolves review 2d0cec0-A — the state-dependent gates mean
+vanilla corrs don't transfer) and folds in review-B (async crisis). The verdict — qualified
+SUPPORT, DD-not-return win, candidate/forward-unproven — is sound. One flag on the HEADLINE number:
+
+**"−71% maxDD" conflates DIVERSIFICATION with DE-RISKING.** The trailing inv-vol combined book is
+~½ v4 + ½ xyz, so its TOTAL vol is ~0.75× v4-alone (ρ≈0.13, comparable leg vols) — part of the
+−71% is simply LOWER v4 exposure, not diversification. This program has caught this exact trap
+before (vBTC v2: "at matched maxDD the +68% PnL is mostly leverage; the real edge is +0.41 Sharpe").
+The vol-neutral read is already visible: Sharpe is MAINTAINED (+1.07→+1.09, and Sharpe is
+leverage-invariant), so the honest DD metric is maxDD-PER-UNIT-VOL (Calmar): combined ≈ −1,559/0.75σ
+vs v4 −5,411/σ → materially smaller than 71% but still large (order ~60% by a rough maxDD∝vol
+scaling). FIX: headline the maxDD reduction at MATCHED vol (lever the combined book to v4's vol and
+recompute) — the raw −71% includes ~10 pts of pure de-risking. This STRENGTHENS credibility (the
+benefit survives vol-matching) rather than overstating it.
+
+Secondary: even the matched number is a SINGLE-PATH extremum on 96 wk — a bootstrapped
+DD-reduction / sub-window check confirms it isn't one-episode. The +2.6 bps xyz-in-v4-bad (n=39)
+and v4-bad corr block-CI[−0.16,+0.38] both cross/near 0 → "weak hedge" is the right wording.
+
+Net: verdict stands — path (C) is the session's strongest result. Re-headline the DD win at matched
+vol (~60% structural), not 71% (partly leverage).
