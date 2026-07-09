@@ -2,7 +2,8 @@
 
 Config-aware diagnosis of what production v4 ACTUALLY trades (not the vanilla book the variant
 cells used). Purpose: locate the real limitations before optimizing. Grounded in `run_convexity_v4_live.sh`
-+ this session's validated findings + a per-regime raw-book attribution.
++ this session's validated findings + a per-regime book-net attribution (residual-alpha AND naked
+frames, defined below).
 
 ## Production v4 = a regime-SWITCHED strategy
 
@@ -89,7 +90,10 @@ paid positioning-depth data.
 
 ## Caveats on the numbers
 
-Pre-gate book-net attribution, shown in BOTH residual-alpha (v4 target) and naked (realized) frames — within a few bps of each other (book ~beta-neutral) (actual post-REGIME_GATE/DD-stop production per-regime net is ≥
-these). Recent bull (n=114) and deep-bull (n=47) are small-sample. inv_sqrt_vol sizing and the
-gates are NOT applied (this is the pre-gate regime edge (residual+naked shown), the right lens for "where's the signal," not
-production PnL). Cost = 9-bps RT per §8 convention; Sharpe daily-aggregated then ×√365.
+Pre-gate book-net attribution in BOTH the residual-alpha (v4 target) and naked (realized) frames —
+within a few bps of each other because the 1L/2S book is ~beta-neutral. It is the pre-gate regime
+EDGE (the right lens for "where is the signal"), NOT production PnL: REGIME_GATE, DD-stop, and
+inv_sqrt_vol sizing are not applied, so actual production per-regime net is ≥ these, and the
+per-regime conditional Sharpes are NOT comparable to the all-regime post-overlay canonical +2.22.
+Recent bull (n=114) and deep-bull (n=47) are small-sample. Cost = 9-bps RT per §8 convention;
+Sharpe = daily-aggregated then ×√365.
