@@ -1104,3 +1104,99 @@ specialist / adversarial ceiling reviewer) on "how to generate a model for relia
 - ONE decisive cheap cell worth running before declaring the free-data axis closed: the
   architect's short-head squeeze-event MVE (committed S1 machinery, discrete endpoint, one-page
   pre-registration, ~20% prior, clean falsifier either way). Escalated to user.
+
+## Addendum 14 (2026-07-09, PRE-REGISTERED) — SQ1: crowding→squeeze stage-2 short-head MVE
+
+**Hypothesis (3-agent consensus, architect design):** a decision-conditional classifier on the
+short shortlist, using CROWDING features the global ranker structurally discards (funding predicts
+squeeze with right mechanism / wrong global sign → per-symbol linear model averages it to zero),
+can reorder the 2 shorts to avoid squeezes. Endpoint = the discrete squeeze-EVENT count (the one
+tip endpoint with power), scored on S1's committed instrument. DECISIVE FALSIFIER: a clean in- AND
+out-of-sample "no" closes the last free-data channel and justifies the paid-data/execution pivot.
+
+**Shortlist:** ranks 1-3 by base-book pred per cycle (the 3 the ranker would short from).
+**Label:** squeeze = short-leg fwd24 alpha > incumbent short p90 (S1 frozen X: OOS +676 / rec +798).
+**Features (name-level, ALL free, DISJOINT from V0_LEAN — verified):** funding_rate_z_7d,
+funding_rate_1d_change (panel); oi_change_z, toptrader_long_short_ratio, long_short_ratio,
+taker_long_short_vol_ratio (metrics caches). Cycle-level state: funding_dispersion (XS std of
+funding_rate_z). All lagged for Vision availability (funding known at funding time; OI/taker
+shift by the T1 36h worst-case convention). NO V0_LEAN, NO pred-derived features → a pass is
+unambiguously "crowding prices the squeeze."
+**Model:** pooled LGBM binary classifier (interaction-capable — the crowding×regime interaction
+is the whole mechanism; logistic can't express it), P(squeeze) per shortlisted name. Decision:
+among ranks 1-3, short the 2 LOWEST P(squeeze).
+**Protocol:**
+- Phase 1 (in-sample falsifier SCREEN, non-verdict): fit on all OOS shortlist rows, apply,
+  count OOS squeeze events. If NOT < matched-placebo p5 (=114 from S1) IN-SAMPLE → DEAD, axis
+  closed, no Phase 2.
+- Phase 2 (VERDICT, only if Phase 1 passes): nested walk-forward — classifier trained on PRIOR
+  folds only (expanding, embargo 1d), predict forward, count OOS events vs matched-swap placebo.
+  Bars: OOS events < placebo p5 (primary); McNemar event-day sign test; short-leg net PnL not
+  significantly worse (guardrail, S1 instrument); recent = non-contradiction (not > placebo p95).
+**Prior (stated up front):** ~15-25% pass. Hard ceiling from S1: always-swap removes only 7/129
+OOS events (tail is regime-driven); the classifier must beat that by informed reorder within
+ranks 1-3. Machinery: s1_corr_shorts_eval.py instrument + a crowding panel builder.
+**No sweeps** (W1b-style refusal recorded): one feature set, one model, one run; a feature or
+threshold sweep after a near-miss is refused in advance.
+
+### Addendum 14b (2026-07-09, BEFORE any verdict compute) — SQ1 design-review REVISE: reformulate to the predictive falsifier
+
+Design review found the reorder endpoint is **near-non-falsifiable in the pass direction (H3)**:
+S1's ceiling is ~7/129 OOS events removable by informed reorder (regime-driven tail — all of
+ranks 1-3 squeeze together), but random 2-of-3 reorder removes ~15 by luck (placebo p5) →
+systematic signal < noise floor → "within band" regardless of classifier quality. Plus H1/H2
+(S1's instrument hardcodes rank-1, wrong placebo for a 2-of-3 pick), H4 (LGBM in-sample screen
+vacuous), H5 (per-feature PIT lag), M6 (129 positives too thin for LGBM → logistic + explicit
+interaction), M7 (nested cold-start warmup).
+
+**Reformulation (dissolves H1-H4 by dropping the portfolio endpoint):** SQ1 becomes a PREDICTIVE
+falsifier — does crowding predict the squeeze event OOS at the name level, at all?
+- Rows: short shortlist ranks 1-3, OOS window (129 squeeze events; label = short-leg fwd24 >
+  incumbent short p90, frozen).
+- Model: **logistic** (L2, fixed C), features = 7 crowding (funding_rate_z_7d,
+  funding_rate_1d_change, oi_change_z, toptrader_ls, ls_ratio, taker_ls, funding_dispersion) +
+  explicit funding_z×funding_dispersion interaction (the stated crowding×regime mechanism).
+  Nested walk-forward (train prior folds, predict forward, embargo 1d, min-40-positive warmup;
+  before warmup no prediction). PIT lags pinned per M6/H5: funding shift(1) cycle (settlement-
+  known), metrics 36h (Vision), oi_change_z trailing-only (verified in build_crowding_panel.py).
+- Endpoints: (1) OOS AUC of P(squeeze) vs realized squeeze; (2) precision@top-decile of P(squeeze);
+  (3) **label-permutation null** (shuffle squeeze labels within cycle, refit, 200×) → real AUC >
+  permutation p95 = signal exists; (4) INCREMENTAL test — AUC of crowding vs AUC of the ranker's
+  OWN base pred alone (does crowding beat what the ranker already encodes? M1 concern).
+- **Falsifier:** if crowding OOS AUC is not > permutation p95 AND not > pred-only AUC, the free-data
+  crowding channel is CLOSED — no reorder, no sizing, nothing to monetize. Pivot justified.
+- **If crowding DOES predict OOS:** the monetization question (reorder ceiling-dead per H3;
+  sizing = lethal learned-gate class) is escalated — do NOT auto-build a gate.
+Prior: ~25-30% crowding beats permutation null (funding's mechanism is real); ~15% it also beats
+pred-only. Machinery: crowding_panel.parquet (built) + a nested logistic AUC harness.
+
+### Addendum 14c (2026-07-09) — SQ1 RESULT: FALSIFIER PASSED — crowding carries real orthogonal squeeze signal
+
+**The free-data crowding channel is NOT closed.** Predictive test on 16,614 shortlist rows /
+1,601 OOS squeeze events (name-level, 9.6% base rate):
+- Crowding-alone OOS AUC 0.579 BEATS permutation-null p95 0.563 (real signal).
+- **Incremental over the ranker's own pred: pred-only 0.584 → pred+crowding 0.605, Δ +0.020,
+  BEATS the crowding-shuffled permutation null p95 0.596** → crowding adds ORTHOGONAL
+  squeeze-predictive information the ranker structurally can't use. This is the first genuine
+  orthogonal-signal find of the entire tip effort.
+- Fold stability: 20/31 folds positive, mean +0.015, median +0.026 (broad, not one-fold) — BUT
+  noisy (worst fold −0.20, best +0.18).
+- Precision@top-decile 12.2% vs 9.6% base = 1.26× lift (modest classifier, AUC 0.60).
+
+**Mechanism correction (drop-one attribution):** the signal is NOT funding (the architect's
+hypothesized driver: dropping funding_rate_z_7d costs only −0.0012, the fx interaction −0.0006).
+It is the **positioning ratios** — ls_ratio (global long/short) is the single biggest contributor
+(drop −0.0219), then toptrader_ls (−0.0090). Retail+whale positioning imbalance predicts which
+shortlisted name squeezes, orthogonally to price/vol features.
+
+**Honest bounds:** (1) predictive ≠ tradeable — the session's core lesson (rank-IC lifts didn't
+convert 4×); AUC 0.60 is a weak classifier; (2) monetization is the hard part and is blocked on
+both obvious consumers — REORDER is ceiling-dead (S1: ~7/129 joint events, below the placebo
+noise floor, H3), and a crowding-GATE/SIZER is the historically-lethal learned-gate class
+(0-for-many on nested-OOS); (3) the increment is fold-noisy.
+
+**Escalated per 14b (do NOT auto-build a gate):** the signal is real; the monetization decision
+is the user's. Options recorded: (A) one DISCRETE crowding-skip cell (single pinned threshold,
+the only form with a nested-OOS chance per the "discrete generalizes" lesson); (B) wire P(squeeze)
+as a risk-MONITOR only (non-trading); (C) log as validated signal, revisit with paid positioning
+depth data. Machinery: build_crowding_panel.py, sq1_crowding_predictive.py.

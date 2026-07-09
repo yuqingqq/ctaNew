@@ -298,6 +298,14 @@ sizing/gross variants, vol_target.
   −0.0176 CI entirely negative REC). Pooling is the lever; trees subtract; neither trades.
   Stage-2 shortlist cell not auto-skipped (formal gate) but premise damaged — escalated.
   Canonical: ledger addendum 11c.
+- **SQ1 crowding→squeeze predictive test (2026-07-09, addenda 14-14c): FIRST POSITIVE — real
+  orthogonal signal, monetization open.** Positioning ratios (global + top-trader long/short)
+  predict which shortlisted name squeezes, OOS, INCREMENTALLY over the ranker's own pred:
+  AUC 0.584→0.605 (Δ +0.020, beats crowding-shuffled permutation p95, 20/31 folds). NOT funding
+  (drop −0.001) — it's the L/S positioning ratios (ls_ratio drop −0.022). The free-data crowding
+  channel is OPEN. BUT: modest (AUC 0.60, 1.26× precision), fold-noisy, and predictive≠tradeable
+  — monetization blocked on reorder (ceiling-dead) and gate (lethal class); escalated. Canonical:
+  ledger addendum 14c; build_crowding_panel.py + sq1_crowding_predictive.py.
 - **Pipeline audit (2026-07-08): NO look-ahead anywhere in the v4 chain** (label β shift, target
   z-scoring, all 14 V0_LEAN features PIT with |IC| ≤ 0.057; CLAUDE.md's historical bug classes have
   no cousins). Fixes applied same day (definitions unchanged — validated artifacts remain valid):
