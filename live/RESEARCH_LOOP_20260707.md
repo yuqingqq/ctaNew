@@ -1563,3 +1563,27 @@ insurance even at flat mean. **That is why the jackpot bar matters and why its f
 disqualifying, not cosmetic.** The user's bar correctly caught a real mechanism cost the mean bar
 alone would have missed. No full-stack confirmation (book-level did not pass). No sweep/blends.
 Script: kl3_equal_weight_long.py.
+
+### Addendum 20c (2026-07-09) — KL3 hedge-role CHECK: corrects the 20b convex-hedge overstatement
+
+20b claimed the jackpot dilution "weakens the long's convex hedge vs short squeezes" — VERIFIED
+empirically, and the claim was OVERSTATED. Measured on short-squeeze cycles (worst-10% short PnL):
+
+| era | corr(long,short) top1/top3 | short PnL | long1 | long3 | book Δ (top1 vs ew3) |
+|---|---|---|---|---|---|
+| REC | −0.030 / −0.036 | −640 | +14 | +6 | −313 vs −317 (Δ −4) |
+| OOS | −0.219 / −0.331 | −474 | +101 | +96 | −186 vs −189 (Δ −3) |
+
+**Findings: (1) the long IS a weak convex hedge** — negative corr to short PnL (−0.03 rec / −0.22
+oos), earning +14/+101 on squeeze cycles (real, especially OOS). **(2) But top-3 hedges squeezes
+only NEGLIGIBLY worse** — +6 vs +14 (rec) / +96 vs +101 (oos) = ~5-8 bps/cyc on squeeze cycles,
+and at BOOK level essentially identical (Δ −3 to −4 bps). Note top-3 actually has a STRONGER
+diversified correlation to short PnL (−0.331 vs −0.219 OOS).
+
+**Correction:** the jackpot-contribution halving (20b) is a DISTRIBUTIONAL-SHAPE change (less tail
+both ways), NOT a material squeeze-hedge loss — the practical hedge degradation is ~negligible.
+So KL3's KEEP verdict stands ONLY on the literal pre-registered jackpot bar; the *consequence* I
+attributed to that failure was overstated. Honest status: KL3 is a NEAR-MISS — mean preserved,
+variance/CVaR −40% both eras, squeeze-hedge ~intact — failing only the literal
+jackpot-contribution metric, whose practical downside is small. Whether that metric SHOULD be
+disqualifying is now a judgment call, not a clear mechanism cost.

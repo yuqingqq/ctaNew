@@ -330,9 +330,11 @@ sizing/gross variants, vol_target.
   jackpot FAILS.** Equal-weight top-3 (matched gross) cuts long-leg variance −47%/−39% and CVaR
   −46%/−35% both eras and PRESERVES net mean (paired Δ CI crosses 0) — but HALVES the jackpot
   contribution (+68→+36 rec, +53→+32 oos). Compresses the distribution (less tail both ways);
-  the jackpot is the long leg's convex hedge vs short-squeeze regimes, so diluting it is a real
-  cost even at flat mean. Discrete, disciplined single cell. Canonical: ledger 20b;
-  kl3_equal_weight_long.py.
+  the jackpot is a WEAK convex hedge vs short-squeeze regimes (corr −0.03/−0.22) — but top-3
+  hedges squeezes only ~negligibly worse (~3-4 bps/cyc at book level, 20c), so the jackpot
+  dilution is a distributional-shape change NOT a material hedge loss. NEAR-MISS: fails only the
+  literal jackpot bar; mean preserved + variance/CVaR −40% + squeeze-hedge ~intact. Canonical:
+  ledger 20b/20c; kl3_equal_weight_long.py.
 - **Pipeline audit (2026-07-08): NO look-ahead anywhere in the v4 chain** (label β shift, target
   z-scoring, all 14 V0_LEAN features PIT with |IC| ≤ 0.057; CLAUDE.md's historical bug classes have
   no cousins). Fixes applied same day (definitions unchanged — validated artifacts remain valid):
