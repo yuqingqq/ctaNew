@@ -326,6 +326,13 @@ sizing/gross variants, vol_target.
   DD-stop PARTLY-TO-FULLY absorbs the benefit — OOS maxDD gap GONE (−3.2k vs −3.2k), REC retains;
   window-dependent, NOT a clean production win. Prior on production win ~15%; needs faithful
   full-bot replay.** Canonical: ledger addenda 19b/19c; hedge1_btc_long.py, hedge1_fullstack.py.
+- **KL3 K_long=3 equal-weight long (2026-07-09, addendum 20-20b): KEEP INCUMBENT — 3/4 bars,
+  jackpot FAILS.** Equal-weight top-3 (matched gross) cuts long-leg variance −47%/−39% and CVaR
+  −46%/−35% both eras and PRESERVES net mean (paired Δ CI crosses 0) — but HALVES the jackpot
+  contribution (+68→+36 rec, +53→+32 oos). Compresses the distribution (less tail both ways);
+  the jackpot is the long leg's convex hedge vs short-squeeze regimes, so diluting it is a real
+  cost even at flat mean. Discrete, disciplined single cell. Canonical: ledger 20b;
+  kl3_equal_weight_long.py.
 - **Pipeline audit (2026-07-08): NO look-ahead anywhere in the v4 chain** (label β shift, target
   z-scoring, all 14 V0_LEAN features PIT with |IC| ≤ 0.057; CLAUDE.md's historical bug classes have
   no cousins). Fixes applied same day (definitions unchanged — validated artifacts remain valid):

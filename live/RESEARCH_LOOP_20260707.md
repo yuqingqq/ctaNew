@@ -1532,3 +1532,34 @@ If book-level passes → REQUIRED full-stack confirmation (does the variance ben
 DD-stop; prior BETTER than HEDGE1 since the stop absorbs drawdowns not day-to-day variance).
 Book-level pass = forward-test candidate. **Prior ~40%** (variance/CVaR clearly down; hinges on
 OOS mean-Δ significance + the turnover credit).
+
+### Addendum 20b (2026-07-09) — KL3 RESULT: KEEP INCUMBENT — 3/4 bars pass, JACKPOT preservation FAILS
+
+Book-level, overlays-off, net 9bps, matched gross/short/turnover-charged. beta1 1.09/1.36 vs
+ew3 1.15/1.38 (~matched):
+
+| era | arm | mean | std | CVaR5% | jackpot-contrib | turnover |
+|---|---|---|---|---|---|---|
+| REC | top-1 | −0.9 | 340 | −689 | +68.2 | 62% |
+| REC | ew-top3 | +0.7 | **182** | **−369** | **+36.0** | 54% |
+| OOS | top-1 | −1.2 | 269 | −555 | +52.8 | 61% |
+| OOS | ew-top3 | −4.3 | **165** | **−363** | **+31.8** | 55% |
+
+Against the 4 pre-registered bars:
+1. **PRESERVE MEAN (CI-based): PASS both** — paired mean-Δ (ew3−top1) +1.6 CI[−10.8,+13.9] REC,
+   −3.1 CI[−7.7,+1.5] OOS — both cross 0 (not significantly worse; the CI-based bar was decisive
+   — the OOS point −3.1 would have "failed" a point-identical bar but is within noise).
+2. **REDUCE VARIANCE: PASS both** — std −47% REC / −39% OOS.
+3. **REDUCE CVaR: PASS both** — −46% REC / −35% OOS.
+4. **PRESERVE JACKPOT: FAIL both** — top-decile contribution HALVED (+68→+36 REC, +53→+32 OOS,
+   ~−40-47%).
+
+**Verdict: KEEP INCUMBENT** (all 4 required; jackpot fails). Mechanism: ew-top3 COMPRESSES the
+long-leg distribution — it halves BOTH the jackpot upside AND the body downside, netting ~flat
+mean with ~45% less variance + lower turnover (54-55% vs 61-62%). So — unlike the K1 fear — the
+mean is NOT killed (it's preserved). But the jackpot is the long leg's CONVEX HEDGE role (the
+long tail fires exactly when shorts get squeezed in bull pumps); halving it weakens that
+insurance even at flat mean. **That is why the jackpot bar matters and why its failure is
+disqualifying, not cosmetic.** The user's bar correctly caught a real mechanism cost the mean bar
+alone would have missed. No full-stack confirmation (book-level did not pass). No sweep/blends.
+Script: kl3_equal_weight_long.py.
