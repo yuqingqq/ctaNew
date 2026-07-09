@@ -2129,3 +2129,25 @@ vol-neutral DD cut (raw −71% includes ~10pts pure de-risking). Secondary: (a) 
 is a single-path extremum → sub-window (per-year) matched-vol DD check added; (b) xyz-in-v4-bad
 +2.6 bps (n=39) crosses 0 → WEAK hedge, not significant (stated). Verdict (path C support) stands;
 this tightens the headline honesty.
+
+### Addendum 23g (2026-07-09) — DIV1 matched-vol RESULT: honest DD cut is +33% (not 71%), concentrated in v4's bad years
+
+Matched-vol recompute (review 4b656da): the combined book's vol was **0.43× v4** (inv-vol heavily
+weights low-vol xyz), so MOST of the raw −71% maxDD cut was DE-RISKING, not diversification. At
+MATCHED vol (levered to v4's vol): v4 −5,411 → combined −3,604 = **+33% honest diversification DD
+cut** (reviewer estimated ~60%; actual +33% — even more de-risking in the raw number than flagged).
+Sub-window (matched-vol) DD cut: **2024 +36%, 2025 +25%, 2026 +17% (v4's weak/flat years — helps),
+2023 −9% (v4's best year — mild hurt, n=19).** → the benefit is real, CONCENTRATED in v4's bad
+eras (correct diversification behavior), but variable and small-sample.
+
+**FINAL DIV1 verdict (path C): QUALIFIED SUPPORT, honestly sized.**
+- Cross-corr low incl. the decisive 2022 crisis (+0.15, no spike) — the headline positive, unchanged.
+- Genuine diversification DD benefit **+33% at matched vol** (not 71%), concentrated in v4's bad
+  years, at MAINTAINED Sharpe (+1.07→+1.09).
+- Weak per-week hedge: xyz +2.6 bps in v4-bad weeks CROSSES 0 (n=39) — not significant.
+- CANDIDATE ceiling: both un-forward-validated (xyz-v7 possibly era-fit); 2022 = ASYNCHRONOUS
+  stresses, NOT a synchronized global liquidity crisis (untested, where corr could spike).
+**Path (C) is the strongest remaining direction and the only one with multiply-reviewed evidence,
+but honestly it is a MODEST, forward-unproven DD-diversification lever (+33% matched-vol DD in
+v4's bad eras), not a Sharpe breakthrough.** Next = forward-validate both streams + build the
+inverse-vol combined book with shared kill-switch. DIV1 investigation CLOSED at this verdict.
