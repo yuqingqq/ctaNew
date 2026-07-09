@@ -1988,3 +1988,35 @@ is structurally real as variance reduction. NOT yet a confirmed lever: needs (a)
 replay with PRODUCTION v4 (not vanilla), (b) forward validation of BOTH streams. Path (C) is the
 strongest remaining direction — promote to a proper combined-book construction + forward test,
 not a free-data modeling cell. Escalate follow-up (production-v4 combined replay) to next review.
+
+### Reviewer review (2026-07-09) — DIV1 SCRIPT (div1_era_diversification.py, 1db3c5f) — CODE flags before running
+
+Read the committed script. The 4 design amendments are present (2022 descriptive corr, CANDIDATE
+ceiling, corr CI, inverse-vol). Scaffolding is sound (proper walk-forward for xyz-v7, paired
+bootstrap resampling, correct short-side sign −alpha, 2022-descriptive scoping intact). Four code
+flags, one BLOCKING:
+
+1. **BLOCKING — v4 is defined TWO DIFFERENT WAYS across eras.** 2023-26 v4 (v4_weekly_oos) = the RAW
+   ungated 1L/2S alpha_A book (0.5/0.5, flat −4.5 bps, NO KEEPSET4 overlays). 2022 v4
+   (v4_weekly_2022) = the FULL KEEPSET4 stack (holdout B pnl_bps, real bot cost). So the decisive
+   2022 corr and the 2023-26 corr/combined-book are NOT the same v4 strategy — the cross-era
+   comparison is apples-to-oranges, and "combined vs v4-alone" is measured on the raw book, not what
+   you would trade. The era-fragility DIV1 targets is a property of the PRODUCTION stack (the gates
+   create it), so the raw book does not directly answer the question. FIX: one definition for BOTH
+   eras — either the raw alpha stream (estimator-law cleanliness → then 2022 must ALSO be the raw
+   book, not pnl_bps) OR the DB1 full-stack replay (production fidelity; machinery just built +
+   proven). The cross-era inconsistency is the defect regardless of which you pick.
+2. **Inverse-vol weights are FULL-SAMPLE (look-ahead).** wv/wx use m.v4.std()/m.xyz.std() over the
+   whole 2023-26 window, then applied retroactively → the blend ratio is set with hindsight. Mild
+   (risk-parity weights are stable) but the combined Sharpe is a slight UPPER bound; the deployable
+   version uses trailing/PIT vol.
+3. **corr_ci is a plain IID bootstrap, not the BLOCK bootstrap 23b flag 3 promised.** Resampling
+   individual weeks i.i.d. understates the CI if weekly returns are autocorrelated (overlapping
+   holds — xyz 5d, v4 6-sleeve). Weekly aggregation mitigates but does not remove it. Use a
+   moving-block bootstrap to honor the amendment.
+4. **(minor) Conditional corr WITHIN v4<0 is range-restricted** (truncation on the dependent
+   variable → biased/noisy); the cleaner, already-reported metric is xyz-mean-in-v4-bad-weeks
+   (want >0) — lead with that, treat the conditional corr as secondary.
+
+Net: fix #1 (consistent v4 definition) and #3 (block bootstrap) BEFORE running; #2/#4 are
+read-with-caveats.
