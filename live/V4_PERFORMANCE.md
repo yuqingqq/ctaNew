@@ -301,10 +301,10 @@ sizing/gross variants, vol_target.
 - **Two-stage tip-reliability investigation consolidated in live/TIP_RELIABILITY_RESULTS.md**
   (architecture rationale: why MSE ranker + deterministic stage-2, not end-to-end; rank-IC≠tip
   value 4× confirmed; stage-1 score = W1; stage-2 = SQ1/SK1/wider-pool below).
-- **SQ1 crowding→squeeze predictive test (2026-07-09, addenda 14-14c): FIRST POSITIVE — real
+- **SQ1 crowding→squeeze predictive test (2026-07-09, addenda 14-14c): PROMISING SCREEN-LEVEL signal —
   orthogonal signal, monetization open.** Positioning ratios (global + top-trader long/short)
   predict which shortlisted name squeezes, OOS, INCREMENTALLY over the ranker's own pred:
-  AUC 0.584→0.605 (Δ +0.020, beats crowding-shuffled permutation p95, 20/31 folds). NOT funding
+  AUC 0.561→0.577 (Δ +0.0153 corrected PIT+embargo; earlier +0.020 used an outcome-informed full-OOS threshold), beats conditional-permutation p95, 18/32 folds. NOT funding
   (drop −0.001) — it's the L/S positioning ratios (ls_ratio drop −0.022). The free-data crowding
   channel is OPEN. BUT: modest (AUC 0.60, 1.26× precision), fold-noisy, and predictive≠tradeable
   — monetization blocked on reorder (ceiling-dead) and gate (lethal class); escalated. Canonical:

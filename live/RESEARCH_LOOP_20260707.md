@@ -1189,6 +1189,8 @@ It is the **positioning ratios** — ls_ratio (global long/short) is the single 
 (drop −0.0219), then toptrader_ls (−0.0090). Retail+whale positioning imbalance predicts which
 shortlisted name squeezes, orthogonally to price/vol features.
 
+**CORRECTION (post-review 2026-07-09):** committed harness now uses a PIT prior-fold squeeze threshold + 1d embargo (the original full-OOS threshold was outcome-informed). Corrected increment = **+0.0153** (pred 0.561 → pred+crowding 0.577, beats conditional-permutation p95 0.571, 18/32 folds); mechanism unchanged (ls_ratio/toptrader, not funding). Reclassified: PROMISING SCREEN-LEVEL signal, not fully validated. SQ1 pre-reg+results shared one commit (c7433bd) — provenance weaker than other cells. Reproduce: sq1_crowding_predictive.py, sk1_recent_widerpool.py.
+
 **Honest bounds:** (1) predictive ≠ tradeable — the session's core lesson (rank-IC lifts didn't
 convert 4×); AUC 0.60 is a weak classifier; (2) monetization is the hard part and is blocked on
 both obvious consumers — REORDER is ceiling-dead (S1: ~7/129 joint events, below the placebo
@@ -1342,3 +1344,24 @@ ret_24h is mildly WORSE on the 4h production label with the matched control (con
 the 8d NO ADDITION). B2 dd_3d @ 4h vs matched control: clean null all four (REC Δic −0.0000/spr
 −1.2; OOS +0.0003/−0.24, all cross 0) → NO ADDITION confirmed. The old 8c/8d deviation (controls
 never built) is closed; neither 4h cell promotes. h12 sleeve-aligned cells (17) scoring next.
+
+### Addendum 17b (2026-07-09) — window×horizon COMPLETION RESULT: 0/3 at h12, program CLOSED
+
+Sleeve-aligned h12 cells vs V0_LEAN@h12 matched baselines (identical population, purge exit12,
+1-day blocks, SCORE_FWD_CYCLES=3). Full 8-part checklist:
+- **Q1 ret_24h @ h12: KEEP.** REC Δrank-IC +0.0006 / K-spr +1.6; OOS +0.0001 / +0.9 — all
+  positive but every CI crosses 0 (fails req 2,4: no CI excludes 0). Folds 7/9 & 19/33. NOTE:
+  sign FLIPS vs the 4h label (17a: ret_24h mildly negative at 4h) — sleeve-alignment does move
+  it, just not into significance. pred-corr 0.989 (near-redundant with return_1d).
+- **Q2 resid_ret_24h @ h12: KEEP.** Strongest of the three — REC Δrank-IC +0.0012 [−.0001,+.0025]
+  / K-spr +3.7; OOS +0.0003 / −0.20 — all cross 0 (fails req 2,4). Folds 7/9 & 18/33.
+- **Q3 dd_3d @ h12: REJECT.** REC K-spread Δ −24.3 [−49.84,−0.67] ENTIRELY NEGATIVE (fails req 3:
+  K-spread ≥0 both eras) + hit 2/9. Mildly harmful on recent at h12.
+- **Q0 resid_ret_3d @ h72: REJECT** (retained from 8d).
+
+**HONEST CLOSING (per the review):** No sleeve-aligned improvement was found among the
+preregistered momentum, residual-momentum, and drawdown ridge representatives at h12 or h72. This
+closes THIS defined grid and model class (V0_LEAN + per-symbol Ridge, these ridge centers). It
+does NOT establish that all possible window tuning is useless. No strategy-sim run (no cell
+cleared book-level). Fixes 1-6 applied + committed before results (17/17a). B1/B2 4h matched
+controls closed the old deviation (17a). Window×horizon program COMPLETE.
