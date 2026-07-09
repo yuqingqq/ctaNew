@@ -763,3 +763,39 @@ Amendments, all applied pre-run:
    by construction (matched-control trigger cannot fire); sample weights target-independent;
    eval scale-invariant (ranks + argmax) so prediction shrinkage cannot manufacture a win.
 8. Weighted per-fold dose (HL=60 recency weights) printed by the generator.
+
+### Addendum 9c (2026-07-09) — W1 RESULT: KEEP INCUMBENT (post-review FINAL)
+
+**Scoreboard (all numbers reviewer-reproduced bit-for-bit; identity arm bit-exact):**
+REC Δrank-IC +0.0243 [+.0199,+.0288] EXCLUDES 0, hit 9/9, folds 9/9; K-spread Δ −19.10
+[−82.01,+41.03]; pred rank-corr 0.889. OOS Δrank-IC +0.0202 [+.0178,+.0226] EXCLUDES 0, hit
+33/33, folds 33/33; K-spread Δ −9.28 [−27.35,+8.32]; pred rank-corr 0.923. Verdict under the
+9b-pinned bars: **KEEP INCUMBENT** (fails K-spread ≥0 both windows; no REJECT — no CI entirely
+negative; W1b correctly does not fire).
+
+**Artifact prosecutions, all rejected by the review:** eval-horizon (lift survives at the
+trained 4h outcome: +0.0189/+0.0139 CI-solid; fwd24 amplifies ~1.3-1.45× via overlap smoothing —
+noted); vol-deweighting tilt (vol-shrink overlays on incumbent preds recover <7% of the lift —
+the gain is coefficient-level, from removing the extreme-leverage rows: 5% of rows carried 38.6%
+of label variance in a LINEAR model); leakage (clip is per-row monotone with a constant
+threshold; identity arm proves pipeline parity); panel drift (bit-exact identity arm).
+
+**Interpretation (reviewer-corrected — supersedes the preliminary "tails carry the tip skill"
+wording, which was factually wrong in two places):** winsorization improves rank ordering across
+the ENTIRE book — mid-book (+0.016..+0.023) and, even more, among extreme-outcome names
+(tails-only Δ +0.028..+0.032, CI-solid). What it does not preserve is top-of-book SELECTION:
+the variant's top-1-vs-top-2 pred gap flattens ~40% (near-ties → partial tip-pick
+randomization), tip picks change in ~half of cycles, and point-estimate tip alpha falls — but
+every tip delta's CI crosses zero, so tip degradation is DIRECTIONAL, NOT ESTABLISHED
+(instrument tip-CI half-width ±18-63 bps vs ~10-20 bps effects). Book-level rank-IC and
+production-K tip value moved in opposite directions on point estimates. Whether fitting tail
+magnitudes is where tip skill comes from remains UNRESOLVED at this instrument's power.
+
+**Follow-up ruling (review R3):** the hybrid two-model cell (winsorized book-model + unclipped
+tip-model) is NOT registered — with production consuming only the K=1/2 tips it is behaviorally
+identical to the incumbent, and the cell would adjudicate on the tip endpoint the instrument
+cannot resolve. The legitimate next step is a DESIGN QUESTION, not a cell: does any layer of the
+stack consume book-level ranks (sizing, eligibility, rotation)? Only if such a consumer exists
+does the winsorized model's (large, real) ordering edge have a monetizable outlet — and that
+cell's endpoint must be the consumer's, not the tip spread. Until then the winz2 books stay as
+diagnostic state (hl_winz2_*, hl_winz10_*).

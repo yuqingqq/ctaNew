@@ -270,6 +270,17 @@ sizing/gross variants, vol_target.
   negative, block-robust), OOS rank-IC lift real but thin and streak-concentrated. New law
   corollaries: check screen flags for near-duplicate parentage before spending a cell; rank-IC
   lift without spread conversion is not tradeable. Canonical: live/WINDOW_HORIZON_RESULTS.md.
+- **W1 training-label winsorization (2026-07-09, addenda 9-9c): KEEP INCUMBENT — the most
+  informative null on record.** Clipping the training xs_z at ±2 (4.95% of rows = 38.6% of label
+  variance; extreme-leverage removal in a linear model) lifts book-level rank-IC by +0.020..+0.024
+  (CI-solid, 42/42 folds+months, horizon-robust, not vol-tilt, identity-arm bit-exact) — TEN
+  TIMES the program's usual effect scale — and STILL fails promotion: K-spread Δ −19/−9 (CIs
+  cross 0), top-of-book pred gap flattens ~40%, tip picks change ~half of cycles. Measured
+  proof that book-level rank-IC and production-K tip value are different quantities that can
+  move oppositely under a treatment; the tip endpoint stays the only verdict-bearing one.
+  Open design question before any follow-up: does anything in the stack consume book-level
+  ranks? (If yes, the winsorized model's ordering edge has a consumer worth one cell.)
+  Canonical: ledger addendum 9c; books hl_winz2_* kept as diagnostic state.
 - **Pipeline audit (2026-07-08): NO look-ahead anywhere in the v4 chain** (label β shift, target
   z-scoring, all 14 V0_LEAN features PIT with |IC| ≤ 0.057; CLAUDE.md's historical bug classes have
   no cousins). Fixes applied same day (definitions unchanged — validated artifacts remain valid):
