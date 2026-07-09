@@ -289,6 +289,15 @@ sizing/gross variants, vol_target.
   is regime-driven, not twin-driven** (rank-3's marginal squeeze rate = rank-2's; always-swap
   ceiling 7/129 events) — within-pool selection cannot de-concentrate it; regime-level (CUSUM
   throttle) and structural (K) levers remain. Canonical: ledger addendum 10c.
+- **M1 pooled-LGBM model-class cell (2026-07-09, addenda 11-11c): REJECT; axis closed at fixed
+  features.** Pooled LGBM (pinned params, 5 seeds, weights preserved, tripwires clean): REC
+  K-spread Δ −89.5 bps/cyc CI entirely negative (long leg −67.5 CI-solid) → REJECT clause; OOS
+  rank-IC +0.0073 excl 0 but 2025-concentrated. Decomposition arm attributes everything:
+  pooled Ridge lifts rank-IC +0.024/+0.013 (CI-solid, 4th confirmation of the W1 law — never
+  converts at tips); the NONLINEARITY increment is negative (LGBM vs pooled Ridge rank-IC
+  −0.0176 CI entirely negative REC). Pooling is the lever; trees subtract; neither trades.
+  Stage-2 shortlist cell not auto-skipped (formal gate) but premise damaged — escalated.
+  Canonical: ledger addendum 11c.
 - **Pipeline audit (2026-07-08): NO look-ahead anywhere in the v4 chain** (label β shift, target
   z-scoring, all 14 V0_LEAN features PIT with |IC| ≤ 0.057; CLAUDE.md's historical bug classes have
   no cousins). Fixes applied same day (definitions unchanged — validated artifacts remain valid):

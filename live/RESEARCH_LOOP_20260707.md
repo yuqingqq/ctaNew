@@ -961,3 +961,36 @@ null ⇒ shortlist cell skipped, conditional structure absent at fixed features)
 9. **Panel-freshness check before the verdict**: panel mtime must predate the W1 winz10 identity
    books (which were verified bit-exact against the incumbents); if the panel changed since,
    rerun the identity arm first.
+
+### Addendum 11c (2026-07-09) — M1 RESULT: REJECT (pooled LGBM); decomposition attributes everything to pooling
+
+**Tripwires all clean** (84 folds: pred std 0.18-0.23/cycle, unique preds = full cross-section,
+inter-seed rho 0.69-0.81 — no 111-panel flattening; pooled-Ridge alpha pinned at grid-top 100).
+
+**Pooled LGBM vs incumbents:** REC Δrank-IC +0.0049 (crosses 0); **K-spread Δ −89.5 bps/cyc CI
+[−180.3, −7.2] ENTIRELY NEGATIVE → REJECT clause fires** (driver: long leg −67.5 [−124.3,
+−12.8]). OOS Δrank-IC +0.0073 [+.0026,+.0126] excludes 0 (2025-concentrated: +0.0232 vs
++0.0024/+0.0014), K-spread +11.8 (crosses 0). Verdict: **REJECT** — with the caveat recorded
+that the REC spread CI upper bound (−7.2) is near zero; REJECT vs KEEP changes no action.
+
+**Decomposition (pooled LGBM vs pooled Ridge, diagnostic):** the nonlinearity increment is
+NEGATIVE for ordering — REC Δrank-IC −0.0176 [−.0280, −.0067] ENTIRELY NEGATIVE, OOS −0.0056
+[−.0111, +.0001] marginal. **Trees subtract ordering skill from the pooled linear model** (X6
+prior confirmed at CI strength). Pooled Ridge itself (diagnostic, non-promotable): Δrank-IC
++0.0239/+0.0130 both CI-solid vs incumbents, K-spread −50.0/−9.9 — the fourth independent
+confirmation of the W1 law, and the attribution: **pooling is the rank-IC lever; nonlinearity
+adds nothing at fixed features; neither converts at the tips.**
+
+**Stage-2 gate reading (per 11b-4, formal):** the gate does NOT trip (LGBM OOS rank-IC CI
+excludes 0 positive) — stage-2 is not auto-skipped. BUT its premise (tree-learnable conditional
+structure at fixed features) took a direct hit from the decomposition arm: what structure exists
+is linear-pooling structure, already unmonetizable at the tips. Stage-2 proceeds only with a
+fresh pre-registration that confronts this result explicitly (e.g., candidate features beyond
+V0_LEAN, or a consumer other than the tip argmax); running it unchanged would re-ask a question
+M1 just answered. Decision escalated to the user.
+
+**Model-class axis: CLOSED at fixed features.** With W1/S1/M1, the plan's cheap cells are spent:
+0/3 promotions, three durable mechanism findings (tails-vs-tips resolution unresolved at power;
+squeeze tail regime-driven; pooling-not-nonlinearity). Remaining live levers: CUSUM throttle
+(pre-registerable now), execution improvement (operational), new data classes (user decision),
+forward ledger.
