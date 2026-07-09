@@ -1956,3 +1956,35 @@ Reviewer (e7cc2e3) — all 4 correct, applied:
    argmax DoF).
 **Verdict framing:** a DIV1 pass = "plausible path (C), forward- AND crisis-unproven"; the 2022
 descriptive corr is necessary-not-sufficient evidence on the decisive era.
+
+### Addendum 23c (2026-07-09) — DIV1 RESULT: qualified SUPPORT for path (C) — crisis-corr does NOT spike
+
+xyz-v7 weekly regenerated (equity walk-forward, 320 wk 2016-2026); v4 vanilla-book weekly.
+
+**DECISIVE ERA (the reviewer's headline concern):** 2022 crisis cross-corr(v4, xyz) = **+0.150,
+CI [−0.17, +0.42]** — LOW, does NOT spike toward 1. In 2022 when v4 CRASHED (−199 bps/wk, the
+holdout FAIL), xyz stayed orthogonal and roughly flat (+2 bps/wk). **The "diversification fails
+exactly when you need it" concern did NOT materialize** — the streams stay uncorrelated even in
+the crisis. This is the load-bearing positive finding for path (C).
+- Overall 2023-26 corr +0.057; v4-negative weeks (n=45) corr −0.037 CI[−0.38,+0.25] — orthogonal
+  on average and in underperform weeks too.
+
+**HONEST QUALIFICATIONS (do not over-read):**
+1. **Uncorrelated ≠ hedge.** xyz's mean in v4's bad weeks is ~0 — it does NOT positively pay when
+   v4 is down; it's VARIANCE-REDUCTION diversification, not a crash hedge that offsets v4's losses.
+2. **Combined-book LEVEL is NOT valid here** — DIV1 used the VANILLA (overlays-off) v4 book
+   (weekly Sharpe −0.94, negative — the overlays-off OOS book is weak, esp. 2025 −426 bps/wk), NOT
+   production v4 (+2.2 rec / −0.28 OOS with overlays). So "combined Sharpe −0.20" is an artifact of
+   the weak v4 arm; a valid combined-book test needs PRODUCTION-v4 weekly returns (DB1 replay +
+   holdout2022/B). Correlation is level-invariant so the corr findings stand; the combined LEVEL
+   does not.
+3. **Candidate ceiling (reviewer #2):** both streams are un-forward-validated backtests, xyz-v7's
+   +3.11 may itself be era-fit ("same disease"). A pass is a CANDIDATE, forward-unproven.
+4. 2022 corr CI is wide [−0.17,+0.42] — "low" is directional, not tight (31 weeks).
+
+**Verdict: QUALIFIED SUPPORT — the first path with real evidence.** v4 (crypto) and xyz-v7
+(equity) are genuinely low-correlated INCLUDING in the decisive 2022 crisis; era-diversification
+is structurally real as variance reduction. NOT yet a confirmed lever: needs (a) a combined-book
+replay with PRODUCTION v4 (not vanilla), (b) forward validation of BOTH streams. Path (C) is the
+strongest remaining direction — promote to a proper combined-book construction + forward test,
+not a free-data modeling cell. Escalate follow-up (production-v4 combined replay) to next review.
