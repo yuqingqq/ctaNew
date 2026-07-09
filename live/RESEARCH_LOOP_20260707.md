@@ -1779,3 +1779,69 @@ configs" part is predictable from the cost curve. Adjustment:
 - **DATA1** unchanged (liquidation data, user's call).
 
 Next: pre-register ROBUST1 in detail → design-review → run on the faithful replay → results-review.
+
+### Reviewer review (2026-07-09) — DB1 result (21b) + addendum-22/22b plan (flags only; pre-reg/results text NOT rewritten)
+
+Loop design/results-review; provenance-preserving (pre-reg 21/22/22b + results 21b byte-unchanged).
+
+**DB1 result (21b) — KEEP verdict CORRECT; wording OVERSTATED + missing the concentration check.**
+Decision is right (flat strictly worse both eras, no DD benefit → KEEP-incumbent — you don't drop
+the incumbent for a strictly-worse variant). But: (1) the KEEP edge is SMALL (+0.08–0.13 Sh,
++1.2–2.0k PnL), reported as a MEAN with no concentration decomposition — the program's own ladder
+("median/concentration/halves next to every mean") is unmet; §5 predicts it is tail-carried
+(deep-bull long median −73/−107, top-3 cycles ≈ 97-106% of totals), so +1.2–2.0k is plausibly 1–2
+melt-up cycles. (2) "genuinely EARNS … not a droppable lottery" OVERSTATES — the earning is
+directional long-alt BETA in the observed melt-ups (ranking unproven p=0.215); a reversing melt-up
+flips it. Honest wording: KEEP on observed eras, NOT de-risked. Add the top-cycle-share/median
+decomposition before the word "validated."
+
+**EXEC1 (22b): AGREED — already demoted.** 22b's demotion matches this flag; the adverse-selection
+framing for a mean-reversion book (maker orders fill exactly as the name drops further, or miss) is
+the correct deepening. Nothing further — it is a forward/live execution experiment, not a cell.
+
+**ROBUST1 (22b elevated to primary): run it, but the elevation's PREMISE is wrong by construction —
+minimax cannot attack the 2022 mechanism.** Minimax over the lever grid minimaxes the OBSERVED
+blocks {recent 2025-10→2026-06, OOS 2023→2025-09}. The 2022 holdout is SPENT (one-shot law) and
+CANNOT be a block — so minimizing the worst OBSERVED block could not, even in principle, have
+prevented the 2022 FAIL (2022 was never in the optimization set). #1's failure mode is
+worst-of-UNOBSERVED eras; minimax over in-sample eras is STILL in-sample — it swaps the objective
+(average → worst-block) without closing the generalization gap. Two further hazards: (a) with ~2
+eras / a handful of purged-CV blocks the minimax is DOMINATED by one block → the "robust" config is
+selected by that block's noise; (b) the degenerate minimax solution is the lowest-exposure /
+most-gated config (the plan's own 25% prior: "trade less") — a risk result mislabeled as an alpha
+breakthrough. RECOMMEND: run ROBUST1 as a RISK exercise with TWO pre-registered guards — (i) report
+which block binds the minimax; if one block drives selection, declare it noise-selected, not robust;
+(ii) if the minimax config is simply the least-exposed one, label it "trade-less-in-ambiguous-eras"
+(a downside-floor rule), not an era-#1 solution. It DOES have value (a config robust across observed
+sub-regimes beats a single-window point winner) — but the genuine attack on #1 is OUT-of-era
+evidence (forward ledger) or an orthogonal return stream (diversification), neither an in-sample
+selector.
+
+**DATA1: CLEAN.** Bar correct (beat free-proxy AUC 0.577 AND survive the recent holdout SK1 failed
+= stationarity, not just AUC). Paid-spend = user decision.
+
+Net: DB1 re-word per flags (1/2); EXEC1 agreed-demoted; ROBUST1 run as a GUARDED risk exercise and
+drop the "attacks the 2022 mechanism" billing; DATA1 ready.
+
+### Addendum 22c (2026-07-09, plan adjustment) — EXEC1 KILLED: taker required, maker structurally wrong
+
+User: "we need taker execution, maker doesn't make sense." Correct and decisive. For a
+signal-driven 4h strategy, TAKER is required: you must BE IN the predicted-alpha position to
+capture the 4h forward move, so a maker order that misses = lost signal, and one that fills =
+adverse selection (filled because price crossed to you, i.e. moved against the entry). At 60%+
+turnover × many names/cycle, maker fills are unreliable. Taker (immediate fill at the touch) is
+the correct, required execution; the ~9 bps RT cost is the unavoidable price of the signal.
+
+**EXEC1 REMOVED entirely (not demoted).** There is NO execution-cost lever. Consequences hardened
+from "limitations" to PERMANENT CONSTRAINTS:
+- ~9 bps RT taker cost is fixed; the strategy must clear it in every traded regime.
+- Long-leg net-negative-at-taker is PERMANENT (cost-justified hedge, not maker-fixable).
+- Steep K-curve is PERMANENT → naive top-K / K=1L/2S are correct; HEDGE1/KL3 couldn't beat them
+  BECAUSE the cost structure is fixed.
+- Cost-domination (the 2022-FAIL mechanism) is unavoidable.
+
+**Remaining research plan:** ROBUST1 (era-robust minimax lever selection, ~25%, attacks #1) and
+DATA1 (liquidation, paid, user's call). With modeling exhausted AND execution fixed, these plus
+the forward ledger are the entire runway. The honest frame: v4 is at a free-data + taker-execution
+LOCAL OPTIMUM; the only breakthroughs left are new data (DATA1) or era-robust risk shaping
+(ROBUST1) — no execution escape.
