@@ -1737,3 +1737,23 @@ ratios. Scope change (paid data) — user decision.
 **Sequencing:** EXEC1 first (faithful, immediate, highest EV, no data cost). ROBUST1 second (new
 method, attacks the deepest limitation). DATA1 on user's call (paid). DB1 (deep-bull config,
 addendum 21) completing in parallel. Each gets design-review → run → results-review per the loop.
+
+### Addendum 21b (2026-07-09) — DB1 RESULT: KEEP mom1d (deep-bull overlay validated at stack level)
+
+Faithful full-stack bot replay (KEEPSET4 env, v4 WF preds, only BULL_DEEP_MODE toggled;
+GLOBAL_GROSS_MULT=1.0 → absolute Sharpe runs hot vs the 0.5×-capped canonical +2.22, but the
+RELATIVE mom1d-vs-flat A/B is clean — same preds/env except the overlay):
+
+| | mom1d (KEEP) | flat (DROP) | Δ (mom1d−flat) |
+|---|---|---|---|
+| REC | Sh +3.25 / PnL +29,030 / DD −10,276 | +3.12 / +27,779 / −10,276 | +0.13 / +1,251 / tie |
+| OOS | Sh +0.98 / PnL +11,924 / DD −6,717 | +0.90 / +9,957 / −6,863 | +0.08 / +1,968 / DD better |
+
+**Verdict: KEEP mom1d.** DROP (flat) is WORSE in BOTH eras (Sharpe −0.13/−0.08, PnL −1,251/−1,968)
+with no maxDD benefit (OOS flat DD slightly worse; stop engagement HIGHER 79.5% vs 72.8% — sitting
+out deep-bull leaves the book more exposed to the bad OOS cycles). Pre-registered DROP bar
+(improve-or-tie Sharpe both windows + no maxDD worsening) FAILS → KEEP. Confirms §6.1/diagnosis #3
+at the STACK level: the deep-bull mom1d overlay genuinely EARNS (long-alt beta in the melt-up),
+not a droppable lottery. The one endorsed config test resolves to KEEP-incumbent — production v4
+deep-bull handling is validated. First FAITHFUL full-stack replay of the session (WF preds → bot,
+correct cost/sizing/path-coupled stop); the machinery is now available for EXEC1/ROBUST1.
