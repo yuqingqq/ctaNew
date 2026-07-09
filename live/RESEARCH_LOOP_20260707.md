@@ -1692,3 +1692,48 @@ only if it improves OR ties net Sharpe in BOTH windows AND does not worsen maxDD
 lottery adds no risk-adjusted value. Else KEEP mom1d. **Prior:** the overlay earns via beta but
 is high-variance and OOS is 23% deep-bull cycles — genuine coin-flip on whether flat's lower
 variance beats mom1d's beta earning at the stack level. ~45%.
+
+## Addendum 22 (2026-07-09, PROPOSED PLAN — for review before running) — breakthrough directions from the limitations
+
+The modeling axis is exhausted (features/windows/model-class/K/beta/winsorization/crowding-
+monetization/long-construction all KEEP/REJECT). So breakthroughs must come from levers the
+diagnosis points to but that have NOT been tested at the stack level. Three proposed, ranked by
+honest EV, mapped to the limitation they attack. **Proposing for review — will run after review.**
+
+### EXEC1 — execution/cost as the primary lever (attacks #5 thin alpha + long-leg + K-curve) — HIGHEST EV
+**Limitation:** the side alpha is thin and event-concentrated; the long leg is net-negative at
+taker (9 bps RT) but +3.4/+3.1 at maker (~2 bps); the K-curve is steep BECAUSE costs are high;
+2022 died cost-dominated. Cost is the binding constraint almost everywhere.
+**New method:** faithful full-stack bot replay sweeping FEE_BPS_FILL across taker (4.5)→maker
+(1.0) with slippage scaled, dual-era. Measure: (a) does the whole-stack net Sharpe rise steeply
+(the cost-sensitivity the sleeve work hinted — V3.1 at maker +2.47); (b) does cheaper execution
+FLIP previously-rejected configs — the long leg turning net-positive (re-opening HEDGE1/KL3), and
+wider-K becoming viable (re-opening K1)? **Why it could break through:** it's the one lever that
+moves EVERY regime at once, it's not modeling (no overfit surface), and the mechanism (maker vs
+taker) is a real, achievable execution change on HL. **Prior: 60%** it materially lifts net
+Sharpe at maker; the open question is whether maker fills are ACHIEVABLE live (forward-test).
+
+### ROBUST1 — era-robust lever selection (attacks #1 no-both-era-edge, the DEEPEST limitation) — NEW METHOD
+**Limitation:** every config is implicitly an era bet; no regime/lever has a consistent both-era
+edge; all prior selection optimized single- or dual-window POINT estimates.
+**New method:** re-select the KEEPSET4 levers by MINIMIZING WORST-ERA (or worst-fold) net Sharpe
+— robust optimization / minimax — instead of average or dual-window. Combinatorial-purged-CV over
+the lever grid, scoring each config by its WORST era-block, adopt the minimax-robust config.
+**Why it could break through:** it directly targets era-fragility (the 2022 FAIL mechanism) rather
+than hoping a point-estimate winner generalizes — the exact failure mode of every rejected cell.
+**Prior: 25%** — robust optimization may just pick the most-gated (lowest-exposure) config, i.e.
+trade less; but even a "trade less in ambiguous eras" rule with a validated worst-era floor would
+be a real risk improvement.
+
+### DATA1 — liquidation data for the squeeze tail (attacks #4 unhedged squeeze) — DATA ROUTE (user decision)
+**Limitation:** the squeeze tail (bear + deep-bull) is unhedged; SQ1 found positioning ratios
+predict squeezes but the free proxy is non-stationary (SK1 failed the recent holdout).
+**New method:** acquire liquidation history (Coinglass Standard $299/mo, 1-month trial), re-point
+the committed SQ1 screen at liquidation features — does it beat the free-proxy AUC (0.577) AND
+stay stationary (survive the recent holdout SK1 failed)? **Prior: 35%** the signal strengthens;
+the bet is that liquidation (the direct squeeze mechanism) is more stationary than positioning
+ratios. Scope change (paid data) — user decision.
+
+**Sequencing:** EXEC1 first (faithful, immediate, highest EV, no data cost). ROBUST1 second (new
+method, attacks the deepest limitation). DATA1 on user's call (paid). DB1 (deep-bull config,
+addendum 21) completing in parallel. Each gets design-review → run → results-review per the loop.
