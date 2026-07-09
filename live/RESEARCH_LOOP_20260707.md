@@ -2065,3 +2065,31 @@ B. **2022's crypto and equity stresses were ASYNCHRONOUS** (crypto = idiosyncrat
 Net: verdict unchanged (qualified support, first real-evidence path). Follow-up production-v4 replay
 should recompute BOTH the 2023-26 corrs AND the combined level on production v4; crisis-robustness
 is scoped to 2022's asynchronous stress, not a synchronized global crisis.
+
+### Addendum 23e (2026-07-09) — DIV1 CORRECTED RESULT (production v4, all fixes): SUPPORTS path (C)
+
+Re-ran with v4 = FULL KEEPSET4 stack consistently across eras + block bootstrap + trailing
+inv-vol. SUPERSEDES 23c. Also resolves review 2d0cec0-(A): the 2023-26 corrs are now recomputed on
+PRODUCTION v4 (not vanilla) — the reviewer correctly noted the gates are STATE-DEPENDENT (not
+affine) so vanilla corrs don't transfer; the production numbers are what stand.
+
+**2023-26 (96 wk, PRODUCTION v4):** overall corr **+0.133**; **xyz mean in v4-BAD weeks (n=39) =
++2.6 bps** (POSITIVE — xyz mildly PAYS when v4 is down, a weak hedge, not just uncorrelated);
+v4-bad corr +0.124 block-CI[−0.16,+0.38].
+**Combined book (trailing inv-vol, production v4):** weekly Sharpe v4 +1.07 / xyz +0.44 /
+**COMBINED +1.09**; weekly maxDD v4 −5,411 / xyz −3,244 / **COMBINED −1,559 (−71% vs v4-alone).**
+→ marginal Sharpe lift but a LARGE drawdown cut — the classic diversification signature, and it
+directly softens the era-fragility (#1) that is a DRAWDOWN problem.
+**2022 CRISIS (decisive, production v4 both sides):** corr **+0.150, block-CI[−0.03,+0.34]** — LOW,
+does NOT spike; v4 −199 bps/wk (the FAIL) while xyz +2 bps/wk (flat). The crisis-spike concern is
+defused even on production v4.
+
+**Verdict: SUPPORTS path (C) — strongest result of the session.** Two streams (crypto v4 × equity
+xyz-v7) are genuinely low-correlated INCLUDING in the 2022 crisis; the combined book cuts maxDD
+~71% at maintained Sharpe. **Caveats (ceiling unchanged):** (1) CANDIDATE — both un-forward-
+validated backtests, xyz-v7 possibly era-fit ("same disease"); (2) review 2d0cec0-(B): 2022's
+crypto and equity stresses were ASYNCHRONOUS → +0.15 does NOT cover a SYNCHRONIZED global
+liquidity crisis (not in-sample; correlations there could be higher); (3) Sharpe lift marginal —
+the win is DRAWDOWN/variance, not return. **Next: forward-validate BOTH streams live (the only
+thing that confirms), and build the combined-book construction (inverse-vol, shared kill-switch).
+Path (C) promoted from research to portfolio-construction + forward-test.**
