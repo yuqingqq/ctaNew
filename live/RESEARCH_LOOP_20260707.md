@@ -1200,3 +1200,48 @@ is the user's. Options recorded: (A) one DISCRETE crowding-skip cell (single pin
 the only form with a nested-OOS chance per the "discrete generalizes" lesson); (B) wire P(squeeze)
 as a risk-MONITOR only (non-trading); (C) log as validated signal, revisit with paid positioning
 depth data. Machinery: build_crowding_panel.py, sq1_crowding_predictive.py.
+
+## Addendum 15 (2026-07-09, PRE-REGISTERED) — SK1: discrete crowding-skip short lever
+
+**Monetization test for SQ1's validated signal.** Discrete, zero-tuning: skip a short leg when
+its PIT P(squeeze) is extreme. The only monetization form with a nested-OOS chance (discrete
+generalizes; tuned gates die).
+
+**Predictions:** SQ1 nested walk-forward P(squeeze) from the pred+crowding logistic (the +0.020
+arm), PIT (trained prior folds only). Applied to the 2 shorts the strategy takes (ranks 1-2 by
+base pred).
+**Lever (single pinned threshold, NO sweep):** for each of the 2 shorts, if its P(squeeze) >
+the PRIOR-FOLD 90th percentile of P(squeeze) (PIT, expanding), SKIP it — drop the leg, do NOT
+backfill with rank-3 (reorder is ceiling-dead), short-side gross reduces by half for that leg
+(both flagged → short gross 0 that cycle). Longs unchanged. Fixed per-name notional (skip =
+de-gross, NOT concentrate).
+**Endpoints (net short-leg is where all delta lives):** portfolio net Sharpe + maxDD, dual-window
+(recent + OOS), overlays OFF (estimator law), 9 bps/leg × turnover. Paired day-block ΔSharpe CI.
+**Placebo (verdict-critical, Q6 discipline):** the skip DE-GROSSES, which mechanically cuts
+variance/DD — so a **random-skip placebo at matched per-cycle skip count** (200 seeds) is
+mandatory; the crowding-skip must beat placebo **p95** on net Sharpe AND maxDD to attribute value
+to the SIGNAL not the de-grossing (Q6: random de-gross replicated 79-83% of DD benefit).
+**Bars:** net Sharpe ≥ baseline (always-2-shorts) both windows, paired CI excl 0 in ≥1; maxDD not
+worse; beat random-skip p95 both metrics; no era-flip (F8); discrete p90 threshold pinned, sweep
+refused in advance (W1b).
+**Prior ~20%:** the classifier is weak (1.26× precision) and the de-gross benefit is mostly
+dose-replicable; the skip must beat random by the thin signal margin. Decisive either way:
+a clean fail means the validated signal is real-but-unmonetizable on free data → pivot.
+
+### Addendum 15b (2026-07-09, pre-compute) — SK1 design-review amendments (REVISE, applied)
+1. **Placebo pinned to the EXACT per-cycle skip-count vector** (same cycles skip the same NUMBER
+   of shorts; randomize only WHICH short when count=1; count=2 → both arms skip both, no contrast;
+   count=0 → neither). Isolates skip-SELECTION from skip-TIMING/de-gross (Q6 void avoided). The
+   signal-vs-placebo contrast lives ONLY in count=1 cycles — correct, but collapses power (see 4).
+2. **Baseline (always-2-shorts) is DESCRIPTIVE ONLY** — skip=de-gross makes "maxDD not worse" and
+   even "Sharpe ≥ baseline" nearly free (Q6: random de-gross replicates 79-83% of DD). The ONLY
+   verdict-bearing comparison is treatment vs matched-count placebo (beat p95 Sharpe AND p5 maxDD).
+3. **Threshold = PRIOR-FOLD expanding p90 of P(squeeze)** (PIT), NOT the full-sample quantile.
+   NaN P or no prior distribution ⇒ no skip; identical in both arms (excluded from contrast).
+4. **Co-primary = discrete squeeze-EVENT-count delta vs matched placebo** (the powered endpoint);
+   net Sharpe/maxDD is secondary/underpowered (K1 ±2.0 wall). Honest ceiling ~1.3-1.9σ on the
+   event count (skip ~10% of shorts, avoid ~15-28 more squeezes than random over OOS, SE ±11-15).
+   "Within band" is the MODAL, still-decisive outcome → signal real-but-unmonetizable → pivot.
+5. **Script frozen + committed BEFORE pred generation** (sk1_crowding_skip.py); model+threshold+
+   placebo pinned; no sweep (W1b).
+6. Label X = full-sample incumbent short p90 — scoring only, cancels across arms.
