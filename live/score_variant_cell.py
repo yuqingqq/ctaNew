@@ -80,8 +80,18 @@ def per_cycle_stats(base_b, base_l, var_b, var_l, fwd):
             return float(f.loc[L].mean() - f.loc[S].mean())
         spB = spread(g["pred"], gl)
         spV = spread(vbt, vlt)
-        out.append((t, fold, icB, icV, spB, spV))
-    return pd.DataFrame(out, columns=["t", "fold", "icB", "icV", "spB", "spV"]).dropna()
+        # per-side leg decomposition (W1 design-review F1: diagnostic only, never verdict-bearing)
+        def legs(bpred, lpred):
+            if len(common) < 3 or len(li) < 1: return np.nan, np.nan
+            L = lpred.loc[li].nlargest(1).index; S = bpred.loc[common].nsmallest(2).index
+            return float(f.loc[L].mean()), float(f.loc[S].mean())
+        lgB, shB = legs(g["pred"], gl); lgV, shV = legs(vbt, vlt)
+        # NO-OP guard input: per-cycle Spearman(variant pred, incumbent pred) on the common pop
+        pcorr = vbt.loc[common].rank().corr(g.loc[common, "pred"].rank())
+        out.append((t, fold, icB, icV, spB, spV, lgB, lgV, shB, shV, pcorr))
+    return pd.DataFrame(out, columns=["t", "fold", "icB", "icV", "spB", "spV",
+                                      "lgB", "lgV", "shB", "shV", "pcorr"]).dropna(
+        subset=["icB", "icV", "spB", "spV"])
 
 BLOCK_DAYS = int(os.environ.get("SCORE_BLOCK_DAYS", "1"))
 FWD_CYCLES = int(os.environ.get("SCORE_FWD_CYCLES", "6"))
@@ -131,6 +141,14 @@ def main():
         print(f"Δrank-IC by year: {yr}")
         hit = dic.groupby(st.t.dt.to_period('M')).mean()
         print(f"monthly hit rate Δic>0: {(hit>0).sum()}/{len(hit)}")
+        # NO-OP guard (addendum 9): declared NO-OP if mean per-cycle pred rank-corr > 0.999
+        print(f"pred rank-corr (variant vs baseline arm, common pop): mean {st.pcorr.mean():+.4f}"
+              f"{'  ** NO-OP GUARD TRIPPED **' if st.pcorr.mean() > 0.999 else ''}")
+        # per-side leg deltas (diagnostic only)
+        dlg = st.lgV - st.lgB; dsh = st.shV - st.shB
+        llo, lhi = blockci(dlg, days); slo2, shi2 = blockci(dsh, days)
+        print(f"per-side (diagnostic): Δ long-leg fwd {dlg.mean():+.2f} [{llo:+.2f},{lhi:+.2f}]"
+              f"  Δ short-leg fwd {dsh.mean():+.2f} [{slo2:+.2f},{shi2:+.2f}] bps/cyc")
         # endpoint 4: per-fold delta table (folds are the WF cuts; monthly-ish in both windows)
         pf = dic.groupby(st["fold"]).mean()
         print(f"per-fold Δic≥0: {(pf>=0).sum()}/{len(pf)}  "

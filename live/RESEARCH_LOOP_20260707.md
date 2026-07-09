@@ -698,3 +698,68 @@ of an in-model feature — but 0/3 book cells pass. B3's 72h lift is OOS-only AN
 the selection layer in either era. No promotable window×horizon variant; no sleeve candidacy;
 V0_LEAN and the 4h stack stay frozen. Unflagged families (corr windows, resid_rev extensions)
 and the ≤3-cell budget are spent; no further cells from this surface.
+
+## Addendum 9 (2026-07-09, PRE-REGISTERED) — W1: training-label winsorization A/B
+
+**Motivation (target-alignment discussion, 2026-07-09):** the strategy consumes ranks; the tip
+tails are measured-unpredictable lotteries/squeezes; MSE training nonetheless spends weight
+precision chasing extreme label magnitudes. Hypothesis: truncating the TRAINING label's tails
+removes unfittable variance and improves the ordering the weights produce — "fit the predictable
+middle, decide on the conditional tail." Prior caution on record: vBTC's clip-at-±5 was harmful,
+but that was an uncontrolled preprocessing change across panels, not a paired label A/B.
+
+**Cell W1 (single verdict-bearing cell):**
+- Incumbent training target: xs_z = per-cycle z(alpha_vs_btc_realized), clip ±10 (clips ~nothing).
+- Variant: identical xs_z, **clip ±2** (z first, then clip — incumbent order). ONLY the training
+  target changes: features, two-book structure, WF cuts, RidgeCV, HL=60, embargo, min-rows,
+  EXCL — all frozen. Row availability unchanged by construction (clip preserves notna) → no
+  population mask; matched-population scorer applies regardless.
+- Dose choice: ±2 truncates a meaningful tail mass (expected ~2-6% of rows; exact fraction
+  REPORTED as the dose check). ±3 would clip ~1% and risk a bit-identical NO-OP (validation
+  ladder rule: bit-identical cells are NO-OPs, not null results). NO-OP guard: if per-cycle pred
+  rank-corr with incumbent > 0.999 in both windows, declare NO-OP.
+- Endpoints & bars: 6b verbatim vs the incumbent V0_LEAN books (fwd24 outcome; the EVAL label is
+  never winsorized — only training). Promotion requires: Δrank-IC ≥ 0 both windows; OOS rank-IC
+  CI excludes 0; K-spread Δ ≥ 0 both windows; no era-flip (F8); recent hit ≥ 5/9, OOS ≥ 17/33.
+- Backup W1b (clip ±3): run ONLY if W1 is ambiguous (defined: exactly one window's rank-IC CI
+  excludes 0 and the two windows' Δ signs conflict). No other doses ever — a clip-level sweep is
+  argmax mining and is refused in advance.
+- Multiplicity: 1 verdict-bearing cell; expected false pass ≈ 0.01.
+Books: hl_winz2_{base,long}[_oos]. Generator: live/gen_winsor_label.py (gen_beta_label_ab
+pattern — target-only change through the frozen machinery).
+
+### Addendum 9b (2026-07-09, BEFORE any book run) — W1 design-review amendments (verdict: REVISE, applied)
+
+Reviewer measured the label anatomy directly: |z|>2 = 4.95% of rows (positive tail 3.06% /
+negative 1.89% — the dose is ~1.6× larger on the long-book side), |z|>3 = 1.97% (pre-reg's "~1%"
+corrected), |z|>10 = 0.01%, clip-±2 removes 38.6% of label variance (corr(z, clip) 0.933).
+Amendments, all applied pre-run:
+
+1. **Per-side leg decomposition added to the scorer** (Δ long-leg fwd, Δ short-leg fwd, block
+   CIs) — DIAGNOSTIC ONLY, never verdict-bearing; pinned now because symmetric clipping is a
+   book-asymmetric treatment and a post-hoc side story is otherwise guaranteed.
+2. **W1b trigger fixed**: backup (clip ±3) runs ONLY if exactly one window's rank-IC CI excludes
+   0 **on the positive side** and the two windows' mean Δrank-IC signs conflict. A negative-side
+   excluding CI is a REJECT and takes precedence — no backup after a REJECT (dose-mining).
+   W1b's role is confirm-toward-KEEP only (a weaker dose cannot rescue an ambiguous strong dose).
+   "Signs" = signs of the two windows' mean Δrank-IC.
+3. **Bars pinned exactly (replacing "6b verbatim")**: promotion requires Δrank-IC ≥ 0 both
+   windows; rank-IC CI excludes 0 (positive) in ≥1 window; K-spread Δ ≥ 0 both windows; no
+   era-flip (F8 25% rule); recent hit ≥ 5/9; OOS hit ≥ 18/33. REJECT if any primary CI entirely
+   negative. Else KEEP INCUMBENT.
+4. **Identity arm (panel-drift + machinery-parity guard)**: WINSOR_Z=10 run through the same
+   generator; require ~0 pred divergence vs the incumbent books on common rows BEFORE the W1
+   verdict is read. Catches silent panel drift (known repo hazard) and proves generator parity
+   in one shot.
+5. **NO-OP guard implementation pinned**: mean per-cycle Spearman(variant pred, incumbent pred)
+   on the common population, printed by the scorer per window; NO-OP if > 0.999 both windows.
+   Noted: with 38.6% variance removed this guard can only catch a bit-identical bug; the real
+   power floor is the paired CI half-width (~0.002 Δrank-IC) — effects below it are undetectable.
+6. **RidgeCV alpha endogeneity declared part of the treatment**: the alpha grid is frozen; the
+   per-symbol selected alpha is endogenous to the target by design (addendum-5 precedent —
+   "what the model learned" includes regularization choice).
+7. Reviewer verified clean (no action): preproc touches features only (target never passes
+   through it); resid_rev built from unclipped alpha; row masks/fold populations bit-identical
+   by construction (matched-control trigger cannot fire); sample weights target-independent;
+   eval scale-invariant (ranks + argmax) so prediction shrinkage cannot manufacture a win.
+8. Weighted per-fold dose (HL=60 recency weights) printed by the generator.
