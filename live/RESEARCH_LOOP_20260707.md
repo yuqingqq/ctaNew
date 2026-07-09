@@ -1936,3 +1936,23 @@ caveat). Four flags before running:
 Net: run DIV1 — but its ceiling is a backtest CANDIDATE, and it structurally CANNOT test the
 crisis-correlation that decides whether path (C) actually hedges #1's worst case. Read a pass as
 "plausible, forward- and crisis-unproven," not "solved."
+
+### Addendum 23b (2026-07-09) — DIV1 design-review amendments (4 flags accepted, applied before result)
+
+Reviewer (e7cc2e3) — all 4 correct, applied:
+1. **DECISIVE-ERA GAP (headline).** DIV1's 2023-26 scope tests only UNDERPERFORM eras, not the
+   2022-CRISIS where v4 FAILS and cross-asset corr spikes → a low 2023-26 corr optimistically
+   understates crisis corr ("diversification fails when you need it"). FIX: add the **2022
+   cross-correlation DESCRIPTIVELY** (correlation-only, NO selection/tuning → not a strategy
+   decision, does NOT spend the one-shot holdout — it is a cross-asset statistic; flagged as
+   such). v4 2022 = holdout2022/B (KEEPSET4) cycles; xyz-v7 2022 = its own backtest fold. This is
+   the decisive era for whether path (C) hedges #1's worst case.
+2. **Double overfit → CANDIDATE ceiling.** Combined book is measured on TWO un-forward-validated
+   backtests (both possibly era-fit, "same disease") → a DIV1 pass is a CANDIDATE, never
+   confirmation. Only forward data on BOTH validates. This is the explicit verdict ceiling.
+3. **Small-sample corr → n + CI.** Bad-era subset is ~tens of weeks; report conditional corr with
+   n and block-bootstrap CI; a point ≤0.3 is NOT decisive.
+4. **Pin weighting = INVERSE-VOL** (principled diversification; removes the 50/50-vs-equal-risk
+   argmax DoF).
+**Verdict framing:** a DIV1 pass = "plausible path (C), forward- AND crisis-unproven"; the 2022
+descriptive corr is necessary-not-sufficient evidence on the decisive era.
