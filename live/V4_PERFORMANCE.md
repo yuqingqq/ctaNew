@@ -306,6 +306,13 @@ sizing/gross variants, vol_target.
   channel is OPEN. BUT: modest (AUC 0.60, 1.26× precision), fold-noisy, and predictive≠tradeable
   — monetization blocked on reorder (ceiling-dead) and gate (lethal class); escalated. Canonical:
   ledger addendum 14c; build_crowding_panel.py + sq1_crowding_predictive.py.
+- **SK1 crowding-skip monetization (2026-07-09, addenda 15-15c): REJECT — signal real, doesn't
+  trade.** Discrete skip of predicted-squeeze shorts: BEATS the matched-count placebo OOS (events
+  850<p5 872, Sharpe +0.67>p95 +0.63) but FAILS the recent forward holdout (events within band,
+  Sharpe −0.08 vs placebo +0.67 — worse than random; skip rate 36% vs OOS 17% = non-stationary
+  crowding→squeeze map). Dual-window requirement caught the non-generalization. SQ1's orthogonal
+  signal is real OOS but unmonetizable on free data. **Tip axis exhausted (W1/S1/M1/K1/SQ1/SK1);
+  levers now = forward ledger, execution, paid positioning-depth data.** Canonical: addendum 15c.
 - **Pipeline audit (2026-07-08): NO look-ahead anywhere in the v4 chain** (label β shift, target
   z-scoring, all 14 V0_LEAN features PIT with |IC| ≤ 0.057; CLAUDE.md's historical bug classes have
   no cousins). Fixes applied same day (definitions unchanged — validated artifacts remain valid):

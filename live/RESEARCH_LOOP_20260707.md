@@ -1245,3 +1245,29 @@ a clean fail means the validated signal is real-but-unmonetizable on free data �
 5. **Script frozen + committed BEFORE pred generation** (sk1_crowding_skip.py); model+threshold+
    placebo pinned; no sweep (W1b).
 6. Label X = full-sample incumbent short p90 — scoring only, cancels across arms.
+
+### Addendum 15c (2026-07-09) — SK1 RESULT: REJECT — passes OOS-nested, FAILS recent forward holdout
+
+Dual-window (pre-registered as binding):
+- **OOS (nested walk-forward):** crowding-skip BEATS the matched-per-cycle-count placebo — squeeze
+  events 850 < placebo p5 872 (avoids ~37 beyond random de-gross), net Sharpe +0.67 > placebo
+  p95 +0.63 (marginal). maxDD −45.8k WITHIN band (de-gross-explained, as Q6 predicted). A real
+  selection effect within 2023-2025.
+- **RECENT (true forward holdout: classifier trained on ALL OOS, applied to 2025-10→2026-06):**
+  FAILS both. Squeeze events 230 vs placebo mean 231.8 [p5 223] WITHIN band; net Sharpe −0.08 vs
+  placebo mean +0.67 [p95 +1.18] — crowding skips are WORSE than random. Does not generalize.
+- Distribution shift: recent skip rate 36% vs OOS 17% (OOS-calibrated p90 over-skips recent) —
+  the crowding→squeeze mapping is NON-STATIONARY across eras; even correcting count, selection
+  has no forward edge.
+
+**Verdict: REJECT (KEEP INCUMBENT).** The SQ1 signal is REAL out-of-sample (+0.020 AUC, addendum
+14c) but does NOT monetize into a generalizing skip lever — it passes the within-era nested test
+and fails the honest forward holdout, the exact pattern of every learned decision layer in this
+project (and vBTC's). The dual-window requirement caught it. Consistent with the 3-agent
+consensus: **the crowding signal is real-but-unmonetizable on free data at this instrument.**
+
+**Program-level close (W1/S1/M1/K1/SQ1/SK1):** the tip axis is exhausted on free data. One real
+orthogonal signal was found (crowding→squeeze, SQ1) — it predicts but does not trade. Durable
+levers remain: forward ledger (release 0.5× gross cap), execution/cost reduction, paid
+positioning-depth data (which would strengthen the SQ1 signal and might make it stationary
+enough to monetize). No further free-data tip cells without new data or a new consumer.
