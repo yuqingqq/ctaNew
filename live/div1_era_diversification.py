@@ -72,8 +72,17 @@ def main():
     sv = m23.v4.expanding(12).std().shift(1); sx = m23.xyz.expanding(12).std().shift(1)
     wv = (1/sv)/((1/sv)+(1/sx)); comb = (wv*m23.v4 + (1-wv)*m23.xyz).dropna()
     print(f"trailing inv-vol combined ({len(comb)} wk): weekly Sharpe v4 {sh(m23.v4):+.2f} | xyz {sh(m23.xyz):+.2f} | COMBINED {sh(comb):+.2f}")
-    print(f"weekly maxDD: v4 {mdd(m23.v4.values):+.0f} | xyz {mdd(m23.xyz.values):+.0f} | combined {mdd(comb.values):+.0f}")
-    for yr,g in m23.groupby("yr"): print(f"  {yr}: v4 {g.v4.mean():+.0f} | xyz {g.xyz.mean():+.0f} (n={len(g)})")
+    print(f"weekly maxDD (raw): v4 {mdd(m23.v4.values):+.0f} | xyz {mdd(m23.xyz.values):+.0f} | combined {mdd(comb.values):+.0f}  [raw = diversification + de-risking]")
+    # MATCHED-VOL maxDD (review 4b656da): lever combined to v4 vol so the DD cut is vol-neutral diversification, not lower exposure
+    v4v = m23.v4.reindex(comb.index); cm = comb * (v4v.std()/comb.std())
+    dd_v4 = mdd(v4v.values); dd_cm = mdd(cm.values)
+    print(f"** MATCHED-VOL maxDD: v4 {dd_v4:+.0f} -> combined-at-v4-vol {dd_cm:+.0f} = {(1-dd_cm/dd_v4)*100:+.0f}% (HONEST diversification DD cut; combined vol was {comb.std()/v4v.std():.2f}x v4) **")
+    # sub-window robustness: matched-vol DD cut per year
+    print("   sub-window matched-vol DD cut:")
+    for yr,g in m23.groupby("yr"):
+        gc = comb.reindex(g.index).dropna(); gv = g.v4.reindex(gc.index)
+        if len(gc) < 6: continue
+        gcm = gc*(gv.std()/gc.std()); print(f"     {yr}: v4 DD {mdd(gv.values):+.0f} -> matched {mdd(gcm.values):+.0f} ({(1-mdd(gcm.values)/mdd(gv.values))*100 if mdd(gv.values)<0 else 0:+.0f}%) | v4 {gv.mean():+.0f}/xyz {g.xyz.mean():+.0f} (n={len(gc)})")
     # 2022 CRISIS descriptive (v4 now full-stack too → consistent)
     m22 = m[m.yr == "2022"]
     print(f"\n=== 2022 CRISIS descriptive corr (n={len(m22)} wk; v4 full-stack, correlation-ONLY) ===")

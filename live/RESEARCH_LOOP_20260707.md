@@ -2117,3 +2117,15 @@ and v4-bad corr block-CI[−0.16,+0.38] both cross/near 0 → "weak hedge" is th
 
 Net: verdict stands — path (C) is the session's strongest result. Re-headline the DD win at matched
 vol (~60% structural), not 71% (partly leverage).
+
+### Addendum 23f (2026-07-09) — DIV1 review 4b656da: re-headline maxDD at MATCHED VOL (diversification ≠ de-risking)
+
+Reviewer correct: "−71% maxDD" conflates DIVERSIFICATION with DE-RISKING. The trailing inv-vol
+combined book runs ~0.75× v4-alone vol (ρ≈0.13, comparable leg vols) → part of the −71% is just
+LOWER v4 exposure, not diversification (the vBTC-v2 leverage-vs-edge trap). Since Sharpe is
+leverage-invariant and MAINTAINED (+1.07→+1.09), the honest metric is maxDD AT MATCHED VOL: lever
+the combined book to v4's vol, then compare maxDD. FIX applied — recompute + headline the
+vol-neutral DD cut (raw −71% includes ~10pts pure de-risking). Secondary: (a) the combined maxDD
+is a single-path extremum → sub-window (per-year) matched-vol DD check added; (b) xyz-in-v4-bad
++2.6 bps (n=39) crosses 0 → WEAK hedge, not significant (stated). Verdict (path C support) stands;
+this tightens the headline honesty.
