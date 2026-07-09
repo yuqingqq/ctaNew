@@ -1624,3 +1624,34 @@ but these quantitative claims are RETRACTED/corrected:
 substantially overlaps production gross-reduction; conservative NOT-A-CANDIDATE status correct.
 Neither HEDGE1 (BTC-long) nor KL3 (K_long=3) is supported. HEDGE1 = risk diagnostic requiring PIT
 beta sizing + a faithful, cost-consistent, funding-inclusive full-bot replay before any revisit.
+
+### Addendum 19e (2026-07-09) — correction OF 19d (second review): retract F5, fix contradictions
+
+Second external review found 19d itself internally inconsistent. All accepted:
+1. **F5 RETRACTED (was wrong):** the repo cost convention is `turnover × 0.5 × COST` all-in
+   (convexity_paper_bot.py:175, COST=9 = all-in RT). A full 0.5-weight long name change → 4.5 bps.
+   So hedge1's ORIGINAL 4.5-bps charge was CORRECT; 19d's claim it should be 9 bps was WRONG.
+   19d-F5 is retracted.
+2. **Canonical contradiction fixed:** the V4_PERFORMANCE HEDGE1 bullet led with "PASS / FIRST
+   positive" then said "not a candidate" — rewritten VERDICT-FIRST (not a candidate; risk
+   diagnostic). Historical PASS language lives only in this audit ledger (19b).
+3. **Overlap/cap OVERSTATED (retract):** 19d said both "lite replay cannot establish redundancy"
+   AND "substantially overlaps" — contradictory. No cap-only vs bull-off-only ablation was run, so
+   "cap dominant" is UNSUPPORTED; the committed script does not reproduce the 43%/26% figure (that
+   was the reviewer's, not mine). Honest: the benefit MAY overlap the production gross-reduction
+   machinery; UNPROVEN. Drop "cap dominant" and "substantially overlaps."
+4. **Sharpe annualization (all hedge1 scripts):** √365 applied to per-cycle (6/day) data →
+   absolute Sharpes understated by ~√6. RELATIVE arm ordering (all HEDGE1/KL3 conclusions)
+   unaffected; absolute Sharpe numbers I quoted (+0.84/+1.19 etc.) are wrong. (Partly explains the
+   "1.19 not 2.2" gap — some was this bug, not only the overlays. K1/addendum-12 used daily-first,
+   correct; KL3 reported no Sharpe.)
+5. **Cross-ref fixed:** 19d said errors in "20c" — that's the KL3 hedge check; corrected to 19b/19c.
+
+**Net (both reviews):** the DECISION — HEDGE1 not a forward-test candidate, no K_long increase, no
+BTC replacement — is robust and correct. But the throwaway HEDGE1/KL3 diagnostic scripts were NOT
+rigorous enough to support quantitative claims (oracle beta, cost convention, Sharpe annualization,
+stop/cap attribution all had errors). They reliably establish DIRECTION (BTC lowers long-leg
+variance; ew-top3 compresses the distribution) but NOT magnitudes. Any real revisit needs
+production-faithful accounting (PIT beta, `turn×0.5×COST`, correct annualization, funding, full
+overlay stack). Reviewer reproduced the one solid number: deployable OOS maxDD −15,630→−13,351 =
+14.6%.
