@@ -1587,3 +1587,40 @@ attributed to that failure was overstated. Honest status: KL3 is a NEAR-MISS —
 variance/CVaR −40% both eras, squeeze-hedge ~intact — failing only the literal
 jackpot-contribution metric, whose practical downside is small. Whether that metric SHOULD be
 disqualifying is now a judgment call, not a clear mechanism cost.
+
+### Addendum 19d (2026-07-09) — HEDGE1 review CORRECTION: retract oracle-beta headline + stop-attribution + lite-replay-as-proof
+
+External review found real errors in 19b/19c/20c. All accepted; the VERDICT (not a forward-test
+candidate; BTC lowers variance; benefit overlaps the production gross-reduction machinery) STANDS,
+but these quantitative claims are RETRACTED/corrected:
+
+1. **Oracle beta (F1):** 19b's beta-matched arm B_beta used `beta_alt` estimated from the FULL
+   evaluation window's realized returns (hedge1_btc_long.py:49) — look-ahead, NOT PIT. The headline
+   "~32% OOS maxDD reduction" depends on that oracle scaling. The DEPLOYABLE notional-matched arm
+   (no beta estimate) is weaker: OOS Sharpe −0.32 vs −0.22 and only ~15% DD reduction. RETRACT the
+   32%; the honest deployable figure is ~15%, and any beta-matched version needs a PIT TRAILING
+   beta (untested).
+2. **Stop-attribution (F2, 19c/20c):** the "DD-stop cuts 76%, ~3× more than the BTC swap" was
+   WRONG — it compared unscaled vanilla against (bull-off + 0.5× cap + DD-stop) combined, crediting
+   the whole reduction to the stop. Isolating the stop AFTER bull-off + cap: incremental stop-only
+   reduction ≈ 43% (OOS alt) / 26% (BTC), and my own recompute shows the stop adds LITTLE once the
+   cap+bull-off are applied. **Most of the maxDD reduction is the 0.5× GROSS CAP + bull-off, NOT
+   the DD-stop.** RETRACT "76% / 3× stronger / DD-stop is the dominant lever." Corrected: the BTC
+   variance benefit overlaps the production GROSS-REDUCTION machinery broadly (cap dominant), not
+   the stop specifically.
+3. **Lite-replay-as-proof (F3/F4):** hedge1_fullstack.py charged LONG costs only — omitting the
+   common SHORT turnover cost, which in a path-dependent (stop) replay affects equity → stop
+   activation → maxDD and does NOT cancel. Plus omitted regime-gate + inv-vol sizing can change
+   stop paths asymmetrically. So the lite replay CANNOT establish production redundancy — it is
+   suggestive only. The "DD-stop absorbs the benefit" conclusion is DOWNGRADED to "the production
+   gross-reduction levers plausibly overlap; unproven without a faithful cost-consistent full-bot
+   replay."
+4. **Turnover/bar (F5/F6):** long turnover charged 0.5× COST but a full 0.5-weight name change is
+   Σ|Δw|=1 → full COST; BTC's 2% recurring turnover unexplained; funding omitted; "materially lower
+   maxDD" bar had no threshold/uncertainty test, and the book test reused the diagnostic's data
+   (confirmation, not independent evidence). All acknowledged.
+
+**HOLDS:** scripts reproduce; BTC genuinely lowers long-leg idiosyncratic variance; the benefit
+substantially overlaps production gross-reduction; conservative NOT-A-CANDIDATE status correct.
+Neither HEDGE1 (BTC-long) nor KL3 (K_long=3) is supported. HEDGE1 = risk diagnostic requiring PIT
+beta sizing + a faithful, cost-consistent, funding-inclusive full-bot replay before any revisit.

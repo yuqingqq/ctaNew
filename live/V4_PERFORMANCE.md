@@ -322,10 +322,13 @@ sizing/gross variants, vol_target.
   (netβ −0.04/−0.06 vs A −0.04/−0.07). Discrete, forecast-free, era-independent. Caveats:
   overlays-OFF (DD-stop may already capture some DD benefit → full-stack replay required); bear
   forfeit is a mild net-short regime bet (OOS bear alt +12 vs BTC +1; HYB recovers it). Forward-
-  test candidate, not deployed. **DOWNGRADE (19c): full-stack-lite replay shows the existing
-  DD-stop PARTLY-TO-FULLY absorbs the benefit — OOS maxDD gap GONE (−3.2k vs −3.2k), REC retains;
-  window-dependent, NOT a clean production win. Prior on production win ~15%; needs faithful
-  full-bot replay.** Canonical: ledger addenda 19b/19c; hedge1_btc_long.py, hedge1_fullstack.py.
+  test candidate, not deployed. **CORRECTED (19d, external review): the headline ~32% OOS maxDD
+  cut used an ORACLE full-window beta — deployable notional-matched is ~15%. The "DD-stop cuts
+  76%/3× stronger" claim was WRONG (mixed bull-off + 0.5× cap + stop); stop-only incremental
+  ≈43%/26% OOS and most of the reduction is the GROSS CAP, not the stop. Lite replay omitted
+  common short costs → cannot prove redundancy. HOLDS: BTC lowers long-leg variance; overlaps
+  production gross-reduction; NOT a candidate. Needs PIT-beta + faithful cost-consistent full-bot
+  replay.** Canonical: ledger 19b/19c/19d; hedge1_btc_long.py, hedge1_fullstack.py.
 - **KL3 K_long=3 equal-weight long (2026-07-09, addendum 20-20b): KEEP INCUMBENT — 3/4 bars,
   jackpot FAILS.** Equal-weight top-3 (matched gross) cuts long-leg variance −47%/−39% and CVaR
   −46%/−35% both eras and PRESERVES net mean (paired Δ CI crosses 0) — but HALVES the jackpot
