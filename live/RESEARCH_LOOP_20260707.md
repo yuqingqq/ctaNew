@@ -1845,3 +1845,24 @@ DATA1 (liquidation, paid, user's call). With modeling exhausted AND execution fi
 the forward ledger are the entire runway. The honest frame: v4 is at a free-data + taker-execution
 LOCAL OPTIMUM; the only breakthroughs left are new data (DATA1) or era-robust risk shaping
 (ROBUST1) — no execution escape.
+
+### Addendum 22d (2026-07-09) — ROBUST1 self-critique: weak; runway collapses to DATA1 + operational
+
+Before running ROBUST1, applied the same scrutiny that killed EXEC1. ROBUST1 is WEAKER than the
+25% prior — do NOT run as-is:
+1. KEEPSET4 levers are ALREADY dual-window (recent+OOS) selected → little minimax headroom.
+2. Minimax over a lever grid = CONFIG-SELECTION = the nested-OOS snooping that killed K3 /
+   decay-weights / cost-margin swap. Needs nested folds, which fail for tuned choices.
+3. Minimax favors the lowest-exposure config → "trade less", which the 0.5× cap already does.
+4. It CANNOT see 2022 (spent/held-out) — the actual worst era — so "worst of 2023-26" can't
+   protect against the era that matters. Honest prior ~10-15%, low value even if it "passes".
+
+**HONEST RUNWAY (complete):** modeling EXHAUSTED (0/many), execution FIXED (taker required, no
+lever), config/robustness = dual-window-validated (re-selection is snooping). The ONE untested
+channel with real EV is NEW DATA (DATA1: liquidation/positioning) — the only source of information
+the current panel lacks, targeting the squeeze tail (#4) and potentially making SQ1 stationary.
+**v4 is at a genuine free-data + taker-execution LOCAL OPTIMUM.** Two honest paths: (A) DATA1 —
+acquire liquidation data (Coinglass Standard $299 1-mo), re-run the committed SQ1 screen for
+stationarity; (B) accept the optimum → operational (forward ledger to release the 0.5× cap,
+live-monitor + kill-switch). No further free-data modeling cell has positive honest EV. Decision
+escalated to user.
