@@ -96,11 +96,13 @@ def per_cycle_stats(base_b, base_l, var_b, var_l, fwd):
 BLOCK_DAYS = int(os.environ.get("SCORE_BLOCK_DAYS", "1"))
 FWD_CYCLES = int(os.environ.get("SCORE_FWD_CYCLES", "6"))
 
-def blockci(x, days, n=2000):
+def blockci(x, days, n=2000, seed=0):
     # days -> block ids of BLOCK_DAYS calendar days (8b-1: block >= horizon)
+    # RNG fixed PER ENDPOINT (17-fix-4): independent seeded generator, reproducible & decoupled
+    r = np.random.default_rng(1000 + seed)
     bid = pd.Series([pd.Timestamp(d).toordinal() // BLOCK_DAYS for d in days], index=range(len(days)))
     per = [g.values for _, g in pd.Series(x.values, index=bid.values).groupby(level=0)]
-    ms = [np.concatenate([per[i] for i in rng.integers(0, len(per), len(per))]).mean() for _ in range(n)]
+    ms = [np.concatenate([per[i] for i in r.integers(0, len(per), len(per))]).mean() for _ in range(n)]
     return np.percentile(ms, [2.5, 97.5])
 
 def main():
@@ -131,7 +133,7 @@ def main():
             print(f"{win}: no overlap"); continue
         dic = st.icV - st.icB; dsp = st.spV - st.spB
         days = st.t.dt.date
-        lo, hi = blockci(dic, days); slo, shi = blockci(dsp, days)
+        lo, hi = blockci(dic, days, seed=1); slo, shi = blockci(dsp, days, seed=2)
         # coverage / population accounting at test level
         cov_rows = len(vb) / max(len(bb), 1)
         print(f"\n===== {win.upper()} ({len(st)} scored cycles; variant/incumbent test-row ratio {cov_rows:.4f}) =====")
@@ -146,7 +148,7 @@ def main():
               f"{'  ** NO-OP GUARD TRIPPED **' if st.pcorr.mean() > 0.999 else ''}")
         # per-side leg deltas (diagnostic only)
         dlg = st.lgV - st.lgB; dsh = st.shV - st.shB
-        llo, lhi = blockci(dlg, days); slo2, shi2 = blockci(dsh, days)
+        llo, lhi = blockci(dlg, days, seed=3); slo2, shi2 = blockci(dsh, days, seed=4)
         print(f"per-side (diagnostic): Δ long-leg fwd {dlg.mean():+.2f} [{llo:+.2f},{lhi:+.2f}]"
               f"  Δ short-leg fwd {dsh.mean():+.2f} [{slo2:+.2f},{shi2:+.2f}] bps/cyc")
         # endpoint 4: per-fold delta table (folds are the WF cuts; monthly-ish in both windows)
@@ -161,7 +163,7 @@ def main():
         print("Δrank-IC by |BTC-4h-move| quintile (Q0 small..Q4 big): "
               + "  ".join(f"Q{int(k)} {v:+.4f}" for k, v in qm.items()))
         big = q == q.max()
-        blo, bhi = blockci(dic[ok][big], days[ok][big])
+        blo, bhi = blockci(dic[ok][big], days[ok][big], seed=5)
         print(f"Q4 (big-move) Δic {dic[ok][big].mean():+.4f}  CI [{blo:+.4f},{bhi:+.4f}]"
               f"  ({int(big.sum())} cycles)")
 

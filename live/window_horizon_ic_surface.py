@@ -155,9 +155,11 @@ def main():
                 Y = rankdata(S[cols].to_numpy(), axis=0).astype(np.float64)
                 p = rankdata(S["pred"].to_numpy()).astype(np.float64)
                 X -= X.mean(0); Y -= Y.mean(0); p -= p.mean()
+                # residual-norm guard (17-fix-2): skip degenerate cycles (near-zero span/pred norm)
+                if np.linalg.norm(X) < 1e-9 or (p @ p) < 1e-9: continue
                 B, *_ = np.linalg.lstsq(X, Y, rcond=None)
                 Rv = Y - X @ B
-                Rp = Y - np.outer(p, (p @ Y) / max(p @ p, 1e-12))
+                Rp = Y - np.outer(p, (p @ Y) / (p @ p))
                 for lc in lab_cols:
                     lv = S[lc].to_numpy(dtype=np.float64)
                     lok = ~np.isnan(lv)
