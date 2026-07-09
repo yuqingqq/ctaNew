@@ -1669,3 +1669,26 @@ SWAP of a weight-w leg costs 9w bps (turnover 2w × 0.5 × COST). Both 4.5 (book
 REC / −1.2 OOS** (taker) — CONFIRMED, finding stands. At maker (~2 bps RT): NET +3.4/+3.1
 (POSITIVE) — the long covers its cost only with cheap execution, reinforcing the execution lever.
 HEDGE1's paired A-vs-B verdict is unaffected by the weight normalization (cancels in the delta).
+
+## Addendum 21 (2026-07-09, PRE-REGISTERED — committed before results) — DB1: deep-bull overlay KEEP/DROP
+
+**The one config test the limitations diagnosis endorsed** (bull-gate split ruled out as the #1
+era-trap). Question: should the ~beta-neutral v4 stack hold the deep-bull directional beta lottery
+(mom1d long-only, §6.1: earns +62k gross via alt-beta, ranking unproven p=0.215, high-variance)?
+KEEP/DROP — NOT "remove a dead patch" (it earns) but "is the lottery worth its variance."
+
+**Method (FAITHFUL full-stack bot replay — the estimator-law-correct tool for an overlay/config
+change; NOT the vanilla-cell machinery):** `convexity_paper_bot.run_replay` with the full KEEPSET4
+env, fed the v4 WF book preds (hl_tgt_res_* recent / hl_v4*_oos), toggling ONLY `BULL_DEEP_MODE`:
+- A = mom1d_long (production)   B = flat (drop the overlay → sit out deep bull)
+Both windows (recent + OOS). GLOBAL_GROSS_MULT=1.0 (historical-replay convention; a constant mult
+doesn't change Sharpe). Scratch CONVEXITY_STATE (no production clobber). Faithful cost (turn×0.5×
+COST), sizing (inv_sqrt_vol), path-coupled DD-stop — so the deep-bull change's effect on later
+DD-stop engagement is captured correctly (unlike the HEDGE1 lite replay).
+
+**Endpoints:** whole-strategy net Sharpe + maxDD + total PnL, dual-window; deep-bull-cycle PnL
+contribution isolated; per-year. **Bars (KEEP/DROP, discrete, no tuning):** DROP (flat) adopted
+only if it improves OR ties net Sharpe in BOTH windows AND does not worsen maxDD — i.e. the
+lottery adds no risk-adjusted value. Else KEEP mom1d. **Prior:** the overlay earns via beta but
+is high-variance and OOS is 23% deep-bull cycles — genuine coin-flip on whether flat's lower
+variance beats mom1d's beta earning at the stack level. ~45%.
