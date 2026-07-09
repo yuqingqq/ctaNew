@@ -298,6 +298,9 @@ sizing/gross variants, vol_target.
   −0.0176 CI entirely negative REC). Pooling is the lever; trees subtract; neither trades.
   Stage-2 shortlist cell not auto-skipped (formal gate) but premise damaged — escalated.
   Canonical: ledger addendum 11c.
+- **Two-stage tip-reliability investigation consolidated in live/TIP_RELIABILITY_RESULTS.md**
+  (architecture rationale: why MSE ranker + deterministic stage-2, not end-to-end; rank-IC≠tip
+  value 4× confirmed; stage-1 score = W1; stage-2 = SQ1/SK1/wider-pool below).
 - **SQ1 crowding→squeeze predictive test (2026-07-09, addenda 14-14c): FIRST POSITIVE — real
   orthogonal signal, monetization open.** Positioning ratios (global + top-trader long/short)
   predict which shortlisted name squeezes, OOS, INCREMENTALLY over the ranker's own pred:
