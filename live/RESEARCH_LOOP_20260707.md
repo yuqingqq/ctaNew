@@ -1411,3 +1411,28 @@ positive is the first long-side lever — though SK1's precedent warns monetizat
 the recent holdout even then. (c) Do NOT build a symmetric long model or an alpha-motivated
 long-shrink. Real levers unchanged: forward ledger, execution, paid positioning data. Prior on
 the screen passing: ~35%; on it MONETIZING dual-window: ~15%.
+
+## Addendum 19 (2026-07-09, PRE-REGISTERED — committed before results) — HEDGE1: BTC-long vs alt-long hedge leg
+
+**Hypothesis (user):** the long leg is a net-negative-after-fees hedge whose cost is TURNOVER
+(62%/cyc) on a leg with ~zero ranking skill (top-8 rank-IC ≈ 0). Replace the top-1 alt long with
+a BTC long (turnover ~0) → recover the turnover tax + cut idiosyncratic variance, at ~equal mean.
+Diagnostic (naked, net 9bps): BTC−alt mean tie (+0.6/−0.5), BTC variance ~3× tighter; BTC
+forfeits the OOS-bear reversion (alt +30 vs BTC +6).
+
+**Test (book-level, estimator-law: overlays OFF — no path-coupled DD-stop/gate):** clean 1L/2S
+book, NAKED returns, fixed 0.5 long / 0.5 short gross, cost 9 bps/leg × turnover. Short leg
+(bottom-2 by base pred) COMMON to all arms → paired delta isolates the long leg. Arms:
+- A = alt top-1 long (incumbent, turnover-costed)
+- B = BTC long, matched NOTIONAL (turnover ~0)
+- B_beta = BTC long scaled to match A's realized net book-beta (the skeptic's net-beta guardrail)
+- (diagnostic) HYB = BTC normally + alt long only in bear (regime switch — diagnostic, not promotable)
+
+**Endpoints:** net Sharpe + maxDD, dual-window (recent + OOS); paired book-return Δ day-block CI;
+REGIME split (bear forfeit explicit); REALIZED net book-beta of every arm (if A and B betas
+differ materially, B_beta is primary). 
+**Bars:** B (or B_beta) net Sharpe ≥ A both windows, OR equal-Sharpe with materially lower maxDD;
+realized-beta matched within reason; no era-flip. Book-level pass = forward-test candidate.
+**Prior ~40%** (higher than the learned-layer cells — discrete construction, structural
+turnover/variance mechanism, era-independent — but the bear-forfeit is a mild net-short regime
+bet the windows can't fully certify, 2022 spent).
