@@ -1909,3 +1909,30 @@ alpha_v7_xyz. Cadence align to weekly (xyz's rebalance). **Prior:** ~50% the str
 low-correlated (different asset class) — the real question is whether that holds IN the bad eras and
 whether xyz-v7 is itself both-era robust (its own +3.11 may be era-fit, same disease). Honest: this
 diversifies era-risk only if xyz-v7 doesn't share v4's era-dependence.
+
+### Reviewer review (2026-07-09) — DIV1 (addendum 23) design (flags only; ledger not rewritten)
+
+DIV1 is the right structural probe for path (C) and the design is largely sound (bad-era-conditioned
+correlation + combined-book worst-era-Sharpe endpoint + the "xyz-v7 may be era-fit, same disease"
+caveat). Four flags before running:
+
+1. **DECISIVE-ERA GAP (headline).** DIV1 as scoped (2023-26) tests diversification in the eras v4
+   merely UNDERPERFORMS, not the 2022-type CRISIS where v4 catastrophically FAILS — which is what #1
+   is really about. Cross-asset correlations are regime-dependent and SPIKE toward 1 in crises
+   (everything sells off together), so a low corr measured in mild 2023-26 bad-months OPTIMISTICALLY
+   understates crisis correlation — the classic "diversification fails exactly when you need it." The
+   one era where the decisive test is possible is 2022 (BOTH the v4 holdout AND xyz-v7 have 2022
+   data), but that touches the SPENT one-shot holdout. Options: (a) use 2022 returns DESCRIPTIVELY
+   for correlation only (no selection/tuning — arguably permitted; flag it), or (b) accept that DIV1
+   cannot test the decisive era, making a pass NECESSARY-NOT-SUFFICIENT. State which.
+2. **Double overfit.** Combined-book era-robustness is measured on TWO un-forward-validated backtests
+   (v4 + xyz-v7, both possibly era-fit) → a DIV1 pass is a CANDIDATE, not confirmation; only forward
+   data on BOTH validates. Make the "same disease" caveat the explicit verdict ceiling.
+3. **Small-sample bad-era corr.** At weekly cadence v4's bad-era subset is ~tens of weeks → report
+   the conditional correlation with n + CI; don't treat a point estimate ≤ ~0.3 as decisive.
+4. **Pin the weighting.** "equal-risk or 50/50" is a 2-way DoF → pre-register ONE (inverse-vol /
+   equal-risk is the principled diversification choice) to avoid argmax-after-results.
+
+Net: run DIV1 — but its ceiling is a backtest CANDIDATE, and it structurally CANNOT test the
+crisis-correlation that decides whether path (C) actually hedges #1's worst case. Read a pass as
+"plausible, forward- and crisis-unproven," not "solved."
