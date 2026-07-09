@@ -994,3 +994,59 @@ M1 just answered. Decision escalated to the user.
 squeeze tail regime-driven; pooling-not-nonlinearity). Remaining live levers: CUSUM throttle
 (pre-registerable now), execution improvement (operational), new data classes (user decision),
 forward ledger.
+
+## Addendum 12 (2026-07-09, PRE-REGISTERED) — K1: Sharpe-vs-K with the winsorized model
+
+**Hypothesis (user):** at fixed total notional, wider K reduces variance (~1/√K + turnover
+savings) while winz2's fatter deep-book curve retains more mean → the Sharpe-optimal K may
+shift outward with a higher peak than production.
+**Disclosure:** the gross K-curve diagnostic (2026-07-09, in-chat) is already on record; the
+challenger is pinned FROM it BEFORE any net/Sharpe computation: **challenger = winz2 at K=5/5**,
+vs **production = incumbent at 1L/2S**. The rest of the sweep ({incumbent, winz2} × K ∈
+{1L/2S, 2/2, 3/3, 5/5, 8/8}) is descriptive only, never promotable this cycle.
+**Estimator (estimator-law compliant, overlays OFF):** book-level fixed-notional portfolio:
+per cycle ret = 0.5·mean(alpha_A of K longs by long-book) − 0.5·mean(alpha_A of K shorts by
+base-book) − cost; cost = 9 bps/leg flat (4.5 fee + 4.5 slip) × measured turnover (holdings
+overlap cycle-to-cycle); sensitivity re-reads at 4.5/13.5 bps diagnostic. Daily aggregation,
+annualized √365; paired Sharpe diff via day-block bootstrap.
+**Bars (challenger promotes to forward-test candidate only):** net Sharpe ≥ production in BOTH
+windows with the paired-diff CI excluding 0 in ≥1; maxDD not worse >10%; no era-flip (F8);
+turnover claim verified (challenger turnover ≤ production). Expected from the gross table: OOS
+likely fails (all-K gross below costs) — recorded before the run.
+**Open questions for design review:** cost model adequacy (flat vs depth), alpha_A-as-return
+frame, turnover accounting at K-change, Sharpe-diff bootstrap validity on overlapping 4h cycles,
+argmax risk from the pinned-after-diagnostic challenger.
+
+### Addendum 12b (2026-07-09, pre-run) — K1 amendments (REVISE, applied)
+1. incumbent@5/5 elevated to MANDATORY attribution arm: the winz2-model claim requires
+   challenger − incumbent@5/5 ΔSharpe ≥ 0 both windows, CI excl 0 in ≥1. Challenger beating
+   production but not incumbent@5/5 = "K-structure works" — a different, unregistered cell,
+   cannot promote this cycle (recorded now).
+2. ΔSharpe CI = joint day-block resample of paired daily nets, recompute BOTH annualized
+   Sharpes per replicate, CI on the difference; 2-day-block sensitivity.
+3. Verdict wording = residual-frame Sharpe; one diagnostic naked-frame re-read (return_pct);
+   promotion = forward-test candidate only.
+4. Turnover pins: signed w=±0.5/K; turnover=Σ|Δw| (flips cost 2 legs); first-cycle entry
+   counted, terminal exit not; thin cross-sections renormalize over available names, both arms.
+5. Flat 9 bps biases AGAINST challenger (smaller clips) — acceptable; liquidity-mix tripwire
+   NOT computable from books (no volume column) — recorded deviation, flag for results reading.
+6. Challenger stays winz2@5/5 (single pin); asymmetric cells descriptive; per-side leg
+   decomposition mandatory in the readout.
+7. maxDD on non-compounded cumulative equity, 10% relative; F8 on daily nets.
+
+### Addendum 12c (2026-07-09) — K1 RESULT: REJECT challenger; KEEP production K
+
+Residual-frame net (9 bps/leg × measured turnover), overlays off:
+- REC: PROD 1L/2S Sharpe +0.48 (mean +15.4 bps/d, maxDD −9,945) vs CHAL winz2@5/5 +0.35
+  (+5.2, −6,919). ΔSharpe −0.13 [−2.11,+2.11]. The variance mechanism WORKED (daily vol ~halved,
+  maxDD −30%, turnover −11%) but the mean give-up (−66%) exceeded it.
+- OOS: ΔSharpe CHAL−PROD **−1.58, CI [−2.68,−0.52] entirely negative (2d-blocks same)** — the
+  wider book loses more reliably when the edge is thin. Fails both windows → REJECT.
+- Attribution arm: winz2 beats incumbent@5/5 by +0.70/+0.50 (CIs cross 0) — the deep-book
+  mean-retention is directionally real but ~half the required size; K-widening alone (ATTR
+  −0.35/−4.18) is strictly bad.
+Verdict: REJECT winz2@5/5; production 1L/2S stands. User's variance logic validated
+mechanically; the binding constraint is mean-per-name at depth vs costs, and OOS thinness makes
+wide books strictly worse. No further K cells from this diagnostic (sweep spent). Liquidity-mix
+tripwire not computable from books (12b-5 deviation, moot under REJECT). Naked-frame re-read
+skipped as moot (REJECT on the favorable frame already).
