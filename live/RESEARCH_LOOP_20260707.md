@@ -4601,3 +4601,33 @@ edge/robustness finding, gated on the two caveats below. I over-tempered; owned 
 
 **Status:** enumeration done; method pre-registered. The expensive part (Vision fetch of ~585 symbols +
 PIT-filter + rebuild + retrain + re-assess) awaits user go. Correctly sequenced BEFORE paid DATA1.
+
+### Reviewer review (2026-07-10) — addendum 54 (survivorship-clean rebuild pre-reg): CLEAN PASS — exemplary; one lumpy-CI calibration note
+
+Exemplary pre-registration. Genuine (enumeration done, method pre-registered, "awaiting go", no results). It owns
+the downstream effect of my retracted 52 verdict (the over-tempering to "measurement not edge") and correctly
+reframes this as a potential edge/robustness finding. It addresses BOTH my caveats — execution realism as TWO
+bounds (naive upper vs realistic halt/settle haircut; honest = haircut), and target_A WINSORIZATION not clip-at-±5
+(the 111-panel break) — and ADDS three guards I did not flag: (2) PIT LIQUIDITY GATE (recover only names that
+would ACTUALLY have been in-universe → no free lunch from illiquid crash names), (4) MIN-HISTORY guard (don't fit
+noise on 6-week delistings), (7) per-episode CONCENTRATION/LOFO gate (FTT alone ≠ an edge). Production model-class
+(per-symbol RidgeCV two-book), both-eras paired block-bootstrap CI, sequenced before paid DATA1. Foundation design
+is sound and complete. Clean pass.
+
+ONE CALIBRATION NOTE for reading the results (important, non-obvious): the recovered crash-edge is INHERENTLY LUMPY
+— crashes are rare events and the survivor edge is ALREADY 90%/8-days (#50). So the both-eras paired-CI, which
+correctly killed the SMOOTH conditioning deltas (short-only, pred_disp — concentrated AND mechanism-less noise),
+will be inherently WIDE on a few-dozen-episode crash series and may cross 0 even for a REAL edge. The principled
+discriminator here is NOT the aggregate CI alone but step-7's per-episode analysis: a real crash-edge shows as
+MULTIPLE INDEPENDENT crowded→crash episodes with CONSISTENT sign/mechanism across BOTH eras (FTT + LUNA-type +
+rug-pulls, not one name); mechanism-less noise shows as one episode or sign-inconsistent ones. So weight
+per-episode consistency + mechanism ALONGSIDE the CI — don't let a wide few-event CI alone VETO a consistent
+multi-episode pattern (false-reject), and don't let a single FTT-sized episode alone CLAIM an edge (false-accept,
+step 7 guards this). Distinct from short-only/pred_disp because those had concentration WITHOUT a repeatable
+identifiable mechanism; the crash-edge has both. Report the per-episode table prominently.
+
+If the rebuild survives (b)-bound realism + PIT-liquidity + target_A-preserved + ≥ several independent both-era
+episodes with consistent sign, it would be the first genuine edge/robustness improvement of the session — and the
+first to beat the CI wall precisely because it is INPUT-CHANGING, not another re-slice. Correctly the free step
+before DATA1. When the fetch/rebuild/retrain lands, I will foundation-check it hardest: delisting identification,
+PIT-liquidity application, target_A spread preservation, the two execution bounds, and the per-episode + CI read.
