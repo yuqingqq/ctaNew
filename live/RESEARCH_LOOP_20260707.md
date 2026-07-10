@@ -2477,3 +2477,37 @@ and pre-commits tests + numeric gates BEFORE running, structured per the reviewe
   ledger with pre-committed KILL criteria (standalone rolling-26w Sharpe <−0.5, or v4-sleeve corr
   >+0.3 for ≥8 wks).
 W1b: no sweep to rescue a failed gate; pinned headline binding. AWAITING REVIEW before running.
+
+### Reviewer review (2026-07-10) — 23n / DIV2_BUILD_PREREG: EXCELLENT plan; 3 gate-design refinements
+
+Strong, disciplined pre-registration — it correctly structures validation around the binding
+uncertainty (sleeve's OWN edge + flash-crash FIRST, diversification downstream, crisis forward-only),
+directly implementing the dominant caveat. Pinned headline + W1b + median/concentration + estimator-law
+all committed. Three gate-design flags before running:
+
+1. **GATE 1a — isolate the CHOPPY regime; don't let 2021's bull carry it.** The "non-2022" bucket must
+   test the genuinely trend-HOSTILE choppy 2023-25 (where the thin +0.41 lives and the forward risk is),
+   NOT 2021 (a trending BULL = trend-FAVORABLE). If the 365d warmup already excludes 2021 (trend PnL
+   starts ~2022) this is fine — CONFIRM it; if any 2021 leaks into the sub-periods it inflates the
+   non-crisis Sharpe and the gate passes on a trend-friendly bull. Report the choppy-only (2023-25)
+   aggregate separately.
+2. **GATE 3a "combined Sharpe ≥ max(v4, trend)" may FALSE-FAIL a working DD-diversifier.** A thin trend
+   sleeve can LOWER combined Sharpe below v4 in a v4-strong / trend-weak 2025-26 window while still
+   cutting DD — the DD-not-return diversifier shape (DIV1's own lesson). The CORE claim is DD-cut > 0;
+   requiring combined-Sharpe-to-beat-BOTH conflates "diversifier" with "Sharpe-additive strategy."
+   Suggest: make **matched-vol DD-cut > 0 the PRIMARY OOS gate** and combined-Sharpe **≥ v4 (not-worse)**
+   the secondary — don't also require beating the thin trend standalone, or a genuine diversifier dies
+   on a Sharpe technicality in a v4-dominant window.
+3. **GATE 1b ≥7/9-same-sign is a WEAK bar.** The 9 cells are correlated slow-trend NEIGHBORS (250-500d ×
+   20-40d) → they agree by construction (the DIV1 adjacency-is-cosmetic lesson). 7/9 same-sign rules out
+   knife-edge but does NOT establish robustness across trend FAMILIES (MA-crossover, breakout). Keep it
+   as the intended sanity check; just don't over-read a pass as strong robustness.
+
+Minor: Phase 2 — report the COUNT of fast-crash windows; if 0-1, the ≤25% size cap is a prior not a
+measurement (fine, note the sample). Phase 4 kill-(i) — rolling-26w Sharpe on a +0.41 sleeve is very
+noisy → <−0.5 may fire on noise; conservative-to-kill is defensible but a longer window trims false
+kills.
+
+Net: approve the plan as pre-registered — the right, disciplined build gate. Recommend tightening GATE
+3a (DD-cut primary, Sharpe≥v4 secondary) and confirming GATE 1a isolates the choppy regime, before
+running. Feasibility→build discipline is exemplary.
