@@ -2780,3 +2780,37 @@ DD-cut>0 vs v4, drop-one-year-jackknife robust (DIV2-HE concentration lesson). H
 only ~3-4 regime transitions → sample-limited, feasibility+placebo not deployable; prior LOW-MODERATE
 but the trendiness detector is a cleaner detection problem than the failed IC-timing attempts. W1b: no
 sweep. AWAITING REVIEW before running.
+
+### Reviewer review (2026-07-10) — 23t / SWITCH1 pre-reg: EXCELLENT design; 2 flags (upside still 2026H1; PIT check)
+
+Best-disciplined adaptive-timing test the program has run. It correctly makes the block-shuffled-regime
+PLACEBO (S-1) the decisive gate — the exact "does timing carry info" test all 7 prior adaptive-timing
+attempts failed; no-snooped-threshold soft tilt (percentile-rank, anti-overfit); risk-normalized both
+streams; concentration-robust jackknife (S-3, DIV2-HE lesson); DD-primary/Sharpe-secondary (GATE-3a
+lesson); honest sample-limited ceiling. Worth running as a clean falsifier. Two flags:
+
+1. **The UPSIDE is still the same 2026H1-concentrated trend that just failed DIV2-HE — read S-1 and S-3
+   JOINTLY, and lean the prior LOW.** SWITCH1's genuinely-NEW value is only AVOIDING the 2025 trend-bleed
+   (tilt to v4 in chop) — a risk-reduction vs the static blend (what S-2 tests); the UPSIDE vs v4 is
+   still 2026H1 (which the static blend also captured). PREDICTION (falsifiable): SWITCH1 likely PASSES
+   S-2 (beats the static overlay by dodging the 2025 bleed) but FAILS S-3's drop-2026H1 jackknife (its
+   DD-benefit vs v4 is still 2026H1-sourced, dies like DIV2-HE). And an S-1 placebo PASS could itself be
+   driven by ONE correctly-timed transition (tilt-to-trend at 2026H1) → a placebo pass that vanishes
+   under S-3's drop-2026H1 is a MIRAGE. Do not bank S-1 alone. I'd lean the prior LOW (not
+   low-to-moderate): detection may be cleaner than IC-timing, but CAPTURE is bottlenecked by a lagging
+   detector (tilts to trend AFTER it's established) and a one-half-year upside.
+2. **PIT correctness (verify in switch1_regime.py BEFORE trusting any number): w_trend for week t must be
+   set from ER through the PRIOR week (shift), then applied to week-t's return.** If w_trend,t uses ER_t
+   (which includes close_t / week-t data) to weight week-t's return, that is a 1-step LOOK-AHEAD — the
+   classic "bar weights itself" bug — and it would MANUFACTURE exactly the timing skill S-1 tests for.
+   Single most important correctness item; confirm the shift on the daily-ER → weekly-tilt alignment
+   (tilt decided at the start of week t = end of week t-1).
+
+Minor: the 10-week placebo block is shorter than regime duration (26-52w) — it preserves w_trend's
+short-run persistence and destroys return-alignment (correct intent), but the placebo's real power still
+rests on the ~3-4 transitions, so a pass is "not-refuted," not "validated" (as the ceiling states).
+
+Net: the placebo is the right decisive gate — run it. But honest expectation is LOW: the upside is
+2026H1-concentrated (same as the failed overlay), so S-3's drop-2026H1 jackknife will likely bind and
+S-1 must be read jointly with it. Verify the PIT shift first — a bar-weights-itself look-ahead would
+fake the whole result.
