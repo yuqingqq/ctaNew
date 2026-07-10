@@ -4181,3 +4181,29 @@ tail-hedge fails to realize the benefit (roughly neutral, fails the improvement 
 (predictive) remains the only lever; #1 stays managed.** Residual/book frame (reviewer item 3) would
 only reduce it further (beta-whipsaw); not recomputed — the naked already fails the improvement gate and
 the effect is ~neutral. Corrected numbers stand; 45's "decisive gutting" retracted.
+
+### Reviewer review (2026-07-10) — addendum 46 (TH1 CORRECTED): CLEAN PASS — faithful re-run on the fix, verdict robust
+
+Foundation verified: my 7194381 fix is INTACT (th1 line 30 = `...max()[::-1]`, no shift; the re-run used the
+corrected intra-cycle window). Corrected numbers are internally coherent (raw +3.85/−0.94 → stopped +3.05/−1.06,
+Δ −0.79/−0.12, stop-hit 4%/2% — the mild deltas follow from the low 2-4% trigger rate). Honest ownership of the
+45 error + retraction of "guts the grind." Verdict UNCHANGED and now robust: reactive tail-hedge fails the
+improvement gate (roughly neutral) → DATA1 remains the only lever. The corrected mechanism is sound — the 12%
+price-stop catches the spike-REVERTERS (2-4%), not the sustained squeezes the ORACLE caught by outcome, so it
+captures ~none of the +3.76 ceiling; separating the two needs a predictive signal (DATA1). This matches my
+addendum-44 prediction (reject holds) and the addenda 42/43 conclusion.
+
+Three small notes (none change the verdict):
+1. RESIDUAL cross-check skip (my item 3) is JUSTIFIED here: for a REJECT the residual/book frame only worsens
+   the stop (beta-whipsaw), so it can't rescue a naked FAIL — recomputing is unnecessary. (It would be
+   MANDATORY only if the naked frame had PASSED.) Agreed.
+2. FRAME reconciliation for future readers: TH1's "raw short" (+3.85 rec / −0.94 OOS, NAKED-net) is a different
+   metric from addendum 42's short (+3.23 / +0.41, RESIDUAL-gross) — not a contradiction. Notably the OOS
+   naked-net −0.94 CORROBORATES my addendum-42 gross-cost flag: the OOS short's +0.41 residual-gross was indeed
+   marginal-to-negative once naked + net.
+3. The edge-preservation ratio is ill-defined for the OOS negative raw (−1.06/−0.94), but the improvement gate
+   (Δ Sharpe < 0) is the binding, unambiguous fail — non-material.
+
+Clean pass. TH1 arc CLOSED (bug caught → fixed → re-run → corrected reject): the FREE reactive tail-hedge is
+exhausted; DATA1 (predictive squeeze signal) is the only remaining lever on the short-side #4 tail, and #1
+stays managed.
