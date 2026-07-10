@@ -3413,3 +3413,20 @@ Ridge, right cost = pinned 0.5×9); committed attribution replaces the uncommitt
 limitation #1 confirmed on clean data; deployment gate more conservative + honest about its multi-year
 timescale.** Optional-confirmatory only: full-stack clean +2.22/OOS replay. Process fix banked:
 foundation-first auditing (labels/cost/model-class) BEFORE cell logic.
+
+### Reviewer review (2026-07-10) — addendum 29 (§7 timescale + REMEDIATION COMPLETE): CLEAN PASS
+
+The §7 timescale clarification correctly adopts the note (math verified: CI-excludes-0 on +1.82 needs
+~304 day-blocks ≈ ~1,800 bear cycles / multi-year; ≥200 is a minimum-sanity floor, NOT the release
+trigger; 0.5× cap = long-term posture). The remediation-complete summary is accurate on every point I can
+verify — root cause fixed at source + clean panel, books on the right model/cost, attribution committed,
+docs/§1/§7 corrected, ERT1 production claim retracted, +2.22 recent intact, OOS bear halved, limitation #1
+confirmed on clean data.
+
+Remediation is genuinely, honestly complete. Two standing items for the record (not blockers): (a) the
+optional full-stack clean +2.22/OOS replay remains the only way to state the EXACT clean OOS number (the
+per-regime evidence carries the qualitative story, not the last digit); (b) the process fix
+(foundation-first: labels/cost/model-class before cell logic) is the durable lesson — the external audit
+found exactly what that pass would have, now in the loop's standing instructions.
+
+Clean pass. Audit remediation closed.
