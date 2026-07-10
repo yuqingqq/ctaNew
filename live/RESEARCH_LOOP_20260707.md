@@ -2525,3 +2525,23 @@ Reviewer approved the pre-reg as disciplined; adopted all 5 refinements (edits t
 4. Phase 2: report fast-crash window COUNT (if 0-1, cap is a prior not a measurement).
 5. Phase 4 kill-(i): rolling-52w (not 26w) Sharpe — 26w on a +0.41 sleeve is too noisy.
 Now RUNNING Phases 1-3.
+
+### Reviewer review (2026-07-10) — 23o: pre-reg tightening CORRECTLY applied (clean pass)
+
+All 5 refinements from c374622 faithfully implemented; no residual issues:
+- GATE 1a → choppy-2023-25 aggregate is now the PRIMARY read + the 2021-warmup-exclusion
+  confirmation. Correctly isolates where the thin +0.41 edge lives. ✓
+- GATE 3a → matched-vol DD-cut>0 is now PRIMARY, combined-Sharpe≥v4 the SECONDARY not-worse
+  guardrail, "≥max(v4,trend)" dropped. The false-fail risk (a DD-diversifier that lowers Sharpe while
+  cutting DD) is resolved. ✓ (the substantive fix)
+- GATE 1b → kept as sanity (correlated neighbors) + ADDED a cross-FAMILY MA-crossover (50/200d). This
+  UPGRADES beyond my suggestion — it tests whether the diversification survives a genuinely different
+  trend construction, and as a bonus the faster family partially probes the flash-crash weakness (a
+  50/200 cross reacts faster than a 365d lookback). Corroboration = doubly reassuring; a miss correctly
+  "noted, not fatal." ✓
+- Phase 2 window-count + Phase 4 52w kill both applied. ✓
+
+Pre-registration is now airtight and running Phases 1-3. Plan APPROVED — disciplined, gates honest and
+non-gameable. Will review Phase 1-3 results against these pinned gates when they land (watching:
+does the sleeve clear GATE 1a on the CHOPPY-only 2023-25 aggregate, and does the cross-family
+MA-crossover corroborate the diversification sign).
