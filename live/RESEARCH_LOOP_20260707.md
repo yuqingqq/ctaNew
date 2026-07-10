@@ -3397,3 +3397,19 @@ quarter."
 replay is correctly scoped as optional-confirmatory (the per-regime recent-unchanged already carries the
 headline). Net: real bugs, honestly remediated; +2.22 recent survives; OOS bear halved; limitation #1
 confirmed on clean data; deployment gate more conservative. Foundation-first verified end-to-end.
+
+### Addendum 29 (2026-07-10) — §7 timescale clarified (review 3055eef); REMEDIATION COMPLETE
+
+Adopted reviewer's quantitative refinement: the ≥200-bear-cycle floor is directionally right but NOT the
+binding release constraint — the day-block CI-excludes-0 on the clean +1.82 Sharpe is. That CI needs
+~304 independent day-blocks (n≈252·(2/1.82)²) ≈ ~1,800 bear cycles at 24h-overlap ≈ multi-year of
+accrued bear data (~10× the ≥200 floor). So §7 now states the 0.5× cap is a LONG-TERM posture on the
+clean thin edge, not few-months-then-release — the right conservatism for a thin era-fragile 2022-failed
+edge. **REMEDIATION COMPLETE (foundation-first, reviewer-verified end-to-end):** root cause fixed (X70
+gap-safe source + clean panel, 317 labels); books regenerated on clean panel (right model = per-symbol
+Ridge, right cost = pinned 0.5×9); committed attribution replaces the uncommitted generator; V4_LIMITATIONS
++ V4_PERFORMANCE §1/§7 corrected; ERT1 production claim retracted. **Net: 4 real bugs honestly remediated;
++2.22 recent headline SURVIVES (leak was OOS-bear-only); OOS bear anchor halved (+1.8 not +4.5);
+limitation #1 confirmed on clean data; deployment gate more conservative + honest about its multi-year
+timescale.** Optional-confirmatory only: full-stack clean +2.22/OOS replay. Process fix banked:
+foundation-first auditing (labels/cost/model-class) BEFORE cell logic.

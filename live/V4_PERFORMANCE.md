@@ -215,6 +215,12 @@ sizing/gross variants, vol_target.
       Months without bear cycles do not advance the clock. Basis: 2022 bear net −8,949, CI
       [−17,208, −807]; rule i −13,339 vs bar −5,839; clean OOS bear anchor +1.82 Sharpe (addendum
       27), not the pre-audit +4.46. (Criterion pinned before any forward data exists.)
+      **TIMESCALE (binding constraint is the CI, not the ≥200 floor):** a day-block 95% CI excluding
+      0 on a +1.82 daily-agg Sharpe needs ~304 independent day-blocks (n ≈ 252·(2/1.82)²) — at ~6
+      cycles/day under the 24h-hold overlap that is **~1,800 bear cycles ≈ multi-year of accrued bear
+      data**, ~10× the ≥200 floor. So the ≥200 floor is a minimum-sanity gate, NOT the release trigger;
+      on the clean thin edge the 0.5× cap is a LONG-TERM posture (demand overwhelming evidence before
+      levering a thin, era-fragile, 2022-failed edge), not a few-months-then-release.
 
 - [ ] Stale-print eligibility gate in the bot (trailing zero-return-frac >10-20% over 30d →
       ineligible). Currently handled via `hl_*_clean` pred files; LITUSDT-class names otherwise
