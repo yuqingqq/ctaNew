@@ -3840,3 +3840,25 @@ shown apart from deep-bull, consistent with the audit's finding-#3 correction.
 Clean pass. This completes the long/short structural analysis: real alpha is SHORT-driven; the long carries
 selection alpha ONLY in bear (bear-long revert); in deep-bull the long is a pure beta lottery (#3) — crushed
 as beta-neutral, capturing beta only as a directional mom1d bet.
+
+### Addendum 39 (2026-07-10) — long/short DISTRIBUTION confirmed (long=lottery, short=grind) + "all regimes positive?" honest read
+
+User: does long farm the long tail / short grind? + after configs do all regimes look positive?
+**DISTRIBUTION (longshort_dist.py, committed, vanilla clean, residual bps gross):** CONFIRMED the
+DDI-2 pattern on v4:
+- **LONG = LOTTERY (farms the right tail).** recent median −19.5 / mean +3.6, skew +1.51, win% 45,
+  top-decile jackpot 1872% of total (non-jackpot longs lose in aggregate). OOS same (median −9.7, skew
+  +1.27, win% 47). Explains the ~dead long Sharpe (+0.11): median-negative lottery = poor risk-adjusted.
+- **SHORT = GRINDER with squeeze left-tail.** recent median +43.3 > mean +24.2, win% 57, skew −1.52
+  (the #4 squeeze gives back). OOS median +15.5 > mean +0.8, win% 54, skew −1.45. Short earns the alpha
+  AND holds the tail risk — same leg.
+**"ALL REGIMES POSITIVE AFTER CONFIGS" — honest read:** TRUE for RECENT only (a good era, +2.30: side
++2.55/bear +0.99/bull +5.01/deepbull +7.04) — NOT OOS (side −0.52, bull −1.19 still negative; only
+bear/deepbull positive). The REGIME_GATE MANAGES #1 by de-grossing losers (lagging damage-control), and
+the per-regime production attribution is PATH-COUPLED (some "positive" is the gate cutting bad cycles
+after the fact) — NOT era-fragility solved (2022 FAILED, OOS still +0.20 thin with negative regimes).
+**MECHANISM IDEA (from the distribution):** the long leg is a median-negative lottery adding variance
+without Sharpe → replacing the alt-long selection with a pure beta hedge (short-only + index/BTC long)
+MIGHT lift risk-adjusted return by removing the lottery variance. Adjacent to HEDGE1/KL3 (long-leg
+alternatives, "not candidates") but NOT this exact clean test on the core book — a candidate to
+re-examine. Script: live/longshort_dist.py.
