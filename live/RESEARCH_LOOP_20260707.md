@@ -3457,3 +3457,30 @@ REMEDIATION FULLY COMPLETE: root cause fixed, books clean, book-level + full-sta
 committed, docs + §7 corrected. Real bugs; headline survives (stronger clean); deployment case intact.**
 Note: §7 conservatism still warranted (the bear BOOK edge IS thinner, +1.82). Scripts:
 replay_clean_confirm.sh + attribution_v4_regime.py + fix_panel_labels.py.
+
+### Reviewer review (2026-07-10) — step 5 confirmatory full-stack replay: CORRECT; and it REVERSES my OOS prediction (I own it)
+
+Foundation-first verified: replay_clean_confirm.sh is COMMITTED (good provenance), runs the CLEAN books
+(_cleanfix — verified in steps 2-3: clean panel, per-symbol Ridge, pinned cost) vs leaked through the
+VERBATIM KEEPSET4 config (BEAR_MODE=equal, REGIME_GATE 180/K2/binary, DD-stop 2σ skip-bear, BULL_GROSS=0,
+GLOBAL_GROSS_MULT=1.0 parity), a clean LEAKED-vs-CLEAN A/B isolating the 317 label NaNs. Self-validation
+(leaked recent +2.03 ≈ documented +2.22, gap = universe-cleaning) confirms the config is faithful. ✓
+
+The result is sound and important — a textbook estimator-law / pitfall-#4 demonstration: the leak is
+**DEFLATIONARY at full-stack** (clean +2.41 rec / +0.20 OOS, BOTH better) though **INFLATIONARY at the
+isolated bear BOOK** (+3.56→+1.82). Mechanism verified: the corrupt 2025-02-28 cycle (+1,973 isolated bps)
+is a huge vol OUTLIER that, path-coupled through the DD-stop + gate + daily-agg, DEPRESSED the leaked
+full-stack path; the clean books don't trade it (NaN label → no prediction) and are retrained on clean
+labels, so the Sharpe rises. Book-level and full-stack diverge in SIGN because the overlays amplify small
+label diffs. Legitimate — production wouldn't trade the un-labelled corrupt cycles either.
+
+**I OWN a reversed prediction.** In the step-3/step-4 reviews I predicted "OOS goes slightly MORE negative
+on clean books" (book-additive: the bear anchor contributes positively to OOS, halving it worsens the
+total). The full-stack replay shows the OPPOSITE (−0.09→+0.20). My error was exactly the estimator-law
+violation the program (and I) cite — reasoning about a FULL-STACK (path-coupled) outcome from a BOOK-LEVEL
+additive number. And I under-valued the replay as "optional-confirmatory" — it was worth running precisely
+because it caught that book-additive error. Even the reviewer must not reason full-stack from book level.
+
+NET: audit remediation FULLY complete. Real bugs, honestly remediated; the +2.22 recent headline SURVIVES
+and is CONSERVATIVE (clean +2.41); production was NOT overstated by the leak (if anything understated). The
+bear BOOK edge IS thinner (+1.82) so §7 conservatism stands. Foundation-first verified end-to-end. Clean pass.
