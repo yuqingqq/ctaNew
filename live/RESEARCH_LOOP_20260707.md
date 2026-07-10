@@ -3899,3 +3899,20 @@ BEFORE running, to avoid re-litigating a failed direction on a path-coupled over
 
 Clean pass — analysis foundation-sound and correct; the mechanism idea is a legitimately open candidate IF
 tested at book level with a pre-registered gate.
+
+### Addendum 40 (2026-07-10) — LH1 PRE-REGISTRATION: short-only + basket beta-hedge (replace the non-deep-bull long lottery)
+
+Motivated by addendum 39 (non-deep-bull long = median-negative lottery, win 45%, adds variance w/o
+residual alpha). Reviewer guards (23ea0da) baked in. Binding pre-registration:
+- **Construction (non-deep-bull cycles only; deep-bull mom1d HELD FIXED → cancels):**
+  BASELINE = WL·long_alpha − WS·short_alpha − cost (current 1L/2S: long=top-1 long-pred, short=bottom-2
+  base-pred). TREATMENT = WL·basket_alpha − WS·short_alpha − cost (replace alt-long with the equal-weight
+  BASKET residual = cross-sec mean alpha_A ≈ the alt-vs-BTC factor, ~low, near-zero selection alpha; and
+  low turnover). WL=WS=0.5, pinned 0.5×9 cost, honest turnover (basket ≈ 0 turnover vs alt-long ~62%).
+- **VERDICT AT BOOK LEVEL (estimator law):** net residual Sharpe, NOT leg distributions.
+- **GATE (both eras):** PRIMARY = treatment net Sharpe ≥ baseline in BOTH recent AND OOS (a one-era-only
+  win = era-fragile → REJECT, per #1). SECONDARY = lower variance/maxDD. JACKPOT-PRESERVATION (reviewer):
+  report the positive-tail (top-decile) change — treatment removes the long jackpots, so it must win net
+  Sharpe DESPITE losing them (if it needs the jackpots, they were worth their variance → keep baseline).
+- Book-level (vanilla frame) first; a full-stack replay is the deploy step IF it passes. W1b: no sweep.
+Script: live/lh1_shortonly_hedge.py. Running now (reviewer-blessed direction + guards).
