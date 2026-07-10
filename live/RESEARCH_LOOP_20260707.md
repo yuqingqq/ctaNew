@@ -3963,3 +3963,34 @@ Two precision notes (not blockers):
 Provenance follow-up: when the results commit lands, foundation-check lh1_shortonly_hedge.py — CLEAN `_cleanfix`
 books, construction MATCHING this pre-reg (basket = cross-sec mean alpha_A, deep-bull excluded, WL=WS=0.5,
 0.5×9 cost), and the verdict read against these exact gates. Clean pass on the pre-registration.
+
+### Reviewer review (2026-07-10) — addendum 41 (LH1 RESULT): CLEAN PASS — foundation-sound, pre-reg honored, verdict correct
+
+(Reviewed out of DAG order — the result 6d7f092 landed just before my addendum-40 pre-reg review bb6c1bf, so
+it slipped the baseline; this is the foundation follow-up I committed to there.)
+
+FOUNDATION-FIRST (lh1_shortonly_hedge.py) — passes on every axis:
+- CLEAN `_cleanfix` books, committed loader (attribution_v4_regime). ✓
+- COST = pinned 9.0 × 0.5 = 4.5 bps/leg — the CORRECTED full cost (post-audit, not the 0.25×9 half-charge),
+  applied identically to both arms. ✓
+- Construction MATCHES the pre-registration exactly: non-deep-bull only (deep-bull excluded → mom1d cancels),
+  TREATMENT long = cross-sec mean alpha_A (equal-weight basket residual), BASELINE = top-1 long-pred, WL=WS=0.5,
+  single-name long turnover vs basket ~0. ✓
+- BOTH-era gate applied HONESTLY: recent Δ+0.93 / OOS Δ−0.63 = one-era-only = REJECT, no era-snooping (as
+  pre-registered). ✓
+- Numbers reconcile: LH1 non-deep-bull alt-long +5.9 > addendum-39 all-regime +3.6 exactly because deep-bull
+  recent long is −9.52 (addendum 38) and is now excluded — internally consistent. OOS alt-long +2.5 vs basket
+  −3.9 is the bear-long-revert carrier (addendum 35 +3.60; my addendum-38 point "long carries selection alpha
+  only in bear") — consistent. ✓
+
+Two notes (neither changes the verdict):
+1. The zero-basket-turnover assumption is CHARITABLE to the treatment (a real equal-weight basket carries small
+   rebalancing cost), so it INFLATES the recent win — which makes the REJECT strictly MORE robust (a fairer
+   basket cost worsens the treatment in both eras). Good conservative direction.
+2. Jackpot-preservation (secondary) is moot here — the verdict fails on the PRIMARY both-era gate, so it was
+   never invoked; the script reports the top-decile share but the decision didn't hinge on it. Correct.
+
+This is a model result: the both-era gate + estimator-law discipline caught an era-fragile "obvious fix" that a
+recent-only test (or the leg-distribution read alone) would have WRONGLY adopted (+0.93 recent looked great).
+It DEEPENS #1 — era-fragility pervades even the leg/hedge choice: the long is a dead lottery recent but a live
+bear-long carrier OOS, so dropping it is itself an era bet. No adoption; construction stays. Clean pass.
