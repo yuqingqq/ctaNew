@@ -3759,3 +3759,27 @@ Comparison (residual Sharpe):
   deep-bull mom1d LONG overlay put work back on the long side); short still leads (+2.71) but production
   is far more two-sided. Note: production regime col lumps deep-bull into bull (bot uses side/bear/bull);
   small-n bull mild+deep mix. Readout artifact updated. Script: live/prod_longshort_regime.py.
+
+### Reviewer review (2026-07-10) — addendum 36 (PRODUCTION long/short by regime): CORRECT; "long revival" is overlay-management, not long-alpha
+
+Foundation-first: prod_longshort_regime.py reads the CLEAN KEEPSET4 replay cycles (replay_{oos,recent}_clean),
+per-leg GATED contributions (long_alpha_bps/short_alpha_bps), correctly LABELED path-coupled/gated, committed,
+framed as the production-vs-vanilla comparison. ✓ Correct instrument for "what the overlays do" — with the
+estimator-law caveat that per-leg production numbers ARE path-coupled (which is why the vanilla pre-gate
+longshort is the clean per-leg baseline).
+
+Config effect (a) — REGIME_GATE de-grosses losing regimes (gross_after_stop OOS side 0.66 / bull 0.15 vs recent
+side 1.37) — is a GOOD concrete demonstration of HOW the overlays manage #1: cut gross once a regime turns. ✓
+
+Config effect (b) — the long "revival" (+0.11 vanilla → +1.74 production) — is REAL as a book effect but is
+OVERLAY-MANAGEMENT, not long-alpha, and shouldn't be read as "the long leg is now good": (1) bull0 REMOVES the
+long's worst regime (mild-bull lottery losses) — protection, not alpha; (2) the deep-bull mom1d overlay ADDS
+the #3 BETA LOTTERY to the long side (a directional bet the clean re-eval confirmed is not alpha — and
+production lumps deep-bull into "bull", so the +1.74 bull-long includes it); (3) inv_sqrt_vol reweights. The
+CLEAN long-leg edge remains vanilla +0.11 (~dead); production is "more two-sided" because the overlays PROTECT
+the long (bull0/DD-stop) and SUPPLEMENT it (bear-equal + deep-bull beta lottery), not because the long gained
+standalone alpha. Worth stating so +1.74 isn't over-read.
+
+Clean pass. Consistent whole-strategy picture: real alpha is SHORT-driven (recent); the long is a
+beta-hedge/lottery the overlays manage; the gates' #1-management is de-grossing losing regimes. Closes the
+long/short structural analysis cleanly.
