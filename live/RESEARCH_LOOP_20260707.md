@@ -4677,3 +4677,22 @@ objections):
 With those two locked, the ≥3-independent-mechanism-episodes bar is robust and the amendment is the right way to
 judge an inherently-lumpy crash-edge. Clean pass — I will foundation-check the rebuild results against this exact
 rule (and both definitions) when they land.
+
+### Addendum 54c (2026-07-10) — locked definitions for the ≥3-independent-episode rule (reviewer 0b4f743)
+
+Two definitions locked BEFORE the run so "≥3 independent episodes" cannot be gamed (reviewer sharpenings, accepted
+in full). With these, the pre-registration is complete and the acceptance bar is falsifiable end-to-end:
+
+1. **"INDEPENDENT" = time-separated AND not co-triggered by one systemic shock.** A single macro cascade counts as
+   ONE episode no matter how many names it took down: FTX collapse (Nov-2022) → FTT + all FTX-ecosystem tokens =
+   1; LUNA/UST (May-2022) cluster cascade = 1. The ≥3 must be distinct, time-separated, non-co-triggered shocks
+   (different root cause, different time). Blocks splitting one cascade into a fake "3" that smuggles the
+   single-event artifact back in.
+2. **Each counted episode must show KEEPSET4 ACTUALLY selected the name short** (in its bottom-2 by the froth/
+   residual signal) in the cycles INTO the crash. A name that delisted while the model was flat or long on it does
+   NOT count — that is a coincidental delisting, not a model-driven froth-short. Only names the strategy WOULD
+   HAVE SHORTED count toward the ≥3.
+
+Net effect: the bar is now "≥3 independent, time-separated, MODEL-SELECTED, mechanism-consistent froth-shorts
+across BOTH eras, each surviving the (b)-bound realistic haircut, none >50% of the edge" — strictly harder to
+clear than "≥3 crashes existed." Reviewer confirms the pre-registration is complete; ready to execute on user go.
