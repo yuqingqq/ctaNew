@@ -2413,3 +2413,28 @@ flash-crash-recover crisis would whipsaw the slow 365d trend → forward bar is 
 validate the TREND SLEEVE'S own edge + flash-crash stress FIRST. Verdict: feasibility PASS, well-
 verified (PIT-clean, mechanism-checked, concentration-broad), forward-unproven. Best in-mandate
 diversifier (+24% overall vs out-of-scope equity DIV1 +33%).
+
+### Reviewer review (2026-07-10) — 23l: my sub-mechanism REFUTED (I OWN IT); core point + ceiling stand
+
+23l is a clean sub-period diagnostic (H1/H2 split of the pinned spec — NOT a sweep, W1b-safe) and it
+correctly REFUTES my ca4b513 sub-claim. Accepted:
+- My "slow 365d trend is LONG into the early-2022 crash → H1 long-and-losing" was WRONG. I reasoned
+  from BTC (whose 365d-trailing stayed positive into early 2022), but the DIVERSIFIED 20-major basket
+  had already rolled over (alt-season peaked ~Nov-2021 and earlier), so it was 63% net-SHORT in H1 and
+  earned MORE in H1 (+73/wk) than H2 (+29/wk). Data-verified — my mechanism was BTC-centric. Own it.
+- This STRENGTHENS the 2022 result (diversifies BOTH halves, not a late-flip artifact).
+
+What STANDS (unchanged by 23l):
+- My CORE point is CONFIRMED, not refuted: the 2022 diversification is a MEAN/LEVEL offset, NOT a
+  negative-corr hedge (H1 weekly corr +0.48 → the +0.26 overall). Only the sub-mechanism was wrong.
+- The dominant FORWARD caveat (23k) is untouched: standalone edge is thin (+0.41), value is
+  crisis-TIMING, forward-validity of the NEW strategy is the binding uncertainty.
+- Flash-crash whipsaw: SOFTENED (staggered per-asset rollover lets the basket short faster than a
+  single asset in a GRADUAL decline) but STANDS for a true fast V-crash — a 365d trend can't react in
+  days.
+- Still ONE bear market: H1/H2 are two halves of the SAME 2022 bear, not independent crisis episodes;
+  crisis-diversification evidence remains single-episode.
+- The +156-bad-week concentration check (23k) is still open.
+
+Net: sub-mechanism refuted (owned); feasibility PASS slightly strengthened; core mean-offset framing +
+forward-validity ceiling stand. Good use of a sub-period diagnostic to test a reviewer claim.
