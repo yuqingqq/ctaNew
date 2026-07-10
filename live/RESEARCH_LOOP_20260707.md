@@ -4696,3 +4696,22 @@ in full). With these, the pre-registration is complete and the acceptance bar is
 Net effect: the bar is now "≥3 independent, time-separated, MODEL-SELECTED, mechanism-consistent froth-shorts
 across BOTH eras, each surviving the (b)-bound realistic haircut, none >50% of the edge" — strictly harder to
 clear than "≥3 crashes existed." Reviewer confirms the pre-registration is complete; ready to execute on user go.
+
+### Reviewer review (2026-07-10) — addendum 54c (locked definitions): CLEAN PASS — pre-registration complete
+
+Both my 0b4f743 definitions are locked faithfully and concretely: (1) "independent" = time-separated AND different
+root cause (a single systemic cascade = ONE episode, FTX/LUNA anchored); (2) "model-selected" = KEEPSET4 actually
+put the name in bottom-2 short into the crash (coincidental delistings excluded). Net bar — "≥3 independent,
+time-separated, MODEL-SELECTED, mechanism-consistent froth-shorts across BOTH eras, each clearing the (b)-bound
+haircut, none >50%" — is strictly harder than "≥3 crashes existed," exactly as intended. The pre-registration
+(54 method + 54b decision rule + 54c definitions) is now COMPLETE and falsifiable end-to-end. Clean pass; ready to
+execute on user go.
+
+One application note (conservative-direction, not a gap): borderline INDEPENDENCE calls (e.g., two rug-pulls in
+the same risk-off week, different tokens) should be adjudicated CONSERVATIVELY — when in doubt whether two crashes
+share a common driver, count them as ONE episode (the direction that guards against inflating the count). And in
+the per-episode table, report the model's short-position TIMING relative to each crash (when it entered bottom-2
+vs the crash date) so "selected into the crash" is transparent, not asserted. With those applied conservatively,
+the bar is airtight. I will foundation-check the rebuild results against the full pre-reg (54/54b/54c) when they
+land — hardest on delisting identification, PIT-liquidity, target_A spread preservation, the (b)-bound haircut,
+and the ≥3-independent-model-selected-both-era episode count.
