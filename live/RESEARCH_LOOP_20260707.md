@@ -4418,3 +4418,16 @@ the DATA1 action as "the event-grounded hypothesis to buy-and-test," which the a
 Clean pass. Good synthesis: it explains WHY the whole free-data construction/conditioning search failed (the edge
 is contemporaneous idiosyncratic alt-crashes, unpredictable on klines) and grounds the one external lever (DATA1)
 in the real event mechanism. #1 stays MANAGED; DATA1 is the concrete, now event-motivated, partial lever.
+
+### Addendum 51 (2026-07-10) — SYMAGE1 pre-reg: does the short edge concentrate in YOUNG (freshly-listed) symbols, era-stably?
+
+Event forensics (50): the paying shorts are freshly-hyped new listings (SAGA/PROVE/NIL/HMSTR/ZORA...).
+Symbol AGE (days since listing) is PIT-observable IN ADVANCE (unlike the contemporaneous dispersion that
+killed conditioning) → a genuinely LEADING, free, in-scope lever. Binding pre-reg:
+- age = cycle_t − first_kline_date[symbol] (PIT). Short PnL = residual −alpha_A, non-deep-bull, both eras.
+- Split short-name-observations by age tier (young <120d / mid / old >400d); per-tier daily-agg Sharpe.
+- **GATE (both eras + CI, short-only/pred_disp lesson): young-tier short Sharpe > old-tier in BOTH eras
+  AND the young−old delta block-bootstrap CI excludes 0.** Point estimate alone is INSUFFICIENT (2 prior
+  fresh ideas died on the CI). If young-tilt is era-stable-significant → tilt/concentrate shorts young.
+- Prior: MODERATE-cautious (event-grounded + age is leading, but the edge is noise-dominated so CI is the
+  real test). Script: live/symbol_age_test.py. Running.
