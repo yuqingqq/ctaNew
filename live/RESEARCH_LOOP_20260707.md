@@ -2282,3 +2282,36 @@ expected to diversify) — STATED not swept; a post-hoc lookback tweak after a n
 advance. Feasibility-only ceiling: inherits DIV1 candidate ceiling + crypto-TSMOM's weak forward
 validity + flash-crash whipsaw (only 2022 sustained trend in-sample). A pass = "within-crypto
 diversification is FEASIBLE in principle," NOT "solved." Script: live/div2_crypto_trend.py.
+
+### Addendum 23k (2026-07-10) — DIV2 RESULT: crypto-TSMOM diversifies v4's era-fragility FROM WITHIN CRYPTO (feasibility PASS)
+
+Pinned 12m/365d canonical TSMOM (20 majors, PIT, costed 4.5 one-way), run once. Results:
+- standalone weekly Sharpe (2023-26, n=182): v4 +1.23 | trend +0.41 (modest, positive)
+- OVERALL corr(v4, trend) 2023-26 = **−0.177** (negatively correlated)
+- **trend mean in v4-BAD weeks (n=72) = +156 bps** (pays exactly when v4 is down)
+- inv-vol combined Sharpe **+1.55 vs v4 +1.27** (combined IMPROVES Sharpe)
+- **MATCHED-VOL maxDD: v4 −8918 → combined −6798 = +24% DD cut** (honest, vol-neutral)
+- **2022 CRISIS**: means v4 −246/wk (FAIL) vs trend **+51/wk** → trend PAYS when v4 fails;
+  2022 matched-vol 50/50 maxDD −10734 → −5539 = **+48% DD cut**.
+- NUANCE (stated, not hidden): 2022 week-to-week corr = **+0.263** (block-CI [−0.17,+0.42]) —
+  mildly POSITIVE, not negative. So the crisis diversification is driven by trend's positive MEAN
+  OFFSET in the bad era (short the 2022 downtrend → +51/wk), NOT by negative week-to-week
+  correlation. Still exactly the predicted crisis-alpha mechanism (short a sustained decline), and it
+  delivers the DD cut; but it is a level/mean diversifier, not a clean negative-corr hedge.
+
+**VERDICT: FEASIBILITY PASS. Within-crypto era-diversification IS feasible in principle** — a
+canonical, pinned, costed crypto-trend sleeve is negatively correlated to v4 overall (−0.18), pays
++156 bps in v4's bad weeks, improves combined Sharpe (+1.55 vs +1.27), and cuts matched-vol maxDD
++24% overall / +48% in the 2022 crisis where v4 fails. This is the FIRST within-mandate structural
+lever that attacks limitation #1 (era-fragility) — and it corrects 23h's wrong "impossible within
+crypto." Shape is right for a crisis diversifier (helps most exactly when v4 breaks, ~neutral else).
+**CEILING (do not overclaim): FEASIBILITY, not a validated lever.** NEW standalone strategy; own
+forward-validity unproven; only 2022's SUSTAINED trend is in-sample (flash-crash-recover whipsaw
+untested); inherits DIV1 candidate ceiling (un-forward-validated); trend standalone Sharpe is thin
+(+0.41). Comparison: cross-asset DIV1 (equities) gave +33% overall matched-vol DD cut / 2022 corr
++0.15; crypto-TSMOM is a somewhat WEAKER but IN-SCOPE diversifier (+24% overall, +48% in 2022).
+**Answer to "can we improve the limitations?": YES for #1, in principle, via a crypto-native trend
+sleeve — the modeling axis is exhausted, but this PORTFOLIO/architecture axis (add an orthogonal
+directional sleeve) is a live, in-scope lever.** Next if pursued: pre-registered forward-validation
+of the trend sleeve itself + flash-crash-regime stress; but that is a NEW strategy build, a scope
+decision. Script: live/div2_crypto_trend.py.
