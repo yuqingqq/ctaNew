@@ -2186,3 +2186,37 @@ kill-switch), not diversified away.** DIV1's +33% result stands as a valid CROSS
 is NOT crypto-actionable. **Crypto-only runway reverts to: (A) DATA1 (crypto liquidation/positioning
 data → SQ1 stationarity; paid, user decision); (B) operational (forward ledger → release gross cap,
 live evidence). No crypto-internal research cell has positive honest EV.**
+
+### Reviewer review (2026-07-10) — 23h SCOPE CORRECTION: ACCEPTED (owns my path-C miss); one overstated claim
+
+The scope correction is VALID and important, and it corrects MY earlier path-(C) recommendation
+(52e5f41): I pointed at xyz-v7 as the diversifying sleeve without flagging the crypto-only mandate —
+xyz-v7 is US equities, so path (C) as tested is cross-asset and OUT of scope. Agreed: DIV1's
++33% / low-crisis-corr is a CROSS-ASSET property (my own async-crisis point 2d0cec0-B taken to its
+conclusion — equities and crypto had asynchronous 2022 crises), NOT crypto-actionable. My path-C rec
+carried an unstated cross-asset assumption — owned.
+
+**One flag: "era-diversification largely UNAVAILABLE within crypto (crypto-crypto corr spikes toward
+1)" is OVERSTATED — it conflates ASSET correlation with STRATEGY correlation.** Crypto ASSET
+correlations do spike toward 1 in a crash, but STRATEGY correlations need not. v4 is beta-NEUTRAL and
+its 2022 failure is alpha/cost, not beta — so a DIRECTIONAL crypto TREND / CTA sleeve (short in a
+sustained decline; 2022 was a trending crash) earns exactly when v4 FAILS → negatively-correlated,
+or at worst uncorrelated, in the crisis. That is the textbook "crisis alpha" of trend-following and
+the canonical crisis diversifier — the OPPOSITE of "corr spikes toward 1." The user's own
+crypto-internal examples correctly fail because they are SIMILAR classes (v3-vs-v4 = a correlated
+near-tie; funding carry = long-biased); a genuinely DIFFERENT directional class is not ruled out by
+the asset-corr argument. Honest status: within-crypto diversification via a SIMILAR class is
+unavailable; via a DIFFERENT directional class (crypto trend/CTA) it is UNTESTED, not impossible —
+testable with the SAME DIV1 machinery (swap xyz-v7 for a crypto-trend PnL series).
+
+Caveats that legitimately keep it OFF the near-term runway (so the reverted runway is still right for
+the current inventory): (1) it's a NEW standalone strategy, not "modeling the current panel"; (2) its
+own forward-validity is unknown; (3) prior crypto-momentum attempts here (mom30 died 2026) were
+regime-MODES/features inside v4, not a portfolio-level directional sleeve; (4) trend's crisis-alpha
+is regime-dependent — it diversifies SUSTAINED-trend crises (2022) but can WHIPSAW in
+flash-crash-and-recover crises. So the prior is UNCERTAIN, not "almost certain fail."
+
+Net: scope correction ACCEPTED (path C = cross-asset, out for crypto-only; DIV1 +33% not
+crypto-actionable). Runway (manage #1 via 0.5× cap + monitoring + kill-switch, DATA1, operational) is
+correct for the current inventory. But don't close the within-crypto door on the asset-corr argument
+— a crypto directional-trend sleeve is the one untested within-mandate diversifier.
