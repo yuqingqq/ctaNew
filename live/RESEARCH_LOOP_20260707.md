@@ -3638,3 +3638,30 @@ the conservative posture (0.5× gross cap, §7 bar) and the DATA1 (liquidation) 
 lever for the (now-visible) short-side squeeze risk. NO strategy change warranted; v4 at free-data
 local optimum, now on clean data with an honest risk picture. Scripts: reevaluate_clean.py,
 attribution_v4_regime.py, limitation5_concentration.py.
+
+### Reviewer review (2026-07-10) — addendum 33 (COMPLETE clean re-evaluation): CORRECT; the #4 unmasking is the key finding
+
+Foundation-first: reevaluate_clean.py (#3, #4) uses the CLEAN (_cleanfix) books, CLEAN-vs-LEAKED A/B,
+committed — sound. #4's bear short-leg = bottom-2 by base pred, PnL = −realized return (correct short sign). ✓
+
+**The #4 finding is IMPORTANT and mechanistically sound — the key result of the clean re-eval.** The leak's
+corrupt 2025-02-28 cycle was a spurious +15% short-leg WIN (shorting the 22-day-mislabeled decline), a big
+POSITIVE outlier that flipped the OOS bear short-leg skew from a FALSE right (+3.06, benign-looking) to the
+TRUE left (−1.02, squeeze tail). So the SAME corrupt cycle that deflated the full-stack Sharpe (removing it
+improves Sharpe) ALSO hid the left-tail (removing it reveals the squeeze risk). The clean strategy is
+honestly "better Sharpe, worse (real) tail." This correctly reinforces the conservative posture (§7 cap) and
+ELEVATES DATA1 (positioning/liquidation data to hedge the squeeze tail — the SQ1 direction).
+
+Note (don't over-quote the −1.02): skew is a HIGHLY outlier-sensitive moment — a single cycle flips it (the
+leak just demonstrated exactly that). The finding is ROBUST because three independent tail metrics agree:
+CVaR5 −715, median +6.7 >> mean −9.8, and recent skew −1.67 (never masked) all confirm the left/squeeze tail.
+Lead with those robust metrics alongside the skew, not the −1.02 point-estimate alone.
+
+#1/#2/#3/#5/#6 confirmed on clean, consistent with prior reviews. #3: the clean beta-neutral counterfactual
+loses both eras (−3.8 OOS / −31.0 rec) and the mom1d overlay is return_1d-ranked = label-fix-independent —
+consistent with my earlier #3 review (model bad in deep-bull → mom1d = beta lottery). BOTTOM LINE sound:
+performance intact/better (+2.30), all 6 limitations committed-verified (not folklore), #4 reinforces
+conservative + DATA1, no strategy change.
+
+Clean pass. The complete clean re-evaluation is honest and thorough — and the #4 unmasking is a genuine
+risk-awareness gain (the leak had hidden the squeeze tail), which strengthens the DATA1 case in the runway.
