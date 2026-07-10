@@ -4461,3 +4461,22 @@ THREE items to VERIFY when results land (the first is decisive):
 If SYMAGE1 survives (1) censoring-clean + (2) survivorship-aware + (3) a proper young−old delta-CI excluding 0 in
 BOTH eras, it would be the first genuine era-stable conditioner — a real result. The censoring check (1) is the
 one most likely to explain any apparent OOS young-tilt, so run it first.
+
+### Addendum 52 (2026-07-10) — SYMAGE1 RESULT: REFUTED — young-tilt is WRONG (young = high-variance both-tails)
+
+Ran symbol_age_test.py. Hypothesis (short edge in young alts) is REFUTED — the OPPOSITE:
+- **RECENT: young(<120d) Sharpe −0.19 / mid +1.26 / old(>400d) +3.54.** Young is WORST; old grinds.
+- **OOS: young +0.46 / mid −0.03 / old +0.55** (all thin).
+- young−old delta: recent −3.74 (CI [−7.55,−0.33], young WORSE), OOS −0.09 (CI crosses 0). **GATE FAIL
+  both point (young<old) AND CI.**
+**KEY reconciliation with event forensics (50):** young alts have POSITIVE median but NEGATIVE mean
+(recent median +7.1 / mean −1.6) → they GRIND but get SQUEEZED violently. Young/freshly-listed alts are
+where BOTH the big crashes (the 50 event-winners: SAGA/PROVE/NIL) AND the big squeezes (#4) happen =
+high-variance both-tails, LOW Sharpe. The forensics saw the crash-WINS on young names but not the
+squeeze-LOSSES — so tilting shorts toward young ADDS variance, not edge. The reliable grind is in OLD
+symbols, but even that isn't era-stable (recent +3.54 vs OOS +0.55). **young-tilt REJECTED.**
+**Deeper: the young-alt event structure (crash edge AND squeeze risk on the SAME names) can only be
+exploited by DISTINGUISHING dump-prone from squeeze-prone crowded young alts — which needs positioning
+data (DATA1), not symbol age.** 3rd consecutive fresh idea (short-only, pred_disp, symage) refuted — all
+free selection/conditioning on the noise-dominated edge fails; DATA1 (new orthogonal signal) is the only
+lever. Script: live/symbol_age_test.py.
