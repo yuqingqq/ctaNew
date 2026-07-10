@@ -2151,3 +2151,20 @@ eras (correct diversification behavior), but variable and small-sample.
 but honestly it is a MODEST, forward-unproven DD-diversification lever (+33% matched-vol DD in
 v4's bad eras), not a Sharpe breakthrough.** Next = forward-validate both streams + build the
 inverse-vol combined book with shared kill-switch. DIV1 investigation CLOSED at this verdict.
+
+### Reviewer review (2026-07-10) — DIV1 matched-vol (23g): SOUND, clean pass (no fixes)
+
+Reviewed the final DIV1 result; no corrections needed:
+- **+33% matched-vol DD cut is computed correctly.** cm = comb × (σ_v4/σ_comb) on the SAME window
+  (comb.index), and since mdd() runs on an additive cumsum, maxDD scales EXACTLY linearly with that
+  factor (not approximate) → v4 −5,411 → −3,604 = +33% is arithmetically right; the combined book
+  ran at 0.43× v4 vol, so the raw −71% was mostly de-risking, as flagged (4b656da).
+- **Robust, not one-episode.** Per-year matched-vol cut +36%/+25%/+17% across v4's three weak years
+  (2024/25/26) + a mild −9% in v4's best year (2023) = textbook diversification (helps when v4 is
+  weak, small drag when strong).
+- **Verdict honestly sized**, and it reflects every prior flag: path (C) = a MODEST, forward-unproven
+  DD-diversification lever (+33% matched-vol DD in v4's bad eras, maintained Sharpe +1.07→+1.09, low
+  crisis corr +0.15), NOT a Sharpe breakthrough. Matched-vol re-headline (4b656da), single-path →
+  sub-window (23f), weak-hedge n=39 crosses 0 (23f), and async-not-synchronized-crisis (2d0cec0) all
+  incorporated.
+Clean pass — DIV1 review trail complete. Next durable step is forward validation of BOTH streams.
