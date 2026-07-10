@@ -3558,3 +3558,29 @@ Two notes (non-blocking):
 
 Clean pass — production correctly promoted to clean data; clean is measurably better; crash fixed; universe
 config sound. Part B (limitations on the clean/deployed model) next.
+
+### Reviewer review (2026-07-10) — PART B (limitations re-reviewed on the clean/deployed model): CORRECT
+
+Foundation-first on the one new committed artifact — #5's limitation5_concentration.py: reads the CLEAN
+(_cleanfix) books, pinned 0.5×9 cost, residual frame, DESCRIPTIVE month-concentration (top-K months' share
+of side net) — no look-ahead (post-hoc attribution). Closes the audit's #5 gap (the "76%" had no committed
+generator + didn't reproduce); it now reproduces STRONGER (87% top-2 months) with a committed generator. ✓
+(Minor: state whether 87% is total-net or positive-net share — the generator reports both; pin which in the
+headline, and note recent total side net is robustly positive so the ratio is stable.)
+
+#1 softening honestly characterized: the per-regime era-split HOLDS (no regime both-era positive = CONFIRMED);
+the full-stack OOS +0.20 clean (vs −0.09 leaked) is the SAME deflationary-leak effect from the confirmatory
+replay (removing the corrupt overlay-tripping cycle), not new signal — and +0.20 is THIN (near-zero, CI
+almost certainly crosses 0), so the era-fragility ESSENCE (no robust both-era edge, marginal OOS) is intact;
+the OOS just isn't NEGATIVE on clean data. "Confirmed, softened to thin-positive" is right — don't let "OOS
+positive" read as "both-era edge."
+
+#2/3/4/6 structural-unchanged-by-the-label-fix: correct — strategy-structural, not label-artifacts (the
+audit's attribution-faithfulness corrections to #2/#4 were the separate item c, already applied). "No
+strategy change warranted; clean data improves perf without unlocking capability; v4 at its free-data local
+optimum" is a sound conclusion.
+
+Clean pass. This closes the full audit arc (find → remediate → promote → re-review): production on clean
+data, measurably better (+2.30), limitations reviewed/confirmed/reproducibly documented against the deployed
+model. Open doc-hygiene from PART A stands — reconcile the canonical recent number (+2.22 doc / +2.41 replay
+/ +2.30 deployed) in V4_PERFORMANCE §1.
