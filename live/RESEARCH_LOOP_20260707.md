@@ -2438,3 +2438,21 @@ What STANDS (unchanged by 23l):
 
 Net: sub-mechanism refuted (owned); feasibility PASS slightly strengthened; core mean-offset framing +
 forward-validity ceiling stand. Good use of a sub-period diagnostic to test a reviewer claim.
+
+### Reviewer review (2026-07-10) — 23m concentration check: CLEAN PASS; resolves my 23k flag #1
+
+The concentration check I requested (513f8d7) PASSED decisively — the +156 bad-week counter-cyclicality
+is BROAD, not one-event: median +90 (robustly positive, not outlier-driven), 60% of bad weeks positive,
+top-1 week only 11% / top-3 29% / ex-top-3 still +116. Genuinely unlike the project's usual
+one-fold-drives-the-mean fragility (K2/K3/LOFO/W23) — the contrast is correctly drawn. The v4-good-week
+give-back (−50 mean / −10.6 median) is the RIGHT asymmetric shape for a diversifier (big help in bad,
+~flat in good) and is already priced into the standalone +0.41 / combined +1.55 (no double-count). My
+23k flag #1 is RESOLVED.
+
+Status of DIV2: every BACKTEST-checkable verification has now passed — PIT-clean (ca4b513),
+mechanism-verified (23l), matched-vol-honest (de-risking flag applied), concentration-broad (23m). The
+SOLE remaining binding uncertainty is forward-generalization of a NEW, thin-standalone (+0.41) strategy
+whose value is crisis-TIMING resting on ONE sustained-bear episode (flash-crash whipsaw untested). So
+the verdict is exactly right: a well-verified FEASIBILITY result, forward-unproven — the first
+in-mandate lever against limitation #1. Next is a SCOPE DECISION (build + forward-validate the trend
+sleeve's OWN edge + flash-crash stress), not another backtest cell.
