@@ -4480,3 +4480,24 @@ exploited by DISTINGUISHING dump-prone from squeeze-prone crowded young alts —
 data (DATA1), not symbol age.** 3rd consecutive fresh idea (short-only, pred_disp, symage) refuted — all
 free selection/conditioning on the noise-dominated edge fails; DATA1 (new orthogonal signal) is the only
 lever. Script: live/symbol_age_test.py.
+
+### Addendum 53 (2026-07-10) — SURVIVORSHIP (review a036397 flag 2) CONFIRMED: SYMAGE1 refutation biased; opens a FREE new direction
+
+Verified: panel_expanded_v0 is SURVIVORSHIP-FILTERED — all 175 symbols extend to panel end 2026-06-30,
+ZERO delisted. So symbols that CRASHED TO DELISTING are ABSENT. Impact on SYMAGE1 (52):
+- The young tier is missing exactly its biggest short-WINS (young froth that crashed to zero/delisting =
+  the short's best outcome), while its squeeze-LOSSES (pumped survivors) ARE present → **my measured
+  "young worse (−0.19)" is SURVIVORSHIP-BIASED and UNDERSTATES the true young edge.** RETRACT the strong
+  "young has no edge"; young-tilt is UNPROVEN either way. The DEPLOYABILITY conclusion still holds (age
+  alone can't separate dump from squeeze in advance → needs DATA1), but the refutation is not clean.
+- **BROADER (the important part): the ENTIRE v4 backtest is on survivors** — the short-CRASH edge (the
+  50-forensics event structure) is likely UNDERSTATED across the whole strategy (biggest crashes = delisted
+  = absent), while squeeze-losses are fully counted. This is the known "survivor-universe" missing-limitation,
+  now shown to bite HARDEST exactly where the edge lives (young-alt crashes).
+**NEW FREE DIRECTION (input-changing, not re-slicing → could beat the CI wall): SURVIVORSHIP-CLEAN
+REBUILD.** Delisted-symbol klines ARE on Binance Vision (free). Rebuild the panel including delisted
+symbols (their full history to delisting), re-assess the short / young-alt edge. This ADDS the missing
+crash-wins (new inputs), directly tests whether the young-alt short edge is REAL once delisting crashes
+are included — a genuine free, in-scope direction the event→age→survivorship chain uncovered. Caveats:
+non-trivial build (identify delistings, fetch klines, rebuild w/o target_A clip breaking it); model
+retrain on the clean universe. Candidate next step BEFORE paid DATA1.
