@@ -3681,3 +3681,25 @@ era-fragile, event-concentrated edge, on clean data with an HONEST risk picture 
 constraints structural (#1, #5, managed not solved); one paid-data lever (#4→DATA1); rest operational
 (forward ledger). Audit trail preserved in ledger addenda 24-33 + git history. Scripts:
 reeval_stability.py + the prior committed generators.
+
+### Reviewer review (2026-07-10) — addendum 34 (V4_LIMITATIONS rewritten clean-authoritative + per-regime stability): CORRECT
+
+Foundation-first: reeval_stability.py reuses the verified attribution_v4_regime (clean books, pinned cost),
+reads the _cleanfix books, computes descriptive per-regime monthly concentration (no look-ahead), committed. ✓
+Stale-number check PASSED: grep finds NO leaked +4.46/+4.09/0.25×9/≥-pre-gate residue in the rewritten doc —
+the leaked-panel + banner PATCHWORK is fully replaced by clean-authoritative numbers, resolving my PART A
+hygiene note (replace, don't just banner-flag). ✓ Spot-checked: the prior substantive framings survive on
+clean data (#3 deep-bull LOTTERY, #2 bull-gate ERA-TRAP, #4 unmasked SQUEEZE tail).
+
+The new per-regime concentration finding is a good generalization: EVERY regime is 50-80% top-2-month
+concentrated (recent side 73%, bear 58-80%, bull 72%) → #5's event-concentration is strategy-WIDE, not
+side-specific. And the side/bear OPPOSITE-era-signs (side +14,432 rec / −8,621 OOS; bear +3,802 OOS / −3,950
+rec) is the sharpest one-line statement of #1 — in any era one main regime works and the other doesn't.
+
+The doc's STATUS framing is appropriately caveated (deployed clean, BACKTEST-verified not live-forward,
+expectation WIDE) and the clean numbers (+2.30 / +0.20, per-regime) match the re-eval.
+
+Clean pass. The rewrite makes V4_LIMITATIONS authoritative on clean data with committed numbers — the right
+final state for the doc. NET of the whole audit episode: production on clean data (+2.30, honest risk picture
+incl. the unmasked squeeze tail), all limitations committed-verified, the doc authoritative, runway = DATA1
+(squeeze-tail hedge) + operational forward ledger.
