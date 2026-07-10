@@ -4268,3 +4268,24 @@ Not a clean pass — promising and foundation-sound, but (2) is a real inconsist
 on (3) paired CIs + (4) the deployed BTC-hedge frame. Recommend: fix the mechanism wording, add paired-CI/per-fold
 on the deltas, then the full-stack replay with the costed+beta-verified hedge. If it survives all three, it is the
 first genuine construction improvement of the session and legitimately addresses #1 source (b).
+
+### Addendum 48 (2026-07-10) — SHORT-ONLY REJECTED: the "both-eras pass" is 1-2-quarter noise (paired CI crosses 0)
+
+Reviewer aacdc47 4 flags applied. Flag 3 (paired CI + per-fold) is DECISIVE and KILLS the candidate
+(shortonly_ci.py):
+- **RECENT: Δ +0.70, block-bootstrap CI [−0.98, +3.06] — CROSSES 0 (not sig).** Per-quarter: 2025Q4
+  Δ −2.81 (short-only WORSE), win is only 2026Q1 (+3.47)/Q2 (+2.53).
+- **OOS: Δ +0.32, CI [−0.89, +1.67] — CROSSES 0.** ENTIRELY one quarter: 2023Q1 Δ +7.53; most others
+  mixed-negative (2023Q3 −2.05, Q4 −2.57, 2024Q3 −2.56). Drop 2023Q1 → OOS delta negative.
+**VERDICT: REJECTED — the book-level both-eras "pass" was point-estimate noise concentrated in 1-2
+quarters (the W23-LOFO / K2-K3 pattern). The cheap paired-CI screen killed it before the full-stack
+replay — exactly its purpose.** I OWN briefly over-reading the point estimate.
+Flags folded: (1) it was an IMPROVEMENT-gate not era-robustness (OOS still −0.53 NEGATIVE); (2)
+mechanism corrected — the long is mean-POSITIVE (+2.5 OOS) but a high-variance LOTTERY, so its marginal
+book-Sharpe contribution is negative (variance drag, NOT negative mean — my 47 arithmetic was wrong);
+(3) CI kills it; (4) BTC-hedge-frame moot (rejected pre-hedge-verify).
+**Deeper conclusion: source (b) long-leg era-conditionality is NOT robustly fixable by construction
+either — dropping the long helps some quarters, hurts others (quarter-fragile, like everything). So ALL
+THREE #1 sources resist construction/free fixes.** Final: #1 stays MANAGED; DATA1 (predictive squeeze,
+for source a) is the ONLY lever with a path, and it's PARTIAL. Construction space now exhaustively +
+statistically closed. Scripts: shortonly_test.py (point est), shortonly_ci.py (the CI screen that killed it).
