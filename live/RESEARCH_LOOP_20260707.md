@@ -4649,3 +4649,31 @@ Discriminator vs the killed re-slice tests: those had concentration WITHOUT a re
 the crash-edge has BOTH concentration AND mechanism (crowded → dump → delist). That is why a lumpy CI does not
 condemn it here and a mechanism-less lumpy delta was condemned there. This is the ONLY loosening of the CI wall in
 the session, justified by mechanism + multi-episode replication — never by the size of any single win.
+
+### Reviewer review (2026-07-10) — addendum 54b (decision-rule amendment): CLEAN PASS — faithful folding-in + 2 definition refinements
+
+Faithful and disciplined folding-in of the cbf681b lumpy-CI note — and, importantly, NOT a weakening into a
+rubber stamp. It replaces the aggregate-CI hard-veto with a CONCRETE, falsifiable, and actually-STRICTER
+per-episode structural test: ACCEPT iff ≥3 INDEPENDENT crowded→crash episodes, consistent short-side sign, ≥1 per
+era, no single episode >50% of the recovered edge, all clearing the (b)-bound realistic haircut; CI secondary.
+Both guards intact — false-accept (single-episode >50% → REJECT, the short-only/pred_disp failure mode) AND
+false-reject (wide few-event CI no longer vetoes). The ≥1-per-era + >50% cap interact well (a single-episode era
+that dominates → REJECT). Correctly scoped as the ONLY CI-wall loosening this session, justified by mechanism +
+multi-episode replication, never by any single win's size. Pre-registered before the run. Clean pass.
+
+Two definition refinements to lock BEFORE the run so "≥3 independent episodes" can't be gamed (sharpenings, not
+objections):
+1. DEFINE "INDEPENDENT" RIGOROUSLY — separated in time AND not driven by a single common systemic shock. The FTX
+   collapse (Nov-2022) crashed FTT PLUS correlated FTX-ecosystem tokens simultaneously = ONE episode, not several;
+   LUNA/UST (May-2022) likewise cascaded across a cluster = one. Without this, a single systemic cascade splits
+   into "3 independent" and smuggles back the single-event artifact the rule exists to block. Require the ≥3 to be
+   distinct, time-separated, non-co-triggered shocks.
+2. PER-EPISODE, VERIFY THE MODEL SELECTED THE NAME — each counted episode must show the KEEPSET4 stack actually
+   put the name in its bottom-2 short (via the froth/residual signal) in the cycles into the crash. The recovered
+   edge only counts if the strategy WOULD HAVE SHORTED it; a name that merely delisted while the model was flat/
+   long on it is not evidence of a repeatable model-driven edge. This is what separates "repeatable froth-short
+   mechanism" from "coincidental delistings existed."
+
+With those two locked, the ≥3-independent-mechanism-episodes bar is robust and the amendment is the right way to
+judge an inherently-lumpy crash-edge. Clean pass — I will foundation-check the rebuild results against this exact
+rule (and both definitions) when they land.
