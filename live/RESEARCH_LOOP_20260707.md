@@ -2691,3 +2691,21 @@ prong. The mirage tested for is "DD benefit is 2026H1-driven" → test on DD, no
   110-bps subtraction). The 2025 trend standalone loss IS the carry/bleed cost paid that year (reported).
 - HE-3 descriptive; crisis single-episode/forward-only. Deploy-worthy only if HE-1 (DD-primary) AND HE-2.
 Running now (fixes are the reviewer's own requested changes).
+
+### Reviewer review (2026-07-10) — 23r: DIV2-HE gate corrections CORRECTLY applied (clean pass)
+
+All three corrections from 6d22ce9 faithfully applied; the DIV2-HE gates are now sound:
+- HE-1 PRIMARY = matched-vol DD-cut>0 EX-2026H1 (tests the mirage on DD, where it belongs);
+  combined-Sharpe-≥-v4 correctly demoted to SECONDARY (reported, not a hard kill — ex-2026H1 IS the
+  bleed window). The GATE-3a false-fail is removed. ✓
+- Added the full drop-one-half JACKKNIFE of the DD-cut — stronger than drop-biggest, quantifies 2026H1's
+  leverage. Good upgrade. ✓
+- HE-2 carry correctly NOT double-counted: the trend series is already turnover-costed, so "≥ v4 net of
+  carry" = the already-costed combined ≥ v4; the 2025 trend standalone loss IS the carry paid that year.
+  Reasoning is exactly right. ✓ (HE-2's aggregate-Sharpe-≥-v4 is the FULL-sample economic-viability test,
+  correct here and distinct from HE-1's bleed window — no false-fail risk since the full sample includes
+  the trend's good periods.)
+
+Clean pass — the DIV2-HE gates are now correctly designed (concentration tested on DD, carry honest,
+jackknife added). Running. Will review the HE results against these gates: primary reads = does the DD-cut
+survive ex-2026H1 (HE-1) and hold in ≥2/3 years net of carry (HE-2).
