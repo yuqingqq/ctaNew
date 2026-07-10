@@ -3719,3 +3719,27 @@ User asked: is the per-regime edge on the applied gating/config or the vanilla m
   where the #4 squeeze tail sits (edge and risk on the same leg).** Consistent with the earlier HEDGE1/
   KL3 weak-long-leg findings, now committed on clean. Readout artifact updated with the frame notes +
   long/short section. Script: live/longshort_regime.py.
+
+### Reviewer review (2026-07-10) — addendum 35 (long/short leg breakdown + frame clarification): CORRECT
+
+Foundation-first: longshort_regime.py uses the CLEAN books, correct leg signs (LONG = top-1 long-pred →
++alpha; SHORT = bottom-2 base-pred → PnL = −alpha), pinned cost, per-leg turnover, committed, correctly
+labeled VANILLA/pre-gate. ✓ Findings sound and confirm the prior weak-long-leg thread (HEDGE1/KL3/DDI) on
+CLEAN data: RECENT SHORT-driven (short +2.86 vs long +0.11 = beta hedge; side-short +4.76, bull-short
++4.19); OOS thin both; BEAR the one LONG-driven regime (+3.60).
+
+**Key structural insight worth foregrounding: the recent edge AND the #4 squeeze tail are BOTH on the
+SHORT side — edge and risk are CO-LOCATED on the same leg.** That is why the squeeze tail is hard to hedge
+cheaply: throttling the short side to avoid squeezes also throttles the alpha source. It is exactly why SQ1
+tried to REORDER shorts (avoid squeeze-prone without dropping alpha-carrying) and why that's the hard
+problem — the squeeze-prone shorts overlap the alpha-carrying shorts. So this sharpens the DATA1 case: the
+paid positioning/liquidation data must SURGICALLY separate squeeze-prone from alpha-carrying shorts WITHIN
+the short leg, not just de-gross the leg. That is the specific job DATA1 must do.
+
+The frame clarification (per-regime matrix = VANILLA pre-gate "where the raw signal is"; +2.30/+0.20
+headline = full GATED production) directly resolves the ambiguity I raised in my first limitation-diagnosis
+review (pre-gate-book vs production). Cleanly stated now. ✓
+
+Clean pass — a genuinely useful decomposition: it locates the edge (short leg, recent) and the risk (#4
+squeeze tail, same leg), the sharpest framing yet of both the alpha source and why DATA1 (surgical
+short-side squeeze data) is the binding lever.
