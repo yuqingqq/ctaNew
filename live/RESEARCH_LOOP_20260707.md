@@ -4230,3 +4230,41 @@ era-conditionality → SHORT-ONLY + BTC-hedge (this candidate, in-scope, free, n
 (a) short squeeze tail → DATA1 (predictive); (c) regime sign-rotation → manage (gate/cap). If short-only
 survives full-stack, it's the first genuine construction improvement + addresses one #1 source directly.
 Script: live/shortonly_test.py.
+
+### Reviewer review (2026-07-10) — addendum 47 (short-only + BTC-hedge): PROMISING CANDIDATE, foundation sound, 4 flags
+
+Genuinely the most promising direction this session, and foundation is sound: CLEAN `_cleanfix` books, correct
+construction (`short_only = -WS*sa - scost` literally drops the long; the BTC-hedge adds ZERO residual by
+construction, so NO double-hedge artifact — my initial concern is averted and the addendum is honest about it),
+gate correctly distinct from LH1 (LH1 added the era-dependent −3.9 basket; this adds nothing). The finding is
+real: dropping the Sharpe-dragging long lottery improves BOTH eras. The layered framing (b→short-only, a→DATA1,
+c→manage) is reasonably scoped, and the CANDIDATE-not-solution caveats (full-stack, cost, beta, jackpot, maxDD)
+are the right list. Four flags:
+
+1. FRAMING (precision): the gate is RELATIVE (`s ≥ b` both eras) = a both-era IMPROVEMENT, NOT era-robustness.
+   Short-only is +2.54 recent / **−0.53 OOS — still NEGATIVE**. The strategy still loses OOS, just less. State
+   this crisply so "PASSES both-eras" isn't skim-read as "era-robust/positive both eras" (it addresses source b;
+   sources a+c keep OOS negative).
+
+2. INCONSISTENT MECHANISM (correctness): "OOS long net-negative overall (side −0.33 + bull −1.57 outweigh bear
+   +3.60)" is arithmetically WRONG — −0.33−1.57 = −1.90 does NOT outweigh +3.60; the sum is **+1.70 (positive)**,
+   and per-regime Sharpes are not additive anyway. It also contradicts addendum 41's long-alt OOS residual MEAN
+   **+2.5 (positive)**. The CORRECT mechanism (script + addenda 39/41): the long is mean-POSITIVE but a
+   high-variance LOTTERY, so its MARGINAL book-Sharpe contribution is negative — dropping its variance raises the
+   book Sharpe even though its standalone mean is +2.5. Fix the justification: variance/marginal-Sharpe drag, NOT
+   a negative long mean.
+
+3. STATISTICAL (rigor): the +0.70/+0.32 deltas have no CI. This session's repeated lesson (W23 LOFO, K2/K3) is
+   that thin OOS deltas concentrate in 1-2 folds; +0.32 OOS Sharpe is thin. Report paired block-bootstrap CI +
+   per-fold breakdown on both deltas BEFORE treating the both-era pass as real — that is the cheap screen that
+   has killed every prior "breakthrough" here.
+
+4. BTC-HEDGE DEFERRAL is the deployability crux (reinforce their caveat 3): the residual result transfers to the
+   deployed book ONLY IF the BTC-hedge is BOTH zero-residual AND beta-neutral. If the hedge ratio leaves residual
+   beta, its naked directional PnL becomes a #3-style BTC beta bet = an ERA bet (long BTC pays in a BTC-up era,
+   not era-robustness). The naked BTC-hedge PnL must net ~0 across eras — verify alongside the beta ratio.
+
+Not a clean pass — promising and foundation-sound, but (2) is a real inconsistency to fix, and the verdict hinges
+on (3) paired CIs + (4) the deployed BTC-hedge frame. Recommend: fix the mechanism wording, add paired-CI/per-fold
+on the deltas, then the full-stack replay with the costed+beta-verified hedge. If it survives all three, it is the
+first genuine construction improvement of the session and legitimately addresses #1 source (b).
