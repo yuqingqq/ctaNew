@@ -2168,3 +2168,21 @@ Reviewed the final DIV1 result; no corrections needed:
   sub-window (23f), weak-hedge n=39 crosses 0 (23f), and async-not-synchronized-crisis (2d0cec0) all
   incorporated.
 Clean pass — DIV1 review trail complete. Next durable step is forward validation of BOTH streams.
+
+### Addendum 23h (2026-07-10) — SCOPE CORRECTION: path (C) is CROSS-ASSET (equities), OUT for crypto-only mandate
+
+User: xyz-v7 is stocks; focus is CRYPTO trading only. Correct — xyz-v7 is a US-EQUITY strategy
+(S&P-100 names, weekly). So path (C) as tested (crypto v4 + equity xyz-v7) is OUT OF SCOPE for a
+crypto-only mandate. **Crucially, this changes the conclusion, not just the label:** DIV1's
+decisive positive (low corr EVEN in the 2022 crisis) is a CROSS-ASSET property — equities don't
+crash WITH crypto (2022 crypto LUNA/FTX was crypto-specific, asynchronous with equities' own
+drawdown). A CRYPTO-ONLY diversifier loses exactly this: all crypto strategies share crypto beta +
+crypto-crisis risk, so in a 2022-type crypto crash (where v4 FAILS) crypto-crypto correlations
+spike toward 1 → a crypto-internal sleeve (trend-vs-reversion, funding carry, v3-vs-v4 [already a
+tie + correlated]) would almost certainly FAIL the crisis-correlation test the equity stream
+passed. **Conclusion: for a crypto-only mandate, era-diversification (path C) is largely
+UNAVAILABLE — limitation #1 (era-fragility) must be MANAGED (0.5× gross cap, forward monitoring,
+kill-switch), not diversified away.** DIV1's +33% result stands as a valid CROSS-ASSET finding but
+is NOT crypto-actionable. **Crypto-only runway reverts to: (A) DATA1 (crypto liquidation/positioning
+data → SQ1 stationarity; paid, user decision); (B) operational (forward ledger → release gross cap,
+live evidence). No crypto-internal research cell has positive honest EV.**
