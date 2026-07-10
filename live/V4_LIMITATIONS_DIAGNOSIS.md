@@ -1,157 +1,112 @@
-# v4 production-config limitations diagnosis (2026-07-09; CORRECTED 2026-07-10 per external audit)
+# v4 limitations — clean-data re-evaluation (2026-07-10, AUTHORITATIVE)
 
-> **⚠️ AUDIT CORRECTIONS (2026-07-10, RESEARCH_LOOP addenda 24-27).** An external audit found real
-> errors in the numbers/frame below; they are corrected here. (1) **Labels were gap-corrupted** (row
-> `.shift(-48)` vs `exit_time=open_time+4h` decoupled at data gaps → the 2025-02-28 cycle was a 22-day
-> return mislabeled as 4h). (2) **Cost was under-charged 2×** (the table used 0.25×9 bps; pinned is
-> 0.5×9). Re-derived on the clean panel at pinned cost (committed: attribution_v4_regime.py), the
-> **OOS BEAR anchor drops +4.46 → +1.82 Sharpe** (contamination is bear-only; other cells move <0.25;
-> recent unchanged). The era-split SURVIVES in sign but the OOS bear anchor is ~+1.8, not ~+4.5. (3)
-> **"bear traded unconditionally" is WRONG** — bear is DD-stop-exempt but the global REGIME_GATE can
-> zero it. (4) **"mild bull = FLAT" is WRONG** — with 3-cycle hysteresis + 6-sleeve/24h hold it is "no
-> NEW mild-bull sleeve"; prior exposure persists ~20h (full flat lags a raw-bull onset ~32h). (5) The
-> **"post-overlay net ≥ pre-gate net" claim is INVALID** (the lagging binary gate zeros winners; the
-> uniform 0.5× cap shrinks the positive regimes). The per-regime table and prose below retain the
-> original (leaked/half-cost) figures for provenance; read them THROUGH this banner — the corrected
-> residual-Sharpe table is RESEARCH_LOOP addendum 27.
+Authoritative statement of v4's limitations on the **clean, deployed** data, replacing the earlier
+(leaked-panel / half-cost) diagnosis. Every number here has a **committed generator** and is at the
+pinned **0.5×9-bps** cost. Audit trail (how we got here — the label gap-leak, the 2× cost undercharge,
+the ERT1 wrong-model, the promotion to production): RESEARCH_LOOP_20260707.md addenda 24–33 + git
+history. Generators: `attribution_v4_regime.py`, `limitation5_concentration.py`, `reevaluate_clean.py`,
+`reeval_stability.py`.
 
-Config-aware diagnosis of what production v4 ACTUALLY trades (not the vanilla book the variant
-cells used). Purpose: locate the real limitations before optimizing. Grounded in `run_convexity_v4_live.sh`
-+ this session's validated findings + a per-regime book-net attribution (residual-alpha AND naked
-frames, defined below).
+## Status (what is true right now)
 
-## Production v4 = a regime-SWITCHED strategy
+- **Deployed:** the live pipeline runs on the **clean panel** (317 gap-corrupted labels fixed at source
+  in X70 + promoted to the canonical panel), **per-symbol RidgeCV** models retrained on it, clean
+  bootstrap books/seeds/state. A latent deep-bull empty-group crash in `convexity_paper_bot` was fixed.
+- **Verified:** in **backtest / replay** — clean-vs-leaked A/B, committed generators, reviewer-closed.
+  Clean is measurably **better** than leaked (recent 2.30 vs 2.26, better maxDD).
+- **NOT yet verified:** **live-forward.** No forward trading on the clean models has occurred; the
+  forward ledger is the standing gap. This is *backtest-verified, not live-proven*.
+- **Forward expectation is WIDE** — the 2.30↔0.71 universe-meta swing showed real universe-composition
+  sensitivity; do not read +2.30 as a tight point estimate.
 
-Per `run_convexity_v4_live.sh`, the model preds feed a regime switch (btc_ret_30d):
+## Performance (clean, deployed)
 
-| regime (btc30) | what production does | share (rec/oos) |
+| frame | full-stack Sharpe | maxDD |
 |---|---|---|
-| **side** (−0.10..+0.10) | model 1L/2S, REGIME_GATE, inv_sqrt_vol | 54% / 55% |
-| **bear** (< −0.10) | equal-weight 1L/2S (BEAR_MODE=equal); **DD-stop OFF** (STOP_SKIP_REGIMES=bear) | 36% / 10% |
-| **bull** (0.10..0.15) | **FLAT — gated** (BULL_GROSS_MULT=0) | 7% / 12% |
-| **deep bull** (≥ 0.15) | **mom1d long-only** (long top-2 by return_1d, ½ gross) | 3% / 23% |
+| **recent 2025-10+** (deployment case) | **+2.30** (deployed; +2.41 confirmatory) | −11,132 |
+| **OOS 2023-25** (guardrail) | **+0.20** (better than leaked −0.09) | — |
 
-Plus GLOBAL_GROSS_MULT=0.5 (live cap), kill-switch.
+Per-regime book (residual Sharpe / net bps, pinned cost):
 
-## Per-regime book-net attribution (net, book 0.5/0.5, 9-bps RT convention, daily Sharpe)
-
-**FRAME (read carefully):** these are per-cycle BOOK NET in bps for the STANDARD beta-neutral 1L/2S
-MODEL book (long top-K / short bottom-K by pred), bucketed by regime — i.e. "what the model book
-does in each regime" — shown in BOTH the RESIDUAL-alpha frame (`alpha_vs_btc` — the v4 TARGET, where
-the model's skill lives) and the NAKED realized-return frame (`return_pct` — what you'd actually
-book). They are within a few bps of each other because the book is ~beta-neutral, so the diagnosis
-is frame-independent. **These are NOT the production +2.22 Sharpe:** they are PRE-GATE (no
-REGIME_GATE/DD-stop → actual production per-regime net is ≥ these) and per-regime CONDITIONAL
-Sharpes (not comparable to the all-regime, post-overlay canonical number). **Crucially, the
-deep-bull row is this beta-neutral MODEL book restricted to deep-bull cycles — the COUNTERFACTUAL
-production abandons — NOT the mom1d long-only overlay production actually runs there** (that overlay
-is long-only, not beta-neutral; its real performance is §6.1/Q3, cross-referenced in limitation #3).
-Small-sample flags noted. **CORRECTION (2026-07-10 audit): the "production per-regime net is ≥ these
-pre-gate figures" claim below is INVALID — the lagging binary REGIME_GATE zeros winning cycles and the
-uniform 0.5× cap shrinks the positive-net regimes, so gates alter per-regime net in a sign-ambiguous,
-path-coupled way (pitfall #4), NOT a lower bound. And the figures themselves under-charged cost 2×; see
-the top banner + addendum 27 for the clean/pinned table.**
-
-| regime | REC residual / naked (net/Sh) | OOS residual / naked (net/Sh) | production action |
-|---|---|---|---|
-| side | **+18.7/+4.09 ; +21.3/+4.61** | **−0.1/−0.04 ; +0.6/+0.17** | traded |
-| bear | −4.9/−0.88 ; −2.5/−0.44 | **+17.3/+4.46 ; +14.8/+3.94** | traded |
-| bull (mild) | +45.2/+4.36 ; +47.6/+4.58 (n=114, short-driven, era-fit) | −7.0/−1.47 ; −5.3/−1.19 | GATED |
-| deep bull | −32.3/−4.55 ; −31.1/−4.40 (n=47) | −0.9/−0.22 ; −1.4/−0.32 | mom1d long-only (row = model counterfactual, NOT the patch — see #3) |
-
-(Format: `residual net / residual Sharpe ; naked net / naked Sharpe`. Residual = v4 alpha target;
-naked = realized. Diagnosis below holds in both frames.)
-
-## The core limitations (what this reveals)
-
-1. **NO regime has a consistent both-era edge — every edge is era-dependent.** Side carries
-   RECENT (+4.09) but is FLAT OOS (−0.04). Bear is the anchor OOS (+4.46) but flat-within-noise
-   recent (−0.88 Sh over ~97 bear-days ⇒ t ≈ −0.45 — NOT a significant drag; recent simply can't
-   speak to it). Mild-bull would've earned recent (+4.36) but loses OOS (−1.47). The strategy is a
-   *collection of era-specific regime edges*, and the config (gate bull, trade bear) is implicitly
-   a bet on which era you're in. This is the deepest limitation and the mechanism behind the 2022
-   holdout FAIL + the 0.5× cap. (Best-powered evidence is the SIDE bucket — 54% of cycles, +4.09
-   rec / −0.04 OOS = the same event-concentration as #5; the thin bear/bull buckets corroborate the
-   pattern but carry sampling noise.)
-2. **The bull gate is blunt — but deliberately so.** The two bull sub-regimes are handled
-   separately: in mild-bull (0.10-0.15) BULL_GROSS_MULT=0 zeroes the model book → FLAT; in deep-bull
-   (≥0.15) the model book is likewise zeroed but the mom1d long-only overlay runs instead (#3). What
-   the mild-bull gate "gives up" is a RECENT-ONLY bucket that was strongly positive (short-driven
-   "pump topping reverts", +4.36) but −1.47 OOS — an era-fit bucket (n=114, short-driven, +4.36 rec
-   / −1.47 OOS = the #1 pattern), NOT a durable edge. So the gate's bluntness is the correct
-   conservative choice, not a real cost. (See "config choice" below: the mild-bull split is the
-   era-trap, not a lever; the deep-bull lottery is the only live bull question.)
-3. **In deep-bull the model's cross-sectional book is weak** (beta-neutral counterfactual −32 rec
-   small-n / −0.9 OOS) — which is WHY production abandons it for the mom1d long-only overlay. But
-   that overlay is NOT a dead patch: it EARNS, via generic long-alt BETA — §6.1/Q3: OOS signal
-   +62k gross, essentially matched by random-alt picks (placebo median +54k gross) and ~2× a
-   BTC-long (+27k). What's unproven is the return_1d RANKING (Q3 p=0.215), not the PnL. So deep-bull
-   handling is an UNVALIDATED DIRECTIONAL BETA LOTTERY (§5: deep-bull long median −73/−107, top-3
-   cycles ≈ 97-106% of totals), not a broken selection leg. The real question is whether a
-   ~beta-neutral strategy should hold that lottery bet, not whether it "earns."
-4. **Bear is DD-stop-exempt but NOT unconditional (CORRECTED).** BEAR_MODE=equal and STOP_SKIP_REGIMES
-   =bear turn OFF the *DD-stop* in bear, but the global REGIME_GATE (empty skip-set) can still de-gross
-   bear to flat when its trailing edge ≤ 0. And the OOS-anchor it bets on is now ~+1.82 Sharpe (clean,
-   pinned), not +4.46. The recent bear number (−0.88) is within noise (t ≈ −0.45),
-   so it neither confirms nor refutes the bet. **The squeeze tail is the risk, and the label leak was
-   MASKING it in OOS (committed re-derivation, reevaluate_clean.py, 2026-07-10):** bear short-leg PnL
-   skew was leaked +3.06 (falsely RIGHT-skewed — the corrupt 2025-02-28 short-a-decline cycle was a
-   huge +outlier) → CLEAN −1.02 (the true LEFT/squeeze tail); median +6.7 >> mean −9.8, CVaR5 −715
-   (recent skew −1.67 barely moved — recent was never masked). It is unhedged (SQ1 crowding signal
-   exists but is too weak/non-stationary on free data — SK1 failed the recent holdout).
-5. **The workhorse (side) alpha is thin and event-concentrated** — CONFIRMED + COMMITTED on clean
-   data (limitation5_concentration.py, 2026-07-10 audit): **87% of RECENT side net from the top 2
-   months** (2026-04 +6,783, 2025-10 +5,773 of +14,432; 5/8 months positive) — the old unverified
-   "76%" reproduces STRONGER at 87%. OOS side is net-NEGATIVE (−8,621 bps, 44% positive months). No
-   config fixes this; it is a signal/data limit (and the era-split of #1: side pays recent, loses OOS).
-6. **The regime label is a 30-day-LAGGING classifier.** Every switch keys off `btc_ret_30d`, so
-   "which regime am I in" is itself a noisy, trailing estimate — worst in fast transitions (a
-   2022-style cascade, a sharp bull→bear flip), where production can apply "bear" rules to the
-   start of a recovery (or "side/bull" rules into a breakdown). Regime is not a clean partition; it
-   is a lagging guess at one, which compounds the era-dependence in #1.
-
-## Optimization map (limitation → lever, with honest priors)
-
-| limitation | candidate lever | prior / status |
+| regime | RECENT Sh / net | OOS Sh / net |
 |---|---|---|
-| era-dependent regime edges | finer/adaptive regime detection | LOW — adaptive-timing failed 7× (dynamic K, gates, rvol-scaling); "trailing estimators lag era" |
-| blunt bull gate | split gate: trade mild-bull (0.10-0.15), gate deep-bull (≥0.15) | LOW — this IS the #1 era-trap (mild-bull +4.36 rec / −1.47 OOS is the textbook era-dependent bucket); uniform bull0 is correct BECAUSE it refuses the era bet. Do not test. |
-| deep-bull = directional beta lottery | pre-registered {mom1d vs flat vs alt-rule} in deep bull | worth a test — but as KEEP/DROP a high-variance long-alt beta bet (it earns via beta, §6.1), NOT as "remove a dead patch"; era-neutral (bad-to-flat both eras) so simplifying is not an era bet |
-| regime label is 30d-lagging (#6) | (structural) faster/robust regime estimator | LOW — same adaptive-timing failure class; naming it, not proposing to chase it |
-| bear unconditional / squeeze tail | CUSUM gross-throttle (regime-level); liquidation data (SQ1) | CUSUM wired-not-lever; liquidation = the paid-data route |
-| thin event-concentrated side alpha | dispersion timing (FAILED); new data | dispersion timing dead; execution/cost is the real lever |
-| era-fragility (2022 FAIL, 0.5× cap) | forward ledger (release cap); universe-portable build | operational; the binding path forward |
+| side | +3.55 / +14,432 | −0.78 / −8,621 |
+| bear | −1.29 / −3,950 | **+1.82 / +3,802** |
+| bull (mild) | +3.95 / +4,571 (GATED→flat) | −2.37 / −8,288 |
+| deep-bull | −4.35 / −1,457 | −0.85 / −5,231 |
 
-## The config choice worth re-examining (NEW, actionable)
+## The strategy in one sentence
 
-Unlike the model/feature axis (exhausted, 0 promotions), ONE config choice has a live question the
-config-aware attribution surfaces cleanly:
-- **The deep-bull mom1d overlay** — a pre-registered {mom1d vs flat vs alt-rule} test in deep bull.
-  Framing (corrected from an earlier "it doesn't earn" reading — see #3): the overlay DOES earn, but
-  via generic long-alt BETA (§6.1/Q3: OOS +54k, matched by random alts), with the return_1d RANKING
-  unproven — so it is a high-variance DIRECTIONAL beta lottery. The test is a KEEP/DROP on whether a
-  ~beta-neutral strategy should hold that bet; it is era-neutral (bad-to-flat both eras), so it is
-  NOT the #1 era-trap.
+v4 is a regime-switched, ~beta-neutral cross-sectional book whose edge is a **collection of
+era-specific, event-concentrated regime edges** — no single regime is reliable across eras, and each
+regime's positive net comes from a handful of dispersion months.
 
-**NOT worth re-examining: the bull-gate split** (trade mild-bull). It is the single clearest
-instance of the #1 era-trap — mild-bull is +4.36 rec / −1.47 OOS, and splitting the gate to harvest
-the recent side is exactly the era bet the diagnosis warns against (adaptive-timing has failed 7×).
-Uniform bull0 is correct because it refuses to classify the era.
+## The definitive limitations (all committed-verified on clean)
 
-The deep-bull test is an OVERLAY/config test (not a model change), so it needs the full-stack replay
-discipline (faithful cost, no path-coupled variant noise — the estimator law), NOT the vanilla-book
-cell machinery. Everything else points back to the standing levers: forward ledger, execution/cost,
-paid positioning-depth data.
+### #1 — Era-fragility (DEEPEST). The two main regimes have OPPOSITE era signs.
+- **side** pays RECENT (+3.55) but LOSES OOS (−0.78); **bear** pays OOS (+1.82) but LOSES recent
+  (−1.29). Opposite signs → **in any given era, one main regime works and the other doesn't; neither is
+  reliable across eras.** No regime is both-era positive.
+- Mechanism: v4 farms cross-sectional dispersion, whose *sign/regime* rotates with the market era; the
+  model cannot know which era it is in. This is the driver of the 2022 holdout FAIL and the 0.5× gross
+  cap.
+- **Fixability: structural, LOW.** Modeling axis exhausted (~20 cells, 0 promotions); era-robust
+  training FAILED honest gates (addendum 23z). Cross-asset diversification works (DIV1 +33%) but is
+  OUT of the crypto-only scope; a within-crypto trend sleeve is not robustly deployable (DIV2/SWITCH1
+  FAILED). → **managed** (cap + monitoring + kill-switch), not solved.
 
-## Caveats on the numbers
+### #2 — Bull gate is a deliberate era-REFUSAL, not a defect.
+- Mild-bull is +3.95 recent (mean +40/cyc, 80% positive-months) but **gated to flat** (BULL_GROSS_MULT
+  =0). Because mild-bull is −2.37 OOS, gating **refuses the era bet** — exactly the #1 discipline.
+  Forfeiting the recent +4,571 is the correct conservative choice, not a lost edge.
 
-Pre-gate book-net attribution of the STANDARD beta-neutral 1L/2S model book, bucketed by regime, in
-BOTH the residual-alpha (v4 target) and naked (realized) frames — within a few bps of each other
-because the book is ~beta-neutral. It is the pre-gate regime EDGE (the right lens for "where is the
-model's signal"), NOT production PnL: REGIME_GATE, DD-stop, and inv_sqrt_vol sizing are not applied,
-so actual production per-regime net is ≥ these, and the per-regime conditional Sharpes are NOT
-comparable to the all-regime post-overlay canonical +2.22. **The deep-bull row is the beta-neutral
-MODEL counterfactual (what the model book would do there), NOT the mom1d long-only overlay
-production runs — see limitation #3 and §6.1/Q3 for the overlay's real numbers.** Recent bull
-(n=114) and deep-bull (n=47) are small-sample; recent bear (−0.88 Sh) is within noise (t ≈ −0.45).
-Cost = 9-bps RT per §8 convention; Sharpe = daily-aggregated then ×√365.
+### #3 — Deep-bull is a directional beta lottery.
+- The beta-neutral MODEL book LOSES in deep-bull both eras (−4.35 rec / −0.85 OOS), so production runs
+  a `mom1d_long` overlay (long top-2 by return_1d, ½ gross). That overlay **earns via generic long-alt
+  BETA, not selection** (Q3 ranking p=0.215; §6.1). return_1d is a feature (label-fix-independent), and
+  deep-bull n≈47 is tiny. → a high-variance directional bet a beta-neutral strategy holds; era-neutral
+  (bad-to-flat both eras), so simplifying it is not an era bet.
+
+### #4 — Bear squeeze tail, UNHEDGED — and the label leak had been MASKING it.
+- The short leg (bottom-K) can be squeezed: bear short-leg PnL is **left-skewed −1.02 OOS** (median
+  +6.7 ≫ mean −9.8, CVaR5 −715). **The label leak had hidden this**: leaked OOS skew read +3.06 (falsely
+  RIGHT-skewed) because the corrupt 2025-02-28 "short-a-22-day-decline" cycle was a +15% outlier. Clean
+  data reveals the true left tail (recent skew −1.67 was never masked). The tail is **unhedged**: SQ1
+  showed crowding predicts squeezes but is non-stationary on free funding (SK1 failed the recent
+  holdout). → **DATA1 (paid liquidation/positioning data) is the one lever with real upside** for
+  hedging this now-visible risk.
+
+### #5 — Thin, event-concentrated alpha — across EVERY regime, not just side.
+- Every regime's positive net is **~50–80% concentrated in its top-2 months**: recent side 73% (2026-04,
+  2025-10), bear 58–80%, bull 72%. The edge is a **handful of dispersion events, not a steady stream** —
+  so realized performance over any short window is dominated by whether a dispersion event landed. This
+  is a signal/data limit (free 4h Binance perp), unfixable by config.
+
+### #6 — The regime label is a 30-day LAGGING classifier (compounds #1).
+- Every switch keys off `btc_ret_30d` + 3-cycle entry hysteresis + 6-sleeve/24h settle, so "which regime
+  am I in" is a lagging guess — worst in fast transitions (a 2022-style cascade, a sharp flip), where
+  the book can apply the wrong era's rules. Structural / label-fix-independent; correctly handled as
+  conservatively as a lagging estimator allows.
+
+## What can move these (honest map)
+
+| limitation | binding? | the only lever with upside |
+|---|---|---|
+| #1 era-fragility | YES (deepest) | none within crypto-only modeling — **manage** (cap/monitor/kill-switch) |
+| #5 thin/concentrated | YES | none (free-data ceiling) — accept + size for long flat stretches |
+| #4 squeeze tail | YES (now visible) | **DATA1** — paid liquidation/positioning data (a real, paid decision) |
+| #2 bull gate | no (deliberate) | keep gating (refuses the era bet) |
+| #3 deep-bull lottery | no (era-neutral) | KEEP/DROP the mom1d beta bet — small either way |
+| #6 lagging regime | structural | none (any faster estimator is adaptive-timing, failed 8×) |
+
+## The bottom line
+
+v4 is a **real but thin, era-fragile, event-concentrated** edge — now on **clean data with an honest
+risk picture** (the #4 squeeze tail is no longer masked). Deployed recent backtest **+2.30** (forward
+expectation WIDE); OOS a thin-positive guardrail (+0.20). The **binding constraints are structural**
+(#1 era-fragility, #5 thin/concentrated alpha) — they are **managed, not solved**, because the alpha
+ceiling is set by free 4h Binance-perp data on a single asset class, and every modeling/construction/
+cost/architecture lever has been honestly exhausted. The **one lever with genuine upside is DATA1**
+(paid liquidation data → the now-visible short-side squeeze tail, #4). Everything else is **operational**
+(the forward ledger, to convert the backtest into live evidence and eventually release the conservative
+0.5× cap on the §7 criteria). **No strategy change is warranted; v4 sits at its free-data local optimum.**

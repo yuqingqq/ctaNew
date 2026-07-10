@@ -3665,3 +3665,19 @@ conservative + DATA1, no strategy change.
 
 Clean pass. The complete clean re-evaluation is honest and thorough — and the #4 unmasking is a genuine
 risk-awareness gain (the leak had hidden the squeeze tail), which strengthens the DATA1 case in the runway.
+
+### Addendum 34 (2026-07-10) — LIMITATIONS DOC REWRITTEN authoritative (clean data); per-regime stability added
+
+User: "what's the status, what are the limitations, thorough analysis, update the limitations."
+Added per-regime STABILITY analysis (reeval_stability.py, committed): EVERY regime's positive net is
+~50-80% concentrated in its top-2 months (recent side 73%, bear 58-80%, bull 72%) → #5 generalizes to
+ALL regimes. And the two MAIN regimes have OPPOSITE era signs: side +14432 rec/−8621 OOS, bear +3802
+OOS/−3950 rec → in any era one works and the other doesn't (the sharpest statement of #1). Rewrote
+V4_LIMITATIONS_DIAGNOSIS.md as an AUTHORITATIVE clean-data document (replaced the leaked-panel +
+correction-banner patchwork): STATUS (deployed clean, backtest-verified not live-forward, expectation
+WIDE) + PERFORMANCE (clean +2.30/+0.20, per-regime) + the 6 definitive limitations (each with clean
+committed numbers, mechanism, fixability) + honest lever map + bottom line. Net: v4 = real but thin,
+era-fragile, event-concentrated edge, on clean data with an HONEST risk picture (#4 unmasked). Binding
+constraints structural (#1, #5, managed not solved); one paid-data lever (#4→DATA1); rest operational
+(forward ledger). Audit trail preserved in ledger addenda 24-33 + git history. Scripts:
+reeval_stability.py + the prior committed generators.
