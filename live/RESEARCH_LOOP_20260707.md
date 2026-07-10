@@ -3250,3 +3250,36 @@ in V4_PERFORMANCE §1/§5, and the §7 cap-release bar (calibrated on the inflat
 (a) regenerate RECENT clean books (gen_residual_target on clean panel — 2026-06-04 gap ×174 lands
 there); (b) re-run the full-stack +2.22 replay on clean books; (c) correct V4_LIMITATIONS_DIAGNOSIS.md
 (clean bear, cost label, bear-gateable, mild-bull no-new-sleeve, drop ≥-pre-gate) + re-set §7.
+
+### Reviewer review (2026-07-10) — remediation steps 2-3 (clean OOS books + committed attribution): CORRECT, foundation-first verified
+
+Foundation-first checks (all PASS):
+- **Clean panel:** gen_oos_v4 `PANEL = env V4_PANEL` override, run with V4_PANEL=clean → books to a
+  SEPARATE suffix (_cleanfix); leaked books untouched (A/B provenance). ✓
+- **Model class = production per-symbol RidgeCV** (both gen_oos_v4 + train_twobook import RidgeCV) — NOT the
+  pooled LGBM that voided ERT1. The remediation is on the RIGHT model. ✓
+- **Cost = pinned 0.5×9 = 4.5** in attribution_v4_regime (`cost=turn*0.5*COST`, COST=9), explicitly NOT the
+  table's 0.25×9 undercharge — finding #2 corrected in the same script. ✓
+- **Committed** attribution generator (replaces the uncommitted table gen — fixes finding #3's provenance);
+  runs LEAKED vs CLEAN to quantify the inflation. ✓
+
+Result sound: bear resid Sharpe +3.56→+1.82 (net +14.0→+6.6), leak BEAR-CONCENTRATED (side/bull ~unchanged
+— the 2025-02-28 gap cycle is a bear). The compounding decomposition reconciles the earlier single-cycle
+estimate: documented +4.46 (at 0.25×9) → +3.56 (cost-corrected to 0.5×9) → +1.82 (label-cleaned); both bugs
+STACK on the bear, ~2.5× total. Era-split (#1) SURVIVES IN SIGN (bear positive OOS anchor, side/bull
+negative) but the bear anchor is ~+1.8, not ~+4.5.
+
+Two forward flags:
+1. **The RECENT window is NOT yet cleaned and the headline +2.22 is exposed.** You noted the 2026-06-04 gap
+   ×174 lands in RECENT — so the evaluation-PRIMARY +2.22 (the whole "honest forward Sharpe" basis) could be
+   similarly inflated and MUST be re-derived on clean recent books before it is quoted again. Highest-priority
+   remaining item — the OOS bear halving proves the mechanism; the recent headline is the bigger claim.
+2. **§7 cap-release re-set is now MORE critical (connects to my very first flag).** The bar was calibrated on
+   the inflated bear (+4.46); the clean bear (~+1.8) is HALF as strong, so the "bear farm" the §7 forward
+   confirmation validates is materially thinner than believed. My original §7-too-weak flag ("≥1 bear episode
+   CI-excludes-0" is easy to clear) is REINFORCED: with a ~+1.8 (not +4.5) anchor, the release criterion
+   should be MORE conservative (≥2 distinct bear episodes / min cycle count), not less — you're confirming a
+   thinner edge.
+
+Clean pass on steps 2-3. Remaining (a-c) — prioritize (a-b) the recent clean rebuild + the +2.22 replay;
+that is the headline number.
