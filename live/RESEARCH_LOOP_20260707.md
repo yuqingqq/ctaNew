@@ -4315,3 +4315,22 @@ This closes the clean-data structural arc (addenda 34-48): v4 is a real-but-thin
 (MULTI-SOURCE #1 — a short-tail + b long-conditionality + c regime-rotation, ALL resisting construction/free
 fixes) edge; #1 stays MANAGED (cap/monitor/kill); DATA1 (predictive squeeze, source a) is the ONE partial lever
 with a path; everything else is operational (forward ledger, §7 cap release).
+
+### Addendum 49 (2026-07-10) — pred_disp conditioning REJECTED (CI); the CONSISTENT failure mode IS the finding
+
+New idea: is the edge ERA-CONSISTENT under a PIT conviction state (pred_disp)? Point estimates looked
+non-obvious: RECENT monotonic (low +0.61/mid +1.38/HIGH +1.68), OOS inverted-U (low −1.33/mid +0.41/HIGH
+−0.68) → "mid era-stable, HIGH era-overfit." **CI screen (pred_disp_ci.py) KILLS it:** every tercile's
+block-bootstrap Sharpe CI CROSSES 0 in BOTH eras (recent mid [−1.00,+4.27], OOS mid [−1.16,+2.28], HIGH
+[−2.35,+1.31]); mid per-quarter net wildly mixed-sign (OOS 2023Q3 +3065 vs 2025Q2 −2253). Noise,
+quarter-concentrated — same as short-only (48).
+**META-FINDING (the important part): two consecutive fresh conditioning/construction ideas (short-only,
+pred_disp) both produced promising POINT estimates that DISSOLVED under the paired/bootstrap CI into
+1-2-quarter noise.** This is not coincidence — it is the DEFINITIVE statistical closure: the v4 edge is
+so thin + event-concentrated (#5) + noise-dominated (DDI: per-cycle IC predictability R²≈0.005) that NO
+observable state or construction subset conditions it to era-stability. Patterns exist in point
+estimates; none survive the CI. **The construction/conditioning space is now STATISTICALLY closed, not
+merely "tried."** The edge is genuinely unpredictable/unconditionalizable on free data → the only levers
+that can move era-fragility are EXTERNAL: new INFORMATION (DATA1, in-scope, partial) or a different ASSET
+CLASS (cross-asset diversification, out of crypto-only scope). #1 stays MANAGED. Scripts:
+pred_disp_cond.py, pred_disp_ci.py.
