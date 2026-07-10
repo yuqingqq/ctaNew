@@ -4365,3 +4365,26 @@ DATA1's external information is the remaining lever (the addendum says this). Cl
 This is the capstone of the construction/conditioning search (addenda 34-49): the free-data edge is thin,
 event-concentrated, and noise-dominated (per-cycle IC unpredictable); #1 era-fragility is MANAGED not solved;
 DATA1 (partial) is the one in-scope external lever; remaining work is operational (forward ledger, §7 cap).
+
+### Addendum 50 (2026-07-10) — EVENT FORENSICS (user idea): the edge is idiosyncratic ALT-CRASH events
+
+User: if event-driven, identify/analyze/quantify the events → recognize next similar + act. event_analysis.py
+(committed, per-day 1L/2S net, clean, non-deep-bull + BTC/dispersion context):
+- **EXTREME event-concentration: RECENT top-8 DAYS = 90% of total edge** (not months — days). OOS diffuse
+  (top-8 = -76%, i.e. the big days are spread and the book is net-negative OOS anyway).
+- **The events are IDIOSYNCRATIC SINGLE-ALT CRASHES caught by the shorts:** 2026-05-13 SAGA short +3,412;
+  2025-10-10 PROVE +1,247 (on a −7.3% BTC day); 2026-05-08 NIL +1,896; 2026-06-12 HMSTR +1,297 (BTC-30d
+  −20%). BTC context is MIXED across the top days (crash −7.3%, deep-bear −20%, bull +12%) → **NOT a
+  market-timing edge; a cross-sectional "short froth, get paid when a specific alt dumps" edge.**
+- **SETUP signature (descriptive, NOT a free predictor):** winning days have higher realized
+  cross-sectional dispersion (recent 176 vs 153) + bigger BTC moves — but the dispersion is
+  CONTEMPORANEOUS (the dump CREATES it), not leading; OOS distinction weak (131 vs 123). This is exactly
+  why the conditioning tests (dispersion-timing, pred_disp) failed — the setup isn't present in advance.
+**WHAT THIS ANSWERS (user's question): next similar event = a CROWDED/OVERVALUED alt starting to dump;
+corresponding action = identify dump-prone crowded alts BEFORE the dump.** The model ALREADY does this
+partially (residual-alpha short = short the froth); the events are when it's right. The LEADING signal for
+"which crowded alt dumps (vs squeezes #4)" is positioning/crowding — NOT in free klines → **DATA1
+(liquidation/positioning) is the concrete, event-grounded lever: it would (a) flag dump-prone crowded
+alts to size into, (b) flag squeeze-prone ones to avoid (#4).** Unifies edge + #4 risk (both = "which
+crowded alt crashes vs squeezes") + era-fragility (alt-crash FREQUENCY varies by era). Script:
+live/event_analysis.py.
