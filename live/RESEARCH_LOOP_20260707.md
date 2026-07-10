@@ -4087,3 +4087,23 @@ than over-swinging to dismiss it, and explicitly retracts the "could genuinely f
 overclaim. Framing-only, no numbers change. Clean pass — the short-tail / #1 / DATA1 picture is now internally
 consistent across addenda 41-43: #1 is multi-source and managed; DATA1 is a real partial lever (its strongest
 motivation), not a solution.
+
+### Addendum 44 (2026-07-10) — TH1 PRE-REGISTRATION: reactive intra-cycle short stop (free tail-hedge probe)
+
+User: test tail-hedge (free, no DATA1). The oracle winsorization (42) needed look-ahead; TH1 tests a
+DEPLOYABLE reactive version: an intra-cycle stop that caps a short name's loss once it rips (no
+prediction). Binding pre-reg:
+- **Mechanism:** for each short name (bottom-2 base-pred), compute intra-4h MAX ADVERSE = max(5m high over
+  [t,t+4h]) / close[t] − 1. If adverse ≥ STOP → short stopped at −STOP (loss capped); else realized short
+  return (−return_pct). Deployable (bar-high = conservative stop trigger, no look-ahead).
+- **PINNED STOP = 12%** (a clear intra-4h alt squeeze; W1b — 8/12/16% neighborhood reported as SANITY only,
+  headline stays 12%). Non-deep-bull cycles (the traded 1L/2S). NAKED frame (the stop is a price mechanism;
+  realized PnL is naked) + residual cross-check.
+- **GATE (both eras, NET of the short's ~4.5 bps cost):** stopped-short net Sharpe ≥ raw-short net in BOTH
+  recent AND OOS (era-robust improvement, not one-era) AND stopped mean ≥ raw mean × 0.8 (the stop must not
+  gut the edge by forgoing reversions). Verdict at short-leg level; a full-book/replay is the deploy step IF
+  it passes.
+- **Prior LOW** (vBTC CLOSED intra-cycle stops — return-target, different strat, but a caution): the free
+  probe of the tail-hedge before any DATA1 spend. Squeezes that REVERT within the hold make the stop LOSE
+  (caps the loss but forgoes the reversion the short would have earned).
+Script: live/th1_reactive_stop.py. Running.
