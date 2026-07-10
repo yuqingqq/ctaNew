@@ -2456,3 +2456,24 @@ whose value is crisis-TIMING resting on ONE sustained-bear episode (flash-crash 
 the verdict is exactly right: a well-verified FEASIBILITY result, forward-unproven — the first
 in-mandate lever against limitation #1. Next is a SCOPE DECISION (build + forward-validate the trend
 sleeve's OWN edge + flash-crash stress), not another backtest cell.
+
+### Addendum 23n (2026-07-10) — DIV2 BUILD chosen: pre-registered validation plan committed (awaiting review)
+
+User: "build". Per loop discipline, first deliverable = binding PRE-REGISTRATION before running.
+Committed live/DIV2_BUILD_PREREG.md: pins the sleeve spec (365d/30d MOP-2012, binding headline),
+and pre-commits tests + numeric gates BEFORE running, structured per the reviewer's binding caveat
+(validate the sleeve's OWN edge + flash-crash weakness FIRST, diversification downstream):
+- **Phase 1 (own edge, GATE):** 1a per-period stability (non-2022 Sharpe ≥ 0 in ≥60% of half-year
+  sub-periods AND aggregate non-2022 ≥ 0 — must not be a drag out of crisis); 1b neighborhood
+  robustness 3×3 {250/365/500}×{20/30/40} (≥7/9 same diversification sign + pinned not knife-edge —
+  NOT a sweep-to-pick, headline stays 365/30); 1c turnover realism.
+- **Phase 2 (flash-crash stress, report+size):** objective fast-V-crash windows (BTC 4h week ≤−15%
+  + ≥50% retrace in 4w); size the sleeve so fast-crash drag ≤25% of v4's move (sizes the known
+  weakness, not a rescue).
+- **Phase 3 (diversification re-confirm, GATE):** form combo on 2023-24, confirm on 2025-26
+  (combined Sharpe ≥ max(v4,trend) + matched-vol DD cut >0 OOS); crisis DD cut is single-episode,
+  forward-only (stated, not gated).
+- **Phase 4 (build, only if 1+3 pass):** crypto_cta_sleeve.py module + combined-book overlay + FORWARD
+  ledger with pre-committed KILL criteria (standalone rolling-26w Sharpe <−0.5, or v4-sleeve corr
+  >+0.3 for ≥8 wks).
+W1b: no sweep to rescue a failed gate; pinned headline binding. AWAITING REVIEW before running.
