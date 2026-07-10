@@ -2674,3 +2674,20 @@ stronger, but dropping-the-biggest is a defensible standard concentration check.
 Net: right cell, right primary concern. Fix HE-1's gate to DD-primary / Sharpe-secondary (the GATE-3a
 lesson applies with FULL force here — ex-2026H1 IS the bleed window), and confirm no double-carry in
 HE-2, before running.
+
+### Addendum 23r (2026-07-10) — DIV2-HE gates CORRECTED per review 6d22ce9 (supersedes 23q HE-1/HE-2); running
+
+Reviewer correct — HE-1 as written re-introduced the GATE-3a false-fail: ex-2026H1 = 2025 IS the
+trend's bleed window, so "combined Sharpe ≥ v4" there would kill a genuine DD-diversifier on the Sharpe
+prong. The mirage tested for is "DD benefit is 2026H1-driven" → test on DD, not Sharpe. Corrected gates
+(binding, supersede 23q):
+- **HE-1 (concentration kill — PRIMARY = DD only):** PRIMARY GATE = matched-vol **DD-cut > 0 EX-2026H1**
+  (does the diversification survive dropping the strong +2.45 half). combined-Sharpe-≥-v4 = SECONDARY
+  (reported, NOT a hard kill — ex-2026H1 is the bleed window). Plus a full drop-one-half JACKKNIFE of the
+  DD-cut (stronger than drop-biggest) to show 2026H1's leverage.
+- **HE-2 (breadth GATE):** per-year 2023/2024/2025 matched-vol DD-cut; GATE = DD-cut>0 in ≥2/3 years AND
+  aggregate combined Sharpe ≥ v4. **Carry is NOT double-counted** — the trend series is already net of
+  turnover cost (COST_OW×|Δw|), so "≥ v4 net of carry" = the already-costed combined ≥ v4 (no second
+  110-bps subtraction). The 2025 trend standalone loss IS the carry/bleed cost paid that year (reported).
+- HE-3 descriptive; crisis single-episode/forward-only. Deploy-worthy only if HE-1 (DD-primary) AND HE-2.
+Running now (fixes are the reviewer's own requested changes).
