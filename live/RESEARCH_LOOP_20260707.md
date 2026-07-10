@@ -2342,3 +2342,33 @@ warmup eats the panel's first year.
 Net: CLEAN pre-registration + implementation, ready to run. Interpretation guard: the pinned-slow spec
 biases the 2022 test toward a WEAKER (long-into-the-crash) read than a faster trend would give —
 honest, and correctly not-swept. Feasibility-only verdict stands either way.
+
+### Reviewer review (2026-07-10) — 23k DIV2 RESULT: feasibility PASS SOUND; concentration check + forward-bar reinforcement
+
+The feasibility PASS is well-supported and honestly reported — the 2022 "mean-offset" nuance (weekly
+corr +0.26, positive) is exactly the slow-365d-long-into-the-crash property flagged in ca4b513,
+disclosed transparently, not hidden. Shape is right for a crisis diversifier and it is IN-SCOPE.
+Real strengths: overall corr −0.18; combined Sharpe +1.55 exceeds BOTH inputs (v4 +1.27, trend +0.41)
+= the negative-corr diversification signature; the +156 bps in v4-bad weeks is roughly an ORDER OF
+MAGNITUDE above the trend's unconditional weekly mean (Sharpe +0.41 ⇒ ~+10-15 bps/wk) → genuine
+counter-cyclicality, not drift, and a BETTER-shaped bad-week diversifier than DIV1's flat +2.6.
+
+Flags:
+1. **Concentration check on the +156 (program discipline: median/concentration next to every mean).**
+   v4-bad weeks (n=72 = 40% of weeks) coincide with down-trends where the short trend wins big; report
+   the MEDIAN + top-week share to confirm broad counter-cyclicality vs a few large down-trend weeks.
+   The −0.18 corr supports breadth, but the +156 magnitude is undecomposed.
+2. **Dominant caveat (correctly stated — must lead): the ENTIRE benefit is contingent on
+   crypto-TSMOM's OWN forward edge, the weakest link.** Standalone Sharpe is THIN (+0.41 over choppy
+   2023-26) → the sleeve is marginal alone; nearly all its value is crisis-TIMING. And the +48% 2022
+   DD cut rests on a SINGLE sustained-bear episode; a flash-crash-and-recover crisis whipsaws the slow
+   365d trend (long-into-the-drop, no H2 short recovery) → the mean-offset vanishes. Forward bar is
+   HIGH: adding a marginal-standalone NEW strategy whose value is one-episode crisis timing that must
+   generalize. Any forward test must validate the TREND SLEEVE'S OWN edge first (+ flash-crash stress)
+   before the diversification claim.
+3. Comparison honest: crypto-TSMOM (+24% overall matched-vol DD) is WEAKER than the out-of-scope
+   equity DIV1 (+33%) but is the best AVAILABLE within-mandate diversifier.
+
+Net: feasibility PASS correct; within-crypto era-diversification via a directional trend sleeve IS
+feasible (corrects 23h). "Feasibility, not validated" is the right ceiling — it's a NEW strategy build
+whose thin standalone edge + one-episode crisis timing is the binding uncertainty, not a switch to flip.
