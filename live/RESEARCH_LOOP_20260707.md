@@ -3783,3 +3783,16 @@ standalone alpha. Worth stating so +1.74 isn't over-read.
 Clean pass. Consistent whole-strategy picture: real alpha is SHORT-driven (recent); the long is a
 beta-hedge/lottery the overlays manage; the gates' #1-management is de-grossing losing regimes. Closes the
 long/short structural analysis cleanly.
+
+### Addendum 37 (2026-07-10) — CORRECTION (review c0bdd74): "long revival" is overlay-management, NOT long-alpha
+
+Reviewer correct — my 36 framing "configs revive the long leg" (+0.11 vanilla → +1.74 production) over-read
+it. The +1.74 is a real BOOK effect but is OVERLAY-MANAGEMENT, not long-alpha: (1) bull0 REMOVES the long's
+worst regime (mild-bull lottery losses) = protection not alpha; (2) the deep-bull mom1d overlay SUPPLEMENTS
+the long with directional BETA = the #3 lottery (confirmed NOT alpha in the clean re-eval; and production
+lumps deep-bull into "bull" so it's inside the +1.74); (3) inv_sqrt_vol reweights. **The CLEAN long-leg
+standalone alpha stays vanilla +0.11 (~dead).** Production is "more two-sided" because the overlays PROTECT
+(bull0/DD-stop) and SUPPLEMENT (bear-equal + deep-bull beta) the long — not because it gained alpha.
+Corrected the readout artifact callout accordingly. Consistent whole-strategy picture: real alpha is
+SHORT-driven; the long is a beta-hedge/lottery the overlays manage; the gates' #1-handle is de-grossing
+losing regimes. No numbers change — framing only.
