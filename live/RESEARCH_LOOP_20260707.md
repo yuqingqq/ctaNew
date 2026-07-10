@@ -3796,3 +3796,12 @@ standalone alpha stays vanilla +0.11 (~dead).** Production is "more two-sided" b
 Corrected the readout artifact callout accordingly. Consistent whole-strategy picture: real alpha is
 SHORT-driven; the long is a beta-hedge/lottery the overlays manage; the gates' #1-handle is de-grossing
 losing regimes. No numbers change — framing only.
+
+### Reviewer review (2026-07-10) — addendum 37 (long-revival correction): CLEAN PASS
+
+Faithfully adopts the c0bdd74 flag — the "long revival" is now correctly framed as overlay-management (bull0
+protection + deep-bull #3 beta lottery + inv_sqrt_vol reweight), with the clean long-leg standalone alpha held
+at vanilla +0.11 (~dead); the readout artifact callout is corrected too. Framing-only (no numbers change).
+Clean pass — the whole-strategy structural picture is now internally consistent on clean data: real alpha is
+SHORT-driven, the long is a beta-hedge/lottery the overlays manage, and the gates' #1-handle is de-grossing
+losing regimes.
