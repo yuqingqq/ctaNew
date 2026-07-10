@@ -2372,3 +2372,24 @@ Flags:
 Net: feasibility PASS correct; within-crypto era-diversification via a directional trend sleeve IS
 feasible (corrects 23h). "Feasibility, not validated" is the right ceiling — it's a NEW strategy build
 whose thin standalone edge + one-episode crisis timing is the binding uncertainty, not a switch to flip.
+
+### Addendum 23l (2026-07-10) — DIV2 2022 mechanism VERIFIED (review ca4b513): basket was NOT "late to flip"
+
+Review ca4b513: script confirmed PIT-clean/no-look-ahead + pre-reg faithful (accepted). Its refinement
+— "slow 365d trend is LONG into the early-2022 crash → H1 long-and-losing → mixed" — TESTED by H1/H2
+decomposition of the SAME pinned spec (a sub-period split, NOT a sweep). Result partly REFUTES the
+specific mechanism while CONFIRMING the conclusion:
+- 2022 week count n=52 (»block-CI floor L=6). OK.
+- H1-2022 (n=26): v4 −270/wk | trend **+73/wk** | corr **+0.48**; sleeve **already 63% net-SHORT** (mean expo −0.20).
+- H2-2022 (n=26): v4 −221/wk | trend +29/wk | corr −0.02; sleeve **100% net-SHORT** (mean expo −0.91).
+**Mechanism correction:** the DIVERSIFIED 20-major basket was NOT long-and-losing in H1 — it was
+already net-short 63% of H1 days and EARNED MORE in H1 (+73) than H2 (+29). Reason: the broad alt
+basket had ALREADY rolled over by early 2022 (alt-season peaked Nov-2021), so the diversified
+trailing-year signal was net-short even in H1, unlike a single-asset BTC trend (BTC's 365d-trailing
+stayed positive into early-2022). So the slow canonical spec was NOT "late to flip" for the basket.
+**What IS true (reviewer's core point, confirmed):** the 2022 diversification is a MEAN/LEVEL effect
+(trend +73/+29 vs v4 −270/−221 in BOTH halves), NOT a negative-corr hedge — the H1 week-to-week corr
+is strongly POSITIVE (+0.48), which is what produces the +0.26 overall 2022 corr. **Net: the "long
+into the crash → weaker 2022" worry did NOT materialize for the diversified basket; the sleeve
+diversified in BOTH halves of 2022. Feasibility PASS is if anything strengthened (not a late-flip
+artifact). Still NOT swept (W1b); pinned-slow spec used throughout.**
