@@ -1,4 +1,19 @@
-# v4 production-config limitations diagnosis (2026-07-09)
+# v4 production-config limitations diagnosis (2026-07-09; CORRECTED 2026-07-10 per external audit)
+
+> **⚠️ AUDIT CORRECTIONS (2026-07-10, RESEARCH_LOOP addenda 24-27).** An external audit found real
+> errors in the numbers/frame below; they are corrected here. (1) **Labels were gap-corrupted** (row
+> `.shift(-48)` vs `exit_time=open_time+4h` decoupled at data gaps → the 2025-02-28 cycle was a 22-day
+> return mislabeled as 4h). (2) **Cost was under-charged 2×** (the table used 0.25×9 bps; pinned is
+> 0.5×9). Re-derived on the clean panel at pinned cost (committed: attribution_v4_regime.py), the
+> **OOS BEAR anchor drops +4.46 → +1.82 Sharpe** (contamination is bear-only; other cells move <0.25;
+> recent unchanged). The era-split SURVIVES in sign but the OOS bear anchor is ~+1.8, not ~+4.5. (3)
+> **"bear traded unconditionally" is WRONG** — bear is DD-stop-exempt but the global REGIME_GATE can
+> zero it. (4) **"mild bull = FLAT" is WRONG** — with 3-cycle hysteresis + 6-sleeve/24h hold it is "no
+> NEW mild-bull sleeve"; prior exposure persists ~20h (full flat lags a raw-bull onset ~32h). (5) The
+> **"post-overlay net ≥ pre-gate net" claim is INVALID** (the lagging binary gate zeros winners; the
+> uniform 0.5× cap shrinks the positive regimes). The per-regime table and prose below retain the
+> original (leaked/half-cost) figures for provenance; read them THROUGH this banner — the corrected
+> residual-Sharpe table is RESEARCH_LOOP addendum 27.
 
 Config-aware diagnosis of what production v4 ACTUALLY trades (not the vanilla book the variant
 cells used). Purpose: locate the real limitations before optimizing. Grounded in `run_convexity_v4_live.sh`
@@ -31,7 +46,11 @@ Sharpes (not comparable to the all-regime, post-overlay canonical number). **Cru
 deep-bull row is this beta-neutral MODEL book restricted to deep-bull cycles — the COUNTERFACTUAL
 production abandons — NOT the mom1d long-only overlay production actually runs there** (that overlay
 is long-only, not beta-neutral; its real performance is §6.1/Q3, cross-referenced in limitation #3).
-Small-sample flags noted.
+Small-sample flags noted. **CORRECTION (2026-07-10 audit): the "production per-regime net is ≥ these
+pre-gate figures" claim below is INVALID — the lagging binary REGIME_GATE zeros winning cycles and the
+uniform 0.5× cap shrinks the positive-net regimes, so gates alter per-regime net in a sign-ambiguous,
+path-coupled way (pitfall #4), NOT a lower bound. And the figures themselves under-charged cost 2×; see
+the top banner + addendum 27 for the clean/pinned table.**
 
 | regime | REC residual / naked (net/Sh) | OOS residual / naked (net/Sh) | production action |
 |---|---|---|---|
@@ -70,8 +89,10 @@ naked = realized. Diagnosis below holds in both frames.)
    handling is an UNVALIDATED DIRECTIONAL BETA LOTTERY (§5: deep-bull long median −73/−107, top-3
    cycles ≈ 97-106% of totals), not a broken selection leg. The real question is whether a
    ~beta-neutral strategy should hold that lottery bet, not whether it "earns."
-4. **Bear is traded unconditionally** (BEAR_MODE=equal, DD-stop OFF in bear) — a bet that bear
-   reverts to its OOS-anchor behavior. The recent bear number (−0.88) is within noise (t ≈ −0.45),
+4. **Bear is DD-stop-exempt but NOT unconditional (CORRECTED).** BEAR_MODE=equal and STOP_SKIP_REGIMES
+   =bear turn OFF the *DD-stop* in bear, but the global REGIME_GATE (empty skip-set) can still de-gross
+   bear to flat when its trailing edge ≤ 0. And the OOS-anchor it bets on is now ~+1.82 Sharpe (clean,
+   pinned), not +4.46. The recent bear number (−0.88) is within noise (t ≈ −0.45),
    so it neither confirms nor refutes the bet. The squeeze tail (short median +42 but mean
    tail-gutted, skew −2.45) is the risk, and it is unhedged (SQ1 crowding signal exists but is too
    weak/non-stationary on free data — SK1 failed the recent holdout).
