@@ -4431,3 +4431,33 @@ killed conditioning) → a genuinely LEADING, free, in-scope lever. Binding pre-
   fresh ideas died on the CI). If young-tilt is era-stable-significant → tilt/concentrate shorts young.
 - Prior: MODERATE-cautious (event-grounded + age is leading, but the edge is noise-dominated so CI is the
   real test). Script: live/symbol_age_test.py. Running.
+
+### Reviewer review (2026-07-10) — addendum 51 (SYMAGE1 pre-reg): CLEAN PASS on design + results-verification checklist (age-censoring is the key)
+
+Genuine pre-registration (doc-only; symbol_age_test.py untracked/"Running" = falsifier pre-committed). Best-
+motivated conditioner of the session: symbol AGE is genuinely PIT-LEADING (known in advance), which fixes the
+"contemporaneous not leading" problem that killed dispersion/pred_disp conditioning (addenda 49-50), and it is
+event-grounded (the paying shorts ARE fresh listings, addendum 50). The gate is well-designed and IMPROVES on
+the pred_disp test: it tests the young−old DIFFERENCE (block-bootstrap delta-CI excludes 0) + both-eras, not a
+standalone-tercile CI — exactly the methodology upgrade I noted in the addendum-49 review. Pinned tiers (young
+<120d / old >400d), honest moderate prior. Clean pass on the design/discipline.
+
+THREE items to VERIFY when results land (the first is decisive):
+1. AGE LEFT-CENSORING (foundation, era-asymmetric): `age = cycle_t − first_kline_date` uses first-kline-in-
+   DATASET as the listing proxy. Symbols present at the DATASET START have censored (understated) age → they are
+   mislabeled "young" for ~the first 120d of the data. This is WORSE for OOS (2023-25 starts at the dataset
+   boundary), so the OOS "young" tier is contaminated with mislabeled-OLD symbols — diluting the young effect AND
+   confounding "young" with "early-in-dataset/regime." REQUIRED: drop symbols whose first_kline_date is at/near
+   the dataset start (true age unknown), or burn-in the first ~120-400d of each era, before the young−old delta.
+   If not handled, the OOS arm is untrustworthy.
+2. SURVIVORSHIP: does the clean panel include symbols that later DELISTED? Froth that crashed-to-delisting would
+   be absent → likely UNDERSTATES the young-short edge (conservative — a young-edge found despite it is robust —
+   but verify the panel isn't survivorship-filtered in a way that biases the young tier).
+3. DELTA-CI CONSTRUCTION: young and old tiers are DIFFERENT symbol-observations (not day-paired like short-only's
+   two books). Confirm the young−old delta-CI treats them as two independent daily series (bootstrap each, or
+   difference-of-independent-Sharpes), not a spurious pairing — and that per-tier daily aggregation has enough
+   days per tier per era for a meaningful CI (age tiers can be thin in one era).
+
+If SYMAGE1 survives (1) censoring-clean + (2) survivorship-aware + (3) a proper young−old delta-CI excluding 0 in
+BOTH eras, it would be the first genuine era-stable conditioner — a real result. The censoring check (1) is the
+one most likely to explain any apparent OOS young-tilt, so run it first.
