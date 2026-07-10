@@ -4561,3 +4561,43 @@ the "recovered crash-wins" are an optimistic UPPER BOUND unless realistic delist
 assumptions are modeled; (2) their target_A-clip caveat is right and load-bearing — the 111-panel failures showed
 clip-at-±5 flattens predictions, so the rebuild must winsorize/handle target_A properly or it repeats that break.
 With those, it is the strongest free, in-scope next step and correctly sequenced BEFORE paid DATA1.
+
+### Addendum 54 (2026-07-10) — survivorship-clean rebuild: ENUMERATION + PRE-REGISTRATION (awaiting go)
+
+**Framing correction I owe the user.** My prior turn (following reviewer 5dc9150's now-RETRACTED "survivorship
+immaterial" verdict) tempered this direction to "a free MEASUREMENT improvement, not an EDGE improvement; young
+stays both-tails regardless." Reviewer 6c46513 retracts that basis and confirms addendum 53. Corrected: the bias
+bites HARDEST where the edge lives (biggest crashes → delisted → absent; squeeze-losses fully counted), so the
+censored wins are the fat-tail short-wins that could ALSO make the fragile OOS era less fragile — potentially an
+edge/robustness finding, gated on the two caveats below. I over-tempered; owned to the user.
+
+**Enumeration (Binance Vision S3 listing, `data.binance.vision` bucket).**
+- 958 USDM symbols ever archived; 803 ASCII USDT perps.
+- Panel = 175 survivors (all USDT); 174/175 reach panel-end 2026-06-30 → survivor-only (confirmed addendum 53).
+- 628 USDT perps absent from panel; 585 never fetched locally (43 are currently-listed-but-unselected).
+- Relevant subset = delisted-AND-would-have-qualified. Canonical example: **FTTUSDT** — FTX token, ~90% dump
+  Nov-2022 on the FTX collapse, perp then delisted → exactly the crowded-alt crash-win the survivor panel censors.
+  Pinning the exact count needs step-1 filtering; order-of-magnitude a few dozen.
+
+**Pre-registered method** (both reviewer caveats load-bearing):
+1. Fetch daily klines for the 585 never-fetched USDT perps from Vision; last-trade date → keep TRUE delistings
+   (last file ≪ 2026-06-30), drop still-trading-but-unfetched.
+2. **PIT liquidity gate** — apply the SAME trailing dollar-volume threshold the panel uses, at each symbol's active
+   window. Only recover names that would ACTUALLY have been in-universe at the time (no free lunch — no recovering
+   illiquid names we'd never have traded).
+3. **target_A guard (111-panel lesson, pitfall discipline)** — recompute the cross-sectional z-score target with
+   proper WINSORIZATION, never clip-at-±5 (which flattened predictions and broke the 111-panel). Verify pred
+   spread is preserved post-rebuild.
+4. Retrain per-symbol RidgeCV on the expanded panel; **min-history guard** on short-lived delistings (a name that
+   delisted 6 weeks after listing has too little PIT train data — flag/exclude, don't fit noise).
+5. Run the full KEEPSET4 stack over the expanded panel; measure short-book realized edge BOTH eras.
+6. **EXECUTION REALISM (reviewer caveat 1)** — report TWO bounds per delisting episode: (a) naive UPPER bound
+   (hold short through the crash, cover at last pre-settlement price); (b) realistic haircut (perp halts/settles
+   ahead of delisting → capture only up to last-tradeable bar, force-settle at index). The honest number is (b);
+   (a) is the ceiling.
+7. **CI + concentration gate (the wall)** — recovered edge must survive the both-eras paired block-bootstrap CI
+   AND not be a single-episode artifact (report per-episode contribution; if FTT alone drives it, it's one lucky
+   short, not an edge — same W23-LOFO / K2-K3 discipline).
+
+**Status:** enumeration done; method pre-registered. The expensive part (Vision fetch of ~585 symbols +
+PIT-filter + rebuild + retrain + re-assess) awaits user go. Correctly sequenced BEFORE paid DATA1.
