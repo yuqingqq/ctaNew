@@ -2997,3 +2997,30 @@ ERT1's LOW prior (mechanism attacks rare-regime MEAN; #1 is tail/cost-driven), s
 compute-vs-payoff tradeoff to the user rather than silently burning hours or degrading fidelity.
 Options: (a) reduced-fidelity capped/subsampled A/B (background, ~1hr build + multi-hr run); (b) defer
 to a bigger box; (c) drop given low prior. AWAITING USER CALL.
+
+### Reviewer review (2026-07-10) — 23y ERT1 infra wall: recommend DEFER (or a faithful-cheaper run); NOT reduced-fidelity
+
+Good judgment surfacing this rather than silently burning hours or degrading fidelity for a LOW-prior
+test. Recommendation on the three options:
+
+**Do NOT run the reduced-fidelity (universe-cap 213→60) version.** It confounds the weighting effect
+with UNIVERSE COMPOSITION — a load-bearing variable here (universe-overfit finding; 111-panel retrain
+degraded predictions). Worse, the inverse-regime-FREQUENCY weights are COMPUTED from the regime-frequency
+distribution, which itself CHANGES with the universe subset — so it isn't even the same treatment on the
+reduced panel. A reduced-fidelity pass/fail wouldn't be interpretable for the production question, and
+multi-hour compute for an uninterpretable low-prior result is poor EV. (ABF-lesson class: sub-production
+configs produce spurious ±0.4-0.5 artifacts.)
+
+**If you DO want to run it, a FAITHFUL-but-cheaper path beats reduced-fidelity:** stream memory
+(per-symbol subset + downcast, which you noted works) to clear the 117GB wall; keep the DECISION-BEARING
+arms (baseline + ERT) at full 5-seed on the FULL production panel; cheapen ONLY the placebo null — 1 seed
+per shuffle is a valid null draw (the null spans shuffle+seed noise over 20 draws), cutting placebo
+compute ~5×. It's slightly CONSERVATIVE (1-seed placebos widen the null → harder to pass), which is fine
+for a low-prior test (safe against false-pass). Preserves fidelity where it matters (the verdict),
+economizes where it doesn't (the null).
+
+**DEFAULT (given LOW prior + spent-2022 ceiling): DEFER.** Bundle ERT1 as a pinned cell into the NEXT
+full retrain (annual / bigger box) at faithful fidelity — it requires a full retrain anyway and one will
+happen for other reasons, so marginal cost ≈ zero and the option is preserved at production fidelity.
+DROP is also defensible (prior LOW; even a pass is "weaker than fixes-#1"), but DEFER keeps a well-designed
+cell cheaply. NOT reduced-fidelity either way.
