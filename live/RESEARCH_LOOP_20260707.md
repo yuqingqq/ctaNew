@@ -4162,3 +4162,22 @@ per pitfall #4 the deployed book is residual and a naked stop can whipsaw on bet
 last 47 run-off cycles as never-stopped — correct (window can't be evaluated there), minor.
 
 NOT a clean pass — bug fixed in code; verdict pending the re-run (likely still REJECT, but must be shown clean).
+
+### Addendum 46 (2026-07-10) — TH1 CORRECTED (reviewer bug-fix 7194381): supersedes addendum 45's numbers
+
+Reviewer caught a real BUG in th1_reactive_stop.py adverse_map: the `.shift(-47)` measured the NEXT 4h
+window [i+47,i+94] (mostly AFTER the position closes at i+48), a 47-bar misalignment — so addendum 45's
+stop-triggers were on the wrong bars. FIX (double-reverse rolling-max already gives the forward
+intra-cycle max; drop the shift) + re-run:
+- **RECENT: raw +3.85 → stopped +3.05 (Δ −0.79), edge-pres 0.77×, stop-hit 4%** (was buggy −2.54).
+- **OOS: raw −0.94 → stopped −1.06 (Δ −0.12), edge-pres 1.07×, stop-hit 2%** (was buggy −1.79).
+- **GATE (stopped ≥ raw BOTH eras): STILL FAIL** — but MILD (roughly neutral), not the catastrophic
+  "guts the grind" of 45. I OWN the error: 45's magnitudes were on a buggy window; corrected here.
+**Corrected mechanism:** the reactive 12% stop catches only 2-4% of names, mostly REVERTING → capping
+them is ~neutral, and it captures almost NONE of the tail-hedge benefit (oracle got OOS +3.76 from tail-
+capping; reactive gets −0.12 ≈ nothing). A price stop can't distinguish a CROWDED/CONTINUING squeeze
+from a REVERTING one — that distinction needs a PREDICTIVE signal. **VERDICT UNCHANGED: reactive
+tail-hedge fails to realize the benefit (roughly neutral, fails the improvement gate) → DATA1
+(predictive) remains the only lever; #1 stays managed.** Residual/book frame (reviewer item 3) would
+only reduce it further (beta-whipsaw); not recomputed — the naked already fails the improvement gate and
+the effect is ~neutral. Corrected numbers stand; 45's "decisive gutting" retracted.
