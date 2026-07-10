@@ -26,6 +26,14 @@ Four mechanism-validated levers, no fitted knobs.
 | v3 reference preds (pre-clean) | +2.77 / +25,863 / −8,208 | −0.59 / −7,137 |
 | v4 candidate preds (pre-clean) | +2.17 / +18,422 | −0.28 / −3,183 (2023 +10.8k) |
 | **v4 candidate preds (clean — canonical baseline for §6 paired cells)** | +2.22 / +19,250 | −0.28 / −3,197 |
+
+> **AUDIT NOTE (2026-07-10, addenda 24-27):** the recent **+2.22 headline is INTACT** — a leaked-vs-clean
+> attribution (attribution_v4_regime.py) shows every recent regime cell moves <0.15 Sharpe after the
+> label-gap fix (the recent 2026-06-04 gap is only 3 days). The label leak was **OOS-bear-only** (the
+> 22-day 2025-02-28 gap cycle): the clean OOS bear BOOK farm is +1.82 Sharpe, not the pre-audit +4.46.
+> The OOS full-stack −0.28 here will go slightly MORE negative on clean books (halved bear anchor) —
+> exact clean OOS pending the full-stack replay — but OOS is the guardrail, not the deployment case, so
+> the story is unchanged. §7 cap-release bar re-set more conservative accordingly.
 | *fitted production v3 stack (comparison)* | *+2.68 / +21,393* | *−1.57 / −12,528* |
 | *vanilla (no levers, v3 preds)* | *+1.13 / +10,399* | *−1.05 / −26,891* |
 
@@ -197,11 +205,16 @@ sizing/gross variants, vol_target.
 - [ ] **BLOCKING — 2022 holdout FAIL consequence (pre-registered, RESEARCH_LOOP_20260707 Iter 4
       F10): live gross capped at 0.5× on BOTH books (shared risk layer; `GLOBAL_GROSS_MULT=0.5`,
       wired in bot + run_convexity_v4_live.sh)** until the forward ledger independently confirms
-      the bear farm: BEAR_MODE=equal bear-regime NET PnL (bot's own labels) over ≥2 calendar
-      months of forward data that include ≥1 bear episode, with day-block 95% CI excluding 0 on
-      the bear book. Months without bear cycles do not advance the clock. Basis: 2022 bear net
-      −8,949, CI [−17,208, −807]; rule i −13,339 vs bar −5,839. (Confirmation criterion pinned
-      here, before any forward data exists.)
+      the bear farm. **CAP-RELEASE BAR RE-SET MORE CONSERVATIVE (2026-07-10 audit, addenda 24-27):
+      the bar was calibrated on a bear-farm OOS Sharpe of +4.46 that the label gap-leak inflated;
+      the CLEAN bear farm is ~+1.82 (HALF), so a thinner edge needs MORE evidence to clear a
+      CI-excludes-0 test.** Revised criterion: BEAR_MODE=equal bear-regime NET PnL (bot's own
+      labels) over ≥3 calendar months spanning **≥2 DISTINCT bear episodes** (separated by a
+      non-bear stretch — a single episode's autocorrelated cycles do not count as two), with
+      **≥200 forward bear cycles** accrued AND day-block 95% CI excluding 0 on the bear book.
+      Months without bear cycles do not advance the clock. Basis: 2022 bear net −8,949, CI
+      [−17,208, −807]; rule i −13,339 vs bar −5,839; clean OOS bear anchor +1.82 Sharpe (addendum
+      27), not the pre-audit +4.46. (Criterion pinned before any forward data exists.)
 
 - [ ] Stale-print eligibility gate in the bot (trailing zero-return-frac >10-20% over 30d →
       ineligible). Currently handled via `hl_*_clean` pred files; LITUSDT-class names otherwise

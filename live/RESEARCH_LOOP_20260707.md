@@ -3356,3 +3356,19 @@ replacing the table with addendum 27's clean figures, so a cell quoted without t
 a stale number.
 
 Clean pass — faithful to the audit, and it closes my own ≥-pre-gate miss.
+
+### Addendum 28 (2026-07-10) — REMEDIATION step 4 (item c): §7 cap-release re-set + §1 audit note (headline +2.22 INTACT)
+
+Reviewer (279fa9d) clarified the canonical +2.22 is the RECENT-window Sharpe (§1: recent +2.23 / OOS
+−0.44 are SEPARATE), and the leaked-vs-clean attribution shows recent is unchanged (<0.15 Sharpe/cell)
+→ **+2.22 headline INTACT** (leak was OOS-bear-only; recent 2026-06-04 gap is 3d, diluted). Applied the
+actionable consequence: (1) **§7 cap-release bar RE-SET MORE CONSERVATIVE** — the bar was calibrated on
+a +4.46 bear farm; clean is ~+1.82 (half), so a thinner edge needs more evidence: now requires ≥3
+months spanning **≥2 DISTINCT bear episodes** + **≥200 forward bear cycles** + day-block 95% CI
+excluding 0 (was ≥2 months / ≥1 episode). (2) **§1 audit note** — recent +2.22 confirmed intact; OOS
+full-stack −0.28 will go slightly more negative on clean books (halved bear anchor); OOS is the
+guardrail not the deployment case → story unchanged. REMAINING (optional/confirmatory): full-stack
+replay on clean books for the exact clean OOS/+2.22 numbers. **Remediation materially COMPLETE:
+root-cause fixed (source + panel), books clean, attribution corrected + committed, docs corrected, §7
+tightened. Net finding: real bugs; +2.22 recent headline survives; OOS bear anchor halved (+1.8 not
++4.5); limitation #1 confirmed on clean data; deployment gate now more conservative.**
