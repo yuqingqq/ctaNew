@@ -120,8 +120,15 @@ def target_alpha(my_close, btc_close):
     cov = my_ret.rolling(288, min_periods=72).cov(btc_ret)
     var = btc_ret.rolling(288, min_periods=72).var()
     beta = (cov / var.replace(0, np.nan)).shift(1)
-    my_fwd = (my_close.reindex(ci).shift(-HORIZON) / my_close.reindex(ci) - 1)
-    btc_fwd = (btc_close.reindex(ci).shift(-HORIZON) / btc_close.reindex(ci) - 1)
+    # GAP-SAFE forward return (2026-07-10 audit fix): the old `.shift(-HORIZON)` on `ci` (existing
+    # bars only) counted 48 *rows* not 48*5min wall-clock, so across data gaps a "4h" label became a
+    # multi-week return while exit_time stayed open_time+4h (decoupled -> corrupt labels + purge leak,
+    # CLAUDE pitfall #1). Fix: reindex to a COMPLETE 5m grid so shift(-HORIZON) spans exactly
+    # HORIZON*5min and returns NaN wherever the +4h bar is missing (gap), then map back to ci.
+    _full = pd.date_range(ci.min(), ci.max(), freq="5min", tz="UTC")
+    _mc = my_close.reindex(_full); _bc = btc_close.reindex(_full)
+    my_fwd = (_mc.shift(-HORIZON) / _mc - 1).reindex(ci)
+    btc_fwd = (_bc.shift(-HORIZON) / _bc - 1).reindex(ci)
     alpha = (my_fwd - beta * btc_fwd).astype(np.float32)
     return alpha, my_fwd.astype(np.float32)
 

@@ -3179,3 +3179,17 @@ re-derivation + closed-arc spot-checks (DIV2/HEDGE1/KL3) on clean books to the s
 Process fix for THIS loop (owned): audit the FOUNDATION first — label/exit_time consistency, cost formula
 vs its label, model-class vs production — on any result BEFORE reviewing its cell logic. A foundation-first
 pass would have found what the external auditor did.
+
+### Addendum 25 (2026-07-10) — REMEDIATION step 1 DONE: label bug fixed at source + clean panel built (317 labels)
+
+(a) SOURCE FIX: X70 target_alpha now computes the forward return gap-safely — reindex to a COMPLETE 5m
+grid so `.shift(-HORIZON)` spans exactly HORIZON*5min and returns NaN across gaps (was `.shift(-HORIZON)`
+on the existing-bars index, which counted rows not wall-clock → 22-day labels at gaps). Future panel
+builds are correct.
+(b) CLEAN PANEL (surgical, = rebuild-equivalent since gap labels are the only corruption): NaN'd exactly
+**317** internal-gap-crossing forward labels (next same-symbol 4h bar >4h away) in the deployable panel →
+outputs/vBTC_features/panel_expanded_v0_clean.parquet (original untouched). Distribution matches the
+audit EXACTLY: 2026-06-04 ×174, 2025-02-28 ×136 (the −15.2% / 22-day corruption), + 7 symbol-specific
+(ICP/LIT/etc.). Script: live/fix_panel_labels.py.
+NEXT: retrain Ridge artifact on clean panel → regenerate v0full_hl60 books → re-derive canonical perf
+(+2.22/bear-farm) leaked-vs-clean → rerun attribution at pinned 0.5×9 cost → correct V4_LIMITATIONS.
