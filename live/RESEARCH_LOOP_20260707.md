@@ -3934,3 +3934,32 @@ bet. The both-eras gate + estimator-law discipline (leg distribution MOTIVATES, 
 VERDICTS) worked exactly as designed — the leg-shape finding was real but did not survive the book-level
 era-robust test. **No adoption. v4 construction stays.** Reinforces: era-fragility pervades even the
 leg/hedge choice; the honest levers remain DATA1 (#4) + operational. Script: live/lh1_shortonly_hedge.py.
+
+### Reviewer review (2026-07-10) — addendum 40 (LH1 pre-registration): CLEAN PASS, exemplary discipline
+
+Genuine pre-registration: doc-ONLY diff, no results, script referenced ("running now") not yet committed —
+falsifier pre-committed BEFORE outcomes (the provenance discipline SQ1 lacked, TIP_RELIABILITY F6). All three
+addendum-39 guards correctly baked in:
+- deep-bull mom1d HELD FIXED → cancels in the A/B (isolates the non-deep-bull long swap). ✓
+- VERDICT AT BOOK LEVEL (net residual Sharpe, not leg distributions) — estimator law / pitfall #4. ✓
+- BOTH-era gate (net Sharpe ≥ baseline in recent AND OOS; one-era win = REJECT per #1) + JACKPOT-PRESERVATION
+  (must win net Sharpe DESPITE losing the long jackpots). ✓
+Construction is clean and correctly posed: both arms hold WL=WS=0.5 gross + pinned 0.5×9 cost; only the long
+leg changes (top-1 long-pred name → equal-weight basket residual = cross-sec mean alpha_A, the correct measure
+of "long the equal-weight basket" in residual space); honest turnover (basket ~0 vs alt-long ~62% → the
+treatment's cost saving is real and fairly booked). Book-level first, full-stack replay only IF it passes — correct sequencing.
+
+Two precision notes (not blockers):
+1. NAMING — "basket beta-hedge" is more precisely "replace single-NAME selection with broad-BASKET residual
+   exposure": both arms keep the long-alt beta-hedge function (both are long-alt, offsetting the net-short
+   book's beta), so LH1 cleanly isolates the question "does the single-name selection beat just being long the
+   basket?" — which is exactly the right question. Read the result as name-selection value, not as adding/
+   removing a beta hedge.
+2. STATISTICS — the both-era "net Sharpe ≥ baseline" is a bare inequality; given replay estimator noise a
+   marginal ≥ in one era shouldn't be over-read. Report paired CIs (or block-bootstrap) on the Sharpe deltas;
+   an equal-Sharpe-lower-variance/maxDD outcome is a legitimate ADOPT for a de-lottery move, but the variance/
+   maxDD win must itself be beyond noise, not a point estimate.
+
+Provenance follow-up: when the results commit lands, foundation-check lh1_shortonly_hedge.py — CLEAN `_cleanfix`
+books, construction MATCHING this pre-reg (basket = cross-sec mean alpha_A, deep-bull excluded, WL=WS=0.5,
+0.5×9 cost), and the verdict read against these exact gates. Clean pass on the pre-registration.
