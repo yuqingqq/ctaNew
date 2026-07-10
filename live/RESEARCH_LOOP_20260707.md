@@ -2545,3 +2545,38 @@ Pre-registration is now airtight and running Phases 1-3. Plan APPROVED — disci
 non-gameable. Will review Phase 1-3 results against these pinned gates when they land (watching:
 does the sleeve clear GATE 1a on the CHOPPY-only 2023-25 aggregate, and does the cross-family
 MA-crossover corroborate the diversification sign).
+
+### Addendum 23p (2026-07-10) — DIV2 BUILD VALIDATION: GATE 1a FAILED → sleeve NOT built (feasibility stands)
+
+Ran Phases 1-3 (div2_validate.py) against the tightened pre-registered gates. Honest pre-committed
+outcome — the OWN-EDGE gate (the reviewer's flagged weak link) FAILS:
+
+**GATE 1a (sleeve's own edge, choppy-isolated) — FAIL.**
+- 365d warmup confirmed excludes 2021 (trend PnL starts 2022-01-01). Half-year trend Sharpes:
+  2023H1 −1.02, 2023H2 +1.34, 2024H1 +0.22, 2024H2 +1.62, **2025H1 −1.71, 2025H2 −0.33**, 2026H1 +2.45.
+- choppy-2023-25 AGGREGATE Sharpe **+0.13** (essentially FLAT — the sleeve barely breaks even outside
+  crisis); non-2022 sub-periods ≥0 in only **57%** (4/7) < 60% bar. **2025 bled BOTH halves** — a slow
+  365d trend can lose for a full year in whipsaw regimes. GATE requires choppy-agg ≥0 AND ≥60% → FAIL.
+
+**GATE 1b (not knife-edge) — PASS.** 9/9 neighborhood cells same diversification sign; pinned 365/30
+Sharpe +0.41 within band [−0.46,+0.52] (not outlier); cross-family MA-crossover(50/200) corroborates
+(bad-week +21 bps, same sign). The diversification SIGN is robust.
+**GATE 3a (diversification OOS) — PASS (strong).** 2025-26 confirm (n=76): combined Sharpe +2.17 vs v4
++1.74; matched-vol DD v4 −8918 → combined −2091 = **+77% DD cut**. DD-benefit holds OOS.
+Phase 1c: turnover 24.4x/yr, cost drag 110 bps/yr (~7% of gross) — realistic. Phase 2: only n=1
+fast-crash window in-sample (2021, pre-trend-start) → the ≤25% size cap is a PRIOR, not measured.
+
+**VERDICT: BUILD GATE = 1a AND 1b AND 3a → FAIL (1a). Sleeve NOT built.** Per pre-registration + W1b:
+no sweep-to-rescue; the pinned result stands as recorded. **Key informative tension: the
+diversification is GENUINE and OOS-robust (1b sign-robust, 3a +77% DD cut) — but it rides on a vehicle
+with NO reliable own edge (choppy +0.13, 2025 both halves negative).** That is exactly the "binding
+uncertainty" the reviewer flagged (23k) and the own-edge gate was designed to catch — now empirically
+CONFIRMED as the blocker: a crypto-CTA sleeve would be a persistent-bleed-risk vehicle whose value is
+almost entirely crisis-timing, and 2025 showed the bleed is real (a full year negative). Staking a NEW
+standalone strategy on that fails the discipline. **What survives:** (1) 23h's "impossible within
+crypto" is still corrected — within-crypto era-diversification is FEASIBLE and even OOS-robust in DD
+terms; (2) but it is NOT BUILDABLE as a reliable standalone sleeve on this data — the own-edge is too
+thin. **Runway reverts (honestly, having now TESTED the build): manage limitation #1 via 0.5× gross
+cap + forward monitoring + kill-switch; DATA1 (paid crypto data); operational forward ledger.** The
+DIV2 feasibility + failed-build is a complete, recorded negative-space result. Scripts:
+div2_crypto_trend.py, div2_validate.py.
