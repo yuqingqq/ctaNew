@@ -1037,6 +1037,8 @@ def select_legs(grp: pd.DataFrame, regime: str, betas_at_t: dict[str, float],
     # leg is a BAD beta hedge in a melt-up (laggards under-rise) -> short beta bleeds -> squeeze. Hedge with a CLEAN
     # BTC long instead, to strip the market-driven part of the squeeze and keep the idiosyncratic reversion alpha.
     _bull_adapt_mult = 1.0
+    if not len(grp):                      # empty eligible universe this cycle -> no positions (2026-07-10
+        return {}                          # audit re-bootstrap: guard the .iloc[0] deep-bull/bull-adapt reads)
     if regime == "bull" and BULL_ADAPT_RAMP and "bull_adapt_mult" in grp.columns:
         _bm = float(grp["bull_adapt_mult"].iloc[0])
         _bull_adapt_mult = _bm if np.isfinite(_bm) else 1.0

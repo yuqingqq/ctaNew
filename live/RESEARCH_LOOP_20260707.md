@@ -3484,3 +3484,27 @@ because it caught that book-additive error. Even the reviewer must not reason fu
 NET: audit remediation FULLY complete. Real bugs, honestly remediated; the +2.22 recent headline SURVIVES
 and is CONSERVATIVE (clean +2.41); production was NOT overstated by the leak (if anything understated). The
 bear BOOK edge IS thinner (+1.82) so §7 conservatism stands. Foundation-first verified end-to-end. Clean pass.
+
+### Addendum 31 (2026-07-10) — PART A: clean pipeline PROMOTED TO PRODUCTION (live system now on clean data)
+
+User: "fix the current system" → promoted the clean pipeline to production (the audit's `_cleanfix`
+artifacts were audit-only; the LIVE artifact/books were still on the leaked panel). Done, all with
+backups:
+- **Canonical panel** → clean (panel_expanded_v0.parquet = the 317-label-fixed panel; leaked backed up
+  as *_leaked_preaudit.parquet). Verified identical except the 317 gap-label NaNs.
+- **Live inference models** (convexity_v4_{base,residrev}_model.pkl) → retrained on clean panel
+  (train_v4_artifact.py; 175 syms, 1.062M rows — 317 corrupt rows now correctly excluded).
+- **Bootstrap books** (hl_tgt_res_{base,long}_clean) → label-clean + stale-filtered (cleanfix filtered
+  to the 171-sym production universe; leaked backed up).
+- **Live seeds** (v4_live/{base,long}.parquet) → re-seeded clean.
+- **Live state warmup** → re-bootstrapped clean: **Sharpe 2.30 / totPnL 20,203 / maxDD −11,132 vs
+  leaked 2.26 / 19,628 / −11,787 (same 171-sym/panel/1.0x config) → CLEAN IS BETTER** on both Sharpe
+  and maxDD, consistent with the confirmatory replay.
+- **Latent bug fixed:** convexity_paper_bot.select_legs crashed on an empty eligible group in a
+  deep-bull cycle (`grp["btc_ret_30d"].iloc[0]` with len(grp)==0) — added a `len(grp)` guard
+  (return {} = no positions). The live forward loop could have hit this.
+- **Config lesson (cost me a detour):** the historical bootstrap MUST use the PANEL as universe meta,
+  NOT the live maturity_meta (floored at now−400d — the run-script header warns this). Using
+  maturity_meta gave a spurious 0.71; panel gives the correct 2.30. maturity_meta is for the FORWARD
+  live loop only. **Production system fully on clean data; clean is measurably better; all leaked
+  artifacts backed up.** NEXT (part B): review limitations on the clean/deployed model.
