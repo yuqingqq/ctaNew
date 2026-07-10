@@ -2814,3 +2814,21 @@ Net: the placebo is the right decisive gate — run it. But honest expectation i
 2026H1-concentrated (same as the failed overlay), so S-3's drop-2026H1 jackknife will likely bind and
 S-1 must be read jointly with it. Verify the PIT shift first — a bar-weights-itself look-ahead would
 fake the whole result.
+
+### Addendum 23u (2026-07-10) — SWITCH1 flags accepted (review d28424f): read S-1∧S-3 jointly, prior LOW, PIT-shift critical
+
+Reviewer approved SWITCH1 as the best-disciplined adaptive-timing test yet; run it. Accepted both flags:
+1. **Upside is still 2026H1-concentrated; read S-1 and S-3 JOINTLY, prior LOW (not low-moderate).**
+   SWITCH1's genuinely-new value vs the failed static blend is ONLY avoiding the 2025 chop-bleed
+   (risk-reduction); the UPSIDE vs v4 is still 2026H1 (same as DIV2-HE). Falsifiable prediction (logged):
+   likely PASSES S-2 (beats static by dodging 2025) but FAILS S-3 drop-2026H1 jackknife; and an S-1
+   placebo pass could be ONE correctly-timed transition (tilt-to-trend at 2026H1) → **PRE-COMMITTED joint
+   reading: an S-1 pass that does NOT survive S-3's drop-2026H1 is a MIRAGE, not a pass.** Detection may
+   be cleaner than IC-timing but CAPTURE is bottlenecked by a lagging detector + one-half upside.
+2. **PIT-shift is the single most important correctness item.** w_trend for week t MUST be set from ER
+   through the PRIOR week (shift), applied to week-t return. Using ER_t (incl week-t data) to weight
+   week-t return = bar-weights-itself look-ahead that would MANUFACTURE the timing skill S-1 tests for.
+   Building the shift explicitly + reporting the look-ahead-vs-PIT gap so it is verifiable.
+Placebo block 10w < regime duration — preserves w_trend persistence, destroys return-alignment (correct
+intent); power still rests on ~3-4 transitions → a pass is "not-refuted", not "validated". Running with
+these.
