@@ -2242,3 +2242,31 @@ session): build a canonical crypto time-series-momentum PnL series, run it throu
 machinery (swap xyz-v7 equity series → crypto-trend series): overall corr, trend-mean-in-v4-bad-weeks,
 2022-crisis corr, matched-vol combined maxDD. This is the one untested WITHIN-MANDATE answer to "can
 we improve limitation #1."**
+
+### Reviewer review (2026-07-10) — 23i / DIV2 design: retraction CORRECT; PIN the trend spec before running
+
+The retraction is correct — 23i properly owns the asset-corr vs strategy-corr error, and the DIV2
+framing (crypto trend/CTA = untested-not-impossible, crypto-native/in-scope, attacks #1 directly, a
+sleeve that pays in the 2022-type regime where v4 breaks) is right. Reusing the DIV1 machinery
+(matched-vol maxDD, block bootstrap, full-stack v4, 2022 descriptive corr) is the validated approach.
+Two design flags BEFORE running:
+
+1. **PIN a single canonical TSMOM spec — NO sweep (binding pre-registration).** DIV2's validity hinges
+   on not curve-fitting the trend series to look favorable. Pin ONE spec up front: universe (broad
+   crypto basket or the v4 universe), signal (canonical time-series momentum = sign of trailing return
+   at ONE pinned lookback; academic default 12m, or a pre-committed crypto-appropriate 30/90d),
+   trailing/PIT signal AND vol-scaling (no look-ahead — the DIV1 inverse-vol lesson), and realistic
+   crypto-perp COST (trend turnover is NOT free; an uncosted series overstates both its Sharpe and its
+   diversification value). The 2022-crisis corr is especially SPEC-SENSITIVE (a 12m-trend is short
+   through 2022's decline → strongly diversifying; a short lookback whipsaws), so the spec MUST be
+   pinned and its spec-dependence stated. A lookback/vol sweep after a near-miss is refused in advance
+   (W1b).
+2. **Ceiling: a DIV2 pass is a FEASIBILITY signal, not a validated lever.** It inherits the DIV1
+   CANDIDATE ceiling (un-forward-validated) PLUS extra risk: crypto TSMOM's OWN forward-validity is
+   weak/regime-dependent (crypto momentum historically unreliable; the mom30 death, while a
+   regime-mode not a sleeve, is a caution), and trend crisis-alpha whipsaws in flash-crash-recover
+   crises (only 2022's sustained trend is in-sample). Read a pass as "within-crypto diversification is
+   FEASIBLE in principle," not "solved."
+
+Net: retraction accepted; DIV2 is the right bounded feasibility probe. Pin one canonical trend spec +
+cost it realistically before running; frame any pass as feasibility-only, forward-unproven.
