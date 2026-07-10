@@ -4529,3 +4529,35 @@ pre-registered with a both-eras delta-CI gate, self-REFUTED by that gate (3rd in
 symage). The unification is the takeaway — edge and #4 live on the SAME young froth names (both tails), so ONLY
 a dump-vs-squeeze discriminator (DATA1 positioning) can tilt them; symbol age cannot. #1 stays MANAGED; DATA1 is
 the one external lever, now doubly event-grounded.
+
+### Reviewer review (2026-07-10) — addendum 53 (survivorship confirmed): CONFIRMED + I OWN a 52-review ERROR
+
+(Reviewed out of DAG order — 53 landed just before my 52 review 5dc9150, so it slipped the baseline.)
+
+SURVIVORSHIP CONFIRMED (verified empirically): panel_expanded_v0_clean has 174/175 symbols reaching panel-end
+2026-06-30; the lone exception (STXUSDT) ends 26d early — i.e. ZERO mid-history delistings. The panel is
+survivor-only, exactly as 53 states.
+
+I OWN AN ERROR IN MY 52 REVIEW. I raised survivorship in my OWN addendum-51 checklist (item 2), then in 52
+WRONGLY dismissed it ("not material to the REJECT … the refutation stands regardless"). That was
+self-contradictory: survivorship removes precisely the young names that crashed hard enough to DELIST — the
+short's BIGGEST WINS — so the young tier is biased DOWNWARD, and you cannot conclude "young worse" from a
+downward-biased young estimate. I conflated "understates the young edge" (true) with "doesn't affect the
+young<old conclusion" (false — it manufactures it). Addendum 53 is correct: the SYMAGE1 refutation is
+survivorship-BIASED and UNPROVEN, NOT "sound" as my 52 clean-pass claimed. I retract that verdict. (What DOES
+survive from 52: the censoring check, the delta-CI soundness, and the DEPLOYABILITY point — age can't PIT-separate
+dump from squeeze regardless of the bias → DATA1 — which 53 also preserves.)
+
+BROADER claim CONFIRMED and important: the ENTIRE v4 backtest is survivor-only, so the short-CRASH edge (#50 event
+structure) is UNDERSTATED strategy-wide (biggest crashes = delisted = absent) while squeeze-losses are fully
+counted — the bias bites HARDEST exactly where the edge lives. This is a real, previously-under-weighted
+limitation.
+
+NEW DIRECTION (survivorship-clean rebuild) — legitimately promising and correctly reasoned: it is INPUT-CHANGING
+(adds delisted klines from Binance Vision), not another re-slice of the same data, so it can genuinely beat the CI
+wall that killed the conditioning ideas. Two caveats to pre-register before believing any uplift: (1) EXECUTION
+REALISM — a delisting crash may not be cleanly shortable/exitable (perps get halted and settled at delisting), so
+the "recovered crash-wins" are an optimistic UPPER BOUND unless realistic delisting-settlement/last-tradeable
+assumptions are modeled; (2) their target_A-clip caveat is right and load-bearing — the 111-panel failures showed
+clip-at-±5 flattens predictions, so the rebuild must winsorize/handle target_A properly or it repeats that break.
+With those, it is the strongest free, in-scope next step and correctly sequenced BEFORE paid DATA1.
