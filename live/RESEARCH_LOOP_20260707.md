@@ -4135,3 +4135,30 @@ Four items to VERIFY when the results land (none blocks the pre-reg; the most im
 
 Clean pass — well-pre-registered; verdict will hinge on the residual/book frame (item 3), where the low prior
 and the revert-forgoing mechanism make a FAIL the likely (and cheap, honest) outcome.
+
+### Reviewer review (2026-07-10) — addendum 45 / TH1 result (d72cac3): CORRECTNESS BUG (adverse-window misaligned 47 bars) — FIX APPLIED, RE-RUN REQUIRED
+
+FOUNDATION-FIRST caught a confirmed bug in th1_reactive_stop.py `adverse_map`. The line
+`d["high"][::-1].rolling(48,min_periods=48).max()[::-1].shift(-47)` does NOT compute the intra-cycle max
+adverse `max(high[i..i+47])`. The double-reverse rolling-max ALREADY yields the forward intra-cycle max; the
+extra `.shift(-47)` pushes it to `max(high[i+47..i+94])` — the NEXT 4h window, almost entirely AFTER the short
+is closed at i+48. Empirically verified (W=4 proxy: the exact idiom returns max over [3,6] at i=0, not [0,3]).
+
+IMPACT: the reactive stop is simulated on the WRONG window — it caps THIS cycle's return based on the NEXT
+cycle's rip. So the d72cac3 commit-message numbers (recent Δ−2.54 / OOS Δ−1.79, edge 0.36×) and the "squeezes
+revert → stop guts the grind" attribution are NOT validly demonstrated — they measure misaligned noise, not the
+pre-registered [t,t+4h] stop. The REJECT DIRECTION is plausibly still correct (low vBTC prior + the misalignment
+adds noise that hurts + fill-optimism favors the stop so a fail is robust), but it is not ESTABLISHED here.
+
+FIX APPLIED (this commit): removed `.shift(-47)` → `fwd_max` now = intra-cycle `max(high[i..i+47])`. (Entry-bar
+inclusive; for entry-exclusive [i+1,i+48] use `.shift(-1)` — a 1-bar refinement, not the bug.) **RE-RUN
+REQUIRED before recording addendum 45** — do not enshrine the −2.54/−1.79 numbers; regenerate them with the
+corrected window.
+
+SECONDARY: (1) the addendum-45 LEDGER ENTRY IS MISSING — the result lives only in the commit message; given the
+bug, that's fortunate (nothing invalid enshrined yet) — write it only after the re-run. (2) The residual
+cross-check promised in the addendum-44 pre-reg is ABSENT (script is naked-only via `return_pct`); add it, since
+per pitfall #4 the deployed book is residual and a naked stop can whipsaw on beta. (3) `fillna(-9)` treats the
+last 47 run-off cycles as never-stopped — correct (window can't be evaluated there), minor.
+
+NOT a clean pass — bug fixed in code; verdict pending the re-run (likely still REJECT, but must be shown clean).

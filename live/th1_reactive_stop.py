@@ -23,8 +23,11 @@ def adverse_map(symbols):
         except Exception: continue
         d["open_time"] = pd.to_datetime(d["open_time"], utc=True)
         d = d.drop_duplicates("open_time").sort_values("open_time").reset_index(drop=True)
-        # forward max-high over next 48 bars (exclusive of run-off end)
-        fwd_max = d["high"][::-1].rolling(48, min_periods=48).max()[::-1].shift(-47)
+        # forward max-high over the intra-cycle window [i, i+47] (48 bars = 4h), exclusive of run-off end.
+        # NOTE (reviewer fix 2026-07-10): the prior `.shift(-47)` here measured [i+47, i+94] (the NEXT 4h
+        # window, mostly AFTER the position closes at i+48) — a ~47-bar misalignment, empirically verified.
+        # The double-reverse rolling-max already yields the forward intra-cycle max; no extra shift.
+        fwd_max = d["high"][::-1].rolling(48, min_periods=48).max()[::-1]
         adv = fwd_max / d["close"] - 1
         g = d[(d.open_time.dt.hour % 4 == 0) & (d.open_time.dt.minute == 0)].copy()
         g["adverse"] = adv.reindex(g.index)
