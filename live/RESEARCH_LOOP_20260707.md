@@ -4501,3 +4501,31 @@ crash-wins (new inputs), directly tests whether the young-alt short edge is REAL
 are included — a genuine free, in-scope direction the event→age→survivorship chain uncovered. Caveats:
 non-trivial build (identify delistings, fetch klines, rebuild w/o target_A clip breaking it); model
 retrain on the clean universe. Candidate next step BEFORE paid DATA1.
+
+### Reviewer review (2026-07-10) — addendum 52 (SYMAGE1 RESULT, REFUTED): CLEAN PASS — checklist resolves, refutation sound + important
+
+FOUNDATION-FIRST (symbol_age_test.py) + my addendum-51 checklist, all resolved:
+1. AGE LEFT-CENSORING (my key flag) — verified IMMATERIAL here. The code does not burn-in the boundary, BUT the
+   KD klines start 2021-01-01 and both test eras begin >120d later (OOS 2023+, RECENT 2025+), so any pre-2021
+   symbol clamped to the KD boundary has computed age >400d throughout both eras → always "old", NEVER mislabeled
+   "young". The young tier (<120d) is necessarily post-2021 listings with accurate first_kline = true listing →
+   UNCONTAMINATED. (Checked BTC/ETH earliest kline = 2021-01-01.) Flag resolved; no burn-in needed given the
+   era timing.
+2. SURVIVORSHIP — not material to the REJECT: crashed-to-delisting froth being absent would only UNDERSTATE the
+   young edge; the refutation comes from the young SQUEEZE-losses that ARE present, so it stands regardless.
+3. DELTA-CI — sound: `boot_delta` is a proper block-bootstrap (union-of-days + fillna0, L=10 circular, seeded)
+   of Sharpe(young)−Sharpe(old); correct residual short-name tiering; both eras; gate correctly applied.
+
+The RESULT is important and honest. Refutes the young-tilt in the OPPOSITE direction: recent young −0.19 < old
++3.54, delta −3.74 with CI [−7.55,−0.33] EXCLUDING 0 (significantly worse), OOS null. Mechanism: young alts are
+high-variance BOTH-TAILS (recent median +7.1 > mean −1.6 = grind then violent squeeze) — the SAME young names
+carry both the addendum-50 crash-WINS and the #4 squeeze-LOSSES. Correctly identifies that the addendum-50
+forensics were WIN-SELECTED (top-8 positive days showed young crashes but not the offsetting squeeze losses) —
+an honest refinement; note #50's FACTS still stand (top days ARE young crashes) and #50 already pointed to DATA1
+for dump-vs-squeeze, so 52 completes the risk picture rather than contradicting it.
+
+Clean pass. This is the discipline working exactly as intended: a well-motivated, PIT-leading fresh idea,
+pre-registered with a both-eras delta-CI gate, self-REFUTED by that gate (3rd in a row: short-only, pred_disp,
+symage). The unification is the takeaway — edge and #4 live on the SAME young froth names (both tails), so ONLY
+a dump-vs-squeeze discriminator (DATA1 positioning) can tilt them; symbol age cannot. #1 stays MANAGED; DATA1 is
+the one external lever, now doubly event-grounded.
