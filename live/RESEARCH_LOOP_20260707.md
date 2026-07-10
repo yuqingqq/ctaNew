@@ -4207,3 +4207,26 @@ Three small notes (none change the verdict):
 Clean pass. TH1 arc CLOSED (bug caught → fixed → re-run → corrected reject): the FREE reactive tail-hedge is
 exhausted; DATA1 (predictive squeeze signal) is the only remaining lever on the short-side #4 tail, and #1
 stays managed.
+
+### Addendum 47 (2026-07-10) — DEEP RE-ANALYSIS: SHORT-ONLY + BTC-hedge PASSES book-level both-eras (candidate solution to source b)
+
+User: dig deeper, propose a solution. Re-examined LH1's failure: it failed because the alt-BASKET hedge
+has an era-dependent residual (−3.9 OOS), NOT because dropping the long is wrong. The SHORT is era-stable
+(+both eras); the OOS LONG is net-negative overall (side-long −0.33 + bull-long −1.57 outweigh bear-long
++3.60). Refined candidate = SHORT-ONLY, beta-neutralized with a ZERO-residual BTC hedge (BTC residual ≈ 0
+both eras, unlike the era-dependent basket). shortonly_test.py (non-deep-bull, residual net, both eras):
+- **RECENT: 1L/2S +1.84 → short-only +2.54 (Δ +0.70)** (drops the long lottery's variance).
+- **OOS: 1L/2S −0.85 → short-only −0.53 (Δ +0.32)** (drops the net-negative long).
+- **GATE (short-only ≥ 1L/2S BOTH eras): PASS** — the FIRST construction change to pass book-level
+  both-eras this session.
+**STATUS: CANDIDATE, not a validated solution** (this session's "breakthroughs" have repeatedly been
+artifacts). What it MUST still survive before adoption: (1) FULL-STACK replay (estimator law / pitfall #4
+— book-level residual is a SCREEN; overlays are path-coupled and can flip sign); (2) BTC-hedge COST +
+turnover charged (not yet — BTC-long is low-turnover but nonzero); (3) beta-neutrality verification (does
+the BTC-hedge ratio actually neutralize the 2-alt short's beta, naked frame); (4) jackpot/tail check
+(short-only removes the long jackpots but inherits the short squeeze tail #4); (5) maxDD (test had a nan
+display bug — clean recompute). **PROPOSED LAYERED SOLUTION to the multi-source #1:** (b) long-leg
+era-conditionality → SHORT-ONLY + BTC-hedge (this candidate, in-scope, free, needs full-stack verify);
+(a) short squeeze tail → DATA1 (predictive); (c) regime sign-rotation → manage (gate/cap). If short-only
+survives full-stack, it's the first genuine construction improvement + addresses one #1 source directly.
+Script: live/shortonly_test.py.
