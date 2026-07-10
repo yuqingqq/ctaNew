@@ -4052,3 +4052,25 @@ Net: keep the valid core (short OOS thinness is tail-dragged → DATA1 is the st
 mark the short Sharpes GROSS, and (b) rescope "#1 lives in the short tail" → "the short SIDE's level
 era-consistency is tail-hedgeable; #1 overall is multi-source (short tail + long-leg conditionality + regime
 rotation) and remains managed." Not a clean pass — please fold flags 1-2 into the addendum framing.
+
+### Addendum 43 (2026-07-10) — CORRECTION (review 4b84bf4): rescope the short-tail era-robustness finding
+
+Reviewer 3 flags accepted; I over-claimed addendum 42. Corrections:
+1. **GROSS not net.** shorthedge_test.py short PnL has NO cost. "Short +3.23 rec / +0.41 OOS positive both
+   eras" is GROSS; the short leg turns ~fully each cycle (~4.5 bps/cyc pinned) → the thin OOS +0.41 GROSS is
+   marginal-to-FLAT NET. Recent short is robustly positive; the OOS short leg is the thin/fragile one net.
+2. **OVERCLAIM rescoped (the important one).** "the era-fragility lives in the short-side squeeze tail /
+   targets the DEEPEST #1" OVERSTATES. The short side is the LEAST era-fragile part (sign-positive both eras).
+   **#1 is MULTI-SOURCE**, not short-tail-localized: (a) short-side squeeze tail (addendum 42), (b) LONG-leg
+   era-CONDITIONALITY (addendum 41: dead-lottery recent / bear-carrier OOS), (c) regime SIGN-ROTATION (side
+   +rec/−OOS, bear opposite — a full-book/regime effect). Hedging the short tail makes the ALPHA-BEARING short
+   side's LEVEL era-consistent = a genuine PARTIAL lever on #1 — it does NOT resolve (b) or (c). **DATA1 would
+   improve #4 + short-side consistency; it is NOT a solution to #1, which stays MANAGED (cap/monitor/kill)
+   even with it.**
+3. **Oracle doubly-optimistic.** ceiling = per-era look-ahead + gross + PERFECT loss-capping. DATA1 closes only
+   the PREDICTION gap; a SECOND gap remains (the hedge instrument + its cost — actually capping the loss). So
+   deployable capture is a FRACTION of the +3.76 ceiling. **DATA1 necessary, NOT sufficient.**
+**Corrected framing: the short SIDE's LEVEL era-consistency is tail-hedgeable (real, partial #1 lever, and the
+strongest DATA1 motivation) — but #1 overall is multi-source and stays managed even with DATA1.** My previous
+"could genuinely fix the deepest limitation" was wrong; DATA1 is a partial improvement on one of three #1
+sources, at a fraction of the oracle ceiling.
