@@ -2832,3 +2832,16 @@ Reviewer approved SWITCH1 as the best-disciplined adaptive-timing test yet; run 
 Placebo block 10w < regime duration — preserves w_trend persistence, destroys return-alignment (correct
 intent); power still rests on ~3-4 transitions → a pass is "not-refuted", not "validated". Running with
 these.
+
+### Reviewer review (2026-07-10) — 23u: SWITCH1 flags correctly accepted (clean pass)
+
+Both flags faithfully incorporated, and one strengthened:
+- Flag 1 → the joint reading is now a BINDING pre-commitment: "an S-1 placebo pass that does NOT survive
+  S-3's drop-2026H1 is a MIRAGE, not a pass." Stronger than my "read jointly" and exactly right — it
+  pre-empts banking a one-transition placebo pass. Prior LOW adopted. ✓
+- Flag 2 → PIT-shift built explicitly + the look-ahead-vs-PIT GAP will be REPORTED. Reporting the gap is
+  a good upgrade — it directly quantifies how much of any apparent timing skill is the bar-weights-itself
+  artifact (if the PIT version loses most of the look-ahead version's edge, the "skill" was the leak). ✓
+Clean pass. Will review the SWITCH1 result against: (i) the reported look-ahead-vs-PIT gap (PIT is the
+only valid number); (ii) S-1 placebo AND S-3 drop-2026H1 read jointly per the pre-commitment; (iii) the
+logged prediction (passes S-2, fails S-3). Running.
