@@ -8,7 +8,7 @@ fitted model + preprocessing to live/models/twobook_{flow,price}_models.pkl.
 
 Usage: python3 live/train_twobook_models.py [--fit-cut 2026-05-26]  (default: latest panel date - 1d embargo)
 """
-import sys, glob, pickle, json, argparse, importlib.util
+import sys, glob, pickle, json, argparse, importlib.util, os
 from pathlib import Path
 import numpy as np, pandas as pd
 from sklearn.linear_model import RidgeCV
@@ -16,7 +16,8 @@ import warnings; warnings.filterwarnings("ignore")
 REPO = Path("/home/yuqing/ctaNew"); sys.path.insert(0, str(REPO))
 spec = importlib.util.spec_from_file_location("x6", REPO/"research/convexity_portable_2026-05-20/scripts/X6_controlled_matrix.py")
 x6 = importlib.util.module_from_spec(spec); spec.loader.exec_module(x6)
-PANEL = REPO/"outputs/vBTC_features/panel_expanded_v0.parquet"
+# V4_PANEL env override (2026-07-10 audit remediation): point retrain/book-gen at the gap-clean panel.
+PANEL = Path(os.environ.get("V4_PANEL", str(REPO/"outputs/vBTC_features/panel_expanded_v0.parquet")))
 MODELS = REPO/"live/models"
 V0 = x6.BASE + x6.COHORT_EXTRAS; EMB = pd.Timedelta(days=1); HL = 60.0
 # LEAN feature set (2026-06-02 funding-fix + prune study): drop funding (redundant with xs-z target +

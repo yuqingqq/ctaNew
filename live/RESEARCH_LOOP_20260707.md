@@ -3225,3 +3225,28 @@ NaN'd — not the +4h production label.
 changes yet — the Ridge artifact + all v0full_hl60 books are still trained on the CORRUPT panel. The leak's
 IMPACT is removed only after retrain + book regeneration on the clean panel (steps 2-3). Correct, verified
 foundation for that rebuild. Clean pass on step 1.
+
+### Addendum 26 (2026-07-10) — REMEDIATION step 2-3: clean OOS books + COMMITTED attribution → bear ~HALVED
+
+Regenerated OOS books on the clean panel (gen_oos_v4 with V4_PANEL=clean, V4_BOOK_SUFFIX=_cleanfix →
+hl_v4base_oos_cleanfix/hl_v4long_oos_cleanfix; 154 syms). Wrote a COMMITTED attribution
+(live/attribution_v4_regime.py — replaces the uncommitted table generator) at the PINNED 0.5×9 cost,
+LEAKED vs CLEAN OOS books, per btc_ret_30d regime, residual+naked frames, daily-agg Sharpe:
+
+| regime | LEAKED resid net/Sh | CLEAN resid net/Sh |
+|---|---|---|
+| side | −2.4 / −0.71 | −2.7 / −0.78 |
+| **bear** | **+14.0 / +3.56** | **+6.6 / +1.82** |
+| bull | −5.9 / −1.40 | −6.5 / −1.52 |
+
+**The leak was BEAR-CONCENTRATED (the 2025-02-28 gap cycle is a bear regime) and roughly DOUBLED the
+apparent bear edge: resid Sharpe +3.56 → +1.82, net +14.0 → +6.6.** Side/bull essentially unchanged
+(the corruption lands in bear). Note the two bugs COMPOUND vs the DOCUMENTED bear OOS +4.46: cost
+correction (0.25×9→0.5×9) takes +4.46→~+3.56, then label cleaning +3.56→+1.82. **Corrected canonical
+OOS bear ≈ +1.8 Sharpe, not +4.46.** The era-split (limitation #1) SURVIVES IN SIGN (bear still the
+positive OOS anchor, side/bull negative OOS) but its magnitude is roughly HALVED — bear is a ~+1.8
+anchor, not a ~+4.5 one. This directly contaminates: V4_LIMITATIONS bear cell, the canonical bear-farm
+in V4_PERFORMANCE §1/§5, and the §7 cap-release bar (calibrated on the inflated bear). REMAINING:
+(a) regenerate RECENT clean books (gen_residual_target on clean panel — 2026-06-04 gap ×174 lands
+there); (b) re-run the full-stack +2.22 replay on clean books; (c) correct V4_LIMITATIONS_DIAGNOSIS.md
+(clean bear, cost label, bear-gateable, mild-bull no-new-sleeve, drop ≥-pre-gate) + re-set §7.

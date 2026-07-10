@@ -7,13 +7,14 @@ Outputs:
   live/state/convexity/hl_v4long_oos/v0full_hl60.parquet   (long, V0_LEAN+resid_rev, residual target)
 Usage: python3 live/gen_oos_v4.py [START=2023-01-01] [END=2025-10-01]
 """
-import sys
+import sys, os
 from pathlib import Path
 import numpy as np, pandas as pd
 from sklearn.linear_model import RidgeCV
 import warnings; warnings.filterwarnings("ignore")
 REPO = Path("/home/yuqing/ctaNew"); sys.path.insert(0, str(REPO))
 import live.train_twobook_models as tt
+SUF = os.environ.get("V4_BOOK_SUFFIX", "")   # audit remediation: e.g. "_cleanfix" for clean-panel books
 x6 = tt.x6; V0 = list(tt.V0)
 V0_LEAN = [f for f in V0 if not f.startswith("funding")]
 EMB = pd.Timedelta(days=1); HL = 60.0
@@ -61,8 +62,8 @@ def gen(feats, outpath):
     outpath.parent.mkdir(parents=True, exist_ok=True); out.to_parquet(outpath)
     return out["symbol"].nunique(), len(out)
 
-print("=== v4 BASE/short book (V0_LEAN, residual target) ===", flush=True)
-bs = gen(V0_LEAN, REPO/"live/state/convexity/hl_v4base_oos/v0full_hl60.parquet")
-print("=== v4 LONG book (V0_LEAN + resid_rev, residual target) ===", flush=True)
-ls = gen(V0_LEAN + RR, REPO/"live/state/convexity/hl_v4long_oos/v0full_hl60.parquet")
+print(f"=== v4 BASE/short book (V0_LEAN, residual target) [suffix='{SUF}'] ===", flush=True)
+bs = gen(V0_LEAN, REPO/f"live/state/convexity/hl_v4base_oos{SUF}/v0full_hl60.parquet")
+print(f"=== v4 LONG book (V0_LEAN + resid_rev, residual target) [suffix='{SUF}'] ===", flush=True)
+ls = gen(V0_LEAN + RR, REPO/f"live/state/convexity/hl_v4long_oos{SUF}/v0full_hl60.parquet")
 print(f"DONE base {bs}, long {ls}", flush=True)
