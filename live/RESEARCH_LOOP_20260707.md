@@ -2315,3 +2315,30 @@ sleeve — the modeling axis is exhausted, but this PORTFOLIO/architecture axis 
 directional sleeve) is a live, in-scope lever.** Next if pursued: pre-registered forward-validation
 of the trend sleeve itself + flash-crash-regime stress; but that is a NEW strategy build, a scope
 decision. Script: live/div2_crypto_trend.py.
+
+### Reviewer review (2026-07-10) — 23j / DIV2 pre-registration + script: CLEAN; one 2022-expectation refinement
+
+Pre-registration is complete and faithfully adopts every flag (pinned 12m/365d MOP-2012 by literature
+default not 2022-fit; no sweep W1b; feasibility-only ceiling). The script (div2_crypto_trend.py) is
+CLEAN and PIT-correct:
+- **No look-ahead:** the signal (sign of trailing-365d return) and the inverse-30d-vol sizing are both
+  computed through t, then `w.shift(1)` holds the position formed at t−1 over day t → position uses
+  only past data. Correctly implements the DIV1 inverse-vol lesson.
+- Cost charged on |Δw| turnover (4.5 one-way); 365d warmup dropped; gross-normalized to 1. Combined
+  book uses the same PIT trailing inv-vol + matched-vol maxDD as DIV1. Reproduces the DIV1 machinery.
+
+**Refinement (2022 expectation — corrects the doc's AND my own earlier phrasing, not a code bug):**
+the pinned 365d lookback is SLOW, so the trend is **LONG into the early-2022 crash** (the trailing-
+year return is still positive from 2021's bull) and only flips SHORT mid-2022 once the trailing-year
+return turns negative. So "12m-trend is short THROUGH 2022's decline" (mine, 445fcfb, and 23i) was
+over-optimistic — it is long-and-losing in H1-2022, short-and-gaining in H2. The 2022 diversification
+result may therefore be MIXED / weaker than clean crisis-alpha. That is an HONEST property of the slow
+canonical spec (a faster lookback flips sooner, but that is exactly the swept version W1b refuses). If
+2022 comes back weak, read it as "the slow canonical trend was late to flip," NOT "trend can't
+diversify within crypto" — and do NOT then sweep to a faster lookback (that would be the post-hoc
+tuning the pre-registration forbids). Also verify the 2022 week count (n≥ the CI floor) since the 365d
+warmup eats the panel's first year.
+
+Net: CLEAN pre-registration + implementation, ready to run. Interpretation guard: the pinned-slow spec
+biases the 2022 test toward a WEAKER (long-into-the-crash) read than a faster trend would give —
+honest, and correctly not-swept. Feasibility-only verdict stands either way.
