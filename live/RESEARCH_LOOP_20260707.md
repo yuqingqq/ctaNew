@@ -4016,3 +4016,39 @@ is exactly #4/SQ1: crowding predicts squeezes but is non-stationary on FREE fund
 answers is "can a PIT squeeze signal capture enough of this tail to convert the feasibility ceiling into
 a real era-robust short book." This is the strongest motivation yet for DATA1: it targets the DEEPEST
 limitation (#1) via the short-side tail, not just #4 in isolation. Script: live/shorthedge_test.py.
+
+### Reviewer review (2026-07-10) — addendum 42 (short-tail era-robustness): CORE DIAGNOSTIC VALID, but 3 flags (gross-cost, an overclaim to scope, oracle optimism)
+
+Mechanics foundation-sound: CLEAN `_cleanfix` books, correct short leg (nsmallest-2 base-pred, non-deep-bull),
+oracle correctly labeled (per-era `np.percentile` winsorization = look-ahead). The CORE diagnostic is VALID and
+valuable: the short side grinds era-stably (sign-positive both eras, addendum 39) and its OOS *thinness* is
+tail-dragged — oracle-capping the worst 2-10% lifts OOS from +0.41 to +3.76. Hedging the short squeeze tail
+(#4) is a real lever on the short side's era-LEVEL-consistency, and this IS the strongest DATA1 motivation yet.
+Agreed on that core. Three flags before the framing is adopted:
+
+1. GROSS-COST (foundation): short PnL is `-S.alpha_A.mean()` with NO cost. So "RAW short +3.23 rec / +0.41 OOS,
+   positive BOTH eras" is a GROSS statement. The short leg turns over ~fully each cycle (≈ WS×COST ≈ 4.5 bps/cyc
+   at the pinned 0.5×9), so the thin OOS +0.41 GROSS is marginal-to-flat NET. Qualify "grinds era-stably
+   positive" as gross — recent is robustly positive; the OOS leg is the thin/fragile one and weaker net.
+
+2. OVERCLAIM TO SCOPE (this is the important one): "the era-fragility lives in the short-side squeeze tail" /
+   "targets the DEEPEST limitation #1" OVERSTATES. The short side is the LEAST era-fragile part — it is
+   sign-positive BOTH eras (raw). This directly tensions with addendum 41, which just established the LONG leg
+   is era-CONDITIONAL (dead lottery recent, bear-carrier OOS) — a SEPARATE #1 driver — and with V4_LIMITATIONS
+   #1's regime SIGN-ROTATION (side +rec/−OOS, bear opposite), which is a full-book/regime effect, not a
+   short-tail effect. So #1 is MULTI-SOURCE: neither "lives in the short tail" (42) nor "in the long leg" (41)
+   alone. Correct scope: hedging the short tail makes the ALPHA-BEARING short side's LEVEL era-consistent — a
+   genuine PARTIAL lever on #1 — but it does NOT resolve the long-leg era-conditionality or the regime
+   sign-rotation. DATA1 would improve #4 + the short side's consistency; it is NOT a solution to #1, which stays
+   managed (cap/monitor/kill-switch) even with it.
+
+3. ORACLE OPTIMISM (reinforce): the ceiling is doubly-plus optimistic — per-era look-ahead + gross + assumes
+   PERFECT loss-capping. DATA1 (a PIT squeeze predictor) closes only the PREDICTION gap; there is a SECOND gap
+   (the hedge instrument + its cost — you must actually cap the loss, e.g. long the squeezing name / a call, at
+   a cost). So the deployable capture is a FRACTION of +3.76, not the ceiling. The caveat correctly says
+   "feasibility ceiling not deployable" — extend it: DATA1 is necessary but not sufficient.
+
+Net: keep the valid core (short OOS thinness is tail-dragged → DATA1 is the strongest-motivated lever) but (a)
+mark the short Sharpes GROSS, and (b) rescope "#1 lives in the short tail" → "the short SIDE's level
+era-consistency is tail-hedgeable; #1 overall is multi-source (short tail + long-leg conditionality + regime
+rotation) and remains managed." Not a clean pass — please fold flags 1-2 into the addendum framing.
