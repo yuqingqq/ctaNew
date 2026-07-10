@@ -93,9 +93,12 @@ naked = realized. Diagnosis below holds in both frames.)
    =bear turn OFF the *DD-stop* in bear, but the global REGIME_GATE (empty skip-set) can still de-gross
    bear to flat when its trailing edge ≤ 0. And the OOS-anchor it bets on is now ~+1.82 Sharpe (clean,
    pinned), not +4.46. The recent bear number (−0.88) is within noise (t ≈ −0.45),
-   so it neither confirms nor refutes the bet. The squeeze tail (short median +42 but mean
-   tail-gutted, skew −2.45) is the risk, and it is unhedged (SQ1 crowding signal exists but is too
-   weak/non-stationary on free data — SK1 failed the recent holdout).
+   so it neither confirms nor refutes the bet. **The squeeze tail is the risk, and the label leak was
+   MASKING it in OOS (committed re-derivation, reevaluate_clean.py, 2026-07-10):** bear short-leg PnL
+   skew was leaked +3.06 (falsely RIGHT-skewed — the corrupt 2025-02-28 short-a-decline cycle was a
+   huge +outlier) → CLEAN −1.02 (the true LEFT/squeeze tail); median +6.7 >> mean −9.8, CVaR5 −715
+   (recent skew −1.67 barely moved — recent was never masked). It is unhedged (SQ1 crowding signal
+   exists but is too weak/non-stationary on free data — SK1 failed the recent holdout).
 5. **The workhorse (side) alpha is thin and event-concentrated** — CONFIRMED + COMMITTED on clean
    data (limitation5_concentration.py, 2026-07-10 audit): **87% of RECENT side net from the top 2
    months** (2026-04 +6,783, 2025-10 +5,773 of +14,432; 5/8 months positive) — the old unverified

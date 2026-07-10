@@ -3602,3 +3602,39 @@ Clean pass — the headline now matches what actually runs (+2.30), the three fr
 and the corrected OOS + universe-variance caveats are in place. **The audit arc is fully closed:** production
 on clean data (+2.30, measurably better), headline reconciled to the deployed number, limitations
 re-confirmed, all foundation-first verified end-to-end.
+
+### Addendum 33 (2026-07-10) — COMPLETE clean-data re-evaluation: all 6 limitations committed-verified; #4 was MASKED by the leak
+
+User: "re-evaluate the strategy/performance completely." Closed the #3/#4/#6 verification gap
+(reevaluate_clean.py, committed) so ALL SIX limitations are now committed-verified on the deployed
+clean books, not asserted. Full consolidated picture:
+
+**PERFORMANCE (clean, deployed) — full-stack:** recent Sharpe **+2.30** deployed (+2.41 confirmatory /
++2.22 orig-doc; all ≈+2.2-2.4, INTACT & better clean), maxDD −11,132; OOS **+0.20** (better than leaked
+−0.09 — leak was deflationary at full-stack). Per-regime book (residual Sharpe, pinned cost): side
++3.55 rec/−0.78 OOS · bear +1.82 OOS (thinner anchor) · bull +3.95 rec/−2.37 OOS · deepbull −4.35 rec/
+−0.85 OOS.
+
+**ALL 6 LIMITATIONS — committed-verified on clean:**
+- **#1 era-fragility** — CONFIRMED (no regime both-era positive), SOFTENED (OOS full-stack +0.20
+  positive; bear anchor +1.82 not +4.46). [attribution_v4_regime.py]
+- **#2 bull gate = era-trap** — CONFIRMED (mild-bull +3.95 rec / −2.37 OOS, the textbook era-split).
+- **#3 deep-bull beta lottery** — CONFIRMED (clean beta-neutral counterfactual LOSES both eras: −3.8
+  OOS / −31.0 recent; the mom1d overlay is return_1d-ranked = label-fix-INDEPENDENT). [reevaluate_clean.py]
+- **#4 bear squeeze tail** — CONFIRMED, and the label leak was **MASKING it in OOS**: bear short-leg PnL
+  skew leaked **+3.06 (false right-skew)** → clean **−1.02 (true left/squeeze tail)**; the corrupt
+  2025-02-28 short-a-decline cycle was a +15% outlier hiding the tail. median +6.7 >> mean −9.8, CVaR5
+  −715. Recent skew −1.67 (never masked). THE limitation the label fix materially moved — it REVEALS a
+  risk the leak hid. [reevaluate_clean.py]
+- **#5 thin/event-concentrated side** — CONFIRMED (87% of recent side net from top-2 months).
+  [limitation5_concentration.py]
+- **#6 lagging regime** — STRUCTURAL / label-fix-independent (btc_ret_30d + 3-cycle hysteresis +
+  6-sleeve/24h settle; verified in convexity_paper_bot by the attribution agent).
+
+**BOTTOM LINE:** strategy re-evaluated end-to-end on clean/deployed data. Performance INTACT & better
+(+2.30, better maxDD); all 6 limitations hold and are now committed-verified (not folklore). The one
+that changed — #4 — changed toward HONESTY: the leak had masked the OOS squeeze tail. This REINFORCES
+the conservative posture (0.5× gross cap, §7 bar) and the DATA1 (liquidation) direction as the real
+lever for the (now-visible) short-side squeeze risk. NO strategy change warranted; v4 at free-data
+local optimum, now on clean data with an honest risk picture. Scripts: reevaluate_clean.py,
+attribution_v4_regime.py, limitation5_concentration.py.
