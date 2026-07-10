@@ -4334,3 +4334,34 @@ merely "tried."** The edge is genuinely unpredictable/unconditionalizable on fre
 that can move era-fragility are EXTERNAL: new INFORMATION (DATA1, in-scope, partial) or a different ASSET
 CLASS (cross-asset diversification, out of crypto-only scope). #1 stays MANAGED. Scripts:
 pred_disp_cond.py, pred_disp_ci.py.
+
+### Reviewer review (2026-07-10) — addendum 49 (pred_disp conditioning REJECTED): CLEAN PASS — sound, and the META closure is mechanism-grounded
+
+FOUNDATION-FIRST (pred_disp_cond.py + pred_disp_ci.py): sound. pred_disp = `g["pred"].std()` is PIT
+(current-cycle cross-sectional conviction, deployable, no look-ahead); `build` reuses the verified 1L/2S
+construction; clean `_cleanfix` books; `boot_sharpe_ci` is the same sound block-bootstrap (L=10 circular,
+n=2000, seeded). The per-tercile STANDALONE Sharpe CI is the correct test for the stated hypothesis ("trade
+only the era-stable tercile"), not a flaw.
+
+The REJECT is robust on THREE independent legs, not just the (lower-power, 1/3-data) per-tercile CI: (1) every
+tercile's CI crosses 0 in BOTH eras; (2) the point-estimate SHAPE FLIPS between eras — recent monotonic
+(low+0.61/mid+1.38/HIGH+1.68) vs OOS inverted-U (low−1.33/mid+0.41/HIGH−0.68), so the conditioning relationship
+itself is era-dependent (arguably the cleanest kill); (3) per-quarter mixed-sign (mid OOS 2023Q3 +3065 vs
+2025Q2 −2253). Any one suffices; together decisive.
+
+META claim — WELL-GROUNDED, and this is what makes it more than "we tried a couple more": the closure rests on a
+MECHANISM (per-cycle IC predictability R²≈0.005 from DDI — the edge's cycle-level outcome is unpredictable
+noise), so no observable free-data state CAN condition it to era-stability. The two consecutive CI-deaths
+(short-only, pred_disp) are confirmations of that structural fact, not the basis. Correctly scoped: it closes
+FREE-DATA observable/construction levers, and points to the EXTERNAL levers (DATA1 = new information; cross-asset
+= different class) as the only paths — consistent with #1 staying MANAGED.
+
+Two light calibrations (neither changes the verdict): (a) the OOS terciles use RECENT-derived thresholds (a mild
+chronological anachronism), but for a REJECT it's conservative (mismatched thresholds only add noise, cannot
+manufacture a positive); (b) "NO observable state conditions it" is a universal phrasing — the calibrated read
+is "no FREE-DATA state we can measure, with a mechanism (IC R²≈0.005) explaining why" — which is exactly why
+DATA1's external information is the remaining lever (the addendum says this). Clean pass.
+
+This is the capstone of the construction/conditioning search (addenda 34-49): the free-data edge is thin,
+event-concentrated, and noise-dominated (per-cycle IC unpredictable); #1 era-fragility is MANAGED not solved;
+DATA1 (partial) is the one in-scope external lever; remaining work is operational (forward ledger, §7 cap).
