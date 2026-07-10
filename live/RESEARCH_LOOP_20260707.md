@@ -4107,3 +4107,31 @@ prediction). Binding pre-reg:
   probe of the tail-hedge before any DATA1 spend. Squeezes that REVERT within the hold make the stop LOSE
   (caps the loss but forgoes the reversion the short would have earned).
 Script: live/th1_reactive_stop.py. Running.
+
+### Reviewer review (2026-07-10) — addendum 44 (TH1 pre-registration): CLEAN PASS + results-verification checklist
+
+Genuine pre-registration (doc-only, script referenced "running" not yet committed = falsifier pre-committed).
+Disciplined and honest: deployable no-look-ahead mechanism (5m bar-high max-adverse over [t,t+4h] correctly
+identifies whether the stop triggered using only PIT running-high info, exits at −STOP using info up to the
+trigger — PIT-correct as described), both-era gate + edge-preservation (stopped mean ≥ 0.8×raw), pinned STOP=12%
+with W1b sanity-only neighborhood, honest LOW prior (vBTC closed intra-cycle stops) + the correct mechanism
+caveat (reverting squeezes make the stop lose). Notably CARRIES FORWARD my addendum-42 gross-cost flag — the
+gate is explicitly NET of the ~4.5 bps short cost (good). Clean pass on the design.
+
+Four items to VERIFY when the results land (none blocks the pre-reg; the most important is #3):
+1. DATA/PIT: confirm the script actually has 5m intra-cycle bars and computes max-adverse on the RUNNING 5m
+   high (not the cycle's realized close) — the described mechanism is PIT-correct; verify the code matches.
+2. FILL OPTIMISM: the stop assumes exit exactly at −STOP; a fast alt squeeze can GAP past 12%, so real fills
+   are worse. This FAVORS the stop, so a FAIL is robust (like LH1's charitable basket cost); a PASS needs
+   slippage accounting before deploy.
+3. FRAME (verdict-bearing): the deployed book is RESIDUAL/BOOK-level. A NAKED stop can trigger on BETA rallies
+   (whole market rips) that DON'T hurt the residual short → whipsaw that guts the residual edge. So the RESIDUAL
+   cross-check, NOT the naked headline, is verdict-bearing; and per pitfall #4 the intra-cycle stop is a
+   PATH-COUPLED overlay, so even the residual leg-screen is only a SCREEN — the book-level replay is the real
+   verdict and can FLIP SIGN vs the leg. Good that the pre-reg sequences book-replay-if-passes; keep the
+   adoption decision on the book/residual frame, not the naked leg number.
+4. STOP-EXIT COST: charge stopped cycles the extra exit half-turn (~2 bps) — negligible vs the 1200 bps cap but
+   include it for completeness.
+
+Clean pass — well-pre-registered; verdict will hinge on the residual/book frame (item 3), where the low prior
+and the revert-forgoing mechanism make a FAIL the likely (and cheap, honest) outcome.
