@@ -3994,3 +3994,25 @@ This is a model result: the both-era gate + estimator-law discipline caught an e
 recent-only test (or the leg-distribution read alone) would have WRONGLY adopted (+0.93 recent looked great).
 It DEEPENS #1 — era-fragility pervades even the leg/hedge choice: the long is a dead lottery recent but a live
 bear-long carrier OOS, so dropping it is itself an era bet. No adoption; construction stays. Clean pass.
+
+### Addendum 42 (2026-07-10) — ERA-ROBUSTNESS path: the short-side era-fragility is a TAIL problem (hedgeable), not a signal problem
+
+User: how to make it robust across eras? Tested whether the era-fragility is a TAIL vs SIGNAL problem
+(shorthedge_test.py, committed). Finding — the SHORT side (the alpha-bearing side) grinds ERA-STABLY;
+its era-fragile Sharpe is dragged by the squeeze LEFT tail:
+- RAW non-deep-bull short: recent Sharpe **+3.23** (median +43, win 57%) / OOS **+0.41** (median +14,
+  win 54%) — positive BOTH eras already (the OOS-negative short earlier was deep-bull-included).
+- **Cap the worst k% squeeze losses (oracle winsorization): STRONGLY ERA-ROBUST both eras** — cap-2%
+  recent +5.63 / OOS +1.61; cap-5% +7.36 / +3.76; cap-10% +10.85 / +6.69. The worst 2-10% of cycles
+  (the squeezes) ARE the era-fragility; removing them → consistent high cross-era Sharpe.
+**INTERPRETATION: era-robustness of the alpha-bearing short side is achievable IN PRINCIPLE by hedging
+the squeeze tail (#4) — it's a tail problem, not a signal problem.** Unifies #1 (era-fragility) + #4
+(squeeze tail) + DATA1 into one answer: the era-fragility lives in the short-side squeeze tail, and
+hedging it makes the era-stable grind consistent.
+**CRITICAL CAVEAT (foundation-first): the tail-cap is ORACLE (post-hoc percentile = LOOK-AHEAD), a
+FEASIBILITY CEILING, NOT a deployable overlay.** A deployable hedge must PREDICT the squeeze PIT — which
+is exactly #4/SQ1: crowding predicts squeezes but is non-stationary on FREE funding (SK1 failed).
+**=> DATA1 (paid liquidation/positioning data) is the concrete deployable lever** — the question DATA1
+answers is "can a PIT squeeze signal capture enough of this tail to convert the feasibility ceiling into
+a real era-robust short book." This is the strongest motivation yet for DATA1: it targets the DEEPEST
+limitation (#1) via the short-side tail, not just #4 in isolation. Script: live/shorthedge_test.py.
