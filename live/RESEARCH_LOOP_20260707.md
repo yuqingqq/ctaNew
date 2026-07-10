@@ -2709,3 +2709,31 @@ All three corrections from 6d22ce9 faithfully applied; the DIV2-HE gates are now
 Clean pass — the DIV2-HE gates are now correctly designed (concentration tested on DD, carry honest,
 jackknife added). Running. Will review the HE results against these gates: primary reads = does the DD-cut
 survive ex-2026H1 (HE-1) and hold in ≥2/3 years net of carry (HE-2).
+
+### Addendum 23s (2026-07-10) — DIV2-HE RESULT: HE-1 concentration kill FAILS → overlay is 2026H1-mirage, NOT deploy-worthy
+
+Ran div2_he.py with corrected DD-primary gates. The concentration kill is DECISIVE — the OOS overlay
+benefit is a single-half mirage:
+- **HE-1 (DD-primary) — FAIL.** FULL 2025-26: matched-vol DD-cut +33%, comb Sh +1.77 vs v4 +1.53.
+  **EX-2026H1 (=2025, the bleed window): DD-cut −25%** — the overlay makes v4's drawdown 25% WORSE once
+  the one strong trend half is removed. Drop-one-half JACKKNIFE: drop 2025H1 +43%, drop 2025H2 +19%,
+  **drop 2026H1 −25%** → the ENTIRE DD benefit rides on 2026H1. Mirage confirmed.
+- **HE-2 (breadth) — PASS technically** but reveals the same thing: DD-cut 2023 +25%, 2024 +14%,
+  **2025 −25%** (2/3 years, agg Sh +1.55≥+1.27) — the failing year is 2025, the most-recent OOS year,
+  where the trend bled −2559 bps standalone (the carry/premium paid) AND hurt v4's DD.
+- **Deploy gate = HE-1 AND HE-2 → FAIL (HE-1). Overlay NOT deploy-worthy on this data.**
+Reconciliation: GATE 3a's +77% (23p) used expanding-vol RESET at 2025 (fewer obs); the PIT-correct
+combo over the full non-crisis series gives +33% full 2025-26 — and −25% ex-2026H1. The +77% was
+slightly optimistic; the decisive ex-2026H1 −25% holds regardless.
+
+**DIV2 arc DEFINITIVELY CLOSED (both framings tested honestly):** feasibility PASS (23k, looked real +
+OOS-robust) → standalone build FAIL (23p, GATE 1a own-edge +0.13/2025 bled) → overlay FAIL (23s, HE-1
+concentration: OOS DD-benefit is 2026H1-only, hurts v4 in 2025). **Neither the standalone sleeve nor
+the diversifying overlay survives an honest, pre-registered, concentration-robust gate.** 23h's
+"impossible within crypto" stays corrected in PRINCIPLE (feasibility exists), but within-crypto
+era-diversification via a trend sleeve is NOT robustly deployable on this data — the OOS win was one
+strong trend half (2026H1), not a durable hedge. **Runway reverts — now TESTED on both framings, not
+assumed: manage limitation #1 via 0.5× gross cap + forward monitoring + kill-switch; DATA1 (paid crypto
+data); operational forward ledger.** The review loop worked exactly as intended: it stopped me
+premature-closing (overlay reframe, correct) AND stopped a mirage deploying (concentration kill,
+correct). Scripts: div2_crypto_trend.py, div2_validate.py, div2_he.py.
