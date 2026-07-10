@@ -2982,3 +2982,18 @@ Clean pass — the gates now judge the right quantity (traded spread + tail), wi
 decisive anti-noise test. Running. Will review the ERT1 result against: bad-fold SPREAD improvement
 (E-1) surviving the shuffled-regime placebo (E-3) and not flattening the mean tip (E-2), read with the
 CVaR tail context and the LOW prior.
+
+### Addendum 23y (2026-07-10) — ERT1 INFRA WALL: faithful full retrain infeasible on this box (117GB cache / multi-hr compute)
+
+ERT1 implemented (live/ert1_era_robust.py, faithful A/B: baseline vs inverse-regime-freq-weighted vs
+20 shuffled-regime placebos, 5-seed, verdict on traded selection spread). Launch OOM'd during
+assemble_universe: v4 universe = 213 symbols × ~550MB 5m feature cache = ~117GB, vs 26GB RAM →
+MemoryError in build_kline_features. Memory alone is streamable (per-symbol subset+downcast), but the
+binding wall is COMPUTE: 5-fold × 5-seed × (baseline+ERT+20 placebo) on a ~100M-row 5m panel = many
+hours. A tractable version requires capping the universe (~60 syms ≈ real per-cycle width 77) AND
+subsampling training bars to non-overlapping 4h (removes 48× overlap redundancy — defensible, but a
+reduced-fidelity RELATIVE A/B, not the production panel; label-horizon coupling needs care). Given
+ERT1's LOW prior (mechanism attacks rare-regime MEAN; #1 is tail/cost-driven), surfacing the
+compute-vs-payoff tradeoff to the user rather than silently burning hours or degrading fidelity.
+Options: (a) reduced-fidelity capped/subsampled A/B (background, ~1hr build + multi-hr run); (b) defer
+to a bigger box; (c) drop given low prior. AWAITING USER CALL.
