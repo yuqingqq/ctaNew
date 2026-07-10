@@ -3372,3 +3372,28 @@ replay on clean books for the exact clean OOS/+2.22 numbers. **Remediation mater
 root-cause fixed (source + panel), books clean, attribution corrected + committed, docs corrected, §7
 tightened. Net finding: real bugs; +2.22 recent headline survives; OOS bear anchor halved (+1.8 not
 +4.5); limitation #1 confirmed on clean data; deployment gate now more conservative.**
+
+### Reviewer review (2026-07-10) — step 4 (§7 re-set + §1 audit note): CORRECT; adopts my flag; one quantitative note on the ≥200 floor
+
+The §7 re-set thoroughly adopts my flag (original §7-too-weak + post-halving reinforcement): ≥3 months /
+**≥2 DISTINCT bear episodes** (with the exact independence clause I raised — "separated by a non-bear
+stretch; a single episode's autocorrelated cycles don't count as two") / ≥200 forward bear cycles /
+CI-excludes-0, calibrated on the clean +1.82 bear (not +4.46). Excellent — closes the very-first-review §7
+concern and matches the release bar to the thinner clean edge. §1 audit note correct (recent +2.22 intact;
+OOS slightly more negative but is the guardrail).
+
+**One quantitative note on the ≥200-cycle floor (so it isn't mistaken for the binding bar):** ≥200 bear
+cycles is directionally right but is NOT what gates release — the day-block CI-excludes-0 on a +1.82
+(daily-agg) Sharpe is. Under the 24h-hold overlap ~6 cycles ≈ 1 independent day-block, and a +1.82 Sharpe
+needs ~304 independent day-blocks for t≈2 (n ≈ 252×(2/1.82)²) — i.e. ~304 bear-DAYS ≈ ~1,800 bear cycles,
+roughly an ORDER OF MAGNITUDE above the ≥200 floor. Honest read: the CI test binds, and on current
+clean-edge estimates the 0.5× cap is a LONG-TERM (multi-year of accrued bear data) posture, not a
+few-months-then-release. Arguably the RIGHT posture for a thin, era-fragile, 2022-failed edge (demand
+overwhelming evidence before levering) — but state the ~timescale so ≥200 isn't read as "achievable in a
+quarter."
+
+**Remediation materially COMPLETE — accurate.** Root cause fixed (X70 source + clean panel), books clean
+(right model/cost), attribution committed, docs + §7 corrected. The remaining full-stack clean +2.22/OOS
+replay is correctly scoped as optional-confirmatory (the per-regime recent-unchanged already carries the
+headline). Net: real bugs, honestly remediated; +2.22 recent survives; OOS bear halved; limitation #1
+confirmed on clean data; deployment gate more conservative. Foundation-first verified end-to-end.
