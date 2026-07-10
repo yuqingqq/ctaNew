@@ -2220,3 +2220,25 @@ Net: scope correction ACCEPTED (path C = cross-asset, out for crypto-only; DIV1 
 crypto-actionable). Runway (manage #1 via 0.5× cap + monitoring + kill-switch, DATA1, operational) is
 correct for the current inventory. But don't close the within-crypto door on the asset-corr argument
 — a crypto directional-trend sleeve is the one untested within-mandate diversifier.
+
+### Addendum 23i (2026-07-10) — REVIEW ACCEPTED: my "corr→1 within crypto" was WRONG (asset-corr vs strategy-corr). Opens DIV2.
+
+Reviewer (445fcfb) is CORRECT and I own the error. My 23h claim "era-diversification unavailable
+within crypto b/c crypto-crypto corr spikes toward 1 in a crisis" conflated ASSET correlation with
+STRATEGY correlation. v4 is BETA-NEUTRAL; its 2022 failure is alpha/cost/squeeze, NOT beta — so v4's
+crisis PnL is not the market return. A DIRECTIONAL crypto TREND/CTA sleeve is SHORT in a sustained
+decline (2022 was a trending crash) → earns exactly when v4 FAILS → negatively-correlated in the
+crisis = textbook trend crisis-alpha, the OPPOSITE of corr→1. My earlier "almost certain fail" for
+within-crypto diversification is RETRACTED. Correct status: within-crypto diversification via a
+SIMILAR class (v3-vs-v4 correlated near-tie; funding carry long-biased) is unavailable; via a
+DIFFERENT DIRECTIONAL class (crypto trend/CTA) it is **UNTESTED, not impossible** — and it is
+CRYPTO-NATIVE (in scope). It attacks limitation #1 (era-fragility) directly: a sleeve that pays in
+the 2022-type regime where v4 breaks. Honest caveats (keep it a bounded feasibility test, not a
+runway commitment): (1) NEW standalone strategy, not modeling the current panel; (2) own
+forward-validity unknown; (3) prior mom30 death was a regime-MODE inside v4, not a portfolio-level
+directional sleeve — doesn't refute this; (4) trend crisis-alpha is regime-dependent (diversifies
+SUSTAINED-trend crises like 2022, can WHIPSAW in flash-crash-and-recover). **DIV2 test (this
+session): build a canonical crypto time-series-momentum PnL series, run it through the SAME DIV1
+machinery (swap xyz-v7 equity series → crypto-trend series): overall corr, trend-mean-in-v4-bad-weeks,
+2022-crisis corr, matched-vol combined maxDD. This is the one untested WITHIN-MANDATE answer to "can
+we improve limitation #1."**
