@@ -3430,3 +3430,30 @@ per-regime evidence carries the qualitative story, not the last digit); (b) the 
 found exactly what that pass would have, now in the loop's standing instructions.
 
 Clean pass. Audit remediation closed.
+
+### Addendum 30 (2026-07-10) — REMEDIATION step 5 (confirmatory full-stack replay): +2.22 headline INTACT (clean BETTER)
+
+Ran the full-stack KEEPSET4 replay (live/replay_clean_confirm.sh — parity GLOBAL_GROSS_MULT=1.0,
+universe-meta=panel), LEAKED vs label-CLEAN books through IDENTICAL config (isolates the label fix;
+both not-universe-cleaned). Daily-agg Sharpe:
+
+| window | LEAKED | CLEAN | Δ |
+|---|---|---|---|
+| recent (headline) | +2.03 | **+2.41** | +0.38 |
+| OOS (guardrail) | −0.09 | **+0.20** | +0.29 |
+
+Self-validation: leaked recent +2.03 ≈ documented +2.22 (gap = my books aren't universe-cleaned like
+the canonical), so the config is faithful and the leaked-vs-clean DELTA is trustworthy.
+**KEY (estimator law / pitfall #4): the label leak is DEFLATIONARY at the full-stack/production level —
+cleaning IMPROVES both windows — even though it was INFLATIONARY at the isolated bear-BOOK level
+(+3.56→+1.82).** Reconciliation: the corrupt 2025-02-28 cycle (+1,973 isolated bear-book bps) is a huge
+volatility OUTLIER that, path-coupled through DD-stop + regime-gate + daily-Sharpe aggregation,
+DEPRESSED the leaked full-stack path; removing it lifts the Sharpe. Book-level and full-stack diverge in
+SIGN because overlays amplify small label diffs — exactly the estimator law. **NET: the canonical +2.22
+recent headline is INTACT and if anything CONSERVATIVE (clean +2.41); OOS guardrail slightly better
+clean (+0.20). The production numbers were NOT overstated by the leak.** The reviewer-flagged bear-BOOK
+inflation is real + corrected (V4_LIMITATIONS), but did NOT propagate to overstate production. **AUDIT
+REMEDIATION FULLY COMPLETE: root cause fixed, books clean, book-level + full-stack attribution both
+committed, docs + §7 corrected. Real bugs; headline survives (stronger clean); deployment case intact.**
+Note: §7 conservatism still warranted (the bear BOOK edge IS thinner, +1.82). Scripts:
+replay_clean_confirm.sh + attribution_v4_regime.py + fix_panel_labels.py.
