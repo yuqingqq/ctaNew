@@ -3136,3 +3136,46 @@ script (with the pinned 0.5×9 cost) and correct V4_LIMITATIONS_DIAGNOSIS.md (co
 mild-bull no-new-sleeve, drop the ≥-pre-gate claim). Until then the limitations are REASONABLE HYPOTHESES,
 not validated production conclusions. Verdict: a genuinely good audit; real bugs; conclusions' SIGN
 survives but magnitudes and the ERT1 production claim do not.
+
+### Reviewer review (2026-07-10) — 24 external audit: verification thorough and correct; the internal review loop (me) MISSED all four — owning it
+
+The audit is high-quality and the verification is exactly right — each claim checked against real code/data,
+all four owned with honest re-grades. I endorse the verification and remediation. The important thing for
+me to say: **the internal review loop MISSED all four, and the reason is a LEVEL error I own.** Across
+~30 reviews tonight I checked cell-logic, gate design, concentration, and script-level PIT (the DIV2/SWITCH1
+.shift tilts) — but never audited the FOUNDATION those cells sit on:
+- #1 label gap-leak: I verified PIT in the DIV2/SWITCH1 SCRIPTS but never traced the label back to X70/X132
+  where forward-return (.shift(-48)) and exit_time (open_time+4h) decouple at gaps — the exact CLAUDE.md-#1
+  look-ahead class, in the deployable panel every v0full_hl60 book I reviewed rests on. I trusted the books,
+  audited the overlays.
+- #2 cost 2×: I helped make V4_LIMITATIONS consistent but never checked the cost FORMULA vs its "9-bps"
+  label (it charges 0.25×9 = 2.25, half).
+- #3 "production net ≥ pre-gate net": I LEFT that in the FRAME note when I edited the doc; the audit shows
+  it's backwards (binary gate zeros winners, 0.5× cap shrinks the positive regimes) — a path-coupled
+  pitfall-#4 error I of all reviewers should have caught, having cited pitfall #4 elsewhere.
+- #4 ERT1 wrong model: the 23w pre-reg literally said "LGBM" while production v4 is per-symbol RidgeCV
+  (M1 REJECTED pooled LGBM). I reviewed that pre-reg, flagged the metric, but NOT the model-class mismatch.
+  So my 23z conclusion "era-robust training rejected on production #1" is RETRACTED — wrong model; only the
+  W1-redux/spread-metric lesson stands (methodology, model-independent).
+
+**Impact on what I reviewed (accepted):** ERT1 production reject VOID (untested on the real model); the
+limitation-doc "≥ pre-gate" claim INVALID; DIV2/HEDGE1/KL3/DIV1 used the correct Ridge model but on
+leaked labels → spot-re-check on rebuilt books. Direction is REASSURING for the rejections — a leak
+INFLATES results (and is concentrated at ~317 gap-edge cycles, not uniform), so removing it should
+STRENGTHEN the mostly-negative verdicts (DIV2 mirage, SWITCH1 placebo-fail); magnitudes and any
+positive/borderline numbers change.
+
+**Biggest downstream flag (add to remediation):** the leak inflated the bear regime materially (the
++1,973 bps 2025-02-28 gap cycle; bear Sh 3.78→2.84 without it), so the CANONICAL production numbers
+(+2.22 recent / bear-farm in V4_PERFORMANCE §1/§5) are contaminated too — not just the limitation table —
+and the §7 forward gross-cap-RELEASE bar (bear-farm confirmation) was calibrated on leak-inflated bear
+numbers. Re-derive the canonical performance on the clean, timestamp-labeled, gap-purged panel, and
+re-set §7, BEFORE any new cells.
+
+Remediation (timestamp labels + drop gap-crossing labels; rebuild panel/retrain/regenerate books; rerun
+attribution from a committed script at the correct cost) is exactly right; I'd add the canonical-perf
+re-derivation + closed-arc spot-checks (DIV2/HEDGE1/KL3) on clean books to the sequence.
+
+Process fix for THIS loop (owned): audit the FOUNDATION first — label/exit_time consistency, cost formula
+vs its label, model-class vs production — on any result BEFORE reviewing its cell logic. A foundation-first
+pass would have found what the external auditor did.
