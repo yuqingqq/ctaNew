@@ -3081,3 +3081,58 @@ Standing rule earned: **rank-IC is now 5-for-5 as a MISLEADING verdict metric in
 pooled-Ridge, ERT1); the traded top/bot-K selection spread (+ tail) is the ONLY verdict-bearing quantity.**
 Any future model/training/label variant must be judged on the spread, never rank-IC. Runway unchanged:
 DATA1 (paid data), operational forward ledger.
+
+### Addendum 24 (2026-07-10) — EXTERNAL AUDIT VERIFIED: all 4 claims CONFIRMED (labels, cost, attribution, ERT1 wrong model)
+
+External reviewer raised 4 technical claims + a limitation re-grade. Verified each against real code/data
+(3 parallel forensic agents + direct read). ALL FOUR CONFIRMED (minor line-pointer imprecisions in the
+write-up; one scope clarification in our favor). Owning the errors:
+
+1. **LABEL CORRUPTION AT GAPS — CONFIRMED, and WORSE than stated (look-ahead leak, not just noisy
+   label).** Deployable panel (outputs/vBTC_features/panel_expanded_v0.parquet via X70/X132): forward
+   return = ROW-based `.shift(-48)` (X70 L123-125) while `exit_time` = fixed `open_time+4h` (X70 L176) →
+   they DECOUPLE at data gaps. Verified: global gaps 2025-03-01..03-22 (22d, 132 bars) + 2026-06-05..07
+   (3d), 317 gap events / 7 symbol-specific — all match exactly. 2025-02-28 20:00 label is a real 22-DAY
+   return (univ mean −15% vs typical 1.4%), reproduced panel==5m-shift(-48) to 4dp on 43 symbols. **The
+   understated exit_time also DEFEATS the walk-forward purge (`tr=PAN[exit_time<fit_cut]`) → gap-edge
+   rows leak 22d-ahead labels into TRAINING.** Bug is in the X70/X132 deployable path (NOT
+   cross_sectional.py, whose exit_time is row-consistent — reviewer's file cite imprecise, substance
+   right). Affects: the per-symbol-Ridge artifact + ALL v0full_hl60 variant books + OOS bear (the
+   +1,973 bps 2025-02-28 cycle; bear Sh 3.78→2.84 w/o it).
+2. **LIMITATION TABLE UNDER-CHARGED COST 2× — CONFIRMED.** Pinned formula = `turn*0.5*COST`, COST=9bps
+   (paper_bot L181-182,L60) = 4.5 bps/cycle. The V4_LIMITATIONS table reproduces EXACTLY only at
+   `0.25*9 = 2.25 bps` (REC deep_bull −32.3/−4.55 bullseye), i.e. HALF. Doc TEXT mislabels it "9-bps RT
+   convention" (L21,L131) — overstates the charge ~2×. Correcting ~halves the edges (REC Side
+   +16.0/+3.50 exact match to reviewer) but PRESERVES sign structure (Side +recent, Bear +OOS). Live
+   launcher UNAFFECTED (uses per-symbol depth slippage + 4.5 fee, a fuller model; flat branch never runs
+   live). [alpha_v4_xs probe charges full 9bps, not the half — half is specific to the table.]
+3. **ATTRIBUTION NOT PRODUCTION-FAITHFUL — CONFIRMED (all sub-claims).** 3-cycle entry hysteresis
+   (REGIME_HYSTERESIS_N=3) + 6-sleeve/24h hold → mild-bull is "NO NEW SLEEVE" not instant flat (prior
+   exposure ~20h; full flat lags raw-bull ~32h). BEAR is NOT unconditional — DD-stop-exempt but the
+   global REGIME_GATE (empty skip-set) can zero it. **Our "post-overlay net ≥ pre-gate net" claim is
+   INVALID** (binary gate on lagging ρ≈0.45 edge zeros winners; uniform 0.5× cap shrinks the
+   positive-net regimes toward zero — "≥" holds only for negative buckets, backwards from where we earn;
+   path-coupled per pitfall #4).
+4. **ERT1 TESTED THE WRONG MODEL — CONFIRMED.** Deployable v4 = per-symbol RidgeCV on
+   xs_z(alpha_vs_btc_realized) (train_v4_artifact.py L37,L43). ERT1 imported alpha_v4_xs = POOLED
+   LightGBM on basket-residual. Different pipeline → **ERT1's "era-robust training fails #1" does NOT
+   transfer to production v4.** RETRACTED as a production claim (the W1-redux metric lesson still stands
+   as methodology). Scope clarification: the LIMITATION DIAGNOSIS + HEDGE1/KL3/DIV1/DIV2 used the CORRECT
+   Ridge HL60 books (v0full_hl60) — only ERT1 used the wrong model.
+
+**LIMITATION RE-GRADE (accepted): #1 era-split survives qualitatively but magnitudes ~halved by cost+gap;
+"training imbalance is the cause" UNPROVEN (and untested on the real model). #2 bull gate = conservative
+tradeoff not defect ("flat"→"no new mild-bull sleeve"). #4 bear NOT unconditional (regime-gated). #5
+"76% from 2 months" has NO committed generator + did not reproduce. #6 30d-lag UNDERSTATED
+(+hysteresis/sleeve/24h-settle lag). MISSING (accepted): survivor-universe endpoint selection (target
+drifts with coverage); v4 still stat-tied with v3; per-symbol Ridge ranked directly despite independent
+preproc (172-173/175 pick max alpha); gate thermometer ≠ traded book; v4 loop is delayed settled-label
+scoring not live decision/exec (state ends 2026-06-30); kill-switch manual, not wired.**
+
+**REMEDIATION (reviewer's first action, ACCEPTED):** (a) fix labels to TIMESTAMP-based forward windows
+(drop/NaN labels whose true exit crosses a gap) in X70/X132; (b) rebuild the panel + retrain the Ridge
+artifact + regenerate the v0full_hl60 prediction books; (c) rerun the regime attribution from a COMMITTED
+script (with the pinned 0.5×9 cost) and correct V4_LIMITATIONS_DIAGNOSIS.md (cost label, bear-gateable,
+mild-bull no-new-sleeve, drop the ≥-pre-gate claim). Until then the limitations are REASONABLE HYPOTHESES,
+not validated production conclusions. Verdict: a genuinely good audit; real bugs; conclusions' SIGN
+survives but magnitudes and the ERT1 production claim do not.
