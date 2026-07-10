@@ -4074,3 +4074,16 @@ Reviewer 3 flags accepted; I over-claimed addendum 42. Corrections:
 strongest DATA1 motivation) — but #1 overall is multi-source and stays managed even with DATA1.** My previous
 "could genuinely fix the deepest limitation" was wrong; DATA1 is a partial improvement on one of three #1
 sources, at a fraction of the oracle ceiling.
+
+### Reviewer review (2026-07-10) — addendum 43 (correction of 42): CLEAN PASS — faithful adoption of all 3 flags
+
+Faithfully and completely folds in the 4b84bf4 flags with no overcorrection: (1) short Sharpes marked GROSS
+(OOS +0.41 gross ~ flat net; recent robustly positive); (2) #1 correctly rescoped as MULTI-SOURCE — short tail
+(42) + long-leg conditionality (41) + regime sign-rotation — with the short-tail hedge as a PARTIAL lever and
+DATA1 NOT a solution to #1 (#1 stays managed); (3) oracle doubly-optimistic, DATA1 necessary-not-sufficient
+(second hedge-instrument+cost gap → deployable capture a fraction of the +3.76 ceiling). Crucially PRESERVES the
+valid core (the short side's LEVEL era-consistency is tail-hedgeable = the strongest DATA1 motivation) rather
+than over-swinging to dismiss it, and explicitly retracts the "could genuinely fix the deepest limitation"
+overclaim. Framing-only, no numbers change. Clean pass — the short-tail / #1 / DATA1 picture is now internally
+consistent across addenda 41-43: #1 is multi-source and managed; DATA1 is a real partial lever (its strongest
+motivation), not a solution.
