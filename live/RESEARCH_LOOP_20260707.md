@@ -3024,3 +3024,31 @@ full retrain (annual / bigger box) at faithful fidelity — it requires a full r
 happen for other reasons, so marginal cost ≈ zero and the option is preserved at production fidelity.
 DROP is also defensible (prior LOW; even a pass is "weaker than fixes-#1"), but DEFER keeps a well-designed
 cell cheaply. NOT reduced-fidelity either way.
+
+### Addendum 23z (2026-07-10) — ERT1 RESULT: era-robust training FAILS all gates; "W1-redux" confirmed (rank-IC↑ while traded spread↓)
+
+Ran ERT1 faithful-on-weights (FULL 213-sym universe streamed, reviewer f3c3996) + 4h-subsampled bars,
+12 expanding folds (2022-05..2026-04, multi-regime training so balancing is a real treatment), 5-seed
+baseline vs inverse-regime-freq ERT vs 20 shuffled-regime placebos. Verdict on TRADED selection spread:
+- **E-1 (bad-fold traded spread improves) — FAIL.** worst-4 of the 9 2023-26 folds: base −1.24 → ERT
+  −1.34 (Δ−0.10) — ERT made the bad eras slightly WORSE, not better. Bad-fold tail also worse
+  (−95.9→−98.0).
+- **E-2 (no flatten) — FAIL.** mean 2023-26 spread base +1.70 → ERT +1.14 (−33% rel) — era-balancing
+  FLATTENED the average traded edge (the exact flatten-risk the gate guards).
+- **E-3 (placebo) — FAIL, decisively.** real bad-fold gain −0.10 vs shuffled-regime gain mean +0.63,
+  p90 +3.23 — the TRUE regime-balancing did WORSE than the average RANDOM reweighting. Regime info is
+  not merely inert; it's anti-useful for the tip.
+- per-fold Δspread mixed (−4.04..+4.50), no consistent sign. 2022 descriptive: base +5.57 → ERT +4.39
+  (worse in the very era it targeted, though spent/not-gated).
+**KEY — "W1-redux" CONFIRMED and the reviewer's metric fix VINDICATED:** diagnostic mean rank-IC ROSE
+(base +0.0113 → ERT +0.0152) while the TRADED spread FELL (+1.70 → +1.14). Had E-1 been gated on rank-IC
+(my original 23w design), this would have been a false PASS; the reviewer's insistence (984619c) on the
+traded-spread metric flipped a false-positive into the correct FAIL. Era-balancing improved ORDERING but
+HURT the traded tip — exactly the rank-IC-doesn't-convert pattern (5th instance now).
+**VERDICT: era-robust training REJECTED on the deepest limitation (#1).** Mechanism confirmed as the
+reviewer's LOW-prior prediction: inverse-regime-freq weighting fits the rare-regime MEAN/ordering (rank-IC
+up) while #1's binding failures are at the TAILS/tips (spread down) — a mechanism mismatch. Fidelity note:
+faithful on universe/weights (the treatment); mild deviation = 4h non-overlapping bars vs production
+all-5m (arguably cleaner, not treatment-confounding). **Limitation #1 stays MANAGED (0.5× gross cap +
+forward monitoring + kill-switch), not trained-away.** Idea A closed. Scripts: live/ert1_era_robust.py
+(panel cached at scratchpad/ert1_panel_4h.parquet). Remaining runway: DATA1 (paid data), operational.

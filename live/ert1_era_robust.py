@@ -11,11 +11,82 @@ import sys, warnings, glob, time
 sys.path.insert(0, "/home/yuqing/ctaNew")
 import numpy as np, pandas as pd, lightgbm as lgb
 warnings.filterwarnings("ignore")
-from features_ml.cross_sectional import XS_FEATURE_COLS, assemble_universe, list_universe, make_xs_alpha_labels
-from ml.research.alpha_v4_xs import (_stack_xs_panel, _walk_forward_splits, _slice, _portfolio_pnl,
+from pathlib import Path
+import gc
+from features_ml.cross_sectional import (XS_FEATURE_COLS, list_universe, make_xs_alpha_labels,
+    build_kline_features, build_basket, add_basket_features, add_engineered_flow_features)
+from ml.research.alpha_v4_xs import (_walk_forward_splits, _slice, _portfolio_pnl,
                                      ENSEMBLE_SEEDS, HORIZON, REGIME_CUTOFF)
 rng = np.random.default_rng(23)
 N_PLACEBO = 20
+CACHE = Path("/home/yuqing/ctaNew/data/ml/cache")
+
+def _build_panel_streaming_4h():
+    """FULL 213-sym universe (reviewer f3c3996: no universe-cap — weights depend on the full regime
+    mix), streamed per-symbol + subsampled to non-overlapping 4h so it fits memory + compute. Faithful
+    on universe/weights; the only deviation is 4h non-overlapping training bars (drops 48x overlap
+    redundancy — defensible, and NOT the treatment-confounding universe-cap)."""
+    universe = list_universe(min_days=200)
+    print(f"  universe {len(universe)} syms; pass1 closes...", flush=True)
+    closes = {}; bad = 0
+    for s in universe:
+        p = CACHE/f"xs_feats_{s}.parquet"
+        try:
+            if p.exists():
+                closes[s] = pd.read_parquet(p, columns=["close"])["close"]
+            else:
+                f = build_kline_features(s); closes[s] = f["close"] if not f.empty else None
+        except Exception:
+            bad += 1; continue
+    closes = pd.DataFrame({s: c for s, c in closes.items() if c is not None}).sort_index()
+    if bad: print(f"  (skipped {bad} unreadable caches)", flush=True)
+    basket_ret, basket_close = build_basket(closes)
+    sym_to_id = {s: i for i, s in enumerate(sorted(closes.columns))}
+    print(f"  basket built ({closes.shape[1]} syms, {closes.shape[0]} 5m bars); pass2 enrich+4h-subsample...", flush=True)
+    keep = list(set(list(XS_FEATURE_COLS) + ["autocorr_pctile_7d"]))
+    frames = []
+    for s in closes.columns:
+        try:
+            f = build_kline_features(s)
+        except Exception:
+            continue
+        if f.empty: continue
+        f = f.reindex(closes.index)
+        f = add_basket_features(f, basket_close, basket_ret)
+        f = add_engineered_flow_features(f)
+        f["sym_id"] = sym_to_id[s]
+        lab = make_xs_alpha_labels({s: f}, basket_close, HORIZON)[s]
+        avail = [c for c in keep if c in f.columns] + (["sym_id"] if "sym_id" in XS_FEATURE_COLS else [])
+        df = f[list(set(avail))].join(lab[["demeaned_target","return_pct","alpha_realized","basket_fwd","exit_time"]], how="inner")
+        df = df.reset_index().rename(columns={"index": "open_time", df.index.name or "index": "open_time"})
+        if "open_time" not in df.columns: df = df.rename(columns={df.columns[0]: "open_time"})
+        df["open_time"] = pd.to_datetime(df["open_time"], utc=True)
+        # NON-OVERLAPPING 4h grid (hour%4==0, minute==0) — matches v4 replay cadence
+        m = (df["open_time"].dt.hour % 4 == 0) & (df["open_time"].dt.minute == 0)
+        df = df[m]
+        df["symbol"] = s
+        for c in df.select_dtypes("float64").columns: df[c] = df[c].astype("float32")
+        frames.append(df); del f;
+    del closes, basket_ret, basket_close; gc.collect()
+    panel = pd.concat(frames, ignore_index=True, sort=False).dropna(subset=["autocorr_pctile_7d","demeaned_target"])
+    del frames; gc.collect()
+    return panel
+
+def expanding_folds(panel, test_days=120, cal_days=10, embargo=1.0, start="2022-01-01", min_train_days=365):
+    """EXPANDING walk-forward (pre-reg): _slice trains on ALL history < cal_start (multi-regime, so
+    era-balancing is a real treatment — unlike 50-day rolling where each window is ~single-regime).
+    Test windows tile 2022->end; 2022 folds descriptive, 2023-26 gated."""
+    ds, de = panel["open_time"].min(), panel["open_time"].max()
+    emb = pd.Timedelta(days=embargo); ts = pd.Timestamp(start, tz="UTC"); folds=[]; fid=0
+    while True:
+        test_start = ts; test_end = test_start + pd.Timedelta(days=test_days)
+        if test_end > de: break
+        cal_end = test_start - emb; cal_start = cal_end - pd.Timedelta(days=cal_days)
+        if (cal_start - ds).days >= min_train_days:
+            folds.append(dict(fid=fid, cal_start=cal_start, cal_end=cal_end, test_start=test_start,
+                              test_end=test_end, embargo=emb, train_start=ds, train_end=cal_start)); fid+=1
+        ts = test_end
+    return folds
 
 def _train_w(X, y, Xc, yc, seed, weight=None):
     """Byte-identical to alpha_v4_xs._train except optional train-row weight (cal stays unweighted)."""
@@ -56,11 +127,12 @@ def spread_and_tail(test_f, yt):
 
 def main():
     t0=time.time()
-    print("assembling v4 panel (cached)...", flush=True)
-    universe = list_universe(min_days=200)
-    pkg = assemble_universe(universe, horizon=HORIZON)
-    labels = make_xs_alpha_labels(pkg["feats_by_sym"], pkg["basket_close"], HORIZON)
-    panel = _stack_xs_panel(pkg["feats_by_sym"], labels, cols=XS_FEATURE_COLS).dropna(subset=["autocorr_pctile_7d"])
+    PC = Path("/tmp/claude-1001/-home-yuqing-ctaNew/ecbd8f4c-236c-426c-85e5-e1f6b6edd11d/scratchpad/ert1_panel_4h.parquet")
+    if PC.exists():
+        print(f"loading cached 4h panel {PC.name}...", flush=True); panel = pd.read_parquet(PC)
+    else:
+        print("assembling v4 panel (FULL universe, streamed, 4h-subsampled)...", flush=True)
+        panel = _build_panel_streaming_4h(); panel.to_parquet(PC)
     # attach btc_ret_30d regime per bar (PIT merge_asof backward)
     b30 = btc_ret_30d_daily()
     panel = panel.sort_values("open_time")
@@ -68,7 +140,8 @@ def main():
     panel["regime"] = panel["btc30"].map(regime_bucket)
     print(f"  panel {len(panel)} rows, {panel.open_time.nunique()} bars; regime mix:\n{panel.regime.value_counts()}", flush=True)
 
-    folds = _walk_forward_splits(panel)
+    folds = expanding_folds(panel)
+    print(f"  {len(folds)} expanding folds {folds[0]['test_start'].date()}..{folds[-1]['test_end'].date()}", flush=True)
     rows=[]
     for fold in folds:
         train, cal, test = _slice(panel, fold)
