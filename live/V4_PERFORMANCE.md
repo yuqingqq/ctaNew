@@ -27,13 +27,17 @@ Four mechanism-validated levers, no fitted knobs.
 | v4 candidate preds (pre-clean) | +2.17 / +18,422 | −0.28 / −3,183 (2023 +10.8k) |
 | **v4 candidate preds (clean — canonical baseline for §6 paired cells)** | +2.22 / +19,250 | −0.28 / −3,197 |
 
-> **AUDIT NOTE (2026-07-10, addenda 24-27):** the recent **+2.22 headline is INTACT** — a leaked-vs-clean
-> attribution (attribution_v4_regime.py) shows every recent regime cell moves <0.15 Sharpe after the
-> label-gap fix (the recent 2026-06-04 gap is only 3 days). The label leak was **OOS-bear-only** (the
-> 22-day 2025-02-28 gap cycle): the clean OOS bear BOOK farm is +1.82 Sharpe, not the pre-audit +4.46.
-> The OOS full-stack −0.28 here will go slightly MORE negative on clean books (halved bear anchor) —
-> exact clean OOS pending the full-stack replay — but OOS is the guardrail, not the deployment case, so
-> the story is unchanged. §7 cap-release bar re-set more conservative accordingly.
+> **AUDIT NOTE (2026-07-10, addenda 24-32) — headline INTACT, now on CLEAN data.** The label-gap bug was
+> fixed and the LIVE pipeline promoted to the clean panel (part A, addendum 31). Recent-number
+> reconciliation (three frames): **+2.30 = the DEPLOYED number** (clean panel, 171-sym stale-filtered,
+> panel-PIT universe, 1.0× parity — what actually runs); +2.41 = confirmatory replay (clean, 174-sym
+> not-stale-filtered); +2.22 = original documented (leaked, universe-cleaned). All ≈ +2.2–2.4 → headline
+> INTACT and if anything BETTER clean (+2.30 > leaked 2.26 at matched config, better maxDD too). The
+> full-stack replay CORRECTED an earlier guess: the leak was DEFLATIONARY at production (path-coupled
+> vol-outlier), so clean OOS full-stack is **+0.20 (BETTER than leaked −0.09)**, not more negative — even
+> though the isolated bear BOOK inflated (+3.56→+1.82). Frame: the ±0.7 universe-meta swing (2.30↔0.71)
+> reflects known universe-composition variance → **forward expectation is WIDE; do not over-read the exact
+> +2.30.** §7 cap-release stays conservative (bear book thinner +1.82).
 | *fitted production v3 stack (comparison)* | *+2.68 / +21,393* | *−1.57 / −12,528* |
 | *vanilla (no levers, v3 preds)* | *+1.13 / +10,399* | *−1.05 / −26,891* |
 
