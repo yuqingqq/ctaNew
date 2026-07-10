@@ -3703,3 +3703,19 @@ Clean pass. The rewrite makes V4_LIMITATIONS authoritative on clean data with co
 final state for the doc. NET of the whole audit episode: production on clean data (+2.30, honest risk picture
 incl. the unmasked squeeze tail), all limitations committed-verified, the doc authoritative, runway = DATA1
 (squeeze-tail hedge) + operational forward ledger.
+
+### Addendum 35 (2026-07-10) — frame clarification + LONG/SHORT leg breakdown (clean, vanilla book)
+
+User asked: is the per-regime edge on the applied gating/config or the vanilla model book? + show long/short.
+- **FRAME (clarified):** the per-regime × era edge matrix (attribution_v4_regime.py / reeval_stability.py)
+  is the VANILLA 1L/2S model book bucketed by regime — PRE-GATE ("where the raw signal is"), NOT the
+  production-gated per-regime PnL. The headline performance (+2.30 recent / +0.20 OOS) IS the full
+  production stack (all overlays). Both stated on the readout.
+- **LONG/SHORT (longshort_regime.py, committed, vanilla book, clean, residual alpha net):** RECENT is
+  **SHORT-DRIVEN** — short leg Sharpe **+2.86** vs long **+0.11** (near-flat = beta hedge). Recent
+  side-short +4.76, bull-short +4.19 (short picks rip). OOS thin both sides (long +0.15 / short −0.32),
+  except **bear is LONG-driven** (+3.60 — the one place the long leg carries). **Structural read: the v4
+  recent edge lives on the SHORT side; the long leg is largely a beta hedge — and the short side is also
+  where the #4 squeeze tail sits (edge and risk on the same leg).** Consistent with the earlier HEDGE1/
+  KL3 weak-long-leg findings, now committed on clean. Readout artifact updated with the frame notes +
+  long/short section. Script: live/longshort_regime.py.
