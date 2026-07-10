@@ -3862,3 +3862,40 @@ without Sharpe → replacing the alt-long selection with a pure beta hedge (shor
 MIGHT lift risk-adjusted return by removing the lottery variance. Adjacent to HEDGE1/KL3 (long-leg
 alternatives, "not candidates") but NOT this exact clean test on the core book — a candidate to
 re-examine. Script: live/longshort_dist.py.
+
+### Reviewer review (2026-07-10) — addendum 39 (long/short distribution + "all regimes positive" read): CLEAN PASS, one caveat on the mechanism idea
+
+FOUNDATION-FIRST (longshort_dist.py): CLEAN books (`_cleanfix`), committed loader (attribution_v4_regime),
+production model-class (long from the +resid_rev long-book pred, short from the base-book pred — the KEEPSET4
+two-book split), K=1 long / K=2 short matches production, GROSS residual bps (correctly labeled — appropriate
+for a shape analysis; net would only make the long leg MORE negative, same conclusion). Distribution stats
+(skew/jackpot/CVaR/win%) all correctly implemented; the 1872% top-decile share is a valid extreme-lottery
+signature (top-decile ≈ 674 bps/name, non-jackpot longs ≈ −71 bps — net-negative ex-jackpot), not a bug. ✓
+
+FINDINGS CORRECT + consistent with the validated picture:
+- Long = lottery (recent median −19.5, win 45%, skew +1.51, jackpot-driven); short = grinder-with-squeeze-tail
+  (recent median +43.3 > mean +24.2, win 57%, skew −1.52). Faithfully reproduces DDI-2 (long win < 50% <
+  short) on v4, and dovetails with #3 (long = beta lottery) and #4 (short squeeze tail).
+- SCOPE NOTE (not a contradiction): the short skew here (−1.52 rec / −1.45 OOS) is ALL-regime; #4's −1.67 rec
+  / −1.02 OOS is BEAR-specific. Same direction (left), different slice — keep them labeled so they aren't
+  conflated.
+- The **"all regimes positive after configs" honest read is exactly right and reinforces #1**: it is RECENT-only
+  (production per-regime side +2.55/bear +0.99/bull +5.01/deepbull +7.04 — full-stack PATH-COUPLED, distinct
+  from the VANILLA per-regime book table in V4_LIMITATIONS, and the deltas are explained by the gate/overlay),
+  NOT OOS (side −0.52, bull −1.19 still negative), and the positives are partly the lagging gate cutting bad
+  cycles ex-post = damage-control, not era-fragility solved (2022 still FAILED, OOS +0.20 thin). This is the
+  correct guard against over-reading the recent all-positive.
+
+CAVEAT on the MECHANISM IDEA (replace lottery long-leg with a pure beta hedge): reasonable and honestly flagged
+as untested/adjacent-to-HEDGE1-KL3 — but three guards before it's a candidate: (1) ESTIMATOR LAW / pitfall #4 —
+the distribution can MOTIVATE but cannot VERDICT this; a leg-standalone lottery shape says nothing about the
+BOOK effect. Verdict only at book level: net Sharpe of {short-only + static index/BTC hedge} vs production,
+NOT by comparing leg distributions. (2) The long lottery may already be doing beta-hedge work (offsetting the
+net-short book's beta), and its jackpots are positive-EV exactly where they land — deep-bull — where production
+ALREADY swaps the long to mom1d; so the clean test must hold the deep-bull mom1d swap fixed and replace only
+the non-deep-bull long. (3) HEDGE1 (not a candidate) / KL3 (near-miss, failed jackpot-preservation) already
+explored long-leg alternatives — pre-register a book-level gate (net Sharpe + jackpot-preservation, both eras)
+BEFORE running, to avoid re-litigating a failed direction on a path-coupled overlay.
+
+Clean pass — analysis foundation-sound and correct; the mechanism idea is a legitimately open candidate IF
+tested at book level with a pre-registered gate.
