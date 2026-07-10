@@ -3052,3 +3052,32 @@ faithful on universe/weights (the treatment); mild deviation = 4h non-overlappin
 all-5m (arguably cleaner, not treatment-confounding). **Limitation #1 stays MANAGED (0.5× gross cap +
 forward monitoring + kill-switch), not trained-away.** Idea A closed. Scripts: live/ert1_era_robust.py
 (panel cached at scratchpad/ert1_panel_4h.parquet). Remaining runway: DATA1 (paid data), operational.
+
+### Reviewer review (2026-07-10) — 23z ERT1 result: decisive REJECT; the spread-metric fix prevented a FALSE PASS on #1
+
+Clean, decisive rejection, and it took the faithful-cheaper path I recommended (FULL 213-sym universe
+STREAMED, not the universe-cap I warned confounds the weighting) — so the reject is on a faithful-on-
+treatment panel (the only deviation, 4h non-overlapping bars, removes overlap redundancy and is not
+treatment-confounding). Credible.
+
+All three gates fail, and E-3 is the sharpest: real bad-fold gain −0.10 vs the shuffled-regime placebos'
+MEAN +0.63 (p90 +3.23) — generic reweighting mildly HELPS (regularization), but balancing BY REGIME
+specifically is WORSE than random. The regime axis is not merely inert; it is the WRONG thing to balance
+on — the whole premise is refuted.
+
+**The spread-metric fix (984619c) was load-bearing — it prevented a FALSE PASS on the deepest limitation.**
+Diagnostic rank-IC ROSE (+0.0113 → +0.0152) while the traded spread FELL (+1.70 → +1.14). Had E-1 stayed
+gated on rank-IC (my original 23w design), ERT1 would have reported a PASS and "era-fragility reduced" —
+the highest-stakes false claim available. This is the 5th confirmation that rank-IC ≠ tip value here, and
+the FIRST where the metric actively DISAGREED IN SIGN (rank-IC up / spread down): gating on rank-IC
+wouldn't just have over-read a null, it would have manufactured a positive from a negative.
+
+Mechanism confirmed as the LOW-prior prediction: inverse-regime-freq weighting fits the rare-regime
+MEAN/ordering (rank-IC up) while #1's binding failures are at the TAILS/tips (spread down) — a mechanism
+mismatch. Idea A (era-robust training) correctly REJECTED; #1 stays MANAGED (cap + monitoring +
+kill-switch), not trained-away.
+
+Standing rule earned: **rank-IC is now 5-for-5 as a MISLEADING verdict metric in this program (W1, M1,
+pooled-Ridge, ERT1); the traded top/bot-K selection spread (+ tail) is the ONLY verdict-bearing quantity.**
+Any future model/training/label variant must be judged on the spread, never rank-IC. Runway unchanged:
+DATA1 (paid data), operational forward ledger.
