@@ -3334,3 +3334,25 @@ flag) the release bar should be MORE conservative (≥2 distinct bear episodes /
 
 Clean pass on step 3. Recommend the full-stack clean +2.22 replay (item b) next to nail the exact headline,
 then the V4_LIMITATIONS/§7 corrections (item c).
+
+### Reviewer review (2026-07-10) — V4_LIMITATIONS correction (audit item c): CORRECT, and it fixes MY miss (the ≥-pre-gate claim)
+
+Verified; all sound:
+- **Comprehensive ⚠️ audit banner** documenting all 5 findings (gap-corrupt labels, 2× cost undercharge,
+  bear-gateable, mild-bull no-new-sleeve, invalid ≥-pre-gate), with clean OOS bear +4.46→+1.82 and a
+  pointer to addendum 27's clean table. Original leaked/half-cost figures retained for provenance,
+  flagged read-through-the-banner. ✓
+- **The ≥-pre-gate claim (MY miss) is now correctly invalidated.** When I edited the FRAME note to make the
+  doc consistent, I LEFT "production per-regime net is ≥ these pre-gate figures" intact; the correction now
+  states it's INVALID (lagging binary gate zeros winners, 0.5× cap shrinks positive regimes →
+  sign-ambiguous, path-coupled pitfall-#4, NOT a lower bound). Exactly right, and it closes what I should
+  have caught. ✓
+- **Limitation #4 (bear) corrected**: "unconditional" → "DD-stop-exempt but NOT unconditional" (global
+  REGIME_GATE can de-gross bear to flat), anchor now ~+1.82 not +4.46. ✓
+
+Minor doc-hygiene (non-blocking): the per-regime TABLE + prose keep the original leaked/half-cost numbers
+(banner-flagged) — safe given the prominent ⚠️, but consider inline per-cell "[leaked; clean=X]" or
+replacing the table with addendum 27's clean figures, so a cell quoted without the banner can't propagate
+a stale number.
+
+Clean pass — faithful to the audit, and it closes my own ≥-pre-gate miss.
