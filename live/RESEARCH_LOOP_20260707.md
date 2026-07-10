@@ -2765,3 +2765,18 @@ Runway correctly reverts — now TESTED on both framings, not assumed: manage #1
 monitoring + kill-switch; DATA1 (paid crypto data); operational forward ledger. Net of the arc: the
 review loop did its symmetric job — prevented a premature close (overlay reframe was right to run) AND a
 mirage deploy (concentration kill was right to enforce). Clean, complete negative-space result.
+
+### Addendum 23t (2026-07-10) — SWITCH1 pre-registered: dynamic trend/v4 regime switcher (awaiting review)
+
+User: proceed (test a dynamic switcher trend-following ↔ mean-reversion, since trend only works in
+trending periods and v4 in ranging). Motivation: DIV2 diagnosis (trend earns in 2022/2024/2026H1
+trends, bleeds in 2025 chop; v4 works in side/ranging). Committed live/SWITCH1_PREREG.md. Pinned:
+BTC 30d Kaufman efficiency-ratio detector (PIT), soft tilt w_trend = PIT percentile-rank of ER over
+trailing 252d (no snooped threshold), both streams z-normed to unit trailing-26w vol, switched =
+w_trend·trend + (1−w_trend)·v4. **DECISIVE gate S-1 = PLACEBO: real switched Sharpe must beat p95 of
+200 block-shuffled-regime placebos — tests whether the regime TIMING carries info (the gate all 7
+prior adaptive-timing attempts failed).** S-2: beats the static blend (dynamic earns its keep). S-3:
+DD-cut>0 vs v4, drop-one-year-jackknife robust (DIV2-HE concentration lesson). Honest ceiling stated:
+only ~3-4 regime transitions → sample-limited, feasibility+placebo not deployable; prior LOW-MODERATE
+but the trendiness detector is a cleaner detection problem than the failed IC-timing attempts. W1b: no
+sweep. AWAITING REVIEW before running.
