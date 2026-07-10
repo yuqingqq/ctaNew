@@ -2393,3 +2393,23 @@ is strongly POSITIVE (+0.48), which is what produces the +0.26 overall 2022 corr
 into the crash → weaker 2022" worry did NOT materialize for the diversified basket; the sleeve
 diversified in BOTH halves of 2022. Feasibility PASS is if anything strengthened (not a late-flip
 artifact). Still NOT swept (W1b); pinned-slow spec used throughout.**
+
+### Addendum 23m (2026-07-10) — DIV2 concentration check (review 513f8d7): counter-cyclicality is BROAD, not one-event
+
+Reviewer asked median + top-week share on the +156 bps (program discipline; the project's usual
+failure mode is one-fold-drives-the-mean, e.g. K2/K3/LOFO/W23). Result — the +156 is BROAD:
+- v4-BAD weeks (2023-26, n=72): mean +156 / **MEDIAN +90.4** bps (median »0 = not outlier-driven)
+- **60% of bad weeks POSITIVE** (breadth of counter-cyclicality)
+- **top-1 week share only 11%** of total, top-3 29%, top-decile (7 wk) 59% — vs the project's typical
+  one-event 100%+; this is broad. Mean EX-top-1 +142, EX-top-3 +116 (robust to removing biggest weeks)
+- v4-GOOD weeks (n=110): trend mean −50 / median −10.6 → gives back only modestly when v4 is up
+  (median near 0); asymmetry is the right shape (big help in bad, ~flat-to-slightly-neg in good), and
+  the give-back is already priced into standalone +0.41 / combined +1.55.
+**Concentration discipline PASSED** — unlike every prior fragile result here, DIV2's diversification is
+NOT one-event; it's a broad 60%-of-weeks counter-cyclicality with median +90. Accepted reviewer's
+DOMINANT caveat unchanged: entire benefit rides on crypto-TSMOM's OWN forward edge (thin +0.41
+standalone; value is crisis-timing), the +48% 2022 DD cut is ONE sustained-bear episode, and a
+flash-crash-recover crisis would whipsaw the slow 365d trend → forward bar is HIGH; any build must
+validate the TREND SLEEVE'S own edge + flash-crash stress FIRST. Verdict: feasibility PASS, well-
+verified (PIT-clean, mechanism-checked, concentration-broad), forward-unproven. Best in-mandate
+diversifier (+24% overall vs out-of-scope equity DIV1 +33%).
