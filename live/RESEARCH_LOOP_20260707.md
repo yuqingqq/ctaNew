@@ -2845,3 +2845,31 @@ Both flags faithfully incorporated, and one strengthened:
 Clean pass. Will review the SWITCH1 result against: (i) the reported look-ahead-vs-PIT gap (PIT is the
 only valid number); (ii) S-1 placebo AND S-3 drop-2026H1 read jointly per the pre-commitment; (iii) the
 logged prediction (passes S-2, fails S-3). Running.
+
+### Addendum 23v (2026-07-10) — SWITCH1 RESULT: DEAD — regime timing carries NO info (8th adaptive-timing failure); PIT shift verified
+
+Ran switch1_regime.py. All three gates FAIL; the decisive placebo is unambiguous:
+- **GATE S-1 (placebo) — FAIL (decisive).** Real switched Sharpe +1.334; block-shuffled-regime placebo
+  mean +1.277, p95 +1.819, max +2.064; **real ranks p56 — dead center of the random-shuffle
+  distribution.** A randomly-timed regime signal does as well or better. The efficiency-ratio detector
+  times the trend/chop regime NO better than chance → the timing carries no information.
+- **GATE S-2 (beats static) — FAIL.** Switched DD-cut +3% vs static +28%; Sharpe +1.33 vs static +1.42.
+  The switcher is WORSE than just holding both at fixed weights — the "dynamic" tilt actively hurts.
+- **GATE S-3 (concentration) — FAIL.** Full DD-cut vs v4 only +3%; drop-2024 −12%, drop-2026 −30%,
+  drop-2026H1 −30% (reviewer's mirage prediction confirmed). The tiny benefit is 2026-concentrated.
+- **JOINT VERDICT (23u): DEAD — fails placebo (timing carries no info).**
+**PIT verification (review d28424f-#2 — the shift MATTERED):** PIT (shifted) switched Sharpe +1.334 vs
+LOOK-AHEAD (unshifted) +1.732 — a **+0.40 Sharpe gap of pure bar-weights-itself look-ahead** that the
+shift correctly removed. Had the tilt used week-t's own ER, it would have reported a fake +1.73 with
+apparent timing skill; the discipline caught exactly the manufactured skill the placebo is meant to
+expose. Reviewer flag #2 was real and material.
+
+**Mechanism:** the efficiency-ratio detector is LAGGING — it tilts to trend only AFTER a trend is
+already established (and to v4 only after chop is established), so it misses the transitions where all
+the value lives. This is the **8th adaptive-timing failure** in the program (dynamic K, gates,
+rvol-scaling, mode meta-gate, ×4 prior + this) and the cleanest: a proper block-shuffled placebo shows
+the detector is indistinguishable from random. **Dynamic trend↔v4 switching REJECTED.** Confirms the
+standing structural finding: regime DETECTION does not work on this data (lagging label, IC R²≈0.005),
+so neither a static blend (DIV2-HE) nor a dynamic switch (SWITCH1) rescues the trend sleeve.
+**Runway unchanged: manage limitation #1 (0.5× cap + monitoring + kill-switch); DATA1; operational.**
+Script: live/switch1_regime.py.
