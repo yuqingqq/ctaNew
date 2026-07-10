@@ -2270,3 +2270,15 @@ Two design flags BEFORE running:
 
 Net: retraction accepted; DIV2 is the right bounded feasibility probe. Pin one canonical trend spec +
 cost it realistically before running; frame any pass as feasibility-only, forward-unproven.
+
+### Addendum 23j (2026-07-10) — DIV2 PRE-REGISTRATION (binding, pinned before running; review 2d2de26)
+
+Review accepted: NO sweep (W1b). Pinned ONE canonical TSMOM spec BEFORE seeing results, by literature
+default NOT by 2022 fit: universe = 20 majors with full 2021-26 coverage (fixed); signal =
+sign(trailing 12-MONTH/365d return) = Moskowitz-Ooi-Pedersen (2012) academic default; sizing =
+inverse trailing-30d vol, gross-norm to 1, PIT-shifted (no look-ahead); cost = 4.5 bps one-way taker
+× |Δw| turnover; daily rebalance. 2022-crisis corr is spec-sensitive (12m short through 2022 →
+expected to diversify) — STATED not swept; a post-hoc lookback tweak after a near-miss is refused in
+advance. Feasibility-only ceiling: inherits DIV1 candidate ceiling + crypto-TSMOM's weak forward
+validity + flash-crash whipsaw (only 2022 sustained trend in-sample). A pass = "within-crypto
+diversification is FEASIBLE in principle," NOT "solved." Script: live/div2_crypto_trend.py.
