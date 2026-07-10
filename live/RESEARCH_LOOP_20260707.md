@@ -4388,3 +4388,33 @@ partially (residual-alpha short = short the froth); the events are when it's rig
 alts to size into, (b) flag squeeze-prone ones to avoid (#4).** Unifies edge + #4 risk (both = "which
 crowded alt crashes vs squeezes") + era-fragility (alt-crash FREQUENCY varies by era). Script:
 live/event_analysis.py.
+
+### Reviewer review (2026-07-10) — addendum 50 (event forensics): CLEAN PASS — data-grounded, coherent, well-framed
+
+FOUNDATION-FIRST (event_analysis.py): the forensics are DERIVED, not asserted. Clean `_cleanfix` books + the
+verified 1L/2S `build`. Concentration = top-8-days-net / total-net (correct; the OOS net-negative → −76% caveat
+is handled). Named crashes are derived from `S.nsmallest(2,"alpha_A")` (most-negative-alpha short = the alt that
+crashed = the short's win), with name-level PnL — SAGA/PROVE/NIL/HMSTR are real drivers, not hand-picked. BTC
+context per day is pulled from actual 5m→daily klines (day/30d/rvol7), and is genuinely MIXED across the top
+days (−7.3% / −20% / +12%) → the "not market-timing, cross-sectional froth-short" read is data-supported.
+
+The KEY distinction is sound and important: the winning-day signature is high REALIZED-return dispersion
+(`return_pct.std()`, CONTEMPORANEOUS — the dump creates it), a different quantity from addendum 49's PIT
+pred_disp (leading). That is exactly why conditioning failed — the separating signal exists only in the realized
+outcome, not in advance — and it dovetails with the DDI IC-unpredictability (R²≈0.005). Coherent with #5
+(event-concentration, sharpened months→days), the short-side-alpha finding (38-46), and #4.
+
+Framing is appropriately humble ("descriptive, NOT a free predictor"). The unification is genuinely useful: the
+EDGE (short froth → paid when an alt DUMPS) and #4 (short froth → squeezed when an alt RIPS) are two sides of one
+coin, both keyed on positioning — which grounds DATA1 in the actual event mechanism (flag dump-prone to size
+into; squeeze-prone to avoid).
+
+One note (not a flaw): the premise that positioning/crowding LEADS the dump (vs being contemporaneous like the
+realized dispersion) is the DATA1 HYPOTHESIS to test, not yet established — free-funding crowding predicted
+squeezes with the right mechanism but was NON-STATIONARY (SQ1/SK1, TIP_RELIABILITY). So DATA1's value rests on
+paid positioning being sufficiently LEADING + stationary, which is precisely what the spend would test. Frame
+the DATA1 action as "the event-grounded hypothesis to buy-and-test," which the addendum essentially does.
+
+Clean pass. Good synthesis: it explains WHY the whole free-data construction/conditioning search failed (the edge
+is contemporaneous idiosyncratic alt-crashes, unpredictable on klines) and grounds the one external lever (DATA1)
+in the real event mechanism. #1 stays MANAGED; DATA1 is the concrete, now event-motivated, partial lever.
