@@ -2901,3 +2901,19 @@ The within-crypto trend-diversification arc is now closed BOTH statically (DIV2-
 (SWITCH1); regime DETECTION does not work on this data (lagging label, IC R²≈0.005). Runway unchanged.
 Methodological keeper: the block-shuffled-regime placebo + reported look-ahead-vs-PIT gap is the cleanest
 adaptive-timing falsifier the program has — reuse it for any future timing claim.
+
+### Addendum 23w (2026-07-10) — ERT1 pre-registered: era-robust training vs limitation #1 (awaiting review)
+
+User chose Idea A (era-robust training). Committed live/ERT1_PREREG.md. Attacks the DEEPEST limitation
+(#1 era-fragility: side/bear/bull edges all era-specific → model overfits the temporally-dominant
+regime). Pinned: sample_weight = 1/freq(btc_ret_30d regime bucket) PIT within each train window,
+normalized mean-1, injected as lgb.Dataset weight= in _train; EVERYTHING ELSE v4-identical (V0_LEAN 14
+feats, residual target, h=48, 5-seed, autocorr filter, hyperparams — CLAUDE.md fair-comparison rule).
+Measurement BOOK LEVEL (estimator law): per-fold rank-IC + top/bot-20% selection spread. Two risks
+named + gated: (1) 2022 holdout SPENT → BINDING gate is 2023-26 fold-consistency, 2022 descriptive
+only; (2) balancing may FLATTEN preds → guarded by no-degradation gate + shuffled-regime placebo.
+Gates: E-1 PRIMARY (bottom-quartile-fold IC improves AND mean IC ≥ baseline−0.005), E-2 SECONDARY (top/
+bot-20% spread ≥ baseline−5%), E-3 PLACEBO (real bottom-fold IC gain beats shuffled-regime p90 — the
+SWITCH1 anti-noise discipline), concentration per-fold. Prior LOW-MODERATE; pass = "more fold-robust in
+2023-26 without losing edge" (weaker than "fixes #1" since 2022 spent). W1b: no weight-scheme sweep.
+AWAITING REVIEW.
