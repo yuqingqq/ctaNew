@@ -96,9 +96,11 @@ naked = realized. Diagnosis below holds in both frames.)
    so it neither confirms nor refutes the bet. The squeeze tail (short median +42 but mean
    tail-gutted, skew −2.45) is the risk, and it is unhedged (SQ1 crowding signal exists but is too
    weak/non-stationary on free data — SK1 failed the recent holdout).
-5. **The workhorse (side) alpha is thin and event-concentrated** — 76% of side net from 2
-   dispersion months, 5/9 months positive, flat OOS. No config fixes this; it is a signal/data
-   limit.
+5. **The workhorse (side) alpha is thin and event-concentrated** — CONFIRMED + COMMITTED on clean
+   data (limitation5_concentration.py, 2026-07-10 audit): **87% of RECENT side net from the top 2
+   months** (2026-04 +6,783, 2025-10 +5,773 of +14,432; 5/8 months positive) — the old unverified
+   "76%" reproduces STRONGER at 87%. OOS side is net-NEGATIVE (−8,621 bps, 44% positive months). No
+   config fixes this; it is a signal/data limit (and the era-split of #1: side pays recent, loses OOS).
 6. **The regime label is a 30-day-LAGGING classifier.** Every switch keys off `btc_ret_30d`, so
    "which regime am I in" is itself a noisy, trailing estimate — worst in fast transitions (a
    2022-style cascade, a sharp bull→bear flip), where production can apply "bear" rules to the

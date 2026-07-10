@@ -3508,3 +3508,24 @@ backups:
   maturity_meta gave a spurious 0.71; panel gives the correct 2.30. maturity_meta is for the FORWARD
   live loop only. **Production system fully on clean data; clean is measurably better; all leaked
   artifacts backed up.** NEXT (part B): review limitations on the clean/deployed model.
+
+### Addendum 32 (2026-07-10) — PART B: limitations reviewed on the CLEAN/deployed model
+
+Reviewed all 6 limitations against the now-deployed clean model. Result: the limitations SURVIVE (they
+are structural, not label-artifacts); two data-dependent ones re-derived + committed:
+- **#1 era-fragility — CONFIRMED, slightly SOFTENED.** Clean per-regime (residual Sharpe): side +3.55
+  rec / −0.78 OOS, bear +1.82 OOS (thinner anchor, not +4.46), bull +3.95 rec / −2.37 OOS, deepbull
+  −4.35 rec / −0.85 OOS. No regime both-era positive (holds). BUT the full-stack OOS guardrail is now
+  MARGINALLY POSITIVE (+0.20 clean vs −0.09 leaked) — "OOS is a negative guardrail" softens to
+  "thin-but-positive." Era-split is real; magnitude of the bear anchor halved.
+- **#5 thin/event-concentrated side alpha — CONFIRMED + now COMMITTED** (limitation5_concentration.py):
+  RECENT side net is **87% from the top-2 months** (2026-04, 2025-10) — the folklore "76%" reproduces
+  STRONGER (87%). OOS side net-NEGATIVE (−8,621). Reproducible number replaces folklore.
+- **#2 bull gate / #3 deep-bull lottery / #4 squeeze tail / #6 lagging regime — STRUCTURAL, unchanged**
+  by the label fix (clean deepbull −4.35 rec still a lottery; squeeze/lag are strategy-structural).
+**NECESSARY CHANGES = documentation only (done): #5 committed figure, #1 clean numbers + OOS-positive,
+the audit banner.** NO strategy change is warranted — the limitations are structural; the clean data
+IMPROVES performance (+2.30 vs 2.26) without unlocking new capability, so v4 remains at its free-data
+local optimum. **Net of parts A+B: production is on clean data and measurably better; the limitations
+are reviewed, confirmed, and now reproducibly documented against the deployed model.** Script:
+live/limitation5_concentration.py.
