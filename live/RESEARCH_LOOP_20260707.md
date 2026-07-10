@@ -2616,3 +2616,32 @@ single-episode/forward-only regardless.
 Net: discipline correct (GATE 1a fail real, no sweep-rescue). But reframe: crypto-trend is DEAD as a
 STANDALONE sleeve, ALIVE as an OOS-validated diversifying OVERLAY whose deploy-worthiness is a
 carry-vs-benefit question — a future pre-registered cell, not a closed door.
+
+### Addendum 23q (2026-07-10) — REVIEW ACCEPTED: "revert runway" too absolute (overlay ≠ standalone); pre-register DIV2-HE
+
+Reviewer (1e035e0) is correct and I own the over-generalization. GATE 1a fail is real and stays honored
+(standalone crypto-trend bleeds — no sweep-rescue). BUT I conflated two distinct questions:
+- GATE 1a: "viable self-carrying STANDALONE?" → NO.
+- GATE 3a: "viable DIVERSIFYING OVERLAY on v4?" → YES OOS — combined beat v4 on BOTH Sharpe (+2.17 vs
+  +1.74) AND DD (+77%) in the SAME 2025-26 window where trend BLED standalone. That is the definition of
+  a valuable negatively-correlated overlay; a hedge needs contribution > carry, NOT a positive own edge.
+My "revert runway to manage-#1-without-it" was too absolute. Correct status: crypto-trend DEAD as a
+standalone sleeve, ALIVE as an OOS-validated diversifying OVERLAY whose deploy-worthiness is a
+carry-vs-benefit question GATE 1a was a too-strict proxy for. NOT a rescue (GATE 3a was pre-registered
+and passed); a DISTINCT question deserving its own pre-registered test.
+
+**DIV2-HE (hedge-economics) PRE-REGISTRATION (binding, before running).** Same pinned 365/30 TSMOM +
+PIT inverse-vol combination (no change). The one way this is a MIRAGE is 2026H1-concentration → that is
+the PRIMARY gate. Tests + pre-committed gates:
+- **HE-1 (concentration kill — PRIMARY GATE):** decompose the 2025-26 overlay benefit by half-year;
+  report combined-vs-v4 (ΔSharpe, ΔDD) EX-2026H1 (drop the strong +2.45 trend half). **GATE: overlay
+  must still improve v4 (matched-vol DD-cut>0 AND combined Sharpe ≥ v4) with 2026H1 REMOVED.** If the
+  benefit is 2026H1-driven → FAIL (mirage), overlay dead too.
+- **HE-2 (full-sample breadth GATE):** over full 2023-26, combined-vs-v4 per YEAR (2023/2024/2025).
+  **GATE: combined cuts matched-vol DD in ≥2/3 years AND aggregate combined Sharpe ≥ v4 net of the
+  110 bps/yr carry.** Quantify carry paid in the worst bleed year (2025).
+- **HE-3 (carry tolerance, descriptive — not gated):** annual carry (110 bps/yr ≈ 7% gross) vs DD
+  benefit; worst-case bleed the overlay adds; is the insurance premium tolerable?
+- Crisis (2022 +48% DD cut) stays single-episode / forward-only regardless.
+- **Deploy-worthy only if HE-1 AND HE-2 pass; even then feasibility→FORWARD ledger, not live deploy.**
+- W1b: no sweep; pinned sleeve binding; concentration-kill is the honest primary test. AWAITING REVIEW.
