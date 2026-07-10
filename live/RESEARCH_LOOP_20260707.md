@@ -3584,3 +3584,21 @@ Clean pass. This closes the full audit arc (find → remediate → promote → r
 data, measurably better (+2.30), limitations reviewed/confirmed/reproducibly documented against the deployed
 model. Open doc-hygiene from PART A stands — reconcile the canonical recent number (+2.22 doc / +2.41 replay
 / +2.30 deployed) in V4_PERFORMANCE §1.
+
+### Reviewer review (2026-07-10) — doc-hygiene recent-number reconciliation: CORRECT (clean pass)
+
+Adopts all three PART A notes faithfully:
+- **Three-frame reconciliation, +2.30 set as the DEPLOYED headline.** +2.30 (clean, 171-sym stale-filtered,
+  panel-PIT, 1.0× — what runs) / +2.41 (confirmatory replay, clean, 174-sym not-stale-filtered) / +2.22
+  (original leaked, universe-cleaned) — all ≈ +2.2–2.4. The +2.30<+2.41 gap is correctly the stale-print
+  filter (171 vs 174 syms), and stale-filtered IS the correct production config (§7 pre-live gate). ✓
+- **OOS prediction corrected in the doc:** the leak was DEFLATIONARY at production (path-coupled
+  vol-outlier), clean OOS +0.20 > leaked −0.09 — documenting the estimator-law lesson that reversed my
+  earlier book-additive guess. ✓
+- **Wide-forward-expectation note** (the ±0.7 universe-meta swing = known universe-composition variance; do
+  not over-read the exact +2.30). ✓ §7 stays conservative on the thinner (+1.82) bear book. ✓
+
+Clean pass — the headline now matches what actually runs (+2.30), the three frames are honestly reconciled,
+and the corrected OOS + universe-variance caveats are in place. **The audit arc is fully closed:** production
+on clean data (+2.30, measurably better), headline reconciled to the deployed number, limitations
+re-confirmed, all foundation-first verified end-to-end.
