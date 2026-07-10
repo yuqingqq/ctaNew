@@ -2580,3 +2580,39 @@ thin. **Runway reverts (honestly, having now TESTED the build): manage limitatio
 cap + forward monitoring + kill-switch; DATA1 (paid crypto data); operational forward ledger.** The
 DIV2 feasibility + failed-build is a complete, recorded negative-space result. Scripts:
 div2_crypto_trend.py, div2_validate.py.
+
+### Reviewer review (2026-07-10) — 23p DIV2 build validation: DISCIPLINE CORRECT; "revert runway" is TOO ABSOLUTE (overlay ≠ standalone)
+
+The disciplined outcome is RIGHT and I affirm it: GATE 1a (own-edge) FAILED exactly as the binding
+caveat (23k) predicted — choppy-2023-25 aggregate +0.13 (flat), 57% < 60% sub-periods, 2025 bled BOTH
+halves (a full year negative for a slow 365d trend in whipsaw). Honoring W1b — no sweep-to-rescue a
+57%-vs-60% marginal miss — is the pre-registration doing its job. Verified GATE 3a's combination is
+PIT-clean (expanding-vol .shift(1)), so its numbers are trustworthy.
+
+**But "sleeve NOT built → revert runway to manage-#1-without-it" is TOO ABSOLUTE, and the result shows
+why.** GATE 1a failed while GATE 3a passed STRONGLY — and critically, GATE 3a's combined book beat v4
+on BOTH Sharpe (+2.17 vs +1.74) AND DD (+77%) in the SAME 2025-26 window where the trend BLED standalone
+(2025 both halves negative). A sleeve that loses money alone yet RAISES the portfolio's Sharpe AND cuts
+its DD is the DEFINITION of a valuable negatively-correlated OVERLAY.
+- GATE 1a answered "is crypto-trend a viable SELF-CARRYING STANDALONE strategy?" → NO (it bleeds).
+- GATE 3a answered "is it a viable DIVERSIFYING OVERLAY on v4?" → YES, OOS (better Sharpe AND DD).
+Different questions. The pre-reg gated the standalone one as a hard prerequisite for the overlay one,
+but GATE 3a shows the overlay value is real and INDEPENDENT of the standalone edge. A hedge/diversifier
+does not need a positive own edge; it needs its portfolio contribution to beat its carry.
+
+**So the runway should NOT fully close path (C).** Honest status: NOT buildable as a self-carrying
+standalone sleeve (GATE 1a, correct); the DIVERSIFYING OVERLAY is OOS-validated (GATE 3a). The W1b-safe
+next step is NOT overriding GATE 1a — it is a NEW pre-registered "hedge-economics" cell: does the
+combined book beat v4 NET of the sleeve's carry (Phase 1c: 110 bps/yr ≈ 7% of gross), over OOS +
+FORWARD, with a bleed-tolerance kill-switch? That is the question GATE 1a was a (too-strict) proxy for.
+
+Honest caveats (so this is not a rescue): (1) the 2025-26 combined lift may be partly carried by 2026H1's
+strong trend (+2.45) — the hedge-economics cell must confirm it is not 2026H1-concentrated; (2) the
+carry is a REAL persistent drag and 2025 was a full year of bleed, so GATE 1a's worry (hold a bleeding
+vehicle for years awaiting a rare crisis) is legitimate — this is NOT "deploy it," it is "the overlay
+question is distinct, more favorable, and deserves its own pre-registered test"; (3) crisis value stays
+single-episode/forward-only regardless.
+
+Net: discipline correct (GATE 1a fail real, no sweep-rescue). But reframe: crypto-trend is DEAD as a
+STANDALONE sleeve, ALIVE as an OOS-validated diversifying OVERLAY whose deploy-worthiness is a
+carry-vs-benefit question — a future pre-registered cell, not a closed door.
