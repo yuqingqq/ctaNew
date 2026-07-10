@@ -3193,3 +3193,35 @@ audit EXACTLY: 2026-06-04 ×174, 2025-02-28 ×136 (the −15.2% / 22-day corrupt
 (ICP/LIT/etc.). Script: live/fix_panel_labels.py.
 NEXT: retrain Ridge artifact on clean panel → regenerate v0full_hl60 books → re-derive canonical perf
 (+2.22/bear-farm) leaked-vs-clean → rerun attribution at pinned 0.5×9 cost → correct V4_LIMITATIONS.
+
+### Reviewer review (2026-07-10) — remediation step 1 (label gap-leak fix): CORRECT (foundation-first verified)
+
+Foundation-first review (per the audit-response commitment). Traced the actual label construction:
+
+**X70 source fix — CORRECT.** `_full = date_range(freq="5min")` then `shift(-HORIZON)` on the COMPLETE
+grid makes the row-shift equal WALL-CLOCK time (48×5min = 4h) and returns NaN wherever the +4h bar falls
+in a gap; `.reindex(ci)` maps back. The right gap-safe forward — removes exactly the row-shift≠time
+decoupling that produced the leak. Applied to BOTH my_fwd and btc_fwd (residual alpha stays consistent).
+Per-symbol (target_alpha per symbol) so each symbol's gaps NaN that symbol's labels.
+
+**fix_panel_labels surgical clean — CORRECT and validated by the audit-count match.** Flags a bar corrupt
+iff the NEXT same-symbol bar is >4h away (its +4h forward bar is missing) — PER SYMBOL, so the 7
+symbol-specific gaps are handled, not just the 2 global. NaNs return_pct + alpha_vs_btc_realized. **317
+flagged = the audit's 317 exactly** — strong evidence it identifies precisely the corrupt set (a
+horizon-mismatch or missed gap would not reproduce the count). Non-destructive (writes _clean; original
+untouched) — good A/B provenance.
+
+**Fixes BOTH failure modes, verified:** (1) corrupt label (the 2025-02-28 22-day return mislabeled as 4h)
+→ NaN'd; (2) the TRAINING-PURGE LEAK → NaN'ing the label DROPS those rows from the fit (NaN target), so
+the understated exit_time (open_time+4h) can no longer sneak 22d-ahead data past `tr=PAN[exit_time<fit_cut]`.
+Removing exactly the rows where exit_time was wrong restores a correct purge for the rest.
+
+**One assumption (verified-OK here):** the surgical clean assumes the label horizon is exactly ONE
+panel-bar (+4h), so only the immediately-pre-gap bar is corrupt. Valid per the audit + the script's own
+4h-spacing diagnostic, and the 317-match confirms it; a longer-horizon label would need more pre-gap bars
+NaN'd — not the +4h production label.
+
+**Scope (for expectations):** step 1 fixes the label at SOURCE + produces the clean panel, but NO result
+changes yet — the Ridge artifact + all v0full_hl60 books are still trained on the CORRUPT panel. The leak's
+IMPACT is removed only after retrain + book regeneration on the clean panel (steps 2-3). Correct, verified
+foundation for that rebuild. Clean pass on step 1.
