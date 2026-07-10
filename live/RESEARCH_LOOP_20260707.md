@@ -3529,3 +3529,32 @@ IMPROVES performance (+2.30 vs 2.26) without unlocking new capability, so v4 rem
 local optimum. **Net of parts A+B: production is on clean data and measurably better; the limitations
 are reviewed, confirmed, and now reproducibly documented against the deployed model.** Script:
 live/limitation5_concentration.py.
+
+### Reviewer review (2026-07-10) — PART A (clean pipeline PROMOTED to production): CORRECT, foundation-first verified
+
+Foundation-first (the highest-stakes commit — it changes LIVE):
+- **select_legs empty-group guard: CORRECT.** `if not len(grp): return {}` is placed BEFORE the
+  `grp[...].iloc[0]` deep-bull/bull-adapt reads (verified in context), and {} = no positions is the right
+  behavior for an empty eligible universe. A real latent crash the live forward loop could have hit. ✓
+- **Canonical panel → clean, models retrained on it.** panel_expanded_v0.parquet is now the 317-fixed clean
+  panel (leaked backed up *_leaked_preaudit); live models retrained via train_v4_artifact (= per-symbol
+  RidgeCV, the RIGHT model, 317 corrupt rows excluded); books/seeds/state re-bootstrapped clean; all backed
+  up. ✓ The audit's _cleanfix artifacts were audit-only; this correctly moves LIVE onto clean data.
+- **Clean 2.30 / maxDD −11,132 > leaked 2.26 / −11,787** (same 171-sym/1.0× config) — better on BOTH,
+  consistent with the confirmatory replay's deflationary-leak finding. ✓
+- **Historical-bootstrap universe config (panel PIT, NOT live maturity_meta): CORRECT and PIT-sound.**
+  maturity_meta is floored at now−400d (a FORWARD view) — applying it to a 2025 historical cycle would drop
+  symbols that were mature THEN (a universe mismatch); the panel carries the PIT universe at each historical
+  cycle. So 2.30 (panel) is right; the 0.71 (maturity_meta) was a wrong-universe artifact, not a real result.
+
+Two notes (non-blocking):
+1. **Doc hygiene — reconcile the canonical recent number.** Three now exist: +2.22 (documented/leaked/
+   universe-cleaned), +2.41 (confirmatory replay, not-universe-cleaned), +2.30 (production, 171-sym, clean =
+   the DEPLOYED number). Update V4_PERFORMANCE §1 to the clean deployed +2.30 with the frame stated, so the
+   headline matches what actually runs.
+2. **The 2.30↔0.71 universe-meta swing** is a reminder of the known universe-composition variance (v1-FROZEN
+   placebo p83): the panel-PIT choice is correct, but the sensitivity underscores the forward expectation is
+   WIDE — don't over-read the exact +2.30.
+
+Clean pass — production correctly promoted to clean data; clean is measurably better; crash fixed; universe
+config sound. Part B (limitations on the clean/deployed model) next.
