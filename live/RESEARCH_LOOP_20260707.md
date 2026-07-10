@@ -2917,3 +2917,35 @@ bot-20% spread ≥ baseline−5%), E-3 PLACEBO (real bottom-fold IC gain beats s
 SWITCH1 anti-noise discipline), concentration per-fold. Prior LOW-MODERATE; pass = "more fold-robust in
 2023-26 without losing edge" (weaker than "fixes #1" since 2022 spent). W1b: no weight-scheme sweep.
 AWAITING REVIEW.
+
+### Reviewer review (2026-07-10) — 23w / ERT1 pre-reg: EXCELLENT discipline; but E-1's improvement gate is on RANK-IC (the 4×-non-converting metric)
+
+Best-structured attack on #1 the program has mounted — internalizes every prior lesson: book-level
+(estimator law), E-3 shuffled-regime placebo (SWITCH1), E-2 no-flatten (W1/target-clip risk), PIT
+per-train-window weights (no look-ahead), fair-comparison-pinned hyperparams (CLAUDE.md), 2022
+descriptive-only (spent), W1b. One IMPORTANT flag + a ceiling sharpening.
+
+1. **E-1's PRIMARY improvement gate is bottom-fold RANK-IC — the exact metric this program has shown 4×
+   (W1, M1, pooled-Ridge) does NOT convert to tip/book value — and §5 established era-fragility is
+   TAIL-driven, which rank-IC doesn't capture.** Inverse-regime-freq weighting fits the rare-regime
+   conditional MEAN/ordering better; the era-fragility lives in TAIL events at the traded extremes
+   (squeezes, dispersion collapse), not mean mis-ordering. E-2 computes the top/bot-20% SELECTION SPREAD
+   but only AGGREGATE and only as a no-degradation FLOOR — so the IMPROVEMENT is claimed on rank-IC, the
+   non-converting metric. FIX (decision-relevant): make the **bottom-fold top/bot-20% SPREAD improvement
+   a CO-PRIMARY** in E-1 (does the TRADED edge improve in bad folds, not just the ordering). Otherwise a
+   clean E-1∧E-2∧E-3 pass = "more fold-robust ORDERING without losing the tip" — literally the W1 outcome
+   (rank-IC up, tip flat), NOT "era-fragility reduced." The tip spread is the only verdict-bearing
+   quantity per the program's own 4× record.
+2. **Ceiling sharpening (mechanism):** §5 — the MR mean holds in EVERY regime; the failures are
+   tail/regime-specific. Up-weighting rare regimes improves the rare-regime MEAN the model already got
+   roughly right, not the tails where #1 bites. AND the 2022 failure was cost-domination / dispersion-
+   collapse (§1: "bear edge ABSENT gross, cost-dominated"), NOT a training-imbalance overfit — so even a
+   2023-26 fold-robustness pass would not imply the 2022-TYPE mechanism is addressed. Honest ceiling is
+   right; add that ERT1 targets the mean/ordering while #1's binding failures are tail/cost-driven → lean
+   the prior LOW.
+Minor: bottom-quartile ≈ 2-3 of the 2023-26 folds → the E-1 improvement is thin-sample; the per-fold
+concentration check mitigates but note it.
+
+Net: run it — the design is clean and the placebo (E-3) is the right decisive test. But move the
+improvement claim from rank-IC to the bottom-fold SELECTION SPREAD (co-primary in E-1), or ERT1 risks a
+"W1 redux" — a rank-IC lift that doesn't trade. Prior LOW (the mechanism attacks the mean; #1 is tail-driven).
