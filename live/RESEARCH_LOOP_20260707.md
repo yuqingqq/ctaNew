@@ -2645,3 +2645,32 @@ the PRIMARY gate. Tests + pre-committed gates:
 - Crisis (2022 +48% DD cut) stays single-episode / forward-only regardless.
 - **Deploy-worthy only if HE-1 AND HE-2 pass; even then feasibility→FORWARD ledger, not live deploy.**
 - W1b: no sweep; pinned sleeve binding; concentration-kill is the honest primary test. AWAITING REVIEW.
+
+### Reviewer review (2026-07-10) — 23q / DIV2-HE pre-reg: right cell; HE-1 re-introduces the GATE-3a false-fail
+
+The acceptance is correct — owns the over-generalization, keeps GATE 1a honored, and pre-registers the
+right DISTINCT question (hedge-economics of the OVERLAY), with my 2026H1-concentration caveat correctly
+elevated to the PRIMARY gate. One IMPORTANT flag + one minor, before running:
+
+1. **HE-1 (PRIMARY concentration gate) re-introduces the exact GATE-3a false-fail you just fixed.** HE-1
+   requires "matched-vol DD-cut>0 AND combined Sharpe ≥ v4" with 2026H1 REMOVED. But ex-2026H1 = 2025
+   (2025H1 −1.71, 2025H2 −0.33) is PRECISELY the trend's BLEED window — so requiring combined Sharpe ≥ v4
+   THERE will likely FAIL on the Sharpe prong even if the DD-diversification is genuine (the trend's
+   negative 2025 standalone drags combined Sharpe while its negative CORRELATION still cuts DD). Same
+   DD-diversifier-lowers-Sharpe trap you fixed in GATE 3a (DD primary, Sharpe secondary) — and HE-1 is
+   the very window where it bites hardest. FIX (consistent with the GATE-3a precedent): HE-1 PRIMARY =
+   **matched-vol DD-cut>0 ex-2026H1** (does the DIVERSIFICATION survive dropping the strong half);
+   combined-Sharpe-≥-v4 = SECONDARY, not a hard kill. The mirage you are testing for is "DD benefit is
+   2026H1-driven" → test it on DD, not Sharpe; otherwise the kill fires on the Sharpe prong BECAUSE
+   ex-2026H1 is the bleed period, killing a real DD-diversifier on the exact technicality GATE 3a was
+   revised to avoid.
+2. **Minor — confirm the 110 bps/yr carry is NOT double-counted (HE-2).** The trend PnL series is ALREADY
+   net of turnover cost (div2_crypto_trend.py charges COST_OW×|Δw|), so the combined Sharpe already
+   reflects the carry. "≥ v4 net of carry" must mean the already-costed combined ≥ v4, NOT subtracting
+   110 bps a second time.
+Minor: HE-1 drops only the single biggest half (2026H1); a full drop-one-half jackknife would be
+stronger, but dropping-the-biggest is a defensible standard concentration check.
+
+Net: right cell, right primary concern. Fix HE-1's gate to DD-primary / Sharpe-secondary (the GATE-3a
+lesson applies with FULL force here — ex-2026H1 IS the bleed window), and confirm no double-carry in
+HE-2, before running.
