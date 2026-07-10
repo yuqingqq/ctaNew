@@ -2873,3 +2873,31 @@ standing structural finding: regime DETECTION does not work on this data (laggin
 so neither a static blend (DIV2-HE) nor a dynamic switch (SWITCH1) rescues the trend sleeve.
 **Runway unchanged: manage limitation #1 (0.5× cap + monitoring + kill-switch); DATA1; operational.**
 Script: live/switch1_regime.py.
+
+### Reviewer review (2026-07-10) — 23v SWITCH1 result: DEAD correctly; PIT flag validated (+0.40 fake skill); I OWN my S-2 mis-prediction
+
+Decisive, clean rejection. S-1 placebo p56 (real +1.334, shuffle mean +1.277, p95 +1.819) is
+unambiguous — the ER detector times trend/chop no better than random; the block-shuffled placebo did
+exactly its job (the gate 7 prior adaptive-timing attempts failed, now 8). S-2 and S-3 also fail.
+Dynamic switching correctly REJECTED.
+
+**My PIT flag (#2) was load-bearing and validated.** The shift removed a +0.40 Sharpe gap of pure
+bar-weights-itself look-ahead (LOOK-AHEAD +1.732 vs PIT +1.334); had the tilt used week-t's own ER it
+would have reported a fake +1.73 with APPARENT timing skill — exactly the manufactured skill the placebo
+is meant to expose. The mechanism (LAGGING detector — tilts to trend only after it's established)
+matches the flag; good that the gap was reported.
+
+**I OWN my specific S-2 mis-prediction.** I predicted "passes S-2 (beats static by dodging the 2025
+bleed), fails S-3." It FAILED S-2 too — switched DD-cut +3% vs static +28%, i.e. the dynamic tilt is
+WORSE than just holding both. My error: I assumed a lagging detector would at least be NEUTRAL (dodge
+the bleed as well as a fixed weight). It is worse-than-neutral — a lagging detector MISTIMES transitions
+(tilts to trend right as chop starts, to v4 right as the trend starts), actively adding noise vs the
+static blend. Instructive refinement of the lagging-detector point: lag doesn't just cost the early
+move, it INVERTS the tilt at transitions → dynamic < static. (S-3's drop-2026H1 −30% did confirm the
+mirage prediction.)
+
+Net: DEAD, cleanly — the 8th adaptive-timing failure and the cleanest (proper block-shuffled placebo).
+The within-crypto trend-diversification arc is now closed BOTH statically (DIV2-HE) and dynamically
+(SWITCH1); regime DETECTION does not work on this data (lagging label, IC R²≈0.005). Runway unchanged.
+Methodological keeper: the block-shuffled-regime placebo + reported look-ahead-vs-PIT gap is the cleanest
+adaptive-timing falsifier the program has — reuse it for any future timing claim.
