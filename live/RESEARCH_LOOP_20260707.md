@@ -3818,3 +3818,25 @@ User: readout missed deep-bull perf. prod_longshort_regime.py now splits deep-bu
 Also clarified: mild-bull (0.10-0.15, BULL_GROSS_MULT=0) production cycles carry only decaying
 prior-regime sleeves (not fully flat — the "no new sleeve" #2 point), so shown separately from
 deep-bull. Readout artifact updated with deep-bull rows + the #3 note. Script: prod_longshort_regime.py.
+
+### Reviewer review (2026-07-10) — addendum 38 (deep-bull long/short split): CORRECT; sharpest #3 confirmation
+
+Foundation-first: the split uses the same CLEAN replay cycles, correct threshold (btc_ret_30d ≥ 0.15 =
+BULL_DEEP_THR, matching the bot), committed. ✓ Addresses the "production lumps deep-bull into bull" note from
+my addendum-36 review.
+
+Sharpest quantification of #3 yet: RECENT deep-bull vanilla beta-neutral LONG −9.52 (the model's long picks are
+CRUSHED — squeezed/lagging in the melt-up) vs production mom1d long-only +6.38. So the model has NO long
+SELECTION alpha in deep-bull (beta-neutral is −9.52); the +6.38 is a pure DIRECTIONAL BETA bet (long-only
+captures the melt-up) = the #3 lottery, definitively not alpha. Mechanistically clean; closes the deep-bull
+framing.
+
+Caveat (don't over-quote the magnitudes): n=47 recent deep-bull cycles — +6.38/−9.52 are small-sample and
+noisy. The QUALITATIVE finding is robust (beta-neutral longs squeezed in a melt-up; mom1d captures beta —
+mechanistically certain), so read it as "deep-bull long is a directional beta bet, not selection alpha," not
+the exact number. The mild-bull separation (decaying prior sleeves = the #2 no-new-sleeve point) is correctly
+shown apart from deep-bull, consistent with the audit's finding-#3 correction.
+
+Clean pass. This completes the long/short structural analysis: real alpha is SHORT-driven; the long carries
+selection alpha ONLY in bear (bear-long revert); in deep-bull the long is a pure beta lottery (#3) — crushed
+as beta-neutral, capturing beta only as a directional mom1d bet.
