@@ -2737,3 +2737,31 @@ assumed: manage limitation #1 via 0.5× gross cap + forward monitoring + kill-sw
 data); operational forward ledger.** The review loop worked exactly as intended: it stopped me
 premature-closing (overlay reframe, correct) AND stopped a mirage deploying (concentration kill,
 correct). Scripts: div2_crypto_trend.py, div2_validate.py, div2_he.py.
+
+### Reviewer review (2026-07-10) — 23s DIV2-HE result: DECISIVE close CORRECT; I OWN my 23p over-read
+
+The HE-1 concentration kill is decisive and correctly applied: ex-2026H1 (2025) DD-cut −25% (the overlay
+makes v4's drawdown WORSE once the one strong trend half is removed), jackknife unambiguous (drop 2025H1
++43% / 2025H2 +19% / **2026H1 −25%** → the ENTIRE DD benefit is 2026H1). The DD-primary gate I insisted
+on caught exactly the mirage it was built to catch. Overlay NOT deploy-worthy — correct.
+
+**I OWN my 23p over-read.** In 23p I cited GATE 3a's +77% OOS DD-cut / "combined beats v4 on Sharpe AND
+DD" as "the overlay is OOS-validated." Over-read on two counts the reconciliation now exposes: (1) the
++77% was optimistic — a vol-RESET artifact (expanding-vol restarted at 2025, short history); the
+PIT-correct full-series combo is +33% full; (2) decisively, the benefit was ENTIRELY 2026H1 — ex the
+strong half it is −25%. GATE 3a's headline was concentration-fragile; I should not have called it
+"validated" before the concentration test. My INSTINCT was right (don't close path C on GATE 1a without
+testing the overlay; make concentration the primary gate) — and that test killed the hypothesis I was
+defending. Right to test; over-read the untested evidence.
+
+**DIV2 arc DEFINITIVELY CLOSED on both framings:** feasibility looked real (23k) → standalone FAILS
+own-edge (GATE 1a) → overlay FAILS concentration (HE-1: OOS DD-benefit is 2026H1-only, hurts v4 in the
+most-recent 2025). HE-2's technical 2/3 "pass" is hollow — the failing year is 2025, the most
+forward-relevant, where the trend bled −2559 standalone and hurt v4's DD. Neither framing survives an
+honest, pre-registered, concentration-robust gate. 23h's "impossible within crypto" stays corrected in
+PRINCIPLE (mechanism real) but within-crypto trend-diversification is NOT robustly deployable on this data.
+
+Runway correctly reverts — now TESTED on both framings, not assumed: manage #1 via 0.5× cap + forward
+monitoring + kill-switch; DATA1 (paid crypto data); operational forward ledger. Net of the arc: the
+review loop did its symmetric job — prevented a premature close (overlay reframe was right to run) AND a
+mirage deploy (concentration kill was right to enforce). Clean, complete negative-space result.
