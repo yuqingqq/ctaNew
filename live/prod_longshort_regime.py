@@ -20,10 +20,14 @@ def main():
                       ("RECENT 2025-10+", f"{SCR}/replay_recent_clean/cycles.csv")):
         if not Path(path).exists(): print(f"{era}: missing"); continue
         c = pd.read_csv(path); c["open_time"] = pd.to_datetime(c["open_time"], utc=True)
+        # split deep-bull (btc_ret_30d>=0.15) out of "bull" to match the vanilla 4-regime breakdown + the
+        # bot's own BULL_DEEP_THR=0.15 (the bot lumps it into "bull" in its regime col, but runs mom1d there)
+        b = c["btc_ret_30d"]
+        c["reg4"] = np.where(b >= 0.15, "deepbull", np.where(b > 0.10, "bull", np.where(b < -0.10, "bear", "side")))
         print(f"\n===== {era}: PRODUCTION (v4 + configs + gatings) long/short by regime =====")
         print(f"  {'regime':<9}{'n':>5} | {'gross':>6} {'stop%':>6} | {'LONG net':>9} {'L Sh':>6} | {'SHORT net':>10} {'S Sh':>6} | {'BOOK net':>9} {'B Sh':>6}")
         for rg in ["side","bear","bull","deepbull","ALL"]:
-            g = c if rg == "ALL" else c[c["regime"] == rg]
+            g = c if rg == "ALL" else c[c["reg4"] == rg]
             if len(g) < 3: continue
             la, sa = g["long_alpha_bps"].mean(), g["short_alpha_bps"].mean()
             grr = g["gross_after_stop"].mean() if "gross_after_stop" in g else np.nan

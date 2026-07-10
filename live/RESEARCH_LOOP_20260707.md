@@ -3805,3 +3805,16 @@ at vanilla +0.11 (~dead); the readout artifact callout is corrected too. Framing
 Clean pass — the whole-strategy structural picture is now internally consistent on clean data: real alpha is
 SHORT-driven, the long is a beta-hedge/lottery the overlays manage, and the gates' #1-handle is de-grossing
 losing regimes.
+
+### Addendum 38 (2026-07-10) — deep-bull long/short added (split from bull via btc_ret_30d)
+
+User: readout missed deep-bull perf. prod_longshort_regime.py now splits deep-bull (btc_ret_30d≥0.15,
+= BULL_DEEP_THR) out of the bot's lumped "bull" regime col. Deep-bull long/short (residual Sharpe):
+- **RECENT: vanilla beta-neutral LONG −9.52 (model longs CRUSHED in deep-bull squeeze) / SHORT +1.48 →
+  PRODUCTION mom1d LONG-only overlay +6.38 / no short, BOOK +7.04 (gross 0.43, n=47).** This is the #3
+  story made concrete: production abandons the failing beta-neutral book for a long-only momentum bet
+  that earns via directional BETA (the #3 lottery, n=47 tiny), NOT selection alpha.
+- **OOS: vanilla L+0.68/S−0.94 → production L+0.90/S+1.23, BOOK +1.17 (n=1381, modest).**
+Also clarified: mild-bull (0.10-0.15, BULL_GROSS_MULT=0) production cycles carry only decaying
+prior-regime sleeves (not fully flat — the "no new sleeve" #2 point), so shown separately from
+deep-bull. Readout artifact updated with deep-bull rows + the #3 note. Script: prod_longshort_regime.py.
