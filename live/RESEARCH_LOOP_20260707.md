@@ -3283,3 +3283,27 @@ Two forward flags:
 
 Clean pass on steps 2-3. Remaining (a-c) — prioritize (a-b) the recent clean rebuild + the +2.22 replay;
 that is the headline number.
+
+### Addendum 27 (2026-07-10) — REMEDIATION step 3 COMPLETE: full corrected per-regime table (clean + pinned cost)
+
+Recent clean books regenerated (gen_residual_target on clean panel → hl_tgt_res_{base,long}_cleanfix).
+Full committed attribution (live/attribution_v4_regime.py), both eras × 4 regimes, LEAKED vs CLEAN, at
+PINNED 0.5×9 cost. Residual-alpha Sharpe (v4 target):
+
+| regime | REC leaked→CLEAN | OOS leaked→CLEAN |
+|---|---|---|
+| side | +3.62 → **+3.55** | −0.71 → **−0.78** |
+| bear | −1.07 → **−1.29** | **+3.56 → +1.82** |
+| bull(mild) | +4.06 → **+3.95** (n=114) | −2.22 → **−2.37** |
+| deepbull | −4.67 → **−4.35** (n=47) | −0.73 → **−0.85** |
+
+**The contamination is almost ENTIRELY the OOS BEAR cell (+3.56→+1.82, ~halved) — the 2025-02-28 gap
+cycle.** Every other cell moves <0.25 Sharpe. RECENT is essentially unchanged (the 2026-06-04 gap ×174
+did NOT materially inflate recent — recent side/bull are genuine). vs the DOCUMENTED table (leaked +
+HALF cost): OOS bear +4.46 → **+1.82** (cost −0.9, label −1.74); REC side +4.09 → +3.55 (cost only).
+**Corrected conclusion: limitation #1 (era-dependent regime edges) SURVIVES qualitatively — side
++3.55 rec / −0.78 OOS, bull +3.95 rec / −2.37 OOS, bear −1.29 rec / +1.82 OOS — but the OOS bear
+anchor is a ~+1.8, not a ~+4.5.** Era-fragility is REAL and if anything the regimes are MORE uniformly
+era-split (no regime both-era positive still holds). Canonical +2.22 impact: recent (main driver)
+intact, OOS bear-farm halved → +2.22 likely drops modestly; §7 cap-release bar (bear-calibrated) must
+be re-set on clean bear ~+1.8. REMAINING: full-stack replay on clean books for the exact clean +2.22.

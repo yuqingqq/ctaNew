@@ -25,14 +25,14 @@ def btc_reg():
     b = b.drop_duplicates("open_time").sort_values("open_time").set_index("open_time")["close"]
     b4 = b[(b.index.hour % 4 == 0) & (b.index.minute == 0)]
     r30 = b4 / b4.shift(180) - 1
-    return {t: ("bull" if v > 0.10 else "bear" if v < -0.10 else "side") for t, v in r30.items() if np.isfinite(v)}
+    def rg(v): return "deepbull" if v >= 0.15 else "bull" if v > 0.10 else "bear" if v < -0.10 else "side"
+    return {t: rg(v) for t, v in r30.items() if np.isfinite(v)}
 
-def load(pfx):
+def load(basep, longp):
     def L(p):
         d = pd.read_parquet(D/f"{p}/v0full_hl60.parquet", columns=["symbol","open_time","pred","alpha_A","return_pct"])
         d["open_time"] = pd.to_datetime(d["open_time"], utc=True); return d
-    base = L(f"hl_v4base_oos{pfx}"); long = L(f"hl_v4long_oos{pfx}")
-    return base, long
+    return L(basep), L(longp)
 
 def attribute(base, long, reg):
     """per-cycle 1L/2S net (bps) in residual + naked frames, with pinned turnover cost, tagged by regime."""
@@ -65,17 +65,22 @@ def sh(x):  # daily-aggregate then annualize
 
 def main():
     reg = btc_reg()
-    for label, pfx in (("LEAKED (hl_v4base_oos)", ""), ("CLEAN  (_cleanfix)", "_cleanfix")):
-        base, long = load(pfx); df = attribute(base, long, reg)
-        S = sh(df)
-        print(f"\n===== {label}: OOS per-regime 1L/2S net, PINNED 0.5x9 cost =====")
-        print(f"  {'regime':<6} {'n':>5} | {'resid net':>10} {'resid Sh':>9} | {'naked net':>10} {'naked Sh':>9}")
-        for rg in ["side","bear","bull"]:
-            s = df[df.reg == rg]
-            if not len(s): continue
-            ss = sh(s)
-            print(f"  {rg:<6} {len(s):>5} | {s.net_resid.mean():>+10.1f} {ss['net_resid']:>+9.2f} | {s.net_naked.mean():>+10.1f} {ss['net_naked']:>+9.2f}")
-        print(f"  ALL    {len(df):>5} | {df.net_resid.mean():>+10.1f} {S['net_resid']:>+9.2f} | {df.net_naked.mean():>+10.1f} {S['net_naked']:>+9.2f}")
+    # (era, leaked base/long, clean base/long)
+    WINDOWS = [
+        ("OOS 2023-25",   "hl_v4base_oos",  "hl_v4long_oos",  "hl_v4base_oos_cleanfix",  "hl_v4long_oos_cleanfix"),
+        ("RECENT 2025-10+","hl_tgt_res_base","hl_tgt_res_long","hl_tgt_res_base_cleanfix","hl_tgt_res_long_cleanfix"),
+    ]
+    for era, lb, ll, cb, cl in WINDOWS:
+        for label, bp, lp in (("LEAKED", lb, ll), ("CLEAN ", cb, cl)):
+            base, long = load(bp, lp); df = attribute(base, long, reg); S = sh(df)
+            print(f"\n===== {era} / {label}: per-regime 1L/2S net, PINNED 0.5x9 cost (resid=v4 target, naked=realized) =====")
+            print(f"  {'regime':<9}{'n':>5} | {'resid net':>10} {'resid Sh':>9} | {'naked net':>10} {'naked Sh':>9}")
+            for rg in ["side","bear","bull","deepbull"]:
+                s = df[df.reg == rg]
+                if not len(s): continue
+                ss = sh(s)
+                print(f"  {rg:<9}{len(s):>5} | {s.net_resid.mean():>+10.1f} {ss['net_resid']:>+9.2f} | {s.net_naked.mean():>+10.1f} {ss['net_naked']:>+9.2f}")
+            print(f"  {'ALL':<9}{len(df):>5} | {df.net_resid.mean():>+10.1f} {S['net_resid']:>+9.2f} | {df.net_naked.mean():>+10.1f} {S['net_naked']:>+9.2f}")
     print("\nATTRIBDONE")
 
 if __name__ == "__main__":
