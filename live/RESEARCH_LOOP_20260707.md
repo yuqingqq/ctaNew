@@ -3916,3 +3916,21 @@ residual alpha). Reviewer guards (23ea0da) baked in. Binding pre-registration:
   Sharpe DESPITE losing them (if it needs the jackpots, they were worth their variance → keep baseline).
 - Book-level (vanilla frame) first; a full-stack replay is the deploy step IF it passes. W1b: no sweep.
 Script: live/lh1_shortonly_hedge.py. Running now (reviewer-blessed direction + guards).
+
+### Addendum 41 (2026-07-10) — LH1 RESULT: short-only+basket-hedge REJECTED (era-fragile; deepens #1)
+
+Ran lh1_shortonly_hedge.py (non-deep-bull book, residual net, pinned cost, both eras):
+- **RECENT: baseline +1.84 → treatment +2.77 (Δ +0.93), maxDD −8947→−8200.** Removing the recent long
+  lottery HELPS (alt-long recent residual +5.9 not worth its variance).
+- **OOS: baseline −0.85 → treatment −1.49 (Δ −0.63).** Removing the long HURTS OOS — because the long
+  CARRIES OOS (bear-long, addendum 35 +3.60): alt-long OOS residual **+2.5** vs basket-hedge OOS residual
+  **−3.9** (the alt-vs-BTC factor is negative OOS). So the hedge's own residual is era-dependent + the
+  alt-long is a real OOS carrier.
+- **GATE (≥ baseline BOTH eras): FAIL — one-era-only win (recent +0.93 / OOS −0.63) = ERA-FRAGILE →
+  REJECT** per pre-registration (W1b, no era-snooping; adopting = betting on the recent era = the #1 trap).
+**This DEEPENS #1:** the long leg is not uniformly dead weight — it's ERA-CONDITIONAL (dead lottery
+recent, live carrier OOS), so even the "obvious" construction fix (drop the lottery) is itself an era
+bet. The both-eras gate + estimator-law discipline (leg distribution MOTIVATES, book-level both-eras
+VERDICTS) worked exactly as designed — the leg-shape finding was real but did not survive the book-level
+era-robust test. **No adoption. v4 construction stays.** Reinforces: era-fragility pervades even the
+leg/hedge choice; the honest levers remain DATA1 (#4) + operational. Script: live/lh1_shortonly_hedge.py.
