@@ -4631,3 +4631,21 @@ episodes with consistent sign, it would be the first genuine edge/robustness imp
 first to beat the CI wall precisely because it is INPUT-CHANGING, not another re-slice. Correctly the free step
 before DATA1. When the fetch/rebuild/retrain lands, I will foundation-check it hardest: delisting identification,
 PIT-liquidity application, target_A spread preservation, the two execution bounds, and the per-episode + CI read.
+
+### Addendum 54b (2026-07-10) — decision-rule amendment (folds in reviewer cbf681b lumpy-CI calibration)
+
+Pre-registered BEFORE the run so results can't move the goalposts. Reviewer cbf681b's calibration: the recovered
+crash-edge is INHERENTLY LUMPY — crashes are rare and the survivor short-edge is already 90%-from-8-days (#50) —
+so the aggregate both-eras paired-CI will be WIDE on a few-dozen-episode series and can cross 0 EVEN FOR A REAL
+EDGE. Applying the smooth-delta CI veto (which correctly killed short-only/pred_disp) here would FALSE-REJECT.
+Refined acceptance rule, locked now:
+- **ACCEPT** iff ≥3 INDEPENDENT crowded→crash delisting episodes show CONSISTENT short-side sign, with ≥1 episode
+  in EACH era (recent + OOS), AND no single episode contributes >50% of the recovered short-edge.
+- The aggregate both-eras CI is REPORTED as a secondary read, NOT a hard veto (it can be wide for a real
+  rare-event edge). Per-episode table reported prominently.
+- **REJECT** if one episode dominates (>50% — false-accept, the short-only/pred_disp pattern) OR signs are
+  era-inconsistent OR <3 independent episodes clear the (b)-bound realistic-settlement haircut.
+Discriminator vs the killed re-slice tests: those had concentration WITHOUT a repeatable identifiable mechanism;
+the crash-edge has BOTH concentration AND mechanism (crowded → dump → delist). That is why a lumpy CI does not
+condemn it here and a mechanism-less lumpy delta was condemned there. This is the ONLY loosening of the CI wall in
+the session, justified by mechanism + multi-episode replication — never by the size of any single win.
