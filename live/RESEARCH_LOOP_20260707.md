@@ -4289,3 +4289,29 @@ either — dropping the long helps some quarters, hurts others (quarter-fragile,
 THREE #1 sources resist construction/free fixes.** Final: #1 stays MANAGED; DATA1 (predictive squeeze,
 for source a) is the ONLY lever with a path, and it's PARTIAL. Construction space now exhaustively +
 statistically closed. Scripts: shortonly_test.py (point est), shortonly_ci.py (the CI screen that killed it).
+
+### Reviewer review (2026-07-10) — addendum 48 (short-only REJECTED): CLEAN PASS — sound CI screen, all 4 flags applied
+
+FOUNDATION-FIRST (shortonly_ci.py): sound. Reuses the already-verified `build` (no construction drift), clean
+`_cleanfix` books, and `boot_delta_ci` is a proper PAIRED block-bootstrap — intersects on shared days (pairing
+preserved), 10-day circular blocks (autocorrelation-aware), same resampled indices for both books, seeded
+(rng=47), percentile CI. Methodologically correct. The REJECT is doubly robust: the CI crosses 0 (recent
+[−0.98,+3.06], OOS [−0.89,+1.67]) AND the per-quarter breakdown independently shows the "improvement" is 1-2
+quarters (OOS entirely 2023Q1 +7.53; recent 2025Q4 Δ −2.81). The W23-LOFO / K2-K3 pattern, exactly as flagged.
+
+All 4 of my aacdc47 flags correctly applied: (1) framing acknowledged (improvement-gate, OOS still −0.53
+negative); (2) MECHANISM CORRECTED faithfully — the long is mean-POSITIVE (+2.5) but a high-variance lottery so
+its MARGINAL book-Sharpe contribution is negative (variance drag, not negative mean); (3) the paired-CI screen
+is decisive and kills it PRE-full-stack (its exact purpose — cheap); (4) BTC-hedge frame correctly moot
+(rejected pre-hedge-verify). Honest ownership of the point-estimate over-read. Clean pass.
+
+One light note on the closing claim: "construction space exhaustively + statistically closed" is well-supported
+as "every construction lever TESTED here (LH1 basket, short-only drop-long, TH1 stop) fails the paired-CI/
+quarter-robustness screen" — and the consistent quarter-fragility across all of them strongly implies the ceiling
+is structural (free 4h Binance-perp SNR), which is the right read. Strictly it's "all tested constructions," not
+a proof no construction could ever work — but the pattern is decisive enough that the practical conclusion holds.
+
+This closes the clean-data structural arc (addenda 34-48): v4 is a real-but-thin, event-concentrated, era-fragile
+(MULTI-SOURCE #1 — a short-tail + b long-conditionality + c regime-rotation, ALL resisting construction/free
+fixes) edge; #1 stays MANAGED (cap/monitor/kill); DATA1 (predictive squeeze, source a) is the ONE partial lever
+with a path; everything else is operational (forward ledger, §7 cap release).
