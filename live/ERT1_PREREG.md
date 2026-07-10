@@ -32,22 +32,37 @@ gutting the aggregate edge.
   ERT (era-balanced), SAME harness, SAME folds.
 
 ## Pre-committed gates (2023-26 walk-forward; 2022 descriptive only)
-- **GATE E-1 (era-robustness — PRIMARY).** ERT's BOTTOM-QUARTILE-fold book rank-IC (the "bad eras")
-  improves vs baseline, AND ERT mean rank-IC ≥ baseline − 0.005 (bad eras get less bad WITHOUT
-  sacrificing the average). If the worst folds don't improve, the balancing didn't help #1 → FAIL.
-- **GATE E-2 (no edge degradation — SECONDARY).** ERT aggregate top/bot-20% selection spread ≥
-  baseline − 5% relative. If balancing FLATTENS the traded edge, FAIL (the flatten-risk kill).
-- **GATE E-3 (PLACEBO — decisive vs weight-noise).** Re-run with sample weights from SHUFFLED regime
-  labels (same weight distribution, regime→row assignment permuted), N≥20 shuffles. Real ERT's
-  bottom-quartile-fold IC gain must beat the p90 of the shuffled-regime placebos. If random-regime
-  balancing helps as much → the regime information is inert, effect is mere regularization → FAIL.
-- **CONCENTRATION:** report per-fold ΔIC (baseline→ERT); the E-1 improvement must not be one-fold-driven.
-- **2022 DESCRIPTIVE (not gated — spent holdout):** report both models' 2022 book rank-IC / per-regime
+**VERDICT METRIC = TRADED top/bot-20% SELECTION SPREAD, not rank-IC (review 984619c).** rank-IC has
+failed to convert to tip value 4× (W1/M1/pooled-Ridge) and §5 established era-fragility is TAIL/tip-
+driven, which full-cross-section rank-IC does not capture. So every improvement gate is on the traded
+selection spread; rank-IC is reported as a DIAGNOSTIC only, never gated.
+- **GATE E-1 (era-robustness — PRIMARY, on the TRADED edge).** ERT's BOTTOM-QUARTILE-fold top/bot-20%
+  selection SPREAD (the traded edge in the "bad eras") improves vs baseline. Does the TRADED edge
+  improve in bad folds — not just the ordering. If the worst folds' spread doesn't improve, ERT did not
+  reduce #1 → FAIL. (Also report bottom-fold traded-book tail: bot-20% CVaR5, since #1 is tail-driven.)
+- **GATE E-2 (no edge degradation — the flatten kill).** ERT MEAN top/bot-20% selection spread ≥
+  baseline − 5% relative. If balancing flattens the average traded edge to buy bad-fold robustness,
+  FAIL.
+- **GATE E-3 (PLACEBO — decisive vs weight-noise, on the SPREAD metric).** Re-run with sample weights
+  from SHUFFLED regime labels (same weight distribution, regime→row assignment permuted), N≥20
+  shuffles. Real ERT's bottom-fold SPREAD gain must beat the p90 of the shuffled-regime placebos. If
+  random-regime balancing lifts the bad-fold spread as much → regime info inert, effect is mere
+  regularization → FAIL.
+- **CONCENTRATION:** report per-fold Δspread (baseline→ERT); the E-1 gain must not be one-fold-driven.
+  NOTE: bottom-quartile ≈ 2-3 of the 2023-26 folds (thin sample) — the concentration check + E-3
+  placebo are what keep a 2-3-fold gain from being noise.
+- **2022 DESCRIPTIVE (not gated — spent holdout):** report both models' 2022 book spread / per-regime
   net as corroboration only. A 2022 improvement is suggestive, never a pass.
 
 ## Honest ceiling (stated before running)
-- Prior LOW-MODERATE. The truest test (2022) is spent, so a PASS = "more fold-robust in 2023-26 without
-  losing edge," a WEAKER claim than "fixes era-fragility." Era-balancing may still just trade breadth
+- Prior **LOW** (sharpened from low-moderate, review 984619c). MECHANISM MISMATCH: inverse-regime-freq
+  weighting fits the rare-regime conditional MEAN/ordering — which the model already gets roughly right
+  — whereas #1's binding failures are TAIL/cost-driven (§5: the MR mean holds in every regime; §1: the
+  2022 failure was cost-domination / dispersion-collapse, NOT a training-imbalance overfit). So ERT1
+  attacks the mean while #1 bites at the tails → even a 2023-26 fold-robustness PASS would NOT imply the
+  2022-TYPE mechanism is addressed.
+- The truest test (2022) is spent, so a PASS = "more fold-robust TRADED edge in 2023-26 without losing
+  average edge," a WEAKER claim than "fixes era-fragility." Era-balancing may still just trade breadth
   for a flatter, safer-but-thinner model.
 - PASS (E-1 ∧ E-2 ∧ E-3) = era-robust training carries real, non-random, non-concentrated robustness
   value → candidate for a full-stack replay + forward ledger (NOT an immediate production swap; the

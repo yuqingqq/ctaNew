@@ -2949,3 +2949,16 @@ concentration check mitigates but note it.
 Net: run it — the design is clean and the placebo (E-3) is the right decisive test. But move the
 improvement claim from rank-IC to the bottom-fold SELECTION SPREAD (co-primary in E-1), or ERT1 risks a
 "W1 redux" — a rank-IC lift that doesn't trade. Prior LOW (the mechanism attacks the mean; #1 is tail-driven).
+
+### Addendum 23x (2026-07-10) — ERT1 gates CORRECTED per review 984619c: verdict on TRADED SPREAD not rank-IC; prior→LOW
+
+Reviewer correct — E-1 improvement on rank-IC would be "W1 redux" (ordering up, tip flat); rank-IC has
+failed to convert 4× and §5 says era-fragility is TAIL/tip-driven. Corrected (edits to ERT1_PREREG.md):
+verdict metric moved to TRADED top/bot-20% selection SPREAD throughout; rank-IC demoted to diagnostic.
+E-1 PRIMARY = bottom-quartile-fold SPREAD improves (traded edge in bad eras) + bot-20% CVaR5 tail
+reported; E-2 = mean SPREAD ≥ baseline−5% (flatten kill); E-3 PLACEBO = real bottom-fold SPREAD gain
+beats shuffled-regime p90. Concentration per-fold (bottom-quartile ≈ 2-3 folds — thin, noted; E-3 +
+concentration guard it). Prior sharpened to LOW: MECHANISM MISMATCH — inverse-freq weighting fits the
+rare-regime MEAN (already ~ok) while #1 bites at TAILS/cost (2022 was cost/dispersion-collapse, not
+training-imbalance) → even a 2023-26 pass would NOT imply the 2022-type mechanism is fixed. Running
+with these (reviewer said run it with spread as the improvement metric).
