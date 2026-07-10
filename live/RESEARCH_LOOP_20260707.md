@@ -3307,3 +3307,30 @@ anchor is a ~+1.8, not a ~+4.5.** Era-fragility is REAL and if anything the regi
 era-split (no regime both-era positive still holds). Canonical +2.22 impact: recent (main driver)
 intact, OOS bear-farm halved → +2.22 likely drops modestly; §7 cap-release bar (bear-calibrated) must
 be re-set on clean bear ~+1.8. REMAINING: full-stack replay on clean books for the exact clean +2.22.
+
+### Reviewer review (2026-07-10) — remediation step 3 complete (recent clean books + full corrected table): CORRECT; my flag #1 resolves REASSURINGLY
+
+Foundation-first verified: RECENT books regenerated on the clean panel (gen_residual_target V4_PANEL=clean
+→ hl_tgt_res_*_cleanfix), and the committed attribution now compares LEAKED vs CLEAN for BOTH eras — so
+"recent unchanged" is backed by a real comparison, not asserted. ✓
+
+**My flag #1 (recent +2.22 exposure) resolves REASSURINGLY.** Recent is essentially unchanged — every
+recent cell moves <0.15 Sharpe (side +3.62→+3.55, bull +4.06→+3.95); only the OOS BEAR cell is material
+(+3.56→+1.82). Mechanism: the 2026-06-04 recent gap is 3 DAYS (vs the 22-day 2025-03-01 OOS gap), so its
+mislabel is far smaller and diluted over the 9-month recent window. Since the canonical +2.22 is the
+RECENT-window Sharpe (V4_PERFORMANCE §1: recent +2.23 / OOS −0.44 are separate), **the +2.22 headline is
+INTACT** — the leak did not inflate it. The flag prompted the check; the check clears the headline.
+
+**Limitation #1 confirmed on CLEAN data** (my earlier limitation review's core finding holds): side +3.55
+rec / −0.78 OOS, bull +3.95 rec / −2.37 OOS, bear −1.29 rec / +1.82 OOS — no regime both-era positive, if
+anything MORE uniformly era-split. Era-fragility is real; only the OOS bear ANCHOR halved (+1.8 not +4.5).
+
+Precision note on the remaining items: the OOS-bear halving makes the OOS GUARDRAIL slightly MORE negative
+(bear was the positive OOS anchor offsetting side/bull; halving it worsens the OOS total from −0.44) — but
+OOS was always a negative guardrail, so the deployment story is unchanged. The full-stack clean +2.22
+replay (item b) should confirm the recent headline ≈ intact; the §7 cap-release re-set (item c) is the real
+consequence — the bear farm it validates is ~+1.8, half the calibrated +4.5, so (per my earlier + reinforced
+flag) the release bar should be MORE conservative (≥2 distinct bear episodes / min cycle count).
+
+Clean pass on step 3. Recommend the full-stack clean +2.22 replay (item b) next to nail the exact headline,
+then the V4_LIMITATIONS/§7 corrections (item c).
