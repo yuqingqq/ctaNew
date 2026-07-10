@@ -30,22 +30,31 @@ FORWARD-only).**
 ## Phases, tests, and PRE-COMMITTED gates
 
 ### Phase 1 — the sleeve's OWN edge (the weak link). Gate = must pass to proceed.
-1a. **Per-period stability.** Split 2021-26 into disjoint half-year sub-periods; report standalone
-    net Sharpe per sub-period (2022 halves flagged as crisis).
-    - **GATE 1a:** non-2022 (i.e. choppy-regime) sub-periods — sleeve Sharpe ≥ 0 in ≥ 60% of them
-      AND aggregate non-2022 Sharpe ≥ 0 (the sleeve must NOT be a drag outside crisis; thin-positive
-      is acceptable, negative is not).
-1b. **Neighborhood robustness (NOT a sweep-to-pick).** Report Sharpe + v4-bad-week diversification
-    sign for lookback ∈ {250, 365, 500}d × vol ∈ {20, 30, 40}d (9 cells). Purpose: confirm the pinned
-    365/30 is not a knife-edge. **The pinned cell stays the headline no matter which cell is best.**
-    - **GATE 1b:** ≥ 7/9 neighborhood cells show the SAME SIGN of v4-bad-week diversification
-      (positive), AND pinned 365/30 standalone Sharpe is within [min, max] of the 9-cell band (not an
-      outlier high). If only 365/30 works, the result is knife-edge → FAIL.
+1a. **Per-period stability — isolate the CHOPPY regime (review c374622-#1).** Split into disjoint
+    half-year sub-periods; report standalone net Sharpe per sub-period. FIRST confirm the 365d warmup
+    excludes 2021 (trend PnL starts ~2022) so a trend-FAVORABLE bull cannot carry the gate; report the
+    trend-HOSTILE **choppy 2023-25 aggregate SEPARATELY as the primary read** (that is where the thin
+    +0.41 lives and the forward risk is). 2022 halves flagged as crisis, excluded from this gate.
+    - **GATE 1a:** choppy-2023-25 aggregate Sharpe ≥ 0 AND sleeve Sharpe ≥ 0 in ≥ 60% of non-2022
+      half-year sub-periods (the sleeve must NOT be a drag outside crisis; thin-positive OK, negative
+      not). If 2021 leaks in, re-report choppy-only.
+1b. **Neighborhood + cross-FAMILY robustness (NOT a sweep-to-pick; SANITY, do not over-read —
+    c374622-#3).** (i) lookback ∈ {250,365,500}d × vol ∈ {20,30,40}d (9 cells) — these are CORRELATED
+    slow-trend neighbors that agree by construction, so this only rules out a knife-edge, NOT family
+    robustness. (ii) Add ONE canonical DIFFERENT trend family — MA-crossover (50/200d golden/death
+    cross, same PIT + inverse-vol + cost) — pinned canonical, non-headline, to test whether the
+    diversification survives a genuinely different trend construction. **The pinned 365/30 TSMOM stays
+    the headline no matter which cell/family is best.**
+    - **GATE 1b (sanity, not strong-robustness):** ≥ 7/9 neighborhood cells same diversification SIGN
+      AND pinned 365/30 Sharpe within the 9-cell [min,max] (not outlier-high). Cross-family
+      MA-crossover reported as corroboration (same-sign diversification = genuine robustness; a miss
+      is noted, not fatal). Knife-edge (only 365/30 works) → FAIL.
 1c. **Turnover/cost realism.** Report mean annual turnover + cost drag as % of gross. Sanity only.
 
 ### Phase 2 — fast-crash stress (the known weakness). Report + size, no pass/fail.
 2a. **Identify fast-V-crash windows** by a pre-defined objective rule: any ISO-week with BTC 4h-close
-    return ≤ −15% followed by ≥ 50% retrace within 4 weeks. List the windows found.
+    return ≤ −15% followed by ≥ 50% retrace within 4 weeks. **Report the COUNT of windows found**
+    (c374622-minor): if 0-1, the ≤25% size cap is a PRIOR not a measurement — note the small sample.
 2b. Measure the sleeve's PnL and the COMBINED book's PnL vs v4-standalone inside those windows.
     - **Pre-committed read:** quantify the worst fast-crash whipsaw drag. If the combined book is
       WORSE than v4-standalone inside fast-crash windows, that is a material limitation → the sleeve
@@ -55,8 +64,11 @@ FORWARD-only).**
 ### Phase 3 — diversification re-confirm (downstream of Phase 1). Gate = the diversification claim.
 3a. **Temporal split.** Form the inverse-vol combination on 2023-24, confirm on 2025-26 (weighting is
     parameter-free PIT, so this tests temporal stability of the benefit, not a fit).
-    - **GATE 3a:** in the 2025-26 CONFIRMATION window, combined net Sharpe ≥ max(v4, trend) standalone
-      AND matched-vol maxDD cut > 0. If the diversification only exists in-form-period → FAIL.
+    - **GATE 3a (revised — c374622-#2, avoid false-fail of a DD diversifier):** a thin trend can LOWER
+      combined Sharpe below v4 in a v4-strong / trend-weak window while STILL cutting DD (the DIV1
+      DD-not-return lesson) — so the core claim is DD, not Sharpe-addition. **PRIMARY gate: matched-vol
+      maxDD cut > 0 in the 2025-26 confirmation window. SECONDARY: combined Sharpe ≥ v4 (not-worse; NOT
+      required to beat the thin trend standalone).** Fail only if the DD cut vanishes OOS.
 3b. **Single-episode honesty (stated, not gated):** the 2022 crisis DD cut is NOT re-confirmable OOS
     on this data (only one bear). Phase 3 validates the CHOPPY-regime diversification; the CRISIS
     diversification remains a forward claim.
@@ -66,8 +78,9 @@ FORWARD-only).**
 - combined-book overlay wiring into the paper harness (PIT inverse-vol, matched-vol sizing, the
   Phase-2 fast-crash size cap).
 - **Forward protocol** (crisis-validation is forward-only): live sleeve-PnL ledger, and KILL criteria
-  pre-committed here — retire the sleeve if (i) standalone rolling-26w Sharpe < −0.5, or (ii) the
-  v4-sleeve rolling-26w correlation drifts to > +0.3 for ≥ 8 consecutive weeks (diversification lost).
+  pre-committed here — retire the sleeve if (i) standalone rolling-**52w** Sharpe < −0.5 (52w not 26w:
+  a +0.41 sleeve's 26w Sharpe is too noisy → false kills — c374622-minor), or (ii) the v4-sleeve
+  rolling-26w correlation drifts to > +0.3 for ≥ 8 consecutive weeks (diversification lost).
 
 ## What a full PASS means (and does not)
 PASS (Phases 1+3 gates + Phase 2 sized) = "a canonical crypto-CTA sleeve has a real, stable,

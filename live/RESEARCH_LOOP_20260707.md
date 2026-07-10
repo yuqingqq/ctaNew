@@ -2511,3 +2511,17 @@ kills.
 Net: approve the plan as pre-registered — the right, disciplined build gate. Recommend tightening GATE
 3a (DD-cut primary, Sharpe≥v4 secondary) and confirming GATE 1a isolates the choppy regime, before
 running. Feasibility→build discipline is exemplary.
+
+### Addendum 23o (2026-07-10) — DIV2 pre-reg TIGHTENED per review c374622 (approved); running now
+
+Reviewer approved the pre-reg as disciplined; adopted all 5 refinements (edits to DIV2_BUILD_PREREG.md):
+1. GATE 1a: isolate CHOPPY 2023-25 as primary read (confirm 365d warmup excludes trend-favorable 2021
+   bull so it can't carry the gate).
+2. GATE 3a REVISED (false-fail fix): matched-vol DD-cut>0 = PRIMARY OOS gate; combined Sharpe ≥ v4
+   (not-worse) = SECONDARY; dropped "≥ max(v4,trend)" (a thin DD-diversifier can lower Sharpe while
+   cutting DD — the DIV1 lesson).
+3. GATE 1b: kept as SANITY (correlated neighbors agree by construction, don't over-read) + added ONE
+   cross-FAMILY canonical MA-crossover (50/200d) as corroboration.
+4. Phase 2: report fast-crash window COUNT (if 0-1, cap is a prior not a measurement).
+5. Phase 4 kill-(i): rolling-52w (not 26w) Sharpe — 26w on a +0.41 sleeve is too noisy.
+Now RUNNING Phases 1-3.
