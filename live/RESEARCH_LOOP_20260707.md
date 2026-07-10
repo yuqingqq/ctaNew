@@ -3743,3 +3743,19 @@ review (pre-gate-book vs production). Cleanly stated now. ✓
 Clean pass — a genuinely useful decomposition: it locates the edge (short leg, recent) and the risk (#4
 squeeze tail, same leg), the sharpest framing yet of both the alpha source and why DATA1 (surgical
 short-side squeeze data) is the binding lever.
+
+### Addendum 36 (2026-07-10) — PRODUCTION long/short by regime (v4 + configs + gatings) vs vanilla
+
+User: show long/short-by-regime for BOTH vanilla and v4+configs+gatings. Built prod_longshort_regime.py
+(committed) from the KEEPSET4 replay cycles (long_alpha_bps/short_alpha_bps/gross_after_stop/regime).
+Comparison (residual Sharpe):
+- **VANILLA (pre-gate):** recent SHORT-driven (side S+4.76/L+1.27, bull S+4.19/L+2.11; ALL L+0.11/S+2.86);
+  OOS bear LONG-driven (L+3.60/S−0.79).
+- **PRODUCTION (+configs+gatings):** recent ALL L+1.74/S+2.71 → BOOK +2.41; OOS ALL L+0.56/S+1.18 →
+  BOOK +0.20. **Two config effects made visible:** (1) REGIME_GATE DE-GROSSES losing regimes —
+  gross_after_stop: OOS side 0.66, OOS bull 0.15 (cut hard, both lose OOS) vs recent side 1.37 (full,
+  wins) — the direct #1-management lever (de-gross once a regime turns). (2) configs REVIVE the long leg
+  — vanilla recent long +0.11 (dead) → production +1.74 (inv_sqrt_vol sizing + BEAR_MODE=equal +
+  deep-bull mom1d LONG overlay put work back on the long side); short still leads (+2.71) but production
+  is far more two-sided. Note: production regime col lumps deep-bull into bull (bot uses side/bear/bull);
+  small-n bull mild+deep mix. Readout artifact updated. Script: live/prod_longshort_regime.py.
