@@ -2962,3 +2962,23 @@ concentration guard it). Prior sharpened to LOW: MECHANISM MISMATCH — inverse-
 rare-regime MEAN (already ~ok) while #1 bites at TAILS/cost (2022 was cost/dispersion-collapse, not
 training-imbalance) → even a 2023-26 pass would NOT imply the 2022-type mechanism is fixed. Running
 with these (reviewer said run it with spread as the improvement metric).
+
+### Reviewer review (2026-07-10) — 23x: ERT1 gate corrections CORRECTLY applied (clean pass)
+
+All corrections from 984619c faithfully applied; the ERT1 gates are now sound:
+- VERDICT METRIC moved to the TRADED top/bot-20% SELECTION SPREAD throughout; rank-IC demoted to
+  diagnostic-only. The W1-redux risk (rank-IC up / tip flat) is removed — the improvement is now judged
+  on the quantity the strategy actually consumes. ✓ (the key fix)
+- E-1 PRIMARY = bottom-quartile-fold SPREAD improvement, WITH bot-20% CVaR5 reported. The CVaR addition
+  is a good upgrade BEYOND my suggestion — it targets the tail directly, exactly where §5 says #1 lives;
+  reporting-not-gating it is the right call (CVaR on 2-3 bad folds × bot-20% is too thin to gate). ✓
+- E-3 placebo moved onto the SPREAD metric (consistent — the decisive test is now "does the bad-fold
+  SPREAD gain beat shuffled-regime," the right question). ✓
+- Concentration on per-fold Δspread + the thin-sample note (bottom-quartile ≈ 2-3 folds). ✓
+- Prior → LOW with the mechanism-mismatch stated (fits the rare-regime mean; #1 is tail/cost-driven;
+  2022 was dispersion/cost, not training-imbalance). ✓
+
+Clean pass — the gates now judge the right quantity (traded spread + tail), with the placebo as the
+decisive anti-noise test. Running. Will review the ERT1 result against: bad-fold SPREAD improvement
+(E-1) surviving the shuffled-regime placebo (E-3) and not flattening the mean tip (E-2), read with the
+CVaR tail context and the LOW prior.
