@@ -5017,3 +5017,30 @@ step, NO wasted large rebuild), and it yielded two REAL wins: (1) validated +2.3
 doubly-confirmed); (2) localized the censored crash-edge as VENUE-gated (abundant on Binance, unreachable on HL).**
 Free-data research is now comprehensively closed (construction/conditioning 34-49 + survivorship 53-58, all null);
 remaining levers are DATA1 (paid), execution-venue (out of scope), and operational (forward ledger, §7 cap).
+
+### Addendum 59 (2026-07-11) — CORRECTION to addendum 50: event-concentration is a LONG-leg artifact; SHORT is a steady grind
+
+Prompted by a sharp user question — does "90%-from-8-days" contradict the earlier "short leg grinds" conclusion?
+It does NOT; addendum 50's framing was imprecise, and I own it. `live/event_legsplit.py` decomposes the 1L/2S
+book into legs, both eras (residual bps, non-deep-bull, clean books):
+
+RECENT per-leg: LONG hit 45.3%, median **−18.4**, mean +5.9 (p95 +583); SHORT hit **57.6%**, median **+41.4**,
+mean +24.3 (p05 −646).
+- SHORT daily: **+43.4/day non-tail grind**, only 42% from top-8 → GRINDS UP (the real steady edge).
+- LONG daily: **−22.0/day non-tail bleed**, 221% of total from top-8 → tail LOTTERY (the beta hedge).
+OOS: SHORT median +21.3 but mean +2.2 (grind collapses under squeeze-tail drag, p05 −438); LONG median −10.6,
+tail-dependent. Both bleed daily gross → net-negative after cost (raw book loses OOS; regime gates salvage +0.20).
+
+**The correction:** addendum 50 read the BOOK-level daily net (90%-from-8-days) and attributed it to "idiosyncratic
+young-alt short crash-wins," implying the strategy's *edge* is event-driven / tail-dependent. The leg-split shows
+the opposite: the SHORT leg is a **steady daily grind** (57.6% hit, +41 median, +43/day) with tail upside on top;
+the LONG leg is the **tail-lottery** (45% hit, −18 median, bleeds −22/day, 221% concentrated). The book's
+event-concentration is largely a LONG-leg artifact plus both legs co-spiking on high-dispersion days — NOT evidence
+that the short alpha is event-driven. Prior conclusions "short side carries the alpha" (DDI 57.4%) and "long is a
+beta-hedge lottery, not an independent edge" are CONFIRMED; addendum 50 mis-stated them at book level. addendum
+50's raw FACTS stand (90%/8-days book concentration, driver names, winning-day dispersion 176-vs-153); only the
+interpretation is corrected.
+
+**Actionability unchanged:** events remain unpredictable in timing (weak 176-vs-153 signature), unconditionable
+(all CI-failed), both-tailed (need DATA1). The real risk surfaced is the **SHORT grind's ERA-FRAGILITY** — recent
++43/day collapses to a net daily bleed OOS under squeeze-tail drag — not event-dependence. Script: event_legsplit.py.
