@@ -5597,3 +5597,30 @@ opposite-signs to the mix of bugs (not "substantially path-coupled"). Reviewer 0
 41/42 folds — verified 3+ ways) that is era-fragile in PnL MAGNITUDE (recent ~10× OOS), with a path-coupled deployed
 Sharpe (range, not point), an unhedged short squeeze-tail, a lagging regime label, and a long-leg beta-hedge lottery.
 DATA1 is the one signal-side lever; live-forward the standing gap. Nothing overstated.
+
+### Reviewer review (2026-07-11) — addendum 65 (whole-strategy review + era-fragility rebalance): CLEAN PASS — well-calibrated; I own a framing miss in my 0b3f864 pass
+
+CONSTRUCTION-VERIFIED the rebalanced framing is correctly CALIBRATED (not over-corrected): #1 now leads "Era-fragility
+SURVIVES, but as MAGNITUDE not SIGN; the selection SKILL is era-stable" — rank-IC era-stable (+0.02-0.05 all 8 cells,
+both eras) BUT PnL monetization era-fragile: book sel-spread +2.59 recent → +0.92 OOS = 2.8× (verified), deployed
+~+2.1-2.5 → ~+0.2 = ~10× (verified 11×). The one-sentence + bottom-line carry the same dual framing. It does NOT swing
+to "era-robust" — the fragility PERSISTS (magnitude), only the opposite-SIGN MECHANISM was the bug-artifact (2× leg-cost
+#4 + row-regime #5 + path-coupling), and they confirmed side/bear positive both eras under BOTH sign conventions. The
+user also caught + fixed the honest_limitations.py sign bug (book = long+short, not long−short) mid-review via the
+negative-net/positive-rank-IC inconsistency. Independently verified: every number reproduces to the digit; the only
+flag was FRAMING, not fact.
+
+I OWN A FRAMING MISS: my 0b3f864 clean-pass accepted the #1 rewrite's optimistic LEAD (led with "era-STABLE",
+attributed the old opposite-signs to "substantially a path-coupled artifact") without flagging that it should
+FOREGROUND the SURVIVING magnitude-fragility. The facts were in my review (I quoted the deployed range ~+2.1-2.5/~+0.2
+= the ~10× fragility), so it wasn't a factual error — but I let the emphasis lean optimistic when it should have led
+"era-stable SKILL / era-fragile MAGNITUDE." The adversarial subagent caught the emphasis I passed; addendum 65 fixes
+it. Owned — a framing/emphasis miss, the subtlest class, and the right correction.
+
+Clean pass. The era-fragility framing is now honest on both ends: neither OVERstated (the old opposite-sign era-flip
+was a corrupted construction) nor UNDERstated (the fragility genuinely survives as ~2.8× book / ~10× deployed
+magnitude, driven by dispersion + regime-mix + path-coupling). Final whole-strategy verdict endorsed: a small GENUINE
+cross-sectional alpha (rank-IC ~+0.03, era-stable SKILL, leak-free, 41/42 folds, verified 3+ ways) that is era-fragile
+in PnL MAGNITUDE, with a path-coupled deployed Sharpe (range), an unhedged short squeeze-tail, a lagging regime label,
+and a long-leg beta-hedge lottery; DATA1 the one signal lever; live-forward the standing gap. Nothing overstated,
+nothing understated.
