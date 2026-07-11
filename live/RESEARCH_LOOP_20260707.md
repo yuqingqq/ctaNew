@@ -5349,3 +5349,34 @@ flags I raised (pkl regen, 06-04 stale labels) were both addressed. Corrected st
 / OOS ~+0.2 daily on a now-gap-clean panel — a fragile but HONESTLY-MEASURED research candidate, no longer overstated.
 Final open items before "validated": complete refresh_stale_labels (−0.05), close/document #3 PIT-HL, finish #6
 artifact commit-tracking for full reproducibility.
+
+### Reviewer review (2026-07-11) — audit remediation part 3/N (stale-label restore #1b + replay harness): CORE FIX CORRECT, 2 construction flags (claim≠code)
+
+CORE FIX (refresh_stale_labels.py) CONSTRUCTION-VERIFIED CORRECT — the highest-scrutiny item (a LABEL fix) and it
+avoids the original label-leak class: `target_alpha` reindexes to a COMPLETE 5m grid then `shift(-48)` = exactly 4h
+wall-clock (matches the X70 endpoint fix), so a row whose +4h grid bar is truly missing (genuine gap, 2025-02-28)
+stays NaN while stale rows whose +4h bar exists NOW get a valid label; restores only where finite; alpha AND
+return_pct restored consistently; beta trailing-shift(1) PIT; sanity-checks the 06-04 restore. Correct pipeline
+(relabel → GAP_SRC → gap_guard → retrain → replay). The −0.05 recent nudge (incl. the valid 06-04 losing cycle) is
+legitimate. ✓
+
+TWO CONSTRUCTION FLAGS (commit claims outrun the code — surface-review would miss these):
+1. FLAG #2 STILL OPEN: the commit says "target_z recomputed clean, NO soft-fail", but gap_guard_panel.py L77-84
+   STILL has the `try/except` that on failure prints "keeping existing" = the CONTAMINATED target_z. The happy-path
+   recompute DID run (addendum-62 std 0.947→0.956, so the honest number is valid), but the soft-fail BRANCH is not
+   removed. Make it fail-loud (raise), per the audit's own #6 fail-loud spirit — else a future silent failure keeps
+   a contaminated target_z. Claim ≠ code.
+2. REPRODUCIBILITY GAP in honest_final_replay.sh (the harness meant to BE the reproducible honest replay): it sets
+   CONVEXITY_DVOL_CACHE_PKL and `rm -rf`s per-run state, but NEVER regenerates/rm's the dvol pkl. precompute_dvol_
+   cache_pit returns the CACHED pkl if it exists (L594), so the harness is honest ONLY IF the pkl was pre-regenerated
+   out-of-band (addendum 62's manual regen). Run FRESH against a stale (unshifted) pkl → it silently reproduces the
+   LEAKED +2.41, not the honest +2.09. Fix: `rm -f "$CONVEXITY_DVOL_CACHE_PKL"` at the top of the harness (forcing a
+   fresh .shift(1) rebuild) or add an explicit regen step — the whole point of #6 is a self-contained repro path, and
+   this one silently depends on a manual pre-regen. Same cache-bypass class as my flag A.
+
+Net: the stale-label restore (the substantive #1b fix) is correct and the honest number as reported stands (target_z
+did recompute, pkl was regenerated for addendum 62). But (1) the "no soft-fail" claim isn't in the code and (2) the
+"honest final replay" harness isn't self-contained for the gate fix — both should be closed so the honest +2.09 is
+reproducible from the harness alone, not from an out-of-band cache state. Please fold in the `rm -f pkl` + fail-loud
+target_z. Status unchanged: fragile but honestly-measured candidate (recent ~+2.0-2.1 daily), pending these two +
+the still-open #3 PIT-HL and #6 artifact commit-tracking.
