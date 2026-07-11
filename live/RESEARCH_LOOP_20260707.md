@@ -4793,3 +4793,41 @@ Clean pass. This is the honest, well-gated scoping result the locked pre-reg was
 (delistings) is near-null in-window; the direction lives or dies on the panel-selection method (Channel B). No
 wasted downloads. Await the Explore verdict, then (a) Channel B fetch / (b) confirm Channel A fails / (c) null
 in-window.
+
+### Addendum 56 (2026-07-11) — Explore trace RESOLVES scoping: universe is a CURRENT-SURVIVOR snapshot (no PIT gate) → Channel B real + a SECOND bias
+
+Explore fully traced panel_expanded_v0_clean ← fix_panel_labels ← panel_expanded_v0 ← `X132_build_expanded_panel.py`.
+Verdict: the 175-symbol universe is a **static current-liquidity / survivor selection, NOT a per-bar PIT gate.**
+- X132 `build_universe()` (L65-70): static UNION of hl70 (currently-on-Hyperliquid flag, single HL day-vol/OI
+  snapshot) + addable (106 names ranked by CURRENT 24h dollar-volume, floored ~$5M/day) − TSTUSDT = 175.
+- Delisted names dropped AT SELECTION (`is_delisted` / `expired_at` filters in alpha_vBTC_check_universe.py).
+- Once selected, a symbol contributes ALL bars back to listing — NO per-bar volume/liquidity condition anywhere in
+  X132/X70/X31 (grep-confirmed volume_pit/trailing/eligib absent). A real PIT-vol system exists in-repo but feeds a
+  DIFFERENT panel (vBTC_features_expanded), not ours.
+
+**Resolves the scoping AND uncovers a second bias:**
+- **Bias 1 (survivor/current-selection → Channel B REAL):** in-window PIT-liquid names that crashed then faded
+  below the current gate (or delisted) are CENSORED (panel is a current snapshot) → short-crash edge understated,
+  as the reviewer argued. Channel B confirmed real.
+- **Bias 2 (NO per-bar PIT gate → possible Sharpe INFLATION):** selected names contribute ALL bars back to listing
+  with no liquidity condition, so the backtest can SELECT & TRADE a name during periods it was too illiquid to
+  realistically trade (pre-liquidity early history, low-volume stretches) → untradeable alpha counted as real → the
+  reported +2.30 may be OPTIMISTIC. Independent of the crash-edge; questions the headline number. (Partial
+  mitigant: the replay's depth-cost CSV penalizes thin names, but does not PREVENT selection of illiquid-period
+  bars, so it only dampens Bias 2.) Magnitude TBD.
+
+**Corrected test addresses BOTH via a PIT-universe rebuild:** define a per-bar trailing dollar-volume gate (~$5M
+floor to match current selection), apply historically → (a) include in-window liquid-then-faded/delisted names
+DURING their liquid periods (fixes Bias 1, recovers Channel B crash episodes), (b) DROP bars below the gate (fixes
+Bias 2). Re-measure. Bigger than the pre-registered delisting-fetch and CHANGES universe construction.
+
+**Staged to avoid a wasted large rebuild — step 1.5 = CHEAP sizing probe:** fetch 1d klines for the ~571 candidate
+names (557 still-trading + 14 in-window delisted), apply the PIT gate, find in-window censored-liquid names, count
+INDEPENDENT crash episodes (reviewer def #1). <3 independent in-window censored crashes → Channel B also can't
+clear the bar → null, cheaply, no retrain. ≥3 → full PIT-universe rebuild + retrain warranted. Bias 2 magnitude
+falls out of the same gate regardless.
+
+**Decision point (genuine re-scope):** the PIT-universe rebuild is a larger, universe-CHANGING undertaking than the
+greenlit delisting fetch, and Bias 2 is a material finding about the production number. Awaiting user steer before
+the sizing probe → rebuild. Reviewer offered an independent cross-check (scan in-panel symbols whose $vol collapsed
+pre-2026). Scripts: live/surv1_identify.py. No downloads beyond metadata yet.
