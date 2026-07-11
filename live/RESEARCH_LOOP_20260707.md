@@ -5394,3 +5394,26 @@ Still open from part 3 (unchanged): fail-loud target_z (gap_guard try/except sti
 pkl inside honest_final_replay.sh (else a stale pkl reproduces the leaked +2.41). This fold fix removes one more crash
 between "harness exists" and "harness reproduces +2.09 self-contained." Status: fragile but honestly-measured
 candidate (recent ~+2.0-2.1 daily), pending those + #3 PIT-HL + #6 artifact commit-tracking.
+
+### Reviewer review (2026-07-11) — audit remediation part 4/N (close my 2 construction flags): CLEAN PASS — both closed, code matches claim
+
+CONSTRUCTION-VERIFIED both flags are actually closed in the CODE (the part-3 lesson: I check code-vs-claim now):
+1. FAIL-LOUD target_z (my flag 2): the `try/except ... keeping existing` is fully REMOVED — build_target_z(clean)
+   runs unguarded, so a failure now PROPAGATES (crashes) rather than silently retaining contaminated target_z.
+   Verified: no `except`/`keeping existing` remains around L80. ✓
+2. SELF-CONTAINED pkl (my flag A / reproducibility): `rm -f "$CONVEXITY_DVOL_CACHE_PKL"` added (L23, after the export,
+   before the replay) → precompute_dvol_cache_pit rebuilds fresh with `.shift(1)`, so the harness reproduces the
+   HONEST +2.09, never silently inherits a stale (leaked) pkl. ✓
+
+Nice, correct closure — and this time the code matches the commit claim (contrast part 3). honest_final_replay.sh is
+now self-contained for books + pkl + gate given the panel: it regenerates the books (gen_residual_target/gen_oos_v4),
+force-rebuilds the shifted dvol pkl, and is fail-loud on every step.
+
+One minor repro note (not a flag): the harness assumes V4_PANEL (the gap-guarded + relabeled panel) already exists —
+it regenerates books/pkl but not the panel. So the FULL honest-number repro path is the 3 committed scripts in
+sequence: refresh_stale_labels.py → gap_guard_panel.py (GAP_SRC=relabeled) → honest_final_replay.sh. That is a
+committed, reproducible path (audit #6 largely satisfied for the pipeline); the residual #6 item is committing the
+large parquet ARTIFACTS themselves (gitignored) — honestly disclosed. Clean pass. Remaining before "validated": #3
+PIT Hyperliquid history (likely a documented free-data gap → Channel B disclosed-not-reproducible) + #6 artifact
+commit-tracking + #5 secondary off-default regime r30. Status: fragile but honestly-measured, now REPRODUCIBLE from
+the 3-script path (recent ~+2.0-2.1 daily).
