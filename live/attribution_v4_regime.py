@@ -24,7 +24,11 @@ def btc_reg():
     b["open_time"] = pd.to_datetime(b["open_time"], utc=True)
     b = b.drop_duplicates("open_time").sort_values("open_time").set_index("open_time")["close"]
     b4 = b[(b.index.hour % 4 == 0) & (b.index.minute == 0)]
-    r30 = b4 / b4.shift(180) - 1
+    # gap-safe (2026-07-11 audit #5): 30-DAY wall-clock lookback, not shift(180) ROWS. Row-based shift straddles
+    # the 2025-02-28 BTC 22d gap and mis-tags ~139 OOS cycles (0 recent). Reindex to a complete 4h grid so 180=30d.
+    _g = pd.date_range(b4.index.min(), b4.index.max(), freq="4h", tz="UTC")
+    b4g = b4.reindex(_g).ffill()
+    r30 = (b4g / b4g.shift(180) - 1).reindex(b4.index)
     def rg(v): return "deepbull" if v >= 0.15 else "bull" if v > 0.10 else "bear" if v < -0.10 else "side"
     return {t: rg(v) for t, v in r30.items() if np.isfinite(v)}
 

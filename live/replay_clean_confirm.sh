@@ -6,7 +6,8 @@
 # (both books are not-universe-cleaned, so the only difference is the 317 gap-label NaNs).
 set -e
 ROOT=/home/yuqing/ctaNew; export PYTHONPATH=$ROOT; cd "$ROOT"
-SCR=/tmp/claude-1001/-home-yuqing-ctaNew/ecbd8f4c-236c-426c-85e5-e1f6b6edd11d/scratchpad
+SCR="${REPLAY_SCRATCH:-$(mktemp -d)}"   # portable (audit #6): no hardcoded session path; override with REPLAY_SCRATCH
+echo "scratch dir: $SCR"
 # --- KEEPSET4 env (verbatim from run_convexity_v4_live.sh, GLOBAL_GROSS_MULT->1.0 parity) ---
 export COST_BPS_LEG=9 FEE_BPS_FILL=4.5 SIDE_MODE=default XS_LEAN=1 CONVEXITY_PIT_DVOL=1 CHARGE_FUNDING=1
 export DEPTH_COST_CSV=$ROOT/live/state/v3loop/persym_cost_cal.csv DEPTH_COST_TIER=cost_10k
@@ -28,7 +29,7 @@ run_one() {  # name base_dir long_dir from [end]
   export CONVEXITY_STATE=$SCR/replay_$name; rm -rf "$CONVEXITY_STATE"; mkdir -p "$CONVEXITY_STATE"
   local endarg=""; [ -n "$endd" ] && endarg="--replay-end $endd"
   echo "== replay $name ($base | from $fromd $endd) =="
-  python3 -m live.convexity_paper_bot --replay-from "$fromd" $endarg > "$SCR/replay_$name.log" 2>&1 || { echo "  FAILED (see log)"; tail -3 "$SCR/replay_$name.log"; return 0; }
+  python3 -m live.convexity_paper_bot --replay-from "$fromd" $endarg > "$SCR/replay_$name.log" 2>&1 || { echo "  FAILED (see log)"; tail -5 "$SCR/replay_$name.log"; return 1; }   # audit #6: FAIL LOUD (was return 0 -> swallowed crashes)
   echo "  done -> $CONVEXITY_STATE/cycles.csv"
 }
 

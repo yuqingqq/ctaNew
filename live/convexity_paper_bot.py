@@ -508,7 +508,13 @@ def compute_mom30_and_beta(syms: list[str], lookback_days: int | None = None) ->
 
 def compute_btc_30d() -> pd.Series:
     btc = load_close_4h("BTCUSDT")
-    return (btc/btc.shift(180)-1).rename("btc_ret_30d")
+    # gap-safe (2026-07-11 audit #5): 30-DAY wall-clock lookback, not shift(180) ROWS. btc is 4h bars with
+    # gaps (2025-02-28 22d BTC gap); row-based shift(180) spans up to 52d across it and mis-tags ~139 OOS
+    # cycles. Reindex to a complete 4h grid (ffill across gaps) so shift(180)=30d wall-clock, then map back.
+    if btc.empty: return btc.rename("btc_ret_30d")
+    _g = pd.date_range(btc.index.min(), btc.index.max(), freq="4h", tz="UTC")
+    bg = btc.reindex(_g).ffill()
+    return (bg/bg.shift(180)-1).reindex(btc.index).rename("btc_ret_30d")
 
 
 # =====================================================================
@@ -607,7 +613,11 @@ def precompute_dvol_cache_pit(syms: list[str], last_n_files: int | None = None) 
             df["open_time"] = pd.to_datetime(df["open_time"], utc=True)
             di = df.set_index("open_time")
             daily = (di["close"]*di["volume"]).resample("1D").sum()
-            trail = daily.rolling(30, min_periods=10).mean().dropna()   # mean daily $vol over trailing 30d
+            # PIT fix (2026-07-11 audit #2): .shift(1) so a cycle on day D sees $vol only THROUGH end-of-day
+            # D-1. resample("1D") stamps each COMPLETE day at 00:00, so eligible_universe_at's .asof(intraday-D)
+            # WITHOUT this shift returns same-day full-day volume = within-day look-ahead (~0.3 Sharpe inflation
+            # on recent, verified). Regenerate _dvol_cache.pkl after this change.
+            trail = daily.rolling(30, min_periods=10).mean().shift(1).dropna()  # trailing-30d mean, PRIOR completed day
             if len(trail): cache[sym] = trail
             # liveness (same pass): trailing fraction of FLAT days (daily close unchanged = halted/delisted)
             if LIVENESS_GATE:
