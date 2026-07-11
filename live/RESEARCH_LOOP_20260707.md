@@ -5072,3 +5072,28 @@ not the core, and Channel B was null regardless; (3) +2.30 / Bias-2 validation i
 unaffected. The reframed risk — the short grind's ERA-FRAGILITY (recent +43/day → OOS net bleed under squeeze-tail
 drag) rather than event-dependence — is consistent with #1 (era-fragility) + #4 (squeeze tail). Clean, correct
 self-correction; the ledger is now internally consistent (39/50/59 all agree: short grinds, long is the lottery).
+
+### Addendum 60 (2026-07-11) — user Q: can we DETECT the era-event and SWITCH to avoid the loss? Tested directly = NO (the detector is itself era-fragile)
+
+`live/event_switch_test.py`, raw 1L/2S daily book, both eras:
+**(1) Predict next-day book PnL from observable PIT state** (trailing-10d book, btc_ret_30d, btc_rvol_7d, xs-disp):
+RECENT combined OLS R²=**0.039**, sign hit 61% (weak, mostly btc_ret_30d Spearman +0.18); OOS R²=**0.0047**, sign hit
+**51% = coin flip**. The detector that has weak signal in recent is pure noise in OOS.
+**(2) Reactive switch rules** (go flat next day when detector says bad); raw-book baseline Sharpe RECENT +1.72 / OOS −0.86:
+
+| switch rule | RECENT | OOS | verdict |
+|---|---:|---:|---|
+| flat in bear (btc_ret_30d < −10%) | +2.54 | **−1.14** | helps recent, HURTS OOS (bear is the OOS profit center, #1) |
+| flat in high-vol (btc_rvol7 top-20%) | +2.56 | −0.78 | helps recent, ~nothing OOS |
+| flat after down-streak (trail-10d < 0) | +0.15 | −0.13 | DESTROYS the recent grind |
+
+No rule is positive in BOTH eras; the ones that dodge recent losses create/keep OOS losses.
+
+**Answer:** the era-fragility is DEEPER than "the edge flips by era" — the MAP from observable-event → good/bad ALSO
+flips. A switch tuned to avoid recent losses ("flat in bear") is exactly *wrong* for OOS (bear PAYS in OOS). So no
+fixed detector/switch generalizes — the concrete reason every prior conditioning attempt (era-robust training,
+regime-conditional feats, dispersion/vol/pred_disp, reactive stop) failed the both-eras CI. What production ALREADY
+HAS — the conservative regime gate (btc_ret_30d: bear→equal-weight, not flat) + DD-stop — salvages the raw OOS book
+−0.86 → the deployed +0.20; tuning it *more* aggressively is era-overfitting. The only escape is a detector whose
+relationship to the edge is STABLE across eras; none exists in free price/vol data (all flip) → DATA1 (positioning
+stress) is the open lever. Script: event_switch_test.py.
