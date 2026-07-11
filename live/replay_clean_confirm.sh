@@ -20,6 +20,7 @@ export BULL_MODE=default BULL_GROSS_MULT=0
 export BULL_DEEP_THR=0.15 BULL_DEEP_MODE=mom1d_long
 export GLOBAL_GROSS_MULT=1.0
 export CONVEXITY_DVOL_CACHE_PKL=$ROOT/live/state/v3loop/ddloop/_dvol_cache.pkl
+rm -f "$CONVEXITY_DVOL_CACHE_PKL"   # audit follow-up: self-contained — force a fresh .shift(1) rebuild, never trust a stale (possibly leaked) on-disk pkl
 # NB: do NOT set CONVEXITY_UNIVERSE_META -> defaults to PANEL (historical replay sees full universe)
 
 run_one() {  # name base_dir long_dir from [end]

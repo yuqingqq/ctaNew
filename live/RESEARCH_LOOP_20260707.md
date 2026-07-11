@@ -5481,3 +5481,36 @@ panel/books/pkl parquets gitignored → correctly-measured + pipeline-reproducib
 not fresh-clone reproducible until the binaries are tracked). Clean pass. The audit arc closes with an honest,
 robust, non-overstated verdict — a fragile but honestly-measured research candidate (book-level rank-IC +0.03 /
 deployed ~+2.1–2.5 recent / ~+0.2 OOS).
+
+### Addendum 64 (2026-07-11) — INDEPENDENT VERIFICATION of the remediation (3 adversarial subagents): HONEST + RELIABLE
+
+User asked to "review and ensure all are honest and reliable." Ran 3 adversarial subagents, each assuming the
+remediation is BROKEN until code+data prove otherwise. All three came back clean:
+
+**(A) Fixes real & active — all 5 VERIFIED-CORRECT, claim=code.** Gate `.shift(1)` present + the un-shifted path is
+inert (PIT_DVOL default "1", both configs pin it); deployed pkl independently recomputed from raw klines = shifted
+(114.07M). Regime grid-safe on all 3 production tag paths; the residual row-based shift(180) is REGIME_CAUSE
+(off-default, config-unset, live-guarded, sizing-only). Gap panel 1,057,502 rows, gap window clean, 06-04 valid.
+Stale-label restore grid-safe + proven by the data chain. Reporting fail-loud + self-contained harness.
+
+**(B) Numbers reproduce, NO LEAK, rank-IC STABLE.** book_level_honest.py reproduced to the digit (recent rank-IC
++0.0302, OOS +0.0238). Walk-forward is textbook: `exit_time` label-purge + 1-day embargo, per-fold RidgeCV, scaler
+fit on train only → preds genuinely OOS. All 14 features |IC| ≤ 0.064 (<0.10 look-ahead bar); model OOS IC < best
+feature IC (opposite of a leak). Stability: recent 9/9 months positive, OOS 32/33 folds positive, mild YoY decay
+all-positive = genuine WEAK alpha. 0.996 pred-corr reproduced (base 0.9961, long 0.9962) → the full-stack swing is
+pitfall-#4 path-coupling, not alpha.
+
+**(C) No remaining look-ahead / new bug.** Gap-guard W=7.5d covers the longest bounded feature (autocorr_pctile_7d
+7.13d); bars_since_high caught by the variable guard (verified algebraically, no false negatives); btc_ret_30d is a
+bot overlay not a panel column. No train/test/preproc leak; resid_rev/cost-CSV/inv_sqrt_vol all PIT. ONE LOW item:
+gap_guard recomputes target_z on the 4h-sampled panel (should be 5m) → corr 0.997, PIT-safe, and **target_z is
+VESTIGIAL** (verified: train_twobook L59 + gen scripts recompute their own target; nobody reads the panel's
+target_z) → zero material impact. Footgun: the un-shifted dvol path is behind CONVEXITY_PIT_DVOL (default "1", safe)
+— worth knowing but default-safe.
+
+**Follow-up applied:** `replay_clean_confirm.sh` now `rm -f`s the dvol pkl (self-contained, matches honest harness).
+
+**VERDICT: the honest result is genuinely honest and reliable.** The RELIABLE number is the book-level rank-IC
+(**+0.030 recent / +0.024 OOS**, no leak, persistent across 41/42 folds) — a small but genuine weak alpha. The
+full-stack Sharpe (~+2.1–2.5 / ~+0.2) is path-coupled/fragile and must be quoted as a RANGE, not performance.
+Nothing overstated; the one LOW item (vestigial target_z grid) has no impact.
