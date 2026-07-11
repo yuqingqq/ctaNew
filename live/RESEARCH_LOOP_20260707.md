@@ -5259,3 +5259,36 @@ This is part 1/N; the larger steps remain (timestamp-grid rebuild of every retur
 fix_panel_labels over-masking #1b, PIT Hyperliquid history #3/#4, retrain + BOOK-level replay #5). Will
 construction-verify each hardest as it lands. Status stays: fragile research candidate until the full rebuild +
 a reproducible, gate-regenerated, book-level number.
+
+### Reviewer review (2026-07-11) — audit remediation part 2/N (gap-guard panel, fix #1): CLEAN PASS — construction-verified COMPLETE + 2 flags
+
+Construction-verified (checked the actual windows, not the claim). gap_guard_panel.py is a principled, correct
+replacement for the over-masker: it keys on REAL 5-min raw-kline gaps (`gap_intervals` via >6min bar spacing), not
+panel row-spacing → restores the 175 valid labels (incl. the 174 at 2026-06-04, which were a cache-hole not a real
+kline gap) AND guards FEATURES not just labels. Handles all three cases: bounded trailing-window (W=7.5d), unbounded
+`bars_since_high` (run-length reaches back across gap-end g1), and BTC gaps UNIVERSE-WIDE (cross-features broadcast
+off BTC). Recomputes bars_since_high_xs_rank + target over clean survivors (correct per pitfall #5). Writes the same
+panel_expanded_v0_clean.parquet output → downstream retrain/replay picks it up.
+
+COVERAGE VERIFIED COMPLETE: I checked all 25 panel columns — the audit-flagged features are 288-bar (1-DAY) windows
+(corr_to_btc_1d, beta_1d, idio_vol_1d), idio_vol_1h (12-bar), and beta_to_btc_change_5d (~6d = 5d-diff of the 1d
+beta); the longest BOUNDED features are the 7d ones (autocorr_pctile_7d, funding_rate_z_7d, rvol_7d, btc_rvol_7d).
+W=7.5d covers the 7d max with 0.5d margin; NO panel feature exceeds 7.5d (the bot's 30d compute_mom30_and_beta is a
+separate OVERLAY, not a panel column). So the guard is complete for the panel's features. ✓
+
+Two flags:
+1. TARGET_Z SOFT-FAIL (contradicts the audit's fail-loud spirit): `build_target_z` is wrapped in try/except that on
+   failure "keeps existing" — i.e. the OLD target_z/rmean/rstd computed over the CONTAMINATED panel. Make it
+   fail-loud (the whole point is a clean target), and VERIFY build_target_z recomputes the per-symbol expanding
+   rmean/rstd normalization (not just target_z from stale rmean/rstd) — rmean/rstd are separate columns and if
+   they're expanding they're gap-sensitive.
+2. UPSTREAM CACHE HOLE IS A SEPARATE STEP (1b): the gap-guard is the DOWNSTREAM guard; it reads panel_expanded_v0
+   (SRC). If SRC has the upstream xs_feats cache-construction HOLE at 06-04 (the reason those rows were holey), the
+   restored 174 rows inherit whatever feature VALUES SRC holds there. The gap-guard correctly fixes over-masking +
+   row-based feature contamination, but the upstream xs_feats rebuild (regenerate SRC clean) is the complementary
+   step 1b — confirm the restored 06-04 feature values are real, not stale/NaN.
+
+Clean pass — the biggest audit finding (#1) is addressed correctly and I verified the W-coverage completeness across
+all columns (the construction-verify the audit taught me). Remaining: run gap_guard_panel.py to regenerate the clean
+panel + the _dvol_cache.pkl regen (part-1 flag) + the retrain/BOOK-level replay (#5) before any honest number. Still
+a fragile research candidate until the full rebuild produces a reproducible book-level result.
