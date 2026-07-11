@@ -1,5 +1,18 @@
 # Convexity v4 — performance tracker (CANONICAL, cleaned 2026-07-07)
 
+> **⚠️ AUDIT RETRACTION BANNER (2026-07-11) — READ FIRST.** The `+2.30` headline, the "clean > leaked 2.26" A/B,
+> the `+2.41` confirmatory, the `+0.20` OOS, and the **FULL-STACK per-regime Sharpes** in this file are **RETRACTED**.
+> A 6-finding external audit (`RESEARCH_LOOP_20260707.md` addenda 61-64, verified + remediated + 3-subagent
+> re-verified) found: (1) the liquidity gate had a **same-day-volume look-ahead** (~0.3 Sharpe, now fixed with
+> `.shift(1)`); (2) the "clean > leaked" A/B was an **over-mask + path-coupled artifact** — clean ≈ leaked; (3)
+> `+2.30` was a **CYCLE** Sharpe (deployed daily 2.195) carrying that look-ahead; (4) the full-stack per-regime
+> Sharpes are **path-coupled** (repo pitfall #4 — overlays amplify 0.4% pred noise ~10-20×), unreliable at this
+> precision. **The AUDITED-HONEST numbers live in `V4_LIMITATIONS_DIAGNOSIS.md`** (rewritten 2026-07-11): the
+> RELIABLE metric is book-level **rank-IC +0.030 recent / +0.024 OOS** (genuine *weak* alpha, no leak, positive in
+> 41/42 folds); the deployed full-stack is a path-coupled **RANGE ~+2.1-2.5 recent / ~+0.2 OOS**, not a performance
+> point. Everything below this banner is **pre-audit and overstated** — trust the honest doc, not these numbers.
+
+
 Single source of truth for the v3/v4 program's validated results. Mechanics reference:
 `CONVEXITY_V4_FLOW.md`. Methods log: `V4_REGIME_INVESTIGATION.md`. Review/intervention log:
 `ALPHA_TESTING_PLAN_REVIEW.md`. Full pre-cleanup history: git (this file was rewritten 2026-07-07 to

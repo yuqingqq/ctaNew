@@ -1,3 +1,8 @@
+> **AUDIT RETRACTION (2026-07-11):** the +2.30 headline and all FULL-STACK per-regime Sharpes referenced here are
+> RETRACTED (gate look-ahead + path-coupled pitfall #4). Audited-honest numbers: `V4_LIMITATIONS_DIAGNOSIS.md`
+> (book-level rank-IC +0.030/+0.024). The regime-conditional SIGN claims here are especially affected — book-level,
+> side/bear are positive in BOTH eras (not opposite-sign); only bull/deep-bull flip.
+>
 > **CORRECTIONS BANNER (2026-07-07)** — this is a chronological session log; the CANONICAL single-source-of-truth is
 > `V4_PERFORMANCE.md` (cleaned). Several verdicts here are superseded — each is now tagged INLINE with `[SUPERSEDED …]`
 > at its section (search the file). Summary of superseded items:
