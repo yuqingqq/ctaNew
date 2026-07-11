@@ -5228,3 +5228,34 @@ path-coupled full-stack; one Sharpe convention + a commit-tracked repro path + f
 Corrected status: honest recent ≈ Daily +2.09 / Cycle +2.20 gate-fixed, still on a CONTAMINATED panel and NOT a
 reproducible promotion → a FRAGILE RESEARCH CANDIDATE, not validated real-alpha. This is the right verdict; my prior
 clean-passes of Bias-2 and Channel-B were too credulous (surface- not construction-verified), and I own it.
+
+### Reviewer review (2026-07-11) — audit remediation part 1/N (point-fixes): CONSTRUCTION-VERIFIED CORRECT + 1 load-bearing flag
+
+Applied the upgraded construction-verify discipline (trace the actual series, not the claim). All three point-fixes
+are CORRECT:
+
+- FIX #2 (gate look-ahead — the one that retracted my Bias-2): `daily.rolling(30).mean().shift(1)` makes trail[D] =
+  mean over [D−30, D−1], so eligible_universe_at's `.asof(intraday-D)` now returns the PRIOR-completed-day value →
+  same-day leak removed. Verified the shift direction (value at D-1 moves to D). Genuinely fixes the ~0.3-Sharpe
+  leak. **LOAD-BEARING FLAG: the fix is INERT until `_dvol_cache.pkl` is regenerated.** The replay sets
+  CONVEXITY_DVOL_CACHE_PKL and precompute_dvol_cache_pit (L594) returns the CACHED dvol for full-history replay,
+  BYPASSING the rebuilt shifted series. The code comment flags "Regenerate _dvol_cache.pkl after this change" — that
+  regen (or deleting the stale pkl) is REQUIRED, else the replay still reads the old unshifted dvol and reports the
+  leaked +2.41/+2.54. Confirm regen is part of the remediation before quoting the honest +2.09/+2.20.
+
+- FIX #5a (regime wall-clock): correct and gap-safe — reindex to a complete 4h grid + ffill across gaps + shift(180)
+  ON THE GRID = true 30-day wall-clock (180×4h=720h), then map back to observed rows. ffill is the right choice (the
+  "price 30d ago" during a no-trade gap = last pre-gap price). Applied CONSISTENTLY in both `btc_reg`
+  (attribution) and `compute_mom30_and_beta` (bot) — the regime tag now matches across attribution and production.
+
+- FIX #6 (fail-loud + portable): `return 1` (was `return 0` swallowing crashes) + `SCR=${REPLAY_SCRATCH:-$(mktemp
+  -d)}` (was a hardcoded session-scratch path). Correct direction. Minor: confirm the CALLER propagates the
+  non-zero return (return 1 under set -e should exit the script; verify run_one isn't called inside a condition
+  that re-swallows it).
+
+Clean pass on the code — all three construction-verified. The single load-bearing item is the `_dvol_cache.pkl`
+regeneration for fix #2 (a cache-bypass that a surface-review would miss — exactly the class the audit flagged).
+This is part 1/N; the larger steps remain (timestamp-grid rebuild of every return + rolling feature per audit #1,
+fix_panel_labels over-masking #1b, PIT Hyperliquid history #3/#4, retrain + BOOK-level replay #5). Will
+construction-verify each hardest as it lands. Status stays: fragile research candidate until the full rebuild +
+a reproducible, gate-regenerated, book-level number.
