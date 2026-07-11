@@ -4870,3 +4870,39 @@ verify code layers before concluding: the liquidity gate lives at the TRADING la
 the +2.30 replay; Bias 2 is false and the +2.30 stands; the corrected direction is a universe-MEMBERSHIP expansion
 (add faded/delisted-pre-snapshot in-window-liquid names), not a from-scratch PIT rebuild, and the existing $3M PIT
 gate is the tool. Cheap probe first; likely small given step-1's ~2-4 in-window candidates.
+
+### Addendum 57 (2026-07-11) — Bias 2 QUANTIFIED = FALSE (user chose "quantify Bias 2 first"); footprint + reviewer code-read CONVERGE
+
+**Retraction I own:** addendum 56 claimed "no per-bar PIT gate → +2.30 may be OPTIMISTIC (Bias 2)." WRONG — I
+traced the panel-BUILD layer (correctly no gate there; it holds all bars for FEATURE computation) but the TRADING
+layer gates. `convexity_paper_bot.py::eligible_universe_at` (L532-563) rejects PER CYCLE: maturity<180d, dvol<$3M/day
+trailing-30d (PIT, honest, "validated 2026-06-01"), delisted/halted (liveness). `PIT_DVOL` default=1 and the +2.30
+replay explicitly sets `CONVEXITY_PIT_DVOL=1` (replay_clean_confirm.sh L11). **Bias 2 is FALSE — the +2.30 already
+gates illiquid bars and STANDS.** Reviewer c529d13 independently verified the same against the code. I retract
+"+2.30 may be optimistic."
+
+**Empirical footprint (`live/surv_bias2_footprint.py`) — confirms the gate MATTERS and that ungating WOULD inflate
+(with phantom alpha):** reconstruct raw ungated 1L/2S from the clean books, tag each leg by `dvol.asof(entry)` vs $3M:
+- OOS: 0.1% sub-gate (8 legs), Sharpe effect ~0.00 → gate immaterial; +0.20 not gate-sensitive.
+- RECENT: 4.5% sub-gate (211 legs) but 5× more profitable than liquid (+75.8 vs +15.5 bps/leg, short-heavy, 18.8%
+  of gross). Proxy-book Sharpe ungated +3.25 vs gated +2.70 → ungating would ADD +0.55. BUT that +0.55 is (a)
+  PHANTOM — residual-at-mid fills on $1-2M-dvol names DURING crashes (MEGA +2216bps@$2.0M, ARK +1117@$1.2M,
+  GRIFFAIN +1058@$2.6M, HMSTR +868@$2.0M — recent-froth crash-shorts); (b) CONCENTRATED (top-3 names MEGA/DOOD/
+  HMSTR = 44%, top-5 days = 35%); (c) recent-only/OOS-null. Exactly the untradeable phantom crash-alpha the gate
+  is designed to remove → **the gate is doing its job; the production number is honest-to-conservative, NOT inflated.**
+
+**Reviewer reframe of Channel B (accepted):** the per-cycle gate operates only on the static 175 → it gates OUT
+their illiquid bars but can't pull in out-of-universe names. Residual censoring = names that WERE $3M-liquid+mature
+in-window, crashed, then faded below the 2026 snapshot (or delisted-pre-snapshot) → out-of-universe → censored.
+Correct fix = EXPAND universe MEMBERSHIP to add those names; the EXISTING $3M PIT gate then trades only their
+liquid-period bars. NOT a from-scratch PIT rebuild (the honest PIT gate already exists, on by default).
+
+**Footprint PREDICTS Channel B is narrow/null:** the in-universe faded crash-shorts the gate removes are
+phantom-at-mid + concentrated + recent-only. The out-of-universe Channel B names are the SAME species (faded/
+delisted froth crash-shorts at marginal liquidity) → adding them would contribute similarly phantom/concentrated/
+recent-only crash-shorts → very likely fails the locked ≥3-independent-both-era + (b)-bound execution-realism bar.
+With step-1's ~2-4 in-window candidates → strong prior Channel B is a formal null.
+
+**Status:** Bias 2 (the user-prioritized headline-number question) = FALSE, answered — +2.30 is honest. Channel B
+is a cheap-to-formally-close thread (step-1.5 probe: existing $3M+maturity+liveness gate on the ~571 candidates,
+count independent in-window crashes), expectations low. Scripts: live/surv1_identify.py, live/surv_bias2_footprint.py.
