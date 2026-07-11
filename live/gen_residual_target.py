@@ -41,7 +41,7 @@ def gen(feats,tgt,outpath):
                 gte=te[te.symbol==sym]
                 if len(gte): rec.append(pd.DataFrame({"symbol":sym,"open_time":gte["open_time"].values,
                     "alpha_A":gte["alpha_vs_btc_realized"].values,"return_pct":gte["return_pct"].values,
-                    "exit_time":gte["exit_time"].values,"pred":m.predict(x6.apply_preproc(gte,feats,s,h))}))
+                    "exit_time":gte["exit_time"].values,"pred":m.predict(x6.apply_preproc(gte,feats,s,h)),"fold":i}))  # fold: bot reads it (L453); old _cleanfix book had it
             except Exception: pass
     out=pd.concat(rec,ignore_index=True)
     for c in ("open_time","exit_time"): out[c]=pd.to_datetime(out[c],utc=True)
