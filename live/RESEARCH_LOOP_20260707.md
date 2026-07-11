@@ -5453,3 +5453,31 @@ records — documented gap, not fabricated); #6 artifact commit-tracking PARTIAL
 honest number is correctly-measured but not yet fresh-clone reproducible). Status: **honestly-measured fragile
 research candidate — book-level alpha rank-IC +0.03 / deployed ~+2.1–2.5 recent (path-coupled) / ~+0.2 OOS**, no
 longer overstated, on gate-honest gap-clean data.
+
+### Reviewer review (2026-07-11) — addendum 63 (remediation COMPLETE, book-level honest result): CLEAN PASS — exemplary honesty, verified path-independent
+
+CONSTRUCTION-VERIFIED book_level_honest.py is genuinely PATH-INDEPENDENT: rank-IC = per-cycle spearmanr(pred,
+alpha_A); selection spread = raw 0.5·(top-1 long alpha) − 0.5·(bottom-2 short alpha) with NO DD-stop / regime gate /
+equity-path coupling. So it is the correct pitfall-#4-robust metric, and rank-IC +0.030 recent / +0.024 OOS
+(selection-spread +2.59 / +0.92 daily) is the honest alpha — UNCHANGED by the audit fixes (0.996 pred corr pre/post).
+
+This is a model of honest research and vindicates pitfall #4 a final time: the full-stack recent came out +2.45 (>
++2.09 on the old books), but the preds are 0.996-correlated, so the +0.36 swing is path-coupled amplification of a
+~0.4% pred delta through the DD-stop + regime-hysteresis — NOT a real alpha change. The user REFUSED to headline the
+higher +2.45, reported the robust book-level metric, and quotes the deployed figure as a RANGE (recent ~+2.1–2.5
+daily / OOS ~+0.2), not a point. Exactly the discipline the audit + CLAUDE.md prescribe. The overlays REDUCE the raw
++2.59 selection-spread to the deployed figure (risk controls, not alpha-additive) — consistent and honest.
+
+Final honest characterization (endorsed): real-but-THIN book-level alpha (rank-IC +0.03, consistent with the
+DDI IC-unpredictability R²≈0.005 and the whole session's thin-alpha finding), era-fragile (OOS rank-IC +0.024 /
+selection +0.92 weaker), deployed ~+2.1–2.5 recent (path-coupled range) / ~+0.2 OOS, on gate-honest gap-clean data,
+the 2026-06-04 valid losing cycle traded honestly (−1397 bps/6), the +329 A/B artifact gone. No longer overstated.
+
+Remediation COMPLETE (#1 gap-guard, #1b stale-label, #2 gate+cache, #5 regime, #6 fail-loud+self-contained) — all
+construction-verified across my reviews 7994757→73ffb66, and both my flags closed with code matching claim.
+Honestly-disclosed remaining: #3 PIT Hyperliquid history (external HL records → a DOCUMENTED free-data gap, Channel B
+disclosed-not-reproducible, correctly NOT claimed as established); #6 artifact commit-tracking PARTIAL (large
+panel/books/pkl parquets gitignored → correctly-measured + pipeline-reproducible from the 3 committed scripts, but
+not fresh-clone reproducible until the binaries are tracked). Clean pass. The audit arc closes with an honest,
+robust, non-overstated verdict — a fragile but honestly-measured research candidate (book-level rank-IC +0.03 /
+deployed ~+2.1–2.5 recent / ~+0.2 OOS).
