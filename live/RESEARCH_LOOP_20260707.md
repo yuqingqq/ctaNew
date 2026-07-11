@@ -5120,3 +5120,69 @@ price/vol) as the only open lever.
 Clean pass. Re-confirms the unconditionability from a new, direct angle (detect-and-switch), consistent with
 SWITCH1 (lagging detector worse-than-static) and addendum 49 (IC R²≈0.005). Free-data conditioning remains
 comprehensively closed; the production gate is the right conservative answer, not a starting point for tuning.
+
+### Addendum 61 (2026-07-11) — EXTERNAL AUDIT (6 findings) verified via 5 adversarial subagents: LARGELY CONFIRMED; major retractions
+
+A second external audit (6 findings) was checked by 5 independent subagents, each told to assume the auditor is
+RIGHT unless code/data refutes, re-running every quantified claim. Result: the auditor is **substantially correct**;
+several recent conclusions are RETRACTED. Per-finding:
+
+**#1 (Critical) — clean panel over-cleaned AND feature-gap-contaminated: CONFIRMED.** (a) X70 forward-return endpoint
+IS gap-safe (5-min grid reindex, L128-131) but beta/corr/idio-vol/beta-change roll over OBSERVED rows (`ci`, L98-109/120-122)
+→ still row-based, gap-contaminated. My label-fix patched only the endpoint. (b) `fix_panel_labels` over-masks: of 317
+NaN'd labels only **142 are corrupt, 175 VALID** — incl. all **174 rows at 2026-06-04 20:00** (label = gap-safe recompute
+to 3e-9); it keys on panel row-spacing, not real corruption (the 06-04 gap is an xs_feats cache-construction hole).
+(c) The +2.30>+2.26 A/B is **invalid**: the 06-04 cycle leaked −338.3 → clean −9.2 = **+329 bps exact** from dropping ONE
+VALID losing cycle; the rest is **path-coupled DD-stop bifurcation** (stop-engagement 43.8%→17.7%, 727/1601 cycles differ)
+= my OWN pitfall #4. Measured correctly at BOOK level: recent **clean ≈ leaked, slightly WORSE** (resid Sharpe +1.61 clean
+vs +1.68 leaked; side +3.55 vs +3.62). (d) Post-gap features survive UN-masked, contaminated up to **7.26 pp** on ETH.
+(Auditor nuance: the "+329 of +575=57%" mixes two replays — +329 is ~10% of the 174-sym +3367 delta — but the deeper
+pitfall-#4 point is confirmed and stronger.)
+
+**#2 (Critical) — "PIT-honest" liquidity gate uses same-day FUTURE volume: CONFIRMED.** Builder (L609-610) `resample("1D").sum()`
+→ `rolling(30).mean()` with NO `.shift(1)`, read via `.asof()` at intraday cycle time → every cycle on day D sees day D's
+COMPLETE volume (proven: 1000BONK Jan-15 00:00/08:00/20:00 all identical full-day value). Honest 1-day-shift fix: recent
+**Cycle 2.54→2.20, Daily 2.41→2.09, PnL −16%**, 65 selection changes; OOS ≈ unchanged. **Bias 2 = FALSE / "+2.30 gated-honest"
+is RETRACTED** — the gate itself leaks ~**+0.31–0.35 Sharpe** (auditor's ~0.44 mildly overstated — they effectively over-shifted ~1.5-2d).
+
+**#3 (Critical) — survivorship closure not reproducible: CONFIRMED.** `surv2_channelB.py` never loads the HL roster (prints
+`PASS→warrants retrain` on the full Binance set); the "100→1" collapse is **manual prose** (addendum 58) over **untracked scratch**
+(`all_hyperliquid.csv` gitignored, single stale 2026-05-09 snapshot, 0 delisted) with **NO PIT HL listing/delisting history**
+anywhere in production. **"venue-gated / Channel B formal null" RETRACTED as rigorously-established** (disclosed ≠ reproducible).
+
+**#4 (High) — leg attribution mixes economics: CONFIRMED (a-c exact) / PARTIAL (d).** Leg "net" fields are GROSS (no cost/funding
+allocated to legs, bot L1648); `longshort_regime.py` undercharges leg cost 2× (0.25× vs pinned 0.5×COST/unit-turn). Corrected leg
+Sharpes match auditor EXACTLY: recent long/short **−0.26/+2.52** (not +0.11/+2.86), OOS **−0.34/−0.78** (not +0.15/−0.32).
+Qualitative "recent short-driven, long is hedge" SURVIVES — BUT **short edge is RECENT-ONLY** (OOS short −0.78 is the WORST leg).
+(d) "deep-bull = pure beta" RETRACTED as worded (the +6.38 is a residual-frame number surviving residualization); the weaker
+"generic non-selective long exposure" survives via the separate Q3 placebo p=0.215; auditor's exact 31.08/29.09 didn't reproduce.
+
+**#5 (High) — negative cells justify non-adoption but not "statistical closure": MIXED.** (a) regime `btc_ret_30d` uses `shift(180)`
+ROWS not 30d wall-clock — **CONFIRMED bug**, but FAVORABLE: only bites at the one 22-day BTC gap → **139 OOS cycles flip** (auditor's
+~35 under-counted), **0 recent flips**; corrected OOS bear is STRONGER (+2.53 not +1.82), ALL unchanged. (b) `pred_disp_cond` slices
+an always-traded book + uses future-window (recent) terciles on OOS — **CONFIRMED look-ahead**. (c) th1 47-bar bug was ALREADY fixed
+(addendum 46) — **REFUTED as still-broken**; residual/book frame + stop-cost omitted (disclosed, conservative). (d) short-only "no
+BTC hedge" — **REFUTED as a bug** (valid by construction: target already BTC-residualized). **"free-data research statistically/
+exhaustively CLOSED" is OVERSTATED — CONFIRMED**; honest claim = "no free lever cleared the bar in the directions tried."
+
+**#6 (Medium) — reporting/promotion not commit-reproducible: CONFIRMED.** **+2.30 is a CYCLE Sharpe** (√(6·365)); the deployed run's
+**DAILY Sharpe is 2.195**; docs juxtapose +2.30 (cycle) with +2.41/+0.20 (daily, DIFFERENT book set) + daily per-regime cells as if
+interchangeable. `replay_clean_confirm.sh` swallows failures (`||{...;return 0}` under `set -e`) + hardcoded scratch path. Promoted
+artifacts (panel/books/state/dvol cache) all gitignored; commit cad80b6 touches 2 files → **+2.30 promotion not reproducible from repo**.
+
+**RETRACTIONS (own them):** (1) "clean panel measurably better / +2.30>+2.26" — invalid A/B (pitfall #4, one valid dropped cycle);
+(2) "Bias 2 FALSE / +2.30 gated-honest" — gate leaks ~0.3 Sharpe; (3) "venue-gated / Channel B null" — manual current-snapshot;
+(4) "deep-bull pure beta"; (5) "free-data research exhaustively/statistically closed". **Honest recent number ≈ Daily +2.09 / Cycle
++2.20 gate-fixed — but still ON A CONTAMINATED PANEL and NOT a valid promotion; treat as a fragile research candidate, NOT validated.**
+
+**SURVIVES (auditor concurs):** era-fragility (regime-fix makes OOS bear stronger, doesn't overturn), recent short-side concentration
+(recent-only), squeeze-tail risk, event concentration (leg-split addendum 59 stands), the deliberate bull refusal, the lagging
+regime classifier. And addenda 59/60 (short grinds / long lottery; detect-and-switch=NO) survive — they used the row-based regime tags
+but the RECENT window has 0 regime flips, and the leg-split is regime-agnostic within non-deep-bull.
+
+**REQUIRED REBUILD (auditor's next step, endorsed):** (1) timestamp-grid rebuild of EVERY return + rolling feature (beta/corr/idio-vol/
+beta-change) AND the `btc_ret_30d` regime — reindex to the 5-min wall-clock grid, not observed rows; (2) fix `fix_panel_labels` to
+rebuild-from-raw (or fix the upstream xs_feats cache holes) so no over-masking; (3) prior-completed-day liquidity gate (`.shift(1)` the
+daily dvol); (4) PIT Hyperliquid availability history (real per-cycle listing/delisting); (5) retrain + replay, measuring label/feature
+variants at BOOK level per pitfall #4 (NOT path-coupled full-stack); (6) reporting: one Sharpe convention (state cycle vs daily),
+commit-track a repro path, make `replay_clean_confirm.sh` fail loudly. Until then: fragile research candidate, not validated real-alpha.
