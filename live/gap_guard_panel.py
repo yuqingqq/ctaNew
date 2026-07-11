@@ -13,13 +13,14 @@ normalization (target_z, expanding) over the surviving rows. Writes panel_expand
 Keyed on real gaps (not panel spacing) -> restores the 175 valid labels fix_panel_labels wrongly masked, and
 masks FEATURES not just labels. Verified against audit #1.
 """
-import sys, glob
+import sys, glob, os
 from pathlib import Path
 import numpy as np, pandas as pd
 REPO = Path("/home/yuqing/ctaNew")
 sys.path.insert(0, str(REPO / "research/convexity_portable_2026-05-20/scripts"))
 KD = REPO / "data/ml/test/parquet/klines"
-SRC = REPO / "outputs/vBTC_features/panel_expanded_v0.parquet"
+# GAP_SRC override (audit #1b): consume the stale-label-refreshed panel so restored labels (e.g. 2026-06-04) survive
+SRC = Path(os.environ.get("GAP_SRC", str(REPO / "outputs/vBTC_features/panel_expanded_v0.parquet")))
 OUT = REPO / "outputs/vBTC_features/panel_expanded_v0_clean.parquet"
 W = pd.Timedelta(hours=180)        # 7.5d trailing-window guard (bounded features ~7d + margin)
 GAP = pd.Timedelta(minutes=6)      # >5min between consecutive 5m bars = missing bar(s)
