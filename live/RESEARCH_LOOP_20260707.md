@@ -4715,3 +4715,45 @@ vs the crash date) so "selected into the crash" is transparent, not asserted. Wi
 the bar is airtight. I will foundation-check the rebuild results against the full pre-reg (54/54b/54c) when they
 land — hardest on delisting identification, PIT-liquidity, target_A spread preservation, the (b)-bound haircut,
 and the ≥3-independent-model-selected-both-era episode count.
+
+### Addendum 55 (2026-07-11) — surv1 step-1 RESULTS: delisting identification (user go given) — Channel A near-empty; Channel B pivot
+
+Ran `live/surv1_identify.py` (metadata-only Vision listing pass, 24-way concurrent, monthly-1h primary + daily
+fallback) over the 585 never-fetched USDT perps. **Backtest trades 2023-01-01 onward** (OOS 2023-01→2025-09,
+RECENT 2025-10→2026-06; 2021-22 panel rows are TRAIN-only). This window fact is decisive.
+
+**Classification of the 585:** 28 TRUE delistings (last trade < 2026-05), 557 still-trading-but-below-our-gate
+(data EXISTS on Vision — e.g. FTTUSDT trades through 2026-06; it's absent from our panel because FTT went ILLIQUID
+post-FTX, NOT because it delisted). My addendum-54 "FTTUSDT canonical delisting" example was WRONG on the facts —
+the FTX-token perp never delisted; SRMUSDT (2024-05) is the real FTX-ecosystem delisting.
+
+**The 28 delistings decompose badly for Channel A (delistings = the pre-registered scope):**
+- 12 PRE-WINDOW (last trade < 2023-01): crash predates the trading window → UNRECOVERABLE regardless of
+  survivorship. Includes LUNAUSDT (2022-05, the reviewer's canonical cascade), BZRX, BTT, AKRO, DODO, KEEP, NU,
+  YFII, LEND, ANC. The violent 2022 crashes are simply out of our backtest.
+- 2 REBRANDS (ticker migration, not crashes): MATICUSDT→POL, RNDRUSDT→RENDER. Likely 2 more (EOSUSDT→"A"/Vaulta
+  2025-05, GALUSDT→G 2024-07) — to verify.
+- 14 in-window non-rebrand, BUT **10 of them delisted in the single 2024-05 Binance administrative batch** (ANT,
+  AUDIO, BLUEBIRD, BTS, COCOS, FOOTBALL, HNT, MBL, SRM, TOMO) = ONE co-triggered housekeeping event (reviewer
+  def #1 → counts as ~one, not ten), and mostly OLD 2020-21 listings that were zombie-volume by 2023 (their real
+  moves were the out-of-window 2022 bear; 2024-05 is just when Binance swept the dust). Remainder: GAL 2024-07,
+  FRONT 2024-09, EOS 2025-05, BDXN 2026-03 (10-mo life).
+
+**Finding: Channel A (delistings) cannot plausibly clear the ≥3-INDEPENDENT-in-window-model-selected-crash bar.**
+Genuinely-independent, in-window, plausibly-crash-driven candidates collapse to ~2-4 (FRONT, BDXN, maybe 1-2
+cluster names IF PIT-liquid+crashed in-window). The big crowded→crash cascades are out of window; the in-window
+delistings are one administrative sweep of already-dead zombies. This is an honest step-1 result BEFORE the fetch:
+the pre-registered delisting rebuild is looking for the crash-edge in the wrong place.
+
+**The FTTUSDT reframe → Channel B.** Violent crowded→crash episodes tend to FADE to illiquidity, not delist (perp
+keeps trading). So the real in-window censored-crash channel is **Channel B: names that were PIT-liquid & in-universe
+during 2023-2026, crashed hard, then faded below the current gate — censored from the survivor panel IFF the panel
+is current-liquidity-selected (174/175 reach panel-end → strong prior it is).** If instead the panel applies a
+proper PER-BAR PIT liquidity gate, faded names' liquid periods are ALREADY included → no in-window censored channel
+at all → the survivorship direction is null in-window (only the out-of-window 2022 crashes are censored).
+
+**PENDING (blocking the scoping call):** Explore agent tracing the panel's symbol-selection method
+(current-selection vs per-bar PIT). That single fact decides between: (a) pivot to Channel B (correct, larger
+scope — fetch in-window-liquid-but-faded names), (b) formally confirm Channel A fails (cheap, ~14 names), or
+(c) null in-window conclusion (if panel is proper-PIT). Scripts: live/surv1_identify.py; tables in scratchpad
+(delisted_table.csv). No kline downloads yet — correctly gated on this scoping decision.
