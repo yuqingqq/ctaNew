@@ -5044,3 +5044,31 @@ interpretation is corrected.
 **Actionability unchanged:** events remain unpredictable in timing (weak 176-vs-153 signature), unconditionable
 (all CI-failed), both-tailed (need DATA1). The real risk surfaced is the **SHORT grind's ERA-FRAGILITY** — recent
 +43/day collapses to a net daily bleed OOS under squeeze-tail drag — not event-dependence. Script: event_legsplit.py.
+
+### Reviewer review (2026-07-11) — addendum 59 (correction to addendum 50): CORRECT + I OWN a 50-review miss
+
+FOUNDATION-VERIFIED event_legsplit.py: correct leg decomposition (top-1 long-pred / bottom-2 short-pred, WL=WS=0.5,
+clean `_cleanfix` books, non-deep-bull, residual bps). The leg stats are unambiguous and cross-consistent: SHORT
+57.6% hit / median +41.4 / +43/day non-tail grind / only 42% from top-8 = STEADY GRIND; LONG 45.3% hit / median
+−18.4 / −22/day bleed / 221% from top-8 = TAIL-LOTTERY. Decisive cross-check: these MATCH addendum 39's leg
+distribution that I clean-passed (long median −19.5, short median +43.3) — so 59 is right and addendum 50's
+book-level attribution was the outlier. The correction is sound: the book's 90%/8-days concentration is a LONG-leg
+artifact (+ both legs co-spiking on high-dispersion days), NOT the short being event-driven; "short carries the
+alpha / long is a beta-hedge lottery" (DDI-2, addendum 39) is CONFIRMED.
+
+I OWN A MISS in my addendum-50 clean-pass (d1b4274). I verified the short-crash DRIVER NAMES were real
+(S.nsmallest(2,alpha_A) = crashed alt = short win) — correct — but I accepted the book-level interpretation "the
+edge is idiosyncratic short-crash events" WITHOUT demanding a per-leg PnL split, and I did NOT flag that this
+book-level short-attribution was in TENSION with addendum 39's leg-level finding (long=median-neg lottery,
+short=median-pos grinder) that I had clean-passed 20 addenda earlier. The leg-split resolves it: the concentrated
+top-day PnL is LONG-lottery-driven (221% from top-8); the short is a grind (42%). My 50 pass verified the facts but
+missed the attribution — exactly the "measure at leg level, not book level" rigor I applied elsewhere. The user's
+sharp question surfaced the tension I should have raised. Owned.
+
+Scope of impact (does NOT cascade): (1) addendum 50's raw FACTS stand (90%/8-days book concentration, driver
+names, 176-vs-153 dispersion) — only the interpretation is corrected; (2) the SURVIVORSHIP null is UNAFFECTED and
+arguably less consequential — the short's edge is a broad GRIND, so the censored short-crash-WINS were tail-upside,
+not the core, and Channel B was null regardless; (3) +2.30 / Bias-2 validation is independent (liquidity gate),
+unaffected. The reframed risk — the short grind's ERA-FRAGILITY (recent +43/day → OOS net bleed under squeeze-tail
+drag) rather than event-dependence — is consistent with #1 (era-fragility) + #4 (squeeze tail). Clean, correct
+self-correction; the ledger is now internally consistent (39/50/59 all agree: short grinds, long is the lottery).
