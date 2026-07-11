@@ -5540,3 +5540,32 @@ Sharpe (~+2.1–2.5 / ~+0.2) is path-coupled and must be quoted as a RANGE, not 
 the audit → remediation → independent-verification arc: the strategy is a fragile but HONESTLY-MEASURED, LEAK-CHECKED,
 PIPELINE-REPRODUCIBLE weak-alpha research candidate, no longer overstated. Remaining (disclosed, non-material to the
 verdict): #3 PIT-HL documented free-data gap; #6 large-artifact commit-tracking.
+
+### Reviewer review (2026-07-11) — docs rewrite on AUDITED-HONEST numbers (V4_LIMITATIONS + retraction banners): CLEAN PASS — complete + honest
+
+Verified all three docs are consistent with the audited-honest + independently-verified state:
+- V4_LIMITATIONS_DIAGNOSIS.md rewritten correctly: retraction banner + a pitfall-#4 measurement-discipline section;
+  RELIABLE metric = book-level rank-IC +0.030 recent / +0.024 OOS (MATCHES book_level_honest.py, verified); full-stack
+  quoted as a path-coupled RANGE ~+2.1-2.5 / ~+0.2 with +2.30 explicitly RETRACTED and cycle-vs-daily stated. The
+  limitations are re-characterized honestly: #1 SOFTENED (the alpha/rank-IC is era-STABLE +0.02-0.05 across every
+  regime + both eras; side/bear are NOT opposite-sign — that was the path-coupled full-stack artifact; only bull/
+  deep-bull flip, and those are gated); #3 CORRECTED (deep-bull NOT pure beta — survives residualization); #5
+  CORRECTED (event-concentration is the LONG-leg lottery, not the short edge — addendum 59). Exemplary bottom line
+  (reliable = rank-IC ~+0.03; deployed = fragile range; nothing overstated).
+- CONSTRUCTION-VERIFIED the generator: honest_limitations.py computes 0.5·la + 0.5·mean(sl) with NO cost term → the
+  leg/per-regime selection-spreads are GROSS residual book-alpha (matching book_level_honest.py), the correct
+  book-level metric — NOT the audit's net leg Sharpes, so no 0.25×-undercharge issue. It also FIXED a sign bug (book
+  = long+short PnL ADDED, since sl is already −alpha; "earlier version subtracted = bug"); the doc is on the fixed
+  version. (Minor label nicety: these are gross-of-cost too, not just pre-overlays; the RELIABLE-vs-deployed split
+  conveys it.)
+- V4_PERFORMANCE.md + V4_REGIME_INVESTIGATION.md now carry prominent "READ FIRST" RETRACTION BANNERS: retract +2.30
+  / the clean>leaked A/B / +2.41 / +0.20 / the full-stack per-regime Sharpes, explain the 4 audit findings + pitfall
+  #4, point to the honest doc, and mark below-banner numbers pre-audit/overstated. V4_REGIME correctly flags the
+  opposite-sign regime claims are corrected. This closes the long-standing V4_PERFORMANCE headline-hygiene item.
+
+Clean pass. Every number is on the audited-honest artifacts, no superseded +2.30-as-validated survives, the
+retractions are prominent, and the reliable statement (rank-IC ~+0.03) is clear. This COMPLETES the arc:
+over-credited → externally audited (my Bias-2/Channel-B/exhaustively-closed clean-passes retracted, owned) →
+remediated (construction-verified) → independently re-verified → now DOCUMENTED honestly across all authoritative
+docs. Final honest verdict stands: a small but genuine, leak-free, era-stable weak alpha (rank-IC ~+0.03); deployed
+Sharpe a fragile path-coupled range; DATA1 the one signal-side lever; live-forward the standing gap.
