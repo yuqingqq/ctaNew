@@ -1,4 +1,10 @@
-"""Audit fix (2026-07-10): surgically NaN gap-crossing forward labels in the deployable panel.
+"""DEPRECATED (2026-07-11 audit #1) — SUPERSEDED by live/gap_guard_panel.py. This script OVER-MASKED 175
+VALID labels (incl. all 174 at 2026-06-04) because it keyed on PANEL row-spacing (a construction artifact),
+not real raw-kline gaps, and masked only LABELS (leaving row-based FEATURES gap-contaminated). Use
+gap_guard_panel.py, which keys on real 5-min gaps and guards features+labels+cross-sectional/target recompute.
+
+--- original docstring ---
+Audit fix (2026-07-10): surgically NaN gap-crossing forward labels in the deployable panel.
 
 The X70/X132 panel's forward return used row-based .shift(-48) while exit_time = open_time+4h, so at
 data gaps a "4h" label became a multi-week return (corrupt label + defeated purge -> leak). This is
