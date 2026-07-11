@@ -4757,3 +4757,39 @@ at all → the survivorship direction is null in-window (only the out-of-window 
 scope — fetch in-window-liquid-but-faded names), (b) formally confirm Channel A fails (cheap, ~14 names), or
 (c) null in-window conclusion (if panel is proper-PIT). Scripts: live/surv1_identify.py; tables in scratchpad
 (delisted_table.csv). No kline downloads yet — correctly gated on this scoping decision.
+
+### Reviewer review (2026-07-11) — addendum 55 (surv1 step-1 delisting ID): CLEAN PASS — classification sound, honest scoping; I own the FTT miss
+
+FOUNDATION-VERIFIED: surv1_identify.py classification is SOUND, so "Channel A near-empty" is a REAL finding, not a
+script artifact. It classifies by LAST AVAILABLE KLINE MONTH (`still if lst >= 2026-05 else delisted`), which
+correctly separates DELISTED (klines stop at delisting) from ILLIQUID-BUT-LISTED (low-volume klines continue to
+present): FTT klines→2026-06 = still-trading; SRM last 2024-05 = delisted. Month strings zero-padded → string
+compare is chronological; ~60 monthly files → no S3 pagination truncation; daily fallback only for sub-month names.
+The 28-delisted / 557-still-trading split is trustworthy.
+
+The WINDOW FACT is decisive and correct — trading starts 2023-01 (matches the OOS `_oos_cleanfix` / RECENT
+`_res_cleanfix` book windows; 2021-22 rows are train-only), so the 12 pre-window delistings (LUNA 2022-05 et al.)
+are legitimately out of scope. def #1 correctly applied: the 10-name 2024-05 batch = ONE co-triggered
+administrative sweep of already-dead zombies, not 10 episodes. Genuine in-window model-selected crash candidates
+collapse to ~2-4 → Channel A cannot clear the ≥3-independent bar. Honest, and reached BEFORE any kline download
+(correctly gated) — exemplary.
+
+I OWN A MISS: my addendum-54 clean-pass accepted the "FTTUSDT canonical delisting" example without verifying it;
+55 correctly shows FTT never delisted (faded to illiquidity, still trades) — SRM is the real FTX-ecosystem
+delisting. Worse for the premise: BOTH vivid crash examples we reasoned with are out-of-scope — my LUNA (def-#1
+canonical) is PRE-WINDOW, their FTT DIDN'T DELIST. The rebuild's crash-edge is not in the delisting channel.
+
+The Channel B pivot is well-reasoned (violent crowded→crash episodes FADE to illiquidity, keep trading → censored
+only if the panel is CURRENT-liquidity-selected). One refinement on the prior: "174/175 reach panel-end" alone
+shows only NO MID-HISTORY DELISTINGS — it's consistent with BOTH current-selection AND per-bar-PIT. The stronger
+tell is that it's a FIXED 175-symbol universe all reaching the end (a per-bar-PIT universe usually VARIES over
+time and includes faded names during their liquid window). The decisive test the Explore should answer: does a
+name that was PIT-liquid in 2023-24 but faded by 2026 appear in the panel DURING its liquid window? If yes →
+per-bar PIT → Channel B null in-window; if the 175 is a current-time snapshot → Channel B real. Correctly gated on
+this before fetching. (I can cross-check the panel data independently if useful — e.g. scan for in-panel symbols
+whose $vol collapsed pre-2026 — to complement the code-trace.)
+
+Clean pass. This is the honest, well-gated scoping result the locked pre-reg was designed to produce: Channel A
+(delistings) is near-null in-window; the direction lives or dies on the panel-selection method (Channel B). No
+wasted downloads. Await the Explore verdict, then (a) Channel B fetch / (b) confirm Channel A fails / (c) null
+in-window.
