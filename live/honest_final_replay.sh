@@ -20,6 +20,7 @@ export BEAR_DEPTH_RAMP=0 CONC_CAP=0.99 CONC_CAP_SINGLE_EXEMPT=1 SHORT_MIN_RET3D=
 export REGIME_GATE=1 REGIME_GATE_W=180 REGIME_GATE_FLOOR=0.0 REGIME_GATE_K=2 REGIME_GATE_MINHIST=60 REGIME_GATE_MODE=binary REGIME_GATE_UNIV=full
 export STOP_SKIP_REGIMES=bear STOP_K_SIGMA=2.0 BULL_MODE=default BULL_GROSS_MULT=0 BULL_DEEP_THR=0.15 BULL_DEEP_MODE=mom1d_long
 export GLOBAL_GROSS_MULT=1.0 CONVEXITY_DVOL_CACHE_PKL=$ROOT/live/state/v3loop/ddloop/_dvol_cache.pkl
+rm -f "$CONVEXITY_DVOL_CACHE_PKL"   # audit #6 self-contained: force a FRESH .shift(1) rebuild; don't silently inherit a stale (leaked) pkl
 
 run() {  # name base_dir long_dir from [end]
   export CONVEXITY_PREDS_PATH=$ROOT/live/state/convexity/$2/v0full_hl60.parquet

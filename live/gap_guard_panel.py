@@ -74,14 +74,11 @@ def main():
     clean = pan.loc[~drop].copy()
     # recompute cross-sectional rank + per-symbol target over CLEAN survivors
     clean["bars_since_high_xs_rank"] = clean.groupby("open_time")["bars_since_high"].rank(pct=True).astype("float32")
-    try:
-        import importlib.util
-        _spec = importlib.util.spec_from_file_location("x6", REPO / "research/convexity_portable_2026-05-20/scripts/X6_controlled_matrix.py")
-        x6 = importlib.util.module_from_spec(_spec); _spec.loader.exec_module(x6)
-        clean = x6.build_target_z(clean)
-        print("recomputed target_z over clean survivors", flush=True)
-    except Exception as e:
-        print(f"WARN: target_z recompute failed ({type(e).__name__}: {e}); keeping existing", flush=True)
+    import importlib.util   # fail-loud (audit #6): a clean target is the whole point — do NOT silently keep contaminated target_z
+    _spec = importlib.util.spec_from_file_location("x6", REPO / "research/convexity_portable_2026-05-20/scripts/X6_controlled_matrix.py")
+    x6 = importlib.util.module_from_spec(_spec); _spec.loader.exec_module(x6)
+    clean = x6.build_target_z(clean)
+    print("recomputed target_z over clean survivors", flush=True)
     clean = clean.dropna(subset=["alpha_vs_btc_realized"]).reset_index(drop=True)
     clean.to_parquet(OUT)
     print(f"wrote {OUT.name}: {len(clean):,} rows (dropped {n0-len(clean):,} = {100*(n0-len(clean))/n0:.2f}% vs raw)", flush=True)
