@@ -4936,3 +4936,53 @@ candidates, count independent in-window crashes) is the direct formal close, cor
 Clean pass. Net of this exchange: +2.30 is DOUBLY-confirmed honest (code-read + empirical footprint); the
 survivorship direction is converging to a formal null (Channel A ~2-4 candidates, Channel B predicted phantom/
 concentrated/recent-only) — a cheap, honest closure pending the step-1.5 probe.
+
+### Addendum 58 (2026-07-11) — Channel B step-1.5 CLOSED = FORMAL NULL (collapses to 1 name under HL-tradability)
+
+User "go" on the cheap closer. `live/surv2_channelB.py` sizes Channel B directly: count INDEPENDENT in-window
+crash episodes on out-of-universe names that WOULD pass the exact production gate (trailing-30d $vol ≥ $3M AND
+maturity ≥ 180d), 2023-01..2026-06. Crash-short episode = gate-eligible bar with forward-14d close drawdown ≤ −40%.
+
+**The HL-execution constraint collapses the pool.** The strategy is Binance-train / Hyperliquid-execute, so a real
+censored Channel B name must be (i) Binance-listed (signal/features), (ii) HL-tradable (execution), (iii) in-window
+gate-eligible, (iv) crashed in-window, (v) not already in the 175. Applying the HL snapshot (all_hyperliquid.csv,
+183 perps, 0 currently HL-delisted):
+- HL names NOT in the 175 = 14. Removing BTCUSDT (hedge), TSTUSDT (excluded by design), and 6 `k*` names = HL's
+  1000× notation for coins ALREADY in the panel (kPEPE=1000PEPE, kSHIB=1000SHIB, kBONK/kFLOKI/kLUNC=1000X,
+  kNEIRO=NEIRO — verified by the mirror: the 6 "panel-not-on-HL" names are exactly those 1000X/base symbols, so
+  all 175 are HL-mapped and there is NO execution-mapping bias either) → 6 genuine candidates.
+- Of the 6: APEX/BLAST/MNT/PURR are NOT on Binance USDM (HL-native → no Binance signal → model can't select →
+  irrelevant); FTTUSDT is Binance-zombie in-window ($0M qvol, crash out-of-window 2022 → 0 gate-eligible crashes).
+- **Remainder = 1 name: CHILLGUYUSDT** (Binance 2024-11, $9M median qvol) — 4 gate-eligible in-window crashes
+  (1 OOS 2025-05-22, 3 RECENT 2025-10 / 2026-01 / 2026-05).
+
+**Verdict: Channel B = FORMAL NULL.** The locked bar requires ≥3 INDEPENDENT episodes, ≥1 per era, none >50%; the
+entire HL-tradable censored pool is ONE memecoin. Four crashes of a single name = 100% single-name concentration
+(fails the anti-concentration guard) and is not a diversified/repeatable crash-edge. def #2 (model-selection) and
+the (b)-bound realism haircut, unapplied, can only shrink it further.
+
+**THE decisive contrast — the edge is VENUE-GATED, not signal-gated.** The background full-585 Binance-universe
+run (no HL filter) found **100 independent weekly crash-clusters, both-era, "PASS"** — i.e. the censored crash-edge
+is ABUNDANT across Binance memecoins. The HL-tradability filter collapses that 100 → **1** (CHILLGUY). So the
+limitation is NOT "the crash-edge doesn't exist" — it's that ~all of it lives in names the strategy CANNOT EXECUTE
+on Hyperliquid. (The 100 is itself a loose upper bound — my week-clustering overcounts macro-correlated risk-off
+crashes as separate, and there's no model-selection / (b)-realism filter — but the 100-vs-1 gap is the point.)
+This points the lever at EXECUTION VENUE, not features/signal: a Binance-execution variant could in principle reach
+the crash-edge; on HL it is unreachable → null. Venue-scope change, out of current scope.
+
+**Residual gap (documented, predicted null):** the HL snapshot is current (0 HL-delisted visible), so names
+HL-delisted MID-window aren't captured. But HL is curated (rare delistings); any such name that was Binance-liquid
+would have surfaced in step-1's Binance-delisting pass (near-null in-window); and the convergent evidence
+(footprint phantom/concentrated, step-1 ~2-4, this HL 1-name collapse) makes ≥3 hidden independent both-era HL
+episodes very unlikely.
+
+**═══ SURVIVORSHIP INVESTIGATION CLOSED = NULL, with two real wins ═══**
+1. **Validated the headline:** +2.30 is HONEST — the trading layer applies a PIT $3M/day + maturity + liveness
+   gate (CONVEXITY_PIT_DVOL=1 in the replay); Bias 2 (untradeable-bar inflation) is FALSE, doubly-confirmed
+   (code-read + empirical footprint). If anything the gate is conservative (removes +0.55 recent phantom crash-fill).
+2. **Closed the censored-crash-edge, and localized WHY:** under the true constraints the HL-executable censored
+   pool collapses to a single name → no recoverable diversified crash-edge on the HL venue. The sharpest new
+   intelligence: the edge is ABUNDANT in the Binance universe (100 clusters) but VENUE-GATED — unreachable on
+   Hyperliquid. So the real lever for this edge is EXECUTION VENUE, not features/signal (which all prior feature/
+   construction work already exhausted). The event→age→survivorship chain is honestly closed within HL scope.
+Scripts: surv1_identify.py, surv2_channelB.py, surv_bias2_footprint.py. Data: channelB_hl_pool.txt.
