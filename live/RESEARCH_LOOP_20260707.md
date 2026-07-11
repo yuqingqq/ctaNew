@@ -4831,3 +4831,42 @@ falls out of the same gate regardless.
 greenlit delisting fetch, and Bias 2 is a material finding about the production number. Awaiting user steer before
 the sizing probe → rebuild. Reviewer offered an independent cross-check (scan in-panel symbols whose $vol collapsed
 pre-2026). Scripts: live/surv1_identify.py. No downloads beyond metadata yet.
+
+### Reviewer review (2026-07-11) — addendum 56 (Explore scoping): PARTIALLY CORRECT — Bias 1 real but NARROW; **Bias 2 is FALSE** (verified against code)
+
+FOUNDATION-FIRST verification of the Explore's trace against the actual code. The Explore is RIGHT that universe
+MEMBERSHIP is static: `X132.build_universe()` (L65-70) is a static union of hl70 + current-24h-vol-ranked addable
+− TST, no per-bar logic. But its central claim — "NO per-bar volume/liquidity condition ANYWHERE → backtest trades
+illiquid bars → +2.30 optimistic (Bias 2)" — is WRONG. Root cause: the Explore traced the PANEL-BUILD layer
+(X132/X70/X31, correctly no gate there — the panel holds all bars for FEATURE computation) but MISSED the
+TRADING/REPLAY layer.
+
+VERIFIED — the trading layer applies a per-cycle gate. `convexity_paper_bot.py::eligible_universe_at()` (L532-563)
+rejects, PER CYCLE: maturity < 180d (L550-552), dollar-vol < LIQ_FLOOR ($3M/day, L420, L553-555), and delisted/
+halted via the LIVENESS gate (L556-561). And it is the HONEST PIT version: `PIT_DVOL` default = "1" (L404, "per-
+cycle trailing-30d liquidity gate (honest, validated 2026-06-01)"), and the committed +2.30 replay EXPLICITLY sets
+`CONVEXITY_PIT_DVOL=1` (replay_clean_confirm.sh L11).
+
+⇒ **Bias 2 (Sharpe inflation from trading illiquid bars) is FALSE.** The +2.30 already gates illiquid bars per-
+cycle with an honest PIT trailing-30d $3M floor + maturity + liveness. The "~+0.17 Sharpe look-ahead" the L568
+docstring warns about is the OLD end-of-sample default, which was FIXED (PIT_DVOL=1 default + set in the replay).
+The +2.30 headline is NOT questioned on this axis — please retract "the reported +2.30 may be OPTIMISTIC."
+
+⇒ **Bias 1 / Channel B is real but NARROWER than framed.** The per-cycle gate operates only on the static 175, so
+it can gate OUT their illiquid bars but cannot pull in out-of-universe names. So the residual censoring is specific:
+names that WERE $3M-liquid + mature in-window (2023-24), crashed, then faded below the 2026 selection snapshot (or
+delisted-pre-snapshot) → absent from the 175 → their liquid-period crash-shorts censored. That is the honest
+Channel B. Fix = EXPAND the static universe to include those names; the EXISTING per-cycle PIT gate then correctly
+trades only their liquid-period bars. This is NOT "build a PIT-universe from scratch" (the PIT gate already exists,
+on by default) — only universe MEMBERSHIP needs expanding.
+
+⇒ The step-1.5 sizing probe is the right cheap test, with one correction: apply the SAME existing gate ($3M/day
+trailing-30d + maturity≥180d + liveness), not a fresh ~$5M selection floor, to the ~571 candidates; count
+INDEPENDENT in-window censored crashes (def #1). And DROP the "Bias 2 magnitude falls out of the same gate" line —
+Bias 2 is already null (honest gate in place).
+
+Net: not a clean pass. Credit — universe membership IS static (Channel B has a narrow reality). Correction —
+verify code layers before concluding: the liquidity gate lives at the TRADING layer, is PIT-honest, and is set in
+the +2.30 replay; Bias 2 is false and the +2.30 stands; the corrected direction is a universe-MEMBERSHIP expansion
+(add faded/delisted-pre-snapshot in-window-liquid names), not a from-scratch PIT rebuild, and the existing $3M PIT
+gate is the tool. Cheap probe first; likely small given step-1's ~2-4 in-window candidates.
