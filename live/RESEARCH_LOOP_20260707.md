@@ -5417,3 +5417,39 @@ large parquet ARTIFACTS themselves (gitignored) — honestly disclosed. Clean pa
 PIT Hyperliquid history (likely a documented free-data gap → Channel B disclosed-not-reproducible) + #6 artifact
 commit-tracking + #5 secondary off-default regime r30. Status: fragile but honestly-measured, now REPRODUCIBLE from
 the 3-script path (recent ~+2.0-2.1 daily).
+
+### Addendum 63 (2026-07-11) — REMEDIATION COMPLETE + honest result characterized (pitfall #4 strikes again)
+
+Final replay: books retrained on the gap-clean + 2026-06-04-restored panel, honest gate (verified pkl shifted:
+1000BONK asof = prior-day 114.07M), fold-column fixed. Result surfaced a PITFALL #4 lesson, not a number to headline:
+
+**Full-stack recent came out DAILY +2.45 — HIGHER than the +2.09 on the old books.** But the old vs new book preds
+are **0.996-correlated** (alpha_A identical) — the panel cleaning did NOT change the alpha. The +0.36 full-stack
+swing is **path-coupled amplification** of the tiny retrain-induced pred difference (0.996 corr) through the DD-stop
++ regime-hysteresis overlays — EXACTLY CLAUDE.md pitfall #4 ("path-coupled overlays amplify prediction noise
+~10-20x"). The bot reads `fold` but doesn't use it functionally; the difference is the ~0.4% pred delta, amplified.
+So the full-stack Sharpe is UNRELIABLE at this precision for comparing near-identical books.
+
+**Honest number measured the repo's-own-prescribed way — BOOK LEVEL, path-INDEPENDENT (`book_level_honest.py`):**
+| era | rank-IC | 1L/2S selection-spread DAILY Sharpe (gross of overlays) |
+|---|---|---|
+| recent 2025-10+ | **+0.030** | **+2.59** |
+| OOS 2023-25 | +0.024 | +0.92 |
+This is the robust honest alpha, UNCHANGED by the audit fixes (same preds). The risk overlays (regime gate, DD-stop,
+bull-flat) reduce this raw alpha to the full-stack deployed figure.
+
+**Honest headline (final):**
+- **Alpha is real and unchanged by the fixes** — book-level rank-IC +0.030 recent / +0.024 OOS; preds 0.996-corr
+  pre/post cleaning.
+- **Gate look-ahead removed** — clean same-book isolation: +2.41 (leaked) → +2.09 (honest) = −0.32 daily.
+- **Deployed full-stack Sharpe is path-coupled (±~0.3): recent ~+2.1–2.5 daily, OOS ~+0.2** — quote as a range, not
+  a point; the robust metric is book-level.
+- 2026-06-04 valid cycle now traded (−1397 bps / 6 cycles), included honestly; the +329 A/B artifact is gone.
+
+**Remediation COMPLETE:** #1 (gap-guard features+labels), #1b (stale-label restore), #2 (gate .shift(1) + cache
+regen), #5 (regime wall-clock), #6 (fail-loud + self-contained harness + one Sharpe convention). Commits dded0a3,
+f9e96b3, cebbb91, 5464e87, c135fb0. STILL OPEN: #3 PIT Hyperliquid availability history (needs external HL listing
+records — documented gap, not fabricated); #6 artifact commit-tracking PARTIAL (panel/books/pkl gitignored → the
+honest number is correctly-measured but not yet fresh-clone reproducible). Status: **honestly-measured fragile
+research candidate — book-level alpha rank-IC +0.03 / deployed ~+2.1–2.5 recent (path-coupled) / ~+0.2 OOS**, no
+longer overstated, on gate-honest gap-clean data.
