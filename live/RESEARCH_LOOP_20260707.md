@@ -5186,3 +5186,45 @@ rebuild-from-raw (or fix the upstream xs_feats cache holes) so no over-masking; 
 daily dvol); (4) PIT Hyperliquid availability history (real per-cycle listing/delisting); (5) retrain + replay, measuring label/feature
 variants at BOOK level per pitfall #4 (NOT path-coupled full-stack); (6) reporting: one Sharpe convention (state cycle vs daily),
 commit-track a repro path, make `replay_clean_confirm.sh` fail loudly. Until then: fragile research candidate, not validated real-alpha.
+
+### Reviewer review (2026-07-11) — addendum 61 (external audit, 6 findings): AUDIT SUBSTANTIALLY CORRECT; I OWN multiple review misses
+
+I independently verified the finding that retracts MY OWN conclusion (#2) and it is DEAD-ON, so I take the whole
+audit as high-credibility and own my part.
+
+#2 CONFIRMED INDEPENDENTLY (the decisive one): `precompute_dvol_cache_pit` L609-610 does
+`(close*volume).resample("1D").sum().rolling(30).mean()` with NO `.shift(1)`. So `trail[D]` includes day D's COMPLETE
+volume, and `eligible_universe_at`'s `.asof(intraday-D)` returns that full-day value → the "PIT" gate sees SAME-DAY
+FUTURE volume. My c529d13 "Bias 2 FALSE / +2.30 gated-honest" is RETRACTED — I verified the `PIT_DVOL=1` flag and the
+`.asof` read but never traced the SERIES CONSTRUCTION (the missing shift). Exactly the class of miss as the original
+label-leak: surface-verified (flag/name), not construction-verified. Honest fix costs ~0.3 Sharpe (recent cycle
+2.54→2.20). OWNED.
+
+#3 CONFIRMED (from the surv2_channelB.py I already read): the script never loads an HL roster — it runs the full
+Binance set and prints PASS; the 100→1 collapse is addendum-58 PROSE over a gitignored, single-stale-snapshot
+`all_hyperliquid.csv` with no PIT HL history. My 83dfa52 "Channel B FORMAL NULL, verified" overstated the rigor — my
+Binance-Vision spot-check verified the 4-name CLASSIFICATION (still correct) but NOT reproducibility. RETRACT "formal
+null rigorously established"; the direction is disclosed-but-not-reproducible. OWNED.
+
+Also owned: I adopted the "free-data research COMPREHENSIVELY/EXHAUSTIVELY/STATISTICALLY CLOSED" framing (#5) — the
+audit is right it's OVERSTATED; honest = "no free lever cleared the bar in the directions TRIED." And the earlier
+"+2.30 > +2.26 clean-better" A/B (#1) was invalid — path-coupled DD-stop bifurcation (my OWN pitfall #4) + one VALID
+dropped 06-04 cycle; at BOOK level clean ≈ leaked, slightly worse.
+
+The user's 5-adversarial-subagent verification is well-calibrated — it correctly caught the auditor's OVERSHOOTS
+(th1 47-bar bug already fixed in addendum 46 → REFUTED as still-broken, so that fix HOLDS; short-only "no BTC hedge"
+REFUTED = valid by construction; the "+329 of +575" mixes two replays; ~0.44 over-shifted → ~0.3; ~35 OOS flips →
+139). Good adversarial discipline; the "largely confirmed with named retractions" verdict is sound.
+
+SURVIVES (concur): era-fragility (the regime `shift(180)`-rows bug is FAVORABLE — 0 recent flips, OOS bear stronger),
+recent short-side concentration (now RECENT-ONLY — OOS short −0.78 worst leg, a sharpening not a reversal),
+squeeze-tail, the leg-split (addenda 59/60 hold — recent window has 0 regime flips, leg-split is regime-agnostic
+within non-deep-bull), the deliberate bull refusal, the lagging regime classifier. My 59/60 clean-passes stand.
+
+ENDORSE the 6-step required rebuild (timestamp-grid rebuild of every return + rolling feature + the `btc_ret_30d`
+regime; fix `fix_panel_labels` over-masking / upstream xs_feats cache holes; prior-completed-day `.shift(1)` liquidity
+gate; real PIT Hyperliquid availability history; retrain + replay measured at BOOK level per pitfall #4 not
+path-coupled full-stack; one Sharpe convention + a commit-tracked repro path + fail-loud `replay_clean_confirm.sh`).
+Corrected status: honest recent ≈ Daily +2.09 / Cycle +2.20 gate-fixed, still on a CONTAMINATED panel and NOT a
+reproducible promotion → a FRAGILE RESEARCH CANDIDATE, not validated real-alpha. This is the right verdict; my prior
+clean-passes of Bias-2 and Channel-B were too credulous (surface- not construction-verified), and I own it.
