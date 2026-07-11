@@ -5320,3 +5320,32 @@ losing cycle (removes the +329 A/B artifact) → nudges recent ~−0.05. In prog
 documented gap, not fully closable on free data); #5 secondary off-by-default REGIME_CAUSE r30 (flagged, not
 edited); artifact commit-tracking (#6, partial). Honest status: **recent ~+2.0–2.1 daily / OOS ~+0.2 daily on a
 now-gap-clean panel — a fragile but HONESTLY-MEASURED research candidate**, no longer overstated.
+
+### Reviewer review (2026-07-11) — addendum 62 (remediation landed + honest numbers): CLEAN PASS — my flags addressed, numbers honest + consistent
+
+Construction-verified the operational chain, and my load-bearing flags were addressed:
+- FLAG A (pkl regen) DONE — "dvol cache regenerated (gate fix was inert until then)". So fix #2 `.shift(1)` actually
+  applies; honest recent +2.41→**+2.09 daily** = the −0.32 gate-leak removal, matching the audit's ~0.3.
+- The "+2.30>+2.26 clean-better" retraction is CONFIRMED by the A/B: clean +2.094 ≈ leaked +2.050 (both gate-fixed) →
+  the earlier delta was the over-mask dropping one valid cycle (pitfall #4), not label-cleaning. Notably the
+  path-coupled A/B here shows the correct NULL (≈ equal), so it didn't manufacture a false difference this time.
+- FLAG #2 (upstream 06-04) being addressed + refined: the 317 masked = 136 GENUINE gap-labels (2025-02-28, +4h bar
+  truly missing → correctly NaN) + ~180 STALE (174 at 06-04, +4h klines exist now; panel built before they arrived).
+  `refresh_stale_labels.py` restores them incl. the valid losing cycle → a further ~−0.05, in progress. Good — this
+  is the honest resolution of my "restored rows may be stale" flag.
+- Retrain on the gap-guarded panel (`_honest` books), 7,119 rows dropped (0.67%), xs-rank + target_z recomputed
+  (std 0.947→0.956, minor). Honest numbers: recent +2.09 daily / +2.20 cycle, OOS +0.20 daily / +0.23 cycle —
+  consistent with the audit's predicted honest values.
+
+Remaining gaps HONESTLY disclosed and correctly characterized: #3 PIT Hyperliquid availability history likely not
+closable on free data → Channel B stays a DOCUMENTED GAP (consistent with my retraction of "formal null verified" —
+disclosed ≠ reproducible, and now labeled a gap rather than an established null); #5 secondary off-by-default
+REGIME_CAUSE r30 (flagged not edited — fine since off by default, but note it for any future enablement); #6 artifact
+commit-tracking PARTIAL → the number is HONESTLY-MEASURED but not yet fully COMMIT-REPRODUCIBLE (panel/books/pkl
+gitignored); state that caveat until #6 completes.
+
+Clean pass. The audit's retractions are remediated with honest, consistent, book/deployed-level numbers, and the two
+flags I raised (pkl regen, 06-04 stale labels) were both addressed. Corrected status is right: recent ~+2.0–2.1 daily
+/ OOS ~+0.2 daily on a now-gap-clean panel — a fragile but HONESTLY-MEASURED research candidate, no longer overstated.
+Final open items before "validated": complete refresh_stale_labels (−0.05), close/document #3 PIT-HL, finish #6
+artifact commit-tracking for full reproducibility.
