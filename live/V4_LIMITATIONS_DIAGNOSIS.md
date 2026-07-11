@@ -57,23 +57,27 @@ hit 47% / **+0.81**, SHORT hit 56% / **+0.33**. The short edge is **RECENT-ONLY*
 ## The strategy in one sentence
 
 A ~beta-neutral cross-sectional book that ranks alts by residual-vs-BTC alpha and shorts the over-extended, whose
-**selection alpha (rank-IC ~+0.03) is small but era-STABLE**, wrapped in regime overlays whose **deployed Sharpe is
-fragile / path-coupled**.
+**selection SKILL is era-stable** (rank-IC ~+0.03 in both eras) but whose **traded PnL is era-fragile in MAGNITUDE**
+(book sel-spread +2.59 recent → +0.92 OOS = 2.8×; deployed ~+2.1-2.5 → ~+0.2 = ~10×), wrapped in overlays whose
+deployed Sharpe is additionally path-coupled.
 
 ## The definitive limitations (audited-honest)
 
-### #1 — Era-VARIABILITY of the deployed Sharpe; the alpha itself is era-STABLE. [CORRECTED — was overstated]
-- The old doc's "side and bear have OPPOSITE era signs" was substantially a **path-coupled artifact**. Book-level,
-  the rank-IC is +0.02–0.05 across **every** regime and **both** eras, and side (+4.60/+1.02) + bear (+0.10/+3.80)
-  are positive-to-flat in both — **not opposite**. The genuine sign-flips are confined to **bull** (+3.76 rec /
-  −1.31 OOS) and **deep-bull** (−3.75 rec / +0.81 OOS) — exactly the regimes the strategy already GATES.
-- What IS era-dependent: the **magnitude** (side +4.60 recent vs +1.02 OOS) and the overall deployed number (recent
-  ~+2.1–2.5 vs OOS ~+0.2), driven by cross-sectional **dispersion** (which varies by era) + regime **mix** (OOS is
-  heavier bull/deep-bull) + the path-coupled overlays. Rank quality is stable; PnL-per-rank is dispersion-dependent.
-- Fixability: the alpha is more era-robust than previously stated; the deployed-Sharpe swing is part path-coupled
-  overlay artifact (reducible), part genuine dispersion-dependence (data). Detect-the-era-and-switch FAILED the
+### #1 — Era-fragility SURVIVES, but as MAGNITUDE not SIGN; the selection SKILL is era-stable. [CORRECTED — mechanism was wrong, fragility persists]
+- **Rank quality is era-stable, PnL magnitude is NOT.** Book-level rank-IC is +0.02–0.05 across **every** regime and
+  **both** eras (the model ranks alts about as well in every era). But the *monetization* is era-fragile: book
+  sel-spread **+2.59 recent → +0.92 OOS (2.8×)**, deployed **~+2.1–2.5 → ~+0.2 (~10×)**. So era-fragility SURVIVES —
+  it just lives in magnitude, not sign.
+- **The old "side and bear have OPPOSITE era signs" is retracted — it was a corrupted construction, not real.** That
+  table (side +3.55/−0.78, bear −1.29/+1.82) came from the audit-found buggy book: a **2× leg-cost undercharge**
+  (finding #4) + a **row-based regime tag** (finding #5) + **path-coupling** (pitfall #4). On the clean 1L/2S
+  spread, neither an add nor subtract convention reproduces it — side (+4.60/+1.02) + bear (+0.10/+3.80) are
+  positive-to-flat in BOTH eras. The genuine sign-flips are confined to **bull** (+3.76 rec / −1.31 OOS) and
+  **deep-bull** (−3.75 rec / +0.81 OOS) — exactly the regimes the strategy already GATES.
+- Mechanism of the surviving magnitude-fragility: cross-sectional **dispersion** (varies by era) + regime **mix**
+  (OOS is heavier bull/deep-bull) + the path-coupled overlays. Fixability: detect-the-era-and-switch FAILED the
   both-eras test (addendum 60: R²≈0.005 predictability; the observable-state→good/bad map itself flips by era). →
-  **managed** (cap / monitor / kill-switch), not a modeling defect.
+  **managed** (cap / monitor / kill-switch), not solved.
 
 ### #2 — Bull gate is a deliberate era-REFUSAL, not a defect. [holds]
 - Mild-bull is book-level +3.76 recent but −1.31 OOS (genuinely opposite) → gated to flat (`BULL_GROSS_MULT=0`).
@@ -116,10 +120,11 @@ fragile / path-coupled**.
 
 ## The bottom line
 
-v4 is a **small but GENUINE and era-stable cross-sectional alpha** — book-level rank-IC **~+0.03**, positive in
-**41/42** independent folds, no leak, verified three ways. The prior "era-fragile, opposite-sign regimes" framing
-was substantially a **path-coupled artifact**; the alpha is more era-robust than previously stated. What remains
-genuinely fragile is the **deployed full-stack Sharpe** (~+2.1–2.5 recent / ~+0.2 OOS) — path-coupled by the
-overlays and dispersion-dependent — which is why it is quoted as a **range**, not performance, and why the strategy
-runs capped + kill-switched. The one signal-side lever with upside is **DATA1** (the short-side squeeze tail).
-**Nothing here is overstated; the reliable statement is the rank-IC.** Live-forward is the standing gap.
+v4 is a **small but GENUINE cross-sectional alpha whose rank QUALITY is era-stable** (book-level rank-IC **~+0.03**,
+positive in **41/42** folds, no leak — verified three ways) **but whose traded PnL is era-fragile in MAGNITUDE**
+(recent ~10× OOS). The prior "opposite-sign regimes" *mechanism* is retracted — it was the audit's cost/regime bugs
++ path-coupling, not real; the *direction* is stable across eras (side/bear positive both), but the *monetization*
+is not. The **deployed full-stack Sharpe** (~+2.1–2.5 recent / ~+0.2 OOS) is path-coupled + dispersion-dependent →
+quoted as a **range**, not performance; the strategy runs capped + kill-switched. The one signal-side lever with
+upside is **DATA1** (the short-side squeeze tail). **The reliable statement is the rank-IC; the era-fragility
+persists as magnitude.** Live-forward is the standing gap.

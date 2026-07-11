@@ -5569,3 +5569,31 @@ over-credited → externally audited (my Bias-2/Channel-B/exhaustively-closed cl
 remediated (construction-verified) → independently re-verified → now DOCUMENTED honestly across all authoritative
 docs. Final honest verdict stands: a small but genuine, leak-free, era-stable weak alpha (rank-IC ~+0.03); deployed
 Sharpe a fragile path-coupled range; DATA1 the one signal-side lever; live-forward the standing gap.
+
+### Addendum 65 (2026-07-11) — WHOLE-STRATEGY REVIEW + limitations rewritten on audited-honest numbers (verified + framing-fixed)
+
+User: "review the whole strategy, check the limitations, update docs, correct the statements." Re-measured ALL
+limitation quantities on the audited-honest artifacts, BOOK-LEVEL (path-independent, pitfall #4). **Caught + fixed a
+sign bug in honest_limitations.py mid-review** (book net = long+short, not long−short — the negative-net-with-
+positive-rank-IC inconsistency flagged it). Rewrote `V4_LIMITATIONS_DIAGNOSIS.md`; added AUDIT RETRACTION banners to
+`V4_PERFORMANCE.md` + `V4_REGIME_INVESTIGATION.md`. vBTC/v7 docs (STATUS/HANDOFF) untouched — different strategy,
+out of audit scope.
+
+**Corrections:** reliable metric = book-level rank-IC +0.030 recent / +0.024 OOS (retracted +2.30). Per-regime
+book-level (replaces path-coupled full-stack): side +4.60/+1.02, bear +0.10/+3.80, bull +3.76/−1.31, deepbull
+−3.75/+0.81; rank-IC +0.02-0.05 all 8 cells. #1: the old "opposite era signs" was a CORRUPTED CONSTRUCTION (audit
+2× leg-cost #4 + row-based regime #5 + path-coupling), NOT real — but era-fragility SURVIVES as MAGNITUDE (2.8× book
+/ ~10× deployed recent-vs-OOS). #3 "pure beta" retracted (residual 0.33-0.59 survives). #5 concentration = LONG-leg
+lottery. Full-stack = path-coupled RANGE.
+
+**Independently verified (adversarial subagent):** EVERY number reproduces to the digit (rank-IC, all 8 per-regime
+cells, legs, 41/42 folds, deep-bull 0.33-0.59, 0.996 corr, short mean<median, full-stack range). Numbers HONEST. The
+one flag was framing, not fact: the era-fragility HEADLINE was optimistically framed (led with "era-STABLE" when the
+fragility SURVIVES as magnitude — the audit's own addendum 61 said "era-fragility survives"). **FIXED:** rebalanced
+one-sentence/#1/bottom-line to lead with "era-stable rank QUALITY, era-fragile PnL MAGNITUDE" + attributed the old
+opposite-signs to the mix of bugs (not "substantially path-coupled"). Reviewer 0b3f864 also clean-passed the rewrite.
+
+**Honest whole-strategy summary:** a small GENUINE cross-sectional alpha (rank-IC ~+0.03, era-stable SKILL, no leak,
+41/42 folds — verified 3+ ways) that is era-fragile in PnL MAGNITUDE (recent ~10× OOS), with a path-coupled deployed
+Sharpe (range, not point), an unhedged short squeeze-tail, a lagging regime label, and a long-leg beta-hedge lottery.
+DATA1 is the one signal-side lever; live-forward the standing gap. Nothing overstated.
