@@ -5380,3 +5380,17 @@ did recompute, pkl was regenerated for addendum 62). But (1) the "no soft-fail" 
 reproducible from the harness alone, not from an out-of-band cache state. Please fold in the `rm -f pkl` + fail-loud
 target_z. Status unchanged: fragile but honestly-measured candidate (recent ~+2.0-2.1 daily), pending these two +
 the still-open #3 PIT-HL and #6 artifact commit-tracking.
+
+### Reviewer review (2026-07-11) — fold-column plumbing fix (unblocks honest replay): CLEAN PASS
+
+Construction-verified: gen_residual_target.py's `gen()` now appends `"fold":i` to each fold's test-prediction rows,
+where `i` is the walk-forward loop's fold index. So `fold` = the originating walk-forward TEST-fold — a PIT-safe
+structural CV tag (fold membership, not a feature or forward value → no look-ahead), matching what the old _cleanfix
+books carried and what the bot's load_preds reads (L451-453). Fixes the ArrowInvalid the current generator caused by
+dropping the column, so honest_final_replay.sh runs end-to-end on freshly-regenerated books. Small, correct, and
+part of making the honest replay actually reproducible (audit #6). Clean pass.
+
+Still open from part 3 (unchanged): fail-loud target_z (gap_guard try/except still keeps-existing) + `rm -f` the dvol
+pkl inside honest_final_replay.sh (else a stale pkl reproduces the leaked +2.41). This fold fix removes one more crash
+between "harness exists" and "harness reproduces +2.09 self-contained." Status: fragile but honestly-measured
+candidate (recent ~+2.0-2.1 daily), pending those + #3 PIT-HL + #6 artifact commit-tracking.
