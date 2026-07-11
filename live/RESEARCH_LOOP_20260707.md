@@ -4986,3 +4986,34 @@ episodes very unlikely.
    Hyperliquid. So the real lever for this edge is EXECUTION VENUE, not features/signal (which all prior feature/
    construction work already exhausted). The event→age→survivorship chain is honestly closed within HL scope.
 Scripts: surv1_identify.py, surv2_channelB.py, surv_bias2_footprint.py. Data: channelB_hl_pool.txt.
+
+### Reviewer review (2026-07-11) — addendum 58 (Channel B step-1.5 CLOSED = null): CLEAN PASS — foundation-verified, incl. independent spot-check of the HL classification
+
+FOUNDATION-VERIFIED surv2_channelB.py: uses the EXACT production gate (trailing-30d $vol ≥ $3M with `.shift(1)` PIT
++ maturity ≥ 180d — correct, no look-ahead in eligibility); crash = forward-14d close DD ≤ −40% (forward info is
+CORRECT here — this COUNTS episodes, it is not a tradable predictor); per-name 30d-gap episode collapsing +
+week-clustering for def-#1 independence (which OVERCOUNTS macro-correlated risk-off as separate → the 100 is a
+loose UPPER bound, i.e. generous to Channel B). Verdict logic matches the locked ≥3-independent + both-era bar. So
+the null is reached under counting that FAVORS Channel B — robust.
+
+INDEPENDENTLY SPOT-CHECKED the one soft spot (the manual HL-filter's "not on Binance USDM" classification of the 4
+HL-native candidates), the linchpin of the 100→1 collapse: Binance Vision monthly-1d archive existence —
+APEX/BLAST/MNT/PURR = **0 files each** (confirmed NOT on Binance USDM → no Binance signal → model can't select),
+CHILLGUYUSDT = **present**. Classification CONFIRMED. Combined with the cross-verified k* mapping (kPEPE=1000PEPE
+etc. → all 175 HL-mapped, no execution-mapping bias), the HL-tradable / Binance-signal / non-175 / in-window pool =
+1 name (CHILLGUY). Four crashes of ONE name = 100% concentration → fails ≥3-INDEPENDENT + none>50% (and def-#2
+model-selection + (b)-realism, unapplied, only shrink it) → **Channel B FORMAL NULL, verified.**
+
+The VENUE-GATED insight is sound and now corroborated: the censored crash-edge is ABUNDANT in Binance (≤100 loose
+clusters, both-era) but collapses to ~1 under HL-tradability → the limitation is EXECUTION VENUE, not signal/
+features (which prior feature/construction work already exhausted). Genuine, actionable intelligence: a
+Binance-execution variant could in principle reach this edge; on HL it is unreachable. Correctly scoped OUT
+(HL-committed) and the residual gap (mid-window HL-delistings) is convergently predicted null (curated HL + the
+near-null Binance-delisting pass + the phantom footprint).
+
+Clean pass. **The survivorship-clean rebuild — the session's last open free-data lever (input-changing, could
+beat the CI wall) — is honestly CLOSED = NULL within HL scope, cheaply (staged step-1 → step-1.5, gated at each
+step, NO wasted large rebuild), and it yielded two REAL wins: (1) validated +2.30 is honest (Bias 2 false,
+doubly-confirmed); (2) localized the censored crash-edge as VENUE-gated (abundant on Binance, unreachable on HL).**
+Free-data research is now comprehensively closed (construction/conditioning 34-49 + survivorship 53-58, all null);
+remaining levers are DATA1 (paid), execution-venue (out of scope), and operational (forward ledger, §7 cap).
