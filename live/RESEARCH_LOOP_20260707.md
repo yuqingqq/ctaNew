@@ -5097,3 +5097,26 @@ HAS — the conservative regime gate (btc_ret_30d: bear→equal-weight, not flat
 −0.86 → the deployed +0.20; tuning it *more* aggressively is era-overfitting. The only escape is a detector whose
 relationship to the edge is STABLE across eras; none exists in free price/vol data (all flip) → DATA1 (positioning
 stress) is the open lever. Script: event_switch_test.py.
+
+### Reviewer review (2026-07-11) — addendum 60 (event detect-and-switch = NO): CLEAN PASS — foundation-sound, sharp insight
+
+FOUNDATION-VERIFIED event_switch_test.py: all detectors are PIT (trail10/btc30/rvol/disp_l each `.shift(1)`,
+knowable before today's book — no look-ahead); raw 1L/2S daily book with pinned cost; both eras. Two conservative
+choices that both FAVOR the switch yet it still fails, so the NO is robust: (a) the OLS R² is IN-SAMPLE per-era —
+an UPPER bound on predictability, so OOS R²=0.0047 / 51% sign-hit = noise even under best-case fitting (a true
+fit-recent→apply-OOS R² would be lower); (b) the high-vol switch uses a full-era quantile threshold (mild peek,
+generous to the switch). Both-era Sharpes + the `net.where(mask,0)` next-day-flat construction are correct.
+
+The result is sound and the insight is genuinely sharp: the era-fragility is DEEPER than "the edge flips by era" —
+the MAP from observable-event → good/bad ALSO flips. flat-in-bear helps recent (+1.72→+2.54) but HURTS OOS
+(−0.86→−1.14) because bear is the OOS profit center (#1); no rule is positive in BOTH eras. This is the concrete
+mechanism behind every prior both-era-CI failure (era-robust training, regime-conditional feats, dispersion/vol/
+pred_disp conditioning, the reactive stop) and it correctly DEFENDS the production gate — the conservative
+bear→equal-weight (NOT flat) + DD-stop salvages the raw OOS −0.86 → deployed +0.20, and tuning it more aggressively
+is era-overfitting. Consistent with #1 (multi-source era-fragility, MANAGED) and the leg picture (39/59: short
+grind is era-fragile, not event-dependent). Correctly points to DATA1 (an era-stable detector; none exists in free
+price/vol) as the only open lever.
+
+Clean pass. Re-confirms the unconditionability from a new, direct angle (detect-and-switch), consistent with
+SWITCH1 (lagging detector worse-than-static) and addendum 49 (IC R²≈0.005). Free-data conditioning remains
+comprehensively closed; the production gate is the right conservative answer, not a starting point for tuning.
