@@ -4906,3 +4906,33 @@ With step-1's ~2-4 in-window candidates → strong prior Channel B is a formal n
 **Status:** Bias 2 (the user-prioritized headline-number question) = FALSE, answered — +2.30 is honest. Channel B
 is a cheap-to-formally-close thread (step-1.5 probe: existing $3M+maturity+liveness gate on the ~571 candidates,
 count independent in-window crashes), expectations low. Scripts: live/surv1_identify.py, live/surv_bias2_footprint.py.
+
+### Reviewer review (2026-07-11) — addendum 57 (Bias 2 quantified = FALSE): CLEAN PASS — faithful adoption + sound empirical footprint
+
+Faithfully adopts the c529d13 Bias 2 correction (retracts "+2.30 optimistic," owns the panel-vs-trading-layer
+error) AND adds an independent empirical confirmation. FOUNDATION-VERIFIED surv_bias2_footprint.py: PIT dvol tagging
+(`s.asof(t)` on the same `_dvol_cache.pkl` eligible_universe_at reads — trailing-30d, not end-of-sample), GATE=$3M
+matches LIQ_FLOOR_DOLLAR_VOL_30D, NaN→not-subgate matches the bot's "finite-and-below → reject else keep," and a
+consistent equal-weight daily-leg-sum proxy Sharpe for ungated-vs-gated. Methodology sound.
+
+The result confirms Bias 2 = FALSE from both directions (my code-read + this footprint): the gate removes exactly
+the PHANTOM-AT-MID crash-alpha — residual-at-mid fills on $1-2M-dvol froth names DURING crashes (MEGA/ARK/GRIFFAIN/
+HMSTR), which are untradeable (can't fill a +2216 bps short at mid on a $2M/day name mid-crash), concentrated
+(top-3 = 44%), and recent-only (OOS ~0). So the gate is doing its job and +2.30 (gate-ON) is honest-to-conservative
+(it forgoes the phantom +0.55). Good.
+
+The Channel B PREDICTION is clever and sound: the in-universe legs the gate removes are the SAME species as the
+out-of-universe Channel B names (marginal-liquidity froth crash-shorts), so the footprint (phantom-at-mid +
+concentrated + recent-only) previews that Channel B would contribute the same → very likely fails the locked
+≥3-independent-both-era + (b)-bound execution-realism bar. Combined with step-1's ~2-4 in-window candidates →
+strong prior Channel B is a formal null.
+
+Two small framing notes (neither changes the conclusion): (1) the +2.70/+3.25 are PROXY raw-1L/2S Sharpes (the
+gate's +0.55 footprint on the raw book), correctly NOT conflated with the production +2.30 full-stack number — good.
+(2) the footprint PREDICTS Channel B via a same-species proxy (in-universe removed ≈ out-of-universe absent); it is
+a strong prior, not a direct measurement — the step-1.5 probe (existing $3M+maturity+liveness gate on the ~571
+candidates, count independent in-window crashes) is the direct formal close, correctly proposed and cheap.
+
+Clean pass. Net of this exchange: +2.30 is DOUBLY-confirmed honest (code-read + empirical footprint); the
+survivorship direction is converging to a formal null (Channel A ~2-4 candidates, Channel B predicted phantom/
+concentrated/recent-only) — a cheap, honest closure pending the step-1.5 probe.
