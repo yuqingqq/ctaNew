@@ -5292,3 +5292,31 @@ Clean pass — the biggest audit finding (#1) is addressed correctly and I verif
 all columns (the construction-verify the audit taught me). Remaining: run gap_guard_panel.py to regenerate the clean
 panel + the _dvol_cache.pkl regen (part-1 flag) + the retrain/BOOK-level replay (#5) before any honest number. Still
 a fragile research candidate until the full rebuild produces a reproducible book-level result.
+
+### Addendum 62 (2026-07-11) — REMEDIATION landed (fixes #1/#2/#5/#6) + HONEST NUMBERS
+
+Fixes committed: dded0a3 (gate .shift(1), regime wall-clock, fail-loud replay), f9e96b3 (gap_guard_panel.py
+replacing the over-masker). dvol cache regenerated (gate fix was inert until then — reviewer's load-bearing flag).
+
+**Honest full-stack replay (gate + regime fixed, cache regenerated), daily Sharpe convention:**
+| era | clean (honest) | leaked | prior OVERSTATED |
+|---|---|---|---|
+| recent 2025-10+ | **Daily +2.09 / Cycle +2.20** | +2.05 / +2.22 | +2.41 / +2.54 |
+| OOS 2023-25 | **Daily +0.20 / Cycle +0.23** | +0.04 / +0.05 | +0.20 |
+
+- Recent gate look-ahead removed (−0.32 daily). **Clean ≈ leaked in recent** (clean +2.094 vs leaked +2.050,
+  better maxDD −9509 vs −10883, cycle marginally lower) → confirms the "+2.30>+2.26 clean-better" A/B was the
+  over-mask artifact, not label cleaning. OOS ~+0.20 (gate immaterial OOS; regime fix mildly favorable).
+- Gap-guard dropped 7,119 rows (0.67%): BTC 22d gap universe-wide + 48 symbol gaps. bars_since_high_xs_rank +
+  target_z recomputed over survivors (target_z std 0.947→0.956, minor as expected).
+- Retrain books regenerated on the gap-guarded panel (V4_PANEL + _honest suffix): base/long recent + OOS.
+
+**Finding 1b precision (reviewer flag 2):** the 317 masked labels = 136 GENUINE gap-labels (2025-02-28 BTC gap,
++4h bar truly missing → correctly NaN) + ~180 STALE (all 174 at 2026-06-04) whose +4h klines EXIST NOW (panel
+built before those bars arrived). Restoring the stale labels from current klines INCLUDES the valid 2026-06-04
+losing cycle (removes the +329 A/B artifact) → nudges recent ~−0.05. In progress (refresh_stale_labels.py).
+
+**Still open:** #3 PIT Hyperliquid availability history (needs external HL historical listing data — likely a
+documented gap, not fully closable on free data); #5 secondary off-by-default REGIME_CAUSE r30 (flagged, not
+edited); artifact commit-tracking (#6, partial). Honest status: **recent ~+2.0–2.1 daily / OOS ~+0.2 daily on a
+now-gap-clean panel — a fragile but HONESTLY-MEASURED research candidate**, no longer overstated.
