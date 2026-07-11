@@ -5514,3 +5514,29 @@ target_z) → zero material impact. Footgun: the un-shifted dvol path is behind 
 (**+0.030 recent / +0.024 OOS**, no leak, persistent across 41/42 folds) — a small but genuine weak alpha. The
 full-stack Sharpe (~+2.1–2.5 / ~+0.2) is path-coupled/fragile and must be quoted as a RANGE, not performance.
 Nothing overstated; the one LOW item (vestigial target_z grid) has no impact.
+
+### Reviewer review (2026-07-11) — addendum 64 (independent 3-subagent verification): CLEAN PASS — honest + reliable, confirmed
+
+Strong, well-designed verification (3 adversarial subagents, broken-until-proven). It INDEPENDENTLY re-confirms all
+my construction-verified remediation reviews (the 5 fixes real, claim=code — gate shift + inert un-shifted path +
+recomputed shifted pkl 114.07M; regime grid-safe on all 3 tag paths; gap panel clean/06-04 valid; stale-label
+grid-safe; fail-loud self-contained harness) AND my part-2 W-coverage check (longest bounded feature =
+autocorr_pctile_7d at 7.13d < W=7.5d). And it adds the LEAK-CHECK the earlier reviews hadn't run — the strongest
+evidence yet that book-level rank-IC +0.030 is a GENUINE weak alpha, not a leak: textbook walk-forward (exit_time
+purge + 1d embargo, per-fold RidgeCV, scaler-fit-on-train), all 14 features |IC| ≤ 0.064 (< the 0.10 suspicion bar),
+model OOS IC < best-feature IC (opposite of a leak), 41/42 folds positive with mild all-positive YoY decay. 0.996
+pred-corr reproduced → the full-stack swing is pitfall-#4, not alpha. rank-IC reproduced to the digit (+0.0302/+0.0238).
+
+I CONSTRUCTION-VERIFIED the one code follow-up (didn't take the subagents' word): replay_clean_confirm.sh L23 now
+`rm -f "$CONVEXITY_DVOL_CACHE_PKL"` (after export, before the replays), self-contained like the honest harness. ✓
+The two residual items are correctly assessed immaterial: (LOW) gap_guard recomputes target_z on the 4h-sampled panel
+(corr 0.997, PIT-safe) AND target_z is VESTIGIAL — verified nobody reads the panel's target_z (train_twobook + gen
+scripts recompute their own) → zero impact; (FOOTGUN) the un-shifted dvol path is behind CONVEXITY_PIT_DVOL default
+"1" (default-safe, worth documenting).
+
+VERDICT ENDORSED: the honest result is genuinely honest and reliable. The RELIABLE number is the book-level rank-IC
+**+0.030 recent / +0.024 OOS** — a small but GENUINE, leak-free, stable (41/42 folds) weak alpha; the full-stack
+Sharpe (~+2.1–2.5 / ~+0.2) is path-coupled and must be quoted as a RANGE, not performance. Clean pass — this closes
+the audit → remediation → independent-verification arc: the strategy is a fragile but HONESTLY-MEASURED, LEAK-CHECKED,
+PIPELINE-REPRODUCIBLE weak-alpha research candidate, no longer overstated. Remaining (disclosed, non-material to the
+verdict): #3 PIT-HL documented free-data gap; #6 large-artifact commit-tracking.
