@@ -5624,3 +5624,37 @@ cross-sectional alpha (rank-IC ~+0.03, era-stable SKILL, leak-free, 41/42 folds,
 in PnL MAGNITUDE, with a path-coupled deployed Sharpe (range), an unhedged short squeeze-tail, a lagging regime label,
 and a long-leg beta-hedge lottery; DATA1 the one signal lever; live-forward the standing gap. Nothing overstated,
 nothing understated.
+
+### Addendum 66 (2026-07-12) — PUMP→DUMP pattern (user LABUSDT example): a REAL risk-ranker, but the same both-tails/era wall
+
+User asked whether pump-then-dump has a common actionable pattern (LABUSDT: +6515% pump/228d → −71% dump/8d with a
+**98× volume climax at the peak**). Scanned 218 local symbols (`pump_dump_scan.py`, `pump_dump_signal.py`). Two bugs
+caught+fixed mid-analysis: honest_limitations sign-bug (prior addendum), and a load1h column bug (`df["qv"]` vs
+`quote_volume`) that had silently reduced the signal test to LABUSDT-only (OOS=0 flagged it).
+
+**The shape IS common + the volume-climax RANKS dump-risk in BOTH eras** (unlike the general froth, which was
+both-tailed/unpredictable). 1,114 pump peaks; the 14% that dumped had **2.6× the volume climax** (13.8 vs 5.2) +
+2× harder 3d acceleration. PIT tercile-by-climax, both eras (`pump_dump_signal.py`):
+| era (pump-state days) | climax-LO fwd-7d med / dump-rate | climax-HI fwd-7d med / dump-rate |
+|---|---|---|
+| OOS 2023-25 (3741) | −0.6% / 2% | **−2.8% / 4%** |
+| RECENT 2025-10+ (836) | −4.1% / 6% | **−13.6% / 13%** |
+Monotone: higher climax → more negative forward return + higher dump-rate, consistently. So the blow-off top is a
+genuine risk-RANKER.
+
+**BUT it is NOT a clean tradeable short — same wall as the whole session:**
+- **Squeeze tail dominates the MEAN.** OOS climax-HI: MEDIAN fwd-7d −2.8% but MEAN **+6.8%** (a few pumps keep
+  exploding up) → naive short-PnL MEAN **−6.8%** (the squeezes blow out the average). RECENT climax-HI mean short
+  +2.6% / median +13.6% / win 68% — looks good, but is RECENT-ONLY.
+- **Era-fragile:** short expected-value positive RECENT, negative OOS (the both-tails/era pattern again).
+- **Low base rate:** even at HI climax, dump-rate 13% recent / 4% OOS → 87-96% of high-climax pumps DON'T dump ≥40%.
+- **Median positive both eras** (short wins 55% OOS / 68% recent) — so a STOP-managed short (cap the squeeze) is the
+  only candidate, but reactive stops were ~neutral (TH1) and separating dump-prone from squeeze-prone needs DATA1.
+- **Survivorship + venue:** local universe is survivor-biased (biggest OOS pump-dumps delisted, absent); many froth
+  names aren't HL-tradable (venue-gating).
+
+**Conclusion:** the pump→dump pattern is REAL and DESCRIBABLE (parabolic run-up → volume-climax blow-off → dump), and
+the volume-climax genuinely ranks dump risk both eras (a better-than-froth finding worth keeping). But monetizing it
+hits the identical squeeze-tail + era-fragility + venue walls — the expected-value short is squeeze-dominated and
+recent-only. The one lever that could separate the dumps from the squeezes remains **DATA1** (positioning). Scripts:
+pump_dump_scan.py, pump_dump_signal.py; data in scratchpad (pump_events.csv, pump_signal.csv, LABUSDT_1h.parquet).
