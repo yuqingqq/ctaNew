@@ -5658,3 +5658,34 @@ the volume-climax genuinely ranks dump risk both eras (a better-than-froth findi
 hits the identical squeeze-tail + era-fragility + venue walls — the expected-value short is squeeze-dominated and
 recent-only. The one lever that could separate the dumps from the squeezes remains **DATA1** (positioning). Scripts:
 pump_dump_scan.py, pump_dump_signal.py; data in scratchpad (pump_events.csv, pump_signal.csv, LABUSDT_1h.parquet).
+
+### review: addendum 66 (pump→dump / LABUSDT) — CLEAN PASS (construction-verified, 2 minor notes)
+
+Reviewer construction-verify (traced both new scripts vs the ledger claim, not surface):
+
+- **Claim = code.** dumped-vs-survived 2.6× climax (13.8/5.2), the PIT climax-tercile table, the squeeze-dominated mean
+  (OOS climax-HI median −2.8% / mean +6.8% → naive short mean −6.8%), era-fragile short-EV, 87–96% no-dump base rate,
+  and median-positive/win-55·68% all reproduce from `pump_dump_scan.py` (descriptive) + `pump_dump_signal.py` (PIT tercile).
+- **PIT clean in the load-bearing test.** `signal.py` features are all past-only (runup=c/c.shift(240),
+  climax=trailing-24h$/trailing-30d-median, accel=c/c.shift(72)); I traced the forward drawdown
+  `c[::-1].rolling(FWD).min()[::-1].shift(-1)` → min over **[t+1, t+FWD]** — correctly forward, **no TH1-style window
+  mis-shift** (contrast addendum 45); fwd_ret=c.shift(−168)/c is the 7d-forward endpoint. The tradeable claim rests on
+  this PIT tercile, **not** on `scan.py`'s centered local-max (`center=True`), which is descriptive-only (peak
+  identification for the dumped-vs-survived characterization) — correctly separated.
+- **Gross/cost + framing balanced.** short-PnL is gross and labeled gross; the verdict is NEGATIVE so gross is the
+  conservative direction, and script+ledger note costs/squeeze/execution would only worsen it. "REAL risk-RANKER, not a
+  clean tradeable short" mirrors the session's era-stable-rank / era-fragile-PnL verdict — credits the genuine both-era
+  monotone climax→dump ranking without overclaiming tradeability (addendum-65 balance held). Bug caught+fixed (load1h
+  qv-column → had silently reduced the test to LABUSDT-only, flagged by OOS=0) is exactly the swallowed-exception-
+  reduces-sample failure mode.
+
+**Two minor notes (neither changes the verdict):**
+1. **Forward-window overlap.** Daily sampling (`index.hour==0`) with a 7d forward window leaves ~6/7 forward-window
+   overlap across adjacent days, so the pump-state-day counts (3741 OOS / 836 recent) overstate *independent*
+   observations ~7×; the code's "avoid overlap" comment addresses intraday only. Does NOT bias the monotone direction or
+   the (negative) tradeability conclusion — but would inflate any significance test later attached to the terciles.
+2. **Residual swallow / path (cosmetic).** The `except Exception: pass` per-symbol swallow (the mechanism that hid the qv
+   bug) remains — OOS-count is now the canary; and the hardcoded session-pinned scratchpad `SD` (ecbd8f4c) would break a
+   fresh re-run's `to_csv`. Neither affects the finding.
+
+Verdict: honest, self-critical, PIT-clean in the load-bearing test, no overstatement, framing well-calibrated. **CLEAN PASS.**
