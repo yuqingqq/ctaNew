@@ -5689,3 +5689,38 @@ Reviewer construction-verify (traced both new scripts vs the ledger claim, not s
    fresh re-run's `to_csv`. Neither affects the finding.
 
 Verdict: honest, self-critical, PIT-clean in the load-bearing test, no overstatement, framing well-calibrated. **CLEAN PASS.**
+
+### Addendum 67 (2026-07-13) — pump→dump follow-ups: STOP fails; FUNDING is a real squeeze-vs-dump separator (opposite the hypothesis)
+
+Both user-requested ideas tested (`pump_dump_both.py`), NON-OVERLAPPING entries (≥7d apart per symbol, reviewer
+note 1) + bootstrap CI, both eras. High-climax tercile of pump-state blow-offs. Gross of cost.
+
+**IDEA 1 — stop-managed short: FAILS.** Capping the squeeze with a hard stop does NOT rescue the short.
+- OOS naive short mean −7.1% [CI −11.2,−3.3]; stop+20% −2.4% [CI −4.4,−0.3]; +30% −4.0%; +50% −4.4% — **still
+  significantly NEGATIVE at every stop**. Mechanism: ~46% of blow-offs squeeze ≥+20% within 7d (often BEFORE they
+  dump), so the stop just locks in −20% losses (stop+20% median −6.0%). RECENT: naive +7.0% [CI −2.0,+14.6] crosses
+  0; stops don't lift it out. The squeeze tail is not cleanly cappable — the squeeze frequently comes first.
+
+**IDEA 2 — funding at the blow-off: a REAL discriminator, SIGN-FLIPPED from the naive "crowded-longs-dump" thesis.**
+Within high-climax, split by funding-at-entry:
+| era | LOW-funding short EV | HIGH-funding short EV |
+|---|---|---|
+| OOS | −0.5% [CI −6.8,+5.0] (~flat) | **−10.6% [CI −17.9,−3.9]** (sig. NEGATIVE — they SQUEEZE) |
+| RECENT | **+14.0% [CI +6.6,+21.3]** (sig. POSITIVE — they DUMP) | −0.1% [CI −15.9,+13.1] (~flat) |
+- **HIGH funding = the pump has real long-conviction → it CONTINUES / SQUEEZES (bad short); LOW/negative funding =
+  no long support → it REVERSES / DUMPS (good short).** Funding is a CONVICTION/continuation proxy, NOT a
+  crowding-reversal proxy — the opposite of the naive DATA1 hypothesis.
+- The low-funding filter IMPROVES the short in BOTH eras vs high-climax-alone (OOS −7.1% → −0.5%, RECENT +7.0% →
+  +14.0%) and the DIRECTION (low-funding > high-funding for shorting) is consistent both eras. This is the FIRST
+  signal all session that SEPARATES the dump tail from the squeeze tail — and it's a FREE positioning proxy
+  (funding), partially delivering what we kept saying needs paid DATA1.
+- **BUT the absolute short EV stays era-fragile**: low-funding short is sig. positive RECENT but ~flat OOS
+  (−0.5%, CI crosses 0). And n is small post-split (RECENT high-climax n=77 → ~38/funding-half; possible
+  symbol-clustering) → the recent significance needs more data. The robust cross-era claim is the NEGATIVE one:
+  **don't short HIGH-funding blow-offs — they squeeze** (OOS −10.6% CI excludes 0).
+
+**Conclusion:** stop-management doesn't work (squeeze comes first). Funding IS a genuine squeeze-vs-dump separator
+(sign-flipped: high funding = continuation/squeeze, low funding = reversal/dump) — the first free proxy to crack the
+both-tails problem — and it narrows but does not eliminate the era-fragility. Next: combine funding + climax + other
+free positioning proxies (OI change, taker-buy ratio) into a proper squeeze-vs-dump classifier; the low-funding
+blow-off short is the candidate to validate with more data + a real cost/execution model. Scripts: pump_dump_both.py.
