@@ -5760,3 +5760,30 @@ Reviewer construction-verify (traced `pump_dump_both.py` vs the claim):
 
 Verdict: honest, PIT-clean, self-critical, framing well-calibrated; a real free squeeze-vs-dump separator (first of the
 session) that narrows but doesn't remove era-fragility. **CLEAN PASS.**
+
+### Addendum 68 (2026-07-13) — squeeze-vs-dump POSITIONING classifier: funding is the only separator; richer metrics don't add
+
+Built the free-positioning classifier the user asked for. **KEY DATA FIND:** local metrics cache (176 syms,
+`data/ml/cache/metrics_*.parquet`) has real positioning — `sum_open_interest`, `sum_toptrader_long_short_ratio`
+(smart money), `count_long_short_ratio` (crowd) — i.e. free DATA1-adjacent signals. **BUT recent-only (2025-09→
+2026-07)** → the positioning classifier CANNOT both-eras-validate. Enriched the recent pump-state entries
+(`pump_dump_classifier2.py`, after 3 kills re-scanning full klines — pivoted to reusing pump_both.csv entries + one
+metrics read/sym). RECENT high-climax blow-offs n=82 (only 44 with metrics; froth names often lack coverage).
+
+**Per-feature median-split short-EV (week-clustered CI), does the proxy separate squeeze from dump:**
+- **funding: LO short +15.3% [wk +9,+22] vs HI +0.7% [wk −13,+13] — SEPARATES** (low-funding = better short, CI
+  excludes 0; high-funding flat). Confirms addendum 67.
+- **top-trader (smart) LS: LO +10.5 vs HI +16.5 — no useful separation** (both decent, HI slightly better).
+- **crowd LS: LO +14.6 vs HI +12.5 — no separation.** **OI change: LO +12.3 vs HI +14.8 — no separation.**
+- Combined: low-funding = +15.0% [wk +5,+23]; adding smart-LS or crowd-LS gives the SAME ~+15% (n=10-12 each) — the
+  richer metrics **add nothing to the short EV** beyond funding. (They do shift the ≥40%-CRASH rate — LO-OI dump 5%
+  vs HI-OI 18%; LO-crowd 18% vs HI-crowd 5% — but not the mean short return, which is what a short earns.)
+
+**Conclusion:** the free positioning metrics (smart-money/crowd long-short, OI) do NOT crack squeeze-vs-dump beyond
+what **funding** already does. Funding remains the one separator (low-funding blow-offs are the better shorts —
+continuation/conviction proxy), recent-significant but era-fragile (addendum 67: ~flat OOS) + gross of cost.
+CAVEATS: recent-only (no both-eras), n=44 metrics-covered high-climax blow-offs = UNDERPOWERED (could hide a
+positioning signal), gross. Net of the whole pump→dump thread: a real risk-RANKER (volume climax) + a real
+SEPARATOR (funding, sign-flipped) but the richer positioning data doesn't add and the tradeable edge is thin /
+recent-only / era-fragile. The honest lever is still historical positioning data at scale (paid/deeper archive) to
+test funding+positioning both-eras. Scripts: pump_dump_classifier2.py (pump_dump_classifier.py = full-scan, too heavy).
