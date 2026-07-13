@@ -5724,3 +5724,39 @@ Within high-climax, split by funding-at-entry:
 both-tails problem — and it narrows but does not eliminate the era-fragility. Next: combine funding + climax + other
 free positioning proxies (OI change, taker-buy ratio) into a proper squeeze-vs-dump classifier; the low-funding
 blow-off short is the candidate to validate with more data + a real cost/execution model. Scripts: pump_dump_both.py.
+
+### review: addendum 67 (pump→dump follow-ups: STOP fails, FUNDING sign-flip) — CLEAN PASS (construction-verified, 2 notes)
+
+Reviewer construction-verify (traced `pump_dump_both.py` vs the claim):
+
+- **Claim = code.** The stop model `np.where(fwd_maxrise≥S, −S, −fwd_ret)` swept over {20,30,50}%, the funding-split
+  short EVs + bootstrap CIs, the ~46% stop-hit mechanism, and the dump-rate all reproduce.
+- **PIT clean → the "sign-flip" is a GENUINE finding, not look-ahead.** `funding_at()` does
+  `reindex(entry_times, method="ffill")` = last funding at-or-before entry (no forward peek); features
+  (runup/climax/funding) are all past-only; the forward `fwd_maxrise`/`fwd_dd` use the same
+  `c[::-1].rolling(FWD).min/max()[::-1].shift(−1)` = **[t+1, t+FWD]** construction I verified in the addendum-66
+  review — correctly forward. So funding-at-entry genuinely predicts the forward squeeze-vs-dump split.
+- **STOP model is OPTIMISTIC yet still fails.** The stop assumes exit exactly at −S (a gap through the stop would be
+  worse), so "STOP fails / stays sig. negative OOS at every stop" is the CONSERVATIVE conclusion — robust.
+- **Framing balanced (addendum-65 held).** Does NOT overclaim funding "fixes" the short: the low-funding short is a
+  CANDIDATE (sig +14.0% RECENT / ~flat −0.5% OOS = era-fragile ABSOLUTE EV); the robust cross-era claims are the
+  DIRECTION (low>high both eras) + the avoidance (don't short HIGH-funding blow-offs, OOS −10.6% CI excludes 0). The
+  funding re-label (continuation/conviction proxy, NOT crowding-reversal) is an honest reinterpretation.
+- **Adopted my addendum-66 note.** "reviewer note 1" → non-overlapping ≥7d entries directly fixes the within-symbol
+  forward-window overlap I flagged in the 89514b4 review. Review loop working.
+
+**Two notes (neither overturns the finding):**
+1. **Cross-symbol event-clustering (the substantive one).** The ≥7d spacing removes *within-symbol* forward-window
+   overlap, but the bootstrap resamples entries as independent while froth blow-offs CLUSTER across symbols in the
+   same froth wave → all CIs (incl. the "robust" OOS high-funding −10.6% excludes-0) are somewhat optimistic. The
+   addendum flags clustering for the RECENT n but the mechanism applies to the OOS robust claim too. The STRONGER leg
+   is the cross-era DIRECTIONAL replication (low>high both eras) — it doesn't depend on CI width; lean on that, not a
+   single-era CI-excludes-0.
+2. **Positive-candidate gross-vs-net gap.** Unlike 66 (negative conclusion → gross conservative), the low-funding
+   short is a POSITIVE-EV candidate (RECENT +14% gross), so cost is a real unquantified HAIRCUT (froth spread +
+   possibly-adverse funding on the short when funding is low/negative). Correctly deferred to "a real cost/execution
+   model," but the haircut could be large on these illiquid names — keep it a candidate, not a result. (Cosmetic:
+   session-pinned scratchpad SD, same as 66.)
+
+Verdict: honest, PIT-clean, self-critical, framing well-calibrated; a real free squeeze-vs-dump separator (first of the
+session) that narrows but doesn't remove era-fragility. **CLEAN PASS.**
