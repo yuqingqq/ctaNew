@@ -5787,3 +5787,38 @@ positioning signal), gross. Net of the whole pump→dump thread: a real risk-RAN
 SEPARATOR (funding, sign-flipped) but the richer positioning data doesn't add and the tradeable edge is thin /
 recent-only / era-fragile. The honest lever is still historical positioning data at scale (paid/deeper archive) to
 test funding+positioning both-eras. Scripts: pump_dump_classifier2.py (pump_dump_classifier.py = full-scan, too heavy).
+
+### review: addendum 68 (squeeze-vs-dump positioning classifier) — CLEAN PASS (construction-verified; both my 67 notes adopted)
+
+Reviewer construction-verify (traced `pump_dump_classifier2.py` — the load-bearing script; `classifier.py` = too-heavy full-scan):
+
+- **Claim = code.** Per-feature median-split short-EV, the low-funding&(smart/crowd-LS) combined rules, week-clustered
+  CIs, and the crash-rate-vs-mean-return split all reproduce.
+- **PIT clean on the NEW positioning metrics (the key look-ahead check).** `enrich()` pulls OI / top-trader-LS /
+  crowd-LS via `reindex(entry_t, method="ffill")` (last value ≤ entry); `oi_chg = oi[t]/oi[t−3d]−1` is a PAST 3-day
+  change; taker = trailing-24h fraction; forward `fwd_ret`/`fwd_dd` stay forward ([t+1,t+FWD], same as 66/67). So the
+  "funding separates / positioning doesn't" comparison is a level PIT field — no look-ahead in the new features.
+- **Both my addendum-67 notes ADOPTED (review loop working, 2nd consecutive):**
+  1. **Cross-symbol clustering** → `wk_boot()` now resamples FROTH-WEEK BLOCKS (not individual entries), directly
+     fixing the independence violation I flagged; funding STILL separates (low +15.3% [wk +9,+22] excludes 0) under
+     the more-robust CI — which STRENGTHENS the 67 finding.
+  2. **Cost** → now QUANTIFIED (~0.5–1% RT + funding drag; "apply a haircut to any positive EV").
+- **Framing balanced (addendum-65 held).** The "richer metrics don't add" NULL is correctly labeled UNDERPOWERED
+  (n=44 metrics-covered → ~10–12 per combined cell; "could hide a positioning signal") — a low-power null, NOT a
+  proven one. Funding kept as recent-sig / era-fragile (67: ~flat OOS) / gross CANDIDATE, not validated. The
+  crash-rate-vs-mean distinction (OI/crowd-LS shift the ≥40%-crash rate but not the mean a linear short earns) is a
+  sophisticated, honest scope statement.
+
+**Two notes (neither overturns it):**
+1. **Low power cuts BOTH ways.** The null ("positioning adds nothing") ≡ "not detectable at n=44"; and the POSITIVE
+   funding-separates claim, while surviving the week-clustered CI, rests on FEW froth-weeks (a block bootstrap with
+   few blocks is itself coarse). So the whole classifier is a promising-but-unpowered, recent-only probe — correctly
+   labeled as such. The genuinely robust cross-era result remains the addendum-67 pair (climax risk-RANKER + funding
+   sign-flip direction); this cell adds "free positioning metrics don't beat funding, at low power."
+2. **Reproducibility chain (cosmetic).** classifier2 reads `pump_both.csv` (addendum-67 scratchpad output) → must run
+   `pump_dump_both.py` first; session-pinned SD (ecbd8f4c), same as 66/67. Both scripts committed; result reproducible
+   from committed code + local caches run in sequence.
+
+Verdict: honest, PIT-clean, self-critical, correctly-under-claimed null, both prior review notes adopted. The
+pump→dump thread lands where the whole session lands — a real ranker + a real (funding) separator, thin/recent/
+era-fragile edge, the real lever is deeper positioning history. **CLEAN PASS.**
