@@ -5878,3 +5878,34 @@ comparison is within-subset); worth stating so the numbers reconcile against V4_
 Verdict: exemplary transfer-test discipline — a promising finding tested against the core system, found to FAIL, and
 honestly reconciled (different mechanism) rather than forced. Book-level, PIT, cross-era, one Sharpe convention.
 **CLEAN PASS.**
+
+### Addendum 70 (2026-07-13) — Binance STANDALONE reliability (user #1): NOT reliable; the funding signal is SELF-DEFEATING for a short
+
+Tested the pump→dump blow-off short as a standalone Binance strategy (venue-gating dissolves on Binance), signal =
+high-climax + low-funding, NET of realistic cost, both eras, week-clustered bootstrap CI (`pump_dump_binance.py`).
+| era (n) | GROSS short | funding drag | NET @20bps | verdict |
+|---|---|---|---|---|
+| OOS (162) | −1.5% (med +3.5, win 57%) | **−2.66%** | **−4.3% [wkCI −10.4,+1.5]** | not sig (CI~0) |
+| RECENT (43) | +9.1% (med +20.2, win 79%) | **−4.90%** | **+4.0% [wkCI −6.9,+13.6]** | not sig (CI~0) |
+**NEITHER era is significant net of cost.** Not reliable.
+
+**The key mechanism — funding is SELF-DEFEATING for this short.** The signal shorts LOW/negative-funding blow-offs
+(low funding predicts the dump), but a short on a negative-funding name PAYS funding → a −2.7%(OOS)/−4.9%(recent)
+drag over the 7d hold that EXCEEDS the spread cost and eats most of the edge. Worse, negative funding = crowded
+SHORTS = squeeze-prone (doubly cursed: pay funding AND squeeze risk). So the very signal that predicts the dump
+imposes a funding cost + squeeze risk on the short. Recent gross +9.1% → net +4.0% (CI crosses 0); OOS gross
+−1.5% → net −4.3% (CI crosses 0). Spread (20-60bps) barely matters — funding drag dominates.
+
+CAVEATS: funding drag = funding_entry×21 assumes CONSTANT extreme funding (mean-reverts → drag likely OVERSTATED),
+but the CIs cross 0 regardless of the haircut; small n (recent 43 clustered in 24 weeks); local survivor universe
+(broad froth adds OOS crashes + delisting-halt risk). Even generously, the week-clustered CI can't establish
+reliability either era.
+
+**═══ PUMP→DUMP THREAD — DEFINITIVE CLOSE ═══** The pattern is REAL (parabolic run-up → volume-climax blow-off →
+dump; volume-climax ranks dump-risk both eras; funding separates squeeze from dump) but does NOT yield a tradeable
+strategy on EITHER path: (a) v4 ENHANCEMENT fails (addendum 69 — funding is opposite-mechanism for v4's reversion
+shorts); (b) STANDALONE Binance is not reliable net of cost (addendum 70 — the funding signal is self-defeating,
+neither era significant). The richer positioning classifier was an underpowered null (68). Net: a real,
+well-characterized market pattern, but not a monetizable edge with free data — same both-tails/era/cost walls, now
+with the added self-defeating-funding mechanism. Scripts: pump_dump_scan/signal/both/classifier2/binance +
+v4_short_funding_split.py.
