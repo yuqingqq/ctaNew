@@ -5822,3 +5822,28 @@ Reviewer construction-verify (traced `pump_dump_classifier2.py` — the load-bea
 Verdict: honest, PIT-clean, self-critical, correctly-under-claimed null, both prior review notes adopted. The
 pump→dump thread lands where the whole session lands — a real ranker + a real (funding) separator, thin/recent/
 era-fragile edge, the real lever is deeper positioning history. **CLEAN PASS.**
+
+### Addendum 69 (2026-07-13) — v4 short-side funding ENHANCEMENT (user #2): FAILS — pump→dump funding is a DIFFERENT mechanism
+
+User asked to enhance v4's short leg with the pump→dump funding finding (high funding = squeeze → skip). Split v4's
+bottom-2 short selections by funding-at-cycle, book-level, both eras (`v4_short_funding_split.py`; self-contained,
+funding cache + _honest books):
+| funding tercile | OOS short-leg Sharpe | RECENT short-leg Sharpe |
+|---|---|---|
+| LO | +0.49 (PnL +4.6bps) | +3.92 (+53.5bps) |
+| mid | −0.24 (−2.1bps) | −1.15 (−13.5bps) |
+| HI | **+1.13 (+9.3bps)** | **+3.46 (+32.0bps)** |
+Non-monotonic (U-shaped): EXTREME funding (either side, = crowded) shorts well; MID (no crowding) is worst. HIGH
+funding shorts are GOOD in v4 (opposite the blow-off finding). Skipping HI-funding shorts HURTS both eras (baseline
+OOS +0.62→gated +0.17; RECENT +3.15→+2.03).
+
+**Mechanism (the honest reconciliation):** v4's shorts are MEAN-REVERSION candidates (over-extended by residual-
+alpha) → crowded longs (HIGH funding) REVERT and pay the short = good. Pump→dump blow-offs are MOMENTUM/parabolic →
+HIGH funding = long CONVICTION → CONTINUES/squeezes = bad short. Same funding, opposite implication, because the two
+trades select opposite regimes (reversion vs momentum). So the pump→dump funding signal does NOT transfer to v4's
+general short leg — the "enhance current system" path FAILS with the simple funding gate. (A targeted gate on only
+the blow-off subset of v4 shorts would need climax + affects few names → minimal; not pursued.)
+
+**Implication:** the pump→dump signal is its OWN thing (momentum blow-off), not a v4 (reversion) enhancement →
+validates the user's framing #1: test it as a STANDALONE Binance strategy (venue-gating dissolves on Binance where
+the froth is tradable), realistic cost, both eras. Next. Scripts: v4_short_funding_split.py.
