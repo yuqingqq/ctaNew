@@ -5847,3 +5847,34 @@ the blow-off subset of v4 shorts would need climax + affects few names → minim
 **Implication:** the pump→dump signal is its OWN thing (momentum blow-off), not a v4 (reversion) enhancement →
 validates the user's framing #1: test it as a STANDALONE Binance strategy (venue-gating dissolves on Binance where
 the froth is tradable), realistic cost, both eras. Next. Scripts: v4_short_funding_split.py.
+
+### review: addendum 69 (v4 short funding enhancement FAILS) — CLEAN PASS (construction-verified; exemplary transfer-test discipline)
+
+Reviewer construction-verify (traced `v4_short_funding_split.py` vs the claim):
+
+- **Claim = code.** Funding-tercile split of v4's bottom-2 short selections, gated (skip HI) vs baseline, both eras
+  (`hl_v4base_oos_honest` / `hl_tgt_res_base_honest`) — all reproduce.
+- **Correctly BOOK-LEVEL — pitfall #4 applied.** Short PnL = `−alpha_A·1e4` (residual-alpha SELECTION PnL), daily
+  Sharpe, **NO overlays / DD-stop / regime gate** — the funding-enhancement is measured path-INDEPENDENT, exactly as a
+  selection/feature test must be (not a path-coupled full-stack replay). Explicitly stated + correctly implemented.
+- **PIT funding** (`fs.reindex(cycle_t, method="ffill")` = last ≤ cycle). **One Sharpe convention** (daily × √365,
+  matching the honest generators — not the retracted cycle Sharpe).
+- **Cross-era robust NEGATIVE.** Gating out HIGH-funding shorts HURTS BOTH eras (OOS +0.62→+0.17; RECENT +3.15→+2.03),
+  and HI-funding shorts are GOOD in v4 both eras (OOS +1.13, RECENT +3.46) — the OPPOSITE of the blow-off finding. A
+  strong negative, not a single-era artifact.
+- **Honest mechanism reconciliation.** v4 shorts = MEAN-REVERSION (crowded/high-funding longs revert, pay the short =
+  good); pump→dump = MOMENTUM (high funding = conviction → continues/squeezes = bad short). Same funding, opposite
+  implication because the two trades select opposite regimes. This genuinely explains why the froth funding signal
+  does NOT transfer and PREVENTS overgeneralizing it onto the core book. Framing balanced: doesn't salvage the failed
+  enhancement, doesn't overclaim a new v4 positive (the U-shape "short extreme-funding" is noted then dismissed as
+  minimal), correctly redirects pump→dump to a STANDALONE Binance test.
+- Self-contained repro (state/convexity _honest books + funding cache; no scratchpad path — cleaner than 66-68).
+
+**One reconciliation note (doesn't affect the conclusion):** the baselines here are on the funding-COVERED subset
+(`dropna(funding)`) — that's why OOS +0.62 differs from the honest-doc full-book OOS short **+0.33** (partial OOS
+funding-cache coverage) while RECENT **+3.15** matches (near-complete recent coverage). Internally consistent (the gate
+comparison is within-subset); worth stating so the numbers reconcile against V4_LIMITATIONS.
+
+Verdict: exemplary transfer-test discipline — a promising finding tested against the core system, found to FAIL, and
+honestly reconciled (different mechanism) rather than forced. Book-level, PIT, cross-era, one Sharpe convention.
+**CLEAN PASS.**
