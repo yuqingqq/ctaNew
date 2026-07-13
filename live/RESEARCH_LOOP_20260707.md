@@ -5909,3 +5909,36 @@ neither era significant). The richer positioning classifier was an underpowered 
 well-characterized market pattern, but not a monetizable edge with free data — same both-tails/era/cost walls, now
 with the added self-defeating-funding mechanism. Scripts: pump_dump_scan/signal/both/classifier2/binance +
 v4_short_funding_split.py.
+
+### review: addendum 70 (Binance standalone — NOT reliable, self-defeating funding) — CLEAN PASS (construction-verified; thread close)
+
+Reviewer construction-verify (traced `pump_dump_binance.py` vs the claim):
+
+- **Claim = code.** Signal (high-climax top-tercile ∩ low-funding ≤ median), gross short / funding-drag / net,
+  spread sweep {20,40,60}bps, week-clustered CI, both eras — all reproduce.
+- **Funding-cost mechanism CORRECT (the load-bearing insight).** `fund_pnl = funding × 21` (7d × 3/day): a short
+  RECEIVES when funding>0, PAYS when funding<0 — right sign. The low/negative-funding signal → the short PAYS the
+  drag (OOS −2.66% / RECENT −4.90%), which exceeds spread. Genuinely self-defeating: the funding that IDENTIFIES the
+  dump is the funding the short PAYS, and low funding = crowded shorts = squeeze-prone.
+- **"Drag overstated" flagged + conclusion robust to it.** Drag = entry-funding × 21 assumes constant funding
+  (mean-reverts → overstated); the author flags this AND the CI crosses 0 either era regardless — correctly, because
+  the failure is driven by CI WIDTH (small n: RECENT 43 in ~24 weeks) not just the drag point: reducing the drag
+  shifts the mean up but the ±10%-wide week-clustered CI still spans 0. Sound.
+- **PIT** (reuses the addendum-67 verified entries), **week-clustered CI** (froth-wave clustering, my 67 note),
+  **both eras**, neither net-significant.
+- **Framing balanced:** real, well-characterized pattern / NOT monetizable on free data. Credits the pattern, denies
+  the edge, names the sharp universe-independent reason (self-defeating funding + squeeze + halt).
+
+**One calibration note (author already flagged survivorship + broad-universe):** for a froth SHORT the local survivor
+universe EXCLUDES delisted crashes = the biggest short WINS → local gross is biased DOWN (understated), so "fails
+locally" does not by itself prove the full-universe froth short fails. The close correctly rests on the
+universe-INDEPENDENT self-defeating-funding + squeeze + delisting-halt MECHANISM, not the local point estimate — the
+body scopes it to FREE data with the broad delisted-froth universe named as the untested-but-unpromising further step,
+so "DEFINITIVELY closed" is a touch strong on the header but honest in the body. (Same survivorship DIRECTION as my
+addendum-52 lesson — good that it's flagged here.) Cosmetic: session-pinned SD, reuses pump_both.csv (repro needs
+addendum-67 `pump_dump_both.py` first).
+
+**Thread verdict (66→70):** a REAL, well-characterized pattern (climax risk-RANKER + funding sign-flip separator) that
+does not monetize on free data — enhancement=wrong-mechanism (69), standalone=self-defeating-funding/not-reliable
+(70), positioning=underpowered-null (68). Same both-tails/era/cost walls + the new self-defeating-funding mechanism.
+Honestly closed. **CLEAN PASS.**
