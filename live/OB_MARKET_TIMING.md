@@ -1,7 +1,20 @@
 # OB Aggregate-Crowding Market-Timing Signal
 
-**Status:** research lead — honestly characterized, **not deployed**. Recent-era persistence is
-statistically unconfirmable on available data; the decisive next step is a live paper-forward test.
+**Status: NEGATIVE / inconclusive after review (2026-07-16).** A hardened re-test
+(`bookdepth_timing_corrected.py`) with a **fixed PIT universe**, **PIT-clean z-score**, **real
+tradeable instruments (BTC/ETH)**, and **honest block-bootstrap CIs** shows **every Sharpe CI
+includes zero** — OOS *and* recent, BTC *and* basket. The earlier "+0.6 / +1.1 Sharpe, OOS-confirmed"
+was **not** out-of-sample (depth/window/horizon/cap/refinements were all selected on both reported
+eras) and was inflated by an **expanding survivor universe** (53→175 names) and trading the
+**equal-weight alt basket** (the signal is ~0 / indistinguishable from zero on BTC, the instrument you
+would actually trade). Do **not** treat this as a validated or deployable strategy. Accurate framing:
+*a historically-suggestive pattern in the alt-basket bull era, not statistically significant, not
+confirmed on a liquid instrument.* The sections below are the ORIGINAL (over-claimed) writeup, retained
+for the record; read them through the corrected status above.
+
+---
+
+**(Original writeup — over-claimed; see corrected status above.)** research lead — **not deployed**.
 
 A defensive market-timing overlay derived from the free Binance USDM `bookDepth` archive. It fades
 **aggregate order-book crowding**: when the whole market's resting book leans one-sided (everyone
