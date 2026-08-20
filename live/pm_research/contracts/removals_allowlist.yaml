@@ -1,5 +1,4 @@
 # Intentional removals/changes. Stale entries are latent bypasses and FAIL.
-_version: v10->v11 refactor per PM_STRUCT_ITER10_REVIEW (see commit message)
 field:DecisionProblem.coupling: 'M9-4.1: replaced by exclusive CouplingSource'
 field:DecisionSchemeConfig.coupling_source: 'M10-5: split into CouplingMode (config) and ResolvedCoupling
   (problem)'

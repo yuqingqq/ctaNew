@@ -222,7 +222,7 @@ if __name__ == "__main__":
         why = allowed.get(k)
         print(f"  {k}: {o!r} -> {n!r}" + (f"   [allowed: {why}]" if why else "   *** UNEXPLAINED ***"))
         fatal |= not why
-    stale = sorted(set(allowed) - set(removed) - set(changed))
+    stale = sorted(set(allowed) - set(removed) - set(changed) - {"_version"})
     if stale:
         print(f"STALE ALLOWLIST ENTRIES ({len(stale)}) — latent bypasses:")
         for k in stale:
