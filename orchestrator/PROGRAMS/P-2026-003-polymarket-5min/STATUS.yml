@@ -3,7 +3,7 @@ name: Polymarket Crypto 5-min Markets
 phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
-updated: 2026-08-20 (session 2 — sigma repair reviewed, Phase 0A reopened)
+updated: 2026-08-20 (session 2 — sigma Revision 3 reviewed, HOLD remains)
 
 flags:
   collector_running: true    # since 2026-08-19 ~14:32 UTC. MNAR bug fixed
@@ -26,11 +26,11 @@ flags:
                              # Must be re-read on the corrected specification.
   anchor_bug: found+diagnosed  # E_t[X_T] used the trailing S60, which lags spot
                              # by ~w/2 = 30 s, paired with a CONDITIONAL
-                             # variance law. sigma_eff came out ~2.6x too small
-                             # at r=30. Nowcast P_hat = 2*S30 - S60 fixes it:
-                             # -0.0101 Brier pooled, at EVERY horizon. The
-                             # anchor explains a large share of the deficit;
-                             # the residual model-vs-book verdict is unadjudicated.
+                             # variance law. The 2*S30-S60 candidate improved
+                             # pooled Brier by 0.0101 on one test day, but it is
+                             # a biased trend extrapolator under the Brownian
+                             # fixture and is NOT the final fix. The conditional
+                             # mean remains to be estimated and validated OOS.
   flb_edge: downgraded       # WAS "+3.6 c/share at p in [0.15,0.35), stable" —
                              # the prior that recommended the Option-B re-scope.
                              # That was measured on `book` snapshots which are
@@ -58,36 +58,28 @@ flags:
                              # conflicts with docs (7%) and CLOB base_fee.
   structure_converged: false # 12 review iterations; replay stands at
                              # LOCAL 11 / SPREADING 1 / STRUCTURAL 1.
-  sigma_plan_finalized: true # SIGMA_PLAN.md, commit 80f823e. Phase 0 gated.
-  sigma_plan_review: iter2-applied # SIGMA_PLAN_REVIEW_ITER2.md M2-1..M2-6 all
-                             # ACCEPTED and applied. Every ITER2 claim was
-                             # REPRODUCED before acting: alpha*=1.499167,
-                             # cond var 8.2590, uncond MSE 9.5139, unconstrained
-                             # 1.701/-0.836 @ 8.0912, and all four adversarial
-                             # probes. SIGMA_PLAN.md is now REVISION 3 —
-                             # rewritten in place, not a third overlay
-                             # (1024 -> 649 lines); contradiction scan clean.
-                             # ESTIMATOR CODE REMAINS ON HOLD.
-  anchor_ledger_closed: false # STILL FALSE, and now correctly modelled. The
-                             # anchor is a conditional MEAN problem: for
-                             # P_hat(alpha)=S60+alpha*(S30-S60) the error is
-                             # (alpha-alpha*)*(S30-S60) + zero-mean residual.
-                             # alpha* = 2700/1801 = 1.4991671, NOT 2. The
-                             # conditional variance is ALPHA-INDEPENDENT (8.2590,
-                             # not 9.5139 — the difference was squared bias).
-                             # The bias is OBSERVABLE at decision time and its
-                             # sd is 1.22 bps vs sigma_eff(30) ~2.4 bps, i.e.
-                             # HALF the sd at r=30 was a predictable mean error.
-                             # Closes only when alpha is ESTIMATED on the tape
-                             # (AnchorSpec.alpha_provenance: ESTIMATED) and the
-                             # sampling convention is VERIFIED.
-  sampling_convention: UNVERIFIED # ~1 Hz publication cadence is a CADENCE, NOT
-                             # A KERNEL. EXP-M6 proves the published S60 endpoint
-                             # reproduces settlement; it says nothing about how
-                             # that endpoint is built. A 1 s shift in fast-stream
-                             # support alone moves alpha* 1.4992 -> 1.4954. No
-                             # PathLaw may price while this reads UNVERIFIED.
-                             # Phase 0A step 5 gates the kernel AND the anchor.
+  sigma_plan_finalized: false # Revision 3 is canonical but not implementation-
+                             # ready; SIGMA_PLAN_REVIEW_ITER3.md is PARTIAL/HOLD.
+  sigma_plan_review: iter3-partial # Revision 3 correctly repairs the Brownian
+                             # mean/variance decomposition, false bracket, hidden
+                             # nugget and several v13 carrier defects. All six
+                             # iter-2 items remain partial: the empirical-anchor
+                             # route and structural ledger are incompatible as
+                             # written, and the executable carrier cannot express
+                             # an empirical alpha as its zero-bias mean.
+  anchor_ledger_closed: false # Choose one estimand first. Direct regression
+                             # identifies a reduced-form mean and total residual;
+                             # it does not also identify structural v(r) and
+                             # Omega. Adding those lines double-counts unless a
+                             # latent measurement model separates them. The
+                             # fixture compares every supplied alpha with the
+                             # Brownian alpha_star, so an empirical alpha is
+                             # labelled biased and pulled back to the fixture.
+  sampling_convention: UNVERIFIED # Correctly reopened, but the fixture still
+                             # returns a numeric settlement variance under the
+                             # default UNVERIFIED convention. Its records encode
+                             # rectangular windows/lag flags, not general weighted
+                             # temporal support. No pricing use is permitted.
   d2_retired: true           # The old incomplete-ledger prediction is retired,
                              # but c(30)=1.14 is NOT replacement evidence: its
                              # 2.6 bps residual comes from SIGMA_DIAGNOSTICS
@@ -96,41 +88,27 @@ flags:
                              # VERIFIED at SIGMA_DIAGNOSTICS.md:157-175. Both
                              # c(30)=2.17 and c(30)=1.14 are apples-to-oranges;
                              # no c(r) number is currently claimable.
-  contracts_version: 14      # M14-1 repairs all eight M2-5 sub-items:
-                             # BE-Uncertainty now reads only via state_view
-                             # (RawEvent reached past the knowledge-time seam);
-                             # LinkRef single-owns the link; LinkFunction gains
-                             # g_prime/density (dynamics consumers were
-                             # unimplementable without them); ForecastRequest
-                             # carries as_of/knowledge_cutoff/target_interval so
-                             # a bare r can no longer hide look-ahead; R-WFWD
-                             # fixes the BACKWARDS fit-cutoff rule (a
-                             # walk-forward law is USED after its cutoff);
-                             # AnchorSpec separates bias from variance;
-                             # AnchorErrorEvidence replaces the false
-                             # floor/ceiling bracket; FeedErrorCov is a 2x2, not
-                             # a scalar; variances/intervals/w_hat are typed.
-                             # 9 removals + 13 changes, all with migration
-                             # records; checker 0 unexplained, 0 invariant fails.
-                             # NOT closed: runtime refusal exists only in the
-                             # fixture, and BE-Belief is still absent from
-                             # modules: (structure loop, not this plan).
+  contracts_version: 14      # Structural migration passes and StateView,
+                             # ForecastRequest, LinkRef, derivative and typed
+                             # anchor additions are useful. Semantics remain
+                             # partial: request/law instrument-target-horizon-
+                             # knowledge equality is not enforced; LinkRef is not
+                             # tied to BeliefProcess.link; alpha/cond_var scope is
+                             # ambiguous; and rate/feed covariance units disagree
+                             # with the fixture. Checker green is structural.
 
 focus: >
   Build and test the model, mechanism-first, no PnL/capacity estimation
   (user, 2026-08-20). Entry point is live/pm_research/PM_ARCHITECTURE.md (v12)
   with contracts/contracts.yaml as the machine-readable source of truth.
-  IMMEDIATE: the ITER2 spec repairs are IN (plan Revision 3, sigma_kernels
-  rewritten, contracts v14) but Phase 0A is NOT closed. Two things gate
-  everything and neither is code: (5) VERIFY S30/S60 AGGREGATION AND
-  KNOWLEDGE-TIME SEMANTICS against the 1 s Binance tape — window endpoints,
-  sample weights, update triggers, event-time alignment — which gates the kernel
-  and the anchor together; then (6) ESTIMATE alpha on the tape, preferably by
-  regressing observed x_T directly on observed (S30, S60), which needs neither
-  latent Chainlink spot nor the internal kernel, with the conditional bias in
-  the MEAN and Omega estimated as a 2x2. Also still open: the fallback's own
-  loss function, and runtime enforcement of refusal (only the fixture refuses
-  today). Estimator implementation remains on HOLD.
+  IMMEDIATE: freeze one statistical route before running Phase 0A 5-6. Either
+  use a reduced-form conditional law fitted on (S30,S60), in which its residual
+  already contains k/v/Omega, or declare a structural latent-state/measurement
+  model that identifies those lines separately. Then repair empirical-alpha
+  ownership and horizon scope, Omega units/PSD/identification, unverified-status
+  refusal, and request/link/time invariants. Only after that verify S30/S60
+  support and design the day-blocked empirical experiment. Estimator
+  implementation remains on HOLD.
 
 standing_rules:
   - No design decision that a measurement on existing data could settle may be
@@ -186,44 +164,25 @@ tasks:
       Review loop is at 12 iterations and NOT converged.
   - id: sigma-model
     phase: 1
-    name: Volatility estimator — ITER2 applied (Rev 3 / v14), anchor to ESTIMATE
-    status: iter2-applied-hold
+    name: Volatility estimator — Revision 3 reviewed, estimand split unresolved
+    status: iter3-reviewed-hold
     notes: |
-      Three estimators were built and each violated a decision already made
-      (static pooled -> static per-coin -> rolling per-window with POOLED blend
-      weights). Root cause was not sigma: the ANCHOR was wrong, TWICE.
-      Lineage: SIGMA_PLAN.md 80f823e -> review 6bea435 -> Revision 2 cc1d0e7 ->
-      SIGMA_PLAN_REVIEW_ITER2.md -> Revision 3 (this).
-      THE V2 ERROR WAS THE V1 ERROR ONE LEVEL DEEPER. v1 used a LAGGING anchor
-      (trailing S60). v2 fixed the lag with P_hat = 2*S30-S60, justified by a
-      LOCALLY LINEAR PATH — a trend model — then entered that estimator's
-      UNCONDITIONAL MSE as a zero-mean variance line. Under the driftless model
-      used everywhere else, trajectories have no local derivative and 2/-1 is
-      not the conditional mean: the error is (alpha-alpha*)*(S30-S60) + a
-      zero-mean residual, with alpha* = 2700/1801 = 1.4991671. The first term is
-      OBSERVABLE AT DECISION TIME, so v2 buried a predictable mean error in the
-      variance — sd 1.22 bps against sigma_eff(30) ~2.4 bps, i.e. HALF the sd at
-      r=30. Same defect class as the bug that started the thread.
-      Also: the conditional variance is ALPHA-INDEPENDENT (8.2590, not 9.5139 —
-      the gap was squared bias), and v2's "floor" of 9.5139 is BEATEN by alpha*
-      inside v2's own model, so it was never a bound.
-      APPLIED: M2-1 anchor rebuilt as a conditional-MEAN problem (AnchorSpec,
-      bias_enters ∈ {MEAN_MODEL, REFUSED}); M2-2 SamplingConvention versioned and
-      UNVERIFIED, kernel step REOPENED; M2-3 non-ordered AnchorErrorEvidence +
-      2x2 FeedErrorCov; M2-4 one ledger, no hidden nugget, exact domain refusal,
-      exact-rational tests (24 checks); M2-5 contracts v14, all eight sub-items;
-      M2-6 plan REWRITTEN IN PLACE as Revision 3 (1024 -> 649 lines), not a third
-      overlay, contradiction scan clean.
-      SELF-CHECK WORTH KEEPING: v2's Monte-Carlo independence test drew the
-      future innovation independently BY CONSTRUCTION — a test that could not
-      fail. That is the FOURTH artefact in this programme to report success
-      without checking the thing it existed to check (v8 contract checker,
-      path-keyed allowlist, that MC, and v13 itself). Assume the next one exists.
-      NEXT (neither is code): Phase 0A 5 — VERIFY S30/S60 semantics against the
-      1 s Binance tape, which gates kernel and anchor together; Phase 0A 6 —
-      ESTIMATE alpha on the tape, preferably by regressing observed x_T on
-      observed (S30, S60), which needs neither latent spot nor the internal
-      kernel and is robust to 5's outcome.
+      Lineage: plan 80f823e -> review 6bea435 -> Revision 2 cc1d0e7 -> review
+      20b759e -> Revision 3 7474e49 -> SIGMA_PLAN_REVIEW_ITER3.md.
+      KEPT: corrected Brownian alpha*=2700/1801 and conditional variance 8.2590;
+      bias separated from variance; false bracket removed; one ledger/no hidden
+      nugget; convention UNVERIFIED; StateView/ForecastRequest/LinkRef carrier;
+      canonical in-place rewrite. SHIPPED TESTS PASS (kernel 24, checker 13,
+      v13->v14 migration clean), but adversarial probes show the semantic gap.
+      BLOCKERS: direct regression estimates a reduced-form total residual while
+      the plan separately adds structural k/v/Omega; the fixture cannot make an
+      empirical alpha its zero-bias mean; Omega is multiplied by sigma2 despite
+      the plan/contract typing it in bps2; negative sigma2 and non-PSD covariance
+      can produce negative pricing variance; UNVERIFIED conventions still return
+      numbers; and v14 request/link/time equality remains prose rather than an
+      executable invariant. All six iter-2 items therefore remain partial.
+      NEXT: choose reduced-form versus structural estimand, then repair alpha,
+      units/refusal and contract invariants before any tape experiment.
   - id: e-x1-bookbeat
     phase: 1
     name: Re-read the model-vs-book verdict on the corrected anchor

@@ -1,22 +1,22 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
 Updated: 2026-08-20, session 2. All work is on branch **`mm-research`** (pushed);
-nothing is on `main`. Sigma repair reviewed in
-`live/pm_research/SIGMA_PLAN_REVIEW_ITER2.md`; verdict **partial, HOLD**.
+nothing is on `main`. Sigma Revision 3 reviewed in
+`live/pm_research/SIGMA_PLAN_REVIEW_ITER3.md`; verdict **partial, HOLD**.
 
 ## Read this first
 
 The programme now has a **verified settlement target**, a **modular
 architecture with machine-readable contracts**, and a reviewed sigma plan.
-Revision 2 made useful repairs but did **not** close the anchor ledger or the
-consumer contract; Phase 0A steps 1–3 are reopened and estimator implementation
-remains on **HOLD**. Two headline results from session 1 have been **withdrawn or
+Revision 3 made substantial repairs but still mixes an empirical reduced-form
+anchor with a structural variance ledger; Phase 0A remains open and estimator
+implementation remains on **HOLD**. Two headline results from session 1 have been **withdrawn or
 downgraded** on discovering that the data underneath them was wrong. Do not cite
 either without reading §"What was withdrawn".
 
 Reading order:
 1. `live/pm_research/PM_ARCHITECTURE.md` (v12) — the entry point; structure.
-2. `live/pm_research/contracts/contracts.yaml` (**v13**) — machine-readable
+2. `live/pm_research/contracts/contracts.yaml` (**v14**) — machine-readable
    source of truth for types. The prose defers to this file, not the other way
    round.
 3. `live/pm_research/EXP_RESULTS_2026-08-20.md` — first model results.
@@ -24,13 +24,14 @@ Reading order:
    place; one estimand, one consumer matrix, one ledger equation. v1/v2 text is
    in git history (`80f823e`, `cc1d0e7`) and nothing defers to it.
 5. `live/pm_research/SIGMA_PLAN_REVIEW.md` — first implementation-readiness review.
-6. `live/pm_research/SIGMA_PLAN_REVIEW_ITER2.md` — review of Revision 2; its six
-   items are applied in Revision 3.
-7. `live/pm_research/sigma_kernels.py` — executable model **fixture**, not a
+6. `live/pm_research/SIGMA_PLAN_REVIEW_ITER2.md` — review of Revision 2.
+7. `live/pm_research/SIGMA_PLAN_REVIEW_ITER3.md` — review of Revision 3 and v14;
+   this is the current implementation-readiness verdict.
+8. `live/pm_research/sigma_kernels.py` — executable model **fixture**, not a
    frozen spec. `--selftest` checks exact arithmetic under a **declared and
    still UNVERIFIED** sampling convention; it does not establish that convention
    against the Chainlink streams.
-8. `live/pm_research/plans/` — BE_BELIEF, BE_FLOWANDFILLS, MEASUREMENT,
+9. `live/pm_research/plans/` — BE_BELIEF, BE_FLOWANDFILLS, MEASUREMENT,
    PRELIMINARY.
 
 ## Done this session
@@ -66,8 +67,8 @@ own doing, and 32 of 47 were BTC** — i.e. the loss was concentrated in exactly
 the busiest intervals, which is missing-not-at-random. Post-fix: **0 drops
 vs 28**. Never pool an unpaired statistic across the fix boundary.
 
-**SIGMA_PLAN reviewed** (`6bea435`) — direction retained, implementation on
-hold; see §"Immediate next step".
+**SIGMA_PLAN Revision 3 reviewed** — conditional-mean correction retained;
+empirical/structural composition rejected; see §"Immediate next step".
 
 ## What was withdrawn — do not cite these
 
@@ -77,10 +78,11 @@ all six horizons, which read as a uniform information deficit and prompted the
 conclusion *"no alpha, therefore pure market making"*. That model was
 **mis-anchored**: `E_t[X_T]` used the trailing S60, which lags spot by
 `w/2 ≈ 30 s`, while being paired with a *conditional* variance law. The
-resulting `σ_eff` was ~2.6× too small at `r = 30`. The nowcast
-`P̂ = 2·S30 − S60` fixes it and gains **−0.0101 Brier pooled, at every
-horizon**. The anchor explains a large share of the deficit; it does not prove
-sigma was adequate. The residual verdict must be re-read
+resulting `σ_eff` was ~2.6× too small at `r = 30`. The candidate
+`P̂ = 2·S30 − S60` gained **−0.0101 Brier pooled, at every horizon** on one test
+day, but Revision 3 correctly shows that coefficient is a biased trend
+extrapolator under the Brownian fixture. It establishes that the lagging-S60
+direction was wrong, not that `alpha=2` is the final anchor. The residual verdict must be re-read
 on the corrected specification before it means anything.
 
 **2. The FLB edge — downgraded from an edge to a rounding error.**
@@ -110,106 +112,48 @@ that recommended B was measured on stale books** (withdrawal 2 above). Re-frame
 the choice before making it; do not read `PM_MM_PLAN §17`'s recommendation as
 current.
 
-## Immediate next step — sigma Phase 0A reopened
+## Immediate next step — choose the sigma estimand
 
-Revision 2 keeps several sound repairs: the normalised-arithmetic coordinate is
-appropriate for an arithmetic settlement mark; the one-second discrete kernel
-branches now use one convention; the output is called a physical forecast; the
-MNAR claim was corrected; and `c(r)` is explicitly diagnostic. The code and
-contract checker selftests pass.
+Revision 3 gets the central mathematics right: under the declared Brownian
+fixture, `alpha*=2700/1801`, the conditional anchor variance is `8.2590 sigma²`,
+and the `2/-1` extrapolator's `9.5139 sigma²` is unconditional MSE containing a
+known squared-bias term. The false ordered bracket, hidden nugget and several v13
+carrier defects are also repaired. Keep those changes.
 
-The second review nevertheless rejects the claim that all six MUST-FIX items
-are closed. The load-bearing issue is mathematical: `a(r)` is the unconditional
-MSE of the chosen `P̂ = 2·S30 − S60` extrapolator, not its conditional variance.
-Under the plan's own one-second Brownian model:
+The iter-3 review found six remaining integration blockers:
 
-- `2·S30 − S60` has MSE `9.5139·σ²`;
-- the translation-invariant conditional projection is approximately
-  `1.499·S30 − 0.499·S60`, with MSE `8.2590·σ²`;
-- therefore the chosen anchor has state-dependent conditional bias, which
-  cannot be inserted into the probability law as zero-mean variance.
+1. Direct regression on `(S30,S60)` estimates a reduced-form mean and total
+   residual, while the plan separately adds structural `k`, `v` and `Omega`.
+   Choose one route; combining them double-counts forecast error.
+2. The fixture compares every supplied empirical `alpha` with the Brownian
+   `alpha_star`, labels it biased, and pulls the corrected mean back to the
+   Brownian fixture. It cannot express the empirical anchor the plan requires.
+3. The plan/contract type `Omega` in bps², but the code treats it as a multiple
+   of `sigma²`. With `sigma²=4`, an identity covariance contributes 9.9867 bps²
+   instead of 2.4967. Non-PSD inputs can produce negative total variance.
+4. The default convention is `UNVERIFIED`, yet `settlement_var` returns a number
+   and discards the status. The “weight schedule” cannot represent arbitrary
+   temporal weights/support, and negative rates are accepted.
+5. v14 carries request timestamps but does not enforce request/law instrument,
+   target, horizon, knowledge or link equality. Checker green is structural.
+6. Canonical guidance still conflicts on whether semantics gates the anchor,
+   whether alpha is estimated or assumed, and whether regression residuals are
+   the whole law. Tracking also retained the overclaim that `alpha=2` “fixes” it.
 
-Five other blockers remain. Actual Chainlink S30/S60 aggregation semantics are
-unverified; the claimed floor/ceiling is not an ordered bracket and a scalar
-cannot represent the needed S30/S60 error covariance; `sigma_kernels.py` adds a
-hidden nugget, accepts invalid/fractional horizons and does not implement the
-promised refusal; contracts v13 still bypass the data-adapter/state boundary,
-duplicate link ownership, omit the link derivative and target interval, and
-state the fit cutoff backwards; and Revision 2 coexists with contradictory v1
-claims. Also, `c(30)=1.14` combines the new model line with a 2.6 bps residual
-from the old Binance-mid anchor diagnostic, so it is not evidence for the new
-S30/S60 anchor.
+Shipped tests pass (kernel 24, checker 13, v13→v14 migration clean), but the
+adversarial cases above fail semantically. Full evidence and acceptance tests are
+in `SIGMA_PLAN_REVIEW_ITER3.md`.
 
-Do not implement or fit the sigma estimator until these are complete. Full
-findings and acceptance tests are in `SIGMA_PLAN_REVIEW_ITER2.md`.
+Next, in order:
 
-### ITER2 APPLIED — all six, spec only. HOLD stands.
+1. choose reduced-form conditional law versus structural latent-state ledger;
+2. repair empirical-alpha ownership, horizon scope and conditional-mean API;
+3. resolve `Omega` identification/units/PSD and unverified-status refusal;
+4. make request/link/time invariants executable;
+5. reconcile plan, code header, status and handoff;
+6. only then run the S30/S60 semantics and day-blocked anchor experiment.
 
-Every ITER2 claim was **reproduced before acting**, not taken on trust:
-`α* = 1.499167` (exactly `2700/1801`), conditional variance `8.2590σ²`,
-unconditional MSE `9.5139σ²`, unconstrained `1.701/−0.836 @ 8.0912`, all four
-adversarial probes, the `2.6 bps` provenance at `SIGMA_DIAGNOSTICS.md:157-175`,
-and every M2-6 line reference. All correct.
-
-**M2-1, the load-bearing one: the v2 error was the v1 error one level deeper.**
-v1 used a *lagging* anchor. v2 fixed the lag with `P̂ = 2·S30 − S60`, justified
-by a **locally linear path** — a trend model — and then entered that estimator's
-**unconditional MSE** as a zero-mean variance line. Under the driftless model
-used everywhere else, trajectories have no local derivative, so with
-`P̂(α) = S60 + α(S30 − S60)`:
-
-```
-P̂(α) − P_t = (α − α*)·(S30 − S60) + conditionally zero-mean residual
-              └─ known at decision time ─┘
-```
-
-`α* = 2700/1801 = 1.4991671`, not 2. So v2 buried an **observable** mean error
-in the variance: **sd 1.22 bps against a total `σ_eff(30)` of ~2.4 bps — half
-the standard deviation at `r=30`.** Two corollaries: the conditional variance is
-**α-independent** (8.2590, not 9.5139 — the gap was squared bias), and v2's
-"floor" of 9.5139 is **beaten by `α*` inside v2's own model**, so it was never a
-bound.
-
-**The anchor is now a parameter to ESTIMATE, not to assume.** `α*` is what a
-declared path model implies, not what the market must do.
-`AnchorSpec.alpha_provenance` must read `ESTIMATED` before anything prices.
-Preferred estimator, which dissolves three problems at once: **regress the
-observed settlement mark `x_T` directly on the observed `(S30, S60)`**. It never
-identifies latent Chainlink spot (so S3's identification problem does not
-arise), assumes no state model, and is **robust to the unverified sampling
-convention** — a regression on the published streams does not care how Chainlink
-builds them internally. It runs on the tape, not on Bernoulli outcomes.
-
-Applied: **M2-2** `SamplingConvention` versioned and `UNVERIFIED`, kernel step
-reopened (a 1 s shift in fast-stream support moves `α*` 1.4992 → 1.4954, so the
-semantics are load-bearing). **M2-3** non-ordered `AnchorErrorEvidence` plus a
-2×2 `FeedErrorCov` — the same covariance raises one anchor's variance and lowers
-another's, so no ordering exists to exploit. **M2-4** one ledger, no hidden
-nugget, exact domain refusal (`Unavailable` is not a float), exact-rational
-tests. **M2-5** contracts **v14**, all eight sub-items. **M2-6** the plan
-**rewritten in place as Revision 3**, 1024 → 649 lines, not a third overlay;
-contradiction scan clean.
-
-**Worth keeping in view:** v2's Monte-Carlo independence test drew the future
-innovation independently *by construction* — a test that could not fail. That is
-the **fourth** artefact here to report success without checking the thing it
-existed to check, after the v8 contract checker, the path-keyed allowlist, and
-v13 itself. Assume the next one exists.
-
-**Verify:** `python3 live/pm_research/sigma_kernels.py --selftest` (24 checks) ·
-`python3 live/pm_research/contracts/contract_check.py --selftest` ·
-`python3 live/pm_research/contracts/contract_check.py HEAD WORKTREE`.
-
-**Next, and neither is code:**
-1. **Phase 0A 5 — verify S30/S60 semantics** against the 1 s Binance tape
-   (endpoints, weights, update triggers, event-time alignment). Gates the kernel
-   and the anchor together.
-2. **Phase 0A 6 — estimate `α`** by the direct regression above, with the
-   conditional bias in the **mean** and `Ω` as a 2×2.
-
-Still open beyond that: the fallback's own loss function; runtime enforcement of
-refusal (only the fixture refuses today); and `BE-Belief`'s absence from the
-contracts `modules:` block, which belongs to the structure loop.
+Estimator implementation remains on **HOLD**.
 
 ## Then
 
