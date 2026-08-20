@@ -1,8 +1,11 @@
-# PM_ARCHITECTURE v5 — structure for P-2026-003
+# PM_ARCHITECTURE v6 — structure for P-2026-003
 
-Rewritten 2026-08-20 from `PM_STRUCT_ITER4_REVIEW.md` (8 MUST-FIX; v4 scored
-LOCAL 9 / SPREADING 2 / STRUCTURAL 2 against a target of 0 STRUCTURAL, ≤1
-SPREADING). Prior: v1 5/3/5, v2 7/4/2.
+Rewritten 2026-08-20 from `PM_STRUCT_ITER5_REVIEW.md` (9 MUST-FIX + 7
+SHOULD-FIX; v5 scored LOCAL 9 / SPREADING 3 / STRUCTURAL 1). Prior: v1 5/3/5,
+v2 7/4/2, v4 9/2/2. The remaining structural failure was a REGRESSION — v5
+dropped the parameter name from the store key that v4 had. Four consecutive
+rewrites have now silently dropped something, so §13 adds a contract-inventory
+diff to the process.
 
 Everything on the review's **keep-unchanged** list is preserved verbatim in
 substance: two-axis spec time · `Known[V]` + knowledge-truncated `StateView` +
@@ -41,23 +44,37 @@ EV  EVAL      Markout · Calibration · Attribution · Replay · Gates
 OP  OPS       LatencyBudget · Monitor/KillSwitch
 ```
 **Dependencies point downward only: SP ← DA ← BE ← DE. EV reads all planes and
-is read by none. OP is readable by all and depends on none.** Settlement FACTS
-are DA (read downward by `DE-Allocator`); performance attribution is EV.
+is read by none.** Settlement FACTS are DA (read downward by `DE-Allocator`);
+performance attribution is EV.
+
+**OP has a data path and a command path (M5-9)** — it cannot both function and
+"depend on nothing", since the monitor observes health and the latency budget
+consumes measurements:
+```
+HealthEvent → OP-Monitor → HaltState → DE-Constraints   (as a HARD constraint)
+```
+OP publishes state and policy; it never reaches the venue. Cancel-all still
+goes through `DE-Actuator`, so the single write path is preserved.
 
 ---
 
 ## 2. Shared type algebra (M4-7 — parallel work needs these to be contracts)
 
 ```
-Uncertain[T] { expectation(), quantile(q), scenarios(n, rng), map(f), combine(other, f) }
-              # a distribution/bracket; NOT two hardcoded scenarios
+Uncertain[T] { expectation(), quantile(q), scenarios(n, rng), map(f),
+               combine(other, f, dependence) }   # a distribution/bracket
+              # DEPENDENCE IS REQUIRED (M5-5): shared scenario identity or an
+              # explicit joint/coupling law. combine() REFUSES when dependence
+              # is unknown — it never assumes independence. Pair completion,
+              # cross-coin risk and portfolio fills are all dependent.
 Unavailable  { reason, since, cause: Unavailable? }        # upstream cause chain
 NullPin      { field, assumption, bias_direction, declared_by }
 Known[V]     { value, t_event, t_known, t_known_prov, t_known_err, source, provenance }
 
 ActionOutcome{ fills, state_transition, cash_flows, latency_used,
                markout_partition, provenance }             # §7.1
-Constraint   { id, kind: HARD|SOFT, unit, usage, binding_id }
+Constraint   { id, kind: HARD|SOFT, limit_or_predicate, scope: ScopeKey,
+               unit, dual_unit, usage, binding_id, provenance }
 ModuleManifest{ inputs, outputs, ports_required, capabilities_required,
                 stateful, artifacts, null_semantics }
 ```
@@ -72,21 +89,23 @@ boundary is fiction.
 ```
 SpecRecord{ hash, observed_at, source, valid_from, valid_to, fields }
 FieldState = Resolved(value, source, provenance)
-           | Disputed(candidates[], observed_at)
+           | Disputed(candidates[{value, source, provenance}], observed_at)
            | Unknown(reason, sources_tried[])
 ```
 Record-level source cannot describe fields reconciled from different
 authorities — and `Disputed` is live today (Gamma vs CLOB registry on the
-rewards band, both in `markets.jsonl`). Consumers must handle `Disputed`; they
-may not silently pick.
+rewards band, both in `markets.jsonl`). A decision that consumes a `Disputed`
+field must name a **declared handler**; silent selection is a wiring error.
 
 Declarative rules are stored as **`(family, params)`**, never closures:
 `fee_schedule = (PIECEWISE_MINPQ, {rate, size_rounding})`, `tick_rule =
 (BANDED, {...})`. Rewards band/rate/eligibility are **instrument-scoped and
 time-varying** even though the programme is venue-level.
 
-`SP-Params{ ScopeKey -> ParamValue{value, provenance, owner, valid_for,
-measured_at, fit_data_through?, artifact_id?} }` — see §4.
+`SP-Params{ (ParamId, ScopeKey) -> ParamValue{value, provenance, owner,
+valid_for, measured_at, fit_data_through?, artifact_id?} }` — see §4.
+**ParamId is part of the key** (v5 dropped it, so volatility and latency at the
+same scope collided).
 
 **Populate on demand.** EV-Markout needs ~4 facts, not 30 fields.
 
@@ -95,7 +114,8 @@ measured_at, fit_data_through?, artifact_id?} }` — see §4.
 ## 4. Identity, ScopeKey, exposure
 
 ```
-VenueId · InstrumentId{venue, symbol, horizon, expiry} · TokenId{instrument, side}
+VenueId · InstrumentId{venue, symbol, horizon, expiry, venue_native_id}
+TokenId{instrument, side}   # venue_native_id = conditionId/market slug
 RiskFactorId · PortfolioId · FeedId · RegionId
 
 ScopeKey{ venue?, factor?, instrument?, horizon?, feed?, region?, portfolio? }
@@ -122,8 +142,10 @@ worst_case_exposure}`. `t_known` on REST/on-chain history is IMPUTED/ASSUMED —
 
 **BE-Target** (`K`, `E[X_T]` from `w_declared`) · **BE-Uncertainty** (σ_eff,
 `w_hat`; registers variance components §7.3) · **BE-Belief → BeliefProcess{
-p_hat, link G, jump_tail?, path_law?, constituents{name→(value, weight,
-provenance)}, staleness, nulls: NullPin[] }` · **BE-FlowAndFills**:
+p_hat, link G, jump_tail: Value|NullPin|Unavailable,
+path_law: Value|NullPin|Unavailable,
+constituents{name→(value, weight, provenance, t_known, estimator_uncertainty)},
+staleness }` · **BE-FlowAndFills**:
 ```
 evaluate(action_set, StateView, SelfState, horizon) -> Uncertain[ActionOutcome] | Unavailable
 ```
@@ -132,9 +154,13 @@ pair-aware by construction (the PM book is unified across the token pair).
 **BE-Competition (NEW — M4-2)** — the rival/equilibrium state the incentive
 theory needs:
 ```
-BE-Competition -> { rival_score X, our_marginal_effect(action_set),
-                    total_participation, eligibility_state }
+BE-Competition -> Known[Uncertain[CompetitionState]] | Unavailable
+CompetitionState{ rival_score X, our_marginal_effect(action_set),
+                  total_participation, eligibility_state }
 ```
+Estimated, time-varying, and often fitted — so it is knowledge-stamped and
+uncertain (M5-6). Bare values would let an ASSUMED equilibrium enter a decision
+as measured fact; fitted variants carry `artifact_id` + `fit_data_through`.
 Without this in `DecisionProblem`, an incentive-scheme change alters an
 interface and stays STRUCTURAL.
 
@@ -149,11 +175,20 @@ was not expressible.
 ```
 UtilityFunctional : RiskNeutral | CARA | PathFunctional
 ControlSolver     : ClosedFormGLFT | PerLevel | HJBQVI
-Coupling          : PerToken | JointPair | PortfolioJoint
+Coupling          : CouplingGraph          # NOT an enum — see below
 ```
 All three declare pairwise compatibility (R-COMPAT); wiring rejects invalid
 triples. A new utility does not reimplement a solver; a new coupling does not
 reimplement either.
+
+**Coupling is a hypergraph, not a single choice (M5-2).** Choosing
+`PortfolioJoint` instead of `JointPair` would DISCARD the Up/Down atomicity
+inside each market. Couplings nest and may overlap:
+```
+CouplingGraph:  portfolio ⊃ { market_A{Up,Down}, market_B{Up,Down} }
+```
+so pair coupling and portfolio coupling compose without either implementation
+knowing the other.
 
 ```
 DecisionProblem{ view: StateView, self: SelfState, belief: BeliefProcess,
@@ -167,13 +202,17 @@ DecisionProblem{ view: StateView, self: SelfState, belief: BeliefProcess,
 DecisionScheme.solve(DecisionProblem) -> Decision{ actions, duals, rationale }
 ```
 
-**Incentives, decomposed (M4-2).** "Rewards are a constraint" was too coarse:
+**Incentives: four homes, ONE registration (M4-2 + M5-7).** The four owners are
+right, but a new contracting theory must not require a coordinated four-file
+edit. It registers as a single extension that supplies four typed
+contributions:
 ```
-IncentiveContract  = payout functional + eligibility obligations   (SP-Venue)
-BE-Competition     = rival score, our marginal effect               (§5)
-DE-Constraints     = eligibility/obligation feasibility
-UtilityFunctional  = the realised/expected incentive cash flow
+IncentiveModel{ contract_spec,        -> SP-Venue (payout functional + obligations)
+                competition_model,    -> BE-Competition
+                constraints,          -> DE-Constraints (eligibility/obligation)
+                cashflow_functional }  -> UtilityFunctional (realised/expected cash)
 ```
+Contributions stay independently testable; adding a theory is one plug-in.
 The solver dual prices the **opportunity cost of satisfying an obligation** —
 it is NOT the subsidy payment. Both appear, in different places.
 
@@ -190,22 +229,30 @@ spread + transient_AS + permanent_AS + snipe + own_impact = markout(τ)
 ```
 each with `{unit, conditioning_measure, sign_convention, coverage}`.
 
-### 7.2 ObjectiveLedger — economics, NOT all of it inside markout (M4-6)
+### 7.2 WealthLedger — additive cash, in one unit (M4-6 + M5-3)
 ```
-markout · fees · rebates · incentive_payments · capital_cost · terminal_utility
+WealthLedger = markout + fees + rebates + incentives − capital_cost
+UtilityFunctional.evaluate( distribution_of(terminal_wealth) )
 ```
-v4 said "anything not in the partition is not an economic term", which wrongly
-excluded fees, rebates, incentives, lockup and terminal utility. Two ledgers,
-non-overlapping, each with units/measure/coverage keys.
+v5 listed `terminal_utility` as a SUMMAND beside cash terms. It is not: it is
+the functional APPLIED to the terminal-wealth distribution, in a different
+unit. Listing it additively would smuggle back the v2 additive-risk-neutral
+objective through the ledger, defeating §6's utility/solver separation.
+Each cash term carries units/measure/coverage keys.
 
 ### 7.3 VarianceComponents — declarative, no class (M4-5)
 ```
-VarianceComponent{ owner, unit_space, estimand, support,
-                   composition_operator, provenance }
+VarianceComponent{ owner, unit_space, estimand, support, provenance }
+VarianceGroup{ components, operator, covariance_model, estimand,
+               validation_gate }
 ```
-Overlapping support is a wiring error. This is what stops `σ_⊥ + κ` and the
-sum-vs-min recurrences; v4 claimed R-ONCE covered variance but partitioned only
-markout.
+Overlap is NOT automatically an error (M5-4): correlated-but-distinct
+components legitimately overlap, and disjoint human labels can equally hide a
+real double count — so a per-component operator cannot express joint
+structure. The group declares a `covariance_model`, and `validation_gate` is an
+empirical PIT / standardised-residual audit by horizon and state.
+**The registry catches declaration errors; the audit catches false
+declarations.** This is what stops `σ_⊥ + κ` and the sum-vs-min recurrences.
 
 ---
 
@@ -215,7 +262,12 @@ markout.
 m = min(q_up, q_down)                        # paired, riskless, redeems $1
 L_adv = unpaired_cost_basis(q_up, q_down, m) # premium actually at risk
 per market:  L_adv ≤ κ_$
-per factor:  Σ_i loading(i,f)·L_adv_i ≤ L_max(f)      # many-to-many
+per scenario: Σ_{i ∈ losers(s)} L_adv_i ≤ L_max(s)   # explicit adverse scenarios
+# NOT Σ loading(i,f)·L_adv_i (M5-8): signed loadings can CANCEL hard loss
+# exposure, and a linear beta is not a binary adverse-resolution outcome.
+# The scenario model declares which instruments lose TOGETHER; the cap
+# evaluates scenario PnL directly. Absolute-exposure fallback is permitted
+# only as a deliberately conservative rule.
 ```
 `|u|·(1−p̂)` charged 0.02/share where ~0.98/share is lost — least where loss is
 largest.
@@ -247,7 +299,8 @@ warm-state snapshot + restart parity, artifact resolution by `artifact_id` +
 ## 10. EV / OP
 
 `Gate{id, question, metric, threshold, unit, data_prereq, owner, preconditions,
-on_pass, on_fail}` forming a **precondition DAG**; **STOP** is a first-class
+on_pass, on_fail, review_date, inference_method, strata_hash, spec_hash,
+artifact_hash, frozen_at}` forming a **precondition DAG**; **STOP** is a first-class
 gate with `on_fail = HALT_PROGRAM`, a named owner and a review date.
 `EV-Attribution` decomposes over §7; read by nobody. `EV-Replay` builds a
 ReplayEnv. `OP-LatencyBudget`: four legs, ack unobserved.
@@ -259,6 +312,32 @@ ReplayEnv. `OP-LatencyBudget`: four legs, ack unobserved.
 3. EXP-IMPACT (AS partition sign) · EXP-BLEND (belief constituents).
 4. `L_adv` + `DE-Allocator` + STOP gate before any order.
 
-## 12. Deliberately not built
+## 12. Implementation status (SHOULD-FIX 6 — v5 claimed marking, did none)
+
+| module | BUILT | NAMED-SEAM |
+|---|---|---|
+| DA-Feeds | PMMarketWS, PMPricesWS, BinanceWS, GammaREST, ClobREST | PolygonRPC |
+| DA-Discovery | collect_pm discovery loop | — |
+| DA-Normalize / DA-State / DA-Settlement | — | all |
+| BE-* | — | all (Target, Uncertainty, Belief, FlowAndFills, Competition) |
+| DE-* | — | all |
+| EV-Markout / EV-Calibration | methodology only | harness |
+| ControlSolver | — | ClosedFormGLFT, PerLevel, HJBQVI |
+| UtilityFunctional | — | RiskNeutral, CARA, PathFunctional |
+
+Nothing in BE or DE is built. The register describes contracts, not code.
+
+## 13. Process: contract-inventory diff (new)
+
+v2 dropped a MUST-FIX, v3 dropped settlement accounting, v4 dropped the
+dependency rule, v5 dropped `ParamId` from the params key — **four consecutive
+rewrites each silently lost something**, and the keep-list check missed the
+fourth because it only covered items the reviewer had named.
+
+A rewrite is not complete until the previous version's **full contract
+inventory** (every type, key, field and rule) is diffed against the new one and
+each removal is either intentional-and-logged or restored.
+
+## 14. Deliberately not built
 No venue abstraction layer; no `VarianceBudget` class; no branches for
-unreachable capabilities; solver impls marked BUILT vs NAMED-SEAM.
+unreachable capabilities.
