@@ -5,13 +5,18 @@ Snapshot time: approximately 14:30 UTC. Scope: the running processes,
 `data/pm_5min` files. This is a read-only audit; no collector was restarted or
 changed.
 
+> **Operational update, 15:12 UTC:** commits `50dd889` and `2deb8e8` repair
+> the findings below and are deployed. The historical tape and the original
+> evidence remain degraded; the new CLOB era is **REPAIRED / MONITORING**, not
+> yet accepted as clean. See the deployment addendum at the end.
+
 ## Verdict
 
 | lane | verdict | consequence |
 |---|---|---|
 | market discovery and resolution | **CLEAN CURRENTLY** | all seven market grids are complete; 1,963 final resolutions, no give-ups |
-| S30/S60 Route-A tape | **FILTERED USE** | sufficient row flow, but socket gaps mean only admissible windows may enter and missingness still needs a selection audit |
-| CLOB book/trade tape | **NOT CLEAN** | extended observation disproves the recorded “post-fix: 0 drops”; do not use it for queue, flow, fill or model-vs-book claims yet |
+| S30/S60 Route-A tape | **FILTERED USE / V2 MONITORING** | sufficient row flow; v2 shortens and records outages, but only admissible windows may enter and missingness still needs a selection audit |
+| CLOB book/trade tape | **REPAIRED / NOT YET ACCEPTED** | v2 passed a 19m23s high-load smoke test; the pre-v2 tape remains degraded and the required full busy day has not elapsed |
 | compute and storage | **SUFFICIENT** | no capacity blocker for the ten-day collection horizon |
 
 The collectors should keep running: stopping would destroy unreplayable data.
@@ -153,3 +158,45 @@ Keep the current tape but label it degraded. Before using it:
 Until those conditions hold, the data is sufficient for filtered Route-A
 measurement accumulation, but not sufficient for clean microstructure or
 market-making inference.
+
+## Remediation deployment addendum — 15:12 UTC
+
+Two reviewed commits are pushed on `mm-research` and live:
+
+- `50dd889` (`clob_v2`, `prices_v2`) removes per-message timer allocation and
+  disk waits from the CLOB receive hot loop, decouples ordered writes through a
+  bounded queue, atomically publishes gzip shards, persists disconnect/gap causes, and
+  makes resolution give-up retryable. The price lane now has independent 8 s
+  global/topic watchdogs, durable per-topic gap open/close records, preserved
+  malformed payloads, stale-hour recovery and atomic gzip rotation.
+- `2deb8e8` (`clob_v2_1`) adds exact active/unseen socket counts, per-coin
+  message rates and oldest active-socket ages. Every market task is strongly
+  referenced and drained on shutdown.
+
+Live evidence is deliberately split by collector version:
+
+- `clob_v2` ran from `14:50:21` to `15:09:44` UTC (**19m23s**). Its last
+  heartbeat reported **908,843** messages including **552,166 BTC**, and it
+  crossed four discovery generations with `retries=0`, `slow=0`,
+  `writer_wait=0`, queue high-water
+  `1`. Shutdown drained the two receivers still blocked after the other
+  sockets exited cooperatively.
+- The first `clob_v2_1` minute processed **84,328** messages, including
+  **53,835 BTC**, with the same zero retry/drop/backpressure counters. It
+  reported 21 overlapping sockets (three per coin), zero unseen sockets, BTC
+  rate **896.6 msg/s** and oldest BTC receive age **1.61 s**. Less-active coins
+  correctly remained fail-visible at 17–24 s rather than being hidden by a
+  global freshness number.
+- `prices_v2` caught one genuine global silence. It reconnected and closed the
+  S60/S30 gaps at **11.50/11.57 s**, versus waiting at least 30 s under the old
+  watchdog. Both topics recovered to sub-second freshness; the event is joined
+  durably in `prices/collector_gaps.jsonl` rather than inferred from prose logs.
+- Exactly one process per collector is live. Twenty-eight gzip shards closed
+  in the final ten-minute check all pass integrity validation; no temporary
+  archive remains.
+
+This is enough to call the implementation repair successful, not enough to set
+`clob_capture_clean=true`. Preserve the preregistered acceptance boundary: one
+full busy day with zero `1013`, or a cause-aware exclusion rule with enough
+complete independent days. Never pool pre-v2 and post-v2 observations without
+an explicit repair-era field derived from the versioned start/stop ledger.

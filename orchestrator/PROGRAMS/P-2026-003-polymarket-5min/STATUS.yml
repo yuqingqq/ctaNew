@@ -7,15 +7,18 @@ updated: 2026-08-20 (session 3 — Route A measured; DESCRIPTIVE / PRICING HOLD)
 
 flags:
   collector_running: true    # One price process and one CLOB process; fresh.
-  clob_capture_clean: false  # Extended post-fix audit refutes "0 drops": since
-                             # the 10:55 restart, 13 confirmed 1013 slow-consumer
-                             # closes across 11/41 recent completed BTC windows,
-                             # plus 7 other BTC retries. This remains MNAR.
+  clob_capture_clean: false  # Second repair deployed 14:50 (`50dd889`) and
+                             # telemetry v2.1 at 15:10 (`2deb8e8`). v2's last
+                             # heartbeat showed 908,843 msgs / 552,166 BTC over
+                             # 19m23s, with zero retries, 1013s or writer waits;
+                             # full busy-day
+                             # acceptance is still pending. Pre-v2 is MNAR.
   route_a_tape_clean: filtered-only # Zero malformed TWAP rows/negative lags;
                              # complete market grids and resolutions. But 28
-                             # 30s price-socket reconnects and 40 S60 gaps >30s
+                             # historical 30s reconnects and 40 S60 gaps >30s
                              # mean only coverage/freshness-admissible rows may
-                             # enter. Recent all-horizon acceptance is 224/273.
+                             # enter. prices_v2 now detects per-topic/global
+                             # silence at 8s and writes a durable gap ledger.
   settlement_verified: true  # E-M6 PASSED 2026-08-20: S60(T) vs S60(t0)
                              # reproduces 1465/1465 winners at 99.8% (99.9% at
                              # |margin|>0.5bp). w = 60 s CONFIRMED; the
@@ -209,7 +212,7 @@ tasks:
   - id: e0-collector
     phase: 0
     name: collect_pm.py — CLOB WS book/trades + Gamma metadata + CLOB resolutions
-    status: live-degraded
+    status: live-repaired-monitoring
     notes: |
       LIVE 2026-08-19. Three bugs found and fixed: (1) Gamma outcomePrices is
       live prices not resolution (is_final guard); (2) Gamma DELETES resolved
@@ -218,10 +221,17 @@ tasks:
       allocated an asyncio timer per message, which at BTC's rate backed the
       server send buffer up into 1013 slow-consumer disconnects. Rewritten to a
       persistent recv task + deadline task, 2000-line write batches. EXTENDED
-      CHECK: repair is insufficient. The restarted process loaded it, yet logged
-      13 further 1013 closes across 11 recent BTC windows. Price RTDS is usable
-      only through frozen coverage/freshness filters; it has unreplayed global
-      socket gaps. Evidence and acceptance boundary:
+      CHECK proved that first repair insufficient: 13 further 1013 closes.
+      SECOND REPAIR (`50dd889`, telemetry `2deb8e8`) removes per-message timer
+      allocation and synchronous disk waits from recv, uses a bounded ordered
+      writer queue, atomically publishes archives, makes give-up retryable, and
+      persists keyed gap causes. Its
+      19m23s high-load smoke's last heartbeat reported 908,843 messages
+      (552,166 BTC) with zero retries/1013/writer waits; v2.1 exposes rates,
+      active sockets and oldest ages. Status remains monitoring until the full
+      busy-day gate. Price RTDS
+      remains usable only through frozen coverage/freshness filters; prices_v2
+      shortens and records outages but cannot replay them. Evidence:
       live/pm_research/DATA_COLLECTOR_AUDIT_2026-08-20.md.
   - id: e0-audit
     phase: 0
