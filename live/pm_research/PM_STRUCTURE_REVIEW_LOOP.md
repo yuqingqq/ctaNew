@@ -259,3 +259,25 @@ silently ignores risk-owner notes, compatibility validation, registries and
 contract version. The halt graph still has no cancel-command producer or
 observable heartbeat path, and the explanatory document has drifted from the
 new YAML in several behavior-bearing places.
+
+| 10 | 2026-08-20 | review: 6 | **v10 NOT CONVERGED; issues recorded** |
+
+## Iteration 10 review of v10 — 6 MUST-FIX
+
+Full review: `PM_STRUCT_ITER10_REVIEW.md`.
+
+V10 corrects the estimated distribution support type, names risk and incentive
+contracts, introduces static/dynamic coupling and pinned outcomes, completes
+the intended heartbeat/cancel producer graph, and broadens the structural
+checker to notes, registries, validation, rule bodies and version monotonicity.
+
+The strict replay nevertheless remains at best **LOCAL 11 / SPREADING 0 /
+STRUCTURAL 2**. Scenario limits are not resolved or wired into a PIT-safe
+constraint/allocator path, while the new `IncentiveModel` is not selected or
+connected to module and cash-flow consumers.
+
+The adversarial audit also proves that the target invariant accepts undefined
+protocol/variant/module types, missing registries, duplicate ownership and
+conflicting port manifests. The canonical source remains incomplete, coupling
+config duplicates per-decision state, pinned outcomes lose their evaluator,
+and cancellation variants lose typed payload and reconciliation semantics.
