@@ -235,3 +235,27 @@ baseline and misses the exact bare-to-wrapped type narrowing it is intended to
 prevent. The halt path lacks canonical telemetry/ack semantics, the SOTA axes
 remain closed unions, and belief/contracts/static coupling do not yet form one
 immutable point-in-time decision snapshot.
+
+| 9 | 2026-08-20 | review: 5 | **v9 NOT CONVERGED; issues recorded** |
+
+## Iteration 9 review of v9 — 5 MUST-FIX
+
+Full review: `PM_STRUCT_ITER9_REVIEW.md`.
+
+V9 correctly names the joint competition aggregator, improves the
+knowledge-time decision snapshot, opens the utility/solver protocols, fixes
+identity/parameter namespace issues and replaces the v8 markdown scanner with
+an owner-qualified type diff whose core regression tests pass.
+
+The strict replay nevertheless remains at best **LOCAL 11 / SPREADING 0 /
+STRUCTURAL 2**. The estimated risk distribution is still typed over scenario
+sets and its claimed sole limit owner is absent from canonical YAML. The
+competition mismatch is fixed, but the one-registration incentive extension is
+also absent from the purported source of truth.
+
+The deeper audit found that `contracts.yaml` is neither complete nor
+reference-closed despite its canonical claim, while `contract_check.py`
+silently ignores risk-owner notes, compatibility validation, registries and
+contract version. The halt graph still has no cancel-command producer or
+observable heartbeat path, and the explanatory document has drifted from the
+new YAML in several behavior-bearing places.
