@@ -1,11 +1,15 @@
-# PM_ARCHITECTURE v7 — structure for P-2026-003
+# PM_ARCHITECTURE v8 — structure for P-2026-003
 
-Rewritten 2026-08-20 from `PM_STRUCT_ITER6_REVIEW.md` (4 MUST-FIX + 3
-SHOULD-FIX; v6 scored LOCAL 11 / SPREADING 0 / STRUCTURAL 2). Prior: v1 5/3/5,
-v2 7/4/2, v4 9/2/2, v5 9/3/1. Both v6 structural failures were BOUNDARY
-inconsistencies: a type fixed at its producer and narrowed at its consumer, and
-an invented quantity (`losers(s)`) with no owner. §13 carries the required
-contract-inventory log — v6 mandated it and omitted it.
+Rewritten 2026-08-20 from `PM_STRUCT_ITER7_REVIEW.md` (5 MUST-FIX + 3
+SHOULD-FIX; v7 scored LOCAL 11 / SPREADING 0 / STRUCTURAL 2 — unchanged).
+Prior: v1 5/3/5, v2 7/4/2, v4 9/2/2, v5 9/3/1.
+
+**The v7 diagnosis, adopted as a rule: a fix that lives in explanatory prose is
+not a fix.** v7 declared `DecisionProblem.scenarios`, dynamic coupling and joint
+competition in narrative blocks BELOW the canonical schemas, where no wiring
+check or `ModuleManifest` can see them. In v8 every contract change lands
+inside a fenced canonical block. Prose may explain a type; it may not
+introduce one.
 
 Everything on the review's **keep-unchanged** list is preserved verbatim in
 substance: two-axis spec time · `Known[V]` + knowledge-truncated `StateView` +
@@ -36,9 +40,10 @@ Naming: SP/DA/BE/DE/EV/OP modules; `EXP-*` experiments.
 ## 1. Layers
 
 ```
-SP  SPECS     Venue · Instrument · Strategy · Params        (data, not a subsystem)
+SP  SPECS     Venue · Instrument · Strategy · Scenarios · Params   (data)
 DA  DATA      Discovery · Feeds · Normalize · State(+SelfState) · Settlement
 BE  BELIEF    Target · Uncertainty · Belief · FlowAndFills · Competition
+              · ScenarioProvider
 DE  DECISION  ActionSpace · Constraints · DecisionScheme · Allocator · Actuator
 EV  EVAL      Markout · Calibration · Attribution · Replay · Gates
 OP  OPS       LatencyBudget · Monitor/KillSwitch
@@ -51,11 +56,25 @@ performance attribution is EV.
 "depend on nothing", since the monitor observes health and the latency budget
 consumes measurements:
 ```
-HealthEvent (owner: OP-Monitor, sources: DA feeds · OP-LatencyBudget · EV)
+HealthEvent (owner: OP-Monitor; sources: DECLARED TELEMETRY PORTS of
+             DA/BE/DE modules · OP-LatencyBudget — NEVER EV)
    → HaltState        LATCHED, FAIL-CLOSED (unknown health ⇒ halted)
    → halt port ──┬──→ DE-Constraints          HARD constraint: no new risk
                  └──→ DE-Actuator.cancel_all  PRIORITY command
+HealthEvent{ id, source_port, severity, observed_at, detail }
+HaltState  { level: RUNNING|DEGRADED|HALTED, latched: bool, since,
+             reason: HealthEvent[], reset_authority: OP_OWNER_ONLY }
+             # monotonic: RUNNING→DEGRADED→HALTED escalates automatically;
+             # de-escalation requires explicit operator reset (never automatic)
+             # unknown health ⇒ HALTED (fail-closed)
+cancel_all { command_id, idempotent: true, requires_ack: true, retry_until_ack }
 ```
+**EV is not a health source (M7-5).** v7 listed EV among the sources, creating
+`EV → OP → DE` and letting evaluation state reach decisions — a violation of
+§1. Runtime health comes from each module's declared telemetry port.
+`EV-Gates.on_fail = HALT_PROGRAM` remains the SEPARATE programme-control path,
+operated by a human owner, not a runtime edge.
+
 **Both edges are required (M6-4).** A hard constraint stops NEW risk; it does
 not retract resting orders — and during a fault the solver may itself be
 `Unavailable`, so a path that runs only through the scheme cannot fire. The
@@ -76,8 +95,11 @@ Uncertain[T] { expectation(), quantile(q), scenarios(n, rng), map(f),
               # DEPENDENCE IS REQUIRED (M5-5): combine() REFUSES when unknown —
               # it never assumes independence. Pair completion, cross-coin risk
               # and portfolio fills are all dependent.
-ScenarioSet  { draws: [(ScenarioId, weight, value)], common_random_id }
-Dependence   = SharedScenarios(common_random_id) | JointLaw(copula|factor)
+ScenarioDrawSet[T]{ draws: [(DrawId, weight, T)], common_random_id }
+              # M7-2: the result of Uncertain[T].scenarios() — MONTE-CARLO DRAWS.
+              # Distinct from AdverseScenarioSet (§8), which is a RISK POLICY.
+              # v7 used one name for both and nested it inside itself.
+Dependence   = SharedDraws(common_random_id) | JointLaw(copula|factor)
                | Independent(DECLARED)   # never a default
               # scenarios() exposes ScenarioId + weight so shared identity is
               # VALIDATED at the type boundary, not trusted in prose
@@ -119,8 +141,11 @@ time-varying** even though the programme is venue-level.
 **Records** (each a `SpecRecord`, so each is bitemporal and field-provenanced):
 ```
 SP-Venue{ matching, tick_grid, min_size, rate_limits, fee_schedule(p,side,size),
-          rebate_schedule, rewards_band, capabilities{CTF_PAIR, NEG_RISK,
-          MAKER_REWARDS, ...} }
+          rebate_schedule, capabilities{CTF_PAIR, NEG_RISK, MAKER_REWARDS,...} }
+          # M7-5: rewards_band REMOVED. Rewards are instrument-scoped and
+          # time-varying (below), so a venue-level copy duplicated the fact and
+          # violated R-SSOT. The capability flag stays; the resolved
+          # band/rate/eligibility live in SP-Instrument.incentive_contract.
 SP-Instrument{ settlement{source, statistic, w_declared, strike_rule, tie_rule},
                T, payoff, complement, incentive_contract }   # instrument-scoped
 SP-Strategy{ utility, solver, coupling, constraints, action_space, impls,
@@ -145,7 +170,8 @@ VenueId · InstrumentId{venue, symbol, horizon, expiry, venue_native_id}
 TokenId{instrument, side}   # venue_native_id = conditionId/market slug
 RiskFactorId · PortfolioId · FeedId · RegionId
 
-ScopeKey{ venue?, factor?, instrument?, horizon?, feed?, region?, portfolio? }
+ScopeKey{ venue?, factor?, instrument?, horizon?, feed?, region?,
+          portfolio?, scenario? }        # scenario axis added (M7-2)
 resolve: most-specific by SUBSET ORDER; ties (Venue(v) vs Factor(f) both
          matching, neither a subset of the other) FAIL LOUD — never silently
          pick. The fully resolved key is recorded in provenance.
@@ -226,7 +252,7 @@ knowing the other.
 
 ```
 DecisionProblem{ view: StateView, self: SelfState, belief: BeliefProcess,
-                 competition: Known[Uncertain[CompetitionState]] | Unavailable,
+                 competition: Known[Uncertain[JointCompetitionState]] | Unavailable,
                  # M6-1: the FULL type crosses the boundary. Unwrapping to an
                  # expectation/quantile/scenario is an explicit UnwrapPolicy
                  # chosen by the scheme, never composition-root coercion.
@@ -234,10 +260,22 @@ DecisionProblem{ view: StateView, self: SelfState, belief: BeliefProcess,
                  #   must be declared by the scheme.
                  outcomes: (action_set -> Uncertain[ActionOutcome]),
                  actions: ActionSpace, portfolio: PortfolioState,
+                 risk_scenarios: RiskScenarios,        # M7-1 — canonical, not prose
+                 coupling: Known[CouplingGraph] | STATIC_INJECTED,   # M7-3
                  constraints: ConstraintSet,      # ORACLE, not a precomputed set:
                                                   # feasibility is conditional on
                                                   # the candidate action set
                  incentives: ContractResolver, horizon }
+
+RiskScenarios = Declared(AdverseScenarioSet)                     # SP-Scenarios, resolved
+              | Estimated(Known[Uncertain[AdverseScenarioSet]])  # BE-ScenarioProvider
+              | Unavailable
+              # the scheme declares an UnavailablePolicy for this field too
+JointCompetitionState{ by_node: {NodeId -> CompetitionState},
+                       dependence: Dependence }
+              # M7-4: scalar fields cannot express different rival scores /
+              # participation / eligibility across simultaneously coupled
+              # instruments; dependence lives INSIDE the uncertainty object
 DecisionScheme.solve(DecisionProblem) -> Decision{ actions, duals, rationale }
 ```
 
@@ -263,7 +301,10 @@ TOTAL terminal wealth.
 **Scope (M6-2).** Rewards are instrument-scoped and time-varying (§3), so a
 single unscoped contract cannot serve a portfolio-coupled problem:
 ```
-ContractResolver: InstrumentId -> Known[IncentiveContract]   # bitemporal via SP
+ContractResolver: InstrumentId -> Known[IncentiveContract] | Unavailable
+              # M7-4: missing/disputed rewards facts are LIVE states today, not
+              # impossible branches; a Disputed field invokes the §3 declared
+              # handler rather than being silently resolved
 DecisionProblem.incentives: ContractResolver                 # not one contract
 DecisionProblem.competition: joint over the CouplingGraph    # not one state
 ```
@@ -316,7 +357,9 @@ declarations.** This is what stops `σ_⊥ + κ` and the sum-vs-min recurrences.
 m = min(q_up, q_down)                        # paired, riskless, redeems $1
 L_adv = unpaired_cost_basis(q_up, q_down, m) # premium actually at risk
 per market:  L_adv ≤ κ_$
-per scenario: Σ_{i ∈ ScenarioSet[s].losers} L_adv_i ≤ L_max[s]   # see owner below
+per scenario s ∈ AdverseScenarioSet:
+   loss(s) = Σ_i L_adv_i · 1{ s.instrument_outcome_map[i] = ADVERSE }
+   loss(s) ≤ ScenarioLossLimit(s.id)          # keyed BY SCENARIO — see below
 # NOT Σ loading(i,f)·L_adv_i (M5-8): signed loadings can CANCEL hard loss
 # exposure, and a linear beta is not a binary adverse-resolution outcome.
 # The scenario model declares which instruments lose TOGETHER; the cap
@@ -330,15 +373,17 @@ largest.
 owner in the algebra, register, manifests or `DecisionProblem`; an ownerless
 quantity is STRUCTURAL by the loop rubric.
 ```
-SP-Scenarios{ ScenarioId -> AdverseScenario{ instrument_outcome_map,
-              scope: ScopeKey, provenance, completeness } }
-              # declarative policy stress, bitemporal like every spec record
-BE-ScenarioProvider -> Known[Uncertain[ScenarioSet]] | Unavailable
-              # ONLY when scenarios are ESTIMATED; must carry an explicit
-              # joint law (§2 Dependence) — never assumed independent
-L_max[s]  : (ParamId, ScopeKey) in SP-Params
+AdverseScenario{ id: ScenarioId, instrument_outcome_map: {InstrumentId ->
+                 ADVERSE|BENIGN}, scope: ScopeKey, provenance, completeness,
+                 loss_limit }                      # limit MAY live here (SSOT)
+AdverseScenarioSet{ scenarios: {ScenarioId -> AdverseScenario}, dependence }
+SP-Scenarios{ ScenarioId -> AdverseScenario }      # declarative, bitemporal
+BE-ScenarioProvider -> Known[Uncertain[AdverseScenarioSet]] | Unavailable
+              # ONLY when ESTIMATED; explicit joint law (§2 Dependence)
+ScenarioLossLimit(ScenarioId) : a ParamId whose ScopeKey carries `scenario`
+              # M7-2: without a scenario axis, multiple limits at one scope are
+              # not uniquely addressable
 consumers: DE-Constraints (per-scenario HARD cap) · DE-Allocator (budget split)
-DecisionProblem.scenarios: Known[Uncertain[ScenarioSet]] | Unavailable
 ```
 Declarative scenarios are the default; the estimated provider is the escape
 hatch and is knowledge-stamped like any other belief.
@@ -391,7 +436,7 @@ ReplayEnv. `OP-LatencyBudget`: four legs, ack unobserved.
 | DA-Feeds | PMMarketWS, PMPricesWS, BinanceWS, GammaREST, ClobREST | PolygonRPC |
 | DA-Discovery | collect_pm discovery loop | — |
 | DA-Normalize / DA-State / DA-Settlement | — | all |
-| BE-* | — | all (Target, Uncertainty, Belief, FlowAndFills, Competition) |
+| BE-* | — | all (Target, Uncertainty, Belief, FlowAndFills, Competition, ScenarioProvider) |
 | DE-* | — | all |
 | EV-Markout / EV-Calibration | methodology only | harness |
 | ControlSolver | — | ClosedFormGLFT, PerLevel, HJBQVI |
@@ -410,17 +455,51 @@ A rewrite is not complete until the previous version's **full contract
 inventory** (every type, key, field and rule) is diffed against the new one and
 each removal is either intentional-and-logged or restored.
 
-**v6 → v7 inventory diff** (v6 mandated this log and did not include one —
-SHOULD-FIX 3):
+**Lineage correction (review SHOULD-FIX 1).** v7's log claimed the spec-record
+block was dropped v5 to v6. Wrong twice over: it was present in v4 and gone by
+v5, so the drop was **v4 to v5**; and it was never CANONICAL even in v4 (inline
+prose code spans, not a fenced schema block). v7 is the first version in which
+those records are canonical.
 
-| contract | change | reason |
-|---|---|---|
-| _(none)_ | — | `SP-Venue`/`SP-Instrument`/`SP-Strategy` record block was dropped in the v5→v6 edit; the diff flagged it and v7 restores it |
+The v7 tool caused the error: it scanned every CamelCase token in the whole
+document, so a contract could vanish from the schema while a lingering prose
+mention kept the diff quiet. It is replaced by `contract_inventory.py`, which
+inventories **only fenced canonical blocks plus the rule table** (types, module
+ids, fields, rules) and ignores prose.
 
-Added: `ContractResolver`, `EdgeId`, `NodeId`, `SP-Instrument`, `ScenarioId`, `ScenarioSet`, `UnavailablePolicy`, `UnwrapPolicy`.
+**v7 to v8 inventory diff** — `python3 contract_inventory.py c636500 WORKTREE`:
 
-Reproduce: `git show <prev>:live/pm_research/PM_ARCHITECTURE.md` and diff the
-extracted identifier set against the working copy.
+```
+DROPPED (2):
+  field:sources
+  type:ScenarioSet
+ADDED (18):
+  field:by_node
+  field:coupling
+  field:dependence
+  field:id
+  field:idempotent
+  field:instrument_outcome_map
+  field:latched
+  field:level
+  field:reason
+  field:requires_ack
+  field:reset_authority
+  field:risk_scenarios
+  field:scenarios
+  type:AdverseScenarioSet
+  type:HaltState
+  type:HealthEvent
+  type:JointCompetitionState
+  type:RiskScenarios
+```
+
+Both removals are intentional: `ScenarioSet` was split into `ScenarioDrawSet`
+and `AdverseScenarioSet` (M7-2); the `sources` field left `HealthEvent` when EV
+was removed as a health source (M7-5).
+
+Reproduce: `python3 live/pm_research/contract_inventory.py <prev-ref> [<ref>]`
+(exit code 1 when anything was dropped).
 
 ## 14. Deliberately not built
 No venue abstraction layer; no `VarianceBudget` class; no branches for
