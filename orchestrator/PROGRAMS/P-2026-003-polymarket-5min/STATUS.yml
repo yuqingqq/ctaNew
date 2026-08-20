@@ -31,6 +31,18 @@ flags:
                              # fix this client-side; leave DISK_WORKERS and
                              # ping_timeout alone, there is no client-side
                              # hypothesis left to test.
+  loss_mechanisms: two       # AMENDED 18:26 — disconnects are no longer
+                             # BTC-only (btc 12, sol 1, eth 1). The non-btc pair
+                             # were 1001 "going away" server-cycling closes:
+                             # activity-INdependent, plausibly MAR. The 1013s
+                             # remain btc-only and bursty: activity-correlated,
+                             # MNAR, so excluding those windows is ITSELF a
+                             # selection and the excluded set must be reported
+                             # beside the retained one. Two mechanisms, different
+                             # handling — which is what makes the pre-registered
+                             # CAUSE-AWARE rule load-bearing rather than
+                             # stylistic; a seconds-lost-only threshold would
+                             # treat them as interchangeable.
   clob_capture_clean: false  # STILL FALSE, and the v3 ROOT-CAUSE CLAIM IS
                              # FALSIFIED (17:39:56 UTC): a SLOW_CONSUMER_1013
                              # occurred under clob_v3, 68 min after deploy, with

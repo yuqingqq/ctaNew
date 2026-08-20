@@ -88,13 +88,25 @@ rule with enough complete independent days, is now the operative path. That
 branch existed before any of this was known, which is what makes the finding
 actionable instead of a dead end.
 
-**The exclusion rule already has its input.** Every disconnect carries cause,
-slug, coin, knowledge time and an explicit end. Loss to date: 30.8 s across 8
-windows, worst `btc-updown-5m-1787247000` at 21.5 s (5.5% of its 390 s). **Every
-disconnect in every era has been BTC** — never the other six coins — so the loss
-is concentrated in the busiest symbol. That is the same MNAR shape as the
-original incident: gap-touched BTC windows must be *excluded* from queue, flow
-and fill inference, not averaged in.
+**The exclusion rule already has its input**, and there are **two loss
+mechanisms**, which is what makes the pre-registered *cause-aware* framing
+load-bearing rather than stylistic:
+
+| mechanism | cause codes | pattern | missingness |
+|---|---|---|---|
+| venue send-buffer / slow-consumer label | `SLOW_CONSUMER_1013` | 12 of 14, **all BTC**, bursty | **MNAR** — activity-correlated |
+| venue server cycling | `CONNECTIONCLOSEDOK` (1001), plausibly `PING_TIMEOUT` / `NO_CLOSE_FRAME` | hits whichever sockets a restarting server held, across coins | plausibly **MAR** |
+
+They need different handling. A 1001 going-away gap can be excluded and the rest
+stays representative; a 1013 gap cannot, because it lands preferentially on the
+busiest windows, so *excluding it is itself a selection* and the excluded set
+must be reported next to the retained one — the lesson of the original MNAR
+incident. A rule keyed only on seconds-lost would treat the two as
+interchangeable.
+
+Loss to date: ~40 s across 10 windows, worst `btc-updown-5m-1787247000` at 21.5 s
+(5.5% of its 390 s). Tally by coin: **btc 12, sol 1, eth 1** — an earlier note
+saying every disconnect was BTC was true when written and is now superseded.
 
 Posture: stop fixing this client-side; keep `clob_capture_clean: false`; leave
 `DISK_WORKERS` and `ping_timeout` alone — there is no client-side hypothesis
