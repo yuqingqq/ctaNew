@@ -253,20 +253,34 @@ class PMCollector:
                                                   ping_timeout=10, open_timeout=15,
                                                   max_queue=2 ** 16) as ws:
                         await ws.send(json.dumps({"assets_ids": toks, "type": "market"}))
-                        while not self.stop and time.time() < stop_at:
-                            timeout = max(1.0, stop_at - time.time())
-                            try:
-                                raw = await asyncio.wait_for(ws.recv(), timeout=min(timeout, 30))
-                            except asyncio.TimeoutError:
-                                if buf:
-                                    f.write("".join(buf)); buf.clear()
-                                if time.time() >= stop_at:
+                        # HOT LOOP -- do the least work possible per message.
+                        # asyncio.wait_for() allocates a timer per message, which at
+                        # BTC's rate dominates and backs the server's send buffer up
+                        # (1013 slow consumer). A single deadline task replaces it, and
+                        # file writes go to a thread so blocking I/O never stalls the
+                        # event loop. Data lost to 1013 is MNAR: it disappears in the
+                        # BUSIEST intervals, biasing every markout toward calm.
+                        loop = asyncio.get_event_loop()
+                        deadline = loop.create_task(self._sleep(max(0.0, stop_at - time.time())))
+                        recv = None
+                        try:
+                            while not self.stop:
+                                if recv is None:
+                                    recv = loop.create_task(ws.recv())
+                                done, _ = await asyncio.wait(
+                                    {recv, deadline}, return_when=asyncio.FIRST_COMPLETED)
+                                if deadline in done:
                                     break
-                                continue      # quiet stretch mid-window is normal
-                            buf.append(f"{time.time_ns()}\t{raw}\n")
-                            self.counts["msgs"] += 1
-                            if len(buf) >= 200:
-                                f.write("".join(buf)); buf.clear()
+                                raw = recv.result(); recv = None
+                                buf.append(f"{time.time_ns()}\t{raw}\n")
+                                self.counts["msgs"] += 1
+                                if len(buf) >= 2000:          # was 200
+                                    chunk = "".join(buf); buf.clear()
+                                    await loop.run_in_executor(None, f.write, chunk)
+                        finally:
+                            for t_ in (recv, deadline):
+                                if t_ is not None and not t_.done():
+                                    t_.cancel()
                 except Exception as ex:
                     if buf:
                         f.write("".join(buf)); buf.clear()

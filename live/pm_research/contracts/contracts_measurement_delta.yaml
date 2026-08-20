@@ -1,0 +1,1102 @@
+# =============================================================================
+# P-2026-003 MEASUREMENT LAYER — canonical contract delta  v12 -> v13
+#
+# STATUS: PROPOSED. This file is a merge candidate for contracts.yaml, written
+# separately because the planning brief forbids editing contracts.yaml in place.
+# Nothing here is in force until it is merged and `version:` is bumped to 13.
+#
+# It defines the three unbuilt modules that build order step 1-2 requires:
+#     DA-State          the knowledge-time layer  (Known[V] + StateView)
+#     EV-Markout        effective / realized half-spread and adverse selection
+#     EV-Calibration    paired Brier scoring and favourite-longshot slope
+#
+# Adding module records for DA-State / DA-Normalize / EV-* is not scope creep:
+# it is open MUST-FIX M11-5 / M12-5 ("the module registry remains the same nine-
+# module subset").
+#
+# MERGE PROCEDURE (M12-2: additions pass the checker silently, so this is manual)
+#   1. splice `types:` / `modules:` / `rules:` / `prelude:` entries into
+#      contracts.yaml under their existing keys
+#   2. bump contracts.yaml `version: 12` -> `13`
+#   3. update the PM_ARCHITECTURE.md title/lineage line to v13
+#   4. append the `migrations:` records at the foot of this file to
+#      contracts/migrations.yaml
+#   5. python3 live/pm_research/contracts/contract_check.py <base-ref>
+#
+# Companion design document: live/pm_research/plans/MEASUREMENT_PLAN.md
+# =============================================================================
+base_version: 12
+proposes_version: 13
+
+# -----------------------------------------------------------------------------
+# RULES — five additions. Each exists because a specific, named failure is
+# otherwise unpreventable rather than merely unlikely.
+# -----------------------------------------------------------------------------
+rules:
+
+  R-IMPUTE:
+    body: >
+      t_known is never set equal to t_event. A Known whose source has no
+      observation on our wire is IMPUTED or ASSUMED, carries a named
+      ImputationRule, and satisfies t_known > t_event strictly. OBSERVED may
+      only be emitted by a source whose SourceProfile.has_recv_ns is true.
+    rationale: >
+      `t_known := t_event` makes the invariant t_known <= now hold BY
+      CONSTRUCTION, passes every assertion in EV-Replay, and returns the
+      measured 1.7 s settlement peek type-laundered and invisible to review.
+      This is the single failure this whole layer exists to prevent.
+    checks:
+    - 'strict_delay: for all k where k.t_known_prov != OBSERVED, k.t_known > k.t_event'
+    - 'observed_needs_wire: k.t_known_prov == OBSERVED => SourceProfile(k.source).has_recv_ns'
+    - 'err_nonzero: k.t_known_prov != OBSERVED => k.t_known_err > 0'
+    - 'rule_named: k.t_known_prov != OBSERVED => k.imputation_rule is not null'
+
+  R-REFUSE:
+    body: >
+      StateView.get admits a Known only when t_known_hi <= now, where
+      t_known_hi = t_known + refuse_k * t_known_err. Inside the error bar the
+      answer is Unavailable(reason=WITHIN_TKNOWN_ERR), never the value.
+      refuse_k is an SP-Params entry, default 1.0.
+    rationale: 'the corpus form of the same rule: "replay refuses inside t_known_err"'
+    checks:
+    - 'no_peek: admitted(k, now) => k.t_known + refuse_k * k.t_known_err <= now'
+    - 'refusal_counted: every refusal increments RefusalLedger for that field'
+
+  R-CANARY:
+    body: >
+      Every replay or evaluation run that consumes a StateView is executed twice
+      — once through StateView (knowledge time) and once through EventTimeView
+      (deliberately leaky) — and reports LeakCanary. A canary delta
+      indistinguishable from zero means the truncation is NOT binding and the
+      run is INVALID, not clean.
+    rationale: >
+      A guard that is never observed to bite is indistinguishable from a guard
+      that is not wired. EXP-M6 already produced one reading of this canary:
+      99.8% at event time vs 99.3% at knowledge time.
+    checks:
+    - 'canary_present: RunRecord.leak_canary is not null'
+    - 'canary_binds: leak_canary.delta == 0 => RunRecord.status = INVALID_UNBOUND_GUARD'
+
+  R-WEIGHT:
+    body: >
+      Weighting is chosen by the KIND of the estimand, declared in
+      InferenceSpec, and both weightings are always reported side by side.
+        ECONOMIC estimand (markout, revenue, depth, cost)  -> NOTIONAL, ex-ante
+        IDENTITY estimand (does rule X reproduce fact Y?)  -> EQUAL within coin,
+                                                              reported per coin,
+                                                              with a per-coin bar
+      A markout headline is stated in cash (cents per share), never only in
+      mid-relative bps.
+    rationale: >
+      Both halves were learned the hard way and they point in OPPOSITE
+      directions, which is why one blanket rule is wrong.
+
+      ECONOMIC: on the sibling programme (ADA, P-2026-002) equal weighting gave
+      rs = +2.443 bps positive on 31 of 31 days and the cell screened as a PASS;
+      notional weighting gave -0.322 bps, positive on 7 of 31, and killed it.
+      Small prints capture the half-tick; the DOLLARS are adversely selected.
+      NOTE A CITATION HAZARD: the shorthand "equal-weighting flipped +2.44 to
+      -0.32" inverts the causal direction — equal weighting MANUFACTURED the
+      +2.44 false positive; notional weighting produced the -0.32 kill.
+      On this venue the same asymmetry is present: the top 1% of prints carry
+      24.2% of risk-notional, the top 10% carry 63.0%, and BTC alone is 82-85%
+      of total notional (effective coins ~1.4).
+
+      IDENTITY: notional weighting on an identity test makes every mechanism
+      claim a BTC claim. A settlement convention reproducing BTC at 99.9% and
+      XRP at 95% would pass a notional-weighted pooled bar at 99.1% while being
+      wrong about four feeds. EXP-M6 is already correctly notional-BLIND (one
+      window one vote); that exemption is now a rule, not an accident.
+
+      Mid-relative bps q(p-m)/m diverges as m -> 0 on a 0.01-1.00 price grid and
+      is not P&L-additive; cash is.
+    checks:
+    - 'both_weights: MarkoutEstimate has notional_weighted AND equal_weighted'
+    - 'cash_unit: MarkoutEstimate.headline.unit == CENTS_PER_SHARE'
+    - 'identity_not_notional: InferenceSpec.estimand_kind == IDENTITY => weight != NOTIONAL'
+    - 'identity_per_coin: estimand_kind == IDENTITY => by_stratum keyed per coin with a per-coin bar'
+
+  R-STRATA:
+    body: >
+      Gate-bearing strata are MODEL-FREE. Permitted axes: time-in-window r,
+      market-defined moneyness |book_mid - 0.5|, coin, phase. Model-derived axes
+      (|d|, p_hat, fitted sigma) are DIAGNOSTIC ONLY and may never carry a gate.
+      Strata are frozen with a strata_hash before the estimate is computed.
+    rationale: >
+      |d| is a function of the model's own forecast; stratifying a gate on it
+      lets the model grade its own exam and licenses stratum-shopping across a
+      ~210-cell space.
+    checks:
+    - 'model_free: gate-bearing StratumId in {r, |book_mid-0.5|, coin, phase}'
+    - 'frozen: InferenceSpec.strata_hash set before the estimate is computed'
+
+  R-ONEROW:
+    body: >
+      One window contributes ONE row to any estimand that has one outcome per
+      window. A panel indexed by (window, r) is estimated SEPARATELY at each r;
+      rows are never pooled across r as independent observations, and the r-rows
+      of a single window are never counted toward n.
+    rationale: >
+      There is exactly one y per window. Stacking ~300 per-second decision rows
+      of a window as independent inflates apparent information by up to 300x,
+      and the late rows carry ~0 information anyway. The six horizon rows of the
+      current EXP-BLEND table are the SAME windows re-scored: six rows, one
+      observation.
+    checks:
+    - 'n_is_windows: for outcome-scored estimands, Estimate.n == distinct windows'
+    - 'no_r_pooling: CalibrationScore.by_r entries carry independent InferenceSpecs'
+
+  R-CLUSTER:
+    body: >
+      The inferential cluster is the CALENDAR DAY. Every EV estimate carries an
+      InferenceSpec naming the cluster unit, the resampling scheme and G. When
+      G < 5 the CI field is Unavailable(reason=INSUFFICIENT_CLUSTERS) — a point
+      estimate is reported and labelled DESCRIPTIVE, never given a standard error.
+    rationale: >
+      288 windows/day ride one underlying path, and the seven coins load on one
+      crypto factor, so clustering on coin-day would triple apparent G by
+      assuming a cross-coin independence the architecture's own many-to-many
+      exposure map denies. At the current G = 2 no day-clustered CI exists at all.
+    checks:
+    - 'cluster_declared: every EV estimate carries InferenceSpec'
+    - 'small_G_refuses: InferenceSpec.G < 5 => estimate.ci is Unavailable'
+    - 'claim_class_gated: estimate.claim_class in ClaimClass, set from G by ClaimLadder'
+
+# -----------------------------------------------------------------------------
+# PRELUDE additions
+# -----------------------------------------------------------------------------
+prelude:
+  primitives:
+  - EventTime          # nominal; NO comparison operator against KnowledgeTime
+  - KnowledgeTime      # nominal; the only clock a decision may read
+  - Cents              # venue-native cash unit, per share, additive
+  external:
+  - ImputationRuleId
+  - AdmissibilityRuleId
+  - ParentEventId
+  - RunId
+  - StratumId
+
+# -----------------------------------------------------------------------------
+# TYPES
+# -----------------------------------------------------------------------------
+types:
+
+  # === DA-State :: the knowledge-time envelope ==============================
+
+  Known:
+    generic:
+    - V
+    fields:
+      value: V
+      t_event: EventTime
+      t_known: KnowledgeTime
+      t_known_prov: enum:OBSERVED|IMPUTED|ASSUMED
+      t_known_err: Duration
+      imputation_rule: ImputationRuleId?
+      seq: int
+      source: SourceId
+      provenance: Provenance
+    notes: >
+      DELTA v12->v13. Two additions. `seq` is RESTORED (it was carried by the
+      reviewed ITER2 design and lost in a later rewrite): the environment seam
+      contracts deterministic tie-breaking and warm-restart parity, and neither
+      is expressible without a total order within source. `imputation_rule` is
+      new and is the audit handle R-IMPUTE checks against.
+
+      COMPOSITION (the generalisation of `t_known = MAX(inputs)`; it must
+      compose associatively or nested composition silently loses the error bar):
+        t_known      = MAX_i t_known_i
+        t_known_hi   = MAX_i (t_known_i + t_known_err_i)
+        t_known_err  = t_known_hi - t_known
+        t_known_prov = WORST_i prov_i        # OBSERVED < IMPUTED < ASSUMED
+        seq          = MAX_i seq_i
+      Taking the err of the argmax input instead is WRONG: an input that is
+      earlier but much less certain can dominate the upper bound.
+
+      Ordering a collection by t_event is legal and necessary (a TWAP integral
+      requires it). Comparing t_event against a decision clock is a TYPE ERROR:
+      EventTime and KnowledgeTime share no comparison operator. Because the
+      collection handed to a consumer was already truncated at the view
+      boundary, no reordering of a truncated set can produce a future value.
+
+  SourceProfile:
+    fields:
+      source: SourceId
+      has_recv_ns: bool
+      transport: enum:LOCAL_WS|LOCAL_REST_POLL|ARCHIVE|ONCHAIN|DERIVED
+      clock_err: Duration
+      default_imputation_rule: ImputationRuleId?
+    notes: >
+      The enforcement point for R-IMPUTE.observed_needs_wire. A Known is
+      constructed only through a factory bound to a SourceProfile; a source with
+      has_recv_ns=false CANNOT emit t_known_prov=OBSERVED. This turns the
+      type-laundering failure from a discipline problem into a construction
+      error. clock_err is the local NTP bound and is the t_known_err even for
+      OBSERVED sources (it is small, not zero).
+
+  ImputationRule:
+    fields:
+      id: ImputationRuleId
+      applies_to: SourceId
+      form: str
+      delay_param: ParamId
+      err_param: ParamId
+      calibrated_from: SourceId?
+      calibration_overlap: (Timestamp, Timestamp)?
+      bias_direction: enum:OPTIMISTIC|PESSIMISTIC
+      artifact_id: ImmutableId?
+    notes: >
+      form is `t_known := t_event + D_hat` with D_hat resolved from SP-Params at
+      the record's own t_event (params.at(t), never params.get()). A rule is
+      LEGITIMATE only when calibrated_from names a stream on which the same
+      venue leg was observed with recv_ns over calibration_overlap; with no
+      overlap the rule must be ASSUMED and pessimistic, and R-PROV then bars it
+      from gating any decision. bias_direction is mandatory so an audit can tell
+      which way an unverified imputation moves a number.
+
+  Gap:
+    fields:
+      from: EventTime
+      to: EventTime
+      cause: enum:STREAM_GAP|COLLECTOR_RESTART|SLOW_CONSUMER|VENUE_OUTAGE|NOT_YET_SUBSCRIBED|POST_UNSUBSCRIBE|UNKNOWN
+      evidence: str
+    notes: >
+      cause is load-bearing, not decoration. NOT_YET_SUBSCRIBED is missingness
+      that is plausibly ignorable. SLOW_CONSUMER is our own send-buffer
+      overflowing, which happens preferentially in the busiest intervals, so it
+      is missing-not-at-random and correlated with exactly the state a markout
+      is trying to measure. An analysis may pool over the first and must not
+      pool over the second.
+
+  Coverage:
+    fields:
+      field: str
+      target: (EventTime, EventTime)
+      covered: list[(EventTime, EventTime)]
+      gaps: list[Gap]
+      weight_missing: float
+      tail_deficit: Duration
+      observed_n: int
+      expected_n: int
+      duplicate_n: int
+      max_gap: Duration
+      complete_frac: float
+      admissible: bool
+      rule: AdmissibilityRuleId
+      provenance: Provenance
+    notes: >
+      DELTA v12->v13, EXTENSION ONLY (segments -> covered is renamed via a
+      migration record; complete_frac survives). NOT a scalar: gaps are
+      non-contiguous.
+
+      complete_frac is SPAN-fraction; weight_missing is ESTIMAND-weight, and for
+      a weighted estimand the two differ arbitrarily. The measured maximum TWAP
+      gap is 44 s against a settlement averaging window of w = 60 s: a window
+      can pass a 90%-density test on [t0-5s, T+5s] while the entire decisive
+      60 s is absent, and complete_frac would report that as 0.85. weight_missing
+      is the fraction of the ESTIMAND's weight absent and reports it as ~1.0.
+      tail_deficit is the right-edge hole — structurally at least the 1.7 s
+      knowledge lag at every settlement read, and larger whenever the stream was
+      also down.
+
+  AdmissibilityRule:
+    fields:
+      id: AdmissibilityRuleId
+      field: str
+      target_expr: str
+      min_complete_frac: float?
+      max_weight_missing: float?
+      max_gap: Duration?
+      protected_span_expr: str?
+      require_pre_boundary_sample: bool
+      on_fail: enum:EXCLUDE_UNIT|DEGRADE|REFUSE_RUN
+      frozen_at: Timestamp
+      spec_hash: Hash
+    notes: >
+      Pre-registered and frozen, because an admissibility rule chosen after
+      seeing the estimate is a selection knob. protected_span_expr names a
+      sub-interval that may contain NO gap regardless of overall density — for
+      settlement that is [T-w, T]. Exclusion is recorded per unit so the
+      excluded set can be compared against the retained set; 18.3% of resolved
+      windows currently fail A-TWAP-1, and unevenly by coin, so the comparison
+      is mandatory rather than reassuring.
+
+      on_fail = EXCLUDE_UNIT never travels alone: InferenceSpec.gap_arm = BOTH
+      is the default, because exclusion selects on volatility (R-CLUSTER notes).
+      DEGRADE means the unit is retained with a gap indicator and, where the
+      estimand is weighted, with weight_missing carried into the weight.
+
+  StateView:
+    methods:
+      get: '(field: str) -> Known[any] | Unavailable'
+      history: '(field: str, span: Duration) -> list[Known[any]]'
+      coverage: '(field: str, span: Duration) -> Coverage'
+      phase: '() -> Phase'
+      refusals: '() -> RefusalLedger'
+    fields:
+      now: KnowledgeTime
+      spec_snapshot: Hash
+    notes: >
+      DELTA v12->v13, EXTENSION ONLY. The ONLY read entry point, bound to a
+      KnowledgeTime `now`. Every accessor — including history() — returns a
+      t_known_hi-truncated result under R-REFUSE. There is deliberately NO
+      accessor returning a Tape, a gap registry or a raw buffer: if one existed
+      the truncation would be bypassable and the guarantee void. BE/DE modules
+      receive a StateView and never a DA-State handle; reaching for the raw feed
+      must be a wiring error, not a code-review finding.
+
+      phase() lands S2-C5 (never previously landed): DE-Constraints cannot
+      express "no quoting after T" without it, and it is derivable from
+      SP-Instrument.horizon plus `now` so it introduces no new data.
+
+      EV modules do NOT read through StateView — they hold the read_all port,
+      because a markout at horizon tau legitimately needs data after the trade.
+      EV-Replay is the exception that proves the rule: it SIMULATES decisions and
+      therefore MUST read through StateView, never read_all.
+
+  EventTimeView:
+    methods:
+      get: '(field: str) -> Known[any] | Unavailable'
+      history: '(field: str, span: Duration) -> list[Known[any]]'
+    fields:
+      now: EventTime
+    notes: >
+      The deliberately leaky twin, truncating on t_event instead of t_known.
+      It exists for exactly one purpose: R-CANARY. It is constructible only by
+      EV-Replay's canary harness and is not reachable from any port.
+
+  Phase:
+    variants:
+    - PRE
+    - IN_WINDOW
+    - POST_T_PRE_RESOLUTION
+    - RESOLVED
+
+  RefusalLedger:
+    fields:
+      by_field: dict[str, RefusalCount]
+    notes: telemetry, not state; a field with zero refusals over a whole run is a wiring smell
+
+  RefusalCount:
+    fields:
+      n_admitted: int
+      n_refused_within_err: int
+      n_unavailable_upstream: int
+      worst_case_peek_blocked: Duration
+
+  LeakCanary:
+    fields:
+      metric: str
+      value_knowledge_time: float
+      value_event_time: float
+      delta: float
+      n: int
+    notes: >
+      R-CANARY's output. EXP-M6's reading of it — 99.3% vs 99.8% winner
+      reproduction — is the reference calibration: the guard is known to bite by
+      0.5 pp on that metric, so a later run reporting 0.0 pp has broken the
+      harness, not fixed the leak.
+
+  # === DA-State :: SelfState and the three clocks ===========================
+
+  SelfState:
+    fields:
+      submitted: list[Known[OrderIntent]]
+      acked: list[Known[OrderAck]]
+      fills: list[Known[Fill]]
+      position: Known[Position]
+      orders: dict[ImmutableId, OrderRecord]
+    methods:
+      envelope: '(now: KnowledgeTime) -> ExposureEnvelope'
+      ack_bracket: '(order: ImmutableId, now: KnowledgeTime) -> AckBracket'
+    notes: >
+      DELTA v12->v13, EXTENSION ONLY. Lands accepted MUST-FIX B2-2: SelfState
+      has THREE knowledge times and the v12 record collapsed them into one
+      OrderRecord with two optional timestamps.
+
+      The write path goes through the WORLD, not the code: DE-Actuator's outbox
+      is part of the Environment seam and DA-Feeds reads it as a feed
+      (t_known = submit, prov = OBSERVED). If the Actuator wrote SelfState
+      directly, DE -> DA would be an upward edge AND live would diverge from
+      replay (live through the venue, replay through a back-channel).
+
+  OrderRecord:
+    fields:
+      id: ImmutableId
+      token: TokenId
+      level: float
+      size: float
+      t_submitted: Known[Timestamp]
+      t_acked: Known[Timestamp] | Unavailable
+      t_filled: Known[Timestamp] | Unavailable
+    notes: >
+      DELTA v12->v13: the three clocks become Known|Unavailable rather than
+      bare optionals, because the reason a timestamp is missing is the whole
+      content of the field.
+
+      t_submitted  OBSERVED, ours, exact up to SourceProfile.clock_err.
+      t_acked      THE VENUE ACK IS NOT EMITTED. It is Unavailable, NOT imputed
+                   to t_submitted. Imputing it to t_submitted is the SelfState
+                   analogue of t_known := t_event: it makes the order live at
+                   submit, over-states queue priority, and lets a replay
+                   FABRICATE FILLS THAT COULD NOT HAVE HAPPENED — a look-ahead
+                   the t_known <= now assertion cannot catch, because the
+                   timestamp is genuinely ours.
+      t_filled     OBSERVED from the fill message recv_ns.
+
+      A partial identification IS available and should be taken: the first
+      observable consequence of an order (our size appearing at our level in a
+      price_change level total, or a fill) upper-bounds the ack. That yields
+      Known[Timestamp] with prov=IMPUTED and t_known_err = t_first_consequence -
+      t_submitted, which is honest and shrinks with activity.
+
+  AckBracket:
+    fields:
+      order: ImmutableId
+      t_live_earliest: KnowledgeTime
+      t_live_latest: KnowledgeTime
+      confirmed_by: ConfirmationSource | None
+      t_first_consequence: Known[Timestamp] | Unavailable
+      null_pin: NullPin
+    notes: >
+      There is no single conservative assumption, because "conservative" is a
+      direction and the three consumers face opposite losses. The bracket is
+      published once and each consumer selects its own edge via AckPolicy:
+        RISK    (can I be filled?)     -> t_live_earliest = t_submitted
+        CANCEL  (is my quote gone?)    -> t_live_latest;  never assume a cancel
+                                          landed (R-HALT already says this for
+                                          cancel-all)
+        PNL     (did I earn a spread?) -> t_live_latest = t_submitted + D_max,
+                                          the shortest queue credit and the
+                                          fewest claimable fills
+      D_min/D_max come from OP-LatencyBudget, whose ack leg is unobserved and
+      therefore ASSUMED (75 ms US / 3 ms EU) — so under R-PROV it may not gate a
+      decision until measured. That is the intended forcing function: the
+      programme must measure round-trip latency before it may size on it.
+      null_pin is mandatory under R-NULL, bias_direction=PESSIMISTIC.
+
+  AckPolicy:
+    fields:
+      risk_side: enum:EARLIEST_LIVE
+      cancel_side: enum:LATEST_LIVE
+      pnl_side: enum:LATEST_LIVE
+    notes: fixed by contract; not a tunable
+
+  ExposureEnvelope:
+    fields:
+      submitted: float
+      acked: float
+      filled: float
+      in_flight: float
+      lo: float
+      hi: float
+      worst_case_exposure: float
+    notes: >
+      DELTA v12->v13, EXTENSION ONLY. lo = acked + filled only. hi = lo + ALL
+      in-flight assumed filled. ROUTING RULE, a contract and not a convention:
+      DE-Constraints evaluates on hi (pessimistic); BE-FlowAndFills evaluates on
+      acked/fills (what the venue believes). No consumer may read a collapsed
+      single exposure number.
+
+  OrderIntent:
+    fields:
+      id: ImmutableId
+      token: TokenId
+      level: float
+      size: float
+      verb: str
+      idempotency_key: str
+
+  OrderAck:
+    fields:
+      order: ImmutableId
+      venue_order_id: ImmutableId?
+      accepted: bool
+
+  # === Shared EV inference vocabulary =======================================
+
+  InferenceSpec:
+    fields:
+      estimand: str
+      estimand_kind: enum:ECONOMIC|IDENTITY
+      unit_of_observation: str
+      weight: enum:NOTIONAL|EQUAL_WITHIN_COIN|EQUAL
+      cluster_unit: enum:DAY|COIN_DAY|NONE
+      G: int
+      scheme: enum:DAY_BLOCK_BOOTSTRAP|STATIONARY_BLOCK_BOOTSTRAP|WILD_CLUSTER_RADEMACHER|NONE
+      B: int
+      paired: bool
+      strata: list[StratumId]
+      strata_hash: Hash
+      gap_arm: enum:EXCLUDE|INDICATOR|BOTH
+      multiplicity: enum:NONE|HOLM|ROMANO_WOLF|BONFERRONI
+      claim_class: ClaimClass
+      prereg_hash: Hash
+      frozen_at: Timestamp
+      mde: float | Unavailable
+    notes: >
+      cluster_unit COIN_DAY is available but must be justified in writing per
+      use: the seven coins load on one crypto factor, so it is usually a false
+      independence assumption that inflates G sevenfold. Measured effective
+      breadth under notional weighting is ~1.4 coins, so n_eff ~ 288 * 1.4 ~ 400
+      windows/day, not 2016.
+
+      gap_arm exists because DROPPING gap-containing intervals SELECTS ON
+      VOLATILITY: outages cluster with bursts (27 of 47 observed disconnects are
+      our own send buffer overflowing, 32 of 47 on BTC alone), so an
+      exclude-only rule biases every volatility- and flow-sensitive estimate
+      toward calm. BOTH is the default: report the excluded estimate and the
+      all-data estimate with a gap indicator, and treat a sign difference
+      between them as a finding rather than a nuisance.
+
+      mde is published from VARIANCE COMPONENTS ONLY at freeze time. A
+      variance-only peek is pre-registration-safe and must be declared as such.
+      Reference MDE for paired dBrier with sigma_dB ~ 0.02 and n_eff ~ 400/day:
+      G=14 -> 5.5e-4, G=28 -> 3.9e-4, G=56 -> 2.8e-4 at the window-noise floor;
+      but the day-level term dominates whenever sigma_day is comparable to the
+      edge, requiring G >= 4*(sigma_day/mu)^2 days REGARDLESS of window count
+      (ratio 2 -> 16 days, ratio 3 -> 36 days).
+
+  ClaimClass:
+    variants:
+    - DESCRIPTIVE          # point estimate, no CI. The only class legal at G < 5.
+    - PROVISIONAL          # wild-cluster CI at 5 <= G < 30; directional claims only
+    - INFERENTIAL          # day-block CI at G >= 30
+    - DETERMINISTIC        # a reproduction identity, not a stochastic estimate
+    notes: >
+      DETERMINISTIC covers EXP-M6-class results (does the recorded stream plus
+      the stated rule reproduce the winners the venue paid?) and data-integrity
+      counts. Those are claimable TODAY at G = 2; nothing else is.
+
+  ClaimLadder:
+    fields:
+      by_G: 'dict[int, ClaimClass]'
+    notes: 'G<5 DESCRIPTIVE; 5<=G<30 PROVISIONAL; G>=30 INFERENTIAL; set by contract, not per-study'
+
+  Estimate:
+    fields:
+      value: float
+      unit: str
+      ci: (float, float) | Unavailable
+      inference: InferenceSpec
+      n: int
+      n_effective: float
+      coverage: Coverage
+      leak_canary: LeakCanary | None
+      era: Hash
+    notes: >
+      era is the spec-content hash, not a date: settlement changed 2026-08-07
+      and the rewards band was re-cut 2026-08-20, and Gamma served a STALE
+      rewards band after the re-cut with both values on disk simultaneously.
+      Era-spanning is refused per FIELD dependency, not per boundary — a fee
+      change must not invalidate a settlement study.
+
+  # === EV-Markout ===========================================================
+
+  ParentEvent:
+    fields:
+      id: ParentEventId
+      instrument: InstrumentId
+      t_event: EventTime
+      t_known: KnowledgeTime
+      q_up: int
+      prints: list[TradePrint]
+      size_shares: float
+      notional_cents: Cents
+      vwap_up: float
+      n_prints: int
+      side_provenance: Provenance
+    notes: >
+      One aggressive sweep. Built by (a) deduplicating prints on
+      (transaction_hash, asset_id, payload.timestamp) — recv_ns differs per
+      collector process so line-level dedup does NOT catch a duplicate collector
+      — then (b) collapsing prints sharing (t_event, q_up) within an instrument.
+
+      MEASURED: on 15,860 prints across 7 coins the dedup key finds ZERO
+      duplicates and the collapse merges 47 prints (0.30%), multiplicity
+      {1: 15768, 2: 43, 3: 2}. Both steps are therefore near no-ops on this
+      venue TODAY, which is a finding, not a licence to drop them: the standard-
+      error inflation they exist to prevent is real at higher print rates, and a
+      guard that starts firing is the signal that the venue changed. The
+      observed rates are asserted as a data-quality regression bound.
+
+      q_up is the aggressor sign in UP-space, +1 for a taker buy of the Up token:
+          q_up = +1 if (asset == UP and side == BUY) or (asset == DOWN and side == SELL)
+          q_up = -1 otherwise
+      side_provenance is mandatory under X-11, which flagged that if the WS
+      `side` were the MAKER's the headline maker gross flips +95 -> -95 bps.
+      MEASURED RESOLUTION: against the prevailing quote taken 200 ms before the
+      print, the taker reading is consistent on 90.8% of 15,262 BTC prints
+      (buy at/above ask or sell at/below bid) versus 6.6% inconsistent and 2.6%
+      inside; the maker reading would require the resting side to have lifted
+      its own offer and is refuted at ~14:1 per print over 15k prints. `side` is
+      the TAKER side. Provenance may therefore be recorded as MEASURED, and the
+      consistency rate is a standing regression check.
+
+  TradePrint:
+    fields:
+      transaction_hash: str
+      asset_id: ImmutableId
+      token_side: enum:UP|DOWN
+      price: float
+      size: float
+      side_raw: enum:BUY|SELL
+      fee_rate_bps: float
+      t_event: EventTime
+      t_known: KnowledgeTime
+      shard_id: str
+      src_file_id: Hash
+
+  ReferenceMid:
+    fields:
+      m: float
+      bid_up: float
+      ask_up: float
+      t_event: EventTime
+      lag_used: Duration
+      convention: enum:MID|MICRO
+      two_sided: bool
+      unified_pair: bool
+    notes: >
+      THE decisive convention of this module, and the reason the v12 markout
+      decomposition is not yet valid.
+
+      LAG. The venue emits the price_change carrying best_bid/best_ask for a
+      match BEFORE it emits the last_trade_price for the same match, so a mid
+      read at the print has already moved toward the print and the measured
+      capture (+0.11..+0.50 c against 1.1-1.8 c spreads) is far below a half-
+      spread — the signature of exactly that contamination. lag_used is FROZEN
+      at 250 ms. Measured aggressor-sign consistency by lag: 75.6% at 0 ms,
+      80.9% at 50 ms, 90.8% at 200 ms, 74.7% at 1000 ms — a plateau with an
+      interior optimum, confirming both the contamination and the staleness
+      failure at the far end. 250 ms is chosen over the sample-optimal 200 ms
+      BECAUSE it was pre-specified independently in PM_DEEP_REVIEW before this
+      grid was run; adopting the argmax of a grid fitted on the evaluation
+      sample would make a tuned parameter of a measurement. The grid
+      {0, 50, 100, 250, 500, 1000} ms is reported as a sensitivity band beside
+      every headline.
+
+      CONVENTION. MID = (bid_up + ask_up)/2 is primary. MICRO (size-weighted) is
+      a reported secondary arm ONLY: it moves with our own resting size, so a
+      maker's own quote would contaminate its own markout, and rs = es - Lambda
+      requires the SAME m in both terms or rs stops meaning maker revenue.
+
+      UNIFIED PAIR. The book is unified across the token pair (neg_risk = false,
+      plain binary CTF; an Up bid at 0.60 crosses a Down bid at 0.40 via mint,
+      atomically at match). Always compute in UP-space:
+          bid_up = max(bid_UP, 1 - ask_DOWN)
+          ask_up = min(ask_UP, 1 - bid_DOWN)
+      This can be TIGHTER than either token alone. If it crosses, that is an
+      arbitrage or a data fault, never a mid. two_sided=false (2.8% of BTC book
+      snapshots are one-sided) yields Unavailable, and the excluded set is a
+      selection on liquidity state that must be reported.
+
+      SAMPLING. `book` snapshots arrive on (re)subscription, not on a timer, so
+      any statistic computed from them is a biased sample of TIME. Every
+      time-uniform quote statistic must come from the price_change
+      best_bid/best_ask spine instead.
+
+  MarkoutObs:
+    fields:
+      parent: ParentEventId
+      m: ReferenceMid
+      p: float
+      q_up: int
+      es_cents: Cents
+      es_bps: float
+      lambda_cents: 'dict[Duration, Cents]'
+      lambda_bps: 'dict[Duration, float]'
+      rs_cents: 'dict[Duration, Cents]'
+      rs_bps: 'dict[Duration, float]'
+      partition: MarkoutPartition
+      notional_cents: Cents
+      stratum: StratumId
+      coverage: Coverage
+    notes: >
+      Canonical identities, q = +1 taker buy, the maker is the counterparty:
+          es        = q (p - m) / m                   effective half-spread
+          Lambda(t) = q (m_{t+tau} - m) / m           adverse selection
+          rs(tau)   = es - Lambda(tau)                maker gross revenue
+      and their cash forms es_cents = q (p - m) * 100, which are the P&L-additive
+      ones.
+
+      TAU GRID, frozen: {1, 5, 15, 30, 60, 300 s, TO_RESOLUTION}. The PRIMARY is
+      TO_RESOLUTION, because the venue doctrine is never to unwind: a binary
+      held to settlement pays 0 or 1 and the finite-tau markouts are decay
+      diagnostics, not the P&L. The finite grid matches the sibling programme so
+      the Lambda(tau) decay profiles are comparable; it is NOT the gate.
+
+      PHASE STRATIFICATION IS MANDATORY, using StateView.phase(). Measured, the
+      three phases are economically different instruments: pre-window t < t0 is
+      7.4% of notional at +0.70 c/share to the maker; in-window is the bulk;
+      post-T t > T is 0.9% of notional at -1.46 c/share (-806 bps), 350,929
+      shares traded after T at prices whose outcome is already determined,
+      costing the maker side ~8% of total maker gross in ~1.4 days. Pooling the
+      three hides both the largest per-share loss on the venue and its trivial
+      remedy (cancel at T - eps, do not re-quote before resolution).
+
+      EVERY number this module produces is an UPPER BOUND on a marginal maker's
+      revenue. The tape's counterparty is the AVERAGE resting maker; a
+      back-of-queue entrant is filled strictly later and strictly more often on
+      the wrong side. The measured selection haircut is severe and moneyness-
+      dependent: an unconditional +1.8 c/share at t=290s, mid in [0.95,1.00)
+      realises +0.72 c on matched fills (~60% haircut); an unconditional -9.4 c
+      at t=30s, mid in [0.15,0.30) realises +0.25 c (~97% haircut).
+
+  MarkoutComponent:
+    fields:
+      name: str
+      value: Cents
+      unit: str
+      conditioning_measure: str
+      sign_convention: str
+      coverage: Coverage
+    notes: >
+      DELTA v12->v13. The v12 MarkoutPartition is five bare floats while the
+      architecture prose mandates {unit, conditioning_measure, sign_convention,
+      coverage} per term. Under the standing rule that a fix living in prose is
+      not a fix, the prose version did not exist. This type lands it.
+      conditioning_measure is PAIR-SCOPED, not instrument-scoped: some fills are
+      minted against a counterparty who wanted the COMPLEMENT, whose information
+      content differs from a same-token taker's, so E[markout | fill] otherwise
+      conditions on the wrong selection event.
+
+  MarkoutPartition:
+    fields:
+      spread: MarkoutComponent
+      transient_AS: MarkoutComponent
+      permanent_AS: MarkoutComponent
+      snipe: MarkoutComponent
+      own_impact: MarkoutComponent
+      markout: Cents
+    notes: >
+      DELTA v12->v13: components become MarkoutComponent. They still sum EXACTLY
+      to markout. The NET markout never uses m and is immune to the reference-mid
+      problem; the PARTITION does and is blocked until ReferenceMid.lag_used is
+      frozen. Report net unconditionally; report the split only with the frozen
+      lag and the sensitivity band attached.
+
+  MarkoutEstimate:
+    fields:
+      headline: Estimate
+      equal_weighted: Estimate
+      by_stratum: 'dict[StratumId, Estimate]'
+      by_tau: 'dict[Duration, Estimate]'
+      sign_consistency_rate: float
+      dedup_dropped: int
+      collapse_merged: int
+      excluded_one_sided: int
+      excluded_coverage: int
+      upper_bound_disclaimer: str
+    notes: >
+      headline.unit is CENTS_PER_SHARE, notional-weighted, day-clustered
+      (R-WEIGHT, R-CLUSTER). The four exclusion/adjustment counters are reported
+      on the face of the estimate, not in an appendix, because each is a place a
+      number could have been moved.
+
+  # === EV-Calibration =======================================================
+
+  CalibrationPanelRow:
+    fields:
+      instrument: InstrumentId
+      day: Date
+      r: Duration
+      p_book: float
+      p_model: float | Unavailable
+      outcome_up: bool
+      drift_control: Known[float] | Unavailable
+      mid_source: ReferenceMid
+      coverage: Coverage
+      admissible: bool
+      era: Hash
+    notes: >
+      One row per (window, r). p_book is the UP-space mid at KNOWLEDGE time
+      T - r; p_model likewise. r grid frozen at {270,240,180,120,60,30,10,5,2} s.
+      drift_control is the realised underlying return over the window measured
+      from BINANCE bookTicker, deliberately NOT from Chainlink: Chainlink is the
+      settlement source, so a Chainlink-based drift control is endogenous to the
+      outcome it is meant to purge.
+
+  CalibrationScore:
+    fields:
+      metric: enum:BRIER|LOG_LOSS
+      clip_rule: str
+      arm: enum:MODEL|BOOK_RAW|BOOK_ISOTONIC
+      paired_delta: Estimate
+      model: Estimate
+      book_raw: Estimate
+      book_isotonic: Estimate
+      by_r: 'dict[Duration, Estimate]'
+    notes: >
+      Brier primary, log-loss secondary. Scoring is PAIRED on the same
+      (window, r) — an unpaired comparison invites the difference-in-
+      significance fallacy, which is this repo's own historical killer.
+
+      FROZEN CLIP. The corpus specifies "a frozen clip" and never gives a
+      number; this fixes it:
+          clip(state) = max( tick(state) / 2 , 5e-4 )
+      applied to BOTH forecasts symmetrically. The tick term is the load-bearing
+      one and it is STATE-DEPENDENT: tick_size_change (0.01 -> 0.001) fires 328
+      times across 130 windows, so a hard-coded [0.01, 0.99] both forbids the
+      only levels that exist near the boundary and leaves the tick-quantization
+      exploit open. Without it, late in a window the book mid is pinned to the
+      grid while a continuous model can "win" on pure quantization with zero
+      economic content. The 5e-4 floor is numerical only, for log-loss.
+
+      THREE ARMS, not two. The model must beat BOOK_ISOTONIC — the walk-forward
+      isotonic recalibration of the book mid — and not merely BOOK_RAW. If the
+      model beats raw mid but not recalibrated mid, the "edge" is public
+      recalibration available to every competitor on the same terms, not
+      information. This is also the self-defeat check in operational form.
+
+      Results are stratified by r and NOT pooled across it for the headline: the
+      base rate and the variance both move by an order of magnitude across the
+      grid (Brier 0.237 at r=270 s versus 0.017 at r=30 s), so a pooled number
+      is dominated by the long horizons. Under R-ONEROW each r carries its own
+      InferenceSpec and n = distinct windows. The six horizon rows of the
+      current EXP-BLEND table are the SAME windows re-scored: six rows, one
+      observation, and their apparent stability is not corroboration.
+
+  FLBFit:
+    fields:
+      a: Estimate
+      b: Estimate
+      day_fixed_effects: bool
+      link: LinkFunction
+      drift_term: str
+      n: int
+      inference: InferenceSpec
+    notes: >
+      The favourite-longshot bias is a SLOPE and the sample's up-drift is a
+      LEVEL, and they are separately identified because they have different
+      SHAPES:
+          P(Up | p_book) = g( a + b * g_inv(p_book) + phi(d) )
+      b < 1 is an underconfident book: realised outcomes are more extreme than
+      quoted. That is FLB and it is invariant to any level shift. A pure drift
+      enters as a constant a > 0 in link space, which in probability space is a
+      HUMP — maximal near p = 0.5 and vanishing at both ends. Absorbing a in day
+      fixed effects de-drifts b by construction.
+
+      The bucket table is NOT the estimator. Gaps of -0.043 at [0.1,0.2) and
+      +0.059 at [0.6,0.7) are consistent with b < 1, but the claim to be gated is
+      b_hat < 1 with a day-clustered interval, not "the bucket gaps are nonzero".
+      The measured pooled up-rate is 0.5436 (naive +3.54 sigma, and that sigma is
+      itself an UPPER bound on significance because windows share paths).
+
+      link is a LinkFunction port: never hardcode the Gaussian Phi.
+
+  Recalibration:
+    fields:
+      map: PluginRef
+      fit_data_through: Timestamp
+      measured_at: Timestamp
+      artifact_id: ImmutableId
+      valid_for: ScopeKey
+      edge_vs_cost: Estimate
+    notes: >
+      The ONLY legal path from a fitted calibration into a decision is offline
+      through the spec plane: EV writes an SP-Params entry with
+      provenance=fitted, valid_from and fit_data_through; DE reads
+      SP-Params.at(t). Any direct DE read of EV would violate "EV is read by
+      none" AND destroy the walk-forward guard. measured_at is when the fit RAN;
+      fit_data_through is the last date of the FITTING DATA, and only the second
+      is PIT-relevant.
+      edge_vs_cost is |p_recal - p_book| net of half-spread and fee, which is the
+      only form in which the FLB is a claim about money.
+
+  VarianceAudit:
+    fields:
+      z_var: Estimate
+      pit_coverage: 'dict[float, float]'
+      by_bin: 'dict[StratumId, Estimate]'
+      verdict: enum:CONSISTENT|BUDGET_TOO_LARGE|COMPONENT_MISSING
+    notes: >
+      z_i = (X_T,i - E_t[X_T,i]) / sqrt(budget.total_i); report var(z) with a
+      day-clustered CI and PIT coverage at 50/80/95 by (r, |d|) bin.
+      var(z) < 1 => the budget is too large => a DOUBLE COUNT of the declared-
+      disjoint kind. var(z) > 1 => a component is MISSING. A 32-41% sigma
+      inflation shows up as var(z) ~ 0.51-0.57.
+      The registry catches declaration ERRORS; this audit catches declaration
+      LIES, and only the second is falsifiable. R-ONCE is not enforced until both
+      exist. Wire as a standing EV-Gates gate, not a one-off study.
+
+  # === Storage ==============================================================
+
+  DatasetPartition:
+    fields:
+      dataset: enum:QUOTES|TRADES|BOOK_SNAP|TWAP|BINANCE_BT|WINDOWS|MARKOUT_EVENTS|CALIB_PANEL
+      day: Date
+      coin: str
+      path: str
+      rows: int
+      inputs: 'list[(str, Hash)]'
+      distiller_version: str
+      era: Hash
+      written_at: Timestamp
+      manifest_hash: Hash
+    notes: >
+      Tier-1 distillation of the immutable Tier-0 landing zone. Sorted by
+      t_known within partition; a row carries BOTH t_event and t_known so an
+      event-time sort is available for integrals and a knowledge-time filter for
+      decisions.
+
+      Written temp-then-atomic-rename: a partial partition is never visible.
+      Re-derivation is idempotent and a manifest mismatch is FATAL, not a
+      warning — the repo has already destroyed 163 of 176 symbol histories once
+      with an overwrite-semantics incremental updater.
+
+  # === Module records =======================================================
+
+modules:
+
+  DA-Normalize:
+    consumes:
+    - RawEvent
+    produces:
+    - Known
+    - DatasetPartition
+    ports:
+    - feed
+    - telemetry_out
+    notes: >
+      The ONLY constructor of Known. Holds the SourceProfile registry, applies
+      ImputationRule, enforces R-IMPUTE at construction, performs dedup and
+      shard merge, and writes Tier-1 partitions.
+    manifest:
+      inputs: [RawEvent, SourceProfile, ImputationRule, SP-Params]
+      outputs: [Known, DatasetPartition, HealthEvent]
+      ports_required: [feed, telemetry_out]
+      capabilities_required: []
+      stateful: true
+      artifacts: []
+      null_semantics:
+        t_known: {field: t_known, assumption: 'IMPUTED = t_event + measured D_hat; never t_event', bias_direction: PESSIMISTIC, declared_by: DA-Normalize}
+
+  DA-State:
+    consumes:
+    - Known
+    - Coverage
+    - AdmissibilityRule
+    produces:
+    - StateView
+    - SelfState
+    - RefusalLedger
+    ports:
+    - feed
+    - telemetry_out
+    notes: >
+      view(now) is the only entry point. Owns SelfState. Never reads a wall
+      clock (R-ENV): `now` is supplied by the Environment.
+    manifest:
+      inputs: [Known, AdmissibilityRule, SP-Instrument, SP-Params]
+      outputs: [StateView, SelfState, RefusalLedger, HealthEvent]
+      ports_required: [feed, telemetry_out]
+      capabilities_required: []
+      stateful: true
+      artifacts: []
+      null_semantics:
+        t_acked: {field: t_acked, assumption: 'venue ack unobserved; bracketed, never imputed to t_submitted', bias_direction: PESSIMISTIC, declared_by: DA-State}
+
+  EV-Markout:
+    consumes:
+    - DatasetPartition
+    - SP-Venue
+    - SP-Instrument
+    produces:
+    - MarkoutObs
+    - MarkoutEstimate
+    - MarkoutPartition
+    ports:
+    - read_all
+    notes: >
+      Needs FOUR spec facts, not thirty fields: tick_size, fee_schedule,
+      w_declared, and the 2026-08-20 era boundary. Populate SP demand-driven.
+      BLOCKER: fee is unreconciled — docs say crypto taker feeRate 0.07, the
+      CLOB market record says maker/taker_base_fee 1000, and all observed
+      fee_rate_bps are 0. A markout number cannot be signed until one of these
+      is established, because the sign of NET maker revenue depends on it.
+    manifest:
+      inputs: [DatasetPartition, SP-Venue, SP-Instrument, InferenceSpec]
+      outputs: [MarkoutObs, MarkoutEstimate, HealthEvent]
+      ports_required: [read_all]
+      capabilities_required: []
+      stateful: false
+      artifacts: []
+      null_semantics:
+        fee: {field: fee_rate_bps, assumption: 'observed 0 on all prints; docs disagree', bias_direction: OPTIMISTIC, declared_by: EV-Markout}
+
+  EV-Calibration:
+    consumes:
+    - DatasetPartition
+    - SettlementFacts
+    produces:
+    - CalibrationPanelRow
+    - CalibrationScore
+    - FLBFit
+    - Recalibration
+    - VarianceAudit
+    ports:
+    - read_all
+    notes: >
+      Also the owner of ground-truth ingestion, which was previously unowned:
+      resolutions.jsonl is consumed by no module. Finality filter is
+      closed == true AND winners present; the 8 pre-fix rows carry a distinct
+      schema (closed:false with populated outcomePrices) and are dropped by
+      schema signature, not by heuristic.
+    manifest:
+      inputs: [DatasetPartition, SettlementFacts, InferenceSpec, LinkFunction]
+      outputs: [CalibrationScore, FLBFit, Recalibration, VarianceAudit, HealthEvent]
+      ports_required: [read_all]
+      capabilities_required: []
+      stateful: false
+      artifacts: [Recalibration.artifact_id]
+      null_semantics:
+        drift: {field: drift_control, assumption: 'Binance bookTicker return; HYPE has no Binance leg', bias_direction: PESSIMISTIC, declared_by: EV-Calibration}
+
+# -----------------------------------------------------------------------------
+# MIGRATION RECORDS — append to contracts/migrations.yaml
+# -----------------------------------------------------------------------------
+migrations:
+- from_version: 12
+  to_version: 13
+  operation: rename
+  key: field:Coverage.segments
+  old: list[(Timestamp, Timestamp)]
+  new: list[(EventTime, EventTime)]
+  reason: 'renamed to Coverage.covered and re-typed to EventTime; B2-9 estimand-weight extension'
+- from_version: 12
+  to_version: 13
+  operation: retype
+  key: field:Known.t_event
+  old: Timestamp
+  new: EventTime
+  reason: 'R-IMPUTE: EventTime and KnowledgeTime must not share a comparison operator'
+- from_version: 12
+  to_version: 13
+  operation: retype
+  key: field:Known.t_known
+  old: Timestamp
+  new: KnowledgeTime
+  reason: 'R-IMPUTE: see above'
+- from_version: 12
+  to_version: 13
+  operation: retype
+  key: field:OrderRecord.t_acked
+  old: Timestamp?
+  new: Known[Timestamp] | Unavailable
+  reason: 'B2-2: the venue ack is unobserved; a bare optional cannot say why it is missing'
+- from_version: 12
+  to_version: 13
+  operation: retype
+  key: field:MarkoutPartition.spread
+  old: float
+  new: MarkoutComponent
+  reason: 'architecture mandates {unit, conditioning_measure, sign_convention, coverage} per term'
+- from_version: 12
+  to_version: 13
+  operation: retype
+  key: field:StateView.coverage
+  old: '(field: str, span: Duration) -> Coverage'
+  new: '(field: str, span: Duration) -> Coverage'
+  reason: 'signature unchanged; Coverage widened'
