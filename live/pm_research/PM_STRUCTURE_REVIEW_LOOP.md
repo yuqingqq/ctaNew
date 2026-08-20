@@ -181,3 +181,20 @@ the additive wealth ledger, supplies covariance/falsification for variance,
 adds dependence to `Uncertain`, makes competition state knowledge-time safe,
 packages incentive theory as one extension, replaces factor-weighted loss with
 scenario risk, and defines the OP health/halt path.
+
+| 6 | 2026-08-20 | review: 4 | **v6 NOT CONVERGED; issues recorded** |
+
+## Iteration 6 review of v6 — 4 MUST-FIX
+
+Full review: `PM_STRUCT_ITER6_REVIEW.md`.
+
+Strict score as written: **LOCAL 11 / SPREADING 0 / STRUCTURAL 2**. The two
+structural rows are portfolio scenario risk, whose scenario model is unnamed
+and ownerless, and incentive theory, whose knowledge/uncertainty wrapper and
+instrument scope are discarded at `DecisionProblem` while its cash-flow seam
+incorrectly targets utility.
+
+The OP improvement is not yet executable: the port manifest carries no
+`HaltState`, and the claimed cancel command has no edge to `DE-Actuator`.
+Remaining work preserves the competition wrapper, routes incentive cash into
+wealth, types and owns adverse scenarios, and completes the halt/cancel path.
