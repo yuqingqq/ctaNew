@@ -305,3 +305,25 @@ different coupling narrowing, rules/ports are not enforced, runtime producers
 can disappear through `config_supplied`, and an unchanged HEAD-to-worktree
 comparison fails on all historical allowlist entries. Decision snapshot
 equalities and real ModuleManifest wiring remain absent.
+
+| 12 | 2026-08-20 | review: 5 | **requested v12 is v11.1; NOT CONVERGED** |
+
+## Iteration 12 review — repository labels the target v11.1
+
+Full review: `PM_STRUCT_ITER12_REVIEW.md`.
+
+Commit `ad5cbc0` closes M11-1 by replacing the path-only allowlist with
+target-ref, exact old/new, version-bound migration records. The previous
+coupling A→C exploit is rejected and unchanged HEAD-to-worktree comparison
+passes.
+
+This is a checker patch, not an architecture iteration:
+`PM_ARCHITECTURE.md` and `contracts.yaml` have zero changed lines, the
+contract remains version 11, and the human document remains titled v10.
+Documentation improvement is therefore zero, not merely marginal.
+
+The replay stays **LOCAL 11 / SPREADING 1 / STRUCTURAL 1**. Semantic
+rules/producers/ports, scenario type consistency, incentive-to-outcome wiring,
+decision snapshot equality and ModuleManifest coverage remain unresolved.
+The gate also still accepts same-version additions and duplicate keys in
+`contracts.yaml`.
