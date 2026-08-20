@@ -1,0 +1,196 @@
+# One-shot migration records (replaces removals_allowlist.yaml, M11-1).
+# Each record authorises EXACTLY ONE (operation, key, old, new) at EXACTLY ONE
+# version transition. A path-keyed allowlist was proven to accept an unrelated
+# narrowing at an allowlisted path -- the precise failure this process exists to
+# prevent. Records are loaded from the TARGET ref.
+migrations:
+- from_version: 10
+  to_version: 11
+  operation: remove
+  key: field:DecisionSchemeConfig.coupling_source
+  old: CouplingSource
+  reason: 'M10-5: split into CouplingMode (config) and ResolvedCoupling (problem)'
+- from_version: 10
+  to_version: 11
+  operation: remove
+  key: field:DecisionSchemeConfig.fallback
+  old: FallbackPolicy?
+  reason: 'M10-5: folded into per-input UnavailableAction.FallBack'
+- from_version: 10
+  to_version: 11
+  operation: remove
+  key: field:Heartbeat.period
+  old: Duration
+  reason: 'M9-5: split, see type:Heartbeat'
+- from_version: 10
+  to_version: 11
+  operation: remove
+  key: field:Heartbeat.port
+  old: TelemetryPortId
+  reason: 'M9-5: split, see type:Heartbeat'
+- from_version: 10
+  to_version: 11
+  operation: remove
+  key: field:Heartbeat.staleness_deadline
+  old: Duration
+  reason: 'M9-5: split, see type:Heartbeat'
+- from_version: 10
+  to_version: 11
+  operation: remove
+  key: field:PinnedOutcomes.artifact_id
+  old: ImmutableId
+  reason: 'M10-5: identity lives once, in PluginRef'
+- from_version: 10
+  to_version: 11
+  operation: remove
+  key: field:PinnedOutcomes.impl
+  old: PluginRef
+  reason: 'M10-5: renamed to `model` and typed as PluginRef'
+- from_version: 10
+  to_version: 11
+  operation: remove
+  key: note:CouplingSource
+  old: "M9-4.1: exclusive \u2014 v9 had a mandatory config ref AND a problem field"
+  reason: 'M10-5: CouplingSource split into CouplingMode/ResolvedCoupling'
+- from_version: 10
+  to_version: 11
+  operation: remove
+  key: note:Heartbeat
+  old: absence cannot emit an event, so liveness is deadline-driven (M8-4)
+  reason: 'M10-6.1: obsolete Heartbeat removed; see HeartbeatRegistration/Pulse'
+- from_version: 10
+  to_version: 11
+  operation: remove
+  key: note:ScenarioLossLimit
+  old: ParamId.name='scenario_loss_limit'; ScopeKey.scenario identifies the scenario
+  reason: 'M10-3.2: limit now carries a resolved value and unit'
+- from_version: 10
+  to_version: 11
+  operation: remove
+  key: note:UnwrapPolicy
+  old: 'M9-4.2: scoped per consumer/input; one global choice cannot serve all'
+  reason: 'M10-5: per-input UnwrapSpec with required parameters'
+- from_version: 10
+  to_version: 11
+  operation: remove
+  key: ports:DA-Feeds
+  old: '[''feed'']'
+  reason: 'M10-6.3: ports are owned by the module record only (single representation)'
+- from_version: 10
+  to_version: 11
+  operation: remove
+  key: prelude:external:Hyperedge
+  old: external
+  reason: v10->v11 refactor per PM_STRUCT_ITER10_REVIEW (see commit message)
+- from_version: 10
+  to_version: 11
+  operation: remove
+  key: type:CouplingSource
+  old: record
+  reason: v10->v11 refactor per PM_STRUCT_ITER10_REVIEW (see commit message)
+- from_version: 10
+  to_version: 11
+  operation: remove
+  key: type:Heartbeat
+  old: record
+  reason: 'M9-5: split into HeartbeatRegistration (config) and HeartbeatPulse (observation)'
+- from_version: 10
+  to_version: 11
+  operation: remove
+  key: variant:CancelAllStatus|Confirmed(command_id, confirmed_by)
+  old: variant
+  reason: v10->v11 refactor per PM_STRUCT_ITER10_REVIEW (see commit message)
+- from_version: 10
+  to_version: 11
+  operation: remove
+  key: variant:CancelAllStatus|FailedTerminal(command_id, reason)
+  old: variant
+  reason: v10->v11 refactor per PM_STRUCT_ITER10_REVIEW (see commit message)
+- from_version: 10
+  to_version: 11
+  operation: remove
+  key: variant:CancelAllStatus|Issued(command_id)
+  old: variant
+  reason: v10->v11 refactor per PM_STRUCT_ITER10_REVIEW (see commit message)
+- from_version: 10
+  to_version: 11
+  operation: remove
+  key: variant:CancelAllStatus|Unconfirmed(command_id, open_orders_remaining)
+  old: variant
+  reason: v10->v11 refactor per PM_STRUCT_ITER10_REVIEW (see commit message)
+- from_version: 10
+  to_version: 11
+  operation: remove
+  key: variant:CouplingSource|Dynamic(Known[CouplingGraph])
+  old: variant
+  reason: v10->v11 refactor per PM_STRUCT_ITER10_REVIEW (see commit message)
+- from_version: 10
+  to_version: 11
+  operation: remove
+  key: variant:CouplingSource|Static(StaticCouplingRef)
+  old: variant
+  reason: v10->v11 refactor per PM_STRUCT_ITER10_REVIEW (see commit message)
+- from_version: 10
+  to_version: 11
+  operation: change
+  key: field:DecisionProblem.coupling
+  old: CouplingSource
+  new: ResolvedCoupling
+  reason: 'M9-4.1: replaced by exclusive CouplingSource'
+- from_version: 10
+  to_version: 11
+  operation: change
+  key: field:DecisionSchemeConfig.unavailable_policy
+  old: enum:HALT|FALL_BACK|REFUSE_ACTION
+  new: UnavailablePolicy
+  reason: v10->v11 refactor per PM_STRUCT_ITER10_REVIEW (see commit message)
+- from_version: 10
+  to_version: 11
+  operation: change
+  key: field:UnwrapPolicy.by_input
+  old: dict[str, enum:EXPECTATION|QUANTILE|SCENARIOS]
+  new: dict[str, UnwrapSpec]
+  reason: v10->v11 refactor per PM_STRUCT_ITER10_REVIEW (see commit message)
+- from_version: 10
+  to_version: 11
+  operation: change
+  key: module:BE-CompetitionAggregator.consumes
+  old: '[''BE-Competition.produces'', ''CouplingGraph'']'
+  new: '[''BE-Competition'', ''CouplingGraph'']'
+  reason: v10->v11 refactor per PM_STRUCT_ITER10_REVIEW (see commit message)
+- from_version: 10
+  to_version: 11
+  operation: change
+  key: module:DE-Constraints.consumes
+  old: '[''DecisionProblem'', ''HaltState'']'
+  new: '[''DecisionProblem'', ''HaltState'', ''ScenarioLossConstraint'']'
+  reason: v10->v11 refactor per PM_STRUCT_ITER10_REVIEW (see commit message)
+- from_version: 10
+  to_version: 11
+  operation: change
+  key: note:CancelAllStatus
+  old: "M9-5: discriminated \u2014 confirmation evidence required only for Confirmed"
+  new: venue ack is NOT observed; confirmation is by open-order reconciliation, and while Unconfirmed
+    the conservative state is HALTED (rule R-HALT.fail_closed)
+  reason: 'M9-5: note rewritten for the discriminated union; reconciliation semantics moved into the variants'
+- from_version: 10
+  to_version: 11
+  operation: change
+  key: note:PinnedOutcomes
+  old: 'M9-4.4: replaces a live callable so replay is immutable'
+  new: 'M10-5: identity lives in PluginRef (single copy); still callable'
+  reason: 'M10-5: identity single-copy; evaluate protocol restored'
+- from_version: 10
+  to_version: 11
+  operation: change
+  key: proto:IncentiveModel.competition_model
+  old: () -> ModuleRef(BE-Competition)
+  new: () -> ModuleRef
+  reason: v10->v11 refactor per PM_STRUCT_ITER10_REVIEW (see commit message)
+- from_version: 10
+  to_version: 11
+  operation: change
+  key: proto:PayoutFunctional.cash
+  old: (ActionOutcome, CompetitionState) -> Uncertain[Wealth]
+  new: (ActionOutcome, Known[Uncertain[JointCompetitionState]], InstrumentId) -> Uncertain[Wealth]
+  reason: v10->v11 refactor per PM_STRUCT_ITER10_REVIEW (see commit message)

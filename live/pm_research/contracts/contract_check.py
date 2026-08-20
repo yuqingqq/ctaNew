@@ -17,7 +17,7 @@ Intentional removals go in removals_allowlist.yaml with a reason.
 import subprocess, sys, yaml, os
 
 REL = "live/pm_research/contracts/contracts.yaml"
-ALLOW = os.path.join(os.path.dirname(__file__), "removals_allowlist.yaml")
+MIG_REL = "live/pm_research/contracts/migrations.yaml"
 
 def load(ref):
     if ref in ("WORKTREE", "", None):
@@ -147,10 +147,47 @@ def invariants(doc):
                 errs.append(f"{mname} consumes {base} with no declared producer")
     return errs
 
-def allowlist():
-    if not os.path.exists(ALLOW):
-        return {}
-    return yaml.safe_load(open(ALLOW)) or {}
+class StrictLoader(yaml.SafeLoader):                     # M11-2: duplicate keys are errors
+    pass
+def _no_dupes(loader, node, deep=False):
+    seen = set()
+    for k, _ in node.value:
+        key = loader.construct_object(k, deep=deep)
+        if key in seen:
+            raise yaml.YAMLError(f"duplicate YAML key: {key!r}")
+        seen.add(key)
+    return yaml.SafeLoader.construct_mapping(loader, node, deep)
+StrictLoader.add_constructor(yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG, _no_dupes)
+
+def migrations(ref):
+    """Load migration records FROM THE TARGET REF (M11-1), not the worktree."""
+    if ref in ("WORKTREE", "", None):
+        if not os.path.exists(MIG_REL):
+            return []
+        raw = open(MIG_REL).read()
+    else:
+        r = subprocess.run(["git", "show", f"{ref}:{MIG_REL}"], capture_output=True, text=True)
+        if r.returncode != 0:
+            return []
+        raw = r.stdout
+    recs = (yaml.load(raw, Loader=StrictLoader) or {}).get("migrations", [])
+    seen = {}
+    for m in recs:                                        # M11-1: conflicting records fail
+        sig = (m.get("from_version"), m.get("to_version"), m.get("operation"), m.get("key"))
+        if sig in seen:
+            sys.exit(f"FATAL: duplicate migration record for {sig}")
+        seen[sig] = m
+    return recs
+
+def authorises(recs, op, key, old, new, va, vb):
+    """A record must match operation, key, EXACT old/new and the version step."""
+    for m in recs:
+        if (m.get("operation") == op and m.get("key") == key
+                and str(m.get("old")) == str(old)
+                and (op == "remove" or str(m.get("new")) == str(new))
+                and m.get("from_version") == va and m.get("to_version") == vb):
+            return m.get("reason", "")
+    return None
 
 def selftest():
     """The regressions this tool must catch — including v8's exact blind spot."""
@@ -188,6 +225,15 @@ def selftest():
         caught = bool(invariants(doc))
         print(f"  {'PASS' if caught else 'FAIL'}  invariant detects {name}")
         ok &= caught
+    rec = [{"from_version": 1, "to_version": 2, "operation": "change",
+            "key": "field:X.y", "old": "A", "new": "B", "reason": "t"}]
+    ab = authorises(rec, "change", "field:X.y", "A", "B", 1, 2) is not None
+    ac = authorises(rec, "change", "field:X.y", "A", "C", 1, 2) is None
+    ver = authorises(rec, "change", "field:X.y", "A", "B", 2, 3) is None
+    print(f"  {'PASS' if ab else 'FAIL'}  migration authorises its exact A->B")
+    print(f"  {'PASS' if ac else 'FAIL'}  migration REJECTS A->C at an allowed path")
+    print(f"  {'PASS' if ver else 'FAIL'}  migration REJECTS a different version step")
+    ok &= ab and ac and ver
     unchanged = diff(flatten(base), flatten(base))
     same_ok = not (unchanged[0] or unchanged[1] or unchanged[2])
     print(f"  {'PASS' if same_ok else 'FAIL'}  no false positive on identical input")
@@ -201,6 +247,7 @@ if __name__ == "__main__":
     a = flatten(load(sys.argv[1]))
     b = flatten(load(sys.argv[2] if len(sys.argv) > 2 else "WORKTREE"))
     va, vb = a.pop("_version", 0), b.pop("_version", 0)
+    a.pop("meta:version", None); b.pop("meta:version", None)   # internal, not a contract
     removed, changed, added = diff(a, b)
     if (vb or 0) < (va or 0):
         print(f"*** VERSION REGRESSION: {va} -> {vb}")
@@ -210,23 +257,28 @@ if __name__ == "__main__":
         print(f"INVARIANT FAILURES ({len(inv)}):")
         for e in inv:
             print(f"  *** {e}")
-    allowed = allowlist()
+    recs = migrations(sys.argv[2] if len(sys.argv) > 2 else "WORKTREE")
     fatal = False
     print(f"REMOVED ({len(removed)}):")
     for k, v in sorted(removed.items()):
-        why = allowed.get(k)
+        why = authorises(recs, "remove", k, v, None, va, vb)
         print(f"  {k}: {v}" + (f"   [allowed: {why}]" if why else "   *** UNEXPLAINED ***"))
         fatal |= not why
     print(f"TYPE-CHANGED ({len(changed)}):")
     for k, (o, n) in sorted(changed.items()):
-        why = allowed.get(k)
+        why = authorises(recs, "change", k, o, n, va, vb)
         print(f"  {k}: {o!r} -> {n!r}" + (f"   [allowed: {why}]" if why else "   *** UNEXPLAINED ***"))
         fatal |= not why
-    stale = sorted(set(allowed) - set(removed) - set(changed) - {"_version"})
-    if stale:
-        print(f"STALE ALLOWLIST ENTRIES ({len(stale)}) — latent bypasses:")
-        for k in stale:
-            print(f"  *** {k}")
+    # M11-1: a record is stale only within ITS OWN declared version step
+    unused = [m for m in recs
+              if m.get("from_version") == va and m.get("to_version") == vb
+              and not authorises([m], m["operation"], m["key"], m.get("old"),
+                                 m.get("new"), va, vb) is None
+              and m["key"] not in removed and m["key"] not in changed]
+    if unused:
+        print(f"UNUSED MIGRATIONS FOR {va}->{vb} ({len(unused)}):")
+        for m in unused:
+            print(f"  *** {m['key']}")
         fatal = True
     print(f"ADDED ({len(added)}):")
     for k in sorted(added):
