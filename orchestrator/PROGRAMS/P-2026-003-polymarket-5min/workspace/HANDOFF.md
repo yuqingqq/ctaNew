@@ -52,7 +52,48 @@ Reading order:
 
 Before any book/trade/queue analysis, read
 `live/pm_research/DATA_COLLECTOR_AUDIT_2026-08-20.md` — current collector
-verdict, live evidence and acceptance boundary.
+verdict, live evidence and acceptance boundary. **Read its v3 section: the v2
+addendum's "repair successful" is withdrawn, and the root cause is now measured
+rather than hypothesised.**
+
+### Collector: root cause found, `clob_v3` deployed 16:31:26 UTC
+
+**The v2 repair did not close the failure.** `clob_v2_1` logged a
+`SLOW_CONSUMER_1013` on BTC **5.8 minutes after deployment** and finished its
+80-minute run at `retries=5 slow=5`, all BTC, over 4.82M messages — **one drop
+per ~16 minutes**. The v2 addendum called the repair successful at 15:12; the
+ledger contradicted it at 15:16.
+
+**Root cause, measured:** `gzip_atomic` ran **synchronously on the event loop** —
+**1,818–1,915 ms** to compress a ~180 MB BTC shard at level 6, every five
+minutes per coin, during which **no socket is drained** and the venue's send
+buffer to us fills. The v2 write-queue repair was real but was never the binding
+constraint: `writer_wait=0`, `q_hi=1` across 4.8M messages.
+
+`clob_v3`: gzip off-loop on a dedicated disk pool; **disk and HTTP executors
+split** (they shared the default 20-worker pool, where a stalled `urlopen` could
+starve a shard write and reproduce the same 1013 by a second path); an
+**event-loop lag probe** reported per heartbeat and **stamped into every
+disconnect**; `gap_open_at_exit` so a gap running to window end is no longer
+indistinguishable from a lost close record; `markets_force_cancelled` replacing
+the misleading `active_markets_drained` (2 reported, 14 actually drained); and a
+narrow chunk-loss window on cancellation closed.
+
+**Why the lag probe matters more than the fix.** A 1013 has two candidate causes
+with *opposite* remedies — the loop stalled (offload work) or the socket rate
+genuinely exceeded capacity (shard connections across processes). Nothing
+previously distinguished them, so every diagnosis was an argument. Now it is a
+number in the disconnect record.
+
+Selftest is 12 checks including a **control**: the same gzip inline must stall
+the loop ≥100 ms and ≥20× the off-loop figure, or the off-loop test proves
+nothing. Measured **211 ms on-loop vs 0.5 ms off-loop, 393×**.
+
+**Acceptance is unchanged and not yet met:** one full busy day with zero `1013`,
+or a cause-aware exclusion rule with enough complete independent days. Compare
+against the v2_1 baseline of one drop per ~16 minutes. A few clean minutes prove
+nothing — that was exactly v2's error. Never pool v2 and v3 rows without the
+`collector_version` field the ledger records.
 
 ## Done this session
 

@@ -7,12 +7,39 @@ updated: 2026-08-20 (session 3 — Route A measured; DESCRIPTIVE / PRICING HOLD)
 
 flags:
   collector_running: true    # One price process and one CLOB process; fresh.
-  clob_capture_clean: false  # Second repair deployed 14:50 (`50dd889`) and
-                             # telemetry v2.1 at 15:10 (`2deb8e8`). v2's last
-                             # heartbeat showed 908,843 msgs / 552,166 BTC over
-                             # 19m23s, with zero retries, 1013s or writer waits;
-                             # full busy-day
-                             # acceptance is still pending. Pre-v2 is MNAR.
+  clob_capture_clean: false  # STILL FALSE. The v2 addendum's "repair
+                             # successful" is WITHDRAWN: the collector's own
+                             # ledger logged SLOW_CONSUMER_1013 on BTC 5.8 min
+                             # after the clob_v2_1 deploy, and v2_1 finished its
+                             # 80-min run at retries=5 slow=5 (all BTC) over
+                             # 4.82M messages = one drop per ~16 min.
+                             # ROOT CAUSE FOUND AND MEASURED: gzip_atomic ran
+                             # SYNCHRONOUSLY ON THE EVENT LOOP — 1,818-1,915 ms
+                             # to compress a ~180 MB BTC shard at level 6, every
+                             # 5 min per coin, during which NO socket is drained
+                             # and the venue's send buffer to us fills. The v2
+                             # write-queue repair was real but not the binding
+                             # constraint (writer_wait=0, q_hi=1 over 4.8M msgs).
+                             # clob_v3 (16:31:26 UTC): gzip off-loop on a
+                             # dedicated disk pool; disk/HTTP executors split so
+                             # a stalled urlopen cannot delay a shard write;
+                             # EVENT-LOOP LAG PROBE reported per heartbeat and
+                             # stamped into every disconnect, so the next 1013 is
+                             # attributable (loop stall vs genuine rate) —
+                             # those have OPPOSITE fixes and nothing previously
+                             # distinguished them; gap_open_at_exit so every gap
+                             # has an explicit end; markets_force_cancelled
+                             # renamed from the misleading
+                             # active_markets_drained; narrow chunk-loss window
+                             # on cancellation closed. Selftest 12 checks with a
+                             # CONTROL (on-loop gzip must stall >=100 ms and
+                             # >=20x off-loop; measured 211 ms vs 0.5 ms = 393x).
+                             # ACCEPTANCE UNCHANGED: one full busy day with zero
+                             # 1013, or a cause-aware exclusion rule. A few clean
+                             # minutes prove nothing — that was v2's error.
+                             # Never pool v2 and v3 rows without the ledger's
+                             # collector_version field.
+
   route_a_tape_clean: filtered-only # Zero malformed TWAP rows/negative lags;
                              # complete market grids and resolutions. But 28
                              # historical 30s reconnects and 40 S60 gaps >30s

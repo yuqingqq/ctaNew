@@ -200,3 +200,81 @@ This is enough to call the implementation repair successful, not enough to set
 full busy day with zero `1013`, or a cause-aware exclusion rule with enough
 complete independent days. Never pool pre-v2 and post-v2 observations without
 an explicit repair-era field derived from the versioned start/stop ledger.
+
+## v3 remediation — 16:31 UTC, and a correction to the v2 addendum
+
+**The v2 addendum's "enough to call the implementation repair successful" was
+premature and is withdrawn.** It was written at 15:12 citing a 19m23s clean
+smoke test. The collector's own ledger recorded a `SLOW_CONSUMER_1013` on BTC at
+**15:16:13, 5.8 minutes after the `clob_v2_1` deployment**, and `clob_v2_1`
+finished its 80-minute run at **`retries=5 slow=5`, all BTC — one slow-consumer
+drop every ~16 minutes** over 4,822,835 messages. Withholding
+`clob_capture_clean=true` was correct; the narrative around it was not.
+
+### What v2 did fix, verified rather than assumed
+
+- **The write path is provably not the bottleneck**: `writer_wait=0`, `q_hi=1`
+  across 4.8M messages. The queue-decoupling repair works — it was simply not
+  the binding constraint.
+- The gap ledger pairs `disconnect` ↔ `gap_closed` with cause and slug keys.
+- The price lane caught a real global silence and closed it at **11.5 s**
+  against ≥30 s under the old watchdog.
+- Atomic gzip and numbered shards survived a real restart: all 14 in-flight
+  market tasks flushed and archived at the v2 stop, and v2_1 resumed the same
+  windows into `.1.gz`.
+
+### The defect v2 missed, measured
+
+`gzip_atomic` ran **synchronously on the event loop**. Measured on real BTC
+shards: **1,818–1,915 ms** to compress ~180 MB at level 6. That is a full
+event-loop stall, every five minutes per coin, during which **no socket is
+drained** and the server's send buffer to us fills. At BTC's 500–1,000 msg/s
+that is 900–1,900 messages the venue must hold for us.
+
+A second, latent one: `to_thread` (writers) and four `run_in_executor(None, …)`
+HTTP calls (`urlopen`, 15–25 s timeouts) shared the **default 20-worker pool**.
+If HTTP saturates it, writer writes queue behind them, `write_q` fills, and
+`flush_buf` falls through to `await write_q.put(...)` **inside the receive
+loop** — producing the same 1013 by a different path. It had not fired
+(`writer_wait=0`), but offloading gzip onto that same pool would have made it
+more likely, not less.
+
+### `clob_v3` changes
+
+1. **gzip off the loop** onto a dedicated 2-worker disk pool; per-shard cost
+   recorded as `gzip_ms_max`.
+2. **Disk and HTTP executors split** (`DISK_WORKERS=2`, `HTTP_WORKERS=8`), so a
+   stalled `urlopen` can never delay a raw-shard write.
+3. **Event-loop lag probe.** A 1013 has two candidate causes with *opposite*
+   fixes — the loop stalled (offload work) or the socket rate genuinely exceeded
+   capacity (shard connections). Nothing previously distinguished them. The
+   probe measures the overshoot of a fixed 100 ms sleep, reports `lag_ms_max`
+   and `lag_stalls` per heartbeat, writes a `loop_stall` ledger event at
+   ≥250 ms, and **stamps the measured lag into every `disconnect` record** so
+   the next 1013 is attributable rather than argued about.
+4. **`active_markets_drained` → `markets_force_cancelled`**, plus
+   `markets_completed_cooperatively`. The old name read as "markets drained"
+   (14 at the v2 stop) when it counted only those needing a forced cancel (2); a
+   later auditor would reasonably have inferred 12 lost shards.
+5. **Every gap now has an explicit end.** An outage running to window end
+   previously left a `disconnect` with no matching `gap_closed`, which a
+   consumer cannot distinguish from a lost close record. `gap_open_at_exit`
+   closes it — the Route-A selection audit needs this to be unambiguous.
+6. **Narrow chunk-loss window closed.** `flush_buf` cleared `buf` before the
+   chunk was safely queued, so a cancellation landing on the backpressure
+   `await` lost it. The chunk now survives in `pending` for the finally to
+   re-flush.
+
+Selftest is 12 checks including a **control**: the same gzip run inline must
+stall the loop by ≥100 ms and ≥20× the off-loop figure, or the off-loop test
+proves nothing. Measured 211 ms on-loop versus 0.5 ms off-loop, **393×**.
+
+### Acceptance — unchanged, and not yet met
+
+The pre-registered boundary stands: one full busy day with zero `1013`, or a
+cause-aware exclusion rule with enough complete independent days. `clob_v3`
+started at 16:31:26 UTC. The honest comparison is against the `clob_v2_1`
+baseline of **one slow-drop per ~16 minutes**; a few clean minutes prove
+nothing, which is exactly the error the v2 addendum made. Do not set
+`clob_capture_clean=true` on anything less than the pre-registered evidence, and
+never pool v2 and v3 observations without the version field the ledger records.

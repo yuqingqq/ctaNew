@@ -39,6 +39,7 @@ import tempfile
 import time
 import urllib.request
 from collections import Counter, defaultdict
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 import websockets
@@ -61,7 +62,18 @@ RESOLVE_GIVEUP_S = 7200
 WRITE_BATCH = 2_000
 WRITE_QUEUE_MAX = 32
 GAP_LEDGER = ROOT / "collector_gaps.jsonl"
-COLLECTOR_VERSION = "clob_v2_1"
+COLLECTOR_VERSION = "clob_v3"
+
+# v3: disk work and HTTP work get SEPARATE executors. They shared the default
+# 20-worker pool, where four run_in_executor HTTP calls (urlopen, 15-25 s
+# timeouts) could starve the writers' to_thread; a full write_q then makes
+# flush_buf block INSIDE the receive loop, which is exactly how a 1013 is
+# produced. Disk is serialised on purpose: one shard compressed at a time
+# bounds peak memory and keeps gzip off both the loop and the HTTP path.
+DISK_WORKERS = 2
+HTTP_WORKERS = 8
+LAG_PROBE_S = 0.1            # event-loop lag probe interval
+LAG_WARN_MS = 250.0          # log a stall at or above this
 
 
 def gget(slug: str):
@@ -170,7 +182,37 @@ class PMCollector:
         self.market_tasks: set[asyncio.Task] = set()
         self.active_market_coin: dict[str, str] = {}
         self.last_recv_by_slug: dict[str, int] = {}
+        self.markets_completed = 0          # exited cooperatively, before shutdown
+        # Separate pools so a stalled HTTP call can never delay a disk write.
+        self.disk_pool = ThreadPoolExecutor(max_workers=DISK_WORKERS,
+                                            thread_name_prefix="pm-disk")
+        self.http_pool = ThreadPoolExecutor(max_workers=HTTP_WORKERS,
+                                            thread_name_prefix="pm-http")
+        self.lag_ms_max = 0.0               # worst loop stall since last heartbeat
+        self.lag_ms_max_ever = 0.0
+        self.lag_stalls = 0
         self._load_state()
+
+    async def _lag_probe(self) -> None:
+        """Measure event-loop stalls directly.
+
+        A 1013 has two candidate causes with OPPOSITE fixes: the loop stalled
+        (offload work) or the socket rate genuinely exceeded capacity (shard
+        connections). Without this number the next disconnect is a guess. The
+        overshoot of a fixed-interval sleep IS the time the loop spent unable to
+        drain any socket.
+        """
+        while not self.stop:
+            t0 = time.perf_counter()
+            await asyncio.sleep(LAG_PROBE_S)
+            lag = (time.perf_counter() - t0 - LAG_PROBE_S) * 1e3
+            if lag > self.lag_ms_max:
+                self.lag_ms_max = lag
+            if lag > self.lag_ms_max_ever:
+                self.lag_ms_max_ever = lag
+            if lag >= LAG_WARN_MS:
+                self.lag_stalls += 1
+                self._audit({"event": "loop_stall", "lag_ms": round(lag, 1)})
 
     def _load_state(self) -> None:
         """Resume: don't re-collect known markets; re-poll unresolved ones."""
@@ -216,7 +258,7 @@ class PMCollector:
         while not self.stop:
             now = int(time.time())
             try:
-                self.rewards = await loop.run_in_executor(None, rewards_registry)
+                self.rewards = await loop.run_in_executor(self.http_pool, rewards_registry)
                 self.rewards_ts = now
                 jl_append(ROOT / "rewards_registry.jsonl",
                           {"recv_ns": time.time_ns(), "n": len(self.rewards)})
@@ -232,6 +274,7 @@ class PMCollector:
 
         def done(finished: asyncio.Task) -> None:
             self.market_tasks.discard(finished)
+            self.markets_completed += 1
             if finished.cancelled():
                 return
             try:
@@ -255,7 +298,7 @@ class PMCollector:
                     if slug in self.known:
                         continue
                     try:
-                        m = await loop.run_in_executor(None, gget, slug)
+                        m = await loop.run_in_executor(self.http_pool, gget, slug)
                     except Exception as ex:
                         print(f"[pm] gamma {slug}: {type(ex).__name__} {str(ex)[:60]}",
                               flush=True)
@@ -268,7 +311,7 @@ class PMCollector:
                     # disagree on fees — capture the venue's own numbers)
                     clob_extra = {}
                     try:
-                        c = await loop.run_in_executor(None, clob_market, m.get("conditionId"))
+                        c = await loop.run_in_executor(self.http_pool, clob_market, m.get("conditionId"))
                         clob_extra = {k: c.get(k) for k in
                                       ("maker_base_fee", "taker_base_fee", "min_incentive_size",
                                        "max_incentive_spread", "rewards", "neg_risk")}
@@ -326,24 +369,33 @@ class PMCollector:
                 try:
                     if chunk is None:
                         return
-                    await asyncio.to_thread(f.write, chunk)
+                    await asyncio.get_running_loop().run_in_executor(
+                        self.disk_pool, f.write, chunk)
                 finally:
                     write_q.task_done()
 
         writer_task = asyncio.create_task(writer())
 
+        pending: str | None = None      # chunk taken from buf, not yet queued
+
         async def flush_buf() -> None:
-            if not buf:
-                return
-            if writer_task.done():
-                writer_task.result()
-            chunk = "".join(buf)
-            buf.clear()
+            nonlocal pending
+            if pending is None:
+                if not buf:
+                    return
+                if writer_task.done():
+                    writer_task.result()
+                pending = "".join(buf)
+                buf.clear()
             try:
-                write_q.put_nowait(chunk)
+                write_q.put_nowait(pending)
             except asyncio.QueueFull:
+                # `pending` survives a cancellation landing on this await, so
+                # the finally can re-flush it. Clearing buf before the chunk is
+                # safely queued was a (narrow) data-loss window.
                 self.counts["writer_backpressure"] += 1
-                await write_q.put(chunk)
+                await write_q.put(pending)
+            pending = None
             self.counts["writer_queue_highwater"] = max(
                 self.counts["writer_queue_highwater"], write_q.qsize())
 
@@ -404,6 +456,11 @@ class PMCollector:
                         "event": "disconnect", "slug": slug, "coin": coin,
                         "tokens": toks, "window_start": ts, "cause": cause,
                         "last_message_recv_ns": last_recv_ns,
+                        # attribution: was the loop stalled, or did the socket
+                        # rate simply exceed capacity? These have opposite fixes.
+                        "lag_ms_max_interval": round(self.lag_ms_max, 1),
+                        "lag_ms_max_ever": round(self.lag_ms_max_ever, 1),
+                        "coin_msg_rate_hint": self.msg_by_coin.get(coin, 0),
                         "error": str(ex)[:240],
                     })
                     if time.time() < stop_at and not self.stop:
@@ -411,6 +468,22 @@ class PMCollector:
                               flush=True)
                         await asyncio.sleep(1)
         finally:
+            if open_gap is not None:
+                # An outage running to window end otherwise leaves a `disconnect`
+                # with no matching `gap_closed`, and a consumer cannot tell that
+                # from a lost close record. The Route-A selection audit needs
+                # every gap to have an explicit end.
+                end_ns = time.time_ns()
+                self._audit({
+                    "event": "gap_open_at_exit", "slug": slug, "coin": coin,
+                    "tokens": toks, "window_start": ts,
+                    "cause": open_gap["cause"],
+                    "gap_start_ns": open_gap["gap_start_ns"],
+                    "gap_end_ns": end_ns,
+                    "duration_ms": (end_ns - open_gap["gap_start_ns"]) / 1e6,
+                    "note": "outage ran to window end; never reconnected",
+                })
+                open_gap = None
             try:
                 await flush_buf()
                 if not writer_task.done():
@@ -434,7 +507,17 @@ class PMCollector:
                 while gz.exists():
                     gz = Path(str(path) + f".{i}.gz")
                     i += 1
-                gzip_atomic(path, gz)
+                # NEVER on the event loop: measured 1.8-1.9 s to compress a
+                # ~180 MB BTC shard at level 6, during which NO socket is
+                # drained and the server's send buffer to us fills -> 1013.
+                # Runs on the disk pool, not the shared default pool, so a
+                # stalled HTTP call cannot delay it and it cannot delay a write.
+                t0 = time.perf_counter()
+                await asyncio.get_running_loop().run_in_executor(
+                    self.disk_pool, gzip_atomic, path, gz)
+                gz_ms = (time.perf_counter() - t0) * 1e3
+                self.counts["gzip_ms_max"] = max(self.counts["gzip_ms_max"],
+                                                 int(gz_ms))
             except Exception as ex:
                 print(f"[pm] gzip {slug}: {ex}", flush=True)
             self.active_market_coin.pop(slug, None)
@@ -450,7 +533,7 @@ class PMCollector:
                 if now < end + RESOLVE_AFTER_S:
                     continue
                 try:
-                    c = await loop.run_in_executor(None, clob_market, cond)
+                    c = await loop.run_in_executor(self.http_pool, clob_market, cond)
                 except Exception:
                     continue
                 if c and c.get("closed") is True:
@@ -506,12 +589,16 @@ class PMCollector:
                   f"retries={self.counts['retries']} slow={self.counts['slow_drops']} "
                   f"writer_wait={self.counts['writer_backpressure']} "
                   f"q_hi={self.counts['writer_queue_highwater']} "
+                  f"lag_ms_max={self.lag_ms_max:.0f} "
+                  f"lag_stalls={self.lag_stalls} "
+                  f"gzip_ms_max={self.counts['gzip_ms_max']} "
                   f"active={dict(active)} unseen={dict(unseen)} "
                   f"oldest_age_s={oldest_age} rate_msg_s={rates} "
                   f"msg_by_coin={dict(self.msg_by_coin)} "
                   f"retry_by_coin={dict(self.retry_by_coin)} "
                   f"slow_by_coin={dict(self.slow_by_coin)}",
                   flush=True)
+            self.lag_ms_max = 0.0        # per-interval high-water
 
     async def run(self) -> None:
         RAW.mkdir(parents=True, exist_ok=True)
@@ -523,7 +610,7 @@ class PMCollector:
             self._spawn_market(slug, ts, toks)
         try:
             await asyncio.gather(self._discovery(), self._resolver(), self._heartbeat(),
-                                 self._rewards_refresh())
+                                 self._rewards_refresh(), self._lag_probe())
         finally:
             # A signal may arrive while every market socket is blocked in recv().
             # Cancel explicitly, then wait for each task's finally block to flush,
@@ -534,7 +621,16 @@ class PMCollector:
             if active:
                 await asyncio.gather(*active, return_exceptions=True)
             self._audit({"event": "collector_stop", "pid": os.getpid(),
-                         "active_markets_drained": len(active)})
+                         # v2 called this "active_markets_drained", which read as
+                         # "markets drained" (14 at the v2 stop) when it counts
+                         # only those needing a forced cancel (2). A later
+                         # auditor would reasonably infer 12 lost shards.
+                         "markets_force_cancelled": len(active),
+                         "markets_completed_cooperatively": self.markets_completed,
+                         "lag_ms_max_ever": round(self.lag_ms_max_ever, 1),
+                         "loop_stalls": self.lag_stalls})
+            self.disk_pool.shutdown(wait=True)
+            self.http_pool.shutdown(wait=False)
             print("[pm] stopped", flush=True)
 
 
@@ -557,9 +653,103 @@ def selftest() -> int:
          == "PING_TIMEOUT"),
         ("gzip publish is atomic", atomic_ok),
     ]
+    checks.extend(_async_checks())
+    return _report(checks)
+
+
+def _report(checks) -> int:
     for name, ok in checks:
         print(f"  {'PASS' if ok else 'FAIL'}  {name}")
     return 0 if all(ok for _, ok in checks) else 1
+
+
+def _async_checks() -> list[tuple[str, bool]]:
+    """The v2 defect was a 1.9 s event-loop stall while gzipping a BTC shard.
+    Asserting the call is `await`ed is not enough -- measure the loop."""
+    async def _run() -> list[tuple[str, bool]]:
+        out = []
+        pool = ThreadPoolExecutor(max_workers=DISK_WORKERS)
+        worst = 0.0
+
+        async def probe() -> None:
+            nonlocal worst
+            while True:
+                t0 = time.perf_counter()
+                await asyncio.sleep(0.005)
+                worst = max(worst, (time.perf_counter() - t0 - 0.005) * 1e3)
+
+        async def measure(fn) -> float:
+            """Worst loop lag observed while `fn` runs. Always lets the probe
+            resume BEFORE cancelling, or a blocking call is never observed."""
+            nonlocal worst
+            worst = 0.0
+            task = asyncio.create_task(probe())
+            await asyncio.sleep(0.02)          # let the probe reach its first await
+            await fn()
+            await asyncio.sleep(0.02)          # let it resume and record the overshoot
+            task.cancel()
+            await asyncio.gather(task, return_exceptions=True)
+            return worst
+
+        with tempfile.TemporaryDirectory() as d:
+            # Sized so that compressing it ON the loop clearly exceeds
+            # LAG_WARN_MS; a shard too small to stall proves nothing.
+            line = ('{"event_type":"book","asset_id":"%s","bids":[{"price":"0.42",'
+                    '"size":"1500"}],"asks":[{"price":"0.44","size":"900"}]}\n' % ("7" * 60))
+            payload = line * 400_000
+
+            big = Path(d) / "big.jsonl"
+            big.write_text(payload)
+            gz = Path(str(big) + ".gz")
+            t0 = time.perf_counter()
+            off = await measure(lambda: asyncio.get_running_loop().run_in_executor(
+                pool, gzip_atomic, big, gz))
+            gz_ms = (time.perf_counter() - t0) * 1e3
+            out.append((f"gzip ran off-loop: {gz_ms:.0f} ms of work, "
+                        f"worst loop lag {off:.1f} ms", off < LAG_WARN_MS))
+            out.append(("gzip still published atomically from the pool",
+                        gz.exists() and not big.exists()))
+
+            # Control: the SAME work inline must trip the probe, else the test
+            # above proves nothing about the fix.
+            big2 = Path(d) / "big2.jsonl"
+            big2.write_text(payload)
+
+            async def inline() -> None:
+                gzip_atomic(big2, Path(str(big2) + ".gz"))
+
+            on = await measure(inline)
+            # Oracle is the SEPARATION, not LAG_WARN_MS: that constant is a
+            # production alerting threshold and tuning it must not break this
+            # test. On-loop must stall by orders of magnitude more, and by an
+            # amount that is unambiguously a stall.
+            out.append((f"control: same gzip ON the loop stalls it "
+                        f"({on:.0f} ms vs {off:.1f} ms off-loop, "
+                        f"{on / max(off, 0.1):.0f}x)",
+                        on >= 100.0 and on > 20 * max(off, 0.1)))
+        pool.shutdown(wait=True)
+
+        c = PMCollector.__new__(PMCollector)
+        c.disk_pool = ThreadPoolExecutor(max_workers=DISK_WORKERS)
+        c.http_pool = ThreadPoolExecutor(max_workers=HTTP_WORKERS)
+        out.append(("disk and HTTP pools are distinct objects",
+                    c.disk_pool is not c.http_pool))
+        import threading
+        release = threading.Event()
+        for _ in range(HTTP_WORKERS):
+            c.http_pool.submit(release.wait)
+        t0 = time.perf_counter()
+        await asyncio.get_running_loop().run_in_executor(c.disk_pool, lambda: None)
+        starve_ms = (time.perf_counter() - t0) * 1e3
+        release.set()
+        out.append((f"disk work unaffected by a fully saturated HTTP pool "
+                    f"({starve_ms:.1f} ms)", starve_ms < 100))
+        c.disk_pool.shutdown(wait=True)
+        c.http_pool.shutdown(wait=True)
+        return out
+
+    return asyncio.run(_run())
+
 
 
 def main() -> None:
