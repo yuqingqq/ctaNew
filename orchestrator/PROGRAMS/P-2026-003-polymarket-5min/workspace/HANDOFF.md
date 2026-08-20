@@ -1,19 +1,19 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-08-20, session 2. All work is on branch **`mm-research`** (pushed);
+Updated: 2026-08-20, session 3. All work is on branch **`mm-research`** (pushed);
 nothing is on `main`. Sigma is at **Revision 5** / contracts **v16**;
-`SIGMA_PLAN_REVIEW_ITER5.md` gives **MEASUREMENT GO / PRICING HOLD**. The model
-specification is frozen for Phase 0A step 6. Do not write Revision 6 before
-running the fit.
+Route A has now been measured under frozen protocol `route_a_v1`. The result is
+**DESCRIPTIVE / PRICING HOLD**: one OOS test day cannot authorize a law.
 
 ## Read this first
 
 The programme now has a **verified settlement target**, a **modular
 architecture with machine-readable contracts**, and a reviewed sigma plan.
 Revision 5 makes the reduced-form/structural split hold at the executable
-boundary. That is enough to start measuring Route A. No real law is fitted and
-the current tape has only two day clusters, so probability-level use remains on
-**HOLD** while the measurement itself is a **GO**. Two headline results from
+boundary. A real, strictly-forward Route-A candidate is now fitted across all
+42 symbol/horizon cells, but the current tape has only two collected days and
+one OOS test day. All 84 gates are therefore `INSUFFICIENT_EVIDENCE`, so
+probability-level use remains on **HOLD**. Two headline results from
 session 1 were withdrawn or downgraded after discovering bad underlying data;
 do not cite either without reading §"What was withdrawn".
 
@@ -22,28 +22,43 @@ Reading order:
 2. `live/pm_research/contracts/contracts.yaml` (**v16**) — machine-readable
    source of truth for types (**v16**). The prose defers to this file, not the
    other way round.
-3. `live/pm_research/EXP_RESULTS_2026-08-20.md` — first model results.
-4. `live/pm_research/SIGMA_PLAN.md` — **REVISION 5, canonical.** One consumer
+3. `live/pm_research/SIGMA_ROUTE_A_RESULTS_2026-08-20.md` — the measured,
+   strictly-forward Route-A result and current verdict.
+4. `live/pm_research/SIGMA_ROUTE_A_PROTOCOL.md` — protocol frozen before fit;
+   includes the non-analytic post-run embargo-wording erratum.
+5. `live/pm_research/EXP_RESULTS_2026-08-20.md` — earlier model results.
+6. `live/pm_research/SIGMA_PLAN.md` — **REVISION 5, canonical.** One consumer
    matrix, one PRICING law (route A) and one DIAGNOSTIC decomposition (route B),
    never summed, now enforced as a TYPE boundary. **Read §2.3 then §1a** — the
    route decision scopes everything, and §1a says where each consumer's number
    actually comes from. v1/v2 text is in git history.
-5. `live/pm_research/SIGMA_PLAN_REVIEW.md` — first implementation-readiness review.
-6. `live/pm_research/SIGMA_PLAN_REVIEW_ITER2.md` — review of Revision 2.
-7. `live/pm_research/SIGMA_PLAN_REVIEW_ITER3.md` — review of Revision 3 and v14;
+7. `live/pm_research/SIGMA_PLAN_REVIEW.md` — first implementation-readiness review.
+8. `live/pm_research/SIGMA_PLAN_REVIEW_ITER2.md` — review of Revision 2.
+9. `live/pm_research/SIGMA_PLAN_REVIEW_ITER3.md` — review of Revision 3 and v14;
    historical input to Revision 4.
-8. `live/pm_research/SIGMA_PLAN_REVIEW_ITER4.md` — review of Revision 4/v15; its
+10. `live/pm_research/SIGMA_PLAN_REVIEW_ITER4.md` — review of Revision 4/v15; its
    six items are applied in Revision 5/v16.
-9. `live/pm_research/SIGMA_PLAN_REVIEW_ITER5.md` — **current verdict:
+11. `live/pm_research/SIGMA_PLAN_REVIEW_ITER5.md` — pre-measurement verdict:
    MEASUREMENT GO / PRICING HOLD**, plus the frozen fit sequence.
-10. `live/pm_research/sigma_kernels.py` — executable model **fixture**, not a
+12. `live/pm_research/sigma_kernels.py` — executable model **fixture**, not a
    frozen spec. `--selftest` checks exact arithmetic under a **declared and
    still UNVERIFIED** sampling convention; it does not establish that convention
    against the Chainlink streams.
-11. `live/pm_research/plans/` — BE_BELIEF, BE_FLOWANDFILLS, MEASUREMENT,
+13. `live/pm_research/plans/` — BE_BELIEF, BE_FLOWANDFILLS, MEASUREMENT,
    PRELIMINARY.
 
 ## Done this session
+
+**Route-A sigma candidate measured — DESCRIPTIVE / PRICING HOLD.** The
+preregistered `route_a_v1` run produced **9,332 admissible rows**, **5,796
+strictly-forward OOS rows**, and all **42** independent fits (7 symbols x 6
+horizons). Settlement direction agreed **1,560/1,560** after admissibility
+filters. An independent post-run audit found zero timing, formula, uniqueness,
+fold, coefficient or source-hash violations. Only 2026-08-20 is an OOS test
+day, so every one of the 84 gates is `INSUFFICIENT_EVIDENCE`. The point
+diagnostics are not reassuring—42/42 conditional-mean effects and 40/42
+conditional-variance effects exceed their frozen tolerances—but one regime-day
+cannot refute the law. Full result: `SIGMA_ROUTE_A_RESULTS_2026-08-20.md`.
 
 **E-M6 settlement truth — PASSED, the foundation gate is cleared.**
 `S60(T) vs S60(t0)` reproduces the winners Polymarket actually paid on
@@ -76,8 +91,8 @@ own doing, and 32 of 47 were BTC** — i.e. the loss was concentrated in exactly
 the busiest intervals, which is missing-not-at-random. Post-fix: **0 drops
 vs 28**. Never pool an unpaired statistic across the fix boundary.
 
-**SIGMA_PLAN Revision 5 reviewed** — **MEASUREMENT GO / PRICING HOLD**. The
-route split and fit specification are frozen; see §"Immediate next step".
+**SIGMA_PLAN Revision 5 reviewed and measured.** The route split and fit
+specification remain frozen; the next action is more OOS days, not Revision 6.
 
 ## What was withdrawn — do not cite these
 
@@ -121,17 +136,18 @@ that recommended B was measured on stale books** (withdrawal 2 above). Re-frame
 the choice before making it; do not read `PM_MM_PLAN §17`'s recommendation as
 current.
 
-## Immediate next step — run the Route-A measurement
+## Immediate next step — accrue OOS days and rerun route_a_v1 unchanged
 
-**Go now.** Implement Phase 0A step 6 and fit
-`x_T-S60 = alpha(r)*(S30-S60)+residual` per symbol/horizon using point-in-time
-rows, whole-day cross-fitting and a longest-label embargo. Persist OOS
-predictions/residuals and freeze the exact effect-size gates and tolerances
-before reading results. Do not add structural `k/v/Omega` terms.
+Phase 0A step 6 now executes end to end. Preserve `route_a_v1` and rerun it as
+immutable days accrue. A formal verdict needs at least **10 OOS test-day
+clusters** and 30 OOS rows in every frozen conditioning cell; because the first
+day is training-only, that normally means at least 11 collected days. Do not
+respond to the one-day point effects by changing the cells, tolerances or
+functional form.
 
-The present two-day tape can produce a descriptive pipeline/result, not a
-pricing-law PASS. Re-run the same frozen analysis after at least ten day
-clusters. Phase 0A step 5 may proceed in parallel and gates Route B only.
+Phase 0A step 5 may proceed in parallel and gates Route B only. Do not add
+structural `k/v/Omega` terms to the Route-A residual. Probability-level use and
+the estimator integration remain on HOLD until all per-fit gates pass.
 
 Iteration 5 found three cleanup items to land alongside that implementation:
 the duplicate YAML `ReducedFormFit` plus stale `ReducedFormLaw`, malformed-input
@@ -217,9 +233,10 @@ consumers read **route A's own horizon profile**, so route B feeds no control.
 **Verify:** `python3 live/pm_research/sigma_kernels.py --selftest` (45 checks) ·
 `contract_check.py --selftest` · `contract_check.py HEAD WORKTREE`.
 
-### What is actually next — a measurement, not another spec round
+### Historical — the pre-measurement directive (now executed)
 
-Four review rounds have each found a real defect, and the pattern is worth
+This directive produced `route_a_v1` and is retained as provenance. Four review
+rounds had each found a real defect, and the pattern is worth
 naming: **each error was the previous error one level of abstraction higher.**
 v1 used a lagging anchor; v2 replaced it with a trend extrapolator and buried the
 bias in the variance; v3 named the bias but kept two incompatible estimators; v4
@@ -235,7 +252,8 @@ specification task.
    only, and may run in parallel; it must not block a valid route-A fit.
 
 Estimator implementation and any probability-level use remain on **HOLD** until
-step 1 produces a law whose gates read `PASS`.
+the repeated step-1 run has enough OOS days and produces a law whose gates all
+read `PASS`.
 
 ### Historical — Revision 3 review and ITER3 application
 

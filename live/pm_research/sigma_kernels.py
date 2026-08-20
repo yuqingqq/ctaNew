@@ -722,7 +722,8 @@ def selftest():
           "1799" not in open(__file__).read()[:open(__file__).read().index("def selftest")])
 
     print(f"\nroute A prices today? {isinstance(pricing_distribution(law, _req(ti), obs), Distribution)}"
-          " for a SYNTHETIC law only — no real fit exists (Phase 0A 6 unrun).")
+          " for a SYNTHETIC PASSING law only — the real descriptive candidate "
+          "is gated INSUFFICIENT_EVIDENCE.")
     print("route B under BTC rate 1.089^2, UNVERIFIED convention, diagnostics only:")
     print("   r   alpha*   diffusion  cond_var@model  model_total")
     for rr in HORIZON_GRID:

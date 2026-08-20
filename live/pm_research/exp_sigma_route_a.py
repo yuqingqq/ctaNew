@@ -103,8 +103,9 @@ def load_streams() -> tuple[dict[tuple[str, int], Series], list[dict], Counter]:
     manifest = []
     audit = Counter()
     topics = ((30, "crypto_prices_twap_thirty"), (60, "crypto_prices_twap_sixty"))
-    for window, topic in topics:
-        paths = sorted((PM / "prices" / topic).glob("*.csv.gz"))
+    snapshot_paths = [(window, topic, sorted((PM / "prices" / topic).glob("*.csv.gz")))
+                      for window, topic in topics]
+    for window, topic, paths in snapshot_paths:
         for path in paths:
             raw = path.read_bytes()
             manifest.append(_manifest_item(path, raw))
@@ -163,9 +164,11 @@ def _utc_day(epoch_s: int) -> str:
 
 
 def build_rows() -> tuple[list[dict], dict]:
-    streams, manifest, stream_audit = load_streams()
+    # Capture the append-only metadata bytes before the slower feed parse so the
+    # run has the promised start-of-run snapshot rather than a moving tail.
     market_rows, market_manifest = _jsonl_snapshot(PM / "markets.jsonl")
     resolution_rows, resolution_manifest = _jsonl_snapshot(PM / "resolutions.jsonl")
+    streams, manifest, stream_audit = load_streams()
     manifest.extend((market_manifest, resolution_manifest))
 
     markets = {}
@@ -464,14 +467,37 @@ def _fmt(x, digits=3) -> str:
     return "—" if x is None else f"{x:.{digits}f}"
 
 
+def _overall_status(verdicts: list[str]) -> str:
+    expected = len(COINS) * len(HORIZONS) * 2
+    if "MODEL_REFUTED" in verdicts:
+        return "MODEL REFUTED — PRICING HOLD"
+    if len(verdicts) == expected and all(v == "PASS" for v in verdicts):
+        return "PRICING PASS"
+    return "DESCRIPTIVE — INSUFFICIENT EVIDENCE"
+
+
+def _fit_status(mean_gate: dict | None, var_gate: dict | None) -> str:
+    if not mean_gate or not var_gate:
+        return "—"
+    verdicts = (mean_gate["verdict"], var_gate["verdict"])
+    if "MODEL_REFUTED" in verdicts:
+        return "REFUTED"
+    if "INSUFFICIENT_EVIDENCE" in verdicts:
+        return "INSUFFICIENT"
+    return "PASS"
+
+
 def render_markdown(payload: dict) -> str:
     audit, summaries = payload["audit"], payload["fits"]
     days = sorted({z["day"] for z in payload["dataset_rows"]})
     oos_days = sorted({z["day"] for z in payload["oos_rows"]})
     all_verdicts = [g[which]["verdict"] for g in summaries for which in ("mean_gate", "var_gate")
                     if g.get(which)]
-    status = "PRICING PASS" if all_verdicts and all(v == "PASS" for v in all_verdicts) \
-        else "DESCRIPTIVE — INSUFFICIENT OOS DAYS"
+    mean_point_breaches = sum(z["mean_gate"]["effect_size"] > MEAN_TOL for z in summaries
+                              if z.get("mean_gate"))
+    var_point_breaches = sum(z["var_gate"]["effect_size"] > VAR_TOL for z in summaries
+                             if z.get("var_gate"))
+    status = _overall_status(all_verdicts)
     lines = [
         "# SIGMA Route-A measurement — protocol route_a_v1",
         "",
@@ -509,9 +535,7 @@ def render_markdown(payload: dict) -> str:
     ]
     for z in summaries:
         mg, vg = z.get("mean_gate"), z.get("var_gate")
-        verdict = "—" if not mg else ("PASS" if mg["verdict"] == vg["verdict"] == "PASS"
-                                      else "INSUFFICIENT" if "INSUFFICIENT_EVIDENCE"
-                                      in (mg["verdict"], vg["verdict"]) else "REFUTED")
+        verdict = _fit_status(mg, vg)
         lines.append(
             f"| {z['coin']} | {z['horizon']} | {z['n_rows']}/{z['n_days']} | "
             f"{z['n_oos']}/{z['n_oos_days']} | {_fmt(z['alpha_oos_weighted'])} | "
@@ -530,6 +554,13 @@ def render_markdown(payload: dict) -> str:
         "`INSUFFICIENT_EVIDENCE` regardless of its point estimate. The numbers",
         "above are a valid descriptive, strictly forward pipeline measurement;",
         "they are not a probability-law authorization.",
+        "",
+        f"The point diagnostics are an early warning, not a gate verdict: "
+        f"**{mean_point_breaches}/{len(summaries)}** mean effects exceed 0.10 "
+        f"residual sigma and **{var_point_breaches}/{len(summaries)}** variance "
+        f"effects exceed 0.25. With one test day these can be a day/regime effect; "
+        f"they provide no early support for homoskedastic Route A, but cannot yet "
+        f"refute it.",
         "",
         "No new sigma specification is warranted from sample size alone. Re-run",
         "this identical protocol as the day count grows. Only an OOS residual",
@@ -559,6 +590,12 @@ def selftest() -> int:
         ("seven frozen cells", set(_cell_rows(oos)) == set(CELLS)),
         ("too few OOS days is insufficient",
          gate(oos, "mean", "selftest")["verdict"] == "INSUFFICIENT_EVIDENCE"),
+        ("partial passes cannot authorize pricing",
+         _overall_status(["PASS"] * 82) != "PRICING PASS"),
+        ("a refutation is never hidden by insufficient evidence",
+         _overall_status(["INSUFFICIENT_EVIDENCE", "MODEL_REFUTED"]).startswith("MODEL REFUTED")
+         and _fit_status({"verdict": "INSUFFICIENT_EVIDENCE"},
+                         {"verdict": "MODEL_REFUTED"}) == "REFUTED"),
         ("no fold audit failures", not audit),
     ]
     for name, ok in checks:

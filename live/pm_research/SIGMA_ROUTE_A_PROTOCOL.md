@@ -4,6 +4,13 @@ Protocol version: `route_a_v1`. Frozen: 2026-08-20, before running
 `exp_sigma_route_a.py` on the regression target. Implements Phase 0A step 6 of
 `SIGMA_PLAN.md` Revision 5.
 
+Post-run erratum: the cross-fitting section originally said the UTC-day
+boundary itself exceeded 270 seconds. The exact protection is that the
+non-overlapping 300-second market grid puts the earliest next-day decision
+`300-r` seconds after the latest prior-day target: 270, 240, 180, 120, 60 and
+30 seconds for the frozen horizons. Thus label supports do not overlap. This
+clarification changes no input, row, estimator, exclusion, gate or tolerance.
+
 ## Decision and scope
 
 This experiment measures the reduced-form conditional law of the observed
@@ -79,8 +86,9 @@ Folds are strictly forward by UTC market-start day:
 - test day `d` trains on all admissible rows from days `< d`;
 - a fold needs at least 30 training rows for that symbol/horizon;
 - no random-row CV and no future-day leave-one-out fold;
-- the day boundary exceeds the longest 270-second remaining-time label support,
-  providing the label embargo; rows from the test day never enter its fit;
+- the non-overlapping 300-second market grid puts the earliest test decision
+  `300-r` seconds (at least 30 seconds) after the latest training target, so
+  label supports do not overlap; rows from the test day never enter its fit;
 - every OOS row records source slug, timestamps, fold day, fitted alpha,
   prediction and residual.
 

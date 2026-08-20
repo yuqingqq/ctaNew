@@ -11,8 +11,11 @@ names. There is one consumer matrix, one PRICING law and one DIAGNOSTIC
 decomposition, they are never summed, and that is now a type boundary rather
 than a convention. v1/v2 text is in git history (`80f823e`, `cc1d0e7`).
 
-**Status: estimator implementation is on HOLD.** Phase 0A is open and no
-route-A law is fitted, so `pricing_distribution()` refuses everything today.
+**Status: estimator implementation is on HOLD.** Phase 0A remains open. A
+strictly-forward Route-A candidate has been fitted under frozen protocol
+`route_a_v1`, but all 84 gates are `INSUFFICIENT_EVIDENCE` with one OOS test
+day, so no pricing law is validated and `pricing_distribution()` still refuses
+everything today. See `SIGMA_ROUTE_A_RESULTS_2026-08-20.md`.
 Enforcement is structural, not conventional: it is the **only** pricing entry
 point, it takes a `ForecastRequest`, it validates every temporal and identity
 invariant *before* computing either moment, and it returns mean and variance
@@ -317,8 +320,9 @@ estimand — and under route B it is not a nuisance at all but the **estimator o
 
 ### 3.3 The route-B numbers, and what they are not
 
-**These are DIAGNOSTICS. There is no `σ_eff` for pricing yet, because no route-A
-law has been fitted.** Under `disc1s_v0` (**UNVERIFIED**), the model anchor and
+**These are DIAGNOSTICS. There is no `σ_eff` for pricing yet: the fitted Route-A
+candidate has only one OOS test day and has not passed its gates.** Under
+`disc1s_v0` (**UNVERIFIED**), the model anchor and
 no feed error, BTC rate `σ² = 1.089²` bps²/s:
 
 | r (s) | 30 | 60 | 120 | 180 | 240 | 270 |
@@ -703,7 +707,8 @@ Estimator implementation is on **HOLD**. Phase 0A is open.
    (§9-2). Revision 3 said it "gates the kernel and the anchor together", which
    contradicted its own claim that the regression is convention-robust; the
    scoped statement is that it gates the *decomposition*, not the *fit*.
-6. **Fit the route-A anchor and law** — regress observed `x_T` on observed
+6. **Fit the route-A anchor and law — DESCRIPTIVE RUN COMPLETE, GATES OPEN.**
+   Regress observed `x_T` on observed
    `(S30, S60)` per horizon and symbol, cross-fitted, day-blocked, embargoed.
    Emit `AnchorSpec{selected: ESTIMATED}` with bias measured against the
    estimate, `model_gap` as a diagnostic, and `ReducedFormLaw` carrying
