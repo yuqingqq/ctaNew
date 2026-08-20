@@ -61,7 +61,7 @@ RESOLVE_GIVEUP_S = 7200
 WRITE_BATCH = 2_000
 WRITE_QUEUE_MAX = 32
 GAP_LEDGER = ROOT / "collector_gaps.jsonl"
-COLLECTOR_VERSION = "clob_v2"
+COLLECTOR_VERSION = "clob_v2_1"
 
 
 def gget(slug: str):
@@ -168,6 +168,8 @@ class PMCollector:
         self.retry_by_coin = Counter()
         self.slow_by_coin = Counter()
         self.market_tasks: set[asyncio.Task] = set()
+        self.active_market_coin: dict[str, str] = {}
+        self.last_recv_by_slug: dict[str, int] = {}
         self._load_state()
 
     def _load_state(self) -> None:
@@ -314,6 +316,7 @@ class PMCollector:
         buf: list[str] = []
         write_q: asyncio.Queue[str | None] = asyncio.Queue(maxsize=WRITE_QUEUE_MAX)
         coin = slug.split("-", 1)[0]
+        self.active_market_coin[slug] = coin
         last_recv_ns: int | None = None
         open_gap: dict | None = None
 
@@ -334,7 +337,6 @@ class PMCollector:
                 return
             if writer_task.done():
                 writer_task.result()
-            n_messages = len(buf)
             chunk = "".join(buf)
             buf.clear()
             try:
@@ -344,7 +346,6 @@ class PMCollector:
                 await write_q.put(chunk)
             self.counts["writer_queue_highwater"] = max(
                 self.counts["writer_queue_highwater"], write_q.qsize())
-            self.msg_by_coin[coin] += n_messages
 
         async def receive(ws) -> None:
             nonlocal last_recv_ns, open_gap
@@ -362,8 +363,10 @@ class PMCollector:
                     })
                     open_gap = None
                 last_recv_ns = recv_ns
+                self.last_recv_by_slug[slug] = recv_ns
                 buf.append(f"{recv_ns}\t{raw}\n")
                 self.counts["msgs"] += 1
+                self.msg_by_coin[coin] += 1
                 if len(buf) >= WRITE_BATCH:
                     await flush_buf()
 
@@ -434,6 +437,8 @@ class PMCollector:
                 gzip_atomic(path, gz)
             except Exception as ex:
                 print(f"[pm] gzip {slug}: {ex}", flush=True)
+            self.active_market_coin.pop(slug, None)
+            self.last_recv_by_slug.pop(slug, None)
 
     # ---- resolution poller ----------------------------------------------------
     async def _resolver(self) -> None:
@@ -472,16 +477,37 @@ class PMCollector:
             await asyncio.sleep(1)
 
     async def _heartbeat(self) -> None:
+        prior = Counter()
+        prior_at = time.monotonic()
         while not self.stop:
             await self._sleep(60)
             if self.stop:
                 break
+            now_mono = time.monotonic()
+            elapsed = max(now_mono - prior_at, 1e-9)
+            rates = {coin: round((count - prior.get(coin, 0)) / elapsed, 1)
+                     for coin, count in sorted(self.msg_by_coin.items())}
+            prior = Counter(self.msg_by_coin)
+            prior_at = now_mono
+            active = Counter(self.active_market_coin.values())
+            unseen = Counter()
+            oldest_age: dict[str, float] = {}
+            now_ns = time.time_ns()
+            for slug, coin in self.active_market_coin.items():
+                recv_ns = self.last_recv_by_slug.get(slug)
+                if recv_ns is None:
+                    unseen[coin] += 1
+                else:
+                    age = round((now_ns - recv_ns) / 1e9, 2)
+                    oldest_age[coin] = max(oldest_age.get(coin, 0.0), age)
             print(f"[pm] {time.strftime('%H:%M:%S', time.gmtime())}Z "
                   f"markets={self.counts['markets']} msgs={self.counts['msgs']} "
                   f"resolved={self.counts['resolved']} pending={len(self.pending_res)} "
                   f"retries={self.counts['retries']} slow={self.counts['slow_drops']} "
                   f"writer_wait={self.counts['writer_backpressure']} "
                   f"q_hi={self.counts['writer_queue_highwater']} "
+                  f"active={dict(active)} unseen={dict(unseen)} "
+                  f"oldest_age_s={oldest_age} rate_msg_s={rates} "
                   f"msg_by_coin={dict(self.msg_by_coin)} "
                   f"retry_by_coin={dict(self.retry_by_coin)} "
                   f"slow_by_coin={dict(self.slow_by_coin)}",
