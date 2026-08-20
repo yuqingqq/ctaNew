@@ -78,7 +78,7 @@ standing_rules:
     snapshots — the latter are p90 6.2 s stale and quietly inflate any
     edge measured against them.
   - Read everything at knowledge time (recv_ns), never payload timestamps.
-    Measured cost of getting this wrong: 0.5 pp on E-M6.
+    Measured cost of getting this wrong is 0.5 pp on E-M6.
 
 tasks:
   - id: e0-collector
