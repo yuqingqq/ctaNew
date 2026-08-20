@@ -281,3 +281,27 @@ protocol/variant/module types, missing registries, duplicate ownership and
 conflicting port manifests. The canonical source remains incomplete, coupling
 config duplicates per-decision state, pinned outcomes lose their evaluator,
 and cancellation variants lose typed payload and reconciliation semantics.
+
+| 11 | 2026-08-20 | review: 5 | **v11 NOT CONVERGED; issues recorded** |
+
+## Iteration 11 review of v11 — 5 MUST-FIX
+
+Full review: `PM_STRUCT_ITER11_REVIEW.md`.
+
+V11 fixes the concrete v10 type gaps: coupling config/state are separated,
+pinned outcomes are callable, unavailable/unwrap policies are parameterised,
+scenario limits and allocator consumers are named, incentive selection is
+pinned, cancellation payloads are typed, and the checker covers more reference
+locations with new self-tests.
+
+The replay improves provisionally to **LOCAL 11 / SPREADING 1 / STRUCTURAL 1**.
+Scenario risk now has owners and consumers but requires coordinated type and
+single-copy corrections. Incentive theory remains structural because the
+selected extension's resolved contracts and joint competition never enter the
+outcome/payout evaluation path.
+
+The executable audit also shows that a path-only migration entry still masks a
+different coupling narrowing, rules/ports are not enforced, runtime producers
+can disappear through `config_supplied`, and an unchanged HEAD-to-worktree
+comparison fails on all historical allowlist entries. Decision snapshot
+equalities and real ModuleManifest wiring remain absent.
