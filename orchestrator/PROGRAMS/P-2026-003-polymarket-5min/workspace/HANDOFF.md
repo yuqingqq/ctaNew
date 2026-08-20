@@ -1,18 +1,21 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
 Updated: 2026-08-20, session 2. All work is on branch **`mm-research`** (pushed);
-nothing is on `main`. Sigma is at **Revision 4** / contracts **v15**; `SIGMA_PLAN_REVIEW_ITER3.md`'s
-six items are applied. HOLD remains — Phase 0A 5–6 are unrun.
+nothing is on `main`. Sigma **Revision 4** / contracts **v15** have now been
+reviewed in `SIGMA_PLAN_REVIEW_ITER4.md`. The route decision passes, but the
+executable pricing boundary does not. **PARTIAL, HOLD.**
 
 ## Read this first
 
 The programme now has a **verified settlement target**, a **modular
 architecture with machine-readable contracts**, and a reviewed sigma plan.
-Revision 3 made substantial repairs but still mixes an empirical reduced-form
-anchor with a structural variance ledger; Phase 0A remains open and estimator
-implementation remains on **HOLD**. Two headline results from session 1 have been **withdrawn or
-downgraded** on discovering that the data underneath them was wrong. Do not cite
-either without reading §"What was withdrawn".
+Revision 4 correctly chooses reduced form for pricing and structural decomposition
+for diagnosis, never summed. Its public API still contradicts that choice and
+does not make request/time or numeric/statistical validation unavoidable; Phase
+0A remains open and estimator implementation remains on **HOLD**. Two headline
+results from session 1 were **withdrawn or downgraded** after discovering that
+the underlying data was wrong. Do not cite either without reading §"What was
+withdrawn".
 
 Reading order:
 1. `live/pm_research/PM_ARCHITECTURE.md` (v12) — the entry point; structure.
@@ -27,12 +30,14 @@ Reading order:
 5. `live/pm_research/SIGMA_PLAN_REVIEW.md` — first implementation-readiness review.
 6. `live/pm_research/SIGMA_PLAN_REVIEW_ITER2.md` — review of Revision 2.
 7. `live/pm_research/SIGMA_PLAN_REVIEW_ITER3.md` — review of Revision 3 and v14;
-   this is the current implementation-readiness verdict.
-8. `live/pm_research/sigma_kernels.py` — executable model **fixture**, not a
+   historical input to Revision 4.
+8. `live/pm_research/SIGMA_PLAN_REVIEW_ITER4.md` — **current
+   implementation-readiness verdict** for Revision 4 and v15: PARTIAL, HOLD.
+9. `live/pm_research/sigma_kernels.py` — executable model **fixture**, not a
    frozen spec. `--selftest` checks exact arithmetic under a **declared and
    still UNVERIFIED** sampling convention; it does not establish that convention
    against the Chainlink streams.
-9. `live/pm_research/plans/` — BE_BELIEF, BE_FLOWANDFILLS, MEASUREMENT,
+10. `live/pm_research/plans/` — BE_BELIEF, BE_FLOWANDFILLS, MEASUREMENT,
    PRELIMINARY.
 
 ## Done this session
@@ -68,8 +73,8 @@ own doing, and 32 of 47 were BTC** — i.e. the loss was concentrated in exactly
 the busiest intervals, which is missing-not-at-random. Post-fix: **0 drops
 vs 28**. Never pool an unpaired statistic across the fix boundary.
 
-**SIGMA_PLAN Revision 3 reviewed** — conditional-mean correction retained;
-empirical/structural composition rejected; see §"Immediate next step".
+**SIGMA_PLAN Revision 4 reviewed** — the route split is retained; its public
+boundary and contract integration remain partial. See §"Immediate next step".
 
 ## What was withdrawn — do not cite these
 
@@ -113,7 +118,38 @@ that recommended B was measured on stale books** (withdrawal 2 above). Re-frame
 the choice before making it; do not read `PM_MM_PLAN §17`'s recommendation as
 current.
 
-## Immediate next step — choose the sigma estimand
+## Immediate next step — close the chosen Route-A boundary
+
+Revision 4 makes the right central decision: **Route A's reduced-form residual
+is the whole pricing variance; Route B is a structural diagnostic; never add
+them.** Iteration 4 retains that decision and narrows the HOLD to six integration
+problems:
+
+1. Route A is documented as independent of internal S30/S60 kernel semantics,
+   but `ReducedFormLaw` and `pricing_var` still require its convention to be
+   `VERIFIED`. Remove that Route-B gate from Route A.
+2. `pricing_var` and `conditional_mean` bypass `check_request`; the helper also
+   accepts future-issued laws and reversed target intervals. Build one atomic
+   request-to-distribution API with unavoidable temporal/link checks.
+3. Negative residual variance and NaN evidence can price, while infinite rates
+   throw. Validate every domain and return a typed refusal.
+4. High p-values are treated as proof of conditional mean/homoskedasticity.
+   Pre-register per-symbol/per-horizon equivalence/calibration gates with effect
+   sizes and confidence bounds.
+5. Route B's `anchor_var` changes with empirical alpha because it absorbs
+   squared model gap, and it exposes `model_total_var`. Separate bias/MSE and
+   make the diagnostic a type that cannot satisfy a pricing protocol.
+6. `PathLaw` is not a discriminated route union; YAML schedules lack offsets;
+   kernel coefficients lose their seconds unit; `CalibrationCurve` is stale;
+   and the source of operational dynamics shape is unresolved.
+
+Shipped checks pass (kernel **41**, checker 13, v14→v15 migration), but focused
+adversarial probes reproduce every issue. Full evidence and acceptance tests are
+in `SIGMA_PLAN_REVIEW_ITER4.md`. Phase 0A step 5 may verify Route-B semantics in
+parallel; it must not gate a valid Route-A fit. Estimator implementation and any
+probability-level use remain on **HOLD**.
+
+### Historical — Revision 3 review and ITER3 application
 
 Revision 3 gets the central mathematics right: under the declared Brownian
 fixture, `alpha*=2700/1801`, the conditional anchor variance is `8.2590 sigma²`,
@@ -193,10 +229,11 @@ weight)` schedules. **M3-5** `check_request` **evaluates** the comparisons with 
 negative fixtures — a typed timestamp that is never compared is documentation.
 **M3-6** the scan now covers plan, code, contracts, STATUS and HANDOFF.
 
-**Verify:** `python3 live/pm_research/sigma_kernels.py --selftest` (40 checks) ·
+**Verify:** `python3 live/pm_research/sigma_kernels.py --selftest` (41 checks) ·
 `contract_check.py --selftest` · `contract_check.py HEAD WORKTREE`.
 
-**Next, and neither is code:**
+**Revision 4's proposed next steps (superseded by the iteration-4 boundary
+review above):**
 1. **Phase 0A 5 — verify S30/S60 semantics** against the 1 s Binance tape. Gates
    route B entirely; does **not** gate route A.
 2. **Phase 0A 6 — fit the route-A law**: regress `x_T` on `(S30, S60)` per
