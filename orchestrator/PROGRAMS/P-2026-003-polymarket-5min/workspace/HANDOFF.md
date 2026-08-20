@@ -13,7 +13,9 @@ Revision 5 makes the reduced-form/structural split hold at the executable
 boundary. A real, strictly-forward Route-A candidate is now fitted across all
 42 symbol/horizon cells, but the current tape has only two collected days and
 one OOS test day. All 84 gates are therefore `INSUFFICIENT_EVIDENCE`, so
-probability-level use remains on **HOLD**. Two headline results from
+probability-level use remains on **HOLD**. The Route-A input lane may keep
+accumulating through frozen filters, but the CLOB lane is **DEGRADED** after
+repeated post-repair BTC slow-consumer losses. Two headline results from
 session 1 were withdrawn or downgraded after discovering bad underlying data;
 do not cite either without reading §"What was withdrawn".
 
@@ -46,6 +48,10 @@ Reading order:
    against the Chainlink streams.
 13. `live/pm_research/plans/` — BE_BELIEF, BE_FLOWANDFILLS, MEASUREMENT,
    PRELIMINARY.
+
+Before any book/trade/queue analysis, read
+`live/pm_research/DATA_COLLECTOR_AUDIT_2026-08-20.md` — current collector
+verdict, live evidence and acceptance boundary.
 
 ## Done this session
 
@@ -84,12 +90,23 @@ checking:
   path. Reproduced `CouplingSource -> CompetitionState` passing. Replaced with
   migration records bound to (operation, key, old, new, version).
 
-**Collector MNAR bug found and fixed.** The hot loop allocated an `asyncio`
-timer per message; at BTC's rate that dominated and backed the server's send
-buffer up into `1013 slow consumer` disconnects. **27 of 47 disconnects were our
+**Collector MNAR bug found; first repair is insufficient.** The hot loop
+allocated an `asyncio` timer per message; at BTC's rate that dominated and
+backed the server's send buffer up into `1013 slow consumer` disconnects. **27
+of 47 disconnects were our
 own doing, and 32 of 47 were BTC** — i.e. the loss was concentrated in exactly
-the busiest intervals, which is missing-not-at-random. Post-fix: **0 drops
-vs 28**. Never pool an unpaired statistic across the fix boundary.
+the busiest intervals, which is missing-not-at-random. The initial short probe
+read 0 post-fix drops, but extended observation of the repaired 10:55 process
+found **13 further 1013 closes across 11/41 recent completed BTC windows**, plus
+seven other BTC retries. Never pool an unpaired statistic across repair eras,
+and do not use this tape for flow/fill/queue inference yet.
+
+**Collector lane audit.** Discovery grids are complete, resolutions are current
+(1,963 final, zero give-ups), TWAP parsing has zero malformed rows or negative
+knowledge lags, and capacity is ample. The price socket nevertheless has
+unreplayed global gaps: recent full-horizon admissibility is 224/273 (82.1%).
+That is sufficient row flow for filtered Route-A accumulation, not evidence
+that excluded regimes are ignorable. See `DATA_COLLECTOR_AUDIT_2026-08-20.md`.
 
 **SIGMA_PLAN Revision 5 reviewed and measured.** The route split and fit
 specification remain frozen; the next action is more OOS days, not Revision 6.
@@ -148,6 +165,12 @@ functional form.
 Phase 0A step 5 may proceed in parallel and gates Route B only. Do not add
 structural `k/v/Omega` terms to the Route-A residual. Probability-level use and
 the estimator integration remain on HOLD until all per-fit gates pass.
+
+In parallel, repair the CLOB receive path and persist a slug/token/time gap
+ledger. The current process still loses busy BTC intervals, and its heartbeat
+hides the `slow_drops` counter. No model-vs-book, queue, flow or fill result may
+use this lane until a full busy day has zero 1013 losses or a pre-registered
+cause-aware exclusion leaves enough complete day clusters.
 
 Iteration 5 found three cleanup items to land alongside that implementation:
 the duplicate YAML `ReducedFormFit` plus stale `ReducedFormLaw`, malformed-input

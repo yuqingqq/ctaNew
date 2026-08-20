@@ -6,13 +6,16 @@ branch: mm-research            # all work lives here, not main; pushed to origin
 updated: 2026-08-20 (session 3 — Route A measured; DESCRIPTIVE / PRICING HOLD)
 
 flags:
-  collector_running: true    # since 2026-08-19 ~14:32 UTC. MNAR bug fixed
-                             # 2026-08-20 (see incident log in HANDOFF): 27 of
-                             # 47 WS disconnects were OUR OWN slow-consumer
-                             # overflow, 32 of 47 on BTC = loss concentrated in
-                             # the busiest intervals. Post-fix: 0 drops vs 28.
-                             # Data before the fix is MNAR — never pool a
-                             # pre/post-fix unpaired statistic.
+  collector_running: true    # One price process and one CLOB process; fresh.
+  clob_capture_clean: false  # Extended post-fix audit refutes "0 drops": since
+                             # the 10:55 restart, 13 confirmed 1013 slow-consumer
+                             # closes across 11/41 recent completed BTC windows,
+                             # plus 7 other BTC retries. This remains MNAR.
+  route_a_tape_clean: filtered-only # Zero malformed TWAP rows/negative lags;
+                             # complete market grids and resolutions. But 28
+                             # 30s price-socket reconnects and 40 S60 gaps >30s
+                             # mean only coverage/freshness-admissible rows may
+                             # enter. Recent all-horizon acceptance is 224/273.
   settlement_verified: true  # E-M6 PASSED 2026-08-20: S60(T) vs S60(t0)
                              # reproduces 1465/1465 winners at 99.8% (99.9% at
                              # |margin|>0.5bp). w = 60 s CONFIRMED; the
@@ -184,7 +187,10 @@ focus: >
   possible verdict is at >=10 OOS test days (normally 11 collected days). Phase
   0A step 5 (internal S30/S60 semantics) gates Route B only and may run in
   parallel. Probability-level use remains on HOLD until every real per-fit gate
-  passes.
+  passes. COLLECTOR P0: Route-A accumulation may continue through its frozen
+  filters, but CLOB capture is degraded: the first hot-loop repair still loses
+  busy BTC intervals. Repair and gap-stamp that lane before any queue/flow/fill
+  or model-vs-book inference. See DATA_COLLECTOR_AUDIT_2026-08-20.md.
 
 standing_rules:
   - No design decision that a measurement on existing data could settle may be
@@ -203,7 +209,7 @@ tasks:
   - id: e0-collector
     phase: 0
     name: collect_pm.py — CLOB WS book/trades + Gamma metadata + CLOB resolutions
-    status: done
+    status: live-degraded
     notes: |
       LIVE 2026-08-19. Three bugs found and fixed: (1) Gamma outcomePrices is
       live prices not resolution (is_final guard); (2) Gamma DELETES resolved
@@ -211,7 +217,12 @@ tasks:
       clob.polymarket.com/markets/<conditionId>; (3) 2026-08-20 the hot loop
       allocated an asyncio timer per message, which at BTC's rate backed the
       server send buffer up into 1013 slow-consumer disconnects. Rewritten to a
-      persistent recv task + deadline task, 2000-line write batches.
+      persistent recv task + deadline task, 2000-line write batches. EXTENDED
+      CHECK: repair is insufficient. The restarted process loaded it, yet logged
+      13 further 1013 closes across 11 recent BTC windows. Price RTDS is usable
+      only through frozen coverage/freshness filters; it has unreplayed global
+      socket gaps. Evidence and acceptance boundary:
+      live/pm_research/DATA_COLLECTOR_AUDIT_2026-08-20.md.
   - id: e0-audit
     phase: 0
     name: EXP-E0 data integrity audit (7 checks)
