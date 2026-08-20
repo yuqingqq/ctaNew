@@ -149,3 +149,18 @@ them signatures. Fixes, in the user's numbering:
 
 Next: re-run the 13-change replay + plug-in tests against v4 (target unchanged:
 0 STRUCTURAL, ≤1 SPREADING).
+
+| 4 | 2026-08-20 | review: 8 | **v4 NOT CONVERGED; issues recorded** |
+
+## Iteration 4 review of v4 — 8 MUST-FIX
+
+Full review: `PM_STRUCT_ITER4_REVIEW.md`.
+
+Provisional score: **LOCAL 9 / SPREADING 2 / STRUCTURAL 2**. The remaining
+structural causes are the conflation of HJBQVI control with CARA utility, and
+the absence of an owner and payout functional for rewards competition.
+
+The other MUST-FIXes close the full-Environment escape hatch, make parameter
+scope composite, add the missing variance partition, separate markout from the
+full objective ledger, define shared algebraic types/module manifests, and put
+provenance on individual spec fields.
