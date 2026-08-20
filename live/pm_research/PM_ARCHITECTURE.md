@@ -1,11 +1,11 @@
-# PM_ARCHITECTURE v6 — structure for P-2026-003
+# PM_ARCHITECTURE v7 — structure for P-2026-003
 
-Rewritten 2026-08-20 from `PM_STRUCT_ITER5_REVIEW.md` (9 MUST-FIX + 7
-SHOULD-FIX; v5 scored LOCAL 9 / SPREADING 3 / STRUCTURAL 1). Prior: v1 5/3/5,
-v2 7/4/2, v4 9/2/2. The remaining structural failure was a REGRESSION — v5
-dropped the parameter name from the store key that v4 had. Four consecutive
-rewrites have now silently dropped something, so §13 adds a contract-inventory
-diff to the process.
+Rewritten 2026-08-20 from `PM_STRUCT_ITER6_REVIEW.md` (4 MUST-FIX + 3
+SHOULD-FIX; v6 scored LOCAL 11 / SPREADING 0 / STRUCTURAL 2). Prior: v1 5/3/5,
+v2 7/4/2, v4 9/2/2, v5 9/3/1. Both v6 structural failures were BOUNDARY
+inconsistencies: a type fixed at its producer and narrowed at its consumer, and
+an invented quantity (`losers(s)`) with no owner. §13 carries the required
+contract-inventory log — v6 mandated it and omitted it.
 
 Everything on the review's **keep-unchanged** list is preserved verbatim in
 substance: two-axis spec time · `Known[V]` + knowledge-truncated `StateView` +
@@ -24,7 +24,7 @@ Naming: SP/DA/BE/DE/EV/OP modules; `EXP-*` experiments.
 |---|---|
 | **R-SSOT** | specs/params are read-only handles; no restatement |
 | **R-KNOW** | `Known[V]`; every read knowledge-truncated (§4); no API takes event time |
-| **R-ONCE** | THREE declared ledgers (§7): markout partition, objective ledger, variance components |
+| **R-ONCE** | THREE declared registries (§7): `MarkoutPartition`, `WealthLedger`, `VarianceGroup` |
 | **R-PROV** | provenance per *field* (§3) and per param; `assumed` may not gate |
 | **R-VERSION** | specs bitemporal: `observed_at` + validity interval |
 | **R-NULL** | typed `NullPin` with bias direction, not a bare optional |
@@ -51,10 +51,20 @@ performance attribution is EV.
 "depend on nothing", since the monitor observes health and the latency budget
 consumes measurements:
 ```
-HealthEvent → OP-Monitor → HaltState → DE-Constraints   (as a HARD constraint)
+HealthEvent (owner: OP-Monitor, sources: DA feeds · OP-LatencyBudget · EV)
+   → HaltState        LATCHED, FAIL-CLOSED (unknown health ⇒ halted)
+   → halt port ──┬──→ DE-Constraints          HARD constraint: no new risk
+                 └──→ DE-Actuator.cancel_all  PRIORITY command
 ```
-OP publishes state and policy; it never reaches the venue. Cancel-all still
-goes through `DE-Actuator`, so the single write path is preserved.
+**Both edges are required (M6-4).** A hard constraint stops NEW risk; it does
+not retract resting orders — and during a fault the solver may itself be
+`Unavailable`, so a path that runs only through the scheme cannot fire. The
+`cancel_all` command therefore bypasses the solver but NOT the actuator, so
+`DE-Actuator` remains the sole venue writer.
+
+The halt port is a declared port in §9 (v6's diagram ended at DE-Constraints
+while §9 gave DE modules no port that could carry `HaltState`). OP publishes
+state and commands; it never touches the venue directly.
 
 ---
 
@@ -63,10 +73,14 @@ goes through `DE-Actuator`, so the single write path is preserved.
 ```
 Uncertain[T] { expectation(), quantile(q), scenarios(n, rng), map(f),
                combine(other, f, dependence) }   # a distribution/bracket
-              # DEPENDENCE IS REQUIRED (M5-5): shared scenario identity or an
-              # explicit joint/coupling law. combine() REFUSES when dependence
-              # is unknown — it never assumes independence. Pair completion,
-              # cross-coin risk and portfolio fills are all dependent.
+              # DEPENDENCE IS REQUIRED (M5-5): combine() REFUSES when unknown —
+              # it never assumes independence. Pair completion, cross-coin risk
+              # and portfolio fills are all dependent.
+ScenarioSet  { draws: [(ScenarioId, weight, value)], common_random_id }
+Dependence   = SharedScenarios(common_random_id) | JointLaw(copula|factor)
+               | Independent(DECLARED)   # never a default
+              # scenarios() exposes ScenarioId + weight so shared identity is
+              # VALIDATED at the type boundary, not trusted in prose
 Unavailable  { reason, since, cause: Unavailable? }        # upstream cause chain
 NullPin      { field, assumption, bias_direction, declared_by }
 Known[V]     { value, t_event, t_known, t_known_prov, t_known_err, source, provenance }
@@ -102,10 +116,23 @@ Declarative rules are stored as **`(family, params)`**, never closures:
 (BANDED, {...})`. Rewards band/rate/eligibility are **instrument-scoped and
 time-varying** even though the programme is venue-level.
 
-`SP-Params{ (ParamId, ScopeKey) -> ParamValue{value, provenance, owner,
-valid_for, measured_at, fit_data_through?, artifact_id?} }` — see §4.
+**Records** (each a `SpecRecord`, so each is bitemporal and field-provenanced):
+```
+SP-Venue{ matching, tick_grid, min_size, rate_limits, fee_schedule(p,side,size),
+          rebate_schedule, rewards_band, capabilities{CTF_PAIR, NEG_RISK,
+          MAKER_REWARDS, ...} }
+SP-Instrument{ settlement{source, statistic, w_declared, strike_rule, tie_rule},
+               T, payoff, complement, incentive_contract }   # instrument-scoped
+SP-Strategy{ utility, solver, coupling, constraints, action_space, impls,
+             nulls{field: NullPin} }
+SP-Scenarios{ ScenarioId -> AdverseScenario{...} }           # §8 (M6-3)
+SP-Params{ (ParamId, ScopeKey) -> ParamValue{value, provenance, owner,
+           valid_for, measured_at, fit_data_through?, artifact_id?} }
+```
 **ParamId is part of the key** (v5 dropped it, so volatility and latency at the
-same scope collided).
+same scope collided). The `Records` block itself was lost in the v5→v6 edit and
+restored by the §13 inventory diff — the first silent drop this program caught
+before a reviewer did.
 
 **Populate on demand.** EV-Markout needs ~4 facts, not 30 fields.
 
@@ -185,20 +212,32 @@ reimplement either.
 `PortfolioJoint` instead of `JointPair` would DISCARD the Up/Down atomicity
 inside each market. Couplings nest and may overlap:
 ```
-CouplingGraph:  portfolio ⊃ { market_A{Up,Down}, market_B{Up,Down} }
+CouplingGraph{ nodes: {NodeId -> TokenId|InstrumentId|PortfolioId},
+               hyperedges: {EdgeId -> (nodes[], relation: ATOMIC|SHARED_RISK|
+                                       SEQUENTIAL, params)},
+               version, provenance, update_semantics: STATIC|PER_DECISION }
+example:  portfolio ⊃ { market_A{Up,Down}ATOMIC, market_B{Up,Down}ATOMIC }
 ```
+**Injection:** the graph is constructed with `DecisionScheme` when
+`update_semantics = STATIC`, and carried in `DecisionProblem` when
+`PER_DECISION` (e.g. a market resolves mid-horizon).
 so pair coupling and portfolio coupling compose without either implementation
 knowing the other.
 
 ```
 DecisionProblem{ view: StateView, self: SelfState, belief: BeliefProcess,
-                 competition: CompetitionState,
+                 competition: Known[Uncertain[CompetitionState]] | Unavailable,
+                 # M6-1: the FULL type crosses the boundary. Unwrapping to an
+                 # expectation/quantile/scenario is an explicit UnwrapPolicy
+                 # chosen by the scheme, never composition-root coercion.
+                 # UnavailablePolicy{ HALT | FALL_BACK(prior) | REFUSE_ACTION }
+                 #   must be declared by the scheme.
                  outcomes: (action_set -> Uncertain[ActionOutcome]),
                  actions: ActionSpace, portfolio: PortfolioState,
                  constraints: ConstraintSet,      # ORACLE, not a precomputed set:
                                                   # feasibility is conditional on
                                                   # the candidate action set
-                 incentives: IncentiveContract, horizon }
+                 incentives: ContractResolver, horizon }
 DecisionScheme.solve(DecisionProblem) -> Decision{ actions, duals, rationale }
 ```
 
@@ -207,12 +246,27 @@ right, but a new contracting theory must not require a coordinated four-file
 edit. It registers as a single extension that supplies four typed
 contributions:
 ```
-IncentiveModel{ contract_spec,        -> SP-Venue (payout functional + obligations)
-                competition_model,    -> BE-Competition
-                constraints,          -> DE-Constraints (eligibility/obligation)
-                cashflow_functional }  -> UtilityFunctional (realised/expected cash)
+IncentiveModel{ contract_spec,      -> SP-Instrument-scoped ContractResolver
+                competition_model,  -> BE-Competition
+                constraints,        -> DE-Constraints (eligibility/obligation)
+                cashflow_emitter }  -> ActionOutcome.cash_flows → WealthLedger
 ```
 Contributions stay independently testable; adding a theory is one plug-in.
+
+**Cash flow, not preference (M6-2).** v6 routed `cashflow_functional` to
+`UtilityFunctional`, re-coupling incentive theory to risk preference one
+section after §7 separated them. An incentive model emits realised/uncertain
+CASH into `ActionOutcome.cash_flows` and thence `WealthLedger`; the
+independently chosen `UtilityFunctional` then evaluates the distribution of
+TOTAL terminal wealth.
+
+**Scope (M6-2).** Rewards are instrument-scoped and time-varying (§3), so a
+single unscoped contract cannot serve a portfolio-coupled problem:
+```
+ContractResolver: InstrumentId -> Known[IncentiveContract]   # bitemporal via SP
+DecisionProblem.incentives: ContractResolver                 # not one contract
+DecisionProblem.competition: joint over the CouplingGraph    # not one state
+```
 The solver dual prices the **opportunity cost of satisfying an obligation** —
 it is NOT the subsidy payment. Both appear, in different places.
 
@@ -262,7 +316,7 @@ declarations.** This is what stops `σ_⊥ + κ` and the sum-vs-min recurrences.
 m = min(q_up, q_down)                        # paired, riskless, redeems $1
 L_adv = unpaired_cost_basis(q_up, q_down, m) # premium actually at risk
 per market:  L_adv ≤ κ_$
-per scenario: Σ_{i ∈ losers(s)} L_adv_i ≤ L_max(s)   # explicit adverse scenarios
+per scenario: Σ_{i ∈ ScenarioSet[s].losers} L_adv_i ≤ L_max[s]   # see owner below
 # NOT Σ loading(i,f)·L_adv_i (M5-8): signed loadings can CANCEL hard loss
 # exposure, and a linear beta is not a binary adverse-resolution outcome.
 # The scenario model declares which instruments lose TOGETHER; the cap
@@ -271,6 +325,23 @@ per scenario: Σ_{i ∈ losers(s)} L_adv_i ≤ L_max(s)   # explicit adverse sce
 ```
 `|u|·(1−p̂)` charged 0.02/share where ~0.98/share is lost — least where loss is
 largest.
+
+**Scenario ownership (M6-3)** — v6 invented `losers(s)` / `L_max(s)` with no
+owner in the algebra, register, manifests or `DecisionProblem`; an ownerless
+quantity is STRUCTURAL by the loop rubric.
+```
+SP-Scenarios{ ScenarioId -> AdverseScenario{ instrument_outcome_map,
+              scope: ScopeKey, provenance, completeness } }
+              # declarative policy stress, bitemporal like every spec record
+BE-ScenarioProvider -> Known[Uncertain[ScenarioSet]] | Unavailable
+              # ONLY when scenarios are ESTIMATED; must carry an explicit
+              # joint law (§2 Dependence) — never assumed independent
+L_max[s]  : (ParamId, ScopeKey) in SP-Params
+consumers: DE-Constraints (per-scenario HARD cap) · DE-Allocator (budget split)
+DecisionProblem.scenarios: Known[Uncertain[ScenarioSet]] | Unavailable
+```
+Declarative scenarios are the default; the estimated provider is the escape
+hatch and is knowledge-stamped like any other belief.
 
 ---
 
@@ -283,7 +354,8 @@ rng, artifacts}`. Modules receive narrow ports, declared in their manifest:
 |---|---|
 | DA-Feeds | feed port |
 | BE-*, DE-* (except Actuator) | `StateView`, RNG, artifact resolver |
-| DE-Actuator | venue port |
+| DE-Constraints | + halt port (read `HaltState`) |
+| DE-Actuator | venue port + halt port (priority `cancel_all`) |
 | replay runner | replay clock + tape |
 
 Injecting the whole object would let a belief bypass `StateView` by reading
@@ -337,6 +409,18 @@ fourth because it only covered items the reviewer had named.
 A rewrite is not complete until the previous version's **full contract
 inventory** (every type, key, field and rule) is diffed against the new one and
 each removal is either intentional-and-logged or restored.
+
+**v6 → v7 inventory diff** (v6 mandated this log and did not include one —
+SHOULD-FIX 3):
+
+| contract | change | reason |
+|---|---|---|
+| _(none)_ | — | `SP-Venue`/`SP-Instrument`/`SP-Strategy` record block was dropped in the v5→v6 edit; the diff flagged it and v7 restores it |
+
+Added: `ContractResolver`, `EdgeId`, `NodeId`, `SP-Instrument`, `ScenarioId`, `ScenarioSet`, `UnavailablePolicy`, `UnwrapPolicy`.
+
+Reproduce: `git show <prev>:live/pm_research/PM_ARCHITECTURE.md` and diff the
+extracted identifier set against the working copy.
 
 ## 14. Deliberately not built
 No venue abstraction layer; no `VarianceBudget` class; no branches for
