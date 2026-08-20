@@ -164,3 +164,20 @@ The other MUST-FIXes close the full-Environment escape hatch, make parameter
 scope composite, add the missing variance partition, separate markout from the
 full objective ledger, define shared algebraic types/module manifests, and put
 provenance on individual spec fields.
+
+| 5 | 2026-08-20 | review: 9 | **v5 NOT CONVERGED; issues recorded** |
+
+## Iteration 5 review of v5 — 9 MUST-FIX
+
+Full review: `PM_STRUCT_ITER5_REVIEW.md`.
+
+Provisional score as written: **LOCAL 9 / SPREADING 3 / STRUCTURAL 1**. After
+restoring `ParamId` to the parameter key: **LOCAL 10 / SPREADING 3 /
+STRUCTURAL 0**.
+
+v5 closes the v4 utility/control and incentive-ownership gaps. Remaining work
+restores parameter identity, makes coupling hierarchical, keeps utility outside
+the additive wealth ledger, supplies covariance/falsification for variance,
+adds dependence to `Uncertain`, makes competition state knowledge-time safe,
+packages incentive theory as one extension, replaces factor-weighted loss with
+scenario risk, and defines the OP health/halt path.
