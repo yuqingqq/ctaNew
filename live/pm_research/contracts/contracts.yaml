@@ -1,4 +1,4 @@
-version: 10
+version: 11
 rules:
   R-SSOT:
     body: every canonical name has exactly one owning type/module
@@ -22,6 +22,10 @@ rules:
     body: no module reads a wall clock
   R-OPEN:
     body: utility/solver/incentive are registries, not closed unions
+  R-HALT:
+    body: while cancellation is Unconfirmed the system state is HALTED
+    checks:
+    - 'fail_closed: CancelAllStatus.Unconfirmed => HaltState.HALTED'
 types:
   Known:
     generic:
@@ -158,9 +162,9 @@ types:
       utility: PluginRef
       solver: PluginRef
       unwrap_policy: UnwrapPolicy
-      unavailable_policy: enum:HALT|FALL_BACK|REFUSE_ACTION
-      coupling_source: CouplingSource
-      fallback: FallbackPolicy?
+      unavailable_policy: UnavailablePolicy
+      coupling_mode: CouplingMode
+      incentive_model: PluginRef
     validation: n_ary_capability_check
   StaticCouplingRef:
     fields:
@@ -177,7 +181,7 @@ types:
       actions: ActionSpace
       portfolio: PortfolioState
       risk_scenarios: RiskScenarios
-      coupling: CouplingSource
+      coupling: ResolvedCoupling
       constraints: ConstraintSet
       incentives: ResolvedContracts
       horizon: Duration
@@ -186,6 +190,7 @@ types:
     fields:
       by_instrument: dict[InstrumentId, Known[IncentiveContract] | Unavailable]
       spec_hash: Hash
+      incentive_plugin: PluginRef
     notes: pre-resolved against the problem's spec snapshot; Disputed invokes the declared handler
   HealthEvent:
     fields:
@@ -194,12 +199,6 @@ types:
       severity: enum:INFO|WARN|FAULT
       observed_at: Timestamp
       detail: str
-  Heartbeat:
-    fields:
-      port: TelemetryPortId
-      period: Duration
-      staleness_deadline: Duration
-    notes: absence cannot emit an event, so liveness is deadline-driven (M8-4)
   HaltState:
     fields:
       level: enum:RUNNING|DEGRADED|HALTED
@@ -218,11 +217,12 @@ types:
       rate_budget_class: enum:PRIORITY
   CancelAllStatus:
     variants:
-    - Issued(command_id)
-    - Confirmed(command_id, confirmed_by)
-    - Unconfirmed(command_id, open_orders_remaining)
-    - FailedTerminal(command_id, reason)
-    notes: "M9-5: discriminated \u2014 confirmation evidence required only for Confirmed"
+    - 'Issued(command_id: ImmutableId)'
+    - 'Confirmed(command_id: ImmutableId, confirmed_by: ConfirmationSource)'
+    - 'Unconfirmed(command_id: ImmutableId, open_orders_remaining: int)'
+    - 'FailedTerminal(command_id: ImmutableId, reason: str)'
+    notes: venue ack is NOT observed; confirmation is by open-order reconciliation, and while Unconfirmed
+      the conservative state is HALTED (rule R-HALT.fail_closed)
   Gate:
     fields:
       id: str
@@ -245,6 +245,8 @@ types:
     fields:
       outcomes: dict[InstrumentId, VenueOutcome]
       scenario_ref: ScenarioId?
+      completeness: enum:COMPLETE|PARTIAL
+      on_incomplete: enum:REFUSE|WORST_CASE_FILL
     notes: ONE realization of venue outcomes across instruments
   ParamValue:
     fields:
@@ -263,7 +265,8 @@ types:
     fields:
       param: ParamId
       scope: ScopeKey
-    notes: ParamId.name='scenario_loss_limit'; ScopeKey.scenario identifies the scenario
+      resolved: Known[Money] | Unavailable
+      unit: str
   LossFunctional:
     protocol:
       loss: (JointOutcome, PortfolioState, ActionSet) -> Wealth
@@ -283,13 +286,14 @@ types:
       valid_for: ScopeKey
   PayoutFunctional:
     protocol:
-      cash: (ActionOutcome, CompetitionState) -> Uncertain[Wealth]
+      cash: (ActionOutcome, Known[Uncertain[JointCompetitionState]], InstrumentId) -> Uncertain[Wealth]
+    notes: 'M10-4: takes the JOINT wrapper plus an instrument projection, not a scalar'
   IncentiveModel:
     kind: open_protocol
     registry: PluginRegistry
     protocol:
       contract_spec: (InstrumentId) -> Known[IncentiveContract] | Unavailable
-      competition_model: () -> ModuleRef(BE-Competition)
+      competition_model: () -> ModuleRef
       constraints: () -> list[Constraint]
       cashflow_emitter: () -> PayoutFunctional
     notes: 'M9-4: ONE registration supplies all four contributions; adding a principal-agent/contest theory
@@ -310,15 +314,9 @@ types:
       stateful: bool
       artifacts: list[ImmutableId]
       null_semantics: dict[str, NullPin]
-  CouplingSource:
-    variants:
-    - Static(StaticCouplingRef)
-    - Dynamic(Known[CouplingGraph])
-    notes: "M9-4.1: exclusive \u2014 v9 had a mandatory config ref AND a problem field"
   UnwrapPolicy:
     fields:
-      by_input: dict[str, enum:EXPECTATION|QUANTILE|SCENARIOS]
-    notes: 'M9-4.2: scoped per consumer/input; one global choice cannot serve all'
+      by_input: dict[str, UnwrapSpec]
   FallbackPolicy:
     fields:
       prior_ref: ImmutableId
@@ -328,10 +326,11 @@ types:
     notes: 'M9-4.3: FALL_BACK needs a referenced prior with an age bound'
   PinnedOutcomes:
     fields:
-      impl: PluginRef
-      artifact_id: ImmutableId
+      model: PluginRef
       spec_hash: Hash
-    notes: 'M9-4.4: replaces a live callable so replay is immutable'
+    protocol:
+      evaluate: (ActionSet, StateView, SelfState, Duration) -> Uncertain[ActionOutcome] | Unavailable
+    notes: 'M10-5: identity lives in PluginRef (single copy); still callable'
   HeartbeatRegistration:
     fields:
       port: TelemetryPortId
@@ -432,6 +431,8 @@ types:
     methods:
       feasible: (ActionSet, PortfolioState) -> FeasibleSet
     notes: 'an ORACLE: feasibility is conditional on the candidate action set'
+    fields:
+      members: list[Constraint | ScenarioLossConstraint]
   FeasibleSet:
     fields:
       max_size: dict[str, float]
@@ -503,13 +504,80 @@ types:
   ModuleRef:
     fields:
       module: ModuleId
+  RawEvent:
+    fields:
+      recv_ns: Timestamp
+      source: SourceId
+      payload: str
+  WealthLedger:
+    fields:
+      markout: float
+      fees: float
+      rebates: float
+      incentives: float
+      capital_cost: float
+    notes: additive cash in one unit; UtilityFunctional evaluates the terminal distribution
+  VarianceComponent:
+    fields:
+      owner: ModuleId
+      unit_space: str
+      estimand: str
+      support: str
+      provenance: Provenance
+  VarianceGroup:
+    fields:
+      components: list[VarianceComponent]
+      operator: str
+      covariance_model: str
+      estimand: str
+      validation_gate: str
+  CouplingMode:
+    variants:
+    - Static(StaticCouplingRef)
+    - Dynamic
+  ResolvedCoupling:
+    variants:
+    - Static(StaticCouplingRef)
+    - Dynamic(Known[CouplingGraph])
+  OutcomeModel:
+    protocol:
+      evaluate: (ActionSet, StateView, SelfState, Duration) -> Uncertain[ActionOutcome] | Unavailable
+    registry: PluginRegistry
+  UnwrapSpec:
+    variants:
+    - Expectation
+    - 'Quantile(level: float)'
+    - 'Draws(n: int, dependence: Dependence)'
+  UnavailablePolicy:
+    fields:
+      by_input: dict[str, UnavailableAction]
+  UnavailableAction:
+    variants:
+    - Halt
+    - RefuseAction
+    - FallBack(FallbackPolicy)
+  ConfirmationSource:
+    variants:
+    - VenueAck
+    - OpenOrderReconciliation
+  Money:
+    fields:
+      amount: float
+      currency: str
+  CapitalBudget:
+    fields:
+      by_instrument: dict[InstrumentId, Money]
+  SettlementFacts:
+    fields:
+      resolutions: dict[InstrumentId, VenueOutcome]
+      redemption_delay: Duration
 modules:
   BE-Competition:
     produces: dict[InstrumentId, Known[Uncertain[CompetitionState]] | Unavailable]
     notes: instrument-scoped marginals
   BE-CompetitionAggregator:
     consumes:
-    - BE-Competition.produces
+    - BE-Competition
     - CouplingGraph
     produces: Known[Uncertain[JointCompetitionState]] | Unavailable
     requires:
@@ -521,7 +589,12 @@ modules:
     consumes:
     - DecisionProblem
     - HaltState
-    produces: FeasibleSet
+    - ScenarioLossConstraint
+    produces:
+    - FeasibleSet
+    ports:
+    - state_view
+    - halt_in
   DE-Actuator:
     consumes:
     - Decision
@@ -549,9 +622,21 @@ modules:
     ports:
     - feed
     - telemetry_out
+  DE-Allocator:
+    consumes:
+    - PortfolioState
+    - ScenarioLossConstraint
+    - SettlementFacts
+    produces:
+    - CapitalBudget
+    ports:
+    - state_view
+  DA-Settlement:
+    produces:
+    - SettlementFacts
+    ports:
+    - feed
 ports:
-  DA-Feeds:
-  - feed
   BE-*:
   - state_view
   - rng
@@ -577,6 +662,7 @@ ports:
   - clock
   EV-*:
   - read_all
+  _representation: module records own ports; this map holds only wildcard defaults
 prelude:
   primitives:
   - Timestamp
@@ -614,5 +700,15 @@ prelude:
   - ModuleOrPluginId
   - PluginRegistry
   - any
-  - Hyperedge
   - EdgeId
+config_supplied:
+- CouplingGraph
+- ScenarioLossConstraint
+- PortfolioState
+- DecisionProblem
+- Decision
+- HealthEvent
+- HeartbeatRegistration
+- HeartbeatPulse
+- HaltState
+- CancelAllCommand

@@ -1,34 +1,41 @@
-# Intentional contract removals/changes. Unexplained ones fail contract_check.py.
-field:CancelAllStatus.command_id: "M9-5: CancelAllStatus became a discriminated union; command_id now lives in each variant"
-field:CancelAllStatus.confirmed_by: "M9-5: confirmation evidence required only for the Confirmed variant"
-field:CancelAllStatus.open_orders_remaining: "M9-5: moved into the Unconfirmed variant"
-field:CancelAllStatus.state: "M9-5: replaced by variant discrimination"
-field:DecisionSchemeConfig.coupling_ref: "M9-4.1: replaced by exclusive CouplingSource(Static|Dynamic)"
-type:Heartbeat: "M9-5: split into HeartbeatRegistration (config) and HeartbeatPulse (observation)"
-field:Heartbeat.port: "M9-5: split, see type:Heartbeat"
-field:Heartbeat.period: "M9-5: split, see type:Heartbeat"
-field:Heartbeat.staleness_deadline: "M9-5: split, see type:Heartbeat"
-field:JointOutcomeDistribution.support: "M9-3: support point is now ONE JointOutcome, not a whole AdverseScenarioSet"
-field:DecisionProblem.outcomes: "M9-4.4: live callable replaced by PinnedOutcomes for immutable replay"
-field:DecisionProblem.coupling: "M9-4.1: replaced by exclusive CouplingSource"
-field:DecisionSchemeConfig.unwrap_policy: "M9-4.2: scalar enum replaced by per-input UnwrapPolicy"
-field:DecisionProblem.incentives: "M9-4: ResolvedContracts retained; IncentiveModel now registers the theory"
-module:DE-Actuator.produces: "M9-5: normalized to a list; adds CancelAllStatus producer"
-module:OP-Monitor.consumes: "M9-5: Heartbeat split into registration + pulse"
-module:OP-Monitor.produces: "M9-5: OP now produces CancelAllCommand as well as HaltState"
-note:CancelAllStatus: "M9-5: note rewritten for the discriminated union; reconciliation semantics moved into the variants"
-note:JointOutcomeDistribution: "M9-3: support point is now one JointOutcome"
-note:DecisionProblem: "M9-4: outcomes pinned, coupling source exclusive"
-note:ScopeKey: "M9-2: unchanged semantics, wording normalized"
-ports:DE-Actuator: "M9-5: adds cancel_cmd_in so the command has a declared input"
-ports:OP-Monitor: "M9-5: adds cancel_cmd_out and a monitor clock for staleness"
-rule:R-SSOT: "M9-1: rules gain machine-readable enforcement bodies"
-rule:R-KNOW: "M9-1: rule body added"
-rule:R-ONCE: "M9-1: rule body added"
-rule:R-PROV: "M9-1: rule body added"
-rule:R-VERSION: "M9-1: rule body added"
-rule:R-NULL: "M9-1: rule body added"
-rule:R-PORT: "M9-1: rule body added"
-rule:R-COMPAT: "M9-1: rule body added"
-rule:R-ENV: "M9-1: rule body added"
-rule:R-OPEN: "M9-1: rule body added"
+# Intentional removals/changes. Stale entries are latent bypasses and FAIL.
+_version: v10->v11 refactor per PM_STRUCT_ITER10_REVIEW (see commit message)
+field:DecisionProblem.coupling: 'M9-4.1: replaced by exclusive CouplingSource'
+field:DecisionSchemeConfig.coupling_source: 'M10-5: split into CouplingMode (config) and ResolvedCoupling
+  (problem)'
+field:DecisionSchemeConfig.fallback: 'M10-5: folded into per-input UnavailableAction.FallBack'
+field:DecisionSchemeConfig.unavailable_policy: v10->v11 refactor per PM_STRUCT_ITER10_REVIEW (see commit
+  message)
+field:Heartbeat.period: 'M9-5: split, see type:Heartbeat'
+field:Heartbeat.port: 'M9-5: split, see type:Heartbeat'
+field:Heartbeat.staleness_deadline: 'M9-5: split, see type:Heartbeat'
+field:PinnedOutcomes.artifact_id: 'M10-5: identity lives once, in PluginRef'
+field:PinnedOutcomes.impl: 'M10-5: renamed to `model` and typed as PluginRef'
+field:UnwrapPolicy.by_input: v10->v11 refactor per PM_STRUCT_ITER10_REVIEW (see commit message)
+module:BE-CompetitionAggregator.consumes: v10->v11 refactor per PM_STRUCT_ITER10_REVIEW (see commit message)
+module:DE-Constraints.consumes: v10->v11 refactor per PM_STRUCT_ITER10_REVIEW (see commit message)
+note:CancelAllStatus: 'M9-5: note rewritten for the discriminated union; reconciliation semantics moved
+  into the variants'
+note:CouplingSource: 'M10-5: CouplingSource split into CouplingMode/ResolvedCoupling'
+note:Heartbeat: 'M10-6.1: obsolete Heartbeat removed; see HeartbeatRegistration/Pulse'
+note:PinnedOutcomes: 'M10-5: identity single-copy; evaluate protocol restored'
+note:ScenarioLossLimit: 'M10-3.2: limit now carries a resolved value and unit'
+note:UnwrapPolicy: 'M10-5: per-input UnwrapSpec with required parameters'
+ports:DA-Feeds: 'M10-6.3: ports are owned by the module record only (single representation)'
+prelude:external:Hyperedge: v10->v11 refactor per PM_STRUCT_ITER10_REVIEW (see commit message)
+proto:IncentiveModel.competition_model: v10->v11 refactor per PM_STRUCT_ITER10_REVIEW (see commit message)
+proto:PayoutFunctional.cash: v10->v11 refactor per PM_STRUCT_ITER10_REVIEW (see commit message)
+type:CouplingSource: v10->v11 refactor per PM_STRUCT_ITER10_REVIEW (see commit message)
+type:Heartbeat: 'M9-5: split into HeartbeatRegistration (config) and HeartbeatPulse (observation)'
+variant:CancelAllStatus|Confirmed(command_id, confirmed_by): v10->v11 refactor per PM_STRUCT_ITER10_REVIEW
+  (see commit message)
+variant:CancelAllStatus|FailedTerminal(command_id, reason): v10->v11 refactor per PM_STRUCT_ITER10_REVIEW
+  (see commit message)
+variant:CancelAllStatus|Issued(command_id): v10->v11 refactor per PM_STRUCT_ITER10_REVIEW (see commit
+  message)
+variant:CancelAllStatus|Unconfirmed(command_id, open_orders_remaining): v10->v11 refactor per PM_STRUCT_ITER10_REVIEW
+  (see commit message)
+variant:CouplingSource|Dynamic(Known[CouplingGraph]): v10->v11 refactor per PM_STRUCT_ITER10_REVIEW (see
+  commit message)
+variant:CouplingSource|Static(StaticCouplingRef): v10->v11 refactor per PM_STRUCT_ITER10_REVIEW (see commit
+  message)

@@ -93,11 +93,47 @@ def invariants(doc):
     pre = (doc.get("prelude") or {})
     known = types | set(pre.get("primitives", [])) | set(pre.get("external", []))
     import re as _re
+    def refs(x):
+        return [r for r in _re.findall(r'[A-Z][A-Za-z0-9_]*', str(x)) if not r.isupper()]
+    def check(where, x):
+        for r in refs(x):
+            if r not in known:
+                errs.append(f"unresolved reference {where} -> {r}")
     for tname, t in (doc.get("types") or {}).items():
         for fname, ty in (t.get("fields") or {}).items():
-            for ref in _re.findall(r'[A-Z][A-Za-z0-9_]*', str(ty)):
-                if ref not in known and not ref.isupper():
-                    errs.append(f"unresolved reference {tname}.{fname} -> {ref}")
+            check(f"{tname}.{fname}", ty)
+        for mname, sig in (t.get("methods") or {}).items():      # M10-2
+            check(f"{tname}.{mname}()", sig)
+        for pname, sig in (t.get("protocol") or {}).items():     # M10-2
+            check(f"{tname}::{pname}", sig)
+        for v in (t.get("variants") or []):                      # M10-2
+            # a variant is Tag(payload) — the Tag is a constructor, not a type.
+            inner = _re.search(r'\((.*)\)\s*$', str(v))
+            if not inner:
+                continue
+            for part in inner.group(1).split(","):
+                ty = part.split(":", 1)[1] if ":" in part else part
+                check(f"{tname}|{str(v).split('(')[0]}", ty)
+        if "registry" in t and str(t["registry"]) not in known:  # M10-2
+            errs.append(f"unresolved registry {tname} -> {t['registry']}")
+    # duplicate local/external declaration (violates R-SSOT)
+    pre_ext = set((doc.get("prelude") or {}).get("external", []))
+    for dup in sorted(set((doc.get("types") or {}).keys()) & pre_ext):
+        errs.append(f"duplicate declaration (local type AND prelude.external): {dup}")
+    # module outputs/inputs must resolve
+    for mname, m in (doc.get("modules") or {}).items():          # M10-2
+        for k in ("produces", "consumes", "requires"):
+            v = m.get(k)
+            if v:
+                mods = set((doc.get("modules") or {}).keys())
+                for item in (v if isinstance(v, list) else [v]):
+                    if str(item) in mods:
+                        continue                       # a module reference, not a type
+                    check(f"module {mname}.{k}", item)
+    # declared rules must have a validator id or checks
+    for rname, body in (doc.get("rules") or {}).items():
+        if isinstance(body, dict) and not (body.get("body") or body.get("checks")):
+            errs.append(f"rule {rname} has no body or checks")
     produced = set()
     for m in (doc.get("modules") or {}).values():
         p = m.get("produces")
@@ -105,10 +141,9 @@ def invariants(doc):
     for mname, m in (doc.get("modules") or {}).items():
         for c in (m.get("consumes") or []):
             base = str(c).split("[")[0].split(".")[0]
+            cfg = set(doc.get("config_supplied") or [])   # declared, not hardcoded
             if base in types and base not in {str(x).split("[")[0] for x in produced} \
-               and base not in ("DecisionProblem", "Decision", "HealthEvent",
-                                "HeartbeatRegistration", "HeartbeatPulse",
-                                "CouplingGraph"):   # supplied by SP-Strategy config
+               and base not in cfg and not base.startswith(("SP-", "DA-", "BE-", "DE-", "EV-", "OP-")):
                 errs.append(f"{mname} consumes {base} with no declared producer")
     return errs
 
@@ -137,6 +172,21 @@ def selftest():
         rem, chg, _ = diff(flatten(base), flatten(mutated))
         caught = bool(rem or chg)
         print(f"  {'PASS' if caught else 'FAIL'}  detects {name}")
+        ok &= caught
+    inv_cases = {
+        "undefined protocol return type": {"prelude": {"external": []},
+            "types": {"X": {"protocol": {"f": "() -> Nope"}}}},
+        "undefined module output": {"prelude": {"external": []},
+            "modules": {"M": {"produces": ["Nope"]}}},
+        "undefined variant payload": {"prelude": {"external": []},
+            "types": {"X": {"variants": ["A(Nope)"]}}},
+        "duplicate local/external type": {"prelude": {"external": ["Dup"]},
+            "types": {"Dup": {"fields": {}}}},
+        "rule without body": {"rules": {"R-X": {}}},
+    }
+    for name, doc in inv_cases.items():
+        caught = bool(invariants(doc))
+        print(f"  {'PASS' if caught else 'FAIL'}  invariant detects {name}")
         ok &= caught
     unchanged = diff(flatten(base), flatten(base))
     same_ok = not (unchanged[0] or unchanged[1] or unchanged[2])
@@ -172,6 +222,12 @@ if __name__ == "__main__":
         why = allowed.get(k)
         print(f"  {k}: {o!r} -> {n!r}" + (f"   [allowed: {why}]" if why else "   *** UNEXPLAINED ***"))
         fatal |= not why
+    stale = sorted(set(allowed) - set(removed) - set(changed))
+    if stale:
+        print(f"STALE ALLOWLIST ENTRIES ({len(stale)}) — latent bypasses:")
+        for k in stale:
+            print(f"  *** {k}")
+        fatal = True
     print(f"ADDED ({len(added)}):")
     for k in sorted(added):
         print(f"  {k}")
