@@ -1,8 +1,21 @@
-# PM_ARCHITECTURE v8 — structure for P-2026-003
+# PM_ARCHITECTURE v9 — structure for P-2026-003
 
 Rewritten 2026-08-20 from `PM_STRUCT_ITER7_REVIEW.md` (5 MUST-FIX + 3
 SHOULD-FIX; v7 scored LOCAL 11 / SPREADING 0 / STRUCTURAL 2 — unchanged).
 Prior: v1 5/3/5, v2 7/4/2, v4 9/2/2, v5 9/3/1.
+
+> ## CANONICAL SOURCE
+> **`contracts/contracts.yaml` is the machine-readable source of truth for every
+> type, field, module, port and rule.** This document explains and motivates;
+> it does not define. Schema blocks below are **illustrative excerpts** — if one
+> disagrees with the YAML, the YAML wins. Verified by
+> `contracts/contract_check.py`, which diffs owner-qualified fields WITH their
+> types (so a narrowing is a detected regression) and carries a selftest.
+>
+> This resolves review M8-3: the v8 checker scanned markdown prose and was
+> proven unsound — it reported ZERO changes when
+> `Known[Uncertain[JointCompetitionState]]` was narrowed to `CompetitionState`,
+> the exact regression class it existed to catch. Reproduced before replacing.
 
 **The v7 diagnosis, adopted as a rule: a fix that lives in explanatory prose is
 not a fix.** v7 declared `DecisionProblem.scenarios`, dynamic coupling and joint
@@ -96,7 +109,8 @@ Uncertain[T] { expectation(), quantile(q), scenarios(n, rng), map(f),
               # it never assumes independence. Pair completion, cross-coin risk
               # and portfolio fills are all dependent.
 ScenarioDrawSet[T]{ draws: [(DrawId, weight, T)], common_random_id }
-              # M7-2: the result of Uncertain[T].scenarios() — MONTE-CARLO DRAWS.
+              # M7-2: the result of Uncertain[T].draws() — MONTE-CARLO DRAWS, keyed
+              # by DrawId (not ScenarioId).
               # Distinct from AdverseScenarioSet (§8), which is a RISK POLICY.
               # v7 used one name for both and nested it inside itself.
 Dependence   = SharedDraws(common_random_id) | JointLaw(copula|factor)
@@ -155,9 +169,9 @@ SP-Params{ (ParamId, ScopeKey) -> ParamValue{value, provenance, owner,
            valid_for, measured_at, fit_data_through?, artifact_id?} }
 ```
 **ParamId is part of the key** (v5 dropped it, so volatility and latency at the
-same scope collided). The `Records` block itself was lost in the v5→v6 edit and
-restored by the §13 inventory diff — the first silent drop this program caught
-before a reviewer did.
+same scope collided) and is **namespaced by module/plugin** so parallel
+implementations do not collide at one market scope. The `Records` block was
+lost in the **v4→v5** edit (see §13 for the corrected lineage).
 
 **Populate on demand.** EV-Markout needs ~4 facts, not 30 fields.
 
@@ -226,8 +240,15 @@ axis, so the adopted prediction-market theory — which needs **both at once** �
 was not expressible.
 
 ```
-UtilityFunctional : RiskNeutral | CARA | PathFunctional
-ControlSolver     : ClosedFormGLFT | PerLevel | HJBQVI
+UtilityFunctional : OPEN PROTOCOL  { evaluate(Uncertain[Wealth]) -> Value }
+ControlSolver     : OPEN PROTOCOL  { solve(DecisionProblem) -> Decision }
+                    # M8-5: registries with plugin ids + config schemas +
+                    # manifests. builtins are REGISTERED, not enumerated in the
+                    # type, so an unlisted SOTA theory does NOT edit shared code.
+DecisionSchemeConfig{ utility, solver, coupling_ref: StaticCouplingRef,
+                      unwrap_policy, unavailable_policy }
+                    # M8-5: policies are FIELDS, not comments; validation is
+                    # n-ary (a pairwise-valid triple can still be invalid)
 Coupling          : CouplingGraph          # NOT an enum — see below
 ```
 All three declare pairwise compatibility (R-COMPAT); wiring rejects invalid
@@ -251,7 +272,9 @@ so pair coupling and portfolio coupling compose without either implementation
 knowing the other.
 
 ```
-DecisionProblem{ view: StateView, self: SelfState, belief: BeliefProcess,
+DecisionProblem{ view: StateView, self: SelfState,
+                 belief: Known[BeliefProcess],          # M8-6: fitted+time-varying,
+                                                        # so ONE enforceable t_known
                  competition: Known[Uncertain[JointCompetitionState]] | Unavailable,
                  # M6-1: the FULL type crosses the boundary. Unwrapping to an
                  # expectation/quantile/scenario is an explicit UnwrapPolicy
@@ -261,21 +284,32 @@ DecisionProblem{ view: StateView, self: SelfState, belief: BeliefProcess,
                  outcomes: (action_set -> Uncertain[ActionOutcome]),
                  actions: ActionSpace, portfolio: PortfolioState,
                  risk_scenarios: RiskScenarios,        # M7-1 — canonical, not prose
-                 coupling: Known[CouplingGraph] | STATIC_INJECTED,   # M7-3
+                 coupling: Known[CouplingGraph] | StaticCouplingRef, # M8-6:
+                 # typed ref w/ graph_id+hash+provenance, not a sentinel
                  constraints: ConstraintSet,      # ORACLE, not a precomputed set:
                                                   # feasibility is conditional on
                                                   # the candidate action set
-                 incentives: ContractResolver, horizon }
+                 incentives: ResolvedContracts,   # M8-6: pre-resolved SNAPSHOT
+                 horizon, spec_snapshot: Hash }   # not a live handle that can
+                 # change after problem construction
 
-RiskScenarios = Declared(AdverseScenarioSet)                     # SP-Scenarios, resolved
-              | Estimated(Known[Uncertain[AdverseScenarioSet]])  # BE-ScenarioProvider
-              | Unavailable
+RiskScenarios = Declared(Known[AdverseScenarioSet])          # M8-2: keeps the
+              |                                              # SP knowledge stamp
+                Estimated(Known[JointOutcomeDistribution])   # M8-2: weighted joint
+              | Unavailable                                  # outcomes, not
+              # "uncertainty over sets" (v8's Uncertain[AdverseScenarioSet] was
+              # ambiguous). Incomplete maps handled by `on_incomplete`.
               # the scheme declares an UnavailablePolicy for this field too
-JointCompetitionState{ by_node: {NodeId -> CompetitionState},
-                       dependence: Dependence }
-              # M7-4: scalar fields cannot express different rival scores /
-              # participation / eligibility across simultaneously coupled
-              # instruments; dependence lives INSIDE the uncertainty object
+JointCompetitionState{ by_node: {NodeId -> CompetitionState} }
+              # M8-1: `dependence` REMOVED from the realised sample — it
+              # describes CONSTRUCTION of the joint uncertainty, so it belongs
+              # to the aggregator/distribution, not to a realised state.
+BE-Competition            -> per-instrument MARGINALS
+BE-CompetitionAggregator  -> Known[Uncertain[JointCompetitionState]] | Unavailable
+              # M8-1: v8 had a scalar producer and a joint consumer with NO
+              # module owning the aggregation — the stack could not wire.
+              # The aggregator combines marginals under an EXPLICIT Dependence
+              # and refuses when dependence is unknown.
 DecisionScheme.solve(DecisionProblem) -> Decision{ actions, duals, rationale }
 ```
 
@@ -373,9 +407,14 @@ largest.
 owner in the algebra, register, manifests or `DecisionProblem`; an ownerless
 quantity is STRUCTURAL by the loop rubric.
 ```
-AdverseScenario{ id: ScenarioId, instrument_outcome_map: {InstrumentId ->
-                 ADVERSE|BENIGN}, scope: ScopeKey, provenance, completeness,
-                 loss_limit }                      # limit MAY live here (SSOT)
+AdverseScenario{ id: ScenarioId, outcome_map: {InstrumentId -> VenueOutcome},
+                 scope: ScopeKey, provenance, completeness, on_incomplete }
+              # M8-2: stores VENUE OUTCOMES, not ADVERSE|BENIGN — adversity is a
+              # function of (outcome, position, action) at decision time and
+              # cannot be stable declarative data.
+              # loss_limit REMOVED: it lives ONLY in SP-Params keyed by
+              # ScopeKey.scenario. v8 had two owners ("MAY live here"), an
+              # R-SSOT violation.
 AdverseScenarioSet{ scenarios: {ScenarioId -> AdverseScenario}, dependence }
 SP-Scenarios{ ScenarioId -> AdverseScenario }      # declarative, bitemporal
 BE-ScenarioProvider -> Known[Uncertain[AdverseScenarioSet]] | Unavailable
@@ -444,62 +483,42 @@ ReplayEnv. `OP-LatencyBudget`: four legs, ack unobserved.
 
 Nothing in BE or DE is built. The register describes contracts, not code.
 
-## 13. Process: contract-inventory diff (new)
+## 13. Process: canonical contracts + structural diff
 
-v2 dropped a MUST-FIX, v3 dropped settlement accounting, v4 dropped the
-dependency rule, v5 dropped `ParamId` from the params key — **four consecutive
-rewrites each silently lost something**, and the keep-list check missed the
-fourth because it only covered items the reviewer had named.
+Five rewrites each silently lost something: v2 a MUST-FIX, v3 settlement
+accounting, v4 the dependency rule, v5 `ParamId` AND the spec-record block.
+Two process guards now exist, and the second exists because the first was
+proven unsound.
 
-A rewrite is not complete until the previous version's **full contract
-inventory** (every type, key, field and rule) is diffed against the new one and
-each removal is either intentional-and-logged or restored.
+**Guard 1 — canonical source.** `contracts/contracts.yaml` defines every type,
+field, module, port and rule. The markdown explains; it does not define.
 
-**Lineage correction (review SHOULD-FIX 1).** v7's log claimed the spec-record
-block was dropped v5 to v6. Wrong twice over: it was present in v4 and gone by
-v5, so the drop was **v4 to v5**; and it was never CANONICAL even in v4 (inline
-prose code spans, not a fenced schema block). v7 is the first version in which
-those records are canonical.
+**Guard 2 — structural diff.** `contracts/contract_check.py <base-ref>` compares
+**owner-qualified fields WITH their types**, so narrowing, renaming, moving and
+deleting are all caught. Removals require an entry in
+`removals_allowlist.yaml`. `--selftest` asserts the four regression classes,
+including v8's blind spot. Subprocess failure is fatal.
 
-The v7 tool caused the error: it scanned every CamelCase token in the whole
-document, so a contract could vanish from the schema while a lingering prose
-mention kept the diff quiet. It is replaced by `contract_inventory.py`, which
-inventories **only fenced canonical blocks plus the rule table** (types, module
-ids, fields, rules) and ignores prose.
+**Lineage correction (v7/v8 reviews).** v7's log said the spec-record block was
+dropped v5→v6. Wrong twice: it was present in v4 and gone by v5 — so **v4→v5** —
+and it was never CANONICAL even in v4 (inline prose, not a fenced block).
 
-**v7 to v8 inventory diff** — `python3 contract_inventory.py c636500 WORKTREE`:
+**Why the v8 checker was replaced (review M8-3).** It scanned markdown prose,
+ignored `git show` failures, could not parse generics, and used unqualified
+field names. Audit, reproduced before accepting:
 
 ```
-DROPPED (2):
-  field:sources
-  type:ScenarioSet
-ADDED (18):
-  field:by_node
-  field:coupling
-  field:dependence
-  field:id
-  field:idempotent
-  field:instrument_outcome_map
-  field:latched
-  field:level
-  field:reason
-  field:requires_ack
-  field:reset_authority
-  field:risk_scenarios
-  field:scenarios
-  type:AdverseScenarioSet
-  type:HaltState
-  type:HealthEvent
-  type:JointCompetitionState
-  type:RiskScenarios
+invalid baseline ref            -> exit 0, DROPPED (0)      # silent pass
+type:Known / Uncertain present? -> False                    # generics invisible
+narrow Known[Uncertain[JointCompetitionState]] -> CompetitionState
+                                -> DROPPED (0), ADDED (0)   # IDENTICAL
 ```
+It passed the exact regression it was built to catch. A verification that can
+be fooled by its own output is worse than none, because it manufactures
+confidence. Replaced, with tests.
 
-Both removals are intentional: `ScenarioSet` was split into `ScenarioDrawSet`
-and `AdverseScenarioSet` (M7-2); the `sources` field left `HealthEvent` when EV
-was removed as a health source (M7-5).
-
-Reproduce: `python3 live/pm_research/contract_inventory.py <prev-ref> [<ref>]`
-(exit code 1 when anything was dropped).
+Reproduce: `python3 live/pm_research/contracts/contract_check.py <base-ref>`
+(exit 1 on any unexplained removal or type change).
 
 ## 14. Deliberately not built
 No venue abstraction layer; no `VarianceBudget` class; no branches for

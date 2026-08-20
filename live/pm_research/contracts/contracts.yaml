@@ -1,0 +1,189 @@
+# CANONICAL CONTRACT SOURCE for PM_ARCHITECTURE (v9+).
+# This file — not the markdown — is the machine-readable source of truth.
+# PM_ARCHITECTURE.md explains; contracts.yaml declares. Checked by
+# contract_check.py, which compares owner-qualified fields WITH their types so
+# a narrowing (Known[Uncertain[X]] -> X) is a detected regression.
+version: 9
+
+rules: [R-SSOT, R-KNOW, R-ONCE, R-PROV, R-VERSION, R-NULL, R-PORT, R-COMPAT, R-ENV, R-OPEN]
+
+types:
+  # ---------- shared algebra ----------
+  Known:
+    generic: [V]
+    fields:
+      value: V
+      t_event: Timestamp
+      t_known: Timestamp
+      t_known_prov: "enum:OBSERVED|IMPUTED|ASSUMED"
+      t_known_err: Duration
+      source: SourceId
+      provenance: Provenance
+  Uncertain:
+    generic: [T]
+    methods:
+      expectation: "() -> T"
+      quantile: "(q: float) -> T"
+      draws: "(n: int, rng: Rng) -> ScenarioDrawSet[T]"
+      combine: "(other: Uncertain[U], f, dependence: Dependence) -> Uncertain[W]"
+    notes: combine REFUSES when dependence is unknown; never assumes independence
+  ScenarioDrawSet:
+    generic: [T]
+    fields:
+      draws: "list[(DrawId, weight: float, value: T)]"
+      common_random_id: CommonRandomId
+  Dependence:
+    variants: ["SharedDraws(common_random_id)", "JointLaw(copula|factor)", "Independent(DECLARED)"]
+  Unavailable:
+    fields: {reason: str, since: Timestamp, cause: "Unavailable?"}
+  NullPin:
+    fields: {field: str, assumption: str, bias_direction: "enum:OPTIMISTIC|PESSIMISTIC", declared_by: ModuleId}
+
+  # ---------- identity ----------
+  InstrumentId:
+    fields:
+      venue: VenueId
+      condition_id: ImmutableId      # M8-SF3: immutable, not a mutable slug
+      symbol: str
+      horizon: Duration
+      expiry: Timestamp
+      slug: "str?"                   # metadata only, never an identity key
+  TokenId:
+    fields: {instrument: InstrumentId, side: "enum:UP|DOWN", asset_id: ImmutableId}
+  ParamId:
+    fields: {namespace: ModuleOrPluginId, name: str}   # M8-SF4: namespaced
+  ScopeKey:
+    fields: {venue: "VenueId?", factor: "RiskFactorId?", instrument: "InstrumentId?",
+             horizon: "Duration?", feed: "FeedId?", region: "RegionId?",
+             portfolio: "PortfolioId?", scenario: "ScenarioId?"}
+    notes: subset-order resolution; equally-specific matches FAIL LOUD
+
+  # ---------- risk policy (M8-2) ----------
+  AdverseScenario:
+    fields:
+      id: ScenarioId
+      outcome_map: "dict[InstrumentId, VenueOutcome]"   # venue outcomes, NOT ADVERSE|BENIGN
+      scope: ScopeKey
+      provenance: Provenance
+      completeness: "enum:COMPLETE|PARTIAL"
+      on_incomplete: "enum:REFUSE|WORST_CASE_FILL"
+    notes: >
+      adversity is a function of (outcome, position, action) evaluated at decision
+      time, so it cannot be stored as stable SP data. Loss limit lives ONLY in
+      SP-Params keyed by ScopeKey.scenario (single owner, R-SSOT).
+  AdverseScenarioSet:
+    fields: {scenarios: "dict[ScenarioId, AdverseScenario]"}
+  JointOutcomeDistribution:
+    fields: {support: "list[(AdverseScenarioSet, weight: float)]", dependence: Dependence}
+    notes: what an ESTIMATED provider emits — weighted joint outcomes, not "uncertainty over sets"
+  RiskScenarios:
+    variants:
+      - "Declared(Known[AdverseScenarioSet])"          # M8-2.1: keeps the SP knowledge stamp
+      - "Estimated(Known[JointOutcomeDistribution])"
+      - "Unavailable"
+
+  # ---------- competition (M8-1) ----------
+  CompetitionState:
+    fields: {rival_score: float, our_marginal_effect: float,
+             total_participation: float, eligibility_state: EligibilityState}
+  JointCompetitionState:
+    fields: {by_node: "dict[NodeId, CompetitionState]"}
+    notes: >
+      realised sample only. Dependence describes CONSTRUCTION of the joint
+      uncertainty and therefore lives on the aggregator/distribution, not here
+      (M8-1). Keys restricted to node kinds that can carry competition state.
+
+  # ---------- decision (M8-5, M8-6) ----------
+  UtilityFunctional:
+    kind: open_protocol                     # M8-5: registry, not a closed union
+    protocol: {evaluate: "(Uncertain[Wealth]) -> Value", config_schema: JsonSchema}
+    registry: PluginRegistry
+    builtin_ids: [risk_neutral, cara, path_functional]
+  ControlSolver:
+    kind: open_protocol
+    protocol: {solve: "(DecisionProblem) -> Decision", config_schema: JsonSchema}
+    registry: PluginRegistry
+    builtin_ids: [closed_form_glft, per_level, hjb_qvi]
+  DecisionSchemeConfig:
+    fields:
+      utility: PluginRef
+      solver: PluginRef
+      coupling_ref: StaticCouplingRef
+      unwrap_policy: "enum:EXPECTATION|QUANTILE|SCENARIOS"     # M8-5: fields, not comments
+      unavailable_policy: "enum:HALT|FALL_BACK|REFUSE_ACTION"
+    validation: n_ary_capability_check       # triples, not just pairs
+  StaticCouplingRef:
+    fields: {graph_id: str, hash: Hash, provenance: Provenance}
+  DecisionProblem:
+    fields:
+      view: StateView
+      self: SelfState
+      belief: "Known[BeliefProcess]"                              # M8-6: wrapped
+      competition: "Known[Uncertain[JointCompetitionState]] | Unavailable"
+      outcomes: "(ActionSet) -> Uncertain[ActionOutcome]"
+      actions: ActionSpace
+      portfolio: PortfolioState
+      risk_scenarios: RiskScenarios
+      coupling: "Known[CouplingGraph] | StaticCouplingRef"        # M8-6: typed, not a sentinel
+      constraints: ConstraintSet
+      incentives: "ResolvedContracts"                             # M8-6: snapshot, not a live handle
+      horizon: Duration
+      spec_snapshot: Hash
+  ResolvedContracts:
+    fields: {by_instrument: "dict[InstrumentId, Known[IncentiveContract] | Unavailable]",
+             spec_hash: Hash}
+    notes: pre-resolved against the problem's spec snapshot; Disputed invokes the declared handler
+
+  # ---------- ops (M8-4) ----------
+  HealthEvent:
+    fields: {id: str, source_port: TelemetryPortId, severity: "enum:INFO|WARN|FAULT",
+             observed_at: Timestamp, detail: str}
+  Heartbeat:
+    fields: {port: TelemetryPortId, period: Duration, staleness_deadline: Duration}
+    notes: absence cannot emit an event, so liveness is deadline-driven (M8-4)
+  HaltState:
+    fields: {level: "enum:RUNNING|DEGRADED|HALTED", latched: bool, since: Timestamp,
+             reason: "list[HealthEvent]", reset_authority: "enum:OP_OWNER_ONLY"}
+    notes: monotonic escalation; de-escalation only by operator; unknown health => HALTED
+  CancelAllCommand:
+    fields: {command_id: ImmutableId, idempotency_key: str, issued_at: Timestamp,
+             deadline: Timestamp, backoff: BackoffPolicy, rate_budget_class: "enum:PRIORITY"}
+  CancelAllStatus:
+    fields: {command_id: ImmutableId,
+             state: "enum:ISSUED|CONFIRMED|FAILED_TERMINAL|UNCONFIRMED",
+             confirmed_by: "enum:VENUE_ACK|OPEN_ORDER_RECONCILIATION",
+             open_orders_remaining: "int?"}
+    notes: >
+      venue ack is NOT observed today (see OP-LatencyBudget), so confirmation is by
+      open-order reconciliation; while UNCONFIRMED the conservative state is HALTED.
+
+  Gate:                                    # M8-SF6: was inline prose, now canonical
+    fields: {id: str, question: str, metric: str, threshold: float, unit: str,
+             data_prereq: str, owner: str, preconditions: "list[GateId]",
+             on_pass: str, on_fail: str, review_date: Date,
+             inference_method: str, strata_hash: Hash, spec_hash: Hash,
+             artifact_hash: Hash, frozen_at: Timestamp}
+
+modules:
+  BE-Competition:
+    produces: "dict[InstrumentId, Known[Uncertain[CompetitionState]] | Unavailable]"
+    notes: instrument-scoped marginals
+  BE-CompetitionAggregator:                # M8-1: the missing owner
+    consumes: ["BE-Competition.produces", "CouplingGraph"]
+    produces: "Known[Uncertain[JointCompetitionState]] | Unavailable"
+    requires: {dependence: Dependence}
+    notes: combines marginals under an EXPLICIT dependence contract; refuses if unknown
+  BE-ScenarioProvider:
+    produces: "Known[JointOutcomeDistribution] | Unavailable"
+  DE-Constraints:  {consumes: [DecisionProblem, HaltState], produces: FeasibleSet}
+  DE-Actuator:     {consumes: [Decision, CancelAllCommand], produces: CancelAllStatus}
+  OP-Monitor:      {consumes: [HealthEvent, Heartbeat], produces: HaltState}
+
+ports:
+  DA-Feeds:        [feed]
+  BE-*:            [state_view, rng, artifact_resolver, telemetry_out]
+  DE-*:            [state_view, rng, artifact_resolver, telemetry_out]
+  DE-Constraints:  [halt_in]
+  DE-Actuator:     [venue, halt_in, telemetry_out]
+  OP-Monitor:      [telemetry_in, heartbeat_in, halt_out]     # M8-4: declared both ends
+  EV-*:            [read_all]

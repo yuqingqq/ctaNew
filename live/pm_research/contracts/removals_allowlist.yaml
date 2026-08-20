@@ -1,0 +1,3 @@
+# Intentional contract removals. Anything removed WITHOUT an entry here fails
+# contract_check.py. First baseline is v9 (contracts.yaml introduced), so this
+# starts empty and grows only with logged, deliberate decisions.
