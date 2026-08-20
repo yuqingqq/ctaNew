@@ -269,6 +269,28 @@ Selftest is 12 checks including a **control**: the same gzip run inline must
 stall the loop by ≥100 ms and ≥20× the off-loop figure, or the off-loop test
 proves nothing. Measured 211 ms on-loop versus 0.5 ms off-loop, **393×**.
 
+### Measured confirmation that the loop no longer stalls
+
+The decisive pairing is gzip work and loop lag **in the same interval**:
+
+| heartbeat | msgs | retries / slow | `gzip_ms_max` | `lag_ms_max` |
+|---|---:|---:|---:|---:|
+| 16:32:26 | 48,551 | 0 / 0 | 1 | 204 (startup) |
+| 16:33:26 | 108,499 | 0 / 0 | 1 | 2 |
+| 16:34:26 | 200,200 | 0 / 0 | 1 | 2 |
+| 16:35:26 | 242,491 | 0 / 0 | 1 | 2 |
+| 16:36:26 | 313,512 | 0 / 0 | 1 | 6 |
+| **16:37:26** | **387,229** | **0 / 0** | **845** | **2** |
+
+At 16:36:30 a BTC shard was published; the next heartbeat records **845 ms of
+compression work against a 2 ms worst-case loop stall**. Under `clob_v2` that
+same 845 ms was 845 ms of full event-loop block. BTC also touched **953 msg/s**
+at 16:34:26 with `lag_ms_max=2` and no disconnect — `clob_v2_1` took its
+15:16:13 drop at 999.6 msg/s.
+
+The mechanism is therefore proven fixed. That is a different claim from the tape
+being clean.
+
 ### Acceptance — unchanged, and not yet met
 
 The pre-registered boundary stands: one full busy day with zero `1013`, or a
