@@ -3,7 +3,7 @@ name: Polymarket Crypto 5-min Markets
 phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
-updated: 2026-08-20 (session 2 — architecture v12, first model results, sigma plan)
+updated: 2026-08-20 (session 2 — sigma plan reviewed, implementation on hold)
 
 flags:
   collector_running: true    # since 2026-08-19 ~14:32 UTC. MNAR bug fixed
@@ -29,7 +29,8 @@ flags:
                              # variance law. sigma_eff came out ~2.6x too small
                              # at r=30. Nowcast P_hat = 2*S30 - S60 fixes it:
                              # -0.0101 Brier pooled, at EVERY horizon. The
-                             # deficit was the anchor, not sigma.
+                             # anchor explains a large share of the deficit;
+                             # the residual model-vs-book verdict is unadjudicated.
   flb_edge: downgraded       # WAS "+3.6 c/share at p in [0.15,0.35), stable" —
                              # the prior that recommended the Option-B re-scope.
                              # That was measured on `book` snapshots which are
@@ -58,14 +59,19 @@ flags:
   structure_converged: false # 12 review iterations; replay stands at
                              # LOCAL 11 / SPREADING 1 / STRUCTURAL 1.
   sigma_plan_finalized: true # SIGMA_PLAN.md, commit 80f823e. Phase 0 gated.
+  sigma_plan_review: hold    # SIGMA_PLAN_REVIEW.md, commit 6bea435. Six
+                             # MUST-FIX items precede estimator code: units,
+                             # consumers/contract, anchor identification, MNAR,
+                             # overlap-aware PIT validation, and c(r)/H-3 gates.
 
 focus: >
   Build and test the model, mechanism-first, no PnL/capacity estimation
   (user, 2026-08-20). Entry point is live/pm_research/PM_ARCHITECTURE.md (v12)
   with contracts/contracts.yaml as the machine-readable source of truth.
-  IMMEDIATE: SIGMA_PLAN.md Phase 0 — four cheap measurements on data already on
-  disk, any of which can invalidate the estimator design, before any machinery
-  is built. User is reviewing the sigma model now.
+  IMMEDIATE: SIGMA_PLAN_REVIEW.md Phase 0A — freeze the unit-correct estimand and
+  consumer contract, then verify S30/S60 semantics and anchor identification.
+  Estimator implementation is on HOLD. Only after Phase 0A may the simple
+  per-symbol baseline and complete-ledger c(r) diagnostic run.
 
 standing_rules:
   - No design decision that a measurement on existing data could settle may be
@@ -121,24 +127,28 @@ tasks:
       Review loop is at 12 iterations and NOT converged.
   - id: sigma-model
     phase: 1
-    name: Volatility estimator — plan finalized, Phase 0 pending
-    status: in-progress
+    name: Volatility estimator — plan reviewed, Phase 0A spec repair pending
+    status: reviewed-hold
     notes: |
       Three estimators were built and each violated a decision already made
       (static pooled -> static per-coin -> rolling per-window with POOLED blend
       weights). Root cause was not sigma at all: the ANCHOR was wrong. Plan
-      written and finalized (SIGMA_PLAN.md, 80f823e) with the build order
-      inverted — measure omega_P and c(r) FIRST, since either can invalidate
-      the design. Expectation on record: c(r) will BREACH the [0.8,1.25] band
-      at short r, and the plan's own rule says that means redesign, not a wider
-      band. USER IS REVIEWING THIS NOW.
+      written and finalized (SIGMA_PLAN.md, 80f823e), then reviewed at 6bea435.
+      HOLD estimator code. First choose one price/return unit space, freeze the
+      actual consumer + fallback contract, verify S30/S60 semantics before the
+      anchor, identify or bracket omega_P, isolate MNAR/stale-book data, specify
+      overlap-aware physical-volatility forecast validation, and define c(r)/H-3
+      with honest inference. D2's expected c(r) breach is only a diagnostic prior
+      until the complete anchor-error ledger is measured.
   - id: e-x1-bookbeat
     phase: 1
     name: Re-read the model-vs-book verdict on the corrected anchor
     status: pending
     notes: Decides the programme's identity (alpha vs pure market-making) and is
       a precondition for SIGMA_PLAN §0's argument that sigma is only plumbing.
-      Paired, so it survives the MNAR gap.
+      Pairing does NOT repair the load-correlated missing regimes. Rebuild dense
+      top of book from price_change, require cause-aware gap admissibility and
+      prefer post-repair data. Descriptive until day-clustered inference exists.
   - id: g-ff4-queue
     phase: 1
     name: Queue-position bracket (Q_ahead)

@@ -1,13 +1,13 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
 Updated: 2026-08-20, session 2. All work is on branch **`mm-research`** (pushed);
-nothing is on `main`. Latest commit `80f823e`.
+nothing is on `main`. Sigma review: `6bea435`.
 
 ## Read this first
 
 The programme now has a **verified settlement target**, a **modular
-architecture with machine-readable contracts**, and a **finalized plan for the
-volatility estimator awaiting user review**. Two headline results from session 1
+architecture with machine-readable contracts**, and a **reviewed sigma plan whose
+implementation is on hold pending six specification fixes**. Two headline results from session 1
 have been **withdrawn or downgraded** on discovering that the data underneath
 them was wrong. Do not cite either without reading §"What was withdrawn".
 
@@ -16,8 +16,9 @@ Reading order:
 2. `live/pm_research/contracts/contracts.yaml` — machine-readable source of
    truth for types. The prose defers to this file, not the other way round.
 3. `live/pm_research/EXP_RESULTS_2026-08-20.md` — first model results.
-4. `live/pm_research/SIGMA_PLAN.md` — **the live document**; user is reviewing.
-5. `live/pm_research/plans/` — BE_BELIEF, BE_FLOWANDFILLS, MEASUREMENT,
+4. `live/pm_research/SIGMA_PLAN.md` — proposed design.
+5. `live/pm_research/SIGMA_PLAN_REVIEW.md` — binding implementation-readiness review.
+6. `live/pm_research/plans/` — BE_BELIEF, BE_FLOWANDFILLS, MEASUREMENT,
    PRELIMINARY.
 
 ## Done this session
@@ -53,7 +54,8 @@ own doing, and 32 of 47 were BTC** — i.e. the loss was concentrated in exactly
 the busiest intervals, which is missing-not-at-random. Post-fix: **0 drops
 vs 28**. Never pool an unpaired statistic across the fix boundary.
 
-**SIGMA_PLAN finalized** (`80f823e`) — see §"Immediate next step".
+**SIGMA_PLAN reviewed** (`6bea435`) — direction retained, implementation on
+hold; see §"Immediate next step".
 
 ## What was withdrawn — do not cite these
 
@@ -65,7 +67,8 @@ conclusion *"no alpha, therefore pure market making"*. That model was
 `w/2 ≈ 30 s`, while being paired with a *conditional* variance law. The
 resulting `σ_eff` was ~2.6× too small at `r = 30`. The nowcast
 `P̂ = 2·S30 − S60` fixes it and gains **−0.0101 Brier pooled, at every
-horizon**. The deficit was the anchor, not sigma. The verdict must be re-read
+horizon**. The anchor explains a large share of the deficit; it does not prove
+sigma was adequate. The residual verdict must be re-read
 on the corrected specification before it means anything.
 
 **2. The FLB edge — downgraded from an edge to a rounding error.**
@@ -95,33 +98,33 @@ that recommended B was measured on stale books** (withdrawal 2 above). Re-frame
 the choice before making it; do not read `PM_MM_PLAN §17`'s recommendation as
 current.
 
-## Immediate next step — SIGMA_PLAN Phase 0
+## Immediate next step — SIGMA_PLAN_REVIEW Phase 0A
 
-`SIGMA_PLAN.md` is finalized and with the user for review. Three decisions are
-recorded at its head:
+The review keeps the plan's best decisions: purpose before estimator,
+rolling-increment versus conditional-settlement separation, `w=60` fixed with
+free `w_hat` diagnostic-only, tape rather than winner fitting, a single-scale
+incumbent, and an H-3 stop rule. It rejects estimator implementation in the
+current order.
 
-- **D1** build order inverted — measure `ω_P` and `c(r)` *before* building the
-  variogram and blend, since both are cheap, run on data already on disk, and
-  either can invalidate the design.
-- **D2** `c(r)` is **expected to breach** the G3 `[0.8, 1.25]` band at short
-  `r` — two independent lines say so (`σ_eff(30) = 1.77 bps` vs realised
-  ~2.6 bps under the nowcast ⇒ `c(30) ≈ 2.1` in variance; and BTC's
-  `ŵ ≈ 47 s` against the fixed 60 s ⇒ 1.63×). The plan's own rule stands: a
-  breach means the parametric law is failing, **not** that the band should
-  widen. Budget for redesign.
-- **D3** size the build to σ's actual job — §0 scopes σ down to risk plumbing,
-  so a single-scale per-symbol estimate may suffice and the multi-scale blend
-  must beat that baseline before it is built.
+Six MUST-FIX items bind:
 
-**Phase 0, gated** (all on existing data): fix the anchor in a shared helper →
-verify S30/S60 semantics against the 1 s Binance tape → measure `ω_P` (it
-enters **undamped** at `r > w`, which is where we quote) → measure `c(r)` (the
-go/no-go) → re-read the book-beat verdict on the corrected spec. Only if that
-clears does Phase 1 build the variogram, blend, PIT and contract carrier.
+1. choose one typed raw-price/relative-return/log-return unit space;
+2. include BE-Belief's non-rare stream fallback and freeze BE-Uncertainty's
+   typed `PathLaw` carrier before machinery;
+3. verify S30/S60 semantics and knowledge-time alignment before implementing
+   the anchor, and identify or conservatively bracket `omega_P`;
+4. rebuild dense top of book and isolate MNAR/admissible data — pairing does
+   **not** recover load-correlated missing regimes;
+5. specify the output as an ex-ante physical-volatility forecast with
+   overlap-aware, embargoed day-block validation;
+6. define `c(r)` only after the complete ledger and give both it and H-3 valid
+   domains, frozen bands and enough day clusters for inference.
 
-The book-beat re-read is deliberately inside Phase 0: it is paired so it
-survives the MNAR gap, and §0's whole argument for scoping σ down *assumes* the
-book supplies the level.
+Revised order: freeze estimand/consumer contract → verify feed semantics and
+discrete kernels → define the anchor-error proxy/bracket → rebuild admissible
+dense-book data → fit one simple per-symbol tape baseline → measure the complete
+ledger and descriptive `c(r)` → only then consider the multi-scale challenger.
+The current two-day `c(r)` point estimate is a redesign diagnostic, not a gate.
 
 ## Then
 
