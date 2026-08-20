@@ -2,49 +2,83 @@ program: P-2026-003-polymarket-5min
 name: Polymarket Crypto 5-min Markets
 phase: in-progress
 status: active
+branch: mm-research            # all work lives here, not main; pushed to origin
+updated: 2026-08-20 (session 2 — architecture v12, first model results, sigma plan)
 
 flags:
-  decision_pending: true     # 2026-08-20 deep review: 3 FATAL, not executable as
-                             # written. User must choose Option A (fix mechanism
-                             # program) vs Option B (re-scope to FLB harvest —
-                             # recommended by reviewer AND by measured data).
-                             # See PM_MM_PLAN §17. Build nothing until chosen.
-  siting_decision: suspended # measured latency 1,700ms (1,440ms = PM publish
-                             # delay, untouchable). EU buys ~21s at |d|=2, not
-                             # the 94% claimed. ATM never quotable anywhere.
-  collector_running: true    # since 2026-08-19 ~14:32 UTC (collect_pm.py, log
-                             # data/pm_5min/collector.log). Smoke: 12 markets /
-                             # 50.6k msgs in 75s. Resolution poller verification
-                             # pending first closed window.
-  fee_structure_known: false # read fee_rate_bps distribution from collected trades
-  g1_taker_viable: null
-  g2_model_beats_book: null
+  collector_running: true    # since 2026-08-19 ~14:32 UTC. MNAR bug fixed
+                             # 2026-08-20 (see incident log in HANDOFF): 27 of
+                             # 47 WS disconnects were OUR OWN slow-consumer
+                             # overflow, 32 of 47 on BTC = loss concentrated in
+                             # the busiest intervals. Post-fix: 0 drops vs 28.
+                             # Data before the fix is MNAR — never pool a
+                             # pre/post-fix unpaired statistic.
+  settlement_verified: true  # E-M6 PASSED 2026-08-20: S60(T) vs S60(t0)
+                             # reproduces 1465/1465 winners at 99.8% (99.9% at
+                             # |margin|>0.5bp). w = 60 s CONFIRMED; the
+                             # full-300s reading is REFUTED at 86.9%.
+                             # Knowledge-time read 99.3% — the 0.5pp gap is the
+                             # look-ahead a careless backtest would bank.
+  g2_model_beats_book: null  # NOT DECIDED. The 2026-08-20 run said the book
+                             # wins at every horizon (+2.5..3.2 Brier pts), but
+                             # that model was MIS-ANCHORED (see anchor_bug
+                             # below), so the verdict is WITHDRAWN, not held.
+                             # Must be re-read on the corrected specification.
+  anchor_bug: found+diagnosed  # E_t[X_T] used the trailing S60, which lags spot
+                             # by ~w/2 = 30 s, paired with a CONDITIONAL
+                             # variance law. sigma_eff came out ~2.6x too small
+                             # at r=30. Nowcast P_hat = 2*S30 - S60 fixes it:
+                             # -0.0101 Brier pooled, at EVERY horizon. The
+                             # deficit was the anchor, not sigma.
+  flb_edge: downgraded       # WAS "+3.6 c/share at p in [0.15,0.35), stable" —
+                             # the prior that recommended the Option-B re-scope.
+                             # That was measured on `book` snapshots which are
+                             # p90 6.2 s STALE. Rebuilt from
+                             # price_change.best_bid/ask (executable quotes):
+                             # b_hat 1.145 (stale inflated it to 1.182),
+                             # walk-forward gain 0.0004 Brier, and the effect is
+                             # ONE-SIDED = a drift signature, not a bias.
+  stale_book_contamination: true  # EVERY book-derived number in PM_DEEP_REVIEW
+                             # inherits this defect, including the "+95 bps
+                             # maker gross / +136 with rebate". Treat all of
+                             # them as UNVERIFIED until re-measured on
+                             # price_change quotes.
+  decision_pending: true     # Option A (mechanism program) vs Option B (FLB
+                             # harvest re-scope) — STILL OPEN, but B has lost
+                             # the measurement that recommended it. Re-frame
+                             # before choosing; do not re-read PM_MM_PLAN §17's
+                             # recommendation as current.
+  siting_decision: suspended # measured latency 1,700 ms of which 1,440 ms is
+                             # PM-side publish delay (untouchable). CORRECTED
+                             # 2026-08-20: the 1.7 s is the SIGNAL clock only —
+                             # the book itself arrives in 47 ms. Siting matters
+                             # much less than the FATAL-1 finding implied.
+  fee_structure_known: false # fee_rate_bps = 0 on all trades observed so far;
+                             # conflicts with docs (7%) and CLOB base_fee.
+  structure_converged: false # 12 review iterations; replay stands at
+                             # LOCAL 11 / SPREADING 1 / STRUCTURAL 1.
+  sigma_plan_finalized: true # SIGMA_PLAN.md, commit 80f823e. Phase 0 gated.
 
-focus: MM-first (user decision 2026-08-19) — taker/latency-arb and calibration
-  trading are secondary tracks. Plan: live/pm_research/PM_MM_PLAN.md
-  (binary-GLFT in probability space, TWAP-aware p̂=Φ(d), pair-harvest +
-  rewards-band quoting, pull-on-burst from the Binance feed; gates G2/G3a/G3b).
-  KEY ECONOMICS (to verify in PM-E1): maker fee $0 + ~20% rebate share +
-  $550k/yr 5-min liquidity rewards vs taker ~1.75c/share peak; spreads 2-4c
-  ⇒ the fee wall is inverted vs Binance; open question is purely adverse
-  selection.
-  SETTLEMENT (verified from live metadata + user + news, 2026-08-19):
-  Chainlink 60s-TWAP Data Stream ({coin}-usd-twap-60s-streams); Up iff
-  X_T ≥ X_0 (ties Up); rule changed 2026-08-07 from snapshots after a
-  Stanford/SMU manipulation study (~$8.2M) — pre-Aug-07 backfill is a
-  different rule + contaminated flow, calibration NEVER crosses the break.
-  Tick $0.01 (books 2-4 ticks wide); rewards band 4.5c / min 50 shares
-  (per-market metadata now captured).
-  PM-E0.5 DATA REVIEW LOOP: charter live/pm_research/PM_REVIEW_LOOP.md;
-  iter 1 DONE (settlement stream found+subscribed; restart-loss bug fixed);
-  iter 2 due after ≥12h post-fix data.
-  SKETCH REVIEW LOOP (user-initiated 2026-08-19): charter
-  live/pm_research/PM_SKETCH_REVIEW_LOOP.md — adversarial review of
-  PM_MM_PLAN.md model+experiments until prereg-worthy; iter 1 running with
-  3 parallel lenses: T theory/math (re-derive TWAP variance laws, binary-GLFT
-  coherence, basis-vs-σ_eff crossover), S stats/design (gate specs, power,
-  cluster units, forking paths), M mechanism/competition (matching, rewards
-  equilibrium+dilution, fees ground truth, CTF pair-merge, capacity bound).
+focus: >
+  Build and test the model, mechanism-first, no PnL/capacity estimation
+  (user, 2026-08-20). Entry point is live/pm_research/PM_ARCHITECTURE.md (v12)
+  with contracts/contracts.yaml as the machine-readable source of truth.
+  IMMEDIATE: SIGMA_PLAN.md Phase 0 — four cheap measurements on data already on
+  disk, any of which can invalidate the estimator design, before any machinery
+  is built. User is reviewing the sigma model now.
+
+standing_rules:
+  - No design decision that a measurement on existing data could settle may be
+    recorded as settled until that measurement is run.
+  - Dedup prices by (timestamp, symbol) and raw by message identity — recv_ns
+    differs per process, so exact-line dedup does NOT catch duplicate
+    collectors. Check collectors with `ps -eo pid,etimes,cmd | grep
+    live/pm_research` (pgrep patterns must include the pm_research/ segment).
+  - Read book state from `price_change.best_bid/ask`, never from `book`
+    snapshots — the latter are p90 6.2 s stale and quietly inflate any
+    edge measured against them.
+  - Read everything at knowledge time (recv_ns), never payload timestamps.
+    Measured cost of getting this wrong: 0.5 pp on E-M6.
 
 tasks:
   - id: e0-collector
@@ -52,25 +86,71 @@ tasks:
     name: collect_pm.py — CLOB WS book/trades + Gamma metadata + CLOB resolutions
     status: done
     notes: |
-      LIVE + VERIFIED END-TO-END 2026-08-19 ~14:55 UTC. API facts: slugs
-      {coin}-updown-5m-<unix300>, pre-created ~5min ahead; WS market channel
-      book/price_change/last_trade_price (carries fee_rate_bps); Gamma needs
-      non-python UA. TWO BUGS FOUND+FIXED: (1) Gamma outcomePrices is live
-      prices, not resolution (is_final guard); (2) Gamma DELETES resolved
-      5-min markets from slug queries → resolution source switched to
-      clob.polymarket.com/markets/<conditionId> (closed + per-token winner;
-      persists). 16 final resolutions confirmed incl. re-polled backlog.
-      Discovery-time metadata is the ONLY durable record of a window's
-      tokens — never skip it. Thin windows exist (volumeNum=2 observed).
+      LIVE 2026-08-19. Three bugs found and fixed: (1) Gamma outcomePrices is
+      live prices not resolution (is_final guard); (2) Gamma DELETES resolved
+      5-min markets — resolution source switched to
+      clob.polymarket.com/markets/<conditionId>; (3) 2026-08-20 the hot loop
+      allocated an asyncio timer per message, which at BTC's rate backed the
+      server send buffer up into 1013 slow-consumer disconnects. Rewritten to a
+      persistent recv task + deadline task, 2000-line write batches.
+  - id: e0-audit
+    phase: 0
+    name: EXP-E0 data integrity audit (7 checks)
+    status: done
+    notes: exp_e0_data_audit.py. Quantifies the duplicate-collector overlap, the
+      ~16 min market-side outage, the 8 malformed resolution rows, restart
+      shards, TWAP gaps, knowledge-time lag, and the up-rate drift confound.
+  - id: em6-settlement
+    phase: 0
+    name: EXP-M6 settlement truth — THE FOUNDATION GATE
+    status: done
+    notes: PASSED at 99.8% on 1465 windows. w=60 confirmed, 300 s refuted.
+      exp_m6_settlement.py; results in EXP_RESULTS_2026-08-20.md.
+  - id: architecture
+    phase: 0
+    name: Modular architecture + machine-readable contracts
+    status: done-not-converged
+    notes: |
+      PM_ARCHITECTURE.md v12, 6 planes; contracts/contracts.yaml 85 types with a
+      structural diff checker and 13 selftests; migrations.yaml binds each
+      migration to (operation, key, old, new, version). Two of my own artefacts
+      were PROVEN UNSOUND during review and replaced: the first contract checker
+      (invalid ref exited 0, generics invisible, narrowing produced an identical
+      inventory) and the path-keyed allowlist (M11-1: authorised ANY change at
+      that path — reproduced CouplingSource -> CompetitionState passing).
+      Review loop is at 12 iterations and NOT converged.
+  - id: sigma-model
+    phase: 1
+    name: Volatility estimator — plan finalized, Phase 0 pending
+    status: in-progress
+    notes: |
+      Three estimators were built and each violated a decision already made
+      (static pooled -> static per-coin -> rolling per-window with POOLED blend
+      weights). Root cause was not sigma at all: the ANCHOR was wrong. Plan
+      written and finalized (SIGMA_PLAN.md, 80f823e) with the build order
+      inverted — measure omega_P and c(r) FIRST, since either can invalidate
+      the design. Expectation on record: c(r) will BREACH the [0.8,1.25] band
+      at short r, and the plan's own rule says that means redesign, not a wider
+      band. USER IS REVIEWING THIS NOW.
+  - id: e-x1-bookbeat
+    phase: 1
+    name: Re-read the model-vs-book verdict on the corrected anchor
+    status: pending
+    notes: Decides the programme's identity (alpha vs pure market-making) and is
+      a precondition for SIGMA_PLAN §0's argument that sigma is only plumbing.
+      Paired, so it survives the MNAR gap.
+  - id: g-ff4-queue
+    phase: 1
+    name: Queue-position bracket (Q_ahead)
+    status: pending
+    notes: POTENTIALLY PROGRAM-ENDING. If the bracket on Q_ahead is wide enough,
+      MM profitability is not knowable from the data we can collect. Plan in
+      plans/BE_FLOWANDFILLS_PLAN.md.
   - id: e1-dataset
     phase: 1
     name: Aligned dataset — binary book vs Binance F_t at 100ms, per window
     status: pending
-  - id: e2-prereg
-    phase: 1
-    name: Pre-register G1/G2 gates (fees/spread vs mispricing; calibration contest)
-    status: pending
   - id: e3-screen
     phase: 2
-    name: Run G1/G2 on ≥2 weeks of windows
+    name: Run the pre-registered gates on >=2 weeks of windows
     status: pending
