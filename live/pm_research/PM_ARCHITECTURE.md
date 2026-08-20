@@ -1,7 +1,8 @@
-# PM_ARCHITECTURE v9 — structure for P-2026-003
+# PM_ARCHITECTURE v10 — structure for P-2026-003
 
-Rewritten 2026-08-20 from `PM_STRUCT_ITER7_REVIEW.md` (5 MUST-FIX + 3
-SHOULD-FIX; v7 scored LOCAL 11 / SPREADING 0 / STRUCTURAL 2 — unchanged).
+Rewritten 2026-08-20 from `PM_STRUCT_ITER9_REVIEW.md` (5 MUST-FIX + 5
+SHOULD-FIX; v9 scored LOCAL 11 / SPREADING 0 / STRUCTURAL 2 — static for four
+iterations). Earlier: v1 5/3/5, v2 7/4/2, v4 9/2/2, v5 9/3/1.
 Prior: v1 5/3/5, v2 7/4/2, v4 9/2/2, v5 9/3/1.
 
 > ## CANONICAL SOURCE

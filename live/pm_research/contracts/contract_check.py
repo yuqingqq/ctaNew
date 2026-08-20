@@ -30,6 +30,12 @@ def load(ref):
 def flatten(doc):
     """owner-qualified name -> type string. Types are compared, not just names."""
     out = {}
+    out["meta:version_floor"] = "monotonic"   # bumps are fine; regression caught below
+    out["_version"] = doc.get("version")
+    for p in (doc.get("prelude") or {}).get("primitives", []):
+        out[f"prelude:primitive:{p}"] = "primitive"
+    for e in (doc.get("prelude") or {}).get("external", []):
+        out[f"prelude:external:{e}"] = "external"
     for tname, t in (doc.get("types") or {}).items():
         out[f"type:{tname}"] = t.get("kind", "record")
         for g in t.get("generic", []) or []:
@@ -45,15 +51,33 @@ def flatten(doc):
         if "protocol" in t:
             for k, sig in t["protocol"].items():
                 out[f"proto:{tname}.{k}"] = str(sig)
+        if "registry" in t:                                 # M9-2: registry deletion
+            out[f"registry:{tname}"] = str(t["registry"])
+        if "validation" in t:                               # M9-2: n-ary -> pairwise
+            out[f"validation:{tname}"] = str(t["validation"])
+        if t.get("notes"):                                  # M9-2: normative notes
+            out[f"note:{tname}"] = " ".join(str(t["notes"]).split())
     for mname, m in (doc.get("modules") or {}).items():
         out[f"module:{mname}"] = "module"
-        for k in ("produces", "consumes", "requires"):
+        for k in ("produces", "consumes", "requires", "ports"):
             if k in m:
-                out[f"module:{mname}.{k}"] = str(m[k])
+                v = m[k]
+                if isinstance(v, dict):
+                    norm = sorted(f"{k2}={v2}" for k2, v2 in v.items())
+                else:
+                    norm = sorted(map(str, v if isinstance(v, list) else [v]))
+                out[f"module:{mname}.{k}"] = str(norm)   # order-insensitive (v9 audit)
     for p, ports in (doc.get("ports") or {}).items():
         out[f"ports:{p}"] = str(sorted(ports))
-    for r in doc.get("rules", []) or []:
-        out[f"rule:{r}"] = "rule"
+    rules = doc.get("rules") or {}
+    if isinstance(rules, list):
+        for r in rules:
+            out[f"rule:{r}"] = "rule"
+    else:
+        for r, body in rules.items():                       # M9-2: enforcement bodies
+            out[f"rule:{r}"] = " ".join(str(body.get("body", "")).split())
+            for c in body.get("checks", []) or []:
+                out[f"rule:{r}.check:{c.split(':')[0]}"] = c
     return out
 
 def diff(a, b):
@@ -61,6 +85,32 @@ def diff(a, b):
     changed = {k: (a[k], b[k]) for k in a if k in b and a[k] != b[k]}
     added = {k: b[k] for k in b if k not in a}
     return removed, changed, added
+
+def invariants(doc):
+    """Target-side checks that a backward diff cannot express (M9-2)."""
+    errs = []
+    types = set((doc.get("types") or {}).keys())
+    pre = (doc.get("prelude") or {})
+    known = types | set(pre.get("primitives", [])) | set(pre.get("external", []))
+    import re as _re
+    for tname, t in (doc.get("types") or {}).items():
+        for fname, ty in (t.get("fields") or {}).items():
+            for ref in _re.findall(r'[A-Z][A-Za-z0-9_]*', str(ty)):
+                if ref not in known and not ref.isupper():
+                    errs.append(f"unresolved reference {tname}.{fname} -> {ref}")
+    produced = set()
+    for m in (doc.get("modules") or {}).values():
+        p = m.get("produces")
+        produced |= set(p if isinstance(p, list) else [p] if p else [])
+    for mname, m in (doc.get("modules") or {}).items():
+        for c in (m.get("consumes") or []):
+            base = str(c).split("[")[0].split(".")[0]
+            if base in types and base not in {str(x).split("[")[0] for x in produced} \
+               and base not in ("DecisionProblem", "Decision", "HealthEvent",
+                                "HeartbeatRegistration", "HeartbeatPulse",
+                                "CouplingGraph"):   # supplied by SP-Strategy config
+                errs.append(f"{mname} consumes {base} with no declared producer")
+    return errs
 
 def allowlist():
     if not os.path.exists(ALLOW):
@@ -100,7 +150,16 @@ if __name__ == "__main__":
         sys.exit("usage: contract_check.py <base-ref> [<ref>|WORKTREE] | --selftest")
     a = flatten(load(sys.argv[1]))
     b = flatten(load(sys.argv[2] if len(sys.argv) > 2 else "WORKTREE"))
+    va, vb = a.pop("_version", 0), b.pop("_version", 0)
     removed, changed, added = diff(a, b)
+    if (vb or 0) < (va or 0):
+        print(f"*** VERSION REGRESSION: {va} -> {vb}")
+        removed["meta:version"] = f"{va} -> {vb}"
+    inv = invariants(load(sys.argv[2] if len(sys.argv) > 2 else "WORKTREE"))
+    if inv:
+        print(f"INVARIANT FAILURES ({len(inv)}):")
+        for e in inv:
+            print(f"  *** {e}")
     allowed = allowlist()
     fatal = False
     print(f"REMOVED ({len(removed)}):")
@@ -116,4 +175,4 @@ if __name__ == "__main__":
     print(f"ADDED ({len(added)}):")
     for k in sorted(added):
         print(f"  {k}")
-    sys.exit(1 if fatal else 0)
+    sys.exit(1 if (fatal or inv) else 0)
