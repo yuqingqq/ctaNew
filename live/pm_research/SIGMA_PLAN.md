@@ -12,6 +12,43 @@ diagnostics run could overturn.
 
 ---
 
+## FINALIZED 2026-08-20 — decisions on top of the draft
+
+Adopted as written except for the three items below. Rationale in the review
+that accompanied this commit.
+
+**D1 — Build order inverted: feasibility BEFORE machinery.** The draft built the
+variogram and blend first, then measured `c(r)` and `ω_P`. Both of those are
+cheap, run on data already collected, and **either can invalidate the design**,
+so they move to the front. See the revised §12.
+
+**D2 — `c(r)` is expected to breach G3, and that is the informative outcome.**
+Two independent lines say `c(r)` will exceed the `[0.8, 1.25]` band at short r:
+the §3 table gives `σ_eff(30) = 1.77 bps` while the measured realised innovation
+at r=30 was 4.69 bps under the old anchor (even granting the nowcast's 45%
+reduction that lands near 2.6 bps, i.e. `c(30) ≈ 2.1` in variance); and BTC's
+free-fitted `ŵ ≈ 47 s` against the fixed 60 s implies a 1.63× in-window bias.
+The plan's own rule stands — *a `c(r)` outside the band means the parametric law
+is failing, not that the multiplier needs widening* — so the likely first result
+is **redesign, not calibration**. Budget for that rather than being surprised.
+
+**D3 — Size the build to σ's actual job.** §0 scopes σ down to risk plumbing:
+the two edge-bearing consumers use no variance, and the dynamics consumers take
+`d` from the book. If D1's measurements land in-band, a **single-scale
+per-symbol estimate may suffice**, and the full multi-scale blend with
+hierarchical shrinkage should be justified against that baseline before it is
+built. Effort saved goes to G-FF4 (the queue bracket), which can end the
+programme.
+
+Unchanged and adopted: the estimand and its closed two-line variance ledger;
+`w=60` fixed with `ŵ_free` as diagnostic only; tape-fitted (not outcome-fitted)
+blend weights; the discrete kernel; measure-then-floor on the link; the
+`(σ̂, SE(log σ̂))` two-output for asymmetric loss; and the validation table —
+including its statement that **"the book wins" is not currently claimable**
+because it was measured on a mis-anchored model.
+
+---
+
 ## 0. Executive answer
 
 1. **σ is not for the level of p̂.** Of the twelve places the design consumes σ,
@@ -637,20 +674,37 @@ regime persistence) with zero risk of contaminating the outcome analysis.
 
 ---
 
-## 12. Build order (once this plan is agreed)
+## 12. Build order — FINALIZED (feasibility first, per D1)
+
+**Phase 0 — do these before building anything (all on data already on disk).**
 
 1. **Fix the anchor** (§2) in a shared helper. Everything downstream is
-   contaminated until this lands. Re-read the book-beat verdict once, then stop.
-2. **Verify S30/S60 semantics** against the 1 s Binance tape (§9-2). If they fail,
-   items 1 and 3 change.
-3. **Joint `(σ², w, nugget)` WLS variogram**, non-overlapping, `r ∈ [10,600] s`,
-   per symbol. Report `ŵ_free` as a diagnostic; resolve §9-3.
-4. **Measure `ω_P`.** Close the ledger before adding anything to it.
-5. **Multi-scale blend**, weights fitted on the tape by QLIKE, per symbol —
-   *and* report it against a single 60 min window (§9-5).
-6. **`c(r)`** from completed windows, pooled with computed shrinkage.
-7. **PIT / G2**, then the `p̂` floor and link policy.
-8. **Contract fix** so the law has a typed carrier (§9-11).
+   contaminated until this lands.
+2. **Verify S30/S60 semantics** against the 1 s Binance tape (§9-2). If they
+   fail, the nowcast and the locked-integral reconstruction both change.
+3. **Measure `ω_P`** against the independent Binance feed (68 k BTC ticks
+   collected). Close the ledger before anything is added to it. Report its
+   weight at `r > w`, where it enters **undamped** — that is where we quote.
+4. **Measure `c(r)`** on completed windows under the corrected anchor, with a
+   provisional single-scale σ̂. **This is the go/no-go for the parametric
+   route** (D2).
+5. **Re-read the book-beat verdict once** on the corrected specification. It is
+   paired, so it survives the MNAR gap, and it decides the programme's identity.
 
-Steps 1–2 are worth doing regardless of whether the rest of this plan is
-adopted.
+**Gate.** If `c(r)` is in-band and the S30/S60 semantics hold → proceed to
+Phase 1. If `c(r)` breaches → stop and redesign the shape, do NOT widen the
+band. If step 5 overturns "the book wins" → re-scope σ before continuing, since
+§0's whole argument assumes the book supplies the level.
+
+**Phase 1 — machinery, only if Phase 0 clears.**
+
+6. **Joint `(σ², w, nugget)` WLS variogram**, non-overlapping, `r ∈ [10,600] s`,
+   per symbol. Report `ŵ_free` as a diagnostic; resolve §9-3.
+7. **Multi-scale blend**, weights fitted on the tape by QLIKE, per symbol —
+   justified against the single-scale baseline from step 4 (D3). If it does not
+   beat that baseline, it does not get built.
+8. **`c(r)` refit** with computed shrinkage; **PIT / G2**; then the `p̂` floor
+   and link policy.
+9. **Contract fix** so the law has a typed carrier (§9-11).
+
+Phase 0 is worth doing regardless of whether Phase 1 is ever adopted.
