@@ -1,8 +1,10 @@
-# PM_ARCHITECTURE v10 — structure for P-2026-003
+# PM_ARCHITECTURE v12 — structure for P-2026-003
 
-Rewritten 2026-08-20 from `PM_STRUCT_ITER9_REVIEW.md` (5 MUST-FIX + 5
-SHOULD-FIX; v9 scored LOCAL 11 / SPREADING 0 / STRUCTURAL 2 — static for four
-iterations). Earlier: v1 5/3/5, v2 7/4/2, v4 9/2/2, v5 9/3/1.
+Version 12 (2026-08-20). Single version line: this document, `contracts/contracts.yaml`
+and the commit label all read **12**. Score history on the 13-change replay:
+v1 5/3/5 · v2 7/4/2 · v4 9/2/2 · v5 9/3/1 · v6–v10 11/0/2 · **v11 11/1/1**
+(target 0 STRUCTURAL, ≤1 SPREADING). Open: M12-2 validator dispatch, M12-3
+scenario-loss typing, M12-4 incentive→cash-flow wiring, M12-5 snapshot validator.
 Prior: v1 5/3/5, v2 7/4/2, v4 9/2/2, v5 9/3/1.
 
 > ## CANONICAL SOURCE

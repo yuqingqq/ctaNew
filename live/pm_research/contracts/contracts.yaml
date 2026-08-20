@@ -1,4 +1,4 @@
-version: 11
+version: 12
 rules:
   R-SSOT:
     body: every canonical name has exactly one owning type/module
