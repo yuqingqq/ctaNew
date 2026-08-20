@@ -1,4 +1,4 @@
-version: 12
+version: 13
 rules:
   R-SSOT:
     body: every canonical name has exactly one owning type/module
@@ -400,8 +400,88 @@ types:
     notes: never hardcode the Gaussian Phi
   PathLaw:
     fields:
-      kind: str
-      params: dict[str, float]
+      instrument: InstrumentId
+      unit_space: UnitSpace
+      horizon_domain: HorizonDomain
+      sigma2_rate: float
+      se_log_sigma: float
+      nugget: float
+      w_declared: Duration
+      w_hat_free_diagnostic: float | NullPin
+      anchor_error: AnchorErrorBudget
+      calibration: CalibrationCurve | NullPin
+      ledger: VarianceGroup
+      link: LinkFunction
+      as_of: Timestamp
+      fit_data_through: Timestamp
+      coverage: Coverage
+      provenance: Provenance
+    protocol:
+      settlement_var: '(r: Duration) -> float | Unavailable'
+      increment_var: '(h: Duration) -> float | Unavailable'
+    notes: >-
+      M13-1. Replaces {kind: str, params: dict[str, float]}, which could not
+      carry a unit space, a horizon domain, a fit cutoff or a refusal, so an
+      estimator emitting a LAW rather than a scalar had no typed carrier.
+      settlement_var is the CONDITIONAL terminal object consumers price with;
+      increment_var is the ROLLING object the tape is fitted to. They are never
+      interchangeable (ratio 4.1x in sigma at r=10 s) and both are exposed so no
+      consumer has to pick. Both REFUSE outside horizon_domain and after
+      fit_data_through rather than extrapolating. w_hat_free_diagnostic never
+      enters either kernel.
+  UnitSpace:
+    fields:
+      coordinate: enum:NORMALISED_ARITHMETIC_RETURN|LOG_RETURN|RAW_PRICE
+      reference: enum:STRIKE|WINDOW_OPEN|NONE
+      scale: enum:BPS|FRACTION|NATIVE
+    notes: >-
+      S1. Every variance field is typed by one of these; composing across two
+      different UnitSpaces is a type error, and cross-symbol pooling is refused
+      before normalisation. The estimator declares
+      NORMALISED_ARITHMETIC_RETURN/STRIKE/BPS: the settlement mark is an
+      ARITHMETIC mean, so the TWAP kernel and the anchor decomposition are exact
+      in price space and only approximate in log space.
+  HorizonDomain:
+    fields:
+      r_min: Duration
+      r_max: Duration
+      grid: list[Duration]
+      basis_crossover: Duration
+    notes: >-
+      Below basis_crossover the basis noise exceeds settlement vol and the price
+      model is noise regardless of estimator quality; queries there return
+      Unavailable, not a number.
+  AnchorErrorBudget:
+    fields:
+      floor: float
+      ceiling: float
+      coefficient_by_horizon: dict[str, float]
+      identified: bool
+      provenance: Provenance
+    notes: >-
+      S3. Var(P_hat - P_t) is NOT identified against one proxy: latent spot is
+      unobserved and time-varying basis plus proxy error stay in the residual.
+      Carried as a BRACKET. floor is model-implied (the reconstruction cost with
+      perfect synchronous feeds, sigma_kernels.omega_p_coeff); ceiling is the
+      empirical proxy residual including basis. identified=false until a
+      two-proxy or error-in-variables estimate exists; consumers must propagate
+      both ends. coefficient_by_horizon is a(r), which is NOT (r/w)^2 * floor at
+      interior horizons because the shorter TWAP is reconstructed from the same
+      pair and the two errors are correlated.
+  CalibrationCurve:
+    fields:
+      c_by_horizon: dict[str, float]
+      interval_by_horizon: dict[str, str]
+      band: str
+      inference_rule: str
+      n_day_clusters: int
+      status: enum:DIAGNOSTIC|GATE
+    notes: >-
+      S6. c(r) is the residual AFTER the ledger, never a substitute for it.
+      status stays DIAGNOSTIC until n_day_clusters meets the pre-registered
+      threshold; a point estimate crossing band at 2 day clusters is not a
+      go/no-go. Whether c multiplies the diffusion line or the whole ledger is
+      fixed by estimand, not left to the reader.
   ActionSpace:
     fields:
       verbs: list[enum:QUOTE|CANCEL|MINT|MERGE|CROSS|WAIT]
@@ -572,6 +652,24 @@ types:
       resolutions: dict[InstrumentId, VenueOutcome]
       redemption_delay: Duration
 modules:
+  BE-Uncertainty:
+    consumes:
+    - RawEvent
+    produces: dict[InstrumentId, Known[Uncertain[PathLaw]] | Unavailable]
+    ports:
+    - state_view
+    - artifact_resolver
+    - telemetry_out
+    notes: >-
+      M13-1. Fits the physical-volatility law from the TAPE; outcomes are used
+      only for calibration and falsification, never to fit it. Emits a law, not
+      a scalar. Instrument-scoped and per-symbol: the measured level spans 4.6x
+      across coins, so a pooled sigma is a 4.6x error, and any pooling appears
+      as a declared shrinkage weight, never as a parameter tie. Refuses
+      (Unavailable) rather than extrapolating outside horizon_domain, past
+      fit_data_through, or when its own inputs are unavailable -- in particular
+      the belief fallback may NOT inherit a book-sourced d after the book has
+      failed.
   BE-Competition:
     produces: dict[InstrumentId, Known[Uncertain[CompetitionState]] | Unavailable]
     notes: instrument-scoped marginals

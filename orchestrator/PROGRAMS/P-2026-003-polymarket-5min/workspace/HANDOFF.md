@@ -7,18 +7,23 @@ nothing is on `main`. Sigma review: `6bea435`.
 
 The programme now has a **verified settlement target**, a **modular
 architecture with machine-readable contracts**, and a **reviewed sigma plan whose
-implementation is on hold pending six specification fixes**. Two headline results from session 1
-have been **withdrawn or downgraded** on discovering that the data underneath
-them was wrong. Do not cite either without reading §"What was withdrawn".
+six specification fixes are now applied — estimator implementation still on
+HOLD**. Two headline results from session 1 have been **withdrawn or
+downgraded** on discovering that the data underneath them was wrong. Do not cite
+either without reading §"What was withdrawn".
 
 Reading order:
 1. `live/pm_research/PM_ARCHITECTURE.md` (v12) — the entry point; structure.
-2. `live/pm_research/contracts/contracts.yaml` — machine-readable source of
-   truth for types. The prose defers to this file, not the other way round.
+2. `live/pm_research/contracts/contracts.yaml` (**v13**) — machine-readable
+   source of truth for types. The prose defers to this file, not the other way
+   round.
 3. `live/pm_research/EXP_RESULTS_2026-08-20.md` — first model results.
-4. `live/pm_research/SIGMA_PLAN.md` — proposed design.
+4. `live/pm_research/SIGMA_PLAN.md` — the design; **read REVISION 2 at the head
+   first**, it supersedes the v1 "FINALIZED" decisions (D2 is retired).
 5. `live/pm_research/SIGMA_PLAN_REVIEW.md` — binding implementation-readiness review.
-6. `live/pm_research/plans/` — BE_BELIEF, BE_FLOWANDFILLS, MEASUREMENT,
+6. `live/pm_research/sigma_kernels.py` — the frozen unit space, the discrete
+   kernels and the closed anchor ledger. Executable; `--selftest` is the check.
+7. `live/pm_research/plans/` — BE_BELIEF, BE_FLOWANDFILLS, MEASUREMENT,
    PRELIMINARY.
 
 ## Done this session
@@ -125,6 +130,72 @@ discrete kernels → define the anchor-error proxy/bracket → rebuild admissibl
 dense-book data → fit one simple per-symbol tape baseline → measure the complete
 ledger and descriptive `c(r)` → only then consider the multi-scale challenger.
 The current two-day `c(r)` point estimate is a redesign diagnostic, not a gate.
+
+### Spec repair DONE — all six accepted, Phase 0A steps 1–3 closed
+
+`SIGMA_PLAN.md` **REVISION 2** answers each item; `sigma_kernels.py` and
+`contracts.yaml` **v13** implement the ones that are code. Nothing about the
+estimator was built; the HOLD stands.
+
+**The load-bearing new result: the anchor ledger is closed-form, and it retires
+D2.** `P̂ = 2·S30 − S60` is a fixed linear functional of the same latent path as
+σ, so `ω_P` is **not a free parameter** — exactly `3.0845σ` on the 1 s grid
+(**3.36 bps** for BTC; continuous `σ√10`), verified by Monte Carlo. Therefore:
+
+- **D2 ("`c(r)` will breach, budget for redesign") is RETIRED.** Against the same
+  2.6 bps: `c(30) = 2.17` on the diffusion line alone, **`c(30) = 1.14`** with
+  the anchor line in — inside `[0.8, 1.25]`. It does not prove `c(r)` is in
+  band; it removes the prediction, which had been computed against an
+  incomplete ledger.
+- It gives S3 its **floor/ceiling bracket** without identifying latent Chainlink
+  spot: floor is model-implied, ceiling is the basis-contaminated Binance
+  residual. Typed as `AnchorErrorBudget{identified: false}`.
+- `σ_eff` was **understated at every horizon**: at `r=30`, 1.77 → **2.44 bps**.
+  And v1's claim that the `(r/w)²` damping makes the nowcast "cost nothing late
+  in the window" is **backwards** — the anchor share *rises* toward expiry, 4.0%
+  of variance at `r=270` but **47.5% at `r=30`**.
+- It gives `k ≈ 1.42` a mechanical account (§7 source 2): under the old S60
+  anchor the omitted line was **65% of total variance at `r=30`**.
+
+**SHOULD-FIX 1 resolved exactly.** The discrete law is already continuous at
+`r=w` (both branches give 20.5028 s); v1's defect was *mixing* conventions —
+discrete below, continuous above — so the `r>w` kernel is `r − 39.4972`, not
+`r − 40`. The review's "roughly +0.5 s" was right to 3 decimals.
+
+**One defect neither v1 nor the review caught:** the in-window anchor coefficient
+is not `(r/w)²·ω_P²` in general — inside the window the trailing `(w−r)`-second
+TWAP is reconstructed from the *same* S30/S60 pair, so the errors correlate and
+add. Exact at `r=30` and `r=60` (today's only in-window grid points), **24%
+understated at `r=45`**. Live as soon as the grid densifies toward per-second
+quoting.
+
+**Recorded disagreement (R1).** S1's remedy suggested `x = log(S/S_ref)`;
+**declined**. The settlement mark is an *arithmetic* mean, so log coordinates
+demote the TWAP kernel, the nowcast, the `r=30` decomposition and the closed
+ledger from identities to approximations — and S1's own acceptance criterion
+("reproduces the formula from one typed fixture at every horizon") is not
+satisfiable where the formula is approximate. **Not a magnitude argument**: the
+Jensen gap is `+0.00059 bps`, 0.024% of `σ_eff(30)`. Adopted instead:
+`x = 1e4·(S − X_0)/X_0`, normalised arithmetic returns in bps — dimensionless,
+poolable after normalisation, every identity exact, zero cost.
+
+**Contracts v13 (M13-1).** `BE-Uncertainty` module added; `PathLaw` replaced —
+it was `{kind: str, params: dict[str, float]}`, which structurally could not
+carry a unit space, a horizon domain, a fit cutoff or a refusal. Now typed with
+`UnitSpace`, `HorizonDomain`, `AnchorErrorBudget`, `CalibrationCurve` and a
+`settlement_var`/`increment_var` protocol that refuses out of domain. Two
+migration records; `contract_check.py` passes (13 selftests, 0 unexplained
+changes). *Still open, belongs to the structure loop:* `BE-Belief` itself is
+absent from `modules:`.
+
+**Verify with:** `python3 live/pm_research/sigma_kernels.py --selftest` (13
+checks) and `python3 live/pm_research/contracts/contract_check.py HEAD WORKTREE`.
+
+**Phase 0A remaining — this is the next work:**
+4. freeze the consumer matrix including the fallback's own loss function;
+5. **verify S30/S60 semantics against the 1 s Binance tape** — this can still
+   invalidate the anchor and the nowcast together, and it must precede step 6;
+6. implement the anchor helper, and measure the `ω_P` **ceiling**.
 
 ## Then
 

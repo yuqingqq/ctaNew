@@ -3,7 +3,7 @@ name: Polymarket Crypto 5-min Markets
 phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
-updated: 2026-08-20 (session 2 — sigma plan reviewed, implementation on hold)
+updated: 2026-08-20 (session 2 — sigma review applied, spec repaired, code HOLD)
 
 flags:
   collector_running: true    # since 2026-08-19 ~14:32 UTC. MNAR bug fixed
@@ -59,17 +59,59 @@ flags:
   structure_converged: false # 12 review iterations; replay stands at
                              # LOCAL 11 / SPREADING 1 / STRUCTURAL 1.
   sigma_plan_finalized: true # SIGMA_PLAN.md, commit 80f823e. Phase 0 gated.
-  sigma_plan_review: hold    # SIGMA_PLAN_REVIEW.md, commit 6bea435. Six
-                             # MUST-FIX items precede estimator code: units,
-                             # consumers/contract, anchor identification, MNAR,
-                             # overlap-aware PIT validation, and c(r)/H-3 gates.
+  sigma_plan_review: applied # SIGMA_PLAN_REVIEW.md, commit 6bea435. All six
+                             # MUST-FIX ACCEPTED and applied in SIGMA_PLAN.md
+                             # REVISION 2 + sigma_kernels.py + contracts v13.
+                             # ESTIMATOR CODE STILL ON HOLD — Phase 0A steps
+                             # 4-6 (consumer matrix, S30/S60 semantics, anchor
+                             # helper) remain. One remedy DECLINED with reasons
+                             # (R1): unit space is normalised ARITHMETIC
+                             # returns, not log — the settlement mark is an
+                             # arithmetic mean, so log coordinates demote every
+                             # TWAP identity to an approximation. Not a
+                             # magnitude argument (Jensen gap 0.00059 bps =
+                             # 0.024% of sigma_eff(30)); an exactness one.
+  anchor_ledger_closed: true # omega_P is NOT a free parameter: P_hat =
+                             # 2*S30-S60 is a fixed linear functional of the
+                             # same latent path as sigma, so its error is
+                             # exactly 3.0845*sigma on the 1s grid (3.36 bps
+                             # for BTC; continuous sqrt(10)). Gives S3 its
+                             # floor/ceiling bracket without identifying latent
+                             # Chainlink spot. sigma_eff was UNDERSTATED at
+                             # every horizon: r=30 goes 1.77 -> 2.44 bps.
+                             # sigma_kernels.py, 13 selftests.
+  d2_retired: true           # "c(r) will breach [0.8,1.25], budget for
+                             # redesign" is WITHDRAWN. It was computed against
+                             # an incomplete ledger: c(30)=2.17 on the
+                             # diffusion line alone, 1.14 with the anchor line
+                             # in = IN BAND. This does not prove c(r) is in
+                             # band (2.6 bps is provisional, w_hat~47s
+                             # untouched) — it removes the prediction. No
+                             # redesign budget is reserved on its account.
+  contracts_version: 13      # M13-1. BE-Uncertainty module added; PathLaw was
+                             # {kind: str, params: dict[str,float]} which could
+                             # not carry a unit space, horizon domain, fit
+                             # cutoff or refusal. Now typed: UnitSpace,
+                             # HorizonDomain, AnchorErrorBudget (floor/ceiling,
+                             # identified=false), CalibrationCurve (status
+                             # DIAGNOSTIC until >=10 day clusters), and a
+                             # settlement_var/increment_var protocol that
+                             # REFUSES out of domain. 2 migration records;
+                             # contract_check.py passes, 0 unexplained changes.
+                             # STILL OPEN: BE-Belief absent from modules: —
+                             # that belongs to the structure review loop.
 
 focus: >
   Build and test the model, mechanism-first, no PnL/capacity estimation
   (user, 2026-08-20). Entry point is live/pm_research/PM_ARCHITECTURE.md (v12)
   with contracts/contracts.yaml as the machine-readable source of truth.
-  IMMEDIATE: SIGMA_PLAN_REVIEW.md Phase 0A — freeze the unit-correct estimand and
-  consumer contract, then verify S30/S60 semantics and anchor identification.
+  IMMEDIATE: Phase 0A steps 4-6. Steps 1-3 are DONE (unit space frozen, typed
+  BE-Uncertainty/PathLaw carrier landed at contracts v13, discrete kernels and
+  the closed anchor ledger derived and unit-tested in sigma_kernels.py). Next:
+  freeze the consumer matrix including the BE-Belief fallback's own loss
+  function; VERIFY S30/S60 SEMANTICS against the 1 s Binance tape — this can
+  still invalidate the anchor and the nowcast together and must precede the
+  helper; then implement the anchor helper and measure the omega_P ceiling.
   Estimator implementation is on HOLD. Only after Phase 0A may the simple
   per-symbol baseline and complete-ledger c(r) diagnostic run.
 
@@ -127,19 +169,32 @@ tasks:
       Review loop is at 12 iterations and NOT converged.
   - id: sigma-model
     phase: 1
-    name: Volatility estimator — plan reviewed, Phase 0A spec repair pending
-    status: reviewed-hold
+    name: Volatility estimator — spec repaired (REVISION 2), Phase 0A 4-6 next
+    status: spec-repaired-hold
     notes: |
       Three estimators were built and each violated a decision already made
       (static pooled -> static per-coin -> rolling per-window with POOLED blend
       weights). Root cause was not sigma at all: the ANCHOR was wrong. Plan
-      written and finalized (SIGMA_PLAN.md, 80f823e), then reviewed at 6bea435.
-      HOLD estimator code. First choose one price/return unit space, freeze the
-      actual consumer + fallback contract, verify S30/S60 semantics before the
-      anchor, identify or bracket omega_P, isolate MNAR/stale-book data, specify
-      overlap-aware physical-volatility forecast validation, and define c(r)/H-3
-      with honest inference. D2's expected c(r) breach is only a diagnostic prior
-      until the complete anchor-error ledger is measured.
+      written and finalized (SIGMA_PLAN.md, 80f823e), reviewed at 6bea435, and
+      all six MUST-FIX now APPLIED in REVISION 2. Estimator code still on HOLD.
+      DONE: unit space frozen (normalised arithmetic returns, bps — R1 declines
+      the review's log-coordinate remedy because the settlement mark is an
+      arithmetic mean and log space demotes every TWAP identity to an
+      approximation); typed BE-Uncertainty + PathLaw carrier at contracts v13;
+      discrete kernels unit-tested, continuous at r=w (v1 MIXED conventions, so
+      its r>w kernel should be r-39.4972 not r-40); the anchor ledger closed in
+      CLOSED FORM, which retires D2; MNAR pairing claim struck; output renamed a
+      physical-volatility FORECAST with overlap-aware day-block validation;
+      c(r)/H-3 given estimands, domains and a frozen inference rule.
+      ALSO FOUND (neither v1 nor the review caught it): the in-window anchor
+      coefficient is not (r/w)^2*omega_P^2 in general — inside the window the
+      trailing (w-r)s TWAP is reconstructed from the SAME S30/S60 pair, so the
+      errors correlate and add. Exact at r=30 and r=60 (today's only in-window
+      grid points), 24% understated at r=45. Live the moment the decision grid
+      densifies toward per-second quoting.
+      NEXT: Phase 0A 4 (consumer matrix incl. the fallback's loss function),
+      5 (VERIFY S30/S60 SEMANTICS — can invalidate anchor + nowcast together;
+      must precede the helper), 6 (anchor helper + measure the omega_P ceiling).
   - id: e-x1-bookbeat
     phase: 1
     name: Re-read the model-vs-book verdict on the corrected anchor

@@ -4,6 +4,21 @@
 # narrowing at an allowlisted path -- the precise failure this process exists to
 # prevent. Records are loaded from the TARGET ref.
 migrations:
+- from_version: 12
+  to_version: 13
+  operation: remove
+  key: field:PathLaw.kind
+  old: str
+  reason: 'M13-1: untyped tag replaced by typed fields + protocol; an estimator
+    emitting a law had no carrier and a dict[str, float] cannot hold a unit space'
+- from_version: 12
+  to_version: 13
+  operation: remove
+  key: field:PathLaw.params
+  old: dict[str, float]
+  reason: 'M13-1: a bag of unitless floats is exactly the composition S1 rejects;
+    replaced by sigma2_rate/nugget/w_declared/anchor_error/calibration with
+    declared units and a settlement_var/increment_var protocol'
 - from_version: 10
   to_version: 11
   operation: remove
