@@ -62,7 +62,7 @@ RESOLVE_GIVEUP_S = 7200
 WRITE_BATCH = 2_000
 WRITE_QUEUE_MAX = 32
 GAP_LEDGER = ROOT / "collector_gaps.jsonl"
-COLLECTOR_VERSION = "clob_v3"
+COLLECTOR_VERSION = "clob_v3_1"
 
 # v3: disk work and HTTP work get SEPARATE executors. They shared the default
 # 20-worker pool, where four run_in_executor HTTP calls (urlopen, 15-25 s
@@ -362,6 +362,8 @@ class PMCollector:
         self.active_market_coin[slug] = coin
         last_recv_ns: int | None = None
         open_gap: dict | None = None
+        qmax = 0                 # deepest inbound frame backlog seen
+        ever_paused = False      # did the library ever stop reading the socket?
 
         async def writer() -> None:
             while True:
@@ -400,7 +402,7 @@ class PMCollector:
                 self.counts["writer_queue_highwater"], write_q.qsize())
 
         async def receive(ws) -> None:
-            nonlocal last_recv_ns, open_gap
+            nonlocal last_recv_ns, open_gap, qmax, ever_paused
             while not self.stop:
                 raw = await ws.recv()
                 recv_ns = time.time_ns()
@@ -416,6 +418,30 @@ class PMCollector:
                     open_gap = None
                 last_recv_ns = recv_ns
                 self.last_recv_by_slug[slug] = recv_ns
+                # THE DISCRIMINATOR (clob_v3_1). websockets buffers inbound
+                # frames in an Assembler and PAUSES READING FROM THE TRANSPORT
+                # when the backlog exceeds its high-water mark -- which is
+                # exactly what makes the venue see a slow consumer and send
+                # 1013. So `paused` answers the question directly:
+                #   paused/deep backlog at a 1013  => WE are genuinely behind
+                #                                     (reduce per-message work,
+                #                                      or shard sockets)
+                #   backlog ~0 and never paused    => the venue closed us for
+                #                                     its own reasons; not
+                #                                     fixable client-side
+                # v3 ruled out loop stalls, write backpressure, memory and raw
+                # rate, and still could not tell these two apart.
+                try:
+                    asm = ws.recv_messages
+                    depth = len(asm.frames)
+                    if depth > qmax:
+                        qmax = depth
+                    if asm.paused:
+                        ever_paused = True
+                    self.counts["ws_queue_highwater"] = max(
+                        self.counts["ws_queue_highwater"], depth)
+                except Exception:
+                    pass
                 buf.append(f"{recv_ns}\t{raw}\n")
                 self.counts["msgs"] += 1
                 self.msg_by_coin[coin] += 1
@@ -461,6 +487,9 @@ class PMCollector:
                         "lag_ms_max_interval": round(self.lag_ms_max, 1),
                         "lag_ms_max_ever": round(self.lag_ms_max_ever, 1),
                         "coin_msg_rate_hint": self.msg_by_coin.get(coin, 0),
+                        # clob_v3_1: were WE the slow consumer, or the venue?
+                        "ws_queue_depth_max": qmax,
+                        "ws_ever_paused": ever_paused,
                         "error": str(ex)[:240],
                     })
                     if time.time() < stop_at and not self.stop:
@@ -592,6 +621,7 @@ class PMCollector:
                   f"lag_ms_max={self.lag_ms_max:.0f} "
                   f"lag_stalls={self.lag_stalls} "
                   f"gzip_ms_max={self.counts['gzip_ms_max']} "
+                  f"ws_q_hi={self.counts['ws_queue_highwater']} "
                   f"active={dict(active)} unseen={dict(unseen)} "
                   f"oldest_age_s={oldest_age} rate_msg_s={rates} "
                   f"msg_by_coin={dict(self.msg_by_coin)} "
@@ -746,6 +776,25 @@ def _async_checks() -> list[tuple[str, bool]]:
                     f"({starve_ms:.1f} ms)", starve_ms < 100))
         c.disk_pool.shutdown(wait=True)
         c.http_pool.shutdown(wait=True)
+
+        # clob_v3_1: prove the slow-consumer discriminator actually flips.
+        # A flag that never becomes True would be indistinguishable from
+        # "we were never behind" -- the failure mode this whole session keeps
+        # finding.
+        try:
+            import websockets.asyncio.messages as wsm
+            from websockets.frames import Frame, Opcode
+            asm = wsm.Assembler(high=2, low=1)
+            out.append(("discriminator starts clean",
+                        len(asm.frames) == 0 and not asm.paused))
+            for _ in range(5):
+                asm.put(Frame(Opcode.TEXT, b"x", fin=True))
+            out.append((f"discriminator FLIPS when the backlog exceeds high "
+                        f"(depth={len(asm.frames)}, paused={asm.paused})",
+                        len(asm.frames) > asm.high and asm.paused is True))
+        except Exception as ex:
+            out.append((f"discriminator testable against installed websockets "
+                        f"({type(ex).__name__}: {str(ex)[:60]})", False))
         return out
 
     return asyncio.run(_run())
