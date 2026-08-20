@@ -3,7 +3,7 @@ name: Polymarket Crypto 5-min Markets
 phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
-updated: 2026-08-20 (session 2 — sigma Revision 5 / contracts v16, HOLD remains)
+updated: 2026-08-20 (session 2 — Revision 5 reviewed; MEASUREMENT GO / PRICING HOLD)
 
 flags:
   collector_running: true    # since 2026-08-19 ~14:32 UTC. MNAR bug fixed
@@ -58,30 +58,29 @@ flags:
                              # conflicts with docs (7%) and CLOB base_fee.
   structure_converged: false # 12 review iterations; replay stands at
                              # LOCAL 11 / SPREADING 1 / STRUCTURAL 1.
-  sigma_plan_finalized: false # Revision 4 makes the route decision, but its
-                             # public pricing boundary is not coherent yet:
-                             # convention semantics contradict the selected
-                             # route, request checks are bypassable, and invalid
-                             # numeric/statistical evidence can price.
-  sigma_plan_review: iter4-applied # All six ITER4 items APPLIED in Revision 5 +
-                             # contracts v16 + a rewritten boundary. Every ITER4
-                             # probe was REPRODUCED first: resid_var=-1 priced,
-                             # NaN clusters/p-values passed (all ordered
-                             # comparisons against NaN are false), a
-                             # future-issued law with a REVERSED target interval
-                             # returned True, anchor_var moved with the empirical
-                             # alpha, model_total_var was exposed, pricing took
-                             # no request, and an infinite rate raised
-                             # OverflowError instead of refusing. All correct.
-                             # Fixture now 45 checks, every refusal path at the
-                             # public boundary.
+  sigma_plan_finalized: true # FINALIZED FOR MEASUREMENT after ITER5 review.
+                             # The estimand, route ownership, fit equation,
+                             # OOS unit and pricing boundary are coherent enough
+                             # to freeze. Do not write Revision 6 before fitting.
+                             # This does NOT claim a fitted/pricing-ready law.
+  sigma_measurement_ready: true # GO: implement and run Phase 0A step 6 now.
+                             # Current two-day output is DESCRIPTIVE; repeat the
+                             # frozen experiment at >=10 day clusters.
+  sigma_pricing_ready: false # No real Route-A law exists, and all per-fit OOS
+                             # evidence must pass before probability-level use.
+  sigma_plan_review: iter5-measurement-go # SIGMA_PLAN_REVIEW_ITER5.md reviews
+                             # 58f6716. All ITER4 specification blockers pass.
+                             # Three implementation cleanups remain (duplicate
+                             # YAML ReducedFormFit/stale ReducedFormLaw; malformed
+                             # input refusal totality; effect_size validation),
+                             # but none changes the estimand or blocks the fit.
   estimand_route: REDUCED_FORM # THE DECISION (ITER3 M3-1). Route A (reduced-form
                              # fit of x_T on (S30,S60)) is the PRICING law; its
                              # residual IS the whole of Sigma(r). Route B
                              # (k_law + v(r) + Omega) is DIAGNOSTIC ONLY. They
-                             # are NEVER summed — rule R-ROUTE, and pricing_var()
-                             # refuses anything that is not a fitted
-                             # ReducedFormLaw. The consumer matrix decides it:
+                             # are NEVER summed — rule R-ROUTE, and
+                             # pricing_distribution() refuses anything that is
+                             # not a ReducedFormPathLaw. The consumer matrix decides it:
                              # the only LEVEL consumer is the BE-Belief fallback,
                              # which needs Sigma(r), not its parts.
                              # DIFFERENT PREREQUISITES: A needs no sampling
@@ -144,6 +143,12 @@ flags:
                              # carrying SECONDS; CalibrationCurve as the
                              # route-agreement RATIO. 29 removals + 11 changes,
                              # all with migration records; checker 0 unexplained.
+                             # ITER5 CLEANUP: YAML defines ReducedFormFit twice;
+                             # normal parsing silently keeps the stale 3-field
+                             # copy and the checker misses it. ReducedFormLaw and
+                             # build step 6 also retain v15 carrier language.
+                             # Repair alongside the measurement implementation;
+                             # it does not block fitting the empirical law.
                              # Prior M15-1 changes: AnchorSpec horizon-indexed
                              # with `selected`
                              # (MODEL|ESTIMATED) so bias is measured against the
@@ -166,17 +171,14 @@ focus: >
   Build and test the model, mechanism-first, no PnL/capacity estimation
   (user, 2026-08-20). Entry point is live/pm_research/PM_ARCHITECTURE.md (v12)
   with contracts/contracts.yaml as the machine-readable source of truth.
-  IMMEDIATE: the ITER2-ITER4 spec repairs are all IN (Revision 5, contracts v16,
-  rewritten boundary) and the route choice now holds at the executable boundary.
-  Nothing further is a specification task. The next two steps are MEASUREMENTS
-  and neither is blocked by the other: (5) verify S30/S60 aggregation and
-  knowledge-time semantics against the 1 s Binance tape — this gates ROUTE B
-  only and may run in parallel; (6) FIT THE ROUTE-A LAW, regressing observed x_T
-  on observed (S30,S60) per horizon and per symbol, cross-fitted, day-blocked and
-  embargoed, emitting GateEvidence with an effect size and tolerance rather than
-  a bare p-value. Do NOT estimate Omega on route A — it is inside the residual.
-  Estimator implementation remains on HOLD until step 6 produces a law whose
-  gates read PASS.
+  IMMEDIATE: MEASUREMENT GO. Implement and run Phase 0A step 6 now: fit
+  x_T-S60 = alpha(r)*(S30-S60)+residual per symbol/horizon, cross-fitted by day,
+  knowledge-time clean and embargoed. Freeze the exact GateEvidence procedures
+  and tolerances before reading results; persist every OOS prediction/residual.
+  Label the current two-day output DESCRIPTIVE, then rerun unchanged at >=10 day
+  clusters. Phase 0A step 5 (internal S30/S60 semantics) gates Route B only and
+  may run in parallel. No Revision 6 before this measurement. Probability-level
+  use remains on HOLD until the real per-fit gates pass.
 
 standing_rules:
   - No design decision that a measurement on existing data could settle may be
@@ -232,8 +234,8 @@ tasks:
       Review loop is at 12 iterations and NOT converged.
   - id: sigma-model
     phase: 1
-    name: Volatility estimator — ITER4 applied (Rev 5 / v16); next step is a FIT
-    status: iter4-applied-hold
+    name: Volatility estimator — Revision 5 reviewed; run the Route-A fit
+    status: measurement-go-pricing-hold
     notes: |
       Lineage: plan 80f823e -> review 6bea435 -> Rev 2 cc1d0e7 -> review 20b759e
       -> Rev 3 7474e49 -> review 11e3c09 -> Rev 4 be23ec1 -> review ef6d1df ->
@@ -268,6 +270,11 @@ tasks:
       NEXT IS A MEASUREMENT, NOT A SPEC TASK: Phase 0A 6, fit the route-A law per
       horizon and symbol, cross-fitted and day-blocked, and report GateEvidence.
       Phase 0A 5 (S30/S60 semantics) gates route B only and may run in parallel.
+      ITER5 VERDICT: MEASUREMENT GO / PRICING HOLD. No Revision 6 before data.
+      Current two-day output is DESCRIPTIVE; >=10 day clusters plus passing gates
+      are required to price. Non-blocking cleanup during implementation: remove
+      duplicate YAML ReducedFormFit + stale ReducedFormLaw, totalize malformed-
+      input refusals, and validate GateEvidence.effect_size.
   - id: e-x1-bookbeat
     phase: 1
     name: Re-read the model-vs-book verdict on the corrected anchor

@@ -2,21 +2,20 @@
 
 Updated: 2026-08-20, session 2. All work is on branch **`mm-research`** (pushed);
 nothing is on `main`. Sigma is at **Revision 5** / contracts **v16**;
-`SIGMA_PLAN_REVIEW_ITER4.md`'s six items are applied and the route decision now
-holds **at the executable boundary**. HOLD remains — but what remains is a
-MEASUREMENT, not another specification round.
+`SIGMA_PLAN_REVIEW_ITER5.md` gives **MEASUREMENT GO / PRICING HOLD**. The model
+specification is frozen for Phase 0A step 6. Do not write Revision 6 before
+running the fit.
 
 ## Read this first
 
 The programme now has a **verified settlement target**, a **modular
 architecture with machine-readable contracts**, and a reviewed sigma plan.
-Revision 4 correctly chooses reduced form for pricing and structural decomposition
-for diagnosis, never summed. Its public API still contradicts that choice and
-does not make request/time or numeric/statistical validation unavoidable; Phase
-0A remains open and estimator implementation remains on **HOLD**. Two headline
-results from session 1 were **withdrawn or downgraded** after discovering that
-the underlying data was wrong. Do not cite either without reading §"What was
-withdrawn".
+Revision 5 makes the reduced-form/structural split hold at the executable
+boundary. That is enough to start measuring Route A. No real law is fitted and
+the current tape has only two day clusters, so probability-level use remains on
+**HOLD** while the measurement itself is a **GO**. Two headline results from
+session 1 were withdrawn or downgraded after discovering bad underlying data;
+do not cite either without reading §"What was withdrawn".
 
 Reading order:
 1. `live/pm_research/PM_ARCHITECTURE.md` (v12) — the entry point; structure.
@@ -35,11 +34,13 @@ Reading order:
    historical input to Revision 4.
 8. `live/pm_research/SIGMA_PLAN_REVIEW_ITER4.md` — review of Revision 4/v15; its
    six items are applied in Revision 5/v16.
-9. `live/pm_research/sigma_kernels.py` — executable model **fixture**, not a
+9. `live/pm_research/SIGMA_PLAN_REVIEW_ITER5.md` — **current verdict:
+   MEASUREMENT GO / PRICING HOLD**, plus the frozen fit sequence.
+10. `live/pm_research/sigma_kernels.py` — executable model **fixture**, not a
    frozen spec. `--selftest` checks exact arithmetic under a **declared and
    still UNVERIFIED** sampling convention; it does not establish that convention
    against the Chainlink streams.
-10. `live/pm_research/plans/` — BE_BELIEF, BE_FLOWANDFILLS, MEASUREMENT,
+11. `live/pm_research/plans/` — BE_BELIEF, BE_FLOWANDFILLS, MEASUREMENT,
    PRELIMINARY.
 
 ## Done this session
@@ -75,8 +76,8 @@ own doing, and 32 of 47 were BTC** — i.e. the loss was concentrated in exactly
 the busiest intervals, which is missing-not-at-random. Post-fix: **0 drops
 vs 28**. Never pool an unpaired statistic across the fix boundary.
 
-**SIGMA_PLAN Revision 4 reviewed** — the route split is retained; its public
-boundary and contract integration remain partial. See §"Immediate next step".
+**SIGMA_PLAN Revision 5 reviewed** — **MEASUREMENT GO / PRICING HOLD**. The
+route split and fit specification are frozen; see §"Immediate next step".
 
 ## What was withdrawn — do not cite these
 
@@ -120,7 +121,25 @@ that recommended B was measured on stale books** (withdrawal 2 above). Re-frame
 the choice before making it; do not read `PM_MM_PLAN §17`'s recommendation as
 current.
 
-## Immediate next step — close the chosen Route-A boundary
+## Immediate next step — run the Route-A measurement
+
+**Go now.** Implement Phase 0A step 6 and fit
+`x_T-S60 = alpha(r)*(S30-S60)+residual` per symbol/horizon using point-in-time
+rows, whole-day cross-fitting and a longest-label embargo. Persist OOS
+predictions/residuals and freeze the exact effect-size gates and tolerances
+before reading results. Do not add structural `k/v/Omega` terms.
+
+The present two-day tape can produce a descriptive pipeline/result, not a
+pricing-law PASS. Re-run the same frozen analysis after at least ten day
+clusters. Phase 0A step 5 may proceed in parallel and gates Route B only.
+
+Iteration 5 found three cleanup items to land alongside that implementation:
+the duplicate YAML `ReducedFormFit` plus stale `ReducedFormLaw`, malformed-input
+refusal totality, and validation of the `GateEvidence.effect_size` payload.
+They are not new model choices and do not block the regression. Full evidence:
+`SIGMA_PLAN_REVIEW_ITER5.md`.
+
+### Historical — iteration-4 boundary review and application
 
 Revision 4 makes the right central decision: **Route A's reduced-form residual
 is the whole pricing variance; Route B is a structural diagnostic; never add
