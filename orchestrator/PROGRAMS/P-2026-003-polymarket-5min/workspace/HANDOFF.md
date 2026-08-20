@@ -20,14 +20,16 @@ Reading order:
    source of truth for types. The prose defers to this file, not the other way
    round.
 3. `live/pm_research/EXP_RESULTS_2026-08-20.md` — first model results.
-4. `live/pm_research/SIGMA_PLAN.md` — the design; **read REVISION 2 at the head
-   first**, it supersedes the v1 "FINALIZED" decisions (D2 is retired).
+4. `live/pm_research/SIGMA_PLAN.md` — **REVISION 3, canonical.** Rewritten in
+   place; one estimand, one consumer matrix, one ledger equation. v1/v2 text is
+   in git history (`80f823e`, `cc1d0e7`) and nothing defers to it.
 5. `live/pm_research/SIGMA_PLAN_REVIEW.md` — first implementation-readiness review.
-6. `live/pm_research/SIGMA_PLAN_REVIEW_ITER2.md` — review of Revision 2; this is
-   the current verdict.
-7. `live/pm_research/sigma_kernels.py` — executable model fixture for the
-   discrete kernels and proposed anchor ledger; `--selftest` checks internal
-   arithmetic, not conditional-forecast correctness.
+6. `live/pm_research/SIGMA_PLAN_REVIEW_ITER2.md` — review of Revision 2; its six
+   items are applied in Revision 3.
+7. `live/pm_research/sigma_kernels.py` — executable model **fixture**, not a
+   frozen spec. `--selftest` checks exact arithmetic under a **declared and
+   still UNVERIFIED** sampling convention; it does not establish that convention
+   against the Chainlink streams.
 8. `live/pm_research/plans/` — BE_BELIEF, BE_FLOWANDFILLS, MEASUREMENT,
    PRELIMINARY.
 
@@ -138,19 +140,76 @@ claims. Also, `c(30)=1.14` combines the new model line with a 2.6 bps residual
 from the old Binance-mid anchor diagnostic, so it is not evidence for the new
 S30/S60 anchor.
 
-Next, in order:
-
-1. verify S30/S60 definition, sampling, timestamps and knowledge-time behavior;
-2. choose the actual conditional endpoint forecast, or explicitly model the
-   operational anchor's conditional bias;
-3. derive the full conditional error/covariance ledger and a genuinely ordered
-   identification set;
-4. make the runtime API reject invalid horizons and expose every variance term;
-5. repair contract ownership, link derivative, target-time and fit-cutoff
-   semantics, then consolidate Revision 2 into a single non-contradictory spec.
-
 Do not implement or fit the sigma estimator until these are complete. Full
 findings and acceptance tests are in `SIGMA_PLAN_REVIEW_ITER2.md`.
+
+### ITER2 APPLIED — all six, spec only. HOLD stands.
+
+Every ITER2 claim was **reproduced before acting**, not taken on trust:
+`α* = 1.499167` (exactly `2700/1801`), conditional variance `8.2590σ²`,
+unconditional MSE `9.5139σ²`, unconstrained `1.701/−0.836 @ 8.0912`, all four
+adversarial probes, the `2.6 bps` provenance at `SIGMA_DIAGNOSTICS.md:157-175`,
+and every M2-6 line reference. All correct.
+
+**M2-1, the load-bearing one: the v2 error was the v1 error one level deeper.**
+v1 used a *lagging* anchor. v2 fixed the lag with `P̂ = 2·S30 − S60`, justified
+by a **locally linear path** — a trend model — and then entered that estimator's
+**unconditional MSE** as a zero-mean variance line. Under the driftless model
+used everywhere else, trajectories have no local derivative, so with
+`P̂(α) = S60 + α(S30 − S60)`:
+
+```
+P̂(α) − P_t = (α − α*)·(S30 − S60) + conditionally zero-mean residual
+              └─ known at decision time ─┘
+```
+
+`α* = 2700/1801 = 1.4991671`, not 2. So v2 buried an **observable** mean error
+in the variance: **sd 1.22 bps against a total `σ_eff(30)` of ~2.4 bps — half
+the standard deviation at `r=30`.** Two corollaries: the conditional variance is
+**α-independent** (8.2590, not 9.5139 — the gap was squared bias), and v2's
+"floor" of 9.5139 is **beaten by `α*` inside v2's own model**, so it was never a
+bound.
+
+**The anchor is now a parameter to ESTIMATE, not to assume.** `α*` is what a
+declared path model implies, not what the market must do.
+`AnchorSpec.alpha_provenance` must read `ESTIMATED` before anything prices.
+Preferred estimator, which dissolves three problems at once: **regress the
+observed settlement mark `x_T` directly on the observed `(S30, S60)`**. It never
+identifies latent Chainlink spot (so S3's identification problem does not
+arise), assumes no state model, and is **robust to the unverified sampling
+convention** — a regression on the published streams does not care how Chainlink
+builds them internally. It runs on the tape, not on Bernoulli outcomes.
+
+Applied: **M2-2** `SamplingConvention` versioned and `UNVERIFIED`, kernel step
+reopened (a 1 s shift in fast-stream support moves `α*` 1.4992 → 1.4954, so the
+semantics are load-bearing). **M2-3** non-ordered `AnchorErrorEvidence` plus a
+2×2 `FeedErrorCov` — the same covariance raises one anchor's variance and lowers
+another's, so no ordering exists to exploit. **M2-4** one ledger, no hidden
+nugget, exact domain refusal (`Unavailable` is not a float), exact-rational
+tests. **M2-5** contracts **v14**, all eight sub-items. **M2-6** the plan
+**rewritten in place as Revision 3**, 1024 → 649 lines, not a third overlay;
+contradiction scan clean.
+
+**Worth keeping in view:** v2's Monte-Carlo independence test drew the future
+innovation independently *by construction* — a test that could not fail. That is
+the **fourth** artefact here to report success without checking the thing it
+existed to check, after the v8 contract checker, the path-keyed allowlist, and
+v13 itself. Assume the next one exists.
+
+**Verify:** `python3 live/pm_research/sigma_kernels.py --selftest` (24 checks) ·
+`python3 live/pm_research/contracts/contract_check.py --selftest` ·
+`python3 live/pm_research/contracts/contract_check.py HEAD WORKTREE`.
+
+**Next, and neither is code:**
+1. **Phase 0A 5 — verify S30/S60 semantics** against the 1 s Binance tape
+   (endpoints, weights, update triggers, event-time alignment). Gates the kernel
+   and the anchor together.
+2. **Phase 0A 6 — estimate `α`** by the direct regression above, with the
+   conditional bias in the **mean** and `Ω` as a 2×2.
+
+Still open beyond that: the fallback's own loss function; runtime enforcement of
+refusal (only the fixture refuses today); and `BE-Belief`'s absence from the
+contracts `modules:` block, which belongs to the structure loop.
 
 ## Then
 

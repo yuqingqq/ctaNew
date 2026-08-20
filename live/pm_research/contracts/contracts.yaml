@@ -1,4 +1,4 @@
-version: 13
+version: 14
 rules:
   R-SSOT:
     body: every canonical name has exactly one owning type/module
@@ -26,6 +26,14 @@ rules:
     body: while cancellation is Unconfirmed the system state is HALTED
     checks:
     - 'fail_closed: CancelAllStatus.Unconfirmed => HaltState.HALTED'
+  R-WFWD:
+    body: a fitted law declares fit_data_through <= as_of and reads no training
+      data beyond that cutoff; being USED after the cutoff is the point, not a
+      violation
+    checks:
+    - 'cutoff_order: PathLaw.fit_data_through <= PathLaw.as_of'
+    - 'no_future_train: training reads truncated at fit_data_through, enforced
+       through StateView knowledge time, never payload time'
 types:
   Known:
     generic:
@@ -394,41 +402,186 @@ types:
       t_known: Timestamp
       estimator_uncertainty: float
   LinkFunction:
+    fields:
+      link_id: ImmutableId
+      version: str
     protocol:
       g: (float) -> float
       g_inv: (float) -> float
-    notes: never hardcode the Gaussian Phi
+      g_prime: (float) -> float
+      density: (float) -> float
+    notes: >-
+      never hardcode the Gaussian Phi. M14-1: g_prime/density added because
+      every dynamics consumer (participation frontier m/g'(d), lambda_bin, the
+      zeta pickoff floor, the hedge delta) needs the derivative, and v13 exposed
+      only g and g_inv -- which left those consumers unimplementable except by
+      reaching for phi and reintroducing the Gaussian by the back door.
   PathLaw:
     fields:
       instrument: InstrumentId
       unit_space: UnitSpace
       horizon_domain: HorizonDomain
-      sigma2_rate: float
+      sampling_convention: SamplingConvention
+      anchor: AnchorSpec
+      sigma2_rate: VarianceQuantity
       se_log_sigma: float
-      nugget: float
+      nugget: VarianceQuantity | NullPin
       w_declared: Duration
-      w_hat_free_diagnostic: float | NullPin
-      anchor_error: AnchorErrorBudget
+      w_hat_free_diagnostic: Duration | NullPin
+      anchor_error_evidence: AnchorErrorEvidence
       calibration: CalibrationCurve | NullPin
       ledger: VarianceGroup
-      link: LinkFunction
+      link_ref: LinkRef
       as_of: Timestamp
       fit_data_through: Timestamp
+      target_interval: TargetInterval
       coverage: Coverage
       provenance: Provenance
     protocol:
-      settlement_var: '(r: Duration) -> float | Unavailable'
-      increment_var: '(h: Duration) -> float | Unavailable'
+      settlement_var: '(req: ForecastRequest) -> VarianceQuantity | Unavailable'
+      increment_var: '(req: ForecastRequest) -> VarianceQuantity | Unavailable'
+      conditional_mean: '(req: ForecastRequest, obs: AnchorObservables) -> Known[float] | Unavailable'
     notes: >-
-      M13-1. Replaces {kind: str, params: dict[str, float]}, which could not
-      carry a unit space, a horizon domain, a fit cutoff or a refusal, so an
-      estimator emitting a LAW rather than a scalar had no typed carrier.
-      settlement_var is the CONDITIONAL terminal object consumers price with;
-      increment_var is the ROLLING object the tape is fitted to. They are never
-      interchangeable (ratio 4.1x in sigma at r=10 s) and both are exposed so no
-      consumer has to pick. Both REFUSE outside horizon_domain and after
-      fit_data_through rather than extrapolating. w_hat_free_diagnostic never
-      enters either kernel.
+      M14-1 (ITER2 M2-5). settlement_var is the CONDITIONAL terminal object
+      consumers price with; increment_var is the ROLLING object the tape is
+      fitted to. They are never interchangeable (ratio 4.1x in sigma at r=10 s)
+      and both are exposed so no consumer has to pick. Both take a
+      ForecastRequest, not a bare horizon, so as_of, knowledge cutoff and the
+      target interval are enforceable rather than implicit; both refuse outside
+      horizon_domain. conditional_mean is now part of the carrier because the
+      anchor has a state-dependent conditional bias that belongs in the MEAN and
+      must not be reachable only through the variance. w_hat_free_diagnostic
+      never enters any kernel. See R-WFWD for the fit-cutoff invariant: v13's
+      note said the law refuses AFTER fit_data_through, which is backwards -- a
+      walk-forward forecast is used precisely then.
+  ForecastRequest:
+    fields:
+      instrument: InstrumentId
+      as_of: Timestamp
+      knowledge_cutoff: Timestamp
+      target_interval: TargetInterval
+      horizon: Duration
+    notes: >-
+      M14-1. The typed request the protocol needs to enforce R-KNOW and R-WFWD.
+      A bare `r` cannot express which knowledge set the answer is conditioned on,
+      which is exactly how a look-ahead enters unnoticed.
+  TargetInterval:
+    fields:
+      start: Timestamp
+      end: Timestamp
+  LinkRef:
+    fields:
+      link_id: ImmutableId
+      version: str
+    notes: >-
+      M14-1. PathLaw REFERENCES the selected link, it does not carry a copy.
+      v13 duplicated BeliefProcess.link into PathLaw with no equality invariant
+      tying the two, so two consumers could silently disagree about g. The link
+      is owned by the belief/spec plane; BE-Uncertainty neither owns nor selects
+      it.
+  VarianceQuantity:
+    fields:
+      value: float
+      unit_space: UnitSpace
+      scale_exponent: int
+      component: VarianceComponent
+    notes: >-
+      M14-1. A variance may not cross the module boundary as a bare float.
+      scale_exponent is 2 for a variance and 1 for a standard deviation;
+      composing two VarianceQuantity with different unit_space or exponent is a
+      type error.
+  SamplingConvention:
+    fields:
+      id: str
+      status: enum:UNVERIFIED|VERIFIED|REFUTED
+      weights_fast: list[float]
+      weights_slow: list[float]
+      dt: Duration
+      w_declared: Duration
+      fast_slow_synchronous: bool
+      provenance: Provenance
+    notes: >-
+      M14-1 (ITER2 M2-2). The averaging kernel is a VERSIONED WEIGHT SCHEDULE,
+      never module constants. A ~1 Hz publication cadence is a cadence, not a
+      kernel: it does not establish 60 equally-weighted samples, synchronous
+      S30/S60 support or right-alignment at t. EXP-M6 proves the published S60
+      endpoint reproduces settlement; it says nothing about how that endpoint is
+      built. No PathLaw whose sampling_convention.status is UNVERIFIED may be
+      used as a pricing input -- a 1 s shift in fast-stream support alone moves
+      the anchor coefficient.
+  AnchorSpec:
+    fields:
+      family: enum:TRANSLATION_INVARIANT_TWO_STREAM|OTHER
+      alpha: float
+      alpha_provenance: enum:ESTIMATED|MODEL_IMPLIED|ASSUMED
+      alpha_star_model: float | NullPin
+      bias_coeff: float
+      bias_enters: enum:MEAN_MODEL|REFUSED
+      cond_var: VarianceQuantity
+      uncond_mse: VarianceQuantity | NullPin
+    notes: >-
+      M14-1 (ITER2 M2-1) -- the load-bearing repair. For the family
+      P_hat(alpha) = S_slow + alpha*(S_fast - S_slow), the error splits as
+      (alpha - alpha*)*(S_fast - S_slow) + a conditionally zero-mean residual.
+      The first term is a CONDITIONAL BIAS that is KNOWN AT DECISION TIME, so it
+      belongs in the mean model; bias_enters may therefore never be anything but
+      MEAN_MODEL or REFUSED. v13 entered the whole unconditional MSE as a
+      zero-mean variance line: at BTC's sigma that buried a bias of sd 1.22 bps
+      inside a total sigma_eff(30) of ~2.4 bps, i.e. half the standard deviation
+      at r=30 was a predictable mean error -- the same defect class as the
+      original S60-anchor bug. cond_var is alpha-INDEPENDENT (P_hat is a
+      function of the conditioning variables) and is the only line that may
+      enter the variance. alpha is a free parameter: alpha_provenance must read
+      ESTIMATED before pricing; MODEL_IMPLIED records what a declared path model
+      says (alpha* = 2700/1801 under disc1s_v0) and ASSUMED is what v1 did when
+      it took alpha = 2 from a local-linear-trend argument that contradicts the
+      variance model.
+  AnchorObservables:
+    fields:
+      s_fast: Known[float]
+      s_slow: Known[float]
+      unit_space: UnitSpace
+    notes: >-
+      The two stream reads the anchor is a function of. Typed so that the
+      conditional bias, which is a function of (s_fast - s_slow), is computable
+      by the consumer rather than assumed away.
+  AnchorErrorEvidence:
+    fields:
+      entries: list[AnchorErrorDatum]
+      ordered: bool
+      feed_error_cov: FeedErrorCov | NullPin
+    notes: >-
+      M14-1 (ITER2 M2-3). Replaces AnchorErrorBudget{floor, ceiling}, which was
+      NOT an ordered bracket. The model-implied MSE of one chosen extrapolator
+      is not a distribution-free lower bound -- the conditional projection beats
+      it inside the very same model -- and the stream-versus-proxy residual is a
+      mixture of anchor error, time-varying basis and proxy error whose
+      covariance can move it either way. `ordered` must stay false until an
+      ordering is derived from stated assumptions; consumers may not apply
+      min/max semantics while it is false.
+  AnchorErrorDatum:
+    fields:
+      label: str
+      value: VarianceQuantity
+      assumptions: str
+      is_a_bound: bool
+  FeedErrorCov:
+    fields:
+      var_fast: float
+      var_slow: float
+      cov: float
+      unit_space: UnitSpace
+    notes: >-
+      M14-1. Stream measurement error is a 2x2, not a scalar. Its contribution
+      is u^T Cov u with u = (alpha, 1 - alpha), so it varies with the horizon
+      weights and is generally NOT a scalar multiple of the model curve -- and
+      because (1 - alpha) changes sign above alpha = 1, the same covariance
+      raises one anchor's variance and lowers another's. v13's scalar
+      omega_scale could not express that.
+  Interval:
+    fields:
+      lo: float
+      hi: float
   UnitSpace:
     fields:
       coordinate: enum:NORMALISED_ARITHMETIC_RETURN|LOG_RETURN|RAW_PRICE
@@ -446,34 +599,19 @@ types:
       r_min: Duration
       r_max: Duration
       grid: list[Duration]
-      basis_crossover: Duration
+      basis_crossover: Duration | NullPin | Unavailable
     notes: >-
       Below basis_crossover the basis noise exceeds settlement vol and the price
       model is noise regardless of estimator quality; queries there return
-      Unavailable, not a number.
-  AnchorErrorBudget:
-    fields:
-      floor: float
-      ceiling: float
-      coefficient_by_horizon: dict[str, float]
-      identified: bool
-      provenance: Provenance
-    notes: >-
-      S3. Var(P_hat - P_t) is NOT identified against one proxy: latent spot is
-      unobserved and time-varying basis plus proxy error stay in the residual.
-      Carried as a BRACKET. floor is model-implied (the reconstruction cost with
-      perfect synchronous feeds, sigma_kernels.omega_p_coeff); ceiling is the
-      empirical proxy residual including basis. identified=false until a
-      two-proxy or error-in-variables estimate exists; consumers must propagate
-      both ends. coefficient_by_horizon is a(r), which is NOT (r/w)^2 * floor at
-      interior horizons because the shorter TWAP is reconstructed from the same
-      pair and the two errors are correlated.
+      Unavailable, not a number. M14-1: the basis study is deferred to PM-E1, so
+      the field must be able to say so -- v13 typed it as a required Duration,
+      which forced a number nobody had measured.
   CalibrationCurve:
     fields:
       c_by_horizon: dict[str, float]
-      interval_by_horizon: dict[str, str]
-      band: str
-      inference_rule: str
+      interval_by_horizon: dict[str, Interval]
+      band: Interval
+      inference_rule: enum:DAY_BLOCK_BOOTSTRAP|BLOCK_BOOTSTRAP|NONE
       n_day_clusters: int
       status: enum:DIAGNOSTIC|GATE
     notes: >-
@@ -654,22 +792,25 @@ types:
 modules:
   BE-Uncertainty:
     consumes:
-    - RawEvent
+    - ForecastRequest
     produces: dict[InstrumentId, Known[Uncertain[PathLaw]] | Unavailable]
     ports:
     - state_view
     - artifact_resolver
     - telemetry_out
     notes: >-
-      M13-1. Fits the physical-volatility law from the TAPE; outcomes are used
+      M14-1. Fits the physical-volatility law from the TAPE; outcomes are used
       only for calibration and falsification, never to fit it. Emits a law, not
       a scalar. Instrument-scoped and per-symbol: the measured level spans 4.6x
       across coins, so a pooled sigma is a 4.6x error, and any pooling appears
-      as a declared shrinkage weight, never as a parameter tie. Refuses
-      (Unavailable) rather than extrapolating outside horizon_domain, past
-      fit_data_through, or when its own inputs are unavailable -- in particular
-      the belief fallback may NOT inherit a book-sourced d after the book has
-      failed.
+      as a declared shrinkage weight, never as a parameter tie. Reads ONLY
+      through the state_view port (R-PORT/R-KNOW) -- v13 declared
+      `consumes: RawEvent`, which reached past the DA/StateView knowledge-time
+      seam into the landing zone and would have let un-truncated data into a
+      walk-forward fit. Refuses (Unavailable) rather than extrapolating outside
+      horizon_domain, when sampling_convention.status is UNVERIFIED, or when its
+      own inputs are unavailable -- in particular the belief fallback may NOT
+      inherit a book-sourced d after the book has failed.
   BE-Competition:
     produces: dict[InstrumentId, Known[Uncertain[CompetitionState]] | Unavailable]
     notes: instrument-scoped marginals
@@ -800,6 +941,7 @@ prelude:
   - any
   - EdgeId
 config_supplied:
+- ForecastRequest
 - CouplingGraph
 - ScenarioLossConstraint
 - PortfolioState

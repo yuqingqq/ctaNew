@@ -4,6 +4,202 @@
 # narrowing at an allowlisted path -- the precise failure this process exists to
 # prevent. Records are loaded from the TARGET ref.
 migrations:
+# ---- v13 -> v14 (M14-1): ITER2 review of the sigma spec repair --------------
+# The v13 carrier landed structurally but could not enforce the boundary it
+# claimed. These records are the honest cost of that.
+- from_version: 13
+  to_version: 14
+  operation: remove
+  key: field:PathLaw.link
+  old: LinkFunction
+  reason: 'M14-1 (M2-5.2): duplicated BeliefProcess.link with no equality
+    invariant tying the copies; replaced by link_ref: LinkRef, a reference to
+    the single owner in the belief/spec plane'
+- from_version: 13
+  to_version: 14
+  operation: remove
+  key: field:PathLaw.anchor_error
+  old: AnchorErrorBudget
+  reason: 'M14-1 (M2-3): floor/ceiling was not an ordered bracket -- the
+    conditional projection beats the "floor" inside the same model; replaced by
+    anchor_error_evidence: AnchorErrorEvidence with ordered=false'
+- from_version: 13
+  to_version: 14
+  operation: remove
+  key: type:AnchorErrorBudget
+  old: record
+  reason: 'M14-1 (M2-3): see field:PathLaw.anchor_error'
+- from_version: 13
+  to_version: 14
+  operation: remove
+  key: note:AnchorErrorBudget
+  old: 'S3. Var(P_hat - P_t) is NOT identified against one proxy: latent spot is
+    unobserved and time-varying basis plus proxy error stay in the residual.
+    Carried as a BRACKET. floor is model-implied (the reconstruction cost with
+    perfect synchronous feeds, sigma_kernels.omega_p_coeff); ceiling is the
+    empirical proxy residual including basis. identified=false until a two-proxy
+    or error-in-variables estimate exists; consumers must propagate both ends.
+    coefficient_by_horizon is a(r), which is NOT (r/w)^2 * floor at interior
+    horizons because the shorter TWAP is reconstructed from the same pair and
+    the two errors are correlated.'
+  reason: 'M14-1 (M2-3): the type it annotated is gone'
+- from_version: 13
+  to_version: 14
+  operation: remove
+  key: field:AnchorErrorBudget.floor
+  old: float
+  reason: 'M14-1 (M2-3): not a bound'
+- from_version: 13
+  to_version: 14
+  operation: remove
+  key: field:AnchorErrorBudget.ceiling
+  old: float
+  reason: 'M14-1 (M2-3): not a bound'
+- from_version: 13
+  to_version: 14
+  operation: remove
+  key: field:AnchorErrorBudget.identified
+  old: bool
+  reason: 'M14-1 (M2-3): superseded by AnchorErrorEvidence.ordered'
+- from_version: 13
+  to_version: 14
+  operation: remove
+  key: field:AnchorErrorBudget.coefficient_by_horizon
+  old: dict[str, float]
+  reason: 'M14-1 (M2-1): a(r) mixed conditional variance with squared bias;
+    the two are now separate fields on AnchorSpec'
+- from_version: 13
+  to_version: 14
+  operation: remove
+  key: field:AnchorErrorBudget.provenance
+  old: Provenance
+  reason: 'M14-1: moves to AnchorErrorDatum-level assumptions'
+- from_version: 13
+  to_version: 14
+  operation: change
+  key: field:PathLaw.sigma2_rate
+  old: float
+  new: VarianceQuantity
+  reason: 'M14-1 (M2-5.7): a variance may not cross the boundary as a bare float'
+- from_version: 13
+  to_version: 14
+  operation: change
+  key: field:PathLaw.nugget
+  old: float
+  new: VarianceQuantity | NullPin
+  reason: 'M14-1 (M2-4): the nugget needs an estimand and a unit space before it
+    can enter any total, and must be able to declare its own absence'
+- from_version: 13
+  to_version: 14
+  operation: change
+  key: field:PathLaw.w_hat_free_diagnostic
+  old: float | NullPin
+  new: Duration | NullPin
+  reason: 'M14-1 (M2-5.7): w_hat is a time, not a dimensionless float'
+- from_version: 13
+  to_version: 14
+  operation: change
+  key: field:HorizonDomain.basis_crossover
+  old: Duration
+  new: Duration | NullPin | Unavailable
+  reason: 'M14-1 (M2-5.8): the basis study is deferred to PM-E1, so a required
+    Duration forced a number nobody had measured'
+- from_version: 13
+  to_version: 14
+  operation: change
+  key: field:CalibrationCurve.band
+  old: str
+  new: Interval
+  reason: 'M14-1 (M2-5.7): a free string cannot be checked against c(r)'
+- from_version: 13
+  to_version: 14
+  operation: change
+  key: field:CalibrationCurve.interval_by_horizon
+  old: dict[str, str]
+  new: dict[str, Interval]
+  reason: 'M14-1 (M2-5.7): same'
+- from_version: 13
+  to_version: 14
+  operation: change
+  key: field:CalibrationCurve.inference_rule
+  old: str
+  new: enum:DAY_BLOCK_BOOTSTRAP|BLOCK_BOOTSTRAP|NONE
+  reason: 'M14-1 (M2-5.7): the inference rule is a closed choice, not prose'
+- from_version: 13
+  to_version: 14
+  operation: change
+  key: proto:PathLaw.settlement_var
+  old: '(r: Duration) -> float | Unavailable'
+  new: '(req: ForecastRequest) -> VarianceQuantity | Unavailable'
+  reason: 'M14-1 (M2-5.6): a bare r cannot enforce as_of, knowledge cutoff or
+    the target interval, which is exactly how look-ahead enters unnoticed'
+- from_version: 13
+  to_version: 14
+  operation: change
+  key: proto:PathLaw.increment_var
+  old: '(h: Duration) -> float | Unavailable'
+  new: '(req: ForecastRequest) -> VarianceQuantity | Unavailable'
+  reason: 'M14-1 (M2-5.6): same'
+- from_version: 13
+  to_version: 14
+  operation: change
+  key: note:PathLaw
+  old: 'M13-1. Replaces {kind: str, params: dict[str, float]}, which could not
+    carry a unit space, a horizon domain, a fit cutoff or a refusal, so an
+    estimator emitting a LAW rather than a scalar had no typed carrier.
+    settlement_var is the CONDITIONAL terminal object consumers price with;
+    increment_var is the ROLLING object the tape is fitted to. They are never
+    interchangeable (ratio 4.1x in sigma at r=10 s) and both are exposed so no
+    consumer has to pick. Both REFUSE outside horizon_domain and after
+    fit_data_through rather than extrapolating. w_hat_free_diagnostic never
+    enters either kernel.'
+  new: 'M14-1 (ITER2 M2-5). settlement_var is the CONDITIONAL terminal object
+    consumers price with; increment_var is the ROLLING object the tape is fitted
+    to. They are never interchangeable (ratio 4.1x in sigma at r=10 s) and both
+    are exposed so no consumer has to pick. Both take a ForecastRequest, not a
+    bare horizon, so as_of, knowledge cutoff and the target interval are
+    enforceable rather than implicit; both refuse outside horizon_domain.
+    conditional_mean is now part of the carrier because the anchor has a
+    state-dependent conditional bias that belongs in the MEAN and must not be
+    reachable only through the variance. w_hat_free_diagnostic never enters any
+    kernel. See R-WFWD for the fit-cutoff invariant: v13''s note said the law
+    refuses AFTER fit_data_through, which is backwards -- a walk-forward
+    forecast is used precisely then.'
+  reason: 'M14-1 (M2-5.5): the v13 note stated the fit-cutoff refusal backwards
+    and predated the mean/variance separation'
+- from_version: 13
+  to_version: 14
+  operation: change
+  key: note:HorizonDomain
+  old: 'Below basis_crossover the basis noise exceeds settlement vol and the
+    price model is noise regardless of estimator quality; queries there return
+    Unavailable, not a number.'
+  new: 'Below basis_crossover the basis noise exceeds settlement vol and the
+    price model is noise regardless of estimator quality; queries there return
+    Unavailable, not a number. M14-1: the basis study is deferred to PM-E1, so
+    the field must be able to say so -- v13 typed it as a required Duration,
+    which forced a number nobody had measured.'
+  reason: 'M14-1 (M2-5.8): records the deferral the type now permits'
+- from_version: 13
+  to_version: 14
+  operation: change
+  key: note:LinkFunction
+  old: never hardcode the Gaussian Phi
+  new: 'never hardcode the Gaussian Phi. M14-1: g_prime/density added because
+    every dynamics consumer (participation frontier m/g''(d), lambda_bin, the
+    zeta pickoff floor, the hedge delta) needs the derivative, and v13 exposed
+    only g and g_inv -- which left those consumers unimplementable except by
+    reaching for phi and reintroducing the Gaussian by the back door.'
+  reason: 'M14-1 (M2-5.3): the derivative was required by the plan and absent
+    from the protocol'
+- from_version: 13
+  to_version: 14
+  operation: change
+  key: module:BE-Uncertainty.consumes
+  old: "['RawEvent']"
+  new: "['ForecastRequest']"
+  reason: 'M14-1 (M2-5.1): RawEvent reached past the DA/StateView knowledge-time
+    seam into the landing zone; reads now go through the state_view port only'
 - from_version: 12
   to_version: 13
   operation: remove

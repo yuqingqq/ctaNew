@@ -59,38 +59,78 @@ flags:
   structure_converged: false # 12 review iterations; replay stands at
                              # LOCAL 11 / SPREADING 1 / STRUCTURAL 1.
   sigma_plan_finalized: true # SIGMA_PLAN.md, commit 80f823e. Phase 0 gated.
-  sigma_plan_review: partial # SIGMA_PLAN_REVIEW_ITER2.md. Revision 2 made real
-                             # progress, but five of the six prior MUST-FIX
-                             # items remain partial/open. Estimator code is on
-                             # HOLD and Phase 0A steps 1-3 are reopened.
-  anchor_ledger_closed: false # a(r) is the unconditional MSE of the chosen
-                             # 2*S30-S60 extrapolator, not a conditional
-                             # variance. Under the plan's own discrete Brownian
-                             # model, its conditional mean is different and its
-                             # error has state-dependent bias. It cannot be
-                             # entered as a zero-mean variance line as written.
+  sigma_plan_review: iter2-applied # SIGMA_PLAN_REVIEW_ITER2.md M2-1..M2-6 all
+                             # ACCEPTED and applied. Every ITER2 claim was
+                             # REPRODUCED before acting: alpha*=1.499167,
+                             # cond var 8.2590, uncond MSE 9.5139, unconstrained
+                             # 1.701/-0.836 @ 8.0912, and all four adversarial
+                             # probes. SIGMA_PLAN.md is now REVISION 3 —
+                             # rewritten in place, not a third overlay
+                             # (1024 -> 649 lines); contradiction scan clean.
+                             # ESTIMATOR CODE REMAINS ON HOLD.
+  anchor_ledger_closed: false # STILL FALSE, and now correctly modelled. The
+                             # anchor is a conditional MEAN problem: for
+                             # P_hat(alpha)=S60+alpha*(S30-S60) the error is
+                             # (alpha-alpha*)*(S30-S60) + zero-mean residual.
+                             # alpha* = 2700/1801 = 1.4991671, NOT 2. The
+                             # conditional variance is ALPHA-INDEPENDENT (8.2590,
+                             # not 9.5139 — the difference was squared bias).
+                             # The bias is OBSERVABLE at decision time and its
+                             # sd is 1.22 bps vs sigma_eff(30) ~2.4 bps, i.e.
+                             # HALF the sd at r=30 was a predictable mean error.
+                             # Closes only when alpha is ESTIMATED on the tape
+                             # (AnchorSpec.alpha_provenance: ESTIMATED) and the
+                             # sampling convention is VERIFIED.
+  sampling_convention: UNVERIFIED # ~1 Hz publication cadence is a CADENCE, NOT
+                             # A KERNEL. EXP-M6 proves the published S60 endpoint
+                             # reproduces settlement; it says nothing about how
+                             # that endpoint is built. A 1 s shift in fast-stream
+                             # support alone moves alpha* 1.4992 -> 1.4954. No
+                             # PathLaw may price while this reads UNVERIFIED.
+                             # Phase 0A step 5 gates the kernel AND the anchor.
   d2_retired: true           # The old incomplete-ledger prediction is retired,
-                             # but c(30)=1.14 is not replacement evidence: its
-                             # 2.6 bps residual comes from the Binance-mid
-                             # anchor diagnostic, not the new S30/S60 anchor.
-  contracts_version: 13      # Structural migration and checker pass. Semantic
-                             # carrier remains incomplete: BE-Uncertainty takes
-                             # RawEvent directly, link ownership is duplicated,
-                             # LinkFunction lacks the required derivative,
-                             # target interval/cutoff semantics are missing or
-                             # backwards, and runtime refusal is not enforced.
+                             # but c(30)=1.14 is NOT replacement evidence: its
+                             # 2.6 bps residual comes from SIGMA_DIAGNOSTICS
+                             # Test F, whose anchor is a Binance-mid path
+                             # level-anchored to Chainlink, not 2*S30-S60.
+                             # VERIFIED at SIGMA_DIAGNOSTICS.md:157-175. Both
+                             # c(30)=2.17 and c(30)=1.14 are apples-to-oranges;
+                             # no c(r) number is currently claimable.
+  contracts_version: 14      # M14-1 repairs all eight M2-5 sub-items:
+                             # BE-Uncertainty now reads only via state_view
+                             # (RawEvent reached past the knowledge-time seam);
+                             # LinkRef single-owns the link; LinkFunction gains
+                             # g_prime/density (dynamics consumers were
+                             # unimplementable without them); ForecastRequest
+                             # carries as_of/knowledge_cutoff/target_interval so
+                             # a bare r can no longer hide look-ahead; R-WFWD
+                             # fixes the BACKWARDS fit-cutoff rule (a
+                             # walk-forward law is USED after its cutoff);
+                             # AnchorSpec separates bias from variance;
+                             # AnchorErrorEvidence replaces the false
+                             # floor/ceiling bracket; FeedErrorCov is a 2x2, not
+                             # a scalar; variances/intervals/w_hat are typed.
+                             # 9 removals + 13 changes, all with migration
+                             # records; checker 0 unexplained, 0 invariant fails.
+                             # NOT closed: runtime refusal exists only in the
+                             # fixture, and BE-Belief is still absent from
+                             # modules: (structure loop, not this plan).
 
 focus: >
   Build and test the model, mechanism-first, no PnL/capacity estimation
   (user, 2026-08-20). Entry point is live/pm_research/PM_ARCHITECTURE.md (v12)
   with contracts/contracts.yaml as the machine-readable source of truth.
-  IMMEDIATE: Phase 0A steps 1-3 are reopened. Verify the actual S30/S60
-  aggregation and knowledge-time semantics; choose and type either the true
-  conditional endpoint forecast or an explicitly operational biased anchor;
-  derive its conditional error law/covariance; replace the unordered
-  floor/ceiling claim; and repair the runtime API plus contract ownership,
-  temporal fields and refusal semantics. Estimator implementation remains on
-  HOLD. Only then freeze the consumer matrix and proceed to the baseline.
+  IMMEDIATE: the ITER2 spec repairs are IN (plan Revision 3, sigma_kernels
+  rewritten, contracts v14) but Phase 0A is NOT closed. Two things gate
+  everything and neither is code: (5) VERIFY S30/S60 AGGREGATION AND
+  KNOWLEDGE-TIME SEMANTICS against the 1 s Binance tape — window endpoints,
+  sample weights, update triggers, event-time alignment — which gates the kernel
+  and the anchor together; then (6) ESTIMATE alpha on the tape, preferably by
+  regressing observed x_T directly on observed (S30, S60), which needs neither
+  latent Chainlink spot nor the internal kernel, with the conditional bias in
+  the MEAN and Omega estimated as a 2x2. Also still open: the fallback's own
+  loss function, and runtime enforcement of refusal (only the fixture refuses
+  today). Estimator implementation remains on HOLD.
 
 standing_rules:
   - No design decision that a measurement on existing data could settle may be
@@ -146,26 +186,44 @@ tasks:
       Review loop is at 12 iterations and NOT converged.
   - id: sigma-model
     phase: 1
-    name: Volatility estimator — spec repair reviewed, Phase 0A reopened
-    status: reviewed-hold
+    name: Volatility estimator — ITER2 applied (Rev 3 / v14), anchor to ESTIMATE
+    status: iter2-applied-hold
     notes: |
       Three estimators were built and each violated a decision already made
       (static pooled -> static per-coin -> rolling per-window with POOLED blend
-      weights). Root cause was not sigma at all: the ANCHOR was wrong. Plan
-      written and finalized (SIGMA_PLAN.md, 80f823e), reviewed at 6bea435, and
-      revised at cc1d0e7. The second review is SIGMA_PLAN_REVIEW_ITER2.md.
-      Revision 2 keeps several good repairs: normalised arithmetic units,
-      consistent discrete kernels, physical-forecast terminology, an MNAR
-      correction and typed contract additions. It does not close the anchor
-      ledger. Under its own discrete Brownian model, 2*S30-S60 has MSE
-      9.5139*sigma^2, while the translation-invariant conditional projection is
-      about 1.499*S30-0.499*S60 with MSE 8.2590*sigma^2. The chosen anchor has
-      state-dependent conditional bias, so its unconditional MSE cannot be
-      added as zero-mean conditional variance. S30/S60 feed semantics are also
-      still unverified; the floor/ceiling is not ordered; sigma_kernels.py has a
-      hidden nugget and no refusal/domain enforcement; and contracts v13 leave
-      consumer, link, derivative, target-time and cutoff semantics incomplete.
-      NEXT: reopen Phase 0A 1-3 and resolve those points before any estimator.
+      weights). Root cause was not sigma: the ANCHOR was wrong, TWICE.
+      Lineage: SIGMA_PLAN.md 80f823e -> review 6bea435 -> Revision 2 cc1d0e7 ->
+      SIGMA_PLAN_REVIEW_ITER2.md -> Revision 3 (this).
+      THE V2 ERROR WAS THE V1 ERROR ONE LEVEL DEEPER. v1 used a LAGGING anchor
+      (trailing S60). v2 fixed the lag with P_hat = 2*S30-S60, justified by a
+      LOCALLY LINEAR PATH — a trend model — then entered that estimator's
+      UNCONDITIONAL MSE as a zero-mean variance line. Under the driftless model
+      used everywhere else, trajectories have no local derivative and 2/-1 is
+      not the conditional mean: the error is (alpha-alpha*)*(S30-S60) + a
+      zero-mean residual, with alpha* = 2700/1801 = 1.4991671. The first term is
+      OBSERVABLE AT DECISION TIME, so v2 buried a predictable mean error in the
+      variance — sd 1.22 bps against sigma_eff(30) ~2.4 bps, i.e. HALF the sd at
+      r=30. Same defect class as the bug that started the thread.
+      Also: the conditional variance is ALPHA-INDEPENDENT (8.2590, not 9.5139 —
+      the gap was squared bias), and v2's "floor" of 9.5139 is BEATEN by alpha*
+      inside v2's own model, so it was never a bound.
+      APPLIED: M2-1 anchor rebuilt as a conditional-MEAN problem (AnchorSpec,
+      bias_enters ∈ {MEAN_MODEL, REFUSED}); M2-2 SamplingConvention versioned and
+      UNVERIFIED, kernel step REOPENED; M2-3 non-ordered AnchorErrorEvidence +
+      2x2 FeedErrorCov; M2-4 one ledger, no hidden nugget, exact domain refusal,
+      exact-rational tests (24 checks); M2-5 contracts v14, all eight sub-items;
+      M2-6 plan REWRITTEN IN PLACE as Revision 3 (1024 -> 649 lines), not a third
+      overlay, contradiction scan clean.
+      SELF-CHECK WORTH KEEPING: v2's Monte-Carlo independence test drew the
+      future innovation independently BY CONSTRUCTION — a test that could not
+      fail. That is the FOURTH artefact in this programme to report success
+      without checking the thing it existed to check (v8 contract checker,
+      path-keyed allowlist, that MC, and v13 itself). Assume the next one exists.
+      NEXT (neither is code): Phase 0A 5 — VERIFY S30/S60 semantics against the
+      1 s Binance tape, which gates kernel and anchor together; Phase 0A 6 —
+      ESTIMATE alpha on the tape, preferably by regressing observed x_T on
+      observed (S30, S60), which needs neither latent spot nor the internal
+      kernel and is robust to 5's outcome.
   - id: e-x1-bookbeat
     phase: 1
     name: Re-read the model-vs-book verdict on the corrected anchor
