@@ -198,3 +198,21 @@ The OP improvement is not yet executable: the port manifest carries no
 `HaltState`, and the claimed cancel command has no edge to `DE-Actuator`.
 Remaining work preserves the competition wrapper, routes incentive cash into
 wealth, types and owns adverse scenarios, and completes the halt/cancel path.
+
+| 7 | 2026-08-20 | review: 5 | **v7 NOT CONVERGED; issues recorded** |
+
+## Iteration 7 review of v7 — 5 MUST-FIX
+
+Full review: `PM_STRUCT_ITER7_REVIEW.md`.
+
+Strict replay score remains **LOCAL 11 / SPREADING 0 / STRUCTURAL 2**.
+V7 correctly preserves the competition wrapper, routes incentive cash into
+wealth and gives the kill path both constraint and actuator edges. Scenario
+risk and portfolio competition nevertheless remain structural because their
+claimed fields and joint types are absent from the canonical
+`DecisionProblem`.
+
+Additional boundary regressions must be removed before convergence: dynamic
+coupling is described but not carried by the problem; OP reads EV despite the
+EV-is-read-by-none invariant; and restoring the old spec block duplicates
+instrument-scoped rewards under `SP-Venue`.
