@@ -1,8 +1,9 @@
 """
 Polymarket crypto 5-min "Up or Down" market collector (P-2026-003, E0).
 
-Markets: {btc,eth,sol,xrp}-updown-5m-<unix_window_start>, 300 s-aligned windows,
-pre-created ~5 min ahead (verified 2026-08-19). Per market we record the full
+Markets: {btc,eth,sol,xrp,doge,bnb,hype}-updown-5m-<unix_window_start>,
+300 s-aligned windows, pre-created ~5 min ahead (verified 2026-08-19). Per
+market we record the full
 CLOB market channel (book snapshots, price_change deltas, last_trade_price —
 which carries fee_rate_bps) plus Gamma metadata and the post-close resolution.
 
@@ -15,8 +16,8 @@ Architecture (all asyncio, one process):
              message stored as "<recv_ns>\t<raw json>" in
              raw/<YYYYMMDD>/<slug>.jsonl; closed at window_end + 90 s grace,
              then gzipped
-  resolution every 60 s: markets past end+120 s are polled on Gamma until
-             closed/outcomePrices appear → append to resolutions.jsonl
+  resolution every 60 s: markets past end+120 s are polled on the persistent
+             CLOB endpoint until closed → append to resolutions.jsonl
 
 Signal-side data (Binance bookTicker/depth/trades for the same coins) is already
 collected by live/mm_research/collect_hf.py — this collector is the market side.
@@ -27,13 +28,17 @@ Run:  nohup python3 live/pm_research/collect_pm.py > data/pm_5min/collector.log 
 """
 from __future__ import annotations
 
+import argparse
 import asyncio
 import gzip
 import json
+import os
 import shutil
 import signal
+import tempfile
 import time
 import urllib.request
+from collections import Counter, defaultdict
 from pathlib import Path
 
 import websockets
@@ -53,6 +58,10 @@ DISCOVER_S = 30
 RESOLVE_S = 60
 RESOLVE_AFTER_S = 120        # start polling resolution this long past end
 RESOLVE_GIVEUP_S = 7200
+WRITE_BATCH = 2_000
+WRITE_QUEUE_MAX = 32
+GAP_LEDGER = ROOT / "collector_gaps.jsonl"
+COLLECTOR_VERSION = "clob_v2"
 
 
 def gget(slug: str):
@@ -104,12 +113,36 @@ def jl_append(path: Path, obj: dict) -> None:
         f.write(json.dumps(obj, separators=(",", ":")) + "\n")
 
 
+def gzip_atomic(path: Path, dest: Path) -> None:
+    """Publish gzip only after a complete archive exists; preserve raw on failure."""
+    tmp = Path(f"{dest}.tmp-{os.getpid()}-{time.time_ns()}")
+    try:
+        with open(path, "rb") as src, gzip.open(tmp, "wb", compresslevel=6) as dst:
+            shutil.copyfileobj(src, dst)
+        tmp.replace(dest)
+        path.unlink()
+    except Exception:
+        tmp.unlink(missing_ok=True)
+        raise
+
+
+def ws_cause(ex: BaseException) -> str:
+    text = str(ex).lower()
+    if "1013" in text or "slow" in text:
+        return "SLOW_CONSUMER_1013"
+    if "ping timeout" in text:
+        return "PING_TIMEOUT"
+    if "no close" in text:
+        return "NO_CLOSE_FRAME"
+    return type(ex).__name__.upper()
+
+
 def is_final(m: dict) -> bool:
     """A market is RESOLVED only if closed, or outcomePrices degenerate to {0,1}.
     Gamma populates outcomePrices continuously for OPEN markets (live prices) —
     treating their mere presence as resolution records garbage (bug found
     2026-08-19: rows with closed=false and prices like 0.165/0.835)."""
-    if m.get("closed") is True or m.get("gave_up"):
+    if m.get("closed") is True:
         return True
     op = m.get("outcomePrices")
     if op:
@@ -127,9 +160,14 @@ class PMCollector:
         self.known: set[str] = set()          # slugs with a running/finished market task
         self.pending_res: dict[str, tuple[int, str]] = {}  # slug → (window_end, conditionId)
         self.resume: list[tuple[str, int, list]] = []       # in-flight windows to re-spawn
+        self.gave_up: set[str] = set()       # logged once, but still polled until final
         self.rewards: dict = {}            # condition_id → authoritative rewards params
         self.rewards_ts = 0.0
-        self.counts = {"msgs": 0, "markets": 0, "resolved": 0}
+        self.counts = defaultdict(int)
+        self.msg_by_coin = Counter()
+        self.retry_by_coin = Counter()
+        self.slow_by_coin = Counter()
+        self.market_tasks: set[asyncio.Task] = set()
         self._load_state()
 
     def _load_state(self) -> None:
@@ -139,6 +177,8 @@ class PMCollector:
             for ln in open(ROOT / "resolutions.jsonl"):
                 try:
                     r = json.loads(ln)
+                    if r.get("gave_up"):
+                        self.gave_up.add(r["slug"])
                     if is_final(r):          # non-final rows (bug above) re-poll
                         resolved.add(r["slug"])
                 except Exception:
@@ -161,20 +201,51 @@ class PMCollector:
             print(f"[pm] resumed: {len(self.known)} known, "
                   f"{len(self.pending_res)} pending resolution", flush=True)
 
+    def _audit(self, obj: dict) -> None:
+        try:
+            jl_append(GAP_LEDGER, {"recv_ns": time.time_ns(),
+                                   "collector_version": COLLECTOR_VERSION, **obj})
+        except Exception as ex:
+            self.counts["audit_errors"] += 1
+            print(f"[pm] audit append: {type(ex).__name__} {str(ex)[:60]}", flush=True)
+
+    async def _rewards_refresh(self) -> None:
+        loop = asyncio.get_event_loop()
+        while not self.stop:
+            now = int(time.time())
+            try:
+                self.rewards = await loop.run_in_executor(None, rewards_registry)
+                self.rewards_ts = now
+                jl_append(ROOT / "rewards_registry.jsonl",
+                          {"recv_ns": time.time_ns(), "n": len(self.rewards)})
+            except Exception as ex:
+                print(f"[pm] rewards registry: {type(ex).__name__} {str(ex)[:60]}",
+                      flush=True)
+            await self._sleep(600)
+
+    def _spawn_market(self, slug: str, ts: int, toks: list[str]) -> None:
+        """Keep strong references so shutdown can drain every raw-data writer."""
+        task = asyncio.create_task(self._market(slug, ts, toks))
+        self.market_tasks.add(task)
+
+        def done(finished: asyncio.Task) -> None:
+            self.market_tasks.discard(finished)
+            if finished.cancelled():
+                return
+            try:
+                finished.result()
+            except Exception as ex:
+                self.counts["market_task_errors"] += 1
+                print(f"[pm] market task {slug}: {type(ex).__name__} {str(ex)[:80]}",
+                      flush=True)
+
+        task.add_done_callback(done)
+
     # ---- discovery ------------------------------------------------------------
     async def _discovery(self) -> None:
         loop = asyncio.get_event_loop()
         while not self.stop:
             now = int(time.time())
-            if now - self.rewards_ts > 600:        # refresh registry every 10 min
-                try:
-                    self.rewards = await loop.run_in_executor(None, rewards_registry)
-                    self.rewards_ts = now
-                    jl_append(ROOT / "rewards_registry.jsonl",
-                              {"recv_ns": time.time_ns(), "n": len(self.rewards)})
-                except Exception as ex:
-                    print(f"[pm] rewards registry: {type(ex).__name__} {str(ex)[:60]}",
-                          flush=True)
             cur = now - now % WINDOW_S
             for coin in COINS:
                 for ts in (cur, cur + WINDOW_S):
@@ -207,7 +278,6 @@ class PMCollector:
                             "clobTokenIds": toks, "outcomes": m.get("outcomes"),
                             "question": m.get("question"),
                             # FULL description — it names the exact settlement stream
-                            # (e.g. btc-usd-twap-60s-streams); truncation loses it
                             "description": m.get("description"),
                             "resolutionSource": m.get("resolutionSource"),
                             # rewards/microstructure params (per-market, versioned)
@@ -231,7 +301,7 @@ class PMCollector:
                     jl_append(ROOT / "markets.jsonl", meta)
                     self.pending_res[slug] = (ts + WINDOW_S, meta["conditionId"])
                     self.counts["markets"] += 1
-                    asyncio.create_task(self._market(slug, ts, toks))
+                    self._spawn_market(slug, ts, toks)
             await self._sleep(DISCOVER_S)
 
     # ---- per-market WS recorder -----------------------------------------------
@@ -242,6 +312,62 @@ class PMCollector:
         stop_at = ts + WINDOW_S + GRACE_S
         f = open(path, "a", buffering=1 << 20)     # 1 MB userspace buffer
         buf: list[str] = []
+        write_q: asyncio.Queue[str | None] = asyncio.Queue(maxsize=WRITE_QUEUE_MAX)
+        coin = slug.split("-", 1)[0]
+        last_recv_ns: int | None = None
+        open_gap: dict | None = None
+
+        async def writer() -> None:
+            while True:
+                chunk = await write_q.get()
+                try:
+                    if chunk is None:
+                        return
+                    await asyncio.to_thread(f.write, chunk)
+                finally:
+                    write_q.task_done()
+
+        writer_task = asyncio.create_task(writer())
+
+        async def flush_buf() -> None:
+            if not buf:
+                return
+            if writer_task.done():
+                writer_task.result()
+            n_messages = len(buf)
+            chunk = "".join(buf)
+            buf.clear()
+            try:
+                write_q.put_nowait(chunk)
+            except asyncio.QueueFull:
+                self.counts["writer_backpressure"] += 1
+                await write_q.put(chunk)
+            self.counts["writer_queue_highwater"] = max(
+                self.counts["writer_queue_highwater"], write_q.qsize())
+            self.msg_by_coin[coin] += n_messages
+
+        async def receive(ws) -> None:
+            nonlocal last_recv_ns, open_gap
+            while not self.stop:
+                raw = await ws.recv()
+                recv_ns = time.time_ns()
+                if open_gap is not None:
+                    self._audit({
+                        "event": "gap_closed", "slug": slug, "coin": coin,
+                        "tokens": toks, "window_start": ts,
+                        "cause": open_gap["cause"],
+                        "gap_start_ns": open_gap["gap_start_ns"],
+                        "gap_end_ns": recv_ns,
+                        "duration_ms": (recv_ns - open_gap["gap_start_ns"]) / 1e6,
+                    })
+                    open_gap = None
+                last_recv_ns = recv_ns
+                buf.append(f"{recv_ns}\t{raw}\n")
+                self.counts["msgs"] += 1
+                if len(buf) >= WRITE_BATCH:
+                    await flush_buf()
+
+        writer_ok = True
         try:
             while not self.stop and time.time() < stop_at:
                 try:
@@ -253,48 +379,51 @@ class PMCollector:
                                                   ping_timeout=10, open_timeout=15,
                                                   max_queue=2 ** 16) as ws:
                         await ws.send(json.dumps({"assets_ids": toks, "type": "market"}))
-                        # HOT LOOP -- do the least work possible per message.
-                        # asyncio.wait_for() allocates a timer per message, which at
-                        # BTC's rate dominates and backs the server's send buffer up
-                        # (1013 slow consumer). A single deadline task replaces it, and
-                        # file writes go to a thread so blocking I/O never stalls the
-                        # event loop. Data lost to 1013 is MNAR: it disappears in the
-                        # BUSIEST intervals, biasing every markout toward calm.
-                        loop = asyncio.get_event_loop()
-                        deadline = loop.create_task(self._sleep(max(0.0, stop_at - time.time())))
-                        recv = None
                         try:
-                            while not self.stop:
-                                if recv is None:
-                                    recv = loop.create_task(ws.recv())
-                                done, _ = await asyncio.wait(
-                                    {recv, deadline}, return_when=asyncio.FIRST_COMPLETED)
-                                if deadline in done:
-                                    break
-                                raw = recv.result(); recv = None
-                                buf.append(f"{time.time_ns()}\t{raw}\n")
-                                self.counts["msgs"] += 1
-                                if len(buf) >= 2000:          # was 200
-                                    chunk = "".join(buf); buf.clear()
-                                    await loop.run_in_executor(None, f.write, chunk)
-                        finally:
-                            for t_ in (recv, deadline):
-                                if t_ is not None and not t_.done():
-                                    t_.cancel()
+                            # Exactly one deadline timer per connection. The receive
+                            # loop does no JSON parsing and never waits for a disk write.
+                            await asyncio.wait_for(receive(ws),
+                                                   timeout=max(0.0, stop_at - time.time()))
+                        except asyncio.TimeoutError:
+                            break
                 except Exception as ex:
-                    if buf:
-                        f.write("".join(buf)); buf.clear()
-                    if "1013" in str(ex) or "slow" in str(ex).lower():
-                        self.counts["slow_drops"] = self.counts.get("slow_drops", 0) + 1
+                    cause = ws_cause(ex)
+                    err_ns = time.time_ns()
+                    self.counts["retries"] += 1
+                    self.retry_by_coin[coin] += 1
+                    if cause == "SLOW_CONSUMER_1013":
+                        self.counts["slow_drops"] += 1
+                        self.slow_by_coin[coin] += 1
+                    if open_gap is None:
+                        open_gap = {"cause": cause,
+                                    "gap_start_ns": last_recv_ns or err_ns}
+                    self._audit({
+                        "event": "disconnect", "slug": slug, "coin": coin,
+                        "tokens": toks, "window_start": ts, "cause": cause,
+                        "last_message_recv_ns": last_recv_ns,
+                        "error": str(ex)[:240],
+                    })
                     if time.time() < stop_at and not self.stop:
                         print(f"[pm] {slug} ws: {type(ex).__name__} {str(ex)[:60]} — retry",
                               flush=True)
                         await asyncio.sleep(1)
         finally:
-            if buf:
-                f.write("".join(buf))
+            try:
+                await flush_buf()
+                if not writer_task.done():
+                    await write_q.put(None)
+                await writer_task
+            except Exception as ex:
+                writer_ok = False
+                self.counts["writer_errors"] += 1
+                print(f"[pm] writer {slug}: {type(ex).__name__} {str(ex)[:80]}", flush=True)
+                if not writer_task.done():
+                    writer_task.cancel()
+                    await asyncio.gather(writer_task, return_exceptions=True)
             f.close()
             try:
+                if not writer_ok:
+                    raise RuntimeError("raw writer failed; preserving uncompressed shard")
                 # numbered shards: a resumed window must never clobber the gz a
                 # previous (truncated) run wrote — consumers concat all shards
                 gz = Path(str(path) + ".gz")
@@ -302,9 +431,7 @@ class PMCollector:
                 while gz.exists():
                     gz = Path(str(path) + f".{i}.gz")
                     i += 1
-                with open(path, "rb") as src, gzip.open(gz, "wb", compresslevel=6) as dst:
-                    shutil.copyfileobj(src, dst)
-                path.unlink()
+                gzip_atomic(path, gz)
             except Exception as ex:
                 print(f"[pm] gzip {slug}: {ex}", flush=True)
 
@@ -329,12 +456,14 @@ class PMCollector:
                         "conditionId": cond, "closed": True,
                         "winners": winners, "source": "clob"})
                     del self.pending_res[slug]
+                    self.gave_up.discard(slug)
                     self.counts["resolved"] += 1
-                elif now > end + RESOLVE_GIVEUP_S:
+                elif now > end + RESOLVE_GIVEUP_S and slug not in self.gave_up:
                     jl_append(ROOT / "resolutions.jsonl",
                               {"recv_ns": time.time_ns(), "slug": slug,
                                "conditionId": cond, "closed": None, "gave_up": True})
-                    del self.pending_res[slug]
+                    self.gave_up.add(slug)
+                    self.counts["resolution_giveups"] += 1
 
     # ---- plumbing -------------------------------------------------------------
     async def _sleep(self, secs: float) -> None:
@@ -349,20 +478,70 @@ class PMCollector:
                 break
             print(f"[pm] {time.strftime('%H:%M:%S', time.gmtime())}Z "
                   f"markets={self.counts['markets']} msgs={self.counts['msgs']} "
-                  f"resolved={self.counts['resolved']} pending={len(self.pending_res)}",
+                  f"resolved={self.counts['resolved']} pending={len(self.pending_res)} "
+                  f"retries={self.counts['retries']} slow={self.counts['slow_drops']} "
+                  f"writer_wait={self.counts['writer_backpressure']} "
+                  f"q_hi={self.counts['writer_queue_highwater']} "
+                  f"msg_by_coin={dict(self.msg_by_coin)} "
+                  f"retry_by_coin={dict(self.retry_by_coin)} "
+                  f"slow_by_coin={dict(self.slow_by_coin)}",
                   flush=True)
 
     async def run(self) -> None:
         RAW.mkdir(parents=True, exist_ok=True)
-        print(f"[pm] coins={COINS} window={WINDOW_S}s grace={GRACE_S}s", flush=True)
+        self._audit({"event": "collector_start", "pid": os.getpid()})
+        print(f"[pm] version={COLLECTOR_VERSION} coins={COINS} "
+              f"window={WINDOW_S}s grace={GRACE_S}s", flush=True)
         for slug, ts, toks in self.resume:   # MUST-FIX iter-1: continue in-flight windows
             print(f"[pm] resuming in-flight {slug}", flush=True)
-            asyncio.create_task(self._market(slug, ts, toks))
-        await asyncio.gather(self._discovery(), self._resolver(), self._heartbeat())
-        print("[pm] stopped", flush=True)
+            self._spawn_market(slug, ts, toks)
+        try:
+            await asyncio.gather(self._discovery(), self._resolver(), self._heartbeat(),
+                                 self._rewards_refresh())
+        finally:
+            # A signal may arrive while every market socket is blocked in recv().
+            # Cancel explicitly, then wait for each task's finally block to flush,
+            # close, and atomically archive its raw shard.
+            active = list(self.market_tasks)
+            for task in active:
+                task.cancel()
+            if active:
+                await asyncio.gather(*active, return_exceptions=True)
+            self._audit({"event": "collector_stop", "pid": os.getpid(),
+                         "active_markets_drained": len(active)})
+            print("[pm] stopped", flush=True)
+
+
+def selftest() -> int:
+    with tempfile.TemporaryDirectory() as d:
+        raw = Path(d) / "raw.jsonl"
+        dest = Path(d) / "raw.jsonl.gz"
+        raw.write_bytes(b"one\ntwo\n")
+        gzip_atomic(raw, dest)
+        atomic_ok = (not raw.exists() and gzip.open(dest, "rb").read() == b"one\ntwo\n"
+                     and not list(Path(d).glob("*.tmp-*")))
+    checks = [
+        ("closed resolution is final", is_final({"closed": True})),
+        ("give-up remains retryable", not is_final({"gave_up": True})),
+        ("degenerate outcome is final", is_final({"outcomePrices": '["1", "0"]'})),
+        ("open live prices are not final", not is_final({"outcomePrices": '[".4", ".6"]'})),
+        ("slow close classified", ws_cause(Exception("received 1013 slow consumer"))
+         == "SLOW_CONSUMER_1013"),
+        ("ping timeout classified", ws_cause(Exception("keepalive ping timeout"))
+         == "PING_TIMEOUT"),
+        ("gzip publish is atomic", atomic_ok),
+    ]
+    for name, ok in checks:
+        print(f"  {'PASS' if ok else 'FAIL'}  {name}")
+    return 0 if all(ok for _, ok in checks) else 1
 
 
 def main() -> None:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--selftest", action="store_true")
+    args = ap.parse_args()
+    if args.selftest:
+        raise SystemExit(selftest())
     c = PMCollector()
 
     def _sig(*_):
