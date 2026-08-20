@@ -100,6 +100,16 @@ by +1 bar. Anything >+0.10 IC is suspicious and probably has hidden look-ahead.
 - Production deployment infra (Docker, CI for trading, etc.)
 - Large data files in git — use `.gitignore` and external storage
 
+## Active program tracking (code-relay protocol)
+
+Active research programs live in `orchestrator/PROGRAMS/P-*/` (currently
+P-2026-002 HF market making and P-2026-003 Polymarket 5-min). **At session
+start read each active program's `workspace/HANDOFF.md`**, and **after each
+completed step update that program's `STATUS.yml` (task statuses + flags) and
+`workspace/HANDOFF.md` (done / in-progress / next / watch-out-for)**. State
+lives there, not in conversation history — write it before context runs long,
+not after.
+
 ## Where to read first
 
 1. `README.md` — overview + quick start

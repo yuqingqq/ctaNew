@@ -1,0 +1,162 @@
+program: P-2026-002-hf-market-making
+name: HF Market Making on Crypto Perps
+phase: in-progress        # planning / in-progress / review / done
+status: active            # not-started / active / blocked / deployed / stopped
+
+flags:
+  e1_passed: overlay-only # FINAL (post results-audit): E1-A PASS audit-robust
+                          # (sweep 6.26 [5.76,6.75] ≤ 8; stale-shadow 7.20; excl-ICP 6.15).
+                          # E1-B: NO real pass — ADA +2.44 eq-weighted flips to −0.32
+                          # notional-weighted (H1 fat-tick artifact; same flip all wide-tick
+                          # names); majors NEGATIVE pre-fee. Program → overlay-only track.
+                          # See live/mm_research/E1_RESULTS.md.
+  e2_passed: null         # markout-adjusted spread > 0 somewhere (naive or signal-gated)
+  venue_choice: null      # binance / hyperliquid / none — decided after E1+E4
+  collector_running: true  # Binance: since 2026-08-19 ~12:45 UTC (collect_hf.py, data/mm_hf/collector.log)
+  hl_collector_running: true  # Hyperliquid: since 2026-08-19 ~13:20 UTC (collect_hl.py,
+                              # data/mm_hf/hl_collector.log) — bbo + l2Book(top10) + trades,
+                              # 16 coins; market-data WS + /info NOT geo-blocked from this box.
+                              # Variant-B screen needs ~30d; earliest read ~2026-09-18.
+
+tasks:
+  # ───── Phase R: research sweep (4 parallel agents) ─────
+  - id: r1-fair-value
+    phase: R
+    name: R1 brief — fair value, microprice, OFI, propagator impact
+    status: done
+    notes: |
+      ~300-line brief. ADOPT 3-term fair value: mid + micro-price adj
+      (imbalance-only Markov chain on majors) + propagator flow term (Bouchaud;
+      estimable from aggTrades ALONE → backtestable on full history now). TFI >
+      quote-OFI on crypto perps (Silantyev XBTUSD). Forecast horizon ~2 avg
+      mid-changes (seconds). REJECT DL-LOB (LOBCAST: SOTA collapses OOS) and
+      30s bookDepth as quoting input. DEFER multi-level OFI etc until L2
+      history accumulates.
+  - id: r2-flow-fills
+    phase: R
+    name: R2 brief — Hawkes flow, fill probability, queue models, toxicity
+    status: done
+    notes: |
+      368-line brief. Verdict: skip full Hawkes MLE — EWMA intensities (1s/30s
+      half-lives) + imbalance-bucket multiplier capture the operational content.
+      Sizes independent of intensity (separate histogram). Queue: bracket with
+      hftbacktest RiskAverse vs ProbQueueModel (L2 can't pin position). KEY
+      external evidence (arxiv 2502.18625, live Binance BTC-perp): ALL 1s maker
+      markouts negative; naive symmetric quoting Sharpe -109. First deliverable
+      = aggTrades markout harness (viability screen + toxicity labels).
+  - id: r3-quoting
+    phase: R
+    name: R3 brief — GLFT, alpha-augmented quoting, funding-aware skew, RL verdict
+    status: done
+    notes: |
+      ~330-line brief. ADOPT GLFT ergodic closed form (constant spread
+      (2/γ)ln(1+γ/k)+S_glft, linear inventory skew; calibrate A,k from
+      ln λ(δ)=ln A−kδ on aggTrade penetration rates; γ from target inventory
+      band). Alpha enters as reservation-price shift: quote around
+      microprice+α̂/κ_α, risk-capped per Bergault §5; spread/skew shape
+      unchanged. Adverse selection preserves formula shape (params shift) —
+      calibrate via post-fill markout ζ(δ), phase-2. Funding = running drift
+      −q·f folded into skew (reject full funding-OU grid). Inventory cap by
+      cascade jump-VaR + kill-switch. REJECT RL for now (simulator-internal
+      results only).
+  - id: r4-practice
+    phase: R
+    name: R4 brief — fees/venues, spread economics, markout methodology, hftbacktest, pitfalls
+    status: done
+    notes: |
+      423-line brief. Fees decide everything: Binance VIP0 maker 1.8bps (BNB
+      disc); rebates application-gated (~$100M/30d). HL base maker 1.5bps.
+      Empirical spreads (Vision bookTicker 2024-03-15): BTC 0.026bp, ETH
+      0.037bp (97% 1-tick), INJ 0.52bp, CHZ 0.88bp → VIP0 fee is 4-20x
+      half-spread → standalone touch-MM on Binance liquid names REJECT at any
+      solo tier; break-even needs ~4-5bp spreads at VIP3+. OPERATIONAL: Vision
+      futures bookTicker STOPS 2024-03-30 (our collection = only current
+      source); fapi REST geo-blocks this US box (WS fine) → Tokyo VPS
+      mandatory for any order placement; 300 orders/10s cap. ADOPT: aggTrades
+      markout pipeline, hftbacktest queue-model bracketing, Tokyo VPS.
+      STRATEGIC: first deployment target = passive execution of the existing
+      XS book (attacks the repo's binding constraint, no fee-tier wall);
+      standalone-MM candidate = HL mid/tails pending forward HL spread data.
+
+  # ───── Phase S: synthesis ─────
+  - id: s-strategy-sketch
+    phase: S
+    name: STRATEGY_SKETCH.md — full component architecture from R1–R4
+    status: done
+    notes: |
+      459 lines. 7 components (fair value F=mid+G*+propagator; EWMA intensity;
+      A·exp(−kδ) fills + queue bracket; GLFT + capped alpha shift + funding
+      skew + one-sided withdrawal; markout-labeled toxicity logistic; jump-VaR
+      risk; markout evaluation), each with formulas/IO/calibration/update-freq.
+      3 consequential decisions: (1) Variant A = passive execution of existing
+      XS book is FIRST deployment target, own gate E1-A: effective RT cost
+      ≤8bps (P-2026-001 capstone threshold); Variant B standalone MM gated to
+      ≥4bps-spread names @≥VIP3 or HL. (2) No double-counting: propagator is
+      THE flow term unless EWMA beats it head-to-head; toxicity enters at
+      exactly one point. (3) Queue-model bracket is a GATE: sign-flip between
+      RiskAverse and ProbQueue-f3 = failure, never averaged.
+
+  # ───── Phase D: experiment design ─────
+  - id: d-experiment-plan
+    phase: D
+    name: EXPERIMENT_PLAN.md — prereg E0–E5 ladder with kill gates
+    status: done
+    notes: |
+      480 lines, PRE-REGISTERED 2026-08-19 before any E1 number computed.
+      E1 fully specified: sweep collapse (transact_time,is_buyer_maker);
+      two-sided last-print mid proxy w/ 10s validity (bias stated ex ante:
+      maker-optimistic → fails final, passes provisional); rs(τ)≡MO(τ) gate
+      quantity (rejected ES−2|MO| as double-count); day-clustered t (dof 30) +
+      stationary block bootstrap (30-min bins, 4h blocks, B=2000); τ*=30s w/
+      slow-tape rule. E1-B pass: rs(τ*)≥fee+0.5 & CI-lo≥fee & ≥70% days &
+      both sides & VWAP sign & E1x 3/4 quarters. E1-A: hourly episodes,
+      T_p=600s primary, touch/sweep fill bracket, shortfall vs decision mid;
+      PASS sweep≤8bps, FAIL touch>8bps. Kill: B empty AND A FAIL → HL pivot
+      or stop. Hazards H1-H6 standing.
+
+  # ───── Phase I: implementation ─────
+  - id: i-e0-collector
+    phase: I
+    name: collect_hf.py — bookTicker + depth20@100ms + aggTrade WS collector, 16-sym pilot
+    status: done
+    notes: |
+      LIVE since 2026-08-19 ~12:45 UTC; restarted ~12:55 with @trade fix
+      (nohup, log data/mm_hf/collector.log). TWO PITFALLS FOUND+FIXED:
+      (1) fstream routed /market/ws ACKs SUBSCRIBE for bookTicker/depth20 but
+      never pushes — combined /stream?streams= URL subscription required;
+      (2) @aggTrade delivers NOTHING on URL-subscribed endpoints — @trade
+      (raw per-match, finer) collected instead. All three streams verified
+      writing. BTC bookTicker ~1000 msg/s; ~1.5-2 GB/day gzipped; 1.2T free.
+      fapi REST geo-blocked from this box (exchange_info snapshot empty) —
+      WS unaffected; tick sizes must come from bookTicker price-increment GCD
+      or a non-blocked host later.
+  - id: i-e1-scan
+    phase: I
+    name: E1 — realized-spread/markout universe scan on Vision tick aggTrades
+    status: done
+    notes: |
+      3 runs (blind review fixes between 1→2, bracket/count fixes 2→3).
+      Amendments D-a..D-j logged. FINAL: E1-B no real pass (ADA = H1 fat-tick
+      per-event artifact, notional-weighted −0.32; majors negative pre-fee);
+      E1-A PASS audit-robust (sweep-bound 6.26 ≤ 8 @ T_p=600). Full reading:
+      live/mm_research/E1_RESULTS.md. tick_size() mode-fix applied post-audit.
+
+  # ───── Phase V: adversarial review ─────
+  - id: v-review
+    phase: V
+    name: Adversarial audit of E1 implementation + results (look-ahead, fill optimism, stats)
+    status: in-progress
+    notes: |
+      CODE audit done BLIND to gate numbers (E1_CODE_REVIEW.md). 2 MUST FIX
+      (gate-condition sample inconsistency — 6/16 syms had CI/per-side on
+      unfiltered days; E1-A silent episode drops = undeclared optimistic
+      bias), 3 SHOULD FIX, 7 NOTED (incl. 2 prereg defects: ES_day same-day
+      look-ahead sanctioned by plan; bootstrap estimand ≠ cond-1 estimand).
+      All MUST+SHOULD fixes applied as amendments D-e..D-h; run 3 after D-i/D-j.
+      Signs, sweep collapse, mid boundary, bootstrap machinery, schemas: PASS.
+      RESULTS AUDIT (appended to E1_CODE_REVIEW.md): ADA = ARTIFACT-LIKELY via
+      H1 (eq→notional weighting flips +2.44→−0.32; staleness exonerated by 2s
+      recompute; prereg never pinned weighting → pre-read amendment for E1x/
+      E2.0: notional-weighted gate). E1-A PASS = ROBUST (per-symbol max 7.53,
+      stale-shadow 7.20, excl-ICP 6.15, fill-rate sanity, winner's curse
+      visible). ICP cell unresolved → E2-A. FIL tick misdetect found+fixed.

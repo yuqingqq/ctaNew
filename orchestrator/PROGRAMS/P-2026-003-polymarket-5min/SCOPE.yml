@@ -1,0 +1,19 @@
+# Write-scope control for P-2026-003-polymarket-5min.
+
+write:
+  - orchestrator/PROGRAMS/P-2026-003-polymarket-5min/**
+  - live/pm_research/**
+  - data/pm_5min/**
+
+write_with_approval:
+  # Shared with P-2026-002 — coordinate before touching.
+  - live/mm_research/collect_hf.py
+
+forbidden:
+  - .env
+  - .env.*
+  - "**/.env"
+  - "**/credentials*"
+  - "**/*secret*"
+  - execution_server/**
+  - orchestrator/PROGRAMS/P-2026-001-ml-cta-engine/**

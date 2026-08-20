@@ -1,0 +1,28 @@
+# Write-scope control for P-2026-002-hf-market-making.
+
+write:
+  # Program documents
+  - orchestrator/PROGRAMS/P-2026-002-hf-market-making/**
+
+  # MM research code + briefs
+  - live/mm_research/**
+
+  # Collected HF data (gitignored via data/)
+  - data/mm_hf/**
+
+write_with_approval:
+  # Shared collectors — only if a change benefits both programs; default is to
+  # keep mm collection self-contained in live/mm_research/collect_hf.py.
+  - data_collectors/**
+
+forbidden:
+  - .env
+  - .env.*
+  - "**/.env"
+  - "**/credentials*"
+  - "**/*secret*"
+  - execution_server/**
+  - experiment_overrides.json
+  - ../code-relay/**
+  # P-2026-001 record is closed history — read-only from this program.
+  - orchestrator/PROGRAMS/P-2026-001-ml-cta-engine/**

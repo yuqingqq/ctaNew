@@ -1,0 +1,76 @@
+program: P-2026-003-polymarket-5min
+name: Polymarket Crypto 5-min Markets
+phase: in-progress
+status: active
+
+flags:
+  decision_pending: true     # 2026-08-20 deep review: 3 FATAL, not executable as
+                             # written. User must choose Option A (fix mechanism
+                             # program) vs Option B (re-scope to FLB harvest —
+                             # recommended by reviewer AND by measured data).
+                             # See PM_MM_PLAN §17. Build nothing until chosen.
+  siting_decision: suspended # measured latency 1,700ms (1,440ms = PM publish
+                             # delay, untouchable). EU buys ~21s at |d|=2, not
+                             # the 94% claimed. ATM never quotable anywhere.
+  collector_running: true    # since 2026-08-19 ~14:32 UTC (collect_pm.py, log
+                             # data/pm_5min/collector.log). Smoke: 12 markets /
+                             # 50.6k msgs in 75s. Resolution poller verification
+                             # pending first closed window.
+  fee_structure_known: false # read fee_rate_bps distribution from collected trades
+  g1_taker_viable: null
+  g2_model_beats_book: null
+
+focus: MM-first (user decision 2026-08-19) — taker/latency-arb and calibration
+  trading are secondary tracks. Plan: live/pm_research/PM_MM_PLAN.md
+  (binary-GLFT in probability space, TWAP-aware p̂=Φ(d), pair-harvest +
+  rewards-band quoting, pull-on-burst from the Binance feed; gates G2/G3a/G3b).
+  KEY ECONOMICS (to verify in PM-E1): maker fee $0 + ~20% rebate share +
+  $550k/yr 5-min liquidity rewards vs taker ~1.75c/share peak; spreads 2-4c
+  ⇒ the fee wall is inverted vs Binance; open question is purely adverse
+  selection.
+  SETTLEMENT (verified from live metadata + user + news, 2026-08-19):
+  Chainlink 60s-TWAP Data Stream ({coin}-usd-twap-60s-streams); Up iff
+  X_T ≥ X_0 (ties Up); rule changed 2026-08-07 from snapshots after a
+  Stanford/SMU manipulation study (~$8.2M) — pre-Aug-07 backfill is a
+  different rule + contaminated flow, calibration NEVER crosses the break.
+  Tick $0.01 (books 2-4 ticks wide); rewards band 4.5c / min 50 shares
+  (per-market metadata now captured).
+  PM-E0.5 DATA REVIEW LOOP: charter live/pm_research/PM_REVIEW_LOOP.md;
+  iter 1 DONE (settlement stream found+subscribed; restart-loss bug fixed);
+  iter 2 due after ≥12h post-fix data.
+  SKETCH REVIEW LOOP (user-initiated 2026-08-19): charter
+  live/pm_research/PM_SKETCH_REVIEW_LOOP.md — adversarial review of
+  PM_MM_PLAN.md model+experiments until prereg-worthy; iter 1 running with
+  3 parallel lenses: T theory/math (re-derive TWAP variance laws, binary-GLFT
+  coherence, basis-vs-σ_eff crossover), S stats/design (gate specs, power,
+  cluster units, forking paths), M mechanism/competition (matching, rewards
+  equilibrium+dilution, fees ground truth, CTF pair-merge, capacity bound).
+
+tasks:
+  - id: e0-collector
+    phase: 0
+    name: collect_pm.py — CLOB WS book/trades + Gamma metadata + CLOB resolutions
+    status: done
+    notes: |
+      LIVE + VERIFIED END-TO-END 2026-08-19 ~14:55 UTC. API facts: slugs
+      {coin}-updown-5m-<unix300>, pre-created ~5min ahead; WS market channel
+      book/price_change/last_trade_price (carries fee_rate_bps); Gamma needs
+      non-python UA. TWO BUGS FOUND+FIXED: (1) Gamma outcomePrices is live
+      prices, not resolution (is_final guard); (2) Gamma DELETES resolved
+      5-min markets from slug queries → resolution source switched to
+      clob.polymarket.com/markets/<conditionId> (closed + per-token winner;
+      persists). 16 final resolutions confirmed incl. re-polled backlog.
+      Discovery-time metadata is the ONLY durable record of a window's
+      tokens — never skip it. Thin windows exist (volumeNum=2 observed).
+  - id: e1-dataset
+    phase: 1
+    name: Aligned dataset — binary book vs Binance F_t at 100ms, per window
+    status: pending
+  - id: e2-prereg
+    phase: 1
+    name: Pre-register G1/G2 gates (fees/spread vs mispricing; calibration contest)
+    status: pending
+  - id: e3-screen
+    phase: 2
+    name: Run G1/G2 on ≥2 weeks of windows
+    status: pending
