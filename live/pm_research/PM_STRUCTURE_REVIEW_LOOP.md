@@ -216,3 +216,22 @@ Additional boundary regressions must be removed before convergence: dynamic
 coupling is described but not carried by the problem; OP reads EV despite the
 EV-is-read-by-none invariant; and restoring the old spec block duplicates
 instrument-scoped rewards under `SP-Venue`.
+
+| 8 | 2026-08-20 | review: 6 | **v8 NOT CONVERGED; issues recorded** |
+
+## Iteration 8 review of v8 — 6 MUST-FIX
+
+Full review: `PM_STRUCT_ITER8_REVIEW.md`.
+
+V8 moves the v7 fixes into canonical blocks and correctly separates scenario
+names, removes duplicate venue rewards, excludes EV from runtime health, and
+adds risk/coupling fields to `DecisionProblem`. The strict replay is still at
+best **LOCAL 11 / SPREADING 0 / STRUCTURAL 2**: risk scenarios remain neither
+PIT-safe nor position-independent, and the scalar competition producer cannot
+supply the new joint consumer.
+
+The deeper audit also found that `contract_inventory.py` passes an invalid
+baseline and misses the exact bare-to-wrapped type narrowing it is intended to
+prevent. The halt path lacks canonical telemetry/ack semantics, the SOTA axes
+remain closed unions, and belief/contracts/static coupling do not yet form one
+immutable point-in-time decision snapshot.
