@@ -427,3 +427,34 @@ from queue, flow and fill inference rather than averaged in.
    it has holes is now known rather than assumed.
 4. Leave `DISK_WORKERS` and `ping_timeout` alone. There is no longer a
    client-side hypothesis to test with them.
+
+## AMENDMENT 18:26:23 UTC — "every disconnect is BTC" is no longer true, and the
+## reason matters for the exclusion rule
+
+sol and eth disconnected simultaneously with `1001 (going away) server shutting
+down` — a *clean* close (`ConnectionClosedOK`), `paused=False`, depths 9 and 91,
+gaps 9.16 s and 1.30 s. Tally is now **btc 12, sol 1, eth 1**. The earlier
+statement that every disconnect in every era was BTC was true when written and
+is now false.
+
+The correction is not cosmetic. It separates **two loss mechanisms with
+different missingness properties**, which is exactly what a *cause-aware* rule
+needs to distinguish:
+
+| mechanism | cause codes | pattern | missingness |
+|---|---|---|---|
+| venue send-buffer / slow-consumer label | `SLOW_CONSUMER_1013` | 12/14, **all BTC**, bursty | **MNAR** — concentrated in the busiest symbol, so activity-correlated |
+| venue server cycling | `CONNECTIONCLOSEDOK` (1001), and plausibly `PING_TIMEOUT` / `NO_CLOSE_FRAME` | hits whichever sockets a restarting server held, across coins | plausibly **MAR** — activity-independent |
+
+This matters because the two demand different handling. A 1001 going-away gap
+can be excluded and the remaining sample stays representative. A 1013 gap cannot:
+it lands preferentially on the busiest windows, so *excluding it is itself a
+selection*, and the excluded set must be reported alongside the retained one —
+the same lesson as the original MNAR collector incident.
+
+It also makes the pre-registered choice of a **cause-aware** rule (rather than a
+flat duration threshold) load-bearing rather than stylistic. A rule keyed only on
+"seconds lost" would treat these two as interchangeable, and they are not.
+
+Still not drafting the rule: the ledger era remains a few hours, and one
+observation of the 1001 mechanism is not a base rate.
