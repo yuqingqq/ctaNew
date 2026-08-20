@@ -1,4 +1,4 @@
-version: 14
+version: 15
 rules:
   R-SSOT:
     body: every canonical name has exactly one owning type/module
@@ -26,6 +26,30 @@ rules:
     body: while cancellation is Unconfirmed the system state is HALTED
     checks:
     - 'fail_closed: CancelAllStatus.Unconfirmed => HaltState.HALTED'
+  R-REQ:
+    body: a ForecastRequest may only be answered by a PathLaw it matches on
+      instrument, link, target interval, horizon and knowledge time; every one of
+      these is COMPARED at query time, not merely carried
+    checks:
+    - 'instrument_eq: ForecastRequest.instrument == PathLaw.instrument'
+    - 'link_eq: ForecastRequest.link_ref == PathLaw.link_ref == BeliefProcess.link'
+    - 'target_eq: ForecastRequest.target_interval == PathLaw.target_interval'
+    - 'horizon_consistent: request.as_of + request.horizon == target_interval.end
+       and horizon in PathLaw.horizon_domain.grid'
+    - 'knowledge_order: ForecastRequest.knowledge_cutoff <= ForecastRequest.as_of'
+    - 'no_future_train_req: PathLaw.fit_data_through <= ForecastRequest.knowledge_cutoff'
+    - 'coverage: request.as_of within PathLaw.coverage'
+    - 'executable: these are evaluated by sigma_kernels.check_request with
+       negative fixtures; a typed timestamp that is never compared is
+       documentation, not look-ahead protection'
+  R-ROUTE:
+    body: a PathLaw declares exactly one estimand_route; REDUCED_FORM residuals
+      and STRUCTURAL lines are never summed into one variance
+    checks:
+    - 'no_mixing: estimand_route == REDUCED_FORM => pricing reads
+       reduced_form.by_horizon[r].resid_var only'
+    - 'diagnostic_only: estimand_route == REDUCED_FORM => k_law, AnchorSpec
+       cond_var and FeedErrorCov are diagnostics and are not added'
   R-WFWD:
     body: a fitted law declares fit_data_through <= as_of and reads no training
       data beyond that cutoff; being USED after the cutoff is the point, not a
@@ -409,21 +433,25 @@ types:
       g: (float) -> float
       g_inv: (float) -> float
       g_prime: (float) -> float
-      density: (float) -> float
     notes: >-
-      never hardcode the Gaussian Phi. M14-1: g_prime/density added because
-      every dynamics consumer (participation frontier m/g'(d), lambda_bin, the
-      zeta pickoff floor, the hedge delta) needs the derivative, and v13 exposed
-      only g and g_inv -- which left those consumers unimplementable except by
+      never hardcode the Gaussian Phi. M14-1: g_prime added because every
+      dynamics consumer (participation frontier m/g'(d), lambda_bin, the zeta
+      pickoff floor, the hedge delta) needs the derivative, and v13 exposed only
+      g and g_inv -- which left those consumers unimplementable except by
       reaching for phi and reintroducing the Gaussian by the back door.
+      M15-1 (ITER3 M3-5): g_prime is the SINGLE canonical derivative. v14 also
+      carried `density`, which for a CDF-valued link is the same function under
+      a second name and let two implementations disagree with no equality rule.
   PathLaw:
     fields:
       instrument: InstrumentId
       unit_space: UnitSpace
       horizon_domain: HorizonDomain
       sampling_convention: SamplingConvention
+      estimand_route: enum:REDUCED_FORM|STRUCTURAL
+      reduced_form: ReducedFormLaw | NullPin
       anchor: AnchorSpec
-      sigma2_rate: VarianceQuantity
+      sigma2_rate: RateQuantity
       se_log_sigma: float
       nugget: VarianceQuantity | NullPin
       w_declared: Duration
@@ -461,6 +489,7 @@ types:
       knowledge_cutoff: Timestamp
       target_interval: TargetInterval
       horizon: Duration
+      link_ref: LinkRef
     notes: >-
       M14-1. The typed request the protocol needs to enforce R-KNOW and R-WFWD.
       A bare `r` cannot express which knowledge set the answer is conditioned on,
@@ -512,30 +541,28 @@ types:
   AnchorSpec:
     fields:
       family: enum:TRANSLATION_INVARIANT_TWO_STREAM|OTHER
-      alpha: float
-      alpha_provenance: enum:ESTIMATED|MODEL_IMPLIED|ASSUMED
-      alpha_star_model: float | NullPin
-      bias_coeff: float
+      selected: enum:MODEL|ESTIMATED
+      alpha_model_by_horizon: dict[str, float]
+      alpha_estimated_by_horizon: dict[str, float] | NullPin
+      bias_coeff_by_horizon: dict[str, float]
       bias_enters: enum:MEAN_MODEL|REFUSED
-      cond_var: VarianceQuantity
-      uncond_mse: VarianceQuantity | NullPin
+      model_gap_by_horizon: dict[str, float] | NullPin
+      cond_var_by_horizon: dict[str, VarianceQuantity]
     notes: >-
-      M14-1 (ITER2 M2-1) -- the load-bearing repair. For the family
-      P_hat(alpha) = S_slow + alpha*(S_fast - S_slow), the error splits as
-      (alpha - alpha*)*(S_fast - S_slow) + a conditionally zero-mean residual.
-      The first term is a CONDITIONAL BIAS that is KNOWN AT DECISION TIME, so it
-      belongs in the mean model; bias_enters may therefore never be anything but
-      MEAN_MODEL or REFUSED. v13 entered the whole unconditional MSE as a
-      zero-mean variance line: at BTC's sigma that buried a bias of sd 1.22 bps
-      inside a total sigma_eff(30) of ~2.4 bps, i.e. half the standard deviation
-      at r=30 was a predictable mean error -- the same defect class as the
-      original S60-anchor bug. cond_var is alpha-INDEPENDENT (P_hat is a
-      function of the conditioning variables) and is the only line that may
-      enter the variance. alpha is a free parameter: alpha_provenance must read
-      ESTIMATED before pricing; MODEL_IMPLIED records what a declared path model
-      says (alpha* = 2700/1801 under disc1s_v0) and ASSUMED is what v1 did when
-      it took alpha = 2 from a local-linear-trend argument that contradicts the
-      variance model.
+      M15-1 (ITER3 M3-2). For P_hat(alpha) = S_slow + alpha*(S_fast - S_slow) the
+      error splits as (alpha - alpha_selected)*(S_fast - S_slow) + a
+      conditionally zero-mean residual. The first term is KNOWN AT DECISION TIME
+      and belongs in the mean; bias_enters may never be other than MEAN_MODEL or
+      REFUSED. v14 defined bias against the MODEL coefficient unconditionally, so
+      an empirically fitted alpha was always labelled biased and the documented
+      mean correction dragged the centre back to the Brownian projection -- no
+      empirical coefficient could become the zero-bias mean. `selected` now says
+      which estimand defines correctness and bias is measured against THAT, so a
+      fitted conditional mean is unbiased with respect to itself.
+      model_gap_by_horizon (estimated - model) survives as a PROCESS DIAGNOSTIC
+      and is never applied as a correction. Every quantity is HORIZON-INDEXED:
+      the anchor is not a scalar (alpha* is 1.2496 at r=30 against 1.4992 outside
+      the window) and the plan fits it at each r.
   AnchorObservables:
     fields:
       s_fast: Known[float]
@@ -571,17 +598,66 @@ types:
       var_slow: float
       cov: float
       unit_space: UnitSpace
+      units: enum:BPS_SQUARED
+      psd_validated: bool
+      identification: enum:CROSS_VARIOGRAM_NUGGET|EXTERNAL_INSTRUMENT|INSIDE_REDUCED_FORM_RESIDUAL|NONE
     notes: >-
-      M14-1. Stream measurement error is a 2x2, not a scalar. Its contribution
-      is u^T Cov u with u = (alpha, 1 - alpha), so it varies with the horizon
-      weights and is generally NOT a scalar multiple of the model curve -- and
-      because (1 - alpha) changes sign above alpha = 1, the same covariance
-      raises one anchor's variance and lowers another's. v13's scalar
-      omega_scale could not express that.
+      M15-1 (ITER3 M3-3). Stream measurement error is a 2x2, not a scalar: the
+      contribution is u^T Cov u with u = (alpha, 1 - alpha), so it varies with
+      the horizon weights, and because (1 - alpha) changes sign above alpha = 1
+      the same covariance raises one anchor's variance and lowers another's.
+      UNITS ARE BPS_SQUARED, once, everywhere. v14 typed this in bps^2 while the
+      fixture documented sigma^2 units and multiplied by the rate, so an identity
+      matrix at rate 4 contributed 9.9867 instead of 2.4967. psd_validated must
+      be true before use -- a non-PSD matrix drove total variance to -120.9.
+      IDENTIFICATION is not free: contemporaneous moments give 3 numbers for 4
+      unknowns (rate plus this 2x2), so Omega is NOT identified from them. Under
+      the STRUCTURAL route it is the lag-0 discontinuity of the bivariate
+      cross-variogram -- i.e. the NUGGET -- which requires the sampling
+      convention to be VERIFIED first and is entangled with w_hat_free (a
+      variogram fitted without a nugget attributes microstructure to a shorter
+      kernel). Under the REDUCED_FORM route it is INSIDE the residual and must
+      never be added again.
   Interval:
     fields:
       lo: float
       hi: float
+  RateQuantity:
+    fields:
+      value: float
+      unit_space: UnitSpace
+      per: enum:SECOND
+    notes: >-
+      M15-1 (ITER3 M3-3). A variance RATE is bps^2 per second and is not the same
+      type as a terminal bps^2 variance. v14 typed sigma2_rate as
+      VarianceQuantity, which erased the time dimension and made a rate and a
+      terminal variance interchangeable at the boundary.
+  ReducedFormLaw:
+    fields:
+      by_horizon: dict[str, ReducedFormFit]
+      convention: SamplingConvention
+      n_day_clusters: int
+      cross_fitted: bool
+      resid_cond_mean_test_p: float
+      hetero_test_p: float
+      status: enum:FITTED|UNFITTED|REFUSED
+    notes: >-
+      M15-1 (ITER3 M3-1). THE PRICING LAW. Its residual variance is the WHOLE of
+      Sigma(r) -- future innovation, latent-path uncertainty, stream error and
+      every covariance among them are already inside it. The structural lines
+      (k_law, anchor cond_var, FeedErrorCov) are NEVER added to it; doing so
+      double-counts. OLS yields the best LINEAR PROJECTION and a POOLED residual,
+      which is the conditional mean only if that mean is linear and the
+      conditional variance only under homoskedasticity -- otherwise it is an
+      unconditional forecast MSE, the same category error this programme removed
+      from the Brownian variance line one revision earlier. Hence
+      resid_cond_mean_test_p, hetero_test_p, cross_fitted and n_day_clusters are
+      GATES: pricing refuses without them.
+  ReducedFormFit:
+    fields:
+      alpha: float
+      resid_var: VarianceQuantity
+      n_effective: int
   UnitSpace:
     fields:
       coordinate: enum:NORMALISED_ARITHMETIC_RETURN|LOG_RETURN|RAW_PRICE

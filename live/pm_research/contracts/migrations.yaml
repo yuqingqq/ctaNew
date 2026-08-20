@@ -4,6 +4,138 @@
 # narrowing at an allowlisted path -- the precise failure this process exists to
 # prevent. Records are loaded from the TARGET ref.
 migrations:
+# ---- v14 -> v15 (M15-1): ITER3 review of Revision 3 ------------------------
+- from_version: 14
+  to_version: 15
+  operation: remove
+  key: field:AnchorSpec.alpha
+  old: float
+  reason: 'M15-1 (M3-2): a scalar alpha cannot express a horizon-dependent anchor (alpha*
+    is 1.2496 at r=30 vs 1.4992 outside the window); replaced by alpha_model_by_horizon /
+    alpha_estimated_by_horizon'
+- from_version: 14
+  to_version: 15
+  operation: remove
+  key: field:AnchorSpec.alpha_provenance
+  old: enum:ESTIMATED|MODEL_IMPLIED|ASSUMED
+  reason: 'M15-1 (M3-2): replaced by `selected`, which names WHICH estimand defines correctness
+    rather than merely labelling where a single alpha came from'
+- from_version: 14
+  to_version: 15
+  operation: remove
+  key: field:AnchorSpec.alpha_star_model
+  old: float | NullPin
+  reason: 'M15-1 (M3-2): folded into alpha_model_by_horizon; the model coefficient is horizon-scoped
+    like every other anchor quantity'
+- from_version: 14
+  to_version: 15
+  operation: remove
+  key: field:AnchorSpec.bias_coeff
+  old: float
+  reason: 'M15-1 (M3-2): bias was defined against the MODEL coefficient unconditionally, so
+    a fitted alpha was always labelled biased and the mean correction dragged the centre back
+    to the Brownian projection; now bias_coeff_by_horizon is measured against the SELECTED
+    estimand'
+- from_version: 14
+  to_version: 15
+  operation: remove
+  key: field:AnchorSpec.cond_var
+  old: VarianceQuantity
+  reason: 'M15-1 (M3-2): horizon-scoped as cond_var_by_horizon'
+- from_version: 14
+  to_version: 15
+  operation: remove
+  key: field:AnchorSpec.uncond_mse
+  old: VarianceQuantity | NullPin
+  reason: 'M15-1 (M3-1): unconditional MSE is a route-B diagnostic and must not sit on the
+    pricing carrier at all'
+- from_version: 14
+  to_version: 15
+  operation: remove
+  key: proto:LinkFunction.density
+  old: (float) -> float
+  reason: 'M15-1 (M3-5): for a CDF-valued link `density` is g_prime under a second name; two
+    derivative operations with no equality rule let implementations disagree'
+- from_version: 14
+  to_version: 15
+  operation: change
+  key: field:PathLaw.sigma2_rate
+  old: VarianceQuantity
+  new: RateQuantity
+  reason: 'M15-1 (M3-3): a variance RATE (bps^2/second) is not the same type as a terminal
+    bps^2 variance; VarianceQuantity erased the time dimension'
+- from_version: 14
+  to_version: 15
+  operation: change
+  key: note:AnchorSpec
+  old: 'M14-1 (ITER2 M2-1) -- the load-bearing repair. For the family P_hat(alpha) = S_slow
+    + alpha*(S_fast - S_slow), the error splits as (alpha - alpha*)*(S_fast - S_slow) + a
+    conditionally zero-mean residual. The first term is a CONDITIONAL BIAS that is KNOWN AT
+    DECISION TIME, so it belongs in the mean model; bias_enters may therefore never be anything
+    but MEAN_MODEL or REFUSED. v13 entered the whole unconditional MSE as a zero-mean variance
+    line: at BTC''s sigma that buried a bias of sd 1.22 bps inside a total sigma_eff(30) of
+    ~2.4 bps, i.e. half the standard deviation at r=30 was a predictable mean error -- the
+    same defect class as the original S60-anchor bug. cond_var is alpha-INDEPENDENT (P_hat
+    is a function of the conditioning variables) and is the only line that may enter the variance.
+    alpha is a free parameter: alpha_provenance must read ESTIMATED before pricing; MODEL_IMPLIED
+    records what a declared path model says (alpha* = 2700/1801 under disc1s_v0) and ASSUMED
+    is what v1 did when it took alpha = 2 from a local-linear-trend argument that contradicts
+    the variance model.'
+  new: 'M15-1 (ITER3 M3-2). For P_hat(alpha) = S_slow + alpha*(S_fast - S_slow) the error
+    splits as (alpha - alpha_selected)*(S_fast - S_slow) + a conditionally zero-mean residual.
+    The first term is KNOWN AT DECISION TIME and belongs in the mean; bias_enters may never
+    be other than MEAN_MODEL or REFUSED. v14 defined bias against the MODEL coefficient unconditionally,
+    so an empirically fitted alpha was always labelled biased and the documented mean correction
+    dragged the centre back to the Brownian projection -- no empirical coefficient could become
+    the zero-bias mean. `selected` now says which estimand defines correctness and bias is
+    measured against THAT, so a fitted conditional mean is unbiased with respect to itself.
+    model_gap_by_horizon (estimated - model) survives as a PROCESS DIAGNOSTIC and is never
+    applied as a correction. Every quantity is HORIZON-INDEXED: the anchor is not a scalar
+    (alpha* is 1.2496 at r=30 against 1.4992 outside the window) and the plan fits it at each
+    r.'
+  reason: 'M15-1 (M3-2): the v14 note described bias against the model coefficient, which
+    is the defect being repaired'
+- from_version: 14
+  to_version: 15
+  operation: change
+  key: note:FeedErrorCov
+  old: M14-1. Stream measurement error is a 2x2, not a scalar. Its contribution is u^T Cov
+    u with u = (alpha, 1 - alpha), so it varies with the horizon weights and is generally
+    NOT a scalar multiple of the model curve -- and because (1 - alpha) changes sign above
+    alpha = 1, the same covariance raises one anchor's variance and lowers another's. v13's
+    scalar omega_scale could not express that.
+  new: 'M15-1 (ITER3 M3-3). Stream measurement error is a 2x2, not a scalar: the contribution
+    is u^T Cov u with u = (alpha, 1 - alpha), so it varies with the horizon weights, and because
+    (1 - alpha) changes sign above alpha = 1 the same covariance raises one anchor''s variance
+    and lowers another''s. UNITS ARE BPS_SQUARED, once, everywhere. v14 typed this in bps^2
+    while the fixture documented sigma^2 units and multiplied by the rate, so an identity
+    matrix at rate 4 contributed 9.9867 instead of 2.4967. psd_validated must be true before
+    use -- a non-PSD matrix drove total variance to -120.9. IDENTIFICATION is not free: contemporaneous
+    moments give 3 numbers for 4 unknowns (rate plus this 2x2), so Omega is NOT identified
+    from them. Under the STRUCTURAL route it is the lag-0 discontinuity of the bivariate cross-variogram
+    -- i.e. the NUGGET -- which requires the sampling convention to be VERIFIED first and
+    is entangled with w_hat_free (a variogram fitted without a nugget attributes microstructure
+    to a shorter kernel). Under the REDUCED_FORM route it is INSIDE the residual and must
+    never be added again.'
+  reason: 'M15-1 (M3-3): declares BPS_SQUARED once, requires PSD validation, and states how
+    Omega is identified per route'
+- from_version: 14
+  to_version: 15
+  operation: change
+  key: note:LinkFunction
+  old: 'never hardcode the Gaussian Phi. M14-1: g_prime/density added because every dynamics
+    consumer (participation frontier m/g''(d), lambda_bin, the zeta pickoff floor, the hedge
+    delta) needs the derivative, and v13 exposed only g and g_inv -- which left those consumers
+    unimplementable except by reaching for phi and reintroducing the Gaussian by the back
+    door.'
+  new: 'never hardcode the Gaussian Phi. M14-1: g_prime added because every dynamics consumer
+    (participation frontier m/g''(d), lambda_bin, the zeta pickoff floor, the hedge delta)
+    needs the derivative, and v13 exposed only g and g_inv -- which left those consumers unimplementable
+    except by reaching for phi and reintroducing the Gaussian by the back door. M15-1 (ITER3
+    M3-5): g_prime is the SINGLE canonical derivative. v14 also carried `density`, which for
+    a CDF-valued link is the same function under a second name and let two implementations
+    disagree with no equality rule.'
+  reason: 'M15-1 (M3-5): the note still advertised `density` after it was removed'
 # ---- v13 -> v14 (M14-1): ITER2 review of the sigma spec repair --------------
 # The v13 carrier landed structurally but could not enforce the boundary it
 # claimed. These records are the honest cost of that.

@@ -1,20 +1,23 @@
 # SIGMA_PLAN — design of the volatility estimator (P-2026-003)
 
-**Revision 3, 2026-08-20. Canonical.** This document was rewritten in place
-rather than amended again: Revision 2 was an overlay whose head block corrected
-decisions that its own body still asserted, and a reader following the equation
-in their local section would have implemented the superseded one
-(`SIGMA_PLAN_REVIEW_ITER2.md` M2-6). There is now **one** estimand, **one**
-consumer matrix and **one** ledger equation. v1 and v2 text is in git history
-(`80f823e`, `cc1d0e7`); nothing here defers to it.
+**Revision 4, 2026-08-20. Canonical.** Rewritten in place at Revision 3; this
+revision resolves the one thing that rewrite got wrong. Revision 3 recommended
+an empirical reduced-form anchor AND kept the structural variance ledger, which
+are two estimators of the same quantity — combining them double-counts
+(`SIGMA_PLAN_REVIEW_ITER3.md` M3-1). **§2.3 now picks one route and the choice
+propagates everywhere.** There is one consumer matrix, one PRICING law and one
+DIAGNOSTIC decomposition, and they are never summed. v1/v2 text is in git
+history (`80f823e`, `cc1d0e7`); nothing here defers to it.
 
-**Status: estimator implementation is on HOLD.** Phase 0A steps 1–3 are
-*reopened*. `sigma_kernels.py` is a **model fixture**, not a frozen spec, and
-no number in it may be used as a pricing input while its sampling convention
-reads `UNVERIFIED`.
+**Status: estimator implementation is on HOLD.** Phase 0A is open. The sampling
+convention is **UNVERIFIED** and `sigma_kernels.py` is a **fixture**, not a
+frozen spec. That is now *enforced* rather than asserted: `pricing_var()`
+refuses under an unverified convention or an unfitted law, and the structural
+function returns a dict with no total a pricer could reach for.
 
 Review lineage: `SIGMA_PLAN_REVIEW.md` (S1–S6) → Revision 2 (`cc1d0e7`) →
-`SIGMA_PLAN_REVIEW_ITER2.md` (M2-1…M2-6) → this revision.
+`SIGMA_PLAN_REVIEW_ITER2.md` (M2-1…M2-6) → Revision 3 (`7474e49`) →
+`SIGMA_PLAN_REVIEW_ITER3.md` (M3-1…M3-6) → this revision.
 
 ---
 
@@ -39,9 +42,10 @@ Review lineage: `SIGMA_PLAN_REVIEW.md` (S1–S6) → Revision 2 (`cc1d0e7`) →
    wins" as settled.
 4. **The anchor is the live problem, and it is a MEAN problem, not a variance
    problem.** §2.
-5. Recommended estimator: tape-fitted variogram for the level and its
-   time-variation, with an empirical horizon multiplier `c(r)` as a
-   **diagnostic**. §4. It is not built until Phase 0A closes.
+5. **One route prices, the other diagnoses.** The pricing law is the route-A
+   reduced-form conditional fit; the structural `k_law/v/Ω` decomposition is
+   route-B diagnostics; `c(r)` is the *agreement between them*, not a term in
+   either. §2.3, §3.2. Neither is built until Phase 0A closes.
 
 ---
 
@@ -66,8 +70,11 @@ Review lineage: `SIGMA_PLAN_REVIEW.md` (S1–S6) → Revision 2 (`cc1d0e7`) →
 `contracts.yaml` says **never hardcode the Gaussian Φ**, and BE-Belief adopts a
 logit recalibration. v13 exposed only `g`/`g_inv`, which left every dynamics
 consumer unimplementable except by reaching for `φ` and smuggling the Gaussian
-back in; v14 adds `g_prime`/`density`. Reparameterising a probability through a
-probit is **not** evidence that the book follows Gaussian dynamics in `x`.
+back in. v14 added `g_prime`; **v15 makes it the single canonical derivative**,
+since v14 also carried `density`, which for a CDF-valued link is the same
+function under a second name with no equality rule to stop two implementations
+disagreeing. Reparameterising a probability through a probit is **not** evidence
+that the book follows Gaussian dynamics in `x`.
 
 **Take `d` from the book:** `d_book = g⁻¹(p̃_book)` with `p̃` the recalibrated
 mid. Then the frontier, `r*`, `ζ` and `λ_bin` are **σ-free**, and the Q9 failure
@@ -136,27 +143,58 @@ Two further consequences:
 - **`9.5139` was called a "floor". It is not.** `α*` achieves `8.2590` inside
   the very same model. Nothing in `sigma_kernels.py` is a bound (§3.3).
 
-### 2.2 α is a parameter to be ESTIMATED
+### 2.2 α is a parameter to be ESTIMATED, and bias is measured against it
 
 `α*` is what *this* path model implies, not what the market must do. Real
 Chainlink streams have heartbeats, deviation thresholds and multi-source
 aggregation; the true conditional mean is an empirical object. **`α` is fitted
-on the tape**, and its distance from both 2.000 (the trend assumption) and
-`α*` (the Brownian projection) is a **process diagnostic**, exactly like
-`ŵ_free`. `AnchorSpec.alpha_provenance` must read `ESTIMATED` before pricing;
-`MODEL_IMPLIED` and `ASSUMED` are declared, non-pricing states.
+on the tape**, and its distance from 2.000 (the trend assumption) and from `α*`
+(the model projection) is a **process diagnostic**, exactly like `ŵ_free`.
 
-**Preferred estimator, and it dissolves three problems at once.** Regress the
-*observed* settlement mark `x_T` directly on the *observed* `(S30(t), S60(t))`
-at each `r`. The fitted combination is the conditional mean; its residual
-variance is `Σ(r)` itself. This never identifies latent Chainlink spot (so the
-S3 identification problem does not arise), assumes no state model (the data pick
-`α̂`), and is **robust to the unverified sampling convention** — a regression on
-the published streams does not care how Chainlink builds them internally. It
-runs on the **tape**, not on Bernoulli outcomes.
+**Bias is defined against the SELECTED estimand, never automatically against the
+model.** Revision 3's fixture computed `bias = α − α*_model` unconditionally, so
+a fitted `α̂` was always labelled biased and applying the documented mean
+correction algebraically dragged the centre back to the Brownian projection — no
+empirical coefficient could ever become the zero-bias mean. `AnchorSpec.selected`
+now names which estimand defines correctness; a fitted conditional mean is
+unbiased with respect to itself, and `model_gap = α̂ − α*` survives as a
+diagnostic that is **never applied as a correction**.
 
-That does not retire the semantics study (§9-2); it removes it from the critical
-path of the anchor.
+### 2.3 Two routes, and you must pick ONE
+
+Revision 3 recommended the direct regression **and** kept the structural ledger.
+Those are two estimators of the same quantity, and combining them double-counts:
+the regression residual already contains future innovation, latent-path
+uncertainty, stream error and every covariance among them.
+
+| | **Route A — reduced form** | **Route B — structural** |
+|---|---|---|
+| object | fitted conditional law of `x_T` on `(S30, S60)` | `σ²k_law(r) + σ²v(r) + uᵀΩu` |
+| needs the sampling convention? | **no** — a regression on published streams does not care how they are built | **yes** — you must know the true covariance's shape |
+| identifies `Ω`? | **no** — `Ω` is *inside* the residual | **yes** — as the lag-0 nugget (§9-2a) |
+| delivers | a **pricing** law | the **decomposition** |
+| status here | **the pricing law** | **diagnostics only** |
+
+> **DECISION: Route A prices; Route B is diagnostic; they are never summed.**
+
+The consumer matrix decides it. The only consumer that needs a *level* is the
+BE-Belief fallback, and it needs `Σ(r)`, not its parts. The decomposition is
+needed only by `c(r)`, the `k` ledger and H-3 — none of which is a gate. Encoded
+as `PathLaw.estimand_route` and rule **R-ROUTE**; `sigma_kernels.pricing_var`
+refuses anything that is not a fitted `ReducedFormLaw`, and the structural
+function returns a dict tagged `DIAGNOSTIC_ONLY` with no `total_var` key.
+
+**What OLS does and does not give you.** OLS returns the best **linear
+projection** and a **pooled** residual variance. That is the conditional mean
+only if the conditional mean is linear, and the conditional variance only under
+homoskedasticity. Otherwise the pooled residual is an *unconditional forecast
+MSE* — the same category error §2.1 removed from the variance line, one level
+up. Under the Gaussian fixture they coincide; the entire point of going
+empirical is not to lean on the fixture. So Route A ships with **gates, not
+footnotes**: cross-fitting, ≥10 day clusters, a residual conditional-mean test
+and a heteroskedasticity test, per horizon and per symbol, day-blocked.
+`pricing_var` refuses if any fails. Two day clusters yield a descriptive
+coefficient, not a pricing-ready conditional law.
 
 ### 2.3 Bias never enters the variance
 
@@ -189,60 +227,84 @@ specification error hiding inside a plausible approximation. Typed as
 
 ### 3.2 The law
 
+**THE PRICING LAW (route A).** One line, and nothing is added to it:
+
 > ```
-> Σ(r) ≡ Var_t[ x_T − Ê_t[x_T] ]  =  σ²·k_law(r)  +  σ²·v(r)  +  u ᵀΩu
->
-> k_law(r) = r(r+1)(2r+1)/(6w²)              r ≤ w    post-t innovation
->          = (r − w) + (w+1)(2w+1)/(6w)      r ≥ w
->
-> v(r)     = conditional variance of the anchor error   (α-INDEPENDENT)
-> uᵀΩu     = stream measurement error, u = (α, 1−α), Ω the 2×2 feed covariance
+> Ê_t[x_T] = S60 + α̂(r)·(S30 − S60)          fitted conditional mean
+> Σ(r)     = residual variance of that fit    the WHOLE of it
 >
 > σ_eff(r) = √Σ(r)     p̂ = g( (Ê_t[x_T] − x_0)/σ_eff(r) )
 > ```
 
-`g` is the selected `LinkFunction`. `k_law` is **continuous at `r = w`** — both
-branches give `(w+1)(2w+1)/(6w) = 20.5028` s — so the `r > w` offset is
-`r − 39.4972`, not the continuous law's `r − 40`. v1 mixed the discrete branch
-below `w` with the continuous one above and jumped 1.25 % in σ at the seam.
+`g` is the selected `LinkFunction`. Future innovation, latent-path uncertainty,
+stream measurement error and every covariance among them are **already inside**
+`Σ(r)`. Adding `k_law`, `v(r)` or `Ω` to it double-counts (R-ROUTE). Gated on
+cross-fitting, ≥10 day clusters and the two residual diagnostics of §2.3.
 
-**There is no third line.** v2 shipped a `settlement_var` that silently added a
-`nugget` its own `ledger()` omitted — two public functions disagreeing on total
-variance. `sigma_kernels.ledger` is now the single source of truth and
-`settlement_var` is a thin accessor onto it. A nugget may be observation noise,
-feed noise or small-scale process variance; those map differently into
-conditional settlement uncertainty, so it returns only as a named component with
-a declared estimand, never as a horizon-constant scalar.
+**THE DIAGNOSTIC DECOMPOSITION (route B).** Never a pricing input:
 
-**Ω is a 2×2, not a scalar.** Its contribution `uᵀΩu` varies with the horizon
-weights, and because `(1−α)` changes sign above `α = 1` the same covariance
-*raises* one anchor's variance and *lowers* another's. v2's scalar
-`omega_scale` could not express that.
+> ```
+> model_total(r) = σ²·k_law(r) + σ²·v(r) + uᵀΩu      DIAGNOSTIC_ONLY
+>
+> k_law(r) = r(r+1)(2r+1)/(6w²)              r ≤ w    post-t innovation
+>          = (r − w) + (w+1)(2w+1)/(6w)      r ≥ w
+> v(r)     = conditional variance of the anchor error   (α-INDEPENDENT)
+> uᵀΩu     = stream measurement error, u = (α, 1−α), Ω the 2×2 feed covariance
+> ```
 
-### 3.3 The numbers, and what they are not
+`k_law` is **continuous at `r = w`** — both branches give
+`(w+1)(2w+1)/(6w) = 20.5028` s — so the `r > w` offset is `r − 39.4972`, not the
+continuous law's `r − 40`. v1 mixed the discrete branch below `w` with the
+continuous one above and jumped 1.25 % in σ at the seam.
 
-Under `disc1s_v0` (**UNVERIFIED**) with the conditional anchor and no feed
-error, BTC `σ = 1.089 bps/√s`:
+**Units, stated once (M3-3).** `σ²` is a **rate**, bps²/**second**, typed
+`RateQuantity` — not the same type as a terminal bps² variance. `k_law` and
+`v(r)` are dimensionless. **`Ω` is in bps², physically, everywhere**, and is
+*not* multiplied by the rate. v3's code documented "σ² units" and multiplied by
+`σ²` in the ledger, so an identity `Ω` at rate 4 contributed 9.9867 bps² instead
+of 2.4967.
+
+**Ω is a 2×2, not a scalar**, its contribution varies with the horizon weights,
+and because `(1−α)` changes sign above `α = 1` the same covariance *raises* one
+anchor's variance and *lowers* another's. It must be symmetric, finite and
+**PSD** before use — v3 accepted a non-PSD matrix and returned a total variance
+of **−120.9**.
+
+**There is no hidden line.** v2 shipped a `settlement_var` that silently added a
+`nugget` its own `ledger()` omitted. A nugget may be observation noise, feed
+noise or small-scale process variance; those map differently into conditional
+settlement uncertainty, so it appears only as a named component with a declared
+estimand — and under route B it is not a nuisance at all but the **estimator of
+`Ω`** (§9-2a).
+
+### 3.3 The route-B numbers, and what they are not
+
+**These are DIAGNOSTICS. There is no `σ_eff` for pricing yet, because no route-A
+law has been fitted.** Under `disc1s_v0` (**UNVERIFIED**), the model anchor and
+no feed error, BTC rate `σ² = 1.089²` bps²/s:
 
 | r (s) | 30 | 60 | 120 | 180 | 240 | 270 |
 |---|---|---|---|---|---|---|
 | `α*(r)` | 1.2496 | 1.4992 | 1.4992 | 1.4992 | 1.4992 | 1.4992 |
 | `k_law(r)` | 2.6264 | 20.5028 | 80.5028 | 140.5028 | 200.5028 | 230.5028 |
 | `v(r)` | 2.0648 | 8.2590 | 8.2590 | 8.2590 | 8.2590 | 8.2590 |
-| **`σ_eff` (bps)** | **2.359** | **5.840** | **10.260** | **13.282** | **15.735** | **16.827** |
+| `model_total` (bps²) | 5.563 | 34.109 | 105.264 | 176.420 | 247.575 | 283.153 |
 
 `α*` is horizon-dependent inside the window and constant outside it: at `r=30`
 the trailing half of the mark *is* `S30`, observed, so `α*(30) = ½ + ½α*` and
-`v(30) = ¼·8.2590` exactly.
+`v(30) = ¼·8.2590` exactly. Revision 3 published a bolded `σ_eff` row here; that
+invited exactly the use this row must not have, so it is gone.
 
-**These are fixtures, not pricing inputs.** The convention is unverified, and a
-1 s shift in fast-stream support alone moves `α*` from 1.4992 to 1.4954. At
-`r=30`, 1 bp in the numerator is 0.42 in `d`-units, ≈ **17 probability-cents** —
-which is why the anchor mattered more than σ, and why a 1.22 bps buried bias was
-not survivable.
+**Why these cannot price.** The convention is unverified — a 1 s shift in
+fast-stream support alone moves `α*` from 1.4992 to 1.4954 — and the model
+anchor is not the estimand. Enforced, not merely stated: `pricing_var()` refuses
+while `status != VERIFIED`, and the structural function returns a dict with no
+`total_var` key for a pricer to reach for. For scale: at `r=30`, 1 bp in the
+numerator is ≈ **17 probability-cents**, which is why the anchor mattered more
+than σ and why a 1.22 bps buried bias was not survivable.
 
-Regenerate: `python3 live/pm_research/sigma_kernels.py --selftest` (24 checks,
-exact rationals).
+Regenerate: `python3 live/pm_research/sigma_kernels.py --selftest` (40 checks,
+exact rationals, including the refusal paths).
 
 ### 3.4 The two objects are never interchangeable
 
@@ -287,14 +349,19 @@ of trailing σ is 3.4–4.3× *within* one coin, so a static σ is indefensible;
 60 min window is at least as good as the 15 min in 6 of 8 symbols. That caps
 what regime conditioning can deliver and refutes v3's `w_fast = 0.9`.
 
-> **Recommendation: B for the level and its time-variation; A for a horizon
-> multiplier `c(r)` held as a DIAGNOSTIC; the kernel from a VERIFIED sampling
-> convention; `α` estimated on the tape.**
+> **Recommendation, restated under §2.3's route decision: the PRICING law is the
+> route-A reduced-form fit. B supplies the level, its time-variation and the
+> decomposition as DIAGNOSTICS, and `c(r)` is the comparison BETWEEN them.**
 >
 > ```
-> Σ̂(r) = σ̂²_blend · k_law(r) + σ̂²·v̂(r) + uᵀΩ̂u ,  then c(r) as a diagnostic
->         on the DIFFUSION line only
+> price with:   Sigma_hat(r) = residual variance of the route-A fit      (one line)
+> diagnose with: model_total(r) = sigma2_blend*k_law(r) + sigma2*v(r) + u'Omega u
+> c(r) = model-vs-empirical agreement, NOT a term added to either
 > ```
+>
+> Revision 3 wrote `Σ̂(r) = σ̂²_blend·k_law + σ̂²v̂ + uᵀΩ̂u` here while §2.2
+> recommended the regression. That was the M3-1 double count in its clearest
+> form: two estimators of one quantity, presented as one formula.
 
 Composition: level fully per-symbol, no pooling (the level spans 4.6× across
 coins); time-variation by a multi-scale blend whose weights are fitted **on the
@@ -429,15 +496,20 @@ overlap-aware weights with block inference.
   *Passes for BTC (1.06×).*
 - **G2 (calibration):** PIT uniform in `|z| < 2` by horizon, per symbol after
   shrinkage, at 7 days, walk-forward.
-- **G3 (ledger closed):** sampling convention **VERIFIED**; `α` estimated with
-  its conditional bias in the mean; `v(r)` and `Ω` separated; no component twice.
-  `c(r)` within `[0.8, 1.25]`, where
-  `c(r) = [Var(e_r) − σ²v(r) − uᵀΩu] / [σ̂²·k_law(r)]` — it multiplies the
-  **diffusion line only**. Its `status` stays **`DIAGNOSTIC`** until ≥10
-  independent day clusters exist; a point estimate crossing the band at 2 day
-  clusters is not a go/no-go. Any quoted SE must name its object — 20–30 %
-  relative uncertainty on a variance multiplier is 20–30 % on `Σ` and ~10–15 %
-  on `σ_eff`, and does **not** shrink because the mean sits near 1.
+- **G3 (route coherent):** `PathLaw.estimand_route` declared; sampling
+  convention **VERIFIED** (route B only); `α` estimated with bias measured
+  against the selected estimand; `Ω` in bps², PSD-validated, with its
+  identification stated per route; and **no structural line added to a
+  reduced-form residual** (R-ROUTE). `c(r)` is now defined as the *agreement*
+  between the two routes,
+  `c(r) = Σ̂_A(r) / model_total_B(r)`, expected ≈ 1 — **not** a multiplier
+  inside either. It is a **model-adequacy diagnostic**: a `c(r)` far from 1
+  means the parametric law misdescribes the tape, which is information about
+  route B, not a correction to route A. Its `status` stays **`DIAGNOSTIC`**
+  until ≥10 independent day clusters exist; a point estimate at 2 day clusters
+  is not a go/no-go. Any quoted SE must name its object — 20–30 % relative
+  uncertainty on a variance ratio is 20–30 % on the ratio and ~10–15 % in σ
+  units, and does **not** shrink because the mean sits near 1.
 - **G4 (H-3, at 30 days):** if the direction test is null, **σ is declared risk
   plumbing permanently**. Pre-registered domain rules: `σ_book` from the selected
   link is undefined near `mid = 0.5`, can go negative when book and stream
@@ -461,7 +533,26 @@ overlap-aware weights with block inference.
    EXP-M6 proves the published S60 endpoint reproduces settlement; it says
    nothing about how that endpoint is built. **A 1 s shift in fast-stream support
    alone moves `α*` by 0.004.** Check by reconstructing both from the 1 s Binance
-   tape. This is Phase 0A step 5 and it gates the kernel.
+   tape. This is Phase 0A step 5. **It gates route B entirely — the kernel, `v(r)`
+   and `Ω` — and does not gate route A**, whose regression runs on the published
+   streams whatever they turn out to be. That asymmetry is the practical reason
+   §2.3 prices with A.
+2a. **`Ω` is not identified from contemporaneous moments, and its route-B
+   estimator is entangled with `ŵ`.** Counting: `Var(S30)`, `Var(S60)`,
+   `Cov(S30,S60)` are **3 moments for 4 unknowns** (the rate plus `Ω`'s three).
+   Under route B the extra information comes from the *time series*: if stream
+   error is serially uncorrelated it appears **only at lag 0**, so extrapolating
+   the true covariance to zero lag and taking the gap identifies `Ω`. That gap is
+   the **nugget** — the same object already in the per-symbol variogram table
+   (0.00 for btc/eth/xrp/doge/bnb, 0.14–0.28 bp for sol/zec/hype). Two caveats
+   that make this a risk rather than a solved problem: it requires the true
+   covariance shape, hence a **VERIFIED** convention; and a variogram fitted
+   without a nugget attributes microstructure to a shorter kernel, so `Ω`, the
+   nugget and `ŵ = 47 s` are **one identification problem, not three** — which is
+   why item 3 must be resolved jointly. If stream error is serially correlated
+   (plausible under deviation-threshold updates) it leaks into short lags and the
+   separation fails. Under route A none of this arises: `Ω` is inside the
+   residual and must never be added again.
 3. **`ŵ ≈ 47 s` for BTC.** Most likely nugget confounding, but if real the
    in-window level is biased up to 1.63× in variance. **Still the largest open
    technical risk after the anchor.** Resolve with a joint `(σ², w, nugget)` WLS
@@ -507,8 +598,10 @@ policy and validation protocol.
 (47 → 81 s); the nugget (0 for btc/eth/xrp/doge/bnb, 0.14–0.28 bp for
 sol/zec/hype); regime persistence (ρ 0.19 btc → 0.40 hype — BTC is the *hardest*
 symbol to regime-condition, so BTC-first is conservative); the fast/slow balance.
-**`α` must be assumed per-symbol until measured otherwise** — it depends on each
-stream's update behaviour.
+**`α` must be treated as symbol-SPECIFIC — never pooled across symbols** — since
+it depends on each stream's update behaviour. (Revision 3 wrote "assumed
+per-symbol until measured otherwise", which read as licence to assume a value;
+no `α` may be assumed for pricing at all — see §2.2.)
 
 **`zec/usd` is a useful control, not an independent OOS asset.** 63,159 price
 ticks and no Polymarket market, so it cannot contaminate the outcome analysis —
@@ -535,39 +628,46 @@ confirmation.
 
 ## 12. Build order
 
-Estimator implementation is on **HOLD**. Phase 0A steps 1–3 are **reopened**:
-what they produced is a fixture, not a frozen spec.
+Estimator implementation is on **HOLD**. Phase 0A is open.
 
 **Phase 0A — definitions and deterministic checks.**
 
-1. **Unit space** — DONE (§3.1), typed as `UnitSpace`.
-2. **Typed carrier** — contracts **v14**: `AnchorSpec` separates conditional
-   bias from conditional variance; `AnchorErrorEvidence` replaces the false
-   bracket; `SamplingConvention` versions the kernel; `ForecastRequest` carries
-   `as_of`/knowledge cutoff/target; `LinkRef` single-owns the link; `LinkFunction`
-   gains `g_prime`; R-WFWD fixes the cutoff semantics. **Not closed:** the
-   runtime must actually enforce refusal, and only the fixture does today.
-3. **Kernels** — REOPENED. The algebra is exact and unit-tested (24 checks,
-   exact rationals) but it is conditional on an **UNVERIFIED** convention, so it
-   cannot be marked frozen. Keep discrete-1s and continuous as sensitivity
-   fixtures.
+0. **Route** — DONE (§2.3). `estimand_route: REDUCED_FORM` prices; STRUCTURAL
+   diagnoses; R-ROUTE forbids summing them. Everything below is scoped by it.
+1. **Unit space** — DONE (§3.1), typed as `UnitSpace`; rates typed separately
+   from terminal variances as `RateQuantity`.
+2. **Typed carrier** — contracts **v15**: `AnchorSpec` is horizon-indexed and
+   defines bias against the SELECTED estimand; `ReducedFormLaw` carries the
+   pricing route with its gates; `FeedErrorCov` fixes bps² once and states its
+   identification; `g_prime` is the single canonical derivative; R-REQ and
+   R-ROUTE join R-WFWD. **Not closed:** the runtime enforces refusal only in the
+   fixture, and `BE-Belief` is still absent from `modules:`.
+3. **Kernels** — REOPENED, and correctly so. The algebra is exact and
+   unit-tested (40 checks including every refusal path) but conditional on an
+   **UNVERIFIED** convention. Route B only.
 4. **Consumer matrix** — §1 is canonical; the fallback's own loss function is
    still unwritten.
 5. **Verify S30/S60 semantics** against the 1 s Binance tape: window endpoints,
    sample weights, update triggers, event-time alignment, knowledge-time
-   construction. **This gates the kernel and the anchor together.**
-6. **Choose and fit the anchor** (§2.2) — preferably by regressing observed
-   `x_T` on observed `(S30, S60)`, which needs neither latent spot nor the
-   internal kernel. Emit `AnchorSpec` with `alpha_provenance: ESTIMATED`, the
-   conditional bias in the mean, and `Ω` estimated as a 2×2.
+   construction. **This gates route B entirely and does not gate route A**
+   (§9-2). Revision 3 said it "gates the kernel and the anchor together", which
+   contradicted its own claim that the regression is convention-robust; the
+   scoped statement is that it gates the *decomposition*, not the *fit*.
+6. **Fit the route-A anchor and law** — regress observed `x_T` on observed
+   `(S30, S60)` per horizon and symbol, cross-fitted, day-blocked, embargoed.
+   Emit `AnchorSpec{selected: ESTIMATED}` with bias measured against the
+   estimate, `model_gap` as a diagnostic, and `ReducedFormLaw` carrying
+   `n_day_clusters`, `cross_fitted` and both residual tests. **Do not estimate
+   `Ω` on this route** — it is inside the residual (§9-2a).
 
 **Phase 0B — data admissibility and feasibility.**
 
 7. Rebuild the dense knowledge-time top of book from `price_change`; classify
    gaps by cause; isolate post-MNAR-repair data.
 8. Fit the frozen per-symbol single-scale baseline on day-block embargoed folds.
-9. Measure the complete ledger, then `c(r)` with block/day uncertainty,
-   `status: DIAGNOSTIC`.
+9. Build the route-B decomposition (only if step 5 passed) and compute
+   `c(r) = Σ̂_A/model_total_B` with block/day uncertainty, `status: DIAGNOSTIC`.
+   It measures agreement between the routes; it is added to neither.
 10. Re-read fallback calibration and model-vs-book scoring on admissible rows
     only, against both raw and recalibrated book. `DESCRIPTIVE` until the
     day-cluster threshold.
@@ -581,10 +681,12 @@ what they produced is a fixture, not a frozen spec.
     walk-forward PIT/G2; then the `p̂` floor and link policy.
 14. H-3 at the pre-registered horizon (G4).
 
-**What can still stop this:** step 5 failing invalidates the kernel and the
-anchor together; step 10 overturning "the book wins" re-scopes σ, since §0's
-argument assumes the book supplies the level. `c(r)` is **not** a gate until the
-day clusters exist.
+**What can still stop this:** step 6's residual diagnostics failing would mean
+the linear projection is not the conditional mean here, and route A would need a
+richer conditioning set before it can price at all; step 5 failing removes route
+B, hence `c(r)`, `ŵ`, `Ω` and the H-3 decomposition, but leaves route A intact;
+step 10 overturning "the book wins" re-scopes σ, since §0's argument assumes the
+book supplies the level. `c(r)` is **not** a gate until the day clusters exist.
 
 Effort saved here goes to **G-FF4, the queue bracket**, which can still end the
 programme.
@@ -646,4 +748,10 @@ which is the separate question §2.2 settles by estimation.
 | M2-3 | floor/ceiling not ordered | replaced by non-ordered evidence + a 2×2 `Ω` |
 | M2-4 | hidden nugget, no refusal | one ledger, exact domain validation, refusal tested |
 | M2-5 | v13 boundary defects | contracts v14, eight sub-items |
-| M2-6 | overlay, not canonical | **this rewrite** |
+| M2-6 | overlay, not canonical | rewritten in place at Revision 3 |
+| M3-1 | reduced-form and structural combined | **§2.3 picks one route**; R-ROUTE; `c(r)` redefined as agreement |
+| M3-2 | fixture could not express an empirical α | `AnchorSpec.selected`, horizon-indexed, bias vs the estimate, `conditional_mean` implemented |
+| M3-3 | `Ω` units/PSD/identification | bps² once, PSD-validated, identification stated per route (§9-2a) |
+| M3-4 | not fail-closed | `pricing_var` refuses on status/fit/gates; rates, PSD, conventions validated; contract `Unavailable` |
+| M3-5 | request fields never compared | `check_request` + R-REQ, with negative fixtures |
+| M3-6 | contradictions survived the scan | scan now covers plan, code, STATUS and HANDOFF |

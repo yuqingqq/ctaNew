@@ -1,8 +1,8 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
 Updated: 2026-08-20, session 2. All work is on branch **`mm-research`** (pushed);
-nothing is on `main`. Sigma Revision 3 reviewed in
-`live/pm_research/SIGMA_PLAN_REVIEW_ITER3.md`; verdict **partial, HOLD**.
+nothing is on `main`. Sigma is at **Revision 4** / contracts **v15**; `SIGMA_PLAN_REVIEW_ITER3.md`'s
+six items are applied. HOLD remains — Phase 0A 5–6 are unrun.
 
 ## Read this first
 
@@ -16,13 +16,14 @@ either without reading §"What was withdrawn".
 
 Reading order:
 1. `live/pm_research/PM_ARCHITECTURE.md` (v12) — the entry point; structure.
-2. `live/pm_research/contracts/contracts.yaml` (**v14**) — machine-readable
+2. `live/pm_research/contracts/contracts.yaml` (**v15**) — machine-readable
    source of truth for types. The prose defers to this file, not the other way
    round.
 3. `live/pm_research/EXP_RESULTS_2026-08-20.md` — first model results.
-4. `live/pm_research/SIGMA_PLAN.md` — **REVISION 3, canonical.** Rewritten in
-   place; one estimand, one consumer matrix, one ledger equation. v1/v2 text is
-   in git history (`80f823e`, `cc1d0e7`) and nothing defers to it.
+4. `live/pm_research/SIGMA_PLAN.md` — **REVISION 4, canonical.** One consumer
+   matrix, one PRICING law (route A) and one DIAGNOSTIC decomposition (route B),
+   never summed. **Read §2.3 first** — the route decision scopes everything
+   else. v1/v2 text is in git history (`80f823e`, `cc1d0e7`).
 5. `live/pm_research/SIGMA_PLAN_REVIEW.md` — first implementation-readiness review.
 6. `live/pm_research/SIGMA_PLAN_REVIEW_ITER2.md` — review of Revision 2.
 7. `live/pm_research/SIGMA_PLAN_REVIEW_ITER3.md` — review of Revision 3 and v14;
@@ -144,14 +145,63 @@ Shipped tests pass (kernel 24, checker 13, v13→v14 migration clean), but the
 adversarial cases above fail semantically. Full evidence and acceptance tests are
 in `SIGMA_PLAN_REVIEW_ITER3.md`.
 
-Next, in order:
+### ITER3 APPLIED — Revision 4 / contracts v15 / fixture rewritten
 
-1. choose reduced-form conditional law versus structural latent-state ledger;
-2. repair empirical-alpha ownership, horizon scope and conditional-mean API;
-3. resolve `Omega` identification/units/PSD and unverified-status refusal;
-4. make request/link/time invariants executable;
-5. reconcile plan, code header, status and handoff;
-6. only then run the S30/S60 semantics and day-blocked anchor experiment.
+Every ITER3 probe was **reproduced before acting**: pricing under `UNVERIFIED`,
+`bias_coeff 0.200833` against an empirical `α`, the 4× `Ω` unit error
+(9.9867 vs 2.4967), negative rate → −4.691, non-PSD → −120.905, the one-slot
+`Unavailable`, the `KeyError` on an unknown convention, and the
+`1799/1200`-vs-`2700/1801` contradiction inside my own file header. All correct.
+
+**M3-1 — THE ROUTE DECISION, and it scopes everything else.**
+
+|  | **Route A — reduced form** | **Route B — structural** |
+|---|---|---|
+| object | fitted law of `x_T` on `(S30, S60)` | `σ²k_law + σ²v(r) + uᵀΩu` |
+| needs sampling semantics? | **no** | **yes** |
+| identifies `Ω`? | **no** — it is *inside* the residual | **yes** — the lag-0 nugget |
+| delivers | a **pricing** law | the **decomposition** |
+| status | **PRICES** | **DIAGNOSTIC ONLY** |
+
+**Route A prices; Route B diagnoses; they are never summed** (`R-ROUTE`,
+`PathLaw.estimand_route`). The consumer matrix decides: the only LEVEL consumer
+is the BE-Belief fallback, which needs `Σ(r)`, not its parts. `c(r)` is
+redefined as the *agreement* between routes, `Σ̂_A/model_total_B ≈ 1` — a
+model-adequacy diagnostic, not a term in either.
+
+**And OLS is not a free lunch.** It gives the best *linear projection* and a
+*pooled* residual — the conditional mean only if that mean is linear, the
+conditional variance only under homoskedasticity. Otherwise it is an
+unconditional forecast MSE, which is the same category error we removed from the
+Brownian variance line one revision earlier, one level up. So route A ships with
+**gates**: cross-fitting, ≥10 day clusters, a residual conditional-mean test and
+a heteroskedasticity test. `pricing_var()` refuses if any fails.
+
+**`Ω`'s identification has an answer** (§9-2a): contemporaneous moments give **3
+numbers for 4 unknowns**, so it is *not* identified from them. Under route B it
+is the lag-0 discontinuity of the bivariate cross-variogram — the **nugget**,
+already in the per-symbol table — which needs a VERIFIED convention and is
+entangled with `ŵ = 47 s`. **`Ω`, the nugget and `ŵ` are one problem, not three.**
+
+Also applied: **M3-2** `AnchorSpec.selected` (MODEL|ESTIMATED), horizon-indexed,
+bias measured against the *selected* estimand so a fitted `α` is unbiased with
+respect to itself, `model_gap` kept as a diagnostic, `conditional_mean`
+implemented. **M3-3** `Ω` is bps² once, PSD-validated, `RateQuantity` separates
+bps²/s from terminal bps². **M3-4** fail-closed on status, rates, PSD, unknown
+conventions; `Unavailable{reason, since, cause}`; conventions are `(offset,
+weight)` schedules. **M3-5** `check_request` **evaluates** the comparisons with 8
+negative fixtures — a typed timestamp that is never compared is documentation.
+**M3-6** the scan now covers plan, code, contracts, STATUS and HANDOFF.
+
+**Verify:** `python3 live/pm_research/sigma_kernels.py --selftest` (40 checks) ·
+`contract_check.py --selftest` · `contract_check.py HEAD WORKTREE`.
+
+**Next, and neither is code:**
+1. **Phase 0A 5 — verify S30/S60 semantics** against the 1 s Binance tape. Gates
+   route B entirely; does **not** gate route A.
+2. **Phase 0A 6 — fit the route-A law**: regress `x_T` on `(S30, S60)` per
+   horizon and symbol, cross-fitted and day-blocked, and report both residual
+   diagnostics. Do **not** estimate `Ω` on this route.
 
 Estimator implementation remains on **HOLD**.
 

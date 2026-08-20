@@ -3,7 +3,7 @@ name: Polymarket Crypto 5-min Markets
 phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
-updated: 2026-08-20 (session 2 — sigma Revision 3 reviewed, HOLD remains)
+updated: 2026-08-20 (session 2 — sigma Revision 4 / contracts v15, HOLD remains)
 
 flags:
   collector_running: true    # since 2026-08-19 ~14:32 UTC. MNAR bug fixed
@@ -58,28 +58,46 @@ flags:
                              # conflicts with docs (7%) and CLOB base_fee.
   structure_converged: false # 12 review iterations; replay stands at
                              # LOCAL 11 / SPREADING 1 / STRUCTURAL 1.
-  sigma_plan_finalized: false # Revision 3 is canonical but not implementation-
-                             # ready; SIGMA_PLAN_REVIEW_ITER3.md is PARTIAL/HOLD.
-  sigma_plan_review: iter3-partial # Revision 3 correctly repairs the Brownian
-                             # mean/variance decomposition, false bracket, hidden
-                             # nugget and several v13 carrier defects. All six
-                             # iter-2 items remain partial: the empirical-anchor
-                             # route and structural ledger are incompatible as
-                             # written, and the executable carrier cannot express
-                             # an empirical alpha as its zero-bias mean.
-  anchor_ledger_closed: false # Choose one estimand first. Direct regression
-                             # identifies a reduced-form mean and total residual;
-                             # it does not also identify structural v(r) and
-                             # Omega. Adding those lines double-counts unless a
-                             # latent measurement model separates them. The
-                             # fixture compares every supplied alpha with the
-                             # Brownian alpha_star, so an empirical alpha is
-                             # labelled biased and pulled back to the fixture.
-  sampling_convention: UNVERIFIED # Correctly reopened, but the fixture still
-                             # returns a numeric settlement variance under the
-                             # default UNVERIFIED convention. Its records encode
-                             # rectangular windows/lag flags, not general weighted
-                             # temporal support. No pricing use is permitted.
+  sigma_plan_finalized: false # Revision 4 applies all six ITER3 items but the
+                             # plan is still not implementation-ready: Phase 0A
+                             # 5-6 are unrun and no route-A law is fitted.
+  sigma_plan_review: iter3-applied # All six ITER3 items applied in Revision 4 +
+                             # contracts v15 + a rewritten fixture. Every ITER3
+                             # probe was REPRODUCED first: UNVERIFIED pricing,
+                             # bias 0.200833 against an empirical alpha, the 4x
+                             # Omega unit error, negative rate, non-PSD -120.9,
+                             # the 1-slot Unavailable, the KeyError, and the
+                             # 1799/1200-vs-2700/1801 header contradiction.
+  estimand_route: REDUCED_FORM # THE DECISION (ITER3 M3-1). Route A (reduced-form
+                             # fit of x_T on (S30,S60)) is the PRICING law; its
+                             # residual IS the whole of Sigma(r). Route B
+                             # (k_law + v(r) + Omega) is DIAGNOSTIC ONLY. They
+                             # are NEVER summed — rule R-ROUTE, and pricing_var()
+                             # refuses anything that is not a fitted
+                             # ReducedFormLaw. The consumer matrix decides it:
+                             # the only LEVEL consumer is the BE-Belief fallback,
+                             # which needs Sigma(r), not its parts.
+                             # DIFFERENT PREREQUISITES: A needs no sampling
+                             # semantics and does NOT identify Omega (it is
+                             # inside the residual); B needs a VERIFIED
+                             # convention and identifies Omega as the lag-0
+                             # nugget. That asymmetry is why A prices.
+  anchor_ledger_closed: false # Still false, and now for the right reason: no
+                             # route-A law is FITTED. OLS gives a linear
+                             # projection and a POOLED residual — the conditional
+                             # mean only if that mean is linear, the conditional
+                             # variance only under homoskedasticity. So pricing
+                             # is GATED on cross-fitting, >=10 day clusters, a
+                             # residual conditional-mean test and a
+                             # heteroskedasticity test. Two day clusters give a
+                             # descriptive coefficient, not a pricing law.
+  sampling_convention: UNVERIFIED # Now ENFORCED, not just labelled:
+                             # pricing_var() refuses while status != VERIFIED,
+                             # and conventions are (offset, weight) schedules
+                             # with alignment semantics rather than window
+                             # lengths plus a lag flag. Gates ROUTE B only —
+                             # route A's regression runs on the published
+                             # streams whatever they turn out to be.
   d2_retired: true           # The old incomplete-ledger prediction is retired,
                              # but c(30)=1.14 is NOT replacement evidence: its
                              # 2.6 bps residual comes from SIGMA_DIAGNOSTICS
@@ -88,14 +106,22 @@ flags:
                              # VERIFIED at SIGMA_DIAGNOSTICS.md:157-175. Both
                              # c(30)=2.17 and c(30)=1.14 are apples-to-oranges;
                              # no c(r) number is currently claimable.
-  contracts_version: 14      # Structural migration passes and StateView,
-                             # ForecastRequest, LinkRef, derivative and typed
-                             # anchor additions are useful. Semantics remain
-                             # partial: request/law instrument-target-horizon-
-                             # knowledge equality is not enforced; LinkRef is not
-                             # tied to BeliefProcess.link; alpha/cond_var scope is
-                             # ambiguous; and rate/feed covariance units disagree
-                             # with the fixture. Checker green is structural.
+  contracts_version: 15      # M15-1. AnchorSpec horizon-indexed with `selected`
+                             # (MODEL|ESTIMATED) so bias is measured against the
+                             # SELECTED estimand — v14 measured it against the
+                             # model, which made an empirical alpha permanently
+                             # "biased" and cancelled it back to the fixture.
+                             # ReducedFormLaw carries the pricing route + gates;
+                             # RateQuantity separates bps^2/s from terminal bps^2;
+                             # FeedErrorCov fixes BPS_SQUARED once, requires
+                             # psd_validated and states identification per route;
+                             # g_prime is the single canonical derivative
+                             # (density removed); R-REQ + R-ROUTE join R-WFWD.
+                             # 7 removals + 4 changes, all with records.
+                             # R-REQ IS EXECUTABLE: sigma_kernels.check_request
+                             # evaluates the comparisons with 8 negative
+                             # fixtures. Checker green is still only structural —
+                             # that is why the invariants live in code.
 
 focus: >
   Build and test the model, mechanism-first, no PnL/capacity estimation
