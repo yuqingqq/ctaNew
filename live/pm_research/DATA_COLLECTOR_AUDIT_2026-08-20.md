@@ -358,3 +358,72 @@ answer.
 The next step is a discriminating measurement, not another fix. Changing
 `DISK_WORKERS` or `ping_timeout` now would create a fourth era boundary while
 the cause is still unidentified — which is how the v2 addendum went wrong.
+
+## RESOLVED 17:46:41 UTC — the 1013 is VENUE-SIDE, not ours
+
+`clob_v3_1`'s discriminator answered on its first 1013, two minutes after
+deployment:
+
+```
+cause               SLOW_CONSUMER_1013
+ws_queue_depth_max  133        <- out of a 65,536-frame pause threshold (0.2%)
+ws_ever_paused      False      <- the library NEVER stopped reading the transport
+lag_ms_max_interval 1.8 ms
+gap                 1.40 s
+```
+
+`websockets` pauses reading from the socket once its inbound backlog passes the
+high-water mark, and a paused transport is what fills a server's send buffer.
+**It never paused.** Our backlog peaked at 133 frames out of 65,536 while the
+venue was telling us its send buffer was full.
+
+### Every client-side cause is now excluded by measurement
+
+| candidate | measurement | verdict |
+|---|---|---|
+| event-loop stall | `lag_ms_max_interval` 1.8 ms | ruled out |
+| gzip on the loop | 1,916 ms of work vs 2 ms lag; none in flight at the drop | ruled out |
+| write-queue backpressure | `writer_wait=0`, `q_hi=1` throughout | ruled out |
+| memory / queue growth | RSS 260 MB stable (v2 ran 416 MB) | ruled out |
+| **our consumption rate** | **`ws_ever_paused=False`, depth 133/65,536** | **ruled out** |
+| **network throughput** | **11.7 Mbps sustained; one BTC socket is 0.24 MB/s** | **ruled out** |
+
+The `1013` label is the venue's, and it does not describe our behaviour. This
+also explains, retrospectively, why two successive client-side repairs failed to
+remove these: neither the write path nor the gzip stall was ever the cause. Both
+were real defects worth fixing on their own merits, and neither was the answer.
+
+### What this changes
+
+**The acceptance boundary as written is probably unachievable.** "One full busy
+UTC day with zero `SLOW_CONSUMER_1013`" tests something we do not control. The
+pre-registered *alternative* — "a cause-aware exclusion rule with enough
+complete independent days" — is now the operative path. That branch was written
+into the boundary before any of this was known, and it is what makes this
+finding actionable rather than a dead end.
+
+**The exclusion rule already has its input.** Every disconnect is recorded with
+cause, slug, coin, knowledge time and an explicit end, so per-window loss is
+computable now:
+
+| window | lost | of 390 s |
+|---|---|---|
+| `btc-updown-5m-1787247000` | 21.46 s | 5.5 % |
+| `btc-updown-5m-1787247900` | 1.40 s | 0.4 % |
+| four earlier BTC windows | ~1.3 s each | ~0.3 % |
+
+30.8 s total across 8 windows, and **every disconnect in every era has been
+BTC** — never the other six coins. The loss is concentrated in the single
+busiest symbol, which is the same MNAR shape as the original incident: it is not
+random with respect to activity, so gap-touched BTC windows must be excluded
+from queue, flow and fill inference rather than averaged in.
+
+### Recommended posture
+
+1. Stop trying to fix the 1013 client-side. It is measured as not ours.
+2. Adopt the cause-aware exclusion rule for CLOB-derived work, keyed on the gap
+   ledger. Report accepted-versus-excluded activity by UTC day.
+3. Keep `clob_capture_clean: false` — the tape still has holes, and the reason
+   it has holes is now known rather than assumed.
+4. Leave `DISK_WORKERS` and `ping_timeout` alone. There is no longer a
+   client-side hypothesis to test with them.

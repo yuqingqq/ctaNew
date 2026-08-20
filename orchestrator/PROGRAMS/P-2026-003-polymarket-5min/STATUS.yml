@@ -7,6 +7,30 @@ updated: 2026-08-20 (session 3 — Route A measured; DESCRIPTIVE / PRICING HOLD)
 
 flags:
   collector_running: true    # One price process and one CLOB process; fresh.
+  clob_1013_is_venue_side: true # RESOLVED 17:46:41 UTC by clob_v3_1's
+                             # discriminator, on its first 1013: ws_ever_paused
+                             # = FALSE and ws_queue_depth_max = 133 out of a
+                             # 65,536-frame pause threshold (0.2%). websockets
+                             # pauses reading from the transport past that mark,
+                             # and a paused transport is what fills a server's
+                             # send buffer -- IT NEVER PAUSED. We were draining
+                             # at 0.2% of capacity while the venue claimed its
+                             # send buffer was full. Also excluded by
+                             # measurement: loop stall (1.8ms), gzip (none in
+                             # flight, and off-loop anyway), write backpressure
+                             # (writer_wait=0, q_hi=1), memory (RSS 260MB
+                             # stable), network throughput (11.7 Mbps sustained;
+                             # one BTC socket is 0.24 MB/s). The 1013 label is
+                             # the venue's and does not describe our behaviour.
+                             # CONSEQUENCE: the acceptance boundary as written
+                             # ("one full busy day, zero 1013") tests something
+                             # we do not control and is probably unachievable.
+                             # The PRE-REGISTERED ALTERNATIVE -- a cause-aware
+                             # exclusion rule with enough complete independent
+                             # days -- is now the operative path. Stop trying to
+                             # fix this client-side; leave DISK_WORKERS and
+                             # ping_timeout alone, there is no client-side
+                             # hypothesis left to test.
   clob_capture_clean: false  # STILL FALSE, and the v3 ROOT-CAUSE CLAIM IS
                              # FALSIFIED (17:39:56 UTC): a SLOW_CONSUMER_1013
                              # occurred under clob_v3, 68 min after deploy, with

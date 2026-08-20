@@ -56,7 +56,51 @@ verdict, live evidence and acceptance boundary. **Read its v3 section: the v2
 addendum's "repair successful" is withdrawn, and the root cause is now measured
 rather than hypothesised.**
 
-### Collector: root cause found, `clob_v3` deployed 16:31:26 UTC
+### Collector: the 1013 is VENUE-SIDE — measured, not inferred
+
+**Resolved 17:46:41 UTC.** `clob_v3_1` samples the `websockets` Assembler, which
+pauses reading from the transport once its inbound backlog passes a
+65,536-frame high-water mark — and a paused transport is exactly what fills a
+server's send buffer. On the first 1013 under v3_1:
+
+```
+ws_ever_paused      False        <- never stopped reading
+ws_queue_depth_max  133          <- 0.2% of the pause threshold
+lag_ms_max_interval 1.8 ms
+```
+
+**We were draining at 0.2% of capacity while the venue said its send buffer was
+full.** Every client-side cause is now excluded by measurement: loop stall
+(1.8 ms), gzip (off-loop, none in flight), write backpressure (`writer_wait=0`,
+`q_hi=1`), memory (RSS 260 MB stable), and network throughput (11.7 Mbps
+sustained; one BTC socket is 0.24 MB/s).
+
+**Two successive repairs failed because neither addressed the cause.** The v2
+write-queue decoupling and the v3 gzip offload were both real defects worth
+fixing — the gzip stall was 1.8–1.9 s of measured loop block — and neither was
+the answer. I asserted the gzip finding as the root cause; that was an inference
+written as a measurement, and it is corrected in `2d5503f`.
+
+**What this changes.** The acceptance boundary as written — one full busy UTC
+day with zero `SLOW_CONSUMER_1013` — tests something we do not control and is
+probably unachievable. The pre-registered *alternative*, a cause-aware exclusion
+rule with enough complete independent days, is now the operative path. That
+branch existed before any of this was known, which is what makes the finding
+actionable instead of a dead end.
+
+**The exclusion rule already has its input.** Every disconnect carries cause,
+slug, coin, knowledge time and an explicit end. Loss to date: 30.8 s across 8
+windows, worst `btc-updown-5m-1787247000` at 21.5 s (5.5% of its 390 s). **Every
+disconnect in every era has been BTC** — never the other six coins — so the loss
+is concentrated in the busiest symbol. That is the same MNAR shape as the
+original incident: gap-touched BTC windows must be *excluded* from queue, flow
+and fill inference, not averaged in.
+
+Posture: stop fixing this client-side; keep `clob_capture_clean: false`; leave
+`DISK_WORKERS` and `ping_timeout` alone — there is no client-side hypothesis
+left to test.
+
+### Historical — `clob_v3` deployed 16:31:26 UTC
 
 **The v2 repair did not close the failure.** `clob_v2_1` logged a
 `SLOW_CONSUMER_1013` on BTC **5.8 minutes after deployment** and finished its
