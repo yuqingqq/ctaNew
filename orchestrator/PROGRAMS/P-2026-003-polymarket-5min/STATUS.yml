@@ -3,7 +3,7 @@ name: Polymarket Crypto 5-min Markets
 phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
-updated: 2026-08-20 (session 2 — Revision 4 reviewed / contracts v15, HOLD remains)
+updated: 2026-08-20 (session 2 — sigma Revision 5 / contracts v16, HOLD remains)
 
 flags:
   collector_running: true    # since 2026-08-19 ~14:32 UTC. MNAR bug fixed
@@ -63,14 +63,18 @@ flags:
                              # convention semantics contradict the selected
                              # route, request checks are bypassable, and invalid
                              # numeric/statistical evidence can price.
-  sigma_plan_review: iter4-partial # SIGMA_PLAN_REVIEW_ITER4.md reviews be23ec1.
-                             # Route split is a substantive pass; all remaining
-                             # repairs are boundary/type/statistical-gate issues.
-                             # Shipped checks pass (kernel 41, checker 13,
-                             # v14->v15 migration), but adversarial probes return
-                             # negative variance, accept NaN gates, accept a
-                             # future-issued law plus reversed target, and throw
-                             # OverflowError on an infinite rate.
+  sigma_plan_review: iter4-applied # All six ITER4 items APPLIED in Revision 5 +
+                             # contracts v16 + a rewritten boundary. Every ITER4
+                             # probe was REPRODUCED first: resid_var=-1 priced,
+                             # NaN clusters/p-values passed (all ordered
+                             # comparisons against NaN are false), a
+                             # future-issued law with a REVERSED target interval
+                             # returned True, anchor_var moved with the empirical
+                             # alpha, model_total_var was exposed, pricing took
+                             # no request, and an infinite rate raised
+                             # OverflowError instead of refusing. All correct.
+                             # Fixture now 45 checks, every refusal path at the
+                             # public boundary.
   estimand_route: REDUCED_FORM # THE DECISION (ITER3 M3-1). Route A (reduced-form
                              # fit of x_T on (S30,S60)) is the PRICING law; its
                              # residual IS the whole of Sigma(r). Route B
@@ -84,10 +88,27 @@ flags:
                              # semantics and does NOT identify Omega (it is
                              # inside the residual); B needs a VERIFIED
                              # convention and identifies Omega as the lag-0
-                             # nugget. That asymmetry is why A prices. ITER4
-                             # FOUND THE IMPLEMENTATION CONTRADICTS THIS:
-                             # ReducedFormLaw/pricing_var still gate route A on
-                             # the structural convention. Repair before fitting.
+                             # nugget. That asymmetry is why A prices.
+  route_boundary_enforced: true # ITER4 M4-1..M4-5, the repair that made the
+                             # route choice real. Route A is NO LONGER gated on
+                             # route B's sampling convention — that gate had
+                             # removed the very advantage that selected route A.
+                             # Route A's own precondition is StreamProvenance
+                             # (stream ids, PIT reads, units, alignment at
+                             # PUBLISHED timestamps). pricing_distribution() is
+                             # the ONLY pricing entry: it takes a
+                             # ForecastRequest, validates every temporal and
+                             # identity invariant BEFORE either moment, and
+                             # returns mean and variance from ONE validated fit.
+                             # v15 exposed pricing_var and conditional_mean
+                             # separately and NEITHER called the request checker.
+                             # Route B is a DISTINCT TYPE with no pricing
+                             # protocol — v15's "no total is reachable" tested
+                             # two key NAMES, which is not a boundary. And
+                             # cond_var_at_model now takes NO alpha, so an
+                             # empirical alpha can no longer silently change the
+                             # alleged conditional variance (that was the
+                             # variance/MSE conflation re-entering on route B).
   anchor_ledger_closed: false # Still false, and now for the right reason: no
                              # route-A law is FITTED. OLS gives a linear
                              # projection and a POOLED residual — the conditional
@@ -97,11 +118,11 @@ flags:
                              # residual conditional-mean test and a
                              # heteroskedasticity test. Two day clusters give a
                              # descriptive coefficient, not a pricing law.
-  sampling_convention: UNVERIFIED # Must gate ROUTE B only. Current code also
-                             # gates route A, contradicting the route table and
-                             # build order. Code schedules use (offset, weight),
-                             # but contracts v15 still expose list[float] and
-                             # cannot carry the support/alignment they promise.
+  sampling_convention: UNVERIFIED # Gates ROUTE B ONLY — now true in code as
+                             # well as in prose. Contracts carry
+                             # list[WeightAtOffset] with alignment/update
+                             # semantics, so an aligned and a lagged schedule can
+                             # no longer present identical weight lists.
   d2_retired: true           # The old incomplete-ledger prediction is retired,
                              # but c(30)=1.14 is NOT replacement evidence: its
                              # 2.6 bps residual comes from SIGMA_DIAGNOSTICS
@@ -110,13 +131,19 @@ flags:
                              # VERIFIED at SIGMA_DIAGNOSTICS.md:157-175. Both
                              # c(30)=2.17 and c(30)=1.14 are apples-to-oranges;
                              # no c(r) number is currently claimable.
-  contracts_version: 15      # PARTIAL after ITER4. AnchorSpec is horizon-indexed
-                             # with `selected`; Omega is bps2/PSD-validated;
-                             # RateQuantity and g_prime are repaired. But PathLaw
-                             # is not a discriminated route union, the weight
-                             # schedule lacks offsets, kernel coefficients lose
-                             # their seconds dimension, CalibrationCurve is stale,
-                             # and R-REQ is not attached to the pricing query.
+  contracts_version: 16      # M16-1. PathLaw is a REAL DISCRIMINATED UNION:
+                             # ReducedFormPathLaw prices; StructuralDiagnosticLaw
+                             # has no settlement_var and structurally cannot.
+                             # v15's estimand_route enum on a shared record
+                             # forced a route-A object to carry an anchor, rate
+                             # and convention it never uses. Also: StreamProvenance
+                             # on the pricing arm; GateEvidence (PASS /
+                             # INSUFFICIENT_EVIDENCE / MODEL_REFUTED with a
+                             # tolerance bound) because failure to reject is NOT
+                             # equivalence; WeightAtOffset; KernelCoefficient
+                             # carrying SECONDS; CalibrationCurve as the
+                             # route-agreement RATIO. 29 removals + 11 changes,
+                             # all with migration records; checker 0 unexplained.
                              # Prior M15-1 changes: AnchorSpec horizon-indexed
                              # with `selected`
                              # (MODEL|ESTIMATED) so bias is measured against the
@@ -139,14 +166,17 @@ focus: >
   Build and test the model, mechanism-first, no PnL/capacity estimation
   (user, 2026-08-20). Entry point is live/pm_research/PM_ARCHITECTURE.md (v12)
   with contracts/contracts.yaml as the machine-readable source of truth.
-  IMMEDIATE: keep the chosen REDUCED_FORM pricing route, but close its boundary
-  before fitting it. Remove Route-B convention verification from Route A; make
-  request, law header and observables one atomic pricing-distribution query;
-  fail closed on all temporal, numeric and per-horizon statistical evidence;
-  and make Route B a non-pricing diagnostic type with bias outside conditional
-  variance. Then repair the route union, schedule and coefficient units, c(r)
-  contract, and dynamics-consumer mapping. Phase 0A step 5 may study Route B in
-  parallel but must not gate a valid Route-A fit. Estimator implementation HOLD.
+  IMMEDIATE: the ITER2-ITER4 spec repairs are all IN (Revision 5, contracts v16,
+  rewritten boundary) and the route choice now holds at the executable boundary.
+  Nothing further is a specification task. The next two steps are MEASUREMENTS
+  and neither is blocked by the other: (5) verify S30/S60 aggregation and
+  knowledge-time semantics against the 1 s Binance tape — this gates ROUTE B
+  only and may run in parallel; (6) FIT THE ROUTE-A LAW, regressing observed x_T
+  on observed (S30,S60) per horizon and per symbol, cross-fitted, day-blocked and
+  embargoed, emitting GateEvidence with an effect size and tolerance rather than
+  a bare p-value. Do NOT estimate Omega on route A — it is inside the residual.
+  Estimator implementation remains on HOLD until step 6 produces a law whose
+  gates read PASS.
 
 standing_rules:
   - No design decision that a measurement on existing data could settle may be
@@ -202,24 +232,42 @@ tasks:
       Review loop is at 12 iterations and NOT converged.
   - id: sigma-model
     phase: 1
-    name: Volatility estimator — Revision 4 reviewed, Route-A boundary unresolved
-    status: iter4-reviewed-hold
+    name: Volatility estimator — ITER4 applied (Rev 5 / v16); next step is a FIT
+    status: iter4-applied-hold
     notes: |
-      Lineage: plan 80f823e -> review 6bea435 -> Revision 2 cc1d0e7 -> review
-      20b759e -> Revision 3 7474e49 -> review 11e3c09 -> Revision 4 be23ec1 ->
-      SIGMA_PLAN_REVIEW_ITER4.md. KEPT: REDUCED_FORM prices, STRUCTURAL
-      diagnoses, never summed; selected/model anchors separated by horizon;
-      Omega bps2 with PSD validation; typed rate; structured Unavailable;
-      executable request comparisons; one g_prime. SHIPPED TESTS PASS (kernel
-      41, checker 13, v14->v15 migration clean). ITER4 BLOCKERS: Route A still
-      requires Route B's VERIFIED sampling convention; pricing_var bypasses
-      check_request, which itself accepts future law issue and reversed target;
-      negative residual variance and NaN gates price; p-value non-rejection is
-      not conditional-law equivalence; structural anchor_var reabsorbs selected
-      alpha bias/MSE and exposes model_total_var; PathLaw is not a route union;
-      schedule support, coefficient time units, CalibrationCurve and dynamics
-      ownership remain contradictory. NEXT: one atomic fail-closed Route-A
-      distribution query and a genuinely non-pricing Route-B diagnostic type.
+      Lineage: plan 80f823e -> review 6bea435 -> Rev 2 cc1d0e7 -> review 20b759e
+      -> Rev 3 7474e49 -> review 11e3c09 -> Rev 4 be23ec1 -> review ef6d1df ->
+      Rev 5 (this). Four review rounds, every one of which found a real defect;
+      all applied.
+      THE ARC, because it is the useful part of the record: v1 used a LAGGING
+      anchor. v2 fixed the lag with a TREND extrapolator and buried its
+      conditional bias in the variance. v3 named the bias but kept two
+      incompatible estimators of the same quantity. v4 chose one route in prose
+      and contradicted the choice in code. Each error was the previous error one
+      level of abstraction higher, and each was caught by an adversarial probe
+      rather than by a test I had written.
+      ITER4 APPLIED: M4-1 route A is no longer gated on route B's sampling
+      convention (that gate had removed the very advantage that selected route A);
+      its precondition is StreamProvenance. M4-2 ONE ATOMIC QUERY —
+      pricing_distribution(law, request, observables) validates every temporal and
+      identity invariant BEFORE either moment and returns both from one validated
+      fit; v15's separate accessors called no checker, and its helper accepted a
+      future-issued law and a REVERSED target interval. M4-3 numeric fail-closed:
+      v15 priced resid_var=-1 and passed NaN counts and NaN p-values because every
+      ordered comparison against NaN is false; infinity raised OverflowError.
+      M4-4 failure to reject is NOT equivalence — GateEvidence carries a verdict
+      (PASS / INSUFFICIENT_EVIDENCE / MODEL_REFUTED), an effect size and a
+      tolerance bound, and PASS requires the CI bound inside the tolerance.
+      M4-5 cond_var_at_model takes NO alpha, so an empirical alpha can no longer
+      change the alleged conditional variance, and route B returns a DISTINCT
+      TYPE with no pricing protocol. M4-6 PathLaw is a real discriminated union;
+      WeightAtOffset, KernelCoefficient (SECONDS) and c(r)-as-ratio land in v16.
+      ALSO: section 1a now maps every consumer to its actual source. "Diagnostic"
+      means NOT A PROBABILITY INPUT, not "not operational" — the four shape
+      consumers read ROUTE A's own horizon profile, so route B feeds no control.
+      NEXT IS A MEASUREMENT, NOT A SPEC TASK: Phase 0A 6, fit the route-A law per
+      horizon and symbol, cross-fitted and day-blocked, and report GateEvidence.
+      Phase 0A 5 (S30/S60 semantics) gates route B only and may run in parallel.
   - id: e-x1-bookbeat
     phase: 1
     name: Re-read the model-vs-book verdict on the corrected anchor

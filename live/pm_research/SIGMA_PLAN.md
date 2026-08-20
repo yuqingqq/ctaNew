@@ -1,23 +1,35 @@
 # SIGMA_PLAN — design of the volatility estimator (P-2026-003)
 
-**Revision 4, 2026-08-20. Canonical.** Rewritten in place at Revision 3; this
-revision resolves the one thing that rewrite got wrong. Revision 3 recommended
-an empirical reduced-form anchor AND kept the structural variance ledger, which
-are two estimators of the same quantity — combining them double-counts
-(`SIGMA_PLAN_REVIEW_ITER3.md` M3-1). **§2.3 now picks one route and the choice
-propagates everywhere.** There is one consumer matrix, one PRICING law and one
-DIAGNOSTIC decomposition, and they are never summed. v1/v2 text is in git
-history (`80f823e`, `cc1d0e7`); nothing here defers to it.
+**Revision 5, 2026-08-20. Canonical.** Revision 3 rewrote this document in place;
+Revision 4 chose the estimand route (§2.3) after ITER3 showed that recommending
+an empirical reduced-form anchor *and* keeping the structural ledger
+double-counts. Revision 5 makes that choice hold **at the executable boundary**,
+which ITER4 showed it did not: route A was still gated on route B's sampling
+convention, the request invariants were an optional helper the pricing
+accessors never called, and the "no total is reachable" claim rested on two key
+names. There is one consumer matrix, one PRICING law and one DIAGNOSTIC
+decomposition, they are never summed, and that is now a type boundary rather
+than a convention. v1/v2 text is in git history (`80f823e`, `cc1d0e7`).
 
-**Status: estimator implementation is on HOLD.** Phase 0A is open. The sampling
-convention is **UNVERIFIED** and `sigma_kernels.py` is a **fixture**, not a
-frozen spec. That is now *enforced* rather than asserted: `pricing_var()`
-refuses under an unverified convention or an unfitted law, and the structural
-function returns a dict with no total a pricer could reach for.
+**Status: estimator implementation is on HOLD.** Phase 0A is open and no
+route-A law is fitted, so `pricing_distribution()` refuses everything today.
+Enforcement is structural, not conventional: it is the **only** pricing entry
+point, it takes a `ForecastRequest`, it validates every temporal and identity
+invariant *before* computing either moment, and it returns mean and variance
+from one validated fit. The structural arm is a **separate type** with no
+pricing protocol at all — Revision 4 claimed "no total is reachable" while
+exposing `model_total_var` on a dict, which is a key name, not a boundary.
+
+**Route A is NOT gated on the sampling convention** (ITER4 M4-1). Revision 4 said
+so in prose and then refused route A unless the convention read `VERIFIED`,
+which destroyed the operational advantage that selected route A in the first
+place. Route A's own precondition is `StreamProvenance`; `SamplingConvention`
+gates the structural arm and nothing else.
 
 Review lineage: `SIGMA_PLAN_REVIEW.md` (S1–S6) → Revision 2 (`cc1d0e7`) →
 `SIGMA_PLAN_REVIEW_ITER2.md` (M2-1…M2-6) → Revision 3 (`7474e49`) →
-`SIGMA_PLAN_REVIEW_ITER3.md` (M3-1…M3-6) → this revision.
+`SIGMA_PLAN_REVIEW_ITER3.md` (M3-1…M3-6) → Revision 4 (`be23ec1`) →
+`SIGMA_PLAN_REVIEW_ITER4.md` (M4-1…M4-6) → this revision.
 
 ---
 
@@ -46,6 +58,10 @@ Review lineage: `SIGMA_PLAN_REVIEW.md` (S1–S6) → Revision 2 (`cc1d0e7`) →
    reduced-form conditional fit; the structural `k_law/v/Ω` decomposition is
    route-B diagnostics; `c(r)` is the *agreement between them*, not a term in
    either. §2.3, §3.2. Neither is built until Phase 0A closes.
+6. **"Diagnostic" means "not a probability input", not "not operational".** The
+   dynamics consumers need variance *shape*, and they take it from **route A's
+   own horizon profile** — the fitted `Σ̂(r)` across the decision grid is an
+   empirical shape — not from route B's kernel. §1a.
 
 ---
 
@@ -87,6 +103,24 @@ because a quiet book emits no events — there is no `d_book`, and σ must suppl
 **level**. Its loss and validation population differ from the main path and are
 scored separately. The fallback **refuses** when its own inputs are unavailable;
 it may **not** inherit a book-sourced `d` after the book has failed.
+
+### 1a. Where each consumer's number actually comes from (ITER4 M4-6)
+
+"Diagnostic only" was too broad in Revision 4. Four controls in the table above
+need variance **shape**, and if route B supplied it, route B would be an
+operational decision input even though it never sets a probability *level*. It
+does not:
+
+| need | source | why |
+|---|---|---|
+| terminal level (fallback `p̂`) | **route A**, `pricing_distribution` | the fitted residual *is* `Σ(r)` |
+| shape across horizons (frontier, `r*`, `ζ`, `λ_bin`, rewards) | **route A's horizon profile** — `Σ̂(r)` over the decision grid | an empirically fitted shape, no kernel required |
+| `d` | the **book**, `g⁻¹(p̃_book)` | §1; makes those four σ-free in the first place |
+| `c(r)`, `ŵ_free`, `Ω`, the `k` ledger, H-3 | **route B** | model adequacy and falsification only |
+
+So route B feeds **no control**, only findings. If a future control genuinely
+needs a kernel-derived shape, that is a change to this table and to R-ROUTE, not
+an implementation detail.
 
 **On the FLB:** earlier drafts called it "the one measured edge". Withdrawn. The
 `+3.6 c/share` was measured on `book` snapshots that are p90 6.2 s stale;
@@ -180,9 +214,10 @@ uncertainty, stream error and every covariance among them.
 The consumer matrix decides it. The only consumer that needs a *level* is the
 BE-Belief fallback, and it needs `Σ(r)`, not its parts. The decomposition is
 needed only by `c(r)`, the `k` ledger and H-3 — none of which is a gate. Encoded
-as `PathLaw.estimand_route` and rule **R-ROUTE**; `sigma_kernels.pricing_var`
-refuses anything that is not a fitted `ReducedFormLaw`, and the structural
-function returns a dict tagged `DIAGNOSTIC_ONLY` with no `total_var` key.
+as the `PathLaw` discriminated union and rule **R-ROUTE**:
+`sigma_kernels.pricing_distribution` refuses anything that is not a
+`ReducedFormPathLaw` (cause `WRONG_ROUTE`), and the structural arm is a separate
+type carrying no pricing protocol at all — not a dict distinguished by key name.
 
 **What OLS does and does not give you.** OLS returns the best **linear
 projection** and a **pooled** residual variance. That is the conditional mean
@@ -193,10 +228,13 @@ up. Under the Gaussian fixture they coincide; the entire point of going
 empirical is not to lean on the fixture. So Route A ships with **gates, not
 footnotes**: cross-fitting, ≥10 day clusters, a residual conditional-mean test
 and a heteroskedasticity test, per horizon and per symbol, day-blocked.
-`pricing_var` refuses if any fails. Two day clusters yield a descriptive
+`pricing_distribution` refuses if any fails, and distinguishes
+`INSUFFICIENT_EVIDENCE` from `MODEL_REFUTED`: **failure to reject is not
+equivalence**, so `PASS` additionally requires the |effect| confidence bound to
+sit inside a pre-registered tolerance. Two day clusters yield a descriptive
 coefficient, not a pricing-ready conditional law.
 
-### 2.3 Bias never enters the variance
+### 2.4 Bias never enters the variance
 
 Whatever `α` is chosen, the residual bias `(α − α̂*)·(S30 − S60)` goes in the
 **numerator of `d`** via `PathLaw.conditional_mean`, or the law refuses.
@@ -295,23 +333,33 @@ the trailing half of the mark *is* `S30`, observed, so `α*(30) = ½ + ½α*` an
 `v(30) = ¼·8.2590` exactly. Revision 3 published a bolded `σ_eff` row here; that
 invited exactly the use this row must not have, so it is gone.
 
-**Why these cannot price.** The convention is unverified — a 1 s shift in
-fast-stream support alone moves `α*` from 1.4992 to 1.4954 — and the model
-anchor is not the estimand. Enforced, not merely stated: `pricing_var()` refuses
-while `status != VERIFIED`, and the structural function returns a dict with no
-`total_var` key for a pricer to reach for. For scale: at `r=30`, 1 bp in the
+**Why these cannot price.** Not because the convention is unverified — that
+gates *this* arm, not route A — but because **the structural arm carries no
+pricing protocol at all.** `DiagnosticVarianceDecomposition` has no
+`settlement_var`, and `pricing_distribution` rejects it on type with cause
+`WRONG_ROUTE`. `model_total` is a model quantity; the reason it cannot be
+mistaken for a settlement variance is the type, not its name.
+
+Separately, `cond_var_at_model` is computed **only at the model projection** and
+takes no `alpha` argument. Revision 4 passed the selected anchor into it, so an
+empirical `α` silently changed the "conditional variance" — reintroducing the
+variance/MSE conflation on the diagnostic route. The selected anchor's bias and
+unconditional MSE are now separate fields. For scale: at `r=30`, 1 bp in the
 numerator is ≈ **17 probability-cents**, which is why the anchor mattered more
 than σ and why a 1.22 bps buried bias was not survivable.
 
-Regenerate: `python3 live/pm_research/sigma_kernels.py --selftest` (40 checks,
-exact rationals, including the refusal paths).
+Regenerate: `python3 live/pm_research/sigma_kernels.py --selftest` (45 checks,
+including every refusal path at the public boundary).
 
 ### 3.4 The two objects are never interchangeable
 
 The rolling TWAP-to-TWAP variogram `V(r) = σ²(r²/w − r³/(3w²))` for `r<w` is
 what you **fit σ to**; the conditional `Σ(r)` is the only thing you **price
-with**. Their ratio in σ is 4.12× at `r=10 s` and 2.24× at `r=30 s`. `PathLaw`
-exposes both (`increment_var`, `settlement_var`) so no consumer has to choose.
+with**. Their ratio in σ is 4.12× at `r=10 s` and 2.24× at `r=30 s`. They now sit
+on **different arms of the union**: `increment_var` belongs to
+`StructuralDiagnosticLaw`, which fits the tape, and the pricing arm has no
+`increment_var` at all. v14–v15 put both on one carrier "so no consumer has to
+choose", which is precisely how a consumer picks the wrong one.
 
 ### 3.5 Other lines, declared and excluded
 
@@ -636,14 +684,16 @@ Estimator implementation is on **HOLD**. Phase 0A is open.
    diagnoses; R-ROUTE forbids summing them. Everything below is scoped by it.
 1. **Unit space** — DONE (§3.1), typed as `UnitSpace`; rates typed separately
    from terminal variances as `RateQuantity`.
-2. **Typed carrier** — contracts **v15**: `AnchorSpec` is horizon-indexed and
-   defines bias against the SELECTED estimand; `ReducedFormLaw` carries the
-   pricing route with its gates; `FeedErrorCov` fixes bps² once and states its
-   identification; `g_prime` is the single canonical derivative; R-REQ and
-   R-ROUTE join R-WFWD. **Not closed:** the runtime enforces refusal only in the
-   fixture, and `BE-Belief` is still absent from `modules:`.
+2. **Typed carrier** — contracts **v16**: `PathLaw` is a real discriminated
+   union (`ReducedFormPathLaw` prices, `StructuralDiagnosticLaw` cannot);
+   `StreamProvenance` replaces the sampling convention on the pricing arm;
+   `GateEvidence` makes non-rejection insufficient; `WeightAtOffset` gives
+   schedules their support; `KernelCoefficient` carries SECONDS;
+   `CalibrationCurve` is the route-agreement ratio. **Not closed:** enforcement
+   lives in the fixture rather than a runtime, and `BE-Belief` is still absent
+   from `modules:`.
 3. **Kernels** — REOPENED, and correctly so. The algebra is exact and
-   unit-tested (40 checks including every refusal path) but conditional on an
+   unit-tested (45 checks including every refusal path) but conditional on an
    **UNVERIFIED** convention. Route B only.
 4. **Consumer matrix** — §1 is canonical; the fallback's own loss function is
    still unwritten.
@@ -755,3 +805,9 @@ which is the separate question §2.2 settles by estimation.
 | M3-4 | not fail-closed | `pricing_var` refuses on status/fit/gates; rates, PSD, conventions validated; contract `Unavailable` |
 | M3-5 | request fields never compared | `check_request` + R-REQ, with negative fixtures |
 | M3-6 | contradictions survived the scan | scan now covers plan, code, STATUS and HANDOFF |
+| M4-1 | route A gated on route B's convention | `StreamProvenance` on the pricing arm; the convention gates route B only |
+| M4-2 | request checks optional and incomplete | one atomic `pricing_distribution`; future-issued laws and reversed intervals refused |
+| M4-3 | numerically unsafe gate | positive/finite/integer validation; NaN and ∞ refuse; evidence per fit |
+| M4-4 | non-rejection read as evidence | `GateEvidence` with PASS / INSUFFICIENT_EVIDENCE / MODEL_REFUTED and a tolerance bound |
+| M4-5 | bias back inside `anchor_var`; total reachable | `cond_var_at_model` takes no α; distinct diagnostic **type** |
+| M4-6 | carrier/units/role contradictions | `PathLaw` union, `WeightAtOffset`, `KernelCoefficient`, `c(r)` as ratio, §1a |

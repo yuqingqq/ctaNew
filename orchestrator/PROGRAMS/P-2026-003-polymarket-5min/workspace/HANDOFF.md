@@ -1,9 +1,10 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
 Updated: 2026-08-20, session 2. All work is on branch **`mm-research`** (pushed);
-nothing is on `main`. Sigma **Revision 4** / contracts **v15** have now been
-reviewed in `SIGMA_PLAN_REVIEW_ITER4.md`. The route decision passes, but the
-executable pricing boundary does not. **PARTIAL, HOLD.**
+nothing is on `main`. Sigma is at **Revision 5** / contracts **v16**;
+`SIGMA_PLAN_REVIEW_ITER4.md`'s six items are applied and the route decision now
+holds **at the executable boundary**. HOLD remains — but what remains is a
+MEASUREMENT, not another specification round.
 
 ## Read this first
 
@@ -19,20 +20,21 @@ withdrawn".
 
 Reading order:
 1. `live/pm_research/PM_ARCHITECTURE.md` (v12) — the entry point; structure.
-2. `live/pm_research/contracts/contracts.yaml` (**v15**) — machine-readable
-   source of truth for types. The prose defers to this file, not the other way
-   round.
+2. `live/pm_research/contracts/contracts.yaml` (**v16**) — machine-readable
+   source of truth for types (**v16**). The prose defers to this file, not the
+   other way round.
 3. `live/pm_research/EXP_RESULTS_2026-08-20.md` — first model results.
-4. `live/pm_research/SIGMA_PLAN.md` — **REVISION 4, canonical.** One consumer
+4. `live/pm_research/SIGMA_PLAN.md` — **REVISION 5, canonical.** One consumer
    matrix, one PRICING law (route A) and one DIAGNOSTIC decomposition (route B),
-   never summed. **Read §2.3 first** — the route decision scopes everything
-   else. v1/v2 text is in git history (`80f823e`, `cc1d0e7`).
+   never summed, now enforced as a TYPE boundary. **Read §2.3 then §1a** — the
+   route decision scopes everything, and §1a says where each consumer's number
+   actually comes from. v1/v2 text is in git history.
 5. `live/pm_research/SIGMA_PLAN_REVIEW.md` — first implementation-readiness review.
 6. `live/pm_research/SIGMA_PLAN_REVIEW_ITER2.md` — review of Revision 2.
 7. `live/pm_research/SIGMA_PLAN_REVIEW_ITER3.md` — review of Revision 3 and v14;
    historical input to Revision 4.
-8. `live/pm_research/SIGMA_PLAN_REVIEW_ITER4.md` — **current
-   implementation-readiness verdict** for Revision 4 and v15: PARTIAL, HOLD.
+8. `live/pm_research/SIGMA_PLAN_REVIEW_ITER4.md` — review of Revision 4/v15; its
+   six items are applied in Revision 5/v16.
 9. `live/pm_research/sigma_kernels.py` — executable model **fixture**, not a
    frozen spec. `--selftest` checks exact arithmetic under a **declared and
    still UNVERIFIED** sampling convention; it does not establish that convention
@@ -143,11 +145,78 @@ problems:
    kernel coefficients lose their seconds unit; `CalibrationCurve` is stale;
    and the source of operational dynamics shape is unresolved.
 
-Shipped checks pass (kernel **41**, checker 13, v14→v15 migration), but focused
+Shipped checks passed at the time of that review (kernel **41** pre-repair,
+checker 13, v14→v15 migration), but focused
 adversarial probes reproduce every issue. Full evidence and acceptance tests are
-in `SIGMA_PLAN_REVIEW_ITER4.md`. Phase 0A step 5 may verify Route-B semantics in
-parallel; it must not gate a valid Route-A fit. Estimator implementation and any
-probability-level use remain on **HOLD**.
+in `SIGMA_PLAN_REVIEW_ITER4.md`.
+
+### ITER4 APPLIED — Revision 5 / contracts v16 / boundary rewritten
+
+Every ITER4 probe was **reproduced before acting**: `resid_var = -1` priced; NaN
+cluster counts and NaN p-values passed (every ordered comparison against NaN is
+false); a **future-issued law with a reversed target interval** returned `True`;
+`anchor_var` moved with the empirical alpha; `model_total_var` was exposed;
+pricing took no request; an infinite rate raised `OverflowError`. All correct.
+
+**M4-1 — the one that mattered, and it was a self-contradiction.** The plan said
+route A regresses published streams and needs no internal kernel; the code
+refused route A unless the convention read `VERIFIED`. That gate removed the very
+advantage that selected route A. Route A's precondition is now
+**`StreamProvenance`** — stream identities, point-in-time reads, units, alignment
+at *published* timestamps. `SamplingConvention` gates the structural arm and
+nothing else, and there is a test that a well-formed route-A law prices **while
+every convention is still UNVERIFIED**.
+
+**M4-2 — one atomic query.** `pricing_distribution(law, request, observables)` is
+the only pricing entry. It validates every temporal and identity invariant
+*before* computing either moment and returns mean and variance from **one**
+validated fit. v15 exposed `pricing_var` and `conditional_mean` separately and
+neither called the checker, so correctness rested on every future caller
+remembering a pre-call. Now also refused: a law issued after the request, a
+reversed target interval, and observables newer than the knowledge cutoff. Every
+boundary refusal carries `since` and a machine-actionable `cause`.
+
+**M4-3/M4-4 — the gate was numerically and statistically unsafe.** Positive,
+finite, integer validation throughout; NaN and ∞ refuse instead of passing or
+raising. And **failure to reject is not equivalence**: `GateEvidence` carries a
+verdict (`PASS` / `INSUFFICIENT_EVIDENCE` / `MODEL_REFUTED`), an effect size and
+a tolerance, and `PASS` requires the |effect| confidence bound *inside* the
+tolerance. A p-value gate treats "not enough data" as "verified", which is
+exactly backwards at a ten-cluster minimum.
+
+**M4-5 — bias had crept back into the variance, on route B.**
+`cond_var_at_model` now takes **no alpha**, so an empirical anchor can no longer
+change the alleged conditional variance. Route B returns a **distinct type** with
+no pricing protocol; v15's "no total is reachable" tested two key *names*.
+
+**M4-6 + §1a.** `PathLaw` is a real discriminated union; `WeightAtOffset` gives
+schedules their support; `KernelCoefficient` carries SECONDS; `c(r)` is the
+route-agreement ratio. And **"diagnostic" means "not a probability input", not
+"not operational"**: §1a maps every consumer to its source, and the four *shape*
+consumers read **route A's own horizon profile**, so route B feeds no control.
+
+**Verify:** `python3 live/pm_research/sigma_kernels.py --selftest` (45 checks) ·
+`contract_check.py --selftest` · `contract_check.py HEAD WORKTREE`.
+
+### What is actually next — a measurement, not another spec round
+
+Four review rounds have each found a real defect, and the pattern is worth
+naming: **each error was the previous error one level of abstraction higher.**
+v1 used a lagging anchor; v2 replaced it with a trend extrapolator and buried the
+bias in the variance; v3 named the bias but kept two incompatible estimators; v4
+chose one route in prose and contradicted it in code. Every one was caught by an
+adversarial probe rather than by a test I had written. Nothing further is a
+specification task.
+
+1. **Phase 0A 6 — FIT THE ROUTE-A LAW.** Regress observed `x_T` on observed
+   `(S30, S60)` per horizon and per symbol, cross-fitted, day-blocked, embargoed;
+   emit `GateEvidence` with an effect size and tolerance, not a bare p-value. Do
+   **not** estimate `Ω` on this route — it is inside the residual.
+2. **Phase 0A 5 — S30/S60 semantics** against the 1 s Binance tape. Gates route B
+   only, and may run in parallel; it must not block a valid route-A fit.
+
+Estimator implementation and any probability-level use remain on **HOLD** until
+step 1 produces a law whose gates read `PASS`.
 
 ### Historical — Revision 3 review and ITER3 application
 

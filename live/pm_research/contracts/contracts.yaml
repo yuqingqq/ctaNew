@@ -1,4 +1,4 @@
-version: 15
+version: 16
 rules:
   R-SSOT:
     body: every canonical name has exactly one owning type/module
@@ -35,21 +35,31 @@ rules:
     - 'link_eq: ForecastRequest.link_ref == PathLaw.link_ref == BeliefProcess.link'
     - 'target_eq: ForecastRequest.target_interval == PathLaw.target_interval'
     - 'horizon_consistent: request.as_of + request.horizon == target_interval.end
-       and horizon in PathLaw.horizon_domain.grid'
+       and request.horizon in ReducedFormPathLaw.by_horizon'
     - 'knowledge_order: ForecastRequest.knowledge_cutoff <= ForecastRequest.as_of'
-    - 'no_future_train_req: PathLaw.fit_data_through <= ForecastRequest.knowledge_cutoff'
-    - 'coverage: request.as_of within PathLaw.coverage'
-    - 'executable: these are evaluated by sigma_kernels.check_request with
-       negative fixtures; a typed timestamp that is never compared is
-       documentation, not look-ahead protection'
+    - 'no_future_train_req: law.fit_data_through <= ForecastRequest.knowledge_cutoff'
+    - 'law_not_from_the_future: ReducedFormPathLaw.as_of <= ForecastRequest.as_of'
+    - 'interval_well_formed: TargetInterval.start < TargetInterval.end'
+    - 'observables_not_ahead: AnchorObservables.t_known <= knowledge_cutoff'
+    - 'coverage: request.as_of within law coverage'
+    - 'atomic: these run INSIDE pricing_distribution, before either moment is
+       computed, and mean and variance come from the same validated fit. v15
+       exposed them as an optional helper the pricing accessors did not call, so
+       correctness depended on every caller remembering a pre-call'
+    - 'refusal_provenance: every boundary refusal carries since and a
+       machine-actionable cause'
   R-ROUTE:
-    body: a PathLaw declares exactly one estimand_route; REDUCED_FORM residuals
-      and STRUCTURAL lines are never summed into one variance
+    body: PathLaw is a discriminated union; only the ReducedForm arm answers a
+      pricing query, and reduced-form residuals are never summed with structural
+      lines. BOTH directions are typed, not conventional
     checks:
-    - 'no_mixing: estimand_route == REDUCED_FORM => pricing reads
-       reduced_form.by_horizon[r].resid_var only'
-    - 'diagnostic_only: estimand_route == REDUCED_FORM => k_law, AnchorSpec
-       cond_var and FeedErrorCov are diagnostics and are not added'
+    - 'no_mixing: pricing reads ReducedFormFit.resid_var only; k_law, AnchorSpec
+       and FeedErrorCov are never added to it'
+    - 'no_structural_pricing: StructuralDiagnosticLaw exposes no settlement_var
+       and no pricing_distribution, so a probability consumer cannot bind to it'
+    - 'type_boundary: enforced by the union and by
+       DiagnosticVarianceDecomposition carrying no pricing protocol, NOT by a
+       key-name convention, which v15 mistook for a boundary'
   R-WFWD:
     body: a fitted law declares fit_data_through <= as_of and reads no training
       data beyond that cutoff; being USED after the cutoff is the point, not a
@@ -443,45 +453,165 @@ types:
       carried `density`, which for a CDF-valued link is the same function under
       a second name and let two implementations disagree with no equality rule.
   PathLaw:
+    variants:
+    - 'ReducedForm(law: ReducedFormPathLaw)'
+    - 'Structural(diag: StructuralDiagnosticLaw)'
+    notes: >-
+      M16-1 (ITER4 M4-6). A REAL discriminated union. v15 made estimand_route an
+      enum on a single record that always carried BOTH reduced-form and
+      structural fields, so a route-A object was forced to populate an anchor, a
+      rate and a sampling convention it does not use, while a structural object
+      kept the pricing-shaped protocol. Only the ReducedForm arm answers a
+      pricing query; the Structural arm has no settlement_var at all, so a
+      pricing consumer cannot bind to it even by mistake. This is the type-level
+      encoding of R-ROUTE, replacing a key-name convention.
+  ReducedFormPathLaw:
     fields:
       instrument: InstrumentId
       unit_space: UnitSpace
-      horizon_domain: HorizonDomain
+      stream_provenance: StreamProvenance
+      by_horizon: dict[str, ReducedFormFit]
+      link_ref: LinkRef
+      as_of: Timestamp
+      fit_data_through: Timestamp
+      target_interval: TargetInterval
+      coverage: Coverage
+      status: enum:FITTED|UNFITTED|REFUSED
+      provenance: Provenance
+    protocol:
+      pricing_distribution: '(req: ForecastRequest, obs: AnchorObservables) -> Distribution | Unavailable'
+    notes: >-
+      M16-1. THE PRICING CARRIER, and the only one. Note what is ABSENT: no
+      SamplingConvention (M4-1 -- route A regresses the PUBLISHED streams and
+      never needs their internal kernel; v15 gated it on VERIFIED anyway, which
+      destroyed the operational advantage that selected route A), no sigma2_rate,
+      no AnchorSpec, no k_law. Note also there is NO settlement_var: terminal
+      variance is reachable ONLY through pricing_distribution, which validates
+      the request BEFORE computing either moment and returns mean and variance
+      from the SAME validated fit. v15 exposed pricing_var and conditional_mean
+      separately and neither called the request checker, so correctness rested on
+      every future caller remembering an unrelated pre-call. increment_var is
+      absent too: the rolling object belongs to the structural arm.
+  ReducedFormFit:
+    fields:
+      alpha: float
+      resid_var: VarianceQuantity
+      n_effective: int
+      n_day_clusters: int
+      cross_fitted: bool
+      mean_gate: GateEvidence
+      var_gate: GateEvidence
+    notes: >-
+      M16-1 (M4-3). Evidence lives on EACH (symbol, horizon) fit. v15 stored one
+      cluster count and two scalar p-values for a whole horizon map while the
+      plan required per-horizon, per-symbol evidence. resid_var must be strictly
+      positive and finite and counts must be nonnegative integers: v15 priced
+      resid_var = -1 and accepted NaN counts and NaN p-values, because every
+      ordered comparison against NaN is false.
+  GateEvidence:
+    fields:
+      test: str
+      conditioning: str
+      multiplicity: str
+      verdict: enum:PASS|INSUFFICIENT_EVIDENCE|MODEL_REFUTED
+      effect_size: float
+      ci_hi_abs: float
+      tolerance: float
+      p_value: float | NullPin
+    notes: >-
+      M16-1 (ITER4 M4-4). FAILURE TO REJECT IS NOT EQUIVALENCE. v15 gated pricing
+      on p >= 0.01, which treats "not enough data" as "verified" -- backwards at
+      the ten-day-cluster minimum where these tests have little power. PASS
+      requires the |effect| confidence bound to lie INSIDE a pre-registered
+      tolerance; INSUFFICIENT_EVIDENCE and MODEL_REFUTED are distinct states and
+      both refuse. test, conditioning basis and multiplicity policy must be
+      pre-registered, not chosen after seeing the data. Ten day clusters is a
+      minimum for ATTEMPTING inference, never evidence of validity.
+  StreamProvenance:
+    fields:
+      fast_id: FeedId
+      slow_id: FeedId
+      unit_space: UnitSpace
+      point_in_time: bool
+      aligned_at_publication: bool
+      status: enum:VERIFIED|UNVERIFIED
+    notes: >-
+      M16-1 (M4-1). What route A actually requires: stream identities, reads that
+      are point-in-time at knowledge time, declared units, and alignment at the
+      PUBLISHED timestamps. A different provenance question from
+      SamplingConvention, which describes the venue's internal aggregation and
+      gates the structural arm only. Conflating the two wrongly gated route A.
+  Distribution:
+    fields:
+      mean: float
+      var: VarianceQuantity
+      horizon: Duration
+      instrument: InstrumentId
+      as_of: Timestamp
+      provenance: StreamProvenance
+    notes: >-
+      M16-1. The single typed result of the atomic query. Mean and variance are
+      produced together from one validated fit, so they cannot be taken from
+      inconsistent objects or versions.
+  StructuralDiagnosticLaw:
+    fields:
+      instrument: InstrumentId
+      unit_space: UnitSpace
       sampling_convention: SamplingConvention
-      estimand_route: enum:REDUCED_FORM|STRUCTURAL
-      reduced_form: ReducedFormLaw | NullPin
       anchor: AnchorSpec
       sigma2_rate: RateQuantity
-      se_log_sigma: float
       nugget: VarianceQuantity | NullPin
       w_declared: Duration
       w_hat_free_diagnostic: Duration | NullPin
       anchor_error_evidence: AnchorErrorEvidence
       calibration: CalibrationCurve | NullPin
       ledger: VarianceGroup
-      link_ref: LinkRef
       as_of: Timestamp
       fit_data_through: Timestamp
-      target_interval: TargetInterval
       coverage: Coverage
       provenance: Provenance
     protocol:
-      settlement_var: '(req: ForecastRequest) -> VarianceQuantity | Unavailable'
-      increment_var: '(req: ForecastRequest) -> VarianceQuantity | Unavailable'
-      conditional_mean: '(req: ForecastRequest, obs: AnchorObservables) -> Known[float] | Unavailable'
+      decomposition: '(r: Duration) -> DiagnosticVarianceDecomposition | Unavailable'
+      increment_var: '(h: Duration) -> VarianceQuantity | Unavailable'
     notes: >-
-      M14-1 (ITER2 M2-5). settlement_var is the CONDITIONAL terminal object
-      consumers price with; increment_var is the ROLLING object the tape is
-      fitted to. They are never interchangeable (ratio 4.1x in sigma at r=10 s)
-      and both are exposed so no consumer has to pick. Both take a
-      ForecastRequest, not a bare horizon, so as_of, knowledge cutoff and the
-      target interval are enforceable rather than implicit; both refuse outside
-      horizon_domain. conditional_mean is now part of the carrier because the
-      anchor has a state-dependent conditional bias that belongs in the MEAN and
-      must not be reachable only through the variance. w_hat_free_diagnostic
-      never enters any kernel. See R-WFWD for the fit-cutoff invariant: v13's
-      note said the law refuses AFTER fit_data_through, which is backwards -- a
-      walk-forward forecast is used precisely then.
+      M16-1. DIAGNOSTICS ONLY, and structurally incapable of pricing: no
+      settlement_var and no pricing_distribution, so no probability consumer can
+      bind to it. It owns increment_var, the ROLLING object the tape is fitted
+      to, never interchangeable with a terminal conditional variance (ratio 4.1x
+      in sigma at r=10 s). Gated on sampling_convention.status == VERIFIED --
+      that gate belongs HERE and nowhere else.
+  DiagnosticVarianceDecomposition:
+    fields:
+      r: Duration
+      diffusion: VarianceQuantity
+      cond_var_at_model: VarianceQuantity
+      feed: VarianceQuantity
+      model_total: VarianceQuantity
+      alpha_star: float
+      selected_alpha: float
+      selected_bias_coeff: float
+      selected_uncond_mse: VarianceQuantity
+    notes: >-
+      M16-1 (ITER4 M4-5). cond_var_at_model is computed ONLY at the model
+      projection and is therefore independent of the selected anchor. v15 passed
+      the selected (possibly empirical) alpha into the conditional-variance
+      function, which returns conditional variance PLUS squared bias whenever
+      alpha differs from alpha*, and published that as `anchor_var` -- so
+      changing the empirical alpha silently changed the alleged conditional
+      variance. That is the variance/MSE conflation Revision 3 removed,
+      reintroduced on the diagnostic route. The selected anchor's known bias and
+      unconditional MSE are now SEPARATE fields. model_total is a model quantity
+      and cannot be read as a settlement variance: the type carries no pricing
+      protocol, which is a boundary a key-name convention was not.
+  KernelCoefficient:
+    fields:
+      value: float
+      units: enum:SECONDS
+    notes: >-
+      M16-1 (M4-6). k_law and the conditional-variance coefficient are NOT
+      dimensionless: rate[bps^2/second] * coefficient = bps^2 requires SECONDS,
+      and the plan's own seam value is labelled 20.5028 s. v15 called them
+      dimensionless while multiplying a rate by them.
   ForecastRequest:
     fields:
       instrument: InstrumentId
@@ -523,11 +653,12 @@ types:
     fields:
       id: str
       status: enum:UNVERIFIED|VERIFIED|REFUTED
-      weights_fast: list[float]
-      weights_slow: list[float]
+      schedule_fast: list[WeightAtOffset]
+      schedule_slow: list[WeightAtOffset]
+      alignment: str
+      update_semantics: str
       dt: Duration
       w_declared: Duration
-      fast_slow_synchronous: bool
       provenance: Provenance
     notes: >-
       M14-1 (ITER2 M2-2). The averaging kernel is a VERSIONED WEIGHT SCHEDULE,
@@ -549,7 +680,7 @@ types:
       model_gap_by_horizon: dict[str, float] | NullPin
       cond_var_by_horizon: dict[str, VarianceQuantity]
     notes: >-
-      M15-1 (ITER3 M3-2). For P_hat(alpha) = S_slow + alpha*(S_fast - S_slow) the
+      M16-1. For P_hat(alpha) = S_slow + alpha*(S_fast - S_slow) the
       error splits as (alpha - alpha_selected)*(S_fast - S_slow) + a
       conditionally zero-mean residual. The first term is KNOWN AT DECISION TIME
       and belongs in the mean; bias_enters may never be other than MEAN_MODEL or
@@ -602,7 +733,7 @@ types:
       psd_validated: bool
       identification: enum:CROSS_VARIOGRAM_NUGGET|EXTERNAL_INSTRUMENT|INSIDE_REDUCED_FORM_RESIDUAL|NONE
     notes: >-
-      M15-1 (ITER3 M3-3). Stream measurement error is a 2x2, not a scalar: the
+      M16-1. Stream measurement error is a 2x2, not a scalar: the
       contribution is u^T Cov u with u = (alpha, 1 - alpha), so it varies with
       the horizon weights, and because (1 - alpha) changes sign above alpha = 1
       the same covariance raises one anchor's variance and lowers another's.
@@ -618,6 +749,16 @@ types:
       variogram fitted without a nugget attributes microstructure to a shorter
       kernel). Under the REDUCED_FORM route it is INSIDE the residual and must
       never be added again.
+  WeightAtOffset:
+    fields:
+      relative_offset: Duration
+      weight: float
+    notes: >-
+      M16-1 (M4-6). A weight schedule needs SUPPORT, not just magnitudes. v15's
+      list[float] could not encode where each sample sits or which stream is
+      offset, so an aligned schedule and a one-second-lagged one carried
+      identical weight lists, and `fast_slow_synchronous: false` did not say
+      which stream lagged or by how much.
   Interval:
     fields:
       lo: float
@@ -628,7 +769,7 @@ types:
       unit_space: UnitSpace
       per: enum:SECOND
     notes: >-
-      M15-1 (ITER3 M3-3). A variance RATE is bps^2 per second and is not the same
+      M16-1. A variance RATE is bps^2 per second and is not the same
       type as a terminal bps^2 variance. v14 typed sigma2_rate as
       VarianceQuantity, which erased the time dimension and made a rate and a
       terminal variance interchangeable at the boundary.
@@ -642,7 +783,8 @@ types:
       hetero_test_p: float
       status: enum:FITTED|UNFITTED|REFUSED
     notes: >-
-      M15-1 (ITER3 M3-1). THE PRICING LAW. Its residual variance is the WHOLE of
+      M16-1. Superseded as a top-level carrier by ReducedFormPathLaw; retained
+      as the per-symbol fitted-law record. THE PRICING LAW. Its residual variance is the WHOLE of
       Sigma(r) -- future innovation, latent-path uncertainty, stream error and
       every covariance among them are already inside it. The structural lines
       (k_law, anchor cond_var, FeedErrorCov) are NEVER added to it; doing so
@@ -691,11 +833,14 @@ types:
       n_day_clusters: int
       status: enum:DIAGNOSTIC|GATE
     notes: >-
-      S6. c(r) is the residual AFTER the ledger, never a substitute for it.
-      status stays DIAGNOSTIC until n_day_clusters meets the pre-registered
-      threshold; a point estimate crossing band at 2 day clusters is not a
-      go/no-go. Whether c multiplies the diffusion line or the whole ledger is
-      fixed by estimand, not left to the reader.
+      M16-1 (ITER4 M4-6). c(r) is the AGREEMENT RATIO between the two routes,
+      c(r) = Sigma_A(r) / model_total_B(r), expected near 1. It is added to
+      NEITHER route and multiplies neither line. v13-v15 described it as "the
+      residual AFTER the ledger" and asked whether it multiplied one line or the
+      whole ledger; both readings predate the route split and are withdrawn. A
+      c(r) far from 1 is evidence the parametric law misdescribes the tape, i.e.
+      information about route B, never a correction to route A. status stays
+      DIAGNOSTIC until n_day_clusters meets the pre-registered threshold.
   ActionSpace:
     fields:
       verbs: list[enum:QUOTE|CANCEL|MINT|MERGE|CROSS|WAIT]
