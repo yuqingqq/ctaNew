@@ -7,7 +7,25 @@ updated: 2026-08-20 (session 3 — Route A measured; DESCRIPTIVE / PRICING HOLD)
 
 flags:
   collector_running: true    # One price process and one CLOB process; fresh.
-  clob_capture_clean: false  # STILL FALSE. The v2 addendum's "repair
+  clob_capture_clean: false  # STILL FALSE, and the v3 ROOT-CAUSE CLAIM IS
+                             # FALSIFIED (17:39:56 UTC): a SLOW_CONSUMER_1013
+                             # occurred under clob_v3, 68 min after deploy, with
+                             # lag_ms_max_interval=1.8ms. The gzip-on-loop stall
+                             # was REAL and is REALLY FIXED (1,916ms of work vs
+                             # 2ms lag) but it was NOT the cause of the 1013s --
+                             # that was inferred and wrongly written as
+                             # "measured". Ruled out at the drop: loop stall,
+                             # gzip in flight, write backpressure (writer_wait=0,
+                             # q_hi=1), memory (RSS 260MB stable), raw rate
+                             # (dropped at 580 msg/s having sustained 984.7).
+                             # Cause is NOT currently instrumented. Total
+                             # disconnect rate ~unchanged (3.7/h -> 3.7/h); only
+                             # the composition changed. Next step is a
+                             # DISCRIMINATING MEASUREMENT, not another fix --
+                             # changing DISK_WORKERS or ping_timeout now would
+                             # add a fourth era boundary with the cause still
+                             # unknown, which is how the v2 addendum went wrong.
+                             # PRIOR (still true as far as it goes): The v2 addendum's "repair
                              # successful" is WITHDRAWN: the collector's own
                              # ledger logged SLOW_CONSUMER_1013 on BTC 5.8 min
                              # after the clob_v2_1 deploy, and v2_1 finished its

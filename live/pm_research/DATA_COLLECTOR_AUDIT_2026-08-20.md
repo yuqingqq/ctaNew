@@ -300,3 +300,61 @@ baseline of **one slow-drop per ~16 minutes**; a few clean minutes prove
 nothing, which is exactly the error the v2 addendum made. Do not set
 `clob_capture_clean=true` on anything less than the pre-registered evidence, and
 never pool v2 and v3 observations without the version field the ledger records.
+
+## CORRECTION 17:39:56 UTC — the v3 root-cause claim is FALSIFIED
+
+**A `SLOW_CONSUMER_1013` occurred under `clob_v3`**, on
+`btc-updown-5m-1787247300`, 68 minutes after deployment. The v3 commit
+(`07bede1`) and the section above assert "ROOT CAUSE, MEASURED NOT
+HYPOTHESISED". That assertion is withdrawn.
+
+What was actually measured, and still stands:
+- `gzip_atomic` blocked the event loop for 1,818–1,915 ms per BTC shard. Real,
+  timed, reproduced.
+- After the fix it does not: 1,916 ms of compression work against 2 ms of loop
+  lag, with a control proving the test would catch a regression.
+
+What was **inferred and wrongly stated as measured**: that this stall *caused*
+the 1013s. Eliminating the stall did not eliminate the 1013.
+
+### What the instrumentation rules out
+
+At the moment of the drop the disconnect record carries
+`lag_ms_max_interval = 1.8 ms`. This is exactly the discrimination the probe was
+built for, and it points away from the branch v3 fixed:
+
+| candidate | evidence | verdict |
+|---|---|---|
+| event-loop stall | `lag_ms_max_interval` 1.8 ms; heartbeat max 13 ms | **ruled out** |
+| gzip in flight | nearest window closes 17:36:30 / 17:41:30, none at 17:39:56 | **ruled out** |
+| write-queue backpressure | `writer_wait=0`, `q_hi=1` since start | **ruled out** |
+| memory / queue ballooning | RSS 260 MB, stable (v2 ran 416 MB) | **ruled out** |
+| peak message rate | dropped at **580 msg/s**; sustained **984.7 msg/s** cleanly at 16:38 | **not a simple rate ceiling** |
+| OS descheduling the process | would appear in the sleep-overshoot probe; it does not | **ruled out** |
+
+### What remains open
+
+All four v3 disconnects are BTC, and three of the four were on a single slug in a
+four-minute burst before this one. Loop lag, write path, memory and raw rate are
+all clean at the time of each. The cause is therefore *not* anything currently
+instrumented. Remaining candidates, none yet tested:
+
+1. per-connection reader throughput inside the `websockets` frame parser;
+2. venue-side per-connection or per-IP limits, independent of our behaviour;
+3. an interaction with concurrent socket count (3 BTC sockets were active);
+4. `DISK_WORKERS=2` — v3 narrowed writers from the 20-worker default pool to two
+   shared with gzip. `writer_wait=0` argues against it but does not exclude a
+   slow writer that never fills a 32-deep queue.
+
+### Consequence for acceptance
+
+The pre-registered boundary — one full busy UTC day with zero
+`SLOW_CONSUMER_1013` — **has failed at 68 minutes**. `clob_capture_clean` stays
+`false`, and the honest read of v3 so far is: total disconnects 3.7/h → 3.7/h
+(five in 80 min v2_1; four in 68 min v3), with the *composition* changed. The
+gzip stall was a genuine defect worth removing on its own merits. It was not the
+answer.
+
+The next step is a discriminating measurement, not another fix. Changing
+`DISK_WORKERS` or `ping_timeout` now would create a fourth era boundary while
+the cause is still unidentified — which is how the v2 addendum went wrong.
