@@ -1,0 +1,38 @@
+[Unit]
+Description=P-2026-003 Polymarket CLOB collector (collect_pm.py)
+Documentation=file:///home/yuqing/ctaNew/live/pm_research/DATA_COLLECTOR_AUDIT_2026-08-20.md
+# Data collection for a 10-day OOS window. An unnoticed overnight death costs a
+# whole UTC day of the frozen route_a_v1 gate, so this is supervised rather than
+# left as a bare nohup orphaned to init.
+
+[Service]
+Type=simple
+WorkingDirectory=/home/yuqing/ctaNew
+# NB: the venv interpreter, not /usr/bin/python3 -- websockets is installed
+# only in the venv. A unit pointing at the system python restart-loops with
+# ModuleNotFoundError and collection is DOWN while it does.
+ExecStart=/home/yuqing/pricer-sol/venv/bin/python3 live/pm_research/collect_pm.py
+
+# O_APPEND, which is what a shell `>>` gives and what a `>` does NOT. The prices
+# log picked up a 56 KB contiguous NUL run (18% of the file, genuinely sparse on
+# disk) when a restart truncated it while an old fd still held a high offset.
+# That silently broke every default grep -- GNU grep treats the file as binary
+# and emits NOTHING, which looks identical to "no matches".
+StandardOutput=append:/home/yuqing/ctaNew/data/pm_5min/collector.log
+StandardError=append:/home/yuqing/ctaNew/data/pm_5min/collector.log
+
+# SIGTERM triggers the collector's own drain: it cancels each market task, lets
+# every finally flush its buffer, closes the file and atomically archives the
+# shard. That took ~3 s for 14 in-flight markets at the v2 stop, but a busy BTC
+# window gzips ~180 MB, so allow generous headroom before SIGKILL.
+KillSignal=SIGTERM
+TimeoutStopSec=180
+
+Restart=always
+RestartSec=10
+# Keep retrying indefinitely. A collector that gives up after N failures fails
+# silently, which is the outcome this unit exists to prevent.
+StartLimitIntervalSec=0
+
+[Install]
+WantedBy=default.target

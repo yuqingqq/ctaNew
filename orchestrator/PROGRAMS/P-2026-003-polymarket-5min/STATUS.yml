@@ -31,6 +31,25 @@ flags:
                              # fix this client-side; leave DISK_WORKERS and
                              # ping_timeout alone, there is no client-side
                              # hypothesis left to test.
+  collectors_supervised: true # 2026-08-21 01:43. Both lanes now run under
+                             # systemd user units (live/pm_research/ops/),
+                             # Restart=always, RestartSec=10, linger enabled so
+                             # they survive logout AND reboot. Previously bare
+                             # nohup orphaned to init: an overnight death would
+                             # have cost a whole UTC day of the route_a_v1 gate
+                             # with nothing watching once the session closed.
+                             # VERIFIED not assumed: kill -9 -> new pid in 10s,
+                             # exactly one of each, monitor independently saw
+                             # process count=0. Cutover cost a RECORDED 44s gap
+                             # (01:42:15-01:42:58) because the units first
+                             # pointed at /usr/bin/python3, which lacks
+                             # websockets -- the interpreter is the venv at
+                             # /home/yuqing/pricer-sol/venv/bin/python3. Also
+                             # fixed the NUL-log corruption at source via
+                             # StandardOutput=append: (O_APPEND); the damaged
+                             # file is kept as
+                             # prices_collector.log.nul-damaged-20260821 and
+                             # needs grep -a. Both logs now 0 NUL bytes.
   oos_day_count: 1_of_10     # THE BINDING CONSTRAINT as of 2026-08-21. Not
                              # collector health, not the spec -- calendar.
                              # route_a_v1's frozen gate needs 10 OOS test days;

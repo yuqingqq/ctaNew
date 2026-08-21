@@ -458,3 +458,51 @@ flat duration threshold) load-bearing rather than stylistic. A rule keyed only o
 
 Still not drafting the rule: the ledger era remains a few hours, and one
 observation of the 1001 mechanism is not a base rate.
+
+## OPERATIONAL FIX 2026-08-21 01:43 — supervision, and two defects it exposed
+
+The collectors had **no supervision**: bare `nohup` processes orphaned to init,
+no restart, no alert. Over a 10-day OOS window an unnoticed overnight death
+costs a whole UTC day of the frozen `route_a_v1` gate, and the only thing
+watching was a monitor that dies with its session. That was the largest
+remaining operational risk and it is now closed.
+
+Both lanes run under systemd user units (`live/pm_research/ops/`), `Restart=always`,
+`RestartSec=10`, lingering enabled so they survive logout and reboot.
+
+**Verified, not assumed.** `Restart=always` left untested is the same
+"reports success without checking" pattern this programme keeps finding, so it
+was exercised: `kill -9` on the CLOB collector → new pid after **10 s**, exactly
+one of each afterwards, unit `active`. The independent gap monitor also fired
+`process count=0`, confirming both layers see the same event.
+
+### Two defects the cutover exposed
+
+**1. Wrong interpreter — and it took collection down for 44 s.** The units
+initially pointed at `/usr/bin/python3`, which has no `websockets`; the real
+interpreter is the venv at `/home/yuqing/pricer-sol/venv/bin/python3`. The units
+restart-looped on `ModuleNotFoundError` while the old processes were already
+stopped. **Recorded gap: `collector_stop` 01:42:15 → `collector_start` 01:42:58,
+44 seconds**, visible in the ledger like any other outage. Cost is one partial
+window; the alternative — leaving collection unsupervised for nine more days —
+was worse. Both units now pin the venv path with a comment saying why.
+
+**2. The NUL-corrupted log is fixed at the source.** `prices_collector.log` held
+a 56 KB contiguous NUL run (18% of the file, genuinely sparse: 278 KB on disk
+against 320 KB apparent) from a restart truncating it while an old fd held a
+high offset. GNU grep treats such a file as **binary and emits nothing** — even
+`grep -c`, which always prints a number — so it looks exactly like "no matches".
+That silently blinded several checks during this session before it was noticed.
+`StandardOutput=append:` is O_APPEND and cannot reproduce it. The damaged file is
+preserved as `prices_collector.log.nul-damaged-20260821`; read it with `grep -a`.
+Both logs are now confirmed 0 NUL bytes.
+
+### What this does and does not fix
+
+Fixed: unsupervised single point of failure; log corruption at source; both now
+survive logout and reboot.
+
+**Not fixed, because it cannot be:** the pre-v3 tape stays MNAR-degraded, and
+~97% of BTC windows predate the gap ledger so they can only be excluded
+wholesale. The venue-side 1013 continues at its own rate. `clob_capture_clean`
+stays `false`.

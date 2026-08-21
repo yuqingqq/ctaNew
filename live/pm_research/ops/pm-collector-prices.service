@@ -1,0 +1,28 @@
+[Unit]
+Description=P-2026-003 Polymarket price collector (collect_pm_prices.py) - Route-A input lane
+Documentation=file:///home/yuqing/ctaNew/live/pm_research/DATA_COLLECTOR_AUDIT_2026-08-20.md
+# This is the lane the sigma measurement actually depends on: S30/S60 feed the
+# route_a_v1 regression. Losing it silently is worse than losing the CLOB lane.
+
+[Service]
+Type=simple
+WorkingDirectory=/home/yuqing/ctaNew
+# NB: the venv interpreter, not /usr/bin/python3 -- websockets is installed
+# only in the venv. A unit pointing at the system python restart-loops with
+# ModuleNotFoundError and collection is DOWN while it does.
+ExecStart=/home/yuqing/pricer-sol/venv/bin/python3 live/pm_research/collect_pm_prices.py
+
+# O_APPEND -- see the clob unit. This log is the one that acquired the NUL hole.
+StandardOutput=append:/home/yuqing/ctaNew/data/pm_5min/prices_collector.log
+StandardError=append:/home/yuqing/ctaNew/data/pm_5min/prices_collector.log
+
+# On stop the collector rotates and atomically gzips the active hourly CSV.
+KillSignal=SIGTERM
+TimeoutStopSec=120
+
+Restart=always
+RestartSec=10
+StartLimitIntervalSec=0
+
+[Install]
+WantedBy=default.target
