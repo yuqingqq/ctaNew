@@ -1,58 +1,63 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-08-21, session 3. All work is on branch **`mm-research`**;
-nothing is on `main`. Sigma is at **Revision 5** / contracts **v17**;
-Route A has now been measured under frozen protocol `route_a_v1`. The result is
-**DESCRIPTIVE / PRICING HOLD**: one OOS test day cannot authorize a law.
-`route_a_v2` is now pre-registered as a future conditional-variance successor;
-it has not been fitted and does not change the v1 verdict.
+Updated: 2026-08-21, session 3 infrastructure close-out. All work is on branch
+**`mm-research`**; nothing is on `main`. Sigma remains **Revision 5 / PRICING
+HOLD**, while the offline measurement stack is complete through contracts
+**v20**. `route_a_v1` has one OOS test day; per-symbol `route_a_v2` is
+pre-registered and begins primary evaluation on 2026-08-22. Neither is
+authorized for probability-level use.
 
 ## Read this first
 
-The programme now has a **verified settlement target**, a **modular
-architecture with machine-readable contracts**, and a reviewed sigma plan.
-Revision 5 makes the reduced-form/structural split hold at the executable
-boundary. A real, strictly-forward Route-A candidate is now fitted across all
-42 symbol/horizon cells, but the current tape has only two collected days and
-one OOS test day. All 84 gates are therefore `INSUFFICIENT_EVIDENCE`, so
-probability-level use remains on **HOLD**. The Route-A input lane may keep
-accumulating through frozen filters. The historical CLOB lane is **DEGRADED**;
-a second receive-path repair is now live and monitoring, but has not passed its
-full busy-day acceptance gate. Two headline results from
-session 1 were withdrawn or downgraded after discovering bad underlying data;
-do not cite either without reading §"What was withdrawn".
+The sigma **engineering pipeline is finished and frozen**. Collectors are
+supervised; the all-coin Tier-1 batch, knowledge-time leak canary, model-free
+Tier-2 terminal markout and fixed-grid calibration scaffold are immutable,
+resumable and commit-last. Hourly user timers run the measurement lane at minute
+20 and Tier-2 at minute 40. At this checkpoint both correctly returned `IDLE`:
+2026-08-20 is not eligible until the adjacent 2026-08-21 UTC day closes. No
+partial smoke is a research result.
+
+The empirical state has not changed: `route_a_v1` has one of ten required OOS
+days and all 84 gates are `INSUFFICIENT_EVIDENCE`. `route_a_v2` is per symbol
+and horizon, uses signed-x conditional variances with no cross-instrument
+pooling, and needs all 126 gates to pass on primary days from 2026-08-22.
+Pre-freeze rows are design/training data, not fresh validation evidence. Leave
+sigma code untouched while days accrue and continue independent mechanism work.
 
 Reading order:
 1. `live/pm_research/PM_ARCHITECTURE.md` — the entry point; explanatory structure.
-2. `live/pm_research/contracts/contracts.yaml` (**v17**) — machine-readable
+2. `live/pm_research/contracts/contracts.yaml` (**v20**) — machine-readable
    source of truth for types. The prose defers to this file, not the
    other way round.
-3. `live/pm_research/SIGMA_ROUTE_A_RESULTS_2026-08-20.md` — the measured,
+3. `live/pm_research/MEASUREMENT_PIPELINE.md` and `EVALUATION_PIPELINE.md` —
+   current Tier-1/Tier-2 runbooks and claim boundaries.
+4. `live/pm_research/SIGMA_ROUTE_A_RESULTS_2026-08-20.md` — the measured,
    strictly-forward Route-A result and current verdict.
-4. `live/pm_research/SIGMA_ROUTE_A_PROTOCOL.md` — protocol frozen before fit;
+5. `live/pm_research/SIGMA_ROUTE_A_PROTOCOL.md` — protocol frozen before fit;
    includes the non-analytic post-run embargo-wording erratum.
-5. `live/pm_research/SIGMA_ROUTE_A_V2_PROTOCOL.md` — pre-registered
+6. `live/pm_research/SIGMA_ROUTE_A_V2_PROTOCOL.md` — pre-registered
    conditional-variance successor; evaluation begins 2026-08-22 and no v2 fit
    exists yet.
-6. `live/pm_research/EXP_RESULTS_2026-08-20.md` — earlier model results.
-7. `live/pm_research/SIGMA_PLAN.md` — **REVISION 5, canonical.** One consumer
+7. `live/pm_research/GFF1_RESULTS.md` — frozen v3 side-convention PASS evidence.
+8. `live/pm_research/EXP_RESULTS_2026-08-20.md` — earlier model results.
+9. `live/pm_research/SIGMA_PLAN.md` — **REVISION 5, canonical.** One consumer
    matrix, one PRICING law (route A) and one DIAGNOSTIC decomposition (route B),
    never summed, now enforced as a TYPE boundary. **Read §2.3 then §1a** — the
    route decision scopes everything, and §1a says where each consumer's number
    actually comes from. v1/v2 text is in git history.
-8. `live/pm_research/SIGMA_PLAN_REVIEW.md` — first implementation-readiness review.
-9. `live/pm_research/SIGMA_PLAN_REVIEW_ITER2.md` — review of Revision 2.
-10. `live/pm_research/SIGMA_PLAN_REVIEW_ITER3.md` — review of Revision 3 and v14;
+10. `live/pm_research/SIGMA_PLAN_REVIEW.md` — first implementation-readiness review.
+11. `live/pm_research/SIGMA_PLAN_REVIEW_ITER2.md` — review of Revision 2.
+12. `live/pm_research/SIGMA_PLAN_REVIEW_ITER3.md` — review of Revision 3 and v14;
    historical input to Revision 4.
-11. `live/pm_research/SIGMA_PLAN_REVIEW_ITER4.md` — review of Revision 4/v15; its
+13. `live/pm_research/SIGMA_PLAN_REVIEW_ITER4.md` — review of Revision 4/v15; its
    six items are applied in Revision 5/v16.
-12. `live/pm_research/SIGMA_PLAN_REVIEW_ITER5.md` — pre-measurement verdict:
+14. `live/pm_research/SIGMA_PLAN_REVIEW_ITER5.md` — pre-measurement verdict:
    MEASUREMENT GO / PRICING HOLD**, plus the frozen fit sequence.
-13. `live/pm_research/sigma_kernels.py` — executable model **fixture**, not a
+15. `live/pm_research/sigma_kernels.py` — executable model **fixture**, not a
    frozen spec. `--selftest` checks exact arithmetic under a **declared and
    still UNVERIFIED** sampling convention; it does not establish that convention
    against the Chainlink streams.
-14. `live/pm_research/plans/` — BE_BELIEF, BE_FLOWANDFILLS, MEASUREMENT,
+16. `live/pm_research/plans/` — BE_BELIEF, BE_FLOWANDFILLS, MEASUREMENT,
    PRELIMINARY.
 
 Before any book/trade/queue analysis, read
@@ -103,7 +108,7 @@ rotated `.csv.gz` archives plus jsonl byte snapshots, so re-running it reproduce
 the identical exclusion set and window identity can be recorded then. Building
 the exclusion ledger is a **scheduling choice, not a race**.
 
-### Post-close-out implementation 2026-08-21
+### Post-close-out implementation 2026-08-21 — completed through Tier-2
 
 **`route_a_v2` is now frozen before its evaluation data.**
 `SIGMA_ROUTE_A_V2_PROTOCOL.md` (SHA-256
@@ -125,72 +130,37 @@ to affect eligibility. A temporary full run over 2,943 final resolutions emitted
 3,014 excluded, with zero duplicates. Those counts include the incomplete
 2026-08-21 day and are verification figures, **not a new v1 result**.
 
-**The post-sigma measurement foundation has started.**
-`live/pm_research/da_state.py` implements the first DA-State build milestone:
-nominal event/knowledge clocks, a `SourceProfile`-bound factory as the only
-supported `Known` constructor, strict non-observed imputation rules, associative
-knowledge-error composition, a knowledge-truncated `StateView`, and refusal
-telemetry. Fifteen focused checks pass, along with read-only construction from
-real TWAP and CLOB collector rows. The TWAP adapter explicitly selects the
-Chainlink payload event timestamp rather than the later envelope publication
-timestamp. This is **offline infrastructure, not a CLOB result**. Canonical
-contracts v17 now integrate this boundary; the old v12 measurement delta is
-historical input, not a merge candidate.
+**The post-sigma measurement foundation is complete.** `da_state.py`,
+`tier1_pipeline.py`, `coverage_ledger.py`, `replay_canary.py`,
+`daily_pipeline.py` and `measurement_batch.py` implement the closed-day Tier-1
+DAG. All requested coins are preflighted before writes; partitions are
+code/schema/input-addressed, immutable and merge-never-overwrite; coverage facts
+remain separate from the frozen admissibility rule; the cross-coin receipt is
+published only after exact validation. Interrupted valid staging is reusable
+but never mistaken for completion.
 
-`live/pm_research/tier1_pipeline.py` now implements build-order step 2 without
-crossing that contract boundary. It reads only immutable rotated collector
-files and writes code/input-addressed, `t_known`-sorted zstd Parquet partitions
-for TWAP, reconstructed UP-space quotes, deduped-and-collapsed parent trades,
-and window identity with collector-era and cause-aware gap facts. Writes are
-temp-renamed and idempotent; a changed manifest is fatal; partial partitions
-are stamped and refused by default. Seven focused checks cover sequential CLOB
-top reconciliation, token folding, exact dedup + `(t_event,q_up)` collapse,
-resolution knowledge time, cause-preserving gaps, TWAP timestamp selection, and
-partition refusal/overwrite behavior. A bounded 2026-08-20 BTC smoke under
-`/tmp` produced 9,972 TWAP rows, 635 quotes, 111 parent trades and all 288
-windows, with zero malformed CLOB lines, zero invalidated books, zero crossed
-quotes and zero UP/DOWN parity failures. Every smoke partition was
-`partial=true`; these counts are infrastructure verification, **not a new
-research result**. The factual window rows say
-`gap_rule_status=FACTS_ONLY_RULE_SEPARATE`: window identity does not silently
-apply an eligibility rule.
+`evaluation_pipeline.py` implements Tier-2. It requires a complete `full`
+Tier-1 receipt and the exact frozen G-FF1 v3 PASS artifact. It emits one
+model-free gross terminal maker observation per parent trade and exactly one
+calibration row per `(slug,r_s)` on the nine-point frozen grid. Knowledge-time
+quote selection matches `StateView`; invalid and unavailable states remain
+named rows instead of disappearing. Every markout summary carries both per-fill
+and share-weighted estimates per coin and phase. With too few day clusters,
+manifests explicitly say `DESCRIPTIVE_POINT_ESTIMATE` and CI unavailable.
 
-**Coverage/admissibility is now executable and frozen separately.**
-`PM_MEASUREMENT_PREREG.md` and `config/a_twap_1.json` freeze A-TWAP-1 by content
-hash; `config/source_profiles_v1.json` freezes a conservative 1 ms host-clock
-bound against Chrony evidence. `coverage_ledger.py` measures 310 one-second
-slots, preserves durable gap causes, computes protected-span missing weight and
-knowledge-time strike readability, then emits a separate hash-bound decision.
-Six pure checks pass, including the exact 90%-density/31-second-hole case and a
-late-known strike refusal. Tier-1 now has a `coverage` dataset. A bounded real
-smoke emitted 288 coverage rows under `partial=true`; its eligibility counts are
-not interpretable. A complete 2026-08-20 BTC build emitted 160,148 TWAP rows and
-288 windows as non-partial, sorted, digest-verified partitions. Complete daily
-coverage intentionally waits for previous/current/next UTC-day TWAP partitions,
-so it cannot be declared complete from a same-day tail.
+Contracts **v20** add R-BATCH, R-DERIVE, R-GROSS, R-DUAL and R-ONEROW plus the
+batch/evaluation carrier types and orchestration modules. The two user timers
+are installed and active. Their first 2026-08-21 invocations returned `IDLE`
+because the adjacent day was still open. That is the expected readiness gate,
+not a failure. Partial smoke counts remain wiring evidence only; the first real
+all-coin receipts will be created automatically after the boundary closes.
 
-### G-FF1 measured — `side` IS the taker's, but the gate is not passed
+### G-FF1 v3 passed — `side` is the taker's
 
-Run under `gff1_v2` (`GFF1_PROTOCOL.md`, results `GFF1_RESULTS.md`, probe
-`exp_gff1_side.py`, feed `da_feeds_polygon.py`). **Verdict:
-`INSUFFICIENT_EVIDENCE`** — do not record G-FF1 as passed.
-
-**Agreement 473/473 = 1.0000, Wilson95 [0.9919, 1.0000].** The lower bound does
-clear the 0.99 threshold. Two pre-registered guards still block the pass:
-473 validated clusters against a required 500, and a `JOIN_MISMATCH` rate of
-0.054 against a 0.05 ceiling. Both are administrative, neither is a hint of the
-opposite conclusion — but "nearly passing" is not passing.
-
-Coverage is what makes the point estimate worth anything: **226 BUY and 247
-SELL**, 7/7 coins perfect, 5/5 moneyness buckets perfect. Two *independent*
-chain-derived signals agree with the websocket on every single row — direction
-derived from which leg of the amount pair is USDC, and the `uint8` enum, whose
-mapping is now measured rather than assumed: `0 = BUY, 1 = SELL`, crosstab
-`(0,BUY) 226 / (1,SELL) 247` with zero off-diagonal.
-
-**Practical read: the `+95 bps` maker-gross sign is not inverted.** The
-downstream flow work is not built on a sign error. That is the useful outcome;
-formal closure needs `gff1_v3`.
+The frozen v3 run is **PASS**: agreement **600/600 = 1.0000**, Wilson95
+**[0.9936, 1.0000]**, with every one of seven coins and five moneyness buckets
+perfect. There are zero excluded rows. The side-evidence artifact and SHA are
+mandatory Tier-2 inputs, so terminal markout cannot run on an assumed sign.
 
 **The exchange ABI in the older docs does not apply to this tape.**
 `0xe111180000d2663c0091e4f400237545b87b996b` replaces `(makerAssetId,
@@ -241,14 +211,11 @@ grid (0.12, 0.65, 0.05) while the chain effective price does not (0.115862,
 0.649168, 0.048008). Direction resolved for all 27 regardless. Not a direction
 failure; a price-comparison artefact of unknown mechanism.
 
-**`gff1_v3` must be frozen before it runs**, and must fix exactly two things:
-draw enough transactions to yield >=500 *validated* clusters (500 drawn yields
-~473), and pre-specify how the tick-grid/effective-price class is compared —
-comparing a nominal price to an aggregate effective price is a category error of
-the same family as the v1 decode bug. **Do not relax `PRICE_TOL` to make the
-ceiling pass**; that would be tuning the instrument to the answer.
+The v1/v2 failures remain useful provenance: v1 validated only BUY rows; v2 had
+473 validated clusters and missed its frozen sample/mismatch guards. Neither is
+retroactively called a pass. Full evidence is in `GFF1_RESULTS.md`.
 
-### Flow model + uncertainty loop — 2026-08-21, in progress
+### Flow model + uncertainty loop — 2026-08-21 checked-in close-out
 
 Charter `live/pm_research/FLOW_UNCERTAINTY_LOOP.md`; plan
 `plans/BE_FLOWANDFILLS_MODEL_PLAN.md`; probe `flow_uncertainty.py`. Coordinator
@@ -268,18 +235,35 @@ which decouples this module from the 10-day sigma clock entirely.
 
 - **U1a `CLEARED`** — `size` is shares at 6 dp, exact against chain 600/600.
   **The volume layer is UNBLOCKED.**
-- **U1b `CLEARED` / SINGLE-ACTOR** — **one address** supplies **16.3% of all
-  trade events** at exactly 0.02 shares, **99.98% SELL**, present in all seven
-  coins, carrying **0.0145% of notional**. 300-transaction unstratified draw:
-  top-1 = 100%, distinct = 1, HHI = 1.0000. Two independent measurements agree
-  on the phenomenon (72.6 vs 78.1 events/window, no shared code).
-  **THE INVERSION:** the plan had assumed the count layer available and the
-  volume layer blocked. Both are backwards — raw-count `λ` is materially
-  contaminated by an economically empty class; notional-weighted `λ` is not.
-  Rule **R-DUAL**: every intensity AND every **signed** flow quantity
-  (imbalance, side mix, signed volume) is reported both ways, exclusion
-  published beside the retained set. Signed quantities are the fragile ones —
-  the contamination is ~100% one-signed and does not average out.
+- **U1b `CLEARED` / SINGLE-ACTOR — but the pooled share is a BTC ARTEFACT.**
+  **One address**, present in all seven coins, at exactly 0.02 shares and
+  **99.98% SELL**, carrying **0.0145% of notional**. 300-transaction unstratified
+  draw: top-1 = 100%, distinct = 1, HHI = 1.0000.
+  **CORRECTED 2026-08-21 by the intensity fit — the "16.3% of events" figure I
+  recorded here is POOLED and hides a 45x range**, because btc is 64% of the
+  pooled denominator:
+
+  | coin | arrivals | micro share |
+  |---|---:|---:|
+  | btc | 270,404 | **2.0%** |
+  | eth | 56,265 | 22.4% |
+  | xrp | 24,107 | 59.9% |
+  | bnb | 16,925 | 78.2% |
+  | hype | 16,160 | **90.0%** |
+  | pooled | 423,134 | 18.3% |
+
+  **On btc the count layer is barely touched; on hype it is not contaminated by
+  that actor, it largely IS that actor.** So R-DUAL is not a uniform reporting
+  convention -- for thin coins the count layer is close to unusable and the
+  notional weighting is the only meaningful one. This is the SIXTH instance of
+  the denominator/population defect, and it was inside a number this file
+  already carried as established.
+  **THE INVERSION still holds:** raw-count intensity is contaminated by an
+  economically empty class; notional-weighted intensity is not. Rule **R-DUAL**:
+  every intensity AND every **signed** flow quantity (imbalance, side mix,
+  signed volume) is reported both ways, exclusion published beside the retained
+  set. Signed quantities are the fragile ones -- the contamination is ~100%
+  one-signed and does not average out.
   **What the address is doing is NOT established and must not be narrated.**
 - **U2 `CLEARED`** — tick composition: 0.001 exists only in the tails (6.75% at
   `p<0.15`, 6.73% at `p>=0.85`), **absent from the middle three buckets**. Where
@@ -292,8 +276,25 @@ which decouples this module from the 10-day sigma clock entirely.
   occurrence was refused as **insufficient power**, not uniformity
   (`D=0.132, p=0.312`, min detectable `D=0.190` at n=51). Bound: **0.155% worst
   decile, 0.0488% overall**, `clob_v3_1` only. **That bounds EXPOSURE, not
-  FLOW.** Measured with matched denominators, flow loss runs at **0.43x** time
-  loss — the long gaps are the **quiet** ones.
+  FLOW.** The earlier “long gaps are quiet” reading used a window-mean baseline
+  against first-decile gaps and is withdrawn; phase-matched U9 does not support
+  it.
+- **U4 `CLEARED / REPLACED`** — the stale-book `+0.45 c/share` maker markout was
+  ~2.6x too high. The model-free terminal identity gives in-window per-fill
+  `+0.165 c` and share-weighted `+0.173 c`; after excluding the single-actor
+  0.02 class, per-fill is `-0.211 c` while share weighting stays `+0.172 c`.
+  Per-coin signs are mixed and two days permit no clustered CI.
+- **U5/U7** — the rare maker fee is a thin per-address tier: 0/~10/50 bps.
+  No in-transaction rebate appears in 600 receipts, but periodic/off-chain
+  rebate remains `Unavailable`.
+- **U6 `UNRESOLVED`** — cross-price chain-leg order is non-random but misses its
+  frozen clearance bar: 49/63 = 0.778, Wilson95 [0.661, 0.863]. Same-price time
+  priority, 59% of adjacent pairs, remains invisible; this cannot identify
+  counterfactual `Q_ahead`.
+- **U8 `CLEARED`** — spread is one tick on BTC/ETH but 3–7 ticks on the thinner
+  coins. The pooled one-tick headline was BTC denominator dominance. Spread
+  width is **not** an edge predictor: equal-width per-coin markout signs flip,
+  consistent with wider spreads pricing adverse-selection risk.
 
 **Fee schedule — see `fee_structure_known`.** Taker pays `0.07·p(1−p)` $/share
 (n=600, four decimals); maker pays zero on 744/754 legs. Crossing at ATM costs
@@ -314,26 +315,23 @@ question onto adverse selection.**
    before use — the name is not the definition.** A real rate exists in the
    heartbeat `rate_msg_s`.
 
-**Open:** U9 (is `PING_TIMEOUT` actually MNAR — it is **49% of all lost time**
-and classified on coin concentration alone, which cannot separate the
-hypotheses), then U4-U8. Nothing from this loop is committed yet.
+**Open:** U9 remains `UNRESOLVED` at seven phase-matched `PING_TIMEOUT` gaps;
+five more in one collector era are required. The checked-in uncertainty ledger
+and reproducible U1–U9 probes are at commits `6a0e593` and `6e125dc`.
 
 ### Residuals — open, in priority order
 
-1. **`PING_TIMEOUT` classification, unresolved at n=8.** It is **8/8 BTC**, which
-   behaves like the MNAR `SLOW_CONSUMER_1013` class, not like the across-coins
-   MAR cycling class where `3b9bddc` grouped it. If it stays BTC-only as n grows,
-   the cause-aware rule must move it. Accumulate before amending.
-2. **Measurement-layer next seam.** Build the daily adjacent TWAP partitions,
-   then wire point-in-time coverage and `EventTimeView` into the replay canary.
-   Batch coverage/admissibility is now executable; a complete 2026-08-20
-   coverage partition waits for the closed 2026-08-21 neighbor. Do not turn a
-   partial partition into a result.
+1. **Accumulate OOS days.** Tier-1/Tier-2 infrastructure is complete and the
+   timers own catch-up. Do not turn partial partitions or design days into a
+   result; rerun frozen v1 only at its formal boundary and evaluate v2 only on
+   primary days from 2026-08-22.
+2. **`PING_TIMEOUT` classification.** Phase-matched U9 is unresolved at n=7;
+   retain `MNAR-suspect` and wait for five more same-era gaps before amendment.
 3. **Phase 0A 5 — S30/S60 internal sampling semantics.** This still gates Route
    B only; the route-A fit remains descriptive until 10 OOS days.
-4. **Contracts cleanup.** Duplicate `ReducedFormFit` is removed and duplicate
-   keys are now fatal. The stale `ReducedFormLaw`, malformed-input refusal
-   totality and `GateEvidence.effect_size` validation remain.
+4. **Downstream model work waits on data.** Tier-2 deliberately leaves sigma
+   forecasts, walk-forward isotonic calibration and inferential intervals
+   unavailable. Attach them only when the frozen day/fold requirements exist.
 
 ### Collector: the 1013 is VENUE-SIDE — measured, not inferred
 
@@ -455,9 +453,10 @@ known incident rather than assuming it benign: the duplicate-collector overlap,
 the ~16 min market-side outage, the 8 malformed resolution rows, restart shards,
 TWAP gaps, knowledge-time lag per coin, and the up-rate drift confound.
 
-**Architecture v12 + machine-readable contracts.** 6 planes, 85 contract types,
-a structural diff checker with 13 selftests, and version-bound migration
-records. Twelve external review iterations. **Two of my own artefacts were
+**Architecture v12 + machine-readable contracts v20.** Six planes, a structural
+diff checker, version-bound migration records, and executable DA/EV pipeline
+contracts through the commit-last Tier-2 boundary. Twelve external review
+iterations. **Two of my own artefacts were
 proven unsound during that loop and replaced** — worth knowing because both
 failures were of the same kind, a checker that reported success without
 checking:
@@ -542,29 +541,27 @@ current.
 
 ## Immediate next step — accrue OOS days and rerun route_a_v1 unchanged
 
-Phase 0A step 6 now executes end to end. Preserve `route_a_v1` and rerun it as
-immutable days accrue. A formal verdict needs at least **10 OOS test-day
-clusters** and 30 OOS rows in every frozen conditioning cell; because the first
-day is training-only, that normally means at least 11 collected days. Do not
-respond to the one-day point effects by changing the cells, tolerances or
-functional form.
+No manual normalization step remains. The supervised collectors and hourly
+measurement/evaluation timers accumulate and materialize each eligible closed
+day. Preserve `route_a_v1` and rerun it unchanged as immutable days accrue. A
+formal verdict needs at least **10 OOS test-day clusters** and 30 OOS rows in
+every frozen conditioning cell; because the first day is training-only, that
+normally means at least 11 collected days. Do not respond to one-day point
+effects by changing the cells, tolerances or functional form.
+
+Keep `route_a_v2` separate: it is per symbol/horizon, begins primary evaluation
+on 2026-08-22, and requires all 126 frozen gates. Rows through 2026-08-21 may
+train a fold but may not contribute to its headline score or interval.
 
 Phase 0A step 5 may proceed in parallel and gates Route B only. Do not add
 structural `k/v/Omega` terms to the Route-A residual. Probability-level use and
 the estimator integration remain on HOLD until all per-fit gates pass.
 
-In parallel, monitor `clob_v2_1`; the receive-path and slug/token/time gap
-ledger repair is deployed. No model-vs-book, queue, flow or fill result may use
-this lane until a full busy day has zero 1013 losses or a pre-registered
-cause-aware exclusion leaves enough complete day clusters. Derive collector
-version from the versioned start/stop ledger, preserve it as a repair-era
-field, and never pool pre-v2 observations unpaired.
-
-Iteration 5 found three cleanup items to land alongside that implementation:
-the duplicate YAML `ReducedFormFit` plus stale `ReducedFormLaw`, malformed-input
-refusal totality, and validation of the `GateEvidence.effect_size` payload.
-They are not new model choices and do not block the regression. Full evidence:
-`SIGMA_PLAN_REVIEW_ITER5.md`.
+In parallel, continue the mechanism/flow work from the reproducible uncertainty
+ledger. Keep cause/version gap facts, per-coin primary reporting and both
+per-fill/notional weightings. The 1013 is measured as venue-side; the operative
+path is the pre-registered cause-aware exclusion, not another client tuning
+cycle. No two-day point estimate is an inferential profitability result.
 
 ### Historical — iteration-4 boundary review and application
 

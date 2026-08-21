@@ -3,10 +3,30 @@ name: Polymarket Crypto 5-min Markets
 phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
-updated: 2026-08-21 (session 3 — collector 1013 settled VENUE-SIDE; OOS day 1 of 10)
+updated: 2026-08-21 (session 3 close-out — sigma infrastructure complete; OOS day 1 of 10)
 
 flags:
   collector_running: true    # One price process and one CLOB process; fresh.
+  sigma_infra_pipeline: complete-awaiting-eligible-day # Research infrastructure
+                             # is complete through contracts v20: immutable
+                             # Tier-1 daily/all-coin batches, paired leak canary,
+                             # model-free Tier-2 markouts, and the fixed-grid
+                             # calibration scaffold. This is engineering
+                             # completion, not a sigma validation result.
+  measurement_timer: active-enabled # Hourly minute 20; catches up one oldest
+                             # eligible closed day and publishes the cross-coin
+                             # batch receipt last. The immediate 2026-08-21 run
+                             # was IDLE because D+1 had not closed, as designed.
+  evaluation_timer: active-enabled # Hourly minute 40; requires/reuses a complete
+                             # full-lane Tier-1 batch, validates G-FF1 v3, then
+                             # publishes Tier-2 across coins with a commit-last
+                             # receipt. The immediate run was likewise IDLE.
+  tier1_complete_batches: 0 # No real batch was claimable at this checkpoint;
+                             # 2026-08-20 becomes eligible only after 2026-08-21
+                             # closes. Partial smoke artifacts are isolated and
+                             # never count as research evidence.
+  tier2_complete_runs: 0    # No real Tier-2 result yet; infrastructure selftests
+                             # and the partial smoke validate wiring only.
   clob_1013_is_venue_side: true # RESOLVED 17:46:41 UTC by clob_v3_1's
                              # discriminator, on its first 1013: ws_ever_paused
                              # = FALSE and ws_queue_depth_max = 133 out of a
@@ -267,36 +287,12 @@ flags:
                              # expected MORE than 2.25c of move. The fee does not
                              # kill MM on cost -- it loads the whole question
                              # onto ADVERSE SELECTION.
-  gff1_side_convention: measured-not-passed # G-FF1 under gff1_v2. `side` IS the
-                             # TAKER's: agreement 473/473 = 1.0000, Wilson95
-                             # [0.9919, 1.0000], covering 226 BUY + 247 SELL,
-                             # 7/7 coins and 5/5 moneyness buckets perfect. TWO
-                             # INDEPENDENT chain signals agree on every row --
-                             # direction from which leg of the amount pair is
-                             # USDC, and the uint8 enum, whose mapping is now
-                             # MEASURED: 0=BUY, 1=SELL, zero off-diagonal.
-                             # VERDICT IS STILL `INSUFFICIENT_EVIDENCE`: 473
-                             # validated clusters vs 500 required, and a
-                             # JOIN_MISMATCH rate of 0.054 vs a 0.05 ceiling.
-                             # Both administrative; neither hints the other way.
-                             # DO NOT record G-FF1 as PASSED. PRACTICAL READ: the
-                             # +95bps maker-gross SIGN IS NOT INVERTED, so the
-                             # flow/fills work is not built on a sign error.
-                             # gff1_v1 is SUPERSEDED, not withdrawn: it hard-coded
-                             # the BUY reading of the amount pair and returned
-                             # 226/226 on a sample that was 100% BUY / ZERO SELL,
-                             # at a 0.548 mismatch rate. The FROZEN MISMATCH
-                             # CEILING is the only reason that one-sided result
-                             # did not read as clean -- keep that guard.
-                             # OPEN: 27 residual legs (5.4%) where size matches
-                             # EXACTLY and only price differs (WS on the tick
-                             # grid 0.12/0.65/0.05, chain effective 0.115862/
-                             # 0.649168/0.048008). Direction resolved for all 27
-                             # anyway. gff1_v3 must be FROZEN BEFORE RUNNING and
-                             # fix exactly two things: draw enough to yield >=500
-                             # VALIDATED clusters, and pre-specify how the
-                             # nominal-vs-effective price class is compared. DO
-                             # NOT relax PRICE_TOL to clear the ceiling.
+  gff1_side_convention: passed # G-FF1 v3 is frozen and PASS: 600/600 validated
+                             # transactions agree that websocket `side` is the
+                             # TAKER's; Wilson95 lower bound 0.9936 clears 0.99,
+                             # with all seven coins and five moneyness buckets
+                             # perfect. The Tier-2 pipeline binds the exact side-
+                             # evidence SHA to every terminal-markout row.
   onchain_abi_verified: true # The older Polymarket CTF Exchange ABI does NOT
                              # apply to this tape. Exchange
                              # 0xe111180000d2663c0091e4f400237545b87b996b
@@ -341,35 +337,16 @@ flags:
                              # proxies, coverage, ages and separately hashed
                              # price-gap cause/version attribution. Gap data is
                              # audit-only and cannot change v1 eligibility.
-  measurement_foundation: step3-v17-coverage-executable
-                             # da_state.py implements the offline SourceProfile-
-                             # bound Known factory, nominal clocks, associative
-                             # knowledge-error composition, knowledge-truncated
-                             # StateView and refusal telemetry. 15 focused checks
-                             # plus real TWAP/CLOB record smoke tests pass.
-                             # tier1_pipeline.py now deterministically distils
-                             # immutable rotated files into TWAP, reconstructed
-                             # UP quotes, deduped/collapsed parent trades and
-                             # windows with version eras + cause-aware gap facts.
-                             # Partitions are code/input-addressed, t_known
-                             # sorted, zstd Parquet, temp-renamed, idempotent,
-                             # merge-never-overwrite and refuse partial reads.
-                             # Canonical contracts v17 now own DA-Normalize,
-                             # DA-Coverage and DA-State, use nominal event vs
-                             # knowledge clocks, and separate Coverage facts
-                             # from AdmissibilityDecision. Duplicate YAML keys
-                             # are fatal. PM_MEASUREMENT_PREREG.md freezes
-                             # A-TWAP-1 and the 1ms observed-source clock bound
-                             # by content hash. coverage_ledger.py has six pure
-                             # checks; tier1_pipeline.py has seven integration
-                             # checks. A bounded real smoke emitted TWAP/quotes/
-                             # trades/windows/coverage only under /tmp and
-                             # partial=true. A complete 2026-08-20 BTC build
-                             # emitted 160,148 TWAP rows and 288 windows as
-                             # non-partial sorted digest-verified partitions.
-                             # Complete coverage correctly waits for adjacent
-                             # UTC-day TWAP partitions. This is infrastructure,
-                             # not a CLOB result or decision authorization.
+  measurement_foundation: complete-v20-tier1-tier2
+                             # DA-State through cross-coin Tier-2 orchestration
+                             # is executable and fail-closed. The pipeline binds
+                             # immutable inputs, knowledge-time coverage,
+                             # admissibility and canary evidence; refuses partial
+                             # or mismatched partitions; resumes valid staging;
+                             # and writes batch/run receipts last. Tier-2 emits
+                             # one terminal maker identity per parent trade and
+                             # exactly nine calibration rows per window while
+                             # retaining unavailable quote states explicitly.
   sigma_plan_review: iter5-measurement-go # SIGMA_PLAN_REVIEW_ITER5.md reviews
                              # 58f6716. All ITER4 specification blockers pass.
                              # Three implementation cleanups remain (duplicate
@@ -433,71 +410,30 @@ flags:
                              # VERIFIED at SIGMA_DIAGNOSTICS.md:157-175. Both
                              # c(30)=2.17 and c(30)=1.14 are apples-to-oranges;
                              # no c(r) number is currently claimable.
-  contracts_version: 16      # M16-1. PathLaw is a REAL DISCRIMINATED UNION:
-                             # ReducedFormPathLaw prices; StructuralDiagnosticLaw
-                             # has no settlement_var and structurally cannot.
-                             # v15's estimand_route enum on a shared record
-                             # forced a route-A object to carry an anchor, rate
-                             # and convention it never uses. Also: StreamProvenance
-                             # on the pricing arm; GateEvidence (PASS /
-                             # INSUFFICIENT_EVIDENCE / MODEL_REFUTED with a
-                             # tolerance bound) because failure to reject is NOT
-                             # equivalence; WeightAtOffset; KernelCoefficient
-                             # carrying SECONDS; CalibrationCurve as the
-                             # route-agreement RATIO. 29 removals + 11 changes,
-                             # all with migration records; checker 0 unexplained.
-                             # ITER5 CLEANUP: YAML defines ReducedFormFit twice;
-                             # normal parsing silently keeps the stale 3-field
-                             # copy and the checker misses it. ReducedFormLaw and
-                             # build step 6 also retain v15 carrier language.
-                             # Repair alongside the measurement implementation;
-                             # it does not block fitting the empirical law.
-                             # Prior M15-1 changes: AnchorSpec horizon-indexed
-                             # with `selected`
-                             # (MODEL|ESTIMATED) so bias is measured against the
-                             # SELECTED estimand — v14 measured it against the
-                             # model, which made an empirical alpha permanently
-                             # "biased" and cancelled it back to the fixture.
-                             # ReducedFormLaw carries the pricing route + gates;
-                             # RateQuantity separates bps^2/s from terminal bps^2;
-                             # FeedErrorCov fixes BPS_SQUARED once, requires
-                             # psd_validated and states identification per route;
-                             # g_prime is the single canonical derivative
-                             # (density removed); R-REQ + R-ROUTE join R-WFWD.
-                             # 7 removals + 4 changes, all with records.
-                             # R-REQ IS EXECUTABLE: sigma_kernels.check_request
-                             # evaluates the comparisons with 8 negative
-                             # fixtures. Checker green is still only structural —
-                             # that is why the invariants live in code.
+  contracts_version: 20      # v17 integrated DA normalization/state/coverage;
+                             # v18-v19 added the daily pipeline and all-coin
+                             # commit-last batch; v20 adds R-DERIVE, R-GROSS,
+                             # R-DUAL and R-ONEROW plus Tier-2 markout,
+                             # calibration and orchestration contracts. Changes
+                             # are additive from v16; the structural checker and
+                             # migration discipline remain authoritative.
 
 focus: >
   Build and test the model, mechanism-first, no PnL/capacity estimation
   (user, 2026-08-20). Entry point is live/pm_research/PM_ARCHITECTURE.md (v12)
   with contracts/contracts.yaml as the machine-readable source of truth.
-  IMMEDIATE 2026-08-21: the binding constraint is the OOS DAY COUNT, 1 of 10,
-  tracking to ~2026-08-29. Collectors are healthy and the 1013 is settled as
-  venue-side (not fixable client-side). The two calendar-wait tasks are DONE:
-  route_a_v2 is pre-registered before primary evaluation begins on 2026-08-22,
-  and route_a_v1 now emits a unique accepted/excluded (slug,horizon) selection
-  ledger with separately hashed price-gap cause/version attribution. Do not fit
-  or inspect v2 on its primary evaluation days before its formal run, and do not
-  let the audit ledger alter v1 eligibility. Post-sigma measurement work has
-  started with the fail-closed knowledge-time foundation; next rebase its stale
-  v12 contract delta onto canonical v16, then build Tier-1 distillation and
-  coverage/admissibility. Phase 0A step 5 and the known contracts cleanup also
-  remain non-blocking; the programme-level next event is still the unchanged
-  v1 day-10 run.
-  PRIOR: ROUTE-A MEASUREMENT EXECUTED under frozen route_a_v1: 9,332 admissible rows,
-  5,796 OOS rows and 42 per-symbol/horizon fits. One OOS day makes all 84 gates
-  INSUFFICIENT_EVIDENCE; the candidate is measurable but not pricing-ready.
-  Preserve the protocol and rerun unchanged as immutable days accrue; the first
-  possible verdict is at >=10 OOS test days (normally 11 collected days). Phase
-  0A step 5 (internal S30/S60 semantics) gates Route B only and may run in
-  parallel. Probability-level use remains on HOLD until every real per-fit gate
-  passes. COLLECTOR P0: Route-A accumulation may continue through its frozen
-  filters, but CLOB capture is degraded: the first hot-loop repair still loses
-  busy BTC intervals. Repair and gap-stamp that lane before any queue/flow/fill
-  or model-vs-book inference. See DATA_COLLECTOR_AUDIT_2026-08-20.md.
+  IMMEDIATE 2026-08-21: the sigma research pipeline is engineered, supervised
+  and frozen; the binding constraint is calendar time, not more sigma code.
+  Route_a_v1 remains at one of ten OOS test days and all 84 gates are
+  INSUFFICIENT_EVIDENCE. Route_a_v2 is pre-registered, per symbol and horizon,
+  begins primary evaluation on 2026-08-22, and needs all 126 gates to pass.
+  Do not refit, tune or inspect v2 on primary days before its formal run.
+  Hourly Tier-1 and Tier-2 jobs will build the oldest eligible day once the D+1
+  boundary closes; partial smokes and pre-freeze design data never count as
+  validation. G-FF1 v3 is PASS and bound to Tier-2. Continue the separate
+  mechanism/flow work while data accrues, but keep all two-day estimates
+  descriptive and preserve per-coin and dual-weighting reporting. Probability-
+  level use remains PRICING HOLD until the frozen per-fit gates pass.
 
 standing_rules:
   - CHECK THE DATA BEFORE USING IT, EVERY TIME — no lane is trusted by default.
@@ -646,7 +582,13 @@ tasks:
   - id: e1-dataset
     phase: 1
     name: Aligned dataset — binary book vs Binance F_t at 100ms, per window
-    status: pending
+    status: infrastructure-complete-awaiting-eligible-day
+    notes: |
+      Tier-1 daily/all-coin orchestration and Tier-2 markout/calibration
+      derivation are complete under contracts v20. Measurement and evaluation
+      timers are installed, enabled and verified. No real receipt existed at
+      this checkpoint because 2026-08-20 requires the closed 2026-08-21
+      neighbor; partial smoke outputs are isolated and are not evidence.
   - id: e3-screen
     phase: 2
     name: Run the pre-registered gates on >=2 weeks of windows
