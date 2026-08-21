@@ -31,6 +31,34 @@ flags:
                              # fix this client-side; leave DISK_WORKERS and
                              # ping_timeout alone, there is no client-side
                              # hypothesis left to test.
+  oos_day_count: 1_of_10     # THE BINDING CONSTRAINT as of 2026-08-21. Not
+                             # collector health, not the spec -- calendar.
+                             # route_a_v1's frozen gate needs 10 OOS test days;
+                             # 2026-08-19 is training-only, so 08-20 is day 1
+                             # and 08-21 is in progress. Tracks to ~2026-08-29.
+  prices_lane: self_healing_not_clean # 58 gaps + 26 reconnects over 11h,
+                             # ~one 11-13s gap every 20 min. Causes
+                             # GLOBAL_SOCKET_SILENCE 38, TOPIC_STALE 7+,
+                             # PEER_TOPIC_RECONNECT 3, CONNECTIONCLOSEDERROR 2.
+                             # Per-hour 2-10, a level with no trend; every gap
+                             # closed. I had been calling this lane "clean" on
+                             # the strength of open_gaps=[] -- self-healing is
+                             # NOT clean. MATTERS BECAUSE: an 11-13s gap on a
+                             # decision time breaks the <=5s predictor-staleness
+                             # rule, and the one 44.8s TOPIC_STALE outlier
+                             # (22:28, 3.5x any other) breaks the 90% coverage
+                             # rule outright. CANDIDATE MECHANISM for
+                             # route_a_v1's 374 s30_window_coverage exclusions
+                             # (19% of windows) -- the unaudited MNAR risk.
+  exclusion_info_recoverable: true # CORRECTION. I claimed twice in session that
+                             # counts-only exclusions meant audit information was
+                             # "not reconstructible later". WRONG: the protocol
+                             # reads immutable rotated .csv.gz archives plus
+                             # jsonl byte snapshots, so re-running reproduces the
+                             # identical exclusion set and identity can be
+                             # recorded then. The ledger is still needed for the
+                             # day-10 audit but it is a scheduling choice, not a
+                             # race. Never committed the wrong version.
   loss_mechanisms: two       # AMENDED 18:26 — disconnects are no longer
                              # BTC-only (btc 12, sol 1, eth 1). The non-btc pair
                              # were 1001 "going away" server-cycling closes:

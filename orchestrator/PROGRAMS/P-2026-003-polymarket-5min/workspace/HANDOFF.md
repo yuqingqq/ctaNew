@@ -56,6 +56,71 @@ verdict, live evidence and acceptance boundary. **Read its v3 section: the v2
 addendum's "repair successful" is withdrawn, and the root cause is now measured
 rather than hypothesised.**
 
+### Session close-out 2026-08-21 01:34 — what the monitoring loop established
+
+**The binding constraint is now the calendar, not the code.** `route_a_v1`'s
+frozen gate needs **10 OOS test days**; 2026-08-19 is training-only, so the count
+is **1 of 10** (08-20 complete, 08-21 in progress), tracking to ~2026-08-29.
+Nothing about the collectors or the spec blocks that; it has to elapse.
+
+**The Route-A prices lane is self-healing, which is not the same as clean.**
+I had been reporting it healthy on the strength of `open_gaps=[]` at each check.
+Over 11 hours it actually logged **58 gaps and 26+ reconnections** — roughly one
+11–13 s gap every 20 minutes — under four causes: `GLOBAL_SOCKET_SILENCE` 38,
+`TOPIC_STALE` 7+, `PEER_TOPIC_RECONNECT` 3, `CONNECTIONCLOSEDERROR` 2. Per-hour
+counts `15:4 16:2 17:4 18:8 19:4 20:6 21:10 22:10 23:4 00:4 01:2` — a level in
+the 2–10/hr band, no trend. Every gap closed; none ever left open.
+
+**Why that matters:** an 11–13 s gap landing on a decision time breaks the
+protocol's ≤5 s predictor-staleness rule for that horizon, and a long one breaks
+the 90 % coverage rule for the whole window. **This is a candidate mechanism for
+`route_a_v1`'s 374 `s30_window_coverage` exclusions (19 % of windows)** — the
+MNAR risk that is still unaudited. One outlier so far: a **44.8 s `TOPIC_STALE`
+pair at 22:28**, 3.5× any other, which at 14.5 % of a 310 s span fails the 90 %
+rule outright for every coin and horizon.
+
+**CLOB lane, closed out.** 46 disconnects across all eras; `ws_ever_paused` has
+read True **0 times**, deepest backlog 254 of 65,536 (0.4 %). Cumulative loss
+149.6 s across 36 windows, **zero unclosed gaps**. 1013s are bursty around
+2–3/hr with whole hours of quiet. Gap-touched BTC windows sit at ~22 %.
+
+**A discipline note worth keeping.** Twice I called a direction on one interval —
+a "rising 1013 frequency" and a "30 % gap-touched share" — and both dissolved
+within the hour as the denominator grew (30 → 25 → 23 → 21 → 22 %). Report burst
+minutes and per-hour counts; do not describe a direction until several hours
+separate the observations. Neither claim reached these documents, which is what
+saved them.
+
+**Correction, so nobody re-derives the wrong urgency.** I claimed twice in
+session that the counts-only exclusion ledger meant selection-audit information
+was "not reconstructible later". That is **wrong**: the protocol reads immutable
+rotated `.csv.gz` archives plus jsonl byte snapshots, so re-running it reproduces
+the identical exclusion set and window identity can be recorded then. Building
+the exclusion ledger is a **scheduling choice, not a race**.
+
+### Residuals — open, in priority order
+
+1. **`route_a_v2` variance spec — pre-register BEFORE the refutation arrives.**
+   `route_a_v1`'s variance gate is on track to read `MODEL_REFUTED` for a
+   predictable reason: OOS residual variance is **U-shaped in `|S30−S60|`**
+   (mid tercile ~0.70–0.80, both tails 1.1–1.7, i.e. 1.4–2.2× across terciles)
+   against a frozen tolerance of 0.25. That is volatility clustering — the same
+   ρ = 0.19–0.40 persistence already in the plan — and it refutes **pooled
+   residual variance**, not route A. The disciplined move is a conditional
+   variance spec frozen *now*; fitting one after seeing the refutation is
+   exactly what pre-registration exists to prevent.
+2. **Exclusion ledger** in `exp_sigma_route_a.py` — exclusions are a bare
+   `Counter` (13 increment sites), so the accepted-versus-excluded activity and
+   volatility comparison that both the protocol and the collector audit require
+   cannot be run. Not urgent (see correction above), but it gates the day-10
+   verdict.
+3. **`PING_TIMEOUT` classification, unresolved at n=8.** It is **8/8 BTC**, which
+   behaves like the MNAR `SLOW_CONSUMER_1013` class, not like the across-coins
+   MAR cycling class where `3b9bddc` grouped it. If it stays BTC-only as n grows,
+   the cause-aware rule must move it. Accumulate before amending.
+4. **Sigma spec** remains at Revision 5 / contracts v16 with Phase 0A 5–6 unrun
+   (S30/S60 semantics; the route-A fit is descriptive until 10 OOS days).
+
 ### Collector: the 1013 is VENUE-SIDE — measured, not inferred
 
 **Resolved 17:46:41 UTC.** `clob_v3_1` samples the `websockets` Assembler, which
