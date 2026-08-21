@@ -77,6 +77,23 @@ class Series:
     def event_count(self, start_ms: int, end_ms: int) -> int:
         return bisect_right(self.event_axis, end_ms) - bisect_left(self.event_axis, start_ms)
 
+    def realised_bps(self, start_ms: int, end_ms: int) -> float | None:
+        """Realised |return| range over the ticks present in the span, in bps.
+
+        Computed from WHATEVER ticks exist, including in windows that fail the
+        coverage rule -- that is the point. The MNAR question is whether the
+        excluded windows are busier than the retained ones, and tick count alone
+        cannot answer it: the feed publishes at ~1 Hz regardless of activity, so
+        a low count measures FEED HEALTH, not market activity. This measures
+        activity. Recording only, never used in any admissibility decision."""
+        lo = bisect_left(self.event_axis, start_ms)
+        hi = bisect_right(self.event_axis, end_ms)
+        vals = [t.value for t in self.event_ticks[lo:hi]
+                if math.isfinite(t.value) and t.value > 0]
+        if len(vals) < 2:
+            return None
+        return 10_000.0 * (max(vals) - min(vals)) / vals[0]
+
 
 def _sha(raw: bytes) -> str:
     return hashlib.sha256(raw).hexdigest()
@@ -181,6 +198,24 @@ def build_rows() -> tuple[list[dict], dict]:
             resolutions[row["slug"]] = row
 
     exclusions = Counter()
+    # WINDOW-IDENTITY LEDGER. The protocol and the collector audit both require an
+    # accepted-versus-excluded activity/volatility comparison before the day-10
+    # verdict; with a bare Counter that comparison is impossible. This records
+    # WHICH windows were dropped and how busy they were.
+    #
+    # Protocol-neutral by construction: it changes no gate, tolerance, exclusion
+    # or conditioning cell -- every `continue` fires on exactly the same
+    # condition as before, and the counters increment identically. It only writes
+    # down decisions that were already being made, so it does NOT create a new
+    # protocol version.
+    excluded: list[dict] = []
+
+    def drop(reason: str, slug: str, coin: str = "", t0_s: int | None = None,
+             **detail) -> None:
+        exclusions[reason] += 1
+        excluded.append({"reason": reason, "slug": slug, "coin": coin,
+                         "window_start": t0_s, **detail})
+
     rows = []
     agreement_n = agreement_hit = 0
     known_skews = []
@@ -189,45 +224,51 @@ def build_rows() -> tuple[list[dict], dict]:
     for slug, resolution in sorted(resolutions.items()):
         market = markets.get(slug)
         if market is None:
-            exclusions["no_market_metadata"] += 1
+            drop("no_market_metadata", slug)
             continue
         coin = str(market.get("coin", "")).lower()
         symbol = COINS.get(coin)
         if symbol is None:
-            exclusions["unsupported_coin"] += 1
+            drop("unsupported_coin", slug, coin)
             continue
         fast, slow = streams.get((symbol, 30)), streams.get((symbol, 60))
         if fast is None or slow is None:
-            exclusions["missing_stream"] += 1
+            drop("missing_stream", slug, coin)
             continue
         try:
             t0_s, end_s = int(market["window_start"]), int(market["window_end"])
         except (KeyError, TypeError, ValueError):
-            exclusions["bad_window_metadata"] += 1
+            drop("bad_window_metadata", slug, coin)
             continue
         if end_s - t0_s != 300:
-            exclusions["non_300s_window"] += 1
+            drop("non_300s_window", slug, coin, t0_s, span_s=end_s - t0_s)
             continue
         t0, end = t0_s * 1000, end_s * 1000
         cov_start, cov_end = t0 - 5_000, end + 5_000
         nominal = (cov_end - cov_start) / 1000
         min_ticks = math.ceil(COVERAGE_FRACTION * nominal)
         if fast.event_count(cov_start, cov_end) < min_ticks:
-            exclusions["s30_window_coverage"] += 1
+            drop("s30_window_coverage", slug, coin, t0_s,
+                 ticks=fast.event_count(cov_start, cov_end), min_ticks=min_ticks,
+                 realised_bps=slow.realised_bps(cov_start, cov_end))
             continue
         if slow.event_count(cov_start, cov_end) < min_ticks:
-            exclusions["s60_window_coverage"] += 1
+            drop("s60_window_coverage", slug, coin, t0_s,
+                 ticks=slow.event_count(cov_start, cov_end), min_ticks=min_ticks,
+                 realised_bps=slow.realised_bps(cov_start, cov_end))
             continue
         x0_tick, xT_tick = slow.at_event(t0), slow.at_event(end)
         if x0_tick is None or xT_tick is None:
-            exclusions["missing_target_boundary"] += 1
+            drop("missing_target_boundary", slug, coin, t0_s,
+                 realised_bps=slow.realised_bps(cov_start, cov_end))
             continue
         if t0 - x0_tick.event_ms > FRESH_MS or end - xT_tick.event_ms > FRESH_MS:
-            exclusions["stale_target_boundary"] += 1
+            drop("stale_target_boundary", slug, coin, t0_s,
+                 realised_bps=slow.realised_bps(cov_start, cov_end))
             continue
         x0, xT = x0_tick.value, xT_tick.value
         if not math.isfinite(x0) or x0 <= 0 or not math.isfinite(xT):
-            exclusions["invalid_target_value"] += 1
+            drop("invalid_target_value", slug, coin, t0_s)
             continue
         covered_windows += 1
         winner_up = bool((resolution.get("winners") or {}).get("Up"))
@@ -238,10 +279,19 @@ def build_rows() -> tuple[list[dict], dict]:
             decision = end - r * 1000
             s30_tick, s60_tick = fast.at_known(decision), slow.at_known(decision)
             if s30_tick is None or s60_tick is None:
-                exclusions[f"r{r}:missing_predictor"] += 1
+                drop(f"r{r}:missing_predictor", slug, coin, t0_s, horizon=r,
+                     realised_bps=slow.realised_bps(cov_start, cov_end))
                 continue
             if decision - s30_tick.known_ms > FRESH_MS or decision - s60_tick.known_ms > FRESH_MS:
-                exclusions[f"r{r}:stale_predictor"] += 1
+                # THE ONE TO WATCH. The prices lane logs an 11-13 s gap roughly
+                # every 20 minutes; one landing on a decision time breaks the
+                # <=5 s staleness rule for exactly this horizon and no other.
+                # Recording the observed staleness makes that mechanism testable
+                # against the collector gap ledger instead of merely plausible.
+                drop(f"r{r}:stale_predictor", slug, coin, t0_s, horizon=r,
+                     s30_age_ms=decision - s30_tick.known_ms,
+                     s60_age_ms=decision - s60_tick.known_ms,
+                     realised_bps=slow.realised_bps(cov_start, cov_end))
                 continue
             known_skews.append(abs(s30_tick.known_ms - s60_tick.known_ms))
             s30, s60 = s30_tick.value, s60_tick.value
@@ -250,9 +300,13 @@ def build_rows() -> tuple[list[dict], dict]:
             y = (xT - s60) * scale
             m = (s60 - x0) * scale
             if not all(math.isfinite(z) for z in (x, y, m)):
-                exclusions[f"r{r}:nonfinite_normalized"] += 1
+                drop(f"r{r}:nonfinite_normalized", slug, coin, t0_s, horizon=r)
                 continue
             rows.append({
+                # same statistic the exclusion ledger records, so accepted and
+                # excluded windows are directly comparable. A one-sided ledger
+                # cannot answer the MNAR question it exists for.
+                "realised_bps": slow.realised_bps(cov_start, cov_end),
                 "slug": slug, "coin": coin, "symbol": symbol,
                 "day": _utc_day(t0_s), "horizon": r,
                 "window_start_ms": t0, "window_end_ms": end,
@@ -284,6 +338,8 @@ def build_rows() -> tuple[list[dict], dict]:
         "known_stream_skew_ms_p95": q(0.95),
         "stream_audit": dict(sorted(stream_audit.items())),
         "exclusions": dict(sorted(exclusions.items())),
+        # per-window identity for the accepted-vs-excluded selection audit
+        "excluded_windows": excluded,
     }
     return rows, audit
 

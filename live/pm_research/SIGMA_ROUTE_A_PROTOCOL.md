@@ -154,3 +154,39 @@ OOS coefficients/residual scales. It cannot authorize probability-level use.
 The identical protocol must be rerun after ten OOS test days; changing a gate,
 tolerance, exclusion or conditioning cell creates a new protocol version and
 must be reported as such.
+
+## Addendum 2026-08-21 — exclusion ledger (protocol-neutral)
+
+Exclusions were a bare `Counter`, so the accepted-versus-excluded activity
+comparison that this protocol and the collector audit both require could not be
+run at all. The script now records, for every dropped window: reason, slug, coin,
+`window_start`, the horizon where applicable, observed predictor ages for
+staleness drops, and a `realised_bps` activity proxy. The same `realised_bps` is
+recorded on retained rows so the two sides are directly comparable — a one-sided
+ledger cannot answer the question it exists for.
+
+**This does not create a new protocol version.** It changes no gate, tolerance,
+exclusion or conditioning cell; it only writes down decisions that were already
+being made. Verified by A/B on identical data with the change stashed and
+restored: exclusions **byte-identical** (9 reason codes, 591 total), 14,224
+admissible rows identical, 10,688 OOS rows identical, **all 42 fits identical**.
+
+### First read, preliminary and confounded
+
+| set | n | median realised | vs retained |
+|---|---:|---:|---:|
+| retained | 14,224 | 20.64 bps | — |
+| `s30_window_coverage` | 397 | 18.14 bps | 0.88x |
+| `stale_target_boundary` | 42 | 17.04 bps | 0.83x |
+| `r120:stale_predictor` | 14 | 17.98 bps | 0.87x |
+
+Excluded windows are **not busier** than retained ones — which is the opposite of
+the CLOB `1013` pattern and argues these exclusions are closer to MAR than MNAR.
+
+**Do not bank that yet.** `realised_bps` is a max-minus-min range over the ticks
+actually present, and coverage-excluded windows have *fewer* ticks by
+construction, which mechanically shrinks an observed range. The confound pushes
+in exactly the direction observed, so the true ratio is ≥ the figure shown and
+may well be ~1. Before this is a finding it needs a tick-count-normalised
+statistic, day-clustered intervals, and the counts are single-digit for the
+per-horizon reasons.
