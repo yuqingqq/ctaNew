@@ -1,0 +1,95 @@
+protocol: FLOW_MODEL_V3
+status: FROZEN_FOR_FORWARD_EVALUATION
+frozen_at: '2026-08-21T06:16:40Z'
+design_data_through: '2026-08-21T23:59:59Z'
+primary_evaluation_start: '2026-08-22T00:00:00Z'
+research_only: true
+
+universe:
+  coins: [btc, eth, sol, xrp, doge, bnb, hype]
+  pooling: DIAGNOSTIC_ONLY
+  primary_verdict: PER_COIN
+
+state:
+  price_state: UP_BOOK_MIDPOINT
+  knowledge_lag_ms: 250
+  interval: HALF_OPEN
+  execution_price_is_mark: true
+  gap_policy: KILL_STATE_REQUIRE_NEW_QUOTE
+  minimum_price_bin_dwell_s: 60
+  price_edges: [0.0, 0.05, 0.15, 0.35, 0.65, 0.85, 0.95, 1.0]
+  remaining_time_bands_s:
+    BODY: [60, 300]
+    TERMINAL: [0, 60]
+
+process:
+  arrival_identity: LAST_TRADE_PRICE_AGGREGATE
+  event_types: [MICRO_002, MARKET]
+  micro_size_shares: 0.02
+  total_intensity_unit: EVENTS_PER_SECOND
+  side_role: CONDITIONAL_MARK
+  monetary_mark: SIZE_SHARES_TIMES_NATIVE_EXECUTION_PRICE
+  monetary_mark_unit: USDC_PER_ARRIVAL
+  notional_throughput_unit: USDC_PER_SECOND
+  notional_throughput_is_derived: true
+  micro_market_independence: TESTED_NULL_NOT_ASSUMPTION
+
+baseline:
+  nesting: [B0_R, B1_P_GIVEN_R_BAND, B2_TICK_TAIL, B3_BOOK, M1_TYPE, M2_SIDE, M3_NOTIONAL_MARK]
+  retention_metric: FORWARD_NEGATIVE_LOG_LIKELIHOOD
+  retention_rule: DAY_BLOCK_BOOTSTRAP_95_PERCENT_UPPER_DELTA_BELOW_ZERO
+
+hawkes:
+  admitted_only_after_full_baseline: true
+  minimum_complete_primary_days: 10
+  baseline_time_change_required: true
+  operational_time_unit: ONE_EXPECTED_BASELINE_ARRIVAL
+  multitype_baseline: JOINT_REFIT_TYPE_BASELINES_WITH_MEAN_TOTAL_RATE_ONE
+  admission_test_correction: HOLM_ACROSS_COINS_AND_TESTS
+  admission_direction: RESIDUAL_CLUSTERING
+  candidate_half_lives_operational: [0.25, 0.5, 1, 2, 5, 10]
+  warmup:
+    minimum_calendar_s: 60
+    minimum_operational_u: 60
+  carry_history_across_adjacent_markets: true
+  gap_policy: RESET_AND_WARM_UP
+  stationarity:
+    univariate_branching_upper: 1.0
+    multitype_spectral_radius_upper: 1.0
+  retention:
+    forward_nll_bootstrap_upper_below_zero: true
+    branching_bootstrap_upper_below_one: true
+    max_ks_worsening: 0.01
+    admitting_cluster_test_must_clear: true
+
+evaluation:
+  unit: COMPLETE_UTC_DAY
+  schedule: EXPANDING_WINDOW_DAY_HELD_OUT
+  require_fit_data_through_before_evaluation_day: true
+  bootstrap_unit: UTC_DAY
+  minimum_complete_primary_days_per_coin: 10
+  multiplicity: HOLM
+  diagnostics:
+    - EXP1_KS_MAX_CDF_DEVIATION
+    - TRANSFORMED_SHORT_GAP_EXCESS_LT_0_25
+    - LJUNG_BOX_LAGS_1_TO_10
+    - MARK_RANDOMIZED_QUANTILE_RESIDUALS
+
+reference_snapshot:
+  note: Descriptive design evidence only; derived JSON is local and gitignored.
+  artifacts:
+    canonical_plan:
+      path: live/pm_research/plans/BE_FLOWANDFILLS_MODEL_PLAN.md
+      sha256: 52682906f060fb4de5c6ba10de3e078a76eeb9996f18163bf3b0a954a757acc0
+    measurement_code:
+      path: live/pm_research/flow_intensity.py
+      sha256: 49b22e9071b5d3d6362d5adf370b47485e255466a080634cad933450b987e807
+    results_note:
+      path: live/pm_research/FLOW_INTENSITY_RESULTS.md
+      sha256: 0ddf28093362ecb34b6e8d747996143a356b602c464154690c25e73efa52de3c
+    empirical_fr:
+      path: data/pm_5min/derived/flow_fr.json
+      sha256: 245cc253b2463b6489f8469bbc99f15b9ca049fec927b079fce8e43839bf8dd2
+    corrected_same_state_fp:
+      path: data/pm_5min/derived/flow_fp.json
+      sha256: 347f0f53fce5cb7737007232a3039943531964bbd8a048b73a0afcc04a8507dd

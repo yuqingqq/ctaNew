@@ -3,12 +3,12 @@ name: Polymarket Crypto 5-min Markets
 phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
-updated: 2026-08-21 (session 3 close-out — sigma infrastructure complete; OOS day 1 of 10)
+updated: 2026-08-21 (flow Revision 3 frozen; corrected same-state f_p measured; contracts v21)
 
 flags:
   collector_running: true    # One price process and one CLOB process; fresh.
   sigma_infra_pipeline: complete-awaiting-eligible-day # Research infrastructure
-                             # is complete through contracts v20: immutable
+                             # is complete through contracts v21: immutable
                              # Tier-1 daily/all-coin batches, paired leak canary,
                              # model-free Tier-2 markouts, and the fixed-grid
                              # calibration scaffold. This is engineering
@@ -27,6 +27,30 @@ flags:
                              # never count as research evidence.
   tier2_complete_runs: 0    # No real Tier-2 result yet; infrastructure selftests
                              # and the partial smoke validate wiring only.
+  flow_model_revision: 3-frozen # Canonical plan is
+                             # plans/BE_FLOWANDFILLS_MODEL_PLAN.md and the
+                             # machine-readable freeze is
+                             # FLOW_MODEL_PROTOCOL_V3.yaml. Primary evaluation
+                             # begins 2026-08-22 and needs 10 complete forward
+                             # UTC days per coin. Ex-micro MARKET is a labelled
+                             # subprocess; independence from MICRO_002 is a
+                             # tested null, not a prerequisite. Side and native-
+                             # price notional are conditional marks. Only count
+                             # intensity has a point-process compensator.
+  flow_fp_state_join: corrected-descriptive # The first f_p is WITHDRAWN: its
+                             # numerator used folded execution-price bins while
+                             # exposure used midpoint bins. Schema v2 uses the
+                             # same 250ms-lagged Up-midpoint state for both and
+                             # kills stale state at gaps. On the six-window
+                             # design sample, execution/state bins disagree on
+                             # 6.9% of BTC arrivals and 38.1% of HYPE arrivals.
+                             # Selftest: 31 checks. This is design evidence, not
+                             # a fitted baseline or forward result.
+  flow_hawkes: not-admitted-awaiting-baseline-and-days # Optional residual only.
+                             # Requires full per-coin baseline time change,
+                             # residual-clustering rejection after Holm, and >=10
+                             # complete primary days. No Hawkes parameters have
+                             # been fitted or validated.
   clob_1013_is_venue_side: true # RESOLVED 17:46:41 UTC by clob_v3_1's
                              # discriminator, on its first 1013: ws_ever_paused
                              # = FALSE and ws_queue_depth_max = 133 out of a
@@ -217,17 +241,15 @@ flags:
                              #     directionally; this is T3's known-answer
                              #     validation stratum PASSING)
                              # THE RESULT THAT MATTERS, and it needed R-DUAL to
-                             # see: EXCLUDING the single-actor 0.02 class, the
-                             # PER-FILL maker edge is NEGATIVE (-0.211 c) while
-                             # share-weighted is unchanged (+0.172). Count-
-                             # weighted maker edge is positive ONLY because of
-                             # one address (+1.987 c/fill on 17.1% of fills) --
-                             # and that counterparty carries 0.0145% OF NOTIONAL,
-                             # so the edge against it is UN-HARVESTABLE by
-                             # construction (tens of dollars across two days).
-                             # ON REAL FLOW, MAKERS LOSE PER FILL. A single-
-                             # weighting spec would have reported "+0.165 c,
-                             # makers profitable" and never revealed this.
+                             # see: excluding the single-actor 0.02 class changes
+                             # the point estimate from +0.165 to -0.211 c/fill,
+                             # while share weighting remains +0.172. ALL real-
+                             # flow pooled and per-coin 95% intervals span zero,
+                             # even with window clustering that understates day-
+                             # level uncertainty. Therefore the maker-edge sign
+                             # is UNDETERMINED; "makers lose on real flow" is
+                             # withdrawn. The 0.02 class is positive but carries
+                             # only 0.0145% of notional and is unharvestable.
                              # PER-COIN THE POOLED SIGN DOES NOT HOLD: share-
                              # weighted in-window is NEGATIVE on bnb (-0.476),
                              # sol (-0.628) and eth (-0.008). Report per-coin as
@@ -585,7 +607,7 @@ tasks:
     status: infrastructure-complete-awaiting-eligible-day
     notes: |
       Tier-1 daily/all-coin orchestration and Tier-2 markout/calibration
-      derivation are complete under contracts v20. Measurement and evaluation
+      derivation are complete under contracts v21. Measurement and evaluation
       timers are installed, enabled and verified. No real receipt existed at
       this checkpoint because 2026-08-20 requires the closed 2026-08-21
       neighbor; partial smoke outputs are isolated and are not evidence.

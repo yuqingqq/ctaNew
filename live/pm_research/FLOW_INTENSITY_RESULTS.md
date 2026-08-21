@@ -1,6 +1,7 @@
 # Flow model — `f_r` and `f_p`, measured
 
-Probe: `flow_intensity.py` (24 selftest checks, incl. flat/ramp vacuity controls).
+Probe: `flow_intensity.py` (31 selftest checks, including same-state, lag, gap,
+and flat/ramp vacuity controls).
 Scope: `clob_v3_1` covered set, **945 windows, 135 per coin**, 35 gap-touched,
 exposure-corrected with exact gap boundaries. 423,134 folded arrivals.
 
@@ -14,15 +15,15 @@ computable; the window-clustered CIs shown **understate** true uncertainty.
 **The most consequential thing measured here, because the figure is already
 treated as established in the plan, in STATUS and in a commit message.**
 
-| coin | arrivals | micro (0.02) | micro % | **primary weighting** |
+| coin | arrivals | micro (0.02) | micro % | **raw all-event count status** |
 |---|---:|---:|---:|---|
-| btc | 270,404 | 5,417 | **2.0 %** | either; count is usable |
-| eth | 56,265 | 12,599 | 22.4 % | notional; count secondary |
-| sol | 24,977 | 7,426 | 29.7 % | notional; count secondary |
-| xrp | 24,107 | 14,444 | 59.9 % | **notional only** |
-| doge | 14,296 | 9,857 | 68.9 % | **notional only** |
-| bnb | 16,925 | 13,241 | 78.2 % | **notional only** |
-| hype | 16,160 | 14,538 | **90.0 %** | **notional only** |
+| btc | 270,404 | 5,417 | **2.0 %** | market-dominated |
+| eth | 56,265 | 12,599 | 22.4 % | mixed; type split required |
+| sol | 24,977 | 7,426 | 29.7 % | mixed; type split required |
+| xrp | 24,107 | 14,444 | 59.9 % | actor-dominated; diagnostic only |
+| doge | 14,296 | 9,857 | 68.9 % | actor-dominated; diagnostic only |
+| bnb | 16,925 | 13,241 | 78.2 % | actor-dominated; diagnostic only |
+| hype | 16,160 | 14,538 | **90.0 %** | actor-dominated; diagnostic only |
 | **pooled** | **423,134** | **77,522** | **18.3 %** | — |
 
 **BTC supplies 64 % of the pooled denominator.** The single-actor class runs from
@@ -32,11 +33,13 @@ largely **is** that actor.
 
 ### R-DUAL is not a uniform reporting convention
 
-Both weightings are not co-equal everywhere. On btc, count-weighted intensity is
-a market measurement. On hype it is not one at all — it is a measurement of one
-participant with a 10 % market residual. The `primary weighting` column above is
-binding: **above ~35 % micro share, count-weighted intensity may not be used as
-evidence about market flow**, only as a diagnostic reported beside notional.
+Raw count and notional throughput are not co-equal arrival intensities. On BTC,
+the raw all-event count is close to market flow. On HYPE it measures one actor
+with a 10% market residual. Above ~35% micro share, raw all-event counts may be
+used only as a type-mixture diagnostic. The labelled ex-micro `MARKET` count is
+still a legitimate cause-specific event process; its lower power must be stated.
+Empirical notional throughput is robust descriptive evidence, but it does not
+replace an event-count compensator.
 
 Sixth instance of the loop's denominator/population defect — a pooled statistic
 whose denominator is dominated by one member.
@@ -253,49 +256,78 @@ length untouched.
 
 ---
 
-## 6. `f_p` — hump-shaped, peaking mid-book
+## 6. Corrected `f_p` — lagged midpoint state on both sides of the ratio
 
-Arrivals/s per unified-price bin, dwell from the Up-token mid path.
-**Subsample: 6 windows per coin** (the quote stream is ~97 % of message volume).
+The first `f_p` result binned arrivals by folded **execution price** but dwell by
+the Up-book **midpoint**. That numerator/denominator state mismatch made the
+profile invalid, especially in wide books. It is withdrawn and replaced here.
+
+This result assigns both arrivals and dwell to the identical Up-midpoint state,
+admissible 250 ms after quote receipt. Execution price remains a mark. Collector
+gaps kill the current state; it is not resumed until a new quote matures through
+the lag. **Subsample: 6 deterministic windows per coin** (the quote stream is
+~97 % of message volume).
+
+### Join diagnostics
+
+| coin | raw arrivals | state-admitted | no state | execution/state bin mismatch |
+|---|---:|---:|---:|---:|
+| btc | 14,083 | 14,073 | 10 | 976 (6.9 %) |
+| eth | 3,640 | 3,640 | 0 | 372 (10.2 %) |
+| sol | 1,212 | 1,212 | 0 | 155 (12.8 %) |
+| xrp | 1,983 | 1,982 | 1 | 369 (18.6 %) |
+| doge | 843 | 843 | 0 | 168 (19.9 %) |
+| bnb | 892 | 892 | 0 | 164 (18.4 %) |
+| hype | 783 | 783 | 0 | 298 (38.1 %) |
+
+The mismatch column is not rejected data: it quantifies how often execution
+price would have selected a different bin. Its size confirms that the corrected
+state identity is material rather than cosmetic.
+
+Arrivals/s by lagged midpoint-state bin:
 
 ```
 p-bin      [0,.05) [.05,.15) [.15,.35) [.35,.65) [.65,.85) [.85,.95) [.95,1]
-btc          2.24    8.22      9.54     10.05     12.72     7.60      3.27
-eth          0.20    2.23      3.18      2.00      2.68     3.34      0.95
-sol          0.26    1.35      0.92      0.92      0.85     1.02      0.40
-xrp          0.21    1.54      1.77      1.31      1.84    FENCED    FENCED
-bnb          0.06    0.71      0.77      0.61      0.91     0.77      0.15
-doge         0.07    0.71      1.10      0.70      0.70     0.48      0.15
-hype         0.07    0.58      0.64      0.64      0.70    FENCED     0.01
+btc          2.36    8.09      9.90      9.86     13.09     7.49      2.95
+eth          0.22    2.36      3.17      2.01      2.68     3.34      0.84
+sol          0.23    1.34      0.95      0.95      0.89     0.89      0.41
+xrp          0.22    1.39      1.81      1.33      1.80    FENCED    FENCED
+bnb          0.06    0.61      0.78      0.67      0.86     0.55      0.16
+doge         0.08    0.73      1.05      0.70      0.73     0.43      0.13
+hype         0.06    0.49      0.79      0.57      0.86    FENCED     0.04
 ```
 
-Intensity is **low in both extreme tails and peaks across the middle**.
+The corrected descriptive profile remains low in the extreme tails and higher
+through the middle. It is not yet a fitted conditional `f_p`: price and
+remaining time are dependent, so Revision 3 requires `f_p(p_state | r_band)` on
+strictly forward days.
 
 **FENCED bins — minimum dwell 60 s.** Rates off negligible dwell are excluded,
-not reported: `xrp [.95,1]` has **0 s** of dwell, `xrp [.85,.95)` **6 s**, and
-`hype [.85,.95)` **9 s** — the last produced a spurious 3.72/s that alone drove
-a `shape_ratio` of 295. A ratio off 9 seconds of denominator is noise wearing a
-number. Dwell per bin is recorded in `data/pm_5min/derived/flow_fp.json`; every
-reported cell above clears the fence.
+not reported: `xrp [.95,1]` has **0 s** of dwell, `xrp [.85,.95)` **5.6 s**, and
+`hype [.85,.95)` **8.6 s**. A ratio off seconds of denominator is noise wearing
+a number. Dwell and all join diagnostics are recorded in
+`data/pm_5min/derived/flow_fp.json`; every reported cell above clears the fence.
 
 **Not evidence about the fee.** The crossing cost `0.07·p(1−p)` is maximal at
 ATM and intensity is also high there. That is the **unidentified** comparison
 §3.1 already rules out — uncertainty peaks at ATM too — and it must not be cited
-in either direction. Recorded as a shape only.
+in either direction. Recorded as a descriptive shape only.
 
 ---
 
-## What this contradicts
+## What this forced Revision 3 to correct
 
-1. **Plan §2.2** — `f_r` as a dominant rising window clock. Count intensity does
-   **not** rise into settlement on any coin. Notional intensity **does** rise,
-   peaking in the second half — so the plan's direction is wrong for counts and
-   right-ish for notional, which are different claims about different series.
-2. **Plan R-DUAL section, STATUS, and commit `6a0e593`** — "16.3 % of events" is
-   pooled and btc-dominated. Per coin, 2.0 %–90.0 %.
-3. **"The count layer is contaminated"** — too weak for the alts, and R-DUAL is
-   not a uniform convention. Above ~35 % micro share, count-weighted intensity
-   is not a market measurement at all.
+1. The earlier plan's `f_r` as a dominant rising window clock. Count intensity
+   does **not** rise into settlement on any coin. Notional throughput can have a
+   different shape because notional is a conditional mark, not a second count
+   intensity.
+2. The pooled "16.3 % of events" claim in earlier artifacts. The corrected
+   per-coin range is 2.0 %–90.0 %, with BTC dominating the pool.
+3. The original marginal `f_p`, now withdrawn because its numerator and
+   denominator did not use the same state.
+4. The claim that independence is required before estimating ex-micro flow.
+   Revision 3 instead treats it as a labelled subprocess and tests cross-type
+   dependence after cause-specific baseline time changes.
 
 ## What is NOT established
 

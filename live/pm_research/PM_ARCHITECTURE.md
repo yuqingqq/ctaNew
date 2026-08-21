@@ -1,7 +1,7 @@
 # PM_ARCHITECTURE — structure for P-2026-003
 
 The explanatory prose baseline is version 12 (2026-08-20); the machine-readable
-canonical contract is now **v20**. Versions 13–16 landed the sigma route and v17
+canonical contract is now **v21**. Versions 13–16 landed the sigma route and v17
 lands the measurement-infrastructure boundary: nominal event/knowledge clocks,
 strict source profiles, factual coverage separated from admissibility decisions,
 and DA-Normalize/DA-Coverage/DA-State ownership. Version 18 adds point-in-time
@@ -10,6 +10,9 @@ DA-Canary/DA-Orchestrate boundary and a commit-last, single-writer batch contrac
 across the requested coin universe. Version 20 adds the full-batch-gated Tier-2
 boundary: model-free terminal markout, a point-in-time calibration scaffold,
 dual weighting, explicit unavailable rows, and a second commit-last receipt.
+Version 21 adds the marked flow-process boundary: same-state arrival/exposure
+assignment, per-coin event intensity, conditional side/notional marks, derived
+USDC throughput, and a forward-gated optional Hawkes residual.
 When this prose and `contracts/contracts.yaml`
 differ, the YAML remains authoritative. Score history on the 13-change replay:
 v1 5/3/5 · v2 7/4/2 · v4 9/2/2 · v5 9/3/1 · v6–v10 11/0/2 · **v11 11/1/1**
@@ -69,6 +72,7 @@ Naming: SP/DA/BE/DE/EV/OP modules; `EXP-*` experiments.
 | **R-GROSS** | terminal maker markout is the model-free gross identity; websocket fee zero is never applied |
 | **R-DUAL** | every economic markout summary reports both per-fill and share-weighted estimates per coin and phase |
 | **R-ONEROW** | calibration has exactly one row per window/frozen horizon; unavailable quotes remain named rows |
+| **R-FLOW** | flow arrivals and exposure share one lagged knowledge-admissible state; only event intensity has a compensator; side/notional are marks; Hawkes is admitted only after a forward-valid baseline time change |
 
 ---
 
@@ -242,6 +246,17 @@ staleness }` · **BE-FlowAndFills**:
 evaluate(action_set, StateView, SelfState, horizon) -> Uncertain[ActionOutcome] | Unavailable
 ```
 pair-aware by construction (the PM book is unified across the token pair).
+
+The Revision 3 flow seam is a per-coin marked point process. `DA-FlowNormalize`
+materializes one `FlowArrival` per `last_trade_price` aggregate and joins it to
+the same 250 ms-lagged midpoint state used for exposure. `BE-FlowFit` fits
+events/s and the conditional type/side/monetary-mark laws; USDC/s is derived as
+arrival intensity times expected native-price notional. `MICRO_002` and
+`MARKET` are labelled subprocesses—independence is a tested null, not a
+prerequisite for estimating either. A `HawkesResidualFit` is optional and may be
+`NOT_ADMITTED`; it requires ten complete forward days and residual clustering
+after baseline time change. The decision-facing `BE-FlowAndFills` remains
+`Unavailable` until forward-valid artifacts exist.
 
 **BE-Competition (NEW — M4-2)** — the rival/equilibrium state the incentive
 theory needs:
@@ -485,13 +500,17 @@ artifact_hash, frozen_at}` forming a **precondition DAG**; **STOP** is a first-c
 gate with `on_fail = HALT_PROGRAM`, a named owner and a review date.
 `EV-Attribution` decomposes over §7; read by nobody. `EV-Replay` builds a
 ReplayEnv. `OP-LatencyBudget`: four legs, ack unobserved.
-`PM_PREREG.md` does not exist — nothing is frozen yet.
+The flow protocol is frozen in `FLOW_MODEL_PROTOCOL_V3.yaml`; this does not
+freeze or authorize the still-unbuilt decision/action layers.
 
 ## 11. Build order (demand-driven)
 1. `Known[V]` + `t_known_prov` + `Unavailable` in DA (`recv_ns` is on disk).
 2. EV-Markout / EV-Calibration Tier-2 artifacts on complete `full` batches.
-3. EXP-IMPACT (AS partition sign) · EXP-BLEND (belief constituents).
-4. `L_adv` + `DE-Allocator` + STOP gate before any order.
+3. Accumulate ten forward days; fit/score the per-coin B0–B3 flow baseline and
+   M1–M3 conditional marks under the frozen Revision 3 protocol.
+4. Fit a Hawkes residual only for coins that pass its admission gate.
+5. EXP-IMPACT (AS partition sign) · EXP-BLEND (belief constituents).
+6. `L_adv` + `DE-Allocator` + STOP gate before any order.
 
 ## 12. Implementation status (SHOULD-FIX 6 — v5 claimed marking, did none)
 
@@ -500,7 +519,8 @@ ReplayEnv. `OP-LatencyBudget`: four legs, ack unobserved.
 | DA-Feeds | PMMarketWS, PMPricesWS, BinanceWS, GammaREST, ClobREST | PolygonRPC |
 | DA-Discovery | collect_pm discovery loop | — |
 | DA-Normalize / DA-State / DA-Settlement | Tier-1 v3, coverage, point-in-time views, closed-day coordinator | settlement spec adapter |
-| BE-* | — | all (Target, Uncertainty, Belief, FlowAndFills, Competition, ScenarioProvider) |
+| BE-FlowFit | corrected descriptive `f_r`/same-state `f_p` measurement only | B0–B3/M1–M3 forward fit; optional gated Hawkes residual |
+| other BE-* | — | Target, Uncertainty, Belief, FlowAndFills decision seam, Competition, ScenarioProvider |
 | DE-* | — | all |
 | EV-Markout / EV-Calibration | Tier-2 terminal markout + normalized book scaffold | fitted/scored arms after sufficient days |
 | ControlSolver | — | ClosedFormGLFT, PerLevel, HJBQVI |

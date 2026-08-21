@@ -1,5 +1,14 @@
 # FLOW_MODEL_SPEC_REV2 — the respecification the measurement forces
 
+> **SUPERSEDED 2026-08-21.** This file is retained only as the audit trail for
+> the first descriptive fit. The authoritative specification is Revision 3 in
+> `plans/BE_FLOWANDFILLS_MODEL_PLAN.md`. In particular, Revision 3 corrects four
+> errors here: ex-micro estimation does not require independence; side is a
+> conditional mark rather than a covariate of total intensity; notional
+> throughput is derived from count intensity and the native-price monetary mark;
+> and the original `f_p` estimate is withdrawn because numerator and denominator
+> used different price states. Do not implement from this document.
+
 Revision spec for `plans/BE_FLOWANDFILLS_MODEL_PLAN.md` §2. **Not the plan
 itself** — folding this in is a separate step, and the plan is being written by
 another agent.

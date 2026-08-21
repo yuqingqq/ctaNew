@@ -7,15 +7,16 @@ growth to itself and adopts on in-sample fit, so the clock is measured FIRST and
 anything else is tested against it later.
 
 Guards carried from the session, each paid for:
-  * R-DUAL      -- every intensity reported count- AND notional-weighted, with
-                   the 0.02 single-actor class separated and published beside.
+  * R-DUAL      -- arrival counts and descriptive notional throughput are both
+                   reported, with distinct units and the 0.02 event type shown.
   * FOLD        -- trades are single-sided; the pair book is one book. Down-token
                    trades enter the unified frame at 1-p with side flipped.
                    Skipping this halves every estimate.
   * ARRIVALS    -- one `last_trade_price` == one taker-order aggregate. Counting
                    OrderFilled legs would inject a state-dependent multiplicity.
-  * DENOMINATOR -- numerator and denominator are computed over the SAME window
-                   set. Excluding the micro class changes counts, never exposure.
+  * DENOMINATOR -- numerator and denominator use the SAME window and state
+                   intervals. Excluding the micro class changes counts, never
+                   exposure.
   * EXPOSURE    -- integrate over observed time using exact gap boundaries. This
                    fixes the DENOMINATOR bias and NOT the selection bias.
   * ERA         -- gap-ledger work is clob_v3_1 only; before 2026-08-20 14:50:21
@@ -29,6 +30,7 @@ Guards carried from the session, each paid for:
 from __future__ import annotations
 
 import argparse
+import bisect
 import collections
 import json
 import math
@@ -45,7 +47,8 @@ MARKETS = PM / "markets.jsonl"
 OUT_MD = Path(__file__).with_name("FLOW_INTENSITY_RESULTS.md")
 
 WINDOW_S = 300.0
-MICRO_SIZE = 0.02          # the single-actor class: 16.3% of events, 0.0145% of notional
+QUOTE_STATE_LAG_S = 0.250  # frozen; shared by numerator and exposure
+MICRO_SIZE = 0.02          # labelled single-actor class; prevalence varies by coin
 MICRO_TOL = 1e-9
 ERA = "clob_v3_1"
 DAYS = ("20260819", "20260820", "20260821")
@@ -248,7 +251,11 @@ def _archive_paths() -> dict[str, Path]:
 # --------------------------------------------------------------------------
 
 def window_trades(path: Path, up_id: str, down_id: str) -> list[dict[str, Any]]:
-    """Folded taker arrivals for one window. One row per last_trade_price event."""
+    """Folded taker arrivals for one window. One row per last_trade_price event.
+
+    Execution price is a mark, not the state used to condition ``f_p``.  The
+    latter is joined separately from the lagged midpoint-state timeline.
+    """
     try:
         ws = int(path.name.split(".jsonl")[0].rsplit("-", 1)[1])
     except (IndexError, ValueError):
@@ -285,22 +292,109 @@ def window_trades(path: Path, up_id: str, down_id: str) -> list[dict[str, Any]]:
                 continue
             rows.append({
                 "elapsed": el,
-                "p": fold_price(px, is_down),
+                "native_price": px,
+                "exec_p_up": fold_price(px, is_down),
                 "side": fold_side(side, is_down),
                 "size": sz,
-                "notional": sz * px,        # USDC actually paid, frame-invariant
+                "notional": sz * px,        # USDC actually paid; do not use folded p
                 "micro": abs(sz - MICRO_SIZE) < MICRO_TOL,
             })
     return rows
 
 
-def window_mid_dwell(path: Path, up_id: str,
-                     gaps: Sequence[tuple[float, float]]) -> list[float]:
-    """Seconds the Up-token mid spent in each p-bin, gap intervals removed."""
+def state_segments_from_points(
+    points: Sequence[tuple[float, float]],
+    gaps: Sequence[tuple[float, float]],
+    lag_s: float = QUOTE_STATE_LAG_S,
+) -> list[tuple[float, float, float]]:
+    """Build half-open, knowledge-admissible ``(start, end, mid)`` segments.
+
+    A quote received at ``t`` becomes usable only at ``t + lag_s``.  A
+    collector gap invalidates the current state at its start; that state is
+    never carried across the gap.  Only a later quote can establish a new
+    segment.  This is intentionally stricter than subtracting gap duration
+    from a stale quote interval.
+    """
+    if lag_s < 0:
+        raise ValueError("state lag must be non-negative")
+
+    # Last quote wins when multiple updates share one receive timestamp.
+    effective: list[tuple[float, float]] = []
+    ordered = sorted(
+        ((float(t) + lag_s, float(mid)) for t, mid in points),
+        key=lambda point: point[0],
+    )
+    for t, mid in ordered:
+        if not (0.0 <= mid <= 1.0) or t > WINDOW_S:
+            continue
+        if effective and abs(effective[-1][0] - t) < 1e-12:
+            effective[-1] = (t, mid)
+        else:
+            effective.append((t, mid))
+
+    clipped_gaps = sorted(
+        (max(0.0, float(g0)), min(WINDOW_S, float(g1)))
+        for g0, g1 in gaps if g1 > g0 and g1 > 0.0 and g0 < WINDOW_S
+    )
+    out: list[tuple[float, float, float]] = []
+    for i, (raw_start, mid) in enumerate(effective):
+        start = max(0.0, raw_start)
+        end = effective[i + 1][0] if i + 1 < len(effective) else WINDOW_S
+        end = min(WINDOW_S, end)
+        if end <= start:
+            continue
+
+        received = raw_start - lag_s
+        if any(g0 < start and g1 > received for g0, g1 in clipped_gaps):
+            # A disconnect between receipt and admissibility invalidates the
+            # quote even when the 250 ms lag would otherwise mature after the
+            # reconnect.
+            continue
+
+        # The first gap touching this quote's lifetime kills it.  In
+        # particular, a state whose admissibility time lands inside a gap does
+        # not reappear at gap_end.
+        first_touch = next(
+            ((g0, g1) for g0, g1 in clipped_gaps if g1 > start and g0 < end),
+            None,
+        )
+        if first_touch is not None:
+            g0, _ = first_touch
+            if g0 <= start:
+                continue
+            end = min(end, g0)
+        if end > start:
+            out.append((start, end, mid))
+    return out
+
+
+def state_mid_at(segments: Sequence[tuple[float, float, float]],
+                 elapsed: float) -> float | None:
+    """Return the midpoint state on the half-open segment containing elapsed."""
+    starts = [s[0] for s in segments]
+    i = bisect.bisect_right(starts, elapsed) - 1
+    if i >= 0 and segments[i][0] <= elapsed < segments[i][1]:
+        return segments[i][2]
+    return None
+
+
+def state_dwell(segments: Sequence[tuple[float, float, float]]) -> list[float]:
+    """Exposure seconds by midpoint-state bin."""
+    dwell = [0.0] * (len(FP_EDGES) - 1)
+    for start, end, mid in segments:
+        dwell[p_bin(mid)] += end - start
+    return dwell
+
+
+def window_mid_segments(path: Path, up_id: str,
+                        gaps: Sequence[tuple[float, float]]) -> list[
+                            tuple[float, float, float]
+                        ]:
+    """Lagged Up-midpoint state segments, with stale state killed at gaps."""
     try:
         ws = int(path.name.split(".jsonl")[0].rsplit("-", 1)[1])
     except (IndexError, ValueError):
-        return [0.0] * (len(FP_EDGES) - 1)
+        return []
     pts: list[tuple[float, float]] = []
     for line in _gz_lines(path):
         if QUOTE_MARK not in line:
@@ -332,18 +426,40 @@ def window_mid_dwell(path: Path, up_id: str,
                 if not (0.0 <= b < a <= 1.0):
                     continue
                 pts.append((el, (a + b) / 2.0))
-    if not pts:
-        return [0.0] * (len(FP_EDGES) - 1)
-    pts.sort()
-    dwell = [0.0] * (len(FP_EDGES) - 1)
-    for i, (t0, mid) in enumerate(pts):
-        t1 = pts[i + 1][0] if i + 1 < len(pts) else WINDOW_S
-        seg = t1 - t0
-        if seg <= 0:
+    return state_segments_from_points(pts, gaps)
+
+
+def fp_window_counts(
+    rows: Sequence[dict[str, Any]],
+    segments: Sequence[tuple[float, float, float]],
+) -> tuple[list[float], list[float], list[float], dict[str, int]]:
+    """Bin arrivals and exposure on the identical lagged midpoint state.
+
+    ``exec_p_up`` is retained only as an execution mark and a mismatch
+    diagnostic.  It never selects the conditioning bin.
+    """
+    n_bins = len(FP_EDGES) - 1
+    cnt = [0.0] * n_bins
+    cnt_ex = [0.0] * n_bins
+    notl = [0.0] * n_bins
+    diag = {"total": len(rows), "admitted": 0, "no_state": 0,
+            "exec_state_bin_mismatch": 0, "micro_admitted": 0}
+    for row in rows:
+        mid = state_mid_at(segments, float(row["elapsed"]))
+        if mid is None:
+            diag["no_state"] += 1
             continue
-        lost = sum(overlap(t0, t1, g0, g1) for g0, g1 in gaps)
-        dwell[p_bin(mid)] += max(0.0, seg - lost)
-    return dwell
+        i = p_bin(mid)
+        diag["admitted"] += 1
+        if p_bin(float(row["exec_p_up"])) != i:
+            diag["exec_state_bin_mismatch"] += 1
+        cnt[i] += 1.0
+        notl[i] += float(row["notional"])
+        if row["micro"]:
+            diag["micro_admitted"] += 1
+        else:
+            cnt_ex[i] += 1.0
+    return cnt, cnt_ex, notl, diag
 
 
 # --------------------------------------------------------------------------
@@ -464,10 +580,12 @@ def fr(n_boot: int = 2000, seed: int = 20260821,
 
 def fp(per_coin: int = 10, n_boot: int = 2000,
        seed: int = 20260821) -> dict[str, Any]:
-    """Arrival intensity per unified-price bin, with dwell time as exposure.
+    """Arrival intensity per lagged midpoint-state bin.
 
-    Needs the quote stream for dwell, which is ~97% of message volume, so this
-    runs on a deterministic subsample of windows per coin. Scope is reported.
+    Numerator and exposure are assigned by the identical knowledge-admissible
+    state timeline.  Execution price is a mark only.  The quote stream is ~97%
+    of message volume, so this runs on a deterministic subsample; scope and
+    state-join diagnostics are reported.
     """
     paths = _archive_paths()
     toks = token_map()
@@ -481,29 +599,22 @@ def fp(per_coin: int = 10, n_boot: int = 2000,
             picked[coin].append(slug)
 
     n_bins = len(FP_EDGES) - 1
-    res: dict[str, Any] = {"edges": FP_EDGES, "per_coin_target": per_coin,
-                           "coins": {}}
+    res: dict[str, Any] = {"schema_version": 2, "edges": FP_EDGES,
+                           "state": "up_midpoint", "state_lag_s": QUOTE_STATE_LAG_S,
+                           "per_coin_target": per_coin, "coins": {}}
     for coin, slugs in sorted(picked.items()):
         pw_cnt, pw_ex, pw_notl = [], [], []
-        n_tr = n_mic = 0
+        diag_total = collections.Counter()
         for slug in slugs:
             up, dn = toks[slug]
             g = gaps.get(slug, [])
-            dwell = window_mid_dwell(paths[slug], up, g)
+            segments = window_mid_segments(paths[slug], up, g)
+            dwell = state_dwell(segments)
             if sum(dwell) <= 0:
                 continue
             rows = window_trades(paths[slug], up, dn)
-            cnt = [0.0] * n_bins
-            cnt_ex = [0.0] * n_bins
-            notl = [0.0] * n_bins
-            for r in rows:
-                i = p_bin(r["p"])
-                cnt[i] += 1.0
-                notl[i] += r["notional"]
-                if not r["micro"]:
-                    cnt_ex[i] += 1.0
-            n_tr += len(rows)
-            n_mic += sum(1 for r in rows if r["micro"])
+            cnt, cnt_ex, notl, diag = fp_window_counts(rows, segments)
+            diag_total.update(diag)
             pw_cnt.append((cnt, dwell))
             pw_ex.append((cnt_ex, dwell))
             pw_notl.append((notl, dwell))
@@ -511,7 +622,13 @@ def fp(per_coin: int = 10, n_boot: int = 2000,
             continue
         prof = profile_ratio(pw_cnt)
         res["coins"][coin] = {
-            "n_windows": len(pw_cnt), "n_trades": n_tr, "n_micro": n_mic,
+            "n_windows": len(pw_cnt),
+            "n_trades": diag_total["admitted"],
+            "n_trades_total": diag_total["total"],
+            "n_trades_state_admitted": diag_total["admitted"],
+            "n_trades_no_state": diag_total["no_state"],
+            "n_exec_state_bin_mismatch": diag_total["exec_state_bin_mismatch"],
+            "n_micro": diag_total["micro_admitted"],
             "dwell_s": [sum(w[1][i] for w in pw_cnt) for i in range(n_bins)],
             "count": {"profile": prof, "shape_ratio": shape_ratio(prof),
                       "ci": cluster_bootstrap(pw_cnt, n_boot, seed)},
@@ -611,6 +728,43 @@ def selftest() -> int:
     # 24: shape_ratio refuses to invent structure from a single bin.
     ok(math.isnan(shape_ratio([3.0])), "shape_ratio undefined on one bin")
 
+    # 25-29: f_p numerator and denominator share one lagged state.  Execution
+    # price is deliberately in the opposite tail and must remain only a mark.
+    seg = state_segments_from_points([(0.0, 0.10), (10.0, 0.90)], [], lag_s=0.25)
+    ok(seg == [(0.25, 10.25, 0.10), (10.25, WINDOW_S, 0.90)],
+       "quote state begins only after frozen lag")
+    row = {"elapsed": 1.0, "exec_p_up": 0.90, "notional": 5.0, "micro": False}
+    c, cx, nv, dg = fp_window_counts([row], seg)
+    ok(c[p_bin(0.10)] == 1.0 and c[p_bin(0.90)] == 0.0,
+       "arrival uses midpoint-state bin, not execution-price bin")
+    ok(cx[p_bin(0.10)] == 1.0 and nv[p_bin(0.10)] == 5.0
+       and dg["exec_state_bin_mismatch"] == 1,
+       "count, ex-micro count and notional share one state bin")
+    ok(abs(state_dwell(seg)[p_bin(0.10)] - 10.0) < 1e-12,
+       "denominator uses the same midpoint-state bin")
+
+    # A gap kills the old state; subtracting the gap and resuming the old quote
+    # would create a forbidden stale-state interval from 8.0 to 10.25.
+    gseg = state_segments_from_points([(0.0, 0.10), (10.0, 0.90)],
+                                      [(5.0, 8.0)], lag_s=0.25)
+    ok(gseg == [(0.25, 5.0, 0.10), (10.25, WINDOW_S, 0.90)]
+       and state_mid_at(gseg, 8.5) is None,
+       "state is not carried across collector gaps")
+
+    # 30: a trade without an admitted state is explicit, never silently binned.
+    _, _, _, no_state = fp_window_counts([
+        {"elapsed": 8.5, "exec_p_up": 0.10, "notional": 1.0, "micro": True}
+    ], gseg)
+    ok(no_state["no_state"] == 1 and no_state["admitted"] == 0,
+       "missing state is counted and rejected")
+
+    # 31: a quote received before a gap cannot mature after the reconnect.
+    interrupted = state_segments_from_points([(4.9, 0.10), (6.0, 0.90)],
+                                             [(5.0, 5.1)], lag_s=0.25)
+    ok(state_mid_at(interrupted, 5.2) is None
+       and state_mid_at(interrupted, 6.25) == 0.90,
+       "gap between quote receipt and lag maturity invalidates the quote")
+
     print(f"flow_intensity selftest: {checks} checks OK")
     return 0
 
@@ -666,7 +820,10 @@ def main() -> int:
         (PM / "derived").mkdir(parents=True, exist_ok=True)
         (PM / "derived/flow_fp.json").write_text(json.dumps(res, indent=1))
         for coin, d in res["coins"].items():
-            print(f"{coin:6s} n_win={d['n_windows']:3d} trades={d['n_trades']:6,} "
+            print(f"{coin:6s} n_win={d['n_windows']:3d} "
+                  f"admitted={d['n_trades_state_admitted']:6,}/"
+                  f"{d['n_trades_total']:6,} no_state={d['n_trades_no_state']:5,} "
+                  f"bin_mismatch={d['n_exec_state_bin_mismatch']:6,} "
                   f"shape={d['count']['shape_ratio']:.2f}")
             print("   dwell_s " + " ".join(f"{x:7.0f}" for x in d["dwell_s"]))
             print("   rate/s  " + " ".join(f"{x:7.3f}" for x in d["count"]["profile"]))

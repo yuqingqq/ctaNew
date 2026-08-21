@@ -1,4 +1,4 @@
-version: 20
+version: 21
 rules:
   R-SSOT:
     body: every canonical name has exactly one owning type/module
@@ -139,6 +139,22 @@ rules:
     - 'identity: unique CalibrationPanelRow key is (slug, r_s)'
     - 'complete_grid: each closed window has exactly the nine frozen r_s values'
     - 'no_silent_drop: unavailable or invalid quote states remain rows with a named quote_status'
+  R-FLOW:
+    body: flow is a per-coin marked point process; every conditional arrival and
+      its exposure use the same knowledge-admissible state, side and notional are
+      marks rather than total-intensity covariates, and a Hawkes residual is
+      admitted only after a forward-valid baseline time change
+    checks:
+    - 'same_state: FlowArrival.state and its exposure interval come from the same StateView with the frozen 250 ms lag; execution price never selects the state bin'
+    - 'gap_kills_state: a collector gap ends the admitted state and a new quote must mature through the lag before either numerator or exposure resumes'
+    - 'count_compensator_only: ArrivalIntensityFit is events/s; NotionalThroughput is USDC/s derived from intensity times a conditional monetary mark and has no point-process compensator'
+    - 'native_notional: FlowArrival.notional_usdc == size_shares * native_price'
+    - 'same_conditioning: NotionalThroughput intensity_ref and mark_law_ref share one conditioning_schema'
+    - 'side_is_mark: total arrival intensity does not consume the realized next-event side; side is conditional on an arrival or represented by reconciled cause-specific intensities'
+    - 'per_coin: primary fit and verdict are coin-scoped; pooling is diagnostic only'
+    - 'label_not_independence: MARKET is a labelled subprocess; micro/market independence is a tested null, not an estimation prerequisite'
+    - 'forward_only: fit_data_through < the first scored evaluation day'
+    - 'hawkes_gate: HawkesResidualFit requires a full-baseline TimeChangeDiagnostic, at least ten complete forward days, and a bootstrap spectral-radius upper bound below one'
 types:
   Known:
     generic:
@@ -1266,6 +1282,115 @@ types:
       manifest_hash: Hash
       partial: bool
       consumer_status: enum:REFUSE_PARTIAL|ELIGIBLE_INPUT_ONLY
+  FlowEventType:
+    variants:
+    - MICRO_002
+    - MARKET
+  FlowSide:
+    variants:
+    - BUY
+    - SELL
+  FlowModelStatus:
+    variants:
+    - DESCRIPTIVE
+    - PASS
+    - NOT_ADMITTED
+    - INSUFFICIENT_EVIDENCE
+    - MODEL_REFUTED
+  FlowState:
+    fields:
+      instrument: InstrumentId
+      coin: str
+      as_of: KnowledgeTime
+      r_s: float
+      p_up_mid: float
+      state_lag: Duration
+      tick: float
+      spread_ticks: float
+      touch_notional: float
+      imbalance_notional: float
+      source_view_hash: Hash
+    notes: one pre-arrival knowledge-admissible state shared by arrival assignment and exposure
+  FlowArrival:
+    fields:
+      event_id: ImmutableId
+      instrument: InstrumentId
+      state: FlowState
+      event_type: FlowEventType
+      side: FlowSide
+      token_side: enum:UP|DOWN
+      native_price: float
+      folded_execution_price_up: float
+      size_shares: float
+      notional_usdc: float
+      t_event: EventTime
+      t_known: KnowledgeTime
+      provenance: Provenance
+    notes: one last_trade_price aggregate; execution price, side, size and notional are marks
+  ArrivalIntensityFit:
+    fields:
+      artifact_id: ImmutableId
+      model_version: str
+      coin: str
+      event_type: FlowEventType?
+      unit: enum:EVENTS_PER_SECOND
+      conditioning_schema: Hash
+      spec_hash: Hash
+      fit_data_through: KnowledgeTime
+      evaluation_start: KnowledgeTime
+      status: FlowModelStatus
+  ConditionalMarkLaw:
+    fields:
+      artifact_id: ImmutableId
+      model_version: str
+      coin: str
+      event_type: FlowEventType?
+      mark: enum:SIDE|NATIVE_EXECUTION_PRICE|SIZE_SHARES|NOTIONAL_USDC
+      unit: enum:PROBABILITY|USDC_PER_ARRIVAL|SHARES_PER_ARRIVAL
+      conditioning_schema: Hash
+      spec_hash: Hash
+      fit_data_through: KnowledgeTime
+      evaluation_start: KnowledgeTime
+      status: FlowModelStatus
+  NotionalThroughput:
+    fields:
+      coin: str
+      value: float
+      unit: enum:USDC_PER_SECOND
+      conditioning_schema: Hash
+      intensity_ref: ImmutableId
+      mark_law_ref: ImmutableId
+      derived: bool
+      as_of: KnowledgeTime
+    notes: derived intensity times conditional monetary mark; never a point-process compensator
+  TimeChangeDiagnostic:
+    fields:
+      artifact_id: ImmutableId
+      baseline_ref: ImmutableId
+      coin: str
+      evaluation_days: int
+      exp1_ks_max_cdf_deviation: float
+      transformed_short_gap_excess: float
+      ljung_box_lag_10_p_holm: float
+      clustering_verdict: enum:REJECTS_UNIT_POISSON_CLUSTERING|NO_CLUSTERING_REJECTION|INSUFFICIENT_EVIDENCE
+      fit_data_through: KnowledgeTime
+      evaluation_start: KnowledgeTime
+  HawkesResidualFit:
+    fields:
+      artifact_id: ImmutableId
+      baseline_ref: ImmutableId
+      diagnostic_ref: ImmutableId
+      coin: str
+      event_types: list[FlowEventType]
+      branching_matrix: list[list[float]]
+      half_lives_operational: list[float]
+      spectral_radius_upper_95: float
+      evaluation_days: int
+      fit_data_through: KnowledgeTime
+      evaluation_start: KnowledgeTime
+      spec_hash: Hash
+      status: FlowModelStatus
+    notes: optional residual model in baseline operational time; never fitted as the clock baseline
   WealthLedger:
     fields:
       markout: float
@@ -1329,6 +1454,48 @@ types:
       resolutions: dict[InstrumentId, VenueOutcome]
       redemption_delay: Duration
 modules:
+  DA-FlowNormalize:
+    consumes:
+    - RawEvent
+    - StateView
+    - AdmissibilityDecision
+    produces:
+    - FlowArrival
+    - HealthEvent
+    ports:
+    - read_all
+    - telemetry_out
+    notes: offline research normalizer; joins arrivals and exposure to one frozen knowledge-admissible state and exposes no venue port
+  BE-FlowFit:
+    consumes:
+    - FlowArrival
+    - DatasetPartition
+    produces:
+    - ArrivalIntensityFit
+    - ConditionalMarkLaw
+    - NotionalThroughput
+    - TimeChangeDiagnostic
+    - HawkesResidualFit
+    - HealthEvent
+    ports:
+    - read_all
+    - artifact_resolver
+    - telemetry_out
+    notes: offline per-coin research fit under R-FLOW; Hawkes output may be NOT_ADMITTED and the module exposes no venue or action port
+  BE-FlowAndFills:
+    consumes:
+    - ActionSet
+    - StateView
+    - SelfState
+    - ArrivalIntensityFit
+    - ConditionalMarkLaw
+    produces: Uncertain[ActionOutcome] | Unavailable
+    ports:
+    - state_view
+    - rng
+    - artifact_resolver
+    - telemetry_out
+    notes: decision-facing seam only; remains unavailable until forward-valid artifacts exist and contains no venue adapter
   BE-Uncertainty:
     consumes:
     - ForecastRequest
@@ -1587,6 +1754,7 @@ prelude:
   - ImputationRuleId
   - AdmissibilityRuleId
 config_supplied:
+- ActionSet
 - ForecastRequest
 - CouplingGraph
 - ScenarioLossConstraint
