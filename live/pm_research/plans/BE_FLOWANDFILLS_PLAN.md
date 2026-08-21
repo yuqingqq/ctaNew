@@ -1,5 +1,10 @@
 # BE-FlowAndFills — design plan
 
+> **SUPERSEDED 2026-08-21.** Retained as the fill-model audit trail. Its queue
+> bracket and joint fill/markout insights are folded into canonical Revision 4
+> in `BE_FLOWANDFILLS_MODEL_PLAN.md`; its stale sigma, markout, fee and Hawkes
+> conclusions are not current. Do not implement directly from this file.
+
 Module planner's deliverable, P-2026-003. Refines §6 of `plans/PRELIMINARY_PLANS.md`.
 **Plan only — no implementation.** The canonical contract is the YAML block in §11.
 

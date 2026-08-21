@@ -1,9 +1,9 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-08-21, flow Revision 3 freeze. All work is on branch
+Updated: 2026-08-21, flow-and-fills Revision 4 development lane. All work is on branch
 **`mm-research`**; nothing is on `main`. Sigma remains **Revision 5 / PRICING
 HOLD**, while the offline measurement stack is complete through contracts
-**v21**. `route_a_v1` has one OOS test day; per-symbol `route_a_v2` is
+**v22**. `route_a_v1` has one OOS test day; per-symbol `route_a_v2` is
 pre-registered and begins primary evaluation on 2026-08-22. Neither is
 authorized for probability-level use.
 
@@ -26,7 +26,7 @@ sigma code untouched while days accrue and continue independent mechanism work.
 
 Reading order:
 1. `live/pm_research/PM_ARCHITECTURE.md` — the entry point; explanatory structure.
-2. `live/pm_research/contracts/contracts.yaml` (**v21**) — machine-readable
+2. `live/pm_research/contracts/contracts.yaml` (**v22**) — machine-readable
    source of truth for types. The prose defers to this file, not the
    other way round.
 3. `live/pm_research/MEASUREMENT_PIPELINE.md` and `EVALUATION_PIPELINE.md` —
@@ -57,14 +57,18 @@ Reading order:
    frozen spec. `--selftest` checks exact arithmetic under a **declared and
    still UNVERIFIED** sampling convention; it does not establish that convention
    against the Chainlink streams.
-16. `live/pm_research/plans/BE_FLOWANDFILLS_MODEL_PLAN.md` — **flow Revision 3,
-   canonical and frozen**; per-coin count intensity plus conditional marks,
-   with Hawkes only as a forward-gated residual.
-17. `live/pm_research/FLOW_MODEL_PROTOCOL_V3.yaml` — machine-readable freeze;
-   primary days begin 2026-08-22 and require 10 complete UTC days per coin.
-18. `live/pm_research/FLOW_INTENSITY_RESULTS.md` and `flow_intensity.py` —
+16. `live/pm_research/plans/BE_FLOWANDFILLS_MODEL_PLAN.md` — **flow-and-fills
+   Revision 4, canonical and frozen**; per-coin marked flow, execution reach,
+   observable queue bounds, and separate development/validation states.
+17. `live/pm_research/FLOW_MODEL_PROTOCOL_V4.yaml` — machine-readable freeze;
+   development fitting is allowed now while promotion still requires 10
+   complete forward UTC days per coin.
+18. `live/pm_research/FLOW_FILL_DEVELOPMENT_RESULTS.md` and
+   `flow_fill_development.py` — two-hour B0–B3/mark/Hawkes/fill development run;
+   explicitly not decision eligible.
+19. `live/pm_research/FLOW_INTENSITY_RESULTS.md` and `flow_intensity.py` —
    corrected same-state descriptive `f_r`/`f_p` evidence and executable guards.
-19. `live/pm_research/plans/` — BE_BELIEF, MEASUREMENT, PRELIMINARY, and
+20. `live/pm_research/plans/` — BE_BELIEF, MEASUREMENT, PRELIMINARY, and
    historical plan inputs.
 
 Before any book/trade/queue analysis, read
@@ -222,15 +226,17 @@ The v1/v2 failures remain useful provenance: v1 validated only BUY rows; v2 had
 473 validated clusters and missed its frozen sample/mismatch guards. Neither is
 retroactively called a pass. Full evidence is in `GFF1_RESULTS.md`.
 
-### Flow model Revision 3 — corrected, canonical, and frozen
+### Flow-and-fills Revision 4 — development runs now; validation still waits
 
 `plans/BE_FLOWANDFILLS_MODEL_PLAN.md` is now the only authoritative flow spec;
 `FLOW_MODEL_SPEC_REV2.md` is explicitly historical. The machine-readable freeze
-is `FLOW_MODEL_PROTOCOL_V3.yaml`, made before the primary period beginning
-2026-08-22. It requires 10 complete forward UTC days per coin. No baseline or
-Hawkes parameter has been fitted or validated yet.
+is `FLOW_MODEL_PROTOCOL_V4.yaml`, made before the primary period beginning
+2026-08-22. Revision 4 separates `DEVELOPMENT` from `VALIDATED`: existing hours
+may test the estimator and queue mapping now, while promotion still requires at
+least 10 complete forward UTC days per coin.
 
-Revision 3 fixes the model, not just its wording:
+Revision 4 retains the Revision 3 state corrections and closes the missing fill
+seam:
 
 - `lambda` is per-coin **event count intensity** in events/s. Side is a
   conditional mark, never the realized-next-side covariate in total intensity.
@@ -245,6 +251,13 @@ Revision 3 fixes the model, not just its wording:
   baseline and at least 10 forward days. Retention then requires forward NLL
   improvement, stable branching (`n<1` or spectral radius `<1`), and improved
   residual calibration.
+- Execution price and size are marks. For an exact frozen shadow action they
+  determine cumulative shares that reach the action level; unconditional
+  arrival rate never determines notional or fills by itself.
+- Public level-total L2 cannot identify exact queue position. Every action
+  therefore returns the optimistic front and conservative trades-only
+  back-displayed fill quantities. The midpoint is forbidden and collector-gap
+  paths remain explicit unavailable rows.
 
 The original `f_p` profile is **WITHDRAWN**. Its numerator used folded execution
 price while its denominator used midpoint dwell, so it did not estimate one
@@ -256,20 +269,30 @@ different bin for **6.9% of BTC** arrivals and **38.1% of HYPE** arrivals, which
 shows the defect was material. The replacement shape is descriptive only and
 is conditioned on `r` in the forward model.
 
-Contracts **v21** add R-FLOW, `FlowArrival`/`FlowState`, count-intensity,
-conditional-mark, derived-throughput, time-change and Hawkes-residual carriers,
-plus offline `DA-FlowNormalize`/`BE-FlowFit` and the still-unavailable
-decision-facing `BE-FlowAndFills` seam. Structural diff: zero removals, zero type
-changes, 122 additive entries.
+`flow_fill_development.py` now runs the first executable lane on 24 consecutive
+five-minute windows per coin (2026-08-20 17:45–19:45 UTC): 80,714 admitted
+arrivals. Within-design held-window NLL says B1 beats B0 on all seven coins; B3
+beats B2 on six, while B2 is mostly unsupported/neutral. The exploratory
+operational-time Hawkes grid selects branching 0.40–0.55, but it resets each
+market with no warm-up and is stamped `DEVELOPMENT`. At 15 seconds the 5-share
+join-touch any-fill bracket is very wide: HYPE 71.3% front versus 2.4% back;
+BTC 94.6% versus 76.9%. This is quantity evidence only—no fill-conditional
+markout or P&L verdict. Full results are in `FLOW_FILL_DEVELOPMENT_RESULTS.md`.
 
-**Next:** let primary days accrue, then materialize per-coin risk intervals and
-fit/forward-score B0–B3 and M1–M3 unchanged. Do not fit Hawkes while waiting; the
-admission diagnostic itself requires the completed baseline and day count.
+Contracts **v22** retain R-FLOW and add R-FILL, `FlowAction`,
+`QueuePositionBound`, `FillQuantityBound`, `FlowActionFillFit`, and a separate
+non-decision `HawkesDevelopmentDiagnostic`. `BE-FlowAndFills` now requires a
+`VALIDATED` action-fill artifact and remains unavailable.
+
+**Next:** freeze and implement the conditional M1–M4 mark-law families, then
+freeze the candidate code before scoring post-cutoff days. Continue accumulating
+primary days in parallel. Do not promote the provisional Hawkes or fill
+parameters; the 10-day minimum and forward gates still apply.
 
 ### Flow-model evidence audit trail — pre-Revision 3
 
 Charter `live/pm_research/FLOW_UNCERTAINTY_LOOP.md`; plan
-at that time (now superseded by Revision 3); probe `flow_uncertainty.py`. Coordinator
+at that time (now superseded by Revision 4); probe `flow_uncertainty.py`. Coordinator
 writes the decision rules, research agent runs the measurements — the split is
 deliberate and has already stopped two rules being re-cut after their answers
 were visible.
@@ -405,10 +428,12 @@ and reproducible U1–U9 probes are at commits `6a0e593` and `6e125dc`.
    timers own catch-up. Do not turn partial partitions or design days into a
    result; rerun frozen v1 only at its formal boundary and evaluate v2 only on
    primary days from 2026-08-22.
-2. **Build the frozen flow baseline after days accrue.** Materialize per-coin
-   risk intervals and conditional marks, then fit/forward-score B0–B3 and M1–M3
-   under `FLOW_MODEL_PROTOCOL_V3.yaml`. Hawkes remains `NOT_ADMITTED` until the
-   completed baseline time-change and ten-day gate say otherwise.
+2. **Finish the flow candidate while days accrue.** The B0–B3, mark-census,
+   exploratory-Hawkes and queue-bound development path already runs under
+   `FLOW_MODEL_PROTOCOL_V4.yaml`. Freeze/implement the conditional M1–M4 law
+   families next, without treating the two-hour receipt as forward evidence.
+   Hawkes and action fills remain unvalidated until the completed forward
+   time-change and ten-day gates say otherwise.
 3. **`PING_TIMEOUT` classification.** Phase-matched U9 is unresolved at n=7;
    retain `MNAR-suspect` and wait for five more same-era gaps before amendment.
 4. **Phase 0A 5 — S30/S60 internal sampling semantics.** This still gates Route
@@ -537,7 +562,7 @@ known incident rather than assuming it benign: the duplicate-collector overlap,
 the ~16 min market-side outage, the 8 malformed resolution rows, restart shards,
 TWAP gaps, knowledge-time lag per coin, and the up-rate drift confound.
 
-**Architecture v12 + machine-readable contracts v21.** Six planes, a structural
+**Architecture v12 + machine-readable contracts v22.** Six planes, a structural
 diff checker, version-bound migration records, and executable DA/EV pipeline
 contracts through the commit-last Tier-2 boundary. Twelve external review
 iterations. **Two of my own artefacts were

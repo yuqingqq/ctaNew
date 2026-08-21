@@ -1,0 +1,164 @@
+protocol: FLOW_AND_FILLS_V4
+status: FROZEN_DESIGN_DEVELOPMENT_ACTIVE
+frozen_at: '2026-08-21T07:27:49Z'
+design_data_through: '2026-08-21T07:05:00Z'
+primary_evaluation_start: '2026-08-22T00:00:00Z'
+research_only: true
+
+artifact_lifecycle:
+  states:
+    - DEVELOPMENT
+    - CANDIDATE_FROZEN
+    - VALIDATED
+    - INSUFFICIENT_EVIDENCE
+    - MODEL_REFUTED
+  development_may_fit_now: true
+  development_is_decision_eligible: false
+  minimum_forward_days_for_validation: 10
+
+universe:
+  coins: [btc, eth, sol, xrp, doge, bnb, hype]
+  pooling: DIAGNOSTIC_ONLY
+  primary_fit_and_verdict: PER_COIN
+
+state:
+  coordinate: UP_UNIFIED_BOOK
+  price_state: UP_BOOK_MIDPOINT
+  knowledge_lag_ms: 250
+  interval: HALF_OPEN
+  gap_policy: KILL_STATE_AND_QUEUE_PATH
+  execution_price_is_mark: true
+  minimum_price_bin_dwell_s: 60
+
+ground_process:
+  canonical_route: TOTAL_INTENSITY_PLUS_CONDITIONAL_MARKS
+  arrival_identity: LAST_TRADE_PRICE_AGGREGATE
+  unit: EVENTS_PER_SECOND
+  remaining_time_edges_s: [0, 60, 120, 180, 240, 300]
+  price_edges: [0.0, 0.05, 0.15, 0.35, 0.65, 0.85, 0.95, 1.0]
+  nesting: [B0_R, B1_P_GIVEN_R, B2_TICK_TAIL, B3_BOOK]
+  b0_numerical_fence:
+    pseudo_count: 0.5
+    pseudo_exposure_s: 1.0
+  b1_parent_exposure_shrink_s: 60
+  b2:
+    tick: 0.001
+    tails: [[0.0, 0.15], [0.85, 1.0]]
+    functional_form: SINGLE_LOG_RATE_OFFSET_FOR_JOINT_INDICATOR
+    zero_count_or_exposure: HALF_EVENT_FENCE_AND_NOT_PROMOTABLE
+  b3:
+    transforms:
+      touch_notional: LOG1P_THEN_TRAIN_STANDARDIZE
+      spread_ticks: CLIP_0_10_THEN_TRAIN_STANDARDIZE
+      imbalance_notional: CLIP_MINUS1_1_THEN_TRAIN_STANDARDIZE
+    functional_form: LINEAR_LOG_INTENSITY
+
+marks:
+  event_types: [MICRO_002, MARKET]
+  micro_size_shares: 0.02
+  sequence:
+    - M1_EVENT_TYPE
+    - M2_UNIFIED_TAKER_SIDE
+    - M3_EXECUTION_PRICE_AND_ACTION_REACH
+    - M4_SIZE_AND_NATIVE_NOTIONAL
+  side_role: CONDITIONAL_MARK
+  monetary_mark: SIZE_SHARES_TIMES_NATIVE_EXECUTION_PRICE
+  cause_specific_intensity: TOTAL_INTENSITY_TIMES_CONDITIONAL_TYPE_PROBABILITY
+  reconciliation_required: true
+  micro_market_independence: TESTED_NULL_NOT_ASSUMPTION
+
+development:
+  permitted_data: DESIGN_DATA_ONLY
+  minimum_windows_per_coin: 3
+  split: LEAVE_ONE_WINDOW_OUT
+  allowed_outputs:
+    - ENGINEERING_RECOVERY
+    - PROVISIONAL_PARAMETERS
+    - WITHIN_DESIGN_NLL
+    - RESIDUAL_DIAGNOSTICS
+    - QUEUE_FILL_BOUNDS
+  forbidden_claims:
+    - FORWARD_EVIDENCE
+    - VALIDATED
+    - DECISION_ELIGIBLE
+
+hawkes:
+  development_fit_allowed: true
+  development_requires_full_baseline_compensator: true
+  operational_time_unit: ONE_EXPECTED_BASELINE_ARRIVAL
+  candidate_half_lives_operational: [0.25, 0.5, 1, 2, 5, 10]
+  branching_grid: [0.0, 0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40,
+                   0.45, 0.50, 0.55, 0.60, 0.65, 0.70, 0.75, 0.80, 0.85, 0.90]
+  development_boundary_policy: RESET_EACH_WINDOW_AND_REPORT_NO_WARMUP
+  validation_warmup:
+    minimum_calendar_s: 60
+    minimum_operational_u: 60
+  validation_admission:
+    minimum_complete_primary_days: 10
+    baseline_time_change_required: true
+    residual_clustering_after_holm_required: true
+    direction: CLUSTERING
+
+fill_actions:
+  coordinate: UP_UNIFIED_BOOK
+  primary_style: JOIN_TOUCH
+  maker_sides: [BUY_UP, SELL_UP]
+  size_shares: 5
+  horizons_s: [5, 15, 30]
+  action_times_elapsed_s: [30, 60, 90, 120, 150, 180, 210, 240, 270]
+  marketability:
+    sell_up: UNIFIED_TAKER_BUY_EXECUTION_PRICE_GTE_ACTION_LEVEL
+    buy_up: UNIFIED_TAKER_SELL_EXECUTION_PRICE_LTE_ACTION_LEVEL
+  queue_rules:
+    FRONT: OPTIMISTIC
+    BACK_DISPLAYED: PESSIMISTIC_TRADES_ONLY_NO_CANCEL_CREDIT
+    UNIFORM_DIAGNOSTIC: NOT_GATE_BEARING
+  filled_shares:
+    FRONT: MIN_ACTION_SIZE_CUMULATIVE_REACHING_VOLUME
+    BACK_DISPLAYED: MIN_ACTION_SIZE_MAX_ZERO_CUMULATIVE_VOLUME_MINUS_DISPLAYED_AHEAD
+  partial_fills: FIRST_CLASS
+  gap_policy: EXPLICIT_UNAVAILABLE_ACTION
+  tick_change_policy: EXPLICIT_UNAVAILABLE_ACTION
+  touch_departure_policy: RETAIN_FIXED_LEVEL_AND_REPORT
+  complement_duplicate_policy: DEDUPLICATE_AND_COUNT
+  exact_queue_position_identified: false
+  midpoint_of_bracket_is_result: false
+
+validation:
+  unit: COMPLETE_UTC_DAY
+  schedule: EXPANDING_WINDOW_DAY_HELD_OUT
+  require_fit_data_through_before_evaluation_day: true
+  bootstrap_unit: UTC_DAY
+  minimum_complete_primary_days_per_coin: 10
+  multiplicity: HOLM
+  layer_retention: DAY_BLOCK_BOOTSTRAP_95_PERCENT_UPPER_DELTA_NLL_BELOW_ZERO
+  hawkes_retention:
+    forward_nll_bootstrap_upper_below_zero: true
+    branching_or_spectral_radius_bootstrap_upper_below_one: true
+    max_ks_worsening: 0.01
+    admitting_cluster_test_must_clear: true
+
+reference_snapshot:
+  note: Immutable source hashes for the Revision 4 development lane; the local derived JSON is gitignored and self-identifies by artifact_id.
+  artifacts:
+    canonical_plan:
+      path: live/pm_research/plans/BE_FLOWANDFILLS_MODEL_PLAN.md
+      sha256: 5ea7174c4d7aeaeafbbf7e01a01d2408d08606089b7316f1d321a171681fb22d
+    development_code:
+      path: live/pm_research/flow_fill_development.py
+      sha256: 21f03e476c5b503b2ffeda09bbdb969f3870e5754b00233a4ff2d54a3d0d99fa
+    development_results:
+      path: live/pm_research/FLOW_FILL_DEVELOPMENT_RESULTS.md
+      sha256: 860ba6fbce4d1a51645110994a0d06109948e6640e159d69a2520a43ce658a3a
+    canonical_contract:
+      path: live/pm_research/contracts/contracts.yaml
+      sha256: ae70e3772e74d929eaa735e01f3a9d77e8b55d65dc69aa04c089b46f2e766111
+    contract_migrations:
+      path: live/pm_research/contracts/migrations.yaml
+      sha256: 7160b8bba78bba16ec44960c5e63fe6c5dadf29c2b4a3b9a777f2d14a0e33ca8
+    corrected_state_code:
+      path: live/pm_research/flow_intensity.py
+      sha256: 49b22e9071b5d3d6362d5adf370b47485e255466a080634cad933450b987e807
+    corrected_state_results:
+      path: live/pm_research/FLOW_INTENSITY_RESULTS.md
+      sha256: 0ddf28093362ecb34b6e8d747996143a356b602c464154690c25e73efa52de3c

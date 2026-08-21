@@ -1,8 +1,10 @@
 # FLOW_MODEL_SPEC_REV2 — the respecification the measurement forces
 
 > **SUPERSEDED 2026-08-21.** This file is retained only as the audit trail for
-> the first descriptive fit. The authoritative specification is Revision 3 in
-> `plans/BE_FLOWANDFILLS_MODEL_PLAN.md`. In particular, Revision 3 corrects four
+> the first descriptive fit. The authoritative specification is Revision 4 in
+> `plans/BE_FLOWANDFILLS_MODEL_PLAN.md`. In particular, Revision 4 retains the
+> Revision 3 state corrections and adds the development/validation lifecycle,
+> execution-reach marks and observable front/back queue-fill bounds. Revision 3 corrected four
 > errors here: ex-micro estimation does not require independence; side is a
 > conditional mark rather than a covariate of total intensity; notional
 > throughput is derived from count intensity and the native-price monetary mark;

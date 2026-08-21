@@ -1,7 +1,7 @@
 # PM_ARCHITECTURE — structure for P-2026-003
 
 The explanatory prose baseline is version 12 (2026-08-20); the machine-readable
-canonical contract is now **v21**. Versions 13–16 landed the sigma route and v17
+canonical contract is now **v22**. Versions 13–16 landed the sigma route and v17
 lands the measurement-infrastructure boundary: nominal event/knowledge clocks,
 strict source profiles, factual coverage separated from admissibility decisions,
 and DA-Normalize/DA-Coverage/DA-State ownership. Version 18 adds point-in-time
@@ -13,6 +13,10 @@ dual weighting, explicit unavailable rows, and a second commit-last receipt.
 Version 21 adds the marked flow-process boundary: same-state arrival/exposure
 assignment, per-coin event intensity, conditional side/notional marks, derived
 USDC throughput, and a forward-gated optional Hawkes residual.
+Version 22 adds the missing action-fill boundary: immutable shadow actions,
+execution-price reach, explicit front/back displayed-queue quantity bounds,
+gap-unavailable rows, a separate non-decision Hawkes development diagnostic,
+and a `FlowActionFillFit` that must be validated before the decision seam reads it.
 When this prose and `contracts/contracts.yaml`
 differ, the YAML remains authoritative. Score history on the 13-change replay:
 v1 5/3/5 · v2 7/4/2 · v4 9/2/2 · v5 9/3/1 · v6–v10 11/0/2 · **v11 11/1/1**
@@ -73,6 +77,7 @@ Naming: SP/DA/BE/DE/EV/OP modules; `EXP-*` experiments.
 | **R-DUAL** | every economic markout summary reports both per-fill and share-weighted estimates per coin and phase |
 | **R-ONEROW** | calibration has exactly one row per window/frozen horizon; unavailable quotes remain named rows |
 | **R-FLOW** | flow arrivals and exposure share one lagged knowledge-admissible state; only event intensity has a compensator; side/notional are marks; Hawkes is admitted only after a forward-valid baseline time change |
+| **R-FILL** | fills bind an exact shadow action to execution-reach volume and a public-data front/back queue bracket; gap paths are unavailable and only `VALIDATED` artifacts reach decisions |
 
 ---
 
@@ -247,16 +252,20 @@ evaluate(action_set, StateView, SelfState, horizon) -> Uncertain[ActionOutcome] 
 ```
 pair-aware by construction (the PM book is unified across the token pair).
 
-The Revision 3 flow seam is a per-coin marked point process. `DA-FlowNormalize`
+The Revision 4 flow seam is a per-coin marked point process. `DA-FlowNormalize`
 materializes one `FlowArrival` per `last_trade_price` aggregate and joins it to
 the same 250 ms-lagged midpoint state used for exposure. `BE-FlowFit` fits
 events/s and the conditional type/side/monetary-mark laws; USDC/s is derived as
 arrival intensity times expected native-price notional. `MICRO_002` and
 `MARKET` are labelled subprocesses—independence is a tested null, not a
-prerequisite for estimating either. A `HawkesResidualFit` is optional and may be
-`NOT_ADMITTED`; it requires ten complete forward days and residual clustering
-after baseline time change. The decision-facing `BE-FlowAndFills` remains
-`Unavailable` until forward-valid artifacts exist.
+prerequisite for estimating either. `DA-FlowActionGrid` materializes immutable
+join-touch research actions and displayed queue bounds. `BE-FillFit` maps
+complement-folded execution prices and sizes into partial front/back fill
+quantities; it never converts unconditional intensity directly into notional or
+fills. A `HawkesDevelopmentDiagnostic` may be fitted immediately but is a
+non-decision type. The distinct `HawkesResidualFit` and `FlowActionFillFit`
+require forward validation. The decision-facing `BE-FlowAndFills` remains
+`Unavailable` until all required artifacts are `VALIDATED`.
 
 **BE-Competition (NEW — M4-2)** — the rival/equilibrium state the incentive
 theory needs:
@@ -500,17 +509,19 @@ artifact_hash, frozen_at}` forming a **precondition DAG**; **STOP** is a first-c
 gate with `on_fail = HALT_PROGRAM`, a named owner and a review date.
 `EV-Attribution` decomposes over §7; read by nobody. `EV-Replay` builds a
 ReplayEnv. `OP-LatencyBudget`: four legs, ack unobserved.
-The flow protocol is frozen in `FLOW_MODEL_PROTOCOL_V3.yaml`; this does not
+The flow-and-fills protocol is frozen in `FLOW_MODEL_PROTOCOL_V4.yaml`; this does not
 freeze or authorize the still-unbuilt decision/action layers.
 
 ## 11. Build order (demand-driven)
 1. `Known[V]` + `t_known_prov` + `Unavailable` in DA (`recv_ns` is on disk).
 2. EV-Markout / EV-Calibration Tier-2 artifacts on complete `full` batches.
-3. Accumulate ten forward days; fit/score the per-coin B0–B3 flow baseline and
-   M1–M3 conditional marks under the frozen Revision 3 protocol.
-4. Fit a Hawkes residual only for coins that pass its admission gate.
-5. EXP-IMPACT (AS partition sign) · EXP-BLEND (belief constituents).
-6. `L_adv` + `DE-Allocator` + STOP gate before any order.
+3. On design data, run the per-coin B0–B3 development fit, M1–M4 mark census,
+   operational-time Hawkes diagnostic, and 5/15/30-second join-touch queue bounds.
+4. Freeze the conditional M1–M4 families and candidate implementation; then
+   accumulate and score at least ten complete forward days without retuning.
+5. Promote Hawkes and action-fill artifacts only if their forward gates pass.
+6. EXP-IMPACT (AS partition sign) · EXP-BLEND (belief constituents).
+7. `L_adv` + `DE-Allocator` + STOP gate before any order.
 
 ## 12. Implementation status (SHOULD-FIX 6 — v5 claimed marking, did none)
 
@@ -519,14 +530,17 @@ freeze or authorize the still-unbuilt decision/action layers.
 | DA-Feeds | PMMarketWS, PMPricesWS, BinanceWS, GammaREST, ClobREST | PolygonRPC |
 | DA-Discovery | collect_pm discovery loop | — |
 | DA-Normalize / DA-State / DA-Settlement | Tier-1 v3, coverage, point-in-time views, closed-day coordinator | settlement spec adapter |
-| BE-FlowFit | corrected descriptive `f_r`/same-state `f_p` measurement only | B0–B3/M1–M3 forward fit; optional gated Hawkes residual |
+| BE-FlowFit | corrected `f_r`/same-state `f_p`; B0–B3 development fit; exploratory Hawkes diagnostic | freeze M1–M4 conditional families; forward fit and gated residual |
+| BE-FillFit | join-touch 5/15/30 s front/back quantity census; gap-unavailable rows | frozen conditional fill artifact and forward validation |
 | other BE-* | — | Target, Uncertainty, Belief, FlowAndFills decision seam, Competition, ScenarioProvider |
 | DE-* | — | all |
 | EV-Markout / EV-Calibration | Tier-2 terminal markout + normalized book scaffold | fitted/scored arms after sufficient days |
 | ControlSolver | — | ClosedFormGLFT, PerLevel, HJBQVI |
 | UtilityFunctional | — | RiskNeutral, CARA, PathFunctional |
 
-Nothing in BE or DE is built. The register describes contracts, not code.
+The two flow/fill probes above are offline research code only. No decision-facing
+BE implementation or DE module is built; the register describes their contracts,
+not live code.
 
 ## 13. Process: canonical contracts + structural diff
 

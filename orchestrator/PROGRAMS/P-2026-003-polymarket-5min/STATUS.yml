@@ -3,12 +3,12 @@ name: Polymarket Crypto 5-min Markets
 phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
-updated: 2026-08-21 (flow Revision 3 frozen; corrected same-state f_p measured; contracts v21)
+updated: 2026-08-21 (flow/fills Revision 4; development run complete; contracts v22)
 
 flags:
   collector_running: true    # One price process and one CLOB process; fresh.
   sigma_infra_pipeline: complete-awaiting-eligible-day # Research infrastructure
-                             # is complete through contracts v21: immutable
+                             # is complete through contracts v22: immutable
                              # Tier-1 daily/all-coin batches, paired leak canary,
                              # model-free Tier-2 markouts, and the fixed-grid
                              # calibration scaffold. This is engineering
@@ -27,10 +27,10 @@ flags:
                              # never count as research evidence.
   tier2_complete_runs: 0    # No real Tier-2 result yet; infrastructure selftests
                              # and the partial smoke validate wiring only.
-  flow_model_revision: 3-frozen # Canonical plan is
+  flow_model_revision: 4-frozen-development-active # Canonical plan is
                              # plans/BE_FLOWANDFILLS_MODEL_PLAN.md and the
                              # machine-readable freeze is
-                             # FLOW_MODEL_PROTOCOL_V3.yaml. Primary evaluation
+                             # FLOW_MODEL_PROTOCOL_V4.yaml. Primary evaluation
                              # begins 2026-08-22 and needs 10 complete forward
                              # UTC days per coin. Ex-micro MARKET is a labelled
                              # subprocess; independence from MICRO_002 is a
@@ -46,11 +46,25 @@ flags:
                              # 6.9% of BTC arrivals and 38.1% of HYPE arrivals.
                              # Selftest: 31 checks. This is design evidence, not
                              # a fitted baseline or forward result.
-  flow_hawkes: not-admitted-awaiting-baseline-and-days # Optional residual only.
-                             # Requires full per-coin baseline time change,
-                             # residual-clustering rejection after Holm, and >=10
-                             # complete primary days. No Hawkes parameters have
-                             # been fitted or validated.
+  flow_development: complete-not-validated # 24 consecutive five-minute
+                             # windows/coin (two hours), 80,714 admitted events.
+                             # B0-B3 held-window plumbing, mark census,
+                             # operational-time Hawkes grid and join-touch
+                             # 5/15/30s front/back fill bounds are executable.
+                             # Receipt is DEVELOPMENT and decision_eligible=false.
+                             # Conditional M1-M4 law families remain to freeze.
+  flow_hawkes: development-only-not-admitted # Exploratory operational-time
+                             # branching is 0.40-0.55 with positive within-design
+                             # likelihood gains. This uses market resets/no
+                             # warmup and is a HawkesDevelopmentDiagnostic, not a
+                             # HawkesResidualFit. Admission still requires full
+                             # forward B0-B3 time change, clustering after Holm,
+                             # and >=10 complete primary days.
+  flow_fill_bounds: development-only-wide # At 15s, join-touch any-fill ranges
+                             # front/back from HYPE 71.3%/2.4% to BTC
+                             # 94.6%/76.9%. Public L2 cannot identify exact
+                             # queue position; gap-crossing actions remain
+                             # explicit unavailable rows. No P&L verdict.
   clob_1013_is_venue_side: true # RESOLVED 17:46:41 UTC by clob_v3_1's
                              # discriminator, on its first 1013: ws_ever_paused
                              # = FALSE and ws_queue_depth_max = 133 out of a
@@ -597,17 +611,19 @@ tasks:
   - id: g-ff4-queue
     phase: 1
     name: Queue-position bracket (Q_ahead)
-    status: pending
-    notes: POTENTIALLY PROGRAM-ENDING. If the bracket on Q_ahead is wide enough,
-      MM profitability is not knowable from the data we can collect. Plan in
-      plans/BE_FLOWANDFILLS_PLAN.md.
+    status: development-bounds-measured-no-profitability-verdict
+    notes: Revision 4 now maps fixed join-touch actions to execution-reaching
+      volume and public-data front/back queue bounds. The two-hour development
+      bracket is wide, especially on thin/micro-dominated coins, but exact queue
+      position and marginal fill-conditional markout remain unidentified. Do
+      not use a bracket midpoint or infer a P&L sign.
   - id: e1-dataset
     phase: 1
     name: Aligned dataset — binary book vs Binance F_t at 100ms, per window
     status: infrastructure-complete-awaiting-eligible-day
     notes: |
       Tier-1 daily/all-coin orchestration and Tier-2 markout/calibration
-      derivation are complete under contracts v21. Measurement and evaluation
+      derivation are complete under contracts v22. Measurement and evaluation
       timers are installed, enabled and verified. No real receipt existed at
       this checkpoint because 2026-08-20 requires the closed 2026-08-21
       neighbor; partial smoke outputs are isolated and are not evidence.

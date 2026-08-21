@@ -1,6 +1,6 @@
-# BE-FlowAndFills — canonical model plan, Revision 3
+# BE-FlowAndFills — canonical model plan, Revision 4
 
-Status: **FROZEN FOR FORWARD EVALUATION**
+Status: **FROZEN DESIGN / DEVELOPMENT ACTIVE / VALIDATION NOT STARTED**
 
 Frozen: 2026-08-21
 
@@ -10,17 +10,34 @@ Primary evaluation begins: 2026-08-22T00:00:00Z
 
 Scope: research only; no venue adapter, order sender, or live execution path
 
-This is the single current specification for the flow model. It supersedes the
-flow-model sections of all earlier revisions, including
-`FLOW_MODEL_SPEC_REV2.md`. Earlier documents remain an audit trail, not a second
-source of truth. The first descriptive fit is in `FLOW_INTENSITY_RESULTS.md`.
+This is the single current specification for both the flow process and the
+action-conditional fill bounds. It supersedes Revision 3, `FLOW_MODEL_SPEC_REV2.md`,
+and `BE_FLOWANDFILLS_PLAN.md`; those remain audit trails, not parallel sources of
+truth. The first descriptive fit is in `FLOW_INTENSITY_RESULTS.md`. The governing
+machine-readable freeze is `FLOW_MODEL_PROTOCOL_V4.yaml`.
 
 ## 0. Current decision
 
-The next build is a **per-coin marked point-process baseline**. A Hawkes term is
-not the baseline and is not fitted merely because raw arrivals cluster. It is an
-optional residual layer, admitted only after the full baseline is time-changed
-and still rejects a unit-rate Poisson process on forward data.
+Build and diagnose the complete research pipeline **now** on design data:
+
+1. a per-coin marked point-process baseline;
+2. execution-level, size and notional mark laws;
+3. queue-bounded fills for frozen shadow-quote actions; and
+4. an exploratory Hawkes residual after the full baseline time change.
+
+Ten forward days are a **promotion gate**, not a construction gate. Development
+fits may run on hours of data but may never be labelled forward evidence or be
+consumed by a decision module.
+
+Artifact states are distinct and monotone:
+
+| status | data/use |
+|---|---|
+| `DEVELOPMENT` | design data; code recovery, diagnostics and provisional parameters only |
+| `CANDIDATE_FROZEN` | implementation/spec hash frozen before its scored period |
+| `VALIDATED` | at least ten complete forward days and every retention/calibration gate passes |
+| `INSUFFICIENT_EVIDENCE` | implementation ran but the independent-day or power gate is not met |
+| `MODEL_REFUTED` | a frozen candidate fails its forward gate |
 
 What is already established:
 
@@ -75,26 +92,27 @@ least 250 ms before the arrival. `side`, `event_type`, execution price, size,
 and notional are marks of the next arrival. In particular, the realized side of
 the next event is not a covariate of total arrival intensity.
 
-Use either equivalent factorization:
+The canonical factorization is one total ground process followed by a joint mark
+law:
 
 ```text
-lambda_all(t | H_t, x_t)                         events / second
+lambda_all(t | H_t, x_t)                                 events / second
 P(type | arrival, H_t, x_t)
 P(side | arrival, type, H_t, x_t)
-G(V, p_exec | arrival, type, side, H_t, x_t)     mark law
+P(p_exec, size, V | arrival, type, side, H_t, x_t)       joint mark law
 ```
 
-or the cause-specific form
+Cause-specific intensities are derived, not independently fitted:
 
 ```text
 lambda_type(t | H_t, x_t)
-lambda_all = lambda_MICRO_002 + lambda_MARKET
+  = lambda_all(t | H_t, x_t) * P(type | arrival, H_t, x_t)
+lambda_all = lambda_MICRO_002 + lambda_MARKET             reconciliation check
 ```
 
-Both are valid without assuming the two types are independent. Deleting the
-micro rows and estimating `lambda_MARKET` estimates a **labelled subprocess**.
-Independence is needed only to claim that deleting micro history has no effect
-or to interpret the two processes counterfactually as unrelated.
+This freezes one implementation route while retaining the valid labelled
+subprocess. Independence is needed only to claim that deleting micro history has
+no effect or to interpret the types counterfactually as unrelated.
 
 ### 1.3 Notional is a conditional mark, not an arrival rate
 
@@ -122,23 +140,37 @@ a diagnostic only and must disclose its event weights. There are no tied
 coefficients across BTC, ETH, SOL, XRP, DOGE, BNB, and HYPE in the primary model.
 
 There are not two structural models called Tier A and Tier B. There is one
-factorization at different resolution. Sparse coins receive coarser `r`/`p`
-bands or an explicit unavailable result; they do not switch from events/s to
-USDC/s as if the units were interchangeable.
+factorization. Primary bins and covariates are identical across coins; sparse
+cells shrink to their parent baseline or return an explicit unavailable result.
+The implementation may not choose coarser bins after seeing a coin's result.
 
 ### 2.2 Frozen baseline order
 
-Fit the following in order, retaining each layer only by forward likelihood:
+Fit the following in order. Development fits report diagnostics immediately;
+only frozen candidates are retained by forward likelihood:
 
 ```text
-B0  per-coin piecewise-constant f_r(r)
-B1  B0 + f_p(p_state | BODY/TERMINAL)
-B2  B1 + tick-tail interaction
-B3  B2 + f_book(spread, touch_notional, imbalance_notional)
+B0  per-coin piecewise-Poisson f_r(r), five frozen 60-second bands
+B1  B0 + categorical f_p(p_state | r_band), seven frozen price bands
+B2  B1 + 1{tick=0.001} × 1{price tail}
+B3  B2 + linear standardized book terms
 M1  conditional type law
 M2  conditional side law given arrival and type
-M3  conditional monetary-mark law G(V | arrival, x, type, side)
+M3  conditional execution/reach law G(p_exec | arrival, x, type, side)
+M4  conditional size/native-notional law G(size,V | arrival,x,type,side,p_exec)
 ```
+
+The frozen remaining-time edges are `{0,60,120,180,240,300}` seconds and price
+edges are those in §2.3. For B1, a cell shrinks to its B0 parent with exposure
+strength 60 seconds; a zero-exposure evaluation cell uses the parent and is
+reported `OUT_OF_SUPPORT`. The development B0 rate uses the frozen numerical
+fence `(N+0.5)/(E+1 second)`. B2 is a single offset coefficient for the joint
+`tick=0.001 AND price-tail` indicator; if a training fold has zero indicator
+exposure or zero indicator arrivals, use a named half-event numerical fence and
+mark that fold `B2_ZERO_EVENT_FENCE` so it cannot be promoted. B3 covariates are `log1p(touch_notional)`, spread
+ticks clipped at 10, and notional imbalance clipped to `[-1,1]`, standardized
+from training data only. No spline, bin, interaction or regularization strength
+may be selected from primary data.
 
 `BODY` is `r in [60, 300]`; `TERMINAL` is `r in [0, 60)`. This boundary is a
 frozen modelling choice motivated by the 60-second settlement construction,
@@ -279,20 +311,28 @@ arrival. Candidate operational-time half-lives are frozen at
 only. They are not seconds; the calendar duration corresponding to one unit of
 `u` varies with the baseline rate.
 
-### 4.3 When Hawkes is allowed
+### 4.3 Development fit versus validated admission
 
-Do not fit the residual Hawkes layer until all are true for a coin:
+An exploratory residual Hawkes fit is allowed immediately when B0–B3 can produce
+an admissible design-data compensator. It must be stamped `DEVELOPMENT`, report
+its in-sample or within-design split explicitly, and expose parameter-boundary
+hits. It exists to test the implementation and measure whether the residual is
+large enough to matter; it cannot enter `BE-FlowAndFills`.
 
-1. B0–B3 have a complete, forward-scored baseline and an admissible compensator.
+Promotion to `VALIDATED` still requires all of:
+
+1. B0–B3 have a complete, strictly-forward-scored compensator.
 2. At least 10 complete primary-evaluation UTC days exist in one compatible
    collector era.
 3. On baseline operational time, a pre-registered short-gap or dependence test
    rejects unit-rate Poisson after Holm correction across coins and tests.
 4. The rejection has the direction of residual clustering, not merely a generic
    distribution mismatch.
+5. The forward retention gates in §6.2 pass.
 
-If these are false, the Hawkes result is `NOT_ADMITTED`, not a zero branching
-ratio and not a request to fit anyway.
+Before promotion the status is `DEVELOPMENT` or `INSUFFICIENT_EVIDENCE`, never a
+zero branching ratio. Ten days is a minimum opportunity to validate, not a
+claim that ten clusters guarantee power.
 
 ### 4.4 Boundaries, gaps, and warm-up
 
@@ -309,10 +349,88 @@ After a gap, data are not scored until both warm-up requirements are satisfied.
 A window without the required observable warm-up is excluded with a named
 reason.
 
-## 5. Frozen forward protocol and gates
+## 5. From exogenous flow to action-conditional fill bounds
+
+### 5.1 Frozen shadow-quote action
+
+The research action is defined in unified Up coordinates:
+
+```text
+A = (coin, slug, start_time, horizon, maker_side, level_up,
+     size_shares, queue_rule)
+maker_side in {BUY_UP, SELL_UP}
+queue_rule in {FRONT, BACK_DISPLAYED, UNIFORM_DIAGNOSTIC}
+```
+
+Primary development actions join the knowledge-admissible Up best bid/ask with
+`size_shares=5` and horizons `{5,15,30}` seconds. Improve and deeper-level arms
+are later frozen actions, never silently mixed with join-touch results. Down
+trades are complement-folded before determining whether they reach the action.
+
+### 5.2 Execution reach and cumulative marketable volume
+
+M3 supplies the missing bridge from arrival intensity to a quote:
+
+```text
+P(reaches A | arrival,x,type,side)
+BUY_UP aggressor reaches SELL_UP A iff p_exec_up >= A.level_up
+SELL_UP aggressor reaches BUY_UP A iff p_exec_up <= A.level_up
+```
+
+For action `A`, let `C_A(h)` be cumulative complement-folded aggressive shares
+that reach its level by horizon `h`. This is computed from actual execution
+prices and sizes, not inferred from midpoint intensity. Partial fills are
+first-class.
+
+### 5.3 Queue uncertainty belongs on queue, not lambda
+
+There is no public MBO identity, so exact queue position is not identified. At
+join time let `Q_displayed` be displayed shares already resting at the level.
+The frozen observable bounds are:
+
+```text
+F_front(A,h) = min(A.size_shares, C_A(h))
+F_back(A,h)  = min(A.size_shares, max(0, C_A(h) - Q_displayed))
+```
+
+`FRONT` is optimistic. `BACK_DISPLAYED` is the conservative trades-only
+join-back rule: cancellations do not grant queue credit. A uniform draw inside
+`[0,Q_displayed]` is diagnostic only and never replaces the bracket. Every
+result reports filled shares, any-fill probability, completion probability and
+first-fill time at both bounds.
+
+A collector gap invalidates the action's queue path. The action remains an
+explicit unavailable row rather than being silently dropped. A tick-size change
+inside the action horizon is likewise `Unavailable(TICK_SIZE_CHANGE)`. Touch-level
+changes do not erase the resting level but are recorded as named diagnostics;
+complement duplicates are de-duplicated and counted.
+
+### 5.4 What is and is not identified
+
+The current tape can identify shadow-action marketable volume and the
+front/back queue bounds. It cannot identify hidden queue reordering, our own
+impact, acknowledgement time, or cancellation success. Those remain explicit
+uncertainty/null pins; they are not set to optimistic constants.
+
+Population maker markout is measurable because every aggressive trade is a
+passive fill for somebody, but it is not automatically the marginal entrant's
+markout. The first development fill artifact therefore reports quantity bounds
+without a profitability verdict. The later shadow-quote outcome law must keep
+fill quantity, fill time and markout on shared draws; `lambda * unconditional
+markout` is forbidden.
+
+### 5.5 Fill artifact and refusal
+
+`FlowActionFillFit` binds one arrival fit, all required mark laws, the exact
+action schema and queue rule. `BE-FlowAndFills` may consume it only at
+`VALIDATED`. If the front/back bracket changes the sign of a later net outcome,
+the action returns `Unavailable(QUEUE_BRACKET_SIGN_FLIP)`; the bracket midpoint
+is never a decision result.
+
+## 6. Frozen forward protocol and gates
 
 All choices above use data through 2026-08-21 and are frozen before the primary
-period. The immutable manifest is `FLOW_MODEL_PROTOCOL_V3.yaml`.
+period. The immutable manifest is `FLOW_MODEL_PROTOCOL_V4.yaml`.
 
 Evaluation is expanding-window, day held out:
 
@@ -326,7 +444,7 @@ uncertainty unit = UTC-day block
 No bin, covariate, lag, half-life, or threshold may be selected using primary
 days. Any change starts a new protocol/version and a new primary period.
 
-### 5.1 Baseline retention
+### 6.1 Baseline retention
 
 Each added baseline layer is retained per coin only when the day-block bootstrap
 95% upper confidence bound for its forward delta negative log likelihood versus
@@ -343,7 +461,7 @@ Holm-correct inferential p-values across seven coins and the frozen tests.
 Failure to reject is not proof of equivalence; the diagnostics and confidence
 intervals remain visible.
 
-### 5.2 Hawkes retention
+### 6.2 Hawkes retention
 
 A Hawkes candidate is retained only if all hold on strictly forward days:
 
@@ -358,29 +476,41 @@ A Hawkes candidate is retained only if all hold on strictly forward days:
 Otherwise publish `MODEL_REFUTED` or `INSUFFICIENT_EVIDENCE` and use the
 baseline. In-sample likelihood never licenses retention.
 
-## 6. Current artifact status
+## 7. Current artifact status
 
 | artifact | status | permitted use |
 |---|---|---|
 | empirical `f_r` | descriptive, measured on `<2` days | design evidence only |
 | original `f_p` in Revision 2 | **WITHDRAWN: state mismatch** | none |
 | corrected same-state `f_p` | descriptive, measured on `<2` days | design evidence only |
-| B0–B3 per-coin baseline | not fitted | next implementation |
-| type/side/mark laws | not fitted | after baseline exposure is frozen |
-| Hawkes residual | not admitted; insufficient forward days | specification only |
+| B0–B3 per-coin baseline | **DEVELOPMENT**, 24 windows/coin | engineering and within-design NLL only |
+| type/side/execution/size marks | **DEVELOPMENT census**; conditional laws not frozen | plumbing diagnostics only |
+| queue-bounded join-touch fills | **DEVELOPMENT**, front/back census at 5/15/30 s | quantity-bracket diagnostics only |
+| Hawkes residual | **DEVELOPMENT**, scalar exploratory grid after B3 | implementation/residual-size diagnostic only |
 | maker profitability/fill response | sign unresolved | do not optimize |
 
-## 7. Build order
+The executable receipt and interpretation are in
+`flow_fill_development.py` and `FLOW_FILL_DEVELOPMENT_RESULTS.md`. This first
+lane deliberately stops short of fitting a decision artifact: the mark census
+checks event-type, side, execution reach and native notional plumbing, but M1–M4
+still need a separately frozen conditional family before candidate freeze.
 
-1. Regenerate corrected same-state `f_p` and publish join diagnostics.
-2. Accumulate primary data without changing this specification.
-3. Materialize per-coin risk intervals and conditional marks.
-4. Fit and forward-score B0–B3, then M1–M3.
-5. Run operational-time residual diagnostics.
-6. Fit Hawkes only for coins that satisfy the admission gate.
-7. Build action-conditional fill probability only after the exogenous flow and
-   mark law are forward-valid. Until then, `BE-FlowAndFills` returns
-   `Unavailable` to a decision consumer.
+## 8. Build order
+
+1. Materialize per-coin risk intervals, execution marks and queue-bound actions
+   from existing design data.
+2. Fit development B0–B3 and M1–M4; run window-held-out diagnostics now.
+3. Run operational-time residual diagnostics and exploratory Hawkes now, stamped
+   `DEVELOPMENT`.
+4. Publish join-touch front/back fill bounds now, without a profitability claim.
+5. Freeze the candidate implementation before primary scoring.
+6. Accumulate and score forward days without changing the candidate.
+7. Promote individual artifacts only when their ten-day minimum and gates pass;
+   otherwise retain `INSUFFICIENT_EVIDENCE` or `MODEL_REFUTED`.
+
+Until the validated flow, mark and fill artifacts all exist,
+`BE-FlowAndFills` returns `Unavailable` to a decision consumer. That runtime
+refusal does not prevent development fitting.
 
 This sequence prevents three known failure modes: pooled parameters hiding
 per-coin differences, notional being mistaken for event intensity, and Hawkes

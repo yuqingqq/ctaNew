@@ -4,6 +4,21 @@
 # narrowing at an allowlisted path -- the precise failure this process exists to
 # prevent. Records are loaded from the TARGET ref.
 migrations:
+# ---- v21 -> v22: action-conditional queue-fill development boundary ------
+- from_version: 21
+  to_version: 22
+  operation: change
+  key: module:BE-FlowFit.produces
+  old: "['ArrivalIntensityFit', 'ConditionalMarkLaw', 'HawkesResidualFit', 'HealthEvent', 'NotionalThroughput', 'TimeChangeDiagnostic']"
+  new: "['ArrivalIntensityFit', 'ConditionalMarkLaw', 'HawkesDevelopmentDiagnostic', 'HawkesResidualFit', 'HealthEvent', 'NotionalThroughput', 'TimeChangeDiagnostic']"
+  reason: 'R-FLOW: exploratory within-design Hawkes output is now a distinct non-decision type instead of weakening the ten-forward-day gate on HawkesResidualFit'
+- from_version: 21
+  to_version: 22
+  operation: change
+  key: module:BE-FlowAndFills.consumes
+  old: "['ActionSet', 'ArrivalIntensityFit', 'ConditionalMarkLaw', 'SelfState', 'StateView']"
+  new: "['ActionSet', 'ArrivalIntensityFit', 'ConditionalMarkLaw', 'FlowActionFillFit', 'SelfState', 'StateView']"
+  reason: 'R-FILL: the decision seam must consume an action-bound validated queue-fill artifact, not infer fills from unconditional arrival intensity and marks'
 # ---- v17 -> v18: replay canary and point-in-time coverage -----------------
 - from_version: 17
   to_version: 18
