@@ -4,6 +4,27 @@
 # narrowing at an allowlisted path -- the precise failure this process exists to
 # prevent. Records are loaded from the TARGET ref.
 migrations:
+# ---- v16 -> v17: measurement infrastructure boundary ---------------------
+- from_version: 16
+  to_version: 17
+  operation: change
+  key: field:Known.t_event
+  old: Timestamp
+  new: EventTime
+  reason: 'R-IMPUTE: event time is nominal and cannot be compared to a decision clock'
+- from_version: 16
+  to_version: 17
+  operation: change
+  key: field:Known.t_known
+  old: Timestamp
+  new: KnowledgeTime
+  reason: 'R-REFUSE: StateView accepts only the nominal knowledge clock'
+- from_version: 16
+  to_version: 17
+  operation: remove
+  key: field:Coverage.segments
+  old: list[(Timestamp, Timestamp)]
+  reason: 'R-ADMISS: replaced by typed Coverage.covered plus explicit cause-aware gaps and target'
 # ---- v15 -> v16 (M16-1): ITER4 review of Revision 4 ------------------------
 - from_version: 15
   to_version: 16

@@ -1,4 +1,4 @@
-version: 16
+version: 17
 rules:
   R-SSOT:
     body: every canonical name has exactly one owning type/module
@@ -68,18 +68,59 @@ rules:
     - 'cutoff_order: PathLaw.fit_data_through <= PathLaw.as_of'
     - 'no_future_train: training reads truncated at fit_data_through, enforced
        through StateView knowledge time, never payload time'
+  R-IMPUTE:
+    body: t_known is never manufactured from t_event; OBSERVED requires recv_ns,
+      and every non-observed value carries a named imputation rule with positive
+      delay and error
+    checks:
+    - 'observed_needs_wire: Known.t_known_prov == OBSERVED => SourceProfile.has_recv_ns'
+    - 'strict_delay: Known.t_known_prov != OBSERVED => Known.t_known > Known.t_event'
+    - 'rule_named: Known.t_known_prov != OBSERVED => Known.imputation_rule is not null'
+  R-REFUSE:
+    body: StateView admits a Known only when t_known plus refuse_k times
+      t_known_err is no later than its supplied KnowledgeTime now
+    checks:
+    - 'no_peek: admitted(k, now) => k.t_known + refuse_k * k.t_known_err <= now'
+    - 'telemetry: every refusal increments RefusalLedger for the requested field'
+  R-ADMISS:
+    body: Coverage is factual and separate from an AdmissibilityDecision; only a
+      FROZEN hash-verified rule may exclude a unit, and EXCLUDE_UNIT requires the
+      paired indicator arm
+    checks:
+    - 'frozen_rule: AdmissibilityDecision requires AdmissibilityRule.status == FROZEN'
+    - 'hash_match: recomputed rule content hash == AdmissibilityRule.spec_hash'
+    - 'two_arms: on_fail == EXCLUDE_UNIT => required_gap_arm == BOTH'
 types:
   Known:
     generic:
     - V
     fields:
       value: V
-      t_event: Timestamp
-      t_known: Timestamp
+      t_event: EventTime
+      t_known: KnowledgeTime
       t_known_prov: enum:OBSERVED|IMPUTED|ASSUMED
       t_known_err: Duration
+      imputation_rule: ImputationRuleId?
+      seq: int
       source: SourceId
       provenance: Provenance
+  SourceProfile:
+    fields:
+      source: SourceId
+      has_recv_ns: bool
+      transport: enum:LOCAL_WS|LOCAL_REST_POLL|ARCHIVE|ONCHAIN|DERIVED
+      clock_err: Duration
+      default_imputation_rule: ImputationRuleId?
+  ImputationRule:
+    fields:
+      id: ImputationRuleId
+      applies_to: SourceId
+      delay: Duration
+      error: Duration
+      calibrated_from: SourceId?
+      calibration_overlap: (EventTime, EventTime)?
+      bias_direction: enum:OPTIMISTIC|PESSIMISTIC
+      artifact_id: ImmutableId?
   Uncertain:
     generic:
     - T
@@ -392,13 +433,71 @@ types:
   StateView:
     methods:
       get: '(field: str) -> Known[any] | Unavailable'
+      history: '(field: str, span: Duration) -> list[Known[any]]'
       coverage: '(field: str, span: Duration) -> Coverage'
+      refusals: '() -> RefusalLedger'
+    fields:
+      now: KnowledgeTime
+      spec_snapshot: Hash
     notes: the ONLY read entry point; bound to a KnowledgeTime `now`
+  Gap:
+    fields:
+      from: EventTime
+      to: EventTime
+      cause: enum:STREAM_GAP|COLLECTOR_RESTART|VENUE_SLOW_CONSUMER_1013|VENUE_SERVER_CYCLE|TOPIC_STALE|GLOBAL_SOCKET_SILENCE|NOT_YET_SUBSCRIBED|POST_UNSUBSCRIBE|UNKNOWN
+      raw_cause: str
+      evidence: str
   Coverage:
     fields:
-      segments: list[(Timestamp, Timestamp)]
+      field: str
+      target: (EventTime, EventTime)
+      covered: list[(EventTime, EventTime)]
+      gaps: list[Gap]
+      weight_missing: float
+      tail_deficit: Duration
+      observed_n: int
+      expected_n: int
+      duplicate_n: int
+      max_gap: Duration
       complete_frac: float
+      strike_readable: bool
+      provenance: Provenance
     notes: 'NOT a scalar: gaps are non-contiguous'
+  AdmissibilityRule:
+    fields:
+      id: AdmissibilityRuleId
+      version: int
+      status: enum:DRAFT|FROZEN|RETIRED
+      field: str
+      target_expr: str
+      cadence: Duration
+      min_complete_frac: float?
+      max_weight_missing: float?
+      max_gap: Duration?
+      protected_span_expr: str?
+      require_pre_boundary_sample: bool
+      require_known_at_boundary: bool
+      on_fail: enum:EXCLUDE_UNIT|DEGRADE|REFUSE_RUN
+      required_gap_arm: enum:EXCLUDE|INDICATOR|BOTH
+      frozen_at: Timestamp?
+      spec_hash: Hash
+  AdmissibilityDecision:
+    fields:
+      coverage_hash: Hash
+      rule: AdmissibilityRuleId
+      rule_hash: Hash
+      admissible: bool
+      failed_checks: list[str]
+      evaluated_at: Timestamp
+  RefusalLedger:
+    fields:
+      by_field: dict[str, RefusalCount]
+  RefusalCount:
+    fields:
+      n_admitted: int
+      n_refused_within_err: int
+      n_unavailable_upstream: int
+      worst_case_peek_blocked: Duration
   SelfState:
     fields:
       orders: dict[ImmutableId, OrderRecord]
@@ -795,11 +894,6 @@ types:
       from the Brownian variance line one revision earlier. Hence
       resid_cond_mean_test_p, hetero_test_p, cross_fitted and n_day_clusters are
       GATES: pricing refuses without them.
-  ReducedFormFit:
-    fields:
-      alpha: float
-      resid_var: VarianceQuantity
-      n_effective: int
   UnitSpace:
     fields:
       coordinate: enum:NORMALISED_ARITHMETIC_RETURN|LOG_RETURN|RAW_PRICE
@@ -948,6 +1042,23 @@ types:
       recv_ns: Timestamp
       source: SourceId
       payload: str
+  DatasetPartition:
+    fields:
+      dataset: enum:QUOTES|TRADES|BOOK_SNAP|TWAP|WINDOWS|COVERAGE|BINANCE_BT|MARKOUT_EVENTS|CALIB_PANEL
+      day: Date
+      coin: str
+      path: str
+      rows: int
+      inputs: list[str]
+      distiller_version: str
+      distiller_code_sha256: Hash
+      era: Hash
+      source_digest: Hash
+      output_sha256: Hash
+      written_at: Timestamp
+      manifest_hash: Hash
+      partial: bool
+      consumer_status: enum:REFUSE_PARTIAL|ELIGIBLE_INPUT_ONLY
   WealthLedger:
     fields:
       markout: float
@@ -1045,6 +1156,43 @@ modules:
     notes: combines marginals under an EXPLICIT dependence contract; refuses if unknown
   BE-ScenarioProvider:
     produces: Known[JointOutcomeDistribution] | Unavailable
+  DA-Normalize:
+    consumes:
+    - RawEvent
+    - SourceProfile
+    - ImputationRule
+    produces:
+    - Known
+    - DatasetPartition
+    - HealthEvent
+    ports:
+    - feed
+    - telemetry_out
+  DA-Coverage:
+    consumes:
+    - DatasetPartition
+    - AdmissibilityRule
+    produces:
+    - Coverage
+    - AdmissibilityDecision
+    - DatasetPartition
+    - HealthEvent
+    ports:
+    - read_all
+    - telemetry_out
+  DA-State:
+    consumes:
+    - Known
+    - Coverage
+    - AdmissibilityRule
+    produces:
+    - StateView
+    - SelfState
+    - RefusalLedger
+    - HealthEvent
+    ports:
+    - feed
+    - telemetry_out
   DE-Constraints:
     consumes:
     - DecisionProblem
@@ -1126,6 +1274,8 @@ ports:
 prelude:
   primitives:
   - Timestamp
+  - EventTime
+  - KnowledgeTime
   - Duration
   - Date
   - Hash
@@ -1161,6 +1311,8 @@ prelude:
   - PluginRegistry
   - any
   - EdgeId
+  - ImputationRuleId
+  - AdmissibilityRuleId
 config_supplied:
 - ForecastRequest
 - CouplingGraph
@@ -1173,3 +1325,6 @@ config_supplied:
 - HeartbeatPulse
 - HaltState
 - CancelAllCommand
+- SourceProfile
+- ImputationRule
+- AdmissibilityRule

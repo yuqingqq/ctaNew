@@ -1,7 +1,7 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
 Updated: 2026-08-21, session 3. All work is on branch **`mm-research`**;
-nothing is on `main`. Sigma is at **Revision 5** / contracts **v16**;
+nothing is on `main`. Sigma is at **Revision 5** / contracts **v17**;
 Route A has now been measured under frozen protocol `route_a_v1`. The result is
 **DESCRIPTIVE / PRICING HOLD**: one OOS test day cannot authorize a law.
 `route_a_v2` is now pre-registered as a future conditional-variance successor;
@@ -23,9 +23,9 @@ session 1 were withdrawn or downgraded after discovering bad underlying data;
 do not cite either without reading §"What was withdrawn".
 
 Reading order:
-1. `live/pm_research/PM_ARCHITECTURE.md` (v12) — the entry point; structure.
-2. `live/pm_research/contracts/contracts.yaml` (**v16**) — machine-readable
-   source of truth for types (**v16**). The prose defers to this file, not the
+1. `live/pm_research/PM_ARCHITECTURE.md` — the entry point; explanatory structure.
+2. `live/pm_research/contracts/contracts.yaml` (**v17**) — machine-readable
+   source of truth for types. The prose defers to this file, not the
    other way round.
 3. `live/pm_research/SIGMA_ROUTE_A_RESULTS_2026-08-20.md` — the measured,
    strictly-forward Route-A result and current verdict.
@@ -133,9 +133,9 @@ knowledge-error composition, a knowledge-truncated `StateView`, and refusal
 telemetry. Fifteen focused checks pass, along with read-only construction from
 real TWAP and CLOB collector rows. The TWAP adapter explicitly selects the
 Chainlink payload event timestamp rather than the later envelope publication
-timestamp. This is **offline infrastructure, not a CLOB result**. The proposed
-measurement contract delta still targets v12 and must be rebased onto canonical
-contracts v16 before this boundary is declared integrated.
+timestamp. This is **offline infrastructure, not a CLOB result**. Canonical
+contracts v17 now integrate this boundary; the old v12 measurement delta is
+historical input, not a merge candidate.
 
 `live/pm_research/tier1_pipeline.py` now implements build-order step 2 without
 crossing that contract boundary. It reads only immutable rotated collector
@@ -143,7 +143,7 @@ files and writes code/input-addressed, `t_known`-sorted zstd Parquet partitions
 for TWAP, reconstructed UP-space quotes, deduped-and-collapsed parent trades,
 and window identity with collector-era and cause-aware gap facts. Writes are
 temp-renamed and idempotent; a changed manifest is fatal; partial partitions
-are stamped and refused by default. Six focused checks cover sequential CLOB
+are stamped and refused by default. Seven focused checks cover sequential CLOB
 top reconciliation, token folding, exact dedup + `(t_event,q_up)` collapse,
 resolution knowledge time, cause-preserving gaps, TWAP timestamp selection, and
 partition refusal/overwrite behavior. A bounded 2026-08-20 BTC smoke under
@@ -152,7 +152,22 @@ windows, with zero malformed CLOB lines, zero invalidated books, zero crossed
 quotes and zero UP/DOWN parity failures. Every smoke partition was
 `partial=true`; these counts are infrastructure verification, **not a new
 research result**. The factual window rows say
-`gap_rule_status=UNFROZEN_FACTS_ONLY`: A-TWAP-1 is not silently applied.
+`gap_rule_status=FACTS_ONLY_RULE_SEPARATE`: window identity does not silently
+apply an eligibility rule.
+
+**Coverage/admissibility is now executable and frozen separately.**
+`PM_MEASUREMENT_PREREG.md` and `config/a_twap_1.json` freeze A-TWAP-1 by content
+hash; `config/source_profiles_v1.json` freezes a conservative 1 ms host-clock
+bound against Chrony evidence. `coverage_ledger.py` measures 310 one-second
+slots, preserves durable gap causes, computes protected-span missing weight and
+knowledge-time strike readability, then emits a separate hash-bound decision.
+Six pure checks pass, including the exact 90%-density/31-second-hole case and a
+late-known strike refusal. Tier-1 now has a `coverage` dataset. A bounded real
+smoke emitted 288 coverage rows under `partial=true`; its eligibility counts are
+not interpretable. A complete 2026-08-20 BTC build emitted 160,148 TWAP rows and
+288 windows as non-partial, sorted, digest-verified partitions. Complete daily
+coverage intentionally waits for previous/current/next UTC-day TWAP partitions,
+so it cannot be declared complete from a same-day tail.
 
 ### G-FF1 measured — `side` IS the taker's, but the gate is not passed
 
@@ -220,17 +235,16 @@ ceiling pass**; that would be tuning the instrument to the answer.
    behaves like the MNAR `SLOW_CONSUMER_1013` class, not like the across-coins
    MAR cycling class where `3b9bddc` grouped it. If it stays BTC-only as n grows,
    the cause-aware rule must move it. Accumulate before amending.
-2. **Measurement-layer contract integration.** Rebase
-   `contracts_measurement_delta.yaml` from v12 onto canonical contracts v16,
-   freeze the measurement preregistration, then connect the now-executable
-   Tier-1 distiller to the typed Coverage/AdmissibilityRule ledger. The
-   distiller's cause facts exist; eligibility does not. Do not run a headline
-   book, markout or flow/fill result before those boundaries land.
+2. **Measurement-layer next seam.** Build the daily adjacent TWAP partitions,
+   then wire point-in-time coverage and `EventTimeView` into the replay canary.
+   Batch coverage/admissibility is now executable; a complete 2026-08-20
+   coverage partition waits for the closed 2026-08-21 neighbor. Do not turn a
+   partial partition into a result.
 3. **Phase 0A 5 — S30/S60 internal sampling semantics.** This still gates Route
    B only; the route-A fit remains descriptive until 10 OOS days.
-4. **Contracts cleanup.** Remove the duplicate YAML `ReducedFormFit` and stale
-   `ReducedFormLaw`, make the contract loader reject duplicate keys, totalize
-   malformed-input refusals and validate `GateEvidence.effect_size`.
+4. **Contracts cleanup.** Duplicate `ReducedFormFit` is removed and duplicate
+   keys are now fatal. The stale `ReducedFormLaw`, malformed-input refusal
+   totality and `GateEvidence.effect_size` validation remain.
 
 ### Collector: the 1013 is VENUE-SIDE — measured, not inferred
 

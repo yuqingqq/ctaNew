@@ -1,9 +1,11 @@
 # =============================================================================
 # P-2026-003 MEASUREMENT LAYER — canonical contract delta  v12 -> v13
 #
-# STATUS: PROPOSED. This file is a merge candidate for contracts.yaml, written
-# separately because the planning brief forbids editing contracts.yaml in place.
-# Nothing here is in force until it is merged and `version:` is bumped to 13.
+# STATUS: SUPERSEDED HISTORICAL INPUT. The measurement-infrastructure subset was
+# rebased directly onto canonical v16 and landed as contracts.yaml v17. Do not
+# merge this v12->v13 file: its EV vocabulary and several causal explanations
+# predate later measured corrections. Canonical v17 plus
+# PM_MEASUREMENT_PREREG.md are authoritative.
 #
 # It defines the three unbuilt modules that build order step 1-2 requires:
 #     DA-State          the knowledge-time layer  (Known[V] + StateView)

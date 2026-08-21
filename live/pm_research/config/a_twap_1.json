@@ -1,0 +1,31 @@
+{
+  "field": "twap60[{symbol}]",
+  "frozen_at": "2026-08-21T03:26:27Z",
+  "id": "A-TWAP-1",
+  "on_fail": "EXCLUDE_UNIT",
+  "required_gap_arm": "BOTH",
+  "requirements": {
+    "max_gap_ms": 30000,
+    "max_weight_missing": 0.0,
+    "min_complete_frac": 0.9,
+    "pre_boundary_span": {
+      "end": "t0",
+      "start": "t0-5s"
+    },
+    "protected_span": {
+      "end": "T",
+      "start": "T-60s"
+    },
+    "require_known_at_boundary": true,
+    "require_pre_boundary_sample": true
+  },
+  "spec_hash": "ab098a558d67a7ef45c685fe8e2ce027fc2ebf55bc278e853115288b25ee4091",
+  "status": "FROZEN",
+  "target": {
+    "cadence_ms": 1000,
+    "end": "T+5s",
+    "slot_semantics": "(start,end]",
+    "start": "t0-5s"
+  },
+  "version": 1
+}

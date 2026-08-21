@@ -1,0 +1,49 @@
+{
+  "clock_domain": "host CLOCK_REALTIME disciplined by chrony",
+  "evidence": {
+    "bound_rationale": "1 ms exceeds measured root distance by more than 9x",
+    "command": "chronyc tracking",
+    "last_offset_s": -0.000000652,
+    "leap_status": "Normal",
+    "observed_at": "2026-08-21T03:26:27Z",
+    "rms_offset_s": 0.000000622,
+    "root_delay_s": 0.000140952,
+    "root_dispersion_s": 0.0000367,
+    "system_offset_s": -0.000000143
+  },
+  "frozen_at": "2026-08-21T03:26:27Z",
+  "profiles": [
+    {
+      "clock_err_ns": 1000000,
+      "has_recv_ns": true,
+      "source": "pm_clob_ws",
+      "transport": "LOCAL_WS"
+    },
+    {
+      "clock_err_ns": 1000000,
+      "has_recv_ns": true,
+      "source": "pm_market_poll",
+      "transport": "LOCAL_REST_POLL"
+    },
+    {
+      "clock_err_ns": 1000000,
+      "has_recv_ns": true,
+      "source": "pm_resolution_poll",
+      "transport": "LOCAL_REST_POLL"
+    },
+    {
+      "clock_err_ns": 1000000,
+      "has_recv_ns": true,
+      "source": "pm_twap30_ws",
+      "transport": "LOCAL_WS"
+    },
+    {
+      "clock_err_ns": 1000000,
+      "has_recv_ns": true,
+      "source": "pm_twap60_ws",
+      "transport": "LOCAL_WS"
+    }
+  ],
+  "registry_hash": "d0fb3e0733b8b9fdea28e02540150f01554ebabffe42878aef13144829ce4847",
+  "version": 1
+}

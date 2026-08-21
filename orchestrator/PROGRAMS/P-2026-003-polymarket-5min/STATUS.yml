@@ -272,7 +272,7 @@ flags:
                              # proxies, coverage, ages and separately hashed
                              # price-gap cause/version attribution. Gap data is
                              # audit-only and cannot change v1 eligibility.
-  measurement_foundation: step2-executable-contract-pending
+  measurement_foundation: step3-v17-coverage-executable
                              # da_state.py implements the offline SourceProfile-
                              # bound Known factory, nominal clocks, associative
                              # knowledge-error composition, knowledge-truncated
@@ -285,14 +285,22 @@ flags:
                              # Partitions are code/input-addressed, t_known
                              # sorted, zstd Parquet, temp-renamed, idempotent,
                              # merge-never-overwrite and refuse partial reads.
-                             # Six focused pipeline checks pass. A bounded real
-                             # 2026-08-20 BTC smoke produced 9,972 TWAP / 635
-                             # quotes / 111 trades / 288 windows, all under /tmp
-                             # and stamped partial=true; this is verification,
-                             # not a result. A-TWAP-1 remains UNFROZEN and is
-                             # not applied. The v12 measurement delta still
-                             # needs rebasing onto canonical contracts v16; no
-                             # CLOB result or decision gate is authorized.
+                             # Canonical contracts v17 now own DA-Normalize,
+                             # DA-Coverage and DA-State, use nominal event vs
+                             # knowledge clocks, and separate Coverage facts
+                             # from AdmissibilityDecision. Duplicate YAML keys
+                             # are fatal. PM_MEASUREMENT_PREREG.md freezes
+                             # A-TWAP-1 and the 1ms observed-source clock bound
+                             # by content hash. coverage_ledger.py has six pure
+                             # checks; tier1_pipeline.py has seven integration
+                             # checks. A bounded real smoke emitted TWAP/quotes/
+                             # trades/windows/coverage only under /tmp and
+                             # partial=true. A complete 2026-08-20 BTC build
+                             # emitted 160,148 TWAP rows and 288 windows as
+                             # non-partial sorted digest-verified partitions.
+                             # Complete coverage correctly waits for adjacent
+                             # UTC-day TWAP partitions. This is infrastructure,
+                             # not a CLOB result or decision authorization.
   sigma_plan_review: iter5-measurement-go # SIGMA_PLAN_REVIEW_ITER5.md reviews
                              # 58f6716. All ITER4 specification blockers pass.
                              # Three implementation cleanups remain (duplicate

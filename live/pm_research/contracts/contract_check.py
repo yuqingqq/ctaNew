@@ -19,13 +19,16 @@ import subprocess, sys, yaml, os
 REL = "live/pm_research/contracts/contracts.yaml"
 MIG_REL = "live/pm_research/contracts/migrations.yaml"
 
-def load(ref):
+def load(ref, *, strict=True):
     if ref in ("WORKTREE", "", None):
-        return yaml.safe_load(open(REL))
+        raw = open(REL).read()
+        return yaml.load(raw, Loader=StrictLoader if strict else yaml.SafeLoader)
     r = subprocess.run(["git", "show", f"{ref}:{REL}"], capture_output=True, text=True)
     if r.returncode != 0:                      # FATAL — v8 silently passed here
         sys.exit(f"FATAL: cannot read {REL} at ref {ref!r}: {r.stderr.strip()}")
-    return yaml.safe_load(r.stdout)
+    return yaml.load(
+        r.stdout, Loader=StrictLoader if strict else yaml.SafeLoader
+    )
 
 def flatten(doc):
     """owner-qualified name -> type string. Types are compared, not just names."""
@@ -237,22 +240,36 @@ def selftest():
     unchanged = diff(flatten(base), flatten(base))
     same_ok = not (unchanged[0] or unchanged[1] or unchanged[2])
     print(f"  {'PASS' if same_ok else 'FAIL'}  no false positive on identical input")
-    return 0 if (ok and same_ok) else 1
+    try:
+        yaml.load("types:\n  X: {}\n  X: {}\n", Loader=StrictLoader)
+    except yaml.YAMLError:
+        duplicate_ok = True
+    else:
+        duplicate_ok = False
+    print(
+        f"  {'PASS' if duplicate_ok else 'FAIL'}  duplicate YAML keys are fatal"
+    )
+    return 0 if (ok and same_ok and duplicate_ok) else 1
 
 if __name__ == "__main__":
     if "--selftest" in sys.argv:
         sys.exit(selftest())
     if len(sys.argv) < 2:
         sys.exit("usage: contract_check.py <base-ref> [<ref>|WORKTREE] | --selftest")
-    a = flatten(load(sys.argv[1]))
-    b = flatten(load(sys.argv[2] if len(sys.argv) > 2 else "WORKTREE"))
+    # Historical refs may predate strict duplicate-key enforcement.  Parse the
+    # base with legacy last-write-wins semantics so it can be migrated, but the
+    # target is always strict: no new canonical contract may hide a definition.
+    a = flatten(load(sys.argv[1], strict=False))
+    b = flatten(load(sys.argv[2] if len(sys.argv) > 2 else "WORKTREE", strict=True))
     va, vb = a.pop("_version", 0), b.pop("_version", 0)
     a.pop("meta:version", None); b.pop("meta:version", None)   # internal, not a contract
     removed, changed, added = diff(a, b)
     if (vb or 0) < (va or 0):
         print(f"*** VERSION REGRESSION: {va} -> {vb}")
         removed["meta:version"] = f"{va} -> {vb}"
-    inv = invariants(load(sys.argv[2] if len(sys.argv) > 2 else "WORKTREE"))
+    inv = invariants(
+        load(sys.argv[2] if len(sys.argv) > 2 else "WORKTREE", strict=True)
+    )
     if inv:
         print(f"INVARIANT FAILURES ({len(inv)}):")
         for e in inv:
