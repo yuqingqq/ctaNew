@@ -199,3 +199,11 @@ reference_snapshot:
     corrected_state_results:
       path: live/pm_research/FLOW_INTENSITY_RESULTS.md
       sha256: 15915d5929796c2d626f39f8c271e884374db42bb5d5335435908bb0aafc6afd
+
+# ERRATUM 2026-08-21: the phase x r interaction test has RUN and option (d)
+# binning is REFUTED -- INTERACTION_MATERIAL on all seven coins, ratio 1.685
+# (btc) to 4.486 (hype) against a 0.50 bar, every ratio above 1.0. The
+# interaction concentrates in the TERMINAL MINUTE, so an
+# `unidentified_60s_component` factor would absorb f_r's largest real feature
+# rather than remove an artefact. Indicated replacement: NON-UNIFORM grid,
+# coarse in the body, fine in the terminal. See FLOW_MODEL_STATE.md section 1a.

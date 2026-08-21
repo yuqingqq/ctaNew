@@ -489,3 +489,12 @@ no count layer and therefore no Hawkes layer, and that more days would not help.
 That was a **false impossibility** — the ex-micro count exists on Tier B, it is
 thin rather than absent, and more days is precisely its remedy. Corrected in
 §3.1, §5.5 and §6.4.
+
+
+## ERRATUM 2026-08-21 — option (d) is REFUTED
+
+The `phase x r` interaction test pre-registered here has run: `INTERACTION_MATERIAL` on all seven coins, ratio 1.685 (btc) to 4.486 (hype) against a 0.50 bar, every ratio ABOVE 1.0. The additivity assumption that option (d) rests on is false.
+
+The interaction concentrates in the TERMINAL MINUTE (btc last cycle 4.7x the next largest, monotone collapse within it), so the failure is not the oscillation interacting with `r` -- it is `f_r` having real structure finer than 60 s there. A factor named `unidentified_60s_component` would ABSORB `f_r`'s largest genuine feature rather than remove an artefact.
+
+Option (b), 60 s bins, is also wrong: it buries the terminal collapse in one bin. Indicated replacement is a NON-UNIFORM grid, coarse in the body and fine in the terminal. Do not ship option (d).

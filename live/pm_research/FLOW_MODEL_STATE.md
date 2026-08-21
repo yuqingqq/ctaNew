@@ -30,6 +30,45 @@ the other document is stale. Say so rather than reconciling it privately.
 | **Market self-excitation is not deletable** | bivariate 2×2: diagonal 0.18–0.45 dominates cross 0.02–0.18 on every coin | scalar fit re-run below; the BIVARIATE fit is still grid-seeded |
 | **Clustering runs at 80–218 ms, and the censoring was OUR GRID** | scalar Hawkes re-fit 2026-08-21 with the instrument floor + continuous optimiser: **no coin is censored**, branching 0.33–0.55, half-life 80.8 ms (btc) to 217.7 ms (hype) — **81×–218× the venue tick** | 24 windows/coin, `clob_v3_1` |
 
+## 1a. The binning decision is REFUTED, and the factor would have eaten real signal
+
+`SPEC_REV2` §2 chose **option (d)** — 15 s bins plus an explicit 4-level phase
+factor — on the **untested assumption that the unidentified 60 s component is
+ADDITIVE**, i.e. separable from `f_r`. I ratified that choice. The pre-registered
+`phase × r` interaction test has now run and it is **`INTERACTION_MATERIAL` on
+all seven coins**:
+
+| coin | `rms(interaction)/rms(phase main effect)` | CI95 |
+|---|---:|---|
+| btc | **1.685** | [1.379, 2.072] |
+| eth | **1.660** | [1.268, 2.230] |
+| sol | 2.377 | [1.776, 3.524] |
+| hype | 4.486 | [3.352, 6.055] |
+
+The material bar is 0.50; every lower bound clears it by 2.5×+, and **every ratio
+exceeds 1.0** — the non-separable structure is *larger than the effect the factor
+exists to remove*.
+
+**And the reason is worse than non-separability.** The interaction concentrates
+almost entirely in the **terminal minute** — btc residual RMS by cycle
+`0.049, 0.074, 0.086, 0.121 → 0.568`, so the last cycle carries **4.7×** the next
+largest (eth 5.7×) — and inside it the pattern is a monotone collapse
+(btc `+0.404, +0.165, −0.174, −1.034`, ≈4.2× decline). That is not the
+oscillation interacting with `r`. It is **`f_r` having genuine structure finer
+than 60 s in the terminal minute**, which a 5-level cycle factor cannot express,
+so the additive model attributes the terminal collapse to *phase*.
+
+**A factor labelled `unidentified_60s_component` would therefore be EATING
+`f_r`'s largest real feature, not removing an artefact.** That is strictly worse
+than failing to separate, and it is why this must not ship.
+
+Excluding the terminal minute does not rescue additivity (btc 1.689 → 0.357,
+eth 1.615 → 0.369, both still above the 0.25 bar with intervals reaching past
+0.50). Option (b), 60 s bins, is also wrong: it puts the entire terminal collapse
+inside a single bin. **Indicated replacement: a NON-UNIFORM grid, coarse in the
+body and fine in the terminal** — the shape §1.3 already chose for Tier B, for
+the opposite reason.
+
 ## 2. Measured and UNDETERMINED — not negative, not positive
 
 - **The maker-edge sign.** `+0.173 ¢/share [−0.251, +0.596]` pooled; **all seven
@@ -115,6 +154,8 @@ the other document is stale. Say so rather than reconciling it privately.
 | "16.3 % of events" unqualified | pooled and btc-dominated; 2.0 %–90.0 % per coin |
 | "count layer available / volume layer blocked" | **inverted** — volume is unblocked, count is contaminated |
 | the FLB edge | 0.0004 Brier, one-sided; measured on stale books |
+| "B2 is actively worse on bnb" | **sample-unstable, not settled** — `+0.0141` at 24 windows, full stack *beats* B1 at 12. A layer whose contribution flips sign between samples of the same era is fitting noise |
+| SPEC_REV2 option (d) binning (15 s + additive phase factor) | **refuted** — see §1a; non-uniform grid indicated |
 
 ## 5. Binding rules
 
