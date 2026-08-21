@@ -64,7 +64,7 @@ marks:
   side_role: CONDITIONAL_MARK
   monetary_mark: SIZE_SHARES_TIMES_NATIVE_EXECUTION_PRICE
   cause_specific_intensity: TOTAL_INTENSITY_TIMES_CONDITIONAL_TYPE_PROBABILITY
-  reconciliation_required: true
+  reconciliation_required: NOT_YET_IMPLEMENTED  # declared property, no code path yet
   micro_market_independence:
     status: TESTED_AND_FAILED
     test: CIRCULAR_SHIFT_PERMUTATION_CROSS_PAIRS_TAU_0_25_S
@@ -100,7 +100,9 @@ hawkes:
   development_fit_allowed: true
   development_requires_full_baseline_compensator: true
   operational_time_unit: ONE_EXPECTED_BASELINE_ARRIVAL
-  candidate_half_lives_operational: [0.25, 0.5, 1, 2, 5, 10]
+  # Extended DOWNWARD 2026-08-21: the 0.25 floor was selected by 6 of 7 coins,
+  # a CENSORED estimate rather than a selection (~36 ms on btc = order splitting).
+  candidate_half_lives_operational: [0.03, 0.0625, 0.125, 0.25, 0.5, 1, 2, 5, 10]
   branching_grid: [0.0, 0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40,
                    0.45, 0.50, 0.55, 0.60, 0.65, 0.70, 0.75, 0.80, 0.85, 0.90]
   development_boundary_policy: RESET_EACH_WINDOW_AND_REPORT_NO_WARMUP
@@ -162,7 +164,7 @@ reference_snapshot:
       sha256: 5ea7174c4d7aeaeafbbf7e01a01d2408d08606089b7316f1d321a171681fb22d
     development_code:
       path: live/pm_research/flow_fill_development.py
-      sha256: c951187c0dd46cbfc4dd21b0f19c5d38f79193c441659b13d401b3fddc06a36f
+      sha256: 1a4b6d301a1c8acca213929a6ad0cade4645bba191f6f84f6ce7ac3d3abb5cbe
     development_results:
       path: live/pm_research/FLOW_FILL_DEVELOPMENT_RESULTS.md
       sha256: c0a1455f4530324b4e0ae0e3fc6400ef58d5f47ccbc16ed72cae19dfa915c614
@@ -174,7 +176,7 @@ reference_snapshot:
       sha256: 7160b8bba78bba16ec44960c5e63fe6c5dadf29c2b4a3b9a777f2d14a0e33ca8
     corrected_state_code:
       path: live/pm_research/flow_intensity.py
-      sha256: 49b22e9071b5d3d6362d5adf370b47485e255466a080634cad933450b987e807
+      sha256: a0f49296940becc5c809f93be9e0dbb94af681345a55d8f575990222be3c5ce7
     corrected_state_results:
       path: live/pm_research/FLOW_INTENSITY_RESULTS.md
       sha256: 0ddf28093362ecb34b6e8d747996143a356b602c464154690c25e73efa52de3c

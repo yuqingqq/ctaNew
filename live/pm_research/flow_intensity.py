@@ -48,6 +48,11 @@ OUT_MD = Path(__file__).with_name("FLOW_INTENSITY_RESULTS.md")
 
 WINDOW_S = 300.0
 QUOTE_STATE_LAG_S = 0.250  # frozen; shared by numerator and exposure
+# Declared in FLOW_MODEL_PROTOCOL_V*.yaml as `minimum_price_bin_dwell_s` and in
+# SPEC_REV2 as part of the estimand rather than a post-hoc filter -- but until
+# 2026-08-21 it existed only as an editorial fence applied in the write-up, with
+# no code path. A bin with 9 s of dwell alone produced a shape_ratio of 295.
+MIN_BIN_DWELL_S = 60.0
 MICRO_SIZE = 0.02          # labelled single-actor class; prevalence varies by coin
 MICRO_TOL = 1e-9
 ERA = "clob_v3_1"
@@ -629,7 +634,14 @@ def fp(per_coin: int = 10, n_boot: int = 2000,
             "n_trades_no_state": diag_total["no_state"],
             "n_exec_state_bin_mismatch": diag_total["exec_state_bin_mismatch"],
             "n_micro": diag_total["micro_admitted"],
-            "dwell_s": [sum(w[1][i] for w in pw_cnt) for i in range(n_bins)],
+            "dwell_s": (dwell_total := [sum(w[1][i] for w in pw_cnt)
+                                       for i in range(n_bins)]),
+            # The fence is now CODE, not prose. Bins below the declared minimum
+            # are marked non-reportable and published beside the retained set
+            # rather than dropped -- the excluded set is part of the result.
+            "min_bin_dwell_s": MIN_BIN_DWELL_S,
+            "bin_reportable": [d >= MIN_BIN_DWELL_S for d in dwell_total],
+            "n_bins_below_min_dwell": sum(d < MIN_BIN_DWELL_S for d in dwell_total),
             "count": {"profile": prof, "shape_ratio": shape_ratio(prof),
                       "ci": cluster_bootstrap(pw_cnt, n_boot, seed)},
             "count_ex_micro": {"profile": profile_ratio(pw_ex)},

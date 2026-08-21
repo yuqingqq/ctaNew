@@ -715,6 +715,54 @@ def fit_hawkes(paths: Sequence[tuple[Sequence[float], float]]) -> dict[str, Any]
     }
 
 
+def assert_protocol_conformance(path: Path = PROTOCOL) -> int:
+    """Check code constants against the FROZEN protocol. Raise on divergence.
+
+    A `reference_snapshot` SHA-256 proves a file has not changed since it was
+    hashed. It proves NOTHING about code conforming to a declaration, and this
+    programme has now been bitten four times by a name that was not a definition.
+    The fourth was this file: commit 332b09b extended the Hawkes half-life grid
+    in code, refreshed the snapshot, left the DECLARED grid untouched in both
+    frozen protocols, and the snapshot verified clean while the committed code
+    conformed to no protocol at all. A change-detector is not a conformance
+    checker; this is the conformance checker.
+    """
+    import yaml
+    spec = yaml.safe_load(path.read_text())
+    checks = 0
+    problems: list[str] = []
+
+    def same(label: str, code_value, declared, tol: float = 1e-12) -> None:
+        nonlocal checks
+        checks += 1
+        a, b = list(code_value), list(declared)
+        if len(a) != len(b) or any(abs(float(x) - float(y)) > tol for x, y in zip(a, b)):
+            problems.append(f"{label}: code {a} != protocol {b}")
+
+    same("hawkes.candidate_half_lives_operational",
+         (0.03, 0.0625, 0.125, 0.25, 0.5, 1.0, 2.0, 5.0, 10.0),
+         spec["hawkes"]["candidate_half_lives_operational"])
+    same("hawkes.branching_grid", [i / 20 for i in range(19)],
+         spec["hawkes"]["branching_grid"])
+    same("ground_process.remaining_time_edges_s", R_EDGES,
+         spec["ground_process"]["remaining_time_edges_s"])
+    same("ground_process.price_edges", P_EDGES, spec["ground_process"]["price_edges"])
+    same("fill_actions.action_times_elapsed_s", ACTION_TIMES,
+         spec["fill_actions"]["action_times_elapsed_s"])
+    same("fill_actions.horizons_s", ACTION_HORIZONS, spec["fill_actions"]["horizons_s"])
+    same("fill_actions.size_shares", [ACTION_SIZE], [spec["fill_actions"]["size_shares"]])
+    same("marks.micro_size_shares", [MICRO_SIZE], [spec["marks"]["micro_size_shares"]])
+    same("state.knowledge_lag_ms", [STATE_LAG_S * 1000.0],
+         [spec["state"]["knowledge_lag_ms"]])
+    same("state.minimum_price_bin_dwell_s", [fi.MIN_BIN_DWELL_S],
+         [spec["state"]["minimum_price_bin_dwell_s"]])
+
+    if problems:
+        raise AssertionError("CODE DOES NOT CONFORM TO THE FROZEN PROTOCOL:\n  "
+                             + "\n  ".join(problems))
+    return checks
+
+
 def a1_independence(windows: Sequence[DevWindow], tau: float = 0.25,
                     n_perm: int = 2000, seed: int = 20260821) -> dict[str, Any]:
     """A1 -- is the MICRO_002 class independent of market flow?
@@ -1066,6 +1114,7 @@ def select_windows(per_coin: int) -> list[tuple[str, Path, str, str, list[tuple[
 
 
 def run(per_coin: int) -> dict[str, Any]:
+    assert_protocol_conformance()   # fail-closed before any measurement
     selected = select_windows(per_coin)
     by_coin: collections.defaultdict[str, list[DevWindow]] = collections.defaultdict(list)
     for i, (slug, path, up, down, gaps) in enumerate(selected, 1):
@@ -1126,6 +1175,27 @@ def selftest() -> int:
         if not condition:
             raise AssertionError(label)
         checks += 1
+
+    checks += assert_protocol_conformance()
+    ok(True, "code conforms to the frozen protocol")
+
+    # CONTROL: the conformance checker must FAIL on a divergent protocol.
+    # Without this it is exactly the unfalsifiable mechanism it was added to
+    # replace -- a checker that reports success without checking.
+    import tempfile, yaml as _yaml
+    _spec = _yaml.safe_load(PROTOCOL.read_text())
+    _spec["hawkes"]["candidate_half_lives_operational"] = [0.25, 0.5, 1, 2, 5, 10]
+    with tempfile.NamedTemporaryFile("w", suffix=".yaml", delete=False) as fh:
+        _yaml.safe_dump(_spec, fh)
+        _bad = Path(fh.name)
+    try:
+        assert_protocol_conformance(_bad)
+    except AssertionError:
+        checks += 1
+    else:
+        raise AssertionError("conformance checker must reject a divergent protocol")
+    finally:
+        _bad.unlink(missing_ok=True)
 
     ok(r_bin(0.0) == 0 and r_bin(299.9) == 4, "five frozen elapsed bands")
     ok(cell_at(30.0, 0.10) == (0, fi.p_bin(0.10)), "joint r/p cell")

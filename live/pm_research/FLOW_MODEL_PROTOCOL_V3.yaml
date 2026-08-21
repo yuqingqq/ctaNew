@@ -47,7 +47,9 @@ hawkes:
   multitype_baseline: JOINT_REFIT_TYPE_BASELINES_WITH_MEAN_TOTAL_RATE_ONE
   admission_test_correction: HOLM_ACROSS_COINS_AND_TESTS
   admission_direction: RESIDUAL_CLUSTERING
-  candidate_half_lives_operational: [0.25, 0.5, 1, 2, 5, 10]
+  # Extended DOWNWARD 2026-08-21: the 0.25 floor was selected by 6 of 7 coins,
+  # a CENSORED estimate rather than a selection (~36 ms on btc = order splitting).
+  candidate_half_lives_operational: [0.03, 0.0625, 0.125, 0.25, 0.5, 1, 2, 5, 10]
   warmup:
     minimum_calendar_s: 60
     minimum_operational_u: 60
