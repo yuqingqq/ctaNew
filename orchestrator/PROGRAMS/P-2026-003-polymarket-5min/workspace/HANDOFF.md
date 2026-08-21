@@ -422,6 +422,77 @@ question onto adverse selection.**
 five more in one collector era are required. The checked-in uncertainty ledger
 and reproducible U1–U9 probes are at commits `6a0e593` and `6e125dc`.
 
+### Queue and type tests — 2026-08-21. C1 CLOSES A LEAD STRUCTURALLY.
+
+Protocol `QUEUE_AND_TYPE_PROTOCOL.md` (frozen before measurement), probe
+`queue_and_type.py` (34 checks), results `QUEUE_AND_TYPE_RESULTS.md`.
+
+**C1 — cancellations and the fill bracket: `UNIDENTIFIABLE`.** The coordinator
+proposed crediting cancellations as an independent source that could narrow the
+bracket. **It is not, and the reason is structural rather than empirical.**
+Cancellation *volume* is abundant — saturation p50 2.0-13.2, with **86-99% of
+actions saturated** — so crediting it collapses the pessimistic bound onto the
+optimistic one (btc and eth agree to three decimals, 0.946/0.946 and
+0.848/0.848). What displayed L2 withholds is cancellation **position**. Credit
+all and you get FRONT; credit none and you get BACK_DISPLAYED; the interior
+needs an ASSUMPTION, not a bound.
+**THE BRACKET WIDTH IS THE QUEUE-POSITION AMBIGUITY RESTATED, and cancellation
+data cannot reduce it because the missing quantity is the same one.**
+Consequence is close to "fill is not determinable from data we can collect" —
+but NOT for the expected reason: displayed depth ahead does not trade through,
+it **churns**, and we cannot tell whose.
+
+**Two defects in the coordinator's own rules, raised and upheld:**
+- **R1 — the reconciliation gate was a TAUTOLOGY.** `cancelled` is definitionally
+  the residual, so the identity balanced by construction, and a 1% threshold
+  against gross churn running **60-1000x trade volume** could never fire. A gate
+  that cannot fire is not a gate. Re-anchored to the independent
+  `last_trade_price` stream, the residual against **traded volume** is
+  **2.3-12.1%** (SOL one share in eight) — trade volume with no matching
+  displayed decrease. Consistent with hidden liquidity or sequencing; not
+  separable here and NOT narrated. Sixth instance of the denominator/population
+  defect, inside a rule written to guard against exactly that class.
+- **R2 — `MATERIAL` could not distinguish tightening from DEGENERATION.** The
+  rule as written granted `MATERIAL` on a 97-100% width reduction; the agent
+  **declined the win it was entitled to** and reported `UNIDENTIFIABLE`, because
+  the bound had not tightened. Taking it would have published "cancellations
+  narrow the bracket by 97%", which is false. A saturation guard is now required:
+  the credited bound is a bound only where `cancelled_at_level < queue_ahead`,
+  which holds in **1-14%** of actions.
+
+**C2 — bivariate Hawkes on {MICRO_002, MARKET}: `RETAIN`. The coordinator's
+motivating hypothesis is REFUTED.** The 2x2 branching diagonal dominates the
+off-diagonal on every coin — `market<-market` 0.18-0.45 against cross terms
+0.02-0.18 — so market self-excitation SURVIVES being modelled alongside the
+micro actor, and the scalar 0.40-0.55 was not cross-excitation wearing a
+self-excitation label. The Hawkes layer stays. A1 is not contradicted: cross
+terms are non-zero, just smaller. Separately the micro actor is strongly
+**self**-exciting (0.18-0.35 on five coins).
+**Corrects a published number:** the scalar figure OVERSTATES market
+self-excitation for most coins — only eth reaches 0.45, four sit at 0.18-0.35.
+**Scope:** intervals are grid-quantised and conditioned on the selected
+half-life, so they show fit STABILITY, not sampling uncertainty (btc's
+degenerate [0.180, 0.180] proves it). `RETAIN` means not-deletable-on-this-
+evidence, NOT a validated branching estimate.
+
+**C2b — the instrument floor, and it blocks the obvious next step.**
+Websocket-frame batching is **REFUTED**: 17.6% of btc market-market pairs fall
+under 5 ms and 12.0% under 1 ms, but **not one shares a frame and not one has a
+zero gap**, on any coin. However the sub-millisecond gaps pile up at **0-50 us
+with a 26 us median**, which is **16.2x** the Poisson expectation. `recv_ns` is
+stamped at PARSE time, so several messages arriving in one TCP segment are
+stamped microseconds apart by processing cadence — distinct frames, distinct
+timestamps, **no market information in the spacing**. The test rules out
+batching at the websocket-message level and NOT at the transport level, and
+26 us is more consistent with the latter.
+**So neither branch is established for btc**: not a frame artefact, but its
+grid-floor selection cannot be read as clustering either.
+**DO NOT EXTEND THE HAWKES GRID LOWER — it would make this worse**, letting the
+fit chase into the region where timestamps carry processing cadence rather than
+arrival time. Prerequisite: establish a **timestamp-resolution floor** (the
+shortest interval at which `recv_ns` differences reflect venue timing) and
+truncate the grid there. Until then btc branching stays **CENSORED**.
+
 ### Residuals — open, in priority order
 
 1. **Accumulate OOS days.** Tier-1/Tier-2 infrastructure is complete and the
