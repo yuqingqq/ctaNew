@@ -4,6 +4,9 @@ Documentation=file:///home/yuqing/ctaNew/live/pm_research/DATA_COLLECTOR_AUDIT_2
 # Data collection for a 10-day OOS window. An unnoticed overnight death costs a
 # whole UTC day of the frozen route_a_v1 gate, so this is supervised rather than
 # left as a bare nohup orphaned to init.
+# Keep retrying indefinitely. This directive belongs in [Unit]; systemd ignores
+# it in [Service].
+StartLimitIntervalSec=0
 
 [Service]
 Type=simple
@@ -30,9 +33,6 @@ TimeoutStopSec=180
 
 Restart=always
 RestartSec=10
-# Keep retrying indefinitely. A collector that gives up after N failures fails
-# silently, which is the outcome this unit exists to prevent.
-StartLimitIntervalSec=0
 
 [Install]
 WantedBy=default.target

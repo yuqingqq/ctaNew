@@ -323,7 +323,7 @@ def plan_day(
     )
 
 
-def _existing_manifest(
+def validate_existing_partition(
     *, output_root: Path, dataset: str, day: date, coin: str
 ) -> dict[str, Any] | None:
     partition = output_root / dataset / f"day={day.isoformat()}" / f"coin={coin}"
@@ -388,7 +388,7 @@ def _build_or_reuse(
 ) -> list[dict[str, Any]]:
     datasets = ("quotes", "trades") if dataset == "clob" else (dataset,)
     existing = [
-        _existing_manifest(
+        validate_existing_partition(
             output_root=output_root, dataset=name, day=day, coin=coin
         )
         for name in datasets

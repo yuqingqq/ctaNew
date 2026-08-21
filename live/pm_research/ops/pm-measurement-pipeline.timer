@@ -1,0 +1,13 @@
+[Unit]
+Description=Retry the P-2026-003 closed-day measurement batch hourly
+Documentation=file:///home/yuqing/ctaNew/live/pm_research/MEASUREMENT_PIPELINE.md
+
+[Timer]
+OnCalendar=*-*-* *:20:00 UTC
+Persistent=true
+RandomizedDelaySec=2min
+AccuracySec=1min
+Unit=pm-measurement-pipeline.service
+
+[Install]
+WantedBy=timers.target

@@ -1,4 +1,4 @@
-version: 18
+version: 19
 rules:
   R-SSOT:
     body: every canonical name has exactly one owning type/module
@@ -99,6 +99,17 @@ rules:
     - 'harness_only: direct EventTimeView construction is fatal'
     - 'guard_binds: LeakCanary.event_only_boundary_reads > 0 and LeakCanary.decision_disagreements > 0'
     - 'telemetry: LeakCanary carries the StateView refusal counts'
+  R-BATCH:
+    body: a measurement batch preflights every requested coin before mutation,
+      has one shared writer, validates every per-coin artifact binding, and emits
+      its immutable COMPLETE receipt only after every requested bundle passes;
+      uncommitted per-coin artifacts are resumable staging, never batch completion
+    checks:
+    - 'preflight_all: all MeasurementBatchPlan per-coin plans are ready before the first partition write'
+    - 'single_writer: one exclusive batch lock covers every partition, canary, health record and receipt write'
+    - 'validate_all: every MeasurementBatchRun per_coin_health_hashes value identifies a PASS BundleHealth'
+    - 'commit_last: MeasurementBatchRun.status == COMPLETE only after every requested coin has a bound run and health hash'
+    - 'resumable: absence of MeasurementBatchRun permits immutable per-coin artifacts to be validated and reused, never treated as complete'
 types:
   Known:
     generic:
@@ -485,6 +496,55 @@ types:
       status: enum:COMPLETE
       run_hash: Hash
     notes: atomic content-addressed receipt emitted only after every planned partition and the bound leak canary complete
+  BundleHealth:
+    fields:
+      validator_version: str
+      validator_code_sha256: Hash
+      target_day: str
+      coin: str
+      lane: enum:measurement|full
+      checks: dict[str, JsonSchema]
+      manifest_hashes: dict[str, Hash]
+      canary_report_hash: Hash?
+      per_coin_run_hash: Hash?
+      status: enum:PASS|FAIL
+      health_hash: Hash
+    notes: content-addressed cross-partition validation result; FAIL can be retained for diagnosis but cannot enter a batch receipt
+  MeasurementCoinPlan:
+    fields:
+      pipeline_version: str
+      target_day: str
+      coin: str
+      lane: enum:measurement|full
+      as_of_day: str
+      ready: bool
+      checks: list[JsonSchema]
+      stages: list[str]
+      plan_hash: Hash
+  MeasurementBatchPlan:
+    fields:
+      batch_version: str
+      target_day: str
+      lane: enum:measurement|full
+      coins: list[str]
+      as_of_day: str
+      ready: bool
+      per_coin: list[MeasurementCoinPlan]
+      plan_hash: Hash
+  MeasurementBatchRun:
+    fields:
+      batch_version: str
+      batch_code_sha256: Hash
+      validator_version: str
+      target_day: str
+      lane: enum:measurement|full
+      coins: list[str]
+      plan_hash: Hash
+      per_coin_run_hashes: dict[str, Hash]
+      per_coin_health_hashes: dict[str, Hash]
+      status: enum:COMPLETE
+      batch_hash: Hash
+    notes: sole cross-coin commit marker; immutable and emitted last under R-BATCH
   Gap:
     fields:
       from: EventTime
@@ -1238,6 +1298,31 @@ modules:
     ports:
     - feed
     - telemetry_out
+  DA-Canary:
+    consumes:
+    - StateView
+    - DatasetPartition
+    produces:
+    - LeakCanary
+    - HealthEvent
+    ports:
+    - read_all
+    - telemetry_out
+    notes: the only harness allowed to construct EventTimeView; never a production read port
+  DA-Orchestrate:
+    consumes:
+    - DatasetPartition
+    - LeakCanary
+    produces:
+    - MeasurementBatchPlan
+    - MeasurementPipelineRun
+    - BundleHealth
+    - MeasurementBatchRun
+    - HealthEvent
+    ports:
+    - read_all
+    - telemetry_out
+    notes: offline research composition root for R-BATCH; it exposes no venue or decision port
   DE-Constraints:
     consumes:
     - DecisionProblem

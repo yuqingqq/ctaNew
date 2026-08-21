@@ -5,7 +5,7 @@ alert. Over a 10-day OOS window an unnoticed overnight death costs a whole UTC
 day of the frozen `route_a_v1` gate, and nothing would have caught it once the
 supervising session closed.
 
-## Install
+## Install collectors
 
 ```bash
 cp live/pm_research/ops/pm-collector-*.service ~/.config/systemd/user/
@@ -13,6 +13,34 @@ loginctl enable-linger "$(id -un)"          # survive logout, not just this logi
 systemctl --user daemon-reload
 systemctl --user enable --now pm-collector-prices.service pm-collector-clob.service
 ```
+
+## Install the closed-day measurement batch
+
+The timer retries hourly and processes one oldest uncommitted eligible day. It
+does not run a model or trade; it only publishes normalized, validated research
+artifacts. `--since 2026-08-20` makes the first deliberately collected UTC day
+the catch-up boundary, so an earlier partial discovery day cannot block the
+queue forever.
+
+```bash
+cp live/pm_research/ops/pm-measurement-pipeline.{service,timer} \
+  ~/.config/systemd/user/
+systemctl --user daemon-reload
+systemctl --user enable --now pm-measurement-pipeline.timer
+systemctl --user start pm-measurement-pipeline.service  # immediate retry
+```
+
+Inspect the last attempts and the next scheduled retry with:
+
+```bash
+systemctl --user status pm-measurement-pipeline.timer
+journalctl --user -u pm-measurement-pipeline.service -n 100 --no-pager
+```
+
+The service uses `--scheduled`: `BLOCKED` and `IDLE` are successful retry states,
+while a build, validation, hash, or lock failure makes the unit fail visibly.
+The coordinator holds `tier1/.locks/measurement_batch.lock`; do not overlap the
+legacy per-coin CLI with the unattended batch writer.
 
 ## Before starting, stop any nohup instance first
 

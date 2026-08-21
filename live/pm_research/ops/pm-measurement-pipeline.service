@@ -1,0 +1,15 @@
+[Unit]
+Description=P-2026-003 closed-day measurement batch
+Documentation=file:///home/yuqing/ctaNew/live/pm_research/MEASUREMENT_PIPELINE.md
+After=pm-collector-prices.service pm-collector-clob.service
+
+[Service]
+Type=oneshot
+WorkingDirectory=/home/yuqing/ctaNew
+# Catch up exactly one oldest uncommitted day per invocation. A blocked or idle
+# closed-day boundary is expected while the collector is still rotating inputs,
+# so --scheduled returns success and lets the timer retry.
+ExecStart=/home/yuqing/pricer-sol/venv/bin/python3 -m live.pm_research.measurement_batch --catch-up --since 2026-08-20 --lane measurement --max-days 1 --scheduled --json
+Nice=10
+IOSchedulingClass=idle
+TimeoutStartSec=infinity

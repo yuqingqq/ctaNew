@@ -3,6 +3,7 @@ Description=P-2026-003 Polymarket price collector (collect_pm_prices.py) - Route
 Documentation=file:///home/yuqing/ctaNew/live/pm_research/DATA_COLLECTOR_AUDIT_2026-08-20.md
 # This is the lane the sigma measurement actually depends on: S30/S60 feed the
 # route_a_v1 regression. Losing it silently is worse than losing the CLOB lane.
+StartLimitIntervalSec=0
 
 [Service]
 Type=simple
@@ -22,7 +23,6 @@ TimeoutStopSec=120
 
 Restart=always
 RestartSec=10
-StartLimitIntervalSec=0
 
 [Install]
 WantedBy=default.target

@@ -1,7 +1,7 @@
 # Measurement pipeline runbook
 
 This batch materializes the research measurement spine. It does not fit a
-model, calculate P&L, or authorize a trading decision.
+model, calculate P&L, authorize a trading decision, or connect to an exchange.
 
 ## Daily boundary
 
@@ -25,25 +25,30 @@ whether each window is usable.
 
 ## Commands
 
-Inspect the latest eligible target without writing:
+Inspect the latest target for every registered coin without writing:
 
 ```bash
-python3 -m live.pm_research.daily_pipeline --latest --plan-only
+python3 -m live.pm_research.measurement_batch --latest --plan-only
 ```
 
-Build the measurement lane for one coin:
+Build or resume one explicit day for the full registered coin universe:
 
 ```bash
-python3 -m live.pm_research.daily_pipeline --latest --coin btc
+python3 -m live.pm_research.measurement_batch --day 2026-08-20
 ```
 
-Omitting `--coin` plans/builds every registered coin. The optional `full` lane
-also normalizes the target day's CLOB quotes and trades:
+For unattended use, catch up the oldest eligible day that has no batch commit
+marker. The lower bound should be the first intentionally collected full day:
 
 ```bash
-python3 -m live.pm_research.daily_pipeline \
-  --latest --lane full --coin btc
+python3 -m live.pm_research.measurement_batch \
+  --catch-up --since 2026-08-20 --max-days 1 --scheduled
 ```
+
+Repeat `--coin` to select an explicit subset; omitting it selects every
+registered coin. The optional `full` lane also normalizes the target day's CLOB
+quotes and trades. `daily_pipeline` remains the per-coin execution primitive;
+`measurement_batch` is the supported shared writer and unattended entrypoint.
 
 Outputs live under `data/pm_5min/tier1/`. Every Parquet partition is immutable,
 code/input-addressed, digest-checked, and refused if partial. Canary reports are
@@ -51,6 +56,20 @@ under `tier1/canary/`; completed DAG receipts are under `tier1/runs/`. Both are
 content-addressed, atomic, idempotent, and merge-never-overwrite.
 Explicit partial-smoke canaries are isolated under `tier1/canary_partial/`, so
 they cannot occupy the future eligible report key.
+
+The batch coordinator preflights every requested coin before the first write
+and holds one non-blocking lock at `tier1/.locks/measurement_batch.lock`. After
+each per-coin run it validates the exact partition set, 288 closed/unique window
+identities, coverage knowledge bounds, frozen rule/source hashes, leak-canary
+binding, and per-coin receipt binding. Content-addressed validation records live
+under `tier1/health/`. Only after every requested coin passes does it atomically
+publish the sole cross-coin commit marker under `tier1/batches/`.
+
+An interruption may therefore leave valid partitions, canaries, health records,
+or per-coin receipts without a batch receipt. Those are resumable staging, not a
+completed batch. The next invocation validates and reuses immutable artifacts;
+it never merges or overwrites a mismatch. `--verify` is read-only and checks an
+existing per-coin bundle without publishing health or completion records.
 
 ## Fail-closed behavior
 
@@ -75,7 +94,13 @@ python3 -m live.pm_research.coverage_ledger --selftest
 python3 -m live.pm_research.tier1_pipeline --selftest
 python3 -m live.pm_research.replay_canary --selftest
 python3 -m live.pm_research.daily_pipeline --selftest
+python3 -m live.pm_research.measurement_batch --selftest
 ```
+
+The checked-in user service and timer are documented in `ops/README.md`. The
+timer retries hourly at minute 20, advances one oldest uncommitted day at a time,
+and treats not-yet-ready/idle as retryable. Build, validation, digest, and lock
+errors still fail the unit and remain visible in the user journal.
 
 ## Current validation — 2026-08-21
 
@@ -97,3 +122,6 @@ was 288/288 (100.00%). Four decisions differed and 568 boundary reads were
 event-only. These numbers validate wiring only; the artifact remains partial
 and is not an admissible research result. The first non-partial 2026-08-20 run
 can occur after 2026-08-21 closes.
+
+The all-coin batch receipt is likewise absent until that real non-partial run.
+Infrastructure completion is not being reported as a sigma-model result.

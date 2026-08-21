@@ -1,13 +1,14 @@
 # PM_ARCHITECTURE — structure for P-2026-003
 
 The explanatory prose baseline is version 12 (2026-08-20); the machine-readable
-canonical contract is now **v18**. Versions 13–16 landed the sigma route and v17
+canonical contract is now **v19**. Versions 13–16 landed the sigma route and v17
 lands the measurement-infrastructure boundary: nominal event/knowledge clocks,
 strict source profiles, factual coverage separated from admissibility decisions,
 and DA-Normalize/DA-Coverage/DA-State ownership. Version 18 adds point-in-time
-coverage refusal and the harness-only event-time leak canary. When this prose and
-`contracts/contracts.yaml` differ, the YAML remains authoritative. Score history
-on the 13-change replay:
+coverage refusal and the harness-only event-time leak canary. Version 19 adds the
+DA-Canary/DA-Orchestrate boundary and a commit-last, single-writer batch contract
+across the requested coin universe. When this prose and `contracts/contracts.yaml`
+differ, the YAML remains authoritative. Score history on the 13-change replay:
 v1 5/3/5 · v2 7/4/2 · v4 9/2/2 · v5 9/3/1 · v6–v10 11/0/2 · **v11 11/1/1**
 (target 0 STRUCTURAL, ≤1 SPREADING). Open: M12-2 validator dispatch, M12-3
 scenario-loss typing, M12-4 incentive→cash-flow wiring, M12-5 snapshot validator.
@@ -60,6 +61,7 @@ Naming: SP/DA/BE/DE/EV/OP modules; `EXP-*` experiments.
 | **R-REFUSE** | `StateView` admits only when `t_known + refuse_k·t_known_err <= now` and counts refusals |
 | **R-ADMISS** | coverage facts and selection decisions are separate; only frozen hash-matched rules evaluate, and exclusion requires both arms |
 | **R-CANARY** | every replay diagnostic pairs `StateView` with a harness-only leaky `EventTimeView` and records whether selected states differ |
+| **R-BATCH** | preflight all requested coins, hold one writer lock, validate every bundle, and emit the immutable cross-coin receipt last; uncommitted artifacts are resumable staging |
 
 ---
 
