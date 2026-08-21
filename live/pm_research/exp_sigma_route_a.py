@@ -20,6 +20,7 @@ import hashlib
 import json
 import math
 import random
+import time
 from bisect import bisect_left, bisect_right
 from collections import Counter, defaultdict
 from dataclasses import dataclass
@@ -31,6 +32,7 @@ REPO = Path(__file__).resolve().parents[2]
 PM = REPO / "data/pm_5min"
 PROTOCOL = Path(__file__).with_name("SIGMA_ROUTE_A_PROTOCOL.md")
 PROTOCOL_VERSION = "route_a_v1"
+SELECTION_LEDGER_VERSION = 1
 HORIZONS = (30, 60, 120, 180, 240, 270)
 COINS = {
     "btc": "btc/usd", "eth": "eth/usd", "sol": "sol/usd",
@@ -77,6 +79,11 @@ class Series:
     def event_count(self, start_ms: int, end_ms: int) -> int:
         return bisect_right(self.event_axis, end_ms) - bisect_left(self.event_axis, start_ms)
 
+    def event_slice(self, start_ms: int, end_ms: int) -> list[Tick]:
+        lo = bisect_left(self.event_axis, start_ms)
+        hi = bisect_right(self.event_axis, end_ms)
+        return self.event_ticks[lo:hi]
+
     def realised_bps(self, start_ms: int, end_ms: int) -> float | None:
         """Realised |return| range over the ticks present in the span, in bps.
 
@@ -112,6 +119,100 @@ def _jsonl_snapshot(path: Path) -> tuple[list[dict], dict]:
         except (json.JSONDecodeError, UnicodeDecodeError):
             continue
     return rows, _manifest_item(path, raw)
+
+
+def _price_gap_intervals(events: list[dict], snapshot_ns: int) -> list[dict]:
+    """Canonicalise the append-only price gap ledger without affecting eligibility.
+
+    A closed record is the durable interval. An open record with no matching
+    close is truncated at the byte-snapshot time and explicitly marked open.
+    """
+    closed = {}
+    for row in events:
+        if row.get("event") != "gap_closed":
+            continue
+        try:
+            key = (str(row["collector_version"]), str(row["topic"]),
+                   str(row["cause"]), int(row["gap_start_ns"]))
+            start_ns, end_ns = int(row["gap_start_ns"]), int(row["gap_end_ns"])
+        except (KeyError, TypeError, ValueError):
+            continue
+        if end_ns < start_ns:
+            continue
+        closed[key] = {
+            "collector_version": key[0], "topic": key[1], "cause": key[2],
+            "gap_start_ns": start_ns, "gap_end_ns": end_ns,
+            "duration_ms": (end_ns - start_ns) / 1e6,
+            "open_at_snapshot": False,
+        }
+
+    intervals = list(closed.values())
+    for row in events:
+        if row.get("event") != "gap_open":
+            continue
+        try:
+            key = (str(row["collector_version"]), str(row["topic"]),
+                   str(row["cause"]), int(row["gap_start_ns"]))
+            start_ns = int(row["gap_start_ns"])
+        except (KeyError, TypeError, ValueError):
+            continue
+        if key in closed:
+            continue
+        end_ns = max(start_ns, snapshot_ns)
+        intervals.append({
+            "collector_version": key[0], "topic": key[1], "cause": key[2],
+            "gap_start_ns": start_ns, "gap_end_ns": end_ns,
+            "duration_ms": (end_ns - start_ns) / 1e6,
+            "open_at_snapshot": True,
+        })
+    return sorted(intervals, key=lambda z: (z["gap_start_ns"], z["topic"]))
+
+
+def _overlapping_gaps(intervals: list[dict], start_ms: int, end_ms: int) -> list[dict]:
+    start_ns, end_ns = start_ms * 1_000_000, end_ms * 1_000_000
+    return [dict(z) for z in intervals
+            if z["gap_start_ns"] <= end_ns and z["gap_end_ns"] >= start_ns]
+
+
+def _collector_versions_at(events: list[dict], at_ms: int) -> list[str]:
+    """Return price collector versions known active at a knowledge timestamp."""
+    at_ns = at_ms * 1_000_000
+    active = {}
+    for row in events:
+        try:
+            recv_ns = int(row["recv_ns"])
+        except (KeyError, TypeError, ValueError):
+            continue
+        if recv_ns > at_ns:
+            continue
+        event, pid = row.get("event"), row.get("pid")
+        if event == "collector_start" and pid is not None:
+            active[str(pid)] = str(row.get("collector_version", "UNKNOWN"))
+        elif event == "collector_stop" and pid is not None:
+            active.pop(str(pid), None)
+    return sorted(set(active.values()))
+
+
+def _s60_path_proxy(series: Series, start_ms: int, end_ms: int,
+                    x0: float | None) -> dict:
+    """Audit-only activity/volatility proxies from the published S60 path."""
+    ticks = series.event_slice(start_ms, end_ms)
+    if x0 is None or not math.isfinite(x0) or x0 <= 0 or not ticks:
+        return {
+            "s60_path_ticks": len(ticks), "s60_nonzero_changes": None,
+            "s60_total_abs_change_bps": None, "s60_quadratic_variation_bps2": None,
+            "s60_range_bps": None,
+        }
+    values = [x0]
+    values.extend(z.value for z in ticks if math.isfinite(z.value) and z.value > 0)
+    deltas = [(b - a) * 10_000.0 / x0 for a, b in zip(values, values[1:])]
+    return {
+        "s60_path_ticks": len(ticks),
+        "s60_nonzero_changes": sum(abs(z) > 0 for z in deltas),
+        "s60_total_abs_change_bps": sum(abs(z) for z in deltas),
+        "s60_quadratic_variation_bps2": sum(z * z for z in deltas),
+        "s60_range_bps": (max(values) - min(values)) * 10_000.0 / x0,
+    }
 
 
 def load_streams() -> tuple[dict[tuple[str, int], Series], list[dict], Counter]:
@@ -183,8 +284,23 @@ def _utc_day(epoch_s: int) -> str:
 def build_rows() -> tuple[list[dict], dict]:
     # Capture the append-only metadata bytes before the slower feed parse so the
     # run has the promised start-of-run snapshot rather than a moving tail.
+    snapshot_started_ns = time.time_ns()
     market_rows, market_manifest = _jsonl_snapshot(PM / "markets.jsonl")
     resolution_rows, resolution_manifest = _jsonl_snapshot(PM / "resolutions.jsonl")
+    price_gap_path = PM / "prices/collector_gaps.jsonl"
+    if price_gap_path.exists():
+        price_gap_events, price_gap_manifest = _jsonl_snapshot(price_gap_path)
+    else:
+        price_gap_events, price_gap_manifest = [], None
+    price_gap_snapshot_ns = time.time_ns()
+    def gap_recv_ns(row: dict) -> int:
+        try:
+            return int(row.get("recv_ns", 0))
+        except (TypeError, ValueError):
+            return 0
+
+    price_gap_events.sort(key=gap_recv_ns)
+    price_gaps = _price_gap_intervals(price_gap_events, price_gap_snapshot_ns)
     streams, manifest, stream_audit = load_streams()
     manifest.extend((market_manifest, resolution_manifest))
 
@@ -209,12 +325,46 @@ def build_rows() -> tuple[list[dict], dict]:
     # down decisions that were already being made, so it does NOT create a new
     # protocol version.
     excluded: list[dict] = []
+    window_audit: dict[str, dict] = {}
+
+    first_price_ledger_ns = min(
+        (int(z["recv_ns"]) for z in price_gap_events
+         if z.get("event") == "collector_start" and z.get("recv_ns") is not None),
+        default=None,
+    )
+
+    def selection_context(t0_s: int, horizon: int | None = None) -> dict:
+        end_ms = (t0_s + 300) * 1000
+        window_start_ms, window_stop_ms = t0_s * 1000 - 5_000, end_ms + 5_000
+        window_gaps = _overlapping_gaps(price_gaps, window_start_ms, window_stop_ms)
+        if horizon is None:
+            at_ms = (t0_s * 1000 + end_ms) // 2
+            decision_gaps = []
+        else:
+            at_ms = end_ms - horizon * 1000
+            decision_gaps = _overlapping_gaps(price_gaps, at_ms - FRESH_MS, at_ms)
+        if first_price_ledger_ns is None or first_price_ledger_ns > at_ms * 1_000_000:
+            coverage = "PRE_LEDGER"
+        else:
+            coverage = "LEDGER_ACTIVE" if _collector_versions_at(
+                price_gap_events, at_ms) else "LEDGER_INACTIVE"
+        return {
+            "price_gap_ledger_coverage": coverage,
+            "price_collector_versions": _collector_versions_at(price_gap_events, at_ms),
+            "window_price_gap_overlaps": window_gaps,
+            "decision_price_gap_overlaps": decision_gaps,
+            # Backward-compatible compact field from the concurrent first ledger.
+            "price_gap_overlaps": decision_gaps if horizon is not None else window_gaps,
+        }
 
     def drop(reason: str, slug: str, coin: str = "", t0_s: int | None = None,
              **detail) -> None:
         exclusions[reason] += 1
-        excluded.append({"reason": reason, "slug": slug, "coin": coin,
-                         "window_start": t0_s, **detail})
+        record = {"reason": reason, "slug": slug, "coin": coin,
+                  "window_start": t0_s, **window_audit.get(slug, {}), **detail}
+        if t0_s is not None:
+            record.update(selection_context(t0_s, detail.get("horizon")))
+        excluded.append(record)
 
     rows = []
     agreement_n = agreement_hit = 0
@@ -247,6 +397,26 @@ def build_rows() -> tuple[list[dict], dict]:
         cov_start, cov_end = t0 - 5_000, end + 5_000
         nominal = (cov_end - cov_start) / 1000
         min_ticks = math.ceil(COVERAGE_FRACTION * nominal)
+        audit_x0, audit_xT = slow.at_event(t0), slow.at_event(end)
+        audit_x0_value = audit_x0.value if audit_x0 is not None else None
+        window_audit[slug] = {
+            "day": _utc_day(t0_s),
+            "window_end": end_s,
+            "s30_ticks": fast.event_count(cov_start, cov_end),
+            "s60_ticks": slow.event_count(cov_start, cov_end),
+            "nominal_ticks": nominal,
+            "min_ticks": min_ticks,
+            "x0_age_ms": t0 - audit_x0.event_ms if audit_x0 is not None else None,
+            "xT_age_ms": end - audit_xT.event_ms if audit_xT is not None else None,
+            "realised_bps": slow.realised_bps(cov_start, cov_end),
+            **_s60_path_proxy(slow, t0, end, audit_x0_value),
+        }
+        if (audit_x0 is not None and audit_xT is not None
+                and math.isfinite(audit_x0.value) and audit_x0.value > 0
+                and math.isfinite(audit_xT.value)):
+            audit_return = (audit_xT.value - audit_x0.value) * 10_000.0 / audit_x0.value
+            window_audit[slug]["settlement_return_bps"] = audit_return
+            window_audit[slug]["abs_settlement_return_bps"] = abs(audit_return)
         if fast.event_count(cov_start, cov_end) < min_ticks:
             drop("s30_window_coverage", slug, coin, t0_s,
                  ticks=fast.event_count(cov_start, cov_end), min_ticks=min_ticks,
@@ -270,6 +440,9 @@ def build_rows() -> tuple[list[dict], dict]:
         if not math.isfinite(x0) or x0 <= 0 or not math.isfinite(xT):
             drop("invalid_target_value", slug, coin, t0_s)
             continue
+        window_audit[slug]["settlement_return_bps"] = (xT - x0) * 10_000.0 / x0
+        window_audit[slug]["abs_settlement_return_bps"] = abs(
+            window_audit[slug]["settlement_return_bps"])
         covered_windows += 1
         winner_up = bool((resolution.get("winners") or {}).get("Up"))
         agreement_n += 1
@@ -306,13 +479,16 @@ def build_rows() -> tuple[list[dict], dict]:
                 # same statistic the exclusion ledger records, so accepted and
                 # excluded windows are directly comparable. A one-sided ledger
                 # cannot answer the MNAR question it exists for.
-                "realised_bps": slow.realised_bps(cov_start, cov_end),
+                **window_audit[slug],
+                **selection_context(t0_s, r),
                 "slug": slug, "coin": coin, "symbol": symbol,
                 "day": _utc_day(t0_s), "horizon": r,
                 "window_start_ms": t0, "window_end_ms": end,
                 "decision_ms": decision, "x0_event_ms": x0_tick.event_ms,
                 "xT_event_ms": xT_tick.event_ms,
                 "s30_known_ms": s30_tick.known_ms, "s60_known_ms": s60_tick.known_ms,
+                "s30_age_ms": decision - s30_tick.known_ms,
+                "s60_age_ms": decision - s60_tick.known_ms,
                 "x0": x0, "xT": xT, "s30": s30, "s60": s60,
                 "x_bps": x, "y_bps": y, "m_bps": m,
                 "winner_up": winner_up,
@@ -340,6 +516,16 @@ def build_rows() -> tuple[list[dict], dict]:
         "exclusions": dict(sorted(exclusions.items())),
         # per-window identity for the accepted-vs-excluded selection audit
         "excluded_windows": excluded,
+        "selection_audit_source": {
+            "ledger_version": SELECTION_LEDGER_VERSION,
+            "snapshot_started_ns": snapshot_started_ns,
+            "price_gap_snapshot_ns": price_gap_snapshot_ns,
+            "price_gap_manifest": price_gap_manifest,
+            "price_gap_digest": (_combined_digest([price_gap_manifest])
+                                 if price_gap_manifest else None),
+            "price_gap_intervals": len(price_gaps),
+            "analytic_source_digest_unchanged": True,
+        },
     }
     return rows, audit
 
@@ -353,6 +539,102 @@ def _quantile(values: list[float], p: float) -> float:
     if lo == hi:
         return v[lo]
     return v[lo] * (hi - pos) + v[hi] * (pos - lo)
+
+
+_SELECTION_FIELDS = (
+    "slug", "coin", "symbol", "day", "horizon", "window_start_ms",
+    "window_end_ms", "realised_bps", "settlement_return_bps",
+    "abs_settlement_return_bps", "s30_ticks", "s60_ticks", "nominal_ticks",
+    "min_ticks", "x0_age_ms", "xT_age_ms", "s60_path_ticks",
+    "s60_nonzero_changes", "s60_total_abs_change_bps",
+    "s60_quadratic_variation_bps2", "s60_range_bps",
+    "price_gap_ledger_coverage", "price_collector_versions",
+    "window_price_gap_overlaps", "decision_price_gap_overlaps",
+    "price_gap_overlaps", "s30_age_ms", "s60_age_ms",
+)
+
+
+def build_selection_ledger(rows: list[dict], excluded: list[dict]) -> list[dict]:
+    """One record per candidate (slug,horizon), accepted or excluded.
+
+    Window-level exclusions are expanded over all six horizons. That gives the
+    accepted and excluded populations identical units and avoids comparing six
+    retained decisions with one rejected-window record.
+    """
+    ledger = []
+    for row in rows:
+        rec = {k: row.get(k) for k in _SELECTION_FIELDS if k in row}
+        rec.update({"accepted": True, "reason": None})
+        ledger.append(rec)
+
+    for item in excluded:
+        horizons = (item["horizon"],) if item.get("horizon") is not None else HORIZONS
+        for horizon in horizons:
+            rec = {k: item.get(k) for k in _SELECTION_FIELDS if k in item}
+            rec.update({
+                "accepted": False, "reason": item["reason"], "horizon": horizon,
+                "window_start_ms": (int(item["window_start"]) * 1000
+                                    if item.get("window_start") is not None else None),
+                "window_end_ms": (int(item["window_end"]) * 1000
+                                  if item.get("window_end") is not None else None),
+            })
+            if rec.get("day") is None and item.get("window_start") is not None:
+                rec["day"] = _utc_day(int(item["window_start"]))
+            ledger.append(rec)
+
+    keys = [(z.get("slug"), z.get("horizon")) for z in ledger]
+    if len(keys) != len(set(keys)):
+        duplicates = [k for k, n in Counter(keys).items() if n > 1]
+        raise ValueError(f"duplicate selection ledger keys: {duplicates[:5]}")
+    return sorted(ledger, key=lambda z: (
+        z.get("day") or "", z.get("slug") or "", int(z.get("horizon") or 0)))
+
+
+def _selection_group_summary(group: list[dict]) -> dict:
+    accepted = [z for z in group if z["accepted"]]
+    excluded = [z for z in group if not z["accepted"]]
+
+    def median(rr: list[dict], field: str) -> float | None:
+        values = [float(z[field]) for z in rr
+                  if z.get(field) is not None and math.isfinite(float(z[field]))]
+        return _quantile(values, 0.5) if values else None
+
+    return {
+        "candidate_rows": len(group), "accepted_rows": len(accepted),
+        "excluded_rows": len(excluded),
+        "gap_touched_rows": sum(bool(z.get("window_price_gap_overlaps")) for z in group),
+        "decision_gap_touched_rows": sum(
+            bool(z.get("decision_price_gap_overlaps")) for z in group),
+        "pre_gap_ledger_rows": sum(z.get("price_gap_ledger_coverage") == "PRE_LEDGER"
+                                   for z in group),
+        "exclusion_reasons": dict(sorted(Counter(
+            z["reason"] for z in excluded).items())),
+        "accepted_median_realised_bps": median(accepted, "realised_bps"),
+        "excluded_median_realised_bps": median(excluded, "realised_bps"),
+        "accepted_median_s60_range_bps": median(accepted, "s60_range_bps"),
+        "excluded_median_s60_range_bps": median(excluded, "s60_range_bps"),
+        "accepted_median_s60_qv_bps2": median(
+            accepted, "s60_quadratic_variation_bps2"),
+        "excluded_median_s60_qv_bps2": median(
+            excluded, "s60_quadratic_variation_bps2"),
+        "accepted_median_abs_settlement_return_bps": median(
+            accepted, "abs_settlement_return_bps"),
+        "excluded_median_abs_settlement_return_bps": median(
+            excluded, "abs_settlement_return_bps"),
+    }
+
+
+def summarize_selection_ledger(ledger: list[dict]) -> dict:
+    by_day = defaultdict(list)
+    for row in ledger:
+        by_day[row.get("day") or "UNKNOWN"].append(row)
+    return {
+        "ledger_version": SELECTION_LEDGER_VERSION,
+        "unit": "candidate slug-horizon row",
+        "overall": _selection_group_summary(ledger),
+        "by_day": {day: _selection_group_summary(group)
+                   for day, group in sorted(by_day.items())},
+    }
 
 
 def _bin3(value: float, cuts: tuple[float, float]) -> str:
@@ -545,6 +827,7 @@ def _fit_status(mean_gate: dict | None, var_gate: dict | None) -> str:
 
 def render_markdown(payload: dict) -> str:
     audit, summaries = payload["audit"], payload["fits"]
+    selection = payload["selection_summary"]
     days = sorted({z["day"] for z in payload["dataset_rows"]})
     oos_days = sorted({z["day"] for z in payload["oos_rows"]})
     all_verdicts = [g[which]["verdict"] for g in summaries for which in ("mean_gate", "var_gate")
@@ -559,7 +842,7 @@ def render_markdown(payload: dict) -> str:
         "",
         f"Run time: {payload['run_time_utc']}. Status: **{status}**.",
         "",
-        "This is the first real fit of the Revision-5 reduced-form law. It uses",
+        "This is a fit of the Revision-5 reduced-form law. It uses",
         "only observed S30/S60 streams and the observed settlement target; no",
         "structural `k/v/Omega` term is added.",
         "",
@@ -598,6 +881,30 @@ def render_markdown(payload: dict) -> str:
             f"{_fmt(z['alpha_full'])} | {_fmt(z['resid_mean_bps'])} | "
             f"{_fmt(z['resid_sd_bps'])} | {_fmt(mg['effect_size'] if mg else None)} | "
             f"{_fmt(vg['effect_size'] if vg else None)} | {verdict} |")
+    overall = selection["overall"]
+    lines.extend([
+        "", "## Selection audit ledger", "",
+        f"The ledger contains **{overall['candidate_rows']}** candidate slug-horizon "
+        f"rows: **{overall['accepted_rows']} accepted** and "
+        f"**{overall['excluded_rows']} excluded**. Gap cause/version fields come from "
+        "a separate byte snapshot and do not change analytic eligibility.",
+        "",
+        "| UTC day | candidate | accepted | excluded | gap-touched | "
+        "accepted median S60 range bp | excluded median S60 range bp |",
+        "|---|---:|---:|---:|---:|---:|---:|",
+    ])
+    for day, rec in selection["by_day"].items():
+        lines.append(
+            f"| {day} | {rec['candidate_rows']} | {rec['accepted_rows']} | "
+            f"{rec['excluded_rows']} | {rec['gap_touched_rows']} | "
+            f"{_fmt(rec['accepted_median_s60_range_bps'], 2)} | "
+            f"{_fmt(rec['excluded_median_s60_range_bps'], 2)} |")
+    lines.extend([
+        "",
+        "These are selection diagnostics, not an MNAR/MAR verdict. The artifact also "
+        "carries S60 quadratic variation, absolute settlement move, coverage counts, "
+        "predictor ages, overlapping gap causes and collector versions per row.",
+    ])
     lines.extend(["", "## Exclusions", "", "| reason | count |", "|---|---:|"])
     for reason, count in audit["exclusions"].items():
         lines.append(f"| `{reason}` | {count} |")
@@ -614,14 +921,14 @@ def render_markdown(payload: dict) -> str:
         f"The point diagnostics are an early warning, not a gate verdict: "
         f"**{mean_point_breaches}/{len(summaries)}** mean effects exceed 0.10 "
         f"residual sigma and **{var_point_breaches}/{len(summaries)}** variance "
-        f"effects exceed 0.25. With one test day these can be a day/regime effect; "
+        f"effects exceed 0.25. With {len(oos_days)} test day(s) these can be a "
+        f"day/regime effect; "
         f"they provide no early support for homoskedastic Route A, but cannot yet "
         f"refute it.",
         "",
-        "No new sigma specification is warranted from sample size alone. Re-run",
-        "this identical protocol as the day count grows. Only an OOS residual",
-        "diagnostic that eventually reads `MODEL_REFUTED` should reopen the",
-        "Route-A functional form.",
+        "Re-run this identical v1 protocol as the day count grows. The separately",
+        "pre-registered route_a_v2 variance candidate neither changes nor rescues",
+        "this verdict.",
         "",
         "Protocol: `live/pm_research/SIGMA_ROUTE_A_PROTOCOL.md`.",
     ])
@@ -639,6 +946,26 @@ def selftest() -> int:
                          "horizon": 60, "window_start_ms": i, "slug": f"s{i}",
                          "x_bps": x, "y_bps": y, "m_bps": m})
     oos, folds, audit = cross_fit(rows)
+    gap_events = [
+        {"recv_ns": 900_000, "collector_version": "prices_v2", "event": "collector_start",
+         "pid": 7},
+        {"recv_ns": 1_000_000, "collector_version": "prices_v2", "event": "gap_open",
+         "topic": "fast", "cause": "TEST", "gap_start_ns": 1_000_000},
+        {"recv_ns": 2_000_000, "collector_version": "prices_v2", "event": "gap_closed",
+         "topic": "fast", "cause": "TEST", "gap_start_ns": 1_000_000,
+         "gap_end_ns": 2_000_000},
+        {"recv_ns": 3_000_000, "collector_version": "prices_v2", "event": "gap_open",
+         "topic": "slow", "cause": "OPEN", "gap_start_ns": 3_000_000},
+    ]
+    intervals = _price_gap_intervals(gap_events, 4_000_000)
+    selection = build_selection_ledger(
+        [{"slug": "accepted", "coin": "btc", "day": "2026-01-02",
+          "horizon": 30, "window_start_ms": 1_000, "realised_bps": 2.0}],
+        [{"slug": "excluded", "coin": "btc", "day": "2026-01-02",
+          "window_start": 2, "window_end": 302, "reason": "coverage",
+          "realised_bps": 4.0}],
+    )
+    selection_summary = summarize_selection_ledger(selection)
     checks = [
         ("one strictly forward fold", len(folds) == 1 and folds[0]["test_day"] == "2026-01-02"),
         ("alpha recovered", abs(folds[0]["alpha"] - 1.5) < 0.01),
@@ -653,6 +980,17 @@ def selftest() -> int:
          and _fit_status({"verdict": "INSUFFICIENT_EVIDENCE"},
                          {"verdict": "MODEL_REFUTED"}) == "REFUTED"),
         ("no fold audit failures", not audit),
+        ("closed and open price gaps canonicalise once",
+         len(intervals) == 2 and not intervals[0]["open_at_snapshot"]
+         and intervals[1]["open_at_snapshot"]
+         and intervals[1]["gap_end_ns"] == 4_000_000),
+        ("gap overlap is interval-based",
+         len(_overlapping_gaps(intervals, 1, 2)) == 1),
+        ("collector era is derived at knowledge time",
+         _collector_versions_at(gap_events, 1) == ["prices_v2"]),
+        ("window exclusions expand to the six comparable horizons",
+         len(selection) == 7 and selection_summary["overall"]["accepted_rows"] == 1
+         and selection_summary["overall"]["excluded_rows"] == 6),
     ]
     for name, ok in checks:
         print(f"  {'PASS' if ok else 'FAIL'}  {name}")
@@ -667,7 +1005,7 @@ def protocol_only() -> None:
         "min_cell_rows": MIN_CELL_ROWS, "bootstrap_draws": BOOTSTRAP_DRAWS,
         "bootstrap_seed": BOOTSTRAP_SEED, "mean_tolerance": MEAN_TOL,
         "variance_tolerance": VAR_TOL, "family_alpha": FAMILY_ALPHA,
-        "cells": CELLS,
+        "cells": CELLS, "selection_ledger_version": SELECTION_LEDGER_VERSION,
     }, indent=2))
 
 
@@ -688,11 +1026,15 @@ def main() -> int:
     rows, audit = build_rows()
     oos, folds, fold_audit = cross_fit(rows)
     audit["fold_audit"] = dict(sorted(fold_audit.items()))
+    selection_ledger = build_selection_ledger(rows, audit["excluded_windows"])
+    selection_summary = summarize_selection_ledger(selection_ledger)
     payload = {
         "protocol_version": PROTOCOL_VERSION,
         "run_time_utc": datetime.now(timezone.utc).isoformat(),
         "audit": audit, "dataset_rows": rows, "folds": folds,
         "oos_rows": oos, "fits": summarize(rows, oos),
+        "selection_ledger": selection_ledger,
+        "selection_summary": selection_summary,
     }
     out_json, out_md = Path(args.output_json), Path(args.output_md)
     out_json.parent.mkdir(parents=True, exist_ok=True)

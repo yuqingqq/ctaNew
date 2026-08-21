@@ -1,9 +1,11 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-08-20, session 3. All work is on branch **`mm-research`** (pushed);
+Updated: 2026-08-21, session 3. All work is on branch **`mm-research`**;
 nothing is on `main`. Sigma is at **Revision 5** / contracts **v16**;
 Route A has now been measured under frozen protocol `route_a_v1`. The result is
 **DESCRIPTIVE / PRICING HOLD**: one OOS test day cannot authorize a law.
+`route_a_v2` is now pre-registered as a future conditional-variance successor;
+it has not been fitted and does not change the v1 verdict.
 
 ## Read this first
 
@@ -29,25 +31,28 @@ Reading order:
    strictly-forward Route-A result and current verdict.
 4. `live/pm_research/SIGMA_ROUTE_A_PROTOCOL.md` — protocol frozen before fit;
    includes the non-analytic post-run embargo-wording erratum.
-5. `live/pm_research/EXP_RESULTS_2026-08-20.md` — earlier model results.
-6. `live/pm_research/SIGMA_PLAN.md` — **REVISION 5, canonical.** One consumer
+5. `live/pm_research/SIGMA_ROUTE_A_V2_PROTOCOL.md` — pre-registered
+   conditional-variance successor; evaluation begins 2026-08-22 and no v2 fit
+   exists yet.
+6. `live/pm_research/EXP_RESULTS_2026-08-20.md` — earlier model results.
+7. `live/pm_research/SIGMA_PLAN.md` — **REVISION 5, canonical.** One consumer
    matrix, one PRICING law (route A) and one DIAGNOSTIC decomposition (route B),
    never summed, now enforced as a TYPE boundary. **Read §2.3 then §1a** — the
    route decision scopes everything, and §1a says where each consumer's number
    actually comes from. v1/v2 text is in git history.
-7. `live/pm_research/SIGMA_PLAN_REVIEW.md` — first implementation-readiness review.
-8. `live/pm_research/SIGMA_PLAN_REVIEW_ITER2.md` — review of Revision 2.
-9. `live/pm_research/SIGMA_PLAN_REVIEW_ITER3.md` — review of Revision 3 and v14;
+8. `live/pm_research/SIGMA_PLAN_REVIEW.md` — first implementation-readiness review.
+9. `live/pm_research/SIGMA_PLAN_REVIEW_ITER2.md` — review of Revision 2.
+10. `live/pm_research/SIGMA_PLAN_REVIEW_ITER3.md` — review of Revision 3 and v14;
    historical input to Revision 4.
-10. `live/pm_research/SIGMA_PLAN_REVIEW_ITER4.md` — review of Revision 4/v15; its
+11. `live/pm_research/SIGMA_PLAN_REVIEW_ITER4.md` — review of Revision 4/v15; its
    six items are applied in Revision 5/v16.
-11. `live/pm_research/SIGMA_PLAN_REVIEW_ITER5.md` — pre-measurement verdict:
+12. `live/pm_research/SIGMA_PLAN_REVIEW_ITER5.md` — pre-measurement verdict:
    MEASUREMENT GO / PRICING HOLD**, plus the frozen fit sequence.
-12. `live/pm_research/sigma_kernels.py` — executable model **fixture**, not a
+13. `live/pm_research/sigma_kernels.py` — executable model **fixture**, not a
    frozen spec. `--selftest` checks exact arithmetic under a **declared and
    still UNVERIFIED** sampling convention; it does not establish that convention
    against the Chainlink streams.
-13. `live/pm_research/plans/` — BE_BELIEF, BE_FLOWANDFILLS, MEASUREMENT,
+14. `live/pm_research/plans/` — BE_BELIEF, BE_FLOWANDFILLS, MEASUREMENT,
    PRELIMINARY.
 
 Before any book/trade/queue analysis, read
@@ -98,28 +103,39 @@ rotated `.csv.gz` archives plus jsonl byte snapshots, so re-running it reproduce
 the identical exclusion set and window identity can be recorded then. Building
 the exclusion ledger is a **scheduling choice, not a race**.
 
+### Post-close-out implementation 2026-08-21
+
+**`route_a_v2` is now frozen before its evaluation data.**
+`SIGMA_ROUTE_A_V2_PROTOCOL.md` (SHA-256
+`c75fd12e74e8400f3761111028a14f75ddc6ae6e2629dd7fc13d1cf5e116456a`)
+keeps the v1 mean and replaces only pooled residual variance with three signed-x
+tercile variances estimated from historical strictly-forward residuals, with a
+fixed 30-row shrinkage weight. Primary evaluation begins 2026-08-22. It needs
+10 future evaluation days, 30 rows per cell and 126 passes: conditional mean,
+conditional-variance calibration and paired Gaussian quasi-score for every
+symbol/horizon. It is **PRE-REGISTERED / NOT FITTED / PRICING HOLD**.
+
+**The Route-A selection ledger is now executable.** Commit `d8a8481` first
+recorded excluded-window identity and an S60 range proxy. The current extension
+normalises the audit unit to one `(slug,horizon)` candidate, expands window-wide
+failures across all six horizons, records both accepted and excluded rows, and
+joins separately hashed price-gap cause/version intervals without allowing them
+to affect eligibility. A temporary full run over 2,943 final resolutions emitted
+17,658 unique candidate keys (exactly six per resolution), 14,644 accepted and
+3,014 excluded, with zero duplicates. Those counts include the incomplete
+2026-08-21 day and are verification figures, **not a new v1 result**.
+
 ### Residuals — open, in priority order
 
-1. **`route_a_v2` variance spec — pre-register BEFORE the refutation arrives.**
-   `route_a_v1`'s variance gate is on track to read `MODEL_REFUTED` for a
-   predictable reason: OOS residual variance is **U-shaped in `|S30−S60|`**
-   (mid tercile ~0.70–0.80, both tails 1.1–1.7, i.e. 1.4–2.2× across terciles)
-   against a frozen tolerance of 0.25. That is volatility clustering — the same
-   ρ = 0.19–0.40 persistence already in the plan — and it refutes **pooled
-   residual variance**, not route A. The disciplined move is a conditional
-   variance spec frozen *now*; fitting one after seeing the refutation is
-   exactly what pre-registration exists to prevent.
-2. **Exclusion ledger** in `exp_sigma_route_a.py` — exclusions are a bare
-   `Counter` (13 increment sites), so the accepted-versus-excluded activity and
-   volatility comparison that both the protocol and the collector audit require
-   cannot be run. Not urgent (see correction above), but it gates the day-10
-   verdict.
-3. **`PING_TIMEOUT` classification, unresolved at n=8.** It is **8/8 BTC**, which
+1. **`PING_TIMEOUT` classification, unresolved at n=8.** It is **8/8 BTC**, which
    behaves like the MNAR `SLOW_CONSUMER_1013` class, not like the across-coins
    MAR cycling class where `3b9bddc` grouped it. If it stays BTC-only as n grows,
    the cause-aware rule must move it. Accumulate before amending.
-4. **Sigma spec** remains at Revision 5 / contracts v16 with Phase 0A 5–6 unrun
-   (S30/S60 semantics; the route-A fit is descriptive until 10 OOS days).
+2. **Phase 0A 5 — S30/S60 internal sampling semantics.** This still gates Route
+   B only; the route-A fit remains descriptive until 10 OOS days.
+3. **Contracts cleanup.** Remove the duplicate YAML `ReducedFormFit` and stale
+   `ReducedFormLaw`, make the contract loader reject duplicate keys, totalize
+   malformed-input refusals and validate `GateEvidence.effect_size`.
 
 ### Collector: the 1013 is VENUE-SIDE — measured, not inferred
 

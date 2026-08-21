@@ -207,6 +207,19 @@ flags:
                              # Point diagnostics already exceed tolerance in
                              # 42/42 mean and 40/42 variance fits, an early
                              # warning rather than a one-day refutation.
+  sigma_v2_preregistered: true # route_a_v2 frozen 2026-08-21T01:54:47Z before
+                             # primary evaluation data. Keeps v1's mean and uses
+                             # three signed-x tercile variances from historical
+                             # forward residuals with fixed lambda=30 shrinkage.
+                             # Evaluation begins 2026-08-22; 126 gates (mean,
+                             # variance calibration, paired quasi-score) must
+                             # pass. NOT FITTED and does not rescue/change v1.
+  route_a_selection_ledger: ready # One record per candidate (slug,horizon),
+                             # accepted or excluded; window failures expand over
+                             # all six horizons. Carries S60 activity/volatility
+                             # proxies, coverage, ages and separately hashed
+                             # price-gap cause/version attribution. Gap data is
+                             # audit-only and cannot change v1 eligibility.
   sigma_plan_review: iter5-measurement-go # SIGMA_PLAN_REVIEW_ITER5.md reviews
                              # 58f6716. All ITER4 specification blockers pass.
                              # Three implementation cleanups remain (duplicate
@@ -313,13 +326,14 @@ focus: >
   with contracts/contracts.yaml as the machine-readable source of truth.
   IMMEDIATE 2026-08-21: the binding constraint is the OOS DAY COUNT, 1 of 10,
   tracking to ~2026-08-29. Collectors are healthy and the 1013 is settled as
-  venue-side (not fixable client-side). While days accumulate the useful work is
-  (1) PRE-REGISTER the route_a_v2 CONDITIONAL VARIANCE spec before route_a_v1's
-  variance gate reads MODEL_REFUTED -- OOS residual variance is U-shaped in
-  |S30-S60|, 1.4-2.2x across terciles against a 0.25 tolerance, which refutes
-  POOLED variance, not route A; fitting a successor after seeing the refutation
-  is what pre-registration exists to prevent; and (2) add window identity to the
-  exclusion ledger so the day-10 selection audit is possible.
+  venue-side (not fixable client-side). The two calendar-wait tasks are DONE:
+  route_a_v2 is pre-registered before primary evaluation begins on 2026-08-22,
+  and route_a_v1 now emits a unique accepted/excluded (slug,horizon) selection
+  ledger with separately hashed price-gap cause/version attribution. Do not fit
+  or inspect v2 on its primary evaluation days before its formal run, and do not
+  let the audit ledger alter v1 eligibility. Useful non-blocking work is now
+  Phase 0A step 5 (Route-B-only sampling semantics) and the known contracts
+  cleanup; the programme-level next event remains the unchanged v1 day-10 run.
   PRIOR: ROUTE-A MEASUREMENT EXECUTED under frozen route_a_v1: 9,332 admissible rows,
   5,796 OOS rows and 42 per-symbol/horizon fits. One OOS day makes all 84 gates
   INSUFFICIENT_EVIDENCE; the candidate is measurable but not pricing-ready.
@@ -444,6 +458,11 @@ tasks:
       gates must pass before pricing. Non-blocking cleanup remains: remove
       duplicate YAML ReducedFormFit + stale ReducedFormLaw, totalize malformed-
       input refusals, and validate GateEvidence.effect_size.
+      POST-CLOSE-OUT: route_a_v2 is pre-registered, NOT fitted, with evaluation
+      days >=2026-08-22 and 126 required gates. Route_a_v1 now emits a complete
+      candidate-row selection ledger; a temporary full-data verification had
+      exactly 6 unique keys per final resolution and zero duplicates. Its gap
+      ledger is a separately hashed audit source, never an eligibility input.
   - id: e-x1-bookbeat
     phase: 1
     name: Re-read the model-vs-book verdict on the corrected anchor
