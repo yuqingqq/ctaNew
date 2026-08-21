@@ -3,7 +3,7 @@ name: Polymarket Crypto 5-min Markets
 phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
-updated: 2026-08-20 (session 3 — Route A measured; DESCRIPTIVE / PRICING HOLD)
+updated: 2026-08-21 (session 3 — collector 1013 settled VENUE-SIDE; OOS day 1 of 10)
 
 flags:
   collector_running: true    # One price process and one CLOB process; fresh.
@@ -292,7 +292,16 @@ focus: >
   Build and test the model, mechanism-first, no PnL/capacity estimation
   (user, 2026-08-20). Entry point is live/pm_research/PM_ARCHITECTURE.md (v12)
   with contracts/contracts.yaml as the machine-readable source of truth.
-  ROUTE-A MEASUREMENT EXECUTED under frozen route_a_v1: 9,332 admissible rows,
+  IMMEDIATE 2026-08-21: the binding constraint is the OOS DAY COUNT, 1 of 10,
+  tracking to ~2026-08-29. Collectors are healthy and the 1013 is settled as
+  venue-side (not fixable client-side). While days accumulate the useful work is
+  (1) PRE-REGISTER the route_a_v2 CONDITIONAL VARIANCE spec before route_a_v1's
+  variance gate reads MODEL_REFUTED -- OOS residual variance is U-shaped in
+  |S30-S60|, 1.4-2.2x across terciles against a 0.25 tolerance, which refutes
+  POOLED variance, not route A; fitting a successor after seeing the refutation
+  is what pre-registration exists to prevent; and (2) add window identity to the
+  exclusion ledger so the day-10 selection audit is possible.
+  PRIOR: ROUTE-A MEASUREMENT EXECUTED under frozen route_a_v1: 9,332 admissible rows,
   5,796 OOS rows and 42 per-symbol/horizon fits. One OOS day makes all 84 gates
   INSUFFICIENT_EVIDENCE; the candidate is measurable but not pricing-ready.
   Preserve the protocol and rerun unchanged as immutable days accrue; the first
