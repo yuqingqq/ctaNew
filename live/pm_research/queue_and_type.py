@@ -455,8 +455,12 @@ def run_c1(per_coin: int, horizon: float = 15.0, n_boot: int = 2000,
                 "unattributed_trade_shares": agg["unattributed_trade"],
                 "residual_vs_gross_turnover": residual_gross,
                 "residual_vs_traded_volume": residual_traded,
-                "passes_1pct_vs_gross": (residual_gross is not None
-                                         and residual_gross <= 0.01),
+                # R1: retained ONLY to show it is uninformative. Gross churn runs
+                # 60-1000x trade volume, so a trade-sized residual is invisible
+                # against it and this gate cannot fire.
+                "passes_1pct_vs_gross_UNINFORMATIVE": (residual_gross is not None
+                                                       and residual_gross <= 0.01),
+                "primary_denominator": "TRADED_VOLUME",
             },
             "cancellation": {
                 "cancelled_shares": agg["cancelled"],
@@ -472,10 +476,80 @@ def run_c1(per_coin: int, horizon: float = 15.0, n_boot: int = 2000,
                 "narrowing_fraction": narrowing,
                 "width_credited_ci95": cluster_bootstrap(pw_width_new, n_boot, seed),
             },
+            "verdict": c1_verdict(
+                (sum(x >= 1.0 for x in saturation) / len(saturation)) if saturation else None,
+                narrowing, residual_traded),
             "diagnostics": dict(collections.Counter(
                 {k: v for w in windows for k, v in w.diagnostics.items()})),
         }
     return result
+
+
+# --------------------------------------------------------------------------
+# C1 verdict -- with the two guards raised as R1 and R2
+# --------------------------------------------------------------------------
+
+# R2. The protocol's MATERIAL branch could not distinguish a bound TIGHTENING
+# from a bound DEGENERATING into the other bound. Where cancellation exceeds the
+# initial queue the credit caps out, the credited bound collapses onto FRONT,
+# and the width "narrows" by construction while learning nothing. Above this
+# share of saturated actions the credited bound is not a bound.
+#
+# This threshold is set AFTER seeing the data, which is normally forbidden. It is
+# admissible here only because the verdict is INSENSITIVE to it across a wide
+# range: measured saturation is 86-99%, so any ceiling from 0.20 to 0.80 returns
+# the same verdict. Recorded as a structural line, not a tuned one.
+SATURATION_CEILING = 0.50
+
+# R1. The protocol's reconciliation gate was a TAUTOLOGY: `cancelled` is
+# definitionally the residual, so the identity balances by construction, and a
+# 1% threshold against gross level churn -- which runs 60-1000x trade volume --
+# could never fire. The informative denominator is TRADED VOLUME, anchored to the
+# independent last_trade_price stream, which CAN fail.
+#
+# NO PASS THRESHOLD IS SET AGAINST TRADED VOLUME HERE. Choosing one now, having
+# seen 2.3-12.1%, would be re-cutting a rule after its answer. It is reported and
+# must be PRE-REGISTERED before the next run.
+RECONCILIATION_VOID_VS_TRADED = 0.25   # gross decomposition failure only
+
+
+def c1_verdict(share_saturated: float | None, narrowing: float | None,
+               residual_traded: float | None) -> dict[str, Any]:
+    """Verdict under QUEUE_AND_TYPE_PROTOCOL C1, with the R1/R2 guards."""
+    notes: list[str] = []
+    if residual_traded is not None and residual_traded > RECONCILIATION_VOID_VS_TRADED:
+        return {"verdict": "VOID", "reason": "RECONCILIATION_FAILED_VS_TRADED_VOLUME",
+                "residual_vs_traded_volume": residual_traded, "notes": notes}
+    if share_saturated is None or narrowing is None:
+        return {"verdict": "UNRESOLVED", "reason": "INSUFFICIENT_ACTIONS", "notes": notes}
+
+    if share_saturated >= SATURATION_CEILING:
+        notes.append(
+            f"{share_saturated:.1%} of actions are credit-saturated, so the credited "
+            "bound has COLLAPSED onto FRONT rather than tightened. A width reduction "
+            "here measures degeneration, not information.")
+        notes.append(
+            "Cancellation VOLUME is abundant; cancellation POSITION is the missing "
+            "quantity, and it is the SAME unknown the bracket already expresses. "
+            "Credit all -> FRONT; credit none -> BACK_DISPLAYED; the interior needs "
+            "an ASSUMPTION, not a bound.")
+        return {"verdict": "UNIDENTIFIABLE",
+                "reason": "CREDITED_BOUND_DEGENERATE_NOT_TIGHTENED",
+                "share_saturated": share_saturated,
+                "apparent_narrowing_not_to_be_read": narrowing,
+                "residual_vs_traded_volume": residual_traded, "notes": notes}
+
+    if narrowing >= 0.50:
+        v = "MATERIAL"
+    elif narrowing < 0.20:
+        v = "IMMATERIAL"
+        notes.append("Displayed depth ahead really does trade through. Fill is not "
+                     "determinable from data we can collect -- state this plainly.")
+    else:
+        v = "PARTIAL"
+    return {"verdict": v, "reason": "SATURATION_BELOW_CEILING",
+            "share_saturated": share_saturated, "narrowing_fraction": narrowing,
+            "residual_vs_traded_volume": residual_traded, "notes": notes}
 
 
 # --------------------------------------------------------------------------
@@ -785,6 +859,35 @@ def selftest() -> int:
     a.cumulative_reaching, a.cancelled_at_level = 12.0, 6.0
     f, b, c = a.fills()
     ok(f >= c >= b, f"bracket must order front>=credited>=back, got {f} {c} {b}")
+
+    # --- R2: the guard must REFUSE the win the unguarded rule would have granted.
+    # Saturated + huge apparent narrowing is precisely the observed case (86-99%
+    # saturated, 97-100% narrowing); the unguarded rule returns MATERIAL.
+    sat = c1_verdict(0.95, 0.98, 0.05)
+    ok(sat["verdict"] == "UNIDENTIFIABLE",
+       f"saturated + narrow must be UNIDENTIFIABLE, not MATERIAL; got {sat['verdict']}")
+    ok(sat["apparent_narrowing_not_to_be_read"] == 0.98,
+       "the apparent narrowing must be carried but labelled unreadable")
+
+    # CONTROL: the same narrowing WITHOUT saturation must still reach MATERIAL,
+    # or the guard is just a blanket refusal and proves nothing.
+    ok(c1_verdict(0.05, 0.98, 0.05)["verdict"] == "MATERIAL",
+       "unsaturated + narrow must still be MATERIAL -- the guard is not a blanket no")
+    ok(c1_verdict(0.05, 0.10, 0.05)["verdict"] == "IMMATERIAL", "no narrowing -> IMMATERIAL")
+    ok(c1_verdict(0.05, 0.35, 0.05)["verdict"] == "PARTIAL", "in between -> PARTIAL")
+
+    # verdict is insensitive to the ceiling across a wide range at the OBSERVED
+    # saturation -- which is what makes a post-hoc threshold admissible here.
+    ok(all(c1_verdict(0.90, 0.98, 0.05)["verdict"] == "UNIDENTIFIABLE"
+           for _ in range(1)), "observed saturation is far from the ceiling")
+
+    # --- R1: the void gate keys on TRADED volume, not gross turnover.
+    ok(c1_verdict(0.05, 0.98, 0.40)["verdict"] == "VOID",
+       "a gross decomposition failure vs traded volume must VOID")
+    ok(c1_verdict(0.05, 0.98, 0.12)["verdict"] != "VOID",
+       "the observed 2.3-12.1% residual must NOT void -- no post-hoc pass bar")
+    ok(c1_verdict(None, None, 0.05)["verdict"] == "UNRESOLVED", "no actions -> UNRESOLVED")
+
     ok(b == 2.0 and abs(c - 5.0) < 1e-12, "credited bound uses the reduced queue")
 
     ok(a.credit_saturation == 0.6, "saturation is cancels over the initial queue")
