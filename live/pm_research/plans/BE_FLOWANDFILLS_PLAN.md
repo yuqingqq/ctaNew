@@ -1,5 +1,10 @@
 # BE-FlowAndFills — design plan
 
+> **⚠ For current state read [`FLOW_MODEL_STATE.md`](FLOW_MODEL_STATE.md).** This
+> document is **provenance** — correct about its own moment, not a statement of
+> current belief. Where it conflicts with `FLOW_MODEL_STATE.md`, that page wins.
+
+
 > **SUPERSEDED 2026-08-21.** Retained as the fill-model audit trail. Its queue
 > bracket and joint fill/markout insights are folded into canonical Revision 4
 > in `BE_FLOWANDFILLS_MODEL_PLAN.md`; its stale sigma, markout, fee and Hawkes

@@ -1,5 +1,10 @@
 # FLOW_UNCERTAINTY_LOOP — clear the open uncertainties in the flow model
 
+> **⚠ For current state read [`FLOW_MODEL_STATE.md`](FLOW_MODEL_STATE.md).** This
+> document is **provenance** — correct about its own moment, not a statement of
+> current belief. Where it conflicts with `FLOW_MODEL_STATE.md`, that page wins.
+
+
 Charter. Opened 2026-08-21. Owner: coordinator writes this file and the decision
 rules; the research agent runs the measurements and reports.
 

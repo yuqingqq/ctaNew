@@ -1,5 +1,10 @@
 # PM_MECHANISM_EXPERIMENTS — mechanism-truth ladder (replaces PM_MM_PLAN §5)
 
+> **⚠ For current state read [`FLOW_MODEL_STATE.md`](FLOW_MODEL_STATE.md).** This
+> document is **provenance** — correct about its own moment, not a statement of
+> current belief. Where it conflicts with `FLOW_MODEL_STATE.md`, that page wins.
+
+
 Program P-2026-003. Written for sketch-review iteration 2 under the user's
 2026-08-20 scope change (`PM_MM_PLAN.md` §9): **no PnL, no capacity, no sizing.**
 Every experiment asks one question — *does this venue behave the way the model

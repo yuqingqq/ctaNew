@@ -1,5 +1,10 @@
 # PM_QUANT_REVIEW — quantitative-correctness lens (σ / variance law + quoting engine)
 
+> **⚠ For current state read [`FLOW_MODEL_STATE.md`](FLOW_MODEL_STATE.md).** This
+> document is **provenance** — correct about its own moment, not a statement of
+> current belief. Where it conflicts with `FLOW_MODEL_STATE.md`, that page wins.
+
+
 Object: `PM_MM_PLAN.md` §2 (settlement model + variance laws), §3 (quoting
 engine as amended), §11 (three model changes), §12 (this session's amendments:
 σ estimation design, the three model defects, EU siting). Prior theory review

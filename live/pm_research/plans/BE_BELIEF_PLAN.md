@@ -1,5 +1,10 @@
 # BE-Belief — design plan
 
+> **⚠ For current state read [`FLOW_MODEL_STATE.md`](FLOW_MODEL_STATE.md).** This
+> document is **provenance** — correct about its own moment, not a statement of
+> current belief. Where it conflicts with `FLOW_MODEL_STATE.md`, that page wins.
+
+
 Program P-2026-003 (Polymarket 5-min crypto binaries). Planner deliverable:
 recommendation + canonical contract. **No implementation in this document.**
 

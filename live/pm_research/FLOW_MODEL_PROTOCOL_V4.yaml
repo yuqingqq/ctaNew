@@ -183,10 +183,10 @@ reference_snapshot:
       sha256: 5ea7174c4d7aeaeafbbf7e01a01d2408d08606089b7316f1d321a171681fb22d
     development_code:
       path: live/pm_research/flow_fill_development.py
-      sha256: 1a4b6d301a1c8acca213929a6ad0cade4645bba191f6f84f6ce7ac3d3abb5cbe
+      sha256: 7f7080742e3f7fbf9ab0decb6bc24669bbd99dc30540b2fbd4ff6719b54b0007
     development_results:
       path: live/pm_research/FLOW_FILL_DEVELOPMENT_RESULTS.md
-      sha256: c0a1455f4530324b4e0ae0e3fc6400ef58d5f47ccbc16ed72cae19dfa915c614
+      sha256: 280e8f21ed06cc2d8fe5120880a826a27381837ce33ddb1ec81b9b1579e01e17
     canonical_contract:
       path: live/pm_research/contracts/contracts.yaml
       sha256: ae70e3772e74d929eaa735e01f3a9d77e8b55d65dc69aa04c089b46f2e766111
@@ -198,4 +198,4 @@ reference_snapshot:
       sha256: a0f49296940becc5c809f93be9e0dbb94af681345a55d8f575990222be3c5ce7
     corrected_state_results:
       path: live/pm_research/FLOW_INTENSITY_RESULTS.md
-      sha256: cf3552bfa4d663e6221455a1eb14e3908e421b915cb6764508340397c51e87e3
+      sha256: 15915d5929796c2d626f39f8c271e884374db42bb5d5335435908bb0aafc6afd

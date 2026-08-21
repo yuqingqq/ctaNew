@@ -1,5 +1,10 @@
 # FLOW_MODEL_SPEC_REV2 — the respecification the measurement forces
 
+> **⚠ For current state read [`FLOW_MODEL_STATE.md`](FLOW_MODEL_STATE.md).** This
+> document is **provenance** — correct about its own moment, not a statement of
+> current belief. Where it conflicts with `FLOW_MODEL_STATE.md`, that page wins.
+
+
 > **SUPERSEDED 2026-08-21.** This file is retained only as the audit trail for
 > the first descriptive fit. The authoritative specification is Revision 4 in
 > `plans/BE_FLOWANDFILLS_MODEL_PLAN.md`. In particular, Revision 4 retains the

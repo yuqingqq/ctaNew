@@ -1,5 +1,10 @@
 # PM_MM_PLAN — Market Making on Polymarket Crypto 5-min Binaries (P-2026-003)
 
+> **⚠ For current state read [`FLOW_MODEL_STATE.md`](FLOW_MODEL_STATE.md).** This
+> document is **provenance** — correct about its own moment, not a statement of
+> current belief. Where it conflicts with `FLOW_MODEL_STATE.md`, that page wins.
+
+
 Focus decision 2026-08-19: **Polymarket MM is the program's primary track**
 (user call). Taker/latency-arb and pure calibration trading are secondary — the
 taker niche is documented as already-occupied (live-trading writeups of 5-min

@@ -1,5 +1,10 @@
 # Measurement-layer design — DA-State, EV-Markout, EV-Calibration
 
+> **⚠ For current state read [`FLOW_MODEL_STATE.md`](FLOW_MODEL_STATE.md).** This
+> document is **provenance** — correct about its own moment, not a statement of
+> current belief. Where it conflicts with `FLOW_MODEL_STATE.md`, that page wins.
+
+
 P-2026-003. Design planner's output, 2026-08-20. **Plan only — no implementation.**
 Refines `PRELIMINARY_PLANS.md` §1–3. Canonical contracts are in
 `contracts/contracts_measurement_delta.yaml` (a proposed v12→v13 delta;

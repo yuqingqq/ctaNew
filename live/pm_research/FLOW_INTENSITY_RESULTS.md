@@ -1,5 +1,10 @@
 # Flow model — `f_r` and `f_p`, measured
 
+> **⚠ For current state read [`FLOW_MODEL_STATE.md`](FLOW_MODEL_STATE.md).** This
+> document is **provenance** — correct about its own moment, not a statement of
+> current belief. Where it conflicts with `FLOW_MODEL_STATE.md`, that page wins.
+
+
 Probe: `flow_intensity.py` (31 selftest checks, including same-state, lag, gap,
 and flat/ramp vacuity controls).
 Scope: `clob_v3_1` covered set, **945 windows, 135 per coin**, 35 gap-touched,

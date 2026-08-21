@@ -1,5 +1,10 @@
 # Flow and fills — Revision 4 development run
 
+> **⚠ For current state read [`FLOW_MODEL_STATE.md`](FLOW_MODEL_STATE.md).** This
+> document is **provenance** — correct about its own moment, not a statement of
+> current belief. Where it conflicts with `FLOW_MODEL_STATE.md`, that page wins.
+
+
 **Status: DEVELOPMENT · decision eligible: no.** This is an engineering and
 within-design-data result, not forward evidence and not a profitability result.
 

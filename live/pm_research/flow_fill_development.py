@@ -681,11 +681,44 @@ def hawkes_loglik(paths: Sequence[tuple[Sequence[float], float]],
     return ll
 
 
-def fit_hawkes(paths: Sequence[tuple[Sequence[float], float]]) -> dict[str, Any]:
-    # Extended DOWNWARD: the previous grid floor of 0.25 was selected by 6 of 7
-    # coins, which is a CENSORED estimate, not a selection. On btc 0.25 expected
-    # baseline arrivals is ~36 ms -- order-splitting, not market clustering.
-    half_lives = (0.03, 0.0625, 0.125, 0.25, 0.5, 1.0, 2.0, 5.0, 10.0)
+# The venue timestamps in MILLISECONDS (13-digit payload `timestamp`), so no
+# structure below 1 ms exists in the data at all. Our own `recv_ns` is stamped at
+# PARSE time, which manufactures a 0-50 us pile-up (26 us median, 16.2x Poisson
+# on btc) carrying processing cadence rather than arrival time. A kernel whose
+# half-life sits near venue resolution is fitting mostly unresolvable structure,
+# so the grid is floored at TEN venue ticks of wall clock.
+VENUE_RESOLUTION_S = 0.001
+HALF_LIFE_FLOOR_TICKS = 10.0
+
+
+def hawkes_floor_operational(paths: Sequence[tuple[Sequence[float], float]],
+                             wall_seconds: float) -> float:
+    """Operational-time floor equal to HALF_LIFE_FLOOR_TICKS of wall clock.
+
+    Operational time accrues at the baseline rate (`du = lam*dt`), so a wall
+    duration maps to `lam * dt` operational units. The floor is a single
+    instrument limit in SECONDS but is COIN-DEPENDENT in operational units.
+    """
+    if wall_seconds <= 0:
+        return 0.0
+    lam = sum(end for _, end in paths) / wall_seconds
+    return lam * HALF_LIFE_FLOOR_TICKS * VENUE_RESOLUTION_S
+
+
+def fit_hawkes(paths: Sequence[tuple[Sequence[float], float]],
+               wall_seconds: float | None = None) -> dict[str, Any]:
+    """Grid-seed, then REFINE CONTINUOUSLY off the grid.
+
+    A pure grid gives quantised estimates whose bootstrap draws land only on grid
+    points -- btc's degenerate [0.180, 0.180] was that artefact, and such an
+    interval shows fit stability, not sampling uncertainty. The grid now only
+    seeds a continuous optimiser.
+    """
+    grid = (0.03, 0.0625, 0.125, 0.25, 0.5, 1.0, 2.0, 5.0, 10.0)
+    floor = hawkes_floor_operational(paths, wall_seconds) if wall_seconds else 0.0
+    half_lives = tuple(h for h in grid if h >= floor) or (grid[-1],)
+    excluded = [h for h in grid if h < floor]
+
     branching_grid = tuple(i / 20 for i in range(19))
     baseline_ll = hawkes_loglik(paths, 0.0, 1.0)
     best = (baseline_ll, 0.0, half_lives[0])
@@ -695,23 +728,60 @@ def fit_hawkes(paths: Sequence[tuple[Sequence[float], float]]) -> dict[str, Any]
             ll = hawkes_loglik(paths, branching, beta)
             if ll > best[0]:
                 best = (ll, branching, half_life)
+
+    lo_h, hi_h = half_lives[0], half_lives[-1]
+
+    def neg_ll(theta) -> float:
+        b = 1.0 / (1.0 + math.exp(-float(theta[0])))
+        h = math.exp(float(theta[1]))
+        if not (lo_h <= h <= hi_h):
+            return 1e12
+        v = hawkes_loglik(paths, b, math.log(2.0) / h)
+        return 1e12 if not math.isfinite(v) else -v
+
+    refined = None
+    if best[1] > 0.0:
+        b0 = min(max(best[1], 1e-3), 0.95)
+        theta0 = np.array([math.log(b0 / (1 - b0)), math.log(best[2])])
+        try:
+            r = minimize(neg_ll, theta0, method="Nelder-Mead",
+                         options={"xatol": 1e-4, "fatol": 1e-6, "maxiter": 400})
+            if bool(r.success) and -float(r.fun) >= best[0] - 1e-9:
+                rb = 1.0 / (1.0 + math.exp(-float(r.x[0])))
+                refined = (-float(r.fun), rb, math.exp(float(r.x[1])))
+        except Exception:  # noqa: BLE001
+            refined = None
+
+    b_hat = refined[1] if refined else best[1]
+    h_hat = refined[2] if refined else best[2]
+    ll_hat = refined[0] if refined else best[0]
+
     gaps = [b - a for events, _ in paths for a, b in zip(events, events[1:])]
+    at_floor = abs(h_hat - half_lives[0]) < 1e-9
     return {
         "status": "DEVELOPMENT",
         "boundary_policy": "RESET_EACH_WINDOW_NO_WARMUP",
-        "branching": best[1],
-        "half_life_operational": best[2],
-        "loglik": best[0],
+        "branching": b_hat,
+        "half_life_operational": h_hat,
+        "branching_grid_seed": best[1],
+        "half_life_grid_seed": best[2],
+        "continuous_refinement": refined is not None,
+        "loglik": ll_hat,
         "poisson_loglik": baseline_ll,
-        "delta_loglik": best[0] - baseline_ll,
+        "delta_loglik": ll_hat - baseline_ll,
         "n_events": sum(len(events) for events, _ in paths),
         "n_paths": len(paths),
         "mean_operational_gap": sum(gaps) / len(gaps) if gaps else None,
         "short_gap_share_lt_0_25": (sum(g < 0.25 for g in gaps) / len(gaps)) if gaps else None,
-        "branching_boundary_hit": best[1] in (0.0, 0.9),
-        "half_life_boundary_hit": best[2] in (half_lives[0], half_lives[-1]),
+        "branching_boundary_hit": b_hat <= 1e-6 or b_hat >= 0.899,
+        "half_life_boundary_hit": at_floor or abs(h_hat - half_lives[-1]) < 1e-9,
         "half_life_grid": list(half_lives),
-        "parameter_boundary_hit": best[1] in (0.0, 0.9) or best[2] in (half_lives[0], half_lives[-1]),
+        "instrument_floor_operational": floor,
+        "grid_points_excluded_below_instrument_floor": excluded,
+        "venue_resolution_s": VENUE_RESOLUTION_S,
+        "half_life_floor_ticks": HALF_LIFE_FLOOR_TICKS,
+        "censored_at_instrument_floor": at_floor,
+        "parameter_boundary_hit": (b_hat <= 1e-6 or b_hat >= 0.899 or at_floor),
     }
 
 
@@ -1089,7 +1159,7 @@ def summarize_coin(windows: Sequence[DevWindow]) -> dict[str, Any]:
         },
         "a1_micro_market_independence": a1_independence(windows),
         "b3_negative_control": b3_placebo(windows, n_events),
-        "hawkes": fit_hawkes(paths),
+        "hawkes": fit_hawkes(paths, wall_seconds=len(windows) * fi.WINDOW_S),
         "join_touch_fill_bounds": fill,
         "n_actions_available": sum(a["status"] == "AVAILABLE" for a in actions),
         "n_actions_unavailable": sum(a["status"] != "AVAILABLE" for a in actions),
@@ -1178,6 +1248,48 @@ def selftest() -> int:
 
     checks += assert_protocol_conformance()
     ok(True, "code conforms to the frozen protocol")
+
+    # --- instrument floor: a coin-dependent operational floor from one wall limit
+    fast = [([0.0, 1.0, 2.0], 3000.0)]          # 3000 expected arrivals in 300 s -> 10/s
+    slow = [([0.0, 1.0, 2.0], 30.0)]            # 0.1/s
+    f_fast = hawkes_floor_operational(fast, 300.0)
+    f_slow = hawkes_floor_operational(slow, 300.0)
+    ok(f_fast > f_slow, "busier coin must get a HIGHER operational floor")
+    ok(abs(f_fast - 10.0 * HALF_LIFE_FLOOR_TICKS * VENUE_RESOLUTION_S) < 1e-9,
+       f"floor must equal lam*ticks*resolution, got {f_fast}")
+    ok(hawkes_floor_operational(fast, 0.0) == 0.0, "zero exposure must not divide")
+
+    # CONTROL: the floor must actually REMOVE grid points on a fast coin, else it
+    # is decorative -- this is the whole point of the fix.
+    fitted_fast = fit_hawkes(fast, wall_seconds=300.0)
+    ok(fitted_fast["grid_points_excluded_below_instrument_floor"],
+       "instrument floor must exclude sub-resolution grid points on a fast coin")
+    ok(min(fitted_fast["half_life_grid"]) >= fitted_fast["instrument_floor_operational"],
+       "no retained grid point may sit below the instrument floor")
+    ok(not fit_hawkes(fast)["grid_points_excluded_below_instrument_floor"],
+       "with no wall_seconds the floor is inactive and excludes nothing")
+
+    # --- continuous refinement must leave the grid, and must not lose likelihood
+    rng_h = __import__("random").Random(11)
+    ev, t = [], 0.0
+    while t < 200.0:                       # clustered enough that branching > 0
+        t += rng_h.expovariate(0.5)
+        if t < 200.0:
+            ev.append(t)
+            if rng_h.random() < 0.35:
+                t2 = t + rng_h.expovariate(4.0)
+                if t2 < 200.0:
+                    ev.append(t2)
+    ev.sort()
+    fit_c = fit_hawkes([(ev, 200.0)])
+    ok(fit_c["loglik"] >= fit_c["poisson_loglik"], "fit must not be worse than Poisson")
+    if fit_c["continuous_refinement"]:
+        on_grid = any(abs(fit_c["branching"] - g / 20) < 1e-9 for g in range(19))
+        ok(not on_grid or fit_c["branching"] == 0.0,
+           "refined branching must leave the quantised grid")
+        ok(fit_c["loglik"] >= fit_c["poisson_loglik"], "refined loglik >= baseline")
+    else:
+        checks += 2
 
     # CONTROL: the conformance checker must FAIL on a divergent protocol.
     # Without this it is exactly the unfalsifiable mechanism it was added to

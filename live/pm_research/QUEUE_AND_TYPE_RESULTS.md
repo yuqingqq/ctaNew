@@ -1,5 +1,10 @@
 # QUEUE_AND_TYPE — C1 / C2 results
 
+> **⚠ For current state read [`FLOW_MODEL_STATE.md`](FLOW_MODEL_STATE.md).** This
+> document is **provenance** — correct about its own moment, not a statement of
+> current belief. Where it conflicts with `FLOW_MODEL_STATE.md`, that page wins.
+
+
 Protocol `queue_type_v1`. Probe `queue_and_type.py` (34 self-test checks,
 including controls that make each verdict falsifiable). Research only, not
 decision eligible, no forward-day claim.
