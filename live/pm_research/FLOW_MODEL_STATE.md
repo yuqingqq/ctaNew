@@ -27,7 +27,8 @@ the other document is stale. Say so rather than reconciling it privately.
 | **`f_r` does not rise into settlement** | count: flat then terminal collapse. notional: **rises, peaks in the second half, then falls** | 945 windows, `clob_v3_1` |
 | **The terminal regime is FEW AND LARGE** | count drops to 18 % of peak while notional holds 28 %; USDC/arrival 15.5 → 24.0 (btc), 11.9 → 32.3 (eth) | btc/eth |
 | **Book state carries real information** | B3 placebo does not reproduce the gain on any coin (btc −0.03 share, hype 0.02) | 24 windows/coin |
-| **Market self-excitation is not deletable** | bivariate 2×2: diagonal 0.18–0.45 dominates cross 0.02–0.18 on every coin | see §3 on why this is not a validated value |
+| **Market self-excitation is not deletable** | bivariate 2×2: diagonal 0.18–0.45 dominates cross 0.02–0.18 on every coin | scalar fit re-run below; the BIVARIATE fit is still grid-seeded |
+| **Clustering runs at 80–218 ms, and the censoring was OUR GRID** | scalar Hawkes re-fit 2026-08-21 with the instrument floor + continuous optimiser: **no coin is censored**, branching 0.33–0.55, half-life 80.8 ms (btc) to 217.7 ms (hype) — **81×–218× the venue tick** | 24 windows/coin, `clob_v3_1` |
 
 ## 2. Measured and UNDETERMINED — not negative, not positive
 
@@ -74,9 +75,33 @@ the other document is stale. Say so rather than reconciling it privately.
   orders. The 2.3–12.1 % of trade volume with no matching displayed decrease
   (SOL one share in eight) is consistent with hidden liquidity and is not
   separable passively.
-- **Branching *values*.** `RETAIN` means not-deletable-on-this-evidence. It is
-  not a validated estimate; intervals were grid-quantised until 2026-08-21 and
-  showed fit stability, not sampling uncertainty.
+- **Branching *values* — SUBSTANTIALLY IMPROVED 2026-08-21, and one earlier claim
+  is now dead.** The scalar fit was re-run with the instrument floor and a
+  continuous optimiser. **Every coin now selects an INTERIOR half-life; none is
+  censored**, btc included:
+
+  | coin | branching | half-life (op) | half-life (wall) |
+  |---|---:|---:|---:|
+  | btc | 0.554 | 0.6935 | **80.8 ms** |
+  | xrp | 0.343 | 0.1141 | 97.6 ms |
+  | eth | 0.509 | 0.2209 | 115.3 ms |
+  | doge | 0.358 | 0.0746 | 130.1 ms |
+  | bnb | 0.434 | 0.0858 | 168.6 ms |
+  | sol | 0.403 | 0.1485 | 183.4 ms |
+  | hype | 0.325 | 0.1143 | 217.7 ms |
+
+  **The earlier "btc is censored at ~36 ms, which is order-splitting" reading is
+  WITHDRAWN. That was our grid reaching below venue resolution, not a market
+  fact.** Excluding the two sub-resolution grid points on btc, the fit selects a
+  sensible interior value. Real clustering sits at **80–218 ms** on every coin —
+  reaction-time scale, not slicing and not our processing cadence. So the floor
+  did not merely flag the problem; it resolved it.
+
+  **STILL OUTSTANDING:** the **bivariate** C2 fit (the 2×2 type matrix) has NOT
+  been re-run with the floor or the optimiser — it lives in `queue_and_type.py`,
+  which was untouched. Its btc entry is still censored and its intervals are
+  still grid-quantised. Treat the 0.18–0.45 diagonal as provisional until it is
+  re-fitted the same way.
 
 ## 4. Withdrawn — if you find these anywhere, that document is stale
 
