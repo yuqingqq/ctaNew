@@ -137,6 +137,83 @@ timestamp. This is **offline infrastructure, not a CLOB result**. The proposed
 measurement contract delta still targets v12 and must be rebased onto canonical
 contracts v16 before this boundary is declared integrated.
 
+`live/pm_research/tier1_pipeline.py` now implements build-order step 2 without
+crossing that contract boundary. It reads only immutable rotated collector
+files and writes code/input-addressed, `t_known`-sorted zstd Parquet partitions
+for TWAP, reconstructed UP-space quotes, deduped-and-collapsed parent trades,
+and window identity with collector-era and cause-aware gap facts. Writes are
+temp-renamed and idempotent; a changed manifest is fatal; partial partitions
+are stamped and refused by default. Six focused checks cover sequential CLOB
+top reconciliation, token folding, exact dedup + `(t_event,q_up)` collapse,
+resolution knowledge time, cause-preserving gaps, TWAP timestamp selection, and
+partition refusal/overwrite behavior. A bounded 2026-08-20 BTC smoke under
+`/tmp` produced 9,972 TWAP rows, 635 quotes, 111 parent trades and all 288
+windows, with zero malformed CLOB lines, zero invalidated books, zero crossed
+quotes and zero UP/DOWN parity failures. Every smoke partition was
+`partial=true`; these counts are infrastructure verification, **not a new
+research result**. The factual window rows say
+`gap_rule_status=UNFROZEN_FACTS_ONLY`: A-TWAP-1 is not silently applied.
+
+### G-FF1 measured — `side` IS the taker's, but the gate is not passed
+
+Run under `gff1_v2` (`GFF1_PROTOCOL.md`, results `GFF1_RESULTS.md`, probe
+`exp_gff1_side.py`, feed `da_feeds_polygon.py`). **Verdict:
+`INSUFFICIENT_EVIDENCE`** — do not record G-FF1 as passed.
+
+**Agreement 473/473 = 1.0000, Wilson95 [0.9919, 1.0000].** The lower bound does
+clear the 0.99 threshold. Two pre-registered guards still block the pass:
+473 validated clusters against a required 500, and a `JOIN_MISMATCH` rate of
+0.054 against a 0.05 ceiling. Both are administrative, neither is a hint of the
+opposite conclusion — but "nearly passing" is not passing.
+
+Coverage is what makes the point estimate worth anything: **226 BUY and 247
+SELL**, 7/7 coins perfect, 5/5 moneyness buckets perfect. Two *independent*
+chain-derived signals agree with the websocket on every single row — direction
+derived from which leg of the amount pair is USDC, and the `uint8` enum, whose
+mapping is now measured rather than assumed: `0 = BUY, 1 = SELL`, crosstab
+`(0,BUY) 226 / (1,SELL) 247` with zero off-diagonal.
+
+**Practical read: the `+95 bps` maker-gross sign is not inverted.** The
+downstream flow work is not built on a sign error. That is the useful outcome;
+formal closure needs `gff1_v3`.
+
+**The exchange ABI in the older docs does not apply to this tape.**
+`0xe111180000d2663c0091e4f400237545b87b996b` replaces `(makerAssetId,
+takerAssetId)` with one asset id plus an explicit `uint8` side. Signatures were
+verified by keccak-256, not taken from a lookup:
+`OrderFilled(bytes32,address,address,uint8,uint256,uint256,uint256,uint256,bytes32,bytes32)`
+and `OrdersMatched(bytes32,address,uint8,uint256,uint256,uint256)`.
+
+**`fee_rate_bps = 0` is a websocket artefact, not the truth.** **All 500**
+sampled transactions carry a nonzero on-chain fee. The open
+`fee_structure_known` question must be settled on-chain; the feed's zero is
+simply wrong. (A tempting corollary — that fee presence explains the residual
+mismatches — was tested and **refuted**: fee is present on validated and
+mismatched rows alike, so it discriminates nothing.)
+
+**Why `gff1_v1` is on the record as superseded.** v1 hard-coded the BUY reading
+of the amount pair and returned `226/226 = 1.0000` — on a sample that was
+**100 % BUY, zero SELL validated**, with a 0.548 mismatch rate. The frozen
+mismatch ceiling is the only reason that one-sided result did not read as clean.
+An order's `makerAmount` is what its creator *gives*, so the pair is ordered by
+direction; under the BUY-only reading a SELL decodes to a price above 1, which
+is impossible in a prediction market. 235 of the 274 mismatches reconciled
+exactly under the inverted reading, which is what confirmed the diagnosis.
+**Keep the guard discipline: it caught a defect that pooled agreement hid.**
+
+**Open, characterised, unexplained:** 27 residual legs (5.4 %) where size
+matches *exactly* and only price differs — the websocket price sits on the tick
+grid (0.12, 0.65, 0.05) while the chain effective price does not (0.115862,
+0.649168, 0.048008). Direction resolved for all 27 regardless. Not a direction
+failure; a price-comparison artefact of unknown mechanism.
+
+**`gff1_v3` must be frozen before it runs**, and must fix exactly two things:
+draw enough transactions to yield >=500 *validated* clusters (500 drawn yields
+~473), and pre-specify how the tick-grid/effective-price class is compared —
+comparing a nominal price to an aggregate effective price is a category error of
+the same family as the v1 decode bug. **Do not relax `PRICE_TOL` to make the
+ceiling pass**; that would be tuning the instrument to the answer.
+
 ### Residuals — open, in priority order
 
 1. **`PING_TIMEOUT` classification, unresolved at n=8.** It is **8/8 BTC**, which
@@ -145,9 +222,10 @@ contracts v16 before this boundary is declared integrated.
    the cause-aware rule must move it. Accumulate before amending.
 2. **Measurement-layer contract integration.** Rebase
    `contracts_measurement_delta.yaml` from v12 onto canonical contracts v16,
-   freeze the measurement preregistration, then build the Tier-1 distiller and
-   cause-aware coverage/admissibility ledger. Do not run a headline book,
-   markout or flow/fill result before those boundaries land.
+   freeze the measurement preregistration, then connect the now-executable
+   Tier-1 distiller to the typed Coverage/AdmissibilityRule ledger. The
+   distiller's cause facts exist; eligibility does not. Do not run a headline
+   book, markout or flow/fill result before those boundaries land.
 3. **Phase 0A 5 — S30/S60 internal sampling semantics.** This still gates Route
    B only; the route-A fit remains descriptive until 10 OOS days.
 4. **Contracts cleanup.** Remove the duplicate YAML `ReducedFormFit` and stale
@@ -597,6 +675,17 @@ Estimator implementation remains on **HOLD**.
 
 ## Standing rules (each one paid for)
 
+- **Check the data before using it, every time — no lane is trusted by default.**
+  Before any analysis reads a lane, verify *for the exact rows it will consume*:
+  coverage and the gap ledger over each window, predictor staleness at each
+  decision time, collector version / repair-era boundaries, and whether the lane
+  is cleared for that class of inference (`clob_capture_clean`). Report the
+  excluded set beside the retained one, and characterise it on the statistic the
+  model actually estimates. Paid for four times: the FLB edge measured on p90
+  6.2 s stale books; the v2 "repair successful" the collector's own ledger
+  contradicted four minutes later; the prices lane called "clean" on
+  `open_gaps=[]` while logging 58 gaps in 11 h; and the exclusion-MNAR reading
+  that reversed sign once a variance statistic replaced a displacement one.
 - No design decision that a measurement on existing data could settle may be
   recorded as settled until that measurement is run.
 - Read book state from `price_change.best_bid/ask`, **never** `book` snapshots.

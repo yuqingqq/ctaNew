@@ -188,8 +188,60 @@ flags:
                              # 2026-08-20: the 1.7 s is the SIGNAL clock only —
                              # the book itself arrives in 47 ms. Siting matters
                              # much less than the FATAL-1 finding implied.
-  fee_structure_known: false # fee_rate_bps = 0 on all trades observed so far;
-                             # conflicts with docs (7%) and CLOB base_fee.
+  fee_structure_known: false # STILL false, but the WS side of it is now SETTLED
+                             # AS WRONG: fee_rate_bps = 0 on the websocket is an
+                             # ARTEFACT. ALL 500 transactions sampled for G-FF1
+                             # carry a NONZERO on-chain fee (e.g. 173290, 371320,
+                             # 66630 base units). The rate/schedule is still
+                             # unknown, but it must be read from the chain, never
+                             # from the feed. A tempting corollary -- that fee
+                             # presence explains the 27 residual join mismatches
+                             # -- was TESTED AND REFUTED (fee>0 on validated and
+                             # mismatched rows alike; it discriminates nothing).
+  gff1_side_convention: measured-not-passed # G-FF1 under gff1_v2. `side` IS the
+                             # TAKER's: agreement 473/473 = 1.0000, Wilson95
+                             # [0.9919, 1.0000], covering 226 BUY + 247 SELL,
+                             # 7/7 coins and 5/5 moneyness buckets perfect. TWO
+                             # INDEPENDENT chain signals agree on every row --
+                             # direction from which leg of the amount pair is
+                             # USDC, and the uint8 enum, whose mapping is now
+                             # MEASURED: 0=BUY, 1=SELL, zero off-diagonal.
+                             # VERDICT IS STILL `INSUFFICIENT_EVIDENCE`: 473
+                             # validated clusters vs 500 required, and a
+                             # JOIN_MISMATCH rate of 0.054 vs a 0.05 ceiling.
+                             # Both administrative; neither hints the other way.
+                             # DO NOT record G-FF1 as PASSED. PRACTICAL READ: the
+                             # +95bps maker-gross SIGN IS NOT INVERTED, so the
+                             # flow/fills work is not built on a sign error.
+                             # gff1_v1 is SUPERSEDED, not withdrawn: it hard-coded
+                             # the BUY reading of the amount pair and returned
+                             # 226/226 on a sample that was 100% BUY / ZERO SELL,
+                             # at a 0.548 mismatch rate. The FROZEN MISMATCH
+                             # CEILING is the only reason that one-sided result
+                             # did not read as clean -- keep that guard.
+                             # OPEN: 27 residual legs (5.4%) where size matches
+                             # EXACTLY and only price differs (WS on the tick
+                             # grid 0.12/0.65/0.05, chain effective 0.115862/
+                             # 0.649168/0.048008). Direction resolved for all 27
+                             # anyway. gff1_v3 must be FROZEN BEFORE RUNNING and
+                             # fix exactly two things: draw enough to yield >=500
+                             # VALIDATED clusters, and pre-specify how the
+                             # nominal-vs-effective price class is compared. DO
+                             # NOT relax PRICE_TOL to clear the ceiling.
+  onchain_abi_verified: true # The older Polymarket CTF Exchange ABI does NOT
+                             # apply to this tape. Exchange
+                             # 0xe111180000d2663c0091e4f400237545b87b996b
+                             # replaces (makerAssetId, takerAssetId) with ONE
+                             # asset id plus an explicit uint8 side enum.
+                             # Verified by KECCAK-256, not taken from a lookup:
+                             # OrderFilled(bytes32,address,address,uint8,uint256,
+                             # uint256,uint256,uint256,bytes32,bytes32) and
+                             # OrdersMatched(bytes32,address,uint8,uint256,
+                             # uint256,uint256). A transaction commonly carries
+                             # SEVERAL OrderFilled legs (3 in the first sample),
+                             # so a hash-level join is NOT a join -- the leg must
+                             # be identified and value-validated first (rule
+                             # R-CHAIN in contracts_onchain_delta.yaml).
   structure_converged: false # 12 review iterations; replay stands at
                              # LOCAL 11 / SPREADING 1 / STRUCTURAL 1.
   sigma_plan_finalized: true # FINALIZED FOR MEASUREMENT after ITER5 review.
@@ -220,15 +272,27 @@ flags:
                              # proxies, coverage, ages and separately hashed
                              # price-gap cause/version attribution. Gap data is
                              # audit-only and cannot change v1 eligibility.
-  measurement_foundation: step1-executable-contract-pending
+  measurement_foundation: step2-executable-contract-pending
                              # da_state.py implements the offline SourceProfile-
                              # bound Known factory, nominal clocks, associative
                              # knowledge-error composition, knowledge-truncated
                              # StateView and refusal telemetry. 15 focused checks
-                             # plus real TWAP/CLOB record smoke tests pass. This
-                             # is infrastructure only: the v12 measurement delta
-                             # still needs rebasing onto canonical contracts v16;
-                             # no CLOB result or decision gate is authorized.
+                             # plus real TWAP/CLOB record smoke tests pass.
+                             # tier1_pipeline.py now deterministically distils
+                             # immutable rotated files into TWAP, reconstructed
+                             # UP quotes, deduped/collapsed parent trades and
+                             # windows with version eras + cause-aware gap facts.
+                             # Partitions are code/input-addressed, t_known
+                             # sorted, zstd Parquet, temp-renamed, idempotent,
+                             # merge-never-overwrite and refuse partial reads.
+                             # Six focused pipeline checks pass. A bounded real
+                             # 2026-08-20 BTC smoke produced 9,972 TWAP / 635
+                             # quotes / 111 trades / 288 windows, all under /tmp
+                             # and stamped partial=true; this is verification,
+                             # not a result. A-TWAP-1 remains UNFROZEN and is
+                             # not applied. The v12 measurement delta still
+                             # needs rebasing onto canonical contracts v16; no
+                             # CLOB result or decision gate is authorized.
   sigma_plan_review: iter5-measurement-go # SIGMA_PLAN_REVIEW_ITER5.md reviews
                              # 58f6716. All ITER4 specification blockers pass.
                              # Three implementation cleanups remain (duplicate
@@ -359,6 +423,17 @@ focus: >
   or model-vs-book inference. See DATA_COLLECTOR_AUDIT_2026-08-20.md.
 
 standing_rules:
+  - CHECK THE DATA BEFORE USING IT, EVERY TIME — no lane is trusted by default.
+    Before any analysis reads a lane, verify FOR THE EXACT ROWS IT WILL CONSUME
+    coverage and the gap ledger per window, predictor staleness at each decision
+    time, collector version / repair-era boundaries, and whether the lane is
+    cleared for that class of inference (clob_capture_clean). Report the excluded
+    set beside the retained one, and characterise it on the statistic the model
+    actually estimates. Paid for four times — the FLB edge on p90 6.2s stale
+    books; the v2 "repair successful" its own ledger contradicted 4 min later;
+    the prices lane called "clean" on open_gaps=[] while logging 58 gaps in 11h;
+    and the exclusion-MNAR reading that REVERSED SIGN once a variance statistic
+    replaced a displacement one.
   - No design decision that a measurement on existing data could settle may be
     recorded as settled until that measurement is run.
   - Dedup prices by (timestamp, symbol) and raw by message identity — recv_ns

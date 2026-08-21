@@ -1,0 +1,194 @@
+# On-chain (DA-Feeds / PolygonRPC) contract delta — for fold-in to v17.
+#
+# ADDITIONS ONLY. This file touches no existing type, module, port or rule, so
+# it can be merged into contracts.yaml at any point in the v17 rebase without
+# reordering anything. Nothing here removes or narrows a v16 key, so the
+# structural diff checker should report zero unexplained changes on merge.
+#
+# Provenance: types are derived from event signatures VERIFIED BY KECCAK-256
+# against the live tape (live/pm_research/da_feeds_polygon.py::_assert_signatures),
+# not from documentation. The classic Polymarket CTF Exchange ABI does NOT apply
+# to this exchange: 0xe111180000d2663c0091e4f400237545b87b996b replaces the
+# (makerAssetId, takerAssetId) pair with ONE asset id plus an explicit uint8
+# side enum. Any contract written from the older 8-field OrderFilled is wrong
+# for this tape.
+
+target_version: 17
+
+rules:
+  R-CHAIN:
+    body: an on-chain join is not established by transaction hash alone; the leg
+      must be identified within the transaction and the identification validated
+      against independently observed values before any field of it is read
+    checks:
+    - 'leg_identified: exactly one TakerOrderMatch in the receipt matches the
+       observed asset_id, else the row is AMBIGUOUS_LEG and is REPORTED'
+    - 'value_validated: TakerOrderMatch.size == observed size and
+       TakerOrderMatch.price == observed price, within declared tolerances,
+       else the row is JOIN_MISMATCH and is REPORTED'
+    - 'excluded_reported: the excluded set is published beside the retained one'
+    notes: 'a transaction commonly carries SEVERAL OrderFilled legs (three in the
+      first inspected sample). A hash-level join proves only that the right
+      transaction was fetched, never that the right leg within it was read'
+
+types:
+  ChainTxHash:
+    fields:
+      value: str
+    notes: '0x-prefixed 32-byte transaction hash; the join key carried by
+      last_trade_price'
+
+  ChainAddress:
+    fields:
+      value: str
+    notes: 'lowercase 0x-prefixed 20-byte address'
+
+  OnChainReceipt:
+    fields:
+      tx_hash: ChainTxHash
+      block_number: int
+      status: enum:SUCCESS|REVERTED
+      logs: list[ChainLog]
+      t_known: Timestamp
+    notes: 'R-KNOW: t_known is the time WE fetched it, never the block timestamp.
+      Receipts are cached by hash so a rerun is byte-reproducible without
+      re-querying the chain'
+
+  ChainLog:
+    fields:
+      address: ChainAddress
+      log_index: int
+      topic0: str
+      topics: list[str]
+      data: str
+
+  ExchangeFill:
+    fields:
+      order_hash: str
+      maker: ChainAddress
+      taker: ChainAddress
+      side_enum: int
+      asset_id: int
+      maker_amount_filled: int
+      taker_amount_filled: int
+      fee: int
+      log_index: int
+    notes: 'decode of OrderFilled(bytes32,address,address,uint8,uint256,uint256,
+      uint256,uint256,bytes32,bytes32), topic0
+      0xd543adfd945773f1a62f74f0ee55a5e3b9b1a28262980ba90b1a89f2ea84d8ee.
+      ONE MAKER LEG of a match; a transaction may carry several. maker and taker
+      are named explicitly -- this is the only ground truth for direction, and
+      nothing in the websocket feed contains either address. NOTE fee is NOT
+      always zero on-chain even where the websocket reports fee_rate_bps = 0;
+      the open fee_structure_known flag must be settled here, not from the feed'
+
+  TakerOrderMatch:
+    fields:
+      taker_order_hash: str
+      taker_order_maker: ChainAddress
+      side_enum: int
+      asset_id: int
+      maker_amount_filled: int
+      taker_amount_filled: int
+      log_index: int
+    notes: 'decode of OrdersMatched(bytes32,address,uint8,uint256,uint256,uint256),
+      topic0 0x174b3811690657c217184f89418266767c87e4805d09680c39fc9c031c0cab7c.
+      The AGGREGATE fill of one taker order. taker_order_maker is the address
+      that SUBMITTED the taker order -- the name comes from the exchange ABI and
+      reads backwards. Amounts are 6-decimal: size = taker_amount_filled / 1e6,
+      price = maker_amount_filled / taker_amount_filled'
+
+  SideConventionEvidence:
+    fields:
+      protocol_version: str
+      gate: enum:G-FF1
+      n_validated_clusters: int
+      agreement: float
+      ci_lower: float
+      ci_upper: float
+      tolerance: float
+      verdict: enum:PASS|INSUFFICIENT_EVIDENCE|MODEL_REFUTED
+      enum_to_label: str
+    notes: 'the finding of G-FF1, not an assumption. enum_to_label records WHICH
+      mapping was confirmed (e.g. 0=BUY). A pooled agreement near 0.0 means the
+      convention is INVERTED and is reported as MODEL_REFUTED -- it must never be
+      silently sign-flipped into a pass. PASS requires the CI bound inside the
+      tolerance, per the v16 GateEvidence discipline that failure to reject is
+      not equivalence'
+
+modules:
+  DA-Feeds/PolygonRPC:
+    produces:
+    - OnChainReceipt
+    - ExchangeFill
+    - TakerOrderMatch
+    ports:
+    - feed
+    - telemetry_out
+    notes: 'fills the PolygonRPC NAMED-SEAM in PM_ARCHITECTURE v12 section 12.
+      READ-ONLY: fetches receipts by hash and decodes verified events. It holds
+      no state beyond an on-disk receipt cache, performs no address or
+      participant analysis, and never writes to chain'
+
+migrations:
+- from_version: 16
+  to_version: 17
+  operation: add
+  key: rule:R-CHAIN
+  new: rule
+  reason: 'a hash-level on-chain join is not a join. The first inspected receipt
+    carried three OrderFilled legs and one OrdersMatched; selecting the wrong leg
+    silently yields a different asset, size and price. R-CHAIN forces leg
+    identification plus value validation before any field is read'
+- from_version: 16
+  to_version: 17
+  operation: add
+  key: type:OnChainReceipt
+  new: OnChainReceipt
+  reason: 'DA-Feeds/PolygonRPC seam is declared in architecture section 12 but had
+    no contract type; v16 contained no on-chain vocabulary at all'
+- from_version: 16
+  to_version: 17
+  operation: add
+  key: type:ChainLog
+  new: ChainLog
+  reason: 'carrier for OnChainReceipt.logs'
+- from_version: 16
+  to_version: 17
+  operation: add
+  key: type:ChainTxHash
+  new: ChainTxHash
+  reason: 'the join key between last_trade_price and the chain'
+- from_version: 16
+  to_version: 17
+  operation: add
+  key: type:ChainAddress
+  new: ChainAddress
+  reason: 'maker/taker identity; the only ground truth for trade direction'
+- from_version: 16
+  to_version: 17
+  operation: add
+  key: type:ExchangeFill
+  new: ExchangeFill
+  reason: 'decode of the keccak-verified OrderFilled event. Also the correct
+    source for fee, which the websocket reports as 0 while the chain does not'
+- from_version: 16
+  to_version: 17
+  operation: add
+  key: type:TakerOrderMatch
+  new: TakerOrderMatch
+  reason: 'decode of the keccak-verified OrdersMatched event; the aggregate taker
+    leg that last_trade_price actually corresponds to'
+- from_version: 16
+  to_version: 17
+  operation: add
+  key: type:SideConventionEvidence
+  new: SideConventionEvidence
+  reason: 'G-FF1 is on_fail HALT_PROGRAM; its result must be a typed, versioned
+    finding with a confidence bound, not a constant someone assumed'
+- from_version: 16
+  to_version: 17
+  operation: add
+  key: module:DA-Feeds/PolygonRPC
+  new: module
+  reason: 'registers the named seam so the module register describes what exists'
