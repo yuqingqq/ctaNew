@@ -1,5 +1,17 @@
 protocol: FLOW_MODEL_V3
-status: FROZEN_FOR_FORWARD_EVALUATION
+status: HISTORICAL_SUPERSEDED_BY_V4
+governs: false
+superseded_by: FLOW_AND_FILLS_V4
+supersession_note: >
+  Retained for provenance only. V3 and V4 were both FROZEN with overlapping
+  scope and no precedence, and they DISAGREE: V3 carries Hawkes history across
+  adjacent markets and warms up after gaps, V4 resets each window with no
+  warm-up; V3 declares design_data_through 2026-08-21T23:59:59Z against V4's
+  07:05:00Z. The code implements V4. The differing cutoffs are the sharp edge --
+  08-21 07:05 to 23:59 is design data here and NEITHER design nor evaluation
+  under V4, so a V3 fit scored against V4 gates carries an inconsistent embargo.
+  Do NOT use this file to admit data or score a fit.
+prior_status: FROZEN_FOR_FORWARD_EVALUATION
 frozen_at: '2026-08-21T06:16:40Z'
 design_data_through: '2026-08-21T23:59:59Z'
 primary_evaluation_start: '2026-08-22T00:00:00Z'

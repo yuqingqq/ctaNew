@@ -124,6 +124,19 @@ is the wrong conditioning: trade price is an outcome of the fill, not the state 
 maker chooses to rest in, and a sweep prints far from the mid it started at.
 Re-run on the mid, the picture is different: the net edge is **noisy, non-monotone,
 ~+0.45 c/share on average, ≈0 at the money, and NOT worse far from the money.**
+
+> **WITHDRAWN 2026-08-21 — DO NOT CITE.** Every figure in this block is
+> **book-derived** and inherits the stale-book defect (`book` snapshots are p90
+> **6.2 s** stale; read `price_change.best_bid/ask` instead). Rebuilt with **no
+> book at all** — from trade price, taker side (G-FF1 `PASS`) and the settled
+> winners field — the maker markout is **+0.17 c/share**, so `+0.45` is ~2.6x
+> too high and `+95 bps / +136 bps` falls with it, being literally the same
+> number. And the corrected figure is **NOT DISTINGUISHABLE FROM ZERO**:
+> window-clustered bootstrap over 931 windows gives **+0.173 [-0.251, +0.596]**,
+> with all seven per-coin CIs spanning zero on both weightings. **The maker-edge
+> sign is UNDETERMINED at two days**, not positive. See
+> `FLOW_UNCERTAINTY_LOOP.md` U4/U10/U10b and STATUS `stale_book_contamination`.
+
 So the plan's directional instinct — don't quote ATM — is *consistent* with the
 data, and my adversarial prior (H-2) is not supported. **The 2–4× swings between
 adjacent bins on 1–2 M shares each are also a warning that 1.4 days is nowhere near
@@ -223,6 +236,19 @@ reservation shift, a price-units quantity. Consequences:
   maker-bought (taker SELL) = **−0.15 c/share** vs maker-sold (taker BUY) =
   **+0.45 c/share**. Directionally consistent with the asymmetry above; conditioned
   on price rather than mid, so treat as suggestive.
+
+> **WITHDRAWN 2026-08-21 — DO NOT CITE.** Every figure in this block is
+> **book-derived** and inherits the stale-book defect (`book` snapshots are p90
+> **6.2 s** stale; read `price_change.best_bid/ask` instead). Rebuilt with **no
+> book at all** — from trade price, taker side (G-FF1 `PASS`) and the settled
+> winners field — the maker markout is **+0.17 c/share**, so `+0.45` is ~2.6x
+> too high and `+95 bps / +136 bps` falls with it, being literally the same
+> number. And the corrected figure is **NOT DISTINGUISHABLE FROM ZERO**:
+> window-clustered bootstrap over 931 windows gives **+0.173 [-0.251, +0.596]**,
+> with all seven per-coin CIs spanning zero on both weightings. **The maker-edge
+> sign is UNDETERMINED at two days**, not positive. See
+> `FLOW_UNCERTAINTY_LOOP.md` U4/U10/U10b and STATUS `stale_book_contamination`.
+
 - `κ` has no calibration recipe (T-F10, still open), so the budget is unanchored
   in the one place where the functional form matters most.
 
@@ -594,6 +620,19 @@ pie and it deserves saying — the maker side of this venue is *not* obviously
 negative-sum, which is a point in the program's favour that no prior review
 established. But:
 
+> **WITHDRAWN 2026-08-21 — DO NOT CITE.** Every figure in this block is
+> **book-derived** and inherits the stale-book defect (`book` snapshots are p90
+> **6.2 s** stale; read `price_change.best_bid/ask` instead). Rebuilt with **no
+> book at all** — from trade price, taker side (G-FF1 `PASS`) and the settled
+> winners field — the maker markout is **+0.17 c/share**, so `+0.45` is ~2.6x
+> too high and `+95 bps / +136 bps` falls with it, being literally the same
+> number. And the corrected figure is **NOT DISTINGUISHABLE FROM ZERO**:
+> window-clustered bootstrap over 931 windows gives **+0.173 [-0.251, +0.596]**,
+> with all seven per-coin CIs spanning zero on both weightings. **The maker-edge
+> sign is UNDETERMINED at two days**, not positive. See
+> `FLOW_UNCERTAINTY_LOOP.md` U4/U10/U10b and STATUS `stale_book_contamination`.
+
+
 - **49% of BTC maker gross comes from 5 of 171 windows.** Excluding the best 10,
   gross falls from $48.4k to $10.8k. Per-window `frac > 0` = 0.53, p10 = −392 bps,
   p90 = +597 bps.
@@ -680,6 +719,19 @@ assumed to be 471 ms in three documents and is 1,700 ms).
   the maker and taker addresses — add one line to confirm that the WS `side` matches
   the on-chain taker's direction on the frozen ≥500-tx sample.
 
+> **WITHDRAWN 2026-08-21 — DO NOT CITE.** Every figure in this block is
+> **book-derived** and inherits the stale-book defect (`book` snapshots are p90
+> **6.2 s** stale; read `price_change.best_bid/ask` instead). Rebuilt with **no
+> book at all** — from trade price, taker side (G-FF1 `PASS`) and the settled
+> winners field — the maker markout is **+0.17 c/share**, so `+0.45` is ~2.6x
+> too high and `+95 bps / +136 bps` falls with it, being literally the same
+> number. And the corrected figure is **NOT DISTINGUISHABLE FROM ZERO**:
+> window-clustered bootstrap over 931 windows gives **+0.173 [-0.251, +0.596]**,
+> with all seven per-coin CIs spanning zero on both weightings. **The maker-edge
+> sign is UNDETERMINED at two days**, not positive. See
+> `FLOW_UNCERTAINTY_LOOP.md` U4/U10/U10b and STATUS `stale_book_contamination`.
+
+
 ---
 
 # The strongest argument that this program should stop
@@ -742,6 +794,19 @@ maker's markout. The mechanism behind it is visible and mechanically sensible: t
 book is **over-dispersed at every decision time** (mid 0.236 → realised 0.142 at
 `t = 30 s`; mid 0.982 → realised 1.000 at `t = 290 s`, 576 windows, zero flips),
 which is the classic favourite–longshot bias — retail buys lottery tickets.
+
+> **WITHDRAWN 2026-08-21 — DO NOT CITE.** Every figure in this block is
+> **book-derived** and inherits the stale-book defect (`book` snapshots are p90
+> **6.2 s** stale; read `price_change.best_bid/ask` instead). Rebuilt with **no
+> book at all** — from trade price, taker side (G-FF1 `PASS`) and the settled
+> winners field — the maker markout is **+0.17 c/share**, so `+0.45` is ~2.6x
+> too high and `+95 bps / +136 bps` falls with it, being literally the same
+> number. And the corrected figure is **NOT DISTINGUISHABLE FROM ZERO**:
+> window-clustered bootstrap over 931 windows gives **+0.173 [-0.251, +0.596]**,
+> with all seven per-coin CIs spanning zero on both weightings. **The maker-edge
+> sign is UNDETERMINED at two days**, not positive. See
+> `FLOW_UNCERTAINTY_LOOP.md` U4/U10/U10b and STATUS `stale_book_contamination`.
+
 
 If the program were re-scoped to *"be a passive two-sided maker on the
 over-dispersion, cap loss-given-adverse-resolution, don't quote ATM, don't quote

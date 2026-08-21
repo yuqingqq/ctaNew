@@ -82,7 +82,13 @@ No coin shows a rising count profile. That much holds on every weighting.
 
 On btc the collapse is weighting-insensitive and is a finding. **On hype it is
 entirely the micro actor going quiet** — ex-micro 1.055, notional **1.421**, so
-real flow *rises*. **A conclusion whose sign flips with the weighting is not a
+real flow *rises*. **CAVEAT ADDED 2026-08-21: the `1.055` is an ex-micro
+DELETION quantity and A1 has since FAILED** (`a1_holds` false on all seven
+coins, direction `BIDIRECTIONAL_OR_COMMON_DRIVER`), so ex-micro is a
+**conditioned sub-process, not a component**, and this figure inherits that.
+**The notional `1.421` does NOT** — notional weighting reweights rather than
+deletes and needs no independence assumption. Read the argument off the notional
+column alone; the ex-micro column is illustrative only. **A conclusion whose sign flips with the weighting is not a
 finding about the market.** "Flat then collapses" must not be read as a
 market-wide property; it is a btc property.
 
@@ -328,6 +334,25 @@ in either direction. Recorded as a descriptive shape only.
 4. The claim that independence is required before estimating ex-micro flow.
    Revision 3 instead treats it as a labelled subprocess and tests cross-type
    dependence after cause-specific baseline time changes.
+
+   **RECONCILIATION, 2026-08-21 — both readings are correct about different
+   things, and the corpus previously carried them as if they conflicted.**
+   Independence (A1) is required **only if the model DELETES the micro class**.
+   Revision 3/4 does not delete it; it LABELS it (`event_types: [MICRO_002,
+   MARKET]`, `TOTAL_INTENSITY_PLUS_CONDITIONAL_MARKS`). So:
+   - **A1's failure kills Revision-2-era ex-micro DELETION quantities** — the
+     Tier B non-uniform grid, the ex-micro `f_r` shapes, the hype `1.055`
+     collapse argument above, any ex-micro branching ratio.
+   - **A1's failure VINDICATES the Revision 3/4 multi-type choice.** Dependence
+     is modelled rather than assumed away, which is why C2 could fit a 2x2
+     branching matrix and find the diagonal dominant (`market<-market`
+     0.18-0.45 vs cross 0.02-0.18) — a decomposition unavailable under deletion.
+   - **Notional weighting is untouched either way.** It reweights rather than
+     deletes; the micro class carries 0.0145 % of notional and is negligible by
+     construction, so no independence assumption is required.
+
+   The governing rule: **delete nothing; label and condition.** Any document
+   presenting an ex-micro quantity as a component quantity is stale.
 
 ## What is NOT established
 

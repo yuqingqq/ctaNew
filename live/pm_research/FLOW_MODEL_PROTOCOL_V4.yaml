@@ -1,5 +1,16 @@
 protocol: FLOW_AND_FILLS_V4
 status: FROZEN_DESIGN_DEVELOPMENT_ACTIVE
+supersedes: FLOW_MODEL_V3
+governs: true
+supersession_note: >
+  V3 and V4 were both FROZEN with overlapping scope and no precedence, and they
+  DISAGREE on the estimator: V3 carries Hawkes history across adjacent markets
+  and warms up after gaps, V4 resets each window with no warm-up; V3 declares
+  design_data_through 2026-08-21T23:59:59Z, V4 2026-08-21T07:05:00Z. The code
+  implements V4. The differing cutoffs are the sharp edge -- 08-21 07:05 to
+  23:59 is design data under V3 and neither design nor evaluation under V4, so a
+  V3 fit scored against V4 gates carries an inconsistent embargo. V4 governs;
+  V3 is historical and must not be used to admit data or score a fit.
 frozen_at: '2026-08-21T07:27:49Z'
 design_data_through: '2026-08-21T07:05:00Z'
 primary_evaluation_start: '2026-08-22T00:00:00Z'
@@ -116,6 +127,14 @@ hawkes:
     direction: CLUSTERING
 
 fill_actions:
+  # RESTRICTED 2026-08-21 by decision. The fill question is answered on btc and
+  # eth ONLY. On the thin coins the bracket is wider than any conclusion it could
+  # support -- hype runs 71.3% front against 2.4% back-displayed at 15 s, a 69pp
+  # range, on a book where 90% of arrivals are one actor. Thin coins remain
+  # DESCRIPTIVE: their fill numbers may be reported, never used as evidence.
+  verdict_coins: [btc, eth]
+  descriptive_only_coins: [sol, xrp, doge, bnb, hype]
+  restriction_reason: BRACKET_WIDER_THAN_ANY_SUPPORTABLE_CONCLUSION
   coordinate: UP_UNIFIED_BOOK
   primary_style: JOIN_TOUCH
   maker_sides: [BUY_UP, SELL_UP]
@@ -179,4 +198,4 @@ reference_snapshot:
       sha256: a0f49296940becc5c809f93be9e0dbb94af681345a55d8f575990222be3c5ce7
     corrected_state_results:
       path: live/pm_research/FLOW_INTENSITY_RESULTS.md
-      sha256: 0ddf28093362ecb34b6e8d747996143a356b602c464154690c25e73efa52de3c
+      sha256: cf3552bfa4d663e6221455a1eb14e3908e421b915cb6764508340397c51e87e3
