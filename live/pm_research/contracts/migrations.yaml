@@ -4,6 +4,21 @@
 # narrowing at an allowlisted path -- the precise failure this process exists to
 # prevent. Records are loaded from the TARGET ref.
 migrations:
+# ---- v17 -> v18: replay canary and point-in-time coverage -----------------
+- from_version: 17
+  to_version: 18
+  operation: change
+  key: rule:R-KNOW
+  old: no API accepts event time; derived t_known = MAX(inputs)
+  new: no production API accepts event time; derived t_known = MAX(inputs); EventTimeView is reachable only through the R-CANARY harness
+  reason: 'R-CANARY: the event-time API exists only as a deliberately leaky, harness-bound diagnostic twin'
+- from_version: 17
+  to_version: 18
+  operation: change
+  key: method:StateView.coverage
+  old: '(field: str, span: Duration) -> Coverage'
+  new: '(field: str, span: Duration) -> Known[Coverage] | Unavailable'
+  reason: 'R-REFUSE: coverage is itself knowledge-time data and must be unavailable before t_known_hi'
 # ---- v16 -> v17: measurement infrastructure boundary ---------------------
 - from_version: 16
   to_version: 17

@@ -65,7 +65,7 @@ from live.pm_research.coverage_ledger import (
 REPO = Path(__file__).resolve().parents[2]
 PM = REPO / "data/pm_5min"
 DEFAULT_OUTPUT_ROOT = PM / "tier1"
-DISTILLER_VERSION = "tier1_v2"
+DISTILLER_VERSION = "tier1_v3"
 PRICE_SCALE = 1_000_000
 ROW_GROUP_SIZE = 65_536
 MAX_NS = (1 << 63) - 1
@@ -1646,7 +1646,15 @@ def normalize_coverage(
             source_profile_hash=source_registry.registry_hash,
             external_gaps=external_gaps,
         )
-        known_ns = max(facts.t_known_ns, market.market_known_ns)
+        # Negative evidence is not knowable before the interval whose absence
+        # it describes has ended.  A missing tail can otherwise make
+        # ``facts.t_known_ns`` precede target_end_ns and launder future coverage
+        # into an earlier StateView.
+        known_ns = max(
+            facts.t_known_ns,
+            market.market_known_ns,
+            facts.target_end_ns,
+        )
         decision = evaluate(facts, rule, evaluated_at_ns=known_ns)
         admissible_count += int(decision.admissible)
         failure_counts.update(decision.failed_checks)
@@ -2021,6 +2029,20 @@ def selftest() -> None:
         assert coverage_rows[0]["observed_n"] == 310
         assert coverage_diagnostics["admissible"] == 1
         print("  PASS  Tier-1 coverage row is hash-bound and admissible")
+
+        tail_missing_rows, _ = normalize_coverage(
+            day=date(1970, 1, 1),
+            coin="btc",
+            markets={coverage_market.slug: coverage_market},
+            twap_rows=grid_rows[:250],
+            price_ledger=price_ledger,
+            rule=load_rule(),
+            source_registry=load_source_registry(),
+        )
+        assert tail_missing_rows[0]["t_known_ns"] >= tail_missing_rows[0][
+            "target_end_ns"
+        ]
+        print("  PASS  missing-tail coverage is not known before target end")
 
         twap_path = root / "twap.csv.gz"
         twap_body = {

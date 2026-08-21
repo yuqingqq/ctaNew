@@ -1,10 +1,11 @@
 # PM_ARCHITECTURE — structure for P-2026-003
 
 The explanatory prose baseline is version 12 (2026-08-20); the machine-readable
-canonical contract is now **v17**. Versions 13–16 landed the sigma route and v17
+canonical contract is now **v18**. Versions 13–16 landed the sigma route and v17
 lands the measurement-infrastructure boundary: nominal event/knowledge clocks,
 strict source profiles, factual coverage separated from admissibility decisions,
-and DA-Normalize/DA-Coverage/DA-State ownership. When this prose and
+and DA-Normalize/DA-Coverage/DA-State ownership. Version 18 adds point-in-time
+coverage refusal and the harness-only event-time leak canary. When this prose and
 `contracts/contracts.yaml` differ, the YAML remains authoritative. Score history
 on the 13-change replay:
 v1 5/3/5 · v2 7/4/2 · v4 9/2/2 · v5 9/3/1 · v6–v10 11/0/2 · **v11 11/1/1**
@@ -48,7 +49,7 @@ Naming: SP/DA/BE/DE/EV/OP modules; `EXP-*` experiments.
 | Rule | Enforcement |
 |---|---|
 | **R-SSOT** | specs/params are read-only handles; no restatement |
-| **R-KNOW** | `Known[V]`; every read knowledge-truncated (§4); no API takes event time |
+| **R-KNOW** | `Known[V]`; every production read is knowledge-truncated (§4); event-time reads exist only inside R-CANARY |
 | **R-ONCE** | THREE declared registries (§7): `MarkoutPartition`, `WealthLedger`, `VarianceGroup` |
 | **R-PROV** | provenance per *field* (§3) and per param; `assumed` may not gate |
 | **R-VERSION** | specs bitemporal: `observed_at` + validity interval |
@@ -58,6 +59,7 @@ Naming: SP/DA/BE/DE/EV/OP modules; `EXP-*` experiments.
 | **R-IMPUTE** | `OBSERVED` requires wire `recv_ns`; non-observed knowledge carries a named positive-delay rule |
 | **R-REFUSE** | `StateView` admits only when `t_known + refuse_k·t_known_err <= now` and counts refusals |
 | **R-ADMISS** | coverage facts and selection decisions are separate; only frozen hash-matched rules evaluate, and exclusion requires both arms |
+| **R-CANARY** | every replay diagnostic pairs `StateView` with a harness-only leaky `EventTimeView` and records whether selected states differ |
 
 ---
 
@@ -210,9 +212,12 @@ exposure: MANY-TO-MANY  InstrumentId -> {(RiskFactorId, loading)}
 
 ## 5. DA / BE
 
-**DA** — `view(now)` is the only entry; `StateView.coverage(field, span)` bound
-to that `now`; `get -> Known[V] | Unavailable`; composition `t_known = MAX`,
+**DA** — `view(now)` is the only production entry;
+`StateView.coverage(field, span) -> Known[Coverage] | Unavailable` is bound to
+that `now`; `get -> Known[V] | Unavailable`; composition `t_known = MAX`,
 `prov = weakest`, `t_known_err = combine`, staleness declared per field.
+`EventTimeView` is constructible only by the replay canary harness and is never
+available through a production port.
 `SelfState.envelope(now) -> {submitted, acked, filled, in_flight,
 worst_case_exposure}`. `t_known` on REST/on-chain history is IMPUTED/ASSUMED —
 `t_known := t_event` is the type-laundered look-ahead; replay refuses inside

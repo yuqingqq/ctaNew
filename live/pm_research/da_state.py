@@ -7,7 +7,9 @@ implements the first DA-State build milestone from ``plans/MEASUREMENT_PLAN.md``
 * a SourceProfile-bound factory as the only supported ``Known`` constructor;
 * fail-closed observed, imputed and assumed provenance rules;
 * associative knowledge-time/error composition; and
-* a point-in-time StateView with refusal telemetry and no raw-data escape.
+* a point-in-time StateView with refusal telemetry and no raw-data escape;
+* point-in-time coverage on a separate spine; and
+* a harness-only EventTimeView twin for the leak canary.
 
 Run the focused checks with::
 
@@ -22,6 +24,7 @@ import argparse
 import gzip
 import json
 import math
+from bisect import bisect_right
 from dataclasses import dataclass, field
 from enum import Enum, IntEnum
 from pathlib import Path
@@ -458,6 +461,17 @@ class DAState:
 
     def __init__(self) -> None:
         self._records: dict[str, list[Known[Any]]] = {}
+        self._coverage_records: dict[str, list[Known[Any]]] = {}
+        self._admission_indexes: dict[
+            tuple[str, float],
+            tuple[
+                list[int],
+                list[Known[Any]],
+                list[int],
+                list[int],
+            ],
+        ] = {}
+        self._event_indexes: dict[str, tuple[list[int], list[Known[Any]]]] = {}
         self._ledger = RefusalLedger()
 
     def ingest(self, field_name: str, item: Known[Any]) -> None:
@@ -466,6 +480,95 @@ class DAState:
         if not isinstance(item, Known):
             raise TypeError("DAState accepts only factory-created Known values")
         self._records.setdefault(field_name, []).append(item)
+        self._event_indexes.pop(field_name, None)
+        for key in [key for key in self._admission_indexes if key[0] == field_name]:
+            self._admission_indexes.pop(key)
+
+    def _admission_index(
+        self, field_name: str, refuse_k: float
+    ) -> tuple[list[int], list[Known[Any]], list[int], list[int]]:
+        key = (field_name, refuse_k)
+        cached = self._admission_indexes.get(key)
+        if cached is not None:
+            return cached
+        records = self._records.get(field_name, ())
+        by_hi = sorted(
+            records,
+            key=lambda item: (
+                item.known_hi_ns(refuse_k),
+                item.t_event.ns,
+                item.t_known.ns,
+                item.seq,
+            ),
+        )
+        hi_axis: list[int] = []
+        prefix_best: list[Known[Any]] = []
+        best: Known[Any] | None = None
+        for item in by_hi:
+            hi_axis.append(item.known_hi_ns(refuse_k))
+            if best is None or (
+                item.t_event.ns,
+                item.t_known.ns,
+                item.seq,
+            ) > (best.t_event.ns, best.t_known.ns, best.seq):
+                best = item
+            prefix_best.append(best)
+
+        by_known = sorted(records, key=lambda item: item.t_known.ns)
+        known_axis: list[int] = []
+        prefix_max_hi: list[int] = []
+        max_hi = 0
+        for item in by_known:
+            known_axis.append(item.t_known.ns)
+            max_hi = max(max_hi, item.known_hi_ns(refuse_k))
+            prefix_max_hi.append(max_hi)
+        cached = (hi_axis, prefix_best, known_axis, prefix_max_hi)
+        self._admission_indexes[key] = cached
+        return cached
+
+    def _latest_admitted(
+        self, field_name: str, refuse_k: float, now_ns: int
+    ) -> tuple[Known[Any] | None, int, bool]:
+        hi_axis, prefix_best, known_axis, prefix_max_hi = self._admission_index(
+            field_name, refuse_k
+        )
+        admitted_end = bisect_right(hi_axis, now_ns)
+        result = prefix_best[admitted_end - 1] if admitted_end else None
+        known_end = bisect_right(known_axis, now_ns)
+        blocked_ns = (
+            max(0, prefix_max_hi[known_end - 1] - now_ns) if known_end else 0
+        )
+        return result, blocked_ns, known_end < len(known_axis)
+
+    def _latest_event(
+        self, field_name: str, now_ns: int
+    ) -> Known[Any] | None:
+        cached = self._event_indexes.get(field_name)
+        if cached is None:
+            ordered = sorted(
+                self._records.get(field_name, ()),
+                key=lambda item: (item.t_event.ns, item.t_known.ns, item.seq),
+            )
+            cached = ([item.t_event.ns for item in ordered], ordered)
+            self._event_indexes[field_name] = cached
+        event_axis, ordered = cached
+        end = bisect_right(event_axis, now_ns)
+        return ordered[end - 1] if end else None
+
+    def ingest_coverage(self, field_name: str, item: Known[Any]) -> None:
+        """Append one coverage fact without exposing its backing collection.
+
+        Coverage is kept on a separate spine because it describes the quality
+        of a field; it is not another observation of that field.  The value is
+        intentionally duck-typed here so DA-State stays independent of the
+        concrete batch-ledger implementation.
+        """
+        if not field_name:
+            raise ValueError("field_name must be non-empty")
+        if not isinstance(item, Known):
+            raise TypeError("DAState accepts only factory-created Known values")
+        _coverage_bounds(item.value)
+        self._coverage_records.setdefault(field_name, []).append(item)
 
     def view(
         self,
@@ -477,6 +580,33 @@ class DAState:
         if not isinstance(now, KnowledgeTime):
             raise TypeError("DAState.view requires KnowledgeTime")
         return StateView(self, now, refuse_k, spec_snapshot)
+
+    def canary_harness(
+        self,
+        *,
+        refuse_k: float = 1.0,
+        spec_snapshot: str = "UNVERSIONED",
+    ) -> "LeakCanaryHarness":
+        """Return the sole constructor of the deliberately leaky twin view.
+
+        This method is for deterministic replay diagnostics only.  Production
+        modules receive ``StateView`` and never this harness.
+        """
+        return LeakCanaryHarness(self, refuse_k, spec_snapshot)
+
+
+def _coverage_bounds(value: Any) -> tuple[int, int]:
+    if isinstance(value, Mapping):
+        start = value.get("target_start_ns")
+        end = value.get("target_end_ns")
+    else:
+        start = getattr(value, "target_start_ns", None)
+        end = getattr(value, "target_end_ns", None)
+    start_ns = _plain_nonnegative_int(start, "coverage.target_start_ns")
+    end_ns = _plain_nonnegative_int(end, "coverage.target_end_ns")
+    if end_ns <= start_ns:
+        raise ValueError("coverage target must have positive width")
+    return start_ns, end_ns
 
 
 class StateView:
@@ -501,10 +631,13 @@ class StateView:
         self.refuse_k = float(refuse_k)
         self.spec_snapshot = spec_snapshot
 
-    def _admitted(self, field_name: str) -> tuple[list[Known[Any]], bool, bool]:
-        records = self._state._records.get(field_name, ())
+    def _admitted_from(
+        self,
+        records: Iterable[Known[Any]],
+        ledger_field: str,
+    ) -> tuple[list[Known[Any]], bool, bool]:
         admitted: list[Known[Any]] = []
-        blocked_within_err = False
+        blocked_ns = 0
         future = False
         for item in records:
             if item.t_known.ns > self.now.ns:
@@ -512,23 +645,25 @@ class StateView:
                 continue
             hi_ns = item.known_hi_ns(self.refuse_k)
             if hi_ns > self.now.ns:
-                blocked_within_err = True
-                self._state._ledger.within_error(
-                    field_name, hi_ns - self.now.ns
-                )
+                blocked_ns = max(blocked_ns, hi_ns - self.now.ns)
                 continue
             admitted.append(item)
-        return admitted, blocked_within_err, future
+        if blocked_ns:
+            self._state._ledger.within_error(ledger_field, blocked_ns)
+        return admitted, bool(blocked_ns), future
 
-    def get(self, field_name: str) -> Known[Any] | Unavailable:
-        admitted, blocked, future = self._admitted(field_name)
-        if admitted:
-            result = max(
-                admitted,
-                key=lambda item: (item.t_event.ns, item.t_known.ns, item.seq),
-            )
-            self._state._ledger.admitted(field_name, 1)
-            return result
+    def _admitted(self, field_name: str) -> tuple[list[Known[Any]], bool, bool]:
+        return self._admitted_from(
+            self._state._records.get(field_name, ()), field_name
+        )
+
+    def _unavailable(
+        self,
+        ledger_field: str,
+        *,
+        blocked: bool,
+        future: bool,
+    ) -> Unavailable:
         reason = (
             UnavailableReason.WITHIN_TKNOWN_ERR
             if blocked
@@ -537,8 +672,21 @@ class StateView:
             else UnavailableReason.NO_DATA
         )
         if reason is not UnavailableReason.WITHIN_TKNOWN_ERR:
-            self._state._ledger.upstream(field_name)
+            self._state._ledger.upstream(ledger_field)
         return Unavailable(reason, self.now)
+
+    def get(self, field_name: str) -> Known[Any] | Unavailable:
+        result, blocked_ns, future = self._state._latest_admitted(
+            field_name, self.refuse_k, self.now.ns
+        )
+        if blocked_ns:
+            self._state._ledger.within_error(field_name, blocked_ns)
+        if result is not None:
+            self._state._ledger.admitted(field_name, 1)
+            return result
+        return self._unavailable(
+            field_name, blocked=bool(blocked_ns), future=future
+        )
 
     def history(self, field_name: str, span: Duration) -> list[Known[Any]]:
         if not isinstance(span, Duration):
@@ -556,8 +704,123 @@ class StateView:
         self._state._ledger.admitted(field_name, len(result))
         return result
 
+    def coverage(
+        self, field_name: str, span: Duration
+    ) -> Known[Any] | Unavailable:
+        """Return the latest admitted coverage fact intersecting the span."""
+        if not isinstance(span, Duration):
+            raise TypeError("StateView.coverage span must be Duration")
+        ledger_field = f"coverage:{field_name}"
+        admitted, blocked, future = self._admitted_from(
+            self._state._coverage_records.get(field_name, ()), ledger_field
+        )
+        cutoff_ns = max(0, self.now.ns - span.ns)
+        candidates: list[tuple[int, int, Known[Any]]] = []
+        for item in admitted:
+            start_ns, end_ns = _coverage_bounds(item.value)
+            if start_ns <= self.now.ns and end_ns >= cutoff_ns:
+                candidates.append((end_ns, start_ns, item))
+        if candidates:
+            result = max(
+                candidates,
+                key=lambda entry: (
+                    entry[0],
+                    entry[1],
+                    entry[2].t_known.ns,
+                    entry[2].seq,
+                ),
+            )[2]
+            self._state._ledger.admitted(ledger_field, 1)
+            return result
+        return self._unavailable(ledger_field, blocked=blocked, future=future)
+
     def refusals(self) -> dict[str, RefusalCount]:
         return self._state._ledger.snapshot()
+
+
+_EVENT_TIME_VIEW_TOKEN = object()
+
+
+class EventTimeView:
+    """Deliberately leaky replay twin used only to prove R-CANARY bites."""
+
+    __slots__ = ("_state", "now")
+
+    def __init__(
+        self,
+        state: DAState,
+        now: EventTime,
+        *,
+        _token: object | None = None,
+    ) -> None:
+        if _token is not _EVENT_TIME_VIEW_TOKEN:
+            raise TypeError("EventTimeView is constructible only by canary harness")
+        if not isinstance(now, EventTime):
+            raise TypeError("EventTimeView requires EventTime")
+        self._state = state
+        self.now = now
+
+    def _visible(self, field_name: str) -> list[Known[Any]]:
+        return [
+            item
+            for item in self._state._records.get(field_name, ())
+            if item.t_event.ns <= self.now.ns
+        ]
+
+    def get(self, field_name: str) -> Known[Any] | Unavailable:
+        result = self._state._latest_event(field_name, self.now.ns)
+        if result is not None:
+            return result
+        # ``since`` remains a KnowledgeTime only because Unavailable is shared
+        # with StateView.  The value is diagnostic and never decision-facing.
+        return Unavailable(
+            UnavailableReason.NO_DATA, KnowledgeTime(self.now.ns)
+        )
+
+    def history(self, field_name: str, span: Duration) -> list[Known[Any]]:
+        if not isinstance(span, Duration):
+            raise TypeError("EventTimeView.history span must be Duration")
+        cutoff_ns = max(0, self.now.ns - span.ns)
+        result = [
+            item
+            for item in self._visible(field_name)
+            if cutoff_ns <= item.t_event.ns
+        ]
+        result.sort(key=lambda item: (item.t_event.ns, item.seq))
+        return result
+
+
+class LeakCanaryHarness:
+    """Creates paired views at one Unix timestamp for deterministic replay."""
+
+    __slots__ = ("_state", "refuse_k", "spec_snapshot")
+
+    def __init__(
+        self,
+        state: DAState,
+        refuse_k: float,
+        spec_snapshot: str,
+    ) -> None:
+        # Reuse StateView's validation without retaining a throwaway view.
+        probe = StateView(state, KnowledgeTime(0), refuse_k, spec_snapshot)
+        self._state = state
+        self.refuse_k = probe.refuse_k
+        self.spec_snapshot = spec_snapshot
+
+    def views_at(self, unix_ns: int) -> tuple[StateView, EventTimeView]:
+        unix_ns = _plain_nonnegative_int(unix_ns, "unix_ns")
+        return (
+            self._state.view(
+                KnowledgeTime(unix_ns),
+                refuse_k=self.refuse_k,
+                spec_snapshot=self.spec_snapshot,
+            ),
+            EventTimeView(
+                self._state,
+                EventTime(unix_ns),
+                _token=_EVENT_TIME_VIEW_TOKEN,
+            ),
+        )
 
 
 def _read_first_wire_record(path: Path) -> tuple[int, dict[str, Any]]:
@@ -641,6 +904,12 @@ def selftest() -> None:
         Transport.DERIVED,
         Duration(2),
     )
+    wide_wire = SourceProfile(
+        "wide_wire",
+        True,
+        Transport.LOCAL_WS,
+        Duration(50),
+    )
     rule = ImputationRule(
         id="twap_delay_v1",
         applies_to=archive.source,
@@ -652,7 +921,7 @@ def selftest() -> None:
         calibration_overlap=(EventTime(1), EventTime(100)),
         artifact_id="latency-profile-v1",
     )
-    factory = KnownFactory([wire, archive, derived], [rule])
+    factory = KnownFactory([wire, archive, derived, wide_wire], [rule])
 
     observed = factory.observed(
         wire.source, 10.0, event_ns=100, recv_ns=105, seq=1
@@ -806,6 +1075,66 @@ def selftest() -> None:
     current = state.view(KnowledgeTime(111)).get("price")
     assert isinstance(current, Known) and current.value == "new"
     print("  PASS  a late old event cannot overwrite newer admitted state")
+
+    coverage = factory.observed(
+        wire.source,
+        {"target_start_ns": 70, "target_end_ns": 100, "complete_frac": 1.0},
+        event_ns=100,
+        recv_ns=105,
+        seq=4,
+    )
+    state.ingest_coverage("price", coverage)
+    coverage_early = state.view(KnowledgeTime(106)).coverage(
+        "price", Duration(50)
+    )
+    assert isinstance(coverage_early, Unavailable)
+    assert coverage_early.reason is UnavailableReason.WITHIN_TKNOWN_ERR
+    coverage_late = state.view(KnowledgeTime(107)).coverage(
+        "price", Duration(50)
+    )
+    assert isinstance(coverage_late, Known)
+    assert coverage_late.value["complete_frac"] == 1.0
+    print("  PASS  coverage is point-in-time and refuses inside its error bar")
+
+    _expect_raises(
+        "EventTimeView is inaccessible outside the canary harness",
+        TypeError,
+        lambda: EventTimeView(state, EventTime(100)),
+    )
+    knowledge_view, event_view = state.canary_harness().views_at(100)
+    knowledge_price = knowledge_view.get("price")
+    event_price = event_view.get("price")
+    assert isinstance(knowledge_price, Known) and knowledge_price.value == "old"
+    assert isinstance(event_price, Known) and event_price.value == "new"
+    print("  PASS  canary twin exposes the event-time look-ahead delta")
+
+    indexed = DAState()
+    indexed_rows = [
+        factory.observed(
+            wide_wire.source, "wide", event_ns=85, recv_ns=90, seq=0
+        ),
+        factory.observed(
+            wire.source, "fast", event_ns=80, recv_ns=100, seq=1
+        ),
+        factory.observed(
+            wire.source, "latest", event_ns=120, recv_ns=125, seq=2
+        ),
+    ]
+    for item in indexed_rows:
+        indexed.ingest("indexed", item)
+    for now_ns in range(80, 151):
+        admitted = [item for item in indexed_rows if item.known_hi_ns() <= now_ns]
+        expected = (
+            max(
+                admitted,
+                key=lambda item: (item.t_event.ns, item.t_known.ns, item.seq),
+            )
+            if admitted
+            else None
+        )
+        actual = indexed.view(KnowledgeTime(now_ns)).get("indexed")
+        assert (actual if isinstance(actual, Known) else None) is expected
+    print("  PASS  indexed admission matches exhaustive truncation")
 
 
 def main() -> None:

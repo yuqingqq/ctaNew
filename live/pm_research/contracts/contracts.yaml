@@ -1,11 +1,12 @@
-version: 17
+version: 18
 rules:
   R-SSOT:
     body: every canonical name has exactly one owning type/module
     checks:
     - 'loss_limit_owner: ScenarioLossLimit only in SP-Params'
   R-KNOW:
-    body: no API accepts event time; derived t_known = MAX(inputs)
+    body: no production API accepts event time; derived t_known = MAX(inputs);
+      EventTimeView is reachable only through the R-CANARY harness
   R-ONCE:
     body: MarkoutPartition, WealthLedger, VarianceGroup are disjoint registries
   R-PROV:
@@ -90,6 +91,14 @@ rules:
     - 'frozen_rule: AdmissibilityDecision requires AdmissibilityRule.status == FROZEN'
     - 'hash_match: recomputed rule content hash == AdmissibilityRule.spec_hash'
     - 'two_arms: on_fail == EXCLUDE_UNIT => required_gap_arm == BOTH'
+  R-CANARY:
+    body: every replay diagnostic runs paired StateView and deliberately leaky
+      EventTimeView reads; EventTimeView is constructible only by the canary
+      harness and is never exposed on a production port
+    checks:
+    - 'harness_only: direct EventTimeView construction is fatal'
+    - 'guard_binds: LeakCanary.event_only_boundary_reads > 0 and LeakCanary.decision_disagreements > 0'
+    - 'telemetry: LeakCanary carries the StateView refusal counts'
 types:
   Known:
     generic:
@@ -434,12 +443,48 @@ types:
     methods:
       get: '(field: str) -> Known[any] | Unavailable'
       history: '(field: str, span: Duration) -> list[Known[any]]'
-      coverage: '(field: str, span: Duration) -> Coverage'
+      coverage: '(field: str, span: Duration) -> Known[Coverage] | Unavailable'
       refusals: '() -> RefusalLedger'
     fields:
       now: KnowledgeTime
       spec_snapshot: Hash
     notes: the ONLY read entry point; bound to a KnowledgeTime `now`
+  EventTimeView:
+    methods:
+      get: '(field: str) -> Known[any] | Unavailable'
+      history: '(field: str, span: Duration) -> list[Known[any]]'
+    fields:
+      now: EventTime
+    notes: deliberately leaky R-CANARY twin; not reachable from any production port
+  LeakCanary:
+    fields:
+      metric: str
+      value_knowledge_time: float
+      value_event_time: float
+      delta: float
+      n: int
+      knowledge_hits: int
+      event_hits: int
+      decision_disagreements: int
+      event_only_boundary_reads: int
+      skipped: int
+      status: enum:VALID_GUARD_BITES|BOUND_ZERO_SCORE_DELTA|INVALID_UNBOUND_GUARD
+      reference_delta_pp: float
+      refusal_counts: dict[str, RefusalCount]
+    notes: score delta may cancel on a small slice; event-only selected reads and decision disagreements prove the guard is wired
+  MeasurementPipelineRun:
+    fields:
+      pipeline_version: str
+      pipeline_code_sha256: Hash
+      plan_hash: Hash
+      target_day: str
+      coin: str
+      lane: enum:measurement|full
+      partition_manifests: list[Hash]
+      canary_report_hash: Hash
+      status: enum:COMPLETE
+      run_hash: Hash
+    notes: atomic content-addressed receipt emitted only after every planned partition and the bound leak canary complete
   Gap:
     fields:
       from: EventTime
