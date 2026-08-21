@@ -157,6 +157,19 @@ Dubach 2026, never measured here; the one previously-measured figure was 1.1–1
 (`PM_DEEP_REVIEW.md:150`). **Both are wrong for the ATM region where the drift-
 adjusted FLB is largest.** ATM the book is 6–8 c wide.
 
+> **REFUTED FOR BTC/ETH, 2026-08-21 (U8).** Measured on 2.29 M executable
+> `price_change` quotes: the ATM median spread is **1 tick (0.0100)** with p90
+> 0.020 on btc, and ATM spread in ticks runs **btc 1 · eth 1 · sol 3 · doge 3 ·
+> xrp 5 · bnb 5 · hype 7**. "6–8 c" holds only for the thinnest coins — hype has
+> 61.8 % of ATM quotes at >= 5 ticks. The corpus figure was a **pooling
+> artefact**: btc supplies 2.28 M of 3.73 M quotes, so a pooled spread largely
+> reports btc, and a pooled "modal 1 tick" and a per-coin "6–8 c" were both
+
+> **REFUTED FOR BTC/ETH (U8):** ATM median spread is **1 tick** on btc/eth (2.29 M quotes); "6–8 c" holds only for the thin coins, and the fill question is now restricted to btc/eth. See the note above.
+
+> being quoted from the same data. **Every conclusion below that rests on a wide
+> ATM book applies to the thin coins only.**
+
 That reframes the whole edge. A 3–7 c gap *at the mid* is 0 to −4 c *at the ask*.
 So:
 
@@ -745,7 +758,11 @@ Ranked by how much they would change the answer.
    overstating the excess over 1 by 26%, and the apparent spread is 1.0–1.5 c too
    wide ATM. *Test:* the §2.1 rebuild. Every corpus number must be re-derived.
 5. **The mid is not tradeable.** ATM spread 6–8 c, not the 2–4 c the corpus
-   assumes; the fitted map moves the belief ~2 pp at its best moneyness, i.e.
+   assumes; **— REFUTED FOR BTC/ETH (U8): ATM median is 1 tick, so on the two
+   liquid coins the mid is roughly half a tick from either side and this item
+   does not apply. It stands for sol/doge/xrp/bnb/hype (3–7 ticks). Since the
+   fill question is now restricted to btc and eth (`FLOW_MODEL_PROTOCOL_V4`
+   `verdict_coins`), this premise is retired for the coins that carry verdicts —** the fitted map moves the belief ~2 pp at its best moneyness, i.e.
    ≈ one half-spread. *Test:* §2.2's `realised−bid` / `ask−realised`
    re-expression, mandatory in every table.
 6. **Selection eats it.** 60–97% measured haircut. BE-Belief cannot fix this and

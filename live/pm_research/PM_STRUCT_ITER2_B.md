@@ -841,6 +841,9 @@ hardcoded constant that then composes by `min` with real ones. The load-bearing 
 is on **derived** values, **params**, and **field semantics** — the last being the one that
 matters most and is still absent: if `last_trade_price.side` is the **maker's** rather than
 the **taker's**, maker gross flips **+95 bps → −95 bps** and the programme is dead. Its
+
+> **WITHDRAWN 2026-08-21 — DO NOT CITE.** `+0.45 ¢/share` and `+95 bps` are the same book-derived number (p90 6.2 s stale books) and fall together. Book-free rebuild: **+0.17 ¢/share**, and **NOT DISTINGUISHABLE FROM ZERO** — **+0.173 [-0.251, +0.596]**, all seven per-coin CIs spanning zero. The maker-edge sign is **UNDETERMINED at two days**. `side` IS the taker's (G-FF1 `PASS`), closing the `+95 → −95` flip. See `FLOW_UNCERTAINTY_LOOP.md` U4/U10/U10b.
+
 status is *circumstantial* (63.7 % of BUY prints at the ask). `DA-Normalize` owns the
 `side × asset_id → direction` mapping and there is nowhere in v2 to record that the mapping
 is `assumed`. **SHOULD-FIX B2-15** — provenance on derived-field semantics, not only on

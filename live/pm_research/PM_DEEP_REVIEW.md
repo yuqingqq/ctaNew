@@ -787,6 +787,9 @@ commitment.
 
 **The honest counter-argument**, which I also believe: the maker side of this venue
 is measurably **+95 bps of notional gross** (+136 bps if the rebate is real), i.e.
+
+> **WITHDRAWN 2026-08-21 — DO NOT CITE.** `+0.45 ¢/share` and `+95 bps` are the same book-derived number (p90 6.2 s stale books) and fall together. Book-free rebuild: **+0.17 ¢/share**, and **NOT DISTINGUISHABLE FROM ZERO** — **+0.173 [-0.251, +0.596]**, all seven per-coin CIs spanning zero. The maker-edge sign is **UNDETERMINED at two days**. `side` IS the taker's (G-FF1 `PASS`), closing the `+95 → −95` flip. See `FLOW_UNCERTAINTY_LOOP.md` U4/U10/U10b.
+
 ~+0.45 c/share, positive in 6 of 8 moneyness bins and in 10 of 16 hours. That is
 not what a picked-over market looks like, and **no prior review established it** —
 twelve sections of design were written without anyone computing the sign of the

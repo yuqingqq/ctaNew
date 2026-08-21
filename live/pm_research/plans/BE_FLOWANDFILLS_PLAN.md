@@ -137,6 +137,9 @@ modelling taste. Canonical coordinate: **Up-price space**, `Down@q ≡ Up@(1−q
 |---|---|---|---|
 | pre-open (t < t₀, strike not yet formed) | **5.88%** | **+0.70 ¢/share** | benign; strike is unformed, no information to be picked off on |
 | in-window | 93.89% | ≈ +0.45 ¢/share avg | the modelled regime |
+
+> **WITHDRAWN 2026-08-21 — DO NOT CITE.** `+0.45 ¢/share` and the `+95 bps` maker gross are the SAME book-derived number and both fall together: `book` snapshots are p90 6.2 s stale. Rebuilt with no book at all the figure is **+0.17 ¢/share**, and it is **NOT DISTINGUISHABLE FROM ZERO** — window-clustered bootstrap gives **+0.173 [-0.251, +0.596]**, with all seven per-coin CIs spanning zero. **The maker-edge sign is UNDETERMINED at two days.** Also settled: `side` IS the taker's (G-FF1 `PASS`, 600/600, Wilson [0.9936, 1.0]), so the `+95 → −95` flip scenario is closed. See `FLOW_UNCERTAINTY_LOOP.md` U4/U10/U10b.
+
 | post-close (t > T, outcome determined, book live) | **0.22%** | **−1.46 ¢/share = −806 bps** | **8% of all maker gross, lost.** Median trade at T+21 s, p95 T+75 s, resolution T+85 s |
 
 Post-close, a resting quote is a **free option with a known answer**. The module must
@@ -334,6 +337,9 @@ impact, reverting) or **run over** (permanent, informed)? Extends the unrun `E-X
      ask vs 15.1% at the best bid) supports *taker*.
    - **This is load-bearing to the point of programme survival:** if `side` is the
      *maker's* side, maker gross flips from **+95 bps to −95 bps** and the programme is
+
+> **WITHDRAWN 2026-08-21 — DO NOT CITE.** `+0.45 ¢/share` and the `+95 bps` maker gross are the SAME book-derived number and both fall together: `book` snapshots are p90 6.2 s stale. Rebuilt with no book at all the figure is **+0.17 ¢/share**, and it is **NOT DISTINGUISHABLE FROM ZERO** — window-clustered bootstrap gives **+0.173 [-0.251, +0.596]**, with all seven per-coin CIs spanning zero. **The maker-edge sign is UNDETERMINED at two days.** Also settled: `side` IS the taker's (G-FF1 `PASS`, 600/600, Wilson [0.9936, 1.0]), so the `+95 → −95` flip scenario is closed. See `FLOW_UNCERTAINTY_LOOP.md` U4/U10/U10b.
+
      dead on arrival. Resolve it on-chain (`OrderFilled` carries maker and taker
      addresses) on the frozen ≥500-tx sample before any ζ number is read.
 
@@ -747,6 +753,9 @@ types:
     - RESOLVED
     notes: 'measured maker markout by phase: PRE_OPEN +0.70 c/share (5.88% of trades, strike
       unformed), IN_WINDOW ~+0.45, POST_CLOSE -1.46 c/share = -806 bps on 0.22% of trades = 8%
+
+> **WITHDRAWN 2026-08-21 — DO NOT CITE.** `+0.45 ¢/share` and the `+95 bps` maker gross are the SAME book-derived number and both fall together: `book` snapshots are p90 6.2 s stale. Rebuilt with no book at all the figure is **+0.17 ¢/share**, and it is **NOT DISTINGUISHABLE FROM ZERO** — window-clustered bootstrap gives **+0.173 [-0.251, +0.596]**, with all seven per-coin CIs spanning zero. **The maker-edge sign is UNDETERMINED at two days.** Also settled: `side` IS the taker's (G-FF1 `PASS`, 600/600, Wilson [0.9936, 1.0]), so the `+95 → −95` flip scenario is closed. See `FLOW_UNCERTAINTY_LOOP.md` U4/U10/U10b.
+
       of ALL maker gross. A POST_CLOSE quote is a free option with a known answer; it is priced
       at full information, not modelled as adverse selection.'
   QueuePosition:

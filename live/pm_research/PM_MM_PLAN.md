@@ -945,6 +945,9 @@ against a 97 c tail. Fix = the §16.4 loss-given-adverse cap.
 region looks edge-free; conditioned on BOOK MID at fill (the correct,
 model-free state) it does not. H-2 is UNTESTED — as is the plan's opposite
 claim. Net maker edge mid-conditioned ≈ **+0.45 c/share average, ≈0 ATM**,
+
+> **WITHDRAWN 2026-08-21 — DO NOT CITE.** `+0.45 ¢/share` and `+95 bps` are the same book-derived number (p90 6.2 s stale books) and fall together. Book-free rebuild: **+0.17 ¢/share**, and **NOT DISTINGUISHABLE FROM ZERO** — **+0.173 [-0.251, +0.596]**, all seven per-coin CIs spanning zero. The maker-edge sign is **UNDETERMINED at two days**. `side` IS the taker's (G-FF1 `PASS`), closing the `+95 → −95` flip. See `FLOW_UNCERTAINTY_LOOP.md` U4/U10/U10b.
+
 noisy and non-monotone on 1.4 days.
 
 ### 17.3 The program cannot end (FATAL-3)
@@ -956,6 +959,9 @@ experiment is read.**
 
 ### 17.4 The positive finding nobody had computed
 The maker side of this venue is measurably **+95 bps of notional gross (+136
+
+> **WITHDRAWN 2026-08-21 — DO NOT CITE.** `+0.45 ¢/share` and `+95 bps` are the same book-derived number (p90 6.2 s stale books) and fall together. Book-free rebuild: **+0.17 ¢/share**, and **NOT DISTINGUISHABLE FROM ZERO** — **+0.173 [-0.251, +0.596]**, all seven per-coin CIs spanning zero. The maker-edge sign is **UNDETERMINED at two days**. `side` IS the taker's (G-FF1 `PASS`), closing the `+95 → −95` flip. See `FLOW_UNCERTAINTY_LOOP.md` U4/U10/U10b.
+
 with the rebate)**, with a visible mechanism: **the book is over-dispersed at
 every decision time**. The favourite–longshot bias is large (**+3.6 c/share at
 p ∈ [0.15, 0.35)**), stable across the sample, and mechanically explicable

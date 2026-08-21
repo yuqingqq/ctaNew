@@ -398,6 +398,11 @@ which decouples this module from the 10-day sigma clock entirely.
   coins. The pooled one-tick headline was BTC denominator dominance. Spread
   width is **not** an edge predictor: equal-width per-coin markout signs flip,
   consistent with wider spreads pricing adverse-selection risk.
+  **WITHDRAWN (U10): that mechanism is NOT supported.** All seven per-coin CIs
+  span zero, so scattered signs across spread widths is exactly what
+  all-coins-near-zero plus sampling noise produces. Calling CIs-spanning-zero
+  "signs flip" asserts structure the intervals deny. What survives is only the
+  NEGATIVE result: **spread width does not predict edge.**
 
 **Fee schedule — see `fee_structure_known`.** Taker pays `0.07·p(1−p)` $/share
 (n=600, four decimals); maker pays zero on 744/754 legs. Crossing at ATM costs

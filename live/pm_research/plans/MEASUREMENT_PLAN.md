@@ -381,6 +381,9 @@ q_up = −1  otherwise
 
 This is the largest open sign risk in the corpus: X-11 flags that **if the WS
 `side` were the *maker's*, the headline maker gross flips from +95 bps to
+
+> **WITHDRAWN 2026-08-21 — DO NOT CITE.** `+0.45 ¢/share` and the `+95 bps` maker gross are the SAME book-derived number and both fall together: `book` snapshots are p90 6.2 s stale. Rebuilt with no book at all the figure is **+0.17 ¢/share**, and it is **NOT DISTINGUISHABLE FROM ZERO** — window-clustered bootstrap gives **+0.173 [-0.251, +0.596]**, with all seven per-coin CIs spanning zero. **The maker-edge sign is UNDETERMINED at two days.** Also settled: `side` IS the taker's (G-FF1 `PASS`, 600/600, Wilson [0.9936, 1.0]), so the `+95 → −95` flip scenario is closed. See `FLOW_UNCERTAINTY_LOOP.md` U4/U10/U10b.
+
 −95 bps and the programme is dead on arrival**, and the existing circumstantial
 check (63.7% of BUY prints at the best ask vs 15.1% at the best bid) is weakened
 by stale-book contamination.
@@ -862,6 +865,9 @@ Ordered by how much damage each does.
     arms must be treated as a result.
 12. **The fee is unresolved and its sign matters.** Gross maker revenue of
     ~+95 bps is not a conclusion until the fee source is settled, and the WS
+
+> **WITHDRAWN 2026-08-21 — DO NOT CITE.** `+0.45 ¢/share` and the `+95 bps` maker gross are the SAME book-derived number and both fall together: `book` snapshots are p90 6.2 s stale. Rebuilt with no book at all the figure is **+0.17 ¢/share**, and it is **NOT DISTINGUISHABLE FROM ZERO** — window-clustered bootstrap gives **+0.173 [-0.251, +0.596]**, with all seven per-coin CIs spanning zero. **The maker-edge sign is UNDETERMINED at two days.** Also settled: `side` IS the taker's (G-FF1 `PASS`, 600/600, Wilson [0.9936, 1.0]), so the `+95 → −95` flip scenario is closed. See `FLOW_UNCERTAINTY_LOOP.md` U4/U10/U10b.
+
     field is known to be unpopulated rather than zero.
 13. **This plan freezes several parameters (250 ms, the τ grid, the clip, the
     r grid, `refuse_k = 1.0`) that no experiment has yet stressed.** They are

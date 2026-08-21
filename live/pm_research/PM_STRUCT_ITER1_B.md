@@ -325,6 +325,9 @@ Three separate gaps:
 3. **Conventions, not just parameters.** The single largest sign risk in the program
    is not a number: it is whether `last_trade_price.side` is the **taker's** side.
    If it is the maker's, maker gross flips **+95 bps → −95 bps** and the program is
+
+> **WITHDRAWN 2026-08-21 — DO NOT CITE.** `+0.45 ¢/share` and the `+95 bps` maker gross are the SAME book-derived number and both fall together: `book` snapshots are p90 6.2 s stale. Rebuilt with no book at all the figure is **+0.17 ¢/share**, and it is **NOT DISTINGUISHABLE FROM ZERO** — window-clustered bootstrap gives **+0.173 [-0.251, +0.596]**, with all seven per-coin CIs spanning zero. **The maker-edge sign is UNDETERMINED at two days.** Also settled: `side` IS the taker's (G-FF1 `PASS`, 600/600, Wilson [0.9936, 1.0]), so the `+95 → −95` flip scenario is closed. See `FLOW_UNCERTAINTY_LOOP.md` U4/U10/U10b.
+
    dead. Its current status is *circumstantial* (63.7 % of BUY prints at the ask).
    D2 "owns the side×asset_id → direction mapping" — but there is nowhere in the
    contract to record that this mapping is `assumed`. **`Provenance` must attach to
