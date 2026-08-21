@@ -199,10 +199,29 @@ verified by keccak-256, not taken from a lookup:
 `OrderFilled(bytes32,address,address,uint8,uint256,uint256,uint256,uint256,bytes32,bytes32)`
 and `OrdersMatched(bytes32,address,uint8,uint256,uint256,uint256)`.
 
-**`fee_rate_bps = 0` is a websocket artefact, not the truth.** **All 500**
-sampled transactions carry a nonzero on-chain fee. The open
-`fee_structure_known` question must be settled on-chain; the feed's zero is
-simply wrong. (A tempting corollary — that fee presence explains the residual
+**`fee_rate_bps = 0` is a websocket artefact, and the fee schedule is now
+MEASURED.** `taker fee = 0.07·p·(1−p)` $/share, matching to four decimals on
+**600** transactions across the full moneyness range — 1.75 ¢/share at `p=0.5`,
+0.63 ¢/share at `p=0.1`. **The taker pays and the maker does not**: 600/600
+taker legs carry a fee, **744/754 maker legs carry zero**. `BE_FLOWANDFILLS_PLAN`
+§12.1 had already derived the formula from a single transaction; this confirms
+it at scale and adds the incidence, which was not previously established. The
+Q5 reading `0.07·min(p,1−p)` (3.5 ¢/share) is **REFUTED at 2×**.
+
+Consequence for the model, and it is not the comfortable one: makers pay no fee,
+but a taker crossing at ATM pays ~0.50 ¢ half-spread + 1.75 ¢ fee = **~2.25
+¢/share, about 225 bps on a $1 binary**. Nobody pays that casually, so every
+maker fill is against a counterparty who expected more than 2.25 ¢ of move.
+**The fee does not kill market making on cost; it loads the entire question onto
+adverse selection.**
+
+Still open: the maker **rebate** (zero fee is NOT evidence of a rebate paid, and
+`OrderFilled.fee` is unsigned so a rebate could not appear in it), and **10 of
+754 maker legs that DO carry a fee** — verified under an unambiguous test
+(`taker == exchange address`), so this is a real residual class, not a
+classification artefact. Mechanism unexplained.
+
+(A tempting corollary — that fee presence explains the residual
 mismatches — was tested and **refuted**: fee is present on validated and
 mismatched rows alike, so it discriminates nothing.)
 
@@ -228,6 +247,76 @@ draw enough transactions to yield >=500 *validated* clusters (500 drawn yields
 comparing a nominal price to an aggregate effective price is a category error of
 the same family as the v1 decode bug. **Do not relax `PRICE_TOL` to make the
 ceiling pass**; that would be tuning the instrument to the answer.
+
+### Flow model + uncertainty loop — 2026-08-21, in progress
+
+Charter `live/pm_research/FLOW_UNCERTAINTY_LOOP.md`; plan
+`plans/BE_FLOWANDFILLS_MODEL_PLAN.md`; probe `flow_uncertainty.py`. Coordinator
+writes the decision rules, research agent runs the measurements — the split is
+deliberate and has already stopped two rules being re-cut after their answers
+were visible.
+
+**The plan is a first-principles rebuild.** The old G-FF1..G-FF4 chain is
+replaced. From the identity `net = half_spread + rebate − maker_fee − AS`, the
+**sign is independent of queue position** — queue enters only via `E[N]` and the
+conditioning inside `AS` — so the old chain put an unidentifiable quantity
+(`Q_ahead`) ahead of a question that does not need it. New order: cost schedule →
+sign → marginality → scale. `E[outcome − ℓ | fill]` needs **no fair-value model**,
+which decouples this module from the 10-day sigma clock entirely.
+
+**Closed so far:**
+
+- **U1a `CLEARED`** — `size` is shares at 6 dp, exact against chain 600/600.
+  **The volume layer is UNBLOCKED.**
+- **U1b `CLEARED` / SINGLE-ACTOR** — **one address** supplies **16.3% of all
+  trade events** at exactly 0.02 shares, **99.98% SELL**, present in all seven
+  coins, carrying **0.0145% of notional**. 300-transaction unstratified draw:
+  top-1 = 100%, distinct = 1, HHI = 1.0000. Two independent measurements agree
+  on the phenomenon (72.6 vs 78.1 events/window, no shared code).
+  **THE INVERSION:** the plan had assumed the count layer available and the
+  volume layer blocked. Both are backwards — raw-count `λ` is materially
+  contaminated by an economically empty class; notional-weighted `λ` is not.
+  Rule **R-DUAL**: every intensity AND every **signed** flow quantity
+  (imbalance, side mix, signed volume) is reported both ways, exclusion
+  published beside the retained set. Signed quantities are the fragile ones —
+  the contamination is ~100% one-signed and does not average out.
+  **What the address is doing is NOT established and must not be narrated.**
+- **U2 `CLEARED`** — tick composition: 0.001 exists only in the tails (6.75% at
+  `p<0.15`, 6.73% at `p>=0.85`), **absent from the middle three buckets**. Where
+  0.001 is available the spread is 1 tick in **99.9%** of quotes, so the 1-cent
+  spread is a **CONSTRAINT, not a convention** — makers step inside the moment
+  the venue allows. `γ_tick` is collinear with extreme moneyness and must be an
+  interaction inside the tail buckets, never a main effect.
+- **U3 + U3a `CLEARED` via the bound branch** — gap exposure concentrates at
+  window **open** (31.7% of lost seconds in the first 30 s, 3.2x mean). KS
+  occurrence was refused as **insufficient power**, not uniformity
+  (`D=0.132, p=0.312`, min detectable `D=0.190` at n=51). Bound: **0.155% worst
+  decile, 0.0488% overall**, `clob_v3_1` only. **That bounds EXPOSURE, not
+  FLOW.** Measured with matched denominators, flow loss runs at **0.43x** time
+  loss — the long gaps are the **quiet** ones.
+
+**Fee schedule — see `fee_structure_known`.** Taker pays `0.07·p(1−p)` $/share
+(n=600, four decimals); maker pays zero on 744/754 legs. Crossing at ATM costs
+~2.25 c/share (~225 bps), so the fee does not kill MM on cost — **it loads the
+question onto adverse selection.**
+
+**Two cross-cutting defects, both recorded with binding consequences:**
+
+1. **The quote guard `0.0 < bid < ask < 1.0`** appeared **independently in both
+   the coordinator's and the agent's code**, against the same tape, and excludes
+   exactly the deep-tail quotes where the 0.001 tick lives. Caught once, only
+   because 84 observed transitions contradicted a reported 0.00% share. Cost:
+   124,772 quotes (5.2%), all from the tails. **Any quote filter must print its
+   exclusion count beside its result.**
+2. **`coin_msg_rate_hint` is a cumulative counter, not a rate**, despite the
+   name (`collect_pm.py:489`); using it produced a spurious 3.26x. **Confirm any
+   collector telemetry field against its definition in the collector source
+   before use — the name is not the definition.** A real rate exists in the
+   heartbeat `rate_msg_s`.
+
+**Open:** U9 (is `PING_TIMEOUT` actually MNAR — it is **49% of all lost time**
+and classified on coin concentration alone, which cannot separate the
+hypotheses), then U4-U8. Nothing from this loop is committed yet.
 
 ### Residuals — open, in priority order
 
@@ -708,8 +797,16 @@ Estimator implementation remains on **HOLD**.
   differs per process so exact-line dedup does **not** catch a duplicate
   collector. Check with `ps -eo pid,etimes,cmd | grep live/pm_research`;
   pgrep patterns must include the `pm_research/` path segment.
-- `fee_rate_bps` must be read from trades, not assumed. Currently 0 on every
-  trade observed, which conflicts with both the docs (7%) and CLOB `base_fee`.
+- **Read fees from the CHAIN, never from `fee_rate_bps`.** The websocket field
+  is `"0"` on all 446,412 trade events and that is an **artefact**, not a zero
+  fee. There is no three-way conflict any more: the docs' 7 % is correct, and
+  `taker fee = 0.07·p·(1−p)` $/share is confirmed to four decimals on 600
+  sampled transactions across the whole moneyness range. **Incidence: the taker
+  pays and the maker does not** — 600/600 taker legs carry a fee, 744/754 maker
+  legs carry zero. The `0.07·min(p,1−p)` reading (= 3.5 ¢/share at p=0.5) is
+  **REFUTED**; it is 2× too large. Still unknown: the maker **rebate** (a zero
+  fee is not evidence of a rebate, and `OrderFilled.fee` is unsigned so a rebate
+  could not appear there), and the 10/754 maker legs that do carry a fee.
 
 ## Watch out for
 

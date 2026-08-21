@@ -173,11 +173,55 @@ flags:
                              # b_hat 1.145 (stale inflated it to 1.182),
                              # walk-forward gain 0.0004 Brier, and the effect is
                              # ONE-SIDED = a drift signature, not a bias.
-  stale_book_contamination: true  # EVERY book-derived number in PM_DEEP_REVIEW
-                             # inherits this defect, including the "+95 bps
-                             # maker gross / +136 with rebate". Treat all of
-                             # them as UNVERIFIED until re-measured on
-                             # price_change quotes.
+  stale_book_contamination: resolved-and-replaced # WAS "every book-derived
+                             # number in PM_DEEP_REVIEW inherits this defect".
+                             # NOW TRACED AND REPLACED (U4, 2026-08-21).
+                             # The "+0.45 c/share maker markout" is at
+                             # PM_DEEP_REVIEW.md:126 and :738 and is LITERALLY
+                             # THE SAME NUMBER as the "+95 bps maker gross / +136
+                             # with rebate" claim -- so both fall together.
+                             # REBUILT WITHOUT ANY BOOK AT ALL: taker BUY at l =>
+                             # maker sold => edge = l - outcome; taker SELL =>
+                             # edge = outcome - l. Needs only trade price, taker
+                             # side (G-FF1 PASS) and the settled winners field,
+                             # so it SIDESTEPS the stale-book problem instead of
+                             # working around it. Mapping hard-validated first:
+                             # winning-token mean price in the last 30s = 0.8943
+                             # (n=8,204), so Up/Down is not inverted.
+                             # CORRECTED FIGURES (980 archives, both complete
+                             # days, unstratified):
+                             #   in-window maker edge  +0.17 c/share
+                             #     (cited +0.45 was ~2.6x TOO HIGH)
+                             #   pre-open  -0.573  (cited +0.70 -- SIGN FLIPPED)
+                             #   post-close -1.732 (cited -1.46 -- CONFIRMED
+                             #     directionally; this is T3's known-answer
+                             #     validation stratum PASSING)
+                             # THE RESULT THAT MATTERS, and it needed R-DUAL to
+                             # see: EXCLUDING the single-actor 0.02 class, the
+                             # PER-FILL maker edge is NEGATIVE (-0.211 c) while
+                             # share-weighted is unchanged (+0.172). Count-
+                             # weighted maker edge is positive ONLY because of
+                             # one address (+1.987 c/fill on 17.1% of fills) --
+                             # and that counterparty carries 0.0145% OF NOTIONAL,
+                             # so the edge against it is UN-HARVESTABLE by
+                             # construction (tens of dollars across two days).
+                             # ON REAL FLOW, MAKERS LOSE PER FILL. A single-
+                             # weighting spec would have reported "+0.165 c,
+                             # makers profitable" and never revealed this.
+                             # PER-COIN THE POOLED SIGN DOES NOT HOLD: share-
+                             # weighted in-window is NEGATIVE on bnb (-0.476),
+                             # sol (-0.628) and eth (-0.008). Report per-coin as
+                             # primary, pooled as diagnostic -- pooled-positive-
+                             # with-negative-constituents is the exact pattern
+                             # that produced two prior withdrawn results.
+                             # TENSION RESOLVED IN THE RIGHT DIRECTION: +0.45
+                             # implied ~0.05c of adverse selection against a
+                             # ~225bps crossing barrier, which was implausible.
+                             # +0.17 implies ~0.33c, which is plausible. T2 now
+                             # predicts taker markout ~ -1.92 c/share.
+                             # SCOPE: TWO DAYS => POINT ESTIMATES ONLY, no day-
+                             # clustered CI is computable. Anything downstream
+                             # needing an interval stays Unavailable.
   decision_pending: true     # Option A (mechanism program) vs Option B (FLB
                              # harvest re-scope) — STILL OPEN, but B has lost
                              # the measurement that recommended it. Re-frame
@@ -188,16 +232,41 @@ flags:
                              # 2026-08-20: the 1.7 s is the SIGNAL clock only —
                              # the book itself arrives in 47 ms. Siting matters
                              # much less than the FATAL-1 finding implied.
-  fee_structure_known: false # STILL false, but the WS side of it is now SETTLED
-                             # AS WRONG: fee_rate_bps = 0 on the websocket is an
-                             # ARTEFACT. ALL 500 transactions sampled for G-FF1
-                             # carry a NONZERO on-chain fee (e.g. 173290, 371320,
-                             # 66630 base units). The rate/schedule is still
-                             # unknown, but it must be read from the chain, never
-                             # from the feed. A tempting corollary -- that fee
-                             # presence explains the 27 residual join mismatches
-                             # -- was TESTED AND REFUTED (fee>0 on validated and
-                             # mismatched rows alike; it discriminates nothing).
+  fee_structure_known: taker-measured-rebate-unknown # WAS false. The taker
+                             # schedule is now MEASURED, not assumed:
+                             # taker fee = 0.07*p*(1-p) $/share, matching to
+                             # FOUR DECIMALS on 600 transactions across the full
+                             # moneyness range (1.75 c/share at p=0.5, 0.63
+                             # c/share at p=0.1). INCIDENCE, which was never
+                             # previously established: THE TAKER PAYS AND THE
+                             # MAKER DOES NOT -- 600/600 taker legs carry a fee,
+                             # 744/754 maker legs carry ZERO, under an
+                             # unambiguous test (the fee-bearing leg is the one
+                             # whose `taker` IS the exchange address).
+                             # THE THREE-WAY CONFLICT IS DISSOLVED, not
+                             # arbitrated: the docs' 7% is CORRECT, CLOB
+                             # base_fee is consistent with it, and the
+                             # observed fee_rate_bps = 0 was simply the WRONG
+                             # SOURCE -- an artefact on all 446,412 events.
+                             # Never read fees from the feed; read them on-chain.
+                             # BE_FLOWANDFILLS_PLAN 12.1 had already derived the
+                             # formula from ONE transaction and flagged a 2x
+                             # contradiction with corpus Q5's 0.07*min(p,1-p)
+                             # (3.5 c/share). Q5 is REFUTED; the n=600 result
+                             # confirms 12.1.
+                             # STILL UNKNOWN: (1) the MAKER REBATE -- a zero fee
+                             # is NOT evidence a rebate was paid, and
+                             # OrderFilled.fee is UNSIGNED so a rebate could not
+                             # appear in it at all; (2) 10 of 754 maker legs DO
+                             # carry a fee, a real residual class (1.3%), not a
+                             # classification artefact. Mechanism unexplained.
+                             # MODEL CONSEQUENCE: makers pay nothing, but a taker
+                             # crossing at ATM pays ~0.50c half-spread + 1.75c
+                             # fee = ~2.25 c/share, ~225 bps on a $1 binary.
+                             # Every maker fill is therefore against someone who
+                             # expected MORE than 2.25c of move. The fee does not
+                             # kill MM on cost -- it loads the whole question
+                             # onto ADVERSE SELECTION.
   gff1_side_convention: measured-not-passed # G-FF1 under gff1_v2. `side` IS the
                              # TAKER's: agreement 473/473 = 1.0000, Wilson95
                              # [0.9919, 1.0000], covering 226 BUY + 247 SELL,

@@ -194,10 +194,68 @@ the enum-to-label mapping instead of assuming `0 = BUY`.
 
 **Unchanged from v1:** hypothesis, sample frame, days, seed, stratification,
 target `n`, tolerances, mismatch ceiling, per-coin floor, threshold, verdict
-rules and clustering. Nothing that could tune the answer moved. The 39 legs that
-reconcile under neither reading remain unexplained and are reported as
-`JOIN_MISMATCH`; a plausible cause is a websocket event reporting one partial
-fill of an aggregated on-chain match, but that is a hypothesis, not a finding.
+rules and clustering. Nothing that could tune the answer moved.
+
+### v2 residual — SOLVED after the run
+
+v2 left 27 residual legs (5.4 %) where size matched **exactly** and only price
+differed. The cause is now measured, not hypothesised:
+
+```
+round(chain_price, 2) == ws_price : 27/27
+round(chain_price, 3) == ws_price :  0/27      <- specifically 2dp
+max |chain_price - ws_price|      : 0.004865   <- under half a 0.01 tick
+```
+
+**The websocket reports the effective price rounded to the tick.** `PRICE_TOL =
+5e-4` was ten times tighter than the tick's own rounding granularity, so the
+comparison demanded an agreement the feed cannot express. This is the same
+category error as the v1 decode bug — comparing an exact quantity with a rounded
+one — one level up.
+
+An earlier guess, that these were partial fills of an aggregated match, is
+**withdrawn**: sizes match exactly, so nothing is partial. A second guess, that
+the on-chain fee explained the gap, was **tested and refuted** — all 500 sampled
+transactions carry a nonzero fee, so fee presence discriminates nothing.
+
+## `gff1_v3` — REQUIRED CHANGES, to be frozen BEFORE it runs
+
+Two fixes, both correctness rather than tolerance:
+
+1. **Compare like with like.** Test `round(chain_price, tick) == ws_price`, with
+   the tick read **per market** — it is `0.01` near the money and `0.001` away
+   from it, and `tick_size_change` events occur mid-window. Do NOT simply widen
+   `PRICE_TOL` to 0.005: that would pass the far-from-money regime on a
+   tolerance ten times its true tick.
+2. **Size the draw to the requirement.** 500 drawn transactions yielded 473
+   validated; draw enough that validated clusters reach 500.
+
+Everything else stays frozen. The design input for both changes was observed
+*after* the v2 run and is disclosed here as such; neither changes the
+hypothesis, the threshold, the strata or the verdict rules.
+
+## Known defect in `gff1_v3`, disclosed — verdict unaffected
+
+The v3 tick lookup uses the byte pattern `"tick_size"`, which does **not** match
+`"new_tick_size"`, so it silently ignored every `tick_size_change` event and read
+the tick only from `book` snapshots. `tick_size_change` transitions
+`0.01 -> 0.001` **do occur** (8 observed in one sampled BTC window), so legs in
+the 0.001 regime were validated against a tolerance ten times too loose. This is
+why the run reported `ticks seen: {0.01: 600}` — that was the bug, not a fact
+about the market.
+
+**The `PASS` stands.** The binding join validation is size agreement to `1e-6`,
+which identifies the leg essentially uniquely; the price check is secondary
+corroboration. Direction is derived from the amount pair, not the price, so it
+is untouched. But any future run must fix the pattern before the price check can
+be quoted as evidence in the 0.001 regime.
+
+Separately measured while checking this, and it contradicts a premise in
+`BE_FLOWANDFILLS_PLAN.md`: across 2.29 M executable quote observations from 12
+BTC windows on 2026-08-20, the median spread is **1 tick (0.0100) at every
+moneyness bucket**, ATM included (p90 0.020). The recorded claim that "ATM runs
+6-8 c" is **not supported for BTC**. Scope: one coin, one day — re-check on
+thinner coins before generalising.
 
 ## Scope
 

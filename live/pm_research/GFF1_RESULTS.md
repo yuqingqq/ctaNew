@@ -1,47 +1,42 @@
-# G-FF1 — WS `side` vs on-chain taker direction (`gff1_v2`)
+# G-FF1 — WS `side` vs on-chain taker direction (`gff1_v3`)
 
-Verdict: **INSUFFICIENT_EVIDENCE**. Threshold 0.99 on the Wilson lower bound.
+Verdict: **PASS**. Threshold 0.99 on the Wilson lower bound.
 
 ## Sample
 
-- protocol SHA-256: `9cb97da773a0c7450e1082ef0057ecfd0f6ccdf2bca7a41316cc188d89c8271f`
-- script SHA-256: `b4dad60d3eb2e6ef0bb602347f01c47074522c8830fe9f7069d67a3a0bcc1f3a`
+- protocol SHA-256: `82293cca11d34cee04602dd11693d3b1595b852c2f57fbb518e651b080916518`
+- script SHA-256: `fbc867234aaee1b7633b2a19535706a88298fc2d8082ac65fcbe870fe2b093c8`
 - candidate digest: `469509e34507136f5d9396bca9f67c7063c4dc9c9b7c4a7ff70f2f401acf35a2`
 - UTC days: 20260819, 20260820; seed 20260821
 - source archives: 2938; candidate legs 1402887; candidate transactions 1401267
-- sampled transactions: 500; validated: 473
+- sampled transactions: 600; validated: 600
 
 ## Result
 
-Agreement **1.0000** (Wilson 95% [0.9919, 1.0000])
+Agreement **1.0000** (Wilson 95% [0.9936, 1.0000])
 
 | coin | agree | n | rate |
 |---|---:|---:|---:|
-| bnb | 78 | 78 | 1.0000 |
-| btc | 67 | 67 | 1.0000 |
-| doge | 69 | 69 | 1.0000 |
-| eth | 66 | 66 | 1.0000 |
-| hype | 63 | 63 | 1.0000 |
-| sol | 65 | 65 | 1.0000 |
-| xrp | 65 | 65 | 1.0000 |
+| bnb | 90 | 90 | 1.0000 |
+| btc | 90 | 90 | 1.0000 |
+| doge | 90 | 90 | 1.0000 |
+| eth | 90 | 90 | 1.0000 |
+| hype | 80 | 80 | 1.0000 |
+| sol | 80 | 80 | 1.0000 |
+| xrp | 80 | 80 | 1.0000 |
 
 | moneyness | agree | n | rate |
 |---|---:|---:|---:|
-| 0.15-0.35 | 96 | 96 | 1.0000 |
-| 0.35-0.65 | 95 | 95 | 1.0000 |
-| 0.65-0.85 | 93 | 93 | 1.0000 |
-| p<0.15 | 95 | 95 | 1.0000 |
-| p>=0.85 | 94 | 94 | 1.0000 |
+| 0.15-0.35 | 120 | 120 | 1.0000 |
+| 0.35-0.65 | 120 | 120 | 1.0000 |
+| 0.65-0.85 | 120 | 120 | 1.0000 |
+| p<0.15 | 120 | 120 | 1.0000 |
+| p>=0.85 | 120 | 120 | 1.0000 |
 
 ## Excluded (reported beside the retained set)
 
 | reason | count |
 |---|---:|
-| `JOIN_MISMATCH` | 27 |
-
-## Why not PASS
-
-- only 473 validated tx-clusters, protocol requires 500
-- JOIN_MISMATCH rate 0.054 exceeds 0.05
+| — | 0 |
 
 Protocol: `live/pm_research/GFF1_PROTOCOL.md`.

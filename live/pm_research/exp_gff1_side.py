@@ -1,4 +1,4 @@
-"""G-FF1 — is the WS `side` the taker's direction? Protocol `gff1_v2`.
+"""G-FF1 — is the WS `side` the taker's direction? Protocol `gff1_v3`.
 
 Runs the frozen protocol in GFF1_PROTOCOL.md. Reads immutable window archives,
 draws a stratified deterministic sample, joins each WS trade to the on-chain
@@ -34,19 +34,27 @@ from da_feeds_polygon import (  # noqa: E402
     orders_matched,
 )
 
-PROTOCOL = "gff1_v2"
+PROTOCOL = "gff1_v3"
 REPO = Path(__file__).resolve().parents[2]
 RAW = REPO / "data/pm_5min/raw"
-OUT_JSON = REPO / "data/pm_5min/derived/gff1_side_v2.json"
+OUT_JSON = REPO / "data/pm_5min/derived/gff1_side_v3.json"
 OUT_MD = Path(__file__).with_name("GFF1_RESULTS.md")
 
 # --- frozen protocol constants -------------------------------------------
 DAYS = ("20260819", "20260820")
 SEED = 20260821
-TARGET_TX = 500
+DRAW_TX = 600            # v3: 500 drawn yielded only 473 validated
+REQUIRED_VALIDATED = 500  # the verdict requirement, distinct from the draw
+TARGET_TX = DRAW_TX       # build_sample draws this many
 MIN_PER_COIN = 20
 SIZE_TOL = 1e-6
-PRICE_TOL = 5e-4
+# v3: the websocket publishes the effective price ROUNDED TO THE TICK
+# (round(chain,2) == ws_price on 27/27 v2 residuals, max diff 0.004865).
+# Comparing an exact price to a rounded one is a category error; compare at the
+# market's own granularity instead. Tick is 0.01 near the money and 0.001 away
+# from it, so it is read per asset from `book`, never assumed.
+TICK_HALF_EPS = 1e-9
+DEFAULT_TICK = 0.01
 MAX_JOIN_MISMATCH_RATE = 0.05
 MIN_COIN_AGREEMENT = 0.95
 THRESHOLD = 0.99
@@ -59,6 +67,7 @@ MONEYNESS = ((0.15, "p<0.15"), (0.35, "0.15-0.35"), (0.65, "0.35-0.65"),
              (0.85, "0.65-0.85"), (1.01, "p>=0.85"))
 
 TRADE_MARK = b'"event_type":"last_trade_price"'
+TICK_MARK = b'"tick_size"'
 SLUG_RE = re.compile(r"^([a-z]+)-updown-5m-(\d+)$")
 
 
@@ -92,6 +101,7 @@ class Leg:
     coin: str
     slug: str
     recv_ns: int
+    tick: float = DEFAULT_TICK
 
     @property
     def key(self) -> tuple[str, str]:
@@ -160,11 +170,34 @@ def scan_day(day: str) -> tuple[list[Leg], list[dict[str, Any]]]:
         coin = m.group(1) if m else "?"
         digest = ""
         n_here = 0
+        tick_by_asset: dict[str, float] = {}
         for line, final_digest in _stream_gz_lines(path):
             if final_digest:
                 digest = final_digest
                 continue
-            if TRADE_MARK not in line:
+            has_trade = TRADE_MARK in line
+            # `book` and `tick_size_change` carry the tick. Track the latest per
+            # asset so the price comparison uses the market's OWN granularity:
+            # 0.01 near the money, 0.001 away from it.
+            if TICK_MARK in line and not has_trade:
+                parts = line.split(b"\t", 1)
+                if len(parts) == 2:
+                    try:
+                        payload = json.loads(parts[1])
+                    except json.JSONDecodeError:
+                        continue
+                    for msg in payload if isinstance(payload, list) else [payload]:
+                        if not isinstance(msg, dict):
+                            continue
+                        t = msg.get("new_tick_size") or msg.get("tick_size")
+                        aid = msg.get("asset_id")
+                        if t and aid:
+                            try:
+                                tick_by_asset[str(aid)] = float(t)
+                            except (TypeError, ValueError):
+                                pass
+                continue
+            if not has_trade:
                 continue  # ~97% of lines are price_change; skip before parsing
             parts = line.split(b"\t", 1)
             if len(parts) != 2:
@@ -192,6 +225,7 @@ def scan_day(day: str) -> tuple[list[Leg], list[dict[str, Any]]]:
                         coin=coin,
                         slug=slug,
                         recv_ns=recv_ns,
+                        tick=tick_by_asset.get(str(msg["asset_id"]), DEFAULT_TICK),
                     ))
                     n_here += 1
                 except (KeyError, ValueError, TypeError):
@@ -302,13 +336,17 @@ def evaluate(sample_tx: list[str], legs_by_tx: dict[str, list[Leg]],
                                     "detail": str(exc)})
                 continue
             size_ok = abs(chain_size - leg.size) <= SIZE_TOL
-            price_ok = abs(chain_price - leg.price) <= PRICE_TOL
+            # The feed rounds to the tick, so demand agreement only to half a
+            # tick of THAT market. Widening a flat tolerance to 0.005 would pass
+            # the 0.001 regime on ten times its true granularity.
+            price_ok = abs(chain_price - leg.price) <= leg.tick / 2 + TICK_HALF_EPS
             if not (size_ok and price_ok):
                 excluded["JOIN_MISMATCH"] += 1
                 leg_results.append({
                     "asset_id": leg.asset_id, "status": "JOIN_MISMATCH",
                     "ws_size": leg.size, "chain_size": chain_size,
                     "ws_price": leg.price, "chain_price": round(chain_price, 6),
+                    "tick": leg.tick,
                     "chain_side": chain_side, "side_enum": om.side_enum})
                 continue
             leg_results.append({
@@ -340,8 +378,9 @@ def verdict(agree: int, n: int, per_coin: dict[str, tuple[int, int]],
             mismatch_rate: float) -> tuple[str, list[str]]:
     lo, hi = wilson(agree, n)
     reasons: list[str] = []
-    if n < TARGET_TX:
-        reasons.append(f"only {n} validated tx-clusters, protocol requires {TARGET_TX}")
+    if n < REQUIRED_VALIDATED:
+        reasons.append(f"only {n} validated tx-clusters, protocol requires "
+                       f"{REQUIRED_VALIDATED}")
     if mismatch_rate > MAX_JOIN_MISMATCH_RATE:
         reasons.append(f"JOIN_MISMATCH rate {mismatch_rate:.3f} exceeds "
                        f"{MAX_JOIN_MISMATCH_RATE}")
