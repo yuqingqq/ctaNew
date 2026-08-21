@@ -65,7 +65,21 @@ marks:
   monetary_mark: SIZE_SHARES_TIMES_NATIVE_EXECUTION_PRICE
   cause_specific_intensity: TOTAL_INTENSITY_TIMES_CONDITIONAL_TYPE_PROBABILITY
   reconciliation_required: true
-  micro_market_independence: TESTED_NULL_NOT_ASSUMPTION
+  micro_market_independence:
+    status: TESTED_AND_FAILED
+    test: CIRCULAR_SHIFT_PERMUTATION_CROSS_PAIRS_TAU_0_25_S
+    verdict_by_coin:
+      btc: DEPENDENT
+      eth: DEPENDENT
+      sol: DEPENDENT
+      xrp: DEPENDENT
+      doge: DEPENDENT
+      bnb: DEPENDENT
+      hype: NOT_REJECTED_NOT_EQUIVALENT
+    direction: BIDIRECTIONAL_OR_COMMON_DRIVER
+    a1_holds_anywhere: false
+    consequence: EX_MICRO_IS_A_CONDITIONED_SUBPROCESS_NOT_A_COMPONENT
+    unaffected: NOTIONAL_WEIGHTING_REWEIGHTS_AND_DOES_NOT_DELETE
 
 development:
   permitted_data: DESIGN_DATA_ONLY
@@ -122,6 +136,8 @@ fill_actions:
   touch_departure_policy: RETAIN_FIXED_LEVEL_AND_REPORT
   complement_duplicate_policy: DEDUPLICATE_AND_COUNT
   exact_queue_position_identified: false
+  back_displayed_is_a_bound_only_if: NO_HIDDEN_OR_ICEBERG_LIQUIDITY
+  hidden_liquidity_status: UNVERIFIED_NOT_ESTABLISHED_FROM_THIS_TAPE
   midpoint_of_bracket_is_result: false
 
 validation:
@@ -146,10 +162,10 @@ reference_snapshot:
       sha256: 5ea7174c4d7aeaeafbbf7e01a01d2408d08606089b7316f1d321a171681fb22d
     development_code:
       path: live/pm_research/flow_fill_development.py
-      sha256: 21f03e476c5b503b2ffeda09bbdb969f3870e5754b00233a4ff2d54a3d0d99fa
+      sha256: c951187c0dd46cbfc4dd21b0f19c5d38f79193c441659b13d401b3fddc06a36f
     development_results:
       path: live/pm_research/FLOW_FILL_DEVELOPMENT_RESULTS.md
-      sha256: 860ba6fbce4d1a51645110994a0d06109948e6640e159d69a2520a43ce658a3a
+      sha256: c0a1455f4530324b4e0ae0e3fc6400ef58d5f47ccbc16ed72cae19dfa915c614
     canonical_contract:
       path: live/pm_research/contracts/contracts.yaml
       sha256: ae70e3772e74d929eaa735e01f3a9d77e8b55d65dc69aa04c089b46f2e766111

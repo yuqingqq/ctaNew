@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import argparse
 import collections
+import copy
 import datetime as dt
 import hashlib
 import heapq
@@ -681,7 +682,10 @@ def hawkes_loglik(paths: Sequence[tuple[Sequence[float], float]],
 
 
 def fit_hawkes(paths: Sequence[tuple[Sequence[float], float]]) -> dict[str, Any]:
-    half_lives = (0.25, 0.5, 1.0, 2.0, 5.0, 10.0)
+    # Extended DOWNWARD: the previous grid floor of 0.25 was selected by 6 of 7
+    # coins, which is a CENSORED estimate, not a selection. On btc 0.25 expected
+    # baseline arrivals is ~36 ms -- order-splitting, not market clustering.
+    half_lives = (0.03, 0.0625, 0.125, 0.25, 0.5, 1.0, 2.0, 5.0, 10.0)
     branching_grid = tuple(i / 20 for i in range(19))
     baseline_ll = hawkes_loglik(paths, 0.0, 1.0)
     best = (baseline_ll, 0.0, half_lives[0])
@@ -704,7 +708,224 @@ def fit_hawkes(paths: Sequence[tuple[Sequence[float], float]]) -> dict[str, Any]
         "n_paths": len(paths),
         "mean_operational_gap": sum(gaps) / len(gaps) if gaps else None,
         "short_gap_share_lt_0_25": (sum(g < 0.25 for g in gaps) / len(gaps)) if gaps else None,
-        "parameter_boundary_hit": best[1] in (0.0, 0.9),
+        "branching_boundary_hit": best[1] in (0.0, 0.9),
+        "half_life_boundary_hit": best[2] in (half_lives[0], half_lives[-1]),
+        "half_life_grid": list(half_lives),
+        "parameter_boundary_hit": best[1] in (0.0, 0.9) or best[2] in (half_lives[0], half_lives[-1]),
+    }
+
+
+def a1_independence(windows: Sequence[DevWindow], tau: float = 0.25,
+                    n_perm: int = 2000, seed: int = 20260821) -> dict[str, Any]:
+    """A1 -- is the MICRO_002 class independent of market flow?
+
+    Excluding the micro class is innocent ONLY under independence: a superposition
+    of independent point processes decomposes, so deleting one component leaves
+    the other's intensity AND branching structure intact. Without independence,
+    ex-micro is a CONDITIONED SUB-PROCESS rather than a component, and every
+    downstream quantity inherits the error silently -- the arithmetic still runs.
+    Exposure is the per-coin micro share, 2% on btc against ~90% on hype.
+
+    Statistic: cross-pairs within `tau` seconds. Null: a circular time-shift of
+    the micro process inside each window, which preserves its own inter-arrival
+    structure while destroying alignment with market arrivals.
+
+    `tau` MUST be small relative to the market inter-arrival time. If 2*tau spans
+    a typical market gap, every micro event has a neighbour whatever the
+    alignment, the statistic saturates, and the shift cannot discriminate -- the
+    test then returns NOT_REJECTED for a perfectly shadowing process. The
+    selftest pins both directions precisely so this cannot regress silently.
+    At btc's ~7 events/s, tau=0.25 spans ~3.5 market events; at hype's ~0.4/s it
+    spans ~0.2, which is thin but permutation-valid.
+
+    Failure to reject is NOT independence, so PASS requires the effect-size
+    interval INSIDE a tolerance. Underpowered defaults to FAILING A1.
+    """
+    min_events = 50
+    tol = 0.10
+    rng = __import__("random").Random(seed)
+
+    per_window: list[tuple[list[float], list[float], float]] = []
+    for w in windows:
+        micro = sorted(t.elapsed for t in w.trades if t.event_type == "MICRO_002")
+        market = sorted(t.elapsed for t in w.trades if t.event_type != "MICRO_002")
+        span = max((p.end for p in w.pieces), default=0.0)
+        if micro and market and span > 0:
+            per_window.append((micro, market, span))
+
+    def cross_pairs(micro: Sequence[float], market: Sequence[float]) -> int:
+        # market is sorted; count micro events with a market event within tau
+        import bisect
+        n = 0
+        for m in micro:
+            lo = bisect.bisect_left(market, m - tau)
+            hi = bisect.bisect_right(market, m + tau)
+            n += hi - lo
+        return n
+
+    def directed_pairs(micro: Sequence[float], market: Sequence[float]) -> tuple[int, int]:
+        """(micro_leads, micro_follows) -- DIRECTION DECIDES THE CONSEQUENCE.
+
+        A symmetric statistic detects association but cannot say which way it
+        runs, and the two readings have opposite implications for the ex-micro
+        process. If micro FOLLOWS market it is reactive, and deleting it leaves
+        the market component's intensity and branching structure intact. If micro
+        LEADS market it may be triggering, and deletion is not innocent.
+        """
+        import bisect
+        leads = follows = 0
+        for m in micro:
+            leads += (bisect.bisect_right(market, m + tau)
+                      - bisect.bisect_right(market, m))     # market strictly after
+            follows += (bisect.bisect_left(market, m)
+                        - bisect.bisect_left(market, m - tau))  # market strictly before
+        return leads, follows
+
+    n_micro = sum(len(m) for m, _, _ in per_window)
+    n_market = sum(len(k) for _, k, _ in per_window)
+    observed = sum(cross_pairs(m, k) for m, k, _ in per_window)
+    obs_lead = sum(directed_pairs(m, k)[0] for m, k, _ in per_window)
+    obs_follow = sum(directed_pairs(m, k)[1] for m, k, _ in per_window)
+
+    null_counts: list[int] = []
+    null_lead: list[int] = []
+    null_follow: list[int] = []
+    for _ in range(n_perm):
+        total = lead = follow = 0
+        for micro, market, span in per_window:
+            shift = rng.uniform(0.0, span)
+            shifted = sorted(((t + shift) % span) for t in micro)
+            total += cross_pairs(shifted, market)
+            dl, df = directed_pairs(shifted, market)
+            lead += dl
+            follow += df
+        null_counts.append(total)
+        null_lead.append(lead)
+        null_follow.append(follow)
+    mean_lead = sum(null_lead) / len(null_lead) if null_lead else 0.0
+    mean_follow = sum(null_follow) / len(null_follow) if null_follow else 0.0
+    lead_ratio = obs_lead / mean_lead if mean_lead > 0 else None
+    follow_ratio = obs_follow / mean_follow if mean_follow > 0 else None
+    p_lead = (sum(c >= obs_lead for c in null_lead) / max(len(null_lead), 1))
+    p_follow = (sum(c >= obs_follow for c in null_follow) / max(len(null_follow), 1))
+    mean_null = sum(null_counts) / len(null_counts) if null_counts else 0.0
+
+    ge = sum(c >= observed for c in null_counts)
+    le = sum(c <= observed for c in null_counts)
+    p_two = min(1.0, 2.0 * min(ge, le) / max(len(null_counts), 1))
+    ratio = observed / mean_null if mean_null > 0 else None
+
+    # window-clustered bootstrap on the observed statistic
+    lo = hi = None
+    if per_window and mean_null > 0:
+        boots = []
+        for _ in range(1000):
+            pick = [per_window[rng.randrange(len(per_window))] for _ in per_window]
+            boots.append(sum(cross_pairs(m, k) for m, k, _ in pick) / mean_null)
+        boots.sort()
+        lo, hi = boots[int(0.025 * len(boots))], boots[int(0.975 * len(boots))]
+
+    if n_micro < min_events or n_market < min_events:
+        verdict, holds = "INSUFFICIENT_POWER", False
+    elif p_two < 0.05:
+        verdict, holds = "DEPENDENT", False
+    elif lo is not None and lo >= 1.0 - tol and hi <= 1.0 + tol:
+        verdict, holds = "SUPPORTED", True
+    else:
+        verdict, holds = "NOT_REJECTED_NOT_EQUIVALENT", False
+
+    # Direction, and what it licenses.
+    if verdict == "DEPENDENT":
+        lead_hot = p_lead < 0.05
+        follow_hot = p_follow < 0.05
+        if follow_hot and not lead_hot:
+            direction = "MICRO_FOLLOWS_MARKET_REACTIVE"
+            implication = "DELETION_LEAVES_MARKET_COMPONENT_INTACT"
+        elif lead_hot and not follow_hot:
+            direction = "MICRO_LEADS_MARKET"
+            implication = "DELETION_NOT_INNOCENT_EX_MICRO_IS_CONDITIONED"
+        elif lead_hot and follow_hot:
+            direction = "BIDIRECTIONAL_OR_COMMON_DRIVER"
+            implication = "DELETION_NOT_INNOCENT_EX_MICRO_IS_CONDITIONED"
+        else:
+            direction = "ASSOCIATION_WITHOUT_RESOLVED_DIRECTION"
+            implication = "UNRESOLVED_TREAT_AS_CONDITIONED"
+    else:
+        direction = "NOT_APPLICABLE"
+        implication = "NOT_APPLICABLE"
+
+    return {
+        "verdict": verdict,
+        "a1_holds": holds,
+        "direction": direction,
+        "direction_implication": implication,
+        "lead_ratio": lead_ratio, "follow_ratio": follow_ratio,
+        "p_lead": p_lead, "p_follow": p_follow,
+        "observed_lead_pairs": obs_lead, "observed_follow_pairs": obs_follow,
+        "consequence_if_false": "EX_MICRO_IS_A_CONDITIONED_SUBPROCESS_NOT_A_COMPONENT",
+        "tau_s": tau, "tolerance": tol, "min_events": min_events,
+        "n_micro": n_micro, "n_market": n_market, "n_windows": len(per_window),
+        "observed_cross_pairs": observed,
+        "mean_null_cross_pairs": mean_null,
+        "ratio": ratio, "ratio_ci95": [lo, hi],
+        "p_two_sided": p_two, "n_permutations": n_perm,
+    }
+
+
+def _shift_book_covariates(window: DevWindow, k: int) -> DevWindow:
+    """Circularly shift the piece covariate sequence by k pieces."""
+    pieces = window.pieces
+    n = len(pieces)
+    if n < 2:
+        return window
+    shifted_x = [pieces[(i + k) % n].book_x for i in range(n)]
+    new_pieces = [ExposurePiece(p.start, p.end, p.cell, p.tick_tail, shifted_x[i])
+                  for i, p in enumerate(pieces)]
+    starts = [p.start for p in pieces]
+    import bisect
+    new_trades = []
+    for t in window.trades:
+        idx = min(max(bisect.bisect_right(starts, t.elapsed) - 1, 0), n - 1)
+        new_trades.append(DevTrade(
+            t.elapsed, t.cell, t.event_type, t.side, t.exec_p_up, t.size,
+            t.notional, t.reach_class, t.distance_ticks, t.tick_tail,
+            shifted_x[idx]))
+    out = copy.copy(window)
+    out.pieces = new_pieces
+    out.trades = new_trades
+    return out
+
+
+def b3_placebo(windows: Sequence[DevWindow], n_events: int) -> dict[str, Any]:
+    """Negative control for B3, because a frozen lag is asserted, not demonstrated.
+
+    `price_change` carries POST-change quotes and can be emitted BEFORE the
+    `last_trade_price` for the same match, so the 250 ms pre-arrival read is a
+    hope until something shows it worked. Circularly shifting the covariate
+    sequence preserves its marginal distribution and autocorrelation while
+    destroying alignment with arrivals. A B3 gain that SURVIVES the shift is not
+    covariate information -- it is flexibility.
+    """
+    if len(windows) < 3:
+        return {"status": "INSUFFICIENT_WINDOWS"}
+    shifted = [_shift_book_covariates(w, max(1, len(w.pieces) // 3)) for w in windows]
+    real = placebo = 0.0
+    for i in range(len(windows)):
+        train_r = [w for j, w in enumerate(windows) if j != i]
+        train_p = [w for j, w in enumerate(shifted) if j != i]
+        fit_r, fit_p = fit_baseline(train_r), fit_baseline(train_p)
+        real += poisson_nll(windows[i], fit_r, "B3") - poisson_nll(windows[i], fit_r, "B2")
+        placebo += poisson_nll(shifted[i], fit_p, "B3") - poisson_nll(shifted[i], fit_p, "B2")
+    per = (lambda v: v / n_events if n_events else None)
+    # A placebo gain at or beyond the real one means B3 carries no covariate signal.
+    survives = (placebo < 0) and (real >= 0 or placebo <= real * 0.5)
+    return {
+        "status": "RUN",
+        "real_b3_minus_b2_per_event": per(real),
+        "placebo_b3_minus_b2_per_event": per(placebo),
+        "placebo_share_of_real": (placebo / real) if real not in (0.0, None) else None,
+        "verdict": "PLACEBO_ALSO_IMPROVES_B3_GAIN_NOT_COVARIATE_INFORMATION" if survives
+                   else "PLACEBO_DOES_NOT_REPRODUCE_THE_GAIN",
     }
 
 
@@ -799,6 +1020,15 @@ def summarize_coin(windows: Sequence[DevWindow]) -> dict[str, Any]:
                 "b2_minus_b1": (nll["B2"] - nll["B1"]) / n_events if n_events else None,
                 "b3_minus_b2": (nll["B3"] - nll["B2"]) / n_events if n_events else None,
             },
+            # ADJACENT DELTAS HIDE A NON-MONOTONE STACK. "B3 improves on B2" reads
+            # as "B3 is best", but if B2 costs more than B3 returns the full stack
+            # is worse than B1 alone. Report cumulative-vs-B0 and name the winner.
+            "cumulative_delta_nll_per_event_vs_b0": {
+                layer.lower(): (nll[layer] - nll["B0"]) / n_events if n_events else None
+                for layer in ("B1", "B2", "B3")
+            },
+            "best_layer": min(("B0", "B1", "B2", "B3"), key=lambda L: nll[L]),
+            "full_stack_is_best": min(("B0", "B1", "B2", "B3"), key=lambda L: nll[L]) == "B3",
             "fold_diagnostics": fold_diagnostics,
         },
         "marks": {
@@ -809,6 +1039,8 @@ def summarize_coin(windows: Sequence[DevWindow]) -> dict[str, Any]:
             "native_notional_p50": _quantile(notional, 0.5),
             "execution_distance_ticks_p50": _quantile(distances, 0.5),
         },
+        "a1_micro_market_independence": a1_independence(windows),
+        "b3_negative_control": b3_placebo(windows, n_events),
         "hawkes": fit_hawkes(paths),
         "join_touch_fill_bounds": fill,
         "n_actions_available": sum(a["status"] == "AVAILABLE" for a in actions),
@@ -960,6 +1192,73 @@ def selftest() -> int:
     moving.note_touch(2.0, 0.50, 0.61)
     ok(moving.result()["touch_departed"],
        "touch departure is retained without erasing the resting level")
+
+    # --- A1 independence: must DETECT dependence and not cry wolf on independence.
+    # Without both directions the verdict would be unfalsifiable.
+    def _win(micro, market, span=300.0):
+        w = DevWindow.__new__(DevWindow)
+        w.slug = "t"
+        w.pieces = [ExposurePiece(0.0, span, (0, 0), 0.0, (0.0, 0.0, 0.0))]
+        w.trades = ([DevTrade(t, (0, 0), "MICRO_002", "SELL", 0.5, 0.02, 0.01,
+                              "X", None, 0.0, (0.0, 0.0, 0.0)) for t in micro]
+                    + [DevTrade(t, (0, 0), "MARKET", "BUY", 0.5, 5.0, 2.5,
+                                "X", None, 0.0, (0.0, 0.0, 0.0)) for t in market])
+        w.actions, w.exposure, w.diagnostics = [], {}, {}
+        return w
+
+    market_times = [i * 1.7 for i in range(120)]
+    locked = _win([t + 0.05 for t in market_times], market_times)      # micro shadows market
+    dep = a1_independence([locked, locked, locked], tau=0.1, n_perm=200, seed=1)
+    ok(dep["verdict"] == "DEPENDENT" and not dep["a1_holds"],
+       f"A1 must detect a shadowing micro process, got {dep['verdict']}")
+
+    # A genuinely INDEPENDENT micro process must be random. Two deterministic
+    # lattices are not independent -- their cross-correlation has moire structure
+    # and the test rightly flags it.
+    _rng = __import__("random").Random(4242)
+    spread = _win(sorted(_rng.uniform(0.0, 300.0) for _ in range(120)), market_times)
+    ind = a1_independence([spread, spread, spread], tau=0.1, n_perm=200, seed=1)
+    ok(ind["verdict"] != "DEPENDENT",
+       f"A1 must not flag an unaligned process, got {ind['verdict']}")
+
+    ok(dep["direction"] == "MICRO_FOLLOWS_MARKET_REACTIVE",
+       f"micro built 0.05s AFTER each market must resolve as FOLLOWS, got {dep['direction']}")
+    ok(dep["follow_ratio"] > dep["lead_ratio"],
+       "the follow channel must dominate for a lagging fixture")
+
+    lead_fix = _win([t - 0.05 for t in market_times if t > 0.05], market_times)
+    led = a1_independence([lead_fix] * 3, tau=0.1, n_perm=200, seed=1)
+    ok(led["direction"] == "MICRO_LEADS_MARKET",
+       f"micro built 0.05s BEFORE each market must resolve as LEADS, got {led['direction']}")
+    ok(led["direction_implication"].startswith("DELETION_NOT_INNOCENT"),
+       "a leading micro process must block innocent deletion")
+
+    sat = a1_independence([locked, locked, locked], tau=1.0, n_perm=200, seed=1)
+    ok(sat["verdict"] != "DEPENDENT",
+       "control: at a saturating tau even a shadowing process is undetectable -- "
+       "this is why tau must stay below the market inter-arrival time")
+
+    thin = _win([1.0, 2.0], [3.0, 4.0])
+    ok(a1_independence([thin, thin, thin], tau=0.1, n_perm=50)["verdict"] == "INSUFFICIENT_POWER",
+       "A1 underpowered must FAIL, never default to independence")
+    ok(not a1_independence([thin, thin, thin], tau=0.1, n_perm=50)["a1_holds"],
+       "A1 underpowered must not report a1_holds")
+
+    # --- placebo: the shift must actually move covariates, else the control is vacuous
+    w = DevWindow.__new__(DevWindow)
+    w.slug = "t"
+    w.pieces = [ExposurePiece(float(i), float(i + 1), (0, 0), 0.0, (float(i), 0.0, 0.0))
+                for i in range(6)]
+    w.trades = [DevTrade(2.5, (0, 0), "MARKET", "BUY", 0.5, 1.0, 0.5, "X", None,
+                         0.0, (2.0, 0.0, 0.0))]
+    w.actions, w.exposure, w.diagnostics = [], {}, {}
+    sh = _shift_book_covariates(w, 2)
+    ok([pc.book_x for pc in sh.pieces] != [pc.book_x for pc in w.pieces],
+       "covariate shift must change the piece sequence")
+    ok(sh.trades[0].book_x != w.trades[0].book_x,
+       "covariate shift must re-key the trade covariate")
+    ok([(pc.start, pc.end) for pc in sh.pieces] == [(pc.start, pc.end) for pc in w.pieces],
+       "covariate shift must NOT move piece boundaries")
 
     print(f"flow_fill_development selftest: {checks} checks OK")
     return 0
