@@ -283,6 +283,35 @@ which decouples this module from the 10-day sigma clock entirely.
   ~2.6x too high. The model-free terminal identity gives in-window per-fill
   `+0.165 c` and share-weighted `+0.173 c`; after excluding the single-actor
   0.02 class, per-fill is `-0.211 c` while share weighting stays `+0.172 c`.
+  **CORRECTED 2026-08-21 (U10/U10b) — THE SIGN IS UNDETERMINED, NOT NEGATIVE.**
+  Window-clustered bootstrap, 931 windows, 10,000 resamples:
+
+  | figure | estimate | 95% CI | |
+  |---|---:|---|---|
+  | per-fill, all flow | +0.165 | [-0.377, +0.734] | spans 0 |
+  | per-fill, ex-0.02 | **-0.211** | **[-0.849, +0.457]** | **spans 0** |
+  | 0.02 class alone | +1.987 | [+1.529, +2.440] | **excludes 0** |
+  | share-wtd pooled | +0.173 | [-0.251, +0.596] | spans 0 |
+
+  All seven per-coin CIs span zero on both weightings; the permutation test on
+  coin labels is p=0.0482 but **names no coin**, so the surviving set is empty.
+  **"On real flow, makers lose per fill" is NOT SUPPORTED and is withdrawn** --
+  it was published in commit `6a0e593` and relayed as a finding. The only
+  interval in the whole analysis that excludes zero is the **+1.987 against the
+  single-actor class**, tight precisely because it is one counterparty behaving
+  consistently, and carrying **~$91 of capacity over two days**: the sole
+  statistically distinguishable maker edge here is the un-harvestable one.
+  **What survives is the ESTIMATOR finding, which needs no interval:** the two
+  weightings diverge in sign on the same fills, so a single-weighting spec would
+  have reported "+0.165, makers profitable" and never revealed the dependence on
+  one counterparty. Keep that apart from the economic claim -- conflating them is
+  how `+0.45` survived two sessions.
+  Window clustering misses day-level common factors, so these intervals
+  **understate** uncertainty, and nothing on real flow excludes zero even so.
+  **PROGRAMME STATE: cost settled bar rho; SIGN MEASURED AND UNDETERMINED;
+  marginality and scale sit behind a sign that only more days resolve** -- so
+  answering the queue question perfectly would still not say whether there is
+  anything to harvest.
   Per-coin signs are mixed and two days permit no clustered CI.
 - **U5/U7** — the rare maker fee is a thin per-address tier: 0/~10/50 bps.
   No in-transaction rebate appears in 600 receipts, but periodic/off-chain

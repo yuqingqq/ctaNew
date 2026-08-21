@@ -141,6 +141,78 @@ likely to differ.
 - **CLEARED when** the spread-by-moneyness table is produced for all seven
   coins with per-coin scope stated.
 
+## ROUND 2 — the uncertainties that remain, opened 2026-08-21 05:10
+
+U9 is not listed here: it clears itself. `PING_TIMEOUT` stands at 7 of the
+required 12 in `clob_v3_1`, accruing at ~0.63/h, so it is reachable ~8 h after
+this was written. **Re-run `u9` unchanged then — do not amend the rule to fit
+the n available.**
+
+### U10 — are the per-coin maker edges real, or noise around zero?
+
+**This is the most urgent item in the loop, because the plan currently carries a
+positive claim that the data may not support.** The per-coin table shows the edge
+sign flipping at every spread width (btc +0.201 / eth −0.008; doge +0.629 / sol
+−0.628; xrp +0.705 / bnb −0.476). That refutes width-as-predictor either way.
+But the *story* attached to it — that a wide spread prices adverse-selection
+hazard, so compensation and hazard scale together — **is one explanation for a
+pattern that is equally consistent with every coin having ~zero edge and the
+dispersion being sampling noise.** Scattered signs is exactly what noise around
+zero looks like.
+
+Two days gives no day-clustered interval. But there are ~3,000 windows, and
+windows are largely independent within a day, so **window-clustered inference is
+available** and is the right instrument.
+
+- Per-coin share-weighted maker edge with a **window-clustered bootstrap**
+  (clusters = windows, >= 10,000 resamples), reported with the point estimate.
+- Plus a **permutation test on coin labels**: is the observed cross-coin
+  dispersion larger than a common-mean null produces?
+
+Outcomes, enumerated exhaustively per the META-RULE:
+
+- **REAL-DISPERSION** — permutation test rejects the common-mean null **and** at
+  least two coins have intervals excluding zero **with opposite signs**. Only
+  then is "coin-specific edge" a finding.
+- **NOISE-CONSISTENT** — dispersion within the null, or no coin interval
+  excludes zero. The per-coin table is then **not evidence of coin-specific
+  edge**; report the pooled point with its interval and say so plainly.
+- **PARTIAL** — some coin intervals exclude zero but dispersion is within the
+  null, or the reverse. Name exactly which coins survive; authorise nothing
+  beyond those.
+- **UNRESOLVED** — any coin with too few windows to bootstrap; say which.
+
+**MANDATORY caveat on every number produced here:** window clustering cannot
+capture day-level common factors, and with two days the intervals **understate**
+true uncertainty. A window-clustered interval that excludes zero is necessary,
+not sufficient, for a day-robust claim.
+
+### U11 — the rebate, off-trade. `rho` BLOCKS EVERY NET-OF-FEE ESTIMAND.
+
+U7 established only that no rebate is paid **inside the trade**. A periodic or
+off-chain programme would be invisible to trade receipts, and
+`rewards_registry.jsonl` turned out to be a size heartbeat, so the question is
+untouched. Every `rho`-dependent estimand is `Unavailable` until this moves.
+
+Take the maker addresses already observed (the 600 receipts, plus the tiered
+addresses from U7b) and look for **USDC inflows not attributable to a trade in
+our set** — testing for periodicity, and for proportionality to that address's
+maker volume.
+
+**Bound the RPC cost before running it.** `eth_getLogs` on USDC `Transfer`
+filtered by recipient is block-range-limited on public endpoints; if the cost is
+prohibitive, say so and stop rather than burning the budget — "not affordable on
+free endpoints" is a legitimate verdict and should be recorded as one.
+
+- **REBATE-OBSERVED** — unexplained inflows found and a schedule readable.
+- **ABSENT-OVER-WINDOW** — no unexplained inflows across the observed span.
+  Stronger than U7 but still bounded by that span: `rho` stays `Unavailable`
+  unless the span demonstrably covers a full reward period, which must be
+  argued, not assumed.
+- **PARTIAL** — inflows found but not attributable to a rebate.
+- **NOT-AFFORDABLE** — RPC limits make it impractical; record the cost estimate.
+- **UNRESOLVED** — anything else.
+
 ## Cross-cutting defect — the quote guard, found in TWO independent codebases
 
 **Recorded because it is a systematic risk, not bad luck.** The filter
@@ -204,7 +276,7 @@ its denominator is drawn from**, and that population must **match the
 numerator's conditioning**. A ratio reported without its denominator population
 named is not a result.
 
-## Cross-cutting defect — THE NAME IS NOT THE DEFINITION (two instances)
+## Cross-cutting defect — THE NAME IS NOT THE DEFINITION (three instances)
 
 **A landmine for anyone touching collector telemetry.** The field name says
 rate; `collect_pm.py:489` stores `self.msg_by_coin.get(coin, 0)` — a
@@ -223,9 +295,19 @@ rewards; the file is **163 rows of `{recv_ns, n}`** — a heartbeat of registry
 two sessions as the place the rebate question would be settled. **Two instances
 make this a pattern, not a one-off.**
 
-**Binding consequence:** any use of a collector telemetry field **or data file**
-must confirm its *definition in the source that writes it* before it is used as
-a measurement — the name is not the definition. Where a rate is needed and none is
+**THIRD INSTANCE — self-inflicted, and therefore the most informative.** The
+agent's own `KNOWN_CONTRACTS` map in `flow_uncertainty.py` labelled
+`0xc011a7e1…` as "USDC.e / collateral" — **a guess, never verified against the
+contract.** It was then used as a sweep target in U11, where all 9 `eth_getLogs`
+calls failed and that token went uncovered, which is one of the two limits
+blocking a stronger U11 verdict. A label invented for convenience became an
+assumption inside a measurement two iterations later. **Guessing a name is the
+same defect as trusting one.**
+
+**Binding consequence:** any use of a collector telemetry field, data file **or
+contract/address label** must confirm its *definition at the source* before it
+is used as a measurement — the name is not the definition, **including a name
+you wrote yourself**. Where a rate is needed and none is
 recorded, derive it from the tape rather than from a counter.
 
 **A rate does exist**: `collector.log` heartbeats carry `rate_msg_s` per coin.
@@ -576,6 +658,9 @@ unstratified draw. Do not assert a single actor until that is run.
 
 | # | uncertainty | verdict | evidence | scope |
 |---|---|---|---|---|
+| U11 | the rebate, off-trade | **PARTIAL — no rebate found, strongest candidate REFUTED, but coverage is incomplete and the span cannot establish absence. `ρ` stays `Unavailable`.** | **Cost bounded first, as required:** the endpoint accepts a topics OR-array of all **199** maker addresses at **10,000-block** spans (40,000 fails), so the **80,355-block (~47 h)** span costs **9 calls/token**. Affordable — measured **362 s** for the sweep, 313 s for the follow-up. **Sweep result:** 10,742 inbound USDC transfers to our 199 makers. Senders: `0x4d97dcd9…` **ConditionalTokens** 8,871 transfers / $848,800 (redemption + merge payouts, not a rebate); the **CTF Exchange** 822 / $8,954 (trade settlement); zero-address 581 to 116 recipients / $81,582 (mints/bridging); then 232 other senders, of which **16 pay >= 5 distinct makers** — the rebate-programme shape. **Strongest candidate REFUTED:** `0xc417fd8e…` turns out to make **8,227** outbound transfers to 58 recipients totalling **$3.22 M**, with a **median block gap of 0** — continuous, not periodic, and only 23 of those transfers touched our makers at all. That is a hot wallet, not a reward schedule. Remaining candidates are $10–70 in total, orders of magnitude below any plausible rebate on ~$4.7 M of sampled notional. | **TWO limits that block a stronger verdict.** (1) **Coverage is partial:** the sweep of the second token address (`0xc011a7e1…`) **failed all 9 calls** with HTTP 400, so only native USDC was swept — and that address's label in `KNOWN_CONTRACTS` was **my guess, never verified**, a third brush with *the name is not the definition*. (2) **The span is ~47 h and cannot be argued to cover a full reward period** — Polymarket schedules are plausibly daily or weekly, and the charter requires that coverage be *argued, not assumed*. So this is stronger than U7's in-trade result and still **not** `ABSENT-OVER-WINDOW`. Every `ρ`-dependent estimand remains `Unavailable`. |
+| U10b | does the published `−0.211 ¢/fill` headline survive an interval? | **NO — WITHDRAWN. It spans zero. And the ONLY interval in the whole analysis that excludes zero is the un-harvestable one.** | Window-clustered bootstrap, 931 windows, 10,000 resamples. **per-fill ALL flow +0.165 [−0.377, +0.734] — spans zero. per-fill EXCLUDING the 0.02 class −0.211 [−0.849, +0.457] — SPANS ZERO. per-fill 0.02 class ALONE +1.987 [+1.529, +2.440] — EXCLUDES ZERO.** Per-coin excluding the class: **all seven span zero** (bnb −0.614, btc −0.130, doge +0.662, eth −0.526, hype −1.327, sol −0.336, xrp −0.592). So *"on real flow, makers lose per fill"* — stated as fact in `HANDOFF.md`, in commit `6a0e593`, and relayed onward — **is not supported**. The 0.02 class's interval is tight *because* it is one counterparty behaving consistently, and it carries **~$91 of capacity over two days**: the sole statistically distinguishable maker edge in the tape is un-harvestable by construction. **TWO CLAIMS KEPT APART:** the **estimator** finding — the two weightings diverge in sign, so a single-weighting spec would have reported "+0.165, makers profitable" and hidden the dependence on one counterparty — is about **estimator behaviour** and survives regardless of any interval; the **economic** claim needed the interval and does not survive. | 931 windows, 2 UTC days, every 3rd archive. **Window clustering misses day-level common factors, so these intervals UNDERSTATE uncertainty — and nothing on real flow excludes zero even so.** Repro: `flow_uncertainty.py u10b` |
+| U10 | are the per-coin maker edges real, or noise around zero? | **PARTIAL — and ZERO coins survive, so it authorises NOTHING. The adverse-selection story is WITHDRAWN.** | Window-clustered bootstrap, 931 windows, 10,000 resamples. **Not one of the seven per-coin CIs excludes zero:** bnb −0.476 [−2.229, +1.359] · btc +0.201 [−0.269, +0.699] · doge +0.629 [−1.094, +2.487] · eth −0.008 [−0.890, +0.807] · **hype +1.761 [−0.304, +3.809]** · sol −0.628 [−1.624, +0.372] · xrp +0.705 [−0.226, +1.716]. Permutation test on coin labels (10,000 shuffles) gives **p = 0.0482** — dispersion is *marginally* beyond the common-mean null, but **it names no coin**, because no individual interval separates from zero. Under the charter's PARTIAL branch ("name exactly which coins survive; authorise nothing beyond those") the surviving set is **empty**. **And the POOLED edge also spans zero: +0.1727 ¢/share, 95 % CI [−0.2509, +0.5963].** So the maker edge is **not distinguishable from zero at either level**. **The mechanism I attached to the sign-flip table — that a wide spread prices adverse-selection hazard so compensation and hazard scale together — is withdrawn: the pattern is fully consistent with every coin sitting near zero and the dispersion being sampling noise.** What survives is only the *negative* result: spread width does not predict edge. | 931 windows, 2 UTC days, every 3rd archive. **MANDATORY CAVEAT: window clustering cannot capture day-level common factors, so with TWO days these intervals UNDERSTATE uncertainty — excluding zero would be NECESSARY, NOT SUFFICIENT, for a day-robust claim, and nothing here excludes zero anyway.** p=0.0482 is marginal and fragile at this n. Repro: `flow_uncertainty.py u10` |
 | U8 | spread on thin coins | **CLEARED — and it REVERSES the plan's headline. "ATM runs 6–8 ¢" is refuted for BTC/ETH but CONFIRMED for the thin coins.** | ATM (`0.35–0.65`) median spread **in ticks**, 8 windows/coin, 2026-08-20, all at the 0.01 tick: **btc 1 (89.8 % at 1 tick) · eth 1 (74.4 %) · sol 3 (22.9 %) · doge 3 (13.7 %) · xrp 5 (14.8 %) · bnb 5 (4.7 %) · hype 7 (2.4 %)**. So ATM half-spread runs **0.5 ¢ on btc/eth but 1.5–3.5 ¢ on sol/doge/xrp/bnb/hype**, and share `>=5` ticks at ATM reaches **61.8 % on hype, 57.2 % on bnb, 51.4 % on xrp**. **The corpus's "modal spread is 1 tick (66.7 %)" is a POOLING ARTEFACT** — btc alone supplies 2.28 M of ~3.73 M quotes, so the pooled statistic largely reports btc. Same shape as the U4 per-coin lesson, a fifth cousin of the population-mismatch family. **Economic consequence:** against a fixed ATM fee of 1.75 ¢, a 0.5 ¢ half-spread (btc) and a 3.5 ¢ half-spread (hype) are different businesses. **But spread width does NOT confer edge — at identical widths the U4 sign FLIPS:** 3 ticks → doge **+0.629** vs sol **−0.628**; 5 ticks → xrp **+0.705** vs bnb **−0.476**. Only the extremes agree (btc 1 tick/+0.201, hype 7 ticks/+1.761). A monotone "wide spread ⇒ good business" reading is **false**; the pattern is consistent with wide spreads **pricing adverse-selection risk** rather than conferring free edge. Tick composition in the tails also varies by coin: 0.001 share runs **6.4 % (bnb) to 16.2 % (doge)**. | 8 windows per coin, **2026-08-20 only**, both pair tokens counted. Deterministic window selection. Thin coins carry far fewer quotes (hype 78 k vs btc 2.28 M), so their tails are correspondingly noisier — one `doge` cell (`0.15–0.35` @0.001, n=278) shows a 239-tick median and is flagged rather than interpreted. Repro: `flow_uncertainty.u2(coin=…)`. |
 | U7 | maker rebate `ρ(p)`, + the per-address fee-tier check folded in from U5 | **U7a CLEARED-ABSENT-IN-TRADE** (`ρ` still `Unavailable`) · **U7b TIER-CONFIRMED** | **U7a — no rebate is paid inside the trade.** Across **600 receipts** only **5 distinct emitting contracts** appear and **all are accounted for** (CTF Exchange, ConditionalTokens, USDC, USDC.e, MATIC gas) — **zero unknown/third-party contracts**. Value-flow check: of 570 receipts containing a token-buying maker, only **3** showed that maker also receiving USDC, and **all 3 are two-sided in the same transaction** with inflows matching their sell legs **exactly** (51,000 / 7,800,000 / 5,070,000). So zero unexplained maker-bound value. `rewards_registry.jsonl` is **163 rows of `{recv_ns, n}`** — a registry-**size** heartbeat with no market-level data, confirming it cannot answer this. **U7b — the maker fee IS a per-address tier, which identifies U5's missing selector.** Over the 33 `px=0.99` maker legs: **5 addresses have >=2 legs and every one shows exactly ONE rate** (`0x1e746427` 0.0 ×3, `0x2277c18f` 0.001 ×3, `0xbdf22122` 0.005 ×2, `0xeebde7a0` 0.0 ×2, `0xb3b0780f` 0.001 ×2), with **three distinct tiers across addresses: 0 bps, ~10 bps, 50 bps**. The selector is the **counterparty, not the trade**. | **U7a's scope limit was stated before running and bounds the result: trade receipts can only establish absence of a PER-TRADE, IN-TRANSACTION rebate.** A periodic or off-chain rebate would not appear in them, so this is **not** evidence that no rebate exists, and every `ρ`-dependent estimand stays **`Unavailable`**. **U7b is thin: 5 addresses at n=2–3 legs each** — constancy on 2–3 observations is suggestive, not strong. 600-tx stratified sample, cached receipts, zero RPC. |
 | U6 | does on-chain leg order carry matching-engine priority? | **UNRESOLVED — my own decision rule has no branch for the outcome.** The lead is **NOT refuted**; it also does not clear the bar. | **Result: 49/63 adjacent informative pairs correctly ordered = 0.7778, 95 % CI [0.6609, 0.8627].** The CI **excludes 0.50 decisively**, so leg order is **clearly not arbitrary** — but 0.778 is **below the 0.80 bar** I pre-registered, and the rule specifies only CLEARED (>=0.80 *and* CI excl. 0.50), REFUTED (CI incl. 0.50) and UNRESOLVED (n<30). n=63. **The outcome falls between the branches — see R2.** **A CORRECTION I nearly reported as a finding:** the first run returned **0.231, anti-correlated**, with the CI excluding 0.50 on the *wrong side*. Cause: in mint-match transactions the maker legs sit on the **complement** token, so their prices run inverted to the taker's book, and the taker-side convention was being applied to complement-space prices. **Same class as the DENOMINATOR/POPULATION MISMATCH entry — a statistic scored against a convention drawn from a different space.** After normalising every leg into taker-asset space (179 legs inverted) the figure is 0.778. A hypothesised multi-`OrdersMatched` contamination was checked and **does not exist**: all 600 transactions carry exactly one. | 600-tx G-FF1 sample, **stratified**, cached receipts, zero RPC. **A limitation sharper than the charter's stated ceiling: 91 of 154 adjacent pairs (59 %) are SAME-PRICE and uninformative** — consistent with the 1-tick modal spread. Time priority operates precisely there and is invisible on-chain, so even a perfect result would speak only to *cross-price* ordering while most book action is *within* a level. Practical read: ~22 % of informative pairs violate price priority, so leg order as a queue proxy carries that error rate. Chain shows only orders that **filled**: bounds the marginal correction, does **not** identify `Q_ahead`. |

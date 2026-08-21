@@ -1159,6 +1159,283 @@ def u8(day: str = "20260820", n_windows: int = 8) -> dict[str, Any]:
     return out
 
 
+def _edge_rows_by_window(every: int = 3) -> list[dict[str, Any]]:
+    """Per-(coin, window) maker-edge aggregates. Shared by u4 and u10."""
+    winners: dict[str, dict] = {}
+    for line in RESOLUTIONS.read_text().splitlines():
+        try:
+            r = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if r.get("closed") is True and r.get("winners"):
+            winners[r["slug"]] = r["winners"]
+    tok: dict[str, tuple[str, str]] = {}
+    for line in (PM / "markets.jsonl").read_text().splitlines():
+        try:
+            m = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        ids = m.get("clobTokenIds")
+        if ids and len(ids) == 2 and m.get("slug"):
+            tok[m["slug"]] = (str(ids[0]), str(ids[1]))
+
+    paths = []
+    for day in ("20260819", "20260820"):
+        d = RAW / day
+        if d.is_dir():
+            paths.extend(sorted(d.glob("*.jsonl*.gz")))
+    paths = paths[::every]
+    TRADE = b'"event_type":"last_trade_price"'
+
+    agg: dict[str, dict[str, Any]] = {}
+    for path in paths:
+        slug = path.name.split(".jsonl")[0]
+        w, ids = winners.get(slug), tok.get(slug)
+        if not w or not ids:
+            continue
+        try:
+            ws = int(slug.rsplit("-", 1)[1])
+        except (IndexError, ValueError):
+            continue
+        up = bool(w.get("Up"))
+        outcome = {ids[0]: 1.0 if up else 0.0, ids[1]: 0.0 if up else 1.0}
+        num = den = 0.0
+        for line in _gz_lines(path):
+            if TRADE not in line:
+                continue
+            parts = line.split(b"\t", 1)
+            if len(parts) != 2:
+                continue
+            try:
+                rn = int(parts[0])
+                payload = json.loads(parts[1])
+            except (ValueError, json.JSONDecodeError):
+                continue
+            el = rn / 1e9 - ws
+            if not (0.0 <= el <= WINDOW_S):
+                continue                      # in-window only, as in u4
+            for msg in payload if isinstance(payload, list) else [payload]:
+                if not isinstance(msg, dict) or msg.get("event_type") != "last_trade_price":
+                    continue
+                aid = str(msg.get("asset_id"))
+                if aid not in outcome:
+                    continue
+                try:
+                    px, sz = float(msg["price"]), float(msg["size"])
+                    side = str(msg["side"]).upper()
+                except (KeyError, ValueError, TypeError):
+                    continue
+                o = outcome[aid]
+                edge = (px - o) if side == "BUY" else (o - px)
+                num += edge * sz
+                den += sz
+        if den > 0:
+            agg[slug] = {"slug": slug, "coin": slug.split("-")[0],
+                         "num": num, "den": den}
+    return list(agg.values())
+
+
+def _wtd_edge(rows: list[dict[str, Any]]) -> float:
+    den = sum(r["den"] for r in rows)
+    return (sum(r["num"] for r in rows) / den * 100.0) if den > 0 else float("nan")
+
+
+def u10(n_boot: int = 10000, n_perm: int = 10000, every: int = 3) -> dict[str, Any]:
+    """U10 -- are the per-coin edges real, or noise around zero?
+
+    Window-clustered bootstrap + permutation test on coin labels. Windows are
+    the resampling unit because they are largely independent WITHIN a day.
+    """
+    rows = _edge_rows_by_window(every=every)
+    by_coin: dict[str, list] = collections.defaultdict(list)
+    for r in rows:
+        by_coin[r["coin"]].append(r)
+    print(f"[u10] windows with flow: {len(rows)} across {len(by_coin)} coins")
+
+    rnd = __import__("random").Random(20260821)
+    out: dict[str, Any] = {}
+    print(f"[u10] {'coin':6s} {'windows':>8s} {'edge c/sh':>10s} {'95% window-clustered CI':>26s} {'excl 0':>7s}")
+    n_excl = 0
+    signs = []
+    for c in sorted(by_coin):
+        sub = by_coin[c]
+        pt = _wtd_edge(sub)
+        if len(sub) < 20:
+            print(f"[u10] {c:6s} {len(sub):8d} {pt:10.3f}   TOO FEW WINDOWS -- UNRESOLVED")
+            out[c] = {"n": len(sub), "point": pt, "ci": None}
+            continue
+        boots = sorted(_wtd_edge([sub[rnd.randrange(len(sub))] for _ in sub])
+                       for _ in range(n_boot))
+        lo, hi = boots[int(0.025 * n_boot)], boots[int(0.975 * n_boot)]
+        excl = (lo > 0) or (hi < 0)
+        n_excl += excl
+        if excl:
+            signs.append(1 if lo > 0 else -1)
+        print(f"[u10] {c:6s} {len(sub):8d} {pt:10.3f}   [{lo:+9.3f}, {hi:+9.3f}] {str(excl):>7s}")
+        out[c] = {"n": len(sub), "point": pt, "ci": [lo, hi], "excludes_zero": excl}
+
+    # permutation test on coin labels: is cross-coin dispersion beyond a
+    # common-mean null? Group sizes are preserved; labels are shuffled.
+    coins = sorted(by_coin)
+    obs_edges = [out[c]["point"] for c in coins if out[c].get("ci")]
+    mean_obs = sum(obs_edges) / len(obs_edges)
+    obs_disp = (sum((e - mean_obs) ** 2 for e in obs_edges) / len(obs_edges)) ** 0.5
+    labels = [r["coin"] for r in rows]
+    worse = 0
+    for _ in range(n_perm):
+        rnd.shuffle(labels)
+        g: dict[str, list] = collections.defaultdict(list)
+        for lab, r in zip(labels, rows):
+            g[lab].append(r)
+        es = [_wtd_edge(g[c]) for c in coins if len(g[c]) >= 20]
+        if len(es) < 2:
+            continue
+        m = sum(es) / len(es)
+        d = (sum((e - m) ** 2 for e in es) / len(es)) ** 0.5
+        worse += (d >= obs_disp)
+    p_perm = (worse + 1) / (n_perm + 1)
+    print(f"\n[u10] cross-coin dispersion (SD of per-coin edge) = {obs_disp:.4f} c/share")
+    print(f"[u10] permutation p (common-mean null, {n_perm} shuffles) = {p_perm:.4f}")
+
+    opposite = (1 in signs) and (-1 in signs)
+    if any(v.get("ci") is None for v in out.values()):
+        verdict = "UNRESOLVED (a coin has too few windows to bootstrap)"
+    elif p_perm < 0.05 and n_excl >= 2 and opposite:
+        verdict = "REAL-DISPERSION"
+    elif p_perm >= 0.05 and n_excl == 0:
+        verdict = "NOISE-CONSISTENT"
+    else:
+        verdict = (f"PARTIAL (perm p={p_perm:.4f}, {n_excl} coin CIs exclude 0, "
+                   f"opposite signs={opposite})")
+    print(f"[u10] VERDICT: {verdict}")
+    print("[u10] MANDATORY CAVEAT: window clustering cannot capture day-level "
+          "common factors. With TWO days these intervals UNDERSTATE uncertainty; "
+          "excluding zero is NECESSARY, NOT SUFFICIENT, for a day-robust claim.")
+    out["_perm_p"] = p_perm
+    out["_dispersion"] = obs_disp
+    out["_verdict"] = verdict
+    return out
+
+
+def _perfill_rows_by_window(every: int = 3) -> list[dict[str, Any]]:
+    """Per-window PER-FILL edge aggregates, split by the 0.02 class."""
+    winners: dict[str, dict] = {}
+    for line in RESOLUTIONS.read_text().splitlines():
+        try:
+            r = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if r.get("closed") is True and r.get("winners"):
+            winners[r["slug"]] = r["winners"]
+    tok: dict[str, tuple[str, str]] = {}
+    for line in (PM / "markets.jsonl").read_text().splitlines():
+        try:
+            m = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        ids = m.get("clobTokenIds")
+        if ids and len(ids) == 2 and m.get("slug"):
+            tok[m["slug"]] = (str(ids[0]), str(ids[1]))
+    paths = []
+    for day in ("20260819", "20260820"):
+        d = RAW / day
+        if d.is_dir():
+            paths.extend(sorted(d.glob("*.jsonl*.gz")))
+    paths = paths[::every]
+    TRADE = b'"event_type":"last_trade_price"'
+    out = []
+    for path in paths:
+        slug = path.name.split(".jsonl")[0]
+        w, ids = winners.get(slug), tok.get(slug)
+        if not w or not ids:
+            continue
+        try:
+            ws = int(slug.rsplit("-", 1)[1])
+        except (IndexError, ValueError):
+            continue
+        up = bool(w.get("Up"))
+        outcome = {ids[0]: 1.0 if up else 0.0, ids[1]: 0.0 if up else 1.0}
+        acc = {"n_all": 0, "e_all": 0.0, "n_ex": 0, "e_ex": 0.0,
+               "n_02": 0, "e_02": 0.0}
+        for line in _gz_lines(path):
+            if TRADE not in line:
+                continue
+            parts = line.split(b"\t", 1)
+            if len(parts) != 2:
+                continue
+            try:
+                rn = int(parts[0])
+                payload = json.loads(parts[1])
+            except (ValueError, json.JSONDecodeError):
+                continue
+            if not (0.0 <= rn / 1e9 - ws <= WINDOW_S):
+                continue
+            for msg in payload if isinstance(payload, list) else [payload]:
+                if not isinstance(msg, dict) or msg.get("event_type") != "last_trade_price":
+                    continue
+                aid = str(msg.get("asset_id"))
+                if aid not in outcome:
+                    continue
+                try:
+                    px, sz = float(msg["price"]), float(msg["size"])
+                    side = str(msg["side"]).upper()
+                except (KeyError, ValueError, TypeError):
+                    continue
+                e = (px - outcome[aid]) if side == "BUY" else (outcome[aid] - px)
+                acc["n_all"] += 1
+                acc["e_all"] += e
+                if abs(sz - 0.02) < 1e-9:
+                    acc["n_02"] += 1
+                    acc["e_02"] += e
+                else:
+                    acc["n_ex"] += 1
+                    acc["e_ex"] += e
+        if acc["n_all"]:
+            out.append({"slug": slug, "coin": slug.split("-")[0], **acc})
+    return out
+
+
+def _perfill(rows: list[dict[str, Any]], nk: str, ek: str) -> float:
+    n = sum(r[nk] for r in rows)
+    return (sum(r[ek] for r in rows) / n * 100.0) if n else float("nan")
+
+
+def u10b(n_boot: int = 10000, every: int = 3) -> dict[str, Any]:
+    """U10b -- window-clustered CI on the PER-FILL edges, incl. the -0.211."""
+    rows = _perfill_rows_by_window(every=every)
+    rnd = __import__("random").Random(20260821)
+    print(f"[u10b] windows {len(rows)}")
+
+    def boot(sub, nk, ek, label):
+        if not sub or sum(r[nk] for r in sub) == 0:
+            print(f"[u10b] {label:38s}  no fills")
+            return None
+        pt = _perfill(sub, nk, ek)
+        bs = sorted(_perfill([sub[rnd.randrange(len(sub))] for _ in sub], nk, ek)
+                    for _ in range(n_boot))
+        lo, hi = bs[int(0.025 * n_boot)], bs[int(0.975 * n_boot)]
+        excl = (lo > 0) or (hi < 0)
+        print(f"[u10b] {label:38s} {pt:+8.3f} c  [{lo:+8.3f}, {hi:+8.3f}]  "
+              f"excl 0: {excl}")
+        return {"point": pt, "ci": [lo, hi], "excludes_zero": excl}
+
+    out = {"all": boot(rows, "n_all", "e_all", "per-fill, ALL flow (+0.165)"),
+           "ex002": boot(rows, "n_ex", "e_ex", "per-fill, EXCLUDING 0.02 (-0.211)"),
+           "only002": boot(rows, "n_02", "e_02", "per-fill, 0.02 class ALONE (+1.987)")}
+
+    print("\n[u10b] per-coin, EXCLUDING the 0.02 class (the headline figure):")
+    by: dict[str, list] = collections.defaultdict(list)
+    for r in rows:
+        by[r["coin"]].append(r)
+    per = {}
+    for c in sorted(by):
+        per[c] = boot(by[c], "n_ex", "e_ex", f"  {c}")
+    out["per_coin_ex002"] = per
+    print("\n[u10b] CAVEAT: window clustering misses day-level common factors; at "
+          "TWO days these intervals UNDERSTATE uncertainty.")
+    return out
+
+
 def selftest() -> int:
     checks = 0
 
@@ -1234,6 +1511,25 @@ def selftest() -> int:
     ok(len({"0xaa"} - {"0xaa"}) == 0, "CONTROL: two-sided maker is excluded from pure buyers")
     ok(len({"0xaa"} - {"0xbb"}) == 1, "CONTROL: pure buyer survives the exclusion")
 
+    # U10 controls: the bootstrap/dispersion machinery must separate a real
+    # difference from noise, or NOISE-CONSISTENT would be unfalsifiable.
+    ok(abs(_wtd_edge([{"num": 2.0, "den": 100.0}, {"num": 0.0, "den": 100.0}]) - 1.0) < 1e-9,
+       "share-weighted edge arithmetic")
+    ok(_wtd_edge([]) != _wtd_edge([]) or True, "empty edge does not crash")
+    import math as _m
+    ok(_m.isnan(_wtd_edge([{"num": 0.0, "den": 0.0}])), "zero volume -> NaN not ZeroDivision")
+    _a = [{"num": 1.0, "den": 100.0}] * 50
+    _b = [{"num": -1.0, "den": 100.0}] * 50
+    ok(_wtd_edge(_a) > 0 > _wtd_edge(_b), "CONTROL: opposite-sign groups score opposite")
+    _disp = lambda es: (sum((e - sum(es) / len(es)) ** 2 for e in es) / len(es)) ** 0.5
+    ok(_disp([1.0, 1.0, 1.0]) == 0.0, "CONTROL: identical coins have zero dispersion")
+    ok(_disp([1.0, -1.0]) == 1.0, "CONTROL: split coins have non-zero dispersion")
+
+    ok(abs(_perfill([{"n": 2, "e": 0.04}], "n", "e") - 2.0) < 1e-9, "per-fill arithmetic")
+    import math as _m2
+    ok(_m2.isnan(_perfill([{"n": 0, "e": 0.0}], "n", "e")), "per-fill zero fills -> NaN")
+    ok(_perfill([{"n": 1, "e": 1.0}], "n", "e") > 0 >
+       _perfill([{"n": 1, "e": -1.0}], "n", "e"), "CONTROL: per-fill sign separates")
     ok(GAPS.exists(), "collector_gaps.jsonl present")
     ok(GFF1_V3.exists(), "gff1_side_v3.json present")
     ok(MARKETS.exists(), "markets.jsonl present")
@@ -1243,7 +1539,7 @@ def selftest() -> int:
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("step", nargs="?", choices=["u1","u1b","u2","u3","u3b","u4","u5","u6","u7","u8","u9"])
+    ap.add_argument("step", nargs="?", choices=["u1","u1b","u2","u3","u3b","u4","u5","u6","u7","u8","u9","u10","u10b"])
     ap.add_argument("--selftest", action="store_true")
     args = ap.parse_args()
     if args.selftest:
@@ -1257,7 +1553,7 @@ def main() -> int:
     if args.step == "u4":
         u4()
         return 0
-    for k, fn in (("u5", u5), ("u6", u6), ("u7", u7), ("u8", u8)):
+    for k, fn in (("u5", u5), ("u6", u6), ("u7", u7), ("u8", u8), ("u10", u10), ("u10b", u10b)):
         if args.step == k:
             fn()
             return 0

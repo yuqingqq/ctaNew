@@ -43,14 +43,17 @@ decomposition must reconcile to (III) on the same fills; where it does not,
 model is the object to build: it is the only term in (I)–(II) that is both
 decisive and fully observed.
 
-### Headline finding (U4): on real flow, makers lose per fill
+### Headline finding (U4 + U10/U10b): the sign is UNDETERMINED at two days
 
 Measured model-free, in-window, n=447,380 fills:
 
 ```
-all flow                        per-fill  +0.165 c     share-wtd  +0.173 c
-EXCLUDING the 0.02 class        per-fill  -0.211 c     share-wtd  +0.172 c
-the 0.02 class alone            per-fill  +1.987 c  -- CAPACITY ~$91 / 2 DAYS
+                          point      95% window-clustered CI     excludes 0
+all flow        per-fill  +0.165 c   [-0.377, +0.734]            NO
+EXCLUDING 0.02  per-fill  -0.211 c   [-0.849, +0.457]            NO
+0.02 class only per-fill  +1.987 c   [+1.529, +2.440]            YES -- but
+                                      CAPACITY ~$91 / 2 DAYS
+all flow      share-wtd   +0.173 c   [-0.251, +0.596]            NO
 ```
 
 **The only positive per-fill maker edge in this tape is against a single
@@ -60,12 +63,29 @@ $4,740,742 for everything else, and its entire maker edge is **$30.42 in the
 subset, ~$91 scaled across the full tape over two days** — order tens of dollars,
 market-wide. It cannot be harvested at any size.
 
-**Strip it out and the maker loses −0.211 ¢ per fill on real flow.** The pooled
-positive exists only because of that counterparty. Share-weighted the edge stays
-mildly positive (+0.172 ¢) because a maker earns per share, not per fill — so the
-two weightings answer different questions and **both must be carried** (R-DUAL).
-This is not a footnote to the flow model; it is the condition the flow model
-exists to explain.
+**Strip it out and the per-fill point estimate is −0.211 ¢. That is NOT a
+finding that makers lose.** Its window-clustered CI is **[−0.849, +0.457]** and
+**spans zero** (U10b). An earlier draft of this plan stated it as fact and it
+was relayed onward as *"on real flow, makers lose per fill"*; **that claim is
+withdrawn.**
+
+**The only edge in this entire analysis that separates from zero is the one
+against the single-actor class: +1.987 ¢/fill, CI [+1.529, +2.440] — and it has
+~$91 of capacity across two days, market-wide.** Its interval is tight precisely
+because it is one counterparty behaving consistently. So the sole statistically
+distinguishable maker edge in the tape is un-harvestable by construction, and
+everything on real flow is undetermined.
+
+**Two claims here must be kept apart** — conflating them is how the +0.45
+survived two sessions:
+
+- **The estimator claim (SURVIVES, independent of any interval):** the two
+  weightings **diverge in sign** on the same fills, so a single-weighting
+  specification would have reported "+0.165 ¢, makers profitable" and never
+  revealed that the positive rests on one counterparty. That is a statement
+  about **estimator behaviour** and R-DUAL stands on it.
+- **The economic claim (DOES NOT SURVIVE):** "makers lose on real flow" needed
+  the interval, and the interval spans zero.
 
 **Cost inputs, settled — folded in and moved past.** `f(p) = 0.07·p(1−p)`
 $/share, matched to four decimals across the full moneyness range at **n = 600**;
@@ -128,11 +148,19 @@ Pairing U8's ATM spread against U4's share-weighted maker edge:
 
 The extremes agree — narrowest (btc) is thin, widest (hype) is best — but the
 middle **splits almost symmetrically at every width**. A monotone
-"wide spread ⇒ good business" reading is **false**, and it is the inference a
-casual reader takes from the extremes alone. What the pattern is consistent with
-is that a wide spread **prices adverse-selection risk** rather than conferring
-free edge: the compensation and the hazard scale together, so width alone
-predicts nothing. Away from the money the tick becomes 0.001
+"wide spread ⇒ good business" reading is **false**.
+
+**An earlier draft attached a mechanism to this — that a wide spread prices
+adverse-selection risk, so compensation and hazard scale together. That is
+WITHDRAWN (U10).** Scattered signs at every width is *equally* what all-coins-
+near-zero plus sampling noise looks like, and window-clustered inference cannot
+tell the two apart here: **not one of the seven per-coin CIs excludes zero**
+(931 windows, 10,000 resamples), and the permutation test on coin labels gives a
+marginal **p = 0.0482** that names no coin. **The pooled edge also spans zero:
++0.1727 ¢/share, 95 % CI [−0.2509, +0.5963].**
+
+What survives is the **negative** result only: **spread width does not predict
+maker edge.** No positive mechanism is claimed. Away from the money the tick becomes 0.001
 (6.4–16.2 % of tail quotes, coin-dependent) and the half-spread falls 10× while
 a proportional fee does not.
 
@@ -471,6 +499,10 @@ mid-conditioned and inherited `stale_book_contamination`; it is also the same
 number as the "+95 bps maker gross" claim. A **model-free rebuild** — needing no
 mid and no book, only trade price, taker side and the settled winner — gives
 **+0.173 ¢/share share-weighted in-window** (n=447,380 fills), ~2.6× lower.
+**But that point estimate is not distinguishable from zero**: window-clustered
+bootstrap over 931 windows gives **95 % CI [−0.2509, +0.5963]** (U10). It
+corrects the magnitude of the old figure; it does **not** establish a positive
+maker edge.
 
 Against a 0.50 ¢ half-spread that implies adverse selection of **~0.33 ¢/share**,
 which is entirely plausible against a 225 bps barrier — where +0.45 had implied
@@ -478,9 +510,12 @@ an implausible ~0.05 ¢. The premise of the flow model is unchanged; the number
 it rests on is now measured rather than inherited.
 
 **And R-DUAL earned its place here.** Excluding the 0.02 single-actor class the
-**per-fill** figure goes *negative* (−0.211 ¢) while the **share-weighted**
-figure is unmoved (+0.172 ¢). Count-weighted maker edge is positive *only*
-because of that one actor. The share-weighted figure is the economically
+**per-fill** point goes *negative* (−0.211 ¢, CI [−0.849, +0.457], **spans
+zero**) while the **share-weighted** point is unmoved (+0.172 ¢, CI
+[−0.251, +0.596], also spans zero). Count-weighted maker edge is positive *only*
+because of that one actor — an **estimator** finding, which survives; the
+economic reading "makers lose" does **not**, because neither interval excludes
+zero. The share-weighted figure is the economically
 meaningful one — a maker earns per share, not per fill — and it is the robust
 one. Two weightings disagreeing in sign is exactly the finding a single
 weighting would have hidden.
@@ -504,14 +539,40 @@ sign); post-close **−1.732 ¢** against a cited −1.46 — **that is T3's
 known-answer validation stratum passing**, which is what licenses trusting the
 same pipeline in-window where no ground truth exists.
 
-### No interval is computable, and that is structural
+### Intervals: window-clustered ones EXIST; day-clustered ones do not
 
-**Two collected days ⇒ no day-clustered CI exists for any U4 figure.** These are
-point estimates with **unknown sampling error**, not estimates with wide
-intervals. Anything downstream requiring an interval — a gate verdict, a
-significance claim, a comparison of two coins — is **`Unavailable`** until the
-day count grows, and must return that rather than a number. This is a refusal,
-not a caveat.
+**Two collected days ⇒ no day-clustered CI.** But ~3,000 windows are largely
+independent *within* a day, so a **window-clustered** bootstrap is available and
+was run (U10, U10b). Every such interval on real flow **spans zero**.
+
+**The two are not interchangeable.** Window clustering cannot capture day-level
+common factors, so these intervals **UNDERSTATE** true uncertainty. Excluding
+zero would be **necessary, not sufficient**, for a day-robust claim — and on
+real flow nothing excludes zero even at the understated width.
+
+Anything downstream requiring a **day-robust** interval remains `Unavailable`
+until the day count grows. That is a refusal, not a caveat.
+
+### Where the programme actually stands
+
+The chain is **cost → sign → marginality → scale**.
+
+- **Cost — settled, bar `ρ`.** Makers pay ~0 on 98.7 % of legs, the taker
+  formula is confirmed to four decimals, and the residual 1.3 % is a per-address
+  tier. `ρ` alone stays `Unavailable` (U7, U11).
+- **Sign — MEASURED AND UNDETERMINED at two days.** Not negative, not positive.
+  Pooled share-weighted +0.173 [−0.251, +0.596]; per-fill on real flow −0.211
+  [−0.849, +0.457]; all seven per-coin intervals under both weightings — every
+  one spans zero. The permutation test on coin labels (p=0.0482) names no coin.
+  **The only interval excluding zero is +1.987 against the single-actor class,
+  which carries ~$91 of capacity over two days.**
+- **Marginality (C3) and Scale (C4)** are therefore **not merely blocked by the
+  queue question.** They sit behind a **sign that only more days can resolve**.
+  Answering the queue question perfectly would still not say whether there is
+  anything to harvest.
+
+**The working conclusion is neither "makers lose per fill" nor "makers earn
++0.17". It is that two days cannot tell, and the binding input is calendar.**
 
 ### 3.4 The tick, now READ (U2 `CLEARED`) — and it is a constraint, not a convention
 
