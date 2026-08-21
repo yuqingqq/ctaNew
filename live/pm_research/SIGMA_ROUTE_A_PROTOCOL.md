@@ -183,6 +183,31 @@ admissible rows identical, 10,688 OOS rows identical, **all 42 fits identical**.
 Excluded windows are **not busier** than retained ones — which is the opposite of
 the CLOB `1013` pattern and argues these exclusions are closer to MAR than MNAR.
 
+> **WITHDRAWN 2026-08-21 02:30.** This reading does not hold. It used a
+> displacement statistic (max-minus-min range, and net settlement return) to
+> answer a question about *variance*. On the confound-free comparison — the same
+> 2,702 rows, both statistics present, a fixed 310 s span — excluded windows show
+> **1.53× the quadratic variation** of retained ones (`s30_window_coverage`, the
+> dominant reason at n=2,820, is **1.79×**) while showing **0.87×** the net
+> settlement return. They are *choppier*, not quieter.
+>
+> The confound direction strengthens this rather than explaining it: QV over a
+> fixed span is time-additive, so a gap merges increments without changing the
+> expected total, and fewer ticks means less microstructure-noise accumulation —
+> which biases QV **down**. 1.53× is therefore a floor.
+>
+> **The corrected conclusion is the opposite: these exclusions are MNAR with
+> respect to variance, the very quantity Route A estimates.** The hedge attached
+> to the original reading ("the true ratio is >= 0.88 and may be ~1") had the
+> right direction and the wrong magnitude; the real mistake was choosing a
+> displacement measure for a variance question.
+>
+> Not over-claimed in turn: this is medians on one snapshot with no
+> day-clustered intervals. It is better evidenced than what it replaces and is
+> still not a tested finding. Report QV over a fixed span as the primary
+> statistic and settlement return as secondary, and never a single one alone —
+> the two point opposite ways.
+
 **Do not bank that yet.** `realised_bps` is a max-minus-min range over the ticks
 actually present, and coverage-excluded windows have *fewer* ticks by
 construction, which mechanically shrinks an observed range. The confound pushes
