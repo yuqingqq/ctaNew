@@ -220,6 +220,15 @@ flags:
                              # proxies, coverage, ages and separately hashed
                              # price-gap cause/version attribution. Gap data is
                              # audit-only and cannot change v1 eligibility.
+  measurement_foundation: step1-executable-contract-pending
+                             # da_state.py implements the offline SourceProfile-
+                             # bound Known factory, nominal clocks, associative
+                             # knowledge-error composition, knowledge-truncated
+                             # StateView and refusal telemetry. 15 focused checks
+                             # plus real TWAP/CLOB record smoke tests pass. This
+                             # is infrastructure only: the v12 measurement delta
+                             # still needs rebasing onto canonical contracts v16;
+                             # no CLOB result or decision gate is authorized.
   sigma_plan_review: iter5-measurement-go # SIGMA_PLAN_REVIEW_ITER5.md reviews
                              # 58f6716. All ITER4 specification blockers pass.
                              # Three implementation cleanups remain (duplicate
@@ -331,9 +340,12 @@ focus: >
   and route_a_v1 now emits a unique accepted/excluded (slug,horizon) selection
   ledger with separately hashed price-gap cause/version attribution. Do not fit
   or inspect v2 on its primary evaluation days before its formal run, and do not
-  let the audit ledger alter v1 eligibility. Useful non-blocking work is now
-  Phase 0A step 5 (Route-B-only sampling semantics) and the known contracts
-  cleanup; the programme-level next event remains the unchanged v1 day-10 run.
+  let the audit ledger alter v1 eligibility. Post-sigma measurement work has
+  started with the fail-closed knowledge-time foundation; next rebase its stale
+  v12 contract delta onto canonical v16, then build Tier-1 distillation and
+  coverage/admissibility. Phase 0A step 5 and the known contracts cleanup also
+  remain non-blocking; the programme-level next event is still the unchanged
+  v1 day-10 run.
   PRIOR: ROUTE-A MEASUREMENT EXECUTED under frozen route_a_v1: 9,332 admissible rows,
   5,796 OOS rows and 42 per-symbol/horizon fits. One OOS day makes all 84 gates
   INSUFFICIENT_EVIDENCE; the candidate is measurable but not pricing-ready.

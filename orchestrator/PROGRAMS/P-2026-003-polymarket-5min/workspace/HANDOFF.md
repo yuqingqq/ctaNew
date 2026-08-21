@@ -125,15 +125,32 @@ to affect eligibility. A temporary full run over 2,943 final resolutions emitted
 3,014 excluded, with zero duplicates. Those counts include the incomplete
 2026-08-21 day and are verification figures, **not a new v1 result**.
 
+**The post-sigma measurement foundation has started.**
+`live/pm_research/da_state.py` implements the first DA-State build milestone:
+nominal event/knowledge clocks, a `SourceProfile`-bound factory as the only
+supported `Known` constructor, strict non-observed imputation rules, associative
+knowledge-error composition, a knowledge-truncated `StateView`, and refusal
+telemetry. Fifteen focused checks pass, along with read-only construction from
+real TWAP and CLOB collector rows. The TWAP adapter explicitly selects the
+Chainlink payload event timestamp rather than the later envelope publication
+timestamp. This is **offline infrastructure, not a CLOB result**. The proposed
+measurement contract delta still targets v12 and must be rebased onto canonical
+contracts v16 before this boundary is declared integrated.
+
 ### Residuals — open, in priority order
 
 1. **`PING_TIMEOUT` classification, unresolved at n=8.** It is **8/8 BTC**, which
    behaves like the MNAR `SLOW_CONSUMER_1013` class, not like the across-coins
    MAR cycling class where `3b9bddc` grouped it. If it stays BTC-only as n grows,
    the cause-aware rule must move it. Accumulate before amending.
-2. **Phase 0A 5 — S30/S60 internal sampling semantics.** This still gates Route
+2. **Measurement-layer contract integration.** Rebase
+   `contracts_measurement_delta.yaml` from v12 onto canonical contracts v16,
+   freeze the measurement preregistration, then build the Tier-1 distiller and
+   cause-aware coverage/admissibility ledger. Do not run a headline book,
+   markout or flow/fill result before those boundaries land.
+3. **Phase 0A 5 — S30/S60 internal sampling semantics.** This still gates Route
    B only; the route-A fit remains descriptive until 10 OOS days.
-3. **Contracts cleanup.** Remove the duplicate YAML `ReducedFormFit` and stale
+4. **Contracts cleanup.** Remove the duplicate YAML `ReducedFormFit` and stale
    `ReducedFormLaw`, make the contract loader reject duplicate keys, totalize
    malformed-input refusals and validate `GateEvidence.effect_size`.
 
