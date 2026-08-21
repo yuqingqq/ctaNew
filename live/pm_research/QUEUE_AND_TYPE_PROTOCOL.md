@@ -101,3 +101,25 @@ the burden is on the layer, not on the reader.
 
 Profitability, maker edge, adverse selection. The sign is measured and
 UNDETERMINED at two days and no test here changes that.
+
+## ERRATUM 2026-08-21 — post-run, non-analytic
+
+C1's verdict `UNIDENTIFIABLE` stands: **queue position cannot be inferred from
+the tape**, and cancellation cannot recover it. That measurement is unchanged.
+
+What was over-stated is the CONSEQUENCE drawn from it. This protocol, and the
+report written from it, treated the FRONT/BACK bracket as an epistemic limit on
+whether fill is determinable at all. It is not. **Queue position is an output of
+the placement policy**: quote a level as it forms and you are at the front; join
+an existing level and you are behind its displayed depth. The bracket is the
+span across placement policies, and it collapses once a policy is named.
+
+The residual genuinely unobserved quantity is narrower — whether a new-BBO quote
+**wins the race** against other participants doing the same, which depends on
+our latency and theirs. So `FRONT` is an upper bound on the new-BBO policy
+rather than a guarantee.
+
+This changes no number in the C1 result and no verdict. It changes what the
+programme should do next: a **policy comparison** (fill AND fill-conditional
+markout, per placement rule) rather than a sensitivity sweep over an assumed
+parameter.

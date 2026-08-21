@@ -443,6 +443,16 @@ all and you get FRONT; credit none and you get BACK_DISPLAYED; the interior
 needs an ASSUMPTION, not a bound.
 **THE BRACKET WIDTH IS THE QUEUE-POSITION AMBIGUITY RESTATED, and cancellation
 data cannot reduce it because the missing quantity is the same one.**
+**CORRECTED 2026-08-21: that is right about INFERENCE and wrong about what it
+implies.** Queue position is an OUTPUT OF THE PLACEMENT POLICY -- new-BBO puts
+you at the front, joining an existing level puts you behind its depth -- so
+FRONT/BACK is the span across POLICIES, not an epistemic bracket, and it
+collapses once a policy is named. The strategy defines the measurement rather
+than waiting on it. What is genuinely unobserved is narrower: whether a
+new-BBO quote WINS THE RACE against others doing the same, which depends on
+latency we do not observe -- so FRONT is an upper bound on that policy, not a
+guarantee. Next step is a POLICY COMPARISON (fill AND fill-conditional markout
+per placement rule), not a sweep over an assumed parameter.
 Consequence is close to "fill is not determinable from data we can collect" —
 but NOT for the expected reason: displayed depth ahead does not trade through,
 it **churns**, and we cannot tell whose.

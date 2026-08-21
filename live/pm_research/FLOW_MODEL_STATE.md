@@ -45,11 +45,27 @@ the other document is stale. Say so rather than reconciling it privately.
 
 ## 3. Not knowable on this data — do not schedule work against these
 
-- **Queue position.** The fill bracket *is* the queue-position ambiguity.
-  Cancellation cannot reduce it: cancellation **volume** is abundant (86–99 % of
-  actions saturated) while cancellation **position** is the same missing
-  quantity. Credit all → `FRONT`; credit none → `BACK_DISPLAYED`; the interior
-  needs an assumption, not a bound.
+- **Queue position CANNOT BE INFERRED FROM THE TAPE** — displayed L2 shows how
+  much size sits at a level, never whose or in what order, and cancellation
+  cannot recover it (we see 40 shares leave, not *which* 40). Cancellation
+  **volume** is abundant, 86–99 % of actions saturated; cancellation
+  **position** is the missing quantity.
+
+  **CORRECTED 2026-08-21 — but this does NOT mean fill is undeterminable, and an
+  earlier version of this page said it did.** Queue position is an **OUTPUT OF
+  THE PLACEMENT POLICY**, not an unknown of nature. Quote a level as it forms
+  (new-BBO) and you are at the front; join an existing level and you are behind
+  its displayed depth. So `FRONT`/`BACK_DISPLAYED` is **the span across placement
+  policies, not an epistemic bracket**, and it collapses to a definite number the
+  moment a policy is named. **The strategy defines the measurement; it is not
+  downstream of it.**
+
+  What genuinely remains unobserved is narrower: **whether a new-BBO quote
+  actually wins the race** against other participants doing the same. That
+  depends on our latency and their behaviour, neither of which is in this tape.
+  So `q ≈ 0` is an **upper bound on the new-BBO policy**, not a guarantee, and
+  the interior of the bracket is reachable by losing races rather than by
+  ignorance.
 - **Sub-millisecond structure.** The venue timestamps in **milliseconds**. Our
   `recv_ns` is stamped at parse time and manufactures a 0–50 µs pile-up
   (26 µs median, 16.2× Poisson on btc). No collector change fixes this — the
@@ -106,10 +122,14 @@ its own moment, not a statement of current belief.
 
 ## 7. What is next, and what blocks it
 
-1. **Nothing about the fill bracket.** It is structural. Either proceed under an
-   explicit queue-position assumption with sensitivity across FRONT↔BACK, or
-   treat it as the programme-ending answer. That is a decision, not a
-   measurement.
+1. **The fill bracket is a POLICY COMPARISON, not a pending measurement.**
+   Specify concrete placement policies — new-BBO (front) and join-BBO (back) at
+   minimum — and measure fill **and fill-conditional markout for each**. That
+   yields a comparison of real strategies instead of a bracket over an unknown.
+   Expect the two to trade off rather than rank: new-BBO wins on fills (94.6 %
+   vs 76.9 % on btc) and plausibly **loses on markout**, because it quotes when
+   the level is forming, thin, and information is freshest. Measuring only the
+   fill side would flatter it.
 2. **Layer retention** needs ~10 forward days in one collector era. Days only.
 3. **The maker-edge sign** needs ~25–30× current data. Days only, and many.
 4. **`U9`** re-runs itself unchanged when `PING_TIMEOUT` reaches n=12.
