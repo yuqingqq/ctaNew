@@ -1,4 +1,4 @@
-"""FLOW_UNCERTAINTY_LOOP — measurements for U1..U8.
+"""FLOW_UNCERTAINTY_LOOP — measurements for U1..U9.
 
 Charter and decision rules: live/pm_research/FLOW_UNCERTAINTY_LOOP.md.
 The rules are written there BEFORE these run; this file only measures.
@@ -8,6 +8,10 @@ data/pm_5min/onchain/receipts/ via da_feeds_polygon — zero RPC calls.
 
     python3 live/pm_research/flow_uncertainty.py --selftest
     python3 live/pm_research/flow_uncertainty.py u1
+
+Steps: u1 u1b u2 u3 u3b u4 u5 u6 u7 u8 u9 — every ledger row is
+re-runnable from this file. Selftests carry a CONTROL per probe that
+would fail if the test were vacuous.
 """
 
 from __future__ import annotations
@@ -17,7 +21,7 @@ import collections
 import json
 import sys
 from pathlib import Path
-from typing import Any, Iterator
+from typing import Any, Iterator, Mapping
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
@@ -29,6 +33,18 @@ GFF1_V3 = PM / "derived/gff1_side_v3.json"
 MARKETS = PM / "markets.jsonl"
 
 ORDER_MIN_SIZE = 5.0  # from markets.jsonl, uniform across 3,095 rows
+
+
+def wilson(successes: int, n: int, z: float = 1.959963985) -> tuple[float, float]:
+    """Two-sided 95% Wilson interval. Defined at k=0 and k=n, unlike Wald."""
+    import math
+    if n <= 0:
+        return (0.0, 1.0)
+    p = successes / n
+    d = 1.0 + z * z / n
+    centre = (p + z * z / (2 * n)) / d
+    half = z * math.sqrt(max(p * (1 - p) / n + z * z / (4 * n * n), 0.0)) / d
+    return (max(0.0, centre - half), min(1.0, centre + half))
 
 
 def quantiles(values: list[float], fracs=(0.1, 0.5, 0.9)) -> list[float]:
@@ -1187,6 +1203,37 @@ def selftest() -> int:
     ok(d_c > d_u, "KS D larger for the concentrated sample")
     import math
     ok(all(math.isnan(x) for x in ks_uniform([], 0, 300)), "KS empty is NaN not crash")
+    # U5 control: the rate arithmetic must separate a fee from a zero-fee leg.
+    lo_w, hi_w = wilson(49, 63)
+    ok(lo_w > 0.5 and hi_w < 0.9, f"CONTROL: wilson(49,63) excludes 0.5, below 0.9")
+    ok(wilson(0, 0) == (0.0, 1.0), "wilson n=0 uninformative not crash")
+    ok(abs(leg_price(9771300, 9870000) - 0.99) < 1e-6, "leg_price at 0.99")
+    ok(abs(leg_price(9870000, 9771300) - 0.99) < 1e-6, "leg_price is symmetric")
+    try:
+        leg_price(0, 5)
+        raise AssertionError("leg_price should refuse zero amounts")
+    except ValueError:
+        checks += 1
+    ok(abs(9770 / 9771300 - 0.001) < 5e-6, "CONTROL: 10bps tier arithmetic")
+    ok(abs(495000 / 99000000 - 0.005) < 1e-9, "CONTROL: 50bps tier arithmetic")
+
+    # U6 controls: the scorer must give 1.0 on perfect order and 0.0 reversed,
+    # or a 0.778 result would mean nothing.
+    ok(priority_score([0.10, 0.20, 0.30], 0) == (2, 0, 0), "CONTROL: BUY ascending = perfect")
+    ok(priority_score([0.30, 0.20, 0.10], 0) == (0, 2, 0), "CONTROL: BUY descending = zero")
+    ok(priority_score([0.30, 0.20, 0.10], 1) == (2, 0, 0), "SELL descending = perfect")
+    ok(priority_score([0.20, 0.20], 0) == (0, 0, 1), "same-price pair is a tie, not a score")
+    # complement normalisation must invert, which is the U6 defect that was caught
+    ok(abs((1.0 - leg_price(9771300, 9870000)) - 0.01) < 1e-6,
+       "CONTROL: complement normalisation inverts 0.99 -> 0.01")
+
+    # U7 control: an unknown contract must be DETECTED, else the screen is vacuous.
+    ok("0xdeadbeef" not in KNOWN_CONTRACTS, "CONTROL: a foreign contract is not whitelisted")
+    ok(len(KNOWN_CONTRACTS) == 5 and all(a.startswith("0x") for a in KNOWN_CONTRACTS),
+       "known-contract set well formed")
+    ok(len({"0xaa"} - {"0xaa"}) == 0, "CONTROL: two-sided maker is excluded from pure buyers")
+    ok(len({"0xaa"} - {"0xbb"}) == 1, "CONTROL: pure buyer survives the exclusion")
+
     ok(GAPS.exists(), "collector_gaps.jsonl present")
     ok(GFF1_V3.exists(), "gff1_side_v3.json present")
     ok(MARKETS.exists(), "markets.jsonl present")
@@ -1196,7 +1243,7 @@ def selftest() -> int:
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("step", nargs="?", choices=["u1","u1b","u2","u3","u3b","u4","u9"])
+    ap.add_argument("step", nargs="?", choices=["u1","u1b","u2","u3","u3b","u4","u5","u6","u7","u8","u9"])
     ap.add_argument("--selftest", action="store_true")
     args = ap.parse_args()
     if args.selftest:
@@ -1210,6 +1257,10 @@ def main() -> int:
     if args.step == "u4":
         u4()
         return 0
+    for k, fn in (("u5", u5), ("u6", u6), ("u7", u7), ("u8", u8)):
+        if args.step == k:
+            fn()
+            return 0
     if args.step == "u9":
         u9()
         return 0

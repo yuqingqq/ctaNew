@@ -1,0 +1,13 @@
+[Unit]
+Description=Retry the P-2026-003 Tier-2 evaluation pipeline hourly
+Documentation=file:///home/yuqing/ctaNew/live/pm_research/EVALUATION_PIPELINE.md
+
+[Timer]
+OnCalendar=*-*-* *:40:00 UTC
+Persistent=true
+RandomizedDelaySec=2min
+AccuracySec=1min
+Unit=pm-evaluation-pipeline.service
+
+[Install]
+WantedBy=timers.target

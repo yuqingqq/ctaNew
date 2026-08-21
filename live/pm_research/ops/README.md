@@ -42,6 +42,29 @@ while a build, validation, hash, or lock failure makes the unit fail visibly.
 The coordinator holds `tier1/.locks/measurement_batch.lock`; do not overlap the
 legacy per-coin CLI with the unattended batch writer.
 
+## Install the Tier-2 evaluation batch
+
+This timer is staggered to minute 40. It builds/reuses the complete `full` Tier-1
+batch, then writes model-free terminal markouts and the normalized calibration
+scaffold. It does not fit a model or emit an inferential result.
+
+```bash
+cp live/pm_research/ops/pm-evaluation-pipeline.{service,timer} \
+  ~/.config/systemd/user/
+systemctl --user daemon-reload
+systemctl --user enable --now pm-evaluation-pipeline.timer
+systemctl --user start pm-evaluation-pipeline.service
+```
+
+```bash
+systemctl --user status pm-evaluation-pipeline.timer
+journalctl --user -u pm-evaluation-pipeline.service -n 100 --no-pager
+```
+
+The Tier-2 job is fail-closed on a missing/non-PASS G-FF1 artifact, incomplete
+full batch, partition/hash mismatch, or writer-lock conflict. Its outputs and
+claim boundary are documented in `../EVALUATION_PIPELINE.md`.
+
 ## Before starting, stop any nohup instance first
 
 Duplicate collectors corrupt the tape and `recv_ns` dedup does **not** catch it,

@@ -1,0 +1,12 @@
+[Unit]
+Description=P-2026-003 full-batch Tier-2 evaluation pipeline
+Documentation=file:///home/yuqing/ctaNew/live/pm_research/EVALUATION_PIPELINE.md
+After=pm-measurement-pipeline.service pm-collector-prices.service pm-collector-clob.service
+
+[Service]
+Type=oneshot
+WorkingDirectory=/home/yuqing/ctaNew
+ExecStart=/home/yuqing/pricer-sol/venv/bin/python3 -m live.pm_research.evaluation_pipeline --catch-up --since 2026-08-20 --max-days 1 --scheduled --json
+Nice=12
+IOSchedulingClass=idle
+TimeoutStartSec=infinity

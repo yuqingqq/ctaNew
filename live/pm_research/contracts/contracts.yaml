@@ -1,4 +1,4 @@
-version: 19
+version: 20
 rules:
   R-SSOT:
     body: every canonical name has exactly one owning type/module
@@ -110,6 +110,35 @@ rules:
     - 'validate_all: every MeasurementBatchRun per_coin_health_hashes value identifies a PASS BundleHealth'
     - 'commit_last: MeasurementBatchRun.status == COMPLETE only after every requested coin has a bound run and health hash'
     - 'resumable: absence of MeasurementBatchRun permits immutable per-coin artifacts to be validated and reused, never treated as complete'
+  R-DERIVE:
+    body: Tier-2 evaluation artifacts consume only a validated COMPLETE full-lane
+      MeasurementBatchRun; every derived partition binds that batch hash and its
+      exact Tier-1 input manifests, and the cross-coin evaluation receipt is
+      emitted last
+    checks:
+    - 'full_batch_only: EvaluationPipelineRun.source_batch_lane == full'
+    - 'input_binding: every derived DatasetPartition binds its MeasurementBatchRun batch_hash and exact source manifest hashes'
+    - 'commit_last: EvaluationPipelineRun.status == COMPLETE only after every requested MARKOUT_EVENTS and CALIB_PANEL partition validates'
+  R-GROSS:
+    body: terminal maker markout is gross of fees, rebates and incentives; an
+      unresolved cash term may not be silently read from the websocket zero field
+    checks:
+    - 'terminal_identity: maker_edge_per_share == q_up * (price_up - outcome_up)'
+    - 'no_fee_in_markout: TerminalMarkoutObservation.fee_status == GROSS_ONLY_NOT_APPLIED'
+  R-DUAL:
+    body: every economic markout summary reports both per-fill and share-weighted
+      estimates per coin and phase; neither may substitute for or hide the other
+    checks:
+    - 'both_weights: MarkoutSummary carries per_fill_cents and share_weighted_cents from the same retained rows'
+    - 'no_pooled_primary: per-coin summaries are primary and any pooled summary is diagnostic only'
+  R-ONEROW:
+    body: the calibration scaffold contains exactly one row per window and frozen
+      decision horizon, including an explicit unavailable row when no quote is
+      knowledge-admissible
+    checks:
+    - 'identity: unique CalibrationPanelRow key is (slug, r_s)'
+    - 'complete_grid: each closed window has exactly the nine frozen r_s values'
+    - 'no_silent_drop: unavailable or invalid quote states remain rows with a named quote_status'
 types:
   Known:
     generic:
@@ -545,6 +574,79 @@ types:
       status: enum:COMPLETE
       batch_hash: Hash
     notes: sole cross-coin commit marker; immutable and emitted last under R-BATCH
+  SideConventionEvidence:
+    fields:
+      artifact_sha256: Hash
+      protocol_version: str
+      n_validated_tx: int
+      agreement: float
+      wilson95: Interval
+      threshold: float
+      verdict: enum:PASS|INSUFFICIENT_EVIDENCE|MODEL_REFUTED
+    notes: EV-Markout refuses unless the immutable artifact verdict is PASS and its Wilson lower bound meets threshold
+  TerminalMarkoutObservation:
+    fields:
+      t_known: KnowledgeTime
+      t_known_err: Duration
+      t_event: EventTime
+      slug: str
+      coin: str
+      parent_id: ImmutableId
+      phase: enum:PRE_OPEN|IN_WINDOW|POST_CLOSE|AMBIGUOUS_BOUNDARY
+      q_up: int
+      price_up: float
+      size: float
+      outcome_up: float
+      maker_edge_per_share: float
+      maker_edge_cents: float
+      maker_gross_cash: float
+      fee_status: enum:GROSS_ONLY_NOT_APPLIED
+      side_evidence_sha256: Hash
+    notes: model-free TO_RESOLUTION identity in UP coordinates; no book or fitted model enters
+  MarkoutSummary:
+    fields:
+      coin: str
+      phase: enum:PRE_OPEN|IN_WINDOW|POST_CLOSE|AMBIGUOUS_BOUNDARY
+      n_fills: int
+      shares: float
+      per_fill_cents: float
+      share_weighted_cents: float
+      gross_cash: float
+      claim_status: enum:DESCRIPTIVE_POINT_ESTIMATE
+      ci: Unavailable
+  CalibrationPanelRow:
+    fields:
+      t_known: KnowledgeTime
+      t_known_err: Duration
+      slug: str
+      coin: str
+      r_s: int
+      decision_time: KnowledgeTime
+      winner_up: bool
+      quote_status: enum:AVAILABLE|NO_ADMITTED_QUOTE|INVALID_BOUNDS|INVALID_TICK|PAIR_INCONSISTENT
+      p_book_raw: float?
+      p_book_clipped: float?
+      tick_size: float?
+      quote_staleness: Duration?
+      route_a_admissible: bool
+      model_status: enum:UNAVAILABLE_NOT_ATTACHED
+      isotonic_status: enum:UNAVAILABLE_REQUIRES_WALK_FORWARD_HISTORY
+    notes: normalized scoring scaffold only; it does not fit or score a model
+  EvaluationPipelineRun:
+    fields:
+      pipeline_version: str
+      pipeline_code_sha256: Hash
+      target_day: str
+      coins: list[str]
+      source_batch_lane: enum:full
+      source_batch_hash: Hash
+      side_evidence_sha256: Hash
+      per_coin_markout_manifest_hashes: dict[str, Hash]
+      per_coin_calib_manifest_hashes: dict[str, Hash]
+      claim_status: enum:DESCRIPTIVE_ARTIFACTS_ONLY
+      status: enum:COMPLETE
+      run_hash: Hash
+    notes: sole cross-coin Tier-2 commit marker; no inference, model fit or decision authorization
   Gap:
     fields:
       from: EventTime
@@ -1323,6 +1425,47 @@ modules:
     - read_all
     - telemetry_out
     notes: offline research composition root for R-BATCH; it exposes no venue or decision port
+  EV-SideConvention:
+    produces:
+    - SideConventionEvidence
+    ports:
+    - read_all
+    notes: offline frozen G-FF1 evidence loader; no decision-facing port
+  EV-Markout:
+    consumes:
+    - MeasurementBatchRun
+    - DatasetPartition
+    - SideConventionEvidence
+    produces:
+    - TerminalMarkoutObservation
+    - MarkoutSummary
+    - DatasetPartition
+    - HealthEvent
+    ports:
+    - read_all
+    notes: computes gross model-free TO_RESOLUTION maker markout under R-GROSS/R-DUAL
+  EV-Calibration:
+    consumes:
+    - MeasurementBatchRun
+    - DatasetPartition
+    produces:
+    - CalibrationPanelRow
+    - DatasetPartition
+    - HealthEvent
+    ports:
+    - read_all
+    notes: materializes the R-ONEROW book scaffold; model and isotonic arms remain unavailable
+  EV-Orchestrate:
+    consumes:
+    - MeasurementBatchRun
+    - DatasetPartition
+    - SideConventionEvidence
+    produces:
+    - EvaluationPipelineRun
+    - HealthEvent
+    ports:
+    - read_all
+    notes: offline R-DERIVE composition root; it exposes no state, venue or decision port
   DE-Constraints:
     consumes:
     - DecisionProblem

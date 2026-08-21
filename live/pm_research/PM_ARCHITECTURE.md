@@ -1,13 +1,16 @@
 # PM_ARCHITECTURE — structure for P-2026-003
 
 The explanatory prose baseline is version 12 (2026-08-20); the machine-readable
-canonical contract is now **v19**. Versions 13–16 landed the sigma route and v17
+canonical contract is now **v20**. Versions 13–16 landed the sigma route and v17
 lands the measurement-infrastructure boundary: nominal event/knowledge clocks,
 strict source profiles, factual coverage separated from admissibility decisions,
 and DA-Normalize/DA-Coverage/DA-State ownership. Version 18 adds point-in-time
 coverage refusal and the harness-only event-time leak canary. Version 19 adds the
 DA-Canary/DA-Orchestrate boundary and a commit-last, single-writer batch contract
-across the requested coin universe. When this prose and `contracts/contracts.yaml`
+across the requested coin universe. Version 20 adds the full-batch-gated Tier-2
+boundary: model-free terminal markout, a point-in-time calibration scaffold,
+dual weighting, explicit unavailable rows, and a second commit-last receipt.
+When this prose and `contracts/contracts.yaml`
 differ, the YAML remains authoritative. Score history on the 13-change replay:
 v1 5/3/5 · v2 7/4/2 · v4 9/2/2 · v5 9/3/1 · v6–v10 11/0/2 · **v11 11/1/1**
 (target 0 STRUCTURAL, ≤1 SPREADING). Open: M12-2 validator dispatch, M12-3
@@ -62,6 +65,10 @@ Naming: SP/DA/BE/DE/EV/OP modules; `EXP-*` experiments.
 | **R-ADMISS** | coverage facts and selection decisions are separate; only frozen hash-matched rules evaluate, and exclusion requires both arms |
 | **R-CANARY** | every replay diagnostic pairs `StateView` with a harness-only leaky `EventTimeView` and records whether selected states differ |
 | **R-BATCH** | preflight all requested coins, hold one writer lock, validate every bundle, and emit the immutable cross-coin receipt last; uncommitted artifacts are resumable staging |
+| **R-DERIVE** | Tier-2 derives only from a validated complete `full` batch, binds exact inputs, and commits across coins last |
+| **R-GROSS** | terminal maker markout is the model-free gross identity; websocket fee zero is never applied |
+| **R-DUAL** | every economic markout summary reports both per-fill and share-weighted estimates per coin and phase |
+| **R-ONEROW** | calibration has exactly one row per window/frozen horizon; unavailable quotes remain named rows |
 
 ---
 
@@ -482,7 +489,7 @@ ReplayEnv. `OP-LatencyBudget`: four legs, ack unobserved.
 
 ## 11. Build order (demand-driven)
 1. `Known[V]` + `t_known_prov` + `Unavailable` in DA (`recv_ns` is on disk).
-2. EV-Markout / EV-Calibration on real state (~4 spec facts).
+2. EV-Markout / EV-Calibration Tier-2 artifacts on complete `full` batches.
 3. EXP-IMPACT (AS partition sign) · EXP-BLEND (belief constituents).
 4. `L_adv` + `DE-Allocator` + STOP gate before any order.
 
@@ -492,10 +499,10 @@ ReplayEnv. `OP-LatencyBudget`: four legs, ack unobserved.
 |---|---|---|
 | DA-Feeds | PMMarketWS, PMPricesWS, BinanceWS, GammaREST, ClobREST | PolygonRPC |
 | DA-Discovery | collect_pm discovery loop | — |
-| DA-Normalize / DA-State / DA-Settlement | — | all |
+| DA-Normalize / DA-State / DA-Settlement | Tier-1 v3, coverage, point-in-time views, closed-day coordinator | settlement spec adapter |
 | BE-* | — | all (Target, Uncertainty, Belief, FlowAndFills, Competition, ScenarioProvider) |
 | DE-* | — | all |
-| EV-Markout / EV-Calibration | methodology only | harness |
+| EV-Markout / EV-Calibration | Tier-2 terminal markout + normalized book scaffold | fitted/scored arms after sufficient days |
 | ControlSolver | — | ClosedFormGLFT, PerLevel, HJBQVI |
 | UtilityFunctional | — | RiskNeutral, CARA, PathFunctional |
 

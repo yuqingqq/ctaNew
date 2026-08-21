@@ -95,6 +95,7 @@ python3 -m live.pm_research.tier1_pipeline --selftest
 python3 -m live.pm_research.replay_canary --selftest
 python3 -m live.pm_research.daily_pipeline --selftest
 python3 -m live.pm_research.measurement_batch --selftest
+python3 -m live.pm_research.evaluation_pipeline --selftest
 ```
 
 The checked-in user service and timer are documented in `ops/README.md`. The
@@ -125,3 +126,8 @@ can occur after 2026-08-21 closes.
 
 The all-coin batch receipt is likewise absent until that real non-partial run.
 Infrastructure completion is not being reported as a sigma-model result.
+
+The next offline stage is documented in `EVALUATION_PIPELINE.md`. It requires a
+separate `full` batch receipt because terminal markout and the calibration
+scaffold consume normalized trades and quotes; the sigma measurement receipt
+does not pretend to contain those inputs.
