@@ -24,7 +24,8 @@ the other document is stale. Say so rather than reconciling it privately.
 | **0.001 tick exists only in the tails** | 6.75 % at `p<0.15`, 6.73 % at `p≥0.85`, **0 % in the middle three buckets** | btc |
 | **One address is a large share of arrivals** | 0.02 shares exactly, 99.98 % SELL, all seven coins, **0.0145 % of notional** | **per coin 2.0 % (btc) → 90.0 % (hype)**; the pooled 16.3 % is btc-dominated |
 | **That address is NOT independent of market flow** | A1 fails on all 7; ratio 1.75–2.79, p=0.000; direction **bidirectional/common-driver** | τ=0.25 s, circular-shift null |
-| **`f_r` does not rise into settlement** | count: flat then terminal collapse. notional: **rises, peaks in the second half, then falls** | 945 windows, `clob_v3_1` |
+| **`f_r` does not rise into settlement** | count: flat then terminal collapse. notional: rises, peaks, then falls — **peak located to the first 5 s inside `r=60`** (btc notional 97→119 through the body, **170.4** at the peak, then a monotone **9.5×** decline to 18.0) | 361 windows/coin, `clob_v3_1` |
+| **The terminal minute contains essentially ALL of `f_r`'s dynamic range** | on btc/eth/sol/doge the terminal collapse ratio **equals the full-profile shape ratio exactly**; six of seven coins on notional | 361 windows/coin |
 | **The terminal regime is FEW AND LARGE** | count drops to 18 % of peak while notional holds 28 %; USDC/arrival 15.5 → 24.0 (btc), 11.9 → 32.3 (eth) | btc/eth |
 | **Book state carries real information** | B3 placebo does not reproduce the gain on any coin (btc −0.03 share, hype 0.02) | 24 windows/coin |
 | **Market self-excitation is not deletable** | bivariate 2×2: diagonal 0.18–0.45 dominates cross 0.02–0.18 on every coin | scalar fit re-run below; the BIVARIATE fit is still grid-seeded |
@@ -79,9 +80,28 @@ the opposite reason.
   required 12. It is **49 % of all lost time**.
 - **The maker rebate `ρ`.** No per-trade in-transaction rebate found; that is
   **not** absence of a rebate. Every `ρ`-dependent estimand stays `Unavailable`.
-- **`f_r`'s terminal mechanism.** The settlement TWAP lock-in is the natural
-  explanation and is **confounded with a 60 s artefact** — window phase and
-  wall-clock minute phase are perfectly collinear here.
+- **`f_r`'s terminal mechanism — THE CONFOUND IS PARTIALLY BROKEN, 2026-08-22.**
+  This entry previously said the mechanism was unidentifiable because window
+  phase and wall-clock minute phase are perfectly collinear. The collinearity is
+  real, but the two hypotheses were **never observationally equivalent** — they
+  differ in **amplitude across minutes**, and nobody had tested that.
+
+  **A uniform minute-boundary artefact is REFUTED.** It predicts comparable
+  amplitude at every boundary. Measured terminal-vs-body log-range ratio, against
+  a 3.0 bar: **btc 7.32 [6.06, 8.51]**, **eth 6.08 [4.62, 7.49]** — the terminal
+  minute is 6–7× the body's. Thin coins fall below the 100-event floor and are
+  excluded from the verdict.
+
+  **A periodic component still exists and is still unidentifiable** — body
+  minutes also decline monotonically (btc ρ = −0.96, −0.97, −0.95, −0.50). It is
+  simply far too small to account for the collapse.
+
+  **TWAP lock-in is FAVOURED but NOT ESTABLISHED.** Any effect confined to the
+  final minute — including a non-stationary artefact — predicts the same shape.
+  Recorded separately and **excluded from the verdict as circular** (it was
+  visible before the rule was written): crossing `r=60` the log-rate **steps UP**
+  by +0.422 on btc (1.53×) and +0.260 on eth, then decays smoothly with no
+  sub-boundary step.
 
 ## 3. Not knowable on this data — do not schedule work against these
 
@@ -155,7 +175,8 @@ the opposite reason.
 | "count layer available / volume layer blocked" | **inverted** — volume is unblocked, count is contaminated |
 | the FLB edge | 0.0004 Brier, one-sided; measured on stale books |
 | "B2 is actively worse on bnb" | **sample-unstable, not settled** — `+0.0141` at 24 windows, full stack *beats* B1 at 12. A layer whose contribution flips sign between samples of the same era is fitting noise |
-| SPEC_REV2 option (d) binning (15 s + additive phase factor) | **refuted** — see §1a; non-uniform grid indicated |
+| SPEC_REV2 option (d) binning (15 s + additive phase factor) | **refuted** — see §1a. **REPLACED 2026-08-22**: body `[0,240)` as 4×60 s, terminal `[240,300)` as 12×5 s. Body at exactly 60 s spans exactly one period of the unidentified component and absorbs it **by construction** rather than by assumption — which is the only honest treatment of a term whose source is unidentifiable. The body pays almost nothing (btc within-minute log range 0.333–0.454 against 2.855 terminal) |
+| "terminal mechanism is unidentifiable" | **partially broken** — uniform minute-boundary artefact refuted at 6–7× amplitude; see §2 |
 
 ## 5. Binding rules
 

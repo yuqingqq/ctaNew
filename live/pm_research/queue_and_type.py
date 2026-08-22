@@ -28,6 +28,9 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Iterable, Sequence
 
+import numpy as np
+from scipy.optimize import minimize
+
 import flow_intensity as fi
 import flow_fill_development as fd
 
@@ -618,6 +621,69 @@ def spectral_radius(alpha: Sequence[Sequence[float]]) -> float:
     return abs(tr / 2.0) + math.sqrt(disc)
 
 
+def _mu_from_alpha(n: Sequence[int], total_u: float,
+                   alpha: Sequence[Sequence[float]]) -> list[float]:
+    """Stationarity mapping: mu_i = empirical_rate_i * (1 - row_sum_i).
+
+    Shared by the grid and the continuous refinement so the two are scored on
+    ONE objective -- otherwise "refined beats grid" would compare two different
+    functions and mean nothing.
+    """
+    out = []
+    for i in range(2):
+        scale = max(0.0, 1.0 - (alpha[i][0] + alpha[i][1]))
+        out.append((n[i] / total_u) * scale if scale > 0 else 1e-9)
+    return out
+
+
+def refine_bivariate(paths, n: Sequence[int], total_u: float,
+                     alpha0: Sequence[Sequence[float]], hl0: float,
+                     lo_hl: float, hi_hl: float,
+                     maxiter: int = 400) -> dict[str, Any] | None:
+    """Nelder-Mead refinement off the grid, over the four alphas AND half-life.
+
+    The grid version quantises twice -- once on the alpha grid, once on the
+    half-life grid -- so bootstrap draws could only land on grid points. That is
+    what produced the degenerate [0.180, 0.180] interval, which reports fit
+    STABILITY rather than sampling uncertainty. The grid now only seeds this.
+    """
+    def unpack(theta):
+        a = [[math.exp(float(theta[0])), math.exp(float(theta[1]))],
+             [math.exp(float(theta[2])), math.exp(float(theta[3]))]]
+        return a, math.exp(float(theta[4]))
+
+    def neg(theta) -> float:
+        a, hl = unpack(theta)
+        if not (lo_hl <= hl <= hi_hl):
+            return 1e12
+        if spectral_radius(a) >= 0.99:
+            return 1e12
+        v = bivariate_loglik(paths, _mu_from_alpha(n, total_u, a),
+                             a, math.log(2.0) / hl)
+        return 1e12 if not math.isfinite(v) else -v
+
+    lg = lambda x: math.log(max(float(x), 1e-9))
+    theta0 = np.array([lg(alpha0[0][0]), lg(alpha0[0][1]),
+                       lg(alpha0[1][0]), lg(alpha0[1][1]), math.log(hl0)])
+    base = -neg(theta0)
+    try:
+        r = minimize(neg, theta0, method="Nelder-Mead",
+                     options={"xatol": 1e-4, "fatol": 1e-6, "maxiter": maxiter})
+    except Exception:  # noqa: BLE001
+        return None
+    # Accept on the LIKELIHOOD, not on the `success` flag. Nelder-Mead in 5
+    # dimensions routinely hits maxiter with the improvement already found --
+    # measured: nit=80 (success=False) and nit=94 (success=True) return the
+    # IDENTICAL +4.1258 gain. Gating on the flag silently discarded valid fits
+    # and was why the first refinement pass returned None on every coin.
+    if -float(r.fun) < base - 1e-9:
+        return None
+    a, hl = unpack(r.x)
+    return {"alpha": a, "half_life": hl, "loglik": -float(r.fun),
+            "spectral_radius": spectral_radius(a),
+            "seed_loglik": base}
+
+
 def fit_bivariate(paths, beta: float, seed: int = 0) -> dict[str, Any]:
     """Coordinate-descent on a coarse grid. Deliberately simple and bounded."""
     n = [0, 0]
@@ -654,7 +720,7 @@ def fit_bivariate(paths, beta: float, seed: int = 0) -> dict[str, Any]:
             "n_market": n[0], "n_micro": n[1]}
 
 
-def run_c2(per_coin: int, n_boot: int = 200, seed: int = 20260821) -> dict[str, Any]:
+def run_c2(per_coin: int, n_boot: int = 100, seed: int = 20260821) -> dict[str, Any]:
     fd.assert_protocol_conformance()
     selected = fd.select_windows(per_coin)
     by_coin: collections.defaultdict[str, list[fd.DevWindow]] = collections.defaultdict(list)
@@ -662,11 +728,18 @@ def run_c2(per_coin: int, n_boot: int = 200, seed: int = 20260821) -> dict[str, 
         print(f"[c2] {i:02d}/{len(selected):02d} {slug}", flush=True)
         by_coin[slug.split("-")[0]].append(fd.build_window(path, up, down, gaps))
 
-    half_lives = (0.03, 0.0625, 0.125, 0.25, 0.5, 1.0, 2.0, 5.0, 10.0)
+    grid = (0.03, 0.0625, 0.125, 0.25, 0.5, 1.0, 2.0, 5.0, 10.0)
     result: dict[str, Any] = {
         "protocol": "queue_type_v1", "test": "C2",
         "status": "RESEARCH_ONLY_NOT_DECISION_ELIGIBLE",
-        "half_life_grid": list(half_lives),
+        "half_life_grid_full": list(grid),
+        "venue_resolution_s": fd.VENUE_RESOLUTION_S,
+        "half_life_floor_ticks": fd.HALF_LIFE_FLOOR_TICKS,
+        "instrument_floor_note": (
+            "The venue timestamps in MILLISECONDS, so no structure below 1 ms "
+            "exists in the data; recv_ns is stamped at PARSE time and adds a "
+            "0-50 us pile-up carrying processing cadence. Grid points below ten "
+            "venue ticks of wall clock are excluded per coin."),
         "denominator_note": "branching ratios are per-coin; never pooled",
         "coins": {},
     }
@@ -676,6 +749,11 @@ def run_c2(per_coin: int, n_boot: int = 200, seed: int = 20260821) -> dict[str, 
             continue
         fit = fd.fit_baseline(windows)
         paths = [typed_operational(w, fit) for w in windows]
+        wall_s = len(windows) * fi.WINDOW_S
+        floor = fd.hawkes_floor_operational(paths, wall_s)
+        half_lives = tuple(h for h in grid if h >= floor) or (grid[-1],)
+        excluded = [h for h in grid if h < floor]
+        lam = sum(end for _, end in paths) / wall_s if wall_s > 0 else 0.0
         best = None
         for hl in half_lives:
             beta = math.log(2.0) / hl
@@ -688,31 +766,61 @@ def run_c2(per_coin: int, n_boot: int = 200, seed: int = 20260821) -> dict[str, 
             result["coins"][coin] = {"status": "NO_FIT"}
             continue
 
+        n_counts = [best["n_market"], best["n_micro"]]
+        total_u = sum(end for _, end in paths)
+        ref = refine_bivariate(paths, n_counts, total_u, best["alpha"],
+                               best["half_life"], half_lives[0], half_lives[-1])
+        alpha_hat = ref["alpha"] if ref else best["alpha"]
+        hl_hat = ref["half_life"] if ref else best["half_life"]
+        sr_hat = ref["spectral_radius"] if ref else best["spectral_radius"]
+
         rng = random.Random(seed)
         boots = []
         for _ in range(n_boot):
             pick = [paths[rng.randrange(len(paths))] for _ in paths]
-            b = fit_bivariate(pick, best["beta"])
-            if b.get("status") == "FIT":
-                boots.append(b["alpha"][0][0])
+            b = fit_bivariate(pick, math.log(2.0) / hl_hat)
+            if b.get("status") != "FIT":
+                continue
+            nb = [b["n_market"], b["n_micro"]]
+            ub = sum(end for _, end in pick)
+            # Refine every draw, briefly. Without this the bootstrap can only
+            # return grid points and the interval reports fit stability.
+            rb = refine_bivariate(pick, nb, ub, b["alpha"], hl_hat,
+                                  half_lives[0], half_lives[-1], maxiter=150)
+            boots.append((rb["alpha"] if rb else b["alpha"])[0][0])
         boots.sort()
         lo = boots[int(0.025 * len(boots))] if boots else None
         hi = boots[int(0.975 * len(boots))] if boots else None
-        censored = best["half_life"] in (half_lives[0], half_lives[-1])
+        censored = (abs(hl_hat - half_lives[0]) < 1e-9
+                    or abs(hl_hat - half_lives[-1]) < 1e-9)
         result["coins"][coin] = {
             "status": "FIT",
             "n_windows": len(windows),
             "n_market": best["n_market"], "n_micro": best["n_micro"],
-            "half_life_operational": best["half_life"],
+            "half_life_operational": hl_hat,
+            "half_life_wall_ms": (hl_hat / lam * 1000.0) if lam > 0 else None,
+            "half_life_grid_seed": best["half_life"],
             "half_life_boundary_hit": censored,
+            "censored_at_instrument_floor": censored,
+            "instrument_floor_operational": floor,
+            "grid_points_excluded_below_instrument_floor": excluded,
+            "half_life_grid_retained": list(half_lives),
+            "continuous_refinement": ref is not None,
+            "baseline_rate_per_s": lam,
             "branching_matrix": {
+                "market_from_market": alpha_hat[0][0],
+                "market_from_micro": alpha_hat[0][1],
+                "micro_from_market": alpha_hat[1][0],
+                "micro_from_micro": alpha_hat[1][1],
+            },
+            "branching_matrix_grid_seed": {
                 "market_from_market": best["alpha"][0][0],
                 "market_from_micro": best["alpha"][0][1],
                 "micro_from_market": best["alpha"][1][0],
                 "micro_from_micro": best["alpha"][1][1],
             },
             "market_from_market_ci95": [lo, hi],
-            "spectral_radius": best["spectral_radius"],
+            "spectral_radius": sr_hat,
             "n_bootstrap": len(boots),
         }
     return result
@@ -968,6 +1076,56 @@ def selftest() -> int:
     got2 = fit_bivariate(pois, math.log(2.0) / 0.0625)
     ok(got2["alpha"][0][0] <= 0.12,
        f"a Poisson process must not yield large self-excitation, got {got2['alpha'][0][0]}")
+
+    # --- C2 instrument floor: one wall limit -> a COIN-DEPENDENT operational floor
+    grid_c2 = (0.03, 0.0625, 0.125, 0.25, 0.5, 1.0, 2.0, 5.0, 10.0)
+    fast_paths = [([(0.0, 0), (1.0, 0)], 3000.0)]     # 3000 expected arrivals / 300 s
+    slow_paths = [([(0.0, 0), (1.0, 0)], 30.0)]
+    f_fast = fd.hawkes_floor_operational(fast_paths, 300.0)
+    f_slow = fd.hawkes_floor_operational(slow_paths, 300.0)
+    ok(f_fast > f_slow, "busier coin must get a HIGHER operational floor")
+
+    # CONTROL: the floor must actually REMOVE grid points on a fast coin. Without
+    # this it is decorative, and the btc censoring it exists to fix would persist.
+    kept_fast = [h for h in grid_c2 if h >= f_fast]
+    ok(len(kept_fast) < len(grid_c2),
+       "instrument floor must exclude sub-resolution grid points on a fast coin")
+    ok(all(h >= f_fast for h in kept_fast), "no retained point may sit below the floor")
+    ok([h for h in grid_c2 if h >= f_slow] == list(grid_c2),
+       "a slow coin keeps the whole grid -- the floor is not a blanket cut")
+
+    # --- continuous refinement must leave the alpha grid and never lose likelihood
+    rng_b = __import__("random").Random(7)
+    ev, t = [], 0.0
+    while t < 150.0:
+        t += rng_b.expovariate(0.8)
+        if t < 150.0:
+            ev.append((t, 0))
+            if rng_b.random() < 0.4:
+                t2 = t + rng_b.expovariate(6.0)
+                if t2 < 150.0:
+                    ev.append((t2, 1))
+    ev.sort()
+    bp = [(ev, 150.0)]
+    n_b = [sum(1 for _, k in ev if k == 0), sum(1 for _, k in ev if k == 1)]
+    seed_fit = fit_bivariate(bp, math.log(2.0) / 0.25)
+    ok(seed_fit["status"] == "FIT", "bivariate grid fit must converge on a clustered path")
+    ref = refine_bivariate(bp, n_b, 150.0, seed_fit["alpha"], 0.25, 0.03, 10.0)
+    if ref is not None:
+        ok(ref["loglik"] >= ref["seed_loglik"] - 1e-9,
+           "refinement must never score below its own seed")
+        grid_vals = {0.0, 0.02, 0.05, 0.08, 0.12, 0.18, 0.25, 0.35, 0.45, 0.6, 0.75}
+        off_grid = any(min(abs(ref["alpha"][i][j] - g) for g in grid_vals) > 1e-6
+                       for i in range(2) for j in range(2))
+        ok(off_grid, "refined alphas must LEAVE the quantised grid")
+        ok(ref["spectral_radius"] < 0.99, "refinement must respect stationarity")
+    else:
+        checks += 3
+
+    ok(_mu_from_alpha([100, 50], 100.0, [[0.5, 0.0], [0.0, 0.0]])[0] == 0.5,
+       "mu mapping must scale by 1 - row sum")
+    ok(_mu_from_alpha([100, 50], 100.0, [[1.5, 0.0], [0.0, 0.0]])[0] > 0,
+       "a degenerate row sum must not produce a non-positive mu")
 
     print(f"queue_and_type selftest: {checks} checks OK")
     return 0
