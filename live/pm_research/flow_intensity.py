@@ -56,7 +56,30 @@ MIN_BIN_DWELL_S = 60.0
 MICRO_SIZE = 0.02          # labelled single-actor class; prevalence varies by coin
 MICRO_TOL = 1e-9
 ERA = "clob_v3_1"
-DAYS = ("20260819", "20260820", "20260821")
+DAYS = ("20260819", "20260820", "20260821", "20260822")
+
+
+def assert_days_current() -> list[str]:
+    """Fail LOUDLY if collected days exist on disk that DAYS does not list.
+
+    This constant went stale silently on 2026-08-22: it omitted that day and its
+    1,141 archives, and every probe importing `_archive_paths()` inherited the
+    omission without any signal. A window pool that quietly shrinks is the same
+    class of defect as a gate that cannot fire -- it reports success while
+    measuring less than it claims.
+
+    Probes pinned to a FROZEN protocol should declare their own day tuple rather
+    than inherit this one; a protocol's design window must not move because a
+    collector kept running.
+    """
+    on_disk = sorted(d.name for d in (PM / "raw").iterdir()
+                     if d.is_dir() and d.name.isdigit())
+    missing = [d for d in on_disk if d not in DAYS]
+    if missing:
+        raise AssertionError(
+            f"flow_intensity.DAYS is STALE: {missing} present on disk but not "
+            f"listed. Add them deliberately, or pin your probe's own days.")
+    return on_disk
 
 TRADE_MARK = b'"event_type":"last_trade_price"'
 QUOTE_MARK = b'"event_type":"price_change"'

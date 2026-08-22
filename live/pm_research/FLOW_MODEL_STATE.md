@@ -68,7 +68,7 @@ violate §1. The code already respects this; it is written down so nobody adds o
 | **The terminal minute contains essentially ALL of `f_r`'s dynamic range** | on btc/eth/sol/doge the terminal collapse ratio **equals the full-profile shape ratio exactly**; six of seven coins on notional | 361 windows/coin |
 | **The terminal regime is FEW AND LARGE** | count drops to 18 % of peak while notional holds 28 %; USDC/arrival 15.5 → 24.0 (btc), 11.9 → 32.3 (eth) | btc/eth |
 | **Book state carries real information** | B3 placebo does not reproduce the gain on any coin (btc −0.03 share, hype 0.02) | 24 windows/coin |
-| **THE TWO BOOKS ARE ONE BOOK — an identity, not a relationship** | `bid(Up) + ask(Down) = 1.0000` at p10, p50 AND p90; within 0.005 of 1.0 in **100 % of 37,394 messages**, both tokens quoted in every one | all coins |
+| **THE TWO BOOKS ARE ONE BOOK — and the second side is DERIVED, not quoted** | **1,081,800 checks across 560 archives, 7 coins, 4 UTC days: ZERO violations, worst deviation exactly 0.00000.** Zero in the 0.001 tick regime (8,468), the terminal minute (23,828), during gaps, and within 5 s of a tick change | **all coins, all days** — the exactness is the finding: two books agreeing would show float noise, one book computed from the other shows none |
 | **A complete set is therefore worth ONE spread, not two** | paying `Up_bid + Down_bid = 1 − spread` for something worth exactly $1 | corrects an earlier coordinator claim |
 | **Market self-excitation is not deletable** | bivariate 2×2 **refit 2026-08-22 with the instrument floor and continuous optimiser**: diagonal **0.236–0.477** dominates cross **0.000–0.167** on every coin; btc `market←market` **0.477 [0.282, 0.519]**, eth **0.389 [0.339, 0.431]** | **no coin censored**; both estimators refined, not grid-seeded |
 | **Clustering runs at 80–218 ms, and the censoring was OUR GRID** | scalar Hawkes re-fit 2026-08-21 with the instrument floor + continuous optimiser: **no coin is censored**, branching 0.33–0.55, half-life 80.8 ms (btc) to 217.7 ms (hype) — **81×–218× the venue tick** | 24 windows/coin, `clob_v3_1` |
@@ -184,6 +184,41 @@ that skips exactly the directional flow that accumulates**.
 found `NEW_BBO` ahead on fills (94.6 % vs 76.9 %). Front-of-queue buys fill rate
 and **pays for it in inventory risk at ~9×**, so that comparison was generous to
 `NEW_BBO`. **Any placement comparison needs inventory risk as a third axis.**
+
+## 1d. Placement skew works — as an UPPER BOUND with an untested generous assumption
+
+The state-dependent policy (reducing side at `NEW_BBO`, adding side at
+`JOIN_BBO`) was simulated against the tape, paired on the same windows:
+
+| coin | JOIN p95 \|net\| | SKEW p95 | cut | JOIN half-life | SKEW half-life | JOIN $ | SKEW $ |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| btc | 194.6 | **21.4** | 89.0 % | none | **6 s** | 121.80 | **8.11** |
+| eth | 92.0 | **20.0** | 78.3 % | 1021 s | **8 s** | 44.66 | **2.87** |
+
+`SKEW_SUFFICIENT` on both verdict coins — cash at risk falls **15×**, and the
+implied half-life drops from *longer than the window* to **6–8 s**.
+
+**The doubt I raised is refuted in the measured arm.** I argued the 1.23×
+fill-rate lever was too small to move a 519 s half-life inside 300 s. It is not
+applied once — it is a **persistent feedback bias compounding across hundreds of
+fills per window**. A drift is not a scaled-up reversion rate.
+
+**But every number above is an UPPER BOUND, and the generous assumption is not
+the one that was controlled for.** When a fronted side is fully lifted it
+**re-posts at `queue_ahead = 0`** — first in the queue again, immediately.
+`SKEW` exercises that ~476 times per window on btc, where `NEW_BBO` symmetric
+exercises it once; `JOIN` pays the displayed queue on every re-post and the
+fronted side never does. `SKEW_IDEAL` barely beating `SKEW` shows the *flip*
+idealisation is not driving the result — **but the flip was never the generous
+part. The re-post is, and both arms share it, so their agreement cannot test
+it.**
+
+**The untested lower bound must be measured before anyone acts on this:** front
+only on genuine level re-formation, re-join the back after every lift.
+
+Also unexplained and outside the pre-registered rule: **skew increases fills by
+~40 %** (btc 4,249 → 5,934), so it does not merely redirect flow. More spread
+capture and more gross exposure — unresolvable while the edge estimand is broken.
 
 ## 2. Measured and UNDETERMINED — not negative, not positive
 
