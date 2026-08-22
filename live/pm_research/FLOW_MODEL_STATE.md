@@ -11,6 +11,46 @@ the other document is stale. Say so rather than reconciling it privately.
 
 ---
 
+## 0. Where things live — plane ownership
+
+Dependency rule (`PM_ARCHITECTURE` §1): **SP ← DA ← BE ← DE.** DE may read BE;
+**BE must never read DE.** EV reads all planes and is read by none.
+
+```
+SP  SPECS      venue · instrument · params            risk LIMITS declared here
+DA  DATA       discovery ✅ feeds ✅ normalize 🔨
+               state 🔨 settlement 📋                  INVENTORY STATE here
+BE  BELIEF     Target ⏳ + Uncertainty ⏳ → Belief ⏳    = FAIR PRICE
+               FlowAndFills 🔬                          = FILL MODEL
+               Competition ❌ ScenarioProvider ❌
+DE  DECISION   ActionSpace ❌ Constraints ❌
+               DecisionScheme ❌ Allocator ❌ Actuator ❌ INVENTORY POLICY here
+EV  EVAL       Markout 📋 Calibration 📋 rest ❌
+OP  OPS        LatencyBudget · Monitor/KillSwitch       partial (supervision)
+```
+
+`⏳` on the sigma clock · `🔬` characterised, edge estimand broken · `🔨` in
+progress · `📋` queued · `❌` not built
+
+**Inventory is THREE things in THREE planes, and conflating them creates the
+forbidden `DE → BE` edge:**
+
+| question | plane | artifact |
+|---|---|---|
+| what do I hold? | `DA-State` / `SelfState` | `plans/DA_INVENTORY_STATE_PLAN.md` |
+| what may I hold? | `SP-Params` limit, enforced at `DE-Constraints` | scenario cap, §8 |
+| what do I do about it? | **`DE-DecisionScheme`** | `plans/DE_PLACEMENT_POLICY_PLAN.md` |
+
+**The third one IS the placement policy.** Skew, dump and hold are decisions, and
+skew is expressed through placement. There is no separate "inventory module".
+
+**`BE-FlowAndFills` is INVENTORY-AGNOSTIC and must stay so.**
+`P(fill | placement, market state)` conditions on market state only — it does not
+know our position. Adding an inventory term to it would make BE depend on DE and
+violate §1. The code already respects this; it is written down so nobody adds one.
+
+---
+
 ## 1. Established, with scope
 
 | fact | evidence | scope |
