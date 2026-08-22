@@ -32,12 +32,14 @@ from __future__ import annotations
 import argparse
 import bisect
 import collections
+import re
+import datetime as dt
 import json
 import math
 import random
 import zlib
 from pathlib import Path
-from typing import Any, Iterator, Sequence
+from typing import Any, Iterator, Sequence, Iterable
 
 REPO = Path(__file__).resolve().parents[2]
 PM = REPO / "data/pm_5min"
@@ -271,13 +273,41 @@ def _gz_lines(path: Path) -> Iterator[bytes]:
 _ARCHIVE_DAYS_USED: list[str] = []
 
 
-def provenance() -> dict[str, object]:
-    """Source-day provenance for a receipt. Stamp this in every published result."""
-    return {
-        "source_days": list(_ARCHIVE_DAYS_USED),
+def provenance(sampled: "Iterable[str | Path] | None" = None) -> dict[str, object]:
+    """Source-day provenance for a receipt. Stamp this in every published result.
+
+    PASS THE SLUGS OR PATHS YOU ACTUALLY SAMPLED. Without them this reports days
+    READ, which for any subsampling probe is an UPPER BOUND on day coverage and
+    not the population the numbers came from -- `inventory_walk.select` takes the
+    first `per_coin` slugs in sorted order, i.e. the EARLIEST, so a newly
+    collected day can be globbed and then never displace the sample. That is why
+    a run after DAYS grew to four days still reproduced a three-day figure to the
+    digit. Comparing two runs on `source_days` alone would have missed it.
+    """
+    read = list(_ARCHIVE_DAYS_USED)
+    out: dict[str, object] = {
+        "days_read": read,
         "days_declared": list(DAYS),
-        "n_days": len(_ARCHIVE_DAYS_USED),
+        "n_days_read": len(read),
     }
+    if sampled is None:
+        out["days_sampled"] = None
+        out["sampled_is_known"] = False
+        out["warning"] = "days_sampled UNKNOWN -- days_read is an UPPER BOUND"
+        out["source_days"] = read          # back-compat, over-reports
+        return out
+    days = set()
+    for item in sampled:
+        name = Path(item).name if isinstance(item, Path) else str(item)
+        m = re.search(r"-(\d{10})(?:\D|$)", name)
+        if m:
+            days.add(dt.datetime.fromtimestamp(
+                int(m.group(1)), dt.timezone.utc).strftime("%Y%m%d"))
+    out["days_sampled"] = sorted(days)
+    out["sampled_is_known"] = True
+    out["n_days_sampled"] = len(days)
+    out["source_days"] = sorted(days)
+    return out
 
 
 def _archive_paths() -> dict[str, Path]:

@@ -213,8 +213,30 @@ idealisation is not driving the result — **but the flip was never the generous
 part. The re-post is, and both arms share it, so their agreement cannot test
 it.**
 
-**The untested lower bound must be measured before anyone acts on this:** front
-only on genuine level re-formation, re-join the back after every lift.
+**MEASURED 2026-08-22 — `SKEW_ROBUST`. The concern was legitimate; the magnitude
+was small.** Lower bound: front only on genuine level re-formation, re-join the
+back after every lift.
+
+| coin | JOIN p95 | SKEW upper | SKEW lower | reduction UB | reduction LB | half-life LB |
+|---|---:|---:|---:|---:|---:|---:|
+| btc | 194.6 | 21.4 | **45.7** | 89.0 % | **76.5 %** | 12.5 s |
+| eth | 92.0 | 20.0 | **17.1** | 78.3 % | **81.4 %** | 10.0 s |
+
+Cash p95: btc `$121.80 → $8.11 (UB) → $9.14 (LB)`. **The 15× survives as ~13×.**
+The switch demonstrably bites — btc grants **124 free re-fronts per window** under
+UB and **zero** under LB — yet terminal `|net|` moves only 21.4 → 45.7. **The
+honest btc figure is a 76–89 % reduction: the published number is the optimistic
+end of a narrow band, not a different answer.** LB is if anything pessimistic,
+since it re-joins behind *pre-trade* displayed depth that the lifting trade
+partly consumed. `hype` alone is bound-dependent, and not for the expected
+reason — the cut is real but its LB half-life is 328.5 s, outside the window.
+Too slow, not too weak.
+
+**The ~40 % fill increase is NOT the same artefact.** 63 % of btc's increase and
+84 % of eth's survive the pessimistic queue (btc `MIXED`, eth and the rest
+`GENUINE`). Fronting genuinely wins fills the queue loses; btc is the only coin
+with a material re-post component, consistent with being the only one where
+re-posting fires often enough to matter.
 
 Also unexplained and outside the pre-registered rule: **skew increases fills by
 ~40 %** (btc 4,249 → 5,934), so it does not merely redirect flow. More spread
