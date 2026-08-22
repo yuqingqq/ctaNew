@@ -70,6 +70,36 @@ inside a single bin. **Indicated replacement: a NON-UNIFORM grid, coarse in the
 body and fine in the terminal** — the shape §1.3 already chose for Tier B, for
 the opposite reason.
 
+## 1b. WHAT "EDGE MEASURED AGAINST SETTLEMENT" ACTUALLY IS — read before citing any edge number
+
+The policy comparison (`policy_v1`) returned `UNRESOLVED`, but its useful output
+is a **defect in the estimand that every edge figure in this programme shares**.
+
+Markout is measured against **settlement** (`S60(T)`), a choice made to keep the
+work off the fair-price model and the sigma clock. The consequence was not
+thought through: **a fill at `t=30 s` is marked at `t=300 s`.** The action
+horizon controls only the FILL window, not the HOLDING period, and the simulated
+order never cancels or reprices.
+
+So `E[outcome − ℓ | fill]` at settlement is the PnL of **"fill, then hold to
+expiry"** — not spread capture. On the *marginal* fills (those `NEW_BBO` catches
+and `JOIN_BBO` does not) this produced an implied **+10.31 ¢/share on btc**,
+against a **0.50 ¢ half-spread**. Ten cents a share on a one-cent book is not
+market making; those fills are exactly the cases where price moved away and
+never came back, and the measurement is dominated by **directional drift**.
+
+**How far this reaches:** the `+0.173 ¢/share` pooled maker edge (§2) uses the
+same estimand, so it too is hold-to-expiry PnL rather than spread capture. It is
+**less contaminated** because it is a population census rather than a selected
+subset — buys and sells, all fills, drift largely symmetric — but it is not
+measuring the quantity a maker who quotes both sides and flattens would earn.
+**Nobody has stated whether this programme's maker holds to expiry or flattens.**
+That is an unstated strategy assumption sitting underneath every edge figure.
+
+Isolating placement needs markout at a **fixed short horizon after fill** plus a
+**stated cancellation policy** — a different estimand requiring fresh
+pre-registration. It must not be swapped in after seeing the above.
+
 ## 2. Measured and UNDETERMINED — not negative, not positive
 
 - **The maker-edge sign.** `+0.173 ¢/share [−0.251, +0.596]` pooled; **all seven
