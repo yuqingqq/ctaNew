@@ -723,10 +723,13 @@ def fit_bivariate(paths, beta: float, seed: int = 0) -> dict[str, Any]:
 def run_c2(per_coin: int, n_boot: int = 100, seed: int = 20260821) -> dict[str, Any]:
     fd.assert_protocol_conformance()
     selected = fd.select_windows(per_coin)
-    by_coin: collections.defaultdict[str, list[fd.DevWindow]] = collections.defaultdict(list)
-    for i, (slug, path, up, down, gaps) in enumerate(selected, 1):
-        print(f"[c2] {i:02d}/{len(selected):02d} {slug}", flush=True)
-        by_coin[slug.split("-")[0]].append(fd.build_window(path, up, down, gaps))
+    # Build ONE COIN AT A TIME and discard its windows before moving on. Holding
+    # all 168 windows simultaneously ran the process out of memory and it was
+    # killed silently -- no traceback, empty output, yesterday's file left in
+    # place. Peak footprint is now one coin's windows, not the whole universe.
+    by_slug: collections.defaultdict[str, list] = collections.defaultdict(list)
+    for entry in selected:
+        by_slug[entry[0].split("-")[0]].append(entry)
 
     grid = (0.03, 0.0625, 0.125, 0.25, 0.5, 1.0, 2.0, 5.0, 10.0)
     result: dict[str, Any] = {
@@ -743,9 +746,13 @@ def run_c2(per_coin: int, n_boot: int = 100, seed: int = 20260821) -> dict[str, 
         "denominator_note": "branching ratios are per-coin; never pooled",
         "coins": {},
     }
-    for coin, windows in sorted(by_coin.items()):
+    for coin, entries in sorted(by_slug.items()):
+        print(f"[c2] building {coin}: {len(entries)} windows", flush=True)
+        windows = [fd.build_window(path, up, down, gaps)
+                   for _, path, up, down, gaps in entries]
         if len(windows) < 3:
             result["coins"][coin] = {"status": "INSUFFICIENT_WINDOWS"}
+            windows = None
             continue
         fit = fd.fit_baseline(windows)
         paths = [typed_operational(w, fit) for w in windows]
@@ -776,18 +783,26 @@ def run_c2(per_coin: int, n_boot: int = 100, seed: int = 20260821) -> dict[str, 
 
         rng = random.Random(seed)
         boots = []
-        for _ in range(n_boot):
+        for bi in range(n_boot):
             pick = [paths[rng.randrange(len(paths))] for _ in paths]
-            b = fit_bivariate(pick, math.log(2.0) / hl_hat)
-            if b.get("status") != "FIT":
-                continue
-            nb = [b["n_market"], b["n_micro"]]
+            nb = [0, 0]
+            for events, _ in pick:
+                for _, typ in events:
+                    nb[typ] += 1
             ub = sum(end for _, end in pick)
-            # Refine every draw, briefly. Without this the bootstrap can only
-            # return grid points and the interval reports fit stability.
-            rb = refine_bivariate(pick, nb, ub, b["alpha"], hl_hat,
+            if ub <= 0 or sum(nb) == 0:
+                continue
+            # Seed each draw from the POINT ESTIMATE and refine. The grid fit was
+            # only ever a seed and cost as much as the refinement itself; the
+            # draws still vary because the DATA varies, and the refinement is what
+            # takes values off the grid. Without refinement the interval could
+            # only return grid points and would report fit stability, not
+            # sampling uncertainty.
+            rb = refine_bivariate(pick, nb, ub, alpha_hat, hl_hat,
                                   half_lives[0], half_lives[-1], maxiter=150)
-            boots.append((rb["alpha"] if rb else b["alpha"])[0][0])
+            boots.append((rb["alpha"] if rb else alpha_hat)[0][0])
+            if (bi + 1) % 25 == 0:
+                print(f"[c2]   {coin} bootstrap {bi+1}/{n_boot}", flush=True)
         boots.sort()
         lo = boots[int(0.025 * len(boots))] if boots else None
         hi = boots[int(0.975 * len(boots))] if boots else None
@@ -822,6 +837,7 @@ def run_c2(per_coin: int, n_boot: int = 100, seed: int = 20260821) -> dict[str, 
             "market_from_market_ci95": [lo, hi],
             "spectral_radius": sr_hat,
             "n_bootstrap": len(boots),
+            "bootstrap_seeded_from": "POINT_ESTIMATE_THEN_REFINED",
         }
     return result
 

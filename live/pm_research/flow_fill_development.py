@@ -746,7 +746,13 @@ def fit_hawkes(paths: Sequence[tuple[Sequence[float], float]],
         try:
             r = minimize(neg_ll, theta0, method="Nelder-Mead",
                          options={"xatol": 1e-4, "fatol": 1e-6, "maxiter": 400})
-            if bool(r.success) and -float(r.fun) >= best[0] - 1e-9:
+            # Accept on LIKELIHOOD, never on scipy's `success` flag. Nelder-Mead
+            # routinely hits maxiter with the improvement already found -- measured
+            # on the bivariate fit, nit=80 success=False and nit=94 success=True
+            # returned the IDENTICAL +4.1258 gain. Gating on the flag rejected
+            # every refinement there. The likelihood comparison is the real guard;
+            # the flag is a convergence report, not a correctness test.
+            if -float(r.fun) >= best[0] - 1e-9:
                 rb = 1.0 / (1.0 + math.exp(-float(r.x[0])))
                 refined = (-float(r.fun), rb, math.exp(float(r.x[1])))
         except Exception:  # noqa: BLE001

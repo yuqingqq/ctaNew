@@ -28,7 +28,7 @@ the other document is stale. Say so rather than reconciling it privately.
 | **The terminal minute contains essentially ALL of `f_r`'s dynamic range** | on btc/eth/sol/doge the terminal collapse ratio **equals the full-profile shape ratio exactly**; six of seven coins on notional | 361 windows/coin |
 | **The terminal regime is FEW AND LARGE** | count drops to 18 % of peak while notional holds 28 %; USDC/arrival 15.5 → 24.0 (btc), 11.9 → 32.3 (eth) | btc/eth |
 | **Book state carries real information** | B3 placebo does not reproduce the gain on any coin (btc −0.03 share, hype 0.02) | 24 windows/coin |
-| **Market self-excitation is not deletable** | bivariate 2×2: diagonal 0.18–0.45 dominates cross 0.02–0.18 on every coin | scalar fit re-run below; the BIVARIATE fit is still grid-seeded |
+| **Market self-excitation is not deletable** | bivariate 2×2 **refit 2026-08-22 with the instrument floor and continuous optimiser**: diagonal **0.236–0.477** dominates cross **0.000–0.167** on every coin; btc `market←market` **0.477 [0.282, 0.519]**, eth **0.389 [0.339, 0.431]** | **no coin censored**; both estimators refined, not grid-seeded |
 | **Clustering runs at 80–218 ms, and the censoring was OUR GRID** | scalar Hawkes re-fit 2026-08-21 with the instrument floor + continuous optimiser: **no coin is censored**, branching 0.33–0.55, half-life 80.8 ms (btc) to 217.7 ms (hype) — **81×–218× the venue tick** | 24 windows/coin, `clob_v3_1` |
 
 ## 1a. The binning decision is REFUTED, and the factor would have eaten real signal
@@ -156,11 +156,16 @@ the opposite reason.
   reaction-time scale, not slicing and not our processing cadence. So the floor
   did not merely flag the problem; it resolved it.
 
-  **STILL OUTSTANDING:** the **bivariate** C2 fit (the 2×2 type matrix) has NOT
-  been re-run with the floor or the optimiser — it lives in `queue_and_type.py`,
-  which was untouched. Its btc entry is still censored and its intervals are
-  still grid-quantised. Treat the 0.18–0.45 diagonal as provisional until it is
-  re-fitted the same way.
+  **RESOLVED 2026-08-22 — the bivariate fit has been re-run the same way and the
+  provisional caveat is lifted.** No coin is censored. **btc moved 0.180 → 0.477
+  (2.65×)** and its interval from the degenerate `[0.180, 0.180]` to
+  `[0.282, 0.519]`; the floor excluded exactly the same two grid points the
+  scalar fit excluded.
+
+  **The two estimators agree on the timescale, which is the strongest evidence
+  either produced.** btc half-life is **75.3 ms** bivariate against **80.8 ms**
+  scalar — different likelihoods, independently fitted, same answer. All coins
+  land at **75–352 ms**, 75×–352× the venue tick. `RETAIN` is unchanged.
 
 ## 4. Withdrawn — if you find these anywhere, that document is stale
 

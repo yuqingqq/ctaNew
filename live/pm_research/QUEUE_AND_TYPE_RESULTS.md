@@ -172,3 +172,61 @@ single-actor share.
 
 Receipts: `data/pm_5min/derived/queue_c1_cancellation_v1.json`,
 `queue_c2_bivariate_v1.json` (both gitignored).
+
+## C2 REFIT 2026-08-22 — instrument floor + continuous optimiser
+
+The original C2 fit was grid-quantised twice (alpha grid and half-life grid) and
+reported btc `CENSORED` at the old floor with a degenerate `[0.180, 0.180]`
+interval. Both mechanisms from the scalar fit are now ported in:
+`hawkes_floor_operational` (ten venue ticks of wall clock, converted per coin
+into operational units) and a Nelder-Mead refinement over the four alphas and
+the half-life jointly.
+
+**Verdict: `RETAIN` — unchanged, now on far better evidence.**
+
+| coin | m←m | CI95 m←m | m←micro | micro←m | micro←micro | HL op | HL wall | censored |
+|---|---:|---|---:|---:|---:|---:|---:|---|
+| btc | **0.477** | [0.282, 0.519] | 0.010 | 0.008 | 0.000 | 0.5408 | **75.3 ms** | no |
+| hype | 0.400 | [0.267, 0.545] | 0.004 | 0.000 | 0.313 | 0.1462 | 351.8 ms | no |
+| eth | 0.389 | [0.339, 0.431] | 0.120 | 0.068 | 0.337 | 0.2257 | 146.3 ms | no |
+| xrp | 0.317 | [0.292, 0.350] | 0.067 | 0.108 | 0.203 | 0.1174 | 139.6 ms | no |
+| sol | 0.291 | [0.245, 0.338] | 0.167 | 0.067 | 0.218 | 0.1528 | 246.3 ms | no |
+| doge | 0.247 | [0.207, 0.289] | 0.082 | 0.096 | 0.273 | 0.0795 | 189.4 ms | no |
+| bnb | 0.236 | [0.162, 0.311] | 0.025 | 0.049 | 0.409 | 0.0875 | 218.5 ms | no |
+
+**No coin is censored, btc included.** The floor excluded exactly two grid points
+on btc (0.03, 0.0625) — the same two the scalar fit excluded — and the fit then
+seeded at 0.50 and refined to 0.5408. Continuous refinement fired on all seven,
+so no interval is grid-confined.
+
+**btc moved 0.180 → 0.477**, a 2.65× increase, and its interval went from the
+degenerate `[0.180, 0.180]` to `[0.282, 0.519]`. That degenerate interval was the
+signature of the defect: bootstrap draws could only land on grid points, so it
+reported fit stability rather than sampling uncertainty.
+
+**Independent agreement with the scalar fit.** btc half-life is **75.3 ms**
+bivariate against **80.8 ms** scalar — two different estimators, two different
+likelihoods, converging on the same timescale. Every coin lands at 75–352 ms,
+i.e. **75× to 352× the venue's millisecond tick**, comfortably resolvable.
+
+**The diagonal still dominates the off-diagonal on every coin**, so the finding
+C2 was opened for survives: market self-excitation is real once the micro actor
+is modelled as a type rather than deleted, and it is not cross-excitation wearing
+a self-excitation label. Verdict inputs under the unchanged protocol rule — btc
+`[0.282, 0.519]` and eth `[0.339, 0.431]` both exclude zero and both exceed 0.10,
+so `DELETE_HAWKES_LAYER` does not fire and `RETAIN` stands.
+
+**Scope, unchanged:** 24 windows/coin, `clob_v3_1`, two days. Window-clustered
+bootstrap at n=100 per coin; day-level common factors are not captured, so these
+intervals still **understate** uncertainty. `RETAIN` means not-deletable on this
+evidence; forward generalization still needs ~10 days in one era.
+
+**Two engineering notes worth keeping.** The first refit attempt built all 168
+windows before fitting and was killed silently — no traceback, empty output,
+yesterday's file left in place, which is exactly the failure mode that looks like
+success. Windows are now built and discarded one coin at a time. And the
+refinement initially returned `None` on every coin because acceptance was gated
+on scipy's `success` flag: in five dimensions Nelder-Mead routinely hits maxiter
+with the improvement already found (measured: `nit=80, success=False` and
+`nit=94, success=True` return the identical `+4.1258` gain). Acceptance is now on
+the likelihood, which is the real guard.
