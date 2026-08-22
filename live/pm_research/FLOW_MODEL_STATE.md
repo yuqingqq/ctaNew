@@ -220,6 +220,61 @@ Also unexplained and outside the pre-registered rule: **skew increases fills by
 ~40 %** (btc 4,249 → 5,934), so it does not merely redirect flow. More spread
 capture and more gross exposure — unresolvable while the edge estimand is broken.
 
+## 1e. LAYER 1 MEASURED — adverse selection is ~2x spread capture, and the sign is negative
+
+The estimand §1b called broken has been replaced and run. Markout against
+**book mid** at fixed horizons, decomposed, per `EDGE_LAYER1_PROTOCOL.md`.
+Verdict **`HORIZON_DEPENDENT`**, and the decomposition is the result:
+
+| coin | h | n | markout | CI95 | spread captured | post-fill drift |
+|---|---:|---:|---:|---|---:|---:|
+| btc | 5 s | 10,294 | **−0.532** | [−0.797, −0.287] | **+0.642** | **−1.175** |
+| btc | 30 s | 9,714 | −0.637 | [−1.047, −0.216] | +0.636 | −1.273 |
+| eth | 5 s | 1,999 | **−1.243** | [−1.726, −0.759] | **+0.778** | **−2.021** |
+| eth | 60 s | 1,752 | −1.609 | [−2.479, −0.807] | +0.695 | −2.305 |
+
+**Spread capture is real, positive and stable** (+0.61–0.64 ¢ btc, +0.70–0.78 ¢
+eth — consistent with a 1-tick book plus occasional wider spreads, which is the
+harness sanity check). **Post-fill drift is 1.8× larger on btc and 2.6× on eth,
+and negative.** Six of eight cells are negative with the interval excluding zero.
+
+**So a passive two-sided `JOIN_BBO` maker loses at short horizons on both verdict
+coins.** This is the first *determinate* answer the programme has produced to
+whether the fill itself is any good, and it closes a loop: the fee structure
+predicted it. Takers pay ~225 bps to cross, so anyone crossing is heavily
+informed — "the fee does not kill MM on cost, it loads the question onto adverse
+selection" was the prediction, and adverse selection is roughly double the
+capture.
+
+**btc's apparent improvement at `h=60` is a POPULATION ARTEFACT, not attenuation.**
+Drift reads −1.175 → −0.697 across the ladder, but `h=60` discards **1,611 btc
+fills, all inside the terminal minute**, shifting the surviving `r`-population
+from p50 166 s to 190 s. `h=60` cannot see the final minute at all, by
+construction. The protocol pre-specified this exclusion as non-benign and it is
+material here.
+
+**Not a micro-actor artefact:** excluding the 0.02 class moves btc −0.532 →
+−0.521.
+
+**Descriptive coins suggest a wide spread buys TIME, not edge.** hype is
+**+3.802** at `h=5` on a 5.86 ¢ spread, then **−3.707** by `h=30`. Wide spreads
+delay adverse selection rather than defeating it. n=58, directional only.
+
+**Methodological point worth keeping:** the settlement estimand was
+`UNDETERMINED` with every interval spanning zero; the narrower Layer-1 question
+has a **determinate** answer. Asking a smaller question got a sharper one.
+
+**UNRECONCILED and deliberately not narrated:** the settlement census reported
+**+0.173 ¢** pooled while Layer 1 reports **−0.53 ¢** on btc at `h=5` with the
+interval excluding zero. Different estimands over different populations — the
+census was all observed fills marked at settlement, this is a simulated
+two-sided `JOIN_BBO` maker marked against mid — so **not** a direct
+contradiction. The directions differ and the reconciliation is **unmeasured**.
+
+**Scope:** Layer 1 only. Inventory carry, the terminal residual and the `r≈60`
+decision are Layer 2 and can move the total either way. Two days,
+window-clustered.
+
 ## 2. Measured and UNDETERMINED — not negative, not positive
 
 - **The maker-edge sign.** `+0.173 ¢/share [−0.251, +0.596]` pooled; **all seven
