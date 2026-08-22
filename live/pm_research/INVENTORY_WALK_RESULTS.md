@@ -6,7 +6,7 @@
 
 Status: **DEVELOPMENT**, not decision-eligible. Research only, no forward-day
 claim, no profitability claim. The first test named by
-`plans/BE_INVENTORY_MODEL_PLAN.md` §5/§6.
+`plans/DA_INVENTORY_STATE_PLAN.md` §5/§6.
 
 ## Decision rule — pre-registered before the measurement
 

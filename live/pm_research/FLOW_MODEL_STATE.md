@@ -108,7 +108,7 @@ pre-registration. It must not be swapped in after seeing the above.
 60 windows/coin. **No coin is self-balancing.** Every measured mean-reversion
 half-life is **519–2726 s**, all of them **longer than the 300 s window** — so
 even where reversion exists it is far too slow to matter inside a market. The
-dump mechanism in `plans/BE_INVENTORY_MODEL_PLAN.md` is **not** deleted.
+dump mechanism in `plans/DA_INVENTORY_STATE_PLAN.md` is **not** deleted.
 
 *(The obvious confound was tested and refuted: sub-linear variance scaling could
 have been manufactured by the measured terminal collapse, but body-only `beta`

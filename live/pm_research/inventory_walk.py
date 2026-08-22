@@ -1,6 +1,6 @@
 """Does `net` random-walk? Replay a resting two-sided quote over the tape.
 
-The first test named by plans/BE_INVENTORY_MODEL_PLAN.md section 5/6. If the
+The first test named by plans/DA_INVENTORY_STATE_PLAN.md section 5/6. If the
 imbalance mean-reverts on its own, the dump mechanism and most of that plan's
 switching machinery are unnecessary -- which is the most valuable thing this
 test can do.
@@ -443,7 +443,7 @@ def verdict(s: dict[str, Any]) -> dict[str, Any]:
     if reverts and b_ci[1] < BETA_SELF_BALANCING_MAX and hl is not None \
             and hl < HALF_LIFE_MAX_S and p95q <= TERMINAL_BAND_QUOTES:
         notes.append("The dump mechanism and the switching rule in "
-                     "BE_INVENTORY_MODEL_PLAN section 2 are UNNECESSARY.")
+                     "DA_INVENTORY_STATE_PLAN section 2 are UNNECESSARY.")
         return {"verdict": "SELF_BALANCING", "reason": "REVERTS_AND_TERMINAL_SMALL",
                 "half_life_s": hl, "p95_in_quote_sizes": p95q, "notes": notes}
     if reverts:
