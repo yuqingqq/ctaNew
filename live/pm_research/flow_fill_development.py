@@ -1223,6 +1223,7 @@ def run(per_coin: int) -> dict[str, Any]:
         "action_size_shares": ACTION_SIZE,
         "coins": {coin: summarize_coin(windows) for coin, windows in sorted(by_coin.items())},
     }
+    result["provenance"] = fi.provenance()   # source-day provenance; see flow_intensity
     result["artifact_id"] = hashlib.sha256(
         json.dumps(result, sort_keys=True, separators=(",", ":")).encode()
     ).hexdigest()

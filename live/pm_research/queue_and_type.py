@@ -1158,6 +1158,7 @@ def main() -> int:
     if args.command == "c1":
         res = run_c1(args.per_coin)
         OUT_C1.parent.mkdir(parents=True, exist_ok=True)
+        res["provenance"] = fi.provenance()   # source-day provenance; see flow_intensity
         OUT_C1.write_text(json.dumps(res, indent=1))
         print(f"[c1] wrote {OUT_C1}")
         return 0
@@ -1165,12 +1166,14 @@ def main() -> int:
         res = run_c2b(args.per_coin)
         out = PM / "derived/queue_c2b_batching_v1.json"
         out.parent.mkdir(parents=True, exist_ok=True)
+        res["provenance"] = fi.provenance()   # source-day provenance; see flow_intensity
         out.write_text(json.dumps(res, indent=1))
         print(f"[c2b] wrote {out}")
         return 0
     if args.command == "c2":
         res = run_c2(args.per_coin)
         OUT_C2.parent.mkdir(parents=True, exist_ok=True)
+        res["provenance"] = fi.provenance()   # source-day provenance; see flow_intensity
         OUT_C2.write_text(json.dumps(res, indent=1))
         print(f"[c2] wrote {OUT_C2}")
         return 0

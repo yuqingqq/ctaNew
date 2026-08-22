@@ -506,6 +506,7 @@ def run(per_coin: int, front: bool = False) -> dict[str, Any]:
         s["verdict"] = verdict(s)
         res["coins"][coin] = s
     OUT.parent.mkdir(parents=True, exist_ok=True)
+    res["provenance"] = fi.provenance()   # source-day provenance; see flow_intensity
     OUT.write_text(json.dumps(res, indent=1))
     return res
 

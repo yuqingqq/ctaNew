@@ -343,8 +343,17 @@ capture and more gross exposure — unresolvable while the edge estimand is brok
   weighting reweights rather than deletes and needs no independence assumption.
 - **State the population of every denominator.** Six instances of that defect so
   far; three read as findings before they were caught.
-- **The name is not the definition.** Four instances, one self-inflicted.
+- **The name is not the definition.** **Five** instances, **two** self-inflicted.
   Confirm any field, file or contract label against the code that writes it.
+- **A shrinking or growing sample must be VISIBLE in the receipt.**
+  `flow_intensity.DAYS` went stale silently on 2026-08-22, omitting a whole day
+  and 1,141 archives from every probe that imports `_archive_paths()`. Fixing it
+  created the mirror risk — the constant now lists four days while **every
+  published number in this corpus was computed on three**. Both directions are
+  now loud: `assert_days_current()` raises if a collected day is unlisted, and
+  `fi.provenance()` stamps `source_days` into every receipt. **Re-running any
+  probe will now produce a four-day population; expect the numbers to move, and
+  check `provenance.source_days` before comparing against anything published.**
 - Read book state from `price_change.best_bid/ask`, never `book` snapshots
   (p90 6.2 s stale). Knowledge time is `recv_ns`. Never pool across
   `collector_version` eras.

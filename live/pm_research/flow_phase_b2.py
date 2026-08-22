@@ -564,6 +564,7 @@ def main() -> int:
     if args.cmd == "phase":
         res = run_phase(n_boot=args.n_boot)
         OUT_PHASE.parent.mkdir(parents=True, exist_ok=True)
+        res["provenance"] = fi.provenance()   # source-day provenance; see flow_intensity
         OUT_PHASE.write_text(json.dumps(res, indent=1))
         for coin, d in res["coins"].items():
             v = d["verdict"]
@@ -579,6 +580,7 @@ def main() -> int:
     if args.cmd == "b2":
         res = run_b2(args.per_coin)
         OUT_B2.parent.mkdir(parents=True, exist_ok=True)
+        res["provenance"] = fi.provenance()   # source-day provenance; see flow_intensity
         OUT_B2.write_text(json.dumps(res, indent=1))
         for coin, d in res["coins"].items():
             c = d["cum_vs_b0_per_event"]

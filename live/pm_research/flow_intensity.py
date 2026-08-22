@@ -263,14 +263,34 @@ def _gz_lines(path: Path) -> Iterator[bytes]:
         yield tail
 
 
+# Records which days the last _archive_paths() call actually read. Every probe
+# consuming that helper stamps this into its receipt via provenance(), so a
+# population change is VISIBLE in the output rather than silent. DAYS grew from
+# three days to four on 2026-08-22; without this, re-running any probe would
+# quietly produce numbers over a different population than the ones published.
+_ARCHIVE_DAYS_USED: list[str] = []
+
+
+def provenance() -> dict[str, object]:
+    """Source-day provenance for a receipt. Stamp this in every published result."""
+    return {
+        "source_days": list(_ARCHIVE_DAYS_USED),
+        "days_declared": list(DAYS),
+        "n_days": len(_ARCHIVE_DAYS_USED),
+    }
+
+
 def _archive_paths() -> dict[str, Path]:
     out: dict[str, Path] = {}
+    used: list[str] = []
     for day in DAYS:
         d = RAW / day
         if not d.is_dir():
             continue
+        used.append(day)
         for path in sorted(d.glob("*.jsonl*.gz")):
             out.setdefault(path.name.split(".jsonl")[0], path)
+    _ARCHIVE_DAYS_USED[:] = used
     return out
 
 
