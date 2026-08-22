@@ -3,9 +3,37 @@ name: Polymarket Crypto 5-min Markets
 phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
-updated: 2026-08-21 (flow/fills Revision 4; development run complete; contracts v22)
+updated: 2026-08-22 (flow/fills Revision 4; development run complete; contracts v22)
 
 flags:
+  flow_model_state_page: live/pm_research/FLOW_MODEL_STATE.md # AUTHORITATIVE for
+                             # current belief about the flow model. Twelve other
+                             # documents carry provenance pointers deferring to
+                             # it. If anything conflicts with that page, the
+                             # other document is stale.
+  flow_edge_estimand_broken: true # Markout measured against SETTLEMENT means a
+                             # fill at t=30s is marked at t=300s -- hold-to-expiry
+                             # PnL, NOT spread capture. On marginal fills that
+                             # implied +10.31 c/share against a 0.50 c
+                             # half-spread. The +0.173 pooled maker edge shares
+                             # the estimand (less contaminated: census, not a
+                             # selected subset). FIX = two layers: fill quality at
+                             # a FIXED SHORT HORIZON against book mid, and
+                             # inventory PnL separately. NEEDS FRESH
+                             # PRE-REGISTRATION. Until then no edge figure means
+                             # spread capture.
+  two_books_are_one_book: true # bid(Up) + ask(Down) = 1.0000 at p10/p50/p90,
+                             # within 0.005 in 100% of 37,394 messages, both
+                             # tokens quoted in every one. AN IDENTITY. So
+                             # "quote the complement" IS "quote the other side",
+                             # and a complete set is worth ONE SPREAD, NOT TWO.
+  queue_position_is_policy_output: true # NOT an unknown of nature. new-BBO puts
+                             # you at the front, joining an existing level puts
+                             # you behind its depth. FRONT/BACK is the span
+                             # across POLICIES and collapses once one is named.
+                             # Genuinely unobserved is narrower: whether a
+                             # new-BBO quote WINS THE RACE (latency-dependent,
+                             # not in this tape), so FRONT is an upper bound.
   collector_running: true    # One price process and one CLOB process; fresh.
   sigma_infra_pipeline: complete-awaiting-eligible-day # Research infrastructure
                              # is complete through contracts v22: immutable
