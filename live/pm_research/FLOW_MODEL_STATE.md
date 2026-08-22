@@ -102,6 +102,49 @@ Isolating placement needs markout at a **fixed short horizon after fill** plus a
 **stated cancellation policy** — a different estimand requiring fresh
 pre-registration. It must not be swapped in after seeing the above.
 
+## 1c. Inventory: control is LOAD-BEARING, and two-sided quoting only works where flow is thick
+
+`net(t)` was simulated under a two-sided quote and replayed against the tape,
+60 windows/coin. **No coin is self-balancing.** Every measured mean-reversion
+half-life is **519–2726 s**, all of them **longer than the 300 s window** — so
+even where reversion exists it is far too slow to matter inside a market. The
+dump mechanism in `plans/BE_INVENTORY_MODEL_PLAN.md` is **not** deleted.
+
+*(The obvious confound was tested and refuted: sub-linear variance scaling could
+have been manufactured by the measured terminal collapse, but body-only `beta`
+(`t ≤ 240 s`) is SMALLER on every coin, not larger. The scaling is real.)*
+
+**Two-sided quoting offsets in proportion to fill frequency, and on thin coins it
+is actively counterproductive.** Terminal `|net|` under two-sided quoting divided
+by the one-sided control, same windows:
+
+| coin | fills/window | ratio |
+|---|---:|---:|
+| btc | 317.6 | **0.101** |
+| eth | 62.5 | **0.199** |
+| xrp | 10.3 | 0.663 |
+| doge | 2.2 | 1.173 |
+| hype | 1.9 | **1.752** |
+
+At ~2 fills/window the two sides rarely pair, so the second quote adds *unpaired*
+fills rather than offsetting ones. **On bnb/doge/hype `skew` does not work at
+all**, leaving only `dump` or `do not quote` — which the inventory plan's §2
+does not allow for, since it treats skew as a control that always helps. This is
+an independent reason for the btc/eth restriction, arrived at from inventory
+rather than from bracket width.
+
+**`NEW_BBO` is a pure random walk carrying ~9.4× the inventory risk.** `beta` is
+0.908–0.996 with every OU slope positive; on btc terminal `|net|` p95 goes
+**191.8 → 1805.1 shares** and cash at risk **$121.80 → $541.76**. Mechanism: at
+the front you fill on every reaching trade and absorb one-sided bursts in full,
+while behind the queue you fill only on sweeps — **the queue acts as a filter
+that skips exactly the directional flow that accumulates**.
+
+**The policy comparison could not see this.** It measured fill and markout and
+found `NEW_BBO` ahead on fills (94.6 % vs 76.9 %). Front-of-queue buys fill rate
+and **pays for it in inventory risk at ~9×**, so that comparison was generous to
+`NEW_BBO`. **Any placement comparison needs inventory risk as a third axis.**
+
 ## 2. Measured and UNDETERMINED — not negative, not positive
 
 - **The maker-edge sign.** `+0.173 ¢/share [−0.251, +0.596]` pooled; **all seven
