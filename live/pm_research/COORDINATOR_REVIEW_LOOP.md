@@ -214,6 +214,69 @@ Stop counter: 0 (MUST-FIX-class findings present). Iteration 2 runs after
 the coordinator applies; Q-DA-3 adjudication and application-verification
 are its first items.
 
+### Iteration 2 — 2026-08-23 — verdict: `DEFECTS_FOUND` (one confirmed challenge; application-verification largely positive)
+
+**1. Q-DA-3 ADJUDICATED: CONFIRMED — Class D's clause (c) is
+deterrent-asymmetric, and for refutation-invalidating amendments it is the
+objective, not the cost.** Verified against the primary texts (the
+three-part test at R-6/§5a; the challenge at §0a; the named route at SP §4's
+`primary_horizon` row): clause (c) — "explicitly invalidates every verdict
+computed under the old bar" — was designed as a COST that deters casual
+amendment. That deterrence only operates when the standing verdict is worth
+keeping to the amender. **Every frozen verdict in this programme is a
+refutation** (DEAD/DEAD, FIRE_SIDE-negative), so an amender who wants a
+refutation gone satisfies (c) *eagerly* — the clause hands them a
+legitimated erasure mechanism, and the entire protection collapses onto
+clause (b) ("not the result itself"), which is judgment-laden. The concrete
+route DA named is real: eth h=15/30 are the two spans-zero cells with no
+recorded population-artefact defence — "new information" citing them could
+motivate a bar amendment whose (c)-step invalidates the DEAD verdicts, with
+every formal box ticked. DA's withdrawn sharpening is noted and does not
+touch the structural claim.
+**Recommended fix (content offered for the owning seat to ratify, per
+R-36's whether/what split): add clause (d) for any amendment whose effect
+could convert a refutation toward a pass — the re-run must ALSO be reported
+under the OLD bar, permanently, beside the new (dual-bar reporting).** This
+converts (c) from erasure into annotation: an amendment can add a second
+reading but can never remove the refutation from view. It is R-28's
+append-only philosophy and R-10's supersede-never-overwrite applied to
+verdicts, it adds no asymmetric bureaucracy, and it makes the directional
+attack pointless rather than forbidden-but-arguable.
+
+**2. APPLICATION-VERIFICATION of iteration 1 (R-36 checked against the
+ledger, and against its own standard):**
+- ADOPTED: rec 1 (premise blocks) = clause 3; rec 2 ("applied names the
+  mechanism") = clause 1, STRENGTHENED — the coordinator verifies the
+  artifact, not the report, reversing the exactly-backwards trust
+  direction the ruling itself names; the PROSE-ONLY class = clause 2; the
+  R-18 extension to the full content class (plans, gates, mechanism
+  choices, fact-correction targets — "the coordinator rules on WHETHER,
+  not on WHAT") adopts the review's one-root finding wholesale.
+- FIRST APPLICATIONS, verified present: **R-24 re-opened as PROSE-ONLY**
+  (ledger line confirmed) with landing evidence correctly NAMED in the
+  re-open itself — a check that FAILS when a sign-blind threshold is
+  supplied — which is the new standard applied to the new standard's first
+  output. Correctly formed.
+- STILL OPEN from iteration 1's recommendations: the R-8 and R-25
+  annotations (texts ready, not yet placed); the R-21/R-26 algorithmic-fix
+  dispatch (still absent); recs 5 (tranche/tick/read-cursor), 6 (taxonomy
+  amendments — Q-DA-3's clause (d) now joins that set), 7 (sealed-receipt
+  standing clause), 8 (code-vs-frozen-text lens), 9 (§2/§1 sync), 10
+  (pre-stamp naming). R-3/R-13's contract items ride the held batch,
+  correctly.
+- **R-36's own landing evidence under its own clause 1** (the
+  hold-me-to-it duty, first exercise): the R-24 PROSE-ONLY marking exists
+  (verified); the clauses are otherwise prospective — their landing
+  evidence is every subsequent ruling carrying a premise-artifact citation
+  and a landing-evidence field. **Standing DE duty recorded: from R-37
+  onward, each ruling is checked for both on arrival; absence is called
+  out in the next report, per the coordinator's own instruction.**
+
+Stop counter: 0 (Q-DA-3's confirmation is MUST-FIX-class against R-6's
+design; the taxonomy amendment set is the coordinator's to apply).
+Iteration 3 verifies the remaining applications and any coordinator
+disagreements filed under their name in §4a.
+
 ---
 
 ## OPS contribution — coordinator review (R-34)
