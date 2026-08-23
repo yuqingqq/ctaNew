@@ -121,7 +121,8 @@ def replay_window(path: Path, up_id: str, down_id: str,
                   gaps: Sequence[tuple[float, float]],
                   front: bool = False,
                   size: float = QUOTE_SIZE,
-                  lag_s: float = fd.STATE_LAG_S) -> WindowFills | None:
+                  lag_s: float = fd.STATE_LAG_S,
+                  _tie_seq_sign: int = 1) -> WindowFills | None:
     """Replay one window with a resting two-sided quote, recording every fill.
 
     Same lagged-state event loop as `inventory_walk.simulate_window`: state is
@@ -219,7 +220,10 @@ def replay_window(path: Path, up_id: str, down_id: str,
     def schedule(recv: float, kind: str, data: dict[str, Any]) -> None:
         nonlocal seq
         seq += 1
-        heapq.heappush(pending, (recv + lag_s, seq, kind, data))
+        # _tie_seq_sign: EV-Replay §4.3 tie-break perturbation ONLY (-1
+        # reverses same-instant apply order deterministically; default 1 is
+        # the reference order). Never set outside the perturbation control.
+        heapq.heappush(pending, (recv + lag_s, _tie_seq_sign * seq, kind, data))
 
     for line in fi._gz_lines(path):
         if not any(m in line for m in (fi.TRADE_MARK, fi.QUOTE_MARK,

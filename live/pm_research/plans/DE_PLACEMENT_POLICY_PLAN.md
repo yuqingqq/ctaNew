@@ -419,7 +419,23 @@ SP-owned parameter with exactly this provisional provenance.
    backstop — and LAYER 2 (carry-to-resolution economics; the unreconciled
    +0.173 ¢ settlement census vs −0.53 ¢ Layer-1 on btc) as the next
    falsifier candidate, to be scoped with its bar brought to the coordinator
-   BEFORE running, same as R-1.** R-9's day-series re-run —
+   BEFORE running, same as R-1.
+   LAYER 2 IS NOW MEASURED (Ruling R-17; `LAYER2_PROTOCOL.md` §6, receipt
+   `derived/layer2_v1.json`): under the R-14-frozen bar the coin verdicts
+   are UNDETERMINED on both verdict coins — btc 2/4 days NEGATIVE (50 % <
+   75 %), eth 1/4 — applied as frozen, not softened. AND the direction is
+   unambiguous, stated without being upgraded: 8/8 cells negative in point
+   estimate on BOTH arms, zero POSITIVE, three excluding zero from below
+   and none from above. THE RECONCILIATION THE PROGRAMME OWED SINCE THE
+   CENSUS IS MEASURED: both marks on one population — the census's +0.173 ¢
+   positive sign DOES NOT SURVIVE the Layer-1 population (it was the
+   outlier; the tension resolves the way Layer 1 indicated), the bridge is
+   ≈ zero (adverse selection done by t+5 s STICKS to resolution), and the
+   arms agree in sign everywhere — itself informative, since the census's
+   arms flipped on the same fills. Carry does not rescue the passive JOIN
+   maker on any measured day; the frozen proportion rule hardens or
+   dissolves the verdict automatically as era days accrue.** R-9's
+   day-series re-run —
    **RUN AND ANSWERED (receipt `warning_window_v1_dayseries.json`): DEAD at
    the decision rung on ALL FOUR era days, both coins** — btc `R(250)`
    12.0–17.1 % (worst within-day CI upper 21.9 % vs the 30.9 % bar), eth

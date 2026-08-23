@@ -343,6 +343,28 @@ def smoke(per_coin: int = 2) -> int:
         raise SystemExit("[ev_replay] +50 ms changed no FILL record on any "
                          "window — lag does not reach fill formation")
 
+    # §4.3 tie-break perturbation control (same sanctioned pattern: the
+    # perturbation parameter lands WITH its control). Reversing same-instant
+    # apply order is a DIFFERENT deterministic engine; if ties are material,
+    # fills differ and the parity gate would trip on such an engine. If no
+    # window differs, that is an HONEST MEASURED outcome — tie order is
+    # immaterial on this set and the tie-break's load-bearing role is
+    # determinism alone (already gated) — reported, never forced.
+    tie_differ = 0
+    for slug, path, up, down, gaps in sel:
+        ref = el.replay_window(path, up, down, gaps, front=False)
+        rev = el.replay_window(path, up, down, gaps, front=False,
+                               _tie_seq_sign=-1)
+        if ref is not None and rev is not None and not conformant(rev, ref):
+            tie_differ += 1
+    gate_results["tie_break_control"] = {
+        "windows": len(sel), "fills_differ_under_reversed_ties": tie_differ,
+        "reading": ("parity trips on a tie-broken engine" if tie_differ
+                    else "tie order immaterial on this set; determinism gate "
+                         "carries the tie-break's only load-bearing role")}
+    print(f"[ev_replay] §4.3 tie-break control: reversed ties change fills "
+          f"on {tie_differ}/{len(sel)} windows")
+
     out = OUT_DIR / "ev_replay_v1_smoke.json"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(env.receipt(recs, "smoke_join", gate_results),
