@@ -20,6 +20,31 @@ names those four artifacts or it is not applied.
 | # | change | source | status |
 |---|---|---|---|
 | M-1 | widen `DecisionProblem.belief` → `Known[BeliefProcess] \| Unavailable` | DE (Q-DE-6; module plan §6.2 — a problem cannot be constructed while BE-Belief is a named seam) | FINALIZED |
+
+**M-1 submission evidence, pre-staged per R-59 (conditions 1 and 5, the
+DE-owned pieces):**
+- *Condition 5 — the migration record, ready for `migrations.yaml`
+  verbatim at submission:*
+  ```yaml
+  - from_version: 22
+    to_version: 23
+    operation: change
+    key: types:DecisionProblem.fields.belief
+    old: "Known[BeliefProcess]"
+    new: "Known[BeliefProcess] | Unavailable"
+    reason: 'Q-DE-6/R-57: a DecisionProblem must be constructible while
+      BE-Belief is a named seam; the widening adds an arm, removes none'
+  ```
+- *Condition 1 — consumer `UnavailablePolicy` declarations, one per
+  consumer of `DecisionProblem.belief`:*
+  **`RulePolicy_v1` (the only wired consumer of `DecisionProblem`):
+  policy = NOT-CONSUMED** — `belief` is outside its consumed-inputs
+  manifest, and the R-42 revelation selftest (sentinel non-manifest
+  fields, fails on any access) ENFORCES that the arm cannot be reached,
+  which is the strongest possible handler declaration: a silent None is
+  impossible because ANY read is a wiring failure. Every future consumer
+  declares its own policy at wiring time as a §2.2 condition inherited
+  from R-57(1).
 | M-2 | `Gate` field removals (12) + type changes (~10); `GateId`/`Provenance` removed from `prelude.external` | BE (Q-BE-7, §9 delta) | **PENDING — NOT READY: structural diff and migration records undone (BE's own filing)** |
 
 ## §2 — ADDITIVE, deduped across planes
@@ -119,6 +144,31 @@ superset of R-57's eight):
 
 **Result: zero contract-field references in frozen artifacts; no removal
 comes out of the batch on condition 4.**
+*(R-59: DISCHARGED — coordinator re-ran the sweep independently across
+the eight frozen protocols and concurs, including classifying the single
+`frozen_at` hit as V5's OWN metadata key, a name collision, not a
+reference. The check is AMENDED for reuse: a field CITATION —
+`Type.field`, schema position, explicit contract reference — is the
+target; bare-word collisions and ordinary usage are false positives of
+the instrument, and any future run of this check reports both counts.)*
+
+**Conditions 2/3 — machinery verified and baseline evidenced,
+2026-08-23 ~18:25 (R-59 next-items pass):**
+- *Condition 2:* the mechanism is `migrations.yaml`, which REPLACED the
+  path-keyed `removals_allowlist.yaml` after M11-1 — records bind
+  (operation, key, EXACT old, EXACT new, from_version, to_version),
+  `authorises()` requires the exact tuple, duplicate records are FATAL.
+  The NOT-path-keyed requirement is satisfied by construction. **Naming
+  reconciliation for the ratification text**: R-57's "removals_allowlist
+  entry" is today spelled "migrations.yaml record" — same discipline,
+  M11-1's replacement; flagged so the ratification language matches the
+  artifact.
+- *Condition 3:* `contract_check.py --selftest` 14/14 PASS (including
+  the narrowing-regression and duplicate-key fatals);
+  `contract_check.py 2f6a156 WORKTREE` → REMOVED (0) / TYPE-CHANGED (0)
+  / ADDED (0) — HEAD and worktree are structurally identical at v22.
+  Both re-run at submission on the v23 candidate; today's run evidences
+  the instrument and the clean baseline.
 
 **Checklist item 2 — VERIFIED 2026-08-23 ~17:15 (R-56 next-items pass):**
 contracts.yaml HEAD still at version 22, no interim motion. Per entry:
