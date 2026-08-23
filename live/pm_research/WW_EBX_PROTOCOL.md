@@ -50,20 +50,35 @@ share `R(τ)` at the Class-D `tau_decision_rung = 250 ms`. Verdict per
 exactly ww_v1's three-way. Windows spanning a `crypto_prices` collector gap
 are excluded and ledgered (the R-ADMISS analog for the second feed).
 
-## §2. The E-BX trigger — one rule, parameter-free, pre-registered
+## §2. The E-BX trigger — the FAMILY UNION, parameter-free (revised per R-48)
 
-**E-BX fires at the first NEW ADVERSE EXTREME of the deployed underlying
-feed since the episode started**, evaluated at feed RECEIPT time: for a
-resting maker BUY_UP, the underlying printing strictly below its running
-minimum since the quote began resting; for SELL_UP, strictly above its
-running maximum. The 4-channel envelope is
+*(Revision note, pre-freeze: the R-47 draft carried a single
+new-adverse-extreme trigger and rejected "any adverse change" as vacuous.
+R-48's union-bound rule reverses that reasoning CORRECTLY: for a one-way
+falsifier, generosity is the point — a saturating union weakens what a
+positive means, and a positive already adopts nothing; what it buys is
+that a NEGATIVE kills every rule in the family at once, with nothing
+tuned and nothing to p-hack.)*
+
+**E-BX fires at the first ADVERSE SIGNAL of the deployed underlying feed
+after the episode starts, under the UNION of every price-derived trigger
+observable on that feed**: any adverse sample-to-sample change, adverse
+displacement vs episode start, new adverse extreme. The union is dominated
+by its earliest-firing member, so operationally **E-BX = the first 1 Hz
+sample adverse to the resting side after the quote begins resting**
+(below the prior sample for BUY_UP, above for SELL_UP), evaluated at feed
+RECEIPT time. Nothing is tunable. The 4-channel envelope is
 `min(first of {E-FLOW, E-DEPLETE, E-MID}, first E-BX)`.
 
-Named and REJECTED alternates (not run, and why):
-- *any adverse price change*: fires ~every other sample on a random walk —
-  saturates the envelope by construction, R would be vacuously large;
-- *strike crossing*: episode-independent and saturating near the strike,
-  where the 1-tick book lives — same vacuity, different route.
+**Family members NAMED but NOT OBSERVABLE on the deployed feed** — R-48
+lists book jump, trade burst, price displacement, perp imbalance flip;
+the pipeline carries NO Binance book, trade, or open-interest stream
+(§3's instrument fact), so three of the four are unbuildable on current
+data. They do NOT inherit a negative from this union: their entire value
+proposition is leading price by sub-second amounts that the 1 Hz floor
+cannot see. The union verdict binds the PRICE-DERIVED family on the
+deployed feed; the direct-feed members stay behind the §3 collection
+boundary as their own future blind protocol.
 
 Beside the primary: the E-BX-ONLY warning share (descriptive — how much of
 the 4-channel R the new channel contributes) and the per-channel first-fire
@@ -132,6 +147,14 @@ within recomputation tolerance, or the run aborts.
 1. This draft goes to the coordinator; **freeze before any receipt is
    read** (Q-DE-11). Build under the R-1 sealed pattern is available while
    the freeze is pending.
-2. On freeze: run, read against the inherited bar, report cells first,
-   roll-ups second, E-BX-only shares beside, per R-9/R-17.
-3. `policy_bounds_v1` continues in parallel (R-47's CONTINUE).
+2. **[R-48] The run additionally gates on OPS's achievable-τ bound.** If
+   we cannot act inside the warning window, every channel here is dead on
+   actuation regardless of signal quality — a signal result assuming an
+   unachievable τ is a result about nothing. Drafting and building are not
+   blocked; READING a receipt is, until OPS reports and the operative τ is
+   confirmed ≥ the 250 ms rung this protocol assumes (or the rung is
+   re-frozen to what OPS measures, BEFORE the run, as a declared input —
+   not after, which would be selection).
+3. On freeze + OPS-τ: run, read against the inherited bar, report cells
+   first, roll-ups second, E-BX-only shares beside, per R-9/R-17.
+4. `policy_bounds_v1` continues in parallel (R-47/R-48 CONTINUE).
