@@ -1,4 +1,4 @@
-# COORDINATOR_REVIEW_LOOP — charter
+# COORDINATOR_REVIEW_LOOP — charter — **LOOP CLOSED 2026-08-23, stop rule met (iterations 3–4 zero confirmed MUST-FIX)**
 
 Review OF THE COORDINATOR, commissioned by the coordinator under Ruling R-34,
 owned and run by the DE session. Started 2026-08-23.
@@ -333,6 +333,70 @@ coordinator's application round was sound, and the findings are a naming
 gap, a corroborated refinement, and a channel extension. Iteration 4 runs
 after the coordinator's next application pass; a second clean iteration
 ends the loop.
+
+### Iteration 4 — 2026-08-23 — verdict: `ZERO CONFIRMED MUST-FIX` — **streak 2 of 2 — THE LOOP CLOSES**
+
+**Application-verification of R-40, against the ledger and its own
+standard:** all three iteration-3 refinements RATIFIED and verified
+present — **clause (e)** verbatim (vacated verdicts carry provenance
+permanently; the vacating amendment auto-files the owed re-run as a
+register row); **the R-38 annotation** with its landing artifacts named
+(SP Rev 10 §10.9, SP:296); **clause 3 extended to dispatches** with the
+one-line "state I rely on". The coordinator also artifact-verified their
+own stale premise before admitting it (40 checks, 20 ActionSpace
+references — checked, not reported), which is clause 1 practiced on
+oneself. Two NOTE-class pendings, recorded as handoff items, not held
+against the close: clause (e)'s echo into SP's operative
+amendment-mechanism text (expected via DA's register absorption, as
+clause (d)'s was), and the dispatch premise-lines being first observable
+on the next dispatch (the standing clause-1 duty covers both).
+
+**The coordinator's commitments, checked at close:** no edits to this
+file by the coordinator (verified — every non-DE addition is a plane
+contribution under its own heading); no findings argued inside it; no
+grading; zero disagreements filed in §4a (every confirmed finding was
+applied instead). **Commitments kept, all four.**
+
+---
+
+## CLOSING SUMMARY — what the commission bought
+
+Four iterations, five contributing sources, every finding
+artifact-verified. **The answer to the user's question — is the
+coordinator working correctly:**
+
+- **Where it rules, yes, measurably**: 25 of 33 rulings CONFIRMED-CORRECT
+  with real outcomes; the freeze-first machinery is why the programme's
+  negatives are trustworthy; the amendment discipline never churned even
+  as everything around it did.
+- **Where it authors, no, reliably**: all four WRONG rulings were the
+  coordinator producing content — now bounded by the extended R-18
+  ("rules on WHETHER, not on WHAT"), which this review's one-root finding
+  produced.
+- **The channels are now guarded in both directions**: §0a fixed inbound
+  on its first day (two live code defects surfaced immediately); R-36's
+  three clauses fixed outbound (landing evidence, PROSE-ONLY,
+  premise artifacts), R-40 extended them to dispatches, and the review
+  caught the relocation in between — proving the coordinator's own
+  closing lesson: **a guard bounds a channel, never a behaviour.**
+- **The amendment mechanism is now five clauses deep and symmetric**:
+  (a) before the re-run, (b) not the result itself, (c) invalidates old
+  verdicts, (d) an amendment buys an obligation, never a verdict,
+  (e) vacated verdicts keep their provenance and the debt is loud. You
+  cannot amend your way out of a refutation in this programme anymore —
+  in either the loud way or the quiet way.
+- **The governance structure completed its first full circuit**
+  (challenge → routed adjudication → confirmation → self-overruling →
+  operational landing), and the quiet-workaround hunt returned the
+  healthiest possible result: two members, both fixed, zero
+  verdict-softening anywhere.
+
+**Survives the close:** the standing clause-1/clause-3 duty (DE checks
+every ruling and dispatch on arrival — independent of this loop, per
+R-36/R-40); the open recommendations 5–10 tracked in the register; the
+two NOTE pendings above. **Re-open triggers:** a WRONG-class ruling
+recurring post-R-36/R-40; a false "applied" surviving a landing-evidence
+check; or the principal (the user) recommissioning.
 
 ---
 
