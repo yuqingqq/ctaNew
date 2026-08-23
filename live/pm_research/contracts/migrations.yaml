@@ -4,29 +4,34 @@
 # narrowing at an allowlisted path -- the precise failure this process exists to
 # prevent. Records are loaded from the TARGET ref.
 migrations:
-# ---- v21 -> v22: action-conditional queue-fill development boundary ------
 - from_version: 21
   to_version: 22
   operation: change
   key: module:BE-FlowFit.produces
-  old: "['ArrivalIntensityFit', 'ConditionalMarkLaw', 'HawkesResidualFit', 'HealthEvent', 'NotionalThroughput', 'TimeChangeDiagnostic']"
-  new: "['ArrivalIntensityFit', 'ConditionalMarkLaw', 'HawkesDevelopmentDiagnostic', 'HawkesResidualFit', 'HealthEvent', 'NotionalThroughput', 'TimeChangeDiagnostic']"
-  reason: 'R-FLOW: exploratory within-design Hawkes output is now a distinct non-decision type instead of weakening the ten-forward-day gate on HawkesResidualFit'
+  old: '[''ArrivalIntensityFit'', ''ConditionalMarkLaw'', ''HawkesResidualFit'', ''HealthEvent'', ''NotionalThroughput'',
+    ''TimeChangeDiagnostic'']'
+  new: '[''ArrivalIntensityFit'', ''ConditionalMarkLaw'', ''HawkesDevelopmentDiagnostic'', ''HawkesResidualFit'',
+    ''HealthEvent'', ''NotionalThroughput'', ''TimeChangeDiagnostic'']'
+  reason: 'R-FLOW: exploratory within-design Hawkes output is now a distinct non-decision type instead
+    of weakening the ten-forward-day gate on HawkesResidualFit'
 - from_version: 21
   to_version: 22
   operation: change
   key: module:BE-FlowAndFills.consumes
-  old: "['ActionSet', 'ArrivalIntensityFit', 'ConditionalMarkLaw', 'SelfState', 'StateView']"
-  new: "['ActionSet', 'ArrivalIntensityFit', 'ConditionalMarkLaw', 'FlowActionFillFit', 'SelfState', 'StateView']"
-  reason: 'R-FILL: the decision seam must consume an action-bound validated queue-fill artifact, not infer fills from unconditional arrival intensity and marks'
-# ---- v17 -> v18: replay canary and point-in-time coverage -----------------
+  old: '[''ActionSet'', ''ArrivalIntensityFit'', ''ConditionalMarkLaw'', ''SelfState'', ''StateView'']'
+  new: '[''ActionSet'', ''ArrivalIntensityFit'', ''ConditionalMarkLaw'', ''FlowActionFillFit'', ''SelfState'',
+    ''StateView'']'
+  reason: 'R-FILL: the decision seam must consume an action-bound validated queue-fill artifact, not infer
+    fills from unconditional arrival intensity and marks'
 - from_version: 17
   to_version: 18
   operation: change
   key: rule:R-KNOW
   old: no API accepts event time; derived t_known = MAX(inputs)
-  new: no production API accepts event time; derived t_known = MAX(inputs); EventTimeView is reachable only through the R-CANARY harness
-  reason: 'R-CANARY: the event-time API exists only as a deliberately leaky, harness-bound diagnostic twin'
+  new: no production API accepts event time; derived t_known = MAX(inputs); EventTimeView is reachable
+    only through the R-CANARY harness
+  reason: 'R-CANARY: the event-time API exists only as a deliberately leaky, harness-bound diagnostic
+    twin'
 - from_version: 17
   to_version: 18
   operation: change
@@ -34,7 +39,6 @@ migrations:
   old: '(field: str, span: Duration) -> Coverage'
   new: '(field: str, span: Duration) -> Known[Coverage] | Unavailable'
   reason: 'R-REFUSE: coverage is itself knowledge-time data and must be unavailable before t_known_hi'
-# ---- v16 -> v17: measurement infrastructure boundary ---------------------
 - from_version: 16
   to_version: 17
   operation: change
@@ -55,123 +59,121 @@ migrations:
   key: field:Coverage.segments
   old: list[(Timestamp, Timestamp)]
   reason: 'R-ADMISS: replaced by typed Coverage.covered plus explicit cause-aware gaps and target'
-# ---- v15 -> v16 (M16-1): ITER4 review of Revision 4 ------------------------
 - from_version: 15
   to_version: 16
   operation: remove
   key: field:PathLaw.anchor
   old: AnchorSpec
-  reason: 'M16-1 (ITER4 M4-6): PathLaw becomes a DISCRIMINATED UNION. v15 made estimand_route
-    an enum on one record that always carried both reduced-form and structural fields, forcing
-    a route-A object to populate an anchor/rate/convention it does not use. This field moves
-    to ReducedFormPathLaw or StructuralDiagnosticLaw, whichever arm actually owns it'
+  reason: 'M16-1 (ITER4 M4-6): PathLaw becomes a DISCRIMINATED UNION. v15 made estimand_route an enum
+    on one record that always carried both reduced-form and structural fields, forcing a route-A object
+    to populate an anchor/rate/convention it does not use. This field moves to ReducedFormPathLaw or StructuralDiagnosticLaw,
+    whichever arm actually owns it'
 - from_version: 15
   to_version: 16
   operation: remove
   key: field:PathLaw.anchor_error_evidence
   old: AnchorErrorEvidence
-  reason: 'M16-1 (ITER4 M4-6): PathLaw becomes a DISCRIMINATED UNION. v15 made estimand_route
-    an enum on one record that always carried both reduced-form and structural fields, forcing
-    a route-A object to populate an anchor/rate/convention it does not use. This field moves
-    to ReducedFormPathLaw or StructuralDiagnosticLaw, whichever arm actually owns it'
+  reason: 'M16-1 (ITER4 M4-6): PathLaw becomes a DISCRIMINATED UNION. v15 made estimand_route an enum
+    on one record that always carried both reduced-form and structural fields, forcing a route-A object
+    to populate an anchor/rate/convention it does not use. This field moves to ReducedFormPathLaw or StructuralDiagnosticLaw,
+    whichever arm actually owns it'
 - from_version: 15
   to_version: 16
   operation: remove
   key: field:PathLaw.as_of
   old: Timestamp
-  reason: 'M16-1 (ITER4 M4-6): PathLaw becomes a DISCRIMINATED UNION. v15 made estimand_route
-    an enum on one record that always carried both reduced-form and structural fields, forcing
-    a route-A object to populate an anchor/rate/convention it does not use. This field moves
-    to ReducedFormPathLaw or StructuralDiagnosticLaw, whichever arm actually owns it'
+  reason: 'M16-1 (ITER4 M4-6): PathLaw becomes a DISCRIMINATED UNION. v15 made estimand_route an enum
+    on one record that always carried both reduced-form and structural fields, forcing a route-A object
+    to populate an anchor/rate/convention it does not use. This field moves to ReducedFormPathLaw or StructuralDiagnosticLaw,
+    whichever arm actually owns it'
 - from_version: 15
   to_version: 16
   operation: remove
   key: field:PathLaw.calibration
   old: CalibrationCurve | NullPin
-  reason: 'M16-1 (ITER4 M4-6): PathLaw becomes a DISCRIMINATED UNION. v15 made estimand_route
-    an enum on one record that always carried both reduced-form and structural fields, forcing
-    a route-A object to populate an anchor/rate/convention it does not use. This field moves
-    to ReducedFormPathLaw or StructuralDiagnosticLaw, whichever arm actually owns it'
+  reason: 'M16-1 (ITER4 M4-6): PathLaw becomes a DISCRIMINATED UNION. v15 made estimand_route an enum
+    on one record that always carried both reduced-form and structural fields, forcing a route-A object
+    to populate an anchor/rate/convention it does not use. This field moves to ReducedFormPathLaw or StructuralDiagnosticLaw,
+    whichever arm actually owns it'
 - from_version: 15
   to_version: 16
   operation: remove
   key: field:PathLaw.coverage
   old: Coverage
-  reason: 'M16-1 (ITER4 M4-6): PathLaw becomes a DISCRIMINATED UNION. v15 made estimand_route
-    an enum on one record that always carried both reduced-form and structural fields, forcing
-    a route-A object to populate an anchor/rate/convention it does not use. This field moves
-    to ReducedFormPathLaw or StructuralDiagnosticLaw, whichever arm actually owns it'
+  reason: 'M16-1 (ITER4 M4-6): PathLaw becomes a DISCRIMINATED UNION. v15 made estimand_route an enum
+    on one record that always carried both reduced-form and structural fields, forcing a route-A object
+    to populate an anchor/rate/convention it does not use. This field moves to ReducedFormPathLaw or StructuralDiagnosticLaw,
+    whichever arm actually owns it'
 - from_version: 15
   to_version: 16
   operation: remove
   key: field:PathLaw.estimand_route
   old: enum:REDUCED_FORM|STRUCTURAL
-  reason: 'M16-1 (M4-6): an enum discriminator on a record is not a discriminated union; replaced
-    by the ReducedForm/Structural variants, which make the wrong arm structurally unable to
-    price'
+  reason: 'M16-1 (M4-6): an enum discriminator on a record is not a discriminated union; replaced by the
+    ReducedForm/Structural variants, which make the wrong arm structurally unable to price'
 - from_version: 15
   to_version: 16
   operation: remove
   key: field:PathLaw.fit_data_through
   old: Timestamp
-  reason: 'M16-1 (ITER4 M4-6): PathLaw becomes a DISCRIMINATED UNION. v15 made estimand_route
-    an enum on one record that always carried both reduced-form and structural fields, forcing
-    a route-A object to populate an anchor/rate/convention it does not use. This field moves
-    to ReducedFormPathLaw or StructuralDiagnosticLaw, whichever arm actually owns it'
+  reason: 'M16-1 (ITER4 M4-6): PathLaw becomes a DISCRIMINATED UNION. v15 made estimand_route an enum
+    on one record that always carried both reduced-form and structural fields, forcing a route-A object
+    to populate an anchor/rate/convention it does not use. This field moves to ReducedFormPathLaw or StructuralDiagnosticLaw,
+    whichever arm actually owns it'
 - from_version: 15
   to_version: 16
   operation: remove
   key: field:PathLaw.horizon_domain
   old: HorizonDomain
-  reason: 'M16-1 (ITER4 M4-6): PathLaw becomes a DISCRIMINATED UNION. v15 made estimand_route
-    an enum on one record that always carried both reduced-form and structural fields, forcing
-    a route-A object to populate an anchor/rate/convention it does not use. This field moves
-    to ReducedFormPathLaw or StructuralDiagnosticLaw, whichever arm actually owns it'
+  reason: 'M16-1 (ITER4 M4-6): PathLaw becomes a DISCRIMINATED UNION. v15 made estimand_route an enum
+    on one record that always carried both reduced-form and structural fields, forcing a route-A object
+    to populate an anchor/rate/convention it does not use. This field moves to ReducedFormPathLaw or StructuralDiagnosticLaw,
+    whichever arm actually owns it'
 - from_version: 15
   to_version: 16
   operation: remove
   key: field:PathLaw.instrument
   old: InstrumentId
-  reason: 'M16-1 (ITER4 M4-6): PathLaw becomes a DISCRIMINATED UNION. v15 made estimand_route
-    an enum on one record that always carried both reduced-form and structural fields, forcing
-    a route-A object to populate an anchor/rate/convention it does not use. This field moves
-    to ReducedFormPathLaw or StructuralDiagnosticLaw, whichever arm actually owns it'
+  reason: 'M16-1 (ITER4 M4-6): PathLaw becomes a DISCRIMINATED UNION. v15 made estimand_route an enum
+    on one record that always carried both reduced-form and structural fields, forcing a route-A object
+    to populate an anchor/rate/convention it does not use. This field moves to ReducedFormPathLaw or StructuralDiagnosticLaw,
+    whichever arm actually owns it'
 - from_version: 15
   to_version: 16
   operation: remove
   key: field:PathLaw.ledger
   old: VarianceGroup
-  reason: 'M16-1 (ITER4 M4-6): PathLaw becomes a DISCRIMINATED UNION. v15 made estimand_route
-    an enum on one record that always carried both reduced-form and structural fields, forcing
-    a route-A object to populate an anchor/rate/convention it does not use. This field moves
-    to ReducedFormPathLaw or StructuralDiagnosticLaw, whichever arm actually owns it'
+  reason: 'M16-1 (ITER4 M4-6): PathLaw becomes a DISCRIMINATED UNION. v15 made estimand_route an enum
+    on one record that always carried both reduced-form and structural fields, forcing a route-A object
+    to populate an anchor/rate/convention it does not use. This field moves to ReducedFormPathLaw or StructuralDiagnosticLaw,
+    whichever arm actually owns it'
 - from_version: 15
   to_version: 16
   operation: remove
   key: field:PathLaw.link_ref
   old: LinkRef
-  reason: 'M16-1 (ITER4 M4-6): PathLaw becomes a DISCRIMINATED UNION. v15 made estimand_route
-    an enum on one record that always carried both reduced-form and structural fields, forcing
-    a route-A object to populate an anchor/rate/convention it does not use. This field moves
-    to ReducedFormPathLaw or StructuralDiagnosticLaw, whichever arm actually owns it'
+  reason: 'M16-1 (ITER4 M4-6): PathLaw becomes a DISCRIMINATED UNION. v15 made estimand_route an enum
+    on one record that always carried both reduced-form and structural fields, forcing a route-A object
+    to populate an anchor/rate/convention it does not use. This field moves to ReducedFormPathLaw or StructuralDiagnosticLaw,
+    whichever arm actually owns it'
 - from_version: 15
   to_version: 16
   operation: remove
   key: field:PathLaw.nugget
   old: VarianceQuantity | NullPin
-  reason: 'M16-1 (ITER4 M4-6): PathLaw becomes a DISCRIMINATED UNION. v15 made estimand_route
-    an enum on one record that always carried both reduced-form and structural fields, forcing
-    a route-A object to populate an anchor/rate/convention it does not use. This field moves
-    to ReducedFormPathLaw or StructuralDiagnosticLaw, whichever arm actually owns it'
+  reason: 'M16-1 (ITER4 M4-6): PathLaw becomes a DISCRIMINATED UNION. v15 made estimand_route an enum
+    on one record that always carried both reduced-form and structural fields, forcing a route-A object
+    to populate an anchor/rate/convention it does not use. This field moves to ReducedFormPathLaw or StructuralDiagnosticLaw,
+    whichever arm actually owns it'
 - from_version: 15
   to_version: 16
   operation: remove
   key: field:PathLaw.provenance
   old: Provenance
-  reason: 'M16-1 (ITER4 M4-6): PathLaw becomes a DISCRIMINATED UNION. v15 made estimand_route
-    an enum on one record that always carried both reduced-form and structural fields, forcing
-    a route-A object to populate an anchor/rate/convention it does not use. This field moves
-    to ReducedFormPathLaw or StructuralDiagnosticLaw, whichever arm actually owns it'
+  reason: 'M16-1 (ITER4 M4-6): PathLaw becomes a DISCRIMINATED UNION. v15 made estimand_route an enum
+    on one record that always carried both reduced-form and structural fields, forcing a route-A object
+    to populate an anchor/rate/convention it does not use. This field moves to ReducedFormPathLaw or StructuralDiagnosticLaw,
+    whichever arm actually owns it'
 - from_version: 15
   to_version: 16
   operation: remove
@@ -183,78 +185,77 @@ migrations:
   operation: remove
   key: field:PathLaw.sampling_convention
   old: SamplingConvention
-  reason: 'M16-1 (M4-1): the pricing arm must NOT carry this. Route A regresses PUBLISHED
-    streams and never needs the internal kernel; v15 gated it on VERIFIED anyway, destroying
-    the operational advantage that selected route A. Moves to the structural arm and is replaced
-    on the pricing arm by StreamProvenance'
+  reason: 'M16-1 (M4-1): the pricing arm must NOT carry this. Route A regresses PUBLISHED streams and
+    never needs the internal kernel; v15 gated it on VERIFIED anyway, destroying the operational advantage
+    that selected route A. Moves to the structural arm and is replaced on the pricing arm by StreamProvenance'
 - from_version: 15
   to_version: 16
   operation: remove
   key: field:PathLaw.se_log_sigma
   old: float
-  reason: 'M16-1 (ITER4 M4-6): PathLaw becomes a DISCRIMINATED UNION. v15 made estimand_route
-    an enum on one record that always carried both reduced-form and structural fields, forcing
-    a route-A object to populate an anchor/rate/convention it does not use. This field moves
-    to ReducedFormPathLaw or StructuralDiagnosticLaw, whichever arm actually owns it'
+  reason: 'M16-1 (ITER4 M4-6): PathLaw becomes a DISCRIMINATED UNION. v15 made estimand_route an enum
+    on one record that always carried both reduced-form and structural fields, forcing a route-A object
+    to populate an anchor/rate/convention it does not use. This field moves to ReducedFormPathLaw or StructuralDiagnosticLaw,
+    whichever arm actually owns it'
 - from_version: 15
   to_version: 16
   operation: remove
   key: field:PathLaw.sigma2_rate
   old: RateQuantity
-  reason: 'M16-1 (ITER4 M4-6): PathLaw becomes a DISCRIMINATED UNION. v15 made estimand_route
-    an enum on one record that always carried both reduced-form and structural fields, forcing
-    a route-A object to populate an anchor/rate/convention it does not use. This field moves
-    to ReducedFormPathLaw or StructuralDiagnosticLaw, whichever arm actually owns it'
+  reason: 'M16-1 (ITER4 M4-6): PathLaw becomes a DISCRIMINATED UNION. v15 made estimand_route an enum
+    on one record that always carried both reduced-form and structural fields, forcing a route-A object
+    to populate an anchor/rate/convention it does not use. This field moves to ReducedFormPathLaw or StructuralDiagnosticLaw,
+    whichever arm actually owns it'
 - from_version: 15
   to_version: 16
   operation: remove
   key: field:PathLaw.target_interval
   old: TargetInterval
-  reason: 'M16-1 (ITER4 M4-6): PathLaw becomes a DISCRIMINATED UNION. v15 made estimand_route
-    an enum on one record that always carried both reduced-form and structural fields, forcing
-    a route-A object to populate an anchor/rate/convention it does not use. This field moves
-    to ReducedFormPathLaw or StructuralDiagnosticLaw, whichever arm actually owns it'
+  reason: 'M16-1 (ITER4 M4-6): PathLaw becomes a DISCRIMINATED UNION. v15 made estimand_route an enum
+    on one record that always carried both reduced-form and structural fields, forcing a route-A object
+    to populate an anchor/rate/convention it does not use. This field moves to ReducedFormPathLaw or StructuralDiagnosticLaw,
+    whichever arm actually owns it'
 - from_version: 15
   to_version: 16
   operation: remove
   key: field:PathLaw.unit_space
   old: UnitSpace
-  reason: 'M16-1 (ITER4 M4-6): PathLaw becomes a DISCRIMINATED UNION. v15 made estimand_route
-    an enum on one record that always carried both reduced-form and structural fields, forcing
-    a route-A object to populate an anchor/rate/convention it does not use. This field moves
-    to ReducedFormPathLaw or StructuralDiagnosticLaw, whichever arm actually owns it'
+  reason: 'M16-1 (ITER4 M4-6): PathLaw becomes a DISCRIMINATED UNION. v15 made estimand_route an enum
+    on one record that always carried both reduced-form and structural fields, forcing a route-A object
+    to populate an anchor/rate/convention it does not use. This field moves to ReducedFormPathLaw or StructuralDiagnosticLaw,
+    whichever arm actually owns it'
 - from_version: 15
   to_version: 16
   operation: remove
   key: field:PathLaw.w_declared
   old: Duration
-  reason: 'M16-1 (ITER4 M4-6): PathLaw becomes a DISCRIMINATED UNION. v15 made estimand_route
-    an enum on one record that always carried both reduced-form and structural fields, forcing
-    a route-A object to populate an anchor/rate/convention it does not use. This field moves
-    to ReducedFormPathLaw or StructuralDiagnosticLaw, whichever arm actually owns it'
+  reason: 'M16-1 (ITER4 M4-6): PathLaw becomes a DISCRIMINATED UNION. v15 made estimand_route an enum
+    on one record that always carried both reduced-form and structural fields, forcing a route-A object
+    to populate an anchor/rate/convention it does not use. This field moves to ReducedFormPathLaw or StructuralDiagnosticLaw,
+    whichever arm actually owns it'
 - from_version: 15
   to_version: 16
   operation: remove
   key: field:PathLaw.w_hat_free_diagnostic
   old: Duration | NullPin
-  reason: 'M16-1 (ITER4 M4-6): PathLaw becomes a DISCRIMINATED UNION. v15 made estimand_route
-    an enum on one record that always carried both reduced-form and structural fields, forcing
-    a route-A object to populate an anchor/rate/convention it does not use. This field moves
-    to ReducedFormPathLaw or StructuralDiagnosticLaw, whichever arm actually owns it'
+  reason: 'M16-1 (ITER4 M4-6): PathLaw becomes a DISCRIMINATED UNION. v15 made estimand_route an enum
+    on one record that always carried both reduced-form and structural fields, forcing a route-A object
+    to populate an anchor/rate/convention it does not use. This field moves to ReducedFormPathLaw or StructuralDiagnosticLaw,
+    whichever arm actually owns it'
 - from_version: 15
   to_version: 16
   operation: remove
   key: field:SamplingConvention.fast_slow_synchronous
   old: bool
-  reason: 'M16-1 (M4-6): a bool cannot say WHICH stream lags or by how much; superseded by
-    per-stream offsets plus alignment/update semantics'
+  reason: 'M16-1 (M4-6): a bool cannot say WHICH stream lags or by how much; superseded by per-stream
+    offsets plus alignment/update semantics'
 - from_version: 15
   to_version: 16
   operation: remove
   key: field:SamplingConvention.weights_fast
   old: list[float]
-  reason: 'M16-1 (M4-6): list[float] cannot encode support, so an aligned and a lagged schedule
-    carried identical weight lists; replaced by list[WeightAtOffset]'
+  reason: 'M16-1 (M4-6): list[float] cannot encode support, so an aligned and a lagged schedule carried
+    identical weight lists; replaced by list[WeightAtOffset]'
 - from_version: 15
   to_version: 16
   operation: remove
@@ -266,171 +267,158 @@ migrations:
   operation: remove
   key: proto:PathLaw.conditional_mean
   old: '(req: ForecastRequest, obs: AnchorObservables) -> Known[float] | Unavailable'
-  reason: 'M16-1 (M4-2): same -- mean and variance must come from one atomic validated query,
-    not two independently callable accessors'
+  reason: 'M16-1 (M4-2): same -- mean and variance must come from one atomic validated query, not two
+    independently callable accessors'
 - from_version: 15
   to_version: 16
   operation: remove
   key: proto:PathLaw.increment_var
   old: '(req: ForecastRequest) -> VarianceQuantity | Unavailable'
-  reason: 'M16-1 (M4-6): the ROLLING increment object belongs to the structural arm that fits
-    the tape, not to the pricing arm; its route-A semantics were undefined'
+  reason: 'M16-1 (M4-6): the ROLLING increment object belongs to the structural arm that fits the tape,
+    not to the pricing arm; its route-A semantics were undefined'
 - from_version: 15
   to_version: 16
   operation: remove
   key: proto:PathLaw.settlement_var
   old: '(req: ForecastRequest) -> VarianceQuantity | Unavailable'
-  reason: 'M16-1 (M4-2): a bare variance accessor let a caller obtain a moment without any
-    request/time validation. Terminal variance is now reachable only through ReducedFormPathLaw.pricing_distribution,
+  reason: 'M16-1 (M4-2): a bare variance accessor let a caller obtain a moment without any request/time
+    validation. Terminal variance is now reachable only through ReducedFormPathLaw.pricing_distribution,
     which validates first and returns both moments from one validated fit'
 - from_version: 15
   to_version: 16
   operation: remove
   key: rule:R-REQ.check:executable
-  old: 'executable: these are evaluated by sigma_kernels.check_request with negative fixtures;
-    a typed timestamp that is never compared is documentation, not look-ahead protection'
-  reason: 'M16-1 (M4-2): superseded by the stronger `atomic` check -- the invariants now run
-    INSIDE pricing_distribution rather than in an optional helper'
+  old: 'executable: these are evaluated by sigma_kernels.check_request with negative fixtures; a typed
+    timestamp that is never compared is documentation, not look-ahead protection'
+  reason: 'M16-1 (M4-2): superseded by the stronger `atomic` check -- the invariants now run INSIDE pricing_distribution
+    rather than in an optional helper'
 - from_version: 15
   to_version: 16
   operation: remove
   key: rule:R-ROUTE.check:diagnostic_only
-  old: 'diagnostic_only: estimand_route == REDUCED_FORM => k_law, AnchorSpec cond_var and
-    FeedErrorCov are diagnostics and are not added'
-  reason: 'M16-1 (M4-5): superseded by no_structural_pricing and type_boundary, which are
-    type-level rather than key-name conventions'
+  old: 'diagnostic_only: estimand_route == REDUCED_FORM => k_law, AnchorSpec cond_var and FeedErrorCov
+    are diagnostics and are not added'
+  reason: 'M16-1 (M4-5): superseded by no_structural_pricing and type_boundary, which are type-level rather
+    than key-name conventions'
 - from_version: 15
   to_version: 16
   operation: change
   key: note:AnchorSpec
-  old: 'M15-1 (ITER3 M3-2). For P_hat(alpha) = S_slow + alpha*(S_fast - S_slow) the error
-    splits as (alpha - alpha_selected)*(S_fast - S_slow) + a conditionally zero-mean residual.
-    The first term is KNOWN AT DECISION TIME and belongs in the mean; bias_enters may never
-    be other than MEAN_MODEL or REFUSED. v14 defined bias against the MODEL coefficient unconditionally,
-    so an empirically fitted alpha was always labelled biased and the documented mean correction
-    dragged the centre back to the Brownian projection -- no empirical coefficient could become
-    the zero-bias mean. `selected` now says which estimand defines correctness and bias is
-    measured against THAT, so a fitted conditional mean is unbiased with respect to itself.
-    model_gap_by_horizon (estimated - model) survives as a PROCESS DIAGNOSTIC and is never
-    applied as a correction. Every quantity is HORIZON-INDEXED: the anchor is not a scalar
-    (alpha* is 1.2496 at r=30 against 1.4992 outside the window) and the plan fits it at each
-    r.'
-  new: 'M16-1. For P_hat(alpha) = S_slow + alpha*(S_fast - S_slow) the error splits as (alpha
-    - alpha_selected)*(S_fast - S_slow) + a conditionally zero-mean residual. The first term
-    is KNOWN AT DECISION TIME and belongs in the mean; bias_enters may never be other than
-    MEAN_MODEL or REFUSED. v14 defined bias against the MODEL coefficient unconditionally,
-    so an empirically fitted alpha was always labelled biased and the documented mean correction
-    dragged the centre back to the Brownian projection -- no empirical coefficient could become
-    the zero-bias mean. `selected` now says which estimand defines correctness and bias is
-    measured against THAT, so a fitted conditional mean is unbiased with respect to itself.
-    model_gap_by_horizon (estimated - model) survives as a PROCESS DIAGNOSTIC and is never
-    applied as a correction. Every quantity is HORIZON-INDEXED: the anchor is not a scalar
-    (alpha* is 1.2496 at r=30 against 1.4992 outside the window) and the plan fits it at each
-    r.'
+  old: 'M15-1 (ITER3 M3-2). For P_hat(alpha) = S_slow + alpha*(S_fast - S_slow) the error splits as (alpha
+    - alpha_selected)*(S_fast - S_slow) + a conditionally zero-mean residual. The first term is KNOWN
+    AT DECISION TIME and belongs in the mean; bias_enters may never be other than MEAN_MODEL or REFUSED.
+    v14 defined bias against the MODEL coefficient unconditionally, so an empirically fitted alpha was
+    always labelled biased and the documented mean correction dragged the centre back to the Brownian
+    projection -- no empirical coefficient could become the zero-bias mean. `selected` now says which
+    estimand defines correctness and bias is measured against THAT, so a fitted conditional mean is unbiased
+    with respect to itself. model_gap_by_horizon (estimated - model) survives as a PROCESS DIAGNOSTIC
+    and is never applied as a correction. Every quantity is HORIZON-INDEXED: the anchor is not a scalar
+    (alpha* is 1.2496 at r=30 against 1.4992 outside the window) and the plan fits it at each r.'
+  new: 'M16-1. For P_hat(alpha) = S_slow + alpha*(S_fast - S_slow) the error splits as (alpha - alpha_selected)*(S_fast
+    - S_slow) + a conditionally zero-mean residual. The first term is KNOWN AT DECISION TIME and belongs
+    in the mean; bias_enters may never be other than MEAN_MODEL or REFUSED. v14 defined bias against the
+    MODEL coefficient unconditionally, so an empirically fitted alpha was always labelled biased and the
+    documented mean correction dragged the centre back to the Brownian projection -- no empirical coefficient
+    could become the zero-bias mean. `selected` now says which estimand defines correctness and bias is
+    measured against THAT, so a fitted conditional mean is unbiased with respect to itself. model_gap_by_horizon
+    (estimated - model) survives as a PROCESS DIAGNOSTIC and is never applied as a correction. Every quantity
+    is HORIZON-INDEXED: the anchor is not a scalar (alpha* is 1.2496 at r=30 against 1.4992 outside the
+    window) and the plan fits it at each r.'
   reason: 'M16-1: renumbered under the ITER4 repair'
 - from_version: 15
   to_version: 16
   operation: change
   key: note:CalibrationCurve
-  old: S6. c(r) is the residual AFTER the ledger, never a substitute for it. status stays
-    DIAGNOSTIC until n_day_clusters meets the pre-registered threshold; a point estimate crossing
-    band at 2 day clusters is not a go/no-go. Whether c multiplies the diffusion line or the
-    whole ledger is fixed by estimand, not left to the reader.
-  new: M16-1 (ITER4 M4-6). c(r) is the AGREEMENT RATIO between the two routes, c(r) = Sigma_A(r)
-    / model_total_B(r), expected near 1. It is added to NEITHER route and multiplies neither
-    line. v13-v15 described it as "the residual AFTER the ledger" and asked whether it multiplied
-    one line or the whole ledger; both readings predate the route split and are withdrawn.
-    A c(r) far from 1 is evidence the parametric law misdescribes the tape, i.e. information
-    about route B, never a correction to route A. status stays DIAGNOSTIC until n_day_clusters
-    meets the pre-registered threshold.
+  old: S6. c(r) is the residual AFTER the ledger, never a substitute for it. status stays DIAGNOSTIC until
+    n_day_clusters meets the pre-registered threshold; a point estimate crossing band at 2 day clusters
+    is not a go/no-go. Whether c multiplies the diffusion line or the whole ledger is fixed by estimand,
+    not left to the reader.
+  new: M16-1 (ITER4 M4-6). c(r) is the AGREEMENT RATIO between the two routes, c(r) = Sigma_A(r) / model_total_B(r),
+    expected near 1. It is added to NEITHER route and multiplies neither line. v13-v15 described it as
+    "the residual AFTER the ledger" and asked whether it multiplied one line or the whole ledger; both
+    readings predate the route split and are withdrawn. A c(r) far from 1 is evidence the parametric law
+    misdescribes the tape, i.e. information about route B, never a correction to route A. status stays
+    DIAGNOSTIC until n_day_clusters meets the pre-registered threshold.
   reason: 'M16-1 (M4-6): c(r) restated as the route-agreement RATIO, added to neither route'
 - from_version: 15
   to_version: 16
   operation: change
   key: note:FeedErrorCov
-  old: 'M15-1 (ITER3 M3-3). Stream measurement error is a 2x2, not a scalar: the contribution
-    is u^T Cov u with u = (alpha, 1 - alpha), so it varies with the horizon weights, and because
-    (1 - alpha) changes sign above alpha = 1 the same covariance raises one anchor''s variance
-    and lowers another''s. UNITS ARE BPS_SQUARED, once, everywhere. v14 typed this in bps^2
-    while the fixture documented sigma^2 units and multiplied by the rate, so an identity
-    matrix at rate 4 contributed 9.9867 instead of 2.4967. psd_validated must be true before
-    use -- a non-PSD matrix drove total variance to -120.9. IDENTIFICATION is not free: contemporaneous
-    moments give 3 numbers for 4 unknowns (rate plus this 2x2), so Omega is NOT identified
+  old: 'M15-1 (ITER3 M3-3). Stream measurement error is a 2x2, not a scalar: the contribution is u^T Cov
+    u with u = (alpha, 1 - alpha), so it varies with the horizon weights, and because (1 - alpha) changes
+    sign above alpha = 1 the same covariance raises one anchor''s variance and lowers another''s. UNITS
+    ARE BPS_SQUARED, once, everywhere. v14 typed this in bps^2 while the fixture documented sigma^2 units
+    and multiplied by the rate, so an identity matrix at rate 4 contributed 9.9867 instead of 2.4967.
+    psd_validated must be true before use -- a non-PSD matrix drove total variance to -120.9. IDENTIFICATION
+    is not free: contemporaneous moments give 3 numbers for 4 unknowns (rate plus this 2x2), so Omega
+    is NOT identified from them. Under the STRUCTURAL route it is the lag-0 discontinuity of the bivariate
+    cross-variogram -- i.e. the NUGGET -- which requires the sampling convention to be VERIFIED first
+    and is entangled with w_hat_free (a variogram fitted without a nugget attributes microstructure to
+    a shorter kernel). Under the REDUCED_FORM route it is INSIDE the residual and must never be added
+    again.'
+  new: 'M16-1. Stream measurement error is a 2x2, not a scalar: the contribution is u^T Cov u with u =
+    (alpha, 1 - alpha), so it varies with the horizon weights, and because (1 - alpha) changes sign above
+    alpha = 1 the same covariance raises one anchor''s variance and lowers another''s. UNITS ARE BPS_SQUARED,
+    once, everywhere. v14 typed this in bps^2 while the fixture documented sigma^2 units and multiplied
+    by the rate, so an identity matrix at rate 4 contributed 9.9867 instead of 2.4967. psd_validated must
+    be true before use -- a non-PSD matrix drove total variance to -120.9. IDENTIFICATION is not free:
+    contemporaneous moments give 3 numbers for 4 unknowns (rate plus this 2x2), so Omega is NOT identified
     from them. Under the STRUCTURAL route it is the lag-0 discontinuity of the bivariate cross-variogram
-    -- i.e. the NUGGET -- which requires the sampling convention to be VERIFIED first and
-    is entangled with w_hat_free (a variogram fitted without a nugget attributes microstructure
-    to a shorter kernel). Under the REDUCED_FORM route it is INSIDE the residual and must
-    never be added again.'
-  new: 'M16-1. Stream measurement error is a 2x2, not a scalar: the contribution is u^T Cov
-    u with u = (alpha, 1 - alpha), so it varies with the horizon weights, and because (1 -
-    alpha) changes sign above alpha = 1 the same covariance raises one anchor''s variance
-    and lowers another''s. UNITS ARE BPS_SQUARED, once, everywhere. v14 typed this in bps^2
-    while the fixture documented sigma^2 units and multiplied by the rate, so an identity
-    matrix at rate 4 contributed 9.9867 instead of 2.4967. psd_validated must be true before
-    use -- a non-PSD matrix drove total variance to -120.9. IDENTIFICATION is not free: contemporaneous
-    moments give 3 numbers for 4 unknowns (rate plus this 2x2), so Omega is NOT identified
-    from them. Under the STRUCTURAL route it is the lag-0 discontinuity of the bivariate cross-variogram
-    -- i.e. the NUGGET -- which requires the sampling convention to be VERIFIED first and
-    is entangled with w_hat_free (a variogram fitted without a nugget attributes microstructure
-    to a shorter kernel). Under the REDUCED_FORM route it is INSIDE the residual and must
-    never be added again.'
+    -- i.e. the NUGGET -- which requires the sampling convention to be VERIFIED first and is entangled
+    with w_hat_free (a variogram fitted without a nugget attributes microstructure to a shorter kernel).
+    Under the REDUCED_FORM route it is INSIDE the residual and must never be added again.'
   reason: 'M16-1: renumbered under the ITER4 repair'
 - from_version: 15
   to_version: 16
   operation: change
   key: note:PathLaw
-  old: 'M14-1 (ITER2 M2-5). settlement_var is the CONDITIONAL terminal object consumers price
-    with; increment_var is the ROLLING object the tape is fitted to. They are never interchangeable
-    (ratio 4.1x in sigma at r=10 s) and both are exposed so no consumer has to pick. Both
-    take a ForecastRequest, not a bare horizon, so as_of, knowledge cutoff and the target
-    interval are enforceable rather than implicit; both refuse outside horizon_domain. conditional_mean
-    is now part of the carrier because the anchor has a state-dependent conditional bias that
-    belongs in the MEAN and must not be reachable only through the variance. w_hat_free_diagnostic
-    never enters any kernel. See R-WFWD for the fit-cutoff invariant: v13''s note said the
-    law refuses AFTER fit_data_through, which is backwards -- a walk-forward forecast is used
-    precisely then.'
-  new: M16-1 (ITER4 M4-6). A REAL discriminated union. v15 made estimand_route an enum on
-    a single record that always carried BOTH reduced-form and structural fields, so a route-A
-    object was forced to populate an anchor, a rate and a sampling convention it does not
-    use, while a structural object kept the pricing-shaped protocol. Only the ReducedForm
-    arm answers a pricing query; the Structural arm has no settlement_var at all, so a pricing
-    consumer cannot bind to it even by mistake. This is the type-level encoding of R-ROUTE,
-    replacing a key-name convention.
+  old: 'M14-1 (ITER2 M2-5). settlement_var is the CONDITIONAL terminal object consumers price with; increment_var
+    is the ROLLING object the tape is fitted to. They are never interchangeable (ratio 4.1x in sigma at
+    r=10 s) and both are exposed so no consumer has to pick. Both take a ForecastRequest, not a bare horizon,
+    so as_of, knowledge cutoff and the target interval are enforceable rather than implicit; both refuse
+    outside horizon_domain. conditional_mean is now part of the carrier because the anchor has a state-dependent
+    conditional bias that belongs in the MEAN and must not be reachable only through the variance. w_hat_free_diagnostic
+    never enters any kernel. See R-WFWD for the fit-cutoff invariant: v13''s note said the law refuses
+    AFTER fit_data_through, which is backwards -- a walk-forward forecast is used precisely then.'
+  new: M16-1 (ITER4 M4-6). A REAL discriminated union. v15 made estimand_route an enum on a single record
+    that always carried BOTH reduced-form and structural fields, so a route-A object was forced to populate
+    an anchor, a rate and a sampling convention it does not use, while a structural object kept the pricing-shaped
+    protocol. Only the ReducedForm arm answers a pricing query; the Structural arm has no settlement_var
+    at all, so a pricing consumer cannot bind to it even by mistake. This is the type-level encoding of
+    R-ROUTE, replacing a key-name convention.
   reason: 'M16-1 (M4-6): the note now describes the union rather than a shared record'
 - from_version: 15
   to_version: 16
   operation: change
   key: note:RateQuantity
-  old: M15-1 (ITER3 M3-3). A variance RATE is bps^2 per second and is not the same type as
-    a terminal bps^2 variance. v14 typed sigma2_rate as VarianceQuantity, which erased the
-    time dimension and made a rate and a terminal variance interchangeable at the boundary.
-  new: M16-1. A variance RATE is bps^2 per second and is not the same type as a terminal bps^2
-    variance. v14 typed sigma2_rate as VarianceQuantity, which erased the time dimension and
-    made a rate and a terminal variance interchangeable at the boundary.
+  old: M15-1 (ITER3 M3-3). A variance RATE is bps^2 per second and is not the same type as a terminal
+    bps^2 variance. v14 typed sigma2_rate as VarianceQuantity, which erased the time dimension and made
+    a rate and a terminal variance interchangeable at the boundary.
+  new: M16-1. A variance RATE is bps^2 per second and is not the same type as a terminal bps^2 variance.
+    v14 typed sigma2_rate as VarianceQuantity, which erased the time dimension and made a rate and a terminal
+    variance interchangeable at the boundary.
   reason: 'M16-1: renumbered under the ITER4 repair'
 - from_version: 15
   to_version: 16
   operation: change
   key: note:ReducedFormLaw
-  old: 'M15-1 (ITER3 M3-1). THE PRICING LAW. Its residual variance is the WHOLE of Sigma(r)
-    -- future innovation, latent-path uncertainty, stream error and every covariance among
-    them are already inside it. The structural lines (k_law, anchor cond_var, FeedErrorCov)
-    are NEVER added to it; doing so double-counts. OLS yields the best LINEAR PROJECTION and
-    a POOLED residual, which is the conditional mean only if that mean is linear and the conditional
-    variance only under homoskedasticity -- otherwise it is an unconditional forecast MSE,
-    the same category error this programme removed from the Brownian variance line one revision
-    earlier. Hence resid_cond_mean_test_p, hetero_test_p, cross_fitted and n_day_clusters
+  old: 'M15-1 (ITER3 M3-1). THE PRICING LAW. Its residual variance is the WHOLE of Sigma(r) -- future
+    innovation, latent-path uncertainty, stream error and every covariance among them are already inside
+    it. The structural lines (k_law, anchor cond_var, FeedErrorCov) are NEVER added to it; doing so double-counts.
+    OLS yields the best LINEAR PROJECTION and a POOLED residual, which is the conditional mean only if
+    that mean is linear and the conditional variance only under homoskedasticity -- otherwise it is an
+    unconditional forecast MSE, the same category error this programme removed from the Brownian variance
+    line one revision earlier. Hence resid_cond_mean_test_p, hetero_test_p, cross_fitted and n_day_clusters
     are GATES: pricing refuses without them.'
-  new: 'M16-1. Superseded as a top-level carrier by ReducedFormPathLaw; retained as the per-symbol
-    fitted-law record. THE PRICING LAW. Its residual variance is the WHOLE of Sigma(r) --
-    future innovation, latent-path uncertainty, stream error and every covariance among them
-    are already inside it. The structural lines (k_law, anchor cond_var, FeedErrorCov) are
-    NEVER added to it; doing so double-counts. OLS yields the best LINEAR PROJECTION and a
-    POOLED residual, which is the conditional mean only if that mean is linear and the conditional
-    variance only under homoskedasticity -- otherwise it is an unconditional forecast MSE,
-    the same category error this programme removed from the Brownian variance line one revision
-    earlier. Hence resid_cond_mean_test_p, hetero_test_p, cross_fitted and n_day_clusters
-    are GATES: pricing refuses without them.'
+  new: 'M16-1. Superseded as a top-level carrier by ReducedFormPathLaw; retained as the per-symbol fitted-law
+    record. THE PRICING LAW. Its residual variance is the WHOLE of Sigma(r) -- future innovation, latent-path
+    uncertainty, stream error and every covariance among them are already inside it. The structural lines
+    (k_law, anchor cond_var, FeedErrorCov) are NEVER added to it; doing so double-counts. OLS yields the
+    best LINEAR PROJECTION and a POOLED residual, which is the conditional mean only if that mean is linear
+    and the conditional variance only under homoskedasticity -- otherwise it is an unconditional forecast
+    MSE, the same category error this programme removed from the Brownian variance line one revision earlier.
+    Hence resid_cond_mean_test_p, hetero_test_p, cross_fitted and n_day_clusters are GATES: pricing refuses
+    without them.'
   reason: 'M16-1: demoted from top-level carrier to the per-symbol fitted record'
 - from_version: 15
   to_version: 16
@@ -443,8 +431,7 @@ migrations:
   to_version: 16
   operation: change
   key: rule:R-REQ.check:horizon_consistent
-  old: 'horizon_consistent: request.as_of + request.horizon == target_interval.end and horizon
-    in PathLaw.horizon_domain.grid'
+  old: 'horizon_consistent: request.as_of + request.horizon == target_interval.end and horizon in PathLaw.horizon_domain.grid'
   new: 'horizon_consistent: request.as_of + request.horizon == target_interval.end and request.horizon
     in ReducedFormPathLaw.by_horizon'
   reason: 'M16-1: the horizon grid now lives on ReducedFormPathLaw.by_horizon'
@@ -459,11 +446,10 @@ migrations:
   to_version: 16
   operation: change
   key: rule:R-ROUTE
-  old: a PathLaw declares exactly one estimand_route; REDUCED_FORM residuals and STRUCTURAL
-    lines are never summed into one variance
-  new: PathLaw is a discriminated union; only the ReducedForm arm answers a pricing query,
-    and reduced-form residuals are never summed with structural lines. BOTH directions are
-    typed, not conventional
+  old: a PathLaw declares exactly one estimand_route; REDUCED_FORM residuals and STRUCTURAL lines are
+    never summed into one variance
+  new: PathLaw is a discriminated union; only the ReducedForm arm answers a pricing query, and reduced-form
+    residuals are never summed with structural lines. BOTH directions are typed, not conventional
   reason: 'M16-1 (M4-5): restated for the union, and now encodes BOTH directions'
 - from_version: 15
   to_version: 16
@@ -471,41 +457,38 @@ migrations:
   key: rule:R-ROUTE.check:no_mixing
   old: 'no_mixing: estimand_route == REDUCED_FORM => pricing reads reduced_form.by_horizon[r].resid_var
     only'
-  new: 'no_mixing: pricing reads ReducedFormFit.resid_var only; k_law, AnchorSpec and FeedErrorCov
-    are never added to it'
+  new: 'no_mixing: pricing reads ReducedFormFit.resid_var only; k_law, AnchorSpec and FeedErrorCov are
+    never added to it'
   reason: 'M16-1: refers to ReducedFormFit rather than the removed estimand_route'
-# ---- v14 -> v15 (M15-1): ITER3 review of Revision 3 ------------------------
 - from_version: 14
   to_version: 15
   operation: remove
   key: field:AnchorSpec.alpha
   old: float
-  reason: 'M15-1 (M3-2): a scalar alpha cannot express a horizon-dependent anchor (alpha*
-    is 1.2496 at r=30 vs 1.4992 outside the window); replaced by alpha_model_by_horizon /
-    alpha_estimated_by_horizon'
+  reason: 'M15-1 (M3-2): a scalar alpha cannot express a horizon-dependent anchor (alpha* is 1.2496 at
+    r=30 vs 1.4992 outside the window); replaced by alpha_model_by_horizon / alpha_estimated_by_horizon'
 - from_version: 14
   to_version: 15
   operation: remove
   key: field:AnchorSpec.alpha_provenance
   old: enum:ESTIMATED|MODEL_IMPLIED|ASSUMED
-  reason: 'M15-1 (M3-2): replaced by `selected`, which names WHICH estimand defines correctness
-    rather than merely labelling where a single alpha came from'
+  reason: 'M15-1 (M3-2): replaced by `selected`, which names WHICH estimand defines correctness rather
+    than merely labelling where a single alpha came from'
 - from_version: 14
   to_version: 15
   operation: remove
   key: field:AnchorSpec.alpha_star_model
   old: float | NullPin
-  reason: 'M15-1 (M3-2): folded into alpha_model_by_horizon; the model coefficient is horizon-scoped
-    like every other anchor quantity'
+  reason: 'M15-1 (M3-2): folded into alpha_model_by_horizon; the model coefficient is horizon-scoped like
+    every other anchor quantity'
 - from_version: 14
   to_version: 15
   operation: remove
   key: field:AnchorSpec.bias_coeff
   old: float
-  reason: 'M15-1 (M3-2): bias was defined against the MODEL coefficient unconditionally, so
-    a fitted alpha was always labelled biased and the mean correction dragged the centre back
-    to the Brownian projection; now bias_coeff_by_horizon is measured against the SELECTED
-    estimand'
+  reason: 'M15-1 (M3-2): bias was defined against the MODEL coefficient unconditionally, so a fitted alpha
+    was always labelled biased and the mean correction dragged the centre back to the Brownian projection;
+    now bias_coeff_by_horizon is measured against the SELECTED estimand'
 - from_version: 14
   to_version: 15
   operation: remove
@@ -517,114 +500,101 @@ migrations:
   operation: remove
   key: field:AnchorSpec.uncond_mse
   old: VarianceQuantity | NullPin
-  reason: 'M15-1 (M3-1): unconditional MSE is a route-B diagnostic and must not sit on the
-    pricing carrier at all'
+  reason: 'M15-1 (M3-1): unconditional MSE is a route-B diagnostic and must not sit on the pricing carrier
+    at all'
 - from_version: 14
   to_version: 15
   operation: remove
   key: proto:LinkFunction.density
   old: (float) -> float
-  reason: 'M15-1 (M3-5): for a CDF-valued link `density` is g_prime under a second name; two
-    derivative operations with no equality rule let implementations disagree'
+  reason: 'M15-1 (M3-5): for a CDF-valued link `density` is g_prime under a second name; two derivative
+    operations with no equality rule let implementations disagree'
 - from_version: 14
   to_version: 15
   operation: change
   key: field:PathLaw.sigma2_rate
   old: VarianceQuantity
   new: RateQuantity
-  reason: 'M15-1 (M3-3): a variance RATE (bps^2/second) is not the same type as a terminal
-    bps^2 variance; VarianceQuantity erased the time dimension'
+  reason: 'M15-1 (M3-3): a variance RATE (bps^2/second) is not the same type as a terminal bps^2 variance;
+    VarianceQuantity erased the time dimension'
 - from_version: 14
   to_version: 15
   operation: change
   key: note:AnchorSpec
-  old: 'M14-1 (ITER2 M2-1) -- the load-bearing repair. For the family P_hat(alpha) = S_slow
-    + alpha*(S_fast - S_slow), the error splits as (alpha - alpha*)*(S_fast - S_slow) + a
-    conditionally zero-mean residual. The first term is a CONDITIONAL BIAS that is KNOWN AT
-    DECISION TIME, so it belongs in the mean model; bias_enters may therefore never be anything
-    but MEAN_MODEL or REFUSED. v13 entered the whole unconditional MSE as a zero-mean variance
-    line: at BTC''s sigma that buried a bias of sd 1.22 bps inside a total sigma_eff(30) of
-    ~2.4 bps, i.e. half the standard deviation at r=30 was a predictable mean error -- the
-    same defect class as the original S60-anchor bug. cond_var is alpha-INDEPENDENT (P_hat
-    is a function of the conditioning variables) and is the only line that may enter the variance.
-    alpha is a free parameter: alpha_provenance must read ESTIMATED before pricing; MODEL_IMPLIED
-    records what a declared path model says (alpha* = 2700/1801 under disc1s_v0) and ASSUMED
-    is what v1 did when it took alpha = 2 from a local-linear-trend argument that contradicts
-    the variance model.'
-  new: 'M15-1 (ITER3 M3-2). For P_hat(alpha) = S_slow + alpha*(S_fast - S_slow) the error
-    splits as (alpha - alpha_selected)*(S_fast - S_slow) + a conditionally zero-mean residual.
-    The first term is KNOWN AT DECISION TIME and belongs in the mean; bias_enters may never
-    be other than MEAN_MODEL or REFUSED. v14 defined bias against the MODEL coefficient unconditionally,
-    so an empirically fitted alpha was always labelled biased and the documented mean correction
-    dragged the centre back to the Brownian projection -- no empirical coefficient could become
-    the zero-bias mean. `selected` now says which estimand defines correctness and bias is
-    measured against THAT, so a fitted conditional mean is unbiased with respect to itself.
-    model_gap_by_horizon (estimated - model) survives as a PROCESS DIAGNOSTIC and is never
-    applied as a correction. Every quantity is HORIZON-INDEXED: the anchor is not a scalar
-    (alpha* is 1.2496 at r=30 against 1.4992 outside the window) and the plan fits it at each
-    r.'
-  reason: 'M15-1 (M3-2): the v14 note described bias against the model coefficient, which
-    is the defect being repaired'
+  old: 'M14-1 (ITER2 M2-1) -- the load-bearing repair. For the family P_hat(alpha) = S_slow + alpha*(S_fast
+    - S_slow), the error splits as (alpha - alpha*)*(S_fast - S_slow) + a conditionally zero-mean residual.
+    The first term is a CONDITIONAL BIAS that is KNOWN AT DECISION TIME, so it belongs in the mean model;
+    bias_enters may therefore never be anything but MEAN_MODEL or REFUSED. v13 entered the whole unconditional
+    MSE as a zero-mean variance line: at BTC''s sigma that buried a bias of sd 1.22 bps inside a total
+    sigma_eff(30) of ~2.4 bps, i.e. half the standard deviation at r=30 was a predictable mean error --
+    the same defect class as the original S60-anchor bug. cond_var is alpha-INDEPENDENT (P_hat is a function
+    of the conditioning variables) and is the only line that may enter the variance. alpha is a free parameter:
+    alpha_provenance must read ESTIMATED before pricing; MODEL_IMPLIED records what a declared path model
+    says (alpha* = 2700/1801 under disc1s_v0) and ASSUMED is what v1 did when it took alpha = 2 from a
+    local-linear-trend argument that contradicts the variance model.'
+  new: 'M15-1 (ITER3 M3-2). For P_hat(alpha) = S_slow + alpha*(S_fast - S_slow) the error splits as (alpha
+    - alpha_selected)*(S_fast - S_slow) + a conditionally zero-mean residual. The first term is KNOWN
+    AT DECISION TIME and belongs in the mean; bias_enters may never be other than MEAN_MODEL or REFUSED.
+    v14 defined bias against the MODEL coefficient unconditionally, so an empirically fitted alpha was
+    always labelled biased and the documented mean correction dragged the centre back to the Brownian
+    projection -- no empirical coefficient could become the zero-bias mean. `selected` now says which
+    estimand defines correctness and bias is measured against THAT, so a fitted conditional mean is unbiased
+    with respect to itself. model_gap_by_horizon (estimated - model) survives as a PROCESS DIAGNOSTIC
+    and is never applied as a correction. Every quantity is HORIZON-INDEXED: the anchor is not a scalar
+    (alpha* is 1.2496 at r=30 against 1.4992 outside the window) and the plan fits it at each r.'
+  reason: 'M15-1 (M3-2): the v14 note described bias against the model coefficient, which is the defect
+    being repaired'
 - from_version: 14
   to_version: 15
   operation: change
   key: note:FeedErrorCov
-  old: M14-1. Stream measurement error is a 2x2, not a scalar. Its contribution is u^T Cov
-    u with u = (alpha, 1 - alpha), so it varies with the horizon weights and is generally
-    NOT a scalar multiple of the model curve -- and because (1 - alpha) changes sign above
-    alpha = 1, the same covariance raises one anchor's variance and lowers another's. v13's
-    scalar omega_scale could not express that.
-  new: 'M15-1 (ITER3 M3-3). Stream measurement error is a 2x2, not a scalar: the contribution
-    is u^T Cov u with u = (alpha, 1 - alpha), so it varies with the horizon weights, and because
-    (1 - alpha) changes sign above alpha = 1 the same covariance raises one anchor''s variance
-    and lowers another''s. UNITS ARE BPS_SQUARED, once, everywhere. v14 typed this in bps^2
-    while the fixture documented sigma^2 units and multiplied by the rate, so an identity
-    matrix at rate 4 contributed 9.9867 instead of 2.4967. psd_validated must be true before
-    use -- a non-PSD matrix drove total variance to -120.9. IDENTIFICATION is not free: contemporaneous
-    moments give 3 numbers for 4 unknowns (rate plus this 2x2), so Omega is NOT identified
-    from them. Under the STRUCTURAL route it is the lag-0 discontinuity of the bivariate cross-variogram
-    -- i.e. the NUGGET -- which requires the sampling convention to be VERIFIED first and
-    is entangled with w_hat_free (a variogram fitted without a nugget attributes microstructure
-    to a shorter kernel). Under the REDUCED_FORM route it is INSIDE the residual and must
-    never be added again.'
-  reason: 'M15-1 (M3-3): declares BPS_SQUARED once, requires PSD validation, and states how
-    Omega is identified per route'
+  old: M14-1. Stream measurement error is a 2x2, not a scalar. Its contribution is u^T Cov u with u =
+    (alpha, 1 - alpha), so it varies with the horizon weights and is generally NOT a scalar multiple of
+    the model curve -- and because (1 - alpha) changes sign above alpha = 1, the same covariance raises
+    one anchor's variance and lowers another's. v13's scalar omega_scale could not express that.
+  new: 'M15-1 (ITER3 M3-3). Stream measurement error is a 2x2, not a scalar: the contribution is u^T Cov
+    u with u = (alpha, 1 - alpha), so it varies with the horizon weights, and because (1 - alpha) changes
+    sign above alpha = 1 the same covariance raises one anchor''s variance and lowers another''s. UNITS
+    ARE BPS_SQUARED, once, everywhere. v14 typed this in bps^2 while the fixture documented sigma^2 units
+    and multiplied by the rate, so an identity matrix at rate 4 contributed 9.9867 instead of 2.4967.
+    psd_validated must be true before use -- a non-PSD matrix drove total variance to -120.9. IDENTIFICATION
+    is not free: contemporaneous moments give 3 numbers for 4 unknowns (rate plus this 2x2), so Omega
+    is NOT identified from them. Under the STRUCTURAL route it is the lag-0 discontinuity of the bivariate
+    cross-variogram -- i.e. the NUGGET -- which requires the sampling convention to be VERIFIED first
+    and is entangled with w_hat_free (a variogram fitted without a nugget attributes microstructure to
+    a shorter kernel). Under the REDUCED_FORM route it is INSIDE the residual and must never be added
+    again.'
+  reason: 'M15-1 (M3-3): declares BPS_SQUARED once, requires PSD validation, and states how Omega is identified
+    per route'
 - from_version: 14
   to_version: 15
   operation: change
   key: note:LinkFunction
-  old: 'never hardcode the Gaussian Phi. M14-1: g_prime/density added because every dynamics
-    consumer (participation frontier m/g''(d), lambda_bin, the zeta pickoff floor, the hedge
-    delta) needs the derivative, and v13 exposed only g and g_inv -- which left those consumers
-    unimplementable except by reaching for phi and reintroducing the Gaussian by the back
-    door.'
-  new: 'never hardcode the Gaussian Phi. M14-1: g_prime added because every dynamics consumer
-    (participation frontier m/g''(d), lambda_bin, the zeta pickoff floor, the hedge delta)
-    needs the derivative, and v13 exposed only g and g_inv -- which left those consumers unimplementable
-    except by reaching for phi and reintroducing the Gaussian by the back door. M15-1 (ITER3
-    M3-5): g_prime is the SINGLE canonical derivative. v14 also carried `density`, which for
-    a CDF-valued link is the same function under a second name and let two implementations
-    disagree with no equality rule.'
+  old: 'never hardcode the Gaussian Phi. M14-1: g_prime/density added because every dynamics consumer
+    (participation frontier m/g''(d), lambda_bin, the zeta pickoff floor, the hedge delta) needs the derivative,
+    and v13 exposed only g and g_inv -- which left those consumers unimplementable except by reaching
+    for phi and reintroducing the Gaussian by the back door.'
+  new: 'never hardcode the Gaussian Phi. M14-1: g_prime added because every dynamics consumer (participation
+    frontier m/g''(d), lambda_bin, the zeta pickoff floor, the hedge delta) needs the derivative, and
+    v13 exposed only g and g_inv -- which left those consumers unimplementable except by reaching for
+    phi and reintroducing the Gaussian by the back door. M15-1 (ITER3 M3-5): g_prime is the SINGLE canonical
+    derivative. v14 also carried `density`, which for a CDF-valued link is the same function under a second
+    name and let two implementations disagree with no equality rule.'
   reason: 'M15-1 (M3-5): the note still advertised `density` after it was removed'
-# ---- v13 -> v14 (M14-1): ITER2 review of the sigma spec repair --------------
-# The v13 carrier landed structurally but could not enforce the boundary it
-# claimed. These records are the honest cost of that.
 - from_version: 13
   to_version: 14
   operation: remove
   key: field:PathLaw.link
   old: LinkFunction
-  reason: 'M14-1 (M2-5.2): duplicated BeliefProcess.link with no equality
-    invariant tying the copies; replaced by link_ref: LinkRef, a reference to
-    the single owner in the belief/spec plane'
+  reason: 'M14-1 (M2-5.2): duplicated BeliefProcess.link with no equality invariant tying the copies;
+    replaced by link_ref: LinkRef, a reference to the single owner in the belief/spec plane'
 - from_version: 13
   to_version: 14
   operation: remove
   key: field:PathLaw.anchor_error
   old: AnchorErrorBudget
-  reason: 'M14-1 (M2-3): floor/ceiling was not an ordered bracket -- the
-    conditional projection beats the "floor" inside the same model; replaced by
-    anchor_error_evidence: AnchorErrorEvidence with ordered=false'
+  reason: 'M14-1 (M2-3): floor/ceiling was not an ordered bracket -- the conditional projection beats
+    the "floor" inside the same model; replaced by anchor_error_evidence: AnchorErrorEvidence with ordered=false'
 - from_version: 13
   to_version: 14
   operation: remove
@@ -635,15 +605,13 @@ migrations:
   to_version: 14
   operation: remove
   key: note:AnchorErrorBudget
-  old: 'S3. Var(P_hat - P_t) is NOT identified against one proxy: latent spot is
-    unobserved and time-varying basis plus proxy error stay in the residual.
-    Carried as a BRACKET. floor is model-implied (the reconstruction cost with
-    perfect synchronous feeds, sigma_kernels.omega_p_coeff); ceiling is the
-    empirical proxy residual including basis. identified=false until a two-proxy
-    or error-in-variables estimate exists; consumers must propagate both ends.
-    coefficient_by_horizon is a(r), which is NOT (r/w)^2 * floor at interior
-    horizons because the shorter TWAP is reconstructed from the same pair and
-    the two errors are correlated.'
+  old: 'S3. Var(P_hat - P_t) is NOT identified against one proxy: latent spot is unobserved and time-varying
+    basis plus proxy error stay in the residual. Carried as a BRACKET. floor is model-implied (the reconstruction
+    cost with perfect synchronous feeds, sigma_kernels.omega_p_coeff); ceiling is the empirical proxy
+    residual including basis. identified=false until a two-proxy or error-in-variables estimate exists;
+    consumers must propagate both ends. coefficient_by_horizon is a(r), which is NOT (r/w)^2 * floor at
+    interior horizons because the shorter TWAP is reconstructed from the same pair and the two errors
+    are correlated.'
   reason: 'M14-1 (M2-3): the type it annotated is gone'
 - from_version: 13
   to_version: 14
@@ -668,8 +636,8 @@ migrations:
   operation: remove
   key: field:AnchorErrorBudget.coefficient_by_horizon
   old: dict[str, float]
-  reason: 'M14-1 (M2-1): a(r) mixed conditional variance with squared bias;
-    the two are now separate fields on AnchorSpec'
+  reason: 'M14-1 (M2-1): a(r) mixed conditional variance with squared bias; the two are now separate fields
+    on AnchorSpec'
 - from_version: 13
   to_version: 14
   operation: remove
@@ -689,8 +657,8 @@ migrations:
   key: field:PathLaw.nugget
   old: float
   new: VarianceQuantity | NullPin
-  reason: 'M14-1 (M2-4): the nugget needs an estimand and a unit space before it
-    can enter any total, and must be able to declare its own absence'
+  reason: 'M14-1 (M2-4): the nugget needs an estimand and a unit space before it can enter any total,
+    and must be able to declare its own absence'
 - from_version: 13
   to_version: 14
   operation: change
@@ -704,8 +672,8 @@ migrations:
   key: field:HorizonDomain.basis_crossover
   old: Duration
   new: Duration | NullPin | Unavailable
-  reason: 'M14-1 (M2-5.8): the basis study is deferred to PM-E1, so a required
-    Duration forced a number nobody had measured'
+  reason: 'M14-1 (M2-5.8): the basis study is deferred to PM-E1, so a required Duration forced a number
+    nobody had measured'
 - from_version: 13
   to_version: 14
   operation: change
@@ -733,8 +701,8 @@ migrations:
   key: proto:PathLaw.settlement_var
   old: '(r: Duration) -> float | Unavailable'
   new: '(req: ForecastRequest) -> VarianceQuantity | Unavailable'
-  reason: 'M14-1 (M2-5.6): a bare r cannot enforce as_of, knowledge cutoff or
-    the target interval, which is exactly how look-ahead enters unnoticed'
+  reason: 'M14-1 (M2-5.6): a bare r cannot enforce as_of, knowledge cutoff or the target interval, which
+    is exactly how look-ahead enters unnoticed'
 - from_version: 13
   to_version: 14
   operation: change
@@ -746,77 +714,65 @@ migrations:
   to_version: 14
   operation: change
   key: note:PathLaw
-  old: 'M13-1. Replaces {kind: str, params: dict[str, float]}, which could not
-    carry a unit space, a horizon domain, a fit cutoff or a refusal, so an
-    estimator emitting a LAW rather than a scalar had no typed carrier.
-    settlement_var is the CONDITIONAL terminal object consumers price with;
-    increment_var is the ROLLING object the tape is fitted to. They are never
-    interchangeable (ratio 4.1x in sigma at r=10 s) and both are exposed so no
-    consumer has to pick. Both REFUSE outside horizon_domain and after
-    fit_data_through rather than extrapolating. w_hat_free_diagnostic never
-    enters either kernel.'
-  new: 'M14-1 (ITER2 M2-5). settlement_var is the CONDITIONAL terminal object
-    consumers price with; increment_var is the ROLLING object the tape is fitted
-    to. They are never interchangeable (ratio 4.1x in sigma at r=10 s) and both
-    are exposed so no consumer has to pick. Both take a ForecastRequest, not a
-    bare horizon, so as_of, knowledge cutoff and the target interval are
-    enforceable rather than implicit; both refuse outside horizon_domain.
-    conditional_mean is now part of the carrier because the anchor has a
-    state-dependent conditional bias that belongs in the MEAN and must not be
-    reachable only through the variance. w_hat_free_diagnostic never enters any
-    kernel. See R-WFWD for the fit-cutoff invariant: v13''s note said the law
-    refuses AFTER fit_data_through, which is backwards -- a walk-forward
-    forecast is used precisely then.'
-  reason: 'M14-1 (M2-5.5): the v13 note stated the fit-cutoff refusal backwards
-    and predated the mean/variance separation'
+  old: 'M13-1. Replaces {kind: str, params: dict[str, float]}, which could not carry a unit space, a horizon
+    domain, a fit cutoff or a refusal, so an estimator emitting a LAW rather than a scalar had no typed
+    carrier. settlement_var is the CONDITIONAL terminal object consumers price with; increment_var is
+    the ROLLING object the tape is fitted to. They are never interchangeable (ratio 4.1x in sigma at r=10
+    s) and both are exposed so no consumer has to pick. Both REFUSE outside horizon_domain and after fit_data_through
+    rather than extrapolating. w_hat_free_diagnostic never enters either kernel.'
+  new: 'M14-1 (ITER2 M2-5). settlement_var is the CONDITIONAL terminal object consumers price with; increment_var
+    is the ROLLING object the tape is fitted to. They are never interchangeable (ratio 4.1x in sigma at
+    r=10 s) and both are exposed so no consumer has to pick. Both take a ForecastRequest, not a bare horizon,
+    so as_of, knowledge cutoff and the target interval are enforceable rather than implicit; both refuse
+    outside horizon_domain. conditional_mean is now part of the carrier because the anchor has a state-dependent
+    conditional bias that belongs in the MEAN and must not be reachable only through the variance. w_hat_free_diagnostic
+    never enters any kernel. See R-WFWD for the fit-cutoff invariant: v13''s note said the law refuses
+    AFTER fit_data_through, which is backwards -- a walk-forward forecast is used precisely then.'
+  reason: 'M14-1 (M2-5.5): the v13 note stated the fit-cutoff refusal backwards and predated the mean/variance
+    separation'
 - from_version: 13
   to_version: 14
   operation: change
   key: note:HorizonDomain
-  old: 'Below basis_crossover the basis noise exceeds settlement vol and the
-    price model is noise regardless of estimator quality; queries there return
-    Unavailable, not a number.'
-  new: 'Below basis_crossover the basis noise exceeds settlement vol and the
-    price model is noise regardless of estimator quality; queries there return
-    Unavailable, not a number. M14-1: the basis study is deferred to PM-E1, so
-    the field must be able to say so -- v13 typed it as a required Duration,
-    which forced a number nobody had measured.'
+  old: Below basis_crossover the basis noise exceeds settlement vol and the price model is noise regardless
+    of estimator quality; queries there return Unavailable, not a number.
+  new: 'Below basis_crossover the basis noise exceeds settlement vol and the price model is noise regardless
+    of estimator quality; queries there return Unavailable, not a number. M14-1: the basis study is deferred
+    to PM-E1, so the field must be able to say so -- v13 typed it as a required Duration, which forced
+    a number nobody had measured.'
   reason: 'M14-1 (M2-5.8): records the deferral the type now permits'
 - from_version: 13
   to_version: 14
   operation: change
   key: note:LinkFunction
   old: never hardcode the Gaussian Phi
-  new: 'never hardcode the Gaussian Phi. M14-1: g_prime/density added because
-    every dynamics consumer (participation frontier m/g''(d), lambda_bin, the
-    zeta pickoff floor, the hedge delta) needs the derivative, and v13 exposed
-    only g and g_inv -- which left those consumers unimplementable except by
-    reaching for phi and reintroducing the Gaussian by the back door.'
-  reason: 'M14-1 (M2-5.3): the derivative was required by the plan and absent
-    from the protocol'
+  new: 'never hardcode the Gaussian Phi. M14-1: g_prime/density added because every dynamics consumer
+    (participation frontier m/g''(d), lambda_bin, the zeta pickoff floor, the hedge delta) needs the derivative,
+    and v13 exposed only g and g_inv -- which left those consumers unimplementable except by reaching
+    for phi and reintroducing the Gaussian by the back door.'
+  reason: 'M14-1 (M2-5.3): the derivative was required by the plan and absent from the protocol'
 - from_version: 13
   to_version: 14
   operation: change
   key: module:BE-Uncertainty.consumes
-  old: "['RawEvent']"
-  new: "['ForecastRequest']"
-  reason: 'M14-1 (M2-5.1): RawEvent reached past the DA/StateView knowledge-time
-    seam into the landing zone; reads now go through the state_view port only'
+  old: '[''RawEvent'']'
+  new: '[''ForecastRequest'']'
+  reason: 'M14-1 (M2-5.1): RawEvent reached past the DA/StateView knowledge-time seam into the landing
+    zone; reads now go through the state_view port only'
 - from_version: 12
   to_version: 13
   operation: remove
   key: field:PathLaw.kind
   old: str
-  reason: 'M13-1: untyped tag replaced by typed fields + protocol; an estimator
-    emitting a law had no carrier and a dict[str, float] cannot hold a unit space'
+  reason: 'M13-1: untyped tag replaced by typed fields + protocol; an estimator emitting a law had no
+    carrier and a dict[str, float] cannot hold a unit space'
 - from_version: 12
   to_version: 13
   operation: remove
   key: field:PathLaw.params
   old: dict[str, float]
-  reason: 'M13-1: a bag of unitless floats is exactly the composition S1 rejects;
-    replaced by sigma2_rate/nugget/w_declared/anchor_error/calibration with
-    declared units and a settlement_var/increment_var protocol'
+  reason: 'M13-1: a bag of unitless floats is exactly the composition S1 rejects; replaced by sigma2_rate/nugget/w_declared/anchor_error/calibration
+    with declared units and a settlement_var/increment_var protocol'
 - from_version: 10
   to_version: 11
   operation: remove
@@ -1007,3 +963,259 @@ migrations:
   old: (ActionOutcome, CompetitionState) -> Uncertain[Wealth]
   new: (ActionOutcome, Known[Uncertain[JointCompetitionState]], InstrumentId) -> Uncertain[Wealth]
   reason: v10->v11 refactor per PM_STRUCT_ITER10_REVIEW (see commit message)
+- from_version: 22
+  to_version: 23
+  operation: remove
+  key: field:Gate.artifact_hash
+  old: Hash
+  new: (removed)
+  reason: 'R-40(e)/R-36: hashes and freeze time are provenance, not gate identity. They move into `bar_provenance:
+    Provenance` and `bar_input_snapshot`, so a vacated provenance is a typed state with a register obligation
+    instead of a stale hash sitting in the gate record'
+- from_version: 22
+  to_version: 23
+  operation: remove
+  key: field:Gate.data_prereq
+  old: str
+  new: (removed)
+  reason: 'R-18: `owner`/`data_prereq` as free strings duplicated the plane ownership the module graph
+    already encodes, and drifted from it. Ownership is read from `GateRegistry`; the prerequisite is `preconditions:
+    list[Precondition]`, which carries a STATE rather than a sentence'
+- from_version: 22
+  to_version: 23
+  operation: remove
+  key: field:Gate.frozen_at
+  old: Timestamp
+  new: (removed)
+  reason: 'R-40(e)/R-36: hashes and freeze time are provenance, not gate identity. They move into `bar_provenance:
+    Provenance` and `bar_input_snapshot`, so a vacated provenance is a typed state with a register obligation
+    instead of a stale hash sitting in the gate record'
+- from_version: 22
+  to_version: 23
+  operation: remove
+  key: field:Gate.inference_method
+  old: str
+  new: (removed)
+  reason: 'R-36: `inference_method` declared the method; `GateEvidence.inference_actual` RECORDS the method
+    that ran. A declaration cannot disagree with itself, which is why the declared-vs-actual mismatch
+    was undetectable'
+- from_version: 22
+  to_version: 23
+  operation: remove
+  key: field:Gate.metric
+  old: str
+  new: (removed)
+  reason: 'R-42/G-FF3: a gate may not describe its own bar in free text. `question`/`metric`/`threshold`/`unit`
+    are replaced by the typed `bar: GateBar` plus `null_hypothesis` and `favourable_arm`, so polarity
+    is DETECTED from the bar rather than DECLARED beside it -- the sign-blindness `Scalar(0.0, cents_per_share)`
+    exhibited is unrepresentable once the bar carries its own side'
+- from_version: 22
+  to_version: 23
+  operation: remove
+  key: field:Gate.on_pass
+  old: str
+  new: (removed)
+  reason: 'R-24: the verdict is THREE-valued (FIRE_SIDE | PASS_SIDE | INSUFFICIENT). An `on_pass`/`on_fail`
+    pair is two-valued routing and cannot express INSUFFICIENT, so it silently routed an underpowered
+    gate as a pass. Replaced by `on_verdict: FailRoute` over `verdict_map`'
+- from_version: 22
+  to_version: 23
+  operation: remove
+  key: field:Gate.owner
+  old: str
+  new: (removed)
+  reason: 'R-18: `owner`/`data_prereq` as free strings duplicated the plane ownership the module graph
+    already encodes, and drifted from it. Ownership is read from `GateRegistry`; the prerequisite is `preconditions:
+    list[Precondition]`, which carries a STATE rather than a sentence'
+- from_version: 22
+  to_version: 23
+  operation: remove
+  key: field:Gate.question
+  old: str
+  new: (removed)
+  reason: 'R-42/G-FF3: a gate may not describe its own bar in free text. `question`/`metric`/`threshold`/`unit`
+    are replaced by the typed `bar: GateBar` plus `null_hypothesis` and `favourable_arm`, so polarity
+    is DETECTED from the bar rather than DECLARED beside it -- the sign-blindness `Scalar(0.0, cents_per_share)`
+    exhibited is unrepresentable once the bar carries its own side'
+- from_version: 22
+  to_version: 23
+  operation: remove
+  key: field:Gate.spec_hash
+  old: Hash
+  new: (removed)
+  reason: 'R-40(e)/R-36: hashes and freeze time are provenance, not gate identity. They move into `bar_provenance:
+    Provenance` and `bar_input_snapshot`, so a vacated provenance is a typed state with a register obligation
+    instead of a stale hash sitting in the gate record'
+- from_version: 22
+  to_version: 23
+  operation: remove
+  key: field:Gate.strata_hash
+  old: Hash
+  new: (removed)
+  reason: 'R-40(e)/R-36: hashes and freeze time are provenance, not gate identity. They move into `bar_provenance:
+    Provenance` and `bar_input_snapshot`, so a vacated provenance is a typed state with a register obligation
+    instead of a stale hash sitting in the gate record'
+- from_version: 22
+  to_version: 23
+  operation: remove
+  key: field:Gate.threshold
+  old: float
+  new: (removed)
+  reason: 'R-42/G-FF3: a gate may not describe its own bar in free text. `question`/`metric`/`threshold`/`unit`
+    are replaced by the typed `bar: GateBar` plus `null_hypothesis` and `favourable_arm`, so polarity
+    is DETECTED from the bar rather than DECLARED beside it -- the sign-blindness `Scalar(0.0, cents_per_share)`
+    exhibited is unrepresentable once the bar carries its own side'
+- from_version: 22
+  to_version: 23
+  operation: remove
+  key: field:Gate.unit
+  old: str
+  new: (removed)
+  reason: 'R-42/G-FF3: a gate may not describe its own bar in free text. `question`/`metric`/`threshold`/`unit`
+    are replaced by the typed `bar: GateBar` plus `null_hypothesis` and `favourable_arm`, so polarity
+    is DETECTED from the bar rather than DECLARED beside it -- the sign-blindness `Scalar(0.0, cents_per_share)`
+    exhibited is unrepresentable once the bar carries its own side'
+- from_version: 22
+  to_version: 23
+  operation: change
+  key: field:Gate.id
+  old: str
+  new: GateId
+  reason: 'R-SSOT: `GateId` becomes a locally declared type so the registry is the single source of gate
+    identity; a bare `str` admitted ids no registry ever issued'
+- from_version: 22
+  to_version: 23
+  operation: change
+  key: field:Gate.on_fail
+  old: str
+  new: FailRoute
+  reason: 'R-24: the verdict is THREE-valued (FIRE_SIDE | PASS_SIDE | INSUFFICIENT). An `on_pass`/`on_fail`
+    pair is two-valued routing and cannot express INSUFFICIENT, so it silently routed an underpowered
+    gate as a pass. Replaced by `on_verdict: FailRoute` over `verdict_map`'
+- from_version: 22
+  to_version: 23
+  operation: change
+  key: field:Gate.preconditions
+  old: list[GateId]
+  new: list[Precondition]
+  reason: 'EV_GATES_PLAN R0-1: `list[GateId]` named an edge but carried no STATE, so the DAG could not
+    distinguish an unmet precondition from an unevaluated one. `Precondition` carries `PreconditionState`'
+- from_version: 22
+  to_version: 23
+  operation: change
+  key: field:GateEvidence.ci_hi_abs
+  old: float
+  new: float | Unavailable
+  reason: 'R-REFUSE: a float cannot express a refusal, so an interval that was never computed was indistinguishable
+    from one measured at 0.0'
+- from_version: 22
+  to_version: 23
+  operation: change
+  key: field:GateEvidence.verdict
+  old: enum:PASS|INSUFFICIENT_EVIDENCE|MODEL_REFUTED
+  new: VerdictState?
+  reason: 'R-24: the two-valued enum predates the three-valued verdict; `VerdictState?` admits INSUFFICIENT
+    and the null carries not-yet-evaluated'
+- from_version: 22
+  to_version: 23
+  operation: remove
+  key: prelude:external:GateId
+  old: external
+  new: locally declared type
+  reason: 'R-SSOT: promoted from external to locally declared -- the registry issues gate ids, so the
+    type must be OURS to constrain'
+- from_version: 22
+  to_version: 23
+  operation: remove
+  key: prelude:external:Provenance
+  old: external
+  new: locally declared type
+  reason: 'R-40(e): promoted from external to locally declared so `vacated_provenance` and the register
+    obligation are expressible in-contract'
+- from_version: 22
+  to_version: 23
+  operation: change
+  key: field:DecisionProblem.belief
+  old: Known[BeliefProcess]
+  new: Known[BeliefProcess] | Unavailable
+  reason: 'M-1 (Q-DE-6/R-57): constructible while BE-Belief is a named seam; adds an arm, removes none'
+- from_version: 22
+  to_version: 23
+  operation: change
+  key: module:BE-Uncertainty.produces
+  old: '[''dict[InstrumentId, Known[Uncertain[PathLaw]] | Unavailable]'']'
+  new: '[''GateEvidence'', ''dict[InstrumentId, Known[Uncertain[PathLaw]] | Unavailable]'']'
+  reason: "GROWTH-ONLY (ratified \xA72 additive, R-65/R-66): adds ['GateEvidence']; old set fully preserved\
+    \ \u2014 superset asserted at generation"
+- from_version: 22
+  to_version: 23
+  operation: change
+  key: module:DE-Actuator.consumes
+  old: '[''CancelAllCommand'', ''Decision'']'
+  new: '[''CancelAllCommand'', ''CapitalOpCommand'', ''Decision'']'
+  reason: "GROWTH-ONLY (ratified \xA72 additive, R-65/R-66): adds ['CapitalOpCommand']; old set fully\
+    \ preserved \u2014 superset asserted at generation"
+- from_version: 22
+  to_version: 23
+  operation: change
+  key: module:DE-Actuator.ports
+  old: '[''cancel_cmd_in'', ''halt_in'', ''telemetry_out'', ''venue'']'
+  new: '[''cancel_cmd_in'', ''capital_cmd_in'', ''halt_in'', ''telemetry_out'', ''venue'']'
+  reason: "GROWTH-ONLY (ratified \xA72 additive, R-65/R-66): adds ['capital_cmd_in']; old set fully preserved\
+    \ \u2014 superset asserted at generation"
+- from_version: 22
+  to_version: 23
+  operation: change
+  key: module:DE-Actuator.produces
+  old: '[''CancelAllStatus'']'
+  new: '[''CancelAllStatus'', ''HeartbeatPulse'']'
+  reason: "GROWTH-ONLY (ratified \xA72 additive, R-65/R-66): adds ['HeartbeatPulse']; old set fully preserved\
+    \ \u2014 superset asserted at generation"
+- from_version: 22
+  to_version: 23
+  operation: change
+  key: module:DE-Allocator.ports
+  old: '[''state_view'']'
+  new: '[''capital_cmd_out'', ''state_view'', ''telemetry_out'']'
+  reason: "GROWTH-ONLY (ratified \xA72 additive, R-65/R-66): adds ['capital_cmd_out', 'telemetry_out'];\
+    \ old set fully preserved \u2014 superset asserted at generation"
+- from_version: 22
+  to_version: 23
+  operation: change
+  key: module:DE-Allocator.produces
+  old: '[''CapitalBudget'']'
+  new: '[''CapitalBudget'', ''CapitalOpCommand'', ''HealthEvent'', ''HeartbeatPulse'']'
+  reason: "GROWTH-ONLY (ratified \xA72 additive, R-65/R-66): adds ['CapitalOpCommand', 'HealthEvent',\
+    \ 'HeartbeatPulse']; old set fully preserved \u2014 superset asserted at generation"
+- from_version: 22
+  to_version: 23
+  operation: change
+  key: module:DE-Constraints.consumes
+  old: '[''DecisionProblem'', ''HaltState'', ''ScenarioLossConstraint'']'
+  new: '[''CapitalBudget'', ''DecisionProblem'', ''HaltState'', ''ScenarioLossConstraint'']'
+  reason: "GROWTH-ONLY (ratified \xA72 additive, R-65/R-66): adds ['CapitalBudget']; old set fully preserved\
+    \ \u2014 superset asserted at generation"
+- from_version: 22
+  to_version: 23
+  operation: change
+  key: module:DE-Constraints.ports
+  old: '[''halt_in'', ''state_view'']'
+  new: '[''halt_in'', ''state_view'', ''telemetry_out'']'
+  reason: "GROWTH-ONLY (ratified \xA72 additive, R-65/R-66): adds ['telemetry_out']; old set fully preserved\
+    \ \u2014 superset asserted at generation"
+- from_version: 22
+  to_version: 23
+  operation: change
+  key: module:DE-Constraints.produces
+  old: '[''FeasibleSet'']'
+  new: '[''FeasibleSet'', ''HealthEvent'', ''HeartbeatPulse'']'
+  reason: "GROWTH-ONLY (ratified \xA72 additive, R-65/R-66): adds ['HealthEvent', 'HeartbeatPulse']; old\
+    \ set fully preserved \u2014 superset asserted at generation"
+- from_version: 22
+  to_version: 23
+  operation: change
+  key: module:OP-Monitor.consumes
+  old: '[''HealthEvent'', ''HeartbeatPulse'', ''HeartbeatRegistration'']'
+  new: '[''CancelAllStatus'', ''HealthEvent'', ''HeartbeatPulse'', ''HeartbeatRegistration'']'
+  reason: "GROWTH-ONLY (ratified \xA72 additive, R-65/R-66): adds ['CancelAllStatus']; old set fully preserved\
+    \ \u2014 superset asserted at generation"

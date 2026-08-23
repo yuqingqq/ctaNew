@@ -1,12 +1,12 @@
-version: 22
+version: 23
 rules:
   R-SSOT:
     body: every canonical name has exactly one owning type/module
     checks:
     - 'loss_limit_owner: ScenarioLossLimit only in SP-Params'
   R-KNOW:
-    body: no production API accepts event time; derived t_known = MAX(inputs);
-      EventTimeView is reachable only through the R-CANARY harness
+    body: no production API accepts event time; derived t_known = MAX(inputs); EventTimeView
+      is reachable only through the R-CANARY harness
   R-ONCE:
     body: MarkoutPartition, WealthLedger, VarianceGroup are disjoint registries
   R-PROV:
@@ -28,147 +28,163 @@ rules:
     checks:
     - 'fail_closed: CancelAllStatus.Unconfirmed => HaltState.HALTED'
   R-REQ:
-    body: a ForecastRequest may only be answered by a PathLaw it matches on
-      instrument, link, target interval, horizon and knowledge time; every one of
-      these is COMPARED at query time, not merely carried
+    body: a ForecastRequest may only be answered by a PathLaw it matches on instrument, link,
+      target interval, horizon and knowledge time; every one of these is COMPARED at query
+      time, not merely carried
     checks:
     - 'instrument_eq: ForecastRequest.instrument == PathLaw.instrument'
     - 'link_eq: ForecastRequest.link_ref == PathLaw.link_ref == BeliefProcess.link'
     - 'target_eq: ForecastRequest.target_interval == PathLaw.target_interval'
-    - 'horizon_consistent: request.as_of + request.horizon == target_interval.end
-       and request.horizon in ReducedFormPathLaw.by_horizon'
+    - 'horizon_consistent: request.as_of + request.horizon == target_interval.end and request.horizon
+      in ReducedFormPathLaw.by_horizon'
     - 'knowledge_order: ForecastRequest.knowledge_cutoff <= ForecastRequest.as_of'
     - 'no_future_train_req: law.fit_data_through <= ForecastRequest.knowledge_cutoff'
     - 'law_not_from_the_future: ReducedFormPathLaw.as_of <= ForecastRequest.as_of'
     - 'interval_well_formed: TargetInterval.start < TargetInterval.end'
     - 'observables_not_ahead: AnchorObservables.t_known <= knowledge_cutoff'
     - 'coverage: request.as_of within law coverage'
-    - 'atomic: these run INSIDE pricing_distribution, before either moment is
-       computed, and mean and variance come from the same validated fit. v15
-       exposed them as an optional helper the pricing accessors did not call, so
-       correctness depended on every caller remembering a pre-call'
-    - 'refusal_provenance: every boundary refusal carries since and a
-       machine-actionable cause'
+    - 'atomic: these run INSIDE pricing_distribution, before either moment is computed, and
+      mean and variance come from the same validated fit. v15 exposed them as an optional
+      helper the pricing accessors did not call, so correctness depended on every caller remembering
+      a pre-call'
+    - 'refusal_provenance: every boundary refusal carries since and a machine-actionable cause'
   R-ROUTE:
-    body: PathLaw is a discriminated union; only the ReducedForm arm answers a
-      pricing query, and reduced-form residuals are never summed with structural
-      lines. BOTH directions are typed, not conventional
+    body: PathLaw is a discriminated union; only the ReducedForm arm answers a pricing query,
+      and reduced-form residuals are never summed with structural lines. BOTH directions are
+      typed, not conventional
     checks:
-    - 'no_mixing: pricing reads ReducedFormFit.resid_var only; k_law, AnchorSpec
-       and FeedErrorCov are never added to it'
-    - 'no_structural_pricing: StructuralDiagnosticLaw exposes no settlement_var
-       and no pricing_distribution, so a probability consumer cannot bind to it'
-    - 'type_boundary: enforced by the union and by
-       DiagnosticVarianceDecomposition carrying no pricing protocol, NOT by a
-       key-name convention, which v15 mistook for a boundary'
+    - 'no_mixing: pricing reads ReducedFormFit.resid_var only; k_law, AnchorSpec and FeedErrorCov
+      are never added to it'
+    - 'no_structural_pricing: StructuralDiagnosticLaw exposes no settlement_var and no pricing_distribution,
+      so a probability consumer cannot bind to it'
+    - 'type_boundary: enforced by the union and by DiagnosticVarianceDecomposition carrying
+      no pricing protocol, NOT by a key-name convention, which v15 mistook for a boundary'
   R-WFWD:
-    body: a fitted law declares fit_data_through <= as_of and reads no training
-      data beyond that cutoff; being USED after the cutoff is the point, not a
-      violation
+    body: a fitted law declares fit_data_through <= as_of and reads no training data beyond
+      that cutoff; being USED after the cutoff is the point, not a violation
     checks:
     - 'cutoff_order: PathLaw.fit_data_through <= PathLaw.as_of'
-    - 'no_future_train: training reads truncated at fit_data_through, enforced
-       through StateView knowledge time, never payload time'
+    - 'no_future_train: training reads truncated at fit_data_through, enforced through StateView
+      knowledge time, never payload time'
   R-IMPUTE:
-    body: t_known is never manufactured from t_event; OBSERVED requires recv_ns,
-      and every non-observed value carries a named imputation rule with positive
-      delay and error
+    body: t_known is never manufactured from t_event; OBSERVED requires recv_ns, and every
+      non-observed value carries a named imputation rule with positive delay and error
     checks:
     - 'observed_needs_wire: Known.t_known_prov == OBSERVED => SourceProfile.has_recv_ns'
     - 'strict_delay: Known.t_known_prov != OBSERVED => Known.t_known > Known.t_event'
     - 'rule_named: Known.t_known_prov != OBSERVED => Known.imputation_rule is not null'
   R-REFUSE:
-    body: StateView admits a Known only when t_known plus refuse_k times
-      t_known_err is no later than its supplied KnowledgeTime now
+    body: StateView admits a Known only when t_known plus refuse_k times t_known_err is no
+      later than its supplied KnowledgeTime now
     checks:
     - 'no_peek: admitted(k, now) => k.t_known + refuse_k * k.t_known_err <= now'
     - 'telemetry: every refusal increments RefusalLedger for the requested field'
   R-ADMISS:
-    body: Coverage is factual and separate from an AdmissibilityDecision; only a
-      FROZEN hash-verified rule may exclude a unit, and EXCLUDE_UNIT requires the
-      paired indicator arm
+    body: Coverage is factual and separate from an AdmissibilityDecision; only a FROZEN hash-verified
+      rule may exclude a unit, and EXCLUDE_UNIT requires the paired indicator arm
     checks:
     - 'frozen_rule: AdmissibilityDecision requires AdmissibilityRule.status == FROZEN'
     - 'hash_match: recomputed rule content hash == AdmissibilityRule.spec_hash'
     - 'two_arms: on_fail == EXCLUDE_UNIT => required_gap_arm == BOTH'
   R-CANARY:
-    body: every replay diagnostic runs paired StateView and deliberately leaky
-      EventTimeView reads; EventTimeView is constructible only by the canary
-      harness and is never exposed on a production port
+    body: every replay diagnostic runs paired StateView and deliberately leaky EventTimeView
+      reads; EventTimeView is constructible only by the canary harness and is never exposed
+      on a production port
     checks:
     - 'harness_only: direct EventTimeView construction is fatal'
-    - 'guard_binds: LeakCanary.event_only_boundary_reads > 0 and LeakCanary.decision_disagreements > 0'
+    - 'guard_binds: LeakCanary.event_only_boundary_reads > 0 and LeakCanary.decision_disagreements
+      > 0'
     - 'telemetry: LeakCanary carries the StateView refusal counts'
   R-BATCH:
-    body: a measurement batch preflights every requested coin before mutation,
-      has one shared writer, validates every per-coin artifact binding, and emits
-      its immutable COMPLETE receipt only after every requested bundle passes;
-      uncommitted per-coin artifacts are resumable staging, never batch completion
+    body: a measurement batch preflights every requested coin before mutation, has one shared
+      writer, validates every per-coin artifact binding, and emits its immutable COMPLETE
+      receipt only after every requested bundle passes; uncommitted per-coin artifacts are
+      resumable staging, never batch completion
     checks:
-    - 'preflight_all: all MeasurementBatchPlan per-coin plans are ready before the first partition write'
-    - 'single_writer: one exclusive batch lock covers every partition, canary, health record and receipt write'
-    - 'validate_all: every MeasurementBatchRun per_coin_health_hashes value identifies a PASS BundleHealth'
-    - 'commit_last: MeasurementBatchRun.status == COMPLETE only after every requested coin has a bound run and health hash'
-    - 'resumable: absence of MeasurementBatchRun permits immutable per-coin artifacts to be validated and reused, never treated as complete'
+    - 'preflight_all: all MeasurementBatchPlan per-coin plans are ready before the first partition
+      write'
+    - 'single_writer: one exclusive batch lock covers every partition, canary, health record
+      and receipt write'
+    - 'validate_all: every MeasurementBatchRun per_coin_health_hashes value identifies a PASS
+      BundleHealth'
+    - 'commit_last: MeasurementBatchRun.status == COMPLETE only after every requested coin
+      has a bound run and health hash'
+    - 'resumable: absence of MeasurementBatchRun permits immutable per-coin artifacts to be
+      validated and reused, never treated as complete'
   R-DERIVE:
-    body: Tier-2 evaluation artifacts consume only a validated COMPLETE full-lane
-      MeasurementBatchRun; every derived partition binds that batch hash and its
-      exact Tier-1 input manifests, and the cross-coin evaluation receipt is
-      emitted last
+    body: Tier-2 evaluation artifacts consume only a validated COMPLETE full-lane MeasurementBatchRun;
+      every derived partition binds that batch hash and its exact Tier-1 input manifests,
+      and the cross-coin evaluation receipt is emitted last
     checks:
     - 'full_batch_only: EvaluationPipelineRun.source_batch_lane == full'
-    - 'input_binding: every derived DatasetPartition binds its MeasurementBatchRun batch_hash and exact source manifest hashes'
-    - 'commit_last: EvaluationPipelineRun.status == COMPLETE only after every requested MARKOUT_EVENTS and CALIB_PANEL partition validates'
+    - 'input_binding: every derived DatasetPartition binds its MeasurementBatchRun batch_hash
+      and exact source manifest hashes'
+    - 'commit_last: EvaluationPipelineRun.status == COMPLETE only after every requested MARKOUT_EVENTS
+      and CALIB_PANEL partition validates'
   R-GROSS:
-    body: terminal maker markout is gross of fees, rebates and incentives; an
-      unresolved cash term may not be silently read from the websocket zero field
+    body: terminal maker markout is gross of fees, rebates and incentives; an unresolved cash
+      term may not be silently read from the websocket zero field
     checks:
     - 'terminal_identity: maker_edge_per_share == q_up * (price_up - outcome_up)'
     - 'no_fee_in_markout: TerminalMarkoutObservation.fee_status == GROSS_ONLY_NOT_APPLIED'
   R-DUAL:
-    body: every economic markout summary reports both per-fill and share-weighted
-      estimates per coin and phase; neither may substitute for or hide the other
+    body: every economic markout summary reports both per-fill and share-weighted estimates
+      per coin and phase; neither may substitute for or hide the other
     checks:
-    - 'both_weights: MarkoutSummary carries per_fill_cents and share_weighted_cents from the same retained rows'
-    - 'no_pooled_primary: per-coin summaries are primary and any pooled summary is diagnostic only'
+    - 'both_weights: MarkoutSummary carries per_fill_cents and share_weighted_cents from the
+      same retained rows'
+    - 'no_pooled_primary: per-coin summaries are primary and any pooled summary is diagnostic
+      only'
   R-ONEROW:
-    body: the calibration scaffold contains exactly one row per window and frozen
-      decision horizon, including an explicit unavailable row when no quote is
-      knowledge-admissible
+    body: the calibration scaffold contains exactly one row per window and frozen decision
+      horizon, including an explicit unavailable row when no quote is knowledge-admissible
     checks:
     - 'identity: unique CalibrationPanelRow key is (slug, r_s)'
     - 'complete_grid: each closed window has exactly the nine frozen r_s values'
     - 'no_silent_drop: unavailable or invalid quote states remain rows with a named quote_status'
   R-FLOW:
-    body: flow is a per-coin marked point process; every conditional arrival and
-      its exposure use the same knowledge-admissible state, side and notional are
-      marks rather than total-intensity covariates, and a Hawkes residual is
-      admitted only after a forward-valid baseline time change
+    body: flow is a per-coin marked point process; every conditional arrival and its exposure
+      use the same knowledge-admissible state, side and notional are marks rather than total-intensity
+      covariates, and a Hawkes residual is admitted only after a forward-valid baseline time
+      change
     checks:
-    - 'same_state: FlowArrival.state and its exposure interval come from the same StateView with the frozen 250 ms lag; execution price never selects the state bin'
-    - 'gap_kills_state: a collector gap ends the admitted state and a new quote must mature through the lag before either numerator or exposure resumes'
-    - 'count_compensator_only: ArrivalIntensityFit is events/s; NotionalThroughput is USDC/s derived from intensity times a conditional monetary mark and has no point-process compensator'
+    - 'same_state: FlowArrival.state and its exposure interval come from the same StateView
+      with the frozen 250 ms lag; execution price never selects the state bin'
+    - 'gap_kills_state: a collector gap ends the admitted state and a new quote must mature
+      through the lag before either numerator or exposure resumes'
+    - 'count_compensator_only: ArrivalIntensityFit is events/s; NotionalThroughput is USDC/s
+      derived from intensity times a conditional monetary mark and has no point-process compensator'
     - 'native_notional: FlowArrival.notional_usdc == size_shares * native_price'
     - 'same_conditioning: NotionalThroughput intensity_ref and mark_law_ref share one conditioning_schema'
-    - 'side_is_mark: total arrival intensity does not consume the realized next-event side; side is conditional on an arrival or represented by reconciled cause-specific intensities'
+    - 'side_is_mark: total arrival intensity does not consume the realized next-event side;
+      side is conditional on an arrival or represented by reconciled cause-specific intensities'
     - 'per_coin: primary fit and verdict are coin-scoped; pooling is diagnostic only'
-    - 'label_not_independence: MARKET is a labelled subprocess; micro/market independence is a tested null, not an estimation prerequisite'
+    - 'label_not_independence: MARKET is a labelled subprocess; micro/market independence
+      is a tested null, not an estimation prerequisite'
     - 'forward_only: fit_data_through < the first scored evaluation day'
-    - 'hawkes_gate: HawkesResidualFit requires a full-baseline TimeChangeDiagnostic, at least ten complete forward days, and a bootstrap spectral-radius upper bound below one'
+    - 'hawkes_gate: HawkesResidualFit requires a full-baseline TimeChangeDiagnostic, at least
+      ten complete forward days, and a bootstrap spectral-radius upper bound below one'
   R-FILL:
-    body: action-conditional fills are derived from complement-folded execution
-      prices and sizes; public level-total books identify only a front/back queue
-      bracket, and only a forward-validated bound artifact may reach a decision
-      consumer
+    body: action-conditional fills are derived from complement-folded execution prices and
+      sizes; public level-total books identify only a front/back queue bracket, and only a
+      forward-validated bound artifact may reach a decision consumer
     checks:
-    - 'action_binding: every FillQuantityBound binds the exact FlowAction, initial QueuePositionBound, arrival fit, mark laws, knowledge-state hash and horizon'
-    - 'execution_reach: a BUY aggressor reaches SELL_UP only at or above the action level and a SELL aggressor reaches BUY_UP only at or below it, after Down-to-Up complement folding'
+    - 'action_binding: every FillQuantityBound binds the exact FlowAction, initial QueuePositionBound,
+      arrival fit, mark laws, knowledge-state hash and horizon'
+    - 'execution_reach: a BUY aggressor reaches SELL_UP only at or above the action level
+      and a SELL aggressor reaches BUY_UP only at or below it, after Down-to-Up complement
+      folding'
     - 'front_bound: front_filled_shares == min(action.size_shares, cumulative_reaching_shares)'
-    - 'back_bound: back_filled_shares == min(action.size_shares, max(0, cumulative_reaching_shares - queue.upper_ahead_shares))'
-    - 'partial_first_class: fill quantities are shares in [0, action.size_shares] and any-fill, completion and first-fill time are derived separately at both bounds'
-    - 'gap_refusal: a collector gap crossing an action horizon yields an explicit UNAVAILABLE FillQuantityBound and never carries pre-gap queue state'
-    - 'no_midpoint: the midpoint of front/back queue results is diagnostic only and cannot be a decision result'
-    - 'validated_only: BE-FlowAndFills consumes FlowActionFillFit only when status == VALIDATED; DEVELOPMENT and CANDIDATE_FROZEN remain unavailable'
+    - 'back_bound: back_filled_shares == min(action.size_shares, max(0, cumulative_reaching_shares
+      - queue.upper_ahead_shares))'
+    - 'partial_first_class: fill quantities are shares in [0, action.size_shares] and any-fill,
+      completion and first-fill time are derived separately at both bounds'
+    - 'gap_refusal: a collector gap crossing an action horizon yields an explicit UNAVAILABLE
+      FillQuantityBound and never carries pre-gap queue state'
+    - 'no_midpoint: the midpoint of front/back queue results is diagnostic only and cannot
+      be a decision result'
+    - 'validated_only: BE-FlowAndFills consumes FlowActionFillFit only when status == VALIDATED;
+      DEVELOPMENT and CANDIDATE_FROZEN remain unavailable'
 types:
   Known:
     generic:
@@ -267,9 +283,9 @@ types:
       provenance: Provenance
       completeness: enum:COMPLETE|PARTIAL
       on_incomplete: enum:REFUSE|WORST_CASE_FILL
-    notes: 'adversity is a function of (outcome, position, action) evaluated at decision time, so it cannot
-      be stored as stable SP data. Loss limit lives ONLY in SP-Params keyed by ScopeKey.scenario (single
-      owner, R-SSOT).
+    notes: 'adversity is a function of (outcome, position, action) evaluated at decision time,
+      so it cannot be stored as stable SP data. Loss limit lives ONLY in SP-Params keyed by
+      ScopeKey.scenario (single owner, R-SSOT).
 
       '
   AdverseScenarioSet:
@@ -294,9 +310,9 @@ types:
   JointCompetitionState:
     fields:
       by_node: dict[NodeId, CompetitionState]
-    notes: 'realised sample only. Dependence describes CONSTRUCTION of the joint uncertainty and therefore
-      lives on the aggregator/distribution, not here (M8-1). Keys restricted to node kinds that can carry
-      competition state.
+    notes: 'realised sample only. Dependence describes CONSTRUCTION of the joint uncertainty
+      and therefore lives on the aggregator/distribution, not here (M8-1). Keys restricted
+      to node kinds that can carry competition state.
 
       '
   UtilityFunctional:
@@ -337,7 +353,7 @@ types:
     fields:
       view: StateView
       self: SelfState
-      belief: Known[BeliefProcess]
+      belief: Known[BeliefProcess] | Unavailable
       competition: Known[Uncertain[JointCompetitionState]] | Unavailable
       outcomes: PinnedOutcomes
       actions: ActionSpace
@@ -353,7 +369,8 @@ types:
       by_instrument: dict[InstrumentId, Known[IncentiveContract] | Unavailable]
       spec_hash: Hash
       incentive_plugin: PluginRef
-    notes: pre-resolved against the problem's spec snapshot; Disputed invokes the declared handler
+    notes: pre-resolved against the problem's spec snapshot; Disputed invokes the declared
+      handler
   HealthEvent:
     fields:
       id: str
@@ -383,26 +400,30 @@ types:
     - 'Confirmed(command_id: ImmutableId, confirmed_by: ConfirmationSource)'
     - 'Unconfirmed(command_id: ImmutableId, open_orders_remaining: int)'
     - 'FailedTerminal(command_id: ImmutableId, reason: str)'
-    notes: venue ack is NOT observed; confirmation is by open-order reconciliation, and while Unconfirmed
-      the conservative state is HALTED (rule R-HALT.fail_closed)
+    notes: venue ack is NOT observed; confirmation is by open-order reconciliation, and while
+      Unconfirmed the conservative state is HALTED (rule R-HALT.fail_closed)
   Gate:
     fields:
-      id: str
-      question: str
-      metric: str
-      threshold: float
-      unit: str
-      data_prereq: str
-      owner: str
-      preconditions: list[GateId]
-      on_pass: str
-      on_fail: str
+      id: GateId
+      status: enum:DRAFT|FROZEN|SUPERSEDED|RETIRED
+      superseded_by: GateId?
+      bar: GateBar
+      bar_provenance: Provenance
+      bar_input_snapshot: dict[str, ProvenancedValue]
+      bound_kind_derived_from: bar
+      null_hypothesis: str
+      favourable_arm: enum:UPPER|LOWER
+      preconditions: list[Precondition]
+      on_fail: FailRoute
+      on_verdict: FailRoute
+      code_hash: Hash
+      conformance_ref: ImmutableId
+      vacuity_control_ref: ImmutableId
+      firing_witness_ref: ImmutableId
+      mde_at_declared_n: float | NullPin
+      verdict_map: dict[str, VerdictState]
+      outcome_space: list[str]
       review_date: Date
-      inference_method: str
-      strata_hash: Hash
-      spec_hash: Hash
-      artifact_hash: Hash
-      frozen_at: Timestamp
   JointOutcome:
     fields:
       outcomes: dict[InstrumentId, VenueOutcome]
@@ -419,10 +440,12 @@ types:
       measured_at: Timestamp
       fit_data_through: Timestamp?
       artifact_id: ImmutableId?
+      valid_from: Timestamp?
+      valid_to: Timestamp?
   SP-Params:
     fields:
       entries: dict[(ParamId, ScopeKey), ParamValue]
-    notes: "SOLE owner of ScenarioLossLimit \u2014 enforced by rule R-SSOT.loss_limit_owner"
+    notes: SOLE owner of ScenarioLossLimit — enforced by rule R-SSOT.loss_limit_owner
   ScenarioLossLimit:
     fields:
       param: ParamId
@@ -458,8 +481,8 @@ types:
       competition_model: () -> ModuleRef
       constraints: () -> list[Constraint]
       cashflow_emitter: () -> PayoutFunctional
-    notes: 'M9-4: ONE registration supplies all four contributions; adding a principal-agent/contest theory
-      is a plug-in, not a four-file edit'
+    notes: 'M9-4: ONE registration supplies all four contributions; adding a principal-agent/contest
+      theory is a plug-in, not a four-file edit'
   PluginRef:
     fields:
       registry: str
@@ -491,7 +514,8 @@ types:
       model: PluginRef
       spec_hash: Hash
     protocol:
-      evaluate: (ActionSet, StateView, SelfState, Duration) -> Uncertain[ActionOutcome] | Unavailable
+      evaluate: (ActionSet, StateView, SelfState, Duration) -> Uncertain[ActionOutcome] |
+        Unavailable
     notes: 'M10-5: identity lives in PluginRef (single copy); still callable'
   HeartbeatRegistration:
     fields:
@@ -514,7 +538,7 @@ types:
       get: '(field: str) -> Known[any] | Unavailable'
       history: '(field: str, span: Duration) -> list[Known[any]]'
       coverage: '(field: str, span: Duration) -> Known[Coverage] | Unavailable'
-      refusals: '() -> RefusalLedger'
+      refusals: () -> RefusalLedger
     fields:
       now: KnowledgeTime
       spec_snapshot: Hash
@@ -541,7 +565,8 @@ types:
       status: enum:VALID_GUARD_BITES|BOUND_ZERO_SCORE_DELTA|INVALID_UNBOUND_GUARD
       reference_delta_pp: float
       refusal_counts: dict[str, RefusalCount]
-    notes: score delta may cancel on a small slice; event-only selected reads and decision disagreements prove the guard is wired
+    notes: score delta may cancel on a small slice; event-only selected reads and decision
+      disagreements prove the guard is wired
   MeasurementPipelineRun:
     fields:
       pipeline_version: str
@@ -554,7 +579,8 @@ types:
       canary_report_hash: Hash
       status: enum:COMPLETE
       run_hash: Hash
-    notes: atomic content-addressed receipt emitted only after every planned partition and the bound leak canary complete
+    notes: atomic content-addressed receipt emitted only after every planned partition and
+      the bound leak canary complete
   BundleHealth:
     fields:
       validator_version: str
@@ -568,7 +594,8 @@ types:
       per_coin_run_hash: Hash?
       status: enum:PASS|FAIL
       health_hash: Hash
-    notes: content-addressed cross-partition validation result; FAIL can be retained for diagnosis but cannot enter a batch receipt
+    notes: content-addressed cross-partition validation result; FAIL can be retained for diagnosis
+      but cannot enter a batch receipt
   MeasurementCoinPlan:
     fields:
       pipeline_version: str
@@ -613,7 +640,8 @@ types:
       wilson95: Interval
       threshold: float
       verdict: enum:PASS|INSUFFICIENT_EVIDENCE|MODEL_REFUTED
-    notes: EV-Markout refuses unless the immutable artifact verdict is PASS and its Wilson lower bound meets threshold
+    notes: EV-Markout refuses unless the immutable artifact verdict is PASS and its Wilson
+      lower bound meets threshold
   TerminalMarkoutObservation:
     fields:
       t_known: KnowledgeTime
@@ -779,28 +807,24 @@ types:
       g: (float) -> float
       g_inv: (float) -> float
       g_prime: (float) -> float
-    notes: >-
-      never hardcode the Gaussian Phi. M14-1: g_prime added because every
-      dynamics consumer (participation frontier m/g'(d), lambda_bin, the zeta
-      pickoff floor, the hedge delta) needs the derivative, and v13 exposed only
-      g and g_inv -- which left those consumers unimplementable except by
-      reaching for phi and reintroducing the Gaussian by the back door.
-      M15-1 (ITER3 M3-5): g_prime is the SINGLE canonical derivative. v14 also
-      carried `density`, which for a CDF-valued link is the same function under
-      a second name and let two implementations disagree with no equality rule.
+    notes: 'never hardcode the Gaussian Phi. M14-1: g_prime added because every dynamics consumer
+      (participation frontier m/g''(d), lambda_bin, the zeta pickoff floor, the hedge delta)
+      needs the derivative, and v13 exposed only g and g_inv -- which left those consumers
+      unimplementable except by reaching for phi and reintroducing the Gaussian by the back
+      door. M15-1 (ITER3 M3-5): g_prime is the SINGLE canonical derivative. v14 also carried
+      `density`, which for a CDF-valued link is the same function under a second name and
+      let two implementations disagree with no equality rule.'
   PathLaw:
     variants:
     - 'ReducedForm(law: ReducedFormPathLaw)'
     - 'Structural(diag: StructuralDiagnosticLaw)'
-    notes: >-
-      M16-1 (ITER4 M4-6). A REAL discriminated union. v15 made estimand_route an
-      enum on a single record that always carried BOTH reduced-form and
-      structural fields, so a route-A object was forced to populate an anchor, a
-      rate and a sampling convention it does not use, while a structural object
-      kept the pricing-shaped protocol. Only the ReducedForm arm answers a
-      pricing query; the Structural arm has no settlement_var at all, so a
-      pricing consumer cannot bind to it even by mistake. This is the type-level
-      encoding of R-ROUTE, replacing a key-name convention.
+    notes: M16-1 (ITER4 M4-6). A REAL discriminated union. v15 made estimand_route an enum
+      on a single record that always carried BOTH reduced-form and structural fields, so a
+      route-A object was forced to populate an anchor, a rate and a sampling convention it
+      does not use, while a structural object kept the pricing-shaped protocol. Only the ReducedForm
+      arm answers a pricing query; the Structural arm has no settlement_var at all, so a pricing
+      consumer cannot bind to it even by mistake. This is the type-level encoding of R-ROUTE,
+      replacing a key-name convention.
   ReducedFormPathLaw:
     fields:
       instrument: InstrumentId
@@ -815,19 +839,18 @@ types:
       status: enum:FITTED|UNFITTED|REFUSED
       provenance: Provenance
     protocol:
-      pricing_distribution: '(req: ForecastRequest, obs: AnchorObservables) -> Distribution | Unavailable'
-    notes: >-
-      M16-1. THE PRICING CARRIER, and the only one. Note what is ABSENT: no
-      SamplingConvention (M4-1 -- route A regresses the PUBLISHED streams and
-      never needs their internal kernel; v15 gated it on VERIFIED anyway, which
-      destroyed the operational advantage that selected route A), no sigma2_rate,
-      no AnchorSpec, no k_law. Note also there is NO settlement_var: terminal
-      variance is reachable ONLY through pricing_distribution, which validates
-      the request BEFORE computing either moment and returns mean and variance
-      from the SAME validated fit. v15 exposed pricing_var and conditional_mean
-      separately and neither called the request checker, so correctness rested on
-      every future caller remembering an unrelated pre-call. increment_var is
-      absent too: the rolling object belongs to the structural arm.
+      pricing_distribution: '(req: ForecastRequest, obs: AnchorObservables) -> Distribution
+        | Unavailable'
+    notes: 'M16-1. THE PRICING CARRIER, and the only one. Note what is ABSENT: no SamplingConvention
+      (M4-1 -- route A regresses the PUBLISHED streams and never needs their internal kernel;
+      v15 gated it on VERIFIED anyway, which destroyed the operational advantage that selected
+      route A), no sigma2_rate, no AnchorSpec, no k_law. Note also there is NO settlement_var:
+      terminal variance is reachable ONLY through pricing_distribution, which validates the
+      request BEFORE computing either moment and returns mean and variance from the SAME validated
+      fit. v15 exposed pricing_var and conditional_mean separately and neither called the
+      request checker, so correctness rested on every future caller remembering an unrelated
+      pre-call. increment_var is absent too: the rolling object belongs to the structural
+      arm.'
   ReducedFormFit:
     fields:
       alpha: float
@@ -837,32 +860,46 @@ types:
       cross_fitted: bool
       mean_gate: GateEvidence
       var_gate: GateEvidence
-    notes: >-
-      M16-1 (M4-3). Evidence lives on EACH (symbol, horizon) fit. v15 stored one
-      cluster count and two scalar p-values for a whole horizon map while the
-      plan required per-horizon, per-symbol evidence. resid_var must be strictly
-      positive and finite and counts must be nonnegative integers: v15 priced
-      resid_var = -1 and accepted NaN counts and NaN p-values, because every
-      ordered comparison against NaN is false.
+    notes: 'M16-1 (M4-3). Evidence lives on EACH (symbol, horizon) fit. v15 stored one cluster
+      count and two scalar p-values for a whole horizon map while the plan required per-horizon,
+      per-symbol evidence. resid_var must be strictly positive and finite and counts must
+      be nonnegative integers: v15 priced resid_var = -1 and accepted NaN counts and NaN p-values,
+      because every ordered comparison against NaN is false.'
   GateEvidence:
     fields:
+      gate: GateId
+      scope: ScopeKey
+      coin: str?
+      per_fill: Interval | NullPin
+      share_weighted: Interval | NullPin
+      ci_arm: enum:UPPER|LOWER
+      estimand_is_idealised: enum:UPPER|LOWER|NO
+      decision_eligible: bool
+      admissible: bool
+      inadmissible_reason: str?
+      provenance_state: ProvenanceState
+      inference_actual: str
+      evaluated_at: Timestamp
+      code_hash: Hash
+      status: enum:CURRENT|SUPERSEDED|WITHDRAWN|INVALIDATED
+      supersedes: ImmutableId?
+      withdrawn_reason: str?
+      verdict: VerdictState?
+      tolerance: float
+      ci_hi_abs: float | Unavailable
+      effect_size: float
       test: str
       conditioning: str
       multiplicity: str
-      verdict: enum:PASS|INSUFFICIENT_EVIDENCE|MODEL_REFUTED
-      effect_size: float
-      ci_hi_abs: float
-      tolerance: float
+      sampling_unit: str | NullPin
       p_value: float | NullPin
-    notes: >-
-      M16-1 (ITER4 M4-4). FAILURE TO REJECT IS NOT EQUIVALENCE. v15 gated pricing
-      on p >= 0.01, which treats "not enough data" as "verified" -- backwards at
-      the ten-day-cluster minimum where these tests have little power. PASS
-      requires the |effect| confidence bound to lie INSIDE a pre-registered
-      tolerance; INSUFFICIENT_EVIDENCE and MODEL_REFUTED are distinct states and
-      both refuse. test, conditioning basis and multiplicity policy must be
-      pre-registered, not chosen after seeing the data. Ten day clusters is a
-      minimum for ATTEMPTING inference, never evidence of validity.
+    notes: M16-1 (ITER4 M4-4). FAILURE TO REJECT IS NOT EQUIVALENCE. v15 gated pricing on
+      p >= 0.01, which treats "not enough data" as "verified" -- backwards at the ten-day-cluster
+      minimum where these tests have little power. PASS requires the |effect| confidence bound
+      to lie INSIDE a pre-registered tolerance; INSUFFICIENT_EVIDENCE and MODEL_REFUTED are
+      distinct states and both refuse. test, conditioning basis and multiplicity policy must
+      be pre-registered, not chosen after seeing the data. Ten day clusters is a minimum for
+      ATTEMPTING inference, never evidence of validity.
   StreamProvenance:
     fields:
       fast_id: FeedId
@@ -871,12 +908,11 @@ types:
       point_in_time: bool
       aligned_at_publication: bool
       status: enum:VERIFIED|UNVERIFIED
-    notes: >-
-      M16-1 (M4-1). What route A actually requires: stream identities, reads that
-      are point-in-time at knowledge time, declared units, and alignment at the
-      PUBLISHED timestamps. A different provenance question from
-      SamplingConvention, which describes the venue's internal aggregation and
-      gates the structural arm only. Conflating the two wrongly gated route A.
+    notes: 'M16-1 (M4-1). What route A actually requires: stream identities, reads that are
+      point-in-time at knowledge time, declared units, and alignment at the PUBLISHED timestamps.
+      A different provenance question from SamplingConvention, which describes the venue''s
+      internal aggregation and gates the structural arm only. Conflating the two wrongly gated
+      route A.'
   Distribution:
     fields:
       mean: float
@@ -885,10 +921,9 @@ types:
       instrument: InstrumentId
       as_of: Timestamp
       provenance: StreamProvenance
-    notes: >-
-      M16-1. The single typed result of the atomic query. Mean and variance are
-      produced together from one validated fit, so they cannot be taken from
-      inconsistent objects or versions.
+    notes: M16-1. The single typed result of the atomic query. Mean and variance are produced
+      together from one validated fit, so they cannot be taken from inconsistent objects or
+      versions.
   StructuralDiagnosticLaw:
     fields:
       instrument: InstrumentId
@@ -909,13 +944,11 @@ types:
     protocol:
       decomposition: '(r: Duration) -> DiagnosticVarianceDecomposition | Unavailable'
       increment_var: '(h: Duration) -> VarianceQuantity | Unavailable'
-    notes: >-
-      M16-1. DIAGNOSTICS ONLY, and structurally incapable of pricing: no
-      settlement_var and no pricing_distribution, so no probability consumer can
-      bind to it. It owns increment_var, the ROLLING object the tape is fitted
-      to, never interchangeable with a terminal conditional variance (ratio 4.1x
-      in sigma at r=10 s). Gated on sampling_convention.status == VERIFIED --
-      that gate belongs HERE and nowhere else.
+    notes: 'M16-1. DIAGNOSTICS ONLY, and structurally incapable of pricing: no settlement_var
+      and no pricing_distribution, so no probability consumer can bind to it. It owns increment_var,
+      the ROLLING object the tape is fitted to, never interchangeable with a terminal conditional
+      variance (ratio 4.1x in sigma at r=10 s). Gated on sampling_convention.status == VERIFIED
+      -- that gate belongs HERE and nowhere else.'
   DiagnosticVarianceDecomposition:
     fields:
       r: Duration
@@ -927,27 +960,23 @@ types:
       selected_alpha: float
       selected_bias_coeff: float
       selected_uncond_mse: VarianceQuantity
-    notes: >-
-      M16-1 (ITER4 M4-5). cond_var_at_model is computed ONLY at the model
-      projection and is therefore independent of the selected anchor. v15 passed
-      the selected (possibly empirical) alpha into the conditional-variance
-      function, which returns conditional variance PLUS squared bias whenever
-      alpha differs from alpha*, and published that as `anchor_var` -- so
-      changing the empirical alpha silently changed the alleged conditional
-      variance. That is the variance/MSE conflation Revision 3 removed,
-      reintroduced on the diagnostic route. The selected anchor's known bias and
-      unconditional MSE are now SEPARATE fields. model_total is a model quantity
-      and cannot be read as a settlement variance: the type carries no pricing
-      protocol, which is a boundary a key-name convention was not.
+    notes: 'M16-1 (ITER4 M4-5). cond_var_at_model is computed ONLY at the model projection
+      and is therefore independent of the selected anchor. v15 passed the selected (possibly
+      empirical) alpha into the conditional-variance function, which returns conditional variance
+      PLUS squared bias whenever alpha differs from alpha*, and published that as `anchor_var`
+      -- so changing the empirical alpha silently changed the alleged conditional variance.
+      That is the variance/MSE conflation Revision 3 removed, reintroduced on the diagnostic
+      route. The selected anchor''s known bias and unconditional MSE are now SEPARATE fields.
+      model_total is a model quantity and cannot be read as a settlement variance: the type
+      carries no pricing protocol, which is a boundary a key-name convention was not.'
   KernelCoefficient:
     fields:
       value: float
       units: enum:SECONDS
-    notes: >-
-      M16-1 (M4-6). k_law and the conditional-variance coefficient are NOT
-      dimensionless: rate[bps^2/second] * coefficient = bps^2 requires SECONDS,
-      and the plan's own seam value is labelled 20.5028 s. v15 called them
-      dimensionless while multiplying a rate by them.
+    notes: 'M16-1 (M4-6). k_law and the conditional-variance coefficient are NOT dimensionless:
+      rate[bps^2/second] * coefficient = bps^2 requires SECONDS, and the plan''s own seam
+      value is labelled 20.5028 s. v15 called them dimensionless while multiplying a rate
+      by them.'
   ForecastRequest:
     fields:
       instrument: InstrumentId
@@ -956,10 +985,9 @@ types:
       target_interval: TargetInterval
       horizon: Duration
       link_ref: LinkRef
-    notes: >-
-      M14-1. The typed request the protocol needs to enforce R-KNOW and R-WFWD.
-      A bare `r` cannot express which knowledge set the answer is conditioned on,
-      which is exactly how a look-ahead enters unnoticed.
+    notes: M14-1. The typed request the protocol needs to enforce R-KNOW and R-WFWD. A bare
+      `r` cannot express which knowledge set the answer is conditioned on, which is exactly
+      how a look-ahead enters unnoticed.
   TargetInterval:
     fields:
       start: Timestamp
@@ -968,23 +996,19 @@ types:
     fields:
       link_id: ImmutableId
       version: str
-    notes: >-
-      M14-1. PathLaw REFERENCES the selected link, it does not carry a copy.
-      v13 duplicated BeliefProcess.link into PathLaw with no equality invariant
-      tying the two, so two consumers could silently disagree about g. The link
-      is owned by the belief/spec plane; BE-Uncertainty neither owns nor selects
-      it.
+    notes: M14-1. PathLaw REFERENCES the selected link, it does not carry a copy. v13 duplicated
+      BeliefProcess.link into PathLaw with no equality invariant tying the two, so two consumers
+      could silently disagree about g. The link is owned by the belief/spec plane; BE-Uncertainty
+      neither owns nor selects it.
   VarianceQuantity:
     fields:
       value: float
       unit_space: UnitSpace
       scale_exponent: int
       component: VarianceComponent
-    notes: >-
-      M14-1. A variance may not cross the module boundary as a bare float.
-      scale_exponent is 2 for a variance and 1 for a standard deviation;
-      composing two VarianceQuantity with different unit_space or exponent is a
-      type error.
+    notes: M14-1. A variance may not cross the module boundary as a bare float. scale_exponent
+      is 2 for a variance and 1 for a standard deviation; composing two VarianceQuantity with
+      different unit_space or exponent is a type error.
   SamplingConvention:
     fields:
       id: str
@@ -996,15 +1020,13 @@ types:
       dt: Duration
       w_declared: Duration
       provenance: Provenance
-    notes: >-
-      M14-1 (ITER2 M2-2). The averaging kernel is a VERSIONED WEIGHT SCHEDULE,
-      never module constants. A ~1 Hz publication cadence is a cadence, not a
-      kernel: it does not establish 60 equally-weighted samples, synchronous
-      S30/S60 support or right-alignment at t. EXP-M6 proves the published S60
-      endpoint reproduces settlement; it says nothing about how that endpoint is
-      built. No PathLaw whose sampling_convention.status is UNVERIFIED may be
-      used as a pricing input -- a 1 s shift in fast-stream support alone moves
-      the anchor coefficient.
+    notes: 'M14-1 (ITER2 M2-2). The averaging kernel is a VERSIONED WEIGHT SCHEDULE, never
+      module constants. A ~1 Hz publication cadence is a cadence, not a kernel: it does not
+      establish 60 equally-weighted samples, synchronous S30/S60 support or right-alignment
+      at t. EXP-M6 proves the published S60 endpoint reproduces settlement; it says nothing
+      about how that endpoint is built. No PathLaw whose sampling_convention.status is UNVERIFIED
+      may be used as a pricing input -- a 1 s shift in fast-stream support alone moves the
+      anchor coefficient.'
   AnchorSpec:
     fields:
       family: enum:TRANSLATION_INVARIANT_TWO_STREAM|OTHER
@@ -1015,44 +1037,38 @@ types:
       bias_enters: enum:MEAN_MODEL|REFUSED
       model_gap_by_horizon: dict[str, float] | NullPin
       cond_var_by_horizon: dict[str, VarianceQuantity]
-    notes: >-
-      M16-1. For P_hat(alpha) = S_slow + alpha*(S_fast - S_slow) the
-      error splits as (alpha - alpha_selected)*(S_fast - S_slow) + a
-      conditionally zero-mean residual. The first term is KNOWN AT DECISION TIME
-      and belongs in the mean; bias_enters may never be other than MEAN_MODEL or
-      REFUSED. v14 defined bias against the MODEL coefficient unconditionally, so
-      an empirically fitted alpha was always labelled biased and the documented
-      mean correction dragged the centre back to the Brownian projection -- no
-      empirical coefficient could become the zero-bias mean. `selected` now says
-      which estimand defines correctness and bias is measured against THAT, so a
-      fitted conditional mean is unbiased with respect to itself.
-      model_gap_by_horizon (estimated - model) survives as a PROCESS DIAGNOSTIC
-      and is never applied as a correction. Every quantity is HORIZON-INDEXED:
-      the anchor is not a scalar (alpha* is 1.2496 at r=30 against 1.4992 outside
-      the window) and the plan fits it at each r.
+    notes: 'M16-1. For P_hat(alpha) = S_slow + alpha*(S_fast - S_slow) the error splits as
+      (alpha - alpha_selected)*(S_fast - S_slow) + a conditionally zero-mean residual. The
+      first term is KNOWN AT DECISION TIME and belongs in the mean; bias_enters may never
+      be other than MEAN_MODEL or REFUSED. v14 defined bias against the MODEL coefficient
+      unconditionally, so an empirically fitted alpha was always labelled biased and the documented
+      mean correction dragged the centre back to the Brownian projection -- no empirical coefficient
+      could become the zero-bias mean. `selected` now says which estimand defines correctness
+      and bias is measured against THAT, so a fitted conditional mean is unbiased with respect
+      to itself. model_gap_by_horizon (estimated - model) survives as a PROCESS DIAGNOSTIC
+      and is never applied as a correction. Every quantity is HORIZON-INDEXED: the anchor
+      is not a scalar (alpha* is 1.2496 at r=30 against 1.4992 outside the window) and the
+      plan fits it at each r.'
   AnchorObservables:
     fields:
       s_fast: Known[float]
       s_slow: Known[float]
       unit_space: UnitSpace
-    notes: >-
-      The two stream reads the anchor is a function of. Typed so that the
-      conditional bias, which is a function of (s_fast - s_slow), is computable
-      by the consumer rather than assumed away.
+    notes: The two stream reads the anchor is a function of. Typed so that the conditional
+      bias, which is a function of (s_fast - s_slow), is computable by the consumer rather
+      than assumed away.
   AnchorErrorEvidence:
     fields:
       entries: list[AnchorErrorDatum]
       ordered: bool
       feed_error_cov: FeedErrorCov | NullPin
-    notes: >-
-      M14-1 (ITER2 M2-3). Replaces AnchorErrorBudget{floor, ceiling}, which was
-      NOT an ordered bracket. The model-implied MSE of one chosen extrapolator
-      is not a distribution-free lower bound -- the conditional projection beats
-      it inside the very same model -- and the stream-versus-proxy residual is a
-      mixture of anchor error, time-varying basis and proxy error whose
-      covariance can move it either way. `ordered` must stay false until an
-      ordering is derived from stated assumptions; consumers may not apply
-      min/max semantics while it is false.
+    notes: M14-1 (ITER2 M2-3). Replaces AnchorErrorBudget{floor, ceiling}, which was NOT an
+      ordered bracket. The model-implied MSE of one chosen extrapolator is not a distribution-free
+      lower bound -- the conditional projection beats it inside the very same model -- and
+      the stream-versus-proxy residual is a mixture of anchor error, time-varying basis and
+      proxy error whose covariance can move it either way. `ordered` must stay false until
+      an ordering is derived from stated assumptions; consumers may not apply min/max semantics
+      while it is false.
   AnchorErrorDatum:
     fields:
       label: str
@@ -1068,33 +1084,27 @@ types:
       units: enum:BPS_SQUARED
       psd_validated: bool
       identification: enum:CROSS_VARIOGRAM_NUGGET|EXTERNAL_INSTRUMENT|INSIDE_REDUCED_FORM_RESIDUAL|NONE
-    notes: >-
-      M16-1. Stream measurement error is a 2x2, not a scalar: the
-      contribution is u^T Cov u with u = (alpha, 1 - alpha), so it varies with
-      the horizon weights, and because (1 - alpha) changes sign above alpha = 1
-      the same covariance raises one anchor's variance and lowers another's.
-      UNITS ARE BPS_SQUARED, once, everywhere. v14 typed this in bps^2 while the
-      fixture documented sigma^2 units and multiplied by the rate, so an identity
-      matrix at rate 4 contributed 9.9867 instead of 2.4967. psd_validated must
-      be true before use -- a non-PSD matrix drove total variance to -120.9.
-      IDENTIFICATION is not free: contemporaneous moments give 3 numbers for 4
-      unknowns (rate plus this 2x2), so Omega is NOT identified from them. Under
-      the STRUCTURAL route it is the lag-0 discontinuity of the bivariate
-      cross-variogram -- i.e. the NUGGET -- which requires the sampling
-      convention to be VERIFIED first and is entangled with w_hat_free (a
-      variogram fitted without a nugget attributes microstructure to a shorter
-      kernel). Under the REDUCED_FORM route it is INSIDE the residual and must
-      never be added again.
+    notes: 'M16-1. Stream measurement error is a 2x2, not a scalar: the contribution is u^T
+      Cov u with u = (alpha, 1 - alpha), so it varies with the horizon weights, and because
+      (1 - alpha) changes sign above alpha = 1 the same covariance raises one anchor''s variance
+      and lowers another''s. UNITS ARE BPS_SQUARED, once, everywhere. v14 typed this in bps^2
+      while the fixture documented sigma^2 units and multiplied by the rate, so an identity
+      matrix at rate 4 contributed 9.9867 instead of 2.4967. psd_validated must be true before
+      use -- a non-PSD matrix drove total variance to -120.9. IDENTIFICATION is not free:
+      contemporaneous moments give 3 numbers for 4 unknowns (rate plus this 2x2), so Omega
+      is NOT identified from them. Under the STRUCTURAL route it is the lag-0 discontinuity
+      of the bivariate cross-variogram -- i.e. the NUGGET -- which requires the sampling convention
+      to be VERIFIED first and is entangled with w_hat_free (a variogram fitted without a
+      nugget attributes microstructure to a shorter kernel). Under the REDUCED_FORM route
+      it is INSIDE the residual and must never be added again.'
   WeightAtOffset:
     fields:
       relative_offset: Duration
       weight: float
-    notes: >-
-      M16-1 (M4-6). A weight schedule needs SUPPORT, not just magnitudes. v15's
-      list[float] could not encode where each sample sits or which stream is
-      offset, so an aligned schedule and a one-second-lagged one carried
-      identical weight lists, and `fast_slow_synchronous: false` did not say
-      which stream lagged or by how much.
+    notes: 'M16-1 (M4-6). A weight schedule needs SUPPORT, not just magnitudes. v15''s list[float]
+      could not encode where each sample sits or which stream is offset, so an aligned schedule
+      and a one-second-lagged one carried identical weight lists, and `fast_slow_synchronous:
+      false` did not say which stream lagged or by how much.'
   Interval:
     fields:
       lo: float
@@ -1104,11 +1114,9 @@ types:
       value: float
       unit_space: UnitSpace
       per: enum:SECOND
-    notes: >-
-      M16-1. A variance RATE is bps^2 per second and is not the same
-      type as a terminal bps^2 variance. v14 typed sigma2_rate as
-      VarianceQuantity, which erased the time dimension and made a rate and a
-      terminal variance interchangeable at the boundary.
+    notes: M16-1. A variance RATE is bps^2 per second and is not the same type as a terminal
+      bps^2 variance. v14 typed sigma2_rate as VarianceQuantity, which erased the time dimension
+      and made a rate and a terminal variance interchangeable at the boundary.
   ReducedFormLaw:
     fields:
       by_horizon: dict[str, ReducedFormFit]
@@ -1118,43 +1126,36 @@ types:
       resid_cond_mean_test_p: float
       hetero_test_p: float
       status: enum:FITTED|UNFITTED|REFUSED
-    notes: >-
-      M16-1. Superseded as a top-level carrier by ReducedFormPathLaw; retained
-      as the per-symbol fitted-law record. THE PRICING LAW. Its residual variance is the WHOLE of
-      Sigma(r) -- future innovation, latent-path uncertainty, stream error and
-      every covariance among them are already inside it. The structural lines
-      (k_law, anchor cond_var, FeedErrorCov) are NEVER added to it; doing so
-      double-counts. OLS yields the best LINEAR PROJECTION and a POOLED residual,
-      which is the conditional mean only if that mean is linear and the
-      conditional variance only under homoskedasticity -- otherwise it is an
-      unconditional forecast MSE, the same category error this programme removed
-      from the Brownian variance line one revision earlier. Hence
-      resid_cond_mean_test_p, hetero_test_p, cross_fitted and n_day_clusters are
-      GATES: pricing refuses without them.
+    notes: 'M16-1. Superseded as a top-level carrier by ReducedFormPathLaw; retained as the
+      per-symbol fitted-law record. THE PRICING LAW. Its residual variance is the WHOLE of
+      Sigma(r) -- future innovation, latent-path uncertainty, stream error and every covariance
+      among them are already inside it. The structural lines (k_law, anchor cond_var, FeedErrorCov)
+      are NEVER added to it; doing so double-counts. OLS yields the best LINEAR PROJECTION
+      and a POOLED residual, which is the conditional mean only if that mean is linear and
+      the conditional variance only under homoskedasticity -- otherwise it is an unconditional
+      forecast MSE, the same category error this programme removed from the Brownian variance
+      line one revision earlier. Hence resid_cond_mean_test_p, hetero_test_p, cross_fitted
+      and n_day_clusters are GATES: pricing refuses without them.'
   UnitSpace:
     fields:
       coordinate: enum:NORMALISED_ARITHMETIC_RETURN|LOG_RETURN|RAW_PRICE
       reference: enum:STRIKE|WINDOW_OPEN|NONE
       scale: enum:BPS|FRACTION|NATIVE
-    notes: >-
-      S1. Every variance field is typed by one of these; composing across two
-      different UnitSpaces is a type error, and cross-symbol pooling is refused
-      before normalisation. The estimator declares
-      NORMALISED_ARITHMETIC_RETURN/STRIKE/BPS: the settlement mark is an
-      ARITHMETIC mean, so the TWAP kernel and the anchor decomposition are exact
-      in price space and only approximate in log space.
+    notes: 'S1. Every variance field is typed by one of these; composing across two different
+      UnitSpaces is a type error, and cross-symbol pooling is refused before normalisation.
+      The estimator declares NORMALISED_ARITHMETIC_RETURN/STRIKE/BPS: the settlement mark
+      is an ARITHMETIC mean, so the TWAP kernel and the anchor decomposition are exact in
+      price space and only approximate in log space.'
   HorizonDomain:
     fields:
       r_min: Duration
       r_max: Duration
       grid: list[Duration]
       basis_crossover: Duration | NullPin | Unavailable
-    notes: >-
-      Below basis_crossover the basis noise exceeds settlement vol and the price
-      model is noise regardless of estimator quality; queries there return
-      Unavailable, not a number. M14-1: the basis study is deferred to PM-E1, so
-      the field must be able to say so -- v13 typed it as a required Duration,
-      which forced a number nobody had measured.
+    notes: 'Below basis_crossover the basis noise exceeds settlement vol and the price model
+      is noise regardless of estimator quality; queries there return Unavailable, not a number.
+      M14-1: the basis study is deferred to PM-E1, so the field must be able to say so --
+      v13 typed it as a required Duration, which forced a number nobody had measured.'
   CalibrationCurve:
     fields:
       c_by_horizon: dict[str, float]
@@ -1163,15 +1164,13 @@ types:
       inference_rule: enum:DAY_BLOCK_BOOTSTRAP|BLOCK_BOOTSTRAP|NONE
       n_day_clusters: int
       status: enum:DIAGNOSTIC|GATE
-    notes: >-
-      M16-1 (ITER4 M4-6). c(r) is the AGREEMENT RATIO between the two routes,
-      c(r) = Sigma_A(r) / model_total_B(r), expected near 1. It is added to
-      NEITHER route and multiplies neither line. v13-v15 described it as "the
-      residual AFTER the ledger" and asked whether it multiplied one line or the
-      whole ledger; both readings predate the route split and are withdrawn. A
-      c(r) far from 1 is evidence the parametric law misdescribes the tape, i.e.
-      information about route B, never a correction to route A. status stays
-      DIAGNOSTIC until n_day_clusters meets the pre-registered threshold.
+    notes: M16-1 (ITER4 M4-6). c(r) is the AGREEMENT RATIO between the two routes, c(r) =
+      Sigma_A(r) / model_total_B(r), expected near 1. It is added to NEITHER route and multiplies
+      neither line. v13-v15 described it as "the residual AFTER the ledger" and asked whether
+      it multiplied one line or the whole ledger; both readings predate the route split and
+      are withdrawn. A c(r) far from 1 is evidence the parametric law misdescribes the tape,
+      i.e. information about route B, never a correction to route A. status stays DIAGNOSTIC
+      until n_day_clusters meets the pre-registered threshold.
   ActionSpace:
     fields:
       verbs: list[enum:QUOTE|CANCEL|MINT|MERGE|CROSS|WAIT]
@@ -1188,6 +1187,8 @@ types:
       token: TokenId?
       level: float?
       size: float?
+      order_ref: str?
+      placement: enum:JOIN|FRONT_ON_FORMATION
   PortfolioState:
     fields:
       positions: dict[TokenId, Position]
@@ -1207,6 +1208,9 @@ types:
     fields:
       max_size: dict[str, float]
       binding: list[Constraint]
+    notes: ' max_size keys are side-keyed "VERB:SIDE" (key domain pinned); DEFAULT-DENY: a
+      verb:side absent from the dict is INFEASIBLE — without the pin an empty set is permissive
+      and the halt door inverts (module plan §2a).'
   Constraint:
     fields:
       id: str
@@ -1407,7 +1411,8 @@ types:
       evaluation_start: KnowledgeTime
       spec_hash: Hash
       status: FlowModelStatus
-    notes: optional residual model in baseline operational time; never fitted as the clock baseline
+    notes: optional residual model in baseline operational time; never fitted as the clock
+      baseline
   HawkesDevelopmentDiagnostic:
     fields:
       artifact_id: ImmutableId
@@ -1447,7 +1452,8 @@ types:
       observed_level_total_shares: float
       observed_as_of: KnowledgeTime
       state_hash: Hash
-    notes: public level-total data do not identify exact queue position; lower is zero and upper is displayed size ahead
+    notes: public level-total data do not identify exact queue position; lower is zero and
+      upper is displayed size ahead
   FillQuantityBound:
     fields:
       artifact_id: ImmutableId
@@ -1465,7 +1471,8 @@ types:
       unavailable_reason: str?
       state_hash: Hash
       provenance: Provenance
-    notes: partial-fill quantity bracket; unavailable rows are retained and bracket midpoint is not an output
+    notes: partial-fill quantity bracket; unavailable rows are retained and bracket midpoint
+      is not an output
   FlowActionFillFit:
     fields:
       artifact_id: ImmutableId
@@ -1479,7 +1486,8 @@ types:
       evaluation_start: KnowledgeTime
       spec_hash: Hash
       status: FlowModelStatus
-    notes: binds flow and mark laws to one exact action schema and queue bracket; decision use requires VALIDATED
+    notes: binds flow and mark laws to one exact action schema and queue bracket; decision
+      use requires VALIDATED
   FlowDevelopmentRun:
     fields:
       artifact_id: ImmutableId
@@ -1525,7 +1533,8 @@ types:
     - Dynamic(Known[CouplingGraph])
   OutcomeModel:
     protocol:
-      evaluate: (ActionSet, StateView, SelfState, Duration) -> Uncertain[ActionOutcome] | Unavailable
+      evaluate: (ActionSet, StateView, SelfState, Duration) -> Uncertain[ActionOutcome] |
+        Unavailable
     registry: PluginRegistry
   UnwrapSpec:
     variants:
@@ -1555,6 +1564,152 @@ types:
     fields:
       resolutions: dict[InstrumentId, VenueOutcome]
       redemption_delay: Duration
+  GateId:
+    fields:
+      protocol: str
+      name: str
+      version: int
+  GateBar:
+    kind: union
+    variants:
+    - 'Scalar(value: float, unit: str)'
+    - 'TwoSided(interval: Interval)'
+    - 'ExcludesZero(side: enum:POSITIVE|NEGATIVE)'
+    - 'Conjunction(parts: list[GateBar])'
+    - 'Disjunction(parts: list[GateBar])'
+    - 'AtLeastK(k: int, parts: list[GateBar])'
+    - 'PerScope(by_scope: dict[ScopeKey, GateBar])'
+  PreconditionState:
+    kind: union
+    variants:
+    - Passed()
+    - 'NotYetEvaluated(blocked_by: GateId)'
+    - 'DischargedByRefutation(by: GateId)'
+    - 'DischargedAsMoot(closed_by: GateId)'
+    - 'Inadmissible(reason: str)'
+  Precondition:
+    fields:
+      gate: GateId
+      state: PreconditionState
+  ProvenanceState:
+    kind: union
+    variants:
+    - 'Enumerated(unit: str, sample: list[str])'
+    - Missing()
+    - 'Contradicted(by: ImmutableId, claimed: str, measured: str)'
+  VerdictState:
+    kind: union
+    variants:
+    - Pass()
+    - ModelRefuted()
+    - 'InsufficientEvidence(resolvable_by: ResourceRequired)'
+    - 'NotIdentifiable(reason: str, overturning_contrast: str)'
+    - FireSide()
+    - PassSide()
+  ResourceRequired:
+    fields:
+      kind: enum:DAYS|WINDOWS|EVENTS|INSTRUMENT|SPECIFICATION
+      quantity: float | NullPin
+      at_declared_n: int | NullPin
+  FailRoute:
+    kind: union
+    variants:
+    - HaltProgram()
+    - 'Reroute(to: str, target: GateId | NullPin)'
+    - BlockDownstream()
+    - ReportOnly()
+    - 'PublishConclusion(text: str)'
+  ProvenancedValue:
+    fields:
+      value: float
+      artifact_id: ImmutableId
+      provenance: Provenance
+  Provenance:
+    kind: union
+    variants:
+    - Observed()
+    - Measured()
+    - Declared()
+    - Chosen()
+    - Assumed()
+    - Imputed()
+    notes: 'Carries ruling R-3, which is RULED and PENDING A CONTRACT EDIT. v22 declares Provenance
+      in prelude.external with NO members, so R-PROV is keyed on a value the contract never
+      defines and no checker can evaluate it. This delta is the contract move R-3 was waiting
+      for. DA co-sponsorship (SP §3/§7): Observed() added as required. NAMED RESIDUE, DA owns
+      at first use: Assumed()/Imputed() collide with Known.t_known_prov axis words and the
+      authority axis is not yet carried; both await DA de-collision naming, additive when
+      it lands.'
+  GateVerdictLedger:
+    fields:
+      entries: dict[GateId, list[GateEvidence]]
+  GateRegistry:
+    fields:
+      entries: dict[GateId, Gate]
+  ModelSelectionOutcome:
+    fields:
+      layer_ref: ImmutableId
+      decision: enum:RETAIN|DELETE|CENSORED|UNRESOLVED
+      evidence: ImmutableId
+      spec_hash: Hash
+  CapitalOpCommand:
+    fields:
+      op: enum:DEPOSIT|WITHDRAW
+      amount: Money
+      idempotency_key: str
+      issued_at: Timestamp
+    notes: DE-Allocator sole issuer; DE-Actuator executor. Bypasses the constraints oracle
+      (exposure-zero); blocked under HALTED like every venue action; permitted within REDUCING-ONLY.
+  SP-Venue:
+    fields:
+      matching: str
+      tick_rule: str
+      min_size: float
+      rate_limits: str
+      fee_schedule: FeeFamily
+      rebate_schedule: str
+      capability_flags: list[str]
+    notes: 'SP §7(1): facts about the venue — measured, documented, or Unknown. Field types
+      are skeleton-loose; DA refines.'
+  SP-Instrument:
+    fields:
+      settlement: str
+      T: Timestamp
+      payoff: str
+      complement: str
+      incentive_contract: str
+    notes: 'SP §7(1): facts about the contract, instrument-scoped, time-varying. Skeleton-loose;
+      DA refines. incentive_contract restored per SP §2 iteration 11.'
+  SP-Strategy:
+    fields:
+      utility: PluginRef
+      solver: PluginRef
+      coupling: PluginRef
+      constraints: str
+      action_space: str
+      impls: str
+      nulls: str
+      loss_functional: str
+      unwrap_policy: str
+      unavailable_policy: str
+    notes: 'SP §7(1): structural choices. Skeleton-loose; DA refines.'
+  SP-Scenarios:
+    fields:
+      scenarios: dict[str, str]
+    notes: 'SP §7(1): ScenarioId -> AdverseScenario{outcome_map, scope, provenance, completeness,
+      on_incomplete}; loose-typed pending DA AdverseScenario type.'
+  FeeFamily:
+    fields:
+      product: enum:PRODUCT_PQ
+      rate: float
+      incidence: str
+      size_rounding: str
+    notes: 'SP §7(4): no fee family was defined in v22.'
+  HumanSeat:
+    fields:
+      seat: enum:USER|COORDINATOR
+    notes: 'SP §7(6): carrier for non-module owners (STOP-MM-VIABLE owner = the user). Widening
+      ParamValue.owner to use it is a FUTURE migration, deliberately not in this batch.'
 modules:
   DA-FlowNormalize:
     consumes:
@@ -1567,7 +1722,8 @@ modules:
     ports:
     - read_all
     - telemetry_out
-    notes: offline research normalizer; joins arrivals and exposure to one frozen knowledge-admissible state and exposes no venue port
+    notes: offline research normalizer; joins arrivals and exposure to one frozen knowledge-admissible
+      state and exposes no venue port
   BE-FlowFit:
     consumes:
     - FlowArrival
@@ -1584,7 +1740,9 @@ modules:
     - read_all
     - artifact_resolver
     - telemetry_out
-    notes: offline per-coin research fit under R-FLOW; HawkesResidualFit is forward-gated while HawkesDevelopmentDiagnostic is never decision-eligible; the module exposes no venue or action port
+    notes: offline per-coin research fit under R-FLOW; HawkesResidualFit is forward-gated
+      while HawkesDevelopmentDiagnostic is never decision-eligible; the module exposes no
+      venue or action port
   DA-FlowActionGrid:
     consumes:
     - DatasetPartition
@@ -1596,7 +1754,8 @@ modules:
     ports:
     - read_all
     - telemetry_out
-    notes: offline immutable shadow-action materializer; uses public book state and has no venue or order port
+    notes: offline immutable shadow-action materializer; uses public book state and has no
+      venue or order port
   BE-FillFit:
     consumes:
     - FlowArrival
@@ -1625,7 +1784,8 @@ modules:
     ports:
     - read_all
     - artifact_resolver
-    notes: emits a DEVELOPMENT receipt for within-design diagnostics only and is read by no decision module
+    notes: emits a DEVELOPMENT receipt for within-design diagnostics only and is read by no
+      decision module
   BE-FlowAndFills:
     consumes:
     - ActionSet
@@ -1640,28 +1800,28 @@ modules:
     - rng
     - artifact_resolver
     - telemetry_out
-    notes: decision-facing seam only; remains unavailable until forward-valid artifacts exist and contains no venue adapter
+    notes: decision-facing seam only; remains unavailable until forward-valid artifacts exist
+      and contains no venue adapter
   BE-Uncertainty:
     consumes:
     - ForecastRequest
-    produces: dict[InstrumentId, Known[Uncertain[PathLaw]] | Unavailable]
+    produces:
+    - dict[InstrumentId, Known[Uncertain[PathLaw]] | Unavailable]
+    - GateEvidence
     ports:
     - state_view
     - artifact_resolver
     - telemetry_out
-    notes: >-
-      M14-1. Fits the physical-volatility law from the TAPE; outcomes are used
-      only for calibration and falsification, never to fit it. Emits a law, not
-      a scalar. Instrument-scoped and per-symbol: the measured level spans 4.6x
-      across coins, so a pooled sigma is a 4.6x error, and any pooling appears
-      as a declared shrinkage weight, never as a parameter tie. Reads ONLY
-      through the state_view port (R-PORT/R-KNOW) -- v13 declared
-      `consumes: RawEvent`, which reached past the DA/StateView knowledge-time
-      seam into the landing zone and would have let un-truncated data into a
-      walk-forward fit. Refuses (Unavailable) rather than extrapolating outside
-      horizon_domain, when sampling_convention.status is UNVERIFIED, or when its
-      own inputs are unavailable -- in particular the belief fallback may NOT
-      inherit a book-sourced d after the book has failed.
+    notes: 'M14-1. Fits the physical-volatility law from the TAPE; outcomes are used only
+      for calibration and falsification, never to fit it. Emits a law, not a scalar. Instrument-scoped
+      and per-symbol: the measured level spans 4.6x across coins, so a pooled sigma is a 4.6x
+      error, and any pooling appears as a declared shrinkage weight, never as a parameter
+      tie. Reads ONLY through the state_view port (R-PORT/R-KNOW) -- v13 declared `consumes:
+      RawEvent`, which reached past the DA/StateView knowledge-time seam into the landing
+      zone and would have let un-truncated data into a walk-forward fit. Refuses (Unavailable)
+      rather than extrapolating outside horizon_domain, when sampling_convention.status is
+      UNVERIFIED, or when its own inputs are unavailable -- in particular the belief fallback
+      may NOT inherit a book-sourced d after the book has failed.'
   BE-Competition:
     produces: dict[InstrumentId, Known[Uncertain[CompetitionState]] | Unavailable]
     notes: instrument-scoped marginals
@@ -1736,7 +1896,8 @@ modules:
     ports:
     - read_all
     - telemetry_out
-    notes: offline research composition root for R-BATCH; it exposes no venue or decision port
+    notes: offline research composition root for R-BATCH; it exposes no venue or decision
+      port
   EV-SideConvention:
     produces:
     - SideConventionEvidence
@@ -1783,27 +1944,35 @@ modules:
     - DecisionProblem
     - HaltState
     - ScenarioLossConstraint
+    - CapitalBudget
     produces:
     - FeasibleSet
+    - HealthEvent
+    - HeartbeatPulse
     ports:
     - state_view
     - halt_in
+    - telemetry_out
   DE-Actuator:
     consumes:
     - Decision
     - CancelAllCommand
+    - CapitalOpCommand
     produces:
     - CancelAllStatus
+    - HeartbeatPulse
     ports:
     - venue
     - halt_in
     - cancel_cmd_in
     - telemetry_out
+    - capital_cmd_in
   OP-Monitor:
     consumes:
     - HealthEvent
     - HeartbeatRegistration
     - HeartbeatPulse
+    - CancelAllStatus
     produces:
     - HaltState
     - CancelAllCommand
@@ -1822,13 +1991,36 @@ modules:
     - SettlementFacts
     produces:
     - CapitalBudget
+    - CapitalOpCommand
+    - HealthEvent
+    - HeartbeatPulse
     ports:
     - state_view
+    - capital_cmd_out
+    - telemetry_out
   DA-Settlement:
     produces:
     - SettlementFacts
     ports:
     - feed
+  EV-Gates:
+    consumes:
+    - GateEvidence
+    - SideConventionEvidence
+    produces:
+    - Gate
+    - GateRegistry
+    - GateVerdictLedger
+    ports:
+    - read_all
+    - artifact_resolver
+  SP-SpecResolver:
+    produces:
+    - ResolvedContracts
+    ports:
+    - spec_out
+    notes: 'SP §7(1): without it DecisionProblem.spec_snapshot and ResolvedContracts.spec_hash
+      have no producer.'
 ports:
   BE-*:
   - state_view
@@ -1871,7 +2063,6 @@ prelude:
   - JsonSchema
   external:
   - Rng
-  - Provenance
   - SourceId
   - ModuleId
   - VenueId
@@ -1890,7 +2081,6 @@ prelude:
   - Value
   - Weight
   - TelemetryPortId
-  - GateId
   - BackoffPolicy
   - ModuleOrPluginId
   - PluginRegistry
