@@ -109,13 +109,14 @@ def contract_conformance(doc: dict[str, Any] | None = None) -> list[str]:
     fs_notes = str((doc.get("types", {}).get("FeasibleSet", {}) or {}).get("notes", ""))
     if "VERB:SIDE" not in fs_notes or "DEFAULT-DENY" not in fs_notes:
         bad.append("FeasibleSet §2a pin (VERB:SIDE / DEFAULT-DENY) not in contract notes")
-    # NAMED RESIDUE (register row Q-DE-13, filed with report #55): the applied
-    # v23 CapitalOpCommand.op enum reads DEPOSIT|WITHDRAW — an applier-chosen
-    # literal where the ratified batch text named no enum — while this plane's
-    # vocabulary is MINT/MERGE (dc.CAPITAL_OPS). The ActionSpace never emits
-    # capital ops (Allocator-issued, bypass the oracle), so the menu is
-    # unaffected; the naming reconciliation is the register's to rule, and
-    # this check deliberately does NOT paper over it by matching either side.
+    # RULED, NOT YET LANDED (R-72, Q-DE-13 closed): the enum is MINT|MERGE;
+    # the applied v23 literal DEPOSIT|WITHDRAW was applier-chosen and has no
+    # ratification to defend. The v23→v24 change record is drafted in
+    # CONTRACTS_BATCH_v24.md and RIDES A BATCH, never an ad-hoc edit (R-35).
+    # Until that batch lands, this check matches NEITHER side BY ORDER —
+    # R-72: "it is the only thing holding the discrepancy visible; do not
+    # turn it green." The ActionSpace never emits capital ops (Allocator-
+    # issued, bypass the oracle), so the menu is unaffected either way.
     return bad
 
 

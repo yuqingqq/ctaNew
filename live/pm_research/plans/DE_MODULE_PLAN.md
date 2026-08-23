@@ -307,11 +307,11 @@ window_i ↔ window_j SHARED_RISK   # same coin — MEASURED (B6, 2026-08-23):
                                   # <= 0.27% of variance) -- with stated
                                   # limits: the replay saw 21.2% of the real
                                   # overlap and the 4-cluster intervals are
-                                  # decorative. Whether this licenses
-                                  # independent-coupling + Allocator-as-
-                                  # accounting is the COORDINATOR'S rule
-                                  # (B6 §6 item 1), pending -- not adopted
-                                  # here.
+                                  # decorative. ADOPTED per Ruling R-71
+                                  # (2026-08-23): independent-coupling +
+                                  # Allocator-as-accounting, WITH B6's
+                                  # limits riding NON-SEVERABLY -- cite as
+                                  # ADOPTED-WITH-LIMITS, never as measured.
 ```
 
 Markets resolve every five minutes, so the coupling is
