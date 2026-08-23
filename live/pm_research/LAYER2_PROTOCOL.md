@@ -1,11 +1,12 @@
 # LAYER2_PROTOCOL — carry-to-resolution, and the reconciliation of the two published numbers
 
-**Status: DRAFT FOR COORDINATOR FREEZE — nothing here is frozen.** Authored by
-the DE session 2026-08-23 under Ruling R-11's invitation and the coordinator's
-item-3 directive: *scope it and bring me the bar BEFORE you run it.* **Drafted
-blind**: no settlement markout of the simulated maker population has been
-computed; every number below is a previously published figure, cited as the
-bar's derivation basis exactly as R-1's `f*` was.
+**Status: §3 FROZEN by Ruling R-14 (2026-08-23), with the coordinator's three
+amendments landed BEFORE `layer2_v1` runs — the binding sequence. If the
+amended bar cannot be satisfied by the data, that IS the answer; it is not
+re-cut afterwards.** Drafted blind by the DE session under Ruling R-11; no
+settlement markout of the simulated maker population has been computed; every
+number below is a previously published figure, cited as the bar's derivation
+basis exactly as R-1's `f*` was.
 
 Per R-11 this is **the last unmeasured place a maker edge could still live on
 this venue**: the cancellation family is closed 8/8 coin-days; skew solves
@@ -70,7 +71,7 @@ whose sum IS that maker's inventory PnL by linearity. The SKEW policy's
 Layer 2 (a different carried residual) is v2, contingent on v1's answer, and
 is NOT part of this freeze.
 
-## 3. The bar — three-way per coin, derived a priori, PROPOSED for freeze
+## 3. The bar — three-way per coin — **FROZEN per R-14, amendments 1–3 landed**
 
 Verdict coins btc/eth; others descriptive. Cell = (coin, day), h=5 primary.
 **VOID** below 500 fills with valid `M_T` on a (coin, day).
@@ -80,18 +81,56 @@ Per cell, on the share-weighted arm with the per-fill arm reported beside
 
 - `POSITIVE` — within-day CI of `M_T` excludes zero from above.
 - `NEGATIVE` — excludes zero from below.
-- `UNDETERMINED` — spans zero. **This is the expected outcome** given the
-  census's pooled CI spanned zero at comparable n; it must not be dressed up.
+- `UNDETERMINED` — spans zero. **This is the expected outcome** (see the
+  power declaration below, which turns that expectation into a number); it
+  must not be dressed up.
 
-**Coin verdict across the era days:**
+**Coin verdict across the era days (R-14 AMENDMENT 1 — the day rule must
+survive a running collector; `DAYS` went stale four times in three days, so
+no verdict hardcodes a day count):**
 
-- `CARRY_RESCUES` — ≥ 3 of 4 days `POSITIVE`, 0 `NEGATIVE`.
-- `CARRY_FAILS` — ≥ 3 of 4 days `NEGATIVE`, 0 `POSITIVE`. **On both verdict
-  coins this closes the last maker-edge hypothesis for the passive JOIN
-  policy on this venue** — the symmetric falsifier, stated before the
-  measurement so neither direction can be softened after.
+- `CARRY_RESCUES` — **at least 75 % of era days `POSITIVE` and zero
+  `NEGATIVE`**, minimum 4 era days.
+- `CARRY_FAILS` — symmetrically: **at least 75 % of era days `NEGATIVE` and
+  zero `POSITIVE`**, minimum 4 era days. **On both verdict coins this closes
+  the last maker-edge hypothesis for the passive JOIN policy on this
+  venue** — the symmetric falsifier, stated before the measurement so
+  neither direction can be softened after.
 - `UNDETERMINED` otherwise — a real outcome: the resolution is then
-  calendar (more era days), not re-cutting.
+  calendar (more era days), not re-cutting. The rule keeps one meaning today
+  (4 days: 75 % = 3, zero contrary) and at seven days (≥6, zero contrary),
+  and cannot silently change character as the tape grows.
+
+**POWER DECLARATION (R-14 AMENDMENT 2 — what it takes to FIRE, stated before
+the run; EV_GATES_PLAN §5.1 extended from failing witness to firing
+witness).** Derived a priori from the published census dispersion only: the
+U10 share-weighted pooled CI half-width was ≈0.42 ¢ at 931 windows
+(window-clustered), implying a per-window dispersion σ_w ≈ 6.6 ¢/share; at a
+cell's ~30 windows the **minimum detectable |M_T| is ≈ 2.4 ¢/share** (both
+verdict coins to order of magnitude; eth wider — fewer fills per window make
+noisier window means). Beside it, the effect sizes actually observed in the
+census: **+0.173 ¢ share-weighted, −0.211 ¢ per-fill ex-micro** — a **>10×
+gap**. **So, said in the protocol before the run: at census-scale effects
+this bar cannot fire in either direction, and the honest expectation is
+UNDETERMINED on every cell — a pre-registered RESULT, not an excuse.** The
+bar CAN fire if the maker-population carry is an order of magnitude larger
+than the census's pooled residue (|M_T| ≳ 2.4 ¢ — continuation/reversal at
+the scale Layer 1's −0.53 ¢-at-5-s drift would produce if it compounds
+rather than reverts). The calendar statement with a number attached:
+resolving a 0.2 ¢-scale effect needs ≈ 4,200 windows per cell-equivalent —
+≈ 140 era days at 30 windows/coin/day, or ≈ 6 days at full-coverage
+680/coin/day, and day-CLUSTERED inference additionally needs ≥ 5 clusters
+(B6 §3a); a full-coverage multi-week design is a future protocol, not this
+one.
+
+**Sign disagreement between arms (R-14 AMENDMENT 3 — the U10 lesson):**
+share-weighted is primary because it answers *does the capital deployed get
+paid* — the estimand for an edge question — while per-fill answers *does the
+average fill get paid*. But the census's two arms DIVERGED IN SIGN on the
+same fills, and a single-weighting spec would have published "+0.165, makers
+profitable" while concealing that it rested on one counterparty. **If the
+arms disagree in sign on any verdict cell, that is a FIRST-CLASS FINDING
+reported in its own right — never resolved silently by the primary.**
 
 **Scope statement, frozen with the bar:** within-day inference only; four day
 clusters support no day-clustered interval (B6 §3a measured 4-cluster
