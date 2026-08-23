@@ -1,6 +1,14 @@
 # EV-Replay — the replay environment plan
 
-Status: **DESIGN**, not decision-eligible. **Revision 3, 2026-08-23** —
+Status: **DESIGN**, not decision-eligible. **REVISION 8, 2026-08-23** —
+applies `EV_REPLAY_REVIEW_LOOP.md` iteration 1 (the plan's dedicated
+R-77 loop): the self-contradicting header fixed (line 3 said "Revision 3"
+against the body's "Now Revision 7" — and R-67's state line plus a B3
+dispatch premise both read the stale line, so the defect had already
+misled two coordinator readings); §1's dialect census updated 5→8 with
+the de-facto pattern named; the precedence banner re-pinned to v23;
+§4.1's fired trigger recorded; §6.4's foreclosed revive condition
+corrected. Prior header (Revisions 3–7 history) follows unchanged:
 applies `DE_PLAN_REVIEW_LOOP.md` iteration 6: the header's gating claim scoped
 to exactly what exists (Rev 2 said "gated green against §4" while §4.3's
 must-fail controls did not exist — the claim-stronger-than-artifact defect in
@@ -34,9 +42,10 @@ on the critical path, and DE is today its only consumer.
 green on §4.1 (v1 form) / §4.2 / the iteration-6 sensitivity controls; §4.3's
 engine-perturbation controls are OPEN DEBT that BLOCKS any engine change.**
 
-> Precedence: `contracts/contracts.yaml` v22 wins on types;
-> `PM_ARCHITECTURE.md` §9/§10 contract the environment; `FLOW_MODEL_STATE.md`
-> wins on facts. Where this plan conflicts with any of them, they win.
+> Precedence: `contracts/contracts.yaml` **v23 (in force per R-68)** wins on
+> types; `PM_ARCHITECTURE.md` §9/§10 contract the environment;
+> `FLOW_MODEL_STATE.md` wins on facts. Where this plan conflicts with any of
+> them, they win.
 
 ---
 
@@ -71,10 +80,23 @@ decision.** Concretely, three rules, each with an enforcement point:
 
 ## 1. What exists de facto, and what this plan converges
 
-Five ad-hoc replay dialects already run inside the DE research code, one per
-probe: `edge_layer1.replay_window`, `inventory_walk.simulate_window`,
-`warning_window.replay_ww`, `placement_skew`/`skew_bound` arms, and
-`policy_comparison`. They agree on the load-bearing conventions —
+**EIGHT** ad-hoc replay dialects now run inside the DE research code
+(Revision 8 correcting "five" — the census had gone stale in the direction
+that matters): `edge_layer1.replay_window`, `inventory_walk.simulate_window`,
+`warning_window.replay_ww`, `placement_skew`/`skew_bound` arms,
+`policy_comparison`, and — added 2026-08-23 under the mitigation-space
+falsifiers — `policy_bounds_v1.replay_multi` (7 arms, one pass),
+`state_gate_v1.replay_sg` (per-fill state capture) and
+`ww_ebx_v1.replay_ebx` (episode-start capture). **The de-facto pattern the
+last three ESTABLISHED, named rather than implied: an instrumented COPY of
+the reference engine, minimal delta, conformance-locked per window to the
+reference under a coordinator-frozen protocol, with §4.3-style perturbation
+and determinism controls in each probe.** That pattern discharged its
+verdicts honestly — but it is COPY PROLIFERATION, exactly what this plan
+exists to converge, and each copy is a place a fix must be re-applied
+(the hour-boundary and anchor repairs of 2026-08-23 touched single copies).
+**Convergence remains the open debt; the pattern is sanctioned per-protocol,
+not adopted as the end state.** They agree on the load-bearing conventions —
 
 - state applied at the **frozen 250 ms knowledge lag** via a scheduled event
   heap; the lag is an environment constant, never policy-visible;
@@ -145,7 +167,7 @@ an **explicit window list** and stamps it, never chooses.
 
 | # | gate | v1 status (kept current per iteration; claims match artifacts) |
 |---|---|---|
-| 4.1 | **Golden-window fill parity** — reproduce `edge_layer1.replay_window`'s fill sequence exactly, both arms, the `warning_window::conformant` pattern as the acceptance gate | **PASS in the v1 form only**: the v1 engine IS the reference, so the gate compares two invocations (engine determinism) and **structurally cannot fail**. Honest label, stated here as in the code: parity becomes a real gate at the FIRST non-reference engine, and no engine change may land before it can fail |
+| 4.1 | **Golden-window fill parity** — reproduce `edge_layer1.replay_window`'s fill sequence exactly, both arms, the `warning_window::conformant` pattern as the acceptance gate | **PASS in the v1 form only**: the v1 engine IS the reference, so the gate compares two invocations (engine determinism) and **structurally cannot fail**. Honest label, stated here as in the code: parity becomes a real gate at the FIRST non-reference engine, and no engine change may land before it can fail. **Revision 8: that trigger has FIRED three times** (`replay_multi`, `replay_sg`, `replay_ebx`, all 2026-08-23) and was satisfied each time via the probe's own per-window `conformant()` gate against the reference — fills (and where applicable (W, channel) streams) exact-equal or the run aborts, demonstrated live by the ww_ebx run-1 abort. The mechanism that discharged the trigger is the per-probe gate, not this harness's parity machinery — consistent with §1's copy-pattern debt |
 | 4.2 | **Determinism** — same `(windows, params, seed)` ⇒ identical `run_hash`, where `run_hash` covers the FULL records via per-record content hashes (fills, mid path, unavailable intervals, diagnostics — everything `evaluate_markout` consumes), plus the `engine_hash` (coverage EXTENDED iterations 7/8/9 — never "completed"; iteration 10 removed this cell's own retained use of the retired claim form) | **PASS against the iteration-9 receipt** (`gates` block: 14/14 parity + determinism true, both arms; per-window `inputs_hash` present) |
 | 4.3 | **Engine-perturbation must-fail controls** — a +50 ms lag perturbation must change a golden fill record; a broken tie-break must trip parity | **BUILT AND DISCHARGED (B2 complete).** Lag control PASSES in the strong form: fills differ on 13/14 smoke windows at +50 ms (record-content comparison, not hashes; data-vs-plumbing failures exit distinctly). Tie-break control BUILT via the same sanctioned pattern (`_tie_seq_sign` perturbation landing WITH its control) and returned the HONEST measured outcome: **reversed same-instant apply order changes fills on 0/14 windows — tie order is immaterial on this set, so the tie-break's only load-bearing role is determinism, which §4.2 already gates.** A finding, not a forced pass: a future tape or engine where ties become material shows up when the control re-runs in every smoke. **The ordering-BLOCK is lifted** — both §4.3 items exist and produce measured readings on demand |
 | 4.4 | **Boundary checks** | **Partial**: class-namespace scans on `ReplayEnv` AND `RunRecord` (methods included, iteration 6) + raw-fields check + hash-sensitivity must-fail controls. Import-level separation does not exist in v1 (one module); it arrives when the plugin path splits the modules |
@@ -184,8 +206,12 @@ instruments that need them (§6.3), not before.
    was a day old**, so the conditional failed and the grid is not built. The
    item stays struck rather than deleted so the harness's original demand
    provenance remains visible; the live consumers are §6.2–6.3 plus the
-   surviving levers' replays (skew × terminal) and promotion parity. Revives
-   only if the coordinator's 680-window re-sample ruling reopens the family.
+   surviving levers' replays (skew × terminal) and promotion parity.
+   **Revision 8, revive condition corrected**: the 680-window re-sample was
+   FORECLOSED (R-9 ran the day series instead; R-11 closed the family;
+   DEAD across four channels at the achievable rungs per R-49/R-54). On
+   current evidence NOTHING revives this item — a genuinely new tape or
+   venue would arrive as its own blind protocol, not as this grid.
 
 ## 7. What would falsify this design
 
