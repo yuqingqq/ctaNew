@@ -38,7 +38,25 @@ import argparse
 from dataclasses import dataclass, field
 from typing import Any
 
-from ev_replay import SP_OPERATIVE
+# Q-DA-13 / Ruling R-32: the original `from ev_replay import SP_OPERATIVE`
+# was a LIVE plane-order violation — EV reads all planes and is READ BY NONE
+# (the edge was removed deliberately in architecture v7). Root cause, as DA
+# named it: the SP register has no machine-readable home, so DE reached for
+# the nearest module holding the constants. Per the ruling the constants are
+# INLINED here — a duplicated literal is a lesser evil than a plane-order
+# violation — until an SP-owned carrier exists. Values = SP_PLANE_PLAN §5
+# operative set (user-ratified, R-6; verified unchanged at register Rev 7).
+# ev_replay.py holds its own copy legally (EV may read everything).
+SP_OPERATIVE = {
+    "set_name": "SP_PLANE_PLAN_s5_operative_R6",
+    "capital_budget_usd": 1000.0,
+    "max_quote_size_shares": 5.0,
+    "kappa_usd_per_market": 50.0,
+    "scenario_loss_limit_usd": 200.0,
+    "refuse_k": 1.0,
+    "gamma_ladder": [0.0, 1e-3, 1e-2, 1e-1],
+    "applied": False,   # stamped for provenance; enforcement is this module
+}
 
 # --- ActionSpace vocabulary (contracts v22 names; plan §1.1-§1.2) ---------
 VERBS = ("QUOTE", "CANCEL", "MINT", "MERGE", "CROSS", "WAIT")

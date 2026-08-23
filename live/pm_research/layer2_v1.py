@@ -130,15 +130,23 @@ def cell_verdict(n_fills: int, lo: float | None, hi: float | None) -> str:
 
 
 def coin_verdict(day_verdicts: Sequence[str]) -> str:
-    """R-14 amendment 1: ≥75 % of era days, ZERO contrary, minimum 4 days."""
-    days = [v for v in day_verdicts if v != "VOID"]
-    if len(days) < MIN_DAYS:
+    """R-14 amendment 1: ≥75 % of ERA DAYS, ZERO contrary, minimum 4 era days.
+
+    CONFORMANCE FIX (Q-DA-12, Ruling R-32): the original computed the
+    proportion over NON-VOID days, which the frozen LAYER2_PROTOCOL §3
+    forbids — a VOID day shrank the denominator and could let fewer
+    era-day verdicts clear 75 %. The denominator is ALL era days sampled,
+    VOID included; a VOID day can only cost the proportion, never help it.
+    R-17's verdict is unmoved (no day VOIDed, so the readings coincided);
+    the code moves to the frozen text, the bar does not move to the code."""
+    days_total = len(day_verdicts)               # ERA days, VOID included
+    if days_total < MIN_DAYS:
         return "UNDETERMINED"
-    pos = sum(1 for v in days if v == "POSITIVE")
-    neg = sum(1 for v in days if v == "NEGATIVE")
-    if pos / len(days) >= PROPORTION and neg == 0:
+    pos = sum(1 for v in day_verdicts if v == "POSITIVE")
+    neg = sum(1 for v in day_verdicts if v == "NEGATIVE")
+    if pos / days_total >= PROPORTION and neg == 0:
         return "CARRY_RESCUES"
-    if neg / len(days) >= PROPORTION and pos == 0:
+    if neg / days_total >= PROPORTION and pos == 0:
         return "CARRY_FAILS"
     return "UNDETERMINED"
 
@@ -336,8 +344,16 @@ def selftest() -> int:
     ok(coin_verdict(["POSITIVE"] * 3) == "UNDETERMINED",
        "below minimum era days -> UNDETERMINED")
     ok(coin_verdict(["POSITIVE"] * 6 + ["UNDETERMINED", "VOID"])
-       == "CARRY_RESCUES", "6/7 non-void positive at 7 days -> RESCUES "
+       == "CARRY_RESCUES", "6/8 ERA days positive = 75% exactly -> RESCUES "
        "(the proportion rule keeps meaning as the tape grows)")
+    # Q-DA-12 / R-32 BITE CASES — the era-days denominator, VOID included:
+    ok(coin_verdict(["POSITIVE", "POSITIVE", "VOID", "VOID"]) == "UNDETERMINED",
+       "2 positive of 4 ERA days = 50% -> UNDETERMINED (the pre-fix code "
+       "read 2/2 non-VOID = 100% -> RESCUES, which the frozen bar forbids)")
+    ok(coin_verdict(["POSITIVE"] * 3 + ["VOID"]) == "CARRY_RESCUES",
+       "3 of 4 ERA days = 75% exactly -> RESCUES under the frozen text")
+    ok(coin_verdict(["NEGATIVE", "NEGATIVE", "VOID", "VOID"]) == "UNDETERMINED",
+       "symmetric: VOID cannot help CARRY_FAILS either")
 
     # weighting arms genuinely differ (weighted vs unweighted)
     wr = [[{"w": 1.0, "micro": False, "mt": 0.10, "mh": None,
