@@ -556,3 +556,17 @@ coordinator's 680-window re-sample ruling reopening the cancel family.
 day series ran instead of the re-sample, DEAD generalised 8/8, and R-11
 CLOSED the family. New DE code surfaces (B2 onward) receive the same
 fresh-eyes review treatment as dispatch QA, outside this closed loop.)*
+
+*(Second post-close addendum, 2026-08-23, R-44 method note — a hole in THIS
+loop's method, recorded where the method lives: ten iterations audited WHAT
+EXISTS and never asked WHAT WAS NEVER ATTEMPTED. The capture-vs-adverse-
+selection trade-off had three unopened levers — placement depth, quote size,
+selective quoting — invisible to every completeness lens here because every
+lens walked the corpus, and untested work leaves nothing in the corpus to
+walk. Found by the USER asking whether the trade-off had been optimised; not
+by this loop, not by the coordinator. Standing correction for any future
+review loop: alongside the corpus lenses, one lens per iteration must
+enumerate the DECISION VARIABLES the plan exposes and ask, for each, where it
+was ever varied — a lever whose every appearance is a single pinned value is
+a finding, whatever the documents say. The 5-share pin sat in plain sight in
+every receipt for the entire loop.)*
