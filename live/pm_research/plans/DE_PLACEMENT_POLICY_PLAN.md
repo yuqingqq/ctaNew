@@ -517,3 +517,46 @@ fair value (Route A, PRICING HOLD); the settlement-estimand maker-edge sign
   invented, here.
 - **Own module wiring.** Contract names, ports, lifecycle states, capital,
   telemetry: [`DE_MODULE_PLAN.md`](DE_MODULE_PLAN.md).
+
+---
+
+## 11. THE MITIGATION SPACE IS MEASURED AND CLOSED — 2026-08-23 (R-44 → R-53)
+
+*(Appended by DE after the day's arc so this plan states the LIVE policy
+space, not the pre-measurement one. §§8–9's R-1/R-11/R-17 records stand;
+this section carries the rest of the closure.)*
+
+**All nine named adverse-selection mitigation channels are closed, each
+against a bar frozen before its data was read:**
+
+| channel | verdict | receipt / authority |
+|---|---|---|
+| react-to-book cancel (3 ch) | DEAD by bound (R-11) **and on actuation** (R-49: achievable τ 351–455 ms vs 160 ms median warning) | `warning_window_v1_dayseries.json` |
+| predict-from-Binance (E-BX union) | **DEAD_4CH, 8/8 cells, both rungs** — slow-reactor share of adverse damage 3–8 % | `ww_ebx_v1.json`; `WW_EBX_PROTOCOL.md` §7 |
+| predict-from-fair-price | actuation-bound + gated on E-X1 (BE); HELD per R-46 | R-46/R-49 |
+| clock gate (body-only) | GATE_FAILS both coins; all-gates bound ceiling +0.004/+0.011 ¢ | `policy_bounds_v1.json`; `POLICY_BOUNDS_PROTOCOL.md` §8 |
+| state gate (spread/flow/rvol union) | btc STATE_GATES_DEAD at bound 0.0; eth NOT_CLOSED at +0.0016 ¢ = nothing | `state_gate_v1.json`; `STATE_GATE_PROTOCOL.md` §6 |
+| placement depth (depth-1) | DEPTH_FAILS — through-sweeps are MORE informed; selection, not room | `policy_bounds_v1.json` |
+| quote size (deployable) | DEAD_DEPLOYABLE; venue floor binds; corpus is size-invariant (the Class-B answer) | `policy_bounds_v1.json` |
+| perp hedge | CLOSED ON MECHANISM, no measurement needed — the lead that makes hedging necessary makes it late by construction | R-47 |
+| rebate | Unavailable, external | SP §4 |
+
+**Three mechanism folklores died on contact with their own receipts:** the
+terminal minute is NOT where the money is lost (the only positive bins sit
+IN it — R-50); wide spread is distress, not opportunity; low vol is worse,
+not better. Any future hypothesis in these spaces starts from the
+inversions, not the folklore.
+
+**Standing scope sentences (verbatim, both directions — no inheritance, no
+permission):** the state-gate result binds single-variable gates on the
+deployed feed, marginally; lever results are marginal, interactions out of
+scope by construction; the E-BX result binds the deployed 1 Hz feed — the
+direct-exchange instrument stays behind the collection boundary
+(coordinator-ordered, if ever), and 43/240 windows carried unlogged ~12 s
+relay holes (a measured reliability fact about that feed).
+
+**What remains live anywhere:** nothing in mitigation. E-X1 (does our fair
+price beat the book) runs with BE as the programme-identity question, not a
+mitigation channel. Every closure above is one-way: a NOT_CLOSED adopts
+nothing, and a new attempt in any closed family is its own blind-drafted
+protocol against these receipts.
