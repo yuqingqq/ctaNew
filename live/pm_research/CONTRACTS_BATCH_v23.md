@@ -81,6 +81,45 @@ operative-set scope. Each enters a future batch after its ruling.
 3. Submit as ONE §2.2 request; coordinator ratifies once; landing evidence
    as named above.
 
+## §5 — RATIFICATION CONDITIONS, declared in advance per R-57 (the bar before the data, applied to a contract change)
+
+§2 ADDITIVE: ratified on arrival, subject only to the §4 re-verification.
+§1 NON-ADDITIVE: five conditions —
+1. M-1 consumers each declare an `UnavailablePolicy` (a widened union with
+   an undeclared handler is a silent None at the first fault);
+2. M-2 removals each carry a `removals_allowlist` entry bound to
+   (operation, key, old, new, version) — NEVER path-keyed (M11-1);
+3. M-2 type changes run through `contract_check.py` (selftest green,
+   HEAD→WORKTREE clean);
+4. **NO FROZEN ARTIFACT REFERENCES A REMOVED FIELD** — grep before
+   submission, zero hits or the removal comes out of the batch;
+5. landing evidence per R-36: `version: 23`, checker selftest green,
+   HEAD→WORKTREE clean, one `migrations.yaml` record per non-additive
+   change.
+
+**CONDITION 4 — EXECUTED 2026-08-23 ~17:50, and it did NOT bite.**
+The twelve removed `Gate` fields were DERIVED (v22 fields minus the §9
+patch's fields — exactly 12: `artifact_hash, data_prereq, frozen_at,
+inference_method, metric, on_pass, owner, question, spec_hash,
+strata_hash, threshold, unit`), then word-boundary-grepped across 15
+frozen/protocol artifacts (all `*PROTOCOL*.md` + the frozen V5 plan — a
+superset of R-57's eight):
+- **7/12 unambiguous snake_case identifiers: ZERO hits anywhere**
+  (`artifact_hash, data_prereq, frozen_at, inference_method, on_pass,
+  spec_hash, strata_hash`).
+- **3/12 prose-common words: 43 raw hits, every one classified**
+  (question 24, threshold 10, unit 9) — all ordinary English ("the
+  question this run asks", "no threshold sweeps", "inference unit is the
+  UTC day"); NOT ONE references the `Gate` contract field. Full
+  file:line lists preserved for audit.
+- **Supplementary, same break-class**: the two prelude removals
+  (`GateId`, `Provenance`) — ZERO hits in frozen artifacts (and both
+  types SURVIVE as local/structured types in the patch, so a reference
+  would re-resolve rather than orphan).
+
+**Result: zero contract-field references in frozen artifacts; no removal
+comes out of the batch on condition 4.**
+
 **Checklist item 2 — VERIFIED 2026-08-23 ~17:15 (R-56 next-items pass):**
 contracts.yaml HEAD still at version 22, no interim motion. Per entry:
 `CancelAllStatus` exactly 3 occurrences (rule/type/producer — OPS's repair
