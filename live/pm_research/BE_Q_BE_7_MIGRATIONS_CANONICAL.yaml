@@ -1,0 +1,192 @@
+# CANONICAL DERIVATIVE of BE_Q_BE_7_MIGRATIONS.yaml — DE-produced 2026-08-23,
+# FOR BE'S BLESSING (R-33 act-and-record on a conformance break; BE's original
+# untouched). Two mechanical corrections, both caught by running conditions 3/5
+# against the assembled non-additive candidate (report #51):
+#   1. KEY SPELLING canonicalized to the checker's flatten() emission:
+#      type:X.f -> field:X.f ; prelude.external:N -> prelude:external:N.
+#      (BE's spelling failed authorises() on all 19 records; the canonical
+#      spelling authorizes 19/19.)
+#   2. ONE MISSING RECORD appended (drafted, marked for BE's blessing):
+#      module:BE-Uncertainty.produces — the §9 patch repoints produces to
+#      ['GateEvidence'], a non-additive module-record change with no record.
+# With these, the candidate diff reads: REMOVED 14 / CHANGED 7 / ADDED 100,
+# every non-additive line authorized, ZERO unused records, invariants 0.
+migrations:
+- from_version: 22
+  to_version: 23
+  operation: remove
+  key: field:Gate.artifact_hash
+  old: Hash
+  new: (removed)
+  reason: 'R-40(e)/R-36: hashes and freeze time are provenance, not gate identity. They move into `bar_provenance:
+    Provenance` and `bar_input_snapshot`, so a vacated provenance is a typed state with a register obligation
+    instead of a stale hash sitting in the gate record'
+- from_version: 22
+  to_version: 23
+  operation: remove
+  key: field:Gate.data_prereq
+  old: str
+  new: (removed)
+  reason: 'R-18: `owner`/`data_prereq` as free strings duplicated the plane ownership the module graph
+    already encodes, and drifted from it. Ownership is read from `GateRegistry`; the prerequisite is `preconditions:
+    list[Precondition]`, which carries a STATE rather than a sentence'
+- from_version: 22
+  to_version: 23
+  operation: remove
+  key: field:Gate.frozen_at
+  old: Timestamp
+  new: (removed)
+  reason: 'R-40(e)/R-36: hashes and freeze time are provenance, not gate identity. They move into `bar_provenance:
+    Provenance` and `bar_input_snapshot`, so a vacated provenance is a typed state with a register obligation
+    instead of a stale hash sitting in the gate record'
+- from_version: 22
+  to_version: 23
+  operation: remove
+  key: field:Gate.inference_method
+  old: str
+  new: (removed)
+  reason: 'R-36: `inference_method` declared the method; `GateEvidence.inference_actual` RECORDS the method
+    that ran. A declaration cannot disagree with itself, which is why the declared-vs-actual mismatch
+    was undetectable'
+- from_version: 22
+  to_version: 23
+  operation: remove
+  key: field:Gate.metric
+  old: str
+  new: (removed)
+  reason: 'R-42/G-FF3: a gate may not describe its own bar in free text. `question`/`metric`/`threshold`/`unit`
+    are replaced by the typed `bar: GateBar` plus `null_hypothesis` and `favourable_arm`, so polarity
+    is DETECTED from the bar rather than DECLARED beside it -- the sign-blindness `Scalar(0.0, cents_per_share)`
+    exhibited is unrepresentable once the bar carries its own side'
+- from_version: 22
+  to_version: 23
+  operation: remove
+  key: field:Gate.on_pass
+  old: str
+  new: (removed)
+  reason: 'R-24: the verdict is THREE-valued (FIRE_SIDE | PASS_SIDE | INSUFFICIENT). An `on_pass`/`on_fail`
+    pair is two-valued routing and cannot express INSUFFICIENT, so it silently routed an underpowered
+    gate as a pass. Replaced by `on_verdict: FailRoute` over `verdict_map`'
+- from_version: 22
+  to_version: 23
+  operation: remove
+  key: field:Gate.owner
+  old: str
+  new: (removed)
+  reason: 'R-18: `owner`/`data_prereq` as free strings duplicated the plane ownership the module graph
+    already encodes, and drifted from it. Ownership is read from `GateRegistry`; the prerequisite is `preconditions:
+    list[Precondition]`, which carries a STATE rather than a sentence'
+- from_version: 22
+  to_version: 23
+  operation: remove
+  key: field:Gate.question
+  old: str
+  new: (removed)
+  reason: 'R-42/G-FF3: a gate may not describe its own bar in free text. `question`/`metric`/`threshold`/`unit`
+    are replaced by the typed `bar: GateBar` plus `null_hypothesis` and `favourable_arm`, so polarity
+    is DETECTED from the bar rather than DECLARED beside it -- the sign-blindness `Scalar(0.0, cents_per_share)`
+    exhibited is unrepresentable once the bar carries its own side'
+- from_version: 22
+  to_version: 23
+  operation: remove
+  key: field:Gate.spec_hash
+  old: Hash
+  new: (removed)
+  reason: 'R-40(e)/R-36: hashes and freeze time are provenance, not gate identity. They move into `bar_provenance:
+    Provenance` and `bar_input_snapshot`, so a vacated provenance is a typed state with a register obligation
+    instead of a stale hash sitting in the gate record'
+- from_version: 22
+  to_version: 23
+  operation: remove
+  key: field:Gate.strata_hash
+  old: Hash
+  new: (removed)
+  reason: 'R-40(e)/R-36: hashes and freeze time are provenance, not gate identity. They move into `bar_provenance:
+    Provenance` and `bar_input_snapshot`, so a vacated provenance is a typed state with a register obligation
+    instead of a stale hash sitting in the gate record'
+- from_version: 22
+  to_version: 23
+  operation: remove
+  key: field:Gate.threshold
+  old: float
+  new: (removed)
+  reason: 'R-42/G-FF3: a gate may not describe its own bar in free text. `question`/`metric`/`threshold`/`unit`
+    are replaced by the typed `bar: GateBar` plus `null_hypothesis` and `favourable_arm`, so polarity
+    is DETECTED from the bar rather than DECLARED beside it -- the sign-blindness `Scalar(0.0, cents_per_share)`
+    exhibited is unrepresentable once the bar carries its own side'
+- from_version: 22
+  to_version: 23
+  operation: remove
+  key: field:Gate.unit
+  old: str
+  new: (removed)
+  reason: 'R-42/G-FF3: a gate may not describe its own bar in free text. `question`/`metric`/`threshold`/`unit`
+    are replaced by the typed `bar: GateBar` plus `null_hypothesis` and `favourable_arm`, so polarity
+    is DETECTED from the bar rather than DECLARED beside it -- the sign-blindness `Scalar(0.0, cents_per_share)`
+    exhibited is unrepresentable once the bar carries its own side'
+- from_version: 22
+  to_version: 23
+  operation: change
+  key: field:Gate.id
+  old: str
+  new: GateId
+  reason: 'R-SSOT: `GateId` becomes a locally declared type so the registry is the single source of gate
+    identity; a bare `str` admitted ids no registry ever issued'
+- from_version: 22
+  to_version: 23
+  operation: change
+  key: field:Gate.on_fail
+  old: str
+  new: FailRoute
+  reason: 'R-24: the verdict is THREE-valued (FIRE_SIDE | PASS_SIDE | INSUFFICIENT). An `on_pass`/`on_fail`
+    pair is two-valued routing and cannot express INSUFFICIENT, so it silently routed an underpowered
+    gate as a pass. Replaced by `on_verdict: FailRoute` over `verdict_map`'
+- from_version: 22
+  to_version: 23
+  operation: change
+  key: field:Gate.preconditions
+  old: list[GateId]
+  new: list[Precondition]
+  reason: 'EV_GATES_PLAN R0-1: `list[GateId]` named an edge but carried no STATE, so the DAG could not
+    distinguish an unmet precondition from an unevaluated one. `Precondition` carries `PreconditionState`'
+- from_version: 22
+  to_version: 23
+  operation: change
+  key: field:GateEvidence.ci_hi_abs
+  old: float
+  new: float | Unavailable
+  reason: 'R-REFUSE: a float cannot express a refusal, so an interval that was never computed was indistinguishable
+    from one measured at 0.0'
+- from_version: 22
+  to_version: 23
+  operation: change
+  key: field:GateEvidence.verdict
+  old: enum:PASS|INSUFFICIENT_EVIDENCE|MODEL_REFUTED
+  new: VerdictState?
+  reason: 'R-24: the two-valued enum predates the three-valued verdict; `VerdictState?` admits INSUFFICIENT
+    and the null carries not-yet-evaluated'
+- from_version: 22
+  to_version: 23
+  operation: remove
+  key: prelude:external:GateId
+  old: external
+  new: locally declared type
+  reason: 'R-SSOT: promoted from external to locally declared -- the registry issues gate ids, so the
+    type must be OURS to constrain'
+- from_version: 22
+  to_version: 23
+  operation: remove
+  key: prelude:external:Provenance
+  old: external
+  new: locally declared type
+  reason: 'R-40(e): promoted from external to locally declared so `vacated_provenance` and the register
+    obligation are expressible in-contract'
+- from_version: 22
+  to_version: 23
+  operation: change
+  key: module:BE-Uncertainty.produces
+  old: '[''dict[InstrumentId, Known[Uncertain[PathLaw]] | Unavailable]'']'
+  new: '[''GateEvidence'']'
+  reason: "DRAFTED BY DE FOR BE'S BLESSING \u2014 Q-BE-7 \xA79 repoints BE-Uncertainty to produce GateEvidence;\
+    \ the module-record change is non-additive and needs its own record (v21\u2192v22 precedent: produces\
+    \ changes recorded)"

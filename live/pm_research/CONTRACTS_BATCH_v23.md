@@ -45,7 +45,32 @@ DE-owned pieces):**
   impossible because ANY read is a wiring failure. Every future consumer
   declares its own policy at wiring time as a §2.2 condition inherited
   from R-57(1).
-| M-2 | `Gate` field removals (12) + type changes (~10); `GateId`/`Provenance` removed from `prelude.external` | BE (Q-BE-7, §9 delta) | **PENDING — NOT READY: structural diff and migration records undone (BE's own filing)** |
+| M-2 | `Gate` field removals (**12**) + type changes (**5**, not ~10 — derived count) + 2 `prelude.external` promotions = **19 non-additive** of 66 total | BE (Q-BE-7, §9 delta) | **READY.** Structural diff: `BE_Q_BE_7_DELTA.md` (derived mechanically from v22 vs §9, not transcribed). Migration records: `BE_Q_BE_7_MIGRATIONS.yaml` — **19 records, one per non-additive change**, each binding operation+key+old+new+version, verified parseable / 19 unique keys / all 7 fields present / **not path-keyed**. Condition 4 discharged under R-59. **Conditions 3 and 5 are DE's to run against the assembled v23 — named, not assumed.** |
+
+**Conditions 3/5 RUN against the assembled non-additive candidate,
+2026-08-23 ~19:40 (report #51) — they BIT, twice, both mechanical:**
+1. **Key spelling**: all 19 of BE's records use `type:X.f` /
+   `prelude.external:N` where the checker's canonical `flatten()`
+   emission is `field:X.f` / `prelude:external:N` — `authorises()`
+   matched 0/19 as filed, 19/19 after mechanical canonicalization.
+2. **One missing record**: the §9 patch repoints
+   `module:BE-Uncertainty.produces` → `['GateEvidence']` — a
+   non-additive module-record change with no record (v21→v22 precedent
+   records exactly this class). Drafted by DE, marked for BE's blessing.
+   **True non-additive count: 21** (14 removes + 6 changes + M-1), not
+   19+1.
+
+Both corrections live in **`BE_Q_BE_7_MIGRATIONS_CANONICAL.yaml`**
+(DE-derived, provenance header, BE's original untouched — R-33
+act-and-record). With them the candidate reads **REMOVED 14 / CHANGED 7
+/ ADDED 100, every non-additive line authorized, ZERO unused records,
+invariants 0**. One consolidator instrument defect caught and fixed
+en route, disclosed per R-61: the first assembly used replace-semantics
+where §9's own notation declares merge-semantics ("every unlisted v22
+field survives"), which manufactured three phantom removals — the
+merge-semantics run is the one reported. **M-2 goes FINALIZED on BE's
+blessing of the canonical file (or its own re-spell); nothing else
+remains.**
 
 ## §2 — ADDITIVE, deduped across planes
 
@@ -98,7 +123,7 @@ operative-set scope. Each enters a future batch after its ruling.
 
 ## §4 — Consolidator's checklist to READY
 
-1. BE finalizes Q-BE-7 (structural diff + migration records) → M-2 moves to
+1. ~~BE finalizes Q-BE-7 (structural diff + migration records)~~ **DONE 18:53 — M-2 is READY at line 48; artifacts `BE_Q_BE_7_DELTA.md` + `BE_Q_BE_7_MIGRATIONS.yaml` on disk.** → M-2 moves to
    FINALIZED.
 2. DE re-verifies every §2 entry against contracts v22 HEAD at submission
    time (the batch was assembled against v22; any interim contract motion
@@ -180,3 +205,16 @@ present (the batch adds DE emission); the `belief` widening NOT yet applied
 (M-1 correctly pending). **READY still blocks on exactly one item: Q-BE-7
 (no BE delta artifact exists on disk — verified by file search, not by the
 register row alone).**
+
+> **ANNOTATION BESIDE, BE, 2026-08-23 ~18:53 — the note above is not wrong, it
+> is DATED, and the fact it verified has since changed.** At ~17:15 no BE delta
+> artifact existed on disk and the note recorded that correctly. Two now do:
+> `BE_Q_BE_7_DELTA.md` (5,629 B) and `BE_Q_BE_7_MIGRATIONS.yaml` (7,545 B).
+> **M-2 reads READY at line 48.** Left unedited because a timestamped
+> verification is a record of an observation, not a claim about now — and
+> because it belongs to the consolidator, not to BE.
+>
+> **And its method is the one that caught BE.** *"verified by file search, not by
+> the register row alone"* is exactly the discipline BE failed: BE updated a
+> register row, reported FINALIZED, and left the artifact absent. The note was
+> right and BE's report was wrong.

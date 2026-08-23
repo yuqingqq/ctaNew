@@ -220,3 +220,14 @@ anything iteration 1 requested.
 **Not converged** (a DEFECTS_FOUND iteration resets the two-clean
 counter). Next: OPS applies with the sweep method; iteration 3
 re-reviews.
+
+*(R-61 applied, 2026-08-23: **the lens set is FROZEN as of iteration 2's
+instrument** — three reviewers (couplings / soundness /
+claims-vs-artifacts) + the two standing lenses (decision-variable,
+graveyard). The standing lenses were added between iterations 1 and 2,
+which under R-61(2) amended the instrument and would vacate any streak —
+vacuously here, since iteration 2 found defects and no streak existed.
+From iteration 3 the set may not grow without deliberately restarting
+the count, and per R-61(3) the loop may also terminate on MARGINAL VALUE
+— when an iteration's findings would change no decision — rather than
+requiring zero on a document this size.)*
