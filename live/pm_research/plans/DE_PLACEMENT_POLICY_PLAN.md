@@ -560,3 +560,21 @@ price beat the book) runs with BE as the programme-identity question, not a
 mitigation channel. Every closure above is one-way: a NOT_CLOSED adopts
 nothing, and a new attempt in any closed family is its own blind-drafted
 protocol against these receipts.
+
+**RATIFIED per Ruling R-54, 2026-08-23.** Two readings the ruling adds,
+carried here verbatim so this section quotes the verdict of record:
+
+1. **The Binance hypothesis is refuted on MAGNITUDE, not direction.** The
+   reasoning was right — PM takers pay ~225 bps, so they act on something,
+   and Binance is the obvious something; the measurement AGREES Binance
+   leads. It says the lead reaches too few fills (envelope fired on
+   13.3 %), too late (increments +0.5–1.0 pp btc / +3.1–4.2 pp eth against
+   shortfalls of 20 and 38 points), to matter — and E-BX was credited the
+   EASIER threshold (receipt-anchored τ, while PM channels pay LAG+τ).
+   We know why it fails; that is better than a null.
+2. **Genuinely NOT closed, so nobody overstates this** (R-54's list):
+   joint and multi-variable state predicates; direct-feed non-relay
+   latency; lever interactions; the maker rebate; and E-X1 — a PREDICTION
+   question, not a mitigation one, commissioned with BE. The direct-
+   exchange feed member is an INFRASTRUCTURE question behind the
+   collection boundary, not a research one.

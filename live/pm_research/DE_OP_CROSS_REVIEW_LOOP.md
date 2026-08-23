@@ -139,3 +139,72 @@ and the contracts ports-map self-inconsistency noted there).
 
 Next iteration: after OPS applies, re-review the revised plan; stop rule
 two consecutive zero-confirmed-MUST-FIX.
+
+### Iteration 2 — 2026-08-23 — verdict: `DEFECTS_FOUND` (3 MUST-FIX + 2 SHOULD-FIX, all one pattern)
+
+Reviewed `OP_PLANE_PLAN.md` REVISION 2 in full against iteration 1's list,
+the artifacts, and the two standing lenses. **All 11 MUST-FIX and 6 of 7
+SHOULD-FIX landed at their NAMED sites** (SF18 deferred to Rev 3, named —
+acceptable), and three claims were re-verified at code level: `DISK_HEADROOM`
+and `CLOCK_SYNC` exist in `pm_lane_health.py` as §8e claims; the landing-
+evidence script runs and does not fail open. **MF3's correction is ACCEPTED**
+— OPS's two-not-three count is right, the receipt is the authority (the
+reviewer's own five-of-eight lesson, pointing the other way this time), and
+correcting-on-verification rather than silently applying is exactly the
+discipline the loop wants.
+
+**Every fresh defect in Revision 2 is ONE method failure: the fix was
+applied at the finding's named site and the same defect SURVIVES at
+unnamed sites.** Five instances:
+
+**MUST-FIX (fix-holder `OP_PLANE_PLAN.md`):**
+1. **§10 contradicts §7.2(3)'s own MF7 retraction.** §7.2(3) says "the
+   on-box half is NOT closed" and promises "that test is now the first
+   item of §10" — §10 still reads "the on-box half is closed via
+   `MONITOR_LIVENESS` + mutual coverage," and contains NO test item at
+   all. An internally contradictory load-bearing safety claim, with the
+   promised falsifier test missing. (§9's SF16 table has the correct
+   "ALREADY FALSIFIED" reading — §10 is the straggler.)
+2. **§5.2 re-plants MF8's misclassification at its own site**: "Interior
+   rungs {0, 50, 100, 250, 500} remain Class A — no verdict turns on
+   them." The 250 ms rung is the R-1-frozen Class-D decision rung; §8a's
+   table says so correctly two sections later. A reader of §5.2 alone
+   re-inherits the exact error MF8 removed.
+3. **§8d's "one UTC day" survives SF15**: "`ww_v1`'s scope is explicitly
+   descriptive, one UTC day" — false since R-9 (DEAD 8/8 coin-days over
+   four era days); corrected at §5.2, missed at §8d, and it materially
+   understates the closure's strength in the very paragraph that warns
+   against misreading.
+
+**SHOULD-FIX:**
+4. **R-49 staleness across §5.1/§8a/§8d**: the τ-selection seam is
+   described as unfired ("a deployment measurement moves the operative
+   rung") when R-49 fired it TODAY — OPS's own achievable-τ bound
+   selected the 500/1000 rungs, the frozen receipts were read at them,
+   and the family is now dead ON ACTUATION, not only "on this tape."
+   (Events post-dating Rev 2 — ww_ebx DEAD_4CH, R-54's nine-of-nine —
+   are NOT charged; a dated as-of stamp per MF11's own pattern cures
+   this class permanently.)
+5. **The evidence literals in §0a are stale against the code they
+   cite**: "11/11" (measured NOW: 14/14), "15/15, exit 0" (measured NOW:
+   18/18), "the eight health checks" (ten — §7.1's table omits
+   `DISK_HEADROOM`/`CLOCK_SYNC` though §8e closes them). The REVELATION
+   MECHANISM is healthy — running the script gives truth — but the
+   section that teaches "don't trust a stale claim" carries three.
+
+**Recommended fix method, once, for all five**: on applying any finding,
+grep the DOCUMENT for the defective literal or claim ("250", "one UTC
+day", check counts, "on-box half is closed") before closing it — a
+point-fix without a sweep is how a corrected document disagrees with
+itself. Same class as IMPORT_LAYOUT's ships-first-wins: benign only when
+caught.
+
+**Beyond-asked, recorded so the good is not lost**: the R-42
+`verify_landing_evidence.py` revelation script (with demonstrated
+negative controls) and the §8e NEVER-ATTEMPTED audit (R-45's lesson,
+self-applied, two rows already CLOSED with code) are both stronger than
+anything iteration 1 requested.
+
+**Not converged** (a DEFECTS_FOUND iteration resets the two-clean
+counter). Next: OPS applies with the sweep method; iteration 3
+re-reviews.
