@@ -274,6 +274,16 @@ def selftest() -> int:
            f"record_hash sensitive to {label}")
     ok(len(engine_hash()) == 64, "engine hash from source, not a label")
 
+    # SP §6's demanded cross-literal guard (coordinator-review F2, applied
+    # under R-33 conformance): the SP_OPERATIVE literal is duplicated in
+    # de_constraints.py (DE) per R-32's inline ruling; the two copies MUST be
+    # asserted equal, and the assert lives HERE because EV may read DE while
+    # DE must never read EV (Q-DA-13). Divergence = the aliased-value defect
+    # SP §6 names.
+    from de_constraints import SP_OPERATIVE as _DE_SP
+    ok(_DE_SP == SP_OPERATIVE,
+       "the two SP_OPERATIVE literals are identical (SP §6 guard)")
+
     # evaluation pass reproduces the reference decomposition on a synthetic
     rec = RunRecord("btc-updown-5m-0", "btc", "JOIN",
                     [(10.0, "BUY_UP", 0.49, 5.0, 0.50, False)],
