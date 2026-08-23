@@ -182,6 +182,60 @@ def feasible_size(ms: dict[str, float], verb: str, side: str) -> float:
 
 
 # --------------------------------------------------------------------------
+# ActionSpace — the typed action record (B2; module plan §1). Validation is
+# construction-time and total: an Action that validates carries exactly the
+# fields its verb needs and nothing else. SP constants enter receipts BY
+# VALUE per Ruling R-20 (frozen bars anchor to their inputs by value, never
+# by reference to a mutable register).
+# --------------------------------------------------------------------------
+
+from dataclasses import dataclass as _dc
+
+
+@_dc(frozen=True)
+class Action:
+    verb: str
+    side: str | None = None
+    placement: str | None = None
+    size: float | None = None
+    order_ref: str | None = None
+
+
+def validate_action(a: Action) -> None:
+    """Total verb-shape validation. Raises ValueError; never returns a
+    half-checked action. The shapes, per module plan §1.1:
+      QUOTE(side, placement, size>0) · CROSS(side, size>0, no placement)
+      CANCEL(order_ref, size-less)   · WAIT(bare)
+      MINT/MERGE: REFUSED here — Allocator-issued via CapitalOpCommand."""
+    if a.verb not in VERBS:
+        raise ValueError(f"unknown verb {a.verb!r}")
+    if a.verb in CAPITAL_OPS:
+        raise ValueError("capital ops are Allocator-issued, never scheme actions")
+    if a.verb == "QUOTE":
+        if a.side not in SIDES or a.placement not in PLACEMENTS \
+                or not a.size or a.size <= 0 or a.order_ref is not None:
+            raise ValueError(f"malformed QUOTE: {a}")
+    elif a.verb == "CROSS":
+        if a.side not in SIDES or a.placement is not None \
+                or not a.size or a.size <= 0 or a.order_ref is not None:
+            raise ValueError(f"malformed CROSS: {a}")
+    elif a.verb == "CANCEL":
+        if not a.order_ref or a.size is not None or a.placement is not None:
+            raise ValueError(f"malformed CANCEL: {a}")
+    elif a.verb == "WAIT":
+        if (a.side, a.placement, a.size, a.order_ref) != (None,) * 4:
+            raise ValueError(f"malformed WAIT: {a}")
+
+
+def action_feasible(a: Action, ms: dict[str, float]) -> bool:
+    """One action against the oracle's max_size map (validated first)."""
+    validate_action(a)
+    if a.verb in ALWAYS_FEASIBLE:
+        return True
+    return (a.size or 0.0) <= feasible_size(ms, a.verb, a.side) + 1e-12
+
+
+# --------------------------------------------------------------------------
 
 def selftest() -> int:
     checks = 0
@@ -276,6 +330,39 @@ def selftest() -> int:
        "cap unchanged at cheap basis (no L_adv derivation in either direction)")
     # flat in REDUCING_ONLY: nothing to reduce
     ok(max_size(REDUCING_ONLY, flat, [], {}) == {}, "flat: nothing to reduce")
+
+    # ActionSpace shapes (B2 continuation): legal forms construct, malformed
+    # forms refuse, capital ops refuse at the scheme level
+    validate_action(Action("QUOTE", "BID_UP", "JOIN", 5.0))
+    validate_action(Action("QUOTE", "ASK_UP", "FRONT_ON_FORMATION", 1.0))
+    validate_action(Action("CROSS", "ASK_UP", None, 3.0))
+    validate_action(Action("CANCEL", order_ref="ord-1"))
+    validate_action(Action("WAIT"))
+    checks += 5
+    for bad in (Action("QUOTE", "BID_UP", "JOIN", 0.0),      # zero size
+                Action("QUOTE", "BID_UP", None, 5.0),        # no placement
+                Action("CROSS", "BID_UP", "JOIN", 3.0),      # placement on CROSS
+                Action("CANCEL"),                            # no order_ref
+                Action("WAIT", side="BID_UP"),               # decorated WAIT
+                Action("MERGE", size=5.0),                   # capital op
+                Action("SPLIT", size=5.0)):                  # unknown verb
+        try:
+            validate_action(bad)
+        except ValueError:
+            checks += 1
+        else:
+            raise AssertionError(f"malformed action accepted: {bad}")
+
+    # feasibility integration: QUOTE within/over the cap; CANCEL always
+    ms_i = {"QUOTE:ASK_UP": 5.0}
+    ok(action_feasible(Action("QUOTE", "ASK_UP", "JOIN", 5.0), ms_i),
+       "QUOTE at the cap is feasible")
+    ok(not action_feasible(Action("QUOTE", "ASK_UP", "JOIN", 5.1), ms_i),
+       "QUOTE over the cap refused")
+    ok(not action_feasible(Action("QUOTE", "BID_UP", "JOIN", 0.1), ms_i),
+       "default-DENY through the action path")
+    ok(action_feasible(Action("CANCEL", order_ref="o"), {}),
+       "CANCEL feasible against the empty map")
 
     print(f"[de_constraints] selftest OK — {checks} checks")
     return 0
