@@ -137,51 +137,77 @@ def reducing_side(pos: Position) -> str | None:
     return None
 
 
+def _reducing_only(pos: Position, out: dict[str, float],
+                   pin: float) -> dict[str, float]:
+    """The REDUCING_ONLY branch. QA F1 (2026-08-23): risk headroom must NEVER
+    bind the reducing side — a reducing action sized ≤ |net| pairs off on
+    fill and CANNOT raise contingent L_adv (corner-max proof), so charging
+    headroom here collapsed REDUCING_ONLY into HALTED exactly post-breach.
+    The ≤|net| cap is DEFINITIONAL, never derived; the CROSS is
+    UNCONDITIONAL on the quote cap (QA F1ii). Evaluated before the R-35
+    scenario requirement: reduction needs no scenario declaration."""
+    rs = reducing_side(pos)
+    if rs is None:
+        return out                     # flat: nothing to reduce
+    cap = min(abs(pos.net), pin)
+    if cap > 1e-12:
+        out[f"QUOTE:{rs}"] = cap
+    out[f"CROSS:{rs}"] = min(abs(pos.net), pin)
+    return out
+
+
 def max_size(state: str, pos: Position, quotes: list[RestingQuote],
              prices: dict[str, float],
              sp: dict[str, Any] | None = None,
-             open_markets_l_adv: float = 0.0) -> dict[str, float]:
+             scenario_losses: dict[str, float] | None = None) -> dict[str, float]:
     """The feasibility oracle's FeasibleSet.max_size — §2a pin executable.
 
     Side-keyed "VERB:SIDE", DEFAULT-DENY: a missing key means size 0. Only
     QUOTE/CROSS ever appear. `prices` gives the per-share worst-case cost of
-    the candidate key's side ({"BID_UP": bid, "ASK_UP": 1 - ask} in Up terms —
-    the caller supplies executable prices). `open_markets_l_adv` is the
-    contingent L_adv held in OTHER markets (portfolio-cap input; this market's
-    own is computed here).
+    the candidate key's side ({"BID_UP": bid, "ASK_UP": 1 - ask} in Up terms).
+
+    SCENARIO-KEYED per Ruling R-35 (Q-DE-7/Q-DA-4 — architecture §8 wins over
+    SP §5's "$200 portfolio-wide" shorthand, which this code had implemented):
+    `scenario_losses` maps scenario_id → the summed contingent L_adv of the
+    OTHER open markets adverse in that scenario; THIS market is treated
+    adverse in every declared scenario (conservative, until a scenario model
+    refines adversity at decision time per §8). The cap is evaluated PER
+    SCENARIO — the binding headroom is the minimum across declared scenarios —
+    so a second scenario cannot be silently permitted by a portfolio-wide
+    ceiling. With one all-adverse scenario the arithmetic equals the old
+    portfolio reading (R-35: "the arithmetic is unchanged today; the
+    STRUCTURE is what fails later"). FAIL-LOUD: no declared scenario ⇒
+    ValueError — the scheme-level `{risk_scenarios: Halt}` should have
+    stopped upstream (SP-Scenarios empty ⇒ RulePolicy halts by design).
     """
     sp = sp or SP_OPERATIVE
+    pin = sp["max_quote_size_shares"]
     if state == HALTED:
         return {}                          # ∅ — the oracle door (§2)
 
-    kappa = sp["kappa_usd_per_market"]
-    slimit = sp["scenario_loss_limit_usd"]
-    pin = sp["max_quote_size_shares"]
-    here = contingent_l_adv(pos, quotes)
-    head_k = max(0.0, kappa - here)
-    head_s = max(0.0, slimit - here - open_markets_l_adv)
-    head = min(head_k, head_s)             # both branches; SP §5's shape makes
-                                           # each reachable (selftest proves it)
     out: dict[str, float] = {}
     if state == REDUCING_ONLY:
-        rs = reducing_side(pos)
-        if rs is None:
-            return out                     # flat: nothing to reduce
-        # QA F1 (2026-08-23): risk headroom must NEVER bind the reducing
-        # side -- a reducing action sized <= |net| pairs off on fill and
-        # CANNOT raise contingent L_adv (corner-max proof, QA attack B), so
-        # charging head/px here collapsed REDUCING_ONLY into HALTED exactly
-        # post-breach (l_adv > kappa), when reduction is the state's purpose.
-        # The plan's "budget" leg is the §4 CapitalBudget chain, proxied in
-        # v1 by the pin. The <=|net| cap is DEFINITIONAL, never derived.
-        cap = min(abs(pos.net), pin)
-        if cap > 1e-12:
-            out[f"QUOTE:{rs}"] = cap
-        out[f"CROSS:{rs}"] = min(abs(pos.net), pin)   # taker reduce, <=|net|;
-        # UNCONDITIONAL on the quote cap (QA F1ii: the guaranteed taker
-        # reduce was silently coupled to the maker conditional)
-        return out
+        # REDUCING_ONLY is evaluated BEFORE the scenario requirement:
+        # reduction cannot add risk and must never be blocked by a missing
+        # scenario declaration (the QA-F1 lesson, preserved under R-35's
+        # scenario keying).
+        return _reducing_only(pos, out, pin)
 
+    if not scenario_losses:
+        raise ValueError(
+            "no declared AdverseScenario: the scenario cap cannot be "
+            "evaluated (fail-closed; RiskScenarios Unavailable halts the "
+            "scheme upstream — R-35)")
+
+    kappa = sp["kappa_usd_per_market"]
+    slimit = sp["scenario_loss_limit_usd"]   # per-scenario limit (one value
+                                             # for all scenarios in v1)
+    here = contingent_l_adv(pos, quotes)
+    head_k = max(0.0, kappa - here)
+    head_s = min(max(0.0, slimit - here - other)
+                 for other in scenario_losses.values())
+    head = min(head_k, head_s)             # both branches exercisable
+                                           # (selftest, constructed positions)
     # RUNNING: both sides, headroom- and pin-capped. `prices` carries the
     # WORST-CASE COST per share in (0,1] (Up terms: bid for BID_UP, 1-ask
     # for ASK_UP) -- validated, not trusted (QA N2: a raw ask here would
@@ -298,21 +324,50 @@ def selftest() -> int:
     # branches are expressible and bind where constructed; realistic
     # binding counts are SP §10.14 (coordinator).
     flat = Position()
+    ONE_SC = {"all_adverse": 0.0}
     # kappa-headroom branch: l_adv=48 -> head_k = 50-48 = 2 < head_s = 152
     # -> cap = min(2/0.5, pin=5) = 4.0
     near_k = Position(96, 0, 48.0, 0)
-    msk = max_size(RUNNING, near_k, [], {"BID_UP": 0.5, "ASK_UP": 0.5})
+    msk = max_size(RUNNING, near_k, [], {"BID_UP": 0.5, "ASK_UP": 0.5},
+                   scenario_losses=ONE_SC)
     ok(abs(msk["QUOTE:BID_UP"] - 4.0) < 1e-9,
        f"kappa-headroom branch binds (cap 4.0, got {msk['QUOTE:BID_UP']})")
-    # scenario-cap branch (all-adverse aggregation, §10.15 pending):
-    # open=199 -> head_s = 1 < head_k = 50 -> cap = min(1/0.5, 5) = 2.0
+    # scenario-cap branch: others-adverse = 199 -> head_s = 1 < head_k = 50
+    # -> cap = min(1/0.5, 5) = 2.0. R-35: one all-adverse scenario, the
+    # arithmetic equals the old portfolio reading exactly.
     msp = max_size(RUNNING, flat, [], {"BID_UP": 0.5, "ASK_UP": 0.5},
-                   open_markets_l_adv=199.0)
+                   scenario_losses={"all_adverse": 199.0})
     ok(abs(msp["QUOTE:BID_UP"] - 2.0) < 1e-9,
        f"scenario-cap branch binds (cap 2.0, got {msp['QUOTE:BID_UP']})")
+    # R-35 STRUCTURAL checks — the reason the keying changed:
+    # (i) the binding scenario is the MIN across scenarios, not their sum —
+    # two disjoint scenarios at 120 each stay feasible where the withdrawn
+    # portfolio reading (sum = 240 > 200) would over-refuse:
+    msd = max_size(RUNNING, flat, [], {"BID_UP": 0.5, "ASK_UP": 0.5},
+                   scenario_losses={"s1": 120.0, "s2": 120.0})
+    ok(abs(msd["QUOTE:BID_UP"] - 5.0) < 1e-9,
+       "disjoint scenarios do not sum (head_s = 80 -> pin binds at 5.0)")
+    # (ii) one hot scenario binds regardless of a cold one beside it:
+    msh = max_size(RUNNING, flat, [], {"BID_UP": 0.5, "ASK_UP": 0.5},
+                   scenario_losses={"hot": 199.0, "cold": 0.0})
+    ok(abs(msh["QUOTE:BID_UP"] - 2.0) < 1e-9,
+       "the hot scenario binds (min across scenarios, cap 2.0)")
+    # (iii) fail-loud with no declared scenario (RUNNING only):
+    try:
+        max_size(RUNNING, flat, [], {"BID_UP": 0.5, "ASK_UP": 0.5})
+    except ValueError:
+        checks += 1
+    else:
+        raise AssertionError("undeclared scenarios must refuse in RUNNING")
+    # (iv) REDUCING_ONLY needs NO scenario — post-breach reduction must
+    # never be blocked by a missing declaration (QA F1 preserved):
+    ok(max_size(REDUCING_ONLY, Position(120, 0, 60.0, 0), [],
+                {"ASK_UP": 0.5})["CROSS:ASK_UP"] > 0,
+       "reduction unblocked without scenarios")
     # px validation (QA N2): a raw ask (>1) must refuse, not misprice
     try:
-        max_size(RUNNING, flat, [], {"BID_UP": 0.5, "ASK_UP": 1.4})
+        max_size(RUNNING, flat, [], {"BID_UP": 0.5, "ASK_UP": 1.4},
+                 scenario_losses=ONE_SC)
     except ValueError:
         checks += 1
     else:

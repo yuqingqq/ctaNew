@@ -142,6 +142,17 @@ at the lag floor is recorded as doubly dead.
 with valid drift and computable `W` on a coin at `h=5`. **Family verdict:**
 DEAD only if BOTH verdict coins are DEAD.
 
+> *ANNOTATION BESIDE (Ruling R-35 / Q-BE-3, 2026-08-23; append-only per
+> R-28):* the `f*` bars above were derived from `edge_l1_v1`, whose sampler
+> was earliest-first and could not leave 2026-08-20 (`FLOW_MODEL_STATE.md`
+> §1f). R-35 rules that day-stratified sampling binds any probe feeding a
+> frozen bar, with two constraints frozen here: **a day-stratified re-measured
+> Layer-1 markout does NOT move this bar** — it creates a CANDIDATE bar
+> requiring an explicit Class-D amendment under the three-part test — **and it
+> must never be pooled with earliest-first receipts.** The R-9 day series
+> already demonstrated the verdict side is day-robust (8/8 DEAD); this
+> annotation governs the BAR side's inputs.
+
 **Verification note (R-1's own instruction, executed before applying):** the
 six numbers were checked against `derived/edge_layer1_v1.json`. The receipt
 equals the published figures at their stated precision — no disagreement, no
