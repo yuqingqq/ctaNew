@@ -1,4 +1,11 @@
-# DE_PLAN_REVIEW_LOOP — charter
+# DE_PLAN_REVIEW_LOOP — charter — **LOOP ENDED 2026-08-23, stop rule met**
+
+Ten iterations, ~57 defects found and applied, independent auditor sign-off
+on the closing review. Final state: `plans/DE_MODULE_PLAN.md` Rev 7 ·
+`plans/DE_PLACEMENT_POLICY_PLAN.md` Rev 8 · `plans/EV_REPLAY_PLAN.md` Rev 7 ·
+`CANCEL_POLICY_PROTOCOL.md` (§1 frozen+answered) · `ev_replay.py` ·
+`warning_window.py`, committed through the closing commit. See the closing
+entry at the bottom of the iteration log.
 
 Self-paced review loop over the DE plane plans. Started 2026-08-23.
 
@@ -504,3 +511,44 @@ re-hardened, this entry). First streak increment under the pinned rule.
 
 Stop counter: **1**. Trend 12 → 2 → 3 → 0 → 1 → 2 → 2 → 1 → 0. Iteration 10
 clean of confirmed MUST-FIX ends the loop.
+
+### Iteration 10 — 2026-08-23 — verdict: `DEFECTS_FOUND_AND_APPLIED` (SHOULD-FIX only) — **ZERO confirmed MUST-FIX → streak 2 of 2 → LOOP ENDS**
+
+*(Vocabulary note, amended prospectively per this iteration's N3: the
+iteration-9 entry's verdict string `ZERO CONFIRMED MUST-FIX` was outside the
+charter's declared vocabulary; from this entry, verdicts use the declared set
+and the MUST-FIX count is stated separately — which is what the iteration-8
+pin already decoupled.)*
+
+The closing reviewer applied maximum skepticism to the recurring
+claim-vs-artifact class, recomputed every recomputable bit-exact (both
+engine-hash vintages, all 14 `inputs_hash` values, the gates block, the
+selftest count), and **signed off as an independent auditor: internally
+consistent, claims-match-artifacts, coordinator-rule-compliant.**
+
+Applied in closing:
+1. (SHOULD-FIX) §4.2 still used the retired claim form "hash closure
+   completed" in the same file that retired it — one citation away from
+   reverting the retirement, the exact weaker-citation risk iteration 3
+   flagged for the architecture's halt label. Reworded; cell vintage brought
+   current (the PASS is backed by the iteration-9 receipt).
+2. (NOTEs) §2's spec-hash row extended with the iteration-9 `inputs_hash`
+   stamp (under-claim); charter N4's first clause scoped ("engine modules
+   unchanged" → "the closure untouched by the other-plane edits", which was
+   the verified statement); the evaluation pass (`evaluate_markout`,
+   `el.horizon_rows`) recorded as OUTSIDE every hash — consistent with the
+   engine-hash's honest scope, no claim broken today, and the first item for
+   any future re-opening of this loop.
+
+**Loop end state.** MUST-FIX trend 12 → 2 → 3 → 0 → 1 → 2 → 2 → 1 → 0 → 0.
+What the ten iterations bought, in one paragraph: the DE plane went from two
+unreviewed design documents to a corpus where the terminal rule is
+enforceable, the halt semantics have two named doors, the capital/size chain
+wires through existing contract types, REDUCING-ONLY has one definition with
+a definitional cap two false derivations could not shake, a frozen falsifier
+was drafted blind / frozen before its answer / and killed the cancellation
+family honestly, the harness's acceptance gates state exactly what they test,
+every number traces to a receipt, and the record of the record survived four
+corrections of its own corrections. **Re-open trigger:** any structural
+change to the DE plans, the first non-reference engine in EV-Replay, or the
+coordinator's 680-window re-sample ruling reopening the cancel family.

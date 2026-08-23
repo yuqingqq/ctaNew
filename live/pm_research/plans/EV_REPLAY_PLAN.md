@@ -6,8 +6,11 @@ to exactly what exists (Rev 2 said "gated green against §4" while §4.3's
 must-fail controls did not exist — the claim-stronger-than-artifact defect in
 the plan whose §4 exists to prevent it); §2's plugin-path rows marked NOT IN
 v1; §4 given an explicit status table with the acceptance DEBT named and made
-blocking. **Now Revision 6** — iteration 9 (streak 1 of 2 under the pinned
-stop rule): `engine_hash` EXTENDED again — the record shapes (`Fill`,
+blocking. **Now Revision 7** — iteration 10, the loop-closing revision: §4.2's
+retained "closure completed" reworded (the retired claim form had survived in
+the file that retired it), cell vintage brought current, §2's spec-hash row
+extended with the iteration-9 `inputs_hash` stamp. Prior — Revision 6,
+iteration 9 (streak 1 of 2 under the pinned stop rule): `engine_hash` EXTENDED again — the record shapes (`Fill`,
 `WindowFills`), the env's own record mapping, and the parity comparator were
 residue (a `Fill` field reorder would have transposed every tuple with the
 hash unmoved); the wording "closure completed" is retired — closure is a
@@ -109,7 +112,7 @@ ReplayEnv(window_spec, tape, params) -> session
 | knowledge-time reads | the 250 ms lag heap is the only path from tape to `StateView`; `EventTimeView` construction is licensed to the CANARY alone (R-CANARY: direct construction elsewhere is fatal — iteration 5 removed a parenthetical that had silently widened this to "conformance"; the parity gate compares fill records, which needs no event-time view) |
 | warm-state snapshot + restart parity | per-window replay is pure: same `(tape, params, seed)` ⇒ byte-identical `RunRecord`; multi-window runs are per-window pure by construction (windows settle independently). **License boundary (iteration 5): this discharge lapses the moment cross-window state enters a replay** — e.g. the Allocator's capital coupling (module plan §5b RESOLUTION: next-window quoting gated on settlement-latency headroom). A capital-coupled replay needs real snapshot/restart machinery; do not extend the purity claim to it |
 | artifact resolution | **plugin-path contract, NOT IN v1** (iteration 6: v1 resolves no artifacts and has no refusal to selftest — the row previously claimed "both selftested"). When the plugin path lands: resolve by `artifact_id + fit_data_through`; REFUSE `fit_data_through` postdating the window (**R-WFWD** `no_future_train` / R-REQ); separately refuse `t_known` manufactured from `t_event` (**R-IMPUTE** — `observed_needs_wire`/`strict_delay`/`rule_named`, admission via R-REFUSE `no_peek`). Two classes, two refusals, both selftested THEN |
-| spec-hash pinning | every **receipt** stamps (iteration 8: the stamps live on the receipt — `RunRecord` stays raw per §0): transitive `engine_hash`, protocol NAME, `params`/SP set, seed, `provenance(days_sampled)`, collector era, per-record queue bound + content hash, lag, gate outcomes |
+| spec-hash pinning | every **receipt** stamps (iteration 8: the stamps live on the receipt — `RunRecord` stays raw per §0): `engine_hash`, protocol NAME, `params`/SP set, seed, `provenance(days_sampled)`, collector era, per-record queue bound + content hash, **per-window `inputs_hash` over gaps + token ids (iteration 9)**, lag, gate outcomes |
 | actuation latency | contract: cancels/placements effective at `t + lag + τ`; τ an env parameter, fills before effectiveness still happen. **v1 status (iteration 6): the lag lives as the engine's internal frozen constant and no v1 arm cancels, so neither lag nor τ is yet a parameter** — parameterization arrives with the first cancel-capable or perturbation-control work (§4.3), whichever is first |
 
 **Window selection is NOT the environment's job.** The sampler defect
@@ -143,7 +146,7 @@ an **explicit window list** and stamps it, never chooses.
 | # | gate | v1 status (kept current per iteration; claims match artifacts) |
 |---|---|---|
 | 4.1 | **Golden-window fill parity** — reproduce `edge_layer1.replay_window`'s fill sequence exactly, both arms, the `warning_window::conformant` pattern as the acceptance gate | **PASS in the v1 form only**: the v1 engine IS the reference, so the gate compares two invocations (engine determinism) and **structurally cannot fail**. Honest label, stated here as in the code: parity becomes a real gate at the FIRST non-reference engine, and no engine change may land before it can fail |
-| 4.2 | **Determinism** — same `(windows, params, seed)` ⇒ identical `run_hash`, where `run_hash` covers the FULL records via per-record content hashes (fills, mid path, unavailable intervals, diagnostics — everything `evaluate_markout` consumes), plus a transitive-closure `engine_hash` | **PASS — re-earned iteration 7 on a post-hardening smoke, hash closure completed iteration 8, and gate outcomes now persist IN the receipt** (`gates` block: 14/14 parity + determinism true, both arms) |
+| 4.2 | **Determinism** — same `(windows, params, seed)` ⇒ identical `run_hash`, where `run_hash` covers the FULL records via per-record content hashes (fills, mid path, unavailable intervals, diagnostics — everything `evaluate_markout` consumes), plus the `engine_hash` (coverage EXTENDED iterations 7/8/9 — never "completed"; iteration 10 removed this cell's own retained use of the retired claim form) | **PASS against the iteration-9 receipt** (`gates` block: 14/14 parity + determinism true, both arms; per-window `inputs_hash` present) |
 | 4.3 | **Engine-perturbation must-fail controls** — a +50 ms lag perturbation must change a golden fill record; a broken tie-break must trip parity | **NOT BUILT — OPEN ACCEPTANCE DEBT.** Not expressible in v1 (the lag is the engine's internal frozen constant, not an env parameter). **BLOCKING: no non-reference engine, and no B2 Constraints binding that alters the event loop, may land until these exist and fail on demand** |
 | 4.4 | **Boundary checks** | **Partial**: class-namespace scans on `ReplayEnv` AND `RunRecord` (methods included, iteration 6) + raw-fields check + hash-sensitivity must-fail controls. Import-level separation does not exist in v1 (one module); it arrives when the plugin path splits the modules |
 
