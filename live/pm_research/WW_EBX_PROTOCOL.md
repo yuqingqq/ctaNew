@@ -45,7 +45,14 @@ the direction this instrument actually points).
 Day-series selection (`select_by_day`, 30/coin/day, era days, verdict coins
 btc/eth), BACK_DISPLAYED arm, the ww_v1 episode/warning machinery
 (`warning_of`), negative-drift fills at the frozen drift horizon, rescuable
-share `R(τ)` at the Class-D `tau_decision_rung = 250 ms`. Verdict per
+share `R(τ)`. **[R-49] The verdict rungs are `τ = 500 ms` (primary) and
+`1000 ms` (beside)** — R-8's designed seam fired as written: OPS's
+achievable-τ bound (floor 351 ms, typical 455 ms, btc p90 750 ms) SELECTS
+the operative rungs, and 250 ms is not achievable. The REOPENED standard
+(§4) applies at the 500 ms rung — the most optimistic achievable latency;
+the 1000 ms column is the tail-honesty check (btc's own p90 implies
+~750 ms for a fifth of its rows), and a REOPENED-at-500 that collapses at
+1000 carries a mandatory tail caveat wherever quoted. Verdict per
 (coin, day) cell: DEAD / GO / INDETERMINATE against `f*_low` by value,
 exactly ww_v1's three-way. Windows spanning a `crypto_prices` collector gap
 are excluded and ledgered (the R-ADMISS analog for the second feed).
@@ -100,12 +107,16 @@ relay — **1 Hz per symbol**, receive lag **p50 0.46 s / p90 0.58 s**
 archives; alignment spot-checked). There is NO raw Binance perp stream in
 the repo.
 
-**The declared floor:** with 1 Hz sampling plus ~0.5 s relay lag, a lead
-must exceed roughly **1.5–1.7 s** (sampling quantization + relay lag +
-250 ms cancel) before this instrument can register it as rescuable. The
-three book channels died at a median warning of 0.16 s against the same
-250 ms; the whole question is whether Binance buys MORE than that, and
-this instrument can only see the answer when the lead is >~1.5 s.
+**The declared floor [re-pointed per R-49]:** with 1 Hz sampling plus
+~0.5 s relay lag plus the 500 ms achievable rung, a lead must exceed
+roughly **2.0 s** before this instrument registers it as rescuable
+(~2.5 s at the 1000 ms rung). And the hypothesis itself has hardened: a
+bot reacting to Binance clears in tens of milliseconds, so Binance buying
+>500 ms of warning requires that a MATERIAL SHARE of the adverse PM flow
+comes from SLOW reactors — humans and cron-grade bots — not from the fast
+ones. That is the question this run now asks, and expectations are set
+accordingly (R-49): the reactive family is already dead on actuation;
+this channel survives only if the slow-reactor share is large.
 
 **Verdict scope, stated now so the negative is read honestly:** a negative
 closes E-BX **on the deployed feed** — deployment-honest, because the
@@ -147,14 +158,12 @@ within recomputation tolerance, or the run aborts.
 1. This draft goes to the coordinator; **freeze before any receipt is
    read** (Q-DE-11). Build under the R-1 sealed pattern is available while
    the freeze is pending.
-2. **[R-48] The run additionally gates on OPS's achievable-τ bound.** If
-   we cannot act inside the warning window, every channel here is dead on
-   actuation regardless of signal quality — a signal result assuming an
-   unachievable τ is a result about nothing. Drafting and building are not
-   blocked; READING a receipt is, until OPS reports and the operative τ is
-   confirmed ≥ the 250 ms rung this protocol assumes (or the rung is
-   re-frozen to what OPS measures, BEFORE the run, as a declared input —
-   not after, which would be selection).
-3. On freeze + OPS-τ: run, read against the inherited bar, report cells
+2. **[R-48→R-49] The OPS-τ gate is SATISFIED.** OPS's bound arrived
+   (18.9 M quote rows, 8 coin-days) and the rungs were re-pointed BEFORE
+   any run, as required: §1 verdicts at 500 ms primary / 1000 ms beside.
+   The re-pointing is a declared input, not a post-hoc cut.
+3. On freeze: run, read against the inherited bar, report cells
    first, roll-ups second, E-BX-only shares beside, per R-9/R-17.
-4. `policy_bounds_v1` continues in parallel (R-47/R-48 CONTINUE).
+4. `policy_bounds_v1` and STATE_GATE are FIRST PRIORITY per R-49
+   (ex-ante selectivity is the primary line); this channel runs behind
+   them with expectations set by §3's hardened hypothesis.

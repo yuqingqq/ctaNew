@@ -86,11 +86,12 @@ unbounded by this result.*
 
 1. **Bar to the coordinator before the run** (register row Q-DE-12);
    build-under-seal permitted meanwhile.
-2. **The run gates on OPS's achievable-τ report** per R-48 — noted that a
-   stand-down does not race a warning window (weaker τ-dependency than the
-   cancel channels; it acts at quote-placement time under the standard
-   250 ms lag), but the gate is complied with as ruled: no receipt is read
-   before OPS reports.
+2. **The OPS-τ gate is SATISFIED (R-49)** — and the ruling confirms what
+   §5's note anticipated: a stand-down is a PRIOR decision that never
+   races the 160 ms warning, so achievable-τ does not touch this family.
+   R-49 promotes this protocol and `policy_bounds_v1` to FIRST PRIORITY:
+   ex-ante selectivity (clock, state, depth, size) is now the primary
+   line, not the fallback.
 3. `policy_bounds_v1` continues in parallel; this probe reuses its BASE
    arm fills, annotated with V1–V3 at fill time — no new engine arms, so
    the conformance surface does not grow.
