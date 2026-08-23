@@ -148,6 +148,14 @@ def coin_verdict(day_verdicts: Sequence[str]) -> str:
 def load_winners() -> dict[str, float]:
     """slug -> payoff in Up terms, FINAL resolutions only. Missing slugs are
     NAMED exclusions at the caller (control 3)."""
+    # tier1_pipeline imports by package path (live.pm_research.*): the repo
+    # root must be importable — same sys.path arrangement as
+    # cross_window_correlation.py, which consumes it the same way.
+    import sys
+    from pathlib import Path
+    repo = Path(__file__).resolve().parents[2]
+    if str(repo) not in sys.path:
+        sys.path.insert(0, str(repo))
     import tier1_pipeline as tp
     _, resolutions, _ = tp.load_market_metadata()
     out: dict[str, float] = {}

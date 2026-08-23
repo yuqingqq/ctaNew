@@ -159,3 +159,40 @@ capital/turnover economics are computed under this protocol.
    report #17.
 3. v2 (skew-policy Layer 2) is scoped only after v1's verdict, as its own
    draft.
+
+---
+
+## 6. ANSWERED — 2026-08-23, `layer2_v1`, receipt `derived/layer2_v1.json`
+
+**Coin verdicts under the frozen §3: btc UNDETERMINED
+(U, U, NEGATIVE, NEGATIVE), eth UNDETERMINED (U, U, U, NEGATIVE).** Neither
+roll-up threshold was met (btc 2/4 NEGATIVE = 50 % < 75 %; eth 1/4); per the
+frozen rule the resolution is CALENDAR — more era days — not re-cutting.
+
+**The descriptive pattern beneath the frozen verdicts, reported exactly:**
+
+- **All 8 share-weighted point estimates NEGATIVE** (btc −0.68/−0.52/−2.37/
+  −1.43 ¢; eth −0.71/−1.52/−1.13/−3.14 ¢), **both arms agreeing in sign on
+  every cell** — zero amendment-3 findings to report.
+- **3 of 8 cells resolve NEGATIVE with the within-day CI excluding zero**
+  (btc 08-22, 08-23; eth 08-23); **zero POSITIVE cells anywhere.**
+- The amendment-2 power declaration held in an informative way: observed
+  effects came in ABOVE census scale (0.5–3.1 ¢ vs 0.17 ¢), which is why
+  three cells could resolve despite the ≈2.4 ¢ per-cell MDE.
+
+**The reconciliation ledger, both pre-committed terms measured:**
+
+- **Estimand term ≈ ZERO**: `bridge(5)` is small and mixed-sign per cell
+  (btc −0.12/+0.46/−1.46/+0.11; eth +0.24/−0.21/+0.80/−0.28) — **the
+  adverse selection done by t+5 s STICKS to resolution**, neither recovering
+  nor systematically compounding. `M_T ≈ M_5` on the maker population.
+- **Population term = the whole gap**: the census's +0.173 ¢ (all fills)
+  against the maker population's −0.5..−3.1 ¢ — the JOIN maker's fills are
+  the adversely-selected subset, and marking them at settlement does not
+  redeem them. **The +0.173-vs-−0.53 tension is a POPULATION effect, not an
+  estimand effect.** Spread capture stayed stable (+0.59–0.85 ¢) and drift
+  at 5 s carried the loss on every cell, matching Layer 1's legs.
+
+Scope as frozen: within-day inference, four era days, no PnL/capacity claim.
+Exclusions per cell in the receipt (worst: 86 gap/tick-touched M_h legs on
+btc 08-20; unresolved-window exclusions zero on all sampled windows).
