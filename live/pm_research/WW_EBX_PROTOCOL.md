@@ -95,8 +95,9 @@ table, ww_v1's own reporting shape.
 
 The warning window is Binance-trigger to PM-fill: `W = t_fill −
 t_recv(trigger)`, anchored at RECEIPT (as-knowable, the same discipline as
-ww_v1's 250 ms PM knowledge lag). Rescuable requires `W > τ_cancel`
-(250 ms rung). The event-anchored equivalent is `W_event > feed_lag +
+ww_v1's 250 ms PM knowledge lag — a state-read constant, unchanged by
+R-49). Rescuable requires `W > τ_cancel` at the R-49-selected rungs
+(500 ms primary, 1000 ms beside — §1). The event-anchored equivalent is `W_event > feed_lag +
 τ_cancel` — the two forms are identities, the receipt-anchored one is used
 because receipts are what a deployed canceller has.
 
@@ -130,7 +131,8 @@ also sees.
 
 ## §4. Verdict semantics
 
-Per (coin, day): `R_4ch(250ms)` vs `f*_low` → GO / DEAD / INDETERMINATE
+Per (coin, day): `R_4ch(500ms)` vs `f*_low` (with the 1000 ms column
+beside, per §1's R-49 re-point) → GO / DEAD / INDETERMINATE
 (ww_v1 cell rule, CI treatment unchanged). Roll-up over the 8 coin-day
 cells, R-9's shape: **REOPENED-on-E-BX** requires ≥75 % of coin-days GO
 with ZERO DEAD; **DEAD-4ch** requires ≥75 % DEAD with zero GO (the R-11

@@ -620,6 +620,12 @@ def selftest() -> int:
     ok("UNINFORMATIVE" in label_cell(und, "eth").get("label", ""),
        "eth UNDETERMINED labeled uninformative")
     ok("label" not in label_cell(und, "btc"), "btc labeling untouched")
+    # ...and the label must survive ASSEMBLY into an S cell, not just exist
+    # as a function (QA 2026-08-23: the v1 receipt's eth S cells bypassed
+    # label_cell — the selftest tested the function, not its application)
+    s_row = label_cell({"state": "UNDETERMINED", "tier": "deployable"}, "eth")
+    ok("UNINFORMATIVE" in s_row.get("label", ""),
+       "assembled eth S cell carries the literal label")
 
     # paired diff hand case
     lo, hi = diff_ci([1.0, 1.0, 1.0, 1.0])
@@ -738,13 +744,15 @@ def run() -> dict[str, Any]:
                 mean = sum(diffs) / len(diffs)
                 st = "IMPROVES" if (lo or 0) > 0 else \
                      "WORSENS" if (hi or 0) < 0 else "UNDETERMINED"
-            row[arm] = {"state": st, "n_fills": nx, "n_pairs": len(diffs),
-                        "mean_diff_cents": None if mean is None else round(mean, 4),
-                        "ci95_cents": [None if lo is None else round(lo, 4),
-                                       None if hi is None else round(hi, 4)],
-                        "tier": ("counterfactual (below venue min_size — "
-                                 "MECHANISM ONLY, no verdict)"
-                                 if arm in ("s1", "s2", "s3") else "deployable")}
+            row[arm] = label_cell(
+                {"state": st, "n_fills": nx, "n_pairs": len(diffs),
+                 "mean_diff_cents": None if mean is None else round(mean, 4),
+                 "ci95_cents": [None if lo is None else round(lo, 4),
+                                None if hi is None else round(hi, 4)],
+                 "tier": ("counterfactual (below venue min_size — "
+                          "MECHANISM ONLY, no verdict)"
+                          if arm in ("s1", "s2", "s3") else "deployable")},
+                coin)
             if arm in ("s10", "s15"):
                 s_states[arm][coin].append(st)
         s_cells[f"{coin}:{day}"] = row
