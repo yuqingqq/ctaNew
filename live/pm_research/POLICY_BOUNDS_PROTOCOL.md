@@ -168,3 +168,63 @@ own bar, drafted blind.
 3. On freeze: run, read against the frozen bars, report per (coin, day) —
    the R-9/R-17 reporting shape, cells first, roll-ups second, bounds
    beside.
+
+---
+
+## §8. RUN AND ANSWERED — 2026-08-23 (appended per R-28; §§0–7 untouched)
+
+**Receipt:** `derived/policy_bounds_v1.json`. Population as frozen: 4 era
+days × 30 windows × btc/eth, 240/240 windows CONFORMANT to the reference
+engine; determinism 4/4; lag-perturbation control 4/4 differ (instrument
+live); tie-order control 0/4 differ (immaterial, matching EV-Replay §4.3).
+No VOID cells. Exclusions: 51 truncated, 281 gap/tick, 0 no-mid.
+
+**LEVER T — GATE_FAILS, both coins (8/8 cells NEGATIVE).** Body-only
+share-weighted M_5, cents/share: btc −0.43/−0.90/−1.06/−1.19 by day, eth
+−1.22/−1.29/−1.69/−2.13 — every CI below zero. Body ≈ base almost
+everywhere (btc 08-22: −1.057 body vs −1.048 base): **the damage is not
+concentrated in the terminal minute; it is everywhere the book rests.**
+Standing down inside r<60 rescues nothing.
+
+**LEVER T bound — formally NOT_CLOSED, ceiling microscopic.** The most ANY
+time-gate could keep, granted every idealisation: **btc +0.0044 ¢/share**
+(two positive bins: r∈[15,20) at 0.4 % of share, n=157; r∈[45,50) at
++0.001 ¢), **eth +0.0106 ¢/share** (one bin, r∈[10,15), 0.8 % of share,
+n=59) — against baseline losses of −0.5 to −2.9 ¢/share. Per amendment 1
+this adopts NOTHING; and no specific-gate protocol is worth drafting
+against a ceiling three orders of magnitude under the loss it must
+overcome, carried by sub-1 %-share bins at n≤157. M_T beside: btc
++0.024 ¢, eth +0.316 ¢ (dominated by one 21.5 %-share body bin at
++0.34 ¢ — still ~an order under eth's M_T losses).
+
+**LEVER S — DEAD_DEPLOYABLE, both coins (no IMPROVES cell anywhere).**
+Deployable paired diffs vs the pin, ¢/share: btc all-UNDETERMINED with
+TIGHT CIs (point estimates +0.002..+0.031, half-widths ±0.03–0.05 — an
+INFORMATIVE null: any size effect on btc is bounded within ~±0.07 ¢);
+eth 7 UNDETERMINED (UNINFORMATIVE — declared-power, amendment 2) + one
+WORSENS (08-23 s10: −0.150 [−0.279, −0.031]). **Counterfactual tier
+{1,2,3}: diffs ±0.01–0.04 ¢ both signs — per-share fill quality is
+nearly SIZE-INVARIANT below the pin too.** The Class-B robustness answer
+is the strongest result of the lever: **every published number's
+conditioning on the 5-share pin is immaterial** — the corpus does not
+move with size.
+
+**LEVER D — DEPTH_FAILS, both coins (3/4 NEGATIVE + 1 UNDETERMINED
+each; zero POSITIVE).** Depth-1 share-weighted M_5: btc −0.93..−3.50,
+eth −0.98..−5.05 by day. **The competing-mechanism question is ANSWERED
+by the decomposition:** spread capture rises to +1.8..+2.3 ¢ (the extra
+tick, as constructed) but drift deteriorates to −2.9..−7.1 ¢ — versus
+−1.2/−2.0 at the touch. Fills one tick back condition on through-sweeps,
+and through-sweeps are decisively MORE informed; the coordinator's
+1-tick-book concern was directionally right but the measured mechanism
+is selection, not room.
+
+**Programme statement (amendment 3 wording):** the three levers AS
+LEVERS are dead on both verdict coins — touch and depth-1 placement,
+deployable size, the pre-registered clock gate — and the all-gates time
+ceiling is economically negligible though formally NOT_CLOSED.
+Interactions remain out of scope by construction. With cancellation
+(four rungs, a fortiori under R-49) and carry (Layer 2) already closed,
+ex-ante MARGINAL selectivity by clock/depth/size is now measured and
+dead; the remaining unmeasured ex-ante family is STATE_GATE's
+(Q-DE-12, drafted, awaiting freeze).
