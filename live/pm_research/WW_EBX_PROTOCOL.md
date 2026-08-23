@@ -172,3 +172,41 @@ within recomputation tolerance, or the run aborts.
 4. `policy_bounds_v1` and STATE_GATE are FIRST PRIORITY per R-49
    (ex-ante selectivity is the primary line); this channel runs behind
    them with expectations set by §3's hardened hypothesis.
+
+---
+
+## §7. RUN AND ANSWERED — 2026-08-23 (appended per R-28; §§0–6 untouched)
+
+**Receipt:** `derived/ww_ebx_v1.json`. **ROLLUP: DEAD_4CH at BOTH rungs —
+8/8 coin-day cells DEAD at 500 ms AND at 1000 ms. No tail caveat arises.**
+
+**Gates:** 197/197 replayed windows conformant per-fill to `ww.replay_ww`
+(fills AND (W, channel) streams); determinism identical; the ±1 s
+clock-misalignment control moved the E-BX-only share (0.0448 → 0.0511/
+0.0467) — alignment is load-bearing; run-1's anchor abort was diagnosed
+to root cause before any receipt was read (report #45). **43/240 windows
+excluded by the frozen §1 gap admission — the deployed relay carries
+real ~12 s unlogged holes at an 18 % window rate**, so every cell's
+receipt-value anchor reads N/A-by-admission and the per-fill conformance
+carries the guarantee instead. R_3ch and R_4ch are computed on the SAME
+admitted rows in every cell.
+
+**Cells (R at 500 ms, share-weighted |drift|; bar by value):** btc
+R_4ch 0.072–0.129 vs f*_low 0.309 (CIs top out at 0.171); eth 0.097–
+0.136 vs 0.494 (CIs top out at 0.172). At 1000 ms: btc 0.033–0.078,
+eth 0.050–0.089. E-BX fired on 13.3 % of fills; its incremental
+rescuable share (R_4ch − R_3ch) is 0.5–4 pp, E-BX-only 3.1–8.0 %.
+
+**The slow-reactor question, answered:** crediting EVERY adverse 1 Hz
+sample at zero latency beyond receipt with zero capture loss, the share
+of adverse damage carrying more than 500 ms of Binance-visible warning
+is 3–8 % — a small minority. The adverse flow on this venue is fast, or
+at least faster than the deployed feed plus the achievable cancel. The
+verdict binds the DEPLOYED FEED (§3); the direct-exchange instrument
+remains behind the collection boundary, unbought and unbounded.
+
+**Family consequence:** the cancellation family's R-11 closure now
+stands across FOUR channels at the ACHIEVABLE rungs — the materially
+stronger negative §4 promised. With this, all nine named channels in
+the adverse-selection mitigation space are closed, each against a bar
+frozen before its data was read.
