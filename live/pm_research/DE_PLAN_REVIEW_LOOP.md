@@ -429,3 +429,46 @@ corpus COMMITTED, per-iteration from now on.**
 Stop counter: 0. Trend 12 → 2 → 3 → 0 → 1 → 2 → 2. Standing practice added:
 **commit per iteration; a revision claim about history must be checkable in
 history.** Next: iteration 8 over the committed corpus.
+
+### Iteration 8 — 2026-08-23 — verdict: `DEFECTS_FOUND_AND_APPLIED`
+
+**1 MUST-FIX + 2 SHOULD-FIX + 4 NOTEs; applied as EV plan Revision 5,
+`ev_replay.py` re-hardened, this correction of record, and the stop-counter
+pin below.**
+
+1. (MUST-FIX — **correction of record for iteration 7's finding 2**) The
+   blanket "the loop's files were untracked, zero commits" was FALSE for two
+   of the eight files: `plans/DE_PLACEMENT_POLICY_PLAN.md` was tracked since
+   `f46379f` (2026-08-22, the pre-revision original) and
+   `EDGE_LAYER1_RESULTS.md` since `a460ccf` — my own Rev-8 placement header
+   stated this truth while this charter contradicted it one entry earlier.
+   Consequence an auditor should know: **the cumulative Rev 1→8 placement
+   diff and the five-of-eight corrections ARE recoverable**
+   (`git diff f46379f c0bae24 -- plans/DE_PLACEMENT_POLICY_PLAN.md`;
+   `a460ccf..c0bae24`); only the six genuinely-untracked files' intermediate
+   revisions are lost. The `c0bae24` commit message carries the overstated
+   claim immutably — this entry is its annotation. The standing practice
+   iteration 7 added banned exactly this defect; iteration 7 committed it in
+   the same breath. Propagations fixed: EV plan header, D-4 (report #13).
+2. (SHOULD-FIX) `engine_hash`'s closure was incomplete: `el.HORIZONS` (sets
+   tick-window `unavailable_iv` spans), the four line-filter marks (drop
+   whole event classes), and `fi._gz_lines` (the tape decoder) could each
+   change records with the hash unmoved. Closure completed; the hash moved
+   (`190fc906…` → `c5c405bc…`), which is itself the demonstration.
+3. (SHOULD-FIX) **Stop-counter semantics PINNED, prospectively:** the counter
+   counts **zero-confirmed-MUST-FIX iterations** — the header rule as
+   written. Iteration 4 (0 MUST-FIX after staleness resolution, SHOULD-FIXes
+   applied) would have counted under this pin; the logs said "0 consecutive
+   clean" instead. The pin changes nothing retroactively — iterations 5–8
+   each carried ≥1 MUST-FIX, so today's streak is 0 under either reading —
+   and it is being pinned while it decides nothing, which is the only
+   legitimate time (the R-6/Class-D lesson, applied to our own rule).
+4. (NOTEs applied) Gate outcomes now persist in the receipt (`gates` block —
+   they were stdout-only, PASS checkable only by entailment); §2's spec-hash
+   row corrected (receipt-level stamps, protocol NAME); §4 vintage labels;
+   the queue-bound comment reworded (consumer never infers; the v1-internal
+   map becomes a run parameter when both bounds share a run).
+
+Stop counter: 0. Trend 12 → 2 → 3 → 0 → 1 → 2 → 2 → 1. Next: iteration 9
+over the re-committed corpus; two consecutive zero-MUST-FIX iterations end
+the loop.

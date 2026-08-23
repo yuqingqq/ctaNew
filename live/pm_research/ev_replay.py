@@ -94,8 +94,8 @@ class ReplayEnv:
                 dict(wf.diagnostics)))
         return out
 
-    def receipt(self, records: Sequence[RunRecord],
-                label: str) -> dict[str, Any]:
+    def receipt(self, records: Sequence[RunRecord], label: str,
+                gates: dict[str, Any] | None = None) -> dict[str, Any]:
         body = {
             "protocol": "ev_replay_v1",
             "status": "RESEARCH_ONLY_NOT_DECISION_ELIGIBLE",
@@ -106,13 +106,19 @@ class ReplayEnv:
             "state_lag_s": fd.STATE_LAG_S,
             "quote_size_shares": el.QUOTE_SIZE,
             "seed": self.seed,   # reserved for stochastic arms; v1 consumes none
+            # gate outcomes persisted IN the artifact (iteration 8: they were
+            # stdout-only, leaving the plan's PASS cells checkable only by
+            # entailment from fail-loud ordering)
+            "gates": gates or {},
             "sp_parameter_set": self.sp_set,
             "windows": [w[0] for w in self.windows],
             "collector_era": fi.ERA,   # iteration 7: era was promised, not stamped
             "records": [{
                 "slug": r.slug, "coin": r.coin, "arm": r.arm,
-                # queue bound stamped EXPLICITLY, never inferred from the arm
-                # name via an external mapping (iteration 7; plan §3.4)
+                # queue bound stamped so the receipt CONSUMER never infers it
+                # (iteration 7/8; the 1:1 arm->bound map below is v1-internal
+                # and KeyError-loud; it becomes a run parameter when both
+                # bounds share a run, per plan §3.4)
                 "queue_bound": {"JOIN": "BACK_DISPLAYED",
                                 "FRONT": "FRONT"}[r.arm],
                 "n_fills": len(r.fills), "fills": r.fills,
@@ -156,9 +162,11 @@ def engine_hash() -> str:
     import inspect
     parts = [inspect.getsource(f) for f in (
         el.replay_window, iw.RestingSide, fd.BookState, fd._parse_book,
-        fi.fold_price, fi.fold_side)]
+        fi.fold_price, fi.fold_side, fi._gz_lines)]
     parts.append(repr((fd.STATE_LAG_S, fi.WINDOW_S, fi.MICRO_SIZE,
-                       el.QUOTE_SIZE)))
+                       el.QUOTE_SIZE, el.HORIZONS,
+                       fi.TRADE_MARK, fi.QUOTE_MARK,
+                       fd.BOOK_MARK, fd.TICK_MARK)))
     return hashlib.sha256("\n".join(parts).encode()).hexdigest()
 
 
@@ -287,9 +295,12 @@ def selftest() -> int:
 def smoke(per_coin: int = 2) -> int:
     sel = iw.select(per_coin)
     env = ReplayEnv(windows=sel)
+    gate_results: dict[str, Any] = {}
     for arm in ARMS:
         p, f = parity_gate(env, arm)
         det = determinism_gate(env, arm, f"smoke_{arm.lower()}")
+        gate_results[arm] = {"parity_pass": p, "parity_fail": f,
+                             "determinism": det}
         print(f"[ev_replay] {arm}: parity {p} pass / {f} fail · "
               f"determinism {'PASS' if det else 'FAIL'}")
         if f or not det:
@@ -297,8 +308,8 @@ def smoke(per_coin: int = 2) -> int:
     recs = env.run("JOIN")
     out = OUT_DIR / "ev_replay_v1_smoke.json"
     out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(json.dumps(env.receipt(recs, "smoke_join"), indent=1,
-                              default=str))
+    out.write_text(json.dumps(env.receipt(recs, "smoke_join", gate_results),
+                              indent=1, default=str))
     n = sum(len(r.fills) for r in recs)
     print(f"[ev_replay] smoke receipt: {len(recs)} windows, {n} fills -> {out}")
     return 0

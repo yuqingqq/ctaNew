@@ -6,13 +6,18 @@ to exactly what exists (Rev 2 said "gated green against §4" while §4.3's
 must-fail controls did not exist — the claim-stronger-than-artifact defect in
 the plan whose §4 exists to prevent it); §2's plugin-path rows marked NOT IN
 v1; §4 given an explicit status table with the acceptance DEBT named and made
-blocking. **Now Revision 4** — iteration 7: §4.2's PASS re-earned on a
-post-hardening smoke (the prior cell cited a pre-hardening receipt);
-`engine_hash` extended to transitive sources; era/bound stamped explicitly.
-**Revision history: Revisions 3–1 (all same-day) predate version control of
-this file and are NOT preserved — iteration 7 found every "in git history"
-claim false (the files were untracked); revisions are committed
-per-iteration from this one onward.**
+blocking. **Now Revision 5** — iteration 8: `engine_hash` closure completed
+(the four line-filter marks, `HORIZONS`, `_gz_lines` — each could change
+records with the hash unmoved); gate outcomes persisted IN the receipt (they
+were stdout-only, leaving PASS cells checkable only by entailment); §2's
+spec-hash row corrected (stamps live on the RECEIPT — `RunRecord` stays raw
+per §0 — and the receipt carries a protocol NAME, not hash); §4 vintage
+labels updated. **Revision history: Revisions 4–1 (all same-day) predate
+per-iteration version control of THIS file, which was untracked before
+`c0bae24` — iteration 8 corrected iteration 7's blanket claim: two OTHER
+corpus files (the placement plan, `EDGE_LAYER1_RESULTS.md`) had 2026-08-22
+commits, so their cumulative diffs ARE recoverable. Committed per-iteration
+from `c0bae24` onward.**
 Written by the DE session under dispatch B3: EV-Replay had no owning plan, is
 on the critical path, and DE is today its only consumer.
 **v1 of the harness (`ev_replay.py`) is built; its gate status is §4's table —
@@ -97,7 +102,7 @@ ReplayEnv(window_spec, tape, params) -> session
 | knowledge-time reads | the 250 ms lag heap is the only path from tape to `StateView`; `EventTimeView` construction is licensed to the CANARY alone (R-CANARY: direct construction elsewhere is fatal — iteration 5 removed a parenthetical that had silently widened this to "conformance"; the parity gate compares fill records, which needs no event-time view) |
 | warm-state snapshot + restart parity | per-window replay is pure: same `(tape, params, seed)` ⇒ byte-identical `RunRecord`; multi-window runs are per-window pure by construction (windows settle independently). **License boundary (iteration 5): this discharge lapses the moment cross-window state enters a replay** — e.g. the Allocator's capital coupling (module plan §5b RESOLUTION: next-window quoting gated on settlement-latency headroom). A capital-coupled replay needs real snapshot/restart machinery; do not extend the purity claim to it |
 | artifact resolution | **plugin-path contract, NOT IN v1** (iteration 6: v1 resolves no artifacts and has no refusal to selftest — the row previously claimed "both selftested"). When the plugin path lands: resolve by `artifact_id + fit_data_through`; REFUSE `fit_data_through` postdating the window (**R-WFWD** `no_future_train` / R-REQ); separately refuse `t_known` manufactured from `t_event` (**R-IMPUTE** — `observed_needs_wire`/`strict_delay`/`rule_named`, admission via R-REFUSE `no_peek`). Two classes, two refusals, both selftested THEN |
-| spec-hash pinning | every `RunRecord` stamps: code hash, protocol hash (if frozen), `params`, seed, `provenance(days_sampled)`, collector era, queue bound, lag |
+| spec-hash pinning | every **receipt** stamps (iteration 8: the stamps live on the receipt — `RunRecord` stays raw per §0): transitive `engine_hash`, protocol NAME, `params`/SP set, seed, `provenance(days_sampled)`, collector era, per-record queue bound + content hash, lag, gate outcomes |
 | actuation latency | contract: cancels/placements effective at `t + lag + τ`; τ an env parameter, fills before effectiveness still happen. **v1 status (iteration 6): the lag lives as the engine's internal frozen constant and no v1 arm cancels, so neither lag nor τ is yet a parameter** — parameterization arrives with the first cancel-capable or perturbation-control work (§4.3), whichever is first |
 
 **Window selection is NOT the environment's job.** The sampler defect
@@ -128,10 +133,10 @@ an **explicit window list** and stamps it, never chooses.
 
 ## 4. Acceptance — the harness itself is measured before it measures anything
 
-| # | gate | v1 status (iteration 6 — claims match artifacts) |
+| # | gate | v1 status (kept current per iteration; claims match artifacts) |
 |---|---|---|
 | 4.1 | **Golden-window fill parity** — reproduce `edge_layer1.replay_window`'s fill sequence exactly, both arms, the `warning_window::conformant` pattern as the acceptance gate | **PASS in the v1 form only**: the v1 engine IS the reference, so the gate compares two invocations (engine determinism) and **structurally cannot fail**. Honest label, stated here as in the code: parity becomes a real gate at the FIRST non-reference engine, and no engine change may land before it can fail |
-| 4.2 | **Determinism** — same `(windows, params, seed)` ⇒ identical `run_hash`, where `run_hash` covers the FULL records via per-record content hashes (fills, mid path, unavailable intervals, diagnostics — everything `evaluate_markout` consumes), plus an `engine_hash` from source | **PASS** (14/14 smoke, both arms; hash coverage extended iteration 6) |
+| 4.2 | **Determinism** — same `(windows, params, seed)` ⇒ identical `run_hash`, where `run_hash` covers the FULL records via per-record content hashes (fills, mid path, unavailable intervals, diagnostics — everything `evaluate_markout` consumes), plus a transitive-closure `engine_hash` | **PASS — re-earned iteration 7 on a post-hardening smoke, hash closure completed iteration 8, and gate outcomes now persist IN the receipt** (`gates` block: 14/14 parity + determinism true, both arms) |
 | 4.3 | **Engine-perturbation must-fail controls** — a +50 ms lag perturbation must change a golden fill record; a broken tie-break must trip parity | **NOT BUILT — OPEN ACCEPTANCE DEBT.** Not expressible in v1 (the lag is the engine's internal frozen constant, not an env parameter). **BLOCKING: no non-reference engine, and no B2 Constraints binding that alters the event loop, may land until these exist and fail on demand** |
 | 4.4 | **Boundary checks** | **Partial**: class-namespace scans on `ReplayEnv` AND `RunRecord` (methods included, iteration 6) + raw-fields check + hash-sensitivity must-fail controls. Import-level separation does not exist in v1 (one module); it arrives when the plugin path splits the modules |
 
