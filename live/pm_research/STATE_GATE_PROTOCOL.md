@@ -1,9 +1,13 @@
 # STATE_GATE_PROTOCOL — stand down by MARKET STATE: the family union bound
 
-**Status: DRAFT FOR COORDINATOR FREEZE — nothing here is frozen.** Authored
-by the DE session 2026-08-23 under Ruling R-48 (Channel 5 — "new and nobody
-has ever proposed it"). **Drafted blind**: no per-state-bin markout has been
-computed. Every constant below is pre-declared here, before any receipt.
+**Status: FROZEN per Ruling R-51, 2026-08-23. APPEND-ONLY from this point
+(R-28); R-38 clause (d) applies — an amendment buys an obligation to
+re-measure, never a verdict. PROMOTED TO FIRST PRIORITY per R-51: one of
+two live channels in the mitigation space, and the only one not facing an
+actuation wall.** Authored by the DE session 2026-08-23 under Ruling R-48
+(Channel 5 — "new and nobody has ever proposed it"). **Drafted blind**: at
+the freeze no per-state-bin markout had been computed. Every constant below
+was pre-declared before any receipt.
 
 **What this tests:** every stand-down arm ever considered is indexed by the
 CLOCK (`r` — Lever T's body-only gate, the terminal-minute regime). None is

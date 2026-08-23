@@ -1,11 +1,14 @@
 # WW_EBX_PROTOCOL — E-BINANCE, the fourth envelope channel (strict ww_v1 extension)
 
-**Status: DRAFT FOR COORDINATOR FREEZE — nothing here is frozen.** Authored by
-the DE session 2026-08-23 under Ruling R-47. **Drafted blind**: no warning
-window, no R, and no per-channel share has been computed with the new
-channel. The feed-cadence and feed-lag figures in §3 are INSTRUMENT facts
-measured before the freeze — the same standing as SP §4's `min_size`
-measurement — and are inputs to the floor declaration, not outcomes.
+**Status: FROZEN per Ruling R-51, 2026-08-23. APPEND-ONLY from this point
+(R-28); R-38 clause (d) applies. Proceeds at the harder R-49 bar (500/1000 ms
+rungs), BEHIND STATE_GATE in the DE lane per R-51's priority order.**
+Authored by the DE session 2026-08-23 under Ruling R-47. **Drafted blind**:
+at the freeze no warning window, no R, and no per-channel share had been
+computed with the new channel. The feed-cadence and feed-lag figures in §3
+are INSTRUMENT facts measured before the freeze — the same standing as SP
+§4's `min_size` measurement — and are inputs to the floor declaration, not
+outcomes.
 
 **What this is:** a STRICT EXTENSION of `ww_v1`, not a new protocol. Same
 population (day-series, 30 windows/coin/day, era days), same arm

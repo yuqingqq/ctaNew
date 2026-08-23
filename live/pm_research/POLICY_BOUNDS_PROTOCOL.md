@@ -228,3 +228,14 @@ Interactions remain out of scope by construction. With cancellation
 ex-ante MARGINAL selectivity by clock/depth/size is now measured and
 dead; the remaining unmeasured ex-ante family is STATE_GATE's
 (Q-DE-12, drafted, awaiting freeze).
+
+> *ANNOTATION BESIDE (2026-08-23, R-50 — appended per R-28): the
+> coordinator's reading of the bound table adds one fact §8 did not state:
+> the positive bins sit IN the terminal minute (bin 3, r∈[15,20), +1.10 ¢
+> at 0.4 % share) — the OPPOSITE side of the clock from the body-only
+> hypothesis, which proposed standing down there. At that n and weight it
+> is noise wearing a sign, not an edge — but it means the mechanism story
+> behind the pre-registered gate is not supported by its own data: the
+> terminal minute is where the only in-sample-positive share lives, not
+> where the losses concentrate. Recorded so the next hypothesis about the
+> terminal regime starts from this inversion, not from the folklore.*
