@@ -277,6 +277,63 @@ design; the taxonomy amendment set is the coordinator's to apply).
 Iteration 3 verifies the remaining applications and any coordinator
 disagreements filed under their name in §4a.
 
+### Iteration 3 — 2026-08-23 — verdict: `ZERO CONFIRMED MUST-FIX` — **streak 1 of 2**
+
+**1. R-38 verified end-to-end, and the chain is the review's headline
+CONFIRMED-CORRECT:** DA challenged a coordinator rule → the coordinator
+routed it out of their own ledger (R-35) → this review confirmed it against
+primary texts (iteration 2) → the coordinator ruled AGAINST their own R-6
+(R-38) → and the fix has already LANDED operationally (SP Rev 10 §10.9
+records "UPHELD — R-38; clause (d) adopted"; the vacate-consequence text is
+live at SP:296). The first complete circuit of the structure, exactly as
+the ruling itself notes.
+
+**2. Clause (d) adjudged: STRONGER than this review's recommended fix, and
+it closes the route — with one corroborated residual.** The review
+recommended dual-bar reporting (the refutation stays visible beside any new
+reading); the coordinator's clause (d) is better on incentives — an
+amendment purchases an OBLIGATION, not a result, and cannot produce any
+verdict at all. The eth h=15/30 route dies: amending yields UNDETERMINED
+plus a debt, and the re-run at the original evidentiary standard faces the
+same 8/8 data. **The residual, independently corroborated by SP's own §10
+(line 519: "vacated but never withdrawn — a cheaper way to undo a
+refutation," found by DA in the `quote_size_pin` row): vacate-to-limbo.**
+An amender who vacates and never completes the re-run holds the verdict at
+UNDETERMINED indefinitely — four-fifths of the erasure, bought for the
+price of an unpaid IOU. **SHOULD-FIX refinement, offered for ratification:
+a vacated verdict carries its provenance permanently ("VACATED — was DEAD
+under bar X; re-run owed") and the vacating amendment AUTO-FILES a §0a
+register row for the owed re-run** — limbo becomes loud, and R-28's
+append-only philosophy reaches verdicts.
+
+**3. First exercise of the standing clause-1 duty, on R-38 itself:**
+premise artifact cited ✓ (the review's iteration 2, the primary texts).
+**Landing evidence EXISTS but is NOT NAMED in the ruling** — SP Rev 10
+§10.9 + the vacate text are the demonstrable landing, reached via DA's
+absorption rather than the ruling's own citation. Distinction preserved:
+this is "nameable but unnamed" (an annotation-beside R-38 adding the
+pointer satisfies clause 1), NOT "no nameable evidence" (which would be
+PROSE-ONLY under clause 2). Flagged as the duty requires; SHOULD-FIX.
+
+**4. The stale-premise class persists in DISPATCHES, post-R-36:** the
+next-items dispatch carries "ActionSpace is still unbuilt... 20 selftest
+checks" — the THIRD instance of this premise (built at `9d28419`; corrected
+in reports #24 and #26; `de_constraints.py` is at 40 checks). R-36's clause
+3 binds RULINGS; dispatches carry no premise blocks and the class simply
+moved channels. **SHOULD-FIX: extend clause 3 to dispatches** — a one-line
+"state I rely on" on each plane's next-items entry would have surfaced all
+three instances before they shipped. (The dispatch's Rev-10 warning, by
+contrast, was warranted and is DISCHARGED: SP §4/§5 re-read at Revision 10;
+operative values unchanged; `ScenarioLossLimit` now reads per-scenario
+exactly as DE's R-35 conform implemented; every class DE annotates is
+already current. Nothing to re-wire.)
+
+Stop counter: **1 of 2** — no confirmed MUST-FIX this iteration; the
+coordinator's application round was sound, and the findings are a naming
+gap, a corroborated refinement, and a channel extension. Iteration 4 runs
+after the coordinator's next application pass; a second clean iteration
+ends the loop.
+
 ---
 
 ## OPS contribution — coordinator review (R-34)
