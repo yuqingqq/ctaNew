@@ -58,7 +58,29 @@ MIN_BIN_DWELL_S = 60.0
 MICRO_SIZE = 0.02          # labelled single-actor class; prevalence varies by coin
 MICRO_TOL = 1e-9
 ERA = "clob_v3_1"
-DAYS = ("20260819", "20260820", "20260821", "20260822")
+def _discover_days() -> tuple[str, ...]:
+    """Every collected UTC day on disk, always current.
+
+    DAYS WAS A HARDCODED TUPLE AND WENT STALE FOUR TIMES IN THREE DAYS -- twice
+    silently, and the last time within twelve hours of being corrected. A literal
+    day list cannot survive a running collector, so it is derived instead.
+
+    THIS GROWS, which is the point, and it is why `provenance(sampled=...)`
+    exists: the population change must be VISIBLE in every receipt rather than
+    silent. Compare two runs on `days_sampled`, never on this constant.
+
+    A probe pinned to a FROZEN protocol must declare its OWN day tuple -- a
+    protocol's design window must not move because a collector kept running.
+    `exp_gff1_side` already does this.
+    """
+    root = PM / "raw"
+    if not root.is_dir():
+        return ()
+    return tuple(sorted(d.name for d in root.iterdir()
+                        if d.is_dir() and d.name.isdigit()))
+
+
+DAYS = _discover_days()
 
 
 def assert_days_current() -> list[str]:
@@ -74,13 +96,13 @@ def assert_days_current() -> list[str]:
     than inherit this one; a protocol's design window must not move because a
     collector kept running.
     """
-    on_disk = sorted(d.name for d in (PM / "raw").iterdir()
-                     if d.is_dir() and d.name.isdigit())
+    on_disk = list(_discover_days())
     missing = [d for d in on_disk if d not in DAYS]
     if missing:
         raise AssertionError(
-            f"flow_intensity.DAYS is STALE: {missing} present on disk but not "
-            f"listed. Add them deliberately, or pin your probe's own days.")
+            f"flow_intensity.DAYS is STALE: {missing} on disk but unlisted. "
+            f"DAYS is now DERIVED, so this can only mean it was captured at "
+            f"import and the collector has written a new day since.")
     return on_disk
 
 TRADE_MARK = b'"event_type":"last_trade_price"'

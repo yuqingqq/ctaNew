@@ -3,9 +3,46 @@ name: Polymarket Crypto 5-min Markets
 phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
-updated: 2026-08-22 (flow/fills Revision 4; development run complete; contracts v22)
+updated: 2026-08-23 (session 4 close-out; Layer-1 measured; 350 selftest checks green)
 
 flags:
+  layer1_edge_measured: negative-for-a-maker-who-never-cancels # THE FIRST
+                             # DETERMINATE ANSWER. Markout vs BOOK MID, decomposed:
+                             # btc h=5s -0.532 [-0.797,-0.287] = spread +0.642
+                             # against drift -1.175; eth -1.243 [-1.726,-0.759] =
+                             # +0.778 vs -2.021. Six of eight cells negative with
+                             # the interval excluding zero. Spread capture is
+                             # REAL and STABLE; adverse selection is 1.8-2.6x
+                             # larger. Closes the loop the fee structure opened:
+                             # takers pay ~225bps to cross so anyone crossing is
+                             # heavily informed.
+                             # READ NARROWLY: every simulation in this corpus
+                             # rests the order until filled -- NOTHING EVER
+                             # CANCELS. So this is "a maker who never cancels
+                             # loses", NOT "market making loses". The gap is the
+                             # whole DE question and a cancellation policy is the
+                             # highest-value unmeasured lever left.
+  inventory_control_load_bearing: true # net does NOT self-balance: reversion
+                             # half-lives 519-2726s, ALL longer than the 300s
+                             # window. Placement skew cuts terminal |net| 76-89%
+                             # (btc) / 78-81% (eth), cash at risk ~13x -- the
+                             # published 15x was the optimistic end of a NARROW
+                             # band. Two-sided quoting only works where flow is
+                             # thick: two-sided/one-sided is btc 0.101, eth 0.199,
+                             # but doge 1.173 and hype 1.752, so on thin coins the
+                             # second quote makes inventory WORSE. Third
+                             # independent argument for btc/eth-only.
+  days_constant_is_derived: true # flow_intensity.DAYS went stale FOUR TIMES IN
+                             # THREE DAYS, twice silently, the last within twelve
+                             # hours of being corrected. A hardcoded day list
+                             # cannot survive a running collector. Now DERIVED
+                             # from disk. It GROWS -- that is the point, and it is
+                             # why provenance(sampled=...) records the days
+                             # actually SAMPLED rather than read: select() takes
+                             # the EARLIEST slugs, so a new day can be globbed and
+                             # never enter the sample. COMPARE RUNS ON
+                             # days_sampled, NEVER ON THE CONSTANT. Probes pinned
+                             # to a frozen protocol must declare their own tuple.
   flow_model_state_page: live/pm_research/FLOW_MODEL_STATE.md # AUTHORITATIVE for
                              # current belief about the flow model. Twelve other
                              # documents carry provenance pointers deferring to

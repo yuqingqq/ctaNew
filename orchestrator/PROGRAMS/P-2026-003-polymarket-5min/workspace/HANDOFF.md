@@ -1,11 +1,108 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-08-21, flow-and-fills Revision 4 development lane. All work is on branch
+Updated: 2026-08-23, session 4 close-out. **Read `live/pm_research/FLOW_MODEL_STATE.md` FIRST** -- it is authoritative for the flow model and twelve documents defer to it. All work is on branch
 **`mm-research`**; nothing is on `main`. Sigma remains **Revision 5 / PRICING
 HOLD**, while the offline measurement stack is complete through contracts
 **v22**. `route_a_v1` has one OOS test day; per-symbol `route_a_v2` is
 pre-registered and begins primary evaluation on 2026-08-22. Neither is
 authorized for probability-level use.
+
+## SESSION 4 CLOSE-OUT 2026-08-23 — the first determinate answer
+
+**`live/pm_research/FLOW_MODEL_STATE.md` is authoritative for what the flow model
+believes.** Anything conflicting with it is stale. Eleven probes, **350 selftest
+checks**, all green. Collectors up 47.9 h, **five UTC days** on disk.
+`route_a_v1` day 4 of 10; `route_a_v2` primary evaluation open. Both frozen.
+
+### A passive maker who never cancels LOSES on both verdict coins
+
+Layer-1 markout against **book mid**, decomposed — replacing the settlement
+estimand, which measured hold-to-expiry drift rather than spread capture:
+
+```
+btc h=5s  n=10,294  markout -0.532 [-0.797,-0.287]  spread +0.642  drift -1.175
+eth h=5s  n= 1,999  markout -1.243 [-1.726,-0.759]  spread +0.778  drift -2.021
+```
+
+Spread capture is **real, positive, stable**. Post-fill drift is **1.8x larger on
+btc, 2.6x on eth, negative.** Six of eight cells negative, interval excluding
+zero.
+
+**This closes a loop the fee structure opened**: takers pay ~225 bps to cross, so
+anyone crossing is heavily informed. "The fee does not kill MM on cost, it loads
+the question onto adverse selection" was the prediction; adverse selection is
+roughly double the capture.
+
+**READ IT NARROWLY.** Every simulation in this corpus rests the order until
+filled or the window ends — **nothing ever cancels**. So this is *"a maker who
+never cancels loses here"*, not *"market making loses here"*. The gap is the
+whole DE question, and **simulating a cancellation policy is the highest-value
+unmeasured lever left** — same harness, one more rule, data in hand.
+
+### Inventory: control is load-bearing, and placement skew works
+
+`net` does **not** self-balance — reversion half-lives 519–2726 s, all longer
+than the window. Placement skew cuts terminal `|net|` **76–89 % (btc)**,
+78–81 % (eth), cash at risk ~13x. The published 15x was the optimistic end of a
+**narrow** band, properly bounded.
+
+**Two-sided quoting only works where flow is thick**: two-sided ÷ one-sided is
+btc 0.101, eth 0.199, but **doge 1.173, hype 1.752** — on thin coins the second
+quote makes inventory *worse*. Third independent argument for btc/eth-only.
+
+**The queue is a risk filter.** `NEW_BBO` symmetric is a random walk at ~9.4x the
+risk; the same property is a liability when flat and exactly what you want when
+reducing, which is why the skew is asymmetric.
+
+### Inventory is THREE things in THREE planes
+
+Dependency **SP ← DA ← BE ← DE**; **BE must never read DE**.
+*What do I hold* → `DA-State` (`plans/DA_INVENTORY_STATE_PLAN.md`).
+*What may I hold* → `SP-Params` → `DE-Constraints`.
+*What do I do about it* → **`DE-DecisionScheme`**
+(`plans/DE_PLACEMENT_POLICY_PLAN.md`) — **and it IS the placement policy.**
+`BE-FlowAndFills` is inventory-agnostic by rule.
+
+### Also settled
+
+- **The two books are ONE book, exactly** — `bid(Up)+ask(Down)=1.0000`,
+  1,081,800 checks, **zero violations, worst deviation 0.00000**.
+- **Hawkes censoring was our grid** — venue clock is milliseconds; floored at 10
+  ticks, clustering runs **75–352 ms**, two estimators agreeing independently.
+- **`f_r` binning replaced** — body 4x60 s absorbs the unidentifiable term *by
+  construction*, terminal 12x5 s.
+- **Terminal confound partially broken** — uniform artefact refuted at 6–7x.
+  TWAP **favoured, not established**.
+- **U9 closed at n=13** — `MNAR-suspect` stands.
+
+### Open, sorted by what would actually move it
+
+**Permanent:** queue-position inference, sub-millisecond structure, own impact,
+ack delay, hidden liquidity.
+**Calendar:** layer generalization (~10 days), maker-edge sign (~25–30x data),
+rebate `rho`.
+**Cheap and unmeasured — next:** a cancellation policy.
+**Unreconciled:** settlement census `+0.173` vs Layer-1 `-0.53` on btc. Different
+estimands, different populations, not a contradiction — reconciliation
+unmeasured and deliberately unnarrated.
+
+### Method lessons, each paid for
+
+1. **A gate that cannot fire is not a gate** — three written, including an
+   algebraic identity and a threshold against a denominator 60–1000x too large.
+2. **A SHA-256 is a change-detector, NOT a conformance checker** — committed code
+   conformed to no frozen protocol while the snapshot verified clean.
+3. **The name is not the definition** — five instances, two self-inflicted.
+4. **State the population of every denominator** — six instances, three read as
+   findings.
+5. **A hardcoded day list cannot survive a running collector** — `DAYS` went
+   stale **four times in three days**, the last within twelve hours of being
+   fixed. Now DERIVED from disk, with `provenance(sampled=...)` recording days
+   actually **sampled**, since `select()` takes the earliest slugs and a new day
+   can be globbed without entering the sample. **Compare on `days_sampled`.**
+6. **Do not slice source by index to edit it** — two files broken that way today,
+   once deleting four functions including the conformance checker. Anchor to
+   exact strings.
 
 ## Read this first
 
