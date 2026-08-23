@@ -260,7 +260,16 @@ belief, competition, outcome or incentive input — **its manifest is exactly
 (`view`, `self`, `actions`, `portfolio`, `risk_scenarios`, `constraints`,
 `horizon`), and that list is load-bearing: n-ary validation checks it against
 §3.4, and it cannot silently grow** (iteration 2 rewrote the opening clause,
-which contradicted the manifest it introduced). Size discipline arrives through
+which contradicted the manifest it introduced). **R-42 upgrade, committed to
+ship WITH the plugin wiring: the manifest is verified by REVELATION, not
+assertion** — the wiring selftest constructs a `DecisionProblem` whose
+non-manifest fields (`belief`, `competition`, `outcomes`, `incentives`,
+`coupling`) are SENTINEL objects that record any access, runs the solver, and
+FAILS if any sentinel was touched. The check does not ask the policy what it
+consumes; it makes the policy reveal it — a declared manifest would otherwise
+let the solver certify its own boundary, the exact self-certification class
+R-42 names (and the same shape as the sign-blindness probe that lifted R-24:
+feed the rule what it claims not to read, and require silence). Size discipline arrives through
 `constraints`: the scheme sizes each `QUOTE` within `FeasibleSet.max_size`
 (§4) — no budget field enters `DecisionProblem` and the manifest does not
 grow. `Decision.duals` is declared empty for a rule policy (duals become
