@@ -6,9 +6,13 @@ Probe `edge_layer1.py` (28 selftest checks) · receipt
 `data/pm_5min/derived/edge_layer1_v1.json` · 30 windows/coin, `JOIN_BBO`
 two-sided, 5 shares, 250 ms knowledge lag.
 
-**Provenance: `source_days = 20260819, 20260820, 20260821, 20260822` (n=4).**
-Every previously published edge figure was computed on **three** days. Numbers
-here are not comparable with those without accounting for the extra day.
+**Provenance: `source_days = 20260819, 20260820, 20260821, 20260822` (n=4) —
+CORRECTED 2026-08-23: that stamp counts days READ, not sampled. The measured
+sample is ONE UTC day (2026-08-20): the shared sampler is earliest-first
+(`FLOW_MODEL_STATE.md` §1f), so every window here comes from 08-20 and every
+interval below is WITHIN-DAY.** The original comparability note ("computed on
+three days" vs "four") compared two day-read stamps and is void — all
+`select()`-based receipts at ≤60 windows/coin share the same one-day sample.
 
 ---
 
@@ -46,10 +50,18 @@ btc   h=5 negative · h=15 negative · h=30 negative · h=60 spans zero
 eth   h=5 negative · h=15 spans zero · h=30 spans zero · h=60 negative
 ```
 
-Six of eight cells are negative with the interval excluding zero. The two that
-span zero are eth at 15 s and 30 s — where the point estimates are still −0.59
-and −0.67 and only the width saves them — and btc at 60 s, which is discussed
-next and is **not** evidence of improvement.
+**Five** of eight cells are negative with the interval excluding zero. The
+**three** that span zero are eth at 15 s and 30 s — where the point estimates
+are still −0.59 and −0.67 and only the width saves them — and btc at 60 s,
+which is discussed next and is **not** evidence of improvement.
+
+*(CORRECTED 2026-08-23, `DE_PLAN_REVIEW_LOOP.md` iteration 5: this paragraph
+originally said "six of eight" and "the two that span zero" while itself
+listing three spanners — the receipt's `signs` block is the authority
+(5 negative / 3 spans_zero) and the sign ladder above was always right. The
+error propagated to `FLOW_MODEL_STATE.md` §1e and two plans; routed to the
+page owners. The verdict `HORIZON_DEPENDENT` and every h=5 figure are
+unaffected.)*
 
 ## btc's h=60 result is a population artefact, not attenuation
 
@@ -99,7 +111,8 @@ n = 58 and 62, so this is directional at best.
 
 **It licenses:** the statement that on btc and eth a passively-quoting two-sided
 maker is adversely selected by more than the spread it captures, at horizons of
-5–30 s, on four days of data.
+5–30 s, on one UTC day of data (2026-08-20 — corrected 2026-08-23, §1f; the
+receipt's four-day stamp counts days read).
 
 **It does not license** any claim about profitability. Layer 2 — inventory carry,
 the terminal residual, the `r≈60` decision — is separate accounting and is
@@ -129,7 +142,9 @@ coins**. Asking a smaller question got a sharper answer.
 
 ## Scope
 
-Four UTC days, one collector era, 30 windows/coin, `JOIN_BBO` only. Window-
+ONE UTC day (2026-08-20 — corrected 2026-08-23; the four-day stamp counts days
+read, `FLOW_MODEL_STATE.md` §1f), one collector era, 30 windows/coin,
+`JOIN_BBO` only. Window-
 clustered intervals; **day-clustered intervals are not computable at this day
 count and are not claimed**. `NEW_BBO` was not run — it carries ~9.4× the
 inventory risk and belongs with the placement work, not here.
