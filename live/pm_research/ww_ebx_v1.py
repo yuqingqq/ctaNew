@@ -626,6 +626,7 @@ def run() -> dict[str, Any]:
     total_fills = 0
     det_samples: list[tuple] = []
     shift_rows: dict[float, list[tuple]] = {-1.0: [], 0.0: [], 1.0: []}
+    gap_cells: dict[tuple[str, str], int] = {}
 
     for day in days:
         for slug, path, up, down, g in by_day[day]:
@@ -636,6 +637,7 @@ def run() -> dict[str, Any]:
             series = feed.window_series(coin, ws_epoch)
             if series_gap(series, ws_epoch):
                 ledger["windows_price_gap_excluded"] += 1
+                gap_cells[(coin, day)] = gap_cells.get((coin, day), 0) + 1
                 continue
             got = replay_ebx(path, up, down, g, front=False)
             ref = ww.replay_ww(path, up, down, g, front=False)
@@ -733,19 +735,31 @@ def run() -> dict[str, Any]:
                           (TAU_BESIDE, "ci95_R4_1000")):
             lo, hi = r4_ci(pw, tau)
             entry[name] = [lo, hi]
-        # conformance to the frozen day-series receipt (already-public values)
+        # conformance to the frozen day-series receipt (already-public
+        # values). Population-aware: the receipt pooled ALL windows; if the
+        # price-gap admission excluded any window from THIS cell the two
+        # populations differ BY PROTOCOL and the value comparison is not
+        # defined — the per-fill same_ww() check (every admitted window)
+        # remains the hard extension-untouched guarantee. Comparing anyway
+        # would abort a clean run on an admission difference (QA catch).
         if ds is not None:
-            try:
-                pub = ds["days"][day]["bounds"]["join"][coin]["horizons"]["5"]["arms"]["all"]["R"]
-                mine = {k: entry["R_3ch"][k] for k in ("250ms", "500ms", "1000ms")}
-                match = all(pub[k] is not None and mine[k] is not None
-                            and abs(pub[k] - mine[k]) < 1e-9 for k in mine)
-                r3_anchor[f"{coin}:{day}"] = bool(match)
-                if not match:
-                    raise SystemExit(f"[ebx] R_3ch ANCHOR BREAK {coin}:{day} "
-                                     f"— receipt {pub} vs recomputed {mine}")
-            except KeyError:
-                r3_anchor[f"{coin}:{day}"] = None
+            k_excl = gap_cells.get((coin, day), 0)
+            if k_excl:
+                r3_anchor[f"{coin}:{day}"] = (
+                    f"N/A — population differs by admission "
+                    f"({k_excl} windows gap-excluded)")
+            else:
+                try:
+                    pub = ds["days"][day]["bounds"]["join"][coin]["horizons"]["5"]["arms"]["all"]["R"]
+                    mine = {k: entry["R_3ch"][k] for k in ("250ms", "500ms", "1000ms")}
+                    match = all(pub[k] is not None and mine[k] is not None
+                                and abs(pub[k] - mine[k]) < 1e-9 for k in mine)
+                    r3_anchor[f"{coin}:{day}"] = bool(match)
+                    if not match:
+                        raise SystemExit(f"[ebx] R_3ch ANCHOR BREAK {coin}:{day} "
+                                         f"— receipt {pub} vs recomputed {mine}")
+                except KeyError:
+                    r3_anchor[f"{coin}:{day}"] = None
         v500 = cell_verdict(n_rows, entry["R_4ch"]["500ms"], coin)
         v1000 = cell_verdict(n_rows, entry["R_4ch"]["1000ms"], coin)
         entry["verdict_500"] = v500
