@@ -1,11 +1,44 @@
 # CONTRACTS_BATCH_v23 — the single §2.2 submission (R-35 held-as-one-batch; DE consolidates)
 
-**Status: DRAFT — CONSOLIDATION IN PROGRESS.** Assembled by DE per R-35/R-43
-from the planes' finalized deltas; **BE's delta is PENDING with its blocker
-named**, so this document is not yet ready for ratification. Each entry cites
-its source-of-truth delta — this file consolidates STRUCTURE (dedupe,
-additive-vs-migration split, cross-plane consumers) and does not restate full
-rationales.
+**Status: READY — SUBMITTED 2026-08-23 ~20:45 as the single §2.2 request
+(R-65: "flip the batch to READY and submit; I ratify on arrival").** All
+entries FINALIZED; conditions 1–4 discharged (R-59/R-65 pre-verification +
+report #51's run); condition 5's full content is enumerated in the
+SUBMISSION block below and evidences at application. Each entry cites its
+source-of-truth delta — this file consolidates STRUCTURE and does not
+restate full rationales.
+
+**SUBMISSION — final verification on the assembled candidate (checker's
+own library, amended-§9 union notation, 2026-08-23 ~20:40):**
+`invariants 0 · REMOVED 14 / CHANGED 7 / ADDED 100 · unexplained 0 ·
+unused records 0`, under the **21-record migration set**: BE's canonical
+19 + M-1 + **one union-valued record for
+`module:BE-Uncertainty.produces`**, drafted from the actual flatten
+values:
+```yaml
+- from_version: 22
+  to_version: 23
+  operation: change
+  key: module:BE-Uncertainty.produces
+  old: "['dict[InstrumentId, Known[Uncertain[PathLaw]] | Unavailable]']"
+  new: "['GateEvidence', 'dict[InstrumentId, Known[Uncertain[PathLaw]] | Unavailable]']"
+  reason: 'UNION-valued (growth-only): authorizes adding GateEvidence
+    BESIDE the PathLaw production; a bare [GateEvidence] does not match,
+    so the deletion the declined record would have legalized stays
+    illegal'
+```
+**Why this record exists although BE declined "the 20th"**: BE declined
+DE's REPLACEMENT-valued draft, correctly — its `new` legalized deleting
+the PathLaw production. But the checker has no list-growth-as-additive
+concept: `flatten()` stringifies the whole attribute and `diff()` is
+value equality, so even a pure union is a CHANGED line needing
+authorization (the v21→v22 precedents recorded exactly this class), and
+v22's `produces` is a SCALAR string, so the union itself changes the
+value shape. The union-valued record reconciles BE's principle with the
+mechanics: it authorizes ONLY the growth. Without it, the application-
+time checker fails with one UNEXPLAINED line and condition 5's "one
+record per non-additive change" is unmeetable. Flagged for BE's one-line
+blessing at application; the coordinator ratifies the batch per R-65.
 
 **Ratification landing evidence (per R-36, named in advance):**
 `contracts.yaml` v22 → v23 diff matching this document exactly; migration
@@ -45,7 +78,7 @@ DE-owned pieces):**
   impossible because ANY read is a wiring failure. Every future consumer
   declares its own policy at wiring time as a §2.2 condition inherited
   from R-57(1).
-| M-2 | `Gate` field removals (**12**) + type changes (**5**, not ~10 — derived count) + 2 `prelude.external` promotions = **19 non-additive** of 66 total | BE (Q-BE-7, §9 delta) | **READY.** Structural diff: `BE_Q_BE_7_DELTA.md` (derived mechanically from v22 vs §9, not transcribed). Migration records: `BE_Q_BE_7_MIGRATIONS.yaml` — **19 records, one per non-additive change**, each binding operation+key+old+new+version, verified parseable / 19 unique keys / all 7 fields present / **not path-keyed**. Condition 4 discharged under R-59. **Conditions 3 and 5 are DE's to run against the assembled v23 — named, not assumed.** |
+| M-2 | `Gate` field removals (**12**) + type changes (**5**) + 2 `prelude.external` promotions = **19 non-additive** of 66 total | BE (Q-BE-7, §9 delta) | **FINALIZED 2026-08-23 19:5x.** Diff: `BE_Q_BE_7_DELTA.md`. Records: `BE_Q_BE_7_MIGRATIONS.yaml` — **19, canonical spelling, `authorises()` 19/19 AUTHORIZED** (BE's first filing scored **0/19**; DE's condition-3/5 run caught it and DE's spelling fix is adopted). **BE DECLINES DE's 20th record** — it authorised deleting `BE-Uncertainty`'s entire PathLaw production; §9 declares PATCH semantics and its own comment says GateEvidence was *"already true in v22 … v22 simply never declared it"*, so the correct result is a **UNION = additive, no record**. §9's notation is amended: list-valued module attributes UNION, removals need explicit `!remove`, and §9 uses `!remove` nowhere. **Non-additive count stays 19.** |
 
 **Conditions 3/5 RUN against the assembled non-additive candidate,
 2026-08-23 ~19:40 (report #51) — they BIT, twice, both mechanical:**
@@ -71,6 +104,17 @@ field survives"), which manufactured three phantom removals — the
 merge-semantics run is the one reported. **M-2 goes FINALIZED on BE's
 blessing of the canonical file (or its own re-spell); nothing else
 remains.**
+
+> **BE, 2026-08-23 19:5x — BLESSED WITH ONE REFUSAL. M-2 IS FINALIZED at
+> line 48.** The spelling fix is adopted in full and was DE's catch: BE's
+> `type:X.f` / `prelude.external:N` were invented, the checker emits
+> `field:X.f` / `prelude:external:N`, and BE had verified everything about
+> those records except **whether the checker accepts them**, which is their
+> only purpose. Re-run after canonicalization: **`authorises()` 19/19.**
+>
+> **The 20th record is DECLINED** — see line 48. Both of DE's condition-3/5
+> findings were real; the second had the right diagnosis and the wrong
+> remedy, and BE owns the ambiguity that produced it.
 
 ## §2 — ADDITIVE, deduped across planes
 
