@@ -399,11 +399,15 @@ SP-owned parameter with exactly this provisional provenance.
    protocol §1.2 (iteration 6 removed a duplicate statement of the same rule —
    the drift class this loop has caught twice).
    **ANSWERED 2026-08-23 under Ruling R-1 (`ww_v1`, receipt
-   `derived/warning_window_v1.json`): `R(τ=250)` = 15.3 % (btc) / 14.3 % (eth)
-   against `f*_low` 30.9 % / 49.4 % — DEAD on both verdict coins, doubly
-   (fails the lag floor: `R(τ=0)` 25.7 % / 22.9 %). Descriptive, one UTC day,
+   `derived/warning_window_v1.json`): dead at the decision rung on both coins
+   (`R(τ=250)` 15.3 % / 14.3 % vs `f*_low` 30.9 % / 49.4 % — margins 12.5 pp
+   and 32 pp), and additionally at the lag floor with a THIN margin on btc
+   (`R(τ=0)` CI upper 29.7 % vs 30.9 % = 1.2 pp; eth comfortable at 23 pp).
+   R-9 corrected the earlier flat "doubly dead" phrasing — the operative
+   verdict is not close; the τ=0 claim on btc is. Descriptive, one UTC day,
    structural reading of an upper bound. The §8.2 grid is NOT built; §9.1
-   fired.**
+   fired. R-9 further orders the day-series re-run under the frozen bar
+   (per-day, never pooled) with DEAD/DEAD operative meanwhile.**
 2. **The cancellation replay grid** (contingent on 1): freeze
    `CANCEL_POLICY_PROTOCOL.md` — trigger parameters, cooldowns, `lag+τ`
    ladder, re-arm semantics, partial-fill rows, verdict bars — then run on the
@@ -434,8 +438,10 @@ fair value (Route A, PRICING HOLD); the settlement-estimand maker-edge sign
    this tape rescues Layer 1 → the "never cancels" qualifier collapses and the
    honest Layer-1 verdict hardens. §8.1 is deliberately first so this dies
    cheaply if it dies.
-   **FIRED 2026-08-23 (`ww_v1` under Ruling R-1): DEAD on both verdict coins,
-   doubly — the rescuable-drift share fails break-even even at the lag floor.
+   **FIRED 2026-08-23 (`ww_v1` under Ruling R-1): dead at the decision rung
+   on both verdict coins, and additionally at the lag floor with a thin
+   margin on btc (R-9's precise phrasing; the flat "doubly dead" is
+   corrected).
    The mechanism is sharper than the falsifier's own wording: only ~12 % of
    fills are UNWARNED, but the median warning (~0.16 s) is shorter than the
    250 ms lag itself, and measured `R` sits BELOW the within-window shuffle at

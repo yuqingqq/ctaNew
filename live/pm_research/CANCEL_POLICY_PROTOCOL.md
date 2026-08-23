@@ -117,8 +117,12 @@ noise of the bar itself. `markout` is `−0.532 [−0.797, −0.287]` on btc and
   Recorded as not-established, never as a pass.
 
 `INDETERMINATE` is a real outcome with a real consequence, not a way of
-declining the question. `R(τ=0)` is reported beside the decision rung; failing
-at the lag floor is recorded as doubly dead. **VOID**: fewer than 500 fills
+declining the question. `R(τ=0)` is reported beside the decision rung; a
+lag-floor failure is reported WITH ITS MARGIN (R-9 corrected the frozen
+text's own "doubly dead" shorthand in how results are phrased: say "dead at
+the decision rung, and additionally at the lag floor with margin X" — the
+2026-08-20 btc lag-floor margin is 1.2 pp, thin, while every decision-rung
+margin is wide). **VOID**: fewer than 500 fills
 with valid drift and computable `W` on a coin at `h=5`. **Family verdict:**
 DEAD only if BOTH verdict coins are DEAD.
 

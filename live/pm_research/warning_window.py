@@ -629,17 +629,140 @@ def selftest() -> int:
     ok(conformant(a, a) and not conformant(a, b) and not conformant(a, None),
        "conformance comparator")
 
+    # R-9 day-series additions: frozen-bar constants pinned to R-1 §1.4, and
+    # the per-day verdict function's three branches hand-checked
+    ok(FROZEN_F_LOW == {"btc": 0.309, "eth": 0.494}, "frozen f*_low verbatim")
+    ok(day_verdict({"n_rows": 499, "R": {"250ms": 0.10}}, "btc") == "VOID",
+       "VOID below the floor")
+    ok(day_verdict({"n_rows": 5000, "R": {"250ms": 0.10}}, "btc") == "DEAD",
+       "DEAD below the bar")
+    ok(day_verdict({"n_rows": 5000, "R": {"250ms": 0.40}}, "btc")
+       == "NOT_DEAD_AT_F_LOW", "not-dead above the bar")
+
     print(f"[ww] selftest OK — {checks} checks")
     return 0
 
 
+# --------------------------------------------------------------------------
+# Ruling R-9 day series: re-run under the FROZEN R-1 bar across the era's
+# additional UTC days. Thresholds unchanged; per-day reporting, never pooled;
+# compare on days_sampled. 2026-08-19 is pre-clob_v3_1 and excluded by the
+# never-pool-across-collector-eras rule.
+# --------------------------------------------------------------------------
+
+FROZEN_F_LOW = {"btc": 0.309, "eth": 0.494}   # R-1 §1.4, verbatim
+MIN_FILLS = 500                                # R-1 VOID floor, per coin, h=5
+
+OUT_DAYS = fi.PM / "derived/warning_window_v1_dayseries.json"
+
+
+def select_by_day(per_coin: int) -> dict[str, list]:
+    """Up to per_coin windows per coin PER UTC DAY, era-wide. The plain
+    earliest-first sampler is exactly why every prior replay sampled one day
+    (FLOW_MODEL_STATE §1f); day-grouping is R-9's ordered selection."""
+    paths = fi._archive_paths()
+    tokens = fi.token_map()
+    gaps = fi.gaps_by_slug(fi.ERA)
+    picked: collections.Counter = collections.Counter()
+    out: dict[str, list] = collections.defaultdict(list)
+    for slug in sorted(fi.covered_slugs(fi.ERA)):
+        day = fi.slug_day(slug)
+        coin = slug.split("-")[0]
+        if picked[(day, coin)] >= per_coin or slug not in paths \
+                or slug not in tokens:
+            continue
+        up, down = tokens[slug]
+        out[day].append((slug, paths[slug], up, down, gaps.get(slug, [])))
+        picked[(day, coin)] += 1
+    return dict(sorted(out.items()))
+
+
+def day_verdict(arm: dict[str, Any], coin: str) -> str:
+    """Frozen §1.4 reading for one day/coin cell. VOID below the floor."""
+    if arm["n_rows"] < MIN_FILLS:
+        return "VOID"
+    r = arm["R"]["250ms"]
+    if r is None:
+        return "VOID"
+    return "DEAD" if r < FROZEN_F_LOW[coin] else "NOT_DEAD_AT_F_LOW"
+
+
+def run_dayseries(per_coin: int) -> None:
+    by_day = select_by_day(per_coin)
+    res_days: dict[str, Any] = {}
+    sampled: list[Path] = []
+    for day, selected in by_day.items():
+        by_coin: dict[str, Any] = {"join": collections.defaultdict(list),
+                                   "front": collections.defaultdict(list)}
+        conf = {"join": [0, 0], "front": [0, 0]}
+        for i, (slug, path, up, down, g) in enumerate(selected, 1):
+            if i % 25 == 0 or i == 1:
+                print(f"[ww-days] {day} {i}/{len(selected)} {slug}", flush=True)
+            sampled.append(path)
+            for bound, front in (("join", False), ("front", True)):
+                got = replay_ww(path, up, down, g, front)
+                ref = el.replay_window(path, up, down, g, front=front)
+                if got is None:
+                    continue
+                wf, ws = got
+                if not conformant(wf, ref):
+                    raise SystemExit(
+                        f"[ww-days] CONFORMANCE FAIL {slug} bound={bound}")
+                conf[bound][0] += 1
+                by_coin[bound][wf.coin].append((wf, ws))
+        res_days[day] = {
+            "conformance": {b: {"pass": p, "fail": f}
+                            for b, (p, f) in conf.items()},
+            "bounds": {b: {c: summarise(w) for c, w in sorted(by.items())}
+                       for b, by in by_coin.items()},
+        }
+
+    res: dict[str, Any] = {
+        "protocol": "ww_v1_dayseries",
+        "ruling": "R-9: re-run under the FROZEN R-1 bar across additional "
+                  "era days; per-day, never pooled; DEAD/DEAD operative "
+                  "meanwhile",
+        "status": "RESEARCH_ONLY_NOT_DECISION_ELIGIBLE",
+        "frozen_f_low": FROZEN_F_LOW,
+        "min_fills_void_floor": MIN_FILLS,
+        "lag_s": LAG_S,
+        "era": fi.ERA,
+        "era_note": "2026-08-19 raw tape exists but predates clob_v3_1; "
+                    "excluded by never-pool-across-collector-eras",
+        "days": res_days,
+    }
+    res["provenance"] = fi.provenance(sampled=sampled)
+    OUT_DAYS.parent.mkdir(parents=True, exist_ok=True)
+    OUT_DAYS.write_text(json.dumps(res, indent=1))
+
+    print("\n[ww-days] per-day reading vs FROZEN f*_low "
+          "(join=BACK_DISPLAYED, h=5, all-fills arm):")
+    for day, d in res_days.items():
+        for coin in ("btc", "eth"):
+            c = d["bounds"].get("join", {}).get(coin)
+            if not c:
+                continue
+            a = c["horizons"]["5"]["arms"]["all"]
+            v = day_verdict(a, coin)
+            r250 = a["R"]["250ms"]
+            r0 = a["R"]["0ms"]
+            fmt = lambda x: f"{x:.3f}" if x is not None else "-"
+            print(f"  {day} {coin}: n={a['n_rows']} R(250)={fmt(r250)} "
+                  f"R(0)={fmt(r0)} vs f*_low={FROZEN_F_LOW[coin]} -> {v}")
+    print(f"[ww-days] receipt -> {OUT_DAYS}")
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
+    ap.add_argument("cmd", nargs="?", default="run", choices=["run", "days"])
     ap.add_argument("--selftest", action="store_true")
     ap.add_argument("--per-coin", type=int, default=30)
     a = ap.parse_args()
     if a.selftest:
         return selftest()
+    if a.cmd == "days":
+        run_dayseries(a.per_coin)
+        return 0
     run(a.per_coin)
     return 0
 
