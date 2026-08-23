@@ -203,10 +203,14 @@ def parity_gate(env: ReplayEnv, arm: str) -> tuple[int, int]:
     front = arm == "FRONT"
     p = f = 0
     for slug, path, up, down, gaps in env.windows:
-        ref = el.replay_window(path, up, down, gaps, front=front)
-        got = el.replay_window(path, up, down, gaps, front=front)
+        ref = el.replay_window(path, up, down, gaps, front=front,
+                               lag_s=env.lag_s)
+        got = el.replay_window(path, up, down, gaps, front=front,
+                               lag_s=env.lag_s)
         # v1: engine == reference, so parity compares two invocations
         # (determinism of the engine itself); future engines replace `got`.
+        # QA F5: the gate runs at env.lag_s — a non-default-lag env must not
+        # earn parity from a default-lag comparison it never executes.
         if ref is None and got is None:
             continue
         if ref is not None and got is not None and conformant(got, ref):
@@ -318,22 +322,27 @@ def smoke(per_coin: int = 2) -> int:
               f"determinism {'PASS' if det else 'FAIL'}")
         if f or not det:
             raise SystemExit(f"[ev_replay] GATE FAIL on {arm} — do not use")
-    # §4.3 lag-perturbation MUST-FAIL control (B2, landing WITH the
-    # parameterization per the BLOCK): +50 ms on one golden window must
-    # change the record, else the lag plumbing is vacuous.
-    one = ReplayEnv(windows=sel[:1])
-    pert = ReplayEnv(windows=sel[:1], lag_s=fd.STATE_LAG_S + 0.050)
-    r_base = one.run("JOIN")
-    r_pert = pert.run("JOIN")
-    lag_control = bool(r_base and r_pert
-                       and record_hash(r_base[0]) != record_hash(r_pert[0]))
-    gate_results["lag_perturbation_control"] = lag_control
-    print(f"[ev_replay] §4.3 lag-perturbation control: "
-          f"{'PASS (records differ)' if lag_control else 'FAIL — VACUOUS'}")
-    if not lag_control:
-        raise SystemExit("[ev_replay] lag plumbing is vacuous — do not use")
-
     recs = env.run("JOIN")
+    # §4.3 lag-perturbation MUST-FAIL control (B2; tightened per QA F4/N4):
+    # +50 ms must change at least one window's FILL record — record_hash
+    # moves mechanically with mid-path timestamps, so hash difference alone
+    # cannot prove lag reaches fill FORMATION. Data failure and plumbing
+    # failure exit with distinct messages.
+    pert = ReplayEnv(windows=sel, lag_s=fd.STATE_LAG_S + 0.050)
+    r_pert = pert.run("JOIN")
+    if not recs or not r_pert:
+        raise SystemExit("[ev_replay] lag control: nothing replayed — a DATA "
+                         "problem, not a plumbing verdict")
+    fills_differ = sum(1 for a, b in zip(recs, r_pert) if a.fills != b.fills)
+    gate_results["lag_perturbation_control"] = {
+        "windows": len(recs), "fills_differ": fills_differ}
+    print(f"[ev_replay] §4.3 lag-perturbation control: fills differ on "
+          f"{fills_differ}/{len(recs)} windows "
+          f"{'— PASS' if fills_differ else '— FAIL (VACUOUS PLUMBING)'}")
+    if fills_differ == 0:
+        raise SystemExit("[ev_replay] +50 ms changed no FILL record on any "
+                         "window — lag does not reach fill formation")
+
     out = OUT_DIR / "ev_replay_v1_smoke.json"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(env.receipt(recs, "smoke_join", gate_results),
