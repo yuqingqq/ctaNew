@@ -1,10 +1,12 @@
 # POLICY_BOUNDS_PROTOCOL — the three unopened levers, bounded
 
-**Status: DRAFT FOR COORDINATOR FREEZE — nothing here is frozen.** Authored by
-the DE session 2026-08-23 under Ruling R-44. **Drafted blind**: no
-per-bin, per-size or per-depth markout has been computed; every number below
-is a previously published figure, cited as derivation basis exactly as R-1's
-`f*` and R-14's MDE were.
+**Status: FROZEN per Ruling R-45, 2026-08-23, with three coordinator
+amendments (landed in §2/§5/§6 below and marked [R-45]). From this point the
+document is APPEND-ONLY (R-28): corrections are annotations beside, never
+edits.** Authored by the DE session 2026-08-23 under Ruling R-44. **Drafted
+blind**: at the freeze no per-bin, per-size or per-depth markout had been
+computed; every number below is a previously published figure, cited as
+derivation basis exactly as R-1's `f*` and R-14's MDE were.
 
 **Origin, recorded because the method note demands it:** this gap was found by
 the USER asking whether the capture-vs-adverse-selection trade-off had been
@@ -71,6 +73,15 @@ skip terminal adverse selection.
   is positive on a verdict coin, ALL time-gates are dead on that coin at
   once** — the lever's family verdict, not one rule's. The per-bin table is
   DESCRIPTIVE; §0 governs what may be promoted from it (nothing).
+- **[R-45 amendment 1] THE BOUND IS A ONE-WAY INSTRUMENT — verdict
+  semantics, not a side-rule.** `Σ max(0, w_b·M_b)` selects bins by their
+  IN-SAMPLE sign, which is exactly right for a falsifier and nothing else:
+  a NEGATIVE bound closes the lever's family (`ALL_GATES_DEAD` — if even
+  the in-sample maximum is negative, no gate survives); a POSITIVE bound
+  is an in-sample maximum and BOUNDS NOTHING — the family is merely
+  `NOT_CLOSED`, nothing is adopted, and any specific gate needs its own
+  blind-drafted protocol. The asymmetry lives here, in the verdict, because
+  this is where it will actually be read.
 
 ## §3. LEVER S — quote size
 
@@ -116,6 +127,15 @@ by ~16 % (the terminal-minute fill share; the h=60 truncation measured 1,611
 of 10,294 fills there) — the VOID floor is not threatened. Stated so an
 UNDETERMINED is read against the declared power, not dressed either way.
 
+**[R-45 amendment 2] AN ETH UNDETERMINED IS UNINFORMATIVE AND MUST BE
+REPORTED AS SUCH.** Since eth half-widths sit near the effect size,
+UNDETERMINED is the EXPECTED eth outcome even under a TRUE effect. It
+carries no information in either direction and must not be written up as
+"eth might work" — failure-to-reject-is-not-equivalence, applied
+prospectively for once instead of in hindsight. Every eth UNDETERMINED cell
+and roll-up carries the literal label `UNINFORMATIVE (declared-power)` in
+tables and prose.
+
 ## §6. Verdict semantics, and what a triple negative means
 
 Each lever verdicts independently; there is no cross-lever selection. If all
@@ -125,6 +145,16 @@ placement (touch and depth-1), size (deployable range), time (any gate, by
 the bound), cancellation (ww_v1, by the bound), carry (Layer 2). A triple
 negative is therefore a programme-level answer, not a disappointment — and
 any FOURTH axis proposed later starts as its own blind-drafted protocol.
+
+**[R-45 amendment 3] A TRIPLE NEGATIVE CLOSES THE MARGINAL SPACE, NOT THE
+INTERACTION SPACE.** Each lever is tested MARGINALLY, and §0 rightly
+forbids the grid — so a genuine INTERACTION (depth-1 AND body-only
+together when neither works alone) is out of scope BY CONSTRUCTION. A
+triple negative is a strong programme-level answer about the levers AS
+LEVERS; it is not a bound on their combinations, and that difference will
+matter the first time someone reads the result as final. Any interaction
+hypothesis is a new pre-registered protocol, one named combination, its
+own bar, drafted blind.
 
 ## §7. Sequencing
 

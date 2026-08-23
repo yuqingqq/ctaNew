@@ -570,3 +570,16 @@ enumerate the DECISION VARIABLES the plan exposes and ask, for each, where it
 was ever varied — a lever whose every appearance is a single pinned value is
 a finding, whatever the documents say. The 5-share pin sat in plain sight in
 every receipt for the entire loop.)*
+
+*(Third post-close addendum, 2026-08-23, R-46 method note — the SECOND
+untested-is-invisible instance in one day, and a different mechanism: R-44's
+levers were never attempted; R-46's two channels were PROPOSED AND DROPPED —
+one blocked on a question deferred since session 1 (E-X1: does our fair
+price beat the book), one cut for a scope reason that no longer applies.
+A review of what EXISTS cannot see what was DROPPED; the register and the
+loops audit live work, and nothing audits the programme's graveyard.
+Standing correction #2 for any future review loop, verbatim from the ruling:
+"what did this plane propose and then drop, and does the reason for dropping
+it still hold?" — one graveyard pass per loop, over the plan's own cut
+lists, deferred items, and out-of-scope declarations, checking each
+dropping-reason against current state.)*

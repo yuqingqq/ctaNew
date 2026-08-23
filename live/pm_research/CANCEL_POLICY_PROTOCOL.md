@@ -246,3 +246,15 @@ warning vs capture destruction).
 2. §2 runs only after freeze and only on GO coins.
 3. Composed skew × cancel (policy plan §8.3) is a separate follow-on under the
    same frozen rules.
+
+> *ANNOTATION BESIDE (2026-08-23, R-47 — appended per R-28; nothing above is
+> edited): the R-11 closure of the cancellation family stands for the three
+> measured channels (E-FLOW, E-DEPLETE, E-MID). Ruling R-47 exercises the
+> bound's stated limit — a FOURTH signal outside that envelope — with
+> `WW_EBX_PROTOCOL.md`: E-BINANCE (underlying-feed adverse extreme) as a
+> strict extension measured against THIS section's frozen `f*_low` by value,
+> `R_4ch` beside `R_3ch`, never pooled. The bar does not move; that file
+> carries the trigger, the latency arithmetic, and the reopening semantics.
+> The perp-HEDGE variant of the same idea is closed ON MECHANISM without
+> measurement (R-47): the lead that makes hedging necessary makes it late by
+> construction.*
