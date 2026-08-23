@@ -210,3 +210,15 @@ stands across FOUR channels at the ACHIEVABLE rungs — the materially
 stronger negative §4 promised. With this, all nine named channels in
 the adverse-selection mitigation space are closed, each against a bar
 frozen before its data was read.
+
+> *ANNOTATION BESIDE (2026-08-23, R-55 — appended per R-28; nothing above
+> is edited): §1's "R-8's designed seam fired as written" carries R-49's
+> label, which R-55 CORRECTS on OPS's own refusal (Q-OPS-10 upheld). The
+> seam has NOT fired: `tau_operative` is Class C — Actuator ack latency
+> measured at deployment — and remains UNMEASURED; what OPS measured is
+> `our_feed_lag` (18.9 M rows, a genuine new Class-C row), and its
+> composite with an assumed ack is a LOWER BOUND on achievable τ. The
+> 500/1000 ms verdict rungs and every verdict in §7 STAND A FORTIORI: a
+> lower bound means true τ is AT LEAST that large, so 250 ms remains
+> unachievable and DEAD_4CH is unaffected, if anything strengthened
+> (R-55's own reading). What changed is the epistemic label only.*

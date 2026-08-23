@@ -531,7 +531,7 @@ against a bar frozen before its data was read:**
 
 | channel | verdict | receipt / authority |
 |---|---|---|
-| react-to-book cancel (3 ch) | DEAD by bound (R-11) **and on actuation** (R-49: achievable τ 351–455 ms vs 160 ms median warning) | `warning_window_v1_dayseries.json` |
+| react-to-book cancel (3 ch) | DEAD by bound (R-11) **and on actuation** (R-49 as corrected by R-55: OPS's 351–455 ms figure is a **LOWER BOUND** on achievable τ — `tau_operative` itself stays unmeasured until an Actuator exists — so 250 ms is unachievable a fortiori) | `warning_window_v1_dayseries.json` |
 | predict-from-Binance (E-BX union) | **DEAD_4CH, 8/8 cells, both rungs** — slow-reactor share of adverse damage 3–8 % | `ww_ebx_v1.json`; `WW_EBX_PROTOCOL.md` §7 |
 | predict-from-fair-price | actuation-bound + gated on E-X1 (BE); HELD per R-46 | R-46/R-49 |
 | clock gate (body-only) | GATE_FAILS both coins; all-gates bound ceiling +0.004/+0.011 ¢ | `policy_bounds_v1.json`; `POLICY_BOUNDS_PROTOCOL.md` §8 |

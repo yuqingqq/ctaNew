@@ -80,3 +80,14 @@ operative-set scope. Each enters a future batch after its ruling.
    invalidates the diff).
 3. Submit as ONE §2.2 request; coordinator ratifies once; landing evidence
    as named above.
+
+**Checklist item 2 — VERIFIED 2026-08-23 ~17:15 (R-56 next-items pass):**
+contracts.yaml HEAD still at version 22, no interim motion. Per entry:
+`CancelAllStatus` exactly 3 occurrences (rule/type/producer — OPS's repair
+still valid and still needed); `order_ref` 0, `CapitalOpCommand` 0 (DE
+additives still absent, correctly pending); `CapitalBudget` present as a
+type with no DE-Constraints consumer (the batch adds it); `HeartbeatPulse`
+present (the batch adds DE emission); the `belief` widening NOT yet applied
+(M-1 correctly pending). **READY still blocks on exactly one item: Q-BE-7
+(no BE delta artifact exists on disk — verified by file search, not by the
+register row alone).**

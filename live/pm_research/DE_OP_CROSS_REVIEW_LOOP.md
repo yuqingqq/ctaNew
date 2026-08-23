@@ -185,6 +185,18 @@ unnamed sites.** Five instances:
    (Events post-dating Rev 2 — ww_ebx DEAD_4CH, R-54's nine-of-nine —
    are NOT charged; a dated as-of stamp per MF11's own pattern cures
    this class permanently.)
+   > *WITHDRAWN 2026-08-23 per R-55 (Q-OPS-10 upheld): the reviewer was
+   > WRONG and the plan was RIGHT. `tau_operative` is Class C — the
+   > Actuator ack latency measured at deployment — and OPS measured
+   > `our_feed_lag` composed with an ASSUMED ack; recording the seam as
+   > fired would adopt an assumption as a measurement, which R-6
+   > forbids. The seam has NOT fired; OPS's figure is a LOWER BOUND on
+   > achievable τ (new Class-C row); the plan's "unfired" description
+   > was the correct epistemic label all along. This finding relied on
+   > R-49's premise, which R-55 vacates — a reviewer defect, logged
+   > against the review, not the plan. Iteration 2's surviving counts:
+   > 3 MUST-FIX + 1 SHOULD-FIX (#5). The verdict `DEFECTS_FOUND` and
+   > the reset of the two-clean counter are unchanged.*
 5. **The evidence literals in §0a are stale against the code they
    cite**: "11/11" (measured NOW: 14/14), "15/15, exit 0" (measured NOW:
    18/18), "the eight health checks" (ten — §7.1's table omits
