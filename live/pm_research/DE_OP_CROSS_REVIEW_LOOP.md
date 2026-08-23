@@ -231,3 +231,46 @@ From iteration 3 the set may not grow without deliberately restarting
 the count, and per R-61(3) the loop may also terminate on MARGINAL VALUE
 — when an iteration's findings would change no decision — rather than
 requiring zero on a document this size.)*
+
+### Iteration 3 — 2026-08-23 — verdict: `CLEAN` (0 MUST-FIX; streak 1; marginal-value close RECOMMENDED)
+
+**Instrument, declared per R-62 before the pass**: the frozen iteration-2
+set (couplings / soundness / claims-vs-artifacts + decision-variable +
+graveyard), no additions; every candidate MUST-FIX must name WHAT
+DECISION CHANGES AND WHOSE.
+
+**Reviewed `OP_PLANE_PLAN.md` REVISION 3** (applies iterations 1 and 2).
+All three iteration-2 MUST-FIX are fixed, and fixed WITH the sweep
+method the iteration prescribed:
+1. §10 now leads with the composite silent-stall test ("promised by
+   §7.2(3) and missing until Revision 3") and its on-box claim is
+   corrected to NOT closed, naming the contradiction it replaces. All
+   four remaining "on-box" occurrences are correct-context.
+2. Both interior-rung sets now read `{0, 50, 100, 500}`; 250 ms appears
+   only in Class-D rows and historical MF8 records.
+3. §8d's "one UTC day" corrected in place — and the plan RECORDS its own
+   residual-hit sweep (the two remaining strings are the correction
+   quoting the defect). The method became part of the document.
+
+**Sole surviving finding — graded SHOULD-FIX under the R-62 bar,
+explicitly not decision-changing**: §0a's evidence literals remain stale
+against the code they cite ("15/15" vs measured 18/18; "the eight health
+checks / 11/11" vs measured 14/14 and ten checks). No decision changes
+and nobody's: the R-42 revelation script is the load-bearing mechanism,
+runs clean, and self-reveals the true counts; the stale prose is
+documentation lag on a section whose design premise is that prose is not
+trusted. (Iteration 2 raised this as SHOULD-FIX 5; it survives at two of
+three sites.)
+
+**Fresh pass under the frozen lenses on the Rev-3 delta**: no new
+findings. The three couplings (halt edges / heartbeat dependency /
+CancelAllStatus) are untouched by the delta and remain consistent with
+the DE corpus; no new pinned decision variables; no new dropped items.
+
+**Streak: 1 of 2. AND the marginal-value clause is now live**: iteration
+3's entire finding set is one non-decision-changing literal-staleness
+residue. DE's assessment: an iteration 4 would change no decision, so
+R-61(3) termination is AVAILABLE and RECOMMENDED — the close is joint
+(OPS co-owns; coordinator ratifies verdicts of record), so this is a
+recommendation on the record, not a unilateral close. If OPS sweeps the
+two stale literals first, the close is clean on either rule.
