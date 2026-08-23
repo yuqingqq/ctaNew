@@ -472,3 +472,35 @@ pin below.**
 Stop counter: 0. Trend 12 → 2 → 3 → 0 → 1 → 2 → 2 → 1. Next: iteration 9
 over the re-committed corpus; two consecutive zero-MUST-FIX iterations end
 the loop.
+
+### Iteration 9 — 2026-08-23 — verdict: `ZERO CONFIRMED MUST-FIX` — **streak 1 of 2**
+
+2 SHOULD-FIX + 4 NOTEs, all applied (EV plan Revision 6, `ev_replay.py`
+re-hardened, this entry). First streak increment under the pinned rule.
+
+1. (SHOULD-FIX) `engine_hash` residue after "closure completed": the record
+   SHAPES (`el.Fill`, `el.WindowFills` — a field reorder transposes every
+   tuple positionally with the hash unmoved), the env's own record mapping,
+   and (N3, preempted) the parity comparator. All added. **The wording
+   "closure completed" is retired**: closure is a property review earns
+   per-iteration, not a state — third residue round in the same class says
+   the claim form itself was the defect.
+2. (SHOULD-FIX — correction of the iteration-8 correction's scope clause)
+   "Only the six genuinely-untracked files' intermediate revisions are lost"
+   was over-scoped: the two TRACKED files' intermediate revisions (placement
+   Rev 1–7, results-file intermediates) are equally lost — git holds two
+   snapshots of each; what is recoverable is the cumulative endpoint diffs,
+   as the previous sentence stated correctly. Corrected here, additively —
+   past log entries are never edited in place.
+3. (N1) The iteration-8 recovery command needs the `live/pm_research/`
+   pathspec prefix — from the repo root it silently returns an empty diff:
+   `git diff f46379f c0bae24 -- live/pm_research/plans/DE_PLACEMENT_POLICY_PLAN.md`.
+4. (N2, applied) Per-window `inputs_hash` (gaps + token ids) now stamped in
+   receipts — those inputs shape `RunRecord`s and previously arrived
+   unstamped, so an input-side change shifted `run_hash` unattributably.
+5. (N4, recorded) The reviewer independently recomputed both hash vintages
+   bit-exact and verified the engine modules unchanged since `c0bae24` —
+   the other-plane working-tree edits touch nothing in the closure.
+
+Stop counter: **1**. Trend 12 → 2 → 3 → 0 → 1 → 2 → 2 → 1 → 0. Iteration 10
+clean of confirmed MUST-FIX ends the loop.

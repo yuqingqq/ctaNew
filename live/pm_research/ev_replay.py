@@ -111,7 +111,13 @@ class ReplayEnv:
             # entailment from fail-loud ordering)
             "gates": gates or {},
             "sp_parameter_set": self.sp_set,
-            "windows": [w[0] for w in self.windows],
+            # slug + inputs_hash per window (iteration 9: gaps and token ids
+            # shape RunRecords but arrived unstamped -- a gaps_by_slug or
+            # token_map change previously shifted run_hash unattributably)
+            "windows": [{"slug": w[0], "inputs_hash": hashlib.sha256(
+                json.dumps([w[2], w[3], w[4]], sort_keys=True,
+                           default=str).encode()).hexdigest()}
+                        for w in self.windows],
             "collector_era": fi.ERA,   # iteration 7: era was promised, not stamped
             "records": [{
                 "slug": r.slug, "coin": r.coin, "arm": r.arm,
@@ -154,15 +160,18 @@ def record_hash(r: RunRecord) -> str:
 
 
 def engine_hash() -> str:
-    """SHA-256 over the engine's TRANSITIVE load-bearing sources, not only
-    `replay_window`'s own body (iteration 7: queue accounting lives in
-    `RestingSide`, state in `BookState`, folding in `fold_*` — an edit to any
-    of these changes fills while the old hash stayed put). A change-detector,
-    NOT a conformance checker."""
+    """SHA-256 over the engine's transitive load-bearing sources — EXTENDED
+    each time review finds residue (iterations 7/8/9), never again claimed
+    COMPLETE: closure is a property review earns per-iteration, not a state.
+    Covers the loop, the record shapes, queue/state/fold/decode helpers, the
+    env's own record mapping, the parity comparator, and the constants. A
+    change-detector, NOT a conformance checker."""
     import inspect
     parts = [inspect.getsource(f) for f in (
-        el.replay_window, iw.RestingSide, fd.BookState, fd._parse_book,
-        fi.fold_price, fi.fold_side, fi._gz_lines)]
+        el.replay_window, el.Fill, el.WindowFills,   # record SHAPES (iter 9:
+        iw.RestingSide, fd.BookState, fd._parse_book,  # a Fill field reorder
+        fi.fold_price, fi.fold_side, fi._gz_lines,     # transposes every
+        ReplayEnv.run, conformant)]                    # tuple, hash unmoved)
     parts.append(repr((fd.STATE_LAG_S, fi.WINDOW_S, fi.MICRO_SIZE,
                        el.QUOTE_SIZE, el.HORIZONS,
                        fi.TRADE_MARK, fi.QUOTE_MARK,

@@ -6,7 +6,14 @@ to exactly what exists (Rev 2 said "gated green against §4" while §4.3's
 must-fail controls did not exist — the claim-stronger-than-artifact defect in
 the plan whose §4 exists to prevent it); §2's plugin-path rows marked NOT IN
 v1; §4 given an explicit status table with the acceptance DEBT named and made
-blocking. **Now Revision 5** — iteration 8: `engine_hash` closure completed
+blocking. **Now Revision 6** — iteration 9 (streak 1 of 2 under the pinned
+stop rule): `engine_hash` EXTENDED again — the record shapes (`Fill`,
+`WindowFills`), the env's own record mapping, and the parity comparator were
+residue (a `Fill` field reorder would have transposed every tuple with the
+hash unmoved); the wording "closure completed" is retired — closure is a
+property review earns per-iteration, not a state; per-window `inputs_hash`
+(gaps + token ids) stamped so a `gaps_by_slug`/`token_map` change can no
+longer shift `run_hash` unattributably. Prior: iteration 8: `engine_hash` extended
 (the four line-filter marks, `HORIZONS`, `_gz_lines` — each could change
 records with the hash unmoved); gate outcomes persisted IN the receipt (they
 were stdout-only, leaving PASS cells checkable only by entailment); §2's
