@@ -8,7 +8,12 @@ second time — after two successive false derivations the cap now stands on its
 DEFINITIONAL ground (REDUCING-ONLY means never past flat) with the predicate
 shown unable to substitute in EITHER direction; §8.1 envelope naming aligned to
 the frozen E-FLOW form. **§8.1 has been RUN and ANSWERED under Ruling R-1:
-DEAD on both verdict coins — see §8/§9.** **Now Revision 8** — iteration 7
+DEAD on both verdict coins — see §8/§9.** **Now Revision 9** — R-9 executed:
+margin-stated phrasing (the flat "doubly dead" corrected; this bump also
+covers the unbumped R-9 phrasing edits, restoring the revision-carrier
+convention) and the day-series outcome recorded in §8.1 — DEAD at the
+decision rung on all four era days, the btc lag-floor subclaim dropped.
+Prior — **Revision 8** — iteration 7
 header correction (also absorbing iteration 6's unbumped §8.1 edit):
 **Revisions 7–1 predate version control of this file and are NOT preserved
 beyond the pre-revision original** (the "in git history" claim was false —
@@ -406,8 +411,19 @@ SP-owned parameter with exactly this provisional provenance.
    R-9 corrected the earlier flat "doubly dead" phrasing — the operative
    verdict is not close; the τ=0 claim on btc is. Descriptive, one UTC day,
    structural reading of an upper bound. The §8.2 grid is NOT built; §9.1
-   fired. R-9 further orders the day-series re-run under the frozen bar
-   (per-day, never pooled) with DEAD/DEAD operative meanwhile.**
+   fired. R-9 further ordered the day-series re-run under the frozen bar —
+   **RUN AND ANSWERED (receipt `warning_window_v1_dayseries.json`): DEAD at
+   the decision rung on ALL FOUR era days, both coins** — btc `R(250)`
+   12.0–17.1 % (worst within-day CI upper 21.9 % vs the 30.9 % bar), eth
+   8.3–14.3 % (worst 17.5 % vs 49.4 %), ex-micro agreeing, shuffle control
+   non-vacuous every day, conformance 1,680/1,680, `days_sampled` n=4.
+   2026-08-20 was NOT special (it was btc's second-highest-R day; eth's R
+   declines across days). **The lag-floor subclaim on btc is DROPPED
+   entirely**: 08-23's within-day CI upper (32.1 %) crosses the bar —
+   exactly the fragility R-9's margin caution named — and the decision-rung
+   verdict never needed it. The day-robust negative stands; still
+   within-day inference only (4 day observations; the 8/8 consistency IS
+   the robustness statement).**
 2. **The cancellation replay grid** (contingent on 1): freeze
    `CANCEL_POLICY_PROTOCOL.md` — trigger parameters, cooldowns, `lag+τ`
    ladder, re-arm semantics, partial-fill rows, verdict bars — then run on the

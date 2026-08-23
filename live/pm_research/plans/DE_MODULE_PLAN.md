@@ -8,7 +8,11 @@ ANY price pair" ignored that `L_adv` is dollar basis, not shares, and the flip
 can RAISE it when the flipped side is expensive), the cap now stands
 DEFINITIONAL to the REDUCING-ONLY state and the predicate is shown unable to
 substitute in either direction; the §2 table's oracle-door scope reworded to
-size-bearing verbs. **Now Revision 7** — iteration 7 header correction:
+size-bearing verbs. **Now Revision 8** — B6 consumed (2026-08-23): the
+SHARED_RISK edge is MEASURED (strictly pairwise, exact shared settlement
+endpoint as structure, small correlations with stated limits), the adoption
+rule stays with the coordinator, and the exposure-convention follow-up is
+recorded as a new-mode item. Prior — **Revision 7** — iteration 7 header correction:
 **Revisions 6–1 predate version control of this file and are NOT preserved**
 (the "in git history" claim was false — the file was untracked); committed
 per-iteration from this revision onward. Cross-session ledger:
@@ -269,7 +273,26 @@ seams for the optimizer era.
 
 ```
 window_i{Up, Down}  ATOMIC        # exact: 1.08 M checks, 0 violations
-window_i ↔ window_j SHARED_RISK   # same coin; correlation UNMEASURED → §6.1
+window_i ↔ window_j SHARED_RISK   # same coin — MEASURED (B6, 2026-08-23):
+                                  # STRICTLY PAIRWISE (3 concurrent never
+                                  # occurs in 7,080 markets; 94% of quotable
+                                  # time has exactly 2 open, a lower bound),
+                                  # and adjacent windows share their
+                                  # settlement endpoint EXACTLY
+                                  # (window_end_k == window_start_{k+1},
+                                  # 7,080/7,080) -- model that channel as
+                                  # STRUCTURE, not estimate. Measured
+                                  # correlations on verdict coins are small
+                                  # (simultaneous net +0.023 btc / -0.012
+                                  # eth; joint loss NEGATIVE both; residual
+                                  # <= 0.27% of variance) -- with stated
+                                  # limits: the replay saw 21.2% of the real
+                                  # overlap and the 4-cluster intervals are
+                                  # decorative. Whether this licenses
+                                  # independent-coupling + Allocator-as-
+                                  # accounting is the COORDINATOR'S rule
+                                  # (B6 §6 item 1), pending -- not adopted
+                                  # here.
 ```
 
 Markets resolve every five minutes, so the coupling is
@@ -457,10 +480,17 @@ SHUTDOWN          cancel_all + reconcile + persist SelfState
   rule, not a vocabulary aspiration (iteration 1): any candidate promoted on
   forward days must run as the registered `RulePolicy_v1` under EV-Replay —
   a harness transcription can develop, it cannot promote.**
-- **The cross-window correlation measurement** (fills §3.3's SHARED_RISK edge):
-  same-coin adjacent windows, correlation of residual moves and of simulated
-  `net` under the standard two-sided replay. Retires the DA plan's falsifier #2
-  in whichever direction it lands and decides §4's character.
+- **The cross-window correlation measurement — DELIVERED (B6, DA, 2026-08-23)
+  and consumed into §3.3.** The strictly-pairwise + small-correlation result
+  supports Allocator-as-accounting; the 21.2 %-of-overlap scope limit and the
+  4-cluster interval failure mean the adoption rule stays with the
+  coordinator (B6 §6 item 1), and falsifier #2's retirement is likewise held
+  (B6 §6 item 2 — nothing measured dominates, on a fifth of the exposure).
+  **DE-owned follow-up from B6 §6 item 3:** the replay exposure convention
+  (`[−60, +300] s` vs the ~283 s real overlap) is DE's to extend; extending
+  it invalidates every result conditioned on the current convention, so it
+  lands as a NEW replay mode under EV-Replay with its own receipts, never as
+  an in-place edit to `simulate_window`'s convention.
 
 ### 6.2 When code starts — the reconciled contract-change list (iteration 1)
 
