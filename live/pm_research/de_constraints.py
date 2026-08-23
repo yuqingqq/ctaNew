@@ -16,10 +16,18 @@ What is executable here, each traceable to a plan section:
     for REDUCING_ONLY (the ≤|net| cap is DEFINITIONAL — two false derivations
     from L_adv arithmetic are on record, iterations 3-5; no third is
     attempted);
-  - the SP §5 SHAPE property as a selftest: under the operative set, kappa
-    binds BEFORE the portfolio cap on a single market and AFTER it across
-    four -- the stated reason those numbers are what they are, so the test
-    proves both oracle branches are reachable.
+  - both oracle branches exercised at CONSTRUCTED positions near the caps
+    (equality asserts). SP Rev 7 WITHDREW Rev 1's "kappa binds before the
+    portfolio cap on one market and after across four" rationale on
+    arithmetic grounds; what the selftest proves is that both branches are
+    EXPRESSIBLE and bind where constructed -- realistic binding counts are
+    the coordinator's re-derivation (SP §10.14). SCOPE NOTE (SP §10.15,
+    which cites this file): the register records ScenarioLossLimit as
+    SCENARIO-scoped; this oracle aggregates one $200 ceiling across open
+    markets, i.e. it evaluates the ALL-ADVERSE scenario -- the architecture
+    §8's "deliberately conservative" fallback -- pending the coordinator's
+    ruling on the scope contradiction. No semantics change here until that
+    ruling.
 
 Selftest: python3 live/pm_research/de_constraints.py --selftest
 """
@@ -266,23 +274,24 @@ def selftest() -> int:
     ok(abs(contingent_l_adv(pos, q2) - 7.0) < 1e-9,
        "adding-side fill raises contingent L_adv (5.0 + 5x0.40)")
 
-    # THE SP §5 SHAPE PROPERTY — rebuilt after QA F2 found the original test
-    # could not fail (an `or` satisfiable by construction; constants-only
-    # conjuncts; a flat position that never touched the head branch). The
-    # rebuilt form: positions NEAR the caps, EQUALITY asserts, no `or`.
+    # BOTH ORACLE BRANCHES, exercised at CONSTRUCTED positions — rebuilt
+    # after QA F2 (the original could not fail), RELABELED after SP Rev 7
+    # withdrew the one-market/four-markets rationale: these prove the
+    # branches are expressible and bind where constructed; realistic
+    # binding counts are SP §10.14 (coordinator).
     flat = Position()
-    # kappa branch BINDING on one market: l_adv=48 -> head_k = 50-48 = 2,
-    # head_s = 200-48 = 152 -> head = 2 -> cap = min(2/0.5, pin=5) = 4.0
+    # kappa-headroom branch: l_adv=48 -> head_k = 50-48 = 2 < head_s = 152
+    # -> cap = min(2/0.5, pin=5) = 4.0
     near_k = Position(96, 0, 48.0, 0)
     msk = max_size(RUNNING, near_k, [], {"BID_UP": 0.5, "ASK_UP": 0.5})
     ok(abs(msk["QUOTE:BID_UP"] - 4.0) < 1e-9,
-       f"kappa branch binds on one market (cap 4.0, got {msk['QUOTE:BID_UP']})")
-    # portfolio branch BINDING across markets: open=199 -> head_s = 1 <
-    # head_k = 50 -> cap = min(1/0.5, 5) = 2.0
+       f"kappa-headroom branch binds (cap 4.0, got {msk['QUOTE:BID_UP']})")
+    # scenario-cap branch (all-adverse aggregation, §10.15 pending):
+    # open=199 -> head_s = 1 < head_k = 50 -> cap = min(1/0.5, 5) = 2.0
     msp = max_size(RUNNING, flat, [], {"BID_UP": 0.5, "ASK_UP": 0.5},
                    open_markets_l_adv=199.0)
     ok(abs(msp["QUOTE:BID_UP"] - 2.0) < 1e-9,
-       f"portfolio branch binds across markets (cap 2.0, got {msp['QUOTE:BID_UP']})")
+       f"scenario-cap branch binds (cap 2.0, got {msp['QUOTE:BID_UP']})")
     # px validation (QA N2): a raw ask (>1) must refuse, not misprice
     try:
         max_size(RUNNING, flat, [], {"BID_UP": 0.5, "ASK_UP": 1.4})

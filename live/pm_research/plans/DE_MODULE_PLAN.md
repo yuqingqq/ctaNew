@@ -93,8 +93,11 @@ needs it.
 
 ### 1.3 Venue facts this menu assumes, none verified
 
-Tested at the Actuator boundary, not discovered there: minimum order size vs
-the research `QUOTE_SIZE = 5` shares; whether resting `ASK_UP` requires holding
+Tested at the Actuator boundary, not discovered there — **except the first,
+now MEASURED (SP Rev 7 §4: `orderMinSize = 5` on 7,771/7,815 rows, uniform,
+`FieldState.Resolved`): `min_size` EQUALS the pin, so the 5-share pin has
+ZERO DOWNWARD HEADROOM — raisable only, and raising is a Class-D
+invalidation event**: whether resting `ASK_UP` requires holding
 Up tokens (`MINT` first — capital, §4); supported time-in-force; whether
 `CANCEL` is free and unthrottled; **whether the venue rejects self-matches**
 (the scheme's cancel-before-cross rule, policy plan §4.7, does not depend on
@@ -216,17 +219,24 @@ reads.
 constant in this table is an SP-owned bitemporal handle (`ParamId` / venue
 fact); numbers in these plans are exposition; no module inlines them. Their
 **character** (`SP_PLANE_PLAN.md` §4) bounds who may move them:
-**Class A** configuration (`κ_$`, `CapitalBudget`, the `γ` ladder,
-`refuse_k`) — coordinator-tunable; sweeps report the RANGE, never a best
-point. **Class B** load-bearing (`quote_size_pin`, cancel-by deadline) —
-changeable, but a change invalidates every measurement conditioned on the old
-value, stated BEFORE the change. **Class C** measured (`r_terminal` — the
-`r=60` handle, still with its withdrawn-grid provenance caveat —
-`tau_operative`, `verdict_coins`, fee/tick/settlement) — published by a
-worker, adopted by the coordinator, never chosen. **Class D** frozen verdict
-bars (R-1's `ww_v1` rule) — after the measurement runs the bar is EVIDENCE,
-not configuration; the standing instruction to refuse and record any post-run
-move applies. The §5 replay set is OPERATIVE (R-6: no live orders, so no
+**Classes updated to the SP register at REVISION 7 (R-20 applied; several
+rows moved since R-6's original assignment):** **Class A** configuration
+(`κ_$`, `CapitalBudget`, the `γ` ladder — the ladder diagnostic ONLY while no
+verdict rests on a rung) — coordinator-tunable; sweeps report the RANGE,
+never a best point. **Class B** load-bearing (cancel-by deadline). **Class C**
+measured (`r_terminal` — the `r=60` handle, withdrawn-grid caveat intact —
+`tau_operative`, fee/tick/settlement) — published, adopted, never chosen.
+**Class D** — now much larger than R-6's original: R-1's `ww_v1` bar;
+`tau_decision_rung = 250 ms` (VERDICT); the `tau_kill_bound = 1000 ms`
+(GUARD, R-8); **`refuse_k` (GUARD, R-20 — was Class A)**;
+**`quote_size_pin` (VERDICT, R-20 — was Class B: every frozen verdict is
+conditioned on it, and `min_size` is now MEASURED = 5, so the pin has ZERO
+DOWNWARD HEADROOM — raisable only, and raising invalidates)**;
+`knowledge_lag = 250 ms` and `primary_horizon = 5 s` (VERDICT — `ww_v1` and
+Layer 2 turn on them). `verdict_coins` is ESCALATED (SP §10.5, a quantifier
+domain, membership frozen in FLOW_MODEL_PROTOCOL_V4). After a measurement
+runs, a Class-D bar is EVIDENCE, not configuration; the standing
+refuse-and-record instruction applies. The §5 replay set is OPERATIVE (R-6: no live orders, so no
 second configuration exists behind it); every replay receipt states the set
 it ran under.
 
