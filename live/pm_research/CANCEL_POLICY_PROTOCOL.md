@@ -73,13 +73,17 @@ unwarned share), and the **rescuable-drift share**
 `R(τ) = Σ negative drift on fills with W > lag + τ ÷ Σ negative drift`,
 `lag = 250 ms`, per rung `τ ∈ {0, 50, 100, 250, 500, 1000} ms`. Drift at
 `h = 5 s` primary (btc drift −1.175 ¢, eth −2.021 ¢ baselines), `h = 15, 30`
-secondary. **Receipt-key mapping, pinned (iteration 5): the receipt's
-`bounds.join` arm IS `BACK_DISPLAYED` and `bounds.front` IS `FRONT`** — the
-join arm rests behind displayed depth (≈346 fills/window btc vs ≈1,868 front:
-the **~5× fill-count ratio**, a different quantity from the corpus's 9.4×
-front-of-queue INVENTORY-risk ratio — one mechanism, two statistics, named
-apart per iteration 6), and it is the higher-`R`, generous arm, as the frozen
-§1.4 rationale predicts. **`R` is a DESCRIPTIVE point estimate with no
+secondary.
+
+> *ANNOTATION BESIDE (iterations 5–6; relabeled explicitly as an annotation
+> under R-28 — it was a post-freeze insertion into a frozen section, pure
+> addition, now unambiguous in status):* **the receipt's `bounds.join` arm IS
+> `BACK_DISPLAYED` and `bounds.front` IS `FRONT`** — the join arm rests
+> behind displayed depth (≈346 fills/window btc vs ≈1,868 front: the **~5×
+> fill-count ratio**, a different quantity from the corpus's 9.4×
+> front-of-queue INVENTORY-risk ratio — one mechanism, two statistics, named
+> apart), and it is the higher-`R`, generous arm, as the frozen §1.4
+> rationale predicts. **`R` is a DESCRIPTIVE point estimate with no
 valid day-clustered interval — the `edge_l1_v1` receipt stamps `source_days` n=4, and that field
 counts days READ; the measured sample is ONE UTC day
 (`FLOW_MODEL_STATE.md` §1f). Under either count there is at most a handful of
@@ -122,12 +126,19 @@ noise of the bar itself. `markout` is `−0.532 [−0.797, −0.287]` on btc and
   Recorded as not-established, never as a pass.
 
 `INDETERMINATE` is a real outcome with a real consequence, not a way of
-declining the question. `R(τ=0)` is reported beside the decision rung; a
-lag-floor failure is reported WITH ITS MARGIN (R-9 corrected the frozen
-text's own "doubly dead" shorthand in how results are phrased: say "dead at
-the decision rung, and additionally at the lag floor with margin X" — the
-2026-08-20 btc lag-floor margin is 1.2 pp, thin, while every decision-rung
-margin is wide). **VOID**: fewer than 500 fills
+declining the question. `R(τ=0)` is reported beside the decision rung; failing
+at the lag floor is recorded as doubly dead.
+
+> *ANNOTATION BESIDE (R-9, converted to this form under R-28's standing rule:
+> frozen documents are APPEND-ONLY; corrections are annotations beside the
+> original, never edits to it — the in-place edit this annotation replaces is
+> restored above verbatim).* The frozen sentence's "doubly dead" shorthand is
+> superseded in USE, not in force: results are phrased *"dead at the decision
+> rung, and additionally at the lag floor with margin X."* The 2026-08-20 btc
+> lag-floor margin was 1.2 pp — thin — and the R-9 day series subsequently
+> showed 08-23 btc's lag-floor CI upper (32.1 %) crossing the bar, vindicating
+> the caution. The label never decided pass/fail, which is why this is an
+> annotation and not a Class-D amendment. **VOID**: fewer than 500 fills
 with valid drift and computable `W` on a coin at `h=5`. **Family verdict:**
 DEAD only if BOTH verdict coins are DEAD.
 
