@@ -73,7 +73,146 @@ first-class review objects; the coordinator applies what this loop confirms.
 
 ## Iteration log
 
-(appended per iteration)
+### Iteration 1 — 2026-08-23 — verdict: `DEFECTS_FOUND` (for the coordinator to apply; DE-side items already applied under R-33)
+
+**Sources consolidated:** three commissioned lenses (ruling audit, system
+lens, workaround hunt) + the DA, OPS and BE plane contributions. Every
+load-bearing claim verified by the reviewer against artifacts (contracts
+still v22 with R-PROV's original body and a member-less `Provenance` — R-3
+unexecuted confirmed; no R-13 projection clause; the R-5/R-22/R-2 failure
+cases are coordinator-admitted on the ledger; the F2/F10 items were verified
+and CLOSED during the review itself, commit `f02fdae`). **Conflict
+disclosure:** DE is a party to R-1/R-9/R-11/R-14/R-17 — all classified
+CONFIRMED-CORRECT; those classifications rest on artifacts (frozen bars on
+disk, receipts independently recomputed by two other planes and the
+coordinator), not on this reviewer's testimony.
+
+---
+
+**THE ANSWER TO THE COMMISSION, in one paragraph.** The coordinator's
+ruling-shaped work — freezes, admendment discipline, admissibility,
+verification-before-ruling, discharge decisions — runs **25 of 33
+CONFIRMED-CORRECT with real outcomes**, including everything that produced
+the programme's trustworthy negatives. **All four WRONG rulings (R-2, R-4,
+R-5, R-22) share one root: the coordinator producing CONTENT — a plan, a
+gate, a mechanism choice, a fact-correction target — rather than a decision
+rule.** Every one was caught by a plane, none by the coordinator; the
+refusal-and-record culture is the system's demonstrated strength and the
+quiet-workaround problem is small (two confirmed members, both DE's, both
+already fixed; zero verdict-softening found anywhere). The structural
+residue is two-sided: the coordinator is a **measured bottleneck** (~4
+cleared per pass vs ~25–30 filed) whose inbound channel §0a fixed on day
+one, and whose **outbound channel — rulings issued from stale premises — has
+no mechanism at all** (8 documented instances; R-16 the dangerous one,
+stopped by worker refusal, which is discipline, not mechanism).
+
+**Counts (ruling audit, verified):** CONFIRMED-CORRECT 25 · WRONG 4
+(R-2, R-4, R-5, R-22) · RIGHT-BUT-UNENFORCEABLE 1 (R-3) ·
+WORK-WITHOUT-OUTCOME 3 (R-13, R-27, R-31).
+
+**The commissioned questions, answered:**
+1. **WRONG:** R-2 (would have installed a 4× population error in the fact
+   authority; averted by BE's triple refusal), R-4/R-5 (the two
+   coordinator-authored plans: 31 and 20 MUST-FIX, including a kill gate
+   whose threshold read the killing evidence — btc −0.532 CI excluding
+   zero — as PASS with `on_pass = proceed`), R-22's MemoryHigh half (a
+   161-minute livelock; the priority-inversion half was right and is
+   retained).
+2. **RIGHT-BUT-UNENFORCEABLE:** R-3 (the fix for a gate-that-cannot-fire
+   itself cannot fire — contracts unmoved at v22). Plus the enforcement gap
+   as a class: **"applied" reports are the only landing evidence for
+   rulings, and the one demonstrated false "applied" sat on the kill gate**
+   (R-24 mechanized in prose only: `on_verdict` typed `FailRoute`, 0 checks,
+   0 code — BE's own contribution).
+3. **WORK-WITHOUT-OUTCOME:** R-13 (its distinct directive never landed),
+   R-27 (a patience instrument where a measured fact was available;
+   superseded within the hour), R-31 (self-described "nothing for me to
+   rule" — R-33 made the class self-serve two rulings later).
+4. **BOTTLENECK, quantified:** ~5× arrival/service mismatch; the thrice-
+   asked V5 freeze; the 27-hour round trip that included an unnecessary
+   wait; Q-DE-6 buried since report #12; the livelock blocker ruled ~45
+   minutes after its cause was measured. The register measures the queue
+   without draining it; "tick" is undefined and the SLA is dead text.
+5. **SECOND DELEGATION TRANCHE (named candidates, risk stated):** ops
+   topology/scheduling → OPS; append-only annotations under R-28 → planes;
+   Class-C adoption-by-default with a defined objection tick; §2.6's three
+   DE proposals split (the HALTED clause stays gated; the other two go).
+   KEEP GATED with caught-error records: R-ADMISS, Class-D freezes/
+   amendments, non-additive migrations.
+6. **QUIET WORKAROUNDS (the most-wanted):** small and mostly healthy. Two
+   confirmed shipped-divergences, both DE's, both found by DA, both fixed
+   (scenario scope — since RULED R-35 and conformed; the era-days
+   denominator). One genuinely unescalated structural pattern: the
+   sys.path/import-layout hack spreading by citation across seven probes
+   and two planes — now filed as Q-DE-9. The general mechanism, named:
+   **whatever ships first with a citation becomes the standard by
+   default** — fine when a standing rule determines the answer (the 08-19
+   era exclusion; the set-name deference), corrosive when none exists.
+   NULL RESULT, stated per the commission: no verdict-softening found
+   anywhere the pressure to soften would live.
+
+**The routed challenges (R-35), adjudicated:**
+- **Q-BE-5 — CONFIRMED with scope.** R-24's premise "no measurement can
+  answer the ANY" is false as stated: `ww_v1` answered an any-policy
+  question via parameter-free maximal supersets, and R-25's discharge
+  RELIES on that property. The correct narrow form: no measurement answers
+  the any-question at the object level without an upper-bound construction;
+  where one exists (as it did), it can. R-24's amended verdict structure
+  survives on its other legs; the premise sentence should be
+  annotated-beside, not defended.
+- **Q-DA-6 — RESOLVED by the strictest-alias rule, annotation owed.** The
+  operational risk is dissolved (SP §4 carries `tau_ladder_rungs
+  {0,50,100,500}` with 250 excluded and Class-D `tau_decision_rung`
+  beside it); R-8's ledger text remains internally inconsistent and owes
+  an ANNOTATION BESIDE (per R-28), text proposed below. The erratum
+  directive itself is one of the six never-executed items.
+- **Q-DA-3 — HELD for iteration 2**: the challenge text needs direct
+  verification against R-6 clause (c)'s wording; not adjudicated on
+  secondhand description.
+
+**RECOMMENDED ACTIONS, concrete, for the coordinator to apply:**
+1. **Premise blocks on directives** (the F5 fix, the record's own lesson:
+   verified rulings never misfired, unverified ones did): every directive
+   carries a "state I rely on" section the receiving plane confirms or
+   refutes BEFORE acting — §0a's symmetric twin.
+2. **"Applied" must name the mechanism** (BE's rule): a compliance report
+   names the type/field/check/consumer, or it is a plan to comply, not
+   compliance.
+3. **Clear the six never-executed directives** (R-3 enum, R-13 clause,
+   R-8 annotation, R-24 mechanization, R-21/R-26's un-dispatched
+   algorithmic fix, R-18's unfinished loops) — fold the contract items
+   into the held batch explicitly so they stop being invisible.
+4. **Annotations owed under R-28** (texts ready): beside R-8 (the 250-rung
+   inconsistency, resolved by strictest-alias); beside R-25 ("FIRE_SIDE"
+   is h=5-only, computed on a receipt that is not STOP's estimand).
+5. **Second delegation tranche** per question 5; **define the tick** and
+   the queue discipline (blocking-first is already the informal practice);
+   **a read-cursor** on the dispatch ledger.
+6. **Amend R-6's taxonomy** with the four missing distinctions the churn
+   traced to: a GUARD subclass; class-on-VALUE not row; measured vs
+   modelling-choice-with-measured-support; quantifier domains/aliases.
+7. **Promote the sealed-receipt pattern** (build-allowed/read-forbidden
+   with auditability mandatory) to a standing §2.1 clause.
+8. **Adopt the code-vs-frozen-text conformance lens** at freeze time and
+   at every probe commit citing a frozen bar — both members of that defect
+   class were caught by cross-plane reading, zero by owner selftests.
+9. **Sync §2/§1 to the operative state** (the `r=60` authority
+   contradiction; the stale live-case; DE's "none built" cell).
+10. **Pre-stamp naming rule**: receipt-visible identifiers are
+    deploy-equals-freeze; touch the register before first stamp.
+
+**CONFIRMED-CORRECT, preserved with equal weight** (the commission's
+requirement): the freeze-first machinery end to end (R-1/R-7/R-8/R-14/
+R-19/R-20 — the counterfactual is an untrusted central negative); R-9's
+redirect (the seat adding analytic value no plane had posed); R-10 (DA:
+"the most productive ruling of the session"); R-12/R-15/R-16-as-executed/
+R-17/R-24-as-decision/R-26/R-28/R-29/R-30/R-32/R-33; the three-part Class-D
+amendment test, which never churned while everything around it did; and
+the routing of these very challenges out of the coordinator's own ledger.
+
+Stop counter: 0 (MUST-FIX-class findings present). Iteration 2 runs after
+the coordinator applies; Q-DA-3 adjudication and application-verification
+are its first items.
 
 ---
 
