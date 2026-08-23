@@ -274,3 +274,21 @@ R-61(3) termination is AVAILABLE and RECOMMENDED — the close is joint
 (OPS co-owns; coordinator ratifies verdicts of record), so this is a
 recommendation on the record, not a unilateral close. If OPS sweeps the
 two stale literals first, the close is clean on either rule.
+
+---
+
+## LOOP CLOSED — 2026-08-23, Ruling R-69: MARGINAL-VALUE CLOSE GRANTED (R-61 clause 3)
+
+**Terminal verdict of record**: `OP_PLANE_PLAN` Revision 1 (as revised to
+Rev 3 under this loop) is REVIEWED; the cross-review CLOSES on the
+marginal-value rule — "a second clean iteration on a document that just
+produced zero findings would cost a plane-pair an iteration to confirm
+what one already showed" (R-69). Final trajectory: iteration 1
+DEFECTS_FOUND (11 MUST-FIX + 7 SHOULD-FIX) → iteration 2 DEFECTS_FOUND
+(3 + 2, one later withdrawn per R-55, all one sweep-method pattern) →
+iteration 3 CLEAN (0 MUST-FIX under the frozen declared instrument).
+Every applied fix verified at its site AND swept document-wide; one
+non-decision-changing SHOULD-FIX residue (§0a evidence literals) rides
+with the closed loop, superseded in authority by the R-42 revelation
+script. Lens set frozen at iteration 2's instrument throughout the
+counted streak per R-61(1).
