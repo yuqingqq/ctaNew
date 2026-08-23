@@ -99,3 +99,44 @@ unbounded by this result.*
 3. `policy_bounds_v1` continues in parallel; this probe reuses its BASE
    arm fills, annotated with V1–V3 at fill time — no new engine arms, so
    the conformance surface does not grow.
+
+---
+
+## §6. RUN AND ANSWERED — 2026-08-23 (appended per R-28; §§0–5 untouched)
+
+**Receipt:** `derived/state_gate_v1.json`. 240/240 windows conformant;
+determinism control identical on both repeat replays (fills AND captured
+state); V3 exclusions ZERO after the pre-read hour-boundary repair (ledger
+carries only the standard 281 gap/tick + 51 truncated). btc n=40,273 rows,
+eth n=7,466. No variable DEGENERATE (the 1-tick modal book still yields 4
+populated spread bins on btc, 5 on eth).
+
+**btc — STATE_GATES_DEAD.** No positive bin on ANY variable at EITHER
+granularity; bound exactly 0.0 everywhere, including all four per-day
+tables. The single-variable state-gate family is CLOSED on btc.
+
+**eth — NOT_CLOSED, on one 55-fill bin.** Spread decile 7 (range
+(0.01, 0.02]): n=55, 0.74 % of share, +0.21 ¢ point, descriptive CI
+[−2.98, +3.43] — the same bin at ventiles (same 55 fills). Bound
++0.0016 ¢/share against −0.9..−2.9 ¢ baseline losses. Per amendment-1
+one-way semantics NOTHING IS ADOPTED; DE recommends no specific-gate
+protocol against a noise-shaped ceiling three orders under the loss.
+
+**The folklore inverts, twice — the finding beyond the verdicts:**
+- *"Quote when the spread is wide"*: WIDE-spread bins carry the WORST
+  fill quality on both coins (btc −0.93 thinnest → −2.22 widest; eth
+  −0.92 → −2.64). The spread widens exactly when informed flow arrives —
+  a wide book is distress, not opportunity.
+- *"Quote when vol is low"*: LOW-rvol bins are WORSE than high on both
+  coins (btc −1.57 low vs −0.87 high; eth −3.81 low vs −1.53 high).
+  Both pre-declared mechanism directions are contradicted by their own
+  data; a state gate built on either folklore would have SELECTED INTO
+  the damage.
+
+**M_T beside:** slightly larger positive residue (btc up to +0.12 ¢
+ventile-v3; eth up to +0.42 ¢) — still 1–2 orders under M_T losses, no
+truncation, noisier; descriptive only.
+
+**Scope (mandatory sentence):** single-variable gates, deployed feed,
+marginal — joint predicates and direct-feed state variables are unbounded
+by this result.
