@@ -71,9 +71,12 @@ class RunRecord:
 @dataclass
 class ReplayEnv:
     """Explicit-window replay environment. Selection is NOT its job (R-ADMISS):
-    it takes the window list and stamps it, never chooses."""
+    it takes the window list and stamps it, never chooses. `lag_s` is now a
+    real env parameter (B2 — the §4.3-sanctioned engine change; default is
+    behavior-identical to the frozen constant)."""
     windows: Sequence[tuple[str, Path, str, str, list[tuple[float, float]]]]
     seed: int = 20260823
+    lag_s: float = fd.STATE_LAG_S
     sp_set: dict[str, Any] = field(default_factory=lambda: dict(SP_OPERATIVE))
 
     def run(self, arm: str) -> list[RunRecord]:
@@ -82,7 +85,8 @@ class ReplayEnv:
         front = arm == "FRONT"
         out: list[RunRecord] = []
         for slug, path, up, down, gaps in self.windows:
-            wf = el.replay_window(path, up, down, gaps, front=front)
+            wf = el.replay_window(path, up, down, gaps, front=front,
+                                  lag_s=self.lag_s)
             if wf is None:
                 continue
             out.append(RunRecord(
@@ -103,7 +107,7 @@ class ReplayEnv:
                       "by construction in v1, gate guards evolution)",
             "engine_hash": engine_hash(),
             "label": label,
-            "state_lag_s": fd.STATE_LAG_S,
+            "state_lag_s": self.lag_s,
             "quote_size_shares": el.QUOTE_SIZE,
             "seed": self.seed,   # reserved for stochastic arms; v1 consumes none
             # gate outcomes persisted IN the artifact (iteration 8: they were
@@ -314,6 +318,21 @@ def smoke(per_coin: int = 2) -> int:
               f"determinism {'PASS' if det else 'FAIL'}")
         if f or not det:
             raise SystemExit(f"[ev_replay] GATE FAIL on {arm} — do not use")
+    # §4.3 lag-perturbation MUST-FAIL control (B2, landing WITH the
+    # parameterization per the BLOCK): +50 ms on one golden window must
+    # change the record, else the lag plumbing is vacuous.
+    one = ReplayEnv(windows=sel[:1])
+    pert = ReplayEnv(windows=sel[:1], lag_s=fd.STATE_LAG_S + 0.050)
+    r_base = one.run("JOIN")
+    r_pert = pert.run("JOIN")
+    lag_control = bool(r_base and r_pert
+                       and record_hash(r_base[0]) != record_hash(r_pert[0]))
+    gate_results["lag_perturbation_control"] = lag_control
+    print(f"[ev_replay] §4.3 lag-perturbation control: "
+          f"{'PASS (records differ)' if lag_control else 'FAIL — VACUOUS'}")
+    if not lag_control:
+        raise SystemExit("[ev_replay] lag plumbing is vacuous — do not use")
+
     recs = env.run("JOIN")
     out = OUT_DIR / "ev_replay_v1_smoke.json"
     out.parent.mkdir(parents=True, exist_ok=True)

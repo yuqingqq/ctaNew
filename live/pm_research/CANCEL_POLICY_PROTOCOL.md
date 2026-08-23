@@ -15,9 +15,14 @@ answer was visible.
 
 Design rationale lives in `plans/DE_PLACEMENT_POLICY_PLAN.md` (current
 revision per its status line) §4–§5, §8.1–§8.2. This file is the executable
-rule set. **§1 has been RUN AND ANSWERED: DEAD on both verdict coins
-(`derived/warning_window_v1.json`, 2026-08-23, DE report #6) — the §2 grid is
-not built.**
+rule set. **§1 has been RUN AND ANSWERED — and under Ruling R-11 the
+cancellation family is CLOSED: DEAD at the decision rung on the original run
+(`warning_window_v1.json`) AND on all four era days of the R-9 day series
+(`warning_window_v1_dayseries.json`, 8/8 coin-days, per-day, frozen bar).
+The one-day objection is discharged; the §2 grid is never built; do not
+reopen without genuinely new data. `cancel_v1` will therefore never report —
+a fact that reaches STOP-MM-VIABLE's precondition DAG; firing that gate is
+the USER's call (R-11).**
 
 ---
 

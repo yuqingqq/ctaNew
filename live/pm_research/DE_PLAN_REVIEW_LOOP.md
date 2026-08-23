@@ -552,3 +552,7 @@ every number traces to a receipt, and the record of the record survived four
 corrections of its own corrections. **Re-open trigger:** any structural
 change to the DE plans, the first non-reference engine in EV-Replay, or the
 coordinator's 680-window re-sample ruling reopening the cancel family.
+*(Post-close addendum, 2026-08-23: the third trigger is FORECLOSED — R-9's
+day series ran instead of the re-sample, DEAD generalised 8/8, and R-11
+CLOSED the family. New DE code surfaces (B2 onward) receive the same
+fresh-eyes review treatment as dispatch QA, outside this closed loop.)*

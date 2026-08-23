@@ -411,7 +411,15 @@ SP-owned parameter with exactly this provisional provenance.
    R-9 corrected the earlier flat "doubly dead" phrasing — the operative
    verdict is not close; the τ=0 claim on btc is. Descriptive, one UTC day,
    structural reading of an upper bound. The §8.2 grid is NOT built; §9.1
-   fired. R-9 further ordered the day-series re-run under the frozen bar —
+   fired. **R-11 CLOSES the family on this evidence: do not reopen without
+   genuinely new data. Consequence carried per R-11: STOP-MM-VIABLE's central
+   hypothesis has failed and its `cancel_v1` precondition will never report;
+   firing that gate is the USER's call — not the coordinator's, not DE's.
+   What remains for the plane: skew, the terminal schedule, the dump
+   backstop — and LAYER 2 (carry-to-resolution economics; the unreconciled
+   +0.173 ¢ settlement census vs −0.53 ¢ Layer-1 on btc) as the next
+   falsifier candidate, to be scoped with its bar brought to the coordinator
+   BEFORE running, same as R-1.** R-9's day-series re-run —
    **RUN AND ANSWERED (receipt `warning_window_v1_dayseries.json`): DEAD at
    the decision rung on ALL FOUR era days, both coins** — btc `R(250)`
    12.0–17.1 % (worst within-day CI upper 21.9 % vs the 30.9 % bar), eth

@@ -120,11 +120,15 @@ class WindowFills:
 def replay_window(path: Path, up_id: str, down_id: str,
                   gaps: Sequence[tuple[float, float]],
                   front: bool = False,
-                  size: float = QUOTE_SIZE) -> WindowFills | None:
+                  size: float = QUOTE_SIZE,
+                  lag_s: float = fd.STATE_LAG_S) -> WindowFills | None:
     """Replay one window with a resting two-sided quote, recording every fill.
 
     Same lagged-state event loop as `inventory_walk.simulate_window`: state is
-    read at the frozen 250 ms knowledge lag, mid comes from
+    read at the knowledge lag (`lag_s`, default the frozen 250 ms — the
+    default is behavior-identical to the pre-parameter engine; the parameter
+    exists for EV-Replay's §4.3 perturbation controls and future
+    cancel-capable arms, B2 2026-08-23), mid comes from
     `price_change.best_bid/ask` and never from `book` snapshots, and complement
     duplicates are dropped by transaction hash.
     """
@@ -215,7 +219,7 @@ def replay_window(path: Path, up_id: str, down_id: str,
     def schedule(recv: float, kind: str, data: dict[str, Any]) -> None:
         nonlocal seq
         seq += 1
-        heapq.heappush(pending, (recv + fd.STATE_LAG_S, seq, kind, data))
+        heapq.heappush(pending, (recv + lag_s, seq, kind, data))
 
     for line in fi._gz_lines(path):
         if not any(m in line for m in (fi.TRADE_MARK, fi.QUOTE_MARK,
