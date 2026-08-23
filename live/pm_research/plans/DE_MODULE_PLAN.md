@@ -438,7 +438,14 @@ provenance, consumed by the Actuator. If the bound exceeds the ladder's top
 rung (1000 ms), the cancellation lever is dead at deployment regardless of
 replay results (falsifier §7.3). If reconciliation cannot resolve adjacent
 rungs, the coarser rung applies — the seam degrades conservative, never
-optimistic.
+optimistic. **Ruling R-8 (2026-08-23) SPLITS the ladder's character: the
+interior rungs {0, 50, 100, 250, 500 ms} are Class A configuration; the
+1000 ms TOP rung is Class D and FROZEN** — it is the deployment-kill
+threshold of the sentence above, and OPS caught that a Class-A top rung
+would let a measured ack bound above it be converted from a refutation into
+a pass by moving the rung. The kill condition survives the family's closure
+(R-11): it remains the recorded reason a reopened cancel family would still
+die at deployment if the ack bound exceeds 1 s.
 
 **Debounce vs policy hysteresis (iteration 1 — two owners, one phenomenon):**
 the flat band's entry/exit hysteresis is a **policy** parameter, in the replay
