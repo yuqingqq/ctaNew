@@ -337,7 +337,11 @@ class PriceFeed:
         lo = ws - 2.0 * TRAIL_S
         hi = ws + fi.WINDOW_S
         out: list[tuple[float, float]] = []
-        t = _dt.datetime.fromtimestamp(lo, _dt.timezone.utc)
+        # iterate from the FLOOR of lo's hour: stepping whole hours from a
+        # mid-hour lo skipped the final partial hour, silently dropping the
+        # 1 Hz samples for every top-of-hour window (QA catch, pre-read)
+        t = _dt.datetime.fromtimestamp(lo, _dt.timezone.utc).replace(
+            minute=0, second=0, microsecond=0)
         end = _dt.datetime.fromtimestamp(hi, _dt.timezone.utc)
         while t <= end:
             out.extend(self._hour(sym, t.strftime("%Y%m%d_%H")))
@@ -575,8 +579,10 @@ def run() -> dict[str, Any]:
     mt_by_coin: dict[str, list[SRow]] = collections.defaultdict(list)
     day_rows: dict[tuple[str, str], list[SRow]] = collections.defaultdict(list)
     ledger: collections.Counter = collections.Counter()
-    engine = {"conformant_windows": 0, "windows_replayed": 0}
+    engine: dict[str, Any] = {"conformant_windows": 0, "windows_replayed": 0,
+                              "determinism": []}
     win_i = 0
+    det_samples: list[tuple] = []
 
     for day in days:
         for slug, path, up, down, gaps in by_day[day]:
@@ -593,6 +599,8 @@ def run() -> dict[str, Any]:
                 raise SystemExit(f"[sg] CONFORMANCE BREAK on {slug}")
             engine["conformant_windows"] += 1
             engine["windows_replayed"] += 1
+            if len(det_samples) < 2:
+                det_samples.append((slug, path, up, down, gaps))
             win_i += 1
             ws = int(slug.rsplit("-", 1)[1])
             series = feed.window_series(coin, ws)
@@ -632,6 +640,19 @@ def run() -> dict[str, Any]:
                              win_i, sf.v1, sf.v2, v3))
         print(f"[sg] {day}: cumulative rows "
               + ", ".join(f"{c}={len(rows_by_coin[c])}" for c in VERDICT_COINS))
+
+    # section-4.3 determinism control: repeat replay must reproduce fills
+    # AND the captured state exactly
+    for slug, path, up, down, gaps in det_samples:
+        a = replay_sg(path, up, down, gaps)
+        b = replay_sg(path, up, down, gaps)
+        same = (a is not None and b is not None
+                and pb.fill_key(a[0]) == pb.fill_key(b[0])
+                and [(s.v1, s.v2) for s in a[1]] == [(s.v1, s.v2) for s in b[1]])
+        engine["determinism"].append({"slug": slug, "identical": same})
+    if engine["determinism"] and not all(d["identical"]
+                                         for d in engine["determinism"]):
+        raise SystemExit("[sg] determinism gate FAILED")
 
     out_tables: dict[str, Any] = {}
     verdicts: dict[str, Any] = {}
