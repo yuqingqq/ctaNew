@@ -78,7 +78,13 @@ class SimArm:
         if self.halt_at is not None and t >= self.halt_at and not self.halted:
             self.halted = True                          # refuse-all: cancel_all
             self.actions += 1                           # the one cancel_all
-        if t >= self.t_stop and not self.stopped:
+        # An abstention covering the ENTIRE window (t_stop <= 0) abstains the
+        # pre-window lead-in too — pinned by the frozen §6 control (r_cut=300
+        # => ZERO fills), which FIRED on first run: the lead-in has t < 0, so
+        # `t >= t_stop` alone left r_cut=300 quoting there (18 fills caught
+        # BEFORE any cell was read). Cells with t_stop > 0 are untouched:
+        # lead-in quoting stays reference-identical, so null parity holds.
+        if (self.t_stop <= 0 or t >= self.t_stop) and not self.stopped:
             self.stopped = True                         # abstention: cancel
             self.actions += 1
         return self.stopped or self.halted
@@ -340,6 +346,12 @@ def selftest() -> int:
     ok(a.actions == 1, "the stop is exactly one cancel_all action")
     a0 = SimArm({"cell": "x", "placement": "JOIN", "r_cut": 0, "size": 5.0})
     ok(not a0.dead(fi.WINDOW_S - 1e-9), "null point never stops in-window")
+    ok(not a0.dead(-60.0), "null point quotes the lead-in (parity depends on it)")
+    afull = SimArm({"cell": "x", "placement": "JOIN", "r_cut": 300,
+                    "size": 5.0})
+    ok(afull.dead(-60.0) and afull.actions == 1,
+       "full abstention is dead from the FIRST event incl. lead-in "
+       "(the fired §6 control, pinned)")
 
     # halt refuse-all (§5): halted arm counts its cancel_all and stays dead
     h = SimArm({"cell": "x", "placement": "JOIN", "r_cut": 0, "size": 5.0},
