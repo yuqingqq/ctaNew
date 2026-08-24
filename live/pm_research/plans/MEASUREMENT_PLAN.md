@@ -1,6 +1,6 @@
 # Measurement-layer design — DA-State, EV-Markout, EV-Calibration
 
-**Revision 13** — iterations **1-7** of `MEASUREMENT_PLAN_REVIEW_LOOP.md` applied.
+**Revision 14** — iterations **1-7** of `MEASUREMENT_PLAN_REVIEW_LOOP.md` applied.
 *(This banner read "iteration 1 … ~25 MUST-FIX" through Revisions 2-7: a STALE
 BANNER, not a provenance statement. The revision number was bumped five times and
 the sentence beside it never was — the plan's own named failure mode, in its
@@ -957,11 +957,18 @@ cannot flatter these numbers. All **20 arm-coin-day values are negative gross**
 (`policy_comparison_v2.json`; **n=141 paired windows per coin — 08-24 is PARTIAL
 at 21/30, so "5 days" is NOT five equal days** — as-of 2026-08-24). The fee term
 is **0.0232 c/share** at incidence 10/754 and **1.75 c/share** at the absolute
-bound (every maker leg at max `0.07·p(1−p)`). **Across that entire range every
-value stays negative: the STOP VERDICT IS INVARIANT to the user's unpinned fee
-parameter.** The only sign-flipping term is the **unmeasured maker rebate**,
+bound (every maker leg at max `0.07·p(1−p)`). ~~**Across that entire range every value stays negative: the STOP VERDICT IS
+INVARIANT to the user's unpinned fee parameter.**~~ **WITHDRAWN BY THE AUTHOR THE
+SAME DAY (R-110): `m5_swm_cents` CARRIES NO INTERVAL** — only the paired
+difference does, and the frozen protocol header says *"levels are context only"*.
+STOP's verdict is defined on **intervals excluding zero**, so context-only point
+estimates cannot establish verdict invariance in either direction. DE has since
+retracted both markout intervals under day-clustering. **What survives, because
+it needs no interval: the fee term's sign is negative by arithmetic, so net ≤
+gross and no fee treatment can move any estimate TOWARD zero.** The only sign-flipping term is the **unmeasured maker rebate**,
 needing **> 0.5164 c/share = 52 bps** to flip the least-negative coin-day and
-**> 2.8620 c/share = 286 bps** to flip all twenty. *The verdict is invariant; the
+**> 2.8620 c/share = 286 bps** to flip all twenty — **INDICATIVE, NOT
+INFERENTIAL**, being computed off the same context-only levels. *The verdict is invariant; the
 NUMBERS are not, and R-107 ships numbers — so materiality stays the user's call.*
 
 **STOP CONSEQUENCE, FILED AS Q-DA-42:** *fee

@@ -1,7 +1,7 @@
 # PM_ARCHITECTURE — structure for P-2026-003
 
 The explanatory prose baseline is version 12 (2026-08-20); the machine-readable
-canonical contract is now **v22**. Versions 13–16 landed the sigma route and v17
+canonical contract is now **v24**. Versions 13–16 landed the sigma route and v17
 lands the measurement-infrastructure boundary: nominal event/knowledge clocks,
 strict source profiles, factual coverage separated from admissibility decisions,
 and DA-Normalize/DA-Coverage/DA-State ownership. Version 18 adds point-in-time
@@ -17,6 +17,12 @@ Version 22 adds the missing action-fill boundary: immutable shadow actions,
 execution-price reach, explicit front/back displayed-queue quantity bounds,
 gap-unavailable rows, a separate non-decision Hawkes development diagnostic,
 and a `FlowActionFillFit` that must be validated before the decision seam reads it.
+Version 23 carries the subsequent contract/operations additions recorded in the
+canonical migration ledger. Version 24 adds the missing adverse-movement boundary:
+an action- and maker-side-specific `AdverseMoveFit`, pre-fill knowledge-time
+estimates embedded inside `ActionOutcome`, and an independent `EV-AdverseMove`
+validator whose economic KEEP-versus-CANCEL gate must pass before the decision
+seam may consume the fit.
 When this prose and `contracts/contracts.yaml`
 differ, the YAML remains authoritative. Score history on the 13-change replay:
 v1 5/3/5 · v2 7/4/2 · v4 9/2/2 · v5 9/3/1 · v6–v10 11/0/2 · **v11 11/1/1**
@@ -266,6 +272,27 @@ fills. A `HawkesDevelopmentDiagnostic` may be fitted immediately but is a
 non-decision type. The distinct `HawkesResidualFit` and `FlowActionFillFit`
 require forward validation. The decision-facing `BE-FlowAndFills` remains
 `Unavailable` until all required artifacts are `VALIDATED`.
+
+The adverse-movement capability is part of that same seam, not a competing
+belief module. `DA-FlowActionGrid` materializes immutable `AdverseFeatureRow`
+objects from `StateView` beside each exact shadow action and queue bound;
+unavailable inputs remain rows rather than disappearing. `BE-FillFit` builds an
+`AdverseMoveFit` from those rows and their frozen dataset partition. At a
+decision time the fit produces an action-bound `AdverseMoveEstimate` before
+the candidate fill: joint toxic-fill probability, fill-conditional maker
+markout, and the gross adverse damage a cancellation could avoid under a bound
+latency profile. These quantities stay gross of spread, fees, rebates and
+incentives. `BE-FlowAndFills` composes them with fill quantity and cash-flow
+terms into `Uncertain[ActionOutcome]`; DE compares complete KEEP and CANCEL
+outcomes and never consumes a bare toxicity probability.
+
+`EV-AdverseMove` is the independent promotion boundary. It evaluates a frozen
+candidate on forward days with the same measured cancellation-latency profile
+and a frozen policy/economics specification. Classification and calibration are
+reported, but promotion is decided by net cancellation value after lost spread,
+rebate, queue position and actuation latency. A sampled-relay model is diagnostic
+only for the direct-event-WS question, and stale or latency-mismatched inputs
+make the decision seam return `Unavailable`.
 
 **BE-Competition (NEW — M4-2)** — the rival/equilibrium state the incentive
 theory needs:
@@ -519,9 +546,13 @@ freeze or authorize the still-unbuilt decision/action layers.
    operational-time Hawkes diagnostic, and 5/15/30-second join-touch queue bounds.
 4. Freeze the conditional M1–M4 families and candidate implementation; then
    accumulate and score at least ten complete forward days without retuning.
-5. Promote Hawkes and action-fill artifacts only if their forward gates pass.
-6. EXP-IMPACT (AS partition sign) · EXP-BLEND (belief constituents).
-7. `L_adv` + `DE-Allocator` + STOP gate before any order.
+5. Build the direct-event-WS adverse-move candidate inside `BE-FillFit`; freeze
+   its features, target, horizons, latency profile and cancellation policy before
+   its scored period.
+6. Promote Hawkes, action-fill and adverse-move artifacts only if their separate
+   forward gates pass; adverse prediction accuracy alone is not a promotion gate.
+7. EXP-IMPACT (AS partition sign) · EXP-BLEND (belief constituents).
+8. `L_adv` + `DE-Allocator` + STOP gate before any order.
 
 ## 12. Implementation status (SHOULD-FIX 6 — v5 claimed marking, did none)
 
@@ -530,15 +561,17 @@ freeze or authorize the still-unbuilt decision/action layers.
 | DA-Feeds | PMMarketWS, PMPricesWS, BinanceWS, GammaREST, ClobREST | PolygonRPC |
 | DA-Discovery | collect_pm discovery loop | — |
 | DA-Normalize / DA-State / DA-Settlement | Tier-1 v3, coverage, point-in-time views, closed-day coordinator | settlement spec adapter |
+| DA-FlowActionGrid | immutable shadow actions and queue bounds | knowledge-time `AdverseFeatureRow` materialization for direct-event inputs |
 | BE-FlowFit | corrected `f_r`/same-state `f_p`; B0–B3 development fit; exploratory Hawkes diagnostic | freeze M1–M4 conditional families; forward fit and gated residual |
-| BE-FillFit | join-touch 5/15/30 s front/back quantity census; gap-unavailable rows | frozen conditional fill artifact and forward validation |
+| BE-FillFit | join-touch 5/15/30 s front/back quantity census; gap-unavailable rows | frozen conditional fill artifact; direct-event-WS adverse-move fit; separate forward validation |
 | other BE-* | — | Target, Uncertainty, Belief, FlowAndFills decision seam, Competition, ScenarioProvider |
 | DE-* | — | all |
 | EV-Markout / EV-Calibration | Tier-2 terminal markout + normalized book scaffold | fitted/scored arms after sufficient days |
+| EV-AdverseMove | — | forward calibration plus frozen-policy KEEP-vs-CANCEL economic validation |
 | ControlSolver | — | ClosedFormGLFT, PerLevel, HJBQVI |
 | UtilityFunctional | — | RiskNeutral, CARA, PathFunctional |
 
-The two flow/fill probes above are offline research code only. No decision-facing
+The flow/fill probes above are offline research code only. No decision-facing
 BE implementation or DE module is built; the register describes their contracts,
 not live code.
 

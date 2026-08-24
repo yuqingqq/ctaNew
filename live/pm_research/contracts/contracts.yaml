@@ -1,4 +1,4 @@
-version: 23
+version: 24
 rules:
   R-SSOT:
     body: every canonical name has exactly one owning type/module
@@ -185,6 +185,33 @@ rules:
       be a decision result'
     - 'validated_only: BE-FlowAndFills consumes FlowActionFillFit only when status == VALIDATED;
       DEVELOPMENT and CANDIDATE_FROZEN remain unavailable'
+  R-ADVERSE:
+    body: adverse-movement prediction is action- and maker-side-specific, uses only features
+      admitted at knowledge time, models toxic fill and markout jointly, remains gross of
+      spread/rebates/incentives, and may reach a decision only after forward validation under
+      the currently measured cancellation-latency profile
+    checks:
+    - 'knowledge_only: every feature used by AdverseMoveEstimate has t_known <= estimate.as_of
+      and was admitted by StateView under R-REFUSE'
+    - 'offline_online_parity: AdverseFeatureRow.feature_schema_hash and state construction
+      match the decision-time builder bound by AdverseMoveFit.feature_schema_hash'
+    - 'strictly_pre_fill: the event that first reveals or causes a candidate fill is never
+      a feature of an estimate whose as_of precedes that fill'
+    - 'action_binding: AdverseMoveEstimate.action_hash binds the exact action, maker side,
+      level, size, state hash, prediction horizon and markout horizon being evaluated'
+    - 'joint_target: p_toxic_fill_if_kept and expected markout are action-conditional joint
+      fill/markout quantities; fill probability and adverse movement are never multiplied
+      under an undeclared independence assumption'
+    - 'latency_binding: estimate.latency_profile_ref matches both its fit and the currently
+      admitted measured cancellation profile; mismatch or stale inputs return Unavailable'
+    - 'gross_model: AdverseMoveEstimate excludes spread, fees, rebates and incentives; those
+      enter only through ActionOutcome cash flows and WealthLedger'
+    - 'economic_gate: classification accuracy is diagnostic; validation is decided by the
+      frozen cancel replay net of lost spread, rebate, queue position and actuation latency'
+    - 'validated_only: BE-FlowAndFills consumes AdverseMoveFit only when status == VALIDATED
+      and its matching AdverseMoveEvaluation verdict is PASS'
+    - 'whole_action_decision: DE compares Uncertain[ActionOutcome] for keep versus cancel and
+      never acts on bare p_toxic_fill_if_kept'
 types:
   Known:
     generic:
@@ -1233,8 +1260,11 @@ types:
       state_transition: str
       cash_flows: dict[str, float]
       latency_used: Duration
+      adverse_move: list[AdverseMoveEstimate]
       markout_partition: MarkoutPartition
       provenance: Provenance
+    notes: adverse_move is explanatory action-level evidence inside the uncertain outcome;
+      it is not a second decision port and never bypasses full KEEP-versus-CANCEL economics
   Fill:
     fields:
       token: TokenId
@@ -1488,6 +1518,91 @@ types:
       status: FlowModelStatus
     notes: binds flow and mark laws to one exact action schema and queue bracket; decision
       use requires VALIDATED
+  AdverseFeatureRow:
+    fields:
+      row_id: ImmutableId
+      action_ref: ImmutableId
+      as_of: KnowledgeTime
+      maker_side: enum:BUY_UP|SELL_UP
+      values: dict[str, float]
+      feature_schema_hash: Hash
+      input_t_known_max: KnowledgeTime
+      input_staleness: Duration
+      state_hash: Hash
+      source_profile_hash: Hash
+      status: enum:AVAILABLE|UNAVAILABLE
+      unavailable_reason: str?
+    notes: immutable offline feature row materialized through StateView; unavailable rows are
+      retained, and no future fill or markout label is carried in the feature object
+  AdverseMoveTarget:
+    fields:
+      prediction_horizon: Duration
+      markout_horizon: Duration
+      adverse_threshold_cents_per_share: float
+      feature_clock: enum:KNOWLEDGE_TIME
+      fee_status: enum:GROSS_ONLY_NOT_APPLIED
+    notes: maker-signed markout is positive when favourable and negative when adverse; the
+      target is gross so a changing rebate schedule cannot relabel the training set
+  AdverseMoveFit:
+    fields:
+      artifact_id: ImmutableId
+      model_version: str
+      coin: str
+      feature_schema_hash: Hash
+      action_schema_hash: Hash
+      source_profile_hash: Hash
+      source_ids: list[SourceId]
+      feed_class: enum:DIRECT_EVENT_WS|SAMPLED_RELAY
+      target: AdverseMoveTarget
+      latency_profile_ref: ImmutableId
+      fit_data_through: KnowledgeTime
+      evaluation_start: KnowledgeTime
+      evaluation_days: int
+      spec_hash: Hash
+      status: FlowModelStatus
+    notes: action-conditioned toxic-fill/markout fit owned inside BE-FlowAndFills; a sampled-relay
+      fit may be diagnostic but cannot stand in for the direct-event-WS cancellation question
+  AdverseMoveEstimate:
+    fields:
+      action_hash: Hash
+      maker_side: enum:BUY_UP|SELL_UP
+      as_of: KnowledgeTime
+      prediction_horizon: Duration
+      markout_horizon: Duration
+      cancel_effective_after: Duration
+      p_toxic_fill_if_kept: float
+      expected_markout_cents_per_share_given_fill: float
+      expected_avoidable_adverse_cents_if_cancel: float
+      input_t_known_max: KnowledgeTime
+      input_staleness: Duration
+      model_ref: ImmutableId
+      latency_profile_ref: ImmutableId
+      provenance: Provenance
+    notes: emitted before the candidate fill; expected_avoidable_adverse_cents_if_cancel is
+      non-negative gross damage on counterfactual fills prevented after cancellation becomes
+      effective, not a claim that spread or queue value is preserved
+  AdverseMoveEvaluation:
+    fields:
+      artifact_id: ImmutableId
+      fit_ref: ImmutableId
+      coin: str
+      evaluation_start: KnowledgeTime
+      evaluation_end: KnowledgeTime
+      n_forward_days: int
+      latency_profile_ref: ImmutableId
+      cancel_policy_hash: Hash
+      economics_spec_hash: Hash
+      toxic_fill_brier: float
+      calibration_error: float
+      gross_avoidable_adverse_share_weighted_cents: float
+      net_cancel_delta_per_fill_cents: float
+      net_cancel_delta_share_weighted_cents: float
+      net_cancel_delta_share_weighted_ci95: Interval
+      verdict: enum:PASS|INSUFFICIENT_EVIDENCE|MODEL_REFUTED
+      spec_hash: Hash
+      provenance: Provenance
+    notes: forward, policy-frozen evaluation; PASS is economic and latency-aware, while Brier
+      and calibration are diagnostics and cannot promote the predictor by themselves
   FlowDevelopmentRun:
     fields:
       artifact_id: ImmutableId
@@ -1750,12 +1865,13 @@ modules:
     produces:
     - FlowAction
     - QueuePositionBound
+    - AdverseFeatureRow
     - HealthEvent
     ports:
     - read_all
     - telemetry_out
-    notes: offline immutable shadow-action materializer; uses public book state and has no
-      venue or order port
+    notes: offline immutable shadow-action and knowledge-time adverse-feature materializer;
+      uses public book state, retains unavailable rows, and has no venue or order port
   BE-FillFit:
     consumes:
     - FlowArrival
@@ -1763,15 +1879,19 @@ modules:
     - QueuePositionBound
     - ArrivalIntensityFit
     - ConditionalMarkLaw
+    - DatasetPartition
+    - AdverseFeatureRow
     produces:
     - FillQuantityBound
     - FlowActionFillFit
+    - AdverseMoveFit
     - HealthEvent
     ports:
     - read_all
     - artifact_resolver
     - telemetry_out
-    notes: offline action-reach and queue-bound fit under R-FILL; no venue or order port
+    notes: offline action-reach, queue-bound and action-conditioned adverse-move fit under
+      R-FILL/R-ADVERSE; no venue or order port
   EV-FlowDevelopment:
     consumes:
     - ArrivalIntensityFit
@@ -1794,14 +1914,30 @@ modules:
     - ArrivalIntensityFit
     - ConditionalMarkLaw
     - FlowActionFillFit
+    - AdverseMoveFit
     produces: Uncertain[ActionOutcome] | Unavailable
     ports:
     - state_view
     - rng
     - artifact_resolver
     - telemetry_out
-    notes: decision-facing seam only; remains unavailable until forward-valid artifacts exist
-      and contains no venue adapter
+    notes: decision-facing seam only; remains unavailable until fill and adverse-move artifacts
+      are forward-valid, emits toxicity only inside complete ActionOutcome economics, and contains
+      no venue adapter
+  EV-AdverseMove:
+    consumes:
+    - AdverseMoveFit
+    - FlowActionFillFit
+    - DatasetPartition
+    produces:
+    - AdverseMoveEvaluation
+    - GateEvidence
+    - HealthEvent
+    ports:
+    - read_all
+    - artifact_resolver
+    notes: offline forward validator under R-ADVERSE; scores calibration and frozen-policy
+      KEEP-versus-CANCEL value and has no decision or venue port
   BE-Uncertainty:
     consumes:
     - ForecastRequest

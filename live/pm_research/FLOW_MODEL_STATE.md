@@ -259,6 +259,30 @@ capture and more gross exposure — unresolvable while the edge estimand is brok
 
 ## 1e. LAYER 1 MEASURED — adverse selection is ~2x spread capture, and the sign is negative
 
+> ### ⚠ SCOPE, R-110 — THIS TABLE IS A LEVEL ON ITS OWN POPULATION AND IS NO
+> ### LONGER THE POLICY ANSWER.
+>
+> **Population, carried with the numbers (R-105): ONE UTC day, JOIN_BBO only,
+> n = 10,294 btc fills / 1,999 eth, markout against BOOK MID. As-of the Layer-1
+> run; superseded as a policy statement 2026-08-24.**
+>
+> **What it still is:** the measured LEVEL for a book-equal maker on that day —
+> spread capture is real and positive, adverse selection is about twice it, and
+> the net sign is negative. Nothing here is retracted.
+>
+> **What it is NOT, and was being used as:** the answer to *which placement
+> policy is better*. **It measures ONE arm** — JOIN_BBO — **on ONE day**, so it
+> cannot rank two policies, and a five-day paired comparison of both arms now
+> exists (§7 item 1). **Cite this table for the LEVEL and the decomposition.
+> Cite §7 item 1 for any comparison between placements.**
+>
+> **Two things that do NOT conflict, though they read as if they might.** This
+> table is markout vs **book mid**; the policy comparison is markout vs
+> **settlement** — different estimands, deliberately, so the comparison stays off
+> the sigma clock. And both say the same thing about profitability: **the level
+> is negative here, and negative on all ten coin-days in both arms there.**
+> **The programme has never measured a placement that pays at these horizons.**
+
 The estimand §1b called broken has been replaced and run. Markout against
 **book mid** at fixed horizons, decomposed, per `EDGE_LAYER1_PROTOCOL.md`.
 Verdict **`HORIZON_DEPENDENT`**, and the decomposition is the result:
@@ -601,17 +625,65 @@ its own moment, not a statement of current belief.
 
 ## 7. What is next, and what blocks it
 
-1. **The fill bracket is a POLICY COMPARISON, not a pending measurement.**
-   Specify concrete placement policies — new-BBO (front) and join-BBO (back) at
-   minimum — and measure fill **and fill-conditional markout for each**. That
-   yields a comparison of real strategies instead of a bracket over an unknown.
-   Expect the two to trade off rather than rank: new-BBO wins on fills (94.6 %
-   vs 76.9 % on btc) and plausibly **loses on markout**, because it quotes when
-   the level is forming, thin, and information is freshest. Measuring only the
-   fill side would flatter it.
+1. ~~**The fill bracket is a POLICY COMPARISON, not a pending measurement.**~~
+   **DONE, AND THE PREDICTION STATED HERE IS REFUTED.** *(R-109/R-110,
+   `policy_comparison_v2.json`, protocol frozen 2026-08-22 before the run.)*
+
+   > **Population, and it must travel with every number below (R-105): 5 days
+   > 2026-08-20 … 2026-08-24, verdict coins btc/eth, h = 5 s, 30
+   > windows/coin/day — EXCEPT 2026-08-24, WHICH IS A PARTIAL DAY AT 21 WINDOWS.
+   > "Five days" must never be written without the partial being visible; eth's
+   > day-robustness turns on it. As-of 2026-08-24.**
+
+   Revision 0 of this item predicted: *"Expect the two to trade off rather than
+   rank: new-BBO wins on fills … and plausibly **loses on markout** … Measuring
+   only the fill side would flatter it."*
+
+   **THE MARKOUT PENALTY DOES NOT APPEAR ANYWHERE.** FRONT is *better* on
+   markout than JOIN in the point estimate on **9 of 10 coin-days**, not worse.
+   The trade-off this page told the programme to expect is not in the data.
+
+   **What SURVIVES the measurement, stated as surviving:**
+
+   - **The LEVELS. Both policies LOSE at h = 5, on all ten coin-days, both
+     arms — 20 of 20 arm-cells negative** (btc −0.516 … −1.514 ¢/share; eth
+     −0.716 … −2.862). This is a count, no interval touches it, and it is the
+     single most robust thing the run produced. **Any sentence of the form
+     "FRONT beats JOIN" is incomplete without "and both lose at h = 5" on the
+     same line.**
+   - **The FILL advantage is real and day-robust with room to spare** — FRONT
+     takes ~5–6× the shares per window (btc +6,054/window, CI [5,698, 6,392];
+     eth +969, CI [903, 1,033]).
+   - **A pre-registered prior was tested and found wrong**, which is worth more
+     than a confirmation would have been.
+
+   **What RETRACTS — BOTH markout intervals:**
+
+   - **btc is NOT day-robust.** Window-clustered [+0.026, +0.251] excludes zero;
+     day-clustered on G=5 it is **[−0.098, +0.389] and spans it**, with the sign
+     **negative on 2 of 5 days**.
+   - **eth is SUGGESTIVE, NOT DAY-ROBUST.** All 5 days positive and the 5-day
+     interval is [+0.093, +0.879] — but **drop the partial 08-24 and it becomes
+     [−0.067, +1.082] and spans zero.** *The precise mechanism, because the loose
+     phrasing misleads:* the mean **RISES** without the partial day (+0.486 →
+     +0.507). **eth loses significance to a lost degree of freedom, not to a lost
+     effect** — 4 clusters cannot carry the interval. That is a POWER statement
+     about eth and a SIGN statement about btc, and they are not the same finding.
+   - **So the markout comparison is SUGGESTIVE AND UNSETTLED.** It may not be
+     cited as a result.
+   - **Unresolved and blocking a verdict (`Q-BE-60`):** on **eth** the arms'
+     mean fill sizes differ by up to **20 %** (FRONT:JOIN 0.796–0.918), so the
+     published **share-weighted** markout and a per-fill markout are **not
+     interchangeable** — on btc they are (0.992–1.029). **The receipt publishes
+     only the share-weighted figure**, so the one coin whose verdict survives is
+     the one where the weighting is load-bearing, and the check cannot be run
+     from the artifact.
+
 2. **Layer retention** needs ~10 forward days in one collector era. Days only.
 3. **The maker-edge sign** needs ~25–30× current data. Days only, and many.
 4. **`U9`** re-runs itself unchanged when `PING_TIMEOUT` reaches n=12.
 
-**Collecting more days does not touch item 1**, which is the item that gates the
-programme's central question.
+~~**Collecting more days does not touch item 1**~~ — **superseded.** Item 1 has
+run. **Days are now exactly what item 1 needs**: btc's markout sign is unstable
+across days and eth's interval opens at G=4, so both retractions above are day-count
+problems. The fill advantage needs nothing further.

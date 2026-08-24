@@ -1821,3 +1821,215 @@ term's SIGN, which is arithmetic — not on its magnitude.**
 
 **R-105 APPLIED:** 08-24 is PARTIAL at 21/30 windows → 141 paired windows per
 coin, not 150. "5 days" is not five equal days.
+
+## DA — 2026-08-24 (R-110) — SURFACE FREEZE ACKNOWLEDGED. **§8 DONE. ONE CLAIM WITHDRAWN.**
+
+**No new modules, plans, loops or checkers.** This tick added two register rows
+and edits to existing documents — nothing built.
+
+**§8 IS FINISHED** (`Q-DA-48`, filed 2026-08-24). Leg named at
+`FLOW_MODEL_STATE.md:60` (**TAKER LEG ONLY** / **DO NOT SUBTRACT FROM A MAKER
+NET**). The number: fee term **0.0232 c/share** at incidence 10/754,
+**1.75 c/share** at the absolute bound. **On the maker leg a fee can only
+SUBTRACT, so net ≤ gross and no fee treatment moves any estimate TOWARD zero.**
+
+**WITHDRAWN THE SAME DAY, BY ME:** *"the STOP verdict is invariant to the fee
+parameter."* `m5_swm_cents` **carries no interval at any level** — only the
+paired difference does, and the frozen protocol header says **"levels are context
+only."** STOP's verdict is defined on intervals excluding zero, so context-only
+point estimates cannot establish verdict invariance in either direction. **Third
+time in three days I have written a claim whose text reads correctly while what
+it evaluates is different.** The 52/286 bps rebate figures are downgraded to
+**INDICATIVE, NOT INFERENTIAL** for the same reason. Struck in both places
+(R-28 annotate-beside), landing-verified, single occurrence, inside the
+strikethrough.
+
+**`Q-DA-49` FILED BLOCKING ON DE'S OPTIMIZER** — three sampling traps, stated
+before the optimizer exists: (i) earliest-first truncation is **selection**, not
+just mis-reporting (`N ≤ 60` never leaves 08-20); (ii) 08-24 is partial **and
+chronologically last**, so earliest-first drops it first; (iii) **not
+conditional** — `m5_swm_cents` has no interval and its own protocol calls levels
+context-only, so an optimizer maximising a level optimises a quantity with
+nothing to separate signal from noise.
+
+**QUEUE:** blocking = `Q-DA-14`, `Q-DA-42`, `Q-DA-43` (STOP → user), `Q-DA-49`
+(optimizer). Everything else debt with triggers. `Q-DA-47`'s trigger extended:
+A-CALIB-1 is on neither the user's path nor the optimizer's (`edge_layer1` shows
+no calib reference on the replay path) and becomes blocking if either changes.
+
+## DA - 2026-08-24 (R-110) - SURFACE FREEZE ACKNOWLEDGED. **§8 DONE. ONE CLAIM WITHDRAWN.**
+
+**No new modules, plans, loops or checkers.** This tick added two register rows
+and edits to existing documents - nothing built.
+
+**§8 IS FINISHED** (`Q-DA-48`, filed 2026-08-24). Leg named at
+`FLOW_MODEL_STATE.md:60` (**TAKER LEG ONLY** / **DO NOT SUBTRACT FROM A MAKER
+NET**). The number: fee term **0.0232 c/share** at incidence 10/754,
+**1.75 c/share** at the absolute bound. **On the maker leg a fee can only
+SUBTRACT, so net <= gross and no fee treatment moves any estimate TOWARD zero.**
+
+**WITHDRAWN THE SAME DAY, BY ME:** *"the STOP verdict is invariant to the fee
+parameter."* `m5_swm_cents` **carries no interval at any level** - only the
+paired difference does, and the frozen protocol header says **"levels are context
+only."** STOP's verdict is defined on intervals excluding zero, so context-only
+point estimates cannot establish verdict invariance in either direction. **Third
+time in three days I have written a claim whose text reads correctly while what
+it evaluates is different.** The 52/286 bps rebate figures are downgraded to
+**INDICATIVE, NOT INFERENTIAL** for the same reason. Struck in both places
+(R-28 annotate-beside), landing-verified, single occurrence, inside the
+strikethrough.
+
+**`Q-DA-49` FILED BLOCKING ON DE'S OPTIMIZER** - three sampling traps, stated
+before the optimizer exists: (i) earliest-first truncation is **selection**, not
+just mis-reporting (`N <= 60` never leaves 08-20); (ii) 08-24 is partial **and
+chronologically last**, so earliest-first drops it first; (iii) **not
+conditional** - `m5_swm_cents` has no interval and its own protocol calls levels
+context-only, so an optimizer maximising a level optimises a quantity with
+nothing to separate signal from noise.
+
+**QUEUE:** blocking = `Q-DA-14`, `Q-DA-42`, `Q-DA-43` (STOP -> user), `Q-DA-49`
+(optimizer). Everything else debt with triggers. `Q-DA-47`'s trigger extended:
+A-CALIB-1 is on neither the user's path nor the optimizer's (`edge_layer1` shows
+no calib reference on the replay path) and becomes blocking if either changes.
+
+## Coordinator tick — 2026-08-24 ~03:10 UTC (R-111..R-113)
+
+**§8 IS DISCHARGED — decision-path item 3 complete.** Maker leg measured at zero
+with a 1.3% exception; taker leg `0.07·p(1−p)`; both on-chain. **A fee can only
+SUBTRACT on the maker leg, so net ≤ gross** — no fee treatment can move any
+estimate *toward* zero, and the measured levels are a **lower bound on the loss**.
+All 20 arm-coin-day values negative gross (n=141 paired windows/coin; **08-24
+PARTIAL at 21/30** — "5 days" is not five equal days; as-of 2026-08-24).
+
+**DA withdrew its own strongest claim the same day it wrote it.** *"The STOP
+verdict is INVARIANT to the user's unpinned fee parameter"* — struck, because
+`m5_swm_cents` carries no interval (only the paired difference does; the frozen
+protocol says levels are context-only), and STOP's verdict is defined on intervals
+excluding zero. R-109's standard applied against DA's own conclusion, unprompted.
+
+### ★ The one term that could still flip the sign
+
+**THE UNMEASURED MAKER REBATE.** Every other term is measured and points the same
+way. §2: *"no per-trade in-transaction rebate found; that is **not** absence of a
+rebate"* — every `ρ`-dependent estimand is `Unavailable`. **If market-making here
+pays, it pays out of a rebate nobody has found yet.** DA is now searching for it;
+a clearly-described negative is as valuable as a positive.
+
+**R-111 — the coordinator's terminal-abstention reasoning was BACKWARDS, and the
+axis was already tested.** POLICY_BOUNDS Lever T ran body-only (`r_cut=60`) for
+JOIN: `GATE_FAILS` both coins, body ≈ base — and **R-50's inversion: the only
+positive bins sat IN the terminal minute**. Abstaining there removes the
+*profitable* region. DE kept the axis on a better licence: `abstention × FRONT` is
+genuinely unmeasured because FRONT's fill mass is **formation-time**. *Fifth
+coordinator correction this session (R-7 OPS, R-87 DE, R-95 BE, R-105 DA, R-111
+DE).*
+
+**`POLICY_OPTIMIZER_PROTOCOL` accepted; three choices adopted as standards:**
+grid **FROZEN at ~20 cells, no cell addable once a number exists**; every axis
+**cites its existing receipt** so the search cannot resell a closed finding
+(depth-1 excluded on `DEPTH_FAILS`; cancellation's REACTIVE family **CLOSED, 8/8
+coin-days**); and a **wiring must-fail** — `r_cut=300` must produce zero fills.
+DE complied with an order it believes wrong (the cancellation axis) by
+**pre-registering the expected null** and stating a non-null *"would challenge the
+closure, not quietly override it."*
+
+**BE's reconciliation landed**, including the framing guard now in force: *"FRONT
+beats JOIN is incomplete without **and both lose at h=5**."*
+
+**In flight:** DE — build the **simulated actuator** (§5, replay-side; **not** the
+venue writer) and run **Stage A's 12 cells**, controls first. BE — adversarial
+check on whether **share-weighting** in `m5_swm` does work a per-fill statistic
+would not (Stage A varies size 5→10, which multiplies shares directly). DA —
+**the maker-rebate search**.
+
+**Surface freeze (R-110) in force. `STOP-MM-VIABLE` not put to the user: optimise
+before concluding.**
+
+## DA - 2026-08-24 (R-112) - THE MAKER REBATE: **FOUND, MEASURED, AND TOO SMALL**
+
+**No modules built.** On-chain analysis ran ad hoc in scratchpad; deliverables
+are one register row (`Q-DA-50`) and annotations to existing documents.
+
+**SEARCHED, IN ORDER:** (1) all 901 on-chain receipts, **every one of the 12
+event types enumerated and identified** - none is a credit/refund/rebate; the
+fee recipient `0x115f48dc...` appears as `to` 901 times and **never as `from`**;
+`OrderFilled.fee` is uint256 with observed min 0, so a negative fee is not
+representable. (2) The venue's own documentation. (3) The Polygon RPC off-trade
+test - **could not be run: 403/401 from all three configured public endpoints.
+NOT-REACHABLE, not NOT-AFFORDABLE.**
+
+**RESULT: A MAKER REBATE PROGRAM EXISTS** - which is why the in-trade search was
+always going to be empty, exactly as U11 predicted. Crypto rebate share **20%**,
+the lowest of any category; `fee_equivalent = C x 0.07 x p x (1-p)`; paid
+**daily in pUSD**, min **$1** accrued; self-normalising to ~20% of the fee your
+own fill generated.
+
+**IT CANNOT FLIP THE SIGN, AND THIS IS A CEILING NOT AN ESTIMATE:**
+`p(1-p) <= 0.25` by arithmetic, so the rebate **cannot exceed 0.35 c/share**.
+Measured pro-rata on our corpus: **0.168 c/share**. Threshold to flip even the
+least-negative coin-day: **0.5164 c/share**. **The maximum possible rebate falls
+32% short.**
+
+**BONUS: reproduced the `744 of 754` claim whose receipt I could not find**
+(Q-DA-48's provenance defect). Decoding OrderFilled word 4 and splitting legs by
+counterparty: **901 taker legs 100% charged; 1,056 maker legs, 10 charged,
+1,046 at exactly zero.** The **10** matches U5 exactly - the denominator does
+not. **10/1,056 = 0.95%, not 1.33%.**
+
+**LIMITS, because the answer is negative.** (i) The thresholds rest on
+context-only levels with no interval, so this is **INDICATIVE, NOT
+INFERENTIAL** - the rebate is below the SCALE of the losses, which is not a
+verdict. (ii) I found 0 of 218 addresses clearing the $1/day minimum **and then
+withdrew it** - 901 receipts are a SAMPLE, so it bounds observed volume, not
+their actual volume. (iii) Rebates pay in pUSD, not USDC.
+
+**THE GAP I AM NOT CLOSING.** The venue runs **TWO** programmes. I measured
+Maker Rebates. The separate **Liquidity Rewards Program** pays for orders
+**resting near the midpoint with no fill required** - not a share of taker fees,
+so **the p(1-p) ceiling does not bound it**. It is now the only remaining term
+that could move the sign, and unlike the rebate I cannot bound it by arithmetic.
+**ASK filed: is measuring it authorised under the surface freeze?**
+
+## DA - 2026-08-24 (R-116) - LIQUIDITY REWARDS: **REAL, LARGE, AND NOT CLOSEABLE BY ME**
+
+Filed `Q-DA-51` **BLOCKING on DE's optimizer**. Unlike the maker rebate this one
+is **not bounded by arithmetic** - it pays the QUOTE, not the TRADE.
+
+**WHERE I LOOKED:** venue docs; `rewards_registry.jsonl` (confirmed a **size
+heartbeat** - 552 records, keys `{recv_ns,n}` only); `tier1/quotes` (**top-of-book
+only**, score not computable there); **`raw/` - FULL BOOK DEPTH, ~50 levels/side,
+25 GB**, which is what made this measurable.
+
+**POOLS: $1M across AUGUST**, $550k to 5-minute markets, BTC $300k. **I counted
+the markets rather than assuming: 288 btc 5-min markets/day** -> **$33.60 per btc
+window**, $5.60 per eth window.
+
+**RESULT 1 - IT SPLITS BY ARM.** 100% of the pool would cover the loss on **9 of
+10 JOIN coin-days and 0 of 10 FRONT coin-days**. JOIN fills ~1,400 sh/window vs
+FRONT's ~7,500: a fixed pool is a large fraction of a small loss.
+
+**RESULT 2 - AT THE TESTED CONFIG IT DOES NOT CLOSE THE GAP.** The replay rests
+`quote_size_shares = 5.0`. Against real book depth (698-1,382 shares within 3c of
+mid) our score share is **median 0.69%** -> **$0.23/window vs a $7.36-$17.94 JOIN
+loss = 3.1% coverage**.
+
+**RESULT 3 - THE ONE THAT MATTERS.** Reward is **strongly concave in RESTING
+size** while loss is roughly linear in FILLS. Score share by resting size (v=3c):
+5 sh -> 0.69%; 50 -> 6.5%; 500 -> 40.9%; 1,400 -> 66.0%. Robust across
+v=2/3/5c; `b` cancels in the ratio.
+
+**THESE ARE NOT P&L FIGURES.** The loss is fixed at the 5-share config's measured
+loss; resting more WOULD fill more. **The fill-vs-resting-size response is the
+missing term and I have not measured it.**
+
+**WHY IT IS DE'S:** the reward/loss ratio is a function of the resting-size
+policy - the optimizer's own free parameter. **An optimizer maximising markout
+alone will systematically under-quote, because markout prices the cost of being
+filled and never the revenue of resting.**
+
+**LIMITS:** `max_spread` not published per-market (2/3/5c sensitivity used, not a
+known value); scored **one-sided** while the real rule takes `min(Q_one,Q_two)`
+and needs two-sided quoting - not modelled; pool assumed uniform over 31 days;
+**book sample is 48 snapshots from 8 markets on ONE day**; and at 40-66% of the
+reward zone **other makers would react - the book is not static under our own
+size**, which nothing here models.

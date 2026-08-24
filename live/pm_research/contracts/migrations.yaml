@@ -4,6 +4,39 @@
 # narrowing at an allowlisted path -- the precise failure this process exists to
 # prevent. Records are loaded from the TARGET ref.
 migrations:
+- from_version: 23
+  to_version: 24
+  operation: change
+  key: module:BE-FillFit.consumes
+  old: '[''ArrivalIntensityFit'', ''ConditionalMarkLaw'', ''FlowAction'', ''FlowArrival'', ''QueuePositionBound'']'
+  new: '[''AdverseFeatureRow'', ''ArrivalIntensityFit'', ''ConditionalMarkLaw'', ''DatasetPartition'', ''FlowAction'', ''FlowArrival'', ''QueuePositionBound'']'
+  reason: 'R-ADVERSE: the offline fit needs immutable knowledge-time feature rows and their
+    frozen dataset partition for direct-WS features and future markout labels; it still has
+    no venue port'
+- from_version: 23
+  to_version: 24
+  operation: change
+  key: module:DA-FlowActionGrid.produces
+  old: '[''FlowAction'', ''HealthEvent'', ''QueuePositionBound'']'
+  new: '[''AdverseFeatureRow'', ''FlowAction'', ''HealthEvent'', ''QueuePositionBound'']'
+  reason: 'GROWTH-ONLY / R-ADVERSE: adds immutable StateView-admitted feature rows beside
+    the existing shadow action and queue bound; all v23 outputs remain present'
+- from_version: 23
+  to_version: 24
+  operation: change
+  key: module:BE-FillFit.produces
+  old: '[''FillQuantityBound'', ''FlowActionFillFit'', ''HealthEvent'']'
+  new: '[''AdverseMoveFit'', ''FillQuantityBound'', ''FlowActionFillFit'', ''HealthEvent'']'
+  reason: 'GROWTH-ONLY: adds the action-conditioned adverse-move fit inside the existing
+    FlowAndFills fitting boundary; all v23 outputs remain present'
+- from_version: 23
+  to_version: 24
+  operation: change
+  key: module:BE-FlowAndFills.consumes
+  old: '[''ActionSet'', ''ArrivalIntensityFit'', ''ConditionalMarkLaw'', ''FlowActionFillFit'', ''SelfState'', ''StateView'']'
+  new: '[''ActionSet'', ''AdverseMoveFit'', ''ArrivalIntensityFit'', ''ConditionalMarkLaw'', ''FlowActionFillFit'', ''SelfState'', ''StateView'']'
+  reason: 'R-ADVERSE: complete action outcomes include adverse-move evidence only from a
+    matching forward-validated fit; a bare toxicity score is not a DE input'
 - from_version: 21
   to_version: 22
   operation: change

@@ -204,6 +204,27 @@ not sufficient, for a day-robust claim.
 
 ### U11 — the rebate, off-trade. `rho` BLOCKS EVERY NET-OF-FEE ESTIMAND.
 
+> **RESOLVED FROM DOCUMENTATION, NOT FROM CHAIN (2026-08-24, DA, R-112, filed
+> Q-DA-50).** A **Maker Rebates Program exists** — which is why U7's in-trade
+> search was always going to come back empty. Per the venue's own docs:
+> `fee_equivalent = C × feeRate × p × (1−p)`, **feeRate 0.07 for crypto**,
+> **rebate share 20 %** (lowest of any category), **paid daily in pUSD**, min
+> **$1** accrued. It self-normalises to ≈ **20 % of the fee your own fill
+> generated**. **CEILING, BY ARITHMETIC:** `p(1−p) ≤ 0.25`, so the rebate
+> **cannot exceed 0.35 c/share**; measured pro-rata on our corpus it is
+> **0.168 c/share**. **The threshold to flip the least-negative coin-day is
+> 0.5164 c/share — so the rebate cannot flip the sign even at its maximum.**
+> **INDICATIVE, NOT INFERENTIAL:** that threshold rests on context-only levels
+> with no interval (Q-DA-48).
+> **THE RPC LEG WAS NEVER RUN: NOT-REACHABLE, NOT NOT-AFFORDABLE** — all three
+> configured public Polygon endpoints return 403/401 from this environment.
+> **STILL OPEN, AND NOT BOUNDED BY THE ABOVE:** the venue runs a SECOND,
+> separate **Liquidity Rewards Program** paying for orders **resting near the
+> midpoint with no fill required**. It is not a share of taker fees, so the
+> `p(1−p)` ceiling does not apply to it. `rho` for *that* term stays
+> `Unavailable`.
+
+
 U7 established only that no rebate is paid **inside the trade**. A periodic or
 off-chain programme would be invisible to trade receipts, and
 `rewards_registry.jsonl` turned out to be a size heartbeat, so the question is

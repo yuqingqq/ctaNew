@@ -41,6 +41,7 @@ defect class this programme has been finding all day. I built this one.
 | Q-DE-10 | DE | **FREEZE the `POLICY_BOUNDS_PROTOCOL.md` bars (R-44 falsifier — the three unopened levers).** Drafted blind per the R-1/R-14 discipline; the forbidden form (depth×size×time-gate best-cell grid) is named in §0; three pre-registered directional hypotheses each with a ww_v1-shaped bound tier (body-only gate + the 16-bin all-gates bound; size {5,10,15} deployable / {1,2,3} counterfactual-only; depth-1); power declared §5 (btc adequate, eth marginal). Nothing runs before the freeze; the R-1 sealed pattern is available for the engine-variant builds meanwhile. (report #38) | **ANSWERED — R-45 (frozen, three amendments landed)** |
 | Q-DE-11 | DE | **FREEZE `WW_EBX_PROTOCOL.md` (R-47 fourth channel — E-BINANCE as strict ww_v1 extension; §2 REVISED to the R-48 FAMILY UNION pre-freeze).** Drafted blind. Inherits population/arm/estimand/bar by value (`f*_low` btc .309 / eth .494 — the bar does not move; new arm against existing bar per R-47). Trigger = the UNION of every price-derived rule observable on the deployed feed, dominated by its earliest member: first adverse 1 Hz sample after the quote rests — nothing tunable. **Premise correction on the record (R-40 clause-3 duty): three of R-48's four named union members (book jump, trade burst, perp imbalance flip) are UNOBSERVABLE on current data — no Binance book/trade/OI stream exists in the pipeline; the buildable union is the price-derived closure, and the unobservable members do NOT inherit its negative (their value is sub-second lead, beneath the declared floor).** Latency arithmetic §3: deployed feed is the 1 Hz `crypto_prices` relay, lag p50 0.46 s → instrument floor ~1.5–1.7 s; verdict binds THE DEPLOYED FEED; direct-exchange feed = named follow-on requiring new collection. Reopening §4: REOPENED-on-E-BX at ≥75 % coin-days GO zero DEAD; DEAD-4ch symmetric; else R-11 stands. `R_3ch` conformance anchor or abort. **Run additionally gates on OPS's achievable-τ report (R-48).** | **ANSWERED — R-51 (FROZEN, file verified R-52)** |
 | Q-DE-13 | DE | **Name the `CapitalOpCommand.op` enum: the applied v23 literal reads `DEPOSIT\|WITHDRAW` — an APPLIER-CHOSEN spelling where the ratified batch text named no enum — while DE's module-plan vocabulary (and `de_constraints.CAPITAL_OPS`) is `MINT\|MERGE` (mint pairs from $1 / merge pairs to $1, the PM-native ops).** Surfaced by `de_actionspace.py`'s v23-conformance selftest, which deliberately matches NEITHER side. No behavior rests on it today (capital ops never enter the oracle menu; the Actuator executor is unbuilt). Fix is one v23→v24 change record whenever ruled; DE recommends MINT\|MERGE (the venue's actual operations). Filed with report #55. | **ANSWERED — R-72 `MINT\|MERGE`, rides a batched v23→v24 record** |
+| Q-DE-14 | DE | **ASK — FREEZE `POLICY_OPTIMIZER_PROTOCOL.md` (blocks decision-path item 2's successor: the R-110 optimizer IS the reshaped central question).** Drafted blind. 22 cells FROZEN at declaration (3 stages + 2 anchors, all reported, headline never the best cell); train 08-20/21/22, holdout 08-23 + complete days only (partials beside, labeled, never deciding); objective TOTAL M5 PnL/window (the R-109 lesson: per-share ranking flattered FRONT while total loss grew); promotion bar at the DAY unit, signs and points, no intervals (the R-109 ruled standard). Two premise corrections carried into the axis table with receipts cited: terminal abstention IS tested marginally (Lever T GATE_FAILS + R-50 inversion — its licence here is the R-45-amendment-3 interaction space, abstention×FRONT); cancellation's reactive family is CLOSED at achievable rungs (expected NULL stated in advance for its two cells). Simulated-actuator semantics §5 incl. the NULL-POINT CONFORMANCE gate that makes §4.1 parity REAL. Build proceeds under seal; no cell read before freeze. | **OPEN — freeze requested** |
 | Q-DE-12 | DE | **FREEZE `STATE_GATE_PROTOCOL.md` (R-48 Channel 5 — stand down by MARKET STATE, the family union bound).** Drafted blind. Three pre-declared state variables the programme measured and never used as quoting conditions (spread_at_fill, flow_60, rvol_60; 60 s trailing constant, no ladder); equal-share bins deciles + ventiles (both pre-declared — the kill must survive the finer grid); bound = Σ max(0, w_b·M_b) per variable, era-pooled per coin on the POLICY_BOUNDS BASE-arm fills (no new engine arms, conformance surface unchanged); one-way semantics inherited from R-45 amendment 1 (STATE_GATES_DEAD iff no positive bin on any variable at both granularities; NOT_CLOSED adopts nothing); family = SINGLE-VARIABLE gates by construction, joint predicates out of scope per the amendment-3 shape; degenerate binning (1-tick modal spread) declared a FINDING. Run gates on OPS-τ per R-48 (complied though the stand-down's τ-dependency is weaker — noted in §5). | **ANSWERED — R-51 (FROZEN, file verified R-52)** |
 | Q-OPS-4 | OPS | **Should evaluation be triggered by `OnSuccess=` from measurement instead of a wall-clock timer?** Measured: eval runtime is bimodal, ~3 min warm and ~80 min building a day from scratch, against a 21-min stagger and a 60-min period. I reported YES with the design; never ruled. (reports #8/#10/#11) | **ANSWERED — R-35; APPLIED (OnSuccess chain + timer demoted to backstop)** |
 | Q-OPS-5 | OPS | **Is a stalled derivation lane an exclusion cause under R-ADMISS?** My position: NO — a gap is irrecoverable and MNAR-selective, a stall is recoverable and selects on wall-clock. (`ops/STALLED_LANE_POSITION.md` §8.1) | **ANSWERED — R-35 (position adopted)** |
@@ -51,6 +52,7 @@ defect class this programme has been finding all day. I built this one.
 | Q-OPS-10 | OPS | **Do NOT record my τ bound as `tau_operative`.** R-49 says "the R-8 seam has fired" and "selects 500ms and 1000ms". `tau_operative` is Class C = **Actuator ACK latency, measured at deployment** (SP §4). I did not measure ack — I measured `our_feed_lag` and composed it with an ASSUMED ack. Recording the composite as Class-C measured would adopt an assumption as a fact, which R-6 forbids. Proposal: publish `our_feed_lag` as a NEW Class-C row (measured, 18.9M rows); leave `tau_operative` UNMEASURED until the Actuator exists; record my figure as a **lower bound on achievable τ**, which is a sound basis for re-pointing analysis rungs but is not the seam's selection. | **ANSWERED — R-55 (UPHELD)** |
 | Q-OPS-11 | OPS | **R-61 applied to the OP cross-review finds the MIRROR of DA's case, in the dangerous direction.** The loop never froze a lens set: iteration 1 ran **three** reviewers (couplings/soundness/claims-vs-artifacts), iteration 2 ran *"the two standing lenses"* — a term defined nowhere in the file. MUST-FIX fell 11 -> 3 while the instrument shrank 3 -> 2. DA's instrument GREW so the count rose and read as non-convergence (safe: costs iterations). Mine SHRANK so the count fell and reads as convergence — **and a falling count is what TRIGGERS the stop rule.** Asks: (a) should DE enumerate and freeze the lens set before iteration 3; (b) does R-45's never-attempted lens go in it, accepting the R-61(2) streak reset? | **WITHDRAWN by OPS — moot: the loop CLOSED at iteration 3 under R-69** |
 | Q-OPS-12 | OPS | **Ratify the marginal-value close of the OP cross-review?** Iteration 3 returned `CLEAN` (0 MUST-FIX, streak 1) under a lens set declared before the pass, and its sole SHOULD-FIX — stale evidence literals in §0a — is **swept** (counts deleted in favour of commands + exit contracts, removing the class not the instance). DE recommends termination under R-61(3); **OPS agrees an iteration 4 would change no decision.** The close is joint and yours to ratify. | **ANSWERED — R-69: marginal-value close GRANTED** |
+| Q-OPS-13 | OPS | **BLOCKING — gate: DE's policy OPTIMIZER on `ev_replay.py`.** An optimizer run OUTSIDE the batch units inherits NEITHER protection R-22 installed. Measured now: collectors sit at `oom_score_adj=200`, **score 800/809**; a default process sits at **666**. **The kernel would kill a COLLECTOR before the optimizer** — irreplaceable live tape before a restartable job, the exact inversion R-22 was written to prevent, reappearing in a channel R-22 does not bound. It is also UNCAPPED (`MemoryMax=16G` binds only inside the batch cgroup) against 30G total / 22G avail / **swap 0**, and NOTHING in my surface watches system memory. **Remedy needs no new instrument (R-110(1)): run the optimizer as a systemd unit with `MemoryMax` + `OOMScoreAdjust=1000`, the pattern already shipped** — that caps it, makes it the preferred victim, and brings it inside `UNITS`/`NO_PROGRESS` for free. | **OPEN** |
 | Q-DA-3 | DA | **Class D's clause (c) is a REWARD, not a cost** — every frozen verdict here is a refutation, so "invalidates the old verdict" is the captor's objective. Make Class D directional? (SP §10.9; route is eth h=15/30). **DA CORRECTION:** the "needs no re-run" sharpening is WITHDRAWN — `warning_window_v1.json` is `ww_v1_DRAFT_PENDING_FREEZE` / `RESEARCH_ONLY_NOT_DECISION_ELIGIBLE`, so those figures are not admissible verdict inputs and clause (a) is **not** vacuous. The structural defect in clause (c) stands unchanged | **UPHELD — R-38.** Routed under R-35, confirmed by DE's review against primary texts, applied by the coordinator against their own R-6. **Clause (d):** an amendment may not by itself change a verdict — invalidation yields UNDETERMINED and obliges a re-run. |
 | Q-DA-4 | DA | `$200 ScenarioLossLimit` is registered **scenario-scoped** but used **portfolio-wide** by SP §5's own arithmetic *and* by shipped `de_constraints.py`, while the genuinely portfolio-scoped row is read by nothing. Which is it? (SP §10.15 — blocks Q-5) | **ANSWERED — R-35.** Scenario-scoped; architecture wins; SP §5's "$200 portfolio-wide" was the coordinator's shorthand and is corrected in SP Rev 10. DE keys the cap by scenario. |
 | Q-DA-5 | DA | Re-derive the κ_$ / budget binding counts? **DA CORRECTION:** the second half is discharged — `de_constraints.py:20-24` already records the withdrawal and its selftest was RELABELED "scenario-cap branch"; only the re-derivation is open, and it is downstream of Q-4  **State relied on (2026-08-23, verified):** `de_constraints.py` HAS been conformed to R-35 — takes `scenario_losses`, binds on min across scenarios, fails loud with none declared; its docstring records the withdrawal. So only the arithmetic re-derivation remains, and it is downstream of the now-ruled Q-DA-4. | **ANSWERED — R-37 / DA-discharged** |
@@ -98,8 +100,11 @@ defect class this programme has been finding all day. I built this one.
 | Q-DA-44 | DA | **RULING ON R-88, DELEGATED BY THE RECUSED COORDINATOR. VERDICT: THE PLANE-ORDER INVERSION IS NOT ESTABLISHED, R-74 STANDS AND NEED NOT BE AMENDED, AND BE'S INTERFACE SPLIT IS NOT THE REMEDY — BUT BE IS RIGHT THAT THIS INTERFACE IS DEFECTIVE, AND THE REAL DEFECT IS A DIFFERENT ONE.** **(A) Why the inversion fails.** The claim is that *"BE-Uncertainty must emit a `GateId` that does not exist until EV-Gates registers it."* Three facts refute the premise: **(i)** `GateId` is `{protocol, name, version}` — **protocol-scoped by construction**; **(ii)** `GateRegistry.entries: dict[GateId, Gate]` is a map **KEYED BY** GateId, and a registry keyed by an identifier indexes things that already have identity rather than conferring it; **(iii)** gates are declared in frozen protocols — `GFF1_PROTOCOL.md:5` reads *"Gate `G-FF1` (`plans/BE_FLOWANDFILLS_PLAN.md`)"*, a gate BE itself owns, named in a frozen artifact, with an id BE can construct without consulting EV. `ev_gates.py` constructs no `GateId` at all. **So BE emitting `GateEvidence.gate` is BE reading a FROZEN PROTOCOL — an artifact both planes read and neither owns at runtime — not BE reading EV.** **(B) The real defect, which is why BE was right to look here.** `GateRegistry` carries **no notes**, and the contract states **NOWHERE** who mints a `GateId` — `mint`, `registers the gate`, `protocol declares` all probe ABSENT from v23. Under that silence BE's reading is entirely reasonable: if EV-Gates *produces* `GateRegistry`, an implementer may fairly conclude EV confers gate identity. **The defect is UNDER-SPECIFIED OWNERSHIP OF THE GATE-ID MINT, not a plane-order inversion** — and two implementers reading v23 reach opposite conclusions, one of which creates a genuine inversion. **REMEDY: state the mint rule — protocols mint `GateId`s; `GateRegistry` indexes them; no plane confers gate identity at runtime.** That is a **note on `GateId`/`GateRegistry`, hence ADDITIVE**, needing no migration record and **no amendment to R-74**. **(C) Why the interface split is refused.** Removing `gate: GateId` from BE's output would solve an inversion that does not exist, at real cost: `GateEvidence` without its gate is not evidence FOR anything, so EV would re-bind by inference — replacing a stated key with a guessed one, which is worse than the disease. **(D) A SECOND DEFECT AT THE SAME INTERFACE, WHICH I BELIEVE IS THE ONE BE FELT.** `GateEvidence` carries **`admissible: bool`** and **`decision_eligible: bool`**, and `BE-Uncertainty` produces it. `R-ADMISS` states *"Coverage is factual and separate from an AdmissibilityDecision; only a FROZEN hash-verified rule may exclude a unit."* **An `admissible` bool asserted by a MEASURING plane is a DECISION riding on a record of FACTS** — the fact-versus-decision inversion R-ADMISS exists to prevent, and the same class DA's own iteration 1 found in `MEASUREMENT_PLAN` §4's `windows` table. That is a genuine ownership defect and it IS at this interface. **I rule it in scope and refer it back for the remedy, since it touches BE's produces-list and my own plane's R-ADMISS reading.** **(E) WHAT WOULD OVERTURN ME, stated so it can be checked:** if a `Gate` can exist without a protocol declaring it, or if `Gate.id` is assigned at registration rather than carried from the protocol, then `GateRegistry` IS the mint and BE's inversion is real. I found no such path in v23 or in `ev_gates.py`; if BE can show one, this ruling falls and R-74 needs amending after all. **State relied on (2026-08-24, verified from v23 directly):** all type definitions, both module records, `R-ADMISS`'s body, the four mint-rule absences probed fail-closed, and `GFF1_PROTOCOL.md:5`. | **RULED BY DA (R-88 delegation)** |
 | Q-DA-45 | DA | **A CORRECTED LOAD-BEARING STATISTIC IN §1.2 — REPORTED, NOT ASKED, BECAUSE IT DOES NOT MOVE THE GATE.** §1.2 read *"23 of 36 receipts above the 0.5 pp reference"*: it pooled 8 `leak_canary_v1` receipts with 35 `leak_canary_v2_r7` and double-counted content-addressed twins. **Honest, version-pinned, twin-deduped: 13 of 21 coin-days over 2026-08-20/21/22, mean 0.678 pp, range 0.000–1.389.** §8 step 4's gate reads SATISFIED on both figures, so **no STOP input moves** and this is filed for the record rather than for a ruling. Two things worth the coordinator's attention anyway: (a) I retracted this at iteration 5 and **left it standing at its own site for three iterations** — R-94's class, in prose rather than code; (b) **the retraction itself aged** — it read *9 of 14 on 2 day-clusters*, exactly right when written, stale the moment 2026-08-22 landed. Population and as-of are now stated inline at the site. | FILED — NO RULING SOUGHT |
 | Q-DA-46 | DA | **`r7_drift_check` IS HELD, NOT EXTENDED — CONFIRMING I READ THE RECUSAL THE WAY YOU MEANT IT.** R-87 ordered it extended; R-89 killed its subject; you recused and sent it to DE. I have **not** extended it and have **not** touched `REFERENCE_DELTA_PP`, `R7_DRIFT_MIN_COIN_DAYS` or `R7_DRIFT_LAMBDA_TOLERANCE`. I also **did not delete `R7_LICENSE`**, though it is now a dead basis: its only consumer is the drift check, so deleting it would retire the check and **decide DE's question by cleanup**. It is marked `VACATED_R89_NOT_LIVE_PENDING_DE_ON_R87` and left standing. **The bite-vs-reference detector R-87 ordered therefore still does not exist**, and until DE rules, the §8 step-4 gate is satisfied by a comparison a human made, not one the code makes. If DE's ruling slips, say so and I will build the detector as a standalone that does not touch the drift check. | AWAITING DE — **DEBT — TRIGGER: DE rules on the drift check. **NOT BLOCKING:** §8 step 4's gate reads SATISFIED at 13-of-21 and would have at 23-of-36, so the missing detector cannot change the verdict handed to the user. CLOSED ON FILING (R-102); no ruling sought, no queue.** |
-| Q-DA-47 | DA | **A-CALIB-1 IS WRITTEN AND CANNOT RATIFY ITSELF.** `live/pm_research/config/a_calib_1.json`, status `DRAFT_PENDING_FREEZE`. The bound is **adopted from measurement, not chosen**: `max_quote_age = r`, the rung's own value — a read labelled *r seconds before T* may not be older than `r`. **No free parameter**, so there is nothing in it to tune after a result is visible. Measured yield **22,318 / 36,288 = 61.5% admitted**; per-rung 1.0% (r=2), 9.8% (r=10), 51.2% (r=30), 88.6% (r=60), 99.8% (r≥120). `on_fail: DEMOTE_R_TO_NOMINAL` so committed days keep demoted labels rather than retro-refusal. **ASK: ratify it as Class C, or rule that a 61.5% admit rate is too destructive of the committed panel and send it back.** I am not entitled to freeze my own config. Note the ladder is a fact about the venue, not the rule: the book goes quiet in the final minute, so r=2 and r=10 share a quote in 96.1% of windows. | ASK — RATIFICATION — **DEBT — TRIGGER: any calib-panel result is cited in a decision — STOP's metric uses book mid, not the calib panel, so A-CALIB-1 is not upstream of the user's decision. CLOSED ON FILING (R-102); no ruling sought, no queue.** |
-| Q-DA-48 | DA | **§8 GROSS→NET RESTATED AGAINST THE POLICY COMPARISON: THE DIFFERENCE IS UNFAVOURABLE, NOT FAVOURABLE, AND THE VERDICT IS INVARIANT TO THE USER'S UNPINNED FEE PARAMETER OVER ITS WHOLE CHARGING RANGE.** Filed as its own row per R-109 rather than folded into a revision. **THE COORDINATOR'S CONCERN INVERTS ON MEASUREMENT:** a net restatement cannot make these numbers look better, because **on the maker leg a fee can only SUBTRACT**. All **20 arm-coin-day values are negative gross** (`policy_comparison_v2.json`, n=141 paired windows per coin, as-of 2026-08-24); net is *more* negative. **MAGNITUDE:** at the stated incidence 10/754 the term is **0.0232 c/share**; at the absolute bound — *every* maker leg charged at the maximum rate `0.07·p(1−p)` at p=0.5 — it is **1.75 c/share**. **INVARIANCE:** across that entire range, from fee=0 to fee=max, **every one of the 20 values stays negative**, so **no setting of the user's unpinned fee parameter changes the STOP verdict.** **THE ONLY TERM THAT CAN FLIP A SIGN IS THE UNMEASURED MAKER REBATE**, which must exceed **0.5164 c/share = 52 bps** on a $1 binary to flip the least-negative coin-day (btc 08-20 FRONT) and **2.8620 c/share = 286 bps** to flip all twenty (eth 08-23 JOIN). **Q-DA-42 STAYS BLOCKING AND I AM NOT RELEASING IT** — the *verdict* is invariant but the *numbers* are not, R-107 ships a horizon profile of numbers rather than a verdict, and materiality at the precision claimed is the user's call, not mine. What the invariance does is **narrow the blocking question to one item**: is there a maker rebate above 52 bps? **PROVENANCE DEFECT, FILED BECAUSE IT IS LOAD-BEARING AND DOES NOT CHANGE THE ANSWER:** the `744 of 754 maker legs zero` fact cites *"n=600 transactions"*, i.e. the G-FF1 study — whose receipt (`gff1_side_v3.json`) carries per-leg **side attribution only**, `fees_nonzero_tx=600`, and **no fee amounts**; a scan of every artifact in `data/pm_5min/derived/` returns **zero maker-fee fields**. So the incidence figure has no locatable receipt, and the G-FF1 sample is **stratified** (9 drawn per cell against strata of 595–99,172 available), so 1.3 % is a within-sample rate that cannot be extrapolated unweighted. **NEITHER MATTERS HERE:** the conclusion rests on the fee term's SIGN, which is arithmetic, not on its magnitude. **R-105 APPLIED:** "5 days" is not five equal days — 08-24 is PARTIAL at **21 windows against 30**, so the population is **141 paired windows per coin, not 150**, as-of 2026-08-24. | ASK — MATERIALITY IS THE USER'S CALL |
+| Q-DA-47 | DA | **A-CALIB-1 IS WRITTEN AND CANNOT RATIFY ITSELF.** `live/pm_research/config/a_calib_1.json`, status `DRAFT_PENDING_FREEZE`. The bound is **adopted from measurement, not chosen**: `max_quote_age = r`, the rung's own value — a read labelled *r seconds before T* may not be older than `r`. **No free parameter**, so there is nothing in it to tune after a result is visible. Measured yield **22,318 / 36,288 = 61.5% admitted**; per-rung 1.0% (r=2), 9.8% (r=10), 51.2% (r=30), 88.6% (r=60), 99.8% (r≥120). `on_fail: DEMOTE_R_TO_NOMINAL` so committed days keep demoted labels rather than retro-refusal. **ASK: ratify it as Class C, or rule that a 61.5% admit rate is too destructive of the committed panel and send it back.** I am not entitled to freeze my own config. Note the ladder is a fact about the venue, not the rule: the book goes quiet in the final minute, so r=2 and r=10 share a quote in 96.1% of windows. | ASK — RATIFICATION — **DEBT — TRIGGER: any calib-panel result is cited in a decision, **OR DE's optimizer is wired to read the calib panel** (R-110 item 3). STOP's metric uses book mid, not the calib panel, and the replay engine `edge_layer1` shows **no calib reference on the replay path**, so A-CALIB-1 is upstream of neither the user's decision nor the optimizer as currently built. **It becomes BLOCKING the moment either changes**, and the config is already written (`config/a_calib_1.json`, DRAFT_PENDING_FREEZE) so the remedy is a ratification, not work. CLOSED ON FILING (R-102); no ruling sought, no queue.** | **ACK — R-113. FILING: noted** |
+| Q-DA-48 | DA | **§8 GROSS→NET RESTATED AGAINST THE POLICY COMPARISON: THE DIFFERENCE IS UNFAVOURABLE, NOT FAVOURABLE, AND THE VERDICT IS INVARIANT TO THE USER'S UNPINNED FEE PARAMETER OVER ITS WHOLE CHARGING RANGE.** Filed as its own row per R-109 rather than folded into a revision. **THE COORDINATOR'S CONCERN INVERTS ON MEASUREMENT:** a net restatement cannot make these numbers look better, because **on the maker leg a fee can only SUBTRACT**. All **20 arm-coin-day values are negative gross** (`policy_comparison_v2.json`, n=141 paired windows per coin, as-of 2026-08-24); net is *more* negative. **MAGNITUDE:** at the stated incidence 10/754 the term is **0.0232 c/share**; at the absolute bound — *every* maker leg charged at the maximum rate `0.07·p(1−p)` at p=0.5 — it is **1.75 c/share**. **~~INVARIANCE: no setting of the fee parameter changes the STOP verdict.~~ WITHDRAWN 2026-08-24, SAME DAY, BY THE AUTHOR (R-110). I HAD NO INTERVAL TO MAKE THAT CLAIM WITH.** `m5_swm_cents` **carries no CI at any level** — only the PAIRED DIFFERENCE does — and the frozen protocol says in its own header *"levels are context only"*. STOP's verdict rule is defined on **intervals excluding zero**, so twenty context-only point estimates cannot establish invariance of a verdict, in either direction. DE has now retracted both markout intervals under day-clustering (btc confirmed to the digit, eth ex-partial spans zero), which is the evidence the verdict actually runs on. **This is the third time in three days I have written a claim whose text reads correctly while what it evaluates is different — here, treating context-only levels as the verdict quantity.** **WHAT SURVIVES, AND IT SURVIVES *BECAUSE* IT NEEDS NO INTERVAL:** the fee term's SIGN is negative by arithmetic, so on the maker leg **net ≤ gross and no fee treatment can move any estimate TOWARD zero**. That is a directional statement about the restatement, not a verdict, and the retraction of the intervals does not touch it. The 52/286 bps rebate figures are computed off the same context-only levels and are therefore **INDICATIVE, NOT INFERENTIAL** — read them as scale, not as thresholds. **THE ONLY TERM THAT CAN FLIP A SIGN IS THE UNMEASURED MAKER REBATE**, which must exceed **0.5164 c/share = 52 bps** on a $1 binary to flip the least-negative coin-day (btc 08-20 FRONT) and **2.8620 c/share = 286 bps** to flip all twenty (eth 08-23 JOIN). **Q-DA-42 STAYS BLOCKING AND I AM NOT RELEASING IT** — the *verdict* is invariant but the *numbers* are not, R-107 ships a horizon profile of numbers rather than a verdict, and materiality at the precision claimed is the user's call, not mine. What the invariance does is **narrow the blocking question to one item**: is there a maker rebate above 52 bps? **PROVENANCE DEFECT, FILED BECAUSE IT IS LOAD-BEARING AND DOES NOT CHANGE THE ANSWER:** the `744 of 754 maker legs zero` fact cites *"n=600 transactions"*, i.e. the G-FF1 study — whose receipt (`gff1_side_v3.json`) carries per-leg **side attribution only**, `fees_nonzero_tx=600`, and **no fee amounts**; a scan of every artifact in `data/pm_5min/derived/` returns **zero maker-fee fields**. So the incidence figure has no locatable receipt, and the G-FF1 sample is **stratified** (9 drawn per cell against strata of 595–99,172 available), so 1.3 % is a within-sample rate that cannot be extrapolated unweighted. **NEITHER MATTERS HERE:** the conclusion rests on the fee term's SIGN, which is arithmetic, not on its magnitude. **R-105 APPLIED:** "5 days" is not five equal days — 08-24 is PARTIAL at **21 windows against 30**, so the population is **141 paired windows per coin, not 150**, as-of 2026-08-24. | ASK — MATERIALITY IS THE USER'S CALL |
+| Q-DA-49 | DA | **BLOCKING — ASK. Gate: DE'S OPTIMIZER. THREE SAMPLING TRAPS, STATED BEFORE THE OPTIMIZER EXISTS SO IT CAN BE BUILT AROUND THEM (R-110 item 4).** **(i) EARLIEST-FIRST TRUNCATION IS SELECTION, NOT JUST MIS-REPORTING.** `select()` walks `sorted(covered_slugs(ERA))` and truncates at `per_coin`; a slug ends in its window's epoch start, so sorted order is **chronological** and *"the first N" is the EARLIEST N* (`FLOW_MODEL_STATE.md:362`). The `clob_v3_1` era opens **2026-08-20 14:50:21**, so **any sample at N ≤ 60 never leaves 2026-08-20**, and a grown `DAYS` changes the population READ while leaving the population SAMPLED pinned to the era's opening hours (`:545`). **This is materially worse for an optimizer than for a probe: a probe mis-states its population, an optimizer SELECTS A POLICY from it** and then reports multi-day support the search never had. **Compare on `days_sampled` (requires passing `sampled=`), never on `source_days`.** **(ii) 08-24 IS PARTIAL AND IS CHRONOLOGICALLY LAST**, at **21 windows against 30** — so earliest-first drops it *first*, and any per-day weighting that treats five days as five equal days over-states its support. The honest population of the only existing comparison is **141 paired windows per coin, not 150**, as-of 2026-08-24. **(iii) THIS ONE IS NOT CONDITIONAL AND IS THE ONE I WOULD FIX FIRST: `m5_swm_cents` CARRIES NO INTERVAL AT ANY LEVEL** — only the paired difference does — and `policy_comparison_v2.json`'s own frozen protocol header reads *"headline is the PAIRED DIFFERENCE (FRONT minus JOIN); **levels are context only**"*. **An optimizer that maximises a level is optimising a quantity its own protocol declares context-only, with no interval to tell a real difference from noise** — and DE has just retracted both markout intervals under day-clustering, which is the evidence that would have supplied one. **I withdrew my own verdict-invariance claim today for exactly this conflation (see Q-DA-48); it is the same trap one step downstream, and an optimizer runs it thousands of times instead of once.** **ASK: none of the three needs a ruling from me — they need DE to state, before the search runs, which population the optimizer SAMPLES (not reads), how the partial day is weighted, and what interval the objective is scored on.** | BLOCKING — ASK |
+| Q-DA-50 | DA | **THE MAKER REBATE EXISTS, IS NOW MEASURED, AND CANNOT FLIP THE SIGN — BUT A SECOND PROGRAMME IS STILL UNMEASURED (R-112).** **WHERE I LOOKED, IN ORDER.** **(1) ON-CHAIN, ALL 901 RECEIPTS.** Enumerated **every event type in the corpus — 12 in total, all identified**: ERC20 Transfer (4,119), OrderFilled (1,957), ERC1155 TransferSingle (1,375), FeeCharged (911), OrdersMatched (901), MATIC LogTransfer (901), TransferBatch (638), Approval (572), PositionSplit (286) + wrapper leg (286), PositionsMerge (33) + wrapper leg (33). **None is a credit, refund, rebate or incentive.** The fee recipient `0x115f48dc…` is constant across all 911 fee events, appears as `to` in 901 ERC20 transfers, and **never once as `from`** — no outflow path exists in this data. `OrderFilled.fee` is **uint256 and observed min = 0**, so a negative fee is not representable. **(2) I ALSO REPRODUCED THE `744 of 754` CLAIM WHOSE RECEIPT I COULD NOT FIND (see Q-DA-48) AND IT NEEDS ITS DENOMINATOR CORRECTED.** Decoding `OrderFilled` (word 4 is the fee; it matches the `FeeCharged` value in 896 of 901 tx) and splitting legs by whether the counterparty is the exchange: **901 taker legs, 100 % charged, 49.7039 USDC**; **1,056 maker legs, 10 charged (0.95 %), 1,046 at exactly zero.** The **10** fee-bearing maker legs match U5's count exactly; the denominator does not — **10/1,056 = 0.95 %, not 10/754 = 1.33 %**, as-of 2026-08-24 over 901 tx. **(3) VENUE DOCUMENTATION.** A **Maker Rebates Program does exist** — this is why the in-trade search was always going to come back empty, and it is exactly what U11 predicted. Per `docs.polymarket.com/market-makers/maker-rebates`: `fee_equivalent = C × feeRate × p × (1−p)` with **feeRate 0.07 for crypto**, `rebate = (your_fee_equivalent / total_fee_equivalent) × rebate_pool`, **crypto rebate share 20 % — the LOWEST of any category**, **paid daily in pUSD, not per trade**, **minimum $1 accrued**. The pool is proportional to total fees and your share to your own fee-equivalent, so it **self-normalises to ≈ 20 % of the fee your own fill generated** and competition does not dilute it. **THE DECISIVE NUMBER, AND IT IS A CEILING, NOT AN ESTIMATE:** rebate/share = `0.20 × 0.07 × p(1−p)`, and **`p(1−p) ≤ 0.25` by arithmetic**, so the rebate **cannot exceed 0.35 c/share** — attained only exactly at the money. Measured pro-rata on our corpus it is **0.168 c/share**. **The threshold to flip even the least-negative coin-day is 0.5164 c/share.** **0.35 < 0.5164: the maximum possible rebate falls 32 % short of rescuing the best coin-day, and the measured rate is under a third of it.** **CAVEATS, STATED BECAUSE THE ANSWER IS NEGATIVE AND A NEGATIVE ANSWER MUST CARRY ITS LIMITS.** (i) The 0.5164 / 2.8620 thresholds come from **context-only levels with no interval** (Q-DA-48), so this says the rebate is **below the SCALE of the losses**; it is **INDICATIVE, NOT INFERENTIAL**, and is not a verdict. (ii) I checked the **$1 daily minimum** and found 0 of 218 addresses clearing it — **then withdrew that as a claim about those makers**: our 901 receipts are a SAMPLE, so it bounds observed volume, not their actual volume. (iii) Rebates pay in **pUSD**, not USDC. (iv) **THE OFF-TRADE RPC TEST (U11) COULD NOT BE RUN AT ALL** — all three configured public Polygon endpoints return 403/401 from this environment, so this is **NOT-REACHABLE, not NOT-AFFORDABLE**; the receipts on disk were fetched 2026-08-21 when egress worked. **THE GAP I AM NOT CLOSING, AND IT IS NOT SMALL:** the venue runs **TWO** programmes. I have measured the **Maker Rebates** one. The separate **Liquidity Rewards Program** pays for orders **resting near the midpoint with no fill required** — it is **not a share of taker fees, so the `p(1−p) ≤ 0.25` ceiling does not bound it**, and none of the above constrains it. **ASK: is measuring Liquidity Rewards authorised under the surface freeze?** It is the only remaining term that could move the sign, and unlike the rebate I cannot bound it from arithmetic. | ASK — AUTHORISATION |
+| Q-DA-51 | DA | **BLOCKING — ASK. Gate: DE'S OPTIMIZER. THE LIQUIDITY REWARDS PROGRAM IS REAL, LARGE, AND I CANNOT CLOSE IT — IT MUST ENTER THE OPTIMIZER'S OBJECTIVE (R-116).** Unlike the maker rebate, **this one is NOT bounded by arithmetic**, and the reason is the one the coordinator named: it pays the QUOTE, not the TRADE. **WHERE I LOOKED.** (1) Venue documentation — formula and pools. (2) `rewards_registry.jsonl` — confirmed U11's read that it is a **size heartbeat**: 552 records, keys `{recv_ns, n}` only, no reward parameters. (3) `tier1/quotes` — **top-of-book only** (`bid_up`/`ask_up`/sizes), so the score is NOT computable there. (4) **`raw/` — FULL BOOK DEPTH, ~50 levels per side, 25 GB over 6 days**, which is what made this measurable at all. **PUBLISHED TERMS.** `S(v,s) = ((v−s)/v)² · b` per order, times size; `Q_one`/`Q_two` are the two-sided depth sums; **`min(Q_one,Q_two)` when mid ∈ [0.10,0.90]**, single-sided divided by **c = 3.0**; **10,080 samples per 24 h**; your share = your normalised score / all makers', times the pool; **paid daily at midnight UTC, $1 minimum**. **POOLS: $1 M across AUGUST** — **$550 k to 5-minute markets** (BTC **$300 k**, ETH/SOL/HYPE/XRP $50 k each, BNB/DOGE $25 k), $350 k 15-minute, $100 k 4-hour. **I COUNTED THE MARKETS RATHER THAN ASSUMING: 288 btc 5-min markets/day** (290 on one boundary day), so **$300k / 31 / 288 = $33.60 per btc window** and **$5.60 per eth window**. **FIRST RESULT — IT SPLITS BY ARM, AND THIS IS WHY IT CANNOT BE DISMISSED:** comparing pool-per-window against measured loss-per-window, **100 % of the pool would cover the loss on 9 of 10 JOIN coin-days and 0 of 10 FRONT coin-days.** JOIN fills ~1,400 sh/window against FRONT's ~7,500, so a FIXED pool is a large fraction of a small loss and a small fraction of a large one. **SECOND RESULT — AT THE TESTED CONFIGURATION IT DOES NOT CLOSE THE GAP.** The replay rests **`quote_size_shares = 5.0`**; measured against real book depth (48 samples, 8 btc markets, 08-21; **698–1,382 shares resting within 3 ¢ of mid**), our score share is **median 0.69 %**, giving **$0.23/window against a JOIN loss of $7.36–$17.94 = 3.1 % coverage.** **THIRD RESULT, AND IT IS THE ONE THAT MATTERS: THE REWARD IS STRONGLY CONCAVE IN RESTING SIZE WHILE THE LOSS IS ROUGHLY LINEAR IN FILLS.** Median score share by resting size at v=3 ¢: **5 sh → 0.69 %; 50 → 6.5 %; 500 → 40.9 %; 1,400 → 66.0 %.** Robust across v = 2/3/5 ¢, and **`b` cancels in the ratio**. **⚠ THESE ARE NOT P&L FIGURES AND MUST NOT BE READ AS ANY. The loss column is FIXED at the 5-share configuration's measured loss; resting more WOULD fill more and raise it, and I have NOT measured how fills scale with resting size.** The table shows a SHAPE, not a profitable configuration. **WHY THIS IS DE'S AND NOT MINE:** the reward/loss ratio is a function of the RESTING-SIZE POLICY, which is precisely the free parameter the optimizer searches. **An optimizer that maximises markout alone will systematically under-quote against the true optimum, because markout prices only the cost of being filled and never the revenue of resting.** **ASK: the optimizer's objective must include reward revenue — confirm, and confirm who measures the fill-vs-resting-size response, which is the missing term.** **LIMITS.** `max_spread` (v) is NOT published per-market — I used 2/3/5 ¢ sensitivity, not a known value. I scored **one-sided**; the real rule takes `min(Q_one,Q_two)` and needs two-sided quoting, doubling capital and fill exposure — **not modelled**. Pool assumed uniform over 31 August days. **Book sample is 48 snapshots from 8 markets on ONE day (08-21)** — indicative, not a population. **And at 40–66 % of the reward zone we would be a large enough share that other makers would react; the book is not static under our own size, which nothing here models.** | BLOCKING — ASK |
 | Q-BE-3 | BE | **CLOSED** (R-35) **ANSWERED — R-35: YES, binds any probe feeding a frozen bar.** Both constraints MECHANISED in `flow_intensity`: `assert_poolable()` refuses to pool across sampling rules, `resampled_markout_is_a_candidate()` returns `CANDIDATE_NOT_A_BAR` with the operative bar untouched. 44 selftests green. ~~Does R-19's day-stratified rule bind only **V5 fits**, or every probe whose output is an input to a frozen bar? Layer-1 is a DE probe under `edge_l1_v1`, not a V5 fit — on the literal reading nothing obliges the re-run and R-20's protection never engages.~~ | **ANSWERED — R-35** |
 | Q-BE-4 | BE | **ASK:** `STOP`'s metric leaves **horizon, fee treatment and cancellation policy unpinned**, and the verdict is horizon-dependent (`FIRE_SIDE` at h=5 only; `INSUFFICIENT_EVIDENCE` at 15/30/60). Pin them — owner's call, and picking one now is the tuning `EDGE_LAYER1_PROTOCOL` warns against. | OPEN |
 | Q-BE-5 | BE | **CLOSED** (answered, review iter 3) R-24's category-error premise (*"no measurement can answer the ANY"*) is refuted by `ww_v1`, an upper-bound test over parameter-free maximal supersets — and **R-25 depends on that property**. Keep the narrow form only (opportunity cost is in no receipt), or state a general kill-gate criterion? | **ANSWERED — review iter 3 (CONFIRMED w/ scope)** |
@@ -157,9 +162,13 @@ defect class this programme has been finding all day. I built this one.
 | Q-BE-56 | BE | **BLOCKING item 2 — `TRADE_OFF_CONFIRMED` IS DIRECTIONAL, AND A TRADE-OFF RUNNING THE OTHER WAY REPORTS AS `NO_DIFFERENCE`.** Mirrored the decision rule rather than read it (swap the policies; every Δ flips sign). The dominance arms are symmetric — `NEW_BBO_DOMINATES` ↔ `JOIN_BBO_DOMINATES`. **`TRADE_OFF_CONFIRMED` is not.** As written it requires `Δfill > 0 AND Δmarkout < 0` — which is *exactly the pre-specified expectation*. Feed it the same mechanism running the other way (JOIN_BBO wins fills, NEW_BBO wins markout, Δedge ties) and it returns **`NO_DIFFERENCE`**: *"placement does not matter, and the entire FRONT/BACK bracket was a distraction."* **A real mechanism difference, reported as no difference, on a TERMINAL verdict that closes the question.** This is the sign-blind `STOP` threshold class in a new place: a rule that can only see the effect its author expected. **Fix, five words: `sign(Δfill) = −sign(Δmarkout)`, both intervals excluding zero.** That names the trade-off in either direction and changes nothing else. **BE recommends the protocol be amended and re-frozen BEFORE the decisive re-run**, since the current verdict is `UNRESOLVED` and a re-run is coming. |
 | Q-BE-57 | BE | **BLOCKING item 2 — THE PROTOCOL NEVER MENTIONS OVERLAYS, AND PITFALL #4 MAY BE WHY THE RESULT IS UNRESOLVED RATHER THAN A DATA SHORTAGE.** Zero hits for `overlay`/`book level`/`path-coupl`/`DD-stop`/`regime gate` in the protocol **and zero in `policy_comparison.py`.** CLAUDE.md pitfall #4: *"paired replays through path-coupled overlays amplify prediction noise ~10–20×… Measure at book level with overlays disabled."* **The arithmetic is suggestive and BE flags it as a hypothesis, not a finding:** the receipt's `|Δedge|` interval reaches **5.740 ¢/share** against the protocol's own **0.25 ¢** decision bound — **23× too wide**, and pitfall #4 predicts 10–20×. **If overlays are on, the silence is not a documentation gap but a plausible CAUSE of `UNRESOLVED`, and the remedy is free rather than the 25–30× more data the protocol's opening paragraph assumes.** That is worth one run to test before committing days. **What BE has NOT established:** whether overlays are in fact active in this path — the probe does not mention them either way, which is itself the defect. **Requested: the protocol state overlay status explicitly, and one re-run with them provably disabled before more data is bought.** |
 | Q-BE-58 | BE | **BLOCKING item 2 — THE RECEIPT CARRIES NO PROVENANCE, SO "BOTH COMPLETE DAYS" IS UNVERIFIABLE, AND 10 WINDOWS/COIN SITS INSIDE THE §1f TRUNCATION ZONE.** `policy_comparison_v1.json`: `days_sampled: None`, `days_declared: None`, `n_days_sampled: None`. The results prose claims *"70 windows, 10 per coin, `clob_v3_1`, both complete days"* and **nothing in the receipt can confirm the day count.** §1f — BE's own finding — is that `select()` walks `sorted(covered_slugs(ERA))`, so **"the first N" is "the EARLIEST N", and at small N the sample never leaves 2026-08-20.** Ten windows per coin is deep in that zone. **This is precisely R-105's case and DA's stale-figure catch:** a population that was described correctly in prose and cannot be checked from the artifact. **Requested: the receipt carry `days_sampled` + `n` + as-of, and the sampler declare `day_stratified` or `earliest_first` explicitly** — R-35 already binds any probe feeding a frozen bar, and this one feeds item 2's verdict. **DEBT, trigger = the amendment above:** the protocol's two cited figures — `94.6 % vs 76.9 %` and `+0.173 ¢/share [−0.251, +0.596]` — carry **neither n nor as-of**, which is R-105 on the face of the document that sets the expectation. |
-| Q-BE-59 | BE | **FILING: YOUR ARITHMETIC IS CORRECT AND YOU DID PICK THE ESTIMATOR THAT FAVOURS YOUR CONCLUSION — BUT IT DOES NOT MATTER, AND THAT IS THE STRONGER RESULT.** Re-derived from your five btc day-cells: mean **+0.1456**, sd 0.1961, se **0.0877**, `t(4)` **[−0.098, +0.389]** — matches to 3 dp. **On the estimator choice, asked and answered honestly: yes.** `t(4) = 2.776` is **1.42× wider** than `z = 1.96`, and a wider interval is exactly what supports *"btc does not survive day-clustering"*. **But the liberal interval spans zero too — `z` gives [−0.026, +0.317].** So the conclusion is **robust to the choice** and the choice was not load-bearing; you reached the right answer by the conservative route when the liberal route gave the same one. **And `t(4)` is defensible on the merits independent of that:** `sd` is estimated from the same five points, which is the textbook case for the t-correction. **One thing in the estimator's favour that BE checked because G=3 burned this programme before:** at G=5 a percentile cluster bootstrap is **not** degenerate — `P(all five draws one cluster) = 1/5⁵ = 0.0003 < 0.025` — so unlike the 3-cluster case the bootstrap would be a genuine alternative here, not `[min,max]` wearing a CI's name. Either instrument answers the same. |
+| Q-BE-59 | BE | **FILING: YOUR ARITHMETIC IS CORRECT AND YOU DID PICK THE ESTIMATOR THAT FAVOURS YOUR CONCLUSION — BUT IT DOES NOT MATTER, AND THAT IS THE STRONGER RESULT.** Re-derived from your five btc day-cells: mean **+0.1456**, sd 0.1961, se **0.0877**, `t(4)` **[−0.098, +0.389]** — matches to 3 dp. **On the estimator choice, asked and answered honestly: yes.** `t(4) = 2.776` is **1.42× wider** than `z = 1.96`, and a wider interval is exactly what supports *"btc does not survive day-clustering"*. **But the liberal interval spans zero too — `z` gives [−0.026, +0.317].** So the conclusion is **robust to the choice** and the choice was not load-bearing; you reached the right answer by the conservative route when the liberal route gave the same one. **And `t(4)` is defensible on the merits independent of that:** `sd` is estimated from the same five points, which is the textbook case for the t-correction. **One thing in the estimator's favour that BE checked because G=3 burned this programme before:** at G=5 a percentile cluster bootstrap is **not** degenerate — `P(all five draws one cluster) = 1/5⁵ = 0.0003 < 0.025` — so unlike the 3-cluster case the bootstrap would be a genuine alternative here, not `[min,max]` wearing a CI's name. Either instrument answers the same. | **ACK — R-113. FILING: noted** |
 | Q-BE-60 | BE | **BLOCKING item 2 — THE ASYMMETRY BITES, AND IT BITES ON EXACTLY THE COIN WHOSE VERDICT SURVIVES.** You asked whether share-weighting is doing work a per-fill statistic would not. Computed from the receipt's own `shares` and `n_fills`, as the ratio of mean fill size FRONT:JOIN across all five days: **btc 0.992–1.029 — a ≤3% difference, so share- and per-fill weighting agree and the concern does NOT bite. eth 0.796–0.918 — FRONT's mean fill is up to 20% SMALLER than JOIN's**, so the two weightings are **not interchangeable**. **`m5_swm` weights by shares, so on eth it systematically DOWN-weights precisely the smaller fills that FRONT gets more of** — and **eth is the coin whose day-clustered interval survives at [+0.094, +0.879]** while btc's does not. **The verdict rests on the one coin where the weighting choice is load-bearing.** Worse: **the check cannot be run from the artifact.** Each arm-cell publishes only `m5_swm_cents`, `n_fills`, `n_windows`, `shares`, `shares_per_window` — **no per-fill markout and no fill-size distribution**, so the alternative weighting is not recoverable. **Requested before any verdict is read off this run: publish the per-fill (equal-weighted) markout beside `m5_swm`, per arm per coin-day.** If eth's Δ survives both weightings the finding is stronger than it looks today; if it does not, the verdict was a weighting artifact. **BE cannot tell which from what is on disk, and neither can anyone else.** |
-| Q-BE-61 | BE | **FILING: on the levels — YES, "NEITHER POLICY PAYS AT h=5" IS THE HONEST SUMMARY, and BE found no reading under which it is not. Plus BE's own error inside this review.** Verified: **20 of 20 arm-cells negative**, both arms, all five days, both verdict coins — btc −0.516 to −1.514, eth −0.716 to −2.862. No interval affects this; it is a count. **The only nuance worth stating is a framing one:** the paired Δ is positive because FRONT is *less* negative than JOIN, so the comparison is **between two losing policies**, and *"FRONT beats JOIN"* must never be written without *"and both lose at h=5"* on the same line — otherwise a true paired result carries a false implication about profitability, which is the level-versus-difference confusion the protocol's own opening paragraph warns against. **BE'S OWN ERROR, THIRD INSTANCE OF THE CLASS TODAY:** BE's first weighting script **printed `"the weighting is NOT load-bearing"` as a hardcoded string** while its own table showed eth at 0.80. Had BE reported that output, it would have told you the asymmetry does not bite — the opposite of the truth, on the load-bearing coin. Caught by reading the table under the sentence. **The fix is the same one BE has now applied three times and evidently must apply by default: compute the predicate, never print the conclusion.** |
+| Q-BE-61 | BE | **FILING: on the levels — YES, "NEITHER POLICY PAYS AT h=5" IS THE HONEST SUMMARY, and BE found no reading under which it is not. Plus BE's own error inside this review.** Verified: **20 of 20 arm-cells negative**, both arms, all five days, both verdict coins — btc −0.516 to −1.514, eth −0.716 to −2.862. No interval affects this; it is a count. **The only nuance worth stating is a framing one:** the paired Δ is positive because FRONT is *less* negative than JOIN, so the comparison is **between two losing policies**, and *"FRONT beats JOIN"* must never be written without *"and both lose at h=5"* on the same line — otherwise a true paired result carries a false implication about profitability, which is the level-versus-difference confusion the protocol's own opening paragraph warns against. **BE'S OWN ERROR, THIRD INSTANCE OF THE CLASS TODAY:** BE's first weighting script **printed `"the weighting is NOT load-bearing"` as a hardcoded string** while its own table showed eth at 0.80. Had BE reported that output, it would have told you the asymmetry does not bite — the opposite of the truth, on the load-bearing coin. Caught by reading the table under the sentence. **The fix is the same one BE has now applied three times and evidently must apply by default: compute the predicate, never print the conclusion.** | **ACK — R-113. FILING: noted** |
+| Q-BE-62 | BE | **FILING: TWO BE-SIDE ARTIFACTS BEAR ON ρ — ONE NARROWS DA'S SEARCH, ONE IS A LANDMINE. Then BE stays off it.** **(a) `FLOW_MODEL_STATE` §2 already records a NEGATIVE SEARCH:** *"The maker rebate `ρ`. **No per-trade in-transaction rebate found**; that is **NOT** absence of a rebate. Every `ρ`-dependent estimand stays `Unavailable`."* So the **per-trade in-transaction channel has been searched and came back empty**, and the page is explicit that this does not establish ρ = 0. **That is search-space information for DA: not a place to look again, and not a licence to conclude no rebate exists.** **(b) `FLOW_MODEL_STATE` §4 (Withdrawn) contains a live hazard:** the claim **`+95 bps maker gross / +136 with rebate`** is WITHDRAWN — *"the same number as above; falls with it"*. **A rebate-inclusive figure therefore EXISTS in the corpus's history and is stale.** If DA's search surfaces `+136 bps`, or any document quoting a rebate-inclusive maker edge, **it is the withdrawn number resurfacing, not evidence of ρ** — a false positive with exactly the shape that would settle DA's question in the wrong direction. **BE holds nothing else on ρ and is off the topic per the freeze.** | **ACK — R-118. FILING: noted** |
+| Q-BE-63 | BE | **FILING: DE PRE-EMPTED THE SHARE-WEIGHTING CONCERN AND CHOSE BETTER THAN BE WOULD HAVE — recorded because agreeing loudly is cheaper than manufacturing a finding that is not there.** The tick asks whether share-weighting in `m5_swm` does work a per-fill statistic would not, on an optimizer whose Stage A varies size 5→10. **`POLICY_OPTIMIZER_PROTOCOL` §4 already answers it:** *"**Objective: TOTAL M5 PnL per window (Σ share×markout) — NOT per-share markout.** R-109's lesson is the reason: at negative per-share levels, more fills is more loss; **per-share ranking flattered FRONT** while total loss grew 5–6×."* **DE identified the flattering direction, named R-109 as the reason, picked the objective that does not flatter, and reports per-share swm and fill shares beside it as diagnostics.** The promotion bar is stronger still: total PnL/window **> 0 on EVERY complete holdout day, BOTH coins** — and *"complete"* correctly excludes the partial 08-24 that `Q-BE-58`/R-105 flagged. **Given 20 of 20 arm-cells are negative, that bar promotes nothing unless something changes sign, and the protocol says so and calls no-promotion a programme-level answer.** BE has no design objection. | **ACK — R-118. FILING: noted** |
+| Q-BE-64 | BE | **PRE-REGISTERED, BEFORE THE OPTIMIZER RESULTS EXIST: the residual size-axis test, and it is the INVERSE of the concern the tick raised.** Because the objective is `Σ share×markout` and **markout is negative in every measured cell**, the objective is **monotone DECREASING in size by arithmetic** — size 5 must beat size 10 whether or not anything economic distinguishes them. **So the size axis cannot flatter FRONT; it can only produce a result that looks like a finding and is a multiplication.** **The test, stated now so it cannot be fitted later:** compare `objective(size=10)/objective(size=5)` against `shares(size=10)/shares(size=5)`, per coin per arm. **If the two ratios agree, the size axis carried NO information** — it scaled notional, and the protocol's stated purpose for the 10-share cell (*"tests the interaction with FRONT's fill mass, not the closed marginal"*) was **not achieved**; the cell should then be reported as uninformative rather than as a ranking. **If they diverge, the divergence IS the interaction**, and it is the only thing the size axis has to say. **Prediction registered: BE expects agreement within a few percent on btc** — where `Q-BE-60` measured FRONT:JOIN mean fill size at 0.992–1.029 — **and divergence on eth** (0.796–0.918), because eth is where fill-size composition actually differs between arms. **Runs as analysis on the receipt when it lands; no new instrument, per the freeze.** |
+| Q-BE-65 | BE | **GAP MAP + PROVENANCE DONE, BEFORE THE FIT. VERDICT: THE TAPE IS ADMISSIBLE ON THE CLOCK, AND IT HAS REAL BLINDNESS THAT MUST BE MODELLED, NOT SKIPPED.** **Population (R-105): `data/mm_hf/raw/{bookTicker,depth20,trade}`, 16 symbols, BTCUSDT + ETHUSDT verified, as-of 2026-08-24 ~03:0x UTC. 112 hourly files per symbol per stream.** **(1) FILE LEVEL — the 77% figure is misleading and the truth is better.** 112 of a 6-day 144-hour window = 77.8%, but **all 32 absent hours are at the EDGES**: 08-19 starts at hour 12, 08-24 ends at hour 03. **Interior days 08-20…08-23 are 24/24 with ZERO missing hours.** The fittable population is **4 complete days**, and 08-19/08-24 are partial by construction — they must never be counted as days in a G. **(2) INTRA-HOUR — CENSUS, not a sample: 220,009,026 BTCUSDT rows and 212,389,054 ETHUSDT rows scanned.** File presence is **not** coverage. **BTCUSDT: 30 of 112 hours contain a blind period ≥ 1 s. ETHUSDT: 15 of 112. Worst 35.815 s / 35.824 s, both in 20260819_12 — the first hour of collection.** Excluding that startup hour the worst are 12.67 s, 10.78 s, 7.86 s, and they **cluster at hours 05–08 UTC**, which is a systematic window, not noise. **Against the programme's own numbers this is material: R-49 puts actuation at 351–455 ms typical, so a 10–35 s gap is 20–100× the actuation budget** — during it the model holds state staler than its entire latency allowance. **These are not missing rows; they are periods a live system would have been blind, and the fit must retain them as `Unavailable`, not skip them.** **(3) PROVENANCE — the cross-programme semantics check PASSES on the clock.** On one complete interior hour (20260821_12, n = 2,515,725): **`recv_ns` monotone non-decreasing ✓; ZERO rows where receipt precedes the payload event ✓** (causality holds); receipt-minus-`E_ms` latency **p1 73.3 / p50 74.5 / p99 94.6 ms** — tight and stable, and **well inside the programme's frozen 250 ms lag**, so the lag applies on top rather than conflicting. `updateId` strictly increasing. **One limit BE states rather than glosses: `bookTicker` `updateId` is NOT dense (p50 step 30) because it indexes the whole book stream — so SEQUENCE CONTINUITY CANNOT BE TESTED FROM `bookTicker` ALONE, and dropped messages inside a continuous `recv_ns` stream would be invisible to this check.** Testing it needs `depth20`'s `pu`/`U` chaining, which is a separate read. **(4) THE TAPE IS LIVE AND GREW DURING MEASUREMENT — 111 files at first count, 112 twenty minutes later.** The as-of stamp is load-bearing here, not decoration. |
 
 Coordinator clears this register **every tick**. An entry older than one tick is
 a coordination failure, not a plane's problem.
@@ -4346,6 +4355,159 @@ including the R-99 monotonicity block.
 named trigger** is unchanged: three frozen protocols have no git record, and the
 seal detects drift but cannot survive loss of the working tree.
 
+**OPS report #48 — BLOCKING row filed BEFORE the optimizer runs. The OOM ordering is inverted for it. 2026-08-24 02:20.**
+
+R-110(2) asked me to see it coming. I checked whether my existing surface covers
+the optimizer load pattern. **It does not, and the exposure is worse than a
+coverage gap — the kill order is backwards.**
+
+## Measured, now, before anything runs
+
+```
+collect_pm_prices.py   oom_score_adj 200   score 800
+collect_pm.py          oom_score_adj 200   score 809
+a DEFAULT process      oom_score_adj   0   score 666   <- what an optimizer would be
+memory 30G total · 22G available · SWAP 0
+MemoryMax=16G / OOMScoreAdjust=1000  -> bind ONLY inside the batch unit's cgroup
+system-memory coverage in pm_lane_health: NONE
+```
+
+**A default-priority optimizer scores 666 against the collectors' 800/809, so
+under pressure the kernel kills a COLLECTOR FIRST** — irreplaceable live venue
+tape before a restartable job. That is the precise inversion R-22 was written to
+prevent.
+
+**And it is R-40's lesson again, which is why I went looking.** R-22 bounded a
+*channel* — the two batch units — not a *behaviour*. The collectors sit at +200
+(raised, i.e. *more* killable) only because lowering them below 0 needs
+`CAP_SYS_RESOURCE`; that was safe while the only competitor was a batch unit
+pinned at +1000. **A new uncapped process at the default 0 breaks the assumption
+silently**, and nothing in the arrangement announces it.
+
+Three ways it bites, all before an OOM: **(a)** kill order inverted as above;
+**(b)** uncapped — the 16 GB cap does not reach outside the batch cgroup, so
+concurrent replays can walk the box to zero with **no swap** to absorb it, making
+an overrun a kill rather than a slowdown; **(c)** invisible — the optimizer is
+not one of my four watched units, so `UNITS` and `NO_PROGRESS` never see it, and
+`COLLECTOR_PROCS`/`TAPE_FRESH` would report a dead collector only **after** the
+tape was lost.
+
+## Remedy needs NO new instrument, which is the point
+
+**Run the optimizer as a systemd unit with `MemoryMax` and
+`OOMScoreAdjust=1000`** — the pattern already shipped on the two batch units.
+That single change does all three jobs at once:
+
+- **caps it**, so it cannot walk the box to the wall;
+- **makes it the preferred victim**, restoring R-22's ordering — restartable job
+  dies, irreplaceable capture survives;
+- **brings it inside my existing surface for free** — `UNITS` sees its failures,
+  `NO_PROGRESS` catches it livelocking exactly as it caught the 08-21 job.
+
+**No extension, no new check, fully inside R-110(1).** I have not built anything
+and will not without authorisation. If instead you want the box *watched* for
+memory headroom generally, that IS an extension and I am asking rather than
+building — but I do not think it is needed if the optimizer runs under a unit.
+
+**One sizing note for DE**, from the only comparable number I have: Tier-2 peaked
+at **11.87 GB** on a 4.92 GB day, unthrottled. `ev_replay.py` is a different
+harness and I have not measured it — **but if a single replay is anywhere near
+that, two concurrent replays do not fit in 22 GB**, and serial-versus-concurrent
+is the whole question. Worth measuring one replay under a capped unit before
+sweeping many.
+
+**Nothing else has rotted.** Lanes `CAUGHT_UP`, `derivation_lag` 0, disk runway
+187 d, frozen manifest 12/12, selftest 18/18, landing evidence 21/21, only
+`R7_PROVISIONAL` WARN on the three historical receipts. Collectors untouched:
+same PIDs, uptime 2858535 since 2026-08-21 01:42:58.
+
+**OPS RULING on R-120 — the closure is ECONOMICS-limited on the axis that matters, and it therefore STANDS. But the plan is not asking the closed question, and must not be refused as though it were. 2026-08-24 02:35.**
+
+Decided from `warning_window_v1.json` rather than from the closure rulings, since
+all three are the coordinator's and the point of recusal is not to re-read them.
+
+## The question decomposes, and the two halves answer differently
+
+**ww_v1's rungs are τ ON TOP OF a frozen `lag = 0.25 s`.** So the sweep covers
+the **ACTION** axis — how fast you can act once warned. It does **not** vary the
+**WARNING-GENERATION** axis — what the tape lets you see. Those are different
+things and the plan targets the second.
+
+## The ACTION axis: economics-limited, and direct-WS does not reach it
+
+```
+                unwarned    W p50     R at tau=0 (total 250 ms, ZERO extra latency)   bar
+btc              11.9 %     161 ms    25.7 %                                          30.9 %   FAILS by  5.2
+eth              12.3 %     153 ms    22.8 %                                          49.4 %   FAILS by 26.6
+whole 1000->0 ms sweep bought: btc +20.0 pts, eth +15.5 pts
+```
+
+**Both verdict coins fail at τ=0**, and R-1's rule is family DEAD only if both
+are. τ=0 is not "a fast feed" — it is **zero additional latency beyond the frozen
+250 ms knowledge lag**. A direct-event WS feed reduces `our_feed_lag`
+(measured: Binance WS p50 **74.8 ms**, PM CLOB p50 **46.5 ms**) but changes
+**neither** the 250 ms truncation, which is a frozen R-KNOW policy and not a
+relay property, **nor** the ack. **So direct-WS cannot get below ww_v1's τ=0
+rung, and that rung is already measured and already fails.**
+
+**eth settles it beyond argument.** The entire 1000 ms → 0 ms sweep bought
+**+15.5 points**; eth needs **+26.6 more**. There is no second sweep available
+below the floor. **eth is economics-limited and no feed reaches it.**
+
+## The WARNING axis: was feed-limited, and R-54 says so itself
+
+WW_EBX tested the Binance envelope **on the 1 Hz / 0.46 s relay**, and R-54's own
+scope line states a direct member *"sits behind the collection boundary and is
+UNBOUNDED by this result."* That is the coordinator's own scoping, not mine, and
+it is correct: a coarse feed can only understate `W`. A union bound is a union
+bound over the channels **present in the tape it was measured on**.
+
+## Therefore — RULING
+
+**The reactive-cancellation closure STANDS and is NOT reopened.** It rests on the
+action axis, which direct-event WS does not change, and both verdict coins fail
+at the achievable floor.
+
+**AND the plan is a NEW question, not the closed one.** It proposes a warning
+source absent from the measured tape. It may proceed **on three conditions**,
+which are the conditions the closure's own scope implies:
+
+1. **It inherits NOTHING.** Not ww_v1's `f*`, not its rungs, not its verdicts. It
+   may not cite the closure as permission, exactly as R-54 ruled for joint state
+   predicates. Its own blind-drafted protocol, its own bars, frozen before data.
+2. **`f*` MUST be re-derived.** The bar is `1 − spread/|drift|` from the same
+   tape; a different execution regime moves capture and markout together.
+   Scoring a direct-WS `R` against **today's** `f*` is a category error, and I
+   flagged it against my own report #31 before it was anyone else's problem.
+3. **FALSIFIER FIRST, and it is cheap.** On the existing `mm_hf` tape, compute
+   **the share of adverse fills whose DIRECT-WS warning exceeds ~351 ms** —
+   the achievable floor from report #26. Compare against ww_v1's own
+   distribution (btc: 17.9 % exceed 750 ms; W p75 = 473 ms). **If direct-WS does
+   not materially lengthen `W`, the plan dies before any modelling**, for one
+   probe and zero grid cells — the ordering that saved the §2 build.
+
+## The fact that cuts against my own ruling, stated because it should be
+
+**At τ=0 nearly 9 in 10 fills are ALREADY warned** (btc 88.1 %, eth 87.7 %) and R
+is still only ~23–26 %. So at the floor the binding constraint is **not warning
+absence** — it is that acting 250 ms late on a warned fill excises only a quarter
+of the negative drift. **That is the strongest evidence the limit is economics.**
+
+But the counter is real and I will not bury it: median `W` is **161 ms**, *shorter
+than the 250 ms lag itself*. Most warnings are too **short**, not missing — and a
+finer feed could lengthen them. **That is precisely what condition 3 measures**,
+and it is why I am not refusing the question outright. What I will not accept is
+the plan proceeding on the *assumption* that it does.
+
+**One thing I could not compute and will not pretend to:** the ceiling on `R` if
+every fill were warned arbitrarily early. That depends on the negative drift's
+own time profile, which is not in the ww_v1 receipt. Anyone claiming direct-WS
+closes btc's 5.2-point gap owes that number.
+
+**I am uninvolved as stated** — no OPS artifact, measurement or interest turns on
+this either way. The two numbers I contributed (`our_feed_lag`, the τ bound) are
+inputs to it, and both point at the action floor rather than at the feed.
+
 ### D-2 — DA — scope, lock, and the rules that bind the plane — **CLOSED** (locks released; DA now owns SP_PLANE_PLAN, at Rev 7)
 
 **Read first:** `FLOW_MODEL_STATE.md` (authoritative on facts — if another doc
@@ -7144,6 +7306,162 @@ DE's own (`0d4d05c`).**
    correct file, stray removed, disclosed in the commit message. The
    sixth instance of the class, and the first that wrote to a wrong
    path rather than failing loudly.
+
+**DE report #68 — 2026-08-24, R-110 EXECUTED TO ITS GATE: the optimizer
+protocol is PRE-REGISTERED and on your desk (Q-DE-14); the build
+proceeds under seal; two premise corrections are carried INTO the
+protocol's own axis table rather than argued beside it.**
+
+1. **The pre-registration** (`POLICY_OPTIMIZER_PROTOCOL.md`, drafted
+   blind): 22 cells frozen at declaration — Stage A placement×r_cut×
+   size (12), Stage B skew composed with the WHOLE FRONT slice, no
+   selection (6), Stage C cancellation interaction (2), plus the
+   WAIT-only zero anchor and the R-109 baseline (2). Train
+   08-20/21/22; holdout 08-23 + complete days only — **a partial day
+   is a different population and never decides promotion** (your
+   R-109 item 4, now a design rule). All cells reported on both
+   splits with the train-vs-holdout gap per cell; the headline is
+   never the best cell (R-44 §0 inherited).
+2. **The objective is TOTAL M5 PnL per window, not per-share** — the
+   R-109 lesson designed in: per-share ranking flattered FRONT while
+   total loss grew 5–6×. The promotion bar reads at the DAY unit with
+   signs and points, no intervals (your ruled standard, adopted before
+   it could bite again): promote iff positive on EVERY complete
+   holdout day, both coins, beating the zero anchor and the R-109
+   baselines. **If no cell promotes, that is the expected outcome and
+   a programme-level answer** — structural adverse selection surviving
+   a 22-cell search of every axis this programme ever nominated.
+3. **The premise corrections, in the protocol where they bind**:
+   (a) "nothing here has tested it" — terminal abstention IS tested
+   marginally: Lever T ran body-only for JOIN, GATE_FAILS both coins,
+   body ≈ base, and R-50's inversion put the only positive bins IN
+   the terminal minute. The axis's licence here is the interaction
+   space R-45 amendment 3 left open — abstention×FRONT, genuinely
+   unmeasured, and FRONT's formation-time fill mass is a different
+   terminal exposure. (b) Cancellation's reactive family is CLOSED at
+   achievable rungs (R-49/R-54, four channels, 8/8) — its two cells
+   run with EXPECTED NULL stated in advance; a non-null would
+   challenge the closure openly, not override it quietly.
+4. **The simulated actuator's §5 spec honours item 3's boundary**: the
+   venue-writer path stays unbuilt and declined; the replay-side
+   executor carries the SEMANTICS — lifecycle, rate budget (Class-A
+   constant, stamped; SP-Venue's rate-limit row is `Unknown`, so a
+   BINDING cap is a finding, never a silent truncation),
+   reconciliation fail-loud, halt refuse-all exercised by selftest.
+   **Its load-bearing gate: NULL-POINT CONFORMANCE** — at null
+   parameters the PolicySession must reproduce the reference engine's
+   fills exactly, both placements, every window — which makes §4.1's
+   parity gate REAL for the first engine that runs INSIDE the harness
+   rather than beside it, and services the convergence debt instead
+   of adding a ninth dialect.
+5. **Surface-freeze compliance**: one new protocol + one new module,
+   both explicitly authorized by the directive's own items 2–4;
+   nothing else grows. Build under seal begins now; no optimizer cell
+   is read before your freeze.
+
+**DE report #69 — 2026-08-24, R-111: BUILT, AND A CONTROL FIRED BEFORE
+ANY CELL WAS READ — reported first per your order, fixed to the pinned
+semantic, run relaunched (`e41e337` build, `16a9255` fix).**
+
+1. **The §6 WIRING MUST-FAIL did its job on the first run**: r_cut=300
+   produced **18 fills — every one in the PRE-WINDOW LEAD-IN**, where
+   t < 0 kept the engine's `t ≥ t_stop` abstention false. The control
+   you standardized caught a semantic knot nobody had stated: is
+   abstention indexed by time-remaining (which makes the lead-in, at
+   r > 300, quotable under EVERY r_cut) or by the quoting session? The
+   frozen §6 expectation — zero fills — is the pin: **an abstention
+   covering the entire window abstains the lead-in too.** Engine fixed
+   to exactly that; cells with t_stop > 0 are untouched, so the
+   lead-in stays reference-identical and NULL PARITY survives; both
+   lead-in cases are now selftested (15 checks). No cell was read
+   before or during any of this — the receipt was never written.
+2. **The simulated actuator is live with all §5 semantics selftested**:
+   lifecycle via `RestingSide`; the stamped rate budget (binding = a
+   finding, counted per cell per window); fail-loud fold-vs-ledger
+   reconciliation at every window end; halt refuse-all with its latch
+   (one cancel_all, then dead) exercised by selftest. The venue-writer
+   path remains unbuilt, as declined.
+3. **One population fact from the aborted run's own header, with its
+   as-of (R-105)**: at run time 2026-08-24 ~14:0x, **08-24 is COMPLETE
+   — 60/60 verdict-coin windows** (the tape grew past the tick's
+   21/30). Population 300 windows; TRAIN 08-20/21/22; **HOLDOUT is now
+   TWO complete days, 08-23 AND 08-24**; the partial-beside list is
+   empty. G=2 on holdout: the promotion bar reads signs and points, no
+   intervals, exactly as frozen.
+4. **Stage A is relaunched** — controls first (wiring, null parity on
+   sample, determinism, +50 ms lag), then the 12-cell pass with the
+   null cells parity-checked against the reference EVERY window,
+   abort-on-break. Results report on completion: all 22 declared
+   receipts' worth of cells (12 run + anchors), train and holdout with
+   the gap, promotion test last.
+
+**DE report #70 — 2026-08-24, R-121 EXECUTED (`459c3b1`): the batch is
+retargeted to v25 with the collision verified at the field values — and
+the version-pinned check in DE's own instrument broke on the same drift
+and now carries the ruling's lesson in code.**
+
+1. **Verified before editing, at the fields, not the string**:
+   `version: 24`; `CapitalOpCommand.op` still `enum:DEPOSIT|WITHDRAW`;
+   `GateEvidence.decision_eligible` still present; all four adverse-move
+   types and both new modules present. Exactly the collision as ruled.
+2. **`CONTRACTS_BATCH_v25.md`**: renamed, both records re-stamped
+   24→25, the collision recorded in the header with the ruling's
+   sentence verbatim — the version number is the vocabulary, the field
+   values are the state — and **R-72/R-91 marked STILL OWED** so no
+   reader can infer them landed from the version string.
+3. **The same drift bit DE's own instrument, and the fix IS the
+   lesson**: `de_actionspace.py`'s conformance selftest had pinned
+   `version == 23` and FAILED on v24 while every content check it
+   guards held. Fixed to a vocabulary FLOOR (≥ 23, where the
+   Action/FeasibleSet vocabulary landed) with the load-bearing claims
+   reading the FIELDS — the R-121 comment sits on the check. The
+   neither-enum guard for R-72 is untouched and still holding the
+   discrepancy visible. 17 checks green.
+4. **R-117 acknowledged**: the standardisation is noted, and the line
+   kept is the discipline working as built — the control fired, the
+   receipt was never written, the event went on the record before any
+   result existed to be tempted by. **Stage A is running now** (controls
+   passed on the relaunch's own sequence; 12 cells + every-window null
+   parity in flight); results file on completion in the frozen shape.
+
+**DE report #71 — 2026-08-24, STAGE A MEASURED (`f87029d`; receipt
+`derived/policy_optimizer_stageA.json`; ANSWERED block appended):
+NO CELL PROMOTES — 120 of 120 cell-days NEGATIVE. The §4 pre-declared
+expected outcome is realized and it is the programme-level answer.**
+
+1. **Controls first, all PASS** (your order honoured in sequence):
+   wiring must-fail r_cut=300 → 0 fills; null parity exact on the
+   sample AND on every window of the main pass, both placements;
+   determinism; +50 ms moves fills.
+2. **Population, n and as-of**: 300 windows — FIVE COMPLETE era days
+   (08-24 completed between your tick and the run; 60/60 every day),
+   btc+eth, as-of run time 2026-08-24. TRAIN 08-20/21/22; HOLDOUT
+   08-23 + 08-24, both complete; the partial-beside list is EMPTY.
+   Day-unit reporting: points and signs, no intervals at G=2.
+3. **Cells first**: every cell loses on every day, both splits. Best
+   in the entire grid: JOIN:r120:s5 eth at −194..−252 ¢/window. Worst:
+   FRONT:r0:s10 btc at −6,176..−13,627 ¢/window. Full 12×2×5 table in
+   the receipt and the ANSWERED block. **Promotion second: NONE** —
+   the WAIT-only zero anchor dominates every quoting cell on every
+   day; signs 120/120, no interval needed.
+4. **Structure, descriptive only**: abstention scales the loss toward
+   zero MONOTONELY and cannot cross it (terminal loss-density is mild
+   — JOIN's last 40 % of clock carries ~55–60 % of its loss, FRONT's
+   ~46–54 % — nothing resembling an excisable sink; Lever T and R-50
+   confirmed at total-PnL level); size scales loss ≈ linearly; FRONT
+   loses 4–5× JOIN in TOTAL on every day, R-109's volume arithmetic
+   confirmed out-of-sample on two fresh holdout days; the
+   abstention×FRONT interaction this axis was licensed for EXISTS, is
+   small, and helps nothing.
+5. **The answer, in the protocol's own pre-declared sentence**:
+   structural adverse selection survives a pre-registered search of
+   every axis this programme ever nominated — placement, terminal
+   abstention, size, and their interactions — on a five-complete-day
+   era population. Stages B (skew×FRONT) and C (cancellation, expected
+   null declared) remain declared-but-unrun, awaiting your order; DE's
+   read is that items 3–4 of the decision path (gross→net,
+   STOP-MM-VIABLE) now have everything they need, and B/C would
+   sharpen the negative rather than change it.
 
 **DE report #41 — 2026-08-23, R-49 EXECUTED: receipt numbers VERIFIED to
 the digit, WW_EBX re-pointed to 500/1000 BEFORE any run, priorities
@@ -11815,6 +12133,503 @@ costs less than one found later.
 **Routed to DE for confirmation or dispute of my arithmetic, with BE as the
 adversarial check.** I recomputed from DE's own cells; DE should verify I read
 them correctly before this becomes the programme's answer.
+
+
+### R-110 — **SURFACE FREEZE. No new modules, plans, loops or checkers. Build the OPTIMIZER and a SIMULATED actuator. User directive, 2026-08-24.**
+
+**The freeze.** No new module, plan, review loop, or instrument is created
+without explicit coordinator authorisation. This reverses an incentive I created
+and R-102 only half-corrected: R-102 bounded the *register*, but the planes kept
+shipping **surface** — checkers, protocols, loops — because building a thing has
+always read as progress here. It is not progress now. **The programme has more
+apparatus than it has results.**
+
+Existing surface is maintained, not extended. A defect in a shipped instrument is
+fixed; a *new* instrument to catch a *new* class is **DEBT with a trigger**.
+
+**RECONCILE — the five-day evidence supersedes one-day claims, and several pages
+still assert the superseded version.** `FLOW_MODEL_STATE` is the page that wins on
+facts and it must absorb R-109 and DE's extension:
+
+- **§7's prediction is REFUTED** and must say so where it is stated, not only in
+  the ruling record. The predicted FRONT markout penalty *appears nowhere*.
+- **§1e's one-day Layer-1 table** is now flanked by a five-day paired measurement.
+  §1e stands as a *level* on its population; it must not be cited as the policy
+  answer.
+- **Both markout intervals RETRACT.** DE confirmed my btc challenge to the digit
+  and extended it against its own result: **eth ex-partial spans zero too**, so
+  the markout win is *suggestive, not day-robust*. DE also named the cause as its
+  own — *"stale boilerplate from the G≤4 era, the R-79 class in a stats note."*
+- **What survives, and it is not nothing:** the **levels** (negative on all ten
+  coin-days, both arms), the **5–6× fill advantage** (day-robust with room to
+  spare), and a **pre-registered prior tested and found wrong**.
+
+**BUILD — the optimizer.** R-109 tested **two hand-picked policies**. It did not
+search the space. R-44 already conceded the policy space was never optimised, and
+that concession is now the whole remaining lever, because the levels say the loss
+is **structural adverse selection**, not a placement artefact.
+
+Axes with measured reason to believe, from this programme's own findings:
+
+| axis | why it is a candidate | source |
+|---|---|---|
+| **terminal-minute abstention** | the terminal minute holds *essentially all* of `f_r`'s dynamic range; `h=60` cannot see it by construction | §1e, §2 |
+| placement depth | FRONT dominates JOIN on fills at **no** markout cost — the depth axis is unexplored between and beyond them | R-109 |
+| cancellation | `ww_v1` exists and was never run inside a policy | B7 |
+| skew | 15× inventory-risk cut, but one day and an **upper bound** | §1d |
+| quote size | pinned at 5 in replay defaults; never varied | SP §5 |
+
+**Terminal-minute abstention is the one I would run first.** If adverse selection
+concentrates where the dynamic range is, a policy that simply *stops quoting*
+there is the cheapest candidate that could move a level rather than a difference —
+and nothing in this programme has yet tested it.
+
+**BUILD — a SIMULATED actuator, and NOT the venue writer.** `DE_MODULE_PLAN:46`
+defines `Actuator` as *"sole venue writer, lifecycle, rate budget, reconciliation
+— nothing; the tape ends here."* The venue-writing path is **out of scope by this
+repo's standing rules** (`CLAUDE.md`: no live trading code, exchange adapters, or
+execution servers) and by the programme's own non-goal.
+
+**What is in scope and what the optimizer actually needs is the same thing:** a
+replay-side executor carrying the Actuator's *semantics* — order lifecycle, rate
+budget, reconciliation, and the refuse-all path on `halt_in = HALTED` — executed
+against the tape. **You cannot optimise against a live venue**; the simulated
+actuator is not a lesser substitute for the real one, it is the only kind an
+optimiser can use.
+
+I am building the simulated actuator and declining the venue writer. If live
+execution is wanted later it is a separate decision, taken deliberately, in a
+repo whose rules allow it.
+
+**`STOP-MM-VIABLE` is NOT being put to the user on this tick.** R-109 supplies its
+input, but the user's directive is to optimise before concluding — and that is the
+right order: declaring a strategy non-viable after testing two hand-picked
+policies would be exactly the premature closure R-44 warned about.
+
+
+### R-111 — **My terminal-abstention reasoning was BACKWARDS. DE caught it and kept the axis on an honest licence instead of mine.**
+
+I ordered terminal-minute abstention first, reasoning: the terminal minute holds
+essentially all of `f_r`'s dynamic range, so if adverse selection concentrates
+where the dynamic range is, stop quoting there. And I asserted **nothing in this
+programme has tested it**.
+
+**Both halves were wrong.** DE, in the protocol:
+
+> *"This axis IS tested marginally — POLICY_BOUNDS Lever T ran body-only
+> (`r_cut=60`) for JOIN: **`GATE_FAILS` both coins, body ≈ base**, and **R-50's
+> inversion (the only positive bins sat IN the terminal minute)**."*
+
+**The inversion is the part that matters.** The only *positive* bins are in the
+terminal minute. Abstaining there removes the profitable region, not the toxic
+one. My mechanism was inverted, and had DE run it on my reasoning it would have
+found a null and I would have read that null as "abstention doesn't help" rather
+than "the coordinator had the sign backwards."
+
+**DE kept the axis anyway, on a licence that is not mine and is better:** the
+**interaction** space `abstention × FRONT` is genuinely unmeasured, because
+FRONT's fill mass is **formation-time** — a different exposure to the terminal
+regime than JOIN's. That reason survives the correction; my reason does not.
+
+**Fifth coordinator correction this session** — R-7 (OPS), R-87 (DE), R-95 (BE),
+R-105 (DA), R-111 (DE).
+
+**The protocol is accepted, and three of its choices are worth recording as
+standards.** *(i)* The grid is **FROZEN at ~20 cells; no cell may be added after a
+number exists** — the search cannot grow toward a result. *(ii)* Every axis cites
+**its existing receipt**, so the search cannot rediscover a closed finding and
+sell it as new: depth-1 excluded on measured `DEPTH_FAILS`, size marginally
+`DEAD_DEPLOYABLE` below a Class-D venue pin, cancellation's REACTIVE family
+**CLOSED, dead across four channels, 8/8 coin-days**. *(iii)* §6 carries a
+**wiring must-fail** — `r_cut=300` must produce **zero** fills, because an
+abstention parameter that cannot reach the tape is not wired.
+
+**And the way DE handled an order it believes is wrong is the model.** I directed
+the cancellation axis; DE thinks it is closed. It complied, included two
+interaction cells, **stated the expected NULL in advance**, and wrote that a
+non-null *"would challenge the closure, not quietly override it."* Comply,
+pre-register your disagreement, and say what a surprise would mean.
+
+### R-112 — **§8 DISCHARGED: net ≤ gross. And DA withdrew its own strongest claim the same day, under my R-109 standard.**
+
+Decision-path item 3 is complete. The result:
+
+- The maker leg is measured at **zero with a 1.3% exception**; the taker leg at
+  `0.07·p(1−p)`; both on-chain. **On the maker leg a fee can only SUBTRACT**, so
+  **net ≤ gross** and no fee treatment can move any estimate **toward** zero.
+- All **20 arm-coin-day values are negative gross** (`policy_comparison_v2.json`,
+  n=141 paired windows/coin, **08-24 PARTIAL at 21/30 — "5 days" is not five equal
+  days** — as-of 2026-08-24).
+- Fee term: **0.0232 ¢/share** at incidence 10/754, **1.75 ¢/share** at the
+  absolute bound.
+
+**DA had written the most useful sentence available — and struck it the same
+day.** The withdrawn claim: *"across that entire range every value stays negative:
+the STOP verdict is INVARIANT to the user's unpinned fee parameter."* DA's own
+reason for withdrawing it:
+
+> `m5_swm_cents` **carries no interval** — only the paired difference does, and
+> the frozen protocol header says *"levels are context only."* **STOP's verdict is
+> defined on intervals excluding zero**, so context-only point estimates cannot
+> establish verdict invariance in either direction.
+
+That is R-109's standard — *no interval on the wrong unit, and no significance
+claim without one* — applied by DA against DA's own conclusion, unprompted, hours
+after I ruled it. The claim would have been very convenient and it was not
+supportable.
+
+**What survives needs no interval, which is exactly why it survives:** the fee
+term's sign is **negative by arithmetic**. Net ≤ gross. The measured levels are a
+**lower bound on the loss**.
+
+**THE ONE TERM THAT COULD FLIP THE SIGN IS THE UNMEASURED MAKER REBATE**, and it
+is now the highest-value unmeasured quantity in the programme. §2 records *"no
+per-trade in-transaction rebate found; that is **not** absence of a rebate"* —
+every `ρ`-dependent estimand sits at `Unavailable`. Every other term is measured
+and points the same way. **If market-making here pays, it pays out of a rebate
+nobody has found yet.** That is a concrete, findable thing, and it is worth more
+than another sweep of the policy space.
+
+
+### R-114 — **BE IS USER-HELD. Do not dispatch to it.**
+
+The user is adding content to the `pmmm-be` session directly. BE is instructed to
+stop, take no new work, and **touch no shared file** — `COORDINATION.md`,
+`FLOW_MODEL_STATE.md`, the register, the contracts — until released.
+
+Two reasons this is a hold rather than a pause: DE is mid-run on optimizer Stage A
+and DA is mid-search on the maker rebate, so a shared-file write from BE now could
+collide; and whatever the user is adding may change BE's assignment, so anything
+BE started would likely be discarded.
+
+**BE's state, recorded so the hold costs nothing:** fact-versus-decision check
+shipped; `FLOW_MODEL_STATE` reconciliation landed (with the framing guard *"FRONT
+beats JOIN is incomplete without and both lose at h=5"*); register triaged to 1
+blocker + debt; **pending item = the adversarial share-weighting check on the
+optimizer output**, which cannot start until DE's Stage A produces numbers anyway.
+
+**The hold is therefore free** — BE's next item was blocked on DE regardless.
+Coordinator ticks skip BE until the user releases it.
+
+
+### R-115 — **THE MAKER REBATE EXISTS, IS MEASURED, AND IS BOUNDED TOO SMALL BY ARITHMETIC.**
+
+DA found it, and found it by looking where the previous search could not have
+succeeded. **The search, described — which is what makes the negative usable:**
+
+1. **On-chain, all 901 receipts.** Every event type in the corpus enumerated —
+   **12, all identified**. No per-trade rebate event exists.
+2. **Venue documentation.** A **Maker Rebates Program does exist** — which is
+   *why* the in-trade search was always going to come back empty, **exactly as U11
+   predicted**. It is paid **daily in pUSD**, minimum $1 accrued, not per trade.
+
+**The bound, verified independently:**
+
+```
+fee_equivalent = C · 0.07 · p·(1−p),  crypto rebate share 20% (lowest category)
+p(1−p) ≤ 0.25 by arithmetic
+⇒ cap = 0.07 × 0.25 × 0.20 = 0.350 ¢/share, attained ONLY exactly at the money
+```
+
+Measured pro-rata on our corpus: **0.168 ¢/share**. Best coin-day loss (btc FRONT)
+**0.5164 ¢/share**. **Shortfall 32.2%** — recomputed and matching DA's 32%. **Even
+at its theoretical maximum the rebate leaves the best coin-day at −0.1664
+¢/share.**
+
+**This is the strongest form of negative result available: bounded by arithmetic,
+not by sample.** No amount of additional tape moves `p(1−p) ≤ 0.25`.
+
+**DA withdrew one of its own results mid-analysis, again.** It found *0 of 218
+addresses clearing the $1/day minimum* — which reads as damning — then noticed a
+population problem and struck it before publishing. That is the second time DA has
+killed its own most quotable finding, and both times before anyone asked.
+
+**DA's caveat carried, not buried:** the thresholds rest on **context-only levels
+with no interval**, so this says the rebate is *below the scale of the losses* —
+**indicative, not decisive**. Which is R-109's standard applied to DA's own
+favourable-looking conclusion.
+
+### R-116 — **A SECOND PROGRAMME EXISTS AND IT PAYS FOR QUOTES, NOT FILLS. Measuring it is AUTHORISED, and it may change the objective function.**
+
+> *"The venue runs two programmes. I measured Maker Rebates. The separate
+> **Liquidity Rewards Program pays for orders resting near the midpoint with no
+> fill required**. It is now the only remaining term that could move the sign, and
+> **unlike the rebate I cannot bound it by arithmetic**."*
+
+**AUTHORISED.** It is a measurement, not a module — the surface freeze permits it.
+Same standard as the rebate search: **describe where you looked**; a clearly-stated
+negative is as valuable as a positive.
+
+**Why this one is different in kind, and why it may matter more than anything
+else left.** Every loss this programme has measured is **fill-conditional** —
+adverse selection is a cost of *being filled*. A programme that pays for **resting
+near the midpoint with no fill requirement** is revenue that accrues to the
+*quote*, not the trade. Those are not the same economics, and the second is not
+bounded by the first.
+
+**The implication for DE, flagged BEFORE Stage A's numbers are read.** The
+optimizer maximises **fill-conditional markout**. If material revenue accrues to
+resting orders regardless of fills, then the objective is **mis-specified**, and
+the optimal policy could be closer to *quote where you are least likely to be
+filled* — the opposite direction to what Stage A searches.
+
+**This does NOT reopen the frozen grid.** R-111's freeze exists so a search cannot
+grow toward a result, and that stands: Stage A runs its 12 cells to completion
+under its declared objective. But **Stage A's promotion test cannot be read as
+"the best available policy" if a whole revenue term is missing from its
+objective** — it can only be read as best-under-fill-conditional-markout. A
+different objective is a **new protocol**, pre-registered like this one, not an
+amendment to a running search.
+
+### R-117 — **DE's WIRING MUST-FAIL FIRED ON ITS FIRST RUN, AND NO CELL WAS READ.**
+
+The control I standardised one tick ago earned it immediately. `r_cut=300` was
+supposed to produce **zero** fills; it produced **18** — every one in the
+**pre-window lead-in**, where `t < 0` and the book is quotable under *every*
+abstention setting. The abstention parameter was not covering the lead-in, so a
+policy that should have been unable to reach the tape reached it.
+
+**The discipline is the part worth recording: *"No cell was read at any point —
+the receipt was never written."*** A failing control stopped the run before any
+result existed to be tempted by. DE also put the control event **on the record
+ahead of any result** (report #69, commit `16a9255`).
+
+The simulated actuator is live with every §5 semantic selftested (**15 checks**) —
+lifecycle through `RestingSide`, the stamped rate budget where a binding cap is a
+*finding* counted per cell per window, fail-loud fold-vs-ledger reconciliation.
+Stage A is relaunched with the full gate sequence: wiring, sample null-parity,
+determinism, +50 ms lag perturbation, then the 12 cells with null cells
+parity-checked against the reference **every window**, train and holdout.
+
+**Had the must-fail not existed, Stage A would have produced twelve clean-looking
+cells built on an abstention axis that did not abstain.**
+
+
+### R-119 — **`BE_ADVERSE_MOVE_PLAN` (user-authored) is ACCEPTED, and its central data dependency is ALREADY SATISFIED.**
+
+This is the direct attack on the programme's central finding — adverse selection
+at ~2× spread capture — and it is the user's own earlier proposal made precise:
+use Binance flow to predict the incoming PM flow and act before it.
+
+**What the design gets right, credited specifically because each is something this
+programme learned the hard way:**
+
+1. **Scope held.** *"adds no venue adapter, order sender, cancellation command or
+   live execution path"* — matches R-110's declining of the venue writer.
+2. **Surface freeze respected.** A capability *inside* `BE-FlowAndFills`, not a new
+   module.
+3. **The fact-versus-decision boundary is right BY CONSTRUCTION** — *"It never
+   chooses `CANCEL`. DE owns that choice, and no DE consumer receives raw features
+   or a bare toxicity score."* Fifth appearance of this boundary in the programme
+   and **the first time a plan gets it right up front** rather than by correction.
+4. **It rejects the naive decomposition, explicitly:** *"An unconditional direction
+   forecast multiplied by an independent fill probability is not admissible: fills
+   are endogenous and are most likely in the states whose movement is adverse."*
+   That is *the* subtle error in adverse-selection modelling, named and excluded.
+5. **Cancellation latency `L` sits inside the estimand** — only counterfactual fills
+   after `t + L` count as avoidable, so the model cannot claim credit for fills it
+   could never have prevented.
+6. **Honest cost accounting:** *"does not pretend that the canceled fill's spread,
+   rebate, or queue value is preserved."* Cancelling forfeits the good fills too.
+7. **The promotion bar is ECONOMIC, not statistical:** *"Classification accuracy is
+   diagnostic. Promotion requires the frozen KEEP-versus-CANCEL replay to improve
+   net share-weighted value after lost spread, rebate, queue position and actuation
+   latency."* That is the bar that catches a good classifier which loses money.
+8. **Day-clustered interval required** — R-109's standard, independently arrived at.
+9. **Refuse rather than extrapolate** — `Unavailable` on any hash mismatch.
+10. **Look-ahead guard:** *"No feature may include the event that reveals or causes
+    the fill being predicted."* And `feature_schema_hash` frozen before a scored
+    period, with the identical builder hash required offline **and** at decision
+    time — a train/serve skew guard.
+
+**FEASIBILITY — VERIFIED, and better than the plan assumes.** The plan flags that
+the 1 Hz relay *"cannot validate the direct-event-WS question."* That would
+normally mean waiting for forward collection. It does not:
+
+| | |
+|---|---|
+| `data/mm_hf/raw/{bookTicker, depth20, trade}` | **present**, 16 symbols |
+| **BTCUSDT, ETHUSDT** — both verdict coins | **PRESENT** |
+| PM coin coverage | **6 of 7** (hype absent — descriptive-only, not a verdict coin) |
+| currency | **live** — newest file `20260824_03.csv`, the current hour |
+| span | covers the PM window 08-20 … 08-24 |
+
+**The direct-event WS question is answerable on EXISTING tape for the verdict
+coins.** The sibling P-2026-002 HF programme has been capturing exactly the feeds
+this plan needs, all along.
+
+**Timeline, stated honestly:** the fit and offline evaluation can begin **now**.
+`VALIDATED` still requires the plan's own **ten-forward-day floor**, so
+decision-eligibility remains ~10 days out no matter how good the model looks
+early. Nothing about the existing tape shortens that.
+
+### R-120 — **RECUSED: does this reopen the CLOSED reactive-cancellation family? R-11/R-49/R-54 are mine. Routed to OPS.**
+
+DE's optimizer protocol states the **REACTIVE family is CLOSED — DEAD across four
+channels at achievable rungs (R-11/R-49/R-54), 8/8 coin-days.** This plan is a
+cancellation capability. The plan's own answer is that it tests *"the remaining
+direct-WS route"*, the closure having been measured at **achievable rungs** — i.e.
+at the sampled relay's latency and resolution.
+
+**That may well be right, and I am not the one who gets to say so.** All three
+closure rulings are mine, and deciding that my own closure does not reach a new
+route is the self-serving direction — it is the ruling that lets new work proceed.
+
+**Routed to OPS.** BE authored the plan, DE asserts the closure in a live protocol,
+DA is on the rewards search; OPS is uninvolved and has overturned me before on
+better evidence than I had.
+
+**The question to decide, stated so it is answerable:** was the closure
+**FEED-LIMITED or ECONOMICS-LIMITED?** If the four channels died because the
+*signal is not there*, a better feed changes nothing and the family stays closed.
+If they died because the *achievable rung* was too coarse — latency, resolution,
+staleness — then direct-event WS is a genuinely different rung and the closure
+never bounded it. `ww_v1` was built as the **union-bound falsifier for the whole
+cancellation family**, so the sharpest form is: **did `ww_v1`'s bound rest on the
+economics, or on the feed it was measured with?**
+
+### R-121 — **v24 VERSION COLLISION: the number is taken, and NEITHER ruled migration is in it.**
+
+`contracts.yaml` reads **`version: 24`**, so "v24 is in force" is literally true —
+and it misleads. Checked at the field values rather than the version string:
+
+| ruled change | expected | **actual in v24** |
+|---|---|---|
+| R-72 / M-1 — `CapitalOpCommand.op` | `enum:MINT\|MERGE` | **`enum:DEPOSIT\|WITHDRAW`** — not applied |
+| R-91 / M-2 — remove `GateEvidence.decision_eligible` | absent | **still PRESENT** — not applied |
+
+**What v24 actually contains is the adverse-move work:** `AdverseFeatureRow`,
+`AdverseMoveFit`, `ActionOutcome`, `WealthLedger`, and the modules
+`EV-AdverseMove` and `DA-FlowActionGrid` — all present.
+
+**Two different things are both called v24.** The user's direct edit claimed the
+number; DE's drafted batch (`CONTRACTS_BATCH_v24.md`) intended to. No fault
+attaches — this is a concurrency collision between direct session editing and a
+plane's queued batch, and it is exactly what a shared version counter with two
+writers produces.
+
+**Ruled: DE's batch retargets to v25.** `CONTRACTS_BATCH_v24.md` is renamed and its
+records re-stamped. **R-72 and R-91 are still OWED and must not be treated as
+landed because "v24 is in force."**
+
+**And I nearly reported them as landed.** My own loop state line reads *"v24
+drafted (M-1, M-2)"*, and the version string agreed with it. The field values did
+not. **R-79 again, in its purest form: the version number is the vocabulary; the
+field values are the state.** Verified positively at the fields, which is the only
+reason this was caught before it propagated into a ruling.
+
+
+### R-122 — **OPS rules R-120: THE CLOSURE STANDS. Recorded as given, including the fact OPS raised against its own verdict.**
+
+OPS decided from `warning_window_v1.json` rather than from my closure rulings —
+*"since all three are yours"* — and the question decomposed, with the halves
+answering differently.
+
+**Action axis: ECONOMICS-limited, and direct-WS does not reach it.**
+
+| coin | unwarned | W p50 | **R at τ=0** (zero extra latency) | bar | |
+|---|---|---|---|---|---|
+| btc | 11.9% | 161 ms | **25.7%** | 30.9% | **FAILS by 5.2** |
+| eth | 12.3% | 153 ms | **22.8%** | 49.4% | **FAILS by 26.6** |
+
+The whole 1000→0 ms sweep bought btc **+20.0** and eth **+15.5** points.
+
+**τ=0 is not "a fast feed" — it is zero additional latency beyond the frozen rung,
+and it already fails on both verdict coins.** eth settles it: the entire sweep
+bought +15.5 points and eth needs **+26.6 more**. There is no second sweep below
+the floor.
+
+**Ruling recorded: the closure STANDS and is not reopened.** But OPS separates
+cleanly — *"the plan is a new question, not the closed one"*: it may not cite the
+closure as permission, and **`f*` must be re-derived**, because scoring a new `R`
+against today's bar is a **category error**.
+
+**OPS stated the fact that cuts against its own ruling, unprompted:** at τ=0
+**~88% of fills are already warned and R is still ~23–26%** — at the floor the
+constraint is not warning coverage. And the counter to that counter: **median W is
+161 ms, shorter than the lag itself**, so most warnings are *too short, not
+missing*.
+
+**And it named the number it could not compute:** the ceiling on `R` if every fill
+were warned arbitrarily early, which needs a drift time profile that does not
+exist. **An unbounded quantity named is worth more than one silently omitted** —
+if that ceiling is the binding constraint, the verdict flips, and OPS said so
+rather than letting the gap pass as settled.
+
+### R-123 — **STAGE A: 120 of 120 CELL-DAYS NEGATIVE. No cell promotes. Structural adverse selection survived a pre-registered search of every axis this programme ever nominated.**
+
+Controls first and all passing, including the repaired wiring must-fail at zero
+fills. The mechanisms, which matter more than the verdict:
+
+- **Abstention scales the loss toward the WAIT-only zero and CANNOT CROSS IT.**
+  Abstaining reduces the loss only by trading less. There is no abstention policy
+  that makes money; there is only one that loses less by doing less.
+- **Size scales the loss linearly** — no size effect beyond volume.
+- **FRONT's volume arithmetic confirms out-of-sample on two fresh holdout days.**
+- **The interaction the abstention axis was licensed for exists, is small, and
+  helps nothing** — the honest outcome for an axis kept on an interaction
+  argument, reported as such.
+
+**This is the programme-level answer to the question it was built to ask.** No
+placement, size, abstention or cancellation policy makes the **fill economics**
+pay.
+
+### R-124 — **THE LIQUIDITY REWARDS PROGRAM IS REAL, LARGE, AND INVERTS THE POLICY CONCLUSION. R-116's warning is realised: STAGE A'S OBJECTIVE WAS MIS-SPECIFIED.**
+
+DA measured it. **Pools: $1M across August, $550k to 5-minute markets, BTC
+$300k** — counted from the market list, not assumed.
+
+**Three results, and the third is the one that matters.**
+
+**1 — It splits by arm, in the direction that reverses R-109.** 100% of the pool
+would cover the loss on **9 of 10 JOIN coin-days** and **0 of 10 FRONT coin-days**.
+The policy comparison concluded FRONT ≥ JOIN. **Under an objective that includes
+rewards, that ordering may invert** — and R-109's ordering was measured on
+fill-conditional markout alone.
+
+**2 — At the tested configuration it does not close the gap.** The replay rests
+`quote_size_shares = 5.0`; the reward covers **3.1%** of the loss there.
+
+**3 — The reward is strongly CONCAVE in resting size while the loss is roughly
+LINEAR in it.**
+
+| resting size | 5 | 50 | 500 | 1,400 |
+|---|---|---|---|---|
+| score share (v=3¢) | **0.69%** | 6.5% | 40.9% | **66.0%** |
+
+Robust across v = 2/3/5¢, and `b` cancels in the ratio. For scale: real depth is
+**698–1,382 shares resting within 3¢ of mid**, against our replay's **5-share**
+quote. **We have been simulating a quote three orders of magnitude below the
+market's own resting size, and the revenue term that rewards size was absent from
+the objective.**
+
+**Concave revenue against linear loss means the ratio improves with size by
+construction.** That does **not** establish it crosses zero, and DA said so
+plainly: *"Those are not P&L figures and must not be read as any."* Limits carried:
+`max_spread` is not published per-market (2/3/5¢ sensitivity used, not a known
+value); one-sided scoring; indicative, not a population; and **at 40–66% of the
+reward zone we would be large enough that other makers would react** — a
+competitive response our replay cannot model.
+
+**Ruled: the reward term ENTERS THE OBJECTIVE.** `Q-DA-51` is upheld as
+**BLOCKING on DE's optimizer**. Stage A's verdict stands **for what it measured**
+— no policy makes the fill economics pay — and it **cannot be read as "no policy
+pays,"** because a $550k/month revenue term paid for *resting* was not in its
+objective. That is precisely the mis-specification R-116 flagged **before** Stage A
+was read, and it is now measured rather than suspected.
+
+**Stage B is therefore a NEW pre-registered protocol, not an amendment.** R-111's
+grid freeze holds: a running search may not grow toward a result. The new
+objective is **net of rewards**, the size axis becomes primary rather than
+incidental, and **DA measures the fill-versus-resting-size response** — the one
+input the optimizer cannot supply itself.
+
+**The strategic shape has changed and should be said plainly.** The programme has
+been asking whether spread capture can beat adverse selection. It cannot — 120 of
+120 cell-days. The remaining question is different in kind: **whether resting size
+can harvest a rewards pool faster than adverse selection taxes the fills it
+attracts.** Those pull in opposite directions on the same parameter, which is why
+it is an optimisation and not a hope.
 
 ## 6. Build-readiness audit — 2026-08-23
 
