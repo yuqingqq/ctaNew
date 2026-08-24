@@ -2033,3 +2033,40 @@ and needs two-sided quoting - not modelled; pool assumed uniform over 31 days;
 **book sample is 48 snapshots from 8 markets on ONE day**; and at 40-66% of the
 reward zone **other makers would react - the book is not static under our own
 size**, which nothing here models.
+
+## DA - 2026-08-24 (R-125) - REWARDS STOPPED; **FORWARD POPULATION IS BROKEN THREE WAYS**
+
+**Rewards out of scope.** `Q-DA-51` -> DEBT, trigger "the user reopens the
+rewards question". **Stopping point is written down in `Q-DA-52`**, so a
+successor restarts from measurement: fills scale **sub-linearly** (elasticity
+**0.50-0.83**, never above 1); the reward/loss ratio improves with size by
+construction but **converges to 31-48%, not 100%**; and **even 100% pool capture
+leaves -$19.97 to -$48.09 per window**. That last one is an arithmetic ceiling
+like the rebate's. Also recorded there: my own Q-DA-51 Result 1 was **not
+commensurable** - it set a reward at one resting size against a loss at another.
+
+**`Q-DA-53` FILED BLOCKING ON BE'S FORWARD EVALUATION.** All counts as-of
+2026-08-24.
+
+- **(i) The admissible holdout is 2.2 hours.** Freeze 2026-08-24T07:30:44Z; PM
+  tape ends 09:40Z, mm_hf 09:48Z. **btc n=26, eth n=26 windows, 07:35-09:40Z,
+  08-24 only** - out of 1,384/coin across 6 days.
+- **(ii) It is a single day-cluster, on the partial day.** Day-clustered
+  inference is not computable on n=1; `DAY_BLOCK_UNAVAILABLE` is the correct
+  answer. 26 windows is **below the 30/coin/day** the policy comparison used.
+- **(iii) THE SILENT ONE: there is NO Tier-1 or Tier-2 data for 08-24.**
+  quotes/trades/coverage and all of tier2 **stop at day=2026-08-22, two days
+  BEFORE the freeze**; twap stops at 08-23. A forward run against Tier-1 returns
+  **zero admissible rows**; one against `raw/` **bypasses knowledge-time
+  truncation, the distiller and the coverage receipts**. Quiet either way.
+- **(iv) No coverage receipts for 08-24**, so the blind-period accounting
+  (30/112 btc hours, 15/112 eth) **cannot be computed for the forward span**.
+
+**NOT broken, and verified rather than assumed:** the earliest-first truncation
+defect is **fixed in `ev_replay`** - provenance carries `days_sampled` distinct
+from `days_read` with `sampled_is_known: true`. **That fix is in that harness;
+whatever BE uses must be checked separately.**
+
+**NEXT:** answer on (a) Tier-1 vs raw, (b) whether a 2.2-hour single-cluster
+partial-day holdout is accepted and under what inference. If not, the remedy is
+**collecting more forward tape - a wait, not a computation.**

@@ -561,17 +561,18 @@ freeze or authorize the still-unbuilt decision/action layers.
 | DA-Feeds | PMMarketWS, PMPricesWS, BinanceWS, GammaREST, ClobREST | PolygonRPC |
 | DA-Discovery | collect_pm discovery loop | — |
 | DA-Normalize / DA-State / DA-Settlement | Tier-1 v3, coverage, point-in-time views, closed-day coordinator | settlement spec adapter |
-| DA-FlowActionGrid | immutable shadow actions and queue bounds | knowledge-time `AdverseFeatureRow` materialization for direct-event inputs |
+| DA-FlowActionGrid | immutable shadow actions and queue bounds; v1 completed-100 ms and v2 exact-event/10 ms-cooldown research materializers | production `StateView` adapter for a future frozen feature schema |
 | BE-FlowFit | corrected `f_r`/same-state `f_p`; B0–B3 development fit; exploratory Hawkes diagnostic | freeze M1–M4 conditional families; forward fit and gated residual |
-| BE-FillFit | join-touch 5/15/30 s front/back quantity census; gap-unavailable rows | frozen conditional fill artifact; direct-event-WS adverse-move fit; separate forward validation |
+| BE-FillFit | join-touch 5/15/30 s front/back quantity census; gap-unavailable rows; v1/fast-v2 linear, incentive-free nonlinear-v3, hurdle-v4 and value-weighted harmful-flow-v5 adverse development fits | frozen conditional fill artifact; an independently scored harmful-flow candidate; separate forward validation |
 | other BE-* | — | Target, Uncertainty, Belief, FlowAndFills decision seam, Competition, ScenarioProvider |
-| DE-* | — | all |
+| DE-DecisionScheme research | five-day Stage-A placement/size/abstention grid, pessimistic `SKEW_LB` Stage-B replay, 10-window JOIN-schema-only harmful-flow cancel×skew diagnostic, and cancel-all FRONT stress test; skew improves cancel-only, cancellation reverses versus skew by day, and cancelling FRONT loses to JOIN-only cancellation on all four development comparisons | keep FRONT cancellation disabled; decision-facing cancellation remains blocked until an action-conditioned model and independent forward gate pass |
+| other DE-* | — | ActionSpace, Constraints, Allocator, Actuator and all live wiring |
 | EV-Markout / EV-Calibration | Tier-2 terminal markout + normalized book scaffold | fitted/scored arms after sufficient days |
-| EV-AdverseMove | — | forward calibration plus frozen-policy KEEP-vs-CANCEL economic validation |
+| EV-AdverseMove | v1/v2, nonlinear-v3, hurdle-v4 and harmful-flow-v5 two-day development diagnostics; v5 has narrow ETH H250/L100 and BTC H50/L25 leads but no robust cell | independent forward calibration plus frozen-policy KEEP-vs-CANCEL economic validation; no further selection on the visible two-day holdout |
 | ControlSolver | — | ClosedFormGLFT, PerLevel, HJBQVI |
 | UtilityFunctional | — | RiskNeutral, CARA, PathFunctional |
 
-The flow/fill probes above are offline research code only. No decision-facing
+The flow/fill/adverse probes above are offline research code only. No decision-facing
 BE implementation or DE module is built; the register describes their contracts,
 not live code.
 

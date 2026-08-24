@@ -30,6 +30,7 @@ import argparse
 import collections
 import heapq
 import json
+import math
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Sequence
@@ -40,6 +41,8 @@ import inventory_walk as iw
 import edge_layer1 as el
 import warning_window as ww
 import policy_bounds_v1 as pb
+import placement_skew as ps
+import skew_bound as sb
 
 OUT = fi.PM / "derived/policy_optimizer_stageA.json"
 
@@ -55,6 +58,14 @@ STAGE_A = [
     for rc in (0, 60, 120)
     for sz in (5.0, 10.0)
 ]
+STAGE_B = [
+    {"cell": f"SKEW_LB:r{rc}:s{int(sz)}", "placement": "SKEW_LB",
+     "r_cut": rc, "size": sz, "skew": True,
+     "skew_band_shares": ps.SKEW_BAND_SHARES,
+     "front_on_repost": False}
+    for rc in (0, 60, 120)
+    for sz in (5.0, 10.0)
+]
 
 
 class SimArm:
@@ -62,9 +73,20 @@ class SimArm:
 
     def __init__(self, spec: dict[str, Any], halt_at: float | None = None):
         self.spec = spec
-        front = spec["placement"] == "FRONT"
-        self.buy = iw.RestingSide("BUY_UP", front, spec["size"])
-        self.sell = iw.RestingSide("SELL_UP", front, spec["size"])
+        self.skew = bool(spec.get("skew", False))
+        self.skew_band = float(spec.get("skew_band_shares", math.inf))
+        front = spec["placement"] == "FRONT" and not self.skew
+        if self.skew:
+            front_on_repost = bool(spec.get("front_on_repost", False))
+            self.buy = sb.BoundedSide(
+                "BUY_UP", front, spec["size"],
+                front_on_repost=front_on_repost)
+            self.sell = sb.BoundedSide(
+                "SELL_UP", front, spec["size"],
+                front_on_repost=front_on_repost)
+        else:
+            self.buy = iw.RestingSide("BUY_UP", front, spec["size"])
+            self.sell = iw.RestingSide("SELL_UP", front, spec["size"])
         self.t_stop = fi.WINDOW_S - spec["r_cut"]      # quote only t < t_stop
         self.halt_at = halt_at                          # selftest hook (§5)
         self.fills: list[el.Fill] = []
@@ -73,6 +95,26 @@ class SimArm:
         self.halted = False
         # incremental ledger for reconciliation (fail-loud at window end)
         self.led_q_up = self.led_q_dn = 0.0
+        self.skew_intent_flips = 0
+
+    @property
+    def net(self) -> float:
+        return self.led_q_up - self.led_q_dn
+
+    def apply_skew_intent(self) -> None:
+        """Change placement intent, never current queue position.
+
+        `SKEW_LB` receives the new intent only on the next genuine touch
+        formation. Its BoundedSide also rejoins behind displayed depth after a
+        full lift, which is the pessimistic queue rule frozen for Stage B.
+        """
+        if not self.skew:
+            return
+        buy_front, sell_front = ps._target_front(self.net, self.skew_band)
+        self.skew_intent_flips += int(self.buy.front != buy_front)
+        self.skew_intent_flips += int(self.sell.front != sell_front)
+        self.buy.front = buy_front
+        self.sell.front = sell_front
 
     def dead(self, t: float) -> bool:
         if self.halt_at is not None and t >= self.halt_at and not self.halted:
@@ -138,6 +180,7 @@ def replay_cells(path: Path, up_id: str, down_id: str,
                     a.sell.reposition(None, 0.0)
                 continue
             bid, ask, bid_sz, ask_sz, _ = q
+            a.apply_skew_intent()
             if a.buy.level is None or abs(a.buy.level - bid) > 1e-12:
                 a.buy.reposition(bid, bid_sz)
                 a.actions += 1
@@ -263,6 +306,7 @@ def replay_cells(path: Path, up_id: str, down_id: str,
                         a.fills.append(el.Fill(recv, "SELL_UP", lvl, f,
                                                mid_now, micro))
                         a.led_q_dn += f
+                        a.apply_skew_intent()
                 elif taker == "SELL" and a.buy.level is not None \
                         and exec_p <= a.buy.level + 1e-12:
                     lvl = a.buy.level
@@ -271,6 +315,7 @@ def replay_cells(path: Path, up_id: str, down_id: str,
                         a.fills.append(el.Fill(recv, "BUY_UP", lvl, f,
                                                mid_now, micro))
                         a.led_q_up += f
+                        a.apply_skew_intent()
 
     advance(fi.WINDOW_S)
     if not mid_t:
@@ -291,6 +336,7 @@ def replay_cells(path: Path, up_id: str, down_id: str,
             diag[f"rate_budget_binding:{a.spec['cell']}"] += 1  # a FINDING
         d = dict(diag)
         d[f"actions:{a.spec['cell']}"] = a.actions
+        d[f"skew_intent_flips:{a.spec['cell']}"] = a.skew_intent_flips
         out[a.spec["cell"]] = el.WindowFills(
             slug, coin, a.fills, mid_t, mid_v, list(bad_iv), d)
     return out
@@ -338,6 +384,23 @@ def selftest() -> int:
 
     ok(len(STAGE_A) == 12, "Stage A is exactly the frozen 12 cells")
     ok(len({c['cell'] for c in STAGE_A}) == 12, "cell names unique")
+    ok(len(STAGE_B) == 6, "Stage B is exactly the frozen six skew cells")
+    ok(all(c["skew"] and not c["front_on_repost"] for c in STAGE_B),
+       "Stage B pins pessimistic SKEW_LB queue semantics")
+
+    skew = SimArm(STAGE_B[0])
+    ok(not skew.buy.front and not skew.sell.front,
+       "skew starts JOIN on both sides while flat")
+    skew.led_q_up = ps.SKEW_BAND_SHARES + 0.1
+    skew.apply_skew_intent()
+    ok(not skew.buy.front and skew.sell.front,
+       "long inventory fronts only the reducing side")
+    old_qahead = 7.0
+    skew.sell.qahead = old_qahead
+    skew.led_q_up = 0.0
+    skew.apply_skew_intent()
+    ok(skew.sell.qahead == old_qahead,
+       "intent flip never teleports current queue position")
 
     # abstention arithmetic: r_cut=120 stops at t=180; r_cut=0 never stops
     a = SimArm({"cell": "x", "placement": "JOIN", "r_cut": 120, "size": 5.0})
