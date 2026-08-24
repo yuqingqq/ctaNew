@@ -826,6 +826,17 @@ def select_holdout(freeze_epoch: float,
     by_day: dict[str, list] = collections.defaultdict(list)
     per_day_coin: dict[str, collections.Counter] = collections.defaultdict(
         collections.Counter)
+    # R-139 (Q-DA-62 upheld): completeness is a BOUNDARY test, never a
+    # cardinality test. n_total counts EVERY covered window of the day;
+    # n_adm_uncapped counts predicate-passers BEFORE the cap (the cap
+    # defines neither admissibility nor completeness). A STRADDLE day --
+    # one containing the freeze instant -- has admissible < total by
+    # construction and is NEVER complete, even after day_closed flips at
+    # midnight with ~18h of pre-freeze windows inside it.
+    n_total: dict[str, collections.Counter] = collections.defaultdict(
+        collections.Counter)
+    n_adm_uncapped: dict[str, collections.Counter] = collections.defaultdict(
+        collections.Counter)
     max_ws = 0
     for slug in sorted(fi.covered_slugs(fi.ERA)):
         if slug not in paths or slug not in tokens:
@@ -835,10 +846,12 @@ def select_holdout(freeze_epoch: float,
         except (IndexError, ValueError):
             continue
         max_ws = max(max_ws, ws)
-        if not window_admissible_forward(ws, freeze_epoch):
-            continue
         day = fi.slug_day(slug)
         coin = slug.split("-")[0]
+        n_total[day][coin] += 1
+        if not window_admissible_forward(ws, freeze_epoch):
+            continue
+        n_adm_uncapped[day][coin] += 1
         if cap_per_coin is not None \
                 and per_day_coin[day][coin] >= cap_per_coin:
             continue
@@ -853,9 +866,13 @@ def select_holdout(freeze_epoch: float,
         day_closed = max_ws >= day_end
         out_days[day] = {
             "day_closed": day_closed,
+            # R-139: complete iff day_closed AND n_admissible == n_total
+            # (DA's wording verbatim) -- a straddle day is never complete
             "holdout_complete_by_coin": {
-                c: bool(day_closed and n > 0)
-                for c, n in sorted(per_day_coin[day].items())},
+                c: bool(day_closed
+                        and n_adm_uncapped[day][c] == n_total[day][c])
+                for c in sorted(per_day_coin[day])},
+            "n_total_by_coin": dict(sorted(n_total[day].items())),
             "n_admissible_by_coin": dict(sorted(per_day_coin[day].items())),
             "windows": by_day[day],
         }
