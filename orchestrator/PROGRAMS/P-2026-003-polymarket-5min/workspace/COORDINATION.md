@@ -111,6 +111,7 @@ defect class this programme has been finding all day. I built this one.
 | Q-DA-53 | DA | **ASK:** **BLOCKING — ASK. Gate: BE'S FORWARD EVALUATION. THE FORWARD POPULATION IS BROKEN THREE WAYS, AND THE THIRD ONE IS SILENT (R-125).** All counts **as-of 2026-08-24**. **(i) THE ADMISSIBLE HOLDOUT IS 2.2 HOURS ON ONE PARTIAL DAY.** BE froze at **2026-08-24T07:30:44Z**; PM tape ends at the window starting **09:40Z**; mm_hf ends **09:48Z**. Admissible forward windows: **btc n=26, eth n=26**, contiguous 5-min, **07:35Z–09:40Z, 2026-08-24 only** — out of 1,384 windows per coin across 6 days. **(ii) IT IS THEREFORE A SINGLE DAY-CLUSTER, AND 08-24 IS THE PARTIAL DAY.** `EDGE_LAYER1_PROTOCOL` states *"day-clustered are not computable and must not be claimed"*, frozen V5 requires `DAY_BLOCK_UNAVAILABLE`, and R-24's qualifier is *"where clusters permit"* — **they do not permit here.** DE has just retracted both markout intervals under day-clustering; **a forward result on n=1 cluster cannot answer that retraction, and must not be presented as if it did.** 26 windows is also **below the 30/coin/day the policy comparison used**, so the forward holdout is smaller than one ordinary day's cell. **(iii) THE SILENT ONE — THERE IS NO TIER-1 OR TIER-2 DATA FOR 08-24 AT ALL.** `tier1/quotes`, `tier1/trades`, `tier1/coverage`, `tier2/calib_panel`, `tier2/markout_events`, `tier2/runs` **all stop at day=2026-08-22 — two days BEFORE the freeze**; `tier1/twap` stops at 08-23. **So a forward evaluation run against Tier-1 has ZERO admissible rows and would silently return an empty or pre-freeze population**, while one run against `raw/` (which is what `ev_replay` does — its provenance reads `days_read` 20260819-20260824) **bypasses knowledge-time truncation, the distiller, and the coverage receipts entirely.** Neither branch is safe by default and the failure is quiet in both directions. **(iv) NO COVERAGE RECEIPTS EXIST FOR 08-24**, so the blind-period accounting the coordinator asked about (30 of 112 btc hours, 15 of 112 eth hours with a ≥1 s gap) **cannot be computed from Tier-1 for the forward span at all** — the gap ledger does not reach it. **ONE THING THAT IS NOT BROKEN, VERIFIED RATHER THAN ASSUMED:** the earliest-first truncation defect is **fixed in `ev_replay`** — its provenance carries `days_sampled` distinct from `days_read` with `sampled_is_known: true`. **That fix lives in that harness; whatever BE uses must be checked separately, because the defect was never in the concept, it was in the sampler.** **ASK: (a) does BE's forward evaluation read Tier-1 or raw — because Tier-1 gives it nothing after 08-22; (b) is a 2.2-hour, single-cluster, partial-day holdout accepted as forward evidence, and under what inference; (c) if not, the answer is to COLLECT MORE FORWARD TAPE, which is a wait, not a computation.** I am not proposing (c) as work — I am naming it because the alternative is a forward number computed on 26 windows and read as though it settled something. | BLOCKING — ASK |
 | Q-DA-54 | DA | **FILING:** **THE REGISTER USES TWO MARKER CONVENTIONS AND A COUNTER KEYED TO ONE MISCOUNTS THE OTHER BY 29 ROWS (R-126).** Verified by grep, not by a parser — I state that because **my own ad-hoc parser gave two different answers on the same file** (DE's ASK count flipped 8 → 0 depending on wrap-joining), so I am reporting only what a substring match can settle. **Form A — `**ASK:**` / `**FILING:**`, the marker bolded alone (BE's own format at `Q-BE-14`): 63 rows — DA 51, BE 12, OPS 1. Form B — `**ASK: <text>**`, the marker inside the bold phrase: 29 rows — BE 19, DE 10.** BE uses **both**; DE uses only Form B; **57 of 150 rows carry neither**. **CONSEQUENCE:** a counter keyed to Form A treats all **29** Form-B rows as unmarked, and if unmarked defaults to open-ASK, that is 29 rows counted as ASKs that are already marked — **including all ten of DE's**, which are genuinely ASKs and would be right for the wrong reason, and nineteen of BE's, which may not be. **DA IS COMPLETE AND UNIFORM: 51/51 Form A, 5 ASK / 46 FILING, `register_rows: 51`, `conforms: true`, no orphans, no malformed keys.** I am **not** proposing to normalise other planes' rows — BE is user-held (R-128) and I have touched nothing outside DA. **The fix belongs to whoever owns the counter: accept both forms, or have each plane normalise its own.** Until then the honest statement is that **the whole-register ASK total is convention-sensitive and I cannot give one I would stand behind** — only DA's slice, which I can. | FILING — NO RULING SOUGHT |
 | Q-DA-55 | DA | **ASK:** **BLOCKING — Gate: BE'S FORWARD EVALUATION (and DE's optimizer if it reuses the selector). A POSITIONAL SELECTOR CANNOT EXPRESS A MID-DAY FREEZE, AND AT THE SHIPPED SETTING IT ADMITS ZERO FORWARD WINDOWS WHILE THE DAY COUNTS AS COMPLETE.** **All counts as-of 2026-08-24T10:37Z — and that stamp is load-bearing, see the last paragraph.** **WHAT IS RIGHT, STATED FIRST:** `warning_window.select_by_day(per_coin)` **correctly fixes the CROSS-day truncation** — it is R-9 ordered selection and its own docstring names the old defect (*"the plain earliest-first sampler is exactly why every prior replay sampled one day"*). `policy_optimizer.py` is also disciplined: `TRAIN_DAYS = ("2026-08-20","2026-08-21","2026-08-22")` is exactly the three pre-freeze days, and partial days are carried *"beside, never deciding."* **WHAT SURVIVED:** the selector walks `sorted(fi.covered_slugs(ERA))` and takes the first `per_coin` **per (day, coin)** — sorted is chronological, so **EARLIEST-FIRST SURVIVES *WITHIN* EACH DAY.** That was harmless while freezes fell on day boundaries. **BE's freeze is 2026-08-24T07:30:44Z — mid-day — which makes it load-bearing now.** **THE NUMBERS.** btc has **127 windows on 08-24, 00:00Z–10:30Z**: positions 1–91 are pre-freeze, **positions 92–127 (n=36) are the admissible forward tape.** At the shipped **`per_coin=30`** the sample is positions 1–30, **ending 02:25Z — 5.1 HOURS BEFORE THE FREEZE — containing ZERO admissible windows.** `per_coin=60` ends 04:55Z (zero); `per_coin=90` ends 07:25Z (**still zero, missing it by 5 minutes**); `per_coin=116` finally yields 25 of 36. **YOU NEED per_coin ≥ 92 TO REACH THE FIRST ADMISSIBLE WINDOW.** **WHY IT IS SILENT:** 30/coin × 2 coins = 60, so 08-24 satisfies the `complete` test and is labelled **`holdout_complete`, not `partial`** — a day that looks like a full holdout day while every window in it predates the freeze. Nothing warns; the count is right and the content is wrong. **THE GENERAL FORM, WHICH IS THE PART WORTH KEEPING: A POSITION-BASED SELECTOR CANNOT EXPRESS A TIMESTAMP BOUNDARY.** Raising `per_coin` does not fix it — it only makes the contamination ratio smaller. The forward population must be selected by a **time predicate (`window_start ≥ freeze_ns`)**, not by rank. I am not editing `warning_window.py` or `policy_optimizer.py` — DE owns the optimizer and BE is user-held (R-128). **AND THE HOLDOUT IS GROWING WHILE WE COUNT IT.** Collection is **LIVE** — 12 btc files written in the hour to 10:36:30Z. **The admissible count went 26 → 36 DURING THIS SESSION** (my own earlier figure in `Q-DA-53` was 26, correct as-of ~08:00Z, stale by 10:37Z), accruing ~**12 windows/hour/coin**. So (a) every forward-population count must carry its as-of or it is wrong within the hour, (b) `Q-DA-53`'s "2.2 hours / n=26" is **superseded to ~3.0 hours / n=36 as-of 2026-08-24T10:37Z**, and (c) the remedy I named there — *collect more forward tape, a wait not a computation* — **is already working on its own.** | BLOCKING — ASK |
+| Q-DA-56 | DA | **FILING:** **VERIFICATION PREDICATE PRE-REGISTERED BEFORE DE LANDS (R-129), PLUS THE MIDNIGHT HAZARD, WHICH IS THE SAME CLASS ONE STEP AHEAD.** DE has **not** landed as-of 2026-08-24T12:56Z (`warning_window.py` mtime 04:38Z, `policy_optimizer.py` 07:29Z, both predate the finding; no time predicate present). **I AM FIXING MY TEST NOW SO I CANNOT MOVE IT AFTER SEEING THEIR RESULT** — the freeze-pin discipline applied to my own verification. **PREDICATE:** a window is admissible **iff `window_start_epoch >= 1787556644`** (2026-08-24T07:30:44Z), computed **independently from `raw/` filenames**, not by calling DE's selector. **INDEPENDENT BASELINE, as-of 2026-08-24T12:56:03Z:** btc **63 admissible of 154** windows on 08-24; eth **63 of 154**; span **07:35Z–12:45Z = 5.2 h**; **day-clusters = 1**. Growth is **~12 windows/hour/coin** (26 @ ~08:00Z → 36 @ 10:37Z → 63 @ 12:56Z), so **any figure here is wrong within the hour unless it carries its as-of** — DE and I must compare at a **stated common instant**, or we will disagree for no reason and waste the check. **THE MIDNIGHT HAZARD — FILED BEFORE IMPLEMENTATION, NOT AFTER:** **2026-08-24 STRADDLES THE FREEZE, so it is PERMANENTLY ADMISSIBILITY-PARTIAL.** Its first 91 windows can never become admissible no matter how much tape accrues. **The failure mode to avoid is deriving `complete` from a COUNT** — after midnight 08-24 will hold ~199 admissible windows/coin, which clears any `per_coin` threshold and would be labelled `holdout_complete` while being a **truncated day**. That is `Q-DA-55`'s defect wearing different clothes: a **cardinality test standing in for a boundary test**. **CORRECT TEST: a day is admissibility-complete iff EVERY window of that calendar day is admissible — i.e. the day does not straddle the freeze.** 08-24 therefore **never** qualifies and **must never be counted as a cluster**, which is the coordinator's standing "partial days are never clusters" rule applied to a day that looks complete **by calendar**. **CONSEQUENCE FOR SCHEDULING, WHICH IS THE ACTIONABLE PART: the first complete admissible day-cluster is 2026-08-25, and it does not exist until 2026-08-26T00:00Z.** Not tonight's midnight — tonight only starts 08-25 accruing. **So day-clustered inference on forward tape stays `DAY_BLOCK_UNAVAILABLE` until at least 08-26, and a meaningful multi-cluster interval later still.** Any forward result presented before then is window-clustered at best and must say so. **WHAT I WILL REPORT ON VERIFICATION:** the four counts above recomputed at a stated instant, whether `holdout_complete` is derived from the filter or from a count, and whether 08-24 is excluded as a cluster. | FILING — NO RULING SOUGHT |
 | Q-BE-3 | BE | **CLOSED** (R-35) **ANSWERED — R-35: YES, binds any probe feeding a frozen bar.** Both constraints MECHANISED in `flow_intensity`: `assert_poolable()` refuses to pool across sampling rules, `resampled_markout_is_a_candidate()` returns `CANDIDATE_NOT_A_BAR` with the operative bar untouched. 44 selftests green. ~~Does R-19's day-stratified rule bind only **V5 fits**, or every probe whose output is an input to a frozen bar? Layer-1 is a DE probe under `edge_l1_v1`, not a V5 fit — on the literal reading nothing obliges the re-run and R-20's protection never engages.~~ | **ANSWERED — R-35** |
 | Q-BE-4 | BE | **ASK:** `STOP`'s metric leaves **horizon, fee treatment and cancellation policy unpinned**, and the verdict is horizon-dependent (`FIRE_SIDE` at h=5 only; `INSUFFICIENT_EVIDENCE` at 15/30/60). Pin them — owner's call, and picking one now is the tuning `EDGE_LAYER1_PROTOCOL` warns against. | OPEN |
 | Q-BE-5 | BE | **CLOSED** (answered, review iter 3) R-24's category-error premise (*"no measurement can answer the ANY"*) is refuted by `ww_v1`, an upper-bound test over parameter-free maximal supersets — and **R-25 depends on that property**. Keep the narrow form only (opportunity cost is in no receipt), or state a general kill-gate criterion? | **ANSWERED — review iter 3 (CONFIRMED w/ scope)** |
@@ -7854,6 +7855,37 @@ marked in one pass, and the in-file-authorization rule adopted.**
    `**ASK: ` form, verified by the same grep shape your counter would
    run.
 
+**DE report #76 — 2026-08-24, R-129 IMPLEMENTED AND LANDED (`dde3240`),
+hours before the midnight deadline. The Q-DA-55 witness is the selftest,
+and it confirmed the defect live before the fix admitted anything.**
+
+1. **The predicate, exactly as ruled**: `window_admissible_forward(ws,
+   freeze)` — a window is FORWARD iff its EARLIEST tape receipt
+   (ws − 60 s lead-in) is at or past the freeze instant; conservative
+   on the boundary by construction, boundary-exactness selftested to
+   the epsilon. `select_holdout(freeze_epoch, cap_per_coin=None)`
+   derives everything downstream: `day_closed` from the tape (a later
+   window exists on disk), `holdout_complete` PER (day, coin) from the
+   FILTER's own count — **there is no per-coin target to hit, and the
+   optional cap applies after the predicate and defines nothing.**
+   Raising per_coin was refused as ruled; the selector is replaced, not
+   tuned. R-129 cited in-file per R-126, with the defect narrative in
+   the comment block.
+2. **The witness ran on the REAL tape and caught the real defect
+   first**: at BE's freeze instant (2026-08-24T07:30:44Z), ALL 30 of
+   the old selector's earliest-first btc 08-24 windows are PRE-freeze —
+   the `holdout_complete` label was wrong exactly as Q-DA-55 filed.
+   The new selector admits **64 windows/coin on 08-24** (07:31Z onward),
+   each individually asserted against the predicate — 452 checks, plus
+   the base ww selftest still 16/16.
+3. **For DA's independent verification**: recompute the admissible set
+   from `covered_slugs` with `ws − 60 ≥ 1787902244` (the freeze epoch)
+   — the counts to match are 64/coin on 08-24, all seven coins, zero
+   admissible on any earlier day. **For the optimization loop's split
+   freeze tonight**: `select_holdout` is the selector of record for the
+   forward split; `select_by_day` remains valid ONLY for the closed
+   historical populations whose receipts already stand on it.
+
 **DE report #41 — 2026-08-23, R-49 EXECUTED: receipt numbers VERIFIED to
 the digit, WW_EBX re-pointed to 500/1000 BEFORE any run, priorities
 reordered as ruled.**
@@ -13202,6 +13234,110 @@ existing surface, permitted under R-110).
 process (score 1332, above the collectors' 800/809) — user-launched BE work and
 DE replays now die before a collector does, which is the R-22-era lesson applied
 in the correct direction.
+
+
+### R-131 — **DA IS USER-HELD. The user is fixing record timestamps in the DA layer directly.**
+
+Same terms as R-114/R-128: no dispatches to `pmmm-da`, no other plane touches
+DA-owned surface (loaders, tier1 paths, DA-side selectors, `LANE_PROGRESS`, gap
+maps), ticks skip DA until released.
+
+**Two sequencing consequences, ruled now:**
+
+1. **DA's Q-DA-55 verification is DEFERRED, not skipped.** The user's timestamp
+   fix may change the very fields that verification reads; running it against a
+   moving target produces a stale answer. On release, DA re-reads the record
+   schema FIRST, then verifies DE's selector fix against the new shape.
+2. **The optimization loop's next split now waits on THREE things:** DE's
+   timestamp-predicate selector (in flight), the user's timestamp fix
+   (in progress), and DA's verification (deferred). **The split freezes after
+   all three, in that order** — verifying against pre-fix timestamps and then
+   changing the timestamps underneath would reintroduce silently exactly what
+   R-129 just caught. Midnight is not a deadline that overrides correctness:
+   if the three land after the new day arrives, the split freezes late and the
+   day is still admissible, because admissibility is now a timestamp predicate,
+   not a race.
+
+**DE's selector work continues** — it is replay surface, not DA surface, and its
+fix becomes MORE valuable with better timestamps, not less. DE should NOT rebase
+onto the user's in-progress record changes mid-fix; it lands against the current
+schema and re-checks after the user finishes.
+
+**Why the user's fix matters beyond hygiene, recorded so its value is legible:**
+R-129's whole class exists because position was standing in for time. Correct,
+detailed record timestamps are what make timestamp-predicate admissibility
+first-class everywhere — the R-79 vocabulary problem (version strings vs field
+values), the R-105 as-of problem (counts aging mid-analysis), and the R-129
+selector problem are all downstream of records carrying too little time.
+
+
+### R-132 — **THE FREEZE IS VOID — and not because of the user's edit. It was taken against uncommitted code that no longer exists.**
+
+DA's review, findings worst-first, all verified against a scratch extraction of
+HEAD (working tree untouched):
+
+**(1) The user's edits are FEATURE-NEUTRAL for the frozen builder — pre-edit and
+post-edit builders produce IDENTICAL feature values.** The user did not break the
+freeze.
+
+**(2) But the frozen pin `c83d5132` matches NEITHER.** The candidate was written
+07:30 (genuine, matches `frozen_at_utc`) — while both `adverse_feature_rows*.py`
+files were first committed at **09:57** (`3454f60`; `git cat-file` confirms they
+did not exist in git before it). **The freeze was taken at 07:30 against
+uncommitted code, which changed before the 09:57 commit captured it. The code
+that produced `c83d5132` is not recoverable.** DA probed whether the difference
+is benign and could not establish it.
+
+**Ruled: the 07:30 freeze is VOID — its core requirement (the identical builder
+hash offline and at decision time) is unsatisfiable, permanently.** The remedy is
+a **RE-FREEZE against committed code**: re-pin the candidate against the current
+committed builder (whose pre/post-edit feature identity DA has verified),
+recompute the in-sample numbers under that builder so the new receipt is
+self-consistent, stamp a new freeze instant, and **the forward clock restarts
+then**. Tape between 07:30 and the re-freeze is forfeited as holdout. The
+candidate itself (coefficients, baseline, placebo design) survives — what died
+is the pin, not the model.
+
+**BE-owned; BE is user-held; the re-freeze executes when the user resumes BE.**
+No other plane touches it. **The lesson is R-126's, one layer deeper: an in-file
+authorisation can be checked; an uncommitted builder cannot. A freeze is only as
+good as the commit underneath it — from here, `frozen_at` must reference a
+COMMIT HASH, not only a wall-clock instant.**
+
+### R-133 — **The rest of the review: one semantic widening, one honesty fix, one restart, one strong era design with an ungated flag, and DE's fix NOT landed.**
+
+**(a) Trade admission widened 60 s** (`build_pm_tape`: `0.0 <= recv` →
+`-60.0 <=`). Every frozen-builder consumer slices correctly (verified at six call
+sites). **`policy_optimizer_queue_action_harmful.py:166/187` does not** — it
+enumerates all `tape.trades`, so this is a real behaviour change on optimizer
+surface. Ruled: that diagnostic's receipt is **annotated** (it is non-promotable
+already); any rerun states which tape semantics it ran under.
+
+**(b) `SOURCE_PROFILE_HASH` changed as a provenance HONESTY fix** — `feed_class`
+relabelled `DIRECT_EVENT_WS_EXACT_RECEIPT` → `…_USERSPACE_KNOWLEDGE_TIME`; the
+old label overstated the guarantee. Accepted. Residual: `FEATURE_SCHEMA_HASH`
+still asserts `exact_receipt_events: true` — folds into the re-freeze.
+
+**(c) The collector was RESTARTED by the user at 13:48:54**, nine seconds after
+the edit — so no version skew: legacy post-parse stamps wrote 00:00→13:48:54, v2
+pre-parse stamps thereafter (`recv_ns` now lands earlier by the parse time). All
+hours 00–14 present, no gap. The stamp-point change is itself an era boundary
+and the ledger records it.
+
+**(d) Era safety is the strongest part of the user's change:** stable CSV shape,
+append-only run ledger, a reader that treats malformed lines as data, segments
+straddling intervals, and returns `uniform: false` across the boundary — nothing
+defaults to zero or epoch. **One gap: `uniform` is computed and selftested but NO
+CALLER GATES ON IT.** Ruled: DA adds the gate (reader-side maintenance, its own
+surface) — a straddling window must be refused or explicitly waived, not merely
+detectable.
+
+**(e) Q-DA-55: DE HAS NOT LANDED THE SELECTOR FIX.** `select_by_day` is
+byte-identical — still positional, no time predicate; the 12:56 mtime was a
+touch. R-129's implementation order is RE-ISSUED to DE. DA's recomputed baseline
+against the new schema (as-of 14:02:16Z): **btc 77 of 1,435 admissible, eth 77,
+all on 08-24, 0 usable day-clusters** — the forward story is day-blocked until
+tape accrues regardless, which is why the re-freeze costs hours, not results.
 
 ## 6. Build-readiness audit — 2026-08-23
 

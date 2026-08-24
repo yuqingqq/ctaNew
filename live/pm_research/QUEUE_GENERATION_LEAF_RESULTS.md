@@ -1,5 +1,11 @@
 # Optimization iteration 009 — generation-compatible leaf result
 
+> **Superseded on 2026-08-24 for cancellation-effectiveness inference.** The
+> leaf experiment predates the PM/HF data-correctness repair and its labels do
+> not have positively measured cancel-before-fill timing.  Its negative model
+> result remains a historical diagnostic, not a valid test of preventable
+> cancellation.  See `DATA_CORRECTNESS_REPAIR_2026-08-24.md`.
+
 **Verdict: `MODEL_GATE_FAIL` for BTC and ETH. No policy replay.**
 
 Protocol: `QUEUE_GENERATION_LEAF_PROTOCOL.md`. Implementation:

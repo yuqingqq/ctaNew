@@ -5,16 +5,13 @@ contemporaneous underlying movement?  That needs, for a Polymarket event at
 time t, the Binance book state that was KNOWN at t.  This module supplies that
 read and the coverage figure that says where it is legitimate.
 
-WHY THE ALIGNMENT CAN BE MADE HONEST -- the enabling fact, stated first because
-if it were false the task would stop here:
-
-    BOTH collectors stamp `recv_ns = time.time_ns()` AT PARSE TIME, ON THE SAME
-    HOST.  `collect_pm.py:408` and `collect_hf.py:175`.
-
-So the two tapes share one wall clock and receipt times are directly
-comparable with no offset estimation, no exchange-clock arithmetic, and no
-cross-venue skew model.  A cross-venue alignment usually founders on exactly
-that; here it is free, and it is the ONLY reason this is knowledge-time honest.
+WHY THE ALIGNMENT CAN BE MADE HONEST -- both collectors stamp local userspace
+knowledge time on the same host.  PM stamps immediately after ``ws.recv``.
+Historical HF rows were stamped after JSON parsing; HF collector v2 stamps
+immediately after ``ws.recv`` and records each process boundary and exact stamp
+semantics in ``data/mm_hf/collector_runs.jsonl``.  Therefore the common clock
+is directly comparable, while the stamp-point version remains explicit rather
+than silently mixing historical and repaired rows.
 
 WHAT WOULD MAKE IT DISHONEST, and is therefore refused:
 
@@ -73,10 +70,12 @@ from typing import Any, Iterable, Sequence
 
 REPO = Path(__file__).resolve().parents[2]
 HF_RAW = REPO / "data/mm_hf/raw"
+HF_RUNS = REPO / "data/mm_hf/collector_runs.jsonl"
 PM_ROOT = REPO / "data/pm_5min"
 PM_GAPS = PM_ROOT / "collector_gaps.jsonl"
 
-ALIGNMENT_VERSION = "hf_pm_alignment_v1_r46"
+ALIGNMENT_VERSION = "hf_pm_alignment_v2_stamp_manifest"
+LEGACY_HF_STAMP_POINT = "AFTER_JSON_PARSE_LEGACY_UNMANIFESTED"
 
 # A recv_ns silence longer than this counts as an inferred HF outage.  Chosen
 # against measured behaviour, not picked: BTCUSDT bookTicker's worst intra-hour
@@ -90,6 +89,86 @@ HF_GAP_LADDER_MS = (500.0, 1000.0, 2000.0, 5000.0, 30000.0)
 WINDOW_S = 300  # Polymarket 5-minute markets
 
 
+def hf_collector_runs(path: Path = HF_RUNS) -> list[dict[str, Any]]:
+    """Read valid append-only HF collector run records.
+
+    Absence of a record is meaningful: rows before the first manifest boundary
+    use the historical post-JSON-parse stamp.  Malformed lines are ignored
+    rather than allowed to relabel raw data.
+    """
+    if not path.exists():
+        return []
+    records: list[dict[str, Any]] = []
+    for line in path.read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        try:
+            record = json.loads(line)
+            started = int(record["started_at_ns"])
+            stamp_point = str(record["stamp_point"])
+            symbols = record["symbols"]
+        except (json.JSONDecodeError, KeyError, TypeError, ValueError):
+            continue
+        if started <= 0 or not stamp_point or not isinstance(symbols, list):
+            continue
+        records.append({**record, "started_at_ns": started,
+                        "stamp_point": stamp_point,
+                        "symbols": [str(symbol).upper() for symbol in symbols]})
+    return sorted(records, key=lambda record: record["started_at_ns"])
+
+
+def hf_stamp_profile(
+    windows: Sequence[int], symbol: str,
+    records: Sequence[dict[str, Any]] | None = None,
+) -> dict[str, Any]:
+    """Describe stamp semantics across the exact requested raw-data interval.
+
+    A run record changes semantics from its ``started_at_ns`` onward.  The
+    interval before the first applicable record is explicitly legacy; it is
+    never inferred to be v2 merely because the current source code is v2.
+    """
+    if not windows:
+        return {"uniform": False, "segments": [],
+                "reason": "NO_WINDOWS"}
+    lo_ns = min(windows) * 1_000_000_000
+    hi_ns = (max(windows) + WINDOW_S) * 1_000_000_000
+    symbol = symbol.upper()
+    applicable = sorted((record for record in (
+        hf_collector_runs() if records is None else records)
+        if symbol in [str(item).upper() for item in record.get("symbols", [])]
+        and int(record.get("started_at_ns", 0)) < hi_ns),
+        key=lambda record: int(record["started_at_ns"]))
+
+    prior = [record for record in applicable
+             if int(record["started_at_ns"]) <= lo_ns]
+    active = (str(prior[-1]["stamp_point"])
+              if prior else LEGACY_HF_STAMP_POINT)
+    boundaries: list[tuple[int, str]] = [(lo_ns, active)]
+    for record in applicable:
+        started = int(record["started_at_ns"])
+        if lo_ns < started < hi_ns:
+            stamp_point = str(record["stamp_point"])
+            if stamp_point != boundaries[-1][1]:
+                boundaries.append((started, stamp_point))
+    segments = [
+        {
+            "start_ns": start,
+            "end_ns": (boundaries[index + 1][0]
+                       if index + 1 < len(boundaries) else hi_ns),
+            "stamp_point": stamp_point,
+        }
+        for index, (start, stamp_point) in enumerate(boundaries)
+    ]
+    return {
+        "uniform": len({segment["stamp_point"] for segment in segments}) == 1,
+        "contains_legacy_post_parse": any(
+            segment["stamp_point"] == LEGACY_HF_STAMP_POINT
+            for segment in segments),
+        "segments": segments,
+        "manifest_records_considered": len(applicable),
+    }
+
+
 # ---------------------------------------------------------------------------
 # R-47: the clock is NOT the risk.  The STAMP POINT is.
 # ---------------------------------------------------------------------------
@@ -97,15 +176,17 @@ WINDOW_S = 300  # Polymarket 5-minute markets
 # The two collectors share one CLOCK_REALTIME on one host, so there is no
 # inter-process skew to reconcile and Binance's own clock offset never enters:
 # the alignment compares recv_ns to recv_ns and never touches `E`.  That is
-# defended, not assumed -- `collect_pm.py:407-408` and `collect_hf.py:172-175`.
+# defended, not assumed -- both collectors retain local ``recv_ns`` and the HF
+# run manifest records the exact code-era boundary.
 #
 # What DOES differ is WHERE in each pipeline the stamp is taken, and a lead-lag
 # measurement is exactly as sensitive to that as it is to a clock error.
 #
 #   1. STAMP-POINT ASYMMETRY.  PM stamps immediately after `ws.recv()` returns,
-#      BEFORE parsing.  HF stamps AFTER `json.loads`.  So an HF row is stamped
-#      one JSON parse later than a PM row that arrived at the same instant --
-#      microseconds, and it makes Binance look LATER than it was.
+#      BEFORE parsing.  Historical HF rows stamp AFTER `json.loads`; v2 HF rows
+#      now use the same userspace boundary as PM.  The append-only manifest
+#      prevents a straddling hour file from hiding that change.  Historical HF
+#      rows retain a small parse-time late bias; they are not rewritten.
 #
 #   2. EVENT-LOOP QUEUEING.  Both collectors are single-threaded asyncio loops
 #      and neither stamps at the kernel.  A message that arrives while the loop
@@ -132,8 +213,11 @@ WINDOW_S = 300  # Polymarket 5-minute markets
 #   12.2 ms, max 12.7 ms; **all-time worst since the run began 203.7 ms**;
 #   `loop_stalls` = 0; `ws_ever_paused` TRUE in **0 of 179**.
 #
-#   HIDES a Binance lead -- HF parse-point plus HF loop queueing: +3.6 ms p50,
-#   +30 ms p99, +259 ms p99.9, +360 ms max (inferred, since HF runs no probe).
+#   HIDES a Binance lead -- on historical rows, HF parse-point plus HF loop
+#   queueing: +3.6 ms p50, +30 ms p99, +259 ms p99.9, +360 ms max (inferred,
+#   since HF runs no probe).  V2 removes parse time, but not websocket/event-loop
+#   queueing, so this remains a conservative historical bound rather than a
+#   claim that v2 supplies kernel-arrival time.
 #
 # So against R-49's 750 ms bar the manufacturing direction is bounded at 1.7 %
 # of the effect typically and 27 % at the worst excursion ever recorded, while
@@ -174,7 +258,10 @@ def stamp_lag_profile(recv_ns: Sequence[int], venue_ms: Sequence[int]) -> dict[s
     """
     if not recv_ns or len(recv_ns) != len(venue_ms):
         raise Unavailable("stamp_lag_profile needs paired recv/venue stamps")
-    deltas = sorted((r / 1e6) - v for r, v in zip(recv_ns, venue_ms))
+    deltas = sorted(
+        (r - v * 1_000_000) / 1_000_000
+        for r, v in zip(recv_ns, venue_ms)
+    )
     floor = deltas[0]
     exc = [d - floor for d in deltas]
     n = len(exc)
@@ -404,6 +491,7 @@ def joint_coverage(
     return {
         "alignment_version": ALIGNMENT_VERSION,
         "coin": coin, "symbol": symbol, "days": list(days),
+        "hf_stamp_profile": hf_stamp_profile(windows, symbol),
         "hf_gap_threshold_ms": gap_ms,
         "hf_rows": n_rows,
         "pm_windows": len(windows),
@@ -541,6 +629,22 @@ def _selftests() -> int:
 
     # 9. the threshold is a ladder, not a single magic number
     ok(HF_GAP_MS in HF_GAP_LADDER_MS, "the reported threshold is on the ladder")
+
+    # 10. Stamp semantics are data-era metadata, not whatever today's source
+    #     happens to say.  A window straddling the first v2 run must expose two
+    #     segments and preserve the historical pre-boundary label.
+    boundary = (w0 + 100) * S
+    profile = hf_stamp_profile([w0], "BTCUSDT", [{
+        "started_at_ns": boundary,
+        "stamp_point": "IMMEDIATELY_AFTER_WS_RECV_BEFORE_JSON_PARSE",
+        "symbols": ["BTCUSDT"],
+    }])
+    ok(not profile["uniform"] and len(profile["segments"]) == 2,
+       "a stamp-point change inside a window is exposed")
+    ok(profile["segments"][0]["stamp_point"] == LEGACY_HF_STAMP_POINT,
+       "unmanifested history remains labelled post-parse legacy")
+    ok(profile["segments"][1]["start_ns"] == boundary,
+       "manifest boundary is preserved at nanosecond resolution")
 
     print(f"da_hf_pm_alignment selftests: {checks} checks passed")
     return 0

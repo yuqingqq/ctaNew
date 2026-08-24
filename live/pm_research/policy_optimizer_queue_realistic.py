@@ -375,7 +375,10 @@ def replay_cells_queue_realistic(
         if len(parts) != 2:
             continue
         try:
-            received = int(parts[0]) / 1e9 - window_start
+            recv_ns = int(parts[0])
+            received = (
+                recv_ns - window_start * 1_000_000_000
+            ) / 1e9
             payload = json.loads(parts[1])
         except (ValueError, json.JSONDecodeError):
             diagnostics["malformed"] += 1

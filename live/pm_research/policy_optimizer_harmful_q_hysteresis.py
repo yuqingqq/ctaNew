@@ -54,7 +54,9 @@ def _scores_for_batch(
     harmful_model = base._load_booster(receipts["value_weighted_harmful_fill"])
     q = np.asarray(harmful_model.predict(batch.x), dtype=float)
     start = int(batch.slug.rsplit("-", 1)[1])
-    elapsed = batch.as_of_ns.astype(np.float64) / 1e9 - start
+    elapsed = (
+        batch.as_of_ns - start * 1_000_000_000
+    ).astype(np.float64) / 1e9
     scores: dict[str, list[tuple[float, float]]] = {
         "BUY_UP": [], "SELL_UP": []}
     for index, when in enumerate(elapsed):

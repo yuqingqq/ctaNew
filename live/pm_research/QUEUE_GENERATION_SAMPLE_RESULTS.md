@@ -1,5 +1,15 @@
 # Optimization iteration 008 — five-window generation sample result
 
+> **Superseded on 2026-08-24 by the data-correctness rebuild.** The original
+> result below used a trace that omitted warm-up trades, deduplicated queue
+> resync states, performed epoch-scale float time arithmetic, and treated
+> unresolved public-tape fills as preventable.  See
+> `DATA_CORRECTNESS_REPAIR_2026-08-24.md`.  The rebuilt 50-window trace passes
+> authoritative parity, but zero economic rows have positively measured cancel
+> timing; both models remain rejected and are constant on the residual
+> optimistic labels.  Corrected artifact ID:
+> `8c64bf5988d7f3df6748f01f75fe94b1340059d346bfac7e9f5971a18c99034d`.
+
 **Verdict: `REJECT` for BTC and ETH. Research only.**
 
 Protocol: `QUEUE_GENERATION_SAMPLE_PROTOCOL.md`. Implementation:

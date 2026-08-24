@@ -100,8 +100,10 @@ STATE_SIGNAL_NAMES = (
 FEATURE_NAMES = PM_FEATURE_NAMES + FAST_SIGNAL_NAMES + STATE_SIGNAL_NAMES
 
 SOURCE_PROFILE = {
-    "feed_class": "DIRECT_EVENT_WS_EXACT_RECEIPT",
+    "feed_class": "DIRECT_EVENT_WS_USERSPACE_KNOWLEDGE_TIME",
     "clock": "LOCAL_RECV_NS",
+    "receipt_clock_arithmetic": "INT_NS_SUBTRACT_BEFORE_FLOAT_SECONDS",
+    "hf_stamp_point": "RUN_MANIFEST_BOUND_PRE_OR_POST_JSON_PARSE",
     "decision_trigger": "HF_BOOK_OR_TRADE_OR_PM_BOOK_OR_TRADE",
     "decision_cooldown_ms": COOLDOWN_MS,
     "polymarket_feature_state_lag_ms": 0,

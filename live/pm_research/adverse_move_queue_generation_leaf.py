@@ -109,7 +109,9 @@ def fit_coin(coin: str, batches: Sequence[qact.ActionBatch],
     daily_constant = _daily(days, realized - constant_realized)
     daily_old = _daily(days, realized - old_realized)
     gates = {
-        "positive_weighted_brier_skill": bool(skill is not None and skill > 0),
+        "causal_timing_proven": qgen.causal_timing_proven(batches),
+        "positive_weighted_brier_skill": bool(
+            skill is not None and skill > qgen.EPS),
         "positive_value_each_dev_day": all(
             daily_value[d] is not None and daily_value[d] > 0
             for d in v5.HOLDOUT_DAYS),
@@ -145,6 +147,7 @@ def fit_coin(coin: str, batches: Sequence[qact.ActionBatch],
 
 def run() -> dict[str, Any]:
     old_artifact = json.loads(old.MODEL_ARTIFACT.read_text())
+    generation_parent = json.loads(qgen5.OUT.read_text())
     bases, sampled, slugs = linear.build_batches(qgen5.PER_COIN_DAY)
     expected = 50
     if len(bases) != expected or any(batch.n_rows == 0 for batch in bases):
@@ -165,6 +168,9 @@ def run() -> dict[str, Any]:
         for coin in linear.COINS}
     controls = {
         "frozen_sample_complete": len(batches) == expected,
+        "parent_trace_authoritative_fill_parity": bool(
+            generation_parent.get("controls", {}).get(
+                "trace_authoritative_fill_parity", False)),
         "leaf_floor_exact": PARAMS["min_child_samples"] == 20,
         "all_other_tree_params_unchanged": all(
             PARAMS[name] == value for name, value in v5.TREE_PARAMS.items()

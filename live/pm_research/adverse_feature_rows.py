@@ -143,6 +143,9 @@ class PMTrade:
     taker_side: str
     exec_p_up: float
     size: float
+    event_ms: int | None = None
+    recv_ns: int | None = None
+    transaction_hash: str | None = None
 
 
 @dataclass(slots=True)
@@ -157,6 +160,11 @@ class PMTape:
     tick_changes: list[float]
     mark_state_t: list[float] = field(default_factory=list)
     mark_states: list[PMState | None] = field(default_factory=list)
+    event_clock_floor_ms: float | None = None
+    event_clock_observations: int = 0
+    replay_state_t: list[float] = field(default_factory=list)
+    replay_states: list[PMState | None] = field(default_factory=list)
+    replay_state_ns: list[int] = field(default_factory=list)
     trade_t: list[float] = field(init=False)
 
     def __post_init__(self) -> None:
@@ -164,6 +172,18 @@ class PMTape:
         if not self.mark_state_t:
             self.mark_state_t = self.state_t
             self.mark_states = self.states
+        if not self.replay_state_t:
+            self.replay_state_t = self.state_t
+            self.replay_states = self.states
+        if not self.replay_state_ns:
+            window_ns = self.window_start * 1_000_000_000
+            self.replay_state_ns = [
+                window_ns + round(value * 1_000_000_000)
+                for value in self.replay_state_t
+            ]
+        if not (len(self.replay_state_t) == len(self.replay_states)
+                == len(self.replay_state_ns)):
+            raise ValueError("replay state clocks have inconsistent lengths")
 
     def state_at(self, t: float) -> PMState | None:
         i = bisect.bisect_right(self.state_t, t) - 1
@@ -246,19 +266,27 @@ def build_pm_tape(path: Path, up_id: str, down_id: str,
         raise ValueError("feature_state_lag_s must be non-negative")
     slug = path.name.split(".jsonl")[0]
     ws = int(slug.rsplit("-", 1)[1])
+    window_ns = ws * 1_000_000_000
     state = fd.BookState()
     mark_state = fd.BookState()
     state_t: list[float] = [-60.0]
     states: list[PMState | None] = [None]
     mark_state_t: list[float] = [-60.0]
     mark_states: list[PMState | None] = [None]
+    replay_state_t: list[float] = [-60.0]
+    replay_states: list[PMState | None] = [None]
+    replay_state_ns: list[int] = [window_ns - 60_000_000_000]
     trades: list[PMTrade] = []
     ticks: list[float] = []
-    pending: list[tuple[float, int, str, dict[str, Any]]] = []
-    gap_starts = sorted(a for a, _ in gaps if 0.0 <= a <= fi.WINDOW_S)
+    pending: list[tuple[int, int, str, dict[str, Any]]] = []
+    gap_starts_ns = sorted(
+        window_ns + round(a * 1_000_000_000)
+        for a, _ in gaps if 0.0 <= a <= fi.WINDOW_S)
     gap_i = 0
     seq = 0
     seen_tx: set[str] = set()
+    event_clock_floor_ms: float | None = None
+    event_clock_observations = 0
 
     def snapshot(t: float) -> None:
         q = state.quote()
@@ -267,6 +295,20 @@ def build_pm_tape(path: Path, up_id: str, down_id: str,
             state_t.append(t)
             states.append(row)
 
+    def replay_snapshot(t: float, t_ns: int) -> None:
+        """Retain every queue-engine resync, even if the quote is unchanged.
+
+        An unchanged visible quote is feature-equivalent, but it is not always
+        order-state-equivalent: a fill may have changed inventory skew since
+        the preceding book mutation.  The authoritative queue loop resyncs on
+        every applied mutation, so the trace tape must preserve that clock.
+        """
+        q = state.quote()
+        row = None if q is None else PMState(t, q[0], q[1], q[2], q[3], q[4])
+        replay_state_t.append(t)
+        replay_states.append(row)
+        replay_state_ns.append(t_ns)
+
     def mark_snapshot(t: float) -> None:
         q = mark_state.quote()
         row = None if q is None else PMState(t, q[0], q[1], q[2], q[3], q[4])
@@ -274,42 +316,49 @@ def build_pm_tape(path: Path, up_id: str, down_id: str,
             mark_state_t.append(t)
             mark_states.append(row)
 
-    def advance(to: float) -> None:
+    def advance(to_ns: int) -> None:
         nonlocal gap_i
         while True:
-            candidates: list[float] = []
+            candidates: list[int] = []
             if pending:
                 candidates.append(pending[0][0])
-            if gap_i < len(gap_starts):
-                candidates.append(gap_starts[gap_i])
-            if not candidates or min(candidates) > to + 1e-12:
+            if gap_i < len(gap_starts_ns):
+                candidates.append(gap_starts_ns[gap_i])
+            if not candidates or min(candidates) > to_ns:
                 return
-            when = min(candidates)
-            if gap_i < len(gap_starts) and abs(gap_starts[gap_i] - when) < 1e-12:
+            when_ns = min(candidates)
+            when = (when_ns - window_ns) / 1e9
+            if (gap_i < len(gap_starts_ns)
+                    and gap_starts_ns[gap_i] == when_ns):
                 state.clear()
                 mark_state.clear()
                 pending.clear()
                 heapq.heapify(pending)
                 snapshot(when)
+                replay_snapshot(when, when_ns)
                 mark_snapshot(when)
-                while gap_i < len(gap_starts) and abs(gap_starts[gap_i] - when) < 1e-12:
+                while (gap_i < len(gap_starts_ns)
+                       and gap_starts_ns[gap_i] == when_ns):
                     gap_i += 1
             mutated = False
-            while pending and pending[0][0] <= when + 1e-12:
+            while pending and pending[0][0] <= when_ns:
                 _, _, kind, data = heapq.heappop(pending)
                 state.apply(kind, data)
                 mutated = True
             if mutated:
                 snapshot(when)
+                replay_snapshot(when, when_ns)
 
-    def schedule(received: float, kind: str, data: dict[str, Any]) -> None:
+    def schedule(received_ns: int, kind: str, data: dict[str, Any]) -> None:
         nonlocal seq
         seq += 1
+        received = (received_ns - window_ns) / 1e9
         mark_state.apply(kind, data)
         mark_snapshot(received)
         if kind == "tick":
             ticks.append(received)
-        heapq.heappush(pending, (received + feature_state_lag_s, seq, kind, data))
+        effective_ns = received_ns + round(feature_state_lag_s * 1_000_000_000)
+        heapq.heappush(pending, (effective_ns, seq, kind, data))
 
     for line in fi._gz_lines(path):
         if not any(x in line for x in (fi.TRADE_MARK, fi.QUOTE_MARK,
@@ -319,22 +368,35 @@ def build_pm_tape(path: Path, up_id: str, down_id: str,
         if len(parts) != 2:
             continue
         try:
-            recv = int(parts[0]) / 1e9 - ws
+            recv_ns = int(parts[0])
+            recv = (recv_ns - window_ns) / 1e9
             payload = json.loads(parts[1])
         except (ValueError, json.JSONDecodeError):
             continue
         if recv < -60.0 or recv > fi.WINDOW_S:
             continue
-        advance(recv)
+        advance(recv_ns)
         for msg in payload if isinstance(payload, list) else [payload]:
             if not isinstance(msg, dict):
                 continue
+            try:
+                event_ms = int(msg["timestamp"])
+            except (KeyError, TypeError, ValueError):
+                event_ms = None
+            if event_ms is not None:
+                delta_ms = (
+                    recv_ns - event_ms * 1_000_000
+                ) / 1_000_000
+                event_clock_observations += 1
+                if (event_clock_floor_ms is None
+                        or delta_ms < event_clock_floor_ms):
+                    event_clock_floor_ms = delta_ms
             et = msg.get("event_type")
             aid = str(msg.get("asset_id"))
             if (et == "book" or ("bids" in msg and "asks" in msg)) and aid == up_id:
                 data = fd._parse_book(msg)
                 if data:
-                    schedule(recv, "book", data)
+                    schedule(recv_ns, "book", data)
                 continue
             if et == "price_change":
                 for pc in msg.get("price_changes", []):
@@ -348,11 +410,11 @@ def build_pm_tape(path: Path, up_id: str, down_id: str,
                     except (KeyError, TypeError, ValueError):
                         continue
                     if 0.0 <= data["best_bid"] < data["best_ask"] <= 1.0:
-                        schedule(recv, "price", data)
+                        schedule(recv_ns, "price", data)
                 continue
             if et == "tick_size_change" and aid == up_id:
                 try:
-                    schedule(recv, "tick", {"tick": float(msg["new_tick_size"])})
+                    schedule(recv_ns, "tick", {"tick": float(msg["new_tick_size"])})
                 except (KeyError, TypeError, ValueError):
                     pass
                 continue
@@ -369,15 +431,27 @@ def build_pm_tape(path: Path, up_id: str, down_id: str,
                 native_side = str(msg["side"]).upper()
             except (KeyError, TypeError, ValueError):
                 continue
-            if 0.0 <= recv <= fi.WINDOW_S:
+            # The queue replay deliberately warms up from -60s.  Keep those
+            # trades on the same tape as the warm-up book state; feature and
+            # label readers already slice strictly after their action start.
+            if -60.0 <= recv <= fi.WINDOW_S:
                 down = aid == down_id
                 trades.append(PMTrade(recv, fi.fold_side(native_side, down),
-                                      fi.fold_price(native_px, down), size))
-    advance(fi.WINDOW_S)
+                                      fi.fold_price(native_px, down), size,
+                                      event_ms=event_ms, recv_ns=recv_ns,
+                                      transaction_hash=tx or None))
+    advance(window_ns + fi.WINDOW_S * 1_000_000_000)
     trades.sort(key=lambda x: x.t)
-    return PMTape(slug, slug.split("-")[0], ws, state_t, states, trades,
-                  sorted(gaps), sorted(ticks), mark_state_t=mark_state_t,
-                  mark_states=mark_states)
+    return PMTape(
+        slug, slug.split("-")[0], ws, state_t, states, trades,
+        sorted(gaps), sorted(ticks), mark_state_t=mark_state_t,
+        mark_states=mark_states,
+        event_clock_floor_ms=event_clock_floor_ms,
+        event_clock_observations=event_clock_observations,
+        replay_state_t=replay_state_t,
+        replay_states=replay_states,
+        replay_state_ns=replay_state_ns,
+    )
 
 
 def _unavailable_label(row_id: str, reason: str) -> ActionLabel:

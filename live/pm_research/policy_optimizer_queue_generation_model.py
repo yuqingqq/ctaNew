@@ -85,11 +85,36 @@ def _daily(days: np.ndarray, values: np.ndarray) -> dict[str, float | None]:
             for day in v5.HOLDOUT_DAYS}
 
 
+def causal_timing_proven(batches: Sequence[qact.ActionBatch]) -> bool:
+    """Whether every non-zero first-generation target has measured timing."""
+    for batch in batches:
+        use = first_generation_mask(batch) & batch.available
+        economic = use & (batch.prevented > EPS) & (np.abs(batch.target) > EPS)
+        if np.any(economic & ~batch.timing_proven):
+            return False
+    return True
+
+
+def economic_timing_counts(
+        batches: Sequence[qact.ActionBatch]) -> tuple[int, int]:
+    """Return (economic rows, rows with positively measured timing)."""
+    economic_rows = 0
+    proven_rows = 0
+    for batch in batches:
+        use = first_generation_mask(batch) & batch.available
+        economic = use & (batch.prevented > EPS) & (np.abs(batch.target) > EPS)
+        economic_rows += int(economic.sum())
+        proven_rows += int(batch.timing_proven[economic].sum())
+    return economic_rows, proven_rows
+
+
 def fit_coin(coin: str, batches: Sequence[qact.ActionBatch],
              old_artifact: dict[str, Any]
              ) -> tuple[dict[str, Any], dict[str, np.ndarray]]:
     train = [batch for batch in batches if batch.day in v5.TRAIN_DAYS]
     dev = [batch for batch in batches if batch.day in v5.HOLDOUT_DAYS]
+    _, timing_proven_train = economic_timing_counts(train)
+    _, timing_proven_dev = economic_timing_counts(dev)
     x_train, target_train, prevented_train, _ = _stack(train, "train")
     x_dev, target_dev, prevented_dev, days = _stack(dev, "dev")
     economic_train = ((prevented_train > EPS)
@@ -131,7 +156,7 @@ def fit_coin(coin: str, batches: Sequence[qact.ActionBatch],
             y_train, np.abs(target_train[economic_train]), y_dev,
             np.abs(target_dev[economic_dev]), q_dev[economic_dev])
         skill = fit["weighted_brier_skill_vs_training_weighted_prevalence"]
-        brier = bool(skill is not None and skill > 0)
+        brier = bool(skill is not None and skill > EPS)
     else:
         fit = {"status": "UNAVAILABLE_TWO_CLASS_DEV"}
         brier = False
@@ -139,6 +164,7 @@ def fit_coin(coin: str, batches: Sequence[qact.ActionBatch],
     daily_constant = _daily(days, realized - constant_realized)
     daily_old = _daily(days, realized - old_realized)
     gates = {
+        "causal_timing_proven": causal_timing_proven(batches),
         "positive_weighted_brier_skill": brier,
         "positive_value_each_dev_day": all(
             daily_value[d] is not None and daily_value[d] > 0
@@ -161,6 +187,8 @@ def fit_coin(coin: str, batches: Sequence[qact.ActionBatch],
             "generation_dev_rows": len(x_dev),
             "economic_train_rows": int(economic_train.sum()),
             "economic_dev_rows": int(economic_dev.sum()),
+            "economic_train_rows_causal_timing_proven": timing_proven_train,
+            "economic_dev_rows_causal_timing_proven": timing_proven_dev,
             "all_eligible_train_rows": sum(len(b.x) for b in train),
             "all_eligible_dev_rows": sum(len(b.x) for b in dev),
         },
@@ -364,10 +392,19 @@ def selftest() -> int:
     batch = type("A", (), {
         "x": np.zeros((5, 1)), "base": base,
         "base_index": np.arange(5),
-        "generation": np.asarray([2, 2, 2, 3, 2])})()
+        "generation": np.asarray([2, 2, 2, 3, 2]),
+        "available": np.ones(5, dtype=bool),
+        "prevented": np.asarray([1.0, 1.0, 1.0, 0.0, 1.0]),
+        "target": np.asarray([1.0, 1.0, -1.0, 0.0, -1.0]),
+        "timing_proven": np.asarray([False, False, True, True, True]),
+    })()
     mask = first_generation_mask(batch)
     ok(mask.tolist() == [True, False, True, True, False],
        "first row selected independently per side/generation")
+    ok(economic_timing_counts([batch]) == (2, 1),
+       "economic timing audit counts only first-generation rows")
+    ok(not causal_timing_proven([batch]),
+       "one unproven economic row closes the causal timing gate")
     ok(CANDIDATE == "QR_CANCEL_QGEN_X_SKEW", "candidate frozen")
     ok(PROTOCOL.exists() and BASELINE_ARTIFACT.exists(),
        "protocol and isolated baseline exist")

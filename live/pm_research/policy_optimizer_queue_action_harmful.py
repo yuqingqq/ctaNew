@@ -27,6 +27,7 @@ import adverse_feature_rows as v1
 import adverse_feature_rows_fast as fast
 import adverse_move_fast as linear
 import adverse_move_harmful as v5
+import da_execution_timing as da_timing
 import edge_layer1 as el
 import flow_fill_development as fd
 import flow_intensity as fi
@@ -54,6 +55,9 @@ FEATURE_SCHEMA_HASH = fast._stable_hash({
     "base_schema": fast.FEATURE_SCHEMA_HASH,
     "action_features": ACTION_FEATURE_NAMES,
     "behavior": qr.QR_SKEW,
+    "queue_trace_warmup_s": 60,
+    "queue_trace_state_clock": "EVERY_APPLIED_PM_MUTATION",
+    "cancel_timing_version": da_timing.TIMING_VERSION,
 })
 CELLS = old_policy.CANDIDATE_CELLS
 TRAIN_DAYS = v5.TRAIN_DAYS
@@ -82,6 +86,8 @@ class TraceFill:
     generation: int
     level: float
     size: float
+    event_ms: int | None
+    recv_ns: int | None
 
 
 @dataclass(slots=True)
@@ -93,7 +99,9 @@ class ActionBatch:
     prevented: np.ndarray
     available: np.ndarray
     generation: np.ndarray
+    timing_proven: np.ndarray
     diagnostics: dict[str, int]
+    trace_fills: tuple[TraceFill, ...]
 
     @property
     def coin(self) -> str:
@@ -153,13 +161,15 @@ def trace_action_batch(base: fast.FastWindowBatch, tape: v1.PMTape
         by_ns[int(value)].append(index)
     window_ns = tape.window_start * 1_000_000_000
 
-    events: list[tuple[float, int, int]] = []
-    events.extend((trade.t, 0, index)
-                  for index, trade in enumerate(tape.trades))
-    events.extend((when, 1, index)
-                  for index, when in enumerate(tape.state_t))
-    events.extend(((event_ns - window_ns) / 1e9, 2, event_ns)
-                  for event_ns in by_ns)
+    events: list[tuple[int, int, int]] = []
+    events.extend((
+        trade.recv_ns if trade.recv_ns is not None
+        else window_ns + round(trade.t * 1_000_000_000),
+        0, index,
+    ) for index, trade in enumerate(tape.trades))
+    events.extend((event_ns, 1, index)
+                  for index, event_ns in enumerate(tape.replay_state_ns))
+    events.extend((event_ns, 2, event_ns) for event_ns in by_ns)
     events.sort(key=lambda item: (item[0], item[1]))
 
     def sync(when: float) -> None:
@@ -173,7 +183,8 @@ def trace_action_batch(base: fast.FastWindowBatch, tape: v1.PMTape
             return
         arm.sync_from_quote(quote)
 
-    for when, kind, ref in events:
+    for event_ns, kind, ref in events:
+        when = (event_ns - window_ns) / 1e9
         arm.clock = when
         if kind == 0:
             trade = tape.trades[ref]
@@ -186,8 +197,10 @@ def trace_action_batch(base: fast.FastWindowBatch, tape: v1.PMTape
                 got = arm.consume("SELL_UP", trade.size,
                                   arm.displayed_for_fill("SELL_UP", quote))
                 if got > 0:
-                    fills.append(TraceFill(when, "SELL_UP", generation,
-                                           float(level), got))
+                    fills.append(TraceFill(
+                        when, "SELL_UP", generation, float(level), got,
+                        trade.event_ms, trade.recv_ns,
+                    ))
                     arm.led_q_dn += got
                     arm.apply_skew_intent()
             elif (trade.taker_side == "SELL" and arm.buy.level is not None
@@ -196,13 +209,15 @@ def trace_action_batch(base: fast.FastWindowBatch, tape: v1.PMTape
                 got = arm.consume("BUY_UP", trade.size,
                                   arm.displayed_for_fill("BUY_UP", quote))
                 if got > 0:
-                    fills.append(TraceFill(when, "BUY_UP", generation,
-                                           float(level), got))
+                    fills.append(TraceFill(
+                        when, "BUY_UP", generation, float(level), got,
+                        trade.event_ms, trade.recv_ns,
+                    ))
                     arm.led_q_up += got
                     arm.apply_skew_intent()
             continue
         if kind == 1:
-            current = tape.states[ref]
+            current = tape.replay_states[ref]
             sync(when)
             continue
 
@@ -246,6 +261,13 @@ def trace_action_batch(base: fast.FastWindowBatch, tape: v1.PMTape
     prevented: list[float] = []
     available: list[bool] = []
     generations: list[int] = []
+    timing_proven: list[bool] = []
+    clock_floor = (
+        da_timing.EventClockFloor(
+            tape.event_clock_floor_ms, tape.event_clock_observations)
+        if tape.event_clock_floor_ms is not None
+        and tape.event_clock_observations > 0 else None
+    )
     for base_i in sorted(snapshots):
         generation, action = snapshots[base_i]
         maker_side = ("BUY_UP" if base.maker_side_sign[base_i] > 0
@@ -253,7 +275,7 @@ def trace_action_batch(base: fast.FastWindowBatch, tape: v1.PMTape
         start = (int(base.as_of_ns[base_i]) - window_ns) / 1e9
         end = start + horizon_ms / 1000.0
         okay = not tape.touched(start, end)
-        marked: list[tuple[float, float, float]] = []
+        marked: list[tuple[TraceFill, float]] = []
         if okay:
             for fill in fills_by_generation.get((maker_side, generation), ()):
                 if fill.t <= start + 1e-12 or fill.t > end + 1e-12:
@@ -269,26 +291,94 @@ def trace_action_batch(base: fast.FastWindowBatch, tape: v1.PMTape
                     break
                 markout = (el.maker_sign(maker_side)
                            * (later.mid - fill.level) * 100.0)
-                marked.append((fill.t, fill.size, markout))
+                marked.append((fill, markout))
         effective = start + latency_ms / 1000.0
-        eligible = [(t, size, value) for t, size, value in marked
-                    if t >= effective - 1e-12]
+        receipt_eligible = [
+            (fill, value) for fill, value in marked
+            if fill.t >= effective - 1e-12
+        ]
+        eligible: list[tuple[TraceFill, float]] = []
+        row_timing_proven = True
+        decision_ns = int(base.as_of_ns[base_i])
+        effective_ns = window_ns + round(effective * 1e9)
+        for fill, value in receipt_eligible:
+            trade_recv_ns = (
+                fill.recv_ns if fill.recv_ns is not None
+                else window_ns + round(fill.t * 1e9)
+            )
+            assessment = da_timing.assess_cancel_timing(
+                event_ms=fill.event_ms,
+                trade_recv_ns=trade_recv_ns,
+                decision_ns=decision_ns,
+                cancel_effective_ns=effective_ns,
+                clock_floor=clock_floor,
+            )
+            diag[f"TIMING_{assessment.status.value}"] += 1
+            if assessment.status in (
+                da_timing.CancelTimingStatus.OBSERVED_BEFORE_DECISION,
+                da_timing.CancelTimingStatus.RECEIVED_BEFORE_CANCEL_EFFECTIVE,
+                da_timing.CancelTimingStatus.DEFINITELY_EXECUTED_BEFORE_DECISION,
+                da_timing.CancelTimingStatus.DEFINITELY_EXECUTED_BEFORE_CANCEL_EFFECTIVE,
+            ):
+                continue
+            eligible.append((fill, value))
+            # Public market data can reject false preventability, but cannot
+            # positively prove that our cancel was live before a fill.  Keep
+            # the residual value only as an optimistic diagnostic.
+            row_timing_proven &= assessment.prevention_is_measured
         indices.append(base_i)
         vectors.append(np.concatenate((base.x[base_i],
                                        np.asarray(action, dtype=np.float32))))
-        targets.append(-sum(size * value for _, size, value in eligible)
+        targets.append(-sum(fill.size * value for fill, value in eligible)
                        if okay else math.nan)
-        prevented.append(sum(size for _, size, _ in eligible)
+        prevented.append(sum(fill.size for fill, _ in eligible)
                          if okay else math.nan)
         available.append(okay)
         generations.append(generation)
+        timing_proven.append(row_timing_proven)
     x = (np.asarray(vectors, dtype=np.float32)
          if vectors else np.empty((0, len(FEATURE_NAMES)), dtype=np.float32))
     return ActionBatch(
         base, np.asarray(indices, dtype=np.int64), x,
         np.asarray(targets, dtype=float), np.asarray(prevented, dtype=float),
         np.asarray(available, dtype=bool), np.asarray(generations, dtype=np.int64),
-        dict(diag))
+        np.asarray(timing_proven, dtype=bool), dict(diag), tuple(fills))
+
+
+def trace_fills_conform(batch: ActionBatch, window: Any) -> bool:
+    """Exact fill-path parity between the derived trace and raw QR replay."""
+    expected = [
+        (fill.t, fill.maker_side, fill.level, fill.size)
+        for fill in batch.trace_fills
+    ]
+    observed = [
+        (fill.t, fill.maker_side, fill.level, fill.size)
+        for fill in window.fills
+    ]
+    return len(expected) == len(observed) and all(
+        left[1] == right[1]
+        and max(
+            abs(left[0] - right[0]),
+            abs(left[2] - right[2]),
+            abs(left[3] - right[3]),
+        ) <= 1e-9
+        for left, right in zip(expected, observed)
+    )
+
+
+def full_false_signal_clock(
+        batch: ActionBatch) -> dict[str, list[tuple[float, bool]]]:
+    """Every admitted decision, independent of action-row eligibility."""
+    start = int(batch.slug.rsplit("-", 1)[1])
+    elapsed = (
+        batch.base.as_of_ns - start * 1_000_000_000
+    ).astype(np.float64) / 1e9
+    result: dict[str, list[tuple[float, bool]]] = {
+        "BUY_UP": [], "SELL_UP": []}
+    for index, when in enumerate(elapsed):
+        side = "BUY_UP" if batch.base.maker_side_sign[index] > 0 else "SELL_UP"
+        result[side].append((float(when), False))
+    return result
 
 
 def _fit_model(x: np.ndarray, target: np.ndarray,
@@ -344,12 +434,14 @@ def _fit_and_score(coin: str, batches: Sequence[ActionBatch],
     x_train = np.concatenate([b.x[b.available] for b in train])
     y_train = np.concatenate([b.target[b.available] for b in train])
     p_train = np.concatenate([b.prevented[b.available] for b in train])
+    timing_train = np.concatenate([b.timing_proven[b.available] for b in train])
     model = _fit_model(x_train, y_train, p_train)
     economic_train = (p_train > EPS) & (np.abs(y_train) > EPS)
 
     x_dev = np.concatenate([b.x[b.available] for b in dev])
     y_dev = np.concatenate([b.target[b.available] for b in dev])
     p_dev = np.concatenate([b.prevented[b.available] for b in dev])
+    timing_dev = np.concatenate([b.timing_proven[b.available] for b in dev])
     days = np.concatenate([
         np.full(int(b.available.sum()), b.day, dtype=object) for b in dev])
     q = np.asarray(model.predict_proba(x_dev)[:, 1], dtype=float)
@@ -377,7 +469,7 @@ def _fit_and_score(coin: str, batches: Sequence[ActionBatch],
         brier_positive = bool(
             fit["weighted_brier_skill_vs_training_weighted_prevalence"]
             is not None and
-            fit["weighted_brier_skill_vs_training_weighted_prevalence"] > 0)
+            fit["weighted_brier_skill_vs_training_weighted_prevalence"] > EPS)
     else:
         fit = {"status": "UNAVAILABLE_TWO_CLASS_DEV"}
         brier_positive = False
@@ -385,6 +477,9 @@ def _fit_and_score(coin: str, batches: Sequence[ActionBatch],
     daily_constant_gain = _daily(days, realized - constant_realized)
     daily_old_gain = _daily(days, realized - old_realized)
     gates = {
+        "causal_timing_proven": bool(
+            timing_train[economic_train].all()
+            and timing_dev[economic_dev].all()),
         "positive_weighted_brier_skill": brier_positive,
         "positive_value_each_dev_day": all(
             daily_value[d] is not None and daily_value[d] > 0 for d in DEV_DAYS),
@@ -404,6 +499,10 @@ def _fit_and_score(coin: str, batches: Sequence[ActionBatch],
             "eligible_dev_rows": len(x_dev),
             "economic_train_rows": int(economic_train.sum()),
             "economic_dev_rows": int(economic_dev.sum()),
+            "economic_train_rows_causal_timing_proven": int(
+                timing_train[economic_train].sum()),
+            "economic_dev_rows_causal_timing_proven": int(
+                timing_dev[economic_dev].sum()),
         },
         "policy": {
             "cancel_fraction": float(cancel.mean()),
@@ -429,7 +528,9 @@ def _signals(batch: ActionBatch, q: np.ndarray
     by_base = {int(index): bool(value > 0.5)
                for index, value in zip(batch.base_index, q)}
     start = int(batch.slug.rsplit("-", 1)[1])
-    elapsed = batch.base.as_of_ns.astype(np.float64) / 1e9 - start
+    elapsed = (
+        batch.base.as_of_ns - start * 1_000_000_000
+    ).astype(np.float64) / 1e9
     result: dict[str, list[tuple[float, bool]]] = {
         "BUY_UP": [], "SELL_UP": []}
     for index, when in enumerate(elapsed):
@@ -474,6 +575,7 @@ def run() -> dict[str, Any]:
     windows: dict[tuple[str, str, str], list[Any]] = collections.defaultdict(list)
     controls = {
         "trace_deterministic": True,
+        "trace_authoritative_fill_parity": True,
         "qr_skew_disabled_path_parity": False,
         "all_false_candidate_parity": True,
         "model_receipt_roundtrip": True,
@@ -491,6 +593,13 @@ def run() -> dict[str, Any]:
             _signals(batch, predictions[slug]), lag_s=0.0)
         if got is None:
             raise RuntimeError(f"candidate replay unavailable {slug}")
+        trace_reference = qr.replay_cells_queue_realistic(
+            path, up, down, gaps,
+            [qr._qr_spec(qr.QR_SKEW, latency, False)],
+            full_false_signal_clock(batch), lag_s=0.0)
+        controls["trace_authoritative_fill_parity"] &= bool(
+            trace_reference is not None
+            and trace_fills_conform(batch, trace_reference[qr.QR_SKEW]))
         for cell, window in got.items():
             windows[(cell, batch.coin, batch.day)].append(window)
         print(f"[qact] replay {index}/{len(action_batches)} {slug}", flush=True)
@@ -654,6 +763,18 @@ def selftest() -> int:
     arm.consume("BUY_UP", 3.0, 10.0)
     ok(arm.generation["BUY_UP"] == generation + 1,
        "full fill repost starts new generation")
+    epoch = 1_780_000_000
+    clock_base = type("ClockBase", (), {
+        "as_of_ns": np.asarray([
+            epoch * 1_000_000_000 + 100,
+            epoch * 1_000_000_000 + 200], dtype=np.int64),
+        "maker_side_sign": np.asarray([1, 1]),
+    })()
+    clock_batch = type("ClockBatch", (), {
+        "slug": f"btc-updown-5m-{epoch}", "base": clock_base})()
+    signal_clock = full_false_signal_clock(clock_batch)["BUY_UP"]
+    ok(abs(signal_clock[1][0] - signal_clock[0][0] - 1e-7) < 1e-15,
+       "relative integer-nanosecond clock preserves sub-microsecond order")
     ok(PROTOCOL.exists() and PARENT_ARTIFACT.exists(),
        "frozen protocol and parent receipt exist")
     print(f"[qact] selftest OK — {checks} checks")

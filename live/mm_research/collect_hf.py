@@ -21,8 +21,10 @@ Storage: append-only CSV per (stream, symbol, UTC hour) under data/mm_hf/raw/,
 gzipped on hour rotation. Rough steady-state: ~0.5-1 GB/day gzipped for the default
 16-symbol pilot (bookTicker on BTC/ETH dominates). data/ is gitignored.
 
-Rows (recv_ns = local monotonic-free wall clock ns at parse time; E/T = exchange
-event/transaction ms — recv_ns/1e6 − E estimates one-way latency + clock offset):
+Rows (recv_ns = local monotonic-free wall clock ns immediately after ``ws.recv``
+returns and before JSON parsing; E/T = exchange event/transaction ms —
+recv_ns/1e6 − E estimates one-way latency + clock offset).  Exact run boundaries
+and stamp semantics are recorded in ``collector_runs.jsonl``:
   bookTicker: recv_ns,E,T,u,bid,bid_qty,ask,ask_qty
   depth20:    recv_ns,E,T,u,bids,asks         (bids/asks = "p@q|p@q|..." 20 levels)
   trade:      recv_ns,E,T,trade_id,price,qty,is_buyer_maker
@@ -35,6 +37,7 @@ import argparse
 import asyncio
 import gzip
 import json
+import os
 import shutil
 import signal
 import sys
@@ -56,6 +59,8 @@ RECONNECT_24H = 23 * 3600  # cycle before Binance's 24h connection cap
 FLUSH_SECONDS = 5
 WATCHDOG_SECS = 45         # no message in 45s → force reconnect (silent-death guard)
 HEARTBEAT_SECS = 60
+COLLECTOR_SCHEMA_VERSION = "hf_ws_v2_recv_boundary"
+STAMP_POINT = "IMMEDIATELY_AFTER_WS_RECV_BEFORE_JSON_PARSE"
 
 # Spread-diverse pilot: majors (control — expected uneconomic at the touch) through
 # wide-spread mid-caps (the candidate niche). E1's universe scan should revise this.
@@ -66,13 +71,40 @@ DEFAULT_SYMS = [
 ]
 
 
+def _record_run_manifest(syms: list[str]) -> None:
+    """Record the exact timestamp semantics for every collector process.
+
+    The CSV shape intentionally stays stable.  The append-only run ledger
+    supplies the boundary needed to distinguish legacy post-parse rows from
+    v2 rows if an UTC-hour file straddles a restart.
+    """
+    record = {
+        "started_at_ns": time.time_ns(),
+        "pid": os.getpid(),
+        "collector_schema_version": COLLECTOR_SCHEMA_VERSION,
+        "stamp_point": STAMP_POINT,
+        "symbols": list(syms),
+    }
+    with (ROOT / "collector_runs.jsonl").open("a") as handle:
+        handle.write(json.dumps(record, sort_keys=True) + "\n")
+
+
 def _snapshot_exchange_info(syms: list[str]) -> None:
     """Save tick/step sizes once per day — needed to convert spreads to ticks/bps."""
     out = ROOT / f"exchange_info_{time.strftime('%Y%m%d', time.gmtime())}.json"
     if out.exists():
-        return
+        try:
+            existing = json.loads(out.read_text(encoding="utf-8"))
+            if isinstance(existing, dict) and set(syms).issubset(existing):
+                return
+        except (OSError, json.JSONDecodeError):
+            pass
     try:
-        info = requests.get(f"{FAPI}/fapi/v1/exchangeInfo", timeout=20).json()
+        response = requests.get(f"{FAPI}/fapi/v1/exchangeInfo", timeout=20)
+        response.raise_for_status()
+        info = response.json()
+        if not isinstance(info.get("symbols"), list):
+            raise ValueError(f"exchangeInfo error payload: {str(info)[:200]}")
         keep = {}
         for s in info.get("symbols", []):
             if s["symbol"] in syms:
@@ -82,7 +114,12 @@ def _snapshot_exchange_info(syms: list[str]) -> None:
                     "stepSize": filt.get("LOT_SIZE", {}).get("stepSize"),
                     "pricePrecision": s.get("pricePrecision"),
                 }
-        out.write_text(json.dumps(keep, indent=1))
+        missing = sorted(set(syms) - set(keep))
+        if missing:
+            raise ValueError(f"exchangeInfo missing requested symbols: {missing}")
+        pending = out.with_suffix(".json.pending")
+        pending.write_text(json.dumps(keep, indent=1), encoding="utf-8")
+        pending.replace(out)
         print(f"[hf] exchangeInfo snapshot → {out.name} ({len(keep)} syms)", flush=True)
     except Exception as ex:  # non-fatal — retry next startup
         print(f"[hf] exchangeInfo snapshot failed: {ex}", flush=True)
@@ -169,10 +206,17 @@ class HFCollector:
                         except asyncio.TimeoutError:
                             print(f"[hf] conn#{idx} silent {WATCHDOG_SECS}s — reconnecting", flush=True)
                             break
+                        # Stamp knowledge time at the first userspace boundary.
+                        # Keeping this immediately after ``recv`` makes the HF
+                        # and PM collectors comparable and excludes JSON parse
+                        # time from the recorded feed latency.  This is still
+                        # not a kernel-arrival timestamp; websocket queueing is
+                        # measured separately by the DA layer.
+                        recv_ns = time.time_ns()
                         m = json.loads(raw)
                         m = m.get("data", m)          # combined-stream wrapper
                         if "e" in m:
-                            self._on_msg(m, time.time_ns())
+                            self._on_msg(m, recv_ns)
                         if time.time() - t_start > RECONNECT_24H:
                             print(f"[hf] conn#{idx} 23h cycle", flush=True)
                             break
@@ -208,6 +252,7 @@ class HFCollector:
 
     async def run(self) -> None:
         RAW.mkdir(parents=True, exist_ok=True)
+        _record_run_manifest(self.syms)
         _snapshot_exchange_info(self.syms)
         streams = [f"{s.lower()}@{ch}" for s in self.syms
                    for ch in ("bookTicker", "depth20@100ms", "trade")]

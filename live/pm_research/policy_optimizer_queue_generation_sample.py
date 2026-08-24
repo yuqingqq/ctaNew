@@ -10,7 +10,7 @@ import hashlib
 import json
 import zlib
 from pathlib import Path
-from typing import Any
+from typing import Any, Sequence
 
 import numpy as np
 
@@ -53,6 +53,30 @@ def _mean(cells: dict[str, Any], cell: str, coin: str,
         cells[cell][coin][day][metric] for day in v5.HOLDOUT_DAYS]))
 
 
+def _timing_audit(
+        batches: Sequence[qact.ActionBatch]) -> dict[str, Any]:
+    result: dict[str, Any] = {}
+    for coin in linear.COINS:
+        selected = [batch for batch in batches if batch.coin == coin]
+        statuses: collections.Counter[str] = collections.Counter()
+        for batch in selected:
+            statuses.update({
+                key.removeprefix("TIMING_"): value
+                for key, value in batch.diagnostics.items()
+                if key.startswith("TIMING_")
+            })
+        economic, proven = qgen.economic_timing_counts(selected)
+        result[coin] = {
+            "trace_fills": sum(len(batch.trace_fills) for batch in selected),
+            "economic_first_generation_rows": economic,
+            "economic_rows_causal_timing_proven": proven,
+            "candidate_fill_assessment_statuses": dict(statuses),
+            "positive_preventability_source": (
+                "UNAVAILABLE_PUBLIC_MARKET_DATA_ONLY"),
+        }
+    return result
+
+
 def run() -> dict[str, Any]:
     old_artifact = json.loads(old.MODEL_ARTIFACT.read_text())
     base_batches, sampled, slugs = linear.build_batches(PER_COIN_DAY)
@@ -86,6 +110,7 @@ def run() -> dict[str, Any]:
               f"{report['model_gate']['pass']}", flush=True)
 
     windows: dict[tuple[str, str, str], list[Any]] = collections.defaultdict(list)
+    trace_authoritative_fill_parity = True
     for index, batch in enumerate(action_batches, 1):
         slug, path, up, down, gaps = selected[batch.slug]
         latency = old.CANDIDATE_CELLS[batch.coin]["latency_ms"]
@@ -99,6 +124,8 @@ def run() -> dict[str, Any]:
             qact._signals(batch, predictions[slug]), 0.0)
         if parent is None or candidate is None:
             raise RuntimeError(f"isolated replay unavailable {slug}")
+        trace_authoritative_fill_parity &= qact.trace_fills_conform(
+            batch, parent[qr.QR_SKEW])
         for cell, window in {**parent, **candidate}.items():
             windows[(cell, batch.coin, batch.day)].append(window)
         print(f"[qgen5] replay {index}/{expected} {slug}", flush=True)
@@ -117,6 +144,7 @@ def run() -> dict[str, Any]:
         path, up, down, gaps, [cand, skew], false, 0.0)
     controls = {
         "frozen_sample_complete": len(action_batches) == expected,
+        "trace_authoritative_fill_parity": trace_authoritative_fill_parity,
         "five_windows_each_coin_day": all(sum(
             batch.coin == coin and batch.day == day for batch in action_batches)
             == PER_COIN_DAY for coin in linear.COINS
@@ -195,6 +223,7 @@ def run() -> dict[str, Any]:
         "candidate": CANDIDATE,
         "model": reports,
         "controls": controls,
+        "timing_audit": _timing_audit(action_batches),
         "cells": cells,
         "adoption": adoption,
         "population": {
@@ -209,6 +238,9 @@ def run() -> dict[str, Any]:
             "fit_unit": "FIRST_ELIGIBLE_ROW_PER_SLUG_SIDE_GENERATION",
             "inference": "ALL_EXACT_EVENT_ELIGIBLE_ROWS",
             "replay": "ONE_ISOLATED_ARM_PER_EVENT_LOOP",
+            "cancel_preventability": (
+                "PUBLIC_TAPE_CAN_REJECT_STALE_FILLS_BUT_CANNOT_PROVE_"
+                "CANCEL_EFFECTIVE_BEFORE_FILL"),
             "forward_days_observed": 0,
         },
         "provenance": {
@@ -217,6 +249,8 @@ def run() -> dict[str, Any]:
             "old_model_artifact_sha256": _file_sha(old.MODEL_ARTIFACT),
             "generation_engine_sha256": _file_sha(Path(qgen.__file__)),
             "action_builder_sha256": _file_sha(Path(qact.__file__)),
+            "pm_tape_builder_sha256": _file_sha(Path(v1.__file__)),
+            "execution_timing_sha256": _file_sha(Path(qact.da_timing.__file__)),
             "isolation_engine_sha256": _file_sha(Path(isolated.__file__)),
             "polymarket": fi.provenance(sampled=sampled),
             "hf_source_identity": {

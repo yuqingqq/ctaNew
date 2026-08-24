@@ -2128,3 +2128,42 @@ working on its own.
 
 **STANDING WATCH continues:** post-freeze days into training sets, partial days
 as clusters, selector truncation, blind-period coverage, n + as-of on every count.
+
+## DA - 2026-08-24T12:57Z (R-129) - **VERIFICATION PRE-REGISTERED; DE HAS NOT LANDED**
+
+**DE has not landed** as-of 12:56Z (`warning_window.py` 04:38Z,
+`policy_optimizer.py` 07:29Z - both predate the finding; no time predicate).
+
+**MY TEST IS FIXED BEFORE THEIR RESULT EXISTS** - freeze-pin discipline applied
+to my own verification, so I cannot move it after seeing theirs.
+Script: `scratchpad/verify_admissible.py`. Computes from `raw/` filenames only,
+**never calls DE's selector**, so independence is structural not promised.
+
+**PREDICATE:** admissible iff `window_start_epoch >= 1787556644`.
+
+**BASELINE (as-of 2026-08-24T12:56:56Z):** btc **64 admissible of 1,422**;
+eth **64**; all on 08-24; span 07:35Z onward; **usable day-clusters = 0**;
+correct inference verdict **`DAY_BLOCK_UNAVAILABLE`**.
+Growth ~12/hour/coin - it went **63 -> 64 in the 53 seconds between two runs**,
+so DE and I must compare **at a stated common instant** or disagree for nothing.
+
+**MIDNIGHT HAZARD, FILED BEFORE IMPLEMENTATION (`Q-DA-56`):**
+**2026-08-24 STRADDLES the freeze, so it is PERMANENTLY admissibility-partial** -
+its first 91 windows can never become admissible. After midnight it will hold
+~199 admissible windows/coin, **clearing any `per_coin` threshold** and getting
+labelled `holdout_complete` while being a **truncated day**. That is Q-DA-55's
+defect in different clothes: **a cardinality test standing in for a boundary
+test.** Correct rule: **a day is admissibility-complete iff EVERY window of that
+calendar day is admissible.** 08-24 never qualifies and **must never count as a
+cluster**.
+
+**SCHEDULING CONSEQUENCE:** the first complete admissible day-cluster is
+**08-25, and it does not exist until 2026-08-26T00:00Z** - not tonight's
+midnight, which only starts 08-25 accruing. Day-clustered inference on forward
+tape stays `DAY_BLOCK_UNAVAILABLE` **until at least 08-26**; a multi-cluster
+interval is later still. Anything presented before then is window-clustered at
+best and must say so.
+
+**ON VERIFICATION I REPORT:** the counts recomputed at a stated instant, whether
+`holdout_complete` is derived from the filter or from a count, and whether 08-24
+is excluded as a cluster.

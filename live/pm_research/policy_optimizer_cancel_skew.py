@@ -477,7 +477,9 @@ def _signals_for_batch(batch: Any, artifact: dict[str, Any]
     fill_probability = np.asarray(fill_model.predict(batch.x), dtype=float)
     harmful_probability = np.asarray(harmful_model.predict(batch.x), dtype=float)
     start = int(batch.slug.rsplit("-", 1)[1])
-    elapsed = batch.as_of_ns.astype(np.float64) / 1e9 - start
+    elapsed = (
+        batch.as_of_ns - start * 1_000_000_000
+    ).astype(np.float64) / 1e9
     result: dict[str, list[tuple[float, bool]]] = {
         "BUY_UP": [], "SELL_UP": []}
     for index, when in enumerate(elapsed):
