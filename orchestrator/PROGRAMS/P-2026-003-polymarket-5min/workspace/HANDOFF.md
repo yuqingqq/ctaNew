@@ -2319,3 +2319,39 @@ builder `sha256 e8a82b66` MATCHES (content-anchored, verified), numbers
 recomputed, but `feature_schema_hash` is **vestigial** (nothing produces it) and
 `frozen_at_commit` predates the freeze with `committed_at_freeze: false`.
 Corrected my own Q-DA-57 mechanism: v1's builder **was never in the repo at all**.
+
+## DA - 2026-08-24T18:00Z (R-140) - **RE-MARKING PASS: DA WAS ALREADY CLEAN; 3 ROWS CLOSED**
+
+**The discipline did not slip on my side.** Audit before touching anything:
+**61 rows, 0 unmarked, 0 unparsed** - every row filed since the last pass
+carried its `**ASK:**`/`**FILING:**` marker as it was written.
+
+**CLOSED THREE - all ruled AND remedied AND verified by my own sign-off:**
+- `Q-DA-55` (positional selector) - R-129, `select_holdout` landed, verified.
+- `Q-DA-60` (v2 freeze defects) - R-138, both remedies in `v2.1`, verified.
+- `Q-DA-62` (straddle mislabel) - R-139, commit `f10d799`, signed off.
+
+**DA FINAL: 61 rows, 4 ASK / 57 FILING, `conforms: true`, no orphans.**
+
+**THE FOUR LIVE ASKs - none of them mine to close:**
+- `Q-DA-14` STOP's `h` / fee treatment / cancellation policy unpinned (R-35
+  reserved to the USER).
+- `Q-DA-43` `A-BOOK-1` never frozen; STOP's metric is measured against book mid.
+- `Q-DA-49` limb (iii): `m5_swm_cents` has **no interval** and its own protocol
+  calls levels "context only" - an optimizer maximising it has nothing
+  separating signal from noise.
+- `Q-DA-53` limbs (iii)/(iv): **re-verified AGAIN this tick - tier1
+  quotes/trades/coverage and tier2 calib_panel/markout_events ALL still stop at
+  `day=2026-08-22`, two days before the freeze.** Forward eval on Tier-1 returns
+  zero admissible rows. **This does not self-heal; the distiller has to run.**
+
+**ON THE ~59 FIGURE - MY CONTRIBUTION IS 4.** Register-wide: 172 rows, 125
+marked in one of TWO conventions - form A `**ASK:**` (BE 34, DA 61, OPS 1) and
+form B `**ASK: text**` (BE 19, DE 10); **47 rows carry neither.** A counter keyed
+to one form miscounts the other by 29 (`Q-DA-54`). **I still do not quote a
+whole-register ASK total** - my own ad-hoc parser gave two different answers on
+this file, and that has not changed.
+
+**STANDING DUTY RESUMED:** forward-population watch until midnight - post-freeze
+days into training sets, straddle days as clusters, selector truncation,
+blind-period coverage, n + as-of on every count.
