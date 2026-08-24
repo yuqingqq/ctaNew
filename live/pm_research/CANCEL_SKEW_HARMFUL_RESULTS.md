@@ -91,6 +91,19 @@ fronted skew orders. It lost to JOIN-only cancel×skew on all four development
 coin-days; see `CANCEL_SKEW_ALL_RESULTS.md`. Front-order cancellation should
 remain disabled until it has an action-conditioned model.
 
+A second follow-on holds eligible JOIN liquidity out until signal clear instead
+of immediately reposting. It improves the lifecycle comparator on both BTC
+development days and beats skew on both ETH development days, but still has no
+common coin-robust result; see `CANCEL_HOLD_SKEW_RESULTS.md`.
+
+A third follow-on corrects the old reducing-side `FRONT` assumption. At an
+occupied touch it joins behind displayed depth; it improves by one tick only
+when the spread has at least two ticks. `QR_CANCEL_HOLD_X_SKEW` is now the
+baseline. It adds -12.71 c/window BTC and +70.96 c/window ETH versus corrected
+skew across all five visible days, and +12.42 / +119.15 c on the two development
+days, respectively. BTC still reverses by day; ETH remains diagnostic only.
+See `QUEUE_REALISTIC_CANCEL_SKEW_RESULTS.md`.
+
 ## Verification
 
 - 144 adverse/skew/cancellation module checks pass, including 13 new lifecycle

@@ -9,6 +9,14 @@ Protocol: `CANCEL_HOLD_SKEW_PROTOCOL.md`. Implementation:
 `data/pm_5min/derived/policy_optimizer_cancel_hold_skew_v1.json`. Artifact ID:
 `ff424e200cc2067820bf7421ffd67c662d806a171e8203fa21a0072a1b09e04f`.
 
+**Queue-semantics correction:** this receipt remains the exact historical
+result, but its reducing-side `FRONT` means zero queue ahead at an already
+occupied touch. It is therefore an optimistic upper-bound experiment, not the
+current executable-placement baseline. The corrected `JOIN_EXISTING` /
+one-tick price-improvement replay and conclusions are in
+`QUEUE_REALISTIC_CANCEL_SKEW_RESULTS.md`; its baseline is
+`QR_CANCEL_HOLD_X_SKEW`.
+
 **Authorizing ruling (R-126 in-file rule, applied by the R-127-ordered
 discipline pass):** the coordinator's standing KEEP-vs-CANCEL harness
 instruction (R-125 item 4), retroactively confirmed as the authorization
@@ -115,11 +123,11 @@ improves the selected lifecycle comparison for BTC and produces a materially
 better risk/PnL tradeoff for ETH. It does not rescue the common harmful-flow
 predictor across both coins.
 
-The only candidate worth freezing on new data is **ETH H=250 ms / assumed
-L=100 ms with `CANCEL_HOLD_X_SKEW`**. It must be scored unchanged against both
-`SKEW_ONLY` and immediate repost on independent forward days. BTC should not
-advance: cancellation still loses to skew on one of two development days and
-destroys too much fill participation.
+This historical queue-upper-bound result originally identified ETH H=250 ms /
+assumed L=100 ms as the only shape worth freezing. The queue correction retains
+ETH as the strongest diagnostic but replaces this arm with
+`QR_CANCEL_HOLD_X_SKEW` and replaces its comparator with `QR_SKEW_ONLY`. BTC
+still should not advance.
 
 No live or decision-facing activation is supported. The v5 model failed its
 original gate, latency is assumed, and the development days have been inspected

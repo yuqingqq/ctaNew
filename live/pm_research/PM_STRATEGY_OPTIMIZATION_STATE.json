@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "status": "ACTIVE",
+  "launched_at": "2026-08-24T11:08:17Z",
+  "research_only": true,
+  "current_iteration": 10,
+  "phase": "DATA_ACCUMULATION",
+  "incumbent": "QR_CANCEL_HOLD_X_SKEW",
+  "required_comparator": "QR_SKEW_ONLY",
+  "incumbent_artifact_id": "7a1091458fcac46b8bdcf8be269c88f57590ae49972d0ac75e63152899272556",
+  "candidate": null,
+  "candidate_change": "wait for a new complete overlapping PM/HF UTC day, then freeze a fresh train/independent-forward split before any further model selection",
+  "training_days": [
+    "2026-08-20",
+    "2026-08-21",
+    "2026-08-22"
+  ],
+  "development_days": [
+    "2026-08-23",
+    "2026-08-24"
+  ],
+  "independent_forward_days": [],
+  "queue_semantics": "JOIN_EXISTING_OR_REDUCING_SIDE_PRICE_IMPROVE_1T_IF_SPREAD_GE_2T",
+  "decision_eligible": false,
+  "promotion_authorized": false,
+  "last_iteration": {
+    "iteration": 9,
+    "candidate": "QGEN5_LEAF20",
+    "verdict": "MODEL_GATE_FAIL",
+    "artifact_id": "ad3b781fe5e02619dac919cbe1679624f73fb82b133ee5a673e46ad36e1ad7eb",
+    "btc_verdict": "MODEL_GATE_FAIL",
+    "eth_verdict": "MODEL_GATE_FAIL",
+    "policy_replay_performed": false
+  },
+  "next_action": "keep collectors running; when a new complete overlapping UTC day exists, freeze the next split before reading its outcomes",
+  "updated_at": "2026-08-24T12:48:00Z"
+}

@@ -565,7 +565,7 @@ freeze or authorize the still-unbuilt decision/action layers.
 | BE-FlowFit | corrected `f_r`/same-state `f_p`; B0–B3 development fit; exploratory Hawkes diagnostic | freeze M1–M4 conditional families; forward fit and gated residual |
 | BE-FillFit | join-touch 5/15/30 s front/back quantity census; gap-unavailable rows; v1/fast-v2 linear, incentive-free nonlinear-v3, hurdle-v4 and value-weighted harmful-flow-v5 adverse development fits | frozen conditional fill artifact; an independently scored harmful-flow candidate; separate forward validation |
 | other BE-* | — | Target, Uncertainty, Belief, FlowAndFills decision seam, Competition, ScenarioProvider |
-| DE-DecisionScheme research | five-day Stage-A placement/size/abstention grid, pessimistic `SKEW_LB` Stage-B replay, 10-window JOIN-schema-only harmful-flow cancel×skew diagnostic, and cancel-all FRONT stress test; skew improves cancel-only, cancellation reverses versus skew by day, and cancelling FRONT loses to JOIN-only cancellation on all four development comparisons | keep FRONT cancellation disabled; decision-facing cancellation remains blocked until an action-conditioned model and independent forward gate pass |
+| DE-DecisionScheme research | five-day Stage-A placement/size/abstention grid, pessimistic `SKEW_LB` Stage-B replay, 10-window JOIN-only cancel×skew, cancel-all FRONT, true cancel-and-hold, queue-realistic diagnostics, action-generation conditioning, and per-arm clock isolation; same-price zero-queue `FRONT` is an upper bound | use isolated `QR_CANCEL_HOLD_X_SKEW` / `QR_SKEW_ONLY` replay for every future comparison; all decision-facing cancellation remains blocked pending robust model evidence, new days, and real queue/ACK latency |
 | other DE-* | — | ActionSpace, Constraints, Allocator, Actuator and all live wiring |
 | EV-Markout / EV-Calibration | Tier-2 terminal markout + normalized book scaffold | fitted/scored arms after sufficient days |
 | EV-AdverseMove | v1/v2, nonlinear-v3, hurdle-v4 and harmful-flow-v5 two-day development diagnostics; v5 has narrow ETH H250/L100 and BTC H50/L25 leads but no robust cell | independent forward calibration plus frozen-policy KEEP-vs-CANCEL economic validation; no further selection on the visible two-day holdout |
@@ -575,6 +575,19 @@ freeze or authorize the still-unbuilt decision/action layers.
 The flow/fill/adverse probes above are offline research code only. No decision-facing
 BE implementation or DE module is built; the register describes their contracts,
 not live code.
+
+The research-only strategy loop is active in
+`PM_STRATEGY_OPTIMIZATION_LOOP.md`. `QR_CANCEL_HOLD_X_SKEW` and
+`QR_SKEW_ONLY` remain the named baseline pair. Iteration 005 found that a new
+candidate's cancel timer can trigger a global skew resync and change another
+arm's fill path. Iteration 006 therefore replays every cell on an independent
+clock and reproduced the stored baseline metrics exactly; that wrapper is now
+mandatory. The action-conditioned model itself failed its frozen gate.
+Generation deduplication, a fivefold within-day sample, and a compatible
+nonlinear leaf floor also failed their frozen gates; the final leaf-20 model
+has BTC/ETH weighted Brier skill -14.05%/-59.92%. Threshold, model-family,
+leaf, H/L, and sample-size tuning on the two visible development days is now
+closed pending new complete overlapping PM/HF days.
 
 ## 13. Process: canonical contracts + structural diff
 

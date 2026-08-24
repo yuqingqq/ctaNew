@@ -2070,3 +2070,61 @@ whatever BE uses must be checked separately.**
 **NEXT:** answer on (a) Tier-1 vs raw, (b) whether a 2.2-hour single-cluster
 partial-day holdout is accepted and under what inference. If not, the remedy is
 **collecting more forward tape - a wait, not a computation.**
+
+## DA - 2026-08-24 (R-126) - REGISTER MARKING PASS: **51/51, 5 ASK / 46 FILING**
+
+Was 0/51 marked, so the counter read all 51 as open ASKs. Now every row carries
+`**ASK:**` or `**FILING:**` in BE's format. `conforms: true`, `register_rows: 51`,
+no orphans, no malformed keys.
+
+**THE FIVE ASKs - all BLOCKING, each naming its gate:**
+`Q-DA-14`, `Q-DA-42`, `Q-DA-43` (STOP -> user) - `Q-DA-49` (DE's optimizer) -
+`Q-DA-53` (BE's forward evaluation).
+
+**`Q-DA-48` marked FILING, and the demotion is recorded IN the row** rather than
+done quietly: its materiality question is the same one `Q-DA-42` blocks on, so
+tracking it separately was double-counting my own row.
+
+**FOUND WHILE MARKING: THREE OF MY ROWS WERE STRUCTURALLY MALFORMED** and did not
+match `_REG_ROW` at all - `Q-DA-24` and `Q-DA-41` had no status cell, and
+**`Q-DA-42` had lost its closing pipe in my own R-105 edit**. That row is a
+BLOCKING ASK, so **my single most important open row was unparseable by the
+counter**. Repaired; all 51 now parse. This was my contribution to the miscount
+BE audited, and it was invisible because the row still LOOKED right.
+
+**Forward-population guard (R-125) stands unchanged:** freeze 07:30:44Z, partial
+days never counted as clusters, chronological truncation, blind-period coverage,
+n and as-of on every count. `Q-DA-53` carries the open findings.
+
+## DA - 2026-08-24T10:37Z (R-128) - **CONTAMINATION FOUND BEFORE FORWARD EVAL STARTED**
+
+**Marking pass CONFIRMED COMPLETE:** DA 51/51 Form-A marked, **5 ASK / 46
+FILING**, `register_rows: 51`, `conforms: true`, no orphans, no malformed keys.
+DA is the only plane fully marked and fully parseable.
+
+**`Q-DA-54` (FILING): the register uses TWO marker conventions** - `**ASK:**`
+(63 rows: DA 51, BE 12, OPS 1) and `**ASK: <text>**` (29 rows: BE 19, DE 10);
+57 rows carry neither. A counter keyed to one form miscounts the other by 29.
+**I do not give a whole-register ASK total** - my own ad-hoc parser gave two
+different answers on the same file, so I report only DA's slice.
+
+**`Q-DA-55` (BLOCKING): a positional selector cannot express a mid-day freeze.**
+`select_by_day` correctly fixed CROSS-day truncation (R-9), but **earliest-first
+survives WITHIN each day**. BE's freeze is mid-day (07:30:44Z), which makes that
+load-bearing. btc 08-24 has 127 windows; positions 1-91 are pre-freeze,
+**92-127 (n=36) are the admissible tape**. At the shipped `per_coin=30` the
+sample ends **02:25Z, 5.1h before the freeze, ZERO admissible windows** - and
+**the day still counts as `holdout_complete`, not partial**. `per_coin=90` still
+misses it by 5 minutes; you need **>= 92**. Raising the number only shrinks the
+contamination ratio - **the forward population must be selected by a TIME
+PREDICATE, not by rank.** Not edited: DE owns the optimizer, BE is user-held.
+
+**THE HOLDOUT IS GROWING WHILE WE COUNT IT.** Collection is LIVE (12 btc files
+in the hour to 10:36:30Z). **Admissible went 26 -> 36 during this session**,
+~12 windows/hour/coin. `Q-DA-53`'s "2.2h / n=26" is **superseded to ~3.0h / n=36
+as-of 2026-08-24T10:37Z**. Every forward count must carry its as-of or it is
+wrong within the hour - and the "wait, not a computation" remedy is already
+working on its own.
+
+**STANDING WATCH continues:** post-freeze days into training sets, partial days
+as clusters, selector truncation, blind-period coverage, n + as-of on every count.
