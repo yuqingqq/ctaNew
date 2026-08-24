@@ -122,3 +122,46 @@ holdout day flips the verdict).
 2. On freeze: run train + holdout, read against §4, report ALL cells —
    train, holdout, gap — cells first, promotion test second, per
    R-9/R-17 shape, every population with n and as-of (R-105).
+
+---
+
+## STAGE A — RUN AND ANSWERED, 2026-08-24 (appended per R-28; §§0–7 untouched)
+
+**Receipt:** `derived/policy_optimizer_stageA.json`. **Controls first, all
+PASS** (R-111 order): wiring must-fail r_cut=300 → **0 fills** (after the
+lead-in semantic it caught on first launch was pinned — report #69); null
+parity exact, sample AND every window in the main pass, both placements;
+determinism; +50 ms moves fills. **Population: 300 windows — five COMPLETE
+era days (08-20..24, 60/60 each; 08-24 completed between tick and run),
+btc+eth, as-of 2026-08-24 run time.** TRAIN 08-20/21/22; HOLDOUT 08-23 +
+08-24 (both complete; partial-beside list empty). Day-unit reporting:
+points and signs, no intervals (G=2 holdout).
+
+**PROMOTION: NO CELL PROMOTES — the §4 pre-declared expected outcome.**
+All 12 cells × 2 coins × 5 days = **120 cell-days, every one NEGATIVE**
+(total M5 PnL/window). The WAIT-only zero anchor dominates every quoting
+cell on every day, both splits — signs are 120/120, no interval needed.
+Best cell in the entire grid: JOIN:r120:s5 eth, −194..−252 ¢/window.
+Worst: FRONT:r0:s10 btc, −6,176..−13,627 ¢/window.
+
+**Structure in the cells (descriptive, no promotion implied):**
+1. **Abstention scales the loss toward zero and cannot cross it** —
+   monotone r120 < r60 < r0 in |loss| within every placement×size×coin.
+   Terminal loss-density is MILD: JOIN's last 40 % of clock carries
+   ~55–60 % of its loss, FRONT's ~46–54 % — consistent with Lever T's
+   "the damage is everywhere" and R-50's inversion; nothing resembling a
+   concentrated sink that abstention could excise.
+2. **Size scales loss ≈ linearly** (s10 ≈ 1.6–2.0× s5 everywhere) — the
+   corpus size-invariance again, now at the total-PnL level.
+3. **FRONT loses 4–5× JOIN in TOTAL on every day** — R-109's volume
+   arithmetic confirmed out-of-sample on two fresh holdout days.
+4. **The abstention×FRONT interaction (this axis's licence) EXISTS and is
+   small and unhelpful**: abstention removes proportionally slightly MORE
+   of JOIN's loss than FRONT's; neither approaches zero.
+
+**Programme-level answer (§4's own sentence, now earned):** structural
+adverse selection survives a pre-registered search of every axis this
+programme ever nominated — placement, terminal abstention, size, and
+their interactions — with every cell losing on every day of a five-day
+era population. Stages B (skew×FRONT) and C (cancellation interaction,
+expected null declared) remain declared-but-unrun, awaiting order.
