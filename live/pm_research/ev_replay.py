@@ -384,14 +384,188 @@ def smoke(per_coin: int = 2) -> int:
     return 0
 
 
+# --------------------------------------------------------------------------
+# the POLICY COMPARISON runner — R-102 item 2 inside the item-1 harness.
+# Population: the R-9 day-series sampler (era days, verdict coins). Protocol:
+# POLICY_COMPARISON_PROTOCOL.md, FROZEN 2026-08-22 before measurement —
+# "every headline is a PAIRED DIFFERENCE; report levels for context; never
+# let a level carry the verdict." Evaluation is a separate pass (plan §0).
+# --------------------------------------------------------------------------
+
+def _swm(rows) -> float | None:
+    """Share-weighted mean markout, cents (rows carry .markout/.size)."""
+    tot = sum(r.size for r in rows)
+    if tot <= 0:
+        return None
+    return sum(r.markout * r.size for r in rows) / tot * 100.0
+
+
+def _boot(vals: list[float], n_boot: int = 2000, seed: int = 20260824
+          ) -> tuple[float | None, float | None]:
+    import random
+    if len(vals) < 2:
+        return (None, None)
+    rng = random.Random(seed)
+    n = len(vals)
+    means = sorted(sum(vals[rng.randrange(n)] for _ in range(n)) / n
+                   for _ in range(n_boot))
+    return means[int(0.025 * n_boot)], means[int(0.975 * n_boot)]
+
+
+def comparison(per_coin: int = 30) -> int:
+    import warning_window as ww
+    import policy_bounds_v1 as pb          # rows_h: admission + SIZE carried
+
+    by_day = ww.select_by_day(per_coin)
+    days = sorted(by_day)
+    sel = [w for day in days for w in by_day[day]
+           if w[0].split("-")[0] in ("btc", "eth")]
+    print(f"[cmp] era days {days}; {len(sel)} verdict-coin windows")
+    env = ReplayEnv(windows=sel)
+
+    # gates first, on a sub-env (engine == reference: parity is determinism
+    # by construction in v1 — the honest §4.1 label; determinism is the gate
+    # that can fail and must pass)
+    sub = ReplayEnv(windows=sel[:4])
+    gates: dict[str, Any] = {}
+    for arm in ARMS:
+        det = determinism_gate(sub, arm, f"cmp_{arm.lower()}")
+        gates[arm] = {"determinism": det}
+        if not det:
+            raise SystemExit(f"[cmp] determinism GATE FAIL on {arm}")
+    print("[cmp] gates: determinism PASS both arms (4-window sub-env)")
+
+    recs = {arm: env.run(arm) for arm in ARMS}
+    OUT_DIR.mkdir(parents=True, exist_ok=True)
+    arm_hashes = {}
+    for arm in ARMS:
+        r = env.receipt(recs[arm], f"policy_comparison_v2_{arm.lower()}", gates)
+        p = OUT_DIR / f"policy_comparison_v2_{arm.lower()}.json"
+        p.write_text(json.dumps(r, indent=1, default=str))
+        arm_hashes[arm] = r["run_hash"]
+        print(f"[cmp] {arm}: {len(recs[arm])} windows, "
+              f"{sum(len(x.fills) for x in recs[arm])} fills -> {p}")
+
+    # ---- evaluation pass (outside the environment) ----
+    slug_day = {w[0]: fi.slug_day(w[0]) for w in sel}
+    by_slug = {arm: {r.slug: r for r in recs[arm]} for arm in ARMS}
+    H = 5.0
+    cells: dict[str, Any] = {}
+    rollup: dict[str, Any] = {}
+    for coin in ("btc", "eth"):
+        slugs = [w[0] for w in sel if w[0].startswith(coin)]
+        per_day: dict[str, dict[str, Any]] = {}
+        d_shares_all: list[float] = []
+        d_m5_paired: list[float] = []
+        for day in days:
+            day_slugs = [s for s in slugs if slug_day[s] == day]
+            stats = {}
+            for arm in ARMS:
+                rows_w = []
+                for s in day_slugs:
+                    rec = by_slug[arm].get(s)
+                    if rec is None:
+                        rows_w.append([])
+                        continue
+                    wf = el.WindowFills(rec.slug, rec.coin,
+                                        [el.Fill(*f) for f in rec.fills],
+                                        rec.mid_t, rec.mid_v,
+                                        list(rec.unavailable_iv), {})
+                    rws, _ = pb.rows_h(wf, H)
+                    rows_w.append(rws)
+                allr = [r for w in rows_w for r in w]
+                stats[arm] = {
+                    "n_windows": len(day_slugs),
+                    "n_fills": len(allr),
+                    "shares": round(sum(r.size for r in allr), 1),
+                    "shares_per_window": round(
+                        sum(r.size for r in allr) / max(1, len(day_slugs)), 3),
+                    "m5_swm_cents": (lambda v: None if v is None
+                                     else round(v, 4))(_swm(allr)),
+                    "_rows_w": rows_w,
+                }
+            # paired, window-level (the protocol's unit)
+            dsh, dm5 = [], []
+            for i, s in enumerate(day_slugs):
+                rj = stats["JOIN"]["_rows_w"][i]
+                rf = stats["FRONT"]["_rows_w"][i]
+                dsh.append(sum(r.size for r in rf) - sum(r.size for r in rj))
+                mj, mf = _swm(rj), _swm(rf)
+                if mj is not None and mf is not None:
+                    dm5.append(mf - mj)
+            d_shares_all += dsh
+            d_m5_paired += dm5
+            lo_s, hi_s = _boot(dsh)
+            lo_m, hi_m = _boot(dm5)
+            per_day[day] = {
+                arm: {k: v for k, v in stats[arm].items()
+                      if not k.startswith("_")} for arm in ARMS} | {
+                "paired": {
+                    "d_shares_per_window_mean": round(
+                        sum(dsh) / max(1, len(dsh)), 3),
+                    "d_shares_ci95": [lo_s, hi_s],
+                    "n_paired_markout_windows": len(dm5),
+                    "d_m5_cents_mean": (round(sum(dm5) / len(dm5), 4)
+                                        if dm5 else None),
+                    "d_m5_ci95_cents": [lo_m, hi_m],
+                }}
+        lo_s, hi_s = _boot(d_shares_all)
+        lo_m, hi_m = _boot(d_m5_paired)
+        cells[coin] = per_day
+        rollup[coin] = {
+            "windows": len(d_shares_all),
+            "d_shares_per_window_mean": round(
+                sum(d_shares_all) / max(1, len(d_shares_all)), 3),
+            "d_shares_ci95": [lo_s, hi_s],
+            "n_paired_markout_windows": len(d_m5_paired),
+            "d_m5_cents_mean": (round(sum(d_m5_paired) / len(d_m5_paired), 4)
+                                if d_m5_paired else None),
+            "d_m5_ci95_cents": [lo_m, hi_m],
+        }
+
+    out = {
+        "protocol": "POLICY_COMPARISON_PROTOCOL.md (policy_v1, FROZEN "
+                    "2026-08-22) — headline is the PAIRED DIFFERENCE "
+                    "(FRONT minus JOIN); levels are context only",
+        "harness": {"engine_hash": engine_hash(), "arm_run_hashes": arm_hashes,
+                    "gates": gates},
+        "population": {"days": days, "per_coin_per_day": per_coin,
+                       "verdict_coins": ["btc", "eth"]},
+        "horizon_s": H,
+        "cells": cells,
+        "rollup_paired": rollup,
+        "notes": [
+            "d_shares: FRONT fills only on level formation (availability is "
+            "part of the policy, so all windows pair); d_m5 pairs only "
+            "windows where BOTH arms have admitted fills — n stated",
+            "window-clustered bootstrap; day-clustered refused below the "
+            "cluster floor (house rule)",
+        ],
+    }
+    p = OUT_DIR / "policy_comparison_v2.json"
+    p.write_text(json.dumps(out, indent=1, default=str))
+    print(f"[cmp] comparison receipt -> {p}")
+    for coin in ("btc", "eth"):
+        r = rollup[coin]
+        print(f"[cmp] {coin}: d_shares/win {r['d_shares_per_window_mean']} "
+              f"CI {r['d_shares_ci95']} | d_M5 {r['d_m5_cents_mean']}c "
+              f"CI {r['d_m5_ci95_cents']} (n_paired="
+              f"{r['n_paired_markout_windows']})")
+    return 0
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("cmd", nargs="?", default="smoke", choices=["smoke"])
+    ap.add_argument("cmd", nargs="?", default="smoke",
+                    choices=["smoke", "comparison"])
     ap.add_argument("--selftest", action="store_true")
     ap.add_argument("--per-coin", type=int, default=2)
     a = ap.parse_args()
     if a.selftest:
         return selftest()
+    if a.cmd == "comparison":
+        selftest()
+        return comparison(a.per_coin if a.per_coin != 2 else 30)
     return smoke(a.per_coin)
 
 
