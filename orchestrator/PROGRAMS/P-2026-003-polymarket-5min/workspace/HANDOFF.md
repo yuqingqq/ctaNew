@@ -2167,3 +2167,88 @@ best and must say so.
 **ON VERIFICATION I REPORT:** the counts recomputed at a stated instant, whether
 `holdout_complete` is derived from the filter or from a count, and whether 08-24
 is excluded as a cluster.
+
+## DA - 2026-08-24T14:40Z (R-132/R-133) - **FREEZE VOID FILED; UNIFORM GATE LANDED**
+
+**`Q-DA-57` FILED BLOCKING** - the freeze is VOID because it was never
+anchored: pin `c83d5132...` at 07:30:44Z, but both builders were **added** in
+commit `3454f60` (09:57) and **did not exist in git before it**. Pre-edit HEAD
+and post-edit working tree both hash to `dd9fe9b1...` - **the user's edits are
+bit-neutral**. The difference is not the `exact_receipt_events` flag, not a
+cooldown value, not a name-block truncation, so it is a **real feature-set
+difference**. Remedy is BE's: re-freeze against committed code, new instant,
+**`frozen_at` references a COMMIT HASH** from here. **Cost is hours, not
+results** - forward was `DAY_BLOCK_UNAVAILABLE` regardless.
+
+**UNIFORM GATE LANDED (R-133, cited in-file), maintenance under R-110.**
+`da_hf_pm_alignment.py`: a window straddling a collector-restart boundary now
+**fails joint coverage exactly as a data gap does**, admissible only by an
+explicit `stamp_waiver` naming the window. New: `stamp_boundaries_ns`,
+`window_stamp_uniform`, `hf_collector_run_defects`. Result now carries
+`stamp_covered`, `stamp_covered_pct`, `stamp_straddling_windows`,
+`stamp_waived_windows`, `hf_collector_ledger_defects`.
+
+**FAIL-CLOSED CHOICE WORTH KNOWING:** `hf_collector_runs` drops malformed lines
+so bad text cannot relabel raw data - right for reading, wrong for CERTIFYING,
+since a dropped line may have carried a boundary. **While any ledger line is
+unreadable, NO window is certified uniform.** An ABSENT ledger is different and
+is treated as uniform-legacy, per the reader's documented semantics.
+
+**GATE BITES ON REAL DATA:** boundaries 13:48:08Z and 13:48:54Z; of 175 btc
+windows on 08-24 **exactly one (13:45Z) is refused**, 174 admitted - it fires,
+and it does not over-refuse. **40 selftests pass**, including an R-42 mirror
+test (edge vs interior must answer differently) and the absent/malformed/clean
+ledger cases.
+
+**VERIFIER PARAMETERISED:** `scratchpad/verify_admissible.py` no longer
+hard-codes the instant - it reads `frozen_at_utc` from the candidate (and
+reports `frozen_at_commit` as **ABSENT - Q-DA-57**), or takes `--freeze`. A
+hard-coded instant would have verified the void freeze forever.
+
+**Baseline as-of 2026-08-24T14:39:45Z:** btc **84 of 1,442** admissible, eth
+same, 0 usable day-clusters, `DAY_BLOCK_UNAVAILABLE`.
+
+**PENDING:** DE's timestamp-predicate selector - re-issued, confirmed never
+landed (`select_by_day` byte-identical, `git diff` empty).
+
+## DA - 2026-08-24T15:03Z (R-134) - **ASKs RE-TRIAGED 7 -> 5; STANDING READY**
+
+**NEITHER HAS LANDED as-of 15:03Z:** only `be_adverse_move_candidate_v1.json`
+exists (no v2 re-freeze receipt), and `git diff` on `warning_window.py` is still
+empty with `select_by_day` byte-identical (no timestamp predicate).
+
+**RE-TRIAGE — 2 closed, 2 narrowed, 3 unchanged. Register: 55 rows, 5 ASK /
+50 FILING, `conforms: true`.**
+
+- **`Q-DA-57` CLOSED** - ruled and adopted in full (R-132). The remedy is BE's
+  and in flight; I hold the verification, not the remedy.
+- **`Q-DA-42` FOLDED into `Q-DA-14`** - its substance is *why* Q-DA-14 is
+  urgent (net made fee treatment live, not latent), not a second question.
+  Same dedup I applied to `Q-DA-24`; tracking it twice inflated my own count.
+- **`Q-DA-49` NARROWED** - limbs (i)/(ii) superseded by `Q-DA-55`/`Q-DA-56`.
+  **Live limb (iii): `m5_swm_cents` has NO INTERVAL and its protocol calls
+  levels "context only"** - an optimizer maximising a level optimises a
+  quantity with nothing separating signal from noise. Untouched.
+- **`Q-DA-53` NARROWED AND RE-VERIFIED THIS TICK** - limbs (i)/(ii) superseded,
+  but **(iii)/(iv) re-checked and STILL TRUE: tier1 quotes/trades/coverage and
+  tier2 calib_panel/markout_events ALL still stop at `day=2026-08-22`**, two
+  days before the freeze. Forward eval on Tier-1 returns **zero admissible
+  rows**; on `raw/` it bypasses knowledge-time truncation, the distiller and
+  the coverage receipts. **Least-attended open row, and it does not self-heal -
+  the distiller has to run.**
+- **Unchanged and live:** `Q-DA-14` (STOP inputs unpinned, now carrying
+  Q-DA-42's urgency), `Q-DA-43` (A-BOOK-1 never frozen - and R-132's lesson now
+  applies to its eventual freeze too: reference a COMMIT), `Q-DA-55` (positional
+  selector; upheld, re-issued, awaiting DE).
+
+**VERIFIER NOW FOLLOWS THE ARTIFACT:** `verify_admissible.py` resolves the
+**highest-numbered** candidate rather than a remembered path, so when
+`candidate_v2` lands it verifies against the NEW instant automatically. A
+verifier pinned to v1 would have gone on certifying the void freeze - the same
+shape as the defect it exists to catch. Absence of any candidate is loud.
+
+**Baseline as-of 2026-08-24T15:03:04Z:** btc **89 of 1,447** admissible,
+0 usable day-clusters, `DAY_BLOCK_UNAVAILABLE`. (26 -> 36 -> 77 -> 84 -> 89.)
+
+**STANDING READY:** on the v2 receipt, verify DE's selector against the new
+instant read from the receipt. The split freeze waits on that and nothing else.

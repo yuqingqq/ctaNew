@@ -8,7 +8,7 @@
 > authoritative parity, but zero economic rows have positively measured cancel
 > timing; both models remain rejected and are constant on the residual
 > optimistic labels.  Corrected artifact ID:
-> `8c64bf5988d7f3df6748f01f75fe94b1340059d346bfac7e9f5971a18c99034d`.
+> `3414fc563b673e7f010614b367b2191dee69d5f52cf6544d0f25162d45d887ba`.
 
 **Verdict: `REJECT` for BTC and ETH. Research only.**
 

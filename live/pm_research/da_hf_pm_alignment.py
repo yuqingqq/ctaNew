@@ -460,8 +460,71 @@ def _overlaps(a0: int, a1: int, b0: int, b1: int) -> bool:
     return a0 < b1 and b0 < a1
 
 
+# ---------------------------------------------------------------------------
+# R-133: DETECTION IS NOT A GATE.
+# ---------------------------------------------------------------------------
+# `hf_stamp_profile` computed `uniform` and the selftests asserted it, but
+# nothing REFUSED on it -- a window straddling a collector restart was
+# detectable and still admitted.  A property nothing acts on is a comment.
+# A straddling window now fails the joint-coverage gate exactly as a data gap
+# does, and can only be admitted by an EXPLICIT waiver naming the window.
+
+def hf_collector_run_defects(path: Path = HF_RUNS) -> int:
+    """Non-empty ledger lines that do NOT parse as run records.
+
+    `hf_collector_runs` drops these so malformed text can never relabel raw
+    data.  That is right for reading and wrong for CERTIFYING: a dropped line
+    may have carried a boundary, so uniformity cannot be asserted while any
+    line is unreadable.  Counted separately so the gate can fail closed.
+    """
+    if not path.exists():
+        return 0
+    defects = 0
+    for line in path.read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        try:
+            record = json.loads(line)
+            int(record["started_at_ns"])
+            if not str(record["stamp_point"]) or not isinstance(
+                    record["symbols"], list):
+                raise ValueError("incomplete run record")
+        except (json.JSONDecodeError, KeyError, TypeError, ValueError):
+            defects += 1
+    return defects
+
+
+def stamp_boundaries_ns(symbol: str,
+                        records: Sequence[dict[str, Any]] | None = None
+                        ) -> list[int]:
+    """Instants at which HF stamp semantics change for `symbol`.
+
+    An EMPTY ledger yields no boundaries, and that is uniformity rather than
+    ignorance: `hf_collector_runs` documents absence as "all legacy
+    post-parse", so a run of unmanifested history is genuinely one semantics.
+    Unreadable lines are a different matter and are handled by the caller via
+    `hf_collector_run_defects`.
+    """
+    recs = hf_collector_runs() if records is None else records
+    want = symbol.upper()
+    return sorted({int(r["started_at_ns"]) for r in recs
+                   if want in [str(x).upper() for x in r.get("symbols", [])]})
+
+
+def window_stamp_uniform(window_start: int, boundaries: Sequence[int]) -> bool:
+    """True iff no stamp boundary falls STRICTLY inside the window.
+
+    A boundary exactly at the window edge is not a straddle: every row in the
+    window then carries one semantics.
+    """
+    lo = window_start * 1_000_000_000
+    hi = lo + WINDOW_S * 1_000_000_000
+    return not any(lo < b < hi for b in boundaries)
+
+
 def joint_coverage(
-    coin: str, symbol: str, days: Sequence[str], gap_ms: float = HF_GAP_MS
+    coin: str, symbol: str, days: Sequence[str], gap_ms: float = HF_GAP_MS,
+    stamp_waiver: Sequence[int] | None = None,
 ) -> dict[str, Any]:
     """The figure that matters: windows BOTH tapes covered.
 
@@ -472,20 +535,33 @@ def joint_coverage(
     gaps, n_rows = hf_window_max_gap(symbol, days, windows)
     pm_gaps = pm_gap_intervals()
 
-    hf_ok = pm_ok = both_ok = 0
+    # R-133: refuse windows whose HF rows do not share one stamp semantics.
+    waived = set(stamp_waiver or ())
+    boundaries = stamp_boundaries_ns(symbol)
+    ledger_defects = hf_collector_run_defects()
+
+    hf_ok = pm_ok = both_ok = stamp_ok = 0
     hf_bad: list[int] = []
     pm_bad: list[int] = []
+    stamp_bad: list[int] = []
     for w in windows:
         lo, hi = w * 1_000_000_000, (w + WINDOW_S) * 1_000_000_000
         h = gaps.get(w, float("inf")) <= gap_ms
         p = not any(_overlaps(lo, hi, g0, g1) for g0, g1, _ in pm_gaps)
+        # An unreadable ledger line may have carried a boundary, so uniformity
+        # cannot be certified for ANY window until the ledger reads cleanly.
+        s_ok = (ledger_defects == 0
+                and window_stamp_uniform(w, boundaries)) or w in waived
         hf_ok += h
         pm_ok += p
-        both_ok += (h and p)
+        stamp_ok += s_ok
+        both_ok += (h and p and s_ok)
         if not h:
             hf_bad.append(w)
         if not p:
             pm_bad.append(w)
+        if not s_ok:
+            stamp_bad.append(w)
 
     n = len(windows) or 1
     return {
@@ -501,6 +577,11 @@ def joint_coverage(
         "joint_covered_pct": round(100.0 * both_ok / n, 2),
         "hf_only_loss": hf_ok - both_ok,
         "pm_only_loss": pm_ok - both_ok,
+        "stamp_covered": stamp_ok,
+        "stamp_covered_pct": round(100.0 * stamp_ok / n, 2),
+        "stamp_straddling_windows": stamp_bad[:20],
+        "stamp_waived_windows": sorted(waived & set(windows)),
+        "hf_collector_ledger_defects": ledger_defects,
         "hf_uncovered_windows": hf_bad[:20],
         "pm_uncovered_windows": pm_bad[:20],
         "hf_coverage_is_INFERRED": True,
@@ -645,6 +726,48 @@ def _selftests() -> int:
        "unmanifested history remains labelled post-parse legacy")
     ok(profile["segments"][1]["start_ns"] == boundary,
        "manifest boundary is preserved at nanosecond resolution")
+
+    # --- R-133: the gate, not merely the detector -------------------------
+    S_ = 1_000_000_000
+    b_mid = [(w0 + 100) * S_]                    # boundary INSIDE the window
+    b_edge = [w0 * S_]                           # boundary exactly at the edge
+    b_out = [(w0 + WINDOW_S + 5) * S_]           # boundary after the window
+    ok(not window_stamp_uniform(w0, b_mid),
+       "a boundary inside the window is a straddle")
+    ok(window_stamp_uniform(w0, b_edge),
+       "a boundary exactly at the window edge is NOT a straddle")
+    ok(window_stamp_uniform(w0, b_out),
+       "a boundary outside the window does not taint it")
+    ok(window_stamp_uniform(w0, []),
+       "an empty ledger is uniform-legacy, not unknown")
+
+    # the mirror test R-42 asks for: the gate must ANSWER DIFFERENTLY for two
+    # inputs that differ only in whether the boundary is inside the window.
+    ok(window_stamp_uniform(w0, b_edge) != window_stamp_uniform(w0, b_mid),
+       "gate distinguishes edge from interior -- it reads the window, not the ledger size")
+
+    recs = [{"started_at_ns": (w0 + 100) * S_, "symbols": ["BTCUSDT"],
+             "stamp_point": "IMMEDIATELY_AFTER_WS_RECV_BEFORE_JSON_PARSE"}]
+    ok(stamp_boundaries_ns("BTCUSDT", recs) == [(w0 + 100) * S_],
+       "boundaries are extracted for the requested symbol")
+    ok(stamp_boundaries_ns("ETHUSDT", recs) == [],
+       "another symbol's restart is not this symbol's boundary")
+    ok(stamp_boundaries_ns("btcusdt", recs) == [(w0 + 100) * S_],
+       "symbol match is case-insensitive")
+
+    import tempfile
+    with tempfile.TemporaryDirectory() as td:
+        bad = Path(td) / "runs.jsonl"
+        bad.write_text('{"started_at_ns":1,"stamp_point":"X","symbols":[]}\n'
+                       'not json at all\n', encoding="utf-8")
+        ok(hf_collector_run_defects(bad) == 1,
+           "an unreadable ledger line is COUNTED, not silently dropped")
+        good = Path(td) / "good.jsonl"
+        good.write_text('{"started_at_ns":1,"stamp_point":"X","symbols":[]}\n',
+                        encoding="utf-8")
+        ok(hf_collector_run_defects(good) == 0, "a clean ledger has no defects")
+        ok(hf_collector_run_defects(Path(td) / "absent.jsonl") == 0,
+           "an ABSENT ledger is not a defect -- absence means all-legacy")
 
     print(f"da_hf_pm_alignment selftests: {checks} checks passed")
     return 0

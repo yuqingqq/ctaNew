@@ -73,7 +73,7 @@ that a public-tape model can measure preventable fills.
 - Corrected generation receipt:
   `data/pm_5min/derived/policy_optimizer_queue_generation_sample_v1.json`,
   artifact ID
-  `8c64bf5988d7f3df6748f01f75fe94b1340059d346bfac7e9f5971a18c99034d`.
+  `3414fc563b673e7f010614b367b2191dee69d5f52cf6544d0f25162d45d887ba`.
 
 The public PM tape itself is demonstrably delayed and reordered.  Across the
 50 windows, all 60,358 retained PM trades had event timestamps, but venue event
