@@ -2252,3 +2252,32 @@ shape as the defect it exists to catch. Absence of any candidate is loud.
 
 **STANDING READY:** on the v2 receipt, verify DE's selector against the new
 instant read from the receipt. The split freeze waits on that and nothing else.
+
+## DA - 2026-08-24T15:56Z (R-136) - **FALLBACK FIXED; MY OWN BOUND WAS 2x TOO SMALL**
+
+**Fixed before the recompute, as instructed.** `scratchpad/m5_concentration.py`
+scores a fill **only if the horizon is observable**: inside the window AND a
+quote exists **at or after** it. Unobservable fills are **EXCLUDED and
+COUNTED**, never approximated.
+
+**Actual exclusion 4.98% btc / 4.50% eth** against the **2.46%/2.01%** I filed
+as the bound. My bound used a narrower test (`ts[i] < tm`) and so measured a
+smaller failure than the one I had just described. Dominant cause is
+**quote availability (81,474 btc), not window end (2,394)** - the book goes
+quiet, the same venue behaviour A-CALIB-1's staleness ladder found.
+
+**CORRECTED (tape population):** btc worst-10% **80.7%**, bar -> **1.60% fills /
+12.60% volume**; per-share **7.10% / 6.71%**. eth worst-10% **81.0%**, bar ->
+**4.38% / 17.93%**; per-share **11.74% / 12.10%**. n = 1,599,690 / 341,828.
+
+**Every figure moved slightly AGAINST the favourable reading** - truncated fills
+had short horizons and understated drift, so dropping them raises what a gate
+must sacrifice. **Conclusion unchanged: btc needs 1.60% of fills where a diffuse
+tape needs 45% - 28x concentration.**
+
+**PENDING BE:** which population the conditional-markout curve is on. On the
+answer I recompute concentration on the matching population - the scorer is
+built and parameterised, so it is a rerun.
+
+**ALSO PENDING:** DE's timestamp-predicate selector (`Q-DA-55`), verification
+standing ready against the latest candidate.
