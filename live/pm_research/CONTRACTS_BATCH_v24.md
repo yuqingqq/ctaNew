@@ -30,6 +30,38 @@ application:**
 `DEPOSIT|WITHDRAW` nor `MINT|MERGE` — it is the only thing holding the
 discrepancy visible, and it must NOT be turned green early.
 
+| # | change | source | status |
+|---|---|---|---|
+| M-2 | remove `GateEvidence.decision_eligible: bool` | Ruling R-91: `R-ADMISS` reserves the SELECTION decision to the coordinator; `GateEvidence` is produced by `BE-Uncertainty`, a worker plane, so a worker emitting `decision_eligible` is a worker making that decision. Verified against v23 by DE this tick (field present, `bool`, sole producer `BE-Uncertainty`) | RULED — record drafted below |
+
+**M-2's migration record, verbatim-ready:**
+```yaml
+- from_version: 23
+  to_version: 24
+  operation: remove
+  key: field:GateEvidence.decision_eligible
+  old: "bool"
+  new: "(removed)"
+  reason: 'R-91: R-ADMISS reserves the selection decision to the
+    coordinator; a worker-plane producer emitting decision_eligible is a
+    worker making that decision. admissible stays (a fact about the
+    evidence); eligibility is the coordinator''s act.'
+```
+
+**Patch-notation obligation (R-74's §9 amendment, FIRST REAL USE):** the
+v24 application patch writes this removal as
+
+```yaml
+GateEvidence:
+  fields:
+    - !remove decision_eligible
+```
+
+— the explicit `!remove` marker, never absence-means-removal. This entry
+is therefore also the live test of whether the amendment DE and BE
+disputed actually works end-to-end at application time; the applier
+reports the outcome either way.
+
 ## §2 — ADDITIVE
 
 (none yet)

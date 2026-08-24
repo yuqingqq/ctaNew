@@ -130,3 +130,33 @@ eight dialects.
 clean the loop closes on two-clean; marginal-value close available
 earlier per R-61(3) if the coordinator prefers — iteration 3's findings
 changed no decision, only carriers.
+
+---
+
+### Iteration 4 — 2026-08-24 — verdict: `CLEAN` (0 MUST-FIX, 0 SHOULD-FIX; streak 2). PIN VERIFIED FIRST: `FREEZE_HELD`, sha `f59541f7…a1048b`.
+
+All five frozen lenses ran on Revision 10; decision-readiness ran.
+Nothing found: the Rev-10 carrier fixes are consistent with the v24
+accumulator (which now holds the EV-Replay-records candidate and the
+claim-ladder debt this plan's §5 points at); the census, disposition
+marker, `REVISION:` field, §4 status cells, §0 boundary, pinned values
+and graveyard entries all verify against the artifacts as of this tick.
+No text changed since the pin — nothing to re-apply.
+
+---
+
+## LOOP CLOSED — 2026-08-24: TWO-CLEAN STOP REACHED (iterations 3 and 4, both against verified pins)
+
+**Terminal verdict of record**: `EV_REPLAY_PLAN.md` REVISION 10 is
+REVIEWED AND CONVERGED under the frozen five-lens instrument declared at
+loop start. Trajectory: iteration 1 DEFECTS_FOUND (2+3) → iteration 2
+DEFECTS_FOUND (2+1, one MUST-FIX being the loop catching its own author
+reintroducing the defect class) → iteration 3 CLEAN (0+2 carriers) →
+iteration 4 CLEAN (0+0). Both streak iterations ran against
+`da_freeze_pin`-verified shas (FREEZE_HELD both), so the two-clean stop
+is evidenced, not asserted. R-77 satisfied throughout (every frozen lens
+ran in iteration 1 and again in each subsequent iteration); R-82
+satisfied (decision-readiness in iterations 1–2 and at close). The plan
+is the programme's convergence record for the eight-dialect replay
+corpus, with the pattern disposition (DEBT) and both named carriers
+(v24 §3) as its open ends.
