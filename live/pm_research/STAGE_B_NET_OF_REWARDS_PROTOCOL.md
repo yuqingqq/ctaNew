@@ -1,7 +1,19 @@
 # STAGE_B_NET_OF_REWARDS — does the net cross zero, at size
 
-REVISION: 1
+REVISION: 2
 
+**Status: CANCELLED BY USER DIRECTIVE — R-125, 2026-08-24, before any
+cell was computed.** Rewards are OUT OF SCOPE; the whole rationale of
+this protocol was the reward term entering the objective, so without it
+there is no objective to search — "a search in want of a question."
+Never frozen, never run; no receipt exists. **DA's rewards measurement
+stands on the record exactly as filed** (deferred, not deleted): Q-DA-51
+becomes DEBT with the trigger "the user reopens the rewards question,"
+and this draft is the design that trigger revives. Q-DE-15 (the freeze
+ask) is WITHDRAWN. The draft below is retained unedited as the record of
+what was designed and why.
+
+*(Superseded draft header follows:)*
 **Status: DRAFT FOR COORDINATOR FREEZE — nothing runs before the freeze;
 drafted blind (no net cell has been computed; every number cited below is
 DA's published measurement or a Stage-A receipt, by value, with as-of).**

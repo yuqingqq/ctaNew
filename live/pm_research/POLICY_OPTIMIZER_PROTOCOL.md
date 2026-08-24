@@ -165,3 +165,18 @@ programme ever nominated — placement, terminal abstention, size, and
 their interactions — with every cell losing on every day of a five-day
 era population. Stages B (skew×FRONT) and C (cancellation interaction,
 expected null declared) remain declared-but-unrun, awaiting order.
+
+> *ANNOTATION BESIDE (2026-08-24, R-125 — appended per R-28; nothing
+> above is edited): **STAGE A STANDS UNQUALIFIED as the performance
+> answer for the strategy as it currently exists.** The R-124
+> qualification ("measured against a mis-specified objective — the
+> reward term was absent") is **WITHDRAWN BY USER DIRECTIVE, not by
+> evidence**: R-125 scopes rewards out of the programme, so the
+> fill-economics objective Stage A measured IS the current strategy's
+> objective. The receipt states which kind of withdrawal this is, as
+> ordered — DA's rewards measurement remains on the record, deferred
+> behind the trigger "the user reopens the rewards question," and the
+> rewards-motivated Stage B (`STAGE_B_NET_OF_REWARDS_PROTOCOL.md`) is
+> CANCELLED unrun. Within THIS protocol, the declared-but-unrun skew and
+> cancellation stages (§3 Stages B/C) remain exactly that — declared,
+> unrun, unaffected by R-125's cancellation of the OTHER Stage B.*
