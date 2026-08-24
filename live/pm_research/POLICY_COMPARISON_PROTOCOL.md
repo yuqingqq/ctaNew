@@ -105,3 +105,58 @@ availability rates before believing it.
 The absolute maker edge, the fair-price model, queue-position inference, and any
 `ρ`-dependent quantity. This protocol compares two policies; it does not
 establish that either is profitable.
+
+---
+
+## RUN AND ANSWERED — 2026-08-24, era-population re-run (appended per R-28; the frozen text above is untouched)
+
+**Receipt:** `derived/policy_comparison_v2.json` (+ per-arm receipts with
+`engine_hash`, arm `run_hash`es, per-window `inputs_hash`). Harness:
+`ev_replay.py` ReplayEnv (R-102 item 1), determinism gates PASS both arms.
+**Population (stamped, launch-time): 282 verdict-coin windows = btc+eth ×
+{08-20/21/22/23 at 30/coin + 08-24 PARTIAL at 21/coin}** — five era days,
+day-grouped sampler; the report-#65 scope estimate (288) differed by the
+partial day's growth between launch and derivation; the stamp wins, as
+promised. No overlays exist in the environment (pitfall #4 honoured by
+construction). All numbers as-of 2026-08-24 ~13:1x.
+
+**Cells (d = FRONT − JOIN, share-weighted M5 ¢/share; window-clustered CIs; n = paired windows):**
+
+| coin | day | JOIN m5 | FRONT m5 | d_M5 [CI] | n |
+|---|---|---|---|---|---|
+| btc | 08-20 | −0.526 | −0.516 | −0.060 [−0.224, +0.114] | 30 |
+| btc | 08-21 | −0.991 | −0.650 | +0.222 [+0.097, +0.366] | 30 |
+| btc | 08-22 | −1.048 | −1.055 | −0.041 [−0.230, +0.174] | 30 |
+| btc | 08-23 | −1.512 | −1.128 | +0.201 [−0.135, +0.570] | 30 |
+| btc | 08-24p | −1.514 | −0.990 | +0.406 [+0.130, +0.708] | 21 |
+| eth | 08-20 | −0.966 | −0.878 | +0.092 [−0.374, +0.569] | 30 |
+| eth | 08-21 | −1.412 | −0.716 | +0.583 [+0.276, +0.903] | 30 |
+| eth | 08-22 | −1.913 | −0.912 | +0.956 [+0.431, +1.574] | 30 |
+| eth | 08-23 | −2.862 | −2.120 | +0.398 [−0.131, +0.927] | 30 |
+| eth | 08-24p | −1.338 | −0.932 | +0.401 [−0.066, +0.918] | 21 |
+
+**Roll-ups (paired, n=141 windows/coin):** fills — FRONT out-fills JOIN
+massively and CI-cleanly everywhere: btc d_shares/window **+6,054**
+[+5,698, +6,392] (≈5.3–6.3×); eth **+969** [+903, +1,033] (≈4.7–5.9×).
+Markout — btc pooled d_M5 **+0.129 ¢ [+0.026, +0.251]** but DAY-SIGN-MIXED
+(2/5 negative points, none CI-clean negative; 2/5 CI-clean positive):
+wash-to-FRONT-favouring, not a clean win. eth pooled **+0.491 ¢
+[+0.282, +0.718]**, positive point every day: FRONT wins markout.
+
+**VERDICT under the frozen paired-difference rule: §7's EXPECTED TRADE-OFF
+DOES NOT APPEAR on this population.** New-BBO wins fills decisively and
+loses fill-conditional markout NOWHERE (no coin-day shows a CI-clean FRONT
+markout penalty); it wins markout outright on eth. Interpretation (labeled
+as such, not measured): queue-POSITION selection dominates formation-time
+information — back-of-queue JOIN fills condition on the displayed queue
+ahead being consumed, i.e. deeper and more informed sweeps, and that
+penalty exceeds the freshest-information penalty of quoting at formation.
+
+**THE LEVELS CONTEXT THAT MUST RIDE WITH ANY QUOTE OF THIS RESULT (the
+frozen rule: never let a level carry the verdict — nor hide it): BOTH
+policies lose money per share at M5 on EVERY coin-day** (JOIN −0.53 to
+−2.86 ¢, FRONT −0.52 to −2.12 ¢). At negative per-share markout, 5–6×
+more fills means 4–6× MORE TOTAL LOSS: FRONT is the BETTER-RANKED policy
+and the FASTER way to lose money. This comparison ranks policies; it does
+not make either viable — that reading belongs to items 3–4 of the
+decision path (gross→net, STOP-MM-VIABLE), not to this protocol.
