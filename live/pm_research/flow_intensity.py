@@ -39,7 +39,7 @@ import math
 import random
 import zlib
 from pathlib import Path
-from typing import Any, Iterator, Sequence, Iterable
+from typing import Any, Iterator, Mapping, Sequence, Iterable
 
 REPO = Path(__file__).resolve().parents[2]
 PM = REPO / "data/pm_5min"
@@ -330,6 +330,357 @@ def provenance(sampled: "Iterable[str | Path] | None" = None) -> dict[str, objec
     out["n_days_sampled"] = len(days)
     out["source_days"] = sorted(days)
     return out
+
+
+
+
+# Frozen by FLOW_MODEL_PROTOCOL_V5.yaml under ruling R-19 (D-V5-1).
+V5_PRIMARY_EVALUATION_START = "2026-08-22"
+
+
+def promotion_days(primary_start: str = V5_PRIMARY_EVALUATION_START,
+                   era: str = ERA) -> dict[str, Any]:
+    """The ten-forward-day promotion count, DERIVED. Never write this down.
+
+    D-V5-2 binding condition, in code: the count is computed from V5's own
+    `primary_evaluation_start` against the days actually present on disk, at read
+    time. A hardcoded day count in a tracking file is the `DAYS`-went-stale
+    defect wearing a different hat -- it went stale four times in three days, the
+    last within twelve hours of being fixed.
+
+    Counts only COMPLETE days: the newest day on disk is still accruing, so it is
+    reported separately rather than silently included.
+    """
+    days = sorted({slug_day(s) for s in covered_slugs(era)})
+    if not days:
+        return {"primary_start": primary_start, "n_complete": 0,
+                "complete": [], "in_progress": None, "required": 10,
+                "remaining": 10, "met": False}
+    in_progress = days[-1]
+    eligible = [d for d in days if d >= primary_start and d != in_progress]
+    return {
+        "primary_start": primary_start,
+        "era": era,
+        "complete": eligible,
+        "n_complete": len(eligible),
+        "in_progress": in_progress if in_progress >= primary_start else None,
+        "required": 10,
+        "remaining": max(0, 10 - len(eligible)),
+        "met": len(eligible) >= 10,
+        "rule": "DERIVED_AT_READ_TIME_NEVER_STORED",
+    }
+
+
+
+# ---------------------------------------------------------------------------
+# R-20: a frozen Class-D bar freezes its TEXT but not its INPUTS.
+# ---------------------------------------------------------------------------
+# R-1's f* is a function of Class-C MEASURED values -- spread capture and the
+# CI endpoint of Layer-1 markout nearest zero -- which Class C obliges the
+# coordinator to ADOPT. So a re-publication of Layer-1 silently moves the bar
+# unless the bar is anchored BY VALUE. R-20 anchors it.
+#
+# The values below are the SNAPSHOT AS PUBLISHED AT FREEZE TIME. They are not
+# a measurement this module performs and they must never be recomputed here.
+# DE's `warning_window_v1_dayseries.json` independently stores the same anchor
+# as `frozen_f_low: {btc: 0.309, eth: 0.494}`.
+R1_BAR_ANCHOR: dict[str, dict[str, float]] = {
+    "btc": {"spread_cents": 0.642, "markout_lo_cents": 0.287, "f_star_low": 0.309},
+    "eth": {"spread_cents": 0.778, "markout_lo_cents": 0.759, "f_star_low": 0.494},
+}
+
+
+def f_star(spread_cents: float, markout_lo_cents: float) -> float:
+    """R-1's break-even warned share: |markout| / (spread + |markout|)."""
+    if spread_cents < 0 or markout_lo_cents < 0:
+        raise ValueError("f_star takes magnitudes; pass |markout|, not the signed value")
+    denom = spread_cents + markout_lo_cents
+    if denom <= 0:
+        raise ValueError("spread + |markout| must be positive")
+    return markout_lo_cents / denom
+
+
+def would_move_bar(coin: str, new_spread_cents: float,
+                   new_markout_lo_cents: float,
+                   measured_r_hi: float | None = None) -> dict[str, Any]:
+    """R-20 REPORTING OBLIGATION, made mechanical. This NEVER moves the bar.
+
+    Given a re-published Layer-1 spread and markout, report what f* WOULD have
+    been and in which direction the verdict would have moved. The frozen bar is
+    unchanged by construction: `f_star_low_operative` is always the anchor.
+
+    R-20 is SYMMETRIC. A re-publication that makes a coin MORE dead is exactly
+    as much a finding as one that revives it, and neither moves the bar. The
+    point is that verdicts stop drifting with their inputs, not that they drift
+    only in the convenient direction.
+
+    `measured_r_hi` is the upper bound of the measured warned share R. Pass it to
+    learn whether the counterfactual bar would flip the DEAD verdict; omit it for
+    the bar movement alone.
+    """
+    if coin not in R1_BAR_ANCHOR:
+        raise ValueError(f"{coin} is not a verdict coin under R-1; "
+                         f"anchored coins are {sorted(R1_BAR_ANCHOR)}")
+    anchor = R1_BAR_ANCHOR[coin]
+    counterfactual = f_star(new_spread_cents, new_markout_lo_cents)
+    delta = counterfactual - anchor["f_star_low"]
+    out: dict[str, Any] = {
+        "coin": coin,
+        "f_star_low_operative": anchor["f_star_low"],   # THE BAR. Never changes.
+        "f_star_low_counterfactual": round(counterfactual, 4),
+        "delta": round(delta, 4),
+        "direction": ("BAR_WOULD_HAVE_RISEN_HARDER_TO_BE_DEAD" if delta > 0
+                      else "BAR_WOULD_HAVE_FALLEN_EASIER_TO_BE_DEAD" if delta < 0
+                      else "UNCHANGED"),
+        "anchor_inputs": dict(anchor),
+        "new_inputs": {"spread_cents": new_spread_cents,
+                       "markout_lo_cents": new_markout_lo_cents},
+        "bar_moved": False,
+        "rule": "R-20: publish the new markout as its OWN result; surface the "
+                "would-have-moved to the coordinator; do NOT propagate into f*",
+    }
+    if measured_r_hi is not None:
+        dead_now = measured_r_hi < anchor["f_star_low"]
+        dead_cf = measured_r_hi < counterfactual
+        out["measured_r_hi"] = measured_r_hi
+        out["verdict_under_operative_bar"] = "DEAD" if dead_now else "NOT_DEAD"
+        out["would_vacate"] = dead_now and not dead_cf
+
+        # R-38 CLAUSE (D): AN AMENDMENT MAY NOT, BY ITSELF, CHANGE A VERDICT.
+        # This block previously reported `verdict_under_counterfactual: NOT_DEAD`
+        # -- i.e. it amended its way from DEAD to alive, which is exactly what
+        # clause (d) forbids. An amendment can only vacate a verdict to
+        # UNDETERMINED, and that purchase costs an OBLIGATION, not a result.
+        if dead_now and not dead_cf:
+            out["verdict_under_counterfactual"] = "UNDETERMINED_PENDING_RERUN"
+            out.update(_vacate_provenance(coin, anchor, counterfactual, "DEAD"))
+            out["obligation"] = (
+                "Re-establishing ANY verdict requires RE-RUNNING the "
+                "measurement under the new bar at the original evidentiary "
+                "standard. An amendment buys 'not yet determined', never 'alive'.")
+            out["escalate"] = (
+                "FIRST-CLASS FINDING: a re-publication would VACATE this coin's "
+                "R-11 verdict to UNDETERMINED and oblige a re-run. It would not "
+                "make the coin not-dead, and the bar does not move.")
+        elif (not dead_now) and dead_cf:
+            out["verdict_under_counterfactual"] = "UNDETERMINED_PENDING_RERUN"
+            out.update(_vacate_provenance(coin, anchor, counterfactual, "NOT_DEAD"))
+            out["obligation"] = (
+                "Symmetric: an amendment that would make a coin MORE dead is "
+                "equally a finding and equally cannot establish the verdict. "
+                "It vacates and obliges a re-run.")
+            out["escalate"] = (
+                "FIRST-CLASS FINDING, adverse direction: a re-publication would "
+                "vacate to UNDETERMINED. R-20's symmetry holds under R-38.")
+        else:
+            out["verdict_under_counterfactual"] = out["verdict_under_operative_bar"]
+    return out
+
+
+
+# ---------------------------------------------------------------------------
+# R-35 (Q-BE-3): day-stratified sampling binds ANY probe whose output is an
+# input to a frozen bar -- not only V5 fits.
+# ---------------------------------------------------------------------------
+# The reason is R-20: a frozen bar is anchored to its inputs BY VALUE, so if
+# those inputs came from a sampler that cannot leave one day, the anchor is
+# anchored to a BIASED number. `edge_l1_v1`'s Layer-1 markout feeds R-1's f*,
+# so Layer-1 is in scope even though it is not a V5 fit.
+#
+# Two constraints follow, and both are mechanised here rather than remembered.
+SAMPLING_RULES = ("EARLIEST_FIRST", "DAY_STRATIFIED", "WHOLE_COVERED_POPULATION")
+
+
+def assert_poolable(receipts: "Iterable[Mapping[str, Any]]") -> str:
+    """R-35 constraint 2: NEVER pool across sampling rules. Returns the rule.
+
+    Different samplers are DIFFERENT POPULATIONS -- the never-pool-across-eras
+    rule one level up. A comparison must state which rule each side used, and a
+    pooled statistic over mixed rules is not a statistic about anything.
+
+    Refuses loudly rather than warning, because the failure it guards is silent:
+    an earliest-first receipt and a day-stratified one have the same shape and
+    the same fields, and nothing in the numbers reveals the mixture.
+    """
+    seen: dict[str, list[str]] = {}
+    for r in receipts:
+        rule = str(r.get("sampling_rule") or "UNDECLARED")
+        seen.setdefault(rule, []).append(str(r.get("protocol") or "<unnamed>"))
+    if "UNDECLARED" in seen:
+        raise ValueError(
+            "R-35: receipt(s) with no declared sampling_rule cannot be pooled: "
+            f"{seen['UNDECLARED']}. Declare the rule; do not assume it.")
+    if len(seen) > 1:
+        raise ValueError(
+            "R-35 constraint 2 -- NEVER POOL ACROSS SAMPLING RULES. "
+            f"Mixed populations: { {k: v for k, v in seen.items()} }. "
+            "Different samplers are different populations; state which rule "
+            "each side used and compare, do not pool.")
+    return next(iter(seen))
+
+
+def resampled_markout_is_a_candidate(coin: str, new_spread_cents: float,
+                                     new_markout_lo_cents: float,
+                                     measured_r_hi: float | None = None
+                                     ) -> dict[str, Any]:
+    """R-35 constraint 1: a re-sampled Layer-1 markout does NOT move the bar.
+
+    It creates a CANDIDATE requiring a Class-D amendment under R-6 -- which,
+    since `ww_v1`'s measurement has already run, must satisfy all three parts of
+    the amendment test including (c) invalidating every verdict computed under
+    the old bar. That is no longer free.
+
+    This wraps `would_move_bar` so the return value cannot be mistaken for an
+    updated bar: the operative value is unchanged and the result is labelled a
+    candidate, not a bar.
+    """
+    out = would_move_bar(coin, new_spread_cents, new_markout_lo_cents,
+                         measured_r_hi=measured_r_hi)
+    out["status"] = "CANDIDATE_NOT_A_BAR"
+    out["requires"] = ("R-6 Class-D amendment: made before the re-run, motivated "
+                       "by information that is not the result, and explicitly "
+                       "invalidating every verdict computed under the old bar")
+    out["amendment_is_free"] = False   # ww_v1's measurement has already run
+    return out
+
+
+
+def _vacate_provenance(coin: str, anchor: Mapping[str, float],
+                       counterfactual: float, was: str) -> dict[str, Any]:
+    """R-40 CLAUSE (E): a vacated verdict carries its provenance PERMANENTLY.
+
+    Clause (d) stopped an amendment converting DEAD into alive. It left one
+    residual, which the coordinator review found: an amender who vacates and
+    never completes the re-run holds the verdict at UNDETERMINED indefinitely --
+    four-fifths of the erasure for the price of an unpaid IOU.
+
+    Clause (e) makes limbo LOUD. The vacated verdict keeps its history forever,
+    and the vacating amendment owes a register row for the re-run it created.
+
+    `register_row_filed` is False here BY CONSTRUCTION: this function knows the
+    obligation exists, not that anyone discharged it. Leaving it False is exactly
+    the limbo clause (e) exposes.
+    """
+    return {
+        "vacated_provenance": (
+            f"VACATED -- was {was} under bar f*_low={anchor['f_star_low']:.3f} "
+            f"(spread {anchor['spread_cents']}, |markout|_lo "
+            f"{anchor['markout_lo_cents']}); re-run owed under the amended bar "
+            f"f*_low={counterfactual:.4f}"),
+        "provenance_is_permanent": True,
+        "register_row_required": True,
+        "register_row_filed": False,
+        "register_row": (
+            f"| Q-BE-n | BE | **RE-RUN OWED (R-40 clause e)** -- `ww_v1` {coin} "
+            f"verdict VACATED to UNDETERMINED by an amendment to `f*_low` "
+            f"({anchor['f_star_low']:.3f} -> {counterfactual:.4f}). Under clause "
+            f"(d) the amendment cannot re-establish a verdict; re-running the "
+            f"measurement under the new bar at the original evidentiary standard "
+            f"is owed. Until it completes, {coin} is UNDETERMINED and was {was}. |"),
+    }
+
+
+def file_vacate_obligation(result: Mapping[str, Any],
+                           register: "Path | None" = None,
+                           dry_run: bool = True) -> dict[str, Any]:
+    """Append the owed-re-run row to the section 0a register. Clause (e).
+
+    `dry_run=True` by default: a function that silently edits a shared,
+    coordinator-owned file as a side effect is a worse defect than the one it
+    fixes. The caller sees the row and files it deliberately.
+    """
+    if not result.get("register_row_required"):
+        raise ValueError("no vacate obligation on this result; nothing to file")
+    row = result["register_row"]
+    if dry_run:
+        return {"filed": False, "dry_run": True, "row": row,
+                "note": "re-call with dry_run=False to append"}
+    path = register or (REPO / "orchestrator/PROGRAMS/P-2026-003-polymarket-5min"
+                               / "workspace/COORDINATION.md")
+    text = path.read_text()
+    marker = "\n## 0. Roles"
+    if marker not in text:
+        raise ValueError("section 0a register not found; refusing to guess")
+    i = text.index(marker)
+    path.write_text(text[:i] + "\n" + row + text[i:])
+    return {"filed": True, "dry_run": False, "row": row, "register": str(path)}
+
+
+def slug_day(slug: str) -> str:
+    """UTC day of a window slug, from the epoch start it ends in."""
+    m = re.search(r"-(\d{10})(?:\D|$)", str(slug))
+    if not m:
+        raise ValueError(f"no epoch in slug {slug!r}")
+    return dt.datetime.fromtimestamp(
+        int(m.group(1)), dt.timezone.utc).strftime("%Y-%m-%d")
+
+
+def sample_days(per_coin: int, era: str = ERA) -> dict[str, Any]:
+    """How many UTC DAYS an earliest-N-per-coin sample actually spans.
+
+    THE SECOND SAMPLING BUG, found 2026-08-23. Deriving DAYS from disk fixed the
+    population READ. It did not touch the population SAMPLED: every probe selects
+    with `sorted(covered_slugs(ERA))` truncated at `per_coin`, and a slug sorts by
+    the epoch it ends in, so "the first N" is "the EARLIEST N". The clob_v3_1 era
+    opens 2026-08-20 14:50:21, so at per_coin <= 60 the sample never leaves
+    2026-08-20 no matter how many days are on disk.
+
+    Every headline replay result in this corpus was computed at per_coin 10-60
+    and is therefore ONE UTC DAY -- while two receipts stamped `n_days: 4` on it,
+    because they called `provenance()` with no `sampled=`. See FLOW_MODEL_STATE
+    section 1f.
+
+    Call this before publishing, and report `n_days_sampled` beside every N.
+    """
+    paths = _archive_paths()
+    tokens = token_map()
+    picked: dict[str, list[str]] = {}
+    for slug in sorted(covered_slugs(era)):
+        coin = slug.split("-")[0]
+        if slug not in paths or slug not in tokens:
+            continue
+        picked.setdefault(coin, [])
+        if len(picked[coin]) < per_coin:
+            picked[coin].append(slug)
+    per: dict[str, Any] = {}
+    union: set[str] = set()
+    for coin, slugs in sorted(picked.items()):
+        days = sorted({slug_day(s) for s in slugs})
+        per[coin] = {"n_windows": len(slugs), "days": days, "n_days": len(days)}
+        union |= set(days)
+    return {
+        "per_coin_requested": per_coin,
+        "era": era,
+        "coins": per,
+        "days_sampled": sorted(union),
+        "n_days_sampled": len(union),
+        "days_declared": list(DAYS),
+        "warning": ("EARLIEST-first selection: n_days_sampled is what the numbers "
+                    "rest on; days_declared is only what is on disk"),
+    }
+
+
+def report_sample_days(per_coin_values: Sequence[int] = (10, 24, 25, 30, 60, 273, 361),
+                       era: str = ERA) -> list[str]:
+    """One line per candidate sample size: how many days it would actually span."""
+    paths = _archive_paths()
+    tokens = token_map()
+    avail: dict[str, list[str]] = {}
+    for slug in sorted(covered_slugs(era)):
+        if slug in paths and slug in tokens:
+            avail.setdefault(slug.split("-")[0], []).append(slug)
+    L = [f"era={era}  coins={len(avail)}  "
+         f"available/coin={min(len(v) for v in avail.values())}"
+         f"-{max(len(v) for v in avail.values())}  "
+         f"days_declared={','.join(DAYS)}", ""]
+    ndays_all = len({slug_day(s) for v in avail.values() for s in v})
+    L.append(f"whole era spans {ndays_all} UTC days")
+    L.append("")
+    L.append(f"{'per_coin':>8} | {'n_days_sampled':>14} | days")
+    for n in per_coin_values:
+        union = sorted({slug_day(s) for v in avail.values() for s in v[:n]})
+        L.append(f"{n:>8} | {len(union):>14} | {','.join(d[5:] for d in union)}")
+    return L
 
 
 def _archive_paths() -> dict[str, Path]:
@@ -872,6 +1223,81 @@ def selftest() -> int:
        and state_mid_at(interrupted, 6.25) == 0.90,
        "gap between quote receipt and lag maturity invalidates the quote")
 
+    # 32-36: the EARLIEST-first sampler. These are the checks that would have
+    # caught the one-day sample being published as a four-day one.
+    ok(slug_day("btc-updown-5m-1787184000") == "2026-08-20", "slug_day decodes")
+    ok(slug_day("btc-updown-5m-1787451600") == "2026-08-23", "slug_day rolls over")
+    _expect("slug with no epoch", ValueError, lambda: slug_day("btc-updown-5m"))
+
+    # The ordering property the whole defect rests on: sorting slugs sorts TIME,
+    # so a truncated sample is the EARLIEST windows, never a spread of them.
+    _slugs = ["btc-updown-5m-1787451600", "btc-updown-5m-1787184000",
+              "btc-updown-5m-1787270400"]
+    ok([slug_day(x) for x in sorted(_slugs)]
+       == ["2026-08-20", "2026-08-21", "2026-08-23"],
+       "sorting slugs sorts by day -- truncation takes the EARLIEST")
+
+    # provenance() without `sampled=` must SAY it is an upper bound. The two
+    # receipts that over-reported n_days: 4 on a one-day sample predate this.
+    _pv = provenance()
+    ok(_pv["sampled_is_known"] is False and _pv["days_sampled"] is None
+       and "UPPER BOUND" in str(_pv["warning"]),
+       "provenance() with no sampled= declares itself an upper bound")
+
+    # 37-42: R-20. The bar is anchored BY VALUE and this code cannot move it.
+    ok(abs(f_star(0.642, 0.287) - 0.309) < 0.001, "f* reproduces btc's frozen 0.309")
+    ok(abs(f_star(0.778, 0.759) - 0.494) < 0.001, "f* reproduces eth's frozen 0.494")
+    _expect("signed markout rejected", ValueError, lambda: f_star(0.642, -0.287))
+
+    # R-20's own worked example: btc at |markout|_lo = 0.110 -> 14.6%.
+    cf = would_move_bar("btc", 0.642, 0.110, measured_r_hi=0.219)
+    ok(abs(cf["f_star_low_counterfactual"] - 0.146) < 0.001,
+       "R-20 worked example reproduces 14.6%")
+    ok(cf["f_star_low_operative"] == 0.309 and cf["bar_moved"] is False,
+       "the operative bar is UNCHANGED by a counterfactual")
+    # R-38 clause (d): the counterfactual may VACATE, never revive.
+    ok(cf["would_vacate"] is True and cf["verdict_under_operative_bar"] == "DEAD"
+       and cf["verdict_under_counterfactual"] == "UNDETERMINED_PENDING_RERUN",
+       "R-38(d): an amendment vacates to UNDETERMINED, never to NOT_DEAD")
+    ok("RE-RUNNING" in cf["obligation"],
+       "R-38(d): vacating buys an OBLIGATION, not a result")
+
+    # R-40 clause (e): limbo is LOUD.
+    ok(cf["provenance_is_permanent"] is True
+       and cf["vacated_provenance"].startswith("VACATED -- was DEAD under bar"),
+       "R-40(e): the vacated verdict carries its history permanently")
+    ok(cf["register_row_required"] is True and cf["register_row_filed"] is False,
+       "R-40(e): a re-run row is OWED and is never silently marked filed")
+    _dry = file_vacate_obligation(cf)
+    ok(_dry["filed"] is False and "RE-RUN OWED" in _dry["row"],
+       "R-40(e): the owed row is produced; filing is deliberate, not silent")
+    _expect("nothing to file when no vacate", ValueError,
+            lambda: file_vacate_obligation({"register_row_required": False}))
+    ok(all(v != "NOT_DEAD" for k, v in cf.items()
+           if k == "verdict_under_counterfactual"),
+       "R-38(d): no code path lets an amendment reach a favourable verdict")
+
+    # symmetry: a MORE-dead re-publication is equally a finding and equally inert
+    worse = would_move_bar("btc", 0.642, 0.900, measured_r_hi=0.219)
+    ok(worse["delta"] > 0 and worse["bar_moved"] is False
+       and worse["would_vacate"] is False,
+       "a more-adverse re-publication also leaves the bar alone")
+
+    # 43-47: R-35. Pooling across samplers is refused, not warned about.
+    _ok_pool = [{"sampling_rule": "DAY_STRATIFIED", "protocol": "a"},
+                {"sampling_rule": "DAY_STRATIFIED", "protocol": "b"}]
+    ok(assert_poolable(_ok_pool) == "DAY_STRATIFIED", "same rule pools")
+    _expect("mixed samplers refused", ValueError, lambda: assert_poolable(
+        [{"sampling_rule": "EARLIEST_FIRST"}, {"sampling_rule": "DAY_STRATIFIED"}]))
+    _expect("undeclared rule refused", ValueError,
+            lambda: assert_poolable([{"protocol": "x"}]))
+
+    _cand = resampled_markout_is_a_candidate("btc", 0.642, 0.110, measured_r_hi=0.219)
+    ok(_cand["f_star_low_operative"] == 0.309 and _cand["bar_moved"] is False,
+       "a re-sampled markout leaves the operative bar untouched")
+    ok(_cand["status"] == "CANDIDATE_NOT_A_BAR" and _cand["amendment_is_free"] is False,
+       "and is labelled a candidate whose amendment is no longer free")
+
     print(f"flow_intensity selftest: {checks} checks OK")
     return 0
 
@@ -904,7 +1330,9 @@ def report_fr(res: dict[str, Any]) -> list[str]:
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("cmd", nargs="?", choices=["fr", "fp"], default=None)
+    ap.add_argument("cmd", nargs="?",
+                    choices=["fr", "fp", "sample-days", "promotion-days"],
+                    default=None)
     ap.add_argument("--selftest", action="store_true")
     ap.add_argument("--boot", type=int, default=2000)
     ap.add_argument("--per-coin", type=int, default=10)
@@ -913,6 +1341,13 @@ def main() -> int:
     a = ap.parse_args()
     if a.selftest:
         return selftest()
+    if a.cmd == "promotion-days":
+        print(json.dumps(promotion_days(), indent=1))
+        return 0
+    if a.cmd == "sample-days":
+        for line in report_sample_days():
+            print(line)
+        return 0
     if a.cmd == "fr":
         res = fr(n_boot=a.boot, era_only=not a.all_windows)
         print(json.dumps({c: {k: v for k, v in d.items() if k != "slug"}

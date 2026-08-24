@@ -1,11 +1,117 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-08-23, session 4 close-out. **Read `live/pm_research/FLOW_MODEL_STATE.md` FIRST** -- it is authoritative for the flow model and twelve documents defer to it. All work is on branch
+Updated: 2026-08-23, session 5 (DE decision-module plan Revision 2). **Read `live/pm_research/FLOW_MODEL_STATE.md` FIRST** -- it is authoritative for the flow model and twelve documents defer to it. All work is on branch
 **`mm-research`**; nothing is on `main`. Sigma remains **Revision 5 / PRICING
 HOLD**, while the offline measurement stack is complete through contracts
 **v22**. `route_a_v1` has one OOS test day; per-symbol `route_a_v2` is
 pre-registered and begins primary evaluation on 2026-08-22. Neither is
 authorized for probability-level use.
+
+## SESSION ROLES 2026-08-23 (v2) — FOUR plane sessions, one coordinator
+
+**Re-assigned by the user. The programme now runs as four worker planes plus a
+separate COORDINATOR seat**, superseding the earlier DE-worker/coordinator
+split. Everything produced under that split — the DE plans, `DE_MODULE_PLAN.md`
+Revision 2, `DE_PLACEMENT_POLICY_PLAN.md` Revision 3, `DE_PLAN_REVIEW_LOOP.md`
+iteration 1 — stands unchanged.
+
+| plane | session |
+|---|---|
+| COORDINATOR | tmux `pmmm-coordinator` |
+| DA | tmux `pmmm-da` |
+| BE | tmux `pmmm-be` |
+| OPS | tmux `pmmm-ops` |
+| DE | tmux `cta` |
+
+**➜ The cross-session interface is `workspace/COORDINATION.md`.** Ownership map,
+coordinator-gated decisions, active FILE LOCKS and the dispatch ledger live
+there; read it before touching another plane's code. This file (`HANDOFF.md`)
+and `STATUS.yml` are **coordinator-owned** from now on to stop concurrent
+writes — send state to the coordinator rather than editing them.
+
+**OPEN, and it corrects this document:** both hourly timers have been FAILING,
+not returning `IDLE`, for ~21 h — `COORDINATION.md` dispatch D-1. `tier1/` holds
+only `day=2026-08-20`, btc/eth/sol/xrp, `lane=measurement`, and **no `full` lane
+receipt has ever committed**, so Tier-2 has never run for real. The claim below
+that the timers own catch-up is currently **false**, and OOS days are not
+accruing through the committed lane. Raw tape is intact; OPS holds the repair,
+with `measurement_batch.py` and `tier1_pipeline.py::normalize_clob` locked to it.
+
+The interface between sessions is the repo files, not conversation history.
+Consequences, per the split this program already runs (coordinator writes
+decision rules; worker runs measurements and builds):
+
+- **DE owns (unchanged):** the two DE plans and their revisions, the
+  DE review loop (`DE_PLAN_REVIEW_LOOP.md`, running), DE replays/probes
+  (warning-window envelope, cancel grid execution, composed skew×cancel,
+  cross-window correlation), and DE-side implementation when authorized.
+- **Coordinator ratifies (do not self-decide):**
+  1. `CANCEL_POLICY_PROTOCOL.md` — verdict bars, grid, cooldowns, and the
+     §8.1 envelope branch threshold are DECISION RULES; the DE session
+     prepares the draft, the coordinator freezes it before measurement.
+  2. Cross-plane contract changes in `DE_MODULE_PLAN.md` §6.2 — above all the
+     NON-ADDITIVE `DecisionProblem.belief` widening (a migration touching a
+     shared type).
+  3. SP-Params choices surfaced by the plans (γ ladder, flat band + hysteresis
+     grid, `r=60` handle, cancel-by deadline, total capital, κ_$,
+     ScenarioLossLimit).
+  4. Three iteration-1 design calls recorded in the plans as proposals, open
+     to coordinator re-cut: HALTED blocks even risk-reducing `CROSS` (carry is
+     the designed degradation); feasibility prices CONTINGENT `L_adv`
+     (position + worst-case fill of resting quotes); one shared REDUCING-ONLY
+     state for cap-breach / `r<60` / DEGRADED.
+- **Standing discipline unchanged:** rules are not re-cut after their answers
+  are visible; nothing measurable recorded as settled; plans stay DESIGN.
+
+## SESSION 5 2026-08-23 — the decision module has a plan
+
+**The DE plane is now planned at two levels.**
+`plans/DE_MODULE_PLAN.md` covers the **module structure** — all five DE modules
+(ActionSpace · Constraints · DecisionScheme · Allocator · Actuator, all
+unbuilt), what measurement already pins in each, and a demand-driven build
+order. Key structural decisions: ActionSpace is five verbs
+(`PLACE/CANCEL/CROSS/MERGE·SPLIT/NONE`) over **one** signed Up-equivalent
+exposure (the exact identity makes complement verbs a double-count), and
+placement is a level-policy, not a price; Constraints is an oracle whose caps
+price `L_adv` side-aware (a `|net|` cap is not a risk limit); the composed rule
+policy registers as solver plugin `RulePolicy_v1` with a **no-belief-inputs
+manifest** (the optimizing seams stay empty because FlowAndFills is unvalidated
+and Route A is HOLD — measured blockers, not taste); utility is deliberately
+unchosen; coupling is `{Up,Down}` ATOMIC (exact) plus same-coin SHARED_RISK
+with **unmeasured** correlation; the Actuator is where the tape ends, and its
+deployment-measured ack latency **selects the operative τ rung** of the cancel
+ladder rather than triggering re-research. Buildable now: the ActionSpace/
+Constraints vocabulary inside the replay harness, and the **cross-window
+correlation measurement** (retires DA-plan falsifier #2, decides the
+Allocator's character).
+
+**`plans/DE_PLACEMENT_POLICY_PLAN.md` is now Revision 2** (Rev 1 in git
+history). It absorbs the three measurements that landed after Rev 1 — its own
+§7.1 answered `SKEW_ROBUST`, the exact one-book identity, Layer-1
+negative-for-never-cancels — and adds the lever Rev 1's menu lacked:
+**cancellation**, the only lever that acts on fill quality. The composed policy
+is four questions: WHERE to rest (skew, measured) · WHEN to leave (cancel,
+unmeasured) · WHEN to cross (`N*` backstop) · WHEN to stop (`r≈60` schedule).
+
+**The pre-committed execution order (plan §8), falsifier-first:**
+
+1. **Warning-window distribution, POLICY-FREE**, on the existing `edge_l1_v1`
+   fill set under both queue bounds: the share of negative drift sitting on
+   fills whose warning exceeds each cancel latency `τ`. One number decides
+   whether any cancellation policy can work on this tape *before one is
+   built*. The mechanism case: drift ~92 % complete by 5 s, flow clustered at
+   75–350 ms (a burst has a first trade), and the queue is a warning buffer —
+   depth ahead leaving by *churn* is visible to a depth-depletion trigger even
+   when it never trades.
+2. Freeze `CANCEL_POLICY_PROTOCOL.md` (trigger family T-FLOW/T-DEPLETE/T-MID/
+   T-AGE, `τ` ladder 0–1000 ms, named re-post rule, every grid cell reported),
+   then run it on static `JOIN_BBO`. Three axes mandatory; excised fills get
+   counterfactual markout rows.
+3. Composed skew × cancel replay — including whether the fronted reducing
+   side's zero-warning exposure shows up per side (tension recorded in plan
+   §4.6).
+
+No code was written; no measurement was run. Next session starts at step 1.
 
 ## SESSION 4 CLOSE-OUT 2026-08-23 — the first determinate answer
 
@@ -1110,3 +1216,608 @@ Estimator implementation remains on **HOLD**.
   contracts (El Euch et al.; Baldacci et al.). Marked superseded; don't cite it.
 - Trading access (US status, CLOB auth) is a deployment question, out of scope
   until the gates pass. Don't let it leak into research design.
+
+## Coordinator tick — 2026-08-23 ~22:50 UTC (R-70..R-76)
+
+**Register re-counted with a real instrument.** `live/pm_research/register_count.py`
+(8 selftest checks). My previous grep was wrong in BOTH directions: it did not
+know DISCHARGED/SUPERSEDED/UPHELD, and it read the whole row so a resolution
+word in a row's *prose* closed it. Honest count was **53 open ASKs / 39
+resolved**, not the ~44 I had been reporting. Six closed this tick → **48 open**.
+OPS and DE registers are now **clear**; DA 25, BE 23.
+
+**Rulings.** R-70 register instrument + ASK/FILING taxonomy, closed resolution
+vocabulary, status-cell-only reads. R-71 Q-DE-8 ADOPT (coupling independent,
+B6's limits ride with it — 21.2% real overlap, decorative intervals). R-72
+enum is `MINT|MERGE`, rides a batched v23→v24 record; `de_actionspace.py`
+selftest must stay matching neither side. R-73 `verify_landing_evidence.py`
+adopted as OPS state source (20/20, not the 15/15 OPS reported). R-74 BE's
+declination of DE's 20th migration record UPHELD — *a migration record
+authorises a change, it does not validate one*; §9 UNION amendment ratified,
+non-additive stays 19. R-75 Q-BE-18 annotate §8a, no edit, no verdict moves.
+R-76 dispatch channel: long multi-line `send-keys` pastes without submitting.
+
+**Two of my own instruments failed during the tick that was auditing
+instruments.** (i) `grep -m1 'Revision [0-9]+'` on `OP_PLANE_PLAN.md` returned
+"Revision 1" by matching *prose about* Revision 1 — the exact mechanism behind
+four consecutive stale OPS state blocks, reproduced live, which is what decided
+R-73. (ii) `register_count.py` found a false positive in **itself** on first
+real use (`Q-BE-26` resolved itself on the word "declined" in its own body,
+because its author wrote no status cell). Both are now fixed and both carry a
+selftest case.
+
+**In flight:** DA — MEASUREMENT_PLAN iteration 4 vs frozen Rev 7 + triage 25
+register rows. BE — execute the §8a annotation (R-75) + triage 23 rows, marking
+FILINGs for ACK. OPS — 08-22 Tier-2 exponent measurement (tier1 08-22 now
+present; tier2 still 08-20/08-21 only). DE — draft the v23→v24 `MINT|MERGE`
+change record.
+
+**Still the user's call:** `STOP-MM-VIABLE`.
+
+## Coordinator tick — 2026-08-23 ~23:20 UTC (R-77..R-80)
+
+**Register:** 95 filed / 50 resolved / **44 open ASKs** (DA 20, BE 25; OPS and
+DE clear). DA triaged 5 down; BE's count rose 23→25 because BE files as it
+triages, which is what an honest triage looks like. BE is marking every row
+`ASK:`/`FILING:` so the FILINGs can be ACKed in one pass.
+
+**R-77 — lens coverage is now a precondition of termination.** MEASUREMENT_PLAN
+ran to 5 iterations, MUST-FIX 25/4/2/7/5. The rise at iteration 4 is *not* the
+R-60 expanding-set pathology: the set is eight and frozen, iterations 4-5 both
+record "No new lens", and the count rose because **currency** and **cross-plane
+consistency** fired for the first time. But it exposed a hole in R-61 — both
+close routes look only at recent iterations, never at coverage, so a loop could
+close by re-running exhausted lenses while a fresh one never fires. No loop now
+closes while any lens in its frozen set has never run. **7 of 8 have run;
+decision-readiness has not**, and that is the lens whose output the coordinator
+consumes — invisible from my side by construction. DA runs it before close.
+
+**R-78 — OPS refused my 08-22 premise and was right.** `twap/day=2026-08-22` is
+the *08-21* run's forward dependency (`measurement_batch.py:469-473`), not a
+readiness signal; every other tier1 stream for 08-22 is absent and
+`newest_eligible_day = 2026-08-21`. `NEXT_DAY_CLOSED` opens 08-22 at **2026-08-24
+00:00 UTC**. Ratified: presence of an artifact is not evidence of the state it
+is named for. OPS holds — sampler detached and gated, prediction on file
+(143 s CPU · 11.2 GB · FITS), cap not raised, collectors untouched.
+
+**R-79 — the false-positive class is named: VOCABULARY-IN-DISCUSSION.** *Any
+document that discusses a rule contains that rule's own vocabulary, so searching
+for the vocabulary finds the discussion, not the state.* Four instances in four
+days, three of them mine (Revision-1 prose, "terminal markers", OPS's
+`Status.*FROZEN`, `register_count.py` on "declined"). State comes from a
+producer's criterion, a structured field, or an instrument with a selftest.
+
+**R-80 — I verified R-75 against the wrong artifact.** BE's §8a annotation is on
+disk at `EX1_PREDICTION_PROTOCOL.md` §8a.2 and was before I asked; I grepped
+`BE_BELIEF_PLAN.md` because §1.2 lives there. R-36 amended: verify the artifact
+the *claim* names, never one inferred from the subject matter.
+
+**In flight:** DA — decision-readiness lens + triage. BE — ASK/FILING marking
+pass + triage. DE — **B3, `EV-Replay` plan + harness** (v24 draft accepted, M-1
+held as the only §1 entry). OPS — gated to 00:00 UTC, reports 08-22 after.
+
+**Still the user's call:** `STOP-MM-VIABLE`.
+
+## Coordinator tick — 2026-08-24 ~00:10 UTC (R-81..R-84)
+
+**Register: 98 filed / 61 resolved / 37 open ASKs / 0 FILINGs** (DA 23, BE 14).
+BE's marking pass let **11 FILINGs ACK in one ruling** (R-81) — 50→61 resolved
+with zero adjudication. Open ASKs 48 → 37 across two ticks.
+
+**R-82 — decision-readiness fired and R-77 was right in the worst way.** DA ran
+the eighth lens: *"Seven of eight obligations never left the document."* A 12.5%
+surfacing rate, on the most-reviewed plan in the programme, by the most rigorous
+plane. Invisible from the coordinator side by construction — every instrument I
+own measures what reached me. Corroborated independently: register 95→98 filed,
+`Q-DA-39/40/41` present as rows. **R-77 extended: decision-readiness runs in the
+first two iterations of every loop AND before close** — requiring it only before
+close leaves obligations trapped for the loop's whole life, which is what
+happened here across five iterations. BE is now running it over its own surface.
+
+**R-84 — §8 has been reporting GROSS behind a discharged blocker, and it reaches
+`STOP`.** Verified at `FLOW_MODEL_STATE.md:59`: taker pays, maker does not —
+**744/754 maker legs zero**, n=600. One correction to DA in the conservative
+direction: 744 of 754, *not* 754 — ten legs were charged (1.3%), so the exception
+must ride with every citation. **DA carries §8 gross → net, and the STOP dossier
+does not go to the user until settled either way.** Not a claim it flips the
+verdict; markout is dominated by adverse selection, not fees.
+
+**R-83 — a stale header misled my accounting twice.** `EV_REPLAY_PLAN` line 3
+says "Revision 3", line 9 says "Revision 7"; R-67 read the stale line and this
+tick's "draft the PLAN first" premise descended from the same misread. DE's
+artifact defect *and* my R-79 (4th instance) — I read a revision from prose
+instead of a field, while the programme now holds two revision-pinning
+instruments (`da_freeze_pin.py`, 8 checks). DE's census correction accepted and
+it sharpens rather than softens: **five replay dialects is now eight**, three
+added this session. DE names the pattern adopted-or-debt in Revision 2.
+
+**Next tick's first business:** `Q-DA-39` (A-CALIB-1 owed, never asked, on a
+committed panel), `Q-DA-40` (v24 assembling without §5's three "Incompatible
+artifacts" inference rules), `Q-DA-41` (R-7 condition 4 — trigger nobody filed,
+no detector; 23 of 36 above the 0.5 pp reference, mean 0.645 pp), plus **R-7 is
+half-landed in v23 exactly as R-3 is** → two rule bodies in v24.
+
+**OPS:** 08-22 opened at 00:00 UTC; measurement timer fires **00:20:16**,
+sampler alive (pid 508268, 10h), prediction on file. Result expected ~00:30.
+
+**Still the user's call:** `STOP-MM-VIABLE` — now gated on R-84.
+
+## Coordinator tick — 2026-08-24 ~00:40 UTC (R-85..R-88)
+
+**TWO RECUSALS OUTSTANDING — the coordinator does not decide either.**
+
+- **R-87** — DA challenges whether **R-7's licence survives** a bite distribution
+  centred 1.3× above its reference. R-7 is the coordinator's ruling → **routed to
+  OPS** for `SURVIVES`/`DIES`. Coordinator ruled only the mechanical half:
+  `r7_drift_check` is extended to police the bite-vs-reference comparison
+  regardless of the answer — *a condition with no detector is a sentence*.
+- **R-88** — BE found a **plane-order inversion live in v23**: `GateEvidence.gate
+  : GateId`, `GateRegistry` produced by EV-Gates, `GateEvidence` produced by
+  BE-Uncertainty → **BE-Uncertainty must emit a GateId that does not exist until
+  EV-Gates registers it. BE reads EV**, inverting the one direction the
+  architecture forbids. **R-74's §9 union is what put it there.** → **routed to
+  DA**. If DA finds against R-74, R-74 gets amended.
+
+**R-85 — `calib_panel` admissible as a STALE-QUOTE panel with `r` demoted to a
+nominal label; INADMISSIBLE as an r-indexed freshness ladder.** `quote_status ==
+AVAILABLE` on **36,288/36,288** is zero-variance and therefore not evidence; p50
+staleness **57.8 s at the r=2 s rung**; **627 s** max on a **300 s** window;
+`r=2`/`r=10` share one quote event in **96.1 %** of windows, so the short rungs
+are one measurement reported twice. `EXP-BLEND` ΔBrier not citable as it stands.
+A-CALIB-1 is owed, bound **adopted from measurement (Class C), not chosen** —
+that an honest bound refuses the panel is information about the panel.
+
+**R-86 — strike §5's G-branch; keep `ci: Unavailable` pinned.** At **G=2** it is
+the correct answer, not a limitation. Claim ladder filed as **debt with trigger
+G ≥ 7 day-clusters**, named in `CONTRACTS_BATCH_v24` §3.
+
+**R-82 now confirmed on TWO independent surfaces** (DA's and BE's, different
+methods) — it is not a property of one document.
+
+**DA's self-correction, made before the ruling and against its own filing:**
+23-of-36 receipts → **9 of 14 coin-days, mean 0.645 pp, 2 day-clusters**. The
+original pooled 8 pre-R-7 `leak_canary_v1` files with 14 coin-days × 2
+content-addressed twins, and carried **two `INVALID_UNBOUND_GUARD` verdicts that
+exist only in v1** — on the very coin-days R-7 reclassified. Cause named against
+itself: `MEASUREMENT_PLAN` §4 lists `twap`/`coverage`/`windows` as
+co-resident-generation datasets and **omits `canary`**. Now a MUST-FIX there.
+
+**08-22:** sampler alive (pid 508268, 10.7 h), logged `activating` at 10.73 GB
+against an 11.2 GB prediction; measurement ran 00:20:25, evaluation 00:25:36,
+both success; tier2 still 08-20/08-21. OPS reporting the regime.
+
+**Dispatch mechanism:** OPS and BE both had text queued unsubmitted (OPS's for
+>1 h; two bare-Enter attempts failed). **Replaced the queued line instead of
+retrying the submit** — all four planes went WORKING. R-76 amended in practice:
+after two failed submits, replace, don't retry.
+
+**Still the user's call:** `STOP-MM-VIABLE` — gated on R-84.
+
+## Coordinator tick — 2026-08-24 ~01:10 UTC (R-89..R-93)
+
+**BOTH RECUSED VERDICTS ARE IN. One killed a coordinator ruling; one upheld one.**
+
+**R-89 — `R-7` IS DEAD.** OPS ruled `DIES`. Primary: R-7's Poisson fit came from
+**14 coin-days over 2 clusters**, and DA's corrected population is **the same 14
+coin-days** — R-7's own basis, read correctly instead of double-counted, does not
+support R-7. Secondary: **Var 1.363 vs λ 1.857, ratio 0.734, under-dispersed** —
+a Poisson-calibrated threshold is mis-set permissively. **OPS ruled against its
+own interest and said so**: the amendment is what stops an unbound-guard coin-day
+aborting the whole day, the direct fix for the 26-hour outage.
+**Vacated, not amended — nothing may cite R-7 as authority.** A distributional
+re-grant is unavailable at G=2 (same wall as R-86). The amendment runs
+**PROVISIONAL/UNLICENSED** pending a **mechanism** re-founding, **routed to BE**
+(DA proposed it, OPS killed it, the coordinator granted it). If BE cannot make it
+stand, the amendment goes and the outage risk returns to the coordinator as an
+open item — the correct place, since the licence was granted on a distribution
+that could not carry the weight.
+
+**R-90 — NO plane-order inversion. `R-74` stands, unamended.** DA adjudicated;
+all three facts verified at the files, not on report: `contracts.yaml:1567-1571`
+(`GateId` = {protocol,name,version}), `:1648` (`entries: dict[GateId, Gate]` — a
+map **keyed by** GateId indexes identity, it cannot confer it), `GFF1_PROTOCOL.md:5`
+(`Gate G-FF1` declared in a frozen protocol, BE-owned). BE emitting
+`GateEvidence.gate` is BE reading a frozen protocol. Interface split **refused**.
+Mint rule adopted: **protocols mint, `GateRegistry` indexes, no plane confers gate
+identity at runtime** — additive, no record. *The recusal's value is identical to
+what it would have been had DA gone the other way; R-74 was made on BE's argument
+in one tick and happened to be right.*
+
+**R-91 — the defect BE actually felt IS real.** `contracts.yaml:868-890`:
+`GateEvidence` carries `decision_eligible: bool` produced by **BE-Uncertainty**, a
+worker plane, while `R-ADMISS` reserves the selection decision to the coordinator.
+**Ruled off the worker type** → non-additive → **v24 §1 beside M-1**, and the first
+real use of R-74's `- !remove <element>` syntax. `admissible` stays *only* as the
+evaluation of a coordinator-set rule — and **under R-85 `A-CALIB-1` does not exist,
+so on calib rows `admissible` is currently a worker decision too. R-85 and R-91 are
+one obligation.** Third fact-vs-decision defect this session: **a boolean is the
+easiest place in a schema to hide a decision.**
+
+**R-92 — 08-22 regime: `full-stall 0.0 s · high 0 · max 0 · oom_kill 0` →
+UNTHROTTLED.** Receipt ABSENT (not committed), quotes 0 of 7, still on btc — in
+progress, not failed. **10.73 GB observed against an 11.2 GB prediction filed
+before the run.** First Tier-2 day with the throttling question settled in advance
+rather than reconstructed after.
+
+**R-93 — 4 more FILINGs ACKed** (Q-BE-40/41/42/43). Register: **106 filed / 65
+resolved / 41 open ASKs / 0 FILINGs.**
+
+**Still the user's call:** `STOP-MM-VIABLE` — gated on R-84.
+
+## Coordinator tick — 2026-08-24 ~01:30 UTC (R-94..R-98)
+
+**R-94 — the canary amendment is RE-FOUNDED and STANDS; the licence stays dead.**
+BE argued from mechanism as asked, executed on the shipped rule with no data:
+
+```
+event_only  disagree  delta   PRE-R-7                POST-R-7
+       566         0    0.0   INVALID_UNBOUND_GUARD  BOUND_ZERO_SCORE_DELTA
+       566         5    0.0   BOUND_ZERO_SCORE_DELTA BOUND_ZERO_SCORE_DELTA
+```
+
+Zero disagreements with zero harm was fatal; five with the same zero harm was
+fine — **the strictly safer observation punished more harshly**. Non-monotone in
+the evidence: an *ordering* defect, no distribution, and **unbreakable by G=2**,
+which is what clears R-89(b)'s bar on distributional re-grants. Licence dead,
+amendment alive — they were separable and BE separated them. **`R7_PROVISIONAL`
+stays up** until the stale artifacts clear; the flag is what makes them visible.
+
+**R-95 — the coordinator built half the assignment on a conflation and BE refused
+it.** "Why should one coin-day's unbound guard not condemn six others?" presumed
+a forgiveness R-7 never granted (`event_only == 0 → INVALID`; an unwired guard is
+not evidence). **Real defect: `INVALID_UNBOUND_GUARD` is returned by TWO arms** —
+unwired guard *and* fail-closed counter inconsistency. **Ruled: split the status.**
+Had BE argued as posed, it would have justified a property the amendment lacks and
+the coordinator would have ratified it.
+
+**R-96 — two artifacts run on the vacated licence, and two committed receipts
+assert it.** `r7_drift_check()` polices a dead licence; the constants encode the
+vacated basis. OPS's new `R7_PROVISIONAL` scan found the consequence already on
+disk: **5 receipts rest on the amendment** (08-20/doge, 08-21/sol, 08-22/hype) and
+**2 assert `drift_verdict: WITHIN_LICENCE`** — false statements in immutable
+artifacts, corrected by **annotation beside (R-28), never edited**. 08-22/hype is
+the first coin-day reclassified *after* vacatur — the flag caught its own first
+live instance on the day it was built. **Class named (BE's second hit): a vacated
+basis surviving in the code that implements it. Vacating a rule is not
+self-executing** — every vacatur now carries a sweep for code, constants, receipt
+fields.
+
+**R-97 — RECUSED, routed to DE: R-87 and R-89 contradict each other and both are
+mine.** R-87 ordered `r7_drift_check` extended to police condition 4; R-89 vacated
+the licence condition 4 conditions. DE decides extend / narrow / retire. Weighing
+note given to DE: an ordering property is checkable **statically**, so the honest
+outcome may be a *different instrument* — R-87 ordering the wrong thing rather
+than too much of it.
+
+**08-22:** tier1 measurement **COMMITTED** (08-22/hype reclassified); tier1 full
+and tier2 absent, quotes 1 of 7; regime **UNTHROTTLED**, full-stall 0.0 s.
+
+**Register: 109 filed / 66 resolved / 43 open ASKs / 0 FILINGs.**
+
+**Still the user's call:** `STOP-MM-VIABLE` — gated on R-84 (§8 gross→net).
+
+## Coordinator tick — 2026-08-24 ~01:40 UTC (R-99..R-101)
+
+**R-99 — DE's R-97 verdict adopted: `r7_drift_check` NARROWED to one arm, my
+R-87 extension order VACATED AS MOOT.** DE decided from the code and explicitly
+discounted the framing in the recusal note — which is the only reason the
+confirmation counts. Verified at the file before adopting: `replay_canary.py:55`
+`REFERENCE_DELTA_PP`, `:75` `"lambda": 1.857`, `:85` `R7_DRIFT_LAMBDA_TOLERANCE = 2.0`,
+`:461` `lo = licensed / tolerance`.
+
+| arm | polices | disposition |
+|---|---|---|
+| λ-tolerance vs licensed 1.857 | the fit R-89 killed | **RETIRE** |
+| variance/mean Poisson-likeness | same dead fit | **RETIRE** |
+| "no coin-day ever shows nonzero delta" | the amendment's **construction** | **KEEP** — runtime witness |
+
+**Commissioned instead: a STATIC MONOTONICITY SELFTEST on `classify()`**, run with
+every canary — *an ordering property cannot drift with data, but it can be
+silently reintroduced by a code change.* Better than what the coordinator ordered.
+OPS implements, DA records condition 4's retirement, R-96 annotations stand.
+
+**Three coordinator rulings corrected by the planes this session — R-7's licence
+(OPS), R-87's instrument (DE), R-95's conflated premise (BE). None by the
+coordinator.**
+
+**R-100 — 08-22 Tier-2 COMMITTED; memory scales ~LINEARLY.** Predicted (filed
+before the run) 143 s CPU / 11.2 GB `FITS`; measured **139.0 s / 11.87 GB**, cap
+untouched. Regime **UNTHROTTLED** — full-stall **0.3 s across 51 min**, high/max/
+oom_kill 0; R-26 met, numbers usable as-is.
+
+```
+TIER-1 build   00:39:36 -> 01:27:58   CPU 2,895.4 s   peak  8.16 GB
+TIER-2 proper  01:28:03 -> 01:30:19   CPU   139.0 s   peak 11.87 GB
+```
+
+**MEMORY 08-22→08-20 = 1.05** on two uncensored points — essentially linear. The
+**≥1.52 previously reported was 08-21's peak pinning at the cap**: a censored
+measurement read as a scaling law. Without the phase split the headline would have
+been 3,882 s vs 08-20's 171.5 s and **manufactured an exponent of ~8**. OPS filed
+a caveat against its own numbers unprompted: 08-22's Tier-2 ran warm in page cache
+(same invocation as its Tier-1 build) while 08-20/08-21 were cold.
+
+**`R7_PROVISIONAL` retargeted for R-94 the same hour its subject changed** —
+carrying the amendment is no longer a finding; only `WITHIN_LICENCE` assertions
+are (count 2 → 3 with 08-22).
+
+**v24 §1 now carries M-1 and M-2** — M-2 (`- !remove decision_eligible`) verified
+at `CONTRACTS_BATCH_v24.md:35` and `:57`, the first real use of the marker.
+
+**Register: 112 filed / 67 resolved / 45 open ASKs (DA 28, BE 19) / 0 FILINGs.**
+
+**Tier-2 days on disk: 08-20, 08-21, 08-22.**
+
+**Still the user's call:** `STOP-MM-VIABLE` — gated on R-84 (§8 gross→net).
+
+## DA — 2026-08-24 (R-94 tick)
+
+**DONE.** All four queued items landed at **Revision 11** *before* this tick; the
+banner said "iterations 1-5" and iterations 6-7 were unlogged, which is why the
+coordinator opened two consecutive ticks on superseded state. **Now Revision 12,
+banner derived from the logged iteration count.**
+
+- **A-CALIB-1 WRITTEN** — `live/pm_research/config/a_calib_1.json`,
+  `DRAFT_PENDING_FREEZE`. Bound **adopted, not chosen**: `max_quote_age = r`.
+  **No free parameter.** Yield 22,318/36,288 = **61.5%**. Filed `Q-DA-47` for
+  ratification — I cannot freeze my own config.
+- **§4 canary omission fixed**; **§5 G-branch struck**, ladder debt at G ≥ 7;
+  **§8 gross→net** landed Revision 10, all four copies.
+- **R-94 recorded**: amendment survives on **ordering**, not distribution.
+- **VACATUR SWEEP**: `classify()` docstring + status-site comment re-founded;
+  `R7_LICENSE` marked `VACATED_R89_NOT_LIVE_PENDING_DE_ON_R87` and **left
+  standing** (deleting it retires the drift check = decides DE's question).
+  Executable AST identical but for the added constant; 27-cell truth table
+  unchanged; selftests pass.
+- **§1.2's "23 of 36" struck** → **13 of 21**, version-pinned, twin-deduped,
+  population and as-of inline. Gate reads SATISFIED either way.
+
+**BLOCKED.** `r7_drift_check` **HELD for DE** (`Q-DA-46`). R-87's bite-vs-reference
+detector therefore **still does not exist** — §8 step 4's gate is satisfied by a
+human comparison, not one the code makes.
+
+**WATCH OUT FOR.** (1) A corrected statistic left standing at its own site — cost
+three iterations here, in prose, the same class R-94 named for code. (2) **A
+correction can age**: "9 of 14" was right when written and stale when a day
+landed. Any count over a growing corpus needs population + as-of inline. (3) DA
+register ids start at **3**; `Q-DA-1/2` never existed (no rows, no git history) —
+not a loss.
+
+**NEXT.** Iteration 8 proper vs frozen Revision 12, pinned at dispatch.
+Decision-readiness runs in the first two iterations per R-77/R-82.
+
+## SCOPE NARROWED — 2026-08-24 ~02:00 UTC (R-102, user-authorised)
+
+**Read this before anything below it. The programme is on a four-item decision
+path; everything else is debt.**
+
+| # | item | owner | state |
+|---|---|---|---|
+| 1 | **B3 `EV-Replay` HARNESS** | DE | plan drafted (259 lines); **harness NOT built** — the only structural piece left |
+| 2 | **Policy comparison** — new-BBO vs join-BBO, fill **and fill-conditional markout** | DE | not started; **not data-gated** (§7) |
+| 3 | **§8 gross→net** (R-84) | DA | in flight — the only thing gating the STOP dossier |
+| 4 | **`STOP-MM-VIABLE` to the user** | coordinator | blocked on (3) |
+
+**Register rule, in force:** a row is an **`ASK`** only if it **blocks one of the
+four**, and it must name which. Everything else is **`DEBT` with a named trigger,
+closing on filing** — no ruling, no queue. R-86's claim ladder at `G ≥ 7` is the
+template. Each plane triages its own rows once (DA 28, BE 19); more than three
+genuine blockers from any plane is itself a finding.
+
+**Why:** open ASKs went **37 → 41 → 43 → 45 → 48** in 2.5 hours; the coordinator
+closes 5–6 a tick against ~10 filed. **101 rulings and 118 rows** now support a
+programme whose central empirical finding is one markout table on **one UTC day**.
+This is a coordinator design defect, not plane behaviour — treating every filed row
+as needing adjudication rewards filing, and R-82 amplified it in the right
+direction (planes were told to *find* unsurfaced obligations; they did, and every
+finding landed in a queue with no exit).
+
+**UNCHANGED — narrowing the queue is not relaxing the standard:** recusal (3
+coordinator rulings overturned this session — R-7/OPS, R-87/DE, R-95/BE);
+verification at the artifact the **claim names** (R-36, R-80); false-positive
+analysis per check (R-79); frozen lens sets and pins; decision-readiness early
+(R-77, R-82); instruments ship with falsifiers (R-59).
+
+**Timeline honestly:** the policy comparison is answerable in **days** and is not
+data-gated. The maker-edge sign needs **25–30× current tape — over a month** that
+no amount of work shortens. Landing the harness buys the one answer available.
+
+## DA — 2026-08-24 (R-102 triage)
+
+**QUEUE DRAINED: 27 open → 2 BLOCKING ASKs, 0 untriaged.** Conformance holds,
+no orphans. Everything else is DEBT with a named trigger, closed on filing.
+
+**§8 IS NOT OUTSTANDING.** It landed at Revision 10 and is verified at
+`MEASUREMENT_PLAN.md:776`. `Q-DA-42` had no closing status, so the register —
+which is what the coordinator reads — never said so. **Now stamped DISCHARGED,
+and NO STOP INPUT MOVED**: net is a lower bound and the 10-of-754 hedged-leg
+exception is unfavourable, so it cannot flatter the gate.
+
+**THE TWO BLOCKERS, both gating STOP going to the user:**
+- **`Q-DA-14`** — STOP's metric says *"after fee ... under a STATED cancellation
+  policy"*; neither is pinned. Absorbs `Q-DA-24` (same `h`+fee+cancellation
+  triple). Seat conflict (BE-6: user / SP §4: coordinator) must resolve first.
+- **`Q-DA-43`** — STOP's metric is measured *against book mid*, so `A-BOOK-1`
+  is upstream of the user's number and was never frozen. Two bound links filed
+  as debt, needing no separate ruling: `Q-DA-36` (v23 ratified with **no
+  spec-resolver**, so `spec_hash` has no producer) and `Q-DA-38` (declared
+  fields never reach the evaluator). Freezing without them is cosmetic.
+
+**WATCH OUT FOR.** A row's status lives in-body by convention and nothing
+enforces it — five DA rows carried empty status cells and
+`da_escalation_conformance.py` passed them. **That is fail-open #14 in my own
+instrument**, and it is how a discharged obligation reads as open for two ticks.
+
+**NEXT.** Iteration 8 vs frozen Revision 12, pinned at dispatch.
+
+## DA — 2026-08-24 (R-105) — **Q-DA-42 REINSTATED AS BLOCKING; I WAS WRONG**
+
+**I stamped Q-DA-42 DISCHARGED yesterday and it was not.** The gross→net *edit*
+landed at Revision 10; the row was never about the edit. `MEASUREMENT_PLAN.md:955`
+says it plainly: carrying §8 to net makes **fee treatment** load-bearing on
+STOP's metric, fee treatment is one of Q-DA-14's three unpinned inputs, R-35
+reserved it to **the user**, and *"the STOP dossier does not go to the user until
+that is settled either way."*
+
+**How the error was shaped:** I discharged it on the grounds that net is a lower
+bound and the 10-of-754 hedged-leg exception is unfavourable, so the number
+cannot flatter the gate. True — and an answer to a different question. Whether a
+number is conservative is not whether an input moved. **A check whose text reads
+correctly while what it evaluates is different — the recurring class, mine this
+time, and permissive in direction.** The coordinator held the correct position
+for four consecutive ticks while I corrected them three times.
+
+**BLOCKING now 3: `Q-DA-14`, `Q-DA-42`, `Q-DA-43`** — all gate STOP → user, and
+Q-DA-42 merges into Q-DA-14 (it is why fee treatment is *live* not latent).
+
+**LEG-NAMING CARRIED THROUGH.** `FLOW_MODEL_STATE.md:60` paired a half-spread and
+a fee as ONE side while winning over every other document by its own precedence
+rule — so the hazard outranked the caution. Row retitled **TAKER LEG ONLY**, with
+**DO NOT SUBTRACT THIS FROM A MAKER NET** and a note beneath the table: a maker
+net that subtracts 2.25 ¢ understates maker economics by the whole crossing cost,
+the largest term in the model. `edge_vs_cost` is prose, not code, so nothing has
+been computed wrong yet.
+
+**R-105 ADOPTED:** every cited population carries `n` and as-of; applied at the
+annotation (n=600 transactions, as-of 2026-08-23).
+
+## Coordinator tick — 2026-08-24 ~02:10 UTC (R-104..R-108)
+
+**DECISION-PATH ITEM 1 IS DONE.** `ev_replay.py` — 25,949 bytes, **selftest OK,
+23 checks** — built within ~15 min of dispatch. **DE now holds the critical path
+alone: item 2, the policy comparison.**
+
+**R-102's effect, measured:** open ASKs **48 → 28**, resolved **70 → 93**. BE
+triaged 28 rows to **1 blocker / 27 debt**; DE holds **zero** open ASKs. The queue
+that grew every tick for three hours turned over in one — the growth was never the
+filing rate, it was the absence of an exit.
+
+**Also verified at the files:** OPS's R-99 commission —
+`_classify_monotonicity_selftest()` at `replay_canary.py:694` (3 named checks) and
+`R7_DRIFT_LAMBDA_TOLERANCE` now **0 occurrences**, presence-of-new *and*
+absence-of-old each checked on its own terms. BE's `check_decision_as_fact.py`,
+11,815 bytes, 20 checks, with the `admissible`-without-A-CALIB-1 falsifier.
+
+**R-107 — Q-BE-4 UPHELD; the `STOP` dossier ships the HORIZON PROFILE, not a
+verdict.** `edge_layer1_v1.json` carries `verdict: HORIZON_DEPENDENT`,
+`horizons_s: [5, 15, 30, 60]` as its own top-level field — `FIRE_SIDE` at h=5,
+`INSUFFICIENT` at 15/30/60, and nothing pinned the horizon. **The coordinator will
+not pin it: whoever selects the rung selects the verdict**, which is a decision
+disguised as configuration — the 4th fact-vs-decision defect this session and the
+first inside the coordinator's own gate. The dependence ships as a **finding**,
+because §1e shows `h=60` **discards 1,611 btc fills, all inside the terminal
+minute** (p50 r 166 s → 190 s) and **cannot see the final minute by construction**.
+"The effect fades" and "we stopped looking where the effect lives" are different
+conclusions. **Item 4 unblocked on this ruling.**
+
+**R-105 — two coordinator rulings cite stale figures; DA caught it.** 9-of-14
+coin-days → **13 of 21** (canary now spans 3 days, 44 files vs 36); R-86's "two
+day-clusters" → three. **No conclusion moves** (G≥7 trigger unaffected; a vacated
+licence isn't revived by later data; R-94's foundation is population-independent).
+New class: *correct when recorded, stale when new data landed* — neither R-79 nor
+R-80. **Remedy adopted programme-wide: every cited population carries its `n` and
+its `as-of`.**
+
+**R-108 — BE pushed back on the coordinator's "101 rulings / one markout table"
+framing and is partly right.** Conceded: a material share of those rulings is why
+the table is trustworthy. What survives: the ratio was bad and the queue had no
+exit — R-104 settled that. Adopted from BE's own admissions: **docstring content
+does not become a register row.**
+
+**Decision path:** ① harness **DONE** · ② policy comparison **IN FLIGHT (DE)**,
+BE pre-reviewing the design before it runs · ③ §8 gross→net **IN FLIGHT (DA)** ·
+④ `STOP` to user — **unblocked by R-107, waiting on ③**.
+
+## ★ THE POLICY COMPARISON IS RUN — 2026-08-24 ~02:40 UTC (R-109)
+
+**Decision-path item 2 is answered. `policy_comparison_v2.json`, protocol
+`POLICY_COMPARISON_PROTOCOL.md` FROZEN 2026-08-22 *before* the run, 5 days
+(08-20…08-24), 30 windows/coin/day, btc+eth, h=5 s, headline = paired FRONT−JOIN.**
+
+### The answer: neither policy pays.
+
+`m5_swm_cents` is **NEGATIVE on all ten coin-days, both arms**:
+
+| coin | arm | per-day ¢/share |
+|---|---|---|
+| btc | JOIN | −0.526, −0.991, −1.048, −1.512, −1.514 |
+| btc | FRONT | −0.516, −0.650, −1.055, −1.128, −0.990 |
+| eth | JOIN | −0.966, −1.412, −1.913, −2.862, −1.338 |
+| eth | FRONT | −0.878, −0.716, −0.912, −2.120, −0.932 |
+
+**The policy lever narrows the loss and does not cross zero.**
+
+### The difference: real on eth, absent on btc
+
+Receipt note: *"window-clustered bootstrap; day-clustered refused below the
+cluster floor (house rule)."* Recomputed from the receipt's own per-day cells,
+t(4) on G=5 day-means:
+
+| coin | per-day Δ (¢) | published (window-clustered) | **day-clustered** | days neg |
+|---|---|---|---|---|
+| btc | −0.060, +0.222, −0.041, +0.201, +0.406 | [+0.026, +0.251] excl. 0 | **[−0.098, +0.389] SPANS 0** | **2 of 5** |
+| eth | +0.092, +0.583, +0.956, +0.398, +0.401 | [+0.282, +0.718] | **[+0.094, +0.879] excl. 0** | 0 of 5 |
+
+**btc's advantage does not survive the correct cluster unit — its sign flips and
+the pooled interval excluded zero only by averaging over that flip.** eth's
+survives, barely (lower bound +0.094 at G=5).
+
+**Standard ruled:** when the correct cluster unit is unavailable, **report the
+point estimate with NO interval**. An interval on the wrong unit is a precision
+claim the design cannot support. **G=5 is not G=2** — R-86's floor was written at
+two clusters; the per-day means were already in the receipt.
+
+### §7's prediction is REFUTED
+
+§7 expected a trade-off — new-BBO wins fills, *plausibly loses markout* (quotes
+when information is freshest). Measured: FRONT wins fills **5–6×** (btc 7,500 vs
+1,400 shares/window) **and does not lose markout on either coin**. A pre-registered
+prior was tested and found wrong.
+
+### Caveats attached, not buried
+
+**2026-08-24 is a PARTIAL day** — 21 windows vs 30, first hours UTC only — and it
+is btc's most positive day. A partial day is a different population, not a smaller
+one. **BE's pre-review was commissioned but the run executed at 02:07**; the review
+still runs, since the receipt is re-analysable.
+
+**Routed:** DE to confirm/dispute the arithmetic; BE adversarially, specifically on
+whether **share-weighting** in `m5_swm` does work a per-fill statistic would not —
+FRONT wins fills 5–6×, so a fill-weighted statistic flatters it by construction.
+
+**Decision path:** ① harness DONE · ② **policy comparison ANSWERED** · ③ §8
+gross→net IN FLIGHT (DA) — the last input · ④ `STOP` dossier to the user, shipping
+the horizon profile per R-107.
+
+## DA — 2026-08-24 (R-109) — §8 NET RESTATED. **THE CONCERN INVERTS.**
+
+**Filed as `Q-DA-48`, its own row, not folded into a revision.**
+
+**A net restatement cannot make these numbers look better: on the maker leg a
+fee can only SUBTRACT.** All 20 arm-coin-day values are negative gross
+(`policy_comparison_v2.json`, n=141 paired windows per coin, as-of 2026-08-24);
+net is *more* negative.
+
+- fee term at stated incidence 10/754 → **0.0232 c/share**
+- fee term at the absolute bound (every leg at max `0.07·p(1−p)`) → **1.75 c/share**
+- **across that whole range all 20 values stay negative** → **the STOP verdict is
+  INVARIANT to the user's unpinned fee parameter**
+- only sign-flipping term = **unmeasured maker rebate**: **>52 bps** flips the
+  least-negative coin-day, **>286 bps** flips all twenty
+
+**`Q-DA-42` STAYS BLOCKING.** The verdict is invariant; the NUMBERS are not, and
+R-107 ships a horizon profile of numbers. Materiality at the claimed precision is
+the user's call — I made the mistake of releasing this myself yesterday and am
+not repeating it. The invariance **narrows the blocking question to one item: is
+there a maker rebate above 52 bps?**
+
+**PROVENANCE DEFECT (does not change the answer).** `744 of 754 maker legs zero`
+cites *"n=600 transactions"* = the G-FF1 study, whose receipt carries per-leg
+**side attribution only** and **no fee amounts**; scanning every artifact in
+`data/pm_5min/derived/` returns **zero maker-fee fields**. The G-FF1 sample is
+also **stratified** (9 per cell against strata of 595–99,172), so 1.3 % is a
+within-sample rate, not a population rate. **The conclusion rests on the fee
+term's SIGN, which is arithmetic — not on its magnitude.**
+
+**R-105 APPLIED:** 08-24 is PARTIAL at 21/30 windows → 141 paired windows per
+coin, not 150. "5 days" is not five equal days.

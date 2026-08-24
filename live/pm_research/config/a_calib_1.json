@@ -1,0 +1,45 @@
+{
+  "rule_id": "A-CALIB-1",
+  "version": "a_calib_1_v1",
+  "status": "DRAFT_PENDING_FREEZE",
+  "authored_by": "DA",
+  "ruled_under": "R-85 (admissibility), R-91 (admissible must evaluate a coordinator-set rule)",
+  "field": "p_book(r) = UP-space mid at knowledge time T-r, read from the price_change spine",
+  "requirements": {
+    "source": "price_change spine only; book snapshots are subscription-triggered and not time-uniform",
+    "max_quote_age_expr": "r",
+    "comment": "THE BOUND IS THE RUNG'S OWN VALUE. Adopted from measurement, not chosen: a read labelled 'r seconds before T' may not be older than r, or the label names a window position the quote predates. No free parameter, so nothing here can be tuned after a result is visible."
+  },
+  "on_fail": "DEMOTE_R_TO_NOMINAL",
+  "on_fail_comment": "R-85: committed days keep demoted labels rather than retro-refusal. The row survives as a stale-quote observation; only the r-indexed freshness reading is refused.",
+  "required_gap_arm": "BOTH",
+  "measured_yield_at_authoring": {
+    "corpus": "committed calib_panel, 36,288 rows, 14 coin-days, generation pinned",
+    "admitted": 22318,
+    "demoted": 13970,
+    "rate": 0.615,
+    "per_rung_admit_rate": {
+      "2": 0.01,
+      "5": 0.036,
+      "10": 0.098,
+      "30": 0.512,
+      "60": 0.886,
+      "120": 0.998,
+      "180": 0.998,
+      "240": 0.998,
+      "270": 0.999
+    },
+    "measured_staleness_p90_s": {
+      "2": 119.3,
+      "5": 116.3,
+      "10": 112.0,
+      "30": 92.9,
+      "60": 66.5,
+      "120": 16.0,
+      "180": 1.3,
+      "240": 1.0,
+      "270": 1.1
+    }
+  },
+  "what_the_measurement_says": "Staleness is monotone in r and collapses at r>=120: the book goes quiet in the final minute, so every short rung reads the same pre-quiet quote. This is a property of the venue's quote process, not of the rule. That an honest bound refuses most of the r<=60 panel is information about the panel."
+}

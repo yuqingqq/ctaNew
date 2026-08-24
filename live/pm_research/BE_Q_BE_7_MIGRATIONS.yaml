@@ -1,0 +1,172 @@
+# Q-BE-7 migration records — v22 -> v23. BLESSED BY BE 2026-08-23.
+#
+# PROVENANCE. BE filed 19 records that `authorises()` matched 0/19: BE invented
+# `type:X.f` / `prelude.external:N` where the checker's canonical flatten()
+# emission is `field:X.f` / `prelude:external:N`. DE ran conditions 3/5, caught
+# it, and canonicalized. THE SPELLING FIX IS DE'S AND IT IS CORRECT -- BE had
+# verified that its records parsed, had unique keys, carried all seven fields and
+# were not path-keyed, and never once ran them through the checker that is their
+# entire purpose.
+#
+# BE DECLINES DE'S 20th RECORD, and this file is the 19 without it.
+# It authorised `module:BE-Uncertainty.produces:
+#   ['dict[InstrumentId, Known[Uncertain[PathLaw]] | Unavailable]'] -> ['GateEvidence']`
+# -- deleting the uncertainty module's whole path-law output. Section 9 declares
+# PATCH semantics and its own comment says GateEvidence was "already true in v22
+# ... v22 simply never declared it". The correct result is a UNION, which is
+# additive and needs no record. A migration record AUTHORISES a change; it does
+# not VALIDATE one, and filing this one would have turned the checker green BY
+# MAKING THE DELETION LEGAL. Section 9's notation is amended so no assembler has
+# to infer this again: list-valued module attributes UNION, and a removal must be
+# written `- !remove <element>`. Section 9 uses !remove nowhere.
+#
+# NON-ADDITIVE COUNT: 19. Reconciles with DE's 21 as: DE counted the 2 prelude
+# promotions among removals (14 = 12 + 2, agreed), the disputed 20th (declined),
+# and M-1 (DE's row, not BE's).
+migrations:
+- from_version: 22
+  to_version: 23
+  operation: remove
+  key: field:Gate.artifact_hash
+  old: Hash
+  new: (removed)
+  reason: 'R-40(e)/R-36: hashes and freeze time are provenance, not gate identity. They move into `bar_provenance: Provenance` and `bar_input_snapshot`, so a vacated provenance is a typed state with a register
+    obligation instead of a stale hash sitting in the gate record'
+- from_version: 22
+  to_version: 23
+  operation: remove
+  key: field:Gate.data_prereq
+  old: str
+  new: (removed)
+  reason: 'R-18: `owner`/`data_prereq` as free strings duplicated the plane ownership the module graph already encodes, and drifted from it. Ownership is read from `GateRegistry`; the prerequisite is `preconditions:
+    list[Precondition]`, which carries a STATE rather than a sentence'
+- from_version: 22
+  to_version: 23
+  operation: remove
+  key: field:Gate.frozen_at
+  old: Timestamp
+  new: (removed)
+  reason: 'R-40(e)/R-36: hashes and freeze time are provenance, not gate identity. They move into `bar_provenance: Provenance` and `bar_input_snapshot`, so a vacated provenance is a typed state with a register
+    obligation instead of a stale hash sitting in the gate record'
+- from_version: 22
+  to_version: 23
+  operation: remove
+  key: field:Gate.inference_method
+  old: str
+  new: (removed)
+  reason: 'R-36: `inference_method` declared the method; `GateEvidence.inference_actual` RECORDS the method that ran. A declaration cannot disagree with itself, which is why the declared-vs-actual mismatch
+    was undetectable'
+- from_version: 22
+  to_version: 23
+  operation: remove
+  key: field:Gate.metric
+  old: str
+  new: (removed)
+  reason: 'R-42/G-FF3: a gate may not describe its own bar in free text. `question`/`metric`/`threshold`/`unit` are replaced by the typed `bar: GateBar` plus `null_hypothesis` and `favourable_arm`, so polarity
+    is DETECTED from the bar rather than DECLARED beside it -- the sign-blindness `Scalar(0.0, cents_per_share)` exhibited is unrepresentable once the bar carries its own side'
+- from_version: 22
+  to_version: 23
+  operation: remove
+  key: field:Gate.on_pass
+  old: str
+  new: (removed)
+  reason: 'R-24: the verdict is THREE-valued (FIRE_SIDE | PASS_SIDE | INSUFFICIENT). An `on_pass`/`on_fail` pair is two-valued routing and cannot express INSUFFICIENT, so it silently routed an underpowered
+    gate as a pass. Replaced by `on_verdict: FailRoute` over `verdict_map`'
+- from_version: 22
+  to_version: 23
+  operation: remove
+  key: field:Gate.owner
+  old: str
+  new: (removed)
+  reason: 'R-18: `owner`/`data_prereq` as free strings duplicated the plane ownership the module graph already encodes, and drifted from it. Ownership is read from `GateRegistry`; the prerequisite is `preconditions:
+    list[Precondition]`, which carries a STATE rather than a sentence'
+- from_version: 22
+  to_version: 23
+  operation: remove
+  key: field:Gate.question
+  old: str
+  new: (removed)
+  reason: 'R-42/G-FF3: a gate may not describe its own bar in free text. `question`/`metric`/`threshold`/`unit` are replaced by the typed `bar: GateBar` plus `null_hypothesis` and `favourable_arm`, so polarity
+    is DETECTED from the bar rather than DECLARED beside it -- the sign-blindness `Scalar(0.0, cents_per_share)` exhibited is unrepresentable once the bar carries its own side'
+- from_version: 22
+  to_version: 23
+  operation: remove
+  key: field:Gate.spec_hash
+  old: Hash
+  new: (removed)
+  reason: 'R-40(e)/R-36: hashes and freeze time are provenance, not gate identity. They move into `bar_provenance: Provenance` and `bar_input_snapshot`, so a vacated provenance is a typed state with a register
+    obligation instead of a stale hash sitting in the gate record'
+- from_version: 22
+  to_version: 23
+  operation: remove
+  key: field:Gate.strata_hash
+  old: Hash
+  new: (removed)
+  reason: 'R-40(e)/R-36: hashes and freeze time are provenance, not gate identity. They move into `bar_provenance: Provenance` and `bar_input_snapshot`, so a vacated provenance is a typed state with a register
+    obligation instead of a stale hash sitting in the gate record'
+- from_version: 22
+  to_version: 23
+  operation: remove
+  key: field:Gate.threshold
+  old: float
+  new: (removed)
+  reason: 'R-42/G-FF3: a gate may not describe its own bar in free text. `question`/`metric`/`threshold`/`unit` are replaced by the typed `bar: GateBar` plus `null_hypothesis` and `favourable_arm`, so polarity
+    is DETECTED from the bar rather than DECLARED beside it -- the sign-blindness `Scalar(0.0, cents_per_share)` exhibited is unrepresentable once the bar carries its own side'
+- from_version: 22
+  to_version: 23
+  operation: remove
+  key: field:Gate.unit
+  old: str
+  new: (removed)
+  reason: 'R-42/G-FF3: a gate may not describe its own bar in free text. `question`/`metric`/`threshold`/`unit` are replaced by the typed `bar: GateBar` plus `null_hypothesis` and `favourable_arm`, so polarity
+    is DETECTED from the bar rather than DECLARED beside it -- the sign-blindness `Scalar(0.0, cents_per_share)` exhibited is unrepresentable once the bar carries its own side'
+- from_version: 22
+  to_version: 23
+  operation: change
+  key: field:Gate.id
+  old: str
+  new: GateId
+  reason: 'R-SSOT: `GateId` becomes a locally declared type so the registry is the single source of gate identity; a bare `str` admitted ids no registry ever issued'
+- from_version: 22
+  to_version: 23
+  operation: change
+  key: field:Gate.on_fail
+  old: str
+  new: FailRoute
+  reason: 'R-24: the verdict is THREE-valued (FIRE_SIDE | PASS_SIDE | INSUFFICIENT). An `on_pass`/`on_fail` pair is two-valued routing and cannot express INSUFFICIENT, so it silently routed an underpowered
+    gate as a pass. Replaced by `on_verdict: FailRoute` over `verdict_map`'
+- from_version: 22
+  to_version: 23
+  operation: change
+  key: field:Gate.preconditions
+  old: list[GateId]
+  new: list[Precondition]
+  reason: 'EV_GATES_PLAN R0-1: `list[GateId]` named an edge but carried no STATE, so the DAG could not distinguish an unmet precondition from an unevaluated one. `Precondition` carries `PreconditionState`'
+- from_version: 22
+  to_version: 23
+  operation: change
+  key: field:GateEvidence.ci_hi_abs
+  old: float
+  new: float | Unavailable
+  reason: 'R-REFUSE: a float cannot express a refusal, so an interval that was never computed was indistinguishable from one measured at 0.0'
+- from_version: 22
+  to_version: 23
+  operation: change
+  key: field:GateEvidence.verdict
+  old: enum:PASS|INSUFFICIENT_EVIDENCE|MODEL_REFUTED
+  new: VerdictState?
+  reason: 'R-24: the two-valued enum predates the three-valued verdict; `VerdictState?` admits INSUFFICIENT and the null carries not-yet-evaluated'
+- from_version: 22
+  to_version: 23
+  operation: remove
+  key: prelude:external:GateId
+  old: external
+  new: locally declared type
+  reason: 'R-SSOT: promoted from external to locally declared -- the registry issues gate ids, so the type must be OURS to constrain'
+- from_version: 22
+  to_version: 23
+  operation: remove
+  key: prelude:external:Provenance
+  old: external
+  new: locally declared type
+  reason: 'R-40(e): promoted from external to locally declared so `vacated_provenance` and the register obligation are expressible in-contract'

@@ -33,6 +33,7 @@ from live.pm_research.coverage_ledger import (
     load_source_registry,
 )
 from live.pm_research.daily_pipeline import (
+    PIPELINE_VERSION,
     DailyPlan,
     ReadinessCheck,
     execute_plan,
@@ -40,7 +41,12 @@ from live.pm_research.daily_pipeline import (
     validate_existing_partition,
     write_run_record,
 )
-from live.pm_research.replay_canary import LeakCanary, write_report
+from live.pm_research.replay_canary import (
+    CANARY_VERSION,
+    LeakCanary,
+    r7_drift_check,
+    write_report,
+)
 from live.pm_research.tier1_pipeline import (
     COIN_SYMBOL,
     DEFAULT_OUTPUT_ROOT,
@@ -169,9 +175,61 @@ def batch_plan_dict(plan: BatchPlan) -> dict[str, Any]:
     }
 
 
+def _process_start_ticks(pid: int) -> str | None:
+    """Process start time, so a RECYCLED pid cannot impersonate the holder."""
+    try:
+        fields = Path(f"/proc/{pid}/stat").read_text().rsplit(") ", 1)[1].split()
+        return fields[19]                      # field 22 overall: starttime
+    except (OSError, IndexError):
+        return None
+
+
+def _holder_liveness(lock_path: Path) -> dict[str, Any]:
+    """Describe whoever the lock TEXT names, and whether they are still alive.
+
+    The text is diagnostic only.  `flock` is held by a file DESCRIPTOR and the
+    kernel releases it when the holder dies, so the text can name a dead process
+    while the lock is genuinely free -- which is exactly how a stale pid string
+    got read as a permanently-orphaned lock on 2026-08-23.  This function exists
+    so the error message can never be misread that way again.
+    """
+    try:
+        recorded = dict(
+            line.split("=", 1)
+            for line in lock_path.read_text().split()
+            if "=" in line
+        )
+    except OSError:
+        return {"recorded": None}
+    pid_text = recorded.get("pid")
+    if pid_text is None or not pid_text.isdigit():
+        return {"recorded": recorded, "holder_alive": None}
+    pid = int(pid_text)
+    current = _process_start_ticks(pid)
+    alive = current is not None and (
+        recorded.get("start") is None or recorded.get("start") == current
+    )
+    return {
+        "recorded": recorded,
+        "holder_alive": alive,
+        "recycled_pid": current is not None
+        and recorded.get("start") is not None
+        and recorded.get("start") != current,
+    }
+
+
 @contextmanager
 def batch_lock(output_root: Path) -> Iterator[Path]:
-    """Hold the single shared-writer lock; contention fails immediately."""
+    """Hold the single shared-writer lock; contention fails immediately.
+
+    Mutual exclusion is the KERNEL's `flock`, never the file text, and there is
+    deliberately no reclaim path: overriding a live `flock` on the strength of a
+    pid parsed from a file would admit two writers, which is the failure this
+    programme's own precedent (163/176 symbol histories lost to overwrite
+    semantics) exists to prevent.  The text carries pid AND process start time
+    purely so contention can be DIAGNOSED -- a lock whose named holder is gone
+    is reported as such rather than leaving a reader to infer an orphan.
+    """
     lock_dir = output_root / ".locks"
     lock_dir.mkdir(parents=True, exist_ok=True)
     lock_path = lock_dir / "measurement_batch.lock"
@@ -179,12 +237,20 @@ def batch_lock(output_root: Path) -> Iterator[Path]:
         try:
             fcntl.flock(handle.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
         except BlockingIOError as exc:
+            liveness = _holder_liveness(lock_path)
             raise RuntimeError(
-                f"another measurement batch holds {lock_path}"
+                f"another measurement batch holds {lock_path}; "
+                f"holder={liveness.get('recorded')} "
+                f"holder_alive={liveness.get('holder_alive')} "
+                f"recycled_pid={liveness.get('recycled_pid')} "
+                f"(flock is kernel-held and released on holder death, so a "
+                f"live flock means a LIVE writer regardless of this text)"
             ) from exc
         handle.seek(0)
         handle.truncate()
-        handle.write(f"pid={os.getpid()}\n")
+        handle.write(
+            f"pid={os.getpid()} start={_process_start_ticks(os.getpid())}\n"
+        )
         handle.flush()
         try:
             yield lock_path
@@ -217,7 +283,13 @@ def _atomic_json(path: Path, payload: Mapping[str, Any]) -> None:
 def _write_immutable_json(
     path: Path, payload: Mapping[str, Any], *, hash_field: str
 ) -> dict[str, Any]:
-    document = dict(payload)
+    # The artifact IS the canonical JSON projection, not the in-memory payload:
+    # json.dumps maps tuple -> array, so a payload carrying a tuple hashes to the
+    # artifact it will become but does not COMPARE equal to it after a round
+    # trip, and the re-verify below then rejects a byte-identical file forever.
+    # Project once, here, so the hash, the comparison and the bytes on disk are
+    # all the same object.  See DA_PIPELINE_OUTAGE_DIAGNOSIS_2026-08-23.md.
+    document = json.loads(canonical_json(dict(payload)))
     declared = str(document.get(hash_field, ""))
     unhashed = dict(document)
     unhashed.pop(hash_field, None)
@@ -244,24 +316,75 @@ def _load_hashed_json(path: Path, *, hash_field: str) -> dict[str, Any]:
 
 
 def _run_path(root: Path, day: date, coin: str, lane: str) -> Path:
-    return (
+    """Resolve the run record for the CURRENT pipeline generation.
+
+    R-10: the address is now `pipeline=<version>/run=<hash>.json`, so the reader
+    cannot construct it -- it globs the generation and expects exactly one
+    content hash inside it.  Two hashes under one generation would mean the same
+    code produced different content for the same key, which is a real
+    contradiction and is raised rather than resolved by picking one.  Records
+    from superseded generations are intentionally NOT matched: they belong to a
+    different rule set.
+    """
+    directory = (
         root
         / "runs"
         / f"day={day.isoformat()}"
         / f"coin={coin}"
         / f"lane={lane}"
-        / "run.json"
+        / f"pipeline={PIPELINE_VERSION}"
     )
+    matches = sorted(directory.glob("run=*.json"))
+    if len(matches) > 1:
+        raise RuntimeError(
+            f"ambiguous run records under one pipeline generation at {directory}: "
+            f"{[m.name for m in matches]}"
+        )
+    if matches:
+        return matches[0]
+    # Absent: return the address it WOULD occupy so the caller's loader raises
+    # the same missing-file error it always did.
+    return directory / "run=<absent>.json"
 
 
-def _canary_path(root: Path, day: date, coin: str) -> Path:
-    return (
+def _canary_path(
+    root: Path, day: date, coin: str, expected_inputs: Sequence[str] | None = None
+) -> Path:
+    """Resolve the canary report matching the CURRENT inputs.
+
+    Mirrors replay_canary._report_dir.  Reports are addressed by `source_digest`
+    (canary code + input manifests), so several may coexist for one coin-day —
+    one per input generation — and that is correct rather than ambiguous: a
+    rebuilt partition set legitimately yields a different canary. The right one
+    is the report whose `input_manifests` match what this build produced, which
+    is data the caller already has.
+    """
+    directory = (
         root
         / "canary"
         / f"day={day.isoformat()}"
         / f"coin={coin}"
-        / "report.json"
+        / f"canary={CANARY_VERSION}"
     )
+    matches = sorted(directory.glob("report=*.json"))
+    if expected_inputs is not None:
+        selected = []
+        for candidate in matches:
+            try:
+                document = json.loads(candidate.read_text())
+            except (OSError, json.JSONDecodeError):
+                continue
+            if list(document.get("input_manifests", [])) == list(expected_inputs):
+                selected.append(candidate)
+        matches = selected
+    if len(matches) > 1:
+        raise RuntimeError(
+            f"ambiguous canary reports for the same inputs at {directory}: "
+            f"{[m.name for m in matches]}"
+        )
+    if matches:
+        return matches[0]
+    return directory / "report=<absent>.json"
 
 
 def _universe_id(coins: Sequence[str]) -> str:
@@ -453,16 +576,16 @@ def validate_bundle(
         )
 
     canary_hash: str | None = None
-    canary_path = _canary_path(output_root, day, coin)
+    expected_inputs = [
+        manifest_hashes[label]
+        for label in ("twap_prev", "twap", "twap_next", "windows", "coverage")
+        if label in manifest_hashes
+    ]
+    canary_path = _canary_path(output_root, day, coin, expected_inputs)
     try:
         canary = _load_hashed_json(canary_path, hash_field="report_hash")
         canary_hash = str(canary["report_hash"])
         item = canary["canary"]
-        expected_inputs = [
-            manifest_hashes[label]
-            for label in ("twap_prev", "twap", "twap_next", "windows", "coverage")
-            if label in manifest_hashes
-        ]
         check(
             "CANARY_BINDING",
             canary.get("partial") is False
@@ -533,10 +656,83 @@ def write_health(output_root: Path, health: BundleHealth) -> dict[str, Any]:
     )
 
 
+def _r7_arms(
+    output_root: Path, plan: BatchPlan
+) -> dict[str, Any]:
+    """R-7 condition 3 -- both arms, never silently absorbed.
+
+    Every coin-day whose canary was RECLASSIFIED by the amendment is named here
+    beside the ones that passed on their own, so a reader of the receipt can see
+    which verdicts depend on R-7 without opening the canary reports.  The drift
+    check (condition 4) rides along, because the receipt is where a later reader
+    will look to ask whether the amendment's licence still holds.
+    """
+    day = date.fromisoformat(plan.target_day)
+    reclassified: list[str] = []
+    retained: list[str] = []
+    for coin in plan.coins:
+        # No expected_inputs filter here: the arms report the population of
+        # canary verdicts, not one build's report.
+        directory = (
+            output_root / "canary" / f"day={plan.target_day}"
+            / f"coin={coin}" / f"canary={CANARY_VERSION}"
+        )
+        reports = sorted(directory.glob("report=*.json"))
+        if not reports:
+            continue
+        item = json.loads(reports[-1].read_text()).get("canary", {})
+        if item.get("r7_reclassified"):
+            reclassified.append(f"{plan.target_day}/{coin}")
+        else:
+            retained.append(f"{plan.target_day}/{coin}")
+
+    # The drift check accumulates over every canary of this generation up to AND
+    # INCLUDING the target day.  Scoped to one day it saw 7 coin-days against a
+    # floor of 14 and could only ever ABSTAIN -- a gate that cannot fire is not a
+    # gate, which is the defect this programme has logged four times.  A PREFIX
+    # (days <= target) rather than "all days on disk" keeps each receipt
+    # reproducible: rebuilding day D later must not consult days that came after
+    # it, or D's batch_hash would drift with the calendar.
+    observations: list[dict[str, Any]] = []
+    canary_root = output_root / "canary"
+    if canary_root.is_dir():
+        for day_dir in sorted(canary_root.glob("day=*")):
+            try:
+                seen_day = date.fromisoformat(day_dir.name.split("=", 1)[1])
+            except ValueError:
+                continue
+            if seen_day > day:
+                continue
+            for report in sorted(
+                day_dir.glob(f"coin=*/canary={CANARY_VERSION}/report=*.json")
+            ):
+                coin = report.parent.parent.name.split("=", 1)[1]
+                item = json.loads(report.read_text()).get("canary", {})
+                observations.append(
+                    {
+                        "coin_day": f"{seen_day.isoformat()}/{coin}",
+                        "decision_disagreements": item.get(
+                            "decision_disagreements", 0
+                        ),
+                        "delta": item.get("delta", 0.0),
+                        "r7_reclassified": bool(item.get("r7_reclassified")),
+                        "status": item.get("status"),
+                    }
+                )
+    return {
+        "ruling": "R-7",
+        "reclassified_coin_days": reclassified,
+        "retained_coin_days": retained,
+        "drift_check_scope": f"canary generation {CANARY_VERSION}, days <= {plan.target_day}",
+        "drift_check": r7_drift_check(observations),
+    }
+
+
 def _batch_payload(
     plan: BatchPlan,
     per_coin_runs: Mapping[str, Mapping[str, Any]],
     per_coin_health: Mapping[str, BundleHealth],
+    r7_arms: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     payload = {
         "batch_version": BATCH_VERSION,
@@ -554,6 +750,8 @@ def _batch_payload(
         },
         "status": "COMPLETE",
     }
+    if r7_arms is not None:
+        payload["r7_canary_amendment"] = dict(r7_arms)
     payload["batch_hash"] = _content_hash(payload)
     return payload
 
@@ -589,7 +787,9 @@ def write_batch_receipt(
             or health.per_coin_run_hash != run.get("run_hash")
         ):
             raise ValueError(f"batch receipt refuses mismatched health for {coin}")
-    payload = _batch_payload(plan, per_coin_runs, per_coin_health)
+    payload = _batch_payload(
+        plan, per_coin_runs, per_coin_health, r7_arms=_r7_arms(output_root, plan)
+    )
     path = _batch_path(
         output_root,
         date.fromisoformat(plan.target_day),

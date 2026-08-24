@@ -1,0 +1,15 @@
+[Unit]
+Description=P-2026-003 lane health check (units, collectors, tape, lane progress)
+Documentation=file:///home/yuqing/ctaNew/live/pm_research/ops/README.md
+# R-40: the checker must not be the only unit whose failure nothing
+# reports. pm-alert@ is a SEPARATE unit, so a crash here still alerts.
+OnFailure=pm-alert@%n.service
+
+[Service]
+Type=oneshot
+WorkingDirectory=/home/yuqing/ctaNew
+# Exits 0 even when it alerts: this unit's own state must never become the
+# signal, or the watcher inherits exactly the silence it exists to break.
+ExecStart=/home/yuqing/pricer-sol/venv/bin/python3 live/pm_research/ops/pm_lane_health.py
+Nice=10
+IOSchedulingClass=idle

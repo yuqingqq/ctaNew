@@ -1,0 +1,10 @@
+[Unit]
+Description=P-2026-003 alert for failed unit %i
+Documentation=file:///home/yuqing/ctaNew/live/pm_research/ops/README.md
+
+[Service]
+Type=oneshot
+WorkingDirectory=/home/yuqing/ctaNew
+# Reached via OnFailure= on the batch units, so a crash surfaces immediately
+# instead of waiting up to 15 minutes for the next timer tick.
+ExecStart=/home/yuqing/pricer-sol/venv/bin/python3 live/pm_research/ops/pm_lane_health.py --unit-failed %i

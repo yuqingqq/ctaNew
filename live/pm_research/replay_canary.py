@@ -43,6 +43,7 @@ from live.pm_research.da_state import (
     Unavailable,
 )
 from live.pm_research.tier1_pipeline import (
+    DISTILLER_VERSION,
     COIN_SYMBOL,
     DEFAULT_OUTPUT_ROOT,
     read_partition,
@@ -50,8 +51,43 @@ from live.pm_research.tier1_pipeline import (
 )
 
 
-CANARY_VERSION = "leak_canary_v1"
+CANARY_VERSION = "leak_canary_v2_r7"
 REFERENCE_DELTA_PP = 0.5
+
+# --- R-7 licence: VACATED (R-89), RETAINED UNDER ADJUDICATION ----------------
+# THIS DICT IS NOT LIVE.  R-7's licence is dead and nothing may cite it as
+# authority.  The amendment it once licensed SURVIVES on a different foundation
+# (R-94, ordering -- see `classify`), which is not distributional and cannot
+# drift, so NOTHING below is the reason the amendment is correct any more.
+#
+# It is not deleted because its ONLY consumer is `r7_drift_check`, and whether
+# that check is extended, narrowed or retired is before DE (the coordinator
+# recused: R-87 ordered it extended, R-89 killed its subject, both theirs).
+# Deleting this dict would retire the check, i.e. would decide DE's question.
+# So the basis is marked dead and left standing. Vacating a rule is not
+# self-executing -- this annotation IS the sweep that R-94's class demands.
+R7_LICENSE_STATUS = "VACATED_R89_NOT_LIVE_PENDING_DE_ON_R87"
+R7_LICENSE = {
+    "ruling": "R-7",
+    "granted": "2026-08-23",
+    "statistic": "decision_disagreements per coin-day",
+    "fit": "Poisson",
+    "lambda": 1.857,
+    "variance_observed": 1.363,
+    "n_coin_days": 14,
+    "source": "2026-08-20 and 2026-08-21, all seven coins, scratch-root enumeration",
+    "p_zero": 0.156,
+    "expected_invalid_coin_days_per_7_coin_day": 1.09,
+}
+# Escalation thresholds for condition 4.  These BOUND the licence; they are not
+# a verdict bar on any research hypothesis.
+# R-99: BOTH distributional arms are RETIRED. They policed the Poisson fit
+# (lambda 1.857, variance 1.363) that R-89 VACATED, so they tested a bar with
+# no force. `R7_DRIFT_MIN_COIN_DAYS` went with them: it existed so a
+# DISTRIBUTIONAL check would abstain rather than guess at small n. The
+# surviving arm is an INVARIANT, not an estimate -- one reclassified coin-day
+# carrying a nonzero delta is a construction violation at n=1 -- so there is
+# nothing left to abstain from.
 
 
 def _sha256_bytes(raw: bytes) -> str:
@@ -67,7 +103,16 @@ def _sha256_file(path: Path) -> str:
 
 
 def _manifest_path(root: Path, dataset: str, day: date, coin: str) -> Path:
-    return root / dataset / f"day={day.isoformat()}" / f"coin={coin}" / "manifest.json"
+    # Partition addresses carry the distiller generation (R-10/R-12); this
+    # duplicated the old layout and silently pointed at the superseded one.
+    return (
+        root
+        / dataset
+        / f"day={day.isoformat()}"
+        / f"coin={coin}"
+        / f"distiller={DISTILLER_VERSION}"
+        / "manifest.json"
+    )
 
 
 def _load_manifest(root: Path, dataset: str, day: date, coin: str) -> dict[str, Any]:
@@ -218,10 +263,71 @@ class LeakCanary:
     status: str
     reference_delta_pp: float
     refusal_counts: Mapping[str, Mapping[str, int]]
+    r7_reclassified: bool = False
 
 
 def _known_value(item: Known[Any] | Unavailable) -> float | None:
     return float(item.value) if isinstance(item, Known) else None
+
+
+# R-95 — ONE NAME COVERED TWO MECHANISMS AND THAT IS WHAT LET A WRONG MODEL FORM.
+# `INVALID_UNBOUND_GUARD` was returned by two arms that fail for unrelated
+# reasons: a guard that was never WIRED, and counters that CONTRADICT each other.
+# The coordinator's rationale for R-7 attached itself to the first when the
+# amendment actually touched neither, and the conflation survived several rulings
+# because the status could be discussed as though it had a single cause.
+#
+# The old name is retained as a READ alias only: receipts already on disk carry
+# it, they are immutable under R-28, and a reader that cannot parse them would
+# turn a naming fix into data loss. Nothing EMITS it.
+INVALID_UNWIRED_GUARD = "INVALID_UNWIRED_GUARD"
+INVALID_COUNTER_INCONSISTENT = "INVALID_COUNTER_INCONSISTENT"
+LEGACY_INVALID = "INVALID_UNBOUND_GUARD"          # read-only; pre-R-95 receipts
+INVALID_STATUSES = frozenset(
+    {INVALID_UNWIRED_GUARD, INVALID_COUNTER_INCONSISTENT, LEGACY_INVALID})
+
+
+def classify(
+    event_only: int, disagreements: int, delta: float
+) -> tuple[str, bool]:
+    """The canary's status rule. Returns (status, reclassified).
+
+    The amendment stands on R-94 (ordering). R-7's licence is VACATED (R-89)
+    and is not authority for anything here.
+
+    Pure and separate from the measurement so the rule can be tested directly,
+    including the branch that the measurement cannot construct.
+
+    `event_only == 0` means the leaky twin never read past a knowledge boundary,
+    i.e. the guard is not wired.  That arm is UNCHANGED by R-7 and stays fatal.
+
+    `disagreements == 0` used to be fatal too, and it pre-empted the branch
+    below that already handled the case correctly.  The reason is ORDERING, not
+    frequency (R-94; the distributional basis R-7 granted it on is VACATED and
+    may not be cited): pre-amendment, zero disagreements with zero harm was
+    INVALID while five disagreements with the SAME zero harm was fine, so the
+    strictly safer observation was punished more harshly.  The rule was
+    non-monotone in its own evidence.  That is a defect in the rule's shape, no
+    distribution enters it, and G=2 cannot break it.
+
+    Conditions 1 and 2 are why `delta` is re-checked here rather than
+    assumed: the status must assert a MEASURED zero, and any nonzero delta stays
+    INVALID.  `disagreements == 0` forces knowledge_hits == event_hits and hence
+    delta == 0 exactly, so that second branch is a fail-closed consistency check
+    which should never fire; if it does, the counters disagree with each other
+    and INVALID is the right answer.
+    """
+    if event_only == 0:
+        return "INVALID_UNWIRED_GUARD", False
+    if disagreements == 0:
+        if math.isclose(delta, 0.0, abs_tol=1e-15):
+            return "BOUND_ZERO_SCORE_DELTA", True
+        return "INVALID_COUNTER_INCONSISTENT", False
+    if math.isclose(delta, 0.0, abs_tol=1e-15):
+        # A score delta can cancel even when the selected states differ.  That
+        # is a review flag, while event-only reads prove the guard is wired.
+        return "BOUND_ZERO_SCORE_DELTA", False
+    return "VALID_GUARD_BITES", False
 
 
 def measure_leak_canary(
@@ -279,14 +385,26 @@ def measure_leak_canary(
     value_knowledge = knowledge_hits / n
     value_event = event_hits / n
     delta = value_event - value_knowledge
-    if event_only == 0 or disagreements == 0:
-        status = "INVALID_UNBOUND_GUARD"
-    elif math.isclose(delta, 0.0, abs_tol=1e-15):
-        # A score delta can cancel even when the selected states differ.  That
-        # is a review flag, while event-only reads prove the guard is wired.
-        status = "BOUND_ZERO_SCORE_DELTA"
-    else:
-        status = "VALID_GUARD_BITES"
+    # --- status, as amended by R-7 -----------------------------------------
+    # `event_only == 0` still means the leaky twin never read past a knowledge
+    # boundary, i.e. the guard is not wired.  That arm is UNCHANGED and fatal.
+    #
+    # `disagreements == 0` used to be fatal too, and it pre-empted the branch
+    # below that already handled it correctly.  The reason is ORDERING, not
+    # frequency (R-94; R-7's distributional basis is VACATED and uncitable):
+    # zero disagreements with zero harm was INVALID while five disagreements
+    # with the SAME zero harm was fine -- the strictly safer observation was
+    # punished more harshly, so the rule was non-monotone in its own evidence.
+    # No distribution enters that, and G=2 cannot break it.
+    #
+    # Conditions 1 and 2 are why the delta is re-checked here rather than
+    # assumed: the status must assert a MEASURED zero, and any nonzero delta
+    # stays INVALID.  Note that `disagreements == 0` forces
+    # knowledge_hits == event_hits and therefore delta == 0 exactly, so the
+    # second branch below is a fail-closed consistency check that should never
+    # fire -- if it ever does, the counters disagree with each other and INVALID
+    # is the right answer.
+    status, r7_reclassified = classify(event_only, disagreements, delta)
     refusals = {
         name: {
             "n_admitted": count.n_admitted,
@@ -316,12 +434,87 @@ def measure_leak_canary(
         status=status,
         reference_delta_pp=REFERENCE_DELTA_PP,
         refusal_counts=refusals,
+        r7_reclassified=r7_reclassified,
     )
 
 
-def _report_path(root: Path, day: date, coin: str, *, partial: bool) -> Path:
+def r7_drift_check(
+    observations: Sequence[Mapping[str, Any]],
+) -> dict[str, Any]:
+    """Runtime witness for the amendment's CONSTRUCTION (R-99, one arm).
+
+    **This no longer checks a distribution.**  R-7 licensed the amendment on a
+    Poisson fit; R-89 VACATED that licence, and R-94 re-founded the amendment on
+    an ORDERING argument that uses no distribution and cannot be broken at G=2.
+    Two arms policed the dead fit -- lambda tolerance and variance/mean
+    Poisson-likeness -- and R-99 retired both: a check against a vacated bar
+    tests nothing and, worse, mints the claim of an authority that no longer
+    exists.
+
+    What survives is the arm that polices the CONSTRUCTION: a reclassified
+    coin-day must carry a MEASURED zero delta.  That is an invariant, not a
+    tolerance, and it holds at any n.
+
+    The rule's ORDERING property -- the thing R-94 actually re-founded it on --
+    cannot drift with data but CAN be silently reintroduced by an edit, so it is
+    policed statically by `selftest()` rather than here (R-99, DE's reasoning).
+
+    Each observation needs `decision_disagreements`, `delta` and `status`.
+    """
+    counts = [int(row["decision_disagreements"]) for row in observations]
+    n = len(counts)
+    reasons: list[str] = []
+    # An invariant, not a tolerance: a reclassified coin-day with
+    # a nonzero delta would mean impact was forgiven, which the amendment
+    # forbids.  It cannot happen by construction, so if it appears the
+    # construction is wrong and the coordinator must hear about it.
+    forgiven = [
+        row for row in observations
+        if row.get("r7_reclassified") and not math.isclose(
+            float(row.get("delta", 0.0)), 0.0, abs_tol=1e-15
+        )
+    ]
+    if forgiven:
+        reasons.append(
+            f"{len(forgiven)} reclassified coin-day(s) carry a NONZERO delta -- "
+            f"R-7 condition 2 violated"
+        )
+    return {
+        # NOT "WITHIN_LICENCE": there is no live licence to be within, and the
+        # old string minted a claim of vacated authority into every receipt.
+        "verdict": "ESCALATE_TO_COORDINATOR" if reasons else "CONSTRUCTION_INTACT",
+        "polices": "construction only (R-99): reclassified coin-days carry a measured zero delta",
+        "ordering_property": "policed statically by selftest(), not by this function",
+        "n_coin_days": n,
+        "disagreements_observed": counts,
+        "reclassified_coin_days": sum(
+            1 for row in observations if row.get("r7_reclassified")
+        ),
+        "reasons": reasons,
+        "licence_status": R7_LICENSE_STATUS,
+    }
+
+
+def _report_dir(root: Path, day: date, coin: str, *, partial: bool) -> Path:
+    """Path carries the canary VERSION, mirroring the health record's layout.
+
+    The report binds `canary_code_sha256` into its own `source_digest` while
+    living at a fixed path, so before R-7 any edit to this file made every
+    already-written report raise `canary merge-never-overwrite` for ever -- the
+    defect class recorded in DA_PIPELINE_OUTAGE_DIAGNOSIS_2026-08-23.md 1.4a.
+    Versioning the path means a semantics change produces a NEW generation of
+    artifacts and leaves the old ones valid and readable, which is also what
+    R-7 condition 3 wants: the pre-amendment verdicts stay on disk as the other
+    arm rather than being overwritten by the amended ones.
+    """
     dataset = "canary_partial" if partial else "canary"
-    return root / dataset / f"day={day.isoformat()}" / f"coin={coin}" / "report.json"
+    return (
+        root
+        / dataset
+        / f"day={day.isoformat()}"
+        / f"coin={coin}"
+        / f"canary={CANARY_VERSION}"
+    )
 
 
 def write_report(
@@ -334,7 +527,6 @@ def write_report(
     source_profile_hash: str,
     partial: bool = False,
 ) -> dict[str, Any]:
-    path = _report_path(output_root, day, coin, partial=partial)
     source = {
         "canary_version": CANARY_VERSION,
         "day": day.isoformat(),
@@ -348,6 +540,15 @@ def write_report(
         ),
     }
     source_digest = _sha256_bytes(canonical_json(source))
+    # R-10/R-16: address by the SOURCE DIGEST, which covers both the canary code
+    # and its inputs.  Versioning by CANARY_VERSION alone was not enough and I
+    # proved it the hard way: editing this file mid-run left an existing report
+    # whose source_digest no longer matched, and the run died on
+    # `canary merge-never-overwrite` at a hand-maintained version directory.  A
+    # hand-maintained version is a promise to remember; a content address is not.
+    path = _report_dir(output_root, day, coin, partial=partial) / (
+        f"report={source_digest}.json"
+    )
     report: dict[str, Any] = {
         **source,
         "source_digest": source_digest,
@@ -419,12 +620,129 @@ def run_from_partitions(
         source_profile_hash=loaded.source_profile_hash,
         partial=allow_partial,
     )
-    if canary.status == "INVALID_UNBOUND_GUARD":
-        raise RuntimeError("leak canary did not bind knowledge-time truncation")
+    if canary.status in INVALID_STATUSES:
+        raise RuntimeError(
+            f"leak canary refused: {canary.status} — "
+            + ("the guard was never wired (event_only == 0), so the run proves "
+               "nothing about knowledge-time truncation"
+               if canary.status == "INVALID_UNWIRED_GUARD" else
+               "the counters contradict each other (disagreements == 0 with a "
+               "nonzero score delta); fail closed"))
     return report
 
 
+def _r7_selftest() -> None:
+    """The four R-7 conditions, each tested against the branch it constrains."""
+    # The arm R-7 did NOT touch: no event-only read means the guard is unwired.
+    assert classify(0, 0, 0.0) == ("INVALID_UNWIRED_GUARD", False)
+    assert classify(0, 5, 0.02) == ("INVALID_UNWIRED_GUARD", False)
+    print("  PASS  R-7 leaves the unwired-guard arm fatal")
+
+    # Condition 1: a wired guard with zero disagreements and a MEASURED zero
+    # delta is bounded, not invalid, and is marked as reclassified.
+    assert classify(568, 0, 0.0) == ("BOUND_ZERO_SCORE_DELTA", True)
+    print("  PASS  R-7 condition 1: measured zero delta bounds the guard")
+
+    # Condition 2: impact is never forgiven, even with zero disagreements.
+    assert classify(568, 0, 0.007) == ("INVALID_COUNTER_INCONSISTENT", False)
+    assert classify(568, 0, -1e-9) == ("INVALID_COUNTER_INCONSISTENT", False)
+    print("  PASS  R-7 condition 2: any nonzero delta stays INVALID")
+
+    # Pre-existing behaviour is unchanged where R-7 does not reach.
+    assert classify(568, 4, 0.0139) == ("VALID_GUARD_BITES", False)
+    assert classify(568, 2, 0.0) == ("BOUND_ZERO_SCORE_DELTA", False)
+    print("  PASS  R-7 does not disturb the bites or cancelling-delta arms")
+
+    # R-99: the drift check now polices CONSTRUCTION ONLY.
+    sample = [
+        {"decision_disagreements": c, "delta": 0.0, "r7_reclassified": c == 0}
+        for c in (4, 3, 3, 2, 0, 2, 1, 2, 1, 0, 1, 2, 3, 2)
+    ]
+    intact = r7_drift_check(sample)
+    assert intact["verdict"] == "CONSTRUCTION_INTACT", intact
+    assert intact["reclassified_coin_days"] == 2
+    print("  PASS  R-99: construction intact on the old licensing sample")
+
+    # The retired arms must STAY retired. A collapsed disagreement rate used to
+    # escalate on lambda tolerance; with no distribution it is unremarkable, and
+    # an all-zero sample is the SAFEST possible observation.
+    collapsed = [
+        {"decision_disagreements": 0, "delta": 0.0, "r7_reclassified": True}
+    ] * 14
+    assert r7_drift_check(collapsed)["verdict"] == "CONSTRUCTION_INTACT"
+    print("  PASS  R-99: a collapsed rate no longer escalates (lambda arm retired)")
+
+    # No abstention floor survives: the invariant holds at n=1.
+    assert r7_drift_check(sample[:1])["verdict"] == "CONSTRUCTION_INTACT"
+    print("  PASS  R-99: no coin-day floor -- an invariant needs no power")
+
+    # No receipt may mint a claim of the vacated licence.
+    assert "WITHIN_LICENCE" not in str(intact)
+    print("  PASS  R-99: the vacated-licence verdict string is gone")
+
+    # The surviving arm still bites.
+    forgiven = list(sample)
+    forgiven[4] = {"decision_disagreements": 0, "delta": 0.01, "r7_reclassified": True}
+    result = r7_drift_check(forgiven)
+    assert result["verdict"] == "ESCALATE_TO_COORDINATOR"
+    assert any("condition 2" in reason for reason in result["reasons"])
+    print("  PASS  R-99: the surviving construction arm still bites")
+
+    _classify_monotonicity_selftest()
+
+
+def _classify_monotonicity_selftest() -> None:
+    """R-99's commissioned instrument: a STATIC sweep of `classify()`.
+
+    DE's reasoning: a rule-ORDERING property cannot drift with data, but it CAN
+    be silently reintroduced by a code change. So it is policed here, over the
+    rule's input lattice, and runs with every canary.
+
+    The defect R-94 named: pre-amendment, `disagreements == 0` with zero harm was
+    INVALID while `disagreements == 5` with the SAME zero harm was fine -- the
+    strictly safer observation punished more harshly.
+    """
+    K = 12
+    fatal = lambda st: st.startswith("INVALID")
+
+    # P1 -- the R-94 property itself.
+    bad = [d for d in range(K + 1) if fatal(classify(1, d, 0.0)[0])]
+    assert not bad, f"zero-harm wired guard fatal at disagreements={bad}"
+    # P2 -- no strictly safer input punished harder.
+    pairs = [(a, b) for a in range(K + 1) for b in range(a + 1, K + 1)
+             if fatal(classify(1, a, 0.0)[0]) and not fatal(classify(1, b, 0.0)[0])]
+    assert not pairs, f"non-monotone in its own evidence at {pairs[:3]}"
+    print("  PASS  R-99 monotonicity: zero harm is never punished for being safer")
+
+    # P3 -- the unwired arm is untouched by the amendment, everywhere.
+    for d in range(K + 1):
+        for x in (0.0, 0.25):
+            assert classify(0, d, x) == ("INVALID_UNWIRED_GUARD", False)
+    print("  PASS  R-99 monotonicity: the unwired-guard arm stays fatal everywhere")
+
+    # P4/P5 -- reclassification only ever on a MEASURED zero.
+    assert fatal(classify(1, 0, 0.25)[0])
+    assert not any(classify(1, d, 0.25)[1] for d in range(K + 1))
+    print("  PASS  R-99 monotonicity: reclassify only on a measured zero delta")
+
+    # NEGATIVE CONTROL -- the properties must FAIL on the pre-amendment rule.
+    def pre(event_only, disagreements, delta):
+        if event_only == 0:
+            return "INVALID_UNWIRED_GUARD", False
+        if disagreements == 0:
+            return "INVALID_UNBOUND_GUARD", False
+        if math.isclose(delta, 0.0, abs_tol=1e-15):
+            return "BOUND_ZERO_SCORE_DELTA", False
+        return "VALID_GUARD_BITES", False
+    assert fatal(pre(1, 0, 0.0)[0]) and not fatal(pre(1, 5, 0.0)[0]), (
+        "the negative control no longer reproduces the R-94 defect, so this "
+        "test can no longer prove it would catch a reintroduction"
+    )
+    print("  PASS  R-99 monotonicity: negative control still detects the R-94 defect")
+
+
 def selftest() -> None:
+    _r7_selftest()
     profile = SourceProfile(
         "pm_twap60_ws", True, Transport.LOCAL_WS, Duration(1)
     )

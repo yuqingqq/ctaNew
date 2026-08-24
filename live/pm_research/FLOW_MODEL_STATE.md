@@ -1,7 +1,7 @@
 # FLOW MODEL — CURRENT STATE
 
 **Read this first, and read nothing else to find out what we currently believe.**
-Updated 2026-08-21. Supersedes every other flow document *for the question "what
+Updated 2026-08-23 (§1f: the published sample populations are corrected). Supersedes every other flow document *for the question "what
 is true now"*. The others remain valid as provenance — how we got here, and why
 particular things were withdrawn — but they argue with each other by
 construction, because they were written in sequence as claims were corrected.
@@ -57,7 +57,7 @@ violate §1. The code already respects this; it is written down so nobody adds o
 |---|---|---|
 | **`side` is the taker's** | G-FF1 `PASS`, 600/600, Wilson [0.9936, 1.0000] | 300 BUY / 300 SELL, 7/7 coins, 5/5 moneyness |
 | **Taker pays the fee, maker does not** | `0.07·p·(1−p)` $/share to 4 dp; 600/600 taker legs charged, 744/754 maker legs zero | n=600 transactions |
-| **Crossing costs ~2.25 ¢/share ATM** | 0.50 ¢ half-spread + 1.75 ¢ fee ≈ **225 bps** on a $1 binary | btc/eth |
+| **Crossing costs ~2.25 ¢/share ATM — TAKER LEG ONLY** | 0.50 ¢ half-spread + 1.75 ¢ fee ≈ **225 bps** on a $1 binary. **BOTH TERMS ARE THE SAME SIDE. DO NOT SUBTRACT THIS FROM A MAKER NET.** | btc/eth; n=600 transactions, as-of 2026-08-23 |
 | **Settlement is `S60(T)` vs `S60(t0)`** | 99.8 % on 1,465 windows; the 300 s reading is refuted at 86.9 % | all |
 | **ATM spread is 1 tick on btc/eth** | median 0.0100, p90 0.020, 2.29 M executable quotes | btc; ticks by coin: btc 1 · eth 1 · sol 3 · doge 3 · xrp 5 · bnb 5 · hype 7 |
 | **The 1-cent spread is a CONSTRAINT, not a convention** | where the 0.001 tick is available the spread is 1 tick in 99.9 % of quotes | btc |
@@ -67,11 +67,25 @@ violate §1. The code already respects this; it is written down so nobody adds o
 | **`f_r` does not rise into settlement** | count: flat then terminal collapse. notional: rises, peaks, then falls — **peak located to the first 5 s inside `r=60`** (btc notional 97→119 through the body, **170.4** at the peak, then a monotone **9.5×** decline to 18.0) | 361 windows/coin, `clob_v3_1` |
 | **The terminal minute contains essentially ALL of `f_r`'s dynamic range** | on btc/eth/sol/doge the terminal collapse ratio **equals the full-profile shape ratio exactly**; six of seven coins on notional | 361 windows/coin |
 | **The terminal regime is FEW AND LARGE** | count drops to 18 % of peak while notional holds 28 %; USDC/arrival 15.5 → 24.0 (btc), 11.9 → 32.3 (eth) | btc/eth |
-| **Book state carries real information** | B3 placebo does not reproduce the gain on any coin (btc −0.03 share, hype 0.02) | 24 windows/coin |
+| **Book state carries real information** | B3 placebo does not reproduce the gain on any coin (btc −0.03 share, hype 0.02) | 24 windows/coin, **1 UTC day** (§1f) |
 | **THE TWO BOOKS ARE ONE BOOK — and the second side is DERIVED, not quoted** | **1,081,800 checks across 560 archives, 7 coins, 4 UTC days: ZERO violations, worst deviation exactly 0.00000.** Zero in the 0.001 tick regime (8,468), the terminal minute (23,828), during gaps, and within 5 s of a tick change | **all coins, all days** — the exactness is the finding: two books agreeing would show float noise, one book computed from the other shows none |
 | **A complete set is therefore worth ONE spread, not two** | paying `Up_bid + Down_bid = 1 − spread` for something worth exactly $1 | corrects an earlier coordinator claim |
 | **Market self-excitation is not deletable** | bivariate 2×2 **refit 2026-08-22 with the instrument floor and continuous optimiser**: diagonal **0.236–0.477** dominates cross **0.000–0.167** on every coin; btc `market←market` **0.477 [0.282, 0.519]**, eth **0.389 [0.339, 0.431]** | **no coin censored**; both estimators refined, not grid-seeded |
-| **Clustering runs at 80–218 ms, and the censoring was OUR GRID** | scalar Hawkes re-fit 2026-08-21 with the instrument floor + continuous optimiser: **no coin is censored**, branching 0.33–0.55, half-life 80.8 ms (btc) to 217.7 ms (hype) — **81×–218× the venue tick** | 24 windows/coin, `clob_v3_1` |
+| **Clustering runs at 80–218 ms, and the censoring was OUR GRID** | scalar Hawkes re-fit 2026-08-21 with the instrument floor + continuous optimiser: **no coin is censored**, branching 0.33–0.55, half-life 80.8 ms (btc) to 217.7 ms (hype) — **81×–218× the venue tick** | 24 windows/coin, **1 UTC day** (§1f), `clob_v3_1` |
+
+> **NAME THE LEG BEFORE COMPUTING A NET (added 2026-08-24, DA, under R-105).**
+> The `~2.25 ¢/share` row pairs a half-spread with a fee **as one side**: the
+> crossing party pays both. The row above it says the other side pays neither —
+> *"Taker pays the fee, maker does not"*, **744 of 754 maker legs at zero, so TEN
+> legs (1.3 %) WERE charged** (n=600 transactions, as-of 2026-08-23).
+> **A maker net that subtracts 2.25 ¢ understates maker economics by roughly the
+> whole crossing cost**, which is the largest single term in the model. Any net
+> figure must state which leg it is on before it states a number.
+> This page wins over conflicting statements by its own rule at the top, so the
+> caution belongs HERE and not only in `MEASUREMENT_PLAN.md:951`.
+> **Under R-105 every cited population now carries its `n` and its as-of** — a
+> figure without an as-of cannot be checked for staleness by anyone, its author
+> included.
 
 ## 1a. The binning decision is REFUTED, and the factor would have eaten real signal
 
@@ -145,7 +159,7 @@ pre-registration. It must not be swapped in after seeing the above.
 ## 1c. Inventory: control is LOAD-BEARING, and two-sided quoting only works where flow is thick
 
 `net(t)` was simulated under a two-sided quote and replayed against the tape,
-60 windows/coin. **No coin is self-balancing.** Every measured mean-reversion
+60 windows/coin — **all of them 2026-08-20; one UTC day, see §1f**. **No coin is self-balancing.** Every measured mean-reversion
 half-life is **519–2726 s**, all of them **longer than the 300 s window** — so
 even where reversion exists it is far too slow to matter inside a market. The
 dump mechanism in `plans/DA_INVENTORY_STATE_PLAN.md` is **not** deleted.
@@ -188,7 +202,8 @@ and **pays for it in inventory risk at ~9×**, so that comparison was generous t
 ## 1d. Placement skew works — as an UPPER BOUND with an untested generous assumption
 
 The state-dependent policy (reducing side at `NEW_BBO`, adding side at
-`JOIN_BBO`) was simulated against the tape, paired on the same windows:
+`JOIN_BBO`) was simulated against the tape, paired on the same windows
+(25/coin, **all 2026-08-20 — one UTC day, see §1f**):
 
 | coin | JOIN p95 \|net\| | SKEW p95 | cut | JOIN half-life | SKEW half-life | JOIN $ | SKEW $ |
 |---|---:|---:|---:|---:|---:|---:|---:|
@@ -258,7 +273,17 @@ Verdict **`HORIZON_DEPENDENT`**, and the decomposition is the result:
 **Spread capture is real, positive and stable** (+0.61–0.64 ¢ btc, +0.70–0.78 ¢
 eth — consistent with a 1-tick book plus occasional wider spreads, which is the
 harness sanity check). **Post-fill drift is 1.8× larger on btc and 2.6× on eth,
-and negative.** Six of eight cells are negative with the interval excluding zero.
+and negative.** **Eight of eight cells are negative in point estimate; FIVE of
+eight have the interval excluding zero** (btc h=5/15/30, eth h=5/60). The three
+that span zero are btc h=60 `[-0.834, +0.633]`, eth h=15 `[-1.284, +0.089]` and
+eth h=30 `[-1.393, +0.059]`.
+
+*Corrected 2026-08-23 (DE flagged; BE owns the page).* This line read "six of
+eight ... with the interval excluding zero", which is one count doing the work of
+two: the sign holds on 8/8, the significance on 5/8. Counted against
+`edge_layer1_v1.json` directly. **The direction of the finding is unchanged and
+the headline cells are the significant ones**, but a reader was being handed a
+stronger significance claim than the receipt supports.
 
 **So a passive two-sided `JOIN_BBO` maker loses at short horizons on both verdict
 coins.** This is the first *determinate* answer the programme has produced to
@@ -294,8 +319,68 @@ two-sided `JOIN_BBO` maker marked against mid — so **not** a direct
 contradiction. The directions differ and the reconciliation is **unmeasured**.
 
 **Scope:** Layer 1 only. Inventory carry, the terminal residual and the `r≈60`
-decision are Layer 2 and can move the total either way. Two days,
-window-clustered.
+decision are Layer 2 and can move the total either way. **ONE UTC day
+(2026-08-20), window-clustered — see §1f.** Adopted under R-29.
+
+The receipt's `source_days: 4` stands **beside** this as provenance, and the
+coordinator's framing is sharper than BE's own: **the receipt says what the run
+COULD have drawn from; the measurement says what it DID.** BE had recorded the
+receipt's 4 as simply *wrong* — it is not wrong, it answers a different question.
+Only the earlier "Two days" on this line was wrong. Under R-6 a sample population
+is Class C, so the coordinator adopted the measurement rather than choosing
+between the two numbers; which one is true was never a decision.
+
+## 1f. EVERY headline simulation result is ONE UTC DAY — the selection rule, not the calendar
+
+Measured 2026-08-23. `select(per_coin)` — the window chooser every replay and
+flow probe shares — walks `sorted(covered_slugs(ERA))` and truncates at
+`per_coin` per coin. A slug ends in its window's epoch start, so sorted order is
+**chronological**: "the first N" is **the EARLIEST N**. The `clob_v3_1` era opens
+2026-08-20 14:50:21, so any sample at N <= 60 never leaves 2026-08-20.
+
+| receipt | windows/coin | UTC days actually sampled |
+|---|---:|---|
+| `policy_comparison_v1` | 10 | **1** — 08-20 |
+| `queue_c1` · `queue_c2` · `flow_fill_development_v1` | 24 | **1** — 08-20 |
+| `placement_skew_t1` · `skew_bound_v1` | 25 | **1** — 08-20 |
+| `edge_layer1_v1` | 30 | **1** — 08-20 |
+| `inventory_walk_v1` | 60 | **1** — 08-20 |
+| `flow_phase_interaction_v1` | 273 | 2 — 08-20, 08-21 |
+| `flow_grid_nonuniform_v1` · `flow_terminal_mechanism_v1` (`f_r`) | 361 | 2 — 08-20, 08-21 |
+
+**680 windows/coin spanning four UTC days (08-20 … 08-23) are on disk now.** The
+Layer-1 sample is 30 of them — **1/22.7 of the available tape**. So §1a and §2's
+`f_r` results genuinely rest on two days; §1c, §1d, §1e, the A1 dependence test,
+the B3 placebo, the Hawkes fits and the queue results all rest on **one**.
+
+Three consequences, and none of them is cosmetic:
+
+- **Day-clustered intervals on these results are not "not yet computed" — they
+  are NOT COMPUTABLE.** One day is one cluster. Every published interval on a
+  single-day result is a WITHIN-day interval and cannot see day-to-day variation
+  at all. Where this corpus says the day unit is "the correct unit, not yet
+  computable", the reason is this sample, not the calendar.
+- **§2's "needs roughly 25–30× current data — over a month" conflates two
+  limits.** For the settlement *census* that is a calendar statement and stands.
+  For every `select()`-based result a **22.7×** larger sample is already on disk
+  and needs no calendar at all.
+- **Nothing here says any result CHANGES when re-sampled.** It says what the
+  stated population is. Re-sampling is a SELECTION decision under R-ADMISS and is
+  coordinator-gated: BE proposes it and does not self-decide it.
+
+**Why the existing guard did not catch it.** `fi.provenance()` was written for
+exactly this failure and its docstring names it — *"a run after `DAYS` grew to
+four days still reproduced a three-day figure to the digit"*. But only two
+receipts on disk carry a provenance block at all, `edge_layer1_v1` and
+`skew_bound_v1`, and both were written by the **pre-fix** version that reports
+days **read** rather than days **sampled**. Both therefore stamp `n_days: 4` on a
+one-day sample — a **4× over-report**, and the reason DE read the receipt as
+contradicting this page when in fact both were wrong in opposite directions. The
+other ten receipts carry no provenance block whatsoever.
+
+**The guard that would have caught it:** every published probe calls
+`fi.provenance(sampled=<the slugs it actually simulated>)`, and no result is
+compared against a published one except on `days_sampled`.
 
 ## 2. Measured and UNDETERMINED — not negative, not positive
 
@@ -424,22 +509,88 @@ window-clustered.
   Confirm any field, file or contract label against the code that writes it.
 - **A shrinking or growing sample must be VISIBLE in the receipt.**
   `flow_intensity.DAYS` went stale silently on 2026-08-22, omitting a whole day
-  and 1,141 archives from every probe that imports `_archive_paths()`. Fixing it
-  created the mirror risk — the constant now lists four days while **every
-  published number in this corpus was computed on three**. Both directions are
-  now loud: `assert_days_current()` raises if a collected day is unlisted, and
-  `fi.provenance()` stamps `source_days` into every receipt. **Re-running any
-  probe will now produce a four-day population; expect the numbers to move, and
-  check `provenance.source_days` before comparing against anything published.**
+  and 1,141 archives from every probe that imports `_archive_paths()`. Both
+  directions are now loud in the code: `assert_days_current()` raises if a
+  collected day is unlisted, and `fi.provenance()` can stamp the sample into a
+  receipt.
+
+  **CORRECTED 2026-08-23, and this bullet was wrong twice — see §1f.** It said
+  every published number "was computed on three" days: for N <= 60 windows/coin
+  they were computed on **one**, and only the `f_r` probes reach two. It also
+  said "re-running any probe will now produce a four-day population": it will
+  **not**. `select()` is EARLIEST-first, so a grown `DAYS` changes the population
+  READ and leaves the population SAMPLED pinned to the era's opening hours. A
+  fixed day-list was one bug; an earliest-first sampler with a growing disk is a
+  second one, and fixing the first hid the second. **Compare runs on
+  `days_sampled` — which requires passing `sampled=` — never on `source_days`,
+  `days_read` or the constant.**
 - Read book state from `price_change.best_bid/ask`, never `book` snapshots
   (p90 6.2 s stale). Knowledge time is `recv_ns`. Never pool across
   `collector_version` eras.
+
+## 5a. Sampling binds any probe that feeds a frozen bar — R-35
+
+Day-stratified sampling is **not** confined to V5 fits. It binds **any probe
+whose output is an input to a frozen bar**, because R-20 anchors a frozen bar to
+its inputs **by value** — so if those inputs came from a sampler that cannot
+leave one day, the anchor is anchored to a **biased number**.
+
+**`edge_l1_v1` is therefore in scope**: its Layer-1 markout feeds R-1's `f*`,
+even though it is not a V5 fit. Two constraints, both mechanised in
+`flow_intensity` rather than left to memory:
+
+| constraint | mechanism |
+|---|---|
+| a re-sampled Layer-1 markout **does not move the bar** — it creates a candidate needing a Class-D amendment | `resampled_markout_is_a_candidate()` returns `status: CANDIDATE_NOT_A_BAR`, `bar_moved: False`, `amendment_is_free: False` |
+| it must **never be pooled** with earlier earliest-first receipts | `assert_poolable()` raises on mixed or undeclared `sampling_rule` |
+
+**The amendment is no longer free.** `ww_v1`'s measurement has already run, so
+R-6's clause (c) — invalidate every verdict computed under the old bar — has
+something to invalidate. That is the difference between the `STOP` amendment,
+which was made before any evaluation existed, and this one.
+
+## 5b. THE SIGMA LANE AND THE BOOK LANE HAVE NO OVERLAPPING DATA — R-56
+
+Surfaced by E-X1's `VOID(NO_PAIRED_POPULATION)` and larger than E-X1. Recorded
+here because it constrains **any** question needing both arms and had not been
+stated anywhere.
+
+```
+sigma  (route_a_v1 OOS windows)  2026-08-20 00:00:00 -> 13:50:00
+book   (clob_v3_1 era opens)     2026-08-20 14:50:21
+overlap                          0 of 5,796 OOS rows
+```
+
+**What this does and does not mean — BE verified the distinction, because
+"calendar-blocked" is right for two of the three blockers and wrong for the
+binding one.**
+
+| blocker | kind | does waiting fix it? |
+|---|---|---|
+| zero paired population | **ARTIFACT**, not data — the sigma inputs (`crypto_prices_twap_*`) exist on **all five days**, and 2,016 / 2,016 / 1,429 windows settled on 08-21/22/23 | **no — a re-run fixes it**, and D-3 authorises rerunning `route_a_v1` unchanged as days accrue |
+| one OOS day vs a threshold of three | calendar | yes |
+| **`route_a_v1` carries NO PROBABILITY** | **METHOD** | **no** |
+
+**The third is binding and structural.** `route_a_v1` emits a conditional mean
+and a residual variance **in bps** — it is not a probability model. Getting `p̂`
+requires the link and σ, i.e. `pricing_distribution`: **the probability path
+`PRICING HOLD` exists to block.**
+
+So E-X1's framing does not survive contact. It argued `PRICING HOLD` did not
+block it *because scoring is not pricing* — but **there is no artifact-level
+probability to score**, so scoring requires invoking the pricing path. The
+distinction was not merely fine; it was empty.
+
+**Consequence: E-X1 does not become runnable by waiting.** It becomes runnable
+only if `PRICING HOLD` lifts or a link is pinned — a Route-A gate question, not a
+calendar one. Recorded so the VOID is not re-opened on the belief that time alone
+clears it.
 
 ## 6. Live artifacts
 
 | | |
 |---|---|
-| governing protocol | `FLOW_MODEL_PROTOCOL_V4.yaml` (V3 is `governs: false`) |
+| governing protocol | **`FLOW_MODEL_PROTOCOL_V5.yaml`** — frozen 2026-08-23 under R-19. V4 and V3 are `governs: false`. V5 changes the `f_r` grid (body 4×60 s, terminal 12×5 s), decouples `f_p`'s `r_band` from it, adds the `DAY_BLOCK_UNAVAILABLE` refusal, and retires earliest-first sampling for **day-stratified** (D-V5-3). Promotion clock RESET at the freeze; the day count is **derived, never written down** (D-V5-2) |
 | specification | `FLOW_MODEL_SPEC_REV2.md`, `plans/BE_FLOWANDFILLS_MODEL_PLAN.md` |
 | probes | `flow_intensity.py` · `flow_fill_development.py` · `flow_uncertainty.py` · `queue_and_type.py` |
 | results | `FLOW_INTENSITY_RESULTS.md` · `FLOW_FILL_DEVELOPMENT_RESULTS.md` · `QUEUE_AND_TYPE_RESULTS.md` |

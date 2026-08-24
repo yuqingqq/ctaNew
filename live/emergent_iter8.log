@@ -1,0 +1,26 @@
+panel 28,752,669 rows | rank-IC (mean over ~350k bars; CIs ~±0.001)
+
+* = both-era same sign AND min|IC|>0.003 (given tiny CIs, ~significant)
+
+feature                     5m             1h             
+— PRICE reversal —
+  tr_5m                     -0.049/-0.071* -0.025/-0.034* 
+— FLOW / order-flow —
+  tfi                       +0.009/+0.016* -0.003/+0.001  
+  signed_volume_z           +0.010/+0.016* +0.000/+0.002  
+  signed_pressure_5min      -0.026/-0.021* -0.019/-0.016* 
+  buy_to_ask_5min           -0.017/-0.012* -0.027/-0.031* 
+— BOOK imbalance —
+  imb1                      +0.016/+0.011* +0.004/+0.008* 
+  imb_change_5min           +0.019/+0.015* +0.008/+0.006* 
+  imb02                     +nan/+0.025    +nan/+0.005    
+— IMPACT / illiquidity —
+  kyle_lambda               +0.004/+0.004* +0.009/+0.010* 
+  impact_bps_per_pressure_5min-0.001/-0.005  +0.001/+0.000  
+  vpin                      +0.004/+0.002  +0.007/+0.009* 
+— DEPTH / absorption —
+  ask_depth_residual_5min   -0.021/-0.016* -0.025/-0.027* 
+  bid_depth_residual_5min   +0.005/+0.009* -0.011/-0.013* 
+  avg_trade_size            -0.005/-0.005* -0.011/-0.013* 
+
+(cell = OOS/REC mean rank-IC. imb02 recent-only ~53% cov. Sign: + continuation, − reversal.)

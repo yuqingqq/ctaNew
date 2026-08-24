@@ -48,7 +48,7 @@ from live.pm_research.tier1_pipeline import (
 )
 
 
-PIPELINE_VERSION = "measurement_daily_v1"
+PIPELINE_VERSION = "measurement_daily_v2_r7"
 TWAP_TOPICS = (
     "crypto_prices_twap_thirty",
     "crypto_prices_twap_sixty",
@@ -326,7 +326,15 @@ def plan_day(
 def validate_existing_partition(
     *, output_root: Path, dataset: str, day: date, coin: str
 ) -> dict[str, Any] | None:
-    partition = output_root / dataset / f"day={day.isoformat()}" / f"coin={coin}"
+    # Mirrors tier1_pipeline._partition_dir, which carries the distiller
+    # generation so an amended distiller writes a NEW partition (R-10, R-12).
+    partition = (
+        output_root
+        / dataset
+        / f"day={day.isoformat()}"
+        / f"coin={coin}"
+        / f"distiller={DISTILLER_VERSION}"
+    )
     manifest_path = partition / "manifest.json"
     output_path = partition / "part-0.parquet"
     if not manifest_path.exists() and not output_path.exists():
@@ -485,19 +493,100 @@ def execute_plan(plan: DailyPlan, *, output_root: Path) -> dict[str, Any]:
     return write_run_record(output_root=output_root, result=result)
 
 
+def _run_dir(output_root: Path, target_day: str, coin: str, lane: str) -> Path:
+    return (
+        output_root
+        / "runs"
+        / f"day={target_day}"
+        / f"coin={coin}"
+        / f"lane={lane}"
+    )
+
+
+def prior_run_records(
+    output_root: Path, target_day: str, coin: str, lane: str
+) -> list[dict[str, str]]:
+    """Records for this key written by a DIFFERENT pipeline generation.
+
+    Deliberately excludes the current generation, so a re-run at the same
+    version computes the same list, hashes to the same address and is a genuine
+    no-op.  Including it would make every re-run mint a new record, which is the
+    opposite of what content addressing is for.
+    """
+    base = _run_dir(output_root, target_day, coin, lane)
+    found: list[dict[str, str]] = []
+    legacy = base / "run.json"
+    if legacy.exists():
+        try:
+            document = json.loads(legacy.read_text())
+        except (OSError, json.JSONDecodeError):
+            document = {}
+        found.append(
+            {
+                "address": "run.json",
+                "pipeline_version": str(document.get("pipeline_version", "unknown")),
+                "run_hash": str(document.get("run_hash", "unreadable")),
+            }
+        )
+    for directory in sorted(base.glob("pipeline=*")):
+        if directory.name == f"pipeline={PIPELINE_VERSION}":
+            continue
+        for record in sorted(directory.glob("run=*.json")):
+            try:
+                document = json.loads(record.read_text())
+            except (OSError, json.JSONDecodeError):
+                document = {}
+            found.append(
+                {
+                    "address": f"{directory.name}/{record.name}",
+                    "pipeline_version": str(
+                        document.get("pipeline_version", "unknown")
+                    ),
+                    "run_hash": str(document.get("run_hash", "unreadable")),
+                }
+            )
+    return found
+
+
 def write_run_record(
     *, output_root: Path, result: Mapping[str, Any]
 ) -> dict[str, Any]:
-    """Atomically persist the content-addressed orchestration receipt."""
-    payload = dict(result)
+    """Atomically persist the content-addressed orchestration receipt.
+
+    R-10: the address carries BOTH the pipeline generation and the content hash,
+    in the style `health` already uses.  Before this, the run record was the one
+    artifact in `tier1/` addressed by neither, so an amended rule (R-7 changed
+    the canary status bar, hence `canary_report_hash`) had nowhere to land: the
+    re-run legitimately produced different content for the same key and
+    merge-never-overwrite correctly refused it.  Immutability and amendability
+    collided, and the usual casualty is immutability, via someone deleting the
+    old file to make the job run.  Addressing by content means the amended
+    record is a NEW record and the superseded one simply stays.
+    """
+    payload = json.loads(canonical_json(dict(result)))
+    superseded = prior_run_records(
+        output_root, str(payload["target_day"]), str(payload["coin"]),
+        str(payload["lane"]),
+    )
+    if superseded:
+        # R-10 (3): the superseding record names what superseded it, so the pair
+        # is readable from the artifacts alone without the coordination ledger.
+        payload["supersedes"] = {
+            "ruling": "R-7",
+            "why": (
+                "R-7 amended the leak-canary status bar, so canary_report_hash "
+                "changed and this record's content changed with it"
+            ),
+            "records": superseded,
+        }
     payload["run_hash"] = _sha256_bytes(canonical_json(payload))
     path = (
-        output_root
-        / "runs"
-        / f"day={payload['target_day']}"
-        / f"coin={payload['coin']}"
-        / f"lane={payload['lane']}"
-        / "run.json"
+        _run_dir(
+            output_root, str(payload["target_day"]), str(payload["coin"]),
+            str(payload["lane"]),
+        )
+        / f"pipeline={PIPELINE_VERSION}"
+        / f"run={payload['run_hash']}.json"
     )
     if path.exists():
         existing = json.loads(path.read_text())
@@ -627,6 +716,40 @@ def selftest() -> None:
         second = write_run_record(output_root=root, result=receipt)
         assert first == second
         print("  PASS  completed orchestration receipt is atomic and idempotent")
+
+        # --- R-10: an amended rule must be able to LAND, without deleting ----
+        run_dir = _run_dir(root, plan.target_day, plan.coin, plan.lane)
+        addresses = sorted(
+            q.relative_to(run_dir).as_posix() for q in run_dir.rglob("run=*.json")
+        )
+        assert len(addresses) == 1, addresses
+        assert addresses[0].startswith(f"pipeline={PIPELINE_VERSION}/run="), addresses
+        assert "supersedes" not in first
+        print("  PASS  a run record is versioned AND content-addressed")
+
+        # A legacy bare-path record from a superseded generation.
+        legacy = run_dir / "run.json"
+        legacy.write_text(json.dumps(
+            {"pipeline_version": "measurement_daily_v1", "run_hash": "old-hash"}
+        ))
+        amended = write_run_record(
+            output_root=root, result={**receipt, "canary_report_hash": "canary-r7"}
+        )
+        assert legacy.exists(), "R-10: the superseded record must NOT be removed"
+        assert amended["supersedes"]["ruling"] == "R-7"
+        assert amended["supersedes"]["records"][0]["run_hash"] == "old-hash"
+        assert amended["run_hash"] != first["run_hash"]
+        print("  PASS  R-10: amended content lands at a NEW address, old one kept")
+        print("  PASS  R-10: the superseding record names R-7 and the record it supersedes")
+
+        # Re-running the amended record must be a no-op, not a third artifact.
+        again = write_run_record(
+            output_root=root, result={**receipt, "canary_report_hash": "canary-r7"}
+        )
+        assert again == amended
+        minted = sorted(q.name for q in run_dir.rglob("run=*.json"))
+        assert len(minted) == 2, minted
+        print("  PASS  R-10: re-running an amended record mints nothing new")
 
 
 def _print_plan(plan: DailyPlan) -> None:

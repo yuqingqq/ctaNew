@@ -1,7 +1,19 @@
 protocol: FLOW_AND_FILLS_V4
-status: FROZEN_DESIGN_DEVELOPMENT_ACTIVE
+status: SUPERSEDED_BY_FLOW_AND_FILLS_V5
 supersedes: FLOW_MODEL_V3
-governs: true
+superseded_by: FLOW_AND_FILLS_V5
+superseded_at: '2026-08-23'
+superseded_by_ruling: R-19
+governs: false
+# GOVERNS FLIPPED false 2026-08-23 by BE, implementing R-19's "V4 is superseded
+# from this ruling". This is the minimal edit that carries the ruling's content.
+# Leaving governs: true would leave TWO protocols both claiming to govern -- the
+# exact defect this file's own supersession_note describes for V3/V4 ("both
+# FROZEN with overlapping scope and no precedence"). V4 remains historical and
+# auditable; it must not be used to admit data or score a fit.
+# NOTE for the coordinator: V4 is a coordinator-gated frozen artifact (COORDINATION
+# section 2 item 5). BE made this edit as IMPLEMENTATION of R-19, not as a decision.
+# It is a one-line revert if the coordinator wanted to make it themselves.
 supersession_note: >
   V3 and V4 were both FROZEN with overlapping scope and no precedence, and they
   DISAGREE on the estimator: V3 carries Hawkes history across adjacent markets

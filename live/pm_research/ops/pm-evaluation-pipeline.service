@@ -2,11 +2,35 @@
 Description=P-2026-003 full-batch Tier-2 evaluation pipeline
 Documentation=file:///home/yuqing/ctaNew/live/pm_research/EVALUATION_PIPELINE.md
 After=pm-measurement-pipeline.service pm-collector-prices.service pm-collector-clob.service
+OnFailure=pm-alert@%n.service
 
 [Service]
 Type=oneshot
 WorkingDirectory=/home/yuqing/ctaNew
 ExecStart=/home/yuqing/pricer-sol/venv/bin/python3 -m live.pm_research.evaluation_pipeline --catch-up --since 2026-08-20 --max-days 1 --scheduled --json
+# R-22. The collectors capture LIVE venue tape: lost capture is gone for
+# ever, while a batch reads immutable tape and re-runs at the cost of CPU.
+# So the batch side is made the preferred OOM victim, and is capped so a
+# runaway is cgroup-killed inside its own slice instead of triggering a
+# GLOBAL OOM that picks its own victim. Protection is applied here and
+# never on the collector units: relative priority is what matters, and
+# raising one side achieves it without restarting live capture.
+# A cap hit is a FINDING, not a reason to raise the cap.
+#
+# R-32: MemoryHigh is DELIBERATELY DISABLED, not merely unset.
+# It was 12G under R-22 and it CAUSED a 162-minute livelock. memory.high
+# throttles by forcing reclaim; on a swapless, all-ANONYMOUS working set
+# there is nothing to reclaim (file cache had already gone to 0), so the
+# process stalls instead of slowing -- measured at cpu_frac 0.0014 with
+# stall_frac 0.9799, i.e. 0.1% of one core and 98% fully stalled, while
+# never reaching memory.max and so never being killed. memory.max alone
+# gives the clean kill that was actually wanted; memory.high on this
+# workload converts that kill into an indefinite hang.
+# DO NOT REINSTATE without swap, or a workload with reclaimable pages.
+MemoryAccounting=yes
+MemoryHigh=infinity
+MemoryMax=16G
+OOMScoreAdjust=1000
 Nice=12
 IOSchedulingClass=idle
 TimeoutStartSec=infinity

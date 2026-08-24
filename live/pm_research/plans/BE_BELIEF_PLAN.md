@@ -1,5 +1,60 @@
 # BE-Belief — design plan
 
+> # ⛔ REFUTED IN SUBSTANCE — R-69, 2026-08-23. DO NOT BUILD FROM THIS PLAN.
+>
+> **Three review iterations, three consecutive `REFUTED_IN_SUBSTANCE` verdicts,
+> stop counter 0 of 2 never reached.** The loop was **terminated by ruling, not
+> closed by convergence** (`BE_BELIEF_REVIEW_LOOP.md`). No Revision 4 exists and
+> none will.
+>
+> **The refutation is about this document, and that was established rather than
+> assumed.** Iteration 3 ran against a frozen artifact whose `sha256` was recorded
+> before the lenses were dispatched and verified by all three independently.
+> Freezing the instrument took the sibling SP loop from 12 findings to 3 to 0.
+> **Here it changed nothing** — so the defects are in the plan, not in how it was
+> read.
+>
+> ## What a successor should take, and what it must not
+>
+> **TAKE — never challenged by any lens in any iteration (nine lens-runs):**
+> - **`Identity`**: BE-Belief produces the executable top-of-book **unchanged**.
+> - **§1.2's ownership ruling**: the estimand is `E[Y | state]`, **never**
+>   `E[Y | state, FILLED]`. Fill-conditioning is BE-FlowAndFills' term; baking it
+>   in double-counts the haircut.
+> - §1.3's cycle break · §2.1's staleness finding · §5.1's tick floor ·
+>   §7's commodity self-description.
+> - **A book-admissibility refusal is genuinely missing** and is the only place
+>   `Identity` can emit something indefensible — but as `width ∧ both_sides ∧
+>   **DEPTH**`, per-coin, since width alone is inert on 1-tick btc/eth.
+>
+> **DO NOT TAKE — refuted, and each one was believed here for at least one
+> revision:**
+> - **`b̂ = 1.145`** (Revision 0's headline). The probe reads 1.037 pooled; the
+>   day-clustered interval contains 1 under **every** convention tried.
+> - **Any claim that the verdict-coin fit "argues harder"**. Its `8.1×` is row-
+>   weighting plus 3.5× fewer training windows — 4% from the value predicted by
+>   estimation optimism alone — measured across **two different data vintages**.
+> - **"τ̂ ≈ 0 / no day-level variance component."** On the verdict coins
+>   `τ̂ = 0.147–0.171`, `Q = 12.71`, `p = 0.005`.
+> - **§5.2's "`b` does not depend on `r`."** False on its own table (1.73 se) and
+>   on the pooled receipt (2.32 σ, a floor).
+> - **§10.2's `TESTED — rotation survives.`** MDE at 80% power is 0.370 against a
+>   +0.241 effect that lies **inside** the interval.
+> - **Any automatic promotion rule.** Every version was sign-blind, underpowered,
+>   or both; the last one survived in code after the prose deleted it.
+>
+> ## The generalisable finding, which is the part worth keeping
+>
+> **Revision 1 built machinery a conclusion needed none of. Revision 2 deleted
+> most of it and built an ARGUMENT the conclusion needed none of.** `Identity` was
+> correct on the plainest reading available from the start — the interval contains
+> 1, and the module is not where the edge is. **Every elaboration of that reading,
+> across three revisions, was wrong.** 48% of iteration 2's findings were damage
+> the preceding rewrite introduced.
+>
+> Nothing blocks on this: E-X1 is `VOID(NO_PAIRED_POPULATION)` under R-56 and its
+> successor is calendar-blocked. Everything below this banner is **provenance**.
+
 > **⚠ For current state read [`FLOW_MODEL_STATE.md`](FLOW_MODEL_STATE.md).** This
 > document is **provenance** — correct about its own moment, not a statement of
 > current belief. Where it conflicts with `FLOW_MODEL_STATE.md`, that page wins.
@@ -7,6 +62,111 @@
 
 Program P-2026-003 (Polymarket 5-min crypto binaries). Planner deliverable:
 recommendation + canonical contract. **No implementation in this document.**
+
+> # ⛔ REVISION 2 IS FROZEN FOR REVIEW — 2026-08-23
+>
+> **No edits until iteration 3 closes.** Both lenses in iteration 2 reported *"the
+> plan changed under me mid-review"* — BE applied corrections at 18:27 while three
+> reviewers were reading. They absorbed it, but **a review of a moving document is
+> not a review of anything**, and R-64 showed the SP loop's entire convergence
+> happened in the two iterations after its instrument was held still.
+>
+> **The freeze is DETECTED, not declared.** The sha256 of this file is recorded in
+> `BE_BELIEF_REVIEW_LOOP.md` before the lenses are dispatched and re-checked when
+> they report. A mismatch invalidates the iteration rather than being explained
+> away.
+>
+> Findings from iteration 3 are applied to **Revision 3**, after the iteration
+> closes — never during it.
+
+> ## Revision 2 — 2026-08-23 — the fit nobody had run, and it argues HARDER for `Identity`
+>
+> **`FLOW_MODEL_PROTOCOL_V5.yaml:333-335` freezes `verdict_coins: [btc, eth]`;
+> the other five are `descriptive_only`.** Every belief number this programme has
+> ever quoted — Revision 0's `b̂ = 1.145`, the probe's `1.037`, every interval —
+> is an equal-window average over a population that is **5/7 barred from carrying
+> a verdict**. Revision 2 ran the restricted fit. Receipt:
+> `BE_BELIEF_RESULTS__btc-eth.md` (7,123 core rows, 4 days).
+>
+> | | all coins (pooled) | **VERDICT COINS btc/eth** |
+> |---|---:|---:|
+> | core `b̂` | 1.037 | **1.083** |
+> | core `â` | −0.006 | **−0.062** |
+> | per-day `b̂` | 0.989 / 0.992 / 1.120 / 0.953 | **0.827 / 0.973 / 1.147 / 1.271** |
+> | day-clustered sd | 0.073 | **0.195 — 2.66× as dispersed** |
+> | day-clustered CI, t(3) | [0.897, 1.130] | **[0.745, 1.364]** |
+> | ...same, z | [0.942, 1.085] | [0.864, 1.245] |
+> | **OOS Δlog-loss, deployable** | **+0.00013** | **+0.00105 — 8.1× WORSE, same wrong sign** |
+>
+> **Every direction points at `Identity` harder than the pooled figure did.** The
+> out-of-sample penalty is eight times larger on the only coins we may trade, the
+> day-to-day dispersion is nearly three times larger, and the interval contains 1
+> under both conventions with room to spare. **Pooling made the estimator look
+> more stable than it is**, by averaging seven series into one — which is the
+> same defect §6.3 was warned about from the other side.
+>
+> **One thing worth carrying, stated as a hypothesis and not a finding.** The
+> verdict-coin per-day series is **monotonically increasing** — 0.827 → 0.973 →
+> 1.147 → 1.271 — where the pooled series is not. Under exchangeability
+> `P(monotone) = 1/4! = 0.042`. **That is four points and it is not significant**;
+> it is exactly the kind of pattern that becomes a headline if someone wants one.
+> It goes to §6.5's monitor as a question, with the interval convention named and
+> the population declared, and nothing is built on it.
+>
+> *(A related claim was checked and does NOT hold: `b̂` is **not** monotone in `r`
+> on the verdict coins — 1.158 / 1.199 / 1.060 / 1.037 / 0.980 declines from
+> r=240 onward but r=270 breaks it. The range, 0.219, is still **2.4× the pooled
+> `b̂ − 1` of 0.083**, so §5.2's "no `r`-dependence" remains unsupported on this
+> population — but it is unsupported, not reversed.)*
+>
+> **Revision 2's other changes are DELETIONS**, on the R-61/marginal-value
+> reading: §6.5's five-condition promotion gate (11 findings, all symptoms of
+> automating a once-only decision) is replaced by a **monitor**; §6.4's warm-up
+> bound is removed because `Identity` performs no fit and the bound refused the
+> best forecast in favour of the worst; §1.2's *"so the recalibration IS the edge
+> or there is none"* is withdrawn as refuted by measurement. **One mechanism is
+> ADDED**: a book-admissibility refusal, the only place `Identity` can emit
+> something indefensible.
+
+> ## Revision 1 — 2026-08-23 — the recommendation changed
+>
+> Revision 0 recommended **recalibrating** the book by a fitted logit slope
+> `b̂ = 1.145`. **Revision 1 recommends `Identity` plus a monitor** — ship the
+> book unchanged, and run the rotation estimator as a *watched diagnostic* that
+> may promote a recalibration later.
+>
+> **This is not a reviewer's preference. Three things forced it:**
+>
+> 1. **The headline fails this plan's OWN declared primary unit.** §6.1 rule 4
+>    says *"the correct unit for power is windows, and above that, **days**."*
+>    §3.3 rejected `b = 1` at 3.5 **window**-clustered σ. Day-clustered on four
+>    days the CI is **[0.897, 1.130] — it contains 1.**
+> 2. **`be_belief.py` productionised §12 steps 1–3 and disagrees.** On 4,762
+>    windows / 4 days: core `b̂` **1.037** (not 1.145), `â` **−0.006** (not
+>    +0.122, and sign-alternating per day), and **every challenger scores WORSE
+>    than the raw book out-of-sample.** The deployable map's OOS Δlog-loss is
+>    **+0.00013** — indistinguishable, and of the wrong sign.
+> 3. **No MDE existed anywhere in Revision 0**, while its own §12 step 5 gates on
+>    an effect size. Computed post-hoc from between-day dispersion it is
+>    **0.00042 log-loss at 7 days**. *(Iteration 1 read this as "the gate cannot
+>    discriminate". **That reading is WITHDRAWN** — 0.00042 < 0.0006, so a true
+>    effect of the claimed size **would** have been detected. See the correction
+>    under §6.5: the gate's power was adequate for the claim; **the claim was not
+>    reproduced.** Detecting the effect actually observed — +0.00013, wrong sign —
+>    would take **73 days**.)*
+>
+> **What survives, unchanged and load-bearing:** §1.2's ownership ruling
+> (`E[Y|state]`, never `E[Y|state,FILLED]`), §1.3's cycle break, §2.1's staleness
+> finding, §5.1's tick floor, §7's commodity self-description, and §3.1's
+> rejection of isotonic — **the one §A claim the probe confirms**, replicated at
+> 4× the sample.
+>
+> **What this costs:** nothing operationally. Revision 0's own §10.13 named
+> `Identity` as the escape hatch, and its §12 step 5 already routed there on a
+> failed gate. Revision 1 makes the escape hatch the *default* and requires
+> evidence to leave it, rather than the reverse. Sections not touched by this
+> revision remain Revision 0 text and are marked where they carry superseded
+> numbers.
 
 Status of inputs: contracts.yaml v12 defines `BeliefProcess` but has **no
 `BE-Belief` module record** (open MUST-FIX M11-4, `PM_STRUCT_ITER11_REVIEW.md:228`).
@@ -22,23 +182,54 @@ corpus, §A wins and says so.
 
 ## 0. Recommendation in one line
 
-**BE-Belief produces the venue book, recalibrated: a two-parameter logit map of
-the executable top-of-book — *estimated* with a free drift intercept, *deployed*
-with that intercept pinned to zero — fitted walk-forward and pooled across
-symbols, with the stream forecast retained only as a weighted constituent whose
-weight is *measured* (currently ≈ 0) and as the declared fallback when the book
-is Unavailable.**
+**BE-Belief produces the executable top-of-book UNCHANGED — `Identity` — under a
+standing rotation monitor.** The two-parameter logit map of Revision 0 is
+retained in full as the monitor's *estimator*, fitted walk-forward and pooled
+across symbols, but it is **not applied to the output** until it clears the
+**monitor of §6.5 has been read by a promotion protocol that does not yet exist**
+(§6.5; no bar lives in this document). The stream forecast is retained as a weighted constituent
+whose weight is *measured* (currently ≈ 0) and as the declared fallback when the
+book is Unavailable.
 
-Formally, option **(c)**, implemented in the shape of **(d)** so that the weight
-on our own forecast is a running diagnostic rather than an assumption.
+Formally, option **(b)** as the deployed map, with option **(c)** kept live as a
+measured, promotable challenger
 
-**And the size of it, measured, not asserted** (§A): `b̂ = 1.15 ± 0.04`
-(window-clustered), which moves the belief by **≈ 2 probability points at its
-best moneyness — about one ATM half-spread** — for a walk-forward gain over the
-raw book of **0.0004–0.0008 Brier**. That is 2–4% of the 0.0201 by which our own
-forecast *loses* to the book. **BE-Belief is a correctness module, not a P&L
-module.** Adopt it because it is the right baseline and it costs one parameter,
-not because it is the trade.
+> **⚠ Revision 1 first wrote "option (a)" here. That was the most dangerous line
+> in the document.** §1.1 defines **(a)** as the *stream-anchored forecast* and
+> rejects it — it loses to the book by **+0.0201 Brier** through three σ
+> generations. `Identity` is **(b)**. An implementer following the original line
+> would have wired `p_hat` to the losing model. **And §1.1 still marks (b)
+> "reject"** — see the §1.1 annotation: Revision 1 adopts an option its own table
+> rejects, for a reason `FLOW_MODEL_STATE.md` refutes. §11's contract `notes`
+> likewise still describe a recalibrating module. **Three statements of deployed
+> behaviour in this document, none of them `Identity`.** The recommendation
+> changed and the document was not swept. — so the rotation is a running diagnostic rather
+than an assumption. **The direction of the burden is the whole change:** Revision
+0 shipped the map and would have retreated to `Identity` on a failed gate;
+Revision 1 ships `Identity` and requires a passed gate to leave it.
+
+**And the size of it, measured on the largest sample available** (`be_belief.py`,
+4,762 windows / 23,801 rows / 4 days):
+
+| quantity | Revision 0 (§A, 1,645 windows, 2 days) | Revision 1 (probe, 4 days) |
+|---|---:|---:|
+| core `b̂` | 1.145 ± 0.042 | **1.037** — day-clustered CI **[0.897, 1.130]**, contains 1 |
+| core `â` | +0.122 | **−0.006**, sign-alternating per day |
+| deployable OOS Δlog-loss | −0.0006 (beats book) | **+0.00013** → `INDISTINGUISHABLE` |
+| best challenger OOS | `affine_ab` −0.0020 | **`affine_ab` +0.00142** — CI excludes 0 on the **wrong side** |
+| MDE at the 7-day gate | *not computed* | **0.00042 log-loss** |
+
+**Every challenger is worse than the raw book out-of-sample.** The honest reading
+is not "the rotation is absent" — four days cannot establish that, and the point
+estimate is still above 1 — it is **"the rotation is not yet distinguishable from
+zero at the unit this plan declares primary, and the effect it would buy is below
+the MDE the same data supports."** Those are different claims and only the second
+is supported.
+
+**BE-Belief is a correctness module, not a P&L module** — that framing survives
+Revision 0 intact. What does not survive is *adopting* the map on it. A
+correctness module that ships an unsupported two-parameter transform is not more
+correct than one that ships the identity; it is more confident.
 
 ---
 
@@ -55,8 +246,48 @@ not because it is the trade.
 
 ### 1.2 The self-defeat check, stated honestly
 
-A belief that tracks the book cannot profit from disagreeing with it. So the
-recalibration IS the edge or there is none. Three consequences we accept up front:
+> ### ⚠ REVISION 2 — THE SECOND SENTENCE IS WITHDRAWN. THE THIRD SURVIVES INTACT.
+>
+> Revision 0 opened: *"A belief that tracks the book cannot profit from
+> disagreeing with it. **So the recalibration IS the edge or there is none.**"*
+>
+> **The first sentence is a tautology. The "So" is a false inference, and
+> `FLOW_MODEL_STATE.md` — which wins on facts — refutes it directly.** §1e
+> measures a simulated two-sided **`JOIN_BBO`** maker, whose belief *is* the book
+> by construction:
+>
+> ```
+> gross spread capture   btc +0.642 c/share (n=10,294)   eth +0.778 c (n=1,999)
+>                        "real, positive and stable"
+> ```
+>
+> **Profit generated with zero disagreement with the book.** The tautology is
+> about *takers*, for whom edge requires disagreement. A **maker** is paid the
+> spread for supplying immediacy, and that payment does not require believing
+> anything the book does not.
+>
+> **What the honest version says, and why it makes the plan STRONGER:** the same
+> §1e measures that maker's markout at **−0.532 c btc / −1.243 c eth**, intervals
+> excluding zero, 8 of 8 cells negative. So a book-equal maker is paid the spread
+> and loses more of it to adverse selection. **The P&L question is spread capture
+> versus adverse selection — which is BE-FlowAndFills' term, not BE-Belief's.**
+>
+> §1.2 located the programme's edge question inside the *belief* module. It is
+> not there. **That is exactly what §7's commodity self-description and
+> consequence 3 below already say**, so withdrawing the "So" removes a
+> contradiction rather than creating one: the plan asserted BE-Belief was the
+> edge in §1.2 and denied it in §7, and §7 was right.
+>
+> **Consequences 1–3 below are independent of the withdrawn sentence and all
+> three stand** — in particular consequence 2, which this plan calls its single
+> most important line and which iteration 1 confirmed. **Under R-38(d) this moves
+> no verdict.** It is escalated as `Q-BE-18` because the loop charter makes §1.2
+> load-bearing for `EX1_PREDICTION_PROTOCOL.md`'s framing; that protocol is
+> FROZEN and gets an annotation beside, never an edit.
+
+*Revision 0 text, retained as provenance:* "A belief that tracks the book cannot
+profit from disagreeing with it. So the recalibration IS the edge or there is
+none." Three consequences we accept up front:
 
 1. **The FLB gap is an upper bound on P&L, not P&L.** The measured capture ratio
    is brutal: unconditional gap +1.8 c/share at `t=290s, mid∈[0.95,1.00)` vs
@@ -338,9 +569,85 @@ largest: `m = 0.65 → p̂ = 0.671`, i.e. **+2.1 pp against an ATM half-spread o
 ≈ 2.2 c**. The map is worth about one half-spread at its best point, and less
 everywhere else — before the 60–97% selection haircut of §1.2.
 
-The null `b = 1` is rejected in-sample at ≈ 3.5 window-clustered σ, and `b` is
-stable across the two days (day 1: 1.184 ± 0.078; day 2: 1.113 ± 0.067). That is
-the strongest thing that can honestly be said on 20 hours of data.
+> ### ⚠ Revision 1 — THIS SUBSECTION'S HEADLINE IS WITHDRAWN
+>
+> Revision 0 continued: *"The null `b = 1` is rejected in-sample at ≈ 3.5
+> window-clustered σ, and `b` is stable across the two days (day 1: 1.184 ±
+> 0.078; day 2: 1.113 ± 0.067). That is the strongest thing that can honestly be
+> said on 20 hours of data."*
+>
+> **It was not the strongest thing that could honestly be said; it was stronger
+> than could honestly be said, and by this plan's own rule.**
+>
+> **§6.1 rule 4 of this document:** *"the correct unit for power is windows, and
+> above that, **days**."* The rejection above is quoted in **window**-clustered
+> σ. Day-clustered on the four days `be_belief.py` covers — `0.9894, 0.9917,
+> 1.1203, 0.9530`:
+>
+> ```
+> mean 1.0136   sd 0.0733   se 0.0367   n_days 4
+> t-interval, 3 df (t=3.182):  [0.897, 1.130]   CONTAINS 1
+> normal z=1.96:               [0.942, 1.085]   EXCLUDES 1
+> ```
+>
+> **The central claim does not survive the unit this plan declares primary.** Not
+> a reviewer's alternative standard — the plan's own, applied to the plan.
+>
+> **⚠ REVISION 1's OWN ARITHMETIC HERE WAS FALSE. CORRECTED.**
+>
+> Revision 1 wrote that the z-interval *"**excludes 1** — and Revision 1's central
+> argument reverses."* **It contains 1:** `0.94176 < 1.00000 < 1.08544`. BE's
+> verification script *printed the literal string* `"does NOT contain 1"` instead
+> of evaluating `lo < 1 < hi` — **a label in the position of output**, written in
+> the same hour BE fixed another instrument for asserting instead of detecting.
+>
+> **The error ran AGAINST interest, and that is the part worth keeping.** Both
+> conventions contain 1, so the conclusion is **robust** to the convention — a
+> *stronger* statement than the one Revision 1 made against itself. Revision 1
+> manufactured a false fragility, then wrote a long confession to Revision 0's
+> convention-shopping sin. **The confession was the error.** Over-correction is
+> not a safe direction to fail in; it is another way to put a false statement in
+> a plan.
+>
+> **AND THE WHOLE DAY-CLUSTERED ARGUMENT IS THE WRONG INSTRUMENT.** A variance
+> decomposition on the same four days:
+>
+> ```
+> mean WITHIN-day sampling variance  0.005302     (from §A.2's clustered se, scaled by n)
+> observed BETWEEN-day variance      0.005374
+> tau^2 = +0.000072   ->   tau = 0.0085   ~  ZERO
+> ```
+>
+> **There is no measurable day-level variance component.** A perfectly stable `b`
+> with one true value produces exactly this much apparent alternation. So §3.3's
+> *"`b̂` per day alternating around 1 … the estimator is not reproducing across
+> samples, which is the finding"* is **refuted** — 98.6% of the dispersion is
+> within-day sampling noise. The correct statistic is the window-clustered
+> interval on all 18,755 core rows:
+>
+> ```
+> b_hat = 1.0367 +/- 1.96(0.0245)  =  [0.989, 1.085]     CONTAINS 1, at HALF the width
+> ```
+>
+> **`Identity` survives on a better argument than the one Revision 1 gave it.**
+> The four-day interval is wide because it burns 3 df estimating a variance that
+> is zero, not because days disagree.
+>
+> **AND "the one day shared with Revision 0's sample" SHARES ZERO WINDOWS.**
+> Revision 0's §A spans `2026-08-19 14:25 → 2026-08-20 10:40`; the `clob_v3_1` era
+> opens `2026-08-20 14:50:21`. **Disjoint, 4h10m apart, across a collector-era
+> boundary** that `FLOW_MODEL_STATE.md` §5 forbids pooling across. The
+> 0.989-vs-1.113 comparison is between two populations sharing a calendar label
+> and nothing else — the same defect that voided E-X1 under R-56, committed again
+> in the section written to correct Revision 0's inference.
+>
+> **What honestly remains of §3.3:** `b̂ ≈ 1.04` with a window-clustered interval
+> containing 1; no evidence of day-level instability; and no comparison to
+> Revision 0 that survives the era boundary. That supports `Identity` and supports
+> nothing else.
+
+*The Revision 0 text above is retained as provenance. Its measurements are not
+disputed; its inference from them is.*
 
 ---
 
@@ -496,7 +803,29 @@ isotonic. Run (core domain, dense, window-clustered):
 | 270 | 1,639 | +0.138 | 1.256 | 0.081 |
 
 **No monotone trend, no pair separated by more than ~1.5 se, every value within
-one se of the pooled 1.145.** So the answer to the brief's question is: **the map
+one se of the pooled 1.145.**
+
+> **⚠ Revision 3 — THIS SENTENCE WAS FALSE ON THE TABLE DIRECTLY ABOVE IT, BEFORE
+> ANY NEW DATA EXISTED.** Two of its three assertions fail against §5.2's own
+> Revision-0 numbers:
+>
+> ```
+> max pairwise separation:  r=270 (1.256, se .081) vs r=180 (1.083, se .059)
+>                           diff 0.173, se_diff 0.100  ->  1.73 se     (claim: "~1.5")
+> "within one se of 1.145":  r=270 is 1.37 se away    VIOLATES
+>                            r=180 is 1.05 se away    VIOLATES   (2 of 5)
+> ```
+>
+> And against the **pooled receipt** — the larger of the two — the max pair is
+> `r=240` vs `r=120`: **2.32 σ**, and that is a *floor*, because the per-`r` fits
+> share window outcomes so `Cov > 0` shrinks the true `se_diff`. On the verdict
+> coins the max pair is 1.40 σ: **underpowered, which is not the same as absent.**
+>
+> **So the header's "measured: no, not detectably" is a null stated as an
+> established fact, and it was never supported — on any data, at any time.**
+> Revision 2 annotated this only in its banner and only against the *smaller*
+> receipt, which left the section itself asserting the null. §10.8 mandates
+> *"always report `r`-stratified"*; §6.5 now records the `r`-split accordingly. So the answer to the brief's question is: **the map
 does not need conditioning on `r`, and adding it now would spend 2–4 dof on
 noise.** The book's Brier collapse to 0.017 at `r = 30 s` is a statement about
 *how much is left to forecast*, not about *how biased the forecast is* — those
@@ -545,6 +874,21 @@ to fail that gate.
 | 1 | **anchored `b`, core domain — the deployable** | run | −0.0006 log-loss / −0.0004 Brier OOS |
 | 2 | `(a, b)` free — the **estimator** | run | −0.0020 / −0.0008 OOS; `a` diagnoses drift; **not deployed** |
 | 3 | `b_low`, `b_high` with common `a` | run | §4.4 — rotation survives, diff CI contains 0 |
+
+> **⚠ Revision 3 — `TESTED` IS WITHDRAWN. THE TEST HAD NO POWER.** The
+> free-intercept CI on `b_high − b_low` is `[−0.169, +0.349]`:
+>
+> ```
+> half-width 0.259  ->  se 0.132  ->  MDE at 80% power = 0.370
+> MDE (0.370) EXCEEDS the +0.241 this row claims to have dissolved
+> and +0.241 lies INSIDE the interval
+> ```
+>
+> **The interval widened to admit both zero and the original estimate.** Nothing
+> collapsed and nothing survived — the data cannot separate the two hypotheses.
+> Striking a risk through as `TESTED` on that basis records **a failure to reject
+> as a result**, which is the defect this plan's own iteration-1 verdict convicted
+> Revision 0 of. Status reverts to **OPEN, underpowered**.
 | 4 | `b(r)`, 2 knots | screened | §5.2 — flat in `r`; expect it to fail its gate at 7 days |
 | 5 | isotonic | run | **worse than the raw book** (+0.0012 / +0.0009) |
 | 6 | per-coin `b` (shrunk) | screened | §6.3 — heterogeneity marginal; gated to ≥30 days |
@@ -599,13 +943,169 @@ immutable artifact with `artifact_id`, `fit_data_through`, `fit_n_windows`,
 `Recalibration` holds *references*.
 
 Fail-loud conditions → `Unavailable`:
-- `fit_n_days < 2` or `fit_n_windows < 300` → `Unavailable(WARMUP)`
+- ~~`fit_n_days < 2` or `fit_n_windows < 300` → `Unavailable(WARMUP)`~~
+  **DELETED IN REVISION 2 — under `Identity` THERE IS NO FIT, and this condition
+  refused the best available forecast in favour of the worst.** Concrete: a fresh
+  deploy or artifact-store reset leaves `fit_n_days = 0`, so the module returns
+  `Unavailable(WARMUP)` for two days even though `p̂ = mid` is computable from the
+  live book and is, per §1.1 row (b), *"the best available forecast"*.
+  `UnavailableAction = FallBack` then routes to the stream forecast, which §1.1
+  row (a) measures as losing to the book by **+0.0201 Brier**. **The bound belongs
+  on `RecalibrationForm.LogitAnchored`, not on `BeliefProcess`** — a warm-up
+  guards a *fit*, and Revision 1 left it guarding a module that no longer performs
+  one.
+- **NEW IN REVISION 2 — book INADMISSIBLE → `Unavailable(BOOK_INADMISSIBLE)`.**
+  The one genuinely missing mechanism, and the only place `Identity` can emit
+  something indefensible. Measured over **1,940,224** admissible quotes on
+  2026-08-23:
+
+  ```
+  spread > 20 c   80,118  (4.13%)   100% of them inside the core domain
+  spread > 50 c   14,720  (0.76%)   100% inside the core domain
+  best_bid = 0.00 71,628  (3.69%)   -- no bid side at all
+  crossed/locked       0  (0.00%)   -- SEE THE CORRECTION BELOW: THIS ZERO IS TAUTOLOGICAL
+  ```
+
+  Concrete failure this closes: `bnb-updown-5m-1787446500` quotes `bid 0.15 /
+  ask 0.94`. The boundary rule `0.0 ≤ bid < ask ≤ 1.0` **admits** it; age is 0 s
+  so `max_book_staleness` **cannot** fire; `m = 0.545` is inside
+  `Recalibration.domain` so `on_out_of_domain` **cannot** fire. Under `Identity`
+  the module emits **`p̂ = 0.545, staleness = 0`, no flag**, from a 79-cent-wide
+  book with essentially nothing in it — and DE sizes against it. `bid 0.00 /
+  ask 0.14` likewise emits `p̂ = 0.07` from a book with no bid side.
+
+  **Note the perverse direction, because it is why staleness cannot substitute:
+  the worst books are the FRESHEST.** A wide book is wide precisely because it is
+  being churned, so every staleness bound passes exactly when admissibility
+  fails. The two conditions are independent and the plan had only one.
+
+> **⚠ Revision 3 — TWO CORRECTIONS, AND THE MECHANISM AS SPECIFIED WAS INERT.**
+>
+> **(a) The crossed/locked zero is TAUTOLOGICAL.** The census ran over quotes
+> admitted by `0.0 ≤ bid < ask ≤ 1.0` — a rule that **excludes crossed and locked
+> by construction** (the strict `<` is itself the guard). Counting them among
+> admitted quotes returns 0 always. `ev_gates.py:244` refuses exactly this shape:
+> *"idealisation is a COMPARISON; one arm cannot show it."* **The instruction
+> "do not code for it" is struck.** It is also wrong for the object §11 mandates:
+> `TopOfBook` is `price_change` ∪ `book`, and a fresh `price_change` bid meeting a
+> `book` ask up to 6 s stale **manufactures crossed pairs** — where the probe,
+> reading `price_change` only, cannot see one because both sides arrive in the
+> same message. Re-run the census on the **unfiltered, merged** stream.
+>
+> **(b) A WIDTH condition does not bind on the coins that carry verdicts.**
+> Revision 2 calibrated this on the `>20 c` tail and demonstrated it with
+> **`bnb`** — one of the five `descriptive_only` coins the same banner cites
+> V5:333 to disqualify. **ATM spread is 1 tick on btc/eth** (§2.2 U8), so any
+> threshold drawn from that tail passes ~100% of the verdict coins. Concrete state
+> still admitted: `bid 0.54 / ask 0.55, size 5 × 5` — one tick wide, both sides
+> present, age 0, **$2.75 a side**, which is the venue's own p10 touch (§2.3).
+>
+> **The condition is `width ∧ both_sides ∧ DEPTH`**, and its census must be run
+> **per coin with the verdict coins reported separately** — a pooled 4.13% is the
+> pooling artefact this plan condemns twice elsewhere. `TopOfBook` already carries
+> `bid_size`/`ask_size`, so depth is buildable today.
+>
+> **(c) The threshold is a POLICY value, not a Class-C estimand.** Revision 2 said
+> *"Class-C — measured, adopted, never chosen"*. No estimator returns "refuse
+> above X cents": Class C is publish-then-adopt for quantities an estimator
+> produces. Calling a policy value Class-C does not defer the choice, it conceals
+> it — **and the protection was already spent**, because this document publishes
+> the distribution at two candidate cut points. Set it from a stated *principle*
+> (refuse when the half-spread exceeds the map's maximum measured effect, ≈2 pp)
+> and record that the value is chosen.
+
+  Admissibility is a **width, both-sides and DEPTH** condition on `TopOfBook`,
+  evaluated before any map. Its threshold is **Class-C — measured, adopted, never chosen**:
+  it is not set in this document, because setting it here against a distribution
+  already seen is the Class-D move R-6 forbids and §6.5 was just deleted for.
 - book absent or `staleness > threshold` → `Unavailable(STALE_BOOK)`, cause
   propagated
 - `m` outside `Recalibration.domain` → the identity map, flagged, never
   extrapolated
 - `source_events = SNAPSHOT_ONLY` → belief is emitted but **marked**, because
   §2.1 shows it is a materially different object
+
+---
+
+### 6.5 What would change our mind — a MONITOR, not a gate (Revision 2)
+
+> **Revision 1 put a five-condition automatic promotion gate here. Revision 2
+> DELETES it.** Three review lenses returned **eleven** findings against it: two
+> of its three "directional" conditions were **sign-blind** (it would have
+> promoted a book-*contracting* map and reported it as confirming the opposite
+> mechanism); it demanded sign agreement across seven coins when
+> `FLOW_MODEL_PROTOCOL_V5.yaml:333` bars five of them from carrying a verdict; its
+> `α` was ~1.5e-06 with ~0 power against the plan's own point estimate; its P4
+> was undefined at the `n_days` it mandated; P5 contradicted P1; and its
+> anti-ratchet could oscillate the belief 1.4 c/share at a UTC boundary with no
+> knowledge-time footprint.
+>
+> **Those are eleven symptoms of one mistake: automating a decision that happens
+> at most once.** A gate must be sound against every input it could ever see,
+> including adversarial ones — that is why it accumulated conditions and why each
+> condition brought its own defect. **A monitor only has to report.**
+
+**The rotation estimator runs and is recorded. It is never applied to the output,
+and no rule promotes it automatically.**
+
+Each refit records `b̂`, its interval, the per-coin split restricted to the
+**verdict coins**, and the out-of-sample Δlog-loss against `Identity`. That is
+the whole mechanism.
+
+> **⚠ Revision 3 — AS WRITTEN THIS DEFERRAL COULD NEVER BE EXECUTED.** §6.5
+> required a protocol *"frozen before the data that would justify it is looked
+> at"* **and** required the monitor to publish that same data at every refit.
+> Both cannot hold: at any time `T`, all data through `T` has been looked at, by
+> the monitor. There was no reachable state in which the protocol could be written
+> cleanly, because Revision 2 deleted the only moment — before the monitor's first
+> reading — when it could have been. **Revision 2 deleted the gate and
+> pre-registration together; they are not the same object.** The eleven iteration-2
+> findings were against the gate's *conditions*, never against pre-registering.
+>
+> **THE TRIGGER IS A CALENDAR COMMITMENT, WHICH IS R-6-SAFE PRECISELY BECAUSE IT
+> IS NOT A THRESHOLD ON THE EFFECT:**
+>
+> > **At `n_days ≥ 30` the programme MUST write and freeze a promotion protocol,
+> > evaluated only on data AFTER its freeze date.**
+>
+> A date is not a Class-D value — it cannot be tuned toward a result, and nothing
+> about the effect is chosen by picking it. The monitor's readings up to the
+> freeze date inform *whether it is worth writing*; the protocol scores only what
+> comes after. **A monitor with no actuator is cost with no path to value**, which
+> is the R-61 marginal-value test applied to a mechanism rather than a finding.
+
+**Leaving `Identity` requires a NEW FROZEN PROTOCOL, frozen on the calendar
+trigger above and evaluated only on post-freeze data.** Not a threshold in this
+document.
+The reasons are the programme's own:
+
+- **A bar written now, against a result already visible, is a Class-D value moved
+  after measurement** — which R-6 forbids and which BE has a standing instruction
+  to refuse. Revision 1's gate was exactly that: BE saw `b̂ = 1.037` and then
+  chose the conditions under which 1.037 would not promote.
+- **Every failure above came from the gate having to answer in advance.** A
+  protocol written when the question is live can state its population, its
+  interval convention, its arm, and its power against the effect actually
+  observed — none of which Revision 1's gate could do, because none of it was
+  knowable when the gate was written.
+
+**What the monitor must report, so the eventual protocol has honest inputs:**
+
+| | and why this one |
+|---|---|
+| `b̂` with the interval method **named**, **`n_clusters`**, and the **data-vintage cut** | §3.3: at small `n_days` the convention decides the verdict. **`n_clusters` because at `k≤3` the "95% CI" IS `[min,max]` of the per-day deltas** — verified on all 8 cells — so without `k` a reader cannot tell an interval from a range. **The vintage cut because two receipts printed BYTE-IDENTICAL `days_sampled` across samples 1,071 rows apart**: a day list is not a vintage |
+| **the between-day sd of Δ** | without it the MDE row below is **not computable from this table**, which is how Revision 2 shipped a monitor that could not produce its own item 4. The two available values differ **4.97×** |
+| **the fit scope and the scored population, named** | rows here otherwise permit three different populations in one report and name none. And the same Δ reads **8.3× differently** row-weighted vs day-weighted, so **report both** |
+| **`b̂_t` and a trend statistic, session-stratified** | a weighted trend on the verdict days absorbs **99.3%** of between-day heterogeneity (z=3.55). A trending `b̂` makes a single pooled `b̂` the wrong summary — and the trend is confounded with UTC-block coverage running 100%/38%/38%/29%, so the split is mandatory, not optional |
+| **the arm-slope split and its interval** | §4.4's "load-bearing result" is otherwise uncheckable — and it does **not** reproduce: btc/eth free-intercept `b_high − b_low = +0.227` against pooled +0.047 |
+| per-coin `b̂`, **verdict coins only** | V5:333. The pooled figure averages a population that is 5/7 descriptive-only |
+| OOS Δlog-loss vs `Identity`, sign included | the deployable currently scores **+0.00013** — indistinguishable, wrong sign |
+| `n_days`, and the MDE **at that `n_days`** | Revision 1 quoted an MDE against a withdrawn effect; against the observed one the horizon is ~73 days |
+| the excluded-quote fraction and its bias | §6.1 rule 3, which the probe itself violated: 5.2% dropped, tail-concentrated, unreported |
+
+**`Identity` is a legitimate terminal answer for this module** — §7 already argues
+the venue book is very hard to beat, and a module that confirms that has done its
+job. Nothing here is a holding pattern.
 
 ---
 
@@ -745,6 +1245,16 @@ Ranked by how much they would change the answer.
    *Remaining test:* refit inside the 0.001 tick regime.
 2. ~~**It is a translation, not a rotation.**~~ **TESTED, §4.4 — rotation
    survives.** With a free common intercept, `b_high − b_low = +0.099`,
+
+   > **⚠ Revision 3 — `TESTED` WITHDRAWN, status reverts to OPEN (UNDERPOWERED).**
+   > The free-`a` CI on `b_high − b_low` is `[−0.169, +0.349]`: half-width 0.259 →
+   > se 0.132 → **MDE at 80% power = 0.370, which EXCEEDS the +0.241 this row
+   > claims to have dissolved** — and **+0.241 lies inside the interval**. The
+   > interval widened to admit both zero and the original estimate. Nothing
+   > collapsed and nothing survived. **Striking a risk through as `TESTED` on a
+   > failure to reject is the defect this plan's own iteration-1 verdict convicted
+   > Revision 0 of**, sitting in its risk register for three revisions.
+
    95% CI [−0.169, +0.349]. The apparent 2.4σ asymmetry is an artifact of
    pinning `a = 0` during *estimation*. Retained as a standing regression test,
    not as an open risk.
@@ -895,6 +1405,36 @@ precisely to put an interval around them.
 
 ## 11. Canonical contract — `BE-Belief`
 
+> ### ⚠ Revision 1 — THIS BLOCK IS NOT SUBMISSION-READY
+>
+> Revision 0 wrote it against **v12** and proposed a `12 → 13` bump. The file is
+> at **v22**, with **v23** in batch consolidation. **Four defects must be cleared
+> before this block is proposed to the contract batch, and until they are it is
+> design text, not a delta:**
+>
+> 1. **Version.** `12 → 13` is stale by ten revisions. The bump is against
+>    whatever v23 lands at, and the R-SSOT name-collision check must be re-run
+>    against **v22/v23**, not v12 — a name free in v12 may well be taken now.
+>    *(Unverified as of Revision 1. Do not submit on the v12 check.)*
+> 2. **The `−0.0004` Brier gain is superseded.** It is quoted three times below
+>    as a settled property. The probe measures **+0.00013 log-loss OOS**
+>    (indistinguishable, wrong sign) on 4 days. **A contract must not ship a
+>    performance claim the plan's own §0 has withdrawn.**
+> 3. **The `6–8 c` ATM spread is WITHDRAWN for btc/eth** — §2.2's own U8 note
+>    records the measured value as **1 tick** on 2.29 M quotes, and the fill
+>    question is now restricted to btc/eth. The block still carries the refuted
+>    figure.
+> 4. **`TopOfBook` cannot be built from the source this same block mandates.**
+>    The block requires it while the mandated input series does not carry the
+>    fields it needs. Either the type shrinks to what the source provides or the
+>    source changes — **this is a contradiction inside one block**, and it is the
+>    one that would have failed a checker rather than a reviewer.
+>
+> Defect 4 is load-bearing and 1–3 are stale values. **Under R-38(d) clearing
+> them buys an obligation to re-measure, not a verdict** — fixing the numbers does
+> not make the recalibration adoptable. **Nothing in this document can** — §6.5's
+> gate is DELETED and promotion requires a separate frozen protocol.
+
 Schema style of `live/pm_research/contracts/contracts.yaml` v12. **Not applied to
 that file; this block is the proposal.** All additions; per
 `contracts/migrations.yaml`, adding types/fields/modules needs no migration
@@ -968,8 +1508,13 @@ types:
       drift-neutral by construction, which is why it is the DEPLOYED form. Isotonic is a
       REFERENCE challenger for measuring overfitting, NOT a deployable: measured walk-forward
       it is WORSE than the raw book (Brier +0.0009) while the 1-parameter map is better
-      (-0.0004). Identity is a legitimate deployable outcome if b_hat is not distinguishable
-      from 1.
+      (-0.0004). REVISION 1: that -0.0004 is SUPERSEDED -- the 4-day probe measures
+      +0.00013 log-loss OOS, indistinguishable and of the wrong sign. Identity is
+      no longer merely "a legitimate outcome"; it is the DEPLOYED DEFAULT, and
+      LogitAnchored is promoted onto it only by a SEPARATE FROZEN PROTOCOL with a
+      calendar trigger. The five-condition gate this line used to name was deleted
+      in Revision 2 and this line kept citing it -- see the Revision 3 sweep.
+      The burden runs the other way from Revision 0.
 
       '
 
@@ -1158,8 +1703,98 @@ to rediscover the answers.
 |---|---|---|---|---|
 | 1 | rebuild `TopOfBook` from `price_change` ∪ `book`; re-derive every book number in the corpus | dense vs snapshot reported; no gate | 2 | **done, §A.1** — must be productionised |
 | 2 | re-express all FLB tables at bid/ask, `r`-stratified, window-clustered | mandatory format change | 2 | **done, §A.1** |
-| 3 | fit models 0–3 and 5, walk-forward | `b̂ > 1` point estimate; §4.4 decomposition | 2 | **done, §A.2–A.4** |
+| 3 | fit models 0–3 and 5, walk-forward | ~~`b̂ > 1` point estimate~~ **BAR FAILED BY THE PROBE** (pooled 1.037; 3 of 4 days below 1) | 2 | **done, §A.2–A.4** |
 | 4 | tick-regime control (0.001 subset) on the extreme domain | extreme bias shrinks ≥5× ⇒ it is the grid | 2–7 | open |
-| 5 | **day-clustered CI on Δlog-loss vs raw book** | CI excludes 0, else ship `Identity` | **7** | open — **the go/no-go for this module** |
-| 6 | `b(r)` and per-coin challengers; `b_t` decay monitor (§7) | beats pooled OOS | **30** | open |
+| **5** | ~~day-clustered CI on Δlog-loss vs raw book~~ | ~~CI excludes 0, else ship `Identity`~~ · ~~**7** days~~ | — | **DELETED IN REVISION 3 — see below** |
+| 6 | `b(r)` and per-coin challengers; **`b_t` TREND estimator** (§7's monitor, which had none) | beats pooled OOS | **30** | open |
 | 7 | capture-ratio markout — **the actual deployment gate for the programme** | owned by BE-FlowAndFills | **30** | open |
+
+> ### ⚠ Revision 3 — STEP 5 IS DELETED, AND IT WAS THE LAST LIVE PROMOTION RULE
+>
+> §6.5 said *"no rule promotes it automatically"* one revision ago. **Step 5 kept
+> saying "the go/no-go for this module", and `be_belief.py` kept EXECUTING it** —
+> `STEP5_MIN_DAYS = 7`, `would_ship_today: RECALIBRATION|IDENTITY`. So at 7 days a
+> machine-generated receipt would have announced an automatic promotion the plan
+> says cannot exist. **Deleting prose does not delete a rule that is
+> implemented**; the code is now a monitor and emits no verdict.
+>
+> **Three reasons the bar was wrong quite apart from being orphaned:**
+>
+> 1. **Its statistic is a range, not an interval.** At 3 day-clusters the
+>    percentile bootstrap returns exactly `[min, max]` of the per-day deltas —
+>    verified on all 8 model×population cells. *"CI excludes 0"* means *"all three
+>    days share a sign"*: a **25%** event under a symmetric null, quoted at 5%.
+> 2. **It tests against the wrong null.** A `k`-parameter map fitted on `n_eff` is
+>    *expected* to lose out-of-sample by `k/(2·n_eff)` **even when `b = 1`
+>    exactly**. Testing Δ against **0** conflates *"no rotation"* with *"rotation
+>    present, not estimable at this `n`"*. Against the correct benchmark the
+>    deployable's excess is +0.000042 pooled and +0.000199 on the verdict coins —
+>    both deep inside their own intervals.
+> 3. **Seven days is not the horizon.** With `τ̂ ≈ 0.15` on the verdict coins the
+>    honest figure is **17–22 days** for `b̂`'s interval to exclude 1, and **~50**
+>    scored days for Δ to reach an MDE of 0.0006.
+>
+> **Nothing replaces it in this document.** Promotion requires a separate protocol
+> with a **calendar** trigger — *"at `n_days ≥ 30`, write and freeze a promotion
+> protocol, evaluated only on data after the freeze date"* — which is a commitment
+> rather than a threshold on the effect, and so is the only construction that
+> satisfies R-6 while the monitor is publishing daily.
+
+---
+
+## 13. What was never attempted (Revision 1, swept in Revision 3)
+
+Added because R-53 established that **review loops audit what exists and nobody
+audits what was never attempted** — two of nine mitigation channels in a sibling
+programme existed only because someone asked that question. Iteration 1 of
+`BE_BELIEF_REVIEW_LOOP.md` grepped 1,165 lines of Revision 0 and found **zero
+hits** for `taker`, `tier`, `Hawkes`, `f_r`, `queue`, `EWMA`, `rolling`,
+`time-of-day`, `volatility`.
+
+**Revision 0 considers exactly two conditioners: moneyness and `r`.** Both are
+properties of the *contract*. None of the conditioners below is a property of the
+contract, and none was rejected — they were never raised.
+
+This section records them **as open, not as recommended.** Each names why it is
+plausible and what would kill it, so a successor inherits the question rather
+than the absence.
+
+| conditioner | why plausible | available now? | what would kill it |
+|---|---|---|---|
+| ~~**liquidity tier**~~ **RETIRED** | ~~a 2-group split has ≈3.5× the per-cell sample~~ **Both claims were false.** (a) **No liquidity tier exists** — every `tier` identifier in the codebase is `tier1`/`tier2` data-lane distillation, so "already computed" was the corpus's own *name-is-not-the-definition* class, committed inside the section written to stop inherited errors. (b) **The axis is VACUOUS on the verdict population**: btc and eth are both 1-tick ATM, so a liquid/thin split has *zero variation* inside the only coins that can carry a verdict — and at n=2, per-tier IS per-coin. | ~~Yes~~ **N/A** | `b̂` indistinguishable across tiers at day-clustered CI |
+| **signed taker flow** | A **fully built flow model exists** (`flow_intensity.py`, `FLOW_MODEL_STATE.md`) and appears nowhere in this plan. Order flow is the standard conditioner for book mispricing. | **Yes** | no incremental Δlog-loss over moneyness alone |
+| **session / time-of-day** | §4.3's entire pin argument rests on *"a 20-hour rally"*, and §6.3's pooling mechanism is a **participant mix that is a function of session**. The plan's own reasoning implies this variable and never tests it. | **Yes** | `b̂` and `â` flat across UTC session blocks |
+| **non-stationary `b`** | §7 proposes a decay **monitor** with **no corresponding estimator**. **The anti-ratchet named here was DELETED in Revision 2; this row cited it for a full revision afterwards.** The rate is unestimated, and on the verdict coins a weighted trend absorbs 99.3% of between-day heterogeneity (z=3.55) -- so this is the best-evidenced row in this table, not a low-priority one. | **Yes** | rolling `b̂` within day-clustered noise of its own mean |
+| **shrinkage toward 1** | §12 step 5's gate is **binary** — adopt `b̂` or adopt `Identity`. A James–Stein-style `b̃ = 1 + λ(b̂ − 1)` is the natural third outcome and is *exactly* the right shape when the point estimate is above 1 but its interval contains 1 — **the current state.** | **Yes** | λ̂ ≈ 0 out-of-sample, i.e. shrinkage picks `Identity` anyway |
+| **realised volatility** | The tick floor of §5.1 manufactures the favourite side; how hard it bites is a function of how far price moves per tick. | **Yes** | tick-floor bias flat in RV |
+
+**None of these is a recommendation to build.** The honest position after
+Revision 1 is that the *deployed* map is `Identity` and the *estimated* rotation
+is below its own MDE — so adding conditioners to an effect that is not yet
+distinguishable from zero would be fitting structure into noise, which is how
+Revision 0's headline happened. > **⚠ Revision 3 — P1 AND §6.5's GATE ARE DELETED. This instruction pointed at
+> machinery that no longer exists, and it is the ONLY routing decision this
+> section makes — so the section written to hand a successor the open questions
+> was handing them a dead pointer.**
+>
+> **The corrected order:**
+> 1. **The verdict-coin per-coin split, which is ALREADY ON DISK AND UNREAD** —
+>    btc `b̂ = 1.028`, eth `1.143`. The headline 1.083 pools one coin at
+>    ≈`Identity` with one at 1.143, so this plan's own sentence *"pooling made the
+>    estimator look more stable than it is"* applies verbatim at n = 2 and was not
+>    applied. Costs nothing; the number exists.
+> 2. **Session / time-of-day**, promoted from this table's bottom rows because it
+>    is now a **live confound** for the `b̂_t` trend — UTC-block coverage runs
+>    100%/38%/38%/29% against a monotone-increasing `b̂` — not a speculative
+>    conditioner.
+> 3. **The calendar trigger at `n_days ≥ 30`.**
+>
+> Conditioners after that, and only if a residual survives.
+
+The shrinkage row is the exception worth flagging: it is the only entry that is
+strictly better than what §12 step 5 does today **regardless of sample size**,
+because a binary adopt/reject gate throws away the information that the point
+estimate is consistently above 1 while its interval is not. That is a **design**
+improvement, not a data-dependent one.
+
+---

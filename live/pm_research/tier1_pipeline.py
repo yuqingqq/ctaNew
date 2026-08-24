@@ -65,7 +65,7 @@ from live.pm_research.coverage_ledger import (
 REPO = Path(__file__).resolve().parents[2]
 PM = REPO / "data/pm_5min"
 DEFAULT_OUTPUT_ROOT = PM / "tier1"
-DISTILLER_VERSION = "tier1_v3"
+DISTILLER_VERSION = "tier1_v4_r12"
 PRICE_SCALE = 1_000_000
 ROW_GROUP_SIZE = 65_536
 MAX_NS = (1 << 63) - 1
@@ -559,6 +559,7 @@ class ParseStats:
     malformed_lines: int = 0
     nonmonotone_recv: int = 0
     duplicate_rows: int = 0
+    book_envelope_collapsed: int = 0
     collapsed_rows: int = 0
     collapse_groups: int = 0
     top_checks: int = 0
@@ -861,6 +862,29 @@ class _BookState:
         )
 
 
+BOOK_ENVELOPE_FIELDS = ("last_trade_price", "tick_size")
+
+
+def _identity_digest(message: Mapping[str, Any]) -> str:
+    """Digest of the identity-bearing content, for the duplicate check.
+
+    R-12: for a `book` snapshot the venue `hash` identifies the book, so the
+    optional envelope fields are not part of its identity and two deliveries
+    that differ only there are ONE state seen twice.  Everything else digests
+    whole -- in particular `bids`/`asks` disagreeing under one venue hash is a
+    real conflict and still raises, which is the case the guard exists for
+    (0 of 19 in the census, and we would want to hear about the first one).
+    """
+    if message.get("event_type") == "book":
+        stripped = {
+            key: value
+            for key, value in message.items()
+            if key not in BOOK_ENVELOPE_FIELDS
+        }
+        return _sha256_bytes(_canonical_json(stripped))
+    return _sha256_bytes(_canonical_json(message))
+
+
 def _raw_message_key(message: Mapping[str, Any]) -> tuple[Any, ...]:
     event_type = message.get("event_type")
     if event_type == "last_trade_price":
@@ -881,6 +905,17 @@ def _raw_message_key(message: Mapping[str, Any]) -> tuple[Any, ...]:
             message.get("side"),
         )
     if event_type == "price_change":
+        # R-12: the resulting top-of-book is part of the EVENT IDENTITY.
+        #
+        # The venue `timestamp` is not unique: a corpus census over 264.8 M
+        # records found 499 keys where two messages shared `timestamp` and every
+        # change-row field yet sat up to 113 ms and 27 cents apart, each copy
+        # internally consistent at bid(Up)+ask(Down)=1.0000 (1,996/1,996 sums).
+        # They are two distinct successive book states, not duplicates -- so the
+        # key is repaired and BOTH RECORDS ARE RETAINED.  Nothing is excluded:
+        # dropping either copy destroys a top-of-book observation, and
+        # `price_change.best_bid/ask` is what the standing rule says the whole
+        # corpus must read book state from.
         changes = message.get("price_changes") or []
         return (
             event_type,
@@ -892,11 +927,18 @@ def _raw_message_key(message: Mapping[str, Any]) -> tuple[Any, ...]:
                     row.get("price"),
                     row.get("size"),
                     row.get("side"),
+                    row.get("best_bid"),
+                    row.get("best_ask"),
                 )
                 for row in changes
             ),
         )
     if event_type == "book":
+        # R-12: the venue `hash` identifies the book, so optional ENVELOPE
+        # fields are not part of book identity.  All 19 conflicting book keys in
+        # the census differed only in `last_trade_price`/`tick_size`, with the
+        # same venue hash and no shared field disagreeing -- a genuine
+        # re-delivery.  These collapse, and the collapsed count is published.
         return (event_type, message.get("asset_id"), message.get("hash"), message.get("timestamp"))
     return (event_type, message.get("timestamp"), _sha256_bytes(_canonical_json(message)))
 
@@ -1052,15 +1094,20 @@ def normalize_clob(
         seen: dict[tuple[Any, ...], str] = {}
         for record in records:
             key = _raw_message_key(record[3])
+            digest = _identity_digest(record[3])
             if key in seen:
-                payload_digest = _sha256_bytes(_canonical_json(record[3]))
-                if payload_digest != seen[key]:
+                if digest != seen[key]:
                     raise ValueError(
                         f"duplicate identity has conflicting payload for {slug}"
                     )
                 stats.duplicate_rows += 1
+                if record[3].get("event_type") == "book" and _sha256_bytes(
+                    _canonical_json(record[3])
+                ) != digest:
+                    # Collapsed on the venue hash despite a differing envelope.
+                    stats.book_envelope_collapsed += 1
                 continue
-            seen[key] = _sha256_bytes(_canonical_json(record[3]))
+            seen[key] = digest
             unique.append(record)
 
         book = _BookState(market.up_asset, market.down_asset)
@@ -1281,7 +1328,26 @@ def normalize_windows(
 
 
 def _partition_dir(root: Path, dataset: str, day: date, coin: str) -> Path:
-    return root / dataset / f"day={day.isoformat()}" / f"coin={coin}"
+    """Partition address carries the distiller generation (R-10's principle).
+
+    The manifest binds `distiller_code_sha256`, so before this any edit to this
+    file made every existing partition raise `distiller code mismatch` at a
+    FIXED address -- the same collision between immutability and amendability
+    that R-10 resolved for the run record.  R-12 changes `_raw_message_key`,
+    which is exactly such an edit.  Versioning the address means the amended
+    generation is written alongside and the superseded one is simply kept.
+
+    Note the code binding is deliberately broad: it invalidates `twap` even
+    though R-12 only touches CLOB keying.  That is the guard being conservative
+    rather than wrong, and the cost is recompute, not data.
+    """
+    return (
+        root
+        / dataset
+        / f"day={day.isoformat()}"
+        / f"coin={coin}"
+        / f"distiller={DISTILLER_VERSION}"
+    )
 
 
 def _manifest_payload(
@@ -2127,6 +2193,35 @@ def selftest() -> None:
         else:
             raise AssertionError("input-manifest mismatch did not fail")
         print("  PASS  changed inputs cannot overwrite an existing partition")
+
+    # --- R-12: two mechanisms, two rules -----------------------------------
+    pc_base = {
+        "event_type": "price_change",
+        "market": "0xm",
+        "timestamp": "1000",
+        "price_changes": [
+            {"asset_id": "U", "hash": "h", "price": "0.74", "size": "0",
+             "side": "BUY", "best_bid": "0.74", "best_ask": "0.84"},
+        ],
+    }
+    pc_moved = json.loads(json.dumps(pc_base))
+    pc_moved["price_changes"][0]["best_bid"] = "0.73"
+    assert _raw_message_key(pc_base) != _raw_message_key(pc_moved)
+    print("  PASS  R-12: same timestamp, moved top-of-book => DISTINCT keys, both kept")
+    assert _raw_message_key(pc_base) == _raw_message_key(json.loads(json.dumps(pc_base)))
+    print("  PASS  R-12: a true price_change re-delivery still collapses to one key")
+
+    book_base = {
+        "event_type": "book", "asset_id": "A", "hash": "h1", "timestamp": "1000",
+        "bids": [{"price": "0.5", "size": "1"}], "asks": [],
+    }
+    book_envelope = dict(book_base, tick_size="0.01", last_trade_price="0.5")
+    assert _raw_message_key(book_base) == _raw_message_key(book_envelope)
+    assert _identity_digest(book_base) == _identity_digest(book_envelope)
+    print("  PASS  R-12: book envelope fields are outside identity, so they collapse")
+    book_real = dict(book_base, bids=[{"price": "0.9", "size": "1"}])
+    assert _identity_digest(book_base) != _identity_digest(book_real)
+    print("  PASS  R-12: a bids disagreement under one venue hash still conflicts")
 
 
 def main() -> None:

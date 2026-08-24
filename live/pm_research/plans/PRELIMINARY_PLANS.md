@@ -1,8 +1,32 @@
 # Preliminary module plans — P-2026-003
 
-Orchestrator's baseline, written 2026-08-20 while the detailed module planners
-run. **Preliminary**: each section is the skeleton a dedicated planner will
-refine or refute. Where a planner disagrees with evidence, the planner wins.
+> # ⛔ SUPERSEDED — 2026-08-23, coordinator
+>
+> **Do not plan from this file, and do not cite its evidence table.** It was the
+> orchestrator's 2026-08-20 baseline, written before the measurements that
+> followed. Dedicated planners now exist for BE-Belief, BE-Uncertainty,
+> BE-FlowAndFills, DA-State/EV, and the DE plane; each supersedes the
+> corresponding section below.
+>
+> **Four of the seven rows in its "don't re-litigate" table are WITHDRAWN**, and
+> the table's framing tells the reader not to question exactly those:
+>
+> | row as written | actual status |
+> |---|---|
+> | "book wins at **every** horizon" | **WITHDRAWN** — the model was mis-anchored (trailing S60 lags spot ~30 s against a conditional variance law); the verdict must be re-read on the corrected spec |
+> | FLB measured, −6.6 ¢ / −7.6 ¢ / +3.4 ¢ | **WITHDRAWN** — measured on `book` snapshots that are p90 6.2 s stale; rebuilt on executable quotes the walk-forward gain is **0.0004 Brier**, one-sided |
+> | "maker 0 + ~70 bps rebate/fill; taker ~3.5 % ATM" | **REFUTED.** Taker pays `0.07·p(1−p)` $/share (1.75 ¢ at ATM), confirmed to 4 dp on 600 transactions; the `0.07·min(p,1−p)` = 3.5 ¢ reading is refuted at **2×**. The rebate is **Unavailable** — zero observed fee is not evidence of a rebate |
+> | "book is 2–4 ticks wide" (in §2) | **REFUTED** for the verdict coins — btc and eth are **1 tick**; 3–7 ticks is the thin coins, and the pooled figure was btc-denominator dominance |
+>
+> The three surviving rows — settlement `S60(T)` vs `S60(t0)` at 99.8 %, the
+> full-300 s reading refuted at 86.9 %, and the sample up-drift — are restated
+> in `FLOW_MODEL_STATE.md`, which is the fact authority. Read that instead.
+>
+> Its **build sequence** is also overtaken: steps 1–2 are built, step 3's
+> question was answered by Layer 1 (`EDGE_LAYER1_RESULTS.md`), and the live
+> order is in `workspace/COORDINATION.md` §7.
+>
+> Retained only as provenance for how the programme was framed on 2026-08-20.
 
 ## What the evidence已 settled (don't re-litigate)
 

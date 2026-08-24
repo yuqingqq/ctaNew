@@ -1,0 +1,402 @@
+protocol: FLOW_AND_FILLS_V5
+status: FROZEN
+governs: true                       # V4 is SUPERSEDED from ruling R-19
+supersedes: FLOW_AND_FILLS_V4
+drafted_by: BE
+drafted_at: '2026-08-23'
+frozen_at: '2026-08-23'
+frozen_by: COORDINATOR_RULING_R_19
+research_only: true
+
+design_data_through: '2026-08-22T00:00:00Z'      # D-V5-1, ruled
+primary_evaluation_start: '2026-08-22T00:00:00Z' # D-V5-1, ruled
+
+# ---------------------------------------------------------------------------
+# R-19 CONDITION -- asserted, with the check that was actually run
+# ---------------------------------------------------------------------------
+# R-19 adopts the 2026-08-22 boundary ONLY IF no V5-grid measurement has touched
+# 08-22 or later; otherwise the boundary moves to 2026-08-24T00:00Z. Stated
+# precisely, because the loose form would be false:
+#
+# A V5-GRID MEASUREMENT DOES EXIST. It is the SELECTION probe itself --
+# `flow_grid_nonuniform_v1` (verified: n_bins 16, body_w 60.0 s, terminal_w
+# 5.0 s, i.e. exactly this grid) and `flow_terminal_mechanism_v1`. Claiming
+# "no V5-grid measurement exists" would be wrong.
+#
+# What is true, and what the condition actually requires:
+r19_condition:
+  claim: NO_V5_GRID_MEASUREMENT_HAS_TOUCHED_2026_08_22_OR_LATER
+  holds: true
+  the_only_v5_grid_measurements:
+    - flow_grid_nonuniform_v1
+    - flow_terminal_mechanism_v1
+  sample: 361 windows/coin, earliest-first (the pre-R-19 sampler)
+  days_touched: ['2026-08-20', '2026-08-21']
+  any_window_on_or_after_2026_08_22: false
+  how_checked: >-
+    Recomputed the 361-per-coin earliest-first selection over
+    covered_slugs(clob_v3_1) and mapped every selected slug to its UTC day. The
+    era opens 2026-08-20 14:50:21 and holds 75 covered windows per coin that
+    day, so a 361-window sample reaches into 08-21 and stops there. Reproduce:
+    `python3 live/pm_research/flow_intensity.py sample-days`.
+  consequence_if_ever_falsified: >-
+    The boundary moves to 2026-08-24T00:00:00Z (BE's conservative alternative)
+    and every V5 verdict computed under the 08-22 boundary is invalidated, per
+    R-19. This block exists so that check is auditable rather than remembered.
+
+# ---------------------------------------------------------------------------
+# FREEZE REQUEST -- what BE asks the freeze to COVER. Stated here so the scope
+# is not inferred. Answers the coordinator's "tell me explicitly what you want
+# the freeze to cover"; the same text is in COORDINATION.md under D-3.
+# ---------------------------------------------------------------------------
+freeze_request:
+  ready: true
+  outcome: FROZEN_BY_R_19_SCOPE_EXACTLY_AS_REQUESTED
+  covers:
+    - id: 1
+      what: THE_F_R_GRID_AND_ONLY_THE_GRID
+      detail: >-
+        body r in [60,300] as 4 x 60 s, terminal r in [0,60) as 12 x 5 s,
+        16 bins. Every other field is V4 carried forward verbatim so the diff
+        reviews as one change.
+    - id: 2
+      what: THE_B1_DECOUPLING
+      detail: >-
+        NOT optional. If r_band follows B0 to 16 bins, V4's frozen
+        b1_parent_exposure_shrink_s: 60 becomes a 60 s prior on a 5 s bin and
+        the prior dominates its own data. f_p stays on the coarse 5 x 60 s
+        bands, nested inside the fine grid. See b1_conditioning below.
+    - id: 3
+      what: THE_DAY_BLOCK_REFUSAL_RULE
+      detail: >-
+        A fit spanning one UTC day reports DAY_BLOCK_UNAVAILABLE rather than a
+        day-clustered interval. BE asks for this IN the protocol rather than as
+        discipline, because five of seven published receipt families turned out
+        to be single-day while being reported otherwise
+        (FLOW_MODEL_STATE.md section 1f).
+  does_not_cover:
+    - M1_M4_CONDITIONAL_MARK_FAMILIES: >-
+        The plan's nominal next item, but downstream of the grid. Freezing both
+        together puts two changes behind one gate.
+    - ANY_MEASUREMENT_RESULT: >-
+        BE has run NO measurement against the V5 grid and will run none until
+        this file is frozen.
+  blocked_on: [D-V5-1, D-V5-2, D-V5-3]   # see coordinator_decisions_required
+  hardest_call: >-
+    D-V5-1. It needs judgement, not measurement: the grid was selected inside
+    the 2026-08-21 07:05 -> 23:59 span that V4 classifies as NEITHER design nor
+    evaluation data.
+
+# ---------------------------------------------------------------------------
+# WHY THIS DRAFT EXISTS
+# ---------------------------------------------------------------------------
+# V4 froze B0 on five uniform 60 s bands over remaining time. That grid is
+# REFUTED, not merely improvable: the pre-registered `phase x r` interaction
+# test returned INTERACTION_MATERIAL on all seven coins (ratio 1.685 btc to
+# 4.486 hype against a 0.50 bar, EVERY ratio above 1.0), and the interaction
+# concentrates in the terminal minute. So the additive phase factor V4's design
+# assumed would have absorbed `f_r`'s LARGEST REAL FEATURE rather than removing
+# an artefact. See FLOW_MODEL_STATE.md section 1a and FLOW_GRID_TERMINAL_RESULTS.md.
+#
+# A candidate cannot be frozen against a refuted grid, and V4 section 6 says any
+# such change starts a new protocol version. Hence V5.
+#
+# THIS FILE IS A DRAFT. Per COORDINATION.md section 2 item 1, freezing a protocol
+# is a coordinator decision; per item 5, V4 is a frozen artifact BE does not
+# touch. BE has run NO measurement against this grid beyond the already-published
+# DEVELOPMENT probe that selected it, and will run none until this is frozen.
+
+# ---------------------------------------------------------------------------
+# THE ONLY SUBSTANTIVE CHANGE: the f_r grid
+# ---------------------------------------------------------------------------
+ground_process:
+  canonical_route: TOTAL_INTENSITY_PLUS_CONDITIONAL_MARKS
+  arrival_identity: LAST_TRADE_PRICE_AGGREGATE
+  unit: EVENTS_PER_SECOND
+
+  # V4 was: remaining_time_edges_s: [0, 60, 120, 180, 240, 300]   (5 uniform bins)
+  # V5 is NON-UNIFORM: coarse in the body, fine in the terminal minute.
+  f_r_grid:
+    coordinate: REMAINING_SECONDS          # r; the window is 300 s
+    body:
+      r_range: [60, 300]
+      n_bins: 4
+      bin_width_s: 60
+    terminal:
+      r_range: [0, 60]
+      n_bins: 12
+      bin_width_s: 5
+    n_bins_total: 16
+    # ascending in r; equivalently elapsed edges 0,60,120,180,240 then 5 s steps
+    remaining_time_edges_s: [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55,
+                             60, 120, 180, 240, 300]
+    rationale:
+      body_60s: >-
+        A 60 s bin spans EXACTLY ONE PERIOD of the unidentified 60 s component,
+        so it absorbs that component BY CONSTRUCTION rather than by assumption.
+        Window phase and wall-clock minute phase are perfectly collinear on this
+        venue, so the source is unidentifiable; absorbing it is weaker and true
+        where subtracting it was stronger and false. The body pays almost nothing:
+        within-minute log range is 0.333-0.454 on btc and 0.365-0.503 on eth,
+        against 2.855 and 2.649 in the terminal.
+      terminal_5s: >-
+        The terminal collapse is f_r's largest feature and a 60 s bin buries it in
+        a single cell. Twelve 5 s bins resolve its shape. The binding constraint
+        is event count in the thinnest bin: btc holds 1,130 arrivals in its
+        smallest terminal bin and eth 259, both above the 100-event floor.
+      boundary_is_a_modelling_choice: >-
+        r = 60 remains a FROZEN MODELLING CHOICE motivated by the 60 s settlement
+        construction, not a discovered causal breakpoint. Unchanged from V4.
+    guards_required_in_code:
+      - EVERY_BODY_BIN_EXACTLY_60_0_S      # if this drifts the body rationale is false
+      - GRID_SPANS_THE_WHOLE_WINDOW
+      - TERMINAL_BIN_EVENT_FLOOR_REPORTED_PER_COIN
+
+  # carried from V4 UNCHANGED
+  price_edges: [0.0, 0.05, 0.15, 0.35, 0.65, 0.85, 0.95, 1.0]
+  nesting: [B0_R, B1_P_GIVEN_R, B2_TICK_TAIL, B3_BOOK]
+  b0_numerical_fence:
+    pseudo_count: 0.5
+    pseudo_exposure_s: 1.0
+  b2:
+    tick: 0.001
+    tails: [[0.0, 0.15], [0.85, 1.0]]
+    functional_form: SINGLE_LOG_RATE_OFFSET_FOR_JOINT_INDICATOR
+    zero_count_or_exposure: HALF_EVENT_FENCE_AND_NOT_PROMOTABLE
+  b3:
+    transforms:
+      touch_notional: LOG1P_THEN_TRAIN_STANDARDIZE
+      spread_ticks: CLIP_0_10_THEN_TRAIN_STANDARDIZE
+      imbalance_notional: CLIP_MINUS1_1_THEN_TRAIN_STANDARDIZE
+    functional_form: LINEAR_LOG_INTENSITY
+
+# ---------------------------------------------------------------------------
+# THE RIPPLE THE GRID CHANGE CREATES, and BE's proposed handling
+# ---------------------------------------------------------------------------
+b1_conditioning:
+  # V4: f_p(p_state | r_band) where r_band WAS the B0 grid -- 5 bands. If r_band
+  # silently follows B0 to 16 bins, B1 cells go 7x5=35 -> 7x16=112 per coin, and
+  # the frozen `b1_parent_exposure_shrink_s: 60` becomes a 60 s prior on a 5 s
+  # bin: the prior would then dominate its own data. That is a gate that cannot
+  # fire, in the other direction.
+  proposal: DECOUPLE
+  r_band_for_f_p:
+    edges_s: [0, 60, 120, 180, 240, 300]   # UNCHANGED 5 coarse bands
+    note: >-
+      f_p conditions on the COARSE band; only the B0 rate uses the 16-bin grid.
+      The two partitions are nested (each coarse band is a union of fine bins),
+      so the decomposition stays coherent.
+  b1_parent_exposure_shrink_s: 60           # valid because r_band stays 60 s wide
+  alternative_rejected: >-
+    Following B0 to 16 bands and rescaling the shrinkage to the bin width. It
+    multiplies B1 cells by 3.2x for no stated gain and puts f_p's identification
+    at risk in exactly the region where dwell is scarcest.
+
+hawkes_ripple:
+  operational_time_changes: true
+  consequence: >-
+    Operational time u(t) is the integral of the baseline compensator, so a finer
+    terminal grid CHANGES u. Every DEVELOPMENT Hawkes number fitted under V4 is
+    on the old compensator and is NOT comparable to a V5 fit. They are not
+    invalidated as engineering diagnostics; they are simply on a different clock
+    and must not be differenced against V5 fits.
+  candidate_half_lives_operational: [0.03, 0.0625, 0.125, 0.25, 0.5, 1, 2, 5, 10]
+  branching_grid: [0.0, 0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40,
+                   0.45, 0.50, 0.55, 0.60, 0.65, 0.70, 0.75, 0.80, 0.85, 0.90]
+  instrument_floor_retained: true
+  floor_note: >-
+    Do not extend the grid below the instrument floor. Below it, recv_ns spacing
+    carries processing cadence rather than arrival time. The earlier "btc censored
+    at ~36 ms = order splitting" reading was OUR GRID reaching below venue
+    resolution and is withdrawn.
+
+# ---------------------------------------------------------------------------
+# COORDINATOR DECISIONS REQUIRED BEFORE FREEZE -- BE proposes, does not decide
+# ---------------------------------------------------------------------------
+coordinator_decisions_ruled:      # all three RULED in R-19, 2026-08-23
+
+  D-V5-1:
+    question: design_data_through and primary_evaluation_start
+    ruling: BE_PROPOSAL_ADOPTED
+    value: '2026-08-22T00:00:00Z'   # both fields
+    reason: >-
+      The new boundary moves data OUT of evaluation and never in -- it concedes
+      17 hours, so it cannot be self-serving, and a conservative-direction
+      correction made before any evaluation exists is honest bookkeeping rather
+      than a re-cut. V4's declared 2026-08-21T07:05:00Z did NOT contain the
+      selection data; that was a real defect in V4.
+    condition: see `r19_condition` above -- asserted and verified.
+
+  D-V5-2:
+    question: does the ten-forward-day promotion clock reset at the freeze?
+    ruling: CONFIRMED_RESETS
+    binding_condition: DAY_COUNT_IS_DERIVED_AND_NEVER_WRITTEN_DOWN
+    derivation: >-
+      count = number of complete UTC days present on disk with
+      day >= primary_evaluation_start, compared on `days_sampled`, computed at
+      read time. NEVER stored as a literal in a tracking file.
+    reason: >-
+      `DAYS` went stale four times in three days, the last within twelve hours
+      of being fixed. A hardcoded day count in a tracking file is that same
+      defect wearing a different hat. STATUS.yml states the reset as a
+      DERIVATION RULE, not as a number.
+
+  D-V5-3:
+    question: the sampling rule (R-ADMISS)
+    ruling: DAY_STRATIFIED_ADOPTED_EARLIEST_FIRST_RETIRED
+    finding_that_forced_it: >-
+      `sorted(covered_slugs(ERA))` truncated at per_coin is EARLIEST-FIRST, so at
+      per_coin <= 60 the sample never leaves 2026-08-20 while 680 windows/coin
+      across four days sit on disk. Five of seven published receipt families were
+      single-day while being reported otherwise. This is not a sampling
+      preference, it is a SELECTION BIAS: it correlates the sample with one day
+      and with the OPENING of the collector era -- the phase where gap exposure
+      concentrates at window open -- and it guarantees a day-block bootstrap has
+      exactly ONE block, silently defeating the day-clustered inference this
+      programme requires.
+    rule:
+      allocation: EQUAL_PER_ERA_DAY
+      determinism: DECLARED_SEED
+      receipt_must_carry: [sampling_rule, provenance_sampled, n_days_sampled]
+    conditions:
+      - id: 1
+        rule: NO_RETROACTIVE_RELABELLING
+        detail: >-
+          Existing receipts are not re-labelled. They keep n_days_sampled
+          visible, and where one claimed support it did not have, it is corrected
+          IN PLACE -- which FLOW_MODEL_STATE.md section 1f already did.
+      - id: 2
+        rule: NEVER_POOL_ACROSS_SAMPLING_RULES
+        detail: >-
+          Earliest-first and day-stratified receipts are DIFFERENT POPULATIONS --
+          the never-pool-across-eras rule one level up. Any comparison must state
+          which rule each side used.
+      - id: 3
+        rule: A_MOVED_RESULT_IS_A_FINDING
+        detail: >-
+          The sampler change is itself a change of population, so a result that
+          MOVES when the sampler changes is a FINDING ABOUT THE OLD RESULT, not a
+          nuisance to reconcile.
+
+# ---------------------------------------------------------------------------
+# EVERYTHING BELOW IS CARRIED FROM V4 UNCHANGED
+# ---------------------------------------------------------------------------
+artifact_lifecycle:
+  states: [DEVELOPMENT, CANDIDATE_FROZEN, VALIDATED, INSUFFICIENT_EVIDENCE, MODEL_REFUTED]
+  development_may_fit_now: true
+  development_is_decision_eligible: false
+  minimum_forward_days_for_validation: 10
+
+universe:
+  coins: [btc, eth, sol, xrp, doge, bnb, hype]
+  pooling: DIAGNOSTIC_ONLY
+  primary_fit_and_verdict: PER_COIN
+
+state:
+  coordinate: UP_UNIFIED_BOOK
+  price_state: UP_BOOK_MIDPOINT
+  knowledge_lag_ms: 250
+  interval: HALF_OPEN
+  gap_policy: KILL_STATE_AND_QUEUE_PATH
+  execution_price_is_mark: true
+  minimum_price_bin_dwell_s: 60
+
+marks:
+  event_types: [MICRO_002, MARKET]
+  micro_size_shares: 0.02
+  sequence: [M1_EVENT_TYPE, M2_UNIFIED_TAKER_SIDE,
+             M3_EXECUTION_PRICE_AND_ACTION_REACH, M4_SIZE_AND_NATIVE_NOTIONAL]
+  side_role: CONDITIONAL_MARK
+  monetary_mark: SIZE_SHARES_TIMES_NATIVE_EXECUTION_PRICE
+  cause_specific_intensity: TOTAL_INTENSITY_TIMES_CONDITIONAL_TYPE_PROBABILITY
+  reconciliation_required: NOT_YET_IMPLEMENTED
+  micro_market_independence:
+    status: TESTED_AND_FAILED
+    verdict_by_coin:
+      btc: DEPENDENT
+      eth: DEPENDENT
+      sol: DEPENDENT
+      xrp: DEPENDENT
+      doge: DEPENDENT
+      bnb: DEPENDENT
+      hype: NOT_REJECTED_NOT_EQUIVALENT
+    direction: BIDIRECTIONAL_OR_COMMON_DRIVER
+    a1_holds_anywhere: false
+    consequence: EX_MICRO_IS_A_CONDITIONED_SUBPROCESS_NOT_A_COMPONENT
+    unaffected: NOTIONAL_WEIGHTING_REWEIGHTS_AND_DOES_NOT_DELETE
+    population_note: >-
+      The A1 verdict was measured at 24 windows/coin = ONE UTC day (2026-08-20).
+      Carried forward as stated because it is a rejection, and a rejection on one
+      day is still a rejection; but its GENERALITY across days is untested.
+
+fill_actions:
+  verdict_coins: [btc, eth]
+  descriptive_only_coins: [sol, xrp, doge, bnb, hype]
+  restriction_reason: BRACKET_WIDER_THAN_ANY_SUPPORTABLE_CONCLUSION
+  coordinate: UP_UNIFIED_BOOK
+  primary_style: JOIN_TOUCH
+  maker_sides: [BUY_UP, SELL_UP]
+  size_shares: 5
+  horizons_s: [5, 15, 30]
+  action_times_elapsed_s: [30, 60, 90, 120, 150, 180, 210, 240, 270]
+  marketability:
+    sell_up: UNIFIED_TAKER_BUY_EXECUTION_PRICE_GTE_ACTION_LEVEL
+    buy_up: UNIFIED_TAKER_SELL_EXECUTION_PRICE_LTE_ACTION_LEVEL
+  queue_rules:
+    FRONT: OPTIMISTIC
+    BACK_DISPLAYED: PESSIMISTIC_TRADES_ONLY_NO_CANCEL_CREDIT
+    UNIFORM_DIAGNOSTIC: NOT_GATE_BEARING
+  partial_fills: FIRST_CLASS
+  gap_policy: EXPLICIT_UNAVAILABLE_ACTION
+  tick_change_policy: EXPLICIT_UNAVAILABLE_ACTION
+  touch_departure_policy: RETAIN_FIXED_LEVEL_AND_REPORT
+  complement_duplicate_policy: DEDUPLICATE_AND_COUNT
+  exact_queue_position_identified: false
+  back_displayed_is_a_bound_only_if: NO_HIDDEN_OR_ICEBERG_LIQUIDITY
+  hidden_liquidity_status: UNVERIFIED_NOT_ESTABLISHED_FROM_THIS_TAPE
+  midpoint_of_bracket_is_result: false
+
+validation:
+  unit: COMPLETE_UTC_DAY
+  schedule: EXPANDING_WINDOW_DAY_HELD_OUT
+  require_fit_data_through_before_evaluation_day: true
+  bootstrap_unit: UTC_DAY
+  minimum_complete_primary_days_per_coin: 10
+  multiplicity: HOLM
+  layer_retention: DAY_BLOCK_BOOTSTRAP_95_PERCENT_UPPER_DELTA_NLL_BELOW_ZERO
+  hawkes_retention:
+    forward_nll_bootstrap_upper_below_zero: true
+    branching_or_spectral_radius_bootstrap_upper_below_one: true
+    max_ks_worsening: 0.01
+    admitting_cluster_test_must_clear: true
+  day_block_bootstrap_precondition: >-
+    ADDED IN V5. A day-block bootstrap needs more than one day block. Any fit
+    whose sample spans a single UTC day reports DAY_BLOCK_UNAVAILABLE and its
+    within-day interval, never a day-clustered interval. This is the rule that
+    the single-day samples of section 1f would have tripped.
+
+reference_snapshot:
+  note: >-
+    Populated at freeze under R-19. A SHA-256 is a CHANGE-DETECTOR, not a
+    conformance checker: these pin what the freeze saw, and they do NOT assert
+    that any of this code implements this protocol. Conformance is a separate
+    declared test.
+  artifacts:
+    canonical_plan:
+      path: live/pm_research/plans/BE_FLOWANDFILLS_MODEL_PLAN.md
+      sha256: 5ea7174c4d7aeaeafbbf7e01a01d2408d08606089b7316f1d321a171681fb22d
+    superseded_protocol:
+      path: live/pm_research/FLOW_MODEL_PROTOCOL_V4.yaml
+      sha256: 514e30ba95be998d6fa8d003900308be52899f6edb4f874b31dc4e4f041bfd1b
+    grid_selection_code:
+      path: live/pm_research/flow_grid_terminal.py
+      sha256: d771db1d7171d23b19b21301c43f36a3249ca5804c63f7924fab1f37be3fba04
+    grid_selection_results:
+      path: live/pm_research/FLOW_GRID_TERMINAL_RESULTS.md
+      sha256: 021fb604722ef30064674c9c52a589d7d932f4a341c6976ddaef15a82e80edc4
+    shared_harness:
+      path: live/pm_research/flow_intensity.py
+      sha256: 39e9487906d00e780a9e33d288e6f21d9fa1495f40edb74834782f7c2df2dc96
+    canonical_contract:
+      path: live/pm_research/contracts/contracts.yaml
+      sha256: ae70e3772e74d929eaa735e01f3a9d77e8b55d65dc69aa04c089b46f2e766111

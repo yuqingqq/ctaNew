@@ -5942,3 +5942,144 @@ addendum-67 `pump_dump_both.py` first).
 does not monetize on free data — enhancement=wrong-mechanism (69), standalone=self-defeating-funding/not-reliable
 (70), positioning=underpowered-null (68). Same both-tails/era/cost walls + the new self-defeating-funding mechanism.
 Honestly closed. **CLEAN PASS.**
+
+### Addendum 71 (2026-07-13) — squeeze-vs-dump FINE-TUNED multivariate model (user: "not just a funding gate? test it fine-tuned"): richer than funding, but the apparent edge is SAMPLE-SELECTION NOISE; NOT-monetizable STANDS
+
+User pushed back that the addendum 66-70 tests were "too trivial" (univariate funding gate) and asked for a proper
+fine-tuned multivariate model. Built it correctly and it produced a genuinely exciting interim result — which
+adversarial PIT/robustness checks then DEFLATED to null. Documented in full because a future session WILL re-hit the
+exciting number and must be warned it is fragility, not edge. Scripts `live/pump_feature_enrich.py`,
+`live/pump_model{,_probe,_probe2,_probe3,_probe4,_probe5,_probe6}.py`; data `pump_enriched.csv` (1252 pump-state
+entries × 18 PIT features: climax/climax_build, runup_3d/1d, parab, rvol_7d, dist_ath, taker, age_d, funding(+chg,z),
+positioning oi_chg/tt_ls/ls/taker_ls; targets fwd_ret/dd/maxrise).
+
+- **FACTUAL CORRECTION to addendum 68's premise.** Positioning metrics (`data/ml/cache/metrics_*.parquet`:
+  sum_open_interest, sum_toptrader_long_short_ratio=smart$, count_long_short_ratio=crowd, taker LS) are **NOT
+  recent-only** — they run back to **2021-12 (LINK/UNI), 2024 (most)**, ~5-min cadence. 636 of the covered pumps are
+  pre-2025-10. So addendum-68's "underpowered null (n=44)" was underpowered *because it wrongly excluded the history*,
+  not because the data is thin. This reopened the positioning question with real cross-era power. (Memory
+  `project_pump_dump_closed.md` "RECENT-ONLY 2025-09+" is WRONG — corrected.)
+- **Model = shallow LGBM** (num_leaves 7, lr 0.03, λ=5, 250 trees, winsorized fwd_ret target), no random CV (time-
+  ordered → would leak). ABLATION under HARD cross-era: M0 univariate-funding / M1 price-only / M2 price+funding /
+  M3 +positioning. Short the predicted-worst tercile/decile, NET (−fwd_ret + funding×21 − 40bps), week-clustered CI.
+- **Aggregate cross-era (both directions): NOTHING clears CI>0.** M0 funding-gate →recent +3.1% [−1.5,+8.3], →oos
+  −2.2% [−6.8,+2.3]; M1/M2/M3 all CI~0. dump-AUC 0.55–0.62 (weak-but-real discrimination, doesn't survive cost).
+  Feature importance: **price-action (rvol_7d, dist_ath, climax, age_d) carries the dump-RANKING, NOT funding** —
+  adding funding FLIPS cross-era rank-IC negative (M1 +0.143 → M2 −0.003 →recent), the self-defeating mechanism at
+  the multivariate level. So the user is RIGHT it is not "just funding" — but the extra structure still doesn't clear
+  cost in aggregate.
+- **The exciting interim (which turned out FALSE):** restricting to positioning-covered rows + concentrating to the
+  DECILE gave M3 +positioning = **+12.8% [+5.7,+21.2]** single-split →recent (median +13.6%, win 80%), and an
+  EXPANDING WALK-FORWARD (train-all-prior, trade next 6wk, 12 folds) = **+9.0% [+3.2,+14.8], 11/12 folds positive**.
+  Attribution looked clean: price+funding-only decile FAILED (M2 −0.8%/−3.0%), and 3× positioning-SHUFFLE placebos
+  collapsed to CI~0. Cost-robust to 150bps. Everything said "real, positioning-driven, tradeable froth-short."
+- **DEFLATION — corrected mechanism (adversarial-reviewer pass + `pump_model_probe7.py`).** First-pass deflation
+  (`pump_model_probe6.py`) claimed the +9% died from "sample-composition fragility / fixed-universe" → −3.6%. **That
+  reasoning was WRONG and probe6 was itself CONFOUNDED** (caught by the independent reviewer): (i) the "fixed universe"
+  is innocent — ≤-covered vs 1d-strict-covered differ by ~1 row (metrics backfill to 2021, so every covered name has
+  snapshots far older than a day); (ii) probe6 SILENTLY changed the TRAINING POLICY from probe3's train-on-covered to
+  train-on-full-panel-with-imputed-positioning, AND shifted the fold window — so −3.6% vs +9% was policy+window+
+  plumbing, not freshness. Clean isolation (probe7, matched start/step/as-of/test-rows): train-on-covered **+4.0%**
+  [−3.4,+11.5] vs train-on-full-imputed **+1.9%** [−6.1,+9.3] (policy ≈ +2pp); as-of ≤→< ≈ −4pp; the headline "+9%"
+  needed the enriched-CSV's 614-row ffill plumbing (clean re-derivation covers 636 → +4.0% at the same config).
+- **HONEST characterization = weak-but-insignificant, NOT noise.** Specification curve, correct covered-train policy,
+  72 configs (start/step/seed/as-of): **net mean +1.5% / median +1.6% [p10 −1.6, p90 +5.0], 72% of specs positive,
+  but 0/72 clear CI>0** net of 40bps. So it is a REAL, consistently-positive, positioning-TILTED edge (funding is a
+  −2.9% drag not a driver; 3× positioning-shuffle placebos collapse; survives a 1h metrics lag ⇒ not a 5-min
+  look-ahead) that is simply **too small to clear cost reliably** — median ~+1.6% vs the ~40bps+funding-drag hurdle.
+- **VERDICT: NOT reliably monetizable STANDS** — but the KILL REASON is "weak / spec-fragile / insignificant net of
+  40bps (0/72 specs CI>0)", NOT "sample-selection artifact." The fine-tuned multivariate/positioning model IS richer
+  than the funding gate (validates the user's push: price-action ranks dump-risk, funding self-defeats, dump-AUC
+  0.60, positioning adds a real tilt), and the earlier "+9%/+12.8%" were favorable-corner artifacts (614-row plumbing
+  + fold window + config), not a stable edge. **Two lessons: (a) a CI>0 from one favorable spec on a ~4-name/fold
+  heavy-tailed basket is not an edge — run the spec curve; (b) when deflating, change ONE knob — probe6 changed three
+  (universe-code, training policy, window) and I mis-attributed the result until the reviewer isolated it.** Do not
+  re-open on free data (weak edge won't survive real froth borrow/squeeze/halt frictions on top of the cost hurdle).
+- **DE-NOISING attempt (user: "optimize to filter noise, check performance"; `pump_denoise.py`, spec-curve judged).**
+  Tried 4 principled de-noisers vs the noise we KNOW (heavy squeeze tail + self-defeating funding). WINNER =
+  **classification target** (select by P(dump=fwd_ret≤−20%) instead of regressing the ±50–190% tail): spec-curve
+  median **+2.9% (from +0.8–1.6%), 100% of specs positive, NO n cost**; concrete CLS-tercile n=110 → net **+3.2%,
+  median +5.3% [wkCI −2.5,+8.5]**. LOSERS: LEAN/drop-funding HURT (funding is a useful FEATURE even though it's a PnL
+  drag — separate roles), crowd-short SGUARD HURT (not a clean squeeze filter), CONF-abstention lifts median but
+  trades away n. **Net: de-noising ~2–4× the point estimate and made it consistently positive (stronger evidence the
+  edge is REAL), but 0/12 specs STILL clear CI>0** — the CLS-tercile lower bound is ~−2.5% (was ~−11%). Gap narrowed,
+  not closed: the small-n × heavy-tail wall holds. Refinement, not a reversal — still not tradeable, now "borderline-
+  but-unproven" rather than "indistinguishable from zero." Only a real fix = more froth episodes (history/universe/
+  paid feed), not more estimator tuning.
+
+### Addendum 72 (2026-07-14) — L2 order-book (bookDepth) integration pilot: NO both-era signal; only durable use is cost/capacity realism
+
+User wanted order-book L2 "more than klines" → download / integrate / test-if-it-helps. Built the pipeline and ran a
+disciplined pilot; clean NO-GO for L2-as-signal. Scripts `live/bookdepth_loader.py`, `bookdepth_test.py`,
+`bookdepth_incremental.py`.
+
+- **SOURCE (reusable fact):** Binance USDM `bookTicker` is SPOT-only (404 on futures). The futures free order-book
+  dataset is **`bookDepth`** = `data.binance.vision/data/futures/um/daily/bookDepth/<SYM>/...` — coarse L2: notional+
+  depth at **±0.2/1/2/3/4/5%** of mid, **30s snapshots**, ~500KB/symbol-day, **791 symbols**, history **2023-01 →
+  now** (NOT 2021-22). The **±0.2% near-touch level was added AFTER 2024** → near-touch features (imb02, touch) are
+  RECENT-ONLY (can't both-era test the sharpest microstructure). Symbol tiers: 25 deployed / 175 panel / 218 klines /
+  791 bookDepth. bookDepth aligns with the OOS(2023+)+recent eval window.
+- **PIPELINE:** loader downloads+aggregates 30s snaps → 4h PIT features (l2_imb1/imb02/liq1/touch/slope/asym1/imbstd),
+  cached tiny at `data/ml/cache/l2_<SYM>.parquet`. STRICT PIT: decision bar T uses book over [T-4h,T) only. Pilot =
+  174 panel syms × 2mo recent + 2mo OOS, merged to the 4h panel (target_z).
+- **RESULT — no both-era signal.** (a) ALPHA: xs rank-IC of every L2 feature vs target_z ≤0.021 and SIGN-FLIPS
+  across eras (e.g. imb1 +0.004 rec / −0.018 OOS). (b) SQUEEZE (limitation #4): my first test (condition on bottom-
+  tercile target_z, IC vs realized alpha) gave huge +0.13..−0.23 ICs → **CONFOUNDED** (target_z ≡ xs-z of the same
+  realized alpha, corr +0.966 = selecting on the outcome); discarded. PIT-clean redo (condition on top-tercile
+  return_1d = over-extension) left only **l2_liq1** both-era (+0.061 rec / +0.029 OOS). (c) INCREMENTAL test
+  (`bookdepth_incremental.py`, partial rank-IC controlling for all V0 features, V0-complete sample): l2_liq1 **DIES** —
+  all-names partial ~0 both eras; over-extended partial **+0.021 [+.002,+.039] rec / −0.013 [−.039,+.012] OOS = SIGN
+  FLIP**. The +0.029 OOS was sample-fragile (flips to −0.017 in the V0-complete sample). l2_liq1 is a size/liquidity
+  proxy, redundant with V0's vol features + era-fragile.
+- **VERDICT:** L2 bookDepth adds NO robust cross-sectional alpha or squeeze signal — the same both-eras / era-flip
+  wall. Not a power problem (a SIGN FLIP, so scaling the fetch can't rescue it) → did NOT scale. L2's only durable
+  value is **execution/capacity realism** (real depth vs the flat VIP-0 cost model; grounds the +4.22→~+1.2 capacity
+  claim) — mechanical, not alpha. Method note: the confounded first squeeze test (select-on-outcome) is the same class
+  of error as the froth-short +9% (favorable-corner) — caught by re-deriving PIT-clean. Do not re-explore L2 as alpha
+  on free coarse depth.
+- **DYNAMICS + vs-BTC + HORIZON-DECAY (user follow-up: "does the CHANGE of the book / persistence→hold, flip→flip
+  carry a signal, each symbol vs BTC?"; `bookdepth_dynamics.py`, `bookdepth_vsbtc.py`, `bookdepth_horizon.py`).**
+  Imbalance DYNAMICS (Δ, 3-bar momentum, |Δ| build) vs raw fwd_4h/fwd_1d AND vs alpha: all ≤0.012, SIGN-FLIP both
+  eras. Symbol imbalance RELATIVE to BTC (level+dynamics) vs symbol-vs-BTC return (fwd_rel_4h/1d/alpha): all ≤0.015,
+  sign-flip/CI~0. So at the strategy's 4h/1d grid the book carries NO both-era directional signal in ANY form. BUT
+  the user's underlying intuition is CORRECT — the mechanism is real, just SHORT-horizon: aggregating imbalance to
+  5-MIN bars (8 liquid names, recent) the per-name IC(imbalance, fwd_ret) = **5m +0.024 (t=3.6), 15m +0.027 (t=3.0),
+  30m +0.023 (t=1.7), 1h +0.025 (t=1.3), 2h +0.012 (t=0.7), 4h +0.018 (t=0.9)** — REAL & significant at 5-15min,
+  DECAYS to noise by 2-4h. Conclusion: order-book imbalance is a genuine 5-15min HFT signal that has fully decayed
+  before this multi-day book's 4h decision grid → not an overlay; harvesting it is a separate market-making game (IC
+  ~0.025/trade vs spread+fees+own-impact, latency race, doesn't transport through Binance-train/HL-execute). Idea
+  validated, horizon-incompatible.
+- **PERSISTENCE / SUSTAINED imbalance (user: "if the book HOLDS the imbalance for a long time, use as a 4h signal?";
+  `bookdepth_persist.py`, `_persist_mom.py`, `_persist_inc.py`; scaled fetch to 9mo×both eras, ~1630 bars/era).**
+  The one book construction that turned out REAL — and then REDUNDANT. Features: imb_ewma/imb_mean12 (smoothed lean),
+  imb_run/imb_frac12 (duration), imb_z30 (the user's z-score — WEAKEST, sign-flips). At 2mo/era it looked faint +
+  raw-only; SCALED to 9mo/era the SMOOTHED-LEAN features (ewma/mean12) are **both-era SIGNIFICANT** (CI-off-zero both
+  eras) at 4h/1d/2d AND on the beta-neutral alpha_vs_btc (ewma +0.011[+.006,+.015] rec / +0.010[+.004,+.015] OOS),
+  and NOT momentum (partial≈raw controlling return_1d/ret_3d). So sustained imbalance genuinely predicts returns
+  (unlike the transient Δ) — the user's persistence intuition was CORRECT. **BUT the DECISIVE incremental test
+  linear partial-IC vs alpha controlling for V0 collapsed to ~0 (+0.011→−0.000). **[CORRECTED after user pushback
+  "have you tested properly" — the first redundancy story was WRONG on two counts:]** (1) MECHANISM wrong — I claimed
+  obv_z/vwap_slope/funding capture it, but `bookdepth_ablation.py` OVERLAP shows R²(imb_ewma~V0)=**0.128 rec / 0.018
+  oos** (top corr = vol features corr_to_btc/idio_vol/rvol, weak) → imb_ewma is **mostly ORTHOGONAL to V0**, not
+  captured by it. (2) The pooled-Ridge model ablation was INVALID (NEGATIVE baseline −0.02..−0.045 — a pooled x-sec
+  Ridge doesn't reproduce the strategy, whose edge is PER-SYMBOL). **PROPER test = per-symbol RidgeCV walk-forward
+  (`bookdepth_persym_ablation.py`, baseline reproduces +rank-IC +0.013 rec / +0.002 oos): V0 vs V0+[ewma,mean12,run]
+  → Δrank-IC +0.0005 [−0.0025,+0.0037] rec / +0.0006 [−0.0043,+0.0054] oos — BOTH CI straddle 0 = within noise.**
+  imb_ewma alone: ~0 (recent flat, oos +0.0008). **Correct conclusion: NOT "redundant" (feature is independent of V0)
+  but NOT MEASURABLY INCREMENTAL — the real +0.011 x-sec IC does not translate to per-symbol model lift (Δ≈+0.0005,
+  CI~0), far too small to justify L2 infra.** Net for the strategy unchanged (don't add L2) but now PROPERLY grounded.
+  Dataset+tracker (`bookdepth_track.py`, cron-ready) current for a possible future DIRECTIONAL strategy.
+- **DEFINITIVE (user: "do tests carefully to show the diff") — real-pipeline ablation `bookdepth_real_ablation.py`.**
+  Test progression (each more faithful): (1) linear partial-IC → "redundant" (proxy); (2) pooled-Ridge ablation
+  INVALID (baseline −0.02, inverts); (3) per-symbol PROXY (baseline +0.013) → Δ +0.0005 [CI~0] "not incremental";
+  (4) **REAL PIPELINE — x6 preproc + V0_LEAN(14) + per-symbol RidgeCV + HL=60 exp-decay + exit_time purge + 1d
+  embargo (exact gen_residual_target machinery), clean panel. VALIDITY GATE PASSED: V0_LEAN baseline reproduces
+  +0.0301 recent = the strategy's honest +0.030 EXACTLY.** Result: adding imb_ewma → **RECENT +0.0301→+0.0281,
+  Δ −0.0020 [−0.0039,−0.0002] = HURTS (CI<0)**; +ewma+mean+run Δ −0.0042 [−.0069,−.0016] HURTS. OOS (baseline
+  +0.0170): imb_ewma Δ −0.0026 [−.0053,+.0002] / +all Δ −0.0037 [−.0075,+.0001] = negative, CI touches 0.
+  **DEFINITIVE VERDICT: adding L2 persistence features does NOT help and mildly HURTS the strategy's rank-IC**
+  (recent significantly, OOS negative-within-noise) — the real +0.011 x-sec IC is subsumed by V0 and the added feature
+  only injects noise a regularized per-symbol model is degraded by. So NOT "neutral/redundant" — slightly HARMFUL to
+  add. **Discipline lesson (user-caught, 3 revisions): don't conclude from proxies — the valid ablation must reproduce
+  the strategy's real rank-IC (+0.030) as a validity gate; only the real-pipeline test (baseline-validated) is
+  trustworthy, and it says DON'T add L2.** L2 thread definitively closed.

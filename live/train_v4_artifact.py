@@ -7,7 +7,7 @@ Two books:
   residrev: V0_LEAN + resid_rev-> convexity_v4_residrev_model.pkl  (long ranker)
 Usage: python3 live/train_v4_artifact.py [--fit-cut 2026-07-06]
 """
-import argparse, pickle, sys
+import argparse, os, pickle, sys
 from pathlib import Path
 import numpy as np, pandas as pd
 from sklearn.linear_model import RidgeCV
@@ -16,6 +16,23 @@ REPO = Path("/home/yuqing/ctaNew"); sys.path.insert(0, str(REPO))
 import live.train_twobook_models as tt
 x6 = tt.x6; V0_LEAN = tt.V0_LEAN; RR = tt.RR; EMB = pd.Timedelta(days=1); HL = 60.0
 OUT = REPO / "live/models"; OUT.mkdir(parents=True, exist_ok=True)
+
+# Liveness filter (env V4_DROP_STALE=1, default OFF -> deployed artifact byte-identical). Flags rows
+# where the price is frozen/stale so the return-based features are degenerate (return_1d==0 for long
+# runs -> all features ~0) or spurious (a huge return computed across a stale gap at un-freeze). Audit
+# (2026-07-16): 6 syms (LIT 302d/ICP 102d/VINE/PUMP/TON) => 2934 rows (0.28%). These NEVER reach traded
+# tips (frozen -> neutral features -> mid-rank; strategy trades only extremes), but they pollute the
+# per-symbol preproc scale + fits. Dropping them from TRAINING is a validated hygiene no-op (book+tip
+# A/B neutral, CI spans 0 both eras). Test/inference rows are NEVER filtered. Reusable via _flag_stale.
+STALE_WIN, STALE_FRAC, UNFREEZE_RET, UNFREEZE_PREV = 42, 0.5, 1.0, 0.3   # 42 bars = 7d @4h grid
+
+def _flag_stale(pan: pd.DataFrame) -> pd.Series:
+    """Boolean: row is stale/frozen (dead) or a spurious gap-spanning un-freeze spike. pan must be
+    sorted by [symbol, open_time]."""
+    z = (pan["return_1d"] == 0.0).astype(float)
+    stale_frac = z.groupby(pan["symbol"]).transform(lambda s: s.rolling(STALE_WIN, min_periods=6).mean())
+    prev_stale = stale_frac.groupby(pan["symbol"]).shift(1)
+    return (stale_frac > STALE_FRAC) | ((pan["return_1d"].abs() > UNFREEZE_RET) & (prev_stale > UNFREEZE_PREV))
 
 def load_panel():
     PAN = pd.read_parquet(tt.PANEL, columns=["symbol", "open_time", "exit_time", "return_pct", "alpha_vs_btc_realized"] + list(tt.V0))
@@ -28,10 +45,15 @@ def load_panel():
     # v4 target: cross-sectional z of the RESIDUAL (what the strategy farms)
     g = PAN.groupby("open_time"); sd = g["alpha_vs_btc_realized"].transform("std").replace(0, np.nan)
     PAN["xs_z"] = ((PAN["alpha_vs_btc_realized"] - g["alpha_vs_btc_realized"].transform("mean")) / sd).clip(-10, 10)
-    return PAN.sort_values(["symbol", "open_time"]).reset_index(drop=True)
+    PAN = PAN.sort_values(["symbol", "open_time"]).reset_index(drop=True)
+    PAN["stale_suspect"] = _flag_stale(PAN)
+    return PAN
 
 def fit_book(PAN, feats, fit_cut, name):
     tr = PAN[(PAN.exit_time < fit_cut) & PAN["xs_z"].notna()]
+    if os.environ.get("V4_DROP_STALE", "0") == "1" and "stale_suspect" in tr.columns:
+        n0 = len(tr); tr = tr[~tr["stale_suspect"]]
+        print(f"  [V4_DROP_STALE] dropped {n0 - len(tr)} stale/frozen training rows ({100*(n0-len(tr))/max(n0,1):.3f}%)")
     t_end = tr["open_time"].max()
     models, sstats, hstats = {}, {}, {}
     for sym, gg in tr.groupby("symbol"):

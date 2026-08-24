@@ -1,11 +1,17 @@
 [Unit]
-Description=Retry the P-2026-003 Tier-2 evaluation pipeline hourly
+Description=P-2026-003 Tier-2 evaluation BACKSTOP (primary trigger is measurement's OnSuccess=)
 Documentation=file:///home/yuqing/ctaNew/live/pm_research/EVALUATION_PIPELINE.md
 
 [Timer]
-OnCalendar=*-*-* *:40:00 UTC
+# R-33/Q-OPS-4: DEMOTED from the primary trigger to a backstop. Evaluation is
+# now chained to pm-measurement-pipeline.service's success, which makes the two
+# unattended lanes structurally unable to run concurrently against the
+# single-writer lock. This timer exists only so a broken chain cannot stall the
+# lane indefinitely; it must stay INFREQUENT, because a short period would
+# reintroduce exactly the wall-clock collision the chain removes.
+OnCalendar=*-*-* 03,09,15,21:50:00 UTC
 Persistent=true
-RandomizedDelaySec=2min
+RandomizedDelaySec=5min
 AccuracySec=1min
 Unit=pm-evaluation-pipeline.service
 

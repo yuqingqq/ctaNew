@@ -1,0 +1,11 @@
+[Unit]
+Description=Run the P-2026-003 lane health check every 15 minutes
+
+[Timer]
+OnCalendar=*:0/15
+AccuracySec=30s
+Persistent=true
+Unit=pm-lane-health.service
+
+[Install]
+WantedBy=timers.target

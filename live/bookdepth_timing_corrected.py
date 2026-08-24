@@ -70,9 +70,10 @@ def block_sharpe(dr, block=10, n=1500):
 def main():
     syms = fixed_universe(); z = agg_z(syms); insts, mj = instruments(syms)
     print(f"FIXED universe {len(syms)} syms (present <=2023-07 through recent) | major basket {len(mj)} | PIT z on {z.notna().sum()} bars\n")
-    for HL, hlab in [(42, "7d"), (60, "10d")]:
+    for HL, hlab in [(6, "1d"), (12, "2d"), (18, "3d"), (42, "7d"), (60, "10d")]:
         pos = (-z).clip(-1.5, 1.5).ewm(halflife=HL).mean()
-        print(f"=== holding {hlab}, net 10bps | Sharpe [10d-block-boot 95% CI] ===")
+        tpd = pos.diff().abs().sum() / (pos.dropna().index.floor("1D").nunique())
+        print(f"=== holding {hlab} (turn {tpd:.2f}/day), net 10bps | Sharpe [10d-block-boot 95% CI] ===")
         print(f"{'instrument':18s} | {'OOS Sharpe [CI]':27s} | {'RECENT Sharpe [CI]':27s}")
         for name, ret in insts.items():
             r = ret.reindex(pos.index)

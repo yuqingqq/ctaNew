@@ -5,12 +5,19 @@ claim. Probe `flow_grid_terminal.py` (25 self-test checks). Receipts
 `data/pm_5min/derived/flow_grid_nonuniform_v1.json` and
 `flow_terminal_mechanism_v1.json` (gitignored).
 
-Population for everything below: `clob_v3_1` covered slugs, days
-2026-08-19/20/21, **361 windows per coin**. Denominator is observed exposure per
-bin, gap-corrected on exact boundaries; numerator is folded taker arrivals in
-the same bin. Window-clustered intervals throughout, and the standing caveat is
-not optional: **window clustering cannot capture day-level common factors, so at
-three collected days these intervals understate uncertainty.**
+Population for everything below: `clob_v3_1` covered slugs, **361 windows per
+coin**. Denominator is observed exposure per bin, gap-corrected on exact
+boundaries; numerator is folded taker arrivals in the same bin.
+
+**POPULATION CORRECTED 2026-08-23.** This line read "days 2026-08-19/20/21" and
+"three collected days". Measured: the `clob_v3_1` era opens 2026-08-20 14:50:21,
+so it contains **no 08-19 windows at all**, and the earliest-361-per-coin sample
+spans **two** UTC days, 2026-08-20 and 2026-08-21. Verify with
+`python3 live/pm_research/flow_intensity.py sample-days`; mechanism in
+`FLOW_MODEL_STATE.md` §1f. Window-clustered intervals throughout, and the
+standing caveat is not optional and is now one day worse than stated: **window
+clustering cannot capture day-level common factors, and at two sampled days
+these intervals understate uncertainty.**
 
 ---
 
