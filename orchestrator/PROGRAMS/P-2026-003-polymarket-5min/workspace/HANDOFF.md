@@ -2281,3 +2281,41 @@ built and parameterised, so it is a rerun.
 
 **ALSO PENDING:** DE's timestamp-predicate selector (`Q-DA-55`), verification
 standing ready against the latest candidate.
+
+## DA - 2026-08-24T16:30Z (R-137) - **REPLAY-ARM CONCENTRATION: MY TAPE NUMBER FLATTERED IT**
+
+**`Q-DA-61` FILED.** The commensurable number is in, and it is **~4.7x (btc) /
+3.1x (eth) weaker** than the real-fill tape figure I filed first.
+
+| population | btc worst-10% | btc bar -> fills/vol | eth worst-10% | eth bar -> fills/vol |
+|---|---|---|---|---|
+| real-fill tape | 80.7% | 1.60% / 12.60% | 81.0% | 4.38% / 17.93% |
+| **replay arm (BE's)** | **53.2%** | **7.47% / 8.84%** | **52.8%** | **13.46% / 15.93%** |
+
+n = 31,645 btc / 5,705 eth fills over 90 windows each, as-of 16:25:57Z.
+Convention NOT reimplemented - `edge_layer1.decompose` called directly, so the
+drift term is the one BE's curve conditions on.
+
+**VALIDATION PASSES:** mean markout **-0.8654 c/share** vs `policy_comparison_v2`
+three-day JOIN mean **-0.855** - 1.2% apart, so the replay I ran IS the policy
+arm. (BE's -0.5325 differs because `edge_layer1.run` uses `iw.select`
+cross-day-earliest-first; I used `select_by_day` on three fixed days. Different
+SAMPLE, not different method.)
+
+**Route not dead** - 7.47% against a diffuse 45% is still **6x concentration** -
+**but the predictor's job is materially harder than my tape number implied.**
+R-137 barring the cross-citation is what stopped that error reaching a decision.
+
+**STRUCTURAL POINT FOR GATE DESIGN:** on the replay, cash-ranked and per-fill
+ranked concentration nearly coincide, because the arm quotes a **FIXED 5 shares**
+- no size variation. On the real tape a meaningful part of concentration was
+**size** (worst 2.04% of fills were ~6.7x average). **The replay has no size
+lever, so its concentration is PURE TOXICITY.** A gate designed against replay
+numbers is asked to do by prediction alone what the real book could partly do by
+sizing.
+
+**ALSO THIS TICK:** `Q-DA-60` filed BLOCKING on the v2 re-freeze verification -
+builder `sha256 e8a82b66` MATCHES (content-anchored, verified), numbers
+recomputed, but `feature_schema_hash` is **vestigial** (nothing produces it) and
+`frozen_at_commit` predates the freeze with `committed_at_freeze: false`.
+Corrected my own Q-DA-57 mechanism: v1's builder **was never in the repo at all**.
