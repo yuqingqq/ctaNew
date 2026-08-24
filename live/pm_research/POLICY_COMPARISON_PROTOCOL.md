@@ -160,3 +160,36 @@ more fills means 4–6× MORE TOTAL LOSS: FRONT is the BETTER-RANKED policy
 and the FASTER way to lose money. This comparison ranks policies; it does
 not make either viable — that reading belongs to items 3–4 of the
 decision path (gross→net, STOP-MM-VIABLE), not to this protocol.
+
+> *ANNOTATION BESIDE (2026-08-24, R-109 challenge — appended per R-28;
+> nothing above is edited): **THE COORDINATOR'S DAY-CLUSTERED ARITHMETIC IS
+> CONFIRMED TO THE DIGIT by DE's own recomputation from the cells above**
+> — btc d_M5 at the DAY unit, t(4), G=5: mean +0.146, se 0.0876,
+> **[−0.098, +0.389], SPANS ZERO**. The published window-clustered
+> [+0.026, +0.251] excluded zero only by pooling windows across a
+> day-level sign change. **The btc CI-excludes-zero presentation is
+> RETRACTED**; under the ruled standard the wrong-unit interval is a
+> precision claim the design cannot support. DE's "day-clustered refused
+> below the cluster floor (house rule)" was STALE BOILERPLATE ported from
+> the G≤4 era — at G=5 the t-interval is wide but valid, and the day
+> means were already in this receipt. The refusal was mechanical, and it
+> is DE's instrument defect, the R-79 class in a stats note.
+>
+> **And the recomputation EXTENDS the challenge via item 4's own
+> caveat**: excluding the partial day (08-24, 21 windows, first hours
+> UTC, btc's most positive day), G=4 complete days give btc
+> [−0.160, +0.322] and **eth [−0.067, +1.082] — eth's day-clustered
+> exclusion of zero holds ONLY with the partial day included**
+> (G=5: [+0.094, +0.879]). A partial day is a different population, not
+> a smaller one — so the eth markout win is SUGGESTIVE, not day-robust.
+>
+> **What survives at the day unit, restated precisely**: (1) THE LEVELS
+> ARE THE ANSWER — m5 negative on all ten coin-days, both arms; neither
+> policy is profitable at h=5 and no reading of the difference changes
+> it. (2) FILLS are day-robust with room to spare: btc d_shares/window
+> t(4) G=5 [+4,644, +7,378]. (3) §7's predicted FRONT markout PENALTY
+> appears NOWHERE — no coin-day is CI-clean negative at either unit; the
+> refutation of the stated prior stands. (4) The markout WIN is
+> point-positive pooled and per-day-majority but NOT day-robust —
+> btc indeterminate at every unit beyond windows; eth clean only at
+> G=5-with-partial. All figures as-of 2026-08-24; n as stated per cell.*
