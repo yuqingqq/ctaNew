@@ -918,7 +918,11 @@ def freeze_from_receipt(path) -> dict[str, Any]:
     import json as _json
     from pathlib import Path as _P
     doc = _json.loads(_P(path).read_text())
-    frozen_at = doc.get("freeze_epoch") or doc.get("frozen_at")
+    # key list widened after the R-136 confirmation RAN the reader and
+    # caught a refusal-by-key-mismatch: the live receipts spell the
+    # instant `frozen_at_utc` (v1/v2 both)
+    frozen_at = (doc.get("freeze_epoch") or doc.get("frozen_at")
+                 or doc.get("frozen_at_utc"))
     commit = (doc.get("frozen_at_commit") or doc.get("commit")
               or doc.get("commit_hash"))
     if frozen_at is None:

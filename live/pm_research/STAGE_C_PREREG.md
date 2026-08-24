@@ -1,6 +1,6 @@
 # STAGE_C_PREREG — predictor-gated quoting, pre-registered before any forward number exists
 
-REVISION: 1
+REVISION: 2
 
 **Authorizing ruling (in-file per R-126): R-135 — conditional
 authorization, surface-freeze exception for THIS protocol only.**
@@ -34,6 +34,17 @@ mere abstention from wearing information's clothes.
   (the wiring must-fail: zero fills or the run aborts).
 
 ## §2. RUN CONDITION — the protocol's own kill switch
+
+> **§2 EVALUATED FOR candidate v2 — SELF-VOID, 2026-08-24 (R-136):**
+> BE's in-sample `E[drift | kept]` curve NEVER CROSSES ZERO for the v2
+> score, so this protocol is **SELF-VOIDED FOR v2 exactly as written
+> below — no cell ever ran.** (Curve receipt: BE-held; cited here by
+> R-136's own statement pending the receipt's path, per the user-hold
+> on BE surface.) **RE-ARM CONDITION: only a v3 freeze** — BE's
+> horizon-matched score, IF it clears the in-sample curve — re-arms
+> this gate, against the v3 receipt via `freeze_from_receipt`. The v2
+> instant (2026-08-24T15:04:28Z, commit 5d312277) remains valid for
+> the SPLIT sequencing, which this protocol does not touch.
 
 **Stage C runs ONLY IF BE's in-sample `E[drift | kept]` curve crosses
 zero at some retention.** If the in-sample curve — which is FLATTERED by
