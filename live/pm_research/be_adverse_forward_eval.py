@@ -39,9 +39,45 @@ from __future__ import annotations
 import json, math, random, sys
 from pathlib import Path
 
-CAND = Path('/home/yuqing/ctaNew/data/pm_5min/derived/be_adverse_move_candidate_v2.json')
-N_PERM = 200                      # FIXED BEFORE ANY FORWARD RESULT (R-138)
-NULL_STAT = "max"
+DERIVED = Path('/home/yuqing/ctaNew/data/pm_5min/derived')
+
+# --- HIGHEST-VERSION RESOLUTION (R-139(3)) ---------------------------------
+# The harness must NOT hardcode a receipt filename. v2 carries a superseded
+# commit and a vestigial hash; v2.1 corrects both IN-FIELD, because automated
+# readers resolve receipt FIELDS, not sidecars -- a sidecar annotation serves a
+# human and is invisible to this file. Resolving highest-version means a future
+# correction reaches the harness without anyone remembering to repoint it.
+def resolve_candidate() -> Path:
+    """Newest `be_adverse_move_candidate_vN[.M].json`. REFUSES on ties/absence."""
+    cands = []
+    for f in DERIVED.glob('be_adverse_move_candidate_v*.json'):
+        stem = f.stem.split('_v')[-1]
+        try:
+            cands.append((tuple(int(x) for x in stem.split('.')), f))
+        except ValueError:
+            continue
+    if not cands:
+        raise SystemExit('REFUSED: no adverse-move candidate receipt found')
+    cands.sort()
+    return cands[-1][1]
+
+
+CAND = resolve_candidate()
+
+# --- THE DECLARED NULLS, R-137/R-138 ---------------------------------------
+# DESIGN and MINIMUM PERMUTATION COUNT are both fixed HERE, in the file, before
+# any forward number exists. Both halves matter: BE ran 8 permutations, saw a
+# result, ran 30, and the verdict REVERSED on two eth cells. A null max is an
+# extreme-order statistic biased downward at small counts, so an UNDER-SAMPLED
+# CORRECT NULL FLATTERS AS MUCH AS A WRONG ONE. Neither number below may be
+# revised after a forward result is seen.
+N_PERM = 200                      # MINIMUM permutation count, fixed pre-result
+NULL_STAT = "max"                 # statistic over permutations, NOT the mean
+NULL_DESIGN = (
+    "permuted-feature refit: shuffle each Binance feature column independently, "
+    "REFIT the logistic on y ~ 1 + pm_logit + shuffled features, and recompute "
+    "incremental Brier over the pm_logit baseline. Refit-style, so it prices in "
+    "the free-parameter optimism a feature-only placebo cannot see.")
 
 
 def load_candidate() -> dict:
@@ -116,6 +152,33 @@ def selftest() -> int:
     ok("pm_logit" in c["baseline"], "the baseline is pm_logit and is recorded in the candidate")
     ok(len(c["coefficients"]["btc"]) == 7, "coefficients load with the expected width")
     ok(c["builder"]["sha256"].startswith("e8a82b66"), "builder sha256 is the anchor")
+    # Assert the PROPERTY, not today's answer. A selftest pinned to
+    # "v2.1" would fail the day a legitimate v2.2 lands, and the fix someone
+    # reaches for is to loosen the assertion -- which removes the check.
+    import tempfile
+    with tempfile.TemporaryDirectory() as td:
+        t = Path(td)
+        for nm in ("v1", "v2", "v2.1", "v10"):
+            (t / f"be_adverse_move_candidate_{nm}.json").write_text("{}")
+        g = globals()
+        old = g["DERIVED"]
+        try:
+            g["DERIVED"] = t
+            picked = resolve_candidate().name
+        finally:
+            g["DERIVED"] = old
+        ok(picked == "be_adverse_move_candidate_v10.json",
+           f"resolution picks the HIGHEST version numerically, not lexically (got {picked})")
+    ok(CAND.name.endswith(".json") and "candidate_v" in CAND.name,
+       f"a candidate resolves from the live directory (got {CAND.name})")
+    ok(CAND.name != "be_adverse_move_candidate_v2.json",
+       "and it is NOT the superseded v2, whose commit field is stale")
+    ok("feature_schema_hash" not in c,
+       "the resolved receipt has NO vestigial feature_schema_hash")
+    ok(c["frozen_at_commit"].startswith("128a757"),
+       "the resolved receipt carries the CORRECTED commit, in-field not in a sidecar")
+    ok(N_PERM >= 200 and NULL_STAT == "max" and "refit" in NULL_DESIGN.lower(),
+       "null DESIGN and MINIMUM COUNT are both declared in-file before any result")
     print(f"be_adverse_forward_eval selftest: {checks} checks OK")
     return 0
 
@@ -129,7 +192,8 @@ def main() -> int:
     print(f"  frozen_at    {c['frozen_at_utc']}  (commit 128a757 per R-138 annotation)")
     print(f"  builder      {c['builder']['sha256'][:16]}")
     print(f"  baseline     pm_logit, hard-coded")
-    print(f"  nulls        {N_PERM} permutations, statistic={NULL_STAT}, FIXED before results")
+    print(f"  nulls        {N_PERM} permutations (MINIMUM, fixed pre-result), statistic={NULL_STAT}")
+    print(f"  null design  {NULL_DESIGN[:66]}...")
     print(f"  R-109        G=1 on day one -> POINT ESTIMATE, NO INTERVAL")
     print("\n  Awaiting the first fully-admissible day (first window t0 >= freeze).")
     return 0
