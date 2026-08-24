@@ -71,3 +71,33 @@ with its reason.
 
 **Applied as plan Revision 8 same-tick** (author-reviewer precedent);
 iteration 2 re-reviews Revision 8 with fresh eyes next tick.
+
+---
+
+### Iteration 2 — 2026-08-24 — verdict: `DEFECTS_FOUND` (2 MUST-FIX + 1 SHOULD-FIX; decision-readiness ran per R-82, as in iteration 1)
+
+1. **MUST-FIX (coordinator-required): the pattern disposition was spread
+   across two sentences, not one unmissable word.** Decision changed and
+   whose: the next replay author's default. Fixed — §1 now carries
+   **"PATTERN DISPOSITION: DEBT — not ADOPTED"** as a standalone marker
+   with the copy-conditions stated (frozen protocol + conformance gate
+   only) and convergence named as this plan's open debt.
+2. **MUST-FIX (self-caught): Revision 8's repair REINTRODUCED the defect
+   class it fixed.** The history block retained a live-looking "**Now
+   Revision 7**" — the exact string a prose-number reader (R-67's method,
+   the R-79 class, four instances programme-wide) would hit next. Decision
+   changed and whose: any accounting reading the file — the same failure,
+   third time waiting to happen. Fixed structurally, not by another prose
+   patch: an authoritative machine-readable `REVISION:` field is now the
+   FIRST line under the title, the only place the number lives; every
+   number in the history narrative is demoted to quoted history
+   ("(then-marked: ...)").
+3. **SHOULD-FIX (process): adopt `da_freeze_pin.py` for this loop from
+   iteration 3** — sha256 pinned at dispatch, verified at report, breached
+   iterations not streak-eligible (DA's instrument, 8 checks; the
+   author-reviewer-same-session shape of this loop is exactly the pattern
+   the pin exists to make evidence-able rather than trusted). ADOPTED in
+   this charter effective iteration 3.
+
+**Applied as plan Revision 9 same-tick.** Streak: 0 (both iterations
+found defects). Iteration 3 runs against a PINNED Revision 9 next tick.

@@ -1,20 +1,32 @@
 # EV-Replay — the replay environment plan
 
-Status: **DESIGN**, not decision-eligible. **REVISION 8, 2026-08-23** —
-applies `EV_REPLAY_REVIEW_LOOP.md` iteration 1 (the plan's dedicated
-R-77 loop): the self-contradicting header fixed (line 3 said "Revision 3"
-against the body's "Now Revision 7" — and R-67's state line plus a B3
-dispatch premise both read the stale line, so the defect had already
-misled two coordinator readings); §1's dialect census updated 5→8 with
-the de-facto pattern named; the precedence banner re-pinned to v23;
+REVISION: 9
+
+*(The line above is the ONLY authoritative revision carrier — machine- and
+grep-readable, one place, never duplicated in prose. Iteration 2's rule
+after the number was misread out of running prose TWICE (R-67, the B3
+tick) and Revision 8's own repair reintroduced a live-looking "Now
+Revision 7" in the history below. Every revision number in the history
+narrative is hereafter QUOTED HISTORY, not a status claim.)*
+
+Status: **DESIGN**, not decision-eligible. **Revision 9, 2026-08-24** —
+applies `EV_REPLAY_REVIEW_LOOP.md` iteration 2: the authoritative
+`REVISION:` field added (above); the §1 pattern disposition made
+one unmissable word per the coordinator's requirement; history numbers
+demoted to quoted history. Revision 8 (2026-08-23) applied iteration 1:
+the self-contradicting header fixed (line 3 said "Revision 3"
+against the body's then-marker "Now Revision 7" — and R-67's state line
+plus a B3 dispatch premise both read the stale line, so the defect had
+already misled two coordinator readings); §1's dialect census updated 5→8
+with the de-facto pattern named; the precedence banner re-pinned to v23;
 §4.1's fired trigger recorded; §6.4's foreclosed revive condition
-corrected. Prior header (Revisions 3–7 history) follows unchanged:
-applies `DE_PLAN_REVIEW_LOOP.md` iteration 6: the header's gating claim scoped
+corrected. Prior history (then-marked Revisions 3–7) follows as QUOTED
+HISTORY: applies `DE_PLAN_REVIEW_LOOP.md` iteration 6: the header's gating claim scoped
 to exactly what exists (Rev 2 said "gated green against §4" while §4.3's
 must-fail controls did not exist — the claim-stronger-than-artifact defect in
 the plan whose §4 exists to prevent it); §2's plugin-path rows marked NOT IN
 v1; §4 given an explicit status table with the acceptance DEBT named and made
-blocking. **Now Revision 7** — iteration 10, the loop-closing revision: §4.2's
+blocking. **(then-marked: "Now Revision 7")** — iteration 10, the loop-closing revision: §4.2's
 retained "closure completed" reworded (the retired claim form had survived in
 the file that retired it), cell vintage brought current, §2's spec-hash row
 extended with the iteration-9 `inputs_hash` stamp. Prior — Revision 6,
@@ -95,8 +107,15 @@ and determinism controls in each probe.** That pattern discharged its
 verdicts honestly — but it is COPY PROLIFERATION, exactly what this plan
 exists to converge, and each copy is a place a fix must be re-applied
 (the hour-boundary and anchor repairs of 2026-08-23 touched single copies).
-**Convergence remains the open debt; the pattern is sanctioned per-protocol,
-not adopted as the end state.** They agree on the load-bearing conventions —
+
+**PATTERN DISPOSITION: DEBT — not ADOPTED.** (Iteration 2, by coordinator
+requirement: one unmissable word, because an unnamed pattern that tripled
+in one session is precisely the one the next author copies without ever
+deciding to.) The instrumented-copy pattern is SANCTIONED per-protocol —
+legitimate for a coordinator-frozen falsifier with its own conformance
+gate — and is NOT the end state; the next replay author copies it only
+with a frozen protocol in hand, and convergence into `ReplayEnv` remains
+this plan's open debt. They agree on the load-bearing conventions —
 
 - state applied at the **frozen 250 ms knowledge lag** via a scheduled event
   heap; the lag is an environment constant, never policy-visible;
