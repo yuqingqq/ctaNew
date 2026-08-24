@@ -769,3 +769,131 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
+
+# --------------------------------------------------------------------------
+# R-129 (Q-DA-55 upheld) — HOLDOUT ADMISSIBILITY IS A TIMESTAMP PREDICATE,
+# NEVER A POSITION COUNT. Authorizing ruling stated in-file per R-126.
+#
+# The defect this replaces: `select_by_day` keeps earliest-first WITHIN each
+# day, so with a MID-DAY freeze (BE's: 2026-08-24T07:30:44Z) the per_coin=30
+# sample of 08-24 ended 02:25Z — 5.1 h BEFORE the freeze — while passing a
+# position-count completeness test and getting labelled holdout_complete: a
+# forward holdout containing no forward data, silently. Raising per_coin was
+# REFUSED as a remedy (R-129): a selector that cannot express the boundary
+# is replaced, not tuned. DA verifies independently by recomputing the
+# admissible set.
+# --------------------------------------------------------------------------
+
+HOLDOUT_LEAD_S = 60.0     # a window's earliest tape receipt is ws - lead-in
+
+
+def window_admissible_forward(ws_epoch: float, freeze_epoch: float) -> bool:
+    """A window is FORWARD iff ALL its data postdates the freeze instant:
+    knowledge time of the window's earliest receipt (ws - lead-in) >= freeze.
+    Conservative on the boundary by construction."""
+    return (ws_epoch - HOLDOUT_LEAD_S) >= freeze_epoch
+
+
+def select_holdout(freeze_epoch: float,
+                   cap_per_coin: int | None = None) -> dict[str, Any]:
+    """The R-129 selector: day-keyed ADMISSIBLE windows + DERIVED labels.
+
+    - admissibility: `window_admissible_forward` per window — the predicate,
+      nothing positional;
+    - `cap_per_coin` (optional) applies AFTER the predicate and NEVER defines
+      admissibility or completeness;
+    - `day_closed`: derived from the tape (a later day's window exists on
+      disk), not from any count;
+    - `holdout_complete` PER (day, coin): day_closed AND n_admissible > 0 —
+      the count is whatever the timestamp filter yields; there is no
+      per-coin target to "hit".
+    Returns {"freeze_epoch", "days": {day: {"day_closed", "windows":
+    [(slug, path, up, down, gaps)...], "n_admissible_by_coin"}}}.
+    """
+    paths = fi._archive_paths()
+    tokens = fi.token_map()
+    gaps = fi.gaps_by_slug(fi.ERA)
+    by_day: dict[str, list] = collections.defaultdict(list)
+    per_day_coin: dict[str, collections.Counter] = collections.defaultdict(
+        collections.Counter)
+    max_ws = 0
+    for slug in sorted(fi.covered_slugs(fi.ERA)):
+        if slug not in paths or slug not in tokens:
+            continue
+        try:
+            ws = int(slug.rsplit("-", 1)[1])
+        except (IndexError, ValueError):
+            continue
+        max_ws = max(max_ws, ws)
+        if not window_admissible_forward(ws, freeze_epoch):
+            continue
+        day = fi.slug_day(slug)
+        coin = slug.split("-")[0]
+        if cap_per_coin is not None \
+                and per_day_coin[day][coin] >= cap_per_coin:
+            continue
+        up, down = tokens[slug]
+        by_day[day].append((slug, paths[slug], up, down, gaps.get(slug, [])))
+        per_day_coin[day][coin] += 1
+    out_days: dict[str, Any] = {}
+    for day in sorted(by_day):
+        day_end = max(int(s.rsplit("-", 1)[1]) for s, *_ in by_day[day]) + \
+            int(fi.WINDOW_S)
+        # closed iff the tape has moved past this day's last covered window
+        day_closed = max_ws >= day_end
+        out_days[day] = {
+            "day_closed": day_closed,
+            "holdout_complete_by_coin": {
+                c: bool(day_closed and n > 0)
+                for c, n in sorted(per_day_coin[day].items())},
+            "n_admissible_by_coin": dict(sorted(per_day_coin[day].items())),
+            "windows": by_day[day],
+        }
+    return {"freeze_epoch": freeze_epoch, "predicate":
+            "ws - HOLDOUT_LEAD_S >= freeze_epoch (R-129)", "days": out_days}
+
+
+def _r129_selftest() -> int:
+    """The Q-DA-55 witness as a MUST-CATCH, on the real tape."""
+    n = [0]
+
+    def ok(cond: bool, label: str) -> None:
+        n[0] += 1
+        if not cond:
+            raise AssertionError(f"[r129] {label}")
+
+    # boundary exactness on the predicate itself
+    ok(window_admissible_forward(1000.0 + HOLDOUT_LEAD_S, 1000.0),
+       "window whose lead-in starts AT the freeze is admissible")
+    ok(not window_admissible_forward(1000.0 + HOLDOUT_LEAD_S - 1e-9, 1000.0),
+       "one epsilon earlier is NOT")
+
+    # the witness: BE's freeze instant, real tape — the OLD selector's
+    # 08-24 btc sample (earliest-30) must be REJECTED wholesale by the
+    # predicate, and the new selector must return ONLY post-freeze windows
+    import datetime as dt
+    freeze = dt.datetime(2026, 8, 24, 7, 30, 44,
+                         tzinfo=dt.timezone.utc).timestamp()
+    old = select_by_day(30)
+    day = "2026-08-24"
+    if day in old:
+        old_btc = [w for w in old[day] if w[0].startswith("btc")]
+        pre = [w for w in old_btc
+               if not window_admissible_forward(
+                   int(w[0].rsplit("-", 1)[1]), freeze)]
+        ok(len(pre) == len(old_btc) and len(old_btc) > 0,
+           f"the Q-DA-55 witness: ALL {len(old_btc)} earliest-30 btc 08-24 "
+           f"windows are PRE-freeze — the old completeness label was wrong")
+    new = select_holdout(freeze)
+    for d, info in new["days"].items():
+        for (slug, *_r) in info["windows"]:
+            ok(window_admissible_forward(
+                int(slug.rsplit("-", 1)[1]), freeze),
+               f"selected window {slug} violates the predicate")
+    ok(all(int(s.rsplit('-', 1)[1]) - HOLDOUT_LEAD_S >= freeze
+           for d in new["days"].values() for (s, *_x) in d["windows"]),
+       "every admitted window is wholly post-freeze incl. lead-in")
+    print(f"[r129] selftest OK — {n[0]} checks "
+          f"(admissible days: { {d: i['n_admissible_by_coin'] for d, i in new['days'].items()} })")
+    return 0
