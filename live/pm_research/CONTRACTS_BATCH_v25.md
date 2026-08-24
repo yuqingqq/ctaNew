@@ -41,7 +41,7 @@ discrepancy visible, and it must NOT be turned green early.
 
 | # | change | source | status |
 |---|---|---|---|
-| M-2 | remove `GateEvidence.decision_eligible: bool` | Ruling R-91: `R-ADMISS` reserves the SELECTION decision to the coordinator; `GateEvidence` is produced by `BE-Uncertainty`, a worker plane, so a worker emitting `decision_eligible` is a worker making that decision. Verified against v23 by DE this tick (field present, `bool`, sole producer `BE-Uncertainty`) | RULED — record drafted below |
+| M-2 | remove `GateEvidence.decision_eligible: bool` — **EXTENDED per R-126: the field gained a SECOND producer in v24** | Ruling R-91: `R-ADMISS` reserves the SELECTION decision to the coordinator; a worker emitting `decision_eligible` is a worker making that decision. **v24 re-verification (2026-08-24, at the field values): `GateEvidence` is now produced by BOTH `BE-Uncertainty` AND `EV-AdverseMove`** (the user's v24 edit added the second), so one worker-plane violation became two, one of them on the EV plane that is read by none. The single field-removal record below removes the field from the TYPE and therefore from both producers' output; the extension is the rationale and the post-application verification obligation (both producers conformant). BE's precise wording lands here when sent; the batch stays DE's. | RULED — record drafted below; **BE wording pending** |
 
 **M-2's migration record, verbatim-ready:**
 ```yaml
@@ -76,6 +76,18 @@ reports the outcome either way.
 (none yet)
 
 ## §3 — Known candidates NOT yet ruled into this batch, and NAMED DEBT
+
+- **THE DECISION-SHAPED-FIELD LICENSING QUESTION (R-126, named item; BE's
+  precise wording pending — DE's provisional census from the v24 field
+  values, 2026-08-24):** beyond M-2's `GateEvidence.decision_eligible`,
+  the contract carries `GateEvidence.admissible`, **`AnchorSpec.selected`
+  (neither producer nor licence, per the ruling)**,
+  `FlowDevelopmentRun.decision_eligible` (a SECOND field of the exact
+  M-2 name-and-shape, on a different type), `ModelSelectionOutcome.decision`,
+  and `AdmissibilityDecision.admissible` — five fields whose licence to
+  exist (who may emit a decision, under which ruling) is unstated.
+  Enters a batch when ruled; until then, named so absence is not mistaken
+  for review.
 
 - DA's `Provenance` de-collision naming + authority axis (residue named in
   the v23 type's own notes) — enters when DA names it.
