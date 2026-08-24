@@ -97,8 +97,15 @@ def contract_conformance(doc: dict[str, Any] | None = None) -> list[str]:
         root = pathlib.Path(__file__).resolve().parents[2]
         doc = yaml.safe_load(open(root / "live/pm_research/contracts/contracts.yaml"))
     bad: list[str] = []
-    if doc.get("version") != 23:
-        bad.append(f"contracts version {doc.get('version')} != 23")
+    # R-121's lesson, in code: THE VERSION NUMBER IS THE VOCABULARY, THE
+    # FIELD VALUES ARE THE STATE. This check pinned `== 23` and broke the
+    # moment an unrelated direct edit took v24 while the vocabulary this
+    # module conforms to was untouched. The version is now a FLOOR (>= 23,
+    # where the Action/FeasibleSet vocabulary landed); every load-bearing
+    # claim below reads the FIELDS.
+    v = doc.get("version")
+    if not (isinstance(v, int) and v >= 23):
+        bad.append(f"contracts version {v!r} < 23 (pre-vocabulary)")
     f = (doc.get("types", {}).get("Action", {}) or {}).get("fields", {})
     if "order_ref" not in f:
         bad.append("Action.order_ref missing (CANCEL inexpressible)")

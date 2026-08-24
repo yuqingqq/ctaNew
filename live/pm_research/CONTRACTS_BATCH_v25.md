@@ -1,7 +1,16 @@
-# CONTRACTS_BATCH_v24 — accumulator (R-35: held as one batch, never ad-hoc)
+# CONTRACTS_BATCH_v25 — accumulator (R-35: held as one batch, never ad-hoc)
 
-**Status: DRAFT — ACCUMULATING.** Opened 2026-08-23 to carry v23→v24
-changes as they are ruled; nothing here is applied until the batch is
+**Status: DRAFT — ACCUMULATING. RETARGETED v24→v25 per Ruling R-121
+(2026-08-24):** the v24 number was TAKEN by the user's direct adverse-move
+edit (AdverseFeatureRow/AdverseMoveFit/ActionOutcome/WealthLedger +
+EV-AdverseMove/DA-FlowActionGrid — verified at the field values, not the
+version string), while THIS batch's two ruled migrations remain UNAPPLIED
+in v24 (`CapitalOpCommand.op` still `DEPOSIT|WITHDRAW`;
+`GateEvidence.decision_eligible` still present — both re-verified
+2026-08-24). A concurrency collision between direct editing and a queued
+batch; no fault; records re-stamped 24→25. **R-72 and R-91 are STILL
+OWED — the version number is the vocabulary, the field values are the
+state.** Opened 2026-08-23; nothing here is applied until the batch is
 submitted as one §2.2 request and ratified. The R-57 condition discipline
 (declared before READY) applies to this batch as precedent.
 
@@ -14,8 +23,8 @@ submitted as one §2.2 request and ratified. The R-57 condition discipline
 **M-1's migration record, verbatim-ready for `migrations.yaml` at
 application:**
 ```yaml
-- from_version: 23
-  to_version: 24
+- from_version: 24
+  to_version: 25
   operation: change
   key: field:CapitalOpCommand.op
   old: "enum:DEPOSIT|WITHDRAW"
@@ -36,8 +45,8 @@ discrepancy visible, and it must NOT be turned green early.
 
 **M-2's migration record, verbatim-ready:**
 ```yaml
-- from_version: 23
-  to_version: 24
+- from_version: 24
+  to_version: 25
   operation: remove
   key: field:GateEvidence.decision_eligible
   old: "bool"
