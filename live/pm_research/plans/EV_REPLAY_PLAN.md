@@ -1,6 +1,6 @@
 # EV-Replay — the replay environment plan
 
-REVISION: 9
+REVISION: 10
 
 *(The line above is the ONLY authoritative revision carrier — machine- and
 grep-readable, one place, never duplicated in prose. Iteration 2's rule
@@ -9,8 +9,12 @@ tick) and Revision 8's own repair reintroduced a live-looking "Now
 Revision 7" in the history below. Every revision number in the history
 narrative is hereafter QUOTED HISTORY, not a status claim.)*
 
-Status: **DESIGN**, not decision-eligible. **Revision 9, 2026-08-24** —
-applies `EV_REPLAY_REVIEW_LOOP.md` iteration 2: the authoritative
+Status: **DESIGN**, not decision-eligible. **Revision 10, 2026-08-24** —
+applies `EV_REPLAY_REVIEW_LOOP.md` iteration 3 (CLEAN, 0 MUST-FIX;
+pin FREEZE_HELD): §5's dead batch pointer re-pointed to the v24
+accumulator (the DE §6.2 batch landed as v23 WITHOUT EV-Replay module
+records); §6.3 marked NO CURRENT DEMAND with its revive condition.
+Revision 9 applied iteration 2: the authoritative
 `REVISION:` field added (above); the §1 pattern disposition made
 one unmissable word per the coordinator's requirement; history numbers
 demoted to quoted history. Revision 8 (2026-08-23) applied iteration 1:
@@ -207,9 +211,11 @@ instruments that need them (§6.3), not before.
   decision remains open and this plan is indifferent to its outcome).
 - **Live/venue anything** — out of scope for the programme.
 - **Contract edits.** v1 runs as research code against the existing probes'
-  conventions; the module-record/port formalisation lands with the DE §6.2
-  batch when code starts, as additive records for `EV-Replay` mirroring §9's
-  port table.
+  conventions. **(Revision 10, stale carrier corrected:)** the DE §6.2
+  batch LANDED as contracts v23 WITHOUT EV-Replay module records, so the
+  formalisation did not ride it; it is now a NAMED CANDIDATE in
+  `CONTRACTS_BATCH_v24.md` §3 and enters a batch by ruling when the
+  plugin path first demands a module record — not before.
 
 ## 6. Build order within B3
 
@@ -218,8 +224,14 @@ instruments that need them (§6.3), not before.
    elsewhere: sampling, promotion bars).
 2. Harness skeleton + golden-window parity gate against `edge_layer1` (the
    acceptance is measurable on day one — §4.1).
-3. Port `warning_window`'s episode/envelope instrumentation as the first
-   in-env instrument (it already carries the conformance discipline).
+3. ~~Port `warning_window`'s episode/envelope instrumentation as the first
+   in-env instrument (it already carries the conformance discipline).~~
+   **(Revision 10: NO CURRENT DEMAND.)** The mitigation space closed 9/9
+   (R-54) and the session's instruments went the sanctioned copy route
+   (§1's disposition) — no live instrument remains to port. Revive
+   condition: the first post-closure in-env instrument anyone
+   commissions; it then ports INTO `ReplayEnv` rather than adding a
+   ninth dialect.
 4. ~~The cancel grid (§2 of the frozen protocol) runs inside EV-Replay v1~~ —
    **DEAD-LETTERED (iteration 5): B7 returned DEAD-DEAD before this revision
    was a day old**, so the conditional failed and the grid is not built. The

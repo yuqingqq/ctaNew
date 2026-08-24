@@ -101,3 +101,32 @@ iteration 2 re-reviews Revision 8 with fresh eyes next tick.
 
 **Applied as plan Revision 9 same-tick.** Streak: 0 (both iterations
 found defects). Iteration 3 runs against a PINNED Revision 9 next tick.
+
+---
+
+### Iteration 3 — 2026-08-24 — verdict: `CLEAN` (0 MUST-FIX + 2 SHOULD-FIX; streak 1). PIN VERIFIED FIRST: `FREEZE_HELD`, sha `6192f0d8…f978fc9`, streak-eligible.
+
+All five frozen lenses ran; decision-readiness ran (before-close duty).
+**No MUST-FIX**: the census is correct at eight, the disposition marker is
+unmissable, the `REVISION:` field is the sole number carrier, §4's cells
+match the artifacts (23 checks re-verified), the §0 boundary holds in all
+eight dialects.
+
+**SHOULD-FIX, both stale-carrier class, applied as Revision 10:**
+1. §5's contract-edits bullet pointed the EV-Replay module-record
+   formalization at "the DE §6.2 batch" — that batch LANDED as v23
+   WITHOUT EV-Replay records, so the pointer was dead and the
+   formalization was unowned. Re-pointed to the v24 accumulator's §3
+   (named candidate, enters by ruling when the plugin path demands it).
+2. §6.3 ("port warning_window's instrumentation as the first in-env
+   instrument") lost its demand when the mitigation space closed 9/9 —
+   the probes went the sanctioned copy route and no live instrument
+   remains to port. Marked NO CURRENT DEMAND with its revive condition
+   (the first post-closure in-env instrument), rather than left looking
+   actionable.
+
+**Streak: 1 of 2.** Revision 10 PINNED for iteration 4
+(`da_freeze_pin`, iteration key `ev_replay_iter4`). If iteration 4 is
+clean the loop closes on two-clean; marginal-value close available
+earlier per R-61(3) if the coordinator prefers — iteration 3's findings
+changed no decision, only carriers.

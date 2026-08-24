@@ -34,9 +34,25 @@ discrepancy visible, and it must NOT be turned green early.
 
 (none yet)
 
-## §3 — Known candidates NOT yet ruled into this batch
+## §3 — Known candidates NOT yet ruled into this batch, and NAMED DEBT
 
 - DA's `Provenance` de-collision naming + authority axis (residue named in
   the v23 type's own notes) — enters when DA names it.
 - DA's refinement of the four skeleton-loose SP record types.
 - Q-DA-19/Q-DA-20 carriers, if and when ruled.
+- **EV-Replay module records** (module/port formalisation mirroring
+  architecture §9's port table) — the plan's §5 pointed this at "the DE
+  §6.2 batch", which landed as v23 without it (EV_REPLAY loop iteration 3,
+  stale-carrier fix); enters by ruling when the plugin path first demands
+  a module record.
+- **THE CLAIM LADDER — named debt with a named trigger (R-86, 2026-08-24).**
+  `R-CLUSTER`, `R-WEIGHT`, `R-STRATA`, `estimand_kind`,
+  `INSUFFICIENT_CLUSTERS`, `InferenceSpec` and `ClaimLadder` are ABSENT
+  from v23 by ruling, not by oversight: the programme holds TWO
+  day-clusters, so a G≥7 relaxation branch would be an unexercised code
+  path carried through every future version, and `contracts.yaml`
+  (ci: `Unavailable` unconditionally at G=2) is CORRECT, not limiting.
+  **Trigger: build it when the programme holds G≥7 day-clusters** —
+  MEASUREMENT_PLAN §5's G-branch was struck rather than built (Q-DA-40).
+  Recorded here because debt that is named is debt; debt that is merely
+  absent is a surprise.
