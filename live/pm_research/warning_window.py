@@ -659,7 +659,16 @@ OUT_DAYS = fi.PM / "derived/warning_window_v1_dayseries.json"
 def select_by_day(per_coin: int) -> dict[str, list]:
     """Up to per_coin windows per coin PER UTC DAY, era-wide. The plain
     earliest-first sampler is exactly why every prior replay sampled one day
-    (FLOW_MODEL_STATE §1f); day-grouping is R-9's ordered selection."""
+    (FLOW_MODEL_STATE §1f); day-grouping is R-9's ordered selection.
+
+    *** HISTORICAL POPULATIONS ONLY (R-129) *** This selector is POSITIONAL
+    and CANNOT express a freeze boundary: with a mid-day freeze its
+    earliest-first within-day sample can be entirely PRE-freeze while
+    passing a count-based completeness test (the Q-DA-55 defect, witnessed
+    live on 08-24). FORWARD/HOLDOUT admission MUST use `select_holdout`
+    below — admissibility as a timestamp predicate, labels derived from
+    the filter. This function remains ONLY because closed historical
+    receipts stand on its populations."""
     paths = fi._archive_paths()
     tokens = fi.token_map()
     gaps = fi.gaps_by_slug(fi.ERA)
@@ -897,3 +906,31 @@ def _r129_selftest() -> int:
     print(f"[r129] selftest OK — {n[0]} checks "
           f"(admissible days: { {d: i['n_admissible_by_coin'] for d, i in new['days'].items()} })")
     return 0
+
+
+def freeze_from_receipt(path) -> dict[str, Any]:
+    """R-132: the freeze instant is a PARAMETER read from the candidate
+    receipt, NEVER a hardcoded constant (the 07:30:44Z freeze is VOID —
+    taken against uncommitted code, unrecoverable; BE re-freezes against
+    committed code). From R-132 onward `frozen_at` REFERENCES A COMMIT
+    HASH, not only a wall clock — a receipt carrying no commit reference
+    is REFUSED, fail-loud."""
+    import json as _json
+    from pathlib import Path as _P
+    doc = _json.loads(_P(path).read_text())
+    frozen_at = doc.get("freeze_epoch") or doc.get("frozen_at")
+    commit = (doc.get("frozen_at_commit") or doc.get("commit")
+              or doc.get("commit_hash"))
+    if frozen_at is None:
+        raise ValueError(f"receipt {path} carries no freeze instant")
+    if not commit:
+        raise ValueError(
+            f"receipt {path} carries a wall clock but NO COMMIT HASH — "
+            f"refused per R-132 (a freeze against uncommitted code is "
+            f"unrecoverable and was already voided once)")
+    if isinstance(frozen_at, str):
+        import datetime as _dt
+        frozen_at = _dt.datetime.fromisoformat(
+            frozen_at.replace("Z", "+00:00")).timestamp()
+    return {"freeze_epoch": float(frozen_at), "commit": str(commit),
+            "source_receipt": str(path)}
