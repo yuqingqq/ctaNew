@@ -345,6 +345,28 @@ def selftest() -> int:
     ev2 = budget_eval(dev, bad, budgets=(0.2,), n_random=50)
     ok(ev2["20%"]["harm_captured_share"] < 0.1,
        "an inverted score captures nothing — the metric is directional")
+    # ext_feats sign regression, on synthetic events (no tape dependence):
+    # bids pulled hard over the window => ofi < 0 => POSITIVE threat for BUY.
+    import harmful_hazard_model as _hm
+    _key = ("BTCUSDT", "2099010100", "full")
+    _hm._BN_CACHE.clear(); _hm._BN_TCACHE.clear()
+    import datetime as _dt
+    base = _dt.datetime(2099, 1, 1, 0, 30, 0, tzinfo=_dt.timezone.utc).timestamp()
+    ts = [base - 0.9 + 0.1 * i for i in range(9)]
+    vals = [(100.0, 50.0 - 5 * i, 100.1, 10.0) for i in range(9)]   # bids pulled
+    hh = _dt.datetime.fromtimestamp(base - 0.001, _dt.timezone.utc)
+    _hm._BN_CACHE[("BTCUSDT", f"{hh:%Y%m%d_%H}", "full")] = (ts, vals)
+    _hm._BN_TCACHE[("BTCUSDT", f"{hh:%Y%m%d_%H}")] = (
+        [base - 0.4], [(-1.0, 40.0)])                               # big SELL print
+    fB = _hm.ext_feats(base, "BUY_UP", "btc")
+    fS = _hm.ext_feats(base, "SELL_UP", "btc")
+    iofi = _hm.EXT_NAMES.index("bnf_ofi_1p0")
+    ok(fB[iofi] > 0, "bids being PULLED reads as POSITIVE threat to a resting BUY")
+    ok(fS[iofi] < 0, "and as negative (protective) for a resting SELL")
+    ipr = _hm.EXT_NAMES.index("bnf_bigprint_0p5")
+    ok(fB[ipr] > 0 and fS[ipr] == 0.0,
+       "a big SELL print threatens the BUY side only")
+    _hm._BN_CACHE.clear(); _hm._BN_TCACHE.clear()
     print(f"harmful_hazard_model selftest: {checks} checks OK")
     return 0
 
@@ -670,7 +692,12 @@ def ext_feats(T: float, side: str, coin: str) -> list | None:
             e = ((bq1 if bp1 >= bp0 else 0.0) - (bq0 if bp1 <= bp0 else 0.0)
                  - ((aq1 if ap1 <= ap0 else 0.0) - (aq0 if ap1 >= ap0 else 0.0)))
             ofi += e
-        out.append(sgn * -ofi)          # falling OFI = threat to a resting BUY
+        # SIGN, reviewed: threat to a resting BUY is FALLING support (ofi<0),
+        # so threat = -ofi for BUY, +ofi for SELL == sgn * ofi with sgn(BUY)=-1.
+        # The first version had sgn * -ofi — inverted. Linear-invariant for the
+        # fit (the coefficient absorbs it) but semantically wrong for any
+        # reader of the coefficient or any nonlinear successor.
+        out.append(sgn * ofi)
     tts, tvals = _bn_trades(sym, h)
     if tts and tts[0] > cut - 60.0:
         prev = h - dt.timedelta(hours=1)
