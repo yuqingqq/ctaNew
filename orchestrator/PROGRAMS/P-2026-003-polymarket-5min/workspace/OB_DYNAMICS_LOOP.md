@@ -60,3 +60,12 @@ the new families; run 1 arms reproduced to the cent = confirmation 4a).
 Multiplicity: 3 candidate specs consumed on 08-24/25 development tape.
 Score dumps: harmful_scores_{btc,eth}_v2.jsonl.gz (offline confirmations,
 validated cent-exact vs receipt). Next: I3 PM-side thinning (multiplicity 4).
+
+## I3 verdict (run 3, receipt harmful_fine_comparison_v3.json)
+
+PM-thinning: NULL. Increments vs reduced are sign-mixed on BOTH coins
+(btc +203/-476/+386; eth -214/+78/-425) — noise pattern, no coherent shape.
+Not adopted; spec consumed (multiplicity 4). Anchors reproduced cent-exact
+(4a). Next: I5 cross-symbol lead, btc->eth only (declared asymmetric —
+btc leads price discovery; eth quotes may be protected by the btc book).
+Multiplicity 5. After I5: saturation report + freeze proposal to the user.
