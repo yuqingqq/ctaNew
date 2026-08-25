@@ -40,7 +40,7 @@ from typing import Any, Sequence
 
 import flow_intensity as fi
 
-ROWS = fi.PM / "derived/harmful_exposure_rows_v1.json"
+ROWS = fi.PM / "derived/harmful_exposure_rows_v3.json"   # v1/v2 receipts are INVALID (user audits, 2026-08-25)
 OUT = fi.PM / "derived/harmful_hazard_model_v1.json"
 LAG_S = 0.250
 # §4.1 asks for 25/50/100/250/500/1000 ms. The finest micro scales measure the

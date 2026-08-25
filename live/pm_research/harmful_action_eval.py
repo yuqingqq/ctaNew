@@ -38,39 +38,59 @@ def _hour(r: dict[str, Any]) -> int:
 def evaluate_policy(rows: Sequence[dict[str, Any]], scores: Sequence[float],
                     latency_ms: int, budgets: Sequence[float] = BUDGETS,
                     n_random: int = N_RANDOM, seed: int = 20260825) -> dict:
-    """Score a ranking policy at each cancellation budget, latency-aware.
+    """FIRST-CROSSING, ONE CANCELLATION PER GENERATION.
 
-    `rows` are v2 generation-interval rows (status OK). `scores[i]` ranks how
-    much the policy wants to cancel generation i. At budget b the policy
-    cancels the top b fraction BY ACTION -- each exactly once.
+    The user's audit found the previous version ranked and summed ROWS while the
+    dedup helper sat unused. This version is generation-native:
+
+      * the action universe is UNIQUE (slug, side, gen) — budgets count GENS;
+      * at budget b, the threshold is the quantile of per-generation MAX score
+        cancelling exactly k gens; each cancelled gen acts ONCE, at its FIRST
+        row crossing the threshold, and the value is THAT row's latency-aware
+        preventable value (later rows of the gen are inert);
+      * randoms cancel the same number of gens, matched within (side x hour)
+        strata, each at its FIRST row — the earliest decision, i.e. the most
+        generous preventable window a random policy could have. Declared.
     """
     L = str(latency_ms)
     rng = random.Random(seed)
-    n = len(rows)
-    prev = [r["latency"][L]["preventable_value_cents"] if r.get("any_fill")
-            else 0.0 for r in rows]
-    harm = [max(v, 0.0) for v in prev]           # avoidable damage
-    good = [min(v, 0.0) for v in prev]           # profitable fills sacrificed
-    total_harm = sum(harm)
-    total_good = -sum(good)
-    strata: dict[tuple, list[int]] = {}
+
+    def val(i):
+        r = rows[i]
+        return (r["latency"][L]["preventable_value_cents"]
+                if r.get("any_fill_ahead") and "latency" in r else 0.0)
+
+    gens: dict = {}
     for i, r in enumerate(rows):
-        strata.setdefault((r["side"], _hour(r)), []).append(i)
-    order = sorted(range(n), key=lambda i: -scores[i])
-    out: dict[str, Any] = {"latency_ms": latency_ms, "n_actions": n,
-                           "total_harm_cents": total_harm,
-                           "total_good_cents": total_good, "budgets": {}}
+        gens.setdefault((r.get("slug"), r["side"], r["gen"]), []).append(i)
+    for k in gens:
+        gens[k].sort(key=lambda i: rows[i]["t_start"])
+    keys = list(gens)
+    n_gens = len(keys)
+    gmax = {k: max(scores[i] for i in gens[k]) for k in keys}
+    strata: dict = {}
+    for k in keys:
+        first = gens[k][0]
+        strata.setdefault((rows[first]["side"], _hour(rows[first])),
+                          []).append(k)
+    order = sorted(keys, key=lambda k: -gmax[k])
+    out: dict[str, Any] = {"latency_ms": latency_ms, "n_generations": n_gens,
+                           "n_rows": len(rows), "budgets": {}}
     for b in budgets:
-        k = max(1, int(n * b))
-        top = order[:k]
-        net = sum(prev[i] for i in top)
-        cap = sum(harm[i] for i in top)
-        sac = -sum(good[i] for i in top)
-        # matched random: same TOTAL action count, drawn within (side,hour)
-        # strata proportional to the policy's own strata usage
-        use: dict[tuple, int] = {}
-        for i in top:
-            key = (rows[i]["side"], _hour(rows[i]))
+        kk = max(1, int(n_gens * b))
+        cancelled = order[:kk]
+        theta = gmax[cancelled[-1]]
+        net = harm = sac = 0.0
+        for gk in cancelled:
+            cross = next(i for i in gens[gk] if scores[i] >= theta)
+            v = val(cross)
+            net += v
+            if v > 0: harm += v
+            else: sac += -v
+        use: dict = {}
+        for gk in cancelled:
+            first = gens[gk][0]
+            key = (rows[first]["side"], _hour(rows[first]))
             use[key] = use.get(key, 0) + 1
         r_nets = []
         for _ in range(n_random):
@@ -78,15 +98,15 @@ def evaluate_policy(rows: Sequence[dict[str, Any]], scores: Sequence[float],
             for key, cnt in use.items():
                 pool = strata[key]
                 pick = pool if cnt >= len(pool) else rng.sample(pool, cnt)
-                tot += sum(prev[i] for i in pick)
+                tot += sum(val(gens[gk][0]) for gk in pick)
             r_nets.append(tot)
         r_nets.sort()
         out["budgets"][f"{int(b*100)}%"] = {
-            "n_cancelled": k,
+            "n_cancelled_generations": kk,
             "net_cents": net,
-            "loss_capture_share": cap / total_harm if total_harm else 0.0,
+            "harm_avoided_cents": harm,
             "sacrifice_cents": sac,
-            "rho_captured_over_sacrificed": (cap / sac) if sac > 0 else None,
+            "rho_captured_over_sacrificed": (harm / sac) if sac > 0 else None,
             "random_net_mean": sum(r_nets) / n_random,
             "random_net_max": r_nets[-1],
             "random_net_p95": r_nets[int(0.95 * n_random)],
@@ -124,41 +144,39 @@ def selftest() -> int:
             raise AssertionError(label)
         checks += 1
 
-    def mk(i, side, hour, prev5, prev250, fill=True):
-        return {"slug": "w", "side": side, "gen": i, "t0": hour * 3600,
-                "t_start": 10.0 + i, "any_fill": fill,
+    def mk(g, side, hour, prev5, prev250, t=None, fill=True):
+        return {"slug": "w", "side": side, "gen": g, "t0": hour * 3600,
+                "t_start": (10.0 + g) if t is None else t,
+                "any_fill_ahead": fill,
                 "latency": {"5": {"preventable_value_cents": prev5},
                             "250": {"preventable_value_cents": prev250}}}
 
-    rows = [mk(0, "BUY_UP", 1, +30.0, +10.0), mk(1, "BUY_UP", 1, +20.0, 0.0),
-            mk(2, "BUY_UP", 1, -15.0, -15.0), mk(3, "SELL_UP", 1, -5.0, -5.0),
+    rows = [mk(0, "BUY_UP", 1, +30.0, +10.0),
+            mk(0, "BUY_UP", 1, +28.0, +9.0, t=10.5),   # SAME gen, later row
+            mk(1, "BUY_UP", 1, +20.0, 0.0),
+            mk(2, "BUY_UP", 1, -15.0, -15.0),
+            mk(3, "SELL_UP", 1, -5.0, -5.0),
             mk(4, "SELL_UP", 1, +1.0, +1.0),
             mk(5, "BUY_UP", 2, 0.0, 0.0, fill=False)]
-    good = [30, 20, -15, -5, 1, 0]
-    ev = evaluate_policy(rows, good, latency_ms=5, budgets=(1/3,), n_random=50)
+    good = [30, 28, 20, -15, -5, 1, 0]
+    ev = evaluate_policy(rows, good, latency_ms=5, budgets=(2/6,), n_random=50)
     b = ev["budgets"]["33%"]
-    ok(b["n_cancelled"] == 2 and abs(b["net_cents"] - 50.0) < 1e-9,
-       "top-2 actions by score: net is the sum of their preventable value, once each")
+    ok(ev["n_generations"] == 6 and ev["n_rows"] == 7,
+       "the action universe is GENERATIONS (6), not rows (7)")
+    ok(b["n_cancelled_generations"] == 2 and abs(b["net_cents"] - 50.0) < 1e-9,
+       "gen 0 is cancelled ONCE at its FIRST crossing (30), not twice — "
+       "the duplicated row adds nothing (the audit's core defect)")
     ok(b["sacrifice_cents"] == 0.0 and b["rho_captured_over_sacrificed"] is None,
-       "a perfect ranking sacrifices nothing; rho is None (undefined), not inf")
-    ev250 = evaluate_policy(rows, good, latency_ms=250, budgets=(1/3,), n_random=50)
-    b250 = ev250["budgets"]["33%"]
-    ok(abs(b250["net_cents"] - 10.0) < 1e-9,
-       "AT LATENCY 250ms THE SAME POLICY EARNS 10, NOT 50 — stale tranches "
-       "contribute nothing; the zero-latency optimism is structurally gone")
+       "perfect ranking sacrifices nothing; rho undefined, not inf")
+    ev250 = evaluate_policy(rows, good, latency_ms=250, budgets=(2/6,), n_random=50)
+    ok(abs(ev250["budgets"]["33%"]["net_cents"] - 10.0) < 1e-9,
+       "same policy at L=250ms earns 10 not 50 — stale value never claimable")
     bad = [-x for x in good]
-    evb = evaluate_policy(rows, bad, latency_ms=5, budgets=(1/3,), n_random=50)
-    ok(evb["budgets"]["33%"]["net_cents"] < 0,
-       "an inverted ranking loses money — the metric is directional")
-    ok(not evb["budgets"]["33%"]["beats_random_max_on_NET"],
-       "and does NOT beat matched random ON NET — issue #6's fix: the control "
-       "is compared on the decision metric")
+    evb = evaluate_policy(rows, bad, latency_ms=5, budgets=(2/6,), n_random=50)
+    ok(evb["budgets"]["33%"]["net_cents"] < 0
+       and not evb["budgets"]["33%"]["beats_random_max_on_NET"],
+       "inverted ranking loses AND fails the random comparison ON NET")
 
-    dup = rows + [dict(rows[0])]          # a regressed dataset: same gen twice
-    acts = first_crossing_dedup(dup, [1.0] * 7, threshold=0.5)
-    ok(len(acts) == 6,
-       "a duplicated generation acts ONCE — the evaluator refuses to "
-       "double-count even if the dataset regresses")
     print(f"harmful_action_eval selftest: {checks} checks OK")
     return 0
 
