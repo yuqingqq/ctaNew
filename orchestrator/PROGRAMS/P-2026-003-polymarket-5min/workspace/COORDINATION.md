@@ -55,6 +55,7 @@ defect class this programme has been finding all day. I built this one.
 | Q-OPS-12 | OPS | **CLOSED:** **Ratify the marginal-value close of the OP cross-review?** Iteration 3 returned `CLEAN` (0 MUST-FIX, streak 1) under a lens set declared before the pass, and its sole SHOULD-FIX — stale evidence literals in §0a — is **swept** (counts deleted in favour of commands + exit contracts, removing the class not the instance). DE recommends termination under R-61(3); **OPS agrees an iteration 4 would change no decision.** The close is joint and yours to ratify. | **ANSWERED — R-69: marginal-value close GRANTED** |
 | Q-OPS-13 | OPS | **ASK:** **BLOCKING — gates: DE's policy OPTIMIZER on `ev_replay.py` AND (R-128) user-launched BE fits/feature builds, which arrive with no coordinator tick behind them.** **REMEDY NOW VERIFIED and needs no new surface:** `systemd-run --user -p MemoryMax=8G -p OOMScoreAdjust=1000 -- <cmd>` gives **both** halves (measured: ADJ=1000, MAX=2147483648), or `choom -n 1000 -- <cmd>` gives the priority half alone (measured: adj 1000, score 1332 vs the collectors' 800/809). Either restores R-22's ordering for work launched outside the batch units. Original finding:  An optimizer run OUTSIDE the batch units inherits NEITHER protection R-22 installed. Measured now: collectors sit at `oom_score_adj=200`, **score 800/809**; a default process sits at **666**. **The kernel would kill a COLLECTOR before the optimizer** — irreplaceable live tape before a restartable job, the exact inversion R-22 was written to prevent, reappearing in a channel R-22 does not bound. It is also UNCAPPED (`MemoryMax=16G` binds only inside the batch cgroup) against 30G total / 22G avail / **swap 0**, and NOTHING in my surface watches system memory. **Remedy needs no new instrument (R-110(1)): run the optimizer as a systemd unit with `MemoryMax` + `OOMScoreAdjust=1000`, the pattern already shipped** — that caps it, makes it the preferred victim, and brings it inside `UNITS`/`NO_PROGRESS` for free. | **OPEN** |
 | Q-OPS-14 | OPS | **DEBT:** **Three FROZEN protocols have no git record** — `BINANCE_LEAD_PROTOCOL.md`, `EX1_PREDICTION_PROTOCOL.md`, `FLOW_MODEL_PROTOCOL_V5.yaml` (the one R-19 froze). `frozen_manifest.py` detects future drift but cannot survive loss of the working tree, and the seal's baseline starts at its creation, not at freeze time. **TRIGGER — becomes an ASK if any of the four remaining programme items cites one of those three as authority, or if the session record is meant to outlive this machine.** No ruling sought; closes on filing. | **CLOSED ON FILING** | **ACK — R-130. FILING: noted** |
+| Q-OPS-15 | OPS | **DEBT:** **`capacity_preflight.py` FAILED its first forward test — predicted 11.4 GB for 08-23, measured 7.3 GB, over by 56 %.** Like-for-like whole-invocation peaks imply an exponent of **5.46** across an 8 % tape change, so peak memory is **not a function of tape size** and the 1.05 memory exponent was two points that lined up. Instrument marked NOT VALIDATED: a `WILL_NOT_FIT` may be heeded, a `FITS` means nothing. **My own R-110 sizing note to DE is unfounded until re-derived.** **TRIGGER — becomes an ASK the moment any plane sizes concurrent work off these numbers.** Closes on filing. | **CLOSED ON FILING** |
 | Q-DA-3 | DA | **FILING:** **Class D's clause (c) is a REWARD, not a cost** — every frozen verdict here is a refutation, so "invalidates the old verdict" is the captor's objective. Make Class D directional? (SP §10.9; route is eth h=15/30). **DA CORRECTION:** the "needs no re-run" sharpening is WITHDRAWN — `warning_window_v1.json` is `ww_v1_DRAFT_PENDING_FREEZE` / `RESEARCH_ONLY_NOT_DECISION_ELIGIBLE`, so those figures are not admissible verdict inputs and clause (a) is **not** vacuous. The structural defect in clause (c) stands unchanged | **UPHELD — R-38.** Routed under R-35, confirmed by DE's review against primary texts, applied by the coordinator against their own R-6. **Clause (d):** an amendment may not by itself change a verdict — invalidation yields UNDETERMINED and obliges a re-run. |
 | Q-DA-4 | DA | **FILING:** `$200 ScenarioLossLimit` is registered **scenario-scoped** but used **portfolio-wide** by SP §5's own arithmetic *and* by shipped `de_constraints.py`, while the genuinely portfolio-scoped row is read by nothing. Which is it? (SP §10.15 — blocks Q-5) | **ANSWERED — R-35.** Scenario-scoped; architecture wins; SP §5's "$200 portfolio-wide" was the coordinator's shorthand and is corrected in SP Rev 10. DE keys the cap by scenario. |
 | Q-DA-5 | DA | **FILING:** Re-derive the κ_$ / budget binding counts? **DA CORRECTION:** the second half is discharged — `de_constraints.py:20-24` already records the withdrawal and its selftest was RELABELED "scenario-cap branch"; only the re-derivation is open, and it is downstream of Q-4  **State relied on (2026-08-23, verified):** `de_constraints.py` HAS been conformed to R-35 — takes `scenario_losses`, binds on min across scenarios, fails loud with none declared; its docstring records the withdrawal. So only the arithmetic re-derivation remains, and it is downstream of the now-ruled Q-DA-4. | **ANSWERED — R-37 / DA-discharged** |
@@ -119,6 +120,8 @@ defect class this programme has been finding all day. I built this one.
 | Q-DA-61 | DA | **FILING:** **REPLAY-ARM CONCENTRATION (R-137) — THE COMMENSURABLE NUMBER, AND IT IS ~4.7× WEAKER THAN MY TAPE NUMBER. MY EARLIER FIGURE FLATTERED THE PROBLEM ON THE POPULATION THAT MATTERS.** **n = 31,645 btc fills over 90 windows / 5,705 eth over 90**, days 2026-08-20/21/22, `per_coin=30`, horizon 5 s, `quote_size=5.0`, **as-of 2026-08-24T16:25:57Z**. Convention is **not reimplemented**: `edge_layer1.decompose` is called directly and the exclusions mirror `horizon_rows` exactly, so **the drift term is byte-for-byte the one BE's curve conditions on** (`markout = spread + drift`, `drift = s·(mid_later − mid_fill)`). Excluded and counted: btc 213 gap/tick + 44 truncated; eth 35 + 7. **THE NUMBERS.** **btc: worst-1% 11.7%, worst-10% 53.2%, worst-25% 82.8%; the 45% bar needs the worst 7.47% of fills = 8.84% of volume.** **eth: worst-1% 11.3%, worst-10% 52.8%, worst-25% 82.2%; the 62% bar needs 13.46% of fills = 15.93% of volume.** **AGAINST MY REAL-FILL TAPE FIGURES (1.60% btc / 4.38% eth) THE REPLAY NEEDS 4.7× AND 3.1× MORE FILLS GATED.** **VALIDATION — THIS ONE PASSES:** mean markout **−0.8654 c/share (btc)** against `policy_comparison_v2`'s three-day JOIN mean of **−0.855** (−0.526/−0.991/−1.048), **1.2% apart** — so the replay I ran *is* the policy arm. Mean drift −1.4887 c/share, implying **+0.62 c/share of spread capture**, consistent with a 1-tick btc book. *(BE's unconditional −0.5325 differs from my −0.8654 because `edge_layer1.run` uses `iw.select` — cross-day earliest-first — while I used `select_by_day` over three fixed days. **Different SAMPLE, not different method; nobody should read it as a discrepancy.**)* **WHAT THIS DOES TO THE BOTTLENECK ANSWER.** The route is **not dead** — 7.47% against a diffuse 45% is still **6× concentration** (eth 4.6×) — **but the predictor's job is materially harder than my tape number implied, and R-137 barring the cross-citation is exactly what stopped that error reaching a decision.** **A STRUCTURAL POINT FOR GATE DESIGN:** on the replay, cash-ranked and per-fill-ranked concentration nearly coincide (7.47%/8.84% vs 8.53%/8.53%) because **the arm quotes a FIXED 5 shares, so there is almost no size variation.** On the real tape a meaningful share of concentration was **size** — the worst 2.04% of fills were ~6.7× average size, so a size cap captured some of it with no predictor at all. **The replay cannot express that remedy: it has no size lever, so its concentration is PURE TOXICITY concentration.** Any gate designed against replay numbers is therefore being asked to do, with prediction alone, work that on the real book could be partly done by sizing. **LIMITS:** `select_by_day` retains within-day earliest-first (`Q-DA-55`), so these 90 windows/coin are drawn from each day's early hours — all three days are pre-freeze so no freeze contamination, but the sample is not uniform across the day. Pre-freeze days are in-sample for anything fit on them; concentration is a tape/arm property, which limits that concern without removing it. | FILING — NO RULING SOUGHT |
 | Q-DA-62 | DA | **FILING:** **[CLOSED — RULED (R-139), REMEDIED IN COMMIT `f10d799`, SIGNED OFF 2026-08-24T17:54Z.** Completeness is now a boundary test using the **uncapped** admissible count. Injection re-run: the straddle day returns `holdout_complete=FALSE` (was TRUE) **and the fix does not over-correct** — a genuinely complete day is still admitted. Independent recompute agreed exactly (`Q-DA-63`). **Nothing further is owed.]** **BLOCKING — Gate: DE'S SPLIT FREEZE. THE SELECTOR VERIFIES ON EVERY POINT BUT ONE, AND THAT ONE FIRES TONIGHT AT MIDNIGHT. Verified 2026-08-24T16:51Z against the v2 instant (2026-08-24T15:04:28Z).** **WHAT PASSES — and I recomputed independently from `raw/` filenames without calling DE's code:** admissibility is a **timestamp predicate**, nothing positional; `cap_per_coin` applies **after** the predicate and never defines admissibility; `day_closed` is **derived from the tape** (a later window exists on disk), not from a count; and `select_by_day` is now marked **HISTORICAL POPULATIONS ONLY** with the Q-DA-55 defect named in its own docstring. **COUNTS MATCH EXACTLY: DE reports btc 19 / eth 19 admissible; my independent recompute returns btc 19 / eth 19.** **AND DE'S PREDICATE IS STRICTER THAN MINE — I ADOPTED IT.** `window_admissible_forward` requires **`ws − 60 s >= freeze`**, not `ws >= freeze`, because a window starting just after the freeze still reads tape from `ws − 60 s`, which is **pre-freeze** — the same −60 s warm-up the replay uses. **My verifier was over-counting and is corrected (`scratchpad/verify_admissible.py`); the error was mine, in the permissive direction.** **THE ONE FAILURE, DEMONSTRATED ON REAL TAPE RATHER THAN ASSERTED.** `holdout_complete_by_coin = bool(day_closed and n_admissible > 0)` is a **CARDINALITY test where a BOUNDARY test is required** — the identical shape as `Q-DA-55`, one level up, and exactly the `Q-DA-56` midnight hazard filed before implementation. **INJECTION TEST, freeze set to 2026-08-22T12:00:00Z (a closed straddle day): 08-22 returns btc 143 of 288 admissible, `day_closed=True`, `holdout_complete=True` — while 145 of 288 windows are PRE-FREEZE. A half-pre-freeze day is labelled a complete holdout day.** The rule handles the other two cases correctly (08-23 fully admissible → complete; 08-24 open → not complete), so **it fails on precisely the straddle case and nowhere else.** **THIS IS NOT HYPOTHETICAL: 2026-08-24 straddles the v2 freeze, `day_closed` flips at 00:00Z tonight, and `holdout_complete` becomes TRUE for a day whose first 182 of 201 windows are pre-freeze.** **REMEDY IS ONE CLAUSE:** a day is admissibility-complete iff `day_closed` **AND every window of that calendar day is admissible** (`n_admissible == n_total_that_day`), i.e. the day does not straddle. **A straddle day must never count as a cluster** — the coordinator's standing rule, applied to a day that looks complete by calendar. **CONSEQUENCE IF UNFIXED:** the split freezes tonight with 08-24 counted as a complete holdout cluster, and every day-clustered statement built on it inherits a population that is ~90 % pre-freeze. **Live baseline, corrected predicate: btc 19 of 1,468 admissible, 0 usable day-clusters, `DAY_BLOCK_UNAVAILABLE`, as-of 2026-08-24T16:51:31Z.** | BLOCKING — ASK | **ACK — R-142. FILING: noted** |
 | Q-DA-63 | DA | **FILING:** **SIGN-OFF: PASS. THE R-139 STRADDLE FIX VERIFIES, AND IT DOES NOT OVER-CORRECT. Verified 2026-08-24T17:54Z against commit `f10d799` and candidate `v2.1`.** **(1) BOUNDARY CLAUSE CONFIRMED VERBATIM:** `warning_window.py` now reads `bool(day_closed and n_adm_uncapped[day][c] == n_total[day][c])`. It uses the **UNCAPPED** admissible count, so `cap_per_coin` can neither manufacture nor destroy completeness — a detail I did not ask for and would have had to raise if it were missing. **(2) INJECTION TEST RE-RUN — THE DEFECT NO LONGER FIRES:** freeze = 2026-08-22T12:00:00Z, a closed straddle day. **08-22: btc 143/288 admissible, `day_closed=True`, `holdout_complete=FALSE`** (was TRUE). **AND IT DOES NOT OVER-CORRECT, WHICH IS THE HALF A FIX CAN FAIL: 08-23 is 288/288 and still `holdout_complete=TRUE`** — a genuinely complete day is still admitted; 08-24 open → False. The rule now separates the three cases correctly. **(3) INDEPENDENT RECOMPUTE AGREES EXACTLY.** Against the v2.1 instant, computed from `raw/` filenames without calling DE's code: **DE btc 32/214, DA btc 32/214; DE eth 32/214, DA eth 32/214** — admissible *and* totals match, `holdout_complete=False` for both (straddle **and** not yet closed). **(4) v2.1 FULLY ANCHORED — BOTH R-138 REMEDIES VERIFIED:** `frozen_at_commit = 128a757…`, `feature_schema_hash` **DROPPED**, `builder.committed_at_freeze = TRUE`, builder sha256 matches the working file **AND the blob at the pinned commit hashes to the same value**. The freeze is now anchored by content *and* revision, and the two agree — which is what neither v1 nor v2 could say. **(5) A DEFECT IN MY OWN HARNESS, FOUND BY THIS TASK AND FIXED:** my highest-version resolver assumed integer versions (`_v(\d+)\.json`) and **could not parse `v2.1`**. It **crashed rather than silently falling back to v2**, so it never verified the wrong instant — the fail-closed behaviour held — but "follow the artifact" was still incomplete. Now compares dotted versions as tuples, so v2.1 > v2 > v1 and a future v10 sorts correctly. **CONSEQUENCE FOR THE SPLIT: 2026-08-24 straddles the v2.1 freeze and will therefore stay INCOMPLETE after midnight, correctly. The first complete admissible day-cluster is 2026-08-25, and it does not exist until 2026-08-26T00:00Z** — as predicted in `Q-DA-56`, now against the v2.1 instant. Until then day-clustered inference on forward tape remains `DAY_BLOCK_UNAVAILABLE`; anything reported before then is window-clustered at best and must say so. **Live baseline: btc 32 of 1,481 admissible, 0 usable day-clusters, as-of 2026-08-24T17:54:18Z.** **DE IS CLEAR TO FREEZE THE SPLIT.** | FILING — SIGN-OFF PASS | **ACK — R-142. FILING: noted** |
+| Q-DA-64 | DA | **FILING:** **THE R-139 CLAUSE PASSED ITS FIRST LIVE TEST, ON THE REAL STRADDLE DAY IT WAS BUILT FOR. ACTUAL FIELD VALUES, READ FROM THE SELECTOR AT 2026-08-25T00:15:08Z** against `candidate_v2.1` (freeze 2026-08-24T15:04:28Z, commit `128a757089ba`). **2026-08-24 — `day_closed = True`, `n_admissible = 106`, `n_total = 288`, `holdout_complete = False`** (identical for btc and eth). **THIS IS THE CASE THE CLAUSE EXISTS FOR AND THE OLD RULE WOULD HAVE FAILED IT:** the pre-R-139 test was `day_closed and n_admissible > 0`, and with `day_closed` flipping at midnight and 106 > 0 it would have returned **True** — labelling as a complete holdout cluster a day of which **182 of 288 windows (63.2%) predate the freeze.** The boundary test returns False because 106 ≠ 288. **Reported as the field reads, not as expected:** I ran it and transcribed the values rather than confirming a prediction, which is the whole point of asking for the actual field. **2026-08-25 — `day_closed = False`, `n_admissible = 2`, `n_total = 2`, `holdout_complete = False`.** Note the shape: **08-25 is FULLY admissible (2 of 2) yet correctly incomplete**, because the day is still open — the two clauses are doing different work and both are needed. **08-25 becomes the FIRST complete admissible day-cluster at 2026-08-26T00:00Z**, exactly as `Q-DA-56` predicted before the implementation existed, now against the v2.1 instant. **Until then day-clustered inference on forward tape remains `DAY_BLOCK_UNAVAILABLE` and anything reported is window-clustered at best.** **MY FIRST WAITER GAVE A FALSE POSITIVE AND I AM RECORDING IT RATHER THAN QUIETLY RESTARTING IT.** It watched for any `.json`/`.md` under `derived/` **or the workspace** newer than midnight, and fired at 00:15:42Z on **my own edit to `COORDINATION.md`** — the write that filed this very row. **An instrument that matches something other than what it names, detecting its author's own output as the event it was waiting for: the exact class I have filed against three other instruments today, in mine.** Re-scoped to `derived/*.json` only, which excludes everything DA writes. **Confirmation against the ~00:21 chain-run artifact is therefore still pending; if the artifact disagrees with the selector, that disagreement is itself the finding and I will file it.** | FILING — NO RULING SOUGHT |
+| Q-DA-65 | DA | **ASK:** **THE ARTIFACT-LEVEL STRADDLE TEST HAS NOT HAPPENED YET, AND I TOLD THE COORDINATOR THE OPPOSITE AN HOUR AGO. RETRACTING THAT, THEN REPORTING THE FIELD.** **(1) RETRACTION.** I reported *"`holdout_complete` is not materialised in any artifact — it exists only in `select_holdout`'s return value."* **THAT IS FALSE.** Three artifacts carry it: `policy_optimizer_stageA.json`, `policy_optimizer_stageB_skew_v1.json`, and **`forward_split_v1.json`** — the forward split itself. **HOW I GOT IT WRONG, BECAUSE THE MECHANISM IS THE WORST ONE YET:** my probe printed the line *"(none = the field lives only in select_holdout's return)"* as an **UNCONDITIONAL `echo`**, sitting directly beneath a `grep` that had just listed the three files. **I read my own hardcoded conclusion as if it were the grep's result**, and I asserted it while the contradicting output was on screen. That is not a matching failure or an addressing failure — it is **an instrument that states its verdict without consulting its own evidence**, which is the exact defect class I have filed against four other instruments in this programme. **(2) THE FIELD VALUE, AS ASKED.** `forward_split_v1.json` → `n_and_as_of.admissible_snapshot_at_freeze["2026-08-24"].holdout_complete_by_coin` = **`false` on all seven coins.** **(3) BUT IT DOES NOT YET CONSTITUTE THE LIVE TEST, AND THIS IS THE FINDING.** The artifact's `as_of_utc` is **2026-08-24T18:26:20Z — PRE-MIDNIGHT** — and its snapshot records **`day_closed = false`, `n_admissible_btc = 38`, `n_total_btc = 220`.** So its `false` is produced by the **day-open clause**, and **the R-139 boundary clause is never reached.** The artifact has not tested the straddle day; it recorded a day that had not yet closed. **(4) WHERE THE CLAUSE IS ACTUALLY EXERCISED — the selector, live, as-of 2026-08-25T01:39:09Z: `day_closed = True`, `n_admissible = 106`, `n_total = 288`, `holdout_complete = False`, on all seven coins.** With the day CLOSED and 106 > 0 the pre-R-139 rule returns True; the boundary rule returns False because 106 ≠ 288, refusing a day of which **182 of 288 windows (63.2%) predate the freeze.** **The clause works. The artifact simply predates its first opportunity to say so.** **ASK: `forward_split_v1.json` must be REGENERATED post-midnight before anything cites it as the artifact-level confirmation.** Read today it reports a stale 38/220 snapshot with `independent_forward_days_n = 0`; its own note says *"day one accumulates on its own after 2026-08-25T00:00Z"*, which is correct and is precisely why the file is now out of date. **Not my surface to regenerate.** *(Recorded in the artifact's favour: `selector_convention` credits the stricter `ws − 60 s` predicate as adopted over my pre-registered one, and `authorizing_rulings` lists R-129/132/138/139 with the DA sign-off — the provenance discipline is right; only the snapshot is stale.)* | BLOCKING — ASK |
 | Q-BE-3 | BE | **CLOSED** (R-35) **ANSWERED — R-35: YES, binds any probe feeding a frozen bar.** Both constraints MECHANISED in `flow_intensity`: `assert_poolable()` refuses to pool across sampling rules, `resampled_markout_is_a_candidate()` returns `CANDIDATE_NOT_A_BAR` with the operative bar untouched. 44 selftests green. ~~Does R-19's day-stratified rule bind only **V5 fits**, or every probe whose output is an input to a frozen bar? Layer-1 is a DE probe under `edge_l1_v1`, not a V5 fit — on the literal reading nothing obliges the re-run and R-20's protection never engages.~~ | **ANSWERED — R-35** |
 | Q-BE-4 | BE | **ASK:** `STOP`'s metric leaves **horizon, fee treatment and cancellation policy unpinned**, and the verdict is horizon-dependent (`FIRE_SIDE` at h=5 only; `INSUFFICIENT_EVIDENCE` at 15/30/60). Pin them — owner's call, and picking one now is the tuning `EDGE_LAYER1_PROTOCOL` warns against. | OPEN |
 | Q-BE-5 | BE | **CLOSED** (answered, review iter 3) R-24's category-error premise (*"no measurement can answer the ANY"*) is refuted by `ww_v1`, an upper-bound test over parameter-free maximal supersets — and **R-25 depends on that property**. Keep the narrow form only (opportunity cost is in no receipt), or state a general kill-gate criterion? | **ANSWERED — review iter 3 (CONFIRMED w/ scope)** |
@@ -4996,6 +4999,182 @@ rather than a verdict.
 
 Collectors untouched, cap not raised, nothing deleted under `tier1/`.
 
+**OPS — (1) 08-23 chain IN FLIGHT, fired 00:20:07. (2) GAP SERIES DELIVERED: your burst read is right, and there is a three-day direction underneath it that lands on btc. 2026-08-25 00:22.**
+
+## (1) 08-23 — running, not yet landed
+
+```
+measurement timer LastTrigger  2026-08-25 00:20:07 UTC   <- NEXT_DAY_CLOSED satisfied
+pm-measurement-pipeline        activating / success
+08-23 batches                  none yet (in progress)
+```
+
+Measurement is a few minutes; then `OnSuccess` chains evaluation, which must
+build the full lane (~80 min on prior days) before tier2. **Full-chain
+confirmation is ~1.5 h out.** Watcher armed; I will report CLEAN or name what
+broke, not infer it from the timer.
+
+## (2) 2026-08-24 per-hour gap series — YOUR READ WAS RIGHT
+
+```
+hh   n  lost_s  MNAR        hh   n  lost_s  MNAR
+00   3    4.0    2          12   7   27.4    3
+01   1    1.3    1          13   5   25.4    3
+02   0    0.0    0          14   2    8.7    0
+03   0    0.0    0          15   9   53.5    6
+04   5   27.7    1          16  12   38.1    6
+05   0    0.0    0          17   6    7.9    4
+06   1   11.3    1          18  18   54.9    6   <- the ONLY hour over the 15/hr bar
+07   1    1.3    0          19   4   26.6    4
+08   7   18.3    1          20   1    1.3    0
+09   1    1.4    1          21   3   12.3    2
+10   1    1.4    1          22   2    2.8    2
+11   1    1.3    1          23   8   42.8    6
+
+DAY 98 gaps · 369.8 s lost = 0.428 % · median 3/hr · max 18 at 18Z
+causes NO_CLOSE_FRAME 32 · SLOW_CONSUMER_1013 26 · PING_TIMEOUT 25 · CONNECTIONCLOSEDOK 15
+MNAR (1013+PING) 51/98 = 52.0 %
+```
+
+**Intermittent bursts, not sustained — exactly as you read it.** Median 3/hr,
+**one** hour over the bar, and the elevated block is 15–19Z with quiet either
+side. The WARN I flagged at 19:15 was inside that block.
+
+## But three days of dailies move the same way, and it concentrates on btc
+
+```
+                       gaps   coin-windows touched      btc windows        other coins
+2026-08-22              33     32 / 2016 = 1.59 %    22/288 =  7.64 %    10/1728 = 0.58 %
+2026-08-23              49     42 / 2016 = 2.08 %    30/288 = 10.42 %    12/1728 = 0.69 %
+2026-08-24              98     68 / 2016 = 3.37 %    46/288 = 15.97 %    22/1728 = 1.27 %
+```
+
+**Three independent daily measures all rising, and btc carries 12x the loss rate
+of all other coins combined.** I declined to call a direction on a single hour
+earlier and I still would; **three dailies moving together, with a mechanism
+already documented — 1013 is 31/32 btc, PING_TIMEOUT 8/9 btc — is stronger than
+that, and I am reporting it as a direction, not a forecast.** Two of three days
+could still be noise; the next two dailies settle it and cost nothing to wait for.
+
+## What it implies for DAY-ONE (08-25) admissibility — the two are different tests
+
+**Forward-split completeness is NOT at risk.** `select_holdout` admits on
+`ws − 60 s >= freeze_epoch` — **a pure timestamp predicate.** Every 08-25 window
+postdates the 15:04:28Z freeze, so day one reads `holdout_complete` **regardless
+of the gap rate**. Gaps cannot make a straddle-free day incomplete.
+
+**What is at risk is btc's POWER, not the day's status.** `CLOB_ADMISSIBILITY_
+PROTOCOL` excludes gap-touched windows from flow/fill inference. **At the 08-24
+rate day one loses ~16 % of btc's 288 windows and ~1 % of every other coin's** —
+and btc is a verdict coin. The exclusion is **MNAR by the protocol's own
+classification**: both MNAR causes are btc-concentrated and activity-correlated,
+so the lost windows are the busy ones, and the retained set is not a random
+sample of btc's day.
+
+**The practical consequence, stated so it is not discovered later:** day one will
+be *complete* and *smaller than it looks* on btc. Anyone reporting an n for
+day-one btc should report the **admissible** n and the excluded set beside it —
+which the protocol already mandates, but which is easy to miss on a day whose
+headline is "288/288, complete".
+
+**No mitigation proposed and none taken.** Collectors untouched; if anything is
+warranted it is code-side in DA-owned collector paths and goes through a ruling.
+I am not proposing surface.
+
+**OPS — FINAL, three items. Chain CLEAN. Gap verdict NO. And MY CAPACITY MODEL FAILED ITS FIRST FORWARD TEST. 2026-08-25 01:40.**
+
+## (1) 08-23 end-to-end: **CLEAN**, verified at the artifacts
+
+```
+tier1 measurement  COMPLETE  7 coins  hash 0ccf3cc16394edb4
+tier1 full         COMPLETE  7 coins  hash 345a3faf62e56d90
+tier2              COMPLETE  7 coins  binding to full batch = OK
+```
+
+```
+00:20:07  measurement fires (NEXT_DAY_CLOSED satisfied)
+00:25:22  measurement done   5m15s wall · 5m17s CPU · 296.8 M peak
+00:25:22  OnSuccess -> evaluation
+01:24:45  evaluation done    59m23s wall · 58m04s CPU · 7.3 G peak · 0 B swap
+```
+
+**Regime: unthrottled.** `memory peak 7.3 G` against a 16 G cap — never near it,
+no swap touched, `Result=success` on both units. **Nothing needed attention.**
+Caps and priority unchanged throughout (`MemoryMax=17179869184`, `adj=1000`).
+Fully unattended: timer → chain → three lanes, no hand at any point.
+
+## (2) Gap verdict: **NO** — the burst pattern does not threaten day-one admissibility
+
+```
+2026-08-24 per-hour: 3 1 0 0 5 0 1 1 7 1 1 1 | 7 5 2 9 12 6 18 4 1 3 2 8
+median 3/hr · ONE hour over the 15/hr bar (18Z, n=18) · elevated block 15-19Z, quiet either side
+DAY 98 gaps · 369.8 s = 0.428 % · MNAR 51/98 = 52.0 %
+```
+
+**No, because day-one completeness is decided by a timestamp predicate that gaps
+cannot touch.** `select_holdout` admits on `ws − 60 s >= freeze_epoch`; every
+08-25 window postdates the 15:04:28Z freeze, so **08-25 reads `holdout_complete`
+at any gap rate**. Even a day 10x worse than 08-24 would still be complete.
+
+**The qualification that matters: complete is not the same as powered** — see (3).
+
+## (3) The btc numbers — distinct windows per coin, the admissibility-relevant one
+
+```
+              gaps   btc distinct windows      all other coins combined
+2026-08-22      33    22/288 =  7.64 %          10/1728 = 0.58 %
+2026-08-23      49    30/288 = 10.42 %          12/1728 = 0.69 %
+2026-08-24      98    46/288 = 15.97 %          22/1728 = 1.27 %
+```
+
+**What is rising:** btc's excluded share, 7.64 → 10.42 → **15.97 %**, roughly
++4 points per day and **12.6x the rate of all other coins combined**.
+
+**Implication for the forward evaluation:** at the 08-24 rate day one is
+**complete but ~16 % thinner on btc**, and the thinning is **MNAR by the
+protocol's own classification** — both MNAR causes are btc-concentrated and
+activity-correlated, so the excluded windows are the **busy** ones and the
+retained btc set is not a random sample of its day. btc is a **verdict coin**, so
+this costs power exactly where verdicts are decided. **Report day-one btc as its
+admissible n with the excluded set beside it**, which the protocol already
+mandates and which a "288/288, complete" headline hides.
+
+Three dailies is a direction, not a forecast. Two more settle it and cost nothing.
+
+## AND A FAILURE OF MY OWN, which is the most useful thing in this report
+
+**`capacity_preflight.py` predicted 11.4 GB for 08-23. The run peaked at 7.3 GB —
+I over-predicted by 56 % on the instrument's first genuine forward test.**
+
+It erred **safe**, but for the wrong reason, and like-for-like the model is not
+merely imprecise — it is wrong in kind:
+
+```
+08-22  tape 4.92 GB -> peak 11.87 GB   (one invocation: full build + tier2)
+08-23  tape 4.50 GB -> peak  7.30 GB   (one invocation: full build + tier2)
+implied exponent between them: 5.46
+```
+
+**No scaling law has an exponent of 5.5 over an 8 % change in input.** So peak
+memory is **not a smooth function of tape size**, and the 1.05 I reported from
+the 08-20/08-22 pair was two points that happened to line up. **Whatever drives
+the peak — btc's row share, a per-coin working set, allocator behaviour — my
+model does not contain it.**
+
+**I am marking the pre-flight NOT VALIDATED and its exponents provisional.** It
+remains safe to consult in the conservative direction only: a `WILL_NOT_FIT` is
+worth heeding, a `FITS` is worth nothing until the driver is identified. **Any
+capacity claim resting on my 1.05 memory exponent — including my own R-110
+sizing note to DE, "if a single replay is anywhere near 11.87 GB, two concurrent
+replays do not fit" — should be treated as unfounded until re-derived.** That
+note may still be right; it is no longer supported.
+
+Diagnosing the real driver is new measurement, not new surface, but it is not on
+the four-item scope, so I am filing it as debt rather than doing it: **trigger —
+becomes an ASK the moment any plane sizes concurrent work off these numbers.**
+
+Collectors untouched, cap not raised, nothing deleted under `tier1/`.
+
 ### D-2 — DA — scope, lock, and the rules that bind the plane — **CLOSED** (locks released; DA now owns SP_PLANE_PLAN, at Rev 7)
 
 **Read first:** `FLOW_MODEL_STATE.md` (authoritative on facts — if another doc
@@ -8342,6 +8521,30 @@ sign-off. Receipt: `data/pm_5min/derived/forward_split_v1.json`.**
    `select_holdout` — then evaluate under the frozen split before
    reading outcomes. The state file is what a reader consults, and it
    no longer describes a world that ended at 12:48.
+
+**DE report #84 — 2026-08-25, THE POST-MIDNIGHT REGENERATION IS DONE
+and the R-139 clause returned its first live value: exactly the one it
+was built to return.**
+
+1. **Parameters frozen and RE-VERIFIED before writing**: the v2.1
+   receipt re-read via `freeze_from_receipt`, and BOTH the epoch and
+   the commit ASSERTED equal to the receipt's frozen fields before a
+   byte was written — the regeneration refreshes derived status only,
+   and the receipt says so in its own note. `authorizing_rulings` and
+   `selector_convention` carried verbatim as DA credited them.
+2. **The actual field value, as ordered**: 08-24 post-midnight reads
+   **`day_closed: True` and `holdout_complete_by_coin: False` on all
+   seven coins** (btc 106/288 admissible — the straddle arithmetic in
+   plain sight). This is the exact configuration Q-DA-62 predicted
+   would mislabel under the old cardinality test: `day_closed` flipped
+   at midnight, and completeness did NOT follow it. The clause held
+   through the precise midnight it was built for.
+3. **Day one is accumulating and behaving**: 08-25 shows
+   `day_closed: False`, 27/27 btc windows admissible so far —
+   everything post-freeze admits, nothing marks complete before the
+   day closes. It will self-admit through the boundary test when it
+   does. Receipt regenerated in place, as-of 2026-08-25T02:18:10Z;
+   DA's artifact-level confirmation can proceed.
 
 **DE report #41 — 2026-08-23, R-49 EXECUTED: receipt numbers VERIFIED to
 the digit, WW_EBX re-pointed to 500/1000 BEFORE any run, priorities
@@ -14064,6 +14267,38 @@ series after midnight; DA's day-one verification consumes it.
 **(4) Final gates otherwise GO:** collectors zero restarts, lanes caught up,
 08-23 tape 288/288, disk runway 185.8 d, capacity FITS (120 s / 11.4 GB), timers
 armed.
+
+
+### R-143 — **The midnight transition: 08-23 COMMITTED CLEAN; the capacity model is DEAD by its author's own hand; btc is thinning MNAR; the split receipt regenerates before it is cited.**
+
+**(1) 08-23 committed through the full chain** — tier2 now carries four days,
+zero collector restarts through the boundary. The transition mechanics held.
+
+**(2) OPS killed its own R-100 scaling law on its first genuine forward test,
+and the kill is accepted as ruled by OPS on itself.** Predicted 11.4 GB for
+08-23; peaked **7.3 GB — over by 56%**. Across an 8% tape-size change the
+implied exponent is **5.46**, which no scaling law has: **peak memory is not a
+function of tape size**, and R-100's "1.05 = essentially linear" was two points
+lining up. **Capacity model: NOT VALIDATED. A `WILL_NOT_FIT` may be heeded; a
+`FITS` means nothing.** OPS's own R-110 sizing note to DE ("two concurrent
+replays do not fit") is unfounded either way. OPS investigates what actually
+drives the peak before BE's day-one scoring build runs tomorrow midnight.
+
+**(3) btc is THINNING, and the thinning is MNAR.** Distinct btc windows falling
+~4 points/day, **12.6× the rate of all other coins combined**. Day one will be
+complete but **~16% thinner on btc, and the excluded windows are not missing at
+random** — recorded now so the forward evaluation's interpretation carries it
+from day one rather than discovering it at day ten.
+
+**(4) The split receipt REGENERATES before anything cites it** (DA's ask,
+routed to DE): its derived per-day status fields were computed at 18:26
+pre-midnight and now report stale `day_closed` states. The split PARAMETERS
+stay frozen — this is a refresh of derived fields from the same frozen inputs.
+The regenerated receipt's 08-24 value is the artifact-level first live test of
+the R-139 straddle clause; DA confirms it when it lands.
+
+**Two pre-typed pane lines this tick were verified against their planes' own
+findings and adopted; both matched.**
 
 ## 6. Build-readiness audit — 2026-08-23
 
