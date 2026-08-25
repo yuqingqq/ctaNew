@@ -311,15 +311,23 @@ def label_rows(segments: Sequence[dict], gens: dict, wf: Any,
         # training population.
         h_end = min(s["t_start"] + FILL_HORIZON_S,
                     (g["t1"] if g else s["t_end"]) + 1e-9)
-        if h_end + MARKOUT_S > window_s:
-            row["status"] = "TRUNCATED_HORIZON"
-            rows.append(row); continue
-        if wf.touched(s["t_start"], h_end + MARKOUT_S):
-            row["status"] = "GAP_IN_HORIZON"
-            rows.append(row); continue
         trs = (g["tranches"] if g else [])
         fut = [t for t in trs
                if s["t_start"] - 1e-9 <= t["t"] <= h_end]
+        # AUDIT 6: the observation endpoint is max(h_end, latest fill + 5s) —
+        # certifying "no further fill" needs the tape only through h_end;
+        # markout data is needed 5s after ACTUAL fills, not hypothetical ones.
+        # Requiring h_end + 5s unconditionally excluded fully-observable
+        # no-fill rows (truncation AND gap) and early-fill rows whose own
+        # markouts were available.
+        obs_end = max(h_end,
+                      max((t["t"] + MARKOUT_S for t in fut), default=h_end))
+        if obs_end > window_s:
+            row["status"] = "TRUNCATED_HORIZON"
+            rows.append(row); continue
+        if wf.touched(s["t_start"], obs_end):
+            row["status"] = "GAP_IN_HORIZON"
+            rows.append(row); continue
         # only tranches INSIDE this row's horizon need markouts
         if any(t["markout_cents_per_share"] is None for t in fut):
             row["status"] = "NO_FUTURE_MID"
@@ -521,7 +529,7 @@ def build_rows(per_coin: int | None = None,
             "boundary_time_violations": boundary_bad_total,
             "consume_clock_violations": clock_bad_total,
             "windows_excluded_binance_gap": n_bn_gap,
-            "schema": "harmful_exposure_v3_3_scoped_observability"}
+            "schema": "harmful_exposure_v3_4_fill_scoped_markout"}
 
 
 def selftest() -> int:
@@ -579,6 +587,41 @@ def selftest() -> int:
     ok(jrec2["tuple_mismatches"] == 1, "level mismatch counted per tuple")
     _, jrec3 = join_fills([], engine)
     ok(jrec3["count_mismatch"], "count mismatch detected")
+
+    # AUDIT 6 — the observation endpoint, three reproduced cases:
+    # (a) no-fill row, 1s horizon observable, NEXT 5s truncated -> OK
+    lgn = {("BUY_UP", 1): {"t0": 298.4, "t1": 298.9, "tranches": []}}
+    segn = [{"side": "BUY_UP", "gen": 1, "level": 0.55, "resting": 5.0,
+             "qahead": 0.0, "net": 0.0, "t_start": 298.4, "t_end": 298.9}]
+    ok(label_rows(segn, lgn, WF(), 300.0)[0]["status"] == "OK",
+       "a NO-FILL row needs the tape only through h_end — the five seconds "
+       "after it are for markouts that do not exist")
+    # (b) gap strictly after the 1s horizon, no fill -> OK
+    class GapAfterH(WF):
+        def touched(self, a, b): return b > 101.2
+    lgh = {("BUY_UP", 1): {"t0": 100.0, "t1": 100.9, "tranches": []}}
+    segh = [{"side": "BUY_UP", "gen": 1, "level": 0.55, "resting": 5.0,
+             "qahead": 0.0, "net": 0.0, "t_start": 100.0, "t_end": 100.9}]
+    ok(label_rows(segh, lgh, GapAfterH(), 300.0)[0]["status"] == "OK",
+       "a gap AFTER a no-fill row's horizon does not exclude it")
+    # (c) early fill with its own markout available; gap before h_end+5 -> OK
+    class GapLate(WF):
+        def touched(self, a, b): return b > 105.6
+    lge = {("BUY_UP", 1): {"t0": 100.0, "t1": 101.5, "tranches": [
+        {"t": 100.2, "shares": 5.0, "level": 0.55,
+         "markout_cents_per_share": 5.0}]}}
+    sege = [{"side": "BUY_UP", "gen": 1, "level": 0.55, "resting": 5.0,
+             "qahead": 0.0, "net": 0.0, "t_start": 100.0, "t_end": 101.5}]
+    re_ = label_rows(sege, lge, GapLate(), 300.0)[0]
+    ok(re_["status"] == "OK"
+       and abs(re_["latency"]["5"]["preventable_value_cents"] + 25.0) < 1e-9,
+       "an early fill needs data through ITS OWN fill_t+5s (105.2), not "
+       "h_end+5s (106.0) — the row labels")
+    # and the guard still guards: a gap INSIDE a filled row's markout excludes
+    class GapInMk(WF):
+        def touched(self, a, b): return b > 104.0
+    ok(label_rows(sege, lge, GapInMk(), 300.0)[0]["status"] == "GAP_IN_HORIZON",
+       "a gap inside the needed markout window still excludes")
 
     # AUDIT 5 BLOCKER 1 — the user's three reproduced cases, as regressions:
     lg = {("BUY_UP", 1): {"t0": 100.0, "t1": 300.0, "tranches": []}}

@@ -48,7 +48,7 @@ ROWS = fi.PM / "derived/harmful_exposure_rows_v3.json"   # v1/v2 receipts are IN
 # declared here, an ASSUMED cancel latency for the diagnostic fit only — the
 # action evaluator sweeps the full 5–250 ms grid regardless.
 TARGET_LATENCY_MS = 50
-EXPECTED_SCHEMA = "harmful_exposure_v3_3_scoped_observability"
+EXPECTED_SCHEMA = "harmful_exposure_v3_4_fill_scoped_markout"
 OUT = fi.PM / "derived/harmful_hazard_model_v1.json"
 LAG_S = 0.250
 # §4.1 asks for 25/50/100/250/500/1000 ms. The finest micro scales measure the
