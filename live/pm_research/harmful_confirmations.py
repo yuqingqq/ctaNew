@@ -21,14 +21,12 @@ from pathlib import Path
 import harmful_action_eval as ae
 
 PM = Path("/home/yuqing/ctaNew/data/pm_5min")
-ARMS = ("PM_ONLY", "PM_PLUS_FINE", "PM_FINE_SHIFTED",
-        "PM_FINE_EXTENDED", "PM_FINE_PLUS_DEPTH")
 L = "50"
 
 
-def load(coin: str):
+def load(coin: str, ver: str, ARMS):
     rows, scores = [], {a: [] for a in ARMS}
-    with gzip.open(PM / f"derived/harmful_scores_{coin}_v2.jsonl.gz", "rt") as fh:
+    with gzip.open(PM / f"derived/harmful_scores_{coin}_{ver}.jsonl.gz", "rt") as fh:
         for line in fh:
             d = json.loads(line)
             rows.append({
@@ -66,10 +64,12 @@ def hourly(rows, sc, budget: float):
     return net, by_hour
 
 
-def main(coin: str) -> int:
+def main(coin: str, ver: str = "v2", arm: str = "PM_PLUS_FINE",
+         base: str = "PM_ONLY") -> int:
     receipt = json.loads(
-        (PM / "derived/harmful_fine_comparison_v2.json").read_text())
-    rows, scores = load(coin)
+        (PM / f"derived/harmful_fine_comparison_{ver}.json").read_text())
+    ARMS = tuple(receipt["paired_arms"][coin])
+    rows, scores = load(coin, ver, ARMS)
     print(f"{coin}: {len(rows)} dev rows reconstructed")
     for a in ARMS:
         gate = ae.evaluate_policy(rows, scores[a], latency_ms=50, n_random=1)
@@ -91,14 +91,14 @@ def main(coin: str) -> int:
                 return 2
             per[a] = byh
         hrs = sorted(set(h for byh in per.values() for h in byh))
-        inc = {h: per["PM_PLUS_FINE"].get(h, 0.0) - per["PM_ONLY"].get(h, 0.0)
+        inc = {h: per[arm].get(h, 0.0) - per[base].get(h, 0.0)
                for h in hrs}
         pos = sum(v for v in inc.values() if v > 0)
         top_h, top_v = max(inc.items(), key=lambda kv: kv[1])
         n_pos = sum(1 for v in inc.values() if v > 0)
         conc = (top_v / pos) if pos > 0 else float("nan")
         single_hour = conc > 0.5
-        print(f"  @{int(b*100)}%: fine-vs-PM increment by hour "
+        print(f"  @{int(b*100)}%: {arm} - {base} increment by hour "
               f"(n_hours={len(hrs)}, positive in {n_pos}):")
         print("    " + "  ".join(f"h{h:02d}:{inc[h]:+.0f}" for h in hrs))
         print(f"    top hour h{top_h:02d} carries {conc:.0%} of positive "
@@ -107,4 +107,4 @@ def main(coin: str) -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main(sys.argv[1] if len(sys.argv) > 1 else "btc"))
+    raise SystemExit(main(*(sys.argv[1:] or ["btc"])))

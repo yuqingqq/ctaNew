@@ -998,14 +998,15 @@ def run_fine(era: bool = True, lead: bool = False) -> dict[str, Any]:
     print(f"population: {src.name}  train {train_days} -> dev {dev_day}")
     paths = fi._archive_paths(); tokens = fi.token_map()
     # I5 lead mode: eth only, btc-book features appended to the reduced spec.
-    ARMS = (("PM_ONLY", "PM_PLUS_FINE", "PM_FINE_PLUS_BTCLEAD") if lead
+    ARMS = (("PM_ONLY", "PM_PLUS_FINE", "PM_FINE_PLUS_BTCLEAD",
+             "PM_FINE_LEADSHIFT") if lead
             else ("PM_ONLY", "PM_PLUS_FINE", "PM_FINE_PLUS_THIN"))
     COINS = ("eth",) if lead else ("btc", "eth")
     out: dict[str, Any] = {
         "paired_arms": {}, "schema": data["schema"],
         "as_of": data.get("as_of"),
         "multiplicity_candidate_specs": 5 if lead else 4,
-        "control_arms": [],
+        "control_arms": ["PM_FINE_LEADSHIFT"] if lead else [],
         "knowledge_cutoffs": {"pm_features_s": 0.250, "pm_thin_s": 0.250,
                               "binance_fine_s": 0.001},
         "declared": "families+mechanisms declared pre-score in code comments; "
@@ -1014,7 +1015,7 @@ def run_fine(era: bool = True, lead: bool = False) -> dict[str, Any]:
     for coin in COINS:
         crows = [r for r in rows if r["coin"] == coin]
         streams: dict = {}
-        FAM: dict = {"pm": [], "fn": [], "th": [], "bl": []}
+        FAM: dict = {"pm": [], "fn": [], "th": [], "bl": [], "ls": []}
         kept: list = []
         for r in crows:
             slug = r["slug"]
@@ -1034,9 +1035,10 @@ def run_fine(era: bool = True, lead: bool = False) -> dict[str, Any]:
             th = thin_feats(streams[slug], r["t_start"], r["side"])
             if lead:
                 bl = fine_feats(T, r["side"], coin, sym="BTCUSDT")
-                if bl is None:
+                lsh = fine_feats(T - 5.0, r["side"], coin, sym="BTCUSDT")
+                if bl is None or lsh is None:
                     continue
-                FAM["bl"].append(bl)
+                FAM["bl"].append(bl); FAM["ls"].append(lsh)
             FAM["pm"].append(fp); FAM["fn"].append(ff); FAM["th"].append(th)
             kept.append({k: r.get(k) for k in
                          ("slug", "day", "t0", "t_start", "side", "gen",
@@ -1053,7 +1055,8 @@ def run_fine(era: bool = True, lead: bool = False) -> dict[str, Any]:
         for arm in ARMS:
             add = {"PM_ONLY": (), "PM_PLUS_FINE": ("fn",),
                    "PM_FINE_PLUS_THIN": ("fn", "th"),
-                   "PM_FINE_PLUS_BTCLEAD": ("fn", "bl")}[arm]
+                   "PM_FINE_PLUS_BTCLEAD": ("fn", "bl"),
+                   "PM_FINE_LEADSHIFT": ("fn", "ls")}[arm]
             XA = [FAM["pm"][i] + [v for f in add for v in FAM[f][i]]
                   for i in range(len(kept))]
             Xs, mu, sd = zscale([XA[i] for i in tr], XA)
@@ -1080,7 +1083,7 @@ def run_fine(era: bool = True, lead: bool = False) -> dict[str, Any]:
             del XA, Xs
         # score dump: everything the offline confirmations need, dev rows only
         DUMP = fi.PM / ("derived/harmful_scores_"
-                        f"{coin}_{'v4lead' if lead else 'v3'}.jsonl.gz")
+                        f"{coin}_{'v5leadctl' if lead else 'v3'}.jsonl.gz")
         with gzip.open(DUMP, "wt") as fh:
             for pos, i in enumerate(dv):
                 k = kept[i]; L = k["latency"][Lh]
@@ -1095,7 +1098,7 @@ def run_fine(era: bool = True, lead: bool = False) -> dict[str, Any]:
         print(f"  score dump {DUMP}")
         del dev_scores, FAM
     OUTF = fi.PM / ("derived/harmful_fine_comparison_"
-                    f"{'v4lead' if lead else 'v3'}.json")
+                    f"{'v5leadctl' if lead else 'v3'}.json")
     OUTF.write_text(json.dumps(out))
     print(f"receipt {OUTF}")
     return out
