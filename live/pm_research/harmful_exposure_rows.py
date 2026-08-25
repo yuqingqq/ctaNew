@@ -40,6 +40,7 @@ import policy_optimizer_queue_realistic as qr
 import inventory_walk as iw
 
 OUT = qr.base.fi.PM / "derived/harmful_exposure_rows_v2.json"
+OUT_ERA = qr.base.fi.PM / "derived/harmful_exposure_rows_v2_eraB.json"
 LATENCY_GRID_MS = (5, 10, 20, 30, 50, 75, 100, 150, 250)
 MARKOUT_S = 5.0
 SIDES = ("BUY_UP", "SELL_UP")
@@ -205,11 +206,49 @@ def reconcile_fills(rows: Sequence[dict], arm) -> dict[str, float]:
             "match": abs(lab - eng_ok) < 1e-6}
 
 
+def v2_era_bounds() -> tuple[float, float]:
+    """The sub-second-reliable Binance era, from the LEDGER (CLAUDE.md rule 5).
+
+    Start = the latest hf_ws_v2 collector start (2026-08-24 13:48:54 UTC).
+    End = now-ish; callers admit only windows FULLY inside [start, end - tail].
+    """
+    import json as _json
+    runs = [_json.loads(l) for l in
+            open('/home/yuqing/ctaNew/data/mm_hf/collector_runs.jsonl')]
+    start = max(r['started_at_ns'] for r in runs) / 1e9
+    import time as _time
+    return start, _time.time()
+
+
+def select_v2_era(coins: Sequence[str]) -> list:
+    """Every PM window fully inside the v2 era (window + markout tail)."""
+    fi = qr.base.fi
+    lo, hi = v2_era_bounds()
+    paths = fi._archive_paths(); tokens = fi.token_map()
+    gaps = fi.gaps_by_slug(fi.ERA)
+    out = []
+    for slug in sorted(fi.covered_slugs(fi.ERA)):
+        coin = slug.split("-")[0]
+        if coin not in coins or slug not in paths or slug not in tokens:
+            continue
+        try:
+            t0 = int(slug.rsplit("-", 1)[1])
+        except ValueError:
+            continue
+        if t0 < lo or t0 + fi.WINDOW_S + MARKOUT_S + 5.0 > hi:
+            continue
+        up, down = tokens[slug]
+        out.append((slug, paths[slug], up, down, gaps.get(slug, [])))
+    return out
+
+
 def build_rows(per_coin: int | None = None,
-               coins: Sequence[str] = ("btc", "eth")) -> dict[str, Any]:
+               coins: Sequence[str] = ("btc", "eth"),
+               v2_era: bool = False) -> dict[str, Any]:
     import datetime as _dt
     spec = qr._qr_spec(qr.QR_SKEW, latency_ms=0, cancel=False)
-    selected = select_stratified(per_coin or 10, coins=coins)
+    selected = (select_v2_era(coins) if v2_era
+                else select_stratified(per_coin or 10, coins=coins))
     rows: list[dict[str, Any]] = []
     recon_fail = 0
     n_windows = 0
@@ -313,14 +352,19 @@ def main() -> int:
     ap.add_argument("cmd", nargs="?", choices=["run"])
     ap.add_argument("--selftest", action="store_true")
     ap.add_argument("--per-coin", type=int, default=None)
+    ap.add_argument("--v2-era", action="store_true",
+                    help="all windows fully inside the hf_ws_v2 stamp era")
+    ap.add_argument("--coins", type=str, default="btc,eth")
     a = ap.parse_args()
     if a.selftest:
         return selftest()
     if a.cmd != "run":
         ap.print_help(); return 2
-    built = build_rows(per_coin=a.per_coin)
-    OUT.parent.mkdir(parents=True, exist_ok=True)
-    OUT.write_text(json.dumps(built))
+    built = build_rows(per_coin=a.per_coin,
+                       coins=tuple(a.coins.split(",")), v2_era=a.v2_era)
+    out = OUT_ERA if a.v2_era else OUT          # populations never share a file
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps(built))
     from collections import Counter
     st = Counter(r["status"] for r in built["rows"])
     print(f"rows {len(built['rows'])} windows {built['n_windows']} "
