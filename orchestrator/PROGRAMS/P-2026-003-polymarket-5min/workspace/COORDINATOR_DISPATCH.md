@@ -102,3 +102,15 @@ the rate-feature lesson); (c) tested as INCREMENTS over the reduced spec
 (imb+midbps), era-pure (v2 stamps only), declared nulls ≥200 perms; (d) every
 population with n + as-of. Verify depth20 semantics FIRST (snapshot cadence,
 level ordering, absolute-vs-delta) against the tape before computing anything.
+
+## DATA BUDGET CORRECTION (user, 2026-08-25) — binding
+**There are NOT 3 training days for the fine-feature model.** Sub-second
+Binance data exists only from 2026-08-24 13:48:54 UTC (~19h and accruing).
+- 3-day dataset (08-20..22): PM-only / hazard / >=1s-bar work ONLY; its Binance
+  side is legacy-stamped and inadmissible for sub-second features.
+- Fine-feature model: v2-era tape only; ALL of it is CONSUMED as development
+  data (every test on 08-24/25 touched it). Training floor (~150k rows / 30k
+  fills btc) reached after ~2-3 era-days.
+- Validation = >=5 complete UTC days collected AFTER the freeze. Earliest
+  honest verdict ~08-31 if the freeze lands ~08-26. Accrual, not cleverness,
+  is the schedule.
