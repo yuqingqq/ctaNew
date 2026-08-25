@@ -2355,3 +2355,16 @@ this file, and that has not changed.
 **STANDING DUTY RESUMED:** forward-population watch until midnight - post-freeze
 days into training sets, straddle days as clusters, selector truncation,
 blind-period coverage, n + as-of on every count.
+
+## 2026-08-25 — OB dynamics loop armed (coordinator)
+
+User directive: reliable OB-dynamics tests, double-confirm, long optimization
+loop. Charter: `workspace/OB_DYNAMICS_LOOP.md`. State: harmful-fill pipeline
+clean (v3.4 dataset, all honesty counters 0); PM-only dead on honest labels;
+reduced fine arm (imb + midbps) flips btc net positive, beats random max on
+NET at all budgets. I1 in flight: three-arm PM_ONLY / +reduced / +extended
+(OFI + big-print, mechanism-declared, sign-reviewed, commit fed230a).
+Next: I2 depth20 depletion (semantics verified: 100ms snapshots, absolute
+sizes, L1==bookTicker), I3 PM-side thinning, I4 confirmation pass
+(time-shift null + per-hour stability). All development evidence; freeze =
+user's call; multiplicity tracked in receipts (currently 2 specs).

@@ -367,6 +367,39 @@ def selftest() -> int:
     ok(fB[ipr] > 0 and fS[ipr] == 0.0,
        "a big SELL print threatens the BUY side only")
     _hm._BN_CACHE.clear(); _hm._BN_TCACHE.clear()
+    # depth20 parser: positive control + malformed refusal (rule 15)
+    good = b"9999999999999999999,1,1,7,100.0@2.0|99.9@1.0|99.8@1.0|99.7@1.0|99.6@1.0|99.5@3.0,100.1@1.0|100.2@1.0|100.3@1.0|100.4@1.0|100.5@1.0|100.6@4.0\n"
+    g = _hm._parse_depth_line(good, 0)
+    ok(g is not None and g != "preera" and abs(g[2] - 9.0) < 1e-9
+       and abs(g[1] - 6.0) < 1e-9 and abs(g[4] - 9.0) < 1e-9,
+       "depth parser sums totals and top5 correctly")
+    ok(_hm._parse_depth_line(b"1,2,3,4,garbage,alsogarbage\n", 0) is None,
+       "depth parser REFUSES a malformed level blob")
+    ok(_hm._parse_depth_line(good, 10**19 + 1) == "preera",
+       "depth parser excludes pre-era rows")
+    # depth_feats sign regression on synthetic snapshots: bids drain 100->60
+    # over 2s, asks flat; book ends tilted to asks.
+    base2 = _dt.datetime(2099, 1, 1, 0, 30, 0,
+                         tzinfo=_dt.timezone.utc).timestamp()
+    dts = [base2 - 60.0 + 0.1 * i for i in range(600)]
+    dvals = []
+    for t in dts:
+        frac = min(1.0, max(0.0, (t - (base2 - 2.0)) / 2.0))
+        btot = 100.0 - 40.0 * frac
+        dvals.append((btot * 0.2, btot, 20.0, 100.0))
+    hh2 = _dt.datetime.fromtimestamp(base2 - 0.001, _dt.timezone.utc)
+    _hm._BN_DCACHE[("BTCUSDT", f"{hh2:%Y%m%d_%H}")] = (dts, dvals)
+    ph = hh2 - _dt.timedelta(hours=1)
+    _hm._BN_DCACHE[("BTCUSDT", f"{ph:%Y%m%d_%H}")] = ([], [])
+    dB = _hm.depth_feats(base2, "BUY_UP", "btc")
+    dS = _hm.depth_feats(base2, "SELL_UP", "btc")
+    ip = _hm.DEPTH_NAMES.index("bnd_pull_2p0")
+    ok(dB[ip] > 0.2, "bid drain reads as POSITIVE pull threat for a resting BUY")
+    ok(abs(dS[ip]) < 0.05, "flat asks read as ~zero pull for a resting SELL")
+    ii = _hm.DEPTH_NAMES.index("bnd_imb20_now")
+    ok(dB[ii] > 0 and dS[ii] < 0,
+       "ask-tilted deep book threatens the BUY side, protects the SELL side")
+    _hm._BN_DCACHE.clear()
     print(f"harmful_hazard_model selftest: {checks} checks OK")
     return 0
 
@@ -714,10 +747,135 @@ def ext_feats(T: float, side: str, coin: str) -> list | None:
     return out
 
 
+# ------------------------------------------------------------- depth20 family
+# DECLARED BEFORE SCORING; geometry-amended after data verification (the
+# 20-level book spans only ~0.4-0.8 bps, so "depth within X bps" collapses
+# to the whole visible book — features use level structure instead):
+#   bnd_pull_{w}:  drain of TOTAL visible threat-side depth over w, vs its
+#                  trailing 60s mean. Pulled support ahead of a move.
+#   bnd_near_now:  1 - top5/total on the threat side — thin near the touch.
+#   bnd_imb20_now: (B20-A20)/(B20+A20), threat-signed — deep imbalance beyond
+#                  the L1 the reduced arm already sees.
+# Snapshots are ~100ms cadence (max gap seen 414ms) so values can be up to
+# ~0.1s stale at the cutoff; inherent to the feed, disclosed.
+DEPTH_SCALES = (0.5, 2.0)
+DEPTH_NAMES = [f"bnd_pull_{str(w).replace('.', 'p')}" for w in DEPTH_SCALES] + \
+              ["bnd_near_now", "bnd_imb20_now"]
+_BN_DCACHE: dict = {}
+
+
+def _parse_depth_line(line: bytes, lo: int):
+    """One depth20 row -> (recv_s, b_top5, b_tot, a_top5, a_tot) | None.
+    None for pre-era rows AND malformed rows; the loader counts the latter."""
+    q = line.rstrip().split(b',')
+    if len(q) != 6:
+        return None
+    try:
+        r = int(q[0])
+        if r < lo:
+            return "preera"
+        bt5 = bt = at5 = at = 0.0
+        for i, lv in enumerate(q[4].split(b'|')):
+            px, qty = lv.split(b'@')
+            v = float(qty)
+            bt += v
+            if i < 5:
+                bt5 += v
+        for i, lv in enumerate(q[5].split(b'|')):
+            px, qty = lv.split(b'@')
+            v = float(qty)
+            at += v
+            if i < 5:
+                at5 += v
+        return (r / 1e9, bt5, bt, at5, at)
+    except (ValueError, IndexError):
+        return None
+
+
+def _bn_depth(sym: str, h):
+    import gzip, glob
+    key = (sym, f"{h:%Y%m%d_%H}")
+    if key in _BN_DCACHE:
+        return _BN_DCACHE[key]
+    lo = _era_boundary_ns()
+    ts = []; vals = []; bad = 0; total = 0
+    for ext in ('.csv.gz', '.csv'):
+        fs = glob.glob(f"/home/yuqing/ctaNew/data/mm_hf/raw/depth20/"
+                       f"{sym}/{h:%Y%m%d_%H}{ext}")
+        if not fs:
+            continue
+        op = gzip.open if fs[0].endswith('.gz') else open
+        with op(fs[0], 'rb') as fh:
+            for line in fh:
+                total += 1
+                got = _parse_depth_line(line, lo)
+                if got == "preera":
+                    continue
+                if got is None:
+                    bad += 1
+                    continue
+                ts.append(got[0]); vals.append(got[1:])
+        break
+    if total and bad > 0.01 * total:
+        raise SystemExit(
+            f"REFUSED: depth20 {sym} {h:%Y%m%d_%H}: {bad}/{total} malformed")
+    if len(_BN_DCACHE) > 2:
+        _BN_DCACHE.pop(next(iter(_BN_DCACHE)))
+    _BN_DCACHE[key] = (ts, vals)
+    return ts, vals
+
+
+def depth_feats(T: float, side: str, coin: str) -> list | None:
+    """Depth20 family at cutoff T-1ms, threat-signed (higher = more danger)."""
+    import bisect, datetime as dt
+    sym = _BN_SYM.get(coin)
+    if sym is None:
+        return None
+    cut = T - 0.001
+    h = dt.datetime.fromtimestamp(cut, dt.timezone.utc)
+    ts, vals = _bn_depth(sym, h)
+    if not ts or ts[0] > cut - 60.0:
+        prev = h - dt.timedelta(hours=1)
+        t2, v2 = _bn_depth(sym, prev)
+        ts = t2 + ts; vals = v2 + vals
+    hi = bisect.bisect_right(ts, cut)
+    if hi == 0:
+        return None
+    bt5, bt, at5, at = vals[hi - 1]
+    # threat side: a resting BUY dies when BID support drains; SELL when asks
+    thr_now = (bt5, bt) if side == "BUY_UP" else (at5, at)
+    m_lo = bisect.bisect_left(ts, cut - 60.0)
+    if m_lo >= hi:          # feed gap >60s: no trailing base — drop the row
+        return None
+    idx = 1 if side == "BUY_UP" else 3
+    base = sum(v[idx] for v in vals[m_lo:hi]) / (hi - m_lo)
+    if base <= 0:
+        return None
+    out = []
+    for w in DEPTH_SCALES:
+        j = bisect.bisect_right(ts, cut - w)
+        if j == 0:
+            return None
+        then = vals[j - 1][idx]
+        out.append((then - thr_now[1]) / base)      # positive = drained
+    out.append(1.0 - (thr_now[0] / thr_now[1] if thr_now[1] > 0 else 1.0))
+    imb = (bt - at) / (bt + at) if (bt + at) > 0 else 0.0
+    out.append((-1.0 if side == "BUY_UP" else 1.0) * imb)
+    return out
+
+
 def run_fine(era: bool = True) -> dict[str, Any]:
-    """PAIRED comparison on IDENTICAL rows: PM_ONLY vs PM + reduced fine.
-    The increment is the finding; a shared-population contrast survives a
-    miscalibrated base. Development evidence only (consumed era tape)."""
+    """PAIRED comparison on IDENTICAL rows. Arms:
+      PM_ONLY          anchor
+      PM_PLUS_FINE     current best (reduced fine spec)
+      PM_FINE_SHIFTED  CONTROL: fine features at T-5s (causal, misaligned).
+                       Declared expectation: the fine gain collapses.
+      PM_FINE_EXTENDED reduced + OFI + big-print   (candidate 2)
+      PM_FINE_PLUS_DEPTH reduced + depth20 family  (candidate 3)
+    Multiplicity: 3 candidate specs in the development race. Increments are
+    read WITHIN this run only (populations differ across runs when a family
+    drops rows). Development evidence — consumed era tape."""
+    import gzip
     import policy_optimizer_queue_realistic as qr
     import harmful_action_eval as ae
     src = ROWS_ERA if era else ROWS
@@ -728,11 +886,21 @@ def run_fine(era: bool = True) -> dict[str, Any]:
     days = data["days"]; train_days, dev_day = tuple(days[:-1]), days[-1]
     print(f"population: {src.name}  train {train_days} -> dev {dev_day}")
     paths = fi._archive_paths(); tokens = fi.token_map()
-    out: dict[str, Any] = {"paired_arms": {}, "schema": data["schema"]}
+    ARMS = ("PM_ONLY", "PM_PLUS_FINE", "PM_FINE_SHIFTED",
+            "PM_FINE_EXTENDED", "PM_FINE_PLUS_DEPTH")
+    out: dict[str, Any] = {
+        "paired_arms": {}, "schema": data["schema"],
+        "as_of": data.get("as_of"),
+        "multiplicity_candidate_specs": 3,
+        "control_arms": ["PM_FINE_SHIFTED"],
+        "declared": "families+mechanisms declared pre-score in code comments; "
+                    "depth geometry amended after data verification, before "
+                    "scoring (20 levels span <1bp)"}
     for coin in ("btc", "eth"):
         crows = [r for r in rows if r["coin"] == coin]
         streams: dict = {}
-        F_pm: list = []; F_fn: list = []; F_ex: list = []; kept: list = []
+        FAM: dict = {"pm": [], "fn": [], "sh": [], "ex": [], "dp": []}
+        kept: list = []
         for r in crows:
             slug = r["slug"]
             if slug not in streams:
@@ -744,13 +912,15 @@ def run_fine(era: bool = True) -> dict[str, Any]:
                           r["resting"], r["qahead"])
             if fp is None:
                 continue
-            ff = fine_feats(r["t0"] + r["t_start"], r["side"], coin)
-            if ff is None:
+            T = r["t0"] + r["t_start"]
+            ff = fine_feats(T, r["side"], coin)
+            fs = fine_feats(T - 5.0, r["side"], coin)
+            fe = ext_feats(T, r["side"], coin)
+            fd = depth_feats(T, r["side"], coin)
+            if ff is None or fs is None or fe is None or fd is None:
                 continue
-            fe = ext_feats(r["t0"] + r["t_start"], r["side"], coin)
-            if fe is None:
-                continue
-            F_pm.append(fp); F_fn.append(ff); F_ex.append(fe)
+            FAM["pm"].append(fp); FAM["fn"].append(ff); FAM["sh"].append(fs)
+            FAM["ex"].append(fe); FAM["dp"].append(fd)
             kept.append({k: r.get(k) for k in
                          ("slug", "day", "t0", "t_start", "side", "gen",
                           "latency")})
@@ -762,13 +932,14 @@ def run_fine(era: bool = True) -> dict[str, Any]:
              for i in range(len(kept))]
         tgt = lambda i: kept[i]["latency"][Lh]["preventable_value_cents"]
         print(f"  {coin}: rows {len(kept)} train {len(tr)} dev {len(dv)}")
-        for arm in ("PM_ONLY", "PM_PLUS_FINE", "PM_FINE_EXTENDED"):
-            if arm == "PM_ONLY":
-                XA = [list(x) for x in F_pm]
-            elif arm == "PM_PLUS_FINE":
-                XA = [F_pm[i] + F_fn[i] for i in range(len(kept))]
-            else:
-                XA = [F_pm[i] + F_fn[i] + F_ex[i] for i in range(len(kept))]
+        dev_scores: dict = {}
+        for arm in ARMS:
+            add = {"PM_ONLY": (), "PM_PLUS_FINE": ("fn",),
+                   "PM_FINE_SHIFTED": ("sh",),
+                   "PM_FINE_EXTENDED": ("fn", "ex"),
+                   "PM_FINE_PLUS_DEPTH": ("fn", "dp")}[arm]
+            XA = [FAM["pm"][i] + [v for f in add for v in FAM[f][i]]
+                  for i in range(len(kept))]
             Xs, mu, sd = zscale([XA[i] for i in tr], XA)
             w = fit_logistic([Xs[i] for i in tr], [y[i] for i in tr])
             ft = [i for i in tr if y[i]]
@@ -780,9 +951,10 @@ def run_fine(era: bool = True) -> dict[str, Any]:
                    for i in dv]
             gate = ae.evaluate_policy([keptrow(kept[i]) for i in dv], ecv,
                                       latency_ms=TARGET_LATENCY_MS)
+            dev_scores[arm] = ecv
             out["paired_arms"].setdefault(coin, {})[arm] = {
                 "auc": auc, "gate": gate}
-            print(f"    {arm:<13} AUC {auc:.3f}")
+            print(f"    {arm:<18} AUC {auc:.3f}")
             for b, g in gate["budgets"].items():
                 print(f"      @{b}: net {g['net_cents']:+8.0f}c "
                       f"harm {g['harm_avoided_cents']:+8.0f} "
@@ -790,7 +962,22 @@ def run_fine(era: bool = True) -> dict[str, Any]:
                       f"rand_max {g['random_net_max']:+8.0f} "
                       f"beats_NET={g['beats_random_max_on_NET']}")
             del XA, Xs
-    OUTF = fi.PM / "derived/harmful_fine_comparison_v1.json"
+        # score dump: everything the offline confirmations need, dev rows only
+        DUMP = fi.PM / f"derived/harmful_scores_{coin}_v2.jsonl.gz"
+        with gzip.open(DUMP, "wt") as fh:
+            for pos, i in enumerate(dv):
+                k = kept[i]; L = k["latency"][Lh]
+                fh.write(json.dumps({
+                    "slug": k["slug"], "side": k["side"], "gen": k["gen"],
+                    "t_abs": k["t0"] + k["t_start"],
+                    "hour": int(((k["t0"] + k["t_start"]) // 3600) % 24),
+                    "pv50": L["preventable_value_cents"],
+                    "ps50": L["preventable_shares"],
+                    "af": keptrow(k)["any_fill_ahead"],
+                    "scores": {a: dev_scores[a][pos] for a in ARMS}}) + "\n")
+        print(f"  score dump {DUMP}")
+        del dev_scores, FAM
+    OUTF = fi.PM / "derived/harmful_fine_comparison_v2.json"
     OUTF.write_text(json.dumps(out))
     print(f"receipt {OUTF}")
     return out
