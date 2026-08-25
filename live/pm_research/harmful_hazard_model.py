@@ -41,6 +41,13 @@ from typing import Any, Sequence
 import flow_intensity as fi
 
 ROWS = fi.PM / "derived/harmful_exposure_rows_v3.json"   # v1/v2 receipts are INVALID (user audits, 2026-08-25)
+# v3.1 SEMANTICS (user audit 3): rows are chronological decision rows; the
+# label is the value of cancelling THE GENERATION FROM THIS ROW ONWARD — not a
+# fixed 1 s horizon. The hazard target is "any tranche ahead of this row"; the
+# toxicity target is the latency-aware preventable value at TARGET_LATENCY_MS,
+# declared here, an ASSUMED cancel latency for the diagnostic fit only — the
+# action evaluator sweeps the full 5–250 ms grid regardless.
+TARGET_LATENCY_MS = 50
 OUT = fi.PM / "derived/harmful_hazard_model_v1.json"
 LAG_S = 0.250
 # §4.1 asks for 25/50/100/250/500/1000 ms. The finest micro scales measure the
@@ -349,7 +356,7 @@ def run() -> dict[str, Any]:
             if slug not in streams:
                 up, dn = tokens[slug]
                 streams[slug] = window_streams(paths[slug], up, dn)
-            f = features(streams[slug], r["t"], r["side"], r["level"],
+            f = features(streams[slug], r["t_start"], r["side"], r["level"],
                          r["resting"], r["qahead"])
             if f is None:
                 continue
@@ -361,14 +368,16 @@ def run() -> dict[str, Any]:
                                   "n_dev": len(dv)}
             continue
         Xall, mu, sd = zscale([feats[i] for i in tr], feats)
-        y_fill = [1 if kept[i].get("any_fill") else 0 for i in range(len(kept))]
+        y_fill = [1 if kept[i].get("any_fill_ahead") else 0 for i in range(len(kept))]
         w_haz = fit_logistic([Xall[i] for i in tr], [y_fill[i] for i in tr])
-        fill_tr = [i for i in tr if y_fill[i] and "v_cancel_cents" in kept[i]]
+        L = str(TARGET_LATENCY_MS)
+        fill_tr = [i for i in tr if y_fill[i] and "latency" in kept[i]]
+        tgt = lambda i: kept[i]["latency"][L]["preventable_value_cents"]
         w_sign = fit_logistic([Xall[i] for i in fill_tr],
-                              [1 if kept[i]["v_cancel_cents"] > 0 else 0
+                              [1 if tgt(i) > 0 else 0
                                for i in fill_tr]) if len(fill_tr) >= 100 else None
         w_mag = fit_ridge([Xall[i] for i in fill_tr],
-                          [kept[i]["v_cancel_cents"] for i in fill_tr],
+                          [tgt(i) for i in fill_tr],
                           lam=10.0) if len(fill_tr) >= 100 else None
         dev_rows = [kept[i] for i in dv]
         p_fill = [predict_p(w_haz, Xall[i]) for i in dv]
