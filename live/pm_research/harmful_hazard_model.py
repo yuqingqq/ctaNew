@@ -477,18 +477,324 @@ def _auc(scores, labels):
     return (rank_sum - pos * (pos + 1) / 2) / (pos * neg)
 
 
+# ---------------------------------------------------------------- fine arm
+# The REDUCED Binance set (audit-validated direction: mechanism-chosen, not
+# scoreboard-chosen): current side-signed top-of-book imbalance + side-signed
+# mid movement at 10/25/50/100/250 ms. Era-pure per event via the collector
+# ledger (CLAUDE.md rule 5). Committed here so the full pipeline is in-repo
+# (rule 12) — the scratch-dir version is what voided an earlier freeze.
+FINE_SCALES = (0.010, 0.025, 0.050, 0.100, 0.250)
+FINE_NAMES = [f"bnf_midbps_{str(w).replace('.', 'p')}" for w in FINE_SCALES]     + ["bnf_imb_now"]
+_BN_SYM = {"btc": "BTCUSDT", "eth": "ETHUSDT"}
+_BN_CACHE: dict = {}
+
+
+def _era_boundary_ns() -> int:
+    runs = [json.loads(l) for l in
+            open('/home/yuqing/ctaNew/data/mm_hf/collector_runs.jsonl')]
+    return max(r['started_at_ns'] for r in runs)
+
+
+def _bn_hour(sym: str, h) -> tuple[list, list]:
+    import gzip, glob
+    key = (sym, f"{h:%Y%m%d_%H}")
+    if key in _BN_CACHE:
+        return _BN_CACHE[key]
+    lo = _era_boundary_ns()
+    ts: list = []; vals: list = []
+    for ext in ('.csv.gz', '.csv'):
+        fs = glob.glob(f"/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/"
+                       f"{sym}/{h:%Y%m%d_%H}{ext}")
+        if not fs:
+            continue
+        op = gzip.open if fs[0].endswith('.gz') else open
+        with op(fs[0], 'rb') as fh:
+            for line in fh:
+                q = line.split(b',')
+                if len(q) < 8:
+                    continue
+                try:
+                    r = int(q[0])
+                    if r < lo:
+                        continue                    # era purity, per event
+                    b = float(q[4]); a = float(q[6])
+                    vals.append(((b + a) / 2.0, float(q[5]), float(q[7])))
+                    ts.append(r / 1e9)
+                except ValueError:
+                    continue
+        break
+    if len(_BN_CACHE) > 3:
+        _BN_CACHE.pop(next(iter(_BN_CACHE)))
+    _BN_CACHE[key] = (ts, vals)
+    return ts, vals
+
+
+def fine_feats(T: float, side: str, coin: str) -> list | None:
+    """Reduced fine set at absolute time T, cutoff T - 1 ms, side-signed."""
+    import bisect, datetime as dt
+    sym = _BN_SYM.get(coin)
+    if sym is None:
+        return None
+    sgn = -1.0 if side == "BUY_UP" else 1.0
+    cut = T - 0.001
+    h = dt.datetime.fromtimestamp(cut, dt.timezone.utc)
+    ts, vals = _bn_hour(sym, h)
+    if not ts or ts[0] > cut:
+        prev = h - dt.timedelta(hours=1)
+        t2, v2 = _bn_hour(sym, prev)
+        ts = t2 + ts; vals = v2 + vals
+    i = bisect.bisect_right(ts, cut) - 1
+    if i < 0:
+        return None
+    mid = vals[i][0]; bq, aq = vals[i][1], vals[i][2]
+    out = []
+    for w in FINE_SCALES:
+        j = bisect.bisect_right(ts, cut - w) - 1
+        m0 = vals[j][0] if j >= 0 else mid
+        out.append(sgn * (mid - m0) / mid * 1e4)
+    out.append(sgn * ((bq - aq) / (bq + aq) if bq + aq > 0 else 0.0))
+    return out
+
+
+# ---------------------------------------------------------- extended fine arm
+# DECLARED BEFORE ANY NUMBER EXISTS (user request, 2026-08-25): two families
+# the reduced arm does not carry, each with a stated mechanism —
+#   OFI (order-flow imbalance): bookTicker QUANTITY DELTAS, Cont-style. Pulled
+#     bids / stacked asks are informed traders clearing the path BEFORE the
+#     level moves — earlier warning than the imbalance level itself.
+#   BIG PRINT: largest threat-side trade in the window over the trailing
+#     median print size. A SUM of signed flow (tested neutral before) hides
+#     exactly this outlier; informed actors reveal themselves in SIZE.
+# PM-side book thinning and depth20 remain queued (parse cost); stated, not
+# silently skipped. Tested as ONE extended arm vs the reduced arm on identical
+# rows — increments only, no per-family scoreboard on consumed data.
+OFI_SCALES = (0.1, 0.5, 1.0)
+PRINT_SCALES = (0.5, 2.0)
+EXT_NAMES = [f"bnf_ofi_{str(w).replace('.', 'p')}" for w in OFI_SCALES] +             [f"bnf_bigprint_{str(w).replace('.', 'p')}" for w in PRINT_SCALES]
+_BN_TCACHE: dict = {}
+
+
+def _bn_hour_full(sym: str, h):
+    """bookTicker with prices AND quantities (for OFI deltas)."""
+    import gzip, glob
+    key = (sym, f"{h:%Y%m%d_%H}", "full")
+    if key in _BN_CACHE:
+        return _BN_CACHE[key]
+    lo = _era_boundary_ns()
+    ts = []; vals = []
+    for ext in ('.csv.gz', '.csv'):
+        fs = glob.glob(f"/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/"
+                       f"{sym}/{h:%Y%m%d_%H}{ext}")
+        if not fs:
+            continue
+        op = gzip.open if fs[0].endswith('.gz') else open
+        with op(fs[0], 'rb') as fh:
+            for line in fh:
+                q = line.split(b',')
+                if len(q) < 8:
+                    continue
+                try:
+                    r = int(q[0])
+                    if r < lo:
+                        continue
+                    vals.append((float(q[4]), float(q[5]),
+                                 float(q[6]), float(q[7])))
+                    ts.append(r / 1e9)
+                except ValueError:
+                    continue
+        break
+    if len(_BN_CACHE) > 3:
+        _BN_CACHE.pop(next(iter(_BN_CACHE)))
+    _BN_CACHE[key] = (ts, vals)
+    return ts, vals
+
+
+def _bn_trades(sym: str, h):
+    import gzip, glob
+    key = (sym, f"{h:%Y%m%d_%H}")
+    if key in _BN_TCACHE:
+        return _BN_TCACHE[key]
+    lo = _era_boundary_ns()
+    ts = []; vals = []
+    for ext in ('.csv.gz', '.csv'):
+        fs = glob.glob(f"/home/yuqing/ctaNew/data/mm_hf/raw/trade/"
+                       f"{sym}/{h:%Y%m%d_%H}{ext}")
+        if not fs:
+            continue
+        op = gzip.open if fs[0].endswith('.gz') else open
+        with op(fs[0], 'rb') as fh:
+            for line in fh:
+                q = line.split(b',')
+                if len(q) < 7:
+                    continue
+                try:
+                    r = int(q[0])
+                    if r < lo:
+                        continue
+                    vals.append((1.0 if q[6].strip() != b'1' else -1.0,
+                                 float(q[5])))
+                    ts.append(r / 1e9)
+                except ValueError:
+                    continue
+        break
+    if len(_BN_TCACHE) > 3:
+        _BN_TCACHE.pop(next(iter(_BN_TCACHE)))
+    _BN_TCACHE[key] = (ts, vals)
+    return ts, vals
+
+
+def ext_feats(T: float, side: str, coin: str) -> list | None:
+    """OFI + big-print at cutoff T-1ms, side-signed toward THREAT."""
+    import bisect, datetime as dt
+    sym = _BN_SYM.get(coin)
+    if sym is None:
+        return None
+    sgn = -1.0 if side == "BUY_UP" else 1.0
+    cut = T - 0.001
+    h = dt.datetime.fromtimestamp(cut, dt.timezone.utc)
+    ts, vals = _bn_hour_full(sym, h)
+    if not ts or ts[0] > cut - max(OFI_SCALES):
+        prev = h - dt.timedelta(hours=1)
+        t2, v2 = _bn_hour_full(sym, prev)
+        ts = t2 + ts; vals = v2 + vals
+    hi = bisect.bisect_right(ts, cut)
+    if hi == 0:
+        return None
+    out = []
+    for w in OFI_SCALES:
+        lo_i = bisect.bisect_left(ts, cut - w)
+        ofi = 0.0
+        for i in range(max(lo_i, 1), hi):
+            bp0, bq0, ap0, aq0 = vals[i - 1]
+            bp1, bq1, ap1, aq1 = vals[i]
+            e = ((bq1 if bp1 >= bp0 else 0.0) - (bq0 if bp1 <= bp0 else 0.0)
+                 - ((aq1 if ap1 <= ap0 else 0.0) - (aq0 if ap1 >= ap0 else 0.0)))
+            ofi += e
+        out.append(sgn * -ofi)          # falling OFI = threat to a resting BUY
+    tts, tvals = _bn_trades(sym, h)
+    if tts and tts[0] > cut - 60.0:
+        prev = h - dt.timedelta(hours=1)
+        t2, v2 = _bn_trades(sym, prev)
+        tts = t2 + tts; tvals = v2 + tvals
+    thi = bisect.bisect_right(tts, cut)
+    base_lo = bisect.bisect_left(tts, cut - 60.0)
+    sizes = sorted(q for _d, q in tvals[base_lo:thi]) or [1.0]
+    med = sizes[len(sizes) // 2] or 1.0
+    for w in PRINT_SCALES:
+        tlo = bisect.bisect_left(tts, cut - w)
+        threat = [q for d, q in tvals[tlo:thi] if (d * sgn) > 0]
+        out.append((max(threat) / med) if threat else 0.0)
+    return out
+
+
+def run_fine(era: bool = True) -> dict[str, Any]:
+    """PAIRED comparison on IDENTICAL rows: PM_ONLY vs PM + reduced fine.
+    The increment is the finding; a shared-population contrast survives a
+    miscalibrated base. Development evidence only (consumed era tape)."""
+    import policy_optimizer_queue_realistic as qr
+    import harmful_action_eval as ae
+    src = ROWS_ERA if era else ROWS
+    data = json.loads(src.read_text())
+    if data.get("schema") != EXPECTED_SCHEMA:
+        raise SystemExit(f"REFUSED: schema {data.get('schema')!r}")
+    rows = [r for r in data["rows"] if r["status"] == "OK"]
+    days = data["days"]; train_days, dev_day = tuple(days[:-1]), days[-1]
+    print(f"population: {src.name}  train {train_days} -> dev {dev_day}")
+    paths = fi._archive_paths(); tokens = fi.token_map()
+    out: dict[str, Any] = {"paired_arms": {}, "schema": data["schema"]}
+    for coin in ("btc", "eth"):
+        crows = [r for r in rows if r["coin"] == coin]
+        streams: dict = {}
+        F_pm: list = []; F_fn: list = []; F_ex: list = []; kept: list = []
+        for r in crows:
+            slug = r["slug"]
+            if slug not in streams:
+                up, dn = tokens[slug]
+                streams[slug] = window_streams(paths[slug], up, dn)
+                if len(streams) > 4:
+                    streams.pop(next(iter(streams)))
+            fp = features(streams[slug], r["t_start"], r["side"], r["level"],
+                          r["resting"], r["qahead"])
+            if fp is None:
+                continue
+            ff = fine_feats(r["t0"] + r["t_start"], r["side"], coin)
+            if ff is None:
+                continue
+            fe = ext_feats(r["t0"] + r["t_start"], r["side"], coin)
+            if fe is None:
+                continue
+            F_pm.append(fp); F_fn.append(ff); F_ex.append(fe)
+            kept.append({k: r.get(k) for k in
+                         ("slug", "day", "t0", "t_start", "side", "gen",
+                          "latency")})
+        tr = [i for i, r in enumerate(kept) if r["day"] in train_days]
+        dv = [i for i, r in enumerate(kept) if r["day"] == dev_day]
+        Lh = str(TARGET_LATENCY_MS)
+        y = [1 if (kept[i].get("latency") or {}).get(Lh, {}).get(
+                 "preventable_shares", 0.0) > 0 else 0
+             for i in range(len(kept))]
+        tgt = lambda i: kept[i]["latency"][Lh]["preventable_value_cents"]
+        print(f"  {coin}: rows {len(kept)} train {len(tr)} dev {len(dv)}")
+        for arm in ("PM_ONLY", "PM_PLUS_FINE", "PM_FINE_EXTENDED"):
+            if arm == "PM_ONLY":
+                XA = [list(x) for x in F_pm]
+            elif arm == "PM_PLUS_FINE":
+                XA = [F_pm[i] + F_fn[i] for i in range(len(kept))]
+            else:
+                XA = [F_pm[i] + F_fn[i] + F_ex[i] for i in range(len(kept))]
+            Xs, mu, sd = zscale([XA[i] for i in tr], XA)
+            w = fit_logistic([Xs[i] for i in tr], [y[i] for i in tr])
+            ft = [i for i in tr if y[i]]
+            wm = (fit_ridge([Xs[i] for i in ft], [tgt(i) for i in ft],
+                            lam=10.0) if len(ft) >= 100 else None)
+            auc = _auc([predict_p(w, Xs[i]) for i in dv], [y[i] for i in dv])
+            ecv = [predict_p(w, Xs[i]) *
+                   (sum(a * b for a, b in zip(wm, Xs[i])) if wm else 0.0)
+                   for i in dv]
+            gate = ae.evaluate_policy([keptrow(kept[i]) for i in dv], ecv,
+                                      latency_ms=TARGET_LATENCY_MS)
+            out["paired_arms"].setdefault(coin, {})[arm] = {
+                "auc": auc, "gate": gate}
+            print(f"    {arm:<13} AUC {auc:.3f}")
+            for b, g in gate["budgets"].items():
+                print(f"      @{b}: net {g['net_cents']:+8.0f}c "
+                      f"harm {g['harm_avoided_cents']:+8.0f} "
+                      f"sac {g['sacrifice_cents']:8.0f} "
+                      f"rand_max {g['random_net_max']:+8.0f} "
+                      f"beats_NET={g['beats_random_max_on_NET']}")
+            del XA, Xs
+    OUTF = fi.PM / "derived/harmful_fine_comparison_v1.json"
+    OUTF.write_text(json.dumps(out))
+    print(f"receipt {OUTF}")
+    return out
+
+
+def keptrow(r: dict) -> dict:
+    r2 = dict(r)
+    lat = r2.get("latency") or {}
+    L = str(TARGET_LATENCY_MS)
+    r2["any_fill_ahead"] = lat.get(L, {}).get("preventable_shares", 0.0) > 0         or any(v.get("preventable_shares", 0.0) > 0 or v.get("stale_shares", 0.0) > 0
+               for v in lat.values())
+    return r2
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("cmd", nargs="?", choices=["run"])
     ap.add_argument("--selftest", action="store_true")
     ap.add_argument("--era", action="store_true",
                     help="run on the era-B artifact with a receipt-derived split")
+    ap.add_argument("--fine", action="store_true",
+                    help="paired PM_ONLY vs PM+reduced-fine comparison")
     a = ap.parse_args()
     if a.selftest:
         return selftest()
     if a.cmd != "run":
         ap.print_help(); return 2
-    run(era=a.era)
+    if a.fine:
+        run_fine(era=True)
+    else:
+        run(era=a.era)
     return 0
 
 
