@@ -69,6 +69,7 @@ def window_streams(path: Path, up_id: str, down_id: str) -> dict[str, list]:
     ws = int(slug.rsplit("-", 1)[1])
     trades: list[tuple[float, int, float]] = []      # (t, dir +1 buyUp, shares)
     quotes: list[tuple[float, float, float]] = []    # (t, bid, ask)
+    levels: list[tuple[float, str, float, float]] = []  # (t, side, px, new_total)
     seen_tx: set[str] = set()
     for line in fi._gz_lines(path):
         if not any(m in line for m in (fi.TRADE_MARK, fi.QUOTE_MARK)):
@@ -98,6 +99,11 @@ def window_streams(path: Path, up_id: str, down_id: str) -> dict[str, list]:
                         continue
                     if 0.0 <= b < a <= 1.0:
                         quotes.append((recv, b, a))
+                    try:
+                        levels.append((recv, str(pc["side"]).upper(),
+                                       float(pc["price"]), float(pc["size"])))
+                    except (KeyError, TypeError, ValueError):
+                        pass
             elif et == "last_trade_price" and aid in (up_id, down_id):
                 tx = str(msg.get("transaction_hash") or "")
                 if tx and tx in seen_tx:
@@ -111,9 +117,20 @@ def window_streams(path: Path, up_id: str, down_id: str) -> dict[str, list]:
                     continue
                 side = fi.fold_side(native, aid == down_id)
                 trades.append((recv, 1 if side == "BUY" else -1, size))
-    trades.sort(); quotes.sort()
-    return {"trades": trades, "quotes": quotes,
-            "tt": [x[0] for x in trades], "qt": [x[0] for x in quotes]}
+    trades.sort(); quotes.sort(); levels.sort(key=lambda x: x[0])
+    # level-size DELTAS on the UP book: first sight of a price initializes
+    # state (absorbed by the 60s pre-window tail), later sights are deltas.
+    state: dict[tuple[str, float], float] = {}
+    deltas: list[tuple[float, str, float]] = []      # (t, side, delta_shares)
+    for t, sd, px, tot in levels:
+        k = (sd, px)
+        prev = state.get(k)
+        state[k] = tot
+        if prev is not None and tot != prev:
+            deltas.append((t, sd, tot - prev))
+    return {"trades": trades, "quotes": quotes, "deltas": deltas,
+            "tt": [x[0] for x in trades], "qt": [x[0] for x in quotes],
+            "dt": [x[0] for x in deltas]}
 
 
 # MICRO SCALES READ THE DENSE STREAM. Measured on the scored population: PM
@@ -400,6 +417,37 @@ def selftest() -> int:
     ok(dB[ii] > 0 and dS[ii] < 0,
        "ask-tilted deep book threatens the BUY side, protects the SELL side")
     _hm._BN_DCACHE.clear()
+    # PM thinning family: pulls on OUR side read as threat; consumption is
+    # excluded; opposite-side stacking reads on the oppstack feature.
+    # NOTE: PM knowledge cutoff is t - LAG_S = t - 0.25, so all events sit
+    # before 9.75; an event at 9.8 was (correctly) excluded by the first
+    # version of this test.
+    stt = {"trades": [], "tt": [],
+           "deltas": [(9.4, "BUY", -40.0), (9.6, "BUY", -60.0),
+                      (9.7, "SELL", +30.0)],
+           "dt": [9.4, 9.6, 9.7], "quotes": [], "qt": []}
+    tb = _hm.thin_feats(stt, 10.0, "BUY_UP")
+    ts_ = _hm.thin_feats(stt, 10.0, "SELL_UP")
+    i1 = _hm.THIN_NAMES.index("pmt_pullshare_1p0")
+    io = _hm.THIN_NAMES.index("pmt_oppstack_5p0")
+    ok(tb[i1] > 0.99, "BUY-side pulls = pullshare ~1 for a resting BUY")
+    ok(ts_[i1] < 0.01, "and ~0 for a resting SELL (its side is quiet)")
+    ok(tb[io] > 0.99, "SELL-side adds stack against the resting BUY")
+    stt2 = dict(stt, trades=[(9.6, -1, 100.0)], tt=[9.6])
+    tb2 = _hm.thin_feats(stt2, 10.0, "BUY_UP")
+    ok(tb2[i1] < 0.01,
+       "a size drop fully explained by executed volume is NOT a pull")
+    # level-delta construction: first sight initializes, later sights delta
+    import io as _io
+    lv = [(1.0, "BUY", 0.48, 100.0), (2.0, "BUY", 0.48, 60.0),
+          (3.0, "BUY", 0.48, 60.0), (4.0, "SELL", 0.52, 10.0)]
+    state = {}; ds = []
+    for t, sd, px, tot in lv:
+        k = (sd, px); prev = state.get(k); state[k] = tot
+        if prev is not None and tot != prev:
+            ds.append((t, sd, tot - prev))
+    ok(ds == [(2.0, "BUY", -40.0)],
+       "first sight initializes; unchanged size emits nothing")
     print(f"harmful_hazard_model selftest: {checks} checks OK")
     return 0
 
@@ -747,6 +795,51 @@ def ext_feats(T: float, side: str, coin: str) -> list | None:
     return out
 
 
+# ---------------------------------------------------------- PM thinning family
+# I3, DECLARED BEFORE SCORING. Mechanism: informed PM participants and
+# competing MMs PULL resting orders just before adverse moves — the PM book
+# thins on the side we rest on (and stacks opposite) ahead of a toxic fill.
+# PM-native, complementary to the Binance families. Scale-free shares (no
+# fitted normalizer); pulls are trade-corrected (a size drop explained by
+# executed volume is consumption, not a pull) — level-blind netting, declared
+# approximate. First sight of a price level initializes state; the 60s
+# pre-window stream absorbs that.
+THIN_SCALES = (1.0, 5.0)
+THIN_NAMES = [f"pmt_pullshare_{str(w).replace('.', 'p')}" for w in THIN_SCALES] \
+             + ["pmt_oppstack_5p0"]
+
+
+def thin_feats(st: dict[str, list], t: float, side: str) -> list:
+    cut = t - LAG_S
+    ours = "BUY" if side == "BUY_UP" else "SELL"
+    out = []
+    for w, want_opp in ((THIN_SCALES[0], False), (THIN_SCALES[1], False),
+                        (THIN_SCALES[1], True)):
+        lo = bisect.bisect_left(st["dt"], cut - w)
+        hi = bisect.bisect_right(st["dt"], cut)
+        pulled = added = 0.0
+        which = ("SELL" if ours == "BUY" else "BUY") if want_opp else ours
+        for i in range(lo, hi):
+            _, sd, d = st["deltas"][i]
+            if sd != which:
+                continue
+            if d < 0:
+                pulled += -d
+            else:
+                added += d
+        tlo = bisect.bisect_left(st["tt"], cut - w)
+        thi = bisect.bisect_right(st["tt"], cut)
+        eat_dir = -1 if which == "BUY" else 1     # taker dir consuming `which`
+        consumed = sum(tr[2] for tr in st["trades"][tlo:thi]
+                       if tr[1] == eat_dir)
+        pull_net = max(0.0, pulled - consumed)
+        if want_opp:
+            out.append(added / (added + pull_net + 1e-9))
+        else:
+            out.append(pull_net / (pull_net + added + 1e-9))
+    return out
+
+
 # ------------------------------------------------------------- depth20 family
 # DECLARED BEFORE SCORING; geometry-amended after data verification (the
 # 20-level book spans only ~0.4-0.8 bps, so "depth within X bps" collapses
@@ -886,20 +979,21 @@ def run_fine(era: bool = True) -> dict[str, Any]:
     days = data["days"]; train_days, dev_day = tuple(days[:-1]), days[-1]
     print(f"population: {src.name}  train {train_days} -> dev {dev_day}")
     paths = fi._archive_paths(); tokens = fi.token_map()
-    ARMS = ("PM_ONLY", "PM_PLUS_FINE", "PM_FINE_SHIFTED",
-            "PM_FINE_EXTENDED", "PM_FINE_PLUS_DEPTH")
+    ARMS = ("PM_ONLY", "PM_PLUS_FINE", "PM_FINE_PLUS_THIN")
     out: dict[str, Any] = {
         "paired_arms": {}, "schema": data["schema"],
         "as_of": data.get("as_of"),
-        "multiplicity_candidate_specs": 3,
-        "control_arms": ["PM_FINE_SHIFTED"],
+        "multiplicity_candidate_specs": 4,
+        "control_arms": [],
+        "knowledge_cutoffs": {"pm_features_s": 0.250, "pm_thin_s": 0.250,
+                              "binance_fine_s": 0.001},
         "declared": "families+mechanisms declared pre-score in code comments; "
                     "depth geometry amended after data verification, before "
                     "scoring (20 levels span <1bp)"}
     for coin in ("btc", "eth"):
         crows = [r for r in rows if r["coin"] == coin]
         streams: dict = {}
-        FAM: dict = {"pm": [], "fn": [], "sh": [], "ex": [], "dp": []}
+        FAM: dict = {"pm": [], "fn": [], "th": []}
         kept: list = []
         for r in crows:
             slug = r["slug"]
@@ -914,13 +1008,10 @@ def run_fine(era: bool = True) -> dict[str, Any]:
                 continue
             T = r["t0"] + r["t_start"]
             ff = fine_feats(T, r["side"], coin)
-            fs = fine_feats(T - 5.0, r["side"], coin)
-            fe = ext_feats(T, r["side"], coin)
-            fd = depth_feats(T, r["side"], coin)
-            if ff is None or fs is None or fe is None or fd is None:
+            if ff is None:
                 continue
-            FAM["pm"].append(fp); FAM["fn"].append(ff); FAM["sh"].append(fs)
-            FAM["ex"].append(fe); FAM["dp"].append(fd)
+            th = thin_feats(streams[slug], r["t_start"], r["side"])
+            FAM["pm"].append(fp); FAM["fn"].append(ff); FAM["th"].append(th)
             kept.append({k: r.get(k) for k in
                          ("slug", "day", "t0", "t_start", "side", "gen",
                           "latency")})
@@ -935,9 +1026,7 @@ def run_fine(era: bool = True) -> dict[str, Any]:
         dev_scores: dict = {}
         for arm in ARMS:
             add = {"PM_ONLY": (), "PM_PLUS_FINE": ("fn",),
-                   "PM_FINE_SHIFTED": ("sh",),
-                   "PM_FINE_EXTENDED": ("fn", "ex"),
-                   "PM_FINE_PLUS_DEPTH": ("fn", "dp")}[arm]
+                   "PM_FINE_PLUS_THIN": ("fn", "th")}[arm]
             XA = [FAM["pm"][i] + [v for f in add for v in FAM[f][i]]
                   for i in range(len(kept))]
             Xs, mu, sd = zscale([XA[i] for i in tr], XA)
@@ -963,7 +1052,7 @@ def run_fine(era: bool = True) -> dict[str, Any]:
                       f"beats_NET={g['beats_random_max_on_NET']}")
             del XA, Xs
         # score dump: everything the offline confirmations need, dev rows only
-        DUMP = fi.PM / f"derived/harmful_scores_{coin}_v2.jsonl.gz"
+        DUMP = fi.PM / f"derived/harmful_scores_{coin}_v3.jsonl.gz"
         with gzip.open(DUMP, "wt") as fh:
             for pos, i in enumerate(dv):
                 k = kept[i]; L = k["latency"][Lh]
@@ -977,7 +1066,7 @@ def run_fine(era: bool = True) -> dict[str, Any]:
                     "scores": {a: dev_scores[a][pos] for a in ARMS}}) + "\n")
         print(f"  score dump {DUMP}")
         del dev_scores, FAM
-    OUTF = fi.PM / "derived/harmful_fine_comparison_v2.json"
+    OUTF = fi.PM / "derived/harmful_fine_comparison_v3.json"
     OUTF.write_text(json.dumps(out))
     print(f"receipt {OUTF}")
     return out
