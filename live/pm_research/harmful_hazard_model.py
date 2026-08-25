@@ -448,6 +448,24 @@ def selftest() -> int:
             ds.append((t, sd, tot - prev))
     ok(ds == [(2.0, "BUY", -40.0)],
        "first sight initializes; unchanged size emits nothing")
+    # cross-lead override: coin='eth' with sym='BTCUSDT' must read the BTC
+    # book, not the ETH one.
+    base3 = _dt.datetime(2099, 1, 1, 0, 30, 0,
+                         tzinfo=_dt.timezone.utc).timestamp()
+    hh3 = _dt.datetime.fromtimestamp(base3 - 0.001, _dt.timezone.utc)
+    _hm._BN_CACHE.clear()
+    for symn, imb in (("BTCUSDT", (90.0, 10.0)), ("ETHUSDT", (10.0, 90.0))):
+        t3 = [base3 - 1.0 + 0.1 * i for i in range(10)]
+        v3 = [(100.0, imb[0], imb[1]) for _ in t3]
+        _hm._BN_CACHE[(symn, f"{hh3:%Y%m%d_%H}")] = (t3, v3)
+        ph3 = hh3 - _dt.timedelta(hours=1)
+        _hm._BN_CACHE.setdefault((symn, f"{ph3:%Y%m%d_%H}"), ([], []))
+    fl = _hm.fine_feats(base3, "SELL_UP", "eth", sym="BTCUSDT")
+    fo = _hm.fine_feats(base3, "SELL_UP", "eth")
+    ii2 = _hm.FINE_NAMES.index("bnf_imb_now")
+    ok(fl[ii2] > 0.7 and fo[ii2] < -0.7,
+       "sym override reads the BTC book (bid-heavy), not ETH (ask-heavy)")
+    _hm._BN_CACHE.clear()
     print(f"harmful_hazard_model selftest: {checks} checks OK")
     return 0
 
@@ -484,7 +502,7 @@ def run(era: bool = False) -> dict[str, Any]:
                            "feature_names": FEATURE_NAMES,
                            "split": {"train": TRAIN_DAYS, "dev": DEV_DAY},
                            "n_random": N_RANDOM, "coins": {}}
-    for coin in ("btc", "eth"):
+    for coin in COINS:
         crows = [r for r in rows if r["coin"] == coin]
         feats = []; kept = []
         for r in crows:
@@ -632,10 +650,10 @@ def _bn_hour(sym: str, h) -> tuple[list, list]:
     return ts, vals
 
 
-def fine_feats(T: float, side: str, coin: str) -> list | None:
+def fine_feats(T: float, side: str, coin: str, sym: str | None = None) -> list | None:
     """Reduced fine set at absolute time T, cutoff T - 1 ms, side-signed."""
     import bisect, datetime as dt
-    sym = _BN_SYM.get(coin)
+    sym = sym or _BN_SYM.get(coin)
     if sym is None:
         return None
     sgn = -1.0 if side == "BUY_UP" else 1.0
@@ -957,7 +975,7 @@ def depth_feats(T: float, side: str, coin: str) -> list | None:
     return out
 
 
-def run_fine(era: bool = True) -> dict[str, Any]:
+def run_fine(era: bool = True, lead: bool = False) -> dict[str, Any]:
     """PAIRED comparison on IDENTICAL rows. Arms:
       PM_ONLY          anchor
       PM_PLUS_FINE     current best (reduced fine spec)
@@ -979,21 +997,24 @@ def run_fine(era: bool = True) -> dict[str, Any]:
     days = data["days"]; train_days, dev_day = tuple(days[:-1]), days[-1]
     print(f"population: {src.name}  train {train_days} -> dev {dev_day}")
     paths = fi._archive_paths(); tokens = fi.token_map()
-    ARMS = ("PM_ONLY", "PM_PLUS_FINE", "PM_FINE_PLUS_THIN")
+    # I5 lead mode: eth only, btc-book features appended to the reduced spec.
+    ARMS = (("PM_ONLY", "PM_PLUS_FINE", "PM_FINE_PLUS_BTCLEAD") if lead
+            else ("PM_ONLY", "PM_PLUS_FINE", "PM_FINE_PLUS_THIN"))
+    COINS = ("eth",) if lead else ("btc", "eth")
     out: dict[str, Any] = {
         "paired_arms": {}, "schema": data["schema"],
         "as_of": data.get("as_of"),
-        "multiplicity_candidate_specs": 4,
+        "multiplicity_candidate_specs": 5 if lead else 4,
         "control_arms": [],
         "knowledge_cutoffs": {"pm_features_s": 0.250, "pm_thin_s": 0.250,
                               "binance_fine_s": 0.001},
         "declared": "families+mechanisms declared pre-score in code comments; "
                     "depth geometry amended after data verification, before "
                     "scoring (20 levels span <1bp)"}
-    for coin in ("btc", "eth"):
+    for coin in COINS:
         crows = [r for r in rows if r["coin"] == coin]
         streams: dict = {}
-        FAM: dict = {"pm": [], "fn": [], "th": []}
+        FAM: dict = {"pm": [], "fn": [], "th": [], "bl": []}
         kept: list = []
         for r in crows:
             slug = r["slug"]
@@ -1011,6 +1032,11 @@ def run_fine(era: bool = True) -> dict[str, Any]:
             if ff is None:
                 continue
             th = thin_feats(streams[slug], r["t_start"], r["side"])
+            if lead:
+                bl = fine_feats(T, r["side"], coin, sym="BTCUSDT")
+                if bl is None:
+                    continue
+                FAM["bl"].append(bl)
             FAM["pm"].append(fp); FAM["fn"].append(ff); FAM["th"].append(th)
             kept.append({k: r.get(k) for k in
                          ("slug", "day", "t0", "t_start", "side", "gen",
@@ -1026,7 +1052,8 @@ def run_fine(era: bool = True) -> dict[str, Any]:
         dev_scores: dict = {}
         for arm in ARMS:
             add = {"PM_ONLY": (), "PM_PLUS_FINE": ("fn",),
-                   "PM_FINE_PLUS_THIN": ("fn", "th")}[arm]
+                   "PM_FINE_PLUS_THIN": ("fn", "th"),
+                   "PM_FINE_PLUS_BTCLEAD": ("fn", "bl")}[arm]
             XA = [FAM["pm"][i] + [v for f in add for v in FAM[f][i]]
                   for i in range(len(kept))]
             Xs, mu, sd = zscale([XA[i] for i in tr], XA)
@@ -1052,7 +1079,8 @@ def run_fine(era: bool = True) -> dict[str, Any]:
                       f"beats_NET={g['beats_random_max_on_NET']}")
             del XA, Xs
         # score dump: everything the offline confirmations need, dev rows only
-        DUMP = fi.PM / f"derived/harmful_scores_{coin}_v3.jsonl.gz"
+        DUMP = fi.PM / ("derived/harmful_scores_"
+                        f"{coin}_{'v4lead' if lead else 'v3'}.jsonl.gz")
         with gzip.open(DUMP, "wt") as fh:
             for pos, i in enumerate(dv):
                 k = kept[i]; L = k["latency"][Lh]
@@ -1066,7 +1094,8 @@ def run_fine(era: bool = True) -> dict[str, Any]:
                     "scores": {a: dev_scores[a][pos] for a in ARMS}}) + "\n")
         print(f"  score dump {DUMP}")
         del dev_scores, FAM
-    OUTF = fi.PM / "derived/harmful_fine_comparison_v3.json"
+    OUTF = fi.PM / ("derived/harmful_fine_comparison_"
+                    f"{'v4lead' if lead else 'v3'}.json")
     OUTF.write_text(json.dumps(out))
     print(f"receipt {OUTF}")
     return out
@@ -1087,6 +1116,8 @@ def main() -> int:
     ap.add_argument("--selftest", action="store_true")
     ap.add_argument("--era", action="store_true",
                     help="run on the era-B artifact with a receipt-derived split")
+    ap.add_argument("--lead", action="store_true",
+                    help="I5: eth-only, btc-book lead features appended")
     ap.add_argument("--fine", action="store_true",
                     help="paired PM_ONLY vs PM+reduced-fine comparison")
     a = ap.parse_args()
@@ -1094,8 +1125,8 @@ def main() -> int:
         return selftest()
     if a.cmd != "run":
         ap.print_help(); return 2
-    if a.fine:
-        run_fine(era=True)
+    if a.fine or a.lead:
+        run_fine(era=True, lead=a.lead)
     else:
         run(era=a.era)
     return 0
