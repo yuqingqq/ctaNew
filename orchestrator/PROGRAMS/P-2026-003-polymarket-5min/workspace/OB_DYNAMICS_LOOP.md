@@ -69,3 +69,36 @@ Not adopted; spec consumed (multiplicity 4). Anchors reproduced cent-exact
 (4a). Next: I5 cross-symbol lead, btc->eth only (declared asymmetric —
 btc leads price discovery; eth quotes may be protected by the btc book).
 Multiplicity 5. After I5: saturation report + freeze proposal to the user.
+
+## I5 + LOOP HOLD (2026-08-25 ~20:25 UTC)
+
+I5 btc->eth lead: +229/+292/+161c over reduced at 5/10/15% — first family
+positive at ALL budgets (receipt harmful_fine_comparison_v4lead.json). 4a
+passed (anchors cent-exact); 4c borderline-pass (no single-hour
+concentration: 40/50/46%, but hour-positivity weak 7/10, 6/10, 5/11).
+4b (T-5s shifted-lead control, v5leadctl) was KILLED EXTERNALLY TWICE
+(~19:40 and ~20:20 UTC) while live collectors stayed up. HELD per protocol —
+no third relaunch without the user.
+
+FLAG for the user: heavy backtest runs (99% CPU, ~8-9GB) on the collector
+box during forward-tape accumulation may degrade recv_ns receive-latency
+p99 — the exact sub-second precision the era depends on. If the kills were
+deliberate protection, they were right. Options: (a) run 4b overnight/idle,
+(b) nice/cpulimit the run, (c) move heavy runs off this box.
+
+I5 status: HELD-UNCONFIRMED (4b pending). Loop otherwise saturated.
+
+## SATURATION REPORT (5 candidate specs, consumed 08-24/25 era tape)
+
+| spec | verdict | evidence |
+|---|---|---|
+| reduced fine (imb+midbps) | CONFIRMED best | 4a+4b+4c all passed, both coins; btc net +2492/+6575/+8289c, beats random max on NET at all budgets |
+| + OFI+big-print | held, unconfirmed | consistent small @5%-only bump both coins; no confirmation run spent |
+| + depth20 | REJECTED | hurts net both coins |
+| + PM thinning | NULL | sign-mixed both coins |
+| + btc->eth lead | held, 4b pending | all-budget positive on eth; 4c borderline; control run blocked |
+
+Forward-race multiplicity if frozen now: reduced (primary) + extended +
+btclead (held) = 3 specs. Freeze is the USER'S decision (rule 12: commit +
+receipt + declared nulls + multiplicity at freeze time). Forward validation
+needs >=5 complete untouched UTC days AFTER the freeze.

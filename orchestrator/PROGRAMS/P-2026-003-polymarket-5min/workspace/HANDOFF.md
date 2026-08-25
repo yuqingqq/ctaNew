@@ -2374,3 +2374,9 @@ Reduced fine spec CONFIRMED best (shifted-control + per-hour + reproduction
 all passed, both coins). Extended = unconfirmed small @5% candidate (held).
 Depth20 REJECTED (hurts both coins). Verdict table: OB_DYNAMICS_LOOP.md.
 Next: I3 PM-side thinning. Multiplicity 3 consumed, I3 makes 4.
+
+### 2026-08-25 ~20:25 UTC — loop HOLD + saturation
+I5 lead positive all budgets (held-unconfirmed; 4b control killed externally
+x2 — no third relaunch; possible collector-protection, flagged CPU/tape-purity
+concern). Saturation report + freeze proposal in OB_DYNAMICS_LOOP.md.
+Awaiting user: machine policy for heavy runs + freeze decision.
