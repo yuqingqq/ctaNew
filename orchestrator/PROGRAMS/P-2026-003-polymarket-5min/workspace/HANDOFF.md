@@ -2368,3 +2368,9 @@ Next: I2 depth20 depletion (semantics verified: 100ms snapshots, absolute
 sizes, L1==bookTicker), I3 PM-side thinning, I4 confirmation pass
 (time-shift null + per-hour stability). All development evidence; freeze =
 user's call; multiplicity tracked in receipts (currently 2 specs).
+
+### 2026-08-25 loop update: I1/I2 closed
+Reduced fine spec CONFIRMED best (shifted-control + per-hour + reproduction
+all passed, both coins). Extended = unconfirmed small @5% candidate (held).
+Depth20 REJECTED (hurts both coins). Verdict table: OB_DYNAMICS_LOOP.md.
+Next: I3 PM-side thinning. Multiplicity 3 consumed, I3 makes 4.

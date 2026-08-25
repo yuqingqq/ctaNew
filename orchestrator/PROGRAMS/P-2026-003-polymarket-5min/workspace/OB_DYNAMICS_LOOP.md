@@ -45,3 +45,18 @@ decisions are the user's. Commit after each gate, never before.
   point estimates + matched-random bands, no fake CIs.
 - btc is the economically live symbol; eth confirms direction.
 - Any freeze proposal goes to the user with the multiplicity count attached.
+
+## RESULTS (as of 2026-08-25, receipt harmful_fine_comparison_v2.json)
+
+Five arms, identical rows (btc 605,243 / eth 520,033 — zero rows dropped by
+the new families; run 1 arms reproduced to the cent = confirmation 4a).
+
+| verdict | arm | evidence |
+|---|---|---|
+| CONFIRMED best | PM_PLUS_FINE (reduced) | 4b: T-5s shifted control collapses to PM_ONLY on BOTH coins. 4c: increment positive in 10/11 btc dev hours at every budget, top-hour 18-26%; eth top-hour <=48%. |
+| unconfirmed small candidate | PM_FINE_EXTENDED (OFI+big-print) | +5%-budget-only bump, both coins (+529c btc, +435c eth); ~0 @10%, <=0 @15%. Held for forward tape, not adopted. |
+| REJECTED | PM_FINE_PLUS_DEPTH (depth20) | hurts net at all btc budgets and eth 5/10%; deep book dilutes the L1 signal. Do not re-test this spec on consumed tape. |
+
+Multiplicity: 3 candidate specs consumed on 08-24/25 development tape.
+Score dumps: harmful_scores_{btc,eth}_v2.jsonl.gz (offline confirmations,
+validated cent-exact vs receipt). Next: I3 PM-side thinning (multiplicity 4).
