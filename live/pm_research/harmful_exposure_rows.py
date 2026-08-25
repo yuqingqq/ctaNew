@@ -44,6 +44,12 @@ import inventory_walk as iw
 OUT = qr.base.fi.PM / "derived/harmful_exposure_rows_v3.json"
 OUT_ERA = qr.base.fi.PM / "derived/harmful_exposure_rows_v3_eraB.json"
 LATENCY_GRID_MS = (5, 10, 20, 30, 50, 75, 100, 150, 250)
+# AUDIT 4: the plan's declared target is fills in [t+L, t+H]; v3.1 had silently
+# changed it to "until generation end" via a source comment. RESTORED: the
+# label window is [t_start + L, min(t_start + H, generation end)] — the cap by
+# generation end is not a target change, merely the fact that a cancelled
+# generation cannot fill after it has been replaced.
+FILL_HORIZON_S = 1.0
 MARKOUT_S = 5.0
 SIDES = ("BUY_UP", "SELL_UP")
 TRAIN_DAYS = ("2026-08-20", "2026-08-21", "2026-08-22")
@@ -90,6 +96,12 @@ class RecordingArm(qr.QueueRealisticArm):
             "t_start": self._now, "t_end": self._now,
             "_start_seq": seq,
         }
+
+    def note_event_time(self, t: float) -> None:
+        """Engine hook (audit 4): the trade receipt time arrives BEFORE any
+        consume on that trade, so every consume-driven boundary — zero-fill
+        queue drains included — is stamped at its true time. No repair step."""
+        self._now = t
 
     def reposition(self, maker_side: str, level, displayed: float) -> None:
         super().reposition(maker_side, level, displayed)
@@ -163,27 +175,23 @@ def join_fills(fill_log: Sequence[dict], engine_fills: Sequence[Any]) -> tuple[l
     return joined, recon
 
 
-def repair_segment_times(segments: list, joined: Sequence[dict]) -> int:
-    """Consume-driven boundaries were stamped with the stale resync clock; the
-    join knows each one's exact fill time. Repair in place; return how many
-    consume boundaries had NO fill to repair from (zero-fill queue drains —
-    their <=64 ms staleness remains and is DISCLOSED in the receipt)."""
+def verify_boundary_times(segments: Sequence[dict], joined: Sequence[dict]) -> int:
+    """AUDIT-4 STRICT GATE. With `note_event_time` there is nothing to repair:
+    every consume-driven boundary must ALREADY equal its fill's engine time.
+    Returns the number of violations — part of the FAILURE condition, so a
+    contaminated window can never sit in the receipt marked OK (the previous
+    version counted the residual and then ignored it, which the audit called
+    out as the worse half of the defect)."""
     t_by_seq = {j["seq"]: j["t"] for j in joined}
-    unrepaired = 0
+    bad = 0
     for seg in segments:
         sseq = seg.pop("_start_seq", None)
         eseq = seg.pop("_end_seq", None)
-        if sseq is not None:
-            if sseq in t_by_seq:
-                seg["t_start"] = max(seg["t_start"], t_by_seq[sseq])
-            else:
-                unrepaired += 1
-        if eseq is not None and eseq in t_by_seq:
-            seg["t_end"] = max(seg["t_end"], t_by_seq[eseq])
-    for seg in segments:
-        if seg["t_end"] < seg["t_start"]:
-            seg["t_end"] = seg["t_start"]
-    return unrepaired
+        if sseq in t_by_seq and abs(seg["t_start"] - t_by_seq[sseq]) > 1e-9:
+            bad += 1
+        if eseq in t_by_seq and abs(seg["t_end"] - t_by_seq[eseq]) > 1e-9:
+            bad += 1
+    return bad
 
 
 def generation_table(segments: Sequence[dict], joined: Sequence[dict], wf: Any,
@@ -247,7 +255,10 @@ def label_rows(segments: Sequence[dict], gens: dict, wf: Any,
         if any(t["markout_cents_per_share"] is None for t in trs):
             row["status"] = "NO_FUTURE_MID"
             rows.append(row); continue
-        fut = [t for t in trs if t["t"] >= s["t_start"] - 1e-9]
+        h_end = min(s["t_start"] + FILL_HORIZON_S,
+                    (g["t1"] if g else s["t_end"]) + 1e-9)
+        fut = [t for t in trs
+               if s["t_start"] - 1e-9 <= t["t"] <= h_end]
         row["any_fill_ahead"] = bool(fut)
         lat = {}
         for L in LATENCY_GRID_MS:
@@ -400,7 +411,7 @@ def build_rows(per_coin: int | None = None,
     else:
         selected, n_bn_gap = select_stratified(per_coin or 10, coins=coins), 0
     rows: list[dict[str, Any]] = []
-    recon_fail = 0; unhooked = 0; wrong_gen = 0; unrepaired_total = 0
+    recon_fail = 0; unhooked = 0; wrong_gen = 0; boundary_bad_total = 0
     n_windows = 0; days: set[str] = set()
     for ent in selected:
         slug = ent[0]
@@ -413,16 +424,17 @@ def build_rows(per_coin: int | None = None,
         day = _dt.datetime.fromtimestamp(t0, _dt.timezone.utc).strftime("%Y-%m-%d")
         days.add(day)
         joined, jrec = join_fills(arm.fill_log, arm.fills)
-        n_unrepaired = repair_segment_times(arm.segments, joined)
+        n_boundary_bad = verify_boundary_times(arm.segments, joined)
         gens, recon = generation_table(arm.segments, joined, wf,
                                        qr.base.fi.WINDOW_S)
         wrows = label_rows(arm.segments, gens, wf, qr.base.fi.WINDOW_S)
         bad = (jrec["count_mismatch"] or jrec["tuple_mismatches"]
                or recon["orphan_fills"]
                or recon["wrong_generation_assignments"]
-               or arm.unhooked_changes)
+               or arm.unhooked_changes
+               or n_boundary_bad)              # STRICT: in the failure condition
         wrong_gen += recon["wrong_generation_assignments"]
-        unrepaired_total += n_unrepaired
+        boundary_bad_total += n_boundary_bad
         if bad:
             recon_fail += 1
             unhooked += arm.unhooked_changes
@@ -436,9 +448,9 @@ def build_rows(per_coin: int | None = None,
             "reconciliation_failures": recon_fail,
             "unhooked_state_changes": unhooked,
             "wrong_generation_assignments": wrong_gen,
-            "unrepaired_consume_boundaries": unrepaired_total,
+            "boundary_time_violations": boundary_bad_total,
             "windows_excluded_binance_gap": n_bn_gap,
-            "schema": "harmful_exposure_v3_1_explicit_generation"}
+            "schema": "harmful_exposure_v3_2_true_trade_clock"}
 
 
 def selftest() -> int:
@@ -471,45 +483,45 @@ def selftest() -> int:
        "the fill carries its PRE-consume generation, from the explicit record")
     segs = [
         {"side": "BUY_UP", "gen": 1, "level": 0.55, "resting": 5.0,
-         "qahead": 0.0, "net": 0.0, "t_start": 0.0, "t_end": 0.5,
+         "qahead": 0.0, "net": 0.0, "t_start": 0.0, "t_end": 0.7,
          "_end_seq": 7},
         {"side": "BUY_UP", "gen": 2, "level": 0.55, "resting": 5.0,
-         "qahead": 2.0, "net": 0.0, "t_start": 0.5, "t_end": 2.0,
+         "qahead": 2.0, "net": 0.0, "t_start": 0.7, "t_end": 2.0,
          "_start_seq": 7},
     ]
-    unrep = repair_segment_times(segs, joined)
-    ok(unrep == 0 and segs[0]["t_end"] == 0.7 and segs[1]["t_start"] == 0.7,
-       "old-gen closure and new-gen birth REPAIRED to the exact fill time")
-    gens, recon = generation_table(segs, joined, WF(), 300.0)
+    ok(verify_boundary_times([dict(x) for x in segs], joined) == 0,
+       "with the true trade clock, boundaries ALREADY equal engine times")
+    stale = [dict(segs[0], t_end=0.5), dict(segs[1], t_start=0.5)]
+    ok(verify_boundary_times(stale, joined) == 2,
+       "a stale-stamped boundary is a VIOLATION in the failure condition — "
+       "audit 4: counted-but-ignored is the worse half of the defect")
+    segs2 = [dict(x) for x in segs]
+    for x in segs2: x.pop("_end_seq", None); x.pop("_start_seq", None)
+    gens, recon = generation_table(segs2, joined, WF(), 300.0)
     ok(recon["wrong_generation_assignments"] == 0
        and len(gens[("BUY_UP", 1)]["tranches"]) == 1
        and len(gens[("BUY_UP", 2)]["tranches"]) == 0,
-       "THE FILL BELONGS TO THE GENERATION IT KILLED, not the one it created")
+       "the fill belongs to the generation it killed")
 
-    # tuple mismatch is DETECTED per fill, not absorbed in an aggregate
     bad_log = [dict(fill_log[0], pre_level=0.54)]
     _, jrec2 = join_fills(bad_log, engine)
-    ok(jrec2["tuple_mismatches"] == 1,
-       "a level mismatch in the join is a counted failure")
+    ok(jrec2["tuple_mismatches"] == 1, "level mismatch counted per tuple")
     _, jrec3 = join_fills([], engine)
-    ok(jrec3["count_mismatch"],
-       "a count mismatch (recorder missed a fill) is a counted failure")
+    ok(jrec3["count_mismatch"], "count mismatch detected")
 
-    # zero-fill queue drains have no fill to repair from: counted, disclosed
-    segs2 = [{"side": "BUY_UP", "gen": 1, "level": 0.55, "resting": 5.0,
-              "qahead": 1.0, "net": 0.0, "t_start": 0.3, "t_end": 0.5,
-              "_start_seq": 3}]
-    ok(repair_segment_times(segs2, joined) == 1,
-       "an unrepairable drain boundary is COUNTED, never silently exact")
-
-    # generation-true labels: cancelling gen 1 from t=0 prevents its fill
-    rows = label_rows(segs, gens, WF(), 300.0)
-    r0 = rows[0]
-    ok(abs(r0["latency"]["5"]["preventable_value_cents"] -
-           (-(0.60 - 0.55) * 100 * 5.0)) < 1e-9,
-       "row of gen 1 sees ITS tranche ahead; gen 2 rows see none")
-    ok(rows[1]["latency"]["5"]["preventable_value_cents"] == 0.0,
-       "gen 2's row carries NO value from the fill that predates it")
+    # THE PLAN'S HORIZON IS BACK: a tranche beyond t_start + H does not label,
+    # even inside the generation
+    gens3 = {("BUY_UP", 1): {"t0": 0.0, "t1": 5.0, "tranches": [
+        {"t": 0.7, "shares": 5.0, "level": 0.55,
+         "markout_cents_per_share": 5.0},
+        {"t": 2.5, "shares": 5.0, "level": 0.55,
+         "markout_cents_per_share": 5.0}]}}
+    seg3 = [{"side": "BUY_UP", "gen": 1, "level": 0.55, "resting": 5.0,
+             "qahead": 0.0, "net": 0.0, "t_start": 0.0, "t_end": 5.0}]
+    rows = label_rows(seg3, gens3, WF(), 300.0)
+    ok(abs(rows[0]["latency"]["5"]["preventable_value_cents"] + 25.0) < 1e-9,
+       "only the tranche inside [t+L, t+H] labels (H=1.0s, the PLAN'S target); "
+       "the 2.5s tranche is outside the declared horizon")
 
     import harmful_action_eval as ae
     ok(hasattr(ae, "evaluate_policy"), "action evaluator present")
@@ -540,7 +552,7 @@ def main() -> int:
           f"days {built['days']} recon_failures {built['reconciliation_failures']} "
           f"unhooked {built['unhooked_state_changes']} "
           f"wrong_gen {built['wrong_generation_assignments']} "
-          f"unrepaired_drains {built['unrepaired_consume_boundaries']} "
+          f"boundary_violations {built['boundary_time_violations']} "
           f"bn_gap_excluded {built['windows_excluded_binance_gap']}")
     print(f"statuses {dict(st)}")
     return 0

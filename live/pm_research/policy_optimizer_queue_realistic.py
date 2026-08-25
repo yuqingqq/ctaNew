@@ -453,6 +453,17 @@ def replay_cells_queue_realistic(
             mid_now = (bid + ask) / 2.0
             record_mid(received)
             micro = abs(size - base.fi.MICRO_SIZE) < 1e-9
+            # Behaviour-neutral time hook (harmful-fill audit 4, 2026-08-25):
+            # zero-fill queue drains mutate arm state inside consume() with no
+            # time-bearing call preceding them, so a recording arm's clock was
+            # stale by up to 463 ms — FUTURE state stamped into the past. An
+            # arm that declares `note_event_time` receives the trade receipt
+            # time before any consume; production arms have no such attribute
+            # and are untouched.
+            for arm in arms:
+                _note = getattr(arm, "note_event_time", None)
+                if _note is not None:
+                    _note(received)
             for arm in arms:
                 if (taker_side == "BUY" and arm.sell.level is not None
                         and execution_price + 1e-12 >= arm.sell.level):

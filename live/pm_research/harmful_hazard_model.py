@@ -48,6 +48,7 @@ ROWS = fi.PM / "derived/harmful_exposure_rows_v3.json"   # v1/v2 receipts are IN
 # declared here, an ASSUMED cancel latency for the diagnostic fit only — the
 # action evaluator sweeps the full 5–250 ms grid regardless.
 TARGET_LATENCY_MS = 50
+EXPECTED_SCHEMA = "harmful_exposure_v3_2_true_trade_clock"
 OUT = fi.PM / "derived/harmful_hazard_model_v1.json"
 LAG_S = 0.250
 # §4.1 asks for 25/50/100/250/500/1000 ms. The finest micro scales measure the
@@ -341,6 +342,14 @@ def selftest() -> int:
 def run() -> dict[str, Any]:
     import policy_optimizer_queue_realistic as qr
     data = json.loads(ROWS.read_text())
+    # AUDIT 4 BLOCKER 3: no schema guard meant this runner could silently train
+    # on an obsolete artifact (the six-window v3.0 smoke was sitting at the v3
+    # path). Wrong schema is a REFUSAL, never a warning.
+    if data.get("schema") != EXPECTED_SCHEMA:
+        raise SystemExit(
+            f"REFUSED: artifact schema {data.get('schema')!r} != "
+            f"{EXPECTED_SCHEMA!r} — regenerate the dataset; this runner will "
+            f"not train on an obsolete artifact")
     rows = [r for r in data["rows"] if r["status"] == "OK"]
     paths = fi._archive_paths(); tokens = fi.token_map()
     streams: dict[str, dict] = {}
@@ -388,12 +397,17 @@ def run() -> dict[str, Any]:
         fills_dev = [i for i in dv if y_fill[i]]
         auc = _auc([p_fill[j] for j in range(len(dv))],
                    [y_fill[dv[j]] for j in range(len(dv))])
-        gate = budget_eval(dev_rows, ecv)
+        # AUDIT 4 BLOCKER 2: the local row-summing budget_eval read a removed
+        # field and silently returned 0. The GENERATION-NATIVE evaluator is the
+        # only one allowed to score a policy.
+        import harmful_action_eval as ae
+        gate = ae.evaluate_policy(dev_rows, ecv, latency_ms=TARGET_LATENCY_MS)
         gate_sign = None
         if w_sign:
             s_sign = [predict_p(w_sign, Xall[i]) * predict_p(w_haz, Xall[i])
                       for i in dv]
-            gate_sign = budget_eval(dev_rows, s_sign)
+            gate_sign = ae.evaluate_policy(dev_rows, s_sign,
+                                           latency_ms=TARGET_LATENCY_MS)
         out["coins"][coin] = {
             "n_train": len(tr), "n_dev": len(dv),
             "n_fill_train": len(fill_tr), "n_fill_dev": len(fills_dev),
@@ -405,12 +419,12 @@ def run() -> dict[str, Any]:
         }
         print(f"  {coin}: train {len(tr)} dev {len(dv)} "
               f"fills(tr/dev) {len(fill_tr)}/{len(fills_dev)} AUC(diag) {auc:.3f}")
-        for b, g in gate.items():
-            print(f"    ecv @{b}: harm {g['harm_captured_share']*100:5.1f}% "
-                  f"rand {g['random_matched_mean_share']*100:5.1f}% "
-                  f"(max {g['random_matched_max_share']*100:5.1f}%) "
-                  f"net {g['net_cancel_value_cents']:+8.0f}c "
-                  f"beats_max={g['beats_random_max']}")
+        for b, g in gate["budgets"].items():
+            print(f"    ecv @{b}: net {g['net_cents']:+8.0f}c "
+                  f"harm {g['harm_avoided_cents']:+8.0f}c "
+                  f"sac {g['sacrifice_cents']:8.0f}c "
+                  f"rand_max {g['random_net_max']:+8.0f}c "
+                  f"beats_max_on_NET={g['beats_random_max_on_NET']}")
     OUT.write_text(json.dumps(out))
     print(f"receipt {OUT}")
     return out
