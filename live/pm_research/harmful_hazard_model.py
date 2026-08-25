@@ -235,11 +235,16 @@ def predict_p(w, x):
 
 
 def zscale(train_X, all_X):
+    """Scales IN PLACE over all_X (returns the same list object): building a
+    second full copy of an era-scale matrix doubled peak memory and OOM'd."""
     k = len(train_X[0])
     mu = [sum(x[i] for x in train_X) / len(train_X) for i in range(k)]
     sd = [math.sqrt(sum((x[i] - mu[i]) ** 2 for x in train_X) / len(train_X)) or 1.0
           for i in range(k)]
-    return [[1.0] + [(x[i] - mu[i]) / sd[i] for i in range(k)] for x in all_X], mu, sd
+    for j in range(len(all_X)):
+        x = all_X[j]
+        all_X[j] = [1.0] + [(x[i] - mu[i]) / sd[i] for i in range(k)]
+    return all_X, mu, sd
 
 
 # ------------------------------------------------------------------ evaluation
@@ -314,11 +319,16 @@ def selftest() -> int:
 
     X = [[x] for x in (-2, -1, -0.5, 0.5, 1, 2)] * 20
     y = [1 if x[0] > 0 else 0 for x in X]
+    # zscale mutates all_X IN PLACE (memory fix for era scale) — the test must
+    # not reuse X afterwards; the first in-place version silently broke the
+    # ridge check below by handing it the already-scaled matrix.
+    raw = [list(x) for x in X]
     Xs, _, _ = zscale(X, X)
+    ok(Xs is X, "zscale scales in place and returns the same object")
     w = fit_logistic(Xs, y)
     ok(predict_p(w, Xs[3]) > 0.9 and predict_p(w, Xs[0]) < 0.1,
        "logistic separates a separable toy")
-    wr = fit_ridge([[1.0, x[0]] for x in X], [2 * x[0] + 1 for x in X])
+    wr = fit_ridge([[1.0, x[0]] for x in raw], [2 * x[0] + 1 for x in raw])
     ok(abs(wr[1] - 2.0) < 0.05 and abs(wr[0] - 1.0) < 0.05, "ridge recovers a line")
 
     dev = [{"v_cancel_cents": v} for v in (10.0, 8.0, -5.0, -5.0, 0.5, -1.0,
@@ -379,6 +389,11 @@ def run(era: bool = False) -> dict[str, Any]:
             if slug not in streams:
                 up, dn = tokens[slug]
                 streams[slug] = window_streams(paths[slug], up, dn)
+                # LRU cap: an unbounded cache held every window's quote stream
+                # (~150k tuples each) for the whole run and OOM'd at era scale.
+                # Rows arrive grouped by window, so 4 is generous.
+                if len(streams) > 4:
+                    streams.pop(next(iter(streams)))
             f = features(streams[slug], r["t_start"], r["side"], r["level"],
                          r["resting"], r["qahead"])
             if f is None:
