@@ -108,6 +108,12 @@ checkable requirements, not style.
    `data/mm_hf/collector_runs.jsonl`) truncate admissible data at the boundary
    by `recv_ns`, not by file. Legacy-stamped data is inadmissible for any
    sub-second feature.
+   **Sub-second-reliable Binance data exists ONLY from 2026-08-24 13:48:54 UTC**
+   (`recv_ns >= 1787579334881534478`, the hf_ws_v2 stamp boundary in the
+   ledger). Before it, rows were stamped post-parse: p50 latency is fine but
+   p99 carries up to ~0.6 s of parse-backlog error, concentrated in bursts —
+   exactly when fine features matter. Pre-boundary mm_hf tape is usable for
+   ≥1 s bars only, and any receipt using it must say so.
 
 **Evaluation**
 6. **Declare the null before the result**: design AND minimum sample

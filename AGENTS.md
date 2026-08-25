@@ -137,7 +137,8 @@ and instruments, distilled from the 2026-08-23..25 failures. Read it before
 producing any number a decision could rest on. The short form:
 
 - rows are actions, on the neutral reference path, with engine-reconciled
-  timestamps and exclusions as statuses;
+  timestamps and exclusions as statuses; sub-second Binance data is reliable
+  only from 2026-08-24 13:48:54 UTC (hf_ws_v2 stamp boundary);
 - nulls declared before results (design + ≥200 samples), controls matched on
   the decision variable, intervals only on the day unit, every population
   with n + as-of, baselines that remove the tautology;
