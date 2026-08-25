@@ -128,3 +128,21 @@ See `docs/HANDOFF.md` for full plans. Quick list:
 - Does longer horizon (1d / 1w) deliver 30+ bps alpha?
 - Does adding funding-rate features help? (free public data, untried)
 - Does maker-tilt simulation produce realistic fill rates? (needs L2 data)
+
+## Reliability rules
+
+**CLAUDE.md §"Reliability rules" is binding for every result-bearing session**
+— 16 hard requirements on labels/populations, evaluation, selection/freezing,
+and instruments, distilled from the 2026-08-23..25 failures. Read it before
+producing any number a decision could rest on. The short form:
+
+- rows are actions, on the neutral reference path, with engine-reconciled
+  timestamps and exclusions as statuses;
+- nulls declared before results (design + ≥200 samples), controls matched on
+  the decision variable, intervals only on the day unit, every population
+  with n + as-of, baselines that remove the tautology;
+- seen days are consumed — validation only on later untouched days (≥5
+  complete); a freeze is a commit with the full pipeline in-repo and
+  multiplicity recorded; corrections ship as superseding receipts;
+- every checker carries a positive control and a known-bad refusal; verify at
+  the artifact a claim names, matching identity not vocabulary.

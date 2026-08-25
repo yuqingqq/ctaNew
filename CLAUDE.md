@@ -84,6 +84,75 @@ orchestrator/PROGRAMS/P-2026-001-ml-cta-engine/  Original program plan + results
 When adding a new feature, sanity-check IC against forward return shifted
 by +1 bar. Anything >+0.10 IC is suspicious and probably has hidden look-ahead.
 
+## Reliability rules (hard requirements — every result-bearing session)
+
+Distilled from failures that each cost real work (2026-08-23..25: four dissolved
+positives, one voided freeze, an eight-issue dataset rebuild). These are
+checkable requirements, not style.
+
+**Labels and populations**
+1. **Never train on an outcome-selected population.** Fills are endogenous:
+   training on completed fills conditions on the event a policy wants to
+   prevent. The unit is the decision-time exposure (a generation interval),
+   built from the neutral no-cancel reference path.
+2. **Rows are actions.** One row per cancellable generation. If several rows
+   can share one outcome, the evaluator must de-duplicate to actions or the
+   result is inflated (measured: 1.99 rows/fill, max 23).
+3. **Timestamps come from the event that carries them**, never a nearby proxy
+   (a resync clock cost 22–162 ms of label error). Every fill/tranche is valued
+   at its own time and level. Add a reconciliation selftest against the
+   generating engine; a mismatch fails the build, never absorbed.
+4. **Exclusions are statuses, never silent drops** (gap, truncation, no future
+   mid). Report their counts with every table.
+5. **Era purity is a per-event predicate.** Collector/stamp changes (see
+   `data/mm_hf/collector_runs.jsonl`) truncate admissible data at the boundary
+   by `recv_ns`, not by file. Legacy-stamped data is inadmissible for any
+   sub-second feature.
+
+**Evaluation**
+6. **Declare the null before the result**: design AND minimum sample
+   (≥200 permutations / draws). A null max is an extreme-order statistic —
+   an under-sampled correct null flatters as much as a wrong one.
+7. **Controls must be matched on the decision variable** (action count, side,
+   hour) and compared on the DECISION metric (net value, rho = adverse/spread),
+   not on a proxy like harm share. Latency enters the estimand: value only
+   tranches after t + L.
+8. **Intervals only on the correct cluster unit** (UTC day here). Below G=5
+   complete days: point estimate, no interval, say so. Every quoted population
+   carries its n AND as-of — the tape grows during measurement.
+9. **A baseline must remove the tautology.** If the target is derived from an
+   input (PM binaries settle on a Binance-derived price), report skill only
+   incremental to that input; skill vs base rate is meaningless.
+10. **Compute predicates, never print conclusions.** A hardcoded verdict string
+    beside a table has contradicted the table three times. If a number is
+    claimed ("2.4x", "excludes zero", "monotone"), the code must evaluate it.
+
+**Selection and freezing**
+11. **Choosing after seeing voids the test.** Feature subsets, thresholds,
+    horizons, window lengths picked on data X may not be validated on X.
+    Seen days are consumed; name them (08-20..25 are consumed for the harmful-
+    fill line). Validation = later untouched days, ≥5 complete UTC days.
+12. **A freeze is a commit.** Candidate = builder file committed (hash + commit
+    ref in the receipt), full pipeline in the repo (data → target → fit →
+    artifact; a scratch-dir builder voided one freeze), declared nulls inside
+    the receipt, and the count of candidates in the forward race (multiplicity)
+    recorded at freeze time.
+13. **Corrections supersede in-band**: a superseding receipt (vN+1), because
+    automated readers resolve receipt fields, not sidecar annotations. Never
+    edit a frozen artifact; the old receipt stays as provenance.
+14. **Models estimate; they never decide.** No worker-produced boolean encodes
+    an entitlement (decision-eligible, admissible). Decisions live in the
+    policy layer with their own priced trade-offs.
+
+**Instruments**
+15. **Every checker ships a falsifier**: a positive control it must flag and a
+    known-bad input it must refuse. A zero from an instrument that never proved
+    it can fire is not a result (a silent regex mismatch once reported a clean
+    surface).
+16. **Verify at the artifact a claim names** — not a proxy, not memory, not a
+    report. Grep hits on vocabulary are not references; match identity
+    (Type.field), and know what KIND of document you are reading.
+
 ## What's in/out of scope
 
 **In scope** (free to edit):
