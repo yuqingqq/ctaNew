@@ -68,6 +68,7 @@ class RecordingArm(qr.QueueRealisticArm):
         self._now = 0.0
         self.unhooked_changes = 0
         self.fill_log: list[dict[str, Any]] = []
+        self.consume_times: list[float] = []     # EVERY consume, zero fills too
         self._consume_seq = 0
         RecordingArm._instances.append(self)
 
@@ -121,6 +122,7 @@ class RecordingArm(qr.QueueRealisticArm):
         pre_level = side.level
         filled = super().consume(maker_side, volume, displayed)
         self._consume_seq += 1
+        self.consume_times.append(self._now)
         if filled > 0:
             self.fill_log.append({
                 "seq": self._consume_seq, "side": maker_side,
@@ -194,6 +196,62 @@ def verify_boundary_times(segments: Sequence[dict], joined: Sequence[dict]) -> i
     return bad
 
 
+def trade_receipt_times(path: Path, up_id: str, down_id: str) -> list[float]:
+    """Independent parse of the window's trade receipt times, for the hard
+    zero-fill clock gate. Reads the raw tape directly — shares NOTHING with the
+    recorder's clock, so a regression in `note_event_time` cannot fool it."""
+    import json as _json
+    slug = path.name.split(".jsonl")[0]
+    ws = int(slug.rsplit("-", 1)[1])
+    out = []
+    for line in qr.base.fi._gz_lines(path):
+        if qr.base.fi.TRADE_MARK not in line:
+            continue
+        parts = line.split(b"\t", 1)
+        if len(parts) != 2:
+            continue
+        try:
+            recv = int(parts[0]) / 1e9 - ws
+            payload = _json.loads(parts[1])
+        except (ValueError, _json.JSONDecodeError):
+            continue
+        for msg in payload if isinstance(payload, list) else [payload]:
+            if (isinstance(msg, dict)
+                    and msg.get("event_type") == "last_trade_price"
+                    and str(msg.get("asset_id")) in (up_id, down_id)):
+                out.append(recv)
+                break
+    return sorted(out)
+
+
+# Membership tolerance for the clock gate. Window-relative times are computed
+# by SUBTRACTING two ~1.8e9-second values; the double ULP at that magnitude is
+# ~2.4e-7 s, so two independently-computed copies of the SAME nanosecond can
+# differ by that much (measured: the engine's own fill times failed a 1e-9
+# membership test 262/263 while agreeing to 4dp). 1e-6 sits 4x above the ULP
+# and THREE ORDERS below both the minimum inter-trade spacing (p10 gap 0.3 ms)
+# and the stale-clock signature this gate exists to catch (>=ms). It cannot
+# absorb a regression; it only absorbs float representation.
+CLOCK_TOL_S = 1e-6
+
+
+def verify_consume_clock(consume_times: Sequence[float],
+                         trade_times: Sequence[float]) -> int:
+    """AUDIT 5 BLOCKER 4: the boundary verifier covered only positive fills, so
+    a future ZERO-FILL clock regression would be invisible. Every consume
+    timestamp — zero fills included — must be a member of the independently
+    parsed trade-receipt times: a stale resync stamp is a QUOTE-event time and
+    will not coincide with a trade time at ns resolution. Violations join the
+    failure condition."""
+    import bisect as _b
+    bad = 0
+    for t in consume_times:
+        i = _b.bisect_left(trade_times, t - CLOCK_TOL_S)
+        if i >= len(trade_times) or abs(trade_times[i] - t) > CLOCK_TOL_S:
+            bad += 1
+    return bad
+
+
 def generation_table(segments: Sequence[dict], joined: Sequence[dict], wf: Any,
                      window_s: float) -> tuple[dict, dict]:
     """Generation intervals + EXPLICIT attribution: each joined fill carries its
@@ -245,20 +303,27 @@ def label_rows(segments: Sequence[dict], gens: dict, wf: Any,
         row["gen_t0"] = g["t0"] if g else s["t_start"]
         row["gen_t1"] = g["t1"] if g else s["t_end"]
         row["status"] = "OK"
-        if (g["t1"] if g else s["t_end"]) + MARKOUT_S > window_s:
+        # AUDIT 5 BLOCKER 1: observability is scoped to THE ROW'S OWN TARGET,
+        # [t_start, h_end + MARKOUT_S] with h_end = min(t+H, gen end) — NOT to
+        # generation end. Checking through gen_t1 + 5s marked a fully
+        # observable t=100 row TRUNCATED because its generation lived to 300,
+        # selectively deleting long-lived and no-fill generations from the
+        # training population.
+        h_end = min(s["t_start"] + FILL_HORIZON_S,
+                    (g["t1"] if g else s["t_end"]) + 1e-9)
+        if h_end + MARKOUT_S > window_s:
             row["status"] = "TRUNCATED_HORIZON"
             rows.append(row); continue
-        if wf.touched(s["t_start"], (g["t1"] if g else s["t_end"]) + MARKOUT_S):
+        if wf.touched(s["t_start"], h_end + MARKOUT_S):
             row["status"] = "GAP_IN_HORIZON"
             rows.append(row); continue
         trs = (g["tranches"] if g else [])
-        if any(t["markout_cents_per_share"] is None for t in trs):
-            row["status"] = "NO_FUTURE_MID"
-            rows.append(row); continue
-        h_end = min(s["t_start"] + FILL_HORIZON_S,
-                    (g["t1"] if g else s["t_end"]) + 1e-9)
         fut = [t for t in trs
                if s["t_start"] - 1e-9 <= t["t"] <= h_end]
+        # only tranches INSIDE this row's horizon need markouts
+        if any(t["markout_cents_per_share"] is None for t in fut):
+            row["status"] = "NO_FUTURE_MID"
+            rows.append(row); continue
         row["any_fill_ahead"] = bool(fut)
         lat = {}
         for L in LATENCY_GRID_MS:
@@ -412,6 +477,7 @@ def build_rows(per_coin: int | None = None,
         selected, n_bn_gap = select_stratified(per_coin or 10, coins=coins), 0
     rows: list[dict[str, Any]] = []
     recon_fail = 0; unhooked = 0; wrong_gen = 0; boundary_bad_total = 0
+    clock_bad_total = 0
     n_windows = 0; days: set[str] = set()
     for ent in selected:
         slug = ent[0]
@@ -425,6 +491,8 @@ def build_rows(per_coin: int | None = None,
         days.add(day)
         joined, jrec = join_fills(arm.fill_log, arm.fills)
         n_boundary_bad = verify_boundary_times(arm.segments, joined)
+        ttimes = trade_receipt_times(ent[1], ent[2], ent[3])
+        n_clock_bad = verify_consume_clock(arm.consume_times, ttimes)
         gens, recon = generation_table(arm.segments, joined, wf,
                                        qr.base.fi.WINDOW_S)
         wrows = label_rows(arm.segments, gens, wf, qr.base.fi.WINDOW_S)
@@ -432,9 +500,11 @@ def build_rows(per_coin: int | None = None,
                or recon["orphan_fills"]
                or recon["wrong_generation_assignments"]
                or arm.unhooked_changes
-               or n_boundary_bad)              # STRICT: in the failure condition
+               or n_boundary_bad
+               or n_clock_bad)                 # STRICT: in the failure condition
         wrong_gen += recon["wrong_generation_assignments"]
         boundary_bad_total += n_boundary_bad
+        clock_bad_total += n_clock_bad
         if bad:
             recon_fail += 1
             unhooked += arm.unhooked_changes
@@ -449,8 +519,9 @@ def build_rows(per_coin: int | None = None,
             "unhooked_state_changes": unhooked,
             "wrong_generation_assignments": wrong_gen,
             "boundary_time_violations": boundary_bad_total,
+            "consume_clock_violations": clock_bad_total,
             "windows_excluded_binance_gap": n_bn_gap,
-            "schema": "harmful_exposure_v3_2_true_trade_clock"}
+            "schema": "harmful_exposure_v3_3_scoped_observability"}
 
 
 def selftest() -> int:
@@ -509,6 +580,38 @@ def selftest() -> int:
     _, jrec3 = join_fills([], engine)
     ok(jrec3["count_mismatch"], "count mismatch detected")
 
+    # AUDIT 5 BLOCKER 1 — the user's three reproduced cases, as regressions:
+    lg = {("BUY_UP", 1): {"t0": 100.0, "t1": 300.0, "tranches": []}}
+    seg_l = [{"side": "BUY_UP", "gen": 1, "level": 0.55, "resting": 5.0,
+              "qahead": 0.0, "net": 0.0, "t_start": 100.0, "t_end": 300.0}]
+    rl = label_rows(seg_l, lg, WF(), 300.0)
+    ok(rl[0]["status"] == "OK",
+       "a t=100 row observable through 106.5 is OK even though its generation "
+       "lives to 300 — long-lived generations are no longer selectively deleted")
+
+    class LateGap(WF):
+        def touched(self, a, b): return b > 150.0     # gap only AFTER the target
+    ok(label_rows(seg_l, lg, LateGap(), 300.0)[0]["status"] == "OK",
+       "a gap after the row's target does not exclude the row")
+
+    lg2 = {("BUY_UP", 1): {"t0": 100.0, "t1": 300.0, "tranches": [
+        {"t": 199.0, "shares": 5.0, "level": 0.55,
+         "markout_cents_per_share": None}]}}
+    ok(label_rows(seg_l, lg2, WF(), 300.0)[0]["status"] == "OK",
+       "a missing markout for a fill OUTSIDE the 1s horizon does not poison "
+       "the row — NO_FUTURE_MID applies only to the row's own tranches")
+
+    # AUDIT 5 BLOCKER 4 — the hard clock gate:
+    trades = [10.0, 10.5, 11.0]
+    ok(verify_consume_clock([10.5, 11.0], trades) == 0,
+       "consume times that ARE trade receipt times pass")
+    ok(verify_consume_clock([10.5 + 2.4e-7], trades) == 0,
+       "a ULP-level float difference is representation, not a violation")
+    ok(verify_consume_clock([10.3], trades) == 1,
+       "a consume stamped at a NON-trade time (a stale resync stamp) is a "
+       "violation — the gate now covers zero-fill drains, which the "
+       "positive-fill-only verifier could not")
+
     # THE PLAN'S HORIZON IS BACK: a tranche beyond t_start + H does not label,
     # even inside the generation
     gens3 = {("BUY_UP", 1): {"t0": 0.0, "t1": 5.0, "tranches": [
@@ -553,6 +656,7 @@ def main() -> int:
           f"unhooked {built['unhooked_state_changes']} "
           f"wrong_gen {built['wrong_generation_assignments']} "
           f"boundary_violations {built['boundary_time_violations']} "
+          f"clock_violations {built['consume_clock_violations']} "
           f"bn_gap_excluded {built['windows_excluded_binance_gap']}")
     print(f"statuses {dict(st)}")
     return 0

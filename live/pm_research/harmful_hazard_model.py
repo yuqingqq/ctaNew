@@ -48,7 +48,7 @@ ROWS = fi.PM / "derived/harmful_exposure_rows_v3.json"   # v1/v2 receipts are IN
 # declared here, an ASSUMED cancel latency for the diagnostic fit only — the
 # action evaluator sweeps the full 5–250 ms grid regardless.
 TARGET_LATENCY_MS = 50
-EXPECTED_SCHEMA = "harmful_exposure_v3_2_true_trade_clock"
+EXPECTED_SCHEMA = "harmful_exposure_v3_3_scoped_observability"
 OUT = fi.PM / "derived/harmful_hazard_model_v1.json"
 LAG_S = 0.250
 # §4.1 asks for 25/50/100/250/500/1000 ms. The finest micro scales measure the
@@ -339,9 +339,17 @@ def selftest() -> int:
     return 0
 
 
-def run() -> dict[str, Any]:
+ROWS_ERA = fi.PM / "derived/harmful_exposure_rows_v3_eraB.json"
+
+
+def run(era: bool = False) -> dict[str, Any]:
+    """AUDIT 5 BLOCKER 2: the era rebuild wrote an artifact this runner never
+    read, with a split naming days it does not contain. In era mode the split
+    is DERIVED FROM THE RECEIPT: last day = development, the rest = training,
+    printed so the population is never implicit."""
     import policy_optimizer_queue_realistic as qr
-    data = json.loads(ROWS.read_text())
+    src = ROWS_ERA if era else ROWS
+    data = json.loads(src.read_text())
     # AUDIT 4 BLOCKER 3: no schema guard meant this runner could silently train
     # on an obsolete artifact (the six-window v3.0 smoke was sitting at the v3
     # path). Wrong schema is a REFUSAL, never a warning.
@@ -351,6 +359,12 @@ def run() -> dict[str, Any]:
             f"{EXPECTED_SCHEMA!r} — regenerate the dataset; this runner will "
             f"not train on an obsolete artifact")
     rows = [r for r in data["rows"] if r["status"] == "OK"]
+    if era:
+        days = data["days"]
+        train_days, dev_day = tuple(days[:-1]), days[-1]
+    else:
+        train_days, dev_day = TRAIN_DAYS, DEV_DAY
+    print(f"population: {src.name}  train {train_days} -> dev {dev_day}")
     paths = fi._archive_paths(); tokens = fi.token_map()
     streams: dict[str, dict] = {}
     out: dict[str, Any] = {"protocol": "HARMFUL_HAZARD_LINEAR_V1",
@@ -370,14 +384,20 @@ def run() -> dict[str, Any]:
             if f is None:
                 continue
             feats.append(f); kept.append(r)
-        tr = [i for i, r in enumerate(kept) if r["day"] in TRAIN_DAYS]
-        dv = [i for i, r in enumerate(kept) if r["day"] == DEV_DAY]
+        tr = [i for i, r in enumerate(kept) if r["day"] in train_days]
+        dv = [i for i, r in enumerate(kept) if r["day"] == dev_day]
         if len(tr) < 500 or len(dv) < 200:
             out["coins"][coin] = {"status": "INSUFFICIENT", "n_train": len(tr),
                                   "n_dev": len(dv)}
             continue
         Xall, mu, sd = zscale([feats[i] for i in tr], feats)
-        y_fill = [1 if kept[i].get("any_fill_ahead") else 0 for i in range(len(kept))]
+        # AUDIT 5 BLOCKER 3: `any_fill_ahead` counts fills BEFORE the assumed
+        # cancellation takes effect — unpreventable by definition. The hazard
+        # label is latency-specific: preventable shares at TARGET_LATENCY_MS.
+        Lh = str(TARGET_LATENCY_MS)
+        y_fill = [1 if (kept[i].get("latency") or {}).get(Lh, {}).get(
+                      "preventable_shares", 0.0) > 0 else 0
+                  for i in range(len(kept))]
         w_haz = fit_logistic([Xall[i] for i in tr], [y_fill[i] for i in tr])
         L = str(TARGET_LATENCY_MS)
         fill_tr = [i for i in tr if y_fill[i] and "latency" in kept[i]]
@@ -446,12 +466,14 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("cmd", nargs="?", choices=["run"])
     ap.add_argument("--selftest", action="store_true")
+    ap.add_argument("--era", action="store_true",
+                    help="run on the era-B artifact with a receipt-derived split")
     a = ap.parse_args()
     if a.selftest:
         return selftest()
     if a.cmd != "run":
         ap.print_help(); return 2
-    run()
+    run(era=a.era)
     return 0
 
 
