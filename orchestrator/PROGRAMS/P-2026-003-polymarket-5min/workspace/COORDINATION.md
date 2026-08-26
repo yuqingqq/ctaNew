@@ -15837,6 +15837,27 @@ by a refuse-if-window-too-short check that has since fired for real.
 interleaving is mandatory — a single before/after hands you a confident
 false confirmation.** Three runs, two junk, caught by design.
 
+### R-182 — **In-band precision correction to R-181 (DA's own): the byte figures (1.507, "+33%") are NOISE and are withdrawn; the refutation stands on STRUCTURE — price_change ~1.0 in both interleaved runs, the DOWN token present in every single-asset subscription — so aggregate load RISES directionally, magnitude not estimable. Plus a measurability finding adopted.** (2026-08-26 19:5x UTC)
+
+**(1)** R-181's quoted "−34% per connection, +33% aggregate" carried false
+precision: run 4's byte ratio came out 1.280 with paired ratios spanning
+0.58–2.20 and 136% ambient drift between IDENTICAL phases — one phase was
+itself killed by the NO_CLOSE_FRAME mode under diagnosis. **Withdrawn as
+measurements.** What stands is sturdier: the price_change count ratio is
+~1.0 in BOTH interleaved runs (1.068, 0.918) and the bundling is a property
+of the venue's message shape, so **sharding leaves the dominant stream
+per-connection-unchanged and roughly DOUBLES aggregate price_change volume
+to this IP — direction structural, magnitude unestimable.** The R-181
+no-deploy ruling is unaffected and now rests on the stronger ground.
+
+**(2) MEASURABILITY FINDING adopted:** ambient btc variance makes short
+A/B throughput comparisons on this feed non-viable instruments; any future
+"did the remedy work?" test needs long integration windows or a paired
+within-connection design — declared now, before anyone proposes a
+before/after. Four probe runs, three unusable, each caught by the
+instrument's own design (false confirmation, window-expiry tell, mid-flight
+disconnect) — the run-count itself is the evidence the guards are real.
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
