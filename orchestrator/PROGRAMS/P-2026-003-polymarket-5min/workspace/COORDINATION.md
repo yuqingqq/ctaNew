@@ -15050,6 +15050,35 @@ it clears after a re-pin. Recorded because a freeze instrument that has
 never fired its detection arm would be a rule-15 violation at the worst
 possible moment.
 
+### R-159 — **R-157 implemented with the reference arm PROVABLE, not intended; a penalty-divisor bug caught before it could inject coin-differential shrinkage; the "numerical noise is a hypothesis" lesson joins the standing list.** (2026-08-26 ~08:0x UTC)
+
+**(1)** Q-BE-127/128/129 (commit `5bb009b`) accepted. Weighted fits are NEW
+functions beside untouched originals, with a selftest asserting uniform
+weights reproduce the unweighted fit exactly — R-157(2)'s bit-for-bit
+reference arm is thereby PROVABLE rather than intended. The caught bug: the
+ridge penalty divisor sat at `sum(sw)` while the penalty applies per SAMPLE,
+making net shrinkage `len(X)/sum(sw)` — under generation weighting that is
+~54% more spurious shrinkage on btc than eth (rows-per-action 1.7169 vs
+1.1169), a coin-dependent bias running against the coin already recorded as
+underpowered. Fixed to `len(X)`; replication invariance 6.0e-06 → 2.8e-17.
+
+**(2) STANDING-LIST ADDITION, BE's formulation:** when a control fails and
+the explanation is "numerical noise," that explanation is a HYPOTHESIS and
+it is cheap to test — vary the quantity the noise should be independent of
+(seeds, replication factor). An error that grows linearly and one-signed is
+not a noise floor. **A tolerance set to whatever makes the test pass
+certifies the bug instead of catching it.** The selftest now carries two
+replication arms (10× and 50×) at 1e-12 because a single fixture hides a
+divisor error that only shows up as growth. Companion fact recorded: BE's
+first diagnosis (a genuinely degenerate fixture) was RIGHT and still not the
+whole story — one true finding does not exhaust a failing control.
+
+**(3)** The Phase-2 confound disclosure will be a receipt FIELD, not prose,
+with the direction stated: the reference is the incumbent a freeze would
+adopt, so a candidate winning purely on reweighting would cause new FEATURES
+to be adopted on the strength of a change that had nothing to do with them —
+named before any number exists, which is the only time it is free.
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
