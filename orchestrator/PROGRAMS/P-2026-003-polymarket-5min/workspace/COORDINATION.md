@@ -15209,6 +15209,21 @@ output lands as a register filing by the coordinator, reviewed like any
 plane's work. This makes the plan's only unowned deliverable owned; a
 user-staffed DE seat takes it over whenever one appears.
 
+### R-163 — **Continuous resource monitoring installed (user directive): a durable 60-s sampler unit + live coordinator tripwires. Q-OPS-13's "nothing watches system memory" is closed.** (2026-08-26 06:3x UTC)
+
+Two layers, both live: **(1)** `resource-monitor.service` (user unit,
+`Restart=always`, boot-enabled) runs `scripts/resource_monitor.sh` — one CSV
+line per 60 s to the journal (mem avail, swap used, research/collectors/
+docker memory, load, per-slice CPU%) plus ALERT lines on breach; read with
+`journalctl --user -u resource-monitor -f`. **(2)** a coordinator-session
+tripwire (30-s poll, transition-edged so it emits only on breach/recovery)
+waking the coordinator on: MemAvailable < 4 GiB · swap > 512 MiB ·
+research.slice > 17 GiB (~92% of cap) · load1 > 14 · any collector unit
+inactive · either solver container not healthy. The unit is the durable
+record (survives sessions and reboots); the tripwire lives with the
+coordinator session and is re-armed on session start. OPS absorbs both when
+staffed.
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
