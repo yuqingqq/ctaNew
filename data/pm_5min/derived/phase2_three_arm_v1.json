@@ -1,0 +1,394 @@
+{
+ "arms": {
+  "btc": {
+   "LGBM_PINNED": {
+    "gate": {
+     "budgets": {
+      "10%": {
+       "beats_random_max_on_NET": true,
+       "harm_avoided_cents": 46882.371501450034,
+       "n_cancelled_generations": 18862,
+       "net_cents": 12129.494558450013,
+       "random_net_max": -27.71976004999957,
+       "random_net_mean": -3193.701307802,
+       "random_net_p95": -1039.2484415000006,
+       "rho_captured_over_sacrificed": 1.3490213077422117,
+       "sacrifice_cents": 34752.87694300001
+      },
+      "15%": {
+       "beats_random_max_on_NET": true,
+       "harm_avoided_cents": 56238.647760450054,
+       "n_cancelled_generations": 28294,
+       "net_cents": 12736.359566950012,
+       "random_net_max": -418.62162400000057,
+       "random_net_mean": -4539.581010219251,
+       "random_net_p95": -1972.0114527500025,
+       "rho_captured_over_sacrificed": 1.2927744745356426,
+       "sacrifice_cents": 43502.2881935
+      },
+      "5%": {
+       "beats_random_max_on_NET": true,
+       "harm_avoided_cents": 29375.902633949998,
+       "n_cancelled_generations": 9431,
+       "net_cents": 10460.507073450004,
+       "random_net_max": 1082.4856465,
+       "random_net_mean": -1648.4019971515002,
+       "random_net_p95": -27.15741800000066,
+       "rho_captured_over_sacrificed": 1.5530155073940994,
+       "sacrifice_cents": 18915.395560499997
+      }
+     },
+     "latency_ms": 50,
+     "n_actions": 188629,
+     "n_generations": 188629,
+     "n_rows": 330193,
+     "rows_per_action": 1.750489055235409,
+     "unit": "ACTION"
+    }
+   },
+   "PLUS_PRED_STATE_V1": {
+    "gate": {
+     "budgets": {
+      "10%": {
+       "beats_random_max_on_NET": true,
+       "harm_avoided_cents": 33608.851773950024,
+       "n_cancelled_generations": 18862,
+       "net_cents": 12505.512458950008,
+       "random_net_max": 469.56650654999964,
+       "random_net_mean": -3118.6596020322504,
+       "random_net_p95": -757.811723499999,
+       "rho_captured_over_sacrificed": 1.5925845323475067,
+       "sacrifice_cents": 21103.339314999997
+      },
+      "15%": {
+       "beats_random_max_on_NET": true,
+       "harm_avoided_cents": 45562.711274950045,
+       "n_cancelled_generations": 28294,
+       "net_cents": 13145.916401950008,
+       "random_net_max": -1226.7037642500015,
+       "random_net_mean": -4894.5538692265,
+       "random_net_p95": -2489.7935505500013,
+       "rho_captured_over_sacrificed": 1.4055279509727012,
+       "sacrifice_cents": 32416.79487299999
+      },
+      "5%": {
+       "beats_random_max_on_NET": true,
+       "harm_avoided_cents": 17886.634745449992,
+       "n_cancelled_generations": 9431,
+       "net_cents": 8191.525045950011,
+       "random_net_max": 773.9585514999994,
+       "random_net_mean": -1523.9051794022503,
+       "random_net_p95": -56.921255049999694,
+       "rho_captured_over_sacrificed": 1.8449130850342461,
+       "sacrifice_cents": 9695.109699500003
+      }
+     },
+     "latency_ms": 50,
+     "n_actions": 188629,
+     "n_generations": 188629,
+     "n_rows": 330193,
+     "rows_per_action": 1.750489055235409,
+     "unit": "ACTION"
+    }
+   },
+   "PM_PLUS_FINE": {
+    "gate": {
+     "budgets": {
+      "10%": {
+       "beats_random_max_on_NET": true,
+       "harm_avoided_cents": 26012.813898450033,
+       "n_cancelled_generations": 18862,
+       "net_cents": 8367.805220950004,
+       "random_net_max": 817.4966084999986,
+       "random_net_mean": -3236.91795390475,
+       "random_net_p95": -1181.7053700000006,
+       "rho_captured_over_sacrificed": 1.4742307229137401,
+       "sacrifice_cents": 17645.008677499995
+      },
+      "15%": {
+       "beats_random_max_on_NET": true,
+       "harm_avoided_cents": 37312.55544795001,
+       "n_cancelled_generations": 28294,
+       "net_cents": 10288.166780950005,
+       "random_net_max": -1157.085017050002,
+       "random_net_mean": -4997.9540970805,
+       "random_net_p95": -2269.1628832500005,
+       "rho_captured_over_sacrificed": 1.3806993345056904,
+       "sacrifice_cents": 27024.388666999996
+      },
+      "5%": {
+       "beats_random_max_on_NET": true,
+       "harm_avoided_cents": 14348.460439500002,
+       "n_cancelled_generations": 9431,
+       "net_cents": 5821.936989000001,
+       "random_net_max": 1287.4999799999998,
+       "random_net_mean": -1665.4846133252502,
+       "random_net_p95": -204.62168750000018,
+       "rho_captured_over_sacrificed": 1.682803140435695,
+       "sacrifice_cents": 8526.523450500003
+      }
+     },
+     "latency_ms": 50,
+     "n_actions": 188629,
+     "n_generations": 188629,
+     "n_rows": 330193,
+     "rows_per_action": 1.750489055235409,
+     "unit": "ACTION"
+    }
+   }
+  },
+  "eth": {
+   "LGBM_PINNED": {
+    "gate": {
+     "budgets": {
+      "10%": {
+       "beats_random_max_on_NET": true,
+       "harm_avoided_cents": 11690.9522425,
+       "n_cancelled_generations": 26863,
+       "net_cents": 1788.2359369999986,
+       "random_net_max": 1755.4450649999994,
+       "random_net_mean": -283.7462934125,
+       "random_net_p95": 691.4738315000006,
+       "rho_captured_over_sacrificed": 1.1805803460215059,
+       "sacrifice_cents": 9902.716305500002
+      },
+      "15%": {
+       "beats_random_max_on_NET": false,
+       "harm_avoided_cents": 14197.060075499996,
+       "n_cancelled_generations": 40295,
+       "net_cents": 1536.2231754999984,
+       "random_net_max": 2259.9914674999995,
+       "random_net_mean": -430.0114079375,
+       "random_net_p95": 736.2213260000005,
+       "rho_captured_over_sacrificed": 1.1213366215546139,
+       "sacrifice_cents": 12660.836900000004
+      },
+      "5%": {
+       "beats_random_max_on_NET": true,
+       "harm_avoided_cents": 8254.29637,
+       "n_cancelled_generations": 13431,
+       "net_cents": 1356.3814819999996,
+       "random_net_max": 870.7457685000005,
+       "random_net_mean": -92.34812403000002,
+       "random_net_p95": 611.3513915000001,
+       "rho_captured_over_sacrificed": 1.1966364479735223,
+       "sacrifice_cents": 6897.914888000002
+      }
+     },
+     "latency_ms": 50,
+     "n_actions": 268634,
+     "n_generations": 268634,
+     "n_rows": 308715,
+     "rows_per_action": 1.1492030048318531,
+     "unit": "ACTION"
+    }
+   },
+   "PLUS_PRED_STATE_V1": {
+    "gate": {
+     "budgets": {
+      "10%": {
+       "beats_random_max_on_NET": true,
+       "harm_avoided_cents": 9890.438983500002,
+       "n_cancelled_generations": 26863,
+       "net_cents": 2694.996737500001,
+       "random_net_max": 1501.6610114999999,
+       "random_net_mean": -293.63358515000004,
+       "random_net_p95": 812.5162989999998,
+       "rho_captured_over_sacrificed": 1.3745421956514443,
+       "sacrifice_cents": 7195.442246000001
+      },
+      "15%": {
+       "beats_random_max_on_NET": true,
+       "harm_avoided_cents": 12893.075836499997,
+       "n_cancelled_generations": 40295,
+       "net_cents": 2558.3618645000015,
+       "random_net_max": 1268.1183100000007,
+       "random_net_mean": -427.80969139999996,
+       "random_net_p95": 802.8234550000002,
+       "rho_captured_over_sacrificed": 1.2475503309942981,
+       "sacrifice_cents": 10334.713972
+      },
+      "5%": {
+       "beats_random_max_on_NET": true,
+       "harm_avoided_cents": 6260.4077475,
+       "n_cancelled_generations": 13431,
+       "net_cents": 2060.8803375000007,
+       "random_net_max": 973.0071509999999,
+       "random_net_mean": -172.08448448250002,
+       "random_net_p95": 646.0447965,
+       "rho_captured_over_sacrificed": 1.4907410135227566,
+       "sacrifice_cents": 4199.527410000002
+      }
+     },
+     "latency_ms": 50,
+     "n_actions": 268634,
+     "n_generations": 268634,
+     "n_rows": 308715,
+     "rows_per_action": 1.1492030048318531,
+     "unit": "ACTION"
+    }
+   },
+   "PM_PLUS_FINE": {
+    "gate": {
+     "budgets": {
+      "10%": {
+       "beats_random_max_on_NET": true,
+       "harm_avoided_cents": 8714.494389,
+       "n_cancelled_generations": 26863,
+       "net_cents": 2803.806030499999,
+       "random_net_max": 1043.2336054999996,
+       "random_net_mean": -322.55780431000005,
+       "random_net_p95": 688.2943215000003,
+       "rho_captured_over_sacrificed": 1.474362013430791,
+       "sacrifice_cents": 5910.688358500001
+      },
+      "15%": {
+       "beats_random_max_on_NET": true,
+       "harm_avoided_cents": 11829.042953499995,
+       "n_cancelled_generations": 40295,
+       "net_cents": 2906.2690254999966,
+       "random_net_max": 1142.1494800000005,
+       "random_net_mean": -548.5300864175,
+       "random_net_p95": 564.9436709999998,
+       "rho_captured_over_sacrificed": 1.3257136232466917,
+       "sacrifice_cents": 8922.773927999999
+      },
+      "5%": {
+       "beats_random_max_on_NET": true,
+       "harm_avoided_cents": 5238.5261075,
+       "n_cancelled_generations": 13431,
+       "net_cents": 1530.4813635,
+       "random_net_max": 1143.5735655,
+       "random_net_mean": -190.5060887,
+       "random_net_p95": 582.1014260000002,
+       "rho_captured_over_sacrificed": 1.4127461962201173,
+       "sacrifice_cents": 3708.0447440000007
+      }
+     },
+     "latency_ms": 50,
+     "n_actions": 268634,
+     "n_generations": 268634,
+     "n_rows": 308715,
+     "rows_per_action": 1.1492030048318531,
+     "unit": "ACTION"
+    }
+   }
+  }
+ },
+ "btc_power_note": "UNDERPOWERED-ON-BTC was declared as a nameable outcome and DOES NOT APPLY: btc scored 188,629 actions over 166 windows, and its fitting side carries 58,232 positives against eth's 6,406. On this surface btc is the BETTER-powered coin, inverting the prior expectation that eth would be the informative one.",
+ "confound_disclosure": "R-157(3), declared before any number existed: arms B and C carry BOTH the 21 PRED_STATE_V1 features AND w=1/n_rows(generation) weighting; arm A carries neither. Any B or C win is features+weighting JOINTLY and is NOT decomposable from these three arms. Direction that matters: A is the incumbent a freeze already adopted, so a candidate winning purely on weighting would cause new FEATURES to be adopted on the strength of a reweighting that had nothing to do with them.",
+ "da_caveat_field": "RESERVED for Q-DA-79 post-gap queue-validity finding",
+ "decision_metric": "net_cents",
+ "declaration_commit": "d7082b6",
+ "g_note": "G=1 UTC day (2026-08-25). No interval is quoted and none may be inferred (rule 8). These are point estimates on a single development day.",
+ "increment_predicates": {
+  "btc": {
+   "LGBM_PINNED": {
+    "beats_incumbent_at_all_budgets": true,
+    "beats_incumbent_at_any_budget": true,
+    "beats_random_max_on_NET_all_budgets": true,
+    "delta_net_cents_vs_incumbent": {
+     "10%": 3761.689337500009,
+     "15%": 2448.192786000007,
+     "5%": 4638.570084450003
+    },
+    "min_margin_over_random_max": 9378.021426950005
+   },
+   "PLUS_PRED_STATE_V1": {
+    "beats_incumbent_at_all_budgets": true,
+    "beats_incumbent_at_any_budget": true,
+    "beats_random_max_on_NET_all_budgets": true,
+    "delta_net_cents_vs_incumbent": {
+     "10%": 4137.7072380000045,
+     "15%": 2857.7496210000027,
+     "5%": 2369.5880569500105
+    },
+    "min_margin_over_random_max": 7417.566494450011
+   }
+  },
+  "eth": {
+   "LGBM_PINNED": {
+    "beats_incumbent_at_all_budgets": false,
+    "beats_incumbent_at_any_budget": false,
+    "beats_random_max_on_NET_all_budgets": false,
+    "delta_net_cents_vs_incumbent": {
+     "10%": -1015.5700935000004,
+     "15%": -1370.0458499999982,
+     "5%": -174.0998815000005
+    },
+    "min_margin_over_random_max": -723.7682920000011
+   },
+   "PLUS_PRED_STATE_V1": {
+    "beats_incumbent_at_all_budgets": false,
+    "beats_incumbent_at_any_budget": true,
+    "beats_random_max_on_NET_all_budgets": true,
+    "delta_net_cents_vs_incumbent": {
+     "10%": -108.80929299999798,
+     "15%": -347.9071609999951,
+     "5%": 530.3989740000006
+    },
+    "min_margin_over_random_max": 1087.8731865000009
+   }
+  }
+ },
+ "lgbm_params": {
+  "colsample_bytree": 0.7,
+  "learning_rate": 0.05,
+  "max_depth": 4,
+  "min_child_samples": 200,
+  "n_estimators": 200,
+  "n_jobs": 4,
+  "num_leaves": 15,
+  "objective": "binary",
+  "random_state": 20260826,
+  "reg_lambda": 10.0,
+  "subsample": 0.7,
+  "subsample_freq": 1,
+  "verbose": -1
+ },
+ "model_class_diagnostic": "B and C share features and weighting and differ only in model class. C-B on btc = +2269/-376/-410 and on eth = -704/-907/-1022: not large and not one-signed, so the btc gain does not look like a model-class effect. This is a DIAGNOSTIC, not an attribution -- the package confound stands.",
+ "multiplicity_after": 4,
+ "multiplicity_before": 2,
+ "multiplicity_note": "4 candidates now stand in the development race (2 frozen + 2 scored here). A clears-claim is judged against a null accounting for FOUR, and each arm's random_net_max is ALREADY a max over 200 draws -- an extreme order statistic. No familywise correction is applied here because none was declared; the count is reported so a reader applies their own.",
+ "n_random": 200,
+ "population": {
+  "btc": {
+   "fit_actions": 352912,
+   "fit_drops": {
+    "fine": 0,
+    "pm": 13,
+    "state": 0
+   },
+   "fit_positive": 58232,
+   "fit_rows": 605243,
+   "score_actions": 188629,
+   "score_drops": {
+    "fine": 0,
+    "pm": 9,
+    "state": 0
+   },
+   "score_rows": 330193,
+   "score_windows": 166
+  },
+  "eth": {
+   "fit_actions": 465385,
+   "fit_drops": {
+    "fine": 0,
+    "pm": 0,
+    "state": 0
+   },
+   "fit_positive": 6406,
+   "fit_rows": 520033,
+   "score_actions": 268634,
+   "score_drops": {
+    "fine": 0,
+    "pm": 0,
+    "state": 0
+   },
+   "score_rows": 308715,
+   "score_windows": 171
+  }
+ },
+ "protocol": "PHASE2_THREE_ARM_V1",
+ "staged_because": "the single-process run was oom-killed at 14G after all four feature passes succeeded; fit and score are now separate processes (the daily-refit shape)"
+}

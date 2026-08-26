@@ -91,12 +91,30 @@ def evaluate_policy(rows: Sequence[dict[str, Any]], scores: Sequence[float],
         cancelled = order[:kk]
         theta = gmax[cancelled[-1]]
         net = harm = sac = 0.0
+        # PER-HOUR CONCENTRATION (Phase-2 gate). A net figure that is really
+        # one hour is not a robust effect, and the aggregate cannot show that.
+        # Tallied here rather than recomputed elsewhere, so the hours come from
+        # the SAME cancelled set the net comes from.
+        by_hour: dict = {}
         for gk in cancelled:
             cross = next(i for i in gens[gk] if scores[i] >= theta)
             v = val(cross)
             net += v
             if v > 0: harm += v
             else: sac += -v
+            by_hour[_hour(rows[cross])] = by_hour.get(_hour(rows[cross]), 0.0) + v
+        _tot = sum(by_hour.values())
+        _pos = {h: v for h, v in by_hour.items() if v > 0}
+        _top = max(by_hour.values()) if by_hour else 0.0
+        concentration = {
+            "n_hours_with_cancellations": len(by_hour),
+            "n_hours_net_positive": len(_pos),
+            "max_single_hour_net_cents": _top,
+            "max_single_hour_share_of_net": (_top / _tot) if _tot > 0 else None,
+            "net_by_hour": {str(h): round(v, 2) for h, v in sorted(by_hour.items())},
+            "net_excluding_best_hour": round(_tot - _top, 2),
+            "positive_without_best_hour": (_tot - _top) > 0,
+        }
         use: dict = {}
         for gk in cancelled:
             first = gens[gk][0]
@@ -112,6 +130,7 @@ def evaluate_policy(rows: Sequence[dict[str, Any]], scores: Sequence[float],
             r_nets.append(tot)
         r_nets.sort()
         out["budgets"][f"{int(b*100)}%"] = {
+            "concentration": concentration,
             "n_cancelled_generations": kk,
             "net_cents": net,
             "harm_avoided_cents": harm,
@@ -237,6 +256,30 @@ def selftest() -> int:
        and not evb["budgets"]["33%"]["beats_random_max_on_NET"],
        "inverted ranking loses AND fails the random comparison ON NET")
 
+    # ---- concentration falsifier: a single-hour result must SHOW as one ----
+    import time as _t
+    base = 1787650800.0                      # a fixed UTC hour
+    def _r(t0, off, gen, v):
+        return {"slug": f"btc-updown-5m-{int(t0)}", "side": "BUY_UP", "gen": gen,
+                "t_start": off, "t0": t0, "any_fill_ahead": True,
+                "latency": {"50": {"preventable_value_cents": v,
+                                   "preventable_shares": 1.0, "stale_shares": 0.0}}}
+    one_hour = [_r(base, i * 1.0, i, 100.0) for i in range(20)]
+    ev1 = evaluate_policy(one_hour, [float(i) for i in range(20)],
+                          latency_ms=50, budgets=(0.5,), n_random=200)
+    c1 = ev1["budgets"]["50%"]["concentration"]
+    ok(c1["n_hours_with_cancellations"] == 1 and c1["max_single_hour_share_of_net"] == 1.0,
+       "POSITIVE CONTROL: an all-one-hour result reports share 1.0 across 1 hour "
+       "-- a concentrated effect cannot hide inside an aggregate net")
+    ok(c1["positive_without_best_hour"] is False,
+       "and net_excluding_best_hour is NOT positive for a single-hour effect")
+    spread = [_r(base + 3600.0 * h, 1.0, h, 100.0) for h in range(8)]
+    ev2 = evaluate_policy(spread, [float(h) for h in range(8)],
+                          latency_ms=50, budgets=(1.0,), n_random=200)
+    c2 = ev2["budgets"]["100%"]["concentration"]
+    ok(c2["n_hours_with_cancellations"] == 8 and c2["positive_without_best_hour"] is True,
+       "KNOWN-GOOD: a spread result reports 8 hours and stays positive without "
+       "its best hour")
     print(f"harmful_action_eval selftest: {checks} checks OK")
     return 0
 
