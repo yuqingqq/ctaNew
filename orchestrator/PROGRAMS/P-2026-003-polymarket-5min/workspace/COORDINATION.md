@@ -14655,6 +14655,43 @@ provide properly, and they break git and tools indiscriminately. Until
 removed, any legitimate big shell operation needs `ulimit -v unlimited`
 first (hard limit is unlimited, so raising is permitted).
 
+### R-150 — **SERVER RESOURCE ALLOCATION POLICY (user-directed): research is fenced to ≤60% RAM / ≤75% CPU as enforced aggregates; collectors get a protected floor, high scheduling weight, and are now AUTO-RESTARTING UNITS. Both guards smoke-tested. One self-inflicted ~2–3 min gap disclosed.** (2026-08-26 ~05:4x UTC)
+
+**(1) The allocation, as enforced cgroup policy (percentages of the whole
+16-CPU / 30 G box):**
+
+| slice | memory | cpu | rationale |
+|---|---|---|---|
+| `research.slice` (ALL heavy jobs) | `MemoryMax=60%` (=18.4 G) hard, swap 0 | `CPUQuota=1200%` (12 of 16 cores) hard · `CPUWeight=50` · `TasksMax=1024` | no combination of research jobs can reach the collectors' memory; ≥4 cores always free for collectors/system; yields FIRST under contention |
+| `collectors.slice` (live tape) | `MemoryLow=2G` floor, NO Max | `CPUWeight=500`, NO quota | a collector is never cap-killed and never throttled; it wins contention 10:1 against research |
+
+Per-job caps (`MemoryMax ≤14G`, `OOMScoreAdjust=1000`) still apply INSIDE
+research.slice; the slice bounds the sum. Enforcement PROVEN, not assumed
+(rule 15): memory — child unit showed 1 G/18 G limits live in cgroupfs; CPU —
+four busy loops under a 100% test quota wanted ~10 s CPU, received
+2.60 s, `nr_throttled=26`, `throttled_usec=7.72 s`.
+
+**(2) Collectors converted from nohup to units (completes R-147(2)):**
+`collect-hf.service` + `collect-hl.service` — `Restart=always`,
+`RestartSec=5`, boot-enabled (linger already on), `Slice=collectors.slice`,
+logs append to the existing files, ledger appends a run row per start
+(verified: pid 30901, schema `hf_ws_v2_recv_boundary` unchanged → same era).
+The two PM collector units received drop-ins joining `collectors.slice` on
+their NEXT restart — no restart forced now (no new PM gap).
+
+**(3) Disclosure — the migration added ~2–3 min of mm_hf/hl gap (~05:33–05:36)
+by MY error:** the first unit files named `/usr/bin/python3`; the collectors
+need the pricer-sol venv interpreter. That is Q-BE-107(a) — filed by BE an
+hour earlier, transcribed by me into R-147(5), and then violated by me in the
+very next unit file. Registered verbatim because the rule evidently needs to
+be a checklist item, not prose: **every ExecStart names the venv interpreter
+absolutely; verify with one `import` before enabling.** 08-26's gap of record
+grows accordingly (it was already an incomplete day; forward day one stays
+08-27).
+
+**(4) Still root-gated, with the user:** `systemd-oomd` enablement, the small
+swapfile, and deleting the `~/.bashrc` ulimit lines (R-149).
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited

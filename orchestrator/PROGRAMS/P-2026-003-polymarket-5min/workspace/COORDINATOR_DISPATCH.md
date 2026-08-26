@@ -44,7 +44,7 @@ forward windows.**
 - **HEAVY-RUN RULE (R-148(3), supersedes R-145(4)/R-147(5) patterns): every
   heavy run launches under
   `systemd-run --user --slice=research.slice -p MemoryMax=<job ≤14G> -p OOMScoreAdjust=1000 -- /home/yuqing/pricer-sol/venv/bin/python3 <script>`.**
-  The slice caps AGGREGATE research memory at 18G (installed, smoke-tested —
+  The slice caps AGGREGATE research memory at 60% (18.4G) and CPU at 1200% (12/16 cores), CPUWeight 50 vs collectors 500 (installed, smoke-tested —
   the 08-26 03:55 box death was an aggregate exhaustion no per-job cap
   bounded). Bare heavy launches from session shells are FORBIDDEN. Never
   `MemoryHigh` (swapless stall); snapshot any receipt a reproduction would
