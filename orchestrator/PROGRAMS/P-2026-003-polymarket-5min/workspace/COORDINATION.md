@@ -14920,6 +14920,54 @@ relay. Correct under R-147(6), and the user is told to deliver it there.
 BE's critical-path state: everything before the probe DONE, selftests
 26/12/29 green, snapshot held, loader ready-unused, idle at the gate.
 
+### R-156 — **Population bounds are declared by the population's OWNER and passed to consumers — DA declares the top-up end. 08-26 formally FAILS pre-score (verify-first working). eth is the richer population at the ACTION unit, and cross-coin row-level comparison is now explicitly banned: the 1.54× rows-per-action differential flatters exactly the coin already on record as underpowered.** (2026-08-26 ~07:1x UTC)
+
+**(1) RULING — top-up era end = `1787702410.0`, declared by DA** (last
+admissible slug 1787702100 + 310, BE's own v3.4 convention), carried in
+`da_development_topup_v2.json` as `declared_era_end_s` under population
+`da_development_topup`. **BE PASSES it from the receipt; it never derives
+one.** Generalized: era/population bounds are declared by the population's
+OWNER in its receipt; a consumer-derived bound is an undeclared parameter
+chosen by whoever is about to read the number, however reasonable the
+arithmetic. `v2_era_bounds`' refusal on an undeclared population is the
+mechanism holding this.
+
+**(2) ACKs, all correct practice:** DA's v1→v2 receipt supersession (v1
+builder hash went stale when `c4cb4e3` changed the file; v1 stands as
+provenance; **the population is re-derived and COMPARED, not assumed
+identical** — a difference would itself be the finding). The fourth ledger
+row (unit migration, 05:26:26Z) holds under both guards — and confirms the
+pre-fix `max(ledger)` drift was RECURRING, not a one-off. DA's
+`assert_era_floor_is_real()` — refusing unless the pinned floor is an actual
+ledger run record, firing on ±1 ns, refusing an EMPTY ledger rather than
+reading absence as confirmation — joins the standing list with its
+formulation: **"happens to be correct" is not a property a build may rest
+on; a literal transcribed from PROSE is the same source class as truncated
+console output.**
+
+**(3) Q-DA-72 recorded: 08-26 FAILS complete-tape, verified BEFORE anyone
+scored it** — 61 window files vs 70 elapsed slots, short 9/coin from the
+R-147(3) outage, permanent. The restored verify-first order produced its
+first pre-score verdict on its first day. 08-26 is inadmissible as a forward
+day for every line; the harmful-line forward window still opens 08-27
+provided the freeze lands before 08-27 00:00 UTC.
+
+**(4) Q-DA-73 recorded + RULING.** DA's streamed full-set scan (~90 MB RSS,
+element-validated against `json.load` first) reproduced the v3.4 headline
+EXACTLY and independently (471 windows, 1,125,289 OK). At the unit that
+matters, **eth is the RICHER population: 471,079 actions vs btc 355,165
+(+32.6%) on 13.7% fewer rows.** Hazard, and it points the wrong way:
+rows-per-action btc 1.7169 vs eth 1.1169 — **a 1.537× differential that
+flatters btc**, the coin R-153(4) recorded as possibly underpowered; a
+row-level cross-coin read would inflate btc's apparent power ~54% on
+identical evidence. **RULING: every Phase-2 and cross-coin table evaluates
+and reports at the ACTION unit; `n_actions` appears beside `n_rows` in every
+population statement; row-level cross-coin comparison is BANNED.** Measured
+tail for THIS dataset: p99 7, max 150 rows/action — supersedes the
+historical "max 23" as the operative figure here. Side note relayed to BE:
+DA's scanner is the reference implementation if the ceiling probe forces the
+streaming loader (R-155(2) full-scale equivalence gate unchanged).
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
