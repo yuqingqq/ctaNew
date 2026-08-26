@@ -14779,6 +14779,65 @@ priority (research at +1000 dies far earlier); the `~/.bashrc` 12 GiB vmem
 cap sits ~6% above the node fill-recorders' 11.3 GiB address space (R-149
 recommends deleting those lines); `systemd-oomd`/swap remain root-gated.
 
+### R-153 — **Residual hardening EXECUTED (one root command left for the user). Q-DA-67 UPHELD: my restart broke the repro's selector — fix specified, owner BE, repro re-sequenced. Q-DA-69: day one STAYS IN, disclosed; verify-first restored. Q-DA-70/71 accepted; Phase 2's btc population is 33 windows and that is on the record.** (2026-08-26 ~06:3x UTC)
+
+**(1) Residuals done (user-directed).** `~/.bashrc` ulimit guard REMOVED
+(dated tombstone comment left in place; processes started before removal keep
+their inherited caps until relaunch — the pcsx fill-recorders were confirmed
+carrying `CLAUDECODE=1` and the 12 GiB cap, so their next restart frees them).
+`research.slice` pre-armed for oomd: `ManagedOOMMemoryPressure=kill`,
+limit 80% — inert until the daemon runs. Root steps staged as ONE idempotent
+command for the user: **`sudo bash scripts/server_hardening_20260826.sh`**
+(enables systemd-oomd · 4 G swapfile + fstab · `vm.swappiness=10`).
+`gc.auto` stays 0; repo gc runs in-slice.
+
+**(2) RULING — Q-DA-67 UPHELD, and the stop-order stands.**
+`v2_era_bounds()` read the ledger for RECENCY (`max(started_at_ns)`) where
+R-147(2) ruled SEMANTICS: all three run rows carry identical
+`(collector_schema_version, stamp_point)`, so no boundary moved — yet the
+code moved the floor 39.4 h and now admits 0 of 926 windows. **Fix
+specification (owner: BE, inside the blocking item, manifest re-pins the new
+hash):** era floor = the literal `1787579334881534478`; era end = a declared
+literal per population (v3.4: the consumed-fragment end) — both read from
+the manifest, passed explicitly, `time.time()` forbidden as an implicit
+bound; a ledger row changes the era ONLY on a `(schema, stamp_point)`
+transition (DA's Q-DA-68 keying is the reference implementation). **The
+repro sequence is now: Q-DA-67 fix committed → manifest re-pin → user's go →
+R-151(6) ceiling probe.** A zero-window result before the fix is a SELECTOR
+failure by construction and must never be read as model irreproducibility.
+
+**(3) RULING — Q-DA-69: DA's recommendation ADOPTED in full.** Day one
+(08-25, btc) STAYS IN THE RACE with the disclosure attached to every
+citation: 231/288 windows (80.2%) gap-affected, 28.0 gaps/hr vs bar 15,
+61.2 min lost, eth 0.7% the same day. Excluding a day that returned a
+NEGATIVE, after scoring, is outcome-selected exclusion — forbidden by the
+same principle as rules 1/11. **Order restored as a precondition: DA
+verifies a day BEFORE anyone scores it, for days 2–5 and thereafter.** The
+btc-specific cause (eth control refutes host-wide resource starvation) goes
+to the commissioned recv_ns/gap measurement — **OPS seat is UNSTAFFED;
+flagged to the user.**
+
+**(4) RULING — Q-DA-70 accepted as declared; Phase 2 proceeds on the thin
+population, and thinness is a named outcome, not a surprise.** btc n=33 OK
+windows (19.1%; PM_GAP-dominated — the SAME btc anomaly as Q-DA-69, measured
+by a second method), eth n=171 (98.8%). The top-up boundary declaration
+STANDS: no extension into 08-26+ tape to fatten development — reserved
+forward tape is not spent on this. If 33 windows cannot separate three
+heads, the named result is UNDERPOWERED-ON-BTC and the state candidate
+carries as unadopted on btc; eth is the informative coin for Phase 2. G=1,
+no intervals on anything from the fragment.
+
+**(5) ACKs.** Q-DA-71: PRED_STATE_V1 built-not-scored; the conservation
+attribution (100.0% on every tested window, no tolerance parameter)
+replacing the 50 ms pairing is a PRE-SCORING design fix — nothing was seen,
+no multiplicity cost — and is the better instrument; the taker/maker side
+bug and the microprice ABSENT-by-§4's-own-condition are both correct
+handling. Q-DA-68: the empty-vs-empty lesson is generalized to the standing
+falsifier list — **two empty sets comparing equal is not an invariance**; a
+checker must refuse a token that matches nothing. Dispatch 8 G text: already
+superseded in the standing-rules bullet (DA read a pre-edit copy); the OPS
+row's "audit ulimit" is moot after (1).
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
