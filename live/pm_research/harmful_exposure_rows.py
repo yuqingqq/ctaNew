@@ -234,6 +234,9 @@ def trade_receipt_times(path: Path, up_id: str, down_id: str) -> list[float]:
 # absorb a regression; it only absorbs float representation.
 CLOCK_TOL_S = 1e-6
 
+# R-153(2): the era floor is READ FROM THE MANIFEST, which owns the pin.
+from harmful_candidate_manifest import ERA_BOUNDARY_NS
+
 
 def verify_consume_clock(consume_times: Sequence[float],
                          trade_times: Sequence[float]) -> int:
@@ -424,16 +427,92 @@ def select_stratified(per_coin_per_day: int,
     return out
 
 
-def v2_era_bounds() -> tuple[float, float]:
-    import json as _json, time as _time
-    runs = [_json.loads(l) for l in
-            open('/home/yuqing/ctaNew/data/mm_hf/collector_runs.jsonl')]
-    return max(r['started_at_ns'] for r in runs) / 1e9, _time.time()
+# --- era bounds: PINNED LITERALS, never derived (R-153(2), Q-DA-67) --------
+# THE DEFECT THIS REPLACES, and why it was not a small one:
+#   floor = max(started_at_ns) over collector_runs.jsonl
+#   end   = time.time()
+# Both FLOAT. Every collector restart appended a ledger row, so the floor
+# walked 39.6 h forward and select_v2_era admitted 0 of 926 windows -- the
+# entire 08-24/25 consumed fragment fell below its own era floor. A build in
+# that state produces zero windows, which reads as MODEL IRREPRODUCIBILITY
+# when it is purely a selector failure. And `time.time()` made the admitted
+# population depend on the wall clock, so two runs minutes apart select
+# different windows: a cent-exact reproduction is IMPOSSIBLE against a moving
+# population, independent of any memory or model question.
+#
+# THE RULE: a ledger row changes the era ONLY on a transition of
+# (collector_schema_version, stamp_point). A restart on the SAME key is a
+# COVERAGE GAP, not a new era -- gaps are handled per-event by the existing
+# binance-continuity check, never by moving the floor.
+ERA_KEY_FIELDS = ("collector_schema_version", "stamp_point")
+# Verified at the ledger, not guessed: all four rows carry this exact pair.
+# (BE's first draft used a TRUNCATED stamp_point copied from a 110-char
+# console display; assert_no_era_transition REFUSED it immediately rather
+# than admitting a wrong era. Third time this session an instrument caught
+# its own author -- and the failure mode it prevented is the worst kind:
+# a plausible-looking era key that silently admits the wrong tape.)
+DECLARED_ERA_KEY = ("hf_ws_v2_recv_boundary",
+                    "IMMEDIATELY_AFTER_WS_RECV_BEFORE_JSON_PARSE")
+LEDGER_PATH = '/home/yuqing/ctaNew/data/mm_hf/collector_runs.jsonl'
+
+# Population-scoped declared END values. Each is a LITERAL tied to a named
+# population, never a clock read. v3.4: last slug t0 1787650200 (08-25
+# 09:30:00Z) + WINDOW_S(300) + MARKOUT_S(5) + 5 -- the end of the last
+# complete window in the consumed fragment, verified at the artifact
+# (471 slugs, matching the receipt's n_windows).
+DECLARED_ERA_END_S = {"v3_4_consumed_fragment": 1787650510.0}
 
 
-def select_v2_era(coins: Sequence[str]) -> tuple[list, int]:
+class EraTransition(RuntimeError):
+    """The ledger shows a genuine era change; a pinned literal cannot stand."""
+
+
+def ledger_era_keys(path: str = LEDGER_PATH) -> list[tuple]:
+    import json as _json
+    out = []
+    for line in open(path):
+        try:
+            r = _json.loads(line)
+        except ValueError:
+            continue
+        out.append(tuple(r.get(f) for f in ERA_KEY_FIELDS))
+    return out
+
+
+def assert_no_era_transition(path: str = LEDGER_PATH) -> None:
+    """REFUSE if the ledger contains a key other than the declared one.
+
+    This is what makes pinning SAFE rather than merely stable: if the
+    collector's schema or stamp point genuinely changes, the pinned literal no
+    longer describes the admissible range, and continuing would silently mix
+    eras -- exactly the failure CLAUDE.md rule 5 exists to prevent. A restart
+    on the same key is fine and must NOT trip this."""
+    keys = set(ledger_era_keys(path))
+    unexpected = keys - {DECLARED_ERA_KEY}
+    if unexpected:
+        raise EraTransition(
+            f"ledger carries era key(s) {sorted(unexpected)!r} besides the "
+            f"declared {DECLARED_ERA_KEY!r}. The pinned boundary describes only "
+            f"the declared era; re-declare the boundary before building.")
+
+
+def v2_era_bounds(population: str = "v3_4_consumed_fragment",
+                  era_end_s: float | None = None) -> tuple[float, float]:
+    """(floor, end) as PINNED LITERALS. `time.time()` is forbidden here."""
+    assert_no_era_transition()
+    end = era_end_s if era_end_s is not None else DECLARED_ERA_END_S.get(population)
+    if end is None:
+        raise ValueError(
+            f"no declared era end for population {population!r}. An end must be "
+            f"DECLARED per population; defaulting to the clock is what made the "
+            f"population non-reproducible.")
+    return ERA_BOUNDARY_NS / 1e9, float(end)
+
+
+def select_v2_era(coins: Sequence[str],
+                  population: str = "v3_4_consumed_fragment") -> tuple[list, int]:
     fi = qr.base.fi
-    bounds = v2_era_bounds()
+    bounds = v2_era_bounds(population)
     paths = fi._archive_paths(); tokens = fi.token_map()
     gaps = fi.gaps_by_slug(fi.ERA)
     out = []; n_gap = 0
@@ -476,11 +555,12 @@ def replay_with_recorder(path, up, dn, gaps, spec):
 
 def build_rows(per_coin: int | None = None,
                coins: Sequence[str] = ("btc", "eth"),
-               v2_era: bool = False) -> dict[str, Any]:
+               v2_era: bool = False,
+               population: str = "v3_4_consumed_fragment") -> dict[str, Any]:
     import datetime as _dt
     spec = qr._qr_spec(qr.QR_SKEW, latency_ms=0, cancel=False)
     if v2_era:
-        selected, n_bn_gap = select_v2_era(coins)
+        selected, n_bn_gap = select_v2_era(coins, population)
     else:
         selected, n_bn_gap = select_stratified(per_coin or 10, coins=coins), 0
     rows: list[dict[str, Any]] = []
@@ -671,6 +751,65 @@ def selftest() -> int:
 
     import harmful_action_eval as ae
     ok(hasattr(ae, "evaluate_policy"), "action evaluator present")
+    # ---- R-153(2) era-pin falsifiers (rule 15: both arms must fire) -------
+    import tempfile as _tf, json as _js, inspect as _ins, ast as _ast
+
+    # KNOWN-GOOD: the real ledger is one era, so bounds resolve.
+    _b = v2_era_bounds()
+    ok(_b[0] == ERA_BOUNDARY_NS / 1e9,
+       "era floor IS the pinned literal, not a ledger max")
+    ok(_b[1] == DECLARED_ERA_END_S["v3_4_consumed_fragment"],
+       "era end IS the declared literal for the population")
+    ok(len(set(ledger_era_keys())) == 1,
+       "the real ledger carries ONE era key: the 08-26 restarts are coverage "
+       "gaps, not era transitions")
+
+    # POSITIVE CONTROL: a genuine era transition MUST be refused.
+    with _tf.NamedTemporaryFile("w", suffix=".jsonl", delete=False) as fh:
+        fh.write(_js.dumps({"started_at_ns": 1, **dict(zip(ERA_KEY_FIELDS,
+                 DECLARED_ERA_KEY))}) + "\n")
+        fh.write(_js.dumps({"started_at_ns": 2,
+                 "collector_schema_version": "hf_ws_v3_SOMETHING_ELSE",
+                 "stamp_point": DECLARED_ERA_KEY[1]}) + "\n")
+        _bad = fh.name
+    try:
+        assert_no_era_transition(_bad)
+        ok(False, "POSITIVE CONTROL: a schema change must be REFUSED")
+    except EraTransition:
+        ok(True, "POSITIVE CONTROL: a real era transition is REFUSED")
+
+    # a same-key restart must NOT trip the guard (the 08-26 case)
+    with _tf.NamedTemporaryFile("w", suffix=".jsonl", delete=False) as fh:
+        for n in (1, 2, 3):
+            fh.write(_js.dumps({"started_at_ns": n,
+                     **dict(zip(ERA_KEY_FIELDS, DECLARED_ERA_KEY))}) + "\n")
+        _good = fh.name
+    assert_no_era_transition(_good)
+    ok(True, "three restarts on the SAME key do NOT trip the guard")
+
+    # an undeclared population must RAISE, never fall back to a clock
+    try:
+        v2_era_bounds("population_that_was_never_declared")
+        ok(False, "an undeclared population must raise")
+    except ValueError:
+        ok(True, "an undeclared population RAISES rather than defaulting to "
+                 "the wall clock -- the defect that made the population "
+                 "non-reproducible")
+
+    # AST proof that no clock is consulted (a docstring may NAME time.time)
+    _fn = _ast.parse(_ins.getsource(v2_era_bounds)).body[0]
+    _calls = {(n.func.attr if isinstance(n.func, _ast.Attribute)
+               else n.func.id if isinstance(n.func, _ast.Name) else "?")
+              for n in _ast.walk(_fn) if isinstance(n, _ast.Call)}
+    ok(not (_calls & {"time", "now", "today", "monotonic"}),
+       "v2_era_bounds consults NO clock (checked by AST, not by grepping the "
+       "source, which would match the docstring forbidding it)")
+
+    # the consumed fragment must fall inside its own bounds
+    ok(1787579400 >= _b[0] and 1787650200 + 310.0 <= _b[1],
+       "the v3.4 fragment's first and last slugs fall INSIDE the pinned "
+       "bounds -- the 0-of-926 selection failure cannot recur")
+
     print(f"harmful_exposure_rows v3 selftest: {checks} checks OK")
     return 0
 

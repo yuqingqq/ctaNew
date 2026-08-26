@@ -47,6 +47,9 @@ HASHED = [
     "live/pm_research/flow_fill_development.py",                 # dep
     "live/pm_research/policy_bounds_v1.py",                      # dep
     "live/pm_research/flow_intensity.py",                        # dep
+    "live/pm_research/harmful_exposure_rows.py",                 # era selector
+    "live/pm_research/harmful_action_eval.py",                   # evaluator
+    "live/pm_research/harmful_rows_loader.py",                   # streaming load path
 ]
 
 
@@ -194,10 +197,155 @@ def selftest() -> int:
     return 0
 
 
+def build() -> dict:
+    """Emit `harmful_candidate_manifest_v1.json`.
+
+    Everything a fresh process needs to reproduce the named development
+    scores WITHOUT FITTING and WITHOUT READING GROWING RAW DATA. Fields that
+    genuinely do not exist yet (fitted weights) are marked PENDING with the
+    reason -- never omitted, never faked, because an automated reader must be
+    able to tell "not yet measured" from "measured as absent"."""
+    import subprocess as _sp
+    from harmful_exposure_rows import (DECLARED_ERA_KEY, DECLARED_ERA_END_S,
+                                       ledger_era_keys)
+
+    ds = REPO / "data/pm_5min/derived/harmful_exposure_rows_v3_eraB.json"
+    hashes = {}
+    for rel in HASHED:
+        f = REPO / rel
+        hashes[rel] = sha256(f) if f.exists() else "ABSENT"
+
+    as_of = _sp.run(["date", "-u", "+%Y-%m-%dT%H:%M:%SZ"],
+                    capture_output=True, text=True).stdout.strip()
+    m = {
+        "protocol": "HARMFUL_CANDIDATE_MANIFEST_V1",
+        "as_of_utc": as_of,
+        "git_commit": git("rev-parse", "HEAD"),
+        "git_dirty": bool(git("status", "--porcelain")),
+
+        "era": {
+            "boundary_ns": ERA_BOUNDARY_NS,
+            "boundary_utc": ERA_BOUNDARY_UTC,
+            "pinned_literal": True,
+            "why_pinned": "Deriving it from max(started_at_ns) let two "
+                          "collector restarts walk the floor 39.6 h forward "
+                          "and admit 0 of 926 windows (Q-DA-67). A derived "
+                          "boundary redefines yesterday's admissibility.",
+            "declared_era_key": list(DECLARED_ERA_KEY),
+            "ledger_distinct_keys": len(set(ledger_era_keys())),
+            "era_end_s": DECLARED_ERA_END_S["v3_4_consumed_fragment"],
+            "era_end_basis": "last slug t0 1787650200 + WINDOW_S 300 + "
+                             "MARKOUT_S 5 + 5; verified at the artifact",
+        },
+        "population": {
+            "name": "v3_4_consumed_fragment",
+            "schema": "harmful_exposure_v3_4_fill_scoped_markout",
+            "n_windows": 471,
+            "n_rows_total": 1135943,
+            "n_rows_ok": 1125289,
+            "statuses": {"OK": 1125289, "GAP_IN_HORIZON": 10456,
+                         "TRUNCATED_HORIZON": 198},
+            "by_coin": {"btc": 609775, "eth": 526168},
+            "by_coin_day": {"btc|2026-08-24": 321770, "btc|2026-08-25": 288005,
+                            "eth|2026-08-24": 265018, "eth|2026-08-25": 261150},
+            "days": ["2026-08-24", "2026-08-25"],
+            "first_slug_t0": 1787579400,
+            "last_slug_t0": 1787650200,
+            "split_embargo_s": SPLIT_EMBARGO_S,
+            "correctness_counters": {"reconciliation_failures": 0,
+                                     "boundary_time_violations": 0,
+                                     "consume_clock_violations": 0,
+                                     "unhooked_state_changes": 0},
+            "consumed": True,
+            "role": "DEVELOPMENT ONLY -- partial 08-24/25 fragment, five specs "
+                    "already scored on it. Never forward validation.",
+        },
+        "split": {
+            "train_days": ["2026-08-24"],
+            "dev_day": "2026-08-25",
+            "derived_from": "receipt days[:-1] / days[-1]",
+            "supersedes_docstring_claim": "harmful_hazard_model.py:24 declares "
+                "'train 2026-08-20/21, development 2026-08-22'. All three days "
+                "END before the era boundary and NONE appear in this dataset; "
+                "the docstring is stale and this field governs.",
+        },
+        "hashes": hashes,
+        "deps": {"python": _sp.run([sys.executable, "-c",
+                    "import sys;print('.'.join(map(str,sys.version_info[:3])))"],
+                    capture_output=True, text=True).stdout.strip(),
+                 "numpy": _sp.run([sys.executable, "-c",
+                    "import numpy;print(numpy.__version__)"],
+                    capture_output=True, text=True).stdout.strip(),
+                 "sklearn": _sp.run([sys.executable, "-c",
+                    "import sklearn;print(sklearn.__version__)"],
+                    capture_output=True, text=True).stdout.strip()},
+        "reproduction_contract": {
+            "target_latency_ms": 50,
+            "peak_rss_lower_bound_bytes": PEAK_RSS_LOWER_BOUND_BYTES,
+            "peak_rss_status": PEAK_RSS_STATUS,
+            "peak_rss_source": PEAK_RSS_SOURCE,
+            "streaming_load_path": "live/pm_research/harmful_rows_loader.py",
+            "streaming_projected_bytes": 1_060_000_000,
+            "streaming_equivalence": "5000 rows field-by-field vs independent "
+                                     "full parse: 0 differences",
+            "launch": "systemd-run --user --slice=research.slice "
+                      "-p MemoryMax=14G -p OOMScoreAdjust=1000 -- "
+                      "/home/yuqing/pricer-sol/venv/bin/python3 ...",
+        },
+        "candidate": {
+            "spec": "PM_PLUS_FINE (reduced fine)",
+            "features_pm": "54 PM queue/flow features, scales 0.01-5.0s, LAG_S 0.001",
+            "features_fine": ["bnf_midbps @10,25,50,100,250ms", "bnf_imb_now"],
+            "fine_cutoff_s": 0.001,
+            "normalization": "z-score on train rows, applied in place",
+            "weights": "PENDING -- no fit has completed on this box; the "
+                       "reproduction has never run to completion. Marked "
+                       "PENDING rather than omitted so a reader cannot mistake "
+                       "'not yet measured' for 'measured as absent'.",
+            "thresholds": "per-generation max score, quantile at budget "
+                          "{0.05,0.10,0.15}; first crossing cancels once",
+        },
+        "declared_nulls": {"n_random": 200,
+                           "matching": "side x hour strata, matched action count",
+                           "decision_metric": "net_cents (NOT harm share)"},
+        "target_scores_to_reproduce": {
+            "source_receipt": "harmful_fine_comparison_v3.json",
+            "source_sha256_at_snapshot":
+                "3279e2aab3c3723e4832d676dbb014f43eccd09ecf111e2a10107f5dd3cf8228",
+            "btc_PM_PLUS_FINE": {"auc": 0.692310, "n_generations": 171452,
+                                 "net_cents_5pct": 2492.200082000001,
+                                 "harm_avoided_cents_5pct": 9217.5027415},
+            "eth_PM_PLUS_FINE": {"auc": 0.731839, "n_generations": 231721,
+                                 "net_cents_5pct": 131.69754650000002,
+                                 "harm_avoided_cents_5pct": 1878.7572594999995},
+        },
+        "multiplicity_note": "adverse race = v2.1 alone (multiplicity 1) per "
+                             "R-147(4); the harmful-fill line is separate.",
+        "freeze_status": "NOT FROZEN. The freeze is the user's decision and "
+                         "Phase-0 reproduction has not yet run.",
+    }
+    out = DERIVED / "harmful_candidate_manifest_v1.json"
+    atomic_write_json(out, m)
+    return {"path": str(out), "n_hashes": len(hashes), "manifest": m}
+
+
 def main() -> int:
     if "--selftest" in sys.argv:
         return selftest()
-    print("build the manifest with: python3 harmful_candidate_manifest.py build")
+    if "build" in sys.argv:
+        r = build()
+        print(f"WROTE {r['path']}")
+        m = r["manifest"]
+        print(f"  era floor pinned : {m['era']['boundary_ns']} ({m['era']['boundary_utc']})")
+        print(f"  era end declared : {m['era']['era_end_s']}")
+        print(f"  ledger era keys  : {m['era']['ledger_distinct_keys']} (1 = no transition)")
+        print(f"  population       : {m['population']['n_windows']} windows, "
+              f"{m['population']['n_rows_ok']:,} OK rows")
+        print(f"  hashes pinned    : {r['n_hashes']}")
+        print(f"  weights          : {m['candidate']['weights'][:38]}...")
+        print(f"  freeze_status    : {m['freeze_status'][:34]}...")
+        return 0
+    print("usage: harmful_candidate_manifest.py [build|--selftest]")
     return 0
 
 
