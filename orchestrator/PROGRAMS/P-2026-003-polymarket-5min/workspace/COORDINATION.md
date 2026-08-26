@@ -14750,6 +14750,33 @@ unchanged: cent-exact match to the receipt. Implementation work on that load
 path is NOT covered by the user's hold (the hold was on relaunching, not on
 writing code) — starting it now is BE's choice.
 
+### R-152 — **CO-TENANCY OF RECORD (user-supplied topology): this box serves LIVE RFQ QUOTING. Research is a guest here. The 08-26 crash cost that service 43 minutes.** (2026-08-26 ~06:1x UTC)
+
+**Topology (user-supplied, usage verified):** Internet :443 → `caddy`
+(container; TLS, routes by path + source IP) → `/OKXDEX/intent/*` (OKX IPs)
+and `/pcsx/rfq` (PCS IPs) → **`okx-solver-blue`** (active, node :8080) /
+**`okx-solver-green`** (hot standby), docker network `okx-net`, redis behind
+(1.9 G), pcsx monitor/recorder helpers in session scopes (~230 MiB). One
+solver pair serves BOTH venues — there is no separate PCS process.
+
+**Standing constraint every plane inherits:** live, latency-sensitive,
+revenue-serving traffic shares this machine. The R-148/R-150 fences exist as
+much for the solvers as for the collectors: research ≤60% RAM / ≤12 cores
+means the solver stack keeps ≥11.6 G and ≥4 cores no matter what research
+does. The heavy-run launch pattern is therefore not hygiene — it is the
+guarantee the quoting service holds its SLA against us.
+
+**Evidence and boundaries:** solver containers live in
+`system.slice/docker-*.scope` — disjoint from the research/collector slices;
+nothing we set reaches them, verified. Their own recovery is sound:
+`restart=unless-stopped`, docker boot-enabled, back **23 s after boot**
+(04:38:22) — the 08-26 outage (~03:55→04:38, **43 min**) was entirely the
+box dying, i.e., entirely the research side's failure. Residual risks are
+the user's calls, unchanged by us: containers run unlimited with default OOM
+priority (research at +1000 dies far earlier); the `~/.bashrc` 12 GiB vmem
+cap sits ~6% above the node fill-recorders' 11.3 GiB address space (R-149
+recommends deleting those lines); `systemd-oomd`/swap remain root-gated.
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
