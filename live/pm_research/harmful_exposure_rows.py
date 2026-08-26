@@ -354,18 +354,50 @@ def label_rows(segments: Sequence[dict], gens: dict, wf: Any,
 _BN_GAPS: dict = {}
 
 
-def _bn_gap_index(sym: str, lo_ns: int) -> list:
+def _hour_files_upto(sym: str, hi_ns: int) -> list:
+    """Hour files for `sym` whose hour STARTS at or before hi_ns.
+
+    Q-DA-75: the unbounded `*.csv*` glob scanned to the present and therefore
+    raced the live collector's hourly csv -> gz rotation: the glob lists
+    `..._07.csv`, the collector rotates it to `..._07.csv.gz`, and the open
+    fails. A FULLY PAST population has no business opening the current hour at
+    all, so the bound removes the race rather than catching it. It is also
+    intermittent by nature -- it can only fire at an hour boundary -- which is
+    exactly the kind of defect that looks like flakiness and gets retried away.
+
+    `except FileNotFoundError: continue` is FORBIDDEN here (ruling): a missing
+    file must fail loudly, never become a silently dropped gap. A dropped gap
+    admits a window whose continuity was never actually verified."""
+    import glob as _glob, datetime as _dt, os as _os
+    out = []
+    for f in _glob.glob(
+            f"/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/{sym}/*.csv*"):
+        stem = _os.path.basename(f).split(".")[0]          # YYYYMMDD_HH
+        try:
+            h = _dt.datetime.strptime(stem, "%Y%m%d_%H").replace(
+                tzinfo=_dt.timezone.utc)
+        except ValueError:
+            continue                                        # not an hour file
+        if h.timestamp() * 1e9 <= hi_ns:
+            out.append(f)
+    return sorted(out)
+
+
+def _bn_gap_index(sym: str, lo_ns: int, hi_ns: int) -> list:
     """Era-pure gap intervals (> BN_MAX_GAP_S) for one symbol. Built ONCE per
     symbol by a single pass over its files, then every window check is an
     interval-overlap lookup — the per-window rescan would have re-read each
-    2.4M-row hour file ~12 times."""
-    if sym in _BN_GAPS:
-        return _BN_GAPS[sym]
-    import gzip, glob
+    2.4M-row hour file ~12 times.
+
+    `hi_ns` is the DECLARED population end. The cache key carries it, because
+    an index built under one bound must never be served under another."""
+    key = (sym, lo_ns, hi_ns)
+    if key in _BN_GAPS:
+        return _BN_GAPS[key]
+    import gzip
     gaps = []
     prev = None
-    files = sorted(glob.glob(
-        f"/home/yuqing/ctaNew/data/mm_hf/raw/bookTicker/{sym}/*.csv*"))
+    files = _hour_files_upto(sym, hi_ns)
     for f in files:
         op = gzip.open if f.endswith(".gz") else open
         with op(f, "rb") as fh:
@@ -382,16 +414,16 @@ def _bn_gap_index(sym: str, lo_ns: int) -> list:
                 if prev is not None and r - prev > BN_MAX_GAP_S * 1e9:
                     gaps.append((prev / 1e9, r / 1e9))
                 prev = r
-    _BN_GAPS[sym] = {"gaps": gaps, "first": None if prev is None else lo_ns/1e9,
+    _BN_GAPS[key] = {"gaps": gaps, "first": None if prev is None else lo_ns/1e9,
                      "last": None if prev is None else prev / 1e9}
-    return _BN_GAPS[sym]
+    return _BN_GAPS[key]
 
 
 def binance_continuity_ok(t0: int, coin: str, bounds) -> bool:
     sym = {"btc": "BTCUSDT", "eth": "ETHUSDT"}.get(coin)
     if sym is None:
         return False
-    idx = _bn_gap_index(sym, int(bounds[0] * 1e9))
+    idx = _bn_gap_index(sym, int(bounds[0] * 1e9), int(bounds[1] * 1e9))
     if idx["last"] is None:
         return False
     a = t0 - 10.0
@@ -472,7 +504,7 @@ DECLARED_ERA_END_S = {"v3_4_consumed_fragment": 1787650510.0}
 DECLARED_ERA_END_RECEIPTS = {
     "da_development_topup": (
         "/home/yuqing/ctaNew/data/pm_5min/derived/da_development_topup_v2.json",
-        "declared_era_end_s"),
+        "bounds.declared_era_end_s"),
 }
 
 
@@ -491,11 +523,23 @@ def declared_era_end_from_receipt(population: str) -> float:
             f"declaring plane's receipt, not from a message, a memory, or this "
             f"consumer's own arithmetic.")
     d = _json.loads(f.read_text())
-    if field not in d:
+    # IDENTITY CHECK before value read: a receipt is addressed by population,
+    # so confirm this file is the one that population owns. Reading the right
+    # field out of the wrong receipt is the failure a path alone cannot catch.
+    rv = str(d.get("receipt_version", ""))
+    if not rv.startswith(population):
         raise UndeclaredEraEnd(
-            f"{f.name} exists but declares no {field!r}. Refusing rather than "
-            f"substituting a locally computed end.")
-    return float(d[field])
+            f"{f.name} declares receipt_version {rv!r}, which does not belong "
+            f"to population {population!r}. Refusing to read a value out of a "
+            f"receipt addressed to something else.")
+    node = d
+    for part in field.split("."):          # dotted path: DA nests under bounds
+        if not isinstance(node, dict) or part not in node:
+            raise UndeclaredEraEnd(
+                f"{f.name} exists but declares no {field!r}. Refusing rather "
+                f"than substituting a locally computed end.")
+        node = node[part]
+    return float(node)
 
 
 class EraTransition(RuntimeError):
@@ -793,6 +837,7 @@ def selftest() -> int:
     ok(hasattr(ae, "evaluate_policy"), "action evaluator present")
     # ---- R-153(2) era-pin falsifiers (rule 15: both arms must fire) -------
     import tempfile as _tf, json as _js, inspect as _ins, ast as _ast
+    import ast as _ast2
 
     # KNOWN-GOOD: the real ledger is one era, so bounds resolve.
     _b = v2_era_bounds()
@@ -851,18 +896,31 @@ def selftest() -> int:
        "bounds -- the 0-of-926 selection failure cannot recur")
 
     # ---- R-156(1): another plane's declared end is READ, never derived ----
+    # POSITIVE CONTROL for an ABSENT receipt. This used to rely on DA's v2 not
+    # existing yet; once DA wrote it the arm started failing -- a control must
+    # not depend on the state of another plane's work, or it silently changes
+    # meaning the moment that work lands.
+    _sv0 = DECLARED_ERA_END_RECEIPTS["da_development_topup"]
+    DECLARED_ERA_END_RECEIPTS["da_development_topup"] = (
+        "/nonexistent/da_development_topup_v2.json", "bounds.declared_era_end_s")
     try:
         v2_era_bounds("da_development_topup")
         ok(False, "the top-up end must not resolve while its receipt is absent")
     except UndeclaredEraEnd:
         ok(True, "POSITIVE CONTROL: a population whose declaring receipt is "
                  "ABSENT is REFUSED, not silently given a locally computed end")
+    DECLARED_ERA_END_RECEIPTS["da_development_topup"] = _sv0
 
     with _tf.NamedTemporaryFile("w", suffix=".json", delete=False) as fh:
-        fh.write(_js.dumps({"receipt_version": "x"}))   # exists, no field
+        # NOTE the receipt_version: it must PASS the identity check so this
+        # arm exercises the missing-FIELD path. Without it the identity check
+        # fires first and the arm silently tests something else -- a control
+        # that passes for the wrong reason is not a control.
+        fh.write(_js.dumps({"receipt_version": "da_development_topup_v2"}))
         _nofield = fh.name
     _save = DECLARED_ERA_END_RECEIPTS["da_development_topup"]
-    DECLARED_ERA_END_RECEIPTS["da_development_topup"] = (_nofield, "declared_era_end_s")
+    DECLARED_ERA_END_RECEIPTS["da_development_topup"] = (
+        _nofield, "bounds.declared_era_end_s")
     try:
         v2_era_bounds("da_development_topup")
         ok(False, "a receipt without the declared field must be refused")
@@ -870,14 +928,81 @@ def selftest() -> int:
         ok(True, "a receipt that EXISTS but declares no end is also REFUSED")
 
     with _tf.NamedTemporaryFile("w", suffix=".json", delete=False) as fh:
-        fh.write(_js.dumps({"declared_era_end_s": 1787702410.0}))
+        fh.write(_js.dumps({"receipt_version": "da_development_topup_v2",
+                            "bounds": {"declared_era_end_s": 1787702410.0}}))
         _withfield = fh.name
-    DECLARED_ERA_END_RECEIPTS["da_development_topup"] = (_withfield, "declared_era_end_s")
+    DECLARED_ERA_END_RECEIPTS["da_development_topup"] = (
+        _withfield, "bounds.declared_era_end_s")
     ok(v2_era_bounds("da_development_topup")[1] == 1787702410.0,
        "KNOWN-GOOD: when the receipt declares an end, it is READ verbatim")
     ok(v2_era_bounds("da_development_topup")[0] == ERA_BOUNDARY_NS / 1e9,
        "and the floor stays the pinned literal for every population")
     DECLARED_ERA_END_RECEIPTS["da_development_topup"] = _save
+
+    # ---- Q-DA-75: the gap-index glob is bounded by the declared end -------
+    _all = _hour_files_upto("BTCUSDT", int(9e18))
+    _bounded = _hour_files_upto("BTCUSDT", int(DECLARED_ERA_END_S[
+        "v3_4_consumed_fragment"] * 1e9))
+    ok(len(_bounded) < len(_all),
+       "POSITIVE CONTROL: bounding by the declared end EXCLUDES files, "
+       "including the live current hour the collector is rotating")
+    import datetime as _dt2, os as _os2
+    _cut = DECLARED_ERA_END_S["v3_4_consumed_fragment"]
+    ok(all(_dt2.datetime.strptime(_os2.path.basename(f).split(".")[0],
+           "%Y%m%d_%H").replace(tzinfo=_dt2.timezone.utc).timestamp() <= _cut
+           for f in _bounded),
+       "and every file kept starts at or before the declared end -- a fully "
+       "past population never opens the file the collector is writing")
+    # Checked by AST, NOT by grepping the source: this module's own docstring
+    # NAMES the forbidden pattern in order to forbid it, so a string match
+    # reports a violation that does not exist. Same trap as grepping for
+    # `time.time` in a function whose docstring forbids time.time.
+    _mod = _ast2.parse(Path(__file__).read_text())
+    _swallows = []
+    for _n in _ast2.walk(_mod):
+        if isinstance(_n, _ast2.ExceptHandler):
+            _t = _n.type
+            _names = ([e.id for e in _t.elts if isinstance(e, _ast2.Name)]
+                      if isinstance(_t, _ast2.Tuple)
+                      else [_t.id] if isinstance(_t, _ast2.Name) else [])
+            if "FileNotFoundError" in _names and all(
+                    isinstance(b, (_ast2.Continue, _ast2.Pass)) for b in _n.body):
+                _swallows.append(getattr(_n, "lineno", -1))
+    ok(not _swallows,
+       "KNOWN-BAD REFUSED: no `except FileNotFoundError: continue/pass` "
+       "swallow exists in this module (checked by AST) -- a missing file must "
+       "fail loudly, because a silently dropped gap admits a window whose "
+       "continuity was never verified")
+    ok(_hour_files_upto("BTCUSDT", 0) == [],
+       "a zero bound yields no files rather than falling back to everything")
+
+    # the gap-index cache must be keyed by its bound
+    _k = ("BTCUSDT", 1, 2)
+    _BN_GAPS[_k] = {"gaps": [], "first": None, "last": None}
+    ok(("BTCUSDT", 1, 3) not in _BN_GAPS,
+       "the gap index is cached per (sym, lo, hi): an index built under one "
+       "declared end is never served under another")
+    _BN_GAPS.pop(_k, None)
+
+    # receipt identity: right field, WRONG receipt must be refused
+    with _tf.NamedTemporaryFile("w", suffix=".json", delete=False) as fh:
+        fh.write(_js.dumps({"receipt_version": "some_other_population_v1",
+                            "bounds": {"declared_era_end_s": 1.0}}))
+        _wrong = fh.name
+    _sv = DECLARED_ERA_END_RECEIPTS["da_development_topup"]
+    DECLARED_ERA_END_RECEIPTS["da_development_topup"] = (_wrong,
+                                                         "bounds.declared_era_end_s")
+    try:
+        v2_era_bounds("da_development_topup")
+        ok(False, "a receipt belonging to another population must be refused")
+    except UndeclaredEraEnd:
+        ok(True, "POSITIVE CONTROL: a receipt whose receipt_version belongs to "
+                 "ANOTHER population is REFUSED even though the field is "
+                 "present and readable")
+    DECLARED_ERA_END_RECEIPTS["da_development_topup"] = _sv
+    ok(v2_era_bounds("da_development_topup")[1] == 1787702410.0,
+       "KNOWN-GOOD: DA's real v2 receipt resolves from the artifact, read at "
+       "bounds.declared_era_end_s -- nothing copied, nothing derived")
 
     print(f"harmful_exposure_rows v3 selftest: {checks} checks OK")
     return 0

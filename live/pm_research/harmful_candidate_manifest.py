@@ -183,6 +183,13 @@ def selftest() -> int:
        "and the bound exceeds the 8G cap that killed attempts 1-2, which is the "
        "whole reason a >=8G reproducer cannot be assumed to succeed")
     ok(ERA_BOUNDARY_NS == 1787579334881534478, "the era boundary is a pinned literal")
+    _m = build()["manifest"]
+    ok(_m["pin_semantics"]["data/mm_hf/collector_runs.jsonl"] == "state_at_build",
+       "the GROWING ledger is pinned as state_at_build, not as an anchor -- "
+       "its hash drifted once already inside a single session")
+    ok(_m["era_key_at_build"]["distinct_keys_in_ledger"] == 1,
+       "and the ledger's ERA KEY -- the part that is actually invariant under "
+       "restarts -- is pinned beside it")
     ok(datetime.fromtimestamp(ERA_BOUNDARY_NS / 1e9, timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
        == ERA_BOUNDARY_UTC, "and its UTC rendering agrees with the literal")
 
@@ -270,6 +277,27 @@ def build() -> dict:
                 "the docstring is stale and this field governs.",
         },
         "hashes": hashes,
+        # R-160: a GROWING input's hash is provenance, not a reproducibility
+        # anchor. collector_runs.jsonl gains a row on every collector restart
+        # -- it went from 2 rows to 4 during the 08-26 recovery alone, so its
+        # hash ALREADY drifted once inside a single session. A reproducer that
+        # treats it as an anchor would declare a valid manifest stale; one that
+        # treats it as provenance reads it as "this is what the ledger looked
+        # like when the manifest was built", which is the only true claim.
+        "pin_semantics": {
+            "data/mm_hf/collector_runs.jsonl": "state_at_build",
+            "_default": "reproducibility_anchor",
+            "_note": "state_at_build entries MUST NOT be compared for equality "
+                     "when validating a reproduction; compare only the "
+                     "reproducibility_anchor entries.",
+        },
+        "era_key_at_build": {
+            "declared": list(DECLARED_ERA_KEY),
+            "distinct_keys_in_ledger": len(set(ledger_era_keys())),
+            "why_this_and_not_the_hash": "the ledger's HASH moves with every "
+                "restart, but its ERA KEY does not. The key is the invariant "
+                "worth pinning; the hash is only provenance.",
+        },
         "deps": {"python": _sp.run([sys.executable, "-c",
                     "import sys;print('.'.join(map(str,sys.version_info[:3])))"],
                     capture_output=True, text=True).stdout.strip(),
