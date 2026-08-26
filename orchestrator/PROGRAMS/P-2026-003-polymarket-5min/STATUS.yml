@@ -63,7 +63,40 @@ flags:
                              # filtering pm_gap_s > 0 reconstructs v2's 204 EXACTLY
                              # -- the ruling demoted the window-level reading, it
                              # did not destroy it. v2 untouched as provenance.
-  post_gap_queue_validity: DESIGN-DECLARED-NOT-RUN # 2026-08-26 DA, Q-DA-79,
+  forward_day_verify_instrument: COMMITTED # 2026-08-26 DA, e9f8d89.
+                             # live/pm_research/da_forward_day_verify.py --
+                             # R-141(1) predicates, R-153(2) hard precondition.
+                             # RUN NIGHTLY BEFORE ANYONE SCORES:
+                             #   python3 live/pm_research/da_forward_day_verify.py \
+                             #     verify --day YYYYMMDD
+                             # Non-zero on any failed predicate. Validated
+                             # against known answers (reproduces Q-DA-69's 08-25
+                             # and Q-DA-72's 08-26 exactly) before being trusted
+                             # on a new day. 13 selftests, falsifiers both ways.
+                             # Reads windows_gap_affected BESIDE gaps/hour --
+                             # 28.0/hr sounded survivable while 80.2% of btc
+                             # windows did not. STATES REASONS, does not exclude.
+  btc_gap_degradation_ongoing: LIVE-RISK # 2026-08-26 DA. FOUR consecutive days,
+                             # not abating: btc gap-affected 15.6% (08-24) /
+                             # 80.2% (08-25) / 59.9% (08-26 @18:40Z); eth 1.4 /
+                             # 0.7 / 0.0. On current form 08-27 -- DAY ONE of
+                             # the forward race -- FAILS the gap predicate, on
+                             # the coin that carries the harmful-cancel line.
+                             # Cause unidentified; OPS measurement commissioned
+                             # (R-145(4)) and the seat is UNSTAFFED. Raised to
+                             # the coordinator BEFORE midnight so it is accepted
+                             # or acted on in advance, not read post hoc.
+  post_gap_queue_validity: RUN-H0-FALSIFIED-NEGLIGIBLE # 2026-08-26 DA, 9d977b0,
+                             # Q-DA-80. 195 OK rows of 645,851 = 0.030% precede
+                             # their own book resync; p50 and p90 lag both round
+                             # to -0.0s, worst -1.135s, 0 slugs unresynced,
+                             # btc-only. Mechanism REAL, magnitude negligible.
+                             # CONSEQUENCE FOR PHASE 2: NONE, ranking unqualified.
+                             # Caveat in both reserved receipt fields. The
+                             # pre-committed reading held both ways -- it barred
+                             # inflating a large result AND bars claiming this
+                             # small one vindicates anything.
+  post_gap_queue_validity_OLD: DESIGN-DECLARED-NOT-RUN # 2026-08-26 DA, Q-DA-79,
                              # commissioned R-173(2), NON-BLOCKING. Design, metric
                              # (resync_lag_s), null (existence claim -- ZERO is a
                              # real answer), instrument falsifier, and the

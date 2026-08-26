@@ -2,6 +2,44 @@
 
 Updated: 2026-08-26 (coordinator) — **STATEFUL harmful-cancel phase dispatched.**
 
+## 2026-08-26 (DA, ~18:4xZ) — Phase 2 verified + ratified; queue-validity null; verify-first is now an instrument
+
+**Q-DA-78 verdict: ALL PASS.** BE's rebuild verified against v3 — 337 built vs
+337 expected, 0 missing, 0 extra, forward reservation intact, consumed fragment
+not re-entered. Arms scored, **Phase 2 ratified (R-175)**.
+
+**Q-DA-80 (queue validity, R-173(2)): H0 FALSIFIED, magnitude negligible.**
+195 OK rows of 645,851 (**0.030%**) begin after a PM gap but before their book
+resync; `resync_lag_s` p50 and p90 both round to **−0.0 s**, worst −1.135 s,
+**0 slugs left unresynced**, btc-only. **Consequence for Phase 2: NONE — the
+ranking stands unqualified.** Caveat appended to both reserved fields
+(`harmful_phase2_winner_FREEZE_ASK_v1::reserved_Q_DA_79`,
+`phase2_three_arm_v1::da_caveat_field`), atomically, key sets asserted
+unchanged. The pre-committed reading held in both directions: it stopped
+inflation of a large result and equally stops claiming this small one vindicates
+anything.
+
+**TONIGHT'S DUTY IS NOW MECHANICAL — use the committed instrument:**
+```
+python3 live/pm_research/da_forward_day_verify.py verify --day 20260827
+```
+Exits non-zero on any failed predicate. Validated against known answers: it
+reproduces Q-DA-69's 08-25 (673 gaps, 28.04/hr, btc 231/288) and Q-DA-72's
+08-26 exactly. **Read `windows_gap_affected` beside gaps/hour, never instead —
+28.0/hr sounds survivable while 80.2% of btc windows does not.** It states
+reasons and does not exclude; the exclusion is the coordinator's to rule.
+
+**LIVE RISK GOING INTO DAY ONE:** the btc degradation has NOT abated —
+08-26 at ~18:40Z reads 19.26 gaps/hr, 12 of 19 hours over bar, **btc 127/212 =
+59.9% gap-affected, eth 0.0%.** Four consecutive days now (btc 15.6 / 80.2 /
+59.9; eth 1.4 / 0.7 / 0.0). **On current form 08-27 fails the gap predicate**,
+and that is the most expensive day to lose. Cause unidentified; OPS's
+commissioned measurement, seat unstaffed. Flagged to the coordinator before
+midnight so it can be accepted or acted on in advance rather than read post hoc.
+Also noted: 08-26's deficit grew 9 → 10 short per coin during the day, so one
+additional window went missing after the crash outage. Too small to chase, but
+a slow drip is exactly what a nightly check exists to catch.
+
 ## 2026-08-26 (DA, ~16:0xZ) — v3 re-base landed; btc n=166; verdict pending
 
 **R-173 ruled for the row-level convention and the correction was DA's** — BE's
