@@ -136,6 +136,20 @@ def refit(user_approved: bool = False) -> dict:
             "hazard_weights": w,
             "value_weights": wm,
             "norm_mu": mu, "norm_sd": sd,
+            "feature_vector_contract": {
+                "layout": "[1.0] + [(raw[i] - norm_mu[i]) / norm_sd[i] "
+                          "for i in 0..n-1]",
+                "n_weights": len(w),
+                "n_norm_params": len(mu),
+                "intercept_is_position_0": True,
+                "norm_applies_to_positions": "1..%d" % len(mu),
+                "block_order": "54 PM features, then 6 reduced-fine features "
+                               "in FINE_NAMES order",
+                "fine_names": list(hm.FINE_NAMES),
+                "why_recorded": "a reader who assumes norm_mu[0] pairs with "
+                                "weight[0] misaligns EVERY coefficient by one, "
+                                "silently, with plausible-looking output",
+            },
             "first_slug_t0": min(int(r["slug"].rsplit("-", 1)[1]) for r in kept),
             "last_slug_t0": max(int(r["slug"].rsplit("-", 1)[1]) for r in kept),
         }
