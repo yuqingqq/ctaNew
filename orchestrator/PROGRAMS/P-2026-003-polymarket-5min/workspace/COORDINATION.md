@@ -15426,6 +15426,45 @@ refit, day = cluster unit, no intervals before G≥5); Phase 2 may begin on
 the top-up with the frozen incumbent as its unchanged reference; the
 fast-compute adoption gate (R-167) opens for post-freeze surfaces.
 
+### R-169 — **THE FREEZE IS CONFIRMED. Coordinator verification of the COMMITTED artifact vs the approved ASK: 10/10 PASS. The forward clock runs from 2026-08-26T10:49:55Z (commit `1b53929`); DAY ONE IS 2026-08-27. Q-BE-144's pre-commit catch joins the standing list. Post-freeze surfaces are OPEN.** (2026-08-26 12:2x UTC)
+
+**(1) Verification of record** (committed artifact `1b53929:harmful_reduced_
+fine_candidate_v1.json` vs `FREEZE_ASK_v1`): multiplicity 2 ✓ members named ✓
+declared nulls identical ✓ era identical ✓ five-consumed disclosed ✓
+authorising ASK named ✓ status FROZEN ✓ decision_eligible false ✓ no
+in-sample verdict ✓ fits both coins ✓ — **10/10, no deviations.** BE's own
+pre-commit verification additionally established: refit slugs
+`1787579400..1787650200` both coins (`last_slug_t0 <= 1787650200` TRUE — the
+top-up untouched, Phase 2's test surface intact), 61+61 weights finite, run
+on the committed stdlib builder per R-167(a). **The governing instant is the
+freeze COMMIT: 2026-08-26T10:49:55Z. Forward admission: complete UTC days
+whose earliest required receipt postdates it — DAY ONE = 2026-08-27;
+earliest honest verdict ≥ 2026-08-31 (G≥5, day-clustered, walk-forward, no
+refit).**
+
+**(2) Q-BE-144 ratified and its lesson is STANDING:** the artifact carried
+61 hazard weights against 60 normalization parameters — correct (zscale
+prepends an intercept) but UNSTATED, and a fresh inference process pairing
+`weight[0]` with `norm_mu[0]` would misalign every coefficient silently.
+Caught BEFORE the commit (rule 13 never engaged; fitted values byte-identical
+before/after the purely-descriptive addition); the `feature_vector_contract`
+field now travels in the artifact and the freeze builder emits it natively.
+**Lesson: an implicit layout convention not stated in-band is a misalignment
+trap for exactly the fresh process the artifact exists to serve — layout
+contracts are receipt fields, not tribal knowledge.** An hour later this
+would have cost a v2 supersession; caught here it cost one field.
+
+**(3) Post-freeze surfaces OPEN, in order:** (a) BE builds/arms the daily
+forward scorer for the race (frozen artifact applied unchanged; per-day
+report carries n_candidates=2; admission = DA-verifies-first per R-153(3));
+(b) the R-167 fast-compute FULL-SCALE gate may run (one fast-path
+reproduction vs FROZEN_TARGETS to the cent, filed, manifest re-pinned on
+pass); (c) Phase 2 begins on the top-up with the frozen incumbent as its
+unchanged reference (R-157 weighting declared, action-unit tables, btc n=33
+thinness on record). **The stateful line's TODO Phases 0 and 5-freeze-half
+are DONE; the program's next substantive event is day one's forward numbers
+after 08-27 closes.**
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
