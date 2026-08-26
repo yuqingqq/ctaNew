@@ -1,5 +1,5 @@
 {
- "as_of_utc": "2026-08-26T06:41:56Z",
+ "as_of_utc": "2026-08-26T08:00:04Z",
  "candidate": {
   "features_fine": [
    "bnf_midbps @10,25,50,100,250ms",
@@ -44,7 +44,7 @@
   "why_this_and_not_the_hash": "the ledger's HASH moves with every restart, but its ERA KEY does not. The key is the invariant worth pinning; the hash is only provenance."
  },
  "freeze_status": "NOT FROZEN. The freeze is the user's decision and Phase-0 reproduction has not yet run.",
- "git_commit": "da2ba48a5a930bf66773ff24c6d9c4066030fb73",
+ "git_commit": "9d2dbb1cc591230c55dda903f6cd31ffde34c94f",
  "git_dirty": true,
  "hashes": {
   "data/mm_hf/collector_runs.jsonl": "c3b3a0b0bf83f7b1cd0d8722fb124f5f6fb4962b4e74ff7db350a4220386abcc",
@@ -102,10 +102,16 @@
  },
  "protocol": "HARMFUL_CANDIDATE_MANIFEST_V1",
  "reproduction_contract": {
+  "cap_used_bytes": 15032385536,
+  "completed_under_cap": true,
+  "cpu_time_s": 4526,
   "launch": "systemd-run --user --slice=research.slice -p MemoryMax=14G -p OOMScoreAdjust=1000 -- /home/yuqing/pricer-sol/venv/bin/python3 ...",
-  "peak_rss_lower_bound_bytes": 8800000000,
-  "peak_rss_source": "direct MemoryCurrent polling of be-repro2, 2026-08-26T03:51-03:53Z",
-  "peak_rss_status": "LOWER_BOUND_ONLY -- the builder has never completed a run on this box. >8.8 GiB observed; true peak unmeasured.",
+  "max_psi_some_avg10": 0.54,
+  "peak_rss_headroom_under_14g": 0.31,
+  "peak_rss_measured_bytes": 9660000000,
+  "peak_rss_source": "be-ceiling5-1787726526, 2026-08-26T06:42-07:57Z, MemoryMax=14G in research.slice, max PSI some_avg10 0.54",
+  "peak_rss_status": "MEASURED -- run completed under a 14 GiB cap. Conservative ceiling 9.66 GiB (mem_trace); systemd unit accounting says 8.3 GiB. Discrepancy disclosed, not resolved: the tracer's cgroup attribution cannot be re-verified after --collect.",
+  "peak_rss_systemd_unit_bytes": 8300000000,
   "streaming_equivalence": "5000 rows field-by-field vs independent full parse: 0 differences",
   "streaming_load_path": "live/pm_research/harmful_rows_loader.py",
   "streaming_projected_bytes": 1060000000,
@@ -132,8 +138,10 @@
    "n_generations": 231721,
    "net_cents_5pct": 131.69754650000002
   },
-  "source_receipt": "harmful_fine_comparison_v3.json",
+  "source_is_immutable_frozen_copy": true,
+  "source_receipt": "harmful_fine_comparison_v3_FROZEN_TARGETS.json",
   "source_sha256_at_snapshot": "3279e2aab3c3723e4832d676dbb014f43eccd09ecf111e2a10107f5dd3cf8228",
-  "values_read_from_artifact_not_transcribed": true
+  "values_read_from_artifact_not_transcribed": true,
+  "why": "the live receipt is overwritten by every run; reading targets from it would compare a run against itself"
  }
 }

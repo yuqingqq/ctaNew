@@ -66,10 +66,26 @@ HASHED = [
 #                                still running when the box died at ~03:55
 # So: peak_rss > 8.8 GiB, CEILING UNKNOWN. The honest field is a bound with a
 # status, never a number that implies a completed measurement.
-PEAK_RSS_LOWER_BOUND_BYTES = 8_800_000_000
-PEAK_RSS_STATUS = ("LOWER_BOUND_ONLY -- the builder has never completed a run "
-                   "on this box. >8.8 GiB observed; true peak unmeasured.")
-PEAK_RSS_SOURCE = "direct MemoryCurrent polling of be-repro2, 2026-08-26T03:51-03:53Z"
+# MEASURED 2026-08-26T07:57Z: the builder COMPLETED under a 14 G cap
+# (be-ceiling5-1787726526, 1h15m26s CPU, exit 0, receipt written).
+# Two peak figures disagree and BOTH are recorded rather than one chosen:
+#   systemd unit accounting ....... 8.3 GiB  (Consumed line, rounded)
+#   mem_trace cgroup sampling ..... 9.66 GiB (4,518 samples of memory.peak)
+# The tracer's cgroup attribution CANNOT be re-verified: `--collect` removed
+# the unit at exit, so `cgroup_dir` now resolves to None. It may have watched
+# the enclosing research.slice rather than the unit. The slice held nothing
+# else, so the two should coincide; they do not, and BE will not resolve that
+# by preferring the convenient number. The CONSERVATIVE figure is recorded as
+# the planning ceiling.
+PEAK_RSS_MEASURED_BYTES = 9_660_000_000
+PEAK_RSS_SYSTEMD_UNIT_BYTES = 8_300_000_000
+PEAK_RSS_STATUS = ("MEASURED -- run completed under a 14 GiB cap. Conservative "
+                   "ceiling 9.66 GiB (mem_trace); systemd unit accounting says "
+                   "8.3 GiB. Discrepancy disclosed, not resolved: the tracer's "
+                   "cgroup attribution cannot be re-verified after --collect.")
+PEAK_RSS_SOURCE = ("be-ceiling5-1787726526, 2026-08-26T06:42-07:57Z, "
+                   "MemoryMax=14G in research.slice, max PSI some_avg10 0.54")
+PEAK_RSS_LOWER_BOUND_BYTES = PEAK_RSS_MEASURED_BYTES   # kept for readers
 
 
 def sha256(p: Path) -> str:
@@ -176,17 +192,21 @@ def selftest() -> int:
     ok(m["verdict"] == "REFUSED_SPLIT_MISMATCH", "a post-era mismatch is refused")
     ok(m["rows_not_declared"] == ["2026-08-25"], "and the undeclared day is named")
 
-    ok("LOWER_BOUND" in PEAK_RSS_STATUS,
-       "the peak-RSS field is declared a BOUND, not a measured peak -- the "
-       "builder has never completed a run, and a bare number would imply it had")
-    ok(PEAK_RSS_LOWER_BOUND_BYTES > 8_000_000_000,
-       "and the bound exceeds the 8G cap that killed attempts 1-2, which is the "
-       "whole reason a >=8G reproducer cannot be assumed to succeed")
+    ok(PEAK_RSS_STATUS.startswith("MEASURED"),
+       "the peak-RSS field now reports a MEASURED ceiling: the builder "
+       "completed under a 14 GiB cap")
+    ok(PEAK_RSS_MEASURED_BYTES > PEAK_RSS_SYSTEMD_UNIT_BYTES,
+       "the CONSERVATIVE of two disagreeing peak figures is the recorded "
+       "ceiling -- the discrepancy is disclosed, not resolved by preference")
     ok(ERA_BOUNDARY_NS == 1787579334881534478, "the era boundary is a pinned literal")
     _m = build()["manifest"]
     ok(_m["pin_semantics"]["data/mm_hf/collector_runs.jsonl"] == "state_at_build",
        "the GROWING ledger is pinned as state_at_build, not as an anchor -- "
        "its hash drifted once already inside a single session")
+    ok(_m["target_scores_to_reproduce"]["source_sha256_at_snapshot"].startswith(
+           "3279e2aab3c3723e"),
+       "targets come from the IMMUTABLE pre-probe frozen copy, so the gate can "
+       "never degenerate into comparing a run against itself")
     ok(_m["target_scores_to_reproduce"]["btc_PM_PLUS_FINE"]["auc"]
        != round(_m["target_scores_to_reproduce"]["btc_PM_PLUS_FINE"]["auc"], 6),
        "targets are READ from the receipt at FULL precision, not transcribed "
@@ -218,11 +238,21 @@ def _read_targets() -> dict:
     that was never exact in the first place. Third time this session that
     transcribing a value instead of reading it from the artifact produced a
     wrong one; the rule is mechanical for the same reason the era end is."""
-    src = DERIVED / "harmful_fine_comparison_v3.json"
+    # READ FROM THE IMMUTABLE FROZEN COPY, never the live receipt.
+    # `run --fine` OVERWRITES harmful_fine_comparison_v3.json. Rebuilding the
+    # manifest after a probe therefore re-read the targets from the file the
+    # probe had just written, replacing the pre-probe provenance hash with the
+    # post-probe one -- which would make every future gate run CIRCULAR
+    # (comparing a run against itself). Caught immediately after the first
+    # post-probe rebuild. The frozen copy is committed and never regenerated.
+    src = DERIVED / "harmful_fine_comparison_v3_FROZEN_TARGETS.json"
     d = json.loads(src.read_text())
     out = {"source_receipt": src.name,
            "source_sha256_at_snapshot": sha256(src),
-           "values_read_from_artifact_not_transcribed": True}
+           "values_read_from_artifact_not_transcribed": True,
+           "source_is_immutable_frozen_copy": True,
+           "why": "the live receipt is overwritten by every run; reading "
+                  "targets from it would compare a run against itself"}
     for coin in ("btc", "eth"):
         a = d["paired_arms"][coin]["PM_PLUS_FINE"]
         g = a.get("gate", {})
@@ -340,7 +370,13 @@ def build() -> dict:
                     capture_output=True, text=True).stdout.strip()},
         "reproduction_contract": {
             "target_latency_ms": 50,
-            "peak_rss_lower_bound_bytes": PEAK_RSS_LOWER_BOUND_BYTES,
+            "peak_rss_measured_bytes": PEAK_RSS_MEASURED_BYTES,
+            "peak_rss_systemd_unit_bytes": PEAK_RSS_SYSTEMD_UNIT_BYTES,
+            "peak_rss_headroom_under_14g": round(1 - 9.66 / 14.0, 3),
+            "cap_used_bytes": 14 * 1024**3,
+            "completed_under_cap": True,
+            "cpu_time_s": 4526,
+            "max_psi_some_avg10": 0.54,
             "peak_rss_status": PEAK_RSS_STATUS,
             "peak_rss_source": PEAK_RSS_SOURCE,
             "streaming_load_path": "live/pm_research/harmful_rows_loader.py",
