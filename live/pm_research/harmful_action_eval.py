@@ -74,8 +74,18 @@ def evaluate_policy(rows: Sequence[dict[str, Any]], scores: Sequence[float],
         strata.setdefault((rows[first]["side"], _hour(rows[first])),
                           []).append(k)
     order = sorted(keys, key=lambda k: -gmax[k])
+    # R-156(2): the ACTION is the unit. `n_actions` is emitted as the primary
+    # name (n_generations kept for existing readers), with n_rows and the
+    # rows-per-action ratio BESIDE it, because that ratio is not a curiosity --
+    # DA measured btc 1.7169 vs eth 1.1169, a 1.537x differential. A row-level
+    # cross-coin table therefore inflates btc by ~54% relative to eth, which
+    # flatters precisely the coin already recorded as underpowered.
     out: dict[str, Any] = {"latency_ms": latency_ms, "n_generations": n_gens,
-                           "n_rows": len(rows), "budgets": {}}
+                           "n_actions": n_gens,
+                           "n_rows": len(rows),
+                           "rows_per_action": (len(rows) / n_gens) if n_gens else None,
+                           "unit": "ACTION",
+                           "budgets": {}}
     for b in budgets:
         kk = max(1, int(n_gens * b))
         cancelled = order[:kk]
@@ -135,6 +145,37 @@ def first_crossing_dedup(rows: Sequence[dict], scores: Sequence[float],
     return acts
 
 
+class RowUnitComparison(RuntimeError):
+    """A cross-coin comparison was attempted at the row unit."""
+
+
+def cross_coin_table(per_coin: dict, metric: str = "net_cents") -> dict:
+    """Build a cross-coin comparison, REFUSING to do it at the row unit.
+
+    R-156(2) bans row-level cross-coin comparison. This enforces it rather
+    than documenting it: the ban only survives contact with a deadline if the
+    code refuses. Every row of the emitted table carries n_actions AND n_rows
+    AND rows_per_action, so a reader can always see the differential that
+    makes the row unit wrong here."""
+    if metric in ("n_rows", "rows", "per_row", "row_count"):
+        raise RowUnitComparison(
+            f"metric {metric!r} compares coins at the ROW unit. Rows-per-action "
+            f"differs across coins (btc 1.7169 vs eth 1.1169, 1.537x), so a "
+            f"row-unit comparison inflates the coin with more rows per action. "
+            f"Compare at the ACTION unit.")
+    table = {}
+    for coin, ev in per_coin.items():
+        n_act = ev.get("n_actions", ev.get("n_generations"))
+        if not n_act:
+            raise RowUnitComparison(
+                f"{coin} carries no action count; a table without n_actions "
+                f"cannot be verified to be at the action unit.")
+        table[coin] = {"n_actions": n_act, "n_rows": ev.get("n_rows"),
+                       "rows_per_action": ev.get("rows_per_action"),
+                       "unit": "ACTION", metric: ev.get(metric)}
+    return table
+
+
 def selftest() -> int:
     checks = 0
 
@@ -161,6 +202,25 @@ def selftest() -> int:
     good = [30, 28, 20, -15, -5, 1, 0]
     ev = evaluate_policy(rows, good, latency_ms=5, budgets=(2/6,), n_random=50)
     b = ev["budgets"]["33%"]
+    ok(ev["n_actions"] == ev["n_generations"] and ev["unit"] == "ACTION",
+       "the evaluator names its unit and emits n_actions primarily")
+    ok(abs(ev["rows_per_action"] - 7 / 6) < 1e-12,
+       "rows_per_action is emitted beside the counts, not left to the reader")
+    try:
+        cross_coin_table({"btc": ev, "eth": ev}, metric="n_rows")
+        ok(False, "a row-unit cross-coin metric must be REFUSED")
+    except RowUnitComparison:
+        ok(True, "POSITIVE CONTROL: a row-unit cross-coin comparison is REFUSED")
+    _t = cross_coin_table({"btc": ev, "eth": ev})
+    ok(all(r["unit"] == "ACTION" and r["n_actions"] and r["rows_per_action"]
+           for r in _t.values()),
+       "KNOWN-GOOD: an action-unit table carries n_actions, n_rows AND the ratio")
+    try:
+        cross_coin_table({"btc": {"n_rows": 5}})
+        ok(False, "a table entry without an action count must be refused")
+    except RowUnitComparison:
+        ok(True, "an entry lacking n_actions is REFUSED, so a row-only dict "
+                 "cannot slip into a cross-coin table")
     ok(ev["n_generations"] == 6 and ev["n_rows"] == 7,
        "the action universe is GENERATIONS (6), not rows (7)")
     ok(b["n_cancelled_generations"] == 2 and abs(b["net_cents"] - 50.0) < 1e-9,

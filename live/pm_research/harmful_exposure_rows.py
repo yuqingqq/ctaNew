@@ -462,6 +462,41 @@ LEDGER_PATH = '/home/yuqing/ctaNew/data/mm_hf/collector_runs.jsonl'
 # (471 slugs, matching the receipt's n_windows).
 DECLARED_ERA_END_S = {"v3_4_consumed_fragment": 1787650510.0}
 
+# Populations whose end is DECLARED BY ANOTHER PLANE. R-156(1): the consumer
+# must READ the declared value from that plane's receipt and never compute it,
+# "even though the arithmetic is your own v3.4 convention" -- a consumer-derived
+# bound is an undeclared parameter chosen by whoever is about to read the
+# number. A value copied out of a CHAT MESSAGE is worse still: it has no
+# artifact behind it at all, so nothing can later verify what was used.
+# Hence: read from the receipt, or REFUSE. Never a literal here.
+DECLARED_ERA_END_RECEIPTS = {
+    "da_development_topup": (
+        "/home/yuqing/ctaNew/data/pm_5min/derived/da_development_topup_v2.json",
+        "declared_era_end_s"),
+}
+
+
+class UndeclaredEraEnd(RuntimeError):
+    """No declared end is available for this population; refuse to guess."""
+
+
+def declared_era_end_from_receipt(population: str) -> float:
+    import json as _json
+    path, field = DECLARED_ERA_END_RECEIPTS[population]
+    f = Path(path)
+    if not f.exists():
+        raise UndeclaredEraEnd(
+            f"population {population!r} takes its era end from {f.name}, which "
+            f"does NOT EXIST yet. Refusing. The value must come from the "
+            f"declaring plane's receipt, not from a message, a memory, or this "
+            f"consumer's own arithmetic.")
+    d = _json.loads(f.read_text())
+    if field not in d:
+        raise UndeclaredEraEnd(
+            f"{f.name} exists but declares no {field!r}. Refusing rather than "
+            f"substituting a locally computed end.")
+    return float(d[field])
+
 
 class EraTransition(RuntimeError):
     """The ledger shows a genuine era change; a pinned literal cannot stand."""
@@ -500,8 +535,13 @@ def v2_era_bounds(population: str = "v3_4_consumed_fragment",
                   era_end_s: float | None = None) -> tuple[float, float]:
     """(floor, end) as PINNED LITERALS. `time.time()` is forbidden here."""
     assert_no_era_transition()
-    end = era_end_s if era_end_s is not None else DECLARED_ERA_END_S.get(population)
-    if end is None:
+    if era_end_s is not None:
+        end = float(era_end_s)                      # explicitly passed by caller
+    elif population in DECLARED_ERA_END_S:
+        end = DECLARED_ERA_END_S[population]        # this plane's own declaration
+    elif population in DECLARED_ERA_END_RECEIPTS:
+        end = declared_era_end_from_receipt(population)   # another plane's
+    else:
         raise ValueError(
             f"no declared era end for population {population!r}. An end must be "
             f"DECLARED per population; defaulting to the clock is what made the "
@@ -809,6 +849,35 @@ def selftest() -> int:
     ok(1787579400 >= _b[0] and 1787650200 + 310.0 <= _b[1],
        "the v3.4 fragment's first and last slugs fall INSIDE the pinned "
        "bounds -- the 0-of-926 selection failure cannot recur")
+
+    # ---- R-156(1): another plane's declared end is READ, never derived ----
+    try:
+        v2_era_bounds("da_development_topup")
+        ok(False, "the top-up end must not resolve while its receipt is absent")
+    except UndeclaredEraEnd:
+        ok(True, "POSITIVE CONTROL: a population whose declaring receipt is "
+                 "ABSENT is REFUSED, not silently given a locally computed end")
+
+    with _tf.NamedTemporaryFile("w", suffix=".json", delete=False) as fh:
+        fh.write(_js.dumps({"receipt_version": "x"}))   # exists, no field
+        _nofield = fh.name
+    _save = DECLARED_ERA_END_RECEIPTS["da_development_topup"]
+    DECLARED_ERA_END_RECEIPTS["da_development_topup"] = (_nofield, "declared_era_end_s")
+    try:
+        v2_era_bounds("da_development_topup")
+        ok(False, "a receipt without the declared field must be refused")
+    except UndeclaredEraEnd:
+        ok(True, "a receipt that EXISTS but declares no end is also REFUSED")
+
+    with _tf.NamedTemporaryFile("w", suffix=".json", delete=False) as fh:
+        fh.write(_js.dumps({"declared_era_end_s": 1787702410.0}))
+        _withfield = fh.name
+    DECLARED_ERA_END_RECEIPTS["da_development_topup"] = (_withfield, "declared_era_end_s")
+    ok(v2_era_bounds("da_development_topup")[1] == 1787702410.0,
+       "KNOWN-GOOD: when the receipt declares an end, it is READ verbatim")
+    ok(v2_era_bounds("da_development_topup")[0] == ERA_BOUNDARY_NS / 1e9,
+       "and the floor stays the pinned literal for every population")
+    DECLARED_ERA_END_RECEIPTS["da_development_topup"] = _save
 
     print(f"harmful_exposure_rows v3 selftest: {checks} checks OK")
     return 0

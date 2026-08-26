@@ -1,5 +1,5 @@
 {
- "as_of_utc": "2026-08-26T05:54:15Z",
+ "as_of_utc": "2026-08-26T06:02:53Z",
  "candidate": {
   "features_fine": [
    "bnf_midbps @10,25,50,100,250ms",
@@ -36,15 +36,15 @@
   "why_pinned": "Deriving it from max(started_at_ns) let two collector restarts walk the floor 39.6 h forward and admit 0 of 926 windows (Q-DA-67). A derived boundary redefines yesterday's admissibility."
  },
  "freeze_status": "NOT FROZEN. The freeze is the user's decision and Phase-0 reproduction has not yet run.",
- "git_commit": "f264e60792e38e70ef685bd52bd9f7eff61e9ed8",
+ "git_commit": "87963f555d6bde390000179793df5721f7c5262c",
  "git_dirty": true,
  "hashes": {
   "data/mm_hf/collector_runs.jsonl": "c3b3a0b0bf83f7b1cd0d8722fb124f5f6fb4962b4e74ff7db350a4220386abcc",
   "data/pm_5min/derived/harmful_exposure_rows_v3_eraB.json": "19a50195c34d0af21aba81b9f6b9501ea58656212d8448ddd8cc219da26d0f08",
   "live/pm_research/flow_fill_development.py": "d5f381cccdc4b7b6e12fa80d0c05947c8338bb0683cd7a0e58f74ac53074dce4",
   "live/pm_research/flow_intensity.py": "e65c812fd42fc8d76c368ebbd6312c8cfbc86f06f2ed0ca726f38e69f783b367",
-  "live/pm_research/harmful_action_eval.py": "0a8c5058a6c5b28b62be62a42e73654bfaab4f3479ec9cb7d3f926bf436885e8",
-  "live/pm_research/harmful_exposure_rows.py": "eb19cd7428de9a40160c42c020513850ee8d945c860f1bf467b04d662f565732",
+  "live/pm_research/harmful_action_eval.py": "55ea57b995afdd4c46ae5909b40a9e64cc1b5092a358399dd36d8c7e03225a06",
+  "live/pm_research/harmful_exposure_rows.py": "49b4dd918c654e8db45db8afd47d044d7f72cc702fea7088f9586bce3647867e",
   "live/pm_research/harmful_hazard_model.py": "c4976b975c074087c77ebfe1f82070dfd147b41c23c643bd786f0818fb4d1e0b",
   "live/pm_research/harmful_rows_loader.py": "8b90c48cfe331e7184fdafdaea17ae9168e65eba0f0d4e3f802b250c92df2308",
   "live/pm_research/policy_bounds_v1.py": "717033ba3b571def77efb50a7ed8d2b4fffd1332df8213c487e2e750a06f0374"
