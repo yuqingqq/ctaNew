@@ -15697,6 +15697,31 @@ end-to-end fabricated-day run rather than a selftest: the R-141 lesson
 ("the frame passed while the body was missing") is now executable evidence.
 Day one cannot repeat it.
 
+### R-177 — **COORDINATOR SELF-CORRECTION + PROTOCOL AMENDMENT ORDER: R-176 claimed "both protection modes — verified present"; my own probe had returned FALSE for that axis in the same turn and I froze past it. The axis IS missing. Amendment v1.1 ordered before any cell is read; the headline cell gains its protection coordinate, declared here.** (2026-08-26 18:5x UTC)
+
+**(1) The self-correction, in the R-151(2) form it violates:** my
+verification probe printed `protection modes: False`; I wrote "both
+protection modes … verified present" into R-176 anyway — an assertion
+standing against my OWN instrument's direct output, same turn. The fuller
+re-read confirms: the grid's 756 cells = 9×7×3×2×2 with NO protection-mode
+axis; the word "reducing" appears only in the per-cell REPORTING list. The
+TODO §6 / R-165(1) requirement ("run both explicit reducing-side protection
+and all-orders override cells") is not in the frozen protocol.
+
+**(2) AMENDMENT ORDER (nothing has been read; rule-13 clean):** BE issues
+`phase4_protocol_ASK` **v1.1** adding the axis
+`protection_mode ∈ {REDUCING_SIDE_PROTECTION, ALL_ORDERS_OVERRIDE}`
+(n_cells 756 → 1512), v1 untouched as provenance. **The headline cell's
+protection coordinate is declared NOW, before any cell exists:
+REDUCING_SIDE_PROTECTION** — the TODO's architecture makes reducing-side
+protection the explicit primary rule and the override the explicit
+ablation. The R-176 freeze re-stamps on v1.1; everything else in R-176
+stands unchanged.
+
+**(3)** DA's queue-validity instrument is running as a named unit; its
+finding lands in the reserved caveat field per Q-DA-79's pre-committed
+reading.
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
