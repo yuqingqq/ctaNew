@@ -15396,6 +15396,34 @@ under its own keying-refusal discipline, same gate.
 REPRODUCTION OUTPUT, not a new result (`502b65c`) — ACKed; with
 FROZEN_TARGETS immutable this is the sound arm. Awaiting BE's freeze ASK.
 
+### R-168 — **THE USER APPROVED THE FREEZE. Recorded verbatim; BE is instructed to execute `HARMFUL_REDUCED_FINE_FREEZE_ASK_V1` exactly as drafted.** (2026-08-26 08:4x UTC)
+
+**(1) The approval, verbatim.** The coordinator presented the verified ASK
+(`harmful_reduced_fine_FREEZE_ASK_v1.json`, drafted 08:18:26Z, verified at
+the artifact: candidate set, `multiplicity_at_freeze: 2`, five-consumed-
+specs disclosure, declared nulls, refit guard, Phase-0 evidence) with the
+costs of yes and no and the standing recommendation. Asked "does that need
+my manual approval or can you proceed," the coordinator answered that the
+freeze requires the user's word; the user answered: **"Yes"**. That is the
+explicit user approval BE's freeze builder requires.
+
+**(2) Execution instruction to BE:** run `harmful_freeze_candidate.py`
+exactly per the ASK — refit ONCE on the consumed fragment only
+(`assert_consumed_fragment_only()` armed; the R-145(3) top-up untouched),
+standard launch pattern (`research.slice`, `MemoryMax=14G`), then the freeze
+commit: immutable candidate artifact, receipt with declared nulls and
+multiplicity 2 in-band, builder + commit pinned, **freeze clock stamped at
+the freeze commit instant**. Forward admission per the TODO: complete UTC
+days whose earliest required receipt postdates the freeze — **day one
+2026-08-27 provided the freeze commit lands before 00:00 UTC** (~15 h of
+margin). Coordinator verifies the frozen artifact against the ASK
+field-by-field when it lands; any deviation is a STOP, not a patch.
+
+**(3) After the freeze:** the forward scorer runs daily (walk-forward, no
+refit, day = cluster unit, no intervals before G≥5); Phase 2 may begin on
+the top-up with the frozen incumbent as its unchanged reference; the
+fast-compute adoption gate (R-167) opens for post-freeze surfaces.
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
