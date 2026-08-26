@@ -15670,6 +15670,33 @@ paired arms — qualifies meaning, never ranking) is declared before data;
 staged fit→persist→free→score is THE memory pattern (proven same-day:
 a 14G+ oom-kill became 5.1G/6.1G peaks under R-174 with identical numbers).
 
+### R-176 — **PHASE-4 PROTOCOL FROZEN as drafted (coordinator act, before any cell is read): the pre-declared headline cell is the multiplicity answer; the fill-model bracket is mandatory with sign-flip = FAIL; Phase-4 replay runs on CONSUMED development tape only — never on reserved forward tape. Forward-scorer dry run PASS recorded.** (2026-08-26 18:4x UTC)
+
+**(1)** `phase4_protocol_ASK_v1.json` (`47f607c`) is FROZEN as drafted.
+Verified present: the latency ladder and cost grid bracketing the measured
+break-even from below; budgets 5/10/15%; both protection modes; the
+MANDATORY R-165(2) fill-model bracket (a conclusion must hold under both
+arms; a sign flip across the bracket is a FAIL, not a choice); R-165(1)
+reset-cost semantics with POLICY_INDUCED_ONLY primary; per-cell reporting
+per TODO §7; verdict bars as computed predicates. **The centerpiece is
+accepted as the multiplicity answer: the headline reporting cell
+(latency=50 ms, cost=0.25¢, budget=10%, POLICY_INDUCED_ONLY) is fixed
+BEFORE any cell exists — a many-cell grid cannot be shopped after the
+fact.** `score_source` is parameterized so a freeze-B yes slots in without
+redrafting.
+
+**(2) Tape rule bound into the freeze:** Phase-4 cells replay the UNCHANGED
+frozen score(s) over CONSUMED development tape (fragment + top-up) — this is
+the explicitly-permitted "cost/latency sensitivity of an unchanged score" on
+consumed data; **no Phase-4 cell may ever be read on tape reserved for any
+candidate's forward validation.**
+
+**(3)** The forward-scorer synthetic-day dry run PASSES and is recorded —
+taken first because it alone had a deadline (00:00 UTC), and deliberately an
+end-to-end fabricated-day run rather than a selftest: the R-141 lesson
+("the frame passed while the body was missing") is now executable evidence.
+Day one cannot repeat it.
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
