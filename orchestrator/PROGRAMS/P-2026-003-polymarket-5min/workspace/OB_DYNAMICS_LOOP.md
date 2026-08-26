@@ -102,3 +102,13 @@ Forward-race multiplicity if frozen now: reduced (primary) + extended +
 btclead (held) = 3 specs. Freeze is the USER'S decision (rule 12: commit +
 receipt + declared nulls + multiplicity at freeze time). Forward validation
 needs >=5 complete untouched UTC days AFTER the freeze.
+
+## HOLD LIFTED (2026-08-26, user: "Proceed the test, check if it is memory issue")
+
+Probable cause found: the session shell carries `ulimit -v` = 12 GiB
+(address space) with hard limit unlimited; heaviest completed run peaked
+9.2 GB RSS (VSZ higher), the lead runs are heavier still. The machine had
+23.9 GB free throughout — the cap, not the box, was the constraint. Same
+cap explains the repack RLIMIT_DATA failures. 4b control relaunched with
+`ulimit -v unlimited`, nice -19 (collector protection), and a 20s VSZ/RSS
+sampler for a definitive trace either way.
