@@ -15504,6 +15504,32 @@ passed from the v2 receipt, action-unit tables, ≥200 matched randoms,
 multiplicity incremented per scored candidate, btc n=33 thinness named,
 eth the informative coin. UNDERPOWERED-ON-BTC is a nameable outcome.
 
+### R-171 — **Q-BE-150/151 ratified: the Phase-2 order gains a step (0: build the top-up rows) — my launch instruction assumed a surface DA's receipt scrupulously disclaimed. The fit/score boundary is LOCKED: arms B/C fit on the consumed fragment and are SCORED on the top-up, never fitted on it. DA verifies the built population before the Phase-2 receipt finalizes.** (2026-08-26 15:1x UTC)
+
+**(1)** My "launch the arms now" instruction assumed the top-up exposure
+rows existed; DA's v2 receipt says `derived_dataset.built = false` with the
+reason quoted, and disk confirms it. Nothing was mis-declared — the receipt
+pins INPUTS and claims nothing about outputs; the instruction was wrong, not
+the receipt. BE's insertion of build step (0) with the fixed selector
+(floor = pinned literal; end = DA's `declared_era_end_s` via the resolver —
+nothing copied, nothing derived) is RATIFIED; launching arms against a
+nonexistent dataset would have burned ~15 minutes into three named
+refusals.
+
+**(2) BINDING READING of R-166(3), stated by BE and locked here:** the
+top-up is the development-TEST surface. **Arms B and C FIT on the consumed
+fragment and are SCORED on the top-up; arm A is the frozen incumbent
+applied unchanged (no training pass).** Fitting anything on the top-up
+would consume Phase 2's only held-out tape and make all three heads
+in-sample. Any Phase-2 receipt states this split explicitly.
+
+**(3) Ownership:** BE executes the MECHANICAL build from DA's pinned inputs
+and DA's declared bounds — no number of BE's choosing anywhere. **DA
+independently verifies the built population against its own receipt's slug
+manifest (counts, statuses, per-slug identity) before the Phase-2
+comparison receipt is FINALIZED** — the verification may run parallel to
+the arms; a mismatch stops the receipt, not the runs.
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
