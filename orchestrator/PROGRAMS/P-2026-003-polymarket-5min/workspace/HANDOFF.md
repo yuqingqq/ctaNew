@@ -2,6 +2,56 @@
 
 Updated: 2026-08-26 (coordinator) — **STATEFUL harmful-cancel phase dispatched.**
 
+## 2026-08-26 (DA, ~05:4xZ) — top-up materialised, PRED_STATE_V1 built, two blocking finds
+
+Commit `c4621af`. **DONE:** (1) **R-145(3) top-up receipt** —
+`data/pm_5min/derived/da_development_topup_v1.json`, 346 candidate slugs, all
+counted by status. **Yield is thin and btc-specific: btc 33 OK / 137 PM_GAP /
+3 BINANCE (19.1% usable); eth 171 OK (98.8%).** G=1 (08-25 only) so no
+intervals. Era floor pinned to the R-145(3) LITERAL, never `max(ledger)`.
+Derived rows NOT built (blocked on Q-DA-67) and the receipt says so — it pins
+INPUTS, not outputs. **BE's Phase 2 is unblocked on DA's side; its btc
+development population is 33 windows, recorded before any score exists.**
+(2) **PRED_STATE_V1** — `live/pm_research/harmful_state_features.py`, §4
+family declared in full, 67-check battery, AST guard proving no policy state
+is emitted. Two bugs the synthetic battery passed and real tape killed:
+exec-vs-cancel attribution was pairing trades within 50 ms and mis-filing ~80%
+of executions as cancellations (replaced with CONSERVATION, no tolerance
+parameter, 100% attribution); and `same_side_fill_share` was ALWAYS 0.0
+because `fold_side` returns a TAKER side while rows carry a MAKER side.
+
+**BLOCKING, both filed, neither mine to fix:**
+* **Q-DA-67** — `harmful_exposure_rows.v2_era_bounds()` reduces the collector
+  ledger with `max()`. R-147(2)'s restart row moved the era floor forward
+  **39.4 h**, and `select_v2_era` now admits **0 of 926** windows. **BE's
+  Phase-0 cent-exact repro cannot reproduce the v3.4 population today** — it
+  fails closed, as an unexplained empty rather than a named refusal. Do not
+  re-run the repro until this is ruled: a zero-window build looks like a
+  failure of the MODEL when it is a failure of the SELECTOR.
+* **Q-DA-69** — the R-141 day-one admission act never ran DA's verification
+  step; BE scored first. Ran it: post-freeze PASS, complete tape PASS, **gap
+  rate FAIL** — 08-25 at **28.0 gaps/hr** vs bar 15 and a prior five-day range
+  of 1.4–4.1, **231 of 288 btc windows (80.2%) gap-affected vs eth 0.7% the
+  same day**; still elevated on 08-26 (20/hr). The eth control refutes a
+  host-wide resource cause. **Not decided by DA:** excluding a day that
+  returned a NEGATIVE removes evidence against the candidate, and the call is
+  now post-hoc because scoring preceded verification. Recommendation: keep day
+  one IN with the 80.2% as a disclosed caveat, and **restore DA-verifies-first
+  for days 2–5 while they are still unscored.**
+
+**Also fixed (Q-DA-68, DA surface, maintenance):** `stamp_boundaries_ns`
+treated every collector restart as a stamp boundary; now keyed on
+`(collector_schema_version, stamp_point)` vs the preceding run per R-147(2).
+Measured both arms — 08-26 (the discriminating day) 54/55 → 55/55,
+`joint_covered` unchanged. Added `check_days()`: a dashed day token matched no
+directory on EITHER tape and returned a silent empty, which made the first
+invariance run compare two empty sets and call them identical. Selftests
+40 → 53.
+
+**NOTE for whoever holds OPS:** the dispatch table still prints the superseded
+`MemoryMax=8G`; R-148(3)/R-150 govern (`--slice=research.slice`, ≤14G/job,
+18.4G aggregate, `MemoryHigh` forbidden, venv python explicit).
+
 ## 2026-08-26 — OB dynamics loop CLOSED; stateful phase dispatched (R-145)
 
 The fine-feature loop closed at I5 (commit `f1ceec9`, five receipts):

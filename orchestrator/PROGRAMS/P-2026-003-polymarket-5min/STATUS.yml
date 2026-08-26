@@ -13,6 +13,71 @@ updated: >-
   hygiene + recv_ns measurement)
 
 flags:
+  da_topup_receipt: materialised # 2026-08-26 DA, commit c4621af, Q-DA-70.
+                             # data/pm_5min/derived/da_development_topup_v1.json
+                             # 346 slugs, ALL counted by status. YIELD IS THIN
+                             # AND BTC-SPECIFIC: btc 33 OK/137 PM_GAP/3 BINANCE
+                             # (19.1% usable); eth 171 OK (98.8%). G=1 (08-25
+                             # only) => NO INTERVALS on anything from it. Era
+                             # floor is the R-145(3) LITERAL, never max(ledger).
+                             # Derived rows NOT built (Q-DA-67); the receipt
+                             # pins INPUTS (raw archives+ledger+builders), not
+                             # outputs, and says so. BE Phase 2's btc dev
+                             # population is 33 windows -- recorded BEFORE any
+                             # score exists, so a thin Phase-2 result cannot be
+                             # explained afterwards by a thinness nobody wrote
+                             # down.
+  pred_state_v1: built-not-scored # 2026-08-26 DA, c4621af, Q-DA-71.
+                             # live/pm_research/harmful_state_features.py,
+                             # TODO §4 family declared IN FULL before any
+                             # result. 67-check battery; AST guard proves no
+                             # policy variable is emitted (the exposure row
+                             # CARRIES net, so the guard is not vacuous). The
+                             # microprice feature is ABSENT by §4's own
+                             # condition -- no timestamped PM fair-price object
+                             # exists. TWO BUGS THE SYNTHETIC BATTERY PASSED
+                             # AND REAL TAPE KILLED: (a) exec-vs-cancel paired
+                             # trades within 50ms and mis-filed ~80% of
+                             # executions as CANCELLATIONS -> replaced with
+                             # CONSERVATION, no tolerance param, 100%
+                             # attribution; (b) same_side_fill_share was ALWAYS
+                             # 0.0 -- fold_side returns a TAKER side, rows carry
+                             # a MAKER side. NOT SCORED; Phase 2 is BE's.
+  era_floor_derived_at_runtime: BLOCKING # 2026-08-26 DA, Q-DA-67. UNRULED.
+                             # harmful_exposure_rows.v2_era_bounds() reduces
+                             # collector_runs.jsonl with max(). R-147(2)'s
+                             # restart row moved the floor forward 39.4h;
+                             # select_v2_era now admits 0 OF 926 windows.
+                             # BE'S PHASE-0 CENT-EXACT REPRO CANNOT REPRODUCE
+                             # THE v3.4 POPULATION TODAY. Fails CLOSED but as
+                             # an unexplained empty, not a named refusal.
+                             # DO NOT RE-RUN THE REPRO UNTIL RULED: a
+                             # zero-window build reads as a MODEL failure when
+                             # it is a SELECTOR failure. Not patched by DA --
+                             # it sits inside BE's blocking item and its hash
+                             # is pinned by BE's manifest. Second, older defect
+                             # in the same function: bounds[1] is time.time(),
+                             # so the population depends on WHEN it runs --
+                             # which the Phase-0 gate forbids outright.
+  day_one_admission_unverified: BLOCKING # 2026-08-26 DA, Q-DA-69. UNRULED.
+                             # The R-141 gate ran OUT OF ORDER: BE scored
+                             # 08-25, DE never appended (forward_split_v1.json
+                             # still as-of 08-25T02:18Z, n=0), and DA's
+                             # verification had never run. DA ran it:
+                             # post-freeze PASS (288/288), complete tape PASS,
+                             # GAP RATE FAIL -- 28.0 gaps/hr vs bar 15, prior
+                             # five days 1.4-4.1, 22 of 24 hours over. The
+                             # deciding number is windows-affected: btc 231 of
+                             # 288 (80.2%) vs eth 0.7% SAME DAY, vs btc 15.6%
+                             # the day before. Still elevated 08-26 (20/hr).
+                             # The eth control REFUTES a host-wide resource
+                             # cause. NOT DECIDED BY DA (rule 14): excluding a
+                             # day that returned a NEGATIVE removes evidence
+                             # AGAINST the candidate, and the call is post-hoc
+                             # because scoring preceded verification.
+                             # Recommendation: keep day one IN with the 80.2%
+                             # disclosed; restore DA-verifies-first for days
+                             # 2-5 WHILE THEY ARE STILL UNSCORED.
   harmful_cancel_line: stateful-phase-dispatched # 2026-08-26, R-145. Loop
                              # closed (f1ceec9 receipts). Reduced fine
                              # CONFIRMED; extended HELD; depth20/thinning/
