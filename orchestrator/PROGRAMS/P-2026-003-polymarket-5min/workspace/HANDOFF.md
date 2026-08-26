@@ -2,6 +2,29 @@
 
 Updated: 2026-08-26 (coordinator) — **STATEFUL harmful-cancel phase dispatched.**
 
+## FORWARD-RACE ADMISSION SEQUENCE — confirmed, do not re-derive it
+
+Settled with the coordinator 2026-08-26 ~18:5xZ after DA raised that the two
+readings could not both be true. **Reading (a) is the ruling:**
+
+* **2026-08-27T00:00:30Z** — CLOSING verdict on **08-26**. Already inadmissible
+  (Q-DA-72, permanent complete-tape failure), so its value is the **final drip
+  count** and the **end-of-day degradation figure** for the acting-OPS
+  diagnosis. This boundary merely OPENS 08-27.
+* **2026-08-28T00:00:30Z** — **DAY ONE's admission verification**, against
+  08-27 as the day that closed.
+* **BE MAY SCORE DAY ONE ONLY AFTER THAT VERDICT PASSES.** The coordinator is
+  binding this into the day-one register entry so the gate cannot go out of
+  order a second time (it did once — BE scored before DA verified, which turned
+  an ordinary exclusion into a post-hoc call on a visible result, Q-DA-69).
+* **The btc-gap risk deadline is NOT moved by this.** 08-27's tape starts
+  ACCRUING at tonight's boundary, so the user's fix-or-accept decision wants
+  making **before 00:00**, even though the verdict on it arrives 24h later.
+
+`da-midnight-verify.timer` is `*-*-* 00:00:30 UTC` — **daily**, so it covers
+both boundaries without further action. It logs the day that closed AND the day
+that opened, to `derived/.da_midnight_verify.log` (append-only).
+
 ## 2026-08-26 (DA, ~18:4xZ) — Phase 2 verified + ratified; queue-validity null; verify-first is now an instrument
 
 **Q-DA-78 verdict: ALL PASS.** BE's rebuild verified against v3 — 337 built vs

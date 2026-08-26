@@ -63,6 +63,23 @@ flags:
                              # filtering pm_gap_s > 0 reconstructs v2's 204 EXACTLY
                              # -- the ruling demoted the window-level reading, it
                              # did not destroy it. v2 untouched as provenance.
+  forward_race_admission_sequence: CONFIRMED-READING-A # 2026-08-26, settled
+                             # with the coordinator after DA raised that the two
+                             # readings could not both hold. 2026-08-27T00:00:30Z
+                             # = CLOSING verdict on 08-26 (already inadmissible;
+                             # value is the final drip count + end-of-day
+                             # degradation figure) and merely OPENS 08-27.
+                             # 2026-08-28T00:00:30Z = DAY ONE's admission
+                             # verification, against 08-27 as the day that
+                             # closed. BE MAY SCORE DAY ONE ONLY AFTER THAT
+                             # VERDICT PASSES -- being bound into the day-one
+                             # register entry so the gate cannot go out of order
+                             # a second time. NOTE the btc-gap risk deadline is
+                             # NOT moved: 08-27's tape accrues from tonight's
+                             # boundary, so fix-or-accept wants deciding BEFORE
+                             # 00:00 though its verdict lands 24h later.
+                             # da-midnight-verify.timer is DAILY (*-*-* 00:00:30
+                             # UTC) and covers both boundaries unattended.
   forward_day_verify_instrument: COMMITTED # 2026-08-26 DA, e9f8d89.
                              # live/pm_research/da_forward_day_verify.py --
                              # R-141(1) predicates, R-153(2) hard precondition.
