@@ -15363,6 +15363,39 @@ freeze DECISION is the USER'S yes/no (R-162(3))**. If the user freezes
 before 2026-08-27 00:00 UTC, forward day one is 08-27 and the earliest
 honest verdict ~09-01. **TODO Phase 0: CLOSED.**
 
+### R-167 — **Fast-compute module LANDED (coordinator dispatch, independently verified): 42–226× on the fit stages at ~1e-13-cent equivalence on synthetic scale. ADOPTION RULES: never for the freeze refit; post-freeze surfaces only, behind the full-scale gate. BE's v3 disposition ACKed.** (2026-08-26 08:3x UTC)
+
+**(1) `harmful_fast_compute.py` landed** — numpy twins of every fit function
+(same signatures, one-import switch), mirroring the committed algorithms
+element-for-element including the R-159 divisor, the ±30 clamp, convergence
+and pivot semantics; a columnar `.npz` cache keyed by (dataset sha, schema)
+whose loader REFUSES stale/corrupt/lossy states; and the equivalence
+harness with a declared bar (per-row |Δscore| < 1e-7 cents + same-cent
+rint + 1e-12 replication invariance), all predicates computed. Coordinator
+ran the selftest independently: **39 checks OK, <1 s**, compared against
+the real `harmful_hazard_model.py`. Falsifiers all fire — including the
+RESURRECTED R-159 sum(sw)-divisor bug, flagged by both the score bar and
+error-grows-with-replication. Measured: logistic 100k×5 **42×**; at builder
+width (55 features) **226×**; cache turns the 44 MB parse into a 0.04 s
+column load. Honest residual documented in-module: reduction-order effects
+measured at ≤2e-13 cents — seven orders under the bar, DISCLOSED not
+asserted away.
+
+**(2) ADOPTION RULES (pre-declared, before anyone is tempted):**
+(a) **The freeze refit runs on the committed stdlib builder, full stop** —
+provenance cleanliness of the freeze outweighs 75 minutes, and the ceiling
+probe already proved the run fits its cap. (b) Adoption is licensed for
+POST-freeze surfaces only — Phase-2 fits, the daily refit cadence, Phase-4
+grids — and only after the R-155(2) FULL-SCALE gate: the fast path must
+reproduce the frozen targets to the cent on the complete population, filed
+as a receipt, manifest re-pinned by BE. Synthetic-scale equivalence
+licenses nothing but the attempt. (c) The cache is separately adoptable
+under its own keying-refusal discipline, same gate.
+
+**(3)** BE's disposition of the regenerated v3 receipt — committed as
+REPRODUCTION OUTPUT, not a new result (`502b65c`) — ACKed; with
+FROZEN_TARGETS immutable this is the sound arm. Awaiting BE's freeze ASK.
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
