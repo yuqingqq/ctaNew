@@ -113,6 +113,145 @@ def _labels(kept: list):
     return y, tgt
 
 
+FITDIR = DERIVED / "phase2_fits"
+
+
+def stage_fit() -> None:
+    """STAGE 1: fit B and C on the fragment, persist, exit.
+
+    The single-process version held fragment features + top-up features + LGBM
+    training matrices simultaneously and was oom-killed at 14G AFTER all four
+    feature passes had succeeded. Splitting is not only a memory fix: it is the
+    daily-refit shape -- fit once, persist, apply -- so the scoring stage never
+    needs the fitting population in memory at all."""
+    import harmful_fast_compute as fc
+    import lightgbm as lgb
+    import numpy as np
+    FITDIR.mkdir(parents=True, exist_ok=True)
+    FIT = _feature_pass(FRAGMENT, "fragment")
+    for coin in ("btc", "eth"):
+        f = FIT[coin]
+        yF, tF = _labels(f["kept"])
+        XF = [f["PM"][i] + f["FN"][i] + f["ST"][i] for i in range(len(f["kept"]))]
+        Xf, mu, sd = fc.fast_zscale(XF, XF)
+        sw = fc.fast_generation_weights(f["kept"])
+        W = fc.fast_fit_logistic_w(Xf, yF, sw)
+        ft = [i for i in range(len(yF)) if yF[i]]
+        WM = (fc.fast_fit_ridge_w([Xf[i] for i in ft], [tF[i] for i in ft],
+                                  [sw[i] for i in ft], lam=10.0)
+              if len(ft) >= 100 else None)
+        (FITDIR / f"linear_{coin}.json").write_text(json.dumps(
+            {"hazard_weights": list(W), "value_weights": list(WM) if WM else None,
+             "norm_mu": list(mu), "norm_sd": list(sd),
+             "n_rows": len(f["kept"]), "n_positive": sum(yF),
+             "n_actions": len({(r["slug"], r["side"], r["gen"]) for r in f["kept"]}),
+             "drops": f["drops"]}))
+        A = np.asarray(Xf, dtype=np.float64); swa = np.asarray(sw)
+        clf = lgb.LGBMClassifier(**D.LGBM_PARAMS)
+        clf.fit(A, np.asarray(yF), sample_weight=swa)
+        clf.booster_.save_model(str(FITDIR / f"lgbm_haz_{coin}.txt"))
+        ftm = np.asarray(yF) == 1
+        if ftm.sum() >= 100:
+            reg = lgb.LGBMRegressor(**D.LGBM_VALUE_PARAMS)
+            reg.fit(A[ftm], np.asarray(tF)[ftm], sample_weight=swa[ftm])
+            reg.booster_.save_model(str(FITDIR / f"lgbm_val_{coin}.txt"))
+        print(f"  [fit/{coin}] persisted linear + lgbm; rows {len(f['kept'])}, "
+              f"positive {sum(yF)}", flush=True)
+        del XF, Xf, A, FIT[coin]["PM"], FIT[coin]["FN"], FIT[coin]["ST"]
+    (FITDIR / "fit_slugs.json").write_text(json.dumps(sorted(
+        {r["slug"] for c in FIT.values() for r in c["kept"]})))
+    print("STAGE FIT COMPLETE", flush=True)
+
+
+def stage_score() -> dict:
+    """STAGE 2: score all three arms on the top-up. Never loads the fragment."""
+    import harmful_hazard_model as hm
+    import harmful_action_eval as ae
+    import harmful_fast_compute as fc
+    import lightgbm as lgb
+    import numpy as np
+
+    frozen = json.loads(FROZEN.read_text())
+    fit_slugs = set(json.loads((FITDIR / "fit_slugs.json").read_text()))
+    SC = _feature_pass(TOPUP, "topup")
+    assert_disjoint(fit_slugs, {r["slug"] for c in SC.values() for r in c["kept"]})
+    print("  populations asserted DISJOINT (fitted slugs read from stage 1)",
+          flush=True)
+
+    out = {"protocol": "PHASE2_THREE_ARM_V1", "arms": {}, "population": {},
+           "declaration_commit": "d7082b6",
+           "multiplicity_before": D.MULTIPLICITY_BEFORE,
+           "multiplicity_after": D.MULTIPLICITY_AFTER,
+           "n_random": D.N_RANDOM, "decision_metric": D.DECISION_METRIC,
+           "lgbm_params": D.LGBM_PARAMS,
+           "staged_because": "the single-process run was oom-killed at 14G after "
+                             "all four feature passes succeeded; fit and score "
+                             "are now separate processes (the daily-refit shape)",
+           "da_caveat_field": "RESERVED for Q-DA-79 post-gap queue-validity finding"}
+
+    for coin in ("btc", "eth"):
+        sc = SC[coin]
+        lin = json.loads((FITDIR / f"linear_{coin}.json").read_text())
+        srows = [hm.keptrow(r) for r in sc["kept"]]
+        nA = len({(r["slug"], r["side"], r["gen"]) for r in sc["kept"]})
+        out["population"][coin] = {
+            "score_rows": len(sc["kept"]), "score_actions": nA,
+            "score_windows": len({r["slug"] for r in sc["kept"]}),
+            "score_drops": sc["drops"], "fit_rows": lin["n_rows"],
+            "fit_actions": lin["n_actions"], "fit_positive": lin["n_positive"],
+            "fit_drops": lin["drops"]}
+        XS_lin = [sc["PM"][i] + sc["FN"][i] + sc["ST"][i]
+                  for i in range(len(sc["kept"]))]
+
+        for arm in D.ARMS:
+            if arm == "PM_PLUS_FINE":
+                fz = frozen["fits"][coin]
+                mu, sd = fz["norm_mu"], fz["norm_sd"]
+                W, WM = fz["hazard_weights"], fz["value_weights"]
+                ecv = []
+                for j in range(len(sc["kept"])):
+                    raw = sc["PM"][j] + sc["FN"][j]
+                    x = [1.0] + [(raw[i] - mu[i]) / sd[i] for i in range(len(mu))]
+                    ecv.append(fc.fast_predict_p(W, x) *
+                               float(sum(a * b for a, b in zip(WM, x))))
+            elif arm == "PLUS_PRED_STATE_V1":
+                mu, sd = lin["norm_mu"], lin["norm_sd"]
+                W, WM = lin["hazard_weights"], lin["value_weights"]
+                ecv = []
+                for raw in XS_lin:
+                    x = [1.0] + [(raw[i] - mu[i]) / sd[i] for i in range(len(mu))]
+                    ecv.append(fc.fast_predict_p(W, x) *
+                               (float(sum(a * b for a, b in zip(WM, x))) if WM else 0.0))
+            else:
+                mu, sd = lin["norm_mu"], lin["norm_sd"]
+                S = np.asarray([[1.0] + [(raw[i] - mu[i]) / sd[i]
+                                         for i in range(len(mu))]
+                                for raw in XS_lin], dtype=np.float64)
+                hb = lgb.Booster(model_file=str(FITDIR / f"lgbm_haz_{coin}.txt"))
+                p = hb.predict(S)
+                vf = FITDIR / f"lgbm_val_{coin}.txt"
+                v = (lgb.Booster(model_file=str(vf)).predict(S)
+                     if vf.exists() else np.zeros(len(S)))
+                ecv = (p * v).tolist()
+                del S
+            gate = ae.evaluate_policy(srows, ecv, latency_ms=D.TARGET_LATENCY_MS,
+                                      budgets=D.BUDGETS, n_random=D.N_RANDOM)
+            out["arms"].setdefault(coin, {})[arm] = {"gate": gate}
+            print(f"  {coin} {arm:<20} n_actions={gate.get('n_actions')}", flush=True)
+            for b, g in gate["budgets"].items():
+                print(f"      @{b}: net {g['net_cents']:+9.1f}c  "
+                      f"rand_max {g['random_net_max']:+8.1f}  "
+                      f"beats_NET={g['beats_random_max_on_NET']}", flush=True)
+        del XS_lin, SC[coin]["PM"], SC[coin]["FN"], SC[coin]["ST"]
+    import os, tempfile
+    fd, tmp = tempfile.mkstemp(dir=str(OUT.parent), suffix=".tmp")
+    with os.fdopen(fd, "w") as fh:
+        json.dump(out, fh, indent=1, sort_keys=True); fh.flush(); os.fsync(fh.fileno())
+    os.replace(tmp, OUT)
+    print(f"\nWROTE {OUT.name}", flush=True)
+    return out
+
+
 def run() -> dict:
     import harmful_hazard_model as hm
     import harmful_action_eval as ae
@@ -257,8 +396,12 @@ def main() -> int:
     if not TOPUP.exists():
         raise SystemExit(f"REFUSED: {TOPUP.name} does not exist. Phase 2 has "
                          f"no test surface; build it before scoring.")
-    run()
-    return 0
+    if "--stage-fit" in sys.argv:
+        stage_fit(); return 0
+    if "--stage-score" in sys.argv:
+        stage_score(); return 0
+    raise SystemExit("specify --stage-fit or --stage-score (staged after the "
+                     "single-process run was oom-killed at 14G)")
 
 
 if __name__ == "__main__":
