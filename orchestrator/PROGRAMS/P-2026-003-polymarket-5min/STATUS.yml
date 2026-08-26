@@ -45,7 +45,45 @@ flags:
                              # proposed in Q-DA-69. Cause unclaimed; OPS
                              # measurement unstaffed. v2.1 race stays G=1;
                              # next candidate forward day is 08-27.
-  da_topup_receipt: materialised # 2026-08-26 DA, commit c4621af, Q-DA-70.
+  da_topup_receipt: v2-population-unchanged # 2026-08-26 DA, 08a4923,
+                             # Q-DA-76. v2 SUPERSEDES v1 (rule 13; v1 untouched
+                             # on disk as provenance). Reason: BE's Q-DA-67 fix
+                             # (c4cb4e3) changed harmful_exposure_rows.py, so
+                             # v1's pinned builder hash no longer described the
+                             # code a rebuild would run. POPULATION RE-DERIVED
+                             # AND COMPARED, NOT ASSUMED: 346/204 both,
+                             # statuses and per-coin/day identical,
+                             # slug_manifest_sha256 IDENTICAL, 0 of 346 slugs
+                             # differ. The fix corrected the selector without
+                             # moving the population. v2 also DECLARES
+                             # era_end_s = 1787702410.0 (population
+                             # da_development_topup) -- BE reads it from here
+                             # per R-156(1) rather than inventing one -- and
+                             # records era_floor_verified_at_ledger from the
+                             # new refusal guard. READING NOTE: markets.jsonl's
+                             # pinned hash moves between ANY two builds (append
+                             # -growing registry, 13,352 lines). For a growing
+                             # input a pinned hash is STATE-AT-BUILD
+                             # provenance, NOT a reproducibility anchor; the
+                             # guarantee is the population check. All 346 slugs
+                             # still resolve in the token map, 0 missing.
+  booktick_scan_races_collector: OPEN-LOW # 2026-08-26 DA, Q-DA-75, BE-owned.
+                             # _bn_gap_index globs *.csv* with NO upper bound,
+                             # so every build scans to the present and opens
+                             # files the collector is rotating. Killed a real
+                             # build (ETHUSDT/20260826_05.csv -> .csv.gz at
+                             # 06:00 mid-scan). BUILD-FRAGILITY ONLY, NOT
+                             # reproducibility: MEASURED that in-span gaps are
+                             # identical, added gaps fall after the cut, last
+                             # only grows -- so a fully-past population's
+                             # verdict cannot move. Not a Phase-0-gate
+                             # violation. Fires only at hour boundaries, so it
+                             # will look intermittent to whoever hits it next.
+                             # Fix: bound the glob by the DECLARED END (already
+                             # exists post-R-154, just never reaches this
+                             # function). NOT except-FileNotFoundError-continue
+                             # -- that trades a loud failure for a dropped gap.
+  da_topup_receipt_v1: superseded # 2026-08-26 DA, Q-DA-70, commit c4621af.
                              # data/pm_5min/derived/da_development_topup_v1.json
                              # 346 slugs, ALL counted by status. YIELD IS THIN
                              # AND BTC-SPECIFIC: btc 33 OK/137 PM_GAP/3 BINANCE

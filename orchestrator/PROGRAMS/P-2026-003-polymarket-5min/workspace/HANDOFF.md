@@ -2,6 +2,37 @@
 
 Updated: 2026-08-26 (coordinator) — **STATEFUL harmful-cancel phase dispatched.**
 
+## 2026-08-26 (DA, ~06:1xZ) — top-up v2: population UNCHANGED; scan race filed
+
+**Q-DA-76 (`08a4923`)** — `da_development_topup_v2.json` supersedes v1 (rule 13;
+**v1 untouched on disk**, mtime still 05:36 through two rebuilds incl. a crash).
+BE's Q-DA-67 fix changed a file v1 pins, so the hash had to be refreshed.
+**Population RE-DERIVED and compared, not assumed: 346/204 both,
+`slug_manifest_sha256` IDENTICAL, 0 of 346 slugs differ.** The fix corrected the
+selector without moving the population. v2 also declares
+**`era_end_s = 1787702410.0`** for population `da_development_topup` — **BE reads
+it from the receipt** (R-156(1)) rather than inventing one — and records
+`era_floor_verified_at_ledger` from the new refusal guard.
+
+**Reading note now in the register:** `markets.jsonl`'s pinned hash moves between
+ANY two builds (append-growing registry). For a growing input a pinned hash is
+**state-at-build provenance, not a reproducibility anchor**; the guarantee is the
+population check. All 346 slugs still resolve, 0 missing.
+
+**Q-DA-75 (`e45569b`, OPEN, LOW, BE-owned)** — `_bn_gap_index` globs bookTicker
+with no upper bound, so builds open files the live collector is rotating; killed
+one v2 attempt. **Build-fragility only, NOT reproducibility — measured:** in-span
+gaps identical, added gaps after the cut, `last` only grows, so a fully-past
+population's verdict cannot move. Fires only at hour boundaries, so it will look
+intermittent. Fix: bound the glob by the declared end (exists post-R-154, never
+reaches that function). NOT `except FileNotFoundError: continue`.
+
+**Q-DA-74 → R-157:** my own Q-DA-73 cross-coin hazard was overstated (the fit is
+per-coin, the evaluator generation-native — nobody makes that comparison). The
+real exposure is fit-side: rows carry **no `sample_weight`**, so each generation
+enters weighted by row count (up to 150x), invisible to a correct evaluator.
+Ruled into Phase 2 as `w = 1/n_rows(generation)` for candidate fits only.
+
 ## 2026-08-26 (DA, ~06:0xZ) — R-153 ruled all five; day two FAILS verify-first; eth audited
 
 **All five DA filings ruled in R-153 (`f264e60`)**: Q-DA-67 upheld (fix owned by
