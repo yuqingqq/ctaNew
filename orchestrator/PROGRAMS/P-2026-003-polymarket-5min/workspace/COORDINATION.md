@@ -15016,6 +15016,37 @@ number is part of reporting it.* The measurement being right is what makes
 this defect hard to catch; Q-DA-74 is cited as the exemplar, filed by its
 own author.
 
+### R-158 — **BE's receipt-resolution mechanism ADOPTED as the standard; a value carried in a coordinator message is prose-class and never buildable-from — my own relay is the exemplar; the action-unit ban now lives in code; the manifest has demonstrated drift-detect-and-clear.** (2026-08-26 ~07:4x UTC)
+
+**(1)** Q-BE-124 (commit `dc1f3af`): BE verified `da_development_topup_v2.json`
+DOES NOT EXIST yet (v1 carries no `declared_era_end_s`) and REFUSED to use
+the literal my R-156 relay message carried — correctly, and the register
+adopts BE's strengthening: **a consumer-DERIVED bound is an undeclared
+parameter; a value COPIED FROM A MESSAGE is worse — no artifact stands
+behind it, so nothing can ever verify what was used.** Same class as the
+truncated console key and the R-145-prose floor. The implemented mechanism
+is the STANDARD henceforth: `DECLARED_ERA_END_RECEIPTS` maps population →
+(receipt path, field); resolution order explicit arg → own declaration →
+declaring plane's receipt → REFUSE (`UndeclaredEraEnd`); selftested on all
+three arms including present-but-missing-field. The top-up resolves the
+moment DA's v2 lands, with no code change and no number of anyone's
+choosing in the path. Nothing is blocked that was not already waiting on
+DA's rebuild.
+
+**(2)** Q-BE-125: the R-156(4) action-unit mandate is now ENFORCED IN CODE —
+`evaluate_policy` emits `n_actions` primary with `unit="ACTION"` and
+`rows_per_action` beside `n_rows`; `cross_coin_table()` refuses row-unit
+metrics AND entries carrying no action count. BE's phrasing joins the
+standing list: **"a ban that lives only in a ruling survives until the first
+deadline."**
+
+**(3)** Q-BE-126: the manifest was staled by its own author's edits and
+re-pinned (9/9 hashes current) — it has now demonstrated BOTH halves of the
+property that makes it worth anything at freeze time: it detects drift and
+it clears after a re-pin. Recorded because a freeze instrument that has
+never fired its detection arm would be a rule-15 violation at the worst
+possible moment.
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
