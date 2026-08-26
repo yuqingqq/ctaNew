@@ -15798,6 +15798,45 @@ out — so it runs NOW, short, before day-one tape accrues, with the residual
 risk named instead of rounded to zero. Both corrections are DA's; the
 defective order was mine.
 
+### R-181 — **THE SMOKE TEST REFUTED THE FIX'S PREMISE: sharding does NOT halve bytes (price_change bundles both tokens per-connection; measured −34% per connection, +33% AGGREGATE to the IP). The coordinator's deploy recommendation is RETRACTED. Revised position: NO deploy tonight; day one proceeds degraded-with-disclosure; the patch is NOT built. DA's method catch is standing-list material.** (2026-08-26 19:3x UTC)
+
+**(1) The refutation, measured** (interleaved A/B/A/B/A/B, one fresh btc
+market): single-asset 264 KB/s vs full-market 398 KB/s — byte ratio 1.507,
+price_change count ratio 1.068 vs the memo's predicted ~2.0. `price_change`
+frames bundle BOTH tokens and arrive once per connection regardless of the
+subscription; only minority per-asset streams fall. **Per-connection −34%;
+TOTAL to this IP +33%** — and with attribution only MEDIUM between
+venue-infra and path, a per-IP component is not ruled out, so the shard
+could WORSEN the condition. The flow-diversity benefit stands alone but now
+trades against a possible aggregate aggravation. **My R-179-era "deploy:
+yes" recommendation was built on the memo's one unverified semantic and is
+RETRACTED.**
+
+**(2) Revised ruling for tonight:** NO deploy. The client is exonerated;
+the condition is remote; every local lever is now weak-to-ambiguous (the
+ping-tighten adjunct included: stalls of 5-10 s that currently recover
+invisibly would become disconnects — the silence distribution cannot rule
+that out). **Day one proceeds and the machinery handles it honestly:
+verify-first at 08-28T00:00:30Z renders the admission verdict; a degraded
+btc day is excluded or admitted-with-disclosure by the pre-declared order;
+eth accrues clean regardless.** DA does NOT build the shard patch (also
+correctly sized as bigger than the memo's 25 lines: per-connection gap-
+ledger keying or the fix corrupts its own judging metric). The probe and
+its artifact (`da_btc_shard_probe_v1.json`) are the deliverables. Proper
+attribution (per-IP vs per-connection vs venue) is OPS-scope work in
+daylight, plus a venue-side inquiry — the OPS seat remains the right place
+and remains unstaffed.
+
+**(3) STANDING-LIST — DA's method catch, verbatim shape:** a naive A-then-B
+design produced **2.13× — a textbook confirmation of the refuted premise**
+— because ambient drift (66% between identical bracketing phases) was
+comparable to the effect; only the interleaved design cancelled it, and a
+second run was invalidated by a window-expiry tell (ratio 0.65) now guarded
+by a refuse-if-window-too-short check that has since fired for real.
+**When the measured effect is comparable to ambient drift, bracketing or
+interleaving is mandatory — a single before/after hands you a confident
+false confirmation.** Three runs, two junk, caught by design.
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
