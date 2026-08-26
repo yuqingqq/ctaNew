@@ -1,6 +1,30 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-08-23, session 5 (DE decision-module plan Revision 2). **Read `live/pm_research/FLOW_MODEL_STATE.md` FIRST** -- it is authoritative for the flow model and twelve documents defer to it. All work is on branch
+Updated: 2026-08-26 (coordinator) — **STATEFUL harmful-cancel phase dispatched.**
+
+## 2026-08-26 — OB dynamics loop CLOSED; stateful phase dispatched (R-145)
+
+The fine-feature loop closed at I5 (commit `f1ceec9`, five receipts):
+**reduced fine CONFIRMED** (PM + L1 imbalance + 10–250 ms mid-move), extended
+HELD @5%-only, depth20/PM-thinning/btc-lead rejected-null-flagged. Five specs
+consumed the 08-24/25 fragment — scoreboard ban permanent. **The freeze of
+reduced(+extended) is the USER'S decision, open; Phase 0 gates it.**
+
+Next phase governed by `live/pm_research/plans/STATEFUL_HARMFUL_CANCEL_TODO.md`
+(`e3d3aaf`), dispatched in `workspace/COORDINATOR_DISPATCH.md` (rewritten,
+R-145): **BE** Phase 0 manifest/repro (THE blocking item: cent-exact
+reproduction of the reduced-fine receipt from committed code) then Phase 2
+model comparison; **DA** Phase 1 `PRED_STATE_V1` builder + the declared
+development top-up receipt (slugs strictly after `1787650200`, strictly before
+08-26 00:00 UTC — development only, never forward) + R-141 daily-admission
+check; **DE** Phase 3 stateful cancel/hold/repost state machine + parity
+battery vs `QR_SKEW_ONLY` (buildable now); **OPS** heavy-run standing rule
+(`systemd-run --user -p MemoryMax=8G -p OOMScoreAdjust=1000`, R-145(4)) +
+recv_ns-degradation measurement + collector watch. Q-OPS-13 answered-adopted;
+Q-DE-14 closed superseded. Tape from 08-26 00:00 UTC on is untouched, reserved
+for forward validation (≥5 complete UTC days after the freeze).
+
+**Read `live/pm_research/FLOW_MODEL_STATE.md` FIRST** -- it is authoritative for the flow model and twelve documents defer to it. All work is on branch
 **`mm-research`**; nothing is on `main`. Sigma remains **Revision 5 / PRICING
 HOLD**, while the offline measurement stack is complete through contracts
 **v22**. `route_a_v1` has one OOS test day; per-symbol `route_a_v2` is

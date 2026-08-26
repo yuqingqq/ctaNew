@@ -4,11 +4,25 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
-  2026-08-23 (session 5: DE plane fully planned — module plan for all
-  five DE modules + placement-policy plan Revision 2 with the cancellation
-  lever; session 6: four-plane worker split with a coordinator session)
+  2026-08-26 (coordinator): OB dynamics loop CLOSED at I5 — reduced fine
+  spec CONFIRMED, five specs consumed, freeze decision with the USER.
+  STATEFUL harmful-cancel phase dispatched per
+  live/pm_research/plans/STATEFUL_HARMFUL_CANCEL_TODO.md and R-145
+  (BE Phase 0 manifest/repro = blocking; DA Phase 1 state features +
+  declared dev top-up; DE Phase 3 state machine + parity; OPS heavy-run
+  hygiene + recv_ns measurement)
 
 flags:
+  harmful_cancel_line: stateful-phase-dispatched # 2026-08-26, R-145. Loop
+                             # closed (f1ceec9 receipts). Reduced fine
+                             # CONFIRMED; extended HELD; depth20/thinning/
+                             # btc-lead out. Scoreboard ban on the consumed
+                             # 08-24/25 fragment is PERMANENT. Dev top-up
+                             # declared: slugs in (1787650200, 08-26 00:00),
+                             # development-only, consumed at first read.
+                             # 08-26+ tape reserved for forward validation.
+                             # USER decision open: freeze reduced(+extended)
+                             # after BE's Phase-0 cent-exact repro passes.
   session_roles: four-plane-with-coordinator # 2026-08-23, user-assigned,
                              # SUPERSEDES de-worker-plus-coordinator. THIS
                              # session = COORDINATOR of the whole programme.
