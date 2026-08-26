@@ -14638,6 +14638,23 @@ path (streaming parse or the columnar cache) as pre-freeze Phase-0 work —
 **reproducibility includes resource feasibility.** Relaunch the repro inside
 `research.slice`; expect the parse burst.
 
+### R-149 — **The repack-killer found: `~/.bashrc` caps every shell at 12 GiB vmem AND 10 GiB file size. git gc repaired inside the slice. The .bashrc caps are recommended for removal — the user decides.** (2026-08-26 ~05:3x UTC)
+
+`~/.bashrc:10-11` sets `ulimit -S -v 12582912` (12 GiB vmem) and
+`ulimit -f 10485760` (10 GiB max file size) in every interactive shell —
+inherited by every session and every bare-launched job, surviving reboots.
+This is the confirmed cause of every git repack failure (a 90 MB malloc
+failed with 21 GB free) and retro-explains the I5 4b kill diagnosis. The
+file-size cap is a second footgun: any shell-launched job writing a >10 GiB
+artifact dies on SIGXFSZ. **Repair executed:** `.git/gc.log` removed and
+`git gc` run to completion INSIDE `research.slice` (systemd units do not
+inherit shell ulimits — one more reason the R-148(3) pattern is mandatory).
+**Recommendation to the user:** delete both .bashrc lines — they were an
+earlier attempt at the protection `research.slice` + per-job `MemoryMax` now
+provide properly, and they break git and tools indiscriminately. Until
+removed, any legitimate big shell operation needs `ulimit -v unlimited`
+first (hard limit is unlimited, so raising is permitted).
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
