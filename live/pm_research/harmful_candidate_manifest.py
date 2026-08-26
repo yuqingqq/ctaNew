@@ -50,6 +50,25 @@ HASHED = [
 ]
 
 
+# ---- reproduction resource contract (R-148(5)) --------------------------
+# A reproduction that cannot RUN on the hardware is not reproducible. So the
+# manifest states a peak-RSS bound alongside the hashes, and a reproducer that
+# cannot meet it must say so rather than quietly succeed on a bigger box.
+#
+# WHAT IS ACTUALLY KNOWN (measured, 2026-08-26 -- and it is a LOWER BOUND, not
+# a peak; the run has never been observed to completion):
+#   attempt 1  MemoryMax=8G   -> cgroup OOM-killed AT 8.0G after 10m40s CPU
+#   attempt 2  MemoryMax=8G   -> same
+#   attempt 3  MemoryMax=14G  -> observed 8.6/8.8/8.5/8.3G at ~03:51-03:53,
+#                                still running when the box died at ~03:55
+# So: peak_rss > 8.8 GiB, CEILING UNKNOWN. The honest field is a bound with a
+# status, never a number that implies a completed measurement.
+PEAK_RSS_LOWER_BOUND_BYTES = 8_800_000_000
+PEAK_RSS_STATUS = ("LOWER_BOUND_ONLY -- the builder has never completed a run "
+                   "on this box. >8.8 GiB observed; true peak unmeasured.")
+PEAK_RSS_SOURCE = "direct MemoryCurrent polling of be-repro2, 2026-08-26T03:51-03:53Z"
+
+
 def sha256(p: Path) -> str:
     h = hashlib.sha256()
     with p.open("rb") as fh:
@@ -154,6 +173,12 @@ def selftest() -> int:
     ok(m["verdict"] == "REFUSED_SPLIT_MISMATCH", "a post-era mismatch is refused")
     ok(m["rows_not_declared"] == ["2026-08-25"], "and the undeclared day is named")
 
+    ok("LOWER_BOUND" in PEAK_RSS_STATUS,
+       "the peak-RSS field is declared a BOUND, not a measured peak -- the "
+       "builder has never completed a run, and a bare number would imply it had")
+    ok(PEAK_RSS_LOWER_BOUND_BYTES > 8_000_000_000,
+       "and the bound exceeds the 8G cap that killed attempts 1-2, which is the "
+       "whole reason a >=8G reproducer cannot be assumed to succeed")
     ok(ERA_BOUNDARY_NS == 1787579334881534478, "the era boundary is a pinned literal")
     ok(datetime.fromtimestamp(ERA_BOUNDARY_NS / 1e9, timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
        == ERA_BOUNDARY_UTC, "and its UTC rendering agrees with the literal")
