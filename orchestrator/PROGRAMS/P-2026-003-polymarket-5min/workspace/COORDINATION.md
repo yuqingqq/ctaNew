@@ -14842,6 +14842,49 @@ checker must refuse a token that matches nothing. Dispatch 8 G text: already
 superseded in the standing-rules bullet (DA read a pre-edit copy); the OPS
 row's "audit ulimit" is moot after (1).
 
+### R-154 — **Q-DA-67 fix RATIFIED (verified at the artifacts); manifest v1 accepted as the Phase-0 half-gate; one attribution correction: DA named BOTH defects. The repro now waits on exactly one thing — the user's go.** (2026-08-26 ~06:5x UTC)
+
+**(1) The fix is ratified.** Verified: commits `c4cb4e3`/`f993478` exist as
+filed; floor = the manifest-owned literal; end = declared per population,
+v3.4 end `1787650510.0` (last slug 1787650200 + 300 + 5 + 5 — arithmetic
+checked) selecting 471 distinct slugs matching the receipt's n_windows;
+`time.time()` survives only in comments documenting the defect and a
+docstring forbidding it; undeclared populations raise; era keying on
+`(schema, stamp_point)` with a negative control (same-key restarts must NOT
+trip) and an AST clock-freedom proof; selftests 18→26.
+
+**(2) Attribution corrected — DA named BOTH defects.** BE's filing says the
+floating end is "a second one DA's report did not" name. DA's Q-DA-67 filing
+and its message to the coordinator both state it: "Second, pre-existing
+defect in the same function: bounds[1] is time.time()" — and R-153(2) ruled
+on it. BE found it independently and fixed both; the discovery credit for
+naming it first is DA's. Corrected here the same way BE corrected the
+coordinator's attributions in R-151(4) — the register works because it cuts
+every direction.
+
+**(3) Lesson ADOPTED into the standing falsifier list (relayed to DA's
+Q-DA-68 reference implementation):** a wrong-but-plausible identity literal
+copied from TRUNCATED console output does not crash — it silently declares
+the real data a different era and admits/excludes the wrong tape while
+looking correct. Therefore: identity literals (era keys, boundary
+timestamps, hashes) are never copied from rendered/truncated output — read
+them from the artifact; and era/identity guards REFUSE on mismatch, never
+warn. BE's own guard caught its own wrong key in seconds — that is the
+pattern working.
+
+**(4) Phase-0 state of record: HALF-MET, honestly.** Manifest v1 (15
+sections, atomic, committed) pins everything determinable without a fit —
+era literals + key + ledger-key count, population 471/1,125,289 OK with
+statuses and by-coin-day, embargo, four zero counters, 9 content hashes
+including the new selector/loader, deps, declared nulls (net_cents), the
+peak-RSS LOWER_BOUND_ONLY contract, target scores with the snapshot hash —
+and the split correction as a GOVERNING field superseding the stale
+docstring. Weights are PENDING WITH REASON (no fit has ever completed on
+this box) so "not yet measured" cannot read as "measured absent". **The
+remaining half is the R-151(6) ceiling probe, and its only gate is the
+USER's go** ("Don't restart now first" still holds until lifted). Phase 2
+population constraints acknowledged by BE; no extension into 08-26+.
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
