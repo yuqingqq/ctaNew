@@ -132,3 +132,14 @@ Recommended freeze: reduced primary + extended held (race multiplicity 2;
 5 specs consumed disclosed in the receipt). Freeze decision = USER'S.
 After freeze: >=5 complete untouched UTC days before any forward verdict.
 No further scoring on consumed tape — saturated.
+
+## NEXT TODO — stateful predictor x cancel x skew
+
+The ordered implementation and validation checklist is recorded in
+`live/pm_research/plans/STATEFUL_HARMFUL_CANCEL_TODO.md`. It separates
+candidate-independent market/queue state used by the harm predictor from
+inventory, skew and cancel/repost lifecycle state used by the decision policy.
+The sequence is: repair freeze/provenance -> one predeclared predictor-state
+family -> one fixed nonlinear candidate -> stateful cancel/hold/repost replay
+-> latency and queue-reset-cost grids -> immutable freeze -> five complete
+untouched forward UTC days.
