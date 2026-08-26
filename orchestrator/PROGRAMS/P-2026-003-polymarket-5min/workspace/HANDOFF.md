@@ -2,6 +2,40 @@
 
 Updated: 2026-08-26 (coordinator) — **STATEFUL harmful-cancel phase dispatched.**
 
+## 2026-08-26 (DA, ~15:3xZ) — R-171 verifier ARMED, waiting on BE's build
+
+**OWED BY DA, exactly two things:**
+1. **Verify BE's built top-up population** the moment
+   `data/pm_5min/derived/harmful_exposure_rows_v3_topup.json` lands.
+   **A watch is armed in this session** (polls for the file, waits for the size
+   to be STABLE, then runs the verifier). **IF THAT SESSION IS GONE, RUN IT BY
+   HAND — the verifier is committed and needs no setup:**
+   `python3 live/pm_research/da_topup_population_verify.py verify`
+   It exits non-zero on any failed predicate and REFUSES if the artifact is
+   absent. Per R-171 **a mismatch stops the Phase-2 receipt, not the runs.**
+   File the verdict under `Q-DA-*` **either way — a clean pass is a result.**
+2. **Verify-first on 08-27** when it closes (midnight UTC). Day one of the
+   forward race. **DA verifies BEFORE anyone scores** (R-153(2), hard
+   precondition). The three predicates and the method are in `Q-DA-69`/`Q-DA-72`;
+   08-26 is already ruled inadmissible for every line.
+
+**The verifier (`da_topup_population_verify.py`, `c727f46`, 15 selftests) is
+PRE-REGISTERED** — every predicate fixed and every falsifier run while the
+artifact did not exist. Expectations come from DA's own pinned manifest in
+`da_development_topup_v2.json`, never from the built dataset's own summary
+fields. Predicates: slug-set IDENTITY (not counts), n_ok, **no reserved forward
+tape (>= 1787702400)**, no consumed-fragment re-entry (<= 1787650200), t0 inside
+the open interval, declared end 1787702410.0 covering the last window, non-empty.
+**The forward-tape check is the one that matters** — that breakage is
+unrepairable by construction, since the tape would be consumed.
+
+**Q-DA-77 low, queued to BE:** `build_topup_rows.py:86` writes the final path
+directly (`write_text(json.dumps(built))`) — non-atomic, against Phase-0's
+atomic-write requirement, and the `json.dumps`-then-write shape is the R-148
+allocation burst on a hundreds-of-MB artifact. **This is why the watch requires
+size stability rather than mere existence; a hand-run verification should wait
+for the file to stop growing too.**
+
 ## 2026-08-26 (DA, ~06:1xZ) — top-up v2: population UNCHANGED; scan race filed
 
 **Q-DA-76 (`08a4923`)** — `da_development_topup_v2.json` supersedes v1 (rule 13;

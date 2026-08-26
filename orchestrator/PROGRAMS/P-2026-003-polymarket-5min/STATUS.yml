@@ -45,6 +45,20 @@ flags:
                              # proposed in Q-DA-69. Cause unclaimed; OPS
                              # measurement unstaffed. v2.1 race stays G=1;
                              # next candidate forward day is 08-27.
+  topup_population_verify: ARMED-AWAITING-ARTIFACT # 2026-08-26 DA, c727f46,
+                             # Q-DA-77, per R-171. PRE-REGISTERED: predicates
+                             # fixed and falsifiers run while the artifact did
+                             # not exist; expectations read from DA's own v2
+                             # manifest, never the built set's summary fields.
+                             # Run by hand if the armed session is gone:
+                             #   python3 live/pm_research/\
+                             #     da_topup_population_verify.py verify
+                             # Non-zero on any failed predicate; REFUSES if the
+                             # artifact is absent. Wait for the file to stop
+                             # growing first -- BE's builder writes the final
+                             # path non-atomically (Q-DA-77(6)). A mismatch
+                             # stops the Phase-2 receipt, not the runs. File
+                             # the verdict either way; a pass is a result.
   da_topup_receipt: v2-population-unchanged # 2026-08-26 DA, 08a4923,
                              # Q-DA-76. v2 SUPERSEDES v1 (rule 13; v1 untouched
                              # on disk as provenance). Reason: BE's Q-DA-67 fix
