@@ -1,0 +1,89 @@
+{
+ "MULTIPLICITY_IS_THE_CENTRAL_RISK": {
+  "declared_now": "the reporting cell for headline comparison is latency=50ms, cost=0.25c, budget=10%, POLICY_INDUCED_ONLY, and it is fixed HERE, before any cell is read, so it cannot be chosen afterwards.",
+  "n_cells": 756,
+  "ruling_requested": "THE GRID CHARACTERIZES A SURFACE; IT DOES NOT SELECT A CELL.",
+  "why": "756 cells searched for the best one manufactures a positive with near-certainty. No Phase-4 conclusion may be stated as 'at the best cell'. Conclusions must be stated as REGION properties \u2014 monotone in latency, sign-stable across the cost grid up to X, holding under BOTH fill models \u2014 or not stated."
+ },
+ "R165_bindings": {
+  "fill_model_bracket": "MANDATORY. REFERENCE_FILLS (queue-optimistic) and NO_FILLS (pessimistic) both run. A conclusion must hold under BOTH; a SIGN FLIP ACROSS THE BRACKET IS A FAIL, NOT A CHOICE (R-165(2) item 2).",
+  "generation_tranche_tables": "Phase 4 consumes generation-level tranche tables as `generation_table` produces (R-165(2) item 5). ANY cell consuming the 1s-capped per-row latency labels MUST declare the cap as part of its estimand.",
+  "reduce_shares_cancel_budget": {
+   "declared_parameter": true,
+   "note": "R-165(2) item 4: a venue-semantics assumption, priced in the protocol, not baked into the machine. Declared FALSE here; reduces keep separate counters.",
+   "value": false
+  },
+  "reset_cost_primary": "POLICY_INDUCED_ONLY \u2014 the metric is DIFFERENTIAL vs the reference trajectory and reference-coincident generation starts are common-mode; charging them taxes the policy for events it did not cause. CHARGE_EVERY_REPOST runs as an ablation. EVERY receipt NAMES which cell it reports (R-165(2) item 1)."
+ },
+ "consumes": "forward or development tape as declared per run; NO Phase-4 cell may be read on tape reserved for forward validation of a frozen candidate.",
+ "declared_before_any_cell_is_read": true,
+ "drafted_at_utc": "2026-08-26T18:28:14Z",
+ "git_commit_at_draft": "5c984028a6b4745b9d44d4bf1dc5a98fffadbf57",
+ "grid": {
+  "budgets": [
+   0.05,
+   0.1,
+   0.15
+  ],
+  "cost_grid_rationale": "brackets the measured gross break-even from BELOW to well above: TODO \u00a77 implies btc 0.29/0.38/0.32c and eth 0.011/0.068/0.072c per cancellation at 5/10/15%. The grid spans 0 to 2.00c \u2014 ~6x above btc's break-even and ~28x above eth's \u2014 so the sign change is INSIDE the grid for both coins rather than off its edge.",
+  "fill_model": [
+   "REFERENCE_FILLS",
+   "NO_FILLS"
+  ],
+  "latency_ms": [
+   5,
+   10,
+   20,
+   30,
+   50,
+   75,
+   100,
+   150,
+   250
+  ],
+  "n_cells": 756,
+  "queue_reset_cost_cents_per_cancellation": [
+   0.0,
+   0.05,
+   0.1,
+   0.25,
+   0.5,
+   1.0,
+   2.0
+  ],
+  "reset_cost_semantics": [
+   "POLICY_INDUCED_ONLY",
+   "CHARGE_EVERY_REPOST"
+  ]
+ },
+ "per_cell_reporting": [
+  "gross avoided harm, favorable-fill sacrifice, cost-adjusted value",
+  "cancellations per minute and per generation",
+  "effective / stale / unresolved / zero-value cancellations",
+  "hold duration, repost count, queue resets",
+  "fill and share retention, spread capture",
+  "retained-book adverse-cost / spread-capture ratio",
+  "terminal inventory, peak inventory, reducing vs increasing split",
+  "comparison vs QR_SKEW_ONLY, QR_CANCEL_HOLD_X_SKEW, and matched random on identical opportunities",
+  "per-hour concentration (top-hour share, positive-without-best-hour) \u2014 added by BE: the Phase-2 gate showed an aggregate net can be half one hour"
+ ],
+ "protocol": "PHASE4_PROTOCOL_ASK_V1",
+ "score_source": {
+  "PARAMETERIZED": true,
+  "note": "Primary input is the frozen reduced-fine score. If the user approves freeze-B, PLUS_PRED_STATE_V1 slots in HERE without redrafting the protocol; the grid, bars and reporting list are unchanged by which score is fed. Each Phase-4 receipt names the score_source it consumed.",
+  "value": "harmful_reduced_fine_candidate_v1.json"
+ },
+ "status": "ASK \u2014 for the coordinator's FREEZE before any cell is read (R-165(3)).",
+ "verdict_bars_as_computed_predicates": {
+  "bars": {
+   "beats_matched_random_on_NET": "value > random_net_max over >=200 matched draws",
+   "cost_adjusted_value_positive": "net_after_reset_costs > 0",
+   "holds_under_both_fill_models": "sign(value|REFERENCE_FILLS) == sign(value|NO_FILLS)",
+   "material_retention": "fill_retention >= 0.5 (declared; below this the policy is not market-making, it is withdrawal)",
+   "no_net_cents_as_profit": "a receipt claiming profit must show reset/repost costs AND complete lifecycle included (TODO \u00a77 closing line)",
+   "not_single_hour": "max_single_hour_share_of_net < 0.5 AND positive_without_best_hour",
+   "sign_stable_over_cost_region": "value > 0 for every cost cell at or below the coin's measured break-even"
+  },
+  "note": "Rule 10 \u2014 every bar below is EVALUATED IN CODE. No verdict string is written beside a table; the predicate's boolean is the verdict."
+ }
+}
