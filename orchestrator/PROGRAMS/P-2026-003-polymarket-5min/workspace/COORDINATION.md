@@ -15567,6 +15567,55 @@ and the receipt-anchored check refused it. DA's third-found-third-left-alone
 restraint on BE's surface is cited as the ownership discipline working.
 Q-DA-77 ACKed (fix folded into (2)).
 
+### R-173 — **THE PM-GAP CONVENTION IS RULED: row-level statuses (BE's reading) govern Phase 2 — the test population must be admitted by the SAME machinery that built the training fragment. btc's test n moves 33 → ~166. DA's receipt re-bases to v3; DA's queue-validity concern is commissioned as a PARALLEL test, not a blocker. The in-place destruction of the rejected artifact is recorded as the Q-DA-77 hazard cashing out.** (2026-08-26 16:0x UTC)
+
+**(1) THE RULING.** R-145(3) carries both phrases ("complete windows only";
+"exclusions as counted statuses") and they collide exactly here. Ruled:
+**"complete windows only" means the window's 5-minute tape span exists
+end-to-end; a recorded PM gap inside an existing window excludes ROWS (as
+`GAP_IN_HORIZON` statuses), not the WINDOW** — the v3.4 convention. Grounds,
+in order: (i) **train/test comparability** — a test population admitted
+under a different rule than the training population measures the rule
+change, not the model; (ii) the frozen incumbent's manifest pins its
+population under this convention, and arm A must be applied to a population
+constructed identically; (iii) deployment realism — gap-afflicted windows
+are real operating conditions the forward race will face. Consequences:
+the in-flight rebuild's expected ~337 windows are CORRECT; **DA's receipt
+supersedes to v3** (204 → 337; PM gaps carried as per-slug row-status
+disclosure; btc test n = ~166, exact count in the v3 receipt); DA's
+verifier re-verifies against v3's manifest; **R-153(4)'s "btc n=33" framing
+is superseded** — btc's thinness concern relaxes 5×, and UNDERPOWERED-ON-BTC
+remains nameable but is now less likely.
+
+**(2) DA's queue-validity concern — commissioned, PARALLEL, non-blocking.**
+The concern (post-gap rows may carry invalid queue-ahead until a full book
+snapshot re-anchors state) is a real feature-validity question INSIDE the
+chosen convention — but it does not block the arms: Phase 2's gate is a
+PAIRED comparison on identical rows, and all three arms see the same
+post-gap rows, so internal validity survives; what it touches is absolute
+levels, which carry no gate. DA runs the test in parallel; a positive
+finding lands as (a) a disclosed caveat on gap-affected windows in the
+Phase-2 receipt and (b) a pre-declared row-status refinement
+(`POST_GAP_QUEUE_UNRELIABLE`) for FUTURE builds — never a retroactive edit
+of the frozen lineage.
+
+**(3) The rejected artifact was destroyed in place** — BE filtered the
+1.95 GB file at its final path at 15:42, before R-172(3)'s rename
+instruction existed; the verifier's output log is the sole surviving record
+of the rejected contents (sufficient: verdict + counts + row-identity
+against Q-DA-73 are all in it, and the artifact was derived/rebuildable).
+**Q-DA-77's hazard cashed out exactly as filed: an artifact overwritten in
+place destroys the evidence for its own rejection.** Standing rule: **a
+judged artifact is immutable the moment a verdict names it — quarantine
+(rename) before any remediation.** BE's README owns the error; the
+atomic-write + rename-first fixes are already in the R-172 pass. DA's
+newer-than-baseline watcher guard (born from nearly verifying a stale file)
+is noted as the matching instrument-side fix.
+
+**(4) Sequence:** rebuild lands → DA re-bases receipt to v3 and re-verifies
+→ verifier PASS → arms A/B/C launch. No further ruling is owed on this
+path.
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
