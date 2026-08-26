@@ -99,6 +99,30 @@ BUILDER_FILES = (
     "live/pm_research/flow_intensity.py",
 )
 
+#: R-160: a pinned hash means different things for different inputs, and the
+#: difference decides whether a MISMATCH is evidence of drift or of time
+#: passing.  Emitted PER SOURCE rather than as one receipt-level flag, because
+#: a single flag cannot answer the only question a reader actually has: "this
+#: hash does not match -- do I care?"
+#:
+#:   reproducibility_anchor -- immutable once written (closed-period archive
+#:       bytes, a builder file at a commit).  A mismatch IS drift; investigate.
+#:   state_at_build -- an append-growing live registry.  Its hash differs
+#:       between ANY two builds at different instants, for entirely benign
+#:       reasons.  A mismatch is NOT evidence of anything; the substantive
+#:       guarantee lives in the population comparison, not here.  Found the
+#:       hard way: markets.jsonl's hash moved between v1 and v2 while the
+#:       population was byte-identical (Q-DA-76).
+PIN_SEMANTICS = {
+    "live/pm_research/da_topup_receipt.py": "reproducibility_anchor",
+    "live/pm_research/harmful_exposure_rows.py": "reproducibility_anchor",
+    "live/pm_research/policy_optimizer_queue_realistic.py": "reproducibility_anchor",
+    "live/pm_research/flow_intensity.py": "reproducibility_anchor",
+    "hf_collector_runs.jsonl": "state_at_build",
+    "markets.jsonl": "state_at_build",
+    "pm_collector_gaps.jsonl": "state_at_build",
+}
+
 STATUSES = (
     "OK",
     "NO_ARCHIVE",
@@ -233,6 +257,8 @@ def build(as_of_ns: int | None = None) -> dict[str, Any]:
     manifest = "\n".join(f"{r['slug']} {r['status']} {r['archive_sha256']}"
                          for r in rows)
 
+    # A source with no declared semantics is a source nobody has decided how
+    # to read.  Refuse rather than default (R-154: guards refuse, never warn).
     src = {}
     for rel in BUILDER_FILES:
         p = REPO / rel
@@ -241,6 +267,15 @@ def build(as_of_ns: int | None = None) -> dict[str, Any]:
                      ("markets.jsonl", MARKETS),
                      ("pm_collector_gaps.jsonl", PM_GAPS)):
         src[label] = sha256_file(p) if p.exists() else None
+
+    undeclared = sorted(set(src) - set(PIN_SEMANTICS))
+    if undeclared:
+        raise PinnedIdentityMismatch(
+            f"pinned source(s) {undeclared} have no declared pin_semantics. "
+            f"Every pin must say whether a mismatch means drift "
+            f"(reproducibility_anchor) or merely time passing "
+            f"(state_at_build); defaulting would hand the reader a hash they "
+            f"cannot interpret.")
 
     days = sorted({r["day"] for r in rows})
     return {
@@ -308,6 +343,13 @@ def build(as_of_ns: int | None = None) -> dict[str, Any]:
         },
         "hashes": {
             "sources": src,
+            "pin_semantics": {k: PIN_SEMANTICS[k] for k in src},
+            "pin_semantics_note": (
+                "reproducibility_anchor: immutable once written; a mismatch IS "
+                "drift. state_at_build: append-growing live registry; its hash "
+                "differs between any two builds for benign reasons and a "
+                "mismatch is NOT evidence of drift -- the guarantee is the "
+                "population comparison, not the hash. R-160."),
             "slug_manifest_sha256": hashlib.sha256(
                 manifest.encode("utf-8")).hexdigest(),
             "ok_slug_list_sha256": hashlib.sha256(
@@ -422,6 +464,24 @@ def _selftests() -> int:
        "derived from the DECLARED bounds rather than picked")
     ok(DECLARED_ERA_END_S > SLUG_START_EXCL_HI - 300,
        "the end is after the last admissible slug start")
+
+    # --- R-160: every pin declares how a MISMATCH should be read ----------
+    pinned = set(BUILDER_FILES) | {"hf_collector_runs.jsonl", "markets.jsonl",
+                                   "pm_collector_gaps.jsonl"}
+    ok(pinned <= set(PIN_SEMANTICS),
+       "every pinned source has declared pin_semantics -- a new source cannot "
+       "be added without deciding how its hash is to be read")
+    ok(set(PIN_SEMANTICS.values()) <= {"reproducibility_anchor",
+                                       "state_at_build"},
+       "only the two declared semantics exist")
+    ok(PIN_SEMANTICS["markets.jsonl"] == "state_at_build",
+       "the append-growing registry that actually moved is marked as such")
+    ok(PIN_SEMANTICS["live/pm_research/harmful_exposure_rows.py"]
+       == "reproducibility_anchor",
+       "a builder file IS an anchor -- its hash moving is exactly the drift "
+       "that forced the v1 -> v2 supersession")
+    ok(sum(1 for v in PIN_SEMANTICS.values() if v == "state_at_build") == 3,
+       "all three live ledgers are state_at_build, not just the one that bit")
 
     print(f"da_topup_receipt selftests: {checks} checks passed")
     return 0
