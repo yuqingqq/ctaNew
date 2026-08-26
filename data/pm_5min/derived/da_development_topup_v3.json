@@ -1,0 +1,5527 @@
+{
+  "as_of_ns": 1787759523360631040,
+  "as_of_utc": "2026-08-26T15:52:03.360631+00:00",
+  "authority": {
+    "era_floor_authority": "R-145(3) literal; CLAUDE.md data budget",
+    "era_floor_not_derived_because": "harmful_exposure_rows.v2_era_bounds() reduces the collector ledger with max(), which the 2026-08-26T03:55Z crash restart moved forward 39.4h -- see Q-DA-67. R-147(2) ruled that row a coverage gap, not a boundary.",
+    "materialisation_assigned_by": "COORDINATION.md R-145(6)",
+    "population_declared_by": "COORDINATION.md R-145(3)"
+  },
+  "bounds": {
+    "coins": [
+      "btc",
+      "eth"
+    ],
+    "continuity_predicate": "harmful_exposure_rows.binance_continuity_ok over [t0-10, t0+WINDOW_S+MARKOUT_S+1], max HF gap <= 1.0s, era-pure from era_floor_recv_ns",
+    "declared_era_end_note": "last admissible slug start 1787702100 + WINDOW_S 300 + MARKOUT_S 5 + 5, matching harmful_exposure_rows' v3.4 convention. DECLARED BY DA as the population owner so a Phase-2 build does not have to invent one.",
+    "declared_era_end_s": 1787702410.0,
+    "era_floor_recv_ns": 1787579334881534478,
+    "era_floor_verified_at_ledger": {
+      "collector_schema_version": "hf_ws_v2_recv_boundary",
+      "note": "the pinned floor IS this run record; the build refuses if it is not (R-154 identity lesson)",
+      "pid": 1369188,
+      "stamp_point": "IMMEDIATELY_AFTER_WS_RECV_BEFORE_JSON_PARSE"
+    },
+    "last_admissible_slug_start": 1787702100,
+    "population_name": "da_development_topup",
+    "slug_start_strictly_after": 1787650200,
+    "slug_start_strictly_before": 1787702400
+  },
+  "derived_dataset": {
+    "built": false,
+    "reason": "The top-up exposure rows are NOT built. Building them requires harmful_exposure_rows --v2-era, whose era floor is the Q-DA-67 defect; it currently selects 0 windows. This receipt pins INPUTS, not outputs, and claims nothing about a dataset that does not exist.",
+    "unblocks_on": "RESOLVED \u2014 Q-DA-67 fixed by BE (c4cb4e3), ratified R-154. A top-up build is now possible; pass era_end_s=1787702410.0 (declared above)."
+  },
+  "hashes": {
+    "ok_slug_list_sha256": "5e207fea197bdadb793d943712ef65219126c7c15d856f2b7ebf8dfa2f7a86e6",
+    "pin_semantics": {
+      "hf_collector_runs.jsonl": "state_at_build",
+      "live/pm_research/da_topup_receipt.py": "reproducibility_anchor",
+      "live/pm_research/flow_intensity.py": "reproducibility_anchor",
+      "live/pm_research/harmful_exposure_rows.py": "reproducibility_anchor",
+      "live/pm_research/policy_optimizer_queue_realistic.py": "reproducibility_anchor",
+      "markets.jsonl": "state_at_build",
+      "pm_collector_gaps.jsonl": "state_at_build"
+    },
+    "pin_semantics_note": "reproducibility_anchor: immutable once written; a mismatch IS drift. state_at_build: append-growing live registry; its hash differs between any two builds for benign reasons and a mismatch is NOT evidence of drift -- the guarantee is the population comparison, not the hash. R-160.",
+    "slug_manifest_sha256": "89994b92cfddba113e0cd9057ae08a4e0005c06413317f3214f840544a848327",
+    "sources": {
+      "hf_collector_runs.jsonl": "c3b3a0b0bf83f7b1cd0d8722fb124f5f6fb4962b4e74ff7db350a4220386abcc",
+      "live/pm_research/da_topup_receipt.py": "4379536769facf68e3357e84fc49ef8340e73f9a65c2eef43aef2bffcf724a01",
+      "live/pm_research/flow_intensity.py": "e65c812fd42fc8d76c368ebbd6312c8cfbc86f06f2ed0ca726f38e69f783b367",
+      "live/pm_research/harmful_exposure_rows.py": "c0cfdac3788beef402ac61f1f1796383aa1e66a04c5dc019c7f946173a110ff6",
+      "live/pm_research/policy_optimizer_queue_realistic.py": "ae13af2931bc33b85b6a73a144261f0ca1d45b4767e985cf94e0cdda0e5c204c",
+      "markets.jsonl": "ac4b11f3fabbdcf144772d795e485e71f8fb4b31d11ddd9fda581c0a13435810",
+      "pm_collector_gaps.jsonl": "dd85c97f6e6b985602e3a8cffeeba8a15334e7225622c7a47c849a0eb83682c8"
+    }
+  },
+  "n_and_as_of": {
+    "cluster_note": "This population spans 1 UTC day(s). Below G=5 complete days no interval may be quoted on a day-clustered statistic (rule 8); development selection does not need one, but any figure derived from this tape inherits the constraint.",
+    "days_spanned": [
+      "2026-08-25"
+    ],
+    "n_by_coin_day_status": {
+      "btc": {
+        "2026-08-25": {
+          "BINANCE_GAP_OR_TRUNCATED": 7,
+          "OK": 166
+        }
+      },
+      "eth": {
+        "2026-08-25": {
+          "BINANCE_GAP_OR_TRUNCATED": 2,
+          "OK": 171
+        }
+      }
+    },
+    "n_by_status": {
+      "BINANCE_GAP_OR_TRUNCATED": 9,
+      "OK": 337
+    },
+    "n_candidate_slugs": 346,
+    "n_complete_utc_days": 1,
+    "n_ok": 337
+  },
+  "receipt_version": "da_development_topup_v3",
+  "role": "DEVELOPMENT_ONLY_NEVER_FORWARD_VALIDATION",
+  "role_note": "DEVELOPMENT ONLY. This tape may be used for Phase-1/2 selection and is CONSUMED at first read. It is never forward validation. Tape from 2026-08-26T00:00Z onward is untouched and reserved.",
+  "slugs": [
+    {
+      "archive_file": "btc-updown-5m-1787650500.jsonl.gz",
+      "archive_sha256": "a2c8704a2af94af43d5347aa59474e35ce268d56a26f3c17c48eea06e38feba6",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          18.836554,
+          20.128824
+        ],
+        [
+          80.01463,
+          90.002563
+        ],
+        [
+          169.880212,
+          181.214945
+        ],
+        [
+          201.124464,
+          210.856272
+        ]
+      ],
+      "pm_gap_s": 32.346745,
+      "slug": "btc-updown-5m-1787650500",
+      "status": "OK",
+      "window_start": 1787650500
+    },
+    {
+      "archive_file": "eth-updown-5m-1787650500.jsonl.gz",
+      "archive_sha256": "644ec6296d789773ef40439f074b0c0f39542491961f3eaf759dc80898c8f59e",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787650500",
+      "status": "OK",
+      "window_start": 1787650500
+    },
+    {
+      "archive_file": "btc-updown-5m-1787650800.jsonl.gz",
+      "archive_sha256": "85b82317b156a36d074db8d0b2ccf9db9fbd4abf7e5de0e3bcb87a7c752068ee",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          44.542913,
+          50.871114
+        ],
+        [
+          58.339636,
+          59.634689
+        ],
+        [
+          89.544546,
+          91.437827
+        ],
+        [
+          121.327939,
+          130.000022
+        ]
+      ],
+      "pm_gap_s": 18.188619,
+      "slug": "btc-updown-5m-1787650800",
+      "status": "OK",
+      "window_start": 1787650800
+    },
+    {
+      "archive_file": "eth-updown-5m-1787650800.jsonl.gz",
+      "archive_sha256": "cc4e6d30be298f0bdcd266519e87ad402344d8a5fcd46a7189208cb617449ea1",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787650800",
+      "status": "OK",
+      "window_start": 1787650800
+    },
+    {
+      "archive_file": "btc-updown-5m-1787651100.jsonl.gz",
+      "archive_sha256": "d9bec7b66e47063a8d1dbaffce95cf62b91a1a3411e639b31ef267467fc73b7c",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          45.61598,
+          53.862557
+        ]
+      ],
+      "pm_gap_s": 8.246577,
+      "slug": "btc-updown-5m-1787651100",
+      "status": "OK",
+      "window_start": 1787651100
+    },
+    {
+      "archive_file": "eth-updown-5m-1787651100.jsonl.gz",
+      "archive_sha256": "987f375213de138947d8f76c33ae3864f04873bd12ec90ee8427073568ed2005",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787651100",
+      "status": "OK",
+      "window_start": 1787651100
+    },
+    {
+      "archive_file": "btc-updown-5m-1787651400.jsonl.gz",
+      "archive_sha256": "afffb4070e3e26dfccd394c35b555bd8c30e967e4dd05f39dfc919d338601459",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          15.50309,
+          16.81888
+        ]
+      ],
+      "pm_gap_s": 1.31579,
+      "slug": "btc-updown-5m-1787651400",
+      "status": "OK",
+      "window_start": 1787651400
+    },
+    {
+      "archive_file": "eth-updown-5m-1787651400.jsonl.gz",
+      "archive_sha256": "a2e8342b07887c725093b5452f5241666eb956a92300cf261a66c44349e84209",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787651400",
+      "status": "OK",
+      "window_start": 1787651400
+    },
+    {
+      "archive_file": "btc-updown-5m-1787651700.jsonl.gz",
+      "archive_sha256": "85401721294d0685fe26167e556eb78bd55a70654df7c28cea8f14b54c0fb452",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          23.641355,
+          24.934765
+        ],
+        [
+          164.823495,
+          176.207678
+        ],
+        [
+          188.425013,
+          189.713415
+        ],
+        [
+          207.286378,
+          208.58286
+        ]
+      ],
+      "pm_gap_s": 15.262476,
+      "slug": "btc-updown-5m-1787651700",
+      "status": "OK",
+      "window_start": 1787651700
+    },
+    {
+      "archive_file": "eth-updown-5m-1787651700.jsonl.gz",
+      "archive_sha256": "eefbdc278cdf8965243e7e2a0601cd16d91af61e920fa4103be3c995166bee0e",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787651700",
+      "status": "OK",
+      "window_start": 1787651700
+    },
+    {
+      "archive_file": "btc-updown-5m-1787652000.jsonl.gz",
+      "archive_sha256": "695aaee371aca4b7d7ba7ab8e74c5c75cbe8bc8f54654e7bbec78bbd96a894d0",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          88.852292,
+          99.736611
+        ],
+        [
+          188.622334,
+          189.914237
+        ],
+        [
+          212.869951,
+          214.158705
+        ],
+        [
+          244.057176,
+          255.361686
+        ]
+      ],
+      "pm_gap_s": 24.769486,
+      "slug": "btc-updown-5m-1787652000",
+      "status": "OK",
+      "window_start": 1787652000
+    },
+    {
+      "archive_file": "eth-updown-5m-1787652000.jsonl.gz",
+      "archive_sha256": "7d1ab8fa11ab45b5fcecdffbfd7a9efec8d3bb7a1d836fb15c940c18a82b118a",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787652000",
+      "status": "OK",
+      "window_start": 1787652000
+    },
+    {
+      "archive_file": "btc-updown-5m-1787652300.jsonl.gz",
+      "archive_sha256": "7a103478435c1e589b8d819adafb573b91018c960fcce588591d89721995dd9b",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          139.908339,
+          151.232987
+        ]
+      ],
+      "pm_gap_s": 11.324648,
+      "slug": "btc-updown-5m-1787652300",
+      "status": "OK",
+      "window_start": 1787652300
+    },
+    {
+      "archive_file": "eth-updown-5m-1787652300.jsonl.gz",
+      "archive_sha256": "432160ffb70b9422a30319e63ab36abdaf74a81e5b985ff59864564bb1e0916d",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787652300",
+      "status": "OK",
+      "window_start": 1787652300
+    },
+    {
+      "archive_file": "btc-updown-5m-1787652600.jsonl.gz",
+      "archive_sha256": "3f61b412d4bb255e2f394ad47e58e1cb6d0c3438d33c1816668ef879067e49ba",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "btc-updown-5m-1787652600",
+      "status": "OK",
+      "window_start": 1787652600
+    },
+    {
+      "archive_file": "eth-updown-5m-1787652600.jsonl.gz",
+      "archive_sha256": "c1e08ab4edd964ddc0e23643198b6f70560bc561804984448bf8574a8c118046",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787652600",
+      "status": "OK",
+      "window_start": 1787652600
+    },
+    {
+      "archive_file": "btc-updown-5m-1787652900.jsonl.gz",
+      "archive_sha256": "0ac556f794690b9462e977e3ed36c80bd1800a2fda64015ba474f03cd7edab01",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          222.125174,
+          229.309924
+        ]
+      ],
+      "pm_gap_s": 7.184751,
+      "slug": "btc-updown-5m-1787652900",
+      "status": "OK",
+      "window_start": 1787652900
+    },
+    {
+      "archive_file": "eth-updown-5m-1787652900.jsonl.gz",
+      "archive_sha256": "0d2d42b6a5ca782d8d9e72ca6e6fcb3d6cc9dfcfa6e210ba319b24c8e41037f6",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787652900",
+      "status": "OK",
+      "window_start": 1787652900
+    },
+    {
+      "archive_file": "btc-updown-5m-1787653200.jsonl.gz",
+      "archive_sha256": "86180d41dc69805b7de7e0612e760c0e9607500a4167697442a7907459cd257e",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "btc-updown-5m-1787653200",
+      "status": "OK",
+      "window_start": 1787653200
+    },
+    {
+      "archive_file": "eth-updown-5m-1787653200.jsonl.gz",
+      "archive_sha256": "8bd193678676a05212b0d009e069f9b2aae56f543193427bfcf68d4275a92bca",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787653200",
+      "status": "OK",
+      "window_start": 1787653200
+    },
+    {
+      "archive_file": "btc-updown-5m-1787653500.jsonl.gz",
+      "archive_sha256": "833faaba51903fe1fdec5f0e59f9c5b7d5ec1dd21a0be1dd1d72bd77314e0321",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "btc-updown-5m-1787653500",
+      "status": "OK",
+      "window_start": 1787653500
+    },
+    {
+      "archive_file": "eth-updown-5m-1787653500.jsonl.gz",
+      "archive_sha256": "0284dc3e6fa8a02f00f51360f300dcdb699204d919ad6070cb257d5b39c8e0c5",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787653500",
+      "status": "OK",
+      "window_start": 1787653500
+    },
+    {
+      "archive_file": "btc-updown-5m-1787653800.jsonl.gz",
+      "archive_sha256": "38818d9fb353aca47aa7e4e6edb30bc946bb9c819ce58af0f8794842f5c1e69f",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          15.963843,
+          17.268454
+        ],
+        [
+          132.320539,
+          133.61827
+        ]
+      ],
+      "pm_gap_s": 2.602342,
+      "slug": "btc-updown-5m-1787653800",
+      "status": "OK",
+      "window_start": 1787653800
+    },
+    {
+      "archive_file": "eth-updown-5m-1787653800.jsonl.gz",
+      "archive_sha256": "2de3301218260d5acabb06ffe043ff567105198b643823b244527eaf785480f5",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787653800",
+      "status": "OK",
+      "window_start": 1787653800
+    },
+    {
+      "archive_file": "btc-updown-5m-1787654100.jsonl.gz",
+      "archive_sha256": "df33642a7e7688257283879bcd7d0ca9a6cfa01a2edd930e046d2011fa4686b2",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "btc-updown-5m-1787654100",
+      "status": "OK",
+      "window_start": 1787654100
+    },
+    {
+      "archive_file": "eth-updown-5m-1787654100.jsonl.gz",
+      "archive_sha256": "dfe9c91a6a29deb36ae5223944acdefa8ebf022adfd6d44dfd94048805d899c6",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787654100",
+      "status": "OK",
+      "window_start": 1787654100
+    },
+    {
+      "archive_file": "btc-updown-5m-1787654400.jsonl.gz",
+      "archive_sha256": "86efdfd9dfc1d7a33c0baadd000dd24dd52105eb305b8f75a7ecfa40f28388b0",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          47.410135,
+          55.702533
+        ]
+      ],
+      "pm_gap_s": 8.292398,
+      "slug": "btc-updown-5m-1787654400",
+      "status": "OK",
+      "window_start": 1787654400
+    },
+    {
+      "archive_file": "eth-updown-5m-1787654400.jsonl.gz",
+      "archive_sha256": "ff92bca4e5c955cb612bec8800980a49e7f902ac4fda9be2e0892dbd033bcc36",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787654400",
+      "status": "OK",
+      "window_start": 1787654400
+    },
+    {
+      "archive_file": "btc-updown-5m-1787654700.jsonl.gz",
+      "archive_sha256": "76d88eb925e96309ba14bbaa43e1e4f0d3c8709df548863dd574cd4d7c8f94a1",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          23.912721,
+          25.217821
+        ]
+      ],
+      "pm_gap_s": 1.305101,
+      "slug": "btc-updown-5m-1787654700",
+      "status": "OK",
+      "window_start": 1787654700
+    },
+    {
+      "archive_file": "eth-updown-5m-1787654700.jsonl.gz",
+      "archive_sha256": "b1a6f3fbe6f56f5ef5c2f4e8f17abd260a8f3967384a0c28b0edfef27901f185",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787654700",
+      "status": "OK",
+      "window_start": 1787654700
+    },
+    {
+      "archive_file": "btc-updown-5m-1787655000.jsonl.gz",
+      "archive_sha256": "00f66658ee0e9eb246119b8d97d5e02b1d80f07bd9c67cb4890ea2e4e6a7be6c",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "btc-updown-5m-1787655000",
+      "status": "OK",
+      "window_start": 1787655000
+    },
+    {
+      "archive_file": "eth-updown-5m-1787655000.jsonl.gz",
+      "archive_sha256": "52509b7e5e4984105fd081753ce57c80851cfd89912977924b939d5390a3853d",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787655000",
+      "status": "OK",
+      "window_start": 1787655000
+    },
+    {
+      "archive_file": "btc-updown-5m-1787655300.jsonl.gz",
+      "archive_sha256": "2100df91921dc895b86a0f2af5dee51af88ae916199b76009f1558d1c1d02ada",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          160.649552,
+          171.94758
+        ]
+      ],
+      "pm_gap_s": 11.298028,
+      "slug": "btc-updown-5m-1787655300",
+      "status": "OK",
+      "window_start": 1787655300
+    },
+    {
+      "archive_file": "eth-updown-5m-1787655300.jsonl.gz",
+      "archive_sha256": "70d8aea13b45fe9d16e90ef31b7007ad8b44013020c4654563fa26b348e0d8b0",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787655300",
+      "status": "OK",
+      "window_start": 1787655300
+    },
+    {
+      "archive_file": "btc-updown-5m-1787655600.jsonl.gz",
+      "archive_sha256": "bacc71dd51b82b38cabc493a0bf0277cef4b16def97a23d67cb84f9a6bfb3b70",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          181.693596,
+          193.005257
+        ]
+      ],
+      "pm_gap_s": 11.311661,
+      "slug": "btc-updown-5m-1787655600",
+      "status": "OK",
+      "window_start": 1787655600
+    },
+    {
+      "archive_file": "eth-updown-5m-1787655600.jsonl.gz",
+      "archive_sha256": "857bfe3f58299fb027365c13ca1dda5f8e920b437d2a7ab9d1fc296f2b3e4f73",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787655600",
+      "status": "OK",
+      "window_start": 1787655600
+    },
+    {
+      "archive_file": "btc-updown-5m-1787655900.jsonl.gz",
+      "archive_sha256": "8cbf7b5bdb1c69579df6f41e21f27ba3a1dae8ffa1b6d83b18682fe23f415d32",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          72.744324,
+          81.392179
+        ]
+      ],
+      "pm_gap_s": 8.647855,
+      "slug": "btc-updown-5m-1787655900",
+      "status": "OK",
+      "window_start": 1787655900
+    },
+    {
+      "archive_file": "eth-updown-5m-1787655900.jsonl.gz",
+      "archive_sha256": "509ef498b6fab01e8f68c459a8bff73a41d881ec2f54744e4fccab5a0667503a",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787655900",
+      "status": "OK",
+      "window_start": 1787655900
+    },
+    {
+      "archive_file": "btc-updown-5m-1787656200.jsonl.gz",
+      "archive_sha256": "4eba085eae80d71ee8a570bc8bcd178289180b1d62454736c27c3e6de8949be6",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "btc-updown-5m-1787656200",
+      "status": "OK",
+      "window_start": 1787656200
+    },
+    {
+      "archive_file": "eth-updown-5m-1787656200.jsonl.gz",
+      "archive_sha256": "44cb99b1689d2e6f298ef4469afb3cf5588d26e4f0f4a0588cf9c3c26a3a381b",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787656200",
+      "status": "OK",
+      "window_start": 1787656200
+    },
+    {
+      "archive_file": "btc-updown-5m-1787656500.jsonl.gz",
+      "archive_sha256": "c4dfe09f47eb334c112e68a2735817612bffadb180dd611108ad7c9c1eb83ce8",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          144.904695,
+          155.348784
+        ]
+      ],
+      "pm_gap_s": 10.444089,
+      "slug": "btc-updown-5m-1787656500",
+      "status": "OK",
+      "window_start": 1787656500
+    },
+    {
+      "archive_file": "eth-updown-5m-1787656500.jsonl.gz",
+      "archive_sha256": "568775dffc6c77a5e2d0139430880917d12bf1f5970f7abaa1741aa9f621aa3b",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787656500",
+      "status": "OK",
+      "window_start": 1787656500
+    },
+    {
+      "archive_file": "btc-updown-5m-1787656800.jsonl.gz",
+      "archive_sha256": "48d19e66765280080ad62c9a1bed7675f948ad4e0ef299e587f9f8f32fabbabd",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "btc-updown-5m-1787656800",
+      "status": "OK",
+      "window_start": 1787656800
+    },
+    {
+      "archive_file": "eth-updown-5m-1787656800.jsonl.gz",
+      "archive_sha256": "a0f87f1f5fde31156bad4d1c7606b9c59e7f3d960dead43638ee46d058af3163",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787656800",
+      "status": "OK",
+      "window_start": 1787656800
+    },
+    {
+      "archive_file": "btc-updown-5m-1787657100.jsonl.gz",
+      "archive_sha256": "506e84eb6471e1f43b9e269ec1347c24b69719c0a280b511284380008b3c52f2",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "btc-updown-5m-1787657100",
+      "status": "OK",
+      "window_start": 1787657100
+    },
+    {
+      "archive_file": "eth-updown-5m-1787657100.jsonl.gz",
+      "archive_sha256": "cf8d7210e76fa9ddbfaa1dc481886e86a1752deacaa7e9ff33a1b5c4e5a99798",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787657100",
+      "status": "OK",
+      "window_start": 1787657100
+    },
+    {
+      "archive_file": "btc-updown-5m-1787657400.jsonl.gz",
+      "archive_sha256": "e6a11bec6ecc3109024bbe8e52b14be6003b7871c0ec5d97b2ee04a46a923869",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          10.816857,
+          12.108333
+        ],
+        [
+          62.010192,
+          73.313013
+        ],
+        [
+          203.202373,
+          208.575096
+        ]
+      ],
+      "pm_gap_s": 17.96702,
+      "slug": "btc-updown-5m-1787657400",
+      "status": "OK",
+      "window_start": 1787657400
+    },
+    {
+      "archive_file": "eth-updown-5m-1787657400.jsonl.gz",
+      "archive_sha256": "7f9281f01d673ab89c09b6915d8cdf7c862566dee553525d0d6cf5e7d346493c",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787657400",
+      "status": "OK",
+      "window_start": 1787657400
+    },
+    {
+      "archive_file": "btc-updown-5m-1787657700.jsonl.gz",
+      "archive_sha256": "38142edeeef0f47b8af556cd15ca5c9ee9f1139ec8a818098a5f544da4dbd47f",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          24.4495,
+          25.752884
+        ]
+      ],
+      "pm_gap_s": 1.303385,
+      "slug": "btc-updown-5m-1787657700",
+      "status": "OK",
+      "window_start": 1787657700
+    },
+    {
+      "archive_file": "eth-updown-5m-1787657700.jsonl.gz",
+      "archive_sha256": "d640b0436cd5ce30cb44eac993014d5098f854d786441007620f0e82bb9db0fe",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787657700",
+      "status": "OK",
+      "window_start": 1787657700
+    },
+    {
+      "archive_file": "btc-updown-5m-1787658000.jsonl.gz",
+      "archive_sha256": "5ffa99b02e86f694fd3bd0fa1c59a6a892ad66d7cb0f92af81aeee054a065a6e",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "btc-updown-5m-1787658000",
+      "status": "OK",
+      "window_start": 1787658000
+    },
+    {
+      "archive_file": "eth-updown-5m-1787658000.jsonl.gz",
+      "archive_sha256": "487e3e5aca4faf445e4cf95ccc94031b5de030ce02c285da9d158e23983885d6",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787658000",
+      "status": "OK",
+      "window_start": 1787658000
+    },
+    {
+      "archive_file": "btc-updown-5m-1787658300.jsonl.gz",
+      "archive_sha256": "6ecc37b04ac44c2ef02735530c516045179f07d42fc729a93213a9d7a4b44fad",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          13.109354,
+          14.402802
+        ]
+      ],
+      "pm_gap_s": 1.293448,
+      "slug": "btc-updown-5m-1787658300",
+      "status": "OK",
+      "window_start": 1787658300
+    },
+    {
+      "archive_file": "eth-updown-5m-1787658300.jsonl.gz",
+      "archive_sha256": "840c2c5cff2c5853cdfc5fdf7416ee0784dc13393f71a39c051847b1ee730175",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787658300",
+      "status": "OK",
+      "window_start": 1787658300
+    },
+    {
+      "archive_file": "btc-updown-5m-1787658600.jsonl.gz",
+      "archive_sha256": "0afb502db86192805b6da094dbebd4bf1fde9cb39ac4864417a957e8fa32d908",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          20.710055,
+          22.018336
+        ],
+        [
+          49.461519,
+          50.797735
+        ],
+        [
+          60.20563,
+          61.513341
+        ],
+        [
+          81.417064,
+          85.927898
+        ],
+        [
+          125.81248,
+          135.768109
+        ],
+        [
+          165.648515,
+          175.102508
+        ]
+      ],
+      "pm_gap_s": 27.872663,
+      "slug": "btc-updown-5m-1787658600",
+      "status": "OK",
+      "window_start": 1787658600
+    },
+    {
+      "archive_file": "eth-updown-5m-1787658600.jsonl.gz",
+      "archive_sha256": "59f72c2ce05b2e21a564fb701b6b9e068fa21cbcc56893b792349e8a5bd0e983",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787658600",
+      "status": "OK",
+      "window_start": 1787658600
+    },
+    {
+      "archive_file": "btc-updown-5m-1787658900.jsonl.gz",
+      "archive_sha256": "2183ee6db9dc076af49732f5db179b27889e4b8c7ddc2fc06b2376846da3b50b",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "btc-updown-5m-1787658900",
+      "status": "OK",
+      "window_start": 1787658900
+    },
+    {
+      "archive_file": "eth-updown-5m-1787658900.jsonl.gz",
+      "archive_sha256": "35efb727524cb65914ef1f695725a1522dd107aa4b9f3395df44bc2aff7254fc",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787658900",
+      "status": "OK",
+      "window_start": 1787658900
+    },
+    {
+      "archive_file": "btc-updown-5m-1787659200.jsonl.gz",
+      "archive_sha256": "a0a6c8e2134f3ead24ecb68bc548f4614acbf7db11bc81a1ab0a65b63e0f71fc",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          65.316916,
+          76.647337
+        ],
+        [
+          107.037343,
+          108.349218
+        ],
+        [
+          228.241411,
+          232.549533
+        ]
+      ],
+      "pm_gap_s": 16.950418,
+      "slug": "btc-updown-5m-1787659200",
+      "status": "OK",
+      "window_start": 1787659200
+    },
+    {
+      "archive_file": "eth-updown-5m-1787659200.jsonl.gz",
+      "archive_sha256": "84f1839d40db18af5e6e2f62858a87119bf8d38253cea11f53a3019a18b90923",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787659200",
+      "status": "OK",
+      "window_start": 1787659200
+    },
+    {
+      "archive_file": "btc-updown-5m-1787659500.jsonl.gz",
+      "archive_sha256": "1c273a69e1a6cccf27a533a53c6a2729e25ca1968b5ba73ef6d31becf853e212",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          76.4133,
+          87.727788
+        ]
+      ],
+      "pm_gap_s": 11.314489,
+      "slug": "btc-updown-5m-1787659500",
+      "status": "OK",
+      "window_start": 1787659500
+    },
+    {
+      "archive_file": "eth-updown-5m-1787659500.jsonl.gz",
+      "archive_sha256": "e67d0a549bc458af3f23e40b91cb8b280789871023c8ae99bd225f3deb3ee844",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787659500",
+      "status": "OK",
+      "window_start": 1787659500
+    },
+    {
+      "archive_file": "btc-updown-5m-1787659800.jsonl.gz",
+      "archive_sha256": "dbf512ab29b22b7d4476a1e49bd46b55542c8638bc3c71bcd6aa368e412c2698",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          58.500645,
+          61.223879
+        ],
+        [
+          74.542797,
+          75.840166
+        ],
+        [
+          88.008673,
+          89.692515
+        ]
+      ],
+      "pm_gap_s": 5.704445,
+      "slug": "btc-updown-5m-1787659800",
+      "status": "OK",
+      "window_start": 1787659800
+    },
+    {
+      "archive_file": "eth-updown-5m-1787659800.jsonl.gz",
+      "archive_sha256": "2a336933ef6a520f66df6eeec6276c68d877317b1e4cdbdca23c22de49ce2afe",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787659800",
+      "status": "OK",
+      "window_start": 1787659800
+    },
+    {
+      "archive_file": "btc-updown-5m-1787660100.jsonl.gz",
+      "archive_sha256": "1ad3bf8ad3ce86e90567578c9865e81f0c1619a2c33410ac0a777107cb172570",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          98.577598,
+          109.887538
+        ],
+        [
+          123.434165,
+          124.73054
+        ],
+        [
+          194.635196,
+          205.941503
+        ]
+      ],
+      "pm_gap_s": 23.912621,
+      "slug": "btc-updown-5m-1787660100",
+      "status": "OK",
+      "window_start": 1787660100
+    },
+    {
+      "archive_file": "eth-updown-5m-1787660100.jsonl.gz",
+      "archive_sha256": "7ae404f5441c359bbca6457502fcbf5d26e63696089afe8f8d5ec171f72a9abf",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787660100",
+      "status": "OK",
+      "window_start": 1787660100
+    },
+    {
+      "archive_file": "btc-updown-5m-1787660400.jsonl.gz",
+      "archive_sha256": "00ea146c6944ac7c1e2191e71373b77815c193e886052e199f268a578dc2ce6b",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          63.214514,
+          64.519564
+        ],
+        [
+          74.498698,
+          75.878442
+        ]
+      ],
+      "pm_gap_s": 2.684794,
+      "slug": "btc-updown-5m-1787660400",
+      "status": "OK",
+      "window_start": 1787660400
+    },
+    {
+      "archive_file": "eth-updown-5m-1787660400.jsonl.gz",
+      "archive_sha256": "45e6339b9addde15b8e7518080880efb515199679c6c4246f29afdc369cee32e",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787660400",
+      "status": "OK",
+      "window_start": 1787660400
+    },
+    {
+      "archive_file": "btc-updown-5m-1787660700.jsonl.gz",
+      "archive_sha256": "46c4bd0c73696cf95f672b2b315b3873c089e733c869908f54bb4df6b927bc36",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          10.79142,
+          12.18442
+        ],
+        [
+          52.011308,
+          61.697798
+        ],
+        [
+          91.590575,
+          102.895025
+        ]
+      ],
+      "pm_gap_s": 22.38394,
+      "slug": "btc-updown-5m-1787660700",
+      "status": "OK",
+      "window_start": 1787660700
+    },
+    {
+      "archive_file": "eth-updown-5m-1787660700.jsonl.gz",
+      "archive_sha256": "62ea47100be2b4fd17645aa1e8fe5c723ca636dade15fb5b78fe99595a7ccd10",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787660700",
+      "status": "OK",
+      "window_start": 1787660700
+    },
+    {
+      "archive_file": "btc-updown-5m-1787661000.jsonl.gz",
+      "archive_sha256": "01d8b565f613b4b5ec50af4fb4a3c9e22b2fc8816ebb95a1e98febb1966976f2",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          51.827952,
+          63.067558
+        ],
+        [
+          90.260347,
+          91.569361
+        ]
+      ],
+      "pm_gap_s": 12.548621,
+      "slug": "btc-updown-5m-1787661000",
+      "status": "OK",
+      "window_start": 1787661000
+    },
+    {
+      "archive_file": "eth-updown-5m-1787661000.jsonl.gz",
+      "archive_sha256": "0633ed5ec3e3a3f1d9c06aeba76132ac046e0b2b2fc7e090decb14a2292a88f8",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787661000",
+      "status": "OK",
+      "window_start": 1787661000
+    },
+    {
+      "archive_file": "btc-updown-5m-1787661300.jsonl.gz",
+      "archive_sha256": "cd24efd308067cbda26544f455ce85f17d3012232e94489eeba381eb368e8b24",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          24.70422,
+          26.000466
+        ],
+        [
+          105.910556,
+          114.019534
+        ],
+        [
+          171.133566,
+          172.450669
+        ],
+        [
+          232.224661,
+          243.646997
+        ],
+        [
+          272.891086,
+          274.181716
+        ]
+      ],
+      "pm_gap_s": 23.435292,
+      "slug": "btc-updown-5m-1787661300",
+      "status": "OK",
+      "window_start": 1787661300
+    },
+    {
+      "archive_file": "eth-updown-5m-1787661300.jsonl.gz",
+      "archive_sha256": "2862569664e56f921a0df4460b3042847b42597b35606fffcfeee2234fb989fc",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787661300",
+      "status": "OK",
+      "window_start": 1787661300
+    },
+    {
+      "archive_file": "btc-updown-5m-1787661600.jsonl.gz",
+      "archive_sha256": "a84e379d48d97c1984ae0c6f86d085b941fc0a6f86e625bd20c03788789acf8d",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          44.054868,
+          55.376147
+        ],
+        [
+          85.204856,
+          88.232287
+        ],
+        [
+          238.145199,
+          249.136505
+        ]
+      ],
+      "pm_gap_s": 25.340016,
+      "slug": "btc-updown-5m-1787661600",
+      "status": "OK",
+      "window_start": 1787661600
+    },
+    {
+      "archive_file": "eth-updown-5m-1787661600.jsonl.gz",
+      "archive_sha256": "e7c00cd1e5b0ca4c5f12d6690c3d135cfc87648cce8df43d2d7d043e78778c42",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787661600",
+      "status": "OK",
+      "window_start": 1787661600
+    },
+    {
+      "archive_file": "btc-updown-5m-1787661900.jsonl.gz",
+      "archive_sha256": "d6db969880f57f59ecbd5c8381daf2c4113a40f482ff9b214968e176bafe9124",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          15.526961,
+          24.642122
+        ],
+        [
+          54.516959,
+          66.470116
+        ],
+        [
+          72.270445,
+          73.582975
+        ]
+      ],
+      "pm_gap_s": 22.380848,
+      "slug": "btc-updown-5m-1787661900",
+      "status": "BINANCE_GAP_OR_TRUNCATED",
+      "window_start": 1787661900
+    },
+    {
+      "archive_file": "eth-updown-5m-1787661900.jsonl.gz",
+      "archive_sha256": "c2e643a8a92fcbcdd6897a4e73951d80e55d0524e8157f7c9e0ebaac7cf22b9e",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787661900",
+      "status": "BINANCE_GAP_OR_TRUNCATED",
+      "window_start": 1787661900
+    },
+    {
+      "archive_file": "btc-updown-5m-1787662200.jsonl.gz",
+      "archive_sha256": "83e590bb02fdd0e3832ba17779579444a4fd5db3902ac6cd0aa664e4ab10bf4b",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "btc-updown-5m-1787662200",
+      "status": "OK",
+      "window_start": 1787662200
+    },
+    {
+      "archive_file": "eth-updown-5m-1787662200.jsonl.gz",
+      "archive_sha256": "248cc1ec89b593ef2c8aaf8566875f7880d8ab363ce6d96e6ce14eea72510835",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787662200",
+      "status": "OK",
+      "window_start": 1787662200
+    },
+    {
+      "archive_file": "btc-updown-5m-1787662500.jsonl.gz",
+      "archive_sha256": "4905725fdef1b82e081315a7d15669afe8ab23c4e8037a5fd4a04e3fb509efde",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "btc-updown-5m-1787662500",
+      "status": "OK",
+      "window_start": 1787662500
+    },
+    {
+      "archive_file": "eth-updown-5m-1787662500.jsonl.gz",
+      "archive_sha256": "7f2859f77da20b1da9d90f01549fcd4818d779587cf54de5a82c4531c40265c5",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787662500",
+      "status": "OK",
+      "window_start": 1787662500
+    },
+    {
+      "archive_file": "btc-updown-5m-1787662800.jsonl.gz",
+      "archive_sha256": "ab26e018c4bbbdcd9647ccf13d150957db6744b415a40320f5e1a9e5d3cf13d0",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          3.929472,
+          5.234307
+        ],
+        [
+          85.132095,
+          92.00553
+        ],
+        [
+          131.911021,
+          143.219887
+        ]
+      ],
+      "pm_gap_s": 19.487136,
+      "slug": "btc-updown-5m-1787662800",
+      "status": "OK",
+      "window_start": 1787662800
+    },
+    {
+      "archive_file": "eth-updown-5m-1787662800.jsonl.gz",
+      "archive_sha256": "bd69a7d2238a9f72ebc60179fcee83084e07c4b2a97bdbda1e35b83e140b592b",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787662800",
+      "status": "OK",
+      "window_start": 1787662800
+    },
+    {
+      "archive_file": "btc-updown-5m-1787663100.jsonl.gz",
+      "archive_sha256": "6572069d68a9a647016d702eecbe9c4da41ee1c46f7f3d6a4d665c0d904bd39e",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          179.510418,
+          180.817295
+        ],
+        [
+          186.2558,
+          187.549499
+        ]
+      ],
+      "pm_gap_s": 2.600576,
+      "slug": "btc-updown-5m-1787663100",
+      "status": "OK",
+      "window_start": 1787663100
+    },
+    {
+      "archive_file": "eth-updown-5m-1787663100.jsonl.gz",
+      "archive_sha256": "0404144e8b69c81c0fdad6cb3709169b312c94ce950ad77621013d356b5c4702",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787663100",
+      "status": "OK",
+      "window_start": 1787663100
+    },
+    {
+      "archive_file": "btc-updown-5m-1787663400.jsonl.gz",
+      "archive_sha256": "2d603dcc3b1250e8f5eb2ba66b7631fbf1efbb5d6a1d442e0ad401f586a33a15",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          41.02865,
+          52.435792
+        ],
+        [
+          78.05678,
+          79.361886
+        ],
+        [
+          82.639738,
+          83.938405
+        ],
+        [
+          212.154032,
+          213.482407
+        ],
+        [
+          243.372993,
+          254.690988
+        ]
+      ],
+      "pm_gap_s": 26.657286,
+      "slug": "btc-updown-5m-1787663400",
+      "status": "OK",
+      "window_start": 1787663400
+    },
+    {
+      "archive_file": "eth-updown-5m-1787663400.jsonl.gz",
+      "archive_sha256": "a231683a31f13e2aa0cec296931cc7ef3c04f9f0f4c9e34998cb4426f47f719b",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787663400",
+      "status": "OK",
+      "window_start": 1787663400
+    },
+    {
+      "archive_file": "btc-updown-5m-1787663700.jsonl.gz",
+      "archive_sha256": "8cab9fabde49131a352b8dace3a01193a47e027979b77b1cccd336af4a25d709",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "btc-updown-5m-1787663700",
+      "status": "OK",
+      "window_start": 1787663700
+    },
+    {
+      "archive_file": "eth-updown-5m-1787663700.jsonl.gz",
+      "archive_sha256": "358ac4440bd8c27eb694300ad42c6e024de4a93c4273ffac1f462899f267b6c0",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787663700",
+      "status": "OK",
+      "window_start": 1787663700
+    },
+    {
+      "archive_file": "btc-updown-5m-1787664000.jsonl.gz",
+      "archive_sha256": "5f011b1a5fd54b3f543ffa129a253031c66c8fa7560794ad8127f192552588bb",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          14.322126,
+          15.623796
+        ],
+        [
+          155.528913,
+          166.833931
+        ],
+        [
+          206.743005,
+          208.764859
+        ],
+        [
+          226.569869,
+          227.869398
+        ],
+        [
+          241.370415,
+          242.670573
+        ]
+      ],
+      "pm_gap_s": 17.22823,
+      "slug": "btc-updown-5m-1787664000",
+      "status": "OK",
+      "window_start": 1787664000
+    },
+    {
+      "archive_file": "eth-updown-5m-1787664000.jsonl.gz",
+      "archive_sha256": "4b7a5dbdcbc1e2fde043b55201083916d6de631e0b0282582c93899a70896493",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787664000",
+      "status": "OK",
+      "window_start": 1787664000
+    },
+    {
+      "archive_file": "btc-updown-5m-1787664300.jsonl.gz",
+      "archive_sha256": "a68adde93f175ec0cbbb653dc47bbe914828c4263714c1c1965ac463a31f4ba7",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          14.352793,
+          15.654279
+        ],
+        [
+          95.56329,
+          106.365164
+        ]
+      ],
+      "pm_gap_s": 12.103361,
+      "slug": "btc-updown-5m-1787664300",
+      "status": "OK",
+      "window_start": 1787664300
+    },
+    {
+      "archive_file": "eth-updown-5m-1787664300.jsonl.gz",
+      "archive_sha256": "afb75d54e70917b04923236b146e0404a0238d64630ac32f64d9b8499e0c1bdb",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787664300",
+      "status": "OK",
+      "window_start": 1787664300
+    },
+    {
+      "archive_file": "btc-updown-5m-1787664600.jsonl.gz",
+      "archive_sha256": "5bdbeb1a9a1b761950b5a7df83d1208e6bb56ecf88735a90dc21b2d6b16411ad",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          15.667957,
+          17.173147
+        ],
+        [
+          34.647661,
+          35.942131
+        ],
+        [
+          65.844517,
+          77.155968
+        ]
+      ],
+      "pm_gap_s": 14.11111,
+      "slug": "btc-updown-5m-1787664600",
+      "status": "OK",
+      "window_start": 1787664600
+    },
+    {
+      "archive_file": "eth-updown-5m-1787664600.jsonl.gz",
+      "archive_sha256": "f665aeb0fd2a1a9b26189056fc6c2263d24f22cd71f88524454bbefb72b49dbf",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787664600",
+      "status": "OK",
+      "window_start": 1787664600
+    },
+    {
+      "archive_file": "btc-updown-5m-1787664900.jsonl.gz",
+      "archive_sha256": "0f5d75b5bda252c68d1c4501594d8766a3e9123aa782a7a7f5f9a67cf0883105",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          9.69449,
+          10.99323
+        ],
+        [
+          38.300001,
+          39.610546
+        ]
+      ],
+      "pm_gap_s": 2.609284,
+      "slug": "btc-updown-5m-1787664900",
+      "status": "OK",
+      "window_start": 1787664900
+    },
+    {
+      "archive_file": "eth-updown-5m-1787664900.jsonl.gz",
+      "archive_sha256": "c3d821cef6b7068c0f79be3306bd4d6827a8e49fcd5dc63e462c9bff001d7679",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787664900",
+      "status": "OK",
+      "window_start": 1787664900
+    },
+    {
+      "archive_file": "btc-updown-5m-1787665200.jsonl.gz",
+      "archive_sha256": "a89ac018a4613bd2d63e018ab9bcda03efe64806171be95eaccd3afee326e264",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          27.744087,
+          39.088025
+        ],
+        [
+          60.468589,
+          61.776976
+        ],
+        [
+          141.684356,
+          152.994191
+        ]
+      ],
+      "pm_gap_s": 23.962161,
+      "slug": "btc-updown-5m-1787665200",
+      "status": "OK",
+      "window_start": 1787665200
+    },
+    {
+      "archive_file": "eth-updown-5m-1787665200.jsonl.gz",
+      "archive_sha256": "9d511b5d28d5b9b8246556a1e42c467c7f4944f9a9c39096ca3768991a4ec215",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787665200",
+      "status": "OK",
+      "window_start": 1787665200
+    },
+    {
+      "archive_file": "btc-updown-5m-1787665500.jsonl.gz",
+      "archive_sha256": "4b21905350d34217cbe29d9657d9cd153cab20e6dcf49dab8b0a50c4d2b1aefa",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          28.855753,
+          40.19412
+        ],
+        [
+          70.085351,
+          81.408715
+        ],
+        [
+          111.313237,
+          113.345755
+        ],
+        [
+          130.421813,
+          131.754308
+        ],
+        [
+          151.653093,
+          162.952267
+        ],
+        [
+          202.863164,
+          213.507103
+        ],
+        [
+          232.860125,
+          234.160594
+        ]
+      ],
+      "pm_gap_s": 49.270328,
+      "slug": "btc-updown-5m-1787665500",
+      "status": "OK",
+      "window_start": 1787665500
+    },
+    {
+      "archive_file": "eth-updown-5m-1787665500.jsonl.gz",
+      "archive_sha256": "606c804f79a49c84c745628670af04be78ac1edee20a717c72bd350943681726",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787665500",
+      "status": "OK",
+      "window_start": 1787665500
+    },
+    {
+      "archive_file": "btc-updown-5m-1787665800.jsonl.gz",
+      "archive_sha256": "b79161bc4191d94bcab5e0af224bc422e593d8bbf7d245c19eb466391226e1e1",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          21.070653,
+          22.364914
+        ],
+        [
+          42.255774,
+          53.598598
+        ],
+        [
+          73.502175,
+          84.181066
+        ],
+        [
+          100.761219,
+          102.070584
+        ],
+        [
+          140.813402,
+          142.106351
+        ]
+      ],
+      "pm_gap_s": 25.91829,
+      "slug": "btc-updown-5m-1787665800",
+      "status": "OK",
+      "window_start": 1787665800
+    },
+    {
+      "archive_file": "eth-updown-5m-1787665800.jsonl.gz",
+      "archive_sha256": "2ee8f088cff0a7a2e905345a66be46724919c4bb934afeb1ac0b73739ba47573",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787665800",
+      "status": "OK",
+      "window_start": 1787665800
+    },
+    {
+      "archive_file": "btc-updown-5m-1787666100.jsonl.gz",
+      "archive_sha256": "7113582e639a7966fbf5a5a5463eec2ba5fe13cb0beabb2dbea91760d8cd99d1",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          29.184862,
+          30.502245
+        ]
+      ],
+      "pm_gap_s": 1.317384,
+      "slug": "btc-updown-5m-1787666100",
+      "status": "OK",
+      "window_start": 1787666100
+    },
+    {
+      "archive_file": "eth-updown-5m-1787666100.jsonl.gz",
+      "archive_sha256": "62e3a19c34a10e01b7d9b51e81927a4dcc5dd295d309a6fbc6840e2a655beb7e",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787666100",
+      "status": "OK",
+      "window_start": 1787666100
+    },
+    {
+      "archive_file": "btc-updown-5m-1787666400.jsonl.gz",
+      "archive_sha256": "386cf9c8306c2e9b231a9b3924219e54287b358be10d9a9758238d3ba650676f",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          16.527198,
+          17.842564
+        ],
+        [
+          47.734589,
+          58.394855
+        ],
+        [
+          88.272401,
+          98.775684
+        ],
+        [
+          138.664334,
+          149.985276
+        ],
+        [
+          189.881145,
+          191.758561
+        ],
+        [
+          196.997109,
+          198.31599
+        ],
+        [
+          221.390503,
+          222.698147
+        ]
+      ],
+      "pm_gap_s": 38.303797,
+      "slug": "btc-updown-5m-1787666400",
+      "status": "OK",
+      "window_start": 1787666400
+    },
+    {
+      "archive_file": "eth-updown-5m-1787666400.jsonl.gz",
+      "archive_sha256": "5914aa7c48247451b9486880dcb0a96caec63eef1c49005aa5ec2a0b730df5e5",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787666400",
+      "status": "OK",
+      "window_start": 1787666400
+    },
+    {
+      "archive_file": "btc-updown-5m-1787666700.jsonl.gz",
+      "archive_sha256": "aa5d34513dfba91b3a8fcf4c2eedc35320fbe981402cd3f8c76f0a37b2542a47",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          24.183954,
+          25.479639
+        ],
+        [
+          95.393897,
+          106.716373
+        ],
+        [
+          114.367901,
+          115.679826
+        ],
+        [
+          185.558791,
+          196.918155
+        ]
+      ],
+      "pm_gap_s": 25.28945,
+      "slug": "btc-updown-5m-1787666700",
+      "status": "OK",
+      "window_start": 1787666700
+    },
+    {
+      "archive_file": "eth-updown-5m-1787666700.jsonl.gz",
+      "archive_sha256": "88ae62fddddfcf1fc5e28a80dc22d96aaf7aed996d4ebc4b6ec88eb1ef4ac65e",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787666700",
+      "status": "OK",
+      "window_start": 1787666700
+    },
+    {
+      "archive_file": "btc-updown-5m-1787667000.jsonl.gz",
+      "archive_sha256": "c345ad6fe51b2d01baf88e226ff67a1ae024e63da3c1357d3dc419bade90703a",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          31.064175,
+          32.363198
+        ],
+        [
+          96.853268,
+          98.178063
+        ]
+      ],
+      "pm_gap_s": 2.623818,
+      "slug": "btc-updown-5m-1787667000",
+      "status": "OK",
+      "window_start": 1787667000
+    },
+    {
+      "archive_file": "eth-updown-5m-1787667000.jsonl.gz",
+      "archive_sha256": "428f4e698c70a87b1d446e20171b7cfd6ef3f372df3aadeb9c62a9fce5ef7173",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787667000",
+      "status": "OK",
+      "window_start": 1787667000
+    },
+    {
+      "archive_file": "btc-updown-5m-1787667300.jsonl.gz",
+      "archive_sha256": "2213642aa1d7d43bc2b8c9f806d41471b69b4fa55b58cd26354512d2961fd88e",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          23.566651,
+          24.883927
+        ],
+        [
+          74.759349,
+          86.263829
+        ],
+        [
+          91.029184,
+          92.374743
+        ],
+        [
+          122.252069,
+          133.596057
+        ],
+        [
+          173.496377,
+          184.812482
+        ],
+        [
+          205.944232,
+          207.259372
+        ],
+        [
+          240.82057,
+          242.135526
+        ]
+      ],
+      "pm_gap_s": 39.457508,
+      "slug": "btc-updown-5m-1787667300",
+      "status": "OK",
+      "window_start": 1787667300
+    },
+    {
+      "archive_file": "eth-updown-5m-1787667300.jsonl.gz",
+      "archive_sha256": "301139f5ed8cdf6616f3578b01e097ed2381af415d4999a68d73d3e43eada85e",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787667300",
+      "status": "OK",
+      "window_start": 1787667300
+    },
+    {
+      "archive_file": "btc-updown-5m-1787667600.jsonl.gz",
+      "archive_sha256": "e2c73e1bec783d17beaf2a26fb99f8c4ea947c6033e3434acced24f51b541357",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          26.870612,
+          28.253723
+        ],
+        [
+          68.122311,
+          79.489797
+        ],
+        [
+          159.374585,
+          170.572466
+        ]
+      ],
+      "pm_gap_s": 23.948478,
+      "slug": "btc-updown-5m-1787667600",
+      "status": "OK",
+      "window_start": 1787667600
+    },
+    {
+      "archive_file": "eth-updown-5m-1787667600.jsonl.gz",
+      "archive_sha256": "a989a4b90071259555e23896eab390d0082127d207f0eb8850bae4d06caa4761",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787667600",
+      "status": "OK",
+      "window_start": 1787667600
+    },
+    {
+      "archive_file": "btc-updown-5m-1787667900.jsonl.gz",
+      "archive_sha256": "af1dcf00c354013d264b3477239d6560405957e54baad91d450fbf37d2a1cfa3",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          20.616107,
+          21.94355
+        ],
+        [
+          69.763334,
+          71.060157
+        ],
+        [
+          120.969524,
+          127.696048
+        ],
+        [
+          131.573547,
+          132.87007
+        ]
+      ],
+      "pm_gap_s": 10.647313,
+      "slug": "btc-updown-5m-1787667900",
+      "status": "OK",
+      "window_start": 1787667900
+    },
+    {
+      "archive_file": "eth-updown-5m-1787667900.jsonl.gz",
+      "archive_sha256": "21c598436b7405de142d1830a48576f3d8e9b5a1478d5804d164ed38c4c108bd",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787667900",
+      "status": "OK",
+      "window_start": 1787667900
+    },
+    {
+      "archive_file": "btc-updown-5m-1787668200.jsonl.gz",
+      "archive_sha256": "acdf0845962a69c37d7fa4e1078028b4500bf459137d1015d6056b8eba904a48",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          39.23869,
+          50.563785
+        ],
+        [
+          80.432718,
+          82.778342
+        ],
+        [
+          109.885017,
+          111.18053
+        ],
+        [
+          151.071622,
+          162.401641
+        ],
+        [
+          192.300218,
+          195.587293
+        ],
+        [
+          285.464498,
+          296.809801
+        ]
+      ],
+      "pm_gap_s": 40.928629,
+      "slug": "btc-updown-5m-1787668200",
+      "status": "OK",
+      "window_start": 1787668200
+    },
+    {
+      "archive_file": "eth-updown-5m-1787668200.jsonl.gz",
+      "archive_sha256": "c263b2187b12e677033870421f096e6f8167c294127acc6ee4061044a99f0b96",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787668200",
+      "status": "OK",
+      "window_start": 1787668200
+    },
+    {
+      "archive_file": "btc-updown-5m-1787668500.jsonl.gz",
+      "archive_sha256": "24c624ab8b061490d56ea65df48c43e746e93b7a9bf4eb17145cef3fa2fc1a45",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          30.323635,
+          40.666039
+        ],
+        [
+          70.521199,
+          72.004504
+        ],
+        [
+          111.91193,
+          115.794311
+        ],
+        [
+          140.113484,
+          141.409927
+        ],
+        [
+          201.30203,
+          203.791675
+        ]
+      ],
+      "pm_gap_s": 19.494178,
+      "slug": "btc-updown-5m-1787668500",
+      "status": "OK",
+      "window_start": 1787668500
+    },
+    {
+      "archive_file": "eth-updown-5m-1787668500.jsonl.gz",
+      "archive_sha256": "0da3eb844dc2fdec3729ffb08cc9aa91ccf398e89f75059b7c077f7452a0b44c",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787668500",
+      "status": "OK",
+      "window_start": 1787668500
+    },
+    {
+      "archive_file": "btc-updown-5m-1787668800.jsonl.gz",
+      "archive_sha256": "2aa840a6b898f44938f2ba17fe0a2d463446bfb6e42cc7a944119b120c7421aa",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          61.575999,
+          68.95089
+        ],
+        [
+          218.842339,
+          222.158373
+        ]
+      ],
+      "pm_gap_s": 10.690925,
+      "slug": "btc-updown-5m-1787668800",
+      "status": "OK",
+      "window_start": 1787668800
+    },
+    {
+      "archive_file": "eth-updown-5m-1787668800.jsonl.gz",
+      "archive_sha256": "4a759ac8f065138d19006b871c0048c5235be938b4f0827d255b05a1c966a3c8",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787668800",
+      "status": "OK",
+      "window_start": 1787668800
+    },
+    {
+      "archive_file": "btc-updown-5m-1787669100.jsonl.gz",
+      "archive_sha256": "acbaeb8a729a698b079e0c4027d5d713c585eafad3a3423aab170d8e64c6b00f",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          19.120033,
+          20.414833
+        ]
+      ],
+      "pm_gap_s": 1.294801,
+      "slug": "btc-updown-5m-1787669100",
+      "status": "OK",
+      "window_start": 1787669100
+    },
+    {
+      "archive_file": "eth-updown-5m-1787669100.jsonl.gz",
+      "archive_sha256": "f20aa39f2d76d66b37a2ac3f4a8a01e69bc1c7490dc910cedcee2ade002e3a03",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787669100",
+      "status": "OK",
+      "window_start": 1787669100
+    },
+    {
+      "archive_file": "btc-updown-5m-1787669400.jsonl.gz",
+      "archive_sha256": "1a91050158644b0e722c6588b739e3327b0bb26cfdbcaa02ffd589bac536840f",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          44.11839,
+          55.496033
+        ]
+      ],
+      "pm_gap_s": 11.377643,
+      "slug": "btc-updown-5m-1787669400",
+      "status": "OK",
+      "window_start": 1787669400
+    },
+    {
+      "archive_file": "eth-updown-5m-1787669400.jsonl.gz",
+      "archive_sha256": "111465039eca097c94b6a9d0eb49684ce1be9e2ae415e4f2e35510ed47aa5fd1",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787669400",
+      "status": "OK",
+      "window_start": 1787669400
+    },
+    {
+      "archive_file": "btc-updown-5m-1787669700.jsonl.gz",
+      "archive_sha256": "df581e237eaa3d3deed2d362e51abe390060fe97f910b2e1d67015f369183cc7",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          205.253639,
+          207.639587
+        ],
+        [
+          237.544142,
+          240.841841
+        ],
+        [
+          263.394412,
+          264.744489
+        ]
+      ],
+      "pm_gap_s": 7.033724,
+      "slug": "btc-updown-5m-1787669700",
+      "status": "OK",
+      "window_start": 1787669700
+    },
+    {
+      "archive_file": "eth-updown-5m-1787669700.jsonl.gz",
+      "archive_sha256": "0bfb73b268cd24d27243b005ea3e4a438439a452a22cbdc4f3a80b63748fefc3",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787669700",
+      "status": "OK",
+      "window_start": 1787669700
+    },
+    {
+      "archive_file": "btc-updown-5m-1787670000.jsonl.gz",
+      "archive_sha256": "652eb04101cb9d493f60f3335e182343747afee8e16bed375bbeac9289816a0d",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          60.088999,
+          61.400314
+        ],
+        [
+          170.818086,
+          172.137215
+        ],
+        [
+          194.86844,
+          196.190462
+        ],
+        [
+          236.069133,
+          247.16918
+        ]
+      ],
+      "pm_gap_s": 15.052511,
+      "slug": "btc-updown-5m-1787670000",
+      "status": "OK",
+      "window_start": 1787670000
+    },
+    {
+      "archive_file": "eth-updown-5m-1787670000.jsonl.gz",
+      "archive_sha256": "f803a128905289e9ccfabfcaf545a126902dc4f7a694079349835a0312795550",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787670000",
+      "status": "OK",
+      "window_start": 1787670000
+    },
+    {
+      "archive_file": "btc-updown-5m-1787670300.jsonl.gz",
+      "archive_sha256": "10044ed083d037e875e689338bc26a6dd3354c2d8b2f91fb95db80c15feb41da",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          47.484286,
+          54.246891
+        ],
+        [
+          96.005615,
+          97.335544
+        ]
+      ],
+      "pm_gap_s": 8.092534,
+      "slug": "btc-updown-5m-1787670300",
+      "status": "OK",
+      "window_start": 1787670300
+    },
+    {
+      "archive_file": "eth-updown-5m-1787670300.jsonl.gz",
+      "archive_sha256": "e4bcbcc342372dba05261dff4eea7baca27f59f574efe300d6b01ec420289d2c",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787670300",
+      "status": "OK",
+      "window_start": 1787670300
+    },
+    {
+      "archive_file": "btc-updown-5m-1787670600.jsonl.gz",
+      "archive_sha256": "0665b332ffd67f21926ce207829691b6a430b598fc01a34f02fb72541c204cf3",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          48.713042,
+          60.076874
+        ],
+        [
+          99.933175,
+          111.294656
+        ]
+      ],
+      "pm_gap_s": 22.725313,
+      "slug": "btc-updown-5m-1787670600",
+      "status": "OK",
+      "window_start": 1787670600
+    },
+    {
+      "archive_file": "eth-updown-5m-1787670600.jsonl.gz",
+      "archive_sha256": "e4ca5686dc25a6f3533a595495ae8f1ef8fe39643dfb4dae14a05bb93604b26c",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787670600",
+      "status": "OK",
+      "window_start": 1787670600
+    },
+    {
+      "archive_file": "btc-updown-5m-1787670900.jsonl.gz",
+      "archive_sha256": "dc6bf07eeaf733a21d926adb65d42dd8dc00b2164916431410fb923a7d311e09",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          50.11195,
+          61.413915
+        ]
+      ],
+      "pm_gap_s": 11.301965,
+      "slug": "btc-updown-5m-1787670900",
+      "status": "OK",
+      "window_start": 1787670900
+    },
+    {
+      "archive_file": "eth-updown-5m-1787670900.jsonl.gz",
+      "archive_sha256": "b8446c663787248602c5f8849db10f1d23c105e3ea498d62ed052fe20988983e",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787670900",
+      "status": "OK",
+      "window_start": 1787670900
+    },
+    {
+      "archive_file": "btc-updown-5m-1787671200.jsonl.gz",
+      "archive_sha256": "7ff4d03dc775ce0cbb60c4f41e78f80de0773f3f8910db4b5d526df9b8ce5ef1",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          141.245021,
+          152.578918
+        ],
+        [
+          212.489839,
+          221.504079
+        ]
+      ],
+      "pm_gap_s": 20.348137,
+      "slug": "btc-updown-5m-1787671200",
+      "status": "OK",
+      "window_start": 1787671200
+    },
+    {
+      "archive_file": "eth-updown-5m-1787671200.jsonl.gz",
+      "archive_sha256": "78a71a5c09396994fa6612255ac49be159ee3afec28f47bf299cabee1f0cf674",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787671200",
+      "status": "OK",
+      "window_start": 1787671200
+    },
+    {
+      "archive_file": "btc-updown-5m-1787671500.jsonl.gz",
+      "archive_sha256": "adb7d46844c325b5cb11b58eb6c7bbbb90e1058a3ac64dd7df8b0fc8397d7fe4",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          252.453056,
+          261.329783
+        ]
+      ],
+      "pm_gap_s": 8.876727,
+      "slug": "btc-updown-5m-1787671500",
+      "status": "OK",
+      "window_start": 1787671500
+    },
+    {
+      "archive_file": "eth-updown-5m-1787671500.jsonl.gz",
+      "archive_sha256": "c4ac8627e443656d423dad9767dcbcff2534462e5432b679aec2d81125995add",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787671500",
+      "status": "OK",
+      "window_start": 1787671500
+    },
+    {
+      "archive_file": "btc-updown-5m-1787671800.jsonl.gz",
+      "archive_sha256": "892c36dc74d9eac1a7f0a50e225d7e7009fb0539ddc7f71c1f51f0d28a7b9c35",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          173.650539,
+          185.011141
+        ]
+      ],
+      "pm_gap_s": 11.360602,
+      "slug": "btc-updown-5m-1787671800",
+      "status": "OK",
+      "window_start": 1787671800
+    },
+    {
+      "archive_file": "eth-updown-5m-1787671800.jsonl.gz",
+      "archive_sha256": "5d5b017390f5487256f9123c616423c85365488ed6d050174740928258b63720",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787671800",
+      "status": "OK",
+      "window_start": 1787671800
+    },
+    {
+      "archive_file": "btc-updown-5m-1787672100.jsonl.gz",
+      "archive_sha256": "318b29239bee4b83801b25689b726f854f0df2f85f1f9b37684f9bae9f1fa7c8",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          34.819218,
+          41.412818
+        ]
+      ],
+      "pm_gap_s": 6.593599,
+      "slug": "btc-updown-5m-1787672100",
+      "status": "OK",
+      "window_start": 1787672100
+    },
+    {
+      "archive_file": "eth-updown-5m-1787672100.jsonl.gz",
+      "archive_sha256": "7df452759043df68680c472ed0bd2480856d18dfc0fee5af02993afede1b10c3",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787672100",
+      "status": "OK",
+      "window_start": 1787672100
+    },
+    {
+      "archive_file": "btc-updown-5m-1787672400.jsonl.gz",
+      "archive_sha256": "192e731d4eb2f9d90fb0dfbe7af36f33fe7883660336b099ad2234b8138c5e7d",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "btc-updown-5m-1787672400",
+      "status": "OK",
+      "window_start": 1787672400
+    },
+    {
+      "archive_file": "eth-updown-5m-1787672400.jsonl.gz",
+      "archive_sha256": "22e649a9ca262b8881cee49fdbefd051df6f239c2b7643a6419cccf231436d97",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787672400",
+      "status": "OK",
+      "window_start": 1787672400
+    },
+    {
+      "archive_file": "btc-updown-5m-1787672700.jsonl.gz",
+      "archive_sha256": "3eb132ee6e39d2bdb1b2cf71d01c03109c2b5d35e326260fb7506ebb2765d2b7",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          157.093163,
+          167.916651
+        ]
+      ],
+      "pm_gap_s": 10.823488,
+      "slug": "btc-updown-5m-1787672700",
+      "status": "OK",
+      "window_start": 1787672700
+    },
+    {
+      "archive_file": "eth-updown-5m-1787672700.jsonl.gz",
+      "archive_sha256": "9067eeeb3544e6e0b645d12d60b49712437f226b64cf1cabef7e220f8ad620b9",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787672700",
+      "status": "OK",
+      "window_start": 1787672700
+    },
+    {
+      "archive_file": "btc-updown-5m-1787673000.jsonl.gz",
+      "archive_sha256": "811e505e5e8e3f7c91c5e50da104c939b9377284206ef3b042dd330b3e756296",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          68.316113,
+          79.639517
+        ],
+        [
+          159.541229,
+          170.84617
+        ],
+        [
+          209.178468,
+          210.486953
+        ],
+        [
+          240.284326,
+          251.627457
+        ]
+      ],
+      "pm_gap_s": 35.279959,
+      "slug": "btc-updown-5m-1787673000",
+      "status": "OK",
+      "window_start": 1787673000
+    },
+    {
+      "archive_file": "eth-updown-5m-1787673000.jsonl.gz",
+      "archive_sha256": "704b126f6f6238aa4ca7ee643695221fce2446a62989ea06aab2e186477ff2ca",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787673000",
+      "status": "OK",
+      "window_start": 1787673000
+    },
+    {
+      "archive_file": "btc-updown-5m-1787673300.jsonl.gz",
+      "archive_sha256": "7768455d85ec6cb3f821d7c7378c0079addcc1cce008188e6b30915d9befbf61",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          10.658819,
+          11.965252
+        ]
+      ],
+      "pm_gap_s": 1.306433,
+      "slug": "btc-updown-5m-1787673300",
+      "status": "OK",
+      "window_start": 1787673300
+    },
+    {
+      "archive_file": "eth-updown-5m-1787673300.jsonl.gz",
+      "archive_sha256": "8b6a35622c62e27256f830a6f3f4ad34f997aaa7c4798c5a265b8a84b9bd23e0",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787673300",
+      "status": "OK",
+      "window_start": 1787673300
+    },
+    {
+      "archive_file": "btc-updown-5m-1787673600.jsonl.gz",
+      "archive_sha256": "f0fa359d5e0cbfdc1e7544ce4950625eb9d55d79d11b5d68eab870021c529f3c",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          30.723118,
+          33.123012
+        ],
+        [
+          47.100787,
+          48.433048
+        ],
+        [
+          68.303859,
+          79.644319
+        ],
+        [
+          129.546953,
+          131.936088
+        ],
+        [
+          156.596992,
+          157.928291
+        ],
+        [
+          207.781845,
+          219.138753
+        ],
+        [
+          241.177029,
+          242.484448
+        ]
+      ],
+      "pm_gap_s": 31.457378,
+      "slug": "btc-updown-5m-1787673600",
+      "status": "OK",
+      "window_start": 1787673600
+    },
+    {
+      "archive_file": "eth-updown-5m-1787673600.jsonl.gz",
+      "archive_sha256": "92aaca3b820679a3b3c3fde6803ffd93eb8d59170a742033e01023a71a8b5a8e",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787673600",
+      "status": "OK",
+      "window_start": 1787673600
+    },
+    {
+      "archive_file": "btc-updown-5m-1787673900.jsonl.gz",
+      "archive_sha256": "ca03cc81bb9634b5896ed9731bd536d77572bfeae3fb36004e22fcce572a064d",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          41.987144,
+          48.930265
+        ]
+      ],
+      "pm_gap_s": 6.943121,
+      "slug": "btc-updown-5m-1787673900",
+      "status": "OK",
+      "window_start": 1787673900
+    },
+    {
+      "archive_file": "eth-updown-5m-1787673900.jsonl.gz",
+      "archive_sha256": "ede56c374a25ac64d94c2aa477b4ec5c59b8e70aa65013e1c9ff537231c710fe",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787673900",
+      "status": "OK",
+      "window_start": 1787673900
+    },
+    {
+      "archive_file": "btc-updown-5m-1787674200.jsonl.gz",
+      "archive_sha256": "4ca14d0b64162e137d3a7a37b97108c0a6dab46aa1263e675ef0c2cd05323350",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "btc-updown-5m-1787674200",
+      "status": "OK",
+      "window_start": 1787674200
+    },
+    {
+      "archive_file": "eth-updown-5m-1787674200.jsonl.gz",
+      "archive_sha256": "09c8d777cfdabb385d9f47244c0c0d8299b2787f39af3527afc65bc2872915f8",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787674200",
+      "status": "OK",
+      "window_start": 1787674200
+    },
+    {
+      "archive_file": "btc-updown-5m-1787674500.jsonl.gz",
+      "archive_sha256": "58d4a5a76d383b9fd363190bceca42b1b504f905957c6e59f9517083d6aaa8ba",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          97.753637,
+          99.080721
+        ],
+        [
+          138.944872,
+          150.294333
+        ],
+        [
+          210.145776,
+          214.877835
+        ]
+      ],
+      "pm_gap_s": 17.408605,
+      "slug": "btc-updown-5m-1787674500",
+      "status": "OK",
+      "window_start": 1787674500
+    },
+    {
+      "archive_file": "eth-updown-5m-1787674500.jsonl.gz",
+      "archive_sha256": "c4523acfc5f79bbf5d11c3d8d97a09329beda540ea1eda69480657ba9717ee1d",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787674500",
+      "status": "OK",
+      "window_start": 1787674500
+    },
+    {
+      "archive_file": "btc-updown-5m-1787674800.jsonl.gz",
+      "archive_sha256": "f4de29dddfba13c26de14d8140349011ddee4b54ce73708f7228d13656a75cf4",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          22.392702,
+          23.718119
+        ],
+        [
+          111.765224,
+          113.065871
+        ]
+      ],
+      "pm_gap_s": 2.626064,
+      "slug": "btc-updown-5m-1787674800",
+      "status": "OK",
+      "window_start": 1787674800
+    },
+    {
+      "archive_file": "eth-updown-5m-1787674800.jsonl.gz",
+      "archive_sha256": "b974cd681140cab2fe6ef4bcb3a18b7bca44d9b022ce81021c2e85ecaa7456e7",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787674800",
+      "status": "OK",
+      "window_start": 1787674800
+    },
+    {
+      "archive_file": "btc-updown-5m-1787675100.jsonl.gz",
+      "archive_sha256": "d5bfbbbea46b1bbafb5bcf469e50f5dca0c328aae1d9ebc804aee70487848ad9",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          31.606408,
+          33.235824
+        ],
+        [
+          162.440842,
+          163.797101
+        ]
+      ],
+      "pm_gap_s": 2.985675,
+      "slug": "btc-updown-5m-1787675100",
+      "status": "OK",
+      "window_start": 1787675100
+    },
+    {
+      "archive_file": "eth-updown-5m-1787675100.jsonl.gz",
+      "archive_sha256": "60c896f90671146207b1d6eaf3b8b8e7fd2229873de201f0cc76253205bad863",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787675100",
+      "status": "OK",
+      "window_start": 1787675100
+    },
+    {
+      "archive_file": "btc-updown-5m-1787675400.jsonl.gz",
+      "archive_sha256": "0b5458b45f64b43088d6b6f71065ce7131c60ab87af928088faa84b1acf7e39c",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          67.926643,
+          79.407485
+        ],
+        [
+          93.49701,
+          94.804051
+        ]
+      ],
+      "pm_gap_s": 12.787882,
+      "slug": "btc-updown-5m-1787675400",
+      "status": "OK",
+      "window_start": 1787675400
+    },
+    {
+      "archive_file": "eth-updown-5m-1787675400.jsonl.gz",
+      "archive_sha256": "5396eb7285cd5dbe1d305d07b6daac9bc090dda76166919734234bc49049fb2b",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787675400",
+      "status": "OK",
+      "window_start": 1787675400
+    },
+    {
+      "archive_file": "btc-updown-5m-1787675700.jsonl.gz",
+      "archive_sha256": "c7c9764aa82bf4b15c8c5c45c59bcf7f52d0e9ddb3f664637af466b4bfbf8d7d",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          11.910641,
+          13.22997
+        ],
+        [
+          183.13828,
+          194.56211
+        ]
+      ],
+      "pm_gap_s": 12.74316,
+      "slug": "btc-updown-5m-1787675700",
+      "status": "OK",
+      "window_start": 1787675700
+    },
+    {
+      "archive_file": "eth-updown-5m-1787675700.jsonl.gz",
+      "archive_sha256": "d4db2b12d981990b61eeb898a56fd1caf7dd18631fc052f59741024497cfbcee",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787675700",
+      "status": "OK",
+      "window_start": 1787675700
+    },
+    {
+      "archive_file": "btc-updown-5m-1787676000.jsonl.gz",
+      "archive_sha256": "f2d32adca608940165b3005f053c6d1e8a3eba0250aa8c3fc79896721a119c6d",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "btc-updown-5m-1787676000",
+      "status": "OK",
+      "window_start": 1787676000
+    },
+    {
+      "archive_file": "eth-updown-5m-1787676000.jsonl.gz",
+      "archive_sha256": "0abdc1e3dcae90d6ad6d8dea9a4e293dc3ffabcf6fd37e9a001e544d9271844f",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787676000",
+      "status": "OK",
+      "window_start": 1787676000
+    },
+    {
+      "archive_file": "btc-updown-5m-1787676300.jsonl.gz",
+      "archive_sha256": "9245cdb02ada6d7ae203efa80c735a08c83cd656d2f24ca545853c7317c9cd02",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          31.129091,
+          32.450194
+        ],
+        [
+          60.106895,
+          61.435328
+        ],
+        [
+          161.325232,
+          172.695663
+        ],
+        [
+          201.582925,
+          202.901914
+        ],
+        [
+          232.772278,
+          236.260748
+        ]
+      ],
+      "pm_gap_s": 18.827426,
+      "slug": "btc-updown-5m-1787676300",
+      "status": "OK",
+      "window_start": 1787676300
+    },
+    {
+      "archive_file": "eth-updown-5m-1787676300.jsonl.gz",
+      "archive_sha256": "4628022b83917b8e1574f03be1cb5666f0a75086ae7bb11f8babf88bc800938e",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787676300",
+      "status": "OK",
+      "window_start": 1787676300
+    },
+    {
+      "archive_file": "btc-updown-5m-1787676600.jsonl.gz",
+      "archive_sha256": "cd3dd22451448a7616981106227faecd3309b971f4d9f9df590625e0086c51ad",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "btc-updown-5m-1787676600",
+      "status": "OK",
+      "window_start": 1787676600
+    },
+    {
+      "archive_file": "eth-updown-5m-1787676600.jsonl.gz",
+      "archive_sha256": "cfb1ec4778f12faa336e5f68757068db5c7d3973ccdee7e0285c8753927d2f9c",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787676600",
+      "status": "OK",
+      "window_start": 1787676600
+    },
+    {
+      "archive_file": "btc-updown-5m-1787676900.jsonl.gz",
+      "archive_sha256": "0a5808ef7e8657f67b14a0c5f4dc9c376d7edf2d82e0ed51f7c113d2826c4cb9",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "btc-updown-5m-1787676900",
+      "status": "OK",
+      "window_start": 1787676900
+    },
+    {
+      "archive_file": "eth-updown-5m-1787676900.jsonl.gz",
+      "archive_sha256": "842585a7115557915caed05265b064bcc677a91b5b253a8e81f6b4c2fbb76152",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787676900",
+      "status": "OK",
+      "window_start": 1787676900
+    },
+    {
+      "archive_file": "btc-updown-5m-1787677200.jsonl.gz",
+      "archive_sha256": "918c35c89367e1d34ea3fcc0ffd2b256e7f262b1d31ce80d3013e475d8cd5be7",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          137.280109,
+          138.590983
+        ],
+        [
+          156.410108,
+          157.733563
+        ],
+        [
+          187.628771,
+          198.952308
+        ]
+      ],
+      "pm_gap_s": 13.957867,
+      "slug": "btc-updown-5m-1787677200",
+      "status": "OK",
+      "window_start": 1787677200
+    },
+    {
+      "archive_file": "eth-updown-5m-1787677200.jsonl.gz",
+      "archive_sha256": "d9008347804f85a225158e1a2e3061a8e504733ac6df43d1ccf6f67c5809318a",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787677200",
+      "status": "OK",
+      "window_start": 1787677200
+    },
+    {
+      "archive_file": "btc-updown-5m-1787677500.jsonl.gz",
+      "archive_sha256": "995fec1cb7519982864545ce42a9f59188b674688a3d817d8c39426b71a7b1d0",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          37.536565,
+          43.457245
+        ]
+      ],
+      "pm_gap_s": 5.92068,
+      "slug": "btc-updown-5m-1787677500",
+      "status": "OK",
+      "window_start": 1787677500
+    },
+    {
+      "archive_file": "eth-updown-5m-1787677500.jsonl.gz",
+      "archive_sha256": "c597561f64faeef8b50b72aceeb305a8671c56d69f745b7f614d9b917999a1db",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787677500",
+      "status": "OK",
+      "window_start": 1787677500
+    },
+    {
+      "archive_file": "btc-updown-5m-1787677800.jsonl.gz",
+      "archive_sha256": "13618ec039591a034ea8560eee5414c187e3efb2f63853a9b7fb401cbd4b3e91",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          46.356307,
+          47.688347
+        ],
+        [
+          67.665727,
+          69.094009
+        ],
+        [
+          239.002856,
+          250.464303
+        ]
+      ],
+      "pm_gap_s": 14.221769,
+      "slug": "btc-updown-5m-1787677800",
+      "status": "OK",
+      "window_start": 1787677800
+    },
+    {
+      "archive_file": "eth-updown-5m-1787677800.jsonl.gz",
+      "archive_sha256": "ceffae04370140e02f79fff59d34a170a5c85b4b611477de67450ec7f6bb01ec",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787677800",
+      "status": "OK",
+      "window_start": 1787677800
+    },
+    {
+      "archive_file": "btc-updown-5m-1787678100.jsonl.gz",
+      "archive_sha256": "3d1ee11ed30411e2f563a3d23edc25047c039c0ca0cc2b8f61f90247aa4c7378",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "btc-updown-5m-1787678100",
+      "status": "OK",
+      "window_start": 1787678100
+    },
+    {
+      "archive_file": "eth-updown-5m-1787678100.jsonl.gz",
+      "archive_sha256": "bf28739f02691e92bbaeb13a573dcdbf0d276e2e3bfb5b6acad8dfa40f4e2385",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787678100",
+      "status": "OK",
+      "window_start": 1787678100
+    },
+    {
+      "archive_file": "btc-updown-5m-1787678400.jsonl.gz",
+      "archive_sha256": "71d485d3c215efd388c5513c3bdc4d9d8cfe98469e796b5f1dd82e41cba12546",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          131.26059,
+          142.608749
+        ]
+      ],
+      "pm_gap_s": 11.348159,
+      "slug": "btc-updown-5m-1787678400",
+      "status": "OK",
+      "window_start": 1787678400
+    },
+    {
+      "archive_file": "eth-updown-5m-1787678400.jsonl.gz",
+      "archive_sha256": "bb05ffbb499c763e2f0ad14b43e5db73d41ae2fa4193a712207374f2a452a97d",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787678400",
+      "status": "OK",
+      "window_start": 1787678400
+    },
+    {
+      "archive_file": "btc-updown-5m-1787678700.jsonl.gz",
+      "archive_sha256": "e1dad22de713e0cc6788bb1d29a0583dcc8ab6979506b669143fdf79cf65280c",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "btc-updown-5m-1787678700",
+      "status": "OK",
+      "window_start": 1787678700
+    },
+    {
+      "archive_file": "eth-updown-5m-1787678700.jsonl.gz",
+      "archive_sha256": "c732e87c7aa0a864791fb85d65d9998b9746a2177f6d33c8da92943c9b06b5f2",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787678700",
+      "status": "OK",
+      "window_start": 1787678700
+    },
+    {
+      "archive_file": "btc-updown-5m-1787679000.jsonl.gz",
+      "archive_sha256": "26ceec85e9586d47ca05cdfdf9b4b2b31bd316f41c04934df475da044bb8ae33",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "btc-updown-5m-1787679000",
+      "status": "OK",
+      "window_start": 1787679000
+    },
+    {
+      "archive_file": "eth-updown-5m-1787679000.jsonl.gz",
+      "archive_sha256": "a57eaa3d4405b3be6aebb1f8bea544dc07cea8a120b34e4d6c01b6370101420c",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787679000",
+      "status": "OK",
+      "window_start": 1787679000
+    },
+    {
+      "archive_file": "btc-updown-5m-1787679300.jsonl.gz",
+      "archive_sha256": "20e2819c2d4c61566ead3bdf4d8b500431cba24dce159fcd623e8c8cc73f7356",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          264.953207,
+          276.266298
+        ]
+      ],
+      "pm_gap_s": 11.313091,
+      "slug": "btc-updown-5m-1787679300",
+      "status": "OK",
+      "window_start": 1787679300
+    },
+    {
+      "archive_file": "eth-updown-5m-1787679300.jsonl.gz",
+      "archive_sha256": "e7d1d88428f262935e169fe70403c1f6bc381fcccc20bbb54c83f24047b7f734",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787679300",
+      "status": "OK",
+      "window_start": 1787679300
+    },
+    {
+      "archive_file": "btc-updown-5m-1787679600.jsonl.gz",
+      "archive_sha256": "a57e1e5f82cbf15a4a22725da4ca9a4760a1fbebad1c562e151f7baa3476e4fc",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          21.84129,
+          23.341682
+        ],
+        [
+          33.540491,
+          34.85918
+        ],
+        [
+          64.741313,
+          76.406836
+        ]
+      ],
+      "pm_gap_s": 14.484604,
+      "slug": "btc-updown-5m-1787679600",
+      "status": "OK",
+      "window_start": 1787679600
+    },
+    {
+      "archive_file": "eth-updown-5m-1787679600.jsonl.gz",
+      "archive_sha256": "a33ee70a586db3dd0e05178042683510423b6e63533a0ec1e02a8f1352c22cc6",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787679600",
+      "status": "OK",
+      "window_start": 1787679600
+    },
+    {
+      "archive_file": "btc-updown-5m-1787679900.jsonl.gz",
+      "archive_sha256": "944619d03c15c5d6bf3217adaadf9c957ed28f6229c20c30a78a5e5285820a7b",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          108.737519,
+          110.047511
+        ]
+      ],
+      "pm_gap_s": 1.309992,
+      "slug": "btc-updown-5m-1787679900",
+      "status": "OK",
+      "window_start": 1787679900
+    },
+    {
+      "archive_file": "eth-updown-5m-1787679900.jsonl.gz",
+      "archive_sha256": "6979d430d429eb0c8e45afeb61bf915c05177e6633d4dd540ba7d89231a43d92",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787679900",
+      "status": "OK",
+      "window_start": 1787679900
+    },
+    {
+      "archive_file": "btc-updown-5m-1787680200.jsonl.gz",
+      "archive_sha256": "79a84bd73e120998d80508bd29e74d1de024e41f57e5c2a00189ac8639882b7f",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          8.755552,
+          10.076483
+        ],
+        [
+          269.986066,
+          281.324976
+        ]
+      ],
+      "pm_gap_s": 12.659842,
+      "slug": "btc-updown-5m-1787680200",
+      "status": "OK",
+      "window_start": 1787680200
+    },
+    {
+      "archive_file": "eth-updown-5m-1787680200.jsonl.gz",
+      "archive_sha256": "ec2a9934f4f164402c60e570b04f2fe4a2595470c803b1c67687064adb94fca7",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787680200",
+      "status": "OK",
+      "window_start": 1787680200
+    },
+    {
+      "archive_file": "btc-updown-5m-1787680500.jsonl.gz",
+      "archive_sha256": "84bb0303c26169b1cc59998ad866a6a5df8b2f0148b4c31444edc168ef9c51e5",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          49.549389,
+          59.639374
+        ],
+        [
+          103.450765,
+          104.778497
+        ],
+        [
+          224.674191,
+          233.484282
+        ]
+      ],
+      "pm_gap_s": 20.227809,
+      "slug": "btc-updown-5m-1787680500",
+      "status": "OK",
+      "window_start": 1787680500
+    },
+    {
+      "archive_file": "eth-updown-5m-1787680500.jsonl.gz",
+      "archive_sha256": "848dba0540c78e992284ffe92d744c64b47b17a44acf0e0a9dd4b15fb567ecfc",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787680500",
+      "status": "OK",
+      "window_start": 1787680500
+    },
+    {
+      "archive_file": "btc-updown-5m-1787680800.jsonl.gz",
+      "archive_sha256": "0f85254c235e4a14ee54a61da036ab04ce22c01b7e0cb33eb47704a4faa33cee",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          50.745692,
+          62.093866
+        ],
+        [
+          91.980844,
+          95.226286
+        ],
+        [
+          155.10745,
+          166.420903
+        ],
+        [
+          196.307867,
+          208.753383
+        ],
+        [
+          223.235099,
+          224.563608
+        ],
+        [
+          235.089124,
+          236.392955
+        ],
+        [
+          259.495322,
+          260.828696
+        ],
+        [
+          290.71605,
+          293.222476
+        ]
+      ],
+      "pm_gap_s": 44.824725,
+      "slug": "btc-updown-5m-1787680800",
+      "status": "OK",
+      "window_start": 1787680800
+    },
+    {
+      "archive_file": "eth-updown-5m-1787680800.jsonl.gz",
+      "archive_sha256": "88d998c366845734e211393503e894d716b520494dc2b16f00197b562e113ce9",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787680800",
+      "status": "OK",
+      "window_start": 1787680800
+    },
+    {
+      "archive_file": "btc-updown-5m-1787681100.jsonl.gz",
+      "archive_sha256": "e69506db888cece0d9e1b6fe54e280dc4ce15e7553fe9597b5086c12dca1a901",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          21.818583,
+          23.992607
+        ],
+        [
+          33.594759,
+          34.909028
+        ],
+        [
+          64.813079,
+          76.224981
+        ],
+        [
+          83.924341,
+          85.217595
+        ],
+        [
+          115.114792,
+          127.4515
+        ],
+        [
+          147.202399,
+          158.675867
+        ],
+        [
+          169.838706,
+          171.162495
+        ],
+        [
+          197.696547,
+          199.662509
+        ],
+        [
+          207.909264,
+          209.227067
+        ],
+        [
+          215.891958,
+          217.20818
+        ],
+        [
+          236.341097,
+          237.658822
+        ],
+        [
+          267.542243,
+          273.919221
+        ]
+      ],
+      "pm_gap_s": 53.622106,
+      "slug": "btc-updown-5m-1787681100",
+      "status": "OK",
+      "window_start": 1787681100
+    },
+    {
+      "archive_file": "eth-updown-5m-1787681100.jsonl.gz",
+      "archive_sha256": "420ffc4a14684973058cd5341e589e69379465cc54183dd5ad5f99edb4475bc0",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787681100",
+      "status": "OK",
+      "window_start": 1787681100
+    },
+    {
+      "archive_file": "btc-updown-5m-1787681400.jsonl.gz",
+      "archive_sha256": "f07c710935d70bb69aa1fbd759fdc508132e3f22d733289b4f87ef3f0fe30fe6",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "btc-updown-5m-1787681400",
+      "status": "OK",
+      "window_start": 1787681400
+    },
+    {
+      "archive_file": "eth-updown-5m-1787681400.jsonl.gz",
+      "archive_sha256": "6e7399fa37fcff17e770b799ff8a4884e0abec98bce1caf2ac0ce5173db65d8c",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787681400",
+      "status": "OK",
+      "window_start": 1787681400
+    },
+    {
+      "archive_file": "btc-updown-5m-1787681700.jsonl.gz",
+      "archive_sha256": "afda70abd6073b963ba035d64f7417754c236a9acd30bdc58e1df467cf705afb",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "btc-updown-5m-1787681700",
+      "status": "OK",
+      "window_start": 1787681700
+    },
+    {
+      "archive_file": "eth-updown-5m-1787681700.jsonl.gz",
+      "archive_sha256": "8a086767b83725200fe40016bc968c349bce27b17ed1dfef7d02848ceb467c71",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787681700",
+      "status": "OK",
+      "window_start": 1787681700
+    },
+    {
+      "archive_file": "btc-updown-5m-1787682000.jsonl.gz",
+      "archive_sha256": "f81df693bd447d333396d993c6608e2aa7439eb9d0f75c951ed12251660eb50e",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "btc-updown-5m-1787682000",
+      "status": "OK",
+      "window_start": 1787682000
+    },
+    {
+      "archive_file": "eth-updown-5m-1787682000.jsonl.gz",
+      "archive_sha256": "31be8f55e4f5b21b6bf5541a9c073d7cd79a692a866d5e8cd206415b9a097d94",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787682000",
+      "status": "OK",
+      "window_start": 1787682000
+    },
+    {
+      "archive_file": "btc-updown-5m-1787682300.jsonl.gz",
+      "archive_sha256": "ef9a2a91e9fbdbdb1eab532c6406b47deafc205b35f6dfc1e2a52b2f6f91693b",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          256.791904,
+          263.921256
+        ]
+      ],
+      "pm_gap_s": 7.129352,
+      "slug": "btc-updown-5m-1787682300",
+      "status": "OK",
+      "window_start": 1787682300
+    },
+    {
+      "archive_file": "eth-updown-5m-1787682300.jsonl.gz",
+      "archive_sha256": "b87f81f7d306cd1c2a8ffc34a191b853e1a79b5f512cd9d5eb8d9f46b38acbea",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787682300",
+      "status": "OK",
+      "window_start": 1787682300
+    },
+    {
+      "archive_file": "btc-updown-5m-1787682600.jsonl.gz",
+      "archive_sha256": "255db67e93e7a393b81da7a86153ffe24b73d16e2fca10690a0067d3f70cf434",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          22.025456,
+          23.34918
+        ]
+      ],
+      "pm_gap_s": 1.323725,
+      "slug": "btc-updown-5m-1787682600",
+      "status": "OK",
+      "window_start": 1787682600
+    },
+    {
+      "archive_file": "eth-updown-5m-1787682600.jsonl.gz",
+      "archive_sha256": "9087ca42fcc5ec8c951cc9d00b8557c001c1145a13d67d74dde1d2a0c4302516",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787682600",
+      "status": "OK",
+      "window_start": 1787682600
+    },
+    {
+      "archive_file": "btc-updown-5m-1787682900.jsonl.gz",
+      "archive_sha256": "d540d7c7c854e02aaf8c36bb2c22aba17d6e8e6cc9d5d6c8ceddc003eba68b54",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "btc-updown-5m-1787682900",
+      "status": "OK",
+      "window_start": 1787682900
+    },
+    {
+      "archive_file": "eth-updown-5m-1787682900.jsonl.gz",
+      "archive_sha256": "b8490fb9e9512f766526084e4fbab84e36f6df5468f6e8e8b62ec2ba2192fe9c",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787682900",
+      "status": "OK",
+      "window_start": 1787682900
+    },
+    {
+      "archive_file": "btc-updown-5m-1787683200.jsonl.gz",
+      "archive_sha256": "770b93041a409483aeee2106f8e3ee76edfee92306d9a4cfeda34c12f847e643",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "btc-updown-5m-1787683200",
+      "status": "BINANCE_GAP_OR_TRUNCATED",
+      "window_start": 1787683200
+    },
+    {
+      "archive_file": "eth-updown-5m-1787683200.jsonl.gz",
+      "archive_sha256": "512864e977c14bbd49a870f2480224a37cb36e7af266216716ef72dffb79af19",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787683200",
+      "status": "OK",
+      "window_start": 1787683200
+    },
+    {
+      "archive_file": "btc-updown-5m-1787683500.jsonl.gz",
+      "archive_sha256": "c4f19c97ff0f55f895a712dfa3bf369acda4b1a2861434c43d3d03aac46f6477",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          15.422231,
+          16.756658
+        ],
+        [
+          36.633422,
+          42.297582
+        ],
+        [
+          62.130746,
+          73.51956
+        ],
+        [
+          103.405804,
+          114.736163
+        ],
+        [
+          134.608393,
+          145.944417
+        ]
+      ],
+      "pm_gap_s": 41.053784,
+      "slug": "btc-updown-5m-1787683500",
+      "status": "OK",
+      "window_start": 1787683500
+    },
+    {
+      "archive_file": "eth-updown-5m-1787683500.jsonl.gz",
+      "archive_sha256": "53e0c264b8f5248a14ac7947b4b57f34d2d343d928b25621dfaff4c825dd8b56",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787683500",
+      "status": "OK",
+      "window_start": 1787683500
+    },
+    {
+      "archive_file": "btc-updown-5m-1787683800.jsonl.gz",
+      "archive_sha256": "5bea6fb23a487455ac6211cfea29cbb8c0aa535b6f7ae7637efd83109368fa78",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          93.869303,
+          105.128558
+        ],
+        [
+          128.40654,
+          129.729802
+        ],
+        [
+          141.316215,
+          142.644927
+        ]
+      ],
+      "pm_gap_s": 13.911228,
+      "slug": "btc-updown-5m-1787683800",
+      "status": "OK",
+      "window_start": 1787683800
+    },
+    {
+      "archive_file": "eth-updown-5m-1787683800.jsonl.gz",
+      "archive_sha256": "124aec577143d66303e96705eeee5994f83ffa548ef0f2c9c178777bf718c1ef",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787683800",
+      "status": "OK",
+      "window_start": 1787683800
+    },
+    {
+      "archive_file": "btc-updown-5m-1787684100.jsonl.gz",
+      "archive_sha256": "5f2e750d528f591fea10adcdfcef3cd00202094e2882d8405db42d2ddd2914b6",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "btc-updown-5m-1787684100",
+      "status": "BINANCE_GAP_OR_TRUNCATED",
+      "window_start": 1787684100
+    },
+    {
+      "archive_file": "eth-updown-5m-1787684100.jsonl.gz",
+      "archive_sha256": "9bd487cfb1c55184839b4b932b2c6de23fd7e69768cfd571d815ab9b4decacbf",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787684100",
+      "status": "OK",
+      "window_start": 1787684100
+    },
+    {
+      "archive_file": "btc-updown-5m-1787684400.jsonl.gz",
+      "archive_sha256": "1255ea5482c63763b5ec90b714baa1f80265805482f59202a3cfde53fef948c6",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          46.166518,
+          57.496649
+        ],
+        [
+          71.565584,
+          72.880808
+        ],
+        [
+          142.742386,
+          154.101061
+        ],
+        [
+          234.076474,
+          235.487499
+        ],
+        [
+          249.140835,
+          250.466763
+        ]
+      ],
+      "pm_gap_s": 26.740981,
+      "slug": "btc-updown-5m-1787684400",
+      "status": "OK",
+      "window_start": 1787684400
+    },
+    {
+      "archive_file": "eth-updown-5m-1787684400.jsonl.gz",
+      "archive_sha256": "5798520a090d8c3e328bc76353e6079a44d9451e5d2c38c642c9e8cb0c826b77",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787684400",
+      "status": "OK",
+      "window_start": 1787684400
+    },
+    {
+      "archive_file": "btc-updown-5m-1787684700.jsonl.gz",
+      "archive_sha256": "0e09e1a08cac6d3f9369b78328fb2e6b8c820b86eaa5fbf4568b111613c1e6e8",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          104.765248,
+          106.077079
+        ],
+        [
+          109.26801,
+          110.566192
+        ]
+      ],
+      "pm_gap_s": 2.610013,
+      "slug": "btc-updown-5m-1787684700",
+      "status": "OK",
+      "window_start": 1787684700
+    },
+    {
+      "archive_file": "eth-updown-5m-1787684700.jsonl.gz",
+      "archive_sha256": "27c85b95ef442f51af8c42d2abb29716b3663b574a73311e8665163fce4c5e2f",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787684700",
+      "status": "OK",
+      "window_start": 1787684700
+    },
+    {
+      "archive_file": "btc-updown-5m-1787685000.jsonl.gz",
+      "archive_sha256": "afca359e71ab3dacf927cb9f6303cced3182714382677c7bb0441e857f11529f",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "btc-updown-5m-1787685000",
+      "status": "OK",
+      "window_start": 1787685000
+    },
+    {
+      "archive_file": "eth-updown-5m-1787685000.jsonl.gz",
+      "archive_sha256": "3e4461964006b4a25a6d39201c9331d4191b099d3827857532fd7f5f0a3d7a6e",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787685000",
+      "status": "OK",
+      "window_start": 1787685000
+    },
+    {
+      "archive_file": "btc-updown-5m-1787685300.jsonl.gz",
+      "archive_sha256": "0898c5abafc4beb2ce5f819d8907b4bccc2cc17c6024218e069f93d328def8d0",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "btc-updown-5m-1787685300",
+      "status": "OK",
+      "window_start": 1787685300
+    },
+    {
+      "archive_file": "eth-updown-5m-1787685300.jsonl.gz",
+      "archive_sha256": "611bd61c26efefbd4b98f6e6011e4901aea9a715bf8f3f817a29abd8f051c1f2",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787685300",
+      "status": "OK",
+      "window_start": 1787685300
+    },
+    {
+      "archive_file": "btc-updown-5m-1787685600.jsonl.gz",
+      "archive_sha256": "c96d5e190532a7dc057ecb565175bc25c6d20f4bd54975c3da9e7d8b7a20c932",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          61.227696,
+          70.989195
+        ],
+        [
+          110.877027,
+          112.359123
+        ]
+      ],
+      "pm_gap_s": 11.243596,
+      "slug": "btc-updown-5m-1787685600",
+      "status": "BINANCE_GAP_OR_TRUNCATED",
+      "window_start": 1787685600
+    },
+    {
+      "archive_file": "eth-updown-5m-1787685600.jsonl.gz",
+      "archive_sha256": "472f5d0cf6970eb48c897d2e42b5d6f7b093dd2ea6508fd48e50d7eb2f010287",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787685600",
+      "status": "OK",
+      "window_start": 1787685600
+    },
+    {
+      "archive_file": "btc-updown-5m-1787685900.jsonl.gz",
+      "archive_sha256": "a88343e27ef016160182268fbffead1acff2698a34469aaddc822aa621c41dea",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          7.615282,
+          8.933234
+        ],
+        [
+          18.119875,
+          19.415061
+        ]
+      ],
+      "pm_gap_s": 2.613138,
+      "slug": "btc-updown-5m-1787685900",
+      "status": "OK",
+      "window_start": 1787685900
+    },
+    {
+      "archive_file": "eth-updown-5m-1787685900.jsonl.gz",
+      "archive_sha256": "fc0eb1667776d8e053d05a707d852fd48efda642b0e174170b0e261fbad13c3a",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787685900",
+      "status": "OK",
+      "window_start": 1787685900
+    },
+    {
+      "archive_file": "btc-updown-5m-1787686200.jsonl.gz",
+      "archive_sha256": "5ca23b3218af5817290c1886990c1b780d16d9cc292c830b82511c81ba1328c1",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          53.598792,
+          64.9382
+        ],
+        [
+          164.810988,
+          175.257524
+        ]
+      ],
+      "pm_gap_s": 21.785944,
+      "slug": "btc-updown-5m-1787686200",
+      "status": "OK",
+      "window_start": 1787686200
+    },
+    {
+      "archive_file": "eth-updown-5m-1787686200.jsonl.gz",
+      "archive_sha256": "ba4fabfd96cf6684fdbbdb5d14fea224110e5315d980bd000e719da477555932",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787686200",
+      "status": "OK",
+      "window_start": 1787686200
+    },
+    {
+      "archive_file": "btc-updown-5m-1787686500.jsonl.gz",
+      "archive_sha256": "45d0f28d1fba703e45ecfbafdacf212e82e49649bb4bac46fe6cfe04902f638f",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "btc-updown-5m-1787686500",
+      "status": "OK",
+      "window_start": 1787686500
+    },
+    {
+      "archive_file": "eth-updown-5m-1787686500.jsonl.gz",
+      "archive_sha256": "1b6030104ae7bd35d222276ac22d5b7c8b5c81c0f4e5f577b1d444245f40d036",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787686500",
+      "status": "OK",
+      "window_start": 1787686500
+    },
+    {
+      "archive_file": "btc-updown-5m-1787686800.jsonl.gz",
+      "archive_sha256": "fc437fa46ff47c0877761951bd3e9ce912d3f1660ab431233f4f308ea4b003e0",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          45.946937,
+          52.380286
+        ]
+      ],
+      "pm_gap_s": 6.433348,
+      "slug": "btc-updown-5m-1787686800",
+      "status": "OK",
+      "window_start": 1787686800
+    },
+    {
+      "archive_file": "eth-updown-5m-1787686800.jsonl.gz",
+      "archive_sha256": "a4e2a18541f576b5f80aa199634c10fef7be3b9eeb0fc19cd1217c87e30ddbab",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787686800",
+      "status": "OK",
+      "window_start": 1787686800
+    },
+    {
+      "archive_file": "btc-updown-5m-1787687100.jsonl.gz",
+      "archive_sha256": "c06800ffbf6338bd31e2d9a31c1bff751497123a0b8fa328a0a7f81ba6d59df8",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          36.221495,
+          37.543484
+        ],
+        [
+          127.459177,
+          138.767369
+        ]
+      ],
+      "pm_gap_s": 12.630181,
+      "slug": "btc-updown-5m-1787687100",
+      "status": "OK",
+      "window_start": 1787687100
+    },
+    {
+      "archive_file": "eth-updown-5m-1787687100.jsonl.gz",
+      "archive_sha256": "59d765a026cc7238bc5f38fca907ed6c0d3c114691c8b4a21f396e2f88c6f38f",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787687100",
+      "status": "OK",
+      "window_start": 1787687100
+    },
+    {
+      "archive_file": "btc-updown-5m-1787687400.jsonl.gz",
+      "archive_sha256": "1498a22154054f715516fe37f2e98ca1c1f42efe83a0a766aeac7b06ff88cff1",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "btc-updown-5m-1787687400",
+      "status": "OK",
+      "window_start": 1787687400
+    },
+    {
+      "archive_file": "eth-updown-5m-1787687400.jsonl.gz",
+      "archive_sha256": "bbc96210eb884602bd326e1f3187736073c8551beba248b45a6f64b9a5dea097",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787687400",
+      "status": "OK",
+      "window_start": 1787687400
+    },
+    {
+      "archive_file": "btc-updown-5m-1787687700.jsonl.gz",
+      "archive_sha256": "b37397611a324c86f16db5d731cc7a8213fdb54ba84a527a9aacb8c081abfc26",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          259.576295,
+          270.903873
+        ]
+      ],
+      "pm_gap_s": 11.327578,
+      "slug": "btc-updown-5m-1787687700",
+      "status": "OK",
+      "window_start": 1787687700
+    },
+    {
+      "archive_file": "eth-updown-5m-1787687700.jsonl.gz",
+      "archive_sha256": "86aee7e846a27ec7c2a647e99cc339ba932ff3da9efabcb2677914324e13f278",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787687700",
+      "status": "OK",
+      "window_start": 1787687700
+    },
+    {
+      "archive_file": "btc-updown-5m-1787688000.jsonl.gz",
+      "archive_sha256": "8f2e98b0647293f2bbcad9555195d2aab90af17b27cff68aee2879f6aaf44e02",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          11.690784,
+          13.100398
+        ],
+        [
+          82.952375,
+          94.283637
+        ]
+      ],
+      "pm_gap_s": 12.740876,
+      "slug": "btc-updown-5m-1787688000",
+      "status": "OK",
+      "window_start": 1787688000
+    },
+    {
+      "archive_file": "eth-updown-5m-1787688000.jsonl.gz",
+      "archive_sha256": "6e63578bf47331ec656f7b350f493739c1d2c9595504d00e1d13a623709c013b",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787688000",
+      "status": "OK",
+      "window_start": 1787688000
+    },
+    {
+      "archive_file": "btc-updown-5m-1787688300.jsonl.gz",
+      "archive_sha256": "586a35159fa7f787fb51aabba2418a6bb518aa808ad3a7342faa2aac9201c513",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          11.078569,
+          12.330945
+        ],
+        [
+          34.831769,
+          36.130879
+        ]
+      ],
+      "pm_gap_s": 2.551487,
+      "slug": "btc-updown-5m-1787688300",
+      "status": "OK",
+      "window_start": 1787688300
+    },
+    {
+      "archive_file": "eth-updown-5m-1787688300.jsonl.gz",
+      "archive_sha256": "1ef109299e5a31bbbf7447fe006f360bc45986d1d51f46f01cbc1024574d45c0",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787688300",
+      "status": "OK",
+      "window_start": 1787688300
+    },
+    {
+      "archive_file": "btc-updown-5m-1787688600.jsonl.gz",
+      "archive_sha256": "87736b2260fce385e261174509e872ee1b20268a0b02e1a385905438a2fda8eb",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          40.689353,
+          42.016581
+        ],
+        [
+          61.889024,
+          68.923025
+        ],
+        [
+          88.72398,
+          98.983379
+        ],
+        [
+          247.521097,
+          248.825843
+        ]
+      ],
+      "pm_gap_s": 19.925373,
+      "slug": "btc-updown-5m-1787688600",
+      "status": "OK",
+      "window_start": 1787688600
+    },
+    {
+      "archive_file": "eth-updown-5m-1787688600.jsonl.gz",
+      "archive_sha256": "7d6a255feacc3928a027e151b7cc6a58a9e28dca81293c9b7877e30dd13d03e8",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787688600",
+      "status": "BINANCE_GAP_OR_TRUNCATED",
+      "window_start": 1787688600
+    },
+    {
+      "archive_file": "btc-updown-5m-1787688900.jsonl.gz",
+      "archive_sha256": "3ffc0b8e5349b8a90a4db02b210364a5c042b90c69e4574d9573d5d0ee4c3b27",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          134.361016,
+          141.5687
+        ],
+        [
+          181.558171,
+          182.882444
+        ]
+      ],
+      "pm_gap_s": 8.531958,
+      "slug": "btc-updown-5m-1787688900",
+      "status": "OK",
+      "window_start": 1787688900
+    },
+    {
+      "archive_file": "eth-updown-5m-1787688900.jsonl.gz",
+      "archive_sha256": "03d82ea9e2cf2aa75c80acf09ce64118a043b5a0ec097e20e33bd6d9b1b2d738",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787688900",
+      "status": "OK",
+      "window_start": 1787688900
+    },
+    {
+      "archive_file": "btc-updown-5m-1787689200.jsonl.gz",
+      "archive_sha256": "4dc519d177782fe6fe6fd378a32fe871e22839dedc2fa681d2bdb765f748bb6b",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          85.501818,
+          91.298337
+        ]
+      ],
+      "pm_gap_s": 5.796519,
+      "slug": "btc-updown-5m-1787689200",
+      "status": "OK",
+      "window_start": 1787689200
+    },
+    {
+      "archive_file": "eth-updown-5m-1787689200.jsonl.gz",
+      "archive_sha256": "6495293c06200f7dc8b218f257bec94b1426c09faffbfc98796a1cc4cdf33288",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787689200",
+      "status": "OK",
+      "window_start": 1787689200
+    },
+    {
+      "archive_file": "btc-updown-5m-1787689500.jsonl.gz",
+      "archive_sha256": "4bc43d608a5c03a12df9ffe018f0aad9846bfda6d2fa1b17758b0cea7c66cf14",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "btc-updown-5m-1787689500",
+      "status": "OK",
+      "window_start": 1787689500
+    },
+    {
+      "archive_file": "eth-updown-5m-1787689500.jsonl.gz",
+      "archive_sha256": "0ef725f883a6c8912239a6ff30e63ceaa05e37b26bfd9d2be4963cdff92b17c0",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787689500",
+      "status": "OK",
+      "window_start": 1787689500
+    },
+    {
+      "archive_file": "btc-updown-5m-1787689800.jsonl.gz",
+      "archive_sha256": "03c398314e797dd9fac5ff8600ab956090433223414a1c5f61c44ba796b9e1cb",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          6.642052,
+          7.970337
+        ],
+        [
+          127.858148,
+          139.222309
+        ]
+      ],
+      "pm_gap_s": 12.692446,
+      "slug": "btc-updown-5m-1787689800",
+      "status": "OK",
+      "window_start": 1787689800
+    },
+    {
+      "archive_file": "eth-updown-5m-1787689800.jsonl.gz",
+      "archive_sha256": "61038fecd080648d093b6720d8ef691a3dd35527ab912c2a1e48add7a2807c2d",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787689800",
+      "status": "OK",
+      "window_start": 1787689800
+    },
+    {
+      "archive_file": "btc-updown-5m-1787690100.jsonl.gz",
+      "archive_sha256": "04963777ee108f5e6376ef12aa343fd214956cc76f20bade3514909cc620cf88",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          79.173189,
+          90.522657
+        ],
+        [
+          104.825734,
+          106.115341
+        ],
+        [
+          126.001312,
+          137.354865
+        ],
+        [
+          159.456228,
+          160.768161
+        ],
+        [
+          171.439469,
+          172.737679
+        ],
+        [
+          188.876687,
+          190.174008
+        ]
+      ],
+      "pm_gap_s": 27.900089,
+      "slug": "btc-updown-5m-1787690100",
+      "status": "OK",
+      "window_start": 1787690100
+    },
+    {
+      "archive_file": "eth-updown-5m-1787690100.jsonl.gz",
+      "archive_sha256": "03460fa05b3ed783af766df80316463c41dca0dc20bce8f3cf6271d166e3ac83",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787690100",
+      "status": "OK",
+      "window_start": 1787690100
+    },
+    {
+      "archive_file": "btc-updown-5m-1787690400.jsonl.gz",
+      "archive_sha256": "d18ebe56d94cbd8afe428668e1d7e38ff48a76bce5c66991558689002f26847d",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          14.298104,
+          15.615456
+        ],
+        [
+          45.512334,
+          56.841424
+        ]
+      ],
+      "pm_gap_s": 12.646441,
+      "slug": "btc-updown-5m-1787690400",
+      "status": "OK",
+      "window_start": 1787690400
+    },
+    {
+      "archive_file": "eth-updown-5m-1787690400.jsonl.gz",
+      "archive_sha256": "218437e87be1534bfb697732e5e0ca0905c4fa3fc2b3a2edaa57d5e03df44031",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787690400",
+      "status": "OK",
+      "window_start": 1787690400
+    },
+    {
+      "archive_file": "btc-updown-5m-1787690700.jsonl.gz",
+      "archive_sha256": "b4d86ff297ecb92e239f14af3d6eef93bab57f6cd598ee49971588e210275431",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          12.94826,
+          14.243794
+        ],
+        [
+          81.986259,
+          83.305103
+        ],
+        [
+          103.195145,
+          114.501869
+        ]
+      ],
+      "pm_gap_s": 13.921102,
+      "slug": "btc-updown-5m-1787690700",
+      "status": "OK",
+      "window_start": 1787690700
+    },
+    {
+      "archive_file": "eth-updown-5m-1787690700.jsonl.gz",
+      "archive_sha256": "37c6ef4906fd666896cd8c160e11e8ab7c312a7301183299d863f2bd8438631a",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787690700",
+      "status": "OK",
+      "window_start": 1787690700
+    },
+    {
+      "archive_file": "btc-updown-5m-1787691000.jsonl.gz",
+      "archive_sha256": "3aa30cb7472fd4c41a6af6b870e5ce3ebb41927bb5b698f23d95f8e592b30b23",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          17.660745,
+          19.005158
+        ],
+        [
+          34.400005,
+          35.712468
+        ],
+        [
+          75.600366,
+          86.923525
+        ],
+        [
+          196.803666,
+          198.561748
+        ],
+        [
+          228.413933,
+          234.176401
+        ]
+      ],
+      "pm_gap_s": 21.500585,
+      "slug": "btc-updown-5m-1787691000",
+      "status": "OK",
+      "window_start": 1787691000
+    },
+    {
+      "archive_file": "eth-updown-5m-1787691000.jsonl.gz",
+      "archive_sha256": "e27251cc31f066ce6222f1876dec1451b93c1a0b04aa3fe956849e6aa78cb9d7",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787691000",
+      "status": "OK",
+      "window_start": 1787691000
+    },
+    {
+      "archive_file": "btc-updown-5m-1787691300.jsonl.gz",
+      "archive_sha256": "2908d414b296c825de9307b9db4baed5b9cd80a7cb9228b22034939df1e3133c",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "btc-updown-5m-1787691300",
+      "status": "OK",
+      "window_start": 1787691300
+    },
+    {
+      "archive_file": "eth-updown-5m-1787691300.jsonl.gz",
+      "archive_sha256": "23e549ecdfafd7a93af9639fb181e0595ca4da2a32fe38a16f919d0427c77d04",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787691300",
+      "status": "OK",
+      "window_start": 1787691300
+    },
+    {
+      "archive_file": "btc-updown-5m-1787691600.jsonl.gz",
+      "archive_sha256": "04b8cae6a824020a81504ff6057a8a2d4fd97cc8d468e62d070bd46066f6ad8d",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          8.466751,
+          9.776643
+        ],
+        [
+          39.649426,
+          50.986859
+        ],
+        [
+          67.62699,
+          68.934768
+        ],
+        [
+          78.888908,
+          80.271536
+        ],
+        [
+          115.841787,
+          117.156821
+        ],
+        [
+          197.043917,
+          200.432136
+        ],
+        [
+          226.192064,
+          227.505702
+        ],
+        [
+          257.370585,
+          268.132852
+        ]
+      ],
+      "pm_gap_s": 32.116889,
+      "slug": "btc-updown-5m-1787691600",
+      "status": "OK",
+      "window_start": 1787691600
+    },
+    {
+      "archive_file": "eth-updown-5m-1787691600.jsonl.gz",
+      "archive_sha256": "d2aa383f366b25931a472ca9a22e09cea37c2ef28eb35b052827210cd8b8e15d",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787691600",
+      "status": "OK",
+      "window_start": 1787691600
+    },
+    {
+      "archive_file": "btc-updown-5m-1787691900.jsonl.gz",
+      "archive_sha256": "b97673432e4094b050d3319a6f6fa5cebb47e26fb838c1f9ec2df1deb0df6cfd",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          75.980238,
+          87.411541
+        ],
+        [
+          147.315156,
+          158.640662
+        ]
+      ],
+      "pm_gap_s": 22.75681,
+      "slug": "btc-updown-5m-1787691900",
+      "status": "OK",
+      "window_start": 1787691900
+    },
+    {
+      "archive_file": "eth-updown-5m-1787691900.jsonl.gz",
+      "archive_sha256": "b323d9f9c1ddfe339f0c02ada98bc36f6a08fcc64e4f12f48a7b0322a166ffed",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787691900",
+      "status": "OK",
+      "window_start": 1787691900
+    },
+    {
+      "archive_file": "btc-updown-5m-1787692200.jsonl.gz",
+      "archive_sha256": "cd299cf348e63c1184c18cad4673938f16d61eff724e790f3452de9ae59d17ad",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          10.430054,
+          11.746799
+        ],
+        [
+          31.647025,
+          42.973237
+        ],
+        [
+          72.846398,
+          84.17703
+        ]
+      ],
+      "pm_gap_s": 23.973588,
+      "slug": "btc-updown-5m-1787692200",
+      "status": "OK",
+      "window_start": 1787692200
+    },
+    {
+      "archive_file": "eth-updown-5m-1787692200.jsonl.gz",
+      "archive_sha256": "402cbf1dfd93febeb306eb5bf7be0cf27daa23ca7395be36e3b968b394f586aa",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787692200",
+      "status": "OK",
+      "window_start": 1787692200
+    },
+    {
+      "archive_file": "btc-updown-5m-1787692500.jsonl.gz",
+      "archive_sha256": "d8c74c05d9e9b8161886c6117c00231e3c60a6a672beb5be090dbf4bbf79593a",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          108.415842,
+          119.727593
+        ]
+      ],
+      "pm_gap_s": 11.311752,
+      "slug": "btc-updown-5m-1787692500",
+      "status": "OK",
+      "window_start": 1787692500
+    },
+    {
+      "archive_file": "eth-updown-5m-1787692500.jsonl.gz",
+      "archive_sha256": "10c2377a815132b495d8719cec8eef6d9d79a36f7f5342288c8db1a58878cf45",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787692500",
+      "status": "OK",
+      "window_start": 1787692500
+    },
+    {
+      "archive_file": "btc-updown-5m-1787692800.jsonl.gz",
+      "archive_sha256": "4f416b0eac3a6a75bca00981d1dfc4696223617de15778f3fc1fe6f665f4ef62",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          18.242665,
+          19.540502
+        ],
+        [
+          39.43714,
+          40.914884
+        ],
+        [
+          80.786301,
+          92.14108
+        ],
+        [
+          141.859424,
+          143.172489
+        ]
+      ],
+      "pm_gap_s": 15.443424,
+      "slug": "btc-updown-5m-1787692800",
+      "status": "OK",
+      "window_start": 1787692800
+    },
+    {
+      "archive_file": "eth-updown-5m-1787692800.jsonl.gz",
+      "archive_sha256": "d83ecd184e3943b2277e9a72f8fe3a1c31f9c24dac2c0f3f175e493ae2601fd1",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787692800",
+      "status": "OK",
+      "window_start": 1787692800
+    },
+    {
+      "archive_file": "btc-updown-5m-1787693100.jsonl.gz",
+      "archive_sha256": "74e66dd08bcb4cfa33e24e62decf02deb3e73229e96bdc1329a91441bde07614",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          100.823174,
+          112.139943
+        ]
+      ],
+      "pm_gap_s": 11.316769,
+      "slug": "btc-updown-5m-1787693100",
+      "status": "OK",
+      "window_start": 1787693100
+    },
+    {
+      "archive_file": "eth-updown-5m-1787693100.jsonl.gz",
+      "archive_sha256": "3f05689e04ddae49b204027f32754aa648f2b39fd3a3d2e3d274cded89cc497b",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787693100",
+      "status": "OK",
+      "window_start": 1787693100
+    },
+    {
+      "archive_file": "btc-updown-5m-1787693400.jsonl.gz",
+      "archive_sha256": "556a263feb65bcdbd7965070f38ae05bb0a0d8fd66ee137030f52c049544b3f2",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          271.962566,
+          275.494918
+        ]
+      ],
+      "pm_gap_s": 3.532352,
+      "slug": "btc-updown-5m-1787693400",
+      "status": "OK",
+      "window_start": 1787693400
+    },
+    {
+      "archive_file": "eth-updown-5m-1787693400.jsonl.gz",
+      "archive_sha256": "18989da9f522308a6c5e057d42f851a8413da107f2aa65faa7af6a448471100f",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787693400",
+      "status": "OK",
+      "window_start": 1787693400
+    },
+    {
+      "archive_file": "btc-updown-5m-1787693700.jsonl.gz",
+      "archive_sha256": "8f8cd9c9fdc3bca8029653e029ca1576825da0565941397a05b5447e4d636f76",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "btc-updown-5m-1787693700",
+      "status": "OK",
+      "window_start": 1787693700
+    },
+    {
+      "archive_file": "eth-updown-5m-1787693700.jsonl.gz",
+      "archive_sha256": "ca766c1fdd7aefa68129149c1d5513d34d964fe05dcd72d98550f49f03343fac",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787693700",
+      "status": "OK",
+      "window_start": 1787693700
+    },
+    {
+      "archive_file": "btc-updown-5m-1787694000.jsonl.gz",
+      "archive_sha256": "bcbf0d16b9db22e4e50a7ea523cd809fc652c97ad61f3abe7197971f1f44ed51",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          214.144998,
+          225.496285
+        ],
+        [
+          255.373563,
+          263.616966
+        ]
+      ],
+      "pm_gap_s": 19.594689,
+      "slug": "btc-updown-5m-1787694000",
+      "status": "OK",
+      "window_start": 1787694000
+    },
+    {
+      "archive_file": "eth-updown-5m-1787694000.jsonl.gz",
+      "archive_sha256": "5826c57f6d6f67770e364bfb67171f3c17d80bab9b0afeed77f606f196edd1d8",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787694000",
+      "status": "OK",
+      "window_start": 1787694000
+    },
+    {
+      "archive_file": "btc-updown-5m-1787694300.jsonl.gz",
+      "archive_sha256": "5ea3c1824abc355953cc5b5e1247f9a23ade4633b9bd1d5323159972af41f7a1",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          85.316,
+          96.67055
+        ],
+        [
+          134.286681,
+          135.588099
+        ],
+        [
+          165.482815,
+          176.796596
+        ],
+        [
+          216.699003,
+          222.523004
+        ]
+      ],
+      "pm_gap_s": 29.793749,
+      "slug": "btc-updown-5m-1787694300",
+      "status": "OK",
+      "window_start": 1787694300
+    },
+    {
+      "archive_file": "eth-updown-5m-1787694300.jsonl.gz",
+      "archive_sha256": "f4611b4e1609f6576e2a5267530e0a15a4384d4fb51236821b3c016cca46c738",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787694300",
+      "status": "OK",
+      "window_start": 1787694300
+    },
+    {
+      "archive_file": "btc-updown-5m-1787694600.jsonl.gz",
+      "archive_sha256": "ae09ee5d35a72b827e764591f4786b0f9f7f5326b9090f53a22a69917760d0ba",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          156.836269,
+          168.14484
+        ]
+      ],
+      "pm_gap_s": 11.308571,
+      "slug": "btc-updown-5m-1787694600",
+      "status": "OK",
+      "window_start": 1787694600
+    },
+    {
+      "archive_file": "eth-updown-5m-1787694600.jsonl.gz",
+      "archive_sha256": "1175080f340423362b4bc734442a1db5983dc5bf75c24fe2bd1fb7778974dd39",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787694600",
+      "status": "OK",
+      "window_start": 1787694600
+    },
+    {
+      "archive_file": "btc-updown-5m-1787694900.jsonl.gz",
+      "archive_sha256": "aa7b215b9d664a18812fe4dfb5f4e810159703791f0734439c0050f5bc0fe6db",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          16.499696,
+          17.808995
+        ],
+        [
+          247.720771,
+          259.033636
+        ]
+      ],
+      "pm_gap_s": 12.622164,
+      "slug": "btc-updown-5m-1787694900",
+      "status": "OK",
+      "window_start": 1787694900
+    },
+    {
+      "archive_file": "eth-updown-5m-1787694900.jsonl.gz",
+      "archive_sha256": "fbafdc74d84f2d68e55a45a0b504b6344a807f22ae39b63793dfe7334aff003c",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787694900",
+      "status": "OK",
+      "window_start": 1787694900
+    },
+    {
+      "archive_file": "btc-updown-5m-1787695200.jsonl.gz",
+      "archive_sha256": "96555ae63e34e301dd0bab058d6e6ad2f091a1a5fef737f08db7b233bf78ba5e",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          28.997067,
+          40.34219
+        ],
+        [
+          170.220891,
+          181.564923
+        ]
+      ],
+      "pm_gap_s": 22.689155,
+      "slug": "btc-updown-5m-1787695200",
+      "status": "OK",
+      "window_start": 1787695200
+    },
+    {
+      "archive_file": "eth-updown-5m-1787695200.jsonl.gz",
+      "archive_sha256": "4e3b03c0bee3587f5902635ffd7f3a92c4b27f1a1c9188befa1cf1ba0464b4d6",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787695200",
+      "status": "OK",
+      "window_start": 1787695200
+    },
+    {
+      "archive_file": "btc-updown-5m-1787695500.jsonl.gz",
+      "archive_sha256": "5167343c86823878281544763002d1a8e08ea07c9039093250564cee52500b5e",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          60.129618,
+          67.752457
+        ]
+      ],
+      "pm_gap_s": 7.622839,
+      "slug": "btc-updown-5m-1787695500",
+      "status": "OK",
+      "window_start": 1787695500
+    },
+    {
+      "archive_file": "eth-updown-5m-1787695500.jsonl.gz",
+      "archive_sha256": "52b7575c04b80ac1336e6080f2ce57a0e52acb0f4d2982e0659350a0b4192132",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787695500",
+      "status": "OK",
+      "window_start": 1787695500
+    },
+    {
+      "archive_file": "btc-updown-5m-1787695800.jsonl.gz",
+      "archive_sha256": "912916d95da913867fa3f669a450a51c10ef9d5c5f34a63b8e956ef800c7cb7e",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          101.249795,
+          108.858718
+        ]
+      ],
+      "pm_gap_s": 7.608924,
+      "slug": "btc-updown-5m-1787695800",
+      "status": "OK",
+      "window_start": 1787695800
+    },
+    {
+      "archive_file": "eth-updown-5m-1787695800.jsonl.gz",
+      "archive_sha256": "a7abba24e58a7c9f8bebb9250507ab04c3566e2e4f273c58a34e98cf13c9a3b7",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787695800",
+      "status": "OK",
+      "window_start": 1787695800
+    },
+    {
+      "archive_file": "btc-updown-5m-1787696100.jsonl.gz",
+      "archive_sha256": "533b6c9febded53d4001e75d03a9ddddb8357289ac26f301e447546fc8a93c99",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          102.362502,
+          111.673823
+        ],
+        [
+          149.660575,
+          150.977695
+        ],
+        [
+          178.171571,
+          179.381328
+        ],
+        [
+          199.244641,
+          210.609499
+        ]
+      ],
+      "pm_gap_s": 23.203055,
+      "slug": "btc-updown-5m-1787696100",
+      "status": "OK",
+      "window_start": 1787696100
+    },
+    {
+      "archive_file": "eth-updown-5m-1787696100.jsonl.gz",
+      "archive_sha256": "8799e95265440b5ed3ac5ec54877323fe9d66873086866febad0d0608eabc4ed",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787696100",
+      "status": "OK",
+      "window_start": 1787696100
+    },
+    {
+      "archive_file": "btc-updown-5m-1787696400.jsonl.gz",
+      "archive_sha256": "ebc213255632a0200a95319dca1e451e86e920bb0b011b4366fac8ca9d03aa63",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          33.517643,
+          44.848045
+        ],
+        [
+          57.190812,
+          58.50714
+        ]
+      ],
+      "pm_gap_s": 12.64673,
+      "slug": "btc-updown-5m-1787696400",
+      "status": "BINANCE_GAP_OR_TRUNCATED",
+      "window_start": 1787696400
+    },
+    {
+      "archive_file": "eth-updown-5m-1787696400.jsonl.gz",
+      "archive_sha256": "45a01f59db2b00d5c1f8fd90d51d3da003fc5a61202f11a1c96ca928c0c19e07",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787696400",
+      "status": "OK",
+      "window_start": 1787696400
+    },
+    {
+      "archive_file": "btc-updown-5m-1787696700.jsonl.gz",
+      "archive_sha256": "5c54698efb9200fa36d2b03f07410c365ab2ee6860028c24f9db7579ee0e7e68",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          44.640208,
+          51.525968
+        ]
+      ],
+      "pm_gap_s": 6.88576,
+      "slug": "btc-updown-5m-1787696700",
+      "status": "OK",
+      "window_start": 1787696700
+    },
+    {
+      "archive_file": "eth-updown-5m-1787696700.jsonl.gz",
+      "archive_sha256": "8f8a32f27ead33c4b3093adce761a77192ea5b61add89666c0bd69ee6710ef95",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787696700",
+      "status": "OK",
+      "window_start": 1787696700
+    },
+    {
+      "archive_file": "btc-updown-5m-1787697000.jsonl.gz",
+      "archive_sha256": "a6931ccb4a72d84e2a5972f83054df7c25709e19bee0a5be7dd63cfbe6f5498c",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          7.486073,
+          8.804332
+        ],
+        [
+          19.910662,
+          21.20199
+        ],
+        [
+          50.969581,
+          62.416667
+        ],
+        [
+          102.309668,
+          113.54776
+        ]
+      ],
+      "pm_gap_s": 25.294764,
+      "slug": "btc-updown-5m-1787697000",
+      "status": "OK",
+      "window_start": 1787697000
+    },
+    {
+      "archive_file": "eth-updown-5m-1787697000.jsonl.gz",
+      "archive_sha256": "8e52ca69ece65fb190d5df422cd5481b024b96c90364f94952a2d95b89697268",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787697000",
+      "status": "OK",
+      "window_start": 1787697000
+    },
+    {
+      "archive_file": "btc-updown-5m-1787697300.jsonl.gz",
+      "archive_sha256": "88b13112289cd28c3ace765ad8db78c6aa420ed597e5076c0ff1eec9e329b61b",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          91.395795,
+          92.711425
+        ],
+        [
+          107.265783,
+          108.589485
+        ],
+        [
+          145.286259,
+          146.578183
+        ],
+        [
+          236.460789,
+          239.288491
+        ]
+      ],
+      "pm_gap_s": 6.758959,
+      "slug": "btc-updown-5m-1787697300",
+      "status": "BINANCE_GAP_OR_TRUNCATED",
+      "window_start": 1787697300
+    },
+    {
+      "archive_file": "eth-updown-5m-1787697300.jsonl.gz",
+      "archive_sha256": "58664e3faf4ba21dc11b69b2a3217b879768850b31bfb38cfb9626a50c04762f",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787697300",
+      "status": "OK",
+      "window_start": 1787697300
+    },
+    {
+      "archive_file": "btc-updown-5m-1787697600.jsonl.gz",
+      "archive_sha256": "44e20e937882f83891ba77e41852d952f093f33a62af14ec7f1666e1f0620d5b",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          218.060681,
+          219.896634
+        ],
+        [
+          230.719725,
+          232.013772
+        ]
+      ],
+      "pm_gap_s": 3.13,
+      "slug": "btc-updown-5m-1787697600",
+      "status": "OK",
+      "window_start": 1787697600
+    },
+    {
+      "archive_file": "eth-updown-5m-1787697600.jsonl.gz",
+      "archive_sha256": "c76236b24e3208b03f127dc149dcd649e77980cb902b61d01f917ba964798c79",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787697600",
+      "status": "OK",
+      "window_start": 1787697600
+    },
+    {
+      "archive_file": "btc-updown-5m-1787697900.jsonl.gz",
+      "archive_sha256": "369169f9dd918498a935f4707447c2ba08575260fa0f2ef4f5df29459de96328",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          13.432317,
+          14.74329
+        ],
+        [
+          37.151465,
+          38.459558
+        ]
+      ],
+      "pm_gap_s": 2.619065,
+      "slug": "btc-updown-5m-1787697900",
+      "status": "OK",
+      "window_start": 1787697900
+    },
+    {
+      "archive_file": "eth-updown-5m-1787697900.jsonl.gz",
+      "archive_sha256": "63f6512dc4c38f0ea7b74ab5067f23867ac7a2992c17619abcdeaf5f03c6d576",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787697900",
+      "status": "OK",
+      "window_start": 1787697900
+    },
+    {
+      "archive_file": "btc-updown-5m-1787698200.jsonl.gz",
+      "archive_sha256": "f4dcde832ac84cc89f2533d2bd45ae351fc6bcceb7466f890d9f7b0965117092",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "btc-updown-5m-1787698200",
+      "status": "BINANCE_GAP_OR_TRUNCATED",
+      "window_start": 1787698200
+    },
+    {
+      "archive_file": "eth-updown-5m-1787698200.jsonl.gz",
+      "archive_sha256": "440f5377e00199441c7f7f11581ade8c7bd1eade6537b3ffc667e66928c1af2d",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787698200",
+      "status": "OK",
+      "window_start": 1787698200
+    },
+    {
+      "archive_file": "btc-updown-5m-1787698500.jsonl.gz",
+      "archive_sha256": "b2116c4c237e3c33d5df91fee2286ecd71c80d0aa8c7b483ffdd7f0125d96ae8",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          71.339578,
+          82.64411
+        ],
+        [
+          182.55851,
+          193.858516
+        ],
+        [
+          271.096122,
+          272.408754
+        ]
+      ],
+      "pm_gap_s": 23.917171,
+      "slug": "btc-updown-5m-1787698500",
+      "status": "OK",
+      "window_start": 1787698500
+    },
+    {
+      "archive_file": "eth-updown-5m-1787698500.jsonl.gz",
+      "archive_sha256": "7965469ac0aeeeb52e8ec560628dfa0ac518e7599b3c52b1da6036c71506dd9a",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787698500",
+      "status": "OK",
+      "window_start": 1787698500
+    },
+    {
+      "archive_file": "btc-updown-5m-1787698800.jsonl.gz",
+      "archive_sha256": "a5c86789fb339115b1d3b9338dd843ae477cb84cd7d25df994d333c1e38dfb72",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          28.461517,
+          29.784575
+        ]
+      ],
+      "pm_gap_s": 1.323058,
+      "slug": "btc-updown-5m-1787698800",
+      "status": "OK",
+      "window_start": 1787698800
+    },
+    {
+      "archive_file": "eth-updown-5m-1787698800.jsonl.gz",
+      "archive_sha256": "7db2c5c00f3ca4afa69aef2221043a03d379ef5b25dfc1be5f2ab89cabdbd7a6",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787698800",
+      "status": "OK",
+      "window_start": 1787698800
+    },
+    {
+      "archive_file": "btc-updown-5m-1787699100.jsonl.gz",
+      "archive_sha256": "8ff3332d31da69f1e965faef3aedfae6c1769f89b94970dd6445aaa82abdf2ab",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          113.502509,
+          118.396504
+        ]
+      ],
+      "pm_gap_s": 4.893995,
+      "slug": "btc-updown-5m-1787699100",
+      "status": "OK",
+      "window_start": 1787699100
+    },
+    {
+      "archive_file": "eth-updown-5m-1787699100.jsonl.gz",
+      "archive_sha256": "12c57aa34b686f139c44226207880e018df0aee9e245dea60a8b9370e512d343",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787699100",
+      "status": "OK",
+      "window_start": 1787699100
+    },
+    {
+      "archive_file": "btc-updown-5m-1787699400.jsonl.gz",
+      "archive_sha256": "99856986243233f07609117419ada5be1f696ea0412b9c4c01060d6c4e2ea6a1",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          36.445962,
+          37.739707
+        ],
+        [
+          67.618772,
+          78.964633
+        ],
+        [
+          100.043797,
+          101.341033
+        ],
+        [
+          147.117162,
+          148.438733
+        ],
+        [
+          198.320054,
+          209.6608
+        ]
+      ],
+      "pm_gap_s": 26.599157,
+      "slug": "btc-updown-5m-1787699400",
+      "status": "OK",
+      "window_start": 1787699400
+    },
+    {
+      "archive_file": "eth-updown-5m-1787699400.jsonl.gz",
+      "archive_sha256": "37959a09b3790e8908063965a3e9f862302c5430b3d1056942bc6df22ecd48f7",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787699400",
+      "status": "OK",
+      "window_start": 1787699400
+    },
+    {
+      "archive_file": "btc-updown-5m-1787699700.jsonl.gz",
+      "archive_sha256": "5abd2944aa3028869c0cfe31c071796dd156fbd7676124c7ce355220624c2f81",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          195.623132,
+          205.949171
+        ],
+        [
+          218.853076,
+          220.142143
+        ],
+        [
+          232.659554,
+          233.960712
+        ]
+      ],
+      "pm_gap_s": 12.916264,
+      "slug": "btc-updown-5m-1787699700",
+      "status": "OK",
+      "window_start": 1787699700
+    },
+    {
+      "archive_file": "eth-updown-5m-1787699700.jsonl.gz",
+      "archive_sha256": "be9094b8ac18cdd0cf0222dba6a387c64d9a62cdb387858fe5ce3db691a1ea4b",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787699700",
+      "status": "OK",
+      "window_start": 1787699700
+    },
+    {
+      "archive_file": "btc-updown-5m-1787700000.jsonl.gz",
+      "archive_sha256": "14f3bc48facefca4000a4e120ef112a1b123e1a0f70c1c41e2e4768fbfbc44d9",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          166.795319,
+          176.482969
+        ]
+      ],
+      "pm_gap_s": 9.68765,
+      "slug": "btc-updown-5m-1787700000",
+      "status": "OK",
+      "window_start": 1787700000
+    },
+    {
+      "archive_file": "eth-updown-5m-1787700000.jsonl.gz",
+      "archive_sha256": "4a3b113486c588a6d9a514e482b2a67c106cc794996ad124cdf273cf3db30e40",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787700000",
+      "status": "OK",
+      "window_start": 1787700000
+    },
+    {
+      "archive_file": "btc-updown-5m-1787700300.jsonl.gz",
+      "archive_sha256": "3c6b259484fd4d55c66f2d0aa6eaf5e612f105c4d5ff2a381df1c5522057dc65",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          97.856108,
+          109.182317
+        ],
+        [
+          199.087164,
+          210.412223
+        ],
+        [
+          237.756394,
+          239.072122
+        ],
+        [
+          246.111289,
+          247.413198
+        ]
+      ],
+      "pm_gap_s": 25.268906,
+      "slug": "btc-updown-5m-1787700300",
+      "status": "OK",
+      "window_start": 1787700300
+    },
+    {
+      "archive_file": "eth-updown-5m-1787700300.jsonl.gz",
+      "archive_sha256": "d0d10873d1140b8f46bf2e97219b448ad659cb4cc1fec28f2ee236cf8ddfffb1",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787700300",
+      "status": "OK",
+      "window_start": 1787700300
+    },
+    {
+      "archive_file": "btc-updown-5m-1787700600.jsonl.gz",
+      "archive_sha256": "2bea1e8477a0a5d999d953cc68b6405e58d34666c8fdeaaca54b1c6835cc3621",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          58.99458,
+          66.260427
+        ],
+        [
+          82.136732,
+          83.450269
+        ],
+        [
+          143.328705,
+          154.6733
+        ],
+        [
+          244.556925,
+          255.884446
+        ]
+      ],
+      "pm_gap_s": 31.2515,
+      "slug": "btc-updown-5m-1787700600",
+      "status": "OK",
+      "window_start": 1787700600
+    },
+    {
+      "archive_file": "eth-updown-5m-1787700600.jsonl.gz",
+      "archive_sha256": "c8bed1d49f941cdd607aa237495db64ed3d06a67861c069505fa12c7a461e9ac",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787700600",
+      "status": "OK",
+      "window_start": 1787700600
+    },
+    {
+      "archive_file": "btc-updown-5m-1787700900.jsonl.gz",
+      "archive_sha256": "9cad1d0945a1304d816e6bb64b93e0ec814b4630f85cd5e687a8dfccaf9a5546",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          29.950749,
+          41.467516
+        ]
+      ],
+      "pm_gap_s": 11.516767,
+      "slug": "btc-updown-5m-1787700900",
+      "status": "OK",
+      "window_start": 1787700900
+    },
+    {
+      "archive_file": "eth-updown-5m-1787700900.jsonl.gz",
+      "archive_sha256": "924d9cbec39b51f9a4d188d63187d3b557ae6841e22b95f9d3229f6abb9d00ed",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787700900",
+      "status": "OK",
+      "window_start": 1787700900
+    },
+    {
+      "archive_file": "btc-updown-5m-1787701200.jsonl.gz",
+      "archive_sha256": "29e85c9a4d10ae93814750a9ff5a1b8d588f5ece8f3192b19da692bb431becd5",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          31.279191,
+          42.311261
+        ],
+        [
+          132.185759,
+          143.5485
+        ],
+        [
+          155.769183,
+          157.085508
+        ]
+      ],
+      "pm_gap_s": 23.711135,
+      "slug": "btc-updown-5m-1787701200",
+      "status": "OK",
+      "window_start": 1787701200
+    },
+    {
+      "archive_file": "eth-updown-5m-1787701200.jsonl.gz",
+      "archive_sha256": "dbe3fcd847a43a01b93a9a685e1fde303c651d457e6918f73469fe74acd32b69",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787701200",
+      "status": "OK",
+      "window_start": 1787701200
+    },
+    {
+      "archive_file": "btc-updown-5m-1787701500.jsonl.gz",
+      "archive_sha256": "908ce501820acb7018a857d4674e250bd7fc8673359f6c3a7720ea95ced37240",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          19.736582,
+          21.053112
+        ],
+        [
+          50.945591,
+          58.821694
+        ],
+        [
+          84.240065,
+          85.532538
+        ],
+        [
+          135.427802,
+          146.769269
+        ],
+        [
+          165.02133,
+          166.307991
+        ]
+      ],
+      "pm_gap_s": 23.113235,
+      "slug": "btc-updown-5m-1787701500",
+      "status": "OK",
+      "window_start": 1787701500
+    },
+    {
+      "archive_file": "eth-updown-5m-1787701500.jsonl.gz",
+      "archive_sha256": "2c946a81cf86b7e6823cd8a81f9f8c365ac81a80f3d9b37319459163bcbb31fc",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787701500",
+      "status": "OK",
+      "window_start": 1787701500
+    },
+    {
+      "archive_file": "btc-updown-5m-1787701800.jsonl.gz",
+      "archive_sha256": "c58d2fd07d1d51c08d4a87c8bd7688182cc35edc46796ef725ce2404a7da2758",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "btc-updown-5m-1787701800",
+      "status": "OK",
+      "window_start": 1787701800
+    },
+    {
+      "archive_file": "eth-updown-5m-1787701800.jsonl.gz",
+      "archive_sha256": "e4c020fdb90d677c97031a8f2a5b1f5f1f8a3ae851ed917304bc24d0f1163fad",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787701800",
+      "status": "OK",
+      "window_start": 1787701800
+    },
+    {
+      "archive_file": "btc-updown-5m-1787702100.jsonl.gz",
+      "archive_sha256": "89774d9b9747ea5040c5e6fcf61fab3f89eed3db22cb927286d670ae136b97fa",
+      "coin": "btc",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [
+        [
+          34.7692,
+          43.190988
+        ],
+        [
+          113.099897,
+          124.416469
+        ]
+      ],
+      "pm_gap_s": 19.73836,
+      "slug": "btc-updown-5m-1787702100",
+      "status": "OK",
+      "window_start": 1787702100
+    },
+    {
+      "archive_file": "eth-updown-5m-1787702100.jsonl.gz",
+      "archive_sha256": "0402a496664ca746c42056ecf3e49f3d9ef3321d828b85b5e3a6d4582400e405",
+      "coin": "eth",
+      "day": "2026-08-25",
+      "pm_gap_intervals": [],
+      "pm_gap_s": 0,
+      "slug": "eth-updown-5m-1787702100",
+      "status": "OK",
+      "window_start": 1787702100
+    }
+  ],
+  "supersede_reason": "R-173 RULED that row-level statuses govern: 'complete windows only' means the window's tape span exists end-to-end, and a PM collector gap INSIDE an existing window excludes ROWS, not the window. v2 excluded 137 slugs wholesale as PM_GAP, which is the losing reading. Grounds given: train/test comparability (a test population admitted under a different rule than the training population measures the rule change, not the model), the frozen incumbent's manifest pins its population under this convention, and deployment realism. v3 re-bases accordingly and carries PM gaps as PER-SLUG DISCLOSURE instead of exclusion. THE CORRECTION IS DA'S, NOT BE'S -- BE's build was right and this receipt was wrong; the 133-slug disagreement my verifier reported was a definition, not a bug. Rule 13: v2 is not edited; it stands as provenance for what was declared before the ruling.",
+  "supersedes": "da_development_topup_v2.json"
+}
