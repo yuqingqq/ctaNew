@@ -247,6 +247,70 @@ def fit_ridge(X, y, lam=1.0):
     return r[0] if r else [0.0] * k
 
 
+# ---- R-157(1): generation weighting, for CANDIDATE arms only --------------
+# WHY: the fit sees ROWS, but the decision unit is the GENERATION. DA measured
+# the exposure -- a 150-row generation currently outweighs a 1-row generation
+# 150:1 in the unweighted fit, and the imbalance is differentially worse on
+# btc (rows-per-action 1.7169 vs eth 1.1169). w = 1/n_rows(generation) makes
+# every generation contribute equally, matching the unit the evaluator and the
+# policy both use.
+#
+# THESE ARE NEW FUNCTIONS. `fit_logistic` and `fit_ridge` above are NOT
+# touched, because R-157(2) requires the confirmed PM_PLUS_FINE reference arm
+# to stay bit-for-bit -- an incumbent rewritten mid-comparison is no longer
+# the thing that was confirmed. `selftest` asserts uniform weights reproduce
+# the unweighted fit exactly, so the two paths are known to agree where they
+# should rather than assumed to.
+def generation_weights(kept: list, key=lambda r: (r.get("slug"), r.get("side"),
+                                                  r.get("gen"))) -> list:
+    """w_i = 1 / (number of rows sharing row i's generation)."""
+    counts: dict = {}
+    for r in kept:
+        counts[key(r)] = counts.get(key(r), 0) + 1
+    return [1.0 / counts[key(r)] for r in kept]
+
+
+def fit_logistic_w(X, y, sw, lam=1e-3, it=120):
+    """Weighted IRLS. With sw all-ones this is `fit_logistic` exactly."""
+    k = len(X[0]); w = [0.0] * k
+    # DIVISOR IS len(X), NOT sum(sw). The penalty is applied once per SAMPLE
+    # inside the loop below, so dividing by total weight makes its net strength
+    # len(X)/sum(sw) -- wrong whenever weights are non-uniform, and wrong in a
+    # way that scales with rows-per-generation, which differs by coin. Caught
+    # by the replication-invariance control: the error grew linearly with the
+    # replication factor and was one-signed, which is a bug signature, not
+    # float noise.
+    n_samp = len(X) or 1
+    for _ in range(it):
+        g = [0.0] * k; H = [[0.0] * k for _ in range(k)]
+        for xi, yi, si in zip(X, y, sw):
+            z = max(-30, min(30, sum(a * b for a, b in zip(w, xi))))
+            p = 1 / (1 + math.exp(-z)); e = yi - p; ww = p * (1 - p)
+            for a in range(k):
+                g[a] += si * e * xi[a] - (lam * w[a] if a else 0.0) / n_samp
+                for b in range(k):
+                    H[a][b] += si * ww * xi[a] * xi[b]
+        for a in range(k):
+            H[a][a] += lam
+        w2 = _solve(H, g, w)
+        if w2 is None:
+            break
+        w, done = w2
+        if done:
+            break
+    return w
+
+
+def fit_ridge_w(X, y, sw, lam=1.0):
+    """Weighted ridge. With sw all-ones this is `fit_ridge` exactly."""
+    k = len(X[0])
+    H = [[sum(sw[i] * X[i][a] * X[i][b] for i in range(len(X)))
+          + (lam if a == b else 0) for b in range(k)] for a in range(k)]
+    g = [sum(sw[i] * X[i][a] * y[i] for i in range(len(X))) for a in range(k)]
+    r = _solve(H, g, [0.0] * k)
+    return r[0] if r else [0.0] * k
+
+
 def predict_p(w, x):
     return 1 / (1 + math.exp(-max(-30, min(30, sum(a * b for a, b in zip(w, x))))))
 
@@ -466,6 +530,66 @@ def selftest() -> int:
     ok(fl[ii2] > 0.7 and fo[ii2] < -0.7,
        "sym override reads the BTC book (bid-heavy), not ETH (ask-heavy)")
     _hm._BN_CACHE.clear()
+    # ---- R-157 weighting falsifiers -------------------------------------
+    import random as _rnd
+    _rnd.seed(7)
+    # NON-SEPARABLE on purpose. A cleanly separable fixture makes the
+    # logistic diverge (coefficients ran to ~40 and hit the z-clamp), so the
+    # fit has no unique optimum and tiny summation-order differences produce
+    # huge coefficient differences. BE's first draft used separable labels and
+    # the invariance control below failed at 1.2 -- the fixture was degenerate,
+    # not the weighting. Label noise gives a well-conditioned optimum.
+    _X = [[1.0, _rnd.gauss(0, 1), _rnd.gauss(0, 1)] for _ in range(120)]
+    _y = [1 if (x[1] + 0.5 * x[2] + _rnd.gauss(0, 1.5)) > 0 else 0 for x in _X]
+
+    _a = fit_logistic(_X, _y)
+    _b = fit_logistic_w(_X, _y, [1.0] * len(_X))
+    ok(max(abs(p - q) for p, q in zip(_a, _b)) < 1e-9,
+       "KNOWN-GOOD: uniform weights reproduce the UNWEIGHTED logistic exactly "
+       "-- the reference arm's path is provably unchanged")
+    _ry = [x[1] + 0.5 * x[2] for x in _X]
+    ok(max(abs(p - q) for p, q in zip(fit_ridge(_X, _ry),
+                                      fit_ridge_w(_X, _ry, [1.0] * len(_X)))) < 1e-9,
+       "and uniform weights reproduce the unweighted ridge exactly")
+
+    # THE DEFINING PROPERTY: duplicating a generation's rows must not change
+    # the weighted fit. This is the whole point of w = 1/n_rows.
+    _X2 = _X + [_X[0]] * 9
+    _y2 = _y + [_y[0]] * 9
+    _sw2 = [1.0] * len(_X); _sw2[0] = 0.1
+    _sw2 = _sw2 + [0.1] * 9
+    _c = fit_logistic_w(_X2, _y2, _sw2)
+    # Tolerance 1e-12: the correct implementation achieves ~1e-16 (machine
+    # epsilon). The loose 1e-6 BE first wrote would have PASSED a real bug --
+    # the penalty divisor was sum(sw) instead of len(X), over-shrinking
+    # coefficients by len(X)/sum(sw). That error grows with rows-per-generation,
+    # which differs by coin (btc 1.7169 vs eth 1.1169), so it would have
+    # injected a COIN-DEPENDENT bias into the very cross-coin comparison
+    # R-156(2) exists to protect. A tolerance set to whatever makes the test
+    # pass is not a test.
+    ok(max(abs(p - q) for p, q in zip(_b, _c)) < 1e-12,
+       "POSITIVE CONTROL: replicating one row 10x while weighting each 1/10 "
+       "leaves the fit UNCHANGED to machine precision -- a 150-row generation "
+       "can no longer outvote a 1-row generation")
+
+    # and the same invariance at a larger replication factor, because the
+    # failed version's error GREW with reps while a float-noise floor does not
+    _X3 = _X + [_X[0]] * 49
+    _y3 = _y + [_y[0]] * 49
+    _sw3 = [1.0] * len(_X); _sw3[0] = 0.02; _sw3 = _sw3 + [0.02] * 49
+    ok(max(abs(p - q) for p, q in
+           zip(_b, fit_logistic_w(_X3, _y3, _sw3))) < 1e-12,
+       "invariance holds at 50x replication too -- a divisor bug shows up as "
+       "error GROWING with the replication factor, which one fixture hides")
+
+    _g = generation_weights([{"slug": "s", "side": "B", "gen": 1},
+                             {"slug": "s", "side": "B", "gen": 1},
+                             {"slug": "s", "side": "B", "gen": 2}])
+    ok(_g == [0.5, 0.5, 1.0],
+       "generation_weights gives each GENERATION unit mass, not each row")
+    ok(abs(sum(_g) - 2.0) < 1e-12,
+       "so total weight equals the ACTION count (2), not the row count (3)")
+
     print(f"harmful_hazard_model selftest: {checks} checks OK")
     return 0
 
