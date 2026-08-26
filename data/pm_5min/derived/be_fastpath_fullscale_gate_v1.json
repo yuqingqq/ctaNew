@@ -1,0 +1,67 @@
+{
+ "ADOPTED": {
+  "functions": [
+   "fit_logistic",
+   "fit_logistic_w",
+   "fit_ridge",
+   "fit_ridge_w",
+   "zscale",
+   "predict_p",
+   "generation_weights"
+  ],
+  "licensed_for": "post-freeze surfaces: Phase-2 fits, daily refits, Phase-4 grids",
+  "not_licensed_for": "the frozen candidate, which was and stays stdlib-fitted",
+  "scope": "the seven FIT twins only"
+ },
+ "NOT_ADOPTED_AND_NOT_DELIVERED": {
+  "columnar_cache": "NOT BUILT by this run and its benefit is UNVERIFIED",
+  "consequence": "the '0.04s parse' benefit does NOT follow from this gate. Wiring the cache into the row-loading path is separate work needing its own gate.",
+  "measured_instead": "4.0x overall (4525s -> 1141s). The ~226x applies to the fits; parse+features are unchanged and are now the dominant cost.",
+  "why": "all seven swapped functions are FIT functions; none touches row loading, so save_columnar/load_columnar were never invoked. run_fine still json.loads the 1.24 GB file."
+ },
+ "as_of_utc": "2026-08-26T14:47:01Z",
+ "authority": "R-167(b) / R-155(2): adoption licensed only by ONE full-scale reproduction to the cent",
+ "compared_against": {
+  "file": "harmful_fine_comparison_v3_FROZEN_TARGETS.json",
+  "immutable": true,
+  "sha256": "3279e2aab3c3723e4832d676dbb014f43eccd09ecf111e2a10107f5dd3cf8228"
+ },
+ "gated_fields": 8,
+ "honest_note": "The speedup is real and large but it is 4x, not 226x, at the level that matters to a Phase-2 run. Quoting 226x for end-to-end work would overstate it by ~56x.",
+ "independent_precheck": {
+  "at_builder_width_n4000_k60": {
+   "ecv_product": 6.2e-15,
+   "logistic": 1.8e-15,
+   "logistic_w": 1.8e-15,
+   "max_abs_ecv": 5.8215,
+   "ridge": 1.6e-15,
+   "ridge_w": 8.9e-16,
+   "zscale_mu": 8.3e-17,
+   "zscale_sd": 2e-15
+  },
+  "by": "BE, before launching",
+  "verified_r159_divisor_present": true,
+  "verified_z_clamp_present": true
+ },
+ "protocol": "BE_FASTPATH_FULLSCALE_GATE_V1",
+ "run": {
+  "cap": "MemoryMax=14G in research.slice",
+  "cpu_time_s": 1141,
+  "exit": "clean",
+  "peak_bytes": 8000000000,
+  "unit": "be-fastgate-1787754474"
+ },
+ "structural_checks": {
+  "builder_file_edited": false,
+  "builder_sha_after": "0091fe75c38af79e",
+  "builder_sha_before": "0091fe75c38af79e",
+  "builder_sha_matches_freeze_receipt_pin": true,
+  "builder_sha_matches_manifest_pin": true,
+  "n_functions_swapped": 7,
+  "populations_identical_to_stdlib_run": "btc 605243/320830/284413, eth 520033/261936/258097",
+  "swap_verified_by_identity_before_run": true,
+  "why_these_matter": "a gate that silently fell back to the stdlib path would reproduce the targets perfectly and prove nothing; the identity assertion makes that a raise, not a quiet pass"
+ },
+ "verdict": "PASS \u2014 CENT_EXACT",
+ "worst_cent_diff": 0.0
+}
