@@ -15749,6 +15749,39 @@ midnight**. Phase-4 cell execution is deliberately NOT started tonight: the
 score-source parameter should know freeze-B's answer first, and the grids
 run fine tomorrow while forward day one accrues.
 
+### R-179 — **THE BTC GAP CAUSE IS DIAGNOSED (acting-OPS, read-only): a REMOTE per-connection throughput choke on the Polymarket WS edge — the client is exonerated by its own instrumentation. Minimal fix identified (btc token-shard, ~25 lines, one ~10-30s restart). Preparation ordered NOW; the deploy decision is the USER'S, wanted before 00:00. The "+1 drip" closes as crash debris.** (2026-08-26 19:1x UTC)
+
+**(1) Diagnosis of record** (`live/pm_research/BTC_GAP_DIAGNOSIS_2026-08-26.md`,
+committed): the venue/path cannot sustain the btc channel's ~273 KB/s to us —
+HIGH confidence remote (client never paused, queues at 80 of 65,536, loop lag
+≤79 ms across all 1,106 btc disconnects; three close causes are one condition;
+flat time-of-day; 9× worsening at UNCHANGED volume = the threshold moved, not
+our traffic; the Binance lane on the same NIC exonerates the host). Why btc:
+pure rate — btc ~384 msg/s vs eth ~72; every coin ≤143 msg/s is clean.
+
+**(2) Fix candidate ratified for preparation:** btc-only TOKEN-SHARD — two
+websockets per btc market, one per asset_id, same buffer/file (~25 lines in
+`collect_pm.py`); halves per-connection bytes to ~136 KB/s (between eth's
+proven-safe 51 and btc's failing 273) AND adds flow diversity (UP≈1−DOWN with
+per-change best bid/ask ⇒ half the tape still carries the full quote picture;
+full blackout needs a double stall). Adjunct: btc ping 10/10→5/5. Anti-fixes
+named and refused (client buffers measured nowhere near limits). One restart,
+~10-30 s gap, drain machinery proven three times. **DA PREPARES the patch and
+an ADDITIVE single-asset smoke test now (a test connection beside the live
+collector — validates the one unverified semantic without touching anything);
+NO deploy, NO restart without the user's explicit go.** Doing nothing is
+priced: the condition holds at ~17-28 gaps/hr, so day one's btc tape would be
+quarantine-grade again.
+
+**(3) The 08-26 "+1 drip" CLOSES as crash debris:** all seven coins miss the
+SAME six windows (04:05-04:30); no ongoing drip; btc's extra shortfall is a
+0-byte/never-gzipped shard from the death minute; the 03:50 btc shard
+(73.8 MB, complete, ungzipped) is salvageable if wanted.
+
+**(4) Sequencing bound in:** tonight 00:00:30 = CLOSING verdict on 08-26 +
+opening of day one; day one VERIFIES at 08-28T00:00:30Z and **BE scores day
+one only after that verdict passes.**
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
