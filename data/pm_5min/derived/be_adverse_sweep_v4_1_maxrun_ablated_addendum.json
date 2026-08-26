@@ -1,0 +1,83 @@
+{
+ "NO_IN_SAMPLE_VERDICT": "None computed, none stored. This arm has not been scored on any tape at the time of filing \u2014 which is the point of filing now.",
+ "ablation": {
+  "feature_masked": "sw_maxrun_1s",
+  "index_in_names_in_order": 5,
+  "masked_coefficient": 0.0,
+  "method": "MASK_AT_INFERENCE",
+  "no_refit": true,
+  "parent_coefficient": 0.0035022494709243137,
+  "why_no_refit": "A refit would be a NEW CANDIDATE selecting on the same consumed tape. Masking at inference changes nothing about what was fitted or when; it removes one term's contribution at scoring time and inherits the parent's freeze instant, so it borrows no additional look at the data."
+ },
+ "addendum_hash": "3199287fa58b0da76a03ede88c251e76322b20c8dbdf25b835e1c95a68628ea3",
+ "authorisation": "coordinator R-146(3): the sw_maxrun_1s-ablated arm is ADMITTED via mask-at-inference (coefficient -> 0, no refit).",
+ "coefficients_btc_masked": [
+  -1.1848325109761912,
+  0.08274739070309729,
+  -0.5082217993353197,
+  -0.0038874269226567156,
+  -0.40135029487352314,
+  0.0,
+  -0.0070015754571894654,
+  0.08396017714907456,
+  -0.0021314637342713903,
+  0.5952863334923766,
+  0.00015273649454039607,
+  4.445520123293287
+ ],
+ "decision_eligible": false,
+ "features_in_order": [
+  "const",
+  "pm_logit",
+  "side",
+  "sw_levels_1s",
+  "sw_purity_1s",
+  "sw_maxrun_1s",
+  "sw_signed_1s",
+  "sw_burst_1s_10s",
+  "sw_levels_5s",
+  "bn_imb_5s",
+  "bn_ticks_5s",
+  "bn_spread_5s"
+ ],
+ "filed_at_utc": "2026-08-26T03:49:32Z",
+ "filed_before_first_scoring": true,
+ "inherits_from_parent": {
+  "declared_nulls": {
+   "design": "permuted-target refit \u2014 shuffle the 5-second drift target, REFIT the same OLS, re-gate, recompute. Refit-style because a feature-only placebo cannot price free-parameter optimism.",
+   "fixed_before_any_forward_result": true,
+   "min_permutations": 200,
+   "statistic": "max",
+   "why_200": "BE ran 8, saw a result, ran 30, and the verdict REVERSED on two cells. A null max is an extreme-order statistic biased downward at small counts, so an UNDER-SAMPLED CORRECT NULL FLATTERS AS MUCH AS A WRONG ONE."
+  },
+  "era_purity_disclosure": {
+   "ONE_FEATURE_IS_NOT": "sw_maxrun_1s = longest same-direction trade RUN depends on WITHIN-SECOND ORDERING, i.e. sub-second structure, which pre-boundary rows do not reliably carry: p99 holds up to ~0.6s of parse-backlog error CONCENTRATED IN BURSTS. A sweep IS a burst, so the exposure is worst exactly where the feature is supposed to fire. The other five sweep features are order-free and 1s-safe.",
+   "boundary_recv_ns": 1787579334881534478,
+   "boundary_utc": "2026-08-24T13:48:54Z",
+   "disposition": "BE does NOT silently drop the feature \u2014 that would refit and void the freeze. sw_maxrun_1s is FLAGGED as era-exposed; the forward evaluation must report v4 both WITH and WITHOUT it, and forward tape is all POST-boundary so forward scoring is clean either way.",
+   "fit_rows_pre_boundary": "10301 of 10301 = 100%",
+   "rule": "CLAUDE.md rule 5",
+   "status": "ENTIRE fit population is PRE-BOUNDARY. Pre-boundary mm_hf tape is admissible for >=1s bars ONLY, and this receipt now says so as the rule requires. v4 sweep bars ARE 1-second bars, so the aggregate features are admissible."
+  },
+  "fit_population_disclosure": "REPLAY ARM (edge_layer1 simulated JOIN_BBO fills). **2026-08-20 17:44\u201320:14 UTC \u2014 THIRTY CONSECUTIVE 5-MINUTE WINDOWS = 2.5 CONTIGUOUS HOURS OF ONE DAY**, not multi-day tape. iw.select(30) walks sorted slugs chronologically, so \"first 30\" is \"EARLIEST 30\" \u2014 the section-1f selector defect. v4 said only \"PRE-FREEZE tape only\", which implied breadth it does not have. n=10,216 fills is a large n on a NARROW population: G=1 day, one 2.5-hour regime.",
+  "forward_clock": "the PARENT's. This arm gets NO new clock, because masking used no new data.",
+  "frozen_at_utc": "2026-08-25T02:45:49Z"
+ },
+ "kind": "ADDENDUM \u2014 a third racer derived from v4.1 by MASK-AT-INFERENCE. NOT a new fit.",
+ "multiplicity": {
+  "adverse_race_n_candidates": 3,
+  "members": [
+   "be_adverse_move_candidate_v2.1.json (settlement horizon)",
+   "be_adverse_sweep_candidate_v4.1.json (5s drift, sweep)",
+   "this addendum (v4.1 with sw_maxrun_1s masked)"
+  ],
+  "rule": "R-146(3): adverse-race multiplicity = 3 from now on, reported in EVERY daily report. A clears-claim is judged against a null accounting for three, not one."
+ },
+ "parent": {
+  "builder_sha256": "33f1f00292dae94517fbc315541862eea1d7e715fec6bbf7b6ae88d5953f5400",
+  "candidate_hash": "49ed05bd1dfc4846f76090a07a2e0655e9cf92ad76335899dc8cb3b580661987",
+  "frozen_at_utc": "2026-08-25T02:45:49Z",
+  "receipt": "be_adverse_sweep_candidate_v4.1.json"
+ },
+ "protocol": "BE_ADVERSE_SWEEP_V4_1_MAXRUN_ABLATED_ADDENDUM"
+}

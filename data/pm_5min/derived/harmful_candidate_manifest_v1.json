@@ -1,0 +1,125 @@
+{
+ "as_of_utc": "2026-08-26T05:54:15Z",
+ "candidate": {
+  "features_fine": [
+   "bnf_midbps @10,25,50,100,250ms",
+   "bnf_imb_now"
+  ],
+  "features_pm": "54 PM queue/flow features, scales 0.01-5.0s, LAG_S 0.001",
+  "fine_cutoff_s": 0.001,
+  "normalization": "z-score on train rows, applied in place",
+  "spec": "PM_PLUS_FINE (reduced fine)",
+  "thresholds": "per-generation max score, quantile at budget {0.05,0.10,0.15}; first crossing cancels once",
+  "weights": "PENDING -- no fit has completed on this box; the reproduction has never run to completion. Marked PENDING rather than omitted so a reader cannot mistake 'not yet measured' for 'measured as absent'."
+ },
+ "declared_nulls": {
+  "decision_metric": "net_cents (NOT harm share)",
+  "matching": "side x hour strata, matched action count",
+  "n_random": 200
+ },
+ "deps": {
+  "numpy": "2.2.6",
+  "python": "3.12.3",
+  "sklearn": "1.8.0"
+ },
+ "era": {
+  "boundary_ns": 1787579334881534478,
+  "boundary_utc": "2026-08-24T13:48:54Z",
+  "declared_era_key": [
+   "hf_ws_v2_recv_boundary",
+   "IMMEDIATELY_AFTER_WS_RECV_BEFORE_JSON_PARSE"
+  ],
+  "era_end_basis": "last slug t0 1787650200 + WINDOW_S 300 + MARKOUT_S 5 + 5; verified at the artifact",
+  "era_end_s": 1787650510.0,
+  "ledger_distinct_keys": 1,
+  "pinned_literal": true,
+  "why_pinned": "Deriving it from max(started_at_ns) let two collector restarts walk the floor 39.6 h forward and admit 0 of 926 windows (Q-DA-67). A derived boundary redefines yesterday's admissibility."
+ },
+ "freeze_status": "NOT FROZEN. The freeze is the user's decision and Phase-0 reproduction has not yet run.",
+ "git_commit": "f264e60792e38e70ef685bd52bd9f7eff61e9ed8",
+ "git_dirty": true,
+ "hashes": {
+  "data/mm_hf/collector_runs.jsonl": "c3b3a0b0bf83f7b1cd0d8722fb124f5f6fb4962b4e74ff7db350a4220386abcc",
+  "data/pm_5min/derived/harmful_exposure_rows_v3_eraB.json": "19a50195c34d0af21aba81b9f6b9501ea58656212d8448ddd8cc219da26d0f08",
+  "live/pm_research/flow_fill_development.py": "d5f381cccdc4b7b6e12fa80d0c05947c8338bb0683cd7a0e58f74ac53074dce4",
+  "live/pm_research/flow_intensity.py": "e65c812fd42fc8d76c368ebbd6312c8cfbc86f06f2ed0ca726f38e69f783b367",
+  "live/pm_research/harmful_action_eval.py": "0a8c5058a6c5b28b62be62a42e73654bfaab4f3479ec9cb7d3f926bf436885e8",
+  "live/pm_research/harmful_exposure_rows.py": "eb19cd7428de9a40160c42c020513850ee8d945c860f1bf467b04d662f565732",
+  "live/pm_research/harmful_hazard_model.py": "c4976b975c074087c77ebfe1f82070dfd147b41c23c643bd786f0818fb4d1e0b",
+  "live/pm_research/harmful_rows_loader.py": "8b90c48cfe331e7184fdafdaea17ae9168e65eba0f0d4e3f802b250c92df2308",
+  "live/pm_research/policy_bounds_v1.py": "717033ba3b571def77efb50a7ed8d2b4fffd1332df8213c487e2e750a06f0374"
+ },
+ "multiplicity_note": "adverse race = v2.1 alone (multiplicity 1) per R-147(4); the harmful-fill line is separate.",
+ "population": {
+  "by_coin": {
+   "btc": 609775,
+   "eth": 526168
+  },
+  "by_coin_day": {
+   "btc|2026-08-24": 321770,
+   "btc|2026-08-25": 288005,
+   "eth|2026-08-24": 265018,
+   "eth|2026-08-25": 261150
+  },
+  "consumed": true,
+  "correctness_counters": {
+   "boundary_time_violations": 0,
+   "consume_clock_violations": 0,
+   "reconciliation_failures": 0,
+   "unhooked_state_changes": 0
+  },
+  "days": [
+   "2026-08-24",
+   "2026-08-25"
+  ],
+  "first_slug_t0": 1787579400,
+  "last_slug_t0": 1787650200,
+  "n_rows_ok": 1125289,
+  "n_rows_total": 1135943,
+  "n_windows": 471,
+  "name": "v3_4_consumed_fragment",
+  "role": "DEVELOPMENT ONLY -- partial 08-24/25 fragment, five specs already scored on it. Never forward validation.",
+  "schema": "harmful_exposure_v3_4_fill_scoped_markout",
+  "split_embargo_s": 60,
+  "statuses": {
+   "GAP_IN_HORIZON": 10456,
+   "OK": 1125289,
+   "TRUNCATED_HORIZON": 198
+  }
+ },
+ "protocol": "HARMFUL_CANDIDATE_MANIFEST_V1",
+ "reproduction_contract": {
+  "launch": "systemd-run --user --slice=research.slice -p MemoryMax=14G -p OOMScoreAdjust=1000 -- /home/yuqing/pricer-sol/venv/bin/python3 ...",
+  "peak_rss_lower_bound_bytes": 8800000000,
+  "peak_rss_source": "direct MemoryCurrent polling of be-repro2, 2026-08-26T03:51-03:53Z",
+  "peak_rss_status": "LOWER_BOUND_ONLY -- the builder has never completed a run on this box. >8.8 GiB observed; true peak unmeasured.",
+  "streaming_equivalence": "5000 rows field-by-field vs independent full parse: 0 differences",
+  "streaming_load_path": "live/pm_research/harmful_rows_loader.py",
+  "streaming_projected_bytes": 1060000000,
+  "target_latency_ms": 50
+ },
+ "split": {
+  "derived_from": "receipt days[:-1] / days[-1]",
+  "dev_day": "2026-08-25",
+  "supersedes_docstring_claim": "harmful_hazard_model.py:24 declares 'train 2026-08-20/21, development 2026-08-22'. All three days END before the era boundary and NONE appear in this dataset; the docstring is stale and this field governs.",
+  "train_days": [
+   "2026-08-24"
+  ]
+ },
+ "target_scores_to_reproduce": {
+  "btc_PM_PLUS_FINE": {
+   "auc": 0.69231,
+   "harm_avoided_cents_5pct": 9217.5027415,
+   "n_generations": 171452,
+   "net_cents_5pct": 2492.200082000001
+  },
+  "eth_PM_PLUS_FINE": {
+   "auc": 0.731839,
+   "harm_avoided_cents_5pct": 1878.7572594999995,
+   "n_generations": 231721,
+   "net_cents_5pct": 131.69754650000002
+  },
+  "source_receipt": "harmful_fine_comparison_v3.json",
+  "source_sha256_at_snapshot": "3279e2aab3c3723e4832d676dbb014f43eccd09ecf111e2a10107f5dd3cf8228"
+ }
+}
