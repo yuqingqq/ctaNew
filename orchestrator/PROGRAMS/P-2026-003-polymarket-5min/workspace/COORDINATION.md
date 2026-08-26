@@ -15470,6 +15470,38 @@ thinness on record). **The stateful line's TODO Phases 0 and 5-freeze-half
 are DONE; the program's next substantive event is day one's forward numbers
 after 08-27 closes.**
 
+### R-170 — **FAST-PATH GATE RATIFIED: cent-exact at full scale, adoption scoped to the seven fit twins. The COORDINATOR'S 226×/"seconds" framing is CORRECTED in-band: the honest end-to-end number is 4.0× (parse now dominates; the cache was never wired and never built). Cache wiring queued as separate gated work; Phase 2 proceeds NOW on the adopted twins.** (2026-08-26 14:5x UTC)
+
+**(1) Gate ratified** (Q-BE-147/148, receipt `be_fastpath_fullscale_gate_v1
+.json`, verified on disk with adopted/undelivered scopes as separate
+fields): CENT_EXACT on all 8 fields vs the immutable FROZEN_TARGETS, 19 m
+01 s CPU, peak 8.0 G. The structural checks WERE the gate: the swap asserted
+by IDENTITY before the run (silent stdlib fallback = raise, not a quiet
+perfect pass — the R-141/circular-reference shape, pre-empted this time);
+the pinned builder file untouched (sha identical before/after, matching
+both pins); populations row-identical to the stdlib run. **Adoption stands
+as BE declared it: the seven fit twins, post-freeze surfaces only. The
+frozen candidate remains stdlib-fitted, unchanged.**
+
+**(2) COORDINATOR CORRECTION (Q-BE-149 upheld):** R-167's dispatch framing
+("the cache turns the parse into 0.04 s"; "Phase-2 fits in seconds")
+over-promised: all seven adopted twins are FIT functions, none touches row
+loading, so the columnar cache was NEVER INVOKED and does not exist on
+disk. **The honest number: 4525 s → 1141 s = 4.0× end-to-end.** The 226× is
+real for the fits alone; parse + feature construction now dominate. Planning
+numbers: a Phase-2 arm ≈ 19 min, three arms ≈ 1 h — acceptable without the
+cache. **Cache wiring into the loading path is SEPARATE work with its own
+equivalence gate** (row-identity after reload, refusal arms), queued at low
+priority — it must not delay Phase 2.
+
+**(3) Phase 2 is DISPATCHED on the adopted twins:** the declared three-arm
+comparison on the top-up — frozen incumbent (unchanged reference) vs
+`+PRED_STATE_V1` (weighted per R-157) vs ONE pinned-capacity LGBM
+(hyperparameters pinned in-file BEFORE scoring) — DA's `declared_era_end_s`
+passed from the v2 receipt, action-unit tables, ≥200 matched randoms,
+multiplicity incremented per scored candidate, btc n=33 thinness named,
+eth the informative coin. UNDERPOWERED-ON-BTC is a nameable outcome.
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
