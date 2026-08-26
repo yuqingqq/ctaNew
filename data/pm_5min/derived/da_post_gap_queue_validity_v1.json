@@ -1,0 +1,47 @@
+{
+  "H0_exposed_set_is_empty": false,
+  "H0_falsified": true,
+  "authorised_by": "R-173(2), design declared in Q-DA-79 before any read",
+  "built": "/home/yuqing/ctaNew/data/pm_5min/derived/harmful_exposure_rows_v3_topup.json",
+  "by_coin": {
+    "btc": {
+      "exposed": 351,
+      "exposed_OK": 195,
+      "in_gap": 372,
+      "unexposed": 265571
+    }
+  },
+  "counts": {
+    "exposed": 351,
+    "exposed_OK": 195,
+    "in_gap": 372,
+    "unexposed": 265571
+  },
+  "exposed_OK_share_of_gapped_rows": 0.000732,
+  "instrument": "da_post_gap_queue_validity_v1",
+  "n_and_as_of": {
+    "n_gapped_ok_slugs": 133,
+    "n_rows_in_dataset": 645851,
+    "n_rows_in_gapped_slugs": 266294
+  },
+  "qahead_exposed": {
+    "n": 351,
+    "p50": 137.0,
+    "p90": 472.5997
+  },
+  "qahead_unexposed": {
+    "n": 261327,
+    "p50": 40.2,
+    "p90": 333.8284
+  },
+  "reading": "PRE-COMMITTED in Q-DA-79 BEFORE this number existed: Phase 2's gate is a paired comparison on identical rows and all arms see the same post-gap rows, so any unreliability is COMMON-MODE. A large exposed set qualifies what the numbers MEAN and does not invalidate the ranking between arms. Not a retroactive edit.",
+  "receipt": "da_development_topup_v3",
+  "resync_lag_s": {
+    "max": -0.0,
+    "min": -1.135,
+    "n": 351,
+    "p50": -0.0,
+    "p90": -0.0
+  },
+  "slugs_with_no_snapshot_after_gap": []
+}
