@@ -15275,6 +15275,50 @@ point AND past run 2's 8 G kill point — anon 8.0 G (peak 8.2) at ~13 min
 against the 14 G cap, PSI flat, box 19 G available. The furthest any
 reproduction attempt has reached. Outcome pending.
 
+### R-165 — **Phase 3 deliverable LANDED under the coordinator's DE hold: `harmful_stateful_policy.py`, parity battery green (verified independently), training-row ban structural. Its five open design questions are RULED. TODO Phase 3 is BUILT; full-tape integration is Phase-4 work.** (2026-08-26 07:0x UTC)
+
+**(1) The deliverable** (built per R-162(4); coordinator ran the selftest
+independently: **78 checks OK, exit 0**): 1,772 lines, stdlib-only; the
+QR_SKEW_ONLY baseline enters as a generation-native reference-trajectory
+INPUT (what makes sub-second synthetic parity fixtures possible). All seven
+TODO §6 parity gates pass with BOTH falsifier arms each: disabled-predictor
+and theta=+inf bit-identical to an independently-constructed passthrough
+(and to each other — score evaluation provably side-effect-free);
+cancel-and-hold equivalence against a hand-built 13-event trajectory; five
+adversarial crossings → ONE cancel; no fill at/after effectiveness;
+in-latency fill charged stale; constructor refusals for every undeclared
+parameter. In-file authorization (R-126) cites R-162(4).
+`emit_training_rows()` raises unconditionally and `EVENT_KEYS` is a closed
+schema — the no-training-population rule is structural, not procedural.
+Refused-not-defaulted throughout: all 10 policy parameters required.
+
+**(2) RULINGS on the five flagged questions:**
+1. **Queue-reset cost: PRIMARY semantics = policy-induced charging only** —
+   the decision metric is DIFFERENTIAL vs the reference trajectory, and
+   reference-coincident generation starts are common-mode; charging them
+   would tax the policy for events it did not cause. The
+   charge-every-repost reading stays implemented as an ablation cell; every
+   Phase-4 receipt NAMES which cell it reports.
+2. **Post-repost fill model: BOTH arms are a MANDATORY BRACKET**
+   (REFERENCE_FILLS queue-optimistic / NO_FILLS pessimistic) — the
+   P-2026-002 queue-bracket rule imported: a Phase-4 conclusion must hold
+   under both; a sign-flip across the bracket is a FAIL, not a choice.
+3. Below-clock anchoring accepted AS BUILT (pure function of the score
+   stream; eligibility ≥ hold start), documented in-file.
+4. Reduce operations keep SEPARATE counters in the machine; whether reduces
+   share the cancel rate budget is a DECLARED parameter of the Phase-4
+   protocol (a venue-semantics assumption, priced there, not baked here).
+5. **Phase-4 wiring: feed generation-level tranche tables** (as
+   `generation_table` produces); any cell consuming the 1 s-capped per-row
+   latency labels must declare the cap as part of its estimand.
+
+**(3) Status:** TODO Phase 3 is **BUILT and gated-green at the synthetic
+level**. Full-tape replay integration and the latency × reset-cost × budget
+grids are Phase-4 work, gated on Phase 2's winner and a Phase-4 protocol
+freeze (coordinator-gated, drafted before any cell is read). A user-staffed
+DE seat takes this module over whenever one appears; BE and DA do not touch
+it.
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
