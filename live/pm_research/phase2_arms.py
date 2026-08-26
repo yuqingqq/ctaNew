@@ -200,8 +200,16 @@ def stage_score() -> dict:
             "score_drops": sc["drops"], "fit_rows": lin["n_rows"],
             "fit_actions": lin["n_actions"], "fit_positive": lin["n_positive"],
             "fit_drops": lin["drops"]}
-        XS_lin = [sc["PM"][i] + sc["FN"][i] + sc["ST"][i]
-                  for i in range(len(sc["kept"]))]
+        # R-174: NO duplicate materialization. The previous version built
+        # XS_lin (a full concatenated copy of 638k x 81) AND a float64 matrix
+        # for LGBM, on top of the feature-pass lists already resident -- three
+        # copies of the same data, which is the shape that oom-killed the
+        # single-process run. Rows are now concatenated ON DEMAND inside each
+        # arm, and LGBM is fed in CHUNKS so no full matrix ever exists.
+        n_sc = len(sc["kept"])
+
+        def _raw(i):
+            return sc["PM"][i] + sc["FN"][i] + sc["ST"][i]
 
         for arm in D.ARMS:
             if arm == "PM_PLUS_FINE":
@@ -218,22 +226,30 @@ def stage_score() -> dict:
                 mu, sd = lin["norm_mu"], lin["norm_sd"]
                 W, WM = lin["hazard_weights"], lin["value_weights"]
                 ecv = []
-                for raw in XS_lin:
+                for j in range(n_sc):
+                    raw = _raw(j)                       # transient, freed each loop
                     x = [1.0] + [(raw[i] - mu[i]) / sd[i] for i in range(len(mu))]
                     ecv.append(fc.fast_predict_p(W, x) *
                                (float(sum(a * b for a, b in zip(WM, x))) if WM else 0.0))
             else:
                 mu, sd = lin["norm_mu"], lin["norm_sd"]
-                S = np.asarray([[1.0] + [(raw[i] - mu[i]) / sd[i]
-                                         for i in range(len(mu))]
-                                for raw in XS_lin], dtype=np.float64)
                 hb = lgb.Booster(model_file=str(FITDIR / f"lgbm_haz_{coin}.txt"))
-                p = hb.predict(S)
                 vf = FITDIR / f"lgbm_val_{coin}.txt"
-                v = (lgb.Booster(model_file=str(vf)).predict(S)
-                     if vf.exists() else np.zeros(len(S)))
-                ecv = (p * v).tolist()
-                del S
+                vb = lgb.Booster(model_file=str(vf)) if vf.exists() else None
+                CH = 50_000                             # ~32MB per chunk, not ~2GB
+                ecv = []
+                for lo in range(0, n_sc, CH):
+                    hi = min(lo + CH, n_sc)
+                    S = np.empty((hi - lo, len(mu) + 1), dtype=np.float64)
+                    S[:, 0] = 1.0
+                    for j in range(lo, hi):
+                        raw = _raw(j)
+                        S[j - lo, 1:] = [(raw[i] - mu[i]) / sd[i]
+                                         for i in range(len(mu))]
+                    p = hb.predict(S)
+                    v = vb.predict(S) if vb is not None else np.zeros(hi - lo)
+                    ecv.extend((p * v).tolist())
+                    del S
             gate = ae.evaluate_policy(srows, ecv, latency_ms=D.TARGET_LATENCY_MS,
                                       budgets=D.BUDGETS, n_random=D.N_RANDOM)
             out["arms"].setdefault(coin, {})[arm] = {"gate": gate}
@@ -242,7 +258,9 @@ def stage_score() -> dict:
                 print(f"      @{b}: net {g['net_cents']:+9.1f}c  "
                       f"rand_max {g['random_net_max']:+8.1f}  "
                       f"beats_NET={g['beats_random_max_on_NET']}", flush=True)
-        del XS_lin, SC[coin]["PM"], SC[coin]["FN"], SC[coin]["ST"]
+        # free this coin's features before the next coin is built
+        SC[coin]["PM"] = []; SC[coin]["FN"] = []; SC[coin]["ST"] = []
+        del sc, srows
     import os, tempfile
     fd, tmp = tempfile.mkstemp(dir=str(OUT.parent), suffix=".tmp")
     with os.fdopen(fd, "w") as fh:
@@ -253,107 +271,16 @@ def stage_score() -> dict:
 
 
 def run() -> dict:
-    import harmful_hazard_model as hm
-    import harmful_action_eval as ae
-    import harmful_fast_compute as fc
-    import lightgbm as lgb
-    import numpy as np
-
-    for n in ("fit_logistic", "fit_logistic_w", "fit_ridge", "fit_ridge_w",
-              "zscale", "predict_p"):
-        setattr(hm, n, getattr(fc, n))
-    assert hm.fit_logistic is fc.fast_fit_logistic, "twin swap did not take"
-
-    frozen = json.loads(FROZEN.read_text())
-    print("building FIT features (consumed fragment)...", flush=True)
-    FIT = _feature_pass(FRAGMENT, "fragment")
-    print("building SCORE features (top-up)...", flush=True)
-    SC = _feature_pass(TOPUP, "topup")
-    assert_disjoint({r["slug"] for c in FIT.values() for r in c["kept"]},
-                    {r["slug"] for c in SC.values() for r in c["kept"]})
-    print("  populations asserted DISJOINT", flush=True)
-
-    out = {"protocol": "PHASE2_THREE_ARM_V1", "arms": {},
-           "declaration_commit": "d7082b6",
-           "multiplicity_before": D.MULTIPLICITY_BEFORE,
-           "multiplicity_after": D.MULTIPLICITY_AFTER,
-           "n_random": D.N_RANDOM, "decision_metric": D.DECISION_METRIC,
-           "lgbm_params": D.LGBM_PARAMS,
-           "da_caveat_field": "RESERVED for Q-DA-79 post-gap queue-validity finding"}
-
-    for coin in ("btc", "eth"):
-        f, sc = FIT[coin], SC[coin]
-        yF, tF = _labels(f["kept"]); ySC, _ = _labels(sc["kept"])
-        nA = len({(r["slug"], r["side"], r["gen"]) for r in sc["kept"]})
-        out.setdefault("population", {})[coin] = {
-            "fit_rows": len(f["kept"]), "score_rows": len(sc["kept"]),
-            "score_actions": nA, "fit_drops": f["drops"],
-            "score_drops": sc["drops"],
-            "score_windows": len({r["slug"] for r in sc["kept"]})}
-        srows = [hm.keptrow(r) for r in sc["kept"]]
-
-        for arm in D.ARMS:
-            if arm == "PM_PLUS_FINE":
-                fit = frozen["fits"][coin]
-                mu, sd = fit["norm_mu"], fit["norm_sd"]
-                W, WM = fit["hazard_weights"], fit["value_weights"]
-                X = [[1.0] + [(v - mu[i]) / sd[i] for i, v in
-                              enumerate(sc["PM"][j] + sc["FN"][j])]
-                     for j in range(len(sc["kept"]))]
-                ecv = [fc.fast_predict_p(W, x) *
-                       float(sum(a * b for a, b in zip(WM, x))) for x in X]
-            else:
-                XF = [f["PM"][i] + f["FN"][i] + f["ST"][i]
-                      for i in range(len(f["kept"]))]
-                XS = [sc["PM"][i] + sc["FN"][i] + sc["ST"][i]
-                      for i in range(len(sc["kept"]))]
-                Xf, mu, sd = fc.fast_zscale(XF, XF)
-                Xs = [[1.0] + [(v - mu[i]) / sd[i] for i, v in enumerate(x)]
-                      for x in XS]
-                sw = fc.fast_generation_weights(f["kept"])
-                if arm == "PLUS_PRED_STATE_V1":
-                    W = fc.fast_fit_logistic_w(Xf, yF, sw)
-                    ft = [i for i in range(len(yF)) if yF[i]]
-                    WM = (fc.fast_fit_ridge_w([Xf[i] for i in ft],
-                                              [tF[i] for i in ft],
-                                              [sw[i] for i in ft], lam=10.0)
-                          if len(ft) >= 100 else None)
-                    ecv = [fc.fast_predict_p(W, x) *
-                           (float(sum(a * b for a, b in zip(WM, x))) if WM else 0.0)
-                           for x in Xs]
-                else:
-                    A = np.asarray(Xf, dtype=np.float64)
-                    S = np.asarray(Xs, dtype=np.float64)
-                    swa = np.asarray(sw, dtype=np.float64)
-                    clf = lgb.LGBMClassifier(**D.LGBM_PARAMS)
-                    clf.fit(A, np.asarray(yF), sample_weight=swa)
-                    p = clf.predict_proba(S)[:, 1]
-                    ftm = np.asarray(yF) == 1
-                    if ftm.sum() >= 100:
-                        reg = lgb.LGBMRegressor(**D.LGBM_VALUE_PARAMS)
-                        reg.fit(A[ftm], np.asarray(tF)[ftm],
-                                sample_weight=swa[ftm])
-                        v = reg.predict(S)
-                    else:
-                        v = np.zeros(len(S))
-                    ecv = (p * v).tolist()
-            gate = ae.evaluate_policy(srows, ecv,
-                                      latency_ms=D.TARGET_LATENCY_MS,
-                                      budgets=D.BUDGETS, n_random=D.N_RANDOM)
-            out["arms"].setdefault(coin, {})[arm] = {"gate": gate}
-            print(f"  {coin} {arm:<20} n_actions={gate.get('n_actions')}",
-                  flush=True)
-            for b, g in gate["budgets"].items():
-                print(f"      @{b}: net {g['net_cents']:+9.1f}c  "
-                      f"rand_max {g['random_net_max']:+8.1f}  "
-                      f"beats_NET={g['beats_random_max_on_NET']}", flush=True)
-    import os, tempfile
-    fd, tmp = tempfile.mkstemp(dir=str(OUT.parent), suffix=".tmp")
-    with os.fdopen(fd, "w") as fh:
-        json.dump(out, fh, indent=1, sort_keys=True); fh.flush(); os.fsync(fh.fileno())
-    os.replace(tmp, OUT)
-    print(f"\nWROTE {OUT.name}", flush=True)
-    return out
+    """SUPERSEDED. The single-process path was oom-killed at 14G and R-174
+    mandates the staged pattern. Kept as a refusal rather than deleted so a
+    caller reaching for it gets told why, instead of finding it missing and
+    reinventing it."""
+    raise SystemExit(
+        "REFUSED: the single-process path is superseded. It held the fragment "
+        "features, the top-up features and the LGBM matrices at once and was "
+        "oom-killed at 14G after all four feature passes had succeeded. "
+        "Use --stage-fit then --stage-score (R-174: restructure, never raise "
+        "the cap).")
 
 
 def selftest() -> int:
