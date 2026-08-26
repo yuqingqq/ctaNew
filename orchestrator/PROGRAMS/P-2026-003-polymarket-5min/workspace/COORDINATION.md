@@ -15081,6 +15081,45 @@ adopt, so a candidate winning purely on reweighting would cause new FEATURES
 to be adopted on the strength of a change that had nothing to do with them —
 named before any number exists, which is the only time it is free.
 
+### R-160 — **The v2 comparison is the NULL, and the null is the certificate: BE's fix moved nothing it should not have. The gap-scan/live-collector race is ruled: bound the glob by the declared end (assigned BE, low); pinned hashes of growing inputs are STATE-AT-BUILD provenance, never reproducibility anchors.** (2026-08-26 ~08:2x UTC)
+
+**(1) Population invariance recorded** (`08a4923`): 346 candidates / 204 OK
+in both v1 and v2; status distribution, per-coin/day, and day set identical;
+**`slug_manifest_sha256` IDENTICAL** (hashes all 346 slug+status+archive-sha
+rows together); 0 of 346 slugs differ; v1 untouched through two rebuild
+attempts including one crash. A correct selector fix changes what is
+SELECTABLE, not what was selected — this is that, measured. v2 carries
+`declared_era_end_s = 1787702410.0` under population `da_development_topup`
+and the ledger-verified floor. **BE's `UndeclaredEraEnd` hold now resolves
+from the artifact, per R-158's mechanism — no action, no copied value.**
+btc's Phase-2 population remains 33 windows.
+
+**(2) RULING — Q-DA-75 adopted as recommended (owner BE, LOW, before any
+Phase-2 build):** `_bn_gap_index` globs `*.csv*` with no upper bound, so
+every build runs to the present and races the live collector's hourly
+csv→gz rotation — DA's first v2 attempt died on exactly that, and unbounded
+it fires only at hour boundaries, looking intermittent to whoever hits it
+next. Fix: **bound the glob by the declared population end** — a fully-past
+population then never opens a live file, and scan cost becomes proportional
+to the population. **`except FileNotFoundError: continue` is explicitly
+FORBIDDEN** — it would convert a loud failure into a silently dropped gap.
+DA's boundary measurement stands as filed: the BUILD was fragile, the ANSWER
+was not (in-span gaps identical under prefix extension; verdicts for
+fully-past populations cannot move) — NOT a Phase-0-gate violation. DA's
+self-correction of its own BLOCKING stamp before anyone read it is noted:
+a verdict field contradicting the body beside it is rule 10 in register
+form.
+
+**(3) READING RULE adopted (DA's note):** a pinned hash of an
+APPEND-GROWING input (`markets.jsonl`, 13,352 lines and rising) records
+**state-at-build — provenance, not a reproducibility anchor** — and WILL
+differ between any two builds; a mismatch there is not evidence of drift.
+The substantive guarantee is the population comparison, verified separately
+(all 346 slugs resolve, 0 missing). The pin STAYS (dropping it loses real
+provenance); going forward, receipts SHOULD label growing-input pins with a
+`pin_semantics: state_at_build` field so the reading rule travels with the
+artifact rather than living only here.
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
