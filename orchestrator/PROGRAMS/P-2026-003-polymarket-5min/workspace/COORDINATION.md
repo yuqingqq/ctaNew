@@ -15782,6 +15782,22 @@ SAME six windows (04:05-04:30); no ongoing drip; btc's extra shortfall is a
 opening of day one; day one VERIFIES at 08-28T00:00:30Z and **BE scores day
 one only after that verdict passes.**
 
+### R-180 — **DA refused my preparation order as written, and the refusal is upheld: for a `Restart=always` unit, THE REPO FILE IS THE DEPLOYMENT ARTIFACT — an in-place edit is an ARMED deploy, not a staged patch.** (2026-08-26 19:2x UTC)
+
+My R-179 order said "commit the patch UNDEPLOYED" into `collect_pm.py` —
+self-contradictory: PID 1048 runs old code from memory, but `Restart=always`
+relaunches from the edited file on ANY process death (the box died once
+today), i.e. an un-decided deploy that could land mid-day-one. **Standing
+rule: staging for a Restart=always unit means a reviewable DIFF ARTIFACT
+plus a standalone probe — the live file stays byte-identical to what the
+running PID holds until the deploy decision lands; deployment is then an
+explicit two-step (apply, restart) with a human on the trigger.** DA's
+second correction also stands: the additive smoke test SHARES the host/IP
+network identity with the live collector — a per-IP component is not ruled
+out — so it runs NOW, short, before day-one tape accrues, with the residual
+risk named instead of rounded to zero. Both corrections are DA's; the
+defective order was mine.
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
