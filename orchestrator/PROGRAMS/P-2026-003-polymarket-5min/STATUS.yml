@@ -45,6 +45,36 @@ flags:
                              # proposed in Q-DA-69. Cause unclaimed; OPS
                              # measurement unstaffed. v2.1 race stays G=1;
                              # next candidate forward day is 08-27.
+  da_topup_receipt_v3: RE-BASED-PER-R173 # 2026-08-26 DA, 53f12a9, Q-DA-78.
+                             # R-173 ruled row-level statuses govern: a PM gap
+                             # INSIDE an existing window excludes ROWS, not the
+                             # window. The correction was DA's -- BE's build was
+                             # right; the 133-slug disagreement was a DEFINITION,
+                             # not a bug. PRE-REGISTERED before the build and met
+                             # exactly: OK 337, BINANCE_GAP_OR_TRUNCATED 9,
+                             # candidates 346. btc test n = 166 (WAS 33 --
+                             # R-153(4)'s underpowered framing is SUPERSEDED);
+                             # eth 171. The 4 extra Binance exclusions are slugs
+                             # whose Binance failure v2's classify() ORDERING had
+                             # masked behind PM_GAP -- mechanism stated in advance,
+                             # so agreement with BE is by construction, not tuning.
+                             # REVERSIBILITY PRESERVED: v3 carries pm_gap_s /
+                             # pm_gap_intervals per slug (137 slugs, 2098.6s), and
+                             # filtering pm_gap_s > 0 reconstructs v2's 204 EXACTLY
+                             # -- the ruling demoted the window-level reading, it
+                             # did not destroy it. v2 untouched as provenance.
+  post_gap_queue_validity: DESIGN-DECLARED-NOT-RUN # 2026-08-26 DA, Q-DA-79,
+                             # commissioned R-173(2), NON-BLOCKING. Design, metric
+                             # (resync_lag_s), null (existence claim -- ZERO is a
+                             # real answer), instrument falsifier, and the
+                             # PRE-COMMITTED reading of a large result all declared
+                             # BEFORE any data is read. That reading: unreliability
+                             # is common-mode across the paired arms, so a large
+                             # exposed set QUALIFIES WHAT THE NUMBERS MEAN and
+                             # never the ranking between arms. Written in advance
+                             # so it cannot be inflated afterwards. Runs after the
+                             # v3 verdict; never a retroactive edit to a built
+                             # population.
   topup_population_verify: ARMED-AWAITING-ARTIFACT # 2026-08-26 DA, c727f46,
                              # Q-DA-77, per R-171. PRE-REGISTERED: predicates
                              # fixed and falsifiers run while the artifact did

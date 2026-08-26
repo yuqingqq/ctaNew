@@ -2,6 +2,34 @@
 
 Updated: 2026-08-26 (coordinator) — **STATEFUL harmful-cancel phase dispatched.**
 
+## 2026-08-26 (DA, ~16:0xZ) — v3 re-base landed; btc n=166; verdict pending
+
+**R-173 ruled for the row-level convention and the correction was DA's** — BE's
+build was right; the 133-slug disagreement my verifier reported was a
+DEFINITION, not a bug. **v3 (`53f12a9`) pre-registered before the build and met
+exactly: OK 337, BINANCE 9, candidates 346. btc test n = 166 (was 33 — the
+underpowered framing is superseded); eth 171.**
+
+**Reversibility deliberately preserved:** v3 carries `pm_gap_s` /
+`pm_gap_intervals` per slug (137 slugs, 2,098.6 s). **Filtering `pm_gap_s > 0`
+reconstructs v2's 204 exactly** — the ruling demoted the window-level reading
+rather than destroying it, so the alternative population stays examinable.
+
+**OWED, unchanged in substance:**
+1. **Verdict on BE's landing rebuild** — the watcher fires automatically and the
+   verifier resolves to v3 (checked live). Hand-run fallback unchanged.
+   **A mismatch stops the Phase-2 receipt, not the runs.**
+2. **Verify-first on 08-27** at midnight — day one of the forward race.
+3. **Q-DA-79 queue-validity test** — design declared, NOT run; non-blocking,
+   after the verdict.
+
+**Hard-won this hour, all three now fixed at the mechanism:** the watcher must
+be a systemd unit (two harness background watches were killed mid-poll); its log
+must be append-only from birth (re-arming it once ERASED the rejection verdict it
+existed to hold); and the verifier must resolve the HIGHEST-version receipt at
+run time (pinned to v2 it would have judged the rebuild against a manifest R-173
+had already overruled — failing loudly, confidently and wrongly).
+
 ## 2026-08-26 (DA, ~15:3xZ) — R-171 verifier ARMED, waiting on BE's build
 
 **OWED BY DA, exactly two things:**
