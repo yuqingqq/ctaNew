@@ -35,7 +35,39 @@ from typing import Any, Iterator
 
 REPO = Path(__file__).resolve().parents[2]
 DERIVED = REPO / "data/pm_5min/derived"
-RECEIPT = DERIVED / "da_development_topup_v2.json"
+def _receipt_version_key(path: Path) -> tuple[int, ...]:
+    """Sort `..._v2.json`, `..._v2.1.json`, `..._v10.json` correctly.
+
+    Tuple comparison, not integer: a resolver that assumed integers once could
+    not parse `v2.1` and CRASHED rather than silently falling back to v2 --
+    fail-closed, but still incomplete. Dotted versions sort properly here.
+    """
+    stem = path.stem.rsplit("_v", 1)[-1]
+    try:
+        return tuple(int(x) for x in stem.split("."))
+    except ValueError:
+        return (-1,)
+
+
+def latest_receipt(derived: Path = DERIVED) -> Path:
+    """The HIGHEST-version topup receipt, resolved at run time.
+
+    Hardcoding v2 was correct until R-173 forced a v3 re-base; a verifier
+    pinned to a superseded receipt would keep checking the built population
+    against a manifest the programme had already overruled, and would report
+    a confident MISMATCH that was purely its own staleness. Resolving forward
+    is the same discipline the freeze receipts use.
+    """
+    cands = [q for q in derived.glob("da_development_topup_v*.json")
+             if _receipt_version_key(q) != (-1,)]
+    if not cands:
+        raise VerificationFailed(
+            f"no da_development_topup_v*.json receipt in {derived}; refusing "
+            f"to verify against no manifest at all")
+    return max(cands, key=_receipt_version_key)
+
+
+RECEIPT = DERIVED / "da_development_topup_v2.json"   # default; see latest_receipt()
 BUILT = DERIVED / "harmful_exposure_rows_v3_topup.json"
 
 # The declared bounds, re-read from DA's receipt at run time rather than
@@ -102,8 +134,9 @@ def iter_rows(path: Path) -> Iterator[dict[str, Any]]:
                 pos += 1
 
 
-def expectations(receipt_path: Path = RECEIPT) -> dict[str, Any]:
+def expectations(receipt_path: Path | None = None) -> dict[str, Any]:
     """DA's own pinned manifest -- the ONLY source of expected values."""
+    receipt_path = receipt_path or latest_receipt()
     r = json.loads(receipt_path.read_text(encoding="utf-8"))
     b = r["bounds"]
     ok_slugs = {row["slug"] for row in r["slugs"] if row["status"] == "OK"}
@@ -175,7 +208,7 @@ def check(built_slugs: set[str], t0s: dict[str, int], exp: dict[str, Any],
 
 
 def verify(built_path: Path = BUILT,
-           receipt_path: Path = RECEIPT) -> dict[str, Any]:
+           receipt_path: Path | None = None) -> dict[str, Any]:
     if not built_path.exists():
         raise VerificationFailed(
             f"{built_path} does not exist. Refusing to report a verdict on an "
@@ -215,6 +248,7 @@ def verify(built_path: Path = BUILT,
 
 
 def _selftests() -> int:
+    import tempfile
     checks = 0
 
     def ok(cond, label):
@@ -285,8 +319,27 @@ def _selftests() -> int:
     else:
         ok(False, "MUST refuse to verify a dataset that does not exist")
 
+    # --- the resolver follows the ruling forward, not a hardcoded version --
+    ok(_receipt_version_key(Path("x_v3.json")) >
+       _receipt_version_key(Path("x_v2.json")), "v3 sorts above v2")
+    ok(_receipt_version_key(Path("x_v2.1.json")) >
+       _receipt_version_key(Path("x_v2.json")), "dotted v2.1 sorts above v2")
+    ok(_receipt_version_key(Path("x_v10.json")) >
+       _receipt_version_key(Path("x_v9.json")), "v10 sorts above v9, not below")
+    with tempfile.TemporaryDirectory() as td:
+        d = Path(td)
+        for v in ("v1", "v2", "v10", "v2.1"):
+            (d / f"da_development_topup_{v}.json").write_text("{}", encoding="utf-8")
+        ok(latest_receipt(d).name == "da_development_topup_v10.json",
+           "the highest version wins among mixed integer and dotted versions")
+        try:
+            latest_receipt(Path(td) / "empty")
+        except VerificationFailed:
+            ok(True, "no receipt at all is REFUSED, not defaulted")
+        else:
+            ok(False, "MUST refuse when no manifest exists")
+
     # the streaming scanner round-trips
-    import tempfile
     with tempfile.TemporaryDirectory() as td:
         f = Path(td) / "rows.json"
         rows = [{"slug": "btc-updown-5m-1787650500", "coin": "btc",

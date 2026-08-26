@@ -58,7 +58,7 @@ PM = REPO / "data/pm_5min"
 HF_RUNS = REPO / "data/mm_hf/collector_runs.jsonl"
 MARKETS = PM / "markets.jsonl"
 PM_GAPS = PM / "collector_gaps.jsonl"
-OUT = PM / "derived/da_development_topup_v2.json"
+OUT = PM / "derived/da_development_topup_v3.json"
 
 # --- the declared bounds, verbatim from R-145(3) ---------------------------
 SLUG_START_EXCL_LO = 1787650200      # strictly after
@@ -80,16 +80,22 @@ ERA_FLOOR_RECV_NS = 1787579334881534478
 DECLARED_ERA_END_S = 1787702410.0
 POPULATION_NAME = "da_development_topup"
 
-RECEIPT_VERSION = "da_development_topup_v2"
-SUPERSEDES = "da_development_topup_v1.json"
+RECEIPT_VERSION = "da_development_topup_v3"
+SUPERSEDES = "da_development_topup_v2.json"
 SUPERSEDE_REASON = (
-    "v1 pinned harmful_exposure_rows.py at sha256 3ed11912... which was the "
-    "PRE-FIX builder. BE's Q-DA-67 remedy (commit c4cb4e3, ratified R-154) "
-    "changed that file, so v1's builder hash no longer describes the code a "
-    "rebuild would run. v2 refreshes the hash and adds the population's "
-    "DECLARED ERA END. The population itself is UNCHANGED and that is "
-    "asserted, not assumed -- see population_unchanged_vs_v1. Rule 13: v1 is "
-    "not edited; it stands as provenance.")
+    "R-173 RULED that row-level statuses govern: 'complete windows only' means "
+    "the window's tape span exists end-to-end, and a PM collector gap INSIDE "
+    "an existing window excludes ROWS, not the window. v2 excluded 137 slugs "
+    "wholesale as PM_GAP, which is the losing reading. Grounds given: "
+    "train/test comparability (a test population admitted under a different "
+    "rule than the training population measures the rule change, not the "
+    "model), the frozen incumbent's manifest pins its population under this "
+    "convention, and deployment realism. v3 re-bases accordingly and carries "
+    "PM gaps as PER-SLUG DISCLOSURE instead of exclusion. THE CORRECTION IS "
+    "DA'S, NOT BE'S -- BE's build was right and this receipt was wrong; the "
+    "133-slug disagreement my verifier reported was a definition, not a bug. "
+    "Rule 13: v2 is not edited; it stands as provenance for what was declared "
+    "before the ruling.")
 ROLE = "DEVELOPMENT_ONLY_NEVER_FORWARD_VALIDATION"
 
 BUILDER_FILES = (
@@ -128,7 +134,6 @@ STATUSES = (
     "NO_ARCHIVE",
     "NO_TOKENS",
     "NOT_PM_ERA_COVERED",
-    "PM_GAP",
     "BINANCE_GAP_OR_TRUNCATED",
 )
 
@@ -195,8 +200,12 @@ def classify(slug: str, t0: int, coin: str, *, paths, tokens, covered,
         return "NO_TOKENS"
     if slug not in covered:
         return "NOT_PM_ERA_COVERED"
-    if gaps.get(slug):
-        return "PM_GAP"
+    # R-173: a PM gap INSIDE an existing window no longer excludes the window.
+    # It is disclosed per slug (`pm_gap_s`, `pm_gap_intervals`) and handled at
+    # ROW level by the exposure builder's GAP_IN_HORIZON status. NOTE what v2's
+    # ORDERING also did: testing PM_GAP before the Binance predicate MASKED the
+    # Binance failure of any slug that failed both. Removing the test lets
+    # those report the reason they were actually excluded for.
     if not bn_ok(t0, coin):
         return "BINANCE_GAP_OR_TRUNCATED"
     return "OK"
@@ -240,9 +249,15 @@ def build(as_of_ns: int | None = None) -> dict[str, Any]:
         status = classify(slug, t0, coin, paths=paths, tokens=tokens,
                           covered=covered, gaps=gaps, bn_ok=bn_ok)
         path = paths.get(slug)
+        g = gaps.get(slug) or []
         rows.append({
             "slug": slug, "coin": coin, "window_start": t0,
             "day": day_of(t0), "status": status,
+            # DISCLOSED, not excluded (R-173). v2's stricter population stays
+            # reconstructible by filtering pm_gap_s > 0, so the ruling does not
+            # destroy the alternative reading -- it demotes it.
+            "pm_gap_intervals": [[round(a, 6), round(b, 6)] for a, b in g],
+            "pm_gap_s": round(sum(b - a for a, b in g), 6),
             "archive_file": path.name if path else None,
             "archive_sha256": sha256_file(path) if path else None,
         })
@@ -397,8 +412,14 @@ def _selftests() -> int:
        "a missing token map is a STATUS")
     ok(classify("s", 1, "btc", **{**base, "covered": set()})
        == "NOT_PM_ERA_COVERED", "a PM era miss is a STATUS")
-    ok(classify("s", 1, "btc", **{**base, "gaps": {"s": [(1.0, 2.0)]}})
-       == "PM_GAP", "a PM gap is a STATUS")
+    ok(classify("s", 1, "btc", **{**base, "gaps": {"s": [(1.0, 2.0)]}}) == "OK",
+       "R-173: a PM gap inside an existing window does NOT exclude it")
+    ok("PM_GAP" not in STATUSES, "PM_GAP is retired as an exclusion status")
+    ok(classify("s", 1, "btc", **{**base, "gaps": {"s": [(1.0, 2.0)]},
+                                  "bn_ok": lambda t, c: False})
+       == "BINANCE_GAP_OR_TRUNCATED",
+       "a slug failing BOTH now reports BINANCE -- the reason v2's ordering "
+       "masked behind PM_GAP")
     ok(classify("s", 1, "btc", **{**base, "bn_ok": lambda t, c: False})
        == "BINANCE_GAP_OR_TRUNCATED", "an HF gap is a STATUS")
     # an EMPTY gap list is not a gap -- the ledger records slugs with no gaps
