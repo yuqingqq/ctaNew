@@ -32,6 +32,7 @@ from pathlib import Path
 REPO = Path("/home/yuqing/ctaNew")
 DERIVED = REPO / "data/pm_5min/derived"
 LAST_CONSUMED_SLUG_T0 = 1787650200          # R-166(3) boundary, inclusive
+FREEZE_COINS = ("btc", "eth")               # explicit; matches the ASK
 OUT = DERIVED / "harmful_reduced_fine_candidate_v1.json"
 
 
@@ -85,7 +86,11 @@ def refit(user_approved: bool = False) -> dict:
     Lh = str(hm.TARGET_LATENCY_MS)
     out: dict = {}
 
-    for coin in hm.COINS:
+    # COINS is a LOCAL inside run_fine, not a module attribute -- the first
+    # draft assumed it was importable and died in 15s. Declared here instead,
+    # because the freeze's coin scope should be explicit in the freeze builder
+    # rather than inherited from another function's internals.
+    for coin in FREEZE_COINS:
         crows = [r for r in rows if r["coin"] == coin]
         streams: dict = {}
         PM: list = []; FN: list = []; kept: list = []
