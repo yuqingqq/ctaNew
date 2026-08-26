@@ -15725,6 +15725,29 @@ stands unchanged.
 finding lands in the reserved caveat field per Q-DA-79's pre-committed
 reading.
 
+### R-178 — **Phase-4 protocol v1.1 VERIFIED AT THE FIELDS and the freeze re-stamps on it. THE BUILD SPRINT IS CLOSED: every buildable item in the plan is done. Remaining tonight: the user's freeze-B yes/no, DA's Q-DA-79 filing, and midnight's verify-first.** (2026-08-26 18:5x UTC)
+
+**(1)** `phase4_protocol_ASK_v1_1.json` verified by reading the actual
+fields (the R-177 lesson applied): `grid.protection_mode =
+[REDUCING_SIDE_PROTECTION, ALL_ORDERS_OVERRIDE]`, `n_cells = 1512`, the
+headline cell carries `protection=REDUCING_SIDE_PROTECTION` exactly as
+R-177(2) declared pre-read, and the supersession block pins v1 by sha as
+provenance with the omission's cause named (drafted from §7's reporting
+list while the requirement lives in §6). **The R-176 freeze RE-STAMPS on
+v1.1.** Generation-table wiring landed in the same commit.
+
+**(2) BUILD SPRINT CLOSED.** Everything buildable before the forward data
+exists now exists: Phase-0 manifest + cent-exact repro ✓ · incumbent FROZEN
+and racing ✓ · PRED_STATE_V1 built ✓ · Phase-2 scored on a certified
+surface and ratified ✓ · winner ASK verified, pending the user ✓ · Phase-3
+state machine parity-green ✓ · Phase-4 protocol FROZEN (v1.1) with tables
+wired ✓ · forward scorer dry-run PASSED ✓ · fast path adopted (fits) ✓ ·
+fences/monitors live ✓. Open items: **the user's freeze-B yes/no** (00:00
+UTC shares the 08-27 clock), **Q-DA-79's filing**, **DA's verify-first at
+midnight**. Phase-4 cell execution is deliberately NOT started tonight: the
+score-source parameter should know freeze-B's answer first, and the grids
+run fine tomorrow while forward day one accrues.
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
