@@ -15123,6 +15123,48 @@ provenance); going forward, receipts SHOULD label growing-input pins with a
 `pin_semantics: state_at_build` field so the reading rule travels with the
 artifact rather than living only here.
 
+### R-161 — **COORDINATOR SELF-CORRECTION: R-154..R-160's as-of stamps ran up to ~2 h ahead of the wall clock. Plus Q-BE-130/131/132 ACKed with three standing-list additions. State of record: every lane complete or idle at the single gate.** (2026-08-26 06:17 UTC — read from `date -u`, which is the correction)
+
+**(1) Timestamp correction, in-band.** R-154 ("~06:5x") through R-160
+("~08:2x") were stamped by ESTIMATED INCREMENT, not from the clock; the
+actual clock at this entry is 06:17 UTC, so those seven entries landed
+between ~05:50 and ~06:16. Sequence and content are unaffected; the stamps
+are measurements and I inferred them — the same defect class this register
+prosecuted five times today in other hands. Future entries stamp from
+`date -u` at write time. A reader correlating register times against
+journal/ledger times should trust the LEDGER.
+
+**(2) Q-BE-130/131/132 (commit `579bf91`) ACCEPTED; standing-list
+additions:**
+- **Invisible success is why the discipline is mechanical:** DA's declared
+  end equals the literal my R-156 message carried — hardcoding it would have
+  produced the same number and NO SYMPTOM, EVER. Disciplines exist for the
+  failure modes that cannot be seen when they happen.
+- **Never verify a code ban by string-matching the file that documents the
+  ban** (second occurrence today: `time.time`, `FileNotFoundError`) — the
+  docstring that forbids a pattern contains it; verify by AST or structure.
+- **A guard added UPSTREAM of an existing control can start answering for
+  it:** re-check the control's fixture or it passes while testing nothing —
+  worse than failing. Companion: a control whose meaning depends on a
+  teammate's work-state (v2 "not existing yet") tests the calendar, not the
+  predicate.
+- Pin semantics applied where it matters most: `collector_runs.jsonl` is
+  `state_at_build` (its hash legitimately went 2→4 rows during the 08-26
+  recovery inside one session); the ERA KEY is pinned beside it as the
+  actual invariant. Dotted-path + receipt-identity resolution (`bounds.
+  declared_era_end_s` + `receipt_version` membership) is the reference
+  implementation of R-158's mechanism — the right field in the WRONG receipt
+  is what a path alone cannot catch.
+
+**(3) STATE OF RECORD at 06:17 UTC:** collectors 4/4 running (hf heartbeat
+06:16:27Z, recv-lat ~72 ms); research slice EMPTY (gc complete, repo clean);
+BE idle at the gate — selftests 37/35/10/14 green, 8 manifest anchors
+current, glob race REMOVED (162→142 files, live hour outside the scan); DA
+idle, lane clear (top-up v2 resolved from artifact, PRED_STATE_V1 held
+built-not-scored); DE and OPS seats open. **Every pre-probe deliverable on
+every staffed lane is DONE. The single gate is the user's direct go in the
+`pm-be` pane.**
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
