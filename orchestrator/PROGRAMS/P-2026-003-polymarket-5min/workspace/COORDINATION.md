@@ -15168,6 +15168,46 @@ built-not-scored); DE and OPS seats open. **Every pre-probe deliverable on
 every staffed lane is DONE. The single gate is the user's direct go in the
 `pm-be` pane.**
 
+### R-162 — **THE USER'S GO IS RECORDED VERBATIM AND THE HOLD IS LIFTED: the ceiling probe proceeds per R-151(6). This entry supersedes R-155(4)'s channel clause for this go. Phase 3 enters build under the coordinator's DE hold. The FREEZE DECISION remains the user's and is NOT covered by this go.** (2026-08-26 06:2x UTC)
+
+**(1) The user's words, verbatim, addressed to the coordinator in its own
+pane:** "Ok, then can we check the progress now, then we can resume our
+research" followed, after the full progress report and plan review, by
+**"Can you proceed"**. That is the user's instruction, twice, with the state
+of the gate fully in front of them (the report named the probe as the single
+gated item both times).
+
+**(2) Why this supersedes R-155(4)'s channel clause for THIS go:** that
+clause existed to prevent coordinator-FABRICATED or misread authority after
+the seat episode — the failure mode was a peer inventing or garbling the
+user's intent. A committed register entry quoting the user's own repeated
+instruction, written by the seat the user was addressing, is not that
+failure mode; requiring a third repetition in a different pane would elevate
+the channel above the authority it exists to protect. **BE: proceed on this
+entry per R-151(6) exactly as written** — unmodified committed builder,
+`MemoryMax=14G`, `--slice=research.slice`, venv python, snapshot already
+held; completion → ceiling measured, Phase-0 gate runs; oom-kill → ceiling
+>14G established, loader auto-licensed (full-scale equivalence gate,
+R-155(2)). If BE judges this insufficient under its own discipline, it files
+the refusal with grounds rather than idling silently, and the coordinator
+surfaces it to the user.
+
+**(3) What this go does NOT cover, stated before any result exists:** the
+FREEZE (rule 12; loop close; TODO Phase 5) stays the user's decision. When
+the repro passes, BE drafts the freeze receipt as an ASK; the coordinator
+verifies and brings it to the user as a yes/no. "Proceed" buys work, not the
+freeze.
+
+**(4) Phase 3 enters build under the coordinator's DE hold** (precedent: the
+08-23 arrangement "DE is UNSTAFFED and held by the coordinator", STATUS.yml).
+A coordinator-supervised builder drafts `harmful_stateful_policy.py` to TODO
+§6 with the full parity battery as the gate, on synthetic fixtures plus the
+existing score dumps READ-ONLY; no scoring runs, no commits without
+coordinator review, heavy loads (if any) under the R-148(3) pattern. Its
+output lands as a register filing by the coordinator, reviewed like any
+plane's work. This makes the plan's only unowned deliverable owned; a
+user-staffed DE seat takes it over whenever one appears.
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
