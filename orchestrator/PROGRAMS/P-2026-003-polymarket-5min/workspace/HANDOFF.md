@@ -7,8 +7,14 @@ Updated: 2026-08-26 (coordinator) — **STATEFUL harmful-cancel phase dispatched
 **OWED BY DA, exactly two things:**
 1. **Verify BE's built top-up population** the moment
    `data/pm_5min/derived/harmful_exposure_rows_v3_topup.json` lands.
-   **A watch is armed in this session** (polls for the file, waits for the size
-   to be STABLE, then runs the verifier). **IF THAT SESSION IS GONE, RUN IT BY
+   **A watch is armed as a SYSTEMD USER UNIT** — `da-topup-verify.service`
+   (check: `systemctl --user is-active da-topup-verify`; progress and verdict:
+   `cat data/pm_5min/derived/.da_topup_verify.out`). It polls for the file,
+   waits for the size to be STABLE, then runs the verifier, and **survives this
+   session ending.** It is a unit and not a background job because **two
+   harness background watches were killed mid-poll on 2026-08-26** while the
+   artifact was still coming — the R-147(2) lesson (units survive, nohup does
+   not) applied to DA's own instrument. **IF THE UNIT IS GONE TOO, RUN IT BY
    HAND — the verifier is committed and needs no setup:**
    `python3 live/pm_research/da_topup_population_verify.py verify`
    It exits non-zero on any failed predicate and REFUSES if the artifact is
