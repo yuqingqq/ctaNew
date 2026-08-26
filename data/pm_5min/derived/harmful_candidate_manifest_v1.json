@@ -1,5 +1,5 @@
 {
- "as_of_utc": "2026-08-26T06:19:45Z",
+ "as_of_utc": "2026-08-26T06:41:56Z",
  "candidate": {
   "features_fine": [
    "bnf_midbps @10,25,50,100,250ms",
@@ -44,7 +44,7 @@
   "why_this_and_not_the_hash": "the ledger's HASH moves with every restart, but its ERA KEY does not. The key is the invariant worth pinning; the hash is only provenance."
  },
  "freeze_status": "NOT FROZEN. The freeze is the user's decision and Phase-0 reproduction has not yet run.",
- "git_commit": "51ae00291bc4be29823e26b300c77ac8c0aa3b0a",
+ "git_commit": "da2ba48a5a930bf66773ff24c6d9c4066030fb73",
  "git_dirty": true,
  "hashes": {
   "data/mm_hf/collector_runs.jsonl": "c3b3a0b0bf83f7b1cd0d8722fb124f5f6fb4962b4e74ff7db350a4220386abcc",
@@ -53,7 +53,7 @@
   "live/pm_research/flow_intensity.py": "e65c812fd42fc8d76c368ebbd6312c8cfbc86f06f2ed0ca726f38e69f783b367",
   "live/pm_research/harmful_action_eval.py": "55ea57b995afdd4c46ae5909b40a9e64cc1b5092a358399dd36d8c7e03225a06",
   "live/pm_research/harmful_exposure_rows.py": "8fb34b0319b0d5966938b6a9a9eddfc96d00a28a1aeaaef624e68aad12f9b9bf",
-  "live/pm_research/harmful_hazard_model.py": "1eae16d6e8b61755f636f91934cf6b272aec2cc9f1db9d02975aa5d6673f7000",
+  "live/pm_research/harmful_hazard_model.py": "0091fe75c38af79ec8b6bf23c084916d2c9a139aa247847676f4fd6f2cbbfeca",
   "live/pm_research/harmful_rows_loader.py": "8b90c48cfe331e7184fdafdaea17ae9168e65eba0f0d4e3f802b250c92df2308",
   "live/pm_research/policy_bounds_v1.py": "717033ba3b571def77efb50a7ed8d2b4fffd1332df8213c487e2e750a06f0374"
  },

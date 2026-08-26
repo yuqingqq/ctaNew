@@ -49,6 +49,7 @@ ROWS = fi.PM / "derived/harmful_exposure_rows_v3.json"   # v1/v2 receipts are IN
 # action evaluator sweeps the full 5–250 ms grid regardless.
 TARGET_LATENCY_MS = 50
 EXPECTED_SCHEMA = "harmful_exposure_v3_4_fill_scoped_markout"
+from harmful_candidate_manifest import ERA_BOUNDARY_NS   # the pin's owner
 OUT = fi.PM / "derived/harmful_hazard_model_v1.json"
 LAG_S = 0.250
 # §4.1 asks for 25/50/100/250/500/1000 ms. The finest micro scales measure the
@@ -316,6 +317,11 @@ def predict_p(w, x):
 
 
 def zscale(train_X, all_X):
+    if not train_X:
+        raise ValueError(
+            "zscale received an EMPTY training set. This is a symptom, not a "
+            "cause: something upstream dropped every training row. Callers "
+            "should refuse with a named error before reaching here.")
     """Scales IN PLACE over all_X (returns the same list object): building a
     second full copy of an era-scale matrix doubled peak memory and OOM'd."""
     k = len(train_X[0])
@@ -590,6 +596,25 @@ def selftest() -> int:
     ok(abs(sum(_g) - 2.0) < 1e-12,
        "so total weight equals the ACTION count (2), not the row count (3)")
 
+    # ---- era pin + named-empty falsifiers --------------------------------
+    ok(_era_boundary_ns() == ERA_BOUNDARY_NS,
+       "the model's era floor IS the pinned literal, not the ledger max -- "
+       "the defect that emptied the feature set and took the probe down")
+    import json as _j2
+    _runs = [_j2.loads(l) for l in
+             open('/home/yuqing/ctaNew/data/mm_hf/collector_runs.jsonl')]
+    ok(max(r['started_at_ns'] for r in _runs) != _era_boundary_ns(),
+       "POSITIVE CONTROL: the ledger max currently DIFFERS from the pinned "
+       "floor, so this test would actually fail if the old max() logic came "
+       "back -- it is not passing by coincidence the way max() once did")
+    try:
+        zscale([], [[1.0]])
+        ok(False, "zscale must refuse an empty training set")
+    except ValueError as _e:
+        ok("symptom, not a cause" in str(_e),
+           "zscale names an empty train set as a SYMPTOM and points upstream, "
+           "instead of raising IndexError from `train_X[0]`")
+
     print(f"harmful_hazard_model selftest: {checks} checks OK")
     return 0
 
@@ -735,9 +760,27 @@ _BN_CACHE: dict = {}
 
 
 def _era_boundary_ns() -> int:
-    runs = [json.loads(l) for l in
-            open('/home/yuqing/ctaNew/data/mm_hf/collector_runs.jsonl')]
-    return max(r['started_at_ns'] for r in runs)
+    """The PINNED era floor. Never `max(started_at_ns)`.
+
+    THIS WAS Q-DA-67's TWIN, in a second file, and it took the ceiling probe
+    down. `max(started_at_ns)` returned the true boundary only by ACCIDENT --
+    while the ledger held just the two 08-24 rows, its max happened to equal
+    1787579334881534478 exactly. The 08-26 crash-recovery restarts appended
+    two more rows, max jumped to 08-26 05:26:26, and every 08-24/25 Binance
+    event was filtered out. `fine_feats` then returned None for EVERY row,
+    `kept` came back empty, and the failure surfaced 5m42s later as an
+    IndexError inside zscale -- a silent cause with a loud, unrelated symptom.
+
+    Using the pinned literal RESTORES the exact value in force when the frozen
+    v3 receipt was produced (verified identical), so this is a PRECONDITION
+    for cent-exactness rather than a change to it."""
+    from harmful_exposure_rows import assert_no_era_transition
+    assert_no_era_transition()          # refuses if a genuine era change exists
+    return ERA_BOUNDARY_NS
+
+
+class EmptyFeatureSet(RuntimeError):
+    """No row survived feature construction; named rather than left to crash."""
 
 
 def _bn_hour(sym: str, h) -> tuple[list, list]:
@@ -1175,6 +1218,31 @@ def run_fine(era: bool = True, lead: bool = False) -> dict[str, Any]:
              for i in range(len(kept))]
         tgt = lambda i: kept[i]["latency"][Lh]["preventable_value_cents"]
         print(f"  {coin}: rows {len(kept)} train {len(tr)} dev {len(dv)}")
+        # NAMED REFUSAL. Previously an empty `kept` sailed on and died as
+        # `IndexError: list index out of range` inside zscale -- a loud symptom
+        # naming the wrong layer entirely, five minutes of CPU after the real
+        # cause. Each branch below names what it means, because "empty" has
+        # three different causes here and they need different fixes.
+        if not kept:
+            raise EmptyFeatureSet(
+                f"{coin}: ZERO rows survived feature construction out of "
+                f"{len(crows)} candidates. This is NOT a split problem -- the "
+                f"split read train={train_days} dev={dev_day}. Every row was "
+                f"dropped by `fine_feats(...) is None`, which means no Binance "
+                f"bookTicker event was found at or after the era floor for any "
+                f"row's cutoff. Check the era floor first: it must be the "
+                f"pinned literal, never max(started_at_ns) over the ledger.")
+        if not tr:
+            raise EmptyFeatureSet(
+                f"{coin}: {len(kept)} rows survived but NONE fall on the "
+                f"training days {train_days}. The population's days are "
+                f"{sorted({r['day'] for r in kept})}. A model cannot be fitted "
+                f"on an empty training side; refusing rather than crashing in "
+                f"zscale.")
+        if not dv:
+            raise EmptyFeatureSet(
+                f"{coin}: {len(kept)} rows survived but NONE fall on the dev "
+                f"day {dev_day!r}; there is nothing to score.")
         dev_scores: dict = {}
         for arm in ARMS:
             add = {"PM_ONLY": (), "PM_PLUS_FINE": ("fn",),

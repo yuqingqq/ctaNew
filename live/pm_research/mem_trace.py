@@ -29,12 +29,22 @@ def read(p: Path) -> str:
 
 
 def cgroup_dir(unit: str) -> Path | None:
-    uid = os.getuid() if (os := __import__("os")) else 1000
-    for c in (CG / f"user.slice/user-{uid}.slice/user@{uid}.service/app.slice/{unit}.service",
-              CG / f"user.slice/user-{uid}.slice/{unit}.service"):
-        if c.exists():
-            return c
-    return None
+    """Locate a unit's cgroup, INCLUDING inside a custom slice.
+
+    The first version only looked in `app.slice`, so when the ceiling probe ran
+    under `--slice=research.slice` it silently found nothing and logged blank
+    cgroup columns for the whole run -- an instrument that appeared to work and
+    recorded no memory at all. It still captured PSI, which is why the run was
+    not a total loss. Now it globs, so any slice is found, and `main` REFUSES
+    to start when the unit cannot be located rather than writing empty columns."""
+    import os as _os
+    uid = _os.getuid()
+    base = CG / f"user.slice/user-{uid}.slice/user@{uid}.service"
+    exact = list(base.glob(f"**/{unit}.service"))
+    if exact:
+        return exact[0]
+    other = list((CG / f"user.slice/user-{uid}.slice").glob(f"**/{unit}.service"))
+    return other[0] if other else None
 
 
 def main() -> int:
@@ -44,6 +54,12 @@ def main() -> int:
     unit, out = sys.argv[1], Path(sys.argv[2])
     iv = float(sys.argv[3]) if len(sys.argv) > 3 else 1.0
     cg = cgroup_dir(unit)
+    if cg is None:
+        # A tracer that cannot find its subject must say so, not log blanks.
+        print(f"mem_trace: REFUSING -- cgroup for unit {unit!r} not found. "
+              f"Blank cgroup columns would look like a successful trace.",
+              file=sys.stderr)
+        return 2
     fh = out.open("w", buffering=1)
     fh.write("#ts\tcg_current\tcg_peak\tmem_available_kb\tpsi_some_avg10\tpsi_full_avg10\n")
     n = 0
