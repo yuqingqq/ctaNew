@@ -1,2 +1,51 @@
-armed 2026-08-26T15:45:01Z as a systemd unit; awaiting /home/yuqing/ctaNew/data/pm_5min/derived/harmful_exposure_rows_v3_topup.json
-will IGNORE any artifact with mtime <= 1787759101 (2026-08-26T15:45:01Z)
+PROVENANCE WARNING -- READ THIS FIRST. THIS IS A TRANSCRIPT, NOT THE ARTIFACT.
+
+The original run log (derived/.da_topup_verify.out, 1955 bytes) was ERASED by
+DA's own watcher script, which did `: > "$LOG"` on re-arming. The erasure
+happened at 2026-08-26T15:45:01Z, minutes after DA filed Q-DA-78(2) against BE
+for overwriting a rejected artifact in place. Same defect, same hour, DA's own
+instrument. The script now appends and never truncates.
+
+The 1.95GB artifact this verdict rejected was ALSO already destroyed (filtered
+in place by BE). So neither the artifact nor its original verdict file exists.
+
+What follows is transcribed from the verifier's stdout as read in DA's session
+at 2026-08-26T15:43Z. Under R-158 a session-carried value is PROSE-CLASS: it is
+provenance, NOT an artifact, and no claim should rest on it that could rest on
+something re-derivable. It is preserved because it is the only remaining
+description of a population that was rejected, and a rejection with no record
+is indistinguishable from one that never happened.
+
+Re-derivable independently: the 471 consumed-fragment row counts below match
+the v3.4 dataset, which DOES still exist -- see Q-DA-73's audit
+(btc 2026-08-24 OK 320,837; eth 2026-08-24 OK 261,936).
+
+--------------------------------------------------------------------------
+armed 2026-08-26T15:18:34Z as a systemd unit
+appeared 2026-08-26T15:39:14Z; awaiting size stability
+stable at 1946178700 bytes 2026-08-26T15:40:14Z; verifying
+
+n_rows   1781794
+n_slugs  808
+receipt  da_development_topup_v2
+status_counts {"GAP_IN_HORIZON": 17329, "OK": 1764206, "TRUNCATED_HORIZON": 259}
+by_coin_day_status
+  btc 2026-08-24 {"GAP_IN_HORIZON": 933,  "OK": 320837}
+  btc 2026-08-25 {"GAP_IN_HORIZON": 8881, "OK": 614621, "TRUNCATED_HORIZON": 242}
+  eth 2026-08-24 {"GAP_IN_HORIZON": 3072, "OK": 261936, "TRUNCATED_HORIZON": 10}
+  eth 2026-08-25 {"GAP_IN_HORIZON": 4443, "OK": 566812, "TRUNCATED_HORIZON": 7}
+
+PREDICATES
+  [FAIL] slug_set_identity: expected 204, built 808, missing 0, extra 604;
+         first extra ['btc-updown-5m-1787579400','btc-updown-5m-1787579700',
+                      'btc-updown-5m-1787580000']
+  [FAIL] n_ok_matches_receipt: receipt n_ok 204, built distinct slugs 808
+  [PASS] no_reserved_forward_tape: slugs at/after 1787702400: 0 (reservation intact)
+  [FAIL] no_consumed_fragment: slugs at/before 1787650200: 471
+  [FAIL] t0_within_declared_bounds: t0 range [1787579400, 1787702100]
+         vs declared open interval (1787650200, 1787702400)
+  [PASS] declared_era_end_covers_last_window: needs 1787702410.0, declared 1787702410.0
+  [PASS] dataset_non_empty: 1781794 rows across 808 slugs
+
+ALL PASS: False
+VERIFIER_EXIT=1  (2026-08-26T15:42:37Z)

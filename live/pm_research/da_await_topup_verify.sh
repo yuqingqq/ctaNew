@@ -17,10 +17,28 @@ set -u
 F=/home/yuqing/ctaNew/data/pm_5min/derived/harmful_exposure_rows_v3_topup.json
 LOG=/home/yuqing/ctaNew/data/pm_5min/derived/.da_topup_verify.out
 DEADLINE=$(( $(date +%s) + 21600 ))     # 6h cap
-: > "$LOG"
+# NEWER-THAN guard. On the first arming the artifact did not exist, so mere
+# presence was a safe trigger. It is not safe any more: a REJECTED build can
+# still be sitting at this path awaiting rename, and firing on it would render
+# a verdict on a superseded artifact -- which is exactly the error avoided by
+# luck at 15:44 today, when the file on disk had already been replaced by a
+# rebuild while my verdict named the 1.95GB original. BASELINE is passed in by
+# the arming command; only an artifact strictly newer than it is verified.
+BASELINE=${BASELINE:-0}
+# APPEND, never truncate. The first version did `: > "$LOG"`, so re-arming the
+# watcher ERASED the rejection verdict the previous run had written -- and it
+# did so minutes after I filed Q-DA-78(2) against BE for overwriting a rejected
+# artifact in place. A log that clears itself on re-arm destroys exactly the
+# evidence it exists to hold.
+{ echo; echo "======== re-armed $(date -u +%FT%TZ) ========"; } >> "$LOG"
 echo "armed $(date -u +%FT%TZ) as a systemd unit; awaiting $F" >> "$LOG"
-while [ ! -f "$F" ]; do
-  [ "$(date +%s)" -gt "$DEADLINE" ] && { echo "TIMEOUT: artifact never appeared" >> "$LOG"; exit 2; }
+echo "will IGNORE any artifact with mtime <= $BASELINE ($(date -u -d @$BASELINE +%FT%TZ 2>/dev/null))" >> "$LOG"
+while : ; do
+  if [ -f "$F" ]; then
+    MT=$(stat -c%Y "$F" 2>/dev/null || echo 0)
+    [ "$MT" -gt "$BASELINE" ] && break
+  fi
+  [ "$(date +%s)" -gt "$DEADLINE" ] && { echo "TIMEOUT: no artifact newer than baseline" >> "$LOG"; exit 2; }
   sleep 20
 done
 echo "appeared $(date -u +%FT%TZ); awaiting size stability" >> "$LOG"
