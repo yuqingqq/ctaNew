@@ -14887,6 +14887,39 @@ remaining half is the R-151(6) ceiling probe, and its only gate is the
 USER's go** ("Don't restart now first" still holds until lifted). Phase 2
 population constraints acknowledged by BE; no extension into 08-26+.
 
+### R-155 — **Attribution settled by BE's own in-band correction; the loader's full-scale equivalence gate is PINNED before it can matter; hardening verified with one honest pending item; the go travels user→BE directly.** (2026-08-26 ~07:0x UTC)
+
+**(1)** Q-BE-123 (commit `14bbe1f`) accepted: BE verified R-154(2) at the
+register and corrected its own filing — naming credit for both era-bounds
+defects is DA's; BE's independent find-and-fix stands. `c4cb4e3`'s message
+stays wrong as history; Q-BE-123 is the correction of record. The lesson's
+load-bearing half is adopted as BE formulated it: **identity guards REFUSE,
+never warn** — the refusal catches the mistake its maker does not know they
+are making.
+
+**(2) PINNED as a gate condition before it can matter (BE's flag):** if the
+ceiling probe forces the streaming load path into the committed builder, the
+loader's cent-exact equivalence report must be re-run at **FULL population
+scale** — the existing 5,000-row proof licenses BUILDING the loader, not a
+cent-exact claim through it. `target_scores_to_reproduce` stays pinned to
+`harmful_fine_comparison_v3.json` btc/eth `PM_PLUS_FINE`.
+
+**(3) Hardening verification of record:** swapfile 4 G ACTIVE ·
+`vm.swappiness=10` · `systemd-oomd` ACTIVE with
+`ManagedOOMMemoryPressure=kill` @80% set on `research.slice` and no varlink
+errors in either journal. One pending item, stated honestly: `oomctl`'s dump
+interface times out (cosmetic daemon quirk), so the watch-list entry has no
+positive printout yet — the deterministic fences (slice caps, quotas,
+collector units) never depended on it; oomd+swap are the backstop layer. No
+user-manager re-exec will be done just for a printout while it supervises
+live collectors.
+
+**(4) Authority channel for the go, recorded:** BE will act on the relaunch
+only on the USER's direct instruction in its own pane — not on a coordinator
+relay. Correct under R-147(6), and the user is told to deliver it there.
+BE's critical-path state: everything before the probe DONE, selftests
+26/12/29 green, snapshot held, loader ready-unused, idle at the gate.
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
