@@ -15619,6 +15619,17 @@ is noted as the matching instrument-side fix.
 → verifier PASS → arms A/B/C launch. No further ruling is owed on this
 path.
 
+### R-174 — **USER DIRECTIVE: memory caps are not raised — code is optimized to fit. The R-173-era 16G fallback grant is REVOKED.** (2026-08-26 16:5x UTC)
+
+The user, verbatim: "Don't increase memory limit, optimize the code to use
+less memory." Standing consequence: **the per-job cap stays ≤14G; a cap
+raise is never the remedy for memory pressure.** The remedy hierarchy is:
+stage (fit → persist → free → score), stream instead of materialize, chunk,
+and free eagerly — the pattern BE's staged rerun already implements. The
+one-job 16G fallback offered after the 16:40 oom-kill is REVOKED unused. A
+job that cannot fit 14G after restructuring files the fact; it does not
+escalate the cap.
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
