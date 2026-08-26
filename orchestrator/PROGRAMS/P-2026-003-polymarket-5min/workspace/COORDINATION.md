@@ -15633,6 +15633,41 @@ one-job 16G fallback offered after the 16:40 oom-kill is REVOKED unused. A
 job that cannot fit 14G after restructuring files the fact; it does not
 escalate the cap.
 
+### R-175 — **PHASE 2 RATIFIED: on the certified test surface the state-features package beats the frozen incumbent on btc at every budget and holds on eth; the incumbent itself GENERALIZES (beats random on both coins). BE's winner ASK is VERIFIED — adopt B unscoped, decline C — and goes to the user. Batched lessons adopted.** (2026-08-26 18:0x UTC)
+
+**(1) The result of record** (`phase2_three_arm_v1.json`, committed
+`5cf9edb`; coordinator cross-read the receipt independently): btc net@5/10/
+15% — incumbent +5,822/+8,368/+10,288¢; **B (+PRED_STATE_V1)
++8,192/+12,506/+13,146¢**; C (LGBM) +10,461/+12,129/+12,736¢ — all btc arms
+beat random-max on NET with concentration PASS (top-hour 12-19%, 14-15/15
+hours net-positive). eth: incumbent +1,530/+2,804/+2,906¢ holds; B mixed; C
+below incumbent everywhere, FAILS the null @15% and concentration @5%.
+**The incumbent beating random on both coins on unseen tape is its first
+generalization evidence** — recorded ahead of its forward race.
+Multiplicity honestly 2→4 scored. G=1; the top-up is CONSUMED by this
+scoring; no intervals.
+
+**(2) The winner ASK is VERIFIED** (`harmful_phase2_winner_FREEZE_ASK_v1
+.json`): adopt **B both coins UNSCOPED** — the scoping position is ruled
+correct: btc-only scoping would be chosen BECAUSE btc won on seen data,
+a rule-11 selection; unscoped, eth simply gets tested too. **Decline C**:
+eth below incumbent at every budget, null failure @15%, concentration
+failure @5%, and the model-class diagnostic (C−B small, mixed-sign) shows
+no class effect worth the multiplicity. btc power note accepted:
+UNDERPOWERED-ON-BTC does not apply on this surface (188,629 score actions;
+btc is the better-powered coin here, inverting the R-153(4)-era prior).
+Race multiplicity if yes: 3. **The yes/no is the USER's; presented now.**
+
+**(3) Batched adoptions closing the sprint's lesson queue:** verdict logs
+are APPEND-ONLY from birth and verdicts anchor on RE-DERIVABLE identities
+by design, not luck (DA's truncation self-catch); a superseding ruling
+DEMOTES rather than destroys the alternative when the artifact carries the
+disclosure to reconstruct it (v3's pm_gap fields recover v2's 204 exactly);
+a pre-committed reading of a large result (Q-DA-79: common-mode across
+paired arms — qualifies meaning, never ranking) is declared before data;
+staged fit→persist→free→score is THE memory pattern (proven same-day:
+a 14G+ oom-kill became 5.1G/6.1G peaks under R-174 with identical numbers).
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
