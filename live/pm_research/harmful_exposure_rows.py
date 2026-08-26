@@ -507,6 +507,48 @@ DECLARED_ERA_END_RECEIPTS = {
         "bounds.declared_era_end_s"),
 }
 
+# R-172(1): A POPULATION IS AN INTERVAL, RESOLVED AS ONE OBJECT.
+# The era floor answers "is this event admissible at all"; it is NOT a
+# population's lower bound. BE supplied only the top-up's END and inherited the
+# era literal as its floor, so selection admitted [era_floor, topup_end] --
+# every consumed-fragment slug swept into what was meant to be the held-out
+# test set, and in the direction that FLATTERS candidates fitted on it.
+# Returning a pair makes the one-bound mistake unrepresentable rather than
+# merely discouraged.
+POPULATION_SLUG_INTERVALS = {
+    # name: (exclusive lower t0, exclusive upper t0, receipt path or None)
+    "v3_4_consumed_fragment": (None, 1787650201, None),      # <= 1787650200
+    "da_development_topup": (1787650200, 1787702400,
+        "/home/yuqing/ctaNew/data/pm_5min/derived/da_development_topup_v2.json"),
+}
+
+
+class UndeclaredInterval(RuntimeError):
+    """A population was used without a declared slug interval."""
+
+
+def population_slug_interval(population: str) -> tuple:
+    """(lower_exclusive, upper_exclusive) for a population's slug t0.
+
+    REFUSES an unknown population rather than defaulting to the era floor,
+    which is what turned a 204-window test set into an 808-window superset."""
+    if population not in POPULATION_SLUG_INTERVALS:
+        raise UndeclaredInterval(
+            f"population {population!r} has no declared slug interval. The era "
+            f"floor is NOT a population floor: it answers admissibility, not "
+            f"membership. Declare the interval or refuse.")
+    lo, hi, _ = POPULATION_SLUG_INTERVALS[population]
+    return lo, hi
+
+
+def slug_in_population(t0: int, population: str) -> bool:
+    lo, hi = population_slug_interval(population)
+    if lo is not None and t0 <= lo:
+        return False
+    if hi is not None and t0 >= hi:
+        return False
+    return True
+
 
 class UndeclaredEraEnd(RuntimeError):
     """No declared end is available for this population; refuse to guess."""
@@ -609,6 +651,10 @@ def select_v2_era(coins: Sequence[str],
         except ValueError:
             continue
         if t0 < bounds[0] or t0 + fi.WINDOW_S + MARKOUT_S + 5.0 > bounds[1]:
+            continue
+        # R-172(1): era admissibility is necessary, not sufficient. The slug
+        # must also fall inside THIS population's declared interval.
+        if not slug_in_population(t0, population):
             continue
         if not binance_continuity_ok(t0, coin, bounds):
             n_gap += 1
@@ -1003,6 +1049,30 @@ def selftest() -> int:
     ok(v2_era_bounds("da_development_topup")[1] == 1787702410.0,
        "KNOWN-GOOD: DA's real v2 receipt resolves from the artifact, read at "
        "bounds.declared_era_end_s -- nothing copied, nothing derived")
+
+    # ---- R-172(1) population interval falsifiers -------------------------
+    _lo, _hi = population_slug_interval("da_development_topup")
+    ok((_lo, _hi) == (1787650200, 1787702400),
+       "the top-up's interval is BOTH bounds, from the declaration")
+    ok(not slug_in_population(1787650200, "da_development_topup"),
+       "POSITIVE CONTROL: the consumed fragment's LAST slug is EXCLUDED from "
+       "the top-up -- the exact leak that swept 471 windows into the test set")
+    ok(not slug_in_population(1787579400, "da_development_topup"),
+       "and the consumed fragment's FIRST slug is excluded too")
+    ok(slug_in_population(1787650500, "da_development_topup"),
+       "KNOWN-GOOD: the first genuine top-up slug is included")
+    ok(not slug_in_population(1787702400, "da_development_topup"),
+       "and 08-26 00:00 is excluded -- forward tape is never development tape")
+    ok(slug_in_population(1787650200, "v3_4_consumed_fragment"),
+       "the consumed fragment still contains its own last slug")
+    ok(not slug_in_population(1787650500, "v3_4_consumed_fragment"),
+       "and does NOT contain top-up slugs")
+    try:
+        population_slug_interval("never_declared")
+        ok(False, "an undeclared population must raise")
+    except UndeclaredInterval:
+        ok(True, "an undeclared population RAISES rather than silently "
+                 "inheriting the era floor as its lower bound")
 
     print(f"harmful_exposure_rows v3 selftest: {checks} checks OK")
     return 0
