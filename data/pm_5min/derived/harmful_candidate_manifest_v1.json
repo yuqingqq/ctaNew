@@ -1,5 +1,5 @@
 {
- "as_of_utc": "2026-08-26T06:16:06Z",
+ "as_of_utc": "2026-08-26T06:19:45Z",
  "candidate": {
   "features_fine": [
    "bnf_midbps @10,25,50,100,250ms",
@@ -44,7 +44,7 @@
   "why_this_and_not_the_hash": "the ledger's HASH moves with every restart, but its ERA KEY does not. The key is the invariant worth pinning; the hash is only provenance."
  },
  "freeze_status": "NOT FROZEN. The freeze is the user's decision and Phase-0 reproduction has not yet run.",
- "git_commit": "2c878a1f9b9e233cd2041ee5bdc19a3863734957",
+ "git_commit": "51ae00291bc4be29823e26b300c77ac8c0aa3b0a",
  "git_dirty": true,
  "hashes": {
   "data/mm_hf/collector_runs.jsonl": "c3b3a0b0bf83f7b1cd0d8722fb124f5f6fb4962b4e74ff7db350a4220386abcc",
@@ -121,18 +121,19 @@
  },
  "target_scores_to_reproduce": {
   "btc_PM_PLUS_FINE": {
-   "auc": 0.69231,
+   "auc": 0.6923099451399828,
    "harm_avoided_cents_5pct": 9217.5027415,
    "n_generations": 171452,
    "net_cents_5pct": 2492.200082000001
   },
   "eth_PM_PLUS_FINE": {
-   "auc": 0.731839,
+   "auc": 0.7318387932491669,
    "harm_avoided_cents_5pct": 1878.7572594999995,
    "n_generations": 231721,
    "net_cents_5pct": 131.69754650000002
   },
   "source_receipt": "harmful_fine_comparison_v3.json",
-  "source_sha256_at_snapshot": "3279e2aab3c3723e4832d676dbb014f43eccd09ecf111e2a10107f5dd3cf8228"
+  "source_sha256_at_snapshot": "3279e2aab3c3723e4832d676dbb014f43eccd09ecf111e2a10107f5dd3cf8228",
+  "values_read_from_artifact_not_transcribed": true
  }
 }

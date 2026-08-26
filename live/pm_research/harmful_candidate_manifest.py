@@ -187,6 +187,10 @@ def selftest() -> int:
     ok(_m["pin_semantics"]["data/mm_hf/collector_runs.jsonl"] == "state_at_build",
        "the GROWING ledger is pinned as state_at_build, not as an anchor -- "
        "its hash drifted once already inside a single session")
+    ok(_m["target_scores_to_reproduce"]["btc_PM_PLUS_FINE"]["auc"]
+       != round(_m["target_scores_to_reproduce"]["btc_PM_PLUS_FINE"]["auc"], 6),
+       "targets are READ from the receipt at FULL precision, not transcribed "
+       "at 6dp -- a rounded target reports a perfect reproduction as a failure")
     ok(_m["era_key_at_build"]["distinct_keys_in_ledger"] == 1,
        "and the ledger's ERA KEY -- the part that is actually invariant under "
        "restarts -- is pinned beside it")
@@ -202,6 +206,33 @@ def selftest() -> int:
 
     print(f"harmful_candidate_manifest selftest: {checks} checks OK")
     return 0
+
+
+def _read_targets() -> dict:
+    """READ the targets from the frozen receipt. Never transcribe them.
+
+    BE's first version hand-typed these and rounded the AUCs to six decimals
+    (0.692310 for a true 0.6923099451399828). The comparator, run against the
+    very receipt the targets came from, returned NOT_REPRODUCED -- i.e. a
+    PERFECT reproduction would have been reported as a failure by a target
+    that was never exact in the first place. Third time this session that
+    transcribing a value instead of reading it from the artifact produced a
+    wrong one; the rule is mechanical for the same reason the era end is."""
+    src = DERIVED / "harmful_fine_comparison_v3.json"
+    d = json.loads(src.read_text())
+    out = {"source_receipt": src.name,
+           "source_sha256_at_snapshot": sha256(src),
+           "values_read_from_artifact_not_transcribed": True}
+    for coin in ("btc", "eth"):
+        a = d["paired_arms"][coin]["PM_PLUS_FINE"]
+        g = a.get("gate", {})
+        b = (g.get("budgets") or {}).get("5%", {})
+        out[f"{coin}_PM_PLUS_FINE"] = {
+            "auc": a.get("auc"),
+            "n_generations": g.get("n_generations"),
+            "net_cents_5pct": b.get("net_cents"),
+            "harm_avoided_cents_5pct": b.get("harm_avoided_cents")}
+    return out
 
 
 def build() -> dict:
@@ -336,17 +367,7 @@ def build() -> dict:
         "declared_nulls": {"n_random": 200,
                            "matching": "side x hour strata, matched action count",
                            "decision_metric": "net_cents (NOT harm share)"},
-        "target_scores_to_reproduce": {
-            "source_receipt": "harmful_fine_comparison_v3.json",
-            "source_sha256_at_snapshot":
-                "3279e2aab3c3723e4832d676dbb014f43eccd09ecf111e2a10107f5dd3cf8228",
-            "btc_PM_PLUS_FINE": {"auc": 0.692310, "n_generations": 171452,
-                                 "net_cents_5pct": 2492.200082000001,
-                                 "harm_avoided_cents_5pct": 9217.5027415},
-            "eth_PM_PLUS_FINE": {"auc": 0.731839, "n_generations": 231721,
-                                 "net_cents_5pct": 131.69754650000002,
-                                 "harm_avoided_cents_5pct": 1878.7572594999995},
-        },
+        "target_scores_to_reproduce": _read_targets(),
         "multiplicity_note": "adverse race = v2.1 alone (multiplicity 1) per "
                              "R-147(4); the harmful-fill line is separate.",
         "freeze_status": "NOT FROZEN. The freeze is the user's decision and "
