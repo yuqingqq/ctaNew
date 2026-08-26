@@ -14969,6 +14969,50 @@ historical "max 23" as the operative figure here. Side note relayed to BE:
 DA's scanner is the reference implementation if the ceiling probe forces the
 streaming loader (R-155(2) full-scale equivalence gate unchanged).
 
+### R-157 — **Q-DA-74 accepted: R-156(4)'s ban was correct-but-empty (the pipeline never makes that comparison); the REAL exposure is fit-side generation weighting, and it is settled NOW, inside the pre-declaration window DA created: Phase-2 candidate fits weight w = 1/rows-per-generation; the reference stays exactly the confirmed unweighted spec; the confound is disclosed by design.** (2026-08-26 ~07:3x UTC)
+
+**(1) R-156(4) amended in-band.** DA verified at the code what its Q-DA-73
+inference had assumed: fits are per-coin by design (`harmful_hazard_model.py`
+line 16, per-coin filters at 505-506/1015-1016 — no pooled fit exists) and
+the evaluator is generation-native (per-generation max, `n_generations`
+reported, first-crossing dedup keyed on generation). The row-level
+cross-coin ban STANDS as a guard-rail but is recorded as protecting against
+a comparison nobody makes. The action-unit reporting mandate stands
+unchanged — it guards the evaluator, which was never the exposed surface.
+
+**(2) The surviving exposure, now ruled.** The fit consumes OK rows with NO
+sample weighting, so a generation influences its coin's fitted hazard in
+proportion to its ROW COUNT — a 150-row generation outweighs a 1-row
+generation 150:1 — invisible to a generation-native evaluator (the evaluator
+being correct is exactly why it did not protect), and differentially larger
+on btc (1.72 mean rows/action, tail to 150) than eth (1.12). **RULING,
+declared BEFORE any Phase-2 number exists:** (a) the TODO §4 requirement
+("duplicate decision states are collapsed or explicitly weighted") is
+satisfied in Phase 2 by **explicit weighting: w = 1/n_rows(generation)** in
+the `+PRED_STATE_V1` and pinned-LGBM candidate fits — equal generation
+influence, state diversity retained; (b) the **reference stays the confirmed
+UNWEIGHTED `PM_PLUS_FINE` spec, untouched** — it is the incumbent under
+test, and rewriting the incumbent mid-comparison would unmoor Phase 2 from
+the loop's confirmed result; (c) consequence disclosed IN THE RECEIPT by
+design: a candidate win over the reference is a PACKAGE claim (features +
+weighting changed together); attributing the win between them is a named
+open question answerable later without touching the forward window. Arms
+stay at three; multiplicity unchanged; nothing was scored unweighted first,
+so this declaration costs nothing.
+
+**(3) Weighting on the CONSUMED fragment stays forbidden** exactly as DA
+reasoned: choosing an estimation change there now, with five specs scored,
+is rule-11 selection on seen data. The declaration above binds Phase 2 on
+the top-up only.
+
+**(4) Standing-list addition, in DA's formulation:** *a measurement verified
+at the artifact plus a consequence verified nowhere, stated with the same
+confidence, is the analyst-side twin of "a rule whose text reads correctly
+while what it evaluates is different" — checking WHO ACTUALLY CONSUMES a
+number is part of reporting it.* The measurement being right is what makes
+this defect hard to catch; Q-DA-74 is cited as the exemplar, filed by its
+own author.
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
