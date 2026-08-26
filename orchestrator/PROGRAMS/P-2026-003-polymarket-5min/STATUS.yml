@@ -93,6 +93,32 @@ flags:
                              # Reads windows_gap_affected BESIDE gaps/hour --
                              # 28.0/hr sounded survivable while 80.2% of btc
                              # windows did not. STATES REASONS, does not exclude.
+  btc_shard_fix: REFUTED-NO-DEPLOY # 2026-08-26 DA, bb2e3ff, Q-DA-81.
+                             # R-179(2) smoke test REFUTED the memo's premise:
+                             # a single-asset subscription does NOT carry ~half
+                             # the bytes. price_change frames bundle BOTH tokens
+                             # and arrive once per connection regardless of which
+                             # bundled asset was subscribed, so the bulk stream
+                             # is untouched by sharding. price_change ratio B/A =
+                             # 1.068 and 0.918 (predicted ~2.0); DOWN token
+                             # present in every single-asset phase. R-181: do NOT
+                             # build the patch, no deploy, ping-tighten declined.
+                             # collect_pm.py is BYTE-IDENTICAL to running PID
+                             # 1048; NOTHING ARMED. (Note for any Restart=always
+                             # unit on this box: editing the repo file does not
+                             # stage a patch, it ARMS one -- the file IS the
+                             # deployment artifact.)
+                             # DA WITHDREW its own byte figures as noise (R-182):
+                             # ambient drift between IDENTICAL phases hit 136%,
+                             # paired ratios spanned 0.58-2.20. Direction solid,
+                             # magnitude unestimable.
+  btc_throughput_ab_tests: NON-VIABLE-INSTRUMENT # 2026-08-26 DA, Q-DA-81(4).
+                             # Ambient btc variance makes SHORT A/B throughput
+                             # comparisons on this feed meaningless -- a naive
+                             # A-then-B returned 2.13x and would have "confirmed"
+                             # the memo. Future remedy-verification needs LONG
+                             # integration or WITHIN-CONNECTION pairing, never a
+                             # before/after. Declared before anyone proposes one.
   btc_gap_degradation_ongoing: LIVE-RISK # 2026-08-26 DA. FOUR consecutive days,
                              # not abating: btc gap-affected 15.6% (08-24) /
                              # 80.2% (08-25) / 59.9% (08-26 @18:40Z); eth 1.4 /
