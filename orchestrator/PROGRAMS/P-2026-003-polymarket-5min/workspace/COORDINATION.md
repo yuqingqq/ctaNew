@@ -15322,6 +15322,47 @@ freeze (coordinator-gated, drafted before any cell is read). A user-staffed
 DE seat takes this module over whenever one appears; BE and DA do not touch
 it.
 
+### R-166 — **PHASE 0 IS CLOSED: cent-exact reproduction from committed code, non-circularity proven, ceiling measured with ~31% headroom. The circularity near-miss joins the standing list. FREEZE-DRAFT RULING: the refit trains on the consumed fragment ONLY — the top-up stays Phase 2's untouched test surface. BE drafts the freeze ASK now; the decision goes to the user.** (2026-08-26 08:2x UTC)
+
+**(1) The gate result, ratified as filed (Q-BE-140):** `be-ceiling5` exit 0,
+1 h 15 m 26 s CPU, under `MemoryMax=14G`. `repro_compare`: **CENT_EXACT,
+worst diff 0.000000 on all 8 gated fields** — and the stronger uncommanded
+verification: field-by-field over all three arms × 2 coins × 3 budgets,
+**zero numeric differences**. Non-circularity PROVEN: targets pinned to the
+pre-probe sha (`3279e2aa…`), probe wrote different bytes (`048bb71f…`,
+additive keys), identical numbers. **Ceiling: ~31% headroom under 14 G; the
+streaming loader is NOT licensed and stays shelved** — built, proven on 5 k
+rows, correctly unused. Q-BE-141's dual peak figures (unit 8.3 GiB vs tracer
+9.66 GiB) handled correctly: both recorded, conservative one planning-named,
+dispute disclosed not resolved.
+
+**(2) The circularity near-miss (Q-BE-142) is ratified and its lesson is
+STANDING:** the post-probe manifest rebuild read the live receipt the run
+had just overwritten — every future gate would have compared a run against
+itself and passed unconditionally. Caught one step later; fixed with the
+immutable `harmful_fine_comparison_v3_FROZEN_TARGETS.json` (sha `3279e2aa…`,
+never regenerated) plus a selftest pinning the source hash. **A gate whose
+reference is a file the run can write is not a gate.** BE files the
+disposition of the modified working-tree `v3.json` (regenerated copy,
+identical numbers) — commit-as-reproduction-output or revert; either is
+sound with FROZEN_TARGETS in place.
+
+**(3) RULING for the freeze draft — training data boundary:** the Phase-5
+"refit each chosen candidate once on all declared development/training
+data" refits on **the consumed fragment ONLY (through slug `1787650200`,
+both days)**. The R-145(3) top-up is EXCLUDED from the freeze refit: it is
+Phase 2's declared development-TEST surface, and folding it into the
+incumbent's training would both contaminate that comparison and change the
+incumbent mid-race. Declared here, before any freeze artifact exists.
+
+**(4) Sequence now:** BE drafts the freeze receipt as an ASK — reduced-fine
+PRIMARY + extended HELD, race multiplicity 2, five consumed specs disclosed,
+refit per (3), immutable manifest, declared nulls in-receipt, commit-pinned
+builder (rule 12 complete). Coordinator verifies at the artifacts; **the
+freeze DECISION is the USER'S yes/no (R-162(3))**. If the user freezes
+before 2026-08-27 00:00 UTC, forward day one is 08-27 and the earliest
+honest verdict ~09-01. **TODO Phase 0: CLOSED.**
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
