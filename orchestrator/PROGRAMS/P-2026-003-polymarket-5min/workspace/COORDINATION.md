@@ -14695,6 +14695,57 @@ grows accordingly (it was already an incomplete day; forward day one stays
 **(4) Still root-gated, with the user:** `systemd-oomd` enablement, the small
 swapfile, and deleting the `~/.bashrc` ulimit lines (R-149).
 
+### R-151 — **BE's Q-BE-114/115/116 batch ruled: the blocking item is HELD AT THE USER, not at BE; the method note is adopted as a standing rule against my own error; BE's tape-measured gap supersedes my estimates; R-147(6)'s attribution claim is corrected; the ceiling-probe protocol is set for the moment the user says go.** (2026-08-26 ~05:5x UTC)
+
+**(1) Blocking-item attribution corrected.** The Phase-0 cent-exact repro is
+**HELD BY USER DECISION** — asked directly, the user answered "Don't restart
+now first" and directed collectors first. BE is ready (pattern read and
+agreed), snapshot discipline held across all three attempts (target still
+`3279e2aa`). Every future reading of "THE blocking item" carries this
+attribution: blocked at the user's go/no-go, not BE stalling. The
+prerequisites the user named are now satisfied and verified (collectors
+supervised + tape-verified, fences live) — the go decision is surfaced to
+the user and NOTHING relaunches on a coordinator or peer instruction.
+
+**(2) METHOD NOTE adopted as a STANDING RULE, against the coordinator's own
+error.** Q-BE-111 held DIRECT `MemoryCurrent` readings (8.6/8.8/8.5/8.3 GiB
+at 03:51–03:53) while R-147(1) published a CPU-time extrapolation
+("probably well under its 14 G cap") that those readings already
+contradicted. The direct measurement won; the inference was withdrawn by its
+author (R-148). Standing rule: **before publishing an inference about a
+quantity, search the register for a direct measurement of that quantity;
+an inference may not stand against an unconsulted direct reading already on
+file.** (Rule-16's spirit applied to the register itself.)
+
+**(3) Gap of record: BE's tape measurement supersedes my wall-clock
+estimates.** 08-26 mm_hf dark time = **76.2 min** (75.65 min
+03:56:05→05:11:44 + 0.59 min 05:25:51→05:26:26 unit takeover), measured over
+6,267,329 rows. My R-150(3) "~2–3 min" takeover estimate was 4–5× the
+measured 35 s. Ledger confirmed: three runs, all `hf_ws_v2` — coverage gaps,
+same era. 08-26 remains an incomplete day; forward day one stays 08-27.
+
+**(4) R-147(6) correction (verified at git):** `harmful_candidate_manifest.py`
+was committed by **BE in `55a9907`**, not by the coordinator — BE's commit
+landed in the seconds between my status check and my commit, so my add
+no-op'd and `38b050e` carries only COORDINATION.md. The loss-protection
+rationale was real; the claim of the act was stale-at-write. Corrected
+in-band; `38b050e`'s message is wrong on this point and stays as history.
+
+**(5) Q-BE-115 ACCEPTED:** the manifest's reproduction contract states
+peak_rss as **"> 8.8 GiB, CEILING UNKNOWN", status LOWER_BOUND_ONLY**, with
+two selftests enforcing bound-ness. Correct hardening — a bare figure would
+imply a measurement nobody has.
+
+**(6) CEILING-PROBE PROTOCOL, effective the moment the user says go:**
+relaunch the UNMODIFIED committed builder once at `MemoryMax=14G` inside
+`research.slice`. Completion → ceiling measured, contract updated, Phase-0
+gate proceeds. OOM-kill at 14 G → ceiling established as >14 G, and the
+**memory-conscious load path is auto-licensed** (R-148(5)) with no further
+round-trip — implemented as committed pre-freeze Phase-0 code whose gate is
+unchanged: cent-exact match to the receipt. Implementation work on that load
+path is NOT covered by the user's hold (the hold was on relaunching, not on
+writing code) — starting it now is BE's choice.
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
