@@ -61,6 +61,7 @@ import argparse
 import bisect
 import gzip
 import json
+import re
 import sys
 from bisect import bisect_right
 from collections import defaultdict
@@ -331,7 +332,7 @@ class HFTape:
 
 def _iter_hf_files(symbol: str, days: Sequence[str], stream: str = "bookTicker"):
     root = HF_RAW / stream / symbol
-    for day in days:
+    for day in check_days(days):
         for path in sorted(root.glob(f"{day}_*.csv.gz")):
             yield path
 
@@ -434,10 +435,37 @@ def pm_gap_intervals() -> list[tuple[int, int, str]]:
     return closed
 
 
+_DAY_TOKEN = re.compile(r"^\d{8}$")
+
+
+def check_days(days: Sequence[str]) -> list[str]:
+    """Refuse a day token that cannot name a directory, instead of matching none.
+
+    Q-DA-68, found by it biting me.  BOTH tapes resolve days by string match --
+    PM globs `raw/<day>/` and HF globs `<day>_*.csv.gz` -- and the archive
+    directories are named `20260824`.  So `pm_windows(["2026-08-24"], "btc")`
+    returned 0 windows and raised nothing, and because `joint_coverage` divides
+    by `len(windows) or 1`, every derived figure became a clean-looking zero.
+    A comparison I ran over that empty population reported its two arms
+    "identical" -- a zero from an instrument that never proved it could fire
+    (rule 15), and a silent drop where a counted status belongs (rule 4).
+
+    A well-formed day with no data is a legitimate empty; a day token that
+    cannot match the naming convention is a bug, and fails loudly here.
+    """
+    bad = [d for d in days if not _DAY_TOKEN.match(str(d))]
+    if bad:
+        raise ValueError(
+            f"malformed day token(s) {bad}: expected YYYYMMDD (e.g. 20260824). "
+            "Such a token selects no files on EITHER tape and would silently "
+            "yield an empty population with no error.")
+    return [str(d) for d in days]
+
+
 def pm_windows(days: Sequence[str], coin: str | None = None) -> dict[str, list[int]]:
     """(coin -> sorted window-start epochs) discovered from the raw slugs."""
     out: dict[str, set[int]] = defaultdict(set)
-    for day in days:
+    for day in check_days(days):
         root = PM_ROOT / "raw" / day
         if not root.is_dir():
             continue
@@ -494,21 +522,59 @@ def hf_collector_run_defects(path: Path = HF_RUNS) -> int:
     return defects
 
 
+#: The fields that DEFINE stamp semantics.  A run row that agrees with its
+#: predecessor on all of them changed nothing a sub-second feature can see.
+STAMP_SEMANTICS_FIELDS = ("collector_schema_version", "stamp_point")
+
+
 def stamp_boundaries_ns(symbol: str,
                         records: Sequence[dict[str, Any]] | None = None
                         ) -> list[int]:
-    """Instants at which HF stamp semantics change for `symbol`.
+    """Instants at which HF stamp semantics CHANGE for `symbol`.
+
+    MAINTENANCE, Q-DA-68 (authority: R-110 maintenance of existing DA surface;
+    semantics ruled by R-147(2)).  THE DEFECT THIS REPLACES: the previous body
+    returned every run start, keyed on symbol membership and nothing else --
+    so the docstring said "semantics change" while the code evaluated "a run
+    started".  The 2026-08-26T05:11:43Z collector restart after the box crash
+    therefore appeared as a third boundary, and R-147(2) had ruled it is not
+    one: "schema `hf_ws_v2_recv_boundary` unchanged -> same era, new run; a
+    coverage gap, not a boundary."  Over-refusal is the SAFE direction, which
+    is exactly why it would have sat here unnoticed.
+
+    THE RULE, which is R-147(2) mechanised rather than restated: a run row is
+    a boundary iff its `STAMP_SEMANTICS_FIELDS` differ from the PRECEDING
+    run's.  The first manifested run is always a boundary -- unmanifested
+    legacy history is post-parse stamped, so the transition into the first
+    recorded run IS a semantics change.
 
     An EMPTY ledger yields no boundaries, and that is uniformity rather than
     ignorance: `hf_collector_runs` documents absence as "all legacy
     post-parse", so a run of unmanifested history is genuinely one semantics.
     Unreadable lines are a different matter and are handled by the caller via
     `hf_collector_run_defects`.
+
+    MEASURED IMPACT (Q-DA-68, both arms run, not asserted): 08-24 btc is
+    unchanged (1 straddle, the 13:45Z window, under both rules -- the dropped
+    instants fall inside the same window).  08-26 btc is where the rules can
+    differ and does: stamp_covered 54/55 -> 55/55, straddles [05:10Z] -> [].
+    `joint_covered` is unchanged on BOTH days (234 and 10), because that
+    window already fails HF coverage inside the crash gap.
     """
     recs = hf_collector_runs() if records is None else records
     want = symbol.upper()
-    return sorted({int(r["started_at_ns"]) for r in recs
-                   if want in [str(x).upper() for x in r.get("symbols", [])]})
+    mine = sorted(
+        (r for r in recs
+         if want in [str(x).upper() for x in r.get("symbols", [])]),
+        key=lambda r: int(r["started_at_ns"]))
+    out: list[int] = []
+    prev: tuple[Any, ...] | None = None
+    for r in mine:
+        sem = tuple(r.get(f) for f in STAMP_SEMANTICS_FIELDS)
+        if prev is None or sem != prev:
+            out.append(int(r["started_at_ns"]))
+        prev = sem
+    return out
 
 
 def window_stamp_uniform(window_start: int, boundaries: Sequence[int]) -> bool:
@@ -768,6 +834,74 @@ def _selftests() -> int:
         ok(hf_collector_run_defects(good) == 0, "a clean ledger has no defects")
         ok(hf_collector_run_defects(Path(td) / "absent.jsonl") == 0,
            "an ABSENT ledger is not a defect -- absence means all-legacy")
+
+    # --- Q-DA-68: a boundary is a SEMANTICS CHANGE, not a restart ----------
+    V2 = "hf_ws_v2_recv_boundary"
+    V1 = "hf_ws_v1_postparse"
+    SP2 = "IMMEDIATELY_AFTER_WS_RECV_BEFORE_JSON_PARSE"
+    SP1 = "AFTER_JSON_PARSE"
+
+    def run(ns, schema=V2, sp=SP2, syms=("BTCUSDT",)):
+        return {"started_at_ns": ns, "collector_schema_version": schema,
+                "stamp_point": sp, "symbols": list(syms)}
+
+    # THE REGRESSION GUARD.  This is the real ledger's shape after the
+    # 2026-08-26 box crash: three runs, all identical semantics.  R-147(2)
+    # ruled the restart is "a coverage gap, not a boundary".
+    real = [run(1787579288518862512), run(1787579334881534478),
+            run(1787721103591796536)]
+    ok(stamp_boundaries_ns("BTCUSDT", real) == [1787579288518862512],
+       "a same-semantics restart is NOT a boundary (R-147(2))")
+
+    # FALSIFIER, positive control (rule 15): it must still FIRE on a real one.
+    changed = [run(1787579288518862512, V1, SP1),
+               run(1787579334881534478, V2, SP2),
+               run(1787721103591796536, V2, SP2)]
+    ok(stamp_boundaries_ns("BTCUSDT", changed)
+       == [1787579288518862512, 1787579334881534478],
+       "a genuine v1->v2 semantics change IS a boundary")
+
+    # the two inputs differ ONLY in the schema strings, so a rule that ignores
+    # them cannot answer differently -- this is the R-42 mirror for this rule.
+    ok(stamp_boundaries_ns("BTCUSDT", real)
+       != stamp_boundaries_ns("BTCUSDT", changed),
+       "the rule READS the semantics fields -- identical starts, different answers")
+
+    # a change BACK is also a change
+    ok(stamp_boundaries_ns("BTCUSDT", [run(10, V2), run(20, V1, SP1), run(30, V2)])
+       == [10, 20, 30], "reverting to an older stamp point is still a boundary")
+    # differing on stamp_point ALONE is enough
+    ok(stamp_boundaries_ns("BTCUSDT", [run(10), run(20, V2, SP1)]) == [10, 20],
+       "stamp_point alone distinguishes semantics")
+    ok(stamp_boundaries_ns("BTCUSDT", []) == [],
+       "an empty ledger yields no boundaries")
+    ok(stamp_boundaries_ns("ETHUSDT", real) == [],
+       "still symbol-scoped after the fix")
+    # unsorted input must not fool the pairwise walk
+    ok(stamp_boundaries_ns("BTCUSDT", list(reversed(real)))
+       == [1787579288518862512],
+       "ledger order does not change the answer")
+
+    # --- Q-DA-68: a malformed day token FAILS LOUDLY ----------------------
+    try:
+        check_days(["2026-08-24"])
+    except ValueError:
+        ok(True, "a dashed day token is refused, not silently empty")
+    else:
+        ok(False, "MUST refuse a day token that can match no directory")
+    ok(check_days(["20260824", "20260826"]) == ["20260824", "20260826"],
+       "well-formed day tokens pass through")
+    ok(check_days([]) == [], "an empty day list is not malformed")
+    try:
+        check_days(["20260824", "2026-08-25"])
+    except ValueError as exc:
+        ok("2026-08-25" in str(exc) and "20260824" not in str(exc).split("expected")[0],
+           "the error names the offending token")
+    else:
+        ok(False, "one bad token among good ones must still refuse")
+    # a well-formed but ABSENT day is a legitimate empty, not an error
+    ok(pm_windows(["19700101"], "btc") == {},
+       "a well-formed day with no data is a legitimate empty")
 
     print(f"da_hf_pm_alignment selftests: {checks} checks passed")
     return 0
