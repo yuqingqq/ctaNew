@@ -1,0 +1,13 @@
+NOT THE TEST SET. Superseded per R-172.
+
+This file was built over [era_floor, topup_end] -- which swept all 471
+consumed-fragment windows into what was meant to be the held-out test set --
+and was then FILTERED IN PLACE by BE to slugs > 1787650200 (337 windows).
+
+BE overwrote the rejected 808-window content when filtering, so the artifact
+R-172(3) asks to preserve no longer exists. That was BE's error: a rejected
+artifact is evidence. This file is the post-filter state, kept as the closest
+available provenance, and is NOT to be used as the Phase-2 test surface.
+
+The clean rebuild, with BOTH population bounds resolved as one interval, is
+harmful_exposure_rows_v3_topup.json.
