@@ -1,0 +1,122 @@
+{
+  "HEADLINE": "MEMO PREMISE REFUTED, on a STRUCTURAL observation that reproduces -- not on a byte ratio, which this feed is too noisy to estimate.",
+  "as_of_utc": "2026-08-26T19:01:50Z",
+  "authorised_by": "R-179 step (2); result ruled in R-181",
+  "conclusion_that_survives": "Sharding does NOT halve per-connection bytes. Because price_change is the overwhelming bulk of traffic and each sharded connection still receives it in full, two sharded connections carry roughly TWICE the aggregate price_change volume of today's single connection. The DIRECTION is structural and solid -- aggregate load to this IP RISES rather than staying neutral as the memo assumed -- while the MAGNITUDE is not estimable from this data. Only per-asset book and last_trade_price fall, and they are a small minority of messages. The redundancy/flow-diversity rationale is untouched by any of this and stands entirely on its own.",
+  "deploy_status": "NO PATCH BUILT, NO DEPLOY (R-181). collect_pm.py is byte-identical to the code PID 1048 is running. Nothing armed.",
+  "method_note": "Four runs, THREE of them unusable, and only the design caught each one. (1) A naive A-then-B returned 2.13x -- a textbook confirmation of the memo's ~2.0 -- until the bracketing A phase showed 66% drift between two IDENTICAL phases, i.e. the 'halving' was the market quieting. (2) A second run straddled a window end and measured a market EXPIRING; the tell was the price_change ratio coming out backwards at 0.65. A precondition guard was added and has since fired for real. (3) A fourth run had a phase killed mid-flight by ConnectionClosedError -- the probe met the very NO_CLOSE_FRAME failure mode under diagnosis -- and showed 136% drift. The one usable run is not enough to pin a byte ratio, which is itself the finding about measurability on this feed.",
+  "probe": "btc_shard_probe_v1",
+  "probe_run_4_full": {
+    "A_phase_drift_fraction": 1.363,
+    "as_of_utc": "2026-08-26T19:01:50Z",
+    "authorised_by": "R-179 step (2); result ruled in R-181",
+    "counts": {
+      "down_events_in_A": 12266,
+      "up_events_in_A": 12487
+    },
+    "deploy_implication": "Per-connection bytes fall to ~66% of today -- a real cut if the choke is strictly per-connection (memo: HIGH confidence). But TOTAL bytes to this IP RISE to ~133% of today, because both sharded connections carry the full price_change stream; the memo treated sharding as aggregate-neutral. The memo is only MEDIUM on venue-infra vs network-path, so if any per-IP or path-aggregate component exists the shard could make the condition WORSE. The redundancy/flow-diversity rationale is untouched and stands on its own.",
+    "deploy_status": "NO PATCH BUILT, NO DEPLOY (R-181). collect_pm.py is byte-identical to the code PID 1048 is running. Nothing armed.",
+    "finding": "MEMO PREMISE REFUTED. A single-asset subscription does NOT carry ~half the bytes. price_change frames bundle BOTH tokens and are delivered once per connection regardless of how many of the bundled assets are subscribed, so the price_change stream -- the overwhelming bulk of traffic -- is UNCHANGED by sharding. Only per-asset book/last_trade_price fall, and they are a small minority. The memo's by_asset observation is confirmed; the inference drawn from it fails.",
+    "full_market_bytes_per_s_mean": 193240.5,
+    "market_age_s": 6,
+    "method_note": "THE FIRST DESIGN WOULD HAVE CONFIRMED THE MEMO FALSELY. A naive A-then-B returned 2.13x, matching the ~2.0 prediction; the bracketing A phase then showed 66% drift between two IDENTICAL single-asset phases -- comparable to the ~50% effect -- i.e. the \"halving\" was mostly the market quieting through the window. Redesigned to interleave A/B/A/B/A/B so a monotone trend cancels. A second run was also invalid: it straddled a window end and measured a market EXPIRING, with the price_change ratio coming out backwards (0.65) as the tell. The probe now REFUSES to start unless the window has room for the whole plan, and that guard has since fired for real. Three runs, two junk; only the design caught it.",
+    "paired_ratio_mean": 1.28,
+    "paired_ratios": [
+      0.58,
+      2.197,
+      1.064
+    ],
+    "phase_summary": [
+      {
+        "book": 74,
+        "bytes_per_s": 330777.8,
+        "error": null,
+        "label": "A1_single_up",
+        "last_trade_price": 30,
+        "price_change": 7094
+      },
+      {
+        "book": 110,
+        "bytes_per_s": 115574.8,
+        "error": null,
+        "label": "B1_full_both",
+        "last_trade_price": 46,
+        "price_change": 1970
+      },
+      {
+        "book": 39,
+        "bytes_per_s": 67824.7,
+        "error": "ConnectionClosedError: no close frame received or sent",
+        "label": "A2_single_up",
+        "last_trade_price": 17,
+        "price_change": 1303
+      },
+      {
+        "book": 132,
+        "bytes_per_s": 272419.1,
+        "error": null,
+        "label": "B2_full_both",
+        "last_trade_price": 61,
+        "price_change": 5383
+      },
+      {
+        "book": 37,
+        "bytes_per_s": 180192.1,
+        "error": null,
+        "label": "A3_single_up",
+        "last_trade_price": 24,
+        "price_change": 3869
+      },
+      {
+        "book": 72,
+        "bytes_per_s": 191727.7,
+        "error": null,
+        "label": "B3_full_both",
+        "last_trade_price": 32,
+        "price_change": 3910
+      }
+    ],
+    "predicates": {
+      "down_token_absent_from_single_phase": false,
+      "drift_smaller_than_effect": false,
+      "full_market_ratio_near_2x": false,
+      "no_phase_errored": false,
+      "single_asset_carries_up_token_events": true,
+      "single_asset_subscription_delivers": true
+    },
+    "price_change_msgs_A_mean": 4088.7,
+    "price_change_msgs_B_mean": 3754.3,
+    "price_change_ratio_B_over_A": 0.918,
+    "probe": "btc_shard_probe_v1",
+    "single_asset_bytes_per_s_mean": 192931.5,
+    "slug": "btc-updown-5m-1787770800"
+  },
+  "what_does_NOT_reproduce": {
+    "byte_ratio_B_over_A": {
+      "ambient_drift_between_IDENTICAL_phases": {
+        "run1": 0.66,
+        "run4": 1.363
+      },
+      "paired_ratios_run4": [
+        0.58,
+        2.197,
+        1.064
+      ],
+      "reading": "NOT RELIABLY ESTIMABLE. Ambient drift between identical single-asset phases reached 136%, and run4's paired ratios spanned 0.58 to 2.20. Any single byte figure from this feed at these durations is noise. An earlier DA message quoted 1.507 and a derived '133% of today' as though they were stable; they are not, and this artifact supersedes that precision.",
+      "run3": 1.507,
+      "run4": 1.28
+    }
+  },
+  "what_reproduces": {
+    "down_token_present_in_single_asset_subscription": {
+      "every_run": true,
+      "reading": "price_change frames bundle BOTH tokens and are delivered once per connection regardless of which of the bundled assets was subscribed. This is a property of the venue's message shape, not a measurement, which is why it does not vary."
+    },
+    "price_change_ratio_B_over_A": {
+      "memo_predicted": 2.0,
+      "reading": "A single-asset subscription receives essentially the SAME price_change volume as a full-market one. Reproduced across two independent interleaved runs.",
+      "run3": 1.068,
+      "run4": 0.918
+    }
+  }
+}
