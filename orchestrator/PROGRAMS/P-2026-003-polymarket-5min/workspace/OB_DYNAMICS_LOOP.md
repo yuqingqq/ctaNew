@@ -112,3 +112,23 @@ Probable cause found: the session shell carries `ulimit -v` = 12 GiB
 cap explains the repack RLIMIT_DATA failures. 4b control relaunched with
 `ulimit -v unlimited`, nice -19 (collector protection), and a 20s VSZ/RSS
 sampler for a definitive trace either way.
+
+## I5 FINAL (4b control, receipt harmful_fine_comparison_v5leadctl.json)
+
+NOT ADOPTED. True-lead increments +229/+292/+161c; T-5s shifted control
++264/-871/-662c. The @10/15% gains collapse under the shift (timely), but
+the @5% gain SURVIVES a 5s-stale btc book — slow-covariate, not timeliness;
+per the pre-declared rule a surviving shifted gain flags the candidate.
+BTCLEAD arm reproduced v4lead cent-exact (4a). Kill diagnosis: peak VSZ
+10.1GB < the 12GiB cap — ulimit NOT confirmed as the killer (cap did break
+git repack); completed run used nice -19 + unlimited (n=1).
+
+## LOOP CLOSED — final state
+
+CONFIRMED: reduced fine spec (PM + L1 imbalance + mid-move). Candidates
+scored on consumed tape: 5. Held-unconfirmed: extended (@5%-only, both
+coins). Rejected/null/flagged: depth20, PM-thinning, btc-lead.
+Recommended freeze: reduced primary + extended held (race multiplicity 2;
+5 specs consumed disclosed in the receipt). Freeze decision = USER'S.
+After freeze: >=5 complete untouched UTC days before any forward verdict.
+No further scoring on consumed tape — saturated.
