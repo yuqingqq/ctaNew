@@ -15531,6 +15531,41 @@ manifest (counts, statuses, per-slug identity) before the Phase-2
 comparison receipt is FINALIZED** — the verification may run parallel to
 the arms; a mismatch stops the receipt, not the runs.
 
+### R-172 — **DA's PRE-REGISTERED VERIFIER FIRED ON ITS FIRST REAL TARGET: the built top-up dataset is REJECTED — it contains the entire consumed fragment (808 slugs vs 204; 471 at/before the boundary). Forward reservation INTACT; nothing scored; the cost is a rebuild. Root cause: only ONE of the population's two bounds was threaded. Batched lessons adopted.** (2026-08-26 15:5x UTC)
+
+**(1) The verdict, from the verifier's own output** (`.da_topup_verify.out`,
+15:42:37Z): `slug_set_identity` FAIL (expected 204, built 808, extra 604);
+`no_consumed_fragment` FAIL (471 slugs at/before `1787650200` — the whole
+fragment); `t0_within_declared_bounds` FAIL (range starts at the ERA floor
+`1787579400`); **`no_reserved_forward_tape` PASS — 0 slugs at/after 08-26
+00:00, the unrepairable reservation is intact**; era-end coverage PASS.
+**The dataset is REJECTED for Phase 2.** Because the verifier ran BEFORE any
+arm, no number was produced on it — the R-171(2) in-sample contamination was
+stopped at zero cost beyond a rebuild (~40 min).
+
+**(2) Root cause and FIX (owner BE):** the builder threaded the population's
+declared END through the resolver but took its LOWER bound from the pinned
+ERA floor — a population has TWO bounds and only one was owner-declared in
+the resolution path. Fix: resolve the FULL interval from DA's receipt —
+t0 strictly greater than `1787650200` AND strictly less than `1787702400`
+(the open interval DA's receipt declares) — both bounds read from the
+artifact, neither derived nor copied; extend the R-158 resolver to carry
+(lower, upper) as one object so a one-bound consumer becomes impossible.
+Same pass: the Q-DA-77 atomic-write fix (temp + replace, streamed dump —
+the 1.95 GB `json.dumps` materialization is the R-148 allocation shape).
+The rejected file is renamed `*.REJECTED.json` with a sidecar naming this
+entry (it is a superset that would look plausible later), then REBUILD →
+DA re-arms the verifier → verdict → ONLY THEN the arms.
+
+**(3) Batched adoptions (queued from this sprint):** DA's strict
+pre-registration rationale — **"a verifier authored after seeing the
+artifact can always be shaped to it"** — and its independence principle —
+**"a dataset agreeing with its own header proves nothing"** — join the
+standing list, today proven live: the builder's own summary looked plausible
+and the receipt-anchored check refused it. DA's third-found-third-left-alone
+restraint on BE's surface is cited as the ownership discipline working.
+Q-DA-77 ACKed (fix folded into (2)).
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
