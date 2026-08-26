@@ -14505,6 +14505,82 @@ the manifest + a superseding receipt, not by editing the frozen file. **The
 blocking item is UNCHANGED: the cent-exact reproduction of the reduced-fine
 receipt from committed code.**
 
+### R-147 — **BOX-WIDE HARD STOP ~03:55:30 UTC — not a confirmed OOM. Collectors restarted, gaps recorded, 08-26 is NOT a complete day. v4 VOID is RATIFIED (provenance verified), amending R-146(2,3): the adverse race is v2.1 ALONE. The memory rule is amended per Q-BE-107. Seats now come from the user's opening message in each new pane.** (2026-08-26 ~05:1x UTC)
+
+**(1) The incident, from artifacts.** The machine died between 03:54:18 (last
+journal flush) and 03:55:50 (last hl heartbeat) and booted at 04:37:59 —
+~43 min dark. The previous boot's journal ends ABRUPTLY: **no shutdown
+sequence, no kernel OOM record at all.** Both mm collectors were healthy to
+the last heartbeat (hf recv-lat ~72 ms at 03:55:07). Prime suspect by timing:
+BE's Phase-0 repro attempt 3 (`be-repro2`, started 03:48:34, nice 10, venv
+python) — **but unconfirmed and arguably unlikely as a pure cgroup event**:
+attempts 1–2 were cleanly cgroup-killed at their 8 G cap (enforcement works),
+and attempt 3 was ~7 min in when the box died (attempt 1 needed 10m40s CPU to
+reach 8 G), so it was probably well under its 14 G cap. The signature matches
+the Q-OPS-1 swapless-livelock class OR an external/hypervisor stop. **Only the
+AWS console (EC2 status checks / system log for ~03:55–04:38) can settle it;
+asked of the user.** The repro wrote nothing: `harmful_fine_comparison_v3.json`
+verified intact (sha256 `3279e2aa…`, matches BE's pre-launch snapshot).
+
+**(2) Recovery actions taken (coordinator, acting for the empty OPS seat).**
+Pre-crash logs archived (`collector.log.pre-reboot-20260826`,
+`hl_collector.log.pre-reboot-20260826`). `collect_hf` restarted pid 22023 —
+the ledger appended its run row (`started_at_ns 1787721103591796536` =
+05:11:43 UTC, schema `hf_ws_v2_recv_boundary` unchanged → **same era, new
+run; a coverage gap, not a boundary**). `collect_hl` restarted pid 22026,
+16 coins × 3 streams. PM collectors needed nothing: they auto-recovered at
+04:38:13 because OPS had made them systemd units — **that pattern is now
+MANDATED for `collect_hf`/`collect_hl`** (user units, `Restart=on-failure`,
+boot-enabled, linger is already on; first task for the next OPS-seated
+session; the nohup restarts above are the interim).
+
+**(3) Tape gaps of record (gap start = last written event):**
+mm_hf Binance **03:55:07 → 05:11:43 (76.6 min)** · Hyperliquid 03:55:50 →
+~05:11:43 (~76 min) · PM CLOB + prices ~03:55:30 → 04:38:13 (~43 min).
+Consequences, by the rules already in force: **2026-08-26 is NOT a complete
+UTC day.** For the harmful-cancel line's forward reservation, day one moves
+to **08-27** provided the user's freeze lands before 08-27 00:00 UTC. For the
+v2.1 adverse race, the 08-26 daily admission must fail/degrade on its own
+predicate — the facts are here for it to read. The R-145(3) development
+top-up (all pre-03:55 tape) is UNAFFECTED.
+
+**(4) RULING — v4 VOID is RATIFIED; R-146(2) and R-146(3) are AMENDED.**
+Coordinator verified all three provenance claims at the artifacts:
+`be_adverse_v4_builder.py` untracked; **`git show c7ac8b7:` FAILS while the
+receipt names that exact commit**; the builder on disk holds 3 defs and no
+fit driver. Rule 12: v4 was never validly frozen. Therefore: **the adverse
+race is v2.1 ALONE (multiplicity 1)**; the masked arm of R-146(3), derived
+from a void candidate, is **WITHDRAWN PRE-SCORE** (declared 03:xx, never
+scored — recorded so the declare-then-withdraw is visible, not vanished);
+its addendum receipt stays on disk as provenance. The v4.2 authorization of
+R-146(4) STANDS with two added requirements from the plan: a decision-time
+exposure population (never completed fills — rule 1) and receipt-time
+sub-second features (§4.3 rules 1 s bars insufficient). v4.1 remains the
+superseding receipt documenting WHY v4 is void.
+
+**(5) RULING — the R-145(4) memory rule is AMENDED per Q-BE-107 (adopted):**
+`OOMScoreAdjust=1000` is the invariant part, MANDATORY on every heavy run.
+`MemoryMax` is declared PER-JOB (default 12G, ceiling 16G on this 30G box) —
+the 8 G literal was never the purpose. **`MemoryHigh` is FORBIDDEN**
+(Q-OPS-1: on a swapless box it stalls, never throttles). Units must name the
+venv python explicitly (`systemd-run --user` does not inherit it), and any
+receipt a reproduction would overwrite is snapshotted (hash recorded) before
+launch — both BE findings, both now standing. Pending the AWS verdict on (1),
+heavy runs during forward-tape accrual prefer idle hours; if the console
+shows a memory-pressure stop, they move OFF this box (the I5 flag's option c).
+
+**(6) Seats after the reboot.** Every worker session died with the box; the
+programme state survives in this file, the dispatch and the plans — which is
+the design. The R-146(5) tmux-label pinning is RETIRED (the labels themselves
+changed in the new tmux server). **A session's seat is now exactly what the
+USER's opening message in its pane says** — the authority Q-BE-91/93
+correctly demanded. Each new session: read `COORDINATOR_DISPATCH.md` + this
+register from R-145, take the row matching your user-assigned seat, file
+under your own plane prefix. `harmful_candidate_manifest.py` (BE's Phase-0
+WIP, selftests reported green) is committed by the coordinator for
+loss-protection only — the next BE seat re-verifies it; this commit is not a
+freeze act.
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
