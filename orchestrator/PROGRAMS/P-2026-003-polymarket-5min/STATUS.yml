@@ -13,6 +13,38 @@ updated: >-
   hygiene + recv_ns measurement)
 
 flags:
+  eth_exposure_stewardship: audited-sound # 2026-08-26 DA, Q-DA-73. ETH IS
+                             # THE LOAD-BEARING PHASE-2 POPULATION (R-153(3):
+                             # btc n=33). Streamed the full 1.24GB v3.4 set.
+                             # HEADLINE REPRODUCES EXACTLY, independently:
+                             # 234+237 = 471 windows, OK rows = 1,125,289.
+                             # eth is the RICHER population at the unit that
+                             # matters: 471,079 ACTIONS vs btc 355,165 (+32.6%)
+                             # on 13.7% FEWER rows. HAZARD FOUND: rows-per-
+                             # action is btc 1.7169 vs eth 1.1169 = 1.537x
+                             # DIFFERENTIAL. A row-level btc-vs-eth comparison
+                             # credits btc ~1.54x the effective observations
+                             # per action -- i.e. it FLATTERS the coin R-153
+                             # just recorded as possibly UNDERPOWERED, masking
+                             # the very thing the ruling put on record.
+                             # Evaluate at ACTIONS (rule 2). Tail is longer
+                             # than CLAUDE.md's cited max 23: p99 7, MAX 150.
+                             # Exclusions partition: GAP_IN_HORIZON 10,456 +
+                             # TRUNCATED_HORIZON 198 = 10,654, none silent.
+  day_two_08_26_fails_verification: RULED-FAIL # 2026-08-26 DA, Q-DA-72, under
+                             # the R-153(2) verify-first duty. Complete tape
+                             # short by 9 windows/coin (61 files vs 70 elapsed
+                             # slots) from the R-147(3) outage -- PERMANENT,
+                             # cannot self-heal, so 08-26 must not be scored as
+                             # a forward day. Filed BEFORE scoring, which is
+                             # the whole point of the restored ordering.
+                             # btc/eth divergence now three days: btc 15.6% /
+                             # 80.2% / 50.0% gap-affected vs eth 1.4% / 0.7% /
+                             # 0.0%. Same process+host+hours, so a host-wide
+                             # cause is REFUTED -- including the one DA itself
+                             # proposed in Q-DA-69. Cause unclaimed; OPS
+                             # measurement unstaffed. v2.1 race stays G=1;
+                             # next candidate forward day is 08-27.
   da_topup_receipt: materialised # 2026-08-26 DA, commit c4621af, Q-DA-70.
                              # data/pm_5min/derived/da_development_topup_v1.json
                              # 346 slugs, ALL counted by status. YIELD IS THIN

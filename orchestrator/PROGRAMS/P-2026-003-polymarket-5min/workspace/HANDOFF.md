@@ -2,6 +2,37 @@
 
 Updated: 2026-08-26 (coordinator) — **STATEFUL harmful-cancel phase dispatched.**
 
+## 2026-08-26 (DA, ~06:0xZ) — R-153 ruled all five; day two FAILS verify-first; eth audited
+
+**All five DA filings ruled in R-153 (`f264e60`)**: Q-DA-67 upheld (fix owned by
+BE; Q-DA-68's keying is the reference implementation), Q-DA-69 adopted in full
+(day one STAYS IN with the 80.2%/28-per-hr disclosure on every citation;
+**DA-verifies-first restored as a hard precondition for days 2-5**), Q-DA-70/71
+accepted, Q-DA-68 ACK.
+
+**Q-DA-72 — day two (08-26) FAILS DA verification, filed BEFORE scoring.**
+61 window files vs 70 elapsed slots, **short by 9 per coin**, from the R-147(3)
+outage. Permanent; cannot self-heal. Do not score 08-26 as a forward day. The
+btc/eth divergence is now three days — btc 15.6% / 80.2% / 50.0% gap-affected
+vs eth 1.4% / 0.7% / 0.0% — which **refutes the host-wide cause DA itself
+proposed**; cause stays with the (unstaffed) OPS measurement. v2.1 race stays
+**G=1**; next candidate forward day is **08-27**, which is also the
+harmful-cancel line's day one if the freeze lands first — one degraded day
+would cost both lines at once.
+
+**Q-DA-73 — eth stewardship: sound, and the stronger population.** Streamed the
+full 1.24 GB v3.4 set (~90 MB RSS, 95 s; scanner validated element-for-element
+against `json.load` on the 21 MB file first). **Headline reproduces exactly:
+471 windows, 1,125,289 OK rows.** **eth carries 471,079 ACTIONS vs btc 355,165
+(+32.6%) on 13.7% fewer rows** — at row level eth looks smaller, at the
+decision unit it is larger by a third. **HAZARD: rows-per-action is btc 1.7169
+vs eth 1.1169, a 1.537x differential** — a row-level btc-vs-eth comparison
+flatters btc by ~54%, i.e. masks exactly the underpowering R-153(3) recorded.
+Evaluate at actions (rule 2); tail p99 7, **max 150**.
+
+**Lane state:** PRED_STATE_V1 stays built-not-scored until BE runs Phase 2.
+Standing duty: DA verifies each forward day BEFORE it is scored.
+
 ## 2026-08-26 (DA, ~05:4xZ) — top-up materialised, PRED_STATE_V1 built, two blocking finds
 
 Commit `c4621af`. **DONE:** (1) **R-145(3) top-up receipt** —

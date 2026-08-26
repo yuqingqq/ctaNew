@@ -58,7 +58,7 @@ PM = REPO / "data/pm_5min"
 HF_RUNS = REPO / "data/mm_hf/collector_runs.jsonl"
 MARKETS = PM / "markets.jsonl"
 PM_GAPS = PM / "collector_gaps.jsonl"
-OUT = PM / "derived/da_development_topup_v1.json"
+OUT = PM / "derived/da_development_topup_v2.json"
 
 # --- the declared bounds, verbatim from R-145(3) ---------------------------
 SLUG_START_EXCL_LO = 1787650200      # strictly after
@@ -70,7 +70,26 @@ COINS = ("btc", "eth")
 # Q-DA-67 for what happens when it is derived.
 ERA_FLOOR_RECV_NS = 1787579334881534478
 
-RECEIPT_VERSION = "da_development_topup_v1"
+# CLASS D. The population-scoped declared ERA END, in BE's post-R-154 idiom
+# (`DECLARED_ERA_END_S`): last admissible slug start + WINDOW_S + MARKOUT_S + 5.
+# 1787702100 + 300 + 5 + 5.  DECLARED HERE BECAUSE DA OWNS THIS POPULATION:
+# `harmful_exposure_rows.DECLARED_ERA_END_S` carries an entry only for
+# v3_4_consumed_fragment, so a Phase-2 build of the top-up would otherwise
+# need an end invented by its CONSUMER.  An end chosen by the consumer is an
+# undeclared parameter no matter how reasonable it looks.
+DECLARED_ERA_END_S = 1787702410.0
+POPULATION_NAME = "da_development_topup"
+
+RECEIPT_VERSION = "da_development_topup_v2"
+SUPERSEDES = "da_development_topup_v1.json"
+SUPERSEDE_REASON = (
+    "v1 pinned harmful_exposure_rows.py at sha256 3ed11912... which was the "
+    "PRE-FIX builder. BE's Q-DA-67 remedy (commit c4cb4e3, ratified R-154) "
+    "changed that file, so v1's builder hash no longer describes the code a "
+    "rebuild would run. v2 refreshes the hash and adds the population's "
+    "DECLARED ERA END. The population itself is UNCHANGED and that is "
+    "asserted, not assumed -- see population_unchanged_vs_v1. Rule 13: v1 is "
+    "not edited; it stands as provenance.")
 ROLE = "DEVELOPMENT_ONLY_NEVER_FORWARD_VALIDATION"
 
 BUILDER_FILES = (
@@ -88,6 +107,38 @@ STATUSES = (
     "PM_GAP",
     "BINANCE_GAP_OR_TRUNCATED",
 )
+
+
+class PinnedIdentityMismatch(RuntimeError):
+    """A pinned identity literal does not match the artifact it names."""
+
+
+def assert_era_floor_is_real(path: Path = HF_RUNS) -> dict[str, Any]:
+    """REFUSE unless the pinned floor is an actual run record in the ledger.
+
+    R-154's lesson, adopted: BE's first `DECLARED_ERA_KEY` was copied from
+    console output truncated at 110 characters, and only a guard that REFUSED
+    on mismatch caught it.  A wrong-but-plausible identity literal does not
+    crash -- it silently describes the real runs as some other era while
+    looking entirely correct.
+
+    My own floor was transcribed from the TEXT of R-145(3), which is the same
+    exposure: a ruling is rendered prose, not the artifact.  The literal
+    happens to be right (verified: it is the `started_at_ns` of pid 1369188),
+    but "happens to be right" is not a property a build should rely on.  So
+    this reads the ledger and REFUSES, rather than warning, if the pinned
+    value is not there.
+    """
+    recs = [json.loads(l) for l in
+            path.read_text(encoding="utf-8").splitlines() if l.strip()]
+    hit = [r for r in recs if int(r["started_at_ns"]) == ERA_FLOOR_RECV_NS]
+    if not hit:
+        raise PinnedIdentityMismatch(
+            f"pinned ERA_FLOOR_RECV_NS {ERA_FLOOR_RECV_NS} is not the "
+            f"started_at_ns of ANY run record in {path}. Ledger holds "
+            f"{[int(r['started_at_ns']) for r in recs]}. Refusing to build: a "
+            f"floor that names no real run pins nothing.")
+    return hit[0]
 
 
 def sha256_file(path: Path) -> str:
@@ -128,6 +179,7 @@ def classify(slug: str, t0: int, coin: str, *, paths, tokens, covered,
 
 
 def build(as_of_ns: int | None = None) -> dict[str, Any]:
+    floor_record = assert_era_floor_is_real()      # refuses, never warns
     fi = qr.base.fi
     as_of = as_of_ns if as_of_ns is not None else int(dt.datetime.now(
         dt.timezone.utc).timestamp() * 1e9)
@@ -193,6 +245,8 @@ def build(as_of_ns: int | None = None) -> dict[str, Any]:
     days = sorted({r["day"] for r in rows})
     return {
         "receipt_version": RECEIPT_VERSION,
+        "supersedes": SUPERSEDES,
+        "supersede_reason": SUPERSEDE_REASON,
         "as_of_utc": dt.datetime.fromtimestamp(
             as_of / 1e9, dt.timezone.utc).isoformat(),
         "as_of_ns": as_of,
@@ -217,6 +271,20 @@ def build(as_of_ns: int | None = None) -> dict[str, Any]:
             "last_admissible_slug_start": SLUG_START_EXCL_HI - 300,
             "coins": list(COINS),
             "era_floor_recv_ns": ERA_FLOOR_RECV_NS,
+            "era_floor_verified_at_ledger": {
+                "pid": floor_record.get("pid"),
+                "collector_schema_version": floor_record.get(
+                    "collector_schema_version"),
+                "stamp_point": floor_record.get("stamp_point"),
+                "note": "the pinned floor IS this run record; the build "
+                        "refuses if it is not (R-154 identity lesson)"},
+            "population_name": POPULATION_NAME,
+            "declared_era_end_s": DECLARED_ERA_END_S,
+            "declared_era_end_note": (
+                "last admissible slug start 1787702100 + WINDOW_S 300 + "
+                "MARKOUT_S 5 + 5, matching harmful_exposure_rows' v3.4 "
+                "convention. DECLARED BY DA as the population owner so a "
+                "Phase-2 build does not have to invent one."),
             "continuity_predicate": (
                 "harmful_exposure_rows.binance_continuity_ok over "
                 "[t0-10, t0+WINDOW_S+MARKOUT_S+1], max HF gap <= 1.0s, "
@@ -253,7 +321,9 @@ def build(as_of_ns: int | None = None) -> dict[str, Any]:
                 "the Q-DA-67 defect; it currently selects 0 windows. This "
                 "receipt pins INPUTS, not outputs, and claims nothing about a "
                 "dataset that does not exist."),
-            "unblocks_on": "Q-DA-67 ruling",
+            "unblocks_on": "RESOLVED — Q-DA-67 fixed by BE (c4cb4e3), "
+                           "ratified R-154. A top-up build is now possible; "
+                           "pass era_end_s=1787702410.0 (declared above).",
         },
         "slugs": rows,
     }
@@ -303,6 +373,55 @@ def _selftests() -> int:
        "coincide the guard is vacuous and this test must be re-grounded")
     ok(ERA_FLOOR_RECV_NS == 1787579334881534478,
        "the floor is the value R-145(3) names")
+
+    # --- R-154 identity lesson: the guard REFUSES, and it can FIRE --------
+    rec = assert_era_floor_is_real()
+    ok(int(rec["started_at_ns"]) == ERA_FLOOR_RECV_NS,
+       "the pinned floor IS a real run record in the ledger artifact")
+    ok(rec.get("collector_schema_version") == "hf_ws_v2_recv_boundary",
+       "and that record carries the declared era key")
+
+    import tempfile
+    with tempfile.TemporaryDirectory() as td:
+        # FALSIFIER: a plausible-but-wrong literal, the exact failure R-154
+        # describes -- a truncated/typo'd identity that does not crash.
+        bad = Path(td) / "runs.jsonl"
+        bad.write_text(json.dumps({
+            "started_at_ns": ERA_FLOOR_RECV_NS + 1, "pid": 1,
+            "collector_schema_version": "hf_ws_v2_recv_boundary",
+            "stamp_point": "IMMEDIATELY_AFTER_WS_RECV_BEFORE_JSON_PARSE",
+            "symbols": ["BTCUSDT"]}) + "\n", encoding="utf-8")
+        try:
+            assert_era_floor_is_real(bad)
+        except PinnedIdentityMismatch:
+            ok(True, "the guard REFUSES a floor that names no real run")
+        else:
+            ok(False, "MUST refuse: off by one nanosecond is still not a run")
+        # ... and does not fire on a good one (no false positive)
+        good = Path(td) / "good.jsonl"
+        good.write_text(json.dumps({
+            "started_at_ns": ERA_FLOOR_RECV_NS, "pid": 9,
+            "collector_schema_version": "hf_ws_v2_recv_boundary",
+            "stamp_point": "IMMEDIATELY_AFTER_WS_RECV_BEFORE_JSON_PARSE",
+            "symbols": ["BTCUSDT"]}) + "\n", encoding="utf-8")
+        ok(assert_era_floor_is_real(good)["pid"] == 9,
+           "and accepts a ledger that does carry it")
+        # an EMPTY ledger must refuse too -- absence is not confirmation
+        empty = Path(td) / "empty.jsonl"
+        empty.write_text("", encoding="utf-8")
+        try:
+            assert_era_floor_is_real(empty)
+        except PinnedIdentityMismatch:
+            ok(True, "an empty ledger cannot confirm the floor -- refuses")
+        else:
+            ok(False, "MUST NOT treat an empty ledger as confirmation")
+
+    # --- the declared era end is a literal tied to the declared bounds ----
+    ok(DECLARED_ERA_END_S == (SLUG_START_EXCL_HI - 300) + 300 + 5.0 + 5.0,
+       "the declared end is the last admissible slug's window end + markout, "
+       "derived from the DECLARED bounds rather than picked")
+    ok(DECLARED_ERA_END_S > SLUG_START_EXCL_HI - 300,
+       "the end is after the last admissible slug start")
 
     print(f"da_topup_receipt selftests: {checks} checks passed")
     return 0
