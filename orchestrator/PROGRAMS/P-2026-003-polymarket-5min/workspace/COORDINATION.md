@@ -15227,6 +15227,54 @@ record (survives sessions and reboots); the tripwire lives with the
 coordinator session and is re-armed on session start. OPS absorbs both when
 staffed.
 
+### R-164 — **Attempt 4's root cause RATIFIED: the Q-DA-67 twin in the feature layer, "correct by accident" until the restarts broke the coincidence. The coordinator's split-stage classification is REFUTED at the journal and withdrawn. Sweep: the defect class is now closed at every instance in the tree. Attempt 5 is past every prior failure point.** (2026-08-26 06:57 UTC)
+
+**(1) BE's diagnosis stands; mine is withdrawn.** I classified attempt 4's
+death as a SPLIT-stage empty; the journal refutes it — the split read both
+days correctly, and `kept` was empty because `_era_boundary_ns()` at
+`harmful_hazard_model.py:737` was a SECOND `max(started_at_ns)` instance in
+a file nobody rechecked because the first fix appeared to close the defect.
+**The decisive fact: `max()` was RIGHT BY ACCIDENT until today** — while the
+ledger held two rows its max equalled the pinned literal byte-identically;
+the crash-recovery restarts broke the coincidence, the floor jumped to
+08-26, every 08-24/25 event fell below it, `fine_feats` returned None for
+every row, and the corpse surfaced 5m42s later as an unrelated `IndexError`.
+A silent cause wearing a loud, unrelated symptom. NOT a memory event (peak
+5.3 G, PSI flat); **attempt 4 does not count as the probe; the ceiling
+remains unmeasured.**
+
+**(2) The fix is RATIFIED as a precondition of cent-exactness, not a threat
+to it:** verified that the pre-crash ledger max was byte-identical to the
+pinned literal, so the frozen v3 numbers were generated under exactly the
+value the fix restores. Three NAMED refusals replace the crash (zero rows
+post-features naming the era floor first suspect; empty TRAIN printing the
+days present; empty DEV), `zscale` refuses an empty train by naming itself a
+SYMPTOM and pointing upstream, and the falsifier asserts the ledger max
+CURRENTLY DIFFERS from the pin — the test cannot pass by the coincidence
+that hid the defect. Selftests 35→38.
+
+**(3) Coordinator sweep, executed at the artifacts:** no remaining live
+`max(ledger)`-as-floor derivation exists in `live/pm_research` — the
+surviving occurrences are the regression guards asserting the ban
+(`harmful_hazard_model.py:606`, `da_topup_receipt.py:411` — both compute the
+max precisely to assert the pin is NOT it) and one benign sort. **The defect
+class is closed at both known instances, each behind a
+coincidence-proof falsifier.**
+
+**(4) Standing-list additions:** *"correct by accident" is a live defect —
+a value equal to the right answer by coincidence must be guarded by a test
+that FAILS when the coincidence breaks* (both fixes now carry one). And
+Q-BE-139's tracer lesson: **an instrument's failure mode must not resemble
+its success mode** — the memory tracer logged blank columns for the whole
+run because it looked in the wrong slice; instruments now REFUSE to start
+when they cannot find their subject. Fifth instrument-catches-author of the
+session.
+
+**(5) Attempt 5 (`be-ceiling5`, launched 06:42:06):** past attempt 4's crash
+point AND past run 2's 8 G kill point — anon 8.0 G (peak 8.2) at ~13 min
+against the 14 G cap, PSI flat, box 19 G available. The furthest any
+reproduction attempt has reached. Outcome pending.
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
