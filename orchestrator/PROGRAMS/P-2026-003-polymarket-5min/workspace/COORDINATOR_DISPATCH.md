@@ -41,10 +41,14 @@ Phase-2 number. **Tape from 08-26 00:00 UTC onward is untouched, reserved for
 forward windows.**
 
 ## Standing rules (inherited + new; do not relearn)
-- **NEW (R-145(4)): heavy runs on the collector box launch under
-  `systemd-run --user -p MemoryMax=8G -p OOMScoreAdjust=1000 -- <cmd>`**
-  (fallback `choom -n 1000 --`), plus `nice`. Collectors die last. The shell
-  `ulimit -v 12G` broke git repack and possibly the I5 runs — check it.
+- **HEAVY-RUN RULE (R-148(3), supersedes R-145(4)/R-147(5) patterns): every
+  heavy run launches under
+  `systemd-run --user --slice=research.slice -p MemoryMax=<job ≤14G> -p OOMScoreAdjust=1000 -- /home/yuqing/pricer-sol/venv/bin/python3 <script>`.**
+  The slice caps AGGREGATE research memory at 18G (installed, smoke-tested —
+  the 08-26 03:55 box death was an aggregate exhaustion no per-job cap
+  bounded). Bare heavy launches from session shells are FORBIDDEN. Never
+  `MemoryHigh` (swapless stall); snapshot any receipt a reproduction would
+  overwrite before launching.
 - Verify at the artifact a claim names; every checker ships a falsifier;
   nulls declared before results (≥200 draws); n + as-of on every population
   (R-105); intervals only on the UTC-day cluster unit, else point estimate and
