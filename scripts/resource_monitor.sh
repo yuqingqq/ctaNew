@@ -22,7 +22,8 @@ while true; do
   echo "$(date -u +%FT%TZ),$ma,$sw,$r,$c,$d,$l1,$rp,$cp"
   [ "$ma" -lt 4096 ] && echo "ALERT MEM_AVAIL_LOW ${ma}MiB"
   [ "$sw" -gt 512 ] && echo "ALERT SWAP_IN_USE ${sw}MiB"
-  [ "$r" -gt 17408 ] && echo "ALERT RESEARCH_NEAR_CAP ${r}MiB"
+  ra=$(( $(awk '/^anon /{print $2}' $CG/research.slice/memory.stat 2>/dev/null || echo 0) / 1048576 ))
+  [ "$ra" -gt 16384 ] && echo "ALERT RESEARCH_ANON_HIGH ${ra}MiB"
   for u in collect-hf collect-hl pm-collector-clob pm-collector-prices; do
     systemctl --user is-active --quiet "$u" || echo "ALERT UNIT_DOWN $u"
   done
