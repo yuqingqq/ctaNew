@@ -1,0 +1,132 @@
+{
+ "candidate": {
+  "held": "PM_FINE_EXTENDED (OFI + big-print) \u2014 HELD @5%-only, not primary",
+  "primary": "PM_PLUS_FINE (reduced fine): 54 PM queue/flow features + side-signed L1 imbalance + side-signed mid-move at 10/25/50/100/250ms, cutoff T-1ms",
+  "race_multiplicity_at_freeze": 2
+ },
+ "declared_nulls": {
+  "decision_metric": "net_cents (NOT harm share)",
+  "matching": "side x hour strata, matched action count",
+  "n_random": 200
+ },
+ "development_evidence": {
+  "btc_PM_PLUS_FINE": {
+   "10%": {
+    "beats_random_max_on_NET": true,
+    "net_cents": 6575.473165500004
+   },
+   "15%": {
+    "beats_random_max_on_NET": true,
+    "net_cents": 8289.222933499996
+   },
+   "5%": {
+    "beats_random_max_on_NET": true,
+    "net_cents": 2492.200082000001
+   }
+  },
+  "eth_PM_PLUS_FINE": {
+   "10%": {
+    "beats_random_max_on_NET": true,
+    "net_cents": 1576.5736114999997
+   },
+   "15%": {
+    "beats_random_max_on_NET": true,
+    "net_cents": 2517.3156050000002
+   },
+   "5%": {
+    "beats_random_max_on_NET": false,
+    "net_cents": 131.69754650000002
+   }
+  },
+  "note": "DEVELOPMENT ONLY, on a consumed partial 08-24/25 fragment. Five specs were scored on this tape; it can never serve as forward validation."
+ },
+ "drafted_at_utc": "2026-08-26T08:18:26Z",
+ "era": {
+  "boundary_ns": 1787579334881534478,
+  "boundary_utc": "2026-08-24T13:48:54Z",
+  "declared_era_key": [
+   "hf_ws_v2_recv_boundary",
+   "IMMEDIATELY_AFTER_WS_RECV_BEFORE_JSON_PARSE"
+  ],
+  "era_end_s": 1787650510.0
+ },
+ "honest_caveats": [
+  "btc eth asymmetry: btc PM_PLUS_FINE beats random-max on NET at all three budgets; eth only at 10% and 15%, and is NEGATIVE at 5%.",
+  "G=1 development day. No intervals are quoted and none should be inferred (R-109).",
+  "The whole result rests on ~19h of era-pure tape, not three days.",
+  "Phase 2's weighting work means a future candidate win would be features+weighting jointly; that confound is declared and not resolvable from three arms."
+ ],
+ "phase_0_evidence": {
+  "completed_under_cap": true,
+  "cpu_time_s": 4526,
+  "gate": "PASSED",
+  "non_circular": "targets sha 3279e2aa (pre-probe, immutable) vs probe output sha 048bb71f",
+  "reproduced_from": "committed code, unmodified builder, MemoryMax=14G in research.slice",
+  "stronger_check": "fresh vs immutable frozen copy over 3 arms x 2 coins x 3 budgets: ZERO numeric differences",
+  "verdict": "CENT_EXACT",
+  "worst_cent_diff": 0.0
+ },
+ "pinned": {
+  "builder": "live/pm_research/harmful_hazard_model.py",
+  "freeze_builder": "live/pm_research/harmful_freeze_candidate.py",
+  "git_commit_at_draft": "632aaac3267e52de5446fee2424db8603e59ed69",
+  "manifest": "harmful_candidate_manifest_v1.json",
+  "manifest_sha256": "eb8733da2c8e2126d79e290c398d2ea65b8680721c29198a8219dd80098e04e4"
+ },
+ "population": {
+  "by_coin": {
+   "btc": 609775,
+   "eth": 526168
+  },
+  "by_coin_day": {
+   "btc|2026-08-24": 321770,
+   "btc|2026-08-25": 288005,
+   "eth|2026-08-24": 265018,
+   "eth|2026-08-25": 261150
+  },
+  "consumed": true,
+  "correctness_counters": {
+   "boundary_time_violations": 0,
+   "consume_clock_violations": 0,
+   "reconciliation_failures": 0,
+   "unhooked_state_changes": 0
+  },
+  "days": [
+   "2026-08-24",
+   "2026-08-25"
+  ],
+  "first_slug_t0": 1787579400,
+  "last_slug_t0": 1787650200,
+  "n_rows_ok": 1125289,
+  "n_rows_total": 1135943,
+  "n_windows": 471,
+  "name": "v3_4_consumed_fragment",
+  "role": "DEVELOPMENT ONLY -- partial 08-24/25 fragment, five specs already scored on it. Never forward validation.",
+  "schema": "harmful_exposure_v3_4_fill_scoped_markout",
+  "split_embargo_s": 60,
+  "statuses": {
+   "GAP_IN_HORIZON": 10456,
+   "OK": 1125289,
+   "TRUNCATED_HORIZON": 198
+  }
+ },
+ "protocol": "HARMFUL_REDUCED_FINE_FREEZE_ASK_V1",
+ "refit_on_yes": {
+  "excludes": "the R-145(3) top-up \u2014 Phase 2's untouched development-test surface (R-166(3))",
+  "expected_peak": "~9.66 GiB measured, ~31% headroom under 14 GiB",
+  "guard": "assert_consumed_fragment_only() REFUSES any post-boundary slug",
+  "no_in_sample_verdict": "the refit's own fit numbers are in-sample by construction and are NOT evidence; the evidence is the completed paired comparison",
+  "trains_on": "CONSUMED FRAGMENT ONLY, both days, through slug 1787650200"
+ },
+ "status": "ASK \u2014 NOT FROZEN. The freeze decision is the user's (R-162(3)).",
+ "what_is_being_asked": "Freeze the reduced-fine spec (PM_PLUS_FINE) as the PRIMARY candidate, with extended (OFI+big-print) HELD, and start the forward validation clock.",
+ "what_the_no_costs": {
+  "cost": "the forward clock does not start, so the earliest verdict moves later by however long the decision waits",
+  "nothing_consumed": "a no consumes no tape and voids nothing; the fragment is already consumed either way"
+ },
+ "what_the_yes_costs": {
+  "earliest_honest_verdict": "~2026-08-31 (>=5 complete untouched UTC days, R-109 G>=5)",
+  "forward_clock": "starts at the freeze commit; if yes lands before 2026-08-27T00:00Z, day one is 08-27",
+  "irreversible": "the freeze instant is a commit; corrections supersede as vN+1 and never edit it"
+ }
+}
