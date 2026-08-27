@@ -829,6 +829,50 @@ def _selftests() -> int:
     ok(features_at(gapped, _row(50.0))["state_status"] != "GAP_AT_CUTOFF",
        "a cutoff outside the gap is not flagged -- the gate reads the time")
 
+    # ---- R-191/R-195 CONTAINMENT LOCKS. Both defects were MINE; these two
+    # tests are the regression guard that stops either returning quietly.
+    #
+    # LOCK 1 -- HALF-OPEN AT g1. `_in_gap` read `g0 <= t <= g1`. R-195 verified
+    # at the collector source that BOTH collectors close a gap inside the
+    # handler of the first post-outage message, stamping `gap_end_ns` with THAT
+    # MESSAGE'S OWN recv_ns (collect_pm.py:407-417). So g1 IS a row instant by
+    # construction: 493 rows sit exactly on one in tape v2, and closed
+    # containment flagged every one of them -- the rows built FROM the
+    # gap-ending message, i.e. THE FRESHEST ROWS ON THE TAPE. 289 -> 782.
+    edge = _synth_tape(level_t={key: [1.0]}, level_v={key: [1.0]},
+                       pm_event_t=[1.0], gaps=[(10.0, 40.0)])
+    ok(features_at(edge, _row(40.0))["state_status"] != "GAP_AT_CUTOFF",
+       "EXACTLY at g1 is NOT gap-affected: that instant is where data RESUMED, "
+       "and the row is built from the resuming message itself")
+    ok(features_at(edge, _row(39.999))["state_status"] == "GAP_AT_CUTOFF",
+       "...while one millisecond earlier IS -- so the boundary is tested, not "
+       "the neighbourhood")
+    ok(features_at(edge, _row(10.0))["state_status"] == "GAP_AT_CUTOFF",
+       "g0 remains INCLUSIVE -- half-open at one end only")
+    ok(features_at(edge, _row(40.0))["state_status"]
+       != features_at(edge, _row(39.999))["state_status"],
+       "the two answers DIFFER across g1, so a closed rule cannot pass this "
+       "battery (R-42 mirror on the containment edge)")
+
+    # LOCK 2 -- NEGATIVE t_start MUST BE REACHABLE. The old proxy clipped gaps
+    # to [0, WINDOW_S] window-relative, so no pre-window row could ever match.
+    # 190 of the 192 score-side hits were exactly that class, and the old set
+    # overlapped the ruled set by TWO. Callers now project COIN-level absolute
+    # gaps by SHIFTING (not clipping), which can yield negative bounds.
+    warm = _synth_tape(level_t={key: [1.0]}, level_v={key: [1.0]},
+                       pm_event_t=[1.0], gaps=[(-30.0, -25.0)])
+    ok(features_at(warm, _row(-27.0))["state_status"] == "GAP_AT_CUTOFF",
+       "a PRE-WINDOW cutoff inside a gap logged against the PRECEDING window "
+       "IS flagged -- the class a clipped [0, WINDOW_S] projection cannot see")
+    ok(features_at(warm, _row(-25.0))["state_status"] != "GAP_AT_CUTOFF",
+       "and half-open holds on NEGATIVE bounds too, not just positive ones")
+    ok(features_at(warm, _row(-27.0))["state_status"]
+       != features_at(_synth_tape(level_t={key: [1.0]}, level_v={key: [1.0]},
+                                  pm_event_t=[1.0],
+                                  gaps=[(0.0, 5.0)]), _row(-27.0))["state_status"],
+       "a clipped-to-[0,WINDOW_S] gap list gives a DIFFERENT answer for the "
+       "same row, so the lossy projection cannot pass this battery either")
+
     # ---- 6. duplicates are WEIGHTED, never silently collapsed ------------
     # NB the third row must be GENUINELY distinct: on a flat book, t=26 has
     # the same level size AND the same (zero) velocities as t=25, so an

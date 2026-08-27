@@ -273,7 +273,8 @@ def clock_of(r: dict[str, Any], schema: dict[str, Any],
 
 def _predicates(schema, n_rows, under, present, statuses, bn_vals, pair_bad,
                 asof_checked, asof_viol, tr_max, sc_min, split_seen,
-                gapped_slugs_expected, header) -> list[dict[str, Any]]:
+                gapped_slugs_expected, header,
+                expect_gap_count: int | None = None) -> list[dict[str, Any]]:
     """The same verdicts the list gate renders, from accumulated counters.
 
     Kept beside `gate()` deliberately: two code paths that must agree are a
@@ -324,6 +325,22 @@ def _predicates(schema, n_rows, under, present, statuses, bn_vals, pair_bad,
       f"GAP_AT_CUTOFF rows: {gap_seen}"
       + (f"; population carries {gapped_slugs_expected} gapped slugs"
          if gapped_slugs_expected is not None else ""))
+    # R-196: a NON-ZERO GAP_AT_CUTOFF count is not the same as the RIGHT one.
+    # tape4 returned 286 -- neither the ruled 289 nor the closed-containment
+    # 782 -- and would have sailed past a mere >0 test. An expected count is
+    # supplied only when one has been PRE-REGISTERED; without it this reports
+    # NOT-ASSERTED rather than inventing a target.
+    if expect_gap_count is not None:
+        p("gap_count_matches_expected", gap_seen == expect_gap_count,
+          f"GAP_AT_CUTOFF {gap_seen} vs pre-registered {expect_gap_count}"
+          + ("" if gap_seen == expect_gap_count else
+             f"  <-- MISMATCH ({gap_seen - expect_gap_count:+d})"))
+    else:
+        p("gap_count_matches_expected", False,
+          "no expected count supplied -- NOT ASSERTED by this run (pass "
+          "--expect-gap-count N with a PRE-REGISTERED value)",
+          applicable=False)
+
     bad_status = sum(v for k, v in statuses.items()
                      if k not in set(schema["statuses"]) | {"__ABSENT__"})
     p("statuses_are_declared_values",
@@ -405,7 +422,8 @@ def _accumulate(rows, schema, header):
 
 def gate(rows: list[dict[str, Any]], schema: dict[str, Any],
          gapped_slugs_expected: int | None = None,
-         header: dict[str, Any] | None = None) -> list[dict[str, Any]]:
+         header: dict[str, Any] | None = None,
+         expect_gap_count: int | None = None) -> list[dict[str, Any]]:
     """List-input gate. DELEGATES to the same `_predicates` the stream uses.
 
     It used to render its own verdicts from its own loop, and I added a
@@ -423,11 +441,12 @@ def gate(rows: list[dict[str, Any]], schema: dict[str, Any],
                        acc["statuses"], acc["bn_vals"], acc["pair_bad"],
                        acc["asof_checked"], acc["asof_viol"], acc["tr_max"],
                        acc["sc_min"], acc["split_seen"], gapped_slugs_expected,
-                       header)
+                       header, expect_gap_count)
 
 
 def verify(tape: Path, schema_path: Path = SCHEMA,
-           gapped_slugs_expected: int | None = None) -> dict[str, Any]:
+           gapped_slugs_expected: int | None = None,
+           expect_gap_count: int | None = None) -> dict[str, Any]:
     schema = load_schema(schema_path)
     header = read_header(tape)
     # SINGLE PASS, COUNTERS ONLY. Streaming the parse is not enough: a
@@ -493,7 +512,8 @@ def verify(tape: Path, schema_path: Path = SCHEMA,
                 sc_min = c if sc_min is None else min(sc_min, c)
     preds = _predicates(schema, n_rows, under, present, statuses, bn_vals,
                         pair_bad, asof_checked, asof_viol, tr_max, sc_min,
-                        split_seen, gapped_slugs_expected, header)
+                        split_seen, gapped_slugs_expected, header,
+                        expect_gap_count)
     return {"gate": "da_state_tape_verify_v1", "tape": str(tape),
             "schema_family": schema["family"], "n_rows": n_rows,
             "tape_header_pins": {k: header.get(k) for k in
@@ -736,6 +756,18 @@ def _selftests() -> int:
     ok(plain.get("applicable", True) is True,
        "N/A is granted ONLY on the tape's own declaration, never by default")
 
+    gc_hit = {q["predicate"]: q for q in gate(good, schema, 0, None, 12)}
+    ok(gc_hit["gap_count_matches_expected"]["pass"],
+       "a matching pre-registered count passes")
+    gc_miss = {q["predicate"]: q for q in gate(good, schema, 0, None, 999)}
+    ok(not gc_miss["gap_count_matches_expected"]["pass"],
+       "a MISMATCHED count fails -- tape4's 286 would not sail past a >0 test")
+    gc_none = {q["predicate"]: q for q in gate(good, schema, 0, None, None)}
+    ok(gc_none["gap_count_matches_expected"]["applicable"] is False
+       and gc_none["gap_count_matches_expected"]["pass"] is False,
+       "with NO expected count it is NOT ASSERTED -- never a silent pass, and "
+       "the gate does not invent a target")
+
     print(f"da_state_tape_verify selftests: {checks} checks passed")
     return 0
 
@@ -746,12 +778,15 @@ def main() -> int:
     ap.add_argument("--selftest", action="store_true")
     ap.add_argument("--tape", default=None)
     ap.add_argument("--gapped-slugs", type=int, default=None)
+    ap.add_argument("--expect-gap-count", type=int, default=None,
+                    help="PRE-REGISTERED expected GAP_AT_CUTOFF row count")
     a = ap.parse_args()
     if a.selftest or not a.cmd:
         return _selftests()
     if not a.tape:
         raise SystemExit("--tape PATH required; refusing to guess a tape")
-    rep = verify(Path(a.tape), gapped_slugs_expected=a.gapped_slugs)
+    rep = verify(Path(a.tape), gapped_slugs_expected=a.gapped_slugs,
+                 expect_gap_count=a.expect_gap_count)
     print(json.dumps({k: v for k, v in rep.items() if k != "predicates"},
                      indent=2, sort_keys=True))
     print("\nPREDICATES")
