@@ -162,6 +162,36 @@ flags:
                              # does NOT change the btc/eth asymmetry.
                              # LIMIT: ~13,263 assumes rows uniform in time --
                              # a first-order estimate; 152 and 0.058% are exact.
+  gap_at_cutoff_count: AGREED-289-192 # 2026-08-27 DA, d2a19a4/c519731,
+                             # Q-DA-85/86, ruled R-191, recorded R-192/193.
+                             # DEFINITION (use this, not a per-slug proxy):
+                             #   T = t0 + t_start, ABSOLUTE, in [g0, g1) of ANY
+                             #   gap of that COIN in collector_gaps.jsonl.
+                             #   Universe = all tape rows; unit = rows.
+                             # DA and BE computed INDEPENDENTLY and agree:
+                             #   TOTAL 289 · score-side 192 · train 97 · btc ONLY.
+                             # PRE-REGISTERED: the rebuilt tape must show 289.
+                             # Instrument: live/pm_research/da_gap_at_cutoff_count.py
+                             #   count --tape PATH   (15 selftests, both interval
+                             #   edges, coin-scope R-42 mirror). Era ambiguity
+                             #   implemented LITERALLY (no filter) with an
+                             #   era-filtered count published beside it.
+                             # CROSS-CHECK: T = t0+t_start vs the tape's own
+                             # decision_time_epoch -> max abs error 0.0 on ALL
+                             # 1,764,206 rows. The clock-basis dispute is closed
+                             # BY MEASUREMENT and is re-derivable in one pass.
+                             # DA's OLD 152 IS SUPERSEDED AND WAS NOT A
+                             # MAGNITUDE ERROR: overlap with the ruled set is 2.
+                             # gaps_by_slug CLIPS to [0,300] window-relative so
+                             # no pre-window row can ever match (190 of 192 were
+                             # invisible by construction), and clipping a
+                             # pre-window gap to 0 invents coverage the ledger
+                             # does not agree with. It measured a DIFFERENT
+                             # quantity. MAGNITUDE AGREEMENT IS NOT SET
+                             # AGREEMENT -- check the overlap, not the count.
+                             # btc carries 1,491 merged coin-level gap intervals
+                             # vs <=20 for every other coin (~75x): the
+                             # Q-DA-69/72/84 asymmetry, third independent sighting.
   state_tape_v2_gate: FAIL-ON-GAPS # 2026-08-27 DA, 01603e9, Q-DA-83, upheld
                              # R-190. 9 PASS / 1 N/A / 1 FAIL over 1,764,206
                              # rows (3m59s, 512KB peak -- the streaming
