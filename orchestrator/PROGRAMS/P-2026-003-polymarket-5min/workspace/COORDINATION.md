@@ -16251,6 +16251,25 @@ seams 10d/10e green, streaming rebuild; DA re-gates with **289 as the
 expected GAP_AT_CUTOFF**; on PASS the purged four-arm rerun launches, same
 turn.
 
+### R-193 — **In-band correction to R-192's citation (Q-DA-86, DA's own): the old 152 and the ruled 192 are NEARLY DISJOINT (overlap 2) — the old cross measured a DIFFERENT QUANTITY, not a low estimate of the same one. R-191 replaced a proxy, it did not adjudicate estimates. The 289/192 agreement and Q-DA-83's FAIL stand, both stronger.** (2026-08-27 06:4x UTC)
+
+**(1)** Of the 192 ruled score-side rows: 190 negative-`t_start`, 2
+non-negative — and DA's old cross would have caught exactly TWO. Mechanism,
+structural not tuning: `gaps_by_slug` CLIPS intervals to [0,300]
+window-relative, so no pre-window row could ever match, and clipping a gap
+that began pre-window manufactures window-relative coverage whose absolute
+instants the ledger does not agree are gapped — wrong in BOTH directions.
+R-191(2)'s predicted mechanism is thereby confirmed AND quantified.
+R-192's "the 40-row delta is the projection" framing is superseded by the
+overlap-2 figure: **magnitude agreement is not set agreement.**
+
+**(2) DA's own lesson, adopted verbatim in kind:** the overreaching
+sentence was written while the breakdown that would have corrected it was
+still running — "publishing a result promptly and publishing its
+explanation prematurely are separable decisions… impatience wearing a
+conclusion's clothes." The number was time-critical; the interpretation
+was not; file the number, hold the story.
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
