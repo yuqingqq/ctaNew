@@ -138,11 +138,16 @@ def tape_index(split: str, features_in_order=None) -> dict:
         if str(r.get("state_status", "OK")) != "OK":
             continue
         state = r.get("state") or {}          # NESTED, per features_under
-        idx[(r["slug"], r["side"], r["gen"], r["t_start"])] = tuple(
-            _PIN.encode_row(state, feats))
+        # The index value carries the ENCODED FEATURES plus the two clock
+        # fields the embargo probe needs. Storing only the tuple made
+        # stage_fit read r["t0"] on a tuple (TypeError at :333); reading them
+        # from the KEY works but re-parses a slug, so they travel explicitly.
+        idx[(r["slug"], r["side"], r["gen"], r["t_start"])] = {
+            "vec": tuple(_PIN.encode_row(state, feats)),
+            "t0": float(r["t0"]), "t_start": float(r["t_start"])}
     return idx
 
-def freeze_thresholds(train_scores, budgets):
+def freeze_thresholds(train_scores, budgets, gen_keys=None):
     """CAUSAL thresholds: per-budget cutoffs resolved from TRAINING scores ONLY.
 
     R-184(4)(vi). The evaluator's top-k cutoff is knowable only after seeing the
@@ -152,7 +157,18 @@ def freeze_thresholds(train_scores, budgets):
     if not train_scores:
         raise ValueError("no training scores: a causal threshold cannot be "
                          "resolved from an empty training side")
-    xs = sorted(train_scores, reverse=True)
+    # ACTION UNIT. The evaluator ranks GENERATIONS by their max row score, so a
+    # cutoff taken from the ROW distribution is not comparable to it and
+    # selects the wrong count. When generation keys are supplied the quantile
+    # is taken over per-generation MAXIMA, matching what theta is compared to.
+    if gen_keys is not None:
+        gmax: dict = {}
+        for k, v in zip(gen_keys, train_scores):
+            if k not in gmax or v > gmax[k]:
+                gmax[k] = v
+        xs = sorted(gmax.values(), reverse=True)
+    else:
+        xs = sorted(train_scores, reverse=True)
     out = {}
     for b in budgets:
         k = max(1, int(len(xs) * b))
@@ -195,9 +211,9 @@ def head_diagnostics(p_haz, y_haz, v_true, v_pred):
     hs = [(vp, vt) for vp, vt in zip(v_pred, v_true) if vt != 0.0]
     sign_acc = (sum(1 for vp, vt in hs if (vp > 0) == (vt > 0)) / len(hs)) if hs else None
     mae = (sum(abs(vp - vt) for vp, vt in zip(v_pred, v_true)) / len(v_true)
-           if v_true else None)
+           if v_true and v_pred else None)
     # calibration slope of predicted vs realized value
-    if len(v_true) > 1:
+    if len(v_true) > 1 and len(v_pred) == len(v_true) and v_pred:
         mx = sum(v_pred) / len(v_pred); my = sum(v_true) / len(v_true)
         num = sum((a - mx) * (b - my) for a, b in zip(v_pred, v_true))
         den = sum((a - mx) ** 2 for a in v_pred)
@@ -243,11 +259,15 @@ def _feature_pass(src: Path, population: str, TAPE=None) -> dict:
         crows = [r for r in rows if r["coin"] == coin]
         streams: dict = {}; tapes: dict = {}
         PM = []; FN = []; ST = []; kept = []
-        drops = {"pm": 0, "fine": 0, "state": 0, "state_status": 0}
+        drops = {"pm": 0, "fine": 0, "state": 0, "state_status": 0,
+                 "no_archive": 0}
         bywin: dict = {}
         for r in crows:
             bywin.setdefault(r["slug"], []).append(r)
         for slug, wrows in bywin.items():
+            if slug not in paths or slug not in tokens:
+                drops["no_archive"] = drops.get("no_archive", 0) + len(wrows)
+                continue          # a COUNTED status, never a KeyError
             up, dn = tokens[slug]
             streams[slug] = hm.window_streams(paths[slug], up, dn)
             # R-187 seam 2: CONSUME the rebuilt tape. The previous call was
@@ -287,7 +307,7 @@ def _feature_pass(src: Path, population: str, TAPE=None) -> dict:
                 # seam 11: the tape index already encoded from the NESTED
                 # state block. Passing the outer row here scored every state
                 # feature as 0.0, silently.
-                sv = list(sfe)
+                sv = list(sfe["vec"])
                 PM.append(fp); FN.append(ff); ST.append(sv)
                 kept.append({k: r.get(k) for k in
                              ("slug", "day", "t0", "t_start", "side", "gen",
@@ -311,6 +331,28 @@ def _labels(kept: list):
 FITDIR = DERIVED / "phase2_fits"
 
 
+
+DA_VERDICT = DERIVED / "da_tape_gate_verdict_v5.json"
+
+
+def assert_gate_passed() -> dict:
+    """Fitting REQUIRES DA's ALL-PASS gate verdict on the v5 tape.
+
+    R-199 seam 21: BE built `assert_tape_is_v5` against exactly this class and
+    never called it. A refusal with no call site is documentation. Both entry
+    paths now call this, and an ABSENT verdict is a REFUSAL, not a pass --
+    fitting before the gate has spoken is how a contaminated tape becomes a
+    result."""
+    if not DA_VERDICT.exists():
+        raise RuntimeError(
+            f"REFUSED: {DA_VERDICT.name} absent. Fitting requires DA's gate "
+            f"verdict on the v5 tape; absence is not permission.")
+    v = json.loads(DA_VERDICT.read_text())
+    ok = v.get("verdict") or v.get("result")
+    if str(ok).upper() not in ("PASS", "ALL_PASS", "ALLPASS"):
+        raise RuntimeError(f"REFUSED: gate verdict is {ok!r}, not PASS.")
+    return v
+
 def stage_fit() -> None:
     """STAGE 1: fit B and C on the fragment, persist, exit.
 
@@ -323,6 +365,8 @@ def stage_fit() -> None:
     import lightgbm as lgb
     import numpy as np
     import phase2_embargo as EMB
+    assert_tape_is_v5()          # the tape is the committed-ref v5 build
+    assert_gate_passed()         # and DA's gate has PASSED it
     FITDIR.mkdir(parents=True, exist_ok=True)
     print("  indexing rebuilt tape (train split)...", flush=True)
     TP = tape_index("train")
@@ -331,8 +375,33 @@ def stage_fit() -> None:
     # APPLY the purge -- recording a violation is not applying it (R-187 seam 3)
     print("  indexing score split for the embargo boundary...", flush=True)
     SP = tape_index("score")
-    score_probe = [{"t0": r["t0"], "t_start": r["t_start"]} for r in SP.values()]
-    for coin in FIT:
+    score_probe = [{"t0": v["t0"], "t_start": v["t_start"]} for v in SP.values()]
+    empty_coins = []
+    for coin in list(FIT):
+        # A coin with ZERO kept rows is a NAMED outcome, not a crash. It
+        # previously fell through to assert_embargo and raised
+        # "empty side: embargo is undefined" -- a message about the embargo for
+        # a condition that has nothing to do with it. Surfaced by the
+        # production seam, which ran a population where one coin was absent.
+        if not FIT[coin]["kept"]:
+            # VACUOUS, not an error (rules 4 + 8). An empty side is a
+            # POPULATION STATEMENT: there is nothing to purge, and that fact is
+            # carried as an explicit per-side status rather than deleted. BE's
+            # first fix dropped the coin entirely, which loses the statement;
+            # enforcement of non-emptiness belongs to the GATE
+            # (dataset_non_empty), not to the purge.
+            empty_coins.append(coin)
+            FIT[coin]["embargo_evidence"] = {
+                "train_rows_before_purge": 0, "train_rows_after_purge": 0,
+                "train_rows_dropped": 0, "purge_status": "VACUOUS_N_0",
+                "purge_applicable": False,
+                "note": "n=0 on the training side: nothing to purge. This is a "
+                        "population statement, not a satisfied embargo and not "
+                        "an error. Non-emptiness is the gate's predicate.",
+                "EMBARGO_ENFORCED": None}
+            print(f"  [purge/{coin}] n=0, purge N/A (vacuous) -- carried as a "
+                  f"status, not an error", flush=True)
+            continue
         before = len(FIT[coin]["kept"])
         keep_idx = set()
         kept, dropped = EMB.purge_training(FIT[coin]["kept"], score_probe)
@@ -368,12 +437,35 @@ def stage_fit() -> None:
                     "numbers on both sides of the seam (R-189).",
         }
     del SP, score_probe
-    for coin in ("btc", "eth"):
+    for coin in list(FIT):
         f = FIT[coin]
+        if not f["kept"]:
+            (FITDIR / f"linear_{coin}.json").write_text(json.dumps(
+                {"n_rows": 0, "purge_status": "VACUOUS_N_0",
+                 "embargo_evidence": f.get("embargo_evidence"),
+                 "fitted": False}))
+            continue
         yF, tF = _labels(f["kept"])
         XF = [f["PM"][i] + f["FN"][i] + f["ST"][i] for i in range(len(f["kept"]))]
         Xf, mu, sd = fc.fast_zscale(XF, XF)
         sw = fc.fast_generation_weights(f["kept"])
+        _gk = [(r["slug"], r["side"], r["gen"]) for r in f["kept"]]
+        # arm A applied UNWEIGHTED on PM+fine, scored on the training side to
+        # obtain ITS OWN cutoff (the frozen model is not refitted)
+        _fz = json.loads(FROZEN.read_text())["fits"][coin]
+        _mA, _sA = _fz["norm_mu"], _fz["norm_sd"]
+        WA, WMA = _fz["hazard_weights"], _fz["value_weights"]
+        _w = len(f["PM"][0]) + len(f["FN"][0])
+        if _w != len(_mA):
+            raise RuntimeError(
+                f"REFUSED: the frozen candidate expects {len(_mA)} PM+fine "
+                f"features but this pipeline produces {_w}. A width mismatch "
+                f"between the frozen artifact and the live feature builder "
+                f"would otherwise surface as an IndexError deep in the fit, or "
+                f"silently truncate if the frozen side were the shorter one.")
+        XfA = [[1.0] + [((f["PM"][i] + f["FN"][i])[k] - _mA[k]) / _sA[k]
+                        for k in range(len(_mA))]
+               for i in range(len(f["kept"]))]
         W = fc.fast_fit_logistic_w(Xf, yF, sw)
         ft = [i for i in range(len(yF)) if yF[i]]
         WM = (fc.fast_fit_ridge_w([Xf[i] for i in ft], [tF[i] for i in ft],
@@ -411,19 +503,38 @@ def stage_fit() -> None:
              "causal_thresholds": freeze_thresholds(
                  [fc.fast_predict_p(W, x) *
                   (float(sum(a * b for a, b in zip(WM, x))) if WM else 0.0)
-                  for x in Xf], D.BUDGETS)}))
+                  for x in Xf], D.BUDGETS, gen_keys=_gk),
+             # ARM A and ARM C need their own training-side cutoffs too: a
+             # frozen threshold is per-MODEL, and reusing B's would compare
+             # each arm against another arm's score distribution.
+             "causal_thresholds_armA": freeze_thresholds(
+                 [fc.fast_predict_p(WA, x) *
+                  (float(sum(a * b for a, b in zip(WMA, x))) if WMA else 0.0)
+                  for x in XfA], D.BUDGETS, gen_keys=_gk)}))
         A = np.asarray(Xf, dtype=np.float64); swa = np.asarray(sw)
         clf = lgb.LGBMClassifier(**D.LGBM_PARAMS)
         clf.fit(A, np.asarray(yF), sample_weight=swa)
         clf.booster_.save_model(str(FITDIR / f"lgbm_haz_{coin}.txt"))
+        # arm C's OWN training thresholds, resolved AFTER its model exists
+        _pc = clf.predict_proba(A)[:, 1]
         ftm = np.asarray(yF) == 1
         if ftm.sum() >= 100:
             reg = lgb.LGBMRegressor(**D.LGBM_VALUE_PARAMS)
             reg.fit(A[ftm], np.asarray(tF)[ftm], sample_weight=swa[ftm])
             reg.booster_.save_model(str(FITDIR / f"lgbm_val_{coin}.txt"))
+            _vc = reg.predict(A)
+        else:
+            _vc = np.zeros(len(A))
+        (FITDIR / f"lgbm_thresholds_{coin}.json").write_text(json.dumps(
+            freeze_thresholds((_pc * _vc).tolist(), D.BUDGETS, gen_keys=_gk)))
         print(f"  [fit/{coin}] persisted linear + lgbm; rows {len(f['kept'])}, "
               f"positive {sum(yF)}", flush=True)
         del XF, Xf, A, FIT[coin]["PM"], FIT[coin]["FN"], FIT[coin]["ST"]
+    (FITDIR / "empty_coins.json").write_text(json.dumps(empty_coins))
+    if not FIT:
+        raise RuntimeError(
+            "REFUSED: every coin came back empty. A fit over no population is "
+            "not a null result, it is a broken input path.")
     (FITDIR / "fit_slugs.json").write_text(json.dumps(sorted(
         {r["slug"] for c in FIT.values() for r in c["kept"]})))
     print("STAGE FIT COMPLETE", flush=True)
@@ -437,6 +548,8 @@ def stage_score() -> dict:
     import lightgbm as lgb
     import numpy as np
 
+    assert_tape_is_v5()
+    assert_gate_passed()
     frozen = json.loads(FROZEN.read_text())
     fit_slugs = set(json.loads((FITDIR / "fit_slugs.json").read_text()))
     print("  indexing rebuilt tape (score split)...", flush=True)
@@ -458,7 +571,13 @@ def stage_score() -> dict:
                              "are now separate processes (the daily-refit shape)",
            "da_caveat_field": "RESERVED for Q-DA-79 post-gap queue-validity finding"}
 
+    _empty = json.loads((FITDIR / "empty_coins.json").read_text()) \
+        if (FITDIR / "empty_coins.json").exists() else []
     for coin in ("btc", "eth"):
+        if coin in _empty or not (FITDIR / f"linear_{coin}.json").exists():
+            print(f"  {coin}: not fitted (absent from the population); skipped",
+                  flush=True)
+            continue
         sc = SC[coin]
         lin = json.loads((FITDIR / f"linear_{coin}.json").read_text())
         srows = [hm.keptrow(r) for r in sc["kept"]]
@@ -482,6 +601,10 @@ def stage_score() -> dict:
             return sc["PM"][i] + sc["FN"][i] + sc["ST"][i]
 
         for arm in D.ARMS:
+            # BOUND PER ARM, before any branch. `p_head if p_head else ...`
+            # guarded TRUTHINESS, not BINDING: on arm A the names were never
+            # assigned and the guard itself raised NameError (:484/:550).
+            p_head: list = []; v_head: list = []; thr = None
             if arm == "PM_PLUS_FINE":
                 fz = frozen["fits"][coin]
                 mu, sd = fz["norm_mu"], fz["norm_sd"]
@@ -535,9 +658,16 @@ def stage_score() -> dict:
                     p = hb.predict(S)
                     v = vb.predict(S) if vb is not None else np.zeros(hi - lo)
                     ecv.extend((p * v).tolist())
+                    # arm C's heads: the LGBM hazard probability and value
+                    # prediction. Leaving them empty made head_diagnostics
+                    # divide by len(v_pred)==0 -- the empty-heads class again,
+                    # this time on the one arm whose branch does not build them
+                    # row by row.
+                    p_head.extend(p.tolist()); v_head.extend(v.tolist())
                     del S
             gate = ae.evaluate_policy(srows, ecv, latency_ms=D.TARGET_LATENCY_MS,
-                                      budgets=D.BUDGETS, n_random=D.N_RANDOM)
+                                      budgets=D.BUDGETS, n_random=D.N_RANDOM,
+                                      theta_frozen=thr)
             Lh = str(D.TARGET_LATENCY_MS)
             y_sc = [1 if (r.get("latency") or {}).get(Lh, {}).get(
                         "preventable_shares", 0.0) > 0 else 0 for r in sc["kept"]]
@@ -547,10 +677,7 @@ def stage_score() -> dict:
             # min(1,|ecv|) as a probability and ecv as the value head measured
             # neither head: |product| is not a hazard probability and the
             # product is not a conditional value.
-            heads = head_diagnostics(p_head if p_head else
-                                     [0.0] * len(sc["kept"]),
-                                     y_sc, v_sc,
-                                     v_head if v_head else [0.0] * len(sc["kept"]))
+            heads = head_diagnostics(p_head, y_sc, v_sc, v_head)
             out["arms"].setdefault(coin, {})[arm] = {
                 "gate": gate, "head_diagnostics": heads,
                 "model_kind": PA_KIND(arm),

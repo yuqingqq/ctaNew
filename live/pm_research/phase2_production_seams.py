@@ -67,19 +67,33 @@ def main() -> int:
          "defined at :67 with zero call sites -- a refusal nobody invokes")
     seam("21b stage_score CALLS assert_tape_is_v5",
          "assert_tape_is_v5(" in sc_src)
-    seam("21c fitting REQUIRES DA's verdict artifact",
-         "da_tape_gate_verdict" in fit_src or "da_tape_gate_verdict" in sc_src,
-         "nothing requires an ALL-PASS gate verdict before fitting")
+    _sv = PA.DA_VERDICT
+    PA.DA_VERDICT = Path("/nonexistent/da_tape_gate_verdict_v5.json")
+    try:
+        PA.assert_gate_passed()
+        seam("21c fitting REFUSES without DA's ALL-PASS verdict", False,
+             "an absent verdict was accepted as permission")
+    except RuntimeError as e:
+        seam("21c fitting REFUSES without DA's ALL-PASS verdict",
+             "absence is not permission" in str(e))
+    finally:
+        PA.DA_VERDICT = _sv
 
     # ---- SEAM 20: provenance interface + snapshot import isolation -------
     b_src = (HERE / "build_state_tape_v2.py").read_text()
     seam("20a builder reads BUILD_REF from the ENV",
          'environ["BUILD_REF"]' in b_src or 'environ.get("BUILD_REF"' in b_src,
          "builder runs git at runtime instead of being told its ref")
-    seam("20b builder runs NO git at runtime",
-         'rev-parse' not in b_src,
-         "git at runtime reports the MAIN tree's HEAD AT COMPLETION, not the "
-         "pinned ref the snapshot was cut from")
+    import ast as _ast20
+    _git_calls = []
+    for _n in _ast20.walk(_ast20.parse(b_src)):
+        if isinstance(_n, _ast20.Constant) and isinstance(_n.value, str) \
+           and _n.value == "git":
+            _git_calls.append(getattr(_n, "lineno", -1))
+    seam("20b builder invokes NO git at runtime (AST, not grep)",
+         not _git_calls,
+         f"git invoked at lines {_git_calls}; a comment mentioning rev-parse "
+         f"is not an invocation and a grep cannot tell them apart")
     seam("20c import root comes from __file__, not a hardcoded path",
          'sys.path.insert(0, "/home/yuqing/ctaNew' not in b_src,
          "a hardcoded main-tree sys.path makes a snapshot import the LIVE tree "
@@ -94,6 +108,14 @@ def main() -> int:
         frag = tdp / "frag.json"; top = tdp / "top.json"
         fr = _mini_exposure(frag, 1_000_000.0, 12, "btc", "d1")
         sc = _mini_exposure(top, 1_000_500.0, 8, "btc", "d2")
+        # eth rows too, so the NON-EMPTY path is exercised on both coins and
+        # the fixture is not silently a single-coin test
+        fr += _mini_exposure(tdp / "frag_e.json", 1_000_000.0, 10, "eth", "d1")
+        sc += _mini_exposure(tdp / "top_e.json", 1_000_500.0, 6, "eth", "d2")
+        frag.write_text(json.dumps({"rows": fr, "days": ["d1"], "n_windows": 2,
+            "schema": "harmful_exposure_v3_4_fill_scoped_markout"}))
+        top.write_text(json.dumps({"rows": sc, "days": ["d2"], "n_windows": 2,
+            "schema": "harmful_exposure_v3_4_fill_scoped_markout"}))
         tape = {"protocol": "PHASE2_STATE_TAPE_V5", "features_under": "state",
                 "builder_ref": "0" * 40, "builder_tree_dirty_at_build": False,
                 "rows": []}
@@ -106,13 +128,29 @@ def main() -> int:
                                      "decision_time": r["t_start"],
                                      "state": {k: 0.25 for k in feats}})
         tp = tdp / "tape.json"; tp.write_text(json.dumps(tape))
-        saved = (PA.TAPE_PATH, PA.FRAGMENT, PA.TOPUP, PA.FITDIR)
+        vd = tdp / "verdict.json"
+        vd.write_text(json.dumps({"verdict": "PASS", "synthetic": True}))
+        saved = (PA.TAPE_PATH, PA.FRAGMENT, PA.TOPUP, PA.FITDIR, PA.DA_VERDICT)
         PA.TAPE_PATH, PA.FRAGMENT, PA.TOPUP = tp, frag, top
         PA.FITDIR = tdp / "fits"
+        PA.DA_VERDICT = vd
+        import harmful_hazard_model as _hm
+        _saved_fn = (_hm.features, _hm.fine_feats, _hm.window_streams,
+                     _hm.fi._archive_paths, _hm.fi.token_map)
+        _slugs = {r["slug"] for r in fr} | {r["slug"] for r in sc}
+        # the stub must match the FROZEN candidate's PM+fine width, or the
+        # width guard fires on the fixture rather than on a real mismatch
+        _fzw = json.loads(PA.FROZEN.read_text())["fits"]["btc"]["norm_mu"]
+        _npm = len(_fzw) - 1
+        _hm.features = lambda *a, **k: [0.3] * _npm
+        _hm.fine_feats = lambda *a, **k: [0.1]
+        _hm.window_streams = lambda *a, **k: object()
+        _hm.fi._archive_paths = lambda *a, **k: {x: Path("/dev/null") for x in _slugs}
+        _hm.fi.token_map = lambda *a, **k: {x: ("u", "d") for x in _slugs}
         try:
             PA.stage_fit()
             seam("17a stage_fit COMPLETES end-to-end on a synthetic v5 tape", True)
-            for coin in ("btc",):
+            for coin in ("btc", "eth"):
                 seam(f"17b arm-D artifact written for {coin}",
                      (PA.FITDIR / f"linear_d_{coin}.json").exists())
         except Exception as e:
@@ -127,7 +165,10 @@ def main() -> int:
             seam("18a stage_score COMPLETES with ALL FOUR arms", False,
                  f"{type(e).__name__}: {e}")
         finally:
-            PA.TAPE_PATH, PA.FRAGMENT, PA.TOPUP, PA.FITDIR = saved
+            (_hm.features, _hm.fine_feats, _hm.window_streams,
+             _hm.fi._archive_paths, _hm.fi.token_map) = _saved_fn
+            (PA.TAPE_PATH, PA.FRAGMENT, PA.TOPUP, PA.FITDIR,
+             PA.DA_VERDICT) = saved
 
     # ---- SEAM 19: causal thresholds actually reach the evaluator ---------
     seam("19a stage_score PASSES theta_frozen to evaluate_policy",

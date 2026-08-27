@@ -25,9 +25,31 @@ from __future__ import annotations
 import gzip, glob, json, os, sys, tempfile
 from pathlib import Path
 
-sys.path.insert(0, "/home/yuqing/ctaNew/live/pm_research")
+# R-199 seam 20c: the import root is THIS FILE'S OWN DIRECTORY. It was
+# hardcoded to the main tree, so a snapshot build imported live-tree modules
+# another seat was editing -- the snapshot isolated nothing. Deriving it from
+# __file__ means a snapshot copy imports its own siblings by construction.
+_ROOT = str(Path(__file__).resolve().parent)
+sys.path.insert(0, _ROOT)
 import phase2_state_schema_freeze as PIN
 import phase2_embargo as EMB
+
+
+def assert_modules_under_root() -> None:
+    """Every pinned module must have loaded from THIS tree, not another.
+
+    Without this, a wrong-tree import is completely silent: the build runs,
+    produces a plausible artifact, and the bytes belong to whatever the live
+    tree happened to contain. That is exactly how tape5b became
+    unattributable."""
+    import gap_at_cutoff_count as _GC
+    for m in (PIN, EMB, _GC):
+        f = str(Path(m.__file__).resolve())
+        if not f.startswith(_ROOT):
+            raise SystemExit(
+                f"REFUSED: {m.__name__} loaded from {f}, which is OUTSIDE this "
+                f"build root {_ROOT}. A snapshot that imports another tree "
+                f"isolates nothing.")
 
 DERIVED = Path("/home/yuqing/ctaNew/data/pm_5min/derived")
 OUT = DERIVED / "phase2_state_tape_v5.json"   # DISTINCT: the v2 path holds
@@ -72,46 +94,26 @@ def bn_recv_for_window(coin: str, t0: float, span: float = 320.0) -> list:
     return out
 
 
-BUILD_PATH_FILES = (
-    "live/pm_research/build_state_tape_v2.py",
-    "live/pm_research/harmful_state_features.py",
-    "live/pm_research/phase2_state_schema_freeze.py",
-    "live/pm_research/phase2_embargo.py",
-    "live/pm_research/gap_at_cutoff_count.py",
-    "live/pm_research/harmful_hazard_model.py",
-)
+def assert_build_ref() -> str:
+    """BUILD_REF must be present and well-formed BEFORE any work begins.
 
-
-def assert_build_path_committed() -> str:
-    """REFUSE to build unless every file in the BUILD PATH is committed.
-
-    R-196(2) says a heavy build launches from a committed ref. That is
-    necessary and NOT sufficient in a shared tree: BE's own work can be fully
-    committed while ANOTHER SEAT is mid-edit on a file BE's builder imports,
-    and the build then runs bytes nobody chose -- which is exactly how tape4
-    produced 286, and how tape5's first launch repeated it one turn after the
-    rule was adopted. Checking `git status` on the BUILD PATH, not on BE's
-    own changes, is the enforceable form of the rule."""
-    import subprocess as _sp
-    root = _sp.run(["git", "rev-parse", "--show-toplevel"],
-                   cwd=str(Path(__file__).resolve().parent),
-                   capture_output=True, text=True).stdout.strip()
-    out = _sp.run(["git", "-C", root, "status", "--porcelain", "--"]
-                  + list(BUILD_PATH_FILES),
-                  capture_output=True, text=True).stdout.strip()
-    if out:
+    An earlier version checked it where the header is written -- after the
+    whole population had been rebuilt. A refusal that fires at the end is not
+    a refusal, it is a wasted build."""
+    r = os.environ.get("BUILD_REF", "").strip()
+    if len(r) != 40 or any(c not in "0123456789abcdef" for c in r.lower()):
         raise SystemExit(
-            "REFUSED: uncommitted changes in the BUILD PATH:\n" +
-            "\n".join("    " + l for l in out.splitlines()) +
-            "\nA result-bearing build must not run bytes that are still "
-            "moving -- whether they are this seat's or another's.")
-    return _sp.run(["git", "-C", root, "rev-parse", "HEAD"],
-                   capture_output=True, text=True).stdout.strip()
+            "REFUSED at startup: BUILD_REF must be a 40-hex commit ref on the "
+            "launch line. A build that determines its own provenance at "
+            "runtime cannot be attributed to the code that produced it.")
+    return r
 
 
 def main() -> int:
-    pinned = assert_build_path_committed()
-    print(f"  build path clean; pinned ref {pinned[:12]}", flush=True)
+    _ref0 = assert_build_ref()
+    assert_modules_under_root()
+    print(f"  modules under snapshot root {_ROOT}", flush=True)
+    print(f"  BUILD_REF {_ref0[:12] or '<ABSENT>'}", flush=True)
     import harmful_hazard_model as hm
     import harmful_state_features as sf
 
@@ -208,12 +210,18 @@ def main() -> int:
     emb_state = "CERTIFIED" if gap >= EMB.EMBARGO_S else (
         f"VIOLATED (unpurged): gap {gap:.3f}s < {EMB.EMBARGO_S}s")
 
+    # RULED PROVENANCE INTERFACE (R-199 seam 20): the LAUNCHER passes
+    # BUILD_REF; the builder READS it and writes it VERBATIM. No git at
+    # runtime -- `git rev-parse HEAD` reported the MAIN tree's head AT
+    # COMPLETION, which is not the ref the snapshot was cut from and is not
+    # attributable to anything.
     import subprocess as _sp
-    _head = _sp.run(["git", "-C", "/home/yuqing/ctaNew", "rev-parse", "HEAD"],
-                    capture_output=True, text=True).stdout.strip()
-    _dirty = bool(_sp.run(["git", "-C", "/home/yuqing/ctaNew", "status",
-                           "--porcelain"], capture_output=True,
-                          text=True).stdout.strip())
+    _ref = os.environ.get("BUILD_REF", "").strip()
+    if len(_ref) != 40 or any(c not in "0123456789abcdef" for c in _ref.lower()):
+        raise SystemExit(
+            "REFUSED: BUILD_REF must be set to a 40-hex commit ref on the "
+            "launch line. A build that determines its own provenance at "
+            "runtime cannot be attributed to the code that produced it.")
     _built_at = _sp.run(["date", "-u", "+%Y-%m-%dT%H:%M:%SZ"],
                         capture_output=True, text=True).stdout.strip()
     out = {
@@ -222,8 +230,8 @@ def main() -> int:
         # ref travels ON the artifact. tape4 was launched 06:08:02Z from a
         # working tree mid-fix and produced GAP_AT_CUTOFF=286 -- an unknown
         # intermediate of six in-flight fixes, reconcilable to nothing.
-        "builder_commit": _head,
-        "builder_tree_dirty_at_build": _dirty,
+        "builder_ref": _ref,               # verbatim from the launcher
+        "snapshot_path": _ROOT,
         "built_at_utc": _built_at,
         # LAYOUT: the schema's native form is FLAT; this tape WRAPS the
         # features, so it declares the wrapping key rather than leaving a
