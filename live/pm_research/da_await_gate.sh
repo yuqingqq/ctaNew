@@ -25,6 +25,11 @@ LOG="${DA_LOG:-/home/yuqing/ctaNew/data/pm_5min/derived/.da_tape_gate.log}"
 EXPECT_COUNT="${DA_EXPECT_COUNT:-}"
 EXPECT_PROV="${DA_EXPECT_PROV:-}"
 GAPPED="${DA_GAPPED_SLUGS:-133}"
+# R-213(4): BOTH checkers must read the SAME pinned ledger the builder used.
+# A gate reading the live ledger while the tape was built from a snapshot is
+# comparing against a different gap population.
+LEDGER="${DA_LEDGER:-}"
+LEDGER_SHA="${DA_EXPECT_LEDGER_SHA:-}"
 # R-212(a/b): THE CONSUMER'S LOCATOR IS THE PRIMARY OUTPUT, not a pin-named
 # file someone must know to look for. `phase2_arms.DA_VERDICT` (:346) resolves
 # exactly this path and REFUSES when it is absent -- so a verdict written under
@@ -50,6 +55,8 @@ track() {  # track <rc>
 run_gate() {
   if [ "${DA_GATE_STUB:-0}" = "1" ]; then return "${DA_STUB_GATE_RC:-0}"; fi
   local args=(verify --tape "$T" --gapped-slugs "$GAPPED")
+  [ -n "$LEDGER" ] && args+=(--ledger "$LEDGER")
+  [ -n "$LEDGER_SHA" ] && args+=(--expect-ledger-sha "$LEDGER_SHA")
   [ -n "$EXPECT_COUNT" ] && args+=(--expect-gap-count "$EXPECT_COUNT")
   [ -n "$EXPECT_PROV" ] && args+=(--expect-provenance "$EXPECT_PROV")
   [ -n "$VERDICT" ] && args+=(--verdict-out "$VERDICT")
@@ -58,7 +65,9 @@ run_gate() {
 
 run_count() {
   if [ "${DA_GATE_STUB:-0}" = "1" ]; then return "${DA_STUB_COUNT_RC:-0}"; fi
-  "$PY" "$D/da_gap_at_cutoff_count.py" count --tape "$T" >> "$LOG" 2>&1
+  local cargs=(count --tape "$T")
+  [ -n "$LEDGER" ] && cargs+=(--ledger "$LEDGER")
+  "$PY" "$D/da_gap_at_cutoff_count.py" "${cargs[@]}" >> "$LOG" 2>&1
 }
 
 if [ "${DA_SKIP_WAIT:-0}" != "1" ]; then
