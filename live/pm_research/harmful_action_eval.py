@@ -99,13 +99,32 @@ def evaluate_policy(rows: Sequence[dict[str, Any]], scores: Sequence[float],
             # valid ranking curve but is not a policy anyone could have run.
             theta = float(theta_frozen[key])
             cancelled = [k for k in order if gmax[k] >= theta]
-            if not cancelled:
-                cancelled = order[:1]
+            # R-203(5): ZERO cancellations is a VALID outcome. Forcing
+            # order[:1] made a policy that would correctly have done
+            # NOTHING cancel its highest-scoring action -- inventing a
+            # decision the frozen threshold explicitly declined to take.
             kk = len(cancelled)
         else:
             kk = max(1, int(n_gens * b))
             cancelled = order[:kk]
             theta = gmax[cancelled[-1]]
+        if not cancelled:
+            out["budgets"][f"{int(b*100)}%"] = {
+                "threshold_mode": "CAUSAL_FROZEN_FROM_TRAIN",
+                "n_cancelled_generations": 0, "n_actions": n_gens,
+                "theta": theta, "net_cents": 0.0, "harm_avoided_cents": 0.0,
+                "sacrifice_cents": 0.0, "random_net_max": 0.0,
+                "random_net_p95": 0.0, "beats_random_max_on_NET": False,
+                "concentration": {"n_hours_with_cancellations": 0,
+                                  "n_hours_net_positive": 0,
+                                  "max_single_hour_net_cents": 0.0,
+                                  "max_single_hour_share_of_net": None,
+                                  "net_by_hour": {},
+                                  "net_excluding_best_hour": 0.0,
+                                  "positive_without_best_hour": False},
+                "note": "the frozen threshold exceeded every generation "
+                        "maximum: the policy correctly cancelled NOTHING"}
+            continue
         net = harm = sac = 0.0
         # PER-HOUR CONCENTRATION (Phase-2 gate). A net figure that is really
         # one hour is not a robust effect, and the aggregate cannot show that.

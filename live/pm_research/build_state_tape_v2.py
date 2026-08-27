@@ -226,7 +226,8 @@ def main() -> int:
     spool = os.fdopen(spool_fd, "w")
     n_rows = 0
     tr_last_exit = float("-inf"); sc_first_feat = float("inf")
-    status_counts: dict = {}
+    status_counts: dict = {}      # EMITTED rows: population statements
+    skip_counts: dict = {}        # PRE-EMISSION: the row never entered at all
     no_token_by_coin_day: dict = {}
     per_split: dict = {}
     for split, src in (("train", FRAGMENT), ("score", TOPUP)):
@@ -246,7 +247,7 @@ def main() -> int:
                 # (which killed tape6 outright), and not a silent .get() skip
                 # (which would shrink the population invisibly).
                 n = len(wrows)
-                status_counts[_why] = status_counts.get(_why, 0) + n
+                skip_counts[_why] = skip_counts.get(_why, 0) + n
                 no_token_by_coin_day[(coin, wrows[0]["day"])] = \
                     no_token_by_coin_day.get((coin, wrows[0]["day"]), 0) + n
                 continue
@@ -305,17 +306,23 @@ def main() -> int:
     # R-202(2) ABSORPTION BOUND. A status absorbs ROW-LEVEL anomalies; it must
     # never absorb a total failure. Any single exclusion status above 1% of
     # input rows refuses the build, with its count named.
-    _total_in = n_rows + sum(v for k, v in status_counts.items() if k != "OK")
-    for _st, _n in sorted(status_counts.items()):
-        if _st == "OK" or _total_in == 0:
+    # R-203(1): the bound applies ONLY to PRE-EMISSION SKIPS. BE's version
+    # iterated every status, so PRE_WINDOW at 3.85% -- a legitimate population
+    # statement about warm-up rows -- would have REFUSED the VALID population
+    # at completion, after ~75 minutes of work. A row that is IN the tape and
+    # labelled is not an absorbed failure; a row that never entered is.
+    _total_in = n_rows + sum(skip_counts.values())
+    for _st, _n in sorted(skip_counts.items()):
+        if _total_in == 0:
             continue
         _frac = _n / _total_in
         if _frac > 0.01:
             raise SystemExit(
-                f"REFUSED: exclusion status {_st} covers {_n:,} of {_total_in:,} "
-                f"input rows ({_frac:.1%}), above the 1% absorption bound. "
-                f"Statuses absorb row-level anomalies, never total failures. "
-                f"All statuses: {status_counts}")
+                f"REFUSED: PRE-EMISSION SKIP {_st} covers {_n:,} of "
+                f"{_total_in:,} input rows ({_frac:.1%}), above the 1% "
+                f"absorption bound. Skips absorb row-level anomalies, never "
+                f"total failures. Skips: {skip_counts}; emitted statuses "
+                f"(NOT bounded): {status_counts}")
     # embargo from the running extremes -- no second pass over the rows
     gap = sc_first_feat - tr_last_exit
     emb = {"gap_s": gap, "embargo_s": EMB.EMBARGO_S,
@@ -361,6 +368,11 @@ def main() -> int:
         "required_inputs_supplied": {"gaps": True, "bn_recv_ns": True},
         "status_field": "state_status",
         "state_status_counts": status_counts,
+        "pre_emission_skip_counts": skip_counts,
+        "skip_vs_status_note": ("skips are rows that never entered the tape "
+                                "(input failures, bounded at 1%); statuses are "
+                                "rows that ARE in the tape and labelled "
+                                "(population statements, unbounded)"),
         "no_token_map_by_coin_day": {f"{c}|{d}": n
                                      for (c, d), n in sorted(
                                          no_token_by_coin_day.items())},

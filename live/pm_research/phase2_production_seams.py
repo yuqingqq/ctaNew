@@ -128,9 +128,29 @@ def main() -> int:
                                      "decision_time": r["t_start"],
                                      "state": {k: 0.25 for k in feats}})
         tp = tdp / "tape.json"; tp.write_text(json.dumps(tape))
+        # R-203(3): the fixture's verdict must satisfy the RULED CONTRACT --
+        # identity, a real predicate table, and binding to THIS tape by hash,
+        # bytes and builder_ref. A bare {"verdict":"PASS"} is exactly what the
+        # contract exists to refuse, so a fixture using one tests nothing.
+        import hashlib as _h
+        _tb = tp.stat().st_size
+        _hh = _h.sha256(tp.read_bytes()).hexdigest()
         vd = tdp / "verdict.json"
-        vd.write_text(json.dumps({"verdict": "PASS", "synthetic": True}))
-        saved = (PA.TAPE_PATH, PA.FRAGMENT, PA.TOPUP, PA.FITDIR, PA.DA_VERDICT)
+        vd.write_text(json.dumps({
+            "verdict": "da_tape_gate_verdict_v1",
+            "predicates": {"schema": True, "non_empty": True,
+                           "gap_count": True, "provenance": True},
+            "tape_path": str(tp), "tape_bytes": _tb,
+            "tape_sha256_prefix": _hh[:16],
+            "builder_ref": "0" * 40,
+            "synthetic_note": "contract-conforming fixture verdict; the real "
+                              "gate emits this shape on the real tape"}))
+        # R-203(4): PA.OUT MUST be sandboxed. The seam run wrote the REAL
+        # phase2_three_arm_v1.json -- a test overwriting an evidentiary
+        # artifact, the same class as filtering a rejected build in place.
+        saved = (PA.TAPE_PATH, PA.FRAGMENT, PA.TOPUP, PA.FITDIR,
+                 PA.DA_VERDICT, PA.OUT)
+        PA.OUT = tdp / "phase2_three_arm_SANDBOX.json"
         PA.TAPE_PATH, PA.FRAGMENT, PA.TOPUP = tp, frag, top
         PA.FITDIR = tdp / "fits"
         PA.DA_VERDICT = vd
@@ -168,7 +188,7 @@ def main() -> int:
             (_hm.features, _hm.fine_feats, _hm.window_streams,
              _hm.fi._archive_paths, _hm.fi.token_map) = _saved_fn
             (PA.TAPE_PATH, PA.FRAGMENT, PA.TOPUP, PA.FITDIR,
-             PA.DA_VERDICT) = saved
+             PA.DA_VERDICT, PA.OUT) = saved
 
     # ---- SEAM 19: causal thresholds actually reach the evaluator ---------
     seam("19a stage_score PASSES theta_frozen to evaluate_policy",
@@ -244,6 +264,71 @@ def main() -> int:
     seam("24e every builder INPUT is verified, not just one",
          "archive_paths" in b24 and "gaps_by_slug" in b24 and "DAYS" in b24,
          "token_map alone passed while archive_paths was empty")
+
+    # ================= SEAM 25 (R-203): the user's six probes ============
+    import harmful_action_eval as ae
+    b25 = (HERE / "build_state_tape_v2.py").read_text()
+    a25 = inspect.getsource(PA)
+
+    # 25a/b: the bound applies to PRE-EMISSION SKIPS only
+    seam("25a skips are tallied SEPARATELY from emitted statuses",
+         "skip_counts" in b25 and "pre_emission_skip_counts" in b25,
+         "one tally meant PRE_WINDOW at 3.85% would refuse a VALID population")
+    seam("25b the 1% bound iterates skips, not statuses",
+         "for _st, _n in sorted(skip_counts.items())" in b25,
+         "iterating status_counts refuses the good build at completion")
+
+    # 25c: a fabricated verdict must be REFUSED
+    import tempfile as _t25, json as _j25
+    _d25 = Path(_t25.mkdtemp()); _v25 = _d25 / "v.json"
+    _v25.write_text(_j25.dumps({"verdict": "PASS"}))
+    _sv25 = PA.DA_VERDICT; PA.DA_VERDICT = _v25
+    try:
+        PA.assert_gate_passed()
+        seam("25c a fabricated {'verdict':'PASS'} is REFUSED", False,
+             "any string can be written into a file")
+    except RuntimeError as _e25:
+        seam("25c a fabricated {'verdict':'PASS'} is REFUSED",
+             "ruled contract" in str(_e25))
+    finally:
+        PA.DA_VERDICT = _sv25
+    seam("25d the verdict is RECOMPUTED from the predicate table",
+         "recomputed all_pass" in a25 or "recomputed" in a25,
+         "trusting a summary field is trusting a string")
+    seam("25e the verdict is BOUND to the tape by hash, bytes and ref",
+         "tape_sha256_prefix" in a25 and "tape_bytes" in a25
+         and "builder_ref" in a25)
+
+    # 25f: zero cancellations is valid
+    ev_src25 = inspect.getsource(ae.evaluate_policy)
+    seam("25f zero cancellations is VALID (no order[:1] force)",
+         "cancelled = order[:1]" not in ev_src25 and
+         "cancelled NOTHING" in ev_src25,
+         "forcing one cancel invents a decision the threshold declined")
+
+    # 25g: multiplicity COMPUTED, not a literal
+    seam("25g multiplicity is COMPUTED from the declaration",
+         "D.MULTIPLICITY_BEFORE + len(D.WEIGHTED_ARMS_V2)" in a25,
+         "a literal beside its own declaration has contradicted it before")
+
+    # 25h: each arm carries ITS OWN thresholds
+    seam("25h the receipt carries each arm's OWN thresholds",
+         '"causal_thresholds": thr' in a25 and "threshold_source" in a25,
+         "the receipt carried B's thresholds for every arm")
+    seam("25i D's thresholds come from GENERATION maxima",
+         a25.count("gen_keys=_gk") >= 4,
+         "a row-quantile cutoff is not comparable to a per-generation max")
+
+    # 25j: value diagnostics condition on the hazard-positive population
+    hd25 = inspect.getsource(PA.head_diagnostics)
+    seam("25j conditional-value diagnostics condition on hazard-positive rows",
+         "if yy" in hd25,
+         "scoring a conditional head over rows with no fill measures it on a "
+         "population it never claims to describe")
+    seam("25k Brier asserts length equality",
+         "len(p_haz) == n" in hd25,
+         "zip() truncates silently, so a short p_haz gave a confident Brier "
+         "over a prefix")
 
     print(f"\n{'PRODUCTION SEAMS GREEN' if not FAILURES else 'PRODUCTION SEAMS RED'}: "
           f"{len(FAILURES)} failing")

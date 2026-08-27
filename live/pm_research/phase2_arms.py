@@ -205,18 +205,26 @@ def head_diagnostics(p_haz, y_haz, v_true, v_pred):
         auc = (rsum - npos * (npos + 1) / 2.0) / (npos * nneg)
     else:
         auc = None
-    brier = sum((p - y) ** 2 for p, y in zip(p_haz, y_haz)) / n if n else None
+    # length equality asserted: zip() silently truncates, so a short p_haz
+    # produced a confident Brier over a prefix rather than an error
+    brier = (sum((p - y) ** 2 for p, y in zip(p_haz, y_haz)) / n
+             if n and len(p_haz) == n else None)
     # harmful-sign discrimination: does the value head separate harmful from
     # favourable outcomes, independent of magnitude?
-    hs = [(vp, vt) for vp, vt in zip(v_pred, v_true) if vt != 0.0]
+    # R-203(6): the conditional-value head is conditional ON A FILL. Scoring
+    # it over rows with no fill measures it on a population it never claims to
+    # describe. Condition on the hazard-positive rows.
+    hs = [(vp, vt) for vp, vt, yy in zip(v_pred, v_true, y_haz)
+          if yy and vt != 0.0]
     sign_acc = (sum(1 for vp, vt in hs if (vp > 0) == (vt > 0)) / len(hs)) if hs else None
-    mae = (sum(abs(vp - vt) for vp, vt in zip(v_pred, v_true)) / len(v_true)
-           if v_true and v_pred else None)
+    _cv = [(vp, vt) for vp, vt, yy in zip(v_pred, v_true, y_haz) if yy]
+    mae = (sum(abs(a - b) for a, b in _cv) / len(_cv)) if _cv else None
     # calibration slope of predicted vs realized value
-    if len(v_true) > 1 and len(v_pred) == len(v_true) and v_pred:
-        mx = sum(v_pred) / len(v_pred); my = sum(v_true) / len(v_true)
-        num = sum((a - mx) * (b - my) for a, b in zip(v_pred, v_true))
-        den = sum((a - mx) ** 2 for a in v_pred)
+    if len(_cv) > 1:
+        _vp = [a for a, _ in _cv]; _vt = [b for _, b in _cv]
+        mx = sum(_vp) / len(_vp); my = sum(_vt) / len(_vt)
+        num = sum((a - mx) * (b - my) for a, b in zip(_vp, _vt))
+        den = sum((a - mx) ** 2 for a in _vp)
         slope = (num / den) if den > 0 else None
     else:
         slope = None
@@ -343,14 +351,60 @@ def assert_gate_passed() -> dict:
     paths now call this, and an ABSENT verdict is a REFUSAL, not a pass --
     fitting before the gate has spoken is how a contaminated tape becomes a
     result."""
+    import hashlib
     if not DA_VERDICT.exists():
         raise RuntimeError(
             f"REFUSED: {DA_VERDICT.name} absent. Fitting requires DA's gate "
             f"verdict on the v5 tape; absence is not permission.")
     v = json.loads(DA_VERDICT.read_text())
-    ok = v.get("verdict") or v.get("result")
-    if str(ok).upper() not in ("PASS", "ALL_PASS", "ALLPASS"):
-        raise RuntimeError(f"REFUSED: gate verdict is {ok!r}, not PASS.")
+    # R-203(3) VERDICT CONTRACT. A bare {"verdict": "PASS"} is a string anyone
+    # can write; it is not evidence that a gate ran on THIS tape. The consumer
+    # identifies the artifact, RECOMPUTES the verdict from the predicate table
+    # rather than trusting a summary field, and binds it to the tape by hash,
+    # size and builder ref.
+    if v.get("verdict") != "da_tape_gate_verdict_v1":
+        raise RuntimeError(
+            f"REFUSED: verdict artifact identifies as {v.get('verdict')!r}, "
+            f"not the ruled contract 'da_tape_gate_verdict_v1'.")
+    table = v.get("predicates") or v.get("predicate_table")
+    if not table:
+        raise RuntimeError("REFUSED: verdict carries no predicate table; a "
+                           "summary field is not a result.")
+    results = (list(table.values()) if isinstance(table, dict)
+               else [x.get("pass") for x in table])
+    recomputed = all(bool(x if not isinstance(x, dict) else x.get("pass"))
+                     for x in results)
+    if not recomputed:
+        raise RuntimeError(
+            f"REFUSED: recomputed all_pass is FALSE over {len(results)} "
+            f"predicates, whatever the summary field says.")
+    tp = Path(v.get("tape_path", ""))
+    if tp.resolve() != TAPE_PATH.resolve():
+        raise RuntimeError(f"REFUSED: verdict is about {tp}, not {TAPE_PATH}.")
+    if not TAPE_PATH.exists():
+        raise RuntimeError(f"REFUSED: {TAPE_PATH.name} absent.")
+    nbytes = TAPE_PATH.stat().st_size
+    if v.get("tape_bytes") != nbytes:
+        raise RuntimeError(
+            f"REFUSED: verdict says {v.get('tape_bytes')} bytes, tape is "
+            f"{nbytes} -- the verdict is about a different artifact.")
+    h = hashlib.sha256()
+    with TAPE_PATH.open("rb") as fh:
+        for chunk in iter(lambda: fh.read(1 << 20), b""):
+            h.update(chunk)
+    digest = h.hexdigest()
+    pref = str(v.get("tape_sha256_prefix", ""))
+    if not pref or not digest.startswith(pref):
+        raise RuntimeError(
+            f"REFUSED: tape sha256 {digest[:16]} does not match the verdict's "
+            f"prefix {pref!r}.")
+    with TAPE_PATH.open() as fh:
+        head = fh.read(4000)
+    meta = json.loads(head[:head.index('"rows"')].rstrip().rstrip(",") + "}")
+    if v.get("builder_ref") != meta.get("builder_ref"):
+        raise RuntimeError(
+            f"REFUSED: verdict builder_ref {v.get('builder_ref')!r} != tape "
+            f"builder_ref {meta.get('builder_ref')!r}.")
     return v
 
 def stage_fit() -> None:
@@ -490,7 +544,7 @@ def stage_fit() -> None:
              "causal_thresholds": freeze_thresholds(
                  [fc.fast_predict_p(Wd, x) *
                   (float(sum(a * b for a, b in zip(WMd, x))) if WMd else 0.0)
-                  for x in Xd], D.BUDGETS)}))
+                  for x in Xd], D.BUDGETS, gen_keys=_gk)}))
         del XD, Xd
         (FITDIR / f"linear_{coin}.json").write_text(json.dumps(
             {"hazard_weights": list(W), "value_weights": list(WM) if WM else None,
@@ -562,8 +616,12 @@ def stage_score() -> dict:
 
     out = {"protocol": "PHASE2_THREE_ARM_V1", "arms": {}, "population": {},
            "declaration_commit": "d7082b6",
+           # rule 10: COMPUTED from the declaration, never written as a
+           # literal beside it. A hardcoded count has contradicted its own
+           # declaration before.
            "multiplicity_before": D.MULTIPLICITY_BEFORE,
-           "multiplicity_after": D.MULTIPLICITY_AFTER,
+           "multiplicity_after": D.MULTIPLICITY_BEFORE + len(D.WEIGHTED_ARMS_V2),
+           "multiplicity_scored_arms": list(D.WEIGHTED_ARMS_V2),
            "n_random": D.N_RANDOM, "decision_metric": D.DECISION_METRIC,
            "lgbm_params": D.LGBM_PARAMS,
            "staged_because": "the single-process run was oom-killed at 14G after "
@@ -681,7 +739,15 @@ def stage_score() -> dict:
             out["arms"].setdefault(coin, {})[arm] = {
                 "gate": gate, "head_diagnostics": heads,
                 "model_kind": PA_KIND(arm),
-                "causal_thresholds": lin.get("causal_thresholds")}
+                # R-203(2): EACH ARM's OWN thresholds. The receipt previously
+                # carried B's for every arm, so three of four rows described a
+                # cutoff their model never used.
+                "causal_thresholds": thr,
+                "threshold_source": {
+                    "PM_PLUS_FINE": "frozen candidate artifact",
+                    "PLUS_PRED_STATE_V1": "linear_{coin}.json",
+                    "INCUMBENT_REWEIGHTED_ONLY": "linear_d_{coin}.json",
+                    "LGBM_PINNED": "lgbm_thresholds_{coin}.json"}.get(arm)}
             print(f"  {coin} {arm:<20} n_actions={gate.get('n_actions')}", flush=True)
             for b, g in gate["budgets"].items():
                 print(f"      @{b}: net {g['net_cents']:+9.1f}c  "
