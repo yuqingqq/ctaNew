@@ -57,7 +57,38 @@ LGBM_PARAMS = {
 }
 LGBM_VALUE_PARAMS = dict(LGBM_PARAMS, objective="regression")
 
-ARMS = ("PM_PLUS_FINE", "PLUS_PRED_STATE_V1", "LGBM_PINNED")
+# ---- v2 AMENDMENT, declared 2026-08-27 BEFORE any purged-rerun number exists
+# R-184(4)(v): arm D isolates the reweighting. B and C carry state features AND
+# w=1/n_rows(generation) together, so a B win could be either. D is the
+# INCUMBENT'S OWN FEATURES with the weighting and nothing else. Then:
+#     D - A  = the weighting alone
+#     B - D  = the state features, given the weighting
+# The confound BE disclosed in v1 as "not decomposable from three arms" becomes
+# decomposable with four. Declaring D now increments the scored-candidate count
+# honestly rather than reading the decomposition out of arms chosen earlier.
+ARMS = ("PM_PLUS_FINE", "PLUS_PRED_STATE_V1", "LGBM_PINNED",
+        "INCUMBENT_REWEIGHTED_ONLY")
+WEIGHTED_ARMS_V2 = ("PLUS_PRED_STATE_V1", "LGBM_PINNED",
+                    "INCUMBENT_REWEIGHTED_ONLY")
+MULTIPLICITY_AFTER_V2 = 5          # 2 frozen + B + C + D
+
+# R-184(4)(vi): CAUSAL thresholds. The v1 evaluator picked a top-k cutoff from
+# the whole scoring population -- knowable only after the fact. That is a valid
+# offline RANKING curve, not a policy anyone could have run. Per-budget score
+# cutoffs are frozen from TRAINING data before scoring; the retrospective curve
+# stays as a named DIAGNOSTIC beside it, never as the primary.
+THRESHOLD_MODES = ("CAUSAL_FROZEN_FROM_TRAIN", "RETROSPECTIVE_TOPK")
+THRESHOLD_PRIMARY = "CAUSAL_FROZEN_FROM_TRAIN"
+
+# R-184(4)(iv): the three head diagnostics, reported SEPARATELY per arm. A
+# product ranking cannot show WHICH head improved; these can.
+HEAD_DIAGNOSTICS = (
+    "hazard_auc", "hazard_brier",
+    "harmful_sign_discrimination",      # does the score separate harmful from favorable
+    "conditional_value_mae", "conditional_value_calibration_slope",
+)
+
+EMBARGO_S = 60.0                   # enforced on TIMES by phase2_embargo
 WEIGHTED_ARMS = ("PLUS_PRED_STATE_V1", "LGBM_PINNED")   # R-157(1); A stays unweighted
 N_RANDOM = 200                                          # rule 6 minimum
 BUDGETS = (0.05, 0.10, 0.15)
@@ -110,6 +141,19 @@ def selftest() -> int:
        "may be chosen after seeing the test side")
     ok(LGBM_PARAMS["random_state"] == 20260826,
        "the seed is pinned, so arm C is reproducible rather than a draw")
+    ok(len(ARMS) == 4 and "INCUMBENT_REWEIGHTED_ONLY" in ARMS,
+       "arm D is declared BEFORE the purged rerun, so state features and "
+       "reweighting can be separated rather than confounded")
+    ok(MULTIPLICITY_AFTER_V2 == 5,
+       "the scored-candidate count increments honestly for arm D: 2 frozen + B + C + D")
+    ok(THRESHOLD_PRIMARY == "CAUSAL_FROZEN_FROM_TRAIN",
+       "the PRIMARY threshold is frozen from training data; the retrospective "
+       "top-k curve is a diagnostic, not the headline")
+    ok(len(HEAD_DIAGNOSTICS) == 5,
+       "five head diagnostics are declared, so the receipt can say WHICH head "
+       "improved rather than only that the product did")
+    ok(EMBARGO_S == 60.0,
+       "the embargo is declared here and enforced on TIMES in phase2_embargo")
     ok(any("UNDERPOWERED" in o for o in DECLARED_OUTCOMES),
        "UNDERPOWERED-ON-BTC is declared as a NAMEABLE outcome before any "
        "number exists, so a thin btc result cannot be spun either way")

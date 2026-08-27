@@ -80,7 +80,7 @@
   "note": "Primary input is the frozen reduced-fine score. If the user approves freeze-B, PLUS_PRED_STATE_V1 slots in HERE without redrafting the protocol; the grid, bars and reporting list are unchanged by which score is fed. Each Phase-4 receipt names the score_source it consumed.",
   "value": "harmful_reduced_fine_candidate_v1.json"
  },
- "status": "ASK \u2014 for the coordinator's FREEZE before any cell is read (R-165(3)).",
+ "status": "FROZEN by the coordinator (R-176, amended R-177/R-178). Superseded v1 retained as provenance.",
  "supersedes": {
   "reason": "v1's grid OMITTED the protection-mode axis required by TODO \u00a76 line 174 ('Run both explicit reducing-side protection and all-orders override cells') and \u00a76 line 67 ('inventory-reducing protection must remain an explicit rule and an explicit ablation'). BE's omission: the draft was built from \u00a77's per-cell reporting list and R-165's rulings, and the requirement lives in \u00a76. v1 is left UNTOUCHED as provenance (rule 13); nothing had been read, so this supersedes cleanly rather than correcting a consumed result.",
   "receipt": "phase4_protocol_ASK_v1.json",

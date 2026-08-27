@@ -1,883 +1,888 @@
 {
-  "arms": {
-    "btc": {
-      "LGBM_PINNED": {
-        "gate": {
-          "budgets": {
-            "10%": {
-              "beats_random_max_on_NET": true,
-              "concentration": {
-                "max_single_hour_net_cents": 2183.0173895000007,
-                "max_single_hour_share_of_net": 0.1799759568694644,
-                "n_hours_net_positive": 12,
-                "n_hours_with_cancellations": 15,
-                "net_by_hour": {
-                  "10": 1037.04,
-                  "11": 545.78,
-                  "12": 525.67,
-                  "13": 331.05,
-                  "14": -804.7,
-                  "15": -10.47,
-                  "16": 1434.15,
-                  "17": 1864.84,
-                  "18": 1251.94,
-                  "19": -215.19,
-                  "20": 1007.51,
-                  "21": 1323.77,
-                  "22": 605.01,
-                  "23": 2183.02,
-                  "9": 1050.07
-                },
-                "net_excluding_best_hour": 9946.48,
-                "positive_without_best_hour": true
-              },
-              "harm_avoided_cents": 46882.371501450034,
-              "n_cancelled_generations": 18862,
-              "net_cents": 12129.494558450013,
-              "random_net_max": -27.71976004999957,
-              "random_net_mean": -3193.701307802,
-              "random_net_p95": -1039.2484415000006,
-              "rho_captured_over_sacrificed": 1.3490213077422117,
-              "sacrifice_cents": 34752.87694300001
-            },
-            "15%": {
-              "beats_random_max_on_NET": true,
-              "concentration": {
-                "max_single_hour_net_cents": 2200.7018000000007,
-                "max_single_hour_share_of_net": 0.17278891887684095,
-                "n_hours_net_positive": 12,
-                "n_hours_with_cancellations": 15,
-                "net_by_hour": {
-                  "10": 1347.96,
-                  "11": 694.43,
-                  "12": 881.53,
-                  "13": 283.65,
-                  "14": -536.76,
-                  "15": -222.89,
-                  "16": 997.88,
-                  "17": 2018.96,
-                  "18": 1322.83,
-                  "19": -529.44,
-                  "20": 867.11,
-                  "21": 1579.63,
-                  "22": 366.89,
-                  "23": 2200.7,
-                  "9": 1463.87
-                },
-                "net_excluding_best_hour": 10535.66,
-                "positive_without_best_hour": true
-              },
-              "harm_avoided_cents": 56238.647760450054,
-              "n_cancelled_generations": 28294,
-              "net_cents": 12736.359566950012,
-              "random_net_max": -418.62162400000057,
-              "random_net_mean": -4539.581010219251,
-              "random_net_p95": -1972.0114527500025,
-              "rho_captured_over_sacrificed": 1.2927744745356426,
-              "sacrifice_cents": 43502.2881935
-            },
-            "5%": {
-              "beats_random_max_on_NET": true,
-              "concentration": {
-                "max_single_hour_net_cents": 1471.2256215,
-                "max_single_hour_share_of_net": 0.1406457269393894,
-                "n_hours_net_positive": 15,
-                "n_hours_with_cancellations": 15,
-                "net_by_hour": {
-                  "10": 771.44,
-                  "11": 673.05,
-                  "12": 815.41,
-                  "13": 442.63,
-                  "14": 439.44,
-                  "15": 438.31,
-                  "16": 322.01,
-                  "17": 1471.23,
-                  "18": 1175.92,
-                  "19": 149.19,
-                  "20": 503.49,
-                  "21": 882.74,
-                  "22": 315.39,
-                  "23": 1145.21,
-                  "9": 915.04
-                },
-                "net_excluding_best_hour": 8989.28,
-                "positive_without_best_hour": true
-              },
-              "harm_avoided_cents": 29375.902633949998,
-              "n_cancelled_generations": 9431,
-              "net_cents": 10460.507073450004,
-              "random_net_max": 1082.4856465,
-              "random_net_mean": -1648.4019971515002,
-              "random_net_p95": -27.15741800000066,
-              "rho_captured_over_sacrificed": 1.5530155073940994,
-              "sacrifice_cents": 18915.395560499997
-            }
-          },
-          "latency_ms": 50,
-          "n_actions": 188629,
-          "n_generations": 188629,
-          "n_rows": 330193,
-          "rows_per_action": 1.750489055235409,
-          "unit": "ACTION"
-        }
+ "STATUS": "SUPERSEDED \u2014 SPLIT-CONTAMINATED. Do not cite these numbers.",
+ "arms": {
+  "btc": {
+   "LGBM_PINNED": {
+    "gate": {
+     "budgets": {
+      "10%": {
+       "beats_random_max_on_NET": true,
+       "concentration": {
+        "max_single_hour_net_cents": 2183.0173895000007,
+        "max_single_hour_share_of_net": 0.1799759568694644,
+        "n_hours_net_positive": 12,
+        "n_hours_with_cancellations": 15,
+        "net_by_hour": {
+         "10": 1037.04,
+         "11": 545.78,
+         "12": 525.67,
+         "13": 331.05,
+         "14": -804.7,
+         "15": -10.47,
+         "16": 1434.15,
+         "17": 1864.84,
+         "18": 1251.94,
+         "19": -215.19,
+         "20": 1007.51,
+         "21": 1323.77,
+         "22": 605.01,
+         "23": 2183.02,
+         "9": 1050.07
+        },
+        "net_excluding_best_hour": 9946.48,
+        "positive_without_best_hour": true
+       },
+       "harm_avoided_cents": 46882.371501450034,
+       "n_cancelled_generations": 18862,
+       "net_cents": 12129.494558450013,
+       "random_net_max": -27.71976004999957,
+       "random_net_mean": -3193.701307802,
+       "random_net_p95": -1039.2484415000006,
+       "rho_captured_over_sacrificed": 1.3490213077422117,
+       "sacrifice_cents": 34752.87694300001
       },
-      "PLUS_PRED_STATE_V1": {
-        "gate": {
-          "budgets": {
-            "10%": {
-              "beats_random_max_on_NET": true,
-              "concentration": {
-                "max_single_hour_net_cents": 2331.1890554999995,
-                "max_single_hour_share_of_net": 0.18641291695580245,
-                "n_hours_net_positive": 14,
-                "n_hours_with_cancellations": 15,
-                "net_by_hour": {
-                  "10": 997.4,
-                  "11": 1048.09,
-                  "12": 1019.57,
-                  "13": 473.25,
-                  "14": 298.49,
-                  "15": -89.68,
-                  "16": 826.53,
-                  "17": 2331.19,
-                  "18": 1170.21,
-                  "19": 347.87,
-                  "20": 1015.55,
-                  "21": 841.87,
-                  "22": 496.44,
-                  "23": 1136.64,
-                  "9": 592.1
-                },
-                "net_excluding_best_hour": 10174.32,
-                "positive_without_best_hour": true
-              },
-              "harm_avoided_cents": 33608.851773950024,
-              "n_cancelled_generations": 18862,
-              "net_cents": 12505.512458950008,
-              "random_net_max": 469.56650654999964,
-              "random_net_mean": -3118.6596020322504,
-              "random_net_p95": -757.811723499999,
-              "rho_captured_over_sacrificed": 1.5925845323475067,
-              "sacrifice_cents": 21103.339314999997
-            },
-            "15%": {
-              "beats_random_max_on_NET": true,
-              "concentration": {
-                "max_single_hour_net_cents": 2175.3775014999997,
-                "max_single_hour_share_of_net": 0.16547933479763458,
-                "n_hours_net_positive": 14,
-                "n_hours_with_cancellations": 15,
-                "net_by_hour": {
-                  "10": 960.52,
-                  "11": 1173.53,
-                  "12": 1304.56,
-                  "13": 628.29,
-                  "14": 176.02,
-                  "15": -148.63,
-                  "16": 956.55,
-                  "17": 2175.38,
-                  "18": 1305.88,
-                  "19": 549.0,
-                  "20": 862.97,
-                  "21": 720.78,
-                  "22": 447.51,
-                  "23": 1401.84,
-                  "9": 631.72
-                },
-                "net_excluding_best_hour": 10970.54,
-                "positive_without_best_hour": true
-              },
-              "harm_avoided_cents": 45562.711274950045,
-              "n_cancelled_generations": 28294,
-              "net_cents": 13145.916401950008,
-              "random_net_max": -1226.7037642500015,
-              "random_net_mean": -4894.5538692265,
-              "random_net_p95": -2489.7935505500013,
-              "rho_captured_over_sacrificed": 1.4055279509727012,
-              "sacrifice_cents": 32416.79487299999
-            },
-            "5%": {
-              "beats_random_max_on_NET": true,
-              "concentration": {
-                "max_single_hour_net_cents": 1014.2632299999998,
-                "max_single_hour_share_of_net": 0.1238186081725362,
-                "n_hours_net_positive": 15,
-                "n_hours_with_cancellations": 15,
-                "net_by_hour": {
-                  "10": 746.02,
-                  "11": 912.59,
-                  "12": 591.19,
-                  "13": 572.05,
-                  "14": 503.86,
-                  "15": 203.48,
-                  "16": 760.41,
-                  "17": 1014.26,
-                  "18": 626.17,
-                  "19": 182.66,
-                  "20": 607.73,
-                  "21": 387.15,
-                  "22": 313.24,
-                  "23": 578.44,
-                  "9": 192.28
-                },
-                "net_excluding_best_hour": 7177.26,
-                "positive_without_best_hour": true
-              },
-              "harm_avoided_cents": 17886.634745449992,
-              "n_cancelled_generations": 9431,
-              "net_cents": 8191.525045950011,
-              "random_net_max": 773.9585514999994,
-              "random_net_mean": -1523.9051794022503,
-              "random_net_p95": -56.921255049999694,
-              "rho_captured_over_sacrificed": 1.8449130850342461,
-              "sacrifice_cents": 9695.109699500003
-            }
-          },
-          "latency_ms": 50,
-          "n_actions": 188629,
-          "n_generations": 188629,
-          "n_rows": 330193,
-          "rows_per_action": 1.750489055235409,
-          "unit": "ACTION"
-        }
+      "15%": {
+       "beats_random_max_on_NET": true,
+       "concentration": {
+        "max_single_hour_net_cents": 2200.7018000000007,
+        "max_single_hour_share_of_net": 0.17278891887684095,
+        "n_hours_net_positive": 12,
+        "n_hours_with_cancellations": 15,
+        "net_by_hour": {
+         "10": 1347.96,
+         "11": 694.43,
+         "12": 881.53,
+         "13": 283.65,
+         "14": -536.76,
+         "15": -222.89,
+         "16": 997.88,
+         "17": 2018.96,
+         "18": 1322.83,
+         "19": -529.44,
+         "20": 867.11,
+         "21": 1579.63,
+         "22": 366.89,
+         "23": 2200.7,
+         "9": 1463.87
+        },
+        "net_excluding_best_hour": 10535.66,
+        "positive_without_best_hour": true
+       },
+       "harm_avoided_cents": 56238.647760450054,
+       "n_cancelled_generations": 28294,
+       "net_cents": 12736.359566950012,
+       "random_net_max": -418.62162400000057,
+       "random_net_mean": -4539.581010219251,
+       "random_net_p95": -1972.0114527500025,
+       "rho_captured_over_sacrificed": 1.2927744745356426,
+       "sacrifice_cents": 43502.2881935
       },
-      "PM_PLUS_FINE": {
-        "gate": {
-          "budgets": {
-            "10%": {
-              "beats_random_max_on_NET": true,
-              "concentration": {
-                "max_single_hour_net_cents": 1326.8092039999992,
-                "max_single_hour_share_of_net": 0.15856119603240076,
-                "n_hours_net_positive": 14,
-                "n_hours_with_cancellations": 15,
-                "net_by_hour": {
-                  "10": 623.12,
-                  "11": 1326.81,
-                  "12": 525.49,
-                  "13": -32.68,
-                  "14": 690.45,
-                  "15": 288.8,
-                  "16": 858.53,
-                  "17": 833.52,
-                  "18": 488.39,
-                  "19": 504.72,
-                  "20": 167.45,
-                  "21": 282.78,
-                  "22": 345.98,
-                  "23": 1251.25,
-                  "9": 213.19
-                },
-                "net_excluding_best_hour": 7041.0,
-                "positive_without_best_hour": true
-              },
-              "harm_avoided_cents": 26012.813898450033,
-              "n_cancelled_generations": 18862,
-              "net_cents": 8367.805220950004,
-              "random_net_max": 817.4966084999986,
-              "random_net_mean": -3236.91795390475,
-              "random_net_p95": -1181.7053700000006,
-              "rho_captured_over_sacrificed": 1.4742307229137401,
-              "sacrifice_cents": 17645.008677499995
-            },
-            "15%": {
-              "beats_random_max_on_NET": true,
-              "concentration": {
-                "max_single_hour_net_cents": 1403.4411294999995,
-                "max_single_hour_share_of_net": 0.13641313942331007,
-                "n_hours_net_positive": 14,
-                "n_hours_with_cancellations": 15,
-                "net_by_hour": {
-                  "10": 864.73,
-                  "11": 1403.44,
-                  "12": 1067.57,
-                  "13": -161.76,
-                  "14": 302.32,
-                  "15": 0.39,
-                  "16": 779.3,
-                  "17": 1073.64,
-                  "18": 854.05,
-                  "19": 906.55,
-                  "20": 515.79,
-                  "21": 421.99,
-                  "22": 556.36,
-                  "23": 1181.05,
-                  "9": 522.74
-                },
-                "net_excluding_best_hour": 8884.73,
-                "positive_without_best_hour": true
-              },
-              "harm_avoided_cents": 37312.55544795001,
-              "n_cancelled_generations": 28294,
-              "net_cents": 10288.166780950005,
-              "random_net_max": -1157.085017050002,
-              "random_net_mean": -4997.9540970805,
-              "random_net_p95": -2269.1628832500005,
-              "rho_captured_over_sacrificed": 1.3806993345056904,
-              "sacrifice_cents": 27024.388666999996
-            },
-            "5%": {
-              "beats_random_max_on_NET": true,
-              "concentration": {
-                "max_single_hour_net_cents": 948.2312169999998,
-                "max_single_hour_share_of_net": 0.1628721195010515,
-                "n_hours_net_positive": 14,
-                "n_hours_with_cancellations": 15,
-                "net_by_hour": {
-                  "10": 756.5,
-                  "11": 948.23,
-                  "12": 468.46,
-                  "13": 183.22,
-                  "14": 622.47,
-                  "15": 399.98,
-                  "16": 808.25,
-                  "17": 480.02,
-                  "18": 244.03,
-                  "19": 257.09,
-                  "20": 130.4,
-                  "21": -415.32,
-                  "22": 234.81,
-                  "23": 482.68,
-                  "9": 221.12
-                },
-                "net_excluding_best_hour": 4873.71,
-                "positive_without_best_hour": true
-              },
-              "harm_avoided_cents": 14348.460439500002,
-              "n_cancelled_generations": 9431,
-              "net_cents": 5821.936989000001,
-              "random_net_max": 1287.4999799999998,
-              "random_net_mean": -1665.4846133252502,
-              "random_net_p95": -204.62168750000018,
-              "rho_captured_over_sacrificed": 1.682803140435695,
-              "sacrifice_cents": 8526.523450500003
-            }
-          },
-          "latency_ms": 50,
-          "n_actions": 188629,
-          "n_generations": 188629,
-          "n_rows": 330193,
-          "rows_per_action": 1.750489055235409,
-          "unit": "ACTION"
-        }
+      "5%": {
+       "beats_random_max_on_NET": true,
+       "concentration": {
+        "max_single_hour_net_cents": 1471.2256215,
+        "max_single_hour_share_of_net": 0.1406457269393894,
+        "n_hours_net_positive": 15,
+        "n_hours_with_cancellations": 15,
+        "net_by_hour": {
+         "10": 771.44,
+         "11": 673.05,
+         "12": 815.41,
+         "13": 442.63,
+         "14": 439.44,
+         "15": 438.31,
+         "16": 322.01,
+         "17": 1471.23,
+         "18": 1175.92,
+         "19": 149.19,
+         "20": 503.49,
+         "21": 882.74,
+         "22": 315.39,
+         "23": 1145.21,
+         "9": 915.04
+        },
+        "net_excluding_best_hour": 8989.28,
+        "positive_without_best_hour": true
+       },
+       "harm_avoided_cents": 29375.902633949998,
+       "n_cancelled_generations": 9431,
+       "net_cents": 10460.507073450004,
+       "random_net_max": 1082.4856465,
+       "random_net_mean": -1648.4019971515002,
+       "random_net_p95": -27.15741800000066,
+       "rho_captured_over_sacrificed": 1.5530155073940994,
+       "sacrifice_cents": 18915.395560499997
       }
+     },
+     "latency_ms": 50,
+     "n_actions": 188629,
+     "n_generations": 188629,
+     "n_rows": 330193,
+     "rows_per_action": 1.750489055235409,
+     "unit": "ACTION"
+    }
+   },
+   "PLUS_PRED_STATE_V1": {
+    "gate": {
+     "budgets": {
+      "10%": {
+       "beats_random_max_on_NET": true,
+       "concentration": {
+        "max_single_hour_net_cents": 2331.1890554999995,
+        "max_single_hour_share_of_net": 0.18641291695580245,
+        "n_hours_net_positive": 14,
+        "n_hours_with_cancellations": 15,
+        "net_by_hour": {
+         "10": 997.4,
+         "11": 1048.09,
+         "12": 1019.57,
+         "13": 473.25,
+         "14": 298.49,
+         "15": -89.68,
+         "16": 826.53,
+         "17": 2331.19,
+         "18": 1170.21,
+         "19": 347.87,
+         "20": 1015.55,
+         "21": 841.87,
+         "22": 496.44,
+         "23": 1136.64,
+         "9": 592.1
+        },
+        "net_excluding_best_hour": 10174.32,
+        "positive_without_best_hour": true
+       },
+       "harm_avoided_cents": 33608.851773950024,
+       "n_cancelled_generations": 18862,
+       "net_cents": 12505.512458950008,
+       "random_net_max": 469.56650654999964,
+       "random_net_mean": -3118.6596020322504,
+       "random_net_p95": -757.811723499999,
+       "rho_captured_over_sacrificed": 1.5925845323475067,
+       "sacrifice_cents": 21103.339314999997
+      },
+      "15%": {
+       "beats_random_max_on_NET": true,
+       "concentration": {
+        "max_single_hour_net_cents": 2175.3775014999997,
+        "max_single_hour_share_of_net": 0.16547933479763458,
+        "n_hours_net_positive": 14,
+        "n_hours_with_cancellations": 15,
+        "net_by_hour": {
+         "10": 960.52,
+         "11": 1173.53,
+         "12": 1304.56,
+         "13": 628.29,
+         "14": 176.02,
+         "15": -148.63,
+         "16": 956.55,
+         "17": 2175.38,
+         "18": 1305.88,
+         "19": 549.0,
+         "20": 862.97,
+         "21": 720.78,
+         "22": 447.51,
+         "23": 1401.84,
+         "9": 631.72
+        },
+        "net_excluding_best_hour": 10970.54,
+        "positive_without_best_hour": true
+       },
+       "harm_avoided_cents": 45562.711274950045,
+       "n_cancelled_generations": 28294,
+       "net_cents": 13145.916401950008,
+       "random_net_max": -1226.7037642500015,
+       "random_net_mean": -4894.5538692265,
+       "random_net_p95": -2489.7935505500013,
+       "rho_captured_over_sacrificed": 1.4055279509727012,
+       "sacrifice_cents": 32416.79487299999
+      },
+      "5%": {
+       "beats_random_max_on_NET": true,
+       "concentration": {
+        "max_single_hour_net_cents": 1014.2632299999998,
+        "max_single_hour_share_of_net": 0.1238186081725362,
+        "n_hours_net_positive": 15,
+        "n_hours_with_cancellations": 15,
+        "net_by_hour": {
+         "10": 746.02,
+         "11": 912.59,
+         "12": 591.19,
+         "13": 572.05,
+         "14": 503.86,
+         "15": 203.48,
+         "16": 760.41,
+         "17": 1014.26,
+         "18": 626.17,
+         "19": 182.66,
+         "20": 607.73,
+         "21": 387.15,
+         "22": 313.24,
+         "23": 578.44,
+         "9": 192.28
+        },
+        "net_excluding_best_hour": 7177.26,
+        "positive_without_best_hour": true
+       },
+       "harm_avoided_cents": 17886.634745449992,
+       "n_cancelled_generations": 9431,
+       "net_cents": 8191.525045950011,
+       "random_net_max": 773.9585514999994,
+       "random_net_mean": -1523.9051794022503,
+       "random_net_p95": -56.921255049999694,
+       "rho_captured_over_sacrificed": 1.8449130850342461,
+       "sacrifice_cents": 9695.109699500003
+      }
+     },
+     "latency_ms": 50,
+     "n_actions": 188629,
+     "n_generations": 188629,
+     "n_rows": 330193,
+     "rows_per_action": 1.750489055235409,
+     "unit": "ACTION"
+    }
+   },
+   "PM_PLUS_FINE": {
+    "gate": {
+     "budgets": {
+      "10%": {
+       "beats_random_max_on_NET": true,
+       "concentration": {
+        "max_single_hour_net_cents": 1326.8092039999992,
+        "max_single_hour_share_of_net": 0.15856119603240076,
+        "n_hours_net_positive": 14,
+        "n_hours_with_cancellations": 15,
+        "net_by_hour": {
+         "10": 623.12,
+         "11": 1326.81,
+         "12": 525.49,
+         "13": -32.68,
+         "14": 690.45,
+         "15": 288.8,
+         "16": 858.53,
+         "17": 833.52,
+         "18": 488.39,
+         "19": 504.72,
+         "20": 167.45,
+         "21": 282.78,
+         "22": 345.98,
+         "23": 1251.25,
+         "9": 213.19
+        },
+        "net_excluding_best_hour": 7041.0,
+        "positive_without_best_hour": true
+       },
+       "harm_avoided_cents": 26012.813898450033,
+       "n_cancelled_generations": 18862,
+       "net_cents": 8367.805220950004,
+       "random_net_max": 817.4966084999986,
+       "random_net_mean": -3236.91795390475,
+       "random_net_p95": -1181.7053700000006,
+       "rho_captured_over_sacrificed": 1.4742307229137401,
+       "sacrifice_cents": 17645.008677499995
+      },
+      "15%": {
+       "beats_random_max_on_NET": true,
+       "concentration": {
+        "max_single_hour_net_cents": 1403.4411294999995,
+        "max_single_hour_share_of_net": 0.13641313942331007,
+        "n_hours_net_positive": 14,
+        "n_hours_with_cancellations": 15,
+        "net_by_hour": {
+         "10": 864.73,
+         "11": 1403.44,
+         "12": 1067.57,
+         "13": -161.76,
+         "14": 302.32,
+         "15": 0.39,
+         "16": 779.3,
+         "17": 1073.64,
+         "18": 854.05,
+         "19": 906.55,
+         "20": 515.79,
+         "21": 421.99,
+         "22": 556.36,
+         "23": 1181.05,
+         "9": 522.74
+        },
+        "net_excluding_best_hour": 8884.73,
+        "positive_without_best_hour": true
+       },
+       "harm_avoided_cents": 37312.55544795001,
+       "n_cancelled_generations": 28294,
+       "net_cents": 10288.166780950005,
+       "random_net_max": -1157.085017050002,
+       "random_net_mean": -4997.9540970805,
+       "random_net_p95": -2269.1628832500005,
+       "rho_captured_over_sacrificed": 1.3806993345056904,
+       "sacrifice_cents": 27024.388666999996
+      },
+      "5%": {
+       "beats_random_max_on_NET": true,
+       "concentration": {
+        "max_single_hour_net_cents": 948.2312169999998,
+        "max_single_hour_share_of_net": 0.1628721195010515,
+        "n_hours_net_positive": 14,
+        "n_hours_with_cancellations": 15,
+        "net_by_hour": {
+         "10": 756.5,
+         "11": 948.23,
+         "12": 468.46,
+         "13": 183.22,
+         "14": 622.47,
+         "15": 399.98,
+         "16": 808.25,
+         "17": 480.02,
+         "18": 244.03,
+         "19": 257.09,
+         "20": 130.4,
+         "21": -415.32,
+         "22": 234.81,
+         "23": 482.68,
+         "9": 221.12
+        },
+        "net_excluding_best_hour": 4873.71,
+        "positive_without_best_hour": true
+       },
+       "harm_avoided_cents": 14348.460439500002,
+       "n_cancelled_generations": 9431,
+       "net_cents": 5821.936989000001,
+       "random_net_max": 1287.4999799999998,
+       "random_net_mean": -1665.4846133252502,
+       "random_net_p95": -204.62168750000018,
+       "rho_captured_over_sacrificed": 1.682803140435695,
+       "sacrifice_cents": 8526.523450500003
+      }
+     },
+     "latency_ms": 50,
+     "n_actions": 188629,
+     "n_generations": 188629,
+     "n_rows": 330193,
+     "rows_per_action": 1.750489055235409,
+     "unit": "ACTION"
+    }
+   }
+  },
+  "eth": {
+   "LGBM_PINNED": {
+    "gate": {
+     "budgets": {
+      "10%": {
+       "beats_random_max_on_NET": true,
+       "concentration": {
+        "max_single_hour_net_cents": 698.214684,
+        "max_single_hour_share_of_net": 0.3904488605521185,
+        "n_hours_net_positive": 11,
+        "n_hours_with_cancellations": 15,
+        "net_by_hour": {
+         "10": 288.75,
+         "11": -458.44,
+         "12": 103.81,
+         "13": 698.21,
+         "14": 440.45,
+         "15": -191.45,
+         "16": 416.58,
+         "17": 270.15,
+         "18": 248.47,
+         "19": 118.93,
+         "20": 32.45,
+         "21": 29.59,
+         "22": -149.54,
+         "23": -185.56,
+         "9": 125.83
+        },
+        "net_excluding_best_hour": 1090.02,
+        "positive_without_best_hour": true
+       },
+       "harm_avoided_cents": 11690.9522425,
+       "n_cancelled_generations": 26863,
+       "net_cents": 1788.2359369999986,
+       "random_net_max": 1755.4450649999994,
+       "random_net_mean": -283.7462934125,
+       "random_net_p95": 691.4738315000006,
+       "rho_captured_over_sacrificed": 1.1805803460215059,
+       "sacrifice_cents": 9902.716305500002
+      },
+      "15%": {
+       "beats_random_max_on_NET": false,
+       "concentration": {
+        "max_single_hour_net_cents": 661.3085089999997,
+        "max_single_hour_share_of_net": 0.43047684707969663,
+        "n_hours_net_positive": 10,
+        "n_hours_with_cancellations": 15,
+        "net_by_hour": {
+         "10": 314.87,
+         "11": -394.25,
+         "12": 297.92,
+         "13": 661.31,
+         "14": 447.03,
+         "15": -340.97,
+         "16": 222.61,
+         "17": 336.0,
+         "18": 338.81,
+         "19": 61.73,
+         "20": 79.4,
+         "21": -237.04,
+         "22": -290.24,
+         "23": -81.77,
+         "9": 120.83
+        },
+        "net_excluding_best_hour": 874.91,
+        "positive_without_best_hour": true
+       },
+       "harm_avoided_cents": 14197.060075499996,
+       "n_cancelled_generations": 40295,
+       "net_cents": 1536.2231754999984,
+       "random_net_max": 2259.9914674999995,
+       "random_net_mean": -430.0114079375,
+       "random_net_p95": 736.2213260000005,
+       "rho_captured_over_sacrificed": 1.1213366215546139,
+       "sacrifice_cents": 12660.836900000004
+      },
+      "5%": {
+       "beats_random_max_on_NET": true,
+       "concentration": {
+        "max_single_hour_net_cents": 702.5600295,
+        "max_single_hour_share_of_net": 0.5179663972292419,
+        "n_hours_net_positive": 10,
+        "n_hours_with_cancellations": 15,
+        "net_by_hour": {
+         "10": 80.95,
+         "11": -550.52,
+         "12": 15.37,
+         "13": 546.62,
+         "14": 702.56,
+         "15": -89.9,
+         "16": 338.12,
+         "17": 321.04,
+         "18": 47.69,
+         "19": -138.0,
+         "20": 180.93,
+         "21": 207.23,
+         "22": -220.63,
+         "23": -191.54,
+         "9": 106.46
+        },
+        "net_excluding_best_hour": 653.82,
+        "positive_without_best_hour": true
+       },
+       "harm_avoided_cents": 8254.29637,
+       "n_cancelled_generations": 13431,
+       "net_cents": 1356.3814819999996,
+       "random_net_max": 870.7457685000005,
+       "random_net_mean": -92.34812403000002,
+       "random_net_p95": 611.3513915000001,
+       "rho_captured_over_sacrificed": 1.1966364479735223,
+       "sacrifice_cents": 6897.914888000002
+      }
+     },
+     "latency_ms": 50,
+     "n_actions": 268634,
+     "n_generations": 268634,
+     "n_rows": 308715,
+     "rows_per_action": 1.1492030048318531,
+     "unit": "ACTION"
+    }
+   },
+   "PLUS_PRED_STATE_V1": {
+    "gate": {
+     "budgets": {
+      "10%": {
+       "beats_random_max_on_NET": true,
+       "concentration": {
+        "max_single_hour_net_cents": 955.7966499999999,
+        "max_single_hour_share_of_net": 0.35465595809464306,
+        "n_hours_net_positive": 9,
+        "n_hours_with_cancellations": 15,
+        "net_by_hour": {
+         "10": 531.09,
+         "11": 253.79,
+         "12": 145.32,
+         "13": 512.01,
+         "14": 955.8,
+         "15": 170.93,
+         "16": 176.89,
+         "17": -49.16,
+         "18": 413.56,
+         "19": -75.56,
+         "20": 111.51,
+         "21": -34.27,
+         "22": -154.69,
+         "23": -153.92,
+         "9": -108.3
+        },
+        "net_excluding_best_hour": 1739.2,
+        "positive_without_best_hour": true
+       },
+       "harm_avoided_cents": 9890.438983500002,
+       "n_cancelled_generations": 26863,
+       "net_cents": 2694.996737500001,
+       "random_net_max": 1501.6610114999999,
+       "random_net_mean": -293.63358515000004,
+       "random_net_p95": 812.5162989999998,
+       "rho_captured_over_sacrificed": 1.3745421956514443,
+       "sacrifice_cents": 7195.442246000001
+      },
+      "15%": {
+       "beats_random_max_on_NET": true,
+       "concentration": {
+        "max_single_hour_net_cents": 1084.2261775,
+        "max_single_hour_share_of_net": 0.4237970369027129,
+        "n_hours_net_positive": 9,
+        "n_hours_with_cancellations": 15,
+        "net_by_hour": {
+         "10": 690.2,
+         "11": -39.1,
+         "12": 130.84,
+         "13": 427.07,
+         "14": 1084.23,
+         "15": -3.57,
+         "16": 195.27,
+         "17": 92.89,
+         "18": 400.46,
+         "19": -150.29,
+         "20": 223.11,
+         "21": -159.32,
+         "22": -291.09,
+         "23": -119.24,
+         "9": 76.9
+        },
+        "net_excluding_best_hour": 1474.14,
+        "positive_without_best_hour": true
+       },
+       "harm_avoided_cents": 12893.075836499997,
+       "n_cancelled_generations": 40295,
+       "net_cents": 2558.3618645000015,
+       "random_net_max": 1268.1183100000007,
+       "random_net_mean": -427.80969139999996,
+       "random_net_p95": 802.8234550000002,
+       "rho_captured_over_sacrificed": 1.2475503309942981,
+       "sacrifice_cents": 10334.713972
+      },
+      "5%": {
+       "beats_random_max_on_NET": true,
+       "concentration": {
+        "max_single_hour_net_cents": 713.0407475000002,
+        "max_single_hour_share_of_net": 0.34598842762747267,
+        "n_hours_net_positive": 12,
+        "n_hours_with_cancellations": 15,
+        "net_by_hour": {
+         "10": 265.66,
+         "11": 230.43,
+         "12": 43.45,
+         "13": 229.25,
+         "14": 713.04,
+         "15": 52.08,
+         "16": 102.61,
+         "17": 192.87,
+         "18": 328.06,
+         "19": -110.04,
+         "20": 75.62,
+         "21": 139.14,
+         "22": -113.65,
+         "23": -146.58,
+         "9": 58.94
+        },
+        "net_excluding_best_hour": 1347.84,
+        "positive_without_best_hour": true
+       },
+       "harm_avoided_cents": 6260.4077475,
+       "n_cancelled_generations": 13431,
+       "net_cents": 2060.8803375000007,
+       "random_net_max": 973.0071509999999,
+       "random_net_mean": -172.08448448250002,
+       "random_net_p95": 646.0447965,
+       "rho_captured_over_sacrificed": 1.4907410135227566,
+       "sacrifice_cents": 4199.527410000002
+      }
+     },
+     "latency_ms": 50,
+     "n_actions": 268634,
+     "n_generations": 268634,
+     "n_rows": 308715,
+     "rows_per_action": 1.1492030048318531,
+     "unit": "ACTION"
+    }
+   },
+   "PM_PLUS_FINE": {
+    "gate": {
+     "budgets": {
+      "10%": {
+       "beats_random_max_on_NET": true,
+       "concentration": {
+        "max_single_hour_net_cents": 767.087521,
+        "max_single_hour_share_of_net": 0.27358794176757156,
+        "n_hours_net_positive": 11,
+        "n_hours_with_cancellations": 15,
+        "net_by_hour": {
+         "10": 114.16,
+         "11": 22.43,
+         "12": 425.07,
+         "13": 423.95,
+         "14": 767.09,
+         "15": 200.49,
+         "16": 256.97,
+         "17": 208.47,
+         "18": 403.26,
+         "19": -23.98,
+         "20": 42.27,
+         "21": 257.1,
+         "22": -11.63,
+         "23": -193.36,
+         "9": -88.46
+        },
+        "net_excluding_best_hour": 2036.72,
+        "positive_without_best_hour": true
+       },
+       "harm_avoided_cents": 8714.494389,
+       "n_cancelled_generations": 26863,
+       "net_cents": 2803.806030499999,
+       "random_net_max": 1043.2336054999996,
+       "random_net_mean": -322.55780431000005,
+       "random_net_p95": 688.2943215000003,
+       "rho_captured_over_sacrificed": 1.474362013430791,
+       "sacrifice_cents": 5910.688358500001
+      },
+      "15%": {
+       "beats_random_max_on_NET": true,
+       "concentration": {
+        "max_single_hour_net_cents": 872.1585410000001,
+        "max_single_hour_share_of_net": 0.30009559794621976,
+        "n_hours_net_positive": 10,
+        "n_hours_with_cancellations": 15,
+        "net_by_hour": {
+         "10": 272.89,
+         "11": 18.46,
+         "12": 433.09,
+         "13": 320.21,
+         "14": 872.16,
+         "15": -8.9,
+         "16": 371.86,
+         "17": 391.96,
+         "18": 388.21,
+         "19": -84.9,
+         "20": 26.39,
+         "21": 26.05,
+         "22": -73.74,
+         "23": -16.53,
+         "9": -30.92
+        },
+        "net_excluding_best_hour": 2034.11,
+        "positive_without_best_hour": true
+       },
+       "harm_avoided_cents": 11829.042953499995,
+       "n_cancelled_generations": 40295,
+       "net_cents": 2906.2690254999966,
+       "random_net_max": 1142.1494800000005,
+       "random_net_mean": -548.5300864175,
+       "random_net_p95": 564.9436709999998,
+       "rho_captured_over_sacrificed": 1.3257136232466917,
+       "sacrifice_cents": 8922.773927999999
+      },
+      "5%": {
+       "beats_random_max_on_NET": true,
+       "concentration": {
+        "max_single_hour_net_cents": 561.0780079999998,
+        "max_single_hour_share_of_net": 0.3666023130898449,
+        "n_hours_net_positive": 10,
+        "n_hours_with_cancellations": 15,
+        "net_by_hour": {
+         "10": 32.73,
+         "11": 160.72,
+         "12": 296.37,
+         "13": 229.58,
+         "14": 561.08,
+         "15": 102.06,
+         "16": 71.75,
+         "17": -85.76,
+         "18": 270.99,
+         "19": -108.09,
+         "20": -37.78,
+         "21": -24.7,
+         "22": -24.44,
+         "23": 37.75,
+         "9": 48.22
+        },
+        "net_excluding_best_hour": 969.4,
+        "positive_without_best_hour": true
+       },
+       "harm_avoided_cents": 5238.5261075,
+       "n_cancelled_generations": 13431,
+       "net_cents": 1530.4813635,
+       "random_net_max": 1143.5735655,
+       "random_net_mean": -190.5060887,
+       "random_net_p95": 582.1014260000002,
+       "rho_captured_over_sacrificed": 1.4127461962201173,
+       "sacrifice_cents": 3708.0447440000007
+      }
+     },
+     "latency_ms": 50,
+     "n_actions": 268634,
+     "n_generations": 268634,
+     "n_rows": 308715,
+     "rows_per_action": 1.1492030048318531,
+     "unit": "ACTION"
+    }
+   }
+  }
+ },
+ "authority": "R-184, user audit 2026-08-27",
+ "btc_power_note": "UNDERPOWERED-ON-BTC was declared nameable and DOES NOT APPLY: 188,629 actions over 166 windows, 58,232 fit positives vs eth's 6,406. On this surface btc is the better-powered coin, inverting the prior expectation that eth would be informative.",
+ "confound_disclosure": "R-157(3), declared before any number existed: arms B and C carry BOTH the 21 PRED_STATE_V1 features AND w=1/n_rows(generation) weighting; arm A carries neither. A B or C win is features+weighting JOINTLY, not decomposable from three arms. Direction that matters: A is the incumbent a freeze already adopted, so a candidate winning purely on weighting would cause new FEATURES to be adopted on the strength of a reweighting that had nothing to do with them.",
+ "da_caveat_field": {
+  "artifact": "data/pm_5min/derived/da_post_gap_queue_validity_v1.json",
+  "authorised_by": "R-173(2); design/metric/null/falsifier declared in Q-DA-79 BEFORE any data was read",
+  "consequence_for_phase2": "NONE. The arms' ranking stands unqualified on this account.",
+  "finding": "H0 FALSIFIED, BUT SHALLOW AND NEGLIGIBLE IN MAGNITUDE.",
+  "forward_refinement_not_retroactive": "POST_GAP_QUEUE_UNRELIABLE remains a pre-declared refinement for FUTURE builds only. R-173(2) is explicit that this never becomes a retroactive edit to a built population, and nothing here proposes one.",
+  "instrument": "live/pm_research/da_post_gap_queue_validity.py (11 selftests incl. two falsifiers)",
+  "interpretation": "The exposure is REAL but SHALLOW. 195 of 645,851 rows (0.030%) are admitted OK while preceding their own book resync. Median and p90 resync lag both round to -0.0 s: almost every exposed row sits within milliseconds of the resync instant, and only the extreme tail reaches 1.135 s. EVERY gap was followed by a snapshot (0 slugs left unresynced), so there is no persistent unresynced state anywhere in the population. btc-only, because eth carries no PM gaps in this top-up.",
+  "question": "R-173 ruled a PM gap excludes ROWS, not the window. Rows INSIDE a gap carry GAP_IN_HORIZON. This asked about rows AFTER a gap: queue-ahead needs book state, and BookState refuses to mutate until a full post-gap snapshot arrives, so a row can report status=OK while its qahead rests on a book that was never re-established. The status field describes the FILL HORIZON and says nothing about queue validity, which is why this could hide.",
+  "reading_PRE_COMMITTED_BEFORE_THE_NUMBER_EXISTED": "Q-DA-79(5), filed before this ran: Phase 2's gate is a PAIRED comparison on identical rows and all three arms see the same post-gap rows, so any unreliability is COMMON-MODE. A large exposed set would QUALIFY WHAT THE NUMBERS MEAN and would NOT invalidate the ranking between arms. At 0.030% of rows it cannot move a paired comparison at all. This reading was committed in advance precisely so it could not be inflated afterwards.",
+  "result": {
+   "H0_exposed_set_is_empty": false,
+   "by_coin": {
+    "btc": {
+     "exposed_OK": 195
     },
     "eth": {
-      "LGBM_PINNED": {
-        "gate": {
-          "budgets": {
-            "10%": {
-              "beats_random_max_on_NET": true,
-              "concentration": {
-                "max_single_hour_net_cents": 698.214684,
-                "max_single_hour_share_of_net": 0.3904488605521185,
-                "n_hours_net_positive": 11,
-                "n_hours_with_cancellations": 15,
-                "net_by_hour": {
-                  "10": 288.75,
-                  "11": -458.44,
-                  "12": 103.81,
-                  "13": 698.21,
-                  "14": 440.45,
-                  "15": -191.45,
-                  "16": 416.58,
-                  "17": 270.15,
-                  "18": 248.47,
-                  "19": 118.93,
-                  "20": 32.45,
-                  "21": 29.59,
-                  "22": -149.54,
-                  "23": -185.56,
-                  "9": 125.83
-                },
-                "net_excluding_best_hour": 1090.02,
-                "positive_without_best_hour": true
-              },
-              "harm_avoided_cents": 11690.9522425,
-              "n_cancelled_generations": 26863,
-              "net_cents": 1788.2359369999986,
-              "random_net_max": 1755.4450649999994,
-              "random_net_mean": -283.7462934125,
-              "random_net_p95": 691.4738315000006,
-              "rho_captured_over_sacrificed": 1.1805803460215059,
-              "sacrifice_cents": 9902.716305500002
-            },
-            "15%": {
-              "beats_random_max_on_NET": false,
-              "concentration": {
-                "max_single_hour_net_cents": 661.3085089999997,
-                "max_single_hour_share_of_net": 0.43047684707969663,
-                "n_hours_net_positive": 10,
-                "n_hours_with_cancellations": 15,
-                "net_by_hour": {
-                  "10": 314.87,
-                  "11": -394.25,
-                  "12": 297.92,
-                  "13": 661.31,
-                  "14": 447.03,
-                  "15": -340.97,
-                  "16": 222.61,
-                  "17": 336.0,
-                  "18": 338.81,
-                  "19": 61.73,
-                  "20": 79.4,
-                  "21": -237.04,
-                  "22": -290.24,
-                  "23": -81.77,
-                  "9": 120.83
-                },
-                "net_excluding_best_hour": 874.91,
-                "positive_without_best_hour": true
-              },
-              "harm_avoided_cents": 14197.060075499996,
-              "n_cancelled_generations": 40295,
-              "net_cents": 1536.2231754999984,
-              "random_net_max": 2259.9914674999995,
-              "random_net_mean": -430.0114079375,
-              "random_net_p95": 736.2213260000005,
-              "rho_captured_over_sacrificed": 1.1213366215546139,
-              "sacrifice_cents": 12660.836900000004
-            },
-            "5%": {
-              "beats_random_max_on_NET": true,
-              "concentration": {
-                "max_single_hour_net_cents": 702.5600295,
-                "max_single_hour_share_of_net": 0.5179663972292419,
-                "n_hours_net_positive": 10,
-                "n_hours_with_cancellations": 15,
-                "net_by_hour": {
-                  "10": 80.95,
-                  "11": -550.52,
-                  "12": 15.37,
-                  "13": 546.62,
-                  "14": 702.56,
-                  "15": -89.9,
-                  "16": 338.12,
-                  "17": 321.04,
-                  "18": 47.69,
-                  "19": -138.0,
-                  "20": 180.93,
-                  "21": 207.23,
-                  "22": -220.63,
-                  "23": -191.54,
-                  "9": 106.46
-                },
-                "net_excluding_best_hour": 653.82,
-                "positive_without_best_hour": true
-              },
-              "harm_avoided_cents": 8254.29637,
-              "n_cancelled_generations": 13431,
-              "net_cents": 1356.3814819999996,
-              "random_net_max": 870.7457685000005,
-              "random_net_mean": -92.34812403000002,
-              "random_net_p95": 611.3513915000001,
-              "rho_captured_over_sacrificed": 1.1966364479735223,
-              "sacrifice_cents": 6897.914888000002
-            }
-          },
-          "latency_ms": 50,
-          "n_actions": 268634,
-          "n_generations": 268634,
-          "n_rows": 308715,
-          "rows_per_action": 1.1492030048318531,
-          "unit": "ACTION"
-        }
-      },
-      "PLUS_PRED_STATE_V1": {
-        "gate": {
-          "budgets": {
-            "10%": {
-              "beats_random_max_on_NET": true,
-              "concentration": {
-                "max_single_hour_net_cents": 955.7966499999999,
-                "max_single_hour_share_of_net": 0.35465595809464306,
-                "n_hours_net_positive": 9,
-                "n_hours_with_cancellations": 15,
-                "net_by_hour": {
-                  "10": 531.09,
-                  "11": 253.79,
-                  "12": 145.32,
-                  "13": 512.01,
-                  "14": 955.8,
-                  "15": 170.93,
-                  "16": 176.89,
-                  "17": -49.16,
-                  "18": 413.56,
-                  "19": -75.56,
-                  "20": 111.51,
-                  "21": -34.27,
-                  "22": -154.69,
-                  "23": -153.92,
-                  "9": -108.3
-                },
-                "net_excluding_best_hour": 1739.2,
-                "positive_without_best_hour": true
-              },
-              "harm_avoided_cents": 9890.438983500002,
-              "n_cancelled_generations": 26863,
-              "net_cents": 2694.996737500001,
-              "random_net_max": 1501.6610114999999,
-              "random_net_mean": -293.63358515000004,
-              "random_net_p95": 812.5162989999998,
-              "rho_captured_over_sacrificed": 1.3745421956514443,
-              "sacrifice_cents": 7195.442246000001
-            },
-            "15%": {
-              "beats_random_max_on_NET": true,
-              "concentration": {
-                "max_single_hour_net_cents": 1084.2261775,
-                "max_single_hour_share_of_net": 0.4237970369027129,
-                "n_hours_net_positive": 9,
-                "n_hours_with_cancellations": 15,
-                "net_by_hour": {
-                  "10": 690.2,
-                  "11": -39.1,
-                  "12": 130.84,
-                  "13": 427.07,
-                  "14": 1084.23,
-                  "15": -3.57,
-                  "16": 195.27,
-                  "17": 92.89,
-                  "18": 400.46,
-                  "19": -150.29,
-                  "20": 223.11,
-                  "21": -159.32,
-                  "22": -291.09,
-                  "23": -119.24,
-                  "9": 76.9
-                },
-                "net_excluding_best_hour": 1474.14,
-                "positive_without_best_hour": true
-              },
-              "harm_avoided_cents": 12893.075836499997,
-              "n_cancelled_generations": 40295,
-              "net_cents": 2558.3618645000015,
-              "random_net_max": 1268.1183100000007,
-              "random_net_mean": -427.80969139999996,
-              "random_net_p95": 802.8234550000002,
-              "rho_captured_over_sacrificed": 1.2475503309942981,
-              "sacrifice_cents": 10334.713972
-            },
-            "5%": {
-              "beats_random_max_on_NET": true,
-              "concentration": {
-                "max_single_hour_net_cents": 713.0407475000002,
-                "max_single_hour_share_of_net": 0.34598842762747267,
-                "n_hours_net_positive": 12,
-                "n_hours_with_cancellations": 15,
-                "net_by_hour": {
-                  "10": 265.66,
-                  "11": 230.43,
-                  "12": 43.45,
-                  "13": 229.25,
-                  "14": 713.04,
-                  "15": 52.08,
-                  "16": 102.61,
-                  "17": 192.87,
-                  "18": 328.06,
-                  "19": -110.04,
-                  "20": 75.62,
-                  "21": 139.14,
-                  "22": -113.65,
-                  "23": -146.58,
-                  "9": 58.94
-                },
-                "net_excluding_best_hour": 1347.84,
-                "positive_without_best_hour": true
-              },
-              "harm_avoided_cents": 6260.4077475,
-              "n_cancelled_generations": 13431,
-              "net_cents": 2060.8803375000007,
-              "random_net_max": 973.0071509999999,
-              "random_net_mean": -172.08448448250002,
-              "random_net_p95": 646.0447965,
-              "rho_captured_over_sacrificed": 1.4907410135227566,
-              "sacrifice_cents": 4199.527410000002
-            }
-          },
-          "latency_ms": 50,
-          "n_actions": 268634,
-          "n_generations": 268634,
-          "n_rows": 308715,
-          "rows_per_action": 1.1492030048318531,
-          "unit": "ACTION"
-        }
-      },
-      "PM_PLUS_FINE": {
-        "gate": {
-          "budgets": {
-            "10%": {
-              "beats_random_max_on_NET": true,
-              "concentration": {
-                "max_single_hour_net_cents": 767.087521,
-                "max_single_hour_share_of_net": 0.27358794176757156,
-                "n_hours_net_positive": 11,
-                "n_hours_with_cancellations": 15,
-                "net_by_hour": {
-                  "10": 114.16,
-                  "11": 22.43,
-                  "12": 425.07,
-                  "13": 423.95,
-                  "14": 767.09,
-                  "15": 200.49,
-                  "16": 256.97,
-                  "17": 208.47,
-                  "18": 403.26,
-                  "19": -23.98,
-                  "20": 42.27,
-                  "21": 257.1,
-                  "22": -11.63,
-                  "23": -193.36,
-                  "9": -88.46
-                },
-                "net_excluding_best_hour": 2036.72,
-                "positive_without_best_hour": true
-              },
-              "harm_avoided_cents": 8714.494389,
-              "n_cancelled_generations": 26863,
-              "net_cents": 2803.806030499999,
-              "random_net_max": 1043.2336054999996,
-              "random_net_mean": -322.55780431000005,
-              "random_net_p95": 688.2943215000003,
-              "rho_captured_over_sacrificed": 1.474362013430791,
-              "sacrifice_cents": 5910.688358500001
-            },
-            "15%": {
-              "beats_random_max_on_NET": true,
-              "concentration": {
-                "max_single_hour_net_cents": 872.1585410000001,
-                "max_single_hour_share_of_net": 0.30009559794621976,
-                "n_hours_net_positive": 10,
-                "n_hours_with_cancellations": 15,
-                "net_by_hour": {
-                  "10": 272.89,
-                  "11": 18.46,
-                  "12": 433.09,
-                  "13": 320.21,
-                  "14": 872.16,
-                  "15": -8.9,
-                  "16": 371.86,
-                  "17": 391.96,
-                  "18": 388.21,
-                  "19": -84.9,
-                  "20": 26.39,
-                  "21": 26.05,
-                  "22": -73.74,
-                  "23": -16.53,
-                  "9": -30.92
-                },
-                "net_excluding_best_hour": 2034.11,
-                "positive_without_best_hour": true
-              },
-              "harm_avoided_cents": 11829.042953499995,
-              "n_cancelled_generations": 40295,
-              "net_cents": 2906.2690254999966,
-              "random_net_max": 1142.1494800000005,
-              "random_net_mean": -548.5300864175,
-              "random_net_p95": 564.9436709999998,
-              "rho_captured_over_sacrificed": 1.3257136232466917,
-              "sacrifice_cents": 8922.773927999999
-            },
-            "5%": {
-              "beats_random_max_on_NET": true,
-              "concentration": {
-                "max_single_hour_net_cents": 561.0780079999998,
-                "max_single_hour_share_of_net": 0.3666023130898449,
-                "n_hours_net_positive": 10,
-                "n_hours_with_cancellations": 15,
-                "net_by_hour": {
-                  "10": 32.73,
-                  "11": 160.72,
-                  "12": 296.37,
-                  "13": 229.58,
-                  "14": 561.08,
-                  "15": 102.06,
-                  "16": 71.75,
-                  "17": -85.76,
-                  "18": 270.99,
-                  "19": -108.09,
-                  "20": -37.78,
-                  "21": -24.7,
-                  "22": -24.44,
-                  "23": 37.75,
-                  "9": 48.22
-                },
-                "net_excluding_best_hour": 969.4,
-                "positive_without_best_hour": true
-              },
-              "harm_avoided_cents": 5238.5261075,
-              "n_cancelled_generations": 13431,
-              "net_cents": 1530.4813635,
-              "random_net_max": 1143.5735655,
-              "random_net_mean": -190.5060887,
-              "random_net_p95": 582.1014260000002,
-              "rho_captured_over_sacrificed": 1.4127461962201173,
-              "sacrifice_cents": 3708.0447440000007
-            }
-          },
-          "latency_ms": 50,
-          "n_actions": 268634,
-          "n_generations": 268634,
-          "n_rows": 308715,
-          "rows_per_action": 1.1492030048318531,
-          "unit": "ACTION"
-        }
-      }
+     "exposed_OK": 0
     }
+   },
+   "exposed_OK_rows": 195,
+   "exposed_OK_share_of_all_rows": 0.000302,
+   "exposed_OK_share_of_gapped_slug_rows": 0.000732,
+   "n_rows_in_dataset": 645851,
+   "resync_lag_s": {
+    "n": 351,
+    "p50": -0.0,
+    "p90": -0.0,
+    "worst": -1.135
+   },
+   "slugs_with_no_snapshot_after_gap": 0
   },
-  "btc_power_note": "UNDERPOWERED-ON-BTC was declared nameable and DOES NOT APPLY: 188,629 actions over 166 windows, 58,232 fit positives vs eth's 6,406. On this surface btc is the better-powered coin, inverting the prior expectation that eth would be informative.",
-  "confound_disclosure": "R-157(3), declared before any number existed: arms B and C carry BOTH the 21 PRED_STATE_V1 features AND w=1/n_rows(generation) weighting; arm A carries neither. A B or C win is features+weighting JOINTLY, not decomposable from three arms. Direction that matters: A is the incumbent a freeze already adopted, so a candidate winning purely on weighting would cause new FEATURES to be adopted on the strength of a reweighting that had nothing to do with them.",
-  "da_caveat_field": {
-    "artifact": "data/pm_5min/derived/da_post_gap_queue_validity_v1.json",
-    "authorised_by": "R-173(2); design/metric/null/falsifier declared in Q-DA-79 BEFORE any data was read",
-    "consequence_for_phase2": "NONE. The arms' ranking stands unqualified on this account.",
-    "finding": "H0 FALSIFIED, BUT SHALLOW AND NEGLIGIBLE IN MAGNITUDE.",
-    "forward_refinement_not_retroactive": "POST_GAP_QUEUE_UNRELIABLE remains a pre-declared refinement for FUTURE builds only. R-173(2) is explicit that this never becomes a retroactive edit to a built population, and nothing here proposes one.",
-    "instrument": "live/pm_research/da_post_gap_queue_validity.py (11 selftests incl. two falsifiers)",
-    "interpretation": "The exposure is REAL but SHALLOW. 195 of 645,851 rows (0.030%) are admitted OK while preceding their own book resync. Median and p90 resync lag both round to -0.0 s: almost every exposed row sits within milliseconds of the resync instant, and only the extreme tail reaches 1.135 s. EVERY gap was followed by a snapshot (0 slugs left unresynced), so there is no persistent unresynced state anywhere in the population. btc-only, because eth carries no PM gaps in this top-up.",
-    "question": "R-173 ruled a PM gap excludes ROWS, not the window. Rows INSIDE a gap carry GAP_IN_HORIZON. This asked about rows AFTER a gap: queue-ahead needs book state, and BookState refuses to mutate until a full post-gap snapshot arrives, so a row can report status=OK while its qahead rests on a book that was never re-established. The status field describes the FILL HORIZON and says nothing about queue validity, which is why this could hide.",
-    "reading_PRE_COMMITTED_BEFORE_THE_NUMBER_EXISTED": "Q-DA-79(5), filed before this ran: Phase 2's gate is a PAIRED comparison on identical rows and all three arms see the same post-gap rows, so any unreliability is COMMON-MODE. A large exposed set would QUALIFY WHAT THE NUMBERS MEAN and would NOT invalidate the ranking between arms. At 0.030% of rows it cannot move a paired comparison at all. This reading was committed in advance precisely so it could not be inflated afterwards.",
-    "result": {
-      "H0_exposed_set_is_empty": false,
-      "by_coin": {
-        "btc": {
-          "exposed_OK": 195
-        },
-        "eth": {
-          "exposed_OK": 0
-        }
-      },
-      "exposed_OK_rows": 195,
-      "exposed_OK_share_of_all_rows": 0.000302,
-      "exposed_OK_share_of_gapped_slug_rows": 0.000732,
-      "n_rows_in_dataset": 645851,
-      "resync_lag_s": {
-        "n": 351,
-        "p50": -0.0,
-        "p90": -0.0,
-        "worst": -1.135
-      },
-      "slugs_with_no_snapshot_after_gap": 0
+  "secondary_reported_without_test": {
+   "n_exposed": 351,
+   "n_unexposed": 261327,
+   "note": "Declared in Q-DA-79 as side-by-side with NO test, and reported that way. Directionally consistent with a stale book inflating queue-ahead; it is NOT a tested claim and no inference rests on it.",
+   "qahead_p50_exposed": 137.0,
+   "qahead_p50_unexposed": 40.2
+  }
+ },
+ "decision_metric": "net_cents",
+ "declaration_commit": "d7082b6",
+ "g_note": "G=1 UTC day (2026-08-25). No interval quoted, none may be inferred (rule 8).",
+ "increment_predicates": {
+  "btc": {
+   "LGBM_PINNED": {
+    "beats_incumbent_at_all_budgets": true,
+    "beats_random_max_on_NET_all_budgets": true,
+    "delta_net_cents_vs_incumbent": {
+     "10%": 3761.689337500009,
+     "15%": 2448.192786000007,
+     "5%": 4638.570084450003
     },
-    "secondary_reported_without_test": {
-      "n_exposed": 351,
-      "n_unexposed": 261327,
-      "note": "Declared in Q-DA-79 as side-by-side with NO test, and reported that way. Directionally consistent with a stale book inflating queue-ahead; it is NOT a tested claim and no inference rests on it.",
-      "qahead_p50_exposed": 137.0,
-      "qahead_p50_unexposed": 40.2
-    }
-  },
-  "decision_metric": "net_cents",
-  "declaration_commit": "d7082b6",
-  "g_note": "G=1 UTC day (2026-08-25). No interval quoted, none may be inferred (rule 8).",
-  "increment_predicates": {
-    "btc": {
-      "LGBM_PINNED": {
-        "beats_incumbent_at_all_budgets": true,
-        "beats_random_max_on_NET_all_budgets": true,
-        "delta_net_cents_vs_incumbent": {
-          "10%": 3761.689337500009,
-          "15%": 2448.192786000007,
-          "5%": 4638.570084450003
-        },
-        "max_top_hour_share": 0.1799759568694644,
-        "no_single_hour_concentration": true
-      },
-      "PLUS_PRED_STATE_V1": {
-        "beats_incumbent_at_all_budgets": true,
-        "beats_random_max_on_NET_all_budgets": true,
-        "delta_net_cents_vs_incumbent": {
-          "10%": 4137.7072380000045,
-          "15%": 2857.7496210000027,
-          "5%": 2369.5880569500105
-        },
-        "max_top_hour_share": 0.18641291695580245,
-        "no_single_hour_concentration": true
-      }
+    "max_top_hour_share": 0.1799759568694644,
+    "no_single_hour_concentration": true
+   },
+   "PLUS_PRED_STATE_V1": {
+    "beats_incumbent_at_all_budgets": true,
+    "beats_random_max_on_NET_all_budgets": true,
+    "delta_net_cents_vs_incumbent": {
+     "10%": 4137.7072380000045,
+     "15%": 2857.7496210000027,
+     "5%": 2369.5880569500105
     },
-    "eth": {
-      "LGBM_PINNED": {
-        "beats_incumbent_at_all_budgets": false,
-        "beats_random_max_on_NET_all_budgets": false,
-        "delta_net_cents_vs_incumbent": {
-          "10%": -1015.5700935000004,
-          "15%": -1370.0458499999982,
-          "5%": -174.0998815000005
-        },
-        "max_top_hour_share": 0.5179663972292419,
-        "no_single_hour_concentration": false
-      },
-      "PLUS_PRED_STATE_V1": {
-        "beats_incumbent_at_all_budgets": false,
-        "beats_random_max_on_NET_all_budgets": true,
-        "delta_net_cents_vs_incumbent": {
-          "10%": -108.80929299999798,
-          "15%": -347.9071609999951,
-          "5%": 530.3989740000006
-        },
-        "max_top_hour_share": 0.4237970369027129,
-        "no_single_hour_concentration": true
-      }
-    }
+    "max_top_hour_share": 0.18641291695580245,
+    "no_single_hour_concentration": true
+   }
   },
-  "lgbm_params": {
-    "colsample_bytree": 0.7,
-    "learning_rate": 0.05,
-    "max_depth": 4,
-    "min_child_samples": 200,
-    "n_estimators": 200,
-    "n_jobs": 4,
-    "num_leaves": 15,
-    "objective": "binary",
-    "random_state": 20260826,
-    "reg_lambda": 10.0,
-    "subsample": 0.7,
-    "subsample_freq": 1,
-    "verbose": -1
-  },
-  "model_class_diagnostic": "B and C share features and weighting and differ only in model class. C-B = btc +2269/-376/-410, eth -704/-907/-1022: neither large nor one-signed, so the btc gain does not look like a model-class effect. DIAGNOSTIC, not attribution; the package confound stands.",
-  "multiplicity_after": 4,
-  "multiplicity_before": 2,
-  "n_random": 200,
-  "population": {
-    "btc": {
-      "fit_actions": 352912,
-      "fit_drops": {
-        "fine": 0,
-        "pm": 13,
-        "state": 0
-      },
-      "fit_positive": 58232,
-      "fit_rows": 605243,
-      "score_actions": 188629,
-      "score_drops": {
-        "fine": 0,
-        "pm": 9,
-        "state": 0
-      },
-      "score_rows": 330193,
-      "score_windows": 166
+  "eth": {
+   "LGBM_PINNED": {
+    "beats_incumbent_at_all_budgets": false,
+    "beats_random_max_on_NET_all_budgets": false,
+    "delta_net_cents_vs_incumbent": {
+     "10%": -1015.5700935000004,
+     "15%": -1370.0458499999982,
+     "5%": -174.0998815000005
     },
-    "eth": {
-      "fit_actions": 465385,
-      "fit_drops": {
-        "fine": 0,
-        "pm": 0,
-        "state": 0
-      },
-      "fit_positive": 6406,
-      "fit_rows": 520033,
-      "score_actions": 268634,
-      "score_drops": {
-        "fine": 0,
-        "pm": 0,
-        "state": 0
-      },
-      "score_rows": 308715,
-      "score_windows": 171
-    }
+    "max_top_hour_share": 0.5179663972292419,
+    "no_single_hour_concentration": false
+   },
+   "PLUS_PRED_STATE_V1": {
+    "beats_incumbent_at_all_budgets": false,
+    "beats_random_max_on_NET_all_budgets": true,
+    "delta_net_cents_vs_incumbent": {
+     "10%": -108.80929299999798,
+     "15%": -347.9071609999951,
+     "5%": 530.3989740000006
+    },
+    "max_top_hour_share": 0.4237970369027129,
+    "no_single_hour_concentration": true
+   }
+  }
+ },
+ "lgbm_params": {
+  "colsample_bytree": 0.7,
+  "learning_rate": 0.05,
+  "max_depth": 4,
+  "min_child_samples": 200,
+  "n_estimators": 200,
+  "n_jobs": 4,
+  "num_leaves": 15,
+  "objective": "binary",
+  "random_state": 20260826,
+  "reg_lambda": 10.0,
+  "subsample": 0.7,
+  "subsample_freq": 1,
+  "verbose": -1
+ },
+ "model_class_diagnostic": "B and C share features and weighting and differ only in model class. C-B = btc +2269/-376/-410, eth -704/-907/-1022: neither large nor one-signed, so the btc gain does not look like a model-class effect. DIAGNOSTIC, not attribution; the package confound stands.",
+ "multiplicity_after": 4,
+ "multiplicity_before": 2,
+ "n_random": 200,
+ "population": {
+  "btc": {
+   "fit_actions": 352912,
+   "fit_drops": {
+    "fine": 0,
+    "pm": 13,
+    "state": 0
+   },
+   "fit_positive": 58232,
+   "fit_rows": 605243,
+   "score_actions": 188629,
+   "score_drops": {
+    "fine": 0,
+    "pm": 9,
+    "state": 0
+   },
+   "score_rows": 330193,
+   "score_windows": 166
   },
-  "protocol": "PHASE2_THREE_ARM_V1",
-  "regeneration_note": "These analysis fields are DERIVED and were lost once when stage-score regenerated this receipt. They are recomputed from the receipt's own gate numbers, so a regeneration can always restore them; nothing here is hand-entered.",
-  "staged_because": "the single-process run was oom-killed at 14G after all four feature passes succeeded; fit and score are now separate processes (the daily-refit shape)"
+  "eth": {
+   "fit_actions": 465385,
+   "fit_drops": {
+    "fine": 0,
+    "pm": 0,
+    "state": 0
+   },
+   "fit_positive": 6406,
+   "fit_rows": 520033,
+   "score_actions": 268634,
+   "score_drops": {
+    "fine": 0,
+    "pm": 0,
+    "state": 0
+   },
+   "score_rows": 308715,
+   "score_windows": 171
+  }
+ },
+ "protocol": "PHASE2_THREE_ARM_V1",
+ "regeneration_note": "These analysis fields are DERIVED and were lost once when stage-score regenerated this receipt. They are recomputed from the receipt's own gate numbers, so a regeneration can always restore them; nothing here is hand-entered.",
+ "staged_because": "the single-process run was oom-killed at 14G after all four feature passes succeeded; fit and score are now separate processes (the daily-refit shape)",
+ "superseded_by": "phase2_three_arm_v2.json (pending the purged rerun)",
+ "supersession_reason": "The train/score split was enforced on SLUG IDENTITY only (phase2_arms.assert_disjoint over slug sets). Slug identity is not an embargo. Measured at the decision clock: the last training label exit is 1787650452.125 and the first scoring feature is 1787650443.991 -- a gap of -8.134s against a declared split_embargo_s of 60. 1,725 training rows / 1,307 actions fall inside the 60s boundary and 593 scoring rows sit in the embargo region, across the two seam slugs (\u20261787650200 / \u20261787650500). Impact is likely confined to those slugs, but that is established by a purged rerun, never assumed.",
+ "what_still_stands": "arithmetic, action counts, matched-random predicates and concentration calculations all reproduce; C's decline stands on three independent failures; the honest reading (btc-B directionally strong, eth-B a wash, confound disclosed, G=1) stands. The INCUMBENT's freeze and forward clock are unaffected -- its receipt defers validation wholly to the forward window and does not cross the fragment/top-up seam."
 }

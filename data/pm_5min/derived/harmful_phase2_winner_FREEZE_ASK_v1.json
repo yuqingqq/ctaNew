@@ -1,255 +1,257 @@
 {
-  "btc_power_note": "UNDERPOWERED-ON-BTC was declared nameable and DOES NOT APPLY: 188,629 actions over 166 windows, 58,232 fit positives vs eth's 6,406. On this surface btc is the better-powered coin, inverting the prior expectation that eth would be informative.",
-  "clock": {
-    "yes_after": "day one 08-28 \u2014 the cost of waiting is one day, not the result",
-    "yes_before_2026-08-27T00:00Z": "shares day one 08-27 with the incumbent"
+ "STATUS": "HELD \u2014 not declined. Returns to the user with the corrected rerun (R-184).",
+ "btc_power_note": "UNDERPOWERED-ON-BTC was declared nameable and DOES NOT APPLY: 188,629 actions over 166 windows, 58,232 fit positives vs eth's 6,406. On this surface btc is the better-powered coin, inverting the prior expectation that eth would be informative.",
+ "clock": {
+  "yes_after": "day one 08-28 \u2014 the cost of waiting is one day, not the result",
+  "yes_before_2026-08-27T00:00Z": "shares day one 08-27 with the incumbent"
+ },
+ "drafted_at_utc": "2026-08-26T17:59:20Z",
+ "evidence_limits": [
+  "G=1 UTC day (2026-08-25). No interval quoted, none may be inferred (rule 8).",
+  "Development evidence on the declared top-up, CONSUMED by this scoring.",
+  "Multiplicity: 2 frozen candidates stood; scoring B and C makes 4 development candidates (2->4). A yes makes the FORWARD race 3.",
+  "Each arm's random_net_max is already a max over 200 draws \u2014 an extreme order statistic."
+ ],
+ "grounds_against_C": [
+  "eth net BELOW the incumbent at every budget: -174 / -1016 / -1370.",
+  "eth @15% FAILS the declared null \u2014 does not beat the matched-random max on NET.",
+  "eth @5% FAILS the concentration gate \u2014 51.8% of net from ONE hour.",
+  "C's btc edge over B is inconsistent (C-B = +2269 / -376 / -410), so it is not reliably the better btc arm either.",
+  "Three independent failures on one development day is sufficient to decline without a tie-breaker."
+ ],
+ "grounds_for_B": {
+  "btc_beats_incumbent_all_budgets": true,
+  "btc_beats_random_max_all_budgets": true,
+  "btc_concentration": "PASS \u2014 15 hours with cancellations, 14-15 net-positive, top-hour share 12.4-18.6%, still positive without its best hour at every budget",
+  "btc_delta_net_vs_incumbent": {
+   "10%": 4138,
+   "15%": 2858,
+   "5%": 2370
   },
-  "drafted_at_utc": "2026-08-26T17:59:20Z",
-  "evidence_limits": [
-    "G=1 UTC day (2026-08-25). No interval quoted, none may be inferred (rule 8).",
-    "Development evidence on the declared top-up, CONSUMED by this scoring.",
-    "Multiplicity: 2 frozen candidates stood; scoring B and C makes 4 development candidates (2->4). A yes makes the FORWARD race 3.",
-    "Each arm's random_net_max is already a max over 200 draws \u2014 an extreme order statistic."
-  ],
-  "grounds_against_C": [
-    "eth net BELOW the incumbent at every budget: -174 / -1016 / -1370.",
-    "eth @15% FAILS the declared null \u2014 does not beat the matched-random max on NET.",
-    "eth @5% FAILS the concentration gate \u2014 51.8% of net from ONE hour.",
-    "C's btc edge over B is inconsistent (C-B = +2269 / -376 / -410), so it is not reliably the better btc arm either.",
-    "Three independent failures on one development day is sufficient to decline without a tie-breaker."
-  ],
-  "grounds_for_B": {
-    "btc_beats_incumbent_all_budgets": true,
-    "btc_beats_random_max_all_budgets": true,
-    "btc_concentration": "PASS \u2014 15 hours with cancellations, 14-15 net-positive, top-hour share 12.4-18.6%, still positive without its best hour at every budget",
-    "btc_delta_net_vs_incumbent": {
-      "10%": 4138,
-      "15%": 2858,
-      "5%": 2370
-    },
-    "eth": "a WASH (+530 / -109 / -348); beats random-max at all budgets; concentration passes at 34.6-42.4% top-hour, thinner than btc"
+  "eth": "a WASH (+530 / -109 / -348); beats random-max at all budgets; concentration passes at 34.6-42.4% top-hour, thinner than btc"
+ },
+ "model_class_diagnostic": "B and C share features and weighting and differ only in model class. C-B = btc +2269/-376/-410, eth -704/-907/-1022: neither large nor one-signed, so the btc gain does not look like a model-class effect. DIAGNOSTIC, not attribution; the package confound stands.",
+ "package_confound": "R-157(3), declared before any number existed: arms B and C carry BOTH the 21 PRED_STATE_V1 features AND w=1/n_rows(generation) weighting; arm A carries neither. A B or C win is features+weighting JOINTLY, not decomposable from three arms. Direction that matters: A is the incumbent a freeze already adopted, so a candidate winning purely on weighting would cause new FEATURES to be adopted on the strength of a reweighting that had nothing to do with them.",
+ "pinned": {
+  "declaration_commit": "d7082b6",
+  "fitted_weights_dir": "data/pm_5min/derived/phase2_fits/",
+  "git_commit_at_draft": "f46f3505134d4d59d5d6d648cafabaae2b750d1c",
+  "receipt": "phase2_three_arm_v1.json",
+  "receipt_sha256": "a048454352b51a27cf8f63049563d36ab7d087dcb41ebe43ffd65f48c32f556a",
+  "receipt_sha256_note": "the pinned sha refers to the SUPERSEDED v1 receipt and is moot while this ASK is held; it will be re-pinned to v2 when the ASK returns."
+ },
+ "populations": {
+  "btc": {
+   "fit_actions": 352912,
+   "fit_drops": {
+    "fine": 0,
+    "pm": 13,
+    "state": 0
+   },
+   "fit_positive": 58232,
+   "fit_rows": 605243,
+   "score_actions": 188629,
+   "score_drops": {
+    "fine": 0,
+    "pm": 9,
+    "state": 0
+   },
+   "score_rows": 330193,
+   "score_windows": 166
   },
-  "model_class_diagnostic": "B and C share features and weighting and differ only in model class. C-B = btc +2269/-376/-410, eth -704/-907/-1022: neither large nor one-signed, so the btc gain does not look like a model-class effect. DIAGNOSTIC, not attribution; the package confound stands.",
-  "package_confound": "R-157(3), declared before any number existed: arms B and C carry BOTH the 21 PRED_STATE_V1 features AND w=1/n_rows(generation) weighting; arm A carries neither. A B or C win is features+weighting JOINTLY, not decomposable from three arms. Direction that matters: A is the incumbent a freeze already adopted, so a candidate winning purely on weighting would cause new FEATURES to be adopted on the strength of a reweighting that had nothing to do with them.",
-  "pinned": {
-    "declaration_commit": "d7082b6",
-    "fitted_weights_dir": "data/pm_5min/derived/phase2_fits/",
-    "git_commit_at_draft": "f46f3505134d4d59d5d6d648cafabaae2b750d1c",
-    "receipt": "phase2_three_arm_v1.json",
-    "receipt_sha256": "a048454352b51a27cf8f63049563d36ab7d087dcb41ebe43ffd65f48c32f556a"
-  },
-  "populations": {
+  "eth": {
+   "fit_actions": 465385,
+   "fit_drops": {
+    "fine": 0,
+    "pm": 0,
+    "state": 0
+   },
+   "fit_positive": 6406,
+   "fit_rows": 520033,
+   "score_actions": 268634,
+   "score_drops": {
+    "fine": 0,
+    "pm": 0,
+    "state": 0
+   },
+   "score_rows": 308715,
+   "score_windows": 171
+  }
+ },
+ "proposal": {
+  "adopt": "PLUS_PRED_STATE_V1 (arm B) as a SECOND frozen candidate, BOTH COINS, UNSCOPED",
+  "decline": "LGBM_PINNED (arm C)",
+  "forward_race_multiplicity_if_yes": 3,
+  "incumbent_unchanged": "PM_PLUS_FINE stays frozen exactly as it is. This ADDS a racer; it replaces nothing."
+ },
+ "protocol": "HARMFUL_PHASE2_WINNER_FREEZE_ASK_V1",
+ "reserved_Q_DA_79": {
+  "artifact": "data/pm_5min/derived/da_post_gap_queue_validity_v1.json",
+  "authorised_by": "R-173(2); design/metric/null/falsifier declared in Q-DA-79 BEFORE any data was read",
+  "consequence_for_phase2": "NONE. The arms' ranking stands unqualified on this account.",
+  "finding": "H0 FALSIFIED, BUT SHALLOW AND NEGLIGIBLE IN MAGNITUDE.",
+  "forward_refinement_not_retroactive": "POST_GAP_QUEUE_UNRELIABLE remains a pre-declared refinement for FUTURE builds only. R-173(2) is explicit that this never becomes a retroactive edit to a built population, and nothing here proposes one.",
+  "instrument": "live/pm_research/da_post_gap_queue_validity.py (11 selftests incl. two falsifiers)",
+  "interpretation": "The exposure is REAL but SHALLOW. 195 of 645,851 rows (0.030%) are admitted OK while preceding their own book resync. Median and p90 resync lag both round to -0.0 s: almost every exposed row sits within milliseconds of the resync instant, and only the extreme tail reaches 1.135 s. EVERY gap was followed by a snapshot (0 slugs left unresynced), so there is no persistent unresynced state anywhere in the population. btc-only, because eth carries no PM gaps in this top-up.",
+  "question": "R-173 ruled a PM gap excludes ROWS, not the window. Rows INSIDE a gap carry GAP_IN_HORIZON. This asked about rows AFTER a gap: queue-ahead needs book state, and BookState refuses to mutate until a full post-gap snapshot arrives, so a row can report status=OK while its qahead rests on a book that was never re-established. The status field describes the FILL HORIZON and says nothing about queue validity, which is why this could hide.",
+  "reading_PRE_COMMITTED_BEFORE_THE_NUMBER_EXISTED": "Q-DA-79(5), filed before this ran: Phase 2's gate is a PAIRED comparison on identical rows and all three arms see the same post-gap rows, so any unreliability is COMMON-MODE. A large exposed set would QUALIFY WHAT THE NUMBERS MEAN and would NOT invalidate the ranking between arms. At 0.030% of rows it cannot move a paired comparison at all. This reading was committed in advance precisely so it could not be inflated afterwards.",
+  "result": {
+   "H0_exposed_set_is_empty": false,
+   "by_coin": {
     "btc": {
-      "fit_actions": 352912,
-      "fit_drops": {
-        "fine": 0,
-        "pm": 13,
-        "state": 0
-      },
-      "fit_positive": 58232,
-      "fit_rows": 605243,
-      "score_actions": 188629,
-      "score_drops": {
-        "fine": 0,
-        "pm": 9,
-        "state": 0
-      },
-      "score_rows": 330193,
-      "score_windows": 166
+     "exposed_OK": 195
     },
     "eth": {
-      "fit_actions": 465385,
-      "fit_drops": {
-        "fine": 0,
-        "pm": 0,
-        "state": 0
-      },
-      "fit_positive": 6406,
-      "fit_rows": 520033,
-      "score_actions": 268634,
-      "score_drops": {
-        "fine": 0,
-        "pm": 0,
-        "state": 0
-      },
-      "score_rows": 308715,
-      "score_windows": 171
+     "exposed_OK": 0
     }
+   },
+   "exposed_OK_rows": 195,
+   "exposed_OK_share_of_all_rows": 0.000302,
+   "exposed_OK_share_of_gapped_slug_rows": 0.000732,
+   "n_rows_in_dataset": 645851,
+   "resync_lag_s": {
+    "n": 351,
+    "p50": -0.0,
+    "p90": -0.0,
+    "worst": -1.135
+   },
+   "slugs_with_no_snapshot_after_gap": 0
   },
-  "proposal": {
-    "adopt": "PLUS_PRED_STATE_V1 (arm B) as a SECOND frozen candidate, BOTH COINS, UNSCOPED",
-    "decline": "LGBM_PINNED (arm C)",
-    "forward_race_multiplicity_if_yes": 3,
-    "incumbent_unchanged": "PM_PLUS_FINE stays frozen exactly as it is. This ADDS a racer; it replaces nothing."
-  },
-  "protocol": "HARMFUL_PHASE2_WINNER_FREEZE_ASK_V1",
-  "reserved_Q_DA_79": {
-    "artifact": "data/pm_5min/derived/da_post_gap_queue_validity_v1.json",
-    "authorised_by": "R-173(2); design/metric/null/falsifier declared in Q-DA-79 BEFORE any data was read",
-    "consequence_for_phase2": "NONE. The arms' ranking stands unqualified on this account.",
-    "finding": "H0 FALSIFIED, BUT SHALLOW AND NEGLIGIBLE IN MAGNITUDE.",
-    "forward_refinement_not_retroactive": "POST_GAP_QUEUE_UNRELIABLE remains a pre-declared refinement for FUTURE builds only. R-173(2) is explicit that this never becomes a retroactive edit to a built population, and nothing here proposes one.",
-    "instrument": "live/pm_research/da_post_gap_queue_validity.py (11 selftests incl. two falsifiers)",
-    "interpretation": "The exposure is REAL but SHALLOW. 195 of 645,851 rows (0.030%) are admitted OK while preceding their own book resync. Median and p90 resync lag both round to -0.0 s: almost every exposed row sits within milliseconds of the resync instant, and only the extreme tail reaches 1.135 s. EVERY gap was followed by a snapshot (0 slugs left unresynced), so there is no persistent unresynced state anywhere in the population. btc-only, because eth carries no PM gaps in this top-up.",
-    "question": "R-173 ruled a PM gap excludes ROWS, not the window. Rows INSIDE a gap carry GAP_IN_HORIZON. This asked about rows AFTER a gap: queue-ahead needs book state, and BookState refuses to mutate until a full post-gap snapshot arrives, so a row can report status=OK while its qahead rests on a book that was never re-established. The status field describes the FILL HORIZON and says nothing about queue validity, which is why this could hide.",
-    "reading_PRE_COMMITTED_BEFORE_THE_NUMBER_EXISTED": "Q-DA-79(5), filed before this ran: Phase 2's gate is a PAIRED comparison on identical rows and all three arms see the same post-gap rows, so any unreliability is COMMON-MODE. A large exposed set would QUALIFY WHAT THE NUMBERS MEAN and would NOT invalidate the ranking between arms. At 0.030% of rows it cannot move a paired comparison at all. This reading was committed in advance precisely so it could not be inflated afterwards.",
-    "result": {
-      "H0_exposed_set_is_empty": false,
-      "by_coin": {
-        "btc": {
-          "exposed_OK": 195
-        },
-        "eth": {
-          "exposed_OK": 0
-        }
-      },
-      "exposed_OK_rows": 195,
-      "exposed_OK_share_of_all_rows": 0.000302,
-      "exposed_OK_share_of_gapped_slug_rows": 0.000732,
-      "n_rows_in_dataset": 645851,
-      "resync_lag_s": {
-        "n": 351,
-        "p50": -0.0,
-        "p90": -0.0,
-        "worst": -1.135
-      },
-      "slugs_with_no_snapshot_after_gap": 0
+  "secondary_reported_without_test": {
+   "n_exposed": 351,
+   "n_unexposed": 261327,
+   "note": "Declared in Q-DA-79 as side-by-side with NO test, and reported that way. Directionally consistent with a stale book inflating queue-ahead; it is NOT a tested claim and no inference rests on it.",
+   "qahead_p50_exposed": 137.0,
+   "qahead_p50_unexposed": 40.2
+  }
+ },
+ "scoping_position": "BE proposes B UNSCOPED and RECOMMENDS AGAINST btc-only scoping. A btc-only scope would be chosen BECAUSE btc won on this surface \u2014 a selection made on seen data (rule 11). Declaring it before the forward test does not undo that it was learned from the development result. Unscoped B is one hypothesis the forward days judge per coin on their own evidence; scoped B asks the forward days to confirm a choice this surface already made. The scoped variant is available on request and would be recorded as a DEVELOPMENT-SELECTED SCOPE, never as a prior.",
+ "status": "ASK \u2014 NOT FROZEN. The yes/no is the USER's (R-162(3)).",
+ "three_heads": {
+  "btc": {
+   "LGBM_PINNED": {
+    "10%": {
+     "beats_random_max_on_NET": true,
+     "net_cents": 12129.494558450013,
+     "positive_without_best_hour": true,
+     "top_hour_share": 0.1799759568694644
     },
-    "secondary_reported_without_test": {
-      "n_exposed": 351,
-      "n_unexposed": 261327,
-      "note": "Declared in Q-DA-79 as side-by-side with NO test, and reported that way. Directionally consistent with a stale book inflating queue-ahead; it is NOT a tested claim and no inference rests on it.",
-      "qahead_p50_exposed": 137.0,
-      "qahead_p50_unexposed": 40.2
-    }
-  },
-  "scoping_position": "BE proposes B UNSCOPED and RECOMMENDS AGAINST btc-only scoping. A btc-only scope would be chosen BECAUSE btc won on this surface \u2014 a selection made on seen data (rule 11). Declaring it before the forward test does not undo that it was learned from the development result. Unscoped B is one hypothesis the forward days judge per coin on their own evidence; scoped B asks the forward days to confirm a choice this surface already made. The scoped variant is available on request and would be recorded as a DEVELOPMENT-SELECTED SCOPE, never as a prior.",
-  "status": "ASK \u2014 NOT FROZEN. The yes/no is the USER's (R-162(3)).",
-  "three_heads": {
-    "btc": {
-      "LGBM_PINNED": {
-        "10%": {
-          "beats_random_max_on_NET": true,
-          "net_cents": 12129.494558450013,
-          "positive_without_best_hour": true,
-          "top_hour_share": 0.1799759568694644
-        },
-        "15%": {
-          "beats_random_max_on_NET": true,
-          "net_cents": 12736.359566950012,
-          "positive_without_best_hour": true,
-          "top_hour_share": 0.17278891887684095
-        },
-        "5%": {
-          "beats_random_max_on_NET": true,
-          "net_cents": 10460.507073450004,
-          "positive_without_best_hour": true,
-          "top_hour_share": 0.1406457269393894
-        }
-      },
-      "PLUS_PRED_STATE_V1": {
-        "10%": {
-          "beats_random_max_on_NET": true,
-          "net_cents": 12505.512458950008,
-          "positive_without_best_hour": true,
-          "top_hour_share": 0.18641291695580245
-        },
-        "15%": {
-          "beats_random_max_on_NET": true,
-          "net_cents": 13145.916401950008,
-          "positive_without_best_hour": true,
-          "top_hour_share": 0.16547933479763458
-        },
-        "5%": {
-          "beats_random_max_on_NET": true,
-          "net_cents": 8191.525045950011,
-          "positive_without_best_hour": true,
-          "top_hour_share": 0.1238186081725362
-        }
-      },
-      "PM_PLUS_FINE": {
-        "10%": {
-          "beats_random_max_on_NET": true,
-          "net_cents": 8367.805220950004,
-          "positive_without_best_hour": true,
-          "top_hour_share": 0.15856119603240076
-        },
-        "15%": {
-          "beats_random_max_on_NET": true,
-          "net_cents": 10288.166780950005,
-          "positive_without_best_hour": true,
-          "top_hour_share": 0.13641313942331007
-        },
-        "5%": {
-          "beats_random_max_on_NET": true,
-          "net_cents": 5821.936989000001,
-          "positive_without_best_hour": true,
-          "top_hour_share": 0.1628721195010515
-        }
-      }
+    "15%": {
+     "beats_random_max_on_NET": true,
+     "net_cents": 12736.359566950012,
+     "positive_without_best_hour": true,
+     "top_hour_share": 0.17278891887684095
     },
-    "eth": {
-      "LGBM_PINNED": {
-        "10%": {
-          "beats_random_max_on_NET": true,
-          "net_cents": 1788.2359369999986,
-          "positive_without_best_hour": true,
-          "top_hour_share": 0.3904488605521185
-        },
-        "15%": {
-          "beats_random_max_on_NET": false,
-          "net_cents": 1536.2231754999984,
-          "positive_without_best_hour": true,
-          "top_hour_share": 0.43047684707969663
-        },
-        "5%": {
-          "beats_random_max_on_NET": true,
-          "net_cents": 1356.3814819999996,
-          "positive_without_best_hour": true,
-          "top_hour_share": 0.5179663972292419
-        }
-      },
-      "PLUS_PRED_STATE_V1": {
-        "10%": {
-          "beats_random_max_on_NET": true,
-          "net_cents": 2694.996737500001,
-          "positive_without_best_hour": true,
-          "top_hour_share": 0.35465595809464306
-        },
-        "15%": {
-          "beats_random_max_on_NET": true,
-          "net_cents": 2558.3618645000015,
-          "positive_without_best_hour": true,
-          "top_hour_share": 0.4237970369027129
-        },
-        "5%": {
-          "beats_random_max_on_NET": true,
-          "net_cents": 2060.8803375000007,
-          "positive_without_best_hour": true,
-          "top_hour_share": 0.34598842762747267
-        }
-      },
-      "PM_PLUS_FINE": {
-        "10%": {
-          "beats_random_max_on_NET": true,
-          "net_cents": 2803.806030499999,
-          "positive_without_best_hour": true,
-          "top_hour_share": 0.27358794176757156
-        },
-        "15%": {
-          "beats_random_max_on_NET": true,
-          "net_cents": 2906.2690254999966,
-          "positive_without_best_hour": true,
-          "top_hour_share": 0.30009559794621976
-        },
-        "5%": {
-          "beats_random_max_on_NET": true,
-          "net_cents": 1530.4813635,
-          "positive_without_best_hour": true,
-          "top_hour_share": 0.3666023130898449
-        }
-      }
+    "5%": {
+     "beats_random_max_on_NET": true,
+     "net_cents": 10460.507073450004,
+     "positive_without_best_hour": true,
+     "top_hour_share": 0.1406457269393894
     }
+   },
+   "PLUS_PRED_STATE_V1": {
+    "10%": {
+     "beats_random_max_on_NET": true,
+     "net_cents": 12505.512458950008,
+     "positive_without_best_hour": true,
+     "top_hour_share": 0.18641291695580245
+    },
+    "15%": {
+     "beats_random_max_on_NET": true,
+     "net_cents": 13145.916401950008,
+     "positive_without_best_hour": true,
+     "top_hour_share": 0.16547933479763458
+    },
+    "5%": {
+     "beats_random_max_on_NET": true,
+     "net_cents": 8191.525045950011,
+     "positive_without_best_hour": true,
+     "top_hour_share": 0.1238186081725362
+    }
+   },
+   "PM_PLUS_FINE": {
+    "10%": {
+     "beats_random_max_on_NET": true,
+     "net_cents": 8367.805220950004,
+     "positive_without_best_hour": true,
+     "top_hour_share": 0.15856119603240076
+    },
+    "15%": {
+     "beats_random_max_on_NET": true,
+     "net_cents": 10288.166780950005,
+     "positive_without_best_hour": true,
+     "top_hour_share": 0.13641313942331007
+    },
+    "5%": {
+     "beats_random_max_on_NET": true,
+     "net_cents": 5821.936989000001,
+     "positive_without_best_hour": true,
+     "top_hour_share": 0.1628721195010515
+    }
+   }
   },
-  "what_a_no_costs": "Nothing is consumed by a no; the top-up is spent either way. The incumbent stands alone in the forward race at multiplicity 2."
+  "eth": {
+   "LGBM_PINNED": {
+    "10%": {
+     "beats_random_max_on_NET": true,
+     "net_cents": 1788.2359369999986,
+     "positive_without_best_hour": true,
+     "top_hour_share": 0.3904488605521185
+    },
+    "15%": {
+     "beats_random_max_on_NET": false,
+     "net_cents": 1536.2231754999984,
+     "positive_without_best_hour": true,
+     "top_hour_share": 0.43047684707969663
+    },
+    "5%": {
+     "beats_random_max_on_NET": true,
+     "net_cents": 1356.3814819999996,
+     "positive_without_best_hour": true,
+     "top_hour_share": 0.5179663972292419
+    }
+   },
+   "PLUS_PRED_STATE_V1": {
+    "10%": {
+     "beats_random_max_on_NET": true,
+     "net_cents": 2694.996737500001,
+     "positive_without_best_hour": true,
+     "top_hour_share": 0.35465595809464306
+    },
+    "15%": {
+     "beats_random_max_on_NET": true,
+     "net_cents": 2558.3618645000015,
+     "positive_without_best_hour": true,
+     "top_hour_share": 0.4237970369027129
+    },
+    "5%": {
+     "beats_random_max_on_NET": true,
+     "net_cents": 2060.8803375000007,
+     "positive_without_best_hour": true,
+     "top_hour_share": 0.34598842762747267
+    }
+   },
+   "PM_PLUS_FINE": {
+    "10%": {
+     "beats_random_max_on_NET": true,
+     "net_cents": 2803.806030499999,
+     "positive_without_best_hour": true,
+     "top_hour_share": 0.27358794176757156
+    },
+    "15%": {
+     "beats_random_max_on_NET": true,
+     "net_cents": 2906.2690254999966,
+     "positive_without_best_hour": true,
+     "top_hour_share": 0.30009559794621976
+    },
+    "5%": {
+     "beats_random_max_on_NET": true,
+     "net_cents": 1530.4813635,
+     "positive_without_best_hour": true,
+     "top_hour_share": 0.3666023130898449
+    }
+   }
+  }
+ },
+ "what_a_no_costs": "Nothing is consumed by a no; the top-up is spent either way. The incumbent stands alone in the forward race at multiplicity 2."
 }

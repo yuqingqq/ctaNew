@@ -441,7 +441,7 @@ def features_at(tape: StateTape, row: dict[str, Any],
             bn_asof = tape.bn_event_t[bn_i]
             asof = bn_asof if asof is None else max(asof, bn_asof)
     out["feature_asof"] = asof
-    out["status"] = status
+    out["state_status"] = status
     if out["feature_asof"] is not None and out["feature_asof"] > t + 1e-12:
         raise AssertionError(
             "feature_asof is AFTER the decision time -- knowledge-time "
@@ -487,7 +487,7 @@ def features_for_window(tape: StateTape,
 
 def status_counts(rows: Iterable[dict[str, Any]]) -> dict[str, int]:
     """Every exclusion is a COUNTED STATUS (rule 4).  Nothing is dropped."""
-    c = collections.Counter(r["status"] for r in rows)
+    c = collections.Counter(r["state_status"] for r in rows)
     for s in STATUSES:
         c.setdefault(s, 0)
     return dict(c)
@@ -556,6 +556,84 @@ def assert_no_policy_state(path: Path | None = None) -> list[str]:
 # ---------------------------------------------------------------------------
 # the §4 correctness battery
 # ---------------------------------------------------------------------------
+
+NULLABLE_WITH_FLAG = {
+    "gen_age_s": "gen_age_missing",
+    "remaining_size_frac": "remaining_size_missing",
+    "queue_ahead_norm": "queue_ahead_missing",
+    "touch_move_age_s": "touch_move_missing",
+    "pm_feed_age_s": "pm_feed_missing",
+    "bn_feed_age_s": "bn_feed_missing",
+    "level_size_vel_50ms": "level_vel_missing_50ms",
+    "level_size_vel_250ms": "level_vel_missing_250ms",
+    "level_size_vel_1000ms": "level_vel_missing_1000ms",
+    "same_side_fill_share_50ms": "fill_share_missing_50ms",
+    "same_side_fill_share_250ms": "fill_share_missing_250ms",
+    "same_side_fill_share_1000ms": "fill_share_missing_1000ms",
+}
+
+
+def declared_schema() -> dict[str, Any]:
+    """The family's contract, DERIVED BY RUNNING the builder, not transcribed.
+
+    A schema written by hand beside the code drifts from it; this one is
+    produced by emitting a real feature row, so it cannot claim a field the
+    builder does not emit or omit one it does. The owner of a family declares
+    its semantics (R-156(1) generalised to features by R-184): a consumer that
+    re-derives them is re-deciding them.
+    """
+    key = ("BUY", 0.5)
+    tape = _synth_tape(level_t={key: [1.0]}, level_v={key: [1.0]},
+                       pm_event_t=[1.0])
+    row = features_at(tape, _row(25.0))
+    emitted = sorted(row)
+    return {
+        "family": FAMILY,
+        "emitted_fields": emitted,
+        "n_emitted": len(emitted),
+        "lookbacks_ms": list(LOOKBACKS_MS),
+        "statuses": list(STATUSES),
+        "status_field": "state_status",
+        "status_field_note": (
+            "RENAMED from `status`. The exposure row a consumer passes in ALSO "
+            "carries `status`, with different semantics -- that one describes "
+            "the FILL HORIZON, this one describes whether the STATE was "
+            "computable. Emitting both under one name meant a merge silently "
+            "kept one, and a consumer filtered on the exposure status while "
+            "27,552 PRE_WINDOW state rows went through unread (R-184)."),
+        "nullable_fields_and_their_flags": NULLABLE_WITH_FLAG,
+        "REQUIRED_INPUTS": {
+            "gaps": ("PM gap intervals for the slug. OMITTING IT DOES NOT "
+                     "ERROR -- it makes GAP_AT_CUTOFF impossible to fire, so "
+                     "the population silently reports zero gap-affected state "
+                     "rows (R-184 found exactly this)."),
+            "bn_recv_ns": ("Binance receipt times. OMITTING IT DOES NOT ERROR "
+                           "-- bn_feed_age_s becomes None and bn_feed_missing "
+                           "1.0 for EVERY row, so the freshness family is "
+                           "constant and carries no information (R-184 found "
+                           "exactly this)."),
+        },
+        "CONSUMPTION_CONTRACT": {
+            "never_zero_impute": (
+                "`None` means UNKNOWN and is always paired with a *_missing or "
+                "*_stale flag. `float(x or 0.0)` maps None to 0.0 and destroys "
+                "the distinction the family exists to preserve -- a "
+                "zero-imputed velocity is indistinguishable from a genuinely "
+                "flat book. If a numeric matrix is required, carry the flag "
+                "column BESIDE every nullable it guards; do not drop one and "
+                "keep the other."),
+            "carry_feature_asof": (
+                "feature_asof is the knowledge-time provenance of the row. "
+                "Dropping it discards the only evidence that the "
+                "feature_asof <= decision_time invariant held for THAT row."),
+            "honour_state_status": (
+                "Rows are never dropped by this builder; exclusions are "
+                "STATUSES. A consumer that ignores state_status consumes "
+                "PRE_WINDOW / GAP_AT_CUTOFF / NO_LEVEL_HISTORY rows as if they "
+                "were clean."),
+        },
+    }
+
 
 def _synth_tape(**kw) -> StateTape:
     """A hand-built tape, so the battery tests THE RULE, not the archive."""
@@ -698,9 +776,9 @@ def _selftests() -> int:
     ok(fresh["pm_feed_stale"] == 0.0, "a live feed is not flagged stale")
     gapped = _synth_tape(level_t={key: [1.0]}, level_v={key: [1.0]},
                          pm_event_t=[1.0], gaps=[(10.0, 40.0)])
-    ok(features_at(gapped, _row(25.0))["status"] == "GAP_AT_CUTOFF",
+    ok(features_at(gapped, _row(25.0))["state_status"] == "GAP_AT_CUTOFF",
        "a cutoff inside a RECORDED gap is a status, not a silent value")
-    ok(features_at(gapped, _row(50.0))["status"] != "GAP_AT_CUTOFF",
+    ok(features_at(gapped, _row(50.0))["state_status"] != "GAP_AT_CUTOFF",
        "a cutoff outside the gap is not flagged -- the gate reads the time")
 
     # ---- 6. duplicates are WEIGHTED, never silently collapsed ------------
@@ -781,10 +859,42 @@ def _selftests() -> int:
             ok(stem.format(ms) in keys, f"§4 requires {stem.format(ms)}")
     for req in ("time_remaining_s", "terminal_window", "gen_age_s",
                 "remaining_size_frac", "queue_ahead_norm", "touch_move_age_s",
-                "pm_feed_age_s", "bn_feed_age_s", "feature_asof", "status"):
+                "pm_feed_age_s", "bn_feed_age_s", "feature_asof",
+                "state_status"):
         ok(req in keys, f"§4 requires {req}")
     ok(not any("microprice" in k or "fair" in k for k in keys),
        "the fair-price feature is ABSENT, per §4's own condition")
+
+    # ---- 11. the declared schema is BOUND to what the builder emits ------
+    sch = declared_schema()
+    ok(set(sch["emitted_fields"]) == keys,
+       "the schema's field list IS the emitted field list -- it is derived by "
+       "running the builder, so it cannot claim a field that does not exist "
+       "nor omit one that does")
+    for nullable, flag in sch["nullable_fields_and_their_flags"].items():
+        ok(nullable in keys, f"declared nullable {nullable} is emitted")
+        ok(flag in keys, f"its guard flag {flag} is emitted too")
+    ok("state_status" in keys and "status" not in keys,
+       "the status key is RENAMED -- it can no longer collide with the "
+       "exposure row's `status`, which a merge silently resolved before")
+    ok(sch["status_field"] == "state_status", "the schema names the new key")
+    ok("never_zero_impute" in sch["CONSUMPTION_CONTRACT"],
+       "the no-zero-imputation contract is stated, not implied")
+    ok(set(sch["REQUIRED_INPUTS"]) == {"gaps", "bn_recv_ns"},
+       "both silently-degrading inputs are named as REQUIRED")
+    # the two inputs whose omission does not error must be shown to matter
+    key2 = ("BUY", 0.5)
+    no_gap = _synth_tape(level_t={key2: [1.0]}, level_v={key2: [1.0]},
+                         pm_event_t=[1.0])
+    with_gap = _synth_tape(level_t={key2: [1.0]}, level_v={key2: [1.0]},
+                           pm_event_t=[1.0], gaps=[(10.0, 40.0)])
+    ok(features_at(no_gap, _row(25.0))["state_status"] == "OK"
+       and features_at(with_gap, _row(25.0))["state_status"] == "GAP_AT_CUTOFF",
+       "omitting `gaps` does not error -- it silently makes GAP_AT_CUTOFF "
+       "unreachable, which is why the schema calls it REQUIRED")
+    no_bn = features_at(no_gap, _row(25.0))
+    ok(no_bn["bn_feed_age_s"] is None and no_bn["bn_feed_missing"] == 1.0,
+       "omitting `bn_recv_ns` yields a CONSTANT freshness family, flagged")
 
     print(f"harmful_state_features selftests: {checks} checks passed")
     return 0
@@ -793,7 +903,11 @@ def _selftests() -> int:
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--selftest", action="store_true")
-    ap.parse_args()
+    ap.add_argument("--schema", action="store_true")
+    a = ap.parse_args()
+    if a.schema:
+        print(json.dumps(declared_schema(), indent=2, sort_keys=True))
+        return 0
     return _selftests()
 
 
