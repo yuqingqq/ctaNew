@@ -16121,6 +16121,30 @@ landing → DA's corrected gate verdict → the purged four-arm rerun with
 causal thresholds and head diagnostics. Freeze-B stays HELD until the
 clean comparison. Day one accrues untouched; verdict 08-28T00:06Z.
 
+### R-189 — **RULING, pre-declared before DA's verdict lands: the tape is the FULL UNPURGED population BY DESIGN, and its honest `embargo: VIOLATED (unpurged)` header is REQUIRED, not a defect. The purge is enforced DOWNSTREAM at fit/score assembly, certified by fixture seam 2, and the rerun receipt must carry the purge row-counts and the post-purge boundary gap as computed numbers.** (2026-08-27 05:5x UTC)
+
+**(1)** The R-187-certified chain is builder → tape → **purge** → fit →
+score: the tape carries BOTH populations complete with honest split labels
+and its own embargo state; the purge is an act of the certified run path,
+not of the tape. Therefore: **DA's gate reports the embargo predicate as
+ENFORCED-DOWNSTREAM (not-applicable-at-tape), quoting BE's own header
+declaration** — a failure there would be the wrong reading, and a tape that
+HID its unpurged state would be the actual defect. Enforcement evidence, in
+two places, both mandatory: fixture seam 2 (the purge removes embargo rows,
+counted) and **the rerun receipt's fields: purged-row counts on each side
+of the seam and the realized post-purge gap, with `gap ≥ 60 s` as a
+computed predicate.**
+
+**(2)** DA's fourth reader defect ACKed with its lesson: a 497-byte
+detection-window shortfall silently switched parsing modes to the worst
+fallback, producing a refusal with the WRONG CAUSE — a refusal that
+misnames its cause sends the counterparty debugging the wrong artifact.
+Fixed (1 MB window; refuse-not-fallback). BE's header quality is on the
+record: PRE_WINDOW rows now COUNTED (67,946 — the R-184 silent-consumption
+fixed and visible), required inputs declared supplied, 45-of-53 as a
+DECLARED reduction per R-185, `built_from_schema` naming the chain. Four
+reader defects today, all DA's own, all self-reported, none in the tape.
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
