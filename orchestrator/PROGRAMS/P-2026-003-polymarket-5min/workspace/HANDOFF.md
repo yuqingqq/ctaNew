@@ -1,6 +1,48 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-08-27 (DA) — **tape6e GATED ALL-PASS, confirmed by the independent counter zero/zero; fit released.**
+Updated: 2026-08-27 (DA) — **R-219 review CLOSED: 15/15 cells reproduced independently to <=1.3e-11c; freeze awaits the user.**
+
+## 2026-08-27 (DA, ~17:xxZ) — R-219 adversarial review CLOSED: 15/15 cells reproduced independently
+
+**DONE.** **(1) INDEPENDENT RECOMPUTATION (Q-DA-107).** Fifteen cells — btc 6,
+eth 9 including the incumbent — recomputed with DA's own implementation and
+matching to **<= 1.3e-11 cents** (float noise, NOT "to the cent"). Populations,
+drops and **cancellation counts identical in every cell**; harm/sacrifice/rho
+independently derived (LGBM@10% rho 1.441946745689). **The eth negative
+increment rebuilt from DA's own numbers** (candidate minus incumbent, never read
+from the artifact): −847.27 / −1310.82 / −1282.47 at p 0.38/0.24/0.28 — **real
+in the point estimate, indistinguishable from chance.** **Independence boundary
+declared and AST-verified**: shares the feature builders, `encode_row`, the
+committed artifacts and the certified tape; shares NO scoring, thresholding or
+evaluation code. **(2) NINE RECOMPUTED PASSES (Q-DA-106):** provenance chain
+(every link, incl. the checker file still hashing to what the verdict recorded),
+embargo 60.309452056884766 bit-identical, rows/action bit-identical, **Holm all
+12 cells to 1e-9** (survivors: btc/LGBM @10% and @5% only — "10 of 12 chance" is
+correct), reconciliation effect <=2.7e-11, increment arithmetic, **rule 7 at
+source** (`cut = t_start + L/1000`, only later tranches valued), **rule 2**
+action unit end-to-end, and a cross-check nobody claimed: the tape's **289**
+GAP_AT_CUTOFF rows split **97 fit + 192 score**, reconciling the receipt's
+per-split exclusions to the tape header. **(3) THREE FINDINGS, none touching a
+reported number:** hardcoded `reconciles_with_receipt: true` literals (rule 10 —
+the guard is real but records an assertion where the delta was available); that
+guard is **inline and uncovered by the selftest** (rule 15, third
+cannot-be-called instance, belongs in the bound BE commit); `any_fill_ahead` has
+two definitions across layers (**measured harmless** — 0 suppressed values in
+330,202 rows).
+
+**METHOD NOTES WORTH KEEPING.** A review BINDS TO A REF — the working tree had
+already drifted from `19b0611`, and the first `stage_score` read was of the tree.
+And **DA's own independence check was a grep that matched its own docstring**
+(*"I do NOT import phase2_arms"*) and reported independence BROKEN — the seam-30
+defect, self-inflicted, inside the check certifying DA's own work. **Vocabulary
+is not identity; the AST parse is the real check.**
+
+**NEXT / WATCH OUT FOR.** **00:06Z tonight** — 08-27 judged whole-day under the
+FROZEN rule; expected FAIL, eth lost with it; per-coin from 08-28. **R-214
+staging-then-promote UNIMPLEMENTED** (write-new + mv, before the next arming).
+**Bound BE debt**: callable `gap_contains` + callable absorption guard + seam 30
+rewritten + the increment-null reconciliation refusal given a falsifier. The
+freeze is the USER's word.
 
 ## 2026-08-27 (DA, ~13:4xZ) — tape6e GATED ALL-PASS, confirmed two ways; join drop is a filter, not a lookup failure
 

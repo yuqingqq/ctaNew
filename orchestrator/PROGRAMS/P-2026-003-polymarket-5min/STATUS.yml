@@ -220,6 +220,26 @@ flags:
                              # rebuild moved 4 rows. R-216 rules the 97
                              # GAP_AT_CUTOFF excluded deliberately (unreliable
                              # decision-time data, all four arms identically).
+  r219_independent_recomputation: 15-OF-15-MATCH # 2026-08-27 DA, Q-DA-107.
+                             # btc 6 + eth 9 cells (incl. incumbent) recomputed
+                             # with DA's own join/normalisation/model/dedup/
+                             # threshold/accounting. Worst |delta| 1.273e-11
+                             # cents. Populations, drops and cancellation counts
+                             # identical; harm/sacrifice/rho reproduced. eth
+                             # negative increment rebuilt from DA's own numbers
+                             # (-1310.82 @10%, p=0.24): real in point estimate,
+                             # chance-indistinguishable. Independence AST-verified
+                             # (no phase2_arms / harmful_action_eval import).
+  r219_review_findings: THREE-NON-BLOCKING # 2026-08-27 DA, Q-DA-106.
+                             # (1) reconciles_with_receipt / every_cell_
+                             # reconciled_to_receipt are HARDCODED literals
+                             # (rule 10) -- guard real, but records an assertion
+                             # where the delta was available. (2) that guard is
+                             # inline in main() and NOT in the selftest (rule 15,
+                             # third cannot-be-called instance). (3) any_fill_
+                             # ahead has two definitions across layers; measured
+                             # harmless (0 suppressed in 330,202 rows).
+                             # None touches a reported number.
   forward_day_verify_instrument: COMMITTED # 2026-08-26 DA, e9f8d89.
                              # live/pm_research/da_forward_day_verify.py --
                              # R-141(1) predicates, R-153(2) hard precondition.
