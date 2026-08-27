@@ -15903,6 +15903,61 @@ day one verifies 08-28), and Q-DA-82 itself. The what-worked line is
 recorded with them: fail-closed refused the open day, and the defects
 surfaced only because the log keeps BOTH arms.
 
+### R-184 — **USER AUDIT (2026-08-27): four blocking findings against Phase 2 and the surrounding machinery — ALL ACCEPTED, spot-verified at the artifacts. The Phase-2 receipt is SUPERSEDED AS SPLIT-CONTAMINATED; the freeze-B ASK is HELD; the user's nine-step corrective sequence is the governing order. The incumbent's freeze and forward clock are UNAFFECTED.** (2026-08-27 ~04:3x UTC)
+
+**(1) The four blockers, as found by the user and verified where spot-checked:**
+- **Embargo not applied**: the split enforced slug-disjointness only
+  (`phase2_arms.py` `assert_disjoint` on slug sets — verified); at the
+  decision clock, scoring begins 2.134 s BEFORE training ends; 1,631
+  training rows / 1,245 actions inside the declared 60 s boundary
+  (`split_embargo_s: 60` in the manifest — verified); 406 scoring rows in
+  the embargo region. **`phase2_three_arm_v1.json` is SUPERSEDED AS
+  CONTAMINATED — not a clean holdout.** Impact likely confined to the two
+  boundary slugs, but that is established by a purged rerun, never assumed.
+- **The tested state family ≠ the planned family**: the 21-column pin
+  (verified) excludes fill shares and exec-vs-cancel; the state tape lacks
+  Binance receipt timestamps (freshness fields constant), lacks PM gaps
+  (GAP_AT_CUTOFF impossible), and consumed 27,552 PRE_WINDOW rows while
+  reporting zero state drops.
+- **Missing head diagnostics**: no separate hazard AUC/Brier, sign
+  discrimination, or conditional-value error — the plan's own requirement;
+  the product ranking cannot show which head improved.
+- **Retrospective threshold**: the evaluator's top-k threshold is known only
+  after the whole scoring population — a valid offline ranking curve, not a
+  causal policy; no fixed threshold is frozen anywhere.
+
+**(2) Also accepted:** the Phase-3 machine's inventory is GLOBAL across
+slugs (the user's two-market falsifier: a market-2 cancel suppressed by
+market-1 inventory) — per-market settlement required; the forward scorer's
+"dry run PASS" was weaker than relayed (random engineered vectors, no real
+tape path) — **the R-176(3) characterization is corrected in-band**; Phase 4
+has NOT executed; provenance drift (winner-ASK pinned SHA stale; manifest
+weights-pending; v1.1 artifact status ASK vs register FROZEN; STATUS.yml
+stale) to be reconciled artifact-side.
+
+**(3) What STANDS:** the arithmetic, action counts, matched-random
+predicates and concentration calculations (all reproduce); **C's decline**;
+the honest reading (btc-B directionally strong, eth-B a wash, confound
+disclosed, G=1); **the INCUMBENT's freeze and forward clock** — its receipt
+claims training on the declared fragment with validation deferred wholly to
+the forward window; the contaminated seam is the fragment/top-up seam,
+which the incumbent's freeze does not cross. Day one accrues untouched;
+verifier fires 08-28T00:06Z.
+
+**(4) THE GOVERNING ORDER is the user's sequence, verbatim in intent:**
+(i) supersede the receipt [done by this entry]; (ii) freeze the corrected
+full state schema (omitted features + real Binance/gap wiring + counted
+PRE_WINDOW handling); (iii) purge by `label_exit_time + 60 s < first score
+feature time`, not slug identity; (iv) add the three head diagnostics;
+(v) add a WEIGHTING-ONLY incumbent arm (declared now — the scored-candidate
+count increments honestly) so state features separate from reweighting;
+(vi) freeze causal thresholds from training data; rerun the paired
+comparison; (vii) fix per-slug inventory settlement + build the real
+tape→forward-report adapter; (viii) only then the freeze-B decision returns
+to the user and Phase 4 executes; (ix) forward evidence still requires ≥5
+admitted untouched days. **The freeze-B ASK is HELD, not declined — it
+returns with the corrected rerun.**
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
