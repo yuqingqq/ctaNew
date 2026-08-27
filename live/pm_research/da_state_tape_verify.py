@@ -393,11 +393,23 @@ def _predicates(schema, n_rows, under, present, statuses, bn_vals, pair_bad,
     # (R-201 seam 23) -- so the header is the only place the loss is visible,
     # and it has to be read. Expected zero on this population; non-zero is a
     # population change, not a formatting detail.
+    # DERIVED, NOT ENUMERATED. The first version listed the skip names I
+    # happened to know -- and guessed `NO_ARCHIVE` while the builder emits
+    # `NO_ARCHIVE_PATH`, so a real skip counter would have been INVISIBLE to
+    # this predicate. BE's own lesson applies to the reader too: enumerating
+    # constants does not converge, verifying consumers does.
+    #
+    # The rule instead: the schema declares which statuses ROWS may carry. Any
+    # OTHER key in the header's status tally describes rows the builder
+    # excluded BEFORE emission -- whatever it is called, including names that
+    # do not exist yet.
     hdr_counts = (header or {}).get("state_status_counts") or {}
+    row_statuses = set(schema["statuses"])
     skipped = {k: v for k, v in hdr_counts.items()
-               if k in ("NO_TOKEN_MAP", "NO_ARCHIVE", "SKIPPED") and v}
+               if k not in row_statuses and v}
     p("no_rows_skipped_by_builder", not skipped,
-      f"builder-side skip counters in the tape header: {skipped or 'none'}"
+      f"builder-side exclusion counters in the header (any key that is not a "
+      f"declared ROW status): {skipped or 'none'}"
       + ("  <-- rows were DROPPED before emission; the population is smaller "
          "than the declaration implies and no row-level predicate can see it"
          if skipped else ""))
@@ -952,6 +964,18 @@ def _selftests() -> int:
     sk = lambda hdr: {q["predicate"]: q["pass"] for q in gate(good, schema, 0, hdr)}
     ok(sk({"state_status_counts": {"OK": 5}})["no_rows_skipped_by_builder"],
        "a header with no skip counters passes")
+    ok(not sk({"state_status_counts": {"OK": 5, "NO_ARCHIVE_PATH": 3}})
+       ["no_rows_skipped_by_builder"],
+       "NO_ARCHIVE_PATH is caught -- the name my enumerated list GUESSED wrong "
+       "(it had NO_ARCHIVE), which would have made a real skip invisible")
+    ok(not sk({"state_status_counts": {"OK": 5, "A_NAME_INVENTED_TOMORROW": 2}})
+       ["no_rows_skipped_by_builder"],
+       "a skip name that DOES NOT EXIST YET is caught, because the set is "
+       "derived from the declared ROW statuses rather than enumerated")
+    ok(sk({"state_status_counts": {"OK": 5, "PRE_WINDOW": 2,
+                                   "GAP_AT_CUTOFF": 1}})
+       ["no_rows_skipped_by_builder"],
+       "declared ROW statuses are NOT mistaken for skips, however large")
     ok(not sk({"state_status_counts": {"OK": 5, "NO_TOKEN_MAP": 3}})
        ["no_rows_skipped_by_builder"],
        "a NON-ZERO NO_TOKEN_MAP fails -- rows dropped before emission are "
