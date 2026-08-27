@@ -58,7 +58,29 @@ def assert_disjoint(fit_slugs: set, score_slugs: set) -> None:
 
 
 
-TAPE_PATH = DERIVED / "phase2_state_tape_v2.json"
+# R-196(4): PINNED to v5 explicitly. No default-path fallthrough to v2 --
+# those bytes are the quarantined tape4 diagnostic (GAP_AT_CUTOFF=286 from a
+# moving tree), and a silent fallback would fit the rerun on them.
+TAPE_PATH = DERIVED / "phase2_state_tape_v5.json"
+
+
+def assert_tape_is_v5(path: Path = None) -> dict:
+    """REFUSE any tape that is not the committed-ref v5 build."""
+    p = path or TAPE_PATH
+    if not p.exists():
+        raise RuntimeError(f"{p.name} absent: the rerun may not fall back to "
+                           f"the quarantined v2/tape4 bytes.")
+    with p.open() as fh:
+        head = fh.read(4000)
+    i = head.index('"rows"')
+    meta = json.loads(head[:i].rstrip().rstrip(",") + "}")
+    if meta.get("protocol") != "PHASE2_STATE_TAPE_V5":
+        raise RuntimeError(f"refusing tape with protocol "
+                           f"{meta.get('protocol')!r}; expected V5")
+    if meta.get("builder_tree_dirty_at_build"):
+        raise RuntimeError("refusing a tape built from a DIRTY tree: tape4's "
+                           "286 came from exactly that.")
+    return meta
 
 
 def load_tape_index(split: str) -> dict:

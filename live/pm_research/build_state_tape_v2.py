@@ -30,7 +30,10 @@ import phase2_state_schema_freeze as PIN
 import phase2_embargo as EMB
 
 DERIVED = Path("/home/yuqing/ctaNew/data/pm_5min/derived")
-OUT = DERIVED / "phase2_state_tape_v2.json"
+OUT = DERIVED / "phase2_state_tape_v5.json"   # DISTINCT: the v2 path holds
+# the tape4 diagnostic bytes (GAP_AT_CUTOFF=286, an unknown mid-fix
+# intermediate) and stays quarantined. Overwriting it would destroy the one
+# artifact that records what a moving-tree build produced.
 FRAGMENT = DERIVED / "harmful_exposure_rows_v3_eraB.json"
 TOPUP = DERIVED / "harmful_exposure_rows_v3_topup.json"
 ERA_NS = 1787579334881534478
@@ -166,8 +169,23 @@ def main() -> int:
     emb_state = "CERTIFIED" if gap >= EMB.EMBARGO_S else (
         f"VIOLATED (unpurged): gap {gap:.3f}s < {EMB.EMBARGO_S}s")
 
+    import subprocess as _sp
+    _head = _sp.run(["git", "-C", "/home/yuqing/ctaNew", "rev-parse", "HEAD"],
+                    capture_output=True, text=True).stdout.strip()
+    _dirty = bool(_sp.run(["git", "-C", "/home/yuqing/ctaNew", "status",
+                           "--porcelain"], capture_output=True,
+                          text=True).stdout.strip())
+    _built_at = _sp.run(["date", "-u", "+%Y-%m-%dT%H:%M:%SZ"],
+                        capture_output=True, text=True).stdout.strip()
     out = {
-        "protocol": "PHASE2_STATE_TAPE_V2",
+        "protocol": "PHASE2_STATE_TAPE_V5",
+        # R-196(2): a heavy build launches only from a COMMITTED ref, and the
+        # ref travels ON the artifact. tape4 was launched 06:08:02Z from a
+        # working tree mid-fix and produced GAP_AT_CUTOFF=286 -- an unknown
+        # intermediate of six in-flight fixes, reconcilable to nothing.
+        "builder_commit": _head,
+        "builder_tree_dirty_at_build": _dirty,
+        "built_at_utc": _built_at,
         # LAYOUT: the schema's native form is FLAT; this tape WRAPS the
         # features, so it declares the wrapping key rather than leaving a
         # reader to guess it (schema LAYOUT.note).
