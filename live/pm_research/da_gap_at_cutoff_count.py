@@ -529,6 +529,12 @@ def main() -> int:
     ap.add_argument("cmd", nargs="?", choices=["count"])
     ap.add_argument("--selftest", action="store_true")
     ap.add_argument("--tape", default=None)
+    ap.add_argument("--ledger", default=None,
+                    help="ledger snapshot to count against (R-213(4): a "
+                         "pre-registered count over a GROWING artifact must "
+                         "pin its input; the live ledger is appended to during "
+                         "measurement, so a count without a pin names no "
+                         "reproducible population)")
     ap.add_argument("--era", default=None,
                     help="optional collector_version filter (diagnostic)")
     a = ap.parse_args()
@@ -536,7 +542,14 @@ def main() -> int:
         return _selftests()
     if not a.tape:
         raise SystemExit("--tape PATH required; refusing to guess a tape")
+    if a.ledger:
+        global PM_GAPS
+        PM_GAPS = Path(a.ledger)
     rep = count(Path(a.tape), era=a.era)
+    import hashlib as _hl
+    rep["ledger_path"] = str(PM_GAPS)
+    rep["ledger_sha256"] = _hl.sha256(PM_GAPS.read_bytes()).hexdigest()
+    rep["ledger_lines"] = len(PM_GAPS.read_text().splitlines())
     print(json.dumps(rep, indent=2, sort_keys=True))
     return 0
 

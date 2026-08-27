@@ -388,7 +388,9 @@ def _predicates(schema, n_rows, under, present, statuses, bn_vals, pair_bad,
                 gapped_slugs_expected, header,
                 expect_gap_count: int | None = None,
                 expect_provenance: str | None = None,
-                at_g1: tuple[int, int] | None = None) -> list[dict[str, Any]]:
+                at_g1: tuple[int, int] | None = None,
+                at_g0: tuple[int, int] | None = None,
+                expect_ledger_sha: str | None = None) -> list[dict[str, Any]]:
     """The same verdicts the list gate renders, from accumulated counters.
 
     Kept beside `gate()` deliberately: two code paths that must agree are a
@@ -544,6 +546,41 @@ def _predicates(schema, n_rows, under, present, statuses, bn_vals, pair_bad,
       + ("  <-- a build absorbing this share has produced a DIFFERENT "
          "population, not a thinner one" if frac > 0.01 else ""))
 
+    # ---- R-213: the LEDGER PIN. A pre-registered count over a GROWING
+    # artifact must pin its input, or the count names no reproducible
+    # population. FAIL-CLOSED: an unverified pin is not a passed pin, so this
+    # asserts even when no expectation was supplied -- otherwise omitting the
+    # flag would silently downgrade it to N/A, which is the Q-DA-93 bypass.
+    _hdr_sha = (header or {}).get("ledger_sha256")
+    _pinned = bool((header or {}).get("ledger_pinned"))
+    if expect_ledger_sha:
+        p("ledger_pin_matches",
+          bool(_hdr_sha) and _pinned
+          and str(_hdr_sha).lower() == expect_ledger_sha.lower(),
+          f"header ledger_sha256={str(_hdr_sha)[:16] if _hdr_sha else None}... "
+          f"pinned={_pinned} vs expected {expect_ledger_sha[:16]}..."
+          + ("" if _hdr_sha else
+             "  <-- NO ledger sha in the header: the build did not pin its "
+             "gap population, so its count is not reproducible"))
+    else:
+        p("ledger_pin_matches", False,
+          "no --expect-ledger-sha supplied: the gap population this tape was "
+          "built from was NOT verified against a pin. Absence of a check is "
+          "not a passed check.")
+
+    # ---- R-213 mirror of half_open: a row exactly at a g_start must FLAG ----
+    if at_g0 is not None:
+        _g0p, _g0f = at_g0
+        p("at_g0_rows_all_flagged", _g0p > 0 and _g0f == _g0p,
+          f"rows exactly at a gap g0: {_g0p} present, {_g0f} flagged "
+          f"GAP_AT_CUTOFF"
+          + ("" if _g0p else "  <-- NONE PRESENT: cannot pass on an empty "
+                             "population; either the gaps did not reach the "
+                             "builder or the tape lost the rows")
+          + ("" if _g0f == _g0p else
+             f"  <-- {_g0p - _g0f} row(s) at an INCLUSIVE lower bound are "
+             f"unflagged; R-191 rules [g_start, g_end)"))
+
     if at_g1 is not None:
         _pres, _flag = at_g1
         p("half_open_containment_landed", _pres > 0 and _flag == 0,
@@ -693,10 +730,11 @@ def gate(rows: list[dict[str, Any]], schema: dict[str, Any],
                        acc["at_g1"])
 
 
-def verify(tape: Path, schema_path: Path = SCHEMA,
+def verify(tape: Path, schema_path: Path = SCHEMA, ledger: Path | None = None,
            gapped_slugs_expected: int | None = None,
            expect_gap_count: int | None = None,
-           expect_provenance: str | None = None) -> dict[str, Any]:
+           expect_provenance: str | None = None,
+           expect_ledger_sha: str | None = None) -> dict[str, Any]:
     schema = load_schema(schema_path)
     header = read_header(tape)
     # SINGLE PASS, COUNTERS ONLY. Streaming the parse is not enough: a
@@ -730,8 +768,15 @@ def verify(tape: Path, schema_path: Path = SCHEMA,
             f"report zero having measured nothing. Absence is never zero -- "
             f"header keys present: {sorted(header)}")
     import da_gap_at_cutoff_count as GC
-    _coin_gaps, _ = GC.coin_gaps()
+    # THE GATE MUST READ THE SAME GAP POPULATION AS THE BUILDER. The live
+    # ledger grows during a build, so a gate reading the live file while the
+    # tape was built from a pinned snapshot compares against a DIFFERENT
+    # population -- and the edge predicates would be answering a question
+    # nobody asked. R-213(4).
+    _coin_gaps, _ = GC.coin_gaps(path=ledger)
     at_g1_present = at_g1_flagged = 0
+    at_g0_present = at_g0_flagged = 0
+    _starts = {c: {a for a, _b in ivs} for c, ivs in _coin_gaps.items()}
     # LOCATE FIRST, THEN ACCUMULATE. The first version resolved `under` only
     # once the buffer reached BUFFER rows, so a tape SHORTER than that never
     # un-nested and every feature read as absent -- the agreement seam test
@@ -773,6 +818,15 @@ def verify(tape: Path, schema_path: Path = SCHEMA,
                 at_g1_present += 1
                 if str(r.get(schema["status_field"], "")) == "GAP_AT_CUTOFF":
                     at_g1_flagged += 1
+            # AT-g0: the mirror predicate. R-213 routes both paths through one
+            # comparison, so a row exactly at a g_start must now be FLAGGED --
+            # the 4 rows that were not are what forced the rebuild. Computed
+            # IN-GATE like at-g1, so it has no expectation flag and therefore
+            # no downgrade path.
+            if (float(_t0) + float(_ts)) in _starts.get(_c, ()):
+                at_g0_present += 1
+                if str(r.get(schema["status_field"], "")) == "GAP_AT_CUTOFF":
+                    at_g0_flagged += 1
         sp = str(r.get("split", "")).lower()
         c = clock_of(r, schema, header)
         if sp.startswith("train"):
@@ -787,7 +841,8 @@ def verify(tape: Path, schema_path: Path = SCHEMA,
                         pair_bad, asof_checked, asof_viol, tr_max, sc_min,
                         split_seen, gapped_slugs_expected, header,
                         expect_gap_count, expect_provenance,
-                        (at_g1_present, at_g1_flagged))
+                        (at_g1_present, at_g1_flagged),
+                        (at_g0_present, at_g0_flagged), expect_ledger_sha)
     return {"gate": "da_state_tape_verify_v1", "tape": str(tape),
             "gate_code": gate_code_identity(),
             "schema_family": schema["family"], "n_rows": n_rows,
@@ -1311,6 +1366,44 @@ def _selftests() -> int:
        ["absorption_within_bound"] is False,
        "1 skipped of 121 is 0.83%%, inside the bound")
 
+    # ---- R-213: ledger pin + the at-g0 mirror, both directions ------------
+    PIN_SHA = "6cb3a027e25fb5df97f74c4ec63924fa710ab24d9f64486651e040f1b9660d55"
+    lp = lambda hdr, exp: {q["predicate"]: q for q in
+                           _predicates(schema, 1, None, set(), collections.Counter(),
+                                       set(), collections.Counter(), 0, 0, None,
+                                       None, {"train": 0, "score": 0}, 0, hdr,
+                                       None, None, None, None, exp)}
+    ok(lp({"ledger_sha256": PIN_SHA, "ledger_pinned": True}, PIN_SHA)
+       ["ledger_pin_matches"]["pass"],
+       "R-213: a tape built from the pinned ledger PASSES against its sha")
+    ok(not lp({"ledger_sha256": "0"*64, "ledger_pinned": True}, PIN_SHA)
+       ["ledger_pin_matches"]["pass"],
+       "a DIFFERENT ledger sha fails -- the count would be over another "
+       "population than the one registered")
+    ok(not lp({"ledger_pinned": False}, PIN_SHA)["ledger_pin_matches"]["pass"],
+       "a build that did NOT pin its ledger fails: an unpinned count over a "
+       "growing artifact is not reproducible")
+    ok(not lp({"ledger_sha256": PIN_SHA, "ledger_pinned": True}, None)
+       ["ledger_pin_matches"]["pass"],
+       "and omitting --expect-ledger-sha FAILS rather than going N/A -- "
+       "absence of a check is not a passed check (the Q-DA-93 bypass)")
+
+    g0 = lambda pres, flag: {q["predicate"]: q for q in
+                             _predicates(schema, 1, None, set(), collections.Counter(),
+                                         set(), collections.Counter(), 0, 0, None,
+                                         None, {"train": 0, "score": 0}, 0, {},
+                                         None, None, None, (pres, flag), None)}
+    ok(g0(4, 4)["at_g0_rows_all_flagged"]["pass"],
+       "R-213 mirror: all rows at an inclusive lower bound FLAGGED passes")
+    ok(not g0(4, 0)["at_g0_rows_all_flagged"]["pass"],
+       "the tape6d state -- 4 present, 0 flagged -- FAILS, which is what "
+       "forced the rebuild")
+    ok(not g0(4, 3)["at_g0_rows_all_flagged"]["pass"],
+       "PARTIAL flagging fails too: 3 of 4 is not the ruled predicate")
+    ok(not g0(0, 0)["at_g0_rows_all_flagged"]["pass"],
+       "and an EMPTY at-g0 population cannot pass -- zero present means the "
+       "gaps never reached the builder, not that containment landed")
+
     # ---- R-209 finding 1: the SOURCE the skip predicates read -------------
     # The user's probe: the builder splits skips into their own tally, this
     # gate kept reading the row-status tally, and 100 dropped rows passed BOTH
@@ -1459,6 +1552,12 @@ def main() -> int:
                     help="PRE-REGISTERED expected GAP_AT_CUTOFF row count")
     ap.add_argument("--expect-provenance", default=None,
                     help="PRE-REGISTERED commit the tape must declare")
+    ap.add_argument("--ledger", default=None,
+                    help="pinned ledger snapshot; the gate MUST read the same "
+                         "gap population the builder did (R-213(4))")
+    ap.add_argument("--expect-ledger-sha", default=None,
+                    help="sha256 of the pinned ledger; the tape header's "
+                         "ledger_sha256 must equal it")
     ap.add_argument("--verdict-out", default=None,
                     help="write the machine-readable verdict artifact here")
     a = ap.parse_args()
@@ -1468,7 +1567,9 @@ def main() -> int:
         raise SystemExit("--tape PATH required; refusing to guess a tape")
     rep = verify(Path(a.tape), gapped_slugs_expected=a.gapped_slugs,
                  expect_gap_count=a.expect_gap_count,
-                 expect_provenance=a.expect_provenance)
+                 expect_provenance=a.expect_provenance,
+                 ledger=Path(a.ledger) if a.ledger else None,
+                 expect_ledger_sha=a.expect_ledger_sha)
     if a.verdict_out:
         write_verdict(rep, Path(a.tape), Path(a.verdict_out))
     print(json.dumps({k: v for k, v in rep.items() if k != "predicates"},
