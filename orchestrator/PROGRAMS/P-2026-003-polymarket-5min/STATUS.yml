@@ -142,6 +142,40 @@ flags:
                              # the memo. Future remedy-verification needs LONG
                              # integration or WITHIN-CONNECTION pairing, never a
                              # before/after. Declared before anyone proposes one.
+  gap_damage_is_absence_not_contamination: MEASURED # 2026-08-27 DA, e262278,
+                             # Q-DA-84. Adopted by R-190 as a standing
+                             # population fact. QUOTE BOTH FIGURES OR NEITHER:
+                             #  * 64-80% of btc WINDOWS carry a hole -> how
+                             #    WIDESPREAD the holes are.
+                             #  * ~2.0% of score-side decision ROWS are ABSENT
+                             #    -> how much evidence is actually LOST.
+                             # In gapped slugs: 261,674 rows present, only 152
+                             # INSIDE a gap (0.058%) -- almost nothing is
+                             # corrupted; ~13,263 rows NEVER EXISTED (~4.8% of
+                             # gapped-slug rows). Rows are event-driven, so a
+                             # gap removes rows rather than spoiling them.
+                             # Only the window figure OVER-reads the damage;
+                             # only the row figure UNDER-reads the fragility
+                             # (holes cluster where the market moved fastest).
+                             # Does NOT soften Q-DA-72 (08-26 fails complete
+                             # tape: 9 windows/coin permanently missing) and
+                             # does NOT change the btc/eth asymmetry.
+                             # LIMIT: ~13,263 assumes rows uniform in time --
+                             # a first-order estimate; 152 and 0.058% are exact.
+  state_tape_v2_gate: FAIL-ON-GAPS # 2026-08-27 DA, 01603e9, Q-DA-83, upheld
+                             # R-190. 9 PASS / 1 N/A / 1 FAIL over 1,764,206
+                             # rows (3m59s, 512KB peak -- the streaming
+                             # standard). FAIL: zero GAP_AT_CUTOFF while 152
+                             # decision cutoffs fall inside recorded gaps
+                             # (lower bound: DA's receipt covers only the 337
+                             # score-side slugs). Population is RIGHT -- 133 of
+                             # 137 gapped slugs present, the 4 absent are
+                             # exactly DA's BINANCE exclusions -- the FLAG PATH
+                             # is not. BE rewires + new fixture seam 10
+                             # (synthetic gap straddling a cutoff must flag,
+                             # red-then-green), rebuilds, returns to the gate.
+                             # N/A: embargo ENFORCED-DOWNSTREAM (R-189), a
+                             # THIRD verdict state that stays pass=False.
   btc_gap_degradation_ongoing: LIVE-RISK # 2026-08-26 DA. FOUR consecutive days,
                              # not abating: btc gap-affected 15.6% (08-24) /
                              # 80.2% (08-25) / 59.9% (08-26 @18:40Z); eth 1.4 /
