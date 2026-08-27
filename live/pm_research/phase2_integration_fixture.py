@@ -214,6 +214,27 @@ def main() -> int:
          'EMBARGO_ENFORCED": _gap["gap_s"] >= _gap["embargo_s"]' in body2,
          "a hardcoded True beside a table has contradicted the table before")
 
+    # ---- SEAM 10 (R-190): a gap straddling a cutoff MUST status ----------
+    # Tests the WIRE, not the population: a synthetic gap around a known
+    # cutoff must produce GAP_AT_CUTOFF in a built tape, and a cutoff outside
+    # it must not. If this is green while the real tape shows zero, the wire
+    # works and the real population genuinely has none under this basis --
+    # which is a different claim from "the wire is broken".
+    import harmful_state_features as _sf
+    _t = _sf.StateTape(slug="x-updown-5m-1", ws=1.0, gaps=[(10.0, 40.0)])
+    _t.pm_event_t = [1.0]
+    _row = {"slug": "x-updown-5m-1", "coin": "btc", "side": "BUY_UP", "gen": 1,
+            "t_start": 25.0, "level": 0.5, "resting": 5.0, "qahead": 1.0}
+    _in = _sf.features_at(_t, _row)
+    _out = _sf.features_at(_t, {**_row, "t_start": 50.0})
+    seam("10a a cutoff INSIDE a synthetic gap statuses GAP_AT_CUTOFF",
+         _in["state_status"] == "GAP_AT_CUTOFF", _in["state_status"])
+    seam("10b a cutoff OUTSIDE it does not",
+         _out["state_status"] != "GAP_AT_CUTOFF", _out["state_status"])
+    seam("10c the gap check compares the SAME basis it stores",
+         _sf._in_gap(_t, 25.0) and not _sf._in_gap(_t, 50.0),
+         "window-relative cutoff vs window-relative gap")
+
     print(f"\n{'FIXTURE GREEN' if not FAILURES else 'FIXTURE RED'}: "
           f"{len(FAILURES)} seam(s) failing")
     for f in FAILURES:
