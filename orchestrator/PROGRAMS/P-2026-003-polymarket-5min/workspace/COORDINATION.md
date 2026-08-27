@@ -16578,6 +16578,27 @@ DA updates its contract suite (the no-provenance acceptance case FLIPS to refusa
 **(3) Accounting fix (BE):** statuses of index-filtered rows stay visible to the join accounting (status map or unfiltered index with status), exclusions counted under status names, exemptions PER-STATUS AND NAMED (BE's ask (ii) — a future genuine join failure still trips the bound). Then fit3 from the fix ref, manifest, score (GO stands), receipt.
 **(4) The guard culture note:** the bound earned itself on its first run by refusing a number that LOOKED like data loss and was actually mis-labeled design — the third instrument today (mode predicate, drop bound) to catch a real issue at first firing. "Not fixing until you rule" is the protocol holding under momentum pressure.
 
+### R-216 — coordinator (2026-08-27T15:40Z): PHASE-2 FOUR-ARM RECEIPT LANDED AND COORDINATOR-VERIFIED — numbers of record; all pre-registrations hold; receipt-filename housekeeping ordered; THE FREEZE-B DECISION RETURNS TO THE USER
+
+**(1) Verification (mine, at the artifact).** Protocol `PHASE2_FOUR_ARM_V2`; multiplicity COMPUTED 2→5 with the three scored arms listed BY NAME; `n_random` 200; **all eight coin/arm cells `CAUSAL_FROZEN_FROM_TRAIN` and `ALL_ARMS_SAME_MODE: True`** (the R-204 predicate, live); action counts IDENTICAL across arms per coin (btc 177,674 / eth 260,602 — the action unit, parity at score); btc score windows **166** (R-173 convention); fit_rows = registered fitted_n (577,598 / 505,498); Q-DA-79 caveat field reserved; two-stage parity + REGISTRATION_PROVENANCE in the hash-bound manifest chain (verdict sha 0bd0b477…, gate_code 1da60b56…, fit ref 19b0611), limitation stated per R-216-(A). Fit determinism established across fit3/fit4 (drops bit-identical; purge to the row).
+**(2) NUMBERS OF RECORD (net cents at the decision metric vs the max of 200 matched randoms; POINT ESTIMATES — G<5 complete days in the score window, so no intervals exist to quote):**
+```
+btc (166 windows, 177,674 actions)      @5%              @10%             @15%
+  PM_PLUS_FINE (incumbent)         +4,033 (rmax +1,298)  +7,407 (+385)   +9,506 (+69)
+  PLUS_PRED_STATE_V1 (state cand.) +7,398 (rmax   +588) +10,833 (−498)  +12,553 (−772)
+  LGBM_PINNED                      +9,803 (rmax   +540) +13,660 (−409)  +11,772 (−92)
+  INCUMBENT_REWEIGHTED_ONLY        +4,613               +7,051          +10,718
+eth (171 windows, 260,602 actions)
+  PM_PLUS_FINE                     +1,413 (rmax   +874)  +2,567 (+1,481) +2,819 (+1,384)
+  PLUS_PRED_STATE_V1               +1,905 (rmax   +845)  +2,962 (+1,787) +2,641 (+1,143)
+  LGBM_PINNED                        +908 (rmax +1,022)  +1,524 (+1,139) +1,035 (+1,751)
+  INCUMBENT_REWEIGHTED_ONLY        +1,755               +2,835          +2,318
+```
+Reading: **btc — the state candidate beats the incumbent at every budget (+46–83%); LGBM strongest at 5/10%, below the state arm at 15%; weighting alone (INCUMBENT_REWEIGHTED_ONLY vs incumbent) is mixed → the gain is the FEATURES.** **eth — marginal:** the state arm edges the incumbent at 5/10% but not 15%; **LGBM sits below its own random max at 5% and 15% on eth.** Versus the superseded first pass: levels came DOWN for every arm under the clean design (contamination out, causal thresholds in, purge applied) but the state-over-incumbent ORDERING and margin survive — the cleanup changed levels, not the conclusion's sign.
+**(3) HONEST FRAME (rule 11):** this is a DEVELOPMENT comparison — fit on the consumed fragment, scored on the dev top-up (08-25→08-26 00:00Z), all on the seen side of the wall, with btc's score day inside the degraded-feed period (gap statuses + parity accounting handle admissibility; disclosed). It selects candidates for the forward race; it validates nothing. Validation = the untouched forward days, per-coin verdicts from 08-28.
+**(4) Housekeeping ORDERED (BE):** the receipt landed at the OLD path `phase2_three_arm_v1.json` (production `PA.OUT` missed the rename; the seam sandbox redirected only tests). Move the new receipt to **`phase2_four_arm_v2.json`**, restore the superseded v1 receipt from git at its path, fix `PA.OUT`, commit receipt + fix together. Fifth in-place-overwrite instance; no data lost (git holds the v1 bytes).
+**(5) THE DECISION RETURNS TO THE USER (rule 12; R-162(3)):** whether to FREEZE the scored candidates into the forward race — `PLUS_PRED_STATE_V1` and/or `LGBM_PINNED` and/or `INCUMBENT_REWEIGHTED_ONLY` — all three inside the DECLARED multiplicity (5). On a yes, each freeze = builder committed + receipt with declared nulls + multiplicity restated (rule 12), day one = first per-coin-passing day after the freeze. Coordinator recommendation (estimate, not decision): freeze `PLUS_PRED_STATE_V1` and `LGBM_PINNED`; leave `INCUMBENT_REWEIGHTED_ONLY` as a scored-not-raced isolation arm. **Nothing freezes until the user says so.**
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
