@@ -1,6 +1,51 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-08-26 (coordinator) — **STATEFUL harmful-cancel phase dispatched.**
+Updated: 2026-08-27 (DA) — **REVIEW-COMPLETE at b3ef93c; tape6d gate armed; day one failing mid-day (Q-DA-99, time-critical).**
+
+## 2026-08-27 (DA, ~10:1xZ) — REVIEW-COMPLETE given; two vacuous load-bearing predicates fixed; day one failing MID-DAY
+
+**DONE.** **(1) R-209(1) — two of six load-bearing predicates were VACUOUS and
+it was mine.** The builder splits skips into `pre_emission_skip_counts` (:371,
+the R-203 split); the gate kept deriving them from `state_status_counts` (:442).
+**Reproduced against the previous commit before fixing**: 100 `NO_ARCHIVE_PATH`
+skips vs 60 rows → `no_rows_skipped_by_builder` True, `absorption_within_bound`
+True. I had verified BE *emitted* the key and never checked my gate *consumed*
+it — guard-vs-consumer, one turn after auditing BE for exactly that. Fixed
+`c36a794`: union-read both sources (a reverted split stays caught), absence on a
+V5 artifact FAILS, absorption reports UNCOMPUTABLE not 0.00%, `verify()` refuses
+on a header lacking the key. **(2) R-209(4) was worse than filed** — `_accumulate`
+never *returned* `at_g1`, so `half_open_containment_landed` went silently N/A on
+the list path, on top of the UnboundLocalError. GC import must stay
+function-local (`da_gap_at_cutoff_count` imports the verifier). **(3) R-210**:
+absorption bound is TOTAL (per-status is evadable by status proliferation — two
+names at 0.59% build, 1.19% total refuses); LOAD_BEARING = SIX. Both verified by
+execution and pinned as regressions. **(4) Verdicts now carry `gate_code`
+{file,sha256,head,dirty}** — the await unit runs the gate BY PATH, so armed-at is
+not ran-at; `dirty` matters because a working-tree verdict is reproducible from
+no ref. **(5) Seam test was writing into the PRODUCTION gate log** — six stub
+triplets landed under a live `armed` header and I misread them as the armed gate
+refusing. Fixed `55e0a24`; correction appended in-band, log stays append-only.
+Suite **87 → 101**, contract 8/8, seam 6/6.
+
+**IN PROGRESS.** `da-gate-tape6d-b3ef93c.service` armed and polling (289 ·
+provenance b3ef93c · 133 gapped slugs · verdict →
+`da_verdict_tape6d_b3ef93c.json` · 6h deadline · worst-rc). Background watcher
+reports when it fires.
+
+**NEXT / WATCH OUT FOR.** **Q-DA-99 is time-critical and unanswered**: day one
+(08-27) is FAILING verify-first *while it runs* — 19.78 gaps/hr vs bar 15, btc
+79/121 windows (65.3%) gap-affected, eth 0/121. **btc-only step change on 08-25**
+(76→665/day, other coins improved), **no version change** (clob_v3_1 throughout),
+**restart did not fix it** (08-26 04:38), **not host starvation** (load 1.25).
+The failure mode flipped: `SLOW_CONSUMER_1013` (our consumer slow) →
+`PING_TIMEOUT`/`NO_CLOSE_FRAME` (connection dies with no close handshake) —
+points away from our code toward the path/peer for the btc market. One WS
+connection per market (`collect_pm.py:14`) is why btc alone suffers. **Salvaging
+hours 11–23 expires in hours**; exclusion is the coordinator's call, not DA's.
+**Do NOT edit `da_await_gate.sh` in place while armed** — bash reads scripts
+lazily from a byte offset; write-new-and-`mv` (the running process holds the
+inode). Post-tape6d the wrapper arms against a named gate ref and refuses on
+drift (ruled, unimplemented).
 
 ## 2026-08-27 (DA, ~00:2xZ) — 08-26 closed FAILING; four instrument defects fixed; day one accruing
 

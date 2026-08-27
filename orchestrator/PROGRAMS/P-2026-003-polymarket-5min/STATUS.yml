@@ -92,7 +92,7 @@ flags:
                              # = CLOSING verdict on 08-26 (already inadmissible;
                              # value is the final drip count + end-of-day
                              # degradation figure) and merely OPENS 08-27.
-                             # 2026-08-28T00:00:30Z = DAY ONE's admission
+                             # 2026-08-28T00:06:00Z = DAY ONE's admission
                              # verification, against 08-27 as the day that
                              # closed. BE MAY SCORE DAY ONE ONLY AFTER THAT
                              # VERDICT PASSES -- being bound into the day-one
@@ -101,8 +101,54 @@ flags:
                              # NOT moved: 08-27's tape accrues from tonight's
                              # boundary, so fix-or-accept wants deciding BEFORE
                              # 00:00 though its verdict lands 24h later.
-                             # da-midnight-verify.timer is DAILY (*-*-* 00:00:30
-                             # UTC) and covers both boundaries unattended.
+                             # da-midnight-verify.timer is DAILY (*-*-* 00:06:00
+                             # UTC -- CORRECTED 2026-08-27 DA against
+                             # `systemctl --user cat`; this file said
+                             # 00:00:30, which the timer has not used
+                             # since it was moved past the 00:01:30
+                             # last-window write + gzip) and covers both
+                             # boundaries unattended.
+  tape6d_gate_armed: ARMED-AT-b3ef93c # 2026-08-27 DA, b308c21.
+                             # da-gate-tape6d-b3ef93c.service polling: 289 gaps,
+                             # provenance b3ef93c, 133 gapped slugs, verdict ->
+                             # da_verdict_tape6d_b3ef93c.json, 6h deadline,
+                             # exits with the WORST checker rc.
+  load_bearing_predicates_were_vacuous: FIXED-R209 # 2026-08-27 DA, c36a794.
+                             # no_rows_skipped_by_builder + absorption_within_
+                             # bound read state_status_counts while the builder
+                             # writes pre_emission_skip_counts (:371). 100 skips
+                             # passed BOTH. Reproduced against 3b6907c before
+                             # fixing. Absence on a V5 artifact now FAILS.
+                             # DA verified BE EMITTED the key and never checked
+                             # DA's own gate CONSUMED it -- guard-vs-consumer.
+  absorption_bound_form: TOTAL-R210 # 2026-08-27 DA/coordinator, eb1233f.
+                             # Per-status (R-202's wording) is evadable by
+                             # status proliferation: two names at 0.59% BUILD,
+                             # 1.19% total REFUSES. DA enforces total; BE's
+                             # builder stays per-status FOR TAPE6D ONLY and
+                             # becomes total-form AND callable in one commit
+                             # before any later build.
+  verdict_records_its_checker: ADDED # 2026-08-27 DA, b308c21.
+                             # gate_code {file,sha256,head,dirty}. The await
+                             # unit runs the gate BY PATH, so armed-at is not
+                             # ran-at; dirty flags a verdict reproducible from
+                             # no ref. Wrapper drift-refusal ruled but NOT yet
+                             # implemented (post-tape6d). Editing that wrapper
+                             # in place while armed corrupts the running shell
+                             # -- write new + mv.
+  day_one_08_27_midday: FAILING-TIME-CRITICAL # 2026-08-27 DA, dad7704, Q-DA-99.
+                             # At 10:10Z: gap_rate FAIL 19.78/hr vs bar 15; btc
+                             # 79/121 windows (65.3%) gap-affected, eth 0/121.
+                             # btc-only STEP CHANGE on 08-25 (76 -> 665/day,
+                             # other coins improved). NOT the version (clob_v3_1
+                             # throughout), NOT restart-fixable (08-26 04:38),
+                             # NOT host starvation (load 1.25). Mode flipped
+                             # SLOW_CONSUMER_1013 -> PING_TIMEOUT/NO_CLOSE_FRAME
+                             # = connection dies with no close handshake, points
+                             # off-box. One WS connection per market
+                             # (collect_pm.py:14) is why btc alone suffers.
+                             # Salvage of hours 11-23 expires in hours;
+                             # exclusion is the coordinator's call (R-141(1)).
   forward_day_verify_instrument: COMMITTED # 2026-08-26 DA, e9f8d89.
                              # live/pm_research/da_forward_day_verify.py --
                              # R-141(1) predicates, R-153(2) hard precondition.
