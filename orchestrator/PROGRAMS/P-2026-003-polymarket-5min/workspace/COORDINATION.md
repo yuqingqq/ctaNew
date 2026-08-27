@@ -15860,6 +15860,49 @@ before/after. Four probe runs, three unusable, each caught by the
 instrument's own design (false confirmation, window-expiry tell, mid-flight
 disconnect) — the run-count itself is the evidence the guards are real.
 
+### R-183 — **Q-DA-82 RATIFIED: 08-26 closes FAILED (final counts in); the "abatement" signal was MANUFACTURED by a denominator bug and the coordinator's relay of it is CORRECTED; the early-firing timer that would have broken DAY ONE'S verdict is fixed 24 h before it could. Batched ratifications land.** (2026-08-27 00:3x UTC)
+
+**(1) 08-26 closing verdict of record:** FAILS — 508 gaps / 21.17 per hour,
+18 of 24 hours over, 50.7 min lost, **btc 178/278 windows gap-affected =
+64.0% vs eth 0.4%** — the degradation CONTINUED through the day; these
+final counts are the input the R-179 diagnosis wanted. The "+1 drip" closes
+as DA's own moving-baseline artifact (final deficit 9 windows/coin ≈ the
+43-min crash outage); the coordinator's "six windows" figure vs DA's nine is
+a counting-basis difference, flagged not resolved, immaterial to any
+decision.
+
+**(2) COORDINATOR CORRECTION: the abatement signal I relayed to the user as
+"genuinely hopeful" WAS NEVER REAL.** `gaps_per_hour` divided by a
+denominator derived from the NUMERATOR's own distribution; fired 30 s into
+the day, 1 gap became "1.0/hr" when the honest extrapolation is ~120/hr —
+an understatement of ~120×, in the flattering direction. Corrected view:
+4 gaps in the first 811 s, btc 2/2 windows affected — NOT abatement (and
+n=2 is too small to be anything). The question stands for the 08-28
+verdict; the encouraging number is withdrawn. **Standing lesson: a rate
+whose denominator derives from its numerator's distribution is not a rate;
+below a full unit of elapsed time, report NO rate.**
+
+**(3) THE SAVE OF THE NIGHT: the timer fired at 00:00:30 while the day's
+last window was still recording (settle ends 00:01:30)** — harmless on
+dead 08-26, but at 08-28T00:00:30Z it would have undercounted 08-27 and
+**failed DAY ONE on a clock artifact rather than the data.** Caught only
+because the instrument ran a real rehearsal on an already-decided day.
+Timer moved to **00:06:00 UTC**, confirmed armed. **Standing lesson:
+verdict clocks respect the tape's settle time — verify AFTER the grace
+window, never at the boundary.** Also fixed: `day_closed` now uses calendar
+closure (it drove a branch while misdescribing closure — R-139 in
+miniature); an empty expectation can no longer pass `complete_tape` (the
+empty-set trap, caught in DA's own instrument the same day it filed it
+twice in others').
+
+**(4) Batched ratifications:** Q-DA-80 (queue-validity: H0 falsified,
+magnitude negligible, ranking unqualified — held to the pre-commitment both
+ways), the verify-first instrument + its four first-run fixes (17
+selftests), the R-163-era sequencing confirmation (tonight closed 08-26;
+day one verifies 08-28), and Q-DA-82 itself. The what-worked line is
+recorded with them: fail-closed refused the open day, and the defects
+surfaced only because the log keeps BOTH arms.
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
