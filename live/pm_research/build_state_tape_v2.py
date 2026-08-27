@@ -72,7 +72,46 @@ def bn_recv_for_window(coin: str, t0: float, span: float = 320.0) -> list:
     return out
 
 
+BUILD_PATH_FILES = (
+    "live/pm_research/build_state_tape_v2.py",
+    "live/pm_research/harmful_state_features.py",
+    "live/pm_research/phase2_state_schema_freeze.py",
+    "live/pm_research/phase2_embargo.py",
+    "live/pm_research/gap_at_cutoff_count.py",
+    "live/pm_research/harmful_hazard_model.py",
+)
+
+
+def assert_build_path_committed() -> str:
+    """REFUSE to build unless every file in the BUILD PATH is committed.
+
+    R-196(2) says a heavy build launches from a committed ref. That is
+    necessary and NOT sufficient in a shared tree: BE's own work can be fully
+    committed while ANOTHER SEAT is mid-edit on a file BE's builder imports,
+    and the build then runs bytes nobody chose -- which is exactly how tape4
+    produced 286, and how tape5's first launch repeated it one turn after the
+    rule was adopted. Checking `git status` on the BUILD PATH, not on BE's
+    own changes, is the enforceable form of the rule."""
+    import subprocess as _sp
+    root = _sp.run(["git", "rev-parse", "--show-toplevel"],
+                   cwd=str(Path(__file__).resolve().parent),
+                   capture_output=True, text=True).stdout.strip()
+    out = _sp.run(["git", "-C", root, "status", "--porcelain", "--"]
+                  + list(BUILD_PATH_FILES),
+                  capture_output=True, text=True).stdout.strip()
+    if out:
+        raise SystemExit(
+            "REFUSED: uncommitted changes in the BUILD PATH:\n" +
+            "\n".join("    " + l for l in out.splitlines()) +
+            "\nA result-bearing build must not run bytes that are still "
+            "moving -- whether they are this seat's or another's.")
+    return _sp.run(["git", "-C", root, "rev-parse", "HEAD"],
+                   capture_output=True, text=True).stdout.strip()
+
+
 def main() -> int:
+    pinned = assert_build_path_committed()
+    print(f"  build path clean; pinned ref {pinned[:12]}", flush=True)
     import harmful_hazard_model as hm
     import harmful_state_features as sf
 
