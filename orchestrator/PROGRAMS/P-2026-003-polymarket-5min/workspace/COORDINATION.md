@@ -16079,6 +16079,46 @@ build is consumed; the freeze-B question stays HELD; the incumbent's race
 and day one are untouched (48 btc windows and counting; verdict
 08-28T00:06Z).
 
+### R-188 — **THE INTEGRATION FIXTURE IS GREEN (23 assertions, seven seams, RED-FIRST on 9) and committed; the R-187 halt lifts stepwise: streaming rebuild running → DA's corrected gate → the purged four-arm rerun. Batched ratifications: DA's four gate defects (two confirmed-by-demonstration, two found by its own seam test), the coordinate-system generalization, and the seam-testing rule.** (2026-08-27 04:3x UTC)
+
+**(1) Fixture of record** (`907a74c`): one synthetic population through
+builder → tape → purge → fit → score → verify → evaluate; 23 assertions
+covering all seven R-187 seams; **first run RED on 9 — the gate proved it
+can fail before the fixes made it green.** BE's fixes confirmed the audit
+precisely: the hand-written exclusion list (schema-derived now; `family`
+and `decision_time` out of the matrix); **the clock resolved to the
+schema's declaration — `decision_time` IS window-relative (legitimately
+negative pre-window), the epoch travels under its own name, and the tape
+declares `clock_basis` and `features_under`**; arm D now DISPATCHES to the
+weighted linear, asserted by model identity; three of BE's own assertions
+upgraded from source-greps to identity/round-trip checks after the
+grep-matched-the-comment trap struck a third time.
+
+**(2) DA's gate hardening ratified** (`334775d`, `08e983c`): the two named
+defects were CONFIRMED BY DEMONSTRATION first — the nested tape produced
+one failure and THREE VACUOUS PASSES, printed before anything was touched;
+the clock double-count reproduced. Its own seam test then found two MORE:
+the zero-imputation signature was false-positive-prone on real tapes
+(replaced with the exact discriminator: **a guard that says MISSING beside
+a value that is PRESENT** — evidence, not pattern) and identity fields
+masking a wholly absent feature set (schema now declares `identity_fields`
+and locates on FEATURES only).
+
+**(3) STANDING, in DA's words tested against its own work:** *"per-module
+selftests certify a module's idea of the world, not the world"* — all four
+gate defects survived 27 passing selftests and died to a single real
+builder row. Corollaries now standing: **owner-declares covers the
+COORDINATE SYSTEM (layout + clock basis), not just the field list**; a
+real-row round-trip belongs in every cross-module gate; **never verify a
+code property by string-matching source** (third occurrence; identity
+checks or AST only). The seam-testing rule generalizes the R-187 fixture
+gate to all future cross-module surfaces.
+
+**(4) In flight:** `be-tape3` streaming rebuild (append-per-slug); on
+landing → DA's corrected gate verdict → the purged four-arm rerun with
+causal thresholds and head diagnostics. Freeze-B stays HELD until the
+clean comparison. Day one accrues untouched; verdict 08-28T00:06Z.
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
