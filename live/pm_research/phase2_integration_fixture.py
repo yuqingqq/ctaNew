@@ -288,19 +288,23 @@ def main() -> int:
     with _o3.fdopen(_fd, "w") as _fh:
         _j3.dump({"rows": [{"split": "train", "state_status": "OK",
                             "slug": "s", "side": "BUY_UP", "gen": 1,
-                            "t_start": 1.0,
+                            "t_start": 1.0, "t0": 1000.0,
                             "state": {k: (i + 1) * 0.5
                                       for i, k in enumerate(feats)}}]}, _fh)
     PA.TAPE_PATH = Path(_tp)
     try:
         _idx = PA.tape_index("train", feats)
-        _vec = next(iter(_idx.values()))
+        _entry = next(iter(_idx.values()))
+        _vec = _entry["vec"]
         seam("11b the real indexing path yields NONZERO features",
              any(v != 0.0 for v in _vec),
              "all-zero means the outer row was encoded instead of state")
         seam("15a the index stores a COMPACT float tuple, not a row dict",
              isinstance(_vec, tuple) and all(isinstance(v, float) for v in _vec),
              f"got {type(_vec).__name__} -- 1.7M row dicts is ~12GB")
+        seam("15c the probe fields travel WITH the vector",
+             set(_entry) == {"vec", "t0", "t_start"},
+             "stage_fit read r['t0'] on a bare tuple (the :333 TypeError)")
         seam("15b the index holds exactly the pinned feature count",
              len(_vec) == len(feats))
     finally:
