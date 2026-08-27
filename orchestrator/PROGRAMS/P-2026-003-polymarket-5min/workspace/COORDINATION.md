@@ -15958,6 +15958,41 @@ to the user and Phase 4 executes; (ix) forward evidence still requires ≥5
 admitted untouched days. **The freeze-B ASK is HELD, not declined — it
 returns with the corrected rerun.**
 
+### R-185 — **A FIFTH blocker the audit did not name (silent zero-imputation via a guardless pin + `or 0.0`), found by DA; the derived-not-transcribed schema is RATIFIED as the standard; the guard-pairing rule is BOUND into the corrected freeze; DA's tape review is accepted as a pre-freeze check.** (2026-08-27 04:2x UTC)
+
+**(1) The fifth finding** (`phase2_arms.py:95`): `float(sfe.get(k) or 0.0)`
+zero-imputes None, and the 21-column pin carried the level-velocity
+features WITHOUT their `level_vel_missing_*` guards — so a missing velocity
+became 0.0 with nothing to say so, indistinguishable from a genuinely flat
+book: the exact distinction TODO §4's no-silent-zero-imputation clause
+exists to preserve. The pin and the `or 0.0` defeat it JOINTLY; neither
+alone. Added to the R-184 blocker list; the corrected rerun must fix it.
+Ownership corrections both ways: the `status` key collision (exposure
+fill-horizon vs state computability; 27,552 PRE_WINDOW rows consumed
+unread) was DA's own key naming — self-reported, renamed `state_status`;
+the guardless pin and the tape-input omissions were the arms-code side.
+
+**(2) STANDING — the schema is DERIVED, never transcribed:**
+`da_pred_state_v1_schema.json` is EMITTED by running the builder on a real
+row, so it cannot claim a field the code does not produce or omit one it
+does — the anti-drift property that a hand-written schema beside code can
+never have. It carries REQUIRED_INPUTS (`gaps`, `bn_recv_ns`) with the
+exact silent degradation each omission causes, all 12 nullable→guard
+pairings, and a CONSUMPTION_CONTRACT (never zero-impute; carry
+`feature_asof`; honour `state_status`). Builder selftests bind schema ≡
+emitted set (67→98 checks).
+
+**(3) RULES BOUND INTO THE CORRECTED FREEZE:** (a) the model pins FROM the
+schema; any reduction is DECLARED AGAINST the schema in the freeze artifact
+so what was dropped is visible — "the tested family was not the planned
+family" cannot happen silently a second time; (b) **a numeric matrix
+carries each guard flag BESIDE the nullable it guards — never one without
+the other** (this rule alone would have prevented the velocity case);
+(c) REQUIRED_INPUTS refuse when absent — silent degradation becomes a
+raise. **(4)** DA's offer is ACCEPTED: DA reviews BE's rebuilt tape against
+the schema BEFORE the corrected freeze — a check by the semantics owner,
+not a second builder.
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
