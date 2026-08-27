@@ -854,6 +854,16 @@ def write_verdict(rep: dict[str, Any], tape: Path, out: Path) -> dict[str, Any]:
       file whose headline disagrees with its own table is the rule-10 defect
       in artifact form.
     """
+    # Every key verify() produces is either CARRIED into the verdict or named
+    # here as deliberately omitted. Adding a field upstream then forces a
+    # decision instead of a silent drop -- which is how gate_code came to read
+    # None in the artifact that authorises fitting.
+    _OMITTED_ON_PURPOSE = {
+        "gate",          # renamed to "verdict" below
+        "tape",          # renamed to "tape_path"
+        "all_pass",      # RECOMPUTED here from the table, never copied
+        "gap_at_cutoff_rows",   # bulk row detail; the counter reports it
+    }
     import hashlib
     h = hashlib.sha256()
     with tape.open("rb") as fh:
@@ -871,6 +881,14 @@ def write_verdict(rep: dict[str, Any], tape: Path, out: Path) -> dict[str, Any]:
         "n_rows": rep.get("n_rows"),
         "schema_family": rep.get("schema_family"),
         "tape_header_pins": rep.get("tape_header_pins"),
+        # WHICH BYTES ISSUED THIS VERDICT. verify() computed this and
+        # write_verdict silently dropped it, so the artifact carried
+        # gate_code=None while the return value carried the truth -- the
+        # third time this exact shape has bitten: the field is PRESENT
+        # upstream and never TAKES EFFECT in the thing consumers read.
+        # BE binds fit manifests to this, so an absent field is a manifest
+        # bound to nothing.
+        "gate_code": rep.get("gate_code"),
         "predicates": rep["predicates"],
         "not_applicable": rep.get("not_applicable", []),
         # An N/A predicate must NAME who enforces it instead. "Not checked
@@ -884,12 +902,25 @@ def write_verdict(rep: dict[str, Any], tape: Path, out: Path) -> dict[str, Any]:
         # recomputed HERE from the table, never copied
         "all_pass": all(x["pass"] for x in applicable),
         "n_applicable": len(applicable),
+        "fields_deliberately_omitted": sorted(_OMITTED_ON_PURPOSE),
         "note": ("ALL_PASS is recomputed from the predicate table in this "
                  "file, not carried in. A consumer should re-derive it rather "
                  "than trust the headline, and should check tape_sha256_prefix "
                  "against the artifact it is about to use -- a verdict that "
                  "cannot identify its subject can be replayed against another."),
     }
+    # ENFORCE the allowlist. Without this the set above is a comment, and a
+    # comment has never stopped a field from vanishing.
+    _dropped = set(rep) - set(verdict) - _OMITTED_ON_PURPOSE
+    if _dropped:
+        raise VerdictRefused(
+            f"REFUSED: verify() produced {sorted(_dropped)} and the verdict "
+            f"does not carry them. Either add them to the artifact or name "
+            f"them in _OMITTED_ON_PURPOSE -- a field that exists upstream and "
+            f"is absent downstream is the defect that made gate_code read None "
+            f"in the artifact consumers resolve.")
+    verdict["_dropped_check"] = ("no unexpected field loss between verify() "
+                                 "and this artifact")
     tmp = out.with_suffix(out.suffix + ".tmp")
     tmp.write_text(json.dumps(verdict, indent=2, sort_keys=True),
                    encoding="utf-8")
@@ -1211,6 +1242,33 @@ def _selftests() -> int:
         ok(v2["all_pass"] is False,
            "all_pass is RECOMPUTED from the predicate table, so a headline "
            "cannot disagree with the table beside it (rule 10 in artifact form)")
+
+    # ---- the ARTIFACT must carry the checker identity, not just verify() ----
+    with tempfile.TemporaryDirectory() as td:
+        tp3 = Path(td) / "t.json"
+        tp3.write_text(json.dumps({"features_under": "state",
+                                   PRE_EMISSION_KEY: {}, "rows": [
+            {"slug": "s", "t0": 1, "state": dict(real_row)}]}), encoding="utf-8")
+        rep3 = verify(tp3, gapped_slugs_expected=0)
+        o3 = Path(td) / "v.json"
+        v3 = write_verdict(dict(rep3, predicates=_full(rep3["predicates"])), tp3, o3)
+        on_disk = json.loads(o3.read_text())
+        ok(isinstance(on_disk.get("gate_code"), dict)
+           and len(on_disk["gate_code"].get("sha256", "")) == 16,
+           "the WRITTEN verdict carries gate_code -- verify() computed it and "
+           "write_verdict dropped it, so the artifact read None while the "
+           "return value read true (present upstream, absent downstream)")
+        # FALSIFIER: an unlisted new field must REFUSE, not vanish
+        rep_extra = dict(rep3, predicates=_full(rep3["predicates"]))
+        rep_extra["a_field_added_next_week"] = 1
+        refused = False
+        try:
+            write_verdict(rep_extra, tp3, o3)
+        except VerdictRefused as e:
+            refused = "a_field_added_next_week" in str(e)
+        ok(refused,
+           "a field verify() gains and the verdict does not carry REFUSES by "
+           "name -- the allowlist is enforced, not documented")
 
     sk = lambda hdr: {q["predicate"]: q["pass"] for q in gate(good, schema, 0, hdr)}
     ok(sk({"state_status_counts": {"OK": 5}})["no_rows_skipped_by_builder"],
