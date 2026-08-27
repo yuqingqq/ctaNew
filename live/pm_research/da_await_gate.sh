@@ -25,7 +25,20 @@ LOG="${DA_LOG:-/home/yuqing/ctaNew/data/pm_5min/derived/.da_tape_gate.log}"
 EXPECT_COUNT="${DA_EXPECT_COUNT:-}"
 EXPECT_PROV="${DA_EXPECT_PROV:-}"
 GAPPED="${DA_GAPPED_SLUGS:-133}"
-VERDICT="${DA_VERDICT_OUT:-}"
+# R-212(a/b): THE CONSUMER'S LOCATOR IS THE PRIMARY OUTPUT, not a pin-named
+# file someone must know to look for. `phase2_arms.DA_VERDICT` (:346) resolves
+# exactly this path and REFUSES when it is absent -- so a verdict written under
+# a different name is a verdict that does not exist, which is the name-drift
+# class in its third instance (after tape_non_empty/dataset_non_empty and the
+# LOAD_BEARING six-vs-seven). Verified at the consumer, not taken from a name.
+#
+# Written to a temp and PROMOTED only if the gate actually produced a verdict:
+# the gate REFUSES to write when a load-bearing predicate was not asserted, and
+# a refusal must leave the locator ABSENT so the consumer refuses too. A
+# half-written file at the ruled name would authorise fitting by accident.
+RULED_VERDICT="${DA_VERDICT_RULED:-/home/yuqing/ctaNew/data/pm_5min/derived/da_tape_gate_verdict_v5.json}"
+VERDICT="${DA_VERDICT_OUT:-$RULED_VERDICT}"
+ARCHIVE="${DA_VERDICT_ARCHIVE:-}"
 DEADLINE=$(( $(date +%s) + ${DA_DEADLINE_S:-14400} ))
 
 worst=0
@@ -71,6 +84,19 @@ if [ "${DA_SKIP_WAIT:-0}" != "1" ]; then
 fi
 
 run_gate;  rc=$?; track "$rc"; echo "GATE_EXIT=$rc"  >> "$LOG"
+# Promote to the ruled locator. Only a verdict the gate actually WROTE is
+# promoted; a refusal leaves the locator absent by design.
+if [ -n "$VERDICT" ] && [ "$VERDICT" != "$RULED_VERDICT" ] && [ -s "$VERDICT" ]; then
+  vtmp="$(mktemp "${RULED_VERDICT}.XXXXXX")"
+  if cp "$VERDICT" "$vtmp" && mv -f "$vtmp" "$RULED_VERDICT"; then
+    echo "PROMOTED verdict -> $RULED_VERDICT (content unchanged; $VERDICT kept as archive)" >> "$LOG"
+  else
+    rm -f "$vtmp"; track 5
+    echo "PROMOTION FAILED -- the ruled locator does NOT resolve; fitting must not start" >> "$LOG"
+  fi
+elif [ -n "$ARCHIVE" ] && [ -s "$RULED_VERDICT" ]; then
+  cp "$RULED_VERDICT" "$ARCHIVE" && echo "archived -> $ARCHIVE" >> "$LOG"
+fi
 run_count; rc=$?; track "$rc"; echo "COUNT_EXIT=$rc" >> "$LOG"
 echo "WORST_EXIT=$worst  ($(date -u +%FT%TZ))" >> "$LOG"
 exit "$worst"

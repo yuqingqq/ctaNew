@@ -37,6 +37,29 @@ check() {  # check <label> <expected_rc> <gate_rc> <count_rc>
     fail=$((fail+1)); echo "  FAIL $label: expected $want got $got"
   fi
 }
+# ---- R-212: the ruled locator must resolve, and ONLY on a real verdict -----
+promo() {  # promo <label> <expect_ruled_exists 0|1> <make_source 0|1>
+  local label="$1" want="$2" mk="$3"
+  local d; d="$(mktemp -d)"
+  local src="$d/pin_named.json" ruled="$d/da_tape_gate_verdict_v5.json"
+  [ "$mk" = 1 ] && printf '{"gate":"da_state_tape_verify_v1","all_pass":true}' > "$src"
+  DA_GATE_STUB=1 DA_STUB_GATE_RC=0 DA_STUB_COUNT_RC=0 \
+    DA_LOG="$SEAM_LOG" DA_TAPE=/dev/null DA_SKIP_WAIT=1 \
+    DA_VERDICT_OUT="$src" DA_VERDICT_RULED="$ruled" "$W" >/dev/null 2>&1
+  local got=0; [ -f "$ruled" ] && got=1
+  if [ "$got" = "$want" ]; then
+    pass=$((pass+1)); echo "  OK   $label"
+  else
+    fail=$((fail+1)); echo "  FAIL $label: ruled locator exists=$got want=$want"
+  fi
+  rm -rf "$d"
+}
+
+echo "seam 22b -- R-212 ruled-locator promotion:"
+promo "a written verdict is PROMOTED to the ruled locator the consumer reads" 1 1
+promo "a REFUSED verdict (no file) leaves the locator ABSENT -- the gate's \
+refuse-to-write must not be undone by the bridge that copies it" 0 0
+
 echo "seam 22 -- wrapper exit-code propagation:"
 check "both checkers pass  -> 0"                0 0 0
 check "GATE refuses        -> nonzero"          1 1 0
