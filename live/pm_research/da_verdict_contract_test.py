@@ -42,14 +42,16 @@ REPO = Path(__file__).resolve().parents[2]
 def _real_emission(tape: Path, all_pass: bool = True) -> dict:
     """A genuine DA verdict, produced by DA's own writer."""
     import da_state_tape_verify as G
-    preds = [
-        {"predicate": "tape_non_empty", "pass": True, "applicable": True,
-         "detail": "1 rows"},
-        {"predicate": "gap_count_matches_expected", "pass": all_pass,
-         "applicable": True, "detail": "289 vs 289" if all_pass else "0 vs 289"},
-        {"predicate": "embargo_respected", "pass": False, "applicable": False,
-         "detail": "ENFORCED-DOWNSTREAM"},
-    ]
+    # Every LOAD-BEARING predicate asserted: the writer now REFUSES otherwise
+    # (R-207), so a genuine emission necessarily carries them all.
+    preds = [{"predicate": n, "pass": True, "applicable": True,
+              "detail": "contract fixture"} for n in G.LOAD_BEARING]
+    for x in preds:
+        if x["predicate"] == "gap_count_matches_expected":
+            x["pass"] = all_pass
+            x["detail"] = "289 vs 289" if all_pass else "0 vs 289"
+    preds.append({"predicate": "embargo_respected", "pass": False,
+                  "applicable": False, "detail": "ENFORCED-DOWNSTREAM"})
     rep = {"predicates": preds, "n_rows": 1, "schema_family": "PRED_STATE_V1",
            "tape_header_pins": {}, "not_applicable": ["embargo_respected"]}
     out = tape.parent / "verdict.json"
@@ -116,7 +118,32 @@ def main() -> int:
         np_.write_text(json.dumps(noc), encoding="utf-8")
         case("predicate table ABSENT", np_, False)
 
-        # 6. subject mismatch -- a stale PASS replayed on other bytes
+        # 6b. R-207: a verdict whose LOAD-BEARING checks were NOT ASSERTED.
+        # Hand-built, because DA's writer now refuses to produce one -- but a
+        # legacy or hand-written file can still reach the reader, and this is
+        # the bypass DA demonstrated: applicable=False was excluded from
+        # all_pass, so a verdict that checked NOTHING said PASS.
+        unasserted = json.loads(rp.read_text())
+        for x in unasserted["predicates"]:
+            if x["predicate"] == "provenance_matches_expected":
+                x["applicable"] = False
+        unasserted["not_applicable"] = ["provenance_matches_expected"]
+        up = d / "unasserted.json"
+        up.write_text(json.dumps(unasserted), encoding="utf-8")
+        case("load-bearing NOT ASSERTED (provenance N/A)", up, False)
+
+        # 6c. THE CHECKED-NOTHING CASE, permanent falsifier.
+        nothing = json.loads(rp.read_text())
+        nothing["predicates"] = [
+            dict(x, applicable=False) for x in nothing["predicates"]]
+        nothing["not_applicable"] = [x["predicate"]
+                                     for x in nothing["predicates"]]
+        nothing["all_pass"] = True
+        npth = d / "checkednothing.json"
+        npth.write_text(json.dumps(nothing), encoding="utf-8")
+        case("CHECKED NOTHING: every predicate N/A, headline PASS", npth, False)
+
+        # 7. subject mismatch -- a stale PASS replayed on other bytes
         mis = json.loads(rp.read_text())
         mis["tape_sha256_prefix"] = "0" * 16
         mp = d / "mismatch.json"

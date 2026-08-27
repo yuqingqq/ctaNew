@@ -52,6 +52,35 @@ DERIVED = REPO / "data/pm_5min/derived"
 SCHEMA = DERIVED / "da_pred_state_v1_schema.json"
 EMBARGO_S = 60.0          # the manifest's declared split_embargo_s
 
+#: R-207: predicates that MUST be asserted for a verdict to authorise fitting.
+#: A verdict is not written at all unless every one of these was actually
+#: evaluated. The reason is a bypass DA demonstrated against its own design:
+#: `all_pass` excludes N/A predicates -- correct for an enforcer that genuinely
+#: lives downstream -- which made EVERY predicate silently downgradable by
+#: omitting a CLI argument. A gate run with no expectations produced
+#: `all_pass: true` and the consumer accepted it. The third state built to
+#: avoid certifying the unchecked became the mechanism for certifying it.
+LOAD_BEARING = (
+    "gap_count_matches_expected",
+    "provenance_matches_expected",
+    "dataset_non_empty",
+    "no_rows_skipped_by_builder",
+    "absorption_within_bound",
+    "half_open_containment_landed",
+)
+
+#: The ONLY predicate permitted to be N/A, by name, and only with its
+#: downstream enforcer named in the verdict (R-207). Not a category -- a list
+#: of one, so a future N/A needs a ruling rather than an argument.
+PERMITTED_NA = {"embargo_respected": (
+    "enforced downstream: phase2_embargo.purge_training + assert_embargo, "
+    "evidenced by the rerun receipt's per-side purge counts and a computed "
+    "realized gap >= 60s (R-189/R-203)")}
+
+
+class VerdictRefused(RuntimeError):
+    """A verdict cannot be written because something load-bearing was not checked."""
+
 
 class GateRefused(RuntimeError):
     """The gate could not evaluate. NOT a pass."""
@@ -276,7 +305,8 @@ def _predicates(schema, n_rows, under, present, statuses, bn_vals, pair_bad,
                 asof_checked, asof_viol, tr_max, sc_min, split_seen,
                 gapped_slugs_expected, header,
                 expect_gap_count: int | None = None,
-                expect_provenance: str | None = None) -> list[dict[str, Any]]:
+                expect_provenance: str | None = None,
+                at_g1: tuple[int, int] | None = None) -> list[dict[str, Any]]:
     """The same verdicts the list gate renders, from accumulated counters.
 
     Kept beside `gate()` deliberately: two code paths that must agree are a
@@ -289,7 +319,13 @@ def _predicates(schema, n_rows, under, present, statuses, bn_vals, pair_bad,
         out.append({"predicate": name, "pass": bool(ok), "detail": detail,
                     "applicable": bool(applicable)})
 
-    p("tape_non_empty", n_rows > 0, f"{n_rows} rows")
+    # RENAMED to the R-207 contract name. The gate emitted
+    # "tape_non_empty" and BE's consumer requires
+    # "dataset_non_empty"; both implemented the ruling faithfully and
+    # the chain DEADLOCKED -- no verdict this gate could produce would
+    # ever be accepted. Behaviour is identical; only the name moves,
+    # and it moves to the ruled one.
+    p("dataset_non_empty", n_rows > 0, f"{n_rows} rows")
     p("layout_matches_declaration", bool(present),
       f"features located {'under ' + repr(under) if under else 'at top level'}"
       f"{' (DECLARED in the tape header)' if (header or {}).get('features_under') else ' (inferred)'}")
@@ -427,6 +463,20 @@ def _predicates(schema, n_rows, under, present, statuses, bn_vals, pair_bad,
       + ("  <-- a build absorbing this share has produced a DIFFERENT "
          "population, not a thinner one" if frac > 0.01 else ""))
 
+    if at_g1 is not None:
+        _pres, _flag = at_g1
+        p("half_open_containment_landed", _pres > 0 and _flag == 0,
+          f"rows exactly at a gap g1: {_pres} present, {_flag} flagged "
+          f"GAP_AT_CUTOFF"
+          + ("" if _pres > 0 and _flag == 0 else
+             ("  <-- ABSENT: the gaps never reached the builder"
+              if _pres == 0 else
+              "  <-- FLAGGED: containment is still CLOSED; these are the rows "
+              "built FROM the gap-ending message, the freshest on the tape")))
+    else:
+        p("half_open_containment_landed", False,
+          "not computed by this call path", applicable=False)
+
     bad_status = sum(v for k, v in statuses.items()
                      if k not in set(schema["statuses"]) | {"__ABSENT__"})
     p("statuses_are_declared_values",
@@ -491,6 +541,14 @@ def _accumulate(rows, schema, header):
             asof_checked += 1
             if a > t + 1e-9:
                 asof_viol += 1
+        _c, _t0, _ts = r.get("coin"), r.get("t0"), r.get("t_start")
+        if _c is not None and _t0 is not None and _ts is not None:
+            _exact, _ = GC.at_upper_edge(_coin_gaps.get(_c, []),
+                                         float(_t0) + float(_ts))
+            if _exact:
+                at_g1_present += 1
+                if str(r.get(schema["status_field"], "")) == "GAP_AT_CUTOFF":
+                    at_g1_flagged += 1
         sp = str(r.get("split", "")).lower()
         c = clock_of(r, schema, header)
         if sp.startswith("train"):
@@ -521,7 +579,7 @@ def gate(rows: list[dict[str, Any]], schema: dict[str, Any],
     are a seam; one implementation is not.
     """
     if not rows:
-        return [{"predicate": "tape_non_empty", "pass": False,
+        return [{"predicate": "dataset_non_empty", "pass": False,
                  "applicable": True,
                  "detail": "0 rows -- an empty tape never passes"}]
     acc = _accumulate(rows, schema, header)
@@ -556,6 +614,14 @@ def verify(tape: Path, schema_path: Path = SCHEMA,
     split_seen = {"train": 0, "score": 0}
     present: set = set()
     pairs = schema["nullable_fields_and_their_flags"]
+    # at-g1: computed IN-GATE so it needs no expectation flag and therefore has
+    # no downgrade path. The count alone cannot distinguish "half-open landed"
+    # from "the gaps never arrived"; only PRESENT-and-UNFLAGGED separates them,
+    # and the artifact that authorises fitting should not omit the assertion
+    # DA argued was the decisive one.
+    import da_gap_at_cutoff_count as GC
+    _coin_gaps, _ = GC.coin_gaps()
+    at_g1_present = at_g1_flagged = 0
     # LOCATE FIRST, THEN ACCUMULATE. The first version resolved `under` only
     # once the buffer reached BUFFER rows, so a tape SHORTER than that never
     # un-nested and every feature read as absent -- the agreement seam test
@@ -589,6 +655,14 @@ def verify(tape: Path, schema_path: Path = SCHEMA,
             asof_checked += 1
             if a > t + 1e-9:
                 asof_viol += 1
+        _c, _t0, _ts = r.get("coin"), r.get("t0"), r.get("t_start")
+        if _c is not None and _t0 is not None and _ts is not None:
+            _exact, _ = GC.at_upper_edge(_coin_gaps.get(_c, []),
+                                         float(_t0) + float(_ts))
+            if _exact:
+                at_g1_present += 1
+                if str(r.get(schema["status_field"], "")) == "GAP_AT_CUTOFF":
+                    at_g1_flagged += 1
         sp = str(r.get("split", "")).lower()
         c = clock_of(r, schema, header)
         if sp.startswith("train"):
@@ -602,7 +676,8 @@ def verify(tape: Path, schema_path: Path = SCHEMA,
     preds = _predicates(schema, n_rows, under, present, statuses, bn_vals,
                         pair_bad, asof_checked, asof_viol, tr_max, sc_min,
                         split_seen, gapped_slugs_expected, header,
-                        expect_gap_count, expect_provenance)
+                        expect_gap_count, expect_provenance,
+                        (at_g1_present, at_g1_flagged))
     return {"gate": "da_state_tape_verify_v1", "tape": str(tape),
             "schema_family": schema["family"], "n_rows": n_rows,
             "tape_header_pins": {k: header.get(k) for k in
@@ -613,6 +688,39 @@ def verify(tape: Path, schema_path: Path = SCHEMA,
                                if not x.get("applicable", True)],
             "all_pass": all(x["pass"] for x in preds
                             if x.get("applicable", True))}
+
+
+def assert_all_load_bearing_asserted(preds: list[dict[str, Any]]) -> None:
+    """REFUSE to produce a verdict unless every load-bearing check ran.
+
+    Preventing the artifact from existing beats relying on every future reader
+    to interrogate it -- the same argument that made the tape-side guard refuse
+    rather than degrade.
+    """
+    by = {x["predicate"]: x for x in preds}
+    missing = [n for n in LOAD_BEARING if n not in by]
+    unasserted = [n for n in LOAD_BEARING
+                  if n in by and not by[n].get("applicable", True)]
+    bad_na = [x["predicate"] for x in preds
+              if not x.get("applicable", True)
+              and x["predicate"] not in PERMITTED_NA]
+    problems = []
+    if missing:
+        problems.append(f"load-bearing predicates ABSENT: {missing}")
+    if unasserted:
+        problems.append(
+            f"load-bearing predicates NOT ASSERTED (an expectation was not "
+            f"supplied): {unasserted}")
+    if bad_na:
+        problems.append(
+            f"predicates marked N/A that are not permitted to be: {bad_na}. "
+            f"Only {sorted(PERMITTED_NA)} may be N/A, and only with its "
+            f"downstream enforcer named.")
+    if problems:
+        raise VerdictRefused(
+            "REFUSING to write a verdict -- " + "; ".join(problems)
+            + ". A verdict that cannot distinguish 'checked and passed' from "
+              "'never checked' is not a gate.")
 
 
 def write_verdict(rep: dict[str, Any], tape: Path, out: Path) -> dict[str, Any]:
@@ -635,6 +743,7 @@ def write_verdict(rep: dict[str, Any], tape: Path, out: Path) -> dict[str, Any]:
     with tape.open("rb") as fh:
         for chunk in iter(lambda: fh.read(1 << 20), b""):
             h.update(chunk)
+    assert_all_load_bearing_asserted(rep["predicates"])
     applicable = [x for x in rep["predicates"] if x.get("applicable", True)]
     verdict = {
         "verdict": "da_tape_gate_verdict_v1",
@@ -648,6 +757,14 @@ def write_verdict(rep: dict[str, Any], tape: Path, out: Path) -> dict[str, Any]:
         "tape_header_pins": rep.get("tape_header_pins"),
         "predicates": rep["predicates"],
         "not_applicable": rep.get("not_applicable", []),
+        # An N/A predicate must NAME who enforces it instead. "Not checked
+        # here" is only acceptable when accompanied by where it IS checked.
+        "not_applicable_enforced_by": {
+            x["predicate"]: PERMITTED_NA[x["predicate"]]
+            for x in rep["predicates"]
+            if not x.get("applicable", True)
+            and x["predicate"] in PERMITTED_NA},
+        "load_bearing_asserted": list(LOAD_BEARING),
         # recomputed HERE from the table, never copied
         "all_pass": all(x["pass"] for x in applicable),
         "n_applicable": len(applicable),
@@ -703,7 +820,7 @@ def _selftests() -> int:
              R(bn_feed_age_s=0.5, split="score", t0=0, decision_time=100.0)]
             * 12)          # clear the 50-row signature minimum
     g = res(good)
-    for k in ("tape_non_empty", "no_undeclared_reduction",
+    for k in ("dataset_non_empty", "no_undeclared_reduction",
               "guard_beside_every_nullable", "no_zero_imputation",
               "bn_recv_ns_was_supplied", "state_status_present",
               "gaps_were_supplied", "statuses_are_declared_values",
@@ -711,7 +828,7 @@ def _selftests() -> int:
         ok(g[k], f"a clean tape passes {k}")
 
     # FALSIFIERS -- each must FIRE (rule 15)
-    ok(not res([])["tape_non_empty"], "an EMPTY tape fails, never passes")
+    ok(not res([])["dataset_non_empty"], "an EMPTY tape fails, never passes")
     ok(not res([{k: v for k, v in R().items() if k != "a_missing"}])
        ["guard_beside_every_nullable"],
        "a nullable present WITHOUT its guard flag is caught (guardless pin)")
@@ -945,6 +1062,22 @@ def _selftests() -> int:
         tp.write_text(json.dumps({"features_under": "state", "rows": [
             {"slug": "s", "t0": 1, "state": dict(real_row)}]}), encoding="utf-8")
         rep = verify(tp, gapped_slugs_expected=0)
+        # A verdict now REQUIRES every load-bearing predicate to have been
+        # ASSERTED, so the fixture supplies them all.
+        def _full(preds):
+            """Fixture helper: every load-bearing predicate PRESENT and
+            ASSERTED. It must also FLIP ones already present as N/A -- the
+            fixture's first version only added missing names and the refusal
+            still fired, correctly, on the two the real run had downgraded."""
+            out = [dict(x, applicable=True) if x["predicate"] in LOAD_BEARING
+                   else x for x in preds]
+            by = {x["predicate"] for x in out}
+            for n in LOAD_BEARING:
+                if n not in by:
+                    out.append({"predicate": n, "pass": True,
+                                "applicable": True, "detail": "fixture"})
+            return out
+        rep = dict(rep, predicates=_full(rep["predicates"]))
         vout = Path(td) / "v.json"
         v = write_verdict(rep, tp, vout)
         ok(vout.exists() and json.loads(vout.read_text())["all_pass"] == v["all_pass"],
@@ -954,8 +1087,8 @@ def _selftests() -> int:
            "verdict that cannot name its subject can be replayed against "
            "another artifact")
         forged = dict(rep)
-        forged["predicates"] = [{"predicate": "x", "pass": False,
-                                 "applicable": True}]
+        forged["predicates"] = _full([{"predicate": "x", "pass": False,
+                                       "applicable": True}])
         v2 = write_verdict(forged, tp, vout)
         ok(v2["all_pass"] is False,
            "all_pass is RECOMPUTED from the predicate table, so a headline "
@@ -1003,6 +1136,56 @@ def _selftests() -> int:
     ok(not ab({"state_status_counts": {"NO_TOKEN_MAP": 1}}, good * 2)
        ["absorption_within_bound"] is False,
        "1 skipped of 121 is 0.83%%, inside the bound")
+
+    # ---- R-207: a verdict that checked NOTHING must not exist -------------
+    with tempfile.TemporaryDirectory() as td:
+        tp2 = Path(td) / "t.json"
+        tp2.write_text(json.dumps({"rows": []}), encoding="utf-8")
+        o2 = Path(td) / "v.json"
+
+        def _try(preds):
+            try:
+                write_verdict({"predicates": preds, "n_rows": 1,
+                               "schema_family": "X", "tape_header_pins": {},
+                               "not_applicable": []}, tp2, o2)
+                return True
+            except VerdictRefused:
+                return False
+
+        allp = [{"predicate": n, "pass": True, "applicable": True,
+                 "detail": ""} for n in LOAD_BEARING]
+        ok(_try(allp), "a verdict with every load-bearing check ASSERTED writes")
+        ok(not o2.exists() or True, "")
+        checks -= 1  # the line above is a no-op guard, not a check
+
+        for drop in LOAD_BEARING:
+            partial = [x for x in allp if x["predicate"] != drop]
+            ok(not _try(partial),
+               f"REFUSES when {drop} is ABSENT -- a load-bearing predicate "
+               f"that never ran cannot be certified by omission")
+            na = [dict(x, applicable=False) if x["predicate"] == drop else x
+                  for x in allp]
+            ok(not _try(na),
+               f"REFUSES when {drop} is present but NOT ASSERTED -- this is "
+               f"the exact bypass: applicable=False was excluded from "
+               f"all_pass, so a verdict that checked nothing said PASS")
+        ok(not _try([]),
+           "THE CHECKED-NOTHING CASE: an empty predicate table is REFUSED, "
+           "permanently")
+        emb = allp + [{"predicate": "embargo_respected", "pass": False,
+                       "applicable": False, "detail": ""}]
+        ok(_try(emb),
+           "embargo_respected MAY be N/A -- the one permitted exception, by "
+           "name, with its downstream enforcer named in the verdict")
+        v_emb = json.loads(o2.read_text())
+        ok("embargo_respected" in v_emb["not_applicable_enforced_by"],
+           "...and the verdict NAMES who enforces it instead: 'not checked "
+           "here' is only acceptable beside where it IS checked")
+        other_na = allp + [{"predicate": "some_other", "pass": False,
+                            "applicable": False, "detail": ""}]
+        ok(not _try(other_na),
+           "any OTHER N/A is refused -- the permitted set is a list of one, so "
+           "a future exception needs a ruling rather than an argument")
 
     print(f"da_state_tape_verify selftests: {checks} checks passed")
     return 0
