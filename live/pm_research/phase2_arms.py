@@ -63,6 +63,8 @@ def _feature_pass(src: Path, population: str) -> dict:
     ALL arms (paired comparison); drops are counted, never silent."""
     import harmful_hazard_model as hm
     import harmful_state_features as sf
+    import phase2_state_schema_freeze as PIN
+    PIN_FEATURES = PIN.build_pin()["features_in_order"]
 
     data = json.loads(src.read_text())
     rows = [r for r in data["rows"] if r["status"] == "OK"]
@@ -72,7 +74,7 @@ def _feature_pass(src: Path, population: str) -> dict:
         crows = [r for r in rows if r["coin"] == coin]
         streams: dict = {}; tapes: dict = {}
         PM = []; FN = []; ST = []; kept = []
-        drops = {"pm": 0, "fine": 0, "state": 0}
+        drops = {"pm": 0, "fine": 0, "state": 0, "state_status": 0}
         bywin: dict = {}
         for r in crows:
             bywin.setdefault(r["slug"], []).append(r)
@@ -92,7 +94,16 @@ def _feature_pass(src: Path, population: str) -> dict:
                 ff = hm.fine_feats(r["t0"] + r["t_start"], r["side"], coin)
                 if ff is None:
                     drops["fine"] += 1; continue
-                sv = [float(sfe.get(k) or 0.0) for k in D.PRED_STATE_V1]
+                # R-185(1): NEVER `or 0.0`. That coerced None to 0.0 with no
+                # guard, so a missing velocity was indistinguishable from a
+                # level that did not move -- and `or` also swallows a
+                # legitimate 0.0 and False. encode_row maps None->0.0 only
+                # because the PAIRED GUARD FLAG carries the information, and
+                # the pin refuses any nullable whose guard is absent.
+                if str(sfe.get("state_status", "OK")) != "OK":
+                    drops["state_status"] = drops.get("state_status", 0) + 1
+                    continue          # a COUNTED status, never a silent drop
+                sv = PIN.encode_row(sfe, PIN_FEATURES)
                 PM.append(fp); FN.append(ff); ST.append(sv)
                 kept.append({k: r.get(k) for k in
                              ("slug", "day", "t0", "t_start", "side", "gen",

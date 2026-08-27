@@ -48,6 +48,25 @@ STATE MACHINE per (slug, side, generation):
     declared parameter, charge_reset_cost_at_generation_start -- the spec is
     ambiguous there and this module refuses to guess).
 
+INVENTORY IS PER-SLUG (v2 changelog 2026-08-27; authorization R-184 step
+(vii), coordinator DE hold).  Each 5-minute slug is an independent binary
+market that settles at expiry, so the net-inventory state feeding
+REDUCING_SIDE_PROTECTION (and reduce suppression) RESETS TO FLAT at every
+slug boundary: no slug's protection decision reads another slug's net.
+The v1 wiring allocated ONE inventory dict and reused it across every
+slug (found by user audit, verified by a two-market falsifier: a SELL
+cancel in market 2 was suppressed solely because market 1 left positive
+inventory, while market 2 replayed alone issued it).  RESET-to-flat, not
+settle-and-carry, is the chosen semantics -- each binary settles at
+expiry, and this module carries no settlement-value model (if one is ever
+added it must stay reporting-only).  The result's top-level "inventory"
+block is a reporting-only cross-slug aggregate (sum of per-slug terminal
+nets, max of per-slug peaks) beside a per_slug breakdown; no decision
+reads it.  Selftest group O keeps the falsifier permanent: the per-slug
+arm must issue the market-2 cancel, a reconstructed v1 global-inventory
+arm must suppress it (rule 15, both arms), and single-market replays must
+be bit-identical under the two wirings.
+
 DETERMINISM / EVENT ORDERING (declared, load-bearing):
   * merged per-slug stream sorted by (t, rank, side, input_seq) with ranks
     GEN_START=0 < FILL=1 < GEN_END=2 < SCORE=3: at one timestamp a placement
@@ -79,7 +98,7 @@ statuses, never silent drops (rule 4).
 
     python3 live/pm_research/harmful_stateful_policy.py --selftest
 
-Selftest: 78 checks (EXPECTED_CHECKS below; the run asserts the count, so
+Selftest: 83 checks (EXPECTED_CHECKS below; the run asserts the count, so
 the claim is computed at run time, not remembered here).
 """
 from __future__ import annotations
@@ -88,7 +107,7 @@ import json
 import math
 from typing import Any, Sequence
 
-EXPECTED_CHECKS = 78          # asserted by selftest(); update together
+EXPECTED_CHECKS = 83          # asserted by selftest(); update together
 
 SIDES = ("BUY_UP", "SELL_UP")
 RANK_GEN_START, RANK_FILL, RANK_GEN_END, RANK_SCORE = 0, 1, 2, 3
@@ -541,7 +560,7 @@ class _SlugReplay:
         self.traj = trajectory
         self.cancel_records = cancels
         self.econ = econ
-        self.inv = inv
+        self.inv = inv          # THIS slug's inventory only (fresh per slug)
         self.sides_ref = sides
         self.scores = slug_scores
         self.side_runs = {s: _SideRun() for s in SIDES}
@@ -1011,6 +1030,9 @@ def replay_policy(reference: dict[str, Any],
     reference trajectory.  Pure function of its three inputs; deterministic;
     consumes the score stream, never re-emits it.  Output carries NO feature
     fields and NO score values -- see the header's structural-ban paragraph.
+    Inventory is PER-SLUG: each slug's replay starts flat and its protection
+    decisions read only that slug's own net (R-184 step (vii)); the result's
+    "inventory" block is a reporting-only aggregate beside per_slug detail.
     """
     p = validate_params(params)
     validate_reference(reference)
@@ -1031,9 +1053,14 @@ def replay_policy(reference: dict[str, Any],
                              "sacrifice_cents": 0.0, "unvalued_shares": 0.0}
                          for b in _NOT_RECEIVED_BUCKETS},
     }
-    inv = {"net": 0.0, "peak_abs_net": 0.0,
-           "received_increasing_shares": 0.0,
-           "received_reducing_shares": 0.0}
+    # Inventory is PER-SLUG (v2; R-184 step (vii), coordinator DE hold):
+    # each slug is an independent binary market settling at expiry, so the
+    # net feeding REDUCING_SIDE_PROTECTION resets to flat at every slug
+    # boundary.  v1 allocated ONE dict here and reused it across slugs, so
+    # a SELL cancel in market 2 could be suppressed solely by market 1's
+    # leftover positive net (user audit; permanent falsifier: selftest
+    # group O).  inv_by_slug feeds ONLY the reporting aggregate below.
+    inv_by_slug: dict[str, dict[str, float]] = {}
     by_slug: dict[str, list] = {slug: [] for slug in reference}
     for s in scores:
         if s["slug"] in by_slug:
@@ -1041,6 +1068,10 @@ def replay_policy(reference: dict[str, Any],
         else:
             counters["scores_unknown_slug"] += 1     # counted, never dropped
     for slug, sides in reference.items():
+        inv = {"net": 0.0, "peak_abs_net": 0.0,      # fresh: reset to flat
+               "received_increasing_shares": 0.0,
+               "received_reducing_shares": 0.0}
+        inv_by_slug[slug] = inv
         _SlugReplay(slug, sides, by_slug[slug], p, counters, trajectory,
                     cancel_records, econ, inv).run()
 
@@ -1089,12 +1120,29 @@ def replay_policy(reference: dict[str, Any],
                   "total_s": econ["hold_seconds_total"],
                   "max_s": econ["hold_seconds_max"],
                   "records": econ["holds"]},
-        "inventory": {"terminal_net": inv["net"],
-                      "peak_abs_net": inv["peak_abs_net"],
-                      "received_increasing_shares":
-                          inv["received_increasing_shares"],
-                      "received_reducing_shares":
-                          inv["received_reducing_shares"]},
+        # REPORTING-ONLY cross-slug aggregate over the per-slug
+        # inventories (decisions read only each slug's own dict; the
+        # per-slug terminal nets are what settle at expiry, so the summed
+        # terminal_net carries no decision meaning)
+        "inventory": {
+            "terminal_net": sum(v["net"] for v in inv_by_slug.values()),
+            "peak_abs_net": max(
+                (v["peak_abs_net"] for v in inv_by_slug.values()),
+                default=0.0),
+            "received_increasing_shares": sum(
+                v["received_increasing_shares"]
+                for v in inv_by_slug.values()),
+            "received_reducing_shares": sum(
+                v["received_reducing_shares"]
+                for v in inv_by_slug.values()),
+            "per_slug": {
+                slug: {"terminal_net": v["net"],
+                       "peak_abs_net": v["peak_abs_net"],
+                       "received_increasing_shares":
+                           v["received_increasing_shares"],
+                       "received_reducing_shares":
+                           v["received_reducing_shares"]}
+                for slug, v in inv_by_slug.items()}},
         "cancels": cancel_records,
         "trajectory": trajectory,
     }
@@ -1754,6 +1802,90 @@ def _selftest_more(ok, refuses, ref, scores, ena) -> None:
        and zed["holds"]["permanent"] == 1,
        "a cancel that prevents nothing is counted zero-value; the SELL "
        "hold with no below-threshold score stays permanent")
+
+    # ---- group O: PER-SLUG inventory (R-184 step (vii) falsifier) -------
+    # Each slug is an independent binary market settling at expiry, so the
+    # net feeding REDUCING_SIDE_PROTECTION resets to flat at slug start.
+    # The v1 defect (ONE inventory dict reused across slugs; user audit,
+    # two-market falsifier) is reconstructed below as the known-bad arm --
+    # both arms per rule 15.
+    def v1_global_inventory_replay(reference, score_events, params):
+        """Reconstruct the v1 wiring: ONE shared inventory dict across
+        every slug of the replay.  Test instrument only."""
+        shared = {"net": 0.0, "peak_abs_net": 0.0,
+                  "received_increasing_shares": 0.0,
+                  "received_reducing_shares": 0.0}
+        orig_init = _SlugReplay.__init__
+
+        def patched(self, slug, sides, slug_scores, p, counters,
+                    trajectory, cancels, econ, inv):
+            orig_init(self, slug, sides, slug_scores, p, counters,
+                      trajectory, cancels, econ, shared)
+
+        _SlugReplay.__init__ = patched
+        try:
+            return replay_policy(reference, score_events, params)
+        finally:
+            _SlugReplay.__init__ = orig_init
+
+    ref_o = {
+        "m1": {"BUY_UP": [_gen(1, 0.0, 10.0, [(2.0, 3.0, -1.0)])],
+               "SELL_UP": []},
+        "m2": {"BUY_UP": [],
+               "SELL_UP": [_gen(1, 0.0, 10.0, [(8.0, 1.0, -30.0)],
+                                level=0.51)]},
+    }
+    sc_o = [{"t": 6.0, "slug": "m2", "side": "SELL_UP", "score": 0.9}]
+    p_o = _params(protection_mode="REDUCING_SIDE_PROTECTION")
+    fix_two = replay_policy(ref_o, sc_o, p_o)
+    ok(fix_two["cancel_lifecycle"]["issued"] == 1
+       and fix_two["counters"]["cancel_suppressed_protected"] == 0
+       and fix_two["cancels"][0]["slug"] == "m2"
+       and fix_two["cancels"][0]["side"] == "SELL_UP"
+       and fix_two["cancels"][0]["reducing_at_request"] is False
+       and abs(fix_two["cancels"][0]["prevented_value_cents"] - 30.0) < 1e-9
+       and all(check_invariants(fix_two).values()),
+       "PER-SLUG ARM: market 2's SELL crossing cancels -- market 1's +3 "
+       "net never reaches market 2's protection decision (each slug "
+       "starts flat) and the t=8 adverse fill is prevented")
+    glob_two = v1_global_inventory_replay(ref_o, sc_o, p_o)
+    ok(glob_two["cancel_lifecycle"]["issued"] == 0
+       and glob_two["counters"]["cancel_suppressed_protected"] == 1
+       and abs(glob_two["fills"]["received_shares"] - 4.0) < 1e-12,
+       "GLOBAL-INVENTORY ARM (v1 wiring reconstructed): the SAME crossing "
+       "is suppressed solely by market 1's leftover net and the adverse "
+       "fill stays charged -- the falsifier fires (rule 15)")
+    ref_o2 = {"m2": ref_o["m2"]}
+    alone = replay_policy(ref_o2, sc_o, p_o)
+    ok(alone["cancel_lifecycle"]["issued"] == 1
+       and bit_identical([e for e in fix_two["trajectory"]
+                          if e["slug"] == "m2"], alone["trajectory"]),
+       "market 2 replayed ALONE issues the cancel, and its slice of the "
+       "two-market replay is bit-identical to the standalone replay: no "
+       "cross-slug effect under per-slug inventory")
+    ok(bit_identical(
+        alone["trajectory"],
+        v1_global_inventory_replay(ref_o2, sc_o, p_o)["trajectory"])
+       and bit_identical(
+        prot["trajectory"],
+        v1_global_inventory_replay(
+            ref_p, sc_p,
+            _params(protection_mode="REDUCING_SIDE_PROTECTION"))[
+            "trajectory"]),
+       "single-market replays are BIT-IDENTICAL under per-slug and "
+       "v1-global inventory (two fixtures): the fix cannot change any "
+       "single-market result")
+    iv_o = fix_two["inventory"]
+    ok(abs(iv_o["per_slug"]["m1"]["terminal_net"] - 3.0) < 1e-12
+       and abs(iv_o["per_slug"]["m2"]["terminal_net"] - 0.0) < 1e-12
+       and abs(iv_o["terminal_net"]
+               - sum(v["terminal_net"]
+                     for v in iv_o["per_slug"].values())) < 1e-12
+       and abs(iv_o["peak_abs_net"]
+               - max(v["peak_abs_net"]
+                     for v in iv_o["per_slug"].values())) < 1e-12,
+       "inventory reported per slug; the top-level block equals the "
+       "sum/max aggregate of the per-slug dicts (reporting-only)")
 
 
 def main(argv: Sequence[str] | None = None) -> int:
