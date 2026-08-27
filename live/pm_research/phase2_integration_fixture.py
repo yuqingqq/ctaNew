@@ -77,6 +77,7 @@ def main() -> int:
     import phase2_state_schema_freeze as PIN
     import phase2_embargo as EMB
     import phase2_declaration as D
+    import harmful_action_eval as ae
 
     print("PHASE-2 INTEGRATION FIXTURE — the seven seams, by construction\n")
     pin = PIN.build_pin()
@@ -256,6 +257,79 @@ def main() -> int:
     seam("10c the gap check compares the SAME basis it stores",
          _sf._in_gap(_t, 25.0) and not _sf._in_gap(_t, 50.0),
          "window-relative cutoff vs window-relative gap")
+
+    # ================= SEAMS 11-16 (R-194) ================================
+    # Every one of these was MISSED by seams 1-10, and the reason is uniform:
+    # 1-10 assert that a component EXISTS, is NAMED, or is MENTIONED in the run
+    # path. None of them assert the component is INVOKED CORRECTLY. A token in
+    # source is not a call; a model KIND is not a model; a persisted field is
+    # not a consumed one.
+
+    # ---- SEAM 11: features must be NONZERO through the real path ----------
+    # encode_row was handed the OUTER tape row while the 45 features live
+    # under row["state"], so every lookup missed and the whole state family
+    # scored as ZERO. All-zero features are silent: the fit converges, the
+    # gate runs, the receipt looks normal.
+    tape_row = {"slug": "s", "side": "BUY_UP", "gen": 1, "t_start": 1.0,
+                "state_status": "OK",
+                "state": {k: (i + 1) * 0.5 for i, k in enumerate(feats)}}
+    outer_vec = PIN.encode_row(tape_row, feats)
+    inner_vec = PIN.encode_row(tape_row.get("state", {}), feats)
+    seam("11a encoding the OUTER row yields all zeros (the defect)",
+         all(v == 0.0 for v in outer_vec),
+         "if this is false the defect is elsewhere")
+    seam("11b the run path encodes the NESTED state, not the outer row",
+         "encode_row(sfe[" in inspect.getsource(PA._feature_pass) or
+         'encode_row(sfe.get("state"' in inspect.getsource(PA._feature_pass),
+         "run path passes the outer row -> every state feature is 0.0")
+    seam("11c encoding the nested state yields NONZERO features",
+         any(v != 0.0 for v in inner_vec))
+
+    # ---- SEAM 12: arm D must differ from arm B, BY ARTIFACT ---------------
+    src_sc = inspect.getsource(PA.stage_score)
+    seam("12a arm D loads its OWN artifact, not B's",
+         "linear_d_" in src_sc or "lin_d" in src_sc,
+         "D shares B's elif branch and loads the same `lin` -> identical "
+         "predictions, so D-A and B-D are both meaningless")
+    src_ft = inspect.getsource(PA.stage_fit)
+    seam("12b arm D is FITTED separately on incumbent features only",
+         "linear_d_" in src_ft or "PM+fine only" in src_ft,
+         "no separate D fit exists")
+
+    # ---- SEAM 13: the evaluator must CONSUME the frozen threshold ---------
+    ev_src = inspect.getsource(ae.evaluate_policy)
+    seam("13a evaluate_policy accepts a frozen threshold",
+         "theta_frozen" in ev_src or "frozen_threshold" in ev_src,
+         "theta is computed retrospectively from the scoring population; the "
+         "frozen thresholds are persisted and never used")
+    seam("13b it SELECTS by the frozen threshold when given one",
+         "theta_frozen is not None" in ev_src)
+
+    # ---- SEAM 14: real heads, and an AUC that scales ----------------------
+    hd_src = inspect.getsource(PA.head_diagnostics)
+    seam("14a AUC is O(n log n), not a double loop",
+         "sort" in hd_src and "for a in pos for b in neg" not in hd_src,
+         "the pairwise loop is O(n^2); at 639k rows it does not finish")
+    seam("14b heads take REAL hazard probabilities, not |ECV|",
+         "p_haz" in inspect.signature(PA.head_diagnostics).parameters and
+         "abs(e)" not in src_sc,
+         "the run path passes min(1,|ecv|) as a probability and ecv as the "
+         "value head -- neither is the model's actual output")
+
+    # ---- SEAM 15: fit-stage indexes must be BOUNDED -----------------------
+    ti_src = inspect.getsource(PA.tape_index)
+    seam("15a the tape index stores compact values, not whole row dicts",
+         "idx[" in ti_src and ('r["state"]' in ti_src or "compact" in ti_src),
+         "1.7M full row dicts is ~12GB -- the R-174 violation again")
+
+    # ---- SEAM 16: half-open containment, exactly-at-g1 NOT flagged --------
+    import harmful_state_features as _sf16
+    _e = _sf16.StateTape(slug="x", ws=1.0, gaps=[(10.0, 20.0)])
+    _e.pm_event_t = [1.0]
+    seam("16a a cutoff exactly at g0 IS flagged", _sf16._in_gap(_e, 10.0))
+    seam("16b a cutoff exactly at g1 is NOT flagged", not _sf16._in_gap(_e, 20.0),
+         "builder uses g0<=t<=g1 (closed); R-191 rules [g0,g1) -- builder and "
+         "counter disagree on the edge")
 
     print(f"\n{'FIXTURE GREEN' if not FAILURES else 'FIXTURE RED'}: "
           f"{len(FAILURES)} seam(s) failing")
