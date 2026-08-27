@@ -240,7 +240,45 @@ flags:
                              # score exists, so a thin Phase-2 result cannot be
                              # explained afterwards by a thinness nobody wrote
                              # down.
-  state_tape_gate: ARMED-PRE-REGISTERED # 2026-08-27 DA, cbfc44d, per R-185.
+  state_tape_gate: ARMED-R187-HARDENED # 2026-08-27 DA, 334775d. Supersedes
+                             # the cbfc44d description below in two ways.
+                             # R-187 found TWO defects in DA's own gate, and the
+                             # seam test it mandated found TWO MORE, also DA's:
+                             #  (1) LAYOUT: searched top-level while the builder
+                             #      output can nest under `state`. Demonstrated
+                             #      BEFORE fixing: a nested tape failed ONE
+                             #      predicate and VACUOUSLY PASSED THREE.
+                             #  (2) CLOCK: added t0 unconditionally,
+                             #      double-counting an absolute decision_time.
+                             #  (3) the zero-imputation SIGNATURE was
+                             #      false-positive-prone -- gen_age_s and
+                             #      pm_feed_age_s are legitimately always
+                             #      computable, so it would have fired on EVERY
+                             #      real tape. A gate that fails everything
+                             #      certifies nothing. Replaced with an EXACT
+                             #      test: guard says MISSING beside a value that
+                             #      is PRESENT (what float(x or 0.0) leaves).
+                             #  (4) `slug` is an emitted field, so slug+t0
+                             #      scored a "hit" and the gate declined to
+                             #      refuse -- one IDENTITY field masking a
+                             #      wholly absent feature set. Schema now
+                             #      declares identity_fields; location keys on
+                             #      FEATURES only.
+                             # SCHEMA NOW DECLARES THE COORDINATE SYSTEM, not
+                             # just the field list: LAYOUT (native flat; a
+                             # wrapper declares `features_under` on the tape)
+                             # and CLOCK_BASIS (decision_time is
+                             # WINDOW-RELATIVE and legitimately NEGATIVE for
+                             # pre-window rows; absolute = t0 + decision_time).
+                             # That generalization -- owner-declares covers the
+                             # COORDINATE SYSTEM -- is the rule of record.
+                             # Selftests 27 -> 37 incl. a SEAM battery that
+                             # round-trips a REAL builder row flat AND nested.
+                             # ALL FOUR DEFECTS SURVIVED 27 PASSING SELFTESTS
+                             # AND DIED TO ONE REAL BUILDER ROW: per-module
+                             # selftests certify a module's IDEA of the world,
+                             # not the world.
+  state_tape_gate_v1_superseded: ARMED-PRE-REGISTERED # 2026-08-27 DA, cbfc44d, per R-185.
                              # THE CORRECTED PHASE-2 FREEZE WAITS ON THIS.
                              # live/pm_research/da_state_tape_verify.py verify
                              #   --tape PATH [--gapped-slugs N]

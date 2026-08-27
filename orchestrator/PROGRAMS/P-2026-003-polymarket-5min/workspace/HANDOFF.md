@@ -37,6 +37,22 @@ THAT VERDICT PASSES.** If the timer is gone, run by hand AFTER 00:06:
 08-27 shows 4 gaps in 811 s with btc 2/2 windows affected — **not** abatement,
 but n=2 is nothing. Do not read hour-zero quiet as a trend; that was defect (1).
 
+## 2026-08-27 (DA, ~06:xxZ) — gate hardened after R-187; seam testing is now the rule
+
+R-187 found two defects in DA's own state-tape gate; **the seam test it
+mandated then found two more, also DA's.** Fixed at `334775d`, selftests
+27 → 37. Details in STATUS.yml under `state_tape_gate`. The generalisation of
+record: **owner-declares now covers the COORDINATE SYSTEM** — layout and clock
+basis — not just the field list, because two modules can agree on every field
+NAME and still disagree about where the fields live and what clock they are on.
+
+**The lesson to carry, tested against DA's own work: all four defects survived
+27 passing selftests, every predicate falsified and firing, and died to a
+SINGLE REAL BUILDER ROW.** Per-module selftests certify a module's idea of the
+world, not the world. Any DA instrument that sits at a seam should round-trip a
+real artifact from the module on the other side before it is trusted — the
+hand-made fixture is exactly where the shared assumption hides.
+
 ## DA's TWO OPEN GATES — both pre-registered, both waiting on someone else
 
 **1. STATE-TAPE GATE (R-185) — the corrected Phase-2 freeze WAITS on this.**
