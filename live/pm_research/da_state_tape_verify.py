@@ -301,6 +301,52 @@ def clock_of(r: dict[str, Any], schema: dict[str, Any],
     return float(r["t0"]) + float(dt)
 
 
+PRE_EMISSION_KEY = "pre_emission_skip_counts"
+
+
+def _protocol_major(header) -> int | None:
+    """Major version from the header protocol, or None if unidentifiable."""
+    import re
+    m = re.search(r"_V(\d+)\b", str((header or {}).get("protocol") or ""))
+    return int(m.group(1)) if m else None
+
+
+def builder_skip_counts(header, schema) -> tuple[dict, bool, str]:
+    """Where builder-side exclusions actually live. Returns (skips, ok, why).
+
+    R-209 finding 1. The builder splits skips OUT of the row-status tally
+    (`pre_emission_skip_counts`, build_state_tape_v2.py:371) precisely because
+    skips and statuses are different KINDS of number. This gate derived skips
+    from `state_status_counts` instead -- so after the split it read zero
+    skips ALWAYS, and both predicates that rest on it passed vacuously on a
+    tape that had dropped rows. Deriving from the wrong source is enumerating's
+    quieter sibling: the code looks principled and evaluates nothing.
+
+    ABSENCE IS NEVER ZERO. On an artifact that identifies as V5+, a missing
+    key is a FAILURE, not an empty tally -- otherwise a builder silently
+    dropping the field buys itself a pass.
+    """
+    hdr = header or {}
+    declared = hdr.get(PRE_EMISSION_KEY)
+    ver = _protocol_major(hdr)
+    if declared is None and ver is not None and ver >= 5:
+        return {}, False, (
+            f"header declares {hdr.get('protocol')!r} but carries no "
+            f"{PRE_EMISSION_KEY!r} -- absence is never zero; a builder that "
+            f"stops reporting its exclusions must not read as having none")
+    skips = {k: v for k, v in (declared or {}).items() if v}
+    # Defence in depth, and the ONLY source pre-split: any key in the ROW
+    # status tally that the schema does not declare as a row status describes
+    # rows excluded before emission, whatever it is named. Kept so a builder
+    # that reverts the split is still seen -- reading ONE source is how this
+    # broke, so read both and union.
+    row_statuses = set(schema["statuses"])
+    for k, v in (hdr.get("state_status_counts") or {}).items():
+        if k not in row_statuses and v:
+            skips[k] = max(skips.get(k, 0), v)
+    return skips, True, ""
+
+
 def _predicates(schema, n_rows, under, present, statuses, bn_vals, pair_bad,
                 asof_checked, asof_viol, tr_max, sc_min, split_seen,
                 gapped_slugs_expected, header,
@@ -439,13 +485,11 @@ def _predicates(schema, n_rows, under, present, statuses, bn_vals, pair_bad,
     # OTHER key in the header's status tally describes rows the builder
     # excluded BEFORE emission -- whatever it is called, including names that
     # do not exist yet.
-    hdr_counts = (header or {}).get("state_status_counts") or {}
-    row_statuses = set(schema["statuses"])
-    skipped = {k: v for k, v in hdr_counts.items()
-               if k not in row_statuses and v}
-    p("no_rows_skipped_by_builder", not skipped,
-      f"builder-side exclusion counters in the header (any key that is not a "
-      f"declared ROW status): {skipped or 'none'}"
+    skipped, _src_ok, _src_why = builder_skip_counts(header, schema)
+    p("no_rows_skipped_by_builder", _src_ok and not skipped,
+      _src_why or
+      f"builder-side exclusions read from {PRE_EMISSION_KEY!r} (and any "
+      f"undeclared key in the row tally): {skipped or 'none'}"
       + ("  <-- rows were DROPPED before emission; the population is smaller "
          "than the declaration implies and no row-level predicate can see it"
          if skipped else ""))
@@ -457,9 +501,10 @@ def _predicates(schema, n_rows, under, present, statuses, bn_vals, pair_bad,
     total_skipped = sum(skipped.values())
     denom = n_rows + total_skipped
     frac = (total_skipped / denom) if denom else 0.0
-    p("absorption_within_bound", frac <= 0.01,
-      f"excluded-before-emission {total_skipped} of {denom} input rows "
-      f"= {100*frac:.2f}% (bound 1.00%)"
+    p("absorption_within_bound", _src_ok and frac <= 0.01,
+      (_src_why + " -- absorption UNCOMPUTABLE" if not _src_ok else
+       f"excluded-before-emission {total_skipped} of {denom} input rows "
+       f"= {100*frac:.2f}% (bound 1.00%)")
       + ("  <-- a build absorbing this share has produced a DIFFERENT "
          "population, not a thinner one" if frac > 0.01 else ""))
 
@@ -518,8 +563,22 @@ def _predicates(schema, n_rows, under, present, statuses, bn_vals, pair_bad,
     return out
 
 
-def _accumulate(rows, schema, header):
-    """Fold a row LIST into the same counters the streaming path builds."""
+def _accumulate(rows, schema, header, coin_gaps=None):
+    """Fold a row LIST into the same counters the streaming path builds.
+
+    R-209 finding 4. `GC`, `_coin_gaps` and the at-g1 counters were bound only
+    on the STREAMING path, so this path raised NameError/UnboundLocalError the
+    moment a row carried coin/t0/t_start -- i.e. on any realistic row, never on
+    the synthetic ones the suite used. Worse than the crash: at_g1 was never
+    RETURNED, so `half_open_containment_landed` -- load-bearing -- went N/A on
+    this path without anyone choosing that.
+
+    The import stays function-local: `da_gap_at_cutoff_count` imports THIS
+    module, so hoisting it to module scope is a circular import.
+    """
+    _coin_gaps = coin_gaps            # loaded LAZILY: only a row that carries
+    at_g1_present = at_g1_flagged = 0  # the identity triple needs the gap table
+    at_g1_checked = 0
     pairs = schema["nullable_fields_and_their_flags"]
     under, flat = locate_features(rows, schema, header)   # REFUSES if unlocatable
     present = set().union(*(set(r) for r in flat)) if flat else set()
@@ -543,6 +602,10 @@ def _accumulate(rows, schema, header):
                 asof_viol += 1
         _c, _t0, _ts = r.get("coin"), r.get("t0"), r.get("t_start")
         if _c is not None and _t0 is not None and _ts is not None:
+            import da_gap_at_cutoff_count as GC   # local: GC imports us
+            if _coin_gaps is None:
+                _coin_gaps = GC.coin_gaps()[0]
+            at_g1_checked += 1
             _exact, _ = GC.at_upper_edge(_coin_gaps.get(_c, []),
                                          float(_t0) + float(_ts))
             if _exact:
@@ -562,14 +625,17 @@ def _accumulate(rows, schema, header):
     return dict(n_rows=len(flat), under=under, present=present,
                 statuses=statuses, bn_vals=bn_vals, pair_bad=pair_bad,
                 asof_checked=asof_checked, asof_viol=asof_viol,
-                tr_max=tr_max, sc_min=sc_min, split_seen=split_seen)
+                tr_max=tr_max, sc_min=sc_min, split_seen=split_seen,
+                at_g1=((at_g1_present, at_g1_flagged)
+                       if at_g1_checked else None))
 
 
 def gate(rows: list[dict[str, Any]], schema: dict[str, Any],
          gapped_slugs_expected: int | None = None,
          header: dict[str, Any] | None = None,
          expect_gap_count: int | None = None,
-         expect_provenance: str | None = None) -> list[dict[str, Any]]:
+         expect_provenance: str | None = None,
+         coin_gaps: dict | None = None) -> list[dict[str, Any]]:
     """List-input gate. DELEGATES to the same `_predicates` the stream uses.
 
     It used to render its own verdicts from its own loop, and I added a
@@ -582,12 +648,13 @@ def gate(rows: list[dict[str, Any]], schema: dict[str, Any],
         return [{"predicate": "dataset_non_empty", "pass": False,
                  "applicable": True,
                  "detail": "0 rows -- an empty tape never passes"}]
-    acc = _accumulate(rows, schema, header)
+    acc = _accumulate(rows, schema, header, coin_gaps)
     return _predicates(schema, acc["n_rows"], acc["under"], acc["present"],
                        acc["statuses"], acc["bn_vals"], acc["pair_bad"],
                        acc["asof_checked"], acc["asof_viol"], acc["tr_max"],
                        acc["sc_min"], acc["split_seen"], gapped_slugs_expected,
-                       header, expect_gap_count, expect_provenance)
+                       header, expect_gap_count, expect_provenance,
+                       acc["at_g1"])
 
 
 def verify(tape: Path, schema_path: Path = SCHEMA,
@@ -619,6 +686,13 @@ def verify(tape: Path, schema_path: Path = SCHEMA,
     # from "the gaps never arrived"; only PRESENT-and-UNFLAGGED separates them,
     # and the artifact that authorises fitting should not omit the assertion
     # DA argued was the decisive one.
+    if header is not None and PRE_EMISSION_KEY not in header:
+        raise VerdictRefused(
+            f"REFUSED: tape header carries no {PRE_EMISSION_KEY!r}. This gate "
+            f"reads builder-side exclusions from that key ONLY; without it "
+            f"no_rows_skipped_by_builder and absorption_within_bound would "
+            f"report zero having measured nothing. Absence is never zero -- "
+            f"header keys present: {sorted(header)}")
     import da_gap_at_cutoff_count as GC
     _coin_gaps, _ = GC.coin_gaps()
     at_g1_present = at_g1_flagged = 0
@@ -982,6 +1056,7 @@ def _selftests() -> int:
         f.write_text(json.dumps({"protocol": "T", "features_under": "state",
                                  "clock_basis": {"decision_time":
                                                  "window_relative_seconds"},
+                                 PRE_EMISSION_KEY: {},
                                  "rows": rows_obj}), encoding="utf-8")
         streamed = list(iter_tape(f))
         ok(streamed == rows_obj,
@@ -1064,7 +1139,8 @@ def _selftests() -> int:
     # --- the verdict artifact ---------------------------------------------
     with tempfile.TemporaryDirectory() as td:
         tp = Path(td) / "t.json"
-        tp.write_text(json.dumps({"features_under": "state", "rows": [
+        tp.write_text(json.dumps({"features_under": "state",
+                                  PRE_EMISSION_KEY: {}, "rows": [
             {"slug": "s", "t0": 1, "state": dict(real_row)}]}), encoding="utf-8")
         rep = verify(tp, gapped_slugs_expected=0)
         # A verdict now REQUIRES every load-bearing predicate to have been
@@ -1126,8 +1202,6 @@ def _selftests() -> int:
        "no counters at all passes, since a builder that never skips need not "
        "declare a zero")
 
-    zero = {q["predicate"]: q["pass"] for q in gate([R()] * 0, schema, 0)} \
-        if False else None
     ab = lambda hdr, rows: {q["predicate"]: q["pass"]
                             for q in gate(rows, schema, 0, hdr)}
     ok(ab({"state_status_counts": {"NO_TOKEN_MAP": 100}}, good)
@@ -1141,6 +1215,64 @@ def _selftests() -> int:
     ok(not ab({"state_status_counts": {"NO_TOKEN_MAP": 1}}, good * 2)
        ["absorption_within_bound"] is False,
        "1 skipped of 121 is 0.83%%, inside the bound")
+
+    # ---- R-209 finding 1: the SOURCE the skip predicates read -------------
+    # The user's probe: the builder splits skips into their own tally, this
+    # gate kept reading the row-status tally, and 100 dropped rows passed BOTH
+    # predicates. Deriving from the wrong source is enumerating's quieter
+    # sibling -- so the source itself is now under test, both directions.
+    V5 = {"protocol": "PHASE2_STATE_TAPE_V5"}
+    ok(not sk({**V5, PRE_EMISSION_KEY: {"NO_ARCHIVE_PATH": 100}})
+       ["no_rows_skipped_by_builder"],
+       "R-209: 100 skips in pre_emission_skip_counts FAIL -- the exact probe "
+       "that passed vacuously when this gate read state_status_counts")
+    ok(ab({**V5, PRE_EMISSION_KEY: {"NO_ARCHIVE_PATH": 100}}, good)
+       ["absorption_within_bound"] is False,
+       "R-209 other direction: absorption is computed over the SAME source, "
+       "so 100 of 160 input rows breaches the bound")
+    ok(sk({**V5, PRE_EMISSION_KEY: {"NO_ARCHIVE_PATH": 0}})
+       ["no_rows_skipped_by_builder"],
+       "an EXPLICIT zero in the new tally passes -- the builder reporting no "
+       "loss is a measurement, and a checker that only fails is not a checker")
+    ok(ab({**V5, PRE_EMISSION_KEY: {}}, good)["absorption_within_bound"],
+       "an explicitly EMPTY tally passes")
+    ok(not sk({**V5, "state_status_counts": {"OK": 5}})
+       ["no_rows_skipped_by_builder"],
+       "ABSENCE IS NEVER ZERO: a V5 artifact with no skip tally at all FAILS "
+       "rather than reading as having skipped nothing")
+    ok(ab({**V5, "state_status_counts": {"OK": 5}}, good)
+       ["absorption_within_bound"] is False,
+       "absorption on a V5 artifact missing the tally is UNCOMPUTABLE, and "
+       "uncomputable is not within bound")
+    ok(not sk({**V5, PRE_EMISSION_KEY: {},
+               "state_status_counts": {"OK": 5, "NO_TOKEN_MAP": 7}})
+       ["no_rows_skipped_by_builder"],
+       "defence in depth: a builder that REVERTS the split and puts skips back "
+       "in the row tally is still caught -- reading one source is how this broke")
+
+    # ---- R-209 finding 4: the list path on a REALISTIC row -----------------
+    # It crashed the moment a row carried coin/t0/t_start, which no synthetic
+    # fixture did -- and at_g1 was never returned, so a load-bearing predicate
+    # went N/A on this path without anyone choosing that.
+    _real = [dict(R(), coin="btc", t0=1787650500.0, t_start=-30.0)]
+    _inj = {"btc": [(1787650400.0, 1787650470.0)]}
+    _lp = {q["predicate"]: q for q in
+           gate(_real, schema, 0, {**V5, PRE_EMISSION_KEY: {}},
+                coin_gaps=_inj)}
+    ok("half_open_containment_landed" in _lp,
+       "R-209: the list path survives a realistic row (coin/t0/t_start) -- it "
+       "raised UnboundLocalError before, on any row a real tape contains")
+    _at = [dict(R(), coin="btc", t0=1787650500.0, t_start=-30.0,
+                state_status="OK")]
+    _lp2 = {q["predicate"]: q for q in
+            gate(_at, schema, 0, {**V5, PRE_EMISSION_KEY: {}},
+                 coin_gaps={"btc": [(1787650000.0, 1787650470.0)]})}
+    ok(_lp2["half_open_containment_landed"].get("applicable", True),
+       "and at_g1 REACHES the predicate on the list path: a row exactly at g1 "
+       "makes containment ASSERTED, not silently N/A")
+    ok(_lp2["half_open_containment_landed"]["pass"],
+       "exactly-at-g1 PRESENT and UNFLAGGED is the half-open landing (a row "
+       "at the upper edge is OUTSIDE the gap and must not carry GAP_AT_CUTOFF)")
 
     # ---- R-207: a verdict that checked NOTHING must not exist -------------
     with tempfile.TemporaryDirectory() as td:
