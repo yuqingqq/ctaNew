@@ -1,0 +1,62 @@
+{
+ "artifact": "be_validation_review_v1",
+ "authority": "USER DIRECTIVE (verbatim): 'Validate the results carefully first, let each module review the code and results.' Charter relayed as coordinator mirror-review.",
+ "reviewer": "BE",
+ "scope": "DA instruments feeding the certified chain; BE self-review against phase2_declaration; full suite battery",
+ "as_of_utc": "2026-08-27",
+ "tree_ref": "a2ea012",
+ "suite_battery": {
+  "note": "counts are from each suite's CORRECT entry point; see F1",
+  "phase2_production_seams": {"pass": 99, "fail": 0},
+  "phase2_integration_fixture": {"pass": 55, "fail": 0},
+  "phase2_embargo": {"pass": 8, "fail": 0, "entry": "--selftest ONLY"},
+  "harmful_state_features": {"pass": 105, "fail": 0},
+  "phase2_state_schema_freeze": {"pass": 25, "fail": 0},
+  "harmful_action_eval": {"pass": 19, "fail": 0},
+  "phase2_increment_null": {"pass": 7, "fail": 0},
+  "total_checks": 318, "total_failing": 0
+ },
+ "findings": [
+  {"id": "F1", "severity": "REPORTING DEFECT — MINE", "status": "OPEN",
+   "finding": "`python3 -m phase2_embargo` runs ZERO checks and exits 0. Its guard is `selftest() if '--selftest' in sys.argv else 0`, so the default entry point is silently vacuous.",
+   "consequence": "Every 'phase2_embargo GREEN' BE reported this session was vacuous, including in the commit messages at ef9b775, 19b0611, 288df3f and 2152a3a. The module's 8 checks DO pass when invoked correctly, so the substance is sound and no result changes; what was wrong was BE's coverage claim.",
+   "remedy": "make the default entry run the selftest, or make it exit non-zero with a message; BE to stop inferring green from rc=0 on a silent suite"},
+  {"id": "F2", "severity": "PROVENANCE DEFECT", "status": "OPEN",
+   "finding": "The Phase-2 receipt hardcodes declaration_commit 'd7082b6'. At that ref ARMS has THREE entries; the run used the v2 amendment (arm D INCUMBENT_REWEIGHTED_ONLY, causal thresholds, 5 head diagnostics, EMBARGO_S) introduced at 1cc2163.",
+   "consequence": "A reader resolving the named ref finds a three-arm declaration beside a four-arm receipt. The governing declaration is 1cc2163, not d7082b6.",
+   "class": "same as the receipt-path defect: a hardcoded label that did not follow its content",
+   "remedy": "resolve declaration_commit by MEASUREMENT (sha of phase2_declaration.py) rather than a literal"},
+  {"id": "F3", "severity": "CHAIN ASYMMETRY", "status": "OPEN",
+   "finding": "phase2_arms.assert_gate_passed hardcodes a 5-element LOAD_BEARING set. The verdict declares SIX in its own load_bearing_asserted, adding half_open_containment_landed. The consumer never reads the producer's list.",
+   "consequence": "No effect on this run — all 17 applicable predicates passed. But a future verdict could declare a predicate load-bearing that BE's checker does not require, and BE would accept it N/A or absent.",
+   "remedy": "consumer's required set = union of its own and the verdict's load_bearing_asserted"},
+  {"id": "F4", "severity": "INSTRUMENT GAP — MINE", "status": "OPEN",
+   "finding": "gap_at_cutoff_count.py reads the gap ledger LIVE from disk and neither pins it nor records its sha in the output.",
+   "consequence": "Its agreement at 289 was against an unrecorded ledger state. The live ledger has in fact MOVED since the tape build (current e6e52c6d43425b06 vs pinned 6cb3a027e25fb5df) because collectors append continuously. The recount still returned 289, so nothing is wrong with the number — but that is luck, not design.",
+   "remedy": "accept a ledger path AND assert/record its sha256, defaulting to the pinned snapshot"},
+  {"id": "F5", "severity": "TEST HYGIENE", "status": "OPEN",
+   "finding": "Running phase2_state_schema_freeze as a suite REWRITES the tracked artifact phase2_state_pin_v2.json.",
+   "consequence": "Idempotent today (git shows no diff after the run), so no damage. But a test that regenerates its own reference cannot detect drift IN that reference: if DA's schema changed, the run would rewrite the pin to match and still report 25 checks OK.",
+   "remedy": "split verify-against-committed-pin from regenerate-pin; the suite should do the former"}
+ ],
+ "clean_passes": [
+  {"id": "C1", "check": "gate code identity", "result": "sha16 1da60b56e1fb2801 identical across working tree, 6a476a9 and HEAD, and equal to the fit manifest's gate_code_sha256_prefix. The sha resolves to committed bytes."},
+  {"id": "C2", "check": "verdict all_pass arithmetic, recomputed independently by BE from the predicate table", "result": "17 applicable predicates, all pass; 1 not-applicable (embargo_respected, ENFORCED-DOWNSTREAM). Recomputed True == verdict True."},
+  {"id": "C3", "check": "embargo, the one N/A predicate, verified where it IS enforced", "result": "realized_gap_s 60.309 >= required 60.0; EMBARGO_ENFORCED true; score side untouched (638,917 rows, trimmed=False); training-side only. The prior -8.134s contamination is gone."},
+  {"id": "C4", "check": "fields_deliberately_omitted is not a hiding place", "result": "CLEAN. The allowlist covers gate->verdict and tape->tape_path renames, gap_at_cutoff_rows bulk detail, and all_pass which is RECOMPUTED in the gate from the table rather than copied in. Correct design."},
+  {"id": "C5", "check": "latency estimand, rule 7 — value only tranches after t+L", "result": "VERIFIED AT THE BUILDER (harmful_exposure_rows.py): cut = t_start + L/1000.0; preventable_value_cents sums ONLY tranches with t >= cut; tranches before the cut are counted separately as stale_shares and never valued. L=50 is in LATENCY_GRID_MS and the evaluator's key str(D.TARGET_LATENCY_MS)=='50' resolves."},
+  {"id": "C6", "check": "family and decision_time pins", "result": "Both correctly ABSENT from the 45-feature pin. No non-numeric leakage."},
+  {"id": "C7", "check": "R-173(1) rows-not-windows on the SCORE side", "result": "192 btc rows excluded as gap_at_cutoff; ZERO windows dropped. btc 166 + eth 171 = 337 = the topup's full declared window count."},
+  {"id": "C8", "check": "split partition completeness", "result": "train 1,125,289 + score 638,917 = 1,764,206 = the tape's n_rows exactly. Complete, non-overlapping."},
+  {"id": "C9", "check": "GAP_AT_CUTOFF reconciliation across FOUR independent paths", "result": "289 everywhere. BE counter (population+ledger, tape never consulted) 289 = train 97 + score 192, btc only; DA counter (tape-based, flag vs recomputation) 289; gate predicate 289 vs pre-registered 289; fit/score drop tables 97+192=289 with eth 0/0."},
+  {"id": "C10", "check": "ledger-pin protocol as executed", "result": "WORKED. The live ledger has moved since the build (e6e52c6d vs pinned 6cb3a027) because collectors append continuously; the pinned snapshot ledger_pin_tape6e.jsonl is preserved READ-ONLY (mode 444) and its sha256 prefix equals the tape header's ledger_sha256 exactly."},
+  {"id": "C11", "check": "declaration constants vs what ran", "result": "BUDGETS (0.05,0.10,0.15) == receipt 5/10/15%; N_RANDOM 200 == receipt; TARGET_LATENCY_MS 50 == evaluator key; THRESHOLD_PRIMARY CAUSAL_FROZEN_FROM_TRAIN == all 8 arm-coin cells; HEAD_DIAGNOSTICS 5 declared == 5 emitted; EMBARGO_S 60.0 == enforced. Multiplicity 2+3=5 == receipt."},
+  {"id": "C12", "check": "increment-null reconciliation", "result": "Every one of the 12 cells re-derived each arm's net from the committed fit artifacts and matched the receipt's net_cents within 1e-6 cents, or the run would have refused. The null was computed on the same statistic the receipt reports."}
+ ],
+ "supersedes": {
+  "target": "phase2_increment_null_v1.json :: be_addendum_notes.gap_at_cutoff_asymmetry",
+  "was": "the btc-97 / eth-0 asymmetry was recorded as REPORTED AS RELAYED, not independently verified at the ledger by BE",
+  "now": "VERIFIED BY BE at the ledger: gap_at_cutoff_count by_coin == {btc: 289}. The ledger carries ZERO gaps touching eth rows in this population, so the asymmetry is the collector record showing through, as relayed. The earlier caveat is superseded by this filing rather than by editing the committed artifact (rule 13)."
+ },
+ "verdict_of_this_review": "The certified chain reconciles. No finding changes any reported number. F1 corrects a COVERAGE CLAIM BE made repeatedly and is the most consequential of the five, because it means BE asserted green on a suite that ran nothing. F2-F5 are provenance and hygiene defects with no effect on this run's results."
+}
