@@ -497,7 +497,19 @@ def main() -> int:
         return _selftests()
     if not a.day:
         raise SystemExit("--day YYYYMMDD is required; refusing to guess a day")
-    rep = verify_day(a.day, a.freeze_epoch)
+    # A DAY THAT FAILS AND AN INSTRUMENT THAT BROKE MUST NOT SHARE AN EXIT
+    # CODE. An uncaught exception exits 1, and so does a computed FAIL -- so
+    # the nightly log could not distinguish "day one is inadmissible" from
+    # "the verifier never ran". R-153(2) makes this a HARD PRECONDITION, and a
+    # precondition that can silently no-op is the failure it exists to prevent.
+    try:
+        rep = verify_day(a.day, a.freeze_epoch)
+    except Exception:
+        import traceback
+        traceback.print_exc()
+        print(f"\nINSTRUMENT FAILURE verifying {a.day}: NOTHING WAS VERIFIED. "
+              f"This is exit 4, NOT a failing day -- no verdict was computed.")
+        return 4
     text = json.dumps(rep, indent=2, sort_keys=True)
     if a.out:
         Path(a.out).write_text(text, encoding="utf-8")
@@ -509,7 +521,14 @@ def main() -> int:
     for c, v in sorted(rep["windows_gap_affected"].items()):
         print(f"  {c}: {v['gap_affected']}/{v['era_covered_windows']} "
               f"({v['gap_affected_pct']}%)")
-    print(f"\nALL PASS: {rep['all_pass']}")
+    if rep.get("verdict_granularity") == "per_coin" and rep.get("per_coin"):
+        print("\nPER-COIN VERDICTS (R-211(3): coin-days pass/fail independently)")
+        for c, v in sorted(rep["per_coin"].items()):
+            print(f"  {c}: ALL PASS = {v['all_pass']}")
+            for x in v["predicates"]:
+                print(f"      [{'PASS' if x['pass'] else 'FAIL'}] "
+                      f"{x['predicate']}: {x['detail']}")
+    print(f"\nALL PASS (whole-day strict, both rules): {rep['all_pass']}")
     return 0 if rep["all_pass"] else 1
 
 
