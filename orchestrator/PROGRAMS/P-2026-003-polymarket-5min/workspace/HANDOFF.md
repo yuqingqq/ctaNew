@@ -1,6 +1,43 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-08-27 (DA) — **tape6d REFUSED as pre-registered; tape6e armed at ed9d572 on a pinned ledger.**
+Updated: 2026-08-27 (DA) — **tape6e GATED ALL-PASS, confirmed by the independent counter zero/zero; fit released.**
+
+## 2026-08-27 (DA, ~13:4xZ) — tape6e GATED ALL-PASS, confirmed two ways; join drop is a filter, not a lookup failure
+
+**DONE.** **(1) tape6e ALL-PASS** (Q-DA-104). Both predicates that forced the
+rebuild flipped exactly as pre-registered: **at-g0 4 present / 4 FLAGGED** (was
+4/0), **at-g1 493 present / 0 flagged** (was 493/1), count **289 vs 289**,
+ledger sha = pin, `builder_ref ed9d57299a80`, `gate_code head=6a476a9
+dirty=False`. `n_rows` 1,764,206 unchanged — the population did not move, only
+the flags. **(2) INDEPENDENT COUNTER AGREES ZERO/ZERO** — cross-tab collapsed to
+a **single cell** `{'GAP_AT_CUTOFF': 289}`; no disagreeing row in either
+direction across 1.76M rows. **This is the R-213 citation; seam 30 is not one.**
+Exactly the five disputed rows moved and nothing else; partition intact. The
+header corroborates independently (`OK` −4, `GAP_AT_CUTOFF` +3, **`PRE_WINDOW`
++1** — the reverted at-g1 row was warm-up, as the census said). **(3) A RACE IN
+DA'S OWN WRAPPER, SELF-REPORTED BEFORE ANYONE ACTED:** the verdict promotes to
+the ruled locator at the end of `run_gate`, so `assert_gate_passed` ACCEPTED
+while the counter was still running — fitting was permitted on the gate alone,
+inverting R-213. Fit held on DA's confirmation; **R-214 adopts
+staging-then-promote** for the NEXT arming (write-new + mv; not yet
+implemented). **(4) JOIN PROBE** (Q-DA-105) confirms BE cell-for-cell: 605,256 /
+578,917 / 26,339 = PRE_WINDOW 26,227 + GAP_AT_CUTOFF 97 + NO_LEVEL_HISTORY 15;
+**near-miss 0, truly absent 0**. **Every one of the 26,339 has an EXACT tape
+match** — the join key is sound, `t_start` round-trips with zero drift, and a
+**filter was counted as a lookup failure**. Not a tape6e regression (the filter
+predates it; the rebuild moved 4 rows). R-216 rules the 97 excluded
+deliberately — unreliable decision-time data, all four arms identically.
+
+**IN PROGRESS.** BE: accounting fix → fit3 → score → receipt.
+
+**NEXT / WATCH OUT FOR.** **00:06Z tonight** — 08-27 judged whole-day under the
+FROZEN rule (R-211(2)); expected FAIL on `gap_rate_under_bar`, **eth lost with
+it**; per-coin verdicts from 08-28. **R-214 staging-then-promote is UNIMPLEMENTED**
+— do it before the next arming, write-new + mv. **Bound BE debt** (R-210/213):
+one commit lifting `gap_contains` to module scope AND making the absorption
+guard callable, seam 30d–f rewritten to call the real function with genuinely
+different inputs, greps replaced by behavioural assertions. Q-DA-99's btc gap
+cause remains unfixed **by design**.
 
 ## 2026-08-27 (DA, ~12:0xZ) — tape6d gated and REFUSED; rebuild armed at ed9d572 on a pinned ledger
 

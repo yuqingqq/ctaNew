@@ -191,6 +191,35 @@ flags:
                              # Root: gap_contains nested in main() = uncallable,
                              # same class as Q-DA-98. Non-blocking per R-213;
                              # DA's independent counter is the citation.
+  tape6e_gate_verdict: ALL-PASS-CONFIRMED-TWO-WAYS # 2026-08-27 DA, Q-DA-104.
+                             # at-g0 4/4 flagged, at-g1 493/0 flagged, count
+                             # 289 vs 289, ledger sha = pin, builder_ref
+                             # ed9d57299a80, gate_code head=6a476a9 dirty=False.
+                             # Independent counter: cross-tab a SINGLE cell
+                             # {GAP_AT_CUTOFF: 289}, zero disagreement both
+                             # directions over 1.76M rows. Exactly 5 rows moved.
+                             # This is the R-213 citation; seam 30 is not.
+  verdict_promotes_before_second_checker: R214-ADOPTED-UNIMPLEMENTED # 2026-08-27
+                             # DA self-reported. The verdict promotes at the end
+                             # of run_gate, so assert_gate_passed ACCEPTS while
+                             # the independent counter is still running -- fit
+                             # permitted on the gate alone, inverting R-213.
+                             # An exit code nobody consumes is not a gate.
+                             # FIX (next arming, write-new+mv): gate writes to a
+                             # STAGING path; promote only when the WORST rc
+                             # across both checkers is 0, so a refusal by EITHER
+                             # leaves the ruled locator absent.
+  fit_join_drop_is_a_filter: MEASURED-NOT-A-LOOKUP-FAILURE # 2026-08-27 DA,
+                             # Q-DA-105. 26,339 btc rows: ALL have EXACT
+                             # (slug,side,gen,t_start) tape matches. near-miss 0,
+                             # truly absent 0 -- t_start round-trips with zero
+                             # float drift, so the join key is sound and the ULP
+                             # class does NOT appear in the join. tape_index
+                             # (phase2_arms.py:222) filters state_status != OK.
+                             # NOT a tape6e regression: filter predates a410c07,
+                             # rebuild moved 4 rows. R-216 rules the 97
+                             # GAP_AT_CUTOFF excluded deliberately (unreliable
+                             # decision-time data, all four arms identically).
   forward_day_verify_instrument: COMMITTED # 2026-08-26 DA, e9f8d89.
                              # live/pm_research/da_forward_day_verify.py --
                              # R-141(1) predicates, R-153(2) hard precondition.
