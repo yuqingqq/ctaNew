@@ -301,6 +301,42 @@ def clock_of(r: dict[str, Any], schema: dict[str, Any],
     return float(r["t0"]) + float(dt)
 
 
+def gate_code_identity() -> dict:
+    """WHICH BYTES ISSUED THIS VERDICT.
+
+    The await unit invokes this file BY PATH, so it executes whatever is on
+    disk when the tape lands -- which is not necessarily what was reviewed when
+    the gate was armed. Today that worked in my favour (R-209 fixes landed
+    after arming and the armed gate picked them up). It is still a hole: a
+    verdict recorded the tape's `builder_ref` and nothing at all about the
+    checker, so "which gate passed this" was unanswerable from the artifact.
+
+    R-205's lesson -- a review binds to a ref -- in operational form: a VERDICT
+    binds to a ref too. Additive only; no consumer field changes meaning.
+    """
+    import hashlib
+    import subprocess
+    me = Path(__file__).resolve()
+    out = {"file": str(me),
+           "sha256": hashlib.sha256(me.read_bytes()).hexdigest()[:16]}
+    try:
+        r = subprocess.run(["git", "-C", str(me.parent), "rev-parse", "--short",
+                            "HEAD"], capture_output=True, text=True, timeout=10)
+        if r.returncode == 0:
+            out["head"] = r.stdout.strip()
+        d = subprocess.run(["git", "-C", str(me.parent), "status", "--porcelain",
+                            "--", str(me)], capture_output=True, text=True,
+                           timeout=10)
+        # UNCOMMITTED CHECKER BYTES ARE NOT A DETAIL. A verdict issued by a
+        # working-tree edit is not reproducible from any ref, and rule 12 says
+        # a freeze is a commit -- so say so IN the artifact rather than let a
+        # reader assume `head` describes what ran.
+        out["dirty"] = bool(d.returncode == 0 and d.stdout.strip())
+    except Exception as e:                       # never fail a verdict on this
+        out["git"] = f"unavailable: {type(e).__name__}"
+    return out
+
+
 PRE_EMISSION_KEY = "pre_emission_skip_counts"
 
 
@@ -753,6 +789,7 @@ def verify(tape: Path, schema_path: Path = SCHEMA,
                         expect_gap_count, expect_provenance,
                         (at_g1_present, at_g1_flagged))
     return {"gate": "da_state_tape_verify_v1", "tape": str(tape),
+            "gate_code": gate_code_identity(),
             "schema_family": schema["family"], "n_rows": n_rows,
             # builder_ref included so the verdict CARRIES the ref it
             # certified: a reader can see WHICH bytes were gated without
@@ -1249,6 +1286,15 @@ def _selftests() -> int:
        ["no_rows_skipped_by_builder"],
        "defence in depth: a builder that REVERTS the split and puts skips back "
        "in the row tally is still caught -- reading one source is how this broke")
+
+    # ---- the verdict names the bytes that issued it ------------------------
+    _gc = gate_code_identity()
+    ok(len(_gc.get("sha256", "")) == 16,
+       "the verdict carries a sha of the CHECKER, not only of the tape: the "
+       "await unit runs this file by path, so armed-at is not ran-at")
+    ok(isinstance(_gc.get("dirty"), bool) or "git" in _gc,
+       "and it says whether those bytes were UNCOMMITTED -- a verdict issued "
+       "from a working-tree edit is reproducible from no ref at all")
 
     # ---- R-210: the bound is TOTAL, and per-status detail STAYS REPORTED ---
     # R-202's per-status wording is superseded: two statuses under the bound
