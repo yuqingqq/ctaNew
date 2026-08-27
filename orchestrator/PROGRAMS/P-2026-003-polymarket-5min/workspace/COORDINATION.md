@@ -16027,6 +16027,55 @@ another's work.**
 **(3)** Remaining in step (vii): the real tape→forward-report adapter
 (BE's queue, after the rerun chain).
 
+### R-187 — **USER AUDIT #2 (2026-08-27): SEVEN blockers in the corrective work itself — every one a CROSS-MODULE seam failure that the passing per-module selftests cannot see. ALL ACCEPTED. The rerun chain is HALTED, the in-flight tape build STOPPED, and the structural remedy is RULED: an END-TO-END INTEGRATION FIXTURE becomes a mandatory gate before any rerun.** (2026-08-27 05:0x UTC)
+
+**(1) The seven, as found by the user (file:line as cited):**
+1. The tape build held ALL output rows in memory (7.4 G at 200/471 slugs —
+   the R-148 allocation shape again); STOPPED by the coordinator; the
+   rebuild must stream/append per the R-174 hierarchy.
+2. The 47-feature pin includes `family="PRED_STATE_V1"` (a string) and
+   `decision_time` as model features — the all-float encoder would CRASH,
+   and decision-time-as-feature is a leak shape besides
+   (`phase2_state_schema_freeze.py:68`).
+3. The scorer DOES NOT CONSUME the rebuilt tape — it re-derives state
+   without gaps or Binance timestamps, recreating the exact missing-input
+   defect the rebuild exists to fix (`phase2_arms.py:85`).
+4. The 60 s embargo is STILL not applied before fitting — the builder
+   records VIOLATED (unpurged) and exits 0; the arms never call the purge
+   (`build_state_tape_v2.py:125`). A recorded violation that nothing
+   enforces is a disclosure, not an embargo.
+5. Builder and verifier disagree on SHAPE (features nested under `state`
+   vs top-level search) and on CLOCK (window-relative `feature_asof` vs
+   absolute `decision_time`; the verifier adds t0 to an already-absolute
+   time) — the gate would judge the wrong layout on the wrong clock
+   (`da_state_tape_verify.py:89`).
+6. Arm D falls through a generic else and is scored WITH THE LGBM MODEL —
+   duplicating C instead of isolating weighting (`phase2_arms.py:247`).
+7. Causal thresholds and the head diagnostics are DECLARED but absent from
+   the scoring path.
+
+**(2) The meta-finding is the ruling:** every module's selftests pass;
+every failure lives at a SEAM. Per-module falsifiers cannot certify a
+pipeline. **RULED: before any rerun, BE builds a SINGLE END-TO-END
+INTEGRATION FIXTURE** — a tiny synthetic population flowing
+builder → tape → purge → fit → score → verify → evaluate in one process —
+whose assertions are precisely the seven seams: the purge REMOVED the
+embargo rows (count them); the fit consumed the REBUILT tape by identity
+(not a re-derivation); the feature matrix is all-numeric with
+`decision_time` absent and every name traceable to the schema; arm D's
+model object IS the weighted linear (asserted by identity, the R-148-gate
+pattern); the verifier round-trips one builder row (shape AND clock);
+causal thresholds resolve from training only; the heads emit. **The
+fixture is a GATE: no fit/score launches until it is green, and it runs in
+CI-fashion before every future rerun.** The schema artifact is extended to
+pin LAYOUT (nesting) and CLOCK BASIS explicitly — a schema that omits its
+own coordinate system invites exactly finding 5.
+
+**(3) Standing:** the rerun chain is halted; nothing from the stopped
+build is consumed; the freeze-B question stays HELD; the incumbent's race
+and day one are untouched (48 btc windows and counting; verdict
+08-28T00:06Z).
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
