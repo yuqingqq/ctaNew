@@ -304,7 +304,64 @@ flags:
                              # score exists, so a thin Phase-2 result cannot be
                              # explained afterwards by a thinness nobody wrote
                              # down.
-  tape5_gate: ARMED-TRIPLE-PRE-REGISTERED # 2026-08-27 DA, cf79214.
+  unit_success_is_not_checker_success: STANDING-HAZARD # 2026-08-27 DA/coord,
+                             # R-199/200. READ THIS BEFORE TRUSTING A UNIT.
+                             # systemd Result=success / ExecMainStatus=0 is
+                             # evidence a CHECKER passed ONLY where exit codes
+                             # PROVABLY PROPAGATE. For a BUILDER unit the unit
+                             # code IS the process code, so those reads are
+                             # sound. For a WRAPPER unit they are not: DA's
+                             # await-gate wrapper echoed GATE_EXIT=$? then
+                             # exited with the status of that echo -- ZERO --
+                             # so a REFUSAL would have reported Result=success.
+                             # Both seats had been reading unit status as
+                             # health evidence all day. Proof of propagation
+                             # for the gate path is seam 22
+                             # (da_wrapper_seam_test.sh, 6/6, asserts BOTH
+                             # directions AND that the WORST rc wins, not the
+                             # last). Red evidence committed at b19af5c BEFORE
+                             # the fix.
+  tape_gate_wrapper: da_await_gate.sh # 2026-08-27 DA, dee5242. Supersedes
+                             # da_await_tape5_gate.sh (DELETED -- it swallowed
+                             # refusals). Env-driven: DA_TAPE, DA_EXPECT_COUNT,
+                             # DA_EXPECT_PROV, DA_GAPPED_SLUGS, DA_VERDICT_OUT.
+                             # Exits with the WORST checker rc. Stub hooks
+                             # (DA_GATE_STUB) exist so the seam test can drive
+                             # it without a tape.
+  tape_gate_verdict_artifact: EMITTED-ON-RUN # 2026-08-27 DA, dee5242, R-199(3).
+                             # --verdict-out writes da_tape_gate_verdict_*.json.
+                             # BE's FIT STAGE REFUSES TO RUN WITHOUT A PASS
+                             # HERE, so this file is load-bearing. Built to be
+                             # CHECKABLE RATHER THAN AUTHORITATIVE: it names the
+                             # tape by PATH AND CONTENT PREFIX (a verdict that
+                             # cannot identify its subject can be replayed
+                             # against another artifact -- three in-place
+                             # overwrites have destroyed an anchor in this
+                             # programme), and all_pass is RECOMPUTED from the
+                             # predicate table inside the file, never carried
+                             # in. Consumers should re-derive it.
+                             # builder_ref is the accepted provenance field and
+                             # is consulted FIRST; builder_commit is REFUSED --
+                             # tape5 wrote main HEAD at completion there, a
+                             # different quantity from the bytes that built it.
+  tape6_gate: HELD-AWAITING-GREEN-AND-PIN # 2026-08-27 DA, R-199(4).
+                             # NOT re-armed. Re-arm only after BE's seams are
+                             # green AND the coordinator supplies the new
+                             # fix-commit pin, which will NOT be 057b1b7.
+                             # VERIFY THE PIN'S ANCESTRY AND DIFF BEFORE
+                             # ASSERTING IT (as was done for 057b1b7: ancestor
+                             # check + purely-additive diff + builder file
+                             # untouched). A stale expected value does not fail
+                             # quietly -- it produces an AUTHORITATIVE FALSE
+                             # REFUSAL, the mirror of a gate that cannot fail.
+                             # Then pre-register again: 289 · 493 at-g1
+                             # PRESENT-and-UNFLAGGED · provenance = new pin.
+  tape5_gate: SUPERSEDED-SEE-tape6_gate # 2026-08-27. tape5 itself was
+                             # unattributable BY CONSTRUCTION (builder prepended
+                             # the MAIN tree to sys.path, so snapshot isolation
+                             # was illusory); build and DA's watcher both
+                             # stopped 07:53Z. Original entry follows.
+  tape5_gate_original: ARMED-TRIPLE-PRE-REGISTERED # 2026-08-27 DA, cf79214.
                              # Unit da-gate-tape5.service (systemd, survives
                              # this session) waits for
                              # derived/phase2_state_tape_v5.json, requires SIZE
