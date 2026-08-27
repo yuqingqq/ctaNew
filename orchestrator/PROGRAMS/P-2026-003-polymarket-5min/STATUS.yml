@@ -240,7 +240,39 @@ flags:
                              # score exists, so a thin Phase-2 result cannot be
                              # explained afterwards by a thinness nobody wrote
                              # down.
-  pred_state_v1: built-not-scored # 2026-08-26 DA, c4621af, Q-DA-71.
+  pred_state_v1: SCORED-THEN-SUPERSEDED-RERUN-PENDING # 2026-08-27 DA, per
+                             # R-184. Was scored in phase2_three_arm_v1, which
+                             # the USER AUDIT superseded as split-contaminated.
+                             # Literally "built-not-scored" again, but for a new
+                             # reason -- do not read the old flag text.
+                             # THE TAPE PATH BYPASSED DA'S WIRING (phase2_arms.py):
+                             #  * build_tape(path, up, dn) called with NO gaps
+                             #    -> GAP_AT_CUTOFF unreachable; NO bn_recv_ns
+                             #    -> freshness family CONSTANT. Neither errors.
+                             #  * 21-column pin of 53 emitted fields; fill-shares
+                             #    and exec-vs-cancel dropped entirely.
+                             #  * float(sfe.get(k) or 0.0) ZERO-IMPUTES None --
+                             #    and level_size_vel_{50,250,1000}ms are pinned
+                             #    WITHOUT their level_vel_missing_* guards, so a
+                             #    missing velocity becomes 0.0 with nothing to
+                             #    say so. That is the exact distinction the
+                             #    family exists to preserve (TODO §4).
+                             #  * DA emitted `status`, COLLIDING with the
+                             #    exposure row's `status` (fill-horizon vs
+                             #    state-computability). Consumer filtered on
+                             #    theirs; 27,552 PRE_WINDOW state rows went
+                             #    through unread. DA's key is RENAMED to
+                             #    `state_status` -- that collision was DA's
+                             #    defect, not BE's.
+                             # DECLARED SCHEMA now emitted BY the builder:
+                             #   python3 live/pm_research/harmful_state_features.py --schema
+                             #   -> data/pm_5min/derived/da_pred_state_v1_schema.json
+                             # Derived by RUNNING the builder so it cannot drift.
+                             # Names REQUIRED_INPUTS (gaps, bn_recv_ns) and the
+                             # CONSUMPTION_CONTRACT (never zero-impute, carry
+                             # feature_asof, honour state_status). The corrected
+                             # rerun must wire to THIS, not re-derive it.
+                             # Selftests 67 -> 98. # 2026-08-26 DA, c4621af, Q-DA-71.
                              # live/pm_research/harmful_state_features.py,
                              # TODO §4 family declared IN FULL before any
                              # result. 67-check battery; AST guard proves no
