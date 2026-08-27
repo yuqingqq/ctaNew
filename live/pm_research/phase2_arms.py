@@ -38,6 +38,66 @@ sys.path.insert(0, _ROOT)
 import phase2_declaration as D
 
 
+PM_DATA_ROOT = Path("/home/yuqing/ctaNew")
+
+
+def pin_data_root() -> None:
+    """Point every data-deriving module at the REAL tree, then PROVE it loads.
+
+    R-214 / fourth appearance of this class. `flow_intensity` computes
+    `REPO = Path(__file__).resolve().parents[2]`, so running the FIT from a
+    snapshot silently relocated its DATA root: fi.PM pointed inside the
+    snapshot, DAYS/_archive_paths/token_map all returned 0, and every fragment
+    row dropped as `no_archive` -- 1,125,289 of them, quietly.
+
+    R-212 pinned this stage's IMPORTS and not its DATA. BE had written that
+    code isolation and data location are separate concerns, then carried only
+    the first across. Values COMPUTED AT IMPORT from a path (DAYS) are stale
+    after rebinding it, so they are recomputed here."""
+    import harmful_hazard_model as _hm
+    fi = _hm.fi
+    pm = PM_DATA_ROOT / "data/pm_5min"
+    fi.REPO = PM_DATA_ROOT
+    fi.PM = pm
+    fi.RAW = pm / "raw"
+    fi.GAPS = pm / "collector_gaps.jsonl"
+    fi.MARKETS = pm / "markets.jsonl"
+    for name in ("PM", "RAW", "GAPS", "MARKETS"):
+        q = getattr(fi, name)
+        if not q.exists():
+            raise RuntimeError(f"REFUSED: pinned {name} = {q} does not exist.")
+    if hasattr(fi, "_discover_days"):
+        fi.DAYS = fi._discover_days()
+
+    # SAME-INSTANCE PREFLIGHT (R-202): probe REAL slugs through the lookups
+    # THE FIT PERFORMS, not merely check that maps are non-empty. Loading a
+    # map is not the lookup; the builder learned that and this stage did not.
+    tok, pth = fi.token_map(), fi._archive_paths()
+    counts = {"token_map": len(tok), "archive_paths": len(pth),
+              "DAYS": len(fi.DAYS)}
+    empty = [k for k, v in counts.items() if v == 0]
+    if empty:
+        raise RuntimeError(
+            f"REFUSED: fit inputs load EMPTY after pinning: {empty}. "
+            f"Counts: {counts}. Paths that look right while the data does not "
+            f"load is the state that dropped every row as no_archive.")
+    probe = []
+    for src in (FRAGMENT, TOPUP):
+        if src.exists():
+            d = json.loads(src.read_text())
+            probe += sorted({r["slug"] for r in d["rows"][:20000]})[:12]
+    probe = sorted(set(probe))
+    if probe:
+        hit = [x for x in probe if x in tok and x in pth]
+        if len(hit) < len(probe):
+            raise RuntimeError(
+                f"REFUSED: fit row-path probe matched {len(hit)}/{len(probe)} "
+                f"REAL population slugs. The maps load but the lookup the fit "
+                f"performs does not resolve them.")
+        counts["row_path_probe"] = f"{len(hit)}/{len(probe)}"
+    print(f"  fit data root pinned; inputs {counts}", flush=True)
+
+
 def assert_modules_under_root() -> None:
     """Every pinned module must have loaded from THIS tree.
 
@@ -348,6 +408,18 @@ def _feature_pass(src: Path, population: str, TAPE=None) -> dict:
                              ("slug", "day", "t0", "t_start", "side", "gen",
                               "latency", "coin")})
             streams.pop(slug, None)
+        # R-214: an ABSORPTION BOUND on the FIT's drops. The builder's bound
+        # covers its own skip_counts and never reached here, so a 100% input
+        # failure read as a quiet all-drop instead of a refusal -- the exact
+        # defect the bound exists to prevent, in the stage it did not cover.
+        _in = len(kept) + sum(drops.values())
+        for _k, _n in sorted(drops.items()):
+            if _in and _n / _in > 0.01:
+                raise RuntimeError(
+                    f"REFUSED: fit drop `{_k}` covers {_n:,} of {_in:,} rows "
+                    f"({_n/_in:.1%}) for {coin}, above the 1% absorption "
+                    f"bound. Drops absorb row-level anomalies, never total "
+                    f"input failures. All drops: {drops}")
         out[coin] = {"PM": PM, "FN": FN, "ST": ST, "kept": kept, "drops": drops}
         print(f"  [{population}/{coin}] kept {len(kept)} rows, drops {drops}",
               flush=True)
@@ -621,6 +693,7 @@ def stage_fit() -> None:
     import numpy as np
     import phase2_embargo as EMB
     assert_modules_under_root()
+    pin_data_root()
     assert_tape_is_v5()                              # committed-ref v5 build
     _v = assert_gate_passed()                        # (i) contract valid
     assert_verdict_subject_is(TAPE_PATH, _v)         # (ii) about THIS tape
@@ -847,6 +920,7 @@ def stage_score() -> dict:
     import numpy as np
 
     assert_modules_under_root()
+    pin_data_root()
     assert_tape_is_v5()
     _v = assert_gate_passed()
     assert_verdict_subject_is(TAPE_PATH, _v)

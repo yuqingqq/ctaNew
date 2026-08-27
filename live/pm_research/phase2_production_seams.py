@@ -557,6 +557,38 @@ def main() -> int:
          "LEDGER_PATH" in _src30 and "ledger_sha256" in _src30,
          "the live ledger grows, so two builds can legitimately disagree")
 
+    # ---- SEAM 31 (R-214): the FIT must load DATA, not just isolate imports
+    # The same seam gap the builder's seam 20 had before its data-root case:
+    # asserting import isolation says nothing about whether the data resolves.
+    # This fires by construction if the fit stage loses its data-root pin.
+    _a31 = inspect.getsource(PA)
+    seam("31a the fit stage PINS its data root",
+         "def pin_data_root" in _a31,
+         "R-212 pinned the fit's IMPORTS and never its DATA root")
+    seam("31b both entry points call it BEFORE reading",
+         "pin_data_root()" in inspect.getsource(PA.stage_fit)
+         and "pin_data_root()" in inspect.getsource(PA.stage_score))
+    # BEHAVIOURAL: run the real pin and require it to report loaded inputs
+    import io as _io31, contextlib as _cl31
+    _buf31 = _io31.StringIO()
+    try:
+        with _cl31.redirect_stdout(_buf31):
+            PA.pin_data_root()
+        _o31 = _buf31.getvalue()
+        seam("31c the pin proves the DATA LOADS (row-path probe over real slugs)",
+             "row_path_probe" in _o31 and "/" in _o31.split("row_path_probe")[1][:12],
+             f"pin said: {_o31.strip()[:110]}")
+        seam("31d archive_paths is non-empty (the input that dropped every row)",
+             "'archive_paths': 0" not in _o31)
+    except RuntimeError as _e31:
+        seam("31c the pin proves the DATA LOADS (row-path probe over real slugs)",
+             False, f"pin REFUSED: {_e31}")
+        seam("31d archive_paths is non-empty", False, "pin refused")
+    seam("31e the FIT has its own drop absorption bound",
+         "absorption\n" in _a31 or "fit drop" in _a31,
+         "the builder's bound covers skip_counts and never reached the fit, so "
+         "a 100% no_archive failure read as a quiet all-drop")
+
     print(f"\n{'PRODUCTION SEAMS GREEN' if not FAILURES else 'PRODUCTION SEAMS RED'}: "
           f"{len(FAILURES)} failing")
     for f in FAILURES:
