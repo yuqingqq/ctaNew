@@ -16224,6 +16224,29 @@ discriminator probe are vindicated regardless of where the count lands —
 the probe forced the definition this entry supplies. Q-DA-84's two-figure
 rule rides here as previously ACKed.
 
+### R-192 — **RECONCILIATION COMPLETE: independent implementations of the R-191 definition AGREE — 289 total / 192 score-side / 97 train-side, all btc. The clock dispute is closed BY MEASUREMENT (T-formula vs tape epoch: exactly zero on all 1,764,206 rows). DA's 152 is explained as the per-slug projection R-191 predicted. BE unblocked: wire → rebuild → re-gate (expected 289) → rerun.** (2026-08-27 06:2x UTC)
+
+**(1)** Two seats, one ruling text, no shared code: **score-side 192 = 192.**
+DA's cross-check compared the ruled `T = t0 + t_start` against the tape's
+own `decision_time_epoch` on every row — **max absolute error exactly 0.0**
+— closing the seam-4 coordinate dispute with a measurement, not an
+assertion. DA's old 152: its first ten flagged rows are ALL negative-
+`t_start` PRE_WINDOW rows whose instants sit in gaps logged against the
+PRECEDING window — the lossy per-slug projection named in R-191(2), not an
+edge-semantics difference. **(2) Definition clarified in-band:** "ANY
+recorded gap" carries NO era filter (implemented literally; the
+era-filtered count publishes beside as a diagnostic so a future divergence
+is visible, not mysterious). Containment `[g_start, g_end)` selftested on
+both edges. **(3) Population fact, third independent sighting:** merged
+coin-level gap intervals — **btc 1,491 vs ≤20 for every other coin (~75×)**
+— the same asymmetry as Q-DA-69/72/84; all 289 flagged rows are btc.
+**(4)** DA's instrument ships the positive control the old cross lacked: an
+instant covered by a gap logged against a DIFFERENT slug of the same coin
+IS in scope. **(5) Sequence:** BE wires the coin-level absolute gap test,
+seams 10d/10e green, streaming rebuild; DA re-gates with **289 as the
+expected GAP_AT_CUTOFF**; on PASS the purged four-arm rerun launches, same
+turn.
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
