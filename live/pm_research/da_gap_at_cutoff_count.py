@@ -49,13 +49,19 @@ PM_GAPS = REPO / "data/pm_5min/collector_gaps.jsonl"
 ERA = "clob_v3_1"
 
 
-def coin_gaps(path: Path = PM_GAPS, era: str | None = None
+def coin_gaps(path: Path | None = None, era: str | None = None
               ) -> tuple[dict[str, list[tuple[float, float]]], dict[str, int]]:
     """COIN -> sorted absolute [g_start, g_end) intervals, from the ledger.
 
     The ledger is the physical source of truth (R-191(2)). Malformed lines are
     COUNTED, never silently dropped.
     """
+    # RESOLVED AT CALL TIME, deliberately. `path: Path = PM_GAPS` binds the
+    # default when the function is DEFINED, so reassigning the module-level
+    # PM_GAPS afterwards does nothing -- a test that believed it had injected a
+    # fixture silently measured the PRODUCTION ledger instead. Caught on my own
+    # new cross-tab test, whose synthetic gap never reached the counter.
+    path = PM_GAPS if path is None else path
     out: dict[str, list[tuple[float, float]]] = collections.defaultdict(list)
     diag = collections.Counter()
     for line in path.read_text(encoding="utf-8").splitlines():
@@ -141,6 +147,8 @@ def count(tape: Path, era: str | None = None) -> dict[str, Any]:
     max_epoch_err = 0.0
     epoch_checked = 0
     missing_fields = collections.Counter()
+    pred_true_status: collections.Counter = collections.Counter()
+    unflagged_rows: list[dict[str, Any]] = []
     for r in G.iter_tape(tape):
         n_rows += 1
         coin, t0, ts = r.get("coin"), r.get("t0"), r.get("t_start")
@@ -181,6 +189,22 @@ def count(tape: Path, era: str | None = None) -> dict[str, Any]:
                 total[lab] += 1
         if in_gap(iv, T):
             total["flagged"] += 1
+            # R-212 ROW-LEVEL DIFF. "flagged" here means PREDICATE-TRUE under
+            # the ruled definition -- it is NOT the tape's status, and keeping
+            # the two words apart is the whole point of this cross-tab. If the
+            # two implementations disagree by 3, those 3 rows carry SOME tape
+            # status; naming it is the difference between a diff and a guess.
+            _st = str(r.get("state_status", "__ABSENT__"))
+            pred_true_status[_st] += 1
+            if _st != "GAP_AT_CUTOFF":
+                # every one of them, not a sample: a discrepancy of 3 is not
+                # something to report the first 10 of.
+                unflagged_rows.append({
+                    "slug": r.get("slug"), "coin": coin, "side": r.get("side"),
+                    "gen": r.get("gen"), "t0": t0, "t_start": ts,
+                    "T_absolute": round(T, 6), "split": r.get("split"),
+                    "state_status": _st,
+                    "decision_time_epoch": r.get("decision_time_epoch")})
             by_coin[coin] += 1
             sp = str(r.get("split", "?"))
             by_split[sp] += 1
@@ -193,11 +217,27 @@ def count(tape: Path, era: str | None = None) -> dict[str, Any]:
                     "state_status": r.get("state_status")})
     return {
         "instrument": "da_gap_at_cutoff_count_v1",
+        "predicate_true_by_tape_status": dict(pred_true_status),
+        "predicate_true_not_flagged": unflagged_rows,
+        "n_predicate_true_not_flagged": len(unflagged_rows),
+        "diff_note": ("`flagged` = PREDICATE-TRUE under the ruled definition, "
+                      "NOT the tape's status. predicate_true_by_tape_status "
+                      "cross-tabs the two: a row can satisfy the predicate and "
+                      "carry a different status if the builder assigns one "
+                      "status per row by precedence. Precedence between "
+                      "GAP_AT_CUTOFF and other statuses has NOT been ruled -- "
+                      "this instrument reports the rows and does not decide "
+                      "(rule 14)."),
         "definition": "T = t0 + t_start in [g_start, g_end) of ANY gap of that "
                       "COIN in the collector-gaps ledger (R-191(2))",
         "era_filter": era,
         "tape": str(tape),
         "n_rows": n_rows,
+        # NAME CAUTION (kept, not renamed -- 289 was exchanged under this key
+        # and moving it mid-dispute would be its own name-drift): this is the
+        # count of rows the RULED PREDICATE is true of, NOT the count of rows
+        # the tape STATUSES as GAP_AT_CUTOFF. Those are the two numbers now in
+        # dispute, so read predicate_true_by_tape_status beside it.
         "GAP_AT_CUTOFF_total": total["flagged"],
         "by_coin": dict(by_coin),
         "by_split": dict(by_split),
@@ -249,6 +289,57 @@ def _selftests() -> int:
         checks += 1
         if not c:
             raise AssertionError(f"selftest failed: {label}")
+
+    # ---- R-212 cross-tab: it must SEPARATE predicate-true from tape status --
+    import tempfile as _tf
+    global PM_GAPS
+    _realg = PM_GAPS
+    try:
+        with _tf.TemporaryDirectory() as _td:
+            _g = Path(_td) / "gaps.jsonl"
+            _g.write_text(json.dumps({
+                "event": "gap_closed", "coin": "btc", "slug": "btc-1000",
+                "gap_start_ns": int(1000.0 * 1e9),
+                "gap_end_ns": int(2000.0 * 1e9)}), encoding="utf-8")
+            PM_GAPS = _g
+            _t = Path(_td) / "tape.json"
+            # three rows INSIDE the gap: one correctly flagged, two masked by
+            # some other status -- exactly the shape a 3-row discrepancy takes
+            _rows = [
+                {"slug": "btc-1", "coin": "btc", "t0": 1500.0, "t_start": 0.0,
+                 "state_status": "GAP_AT_CUTOFF"},
+                {"slug": "btc-2", "coin": "btc", "t0": 1500.0, "t_start": 1.0,
+                 "state_status": "PRE_WINDOW"},
+                {"slug": "btc-3", "coin": "btc", "t0": 1500.0, "t_start": 2.0,
+                 "state_status": "NO_LEVEL_HISTORY"},
+                {"slug": "btc-4", "coin": "btc", "t0": 9000.0, "t_start": 0.0,
+                 "state_status": "OK"},          # outside the gap entirely
+            ]
+            _t.write_text(json.dumps({"rows": _rows}), encoding="utf-8")
+            _rep = count(_t)
+            ok(_rep["GAP_AT_CUTOFF_total"] == 3,
+               "three rows satisfy the ruled predicate (the fourth is outside)")
+            ok(_rep["predicate_true_by_tape_status"]
+               == {"GAP_AT_CUTOFF": 1, "PRE_WINDOW": 1, "NO_LEVEL_HISTORY": 1},
+               "the cross-tab SEPARATES predicate-true from the tape's status "
+               "-- a count alone cannot tell 3 flagged from 1 flagged + 2 masked")
+            ok(_rep["n_predicate_true_not_flagged"] == 2,
+               "the masked rows are counted")
+            _slugs = sorted(x["slug"] for x in _rep["predicate_true_not_flagged"])
+            ok(_slugs == ["btc-2", "btc-3"],
+               "and NAMED individually -- a 3-row discrepancy is not something "
+               "to report the first ten of")
+            # FALSIFIER: with every row correctly flagged there must be NO
+            # masked rows, or the instrument would 'find' masking anywhere
+            _rows2 = [dict(r, state_status="GAP_AT_CUTOFF") for r in _rows[:3]]
+            _t.write_text(json.dumps({"rows": _rows2}), encoding="utf-8")
+            _rep2 = count(_t)
+            ok(_rep2["n_predicate_true_not_flagged"] == 0
+               and _rep2["GAP_AT_CUTOFF_total"] == 3,
+               "a fully-flagged tape reports ZERO masked rows -- the cross-tab "
+               "can come back empty, so a non-empty answer means something")
+    finally:
+        PM_GAPS = _realg
 
     iv = [(100.0, 200.0), (300.0, 400.0)]
     ok(in_gap(iv, 100.0), "LOWER bound is INCLUSIVE")
