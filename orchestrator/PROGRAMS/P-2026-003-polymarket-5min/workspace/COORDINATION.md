@@ -16392,6 +16392,18 @@ Ratified in full. (a) The drill is the gate's owed falsifier evidence: refused t
 
 **Assignments:** BE — fixes 1/2/3/5, builder side of 4 (env-ref + `__file__` import root + probe), fixture seams 17–21. DA — verifier side of 4 (`builder_ref` field), wrapper fix + seam 22 in its own suite, re-arm for tape6, verdict-artifact emission. **tape6 launches only after ALL seams green**, from a snapshot of the fix commit with `BUILD_REF` on the unit line, unit `be-tape6-<ref>`, output `phase2_state_tape_v5.json` (fresh path — nothing occupies it), gate triple re-registered (289 · 493 present-and-UNFLAGGED · provenance = the new pin). Fitting stays blocked until that gate PASS. Forward race untouched; day-one verify 08-28T00:06Z.
 
+### R-200 — coordinator (2026-08-27T08:24Z): sprint v4 GREEN coordinator-verified at 4499f2b — tape6 cleared; pin issued; empty-side ruling; unit-success lesson; R-199 header time corrected
+
+**(1) Verification (mine, not relayed).** At clean tree = `4499f2bc3d1849aa97ba61d211ab75f329a8fdf7`: production seams 17–21 **13/13 GREEN** and integration seams 1–16 **GREEN**, both fixtures run by the coordinator at 08:2xZ. BE's fixes (2d48e11 + 4499f2b) cover the five R-199 items **plus four additional defects that ONLY the production-entry fixture revealed** — the strongest possible confirmation of the R-199 seam rule (a capability assertion without a wiring assertion is half a test). DA's dee5242 (seam 22 both-directions with rc-preservation; `builder_ref` accepted with `builder_commit` deliberately REJECTED — a stale sibling cannot outrank the ruled field; verdict artifact naming its subject by path AND content prefix, `all_pass` recomputed-never-carried) is RATIFIED as filed.
+
+**(2) Empty-side embargo RULING (from seam 17a's live fire):** an empty side is a population statement, not an error — the purge treats it as VACUOUS with an explicit per-side status (`n=0, purge N/A`, third-state pattern) carried into the receipt (rules 4+8); emptiness ENFORCEMENT belongs to the gate (`dataset_non_empty`), not the purge.
+
+**(3) STANDING LESSON (DA's observation, binds the coordinator too):** a systemd unit's `Result=success` is evidence of checker success ONLY where exit codes provably propagate. For simple builder units the unit code IS the process code; for any WRAPPER unit the habit reads swallowed refusals as passes. Seam 22 is now the propagation proof for the gate path.
+
+**(4) Correction (R-161 class, in-band):** R-199's header time reads 08:15Z; the true write time was **07:55Z** (I stamped before reading the clock). The git commit timestamp on 4c75805 is authoritative.
+
+**(5) tape6 CLEARED.** Pin = **4499f2b** (full hash above). BE: snapshot-launch per R-197 with `BUILD_REF=<full hash>` on the systemd-run line (builder refuses without it, never runs git, imports rooted at `__file__` with the isolation probe), unit `be-tape6-4499f2b`, output `phase2_state_tape_v5.json` (path empty since the kill), MemoryMax≤14G, OOMScoreAdjust=1000. DA: verify the pin's ancestry independently, re-arm the FIXED wrapper (`da_await_gate.sh`), triple re-registered: **289 · 493 at-g1 PRESENT-and-UNFLAGGED · provenance 4499f2b**; emit the verdict artifact. BE's fit stage requires the PASS verdict — on PASS, the purged four-arm rerun runs SAME TURN; receipt per R-184/R-194 requirements; then the freeze-B decision RETURNS TO THE USER (rule 12; the decision was never mine or the seats').
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
