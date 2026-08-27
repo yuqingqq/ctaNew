@@ -380,6 +380,22 @@ def _predicates(schema, n_rows, under, present, statuses, bn_vals, pair_bad,
           "no expected provenance supplied -- NOT ASSERTED by this run",
           applicable=False)
 
+    # A SKIPPED ROW IS INVISIBLE TO A ROW-STREAMING GATE. Every other
+    # predicate here inspects rows that EXIST; a builder that drops a slug
+    # shrinks the population and this gate would never know. The builder now
+    # counts such slugs as NO_TOKEN_MAP in its HEADER rather than raising
+    # (R-201 seam 23) -- so the header is the only place the loss is visible,
+    # and it has to be read. Expected zero on this population; non-zero is a
+    # population change, not a formatting detail.
+    hdr_counts = (header or {}).get("state_status_counts") or {}
+    skipped = {k: v for k, v in hdr_counts.items()
+               if k in ("NO_TOKEN_MAP", "NO_ARCHIVE", "SKIPPED") and v}
+    p("no_rows_skipped_by_builder", not skipped,
+      f"builder-side skip counters in the tape header: {skipped or 'none'}"
+      + ("  <-- rows were DROPPED before emission; the population is smaller "
+         "than the declaration implies and no row-level predicate can see it"
+         if skipped else ""))
+
     bad_status = sum(v for k, v in statuses.items()
                      if k not in set(schema["statuses"]) | {"__ABSENT__"})
     p("statuses_are_declared_values",
@@ -912,6 +928,21 @@ def _selftests() -> int:
         ok(v2["all_pass"] is False,
            "all_pass is RECOMPUTED from the predicate table, so a headline "
            "cannot disagree with the table beside it (rule 10 in artifact form)")
+
+    sk = lambda hdr: {q["predicate"]: q["pass"] for q in gate(good, schema, 0, hdr)}
+    ok(sk({"state_status_counts": {"OK": 5}})["no_rows_skipped_by_builder"],
+       "a header with no skip counters passes")
+    ok(not sk({"state_status_counts": {"OK": 5, "NO_TOKEN_MAP": 3}})
+       ["no_rows_skipped_by_builder"],
+       "a NON-ZERO NO_TOKEN_MAP fails -- rows dropped before emission are "
+       "invisible to every row-level predicate in this gate")
+    ok(sk({"state_status_counts": {"OK": 5, "NO_TOKEN_MAP": 0}})
+       ["no_rows_skipped_by_builder"],
+       "an explicit ZERO is a pass, not a failure -- the counter being present "
+       "and zero is the builder REPORTING no loss")
+    ok(sk({})["no_rows_skipped_by_builder"],
+       "no counters at all passes, since a builder that never skips need not "
+       "declare a zero")
 
     print(f"da_state_tape_verify selftests: {checks} checks passed")
     return 0
