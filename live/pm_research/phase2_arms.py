@@ -170,23 +170,137 @@ STATUS_DROP_NAME = {
 DESIGN_EXCLUSIONS = frozenset(STATUS_DROP_NAME.values())
 BOUNDED_DROPS     = ("state_join_failed",)          # expected 0, bound 1%
 
-# PRE-REGISTERED fit population, declared BEFORE any score exists (R-215(1)).
-# btc: 605,256 fragment rows - 26,339 non-OK tape rows = 578,917. Recorded here
-# so the number cannot be back-filled from a result: a fit that lands elsewhere
-# refuses, and the receipt reports the declared value beside the realised one.
+# ---- TWO-STAGE PARITY REGISTRATION (R-216), keyed by TAPE IDENTITY ---------
+# THE STAGE IS PART OF THE DECLARATION. be-fit3 refused because a number
+# declared for the post-join population was checked against the post-PURGE one:
+# 578,917 and 577,598 are both correct counts of DIFFERENT stages, and the
+# embargo purge (R-189) sits deliberately between them. A population count
+# without its pipeline stage is not a declaration, it is an ambiguity.
 #
-# KEYED BY TAPE IDENTITY, not by coin alone: a population count is a property of
-# the exact tape it was counted on, so it must not be asserted against a
-# different one. On any other tape the entry is absent, the check does not
-# apply, and the receipt says so with an explicit null rather than silently
-# reporting a match it never made.
+# So BOTH stages are registered, and the purge is an accounted step:
+#     ok_n            post-join, pre-purge: fragment rows whose tape row is OK
+#     embargo_purged  training rows removed by the 60s embargo
+#     fitted_n        the matrix every arm is fitted on
+# and the predicate asserts fitted_n + embargo_purged == ok_n == registered.
+#
+# EVIDENTIAL STATUS IS NOT UNIFORM ACROSS THESE THREE, and the receipt must say
+# so rather than let a reader assume all were declared blind:
+#   ok_n            PRE-REGISTERED before any score existed (R-215(1)).
+#   embargo_purged  RE-DECLARED after observing be-fit3's purge line, with the
+#   fitted_n        cause named (registration under-specification, not a
+#                   population movement -- every drop cell was identical to the
+#                   diagnostic and state_join_failed stayed 0). Deliberate
+#                   re-declaration under rule 11, NOT "adopting the new number".
+# A future tape re-registers all three blind; only THIS tape carries the split.
 PREREGISTERED_FIT_N = {
-    "c7ab02ebcf27d2fc": {"btc": 578917},   # tape6e, builder_ref ed9d572
+    "c7ab02ebcf27d2fc": {                      # tape6e, builder_ref ed9d572
+        "btc": {"ok_n": 578917, "embargo_purged": 1319, "fitted_n": 577598},
+        "eth": {"ok_n": 505904, "embargo_purged":  406, "fitted_n": 505498},
+    },
+}
+REGISTRATION_PROVENANCE = {
+    "ok_n": "PRE-REGISTERED before any score existed (R-215(1))",
+    "embargo_purged": "RE-DECLARED post-observation, cause named (R-216)",
+    "fitted_n": "RE-DECLARED post-observation, cause named (R-216)",
 }
 
-def preregistered_n(tape_sha16: str, coin: str):
-    """The declared population for this coin ON THIS TAPE, or None."""
-    return PREREGISTERED_FIT_N.get(tape_sha16, {}).get(coin)
+
+def registration(tape_sha16: str, coin: str, table: dict = None):
+    """The two-stage registration for this coin ON THIS TAPE, or None."""
+    tbl = PREREGISTERED_FIT_N if table is None else table
+    return tbl.get(tape_sha16, {}).get(coin)
+
+
+def preregistered_n(tape_sha16: str, coin: str, table: dict = None):
+    """The registered PRE-PURGE (ok_n) population, or None."""
+    r = registration(tape_sha16, coin, table)
+    return None if r is None else r["ok_n"]
+
+
+def assert_registration_arithmetic(table: dict = None) -> int:
+    """fitted_n + embargo_purged == ok_n, for every registered entry.
+
+    A registration whose own three numbers disagree cannot adjudicate a fit.
+    Checked at import-time cost of nothing, and callable so a seam can feed it
+    a deliberately inconsistent table and require a refusal."""
+    tbl = PREREGISTERED_FIT_N if table is None else table
+    n = 0
+    for sha, coins in tbl.items():
+        for coin, r in coins.items():
+            if r["fitted_n"] + r["embargo_purged"] != r["ok_n"]:
+                raise RuntimeError(
+                    f"REFUSED: registration for {coin} on tape {sha} is "
+                    f"internally inconsistent: fitted_n {r['fitted_n']:,} + "
+                    f"embargo_purged {r['embargo_purged']:,} != ok_n "
+                    f"{r['ok_n']:,}. The registration must reconcile before it "
+                    f"can adjudicate anything.")
+            n += 1
+    return n
+
+
+assert_registration_arithmetic()      # the table adjudicates nothing until it reconciles
+
+
+def assert_preregistered_population(FIT: dict, tape_sha16: str,
+                                    table: dict = None) -> dict:
+    """STAGE 1: the PRE-PURGE population, checked where the number is true.
+
+    Callable, and called immediately after the feature pass -- the stage the
+    declared ok_n actually describes."""
+    ev = {}
+    for coin, f in FIT.items():
+        n = len(f["kept"])
+        r = registration(tape_sha16, coin, table)
+        ev[coin] = {"population_pre_purge": n,
+                    "registered_ok_n": None if r is None else r["ok_n"],
+                    "registered_embargo_purged": (None if r is None
+                                                  else r["embargo_purged"]),
+                    "registered_fitted_n": None if r is None else r["fitted_n"],
+                    "preregistration_key": tape_sha16,
+                    "registration_provenance": dict(REGISTRATION_PROVENANCE),
+                    "matches_ok_n": None if r is None else n == r["ok_n"]}
+        if r is not None and n != r["ok_n"]:
+            raise RuntimeError(
+                f"REFUSED: {coin} PRE-PURGE population is {n:,} rows but ok_n "
+                f"{r['ok_n']:,} is REGISTERED for tape {tape_sha16}. Same stage, "
+                f"different counts: this is a real population move. Name the "
+                f"cause and re-declare deliberately, never adopt the new "
+                f"number. drops={f.get('drops')}")
+    return ev
+
+
+def assert_fitted_population(coin: str, fitted_n: int, purged: int,
+                             ev: dict) -> dict:
+    """STAGE 2: the fitted matrix, AND the purge reconciliation.
+
+    Asserts fitted_n == registered fitted_n AND that the observed purge closes
+    the arithmetic back to ok_n -- so the gap between the declared and fitted
+    counts is attributed to a named step, never absorbed (rule 4)."""
+    pre = ev.get("population_pre_purge")
+    reconciles = (pre is not None and pre - purged == fitted_n)
+    out = {"fitted_population": fitted_n, "purged_rows_embargo": purged,
+           "population_pre_purge": pre, "purge_reconciles": reconciles,
+           "registered_fitted_n": ev.get("registered_fitted_n"),
+           "registered_embargo_purged": ev.get("registered_embargo_purged"),
+           "matches_registered_fitted_n": (
+               None if ev.get("registered_fitted_n") is None
+               else fitted_n == ev["registered_fitted_n"]),
+           "matches_registered_purge": (
+               None if ev.get("registered_embargo_purged") is None
+               else purged == ev["registered_embargo_purged"])}
+    if not reconciles:
+        raise RuntimeError(
+            f"REFUSED: {coin} purge does not reconcile: pre-purge {pre!r} - "
+            f"purged {purged:,} != fitted {fitted_n:,}. Rows left the "
+            f"population through an unaccounted path.")
+    for _k, _lbl in (("matches_registered_fitted_n", "fitted_n"),
+                     ("matches_registered_purge", "embargo_purged")):
+        if out[_k] is False:
+            raise RuntimeError(
+                f"REFUSED: {coin} {_lbl} disagrees with its registration "
+                f"(observed vs registered: {out}). Re-declare deliberately "
+                f"with the cause named; never adopt the new number.")
+    return out
 
 
 def assert_tape_is_v5(path: Path = None) -> dict:
@@ -798,6 +912,16 @@ def stage_fit() -> None:
     TP = tape_index("train")
     print(f"  tape rows indexed: {len(TP):,}", flush=True)
     FIT = _feature_pass(FRAGMENT, "fragment", TAPE=TP)
+    # The pre-registration is checked HERE, on the pre-purge population, because
+    # that is the stage it declares. Checked after the purge it compares two
+    # different quantities and refuses on their difference.
+    _ident = _tape_identity()
+    _tape_sha16 = _ident["tape_sha256_prefix"]
+    _prereg = assert_preregistered_population(FIT, _tape_sha16)
+    for _c, _e in sorted(_prereg.items()):
+        if _e["registered_ok_n"] is not None:
+            print(f"  [prereg/{_c}] pre-purge {_e['population_pre_purge']:,} == "
+                  f"registered ok_n {_e['registered_ok_n']:,} OK", flush=True)
     # APPLY the purge -- recording a violation is not applying it (R-187 seam 3)
     print("  indexing score split for the embargo boundary...", flush=True)
     SP = tape_index("score")
@@ -863,10 +987,6 @@ def stage_fit() -> None:
                     "numbers on both sides of the seam (R-189).",
         }
     del SP, score_probe
-    # _tape_identity() hashes the whole 3.17GB tape, so it is computed ONCE
-    # and reused by both the parity key and the completion manifest.
-    _ident = _tape_identity()
-    _tape_sha16 = _ident["tape_sha256_prefix"]
     _parity: dict = {}
     for coin in list(FIT):
         f = FIT[coin]
@@ -979,28 +1099,27 @@ def stage_fit() -> None:
                 f"only in features -- an unpaired arm makes every between-arm "
                 f"delta uninterpretable. Missing arms: "
                 f"{sorted(set(D.ARMS) - set(_arm_n))}; mismatched: {_bad}.")
-        _pre = preregistered_n(_tape_sha16, coin)
-        if _pre is not None and _expect != _pre:
-            raise RuntimeError(
-                f"REFUSED: {coin} fit population is {_expect:,} rows but "
-                f"{_pre:,} was PRE-REGISTERED before any score existed "
-                f"(R-215(1)). A population that moved between declaration and "
-                f"fit invalidates the declaration; re-declare deliberately, "
-                f"with the cause named, rather than adopting the new number. "
-                f"drops={f['drops']}")
-        _parity[coin] = {"declared_population": _expect, "per_arm_n": dict(_arm_n),
-                         "all_arms_same_n": (len(set(_arm_n.values())) == 1
-                                             and set(_arm_n) == set(D.ARMS)),
-                         "n_arms": len(_arm_n), "n_arms_declared": len(D.ARMS),
-                         "preregistered_n": _pre,
-                         "preregistration_key": _tape_sha16,
-                         "matches_preregistration": (None if _pre is None
-                                                     else _expect == _pre),
-                         "drops": dict(f["drops"])}
+        # STAGE 2: the fitted matrix and the purge reconciliation. Both the
+        # count and the arithmetic back to ok_n are asserted, so the gap
+        # between declared and fitted is attributed to a named step (rule 4).
+        _pp = _prereg.get(coin, {})
+        _fit_ev = assert_fitted_population(coin, _expect,
+                                           f.get("purged_rows", 0), _pp)
+        _parity[coin] = dict(_fit_ev)
+        _parity[coin].update({
+            "per_arm_n": dict(_arm_n),
+            "all_arms_same_n": (len(set(_arm_n.values())) == 1
+                                and set(_arm_n) == set(D.ARMS)),
+            "n_arms": len(_arm_n), "n_arms_declared": len(D.ARMS),
+            "registered_ok_n": _pp.get("registered_ok_n"),
+            "matches_ok_n": _pp.get("matches_ok_n"),
+            "preregistration_key": _pp.get("preregistration_key"),
+            "registration_provenance": _pp.get("registration_provenance"),
+            "drops": dict(f["drops"])})
         print(f"  [fit/{coin}] persisted linear + lgbm; rows {len(f['kept'])}, "
               f"positive {sum(yF)}; parity {len(_arm_n)}/{len(D.ARMS)} arms "
-              f"@ n={_expect:,}"
-              + (f" (pre-registered {_pre:,} OK)" if _pre else ""), flush=True)
+              f"@ fitted_n={_expect:,} (ok_n {_pp.get('population_pre_purge'):,} "
+              f"- {f.get('purged_rows', 0):,} purged, reconciles)", flush=True)
         del XF, Xf, A, FIT[coin]["PM"], FIT[coin]["FN"], FIT[coin]["ST"]
     (FITDIR / "empty_coins.json").write_text(json.dumps(empty_coins))
     if not FIT:

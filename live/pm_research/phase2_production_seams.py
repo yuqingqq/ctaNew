@@ -708,10 +708,86 @@ def main() -> int:
          "that table three times in this repo (CLAUDE.md rule 10)")
     seam("33f the bounded counter cannot be silently renamed away",
          "bounded drop counter" in inspect.getsource(PA._feature_pass))
-    seam("33d the pre-registered n is keyed by TAPE identity",
+    seam("33d the registration is keyed by TAPE identity",
          PA.preregistered_n("c7ab02ebcf27d2fc", "btc") == 578917
          and PA.preregistered_n("0" * 16, "btc") is None,
          "a population count asserted against the wrong tape is not a check")
+
+    # ---- SEAM 34 (R-216): TWO-STAGE registration, and the stage is part of
+    # the declaration. be-fit3 refused a HEALTHY fit because ok_n (post-join,
+    # 578,917) was checked against the post-PURGE matrix (577,598). Both counts
+    # were correct; the embargo purge sits deliberately between them. These
+    # enter at the CALLABLE predicates -- which is why they are callable.
+    _REG = {"t": {"btc": {"ok_n": 100, "embargo_purged": 10, "fitted_n": 90}}}
+
+    seam("34a the registration reconciles: fitted_n + purged == ok_n",
+         PA.assert_registration_arithmetic() >= 2)
+    try:
+        PA.assert_registration_arithmetic(
+            {"t": {"btc": {"ok_n": 100, "embargo_purged": 5, "fitted_n": 90}}})
+        seam("34b an INCONSISTENT registration is REFUSED", False,
+             "a registration whose own numbers disagree cannot adjudicate a fit")
+    except RuntimeError as _e:
+        seam("34b an INCONSISTENT registration is REFUSED",
+             "internally inconsistent" in str(_e))
+
+    # stage 1 is checked on the PRE-PURGE population -- the be-fit3 class
+    _FITok = {"btc": {"kept": [0] * 100, "drops": {}}}
+    try:
+        _ev = PA.assert_preregistered_population(_FITok, "t", _REG)
+        seam("34c stage 1 passes on the PRE-PURGE count", _ev["btc"]["matches_ok_n"])
+        _f = PA.assert_fitted_population("btc", 90, 10, _ev["btc"])
+        seam("34d stage 2 accepts the post-purge matrix (the be-fit3 case)",
+             _f["purge_reconciles"] and _f["matches_registered_fitted_n"],
+             "the fit be-fit3 refused must now pass: 100 -> 90 with 10 purged")
+    except Exception as _e:
+        seam("34c stage 1 passes on the PRE-PURGE count", False, f"{_e}")
+        seam("34d stage 2 accepts the post-purge matrix (the be-fit3 case)",
+             False, f"{_e}")
+
+    # a REAL population move at stage 1 must still refuse
+    try:
+        PA.assert_preregistered_population({"btc": {"kept": [0] * 99,
+                                                    "drops": {}}}, "t", _REG)
+        seam("34e a REAL pre-purge move still REFUSES", False,
+             "widening the stage must not have widened the check")
+    except RuntimeError as _e:
+        seam("34e a REAL pre-purge move still REFUSES", "population move" in str(_e))
+
+    # rows leaving through an UNACCOUNTED path must refuse
+    try:
+        PA.assert_fitted_population("btc", 88, 10,
+                                    {"population_pre_purge": 100,
+                                     "registered_fitted_n": 90,
+                                     "registered_embargo_purged": 10})
+        seam("34f an UNRECONCILED purge is REFUSED", False,
+             "100 - 10 != 88: rows left through a path nothing accounts for")
+    except RuntimeError as _e:
+        seam("34f an UNRECONCILED purge is REFUSED", "does not reconcile" in str(_e))
+
+    # a purge count that disagrees with its registration must refuse
+    try:
+        PA.assert_fitted_population("btc", 85, 15,
+                                    {"population_pre_purge": 100,
+                                     "registered_fitted_n": 90,
+                                     "registered_embargo_purged": 10})
+        seam("34g a purge DISAGREEING with its registration is REFUSED", False,
+             "reconciling internally is not the same as matching what was declared")
+    except RuntimeError as _e:
+        seam("34g a purge DISAGREEING with its registration is REFUSED",
+             "never adopt the new number" in str(_e))
+
+    seam("34h evidential status is recorded, not assumed uniform",
+         set(PA.REGISTRATION_PROVENANCE) == {"ok_n", "embargo_purged", "fitted_n"}
+         and "PRE-REGISTERED" in PA.REGISTRATION_PROVENANCE["ok_n"]
+         and "RE-DECLARED" in PA.REGISTRATION_PROVENANCE["fitted_n"],
+         "ok_n was declared blind; fitted_n and the purge were re-declared after "
+         "observation with the cause named -- a reader must not assume all three "
+         "carry the same weight")
+    seam("34i stage 1 runs BEFORE the purge in the real stage_fit",
+         inspect.getsource(PA.stage_fit).index("assert_preregistered_population")
+         < inspect.getsource(PA.stage_fit).index("EMB.purge_training"),
+         "checked after the purge, it compares two different stages -- be-fit3")
 
     print(f"\n{'PRODUCTION SEAMS GREEN' if not FAILURES else 'PRODUCTION SEAMS RED'}: "
           f"{len(FAILURES)} failing")
