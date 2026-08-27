@@ -1,6 +1,49 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-08-27 (DA) — **R-211(3) per-coin rule shipped; tape6d gate armed; 08-27 judged whole-day tonight.**
+Updated: 2026-08-27 (DA) — **tape6d REFUSED as pre-registered; tape6e armed at ed9d572 on a pinned ledger.**
+
+## 2026-08-27 (DA, ~12:0xZ) — tape6d gated and REFUSED; rebuild armed at ed9d572 on a pinned ledger
+
+**DONE.** **(1) tape6d gate REFUSED as pre-registered** — `gap_count_matches_expected`
+FAIL (286 vs 289) and `half_open_containment_landed` FAIL (493 at-g1, 1 flagged).
+Verdict bridged to the ruled locator; `assert_gate_passed` refused; fit blocked
+by the machinery. **(2) ROW-LEVEL DIFF — both hypotheses refuted.** Status-masking
+refuted (the 4 rows carry `OK`, nothing competes). Adjacency refuted from the
+ledger alone (btc 1632 raw gaps, **0 touching, 0 overlapping**). **My own
+replacement mechanism — the complement interval `(g0, g1]` — was WRONG and
+withdrawn one test later**: 493 rows sit on a g1 and only 1 is flagged, so the
+upper edge agrees 492/493. The tidiness was the tell. **(3) CENSUS gave the
+denominators a disagreement-only diff cannot**: at-g0 **4/4 systematic**; at-g1
+splits perfectly by t_start sign **but the negative cell is n=1 and the tape holds
+exactly one such row — the sample is EXHAUSTED, not thin**. Interior 285/285
+agreed, outside 1,763,424 clean: **the edges are the only disagreement classes**.
+Classes partition to n_rows and both disputed numbers reconstruct from
+independent cells (289 = 4+285, 286 = 285+1). **(4) BE's ed9d572 mechanism beats
+mine and retro-explains the n=1**: the projection subtracted t0 from ~1.79e9
+where a float ULP is 2.4e-7s, so edge equality survives for some values and not
+others — one cause, both edges; never a warm-up *convention*. Verified at the
+call sites: one comparison, feature path handed `gaps=()` (retired, not
+corrected). **(5) SEAM 30 does NOT test the fix** — source-text greps, a local
+re-implementation, an `X and X` tautology that cannot fail, an unused import.
+Root: `gap_contains` nested in `main()`, uncallable — same class as Q-DA-98,
+same file. Ruled non-blocking; **DA's counter is the citation**; debt bound to one
+BE commit. **(6) `gate_code` was absent from the written verdict** (verify()
+computed it, write_verdict dropped it) — third *present-upstream/absent-
+downstream* instance; fixed with the class (unlisted field REFUSES the write).
+
+**IN PROGRESS.** `da-gate-tape6e-ed9d572.service` polling. **Ledger PIN**
+`ledger_pin_tape6e.jsonl` sha `6cb3a027e25fb5df…`, 3494 lines, chmod 444,
+write-once. Registration **measured against the pin**: 289 / at-g0 4 / at-g1 493.
+Gate AND counter both read the pin. Ruled locator cleared by RENAME so a refusal
+leaves absence. Persistent Monitor watches the gate log (two session-scoped
+watchers were killed — R-147(2) again: durable work in units, notifications are
+not durable).
+
+**NEXT / WATCH OUT FOR.** On landing: expect at-g0 4/4 FLAGGED, at-g1 493
+present-and-UNFLAGGED, count 289, ledger sha = pin. **00:06Z tonight**: 08-27
+judged whole-day under the FROZEN rule (R-211(2)) — expected FAIL, eth lost with
+it; per-coin from 08-28. Q-DA-99's btc cause is unfixed **by design** (R-211(1):
+a mid-day collector change would stamp an era boundary inside day one).
 
 ## 2026-08-27 (DA, ~10:2xZ) — R-211(3) per-coin rule shipped; tonight's unattended path had two defects
 

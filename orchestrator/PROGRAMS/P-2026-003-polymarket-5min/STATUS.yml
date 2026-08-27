@@ -168,6 +168,29 @@ flags:
                              # parseable artifact NAMING its subject, temp-
                              # written and promoted only on validation.
                              # Absence is never success.
+  tape6d_gate_verdict: REFUSED-AS-PREREGISTERED # 2026-08-27 DA, Q-DA-101/102.
+                             # gap_count 286 vs 289 + half_open FAIL. Row-level
+                             # diff: 4 rows at exactly g_start unflagged, 1 at
+                             # exactly g_end flagged; net 3 concealed a 5-row
+                             # two-sided disagreement. Status-masking AND
+                             # adjacency both refuted. Census denominators:
+                             # at-g0 4/4 systematic; at-g1 492/493 agree, the
+                             # 1 exception is n=1 and the sample is EXHAUSTED.
+                             # Edges are the ONLY disagreement classes.
+  ledger_snapshot_pin: FROZEN-tape6e # 2026-08-27 DA, R-213(4).
+                             # data/pm_5min/derived/ledger_pin_tape6e.jsonl
+                             # sha 6cb3a027e25fb5df97f74c4ec63924fa710ab24d
+                             # 9f64486651e040f1b9660d55, 3494 lines, chmod 444,
+                             # WRITE-ONCE (writer refuses if it exists).
+                             # Registration MEASURED against it: 289 / at-g0 4 /
+                             # at-g1 493. Gate AND counter both read the pin --
+                             # the live ledger grows during a build.
+  seam30_does_not_test_the_fix: FILED-DEBT-BOUND # 2026-08-27 DA, Q-DA-103.
+                             # source-text greps, tests a local copy, 30f is
+                             # X-and-X and cannot fail, _B30 imported unused.
+                             # Root: gap_contains nested in main() = uncallable,
+                             # same class as Q-DA-98. Non-blocking per R-213;
+                             # DA's independent counter is the citation.
   forward_day_verify_instrument: COMMITTED # 2026-08-26 DA, e9f8d89.
                              # live/pm_research/da_forward_day_verify.py --
                              # R-141(1) predicates, R-153(2) hard precondition.
