@@ -318,8 +318,14 @@ def _predicates(schema, n_rows, under, present, statuses, bn_vals, pair_bad,
       f"{dict(pair_bad) or 'none'}")
     p("bn_recv_ns_was_supplied", len(bn_vals) > 1,
       f"bn_feed_age_s distinct non-null values (capped at 64): {len(bn_vals)}")
-    p("state_status_present", "__ABSENT__" not in statuses,
-      f"{schema['status_field']} counts: {dict(statuses)}")
+    # A ZERO-ROW tape has no __ABSENT__ because it has no rows, so this passed
+    # on the quarantined artifact. Seen on real evidence, fixed here: an empty
+    # status tally cannot demonstrate the field is present.
+    p("state_status_present",
+      bool(statuses) and "__ABSENT__" not in statuses,
+      f"{schema['status_field']} counts: {dict(statuses)}"
+      + ("  <-- NO rows carried any status: presence is not demonstrated"
+         if not statuses else ""))
     gap_seen = statuses.get("GAP_AT_CUTOFF", 0)
     okg = gap_seen > 0 if gapped_slugs_expected is None else (
         gap_seen > 0 or gapped_slugs_expected == 0)
@@ -396,11 +402,25 @@ def _predicates(schema, n_rows, under, present, statuses, bn_vals, pair_bad,
          "than the declaration implies and no row-level predicate can see it"
          if skipped else ""))
 
+    # R-202 ABSORPTION BOUND, mirrored so BOTH sides enforce it independently.
+    # A build that excludes most of its input has not produced a thin
+    # population, it has produced a different one. tape6b absorbed 100% into
+    # NO_TOKEN_MAP and still wrote a well-formed header.
+    total_skipped = sum(skipped.values())
+    denom = n_rows + total_skipped
+    frac = (total_skipped / denom) if denom else 0.0
+    p("absorption_within_bound", frac <= 0.01,
+      f"excluded-before-emission {total_skipped} of {denom} input rows "
+      f"= {100*frac:.2f}% (bound 1.00%)"
+      + ("  <-- a build absorbing this share has produced a DIFFERENT "
+         "population, not a thinner one" if frac > 0.01 else ""))
+
     bad_status = sum(v for k, v in statuses.items()
                      if k not in set(schema["statuses"]) | {"__ABSENT__"})
     p("statuses_are_declared_values",
-      "__ABSENT__" not in statuses and bad_status == 0,
-      f"rows carrying an undeclared status: {bad_status}")
+      bool(statuses) and "__ABSENT__" not in statuses and bad_status == 0,
+      f"rows carrying an undeclared status: {bad_status}"
+      + ("  <-- on ZERO rows, nothing was checked" if not statuses else ""))
     p("feature_asof_never_after_decision", asof_checked > 0 and asof_viol == 0,
       f"{asof_checked} rows carried both fields; {asof_viol} violations")
     # THE EMBARGO IS NOT THIS TAPE'S TO SATISFY (R-189). The certified chain is
@@ -943,6 +963,22 @@ def _selftests() -> int:
     ok(sk({})["no_rows_skipped_by_builder"],
        "no counters at all passes, since a builder that never skips need not "
        "declare a zero")
+
+    zero = {q["predicate"]: q["pass"] for q in gate([R()] * 0, schema, 0)} \
+        if False else None
+    ab = lambda hdr, rows: {q["predicate"]: q["pass"]
+                            for q in gate(rows, schema, 0, hdr)}
+    ok(ab({"state_status_counts": {"NO_TOKEN_MAP": 100}}, good)
+       ["absorption_within_bound"] is False,
+       "100 skipped against 60 emitted breaches the 1% absorption bound")
+    ok(ab({"state_status_counts": {"NO_TOKEN_MAP": 0}}, good)
+       ["absorption_within_bound"],
+       "zero skipped is within bound")
+    ok(ab({}, good)["absorption_within_bound"],
+       "no counters declared is within bound")
+    ok(not ab({"state_status_counts": {"NO_TOKEN_MAP": 1}}, good * 2)
+       ["absorption_within_bound"] is False,
+       "1 skipped of 121 is 0.83%%, inside the bound")
 
     print(f"da_state_tape_verify selftests: {checks} checks passed")
     return 0
