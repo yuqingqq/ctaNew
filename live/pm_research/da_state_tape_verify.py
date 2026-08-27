@@ -1250,6 +1250,23 @@ def _selftests() -> int:
        "defence in depth: a builder that REVERTS the split and puts skips back "
        "in the row tally is still caught -- reading one source is how this broke")
 
+    # ---- R-210: the bound is TOTAL, and per-status detail STAYS REPORTED ---
+    # R-202's per-status wording is superseded: two statuses under the bound
+    # individually, over it together, is the same population change decided by
+    # how the loss was LABELLED. The evasion is the reason for the ruling, so
+    # the evasion is the test.
+    _many = [dict(real_row) for _ in range(1000)]
+    _split = {q["predicate"]: q for q in gate(
+        _many, schema, 0, {**V5, PRE_EMISSION_KEY: {"NO_TOKEN_MAP": 6,
+                                                    "NO_ARCHIVE_PATH": 6}})}
+    ok(_split["absorption_within_bound"]["pass"] is False,
+       "R-210: two skip statuses at 0.59% each (1.19% total) REFUSE -- a "
+       "per-status bound would have built, and status names are free")
+    _d = _split["no_rows_skipped_by_builder"]["detail"]
+    ok("NO_TOKEN_MAP" in _d and "NO_ARCHIVE_PATH" in _d,
+       "R-210: the bound is total but the PER-STATUS breakdown stays in the "
+       "detail -- a refusal has to say what was lost, not only how much")
+
     # ---- R-209 finding 4: the list path on a REALISTIC row -----------------
     # It crashed the moment a row carried coin/t0/t_start, which no synthetic
     # fixture did -- and at_g1 was never returned, so a load-bearing predicate
