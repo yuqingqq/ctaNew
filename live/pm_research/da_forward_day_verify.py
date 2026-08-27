@@ -47,6 +47,32 @@ WINDOWS_PER_DAY = 288
 #: this one understated the damage on day one.
 GAP_BAR_PER_HR = 15.0
 
+#: R-211(3). PER-COIN verdicts from this day forward; days BEFORE it are judged
+#: by the FROZEN whole-day rule, unchanged. Declared 2026-08-27 while NO 08-28
+#: DATA EXISTS -- that is the whole point. Day one (08-27) is failing on btc
+#: while eth is clean, and choosing the granularity that rescues eth AFTER
+#: seeing that would be selecting on the result (rule 11). So 08-27 is judged
+#: whole-day, eth is lost with it, and the better rule starts at a boundary no
+#: one has looked past.
+#:
+#: CLASS A and PROSPECTIVE-ONLY: moving this value later, once a coin-day
+#: verdict is visible, would retro-judge a day under a rule chosen to change
+#: its answer. If asked to move it after a result is visible, REFUSE and record
+#: the refusal (the standing Class-C/D instruction).
+PER_COIN_RULE_FROM_DAY = "20260828"
+
+
+def verdict_granularity(day_token: str) -> str:
+    """Which rule judges this day. A DATE predicate, not a caller's flag.
+
+    Deliberately takes no override argument: a granularity that a caller can
+    choose is a granularity that gets chosen after seeing the numbers.
+    """
+    return ("per_coin"
+            if dt.datetime.strptime(day_token, "%Y%m%d")
+            >= dt.datetime.strptime(PER_COIN_RULE_FROM_DAY, "%Y%m%d")
+            else "aggregate_frozen")
+
 
 def day_bounds(day_token: str) -> tuple[int, int]:
     d = dt.datetime.strptime(day_token, "%Y%m%d").replace(tzinfo=dt.timezone.utc)
@@ -54,7 +80,8 @@ def day_bounds(day_token: str) -> tuple[int, int]:
     return lo, lo + 86400
 
 
-def gap_series(lo: int, hi: int, now: float | None = None) -> dict[str, Any]:
+def gap_series(lo: int, hi: int, now: float | None = None,
+               coin: str | None = None) -> dict[str, Any]:
     """Per-hour PM gap counts, with unparseable lines COUNTED (rule 4).
 
     THE DENOMINATOR IS ELAPSED TIME, NOT THE SPAN OF THE GAPS THEMSELVES.
@@ -87,6 +114,8 @@ def gap_series(lo: int, hi: int, now: float | None = None) -> dict[str, Any]:
         t = s / 1e9
         if not (lo <= t < hi):
             continue
+        if coin is not None and r.get("coin") != coin:
+            continue
         hr = int((t - lo) // 3600)
         per_hr[hr] += 1
         lost_ns[hr] += max(0, (r.get("gap_end_ns") or s) - s)
@@ -100,6 +129,7 @@ def gap_series(lo: int, hi: int, now: float | None = None) -> dict[str, Any]:
     rate = (round(sum(per_hr.values()) / elapsed_h, 2)
             if elapsed_h >= 1.0 else None)
     return {
+        "coin": coin,          # None = every coin, the frozen whole-day basis
         "ledger_lines": n_lines, "ledger_unparseable": n_bad,
         "n_gaps": sum(per_hr.values()),
         "lost_s": round(sum(lost_ns.values()) / 1e9, 1),
@@ -210,8 +240,81 @@ def verify_day(day_token: str, freeze_epoch: float,
             "era_covered_windows": tot_w, "gap_affected": aff,
             "gap_affected_pct": round(100.0 * aff / tot_w, 1) if tot_w else None}
 
+    # --- R-211(3): PER-COIN verdicts, days >= PER_COIN_RULE_FROM_DAY only ---
+    # Each coin is judged on ITS OWN completeness and ITS OWN hourly gap bars,
+    # and coin-days pass or fail independently -- so one coin's degraded feed
+    # stops costing every other coin its day. The frozen whole-day predicates
+    # above are computed EITHER WAY and stay in the artifact: the day a rule
+    # changes is exactly the day both answers should be legible side by side.
+    gran = verdict_granularity(day_token)
+    per_coin: dict[str, Any] = {}
+    if gran == "per_coin":
+        for coin in coins:
+            cp: list[dict[str, Any]] = []
+
+            def cpp(name, okv, detail):
+                cp.append({"predicate": name, "pass": bool(okv),
+                           "detail": detail})
+
+            # post-freeze, this coin only
+            if day is None:
+                cpp("entirely_post_freeze", False,
+                    f"{iso} absent from the selector -- not verifiable")
+            else:
+                _a, _t = adm.get(coin), tot.get(coin)
+                cpp("entirely_post_freeze",
+                    _t is not None and _t > 0 and _a == _t,
+                    f"{coin} {_a}/{_t} admissible/total"
+                    + ("" if _t else "  <-- NO WINDOWS: an empty coin-day "
+                                     "cannot pass on an empty expectation"))
+
+            # completeness, this coin's own window count
+            _n, _short = counts.get(coin, 0), expect - counts.get(coin, 0)
+            cpp("complete_tape", expect > 0 and _short <= 0,
+                f"expect {expect} ({basis}); {coin} {_n} (short {_short})"
+                + ("" if expect > 0 else "  <-- NOTHING ELAPSED"))
+
+            # gap bars computed on THIS COIN's gaps -- the substance of R-211(3)
+            _gs = gap_series(lo, hi, now.timestamp(), coin=coin)
+            cpp("gap_rate_under_bar",
+                _gs["rate_estimable"] and _gs["n_hours_over_bar"] == 0,
+                (f"{_gs['n_gaps']} {coin} gaps over {_gs['hours_elapsed']}h = "
+                 f"{_gs['gaps_per_hour']}/hr vs bar {GAP_BAR_PER_HR:.0f}; "
+                 f"{_gs['n_hours_over_bar']} hours over; worst "
+                 f"{_gs['worst_hour']}; {_gs['lost_s']}s lost")
+                if _gs["rate_estimable"] else
+                f"NOT ESTIMABLE -- {_gs['rate_note']}")
+
+            per_coin[coin] = {
+                "predicates": cp,
+                "all_pass": all(x["pass"] for x in cp),
+                "gap_series": _gs,
+                "windows_gap_affected": affected.get(coin),
+            }
+
+    # `all_pass` STAYS WHOLE-DAY-STRICT under both rules: a reader that has not
+    # been updated for per-coin verdicts must not be handed a day-level True
+    # because one coin survived. The independent verdicts live in `per_coin`,
+    # so an un-updated reader fails safe and an updated one reads the coin it
+    # actually wants (R-211(3): coin-days pass/fail independently, each coin's
+    # >=5-day clock on its own passing days).
+    _day_all_pass = all(x["pass"] for x in preds)
+    if gran == "per_coin" and per_coin:
+        _day_all_pass = _day_all_pass and all(v["all_pass"]
+                                              for v in per_coin.values())
+
     return {
         "instrument": "da_forward_day_verify_v1",
+        "verdict_granularity": gran,
+        "per_coin_rule_from_day": PER_COIN_RULE_FROM_DAY,
+        "granularity_note": (
+            "R-211(3), declared 2026-08-27 while no 08-28 data existed. Days "
+            "before the boundary are judged by the FROZEN whole-day rule; from "
+            "the boundary each coin-day passes or fails on its own "
+            "completeness and its own hourly gap bars. `all_pass` remains "
+            "whole-day-strict under BOTH rules so an un-updated reader fails "
+            "safe; per-coin verdicts are in `per_coin`."),
+        "per_coin": per_coin,
         "authorised_by": "R-141(1); DA-verifies-first restored as a hard "
                          "precondition by R-153(2)",
         "day": iso, "day_token": day_token,
@@ -220,7 +323,7 @@ def verify_day(day_token: str, freeze_epoch: float,
         "day_closed_selector": day_closed,
         "day_closed_calendar": now.timestamp() >= hi,
         "predicates": preds,
-        "all_pass": all(x["pass"] for x in preds),
+        "all_pass": _day_all_pass,
         "windows_gap_affected": affected,
         "gap_series": gs,
         "decision_note": (
@@ -250,10 +353,75 @@ def _selftests() -> int:
        "consecutive days abut exactly -- no gap, no overlap at midnight")
     ok(WINDOWS_PER_DAY * WINDOW_S == 86400, "288 windows tile the day exactly")
 
+    # ---- R-211(3): the rule switch is PROSPECTIVE and date-driven ---------
+    ok(verdict_granularity("20260827") == "aggregate_frozen",
+       "day one (08-27) is judged by the FROZEN whole-day rule -- the new rule "
+       "must not reach back and re-judge the day that motivated it")
+    ok(verdict_granularity("20260826") == "aggregate_frozen",
+       "and neither are earlier days")
+    ok(verdict_granularity("20260828") == "per_coin",
+       "the per-coin rule starts at the declared boundary")
+    ok(verdict_granularity("20260901") == "per_coin", "and holds after it")
+    import inspect as _insp
+    ok("day_token" in _insp.signature(verdict_granularity).parameters
+       and len(_insp.signature(verdict_granularity).parameters) == 1,
+       "granularity takes ONLY the date: a rule a caller can override is a "
+       "rule that gets overridden after the numbers are visible (rule 11)")
+
+    # ---- R-211(3) BOTH DIRECTIONS on a synthetic btc-degraded/eth-clean day
+    import tempfile as _tf2
+    global PM_GAPS
+    _real2 = PM_GAPS
+    try:
+        with _tf2.TemporaryDirectory() as td2:
+            f2 = Path(td2) / "g.jsonl"
+            lo8, hi8 = day_bounds("20260828")
+            rowsx = []
+            for i in range(20):        # btc: 20 in hour 0 -> OVER the bar of 15
+                rowsx.append(json.dumps({
+                    "event": "gap_closed", "coin": "btc",
+                    "gap_start_ns": int((lo8 + 60 + i) * 1e9),
+                    "gap_end_ns": int((lo8 + 62 + i) * 1e9)}))
+            for i in range(2):         # eth: 2 in hour 0 -> UNDER the bar
+                rowsx.append(json.dumps({
+                    "event": "gap_closed", "coin": "eth",
+                    "gap_start_ns": int((lo8 + 90 + i) * 1e9),
+                    "gap_end_ns": int((lo8 + 91 + i) * 1e9)}))
+            f2.write_text("\n".join(rowsx), encoding="utf-8")
+            PM_GAPS = f2
+            _now8 = lo8 + 7200          # 2h elapsed: rate estimable
+
+            gb = gap_series(lo8, hi8, _now8, coin="btc")
+            ge = gap_series(lo8, hi8, _now8, coin="eth")
+            ga = gap_series(lo8, hi8, _now8)              # frozen basis
+
+            btc_pass = gb["rate_estimable"] and gb["n_hours_over_bar"] == 0
+            eth_pass = ge["rate_estimable"] and ge["n_hours_over_bar"] == 0
+            agg_pass = ga["rate_estimable"] and ga["n_hours_over_bar"] == 0
+
+            ok(btc_pass is False,
+               "R-211(3) direction 1: the degraded coin FAILS its own bar "
+               f"({gb['n_gaps']} btc gaps in hour 0 vs bar 15)")
+            ok(eth_pass is True,
+               "R-211(3) direction 2: the CLEAN coin PASSES on the same day -- "
+               f"({ge['n_gaps']} eth gaps) -- which is the entire point of the "
+               "rule: one coin's dead feed stops costing every other coin")
+            ok(gb["n_gaps"] == 20 and ge["n_gaps"] == 2,
+               "each coin's series counts ONLY its own gaps (R-42 mirror: the "
+               "two coins get different answers from one ledger)")
+            ok(ga["n_gaps"] == 22 and agg_pass is False,
+               "and the FROZEN whole-day basis still pools all 22 and fails -- "
+               "so a pre-boundary day is judged exactly as it was before")
+            ok(verdict_granularity("20260827") == "aggregate_frozen"
+               and agg_pass is False,
+               "R-211(3) direction 3: the SAME ledger under a pre-08-28 date "
+               "is whole-day FAIL -- eth is not rescued retroactively")
+    finally:
+        PM_GAPS = _real2
+
     # the gap series must COUNT unparseable lines, never drop them (rule 4)
     import tempfile
-    global PM_GAPS
-    real = PM_GAPS
+    real = PM_GAPS          # `global PM_GAPS` is declared once, above
     try:
         with tempfile.TemporaryDirectory() as td:
             f = Path(td) / "g.jsonl"
