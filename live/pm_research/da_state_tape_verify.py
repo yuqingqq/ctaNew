@@ -274,7 +274,8 @@ def clock_of(r: dict[str, Any], schema: dict[str, Any],
 def _predicates(schema, n_rows, under, present, statuses, bn_vals, pair_bad,
                 asof_checked, asof_viol, tr_max, sc_min, split_seen,
                 gapped_slugs_expected, header,
-                expect_gap_count: int | None = None) -> list[dict[str, Any]]:
+                expect_gap_count: int | None = None,
+                expect_provenance: str | None = None) -> list[dict[str, Any]]:
     """The same verdicts the list gate renders, from accumulated counters.
 
     Kept beside `gate()` deliberately: two code paths that must agree are a
@@ -339,6 +340,38 @@ def _predicates(schema, n_rows, under, present, statuses, bn_vals, pair_bad,
         p("gap_count_matches_expected", False,
           "no expected count supplied -- NOT ASSERTED by this run (pass "
           "--expect-gap-count N with a PRE-REGISTERED value)",
+          applicable=False)
+
+    # R-198: the tape must say WHICH BYTES BUILT IT. tape4 was
+    # provenance-indeterminate -- launched from a moving tree -- and that alone
+    # made its 286 unattributable. A prefix match is accepted because refs are
+    # quoted short and long; the comparison is anchored at the start so a short
+    # ref cannot match some unrelated hash mid-string.
+    if expect_provenance is not None:
+        hdr_prov = ""
+        for k in ("provenance", "pinned_ref", "commit", "build_commit",
+                  "built_from_commit", "git_ref"):
+            v = (header or {}).get(k)
+            if isinstance(v, str):
+                hdr_prov = v
+                break
+            if isinstance(v, dict):
+                for kk in ("commit", "ref", "sha", "pinned_ref"):
+                    if isinstance(v.get(kk), str):
+                        hdr_prov = v[kk]
+                        break
+                if hdr_prov:
+                    break
+        a, b = hdr_prov.lower(), expect_provenance.lower()
+        okp = bool(hdr_prov) and (a.startswith(b) or b.startswith(a))
+        p("provenance_matches_expected", okp,
+          f"tape header provenance {hdr_prov or '(ABSENT)'} vs pre-registered "
+          f"{expect_provenance}"
+          + ("" if okp else "  <-- MISMATCH or ABSENT: bytes of unknown origin "
+                            "cannot be certified"))
+    else:
+        p("provenance_matches_expected", False,
+          "no expected provenance supplied -- NOT ASSERTED by this run",
           applicable=False)
 
     bad_status = sum(v for k, v in statuses.items()
@@ -423,7 +456,8 @@ def _accumulate(rows, schema, header):
 def gate(rows: list[dict[str, Any]], schema: dict[str, Any],
          gapped_slugs_expected: int | None = None,
          header: dict[str, Any] | None = None,
-         expect_gap_count: int | None = None) -> list[dict[str, Any]]:
+         expect_gap_count: int | None = None,
+         expect_provenance: str | None = None) -> list[dict[str, Any]]:
     """List-input gate. DELEGATES to the same `_predicates` the stream uses.
 
     It used to render its own verdicts from its own loop, and I added a
@@ -441,12 +475,13 @@ def gate(rows: list[dict[str, Any]], schema: dict[str, Any],
                        acc["statuses"], acc["bn_vals"], acc["pair_bad"],
                        acc["asof_checked"], acc["asof_viol"], acc["tr_max"],
                        acc["sc_min"], acc["split_seen"], gapped_slugs_expected,
-                       header, expect_gap_count)
+                       header, expect_gap_count, expect_provenance)
 
 
 def verify(tape: Path, schema_path: Path = SCHEMA,
            gapped_slugs_expected: int | None = None,
-           expect_gap_count: int | None = None) -> dict[str, Any]:
+           expect_gap_count: int | None = None,
+           expect_provenance: str | None = None) -> dict[str, Any]:
     schema = load_schema(schema_path)
     header = read_header(tape)
     # SINGLE PASS, COUNTERS ONLY. Streaming the parse is not enough: a
@@ -513,7 +548,7 @@ def verify(tape: Path, schema_path: Path = SCHEMA,
     preds = _predicates(schema, n_rows, under, present, statuses, bn_vals,
                         pair_bad, asof_checked, asof_viol, tr_max, sc_min,
                         split_seen, gapped_slugs_expected, header,
-                        expect_gap_count)
+                        expect_gap_count, expect_provenance)
     return {"gate": "da_state_tape_verify_v1", "tape": str(tape),
             "schema_family": schema["family"], "n_rows": n_rows,
             "tape_header_pins": {k: header.get(k) for k in
@@ -768,6 +803,26 @@ def _selftests() -> int:
        "with NO expected count it is NOT ASSERTED -- never a silent pass, and "
        "the gate does not invent a target")
 
+    pv = lambda hdr, exp: {q["predicate"]: q for q in
+                           gate(good, schema, 0, hdr, None, exp)}
+    ok(pv({"provenance": "057b1b7aa13b04c8"}, "057b1b7")
+       ["provenance_matches_expected"]["pass"],
+       "a short pre-registered ref matches a long declared one")
+    ok(pv({"pinned_ref": "057b1b7"}, "057b1b7aa13b04c8")
+       ["provenance_matches_expected"]["pass"],
+       "...and the reverse, since refs are quoted at both lengths")
+    ok(not pv({"provenance": "9fb043b"}, "057b1b7")
+       ["provenance_matches_expected"]["pass"],
+       "a DIFFERENT commit fails -- this is the check tape4 had no way to make")
+    ok(not pv({}, "057b1b7")["provenance_matches_expected"]["pass"],
+       "an ABSENT provenance header FAILS -- unknown origin is not a pass")
+    ok(not pv({"provenance": "aa057b1b7bb"}, "057b1b7")
+       ["provenance_matches_expected"]["pass"],
+       "a ref appearing MID-STRING does not match -- the compare is anchored")
+    ok(pv({"provenance": "057b1b7"}, None)
+       ["provenance_matches_expected"]["applicable"] is False,
+       "with no expectation it is NOT ASSERTED, never a silent pass")
+
     print(f"da_state_tape_verify selftests: {checks} checks passed")
     return 0
 
@@ -780,13 +835,16 @@ def main() -> int:
     ap.add_argument("--gapped-slugs", type=int, default=None)
     ap.add_argument("--expect-gap-count", type=int, default=None,
                     help="PRE-REGISTERED expected GAP_AT_CUTOFF row count")
+    ap.add_argument("--expect-provenance", default=None,
+                    help="PRE-REGISTERED commit the tape must declare")
     a = ap.parse_args()
     if a.selftest or not a.cmd:
         return _selftests()
     if not a.tape:
         raise SystemExit("--tape PATH required; refusing to guess a tape")
     rep = verify(Path(a.tape), gapped_slugs_expected=a.gapped_slugs,
-                 expect_gap_count=a.expect_gap_count)
+                 expect_gap_count=a.expect_gap_count,
+                 expect_provenance=a.expect_provenance)
     print(json.dumps({k: v for k, v in rep.items() if k != "predicates"},
                      indent=2, sort_keys=True))
     print("\nPREDICATES")
