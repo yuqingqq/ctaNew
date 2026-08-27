@@ -2,6 +2,41 @@
 
 Updated: 2026-08-26 (coordinator) — **STATEFUL harmful-cancel phase dispatched.**
 
+## 2026-08-27 (DA, ~00:2xZ) — 08-26 closed FAILING; four instrument defects fixed; day one accruing
+
+**08-26 CLOSING VERDICT: ALL PASS = FALSE** (Q-DA-82, `abc7455`). post-freeze
+PASS 278/278; complete_tape FAIL (**short 9 per coin**, = the ~43-min crash
+outage); gap_rate FAIL (**508 gaps, 21.17/hr, 18 of 24 hours over, 50.7 min
+lost**); **btc 178/278 = 64.0% gap-affected vs eth 0.4%.** Already inadmissible
+per Q-DA-72, so this is the formality plus the final counts for the OPS
+diagnosis. **The "+1 drip" closes as crash debris — my 9→10 reading came from
+comparing against a moving elapsed baseline on an open day, not from windows
+disappearing.**
+
+**FOUR DEFECTS IN DA's OWN INSTRUMENT, all fixed (`ab0fad4`), selftests 13→17:**
+1. `gaps_per_hour` divided by a **gap-derived** denominator, not elapsed time —
+   30 s after the boundary one gap read as "1.0/hr", **~120x flattering**, and
+   was relayed upward as possible abatement. Now elapsed-based; **no rate at all
+   below one full hour.**
+2. `day_closed` came from the selector's tape-derived predicate and called
+   **08-26 open 30 s after 08-26 ended**, while driving the complete_tape
+   branch. Now **calendar** closure, flags selector disagreement.
+3. `complete_tape` **passed vacuously** on 0-of-0. Empty expectations can no
+   longer pass.
+4. **THE TIMER FIRED TOO EARLY — this one would have failed DAY ONE.** The
+   collector records each window until `start + WINDOW_S + GRACE_S`, so a day's
+   last window is still recording until **00:01:30** and gzipped after. Counts
+   read 277/278 at 00:00:30 and 278/279 minutes later. **Timer moved to
+   `00:06:00 UTC`** — verify only after the grace window.
+
+**NEXT AND ONLY OWED ITEM: DAY ONE (08-27) VERDICT at 2026-08-28T00:06Z.**
+Timer `da-midnight-verify.timer` is armed and daily. **BE SCORES NOTHING UNTIL
+THAT VERDICT PASSES.** If the timer is gone, run by hand AFTER 00:06:
+`python3 live/pm_research/da_forward_day_verify.py verify --day 20260827`.
+**Open question it settles:** whether the btc degradation abated. As of 00:13Z
+08-27 shows 4 gaps in 811 s with btc 2/2 windows affected — **not** abatement,
+but n=2 is nothing. Do not read hour-zero quiet as a trend; that was defect (1).
+
 ## FORWARD-RACE ADMISSION SEQUENCE — confirmed, do not re-derive it
 
 Settled with the coordinator 2026-08-26 ~18:5xZ after DA raised that the two

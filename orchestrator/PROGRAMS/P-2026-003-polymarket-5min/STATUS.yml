@@ -63,6 +63,29 @@ flags:
                              # filtering pm_gap_s > 0 reconstructs v2's 204 EXACTLY
                              # -- the ruling demoted the window-level reading, it
                              # did not destroy it. v2 untouched as provenance.
+  day_08_26_closed: FAILS-INADMISSIBLE-FINAL # 2026-08-27 DA, abc7455, Q-DA-82.
+                             # Final counts: short 9 windows/coin (crash
+                             # outage), 508 gaps = 21.17/hr, 18 of 24 hours over
+                             # bar, 50.7 min lost, btc 178/278 = 64.0%
+                             # gap-affected vs eth 0.4%. The "+1 drip" closes as
+                             # crash debris -- DA's own reading was an artifact
+                             # of a moving elapsed baseline on an open day.
+  verify_first_instrument_defects: FIXED-4 # 2026-08-27 DA, ab0fad4, Q-DA-82.
+                             # Found by the FIRST live firing, on a dead day:
+                             # (1) gaps_per_hour used a GAP-DERIVED denominator
+                             # -> "1.0/hr" for 1 gap in 30s, ~120x FLATTERING,
+                             # relayed upward as possible abatement. Now
+                             # elapsed-based; NO rate below one full hour.
+                             # (2) day_closed from the selector's tape predicate
+                             # called 08-26 OPEN 30s after it ended, while
+                             # driving a branch -> calendar closure now.
+                             # (3) complete_tape PASSED VACUOUSLY on 0-of-0.
+                             # (4) TIMER FIRED BEFORE THE TAPE SETTLED -- the
+                             # last window records to 00:01:30 then gzips; would
+                             # have FAILED DAY ONE on the clock, not the data.
+                             # Timer moved 00:00:30 -> 00:06:00 UTC.
+                             # STANDING: no rate below a full elapsed unit;
+                             # verdict clocks respect settle time.
   forward_race_admission_sequence: CONFIRMED-READING-A # 2026-08-26, settled
                              # with the coordinator after DA raised that the two
                              # readings could not both hold. 2026-08-27T00:00:30Z
