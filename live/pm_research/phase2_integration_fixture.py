@@ -302,11 +302,40 @@ def main() -> int:
         seam("15a the index stores a COMPACT float tuple, not a row dict",
              isinstance(_vec, tuple) and all(isinstance(v, float) for v in _vec),
              f"got {type(_vec).__name__} -- 1.7M row dicts is ~12GB")
+        # R-215: `status` joins the entry so the JOIN can name its exclusions.
+        # Kept as exact-set equality, at the new shape -- the guard exists to
+        # catch the entry degrading to a bare tuple (the :333 TypeError), and a
+        # subset test would stop catching it.
         seam("15c the probe fields travel WITH the vector",
-             set(_entry) == {"vec", "t0", "t_start"},
-             "stage_fit read r['t0'] on a bare tuple (the :333 TypeError)")
+             set(_entry) == {"vec", "t0", "t_start", "status"},
+             f"stage_fit read r['t0'] on a bare tuple (the :333 TypeError); "
+             f"got {sorted(_entry)}")
         seam("15b the index holds exactly the pinned feature count",
              len(_vec) == len(feats))
+        seam("15e an OK row carries status OK", _entry["status"] == "OK")
+        # ---- 15d (R-215): a NON-OK row is INDEXED, carrying its status ----
+        # Skipping it here is what made "excluded by design" indistinguishable
+        # from "join failed" downstream: the row simply vanished, and the join
+        # could only report an absence.
+        _fd2, _tp2 = _tf3.mkstemp(suffix=".json")
+        with _o3.fdopen(_fd2, "w") as _fh2:
+            _j3.dump({"rows": [{"split": "train", "state_status": "PRE_WINDOW",
+                                "slug": "s", "side": "BUY_UP", "gen": 1,
+                                "t_start": -9.0, "t0": 1000.0, "state": {}}]}, _fh2)
+        PA.TAPE_PATH = Path(_tp2)
+        try:
+            _idx2 = PA.tape_index("train", feats)
+            seam("15d a NON-OK row is INDEXED, not skipped", len(_idx2) == 1,
+                 "a skipped row can only be reported downstream as an absence, "
+                 "which is what mislabelled 26,339 design exclusions as a "
+                 "join failure")
+            if _idx2:
+                _e2 = next(iter(_idx2.values()))
+                seam("15d2 it carries its STATUS and no vector",
+                     _e2["status"] == "PRE_WINDOW" and _e2["vec"] is None,
+                     f"got status={_e2.get('status')!r} vec={_e2.get('vec')!r}")
+        finally:
+            _o3.unlink(_tp2)
     finally:
         PA.TAPE_PATH = _saved
         _o3.unlink(_tp)

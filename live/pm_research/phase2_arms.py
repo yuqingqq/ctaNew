@@ -147,6 +147,47 @@ def assert_disjoint(fit_slugs: set, score_slugs: set) -> None:
 # moving tree), and a silent fallback would fit the rerun on them.
 TAPE_PATH = DERIVED / "phase2_state_tape_v5.json"
 
+# ---------------------------------------------------------------- R-215 -----
+# The fit population for ALL FOUR ARMS is: fragment rows whose TAPE row carries
+# state_status == OK. Parity is the estimand -- same rows, different features --
+# so this exclusion is applied ONCE, in tape_index(), and every arm inherits it.
+#
+# Rows the tape marked unusable are DESIGN exclusions: they are counted under
+# their own status name and exempt from the fit's absorption bound. A key that
+# is ABSENT from the tape is a FAILURE (`state_join_failed`), expected 0 and
+# bounded at 1%. The two were previously the same counter, named for the
+# failure -- so 26,339 warm-up rows (99.8% negative t_start) refused a fit as
+# though the join had broken.
+#
+# Any status NOT listed here maps to `<status>_excluded` and is therefore NOT
+# in DESIGN_EXCLUSIONS -- so a new or unexpected status trips the bound instead
+# of inheriting an exemption it was never ruled into.
+STATUS_DROP_NAME = {
+    "PRE_WINDOW":       "pre_window_excluded",
+    "GAP_AT_CUTOFF":    "gap_at_cutoff_excluded",   # own line, never folded
+    "NO_LEVEL_HISTORY": "no_level_history_excluded",
+}
+DESIGN_EXCLUSIONS = frozenset(STATUS_DROP_NAME.values())
+BOUNDED_DROPS     = ("state_join_failed",)          # expected 0, bound 1%
+
+# PRE-REGISTERED fit population, declared BEFORE any score exists (R-215(1)).
+# btc: 605,256 fragment rows - 26,339 non-OK tape rows = 578,917. Recorded here
+# so the number cannot be back-filled from a result: a fit that lands elsewhere
+# refuses, and the receipt reports the declared value beside the realised one.
+#
+# KEYED BY TAPE IDENTITY, not by coin alone: a population count is a property of
+# the exact tape it was counted on, so it must not be asserted against a
+# different one. On any other tape the entry is absent, the check does not
+# apply, and the receipt says so with an explicit null rather than silently
+# reporting a match it never made.
+PREREGISTERED_FIT_N = {
+    "c7ab02ebcf27d2fc": {"btc": 578917},   # tape6e, builder_ref ed9d572
+}
+
+def preregistered_n(tape_sha16: str, coin: str):
+    """The declared population for this coin ON THIS TAPE, or None."""
+    return PREREGISTERED_FIT_N.get(tape_sha16, {}).get(coin)
+
 
 def assert_tape_is_v5(path: Path = None) -> dict:
     """REFUSE any tape that is not the committed-ref v5 build."""
@@ -219,15 +260,21 @@ def tape_index(split: str, features_in_order=None) -> dict:
     for r in _stream_tape_rows(TAPE_PATH):
         if r.get("split") != split:
             continue
-        if str(r.get("state_status", "OK")) != "OK":
-            continue
+        # R-215: index EVERY row and CARRY ITS STATUS. Skipping non-OK rows
+        # here made "excluded by design" indistinguishable from "join failed":
+        # the same exclusion was applied at index time and then counted AGAIN
+        # at join time under a name meaning the join broke -- while the counter
+        # built to observe it (drops['state_status']) read zero, because the
+        # filter upstream meant _feature_pass never saw a status at all.
+        _st = str(r.get("state_status", "OK"))
         state = r.get("state") or {}          # NESTED, per features_under
         # The index value carries the ENCODED FEATURES plus the two clock
         # fields the embargo probe needs. Storing only the tuple made
         # stage_fit read r["t0"] on a tuple (TypeError at :333); reading them
         # from the KEY works but re-parses a slug, so they travel explicitly.
         idx[(r["slug"], r["side"], r["gen"], r["t_start"])] = {
-            "vec": tuple(_PIN.encode_row(state, feats)),
+            "vec": tuple(_PIN.encode_row(state, feats)) if _st == "OK" else None,
+            "status": _st,
             "t0": float(r["t0"]), "t_start": float(r["t_start"])}
     return idx
 
@@ -354,8 +401,13 @@ def _feature_pass(src: Path, population: str, TAPE=None) -> dict:
         crows = [r for r in rows if r["coin"] == coin]
         streams: dict = {}; tapes: dict = {}
         PM = []; FN = []; ST = []; kept = []
-        drops = {"pm": 0, "fine": 0, "state": 0, "state_status": 0,
-                 "no_archive": 0}
+        # R-215: every exclusion is counted under ITS OWN NAME. `state` and
+        # `state_status` are gone: the first lumped design exclusions under a
+        # name meaning the join broke, the second could never fire.
+        drops = {"pm": 0, "fine": 0, "no_archive": 0,
+                 "pre_window_excluded": 0, "gap_at_cutoff_excluded": 0,
+                 "no_level_history_excluded": 0,
+                 "state_join_failed": 0}
         bywin: dict = {}
         for r in crows:
             bywin.setdefault(r["slug"], []).append(r)
@@ -376,13 +428,23 @@ def _feature_pass(src: Path, population: str, TAPE=None) -> dict:
                     "no rebuilt state tape supplied. Re-deriving state here "
                     "would rebuild it WITHOUT gaps/bn_recv_ns and silently "
                     "restore the defect the rebuild removed.")
-            sfeats = [TAPE[(r["slug"], r["side"], r["gen"], r["t_start"])]
-                      for r in wrows if (r["slug"], r["side"], r["gen"],
-                                         r["t_start"]) in TAPE]
-            if len(sfeats) != len(wrows):
-                drops["state"] += len(wrows) - len(sfeats)
-                wrows = [r for r in wrows if (r["slug"], r["side"], r["gen"],
-                                              r["t_start"]) in TAPE]
+            # R-215: `state_join_failed` means the key is ABSENT from the tape
+            # -- a real join failure, expected 0, and it keeps the 1% bound.
+            # Rows PRESENT under a non-OK status are counted by that status, so
+            # a genuine join failure can never hide behind a design exclusion.
+            _keep, sfeats = [], []
+            for r in wrows:
+                _e = TAPE.get((r["slug"], r["side"], r["gen"], r["t_start"]))
+                if _e is None:
+                    drops["state_join_failed"] += 1
+                    continue
+                _st = _e.get("status", "OK")
+                if _st != "OK":
+                    _nm = STATUS_DROP_NAME.get(_st, f"{_st.lower()}_excluded")
+                    drops[_nm] = drops.get(_nm, 0) + 1
+                    continue
+                _keep.append(r); sfeats.append(_e)
+            wrows = _keep
             for r, sfe in zip(wrows, sfeats):
                 fp = hm.features(streams[slug], r["t_start"], r["side"],
                                  r["level"], r["resting"], r["qahead"])
@@ -412,8 +474,20 @@ def _feature_pass(src: Path, population: str, TAPE=None) -> dict:
         # covers its own skip_counts and never reached here, so a 100% input
         # failure read as a quiet all-drop instead of a refusal -- the exact
         # defect the bound exists to prevent, in the stage it did not cover.
+        # R-215: DESIGN exclusions (rows the tape itself marked unusable) are
+        # exempt BY NAME. A blanket carve-out would let a real join failure
+        # hide behind one; each name is listed, so anything unlisted is bounded.
+        _missing = [b for b in BOUNDED_DROPS if b not in drops]
+        if _missing:
+            raise RuntimeError(
+                f"REFUSED: bounded drop counter(s) {_missing} absent from the "
+                f"drops table. A renamed or deleted counter removes the only "
+                f"thing standing between a real join failure and a silent "
+                f"all-drop. Present: {sorted(drops)}")
         _in = len(kept) + sum(drops.values())
         for _k, _n in sorted(drops.items()):
+            if _k in DESIGN_EXCLUSIONS:
+                continue
             if _in and _n / _in > 0.01:
                 raise RuntimeError(
                     f"REFUSED: fit drop `{_k}` covers {_n:,} of {_in:,} rows "
@@ -789,6 +863,11 @@ def stage_fit() -> None:
                     "numbers on both sides of the seam (R-189).",
         }
     del SP, score_probe
+    # _tape_identity() hashes the whole 3.17GB tape, so it is computed ONCE
+    # and reused by both the parity key and the completion manifest.
+    _ident = _tape_identity()
+    _tape_sha16 = _ident["tape_sha256_prefix"]
+    _parity: dict = {}
     for coin in list(FIT):
         f = FIT[coin]
         if not f["kept"]:
@@ -798,8 +877,15 @@ def stage_fit() -> None:
                  "fitted": False}))
             continue
         yF, tF = _labels(f["kept"])
+        # R-215(1): PARITY IS THE ESTIMAND -- same rows, different features. It
+        # is COMPUTED from each arm's actual design matrix, never assumed from
+        # the fact that they share a loop: measuring the thing that matters is
+        # the point, and a future edit that filters one arm's matrix must fail
+        # here rather than produce a quietly unpaired comparison.
+        _arm_n: dict = {}
         XF = [f["PM"][i] + f["FN"][i] + f["ST"][i] for i in range(len(f["kept"]))]
         Xf, mu, sd = fc.fast_zscale(XF, XF)
+        _arm_n["PLUS_PRED_STATE_V1"] = len(Xf)
         sw = fc.fast_generation_weights(f["kept"])
         _gk = [(r["slug"], r["side"], r["gen"]) for r in f["kept"]]
         # arm A applied UNWEIGHTED on PM+fine, scored on the training side to
@@ -818,6 +904,7 @@ def stage_fit() -> None:
         XfA = [[1.0] + [((f["PM"][i] + f["FN"][i])[k] - _mA[k]) / _sA[k]
                         for k in range(len(_mA))]
                for i in range(len(f["kept"]))]
+        _arm_n["PM_PLUS_FINE"] = len(XfA)
         W = fc.fast_fit_logistic_w(Xf, yF, sw)
         ft = [i for i in range(len(yF)) if yF[i]]
         WM = (fc.fast_fit_ridge_w([Xf[i] for i in ft], [tF[i] for i in ft],
@@ -828,6 +915,7 @@ def stage_fit() -> None:
         # Sharing B's branch made D load B's weights and predict identically,
         # so D-A and B-D were both meaningless (R-194 seam 12).
         XD = [f["PM"][i] + f["FN"][i] for i in range(len(f["kept"]))]
+        _arm_n["INCUMBENT_REWEIGHTED_ONLY"] = len(XD)
         Xd, mud, sdd = fc.fast_zscale(XD, XD)
         Wd = fc.fast_fit_logistic_w(Xd, yF, sw)
         WMd = (fc.fast_fit_ridge_w([Xd[i] for i in ft], [tF[i] for i in ft],
@@ -864,6 +952,7 @@ def stage_fit() -> None:
                   (float(sum(a * b for a, b in zip(WMA, x))) if WMA else 0.0)
                   for x in XfA], D.BUDGETS, gen_keys=_gk)}))
         A = np.asarray(Xf, dtype=np.float64); swa = np.asarray(sw)
+        _arm_n["LGBM_PINNED"] = int(A.shape[0])
         clf = lgb.LGBMClassifier(**D.LGBM_PARAMS)
         clf.fit(A, np.asarray(yF), sample_weight=swa)
         clf.booster_.save_model(str(FITDIR / f"lgbm_haz_{coin}.txt"))
@@ -879,15 +968,47 @@ def stage_fit() -> None:
             _vc = np.zeros(len(A))
         (FITDIR / f"lgbm_thresholds_{coin}.json").write_text(json.dumps(
             freeze_thresholds((_pc * _vc).tolist(), D.BUDGETS, gen_keys=_gk)))
+        # ---- R-215(1): four-arms-one-n parity, COMPUTED ----
+        _expect = len(f["kept"])
+        _bad = {a: n for a, n in _arm_n.items() if n != _expect}
+        if set(_arm_n) != set(D.ARMS) or _bad:
+            raise RuntimeError(
+                f"REFUSED: fit population parity broken for {coin}. Declared "
+                f"population {_expect:,} rows; per-arm design matrices "
+                f"{_arm_n}. Arms must be fitted on the SAME rows and differ "
+                f"only in features -- an unpaired arm makes every between-arm "
+                f"delta uninterpretable. Missing arms: "
+                f"{sorted(set(D.ARMS) - set(_arm_n))}; mismatched: {_bad}.")
+        _pre = preregistered_n(_tape_sha16, coin)
+        if _pre is not None and _expect != _pre:
+            raise RuntimeError(
+                f"REFUSED: {coin} fit population is {_expect:,} rows but "
+                f"{_pre:,} was PRE-REGISTERED before any score existed "
+                f"(R-215(1)). A population that moved between declaration and "
+                f"fit invalidates the declaration; re-declare deliberately, "
+                f"with the cause named, rather than adopting the new number. "
+                f"drops={f['drops']}")
+        _parity[coin] = {"declared_population": _expect, "per_arm_n": dict(_arm_n),
+                         "all_arms_same_n": (len(set(_arm_n.values())) == 1
+                                             and set(_arm_n) == set(D.ARMS)),
+                         "n_arms": len(_arm_n), "n_arms_declared": len(D.ARMS),
+                         "preregistered_n": _pre,
+                         "preregistration_key": _tape_sha16,
+                         "matches_preregistration": (None if _pre is None
+                                                     else _expect == _pre),
+                         "drops": dict(f["drops"])}
         print(f"  [fit/{coin}] persisted linear + lgbm; rows {len(f['kept'])}, "
-              f"positive {sum(yF)}", flush=True)
+              f"positive {sum(yF)}; parity {len(_arm_n)}/{len(D.ARMS)} arms "
+              f"@ n={_expect:,}"
+              + (f" (pre-registered {_pre:,} OK)" if _pre else ""), flush=True)
         del XF, Xf, A, FIT[coin]["PM"], FIT[coin]["FN"], FIT[coin]["ST"]
     (FITDIR / "empty_coins.json").write_text(json.dumps(empty_coins))
-    _ident = _tape_identity()
     if not FIT:
         raise RuntimeError(
             "REFUSED: every coin came back empty. A fit over no population is "
             "not a null result, it is a broken input path.")
+    (FITDIR / "fit_population_parity.json").write_text(
+        json.dumps(_parity, indent=1, sort_keys=True))
     (FITDIR / "fit_slugs.json").write_text(json.dumps(sorted(
         {r["slug"] for c in FIT.values() for r in c["kept"]})))
     # COMPLETION MANIFEST then ATOMIC PROMOTE. Written last, so its presence
@@ -901,7 +1022,8 @@ def stage_fit() -> None:
                   "run_finished_utc": __import__("subprocess").run(
                       ["date", "-u", "+%Y-%m-%dT%H:%M:%SZ"],
                       capture_output=True, text=True).stdout.strip(),
-                  "arms": list(D.ARMS), "budgets": list(D.BUDGETS)})
+                  "arms": list(D.ARMS), "budgets": list(D.BUDGETS),
+                  "fit_population_parity": _parity})
     (_run / FIT_MANIFEST).write_text(json.dumps(_mani, indent=1, sort_keys=True))
     if _final.exists():
         _sh2.rmtree(_final.with_suffix(".prev"), ignore_errors=True)

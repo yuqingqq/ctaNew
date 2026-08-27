@@ -589,6 +589,130 @@ def main() -> int:
          "the builder's bound covers skip_counts and never reached the fit, so "
          "a 100% no_archive failure read as a quiet all-drop")
 
+    # ---- SEAM 32 (R-215): exclusions are counted under THEIR OWN NAMES ----
+    # The defect: tape_index() filtered state_status != "OK", so _feature_pass
+    # found those rows missing and counted them as a JOIN failure. The same
+    # exclusion applied twice, reported under a name meaning something else --
+    # and 26,339 design exclusions refused a fit on the 1% bound. The counter
+    # built to observe it (drops['state_status']) read 0, because the filter
+    # upstream meant it never saw a status at all.
+    #
+    # This enters at the REAL _feature_pass with a synthetic tape and asserts
+    # the DISTINCTION: design exclusions are exempt BY NAME and stay visible;
+    # an ABSENT key still trips the bound; an UNRULED status is NOT exempt.
+    import harmful_hazard_model as _hm32
+
+    def _fp_case(statuses, drop_keys=()):
+        """Run the real _feature_pass over one slug whose tape rows carry
+        `statuses`. `drop_keys` are omitted from the tape entirely (join
+        failure). Returns (drops, kept) or raises what production raises."""
+        with tempfile.TemporaryDirectory() as td:
+            tdp = Path(td)
+            frag = tdp / "frag.json"
+            # _mini_exposure emits TWO rows per generation, so the generation
+            # count is half the requested row count.
+            assert len(statuses) % 2 == 0, "statuses must cover whole generations"
+            rows = _mini_exposure(frag, 1787650200.0, len(statuses) // 2,
+                                  "btc", "2026-08-25")
+            assert len(rows) == len(statuses), (len(rows), len(statuses))
+            TAPE = {}
+            for i, r in enumerate(rows):
+                k = (r["slug"], r["side"], r["gen"], r["t_start"])
+                if i in drop_keys:
+                    continue
+                st = statuses[i]
+                TAPE[k] = {"vec": (0.0,) * 45 if st == "OK" else None,
+                           "status": st, "t0": r["t0"], "t_start": r["t_start"]}
+            _sv = (_hm32.features, _hm32.fine_feats, _hm32.window_streams,
+                   _hm32.fi._archive_paths, _hm32.fi.token_map)
+            _slugs = {r["slug"] for r in rows}
+            _npm = len(json.loads(PA.FROZEN.read_text())["fits"]["btc"]["norm_mu"]) - 1
+            _hm32.features = lambda *a, **k: [0.3] * _npm
+            _hm32.fine_feats = lambda *a, **k: [0.1]
+            _hm32.window_streams = lambda *a, **k: object()
+            _hm32.fi._archive_paths = lambda *a, **k: {x: Path("/dev/null") for x in _slugs}
+            _hm32.fi.token_map = lambda *a, **k: {x: ("u", "d") for x in _slugs}
+            try:
+                out = PA._feature_pass(frag, "seam32", TAPE=TAPE)
+            finally:
+                (_hm32.features, _hm32.fine_feats, _hm32.window_streams,
+                 _hm32.fi._archive_paths, _hm32.fi.token_map) = _sv
+            return out["btc"]["drops"], out["btc"]["kept"]
+
+    # (a) POSITIVE CONTROL — design exclusions far above the bound must NOT
+    #     refuse, and must appear under their own names.
+    _st = ["OK"] * 10 + ["PRE_WINDOW"] * 20 + ["GAP_AT_CUTOFF"] * 6 \
+          + ["NO_LEVEL_HISTORY"] * 4
+    _st = [x for x in _st for _ in (0, 1)]          # two rows per generation
+    try:
+        _d32, _k32 = _fp_case(_st)
+        seam("32a design exclusions at 75% do NOT trip the bound",
+             True)
+        seam("32b PRE_WINDOW counted as pre_window_excluded",
+             _d32.get("pre_window_excluded") == 40, f"drops={_d32}")
+        seam("32c GAP_AT_CUTOFF has its OWN line, never folded into warm-up",
+             _d32.get("gap_at_cutoff_excluded") == 12, f"drops={_d32}")
+        seam("32d NO_LEVEL_HISTORY counted separately",
+             _d32.get("no_level_history_excluded") == 8, f"drops={_d32}")
+        seam("32e state_join_failed is 0 when every key is PRESENT",
+             _d32.get("state_join_failed") == 0, f"drops={_d32}")
+        seam("32f the misnamed counter is GONE",
+             "state" not in _d32 and "state_status" not in _d32, f"drops={_d32}")
+        seam("32g only OK rows are kept", len(_k32) == 20, f"kept={len(_k32)}")
+    except Exception as _e32:
+        for _n in ("32a design exclusions at 75% do NOT trip the bound",
+                   "32b PRE_WINDOW counted as pre_window_excluded",
+                   "32c GAP_AT_CUTOFF has its OWN line, never folded into warm-up",
+                   "32d NO_LEVEL_HISTORY counted separately",
+                   "32e state_join_failed is 0 when every key is PRESENT",
+                   "32f the misnamed counter is GONE",
+                   "32g only OK rows are kept"):
+            seam(_n, False, f"{type(_e32).__name__}: {_e32}")
+
+    # (b) KNOWN-BAD INPUT — a genuinely ABSENT key is a join failure and MUST
+    #     still refuse. This is what stops the exemption becoming a carve-out.
+    try:
+        _fp_case(["OK"] * 40, drop_keys=set(range(0, 20)))
+        seam("32h an ABSENT key still TRIPS the 1% bound", False,
+             "_feature_pass ACCEPTED 25% missing keys — the exemption has "
+             "become a blanket carve-out and a real join failure is invisible")
+    except Exception as _e32b:
+        seam("32h an ABSENT key still TRIPS the 1% bound",
+             isinstance(_e32b, RuntimeError) and "state_join_failed" in str(_e32b),
+             f"{type(_e32b).__name__}: {_e32b}")
+
+    # (c) an UNRULED status must NOT inherit an exemption it was never ruled
+    #     into — otherwise any future status silently bypasses the bound.
+    try:
+        _fp_case(["OK"] * 30 + ["SOME_NEW_STATUS"] * 10)
+        seam("32i an UNRULED status is NOT exempt", False,
+             "a status never ruled into DESIGN_EXCLUSIONS bypassed the bound")
+    except Exception as _e32c:
+        seam("32i an UNRULED status is NOT exempt",
+             isinstance(_e32c, RuntimeError)
+             and "some_new_status_excluded" in str(_e32c),
+             f"{type(_e32c).__name__}: {_e32c}")
+
+    # ---- SEAM 33 (R-215): four-arms-one-n parity is COMPUTED --------------
+    _f33 = inspect.getsource(PA.stage_fit)
+    seam("33a parity is computed from each arm's OWN design matrix",
+         _f33.count("_arm_n[") >= 4,
+         "fewer than four arms record an n — parity would be assumed, not measured")
+    seam("33b a parity mismatch REFUSES",
+         "parity broken" in _f33)
+    seam("33c parity reaches the manifest AND its own artifact",
+         "fit_population_parity" in _f33)
+    seam("33e the parity predicate is COMPUTED, not a hardcoded verdict",
+         "\"all_arms_same_n\": (len(set(" in _f33,
+         "a hardcoded True beside the table it describes has contradicted "
+         "that table three times in this repo (CLAUDE.md rule 10)")
+    seam("33f the bounded counter cannot be silently renamed away",
+         "bounded drop counter" in inspect.getsource(PA._feature_pass))
+    seam("33d the pre-registered n is keyed by TAPE identity",
+         PA.preregistered_n("c7ab02ebcf27d2fc", "btc") == 578917
+         and PA.preregistered_n("0" * 16, "btc") is None,
+         "a population count asserted against the wrong tape is not a check")
+
     print(f"\n{'PRODUCTION SEAMS GREEN' if not FAILURES else 'PRODUCTION SEAMS RED'}: "
           f"{len(FAILURES)} failing")
     for f in FAILURES:
