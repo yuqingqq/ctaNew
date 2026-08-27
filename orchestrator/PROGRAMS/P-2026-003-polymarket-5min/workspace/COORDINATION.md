@@ -16351,6 +16351,14 @@ the seams it asserts, and it must grow with every audit.**
 
 **(6) tape5 LAUNCH ORDERS (BE, now):** from committed ref **a410c07 or later** (record the hash in the unit + artifact header); output to **`phase2_state_tape_v5.json`** (distinct path; v2-path bytes stay quarantined as the tape4 diagnostic); same launch pattern (in-slice systemd-run, MemoryMax≤14G, OOMScoreAdjust=1000); downstream fit-stage reader pinned explicitly to the v5 path. DA gates tape5: count expects **289** AND edge probe asserts the **493 at-g1 rows PRESENT-and-UNFLAGGED** (the positive assertion that half-open landed, distinguishing it from "the gaps never arrived"). DA adds its two locking selftests (exactly-at-g1, negative-t_start) now that the module is committed. On PASS → purged four-arm rerun, same turn.
 
+### R-197 — coordinator (2026-08-27T08:00Z): tape5 first launch KILLED by BE's own guard (correctly) — the build-at-commit rule was insufficient in a shared tree; SNAPSHOT-LAUNCH pattern adopted; relaunch ordered
+
+**(1) What happened.** BE launched tape5 from committed ref 9fb043b, then found the shared tree dirty in its build path — DA's in-flight (uncommitted) locking selftests in `harmful_state_features.py`. A ref pins intent; **Python imports read the TREE.** BE's new dirty-tree guard fired and BE killed the unit at 20s CPU, before any artifact existed. Credit where due: the guard's author was its first catch, one turn after adopting the rule — that is the instrument culture working (rule 15 in spirit: the guard proved it can fire).
+
+**(2) RULE AMENDED (supersedes R-196(3) wording): a heavy build runs from an IMMUTABLE SNAPSHOT of the pinned ref, not the shared tree.** Pattern: `git worktree add --detach <scratch>/build-<ref> <ref>` (or `git archive <ref> | tar -x`), unit runs the script from the snapshot dir, unit invocation records ref + snapshot path, snapshot removed after the run. Data paths are absolute in the builder (verified `build_state_tape_v2.py:32`), so the snapshot isolates CODE only. Seats keep editing the shared tree freely — no lock, no serialization. The dirty-tree guard remains the pre-flight for any direct-tree run (light jobs).
+
+**(3) Relaunch orders:** tape5 from a snapshot of **9fb043b** (the audited state: a410c07 six fixes + v5 wiring; DA's test-only additions are not builder semantics and join at their own commit). Output/caps/provenance-in-artifact unchanged from R-196(6). The FIT stage obeys the same snapshot rule at its own launch ref when its turn comes.
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
