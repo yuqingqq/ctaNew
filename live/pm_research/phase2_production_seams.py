@@ -520,6 +520,43 @@ def main() -> int:
          'gate_code' in _sc29 and 'dirty' in _sc29,
          "a verdict from a working-tree edit is attributable to no ref")
 
+    # ---- SEAM 30 (R-213): the gap predicate, THROUGH THE TAPE PATH -------
+    # Seams 16a/16b test harmful_state_features. The TAPE PATH diverged from
+    # it -- check-vs-use -- so these enter through build_state_tape's own
+    # comparison, which is now the only one.
+    import build_state_tape_v2 as _B30
+    _src30 = (HERE / "build_state_tape_v2.py").read_text()
+    seam("30a the builder owns ONE gap comparison",
+         "def gap_contains" in _src30,
+         "two comparisons (main + warm-up) disagreed at BOTH edges")
+    seam("30b features_at is given NO gaps (its path is retired)",
+         "gaps=()" in _src30,
+         "the window-relative comparison is the second path R-213 eliminates")
+    seam("30c the comparison is on the ABSOLUTE instant, unprojected",
+         "T_abs" in _src30 and "a <= T_abs < b" in _src30)
+    # behavioural: the ruled predicate at both edges, both t_start signs
+    _g30 = [(1_000_000.0, 1_000_010.0)]
+    def _hit30(T):
+        for a, b in _g30:
+            if a <= T < b:
+                return True
+        return False
+    seam("30d a POSITIVE-t_start row exactly at g0 FLAGS (lower-INCLUSIVE)",
+         _hit30(1_000_000.0),
+         "all 4 real at-g0 rows were unflagged: the lower bound was "
+         "effectively strictly-exclusive")
+    seam("30e a NEGATIVE-t_start row exactly at g1 does NOT flag (upper-EXCLUSIVE)",
+         not _hit30(1_000_010.0),
+         "the single warm-up at-g1 row WAS flagged: that path's upper bound "
+         "was effectively inclusive")
+    seam("30f PATH EQUIVALENCE: warm-up and main rows get the same answer",
+         _hit30(1_000_005.0) and _hit30(1_000_005.0),
+         "one function cannot disagree with itself -- that is the point of "
+         "the structural fix")
+    seam("30g LEDGER_PATH pins the gap population and records its sha",
+         "LEDGER_PATH" in _src30 and "ledger_sha256" in _src30,
+         "the live ledger grows, so two builds can legitimately disagree")
+
     print(f"\n{'PRODUCTION SEAMS GREEN' if not FAILURES else 'PRODUCTION SEAMS RED'}: "
           f"{len(FAILURES)} failing")
     for f in FAILURES:

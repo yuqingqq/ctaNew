@@ -200,16 +200,52 @@ def main() -> int:
     # every window except the one it happened to be logged against, which is
     # why BE counted 0 where the ledger counts 289.
     import gap_at_cutoff_count as GC
-    coin_gaps_abs = GC.load_coin_gaps()
+    # A pinned LEDGER SNAPSHOT makes the gap population reproducible: the live
+    # ledger grows with every collector restart, so two builds minutes apart
+    # can legitimately disagree on the count.
+    _ledger = os.environ.get("LEDGER_PATH", "").strip()
+    if _ledger:
+        _lp = Path(_ledger)
+        if not _lp.exists():
+            raise SystemExit(f"REFUSED: LEDGER_PATH={_lp} does not exist.")
+        coin_gaps_abs = GC.load_coin_gaps(_lp)
+        import hashlib as _hl
+        _ledger_sha = _hl.sha256(_lp.read_bytes()).hexdigest()
+        print(f"  pinned ledger {_lp.name} sha {_ledger_sha[:16]}", flush=True)
+    else:
+        coin_gaps_abs = GC.load_coin_gaps()
+        _ledger_sha = None
     print(f"  coin-level absolute gaps from the ledger: "
           f"{ {c: len(v) for c, v in coin_gaps_abs.items() if c in ('btc','eth')} }",
           flush=True)
 
+    def gap_contains(T_abs: float, coin: str):
+        """THE ruled predicate, and the ONLY gap comparison in this builder.
+
+        [g_start, g_end) -- lower-INCLUSIVE, upper-EXCLUSIVE -- evaluated on
+        the ABSOLUTE instant at FULL PRECISION. No projection.
+
+        R-213: there were TWO comparisons (main path and warm-up/shifted path)
+        and they disagreed at both edges: all 4 rows at exactly T==g_start were
+        unflagged (effectively strictly-exclusive lower bound), while the one
+        negative-t_start row at T==g_end WAS flagged (effectively inclusive
+        upper bound). Projecting gaps into window-relative form by subtracting
+        t0 from values near 1.79e9 is lossy -- ULP there is 2.4e-7 s -- so
+        exact equality survives for some values and not others. Comparing in
+        the absolute basis removes the projection, and routing BOTH paths
+        through this one function removes the divergence categorically rather
+        than by diagnosing either edge."""
+        for a, b in coin_gaps_abs.get(coin, ()):
+            if a <= T_abs < b:
+                return (a, b)
+        return None
+
     def gaps_for(slug: str, coin: str, t0: float):
         """Project the COIN's absolute gaps into THIS window's basis.
 
-        `_in_gap` compares a window-relative cutoff, so the intervals are
-        shifted by t0 rather than the comparison being changed. Intervals
+        RETAINED FOR THE TAPE HEADER ONLY. The gap DECISION is made by
+        gap_contains() on the absolute instant; this projection no longer
+        feeds any comparison (R-213). Intervals
         landing outside [0, WINDOW_S] are KEPT deliberately: a gap logged
         against the preceding window overlaps this window's warm-up rows at
         NEGATIVE t_start, and those are precisely the 289."""
@@ -251,15 +287,28 @@ def main() -> int:
                 no_token_by_coin_day[(coin, wrows[0]["day"])] = \
                     no_token_by_coin_day.get((coin, wrows[0]["day"]), 0) + n
                 continue
-            g = gaps_for(slug, coin, t0)
+            g = gaps_for(slug, coin, t0)   # retained for the tape header only
             bn = bn_recv_for_window(coin, t0)
             # REFUSES rather than degrading -- the R-184 finding, in code
             PIN.assert_required_inputs(g, bn)
             up, dn = tokens[slug]
-            tape = sf.build_tape(paths[slug], up, dn, gaps=g, bn_recv_ns=bn)
+            # gaps are NOT handed to features_at: its window-relative
+            # comparison is the second path R-213 eliminates. The builder owns
+            # the single absolute comparison and applies the status below.
+            tape = sf.build_tape(paths[slug], up, dn, gaps=(), bn_recv_ns=bn)
             feats = sf.features_for_window(tape, wrows)
             for r, fe in zip(wrows, feats):
                 st = str(fe.get("state_status", "OK"))
+                # ONE comparison, both paths. A gap is a FEED fact and outranks
+                # where the row sits in its window, so it overrides whatever
+                # the status chain produced -- including PRE_WINDOW, which is
+                # exactly the warm-up population that carries the gaps.
+                _T = float(r["t0"]) + float(r["t_start"])
+                _hit = gap_contains(_T, coin)
+                if _hit is not None:
+                    st = "GAP_AT_CUTOFF"
+                elif st == "GAP_AT_CUTOFF":
+                    st = "OK"      # the old path flagged it; the ruled one does not
                 status_counts[st] = status_counts.get(st, 0) + 1
                 _row = {
                     "slug": slug, "coin": coin, "day": r["day"],
@@ -352,6 +401,11 @@ def main() -> int:
         # working tree mid-fix and produced GAP_AT_CUTOFF=286 -- an unknown
         # intermediate of six in-flight fixes, reconcilable to nothing.
         "builder_ref": _ref,               # verbatim from the launcher
+        "ledger_path": _ledger or str(GC.LEDGER),
+        "ledger_sha256": _ledger_sha,
+        "ledger_pinned": bool(_ledger),
+        "gap_predicate": "[g_start, g_end) absolute basis, full precision, "
+                         "single comparison for main and warm-up paths (R-213)",
         "snapshot_path": _ROOT,
         "built_at_utc": _built_at,
         # LAYOUT: the schema's native form is FLAT; this tape WRAPS the
