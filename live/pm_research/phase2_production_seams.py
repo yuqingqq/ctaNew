@@ -197,6 +197,12 @@ def main() -> int:
     seam("22b the pinned root points at the REAL data tree",
          str(_hm22.fi.PM).startswith("/home/yuqing/ctaNew/data"),
          f"fi.PM = {_hm22.fi.PM}")
+    # BEHAVIOURAL: the data must LOAD, not merely look addressable. The first
+    # data-root fix rebound PM and left RAW/GAPS/MARKETS derived from the old
+    # value, so every path looked right and token_map() was still empty.
+    seam("22c pinning is verified by LOADING, not by inspecting paths",
+         "token_map()" in b_src2 and "is EMPTY after pinning" in b_src2,
+         "a path assertion passes while the data does not load")
 
     # ---- SEAM 23: an unmappable slug is a STATUS, never a KeyError --------
     b_main = b_src2[b_src2.find("def main"):]

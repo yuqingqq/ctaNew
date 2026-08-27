@@ -124,10 +124,30 @@ def pin_data_root() -> None:
     concerns and must be stated separately."""
     import harmful_hazard_model as _hm
     fi = _hm.fi
+    pm = PM_DATA_ROOT / "data/pm_5min"
+    # EVERY derived constant, not just PM. RAW/GAPS/MARKETS are computed FROM
+    # PM at IMPORT time, so rebinding PM alone leaves them pointing into the
+    # snapshot -- which is why the first version of this fix still returned an
+    # empty token_map. Fixing a constant does not fix what was derived from it.
     fi.REPO = PM_DATA_ROOT
-    fi.PM = PM_DATA_ROOT / "data/pm_5min"
-    if not fi.PM.exists():
-        raise SystemExit(f"REFUSED: pinned data root {fi.PM} does not exist.")
+    fi.PM = pm
+    fi.RAW = pm / "raw"
+    fi.GAPS = pm / "collector_gaps.jsonl"
+    fi.MARKETS = pm / "markets.jsonl"
+    for name in ("PM", "RAW", "GAPS", "MARKETS"):
+        q = getattr(fi, name)
+        if not q.exists():
+            raise SystemExit(f"REFUSED: pinned {name} = {q} does not exist.")
+    # BEHAVIOURAL check, not a path check: the point is that the data LOADS.
+    # Asserting the constants look right is what let the first fix pass while
+    # token_map() returned zero entries.
+    n = len(fi.token_map())
+    if n == 0:
+        raise SystemExit(
+            "REFUSED: token_map() is EMPTY after pinning the data root. The "
+            "paths look right and the data does not load, which is the exact "
+            "state that killed tape6.")
+    print(f"  data root pinned; token_map {n:,} entries", flush=True)
 
 
 def main() -> int:
