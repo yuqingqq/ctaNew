@@ -16270,6 +16270,50 @@ explanation prematurely are separable decisions… impatience wearing a
 conclusion's clothes." The number was time-critical; the interpretation
 was not; file the number, hold the story.
 
+### R-194 — **USER AUDIT #3: six critical seam defects in the corrective work — ALL ACCEPTED. tape4 completes as DIAGNOSTIC ONLY; fitting is BLOCKED until the six are fixed AND the fixture gains seams that can see them (11–16). The edge-semantics finding gets a demonstrated-equivalence path so the tape may be promotable without a third rebuild.** (2026-08-27 06:5x UTC)
+
+**(1) The six, file:line as cited by the user:**
+1. **State features still zero at scoring** — the tape nests features under
+   `row["state"]` but `_feature_pass` hands the OUTER row to `encode_row`
+   (0 nonzero vs 11 nested on a real OK row; `phase2_arms.py:218/242`).
+   The seam-1 class recursed at a new call site.
+2. **Arm D does not isolate weighting** — B and D load the SAME full model
+   with the same input; predictions identical. D needs its own weighted
+   PM+fine-ONLY fit (`phase2_arms.py:426`).
+3. **Causal thresholds computed but never APPLIED** — derived for B only,
+   copied into every receipt; the evaluator still selects retrospective
+   top-k (`harmful_action_eval.py:70`).
+4. **Head diagnostics are not heads** — hazard replaced by |ECV|,
+   conditional value by the product; the real head outputs must be
+   retained separately. The AUC is O(n²) and will stall at ~639k rows
+   (`phase2_arms.py:130/465`).
+5. **Stage-fit memory** — `tape_index("train")` materializes ~1.1M row
+   dicts (~12 GB for two indexes before matrices) — the R-174 violation
+   recurring inside the fit stage (`phase2_arms.py:280`).
+6. **Containment mismatch** — the builder uses `g0 <= t <= g1` against the
+   ruled `[g0, g1)` (`harmful_state_features.py:301`).
+
+**(2) RULINGS:** (a) **tape4 finishes as DIAGNOSTIC**; DA still gates it
+(the 289 expectation now doubles as the edge-semantics probe). (b) **The
+fixture gains seams 11–16 BEFORE any fit**, each able to go red: nonzero
+feature count through the REAL `_feature_pass` path on an OK row; arm-D
+predictions MUST DIFFER from B on a weighting-sensitive fixture AND load a
+distinct artifact; the evaluator MUST consume the frozen causal threshold
+and produce a selection that differs from retrospective on a designed
+fixture; true hazard and value head outputs present separately, with the
+AUC reworked to O(n log n); the fit stage holds BOUNDED memory (streaming/
+generator indexes — assert a ceiling on the fixture scaled up); a row at
+exactly `g1` is NOT flagged. (c) **Edge-equivalence path:** BE fixes the
+builder operator, then scans tape4 for rows with `T` exactly equal to any
+`g1` — ZERO hits (published in-receipt) proves the diagnostic tape is
+bit-equivalent to the fixed builder's output and PROMOTABLE without a
+third rebuild; any hits force the rebuild. (d) The good news is recorded
+as the user stated it: pinning, clock/layout declarations, streaming tape
+creation, gap precedence, required-input wiring, and explicit purging are
+substantially improved; every selftest and the fixture pass — **and the
+fixture missing these six is the finding: a fixture is only as good as
+the seams it asserts, and it must grow with every audit.**
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
