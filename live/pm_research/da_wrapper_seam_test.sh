@@ -15,10 +15,20 @@
 #   ./da_wrapper_seam_test.sh          # asserts the wrapper propagates
 set -u
 W=/home/yuqing/ctaNew/live/pm_research/da_await_gate.sh
+# ITS OWN LOG. This test drives the wrapper with STUB exit codes, and it used
+# to inherit the wrapper's DEFAULT log -- the production one. Six stub runs
+# therefore landed underneath a LIVE "armed" header while the real gate was
+# still polling for its tape, and the first person to read it (me) concluded
+# the armed gate had run and exited 3. A log that cannot distinguish "the gate
+# ran" from "a test of the gate ran" is not evidence, and this log exists to
+# carry a refusal.
+SEAM_LOG="$(mktemp -t da_seam_log.XXXXXX)"
+trap 'rm -f "$SEAM_LOG"' EXIT
 pass=0; fail=0
 check() {  # check <label> <expected_rc> <gate_rc> <count_rc>
   local label="$1" want="$2" g="$3" c="$4" got
   DA_GATE_STUB=1 DA_STUB_GATE_RC="$g" DA_STUB_COUNT_RC="$c" \
+    DA_LOG="$SEAM_LOG" \
     DA_TAPE=/dev/null DA_SKIP_WAIT=1 "$W" >/dev/null 2>&1
   got=$?
   if [ "$got" = "$want" ]; then
