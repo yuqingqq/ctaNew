@@ -16182,6 +16182,46 @@ figure this programme quotes. Five own-gate defects en route are already
 recorded (R-189(2)); the streaming gate's final form: 1.76M rows, 3m59s,
 **512 KB peak**.
 
+### R-191 — **THE GAP_AT_CUTOFF DEFINITION IS RULED FROM THE ESTIMAND, ending the BE↔DA count dispute: ABSOLUTE time, COIN-level gap source, stated containment semantics. Both seats compute the count independently under the ONE definition and must AGREE before the rebuild. BE's "supplied ≠ consumed" self-correction is ratified; DA's probe is vindicated; seam 10 gains the two suspected loss modes.** (2026-08-27 06:1x UTC)
+
+**(1) The dispute:** the wire FIRES (three-way verified, including DA's own
+selftests); under the code's window-relative basis the count is genuinely 0;
+DA's discriminator found 152 (score-side lower bound); BE's basis hunt
+produced 0 / 405 / 30,150 / 496 and reproduced 152 under none — two planes
+disagreeing on a coordinate system, the seam-4 family one level up, plus a
+universe difference (DA score-side-only; BE both populations).
+
+**(2) THE DEFINITION, ruled from what the status MEANS** (a recorded PM
+outage covers this decision's instant, so the book state feeding the row may
+be stale): **a row is `GAP_AT_CUTOFF` iff its ABSOLUTE decision instant
+`T = t0 + t_start` lies in `[g_start, g_end)` for ANY recorded gap of that
+COIN in the collector-gaps ledger** — the physical source of truth. Basis:
+ABSOLUTE on both sides. Gap scope: COIN-level, never per-slug assignment —
+a gap is a feed event; slug-scoping it is a lossy projection that drops
+warm-up and boundary overlaps (the likely home of the discrepancy: rows
+with negative `t_start` sit in windows whose per-slug gap list cannot see a
+gap assigned to the neighbouring window). Universe: ALL tape rows; unit:
+ROWS (the status is per-row). Score-side-only reported beside, so DA's 152
+reconciles or its own cross is corrected.
+
+**(3) PROCEDURE:** BOTH seats implement the definition INDEPENDENTLY from
+this entry's text and exchange counts (total + score-side + per-coin).
+**Agreement on the number is REQUIRED before the rebuild**; disagreement
+localizes to a concrete row list (each publishes its first 10 flagged
+row-identities) and files. Then the builder implements the agreed
+definition and seam 10 EXTENDS with the two suspected loss modes: a
+warm-up cutoff (negative `t_start`) inside a gap, and a gap straddling a
+window boundary — both must flag.
+
+**(4) Ratified:** BE's Q-BE-173 self-correction — "supplying an input does
+not establish the path CONSUMES it; reachability is established by FIRING
+the predicate" (the seam-8 error named in its own earlier claim) — and
+BE's refusal to encode DA's basis blind (a wrongly-flagged status is a
+silent exclusion). DA's refusal to accept the header's word and its
+discriminator probe are vindicated regardless of where the count lands —
+the probe forced the definition this entry supplies. Q-DA-84's two-figure
+rule rides here as previously ACKed.
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
