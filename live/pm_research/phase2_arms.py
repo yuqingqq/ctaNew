@@ -148,6 +148,9 @@ def tape_index(split: str, features_in_order=None) -> dict:
     return idx
 
 def freeze_thresholds(train_scores, budgets, gen_keys=None):
+    """Returns a cutoff for EVERY declared budget -- the shape R-209(2)
+    requires of its callers. A partial map is refused downstream, so it must
+    never be produced here."""
     """CAUSAL thresholds: per-budget cutoffs resolved from TRAINING scores ONLY.
 
     R-184(4)(vi). The evaluator's top-k cutoff is knowable only after seeing the
@@ -504,6 +507,61 @@ def assert_verdict_subject_is(tape: Path, v: dict) -> None:
             f"still the wrong verdict.")
 
 
+FIT_MANIFEST = "fit_manifest.json"
+
+
+def _tape_identity() -> dict:
+    """The tape sha-prefix + verdict identity this fit is bound to."""
+    import hashlib
+    h = hashlib.sha256()
+    with TAPE_PATH.open("rb") as fh:
+        for chunk in iter(lambda: fh.read(1 << 20), b""):
+            h.update(chunk)
+    v = json.loads(DA_VERDICT.read_text()) if DA_VERDICT.exists() else {}
+    return {"tape_path": str(TAPE_PATH), "tape_sha256_prefix": h.hexdigest()[:16],
+            "tape_bytes": TAPE_PATH.stat().st_size,
+            "verdict_kind": v.get("verdict"),
+            "verdict_tape_sha256_prefix": v.get("tape_sha256_prefix")}
+
+
+def assert_fit_complete_and_matching() -> dict:
+    """stage_score REQUIRES a completed fit bound to THE TAPE IT SCORES.
+
+    R-209(3): fits wrote in place into a SHARED directory with no completion
+    marker, so a killed partial fit left stale per-arm artifacts that
+    stage_score consumed as if whole -- the in-place-overwrite class, fifth
+    appearance. A run directory plus an atomic promote makes 'partially
+    written' unrepresentable; the manifest makes 'written by a different run,
+    against a different tape' detectable."""
+    mf = FITDIR / FIT_MANIFEST
+    if not mf.exists():
+        raise RuntimeError(
+            f"REFUSED: no {FIT_MANIFEST} in {FITDIR}. A fit without a "
+            f"completion marker may be a killed partial; its artifacts look "
+            f"identical to a finished run's.")
+    m = json.loads(mf.read_text())
+    if not m.get("complete"):
+        raise RuntimeError(f"REFUSED: {FIT_MANIFEST} is not marked complete.")
+    now = _tape_identity()
+    for k in ("tape_sha256_prefix", "tape_bytes"):
+        if m.get(k) != now.get(k):
+            raise RuntimeError(
+                f"REFUSED: the fit was produced against a different tape "
+                f"({k}: fit={m.get(k)!r} now={now.get(k)!r}). Scoring a fit "
+                f"against a tape it was not fitted on is not a comparison.")
+    import hashlib
+    for name, want in (m.get("file_hashes") or {}).items():
+        f = FITDIR / name
+        if not f.exists():
+            raise RuntimeError(f"REFUSED: manifest lists {name}, which is absent.")
+        got = hashlib.sha256(f.read_bytes()).hexdigest()[:16]
+        if got != want:
+            raise RuntimeError(
+                f"REFUSED: {name} hash {got} != manifest {want}; the fit "
+                f"directory changed after the run completed.")
+    return m
+
+
 def stage_fit() -> None:
     """STAGE 1: fit B and C on the fragment, persist, exit.
 
@@ -519,7 +577,14 @@ def stage_fit() -> None:
     assert_tape_is_v5()                              # committed-ref v5 build
     _v = assert_gate_passed()                        # (i) contract valid
     assert_verdict_subject_is(TAPE_PATH, _v)         # (ii) about THIS tape
-    FITDIR.mkdir(parents=True, exist_ok=True)
+    # write into a per-run directory; promote only on completion
+    import shutil as _sh
+    _run = FITDIR.parent / (FITDIR.name + ".run")
+    if _run.exists():
+        _sh.rmtree(_run)
+    _run.mkdir(parents=True, exist_ok=True)
+    _final = FITDIR
+    globals()["FITDIR"] = _run
     print("  indexing rebuilt tape (train split)...", flush=True)
     TP = tape_index("train")
     print(f"  tape rows indexed: {len(TP):,}", flush=True)
@@ -683,13 +748,32 @@ def stage_fit() -> None:
               f"positive {sum(yF)}", flush=True)
         del XF, Xf, A, FIT[coin]["PM"], FIT[coin]["FN"], FIT[coin]["ST"]
     (FITDIR / "empty_coins.json").write_text(json.dumps(empty_coins))
+    _ident = _tape_identity()
     if not FIT:
         raise RuntimeError(
             "REFUSED: every coin came back empty. A fit over no population is "
             "not a null result, it is a broken input path.")
     (FITDIR / "fit_slugs.json").write_text(json.dumps(sorted(
         {r["slug"] for c in FIT.values() for r in c["kept"]})))
-    print("STAGE FIT COMPLETE", flush=True)
+    # COMPLETION MANIFEST then ATOMIC PROMOTE. Written last, so its presence
+    # is the completion signal; promoted by rename, so a consumer never sees a
+    # half-populated directory.
+    import hashlib as _hh, shutil as _sh2, os as _os2
+    _hashes = {f.name: _hh.sha256(f.read_bytes()).hexdigest()[:16]
+               for f in sorted(_run.iterdir()) if f.is_file()}
+    _mani = dict(_ident)
+    _mani.update({"complete": True, "file_hashes": _hashes,
+                  "run_finished_utc": __import__("subprocess").run(
+                      ["date", "-u", "+%Y-%m-%dT%H:%M:%SZ"],
+                      capture_output=True, text=True).stdout.strip(),
+                  "arms": list(D.ARMS), "budgets": list(D.BUDGETS)})
+    (_run / FIT_MANIFEST).write_text(json.dumps(_mani, indent=1, sort_keys=True))
+    if _final.exists():
+        _sh2.rmtree(_final.with_suffix(".prev"), ignore_errors=True)
+        _final.rename(_final.with_suffix(".prev"))
+    _os2.replace(str(_run), str(_final))
+    globals()["FITDIR"] = _final
+    print(f"STAGE FIT COMPLETE -- promoted {len(_hashes)} artifacts", flush=True)
 
 
 def stage_score() -> dict:
@@ -703,6 +787,9 @@ def stage_score() -> dict:
     assert_tape_is_v5()
     _v = assert_gate_passed()
     assert_verdict_subject_is(TAPE_PATH, _v)
+    _fm = assert_fit_complete_and_matching()   # a partial fit cannot be scored
+    print(f"  fit manifest OK: {len(_fm.get('file_hashes') or {})} artifacts, "
+          f"tape {_fm.get('tape_sha256_prefix')}", flush=True)
     frozen = json.loads(FROZEN.read_text())
     fit_slugs = set(json.loads((FITDIR / "fit_slugs.json").read_text()))
     print("  indexing rebuilt tape (score split)...", flush=True)

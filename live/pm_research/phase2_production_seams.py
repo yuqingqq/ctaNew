@@ -415,6 +415,53 @@ def main() -> int:
                         "applicable": False}]),
          "the legitimate shape must still pass, or the fix is just a wall")
 
+    # ---- SEAM 28 (R-209): partial theta + partial fit -------------------
+    # 28a: a PARTIAL theta_frozen must REFUSE. The old per-budget guard let a
+    # missing key fall back to retrospective FOR THAT BUDGET while the arm
+    # reported causal -- within-arm mixing the same-mode check cannot see,
+    # because it compares arms rather than budgets.
+    _rr28 = [{"slug": "s", "side": "BUY_UP", "gen": i, "t_start": float(i),
+              "t0": 1000.0, "any_fill_ahead": True,
+              "latency": {"50": {"preventable_value_cents": 1.0,
+                                 "preventable_shares": 1.0,
+                                 "stale_shares": 0.0}}} for i in range(6)]
+    try:
+        ae.evaluate_policy(_rr28, [0.5] * 6, latency_ms=50,
+                           budgets=(0.05, 0.10), n_random=200,
+                           theta_frozen={"5%": 0.4})
+        seam("28a a PARTIAL theta_frozen is REFUSED", False,
+             "the missing budget fell back to retrospective")
+    except ValueError as _e28:
+        seam("28a a PARTIAL theta_frozen is REFUSED",
+             "lacks budget key" in str(_e28))
+    _full28 = ae.evaluate_policy(_rr28, [0.5] * 6, latency_ms=50,
+                                 budgets=(0.5,), n_random=200,
+                                 theta_frozen={"50%": 0.4})
+    seam("28b each BUDGET carries its own mode stamp",
+         _full28["budgets"]["50%"].get("threshold_mode")
+         == "CAUSAL_FROZEN_FROM_TRAIN",
+         "one stamp per arm hides within-arm mixing")
+
+    # 28c: a killed partial fit (no manifest) must REFUSE scoring
+    _d28 = Path(_t25.mkdtemp()); _fd28 = _d28 / "fits"; _fd28.mkdir()
+    (_fd28 / "linear_btc.json").write_text("{}")      # stale partial artifact
+    _svf = PA.FITDIR; PA.FITDIR = _fd28
+    try:
+        PA.assert_fit_complete_and_matching()
+        seam("28c a fit with NO completion manifest is REFUSED", False,
+             "a killed partial fit looks identical to a finished one")
+    except RuntimeError as _e28b:
+        seam("28c a fit with NO completion manifest is REFUSED",
+             "killed partial" in str(_e28b))
+    finally:
+        PA.FITDIR = _svf
+    seam("28d stage_score REQUIRES the fit manifest",
+         "assert_fit_complete_and_matching()" in inspect.getsource(PA.stage_score))
+    seam("28e the fit promotes ATOMICALLY from a run dir",
+         "os2.replace(str(_run)" in inspect.getsource(PA.stage_fit) or
+         "_os2.replace" in inspect.getsource(PA.stage_fit),
+         "writing in place into a shared dir is the in-place-overwrite class")
+
     print(f"\n{'PRODUCTION SEAMS GREEN' if not FAILURES else 'PRODUCTION SEAMS RED'}: "
           f"{len(FAILURES)} failing")
     for f in FAILURES:
