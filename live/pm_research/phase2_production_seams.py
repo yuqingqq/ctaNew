@@ -462,6 +462,64 @@ def main() -> int:
          "_os2.replace" in inspect.getsource(PA.stage_fit),
          "writing in place into a shared dir is the in-place-overwrite class")
 
+    # ---- SEAM 29 (R-212): snapshot isolation + manifest binding ---------
+    # 29a: the POISONED-MAIN-TREE probe. A module loaded from outside the run
+    # root must be REFUSED at the entry point -- this is the tape5 class, and
+    # it lived in BE's fit stage until R-212 found it.
+    seam("29a the fit stage asserts modules load under ITS OWN root",
+         hasattr(PA, "assert_modules_under_root"),
+         "an absolute main-tree sys.path insert makes a snapshot import the "
+         "live tree, silently")
+    if hasattr(PA, "assert_modules_under_root"):
+        PA.assert_modules_under_root()          # main-tree run: must pass
+        seam("29b it PASSES when modules really are under the root", True)
+        import types as _ty29
+        _fake = _ty29.ModuleType("phase2_declaration")
+        _fake.__file__ = "/some/other/tree/phase2_declaration.py"
+        _svD = PA.D; PA.D = _fake
+        try:
+            PA.assert_modules_under_root()
+            seam("29c a module from ANOTHER tree is REFUSED", False,
+                 "wrong-tree imports are silent by default")
+        except RuntimeError as _e29:
+            seam("29c a module from ANOTHER tree is REFUSED",
+                 "isolates nothing" in str(_e29))
+        finally:
+            PA.D = _svD
+    seam("29d entry points call the probe",
+         "assert_modules_under_root()" in inspect.getsource(PA.stage_fit)
+         and "assert_modules_under_root()" in inspect.getsource(PA.stage_score))
+
+    # 29e/f: manifest binds AND rechecks the verdict identity
+    _ti29 = inspect.getsource(PA._tape_identity)
+    for _lbl, _tok in (("verdict path", "verdict_path"),
+                       ("verdict content hash", "verdict_sha256_prefix"),
+                       ("gate code identity", "gate_code_sha256_prefix"),
+                       ("fit code ref", "fit_code_ref")):
+        seam(f"29e manifest binds the {_lbl}", _tok in _ti29)
+    _af29 = inspect.getsource(PA.assert_fit_complete_and_matching)
+    seam("29f scoring RECHECKS every binding, not just the tape",
+         all(t in _af29 for t in ("verdict_sha256_prefix",
+                                  "gate_code_sha256_prefix", "fit_code_ref")),
+         "a manifest pinning only the tape cannot see a swapped verdict")
+
+    # 29g: staging is unique per run and refuses a LIVE lock
+    _sf29 = inspect.getsource(PA.stage_fit)
+    seam("29g the run dir is unique per run, not a fixed path",
+         ".run-{int(" in _sf29 or "run-" in _sf29,
+         "rmtree on a fixed .run path deletes a CONCURRENT run's directory")
+    seam("29h a LIVE fit lock REFUSES rather than reclaiming",
+         "held by LIVE pid" in _sf29)
+    # DA relay: gate_code binds by FILE SHA, and a dirty-checker verdict is
+    # refused -- a verdict from uncommitted checker bytes is reproducible from
+    # no ref, so binding to `head` would bind to a ref that never ran.
+    _sc29 = inspect.getsource(PA.stage_score)
+    seam("29i gate_code binds by FILE SHA256, not head",
+         "gate_code_sha256_prefix" in _ti29 and "rev-parse" not in _ti29)
+    seam("29j a DIRTY-checker verdict is REFUSED at scoring",
+         'gate_code' in _sc29 and 'dirty' in _sc29,
+         "a verdict from a working-tree edit is attributable to no ref")
+
     print(f"\n{'PRODUCTION SEAMS GREEN' if not FAILURES else 'PRODUCTION SEAMS RED'}: "
           f"{len(FAILURES)} failing")
     for f in FAILURES:

@@ -28,8 +28,32 @@ from __future__ import annotations
 import json, sys
 from pathlib import Path
 
-sys.path.insert(0, "/home/yuqing/ctaNew/live/pm_research")
+# R-212(1): THE TAPE5 CLASS, IN BE'S OWN FIT STAGE. This was an absolute
+# main-tree insert, so a fit run from a snapshot imported its pinned modules
+# from the LIVE tree -- the identical defect BE fixed in the builder and never
+# looked for here. The import root is THIS FILE'S directory, so a snapshot copy
+# imports its own siblings by construction.
+_ROOT = str(Path(__file__).resolve().parent)
+sys.path.insert(0, _ROOT)
 import phase2_declaration as D
+
+
+def assert_modules_under_root() -> None:
+    """Every pinned module must have loaded from THIS tree.
+
+    A wrong-tree import is silent: the fit runs, the numbers look normal, and
+    the code that produced them is whatever the live tree happened to contain.
+    Called at BOTH entry points, because either can be run from a snapshot."""
+    import phase2_state_schema_freeze as _PIN
+    import phase2_embargo as _EMB
+    import harmful_action_eval as _AE
+    for m in (D, _PIN, _EMB, _AE):
+        f = str(Path(m.__file__).resolve())
+        if not f.startswith(_ROOT):
+            raise RuntimeError(
+                f"REFUSED: {m.__name__} loaded from {f}, OUTSIDE this run root "
+                f"{_ROOT}. A snapshot that imports another tree isolates "
+                f"nothing -- the fit would run bytes nobody pinned.")
 
 DERIVED = Path("/home/yuqing/ctaNew/data/pm_5min/derived")
 TOPUP = DERIVED / "harmful_exposure_rows_v3_topup.json"
@@ -511,17 +535,31 @@ FIT_MANIFEST = "fit_manifest.json"
 
 
 def _tape_identity() -> dict:
-    """The tape sha-prefix + verdict identity this fit is bound to."""
-    import hashlib
+    """Everything this fit is bound to: tape, verdict, gate code, fit code."""
+    import hashlib, os
     h = hashlib.sha256()
     with TAPE_PATH.open("rb") as fh:
         for chunk in iter(lambda: fh.read(1 << 20), b""):
             h.update(chunk)
     v = json.loads(DA_VERDICT.read_text()) if DA_VERDICT.exists() else {}
+    # R-212(3): bind to the VERDICT ITSELF (path + content hash) and to the
+    # CODE on both sides. A manifest that pins only the tape cannot tell that
+    # the verdict was swapped, or that a different gate or a different fit
+    # produced it -- and each of those changes what the numbers mean.
+    vh = (hashlib.sha256(DA_VERDICT.read_bytes()).hexdigest()[:16]
+          if DA_VERDICT.exists() else None)
+    gate_src = Path(_ROOT) / "da_state_tape_verify.py"
+    gate_id = (hashlib.sha256(gate_src.read_bytes()).hexdigest()[:16]
+               if gate_src.exists() else None)
+    fit_ref = os.environ.get("FIT_CODE_REF", "").strip() or None
     return {"tape_path": str(TAPE_PATH), "tape_sha256_prefix": h.hexdigest()[:16],
             "tape_bytes": TAPE_PATH.stat().st_size,
             "verdict_kind": v.get("verdict"),
-            "verdict_tape_sha256_prefix": v.get("tape_sha256_prefix")}
+            "verdict_tape_sha256_prefix": v.get("tape_sha256_prefix"),
+            "verdict_path": str(DA_VERDICT),
+            "verdict_sha256_prefix": vh,
+            "gate_code_sha256_prefix": gate_id,
+            "fit_code_ref": fit_ref}
 
 
 def assert_fit_complete_and_matching() -> dict:
@@ -543,12 +581,20 @@ def assert_fit_complete_and_matching() -> dict:
     if not m.get("complete"):
         raise RuntimeError(f"REFUSED: {FIT_MANIFEST} is not marked complete.")
     now = _tape_identity()
-    for k in ("tape_sha256_prefix", "tape_bytes"):
+    # RECHECK EVERY BINDING, not just the tape. Each of these changes what the
+    # scored numbers mean, and each is invisible in the numbers themselves.
+    for k, why in (
+            ("tape_sha256_prefix", "the fit was produced against a different tape"),
+            ("tape_bytes", "the tape changed size since the fit"),
+            ("verdict_path", "a different verdict artifact is in place"),
+            ("verdict_sha256_prefix", "the verdict CONTENT changed since the fit"),
+            ("gate_code_sha256_prefix", "a different GATE produced the verdict"),
+            ("fit_code_ref", "a different FIT CODE REF produced these artifacts")):
         if m.get(k) != now.get(k):
             raise RuntimeError(
-                f"REFUSED: the fit was produced against a different tape "
-                f"({k}: fit={m.get(k)!r} now={now.get(k)!r}). Scoring a fit "
-                f"against a tape it was not fitted on is not a comparison.")
+                f"REFUSED: {why} ({k}: fit={m.get(k)!r} now={now.get(k)!r}). "
+                f"Scoring under bindings that differ from the fit's is not a "
+                f"comparison.")
     import hashlib
     for name, want in (m.get("file_hashes") or {}).items():
         f = FITDIR / name
@@ -574,15 +620,31 @@ def stage_fit() -> None:
     import lightgbm as lgb
     import numpy as np
     import phase2_embargo as EMB
+    assert_modules_under_root()
     assert_tape_is_v5()                              # committed-ref v5 build
     _v = assert_gate_passed()                        # (i) contract valid
     assert_verdict_subject_is(TAPE_PATH, _v)         # (ii) about THIS tape
     # write into a per-run directory; promote only on completion
-    import shutil as _sh
-    _run = FITDIR.parent / (FITDIR.name + ".run")
-    if _run.exists():
-        _sh.rmtree(_run)
-    _run.mkdir(parents=True, exist_ok=True)
+    import shutil as _sh, os as _os0, time as _tm0
+    # R-212(4): a UNIQUE run dir. `rmtree` on a fixed `.run` path would delete
+    # a CONCURRENT run's working directory -- destroying another process's
+    # in-flight state to make room for this one.
+    _run = FITDIR.parent / f"{FITDIR.name}.run-{int(_tm0.time())}-{_os0.getpid()}"
+    _run.mkdir(parents=True, exist_ok=False)
+    _lock = FITDIR.parent / f"{FITDIR.name}.lock"
+    if _lock.exists():
+        try:
+            _owner = int(_lock.read_text().strip())
+            _alive = Path(f"/proc/{_owner}").exists()
+        except (ValueError, OSError):
+            _owner, _alive = None, False
+        if _alive:
+            raise RuntimeError(
+                f"REFUSED: fit lock held by LIVE pid {_owner}. Two fits "
+                f"writing one directory is how a partial run becomes another "
+                f"run's input.")
+        print(f"  stale fit lock from dead pid {_owner}; reclaiming", flush=True)
+    _lock.write_text(str(_os0.getpid()))
     _final = FITDIR
     globals()["FITDIR"] = _run
     print("  indexing rebuilt tape (train split)...", flush=True)
@@ -784,9 +846,23 @@ def stage_score() -> dict:
     import lightgbm as lgb
     import numpy as np
 
+    assert_modules_under_root()
     assert_tape_is_v5()
     _v = assert_gate_passed()
     assert_verdict_subject_is(TAPE_PATH, _v)
+    # DA relay: a verdict issued from a DIRTY checker tree is reproducible from
+    # no ref at all -- binding to `head` would bind to a ref that never ran.
+    # The manifest already binds the checker by FILE SHA256; this additionally
+    # refuses a verdict whose own gate_code declares itself dirty. If we ever
+    # legitimately need one, that is a ruling, not a default.
+    _gc = (_v.get("gate_code") or {}) if isinstance(_v, dict) else {}
+    if _gc.get("dirty") is True:
+        raise RuntimeError(
+            f"REFUSED: the verdict was produced by a DIRTY checker tree "
+            f"(gate_code.dirty=true, sha256={_gc.get('sha256', '?')!r:.18}). "
+            f"A verdict from uncommitted checker bytes is attributable to no "
+            f"ref; accepting it would bind this fit to code that never existed "
+            f"as a commit.")
     _fm = assert_fit_complete_and_matching()   # a partial fit cannot be scored
     print(f"  fit manifest OK: {len(_fm.get('file_hashes') or {})} artifacts, "
           f"tape {_fm.get('tape_sha256_prefix')}", flush=True)
@@ -800,7 +876,8 @@ def stage_score() -> dict:
     print("  populations asserted DISJOINT (fitted slugs read from stage 1)",
           flush=True)
 
-    out = {"protocol": "PHASE2_THREE_ARM_V1", "arms": {}, "population": {},
+    out = {"protocol": "PHASE2_FOUR_ARM_V2",
+           "supersedes_label": "PHASE2_THREE_ARM_V1 (stale: four arms since arm D)", "arms": {}, "population": {},
            "declaration_commit": "d7082b6",
            # rule 10: COMPUTED from the declaration, never written as a
            # literal beside it. A hardcoded count has contradicted its own
