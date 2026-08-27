@@ -1,6 +1,14 @@
 {
+ "clock_basis": {
+  "absolute_epoch_via": "t0 + decision_time",
+  "decision_time": "window_relative_seconds",
+  "feature_asof": "window_relative_seconds",
+  "note": "decision_time IS t_start from the exposure row: seconds relative to the window start, and LEGITIMATELY NEGATIVE for pre-window warm-up rows (real values reach -39.4). It is NOT an epoch. A consumer that emits an absolute decision_time must say so on the tape as `clock_basis: absolute_epoch`, or a reader adding t0 will double-count the window start."
+ },
  "declared_reductions": [
   "coin",
+  "decision_time",
+  "family",
   "feature_asof",
   "gen",
   "side",
@@ -11,12 +19,11 @@
   "n_emitted": 53,
   "schema": "da_pred_state_v1_schema.json"
  },
+ "exclusions_derived_not_hand_listed": true,
  "features_in_order": [
   "bn_feed_age_s",
   "bn_feed_missing",
   "bn_feed_stale",
-  "decision_time",
-  "family",
   "fill_share_missing_1000ms",
   "fill_share_missing_250ms",
   "fill_share_missing_50ms",
@@ -60,7 +67,12 @@
   "touch_move_age_s",
   "touch_move_missing"
  ],
- "n_features": 47,
+ "layout": {
+  "features_under": null,
+  "native": "flat",
+  "note": "`features_at` returns a FLAT dict. A consumer that wraps it MUST declare the wrapping key on the tape itself as `features_under`, so a reader locates the fields by declaration rather than by guessing."
+ },
+ "n_features": 45,
  "never_zero_impute": "None means UNKNOWN. A consumer must read the guard flag, never coerce None to 0.0 (the v1 defect at phase2_arms.py:95).",
  "nullable_guard_pairs": {
   "bn_feed_age_s": "bn_feed_missing",

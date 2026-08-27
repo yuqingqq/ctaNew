@@ -77,7 +77,14 @@ def main() -> int:
     gaps_by_slug = hm.fi.gaps_by_slug(hm.fi.ERA)
     paths = hm.fi._archive_paths(); tokens = hm.fi.token_map()
 
-    rows_out = []
+    # STREAMING (R-174). The stopped build held every row in memory and hit
+    # 7.4G at 200/471 slugs. Rows are appended to a JSONL spool per slug and
+    # the final artifact is streamed FROM the spool, so peak memory is one
+    # slug's rows, not the population's.
+    spool_fd, spool_path = tempfile.mkstemp(dir=str(OUT.parent), suffix=".jsonl")
+    spool = os.fdopen(spool_fd, "w")
+    n_rows = 0
+    tr_last_exit = float("-inf"); sc_first_feat = float("inf")
     status_counts: dict = {}
     per_split: dict = {}
     for split, src in (("train", FRAGMENT), ("score", TOPUP)):
@@ -100,35 +107,54 @@ def main() -> int:
             for r, fe in zip(wrows, feats):
                 st = str(fe.get("state_status", "OK"))
                 status_counts[st] = status_counts.get(st, 0) + 1
-                rows_out.append({
+                _row = {
                     "slug": slug, "coin": coin, "day": r["day"],
                     "t0": r["t0"], "t_start": r["t_start"],
                     "side": r["side"], "gen": r["gen"],
                     "split": split,                       # embargo certifiable
                     "state_status": st,
                     "feature_asof": fe.get("feature_asof"),
-                    "decision_time": float(r["t0"]) + float(r["t_start"]),
+                    # CLOCK BASIS, per the schema: decision_time is
+                    # WINDOW-RELATIVE seconds (== t_start) and is legitimately
+                    # NEGATIVE for pre-window warm-up rows. BE's first builder
+                    # wrote t0 + t_start here -- an absolute epoch under a name
+                    # the schema declares window-relative -- so any reader
+                    # adding t0 would have double-counted the window start.
+                    "decision_time": float(r["t_start"]),
+                    "decision_time_epoch": float(r["t0"]) + float(r["t_start"]),
                     "label_exit_time": EMB.label_exit_time(r),
                     "state": {k: fe.get(k) for k in pin["features_in_order"]},
-                })
+                }
+                spool.write(json.dumps(_row) + "\n")
+                n_rows += 1
+                if split == "train":
+                    tr_last_exit = max(tr_last_exit, _row["label_exit_time"])
+                else:
+                    sc_first_feat = min(sc_first_feat, _row["decision_time_epoch"])
             n_slug += 1
             if n_slug % 100 == 0:
                 print(f"  [{split}] {n_slug}/{len(bywin)} slugs", flush=True)
-        per_split[split] = {"slugs": len(bywin), "rows": sum(
-            1 for x in rows_out if x["split"] == split)}
+        per_split[split] = {"slugs": len(bywin)}
         print(f"  [{split}] DONE {per_split[split]}", flush=True)
 
-    tr = [r for r in rows_out if r["split"] == "train"]
-    sc = [r for r in rows_out if r["split"] == "score"]
-    emb = None
-    try:
-        emb = EMB.assert_embargo(tr, sc)
-        emb_state = "CERTIFIED"
-    except EMB.EmbargoViolation as e:
-        emb_state = f"VIOLATED (unpurged): {e}"
+    spool.flush(); os.fsync(spool.fileno()); spool.close()
+    # embargo from the running extremes -- no second pass over the rows
+    gap = sc_first_feat - tr_last_exit
+    emb = {"gap_s": gap, "embargo_s": EMB.EMBARGO_S,
+           "last_train_label_exit": tr_last_exit,
+           "first_score_feature": sc_first_feat}
+    emb_state = "CERTIFIED" if gap >= EMB.EMBARGO_S else (
+        f"VIOLATED (unpurged): gap {gap:.3f}s < {EMB.EMBARGO_S}s")
 
     out = {
         "protocol": "PHASE2_STATE_TAPE_V2",
+        # LAYOUT: the schema's native form is FLAT; this tape WRAPS the
+        # features, so it declares the wrapping key rather than leaving a
+        # reader to guess it (schema LAYOUT.note).
+        "features_under": "state",
+        "clock_basis": {"decision_time": "window_relative_seconds",
+                        "decision_time_epoch": "absolute_epoch",
+                        "label_exit_time": "absolute_epoch"},
         "built_from_schema": pin["derived_from"],
         "n_features": pin["n_features"],
         "features_in_order": pin["features_in_order"],
@@ -139,17 +165,24 @@ def main() -> int:
         "per_split": per_split,
         "embargo": {"state": emb_state, "detail": emb,
                     "rule": "label_exit_time + 60s < first score feature time"},
-        "n_rows": len(rows_out),
-        "rows": rows_out,
+        "n_rows": n_rows,
     }
     fd, tmp = tempfile.mkstemp(dir=str(OUT.parent), suffix=".tmp")
     with os.fdopen(fd, "w") as fh:
-        for chunk in json.JSONEncoder().iterencode(out):
-            fh.write(chunk)
+        head = json.dumps(out)
+        fh.write(head[:-1] + ', "rows": [')      # splice the array in
+        with open(spool_path) as sp:
+            first = True
+            for line in sp:
+                if not first:
+                    fh.write(",")
+                fh.write(line.rstrip("\n")); first = False
+        fh.write("]}")
         fh.flush(); os.fsync(fh.fileno())
     os.replace(tmp, OUT)
-    print(f"\nWROTE {OUT.name}: {len(rows_out):,} rows, "
-          f"statuses {status_counts}, embargo {emb_state[:40]}")
+    Path(spool_path).unlink(missing_ok=True)
+    print(f"\nWROTE {OUT.name}: {n_rows:,} rows, "
+          f"statuses {status_counts}, embargo {emb_state[:44]}")
     return 0
 
 

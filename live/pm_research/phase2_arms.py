@@ -56,7 +56,75 @@ def assert_disjoint(fit_slugs: set, score_slugs: set) -> None:
             f"in-sample and FLATTERS them. Refusing.")
 
 
-def _feature_pass(src: Path, population: str) -> dict:
+
+def freeze_thresholds(train_scores, budgets):
+    """CAUSAL thresholds: per-budget cutoffs resolved from TRAINING scores ONLY.
+
+    R-184(4)(vi). The evaluator's top-k cutoff is knowable only after seeing the
+    whole scoring population -- a valid offline RANKING curve, but not a policy
+    anyone could have run on the day. These are frozen before scoring, so the
+    cancel/keep decision at any scored row depends on nothing after it."""
+    if not train_scores:
+        raise ValueError("no training scores: a causal threshold cannot be "
+                         "resolved from an empty training side")
+    xs = sorted(train_scores, reverse=True)
+    out = {}
+    for b in budgets:
+        k = max(1, int(len(xs) * b))
+        out[f"{int(b*100)}%"] = xs[k - 1]
+    return out
+
+
+def head_diagnostics(p_haz, y_haz, v_true, v_pred):
+    """The five declared head diagnostics, per arm, reported SEPARATELY.
+
+    R-184(4)(iv): a product ranking cannot show WHICH head improved. Hazard
+    quality and conditional-value quality are different claims and a gain in
+    one can mask a loss in the other."""
+    import math
+    n = len(y_haz)
+    pos = [p for p, y in zip(p_haz, y_haz) if y]
+    neg = [p for p, y in zip(p_haz, y_haz) if not y]
+    if pos and neg:
+        wins = sum(1 for a in pos for b in neg if a > b)
+        ties = sum(1 for a in pos for b in neg if a == b)
+        auc = (wins + 0.5 * ties) / (len(pos) * len(neg))
+    else:
+        auc = None
+    brier = sum((p - y) ** 2 for p, y in zip(p_haz, y_haz)) / n if n else None
+    # harmful-sign discrimination: does the value head separate harmful from
+    # favourable outcomes, independent of magnitude?
+    hs = [(vp, vt) for vp, vt in zip(v_pred, v_true) if vt != 0.0]
+    sign_acc = (sum(1 for vp, vt in hs if (vp > 0) == (vt > 0)) / len(hs)) if hs else None
+    mae = (sum(abs(vp - vt) for vp, vt in zip(v_pred, v_true)) / len(v_true)
+           if v_true else None)
+    # calibration slope of predicted vs realized value
+    if len(v_true) > 1:
+        mx = sum(v_pred) / len(v_pred); my = sum(v_true) / len(v_true)
+        num = sum((a - mx) * (b - my) for a, b in zip(v_pred, v_true))
+        den = sum((a - mx) ** 2 for a in v_pred)
+        slope = (num / den) if den > 0 else None
+    else:
+        slope = None
+    return {"hazard_auc": auc, "hazard_brier": brier,
+            "harmful_sign_discrimination": sign_acc,
+            "conditional_value_mae": mae,
+            "conditional_value_calibration_slope": slope}
+
+
+def arm_model_kind(arm: str) -> str:
+    """The model class each arm MUST use. Asserted by identity in the fixture.
+
+    Arm D exists to isolate the reweighting; if it silently falls through to
+    the LGBM branch it duplicates arm C and both D-A and B-D become
+    meaningless. Naming the mapping makes that assertable."""
+    return {"PM_PLUS_FINE": "frozen_linear_applied",
+            "PLUS_PRED_STATE_V1": "weighted_linear",
+            "INCUMBENT_REWEIGHTED_ONLY": "weighted_linear",
+            "LGBM_PINNED": "lgbm"}[arm]
+
+
+def _feature_pass(src: Path, population: str, TAPE=None) -> dict:
     """Build PM+fine+state features for every OK row of one population.
 
     Returns per-coin parallel lists. A row missing ANY family is dropped from
@@ -81,11 +149,24 @@ def _feature_pass(src: Path, population: str) -> dict:
         for slug, wrows in bywin.items():
             up, dn = tokens[slug]
             streams[slug] = hm.window_streams(paths[slug], up, dn)
-            try:
-                tape = sf.build_tape(paths[slug], up, dn)
-            except Exception:
-                drops["state"] += len(wrows); continue
-            sfeats = sf.features_for_window(tape, wrows)
+            # R-187 seam 2: CONSUME the rebuilt tape. The previous call was
+            # `sf.build_tape(paths[slug], up, dn)` with NO gaps and NO
+            # bn_recv_ns, which recreated inside the scorer the exact
+            # missing-input defect the tape rebuild exists to remove: freshness
+            # constant for every row, GAP_AT_CUTOFF unreachable. The tape is
+            # built once, with its required inputs asserted, and read here.
+            if TAPE is None:
+                raise RuntimeError(
+                    "no rebuilt state tape supplied. Re-deriving state here "
+                    "would rebuild it WITHOUT gaps/bn_recv_ns and silently "
+                    "restore the defect the rebuild removed.")
+            sfeats = [TAPE[(r["slug"], r["side"], r["gen"], r["t_start"])]
+                      for r in wrows if (r["slug"], r["side"], r["gen"],
+                                         r["t_start"]) in TAPE]
+            if len(sfeats) != len(wrows):
+                drops["state"] += len(wrows) - len(sfeats)
+                wrows = [r for r in wrows if (r["slug"], r["side"], r["gen"],
+                                              r["t_start"]) in TAPE]
             for r, sfe in zip(wrows, sfeats):
                 fp = hm.features(streams[slug], r["t_start"], r["side"],
                                  r["level"], r["resting"], r["qahead"])

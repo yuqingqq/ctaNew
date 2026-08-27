@@ -32,12 +32,21 @@ OUT = Path("/home/yuqing/ctaNew/data/pm_5min/derived/phase2_state_pin_v2.json")
 
 # Columns deliberately NOT fed to the model, DECLARED against the schema.
 # Provenance and status columns are carried on the ROW but are not features.
-DECLARED_NON_FEATURES = {
-    "feature_asof",     # provenance: carried, asserted, never a model input
-    "state_status",     # a STATUS, not a feature (rule 4)
-    "side", "gen", "slug", "day", "coin", "t0", "t_start",
-    "dup_group_size", "dup_index",   # de-duplication metadata for the evaluator
-}
+# DERIVED, not hand-listed. BE already fixed a hand-listed FEATURE set by
+# deriving it from the schema -- and then hand-wrote the EXCLUSIONS, so
+# `family` (a string) and `decision_time` (a clock) walked through and the
+# all-float encoder crashed. Deriving half a contract and hand-writing the
+# other half leaves the whole contract hand-written. These come from the
+# schema's own declarations now.
+def _derived_non_features(schema: dict) -> set:
+    out = {schema["status_field"]}                    # a STATUS, never a feature
+    out.add("family")                                 # schema-declared string
+    for k in ("decision_time", "feature_asof"):       # CLOCK_BASIS columns
+        if k in schema.get("CLOCK_BASIS", {}) or k in schema["emitted_fields"]:
+            out.add(k)
+    out |= {"side", "gen", "slug", "day", "coin", "t0", "t_start",
+            "dup_group_size", "dup_index"}            # identity / dedup metadata
+    return out
 
 
 class SchemaViolation(RuntimeError):
@@ -59,7 +68,8 @@ def build_pin() -> dict:
     s = load_schema()
     emitted = list(s["emitted_fields"])
     pairs = dict(s["nullable_fields_and_their_flags"])
-    feats = [c for c in emitted if c not in DECLARED_NON_FEATURES]
+    non_feat = _derived_non_features(s)
+    feats = [c for c in emitted if c not in non_feat]
 
     # RULE 3: every nullable travels with its guard. Checked both ways.
     orphan_nullable = [n for n, g in pairs.items() if n in feats and g not in feats]
@@ -70,7 +80,7 @@ def build_pin() -> dict:
             f"{orphan_nullable}, guards without nullables {orphan_guard}. "
             f"A nullable without its guard means UNKNOWN is indistinguishable "
             f"from a real value -- exactly the velocity defect (R-185(1)).")
-    dropped = [c for c in emitted if c in DECLARED_NON_FEATURES]
+    dropped = [c for c in emitted if c in non_feat]
     return {
         "protocol": "PHASE2_STATE_PIN_V2",
         "derived_from": {"schema": SCHEMA.name, "n_emitted": s["n_emitted"]},
@@ -88,6 +98,9 @@ def build_pin() -> dict:
                              "flag, never coerce None to 0.0 (the v1 defect at "
                              "phase2_arms.py:95).",
         "supersedes": "the hand-listed 21-column PRED_STATE_V1 pin",
+        "layout": s.get("LAYOUT"),
+        "clock_basis": s.get("CLOCK_BASIS"),
+        "exclusions_derived_not_hand_listed": True,
     }
 
 
@@ -146,6 +159,15 @@ def selftest() -> int:
         if n in pin["features_in_order"]:
             ok(g in pin["features_in_order"],
                f"{n} travels with its guard {g}")
+    ok("family" not in pin["features_in_order"],
+       "`family` (a schema-declared STRING) is excluded -- it crashed the "
+       "all-float encoder when the exclusions were hand-written")
+    ok("decision_time" not in pin["features_in_order"],
+       "`decision_time` (a CLOCK column) is excluded -- as a feature it lets "
+       "the model date its rows")
+    ok(pin.get("clock_basis") and pin.get("layout"),
+       "the pin CARRIES the schema's LAYOUT and CLOCK_BASIS, so a consumer "
+       "locates fields and interprets times by declaration, not by guessing")
     ok(pin["status_field"] == "state_status",
        "the pin consumes DA's renamed state_status (R-185(3))")
     ok("PRE_WINDOW" in pin["statuses_as_counted"] and
