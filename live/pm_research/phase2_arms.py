@@ -388,6 +388,45 @@ def assert_gate_passed() -> dict:
         raise RuntimeError(
             f"REFUSED: every predicate is marked not-applicable "
             f"({skipped}); a table with nothing evaluated is not a result.")
+
+    # R-207: N/A-VACUITY. Excluding not-applicable predicates from all_pass was
+    # correct; ALLOWING A LOAD-BEARING PREDICATE TO BE not-applicable was not.
+    # DA demonstrated the bypass: a gate run with NO expectations marks
+    # everything N/A, writes all_pass:true, and a consumer that only excludes
+    # N/A accepts it. The absence of a check is not the passing of a check.
+    # So each load-bearing predicate must be ASSERTED (present, not N/A) AND
+    # passing. Only `embargo_respected` may legitimately be N/A -- it is
+    # ENFORCED-DOWNSTREAM by the purge, which the receipt evidences separately.
+    LOAD_BEARING = ("gap_count_matches_expected", "provenance_matches_expected",
+                    "dataset_non_empty", "no_rows_skipped_by_builder",
+                    "absorption_within_bound")
+    NA_WHITELIST = ("embargo_respected",)
+    _by_name = {}
+    if isinstance(table, dict):
+        _by_name = {k: {"pass": bool(v), "applicable": True}
+                    for k, v in table.items()}
+    else:
+        for _x in table:
+            _by_name[_x.get("predicate")] = {
+                "pass": bool(_x.get("pass")),
+                "applicable": bool(_x.get("applicable", True))}
+    _missing = [k for k in LOAD_BEARING if k not in _by_name]
+    _na = [k for k in LOAD_BEARING if _by_name.get(k, {}).get("applicable") is False]
+    _failed_lb = [k for k in LOAD_BEARING
+                  if k in _by_name and _by_name[k]["applicable"]
+                  and not _by_name[k]["pass"]]
+    if _missing or _na or _failed_lb:
+        raise RuntimeError(
+            f"REFUSED: load-bearing predicates must be ASSERTED and PASSING. "
+            f"missing={_missing} not_applicable={_na} failing={_failed_lb}. "
+            f"A gate that checked nothing is not a gate that passed: the "
+            f"absence of a check is not the passing of a check.")
+    _bad_na = [k for k in skipped if k not in NA_WHITELIST]
+    if _bad_na:
+        raise RuntimeError(
+            f"REFUSED: predicates marked not-applicable outside the whitelist "
+            f"{list(NA_WHITELIST)}: {_bad_na}. N/A is a claim about a "
+            f"predicate that CANNOT apply here, not a way to skip one.")
     failed = [k for k, ok in applicable if not ok]
     if failed:
         raise RuntimeError(

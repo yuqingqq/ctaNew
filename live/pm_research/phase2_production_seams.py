@@ -138,8 +138,23 @@ def main() -> int:
         vd = tdp / "verdict.json"
         vd.write_text(json.dumps({
             "verdict": "da_tape_gate_verdict_v1",
-            "predicates": {"schema": True, "non_empty": True,
-                           "gap_count": True, "provenance": True},
+            # the RULED load-bearing set, each ASSERTED and PASSING, plus
+            # embargo_respected as the one legitimate N/A. A fixture whose
+            # verdict does not carry the real predicate names would pass a
+            # consumer that never checks for them.
+            "predicates": [
+                {"predicate": "gap_count_matches_expected", "pass": True,
+                 "applicable": True},
+                {"predicate": "provenance_matches_expected", "pass": True,
+                 "applicable": True},
+                {"predicate": "dataset_non_empty", "pass": True,
+                 "applicable": True},
+                {"predicate": "no_rows_skipped_by_builder", "pass": True,
+                 "applicable": True},
+                {"predicate": "absorption_within_bound", "pass": True,
+                 "applicable": True},
+                {"predicate": "embargo_respected", "pass": False,
+                 "applicable": False, "detail": "ENFORCED-DOWNSTREAM"}],
             "tape_path": str(tp), "tape_bytes": _tb,
             "tape_sha256_prefix": _hh[:16],
             "builder_ref": "0" * 40,
@@ -338,6 +353,67 @@ def main() -> int:
          "comparable, and its numbers still look normal alone")
     seam("26b a mode split REFUSES rather than reporting",
          "not a comparison" in a26)
+
+    # ---- SEAM 27 (R-207): N/A-VACUITY -----------------------------------
+    # DA's bypass: a gate run with NO expectations marks every predicate
+    # not-applicable, writes all_pass:true, and a consumer that merely EXCLUDES
+    # N/A accepts it. Excluding N/A from the pass computation was right;
+    # allowing a LOAD-BEARING predicate to BE N/A was not. The absence of a
+    # check is not the passing of a check.
+    import hashlib as _h27, tempfile as _t27, json as _j27
+    _d27 = Path(_t27.mkdtemp()); _tp27 = _d27 / "t.json"
+    _tp27.write_text(_j27.dumps({"protocol": "PHASE2_STATE_TAPE_V5",
+                                 "rows": [{"a": 1}]}))
+    _hh27 = _h27.sha256(_tp27.read_bytes()).hexdigest()
+    _LB27 = ("gap_count_matches_expected", "provenance_matches_expected",
+             "dataset_non_empty", "no_rows_skipped_by_builder",
+             "absorption_within_bound")
+
+    def _verdict27(preds):
+        _v = _d27 / "v.json"
+        _v.write_text(_j27.dumps({
+            "verdict": "da_tape_gate_verdict_v1", "all_pass": True,
+            "predicates": preds, "tape_path": str(_tp27),
+            "tape_bytes": _tp27.stat().st_size,
+            "tape_sha256_prefix": _hh27[:16], "tape_header_pins": {}}))
+        return _v
+
+    def _accepts27(preds):
+        _sv = PA.DA_VERDICT; PA.DA_VERDICT = _verdict27(preds)
+        try:
+            PA.assert_gate_passed(); return True
+        except RuntimeError:
+            return False
+        finally:
+            PA.DA_VERDICT = _sv
+
+    seam("27a an ALL-N/A verdict claiming all_pass is REFUSED",
+         not _accepts27([{"predicate": k, "pass": False, "applicable": False}
+                         for k in _LB27]))
+    seam("27b one trivial pass with load-bearing all N/A is REFUSED",
+         not _accepts27([{"predicate": "trivial", "pass": True, "applicable": True}]
+                        + [{"predicate": k, "pass": False, "applicable": False}
+                           for k in _LB27]),
+         "the subtler bypass: a non-empty applicable set that checks nothing "
+         "load-bearing")
+    seam("27c a MISSING load-bearing predicate is REFUSED",
+         not _accepts27([{"predicate": k, "pass": True, "applicable": True}
+                         for k in _LB27[:-1]]))
+    seam("27d a FAILING load-bearing predicate is REFUSED",
+         not _accepts27([{"predicate": k, "pass": (k != "dataset_non_empty"),
+                          "applicable": True} for k in _LB27]))
+    seam("27e a non-whitelisted N/A predicate is REFUSED",
+         not _accepts27([{"predicate": k, "pass": True, "applicable": True}
+                         for k in _LB27]
+                        + [{"predicate": "schema_family_matches",
+                            "pass": False, "applicable": False}]),
+         "N/A is a claim that a predicate CANNOT apply, not a way to skip one")
+    seam("27f KNOWN-GOOD: all load-bearing asserted+passing, embargo N/A, ACCEPTED",
+         _accepts27([{"predicate": k, "pass": True, "applicable": True}
+                     for k in _LB27]
+                    + [{"predicate": "embargo_respected", "pass": False,
+                        "applicable": False}]),
+         "the legitimate shape must still pass, or the fix is just a wall")
 
     print(f"\n{'PRODUCTION SEAMS GREEN' if not FAILURES else 'PRODUCTION SEAMS RED'}: "
           f"{len(FAILURES)} failing")
