@@ -784,6 +784,21 @@ def main() -> int:
          "ok_n was declared blind; fitted_n and the purge were re-declared after "
          "observation with the cause named -- a reader must not assume all three "
          "carry the same weight")
+    # ---- SEAM 35 (R-216): the PRODUCTION receipt path is not the stale one --
+    # The protocol label was renamed and the output path was not, so the
+    # four-arm score overwrote the committed three-arm receipt in place. The
+    # seam sandbox redirects PA.OUT, which is precisely why the production
+    # default was never exercised: a test that reassigns the thing under test
+    # cannot see it is wrong.
+    seam("35a PA.OUT names the CURRENT protocol, not the superseded one",
+         "four_arm_v2" in PA.OUT.name and "three_arm" not in PA.OUT.name,
+         f"PA.OUT={PA.OUT.name} -- a four-arm receipt written to the three-arm "
+         f"path overwrites a superseded artifact that exists as provenance")
+    seam("35b the receipt path agrees with the protocol label in the receipt",
+         PA.OUT.stem.replace("phase2_", "").replace("_", "").lower()
+         in inspect.getsource(PA.stage_score).lower().replace("_", ""),
+         "path and label must not be able to drift apart again")
+
     seam("34i stage 1 runs BEFORE the purge in the real stage_fit",
          inspect.getsource(PA.stage_fit).index("assert_preregistered_population")
          < inspect.getsource(PA.stage_fit).index("EMB.purge_training"),

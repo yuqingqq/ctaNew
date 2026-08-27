@@ -119,7 +119,14 @@ DERIVED = Path("/home/yuqing/ctaNew/data/pm_5min/derived")
 TOPUP = DERIVED / "harmful_exposure_rows_v3_topup.json"
 FRAGMENT = DERIVED / "harmful_exposure_rows_v3_eraB.json"
 FROZEN = DERIVED / "harmful_reduced_fine_candidate_v1.json"
-OUT = DERIVED / "phase2_three_arm_v1.json"
+# R-216: the receipt path follows the protocol rename. The label was renamed to
+# PHASE2_FOUR_ARM_V2 and this was not, so the four-arm score OVERWROTE the
+# committed three-arm receipt in place -- destroying DA's Q-DA-79 caveat block
+# and 11 provenance fields on a SUPERSEDED artifact that exists to be provenance
+# (rule 13: never edit a frozen artifact; the old receipt stays). Recovered from
+# git. The seam sandbox redirected PA.OUT for tests, which is exactly why the
+# production default went unexercised.
+OUT = DERIVED / "phase2_four_arm_v2.json"
 
 
 class PopulationLeak(RuntimeError):
