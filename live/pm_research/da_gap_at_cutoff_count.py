@@ -155,6 +155,18 @@ def count(tape: Path, era: str | None = None) -> dict[str, Any]:
     # direction is how a net difference conceals its own size.
     flagged_not_pred_rows: list[dict[str, Any]] = []
     tape_flag_total = 0
+    # R-212 DENOMINATOR CENSUS. A disagreement-only diff cannot say whether 4
+    # bad rows at g_start are 4-of-4 or 4-of-many: rows at g_start the builder
+    # DID flag sit inside the agreed set and are invisible. So classify EVERY
+    # row by where it sits relative to the interval endpoints, crossed with the
+    # tape's flag and the sign of t_start (the warm-up axis).
+    # Exact-endpoint membership is a SET lookup, not a scan: min-distance over
+    # ~1632 intervals for 1.76M rows is ~3e9 operations, and the question only
+    # needs equality. Sound because 0 gaps touch or overlap (verified), so an
+    # endpoint belongs to exactly one interval.
+    start_sets = {c: {a for a, _b in ivs} for c, ivs in gaps.items()}
+    end_sets = {c: {b for _a, b in ivs} for c, ivs in gaps.items()}
+    census: collections.Counter = collections.Counter()
     for r in G.iter_tape(tape):
         n_rows += 1
         coin, t0, ts = r.get("coin"), r.get("t0"), r.get("t_start")
@@ -183,6 +195,21 @@ def count(tape: Path, era: str | None = None) -> dict[str, Any]:
                     "split": r.get("split"),
                     "dist_to_nearest_g_start": _lo_d,
                     "dist_to_nearest_g_end": _hi_d})
+        # --- census: position x tape-flag x t_start sign -------------------
+        _sign = ("neg" if float(ts) < 0 else "zero" if float(ts) == 0 else "pos")
+        _at_start = T in start_sets.get(coin, ())
+        _at_end = T in end_sets.get(coin, ())
+        _inside = in_gap(iv, T)
+        if _at_start:
+            _pos = "at_g_start"
+        elif _at_end:
+            _pos = "at_g_end"
+        elif _inside:
+            _pos = "strictly_inside"
+        else:
+            _pos = "outside"
+        census[f"{_pos}|{'FLAGGED' if _tape_flag else 'not_flagged'}|{_sign}"] += 1
+
         exact, dist = at_upper_edge(iv, T)
         if exact:
             total["at_g1_exact"] += 1
@@ -246,6 +273,14 @@ def count(tape: Path, era: str | None = None) -> dict[str, Any]:
         "instrument": "da_gap_at_cutoff_count_v1",
         "predicate_true_by_tape_status": dict(pred_true_status),
         "tape_flagged_total": tape_flag_total,
+        "edge_census": dict(sorted(census.items())),
+        "edge_census_note": (
+            "position | tape flag | sign(t_start). Position is exact: at_g_start "
+            "means T equals some g_start of that coin (sound because 0 gaps "
+            "touch or overlap). strictly_inside means in-gap and NOT on a "
+            "g_start. This supplies the DENOMINATORS a disagreement-only diff "
+            "cannot: rows at an endpoint that the builder agreed about are "
+            "invisible to the diff and visible here."),
         "flagged_but_not_predicate_true": flagged_not_pred_rows,
         "n_flagged_but_not_predicate_true": len(flagged_not_pred_rows),
         "symmetric_diff_note": (
@@ -365,6 +400,33 @@ def _selftests() -> int:
             ok(_slugs == ["btc-2", "btc-3"],
                "and NAMED individually -- a 3-row discrepancy is not something "
                "to report the first ten of")
+            # census: every position class, and the t_start sign split
+            _rowsC = [
+                {"slug":"a","coin":"btc","t0":1000.0,"t_start":0.0,
+                 "state_status":"OK"},                       # AT g_start, pos-0
+                {"slug":"b","coin":"btc","t0":2100.0,"t_start":-100.0,
+                 "state_status":"GAP_AT_CUTOFF"},            # AT g_end, NEGATIVE
+                {"slug":"c","coin":"btc","t0":1000.0,"t_start":500.0,
+                 "state_status":"GAP_AT_CUTOFF"},            # strictly inside
+                {"slug":"d","coin":"btc","t0":9000.0,"t_start":1.0,
+                 "state_status":"OK"},                       # outside
+            ]
+            _t.write_text(json.dumps({"rows": _rowsC}), encoding="utf-8")
+            _cen = count(_t)["edge_census"]
+            ok(_cen.get("at_g_start|not_flagged|zero") == 1,
+               "census: a row exactly AT g_start with t_start 0 is classed as "
+               "at_g_start -- the denominator a disagreement-only diff hides")
+            ok(_cen.get("at_g_end|FLAGGED|neg") == 1,
+               "census: an at-g_end row with NEGATIVE t_start is split out by "
+               "sign -- the warm-up axis the n=1 exception points at")
+            ok(_cen.get("strictly_inside|FLAGGED|pos") == 1,
+               "census: a strictly-inside row is NOT counted as an edge case")
+            ok(_cen.get("outside|not_flagged|pos") == 1,
+               "census: an outside row is classed outside")
+            ok(sum(_cen.values()) == 4,
+               "every row lands in exactly ONE census cell -- the classes "
+               "partition the rows, so no row is double-counted or dropped")
+
             # the OTHER direction must be seen too: a row the TAPE flags that
             # the ruled predicate does not. Without it a 4-vs-1 disagreement
             # reports as "3".
