@@ -54,8 +54,17 @@ def day_bounds(day_token: str) -> tuple[int, int]:
     return lo, lo + 86400
 
 
-def gap_series(lo: int, hi: int) -> dict[str, Any]:
-    """Per-hour PM gap counts, with unparseable lines COUNTED (rule 4)."""
+def gap_series(lo: int, hi: int, now: float | None = None) -> dict[str, Any]:
+    """Per-hour PM gap counts, with unparseable lines COUNTED (rule 4).
+
+    THE DENOMINATOR IS ELAPSED TIME, NOT THE SPAN OF THE GAPS THEMSELVES.
+    The first version divided by `max(gap_hour) + 1`, which is fine for a full
+    day with gaps in every hour and badly wrong for a partial one: fired 30 s
+    after the 08-27 boundary it reported "1 gaps over 1h = 1.0/hr" for a single
+    gap in thirty seconds -- understating by ~120x, and in the direction that
+    reads as GOOD NEWS. A rate whose denominator comes from the numerator's own
+    distribution is not a rate.
+    """
     per_hr: collections.Counter = collections.Counter()
     lost_ns: collections.Counter = collections.Counter()
     causes: collections.Counter = collections.Counter()
@@ -84,13 +93,23 @@ def gap_series(lo: int, hi: int) -> dict[str, Any]:
         causes[r.get("cause", "?")] += 1
     hours = sorted(per_hr)
     over = [h for h in hours if per_hr[h] > GAP_BAR_PER_HR]
-    span = max(hours) + 1 if hours else 0
+    now = dt.datetime.now(dt.timezone.utc).timestamp() if now is None else now
+    elapsed_h = max(0.0, (min(now, hi) - lo)) / 3600.0
+    # Below an hour of tape there is no rate to report. Saying so beats
+    # publishing a number that will be read as a trend.
+    rate = (round(sum(per_hr.values()) / elapsed_h, 2)
+            if elapsed_h >= 1.0 else None)
     return {
         "ledger_lines": n_lines, "ledger_unparseable": n_bad,
         "n_gaps": sum(per_hr.values()),
         "lost_s": round(sum(lost_ns.values()) / 1e9, 1),
-        "hours_observed": span,
-        "gaps_per_hour": round(sum(per_hr.values()) / span, 2) if span else None,
+        "hours_elapsed": round(elapsed_h, 3),
+        "hours_with_a_gap": len(hours),
+        "gaps_per_hour": rate,
+        "rate_estimable": elapsed_h >= 1.0,
+        "rate_note": (None if elapsed_h >= 1.0 else
+                      f"only {elapsed_h*3600:.0f}s elapsed -- NO RATE REPORTED; "
+                      f"{sum(per_hr.values())} raw gaps so far"),
         "hours_over_bar": over, "n_hours_over_bar": len(over),
         "worst_hour": max(per_hr.values()) if per_hr else 0,
         "per_hour": {str(h): per_hr[h] for h in hours},
@@ -133,19 +152,40 @@ def verify_day(day_token: str, freeze_epoch: float,
     w = A.pm_windows([day_token])
     counts = {c: len([x for x in w.get(c, []) if lo <= x < hi]) for c in coins}
     elapsed = min(WINDOWS_PER_DAY, max(0, int((now.timestamp() - lo) // WINDOW_S)))
-    expect = WINDOWS_PER_DAY if day_closed else elapsed
+    # CALENDAR closure, not the selector's tape-derived `day_closed`. The
+    # selector derives closure from "a strictly later window exists on disk",
+    # which at 00:00:30 is not yet true -- so it called 08-26 OPEN thirty
+    # seconds after 08-26 ended, and that boolean was feeding this branch. A
+    # field that misdescribes closure driving a verdict is the R-139 class in
+    # miniature. A day whose end is in the past is closed, and no tape state
+    # changes that.
+    calendar_closed = now.timestamp() >= hi
+    expect = WINDOWS_PER_DAY if calendar_closed else elapsed
     short = {c: expect - n for c, n in counts.items()}
-    p("complete_tape", all(v <= 0 for v in short.values()),
-      f"expect {expect} ({'closed day' if day_closed else 'elapsed so far'}); "
-      + ", ".join(f"{c} {counts[c]} (short {short[c]})" for c in coins))
+    basis = "closed day (calendar)" if calendar_closed else "elapsed so far"
+    disagree = (day_closed is not None and bool(day_closed) != calendar_closed)
+    # An empty expectation must NEVER pass: 0 present of 0 expected is the
+    # empty-set-passes trap, and it PASSED on the 08-27 arm at 00:00:30.
+    p("complete_tape",
+      expect > 0 and all(v <= 0 for v in short.values()),
+      f"expect {expect} ({basis}); "
+      + ", ".join(f"{c} {counts[c]} (short {short[c]})" for c in coins)
+      + ("" if expect > 0 else "  <-- NOTHING ELAPSED: cannot pass on an empty "
+                              "expectation")
+      + (f"  [selector day_closed={day_closed} DISAGREES with the calendar; "
+         f"its tape-derived predicate lags the boundary by up to one window]"
+         if disagree else ""))
 
     # --- 3. gap rate under bar ---------------------------------------------
-    gs = gap_series(lo, hi)
-    p("gap_rate_under_bar", gs["n_hours_over_bar"] == 0,
-      f"{gs['n_gaps']} gaps over {gs['hours_observed']}h = "
-      f"{gs['gaps_per_hour']}/hr vs bar {GAP_BAR_PER_HR:.0f}; "
-      f"{gs['n_hours_over_bar']} hours over; worst {gs['worst_hour']}; "
-      f"{gs['lost_s']}s lost")
+    gs = gap_series(lo, hi, now.timestamp())
+    p("gap_rate_under_bar",
+      gs["rate_estimable"] and gs["n_hours_over_bar"] == 0,
+      (f"{gs['n_gaps']} gaps over {gs['hours_elapsed']}h elapsed = "
+       f"{gs['gaps_per_hour']}/hr vs bar {GAP_BAR_PER_HR:.0f}; "
+       f"{gs['n_hours_over_bar']} hours over; worst {gs['worst_hour']}; "
+       f"{gs['lost_s']}s lost")
+      if gs["rate_estimable"] else
+      f"NOT ESTIMABLE -- {gs['rate_note']}")
 
     # --- the number Q-DA-69 showed actually decides it ---------------------
     fi = qr.base.fi
@@ -177,7 +217,8 @@ def verify_day(day_token: str, freeze_epoch: float,
         "day": iso, "day_token": day_token,
         "as_of_utc": now.isoformat(),
         "freeze_epoch": freeze_epoch,
-        "day_closed": day_closed,
+        "day_closed_selector": day_closed,
+        "day_closed_calendar": now.timestamp() >= hi,
         "predicates": preds,
         "all_pass": all(x["pass"] for x in preds),
         "windows_gap_affected": affected,
@@ -252,6 +293,23 @@ def _selftests() -> int:
                          encoding="utf-8")
             ok(gap_series(lo, hi)["n_gaps"] == 0,
                "a collector_start is not a gap")
+            # --- the rate denominator is ELAPSED, not gap-derived --------
+            f.write_text("\n".join(good[:1]), encoding="utf-8")
+            short = gap_series(lo, hi, now=lo + 30)          # 30s elapsed
+            ok(short["rate_estimable"] is False
+               and short["gaps_per_hour"] is None,
+               "under an hour of tape NO RATE is reported -- the 08-27 arm "
+               "published '1.0/hr' for one gap in 30s, understating ~120x and "
+               "in the direction that reads as abatement")
+            ok(short["n_gaps"] == 1 and "30s elapsed" in (short["rate_note"] or ""),
+               "the raw count and the reason are reported instead")
+            full = gap_series(lo, hi, now=lo + 7200)         # 2h elapsed
+            ok(full["rate_estimable"] and full["gaps_per_hour"] == 0.5,
+               "with 2h elapsed and 1 gap the rate is 0.5/hr, not 1.0 -- the "
+               "denominator is time, not the span of the gaps themselves")
+            ok(short["gaps_per_hour"] != full["gaps_per_hour"],
+               "identical ledgers, different elapsed -> different answers "
+               "(R-42 mirror on the denominator)")
     finally:
         PM_GAPS = real
 
