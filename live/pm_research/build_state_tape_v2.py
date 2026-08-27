@@ -74,7 +74,27 @@ def main() -> int:
     import harmful_state_features as sf
 
     pin = PIN.build_pin()
-    gaps_by_slug = hm.fi.gaps_by_slug(hm.fi.ERA)
+    # R-191: gaps are COIN-LEVEL and ABSOLUTE, read from the collector-gaps
+    # LEDGER -- not per-slug. Per-slug assignment made a feed gap invisible to
+    # every window except the one it happened to be logged against, which is
+    # why BE counted 0 where the ledger counts 289.
+    import gap_at_cutoff_count as GC
+    coin_gaps_abs = GC.load_coin_gaps()
+    print(f"  coin-level absolute gaps from the ledger: "
+          f"{ {c: len(v) for c, v in coin_gaps_abs.items() if c in ('btc','eth')} }",
+          flush=True)
+
+    def gaps_for(slug: str, coin: str, t0: float):
+        """Project the COIN's absolute gaps into THIS window's basis.
+
+        `_in_gap` compares a window-relative cutoff, so the intervals are
+        shifted by t0 rather than the comparison being changed. Intervals
+        landing outside [0, WINDOW_S] are KEPT deliberately: a gap logged
+        against the preceding window overlaps this window's warm-up rows at
+        NEGATIVE t_start, and those are precisely the 289."""
+        lo, hi = t0 - 400.0, t0 + 700.0
+        return [(a - t0, b - t0) for a, b in coin_gaps_abs.get(coin, ())
+                if b >= lo and a <= hi]
     paths = hm.fi._archive_paths(); tokens = hm.fi.token_map()
 
     # STREAMING (R-174). The stopped build held every row in memory and hit
@@ -97,7 +117,7 @@ def main() -> int:
         for slug, wrows in bywin.items():
             coin = slug.split("-")[0]
             t0 = float(wrows[0]["t0"])
-            g = gaps_by_slug.get(slug, [])
+            g = gaps_for(slug, coin, t0)
             bn = bn_recv_for_window(coin, t0)
             # REFUSES rather than degrading -- the R-184 finding, in code
             PIN.assert_required_inputs(g, bn)

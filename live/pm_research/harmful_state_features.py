@@ -324,13 +324,22 @@ def features_at(tape: StateTape, row: dict[str, Any],
         "decision_time": t,
     }
 
+    # STATUS ORDER (R-191): the GAP test comes FIRST.
+    # It previously sat behind PRE_WINDOW/POST_WINDOW, so a cutoff inside a
+    # recorded gap statused PRE_WINDOW instead -- and since a feed gap logged
+    # against one window overlaps the NEXT window's warm-up rows, that is
+    # exactly the population carrying gaps. All 289 rows the ledger flags have
+    # negative t_start; every one of them was lost to PRE_WINDOW. The gap is a
+    # FEED fact and outranks where the row sits in its window; PRE/POST_WINDOW
+    # remain recoverable from t_start itself, so no information is lost by the
+    # reordering, whereas the gap was not recoverable from anything.
     status = "OK"
-    if t < 0.0:
+    if _in_gap(tape, t):
+        status = "GAP_AT_CUTOFF"
+    elif t < 0.0:
         status = "PRE_WINDOW"
     elif t > WINDOW_S:
         status = "POST_WINDOW"
-    elif _in_gap(tape, t):
-        status = "GAP_AT_CUTOFF"
     elif key not in tape.level_t:
         status = "NO_LEVEL_HISTORY"
 
