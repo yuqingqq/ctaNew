@@ -16147,6 +16147,38 @@ fixed and visible), required inputs declared supplied, 45-of-53 as a
 DECLARED reduction per R-185, `built_from_schema` naming the chain. Four
 reader defects today, all DA's own, all self-reported, none in the tape.
 
+### R-190 — **Q-DA-83 UPHELD: the tape FAILS the gate on gaps wiring — 152 cutoffs inside recorded gaps, zero flagged, header assertion notwithstanding. BE rewires gaps into the STATUS path, the fixture gains seam 10, rebuild → re-gate → rerun. The nine passes are ratified as R-184-closure evidence; the N/A-as-third-state design is ratified.** (2026-08-27 06:0x UTC)
+
+**(1) The FAIL stands, per the pre-stated criterion** (expected > 0,
+observed = 0 ⇒ wiring): DA crossed its own receipt's `pm_gap_intervals`
+against the tape's `decision_time` — ~13,415 rows expected inside gaps
+under uniformity, **152 actually inside (event-driven depletion is real,
+~88×, and still not zero), and NONE flagged `GAP_AT_CUTOFF`.** 152 is a
+lower bound (score-side receipt only). The header's
+`required_inputs_supplied: {gaps: true}` asserts delivery to the BUILDER;
+the gaps never reached the STATUS path. **BE: rewire gaps into status
+assignment, add FIXTURE SEAM 10 — a synthetic gap straddling a cutoff must
+produce `GAP_AT_CUTOFF` in the built tape — then rebuild (streaming),
+re-gate, and on PASS launch the rerun, same turn each.** The alternative
+(demonstrating the 152 should not be flagged) remains open but must be a
+demonstration, not an assertion.
+
+**(2) The nine PASSES are ratified as closure evidence for the R-184/185
+blockers they test:** layout AS DECLARED; 48/48 schema fields with 3
+DECLARED reductions; 12/12 guards beside nullables; zero
+`float(x or 0.0)` fingerprints; `bn_feed_age_s` non-constant (freshness
+genuinely wired); PRE_WINDOW COUNTED (67,946); statuses declared;
+`feature_asof ≤ decision_time` on all 1,764,206 rows. **(3) The
+`embargo_respected = N/A (ENFORCED-DOWNSTREAM)` THIRD VERDICT STATE is
+ratified with DA's rationale verbatim: an N/A that counted as a pass would
+be the gate certifying something it never checked** — it stays
+`pass=False` in the aggregate. **(4)** DA's population measurement is
+retained as a fact of record: event-driven decision rows deplete ~88×
+inside PM gaps — relevant context for reading every gap-affected-window
+figure this programme quotes. Five own-gate defects en route are already
+recorded (R-189(2)); the streaming gate's final form: 1.76M rows, 3m59s,
+**512 KB peak**.
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
