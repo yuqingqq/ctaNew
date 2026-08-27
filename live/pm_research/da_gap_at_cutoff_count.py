@@ -157,6 +157,17 @@ def count(tape: Path, era: str | None = None) -> dict[str, Any]:
         exact, dist = at_upper_edge(iv, T)
         if exact:
             total["at_g1_exact"] += 1
+            # THE POSITIVE ASSERTION (R-196/R-199): present is only half of it.
+            # A tape can show the right COUNT because half-open landed, or
+            # because the gaps never arrived at all. What distinguishes them is
+            # that the at-g1 rows are PRESENT **and carry a status other than
+            # GAP_AT_CUTOFF**. If they are absent entirely, the gaps did not
+            # reach the builder; if they are flagged, containment is still
+            # closed.
+            st = str(r.get("state_status", "?"))
+            total[f"at_g1_status_{st}"] += 1
+            if st == "GAP_AT_CUTOFF":
+                total["at_g1_FLAGGED"] += 1
             if len(edge_ids) < 10:
                 edge_ids.append({"slug": r.get("slug"), "t_start": ts,
                                  "T_absolute": round(T, 9),
@@ -207,6 +218,17 @@ def count(tape: Path, era: str | None = None) -> dict[str, Any]:
             "min_abs_distance_to_any_g1": (
                 None if min_edge_dist == float("inf")
                 else round(min_edge_dist, 9)),
+            "at_g1_flagged": total.get("at_g1_FLAGGED", 0),
+            "at_g1_status_breakdown": {k[len("at_g1_status_"):]: v
+                                       for k, v in total.items()
+                                       if k.startswith("at_g1_status_")},
+            "half_open_landed": (total.get("at_g1_exact", 0) > 0
+                                 and total.get("at_g1_FLAGGED", 0) == 0),
+            "half_open_note": (
+                "half_open_landed requires at-g1 rows to be PRESENT *and* "
+                "UNFLAGGED. Present-but-flagged means containment is still "
+                "closed; absent entirely means the gaps never reached the "
+                "builder. The COUNT alone cannot separate those two."),
             "first_10_at_edge": edge_ids,
             "verdict": ("EDGE IMMATERIAL on this tape: no row lands exactly on "
                         "a g1, so closed and half-open containment are "
