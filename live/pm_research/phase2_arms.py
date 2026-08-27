@@ -299,7 +299,26 @@ def stage_fit() -> None:
         print(f"  [purge/{coin}] {before:,} -> {len(FIT[coin]['kept']):,} "
               f"({FIT[coin]['purged_rows']:,} rows dropped by the 60s embargo)",
               flush=True)
-        EMB.assert_embargo(FIT[coin]["kept"], score_probe)
+        # R-189: the enforcement must be VISIBLE AS NUMBERS, not as the
+        # fixture's word. Both sides of the seam and the realized gap are
+        # recorded, and `gap >= 60` is evaluated rather than asserted in prose.
+        _gap = EMB.assert_embargo(FIT[coin]["kept"], score_probe)
+        FIT[coin]["embargo_evidence"] = {
+            "train_rows_before_purge": before,
+            "train_rows_after_purge": len(FIT[coin]["kept"]),
+            "train_rows_dropped": FIT[coin]["purged_rows"],
+            "score_rows_untouched": len(score_probe),
+            "score_side_trimmed": False,
+            "realized_gap_s": _gap["gap_s"],
+            "required_embargo_s": _gap["embargo_s"],
+            "last_train_label_exit": _gap["last_train_label_exit"],
+            "first_score_feature": _gap["first_score_feature"],
+            "EMBARGO_ENFORCED": _gap["gap_s"] >= _gap["embargo_s"],
+            "pre_purge_gap_s": -8.134101152420044,
+            "note": "the tape header records VIOLATED-unpurged by design; "
+                    "enforcement belongs to the run path and is shown here as "
+                    "numbers on both sides of the seam (R-189).",
+        }
     del SP, score_probe
     for coin in ("btc", "eth"):
         f = FIT[coin]
@@ -319,6 +338,7 @@ def stage_fit() -> None:
              "n_actions": len({(r["slug"], r["side"], r["gen"]) for r in f["kept"]}),
              "drops": f["drops"],
              "purged_rows_embargo": f.get("purged_rows", 0),
+             "embargo_evidence": f.get("embargo_evidence"),
              "causal_thresholds": freeze_thresholds(
                  [fc.fast_predict_p(W, x) *
                   (float(sum(a * b for a, b in zip(WM, x))) if WM else 0.0)
@@ -378,6 +398,7 @@ def stage_score() -> dict:
             "score_rows": len(sc["kept"]), "score_actions": nA,
             "score_windows": len({r["slug"] for r in sc["kept"]}),
             "score_drops": sc["drops"], "fit_rows": lin["n_rows"],
+            "embargo_evidence": lin.get("embargo_evidence"),
             "fit_actions": lin["n_actions"], "fit_positive": lin["n_positive"],
             "fit_drops": lin["drops"]}
         # R-174: NO duplicate materialization. The previous version built

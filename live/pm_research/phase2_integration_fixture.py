@@ -200,6 +200,20 @@ def main() -> int:
         seam(label, tok in body,
              "defined but never called by stage_fit/stage_score")
 
+    # ---- SEAM 9 (R-189): enforcement must be VISIBLE AS NUMBERS -----------
+    body2 = inspect.getsource(PA.stage_fit) + inspect.getsource(PA.stage_score)
+    for label, tok in (
+        ("9a purge records BOTH sides of the seam", "train_rows_before_purge"),
+        ("9b the realized post-purge gap is recorded", "realized_gap_s"),
+        ("9c gap>=60 is a COMPUTED predicate", "EMBARGO_ENFORCED"),
+        ("9d evidence reaches the receipt", "embargo_evidence")):
+        seam(label, tok in body2,
+             "R-189: the fixture's word is not evidence; the receipt carries numbers")
+    # and the predicate must be computed, never hardcoded True
+    seam("9e EMBARGO_ENFORCED is evaluated, not asserted",
+         'EMBARGO_ENFORCED": _gap["gap_s"] >= _gap["embargo_s"]' in body2,
+         "a hardcoded True beside a table has contradicted the table before")
+
     print(f"\n{'FIXTURE GREEN' if not FAILURES else 'FIXTURE RED'}: "
           f"{len(FAILURES)} seam(s) failing")
     for f in FAILURES:
