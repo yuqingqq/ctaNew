@@ -37,6 +37,36 @@ THAT VERDICT PASSES.** If the timer is gone, run by hand AFTER 00:06:
 08-27 shows 4 gaps in 811 s with btc 2/2 windows affected — **not** abatement,
 but n=2 is nothing. Do not read hour-zero quiet as a trend; that was defect (1).
 
+## DA's TWO OPEN GATES — both pre-registered, both waiting on someone else
+
+**1. STATE-TAPE GATE (R-185) — the corrected Phase-2 freeze WAITS on this.**
+`python3 live/pm_research/da_state_tape_verify.py verify --tape PATH
+ [--gapped-slugs N]` · commit `cbfc44d` · 27 selftests.
+Written and falsified **before BE's tape existed**. Expectations are READ from
+`da_pred_state_v1_schema.json`, which is emitted by running the builder —
+**builder → schema → gate, nothing transcribed at any link**, so a change to
+the family reaches the gate automatically. Regenerate the schema with
+`harmful_state_features.py --schema`.
+Targets the five silent failures of the first tape (R-184/185): undeclared
+reduction · guardless pin · zero-imputation · `bn_recv_ns` omitted (constant
+freshness) · `gaps` omitted (unreachable `GAP_AT_CUTOFF`) · plus the embargo.
+**Fails closed by design:** a tape lacking `feature_asof`/`decision_time` FAILS
+the knowledge-time predicate rather than passing it vacuously, and an
+unlabelled tape leaves the embargo **NOT CERTIFIED** rather than assumed clean.
+**DA CHECKS, DA DOES NOT SPECIFY** (upheld as the rule for this review): if DA
+tells BE how to satisfy the gate it stops being independent. Both sides read
+the schema; neither reads the other's intent.
+
+**2. DAY-ONE VERDICT — BE SCORES NOTHING UNTIL IT PASSES.**
+`da-midnight-verify.timer`, daily, **00:06:00 UTC** (not 00:00:30 — the last
+window records to 00:01:30 then gzips; verifying earlier undercounts). Next
+fire **2026-08-28T00:06Z** against **08-27**, the day that closes then.
+Hand-run after 00:06 if the timer is gone:
+`python3 live/pm_research/da_forward_day_verify.py verify --day 20260827`
+**Open question it settles:** whether the btc degradation abated. Do NOT read
+hour-zero quiet as a trend — that was a defect in DA's own rate denominator,
+since fixed (no rate reported below one elapsed hour).
+
 ## FORWARD-RACE ADMISSION SEQUENCE — confirmed, do not re-derive it
 
 Settled with the coordinator 2026-08-26 ~18:5xZ after DA raised that the two

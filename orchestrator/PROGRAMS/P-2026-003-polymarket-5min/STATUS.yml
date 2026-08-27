@@ -240,6 +240,26 @@ flags:
                              # score exists, so a thin Phase-2 result cannot be
                              # explained afterwards by a thinness nobody wrote
                              # down.
+  state_tape_gate: ARMED-PRE-REGISTERED # 2026-08-27 DA, cbfc44d, per R-185.
+                             # THE CORRECTED PHASE-2 FREEZE WAITS ON THIS.
+                             # live/pm_research/da_state_tape_verify.py verify
+                             #   --tape PATH [--gapped-slugs N]
+                             # Written + falsified BEFORE BE's tape existed;
+                             # refuses on an absent tape. Expectations READ from
+                             # da_pred_state_v1_schema.json, itself emitted by
+                             # running the builder: builder -> schema -> gate,
+                             # nothing transcribed at any link.
+                             # 10 predicates over the five silent failures of
+                             # the first tape + the embargo. FAILS CLOSED: a
+                             # tape lacking feature_asof/decision_time FAILS the
+                             # knowledge-time check rather than passing it
+                             # vacuously; an unlabelled tape leaves the embargo
+                             # NOT CERTIFIED rather than assumed clean.
+                             # Zero-imputation check is a SIGNATURE not a proof,
+                             # labelled so, with a no-false-positive control.
+                             # RULE FOR THIS REVIEW (R-185): DA CHECKS, DA DOES
+                             # NOT SPECIFY. If DA tells BE how to satisfy the
+                             # gate it stops being independent.
   pred_state_v1: SCORED-THEN-SUPERSEDED-RERUN-PENDING # 2026-08-27 DA, per
                              # R-184. Was scored in phase2_three_arm_v1, which
                              # the USER AUDIT superseded as split-contaminated.
