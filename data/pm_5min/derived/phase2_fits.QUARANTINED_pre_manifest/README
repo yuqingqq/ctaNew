@@ -1,0 +1,9 @@
+QUARANTINED. Pre-transactional fit artifacts, no fit_manifest.json.
+
+These predate the run-dir + completion-manifest design (R-209(3)). A
+manifest-less directory on the PROMOTED path is exactly what stage_score's
+manifest requirement exists to refuse -- but leaving them there invites a
+future reader to treat them as a completed fit.
+
+Renamed, not deleted: they are the artifacts of the pre-transactional era and
+are referenced by earlier register rows.
