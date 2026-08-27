@@ -15996,6 +15996,36 @@ raise. **(4)** DA's offer is ACCEPTED: DA reviews BE's rebuilt tape against
 the schema BEFORE the corrected freeze — a check by the semantics owner,
 not a second builder.
 
+### R-186 — **R-184 step (vii) first half DONE: inventory is PER-SLUG, both falsifier arms fire, single-market results provably unchanged (83 checks, coordinator-verified). One provenance wrinkle: the fix was swept into BE's `d8d03b6` by the shared working tree — attribution corrected here; STAGE-BY-EXPLICIT-PATH becomes standing.** (2026-08-27 04:5x UTC)
+
+**(1) The fix, ratified after independent verification** (coordinator ran
+the battery: 83 checks OK, exit 0): inventory allocates fresh per slug —
+each 5-minute binary settles at expiry, so RESET-to-flat is the correct
+semantics; the only decision-feeding read (`_is_reducing` gating
+suppression under REDUCING_SIDE_PROTECTION) is now per-slug. The user's
+two-market falsifier is a permanent selftest with BOTH arms: per-slug
+wiring ISSUES the market-2 cancel; a reconstructed v1-global arm SUPPRESSES
+it; single-market replays are BIT-IDENTICAL under either wiring (the fix
+cannot move any single-market number); the aggregate inventory block is
+reporting-only with a per-slug breakdown, and the old global peak —
+itself contaminated — is replaced by max-of-per-slug-peaks. Reintroducing
+the defect fails the battery at exactly the new check.
+
+**(2) Attribution of record:** the change LANDED inside `d8d03b6` ("BE: …
+pin rebuilt FROM DA's schema") — BE's commit of the shared working tree
+swept the DE-hold agent's completed, uncommitted edits into an unrelated
+message. Content verified end-to-end (parent byte-identical to pre-edit;
+the d8d03b6 diff for the file is exactly the fix; in-file changelog carries
+the R-184(vii) authorization). The commit message stays wrong as history;
+this entry is the truth — the third commit-race attribution of the
+programme (R-147(6), R-151(4) precedents). **STANDING RULE: in this
+multi-seat shared tree, every seat stages by EXPLICIT PATH — never
+`git add -A`/`git commit -a` — so one seat's commit cannot absorb
+another's work.**
+
+**(3)** Remaining in step (vii): the real tape→forward-report adapter
+(BE's queue, after the rerun chain).
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
