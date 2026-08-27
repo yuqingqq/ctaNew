@@ -149,6 +149,25 @@ flags:
                              # (collect_pm.py:14) is why btc alone suffers.
                              # Salvage of hours 11-23 expires in hours;
                              # exclusion is the coordinator's call (R-141(1)).
+  per_coin_day_verdicts: LIVE-FROM-08-28 # 2026-08-27 DA, c8a655b, R-211(3).
+                             # verdict_granularity(day_token) takes ONLY the
+                             # date -- no caller override. PER_COIN_RULE_FROM_
+                             # DAY=20260828, Class A, PROSPECTIVE-ONLY: moving
+                             # it once a coin-day verdict is visible would
+                             # retro-judge a day under a rule picked to change
+                             # its answer -- REFUSE and record the refusal.
+                             # Bar unchanged at 15. all_pass stays whole-day-
+                             # strict under BOTH rules so stale readers fail
+                             # SAFE. Invariance proven vs closed day 08-26.
+  unattended_runners_prove_they_ran: STANDING # 2026-08-27 DA, 817f7b0, Q-DA-100.
+                             # An exit code cannot distinguish a failing day
+                             # from a dead instrument (a module dying on import
+                             # exits 1, same as a computed FAIL) -- DA's own
+                             # falsifier refuted DA's first fix. Every
+                             # unattended runner now proves it ran by leaving a
+                             # parseable artifact NAMING its subject, temp-
+                             # written and promoted only on validation.
+                             # Absence is never success.
   forward_day_verify_instrument: COMMITTED # 2026-08-26 DA, e9f8d89.
                              # live/pm_research/da_forward_day_verify.py --
                              # R-141(1) predicates, R-153(2) hard precondition.

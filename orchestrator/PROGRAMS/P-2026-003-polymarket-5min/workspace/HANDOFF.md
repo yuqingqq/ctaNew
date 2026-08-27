@@ -1,6 +1,43 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-08-27 (DA) — **REVIEW-COMPLETE at b3ef93c; tape6d gate armed; day one failing mid-day (Q-DA-99, time-critical).**
+Updated: 2026-08-27 (DA) — **R-211(3) per-coin rule shipped; tape6d gate armed; 08-27 judged whole-day tonight.**
+
+## 2026-08-27 (DA, ~10:2xZ) — R-211(3) per-coin rule shipped; tonight's unattended path had two defects
+
+**DONE.** **(1) R-211(3) per-coin forward-day verdicts** (`c8a655b`), 13h inside
+the deadline. `verdict_granularity(day_token)` takes **only** the date — no
+override parameter, because *a granularity a caller can choose is one that gets
+chosen after the numbers are visible*. `PER_COIN_RULE_FROM_DAY = 20260828`,
+Class A, prospective-only. Same bar of 15; **no CHOSEN value moved**. Day-level
+`all_pass` stays whole-day-strict under BOTH rules so an un-updated reader
+**fails safe**; per-coin verdicts in `per_coin`, and the artifact names its own
+rule. Invariance proven old-vs-new on CLOSED day 08-26 (identical, 708 bytes,
+cross-checks the recorded 508 gaps / 18 hours over bar). **The first invariance
+proof was a FALSE PASS** — it printed IDENTICAL while diffing two EMPTY files
+after both runs crashed on a repo path I broke; the check now refuses on an
+empty side. 17 → 27 checks. **(2) Tonight's 00:06Z path had two defects**
+(`817f7b0`): `main()` returned 1 for both a computed FAIL and an uncaught
+exception (now 0/1/**4=instrument failure**), and `da_midnight_verify.sh` exited
+with its last `echo` — always 0 — so a crashed verifier reported SUCCESS to
+systemd (the R-199 swallow-class, still present in the one script that runs
+unattended). **My first fix was wrong and my own falsifier refuted it**: `rc>=4`
+only catches exceptions inside `main()`; a module dying on import exits 1. The
+check is now **positive evidence** — a parseable verdict artifact naming the day
+it claims to have verified, temp-written and promoted only on validation.
+*Absence is never success.* `DA_MIDNIGHT_LOG` makes the script rehearsable
+without touching the nightly record; per-coin verdicts print in the log too.
+
+**IN PROGRESS.** `da-gate-tape6d-b3ef93c.service` polling; background watcher
+reports when it fires.
+
+**NEXT / WATCH OUT FOR.** 00:06Z tonight: 08-27 judged whole-day under the
+FROZEN rule (R-211(2)) — expected FAIL on `gap_rate_under_bar`, **eth lost with
+it**, the price of not choosing after seeing. From 08-28 per-coin. **Q-DA-99's
+btc cause is unfixed by design** (R-211(1): no mid-day intervention — a
+collector change writes a stamp boundary INSIDE the day and would manufacture a
+mixed-era day); mitigation is an OPS between-days task on the coordinator's
+desk, deploy only at a UTC boundary. Standing pattern now: **every unattended
+runner proves it ran by leaving an artifact, never by an exit code.**
 
 ## 2026-08-27 (DA, ~10:1xZ) — REVIEW-COMPLETE given; two vacuous load-bearing predicates fixed; day one failing MID-DAY
 
