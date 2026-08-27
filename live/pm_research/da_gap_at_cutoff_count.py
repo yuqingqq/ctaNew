@@ -149,6 +149,12 @@ def count(tape: Path, era: str | None = None) -> dict[str, Any]:
     missing_fields = collections.Counter()
     pred_true_status: collections.Counter = collections.Counter()
     unflagged_rows: list[dict[str, Any]] = []
+    # THE OTHER DIRECTION. Reporting only predicate-true-but-unflagged makes a
+    # two-sided disagreement look one-sided: 289 vs 286 reads as "3 rows" while
+    # it can be 4 one way and 1 the other. A diff that can only see one
+    # direction is how a net difference conceals its own size.
+    flagged_not_pred_rows: list[dict[str, Any]] = []
+    tape_flag_total = 0
     for r in G.iter_tape(tape):
         n_rows += 1
         coin, t0, ts = r.get("coin"), r.get("t0"), r.get("t_start")
@@ -162,6 +168,21 @@ def count(tape: Path, era: str | None = None) -> dict[str, Any]:
             epoch_checked += 1
             max_epoch_err = max(max_epoch_err, abs(float(dte) - T))
         iv = gaps.get(coin, [])
+        _tape_flag = str(r.get("state_status", "")) == "GAP_AT_CUTOFF"
+        if _tape_flag:
+            tape_flag_total += 1
+            if not in_gap(iv, T):
+                _lo_d = min((abs(T - a) for a, _b in iv), default=None)
+                _hi_d = min((abs(T - b) for _a, b in iv), default=None)
+                flagged_not_pred_rows.append({
+                    "slug": r.get("slug"), "coin": coin, "side": r.get("side"),
+                    "gen": r.get("gen"), "t0": t0, "t_start": ts,
+                    "T_absolute_full": repr(T),   # NOT rounded: a rounded T
+                    # printed next to a boundary is how a 0.0000000s distance
+                    # reads as "no gap contains this row"
+                    "split": r.get("split"),
+                    "dist_to_nearest_g_start": _lo_d,
+                    "dist_to_nearest_g_end": _hi_d})
         exact, dist = at_upper_edge(iv, T)
         if exact:
             total["at_g1_exact"] += 1
@@ -202,7 +223,13 @@ def count(tape: Path, era: str | None = None) -> dict[str, Any]:
                 unflagged_rows.append({
                     "slug": r.get("slug"), "coin": coin, "side": r.get("side"),
                     "gen": r.get("gen"), "t0": t0, "t_start": ts,
-                    "T_absolute": round(T, 6), "split": r.get("split"),
+                    "T_absolute": round(T, 6),
+                    "T_absolute_full": repr(T),
+                    "dist_to_nearest_g_start": min(
+                        (abs(T - a) for a, _b in iv), default=None),
+                    "dist_to_nearest_g_end": min(
+                        (abs(T - b) for _a, b in iv), default=None),
+                    "split": r.get("split"),
                     "state_status": _st,
                     "decision_time_epoch": r.get("decision_time_epoch")})
             by_coin[coin] += 1
@@ -218,6 +245,15 @@ def count(tape: Path, era: str | None = None) -> dict[str, Any]:
     return {
         "instrument": "da_gap_at_cutoff_count_v1",
         "predicate_true_by_tape_status": dict(pred_true_status),
+        "tape_flagged_total": tape_flag_total,
+        "flagged_but_not_predicate_true": flagged_not_pred_rows,
+        "n_flagged_but_not_predicate_true": len(flagged_not_pred_rows),
+        "symmetric_diff_note": (
+            "Two-sided. n_predicate_true_not_flagged = ruled-in / tape-out; "
+            "n_flagged_but_not_predicate_true = tape-in / ruled-out. The NET "
+            "count difference is their difference, so a net of 3 can be 4 and "
+            "1. Distances to the nearest g_start/g_end are reported UNROUNDED "
+            "because a boundary case rounds away."),
         "predicate_true_not_flagged": unflagged_rows,
         "n_predicate_true_not_flagged": len(unflagged_rows),
         "diff_note": ("`flagged` = PREDICATE-TRUE under the ruled definition, "
@@ -329,6 +365,29 @@ def _selftests() -> int:
             ok(_slugs == ["btc-2", "btc-3"],
                "and NAMED individually -- a 3-row discrepancy is not something "
                "to report the first ten of")
+            # the OTHER direction must be seen too: a row the TAPE flags that
+            # the ruled predicate does not. Without it a 4-vs-1 disagreement
+            # reports as "3".
+            _rows3 = [
+                {"slug": "btc-9", "coin": "btc", "t0": 9000.0, "t_start": 0.0,
+                 "state_status": "GAP_AT_CUTOFF"},        # outside every gap
+                {"slug": "btc-1", "coin": "btc", "t0": 1500.0, "t_start": 0.0,
+                 "state_status": "GAP_AT_CUTOFF"},        # inside, agreed
+            ]
+            _t.write_text(json.dumps({"rows": _rows3}), encoding="utf-8")
+            _rep3 = count(_t)
+            ok(_rep3["n_flagged_but_not_predicate_true"] == 1
+               and _rep3["flagged_but_not_predicate_true"][0]["slug"] == "btc-9",
+               "a row the TAPE flags but the ruled predicate does not is caught "
+               "and NAMED -- the direction a one-sided diff cannot see")
+            ok(_rep3["tape_flagged_total"] == 2,
+               "the tape's own flag total is reported beside the predicate's, "
+               "so the two numbers in dispute are both in one artifact")
+            ok(_rep3["flagged_but_not_predicate_true"][0]
+               ["dist_to_nearest_g_start"] is not None,
+               "with an UNROUNDED distance to the nearest boundary -- a "
+               "rounded T beside a boundary reads as 'no gap contains this row'")
+
             # FALSIFIER: with every row correctly flagged there must be NO
             # masked rows, or the instrument would 'find' masking anywhere
             _rows2 = [dict(r, state_status="GAP_AT_CUTOFF") for r in _rows[:3]]
