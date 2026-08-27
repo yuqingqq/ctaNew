@@ -94,6 +94,29 @@ def coin_gaps(path: Path = PM_GAPS, era: str | None = None
     return merged, dict(diag)
 
 
+def at_upper_edge(intervals: list[tuple[float, float]], t: float
+                  ) -> tuple[bool, float]:
+    """(is t EXACTLY at some g_end, distance to the nearest g_end).
+
+    THE ONLY PLACE the ruled `[g0, g1)` and BE's builder `[g0, g1]` can
+    disagree (R-194). Under closed containment a row exactly at g1 is flagged;
+    under the ruled half-open it is not. So the difference set is precisely
+    {rows with T == g_end}. If that set is EMPTY the two conventions are
+    indistinguishable on this tape and the diagnostic build is equivalent to
+    fixed-builder output; if it is non-empty the containment bug bites and the
+    rebuild is forced.
+
+    The distance is returned as well, because "zero hits" is only reassuring
+    beside how CLOSE anything got: zero hits with rows landing microseconds
+    away is a coincidence, zero hits with the nearest approach seconds away is
+    a structural fact.
+    """
+    if not intervals:
+        return False, float("inf")
+    best = min(abs(t - b) for _, b in intervals)
+    return best == 0.0, best
+
+
 def in_gap(intervals: list[tuple[float, float]], t: float) -> bool:
     """[g_start, g_end): lower-inclusive, upper-EXCLUSIVE (R-191(2))."""
     if not intervals:
@@ -112,6 +135,8 @@ def count(tape: Path, era: str | None = None) -> dict[str, Any]:
     by_split = collections.Counter()
     by_coin_split: collections.Counter = collections.Counter()
     flagged_ids: list[dict[str, Any]] = []
+    edge_ids: list[dict[str, Any]] = []
+    min_edge_dist = float("inf")
     n_rows = 0
     max_epoch_err = 0.0
     epoch_checked = 0
@@ -128,7 +153,22 @@ def count(tape: Path, era: str | None = None) -> dict[str, Any]:
         if dte is not None:
             epoch_checked += 1
             max_epoch_err = max(max_epoch_err, abs(float(dte) - T))
-        if in_gap(gaps.get(coin, []), T):
+        iv = gaps.get(coin, [])
+        exact, dist = at_upper_edge(iv, T)
+        if exact:
+            total["at_g1_exact"] += 1
+            if len(edge_ids) < 10:
+                edge_ids.append({"slug": r.get("slug"), "t_start": ts,
+                                 "T_absolute": round(T, 9),
+                                 "split": r.get("split")})
+        if dist < min_edge_dist:
+            min_edge_dist = dist
+        for band, lab in ((1e-6, "within_1us_of_g1"),
+                          (1e-3, "within_1ms_of_g1"),
+                          (1.0, "within_1s_of_g1")):
+            if dist <= band:
+                total[lab] += 1
+        if in_gap(iv, T):
             total["flagged"] += 1
             by_coin[coin] += 1
             sp = str(r.get("split", "?"))
@@ -157,6 +197,25 @@ def count(tape: Path, era: str | None = None) -> dict[str, Any]:
             "rows_checked": epoch_checked,
             "max_abs_error_vs_t0_plus_t_start": round(max_epoch_err, 9)},
         "first_10_flagged": flagged_ids,
+        # R-194 edge probe: the ONLY divergence between the ruled [g0,g1) and
+        # the builder's [g0,g1] is rows landing exactly on g1.
+        "containment_edge_probe": {
+            "at_g1_exact": total.get("at_g1_exact", 0),
+            "within_1us_of_g1": total.get("within_1us_of_g1", 0),
+            "within_1ms_of_g1": total.get("within_1ms_of_g1", 0),
+            "within_1s_of_g1": total.get("within_1s_of_g1", 0),
+            "min_abs_distance_to_any_g1": (
+                None if min_edge_dist == float("inf")
+                else round(min_edge_dist, 9)),
+            "first_10_at_edge": edge_ids,
+            "verdict": ("EDGE IMMATERIAL on this tape: no row lands exactly on "
+                        "a g1, so closed and half-open containment are "
+                        "indistinguishable here"
+                        if total.get("at_g1_exact", 0) == 0 else
+                        "EDGE BITES: rows land exactly on a g1, so the "
+                        "builder's closed containment flags rows the ruled "
+                        "half-open does not -- rebuild forced"),
+        },
     }
 
 
@@ -211,6 +270,21 @@ def _selftests() -> int:
            "for ANY btc row -- this is precisely what per-slug scoping drops")
         gera, _ = coin_gaps(f, era="other_era")
         ok(gera == {}, "an era filter that matches nothing yields no gaps")
+
+    # --- R-194 containment-edge probe ------------------------------------
+    e, d = at_upper_edge(iv, 200.0)
+    ok(e and d == 0.0, "a row EXACTLY at g1 is detected as an edge hit")
+    ok(not in_gap(iv, 200.0),
+       "...and the RULED containment does NOT flag it -- which is exactly the "
+       "divergence from the builder's closed form")
+    e2, d2 = at_upper_edge(iv, 199.999)
+    ok(not e2 and abs(d2 - 0.001) < 1e-9,
+       "a row just inside reports its distance, not an edge hit")
+    ok(in_gap(iv, 199.999), "...and IS flagged by the ruled containment")
+    e3, d3 = at_upper_edge(iv, 500.0)
+    ok(not e3 and d3 == 100.0, "distance is to the NEAREST g1, across intervals")
+    ok(at_upper_edge([], 1.0) == (False, float("inf")),
+       "no intervals means no edge and infinite distance, not a false hit")
 
     print(f"da_gap_at_cutoff_count selftests: {checks} checks passed")
     return 0
