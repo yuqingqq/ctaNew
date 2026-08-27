@@ -184,6 +184,22 @@ def main() -> int:
     seam("4g negative decision_time is ADMITTED (pre-window warm-up is real)",
          tape_row["decision_time"] < 0)
 
+    # ---- SEAM 8 (BE-added): the RUN PATH must USE these, not merely define
+    # them. The fixture was green on all seven seams while stage_score called
+    # NONE of the fixed components -- capabilities existing is not the same
+    # claim as the run path using them, and only the second one protects a
+    # rerun. A gate that certifies parts a pipeline never invokes certifies
+    # nothing about that pipeline.
+    import inspect
+    body = inspect.getsource(PA.stage_score) + inspect.getsource(PA.stage_fit)
+    for label, tok in (("8a run path passes the TAPE into the feature pass", "TAPE="),
+                       ("8b run path resolves CAUSAL thresholds", "freeze_thresholds("),
+                       ("8c run path emits HEAD DIAGNOSTICS", "head_diagnostics("),
+                       ("8d run path dispatches ARM D", "INCUMBENT_REWEIGHTED_ONLY"),
+                       ("8e run path APPLIES the purge", "purge_training(")):
+        seam(label, tok in body,
+             "defined but never called by stage_fit/stage_score")
+
     print(f"\n{'FIXTURE GREEN' if not FAILURES else 'FIXTURE RED'}: "
           f"{len(FAILURES)} seam(s) failing")
     for f in FAILURES:

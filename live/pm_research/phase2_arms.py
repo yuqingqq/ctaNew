@@ -57,6 +57,58 @@ def assert_disjoint(fit_slugs: set, score_slugs: set) -> None:
 
 
 
+
+TAPE_PATH = DERIVED / "phase2_state_tape_v2.json"
+
+
+def load_tape_index(split: str) -> dict:
+    """Stream the rebuilt tape and index ONE split's rows by identity.
+
+    Streamed, not json.loads'd: the tape is 3.17 GB and R-174 forbids
+    materializing it. Keyed by (slug, side, gen, t_start) so the scorer
+    CONSUMES this tape by identity rather than re-deriving state without its
+    required inputs."""
+    import ijson  # noqa: F401  (optional fast path)
+    raise RuntimeError("unused")
+
+
+def _stream_tape_rows(path: Path):
+    """Yield row dicts from the tape without holding the file in memory."""
+    dec = json.JSONDecoder()
+    buf = ""
+    with path.open("r") as fh:
+        head = fh.read(1 << 16)
+        i = head.index('"rows"')
+        i = head.index("[", i) + 1
+        buf = head[i:]
+        while True:
+            buf = buf.lstrip()
+            while buf.startswith(","):
+                buf = buf[1:].lstrip()
+            if buf.startswith("]"):
+                return
+            try:
+                obj, end = dec.raw_decode(buf)
+            except ValueError:
+                chunk = fh.read(1 << 22)
+                if not chunk:
+                    return
+                buf += chunk
+                continue
+            yield obj
+            buf = buf[end:]
+
+
+def tape_index(split: str) -> dict:
+    idx = {}
+    for r in _stream_tape_rows(TAPE_PATH):
+        if r.get("split") != split:
+            continue
+        if str(r.get("state_status", "OK")) != "OK":
+            continue
+        idx[(r["slug"], r["side"], r["gen"], r["t_start"])] = r
+    return idx
+
 def freeze_thresholds(train_scores, budgets):
     """CAUSAL thresholds: per-budget cutoffs resolved from TRAINING scores ONLY.
 
@@ -110,6 +162,9 @@ def head_diagnostics(p_haz, y_haz, v_true, v_pred):
             "harmful_sign_discrimination": sign_acc,
             "conditional_value_mae": mae,
             "conditional_value_calibration_slope": slope}
+
+
+PA_KIND = lambda a: arm_model_kind(a)
 
 
 def arm_model_kind(arm: str) -> str:
@@ -219,8 +274,33 @@ def stage_fit() -> None:
     import harmful_fast_compute as fc
     import lightgbm as lgb
     import numpy as np
+    import phase2_embargo as EMB
     FITDIR.mkdir(parents=True, exist_ok=True)
-    FIT = _feature_pass(FRAGMENT, "fragment")
+    print("  indexing rebuilt tape (train split)...", flush=True)
+    TP = tape_index("train")
+    print(f"  tape rows indexed: {len(TP):,}", flush=True)
+    FIT = _feature_pass(FRAGMENT, "fragment", TAPE=TP)
+    # APPLY the purge -- recording a violation is not applying it (R-187 seam 3)
+    print("  indexing score split for the embargo boundary...", flush=True)
+    SP = tape_index("score")
+    score_probe = [{"t0": r["t0"], "t_start": r["t_start"]} for r in SP.values()]
+    for coin in FIT:
+        before = len(FIT[coin]["kept"])
+        keep_idx = set()
+        kept, dropped = EMB.purge_training(FIT[coin]["kept"], score_probe)
+        keys = {(r["slug"], r["side"], r["gen"], r["t_start"]) for r in kept}
+        for n, r in enumerate(FIT[coin]["kept"]):
+            if (r["slug"], r["side"], r["gen"], r["t_start"]) in keys:
+                keep_idx.add(n)
+        for fam in ("PM", "FN", "ST"):
+            FIT[coin][fam] = [v for n, v in enumerate(FIT[coin][fam]) if n in keep_idx]
+        FIT[coin]["kept"] = [v for n, v in enumerate(FIT[coin]["kept"]) if n in keep_idx]
+        FIT[coin]["purged_rows"] = before - len(FIT[coin]["kept"])
+        print(f"  [purge/{coin}] {before:,} -> {len(FIT[coin]['kept']):,} "
+              f"({FIT[coin]['purged_rows']:,} rows dropped by the 60s embargo)",
+              flush=True)
+        EMB.assert_embargo(FIT[coin]["kept"], score_probe)
+    del SP, score_probe
     for coin in ("btc", "eth"):
         f = FIT[coin]
         yF, tF = _labels(f["kept"])
@@ -237,7 +317,12 @@ def stage_fit() -> None:
              "norm_mu": list(mu), "norm_sd": list(sd),
              "n_rows": len(f["kept"]), "n_positive": sum(yF),
              "n_actions": len({(r["slug"], r["side"], r["gen"]) for r in f["kept"]}),
-             "drops": f["drops"]}))
+             "drops": f["drops"],
+             "purged_rows_embargo": f.get("purged_rows", 0),
+             "causal_thresholds": freeze_thresholds(
+                 [fc.fast_predict_p(W, x) *
+                  (float(sum(a * b for a, b in zip(WM, x))) if WM else 0.0)
+                  for x in Xf], D.BUDGETS)}))
         A = np.asarray(Xf, dtype=np.float64); swa = np.asarray(sw)
         clf = lgb.LGBMClassifier(**D.LGBM_PARAMS)
         clf.fit(A, np.asarray(yF), sample_weight=swa)
@@ -265,7 +350,10 @@ def stage_score() -> dict:
 
     frozen = json.loads(FROZEN.read_text())
     fit_slugs = set(json.loads((FITDIR / "fit_slugs.json").read_text()))
-    SC = _feature_pass(TOPUP, "topup")
+    print("  indexing rebuilt tape (score split)...", flush=True)
+    TP = tape_index("score")
+    print(f"  tape rows indexed: {len(TP):,}", flush=True)
+    SC = _feature_pass(TOPUP, "topup", TAPE=TP)
     assert_disjoint(fit_slugs, {r["slug"] for c in SC.values() for r in c["kept"]})
     print("  populations asserted DISJOINT (fitted slugs read from stage 1)",
           flush=True)
@@ -314,7 +402,11 @@ def stage_score() -> dict:
                     x = [1.0] + [(raw[i] - mu[i]) / sd[i] for i in range(len(mu))]
                     ecv.append(fc.fast_predict_p(W, x) *
                                float(sum(a * b for a, b in zip(WM, x))))
-            elif arm == "PLUS_PRED_STATE_V1":
+            elif arm in ("PLUS_PRED_STATE_V1", "INCUMBENT_REWEIGHTED_ONLY"):
+                # arm D is IDENTITY-DISPATCHED to the weighted linear. Sharing
+                # B's model class is what makes B-D isolate the FEATURES; if D
+                # fell through to LGBM it would duplicate C.
+                assert PA_KIND(arm) == "weighted_linear", arm
                 mu, sd = lin["norm_mu"], lin["norm_sd"]
                 W, WM = lin["hazard_weights"], lin["value_weights"]
                 ecv = []
@@ -344,7 +436,17 @@ def stage_score() -> dict:
                     del S
             gate = ae.evaluate_policy(srows, ecv, latency_ms=D.TARGET_LATENCY_MS,
                                       budgets=D.BUDGETS, n_random=D.N_RANDOM)
-            out["arms"].setdefault(coin, {})[arm] = {"gate": gate}
+            Lh = str(D.TARGET_LATENCY_MS)
+            y_sc = [1 if (r.get("latency") or {}).get(Lh, {}).get(
+                        "preventable_shares", 0.0) > 0 else 0 for r in sc["kept"]]
+            v_sc = [(r.get("latency") or {}).get(Lh, {}).get(
+                        "preventable_value_cents", 0.0) for r in sc["kept"]]
+            heads = head_diagnostics([min(1.0, max(0.0, abs(e))) for e in ecv],
+                                     y_sc, v_sc, ecv)
+            out["arms"].setdefault(coin, {})[arm] = {
+                "gate": gate, "head_diagnostics": heads,
+                "model_kind": PA_KIND(arm),
+                "causal_thresholds": lin.get("causal_thresholds")}
             print(f"  {coin} {arm:<20} n_actions={gate.get('n_actions')}", flush=True)
             for b, g in gate["budgets"].items():
                 print(f"      @{b}: net {g['net_cents']:+9.1f}c  "
