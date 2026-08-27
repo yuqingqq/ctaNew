@@ -344,7 +344,51 @@ flags:
                              # is consulted FIRST; builder_commit is REFUSED --
                              # tape5 wrote main HEAD at completion there, a
                              # different quantity from the bytes that built it.
-  tape6_gate: HELD-AWAITING-GREEN-AND-PIN # 2026-08-27 DA, R-199(4).
+  tape6c_gate: ARMED-AT-7ee8afd # 2026-08-27 DA. Unit da-gate-tape6c-0837.
+                             # Waits for derived/phase2_state_tape_v5.json,
+                             # size-stable, then gate + count/edge, and writes
+                             # da_tape_gate_verdict_v5.json. BE'S FIT TAKES THAT
+                             # VERDICT AS ITS GREEN LIGHT.
+                             # HAND-RUN if the unit is gone:
+                             #   DA_TAPE=<t5> DA_EXPECT_COUNT=289 \
+                             #   DA_EXPECT_PROV=7ee8afd DA_GAPPED_SLUGS=133 \
+                             #   DA_VERDICT_OUT=<out> live/pm_research/da_await_gate.sh
+                             # FULL PREDICATE SET (14 + 1 N/A): count 289 ·
+                             # 493 at-g1 PRESENT-and-UNFLAGGED · provenance
+                             # 7ee8afd · skip counters ZERO · absorption <=1% ·
+                             # layout/clock declared · guards beside nullables ·
+                             # no zero-imputation · feature_asof <= decision ·
+                             # embargo N/A enforced-downstream.
+                             # PIN VERIFIED on ancestry + gap path + archive
+                             # path before arming; gap path untouched since
+                             # a410c07 so 289/493 still apply.
+                             # ON REFUSE: file the verdict and STOP. No
+                             # diagnosis races (R-203).
+  tape_gate_lessons: SEE-BELOW # accumulated 2026-08-27, all cost real defects.
+                             # * A CHECK CAN VERIFY A FIX IS PRESENT RATHER
+                             #   THAN THAT IT TAKES EFFECT -- a weaker check
+                             #   wearing the same clothes. Root of the whole
+                             #   sprint: guard-vs-consumer, capability-vs-
+                             #   wiring, enumerate-vs-derive are its faces.
+                             # * ENUMERATING CONSTANTS DOES NOT CONVERGE.
+                             #   Derive the set from what is declared; assert
+                             #   with an invented name that exists nowhere.
+                             # * EMPTY SETS PASS. Any predicate that iterates
+                             #   must fail when it iterated over nothing --
+                             #   found twice in DA's own gate, the second time
+                             #   only by a REAL artifact, not a fixture.
+                             # * UNIT SUCCESS != CHECKER SUCCESS unless exit
+                             #   codes provably propagate (seam 22), and unit
+                             #   PROPERTIES can be read at the wrong moment --
+                             #   the JOURNAL exit line is authoritative.
+                             # * NEVER read an exit code through a pipe.
+                             # * A STALE EXPECTED VALUE produces an
+                             #   AUTHORITATIVE FALSE REFUSAL -- worse than a
+                             #   gate that cannot fail. Disarm before a pin
+                             #   moves; never race a swap.
+                             # * RANGE DIFF != COMMIT DIFF; mistaking them
+                             #   files false findings against other planes.
+  tape6_gate: SUPERSEDED-BY-tape6c_gate # 2026-08-27 DA, R-199(4).
                              # NOT re-armed. Re-arm only after BE's seams are
                              # green AND the coordinator supplies the new
                              # fix-commit pin, which will NOT be 057b1b7.
