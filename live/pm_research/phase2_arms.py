@@ -370,26 +370,49 @@ def assert_gate_passed() -> dict:
     if not table:
         raise RuntimeError("REFUSED: verdict carries no predicate table; a "
                            "summary field is not a result.")
-    results = (list(table.values()) if isinstance(table, dict)
-               else [x.get("pass") for x in table])
-    recomputed = all(bool(x if not isinstance(x, dict) else x.get("pass"))
-                     for x in results)
-    if not recomputed:
+    # THREE STATES, not two. A predicate marked `applicable: False` is
+    # NOT-APPLICABLE -- neither pass nor fail -- and must be EXCLUDED from
+    # all_pass. BE's first version flattened it to a boolean, so DA's real
+    # emission (which carries embargo_respected as pass:False/applicable:False,
+    # "ENFORCED-DOWNSTREAM") was REFUSED as failing. A consumer that cannot
+    # represent not-applicable will reject correct verdicts forever.
+    if isinstance(table, dict):
+        applicable = [(k, bool(v)) for k, v in table.items()]
+        skipped = []
+    else:
+        applicable = [(x.get("predicate"), bool(x.get("pass"))) for x in table
+                      if x.get("applicable", True)]
+        skipped = [x.get("predicate") for x in table
+                   if not x.get("applicable", True)]
+    if not applicable:
         raise RuntimeError(
-            f"REFUSED: recomputed all_pass is FALSE over {len(results)} "
-            f"predicates, whatever the summary field says.")
+            f"REFUSED: every predicate is marked not-applicable "
+            f"({skipped}); a table with nothing evaluated is not a result.")
+    failed = [k for k, ok in applicable if not ok]
+    if failed:
+        raise RuntimeError(
+            f"REFUSED: recomputed all_pass is FALSE. Failing predicates: "
+            f"{failed} (of {len(applicable)} applicable; not-applicable and "
+            f"excluded: {skipped}). The summary field is not consulted.")
+    # TWO SEPARATE QUESTIONS, and conflating them was a defect:
+    #   (i)  is this verdict internally valid and BOUND TO ITS OWN SUBJECT?
+    #   (ii) is that subject the tape THIS FIT is about to consume?
+    # (i) is the contract; (ii) is a caller concern. Checking (ii) inside the
+    # contract made the consumer refuse a perfectly valid verdict whenever the
+    # module constant pointed elsewhere.
     tp = Path(v.get("tape_path", ""))
-    if tp.resolve() != TAPE_PATH.resolve():
-        raise RuntimeError(f"REFUSED: verdict is about {tp}, not {TAPE_PATH}.")
-    if not TAPE_PATH.exists():
-        raise RuntimeError(f"REFUSED: {TAPE_PATH.name} absent.")
-    nbytes = TAPE_PATH.stat().st_size
+    if not tp.exists():
+        raise RuntimeError(
+            f"REFUSED: the verdict's subject {tp} does not exist; a verdict "
+            f"about a missing artifact certifies nothing.")
+    subject = tp
+    nbytes = subject.stat().st_size
     if v.get("tape_bytes") != nbytes:
         raise RuntimeError(
             f"REFUSED: verdict says {v.get('tape_bytes')} bytes, tape is "
             f"{nbytes} -- the verdict is about a different artifact.")
     h = hashlib.sha256()
-    with TAPE_PATH.open("rb") as fh:
+    with subject.open("rb") as fh:
         for chunk in iter(lambda: fh.read(1 << 20), b""):
             h.update(chunk)
     digest = h.hexdigest()
@@ -398,14 +421,49 @@ def assert_gate_passed() -> dict:
         raise RuntimeError(
             f"REFUSED: tape sha256 {digest[:16]} does not match the verdict's "
             f"prefix {pref!r}.")
-    with TAPE_PATH.open() as fh:
+    with subject.open() as fh:
         head = fh.read(4000)
-    meta = json.loads(head[:head.index('"rows"')].rstrip().rstrip(",") + "}")
-    if v.get("builder_ref") != meta.get("builder_ref"):
+    try:
+        meta = json.loads(head[:head.index('"rows"')].rstrip().rstrip(",") + "}")
+    except (ValueError, json.JSONDecodeError):
+        meta = {}
+    # DA's writer carries the tape's header pins under `tape_header_pins`,
+    # not at top level. Reading only the top level made the consumer refuse
+    # DA's REAL emission over a field that was present all along, one key
+    # deeper -- a contract disagreement about LOCATION, not about content,
+    # which is the same shape as the features_under/nesting seam.
+    pins = v.get("tape_header_pins") or {}
+    vref = v.get("builder_ref") or pins.get("builder_ref")
+    tref = meta.get("builder_ref")
+    if vref is not None and tref is not None and vref != tref:
         raise RuntimeError(
-            f"REFUSED: verdict builder_ref {v.get('builder_ref')!r} != tape "
-            f"builder_ref {meta.get('builder_ref')!r}.")
+            f"REFUSED: verdict builder_ref {vref!r} != tape builder_ref "
+            f"{tref!r} -- the verdict is about a different build.")
+    # ABSENCE of builder_ref in the verdict is ACCEPTED, and the reason is
+    # that the binding is already complete without it: tape_bytes and
+    # tape_sha256_prefix were checked against THIS file, so the tape is
+    # byte-identical to the one the gate ran on -- and those bytes CONTAIN the
+    # builder_ref. Hash-binding subsumes ref-binding. Refusing on absence
+    # rejected DA's own real emission (whose `tape_header_pins` is empty in the
+    # contract test) over a field the hash had already pinned.
+    # NOTE FOR THE REGISTER: R-203(3) lists builder_ref among the fields to
+    # validate, while DA's acceptance test emits a verdict without one and
+    # requires acceptance. BE resolves toward the test -- a MISMATCH still
+    # refuses -- and flags the discrepancy rather than choosing silently.
     return v
+
+def assert_verdict_subject_is(tape: Path, v: dict) -> None:
+    """(ii): the verdict's subject must be the tape THIS fit will consume.
+
+    Separate from the contract check by design -- a verdict can be perfectly
+    valid about another artifact, and consuming it here would still be wrong."""
+    sub = Path(v.get("tape_path", "")).resolve()
+    if sub != tape.resolve():
+        raise RuntimeError(
+            f"REFUSED: the verdict certifies {sub}, but this fit consumes "
+            f"{tape.resolve()}. A valid verdict about a different tape is "
+            f"still the wrong verdict.")
+
 
 def stage_fit() -> None:
     """STAGE 1: fit B and C on the fragment, persist, exit.
@@ -419,8 +477,9 @@ def stage_fit() -> None:
     import lightgbm as lgb
     import numpy as np
     import phase2_embargo as EMB
-    assert_tape_is_v5()          # the tape is the committed-ref v5 build
-    assert_gate_passed()         # and DA's gate has PASSED it
+    assert_tape_is_v5()                              # committed-ref v5 build
+    _v = assert_gate_passed()                        # (i) contract valid
+    assert_verdict_subject_is(TAPE_PATH, _v)         # (ii) about THIS tape
     FITDIR.mkdir(parents=True, exist_ok=True)
     print("  indexing rebuilt tape (train split)...", flush=True)
     TP = tape_index("train")
@@ -603,7 +662,8 @@ def stage_score() -> dict:
     import numpy as np
 
     assert_tape_is_v5()
-    assert_gate_passed()
+    _v = assert_gate_passed()
+    assert_verdict_subject_is(TAPE_PATH, _v)
     frozen = json.loads(FROZEN.read_text())
     fit_slugs = set(json.loads((FITDIR / "fit_slugs.json").read_text()))
     print("  indexing rebuilt tape (score split)...", flush=True)
@@ -671,8 +731,11 @@ def stage_score() -> dict:
                 for j in range(len(sc["kept"])):
                     raw = sc["PM"][j] + sc["FN"][j]
                     x = [1.0] + [(raw[i] - mu[i]) / sd[i] for i in range(len(mu))]
-                    ecv.append(fc.fast_predict_p(W, x) *
-                               float(sum(a * b for a, b in zip(WM, x))))
+                    ph = fc.fast_predict_p(W, x)
+                    vh = float(sum(a * b for a, b in zip(WM, x)))
+                    p_head.append(ph); v_head.append(vh); ecv.append(ph * vh)
+                thr = (fz.get("causal_thresholds")
+                       or lin.get("causal_thresholds_armA"))
             elif arm == "INCUMBENT_REWEIGHTED_ONLY":
                 lind = json.loads((FITDIR / f"linear_d_{coin}.json").read_text())
                 mu, sd = lind["norm_mu"], lind["norm_sd"]
@@ -686,9 +749,14 @@ def stage_score() -> dict:
                     p_head.append(ph); v_head.append(vh); ecv.append(ph * vh)
                 thr = lind.get("causal_thresholds")
             elif arm == "PLUS_PRED_STATE_V1":
-                # arm D is IDENTITY-DISPATCHED to the weighted linear. Sharing
-                # B's model class is what makes B-D isolate the FEATURES; if D
-                # fell through to LGBM it would duplicate C.
+                # R-205: NAMES ONLY -- this comment previously labelled the
+                # PLUS_PRED_STATE_V1 branch with the wrong letter and taught a
+                # swapped convention. PLUS_PRED_STATE_V1 is identity-dispatched
+                # to the weighted linear; it shares that model class with
+                # INCUMBENT_REWEIGHTED_ONLY, which is what makes
+                # (PLUS_PRED_STATE_V1 - INCUMBENT_REWEIGHTED_ONLY) isolate the
+                # STATE FEATURES. Falling through to LGBM would duplicate
+                # LGBM_PINNED.
                 assert PA_KIND(arm) == "weighted_linear", arm
                 mu, sd = lin["norm_mu"], lin["norm_sd"]
                 W, WM = lin["hazard_weights"], lin["value_weights"]
@@ -696,8 +764,10 @@ def stage_score() -> dict:
                 for j in range(n_sc):
                     raw = _raw(j)                       # transient, freed each loop
                     x = [1.0] + [(raw[i] - mu[i]) / sd[i] for i in range(len(mu))]
-                    ecv.append(fc.fast_predict_p(W, x) *
-                               (float(sum(a * b for a, b in zip(WM, x))) if WM else 0.0))
+                    ph = fc.fast_predict_p(W, x)
+                    vh = float(sum(a * b for a, b in zip(WM, x))) if WM else 0.0
+                    p_head.append(ph); v_head.append(vh); ecv.append(ph * vh)
+                thr = lin.get("causal_thresholds")
             else:
                 mu, sd = lin["norm_mu"], lin["norm_sd"]
                 hb = lgb.Booster(model_file=str(FITDIR / f"lgbm_haz_{coin}.txt"))
@@ -723,6 +793,17 @@ def stage_score() -> dict:
                     # row by row.
                     p_head.extend(p.tolist()); v_head.extend(v.tolist())
                     del S
+                # LGBM_PINNED loads ITS OWN frozen thresholds, persisted by
+                # stage_fit after its model existed. Without this the arm ran
+                # RETROSPECTIVE_TOPK while the other three ran causal -- and
+                # every per-arm number still looked entirely normal.
+                _tf = FITDIR / f"lgbm_thresholds_{coin}.json"
+                thr = json.loads(_tf.read_text()) if _tf.exists() else None
+                if thr is None:
+                    raise RuntimeError(
+                        f"REFUSED: LGBM_PINNED has no frozen thresholds for "
+                        f"{coin}; running it retrospectively while the other "
+                        f"arms are causal is not a paired comparison.")
             gate = ae.evaluate_policy(srows, ecv, latency_ms=D.TARGET_LATENCY_MS,
                                       budgets=D.BUDGETS, n_random=D.N_RANDOM,
                                       theta_frozen=thr)
@@ -756,6 +837,27 @@ def stage_score() -> dict:
         # free this coin's features before the next coin is built
         SC[coin]["PM"] = []; SC[coin]["FN"] = []; SC[coin]["ST"] = []
         del sc, srows
+    # R-204(2): every arm must have been evaluated in the SAME mode. If a
+    # rewiring ever leaves one arm on RETROSPECTIVE_TOPK while the others are
+    # causal, the arms are not comparable -- and the per-arm numbers would
+    # still look entirely normal. Asserted at the ARTIFACT, not in prose.
+    _modes = {}
+    for _c, _arms in out["arms"].items():
+        for _a, _v in _arms.items():
+            _modes[f"{_c}/{_a}"] = _v["gate"].get("threshold_mode")
+    _distinct = sorted(set(_modes.values()))
+    out["evaluation_mode_check"] = {
+        "per_arm": _modes,
+        "distinct_modes": _distinct,
+        "ALL_ARMS_SAME_MODE": len(_distinct) == 1,
+        "mode": _distinct[0] if len(_distinct) == 1 else None,
+        "why": "arms evaluated under different threshold modes are not "
+               "comparable, and each arm's numbers still look normal alone",
+    }
+    if len(_distinct) != 1:
+        raise RuntimeError(
+            f"REFUSED: arms were evaluated under DIFFERENT threshold modes: "
+            f"{_modes}. A paired comparison across modes is not a comparison.")
     import os, tempfile
     fd, tmp = tempfile.mkstemp(dir=str(OUT.parent), suffix=".tmp")
     with os.fdopen(fd, "w") as fh:

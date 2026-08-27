@@ -330,6 +330,15 @@ def main() -> int:
          "zip() truncates silently, so a short p_haz gave a confident Brier "
          "over a prefix")
 
+    # ---- SEAM 26 (R-204): all arms in the SAME evaluation mode ----------
+    a26 = inspect.getsource(PA.stage_score)
+    seam("26a the receipt asserts ALL arms share one evaluation mode",
+         "ALL_ARMS_SAME_MODE" in a26,
+         "an arm left on RETROSPECTIVE_TOPK while others are causal is not "
+         "comparable, and its numbers still look normal alone")
+    seam("26b a mode split REFUSES rather than reporting",
+         "not a comparison" in a26)
+
     print(f"\n{'PRODUCTION SEAMS GREEN' if not FAILURES else 'PRODUCTION SEAMS RED'}: "
           f"{len(FAILURES)} failing")
     for f in FAILURES:
