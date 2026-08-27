@@ -16317,6 +16317,21 @@ substantially improved; every selftest and the fixture pass — **and the
 fixture missing these six is the finding: a fixture is only as good as
 the seams it asserts, and it must grow with every audit.**
 
+### R-195 — coordinator (2026-08-27T07:22Z): Q-DA-87 RATIFIED; mechanism CONFIRMED at collector source; R-194(1) promotion test AMENDED — tape4 has NO promotion path, tape5 required
+
+**(1) Measurement accepted.** 493 rows sit exactly on a `g1` (min distance 0.0); closed `[g0,g1]` yields 782 where the ruled `[g0,g1)` yields 289; the sets are disjoint. The probe ran on tape v2 **before tape4 exists**, so this is a property of the exposure population, not of any build. The R-194(1) at-g1-zero condition was premised on the edge being measure-zero; that premise is refuted, and the condition is **DROPPED as unsatisfiable on this ledger** — exactly as DA asks.
+
+**(2) Mechanism CONFIRMED — upgraded from DA's hypothesis by DE-hold verification at the collector source (rule 16).** Both collectors close a gap **inside the handler of the first post-outage message**, stamping `gap_end_ns` with that message's own `recv_ns`: `live/pm_research/collect_pm.py:407-417` (`raw = await ws.recv(); recv_ns = time.time_ns(); ... "gap_end_ns": recv_ns`) and `live/pm_research/collect_pm_prices.py:139-147` (same, topic-level). So `g1` is **by construction** the receive instant of the recovery message; wherever that message generates a decision row, a row sits exactly on `g1`. The edge is structural and permanent. **STANDING LESSON: on these ledgers, `gap_end_ns` IS a row instant by construction — every future gap analysis meets this edge, and closed containment is always wrong here.**
+
+**(3) Semantics now beyond argument.** The row at `g1` is built FROM the gap-ending message — the freshest data on the tape. Closed containment flags the recovery row as gap-affected, once per gap: backwards, ~2.7x inflation on this population, concentrated on the freshest rows. R-191's `[g0,g1)` is vindicated materially, not conventionally. No committed figure carried the closed counts: the only receipt built closed (`phase2_three_arm_v1.json`) is already superseded on other grounds (R-184). Damage averted, not done.
+
+**(4) The promotion test does NOT collapse to "tape4 shows 289" — coordinator amendment to DA's proposal.** tape4 (`be-tape4-1787810882.service`, still active) was launched from the pre-fix builder — closed containment at `harmful_state_features.py:301` per the user's audit, reproduced RED in seam 16 (53a1074) — and a running process does not pick up later edits. **Expected tape4 count: 782.** Ruling:
+- **tape4 = 782** → closed diagnosis confirmed at full scale; tape4 stays DIAGNOSTIC (user's standing instruction) and becomes the **gate's live positive control** (rule 15): DA's gate must REFUSE it with the right cause (GAP_AT_CUTOFF 782≠289; 493 at-g1 rows flagged).
+- **tape4 = 289** → provenance alarm, NOT promotion: the audited bytes cannot produce 289; establish which code built the tape before anything else moves.
+- **anything else** → third problem; stop and diagnose.
+
+**(5) Chain of record (supersedes the R-194 chain's scan step).** BE: six fixes → seams 11–16 GREEN → **launch tape5 with the fixed builder** (streaming, in-slice, ≤14G) → DA gates tape5 (expect **289**, and edge probe expects the 493 at-g1 rows **present and UNFLAGGED**) → on PASS the purged four-arm rerun, same turn. BE's own exact-at-g1 zero-scan is **DELETED** (unsatisfiable and superseded by DA's pre-registered probe; builder-count vs gate-count is the two-sided check). tape4 runs to completion for the positive-control read and the full-scale streaming-memory validation; if slice memory pressure arises when tape5 launches, tape4 dies first. Fitting remains blocked until seams green + tape5 PASS — unchanged from the user's instruction.
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
