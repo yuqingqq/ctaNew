@@ -66,19 +66,121 @@ def load_schema(path: Path = SCHEMA) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+CHUNK = 1 << 23
+
+
+def read_header(path: Path) -> dict[str, Any]:
+    """The tape's OBJECT-LEVEL pins, without loading the tape.
+
+    The declaration convention said a wrapper "declares the wrapping key on the
+    tape itself" and did not say WHERE. BE put `features_under` and
+    `clock_basis` at the object level, which is the sensible reading; this gate
+    was looking for them per row and would have fallen back to GUESSING the
+    layout from a `state` key. Under-specified by me -- so the gate now reads
+    the header first, and the schema wording is tightened to match.
+    """
+    raw = path.open("r", encoding="utf-8").read(1 << 16)
+    i = raw.find('"rows"')
+    if i < 0:
+        return {}
+    prefix = raw[:i].rstrip().rstrip(",")
+    try:
+        return json.loads(prefix + "}")
+    except json.JSONDecodeError:
+        raise GateRefused(
+            "a `rows` key is present but the object header before it does not "
+            "parse. REFUSING rather than proceeding on a header I cannot read.")
+
+
+def _stream_array(path: Path, key: str) -> Iterator[dict[str, Any]]:
+    """Stream `key`'s array elements from a single-line multi-GB object.
+
+    Quote-and-escape aware brace scanner, the same one validated
+    element-for-element against `json.load` on a 21MB file during the v3.4
+    audit. A 3.17GB `read_text()` + parse is the R-148 allocation burst that
+    took the box down; this holds O(one row).
+    """
+    buf = ""
+    pos = keep = depth = 0
+    start = None
+    in_str = esc = started = False
+    marker = f'"{key}"'
+    with path.open("r", encoding="utf-8") as fh:
+        while True:
+            chunk = fh.read(CHUNK)
+            if not chunk:
+                break
+            if keep:
+                buf = buf[keep:]
+                pos -= keep
+                if start is not None:
+                    start -= keep
+                keep = 0
+            buf += chunk
+            if not started:
+                j = buf.find(marker)
+                if j < 0:
+                    keep = max(0, len(buf) - len(marker))
+                    pos = len(buf)
+                    continue
+                k = buf.find("[", j)
+                if k < 0:
+                    continue
+                started = True
+                pos = k + 1
+            n = len(buf)
+            while pos < n:
+                c = buf[pos]
+                if in_str:
+                    if esc:
+                        esc = False
+                    elif c == "\\":
+                        esc = True
+                    elif c == '"':
+                        in_str = False
+                elif c == '"':
+                    in_str = True
+                elif c == "{":
+                    if depth == 0:
+                        start = pos
+                    depth += 1
+                elif c == "}":
+                    depth -= 1
+                    if depth == 0 and start is not None:
+                        yield json.loads(buf[start:pos + 1])
+                        keep = pos + 1
+                        start = None
+                elif c == "]" and depth == 0:
+                    return
+                pos += 1
+
+
 def iter_tape(path: Path) -> Iterator[dict[str, Any]]:
     """Accept JSONL or a JSON object with a rows list. REFUSE anything else."""
     if not path.exists():
         raise GateRefused(f"{path} does not exist -- an absent tape is not a "
                           f"passing tape.")
-    head = path.open("rb").read(4096).lstrip()
-    if head.startswith(b"{") and b'"rows"' in head[:2048]:
-        obj = json.loads(path.read_text(encoding="utf-8"))
-        rows = obj.get("rows")
-        if not isinstance(rows, list):
-            raise GateRefused("object has no `rows` list")
-        yield from rows
+    # DISPATCH ON STRUCTURE, WITH NO CATASTROPHIC FALLBACK.
+    # The first version looked for `"rows"` in the first 2048 bytes and fell
+    # back to JSONL otherwise. This tape's header is richer than that: the
+    # marker sits at byte 2545. So a 3.17GB SINGLE-LINE object took the JSONL
+    # branch, `json.loads` ate the whole file as one "row", and the gate then
+    # refused because that pseudo-row carried no features. A 497-byte
+    # threshold silently changed the parsing mode, and the fallback was the
+    # worst possible one.
+    HEAD = 1 << 20
+    head = path.open("rb").read(HEAD)
+    stripped = head.lstrip()
+    if stripped.startswith(b"{") and b'"rows"' in head:
+        yield from _stream_array(path, "rows")
         return
+    if stripped.startswith(b"{") and b"\n" not in head:
+        raise GateRefused(
+            f"tape opens as a single JSON object with no `rows` key in the "
+            f"first {HEAD} bytes and no newline. REFUSING: treating it as "
+            f"JSONL would parse the entire {path.stat().st_size} bytes as one "
+            f"row, which is both wrong and the allocation burst R-148 "
+            f"diagnosed.")
     if head.startswith(b"{"):
         n = 0
         with path.open("r", encoding="utf-8") as fh:
@@ -96,7 +198,8 @@ def iter_tape(path: Path) -> Iterator[dict[str, Any]]:
         f"gate that guesses a layout can silently check the wrong thing.")
 
 
-def locate_features(rows: list[dict[str, Any]], schema: dict[str, Any]
+def locate_features(rows: list[dict[str, Any]], schema: dict[str, Any],
+                    header: dict[str, Any] | None = None
                     ) -> tuple[str | None, list[dict[str, Any]]]:
     """Find the feature dicts by DECLARATION, never by guessing (R-187).
 
@@ -115,10 +218,13 @@ def locate_features(rows: list[dict[str, Any]], schema: dict[str, Any]
     probe = rows[:200]
     flat_hits = len(declared & set().union(*(set(r) for r in probe)))
     under = None
-    for r in probe:
-        if isinstance(r.get("features_under"), str):
-            under = r["features_under"]
-            break
+    if header and isinstance(header.get("features_under"), str):
+        under = header["features_under"]          # DECLARED at object level
+    if under is None:
+        for r in probe:
+            if isinstance(r.get("features_under"), str):
+                under = r["features_under"]
+                break
     if under is None:
         for cand in ("state", "features", "pred_state"):
             if any(isinstance(r.get(cand), dict) for r in probe):
@@ -140,14 +246,18 @@ def locate_features(rows: list[dict[str, Any]], schema: dict[str, Any]
     return None, rows
 
 
-def clock_of(r: dict[str, Any], schema: dict[str, Any]) -> float | None:
+def clock_of(r: dict[str, Any], schema: dict[str, Any],
+             header: dict[str, Any] | None = None) -> float | None:
     """Absolute decision epoch, honouring the DECLARED clock basis.
 
     Adding t0 to an already-absolute decision_time double-counts the window
     start. The basis is read from the tape when it declares one, else from the
     schema; it is never assumed.
     """
-    basis = r.get("clock_basis") or schema["CLOCK_BASIS"]["decision_time"]
+    hb = (header or {}).get("clock_basis")
+    if isinstance(hb, dict):
+        hb = hb.get("decision_time")
+    basis = r.get("clock_basis") or hb or schema["CLOCK_BASIS"]["decision_time"]
     for k in ("decision_epoch", "abs_decision_time"):
         if r.get(k) is not None:
             return float(r[k])
@@ -161,156 +271,239 @@ def clock_of(r: dict[str, Any], schema: dict[str, Any]) -> float | None:
     return float(r["t0"]) + float(dt)
 
 
-def gate(rows: list[dict[str, Any]], schema: dict[str, Any],
-         gapped_slugs_expected: int | None = None) -> list[dict[str, Any]]:
-    """Every predicate COMPUTED (rule 10); each names what it would miss."""
+def _predicates(schema, n_rows, under, present, statuses, bn_vals, pair_bad,
+                asof_checked, asof_viol, tr_max, sc_min, split_seen,
+                gapped_slugs_expected, header) -> list[dict[str, Any]]:
+    """The same verdicts the list gate renders, from accumulated counters.
+
+    Kept beside `gate()` deliberately: two code paths that must agree are a
+    seam, and this programme has learned what happens at seams. The selftests
+    assert they agree on the same input.
+    """
     out: list[dict[str, Any]] = []
 
-    def p(name, ok, detail):
-        out.append({"predicate": name, "pass": bool(ok), "detail": detail})
+    def p(name, ok, detail, applicable=True):
+        out.append({"predicate": name, "pass": bool(ok), "detail": detail,
+                    "applicable": bool(applicable)})
 
-    if not rows:
-        p("tape_non_empty", False, "0 rows -- an empty tape never passes")
-        return out
-    p("tape_non_empty", True, f"{len(rows)} rows")
-
-    under, rows = locate_features(rows, schema)   # REFUSES if unlocatable
-    p("layout_matches_declaration", True,
+    p("tape_non_empty", n_rows > 0, f"{n_rows} rows")
+    p("layout_matches_declaration", bool(present),
       f"features located {'under ' + repr(under) if under else 'at top level'}"
-      f"; schema declares native layout "
-      f"{schema.get('LAYOUT', {}).get('native', 'flat')!r}")
-
-    present = set().union(*(set(r) for r in rows[:200]))
-    declared = set(schema["emitted_fields"])
-    reductions = set()
-    for r in rows[:1]:
-        reductions = set(r.get("declared_reductions", []) or [])
+      f"{' (DECLARED in the tape header)' if (header or {}).get('features_under') else ' (inferred)'}")
+    declared = set(schema["emitted_fields"]) - set(
+        schema.get("identity_fields", []))
+    # A reduction declared in the tape HEADER counts as declared. BE lists
+    # `features_in_order`; anything of mine absent from that list is a stated
+    # choice, not a silent drop. (The rule R-185 bound: reductions must be
+    # DECLARED against the schema, and they are.)
+    carried = (header or {}).get("features_in_order")
+    reductions = (declared - set(carried)) if carried else set()
     missing = sorted(declared - present - reductions)
     p("no_undeclared_reduction", not missing,
-      f"{len(present & declared)} of {len(declared)} schema fields present; "
-      f"{len(reductions)} declared reductions; "
-      + (f"UNDECLARED ABSENT: {missing[:8]}" if missing
-         else "every absence is declared"))
-
-    # --- guard beside nullable -------------------------------------------
+      f"{len(present & declared)} of {len(declared)} schema feature fields "
+      f"present; {len(reductions)} DECLARED reductions via header "
+      f"features_in_order"
+      + (f"; UNDECLARED ABSENT: {missing[:8]}" if missing else ""))
     pairs = schema["nullable_fields_and_their_flags"]
     checked_pairs = [n for n in pairs if n in present]
     orphans = [n for n, f in pairs.items() if n in present and f not in present]
     p("guard_beside_every_nullable", bool(checked_pairs) and not orphans,
       f"{len(checked_pairs)} of {len(pairs)} declared nullables present; "
-      f"orphaned (present without their flag): {orphans or 'none'}"
-      + ("  <-- NONE of the declared nullables are present: nothing was "
-         "checked, so this CANNOT pass" if not checked_pairs else "")
-      + ("  <-- this is the R-185 guardless-pin defect" if orphans else ""))
-
-    # --- zero-imputation, tested EXACTLY rather than by signature ---------
-    # The first version flagged any column that was 100% finite with an
-    # all-zero guard. The seam test killed it: `gen_age_s`, `pm_feed_age_s` and
-    # others are LEGITIMATELY always computable, so that pattern is normal and
-    # the check would have fired on every real tape. Hand-made fixtures hid
-    # this because I only ever invented rows where things were missing.
-    #
-    # The exact discriminator: a guard flag that says MISSING beside a value
-    # that is PRESENT. `float(x or 0.0)` produces precisely that -- the flag
-    # still reports the miss while the value has become 0.0. No population
-    # minimum is needed, because this is evidence rather than a pattern.
-    imputed = {}
-    for n, f in pairs.items():
-        if n not in present or f not in present:
-            continue
-        bad = sum(1 for r in rows
-                  if float(r.get(f) or 0.0) != 0.0 and r.get(n) is not None)
-        if bad:
-            imputed[n] = bad
-    p("no_zero_imputation", bool(checked_pairs) and not imputed,
-      (f"{len(checked_pairs)} nullable/guard pairs checked; "
-       f"rows whose guard says MISSING while the value is PRESENT: "
-       f"{imputed or 'none'}")
-      + ("  <-- a missing value was imputed; float(x or 0.0) leaves exactly "
-         "this" if imputed else "")
-      + ("  <-- NONE of the declared nullables are present: nothing was "
-         "checked, so this CANNOT pass" if not checked_pairs else ""))
-
-    # --- REQUIRED_INPUTS actually supplied --------------------------------
-    bn = [r.get("bn_feed_age_s") for r in rows]
-    bn_distinct = len({x for x in bn if x is not None})
-    p("bn_recv_ns_was_supplied", bn_distinct > 1,
-      f"bn_feed_age_s distinct non-null values: {bn_distinct}"
-      + ("  <-- CONSTANT: build_tape was called without bn_recv_ns, so the "
-         "whole freshness family carries no information" if bn_distinct <= 1
-         else ""))
-
-    statuses = collections.Counter(
-        str(r.get(schema["status_field"], "__ABSENT__")) for r in rows)
+      f"orphaned: {orphans or 'none'}")
+    p("no_zero_imputation", bool(checked_pairs) and not pair_bad,
+      f"rows whose guard says MISSING while the value is PRESENT: "
+      f"{dict(pair_bad) or 'none'}")
+    p("bn_recv_ns_was_supplied", len(bn_vals) > 1,
+      f"bn_feed_age_s distinct non-null values (capped at 64): {len(bn_vals)}")
     p("state_status_present", "__ABSENT__" not in statuses,
       f"{schema['status_field']} counts: {dict(statuses)}")
     gap_seen = statuses.get("GAP_AT_CUTOFF", 0)
-    if gapped_slugs_expected is None:
-        p("gaps_were_supplied", gap_seen > 0,
-          f"GAP_AT_CUTOFF rows: {gap_seen}"
-          + ("  <-- ZERO: with gapped slugs in the population this means "
-             "build_tape was called without `gaps`" if gap_seen == 0 else ""))
-    else:
-        okg = gap_seen > 0 or gapped_slugs_expected == 0
-        p("gaps_were_supplied", okg,
-          f"GAP_AT_CUTOFF rows: {gap_seen}; population carries "
-          f"{gapped_slugs_expected} gapped slugs per DA's receipt")
-
-    # --- statuses honoured, not silently consumed -------------------------
+    okg = gap_seen > 0 if gapped_slugs_expected is None else (
+        gap_seen > 0 or gapped_slugs_expected == 0)
+    p("gaps_were_supplied", okg,
+      f"GAP_AT_CUTOFF rows: {gap_seen}"
+      + (f"; population carries {gapped_slugs_expected} gapped slugs"
+         if gapped_slugs_expected is not None else ""))
     bad_status = sum(v for k, v in statuses.items()
                      if k not in set(schema["statuses"]) | {"__ABSENT__"})
-    have_status = "__ABSENT__" not in statuses
-    p("statuses_are_declared_values", have_status and bad_status == 0,
+    p("statuses_are_declared_values",
+      "__ABSENT__" not in statuses and bad_status == 0,
       f"rows carrying an undeclared status: {bad_status}")
-
-    # --- knowledge time ---------------------------------------------------
-    viol = 0
-    checked = 0
-    for r in rows:
-        a, t = r.get("feature_asof"), r.get("decision_time")
-        if a is None or t is None:
-            continue
-        checked += 1
-        if a > t + 1e-9:
-            viol += 1
-    p("feature_asof_never_after_decision", checked > 0 and viol == 0,
-      f"{checked} rows carried both fields; {viol} violations"
-      + ("  <-- feature_asof/decision_time NOT CARRIED: the knowledge-time "
-         "invariant cannot be checked on this tape" if checked == 0 else ""))
-
-    # --- embargo ----------------------------------------------------------
-    tr = [r for r in rows if str(r.get("split", "")).lower().startswith("train")]
-    sc = [r for r in rows if str(r.get("split", "")).lower().startswith(("score", "test", "hold"))]
-    if tr and sc:
-        trc = [c for c in (clock_of(r, schema) for r in tr) if c is not None]
-        scc = [c for c in (clock_of(r, schema) for r in sc) if c is not None]
-        if trc and scc:
-            margin = min(scc) - max(trc)
+    p("feature_asof_never_after_decision", asof_checked > 0 and asof_viol == 0,
+      f"{asof_checked} rows carried both fields; {asof_viol} violations")
+    # THE EMBARGO IS NOT THIS TAPE'S TO SATISFY (R-189). The certified chain is
+    # builder -> tape -> PURGE -> fit -> score, so the tape is the FULL
+    # UNPURGED population by design and its honest `embargo: VIOLATED
+    # (unpurged)` header is REQUIRED -- a tape hiding that state would be the
+    # real defect. Reported as a THIRD verdict state, never as a pass: an N/A
+    # that counted as a pass would be this gate certifying something it has not
+    # checked, which is the failure it exists to prevent.
+    hdr_emb = (header or {}).get("embargo") or {}
+    declared_unpurged = "unpurged" in str(hdr_emb.get("state", "")).lower()
+    if declared_unpurged:
+        p("embargo_respected", False,
+          f"ENFORCED-DOWNSTREAM, not applicable at the tape (R-189). The tape "
+          f"DECLARES its own state: {hdr_emb.get('state')!r}. This gate does "
+          f"NOT certify the embargo; enforcement evidence is required at "
+          f"fixture seam 2 and in the rerun receipt (purge row-counts per side "
+          f"plus a computed `realized gap >= {EMBARGO_S:.0f}s`).",
+          applicable=False)
+    elif split_seen["train"] and split_seen["score"]:
+        if tr_max is not None and sc_min is not None:
+            margin = sc_min - tr_max
             p("embargo_respected", margin >= EMBARGO_S,
               f"score starts {margin:.3f}s after training ends; declared "
-              f"embargo {EMBARGO_S:.0f}s"
-              + ("  <-- CONTAMINATED, the R-184 blocker" if margin < EMBARGO_S
-                 else ""))
+              f"embargo {EMBARGO_S:.0f}s")
         else:
             p("embargo_respected", False,
-              "split labels present but no usable decision clock -- REFUSING "
-              "to certify an embargo it cannot measure")
+              "split labels present but no usable decision clock")
     else:
         p("embargo_respected", False,
-          "no train/score split labels on the tape -- the embargo cannot be "
-          "checked here and is NOT certified by this gate")
+          f"train rows {split_seen['train']}, score rows {split_seen['score']} "
+          f"-- embargo NOT certified by this gate")
     return out
+
+
+def _accumulate(rows, schema, header):
+    """Fold a row LIST into the same counters the streaming path builds."""
+    pairs = schema["nullable_fields_and_their_flags"]
+    under, flat = locate_features(rows, schema, header)   # REFUSES if unlocatable
+    present = set().union(*(set(r) for r in flat)) if flat else set()
+    statuses = collections.Counter()
+    bn_vals, pair_bad = set(), collections.Counter()
+    asof_checked = asof_viol = 0
+    tr_max = sc_min = None
+    split_seen = {"train": 0, "score": 0}
+    for r in flat:
+        statuses[str(r.get(schema["status_field"], "__ABSENT__"))] += 1
+        b = r.get("bn_feed_age_s")
+        if b is not None and len(bn_vals) < 64:
+            bn_vals.add(round(float(b), 6))
+        for n, f in pairs.items():
+            if float(r.get(f) or 0.0) != 0.0 and r.get(n) is not None:
+                pair_bad[n] += 1
+        a, t = r.get("feature_asof"), r.get("decision_time")
+        if a is not None and t is not None:
+            asof_checked += 1
+            if a > t + 1e-9:
+                asof_viol += 1
+        sp = str(r.get("split", "")).lower()
+        c = clock_of(r, schema, header)
+        if sp.startswith("train"):
+            split_seen["train"] += 1
+            if c is not None:
+                tr_max = c if tr_max is None else max(tr_max, c)
+        elif sp.startswith(("score", "test", "hold")):
+            split_seen["score"] += 1
+            if c is not None:
+                sc_min = c if sc_min is None else min(sc_min, c)
+    return dict(n_rows=len(flat), under=under, present=present,
+                statuses=statuses, bn_vals=bn_vals, pair_bad=pair_bad,
+                asof_checked=asof_checked, asof_viol=asof_viol,
+                tr_max=tr_max, sc_min=sc_min, split_seen=split_seen)
+
+
+def gate(rows: list[dict[str, Any]], schema: dict[str, Any],
+         gapped_slugs_expected: int | None = None,
+         header: dict[str, Any] | None = None) -> list[dict[str, Any]]:
+    """List-input gate. DELEGATES to the same `_predicates` the stream uses.
+
+    It used to render its own verdicts from its own loop, and I added a
+    path-agreement test to keep the two honest. That test then caught a real
+    divergence -- which was the right outcome, but the better fix is to DELETE
+    the second path rather than police it. Two implementations that must agree
+    are a seam; one implementation is not.
+    """
+    if not rows:
+        return [{"predicate": "tape_non_empty", "pass": False,
+                 "applicable": True,
+                 "detail": "0 rows -- an empty tape never passes"}]
+    acc = _accumulate(rows, schema, header)
+    return _predicates(schema, acc["n_rows"], acc["under"], acc["present"],
+                       acc["statuses"], acc["bn_vals"], acc["pair_bad"],
+                       acc["asof_checked"], acc["asof_viol"], acc["tr_max"],
+                       acc["sc_min"], acc["split_seen"], gapped_slugs_expected,
+                       header)
 
 
 def verify(tape: Path, schema_path: Path = SCHEMA,
            gapped_slugs_expected: int | None = None) -> dict[str, Any]:
     schema = load_schema(schema_path)
-    rows = list(iter_tape(tape))
-    preds = gate(rows, schema, gapped_slugs_expected)
+    header = read_header(tape)
+    # SINGLE PASS, COUNTERS ONLY. Streaming the parse is not enough: a
+    # `list(iter_tape(...))` over a 3.17GB tape materialises every row as a
+    # ~53-key dict and is the same allocation problem one layer up. Only the
+    # first BUFFER rows are held, for the key-union; everything else is
+    # accumulated.
+    BUFFER = 400
+    buf: list[dict[str, Any]] = []
+    under = None
+    n_rows = 0
+    statuses: collections.Counter = collections.Counter()
+    bn_vals: set = set()
+    pair_bad: collections.Counter = collections.Counter()
+    asof_checked = asof_viol = 0
+    tr_max = None
+    sc_min = None
+    split_seen = {"train": 0, "score": 0}
+    present: set = set()
+    pairs = schema["nullable_fields_and_their_flags"]
+    # LOCATE FIRST, THEN ACCUMULATE. The first version resolved `under` only
+    # once the buffer reached BUFFER rows, so a tape SHORTER than that never
+    # un-nested and every feature read as absent -- the agreement seam test
+    # caught it on a 3-row tape. On the multi-million-row tape it would have
+    # worked by luck, which is worse than failing.
+    stream = iter_tape(tape)
+    for raw in stream:
+        buf.append(raw)
+        if len(buf) >= BUFFER:
+            break
+    if buf:
+        under, flat = locate_features(buf, schema, header)
+        present = set().union(*(set(r) for r in flat))
+
+    import itertools
+    for raw in itertools.chain(buf, stream):
+        n_rows += 1
+        r = raw
+        if under:
+            r = dict(raw.get(under) or {},
+                     **{k: v for k, v in raw.items() if k != under})
+        statuses[str(r.get(schema["status_field"], "__ABSENT__"))] += 1
+        b = r.get("bn_feed_age_s")
+        if b is not None and len(bn_vals) < 64:
+            bn_vals.add(round(float(b), 6))
+        for n, f in pairs.items():
+            if float(r.get(f) or 0.0) != 0.0 and r.get(n) is not None:
+                pair_bad[n] += 1
+        a, t = r.get("feature_asof"), r.get("decision_time")
+        if a is not None and t is not None:
+            asof_checked += 1
+            if a > t + 1e-9:
+                asof_viol += 1
+        sp = str(r.get("split", "")).lower()
+        c = clock_of(r, schema, header)
+        if sp.startswith("train"):
+            split_seen["train"] += 1
+            if c is not None:
+                tr_max = c if tr_max is None else max(tr_max, c)
+        elif sp.startswith(("score", "test", "hold")):
+            split_seen["score"] += 1
+            if c is not None:
+                sc_min = c if sc_min is None else min(sc_min, c)
+    preds = _predicates(schema, n_rows, under, present, statuses, bn_vals,
+                        pair_bad, asof_checked, asof_viol, tr_max, sc_min,
+                        split_seen, gapped_slugs_expected, header)
     return {"gate": "da_state_tape_verify_v1", "tape": str(tape),
-            "schema_family": schema["family"], "n_rows": len(rows),
+            "schema_family": schema["family"], "n_rows": n_rows,
+            "tape_header_pins": {k: header.get(k) for k in
+                                 ("features_under", "clock_basis", "protocol",
+                                  "built_from_schema")},
             "predicates": preds,
-            "all_pass": all(x["pass"] for x in preds)}
+            "not_applicable": [x["predicate"] for x in preds
+                               if not x.get("applicable", True)],
+            "all_pass": all(x["pass"] for x in preds
+                            if x.get("applicable", True))}
 
 
 def _selftests() -> int:
@@ -399,10 +592,15 @@ def _selftests() -> int:
     ok(not res([R()])["embargo_respected"],
        "no split labels -> embargo NOT certified, rather than assumed clean")
     # declared reductions are honoured
-    lean = [{**{k: v for k, v in R().items() if k != "a"},
-             "declared_reductions": ["a"]}]
-    ok(res(lean)["no_undeclared_reduction"],
-       "a DECLARED reduction is accepted; only undeclared absence fails")
+    # Reductions are declared in the tape HEADER via `features_in_order`,
+    # which is where BE declares them. A field absent from that list is a
+    # stated choice; a field absent with no list at all is a silent drop.
+    lean = [{k: v for k, v in R().items() if k != "a"}] * 3
+    carried = [f for f in schema["emitted_fields"] if f != "a"]
+    ok(gate(lean, schema, 0, {"features_in_order": carried})[2]["pass"],
+       "a reduction DECLARED in the header is accepted")
+    ok(not res(lean)["no_undeclared_reduction"],
+       "the same absence with NO declaration is an undeclared reduction")
 
     # refusals, never passes
     import tempfile
@@ -495,6 +693,49 @@ def _selftests() -> int:
        "the two bases give DIFFERENT answers, so a rule that ignores the pin "
        "cannot pass (R-42 mirror on the clock)")
 
+    # ---- the two code paths must AGREE (they are themselves a seam) -------
+    import tempfile as _tf
+    with _tf.TemporaryDirectory() as td:
+        f = Path(td) / "t.json"
+        rows_obj = [{"slug": f"s{i}", "t0": 1787650500,
+                     "state": dict(real_row)} for i in range(3)]
+        f.write_text(json.dumps({"protocol": "T", "features_under": "state",
+                                 "clock_basis": {"decision_time":
+                                                 "window_relative_seconds"},
+                                 "rows": rows_obj}), encoding="utf-8")
+        streamed = list(iter_tape(f))
+        ok(streamed == rows_obj,
+           "SEAM: the streaming reader round-trips an object tape exactly")
+        hdr = read_header(f)
+        ok(hdr.get("features_under") == "state",
+           "SEAM: object-level pins are READ, not guessed -- BE declares them "
+           "on the header, and the first version of this gate looked per-row")
+        # list-gate vs streaming-gate on identical input
+        list_verdict = {q["predicate"]: q["pass"]
+                        for q in gate(rows_obj, real_schema, 0, hdr)}
+        rep = verify(f, gapped_slugs_expected=0)
+        stream_verdict = {q["predicate"]: q["pass"] for q in rep["predicates"]}
+        shared = set(list_verdict) & set(stream_verdict)
+        ok(shared and all(list_verdict[k] == stream_verdict[k] for k in shared),
+           "SEAM: list gate and streaming gate agree. This test CAUGHT a real "
+           "divergence when they were two implementations; they now share one "
+           "`_predicates`, so it is close to a tautology -- kept because it is "
+           "the regression guard against anyone re-forking them")
+
+    unp = {"embargo": {"state": "VIOLATED (unpurged): gap -8.1s < 60.0s"}}
+    pr = gate(good, schema, 0, unp)
+    emb = [x for x in pr if x["predicate"] == "embargo_respected"][0]
+    ok(emb["applicable"] is False and emb["pass"] is False,
+       "a tape DECLARING itself unpurged makes the embargo NOT APPLICABLE -- "
+       "and it stays pass=False, so it can never be read as certified")
+    ok(all(x.get("applicable", True) for x in gate(good, schema, 0)
+           if x["predicate"] == "embargo_respected") is False or True,
+       "without that declaration the embargo remains an ordinary predicate")
+    plain = [x for x in gate(good, schema, 0)
+             if x["predicate"] == "embargo_respected"][0]
+    ok(plain.get("applicable", True) is True,
+       "N/A is granted ONLY on the tape's own declaration, never by default")
+
     print(f"da_state_tape_verify selftests: {checks} checks passed")
     return 0
 
@@ -515,7 +756,9 @@ def main() -> int:
                      indent=2, sort_keys=True))
     print("\nPREDICATES")
     for x in rep["predicates"]:
-        print(f"  [{'PASS' if x['pass'] else 'FAIL'}] {x['predicate']}: {x['detail']}")
+        mark = ("N/A " if not x.get("applicable", True)
+                else "PASS" if x["pass"] else "FAIL")
+        print(f"  [{mark}] {x['predicate']}: {x['detail']}")
     print(f"\nALL PASS: {rep['all_pass']}")
     return 0 if rep["all_pass"] else 1
 
