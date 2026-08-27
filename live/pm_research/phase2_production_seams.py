@@ -200,9 +200,23 @@ def main() -> int:
     # BEHAVIOURAL: the data must LOAD, not merely look addressable. The first
     # data-root fix rebound PM and left RAW/GAPS/MARKETS derived from the old
     # value, so every path looked right and token_map() was still empty.
-    seam("22c pinning is verified by LOADING, not by inspecting paths",
-         "token_map()" in b_src2 and "is EMPTY after pinning" in b_src2,
-         "a path assertion passes while the data does not load")
+    # BEHAVIOURAL: run the real preflight and require it to report a
+    # row-path probe over KNOWN population slugs. Greping for a message string
+    # went RED the moment the message was reworded -- seventh recurrence of
+    # source-text matching misreporting, so this asserts the OUTCOME.
+    import io as _io22, contextlib as _cl22
+    import build_state_tape_v2 as _B22
+    _buf = _io22.StringIO()
+    try:
+        with _cl22.redirect_stdout(_buf):
+            _B22.pin_data_root()
+        _out = _buf.getvalue()
+        seam("22c the preflight probes KNOWN slugs through the row path",
+             "row_path_probe" in _out and "/" in _out.split("row_path_probe")[1][:12],
+             f"preflight said: {_out.strip()[:120]}")
+    except SystemExit as _e:
+        seam("22c the preflight probes KNOWN slugs through the row path",
+             False, f"preflight REFUSED: {_e}")
 
     # ---- SEAM 23: an unmappable slug is a STATUS, never a KeyError --------
     b_main = b_src2[b_src2.find("def main"):]
