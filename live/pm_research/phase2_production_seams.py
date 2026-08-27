@@ -183,6 +183,30 @@ def main() -> int:
          "causal_thresholds" in fit_src and fit_src.count("causal_thresholds") >= 3,
          "only B and D persist thresholds; A and C have none")
 
+    # ---- SEAM 22: a snapshot must not relocate the DATA ROOT -------------
+    # tape6 died with KeyError on every slug because flow_intensity derives
+    # REPO from its own __file__ (:44-45), so a CODE snapshot silently moved
+    # the DATA root with it and token_map() returned 0 entries. R-197 assumed
+    # "data paths are absolute in the builder" -- true of the builder, false of
+    # a module it calls. The builder must PIN the data root explicitly.
+    b_src2 = (HERE / "build_state_tape_v2.py").read_text()
+    seam("22a builder PINS the data root against snapshot relocation",
+         "PM_DATA_ROOT" in b_src2 or "fi.PM =" in b_src2 or "fi.REPO =" in b_src2,
+         "a code snapshot relocates any module that derives data from __file__")
+    import harmful_hazard_model as _hm22
+    seam("22b the pinned root points at the REAL data tree",
+         str(_hm22.fi.PM).startswith("/home/yuqing/ctaNew/data"),
+         f"fi.PM = {_hm22.fi.PM}")
+
+    # ---- SEAM 23: an unmappable slug is a STATUS, never a KeyError --------
+    b_main = b_src2[b_src2.find("def main"):]
+    seam("23a builder handles a slug with no token mapping as a STATUS",
+         "NO_TOKEN_MAP" in b_src2,
+         "tokens[slug] raised KeyError and killed the build (rule 4: an "
+         "exclusion is a counted status, never a crash and never a silent skip)")
+    seam("23b it is COUNTED, not silently skipped",
+         "NO_TOKEN_MAP" in b_src2 and "status_counts" in b_src2)
+
     print(f"\n{'PRODUCTION SEAMS GREEN' if not FAILURES else 'PRODUCTION SEAMS RED'}: "
           f"{len(FAILURES)} failing")
     for f in FAILURES:

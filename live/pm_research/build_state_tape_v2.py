@@ -109,9 +109,31 @@ def assert_build_ref() -> str:
     return r
 
 
+PM_DATA_ROOT = Path("/home/yuqing/ctaNew")
+
+
+def pin_data_root() -> None:
+    """Point every data-deriving module at the REAL tree.
+
+    `flow_intensity` computes `REPO = Path(__file__).resolve().parents[2]`
+    (:44-45), so a CODE snapshot silently relocates the DATA root with it --
+    inside a worktree `fi.PM` became <snapshot>/data/pm_5min, `token_map()`
+    returned 0 entries, and every slug raised KeyError. The snapshot rule
+    assumed data paths were absolute; they are, in THIS builder, and are not
+    in a module it calls. Code isolation and data location are separate
+    concerns and must be stated separately."""
+    import harmful_hazard_model as _hm
+    fi = _hm.fi
+    fi.REPO = PM_DATA_ROOT
+    fi.PM = PM_DATA_ROOT / "data/pm_5min"
+    if not fi.PM.exists():
+        raise SystemExit(f"REFUSED: pinned data root {fi.PM} does not exist.")
+
+
 def main() -> int:
     _ref0 = assert_build_ref()
     assert_modules_under_root()
+    pin_data_root()
     print(f"  modules under snapshot root {_ROOT}", flush=True)
     print(f"  BUILD_REF {_ref0[:12] or '<ABSENT>'}", flush=True)
     import harmful_hazard_model as hm
@@ -150,6 +172,7 @@ def main() -> int:
     n_rows = 0
     tr_last_exit = float("-inf"); sc_first_feat = float("inf")
     status_counts: dict = {}
+    no_token_by_coin_day: dict = {}
     per_split: dict = {}
     for split, src in (("train", FRAGMENT), ("score", TOPUP)):
         data = json.loads(src.read_text())
@@ -161,6 +184,16 @@ def main() -> int:
         for slug, wrows in bywin.items():
             coin = slug.split("-")[0]
             t0 = float(wrows[0]["t0"])
+            if slug not in tokens or slug not in paths:
+                # rule 4: an exclusion is a COUNTED STATUS. Not a KeyError
+                # (which killed tape6 outright), and not a silent .get() skip
+                # (which would shrink the population invisibly).
+                n = len(wrows)
+                status_counts["NO_TOKEN_MAP"] = \
+                    status_counts.get("NO_TOKEN_MAP", 0) + n
+                no_token_by_coin_day[(coin, wrows[0]["day"])] = \
+                    no_token_by_coin_day.get((coin, wrows[0]["day"]), 0) + n
+                continue
             g = gaps_for(slug, coin, t0)
             bn = bn_recv_for_window(coin, t0)
             # REFUSES rather than degrading -- the R-184 finding, in code
@@ -247,6 +280,9 @@ def main() -> int:
         "required_inputs_supplied": {"gaps": True, "bn_recv_ns": True},
         "status_field": "state_status",
         "state_status_counts": status_counts,
+        "no_token_map_by_coin_day": {f"{c}|{d}": n
+                                     for (c, d), n in sorted(
+                                         no_token_by_coin_day.items())},
         "per_split": per_split,
         "embargo": {"state": emb_state, "detail": emb,
                     "rule": "label_exit_time + 60s < first score feature time"},
