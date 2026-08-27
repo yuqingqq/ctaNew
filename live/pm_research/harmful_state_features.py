@@ -589,7 +589,40 @@ def declared_schema() -> dict[str, Any]:
     emitted = sorted(row)
     return {
         "family": FAMILY,
+        # THE COORDINATE SYSTEM IS PART OF THE CONTRACT (R-187). Declaring
+        # field NAMES without declaring the LAYOUT they sit in and the CLOCK
+        # they are measured on lets two modules each be internally consistent
+        # and disagree at the seam -- which is exactly what happened: a
+        # consumer nested these fields under `state` and a checker searched
+        # top level, while a second consumer added t0 to an already-absolute
+        # decision_time. Both were reading the same field list.
+        "LAYOUT": {
+            "native": "flat",
+            "features_under": None,
+            "note": ("`features_at` returns a FLAT dict. A consumer that wraps "
+                     "it MUST declare the wrapping key on the tape itself as "
+                     "`features_under`, so a reader locates the fields by "
+                     "declaration rather than by guessing."),
+        },
+        "CLOCK_BASIS": {
+            "decision_time": "window_relative_seconds",
+            "feature_asof": "window_relative_seconds",
+            "absolute_epoch_via": "t0 + decision_time",
+            "note": ("decision_time IS t_start from the exposure row: seconds "
+                     "relative to the window start, and LEGITIMATELY NEGATIVE "
+                     "for pre-window warm-up rows (real values reach -39.4). "
+                     "It is NOT an epoch. A consumer that emits an absolute "
+                     "decision_time must say so on the tape as "
+                     "`clock_basis: absolute_epoch`, or a reader adding t0 "
+                     "will double-count the window start."),
+        },
         "emitted_fields": emitted,
+        # Identity/provenance, not features. Any tape carries these whatever
+        # its layout, so a reader that locates the family by "do I recognise a
+        # declared field?" can be fooled by `slug` alone into thinking it has
+        # found a feature set that is entirely absent. Declared separately so
+        # location keys on FEATURES.
+        "identity_fields": ["family", "slug", "coin", "side", "gen"],
         "n_emitted": len(emitted),
         "lookbacks_ms": list(LOOKBACKS_MS),
         "statuses": list(STATUSES),

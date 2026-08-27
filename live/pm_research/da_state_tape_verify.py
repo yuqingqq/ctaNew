@@ -96,6 +96,71 @@ def iter_tape(path: Path) -> Iterator[dict[str, Any]]:
         f"gate that guesses a layout can silently check the wrong thing.")
 
 
+def locate_features(rows: list[dict[str, Any]], schema: dict[str, Any]
+                    ) -> tuple[str | None, list[dict[str, Any]]]:
+    """Find the feature dicts by DECLARATION, never by guessing (R-187).
+
+    The schema declares the builder's NATIVE layout (flat). A consumer that
+    wraps the fields must say so on the tape as `features_under`. If the fields
+    are in neither place this REFUSES -- because the alternative is what
+    happened before: a checker searching top level while the builder nested
+    under `state`, whereupon predicates that iterate over "present" fields
+    found none, iterated over nothing, and PASSED. Three of them did.
+    """
+    # Locate on FEATURES, never on identity. `slug` is an emitted field, so a
+    # tape carrying only slug+t0 scored a "hit" and the gate declined to
+    # refuse -- one identity field masking a wholly absent feature set.
+    declared = set(schema["emitted_fields"]) - set(
+        schema.get("identity_fields", []))
+    probe = rows[:200]
+    flat_hits = len(declared & set().union(*(set(r) for r in probe)))
+    under = None
+    for r in probe:
+        if isinstance(r.get("features_under"), str):
+            under = r["features_under"]
+            break
+    if under is None:
+        for cand in ("state", "features", "pred_state"):
+            if any(isinstance(r.get(cand), dict) for r in probe):
+                under = cand
+                break
+    nest_hits = 0
+    if under:
+        nest_hits = len(declared & set().union(
+            *(set(r.get(under) or {}) for r in probe)))
+    if flat_hits == 0 and nest_hits == 0:
+        raise GateRefused(
+            f"cannot locate ANY of the {len(declared)} declared FEATURE fields "
+            f"(identity fields excluded on purpose), flat "
+            f"or under {under!r}. REFUSING rather than checking an empty "
+            f"intersection -- an unreadable layout must not yield passes.")
+    if nest_hits > flat_hits:
+        return under, [dict(r.get(under) or {}, **{k: v for k, v in r.items()
+                                                   if k != under}) for r in rows]
+    return None, rows
+
+
+def clock_of(r: dict[str, Any], schema: dict[str, Any]) -> float | None:
+    """Absolute decision epoch, honouring the DECLARED clock basis.
+
+    Adding t0 to an already-absolute decision_time double-counts the window
+    start. The basis is read from the tape when it declares one, else from the
+    schema; it is never assumed.
+    """
+    basis = r.get("clock_basis") or schema["CLOCK_BASIS"]["decision_time"]
+    for k in ("decision_epoch", "abs_decision_time"):
+        if r.get(k) is not None:
+            return float(r[k])
+    dt = r.get("decision_time")
+    if dt is None:
+        return None
+    if str(basis).startswith("absolute"):
+        return float(dt)
+    if r.get("t0") is None:
+        return None
+    return float(r["t0"]) + float(dt)
+
+
 def gate(rows: list[dict[str, Any]], schema: dict[str, Any],
          gapped_slugs_expected: int | None = None) -> list[dict[str, Any]]:
     """Every predicate COMPUTED (rule 10); each names what it would miss."""
@@ -108,6 +173,12 @@ def gate(rows: list[dict[str, Any]], schema: dict[str, Any],
         p("tape_non_empty", False, "0 rows -- an empty tape never passes")
         return out
     p("tape_non_empty", True, f"{len(rows)} rows")
+
+    under, rows = locate_features(rows, schema)   # REFUSES if unlocatable
+    p("layout_matches_declaration", True,
+      f"features located {'under ' + repr(under) if under else 'at top level'}"
+      f"; schema declares native layout "
+      f"{schema.get('LAYOUT', {}).get('native', 'flat')!r}")
 
     present = set().union(*(set(r) for r in rows[:200]))
     declared = set(schema["emitted_fields"])
@@ -123,28 +194,42 @@ def gate(rows: list[dict[str, Any]], schema: dict[str, Any],
 
     # --- guard beside nullable -------------------------------------------
     pairs = schema["nullable_fields_and_their_flags"]
+    checked_pairs = [n for n in pairs if n in present]
     orphans = [n for n, f in pairs.items() if n in present and f not in present]
-    p("guard_beside_every_nullable", not orphans,
-      f"orphaned nullables (present without their flag): {orphans or 'none'}"
+    p("guard_beside_every_nullable", bool(checked_pairs) and not orphans,
+      f"{len(checked_pairs)} of {len(pairs)} declared nullables present; "
+      f"orphaned (present without their flag): {orphans or 'none'}"
+      + ("  <-- NONE of the declared nullables are present: nothing was "
+         "checked, so this CANNOT pass" if not checked_pairs else "")
       + ("  <-- this is the R-185 guardless-pin defect" if orphans else ""))
 
-    # --- zero-imputation signature ---------------------------------------
-    # A nullable that is 100% finite while its flag is 100% zero is what
-    # `float(x or 0.0)` leaves behind. It is a SIGNATURE, not a proof, so it is
-    # reported per column rather than collapsed into one verdict.
-    suspects = []
+    # --- zero-imputation, tested EXACTLY rather than by signature ---------
+    # The first version flagged any column that was 100% finite with an
+    # all-zero guard. The seam test killed it: `gen_age_s`, `pm_feed_age_s` and
+    # others are LEGITIMATELY always computable, so that pattern is normal and
+    # the check would have fired on every real tape. Hand-made fixtures hid
+    # this because I only ever invented rows where things were missing.
+    #
+    # The exact discriminator: a guard flag that says MISSING beside a value
+    # that is PRESENT. `float(x or 0.0)` produces precisely that -- the flag
+    # still reports the miss while the value has become 0.0. No population
+    # minimum is needed, because this is evidence rather than a pattern.
+    imputed = {}
     for n, f in pairs.items():
         if n not in present or f not in present:
             continue
-        nulls = sum(1 for r in rows if r.get(n) is None)
-        flag_hot = sum(1 for r in rows if float(r.get(f) or 0.0) != 0.0)
-        if nulls == 0 and flag_hot == 0:
-            suspects.append(n)
-    p("missingness_is_representable", not suspects,
-      f"columns with ZERO nulls AND an all-zero guard flag: "
-      f"{suspects or 'none'}"
-      + ("  <-- signature of zero-imputation: a missing value became 0.0 with "
-         "nothing to say so" if suspects else ""))
+        bad = sum(1 for r in rows
+                  if float(r.get(f) or 0.0) != 0.0 and r.get(n) is not None)
+        if bad:
+            imputed[n] = bad
+    p("no_zero_imputation", bool(checked_pairs) and not imputed,
+      (f"{len(checked_pairs)} nullable/guard pairs checked; "
+       f"rows whose guard says MISSING while the value is PRESENT: "
+       f"{imputed or 'none'}")
+      + ("  <-- a missing value was imputed; float(x or 0.0) leaves exactly "
+         "this" if imputed else "")
+      + ("  <-- NONE of the declared nullables are present: nothing was "
+         "checked, so this CANNOT pass" if not checked_pairs else ""))
 
     # --- REQUIRED_INPUTS actually supplied --------------------------------
     bn = [r.get("bn_feed_age_s") for r in rows]
@@ -174,7 +259,8 @@ def gate(rows: list[dict[str, Any]], schema: dict[str, Any],
     # --- statuses honoured, not silently consumed -------------------------
     bad_status = sum(v for k, v in statuses.items()
                      if k not in set(schema["statuses"]) | {"__ABSENT__"})
-    p("statuses_are_declared_values", bad_status == 0,
+    have_status = "__ABSENT__" not in statuses
+    p("statuses_are_declared_values", have_status and bad_status == 0,
       f"rows carrying an undeclared status: {bad_status}")
 
     # --- knowledge time ---------------------------------------------------
@@ -196,15 +282,8 @@ def gate(rows: list[dict[str, Any]], schema: dict[str, Any],
     tr = [r for r in rows if str(r.get("split", "")).lower().startswith("train")]
     sc = [r for r in rows if str(r.get("split", "")).lower().startswith(("score", "test", "hold"))]
     if tr and sc:
-        def clock(r):
-            for k in ("decision_epoch", "t0_plus_t_start", "abs_decision_time"):
-                if r.get(k) is not None:
-                    return float(r[k])
-            if r.get("t0") is not None and r.get("decision_time") is not None:
-                return float(r["t0"]) + float(r["decision_time"])
-            return None
-        trc = [c for c in map(clock, tr) if c is not None]
-        scc = [c for c in map(clock, sc) if c is not None]
+        trc = [c for c in (clock_of(r, schema) for r in tr) if c is not None]
+        scc = [c for c in (clock_of(r, schema) for r in sc) if c is not None]
         if trc and scc:
             margin = min(scc) - max(trc)
             p("embargo_respected", margin >= EMBARGO_S,
@@ -243,6 +322,9 @@ def _selftests() -> int:
         if not c:
             raise AssertionError(f"selftest failed: {label}")
 
+    # A MINIATURE schema for the unit cases -- but it now carries the LAYOUT
+    # and CLOCK_BASIS pins, because a test schema that omits them is how the
+    # gate came to assume both (R-187).
     schema = {
         "family": "PRED_STATE_V1",
         "emitted_fields": ["a", "a_missing", "bn_feed_age_s", "state_status",
@@ -250,6 +332,8 @@ def _selftests() -> int:
         "statuses": ["OK", "PRE_WINDOW", "GAP_AT_CUTOFF"],
         "status_field": "state_status",
         "nullable_fields_and_their_flags": {"a": "a_missing"},
+        "LAYOUT": {"native": "flat", "features_under": None},
+        "CLOCK_BASIS": {"decision_time": "window_relative_seconds"},
     }
 
     def R(**kw):
@@ -262,13 +346,14 @@ def _selftests() -> int:
     def res(rows, **kw):
         return {p["predicate"]: p["pass"] for p in gate(rows, schema, **kw)}
 
-    good = [R(bn_feed_age_s=0.1), R(bn_feed_age_s=0.2, a=None, a_missing=1.0),
-            R(bn_feed_age_s=0.3, state_status="GAP_AT_CUTOFF"),
-            R(bn_feed_age_s=0.4, split="train", t0=0, decision_time=1.0),
-            R(bn_feed_age_s=0.5, split="score", t0=0, decision_time=100.0)]
+    good = ([R(bn_feed_age_s=0.1), R(bn_feed_age_s=0.2, a=None, a_missing=1.0),
+             R(bn_feed_age_s=0.3, state_status="GAP_AT_CUTOFF"),
+             R(bn_feed_age_s=0.4, split="train", t0=0, decision_time=1.0),
+             R(bn_feed_age_s=0.5, split="score", t0=0, decision_time=100.0)]
+            * 12)          # clear the 50-row signature minimum
     g = res(good)
     for k in ("tape_non_empty", "no_undeclared_reduction",
-              "guard_beside_every_nullable", "missingness_is_representable",
+              "guard_beside_every_nullable", "no_zero_imputation",
               "bn_recv_ns_was_supplied", "state_status_present",
               "gaps_were_supplied", "statuses_are_declared_values",
               "feature_asof_never_after_decision", "embargo_respected"):
@@ -279,10 +364,15 @@ def _selftests() -> int:
     ok(not res([{k: v for k, v in R().items() if k != "a_missing"}])
        ["guard_beside_every_nullable"],
        "a nullable present WITHOUT its guard flag is caught (guardless pin)")
-    ok(not res([R(), R(), R()])["missingness_is_representable"],
-       "all-finite column with an all-zero flag is caught (zero-imputation)")
-    ok(res([R(a=None, a_missing=1.0), R()])["missingness_is_representable"],
-       "a column that does carry nulls is NOT flagged (no false positive)")
+    ok(not res([R(a=0.0, a_missing=1.0)])["no_zero_imputation"],
+       "guard says MISSING while the value is PRESENT -- caught exactly; this "
+       "is the fingerprint float(x or 0.0) leaves")
+    ok(res([R(a=None, a_missing=1.0), R()])["no_zero_imputation"],
+       "a genuine None beside a hot flag is CLEAN")
+    ok(res([R()] * 3)["no_zero_imputation"],
+       "a column that is LEGITIMATELY always computable is NOT flagged -- the "
+       "false positive the seam test exposed in the signature version, which "
+       "would have fired on gen_age_s and pm_feed_age_s on every real tape")
     ok(not res([R(bn_feed_age_s=0.1), R(bn_feed_age_s=0.1)])
        ["bn_recv_ns_was_supplied"],
        "a CONSTANT freshness family is caught (bn_recv_ns omitted)")
@@ -337,6 +427,73 @@ def _selftests() -> int:
             ok(True, "an unrecognised layout REFUSES rather than guessing")
         else:
             ok(False, "must refuse an unrecognised layout")
+
+    # ---- THE SEAM TEST (R-187) -------------------------------------------
+    # Every case above feeds the gate dicts I INVENTED. That is precisely how
+    # this gate came to search top level while the builder nested, and to add
+    # t0 to a clock that might already be absolute: per-module selftests,
+    # however falsified, cannot certify a seam. So round-trip a REAL builder
+    # row through the REAL schema.
+    import harmful_state_features as SF
+    real_schema = SF.declared_schema()
+    k2 = ("BUY", 0.5)
+    tp = SF._synth_tape(level_t={k2: [10.0, 20.0]}, level_v={k2: [100.0, 60.0]},
+                        pm_event_t=[10.0, 20.0])
+    real_row = SF.features_at(tp, SF._row(25.0))
+    flat_tape = [dict(real_row, slug="s", t0=1787650500)]
+    under, got = locate_features(flat_tape, real_schema)
+    ok(under is None and set(real_schema["emitted_fields"]) <= set(got[0]),
+       "SEAM: a real builder row is located at top level and complete")
+
+    nested_tape = [{"slug": "s", "t0": 1787650500, "state": dict(real_row)}]
+    under_n, got_n = locate_features(nested_tape, real_schema)
+    ok(under_n == "state"
+       and set(real_schema["emitted_fields"]) <= set(got_n[0]),
+       "SEAM: the SAME row nested under `state` is still located -- the exact "
+       "layout mismatch that made three predicates pass on nothing")
+    # Two real rows, the second at a level the tape never saw, so the
+    # velocity nullables genuinely carry None with their flags set.
+    sparse = SF.features_at(tp, SF._row(25.0, level=0.99))
+    nested_many = [{"slug": "s", "t0": 1787650500, "state": dict(r)}
+                   for r in ([real_row, sparse] * 30)]
+    gn = {q["predicate"]: q["pass"] for q in gate(nested_many, real_schema)}
+    ok(gn["guard_beside_every_nullable"],
+       "SEAM: nested rows are now CHECKED for guard-beside-nullable, not "
+       "skipped-and-passed -- the defect that made three predicates pass on "
+       "an unreadable layout")
+    ok(gn["no_zero_imputation"],
+       "SEAM: REAL builder rows pass the exact zero-imputation test -- "
+       "including the always-computable columns the signature version would "
+       "have falsely flagged")
+    forged = [{"slug": "s", "t0": 1,
+               "state": dict(real_row, gen_age_s=0.0, gen_age_missing=1.0)}]
+    gf = {q["predicate"]: q["pass"] for q in gate(forged, real_schema)}
+    ok(not gf["no_zero_imputation"],
+       "SEAM: a real row with ONE value imputed is caught -- so the exact test "
+       "still fires on the defect it exists for")
+
+    opaque = [{"slug": "s", "t0": 1, "payload": {"nothing": 1}}]
+    try:
+        locate_features(opaque, real_schema)
+    except GateRefused:
+        ok(True, "SEAM: an unlocatable layout REFUSES instead of passing on an "
+                 "empty intersection")
+    else:
+        ok(False, "must refuse when no declared field can be found")
+
+    # clock basis is READ, not assumed
+    rel = {"t0": 1000.0, "decision_time": 25.0}
+    ab = {"t0": 1000.0, "decision_time": 1787650525.0,
+          "clock_basis": "absolute_epoch"}
+    ok(clock_of(rel, real_schema) == 1025.0,
+       "window-relative decision_time is made absolute by adding t0")
+    ok(clock_of(ab, real_schema) == 1787650525.0,
+       "an ALREADY-ABSOLUTE decision_time is not double-counted -- the basis "
+       "is read from the tape, never assumed")
+    ok(clock_of(rel, real_schema) != clock_of(
+        dict(rel, clock_basis="absolute_epoch"), real_schema),
+       "the two bases give DIFFERENT answers, so a rule that ignores the pin "
+       "cannot pass (R-42 mirror on the clock)")
 
     print(f"da_state_tape_verify selftests: {checks} checks passed")
     return 0

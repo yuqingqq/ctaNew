@@ -1,8 +1,19 @@
 {
+  "CLOCK_BASIS": {
+    "absolute_epoch_via": "t0 + decision_time",
+    "decision_time": "window_relative_seconds",
+    "feature_asof": "window_relative_seconds",
+    "note": "decision_time IS t_start from the exposure row: seconds relative to the window start, and LEGITIMATELY NEGATIVE for pre-window warm-up rows (real values reach -39.4). It is NOT an epoch. A consumer that emits an absolute decision_time must say so on the tape as `clock_basis: absolute_epoch`, or a reader adding t0 will double-count the window start."
+  },
   "CONSUMPTION_CONTRACT": {
     "carry_feature_asof": "feature_asof is the knowledge-time provenance of the row. Dropping it discards the only evidence that the feature_asof <= decision_time invariant held for THAT row.",
     "honour_state_status": "Rows are never dropped by this builder; exclusions are STATUSES. A consumer that ignores state_status consumes PRE_WINDOW / GAP_AT_CUTOFF / NO_LEVEL_HISTORY rows as if they were clean.",
     "never_zero_impute": "`None` means UNKNOWN and is always paired with a *_missing or *_stale flag. `float(x or 0.0)` maps None to 0.0 and destroys the distinction the family exists to preserve -- a zero-imputed velocity is indistinguishable from a genuinely flat book. If a numeric matrix is required, carry the flag column BESIDE every nullable it guards; do not drop one and keep the other."
+  },
+  "LAYOUT": {
+    "features_under": null,
+    "native": "flat",
+    "note": "`features_at` returns a FLAT dict. A consumer that wraps it MUST declare the wrapping key on the tape itself as `features_under`, so a reader locates the fields by declaration rather than by guessing."
   },
   "REQUIRED_INPUTS": {
     "bn_recv_ns": "Binance receipt times. OMITTING IT DOES NOT ERROR -- bn_feed_age_s becomes None and bn_feed_missing 1.0 for EVERY row, so the freshness family is constant and carries no information (R-184 found exactly this).",
@@ -64,6 +75,13 @@
     "touch_move_missing"
   ],
   "family": "PRED_STATE_V1",
+  "identity_fields": [
+    "family",
+    "slug",
+    "coin",
+    "side",
+    "gen"
+  ],
   "lookbacks_ms": [
     50,
     250,
