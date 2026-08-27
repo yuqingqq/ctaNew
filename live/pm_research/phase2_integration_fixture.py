@@ -231,6 +231,28 @@ def main() -> int:
          _in["state_status"] == "GAP_AT_CUTOFF", _in["state_status"])
     seam("10b a cutoff OUTSIDE it does not",
          _out["state_status"] != "GAP_AT_CUTOFF", _out["state_status"])
+    # R-191(2) LOSS MODE 1: a WARM-UP cutoff (negative t_start) inside a gap.
+    # Every one of BE's 289 real flags is a warm-up row, and the PRE_WINDOW
+    # branch precedes the gap branch in the status chain -- so under the
+    # current chain a warm-up row in a gap statuses PRE_WINDOW and the gap is
+    # LOST. This is the loss mode R-191 names, and it is why per-slug scoping
+    # found zero: those rows never reach the gap test at all.
+    _w = _sf.StateTape(slug="x-updown-5m-1", ws=1.0, gaps=[(-20.0, -10.0)])
+    _w.pm_event_t = [1.0]
+    _warm = _sf.features_at(_w, {**_row, "t_start": -15.0})
+    seam("10d a WARM-UP cutoff inside a gap flags GAP_AT_CUTOFF",
+         _warm["state_status"] == "GAP_AT_CUTOFF",
+         f"got {_warm['state_status']!r} — PRE_WINDOW precedes the gap branch, "
+         f"so the gap is lost on exactly the rows that carry it")
+    # R-191(2) LOSS MODE 2: a gap STRADDLING a window boundary.
+    _b = _sf.StateTape(slug="x-updown-5m-1", ws=1.0, gaps=[(-5.0, 5.0)])
+    _b.pm_event_t = [1.0]
+    _pre = _sf.features_at(_b, {**_row, "t_start": -2.0})
+    _post = _sf.features_at(_b, {**_row, "t_start": 2.0})
+    seam("10e a boundary-straddling gap flags on BOTH sides",
+         _pre["state_status"] == "GAP_AT_CUTOFF" and
+         _post["state_status"] == "GAP_AT_CUTOFF",
+         f"pre={_pre['state_status']!r} post={_post['state_status']!r}")
     seam("10c the gap check compares the SAME basis it stores",
          _sf._in_gap(_t, 25.0) and not _sf._in_gap(_t, 50.0),
          "window-relative cutoff vs window-relative gap")
