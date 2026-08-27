@@ -213,6 +213,24 @@ def main() -> int:
     seam("23b it is COUNTED, not silently skipped",
          "NO_TOKEN_MAP" in b_src2 and "status_counts" in b_src2)
 
+    # ---- SEAM 24 (R-202): a status must never absorb a TOTAL failure -----
+    b24 = (HERE / "build_state_tape_v2.py").read_text()
+    seam("24a zero-row builds are REFUSED, never written",
+         "produced ZERO rows" in b24,
+         "tape6b wrote a 0-row artifact reporting 'embargo CERTIFIED'")
+    seam("24b any status above 1% of input rows REFUSES",
+         "absorption bound" in b24 and "0.01" in b24,
+         "a status absorbing 1,764,206 of 1,764,206 rows exited 0")
+    seam("24c the preflight probes the ROW PATH, not just the load",
+         "row_path_probe" in b24,
+         "loading a map is not the lookup the row path performs")
+    seam("24d exclusion statuses NAME their cause",
+         "NO_ARCHIVE_PATH" in b24 and "NO_TOKEN_MAP" in b24,
+         "one status covering two causes misdirected the diagnosis")
+    seam("24e every builder INPUT is verified, not just one",
+         "archive_paths" in b24 and "gaps_by_slug" in b24 and "DAYS" in b24,
+         "token_map alone passed while archive_paths was empty")
+
     print(f"\n{'PRODUCTION SEAMS GREEN' if not FAILURES else 'PRODUCTION SEAMS RED'}: "
           f"{len(FAILURES)} failing")
     for f in FAILURES:

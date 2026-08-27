@@ -138,16 +138,51 @@ def pin_data_root() -> None:
         q = getattr(fi, name)
         if not q.exists():
             raise SystemExit(f"REFUSED: pinned {name} = {q} does not exist.")
-    # BEHAVIOURAL check, not a path check: the point is that the data LOADS.
-    # Asserting the constants look right is what let the first fix pass while
-    # token_map() returned zero entries.
-    n = len(fi.token_map())
-    if n == 0:
+    # Values COMPUTED AT IMPORT from a path are stale after rebinding it.
+    # DAYS = _discover_days() ran at import and returned 0 in the snapshot, so
+    # _archive_paths() -- which iterates DAYS -- stayed empty even though RAW
+    # was correct. Third round of this class: PM, then RAW/GAPS/MARKETS, now
+    # DAYS. Enumerating constants does not converge; verifying CONSUMERS does.
+    if hasattr(fi, "_discover_days"):
+        fi.DAYS = fi._discover_days()
+
+    # BEHAVIOURAL, over EVERY input the builder actually consumes. The prior
+    # version checked token_map() alone and passed while _archive_paths() was
+    # empty -- which produced a 0-row tape that reported "embargo CERTIFIED".
+    consumers = {"token_map": len(fi.token_map()),
+                 "archive_paths": len(fi._archive_paths()),
+                 "gaps_by_slug": len(fi.gaps_by_slug(fi.ERA)),
+                 "DAYS": len(fi.DAYS)}
+    # R-202(1) SAME-INSTANCE PREFLIGHT. Loading a map is not the lookup the row
+    # path performs. This probes REAL slugs from the actual population through
+    # the SAME dicts main() will use, and asserts real token pairs come back --
+    # the previous check verified the load and the row path still matched zero.
+    import json as _j
+    _tok = fi.token_map(); _pth = fi._archive_paths()
+    _probe = []
+    try:
+        _d = _j.loads(FRAGMENT.read_text())
+        _probe = sorted({r["slug"] for r in _d["rows"][:20000]})[:25]
+    except Exception:
+        pass
+    if _probe:
+        _hit = [x for x in _probe if x in _tok and x in _pth]
+        _pairs_ok = all(isinstance(_tok[x], tuple) and len(_tok[x]) == 2
+                        for x in _hit)
+        if len(_hit) < len(_probe) or not _pairs_ok:
+            raise SystemExit(
+                f"REFUSED: row-path probe matched {len(_hit)}/{len(_probe)} "
+                f"real population slugs (token pairs well-formed: {_pairs_ok}). "
+                f"The maps LOAD but the lookup the build performs does not "
+                f"resolve them -- exactly the state that emitted a 0-row tape.")
+        consumers["row_path_probe"] = f"{len(_hit)}/{len(_probe)}"
+    empty = [k for k, v in consumers.items() if v == 0]
+    if empty:
         raise SystemExit(
-            "REFUSED: token_map() is EMPTY after pinning the data root. The "
-            "paths look right and the data does not load, which is the exact "
-            "state that killed tape6.")
-    print(f"  data root pinned; token_map {n:,} entries", flush=True)
+            f"REFUSED: these builder inputs load EMPTY after pinning: {empty}. "
+            f"Counts: {consumers}. Paths that look right while the data does "
+            f"not load is the exact state that produced a zero-row tape.")
+    print(f"  data root pinned; inputs {consumers}", flush=True)
 
 
 def main() -> int:
@@ -205,12 +240,13 @@ def main() -> int:
             coin = slug.split("-")[0]
             t0 = float(wrows[0]["t0"])
             if slug not in tokens or slug not in paths:
+                _why = ("NO_TOKEN_MAP" if slug not in tokens
+                        else "NO_ARCHIVE_PATH")
                 # rule 4: an exclusion is a COUNTED STATUS. Not a KeyError
                 # (which killed tape6 outright), and not a silent .get() skip
                 # (which would shrink the population invisibly).
                 n = len(wrows)
-                status_counts["NO_TOKEN_MAP"] = \
-                    status_counts.get("NO_TOKEN_MAP", 0) + n
+                status_counts[_why] = status_counts.get(_why, 0) + n
                 no_token_by_coin_day[(coin, wrows[0]["day"])] = \
                     no_token_by_coin_day.get((coin, wrows[0]["day"]), 0) + n
                 continue
@@ -255,6 +291,31 @@ def main() -> int:
         print(f"  [{split}] DONE {per_split[split]}", flush=True)
 
     spool.flush(); os.fsync(spool.fileno()); spool.close()
+    # A zero-row build is NOT a result. The status path turned a loud KeyError
+    # into a SILENT TOTAL EXCLUSION: 1,764,206 rows statused out, artifact
+    # written, exit 0, header claiming "embargo CERTIFIED" over no data. An
+    # exclusion status is for a MINORITY of rows; when it swallows the whole
+    # population it is a broken input, not a population statement.
+    if n_rows == 0:
+        raise SystemExit(
+            f"REFUSED: the build produced ZERO rows. Statuses: {status_counts}. "
+            f"Every row was excluded, which is a broken input path, not a "
+            f"result -- writing it would have produced an empty tape claiming "
+            f"a certified embargo.")
+    # R-202(2) ABSORPTION BOUND. A status absorbs ROW-LEVEL anomalies; it must
+    # never absorb a total failure. Any single exclusion status above 1% of
+    # input rows refuses the build, with its count named.
+    _total_in = n_rows + sum(v for k, v in status_counts.items() if k != "OK")
+    for _st, _n in sorted(status_counts.items()):
+        if _st == "OK" or _total_in == 0:
+            continue
+        _frac = _n / _total_in
+        if _frac > 0.01:
+            raise SystemExit(
+                f"REFUSED: exclusion status {_st} covers {_n:,} of {_total_in:,} "
+                f"input rows ({_frac:.1%}), above the 1% absorption bound. "
+                f"Statuses absorb row-level anomalies, never total failures. "
+                f"All statuses: {status_counts}")
     # embargo from the running extremes -- no second pass over the rows
     gap = sc_first_feat - tr_last_exit
     emb = {"gap_s": gap, "embargo_s": EMB.EMBARGO_S,
