@@ -278,10 +278,34 @@ def main() -> int:
     seam("11a encoding the OUTER row yields all zeros (the defect)",
          all(v == 0.0 for v in outer_vec),
          "if this is false the defect is elsewhere")
-    seam("11b the run path encodes the NESTED state, not the outer row",
-         "encode_row(sfe[" in inspect.getsource(PA._feature_pass) or
-         'encode_row(sfe.get("state"' in inspect.getsource(PA._feature_pass),
-         "run path passes the outer row -> every state feature is 0.0")
+    # BEHAVIOURAL, not a grep: build a one-row tape-shaped index through the
+    # REAL indexing path and assert the encoded vector is nonzero. A grep for
+    # the call site went stale the moment the encoding moved into tape_index,
+    # which is the third time a source-text assertion has misreported here.
+    _saved = PA.TAPE_PATH
+    import tempfile as _tf3, json as _j3, os as _o3
+    _fd, _tp = _tf3.mkstemp(suffix=".json")
+    with _o3.fdopen(_fd, "w") as _fh:
+        _j3.dump({"rows": [{"split": "train", "state_status": "OK",
+                            "slug": "s", "side": "BUY_UP", "gen": 1,
+                            "t_start": 1.0,
+                            "state": {k: (i + 1) * 0.5
+                                      for i, k in enumerate(feats)}}]}, _fh)
+    PA.TAPE_PATH = Path(_tp)
+    try:
+        _idx = PA.tape_index("train", feats)
+        _vec = next(iter(_idx.values()))
+        seam("11b the real indexing path yields NONZERO features",
+             any(v != 0.0 for v in _vec),
+             "all-zero means the outer row was encoded instead of state")
+        seam("15a the index stores a COMPACT float tuple, not a row dict",
+             isinstance(_vec, tuple) and all(isinstance(v, float) for v in _vec),
+             f"got {type(_vec).__name__} -- 1.7M row dicts is ~12GB")
+        seam("15b the index holds exactly the pinned feature count",
+             len(_vec) == len(feats))
+    finally:
+        PA.TAPE_PATH = _saved
+        _o3.unlink(_tp)
     seam("11c encoding the nested state yields NONZERO features",
          any(v != 0.0 for v in inner_vec))
 
@@ -317,10 +341,7 @@ def main() -> int:
          "value head -- neither is the model's actual output")
 
     # ---- SEAM 15: fit-stage indexes must be BOUNDED -----------------------
-    ti_src = inspect.getsource(PA.tape_index)
-    seam("15a the tape index stores compact values, not whole row dicts",
-         "idx[" in ti_src and ('r["state"]' in ti_src or "compact" in ti_src),
-         "1.7M full row dicts is ~12GB -- the R-174 violation again")
+    # (15a/15b asserted behaviourally above, through the real index path)
 
     # ---- SEAM 16: half-open containment, exactly-at-g1 NOT flagged --------
     import harmful_state_features as _sf16

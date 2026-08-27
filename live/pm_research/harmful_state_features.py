@@ -299,7 +299,13 @@ def _sum_in(events: Sequence[tuple[float, float]], lo: float, hi: float) -> floa
 
 
 def _in_gap(tape: StateTape, t: float) -> bool:
-    return any(g0 <= t <= g1 for g0, g1 in tape.gaps)
+    """HALF-OPEN [g0, g1) per R-191. g1 is EXCLUDED, and not arbitrarily:
+    `gap_end_ns` is the recv_ns of the FIRST POST-OUTAGE MESSAGE
+    (collect_pm.py:407-417), so a cutoff exactly at g1 is the instant data
+    RESUMED -- it is observed, not missing. Closed containment flags 782 rows
+    on this ledger where the ruled predicate flags 289; the 493-row difference
+    is entirely rows sitting exactly on a resumption instant."""
+    return any(g0 <= t < g1 for g0, g1 in tape.gaps)
 
 
 def features_at(tape: StateTape, row: dict[str, Any],

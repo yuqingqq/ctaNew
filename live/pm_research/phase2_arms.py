@@ -99,14 +99,25 @@ def _stream_tape_rows(path: Path):
             buf = buf[end:]
 
 
-def tape_index(split: str) -> dict:
+def tape_index(split: str, features_in_order=None) -> dict:
+    """Index ONE split by identity, storing a COMPACT FLOAT TUPLE per row.
+
+    R-194 seam 15: storing whole row dicts was ~12 GB for 1.7M rows -- the
+    R-174 violation a third time. Only the 45 feature values are needed
+    downstream, so the index holds a tuple of floats, not the row.
+    Encoding happens HERE, from the NESTED state block (seam 11), so the
+    caller cannot re-make the outer-row mistake."""
+    import phase2_state_schema_freeze as _PIN
+    feats = features_in_order or _PIN.build_pin()["features_in_order"]
     idx = {}
     for r in _stream_tape_rows(TAPE_PATH):
         if r.get("split") != split:
             continue
         if str(r.get("state_status", "OK")) != "OK":
             continue
-        idx[(r["slug"], r["side"], r["gen"], r["t_start"])] = r
+        state = r.get("state") or {}          # NESTED, per features_under
+        idx[(r["slug"], r["side"], r["gen"], r["t_start"])] = tuple(
+            _PIN.encode_row(state, feats))
     return idx
 
 def freeze_thresholds(train_scores, budgets):
@@ -138,9 +149,22 @@ def head_diagnostics(p_haz, y_haz, v_true, v_pred):
     pos = [p for p, y in zip(p_haz, y_haz) if y]
     neg = [p for p, y in zip(p_haz, y_haz) if not y]
     if pos and neg:
-        wins = sum(1 for a in pos for b in neg if a > b)
-        ties = sum(1 for a in pos for b in neg if a == b)
-        auc = (wins + 0.5 * ties) / (len(pos) * len(neg))
+        # RANK-BASED AUC, O(n log n). The pairwise form was O(n^2): at 639k
+        # scoring rows that is ~4e11 comparisons and does not finish.
+        order = sorted(range(n), key=lambda i: p_haz[i])
+        ranks = [0.0] * n
+        i = 0
+        while i < n:
+            j = i
+            while j + 1 < n and p_haz[order[j + 1]] == p_haz[order[i]]:
+                j += 1
+            avg = (i + j) / 2.0 + 1.0            # average rank for ties
+            for k in range(i, j + 1):
+                ranks[order[k]] = avg
+            i = j + 1
+        rsum = sum(r for r, y in zip(ranks, y_haz) if y)
+        npos, nneg = len(pos), len(neg)
+        auc = (rsum - npos * (npos + 1) / 2.0) / (npos * nneg)
     else:
         auc = None
     brier = sum((p - y) ** 2 for p, y in zip(p_haz, y_haz)) / n if n else None
@@ -236,10 +260,12 @@ def _feature_pass(src: Path, population: str, TAPE=None) -> dict:
                 # legitimate 0.0 and False. encode_row maps None->0.0 only
                 # because the PAIRED GUARD FLAG carries the information, and
                 # the pin refuses any nullable whose guard is absent.
-                if str(sfe.get("state_status", "OK")) != "OK":
-                    drops["state_status"] = drops.get("state_status", 0) + 1
-                    continue          # a COUNTED status, never a silent drop
-                sv = PIN.encode_row(sfe, PIN_FEATURES)
+                # non-OK statuses were already excluded when the index was
+                # built; they are counted there, never silently dropped here
+                # seam 11: the tape index already encoded from the NESTED
+                # state block. Passing the outer row here scored every state
+                # feature as 0.0, silently.
+                sv = list(sfe)
                 PM.append(fp); FN.append(ff); ST.append(sv)
                 kept.append({k: r.get(k) for k in
                              ("slug", "day", "t0", "t_start", "side", "gen",
@@ -331,6 +357,27 @@ def stage_fit() -> None:
         WM = (fc.fast_fit_ridge_w([Xf[i] for i in ft], [tF[i] for i in ft],
                                   [sw[i] for i in ft], lam=10.0)
               if len(ft) >= 100 else None)
+        # ARM D: incumbent features ONLY (PM+fine, no state), WITH the R-157
+        # weighting. This is a SEPARATE FIT persisted to a SEPARATE ARTIFACT.
+        # Sharing B's branch made D load B's weights and predict identically,
+        # so D-A and B-D were both meaningless (R-194 seam 12).
+        XD = [f["PM"][i] + f["FN"][i] for i in range(len(f["kept"]))]
+        Xd, mud, sdd = fc.fast_zscale(XD, XD)
+        Wd = fc.fast_fit_logistic_w(Xd, yF, sw)
+        WMd = (fc.fast_fit_ridge_w([Xd[i] for i in ft], [tF[i] for i in ft],
+                                   [sw[i] for i in ft], lam=10.0)
+               if len(ft) >= 100 else None)
+        (FITDIR / f"linear_d_{coin}.json").write_text(json.dumps(
+            {"hazard_weights": list(Wd),
+             "value_weights": list(WMd) if WMd else None,
+             "norm_mu": list(mud), "norm_sd": list(sdd),
+             "arm": "INCUMBENT_REWEIGHTED_ONLY",
+             "features": "PM+fine only, NO state features",
+             "causal_thresholds": freeze_thresholds(
+                 [fc.fast_predict_p(Wd, x) *
+                  (float(sum(a * b for a, b in zip(WMd, x))) if WMd else 0.0)
+                  for x in Xd], D.BUDGETS)}))
+        del XD, Xd
         (FITDIR / f"linear_{coin}.json").write_text(json.dumps(
             {"hazard_weights": list(W), "value_weights": list(WM) if WM else None,
              "norm_mu": list(mu), "norm_sd": list(sd),
@@ -423,7 +470,19 @@ def stage_score() -> dict:
                     x = [1.0] + [(raw[i] - mu[i]) / sd[i] for i in range(len(mu))]
                     ecv.append(fc.fast_predict_p(W, x) *
                                float(sum(a * b for a, b in zip(WM, x))))
-            elif arm in ("PLUS_PRED_STATE_V1", "INCUMBENT_REWEIGHTED_ONLY"):
+            elif arm == "INCUMBENT_REWEIGHTED_ONLY":
+                lind = json.loads((FITDIR / f"linear_d_{coin}.json").read_text())
+                mu, sd = lind["norm_mu"], lind["norm_sd"]
+                W, WM = lind["hazard_weights"], lind["value_weights"]
+                ecv = []; p_head = []; v_head = []
+                for j in range(n_sc):
+                    raw = sc["PM"][j] + sc["FN"][j]      # NO state features
+                    x = [1.0] + [(raw[i] - mu[i]) / sd[i] for i in range(len(mu))]
+                    ph = fc.fast_predict_p(W, x)
+                    vh = float(sum(a * b for a, b in zip(WM, x))) if WM else 0.0
+                    p_head.append(ph); v_head.append(vh); ecv.append(ph * vh)
+                thr = lind.get("causal_thresholds")
+            elif arm == "PLUS_PRED_STATE_V1":
                 # arm D is IDENTITY-DISPATCHED to the weighted linear. Sharing
                 # B's model class is what makes B-D isolate the FEATURES; if D
                 # fell through to LGBM it would duplicate C.
@@ -462,8 +521,14 @@ def stage_score() -> dict:
                         "preventable_shares", 0.0) > 0 else 0 for r in sc["kept"]]
             v_sc = [(r.get("latency") or {}).get(Lh, {}).get(
                         "preventable_value_cents", 0.0) for r in sc["kept"]]
-            heads = head_diagnostics([min(1.0, max(0.0, abs(e))) for e in ecv],
-                                     y_sc, v_sc, ecv)
+            # REAL head outputs, retained separately (R-194). Passing
+            # min(1,|ecv|) as a probability and ecv as the value head measured
+            # neither head: |product| is not a hazard probability and the
+            # product is not a conditional value.
+            heads = head_diagnostics(p_head if p_head else
+                                     [0.0] * len(sc["kept"]),
+                                     y_sc, v_sc,
+                                     v_head if v_head else [0.0] * len(sc["kept"]))
             out["arms"].setdefault(coin, {})[arm] = {
                 "gate": gate, "head_diagnostics": heads,
                 "model_kind": PA_KIND(arm),

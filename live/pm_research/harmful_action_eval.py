@@ -37,7 +37,7 @@ def _hour(r: dict[str, Any]) -> int:
 
 def evaluate_policy(rows: Sequence[dict[str, Any]], scores: Sequence[float],
                     latency_ms: int, budgets: Sequence[float] = BUDGETS,
-                    n_random: int = N_RANDOM, seed: int = 20260825) -> dict:
+                    n_random: int = N_RANDOM, seed: int = 20260825, theta_frozen: dict | None = None) -> dict:
     """FIRST-CROSSING, ONE CANCELLATION PER GENERATION.
 
     The user's audit found the previous version ranked and summed ROWS while the
@@ -80,16 +80,32 @@ def evaluate_policy(rows: Sequence[dict[str, Any]], scores: Sequence[float],
     # DA measured btc 1.7169 vs eth 1.1169, a 1.537x differential. A row-level
     # cross-coin table therefore inflates btc by ~54% relative to eth, which
     # flatters precisely the coin already recorded as underpowered.
-    out: dict[str, Any] = {"latency_ms": latency_ms, "n_generations": n_gens,
+    out: dict[str, Any] = {"latency_ms": latency_ms,
+                           "threshold_mode": ("CAUSAL_FROZEN_FROM_TRAIN"
+                                              if theta_frozen else
+                                              "RETROSPECTIVE_TOPK"),
+                           "n_generations": n_gens,
                            "n_actions": n_gens,
                            "n_rows": len(rows),
                            "rows_per_action": (len(rows) / n_gens) if n_gens else None,
                            "unit": "ACTION",
                            "budgets": {}}
     for b in budgets:
-        kk = max(1, int(n_gens * b))
-        cancelled = order[:kk]
-        theta = gmax[cancelled[-1]]
+        key = f"{int(b*100)}%"
+        if theta_frozen is not None and key in theta_frozen:
+            # CAUSAL: the cutoff was frozen from TRAINING scores before any
+            # scoring row was seen, so the cancel/keep decision at each action
+            # depends on nothing after it. The retrospective top-k below is a
+            # valid ranking curve but is not a policy anyone could have run.
+            theta = float(theta_frozen[key])
+            cancelled = [k for k in order if gmax[k] >= theta]
+            if not cancelled:
+                cancelled = order[:1]
+            kk = len(cancelled)
+        else:
+            kk = max(1, int(n_gens * b))
+            cancelled = order[:kk]
+            theta = gmax[cancelled[-1]]
         net = harm = sac = 0.0
         # PER-HOUR CONCENTRATION (Phase-2 gate). A net figure that is really
         # one hour is not a robust effect, and the aggregate cannot show that.
@@ -280,6 +296,29 @@ def selftest() -> int:
     ok(c2["n_hours_with_cancellations"] == 8 and c2["positive_without_best_hour"] is True,
        "KNOWN-GOOD: a spread result reports 8 hours and stays positive without "
        "its best hour")
+    # ---- R-194 seam 13: the frozen threshold must CHANGE the selection ----
+    def _rr(g, sc, v):
+        return {"slug": "s", "side": "BUY_UP", "gen": g, "t_start": float(g),
+                "t0": 1000.0, "any_fill_ahead": True,
+                "latency": {"50": {"preventable_value_cents": v,
+                                   "preventable_shares": 1.0, "stale_shares": 0.0}}}
+    rws = [_rr(i, 0.0, 10.0 if i < 2 else -1.0) for i in range(10)]
+    scs = [0.95, 0.90, 0.10, 0.09, 0.08, 0.07, 0.06, 0.05, 0.04, 0.03]
+    retro = evaluate_policy(rws, scs, latency_ms=50, budgets=(0.5,), n_random=200)
+    causal = evaluate_policy(rws, scs, latency_ms=50, budgets=(0.5,),
+                             n_random=200, theta_frozen={"50%": 0.5})
+    ok(retro["threshold_mode"] == "RETROSPECTIVE_TOPK" and
+       causal["threshold_mode"] == "CAUSAL_FROZEN_FROM_TRAIN",
+       "the gate NAMES which threshold mode produced it")
+    ok(retro["budgets"]["50%"]["n_cancelled_generations"] == 5,
+       "retrospective top-k takes 50% of actions regardless of score level")
+    ok(causal["budgets"]["50%"]["n_cancelled_generations"] == 2,
+       "POSITIVE CONTROL: the FROZEN threshold selects only the 2 actions "
+       "above 0.5 -- a different set from retrospective top-k, so the frozen "
+       "cutoff demonstrably CHANGES the decision rather than being carried "
+       "along unused")
+    ok(causal["budgets"]["50%"]["net_cents"] != retro["budgets"]["50%"]["net_cents"],
+       "and the two modes produce different NET, so the distinction is not cosmetic")
     print(f"harmful_action_eval selftest: {checks} checks OK")
     return 0
 
