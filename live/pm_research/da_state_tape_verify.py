@@ -38,6 +38,7 @@ from __future__ import annotations
 
 import argparse
 import collections
+import datetime as dt
 import json
 import math
 import sys
@@ -349,8 +350,13 @@ def _predicates(schema, n_rows, under, present, statuses, bn_vals, pair_bad,
     # ref cannot match some unrelated hash mid-string.
     if expect_provenance is not None:
         hdr_prov = ""
-        for k in ("provenance", "pinned_ref", "commit", "build_commit",
-                  "built_from_commit", "git_ref"):
+        # `builder_ref` is the RULED interface (R-199 item 2): the launcher
+        # passes BUILD_REF in the environment and the builder writes it
+        # VERBATIM -- it never runs git at completion. tape5's `builder_commit`
+        # was main HEAD read at finish, which is a different quantity from the
+        # bytes that built it and is exactly why that tape was unattributable.
+        for k in ("builder_ref", "provenance", "pinned_ref", "commit",
+                  "build_commit", "built_from_commit", "git_ref"):
             v = (header or {}).get(k)
             if isinstance(v, str):
                 hdr_prov = v
@@ -559,6 +565,55 @@ def verify(tape: Path, schema_path: Path = SCHEMA,
                                if not x.get("applicable", True)],
             "all_pass": all(x["pass"] for x in preds
                             if x.get("applicable", True))}
+
+
+def write_verdict(rep: dict[str, Any], tape: Path, out: Path) -> dict[str, Any]:
+    """Emit the machine-readable verdict (R-199 item 3).
+
+    BE's fit stage REFUSES to run without a PASS here, so this instrument
+    becomes the pipeline gate in fact and not only in protocol. Two properties
+    follow from that and are deliberate:
+
+    * The artifact names the TAPE IT JUDGED by path AND content prefix. A
+      verdict that does not identify its subject can be replayed against a
+      different artifact -- and this programme has had three in-place
+      overwrites destroy the bytes a claim was anchored to.
+    * `all_pass` is written from the predicate list, never passed in. A verdict
+      file whose headline disagrees with its own table is the rule-10 defect
+      in artifact form.
+    """
+    import hashlib
+    h = hashlib.sha256()
+    with tape.open("rb") as fh:
+        for chunk in iter(lambda: fh.read(1 << 20), b""):
+            h.update(chunk)
+    applicable = [x for x in rep["predicates"] if x.get("applicable", True)]
+    verdict = {
+        "verdict": "da_tape_gate_verdict_v1",
+        "produced_by": "live/pm_research/da_state_tape_verify.py",
+        "tape_path": str(tape),
+        "tape_sha256_prefix": h.hexdigest()[:16],
+        "tape_bytes": tape.stat().st_size,
+        "as_of_utc": dt.datetime.now(dt.timezone.utc).isoformat(),
+        "n_rows": rep.get("n_rows"),
+        "schema_family": rep.get("schema_family"),
+        "tape_header_pins": rep.get("tape_header_pins"),
+        "predicates": rep["predicates"],
+        "not_applicable": rep.get("not_applicable", []),
+        # recomputed HERE from the table, never copied
+        "all_pass": all(x["pass"] for x in applicable),
+        "n_applicable": len(applicable),
+        "note": ("ALL_PASS is recomputed from the predicate table in this "
+                 "file, not carried in. A consumer should re-derive it rather "
+                 "than trust the headline, and should check tape_sha256_prefix "
+                 "against the artifact it is about to use -- a verdict that "
+                 "cannot identify its subject can be replayed against another."),
+    }
+    tmp = out.with_suffix(out.suffix + ".tmp")
+    tmp.write_text(json.dumps(verdict, indent=2, sort_keys=True),
+                   encoding="utf-8")
+    tmp.replace(out)
+    return verdict
 
 
 def _selftests() -> int:
@@ -823,6 +878,41 @@ def _selftests() -> int:
        ["provenance_matches_expected"]["applicable"] is False,
        "with no expectation it is NOT ASSERTED, never a silent pass")
 
+    # --- builder_ref is accepted, and preferred over stale alternatives ----
+    ok(pv({"builder_ref": "abc1234"}, "abc1234")
+       ["provenance_matches_expected"]["pass"],
+       "builder_ref is an accepted provenance field (R-199 ruled interface)")
+    ok(not pv({"builder_commit": "abc1234"}, "abc1234")
+       ["provenance_matches_expected"]["pass"],
+       "builder_commit is NOT accepted -- tape5 wrote main HEAD at completion "
+       "into that field, a different quantity from the bytes that built it, "
+       "and accepting it would certify exactly what made tape5 unattributable")
+    ok(pv({"builder_ref": "abc1234", "commit": "deadbee"}, "abc1234")
+       ["provenance_matches_expected"]["pass"],
+       "builder_ref is consulted FIRST, so a stale sibling field cannot win")
+
+    # --- the verdict artifact ---------------------------------------------
+    with tempfile.TemporaryDirectory() as td:
+        tp = Path(td) / "t.json"
+        tp.write_text(json.dumps({"features_under": "state", "rows": [
+            {"slug": "s", "t0": 1, "state": dict(real_row)}]}), encoding="utf-8")
+        rep = verify(tp, gapped_slugs_expected=0)
+        vout = Path(td) / "v.json"
+        v = write_verdict(rep, tp, vout)
+        ok(vout.exists() and json.loads(vout.read_text())["all_pass"] == v["all_pass"],
+           "the verdict artifact is written and self-consistent")
+        ok(len(v["tape_sha256_prefix"]) == 16 and v["tape_path"] == str(tp),
+           "it identifies the tape it judged by PATH and CONTENT prefix -- a "
+           "verdict that cannot name its subject can be replayed against "
+           "another artifact")
+        forged = dict(rep)
+        forged["predicates"] = [{"predicate": "x", "pass": False,
+                                 "applicable": True}]
+        v2 = write_verdict(forged, tp, vout)
+        ok(v2["all_pass"] is False,
+           "all_pass is RECOMPUTED from the predicate table, so a headline "
+           "cannot disagree with the table beside it (rule 10 in artifact form)")
+
     print(f"da_state_tape_verify selftests: {checks} checks passed")
     return 0
 
@@ -837,6 +927,8 @@ def main() -> int:
                     help="PRE-REGISTERED expected GAP_AT_CUTOFF row count")
     ap.add_argument("--expect-provenance", default=None,
                     help="PRE-REGISTERED commit the tape must declare")
+    ap.add_argument("--verdict-out", default=None,
+                    help="write the machine-readable verdict artifact here")
     a = ap.parse_args()
     if a.selftest or not a.cmd:
         return _selftests()
@@ -845,6 +937,8 @@ def main() -> int:
     rep = verify(Path(a.tape), gapped_slugs_expected=a.gapped_slugs,
                  expect_gap_count=a.expect_gap_count,
                  expect_provenance=a.expect_provenance)
+    if a.verdict_out:
+        write_verdict(rep, Path(a.tape), Path(a.verdict_out))
     print(json.dumps({k: v for k, v in rep.items() if k != "predicates"},
                      indent=2, sort_keys=True))
     print("\nPREDICATES")
