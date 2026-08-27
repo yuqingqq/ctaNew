@@ -680,9 +680,14 @@ def verify(tape: Path, schema_path: Path = SCHEMA,
                         (at_g1_present, at_g1_flagged))
     return {"gate": "da_state_tape_verify_v1", "tape": str(tape),
             "schema_family": schema["family"], "n_rows": n_rows,
+            # builder_ref included so the verdict CARRIES the ref it
+            # certified: a reader can see WHICH bytes were gated without
+            # opening a 3GB tape. Not a hole without it -- absence is accepted
+            # and the gate asserts the ref tape-side -- but a verdict that
+            # names its subject should name it completely.
             "tape_header_pins": {k: header.get(k) for k in
                                  ("features_under", "clock_basis", "protocol",
-                                  "built_from_schema")},
+                                  "built_from_schema", "builder_ref")},
             "predicates": preds,
             "not_applicable": [x["predicate"] for x in preds
                                if not x.get("applicable", True)],
