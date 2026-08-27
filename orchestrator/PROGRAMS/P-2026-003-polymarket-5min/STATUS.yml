@@ -304,6 +304,33 @@ flags:
                              # score exists, so a thin Phase-2 result cannot be
                              # explained afterwards by a thinness nobody wrote
                              # down.
+  tape5_gate: ARMED-TRIPLE-PRE-REGISTERED # 2026-08-27 DA, cf79214.
+                             # Unit da-gate-tape5.service (systemd, survives
+                             # this session) waits for
+                             # derived/phase2_state_tape_v5.json, requires SIZE
+                             # STABILITY, then runs all three. Log:
+                             # derived/.da_tape5_gate.log (append-only).
+                             # HAND-RUN EQUIVALENT if the unit is gone:
+                             #   da_state_tape_verify.py verify --tape <t5> \
+                             #     --gapped-slugs 133 --expect-gap-count 289 \
+                             #     --expect-provenance 057b1b7
+                             #   da_gap_at_cutoff_count.py count --tape <t5>
+                             # THE THREE, FIXED BEFORE THE ARTIFACT EXISTED:
+                             #   count      289
+                             #   edge       493 at-g1 rows PRESENT + UNFLAGGED
+                             #   provenance 057b1b7 (anchored prefix; ABSENT=FAIL)
+                             # WHY ALL THREE: the count alone cannot tell
+                             # half-open-landed from gaps-never-arrived; the
+                             # edge assertion alone cannot catch a wrong
+                             # population; provenance alone catches neither but
+                             # without it neither of the others attributes to
+                             # any particular code. Any one alone answers a
+                             # question nobody asked.
+                             # 057b1b7 VERIFIED not accepted: 9fb043b is its
+                             # ancestor, one purely-additive commit (+47/-0),
+                             # harmful_state_features.py UNTOUCHED -- so no
+                             # builder semantics moved and 289 still applies.
+                             # On PASS BE runs the purged four-arm rerun.
   state_tape_gate: ARMED-R187-HARDENED # 2026-08-27 DA, 334775d. Supersedes
                              # the cbfc44d description below in two ways.
                              # R-187 found TWO defects in DA's own gate, and the
