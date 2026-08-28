@@ -40,6 +40,54 @@ The generator validates `owner`, `schema_version`, `target`, and recomputes
 `owner_sha256`. Any mismatch → **refuse the merge and leave the field RESERVED**.
 It must never repair, truncate or partially merge.
 
+### 2a. Canonicalization — AMENDMENT, ruled by the contract owner
+
+**The first version of clause 2 said "sha256 of content||binds_to" and pinned no
+canonical form.** BE refused to implement on that basis and was right to: if two
+correct implementations differ on key order, whitespace, unicode escaping, float
+repr, or what `||` concatenates, **every VALID sidecar mismatches on recompute,
+and the refusal is indistinguishable from tampering** — the mechanism built to
+preserve annotations would drop them while reporting an attack. A signature rule
+that does not pin its bytes is not a signature rule.
+
+**RULED — `canonical_form: "annotation_canon_v1"`**, declared as a field in the
+sidecar, defined as exactly:
+
+```python
+payload = json.dumps({"content": content, "binds_to": binds_to},
+                     sort_keys=True, separators=(",", ":"),
+                     ensure_ascii=False, allow_nan=False).encode("utf-8")
+owner_sha256 = hashlib.sha256(payload).hexdigest()
+```
+
+One object (no `||` ambiguity), recursively sorted keys, no insignificant
+whitespace, explicit UTF-8. **`allow_nan=False` is not decoration**: the default
+emits bare `NaN`/`Infinity`, which is not JSON, so some readers reject the
+payload and others parse it differently — a divergence that would surface as a
+signature mismatch. NaN/Infinity in a signed payload REFUSES at write time.
+
+**Floats, the residue BE's proposal does not close.** `json.dumps` serialises
+floats with Python's shortest round-tripping `repr`. That is stable across
+CPython 3.x but is **not** a cross-language guarantee. So: `annotation_canon_v1`
+is defined **for CPython 3.12+ on both sides**, and any implementation outside
+that must declare a new `canonical_form` rather than reinterpret this one.
+Annotators who want to be safe from this entirely may carry numeric magnitudes
+as strings; nothing in the contract requires floats.
+
+**Unknown `canonical_form` → REFUSE with a DISTINCT cause** ("unrecognised
+canonical form"), never a signature-mismatch error. This is the clause that
+keeps *we disagree about the recipe* from being reported as *someone tampered*.
+
+### 2b. Agreement must be PROVEN before first use, not assumed
+
+The merge implementation must ship a **canonicalization agreement test** that
+recomputes `owner_sha256` from **the owner's real committed sidecar bytes** and
+matches the value the owner recorded. **If that test is absent or failing, the
+merge path must refuse to run at all** — not fall back, not warn. Two
+implementations that have never been shown to agree on the bytes are not a
+signature scheme, and the failure mode this contract exists to prevent is
+precisely a silent disagreement that reads as an attack.
+
 **3. `binds_to` — the part that carries the lesson.** The annotator declares
 what its content's validity depends on. Two kinds:
 - `"population_independent": true` — the claim rests on an argument, not a
@@ -70,6 +118,12 @@ Each must be a behavioural test, not a source-text match:
    present" passes both the correct and the silent-carry behaviour and is not a
    test.
 4. **Tampered `owner_sha256`** → merge REFUSED, field `RESERVED`, cause logged.
+4a. **Unknown `canonical_form`** → REFUSED with the *unrecognised-form* cause,
+   NOT the signature-mismatch cause. A test that accepts either message cannot
+   tell a recipe disagreement from an attack, which is the whole point.
+4b. **Agreement test on the owner's REAL committed sidecar** → recomputes to the
+   recorded `owner_sha256`. Absent or failing ⇒ merge path refuses to run.
+4c. **NaN/Infinity in content** → REFUSED at write time (`allow_nan=False`).
 5. **Wrong `owner` or `schema_version`** → REFUSED.
 6. **Positive control**: the generator with no sidecar present must still write
    a valid receipt — the merge path must not become load-bearing for the receipt.
