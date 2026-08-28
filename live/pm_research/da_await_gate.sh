@@ -50,7 +50,25 @@ ARCHIVE="${DA_VERDICT_ARCHIVE:-}"
 # assert_gate_passed ACCEPTED while the independent counter was still running --
 # fitting was permitted on the gate alone. An exit code nobody consumes is not
 # a gate.
-STAGING="${RULED_VERDICT}.staging"
+# R-228 FAIL-OPEN, found by the user: this was a FIXED name, never removed and
+# never refused at startup. A leftover staging file from any prior run -- or a
+# hand-placed one -- was promoted verbatim by checkers that exited 0 WITHOUT
+# WRITING ANYTHING. Verified: {"stale":true} reached the ruled locator.
+# The verdict must be a file THIS RUN created, so the name is unique per run
+# and removed on exit. A stale file can no longer be mistaken for this run's
+# output because this run's output did not exist until mktemp made it.
+STAGING="$(mktemp "${RULED_VERDICT}.staging.XXXXXX")"
+rm -f "$STAGING"          # mktemp reserves the NAME; the gate must create the file
+trap 'rm -f "$STAGING"' EXIT
+# Orphans from crashed runs cannot be promoted (they are not this run's path),
+# but they accumulate and hide, so they are removed with the cause LOGGED --
+# never silently, and the ruled locator itself is never touched.
+for _orphan in "${RULED_VERDICT}".staging*; do
+  [ -e "$_orphan" ] || continue
+  [ "$_orphan" = "$STAGING" ] && continue
+  echo "REMOVED ORPHAN STAGING $_orphan ($(stat -c%s "$_orphan" 2>/dev/null) bytes) -- a leftover from a run that did not finish; it is NOT this run's output and was never promotable" >> "$LOG"
+  rm -f "$_orphan"
+done
 DEADLINE=$(( $(date +%s) + ${DA_DEADLINE_S:-14400} ))
 # A STALE verdict at the ruled locator defeats the entire absence contract: a
 # refusal would leave the PREVIOUS run's verdict resolving, and only the
@@ -71,7 +89,14 @@ track() {  # track <rc>
 }
 
 run_gate() {
-  if [ "${DA_GATE_STUB:-0}" = "1" ]; then return "${DA_STUB_GATE_RC:-0}"; fi
+  if [ "${DA_GATE_STUB:-0}" = "1" ]; then
+    # A stub that WRITES writes to THIS RUN's staging path, exactly as the real
+    # gate does. Tests must never pre-seed the staging file: doing so is
+    # indistinguishable from the R-228 defect, which is why the suite passed
+    # 13/13 while the defect was live.
+    [ -n "${DA_STUB_VERDICT:-}" ] && printf '%s' "$DA_STUB_VERDICT" > "$STAGING"
+    return "${DA_STUB_GATE_RC:-0}"
+  fi
   local args=(verify --tape "$T" --gapped-slugs "$GAPPED")
   [ -n "$LEDGER" ] && args+=(--ledger "$LEDGER")
   [ -n "$LEDGER_SHA" ] && args+=(--expect-ledger-sha "$LEDGER_SHA")

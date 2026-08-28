@@ -48,8 +48,9 @@ promo() {  # promo <label> <expect_ruled_exists 0|1> <make_source 0|1>
   local label="$1" want="$2" mk="$3"
   local d; d="$(mktemp -d)"
   local src="$d/pin_named.json" ruled="$d/da_tape_gate_verdict_v5.json"
-  [ "$mk" = 1 ] && printf '{"gate":"da_state_tape_verify_v1","all_pass":true}' > "$ruled.staging"
-  DA_GATE_STUB=1 DA_STUB_GATE_RC=0 DA_STUB_COUNT_RC=0 \
+  local sv=""
+  [ "$mk" = 1 ] && sv='{"gate":"da_state_tape_verify_v1","all_pass":true}'
+  DA_GATE_STUB=1 DA_STUB_GATE_RC=0 DA_STUB_COUNT_RC=0 DA_STUB_VERDICT="$sv" \
     DA_LOG="$SEAM_LOG" DA_TAPE=/dev/null DA_SKIP_WAIT=1 \
     DA_VERDICT_RULED="$ruled" "$W" >/dev/null 2>&1
   local got=0; [ -f "$ruled" ] && got=1
@@ -66,9 +67,11 @@ promo2() {  # promo2 <label> <want_locator 0|1> <gate_rc> <count_rc>
   local label="$1" want="$2" g="$3" c="$4"
   local d; d="$(mktemp -d)"
   local ruled="$d/da_tape_gate_verdict_v5.json"
-  # a stub run writes no verdict, so pre-seed the STAGING path the gate targets
-  printf '{"gate":"da_state_tape_verify_v1","all_pass":true}' > "$ruled.staging"
+  # R-228: the stub WRITES, exactly as the real gate does. Pre-seeding the
+  # staging path is indistinguishable from the fail-open it would mask -- that
+  # is how this suite passed 13/13 while a stale file was being promoted.
   DA_GATE_STUB=1 DA_STUB_GATE_RC="$g" DA_STUB_COUNT_RC="$c" \
+    DA_STUB_VERDICT='{"gate":"da_state_tape_verify_v1","all_pass":true}' \
     DA_LOG="$SEAM_LOG" DA_TAPE=/dev/null DA_SKIP_WAIT=1 \
     DA_VERDICT_RULED="$ruled" "$W" >/dev/null 2>&1
   local got=0; [ -f "$ruled" ] && got=1
@@ -76,6 +79,29 @@ promo2() {  # promo2 <label> <want_locator 0|1> <gate_rc> <count_rc>
   else fail=$((fail+1)); echo "  FAIL $label: locator exists=$got want=$want"; fi
   rm -rf "$d"
 }
+
+echo "seam 22d -- R-228 fail-open (the user's known-bad, verbatim):"
+r228() {
+  local d; d="$(mktemp -d)"; local ruled="$d/da_tape_gate_verdict_v5.json"
+  # a STALE staging file, and checkers that exit 0 having written NOTHING
+  printf '{"stale":true}' > "$ruled.staging"
+  DA_GATE_STUB=1 DA_STUB_GATE_RC=0 DA_STUB_COUNT_RC=0 \
+    DA_LOG="$SEAM_LOG" DA_TAPE=/dev/null DA_SKIP_WAIT=1 \
+    DA_VERDICT_RULED="$ruled" "$W" >/dev/null 2>&1
+  if [ -f "$ruled" ]; then
+    fail=$((fail+1)); echo "  FAIL a STALE staging file was PROMOTED by checkers that wrote nothing: $(cat "$ruled")"
+  else
+    pass=$((pass+1)); echo "  OK   a stale staging file is NEVER promoted -- the verdict must be a file THIS RUN created"
+  fi
+  # and the orphan must be gone, with the cause logged
+  if [ -e "$ruled.staging" ]; then
+    fail=$((fail+1)); echo "  FAIL the orphan staging file survived"
+  else
+    pass=$((pass+1)); echo "  OK   the orphan staging file is removed, with its cause logged"
+  fi
+  rm -rf "$d"
+}
+r228
 
 echo "seam 22c -- R-214 promote only after BOTH checkers:"
 promo2 "both checkers pass -> verdict IS promoted" 1 0 0
