@@ -1,6 +1,12 @@
 # Iteration 011 preregistration — AMENDMENT A1
 
-**STATUS: DRAFT-FOR-USER-FREEZE. Not frozen. Nothing fitted, nothing scored.**
+**STATUS: FROZEN — USER RULING 2026-08-28T09:29Z (structured answer via the
+coordinator, R-242): §A1.1 OPTION 1 (separate p_positive/p_negative) is
+selected; §A1.2–A1.6 frozen as drafted. Q2's cell statistic under A1.4 is
+therefore AUC; heads (4), arms (2) and the 24-cell Holm family are UNCHANGED.
+No clock effect: iteration 011 has no forward clock (nothing fitted, nothing
+scored), and the hazard-candidate race clock (`b3f7f9f`) is untouched.
+The draft text below is preserved verbatim as committed at `56f272e`.**
 **Amends:** `ITER011_CONDITIONAL_VALUE_PREREGISTRATION.md` (frozen at `3b71d3e`
 by user ruling R-232). **Drafted by:** BE. **Frozen by:** the USER, and only the
 user — BE does not amend a frozen document it authored.
@@ -87,6 +93,10 @@ predictable — which is a finding, not an assumption, and Option 1 measures it
 
 **This is the user's call.** BE will implement whichever is frozen and will not
 proceed on any of the three until one is.
+
+> **RULED 2026-08-28T09:29Z: OPTION 1.** (User, structured answer; recorded by
+> the coordinator, R-242. The recommendation and the ruling agree; the ruling,
+> not the recommendation, is what authorizes implementation.)
 
 ---
 
