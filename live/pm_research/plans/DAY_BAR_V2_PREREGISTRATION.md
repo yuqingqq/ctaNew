@@ -53,10 +53,22 @@ is the expected post-O1 signature, not a failure.
 | day | lost s/hr (P1) | mat≥25% windows (P2) | worst-60min s (P3) | raw breadth (diagnostic) | verdict under v2 |
 |---|---|---|---|---|---|
 | 08-25 | 151.9 FAIL | 0.0% pass | 301.2 pass | 80.6% | FAIL (P1) |
-| 08-26 | 123.8 FAIL | 0.3% pass | 278.6 pass | 62.2% | FAIL (P1) |
-| 08-27 | 130.6 FAIL | 0.0% pass | 256.3 pass | 70.1% | FAIL (P1) |
+| 08-26 | 123.8 FAIL | 0.3% pass | 283.2 pass | 62.2% | FAIL (P1) |
+| 08-27 | 130.6 FAIL | 0.0% pass | 258.9 pass | 70.1% | FAIL (P1) |
 | post-O1 counterfactual (crude: −10 s detection lag per long gap) | 54–79 | ~0% | 131–158 | ~unchanged | PASS expected |
 | post-O1 counterfactual (DA, measured per-gap lag) | ~28–36 | ~0% | — | ~unchanged | PASS expected |
+
+**P3 COLUMN CORRECTED 2026-08-28T09:21Z (in-band, rule 13; coordinator; before
+any judged day).** The 08-26/08-27 worst-60min values were produced by the P3
+implementation's 300s-aligned stepping — the defect Codex re-review blocker (5)
+reproduced and `f8581b6` fixed. The exact rolling-hour maxima are **283.2**
+(superseded: 278.6) and **258.9** (superseded: 256.3); 08-25's 301.2 is
+unchanged, so §2's P3 anchor sentence stands. Both corrected values still pass
+≤900: **no verdict changes, no threshold moves.** The "match" Q-DA-115 reported
+between implementation and this table was agreement between two runs of the
+same defect, not validation. Corrected values reproduced independently by the
+coordinator from committed `day_bar_v2()` at `f8581b6` (P1/P2 recomputed too:
+unchanged) before this block was written.
 
 **AMENDED 2026-08-28T06:04Z, before any judged day (supersedes the three-branch
 text below, rule 13; original kept for provenance).** DA corrected its own
