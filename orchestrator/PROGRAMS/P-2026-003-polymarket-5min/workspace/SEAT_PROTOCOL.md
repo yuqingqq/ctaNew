@@ -76,6 +76,15 @@ except where marked USER-ONLY.
     the defect as spec). Phrased on the control side deliberately: the next
     instance will wear a shape none of these four had. Every control ships
     both directions — it fires on the bad case AND admits the good one.
+17. **Suite-green is not pipeline-wired** (R-251 finding, R-252 closure;
+    MEM's class): a control that cannot RUN is distinct from rule 16's
+    control that cannot FAIL — green suites prove the unit, not the wiring,
+    and test-counting coverage cannot tell them apart (I11-2: six evaluator
+    functions, all falsifier-proven, zero call sites in the runner; DB2:
+    both suites green while the integration always refused). Closure needs
+    BOTH halves: the wiring, AND an artifact-level guard that refuses output
+    produced without it; plus a seam test that runs the integration the way
+    the launcher runs it, on the producer's real emitted rows.
 
 ## Cadences
 
