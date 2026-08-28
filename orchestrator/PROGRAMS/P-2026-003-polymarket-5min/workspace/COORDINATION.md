@@ -17085,6 +17085,10 @@ Design doc: `live/pm_research/plans/BTC_FEED_MITIGATION_DESIGN_2026-08-28.md`. T
 
 The question BE escalated is ANSWERED BY THE USER: the two inert arms' real trajectories from the consumed v3.4 dataset proceed while the holds stand, on the recorded admissibility case (no predictor estimate consumed; nothing fitted, scored, or selected; reproduction-class on consumed data). The decision provenance is exactly what BE's escalation was for: the reasoning's author did not decide it — the USER did, once, visibly, with the alternative (defer to HOLD RELEASED) stated beside it. BE's meanwhile-work (dry-run harness, seams 30a-c) continues alongside or yields to the heavy run at BE's sequencing discretion; trajectories ride round 3 if they land before it fires.
 
+### R-273 — 2026-08-28T14:04Z — coordinator — ESCALATION-CHANNEL FIX (user-prompted, from the 2h latency BE's escalation paid): USER-escalations route through the coordinator in the same breath — SEAT_PROTOCOL rule 13 amended; substance untouched (the user decides, never the dispatching seat)
+
+The R-271 escalation was RIGHT in substance and sat ~2h in the wrong CHANNEL: BE asked the user in its own session's terminal, where the user wasn't looking; surfaced in the coordinator session, it was answered in seconds (R-272). The fix changes only latency: any seat escalating a decision to the USER sends it to the coordinator in the same breath, flagged ESCALATION-FOR-USER; the coordinator surfaces it where the user is demonstrably active; the answer returns with a register cite. Refusal postures, the not-the-reasoning's-author principle, and rule 13's substance are all unchanged. Both seats notified; SEAT_PROTOCOL rule 13 carries the clause with this entry's cite.
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited

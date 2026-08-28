@@ -59,7 +59,12 @@ except where marked USER-ONLY.
 13. **Escalation**: a seat that cannot rule (frozen numbers, another seat's
     surface, USER-ONLY matter) escalates to the coordinator rather than
     acting; refusing to act on ambiguity is the correct move on record
-    (BE's canon refusal; DA's sorted-wins refusal).
+    (BE's canon refusal; DA's sorted-wins refusal). **USER-escalations route
+    through the coordinator in the same breath** (R-273): a question parked
+    in a seat's own terminal waits for a user who isn't looking there —
+    flag it ESCALATION-FOR-USER to the coordinator, who surfaces it where
+    the user is active; the answer returns with a register cite. Substance
+    unchanged: the user decides, never the dispatching seat.
 14. **Peer messages**: relayed authority is verified at the user's own
     committed text when a ruling expands a seat's surface (DA's d506a06
     check — the model).
