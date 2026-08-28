@@ -1,0 +1,185 @@
+{
+ "THIS_IS_A_CITATION_CORRECTION_NOT_A_RE_FREEZE": {
+  "multiplicity_UNCHANGED": true,
+  "multiplicity_at_freeze": 1,
+  "race_clock_UNCHANGED": true,
+  "race_clock_start": "at the freeze commit",
+  "race_clock_start_commit": "b3f7f9f",
+  "statement": "The FREEZE EVENT happened at b3f7f9f. This artifact corrects which null draw the receipt cites; it does NOT re-freeze the candidate, does not restart the clock, and does not increment multiplicity. Reading v2's commit date as a new freeze would hand the candidate days it did not earn."
+ },
+ "TWO_SEPARATE_CAVEATS_DO_NOT_CONFLATE": {
+  "1_population": {
+   "consumed_days": "2026-08-20..25 consumed; 08-26 FAIL (Q-DA-72); 08-27 EXCLUDED (R-222)",
+   "covered_by": "marked-unvalidated",
+   "facts": {
+    "G_complete_utc_days": 0,
+    "intervals_claimable": false,
+    "is_a_validation": false,
+    "is_development_population": true,
+    "population_label": "da_development_topup",
+    "span_hours": 14.407338536977768
+   }
+  },
+  "2_budget_non_monotonicity": {
+   "covered_by": "NOTHING \u2014 this is a separate, UNEXPLAINED fact about the object being admitted, and marked-unvalidated does not address it",
+   "failing_budgets": [
+    "15%"
+   ],
+   "sharpened": "The arm BEATS MATCHED RANDOM at ALL THREE budgets while beating the INCUMBENT at only two. That gap is the concrete form of 'beating random is not beating the incumbent' for this candidate.",
+   "statement": "The increment over the incumbent survives joint reading at ['5%', '10%'] and is INDISTINGUISHABLE FROM CHANCE at ['15%'] (Holm 1.00000, raw p 0.6612). No mechanism has been offered for why a larger cancellation budget should erase the advantage. An effect present at two budgets and absent at the third is not established.",
+   "surviving_budgets": [
+    "5%",
+    "10%"
+   ]
+  }
+ },
+ "admission_statement": "Admitted WITHOUT clearing validation. Development evidence only: btc @5% and @10% increments over the incumbent, under an OPTIMISTIC window-level null. This is not a validated candidate and the freeze does not assert that it is.",
+ "artifact": "harmful_phase2_lgbm_btc_freeze_v2",
+ "authority": "USER RULING relayed as R-232: LGBM_PINNED enters the forward race btc-only, marked-unvalidated.",
+ "candidate": {
+  "arm": "LGBM_PINNED",
+  "coin_scope": "btc",
+  "model_class": "LGBM classifier + LGBM value regressor, params pinned in phase2_declaration (LGBM_PARAMS / LGBM_VALUE_PARAMS)",
+  "thresholds": "CAUSAL_FROZEN_FROM_TRAIN, per budget, frozen before scoring"
+ },
+ "declared_nulls": {
+  "increment_over_incumbent": {
+   "artifact": "phase2_increment_null_v1.json",
+   "artifact_commit": "163bd36",
+   "cluster_unit_disclosure": {
+    "ruled_unit": "UTC day (CLAUDE.md rule 8)",
+    "unit_used": "window (slug)",
+    "weaker_than_ruled": true,
+    "why": "G is 0 complete UTC days, so the ruled unit has no replicates. The window is the finest plausibly-exchangeable unit available; windows within a day are NOT independent, so these p-values are OPTIMISTIC and are evidence, not a significance certificate."
+   },
+   "design": "window-level sign-flip permutation of per-window paired increment sums vs INCUMBENT_REWEIGHTED_ONLY on the identical action population",
+   "determinism": {
+    "acceptance": "PRE-COMMITTED: this run's p-values are the numbers of record whatever they are; a Holm survival flip IS the result, reported never reconciled. One run.",
+    "prior_draws_are_provenance": "two independent MC estimates of the same true p exist: e7caaeb (R-217) and the 2026-08-28 re-binding preserved at phase2_increment_null_v1.SUPERSEDED_BY_v2.json. Increments were bit-identical across both; 11 of 12 p-values moved, max 0.0245, consistent with MC error at n_perm=2000 (SE~0.0112)",
+    "pythonhashseed": "0",
+    "ruling": "R-234 (8da983e) -- determinism repair, not re-selection",
+    "why": "sign_flip_p assigns signs in LIST ORDER, so a fixed PERM_SEED over a process-dependent order is an INDEPENDENT DRAW each run, not a reproduction",
+    "window_order": "sorted(set(candidate)|set(baseline)) via ordered_windows(); previously raw set iteration"
+   },
+   "multiplicity": "Holm-Bonferroni across all 12 cells, read JOINTLY",
+   "n_perm": 2000,
+   "perm_seed": 20260827
+  },
+  "matched_random": {
+   "design": "randoms cancel the same number of generations, matched within (side x hour) strata, each at its FIRST row",
+   "metric": "net_cents",
+   "n_random": 200
+  }
+ },
+ "evidence_btc_all_three_budgets": {
+  "10%": {
+   "arm_net_cents": 13659.74895244999,
+   "beats_matched_random_on_NET": true,
+   "budget": "10%",
+   "increment_holm_p": 0.03298350824587706,
+   "increment_raw_p_two_sided": 0.0029985007496251873,
+   "increment_survives_joint_reading_at_0_05": true,
+   "increment_vs_incumbent_cents": 6608.580243499999,
+   "rho_captured_over_sacrificed": 1.4419467456890727,
+   "threshold_mode": "CAUSAL_FROZEN_FROM_TRAIN"
+  },
+  "15%": {
+   "arm_net_cents": 11771.91322744999,
+   "beats_matched_random_on_NET": true,
+   "budget": "15%",
+   "increment_holm_p": 1.0,
+   "increment_raw_p_two_sided": 0.6611694152923538,
+   "increment_survives_joint_reading_at_0_05": false,
+   "increment_vs_incumbent_cents": 1053.7137489999996,
+   "rho_captured_over_sacrificed": 1.2815290941239543,
+   "threshold_mode": "CAUSAL_FROZEN_FROM_TRAIN"
+  },
+  "5%": {
+   "arm_net_cents": 9802.855993450003,
+   "beats_matched_random_on_NET": true,
+   "budget": "5%",
+   "increment_holm_p": 0.005997001499250375,
+   "increment_raw_p_two_sided": 0.0004997501249375312,
+   "increment_survives_joint_reading_at_0_05": true,
+   "increment_vs_incumbent_cents": 5189.848050949999,
+   "rho_captured_over_sacrificed": 1.541388083568223,
+   "threshold_mode": "CAUSAL_FROZEN_FROM_TRAIN"
+  }
+ },
+ "evidence_eth_why_scope_is_btc_only": {
+  "10%": {
+   "arm_net_cents": 1523.9605454999996,
+   "beats_matched_random_on_NET": true,
+   "budget": "10%",
+   "increment_holm_p": 1.0,
+   "increment_raw_p_two_sided": 0.23338330834582707,
+   "increment_survives_joint_reading_at_0_05": false,
+   "increment_vs_incumbent_cents": -1310.8198020000004,
+   "rho_captured_over_sacrificed": 1.1510342905254989,
+   "threshold_mode": "CAUSAL_FROZEN_FROM_TRAIN"
+  },
+  "15%": {
+   "arm_net_cents": 1035.329738,
+   "beats_matched_random_on_NET": false,
+   "budget": "15%",
+   "increment_holm_p": 1.0,
+   "increment_raw_p_two_sided": 0.2773613193403298,
+   "increment_survives_joint_reading_at_0_05": false,
+   "increment_vs_incumbent_cents": -1282.4676220000008,
+   "rho_captured_over_sacrificed": 1.0808964418015954,
+   "threshold_mode": "CAUSAL_FROZEN_FROM_TRAIN"
+  },
+  "5%": {
+   "arm_net_cents": 907.8557069999998,
+   "beats_matched_random_on_NET": false,
+   "budget": "5%",
+   "increment_holm_p": 1.0,
+   "increment_raw_p_two_sided": 0.4207896051974013,
+   "increment_survives_joint_reading_at_0_05": false,
+   "increment_vs_incumbent_cents": -847.2721859999999,
+   "rho_captured_over_sacrificed": 1.1234620017639085,
+   "threshold_mode": "CAUSAL_FROZEN_FROM_TRAIN"
+  }
+ },
+ "kind": "RULE_12_FREEZE_RECEIPT",
+ "provenance": {
+  "declaration_sha256_prefix": "aa866f8261677d79",
+  "fit_code_ref": "e12e2c70c133a0034336b6370f70cc3ab3aecc72",
+  "fit_code_sha256_prefix": "3d0b6c8c6dfe9466",
+  "fragment_sha256_prefix": "19a50195c34d0af2",
+  "freeze_commit_parent": "fd1e9491e4735217b660e5c11a905818fa56a4f7",
+  "frozen_incumbent_sha256_prefix": "cfc454d62f521d9a",
+  "model_artifacts_note": "Boosters are excluded from git by size and are bound by content in the COMMITTED fit_manifest.json, which is the point of hashing them.",
+  "model_artifacts_sha256_prefix": {
+   "lgbm_haz_btc.txt": "ec52055214a01ed5",
+   "lgbm_thresholds_btc.json": "0fa2f1f7a5a4c58f",
+   "lgbm_val_btc.txt": "7ab34a39f2b3993f"
+  },
+  "pipeline_in_repo": "data -> target (harmful_exposure_rows) -> state (harmful_state_features) -> fit/score (phase2_arms) -> receipt; all committed.",
+  "tape_sha256_prefix": "c7ab02ebcf27d2fc",
+  "topup_sha256_prefix": "e75d0e210590e2a8"
+ },
+ "race": {
+  "auto_entry_of_other_candidates": false,
+  "bar": "5 later COMPLETE, PASSING btc UTC days (per-coin, R-232 9.4)",
+  "clock_starts": "at the freeze commit",
+  "multiplicity_at_freeze": 1,
+  "multiplicity_meaning": "count of candidates in the forward race at the moment of freeze, recorded per rule 12"
+ },
+ "status": "FROZEN \u2014 ADMITTED TO THE FORWARD RACE, MARKED UNVALIDATED",
+ "supersedes": {
+  "artifact": "harmful_phase2_lgbm_btc_freeze_v1.json",
+  "committed_at": "b3f7f9f",
+  "reason": "citation correction under R-234/R-235 \u2014 the cited null instrument was repaired for determinism; verdict-bearing statements unchanged (true/true/false in both).",
+  "sha256_prefix": "0a82b338bd20d1de",
+  "v1_status": "stays COMMITTED and UNEDITED as provenance (rule 13)",
+  "what_changed": "the null pointer now resolves to the CANONICAL draw (163bd36, PYTHONHASHSEED-pinned) and the p-values are that draw's. v1 cited e7caaeb, the SUPERSEDED non-deterministic draw, whose sign-flip order derived from a set of string window keys under an unpinned hash seed.",
+  "what_did_not_change": "every verdict: @5% survives, @10% survives, @15% does not \u2014 in BOTH draws. The correction moves citations and p-values, not conclusions."
+ },
+ "what_this_freeze_does_not_assert": [
+  "that the candidate is validated \u2014 it is explicitly not",
+  "that the 15% behaviour is understood \u2014 it is not",
+  "that eth is in scope \u2014 its increments are NEGATIVE at every budget",
+  "that a forward-race pass would by itself validate it; the day bar and the population rules still apply"
+ ]
+}
