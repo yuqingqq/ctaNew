@@ -4,6 +4,32 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-08-28T09:24Z (MEM): SWEPT R-236..R-241, and the shape of the gap matters
+  more than its size. THE USER DESIGNATED CODEX AS SYSTEM REVIEWER (R-238); a
+  standing protocol now governs -- build, commit+push, Codex reviews,
+  coordinator verifies every claim BY EXECUTION, fixes land red-first,
+  re-review, then proceed, ONE round per COMPLETED batch. Its first pass put TWO
+  THINGS ON HOLD. Iteration 011: NO FIT, NO SCORE; five blockers, the first a
+  Q4 ALGEBRA FLAW that is data-independent and is therefore being fixed by
+  superseding amendment BEFORE any number exists (BE drafts, USER freezes,
+  sequence step 1). Day-bar v2: MUST NOT judge 08-29 until repaired AND
+  re-reviewed -- DA's five re-review blockers are CLOSED at f8581b6 and
+  coordinator-verified by execution (suite 63), but THE HOLD REMAINS IN FORCE
+  and releases only on Codex's explicit HOLD RELEASED. Fixes verified is not
+  hold released. The prereg's P3 grounding column was corrected in-band
+  (283.2/258.9) because Q-DA-115's implementation-vs-table match was AGREEMENT
+  BETWEEN TWO RUNS OF THE SAME DEFECT, not validation; DA filed that against
+  itself unprompted and adopted the rule that a filing may not say VALIDATED
+  unless the entry point was exercised the way its launcher invokes it. Race
+  accrual is now governed by the FREEZE-COMMIT epoch with day quality split from
+  accrual, after DA caught a half-true ruling; 08-28 reports ACCRUES=False. O1's
+  two deploy conditions were BOTH met ~13.5 h early, so the boundary deploy is
+  ON for 00:00:00Z and 22:30Z is demoted to a confirmation check. MEM verified
+  freeze receipt v2 at the artifact rather than from its commit message: the
+  citation-correction block anchors race_clock_start_commit b3f7f9f and states
+  outright that reading v2's date as a new freeze "would hand the candidate days
+  it did not earn". The two reviewer-authored flags in this file are left
+  VERBATIM; superseding state sits beside them, never over them. PRIOR:
   2026-08-28T08:46Z (independent pre-fit review): ITERATION 011 FIT HOLD; no
   011 result artifact exists. Pre-number blockers were found in the zero-mass
   estimand algebra, fail-open target construction, generator population build,
@@ -112,6 +138,119 @@ updated: >-
   hygiene + recv_ns measurement)
 
 flags:
+  codex_system_reviewer: DESIGNATED-BY-USER # 2026-08-28 R-238/R-239/R-240.
+                             # The USER designated the Codex session (tmux
+                             # pm-codex, gpt-5.6-sol) as SYSTEM REVIEWER; pm-co
+                             # coordinates follow-up work. STANDING PROTOCOL:
+                             # build -> commit+push -> Codex reviews -> Codex
+                             # commits+pushes its review -> coordinator VERIFIES
+                             # each claim at the artifact BY EXECUTION (a claim
+                             # is either a reproduced defect or a review error,
+                             # established by running, filed either way) ->
+                             # fixes land RED-FIRST -> re-review -> only then
+                             # proceed. R-240 refinement (user): finish ALL
+                             # fixes in a round, then ONE Codex round per
+                             # COMPLETED batch -- never multiple reviews per
+                             # round. Review filings belong in
+                             # workspace/reviews/, NOT in STATUS/HANDOFF: the
+                             # first filing landed in the state files and that
+                             # was a COLLISION SHAPE (MEM's surface). The two
+                             # reviewer-authored flags in this file
+                             # (iter011_prefit_review, day_bar_v2_judgment) are
+                             # that filing and are left VERBATIM -- superseding
+                             # state is recorded beside them, never over them.
+                             # Current batch waits on BE's 011 half; contents so
+                             # far 99d0573, c288ed1, f8581b6, 9bcc208.
+  race_accrual_epoch: FREEZE-COMMIT-b3f7f9f # 2026-08-28 R-240, executed by DA
+                             # at 99d0573. entirely_post_freeze is governed by
+                             # the FREEZE-COMMIT epoch (b3f7f9f, epoch
+                             # 1787897340 = 06:09:00Z) per the receipt's own
+                             # clock_starts clause, so a MID-DAY freeze means
+                             # 08-28 must NOT accrue toward the btc candidate's
+                             # five days. DA CORRECTED THE COORDINATOR'S RULING
+                             # TEXT and the correction is the substance: "day
+                             # quality unaffected, accrual changes" was NOT true
+                             # of the implementation, because entirely_post_
+                             # freeze fed all_pass -- so a HEALTHY-BUT-EARLY day
+                             # would have read as BAD rather than as
+                             # good-but-not-counting. split_verdict() now
+                             # reports day_quality_pass / post_freeze_pass /
+                             # race_accrual_eligible SEPARATELY, all_pass
+                             # unchanged for existing readers, falsified three
+                             # ways (straddle-day good-but-no-accrual;
+                             # healthy-after accrues; unhealthy-after does NOT,
+                             # because accrual needs BOTH halves). Material
+                             # effect tonight: zero (btc fails the day, eth has
+                             # no candidate). 08-28 reports ACCRUES=False in its
+                             # own field.
+  o1_deploy_conditions: BOTH-MET-DEPLOY-ON # 2026-08-28 R-240, met ~13.5 h
+                             # early. (i) coordinator behavioral tests of the
+                             # four new collector paths, 10/10, driving the REAL
+                             # PMCollector._market from a GIT-EXTRACTED v4 copy
+                             # against fake sockets -- the held working tree
+                             # never touched, asserted by a COLLECTOR_VERSION
+                             # check; O1a connect kwargs 3/3; O1c silent
+                             # subscription -> SUBSCRIBE_UNCONFIRMED + reconnect;
+                             # O1d never-connected -> gap stamped at SCOPE START
+                             # within 300 ms; O1b ladder escalates then RESETS
+                             # after a delivered message; plus a positive
+                             # control (healthy feed opens no gap). Two harness
+                             # bugs found and fixed before green, including a
+                             # ledger SHARED across tests counting a prior
+                             # test's rows -- the isolation class, caught inside
+                             # the instrument itself and named. (ii) DA's
+                             # gap_open_at_exit integration closed at f4fafe6.
+                             # CADENCE: boundary deploy ON for
+                             # 2026-08-29T00:00:00Z per the runbook; 22:30Z is
+                             # now a CONFIRMATION CHECK, not a decision point;
+                             # arming ~23:55Z; subject ONLY to an adverse Codex
+                             # filing in between.
+  validated_requires_launcher_exercise: STANDING-RULE # 2026-08-28 DA, Q-DA-116
+                             # (233c95e), adopted from its own superseded
+                             # filing. A FILING MAY NOT SAY "VALIDATED" UNLESS
+                             # THE ENTRY POINT WAS EXERCISED THE WAY ITS
+                             # LAUNCHER INVOKES IT. Q-DA-115 had called day-bar
+                             # v2 implemented AND validated; both halves were
+                             # wrong, and ten defects followed IN CONSUMERS --
+                             # all_pass did not read the bars; the CLI did not
+                             # read its own renamed keys; the launcher did not
+                             # pass the epoch; the superseded count bar still
+                             # vetoed v2 days; a coverage guard's `is False` let
+                             # the default None through (N/A-vacuity inside a
+                             # guard added the day before to close a fail-open);
+                             # validation ran AFTER coin filtering, so a
+                             # reversed interval scored -50 lost seconds and
+                             # passed; and P3 sampled a grid rather than
+                             # computing the declared maximum. The new argv seam
+                             # test mechanizes the rule for the one boundary
+                             # currently reachable. DA filed this correction
+                             # UNPROMPTED, in the same message that reported its
+                             # own fixes; the original row is untouched.
+  kill_mystery: RESOLVED-REVIEWER-PID-STOPS # 2026-08-28 R-238. The 08:40:36 fit
+                             # death and its companions were the REVIEWER
+                             # stopping three fit processes by exact PID -- not
+                             # OOM, not oomd, not the code. Kept because the
+                             # diagnosis chain is a lesson pair: BE's
+                             # boundary-nailing (CPU to a tenth of a second) and
+                             # its refuted-by-measurement memory-floor
+                             # hypothesis were both CORRECT METHOD on a cause
+                             # that turned out external, while the coordinator
+                             # read a released transient unit's DEFAULT fields
+                             # (Result=success / ExecMainStatus=0) as an
+                             # observation and dispatched a hunt for an exit-0
+                             # swallow that does not exist. Good method can sit
+                             # above a wrong cause; default fields carry no
+                             # information.
+  seat_protocol_doc: workspace/SEAT_PROTOCOL.md # 2026-08-28 a5d010b.
+                             # Consolidated roles and rules for all six seats
+                             # (coordinator / BE / DA / MEM / Codex-reviewer /
+                             # USER), 14 standing rules with register cites.
+                             # CONSOLIDATION, NOT NEW LAW -- the register stays
+                             # authoritative wherever they differ. MEM's row:
+                             # owns STATUS.yml, HANDOFF.md, memory docs and TODO
+                             # checkbox true-ups (TICK-WITH-CITATION ONLY); does
+                             # NOT own plan prose, the register, receipts, or
+                             # any result-bearing artifact.
   iter011_prefit_review: HOLD-CORRECTNESS-BLOCKERS-AS-OF-2026-08-28T08:46Z
   day_bar_v2_judgment: HOLD-CORRECTNESS-BLOCKERS-AS-OF-2026-08-28T08:46Z
   todo_completion: 39-of-113-COUNTABLE-AS-OF-2026-08-28T08:37Z # MEM, trued up
@@ -165,7 +304,21 @@ flags:
                              # not "fix" the two implementations into agreement
                              # and quietly delete the independence that makes
                              # six agreeing generations mean anything.
-  freeze_receipt_null_pointer: RULED-IN-EXECUTION # RULED 2026-08-28T06:58Z by
+  freeze_receipt_null_pointer: LANDED # LANDED 68dca00 (R-236), VERIFIED BY MEM
+                             # AT THE ARTIFACT 2026-08-28T09:24Z rather than
+                             # from the commit message, as promised when it was
+                             # ruled. harmful_phase2_lgbm_btc_freeze_v2.json
+                             # carries a top-level block
+                             # THIS_IS_A_CITATION_CORRECTION_NOT_A_RE_FREEZE
+                             # with race_clock_start_commit "b3f7f9f",
+                             # race_clock_UNCHANGED true, multiplicity_UNCHANGED
+                             # true, multiplicity_at_freeze 1, and a statement
+                             # naming the failure mode outright: "Reading v2's
+                             # commit date as a new freeze would hand the
+                             # candidate days it did not earn."
+                             # declared_nulls...artifact_commit now reads
+                             # 163bd36. v1 frozen untouched. EARLIER ENTRY
+                             # (rule 13): RULED 2026-08-28T06:58Z by
                              # the coordinator, accepting the raise as rule 13
                              # by its own rationale. BE authors
                              # harmful_phase2_lgbm_btc_freeze_v2.json carrying
@@ -208,7 +361,42 @@ flags:
                              # coordinator, not here. Recorded so the divergence
                              # is discoverable from the state files rather than
                              # only by re-reading two artifacts side by side.
-  iter011_development: SLICES-1-2-LANDED # 2026-08-28 BE, per the FROZEN
+  iter011_development: HOLD-NO-FIT-NO-SCORE # HOLD 2026-08-28 (R-238 Codex
+                             # pre-fit review; the reviewer's own as-of
+                             # statement lives in the iter011_prefit_review
+                             # flag, filed verbatim and NOT edited here).
+                             # NO FIT, NO SCORE until Codex re-reviews. Five
+                             # blockers routed to BE; the first is
+                             # data-independent and so is correctable BEFORE any
+                             # number exists: (1) THE FROZEN Q4 ALGEBRA IS WRONG
+                             # whenever P(V_cancel=0|preventable) > 0 --
+                             # (1-p_harm) is not P(V<0) under zero mass while
+                             # m_good is measured on V<0 only; a superseding
+                             # PREREGISTRATION AMENDMENT is required, BE drafts
+                             # and the USER freezes, and that is SEQUENCE STEP 1
+                             # -- nothing lands before it; (2) target
+                             # construction FAILS OPEN (missing/inconsistent
+                             # latency/fill/share/value become clean
+                             # zero/no-fill rows; head_populations
+                             # double-consumes generators; any_fill_ahead, an
+                             # OUTCOME field, admitted by the feature fence);
+                             # (3) Q2/Q3 predict on realized conditional subsets
+                             # -> unaligned lengths -> action-time Q4 cannot
+                             # compose; (4) metrics accept malformed vectors and
+                             # Holm accepts subsets, so THE FROZEN 24-CELL
+                             # DENOMINATOR CAN SHRINK; (5) action-unit
+                             # weighting/dedup/constraints incompletely frozen.
+                             # Slices 1-4 landed and fit/score NOTHING
+                             # (77cc76c, e597630/2febf2d/5423167, fd71fe1,
+                             # 52003bd, ecc3393). R-237 pre-run ruling stands:
+                             # Q2/Q3 incremental cells carry
+                             # NO_INCUMBENT_COUNTERPART as a declared STATUS
+                             # (rule 4 applied to null cells), because the
+                             # incumbent never decomposed sign from magnitude
+                             # and inventing a baseline would be the inverse of
+                             # rule 9; the frozen document is NOT edited.
+                             # ORIGINAL ENTRY (rule 13): 2026-08-28 BE, per the
+                             # FROZEN
                              # preregistration 3b71d3e. Slice 1 (77cc76c):
                              # target builder + four heads, 27 falsifiers,
                              # FITS NOTHING AND SCORES NOTHING. Slice 2
@@ -293,7 +481,43 @@ flags:
                              # collectors are outside worker surfaces (R-110).
                              # See also collect_pm_working_tree_divergence
                              # below -- DA's hold flag, which stands as written.
-  day_bar_v2_preregistered: yes # 2026-08-28 coordinator, dfa0977, AMENDED
+  day_bar_v2_preregistered: PREREGISTERED-IMPLEMENTED-BUT-HELD # HOLD IN FORCE
+                             # 2026-08-28 (R-238 Codex pre-fit review; the
+                             # reviewer's own as-of statement lives in the
+                             # day_bar_v2_judgment flag, filed verbatim and NOT
+                             # edited here). Day-bar v2 must NOT judge 08-29
+                             # until repaired AND re-reviewed. DA's five
+                             # re-review blockers CLOSED at f8581b6 and
+                             # coordinator-VERIFIED BY EXECUTION (R-241: own
+                             # run, suite 63; launcher passes the ruled epoch
+                             # 1787897340; coverage guard is coverage_observed
+                             # is True ONLY, so None/False/omitted/malformed all
+                             # REFUSE; structural validation precedes coin
+                             # filtering with counted n_structural_bad; P3
+                             # exactness checked twice -- breakpoint argument
+                             # plus independent recompute).
+                             # BUT THE HOLD ITSELF IS STILL IN FORCE and
+                             # releases ONLY on Codex's explicit HOLD RELEASED
+                             # at the next batch review. NO 08-29 v2 VERDICT IS
+                             # ADMISSIBLE UNTIL THEN. FIXES VERIFIED IS NOT HOLD
+                             # RELEASED -- do not conflate them.
+                             # P3 GROUNDING COLUMN CORRECTED IN-BAND (R-241,
+                             # rule 13, 368345b precedent): 08-26 278.6 ->
+                             # 283.2, 08-27 256.3 -> 258.9; 08-25's 301.2
+                             # unchanged so the anchor sentence stands; both
+                             # corrected values still pass <=900. NO verdict
+                             # changes, NO threshold moves, NO clock effect;
+                             # superseded values kept as provenance.
+                             # KEEP THIS FRAMING EXACTLY: Q-DA-115's
+                             # implementation-vs-table "match" was AGREEMENT
+                             # BETWEEN TWO RUNS OF THE SAME DEFECT -- the
+                             # table's P3 column came from the same defective
+                             # aligned stepping the implementation used. It must
+                             # NOT be compressed into "validated against the
+                             # table": validation against a grounding table is
+                             # only as good as the instrument that built the
+                             # table. ORIGINAL ENTRY (rule 13): 2026-08-28
+                             # coordinator, dfa0977, AMENDED
                              # 368345b at 06:04Z before any judged day.
                              # plans/DAY_BAR_V2_PREREGISTRATION.md. Per coin,
                              # ALL must hold for a complete-day PASS:

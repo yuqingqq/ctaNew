@@ -1,9 +1,130 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-08-28T08:46Z (independent pre-fit review) — **ITERATION 011 FIT
-HOLD. No 011 result artifact exists.** Review found correctness blockers before
-the first number; day-bar v2 must also not judge 08-29 until its verdict wiring
-and ledger coverage are corrected. O1 remains held at v3_1.
+Updated: 2026-08-28T09:24Z (MEM) — **two HOLDs in force** (011 fit; day-bar v2
+judging 08-29), a system reviewer now designated by the user, race accrual
+governed by the freeze-commit epoch, and the **boundary deploy ON for
+00:00:00Z** with both O1 conditions met early. O1 still held at v3_1 until the
+boundary.
+
+## 2026-08-28 ~09:24Z (MEM) — R-236..R-241 swept: a reviewer, two HOLDs, and an epoch
+
+**Sweep note first, because it changed how I write here.** Between my last sweep
+and this one, the Codex filing (`df1ef73`) and R-238 (`8a74571`) both wrote into
+`STATUS.yml` and this file. That is the collision shape R-239 names, and the
+fix is already ruled: review filings belong in `workspace/reviews/`. **Their
+text is left verbatim** — the two reviewer-authored flags
+(`iter011_prefit_review`, `day_bar_v2_judgment`) and the 08:46Z section below
+are theirs; superseding state sits *beside* them, never over them.
+
+### The user designated a system reviewer
+
+**Codex (tmux `pm-codex`) is the system reviewer** (R-238, the user's word);
+pm-co coordinates follow-up. **Standing protocol** (R-239): build →
+commit+push → Codex reviews → Codex commits+pushes its review → coordinator
+**verifies every claim by execution** (a claim is either a reproduced defect or
+a review error, established by running, filed either way) → fixes land
+**red-first** → re-review → only then proceed. **R-240 refinement, the user's:
+finish ALL fixes in a round, then ONE review round — never several per round.**
+The batch waits on BE's 011 half; contents so far `99d0573`, `c288ed1`,
+`f8581b6`, `9bcc208`.
+
+### HOLD 1 — iteration 011: no fit, no score
+
+Five blockers. **The first is data-independent, which is why it is being fixed
+before any number exists rather than argued about after one:** the frozen **Q4
+algebra is wrong** whenever `P(V_cancel=0|preventable) > 0` — `(1 − p_harm)` is
+not `P(V<0)` under zero mass while `m_good` is measured on `V<0` only. A
+**superseding preregistration amendment** is required: BE drafts, **the user
+freezes**, and that is sequence step 1 — nothing lands before it. The rest:
+target construction **fails open**; `any_fill_ahead`, an *outcome* field,
+admitted by the feature fence; Q2/Q3 predicting on realized conditional subsets
+so action-time Q4 cannot compose; and metrics/Holm accepting subsets, **so the
+frozen 24-cell denominator can shrink**. Slices 1–4 landed and fit/score
+nothing.
+
+**R-237's pre-run ruling stands** (a gap BE raised *before* running, which is
+the right moment): Q2/Q3 incremental cells carry `NO_INCUMBENT_COUNTERPART` as
+a **declared status** — rule 4 applied to null cells — because the incumbent
+never decomposed sign from magnitude, and inventing a baseline would be the
+inverse of rule 9. **The frozen document was not edited.**
+
+### HOLD 2 — day-bar v2 must not judge 08-29 yet
+
+DA's five re-review blockers are **closed at `f8581b6` and verified by
+execution** (R-241: suite 63 reproduced in the coordinator's own run; launcher
+passes the ruled epoch; the coverage guard is `coverage_observed is True` only,
+so `None`/`False`/omitted/malformed all refuse; structural validation precedes
+coin filtering with a counted `n_structural_bad`; P3 exactness checked twice, by
+breakpoint argument and independent recompute).
+
+**The hold is still in force.** It releases only on Codex's explicit *HOLD
+RELEASED* at the next batch review, and **no 08-29 v2 verdict is admissible
+until then. Fixes verified is not hold released** — the two are separate events
+and collapsing them is how a held instrument quietly starts judging days.
+
+**P3 grounding column corrected in-band** (R-241): 08-26 278.6 → **283.2**,
+08-27 256.3 → **258.9**; 08-25's 301.2 unchanged, so §2's anchor sentence
+stands; both corrected values still pass ≤900. No verdict changes, no threshold
+moves, no clock effect; superseded values kept as provenance.
+
+**Keep this framing exactly, because the compressed version is wrong:**
+Q-DA-115's implementation-vs-table "match" was **agreement between two runs of
+the same defect** — the table's P3 column came from the same defective aligned
+stepping the implementation used. It must **not** become "validated against the
+table." Validation against a grounding table is only as good as the instrument
+that built the table.
+
+**DA filed that correction against itself, unprompted, in the same message that
+reported its own fixes** (Q-DA-116, `233c95e`), and adopted the rule from it:
+**a filing may not say VALIDATED unless the entry point was exercised the way
+its launcher invokes it.** Ten defects had followed the "validated" claim, all
+in *consumers* — `all_pass` not reading the bars, the CLI not reading its own
+renamed keys, the launcher not passing the epoch, a coverage guard's `is False`
+letting the default `None` through (N/A-vacuity *inside a guard added the day
+before to close a fail-open*), validation running after coin filtering so a
+reversed interval scored −50 lost seconds and passed.
+
+### Race accrual now has an epoch — and day quality is split from it
+
+`entirely_post_freeze` is governed by the **freeze-commit epoch** (`b3f7f9f`,
+1787897340 = 06:09:00Z) per the receipt's own `clock_starts` clause, so a
+mid-day freeze means **08-28 must not accrue** toward the btc candidate's five
+days. **DA corrected the coordinator's ruling text and the correction is the
+substance:** "day quality unaffected, accrual changes" was not true of the
+implementation, because `entirely_post_freeze` fed `all_pass` — a
+**healthy-but-early** day would have read as **bad** rather than as
+good-but-not-counting. `split_verdict()` now reports `day_quality_pass` /
+`post_freeze_pass` / `race_accrual_eligible` separately, falsified three ways.
+Material effect tonight: zero. **08-28 reports `ACCRUES=False`.**
+
+### Tonight is ON
+
+Both O1 conditions were met **~13.5 h early** (R-240): coordinator behavioral
+tests 10/10 driving the *real* `PMCollector._market` from a **git-extracted** v4
+copy against fake sockets — the held working tree never touched, asserted by a
+`COLLECTOR_VERSION` check — plus DA's `gap_open_at_exit` integration at
+`f4fafe6`. **Boundary deploy ON for 2026-08-29T00:00:00Z**; **22:30Z is now a
+confirmation check, not a decision point**; arming ~23:55Z; subject only to an
+adverse Codex filing in between. Tonight's 00:06Z verdict runs under the **old**
+bar.
+
+### Closed since the last sweep
+
+- **Freeze receipt v2 LANDED** (`68dca00`) — and I verified it at the artifact
+  rather than from its commit message, as promised:
+  `THIS_IS_A_CITATION_CORRECTION_NOT_A_RE_FREEZE` anchors
+  `race_clock_start_commit: b3f7f9f`, `race_clock_UNCHANGED: true`,
+  `multiplicity_UNCHANGED: true`, and states outright that reading v2's commit
+  date as a new freeze "would hand the candidate days it did not earn." The
+  null pointer now reads `163bd36`. **v1 frozen untouched.**
+- **The kill mystery is resolved** — reviewer PID-stops, not OOM, not the code.
+  Kept as a lesson pair: BE's boundary-nailing and its refuted-by-measurement
+  memory hypothesis were **correct method on an external cause**, while a
+  released transient unit's **default** fields (`Result=success`) were read as
+  an observation and sent a hunt after a swallow that does not exist.
+- **Lanes 2+4 specs delivered** (`6fc96e2`), spec only, no scoring authorized.
+- **`SEAT_PROTOCOL.md`** (`a5d010b`) consolidates six seats and 14 standing
+  rules — **consolidation, not new law**; the register stays authoritative.
 
 ## 2026-08-28 ~08:46Z — independent pre-fit review: HOLD 011 before numbers
 
