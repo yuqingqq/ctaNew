@@ -44,7 +44,25 @@ LEDGER_SHA="${DA_EXPECT_LEDGER_SHA:-}"
 RULED_VERDICT="${DA_VERDICT_RULED:-/home/yuqing/ctaNew/data/pm_5min/derived/da_tape_gate_verdict_v5.json}"
 VERDICT="${DA_VERDICT_OUT:-$RULED_VERDICT}"
 ARCHIVE="${DA_VERDICT_ARCHIVE:-}"
+# R-214: the gate writes HERE first. The verdict reaches the ruled locator only
+# after BOTH checkers have spoken, so a refusal by EITHER leaves the locator
+# absent. Previously promotion happened at the end of run_gate, and
+# assert_gate_passed ACCEPTED while the independent counter was still running --
+# fitting was permitted on the gate alone. An exit code nobody consumes is not
+# a gate.
+STAGING="${RULED_VERDICT}.staging"
 DEADLINE=$(( $(date +%s) + ${DA_DEADLINE_S:-14400} ))
+# A STALE verdict at the ruled locator defeats the entire absence contract: a
+# refusal would leave the PREVIOUS run's verdict resolving, and only the
+# consumer's sha check would stand between it and a wrong authorisation. DA had
+# to clear one by hand before tape6e. Refuse instead, and make the operator
+# archive it deliberately.
+if [ -e "$RULED_VERDICT" ] && [ "${DA_ALLOW_OCCUPIED_LOCATOR:-0}" != "1" ]; then
+  echo "REFUSED: $RULED_VERDICT already exists. A stale verdict there means a" >&2
+  echo "  refusal would still leave a resolvable verdict. Archive or rename it" >&2
+  echo "  first (deliberately), then re-arm." >&2
+  exit 6
+fi
 
 worst=0
 track() {  # track <rc>
@@ -59,7 +77,7 @@ run_gate() {
   [ -n "$LEDGER_SHA" ] && args+=(--expect-ledger-sha "$LEDGER_SHA")
   [ -n "$EXPECT_COUNT" ] && args+=(--expect-gap-count "$EXPECT_COUNT")
   [ -n "$EXPECT_PROV" ] && args+=(--expect-provenance "$EXPECT_PROV")
-  [ -n "$VERDICT" ] && args+=(--verdict-out "$VERDICT")
+  args+=(--verdict-out "$STAGING")
   "$PY" "$D/da_state_tape_verify.py" "${args[@]}" >> "$LOG" 2>&1
 }
 
@@ -93,19 +111,29 @@ if [ "${DA_SKIP_WAIT:-0}" != "1" ]; then
 fi
 
 run_gate;  rc=$?; track "$rc"; echo "GATE_EXIT=$rc"  >> "$LOG"
-# Promote to the ruled locator. Only a verdict the gate actually WROTE is
-# promoted; a refusal leaves the locator absent by design.
-if [ -n "$VERDICT" ] && [ "$VERDICT" != "$RULED_VERDICT" ] && [ -s "$VERDICT" ]; then
+run_count; rc=$?; track "$rc"; echo "COUNT_EXIT=$rc" >> "$LOG"
+echo "WORST_EXIT=$worst  ($(date -u +%FT%TZ))" >> "$LOG"
+
+# R-214 PROMOTION, after BOTH checkers. Three outcomes, all logged:
+#  worst != 0            -> staging DISCARDED, locator absent, fit blocked
+#  worst == 0, no verdict -> the gate refused to write; locator absent
+#  worst == 0, verdict    -> promoted atomically, archive copy optional
+if [ "$worst" -ne 0 ]; then
+  rm -f "$STAGING"
+  echo "NOT PROMOTED: worst rc $worst -- a refusal by EITHER checker leaves the ruled locator ABSENT" >> "$LOG"
+elif [ ! -s "$STAGING" ]; then
+  echo "NOT PROMOTED: both checkers passed but the gate wrote NO verdict (refuse-to-write); locator stays absent" >> "$LOG"
+else
   vtmp="$(mktemp "${RULED_VERDICT}.XXXXXX")"
-  if cp "$VERDICT" "$vtmp" && mv -f "$vtmp" "$RULED_VERDICT"; then
-    echo "PROMOTED verdict -> $RULED_VERDICT (content unchanged; $VERDICT kept as archive)" >> "$LOG"
+  if cp "$STAGING" "$vtmp" && mv -f "$vtmp" "$RULED_VERDICT"; then
+    rm -f "$STAGING"
+    echo "PROMOTED -> $RULED_VERDICT (both checkers rc 0; content unchanged)" >> "$LOG"
+    if [ -n "$ARCHIVE" ]; then
+      cp "$RULED_VERDICT" "$ARCHIVE" && echo "archived -> $ARCHIVE" >> "$LOG"
+    fi
   else
     rm -f "$vtmp"; track 5
     echo "PROMOTION FAILED -- the ruled locator does NOT resolve; fitting must not start" >> "$LOG"
   fi
-elif [ -n "$ARCHIVE" ] && [ -s "$RULED_VERDICT" ]; then
-  cp "$RULED_VERDICT" "$ARCHIVE" && echo "archived -> $ARCHIVE" >> "$LOG"
 fi
-run_count; rc=$?; track "$rc"; echo "COUNT_EXIT=$rc" >> "$LOG"
-echo "WORST_EXIT=$worst  ($(date -u +%FT%TZ))" >> "$LOG"
 exit "$worst"

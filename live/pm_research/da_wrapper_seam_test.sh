@@ -27,10 +27,16 @@ trap 'rm -f "$SEAM_LOG"' EXIT
 pass=0; fail=0
 check() {  # check <label> <expected_rc> <gate_rc> <count_rc>
   local label="$1" want="$2" g="$3" c="$4" got
+  # ISOLATED LOCATOR. Without this the propagation cases inherit the
+  # PRODUCTION ruled path, which exists after a real run -- so they hit the
+  # R-214 occupied-locator refusal (rc 6) and test nothing about propagation.
+  # Same isolation defect as the seam log writing into the production gate log.
+  local rdir; rdir="$(mktemp -d)"
   DA_GATE_STUB=1 DA_STUB_GATE_RC="$g" DA_STUB_COUNT_RC="$c" \
-    DA_LOG="$SEAM_LOG" \
+    DA_LOG="$SEAM_LOG" DA_VERDICT_RULED="$rdir/verdict.json" \
     DA_TAPE=/dev/null DA_SKIP_WAIT=1 "$W" >/dev/null 2>&1
   got=$?
+  rm -rf "$rdir"
   if [ "$got" = "$want" ]; then
     pass=$((pass+1)); echo "  OK   $label (rc=$got)"
   else
@@ -42,10 +48,10 @@ promo() {  # promo <label> <expect_ruled_exists 0|1> <make_source 0|1>
   local label="$1" want="$2" mk="$3"
   local d; d="$(mktemp -d)"
   local src="$d/pin_named.json" ruled="$d/da_tape_gate_verdict_v5.json"
-  [ "$mk" = 1 ] && printf '{"gate":"da_state_tape_verify_v1","all_pass":true}' > "$src"
+  [ "$mk" = 1 ] && printf '{"gate":"da_state_tape_verify_v1","all_pass":true}' > "$ruled.staging"
   DA_GATE_STUB=1 DA_STUB_GATE_RC=0 DA_STUB_COUNT_RC=0 \
     DA_LOG="$SEAM_LOG" DA_TAPE=/dev/null DA_SKIP_WAIT=1 \
-    DA_VERDICT_OUT="$src" DA_VERDICT_RULED="$ruled" "$W" >/dev/null 2>&1
+    DA_VERDICT_RULED="$ruled" "$W" >/dev/null 2>&1
   local got=0; [ -f "$ruled" ] && got=1
   if [ "$got" = "$want" ]; then
     pass=$((pass+1)); echo "  OK   $label"
@@ -54,6 +60,46 @@ promo() {  # promo <label> <expect_ruled_exists 0|1> <make_source 0|1>
   fi
   rm -rf "$d"
 }
+
+# ---- R-214: promotion happens only after BOTH checkers pass ---------------
+promo2() {  # promo2 <label> <want_locator 0|1> <gate_rc> <count_rc>
+  local label="$1" want="$2" g="$3" c="$4"
+  local d; d="$(mktemp -d)"
+  local ruled="$d/da_tape_gate_verdict_v5.json"
+  # a stub run writes no verdict, so pre-seed the STAGING path the gate targets
+  printf '{"gate":"da_state_tape_verify_v1","all_pass":true}' > "$ruled.staging"
+  DA_GATE_STUB=1 DA_STUB_GATE_RC="$g" DA_STUB_COUNT_RC="$c" \
+    DA_LOG="$SEAM_LOG" DA_TAPE=/dev/null DA_SKIP_WAIT=1 \
+    DA_VERDICT_RULED="$ruled" "$W" >/dev/null 2>&1
+  local got=0; [ -f "$ruled" ] && got=1
+  if [ "$got" = "$want" ]; then pass=$((pass+1)); echo "  OK   $label"
+  else fail=$((fail+1)); echo "  FAIL $label: locator exists=$got want=$want"; fi
+  rm -rf "$d"
+}
+
+echo "seam 22c -- R-214 promote only after BOTH checkers:"
+promo2 "both checkers pass -> verdict IS promoted" 1 0 0
+promo2 "GATE refuses -> locator ABSENT (no promotion)" 0 1 0
+promo2 "COUNT refuses -> locator ABSENT: the second checker can veto, which is \
+the race R-214 closes -- the verdict used to publish before it had spoken" 0 0 1
+promo2 "both refuse -> locator ABSENT" 0 1 1
+
+occupied() {  # the wrapper must refuse to arm onto an occupied locator
+  local d; d="$(mktemp -d)"; local ruled="$d/da_tape_gate_verdict_v5.json"
+  printf '{"stale":true}' > "$ruled"
+  DA_GATE_STUB=1 DA_STUB_GATE_RC=0 DA_STUB_COUNT_RC=0 \
+    DA_LOG="$SEAM_LOG" DA_TAPE=/dev/null DA_SKIP_WAIT=1 \
+    DA_VERDICT_RULED="$ruled" "$W" >/dev/null 2>&1
+  local rc=$?
+  local kept=0; grep -q '"stale"' "$ruled" 2>/dev/null && kept=1
+  if [ "$rc" = "6" ] && [ "$kept" = "1" ]; then
+    pass=$((pass+1)); echo "  OK   an OCCUPIED locator REFUSES (rc 6) and the stale verdict is left intact"
+  else
+    fail=$((fail+1)); echo "  FAIL occupied-locator: rc=$rc kept=$kept (want rc=6 kept=1)"
+  fi
+  rm -rf "$d"
+}
+occupied
 
 echo "seam 22b -- R-212 ruled-locator promotion:"
 promo "a written verdict is PROMOTED to the ruled locator the consumer reads" 1 1
