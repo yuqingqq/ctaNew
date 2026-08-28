@@ -103,8 +103,15 @@ class FairPrice:
         if self.outcome not in OUTCOMES:
             bad(f"outcome {self.outcome!r} is not one of {OUTCOMES} -- an "
                 f"unrecognised side convention is how a sign flips silently")
-        if not isinstance(self.window_start, int) or self.window_start <= 0:
-            bad("window_start must be a positive epoch second")
+        if (not isinstance(self.window_start, int)
+                or isinstance(self.window_start, bool)
+                or self.window_start <= 0):
+            # `True` IS an int in Python, so isinstance(x, int) admits it and
+            # FairPrice(window_start=True) built fine. A bool reaching an epoch
+            # field is a wiring error upstream, and it would compare, sort and
+            # format as 1 all the way down.
+            bad("window_start must be a positive epoch second (a bool is not "
+                "an epoch, even though Python says it is an int)")
         if not self.estimator:
             bad("estimator must be named; an anonymous record cannot be "
                 "attributed to Identity or to a challenger")
@@ -126,6 +133,28 @@ class FairPrice:
             # FRESHNESS CONSISTENCY is enforced ALWAYS: on a STALE record the
             # freshness IS the evidence, so a stored value disagreeing with its
             # own timestamps would misreport the very thing being reported.
+            if (self.status == OK and self.freshness_s is not None
+                    and math.isfinite(self.freshness_s)
+                    and self.freshness_s > MAX_FRESHNESS_S):
+                # OK RECORDS ONLY -- and that is not a loophole, it is the same
+                # reason the ordering check is OK-only two lines up: a STALE
+                # record's freshness IS its evidence, and refusing to construct
+                # it would leave the fault undescribable. My first version
+                # applied the bound to every status and broke the STALE
+                # positive control, which is the guard telling me the
+                # difference matters.
+                #
+                # THE FACTORY'S STALE CHECK WAS BYPASSABLE. `identity_from_book`
+                # refuses a stale book, but a CHALLENGER constructs this type
+                # DIRECTLY -- and FairPrice(status=OK, freshness_s=100.0) built
+                # fine, so every challenger could quietly opt out of the one
+                # bound that makes the comparison fair. The type is the contract
+                # (FP1's original lesson); enforcing it anywhere else enforces
+                # it only for the estimator that agreed to be checked.
+                bad(f"an OK record may not be staler than the declared "
+                    f"MAX_FRESHNESS_S={MAX_FRESHNESS_S}s; got "
+                    f"{self.freshness_s}s. A challenger constructing this type "
+                    f"directly must meet the same bound as the factory.")
             if self.freshness_s is None or abs(self.freshness_s - (lk - src)) > 1e-9:
                 bad("freshness_s must EQUAL local_knowledge - source; a stored "
                     "freshness that disagrees with its own timestamps lets a "
@@ -190,6 +219,20 @@ def identity_from_book(coin: str, window_start: int, outcome: str,
     then depth, then freshness -- so the reported cause is the FIRST thing
     wrong, not whichever check happened to run last.
     """
+    for _nm, _cfg in (("min_depth", min_depth),
+                      ("max_freshness_s", max_freshness_s)):
+        if (not isinstance(_cfg, (int, float)) or isinstance(_cfg, bool)
+                or not math.isfinite(_cfg) or _cfg < 0):
+            raise Inadmissible(
+                f"REFUSED: {_nm}={_cfg!r} must be a finite non-negative real. "
+                f"A non-finite CONFIGURATION value disables the check it "
+                f"configures, silently and for every row.")
+    if max_freshness_s > MAX_FRESHNESS_S:
+        raise Inadmissible(
+            f"REFUSED: max_freshness_s={max_freshness_s} exceeds the declared "
+            f"MAX_FRESHNESS_S={MAX_FRESHNESS_S}. A caller may be STRICTER than "
+            f"a declared bound, never looser -- a per-call relaxation is the "
+            f"value being chosen after the numbers are visible.")
     if source_timestamp is None or local_knowledge_timestamp is None:
         return _bad(coin, window_start, outcome, NO_INPUT,
                     "a record without BOTH timestamps is inadmissible, never "
@@ -239,6 +282,13 @@ def identity_from_book(coin: str, window_start: int, outcome: str,
                     f"crossed/locked book: bid {best_bid} >= ask {best_ask}",
                     source_timestamp, local_knowledge_timestamp)
     if (bid_size is None or ask_size is None
+            or not isinstance(bid_size, (int, float))
+            or not isinstance(ask_size, (int, float))
+            or isinstance(bid_size, bool) or isinstance(ask_size, bool)
+            or not math.isfinite(bid_size) or not math.isfinite(ask_size)
+            # EVERY NaN COMPARISON IS FALSE, so `NaN < min_depth` is False and
+            # a NaN size passed the depth gate and produced status=OK. The
+            # finite check must come BEFORE the ordering, not beside it.
             or bid_size < min_depth or ask_size < min_depth):
         return _bad(coin, window_start, outcome, INSUFFICIENT_DEPTH,
                     f"depth below the declared minimum {min_depth}",
@@ -794,6 +844,14 @@ def assert_declared_before(declared_utc: float, comparison_utc: float,
         raise Inadmissible(
             f"REFUSED: challenger {challenger_id!r} has no finite declaration "
             f"time; an undated declaration cannot be shown to precede anything.")
+    if not (isinstance(comparison_utc, (int, float))
+            and not isinstance(comparison_utc, bool)
+            and math.isfinite(comparison_utc)):
+        raise Inadmissible(
+            f"REFUSED: challenger {challenger_id!r} has a non-finite "
+            f"comparison time {comparison_utc!r}. Every comparison against NaN "
+            f"is False, so `declared >= comparison` was False and the "
+            f"predeclaration check PASSED on an unusable stamp.")
     if declared_utc >= comparison_utc:
         raise Inadmissible(
             f"REFUSED: challenger {challenger_id!r} was declared at "
@@ -1277,6 +1335,89 @@ def _selftests() -> int:
        "across 20 (sigma, tau) cells including the near-degenerate "
        "sigma*sqrt(tau) -> 0 limit, every output is a finite probability -- "
        "the limit is answered exactly rather than dividing by zero")
+
+    # ===== FP1 re-check: the four executed counterexamples ===============
+    def _ctor_refuses(**kw):
+        base = dict(coin="btc", window_start=1787650200, outcome="UP",
+                    value=0.5, source_timestamp=0.0,
+                    local_knowledge_timestamp=1.0, freshness_s=1.0, status=OK)
+        try:
+            FairPrice(**{**base, **kw})
+        except Inadmissible as e:
+            return str(e)
+        return ""
+
+    ok("staler than the declared" in _ctor_refuses(
+           source_timestamp=0.0, local_knowledge_timestamp=100.0,
+           freshness_s=100.0),
+       "FP1(1): an OK record built DIRECTLY at 100s freshness now REFUSES. "
+       "The factory refused a stale book but a CHALLENGER constructs this type "
+       "itself, so every challenger could opt out of the one bound that makes "
+       "the comparison fair -- the type is the contract")
+    ok(identity_from_book("btc", 1787650200, "UP", 0.40, 0.44, 5.0, 5.0,
+                          0.0, MAX_FRESHNESS_S).status == OK,
+       "positive control: exactly-at-bound freshness on an OK record is still "
+       "ADMITTED -- the new check did not become a wall")
+    ok(FairPrice(coin="btc", window_start=1787650200, outcome="UP", value=None,
+                 source_timestamp=0.0, local_knowledge_timestamp=100.0,
+                 freshness_s=100.0, status=STALE).status == STALE,
+       "and a STALE record may still CARRY 100s -- its freshness IS the "
+       "evidence, and refusing to construct it would leave the fault "
+       "undescribable (my first version applied the bound to every status and "
+       "broke exactly this)")
+
+    _nan_depth = identity_from_book("btc", 1787650200, "UP", 0.40, 0.44,
+                                    float("nan"), 2.0, 100.0, 100.05)
+    ok(_nan_depth.status == INSUFFICIENT_DEPTH and _nan_depth.value is None,
+       "FP1(2): a NaN depth now refuses. EVERY NaN COMPARISON IS FALSE, so "
+       "`NaN < min_depth` was False and a NaN size produced status=OK -- the "
+       "finite check has to come BEFORE the ordering, not beside it")
+    ok(identity_from_book("btc", 1787650200, "UP", 0.40, 0.44, True, 2.0,
+                          100.0, 100.05).status == INSUFFICIENT_DEPTH,
+       "and a BOOLEAN depth refuses, though Python calls True an int")
+
+    ok("bool is not an epoch" in _ctor_refuses(window_start=True),
+       "FP1(3): window_start=True now REFUSES. `True` IS an int in Python, so "
+       "the isinstance check admitted it, and a bool reaching an epoch field "
+       "compares, sorts and formats as 1 all the way down")
+    ok(_ctor_refuses(window_start=1787650200) == "",
+       "positive control: a real epoch still constructs")
+
+    _nan_cmp = ""
+    try:
+        assert_declared_before(1.0, float("nan"), "challenger")
+    except Inadmissible as e:
+        _nan_cmp = str(e)
+    ok("non-finite comparison time" in _nan_cmp,
+       "FP1(4): a NaN comparison stamp now REFUSES. `declared >= NaN` is "
+       "False, so the predeclaration check PASSED on an unusable stamp and "
+       "returned checked=True -- rule 11 satisfied by a comparison that never "
+       "happened")
+    ok(assert_declared_before(1.0, 2.0, "challenger")["checked"] is True,
+       "positive control: a real pair still checks")
+
+    _cfg = ""
+    try:
+        identity_from_book("btc", 1787650200, "UP", 0.40, 0.44, 5.0, 5.0,
+                           100.0, 100.05, min_depth=float("nan"))
+    except Inadmissible as e:
+        _cfg = str(e)
+    ok("disables the check it configures" in _cfg,
+       "a NON-FINITE CONFIGURATION value refuses -- it would disable the check "
+       "it configures, silently and for every row")
+    _loose = ""
+    try:
+        identity_from_book("btc", 1787650200, "UP", 0.40, 0.44, 5.0, 5.0,
+                           100.0, 100.05, max_freshness_s=99.0)
+    except Inadmissible as e:
+        _loose = str(e)
+    ok("never looser" in _loose,
+       "and a caller may be STRICTER than a declared bound, never LOOSER -- a "
+       "per-call relaxation is the declared value being chosen after the "
+       "numbers are visible")
+    ok(identity_from_book("btc", 1787650200, "UP", 0.40, 0.44, 5.0, 5.0,
+                          100.0, 100.01, max_freshness_s=0.05).status == OK,
+       "positive control: a STRICTER caller bound is accepted and applied")
 
     # ===== A2: the SIXTY-SECOND ENDPOINT estimand ========================
     _s60 = dict(spot=100.0, spot_as_of=100.0, partial=None, t=100.0, T=300.0,

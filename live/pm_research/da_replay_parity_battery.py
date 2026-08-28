@@ -800,6 +800,19 @@ def load_external_trajectory(obj: dict[str, Any]) -> Trajectory:
                                 f"not a declared kind")
         if not isinstance(e["seq"], int) or isinstance(e["seq"], bool):
             raise ParityRefused(f"REFUSED: event {i} seq is not an int")
+        # gen and side were UNTYPED: gen=1.5 and side=7 loaded and passed the
+        # whole lifecycle. Both are IDENTITY components -- they key the
+        # per-generation accounting -- so a float gen silently creates a
+        # generation that can never match its own request, and a non-string
+        # side corrupts the side-matched control.
+        if not isinstance(e["gen"], int) or isinstance(e["gen"], bool):
+            raise ParityRefused(
+                f"REFUSED: event {i} gen={e['gen']!r} is not an int; gen keys "
+                f"the per-generation accounting")
+        for _f in ("slug", "side", "kind", "note"):
+            if not isinstance(e[_f], str):
+                raise ParityRefused(
+                    f"REFUSED: event {i} {_f}={e[_f]!r} is not a string")
         if e["seq"] in seen_seq:
             raise ParityRefused(f"REFUSED: duplicate seq {e['seq']}; ordering "
                                 f"by (t, seq) would be ambiguous")
@@ -1019,20 +1032,33 @@ def external_lifecycle(tr: Trajectory) -> dict[str, Any]:
     same facts the stub enforces by construction -- which is why they must be
     CHECKED on anything the stub did not build."""
     ev = sorted(tr.events, key=lambda e: (e.t, e.seq))
-    req: dict[tuple, int] = {}
-    eff: dict[tuple, float] = {}
-    sup: set[tuple] = set()
-    dbl: list[tuple] = []
+    # COUNT, DO NOT COLLAPSE. `eff` was a dict keyed by generation and `sup`
+    # a set, so a DUPLICATE effective OVERWROTE its twin and vanished before
+    # the accounting identity was tested -- requested = effective + suppressed
+    # then held on a trajectory that resolved one request twice. Multiplicity
+    # that disappears before the check is multiplicity the check cannot see.
+    req: dict[tuple, list[float]] = {}
+    eff: dict[tuple, list[float]] = {}
+    sup: dict[tuple, list[float]] = {}
     for e in ev:
         k = (e.slug, e.side, e.gen)
         if e.kind == "CANCEL_REQUESTED":
-            req[k] = req.get(k, 0) + 1
-            if req[k] > 1:
-                dbl.append(k)
+            req.setdefault(k, []).append(e.t)
         elif e.kind == "CANCEL_EFFECTIVE":
-            eff[k] = e.t
+            eff.setdefault(k, []).append(e.t)
         elif e.kind == "CANCEL_SUPPRESSED":
-            sup.add(k)
+            sup.setdefault(k, []).append(e.t)
+    dbl = sorted(k for k, v in req.items() if len(v) > 1)
+    # EXACTLY ONE TERMINAL OUTCOME PER REQUEST: a request either binds or is
+    # suppressed, once. Two outcomes for one request is a producer accounting
+    # error, and it is the shape the collapse was hiding.
+    multi = sorted(k for k in set(eff) | set(sup)
+                   if len(eff.get(k, [])) + len(sup.get(k, [])) > 1)
+    # TEMPORAL ORDER: a cancel that took EFFECT BEFORE IT WAS REQUESTED passed
+    # cleanly -- nothing compared the two stamps. Measured against the EARLIEST
+    # request for the generation, so a later duplicate cannot excuse it.
+    early = sorted((k, o) for k in set(eff) | set(sup) if k in req
+                   for o in eff.get(k, []) + sup.get(k, []) if o < min(req[k]))
     # BOTH fill kinds. The first version checked only FILL, so a producer
     # could emit FILL_STALE after effectiveness and pass -- and STALE is
     # DEFINED as pre-effectiveness, so that is precisely the mislabel the
@@ -1041,22 +1067,26 @@ def external_lifecycle(tr: Trajectory) -> dict[str, Any]:
     late = [(e.kind, e.slug, e.gen, e.t) for e in ev
             if e.kind in ("FILL", "FILL_STALE")
             and (e.slug, e.side, e.gen) in eff
-            and e.t >= eff[(e.slug, e.side, e.gen)]]
+            and e.t >= min(eff[(e.slug, e.side, e.gen)])]
     # An OUTCOME without its REQUEST: an effective or suppressed cancel on a
     # generation that was never asked to cancel means the producer's
     # accounting is broken, and requested=effective+suppressed would then be
     # satisfied by two compensating errors. Sorted, because set iteration
     # order over string tuples is PYTHONHASHSEED-dependent.
-    unrequested = sorted(k for k in (set(eff) | sup) if k not in req)
-    n_req = sum(req.values())
+    unrequested = sorted(k for k in (set(eff) | set(sup)) if k not in req)
+    n_req = sum(len(v) for v in req.values())
+    n_eff = sum(len(v) for v in eff.values())
+    n_sup = sum(len(v) for v in sup.values())
     return {"arm": tr.arm, "n_events": len(ev),
-            "requested": n_req, "effective": len(eff), "suppressed": len(sup),
-            "identity_holds": n_req == len(eff) + len(sup),
+            "requested": n_req, "effective": n_eff, "suppressed": n_sup,
+            "identity_holds": n_req == n_eff + n_sup,
             "no_double_cancel": not dbl,
+            "one_terminal_outcome_per_request": not multi,
+            "outcomes_after_their_request": not early,
             "no_fill_after_effective": not late,
             "no_unrequested_outcome": not unrequested,
-            "pass": (not dbl and not late and not unrequested
-                     and n_req == len(eff) + len(sup))}
+            "pass": (not dbl and not late and not unrequested and not multi
+                     and not early and n_req == n_eff + n_sup)}
 
 
 def check_external_arms(objs: list[dict[str, Any]],
@@ -1224,6 +1254,11 @@ def _selftests() -> int:
         print(f"  {'PASS' if c else 'FAIL'}  {label}")
         if not c:
             fails.append(label)
+
+    def _mut_ev(base, idx, **kw):
+        o = json.loads(json.dumps(base))
+        o["events"][idx].update(kw)
+        return o
 
     def refuses(fn, needle):
         try:
@@ -1555,6 +1590,54 @@ def _selftests() -> int:
        "two submissions under the SAME (arm, predictor) pair are flagged -- "
        "otherwise one candidate could be scored twice and a missing one go "
        "unnoticed")
+
+    # ---- batch-2 §6: the external boundary was fail-open four ways ------
+    _xt = run_stub_arm("CONDVALUE_X_SKEW", opps, predictor_enabled=True,
+                       cancel_threshold=0.5)
+    _xt.predictor, _xt.predictor_active = "composed_linear", True
+    _xb = trajectory_to_contract(_xt)
+
+    def _lc_pass(mut):
+        o = json.loads(json.dumps(_xb))
+        mut(o)
+        return external_lifecycle(load_external_trajectory(o))["pass"]
+
+    def _dup_eff(o):
+        e = next(x for x in o["events"] if x["kind"] == "CANCEL_EFFECTIVE")
+        o["events"].append(dict(e, t=e["t"] + 0.001,
+                                seq=max(x["seq"] for x in o["events"]) + 1))
+    ok(_lc_pass(_dup_eff) is False,
+       "§6(1) a DUPLICATE CANCEL_EFFECTIVE now FAILS. `eff` was a dict keyed "
+       "by generation, so the duplicate OVERWROTE its twin and vanished "
+       "BEFORE requested=effective+suppressed was tested -- the identity then "
+       "held on a trajectory that resolved one request twice. Multiplicity "
+       "that disappears before the check is multiplicity the check cannot see")
+
+    def _early(o):
+        r = next(x for x in o["events"] if x["kind"] == "CANCEL_REQUESTED")
+        for x in o["events"]:
+            if x["kind"] == "CANCEL_EFFECTIVE" and x["gen"] == r["gen"]:
+                x["t"] = r["t"] - 5.0
+    ok(_lc_pass(_early) is False,
+       "§6(2) a cancel EFFECTIVE FIVE SECONDS BEFORE IT WAS REQUESTED now "
+       "FAILS -- nothing compared the two stamps. Isolated on a fill-free "
+       "trajectory, because with fills present it failed for an unrelated "
+       "reason and looked caught when it was not")
+    ok(refuses(lambda: load_external_trajectory(
+           _mut_ev(_xb, 0, gen=1.5)), "is not an int"),
+       "§6(3) a non-integer `gen` REFUSES at the loader -- gen KEYS the "
+       "per-generation accounting, so a float creates a generation that can "
+       "never match its own request")
+    ok(refuses(lambda: load_external_trajectory(
+           _mut_ev(_xb, 0, side=7)), "is not a string"),
+       "§6(4) a non-string `side` REFUSES -- it keys the side-matched control")
+    ok(external_lifecycle(load_external_trajectory(_xb))["pass"] is True,
+       "positive control: the clean submission still passes all of it")
+    _r_ok = external_lifecycle(load_external_trajectory(_xb))
+    ok(_r_ok["one_terminal_outcome_per_request"]
+       and _r_ok["outcomes_after_their_request"],
+       "and both NEW predicates are present and true on a valid trajectory, "
+       "so they are wired into `pass` rather than merely defined")
 
     # ---- B2: identity is (composition x predictor) -----------------------
     _lin = trajectory_to_contract(ext_tr)
