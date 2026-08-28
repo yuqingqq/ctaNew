@@ -1,9 +1,53 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-08-28T08:37Z (MEM) — **TODO checkboxes trued up to artifacts;
-countable progress 39/113 (35%) with its definition recorded.** Blocker 7
-closed by finding a determinism defect; freeze-receipt v2 ruled with the clock
-unmoved. O1 still held at v3_1 for tonight's 00:00:00Z boundary.
+Updated: 2026-08-28T08:46Z (independent pre-fit review) — **ITERATION 011 FIT
+HOLD. No 011 result artifact exists.** Review found correctness blockers before
+the first number; day-bar v2 must also not judge 08-29 until its verdict wiring
+and ledger coverage are corrected. O1 remains held at v3_1.
+
+## 2026-08-28 ~08:46Z — independent pre-fit review: HOLD 011 before numbers
+
+The user explicitly requested review of the committed 011 machinery before any
+fit. Three fit processes launched concurrently by another workspace session
+during the review were stopped by exact PID; no `*iter011*` derived artifact
+exists. Commit `bac5469` subsequently added a silent-success output guard, but
+its `__main__` check also makes an explicitly requested `--selftest` print GREEN
+and then exit nonzero because a self-test correctly writes no result artifact.
+
+**011 blockers:** (1) the frozen composition is algebraically wrong when
+`P(V_cancel=0 | preventable)>0`; that is known before data and must be amended
+before fitting, not decided after observing the zero fraction; (2) missing or
+inconsistent label fields fail open to no-fill/zero value; (3)
+`head_populations` consumes generators twice; (4) the feature fence explicitly
+admits the target-side `any_fill_ahead`; (5) metric functions do not enforce
+aligned lengths/domains and report prediction count as population count; (6)
+Q2/Q3 models are applied only to realised conditional subsets, so the four
+heads are not row-aligned and Q4 cannot be composed for decision rows; the
+runner emits no Q4, matched-random, incremental-null, or Holm results; (7) all
+decision rows carry unit weight despite the declared cancellable-generation
+action unit; (8) the 24-cell family does not define how multi-metric heads or
+budget-independent Q1-Q3 metrics map to one p-value per cell, and status cells
+can shrink `holm()`'s denominator; (9) exact minimum-n/ridge/weighting/output
+constraints and standalone code identity are not fully frozen or bound; (10)
+the new output guard breaks the self-test-only command.
+
+**Day-bar/O1 blockers before the 08-29 judgment:** P1/P2/P3 are appended after
+both per-coin and whole-day `all_pass` are computed, while the superseded raw
+gap-count predicate remains binding; a full elapsed day with an empty ledger
+passes P1-P3; structurally malformed JSON rows and `gap_open_at_exit` are
+silently ignored; P3 is 5-minute-aligned rather than the declared maximum
+rolling hour; the CLI renderer reads removed breadth keys; and the default
+freeze epoch is 2026-08-24T15:04:28Z rather than the admitted candidate's
+2026-08-28T06:09:00Z freeze. The O1 patch itself compiles and its legacy suite
+is green, but the new O1a-d paths lack committed behavioral tests and its
+`gap_open_at_exit` output is currently invisible to the governing day bar.
+
+**Reviewed and internally consistent:** freeze receipt v2 preserves the
+`b3f7f9f` clock, binds the canonical null and unchanged survivor conclusions,
+and is correctly marked unvalidated. The canonical null's deterministic-order
+repair is real. Lane 2/4 documents are useful specifications but need typed
+join/units/target fields and an unambiguous replay base/output schema before
+implementation.
 
 ## 2026-08-28 ~08:37Z (MEM) — TODO trued up; progress recorded WITH its definition
 

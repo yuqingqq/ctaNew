@@ -4,7 +4,19 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
-  2026-08-28T06:56Z (MEM): BLOCKER 7 CLOSED, AND IT CLOSED BY FINDING SOMETHING
+  2026-08-28T08:46Z (independent pre-fit review): ITERATION 011 FIT HOLD; no
+  011 result artifact exists. Pre-number blockers were found in the zero-mass
+  estimand algebra, fail-open target construction, generator population build,
+  outcome fence, metric alignment/domain checks, per-row Q4 prediction
+  alignment, generation/action weighting, 24-cell null mapping, and standalone
+  result provenance; the bac5469 output guard also makes --selftest print GREEN
+  then exit nonzero for correctly producing no result. Day-bar v2 is also HOLD for the 08-29 judgment: P1/P2/P3
+  do not govern all_pass; an elapsed empty ledger passes; structural bad rows
+  and gap_open_at_exit are ignored; CLI breadth rendering uses removed keys;
+  and the default freeze epoch predates the btc freeze by 3.63 days. O1 stays
+  staged at v3_1; its new paths need behavioral tests and gap_open_at_exit must
+  feed the day bar. Freeze receipt v2 and the canonical determinism repair are
+  internally consistent. PRIOR: 2026-08-28T06:56Z (MEM): BLOCKER 7 CLOSED, AND IT CLOSED BY FINDING SOMETHING
   (R-234 8da983e ruling / R-235 7ec5f4e close). The increment-null re-binding
   surfaced a real determinism defect: increments bit-identical, but 11 of 12
   p-values moved on the same seed and data, because sign order came from
@@ -99,6 +111,8 @@ updated: >-
   hygiene + recv_ns measurement)
 
 flags:
+  iter011_prefit_review: HOLD-CORRECTNESS-BLOCKERS-AS-OF-2026-08-28T08:46Z
+  day_bar_v2_judgment: HOLD-CORRECTNESS-BLOCKERS-AS-OF-2026-08-28T08:46Z
   todo_completion: 39-of-113-COUNTABLE-AS-OF-2026-08-28T08:37Z # MEM, trued up
                              # at 9669203 against
                              # plans/STATEFUL_HARMFUL_CANCEL_TODO.md.
