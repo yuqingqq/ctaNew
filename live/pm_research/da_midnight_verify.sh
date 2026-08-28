@@ -24,6 +24,29 @@ LOG="${DA_MIDNIGHT_LOG:-/home/yuqing/ctaNew/data/pm_5min/derived/.da_midnight_ve
 V=/home/yuqing/ctaNew/live/pm_research/da_forward_day_verify.py
 PY=/home/yuqing/pricer-sol/venv/bin/python3
 cd /home/yuqing/ctaNew/live/pm_research || exit 3
+# THE PAIR GUARD RUNS BEFORE ANY WRITE. Codex batch-2 §7: with only OUTDIR
+# overridden this refused with rc=5 *after* appending its header to the
+# PRODUCTION log -- 46 bytes, measured. The guard written this morning
+# against "an isolation that only covers the visible half" was itself
+# half-isolated: it refused the run and mutated production on the way out.
+# A guard that writes before it refuses has already done the thing it
+# refuses.
+#
+# A REHEARSAL MUST NOT WRITE PRODUCTION ARTIFACTS. DA_MIDNIGHT_LOG was
+# overridable and OUTDIR was not, so a rehearsal sent its output to a scratch
+# log while overwriting the real verdicts -- which is how the 00:06Z artifacts
+# for 08-27 and 08-28 were silently replaced at 09:14Z. Overriding ONE of the
+# two is now a REFUSAL rather than a half-isolated run: an isolation that only
+# covers the visible half is worse than none, because it reads as isolated.
+OUTDIR="${DA_MIDNIGHT_OUTDIR:-/home/yuqing/ctaNew/data/pm_5min/derived}"
+if { [ -n "${DA_MIDNIGHT_LOG:-}" ] && [ -z "${DA_MIDNIGHT_OUTDIR:-}" ]; } || \
+   { [ -z "${DA_MIDNIGHT_LOG:-}" ] && [ -n "${DA_MIDNIGHT_OUTDIR:-}" ]; }; then
+  echo "REFUSED: DA_MIDNIGHT_LOG and DA_MIDNIGHT_OUTDIR must be overridden" \
+       "TOGETHER or not at all. Overriding only one gives a rehearsal that" \
+       "writes PRODUCTION verdicts while logging elsewhere." >&2
+  exit 5
+fi
+mkdir -p "$OUTDIR"
 {
   echo
   echo "======== fired $(date -u +%FT%TZ) ========"
@@ -52,21 +75,6 @@ OPENED=$(date -u +%Y%m%d)
 # is never success, the same rule the tape gate learned about skip counters.
 # Written to a temp path and PROMOTED only after it validates -- nothing
 # pre-existing is deleted, and a stale file cannot masquerade as tonight's run.
-# A REHEARSAL MUST NOT WRITE PRODUCTION ARTIFACTS. DA_MIDNIGHT_LOG was
-# overridable and OUTDIR was not, so a rehearsal sent its output to a scratch
-# log while overwriting the real verdicts -- which is how the 00:06Z artifacts
-# for 08-27 and 08-28 were silently replaced at 09:14Z. Overriding ONE of the
-# two is now a REFUSAL rather than a half-isolated run: an isolation that only
-# covers the visible half is worse than none, because it reads as isolated.
-OUTDIR="${DA_MIDNIGHT_OUTDIR:-/home/yuqing/ctaNew/data/pm_5min/derived}"
-if { [ -n "${DA_MIDNIGHT_LOG:-}" ] && [ -z "${DA_MIDNIGHT_OUTDIR:-}" ]; } || \
-   { [ -z "${DA_MIDNIGHT_LOG:-}" ] && [ -n "${DA_MIDNIGHT_OUTDIR:-}" ]; }; then
-  echo "REFUSED: DA_MIDNIGHT_LOG and DA_MIDNIGHT_OUTDIR must be overridden" \
-       "TOGETHER or not at all. Overriding only one gives a rehearsal that" \
-       "writes PRODUCTION verdicts while logging elsewhere." >&2
-  exit 5
-fi
-mkdir -p "$OUTDIR"
 broke=0
 # R-255(4): WHICH DAYS. Persistent=true recovers a missed night, but the day
 # list used to be exactly `date -d yesterday` and `date -d today` RELATIVE TO

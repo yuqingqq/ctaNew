@@ -930,6 +930,24 @@ def _selftests() -> int:
                "(1) and overriding ONLY the log REFUSES (rc 5) -- a half "
                "isolation reads as isolated while writing production "
                "artifacts, which is worse than none")
+            # A GUARD THAT WRITES BEFORE IT REFUSES HAS ALREADY DONE THE THING
+            # IT REFUSES. Codex batch-2 §7: with only OUTDIR overridden this
+            # refused with rc=5 *after* appending its header to the production
+            # log (46 bytes, measured). Both refusal directions must now leave
+            # the log path untouched, so the check is on the FILE, not the
+            # return code -- the return code was already right.
+            _dlog = Path(_ltd) / "default.log"
+            _run.write_text(_run.read_text(encoding="utf-8").replace(
+                str(Path(_ltd) / "log"), str(_dlog)), encoding="utf-8")
+            _oonly = _sp.run(["bash", str(_run)], capture_output=True,
+                             env={k: v for k, v in _env.items()
+                                  if k != "DA_MIDNIGHT_LOG"})
+            ok(_oonly.returncode == 5 and not _dlog.exists(),
+               "(1) a refusal writes NOTHING: with only OUTDIR overridden the "
+               "run refuses AND leaves its log path untouched. The pair guard "
+               "was written this morning against 'an isolation that only "
+               "covers the visible half' and was ITSELF half-isolated -- it "
+               "refused the run and mutated production on the way out")
             _argv = json.loads((Path(_ltd) / "argv.json").read_text())
             ok("--freeze-epoch" in _argv,
                "(1) the LAUNCHER passes --freeze-epoch explicitly (no default "
