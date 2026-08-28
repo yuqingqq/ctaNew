@@ -1,10 +1,56 @@
 # Stateful harmful-flow cancel x skew — TODO plan
 
 **Recorded:** 2026-08-26T02:43:12Z, after the I5 lead control completed  
-**Status:** TODO / offline research only / no live-trading implementation  
+**Status:** ACTIVE / PHASE-2 DEVELOPMENT RECEIPT COMPLETE / NOT FROZEN
 **Parent plan:** `HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md`  
-**Working baseline:** reduced-fine linear model (`PM_PLUS_FINE`) on the
-unchanged `QR_SKEW_ONLY` shadow trajectory
+**Working comparators:** `QR_SKEW_ONLY`, `QR_CANCEL_HOLD_X_SKEW` and the
+Phase-2 v2.2 linear/state/LightGBM arms on the unchanged neutral shadow
+trajectory
+
+## 0. 2026-08-28 progress and superseding direction
+
+This section supersedes the old progress snapshot below without deleting its
+provenance.
+
+- [x] The decision/exposure dataset, `PRED_STATE_V1`, embargo and action-unit
+  reconciliation are implemented and repeatedly reproduced.
+- [x] The research-only cancel/hold/repost state machine and its synthetic
+  parity/lifecycle battery are implemented; real-data integrated wiring remains
+  outstanding.
+- [x] The Phase-2 four-arm development receipt v2.2 is independently
+  recomputed 15/15 and bit-exact across the latest replication chain.
+- [x] Fill hazard has incremental development evidence for BTC at the 5% and
+  10% budgets under the declared optimistic window-level null.
+- [x] The receipt classifies that evidence as development, not validation: the
+  scored top-up is one 14.4-hour consumed span and `G=0` complete UTC days.
+- [ ] Conditional harmful-sign/value discrimination remains the principal
+  modelling question. `PLUS_PRED_STATE_V1` survives nowhere; ETH has no
+  promotable increment.
+- [ ] The latest predictor has not yet passed a complete cancel x skew x fair
+  price lifecycle comparison.
+- [ ] No timestamped PM fair-price object currently enters `PRED_STATE_V1`.
+  `Identity` remains the supported fair-price baseline.
+
+The next work therefore separates four lanes: conditional value, fair price,
+frozen skew and integrated replay. Build and preregistration may proceed in
+parallel; result-based selection may not reuse consumed days.
+
+### 0.1 Correctness blockers before downstream integration
+
+- [ ] Require both conditional LightGBM value-model artifacts in the expected
+  manifest hash set; absence or byte mismatch must refuse scoring.
+- [ ] Extend fit-side pre-load/write-time drift detection to every bound
+  frozen/top-up/receipt input used by the scorer.
+- [ ] Enforce the repository root for every result-bearing imported module,
+  including the harmful exposure/valuation and policy modules.
+- [ ] Make population role, reach (`G`, complete-day count and as-of) and
+  development-not-validation caveats generator-owned receipt fields.
+- [ ] Preserve peer audit annotations across regeneration by mechanism rather
+  than manual reattachment.
+- [ ] Regenerate the increment-null receipt against the same Phase-2 v2.2
+  provenance chain.
+- [ ] Every new guard gets a real positive control and a known-bad behavioural
+  refusal; source-text checks do not satisfy this item.
 
 ## 1. Current state and decision boundary
 
@@ -70,18 +116,18 @@ protection must remain an explicit rule and an explicit ablation.
 
 These are blockers before any candidate is called frozen.
 
-- [ ] Pin the admitted high-frequency era boundary in the candidate manifest;
+- [x] Pin the admitted high-frequency era boundary in the candidate manifest;
   do not derive it from the latest collector restart at runtime.
-- [ ] Record artifact `as_of`, exact train/development bounds, selected slugs,
+- [x] Record artifact `as_of`, exact train/development bounds, selected slugs,
   row counts by coin/day/status and the 60-second split embargo.
-- [ ] Record SHA-256 hashes for the exposure dataset, raw-source ledger,
+- [x] Record SHA-256 hashes for the exposure dataset, raw-source ledger,
   feature schema, builder files and dependency lock.
-- [ ] Save the exact feature names, normalization means/scales, hazard weights,
+- [x] Save the exact feature names, normalization means/scales, hazard weights,
   conditional-value weights, target latency and action thresholds.
-- [ ] Correct the historical hardcoded split field and refuse receipts whose
+- [x] Correct the historical hardcoded split field and refuse receipts whose
   declared split disagrees with their row timestamps.
-- [ ] Write candidate and score-dump artifacts atomically.
-- [ ] Reproduce the reduced-fine receipt to the cent from committed code before
+- [x] Write candidate and score-dump artifacts atomically.
+- [x] Reproduce the reduced-fine receipt to the cent from committed code before
   extending it. A reproduction may not change features, labels or thresholds.
 
 **Phase-0 gate:** a fresh process can load one manifest and reproduce the named
@@ -91,17 +137,17 @@ development scores without fitting or consulting growing raw data.
 
 Declare a single family, `PRED_STATE_V1`, before reading its result. It adds:
 
-- [ ] `time_remaining_s` and a terminal-window indicator;
-- [ ] true order-generation age `t_start - gen_t0` (not the current market
+- [x] `time_remaining_s` and a terminal-window indicator;
+- [x] true order-generation age `t_start - gen_t0` (not the current market
   quote freshness field);
-- [ ] remaining-size fraction and normalized queue-ahead;
-- [ ] exact-level depletion/replenishment velocity at 50/250/1,000 ms;
-- [ ] recent same-side and opposite-side fill shares at 50/250/1,000 ms;
-- [ ] time since last same-side PM touch move;
-- [ ] PM and Binance feed freshness/event age at the decision cutoff;
+- [x] remaining-size fraction and normalized queue-ahead;
+- [x] exact-level depletion/replenishment velocity at 50/250/1,000 ms;
+- [x] recent same-side and opposite-side fill shares at 50/250/1,000 ms;
+- [x] time since last same-side PM touch move;
+- [x] PM and Binance feed freshness/event age at the decision cutoff;
 - [ ] point-in-time PM microprice/fair-price disagreement, only if the existing
   fair-price object supplies a timestamped value without re-derivation here;
-- [ ] explicit missing/stale flags instead of silent zero imputation.
+- [x] explicit missing/stale flags instead of silent zero imputation.
 
 Do **not** put these policy variables into the harm predictor:
 
@@ -116,30 +162,30 @@ state that the training population does not identify.
 
 ### Phase-1 correctness tests
 
-- [ ] Every feature carries `feature_asof <= decision_time - source_cutoff`.
-- [ ] A synthetic event after the cutoff cannot change any feature.
-- [ ] Exact-level depletion tests distinguish cancellations from executions.
-- [ ] Generation age resets only on a generation change.
-- [ ] Feed-staleness tests fire on real and synthetic gaps.
-- [ ] Duplicate decision states are collapsed or explicitly weighted.
-- [ ] Adding the feature builder drops zero rows silently: every exclusion has
+- [x] Every feature carries `feature_asof <= decision_time - source_cutoff`.
+- [x] A synthetic event after the cutoff cannot change any feature.
+- [x] Exact-level depletion tests distinguish cancellations from executions.
+- [x] Generation age resets only on a generation change.
+- [x] Feed-staleness tests fire on real and synthetic gaps.
+- [x] Duplicate decision states are collapsed or explicitly weighted.
+- [x] Adding the feature builder drops zero rows silently: every exclusion has
   a counted status.
 
 ## 5. Phase 2 — limited model comparison
 
 No hyperparameter search.
 
-- [ ] Keep `PM_PLUS_FINE` linear hazard x conditional-value as the reference.
-- [ ] Test `PM_PLUS_FINE + PRED_STATE_V1` as one combined state candidate.
-- [ ] Test exactly one fixed-capacity nonlinear candidate using the same
+- [x] Keep `PM_PLUS_FINE` linear hazard x conditional-value as the reference.
+- [x] Test `PM_PLUS_FINE + PRED_STATE_V1` as one combined state candidate.
+- [x] Test exactly one fixed-capacity nonlinear candidate using the same
   reduced/state feature schema. Pin LightGBM capacity, regularization, seed and
   early-stopping rule before scoring.
-- [ ] Report fill-hazard discrimination, harmful-fill sign discrimination and
+- [x] Report fill-hazard discrimination, harmful-fill sign discrimination and
   conditional-value error separately; do not let expected-value ranking hide
   a failed head.
-- [ ] Use generation-native first-crossing evaluation and at least 200 matched
+- [x] Use generation-native first-crossing evaluation and at least 200 matched
   random controls.
-- [ ] Increment multiplicity for every scored candidate, including a nonlinear
+- [x] Increment multiplicity for every scored candidate, including a nonlinear
   candidate that fails.
 
 If new state/nonlinear candidates are scored on a one-time top-up, freeze the
@@ -149,6 +195,91 @@ separate forward candidates and price the increased multiplicity honestly.
 **Phase-2 gate:** a candidate must improve gross cancel value and harmful-tail
 selection over reduced fine on identical rows without concentrating its gain
 in one hour or a handful of fills. AUC alone cannot pass the gate.
+
+### 5.1 Phase 2A — conditional signed-value lane
+
+Freeze one `COND_VALUE_V1` specification before reading a new result.
+
+- [ ] Define `V_cancel` from each fill/tranche's own event timestamp, resting
+  level, shares and five-second markout; never proxy a fill timestamp with a
+  nearby quote or resync event.
+- [ ] Keep no-fill hazard, harmful sign and signed magnitude as separately
+  observable heads. No-fill rows train hazard; only latency-preventable fills
+  enter the conditional heads.
+- [ ] Fit `P(harm | fill, x)` plus separate harmful and favourable magnitude
+  heads, and combine them as:
+
+  ```text
+  p_fill * (p_harm * m_harm - (1 - p_harm) * m_good).
+  ```
+
+- [ ] Compare exactly three conditional-value specifications: existing linear
+  reference, one fixed-capacity sign-plus-magnitude model and one fixed-capacity
+  direct nonlinear-value model. No model sweep.
+- [ ] Calibrate out of fold with the declared embargo and preserve one action
+  per cancellable generation in scoring.
+- [ ] Report hazard AUC/PR, harmful-sign PR/lift, signed-value rank correlation,
+  tail value captured, favourable-fill sacrifice and calibration separately.
+- [ ] Compare hazard-only, harmful-sign-only and full-value actions on identical
+  rows and matched cancellation budgets.
+- [ ] Report BTC and ETH independently. A BTC pass does not carry ETH; ETH may
+  stop if its conditional increment remains negative or cost-fragile.
+- [ ] Add synthetic positive controls with known harmful/favourable fills and a
+  known-bad refusal for outcome-selected or duplicate-action populations.
+
+**Phase-2A gate:** full conditional value must improve the decision metric over
+hazard-only and matched random at a material retention level. Better fill AUC
+without better harm/value selection does not pass.
+
+### 5.2 Phase 2B — timestamped fair-price lane (parallel)
+
+Do not edit or implement the refuted `BE_BELIEF_PLAN.md`. Write a short
+successor contract that carries only its surviving ownership rules.
+
+- [ ] Define a typed point-in-time output containing coin/window, side or
+  outcome convention, fair value, source-event time, local-knowledge time,
+  freshness and book-admissibility status.
+- [ ] Use executable-book `Identity` as the mandatory baseline and fallback.
+- [ ] Predeclare at most two challengers: PM microprice and one cross-venue
+  forecast. Do not reuse fill outcomes to construct either forecast.
+- [ ] Score each challenger incrementally to `Identity` using a proper forecast
+  score, point-in-time parity and day-level reporting.
+- [ ] Add future-event invariance, stale-feed, crossed/one-sided/insufficient-
+  depth and convention/complement selftests.
+- [ ] Join the artifact into predictor rows strictly as-of and expose explicit
+  missing/stale flags; never rederive fair price inside the harmful feature
+  builder.
+- [ ] Define toxicity labels as fill-conditional residuals relative to the
+  unconditional fair-price output, avoiding adverse-selection double-counting.
+- [ ] Run `Identity` versus each passing challenger as an explicit integration
+  ablation. If none passes, keep `Identity`; fair price does not block the
+  cancellation experiment.
+
+**Phase-2B gate:** a challenger must improve on `Identity` out of sample without
+failing timestamp/admissibility checks. Similarity to settlement or a base-rate
+comparison is not an incremental fair-price result.
+
+### 5.3 Phase 2C — frozen skew lane (parallel)
+
+Treat skew as inventory/risk control, not as a substitute alpha model.
+
+- [ ] Freeze `QR_SKEW_ONLY` placement, size, queue and inventory semantics as
+  the neutral integration reference.
+- [ ] Do not select another band, hysteresis or skew threshold on 2026-08-20
+  through 2026-08-25.
+- [ ] Define the policy interface through desired exposure, allowed placement,
+  marginal inventory-risk value and inventory-increasing/reducing status.
+- [ ] Keep inventory, skew tier, cooldown and cancel lifecycle out of the harm
+  predictor; consume them only in the action-value policy.
+- [ ] Run explicit reducing-side protection and all-orders override ablations.
+- [ ] Require bit-identical `QR_SKEW_ONLY` replay when predictor output is
+  disabled or the cancel threshold is infinite.
+- [ ] Report whether skew improves inventory even when it does not improve P&L;
+  do not force one module to pass both roles.
+
+**Phase-2C gate:** skew is admissible when it respects the frozen queue model
+and declared inventory/traffic bounds. It is not promoted as alpha merely for
+reducing inventory.
 
 ## 6. Phase 3 — stateful cancel x skew replay
 
@@ -185,6 +316,33 @@ LIVE -> CANCEL_PENDING -> HELD -> REPOST_ELIGIBLE -> LIVE
 - [ ] Pre-effectiveness fills remain charged as stale.
 - [ ] No policy-generated trajectory is reused as its own training population.
 
+### Required integrated arms
+
+Run these on the same neutral opportunities and independent event clocks:
+
+- [ ] `QR_SKEW_ONLY`.
+- [ ] `QR_CANCEL_HOLD_X_SKEW`.
+- [ ] Fill-hazard-only cancel with neutral placement.
+- [ ] Conditional-value cancel with neutral placement.
+- [ ] Conditional-value cancel x frozen skew.
+- [ ] Conditional-value cancel x frozen skew x fair-price residual.
+- [ ] Random cancel matched on action count, side, hour and budget.
+
+For the full arm, the policy must compute rather than print:
+
+```text
+delta_EV(cancel vs keep)
+    = avoided conditional harm
+    - sacrificed favourable fill value
+    - lost spread capture
+    - queue-reset/repost cost
+    + marginal inventory-risk benefit
+    - action/traffic cost.
+```
+
+The predictor emits estimates, never the final cancel boolean. Skew owns desired
+placement; the state machine owns cancel, hold and repost lifecycle.
+
 ## 7. Phase 4 — economic and latency gates
 
 Evaluate the unchanged score at assumed cancel-effective latencies:
@@ -205,8 +363,12 @@ For every latency x cost x budget cell report:
 - [ ] fill/share retention and spread capture;
 - [ ] retained-book adverse-cost/spread-capture ratio;
 - [ ] terminal inventory, peak inventory and reducing/increasing-side split;
+- [ ] complete maker P&L, post-fill markout and inventory loss, rather than
+  treating `net_cancel_cents` as strategy P&L;
 - [ ] comparison with `QR_SKEW_ONLY`, `QR_CANCEL_HOLD_X_SKEW` and matched
   random cancellation on identical opportunities.
+- [ ] marginal module deltas: hazard -> conditional value, cancel -> cancel x
+  skew and `Identity` -> fair-price challenger.
 
 Do not label `net_cents` as strategy profit unless queue-reset/repost costs and
 the complete lifecycle are included.
@@ -218,9 +380,10 @@ if its very small per-cancel margin cannot survive the cost grid.
 
 ## 8. Phase 5 — freeze and forward validation
 
-- [ ] User chooses the forward candidate set. Working recommendation:
-  reduced-fine primary; extended remains held and is not silently adopted;
-  BTC lead stays rejected.
+- [ ] Choose the forward candidate set only after the conditional-value,
+  fair-price and integrated replay gates. The current BTC LightGBM hazard arm
+  is a research seed, not a frozen full-policy candidate; no ETH arm is
+  currently promotable.
 - [ ] Refit each chosen candidate once on all declared development/training
   data and write a complete immutable manifest.
 - [ ] Stamp the freeze commit and UTC instant before admitting any forward
@@ -241,14 +404,37 @@ require an exchange adapter.
 
 ## 9. Ordered deliverables
 
-1. `harmful_candidate_manifest_v1.json` — pinned data/code/model provenance.
-2. `harmful_state_features.py` — point-in-time `PRED_STATE_V1` builder and
-   selftests.
-3. `harmful_state_model_comparison_v1.json` — linear/state/nonlinear paired
-   research receipt.
-4. `harmful_stateful_policy.py` — offline cancel/hold/repost state machine.
-5. `harmful_stateful_comparison_v1.json` — latency x cost x budget results.
-6. Freeze receipt and forward scorer — only after the preceding gates pass.
+1. Phase-2 seam closure and same-chain increment-null receipt.
+2. `conditional_value_v1` protocol, builder/models and paired receipt.
+3. Fair-price successor contract, timestamped `Identity` artifact and
+   predeclared challenger receipt.
+4. Frozen skew policy interface and parity receipt.
+5. Common action-value interface plus seven-arm offline replay.
+6. Integrated latency x cost x budget receipt with complete strategy metrics.
+7. Immutable candidate/freeze manifest with module hashes and multiplicity.
+8. Unchanged forward scorer for at least five later complete UTC days.
 
 The filenames are proposed interfaces, not authorization for live execution.
 All code remains offline replay/research code.
+
+## 10. Parallel execution order
+
+```text
+correctness seams ─> Phase 2A conditional value ─┐
+                  └> Phase 2B fair price ────────┼─> integrated replay
+                  └> Phase 2C frozen skew ───────┘        |
+                                                        freeze
+                                                          |
+                                              >=5 later complete UTC days
+```
+
+- [ ] Start Phase 2A and Phase 2B only after their protocols and multiplicity
+  are recorded.
+- [ ] Build Phase 2C parity and the replay harness concurrently using typed
+  stubs; do not score a synthetic stub as a candidate.
+- [ ] Integrate immutable outputs only after their standalone gates are
+  computed.
+- [ ] A candidate changed after seeing a day cannot score that day; restart its
+  forward clock after the new committed freeze.
+- [ ] No full-policy promotion until standalone ablations and the complete
+  lifecycle both pass.

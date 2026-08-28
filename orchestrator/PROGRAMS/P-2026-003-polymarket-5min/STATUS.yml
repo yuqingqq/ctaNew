@@ -4,6 +4,12 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-08-28 (coordinator): harmful-fill programme plan updated for the next
+  conditional-research cycle. Added separate conditional signed-value,
+  timestamped fair-price successor, frozen-skew and common action-value replay
+  lanes; seven-arm integration ablation; full lifecycle metrics; reliability
+  seam blockers; and >=5 later complete UTC-day validation. Documentation only:
+  no candidate frozen, fitted, scored or promoted. PRIOR:
   2026-08-28 (BE): R-228 chain CLOSED. Receipt v2.2 (c47eb83) from
   fit6/score6 at 97b7183; replication BIT-EXACT vs v2.1 (1,046 shared
   leaves, max abs delta 0.000e+00; sole differing leaf da_caveat_field,
@@ -25,6 +31,13 @@ updated: >-
   hygiene + recv_ns measurement)
 
 flags:
+  harmful_fill_integrated_plan: RECORDED-NOT-FROZEN # 2026-08-28 coordinator.
+                             # Parent plan + execution TODO now split fill
+                             # hazard, conditional sign/magnitude, unconditional
+                             # fair price, frozen skew and lifecycle action
+                             # value. Parallel means build/preregister only;
+                             # outcome-driven selection remains serialized.
+                             # No experiment or freeze occurred in this edit.
   fail_open_class_closed_two_levels: yes # 2026-08-28 BE, R-228 (97b7183).
                              # Audit #9 found R-225's own guards passing
                              # VACUOUSLY: an EMPTY file_hashes map ran zero

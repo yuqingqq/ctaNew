@@ -1,6 +1,38 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-08-28 (DA) — **receipt VALIDATED 15/15; increment-null 10-of-12 chance; 08-27 EXCLUDED; per-coin live; btc evidence pack delivered; freeze awaits the user.**
+Updated: 2026-08-28 (coordinator) — **conditional-value and modular integration
+plan recorded; documentation only; no candidate frozen or scored.**
+
+## 2026-08-28 (coordinator) — conditional-value + modular integration plan recorded
+
+**DOCUMENTATION ONLY; NO CANDIDATE FROZEN OR SCORED.** Updated
+`live/pm_research/plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md` and
+`STATEFUL_HARMFUL_CANCEL_TODO.md`, with iterations 011--013 cross-referenced in
+`PM_STRATEGY_OPTIMIZATION_LOOP.md`.
+
+The next cycle has four separately owned lanes: (1) fill hazard plus
+conditional harmful-sign/favourable-vs-harmful magnitude, (2) a timestamped
+unconditional fair-price successor with `Identity` mandatory, (3) frozen skew
+as inventory/placement control, and (4) a common stateful action-value replay.
+The full comparison has seven arms, including neutral skew, incumbent,
+hazard-only, conditional cancel, cancel x skew, cancel x skew x fair residual,
+and decision-matched random cancellation.
+
+**ORDERING:** first close the recorded Phase-2 hash/drift/module-root and
+generator-owned-disclosure seams; conditional value and fair-price engineering
+may then run in parallel while skew/replay parity is built against typed stubs.
+Final scoring consumes only immutable module artifacts. Existing 08-20..25
+harmful-fill days remain consumed; every changed candidate starts a new forward
+clock and needs at least five later complete UTC days.
+
+**FAIR-PRICE WARNING:** `plans/BE_BELIEF_PLAN.md` is refuted provenance and is
+not an implementation source. A successor carries only `Identity` and the
+unconditional `E[Y|state]` ownership rule; toxicity owns the fill-conditional
+residual so adverse selection is not counted twice.
+
+Prior active-state summary (DA): **receipt VALIDATED 15/15; increment-null
+10-of-12 chance; 08-27 EXCLUDED; per-coin live; BTC evidence pack delivered;
+freeze awaits the user.**
 
 ## 2026-08-28 (BE, ~04:35Z) — R-228 chain CLOSED; receipt v2.2, replication BIT-EXACT
 

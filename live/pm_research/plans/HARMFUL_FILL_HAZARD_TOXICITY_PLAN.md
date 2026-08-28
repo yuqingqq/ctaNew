@@ -1,10 +1,17 @@
 # Harmful-fill hazard × toxicity optimization plan
 
-**Status:** DRAFT / RECORDED BEFORE IMPLEMENTATION / NOT FROZEN  
+**Status:** ACTIVE / INITIAL VERSION RECORDED BEFORE IMPLEMENTATION / NOT FROZEN
 **Scope:** offline research only; no venue adapter, live cancellation path, or
 execution server  
 **Incentives:** maker rebates and liquidity rewards excluded from the primary
 economics, by current user direction
+
+**2026-08-28 update:** Phases 0--2 have produced a reproducible development
+receipt and a BTC fill-hazard research seed, but no complete-UTC-day forward
+validation. The main unresolved estimand is now conditional signed fill value,
+not whether an exposed order is likely to fill. Fair price, conditional harm,
+inventory skew and lifecycle cost will be developed as separate modules and
+combined only through the action-value interface in this plan.
 
 ## 1. Decision and motivation
 
@@ -61,6 +68,39 @@ The prediction unit is a **decision-time quote-exposure row**, not a completed
 fill. Training only on completed fills would condition on the event the policy
 is trying to change and would not teach the model when an exposed order will
 remain unfilled.
+
+### 2.1 Conditional-value decomposition
+
+The next model revision must not rely on one unconditional regression through a
+zero-heavy, signed target. Estimate the components explicitly:
+
+```text
+p_harm(x) = P(V_cancel > 0 | preventable fill, x)
+m_harm(x) = E[V_cancel | V_cancel > 0, preventable fill, x]
+m_good(x) = E[-V_cancel | V_cancel < 0, preventable fill, x]
+
+conditional_cancel_value(x)
+    = p_harm(x) * m_harm(x) - (1 - p_harm(x)) * m_good(x)
+
+expected_cancel_value(x)
+    = p_fill(x) * conditional_cancel_value(x)
+```
+
+The empirical comparison must isolate four questions: fill arrival, harmful
+sign, harmful/favourable magnitude and their combined expected value. A strong
+hazard head does not establish useful toxicity discrimination.
+
+### 2.2 Module ownership and no double-counting
+
+The fair-price module estimates the unconditional object `E[Y | state]`. The
+toxicity module estimates a fill-conditional residual relative to that anchor,
+for example `E[fill value - fair value | fill, state]`. It must never absorb an
+`E[Y | state, FILLED]` fair price; that would put adverse selection in both the
+fair-price and toxicity terms.
+
+Inventory and lifecycle state remain policy inputs. They price whether a
+cancel, size reduction or repost is desirable; they do not become predictor
+features merely because they affect the action decision.
 
 ## 3. Dataset contract
 
@@ -119,6 +159,15 @@ The fair-price module describes where price should move. PM flow and queue
 state describe whether this particular order is about to be selected. The two
 roles must remain identifiable in ablations.
 
+The currently supported fair-price output is `Identity`: the executable PM
+top-of-book unchanged. The refuted `BE_BELIEF_PLAN.md` remains provenance and
+must not be revived as an implementation plan. Create a small successor
+contract before adding a fair-price feature to this dataset. It must emit a
+point-in-time value, source timestamp, local-knowledge timestamp, freshness and
+book-admissibility status. `Identity` is the mandatory baseline; PM microprice
+and at most one cross-venue forecast may be predeclared challengers. A failed
+challenger does not block integration: the full policy runs with `Identity`.
+
 ### 4.3 Frequency requirement
 
 One-second bars that exclude the current second can be roughly 250–1,250 ms
@@ -149,6 +198,18 @@ The combined action score is evaluated in expected cents, but ranking quality
 in the harmful tail is reported separately so a noisy magnitude head cannot
 hide useful discrimination.
 
+The predeclared conditional-value comparison is limited to:
+
+1. the existing linear conditional-value reference;
+2. one fixed-capacity sign classifier plus separate harmful/favourable
+   magnitude heads; and
+3. one fixed-capacity direct nonlinear conditional-value challenger.
+
+Compare hazard-only gating, harmful-sign gating and full expected-value ranking
+on identical actions. Calibrate out of fold, report BTC and ETH separately and
+permit a coin-specific rejection. Do not launch a generic model or
+hyperparameter sweep.
+
 ## 6. Policy composition
 
 Inventory skew and harmful-flow protection remain separate modules:
@@ -171,6 +232,23 @@ The economic decision rule is:
 cancel when expected avoided harm
             > lost spread capture + queue-reset/repost cost.
 ```
+
+The integrated evaluator owns the complete action comparison:
+
+```text
+delta_EV(cancel vs keep)
+    = expected avoided fill-conditional harm
+    - expected sacrificed favourable fill value
+    - lost spread capture
+    - queue-reset/repost cost
+    + marginal inventory-risk benefit
+    - action/traffic cost.
+```
+
+The predictor supplies estimates, never a cancel boolean. Skew retains
+ownership of desired inventory exposure and placement. The policy layer alone
+chooses `keep`, `resize`, `cancel`, `hold` or `repost` after applying inventory,
+traffic and lifecycle constraints.
 
 Because queue-reset cost is not yet directly measured, report results both
 before it and across a declared sensitivity grid. Do not call a gross result
@@ -224,10 +302,35 @@ The strategy baseline remains `QR_CANCEL_HOLD_X_SKEW`, with
 baseline on independent days without worsening the declared inventory and
 traffic limits.
 
+### 8.1 Required integration ablation
+
+Run every arm on the same neutral `QR_SKEW_ONLY` opportunity population, with
+an independent event clock per arm:
+
+1. `QR_SKEW_ONLY`;
+2. `QR_CANCEL_HOLD_X_SKEW`;
+3. fill-hazard-only cancellation with neutral placement;
+4. conditional-value cancellation with neutral placement;
+5. conditional-value cancel x frozen skew;
+6. conditional-value cancel x frozen skew x fair-price residual; and
+7. random cancellation matched on action count, side, hour and cancellation
+   budget.
+
+Also report the marginal deltas `hazard -> conditional value`, `cancel ->
+cancel x skew` and `Identity -> fair-price challenger`. The full arm cannot hide
+a failed component behind another module's gain.
+
+Full replay output includes complete maker P&L, spread capture, post-fill
+markout, fill/share retention, `rho`, effective/stale/unresolved cancels,
+hold/repost/queue-reset traffic, terminal and peak inventory, inventory loss,
+and per-day latency x cost sensitivity. `net_cancel_cents` alone is not a
+strategy-P&L verdict.
+
 ## 9. Validation discipline
 
-- Existing 2026-08-20/21/22 data is training context.
-- Existing 2026-08-23/24 data is seen development context.
+- Existing 2026-08-20 through 2026-08-25 data is consumed for the harmful-fill
+  line. The current Phase-2 result includes one 14.4-hour 2026-08-25
+  development span and has `G=0` complete UTC validation days.
 - Do not tune features, thresholds, horizons or model capacity on new forward
   outcomes after the candidate is frozen.
 - Admit only complete UTC days whose earliest required receipts postdate the
@@ -243,25 +346,55 @@ More forward data is necessary to test generalization. More data from the same
 seen days does not repair model selection, timing ambiguity or an invalid
 freeze.
 
+Parallel work is allowed for implementation, selftests and preregistration.
+Outcome-driven selection is serialized: no lane may inspect a later day and
+then change another lane's candidate for scoring on that same day. A newly
+defined candidate starts its own forward clock after its committed freeze.
+
 ## 10. Implementation order
 
-1. **Repair provenance first.** The current v4 sweep artifact is not accepted
-   as a durable candidate: its builder is uncommitted, absent from its named
-   commit, and does not contain the complete data/target/fit/artifact pipeline.
-   Either reconstruct and freeze a complete reproducible builder or mark that
-   artifact void.
-2. Build and self-test the side-specific decision/exposure dataset.
-3. Add receipt-time multiscale PM flow/depletion features and feature-as-of
-   audits.
-4. Fit the linear hazard × toxicity reference.
-5. Fit the fixed nonlinear candidate and run feature-family ablations.
-6. Evaluate loss capture and matched-random controls before any policy replay.
-7. Integrate only a model that passes those gates into cancel × skew replay.
-8. Run the latency and queue-reset-cost grids.
-9. Freeze the surviving candidate and score it unchanged on complete forward
-   days.
+1. Close the remaining receipt/runtime fail-open seams before a downstream
+   artifact depends on Phase 2: require every conditional-model artifact in
+   the hash set, cover every bound input in fit-side drift detection, enforce
+   the repository root for every result-bearing module, make population/reach
+   disclosure generator-owned and rerun the increment null in the same chain.
+2. Preserve and reproduce the accepted side-specific decision/exposure dataset
+   and `PRED_STATE_V1` feature-as-of/reconciliation tests.
+3. **Conditional-value lane:** preregister and fit the sign/magnitude
+   decomposition in §2.1; evaluate hazard-only, sign-only and full-value
+   increments with matched controls.
+4. **Fair-price lane, in parallel:** write the successor timestamped interface,
+   preserve `Identity`, and test only the predeclared challengers and feature
+   ablations in §4.2.
+5. **Skew lane, in parallel:** freeze `QR_SKEW_ONLY` placement semantics and
+   inventory limits; implement integration/parity tests without selecting new
+   bands or thresholds on consumed days.
+6. Build the common action-value interface and the seven-arm ablation in §8.1.
+7. Integrate only conditional-value and fair-price increments that pass their
+   own gates; use `Identity` when no fair-price challenger passes.
+8. Run complete stateful cancel/hold/repost replay, then the latency and
+   queue-reset-cost grids.
+9. Freeze the surviving candidate set, record multiplicity and score it
+   unchanged on at least five complete later UTC days.
 10. Measure real execution latency separately before making any claim about
     actually preventable fills.
+
+### 10.1 Parallel-lane dependency rule
+
+The conditional-value and fair-price lanes may be built concurrently. Skew
+integration and the common replay harness may be developed against typed stub
+outputs. Final economic scoring waits for immutable module artifacts:
+
+```text
+conditional value ─┐
+fair price ─────────┼─> action-value policy ─> stateful replay ─> forward gate
+frozen skew ────────┤
+latency/cost model ─┘
+```
+
+Parallel construction does not authorize joint tuning. Each module must have a
+standalone ablation, a positive control, a known-bad refusal and a committed
+freeze before its first eligible forward day.
 
 ## 11. Expected outcome and stopping rule
 

@@ -84,6 +84,16 @@ must later be frozen and scored unchanged on new complete days.
 | 008 | five windows per coin/day | generation-level fit is support-limited; increase independent order generations without changing model/policy | REJECTED; tree cannot split |
 | 009 | generation-compatible tree leaf floor | pinned 200-row leaf minimum exceeds both economic generation samples; test nonlinear capacity with fixed default 20 | MODEL GATE FAILED |
 | 010 | independent-day continuation | further selection on Aug 23/24 would be model/sample tuning; accumulate new complete PM+HF days before freezing the next split | WAITING FOR NEW COMPLETE DAY |
+| 011 | conditional signed-value decomposition | the Phase-2 hazard head detects fill arrival better than the current heads distinguish harmful from favourable fills; split harmful sign and signed magnitude under the neutral action population | PLANNED; protocol not frozen |
+| 012 | timestamped fair-price successor + frozen skew interfaces | preserve `Identity`, test only predeclared point-in-time challengers, and keep skew as inventory/placement control | PLANNED IN PARALLEL; no scoring authorized |
+| 013 | common action-value seven-arm replay | integrate hazard, conditional value, fair-price residual, skew and lifecycle costs only after standalone gates | BLOCKED ON 011/012 artifacts |
+
+Iterations 011--013 are governed by
+`plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md` and
+`plans/STATEFUL_HARMFUL_CANCEL_TODO.md`. Parallel status means implementation,
+selftests and preregistration may overlap. It does not permit tuning multiple
+modules against the same visible outcomes or admitting a day that predates a
+candidate's committed freeze.
 
 ## Stop and continuation rules
 
