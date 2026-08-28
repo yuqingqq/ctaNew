@@ -806,9 +806,29 @@ def _selftests() -> int:
                             f'LOG="{Path(_ltd) / "log"}"'),
                 encoding="utf-8")
             _run.chmod(0o755)
-            _sp.run(["bash", str(_run)], capture_output=True,
-                    env={"PATH": "/usr/bin:/bin",
-                         "DA_MIDNIGHT_LOG": str(Path(_ltd) / "log")})
+            # BOTH overrides, or none. This test redirected the LOG and left
+            # OUTDIR pointing at production, so every run of the seam test
+            # OVERWROTE the real verdict artifacts -- invisibly, because the
+            # path is stable and the log was elsewhere. That is how the 00:06Z
+            # verdicts for 08-27 and 08-28 were replaced at 09:14Z. An
+            # instrument that mutates production state as a side effect of
+            # checking it is not a check.
+            _out = Path(_ltd) / "out"
+            _env = {"PATH": "/usr/bin:/bin",
+                    "DA_MIDNIGHT_LOG": str(Path(_ltd) / "log"),
+                    "DA_MIDNIGHT_OUTDIR": str(_out)}
+            _pr = _sp.run(["bash", str(_run)], capture_output=True, env=_env)
+            ok(_pr.returncode != 5,
+               "(1) the seam run is FULLY isolated: log AND outdir both "
+               "redirected, so checking the launcher does not rewrite the "
+               "production verdicts it is checking")
+            _half = _sp.run(["bash", str(_run)], capture_output=True,
+                            env={k: v for k, v in _env.items()
+                                 if k != "DA_MIDNIGHT_OUTDIR"})
+            ok(_half.returncode == 5 and b"REFUSED" in _half.stderr,
+               "(1) and overriding ONLY the log REFUSES (rc 5) -- a half "
+               "isolation reads as isolated while writing production "
+               "artifacts, which is worse than none")
             _argv = json.loads((Path(_ltd) / "argv.json").read_text())
             ok("--freeze-epoch" in _argv,
                "(1) the LAUNCHER passes --freeze-epoch explicitly (no default "

@@ -52,7 +52,21 @@ OPENED=$(date -u +%Y%m%d)
 # is never success, the same rule the tape gate learned about skip counters.
 # Written to a temp path and PROMOTED only after it validates -- nothing
 # pre-existing is deleted, and a stale file cannot masquerade as tonight's run.
-OUTDIR=/home/yuqing/ctaNew/data/pm_5min/derived
+# A REHEARSAL MUST NOT WRITE PRODUCTION ARTIFACTS. DA_MIDNIGHT_LOG was
+# overridable and OUTDIR was not, so a rehearsal sent its output to a scratch
+# log while overwriting the real verdicts -- which is how the 00:06Z artifacts
+# for 08-27 and 08-28 were silently replaced at 09:14Z. Overriding ONE of the
+# two is now a REFUSAL rather than a half-isolated run: an isolation that only
+# covers the visible half is worse than none, because it reads as isolated.
+OUTDIR="${DA_MIDNIGHT_OUTDIR:-/home/yuqing/ctaNew/data/pm_5min/derived}"
+if { [ -n "${DA_MIDNIGHT_LOG:-}" ] && [ -z "${DA_MIDNIGHT_OUTDIR:-}" ]; } || \
+   { [ -z "${DA_MIDNIGHT_LOG:-}" ] && [ -n "${DA_MIDNIGHT_OUTDIR:-}" ]; }; then
+  echo "REFUSED: DA_MIDNIGHT_LOG and DA_MIDNIGHT_OUTDIR must be overridden" \
+       "TOGETHER or not at all. Overriding only one gives a rehearsal that" \
+       "writes PRODUCTION verdicts while logging elsewhere." >&2
+  exit 5
+fi
+mkdir -p "$OUTDIR"
 broke=0
 for d in "$CLOSED" "$OPENED"; do
   echo "---- day $d ----" >> "$LOG"
@@ -83,7 +97,16 @@ for d in "$CLOSED" "$OPENED"; do
 d=json.load(open(sys.argv[1]))
 sys.exit(0 if d.get("day_token")==sys.argv[2] and d.get("predicates") else 1)'        "$tmp" "$d" 2>/dev/null; then
     mv -f "$tmp" "$OUTDIR/da_dayverdict_$d.json"
-    echo "exit=$rc for $d (verdict artifact written)" >> "$LOG"
+    # NAME THE ARTIFACT, not just the fact that one was written. The verdict
+    # path is stable, so ANY later re-run -- a rehearsal, a manual verify --
+    # overwrites it while this line still reads "written", and the log then
+    # describes a file that is no longer the one it describes. Observed
+    # 2026-08-28: the 00:06Z artifacts for 08-27 and 08-28 were replaced at
+    # 09:14Z by a hand re-run, and nothing in the log said so. The digest and
+    # the artifact's own as_of let a reader CHECK rather than assume.
+    _sha="$(sha256sum "$OUTDIR/da_dayverdict_$d.json" | cut -c1-16)"
+    _asof="$("$PY" -c 'import json,sys;print(json.load(open(sys.argv[1])).get("as_of_utc"))' "$OUTDIR/da_dayverdict_$d.json" 2>/dev/null)"
+    echo "exit=$rc for $d (verdict artifact written: sha256=$_sha as_of=$_asof)" >> "$LOG"
   else
     rm -f "$tmp"
     broke=4
