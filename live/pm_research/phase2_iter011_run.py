@@ -923,7 +923,11 @@ def _q4_cell(arm: str, budget: str, per_coin: dict) -> tuple:
     # the raw net's magnitude. A p that does not describe the number beside it
     # is not evidence about that number. The raw nets are REPORTED, never
     # adjudicated (A1.4: every other metric is reported and never adjudicated).
-    return (inc_net, null["p_two_sided"], I11.CELL_STATUS_OK,
+    # ADJUDICATE the one-sided p. Q4's gate says the candidate must BEAT the
+    # incumbent, and the two-sided form gave a candidate LOSING by 120c the
+    # same p as one winning by 120c. p_two_sided remains in the null's output
+    # as a reported diagnostic; it is not what decides a cell.
+    return (inc_net, null["p_value"], I11.CELL_STATUS_OK,
             f"increment vs incumbent {null['observed']:+.1f}c over "
             f"{null['n_units']} windows; {null['n_perm']} sign-flip "
             f"permutations, units consumed in SORTED order (R-234). "
@@ -1563,6 +1567,25 @@ def selftest() -> int:
     ok(callable(globals().get("apply_incumbent_hazard")),
        "B2 a Q1 incumbent HAZARD comparator exists (the R-280 load-verify-"
        "apply path extends to the hazard head, not only to composed value)")
+
+
+    # ---- the Q4 cell adjudicates the DIRECTIONAL p (sibling of (3)) -------
+    _lose = [_gr("W", "BUY", g, 0.0, -50.0) for g in range(1, 9)]
+    _lp = {"expected_cancel_value": [0.9 - 0.1 * i for i in range(8)]}
+    _li = {"expected_cancel_value": [0.1 + 0.1 * i for i in range(8)]}
+    _lpc = {"btc": {"composed_linear": {
+        "economics": q4_economics(_lp, _lose, incumbent=_li),
+        "heads": {}, "adjudicated_statistics": {}}}}
+    _ls, _lpv, _lst, _ld = _q4_cell("composed_linear", I11.BUDGETS_011[0], _lpc)
+    _inc = sum(_lpc["btc"]["composed_linear"]["economics"]
+               [I11.BUDGETS_011[0]]["increment_by_window"].values())
+    if _inc < 0:
+        ok(_lpv is not None and _lpv > 0.5,
+           f"a Q4 cell whose increment is NEGATIVE ({_inc:+.1f}c: the candidate "
+           f"LOST to the incumbent) must not carry small-p evidence; got "
+           f"p={_lpv}")
+    ok(_lpv is None or 0.0 < _lpv <= 1.0,
+       "the Q4 cell's p is a real permutation p in (0, 1]")
 
     return _selftest_verdict(fails)
 

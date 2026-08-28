@@ -343,6 +343,19 @@ def head_power(pops: dict) -> dict:
     }
 
 
+def _lib_verdict(fails: list) -> int:
+    """The verdict is printed BY the return, so nothing appended before it can
+    land below the summary. The library carried that trap live: the GREEN line
+    sat mid-function and every check added after it -- the matched-random null,
+    the one-sided fixes, the cluster gate -- printed UNDER a summary that had
+    already announced 0 failing."""
+    print(f"\n{'ITER011 SELFTEST GREEN' if not fails else 'ITER011 SELFTEST RED'}: "
+          f"{len(fails)} failing")
+    for f in fails:
+        print(f"  - {f}")
+    return 1 if fails else 0
+
+
 def selftest() -> int:
     fails = []
 
@@ -682,8 +695,6 @@ def selftest() -> int:
     ok(set(ADJUDICATED_STATISTIC) == set(HEADS_011),
        "A1.4 every head has exactly ONE declared adjudicated statistic")
 
-    print(f"\n{'ITER011 SELFTEST GREEN' if not fails else 'RED'}: "
-          f"{len(fails)} failing")
 
     # ---- prereg §5(1): the MATCHED-random null (I11-B2) --------------------
     # Rule 15: the instrument ships a positive control it MUST flag and
@@ -795,7 +806,31 @@ def selftest() -> int:
     ok(not cluster_disclosure(3, "UTC day")["intervals_claimable"],
        "below G=5 the ruled unit still refuses intervals")
 
-    return 1 if fails else 0
+
+    # ==== the SAME asymmetry in the INCREMENT null (sibling of (3)) ========
+    # Q4's frozen gate also says the candidate must BEAT the incumbent. A
+    # two-sided sign-flip scores |sum|, so a candidate that LOSES badly earns
+    # the same p as one that wins by the same margin -- measured before the
+    # fix: +120c and -120c both p=0.000500, both beside CELL_STATUS_OK, both
+    # rankable in Holm as evidence.
+    _up = sign_flip_null({f"w{i}": +10.0 for i in range(12)}, n_perm=400, seed=7)
+    _dn = sign_flip_null({f"w{i}": -10.0 for i in range(12)}, n_perm=400, seed=7)
+    ok(_up.get("p_value") is not None and _up["p_value"] < 0.01,
+       f"POSITIVE CONTROL: a candidate BEATING the incumbent in every window "
+       f"earns a small adjudicated p (got {_up.get('p_value')})")
+    ok(_dn.get("p_value") is not None and _dn["p_value"] > 0.5,
+       f"KNOWN-BAD: a candidate LOSING to the incumbent in every window must "
+       f"NOT earn evidence -- the gate says BEATS (got {_dn.get('p_value')})")
+    ok(_up.get("sided") == "one" and _up.get("alternative") == "greater",
+       "the increment null declares SIDEDNESS and DIRECTION in-band, the same "
+       "visibility mechanism the matched-random null uses")
+    ok(_up.get("no_skill_value") == 0.0,
+       "the increment's no-skill point is ZERO increment, declared not implied")
+    ok(_dn.get("p_two_sided") is not None,
+       "the two-sided p survives as a REPORTED diagnostic; it is the "
+       "adjudicated p that had to become directional")
+
+    return _lib_verdict(fails)
 
 
 
@@ -1106,11 +1141,14 @@ def sign_flip_null(paired_by_unit: dict, n_perm: int = N_PERM_011,
     vals = [float(paired_by_unit[k]) for k in keys]
     obs = math.fsum(vals)
     rng = random.Random(seed)
-    ge = 0
+    ge = 0          # two-sided tally, kept as a reported diagnostic
+    ge_one = 0      # one-sided tally: draws that reach or BEAT the observed
     for _ in range(n_perm):
         t = math.fsum(v if rng.getrandbits(1) else -v for v in vals)
         if abs(t) >= abs(obs):
             ge += 1
+        if t >= obs:
+            ge_one += 1
     return {
         "observed": obs, "n_units": len(vals),
         "n_units_positive": sum(1 for v in vals if v > 0),
@@ -1118,6 +1156,15 @@ def sign_flip_null(paired_by_unit: dict, n_perm: int = N_PERM_011,
         "n_perm": n_perm, "perm_seed": seed,
         # (ge+1)/(n+1): the observed arrangement is itself one arrangement
         # under H0, so a permutation p can never be exactly zero.
+        # ONE-SIDED for adjudication, direction from Q4's own gate: the
+        # candidate must BEAT the incumbent. The two-sided form scored |sum|,
+        # so a candidate LOSING by 120c earned the same p as one winning by
+        # 120c (measured: both 0.000500) beside CELL_STATUS_OK, and a strictly
+        # worse candidate could rank in Holm as evidence. p_two_sided is kept
+        # as a REPORTED diagnostic so nothing that already cites it breaks, but
+        # `p_value` is what a cell adjudicates.
+        "p_value": (ge_one + 1) / (n_perm + 1),
+        "sided": "one", "alternative": "greater", "no_skill_value": 0.0,
         "p_two_sided": (ge + 1) / (n_perm + 1),
         "unit_order": "SORTED KEYS — pinned at consumption (R-234)",
     }
