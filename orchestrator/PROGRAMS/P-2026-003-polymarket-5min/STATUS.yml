@@ -119,7 +119,26 @@ flags:
                              # not "fix" the two implementations into agreement
                              # and quietly delete the independence that makes
                              # six agreeing generations mean anything.
-  freeze_receipt_null_pointer: FLAGGED-FOR-OWNER # 2026-08-28T06:56Z MEM,
+  freeze_receipt_null_pointer: RULED-IN-EXECUTION # RULED 2026-08-28T06:58Z by
+                             # the coordinator, accepting the raise as rule 13
+                             # by its own rationale. BE authors
+                             # harmful_phase2_lgbm_btc_freeze_v2.json carrying
+                             # the CANONICAL null pointer (163bd36) and the
+                             # canonical p's, a supersedes block naming v1 as a
+                             # CITATION CORRECTION (verdict-bearing statements
+                             # unchanged: true/true/false), and an EXPLICIT
+                             # CLOCK-UNMOVED CLAUSE. That clause is the
+                             # load-bearing one and is why v2 is safe: the
+                             # FREEZE EVENT stays at b3f7f9f, so the race clock
+                             # and the multiplicity-1 record run from the
+                             # original freeze commit -- v2 corrects citations
+                             # and NEVER re-freezes. A superseding receipt that
+                             # silently restarted the clock would buy five fresh
+                             # days for a candidate that has been accruing since
+                             # 06:09Z, which is the failure this clause forbids.
+                             # v1 stays FROZEN AND UNTOUCHED (rule 13). Advance
+                             # this flag to LANDED when BE's commit ref arrives.
+                             # ORIGINAL RAISE (rule 13): 2026-08-28T06:56Z MEM,
                              # raised not ruled -- receipts are not my surface.
                              # R-235 rules freeze-receipt impact NONE, and on
                              # verdict-bearing statements that is correct and

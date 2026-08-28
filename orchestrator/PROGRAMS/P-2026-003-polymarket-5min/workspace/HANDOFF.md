@@ -1,9 +1,31 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-08-28T06:56Z (MEM) — **blocker 7 CLOSED, and it closed by finding
-a real determinism defect.** Canonical null re-bound sight-unseen, survivors
-unchanged; the six-generation ~1e-11 delta finally explained and deliberately
-left unharmonized. O1 still held at v3_1 for tonight's 00:00:00Z boundary.
+Updated: 2026-08-28T06:58Z (MEM) — blocker 7 CLOSED by finding a real
+determinism defect; the ~1e-11 delta explained and deliberately left
+unharmonized; **the freeze-receipt citation residual is RULED — v2 in
+execution, clock unmoved.** O1 still held at v3_1 for tonight's 00:00:00Z
+boundary.
+
+## 2026-08-28 ~06:58Z (MEM) — the flagged residual is ruled: freeze receipt v2, clock unmoved
+
+**Supersedes, in-band, the "raised, not ruled" close of the 06:56Z entry below**
+(which stands unedited). The coordinator ruled it as rule 13 by its own
+rationale: **BE authors `harmful_phase2_lgbm_btc_freeze_v2.json`** carrying the
+canonical null pointer (`163bd36`) and canonical p's, a `supersedes` block
+naming v1 as a **citation correction** (verdict-bearing statements unchanged —
+true / true / false), and an **explicit clock-unmoved clause**. **v1 stays
+frozen and untouched.**
+
+**The clock-unmoved clause is the load-bearing part.** The freeze *event* stays
+at `b3f7f9f`, so the race clock and the multiplicity-1 record run from the
+original freeze commit; v2 corrects citations and never re-freezes. A
+superseding receipt that quietly restarted the clock would hand a candidate
+that has been accruing since 06:09Z five fresh days — which is exactly what
+that clause forbids, and worth naming because it is the plausible way this
+correction could have gone wrong.
+
+Flag is `RULED-IN-EXECUTION`; it advances to `LANDED` when BE's commit ref
+arrives.
 
 ## 2026-08-28 ~06:56Z (MEM) — blocker 7 closed by finding something; one residual flagged
 
