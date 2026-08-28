@@ -98,22 +98,52 @@ def pin_data_root() -> None:
     print(f"  fit data root pinned; inputs {counts}", flush=True)
 
 
-def assert_modules_under_root() -> None:
-    """Every pinned module must have loaded from THIS tree.
+def assert_modules_under_root() -> dict:
+    """Every LATTICE module loaded from THIS tree, and its RUNTIME BYTES equal
+    the bytes being attested. R-230(3).
 
-    A wrong-tree import is silent: the fit runs, the numbers look normal, and
-    the code that produced them is whatever the live tree happened to contain.
-    Called at BOTH entry points, because either can be run from a snapshot."""
-    import phase2_state_schema_freeze as _PIN
-    import phase2_embargo as _EMB
-    import harmful_action_eval as _AE
-    for m in (D, _PIN, _EMB, _AE):
-        f = str(Path(m.__file__).resolve())
-        if not f.startswith(_ROOT):
+    This checked FOUR modules while CODE_IDENTITY_FILES hashes TWELVE, so a
+    wrong-tree harmful_hazard_model was ACCEPTED while the lattice hashed the
+    repo copy -- the identity attested to bytes that never ran. Every lattice
+    module is now imported at entry (an unimportable one is a refusal, not a
+    skip) and checked twice:
+
+      (a) __file__ resolves under _ROOT          -- a PROXY for provenance
+      (b) sha256(the file actually loaded) == sha256(the file being recorded)
+
+    (b) is the real invariant: RUNTIME BYTES == ATTESTED BYTES. Path prefix
+    only says where a module claims to live."""
+    import importlib
+    checked = {}
+    for fname in CODE_IDENTITY_FILES:
+        mod_name = fname[:-3]
+        try:
+            m = importlib.import_module(mod_name)
+        except Exception as e:
             raise RuntimeError(
-                f"REFUSED: {m.__name__} loaded from {f}, OUTSIDE this run root "
+                f"REFUSED: lattice module {mod_name} could not be imported "
+                f"({type(e).__name__}: {e}). A module whose bytes are attested "
+                f"but which never loads means the identity describes code that "
+                f"did not run; an unimportable dependency is a refusal, not a "
+                f"skip.")
+        f = getattr(m, "__file__", None)
+        if not f:
+            raise RuntimeError(
+                f"REFUSED: lattice module {mod_name} has no __file__, so the "
+                f"bytes that ran cannot be identified.")
+        fp = Path(f).resolve()
+        if not str(fp).startswith(_ROOT):
+            raise RuntimeError(
+                f"REFUSED: {mod_name} loaded from {fp}, OUTSIDE this run root "
                 f"{_ROOT}. A snapshot that imports another tree isolates "
-                f"nothing -- the fit would run bytes nobody pinned.")
+                f"nothing -- the run would execute bytes nobody pinned.")
+        # The sha is taken from the RESOLVED __file__ -- the bytes the module
+        # actually loaded from -- and that value is what the identity records.
+        # Hashing _ROOT/fname here instead would compare a file to ITSELF and
+        # prove nothing (the trap DA hit in its own sweep: one source supplying
+        # both the input and the expected answer).
+        checked[fname] = _file_sha16(fp)
+    return checked
 
 DERIVED = Path("/home/yuqing/ctaNew/data/pm_5min/derived")
 TOPUP = DERIVED / "harmful_exposure_rows_v3_topup.json"
@@ -927,6 +957,25 @@ def assert_verdict_subject_is(tape: Path, v: dict) -> None:
 FIT_MANIFEST = "fit_manifest.json"
 
 
+# R-230(2): capture and comparison must consume ONE declared set. The fit's
+# at-write drift tuple listed SEVEN keys while the identity captured more, so
+# the R-228 bindings (topup, frozen incumbent, topup build receipt) were
+# captured and never compared -- an incumbent swap DURING fitting passed the
+# recheck. Two hand-maintained lists diverged once and would again.
+#
+# The rule is now: compare EVERYTHING captured, with explicit named exceptions.
+# The exception list is empty by design and each future entry must carry its
+# reason; a key that cannot be compared should not be in the identity.
+IDENTITY_DRIFT_EXEMPT: tuple = ()
+
+
+def identity_drift(pre: dict, post: dict) -> dict:
+    """Every captured key compared, minus declared exemptions. R-230(2)."""
+    keys = (set(pre) | set(post)) - set(IDENTITY_DRIFT_EXEMPT)
+    return {k: (pre.get(k), post.get(k)) for k in sorted(keys)
+            if pre.get(k) != post.get(k)}
+
+
 def _file_sha16(path) -> str:
     """sha256 prefix of a file, or None if it is absent."""
     import hashlib
@@ -987,7 +1036,18 @@ def measured_code_identity() -> dict:
     # live sys.modules made the identity depend on entry point -- stage_fit and
     # stage_score would report different shas for the SAME tree, which is the
     # opposite of an identity. Absent files hash to None and are visible.
-    files = {n: _file_sha16(root / n) for n in CODE_IDENTITY_FILES}
+    #
+    # R-230(3): the sha comes from the module's RESOLVED __file__ when it is
+    # loaded, so the identity attests to the BYTES THAT RAN rather than to the
+    # bytes at a path we assume it used. A sys.modules-injected wrong-tree copy
+    # is returned by import without touching sys.path, so a path-derived hash
+    # would record the repo copy while other bytes executed.
+    import sys as _sys
+    files = {}
+    for n in CODE_IDENTITY_FILES:
+        m = _sys.modules.get(n[:-3])
+        f = getattr(m, "__file__", None) if m is not None else None
+        files[n] = _file_sha16(_P(f).resolve()) if f else _file_sha16(root / n)
     combined = hashlib.sha256(
         "".join(f"{k}:{v}" for k, v in sorted(files.items())).encode()
     ).hexdigest()[:16]
@@ -1054,7 +1114,8 @@ def _tape_identity() -> dict:
 # list. lgbm_val_{coin} is CONDITIONAL (written only when a coin has >=100
 # positives), so it is verified when present and never required.
 FIT_BASE_ARTIFACTS = ("empty_coins.json", "fit_slugs.json",
-                      "fit_population_parity.json")
+                      "fit_population_parity.json",
+                      "val_models.json")          # R-230(1)
 FIT_PER_COIN_ARTIFACTS = ("linear_{c}.json", "linear_d_{c}.json",
                           "lgbm_haz_{c}.txt", "lgbm_thresholds_{c}.json")
 
@@ -1081,7 +1142,24 @@ def expected_fit_artifacts(m: dict) -> set:
     out = set(FIT_BASE_ARTIFACTS)
     for c in coins:
         out |= {t.format(c=c) for t in FIT_PER_COIN_ARTIFACTS}
+    # R-230(1): lgbm_val_{coin} is REQUIRED exactly when the fit recorded that
+    # it wrote one. It used to be "verified when present, never required", so
+    # deleting it between fit and score passed completeness untouched.
+    for c, wrote in (val_models_record() or {}).items():
+        if wrote and c in coins:
+            out.add(f"lgbm_val_{c}.txt")
     return out
+
+
+def val_models_record() -> dict:
+    """Which coins the FIT recorded writing a val model for. R-230(1)."""
+    f = FITDIR / "val_models.json"
+    if not f.exists():
+        return {}
+    try:
+        return dict(json.loads(f.read_text()))
+    except (ValueError, OSError):
+        return {}
 
 
 def assert_ref_resolves_to_recorded_code(m: dict) -> dict:
@@ -1364,6 +1442,7 @@ def stage_fit() -> None:
             }
         del SP, score_probe
         _parity: dict = {}
+        _val_written: dict = {}
         for coin in list(FIT):
             f = FIT[coin]
             if not f["kept"]:
@@ -1455,13 +1534,24 @@ def stage_fit() -> None:
             # arm C's OWN training thresholds, resolved AFTER its model exists
             _pc = clf.predict_proba(A)[:, 1]
             ftm = np.asarray(yF) == 1
+            # R-230(1): whether a val model exists is now a RECORDED FACT, not
+            # something inferred from a file being present. "Absent" and "never
+            # written" were indistinguishable, so a val model deleted between
+            # fit and score silently degraded arm C to hazard-only ranking.
             if ftm.sum() >= 100:
                 reg = lgb.LGBMRegressor(**D.LGBM_VALUE_PARAMS)
                 reg.fit(A[ftm], np.asarray(tF)[ftm], sample_weight=swa[ftm])
                 reg.booster_.save_model(str(FITDIR / f"lgbm_val_{coin}.txt"))
                 _vc = reg.predict(A)
+                _val_written[coin] = True
             else:
+                # the LEGITIMATE no-val path, now an EXPLICIT recorded state
+                # rather than an absence anyone must interpret
                 _vc = np.zeros(len(A))
+                _val_written[coin] = False
+                print(f"  [fit/{coin}] NO val model: {int(ftm.sum())} positives "
+                      f"< 100. Recorded explicitly; arm C ranks on hazard alone "
+                      f"for this coin.", flush=True)
             (FITDIR / f"lgbm_thresholds_{coin}.json").write_text(json.dumps(
                 freeze_thresholds((_pc * _vc).tolist(), D.BUDGETS, gen_keys=_gk)))
             # ---- R-215(1): four-arms-one-n parity, COMPUTED ----
@@ -1502,6 +1592,9 @@ def stage_fit() -> None:
             raise RuntimeError(
                 "REFUSED: every coin came back empty. A fit over no population is "
                 "not a null result, it is a broken input path.")
+        # R-230(1): inside the hash lattice, so forging it breaks its own hash
+        (FITDIR / "val_models.json").write_text(
+            json.dumps(_val_written, indent=1, sort_keys=True))
         (FITDIR / "fit_population_parity.json").write_text(
             json.dumps(_parity, indent=1, sort_keys=True))
         (FITDIR / "fit_slugs.json").write_text(json.dumps(sorted(
@@ -1515,12 +1608,7 @@ def stage_fit() -> None:
         # being read. A divergence here means the run's numbers describe a
         # population that no longer exists, which is a refusal, not a warning.
         _ident_post = _tape_identity()
-        _drift = {k: (_ident_pre.get(k), _ident_post.get(k))
-                  for k in ("tape_sha256_prefix", "tape_bytes",
-                            "fragment_sha256_prefix", "fragment_bytes",
-                            "verdict_sha256_prefix", "gate_code_sha256_prefix",
-                            "fit_code_sha256_prefix")
-                  if _ident_pre.get(k) != _ident_post.get(k)}
+        _drift = identity_drift(_ident_pre, _ident_post)
         if _drift:
             raise RuntimeError(
                 f"REFUSED: inputs CHANGED DURING the run: {_drift}. The "
@@ -1548,6 +1636,66 @@ def stage_fit() -> None:
     finally:
         if release_fit_lock(_lock):
             print(f"  released {_lock.name}", flush=True)
+
+# R-230(4) / R-229 top debt: the population and reach disclosure, EMITTED BY
+# THE GENERATOR. It was re-attached by hand for three consecutive cycles, and
+# these are exactly the fields a fresh generation drops -- the ones whose silent
+# absence turns a development result into an apparent validation.
+#
+# COMPUTED, not asserted. Every field below is derived from the declaration or
+# from the scored rows; none is a prose conclusion sitting beside a table
+# (rule 10). A reader can check each one.
+VALIDATION_MIN_COMPLETE_DAYS = 5          # CLAUDE.md rule 11
+
+
+def population_reach_disclosure(rows) -> dict:
+    """What this receipt's numbers can and cannot support. R-230(4)."""
+    import datetime as _dt
+    ts = [r["t0"] + r["t_start"] for r in rows] if rows else []
+    label = str(getattr(D, "POPULATION", "?"))
+    out = {
+        "population_label": label,
+        "is_development_population": "development" in label.lower(),
+        "declared_in": "phase2_declaration.POPULATION",
+    }
+    if not ts:
+        out.update({"G_complete_utc_days": 0, "dates_present": [],
+                    "span_hours": 0.0})
+    else:
+        lo, hi = min(ts), max(ts)
+        by_date = {}
+        for t in ts:
+            d = _dt.datetime.fromtimestamp(t, _dt.timezone.utc).date().isoformat()
+            by_date[d] = by_date.get(d, 0) + 1
+        complete = []
+        for d in sorted(by_date):
+            d0 = _dt.datetime.fromisoformat(d).replace(
+                tzinfo=_dt.timezone.utc).timestamp()
+            if lo <= d0 and hi >= d0 + 86400:
+                complete.append(d)
+        out.update({
+            "G_complete_utc_days": len(complete),
+            "complete_days": complete,
+            "dates_present": sorted(by_date),
+            "rows_by_date": {k: by_date[k] for k in sorted(by_date)},
+            "span_hours": (hi - lo) / 3600.0,
+            "day_completeness_definition":
+                "a UTC date is COMPLETE iff the population span covers all of "
+                "it: min(t) <= 00:00:00 and max(t) >= the next 00:00:00",
+        })
+    g = out["G_complete_utc_days"]
+    out["intervals_claimable"] = g >= VALIDATION_MIN_COMPLETE_DAYS
+    out["meets_validation_day_bar"] = g >= VALIDATION_MIN_COMPLETE_DAYS
+    out["is_a_validation"] = bool(
+        out["meets_validation_day_bar"] and not out["is_development_population"])
+    out["why"] = (
+        f"G={g} complete UTC day(s) against a bar of "
+        f"{VALIDATION_MIN_COMPLETE_DAYS} (rule 11), on a population labelled "
+        f"{label!r}. is_a_validation is COMPUTED from those two facts, not "
+        f"asserted: a development population or too few complete days makes "
+        f"these numbers a development result, whatever their size.")
+    return out
+
 
 def _supersedes_block() -> dict:
     """What this receipt replaces, emitted BY THE GENERATOR. R-228(5).
@@ -1661,6 +1809,8 @@ def stage_score() -> dict:
            # R-228(5): generator-owned, not hand-added after the fact.
            "protocol_version": PROTOCOL_VERSION,
            "supersedes": _supersedes_block(),
+           # R-230(4): generator-owned, computed from the scored rows below
+           "population_and_reach": None,
            "supersedes_label": "PHASE2_THREE_ARM_V1 (stale: four arms since arm D)", "arms": {}, "population": {},
            # BE F2: this was the literal "d7082b6" -- a ref whose ARMS has
            # THREE entries, beside a four-arm receipt. The governing
@@ -1784,8 +1934,37 @@ def stage_score() -> dict:
             else:
                 mu, sd = lin["norm_mu"], lin["norm_sd"]
                 hb = lgb.Booster(model_file=str(FITDIR / f"lgbm_haz_{coin}.txt"))
+                # R-230(1): the val model is loaded against the fit's RECORD,
+                # not against whether a file happens to be there. This was
+                # `Booster(vf) if vf.exists() else None`, and the None path fed
+                # np.zeros -- so a val model deleted between fit and score
+                # degraded arm C to hazard-only ranking, produced a full set of
+                # plausible numbers, and refused nothing.
                 vf = FITDIR / f"lgbm_val_{coin}.txt"
-                vb = lgb.Booster(model_file=str(vf)) if vf.exists() else None
+                _rec = val_models_record()
+                if coin not in _rec:
+                    raise RuntimeError(
+                        f"REFUSED: the fit recorded no val-model state for "
+                        f"{coin}. Absent and never-written are different facts "
+                        f"and must not be inferred from a file listing.")
+                if _rec[coin]:
+                    if not vf.exists():
+                        raise RuntimeError(
+                            f"REFUSED: the fit RECORDED writing a val model for "
+                            f"{coin} and {vf.name} is absent. Substituting zeros "
+                            f"would silently rank arm C on hazard alone while "
+                            f"reporting it as the value-weighted arm.")
+                    vb = lgb.Booster(model_file=str(vf))
+                else:
+                    if vf.exists():
+                        raise RuntimeError(
+                            f"REFUSED: the fit recorded NO val model for {coin} "
+                            f"yet {vf.name} exists. An artifact the fit did not "
+                            f"write must not be scored.")
+                    vb = None
+                    print(f"  [{coin}/LGBM_PINNED] no val model (recorded): "
+                          f"ranking on hazard alone, by declaration",
+                          flush=True)
                 CH = 50_000                             # ~32MB per chunk, not ~2GB
                 ecv = []
                 for lo in range(0, n_sc, CH):
@@ -1871,16 +2050,19 @@ def stage_score() -> dict:
         raise RuntimeError(
             f"REFUSED: arms were evaluated under DIFFERENT threshold modes: "
             f"{_modes}. A paired comparison across modes is not a comparison.")
+    # R-230(4): the disclosure is computed from the ROWS ACTUALLY SCORED, so it
+    # cannot describe a population other than the one that produced these
+    # numbers. Emitted by the generator; not re-attached by hand.
+    _all_rows = [r for c in SC.values() for r in c["kept"]]
+    out["population_and_reach"] = population_reach_disclosure(_all_rows)
+    _pr = out["population_and_reach"]
+    print(f"  population/reach: {_pr['population_label']} | G="
+          f"{_pr['G_complete_utc_days']} complete UTC days | "
+          f"is_a_validation={_pr['is_a_validation']}", flush=True)
+
     # R-228(2): RECHECK at write. A capture nobody re-verifies is a claim.
     _ident_post = _tape_identity()
-    _drift = {k: (_ident_pre.get(k), _ident_post.get(k))
-              for k in ("tape_sha256_prefix", "tape_bytes",
-                        "topup_sha256_prefix", "topup_bytes",
-                        "fragment_sha256_prefix", "frozen_incumbent_sha256_prefix",
-                        "topup_build_receipt_sha256_prefix",
-                        "verdict_sha256_prefix", "gate_code_sha256_prefix",
-                        "fit_code_sha256_prefix")
-              if _ident_pre.get(k) != _ident_post.get(k)}
+    _drift = identity_drift(_ident_pre, _ident_post)
     if _drift:
         raise RuntimeError(
             f"REFUSED: inputs CHANGED DURING scoring: {_drift}. The numbers "

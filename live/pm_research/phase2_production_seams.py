@@ -523,10 +523,16 @@ def main() -> int:
     if hasattr(PA, "assert_modules_under_root"):
         PA.assert_modules_under_root()          # main-tree run: must pass
         seam("29b it PASSES when modules really are under the root", True)
+        # R-230(3): this rebound PA.D, a module-level ATTRIBUTE. The check now
+        # reads sys.modules, which is both the stronger mechanism and the
+        # realistic threat: an already-imported wrong-tree copy is returned by
+        # import without touching sys.path or any attribute. Rebinding an
+        # attribute no longer reaches the code, so the probe moves with it.
         import types as _ty29
         _fake = _ty29.ModuleType("phase2_declaration")
         _fake.__file__ = "/some/other/tree/phase2_declaration.py"
-        _svD = PA.D; PA.D = _fake
+        _svD = sys.modules.get("phase2_declaration")
+        sys.modules["phase2_declaration"] = _fake
         try:
             PA.assert_modules_under_root()
             seam("29c a module from ANOTHER tree is REFUSED", False,
@@ -535,7 +541,10 @@ def main() -> int:
             seam("29c a module from ANOTHER tree is REFUSED",
                  "isolates nothing" in str(_e29))
         finally:
-            PA.D = _svD
+            if _svD is None:
+                import importlib as _il29
+                _svD = _il29.import_module("phase2_declaration")
+            sys.modules["phase2_declaration"] = _svD
     seam("29d entry points call the probe",
          "assert_modules_under_root()" in inspect.getsource(PA.stage_fit)
          and "assert_modules_under_root()" in inspect.getsource(PA.stage_score))
@@ -1264,6 +1273,111 @@ def main() -> int:
          "present_at_write" in inspect.getsource(PA._supersedes_block),
          "a receipt silently claiming to supersede nothing is "
          "indistinguishable from one whose predecessor was deleted")
+
+    # ---- SEAM 47 (R-230): audit #10's residual fail-opens -----------------
+    # LIMIT STATED SO THE GREEN IS NOT READ WIDER THAN IT IS: these attest the
+    # DIRECT lattice imports. The transitive closure is NOT enumerated -- a
+    # wrong-tree module imported only by a lattice module is not covered here.
+    import types as _ty47, shutil as _sh47, tempfile as _tf47
+    seam("47a the fit RECORDS its val-model state per coin",
+         callable(getattr(PA, "val_models_record", None)),
+         "'absent' and 'never written' were indistinguishable, so a deleted "
+         "val model silently degraded arm C to hazard-only ranking")
+    seam("47b val_models.json is INSIDE the hash lattice",
+         "val_models.json" in PA.FIT_BASE_ARTIFACTS,
+         "forging the record must break its own hash")
+    _d47 = Path(_tf47.mkdtemp()); _sv47 = PA.FITDIR; PA.FITDIR = _d47
+    try:
+        (_d47 / "empty_coins.json").write_text("[]")
+        (_d47 / "val_models.json").write_text(json.dumps({"btc": True,
+                                                          "eth": False}))
+        _exp47 = PA.expected_fit_artifacts({})
+        seam("47c a RECORDED val model is REQUIRED by the expected set",
+             "lgbm_val_btc.txt" in _exp47,
+             "it was verified-when-present and never required")
+        seam("47d the legitimate <100-positives path stays legitimate",
+             "lgbm_val_eth.txt" not in _exp47,
+             "a recorded NO-val coin must not require the file")
+    finally:
+        PA.FITDIR = _sv47
+
+    # every captured identity key is compared, both planes
+    _a47 = PA._tape_identity()
+    _missed47 = [k for k in _a47
+                 if k not in PA.identity_drift(_a47, dict(_a47, **{k: "X"}))]
+    seam("47e EVERY captured identity key is COMPARED",
+         not _missed47,
+         f"captured but never compared: {_missed47} — the fit's tuple listed "
+         f"seven keys while the identity captured twenty-one, so an incumbent "
+         f"swap during fitting passed the recheck")
+    seam("47f capture and comparison share ONE declared set",
+         hasattr(PA, "IDENTITY_DRIFT_EXEMPT"))
+
+    # the wrong-tree route that a path-prefix defence misses
+    _dec47 = Path(_tf47.mkdtemp()) / "othertree"
+    _dec47.mkdir(parents=True)
+    _t47 = _dec47 / "harmful_hazard_model.py"
+    _sh47.copy2(HERE / "harmful_hazard_model.py", _t47)
+    _t47.write_bytes(_t47.read_bytes() + b"\n# WRONG TREE\n")
+    _real47 = sys.modules.get("harmful_hazard_model")
+    _fake47 = _ty47.ModuleType("harmful_hazard_model")
+    _fake47.__file__ = str(_t47)
+    sys.modules["harmful_hazard_model"] = _fake47
+    try:
+        PA.assert_modules_under_root()
+        seam("47g a SYS.MODULES-INJECTED wrong-tree module is REFUSED", False,
+             "an already-imported wrong-tree copy is returned by import WITHOUT "
+             "touching sys.path — the route a PYTHONPATH probe cannot reach and "
+             "a path-prefix-only defence misses")
+    except RuntimeError as _e47:
+        seam("47g a SYS.MODULES-INJECTED wrong-tree module is REFUSED",
+             "OUTSIDE this run root" in str(_e47))
+    finally:
+        if _real47 is None:
+            import importlib as _il47
+            _real47 = _il47.import_module("harmful_hazard_model")
+        sys.modules["harmful_hazard_model"] = _real47
+    _chk47 = PA.assert_modules_under_root()
+    seam("47h the root check covers ALL lattice modules",
+         len(_chk47) == len(PA.CODE_IDENTITY_FILES),
+         f"{len(_chk47)} of {len(PA.CODE_IDENTITY_FILES)}; it checked FOUR "
+         f"while the lattice hashed TWELVE")
+    seam("47i the identity hashes the RESOLVED __file__, not an assumed path",
+         PA.measured_code_identity()["files"]["harmful_hazard_model.py"]
+         == PA._file_sha16(Path(
+             sys.modules["harmful_hazard_model"].__file__).resolve()),
+         "hashing _ROOT/name compares a file to ITSELF and proves nothing")
+    # DA's free cross-check, emitted where cheap: the gate module we loaded
+    # must be the one the manifest's gate_code names.
+    try:
+        import da_state_tape_verify as _gv47
+        _mf47 = PA.FITDIR / PA.FIT_MANIFEST
+        if _mf47.exists():
+            _want47 = json.loads(_mf47.read_text()).get("gate_code_sha256_prefix")
+            seam("47j the LOADED gate module matches the manifest's gate_code",
+                 PA._file_sha16(Path(_gv47.__file__).resolve()) == _want47,
+                 "a free cross-check between two independently recorded facts")
+    except ImportError:
+        pass
+
+    # R-229 top debt, taken in this cycle
+    _pr47 = PA.population_reach_disclosure(
+        [{"t0": 1787650200.0, "t_start": float(i * 3600)} for i in range(15)])
+    seam("47k the generator EMITS the population/reach disclosure",
+         isinstance(_pr47, dict) and "is_a_validation" in _pr47,
+         "re-attached by hand for three cycles; a fresh generation drops "
+         "exactly the fields whose absence reads as validation")
+    seam("47l is_a_validation is COMPUTED, not asserted",
+         _pr47["is_a_validation"] is False
+         and _pr47["G_complete_utc_days"] == 0
+         and _pr47["is_development_population"] is True,
+         "a prose conclusion beside a table has contradicted the table before")
+    _pr47b = PA.population_reach_disclosure(
+        [{"t0": 1787000000.0, "t_start": float(i * 86400)} for i in range(9)])
+    seam("47m the disclosure RESPONDS to the data (it is not a constant)",
+         _pr47b["G_complete_utc_days"] > _pr47["G_complete_utc_days"],
+         "a disclosure that reports the same thing regardless of input is a "
+         "hardcoded verdict wearing a computation's clothes")
 
     print(f"\n{'PRODUCTION SEAMS GREEN' if not FAILURES else 'PRODUCTION SEAMS RED'}: "
           f"{len(FAILURES)} failing")
