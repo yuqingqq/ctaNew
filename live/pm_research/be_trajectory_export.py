@@ -494,18 +494,37 @@ def selftest() -> int:
            "B4 a deliberate TYPO is REFUSED — it removes the real arm as well "
            "as adding a fake one, and the MISSING side is what catches it")
 
-    # OBSERVATION, reported not asserted as a defect: a PURELY ADDITIVE unknown
-    # arm is accepted and ignored. The candidate list is identical with and
-    # without it, so nothing is miscounted today; but a declaration naming a
-    # composition the contract does not have passes silently, which would
-    # matter if someone declared a future arm early and assumed it was counted.
-    _extra = DA.candidate_multiplicity(
-        **dict(_base, consumes_predictor=dict(_cs["consumes_predictor"],
-                                              FUTURE_ARM=True)))
-    ok(sorted(_extra["candidates"]) == sorted(_m["candidates"]),
-       "B4 a purely ADDITIVE unknown arm changes NO candidate (it is ignored, "
-       "not counted) — reported to DA as an observation, since a declaration "
-       "naming a non-existent composition passes silently")
+    # THIS TEST CHANGED SIDES, and the change is the point. It originally
+    # asserted that a purely ADDITIVE unknown arm was IGNORED — a test that
+    # DOCUMENTED A HOLE rather than proving a property. I reported the hole;
+    # DA closed it (316ef0d) on the argument that ignoring an extra declaration
+    # computes multiplicity over a PROJECTION of what was declared. So the
+    # assertion now proves the FIX instead of the defect.
+    #
+    # A defect-documenting test is worth writing — it makes the hole visible
+    # and it fails loudly when someone closes it, which is exactly what
+    # happened. But it must be REWRITTEN when the hole closes, or it becomes a
+    # test defending a behaviour nobody wants any more.
+    for _where, _kw in (
+            ("consumes_predictor",
+             dict(_base, consumes_predictor=dict(_cs["consumes_predictor"],
+                                                 FUTURE_ARM=True))),
+            ("roles",
+             dict(_base, roles=dict(_cs["role"], FUTURE_ARM="candidate")))):
+        try:
+            DA.candidate_multiplicity(**_kw)
+            ok(False, f"B4 an ADDITIVE unknown arm in {_where} is REFUSED")
+        except TypeError as _e:
+            ok(False, f"B4 additive-unknown case malformed, guard not "
+                      f"reached: {_e}")
+        except Exception as _e:
+            ok("FUTURE_ARM" in str(_e),
+               f"B4 an ADDITIVE unknown arm in {_where} is REFUSED, naming it "
+               f"— ignoring it would compute multiplicity over a PROJECTION of "
+               f"what was declared (DA 316ef0d, closing my observation)")
+    ok(len(_m["candidates"]) == 14,
+       "B4 and the CLEAN declaration still derives its 14 triples — closing "
+       "the hole did not turn the derivation into a wall")
 
     try:
         DA.candidate_multiplicity(
