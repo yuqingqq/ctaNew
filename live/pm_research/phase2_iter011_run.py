@@ -604,9 +604,21 @@ def selftest() -> int:
            "an EMPTY object is refused (existence alone is not a result)")
     ok(assert_outputs_written((_d / "nope2.json",),
                               argv=["prog", "--selftest"]).get("exempt")
-       == "--selftest",
+       == ["--selftest"],
        "an EXPLICIT --selftest run is EXEMPT (a selftest writes no artifact "
        "by design; the guard must not punish it)")
+    ok(assert_outputs_written((_d / "nope5.json",),
+                              argv=["prog", "--dry-run"]).get("exempt")
+       == ["--dry-run"],
+       "a --dry-run is EXEMPT too — it writes to a throwaway path by design, "
+       "and the exemption is still keyed on the DECLARED MODE")
+    for _bad_argv in (["prog"], ["prog", "--dryrun"], ["prog", "--dry_run"]):
+        try:
+            assert_outputs_written((_d / "nope6.json",), argv=_bad_argv)
+            ok(False, f"a non-declared mode {_bad_argv[1:]} is NOT exempt")
+        except RuntimeError:
+            ok(True, f"a non-declared mode {_bad_argv[1:]} is NOT exempt — "
+                     f"lookalike flags do not grant the exemption")
     try:
         assert_outputs_written((_d / "nope3.json",), argv=["prog"])
         ok(False, "the exemption is NOT reachable without the declared flag")
@@ -789,16 +801,29 @@ def incumbent_null_applicability() -> dict:
 
 DECLARED_OUTPUTS = (OUT,)
 SELFTEST_FLAG = "--selftest"
+DRY_RUN_FLAG = "--dry-run"
+# Modes that CORRECTLY do not write the declared output. Each is a DECLARED
+# FLAG, never "the outputs happen to be missing" — that would be a bypass
+# excusing the exact failure the guard exists to catch.
+#
+# THIS LIST HAS GROWN TWICE. --selftest was added when a green selftest exited
+# 1; --dry-run when the harness wrote to a throwaway path. The pattern is that
+# the guard checks a FIXED declared path while modes legitimately write
+# elsewhere. If a third mode appears, the right fix is for main() to REPORT
+# where it wrote and the guard to check THAT — noted here rather than
+# refactored now, because a third case has not appeared and speculative
+# generality is its own defect.
+NON_WRITING_MODES = (SELFTEST_FLAG, DRY_RUN_FLAG)
 
 
 def is_selftest_mode(argv=None) -> bool:
-    """Declared selftest mode. A selftest CORRECTLY writes no artifact.
+    """A DECLARED mode that correctly writes no declared artifact.
 
     The exemption is tied to the DECLARED MODE, never to 'the outputs happen to
-    be missing' — the latter would be a bypass that excuses exactly the failure
-    the guard exists to catch. In every other mode the guard applies in full,
-    including when selftest() has been called internally as the run's gate."""
-    return SELFTEST_FLAG in (sys.argv if argv is None else argv)
+    be missing'. In every other mode the guard applies in full, including when
+    selftest() has been called internally as the run's gate."""
+    a = sys.argv if argv is None else argv
+    return any(f in a for f in NON_WRITING_MODES)
 
 
 def assert_outputs_written(outputs=DECLARED_OUTPUTS, argv=None) -> dict:
@@ -810,7 +835,8 @@ def assert_outputs_written(outputs=DECLARED_OUTPUTS, argv=None) -> dict:
     and carry its artifact identity — existence alone would pass a zero-byte
     file, and parsing alone would pass an empty object."""
     if is_selftest_mode(argv):
-        return {"exempt": SELFTEST_FLAG,
+        return {"exempt": [f for f in NON_WRITING_MODES
+                           if f in (sys.argv if argv is None else argv)],
                 "why": "a selftest run writes no artifact BY DESIGN; the "
                        "exemption is on the DECLARED MODE, not on the outputs "
                        "being absent"}
@@ -839,6 +865,54 @@ def assert_outputs_written(outputs=DECLARED_OUTPUTS, argv=None) -> dict:
 
 
 
+def synthetic_populations(n_per_coin: int = 400, seed: int = 20260828) -> tuple:
+    """FIT/EVAL blocks shaped exactly like _feature_pass output, no real data.
+
+    Used ONLY by --dry-run. The point is to exercise main()'s OWN path over
+    substituted populations: same fits, same reports, same economics, same
+    family assembly, same output guard. A parallel harness that IMITATED main()
+    would prove nothing — that is precisely the defect Codex found (I11-2), a
+    component suite green while main() called none of it."""
+    import random as _r
+    rr = _r.Random(seed)
+    L = str(D.TARGET_LATENCY_MS)
+    out = {}
+    for coin in ("btc", "eth"):
+        rows, PM, FN, ST = [], [], [], []
+        for i in range(n_per_coin):
+            # a mix that populates every head: harm, good, zero, and no-fill
+            bucket = i % 4
+            fill = bucket != 3
+            v = {0: 4.0 + rr.random(), 1: -3.0 - rr.random(),
+                 2: 0.0, 3: 0.0}[bucket]
+            rows.append({
+                "slug": f"{coin}-updown-5m-{1787650200 + (i // 8) * 300}",
+                "coin": coin, "side": "BUY_UP" if i % 2 else "SELL_UP",
+                "gen": i // 2, "t0": 1787650200.0 + (i // 8) * 300,
+                "t_start": float(i % 8), "any_fill_ahead": fill,
+                "latency": {L: {"preventable_value_cents": v if fill else 0.0,
+                                "preventable_shares": 1.0 if fill else 0.0,
+                                "stale_shares": 0.0}}})
+            PM.append([rr.random() for _ in range(6)])
+            FN.append([rr.random()])
+            ST.append([rr.random() for _ in range(4)])
+        out[coin] = {"kept": rows, "PM": PM, "FN": FN, "ST": ST,
+                     "drops": {"pm": 0, "fine": 0, "no_archive": 0,
+                               "state_join_failed": 0}}
+    # EVAL is an INDEPENDENT draw, so the out-of-sample structure is preserved
+    fit = out
+    ev = synthetic_populations.__wrapped__(n_per_coin, seed + 1) \
+        if hasattr(synthetic_populations, "__wrapped__") else None
+    return fit, ev
+
+
+def _synth_pair(n_per_coin: int = 400) -> tuple:
+    """FIT and EVAL as two INDEPENDENT synthetic draws."""
+    fit, _ = synthetic_populations(n_per_coin, seed=20260828)
+    ev, _ = synthetic_populations(n_per_coin, seed=20260829)
+    return fit, ev
+
+
 def main() -> int:
     """The 011 DEVELOPMENT run. Known-bads first: selftest gates the run."""
     if "--selftest" in sys.argv:
@@ -848,25 +922,55 @@ def main() -> int:
                          "that has not shown it can fire.")
     import phase2_embargo as EMB
 
-    PA.assert_modules_under_root()
-    PA.pin_data_root()
-    PA.assert_tape_is_v5()
-    _v = PA.assert_gate_passed()
-    PA.assert_verdict_subject_is(PA.TAPE_PATH, _v)
-    ident = PA._tape_identity()
-    print(f"  identity: tape {ident['tape_sha256_prefix']} fragment "
-          f"{ident['fragment_sha256_prefix']} topup {ident['topup_sha256_prefix']}",
-          flush=True)
+    # RULE 17 HARNESS. --dry-run substitutes SYNTHETIC populations and runs
+    # EVERYTHING ELSE IN THIS FUNCTION unchanged: both arms fitted, applied,
+    # reported, economics computed, the 24-cell family assembled and
+    # adjudicated, the output guard enforced. It reads no real data, touches no
+    # model artifact and writes to a throwaway path.
+    #
+    # It exists because a component suite cannot see an unwired main(): every
+    # falsifier calls evaluate_family, q4_economics and
+    # assert_receipt_has_all_cells DIRECTLY, so they would all stay green if
+    # someone unwired main() again. This drives main()'s OWN path.
+    _dry = "--dry-run" in sys.argv
+    if _dry:
+        print("  DRY RUN: synthetic populations, no real data, throwaway "
+              "output. Exercising main()'s own path.", flush=True)
 
-    print("  indexing train split...", flush=True)
-    TP = PA.tape_index("train")
-    print(f"  train split indexed: {len(TP):,} rows", flush=True)
-    FIT = PA._feature_pass(PA.FRAGMENT, "fragment", TAPE=TP)
-    del TP
-    print("  indexing score split for the embargo boundary...", flush=True)
-    SP = PA.tape_index("score")
-    print(f"  score split indexed: {len(SP):,} rows", flush=True)
-    probe = [{"t0": v["t0"], "t_start": v["t_start"]} for v in SP.values()]
+    if not _dry:
+        PA.assert_modules_under_root()
+        PA.pin_data_root()
+        PA.assert_tape_is_v5()
+        _v = PA.assert_gate_passed()
+        PA.assert_verdict_subject_is(PA.TAPE_PATH, _v)
+        ident = PA._tape_identity()
+        print(f"  identity: tape {ident['tape_sha256_prefix']} fragment "
+              f"{ident['fragment_sha256_prefix']} topup "
+              f"{ident['topup_sha256_prefix']}", flush=True)
+        print("  indexing train split...", flush=True)
+        TP = PA.tape_index("train")
+        print(f"  train split indexed: {len(TP):,} rows", flush=True)
+        FIT = PA._feature_pass(PA.FRAGMENT, "fragment", TAPE=TP)
+        del TP
+        print("  indexing score split for the embargo boundary...", flush=True)
+        SP = PA.tape_index("score")
+        print(f"  score split indexed: {len(SP):,} rows", flush=True)
+    else:
+        ident = {"tape_sha256_prefix": "DRY_RUN", "DRY_RUN": True,
+                 "fragment_sha256_prefix": "DRY_RUN",
+                 "topup_sha256_prefix": "DRY_RUN"}
+        FIT, EVAL = _synth_pair()
+        SP = None
+    # The embargo probe. In a dry run it is derived from the SYNTHETIC EVAL
+    # rows, exactly as the real path derives it from the score split — an empty
+    # probe would make phase2_embargo refuse ("an embargo over an empty holdout
+    # is vacuous, not satisfied", and it is right to), and SKIPPING the purge
+    # would mean the dry run does not exercise it, which defeats the harness.
+    if SP is not None:
+        probe = [{"t0": v["t0"], "t_start": v["t_start"]} for v in SP.values()]
+    else:
+        probe = [{"t0": r["t0"] + 3600.0, "t_start": r["t_start"]}
+                 for c in EVAL.values() for r in c["kept"]]
     for coin in list(FIT):
         if not FIT[coin]["kept"]:
             continue
@@ -880,7 +984,8 @@ def main() -> int:
         FIT[coin]["kept"] = [FIT[coin]["kept"][n] for n in keep]
         print(f"  [purge/{coin}] {before:,} -> {len(FIT[coin]['kept']):,}",
               flush=True)
-    EVAL = PA._feature_pass(PA.TOPUP, "topup", TAPE=SP)
+    if not _dry:
+        EVAL = PA._feature_pass(PA.TOPUP, "topup", TAPE=SP)
     del SP, probe
 
     out = {"artifact": "iter011_conditional_value_v1",
@@ -930,7 +1035,12 @@ def main() -> int:
             rep = report_arm(ap, tge)
             rep["fit_seconds"] = round(time.time() - t0, 1)
             rep["evaluation"] = "OUT-OF-SAMPLE within development"
-            rep["economics"] = q4_economics(pr, EVAL[coin]["kept"])
+            # `ap` is apply_arm's output; this said `pr`, an undefined name.
+            # A NameError that would have killed the REAL run at the FIRST arm,
+            # before any artifact — the same class as I11-1, and invisible to
+            # every component test because they all call q4_economics directly.
+            # Found by the --dry-run harness on its first execution.
+            rep["economics"] = q4_economics(ap, EVAL[coin]["kept"])
             out["results"][coin][arm] = rep
             h = rep["heads"]
             # I11-1: this printed h['Q2_sign'], a key report_arm has never
@@ -964,11 +1074,20 @@ def main() -> int:
                      "out-of-sample relative to the fit but neither is a "
                      "validation set. Selection and validation require later "
                      "untouched complete UTC days (R-232 9.4, per coin)."}
-    with OUT.open("w") as fh:
+    _out_path = OUT
+    if _dry:
+        import tempfile as _tf_dry
+        _out_path = Path(_tf_dry.mkdtemp()) / OUT.name
+        out["DRY_RUN"] = {
+            "synthetic_populations": True, "real_data_read": False,
+            "model_artifacts_read": False, "output_path": str(_out_path),
+            "why": "exercises main()'s OWN path — a component suite cannot see "
+                   "an unwired main(), which is defect I11-2"}
+    with _out_path.open("w") as fh:
         json.dump(out, fh, indent=1, sort_keys=True, default=str)
         fh.flush(); os.fsync(fh.fileno())
-    ev = assert_outputs_written()
-    print(f"\nWROTE {OUT.name}: {ev[OUT.name]}", flush=True)
+    ev = assert_outputs_written((_out_path,))
+    print(f"\nWROTE {_out_path.name}: {ev.get(_out_path.name, ev)}", flush=True)
     return 0
 
 
