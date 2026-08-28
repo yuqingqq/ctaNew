@@ -45,9 +45,13 @@ that file before the boundary; it is a safety hold, not a stray edit.**
 - **O1d:** never-connected gaps record from scope start (longer, honest
   durations for that class; cross-boundary comparisons treat pre-boundary as
   understated).
-- **Day bar:** 08-29 is judged under DAY_BAR_V2 (P1/P2/P3, `dfa0977`); the
-  first post-deploy day is the pre-declared DISCRIMINATING test (~30 vs ~79
-  vs >120 s/hr readings, doc §3).
+- **Day bar:** 08-29 is judged under DAY_BAR_V2 (P1/P2/P3, `dfa0977`).
+  SUPERSEDED 06:04Z by the doc's §3 amendment (`368345b` — MEM caught the
+  stale citation here): the reading is now ONE band — expect **~55–80 s/hr**
+  (both models); **below ~45** = O1b's reconnect residual also fell
+  (unmodelled); **above ~120 (P1 FAIL)** = the detection-lag diagnosis was
+  wrong, NOT the fix underperforming. *(Original two-model text "~30 vs ~79
+  vs >120" superseded; the pre-registration doc is authoritative.)*
 
 ## Abort conditions
 
