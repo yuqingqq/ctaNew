@@ -37,20 +37,38 @@ parallel; result-based selection may not reuse consumed days.
 
 ### 0.1 Correctness blockers before downstream integration
 
-- [ ] Require both conditional LightGBM value-model artifacts in the expected
+- [x] Require both conditional LightGBM value-model artifacts in the expected
   manifest hash set; absence or byte mismatch must refuse scoring.
-- [ ] Extend fit-side pre-load/write-time drift detection to every bound
+  — done, `5d8d58b`: the FIT records `val_models.json` inside the hash lattice
+  and the expected set is derived from it (`phase2_arms.py:1151`); exercised in
+  production at `fd1e949` (14 `file_hashes`, both val models required).
+- [x] Extend fit-side pre-load/write-time drift detection to every bound
   frozen/top-up/receipt input used by the scorer.
-- [ ] Enforce the repository root for every result-bearing imported module,
+  — done, `5d8d58b`: `identity_drift` compares every captured key with
+  `IDENTITY_DRIFT_EXEMPT = ()` (`phase2_arms.py:975`), wired at both fit
+  (`:1617`) and score (`:2071`).
+- [x] Enforce the repository root for every result-bearing imported module,
   including the harmful exposure/valuation and policy modules.
-- [ ] Make population role, reach (`G`, complete-day count and as-of) and
+  — done, `5d8d58b`: all 12 `CODE_IDENTITY_FILES` imported at entry with
+  `__file__` resolved under `_ROOT` (`phase2_arms.py:118`), replacing the
+  four-module check.
+- [x] Make population role, reach (`G`, complete-day count and as-of) and
   development-not-validation caveats generator-owned receipt fields.
+  — done, `5d8d58b`: `is_a_validation` is COMPUTED from the declared population
+  label and the complete-UTC-day count (`phase2_arms.py:1695`); first emitted by
+  the generator at `fd1e949`.
 - [ ] Preserve peer audit annotations across regeneration by mechanism rather
   than manual reattachment.
-- [ ] Regenerate the increment-null receipt against the same Phase-2 v2.2
+- [x] Regenerate the increment-null receipt against the same Phase-2 v2.2
   provenance chain.
-- [ ] Every new guard gets a real positive control and a known-bad behavioural
+  — done, `163bd36` under R-234/R-235, re-bound to the v2.3 chain that
+  supersedes the v2.2 named above. The re-binding surfaced a determinism defect
+  (unpinned `PYTHONHASHSEED` made every draw independent); repaired canonically
+  with sight-unseen pre-committed acceptance, survivors unchanged.
+- [x] Every new guard gets a real positive control and a known-bad behavioural
   refusal; source-text checks do not satisfy this item.
+  — done as standing practice, verified at R-231 (11 red-then-green known-bads
+  that cycle; BE battery 489/0, seams 184/0 on the coordinator's own run).
 
 ## 1. Current state and decision boundary
 
