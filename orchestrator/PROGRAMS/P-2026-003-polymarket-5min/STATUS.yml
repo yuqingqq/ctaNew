@@ -237,7 +237,21 @@ flags:
   idle_seat_dispatch: STANDING-COORDINATOR-PRACTICE # 2026-08-28 R-245, USER
                              # directive ("you will launch jobs if the
                              # respective sessions are idle and have future
-                             # jobs"). NOTE THE SUBJECT: this is a standing
+                             # jobs").
+                             # PROVENANCE OF THE NARROW READING BELOW, stated
+                             # precisely because it is a rule about the scope of
+                             # the seat that writes this file: MEM wrote it
+                             # first as its own reading; the COORDINATOR then
+                             # CONFIRMED it in-session at 2026-08-28T09:46Z as
+                             # the INTENDED one -- the user's "you will launch
+                             # jobs" addressed the coordinator -- and undertook
+                             # to record the confirmation in the next register
+                             # entry. AT THIS WRITE THE REGISTER CITE DOES NOT
+                             # YET EXIST: this is a cross-session confirmation,
+                             # not an artifact. UPGRADE THIS PROVENANCE LINE TO
+                             # THE R-ENTRY CITE once it lands, and until then do
+                             # not quote the narrow reading as register-backed.
+                             # NOTE THE SUBJECT: this is a standing
                              # practice for the COORDINATOR to dispatch idle
                              # seats onto the next admissible plan job. It is
                              # NOT a licence for a seat to self-dispatch outside
