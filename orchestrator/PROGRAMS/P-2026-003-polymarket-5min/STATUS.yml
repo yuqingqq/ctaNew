@@ -4,6 +4,17 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-08-28T06:25Z (MEM): R-232 EXECUTION CLOSED at R-233 (166679c). DA's
+  both-coin verification of v2.3 is closed (Q-DA-113, 846e1ca): 15/15 at the
+  commit fd1e949, btc worst 1.273e-11 / eth 3.638e-12, and the FIRST
+  verification self-attesting on runtime identity -- it names its own
+  feature-code bytes and refuses wrong-tree modules, so the verifier proves
+  which code it ran instead of hashing a repo copy beside it. The Q-DA-79
+  caveat is back in the receipt (cd23ebd) with BINDING_STALE correctly marked;
+  that is the THIRD hand application and the count is the argument for BE's
+  merge, which is next. Everything for tonight is now staged: freeze live with
+  its clock running, O1 held at v3_1 for the 00:00:00Z boundary, O2
+  pre-registered and amended, 08-28 judged at 00:06Z under the old bar. PRIOR:
   2026-08-28T06:15Z (MEM): FIRST FROZEN CANDIDATE. The rule-12 freeze receipt
   landed at b3f7f9f -- LGBM_PINNED, btc-only, MARKED UNVALIDATED, multiplicity
   1, race clock running from the freeze commit against a bar of 5 later
@@ -69,6 +80,17 @@ updated: >-
   hygiene + recv_ns measurement)
 
 flags:
+  verdict_2026_08_28_expectation: STATED-BEFORE-THE-RESULT # 2026-08-28, from
+                             # R-233's open-queue line, recorded here so
+                             # tonight's 00:06Z verdict is read against an
+                             # expectation fixed in advance rather than
+                             # explained afterwards: btc EXPECTED FAIL at
+                             # ~153 s/hr (live-ledger measurement as-of
+                             # 2026-08-28T05:31Z), eth EXPECTED PASS. Judged
+                             # under the OLD count bar -- day-bar v2 governs
+                             # days >=08-29 only. If btc PASSES tonight, that
+                             # is a surprise worth explaining, not a relief to
+                             # absorb quietly.
   state_file_ownership: MEM # 2026-08-28T06:09Z. Coordinator standing division
                              # this session: BE/DA commit artifacts and report
                              # facts; the MEM seat sweeps and writes STATUS.yml
@@ -84,7 +106,21 @@ flags:
                              # such a write, never treat it as a violation or
                              # revert it. Amendment sits with the coordinator to
                              # raise with the user.
-  receipt_v2_3: CLOSED-CHAIN # 2026-08-28 BE, fd1e949. fit7/score7 from
+  receipt_v2_3: CLOSED-CHAIN-DA-VERIFIED # DA verification CLOSED 2026-08-28
+                             # (Q-DA-113, 846e1ca): 15/15 cells reproduced
+                             # independently AT THE COMMIT fd1e949 -- btc worst
+                             # |delta| 1.273e-11, eth worst 3.638e-12, the same
+                             # per-cell float-noise pattern for a fourth
+                             # generation. FIRST verification that is
+                             # SELF-ATTESTING ON RUNTIME IDENTITY: it emits
+                             # RUNTIME_IDENTITY naming its own feature-code
+                             # bytes and wrong-tree modules REFUSE -- DA's
+                             # Q-DA-112 sweep applied to DA's own stack, so the
+                             # verifier now proves which code it ran rather than
+                             # hashing a repository copy beside it. Ratified at
+                             # R-233 (166679c). ORIGINAL ENTRY KEPT AS
+                             # PROVENANCE (rule 13): 2026-08-28 BE, fd1e949.
+                             # fit7/score7 from
                              # e12e2c7 under the R-230 chain. Sixth
                              # numerically identical generation; 1,046 leaves,
                              # max abs delta 0.000e+00. Supersedes
@@ -254,7 +290,24 @@ flags:
                              # preserved: 417423a's message claimed the sidecar
                              # shipped when generation had failed; 2642b90
                              # CORRECTS rather than rewrites.
-  blocker_6_annotation_survival: OPEN-MECHANISM-PENDING # 2026-08-28. Contract
+  blocker_6_annotation_survival: OPEN-MECHANISM-PENDING # SUPERSEDING FACT
+                             # 2026-08-28T06:23Z (rule 13, the original text
+                             # below stands unedited): the caveat WAS re-applied
+                             # to v2.3 by its owner at cd23ebd -- so the
+                             # statement below that "v2.3 carries the RESERVED
+                             # placeholder", true when read at 06:09Z, is no
+                             # longer the state. da_caveat_field now carries the
+                             # Q-DA-79 content plus a BINDING_STALE block naming
+                             # declared {btc 645,851} against actual {btc
+                             # 311,640, eth 299,703}, applied_by "DA by hand,
+                             # contract clause 4, until BE's sidecar merge
+                             # lands", and DA verified only that field changed
+                             # (everything else byte-identical to fd1e949).
+                             # THE BLOCKER IS STILL OPEN AND THE COUNT IS THE
+                             # ARGUMENT: this is the THIRD consecutive hand
+                             # application. BE's annotation_canon_v1 merge is
+                             # the mechanism and is next in its queue. ORIGINAL
+                             # ENTRY (rule 13): 2026-08-28. Contract
                              # is ratified (annotation_canon_v1 above) but the
                              # MECHANISM is not built: fd1e949's v2.3 carries
                              # da_caveat_field = "RESERVED for Q-DA-79 post-gap

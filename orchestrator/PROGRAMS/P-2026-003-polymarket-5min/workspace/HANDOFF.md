@@ -1,9 +1,67 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-08-28T06:15Z (MEM) — **first frozen candidate: the rule-12
-freeze receipt landed at `b3f7f9f`.** LGBM_PINNED, btc-only, marked
-unvalidated, race clock running. Collector v4 deploys tonight at 00:00:00Z;
-day-bar v2 governs days ≥08-29.
+Updated: 2026-08-28T06:25Z (MEM) — **R-232 execution CLOSED at R-233.** v2.3
+DA-verified 15/15 with self-attesting runtime identity; freeze live with its
+clock running; O1 held at v3_1 for tonight's 00:00:00Z boundary; 08-28 judged
+at 00:06Z under the old bar.
+
+## 2026-08-28 ~06:25Z (MEM) — DA's v2.3 verification + R-233 swept; one earlier fact corrected
+
+**DA both-coin verification CLOSED** (Q-DA-113, `846e1ca`; ratified in R-233,
+`166679c`): **15/15 cells reproduced independently at the commit** `fd1e949` —
+btc worst |Δ| 1.273e-11, eth worst 3.638e-12, the same per-cell float-noise
+pattern for a fourth generation.
+
+**The part that is new, not just repeated:** this is the **first verification
+that is self-attesting on runtime identity.** It emits `RUNTIME_IDENTITY`
+naming its own feature-code bytes, and wrong-tree modules refuse — DA's
+Q-DA-112 sweep applied to DA's own stack. Every prior verification hashed the
+repository copy while running whatever tree the process happened to import;
+this one proves which code it ran. That is R-230(3)'s defect class closed on
+the verifying side, not only the producing side.
+
+**CORRECTION to the 06:12Z entry below** (in-band; that entry stands unedited):
+it recorded that v2.3 carried `da_caveat_field` = `RESERVED`. True when read at
+06:09Z, **not true now.** DA re-applied the Q-DA-79 caveat at `cd23ebd`, taken
+from the committed owner sidecar with its signature verified under
+`annotation_canon_v1` — *not re-authored*, which is the whole point of the
+contract. Read at the receipt just now: the field carries the Q-DA-79 content
+plus a `BINDING_STALE` block naming `declared {btc 645,851}` against `actual
+{btc 311,640, eth 299,703}`, `applied_by` "DA by hand, contract clause 4, until
+BE's sidecar merge lands". Contract clause 4 working as designed: the caveat is
+**merged and marked stale** — not dropped (which loses a caveat someone relied
+on) and not carried silently (which is how one population's magnitudes come to
+describe another's receipt). DA verified only that field changed; everything
+else byte-identical to `fd1e949`.
+
+**The blocker is still open and the count is the argument.** Third consecutive
+hand application. BE's `annotation_canon_v1` merge — proven-agreement gate
+against DA's real sidecar bytes, expected `BINDING_STALE` — is next in its
+queue and is what closes it.
+
+### Tonight, in order — and what is expected before it happens
+
+1. **00:00:00Z — O1 boundary deploy** per `plans/O1_DEPLOY_RUNBOOK_2026-08-29.md`
+   (now carrying the amended single-band citation, `6c59b75`).
+2. **00:06Z — per-coin verdict on 08-28, OLD count bar.** **Expectation stated
+   in advance** (R-233, from the live ledger as-of 05:31Z): **btc expected FAIL
+   at ~153 s/hr; eth expected PASS.** Recorded here and in `STATUS.yml` so the
+   result is read against a fixed prior rather than explained afterwards — **if
+   btc passes tonight, that is a surprise to explain, not a relief to absorb.**
+3. **08-29 — the first day under day-bar v2**, and the pre-declared
+   discriminating test on the amended single band (~55–80 / <45 / >120 s/hr).
+
+### Open queues at this write
+
+- **BE:** `annotation_canon_v1` merge (closes blocker 6), then 011 development
+  — target builder + heads, known-bads first, against the FROZEN preregistration
+  (`3b71d3e`).
+- **DA:** blocker-7 increment-null re-binding at the v2.3 chain; day-bar v2
+  implementation (P1/P2/P3, falsifiers, per-slug vs coin-level dual reporting);
+  lanes 2/4 specs.
+- **Coordinator:** the boundary deploy, then the 00:06Z verdict to the user.
+- **User:** the CLAUDE.md code-relay amendment (R-233 ask) — until it lands,
+  fresh seats writing the state files are behaving correctly.
 
 ## 2026-08-28 ~06:15Z (MEM) — freeze receipt swept into state
 
