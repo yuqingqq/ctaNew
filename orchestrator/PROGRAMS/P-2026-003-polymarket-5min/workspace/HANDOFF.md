@@ -126,7 +126,7 @@ to staging, promotion only when the WORST rc across both checkers is 0, plus a
 default-on refusal (rc 6) to arm onto an occupied locator. Seam 13/13.
 (4) **BE's bound debts** — callable `gap_contains`, callable absorption guard,
 seam 30 rewritten to call the real function, the increment-null reconciliation
-refusal given a falsifier, plus R-225's four guard-wiring findings.
+refusal given a falsifier. **R-225's four guard-wiring findings are CLOSED** (BE's enforcement chain, receipt v2.1). **R-228 (user audit #9): items 1/2/4/5 are BE's; item 3 was DA's staging fail-open and is FIXED 2026-08-28 (`da_await_gate.sh`, seam 15/15, red-then-green proven against the pre-fix wrapper).**
 
 **RUNBOOK — ARMING A FUTURE TAPE (tape7+). STEP ONE, BEFORE ANY ARM:**
 `da_await_gate.sh` REFUSES (rc 6) onto an occupied ruled locator, by design
