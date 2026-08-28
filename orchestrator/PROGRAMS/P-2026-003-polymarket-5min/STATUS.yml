@@ -4,6 +4,34 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-08-28T06:09Z (MEM state sweep; clock read as a separate command per
+  R-214): STATE FILES BROUGHT CURRENT THROUGH R-232 AND RECEIPT v2.3. They had
+  stopped at R-228 / d506a06 -- R-229, R-230, R-231, R-232, the O1 collector
+  package, the O2 day bar and iteration-011 appeared ZERO times in either
+  STATUS.yml or HANDOFF.md before this write. LANDED SINCE: receipt v2.3
+  (fd1e949) from fit7/score7 at e12e2c7 -- the SIXTH consecutive numerically
+  identical generation (1,046 leaves compared, max abs delta 0.000e+00; sole
+  differing leaf da_caveat_field, predicted before the run), and the
+  population/reach disclosure is GENERATOR-OWNED for the first time. Read at
+  the artifact for this entry, not from a report: population_and_reach =
+  label da_development_topup, G_complete_utc_days 0, is_a_validation false,
+  intervals_claimable false, dates_present [2026-08-25], 611,343 rows,
+  span 14.41 h -- COMPUTED from the rows actually scored against rule 11's
+  bar, which closes R-229's top debt by mechanism rather than by hand
+  re-attachment. val_models.json {btc true, eth true} now sits INSIDE the hash
+  lattice (14 file_hashes, up from 13), so score7 REQUIRED both val models
+  instead of tolerating their absence. Six fits agree
+  (ef9b775 / 19b0611 / 43f777d / 97b7183 / e12e2c7). UNCHANGED BY ANY OF IT:
+  development population, G=0, NOT a validation -- R-225/R-228/R-230 hardened
+  PROVENANCE, not reach. IN FLIGHT at this write: DA both-coin verification of
+  v2.3, then the rule-12 LGBM freeze receipt (R-232(3): btc-only, MARKED
+  UNVALIDATED, multiplicity = 1 recorded at freeze). TONIGHT: collector v4
+  deploys at 2026-08-29T00:00:00Z under runbook cb85ebd; the 00:06Z per-coin
+  verdict judges 08-28 under the OLD count bar; day-bar v2 (dfa0977, amended
+  368345b) governs days >=2026-08-29 only. STATE-FILE OWNERSHIP moved to the
+  MEM seat by coordinator standing division this session -- see the
+  state_file_ownership flag for the CLAUDE.md conflict that is not yet
+  reconciled. PRIOR:
   2026-08-28 (coordinator): harmful-fill programme plan updated for the next
   conditional-research cycle. Added separate conditional signed-value,
   timestamped fair-price successor, frozen-skew and common action-value replay
@@ -31,6 +59,173 @@ updated: >-
   hygiene + recv_ns measurement)
 
 flags:
+  state_file_ownership: MEM # 2026-08-28T06:09Z. Coordinator standing division
+                             # this session: BE/DA commit artifacts and report
+                             # facts; the MEM seat sweeps and writes STATUS.yml
+                             # + HANDOFF.md, so the post-chain refresh habit
+                             # (a46ae64 pattern) cannot race a coordinator tick.
+                             # CONSTRAINT, recorded because it is NOT yet
+                             # reconciled: CLAUDE.md still instructs EVERY
+                             # session to update STATUS.yml + HANDOFF.md after
+                             # each completed step. That is a USER-level rule;
+                             # no coordinator or peer can revoke it. Until the
+                             # user amends CLAUDE.md, a fresh seat writing these
+                             # files is behaving CORRECTLY -- SEQUENCE around
+                             # such a write, never treat it as a violation or
+                             # revert it. Amendment sits with the coordinator to
+                             # raise with the user.
+  receipt_v2_3: CLOSED-CHAIN # 2026-08-28 BE, fd1e949. fit7/score7 from
+                             # e12e2c7 under the R-230 chain. Sixth
+                             # numerically identical generation; 1,046 leaves,
+                             # max abs delta 0.000e+00. Supersedes
+                             # phase2_four_arm_v2.SUPERSEDED_BY_v2_3.json
+                             # (v2.2 bytes, preserved unedited BEFORE the run,
+                             # rule 13). NO hand-added be_receipt_notes this
+                             # cycle -- deliberately, because the disclosure is
+                             # now generator-owned and re-attaching it by hand
+                             # would reopen the habit the fix exists to end.
+                             # Filed debt (BE, in-band): the receipt carries no
+                             # pointer to its own null artifact
+                             # (phase2_increment_null_v1.json, e7caaeb); a
+                             # reader must know to look. Named, not patched.
+  collector_v4_boundary_deploy: COMMITTED-NOT-DEPLOYED # 2026-08-28 coordinator,
+                             # 6786a02 (patch) + cb85ebd (runbook). User-
+                             # approved package a-d under R-232(1), deploying
+                             # ONCE at 2026-08-29T00:00:00Z with an era stamp:
+                             # O1a ping 10/10 -> 3/3 (77.1% of the btc loss was
+                             # client-side DETECTION LAG); O1b cause-aware
+                             # exponential backoff with full jitter, SLOW_
+                             # CONSUMER floored at 2 s base, ladder resets on a
+                             # working connection; O1c first-message subscribe
+                             # confirmation (10 s bound, distinct
+                             # SUBSCRIBE_UNCONFIRMED cause, hot recv path
+                             # unchanged); O1d gap_start falls back to
+                             # scope-start coverage, never the error instant.
+                             # COLLECTOR_VERSION clob_v3_1 -> clob_v4.
+                             # Verification is STRUCTURAL per R-182 (within-
+                             # cause: the PING_TIMEOUT duration distribution
+                             # must collapse toward ~ping_interval + 1.3 s),
+                             # NEVER a throughput A/B. Abort path is in the
+                             # runbook. Execution is COORDINATOR-owned;
+                             # collectors are outside worker surfaces (R-110).
+                             # See also collect_pm_working_tree_divergence
+                             # below -- DA's hold flag, which stands as written.
+  day_bar_v2_preregistered: yes # 2026-08-28 coordinator, dfa0977, AMENDED
+                             # 368345b at 06:04Z before any judged day.
+                             # plans/DAY_BAR_V2_PREREGISTRATION.md. Per coin,
+                             # ALL must hold for a complete-day PASS:
+                             # P1 lost_seconds/24 <= 120 s/hr; P2 windows with
+                             # >=75 s gap-intersect <= 5% (<=14 of 288);
+                             # P3 max rolling-60-min lost seconds <= 900 s.
+                             # Raw breadth share = DIAGNOSTIC, NO bar (it is
+                             # near-invariant under O1 and dominated by sub-2 s
+                             # gaps; a bar on it would fail good days forever).
+                             # Applies to days >=2026-08-29T00:00:00Z ONLY.
+                             # NOTHING RETROACTIVE: 08-26 stays FAIL (Q-DA-72),
+                             # 08-27 stays EXCLUDED (R-222), 08-28 is judged
+                             # tonight under the OLD count bar. Source must be
+                             # the LIVE collector_gaps.jsonl with as-of
+                             # recorded; the tape6e ledger pin is NOT valid for
+                             # full-day figures (frozen 08-27T11:56Z).
+                             # AMENDED READING (single pre-registered band,
+                             # after DA corrected its own counterfactual --
+                             # O1a shortens detection to ~3 s, it does not
+                             # eliminate it, so the two models converge and no
+                             # longer discriminate): expect ~55-80 s/hr =
+                             # worked as modelled; below ~45 = something else
+                             # also improved, most plausibly O1b's backoff
+                             # residual which neither model prices; above ~120
+                             # (P1 FAIL) = THE DETECTION-LAG DIAGNOSIS WAS
+                             # WRONG, not "the fix underperformed" -- that
+                             # branch survives the correction unchanged and is
+                             # the one worth having declared. Implementation
+                             # (DA, after v2.3 verification + blocker 7):
+                             # P1/P2/P3 in the day-verdict tool, COIN-LEVEL
+                             # mandatory, falsifiers shipped with the checker
+                             # (rule 15), verdict artifact naming this doc and
+                             # its commit as the governing bar.
+  lgbm_freeze_receipt: PENDING-IN-FLIGHT # 2026-08-28, ruled by the USER at
+                             # R-232(3). LGBM_PINNED enters the forward race as
+                             # a btc-only, MARKED-UNVALIDATED candidate. The
+                             # state arm (PLUS_PRED_STATE_V1) stays OUT --
+                             # survived nowhere; eth has NO candidate (its LGBM
+                             # increment is negative on the decision metric
+                             # despite the best AUC). Rule-12 mechanics owed in
+                             # the receipt: builder committed (hash + ref),
+                             # full pipeline in repo, declared nulls INSIDE the
+                             # receipt, race multiplicity recorded at freeze
+                             # (= 1 candidate), and the words "admitted without
+                             # clearing validation; development evidence only
+                             # (btc @5/10% under an optimistic window-level
+                             # null)". Candidate clock accrues FROM THE FREEZE
+                             # COMMIT under the per-coin regime: >=5 later
+                             # complete PASSING btc UTC days for a verdict.
+                             # Sequenced after DA's both-coin v2.3 verification.
+  iter011_preregistration: FROZEN-BY-USER-RULING # 2026-08-28 BE, 3b71d3e,
+                             # citing R-232(4). ITER011_CONDITIONAL_VALUE_
+                             # PREREGISTRATION.md. Scope = TWO arms
+                             # (composed-linear, composed-LGBM on the pinned
+                             # schema) -> 24 Holm cells (2 x 4 heads x 3
+                             # budgets). Sec 9.2: Q4 ALONE may not advance a
+                             # candidate -- explicit user sign-off required at
+                             # that time, reported ALWAYS including on failure
+                             # (a composed EV that wins while its sign or
+                             # magnitude head fails is exactly the case where
+                             # the decomposition has NOT done its job).
+                             # Sec 9.3: NO auto-entry to any forward race --
+                             # race admission is a separate user decision.
+                             # Sec 9.4: G bar = >=5 complete UTC days PER COIN,
+                             # coins accruing independently. Sec 10 separates
+                             # what BE decides (implementation, known-bads, how
+                             # failures surface) from what BE does not
+                             # (advancement, race entry, programme meaning --
+                             # rule 14). NOTHING FITTED OR SCORED.
+  annotation_canon_v1: RATIFIED # 2026-08-28, R-232, DA at 417423a + 2642b90.
+                             # Single-object canonical JSON (sort_keys, compact
+                             # separators, ensure_ascii=False, UTF-8) plus DA's
+                             # two additions beyond BE's proposal: allow_nan=
+                             # False (bare NaN/Infinity is not JSON; divergent
+                             # parsing would surface as a signature mismatch)
+                             # and the float-repr residue pinned to CPython
+                             # 3.12+ (another runtime must declare a NEW form).
+                             # Unknown canonical_form refuses with a DISTINCT
+                             # cause from signature-mismatch, so the falsifier
+                             # can tell them apart. Agreement PROVEN BEFORE
+                             # FIRST USE: the merge path refuses to run unless
+                             # a test recomputing from the owner's real
+                             # committed sidecar bytes exists and passes. Real
+                             # sidecar at annotations/phase2_four_arm_v2.da_
+                             # caveat_field.json (owner_sha256 7acbca0759fc6706),
+                             # built with population_independent false so
+                             # BINDING_STALE is the EXPECTED production outcome
+                             # -- the interesting path is exercised, not the
+                             # trivial one. DA's own in-band correction is
+                             # preserved: 417423a's message claimed the sidecar
+                             # shipped when generation had failed; 2642b90
+                             # CORRECTS rather than rewrites.
+  blocker_6_annotation_survival: OPEN-MECHANISM-PENDING # 2026-08-28. Contract
+                             # is ratified (annotation_canon_v1 above) but the
+                             # MECHANISM is not built: fd1e949's v2.3 carries
+                             # da_caveat_field = "RESERVED for Q-DA-79 post-gap
+                             # queue-validity finding" -- verified by reading
+                             # the receipt, 06:09Z. DA's Q-DA-79 content is
+                             # therefore NOT in the current receipt and needs
+                             # re-application by its owner, as in v2.1/v2.2
+                             # (8b4bcee, e14639a). This is the third
+                             # consecutive cycle of hand re-application; the
+                             # standing ruling is that it needs a MECHANISM,
+                             # not a reminder. Owners: DA the contract, BE the
+                             # receipt-side mechanism.
+  blocker_7_increment_null_rebinding: OPEN # 2026-08-28, assigned DA after v2.3
+                             # lands. Regenerate phase2_increment_null_v1.json
+                             # (e7caaeb) against the CURRENT provenance chain
+                             # with the SAME declared design / seed / n_perm as
+                             # R-217 -- a re-BINDING, not a re-selection. The
+                             # R-218 result of record is unchanged by it: 10 of
+                             # 12 cells are chance under the pre-declared joint
+                             # reading; only btc LGBM @5/10% survives Holm,
+                             # against an optimistic null, on one consumed
+                             # development day.
   harmful_fill_integrated_plan: RECORDED-NOT-FROZEN # 2026-08-28 coordinator.
                              # Parent plan + execution TODO now split fill
                              # hazard, conditional sign/magnitude, unconditional
@@ -54,7 +249,17 @@ flags:
                              # defect as the definition of well-formed. A
                              # guard's positive control must be exercised with
                              # something actually valid.
-  generator_owns_disclosure: DEBT # 2026-08-28 BE. protocol_version and
+  generator_owns_disclosure: CLOSED # CLOSED 2026-08-28 at fd1e949 (v2.3):
+                             # the disclosure is now COMPUTED and carried by
+                             # the generator -- is_a_validation derived from
+                             # the declared population label and the complete-
+                             # UTC-day count against rule 11's bar, printed by
+                             # the run itself, with seam 47m requiring it to
+                             # RESPOND to input. Fourth cycle would have been
+                             # the fourth hand re-attachment; it was fixed
+                             # instead. ORIGINAL ENTRY KEPT BELOW AS
+                             # PROVENANCE (rule 13): 2026-08-28 BE.
+                             # protocol_version and
                              # supersedes are generator-owned; the
                              # population/reach disclosure (development-not-
                              # test, G=0, not-a-validation) is NOT and has been
@@ -63,7 +268,15 @@ flags:
                              # generation drops and exactly the ones whose
                              # silent absence converts a development result
                              # into an apparent validation. TOP next-cycle debt.
-  peer_annotation_survives_no_regeneration: DEBT # 2026-08-28. da_caveat_field
+  peer_annotation_survives_no_regeneration: DEBT-CONTRACT-RATIFIED # STILL OPEN
+                             # 2026-08-28: annotation_canon_v1 is RATIFIED
+                             # (R-232) and the real owner sidecar is committed
+                             # (2642b90), but the receipt-side MECHANISM is not
+                             # built, so v2.3 (fd1e949) again carries the
+                             # RESERVED placeholder -- read at the receipt
+                             # 06:09Z. See blocker_6_annotation_survival.
+                             # ORIGINAL ENTRY KEPT AS PROVENANCE (rule 13):
+                             # 2026-08-28. da_caveat_field
                              # resets to RESERVED on every fresh generation, so
                              # DA's Q-DA-79 block must be re-applied each time.
                              # Needs a MECHANISM, not a reminder.
@@ -1587,20 +1800,43 @@ flags:
 
 focus: >
   Build and test the model, mechanism-first, no PnL/capacity estimation
-  (user, 2026-08-20). Entry point is live/pm_research/PM_ARCHITECTURE.md (v12)
-  with contracts/contracts.yaml as the machine-readable source of truth.
-  IMMEDIATE 2026-08-21: the sigma research pipeline is engineered, supervised
-  and frozen; the binding constraint is calendar time, not more sigma code.
-  Route_a_v1 remains at one of ten OOS test days and all 84 gates are
-  INSUFFICIENT_EVIDENCE. Route_a_v2 is pre-registered, per symbol and horizon,
-  begins primary evaluation on 2026-08-22, and needs all 126 gates to pass.
-  Do not refit, tune or inspect v2 on primary days before its formal run.
-  Hourly Tier-1 and Tier-2 jobs will build the oldest eligible day once the D+1
-  boundary closes; partial smokes and pre-freeze design data never count as
-  validation. G-FF1 v3 is PASS and bound to Tier-2. Continue the separate
-  mechanism/flow work while data accrues, but keep all two-day estimates
-  descriptive and preserve per-coin and dual-weighting reporting. Probability-
-  level use remains PRICING HOLD until the frozen per-fit gates pass.
+  (user, 2026-08-20 -- unchanged). Entry point is
+  live/pm_research/PM_ARCHITECTURE.md (prose baseline v12; the machine-readable
+  canonical contract is contracts/contracts.yaml at v24 -- both read at the
+  file today, 2026-08-28); the decision record is workspace/COORDINATION.md,
+  R-entries through R-232.
+  IMMEDIATE 2026-08-28: three things are live at once, and they are
+  independent. (1) PHASE-2 PROVENANCE IS CLOSED -- receipt v2.3 at fd1e949,
+  six fits agreeing, the disclosure generator-owned. What that hardened is
+  provenance, NOT reach: the population is still development, G=0 complete
+  UTC days, is_a_validation FALSE. Do not let the strength of the chain be
+  read as strength of the claim. (2) THE FORWARD CLOCK is the binding
+  constraint, exactly as calendar time was in August: per-coin verdicts
+  (R-211(3)), 08-26 FAIL, 08-27 EXCLUDED, 08-28 judged tonight at 00:06Z
+  under the OLD count bar, day-bar v2 (P1/P2/P3, dfa0977 + 368345b)
+  governing days >=08-29, and >=5 later complete PASSING UTC days per coin
+  before any candidate has a verdict. Collector v4 deploys at the same
+  instant (00:00:00Z, runbook cb85ebd) to stop losing those days to
+  detection lag. (3) BUILD/PREREGISTER ONLY on the four-lane conditional-
+  value plan (iterations 011-013, d506a06 adopted at R-231): outcome-driven
+  selection stays SERIALIZED, no scoring under lane 012, no new-feature
+  scoreboard on consumed days (08-20..25 are consumed and stay consumed),
+  and every changed candidate starts a NEW forward clock. Iteration-011 is
+  frozen by user ruling at 3b71d3e -- two arms, 24 Holm cells, nothing
+  fitted or scored. Probability-level use remains PRICING HOLD until the
+  frozen per-fit gates pass. PRIOR FOCUS (2026-08-21, superseded by this
+  entry, kept because its rules still bind): the sigma research pipeline is
+  engineered, supervised and frozen; route_a_v2 is pre-registered per symbol
+  and horizon and must not be refit, tuned or inspected on primary days
+  before its formal run; partial smokes and pre-freeze design data never
+  count as validation; keep two-day estimates descriptive and preserve
+  per-coin and dual-weighting reporting. Route A's counts are carried forward
+  UNVERIFIED at their 2026-08-21 as-of and have not been re-read since --
+  route_a_v1 at one of ten OOS test days with all 84 gates
+  INSUFFICIENT_EVIDENCE, route_a_v2 at 126 gates from 2026-08-22, G-FF1 v3
+  PASS and bound to Tier-2. The lane is dormant, not closed: it has not
+  appeared in the register since the 2026-08-23 build-order audit, so re-read
+  those numbers before quoting them rather than trusting this line.
 
 standing_rules:
   - CHECK THE DATA BEFORE USING IT, EVERY TIME — no lane is trusted by default.

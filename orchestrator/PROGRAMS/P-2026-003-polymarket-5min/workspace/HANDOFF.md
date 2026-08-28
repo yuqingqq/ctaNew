@@ -1,7 +1,151 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-08-28 (coordinator) — **conditional-value and modular integration
-plan recorded; documentation only; no candidate frozen or scored.**
+Updated: 2026-08-28T06:12Z (MEM) — **state files swept current through R-232
+and receipt v2.3.** Provenance is closed; reach is unchanged (development
+population, G=0, NOT a validation). Collector v4 deploys tonight at
+00:00:00Z; day-bar v2 governs days ≥08-29.
+
+## 2026-08-28 ~06:12Z (MEM) — state sweep: STATUS.yml + HANDOFF current through R-232 + v2.3
+
+**Why this entry exists.** Both state files had stopped at R-228 / `d506a06`.
+`R-229`, `R-230`, `R-231`, `R-232`, the O1 collector package, the O2 day bar
+and iteration-011 appeared **zero** times in either file before this write —
+measured, not assumed. Everything below is sourced from the commit or artifact
+named beside it (rule 16); nothing from conversation.
+
+**State-file ownership moved to the MEM seat** by coordinator standing division
+this session: BE/DA commit artifacts and report facts, MEM sweeps and writes
+`STATUS.yml` + `HANDOFF.md`, so the post-chain refresh habit (the `a46ae64`
+pattern) cannot race a coordinator tick. See the unreconciled CLAUDE.md
+conflict under *Watch out for* — that one is the user's to settle, not ours.
+
+### Done — landed and verified at the artifact
+
+- **Receipt v2.3 — `fd1e949`.** fit7/score7 from `e12e2c7` under the R-230
+  chain. **Sixth consecutive numerically identical generation:** 1,046 leaves
+  compared, max abs delta `0.000e+00`; sole differing leaf `da_caveat_field`,
+  predicted before the run. Supersedes
+  `phase2_four_arm_v2.SUPERSEDED_BY_v2_3.json` (the v2.2 bytes, preserved
+  unedited *before* anything ran — rule 13). Six fits now agree
+  (`ef9b775` / `19b0611` / `43f777d` / `97b7183` / `e12e2c7`).
+- **The population/reach disclosure is generator-owned for the first time.**
+  Read out of the receipt for this entry, not from a report:
+  `population_and_reach` = label `da_development_topup`, `G_complete_utc_days`
+  **0**, `is_a_validation` **false**, `intervals_claimable` **false**,
+  `dates_present` `[2026-08-25]`, 611,343 rows, span 14.41 h — *computed* from
+  the rows actually scored against rule 11's bar. R-229's top debt is closed by
+  mechanism. BE deliberately did **not** hand-attach `be_receipt_notes` this
+  cycle; re-attaching would reopen the habit the fix exists to end.
+- **R-230(1) confirmed in production, not only in seams.** `val_models.json`
+  records `{"btc": true, "eth": true}` and is hashed into the lattice — 14
+  `file_hashes`, up from 13 — so score7 *required* both val models. The branch
+  where a deleted val model silently degraded arm C to hazard-only ranking is
+  closed for this run.
+- **Iteration-011 preregistration FROZEN by user ruling — `3b71d3e`** (R-232(4)).
+  Two arms (composed-linear, composed-LGBM) → 24 Holm cells. §9.2: Q4 alone may
+  not advance a candidate, explicit user sign-off required, reported *always*
+  including on failure. §9.3: no auto-entry to any forward race. §9.4: G bar =
+  ≥5 complete UTC days **per coin**. §10 separates what BE decides from what BE
+  does not (rule 14). **Nothing fitted or scored.**
+- **O1 collector package committed-not-deployed — `6786a02`, runbook `cb85ebd`.**
+  a) ping 10/10 → 3/3 (77.1 % of the btc loss was client-side detection lag);
+  b) cause-aware exponential backoff with full jitter, SLOW_CONSUMER floored at
+  2 s base, ladder resets on a working connection; c) first-message subscribe
+  confirmation (10 s bound, distinct `SUBSCRIBE_UNCONFIRMED` cause, hot recv
+  path unchanged); d) `gap_start` falls back to scope-start coverage, never the
+  error instant. `COLLECTOR_VERSION` `clob_v3_1` → `clob_v4`. **Live process
+  untouched until the boundary restart.**
+- **Day-bar v2 PRE-REGISTERED — `dfa0977`, amended `368345b`** at 06:04Z,
+  before any day it judges. Per coin, all must hold: **P1** lost s/hr ≤ 120;
+  **P2** windows with ≥75 s gap-intersect ≤ 5 % (≤14 of 288); **P3** max
+  rolling-60-min lost seconds ≤ 900. Raw breadth = diagnostic, **no bar** (it is
+  near-invariant under O1 and dominated by sub-2 s gaps). Applies to days
+  ≥2026-08-29 only; nothing retroactive.
+- **`annotation_canon_v1` RATIFIED** (R-232; DA at `417423a` + `2642b90`) with
+  `allow_nan=False` and the float-repr residue pinned to CPython 3.12+, an
+  unknown `canonical_form` refusing with a *distinct* cause from
+  signature-mismatch, and agreement proven before first use. The real sidecar
+  is committed with `population_independent: false`, so `BINDING_STALE` is the
+  **expected** production outcome — the interesting path is exercised.
+
+### In progress
+
+- **DA — both-coin independent verification of v2.3** (the R-230 dispatch), then
+  the day-bar v2 implementation: P1/P2/P3 into the day-verdict tool, coin-level
+  mandatory, falsifiers shipped with the checker (rule 15), verdict artifact
+  naming `DAY_BAR_V2_PREREGISTRATION.md` and its commit as the governing bar.
+- **The rule-12 LGBM freeze receipt — not yet written.** Ruled by the user at
+  R-232(3): `LGBM_PINNED` enters the forward race **btc-only** and **marked
+  unvalidated**; the state arm stays out (survived nowhere); eth has no
+  candidate (its LGBM increment is negative on the decision metric despite the
+  best AUC). The receipt owes: builder committed (hash + ref), full pipeline in
+  repo, declared nulls *inside* the receipt, multiplicity at freeze (= 1), and
+  the words "admitted without clearing validation; development evidence only".
+  Clock accrues **from the freeze commit**: ≥5 later complete passing btc UTC
+  days.
+- **Blocker 6 — annotation-survival mechanism.** Contract ratified, mechanism
+  not built: v2.3 again carries `da_caveat_field` = `"RESERVED for Q-DA-79
+  post-gap queue-validity finding"` (read at the receipt, 06:09Z). DA's Q-DA-79
+  content is **not** in the current receipt and needs re-application by its
+  owner, as in v2.1/v2.2 (`8b4bcee`, `e14639a`). Third consecutive cycle of hand
+  re-application — the standing ruling is that this needs a mechanism, not a
+  reminder.
+- **Blocker 7 — increment-null re-binding** (DA, after v2.3): regenerate
+  `phase2_increment_null_v1.json` (`e7caaeb`) against the current provenance
+  chain with the *same* declared design / seed / n_perm as R-217. A re-binding,
+  **not** a re-selection; the R-218 result of record does not move.
+
+### Next — in order
+
+1. **Tonight 00:00:00Z — the O1 boundary deploy** (coordinator-owned; collectors
+   are outside worker surfaces, R-110). Sequence, verification and abort path
+   are in `plans/O1_DEPLOY_RUNBOOK_2026-08-29.md`.
+2. **00:06Z — the per-coin verdict on 08-28, under the OLD count bar.**
+3. **08-29 is the pre-declared discriminating test.** Amended single band
+   (`368345b`, supersedes the earlier two-model reading): **~55–80 s/hr** = the
+   fix worked as modelled; **below ~45** = something else also improved, most
+   plausibly O1b's backoff residual, which neither model prices; **above ~120
+   (P1 FAIL)** = the detection-lag *diagnosis was wrong*, not "the fix
+   underperformed". That last branch survives the correction unchanged and is
+   the one worth having declared.
+4. **Lanes 011/012 — build and preregister only.** Outcome-driven selection
+   stays serialized; no scoring under 012; no new-feature scoreboard on consumed
+   days.
+
+### Watch out for
+
+- **`live/pm_research/collect_pm.py` shows MODIFIED on purpose.** The v4 patch
+  is committed (`6786a02`) but the working file is held at `clob_v3_1` until the
+  boundary, because `Restart=always` would load v4 **unstamped** on any mid-day
+  auto-restart and manufacture an unrecorded era boundary inside a live day.
+  **Do not clean, sweep, checkout, restore or commit that file** (`8dd9831`,
+  `cb85ebd`). It is a safety hold, not drift.
+- **Same class: the tape7+ arming runbook.** Archiving the ruled gate-verdict
+  locator is **step one of a future arming**, never tidying (R-227 / R-229). A
+  guard's output that looks like something to clean up is exactly what these two
+  notes exist to protect.
+- **The runbook's day-bar line points at superseded numbers.** `cb85ebd`
+  (05:49Z) cites "~30 vs ~79 vs >120 s/hr readings, doc §3"; the O2 amendment
+  `368345b` (06:04Z) replaced that two-model test with the single band in item 3
+  above. The pre-registration document is authoritative; the runbook line is
+  stale by 15 minutes. Flagged for its owner (coordinator), **not** edited here.
+- **Provenance ≠ reach.** R-225/R-228/R-230 hardened the chain, not the claim.
+  Six identical generations of a **development** result on G=0 complete UTC days
+  is still not a validation. Do not let chain strength read as claim strength.
+- **CLAUDE.md is not yet reconciled with the state-file ownership split.** It
+  still instructs *every* session to update `STATUS.yml` + `HANDOFF.md` after
+  each completed step — a user-level rule no coordinator or peer can revoke.
+  Until the user amends it, **a fresh seat writing these files is behaving
+  correctly**: sequence around such a write, never treat it as a violation or
+  revert it. The amendment sits with the coordinator to raise with the user.
+- **Filed debt, named rather than patched** (BE, in-band at `fd1e949`): the
+  receipt carries no pointer to its own null artifact
+  (`phase2_increment_null_v1.json`, `e7caaeb`) — a reader has to know to look.
+- **`STATUS.yml` `focus:` was rewritten in this sweep**; it had been frozen at
+  2026-08-21 (sigma pipeline / route_a framing). The prior text is preserved
+  inside the new block as PRIOR FOCUS, and Route A's counts are carried forward
+  explicitly **unverified at their 2026-08-21 as-of** — re-read them before
+  quoting.
 
 ## 2026-08-28 (coordinator) — conditional-value + modular integration plan recorded
 
