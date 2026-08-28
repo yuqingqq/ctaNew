@@ -2,6 +2,86 @@
 
 Updated: 2026-08-28 (DA) — **receipt VALIDATED 15/15; increment-null 10-of-12 chance; 08-27 EXCLUDED; per-coin live; btc evidence pack delivered; freeze awaits the user.**
 
+## 2026-08-28 (BE, ~02:53Z) — R-225 enforcement chain CLOSED; receipt v2.1, numbers identical
+
+**AUDIT #8's CRITIQUE AND WHAT IT COST.** The user's finding: BE's seams proved
+hashes CHANGE and none proved scoring REJECTS a missing or mismatched hash. An
+instrument that moves is not a gate that bites. Four enforcement fixes at
+`43f777d`, each with a behavioural known-bad that FAILS against the prior code
+(red 7 -> green 0 on the same harness):
+
+1. **Measured identity ENFORCED.** `fit_code_sha256_prefix` and
+   `fragment_sha256_prefix` were WRITTEN into the manifest and never COMPARED,
+   so a manifest carrying no measured identity was ACCEPTED. Two holes closed:
+   a key absent from the compare list was never checked, and
+   `m.get(k) != now.get(k)` passes VACUOUSLY when both sides are None — an
+   absent binding read as agreement. "Missing" is now a distinct refusal from
+   "mismatched", and a well-formed manifest must still be ACCEPTED (seam 42f),
+   so the guard is a gate and not a wall.
+   Also: the receipt reported the **SCORER's** identity under the **FIT's** name.
+   It now reads the fit's identity FROM ITS MANIFEST, with the scorer's beside it.
+2. **Fit-path TOTAL absorption bound**, callable. Ten 0.9% categories
+   aggregating 9% passed every per-status check. Seam 31e's source-text search
+   for the word "absorption" replaced by driving the guard.
+3. **The lock did not exclude, and was never released.** Check-then-write let
+   two processes both pass `if _lock.exists()`. Now `O_CREAT|O_EXCL` with a
+   dead-holder reclaim that RE-ATTEMPTS the atomic create. Release in a
+   `finally`, ownership-checked. Seam 44a spawns two concurrent acquirers and
+   requires exactly one winner.
+4. **Identity captured BEFORE load, RECHECKED at write**; drift is a REFUSAL.
+
+**RESULT: fit5/score5 -> RECEIPT v2.1 (`2fbf233`), NUMBERS IDENTICAL.** 980
+leaves compared against the superseded receipt; **max absolute delta 8.327e-17**
+— floating-point last-bit noise. Every net, threshold, AUC, rho and gate outcome
+reproduces, including eth LGBM_PINNED's `beats_NET=False` at 5% and 15% (the
+seeded null replays too). The eight differing leaves are ALL structural
+provenance and no numbers. The enforcement changed what is attested, not what
+was measured — divergence would have meant R-225 altered the thing it was only
+supposed to witness.
+
+**DETERMINISM NOW SPANS THREE FITS**: fit3 `ef9b775`, fit4 `19b0611`, fit5
+`43f777d` agree on every drop cell and purge delta; fit4 and fit5 additionally
+reproduce every scored number. That is what makes the two-stage registration a
+control rather than a coincidence.
+
+**SUPERSESSION, rule 13.** v2 preserved by RENAME at
+`phase2_four_arm_v2.SUPERSEDED_BY_v2_1.json` (sha `0f61d38814d5aeaa`, unedited,
+`ecb8707`) BEFORE score5 could overwrite it — the R-216 defect was one command
+away from repeating and was caught before the run, not recovered after.
+
+**STANDING RULE DISCOVERED (bit twice).** R-225 makes fit and score code
+byte-identical BY CONSTRUCTION, so **output PATH and receipt SCHEMA are both
+FIT-TIME decisions**. Changing either between fit and score alters
+`fit_code_sha256_prefix` and the manifest correctly refuses its own score. The
+v2.1 supersession fields are therefore `ADDED_POST_GENERATION` and say so in the
+artifact. Pre-launch checklist must confirm PA.OUT is writable-without-overwrite
+BEFORE the fit.
+
+**INSTRUMENT SELF-CRITICISM, recorded because it recurs.** BE's first red
+harness was SOURCE-TEXT based and misreported in BOTH directions: a false GREEN
+on the missing total-form bound before the fix, four false REDs after, because
+the guards had moved into callables while their properties held. Tenth
+appearance of the source-grep class, this time in BE's own test. Rewritten to
+drive real code, which is when the red->green evidence became trustworthy. Same
+lesson as the audit, one level up.
+
+**BATTERY**: 456 checks, 0 failing across 9 suites. Earlier in the day BE also
+found **F1: `python3 -m phase2_embargo` ran ZERO checks and exited 0** — four BE
+commit messages had cited that silent rc=0 as "GREEN". Fixed; the coverage claim
+was wrong even though the module's 8 checks pass.
+
+**UNCHANGED AND STILL GOVERNING** (carried in the receipt, not just here):
+`da_development_topup` is DEVELOPMENT not test; **G = 0 complete UTC days**, one
+14.4-hour span on 2026-08-25 inside the consumed range 08-20..25; no interval
+claimable; **this is not validation**. The increment null (`e7caaeb`) is
+unaffected — it reconciles to these same `net_cents`.
+
+**FOR DA**: `da_caveat_field` is a RESERVED placeholder again on this fresh
+generation. Q-DA-79 must be re-applied BY DA; BE has not copied or reconstructed
+it. Ready for two-track re-verification against v2.1.
+
+**NEXT**: DA re-verify v2.1; freeze decision remains **with the USER**.
+
 ## 2026-08-28 (DA, ~01:xxZ) — day one EXCLUDED; per-coin live; receipt validated; btc evidence pack delivered
 
 **WHERE THE PROGRAMME ACTUALLY STANDS** (the audit flagged this file stale —

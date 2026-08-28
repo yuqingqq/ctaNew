@@ -4,7 +4,14 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
-  2026-08-26 (coordinator): OB dynamics loop CLOSED at I5 — reduced fine
+  2026-08-28 (BE): R-225 enforcement chain CLOSED. Receipt v2.1 committed
+  (2fbf233) from fit5/score5 at 43f777d under a guard-ENFORCED provenance
+  chain; numbers IDENTICAL to the superseded v2 (980 leaves, max abs delta
+  8.327e-17). v2 preserved by rename at
+  phase2_four_arm_v2.SUPERSEDED_BY_v2_1.json (ecb8707, unedited, rule 13).
+  Determinism across THREE fits (ef9b775/19b0611/43f777d). Battery 456 checks,
+  0 failing. Freeze decision remains WITH THE USER.
+  PRIOR: 2026-08-26 (coordinator): OB dynamics loop CLOSED at I5 — reduced fine
   spec CONFIRMED, five specs consumed, freeze decision with the USER.
   STATEFUL harmful-cancel phase dispatched per
   live/pm_research/plans/STATEFUL_HARMFUL_CANCEL_TODO.md and R-145
@@ -13,6 +20,48 @@ updated: >-
   hygiene + recv_ns measurement)
 
 flags:
+  provenance_chain_enforced: yes # 2026-08-28 BE, R-225 (43f777d). Audit #8:
+                             # BE's seams proved hashes CHANGE; none proved
+                             # scoring REJECTS a missing or mismatched hash. An
+                             # instrument that moves is not a gate that bites.
+                             # fit_code_sha256_prefix + fragment_sha256_prefix
+                             # were WRITTEN and never COMPARED -> a manifest
+                             # with no measured identity was ACCEPTED. Now
+                             # REQUIRED and compared, with "missing" a distinct
+                             # refusal from "mismatched" and the None==None
+                             # vacuity closed (both sides absent had read as
+                             # agreement). Receipt now reads the FIT's identity
+                             # FROM ITS MANIFEST; it had been reporting the
+                             # SCORER's under the fit's name. Red 7 -> green 0
+                             # on a BEHAVIOURAL harness.
+  output_path_is_a_fit_time_decision: STANDING-RULE # 2026-08-28 BE. R-225 makes
+                             # fit and score code byte-identical BY
+                             # CONSTRUCTION, so changing PA.OUT or the receipt
+                             # SCHEMA between fit and score alters
+                             # fit_code_sha256_prefix and the manifest
+                             # correctly refuses its own score. Both are
+                             # FIT-TIME decisions. Pre-launch checklist must
+                             # confirm PA.OUT is writable-without-overwrite
+                             # BEFORE the fit. Discovered when score5 would
+                             # have overwritten the committed v2 receipt --
+                             # the R-216 defect one command from repeating,
+                             # caught BEFORE the run rather than recovered
+                             # after.
+  embargo_suite_was_vacuous: FIXED # 2026-08-28 BE, self-review F1.
+                             # `python3 -m phase2_embargo` ran ZERO checks and
+                             # exited 0 (`selftest() if "--selftest" in argv
+                             # else 0`). FOUR BE commit messages cited that
+                             # silent rc=0 as "GREEN". The module's 8 checks do
+                             # pass when invoked correctly, so no result
+                             # changed -- the COVERAGE CLAIM was wrong. Default
+                             # entry now runs the checks.
+  source_grep_class_count: 10 # 2026-08-28 BE. Tenth appearance, this time in
+                             # BE's OWN red harness, which misreported in BOTH
+                             # directions: a false GREEN on the missing
+                             # total-form bound before the fix and four false
+                             # REDs after, because the guards had moved into
+                             # callables while their properties held. Seams
+                             # must DRIVE code, never search its text.
   eth_exposure_stewardship: audited-sound # 2026-08-26 DA, Q-DA-73. ETH IS
                              # THE LOAD-BEARING PHASE-2 POPULATION (R-153(3):
                              # btc n=33). Streamed the full 1.24GB v3.4 set.
