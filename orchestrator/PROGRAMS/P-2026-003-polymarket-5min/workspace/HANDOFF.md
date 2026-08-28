@@ -4593,3 +4593,57 @@ I5 lead positive all budgets (held-unconfirmed; 4b control killed externally
 x2 — no third relaunch; possible collector-protection, flagged CPU/tape-purity
 concern). Saturation report + freeze proposal in OB_DYNAMICS_LOOP.md.
 Awaiting user: machine policy for heavy runs + freeze decision.
+
+### 2026-08-28 — BE seat: provenance chain, batch-4, inert-arm run
+
+**DONE**
+- **R-275/277 provenance.** Seam 47j (mine) fired on its own: the loaded gate
+  module no longer matched the `gate_code` fit7's manifest recorded, after two
+  substantive gate defect fixes (`f43359b`, `91a8949`). DA's determination came
+  back IDENTICAL, so v2.3's numbers stand on a re-derivation. **The chain is
+  restored SCIENTIFICALLY but NOT MECHANICALLY**: the manifest was never
+  re-stamped, so `assert_fit_complete_and_matching()` still refuses with "a
+  different GATE produced the verdict". Correct behaviour; re-stamping is a
+  fit-time decision (R-225). Seams remain 1 red — 47j, deliberately.
+- **Instruments (`558e699`).** `falsifier_count.sh` line 21 ended in `|| true`,
+  so a suite that crashed after printing PASS lines yielded a plausible count
+  with rc=0. Fixed and given its own falsifiers — which immediately caught that
+  `die` inside `$(...)` exits only the subshell, so three refusals reported the
+  wrong reason. Seam 39d converted from a source grep to behaviour.
+- **Batch-4 (`375190a`).** I11-B2/B3/B4 implemented red-first: first-crossing
+  valuation (max-composed disagreed in SIGN: -90c vs +110c), head n as the
+  ACTION count, a real candidate-minus-incumbent increment, the prereg §5(1)
+  matched-random null, and a cell guard that validates contents (24 empty dicts
+  used to pass). Two gaps STATED not picked: Q3's two slopes, and per-coin
+  collapse vs §9.4's per-coin regime. Q2 is NOT a gap — A1.4 carries user
+  ruling R-249.
+- **Q4 incumbent (`5d9a6f8`).** Load-verify-apply, 11 falsifiers, dark until
+  release. Note: the incumbent is **arm D (`linear_d_<coin>.json`)**, NOT
+  `harmful_reduced_fine_candidate_v1.json` — that is arm A's frozen linear.
+- **Inert-arm run (`f0e5272`, `d0ee2f2`).** BE's OWN producer (DA's arm code
+  never imported into production). Full tape: 638,917 rows -> 457,268 actions;
+  both arms 457,268 PLACE events; DA's real loader ACCEPTED both; anchors
+  cancel-disabled==skew-only and crossed-PYTHONHASHSEED both hold; agreement
+  with DA's stub event-for-event.
+
+**WATCH OUT FOR**
+- **systemd-run reports success for runs that did nothing.** One invocation
+  returned `status=0, Memory peak: 256.0K` in 5.4s having read no tape at all
+  (`python3 -` under `--pipe` got no stdin). The completed 914k-event run
+  likewise reported `Memory peak: 512.0K`. **Exit status and memory peak from a
+  transient unit are not evidence.** Check a number the work had to produce.
+  Consequence: the inert run carries NO ceiling measurement; be-ceiling5's
+  9.65G remains the only real datum.
+- **11 of the 14 artifacts the fit manifest cites by hash are not in git**
+  (total 1.15 MB, excluded by the blanket `data/` rule at .gitignore:9), incl.
+  both `linear_d_*.json` the incumbent loader verifies. Unresolved.
+- The v3.4 dataset **cannot** drive `harmful_stateful_policy.replay_policy`: it
+  carries per-latency aggregates, no generation tranches. Not a blocker for the
+  contract path (which needs opportunities), but real for Phase-3 integrated
+  replay.
+
+**NEXT**
+- Post-HOLD-RELEASE fit cycle: annotation-merge wiring + the manifest re-stamp;
+  the tranche persister is a candidate for the same slot.
+- The two stated gaps (Q3 slopes, per-coin collapse) go to the user with the
+  round-3 review.
