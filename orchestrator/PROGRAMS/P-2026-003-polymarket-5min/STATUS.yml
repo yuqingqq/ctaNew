@@ -4,6 +4,25 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-08-28T15:19Z (MEM): R-289 -- MY DISCLOSURE CAUGHT A SECOND VACUUM, AND
+  IT WAS IN THE REGISTER. The coordinator's R-288 "independent confirmation" of
+  the committed-null dependence check was ITSELF vacuous: its parse matched all
+  12 cells but guessed the observed field name, so every cell defaulted to 0 and
+  the filter never fired -- a FIELD-LEVEL vacuum wearing the shape of a
+  confirmation, recorded as independent evidence. Mine, an hour earlier, was a
+  CELL-LEVEL vacuum (parse matched zero cells) caught by implausibility. SAME
+  FOUR-LINE CHECK, TWO SEATS, ONE HOUR, TWO VACUUMS, EACH VACUOUS A DIFFERENT
+  WAY -- and neither was visible from inside its own run. THE CONCLUSION WAS
+  NEVER IN DANGER: BE's original check was real, and the ledger now reads BE +
+  MEM's asserted check + the coordinator's CORRECTED check, agreeing exactly.
+  What was wrong was the ACCOUNTING of the evidence, which my own flag had
+  overstated as "checked three times independently" -- corrected in-band here,
+  original line kept. THE RULE THE PAIR DEMONSTRATES: a verification claim
+  entering the register must assert that its parse ACTUALLY READ the population
+  AND the fields it filters on; "found nothing" from a reader that touched
+  nothing is the empty-set trap in the checker's chair. Note what the matched
+  pair proves that one instance could not: A COUNT ASSERTION ALONE WOULD HAVE
+  CAUGHT MINE AND MISSED THE COORDINATOR'S. PRIOR:
   2026-08-28T15:15Z (MEM): R-277..R-288. THE PROVENANCE CHAIN RESTORES -- and
   the two states are different, so both are recorded: SCIENTIFICALLY CLOSED (the
   re-gate determination returned IDENTICAL on its pre-declared branch,
@@ -46,30 +65,7 @@ updated: >-
   settlement correction in one day, both pre-freeze. THE USER RULED on
   CLAUDE.md (option (a): it defers to SEAT_PROTOCOL for this program, rule-9
   fix rides the same edit) -- text drafted, APPLIED ONLY BY THE USER'S HAND.
-  011 stays DARK. PRIOR:
-  2026-08-28T10:21Z (MEM): R-252 + R-253. THE SETTLEMENT-SOURCE PREMISE WAS
-  FALSE. Settlement is CHAINLINK TWAP-vs-OPEN, ties UP -- not Binance. Verified
-  at markets.jsonl by my own run: 17,734 records, 17,734 Chainlink, ZERO
-  Binance (the register's 17,727 was right as of its run one minute earlier;
-  the file grew 7 records between -- rule 8's tape-grows-during-measurement,
-  live). THE ESTIMAND CHANGES WORK, not just wording: the settlement event is
-  P(TWAP over window >= the window's OWN OPEN) -- a PATH average, so any
-  transformation built on terminal price would PRICE THE WRONG EVENT; tie->UP
-  is pinned by the venue, not chosen by us. DA's R-244 venue-lag reading is
-  VOID, and note the direction -- a positive bookTicker increment would now be
-  a GENUINE CROSS-VENUE LEAD, a STRONGER claim than the voided reading allowed;
-  the decision-value complement survives. THE PRE-DECLARATION IS WHAT MADE THIS
-  CHEAP: both readings were on record before any number existed, so the false
-  one died with no sign to build a story around, and NOTHING WAS EVER SCORED ON
-  IT. Two facts kept separate: DA erred first AND corrected first; the
-  coordinator ratified the false reading at R-244 and CO-OWNS it. Rule 9 stands
-  through a corrected door -- the tautology was never Binance, it is that
-  IDENTITY ALREADY PRICES THE EVENT. **CLAUDE.md line 130 carries the same false
-  claim in the USER'S OWN FILE; no seat edits it, it is flagged to the user, and
-  until their edit lands the claudemd_rule9_parenthetical_is_FALSE flag is the
-  correction of record -- no seat may cite that parenthetical as fact.** Also:
-  RULE 17 ADOPTED (suite-green is not pipeline-wired) after batch 2 DEMONSTRATED
-  the both-halves closure, so it lands with a cite rather than an anecdote.
+  011 stays DARK.
   ARCHIVED: entries older than these three are moved, never deleted, to
   workspace/STATUS_UPDATED_ARCHIVE.md (append-only). This field is a
   ROLLING WINDOW OF THREE by ruling (coordinator, 2026-08-28T10:02Z):
@@ -77,6 +73,39 @@ updated: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  verification_must_assert_it_read: CANONICAL-INSTANCE-R-289 # 2026-08-28
+                             # R-289, rule candidate. THE RULE: A VERIFICATION
+                             # CLAIM ENTERING THE REGISTER MUST ASSERT THAT ITS
+                             # PARSE ACTUALLY READ THE POPULATION AND THE FIELDS
+                             # IT FILTERS ON. "Found nothing" from a reader that
+                             # TOUCHED NOTHING is the empty-set trap in the
+                             # CHECKER'S chair -- rule 15/16 applied to
+                             # verification itself rather than to the code under
+                             # test.
+                             # CANONICAL INSTANCE, and it is unusually good
+                             # because it is a matched pair: the same four-line
+                             # dependence check, two seats, one hour, TWO
+                             # vacuums, EACH VACUOUS A DIFFERENT WAY. MEM's
+                             # failed at the CELL level (parse matched zero
+                             # cells; every filter trivially empty) and was
+                             # caught by implausibility -- zero cells in a
+                             # 12-cell artifact is visibly wrong. The
+                             # coordinator's failed at the FIELD level (parse
+                             # matched all 12 cells but read none of them,
+                             # because the field name was guessed rather than
+                             # looked up; every value defaulted to 0) and was
+                             # NOT visible from inside its own run at all --
+                             # it printed a plausible number from a filter that
+                             # compared nothing, and was caught ONLY because MEM
+                             # disclosed its own near-miss.
+                             # WHAT THE PAIR DEMONSTRATES: an assertion on the
+                             # COUNT alone would have caught MEM's and MISSED
+                             # the coordinator's. The check must assert BOTH
+                             # that the population was read AND that the fields
+                             # it filters on were read as the type it filters
+                             # them as. Seventh sibling of the day's
+                             # truncation/vacuity class, this one in the
+                             # verifier's chair.
   committed_null_two_sided_defect: CONCLUSION-STANDS-FIX-QUEUED # 2026-08-28
                              # R-288. SAY THIS PRECISELY, because "same bug,
                              # committed artifact" reads like an emergency until
@@ -91,9 +120,38 @@ flags:
                              # The defect was CONSERVATIVE IN THE SAFE
                              # DIRECTION and the committed "10 of 12 chance"
                              # conclusion STANDS.
-                             # DEPENDENCE CHECKED THREE TIMES INDEPENDENTLY --
-                             # BE first, the coordinator's four-line check, and
-                             # MEM's own at 2026-08-28T15:15Z: 12 cells parsed
+                             # EVIDENCE LEDGER CORRECTED 2026-08-28T15:18Z
+                             # (R-289) -- THE "THREE TIMES INDEPENDENTLY" LINE
+                             # BELOW OVERSTATED IT WHEN WRITTEN, and the
+                             # correction is the interesting part. The
+                             # coordinator's R-288 check was ITSELF VACUOUS: its
+                             # parse matched all 12 cells but guessed the
+                             # observed field as observed/observed_increment
+                             # against the artifact's
+                             # observed_increment_cents, so every cell defaulted
+                             # to 0, the filter never fired, and "0 negative
+                             # with p<0.10" WAS A FIELD-LEVEL VACUUM WEARING THE
+                             # SHAPE OF A CONFIRMATION -- recorded in the
+                             # register as independent confirmation.
+                             # THE HONEST LEDGER IS NOW: BE's original check
+                             # (real), MEM's asserted check, and the
+                             # coordinator's CORRECTED check -- three real
+                             # confirmations, agreeing exactly. THE CONCLUSION
+                             # WAS NEVER IN DANGER; the accounting of it was.
+                             # NEAR-MISS LEDGER, kept because it is the lesson:
+                             # THE SAME FOUR-LINE CHECK PRODUCED TWO VACUUMS IN
+                             # TWO SEATS IN ONE HOUR, EACH VACUOUS A DIFFERENT
+                             # WAY -- MEM's CELL-level (parse matched zero
+                             # cells), caught by implausibility; the
+                             # coordinator's FIELD-level (parse matched every
+                             # cell, read no field), caught ONLY by MEM
+                             # disclosing its own. Neither seat's vacuum was
+                             # visible from inside its own run. ORIGINAL LINE
+                             # (rule 13, kept because it is the overstatement
+                             # this entry corrects): DEPENDENCE CHECKED THREE
+                             # TIMES INDEPENDENTLY -- BE first, the
+                             # coordinator's four-line check, and MEM's own at
+                             # 2026-08-28T15:15Z: 12 cells parsed
                              # (with a count falsifier, because MEM's FIRST
                              # parse matched zero cells and would have reported
                              # "no negative significant cells" VACUOUSLY -- the

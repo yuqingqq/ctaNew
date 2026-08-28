@@ -1,10 +1,73 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-08-28T15:15Z (MEM) — **the chain RESTORES**: scientifically closed
-(re-gate IDENTICAL, independently confirmed), **not yet mechanically closed**
-(47j deliberately red until the fit-time re-stamp). The committed null has a
-two-sided defect **and its conclusion stands, conservatively**. Round 3 fired;
-tonight's 00:06Z is the **first governed verdict**.
+Updated: 2026-08-28T15:19Z (MEM) — **two vacuous confirmations of the same check
+in one hour, one per seat, each vacuous a different way.** The conclusion was
+never in danger; the accounting of it was, and is corrected. Chain restored
+scientifically, not yet mechanically. Round 3 fired; tonight's 00:06Z is the
+**first governed verdict**.
+
+## 2026-08-28 ~15:19Z (MEM) — R-289: the checker's chair has an empty-set trap too
+
+### What happened
+
+My last sweep recorded the committed-null conclusion as *"checked three times
+independently — BE, the coordinator, and me."* **That overstated it when I wrote
+it**, and the correction is the interesting part.
+
+**The coordinator's R-288 check was itself vacuous.** Its parse matched all 12
+cells but **guessed the observed field name** (`observed` / `observed_increment`
+against the artifact's `observed_increment_cents`), so every cell defaulted to
+`0`, the filter never fired, and *"0 negative with p<0.10"* was **a field-level
+vacuum wearing the shape of a confirmation** — recorded in the register as
+independent evidence.
+
+**Mine, an hour earlier, was a cell-level vacuum** — the parse matched **zero**
+cells, so every filter was trivially empty. I caught it by implausibility (zero
+cells in a 12-cell artifact is visibly wrong), added a count falsifier, and
+re-ran. **My disclosure is what sent the coordinator back to theirs.**
+
+### The matched pair is the lesson
+
+**The same four-line check produced two vacuums, in two seats, in one hour, each
+vacuous a different way — and neither was visible from inside its own run.**
+
+| | failed at | caught by |
+|---|---|---|
+| MEM | **cell** level — parse matched 0 cells | implausibility of the count |
+| Coordinator | **field** level — matched all 12 cells, read none of them | **only** the other seat's disclosure |
+
+**What the pair proves that either instance alone could not: a count assertion
+would have caught mine and missed the coordinator's.** The check must assert
+**both** that the population was read **and** that the fields it filters on were
+read as the type it filters them as.
+
+**The rule, in its canonical form:** *a verification claim entering the register
+must assert that its parse actually read the population and the fields it filters
+on. "Found nothing" from a reader that touched nothing is the empty-set trap in
+the checker's chair.* That is rule 15/16 applied to **verification itself**
+rather than to the code under test — the seventh sibling of the day's
+truncation/vacuity class, this one in the verifier's chair.
+
+### The conclusion itself never moved
+
+**BE's original check was real.** The honest ledger now reads **BE's original +
+MEM's asserted check + the coordinator's corrected check**, agreeing exactly:
+12 cells, three negative-increment cells at p 0.2334 / 0.2774 / 0.4208, **zero
+negative under p<0.10**.
+
+So the committed null's defect remains **conservative in the safe direction**,
+the *"10 of 12 chance"* conclusion **stands**, and **no summary may say the
+canonical null was wrong.** What was wrong was the *accounting of the evidence*,
+which my own flag had overstated — corrected in-band, original line kept as the
+record of the overstatement.
+
+### Unchanged from the previous entry
+
+Chain **restored scientifically, not yet mechanically** (47j red until the
+fit-time re-stamp). Post-release cycle carries four items. **Round 3 fired at
+`a63d717`** with the **O1-adverse condition live again** before tonight's arming.
+**Tonight 00:06Z: the first verdict governed by released day-bar v2.**
+**Tomorrow 00:00Z: the boundary.**
 
 ## 2026-08-28 ~15:15Z (MEM) — R-277..R-288: the chain restores, and a defect that was conservative
 

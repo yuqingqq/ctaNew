@@ -336,3 +336,34 @@ Moved in the same commit as the sweep that pushed it out. Join rule as in batch 
   is not a probability, and FREEZE-AFTER-REVIEW IS NOW TWICE VINDICATED -- FP2
   would have been frozen in.
 ```
+
+## Batch 6 — archived 2026-08-28T15:19Z (1 entry, rolling-window overflow)
+
+Moved in the same commit as the sweep that pushed it out. Join rule as in batch 1.
+
+```yaml
+
+  2026-08-28T10:21Z (MEM): R-252 + R-253. THE SETTLEMENT-SOURCE PREMISE WAS
+  FALSE. Settlement is CHAINLINK TWAP-vs-OPEN, ties UP -- not Binance. Verified
+  at markets.jsonl by my own run: 17,734 records, 17,734 Chainlink, ZERO
+  Binance (the register's 17,727 was right as of its run one minute earlier;
+  the file grew 7 records between -- rule 8's tape-grows-during-measurement,
+  live). THE ESTIMAND CHANGES WORK, not just wording: the settlement event is
+  P(TWAP over window >= the window's OWN OPEN) -- a PATH average, so any
+  transformation built on terminal price would PRICE THE WRONG EVENT; tie->UP
+  is pinned by the venue, not chosen by us. DA's R-244 venue-lag reading is
+  VOID, and note the direction -- a positive bookTicker increment would now be
+  a GENUINE CROSS-VENUE LEAD, a STRONGER claim than the voided reading allowed;
+  the decision-value complement survives. THE PRE-DECLARATION IS WHAT MADE THIS
+  CHEAP: both readings were on record before any number existed, so the false
+  one died with no sign to build a story around, and NOTHING WAS EVER SCORED ON
+  IT. Two facts kept separate: DA erred first AND corrected first; the
+  coordinator ratified the false reading at R-244 and CO-OWNS it. Rule 9 stands
+  through a corrected door -- the tautology was never Binance, it is that
+  IDENTITY ALREADY PRICES THE EVENT. **CLAUDE.md line 130 carries the same false
+  claim in the USER'S OWN FILE; no seat edits it, it is flagged to the user, and
+  until their edit lands the claudemd_rule9_parenthetical_is_FALSE flag is the
+  correction of record -- no seat may cite that parenthetical as fact.** Also:
+  RULE 17 ADOPTED (suite-green is not pipeline-wired) after batch 2 DEMONSTRATED
+  the both-halves closure, so it lands with a cite rather than an anecdote.
+```
