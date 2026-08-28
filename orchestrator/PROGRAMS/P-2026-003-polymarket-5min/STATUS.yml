@@ -4,6 +4,27 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-08-28T09:44Z (MEM): R-243..R-245. DA's FAIR-PRICE IDENTITY ARTIFACT
+  delivered and verified by the coordinator's own run (21 selftests), with the
+  2B protocol draft RIDING THE BATCH so Codex reviews it BEFORE the user is
+  asked to freeze it -- the 011 lesson applied forward, and the reasoning is
+  the durable part: an amendment to a frozen document costs a USER ACT, a
+  review comment on a draft costs nothing. The second 2B challenger is NAMED
+  BEFORE the review (Binance USDM bookTicker mid; tape verified at the data;
+  era floor = the hf_ws_v2 ledger boundary, pre-boundary instants INADMISSIBLE
+  rather than merely noisier), and BOTH readings of a would-be win are
+  PRE-DECLARED AND BOTH KEPT: DA's (closer to the settlement source, so a
+  positive increment is venue lag, NOT alpha) and the coordinator's complement
+  (lag is exactly what a fair-price successor exists to capture -- decision
+  value). What is excluded is choosing the story after the sign; the
+  admit-vs-one-challenger call is the USER's at freeze time. Two standing USER
+  directives: the aggregate RESOURCE CAP is binding and verified live at the
+  instrument (18.4G / 1200% research.slice), enforced AT CLEARANCE TIME rather
+  than discovered at OOM; and IDLE SEATS TAKE THE NEXT ADMISSIBLE PLAN JOB --
+  a COORDINATOR dispatch rule, not a licence for a seat to self-dispatch
+  outside its surface. DA is now on the lane-4 parity stub battery, building
+  the CHECKER while BE's arms stay the CHECKED. Gate model restated: fixes
+  verified is not HOLD RELEASED. PRIOR:
   2026-08-28T09:31Z (MEM): R-242 -- THE USER FROZE AMENDMENT A1, and the
   sequencing is the point: the Q4 algebra flaw was DATA-INDEPENDENT, so it was
   corrected by a user-frozen amendment BEFORE any 011 number existed rather
@@ -156,6 +177,106 @@ updated: >-
   hygiene + recv_ns measurement)
 
 flags:
+  phase2b_challenger_family: NAMED-PRE-REVIEW-BOTH-READINGS-DECLARED # 2026-08-28
+                             # R-244 (612346b). Second challenger NAMED BEFORE
+                             # the review: Binance USDM bookTicker mid. Naming
+                             # it now was the right call against DA's own
+                             # closed-set clause -- the reviewer sees a real
+                             # candidate rather than a placeholder, and a
+                             # POST-review naming would have been A NEW FAMILY.
+                             # Tape claims verified at the data by the
+                             # coordinator's own run: 213 hourly files per
+                             # symbol from 20260819_12, columns exactly
+                             # recv_ns/E/T/updateId/bid/bidQty/ask/askQty,
+                             # freshness arithmetic consistent on the first row.
+                             # ERA FLOOR = the ledger boundary of record,
+                             # recv_ns >= 1787579334881534478
+                             # (2026-08-24T13:48:54Z, hf_ws_v2 stamp):
+                             # pre-boundary instants are INADMISSIBLE for this
+                             # challenger, NOT merely noisier, and sec 7.4
+                             # (admissible-count parity) already tests the
+                             # strictly-smaller population that creates.
+                             # BOTH WIN-INTERPRETATIONS PRE-DECLARED BEFORE ANY
+                             # NUMBER EXISTS, AND BOTH ARE KEPT -- neither is
+                             # compressible into the other:
+                             # (i) DA's, binding in the draft: the challenger is
+                             # CLOSER TO THE SETTLEMENT SOURCE than Identity, so
+                             # a positive increment is NOT forecasting skill --
+                             # it says the PM book LAGS the settlement venue, a
+                             # latency/microstructure fact, and must NOT be
+                             # narrated as alpha.
+                             # (ii) the coordinator's complement, equally
+                             # pre-declared: lane 2's deliverable is the best
+                             # admissible point-in-time fair price FOR
+                             # DECISIONS -- toxicity residuals, predictor
+                             # features, quoting -- and "the PM book lags the
+                             # settlement venue" is precisely the class of fact
+                             # a fair-price successor exists to capture. Not
+                             # alpha, but DECISION VALUE.
+                             # WHAT IS NOW EXCLUDED IS CHOOSING THE STORY AFTER
+                             # THE SIGN. The admit-vs-one-challenger-family call
+                             # is the USER'S at freeze time, post-review, with
+                             # both readings already in hand.
+  resource_cap: BINDING-ON-ALL-RESEARCH-WORK # 2026-08-28 R-245, USER directive
+                             # ("we have a cpu/memory limit for the whole
+                             # research task, don't break it"); R-148(3)
+                             # heavy-run rule re-affirmed. VERIFIED LIVE AT THE
+                             # INSTRUMENT, not read from the doc:
+                             # research.slice installed, MemoryMax 19742269440
+                             # (18.4G), CPUQuotaPerSecUSec 12s (1200%),
+                             # CPUWeight 50; slice usage ~3G at the check, box
+                             # 25G, nothing heavy running. ENFORCEMENT POINT is
+                             # the CLEARANCE, not the crash: every coordinator
+                             # clearance for a heavy run carries the
+                             # `systemd-run --slice=research.slice
+                             # -p MemoryMax=<=14G>` pattern IN the clearance --
+                             # checked at dispatch time, not discovered at OOM
+                             # time. Next real risk points named: BE's eventual
+                             # 011 fit/score after HOLD RELEASED; DA's at-scale
+                             # bookTicker tape processing.
+  idle_seat_dispatch: STANDING-COORDINATOR-PRACTICE # 2026-08-28 R-245, USER
+                             # directive ("you will launch jobs if the
+                             # respective sessions are idle and have future
+                             # jobs"). NOTE THE SUBJECT: this is a standing
+                             # practice for the COORDINATOR to dispatch idle
+                             # seats onto the next admissible plan job. It is
+                             # NOT a licence for a seat to self-dispatch outside
+                             # its own surface -- MEM in particular does not
+                             # acquire plan-execution work by being idle; it
+                             # takes such work only when the coordinator
+                             # dispatches it. First instance was the R-242
+                             # fair-price dispatch; second, immediately: DA ->
+                             # lane-4 parity stub battery. Batch boundary rule
+                             # stated in the dispatch: lands before BE flags ->
+                             # rides the current round; later -> opens the next
+                             # batch; NO RUSHING HALF-WORK TO CATCH A BOUNDARY.
+  lane4_parity_stub_battery: DA-BUILDING-CHECKER-SIDE # 2026-08-28 R-245,
+                             # 7815c2f. Seven-arm replay parity STUB battery per
+                             # DA's own spec (6fc96e2) and hazard plan sec 10
+                             # item 6: typed stubs only, BIT-IDENTICAL anchor
+                             # (not within-tolerance -- after the summation-order
+                             # finding, "close" cannot be distinguished from
+                             # "differently ordered but wrong"), perturbation
+                             # falsifier (one extra cancel must BREAK parity or
+                             # the anchor is decorative), PYTHONHASHSEED
+                             # determinism so it cannot inherit blocker-7's
+                             # class, and an empty run must NOT report seven
+                             # passing arms (quiet-vs-empty applied forward).
+                             # NOTHING SCORED. Seat separation held per R-235:
+                             # DA builds the CHECKER, BE's replay arms remain
+                             # the CHECKED.
+  gate_model: FIXES-VERIFIED-IS-NOT-HOLD-RELEASED # 2026-08-28 R-245, restated
+                             # for the record at the user's request. The two
+                             # HOLDs (011 fit/score; day-bar v2 judging 08-29)
+                             # lift ONLY on the reviewer's EXPLICIT words at the
+                             # exact batch commit -- not on the fixes being
+                             # verified, however thoroughly. Work ruled SAFE
+                             # proceeds on its OWN gates instead (the 2B draft's
+                             # gate is a user freeze, post-review). Companion
+                             # phrasing already in force for the other hold:
+                             # CLEARED TO BUILD IS NOT CLEARED TO FIT. Same
+                             # failure, different nouns; both collapse the
+                             # moment someone summarises the state in one line.
   iter011_amendment_a1: FROZEN-BY-USER # 2026-08-28T09:29Z, R-242.
                              # plans/ITER011_PREREG_AMENDMENT_A1.md. Drafted by
                              # BE, FROZEN BY THE USER AND ONLY THE USER -- BE
@@ -195,7 +316,39 @@ flags:
                              # (empty diff) -- rule 13 held, the amendment is a
                              # SEPARATE document and the frozen one was not
                              # edited.
-  fair_price_lane_2b: DISPATCHED-DA-BUILD-AND-DRAFT-ONLY # 2026-08-28 R-242,
+  fair_price_lane_2b: DELIVERED-VERIFIED-DRAFT-RIDES-THE-BATCH # ADVANCED
+                             # 2026-08-28 R-243 (d97c23e). Identity artifact
+                             # da_fair_price_identity.py DELIVERED and verified
+                             # by the coordinator's OWN RUN, not DA's report:
+                             # 21 selftests, 0 failing; authorization stated
+                             # IN-FILE against the user's own committed plan
+                             # d506a06, so the relay was checked against the
+                             # user's text before building and the reading is
+                             # auditable in the file.
+                             # DESIGN POINTS WORTH KEEPING, each a defect class
+                             # this programme has paid for elsewhere: every
+                             # refusal is value=None PLUS a TALLIED status,
+                             # because a zero is indistinguishable from a real
+                             # 0.0 price; read_as_of() keeps UNKNOWABLE-AT-t and
+                             # INADMISSIBLE as SEPARATE refusals, since
+                             # collapsing them would hide look-ahead behind a
+                             # data-quality message (a future-dated record is
+                             # VALID -- as-of is a consumption rule, not a
+                             # validity rule); boundary positive controls ADMIT
+                             # exactly-at-minimum depth and exactly-at-bound
+                             # freshness, because a guard shown only to REFUSE
+                             # may be refusing everything; the complement check
+                             # reports NOT CHECKED on an inadmissible side
+                             # rather than passing.
+                             # THE 2B PROTOCOL DRAFT RIDES THE BATCH BY RULING:
+                             # Codex reviews it BEFORE the user is asked to
+                             # freeze it. This is the 011-preregistration lesson
+                             # applied FORWARD and the reasoning is worth
+                             # keeping -- an amendment to a frozen document
+                             # costs a USER ACT; a review comment on a draft
+                             # costs nothing. Waiting costs hours; the
+                             # challenger race clock starts at freeze either
+                             # way. ORIGINAL ENTRY (rule 13): 2026-08-28 R-242,
                              # on the USER's directive that the hazard line
                              # proceeds per HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md.
                              # DA turns its own lane-2 spec (6fc96e2, ruled

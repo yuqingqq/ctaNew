@@ -1,9 +1,107 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-08-28T09:31Z (MEM) — **the user froze amendment A1**, so 011's
-algebra flaw is corrected before any 011 number exists; BE builds, but the
-fit/score HOLD stands. Day-bar v2 still held for 08-29. DA dispatched to the
-fair-price lane. **Boundary deploy ON for 00:00:00Z.**
+Updated: 2026-08-28T09:44Z (MEM) — fair-price Identity artifact **delivered and
+verified**; the 2B challenger **named before review** with **both** readings of
+a win pre-declared; resource cap and idle-seat dispatch now standing user
+directives. Both HOLDs still in force. **Boundary deploy ON for 00:00:00Z.**
+
+## 2026-08-28 ~09:44Z (MEM) — R-243..R-245: freeze-after-review, and a story that cannot be chosen later
+
+### The 2B draft rides the batch — the 011 lesson pointed forward
+
+DA's **Identity artifact** landed (`d97c23e`) and the coordinator verified it by
+**its own run, not DA's report**: 21 selftests, 0 failing; authorization stated
+**in-file** against the user's committed plan `d506a06`, so the relay was checked
+against the user's own text before building and that reading is auditable in the
+file.
+
+Four design points worth keeping, each a defect class paid for elsewhere in this
+programme:
+
+- every refusal is `value=None` **plus a tallied status** — a zero is
+  indistinguishable from a real 0.0 price;
+- `read_as_of()` keeps **unknowable-at-t** and **inadmissible** as *separate*
+  refusals — collapsing them would hide look-ahead behind a data-quality
+  message. A future-dated record is **valid**; as-of is a *consumption* rule;
+- boundary positive controls **admit** exactly-at-minimum depth and
+  exactly-at-bound freshness — **a guard shown only to refuse may be refusing
+  everything**;
+- the complement check reports **NOT CHECKED** on an inadmissible side rather
+  than passing.
+
+**The 2B protocol draft rides the current batch by ruling: Codex reviews it
+before the user is asked to freeze it.** That is the 011-preregistration lesson
+applied *forward*, and the reasoning is the durable part — **an amendment to a
+frozen document costs a user act; a review comment on a draft costs nothing.**
+Waiting costs hours, and the challenger race clock starts at freeze either way.
+
+### The second challenger is named — and both readings of a win are pre-declared
+
+**Binance USDM bookTicker mid** (`612346b`), named **before** the review.
+Against DA's own closed-set clause that was the right call: the reviewer sees a
+real candidate, not a placeholder, and **naming it after review would have been a
+new family.**
+
+Tape claims verified at the data: 213 hourly files per symbol from `20260819_12`,
+columns exactly as declared, freshness arithmetic consistent. **Era floor is the
+ledger boundary of record** — `recv_ns >= 1787579334881534478`
+(2026-08-24T13:48:54Z, hf_ws_v2 stamp): pre-boundary instants are
+**inadmissible for this challenger, not merely noisier**, and §7.4's
+admissible-count parity already tests the strictly smaller population that
+creates.
+
+**Both interpretations of a positive increment are pre-declared, and both are
+kept — neither compresses into the other:**
+
+1. **DA's, binding in the draft:** the challenger sits **closer to the
+   settlement source** than Identity, so a positive increment is **not
+   forecasting skill**. It says the PM book **lags** the settlement venue — a
+   latency/microstructure fact that must not be narrated as alpha.
+2. **The coordinator's complement, equally pre-declared:** lane 2's deliverable
+   is the best admissible point-in-time fair price **for decisions** — toxicity
+   residuals, predictor features, quoting — and "the PM book lags the settlement
+   venue" is precisely the class of fact a fair-price successor **exists to
+   capture**. Not alpha, but **decision value**.
+
+**What is now excluded is choosing the story after the sign.** The
+admit-versus-one-challenger-family call is the **user's**, at freeze time,
+post-review, with both readings already in hand.
+
+### Two standing user directives
+
+- **The aggregate resource cap is binding on all research work.** Verified live
+  at the instrument rather than read from a doc: `research.slice`, MemoryMax
+  18.4 G, CPU quota 1200 %, ~3 G in use at the check. **Enforcement is at
+  clearance time, not crash time** — every heavy-run clearance carries the
+  `systemd-run --slice=research.slice -p MemoryMax=…` pattern *in the clearance
+  itself*. Named risk points: BE's eventual 011 fit/score after HOLD RELEASED,
+  and DA's at-scale bookTicker processing.
+- **Idle seats take the next admissible plan job.** **Note the subject:** this is
+  a standing practice for the **coordinator** to dispatch idle seats. It is not a
+  licence for a seat to self-dispatch outside its surface — **MEM does not
+  acquire plan-execution work by being idle**; it takes such work only on
+  dispatch. Batch boundary rule came with the dispatch: lands before BE flags →
+  rides this round; later → opens the next; **no rushing half-work to catch a
+  boundary.**
+
+DA is now on the **lane-4 seven-arm parity stub battery** (`7815c2f`): typed
+stubs, **bit-identical** anchor (after the summation-order finding, "close"
+cannot be distinguished from "differently ordered but wrong"), perturbation
+falsifier, `PYTHONHASHSEED` determinism so it cannot inherit blocker-7's class,
+and an empty run must not report seven passing arms. **Nothing scored.** Seat
+separation holds: **DA builds the checker, BE's arms remain the checked.**
+
+### Gate model, restated at the user's request
+
+**Fixes verified is not HOLD RELEASED.** Both holds lift only on the reviewer's
+explicit words at the exact batch commit, however thorough the fixes. Work ruled
+**safe** proceeds on its own gates instead — the 2B draft's gate is a user
+freeze, post-review. Companion phrasing for the other hold: **cleared to build is
+not cleared to fit.** Same failure, different nouns.
+
+**Batch outstanding: BE's A1.8 steps 2–5 only.** Cadence unchanged: 22:30Z
+confirmation, ~23:55Z arming, 00:00:00Z deploy, 00:06Z verdict (btc FAIL
+expected, `ACCRUES=False`).
 
 ## 2026-08-28 ~09:31Z (MEM) — R-242: A1 frozen before the first number; DA to fair price
 
