@@ -45,6 +45,14 @@ STALE = "STALE"                            # freshness beyond the declared bound
 NO_INPUT = "NO_INPUT"                      # nothing to read at all
 STATUSES = (OK, NOT_READY, CROSSED, ONE_SIDED, INSUFFICIENT_DEPTH, STALE, NO_INPUT)
 
+#: A PM binary settles to 0 or 1, so its price IS a probability and must lie in
+#: [0,1]. This was UNBOUNDED: identity_from_book(best_bid=99, best_ask=100)
+#: returned status=OK with value=99.5 -- a "fair price" that is not a
+#: probability at all, and would have propagated into every downstream term.
+PROB_LO, PROB_HI = 0.0, 1.0
+KNOWN_COINS = ("btc", "eth", "sol", "xrp", "doge", "bnb", "hype")
+OUTCOMES = ("UP", "DOWN")
+
 #: CLASS A, declared here and not tuned per call site.
 MIN_DEPTH_SHARES = 1.0
 MAX_FRESHNESS_S = 5.0
@@ -52,7 +60,7 @@ COMPLEMENT_TOL = 0.02      # UP + DOWN should price to ~1 for a binary pair
 
 
 class Inadmissible(ValueError):
-    """A record that must not be consumed. Raised only by the strict readers."""
+    """A record that must not be consumed, or must not exist at all."""
 
 
 @dataclass(frozen=True)
@@ -68,6 +76,67 @@ class FairPrice:
     status: str
     estimator: str = "Identity"
     detail: str = ""
+
+    def __post_init__(self) -> None:
+        """FP1: the invariants hold AT THE RECORD BOUNDARY, not by convention.
+
+        There was no validating constructor, so `FairPrice(value=60000.0,
+        status=OK)` built fine and `read_as_of` returned 60000. That matters
+        immediately because CHALLENGERS ARE REQUIRED TO CONSTRUCT THIS SAME
+        TYPE: an unenforced type is a contract every challenger may quietly
+        ignore, and the factory being careful protects nothing.
+        """
+        def bad(msg: str):
+            raise Inadmissible(f"REFUSED: invalid FairPrice -- {msg}")
+        if self.status not in STATUSES:
+            bad(f"status {self.status!r} is not one of {STATUSES}")
+        if self.coin not in KNOWN_COINS:
+            bad(f"coin {self.coin!r} is not a known coin")
+        if self.outcome not in OUTCOMES:
+            bad(f"outcome {self.outcome!r} is not one of {OUTCOMES} -- an "
+                f"unrecognised side convention is how a sign flips silently")
+        if not isinstance(self.window_start, int) or self.window_start <= 0:
+            bad("window_start must be a positive epoch second")
+        if not self.estimator:
+            bad("estimator must be named; an anonymous record cannot be "
+                "attributed to Identity or to a challenger")
+        for nm in ("source_timestamp", "local_knowledge_timestamp"):
+            v = getattr(self, nm)
+            if v is not None and (not isinstance(v, (int, float))
+                                  or not math.isfinite(v)):
+                bad(f"{nm} must be finite or None")
+        src, lk = self.source_timestamp, self.local_knowledge_timestamp
+        if src is not None and lk is not None:
+            # ORDERING is enforced only where the value is USED. A non-OK
+            # record is a REPORT ABOUT BAD INPUT and may carry the offending
+            # timestamps as its evidence -- refusing to construct it would
+            # leave the fault undescribable, which is how a bad input becomes a
+            # silent drop instead of a counted status.
+            if lk < src and self.status == OK:
+                bad("local_knowledge_timestamp precedes source_timestamp, "
+                    "which is impossible without look-ahead")
+            # FRESHNESS CONSISTENCY is enforced ALWAYS: on a STALE record the
+            # freshness IS the evidence, so a stored value disagreeing with its
+            # own timestamps would misreport the very thing being reported.
+            if self.freshness_s is None or abs(self.freshness_s - (lk - src)) > 1e-9:
+                bad("freshness_s must EQUAL local_knowledge - source; a stored "
+                    "freshness that disagrees with its own timestamps lets a "
+                    "stale record present itself as fresh")
+        if self.status == OK:
+            if self.value is None or not isinstance(self.value, (int, float)) \
+                    or not math.isfinite(self.value):
+                bad("an OK record must carry a finite value")
+            if not (PROB_LO <= self.value <= PROB_HI):
+                bad(f"value {self.value} is outside [{PROB_LO},{PROB_HI}]: a PM "
+                    f"binary price IS a probability, and a number outside the "
+                    f"unit interval is not a fair price for one")
+            if src is None or lk is None:
+                bad("an OK record must carry BOTH timestamps")
+        else:
+            if self.value is not None:
+                bad(f"status {self.status} must carry value=None; a value beside "
+                    f"a non-OK status is exactly the silent-substitute this "
+                    f"type exists to prevent")
 
     # --- guards, paired flags: a null value NEVER travels without its status --
     @property
@@ -141,6 +210,13 @@ def identity_from_book(coin: str, window_start: int, outcome: str,
         return _bad(coin, window_start, outcome, ONE_SIDED,
                     "non-finite book side", source_timestamp,
                     local_knowledge_timestamp)
+    for _nm, _v in (("best_bid", best_bid), ("best_ask", best_ask)):
+        if not (PROB_LO <= _v <= PROB_HI):
+            return _bad(coin, window_start, outcome, ONE_SIDED,
+                        f"{_nm}={_v} is outside [{PROB_LO},{PROB_HI}]: a PM "
+                        f"binary book prices a probability, so a side outside "
+                        f"the unit interval is not a PM book",
+                        source_timestamp, local_knowledge_timestamp)
     if best_bid >= best_ask:
         return _bad(coin, window_start, outcome, CROSSED,
                     f"crossed/locked book: bid {best_bid} >= ask {best_ask}",
@@ -197,6 +273,59 @@ def complement_check(up: FairPrice, down: FairPrice,
     s = up.value + down.value
     return {"checked": True, "sum": s, "deviation": abs(s - 1.0),
             "within_tolerance": abs(s - 1.0) <= tol, "tolerance": tol}
+
+
+def assert_no_double_count(toxicity_feature_names: list[str],
+                          toxicity_target: str) -> dict[str, Any]:
+    """The ownership fence, MECHANICAL (interface spec §3).
+
+    Fair price owns the unconditional `E[Y | state]`; toxicity owns the
+    fill-conditional RESIDUAL against it. If the toxicity estimator can see the
+    fair-price value among its features, or targets the LEVEL instead of the
+    residual, adverse selection is counted in BOTH terms -- and every
+    downstream comparison inherits the double count while no per-arm number
+    looks unusual. A rule stated only in prose has been violated in this
+    programme before; this one is checkable on the fitted artifact.
+    """
+    banned = {"fair_price", "fair_value", "identity", "identity_value",
+              "fair_price_value", "e_y_given_state"}
+    hits = sorted(n for n in toxicity_feature_names
+                  if n.strip().lower() in banned)
+    target_ok = "residual" in toxicity_target.strip().lower()
+    if hits:
+        raise Inadmissible(
+            f"REFUSED: the toxicity feature set contains the fair-price value "
+            f"{hits}. Toxicity estimates the RESIDUAL against that anchor; "
+            f"seeing the anchor puts adverse selection in both terms.")
+    if not target_ok:
+        raise Inadmissible(
+            f"REFUSED: toxicity target {toxicity_target!r} is not a residual. "
+            f"Targeting the LEVEL re-estimates the unconditional term that "
+            f"fair price already owns.")
+    return {"checked": True, "banned_feature_hits": hits,
+            "target_is_residual": target_ok}
+
+
+def assert_declared_before(declared_utc: float, comparison_utc: float,
+                           challenger_id: str) -> dict[str, Any]:
+    """A challenger declared AFTER its comparison is not predeclared (rule 11).
+
+    Checked on timestamps rather than trusted, because the whole value of
+    predeclaration is that it cannot be asserted retrospectively.
+    """
+    if not (isinstance(declared_utc, (int, float))
+            and math.isfinite(declared_utc)):
+        raise Inadmissible(
+            f"REFUSED: challenger {challenger_id!r} has no finite declaration "
+            f"time; an undated declaration cannot be shown to precede anything.")
+    if declared_utc >= comparison_utc:
+        raise Inadmissible(
+            f"REFUSED: challenger {challenger_id!r} was declared at "
+            f"{declared_utc} which is NOT BEFORE its comparison at "
+            f"{comparison_utc}. Choosing after seeing voids the test.")
+    return {"checked": True, "declared_utc": declared_utc,
+            "comparison_utc": comparison_utc,
+            "lead_time_s": comparison_utc - declared_utc}
 
 
 def tally(records: list[FairPrice]) -> dict[str, int]:
@@ -318,6 +447,72 @@ def _selftests() -> int:
     ok(complement_check(up, mk(ready=False))["checked"] is False,
        "a complement check on an inadmissible side reports NOT CHECKED rather "
        "than passing -- an unrun check must never read as a passed one")
+
+    # ---- FP1: the RECORD BOUNDARY enforces, direct construction included --
+    def direct(**kw):
+        a = dict(coin="btc", window_start=1787650200, outcome="UP", value=0.5,
+                 source_timestamp=T0, local_knowledge_timestamp=LK,
+                 freshness_s=0.2, status=OK, estimator="Identity")
+        a.update(kw)
+        return FairPrice(**a)
+
+    ok(direct().status == OK,
+       "positive control: a VALID record constructs directly (the boundary "
+       "does not simply reject everything)")
+    for kw, lbl in (
+            (dict(value=60000.0), "the reviewer's probe: value 60000 with status OK"),
+            (dict(value=-0.01), "a NEGATIVE probability"),
+            (dict(value=1.5), "a probability above 1"),
+            (dict(value=float("nan")), "a NON-FINITE value"),
+            (dict(coin="doggo"), "an UNKNOWN coin"),
+            (dict(outcome="SIDEWAYS"), "an unrecognised OUTCOME convention"),
+            (dict(status="FINE"), "a status outside the declared set"),
+            (dict(status=STALE), "a NON-OK status carrying a value"),
+            (dict(freshness_s=99.0), "a stored freshness disagreeing with its timestamps"),
+            (dict(local_knowledge_timestamp=T0 - 1.0, freshness_s=-1.0),
+             "an OK record whose local knowledge PRECEDES the source event"),
+            (dict(source_timestamp=None), "an OK record missing a timestamp"),
+            (dict(estimator=""), "an ANONYMOUS record")):
+        refused = False
+        try:
+            direct(**kw)
+        except Inadmissible:
+            refused = True
+        ok(refused, f"FP1: DIRECT CONSTRUCTION of {lbl} REFUSES -- challengers "
+                    f"build this same type, so an unenforced contract is one "
+                    f"every challenger may quietly ignore")
+    r99 = identity_from_book("btc", 1787650200, "UP", 99.0, 100.0, 10.0, 10.0,
+                             T0, LK)
+    ok(r99.status != OK and r99.value is None,
+       "FP1: the reviewer's second probe -- a book priced 99/100 -- no longer "
+       "returns 'fair price 99.5': a PM binary book prices a PROBABILITY")
+
+    # ---- the ownership fence and predeclaration, both mechanical ----------
+    ok(assert_no_double_count(["spread", "queue_ahead"], "adverse_residual")
+       ["checked"],
+       "positive control: a clean toxicity spec passes the no-double-count fence")
+    for feats, tgt, lbl in (
+            (["spread", "fair_price"], "adverse_residual", "the fair-price VALUE among toxicity features"),
+            (["spread"], "adverse_level", "a toxicity target that is the LEVEL, not the residual")):
+        refused = False
+        try:
+            assert_no_double_count(feats, tgt)
+        except Inadmissible:
+            refused = True
+        ok(refused, f"fence: {lbl} REFUSES -- otherwise adverse selection is "
+                    f"counted in BOTH terms and no per-arm number looks unusual")
+    ok(assert_declared_before(100.0, 200.0, "microprice")["lead_time_s"] == 100.0,
+       "positive control: a challenger declared BEFORE its comparison passes")
+    for d, c, lbl in ((200.0, 100.0, "declared AFTER"),
+                      (100.0, 100.0, "declared AT the comparison instant"),
+                      (float("nan"), 100.0, "an UNDATED declaration")):
+        refused = False
+        try:
+            assert_declared_before(d, c, "microprice")
+        except Inadmissible:
+            refused = True
+        ok(refused, f"predeclaration: a challenger {lbl} REFUSES -- the value of "
+                    f"predeclaration is that it cannot be asserted afterwards")
 
     # ---- EXCLUSIONS ARE COUNTED -------------------------------------------
     t = tally([mk(), mk(ready=False), mk(ready=False), mk(best_bid=None)])
