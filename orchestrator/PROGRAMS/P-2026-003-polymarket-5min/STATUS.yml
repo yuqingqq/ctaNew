@@ -73,7 +73,32 @@ updated: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
-  verification_must_assert_it_read: CANONICAL-INSTANCE-R-289 # 2026-08-28
+  verification_must_assert_it_read: VOCABULARY-RULE-18-HELD-TO-A-STATED-BAR
+                             # STATUS 2026-08-28T15:21Z (R-290): ADOPTED AS
+                             # STANDING VOCABULARY; the NUMBERED rule is HELD to
+                             # the same bar rule 17 had to clear. THE BAR IS
+                             # STATED CHECKABLY so nobody re-litigates it --
+                             # RULE 18 LANDS WHEN THE CORRECTED PATTERN SHIPS IN
+                             # A **COMMITTED** VERIFICATION INSTRUMENT CARRYING
+                             # ALL THREE: (1) a population-COUNT assertion;
+                             # (2) a FIELD-TYPE assertion; (3) A FALSIFIER IN
+                             # WHICH A DELIBERATELY RENAMED FIELD FLIPS THE
+                             # CHECK TO **REFUSED** RATHER THAN TO
+                             # FOUND-NOTHING. That third item is the whole
+                             # lesson mechanised: the coordinator's vacuum
+                             # printed found-nothing from a renamed field and
+                             # looked like a pass.
+                             # THE TWO ONE-OFF PROBES DEMONSTRATE; THEY DO NOT
+                             # SHIP. The next verification code entering the
+                             # register either meets the bar and mints the rule,
+                             # or the rule waits. WHOEVER SWEEPS THAT CODE:
+                             # check the three items and say which are present
+                             # -- a partial pattern does NOT mint it, exactly as
+                             # a half closure did not mint rule 17.
+                             # Rationale kept, because it generalises: A
+                             # VOCABULARY ENTRY THAT LATER GRADUATES LANDS
+                             # HARDER THAN A RULE MINTED WARM. ORIGINAL ENTRY
+                             # (rule 13): 2026-08-28
                              # R-289, rule candidate. THE RULE: A VERIFICATION
                              # CLAIM ENTERING THE REGISTER MUST ASSERT THAT ITS
                              # PARSE ACTUALLY READ THE POPULATION AND THE FIELDS
