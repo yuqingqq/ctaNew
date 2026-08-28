@@ -49,7 +49,13 @@ FILL_CONDITIONED_TOKENS = (
 # allowlist tuned until the suite passes: an entry without construction evidence
 # is a fence with a hole in it.
 FENCE_REVIEWED = {
-    "any_fill_ahead": "the valuation GATE, not a feature; never in the pin",
+    # A1.2 (FROZEN): `any_fill_ahead` was HERE, admitted as "the valuation GATE,
+    # not a feature; never in the pin". Both clauses are true and neither is a
+    # defence — it is an OUTCOME field, and the fence exists to ban outcome
+    # fields BY NAME rather than trust they never reach the pin. A reviewed
+    # admission is a standing permission, and that one permitted exactly the
+    # class the fence was built to stop. Its use as the valuation GATE is
+    # unaffected: the gate is not a feature and never passes through here.
     "queue_ahead": "queue position at decision time; 'ahead' is spatial",
     "qahead": "as above",
 }
@@ -72,6 +78,76 @@ for _ms in (50, 250, 1000):
             "outcome" % _ms)
 
 
+class MalformedRow(RuntimeError):
+    """A row whose valuation inputs cannot be trusted. A1.3 (FROZEN).
+
+    Carries a NAMED status so the refusal can be counted rather than absorbed:
+    a zero that means 'absent' and a zero that means 'no harm' must not be the
+    same number."""
+
+    def __init__(self, status: str, detail: str):
+        self.status = status
+        self.detail = detail
+        super().__init__(f"[{status}] {detail}")
+
+
+def _num(x):
+    """A finite real, or None. bool is rejected: True would arithmetic as 1.0."""
+    if isinstance(x, bool) or not isinstance(x, (int, float)):
+        return None
+    return float(x) if math.isfinite(float(x)) else None
+
+
+def validate_row(row: dict, latency_ms: int = None) -> dict:
+    """Strict validation of one row's valuation inputs. A1.3 (FROZEN).
+
+    Fail-open was the defect: a missing or inconsistent field became a clean 0.0
+    or a 'no fill' row indistinguishable from a genuine one. Every failure below
+    is a NAMED status the caller must count."""
+    L = str(D.TARGET_LATENCY_MS if latency_ms is None else latency_ms)
+    if not isinstance(row, dict):
+        raise MalformedRow("NOT_A_ROW", f"got {type(row).__name__}")
+    if "any_fill_ahead" not in row:
+        raise MalformedRow("MISSING_GATE", "no any_fill_ahead on the row")
+    gate = row["any_fill_ahead"]
+    if not isinstance(gate, bool):
+        raise MalformedRow("NON_BOOLEAN_GATE", f"any_fill_ahead={gate!r}")
+    lat = row.get("latency")
+    if lat is None:
+        # a row with NO fill ahead legitimately carries no latency block
+        if gate:
+            raise MalformedRow("MISSING_LATENCY",
+                               "gate says a fill is ahead but there is no "
+                               "latency block to value it from")
+        return {"ok": True, "gate": False, "value": 0.0, "shares": 0.0}
+    if not isinstance(lat, dict):
+        raise MalformedRow("MALFORMED_LATENCY", f"latency={type(lat).__name__}")
+    if L not in lat:
+        raise MalformedRow("MISSING_LATENCY_BUCKET",
+                           f"no bucket {L!r}; buckets present: {sorted(lat)}")
+    b = lat[L]
+    if not isinstance(b, dict):
+        raise MalformedRow("MALFORMED_BUCKET", f"bucket {L} is {type(b).__name__}")
+    val = _num(b.get("preventable_value_cents"))
+    sh = _num(b.get("preventable_shares"))
+    if val is None:
+        raise MalformedRow("NON_NUMERIC_VALUE",
+                           f"preventable_value_cents="
+                           f"{b.get('preventable_value_cents')!r}")
+    if sh is None:
+        raise MalformedRow("NON_NUMERIC_SHARES",
+                           f"preventable_shares={b.get('preventable_shares')!r}")
+    if sh < 0:
+        raise MalformedRow("NEGATIVE_SHARES", f"preventable_shares={sh}")
+    if val != 0.0 and sh == 0.0:
+        raise MalformedRow(
+            "VALUE_WITHOUT_SHARES",
+            f"preventable_value_cents={val} with preventable_shares=0. A "
+            f"non-zero preventable value requires preventable shares; the pair "
+            f"is inconsistent and was previously accepted as a NO-FILL row.")
+    return {"ok": True, "gate": gate, "value": val, "shares": sh}
+
+
 def signed_v_cancel(row: dict, latency_ms: int = None) -> float:
     """V_cancel: signed value of cancelling, from the neutral-path row.
 
@@ -83,19 +159,14 @@ def signed_v_cancel(row: dict, latency_ms: int = None) -> float:
     valued) and the valuation gate (any_fill_ahead). This function must not
     re-derive either -- two definitions of a valuation gate is one too many
     (R-228(12))."""
-    L = str(D.TARGET_LATENCY_MS if latency_ms is None else latency_ms)
-    lat = row.get("latency") or {}
-    if not row.get("any_fill_ahead") or L not in lat:
-        return 0.0
-    return float(lat[L].get("preventable_value_cents", 0.0))
+    v = validate_row(row, latency_ms)
+    return v["value"] if v["gate"] else 0.0
 
 
 def preventable(row: dict, latency_ms: int = None) -> bool:
     """A PREVENTABLE fill in the latency sense, not the colloquial one."""
-    L = str(D.TARGET_LATENCY_MS if latency_ms is None else latency_ms)
-    lat = row.get("latency") or {}
-    return bool(row.get("any_fill_ahead")) and \
-        float(lat.get(L, {}).get("preventable_shares", 0.0)) > 0
+    v = validate_row(row, latency_ms)
+    return bool(v["gate"]) and v["shares"] > 0
 
 
 def head_populations(rows, latency_ms: int = None) -> dict:
@@ -103,12 +174,23 @@ def head_populations(rows, latency_ms: int = None) -> dict:
 
     Rule 4: exclusions are STATUSES, never silent drops."""
     L = latency_ms
-    q1 = list(rows)                                   # fill arrival: all rows
-    prev = [r for r in rows if preventable(r, L)]     # the conditional base
-    v = {id(r): signed_v_cancel(r, L) for r in prev}
-    harm = [r for r in prev if v[id(r)] > 0]
-    good = [r for r in prev if v[id(r)] < 0]
-    zero = [r for r in prev if v[id(r)] == 0.0]
+    # A1.3 (FROZEN): materialise ONCE. `rows` may be a generator, and the
+    # previous form consumed it with list(rows) and then iterated it AGAIN —
+    # yielding preventable=0 from a non-empty population, silently.
+    q1 = list(rows)
+    prev, refused = [], {}
+    vals = {}
+    for i, r in enumerate(q1):
+        try:
+            if preventable(r, L):
+                prev.append(i)
+                vals[i] = signed_v_cancel(r, L)
+        except MalformedRow as e:
+            refused[e.status] = refused.get(e.status, 0) + 1
+    harm = [q1[i] for i in prev if vals[i] > 0]
+    good = [q1[i] for i in prev if vals[i] < 0]
+    zero = [q1[i] for i in prev if vals[i] == 0.0]
+    prev = [q1[i] for i in prev]
     return {
         "q1_arrival": q1,
         "q2_sign_base": prev,
@@ -117,7 +199,10 @@ def head_populations(rows, latency_ms: int = None) -> dict:
         "zero_value_preventable": zero,
         "counts": {"all_rows": len(q1), "preventable": len(prev),
                    "v_positive": len(harm), "v_negative": len(good),
-                   "v_zero": len(zero)},
+                   "v_zero": len(zero),
+                   "refused_malformed": sum(refused.values())},
+        # rule 4: exclusions are STATUSES, never silent drops
+        "refused_by_status": dict(sorted(refused.items())),
     }
 
 
@@ -236,26 +321,65 @@ def selftest() -> int:
 
     L = str(D.TARGET_LATENCY_MS)
 
-    def row(v, shares=1.0, fill=True):
+    def row(v, shares=1.0, fill=True, v_override=None):
+        """Build a CONSISTENT row. Under A1.3 a value without shares is a
+        refusal, so the helper must not manufacture that pair by accident."""
+        val = v if v_override is None else v_override
         return {"any_fill_ahead": fill,
-                "latency": {L: {"preventable_value_cents": v,
+                "latency": {L: {"preventable_value_cents": val,
                                 "preventable_shares": shares,
                                 "stale_shares": 0.0}}}
 
     # --- target: sign convention and the gate ---
     ok(signed_v_cancel(row(5.0)) == 5.0, "V_cancel positive = harm avoided")
     ok(signed_v_cancel(row(-3.0)) == -3.0, "V_cancel negative = good fill lost")
-    ok(signed_v_cancel(row(5.0, fill=False)) == 0.0,
+    ok(signed_v_cancel({"any_fill_ahead": False}) == 0.0,
        "no fill ahead -> 0; the GATE is the exposure row's, not re-derived here")
-    ok(signed_v_cancel({}) == 0.0, "a row with no latency block is 0, not a crash")
-    ok(not preventable(row(5.0, shares=0.0)),
-       "zero preventable shares is NOT a preventable fill")
+
+    # A1.3 (FROZEN): these previously FAILED OPEN. The old falsifier here
+    # asserted `signed_v_cancel({}) == 0.0` — "0, not a crash" — which encoded
+    # the fail-open behaviour AS CORRECT. A test can enshrine a defect as the
+    # specification, and this one did.
+    for _lbl, _r, _st in (
+            ("no gate field", {}, "MISSING_GATE"),
+            ("gate true, no latency", {"any_fill_ahead": True}, "MISSING_LATENCY"),
+            ("non-numeric value", {"any_fill_ahead": True, "latency": {
+                L: {"preventable_value_cents": None,
+                    "preventable_shares": 1.0}}}, "NON_NUMERIC_VALUE"),
+            ("value>0 with shares==0", {"any_fill_ahead": True, "latency": {
+                L: {"preventable_value_cents": 5.0,
+                    "preventable_shares": 0.0}}}, "VALUE_WITHOUT_SHARES"),
+            ("negative shares", {"any_fill_ahead": True, "latency": {
+                L: {"preventable_value_cents": 1.0,
+                    "preventable_shares": -1.0}}}, "NEGATIVE_SHARES"),
+            ("non-boolean gate", {"any_fill_ahead": 1, "latency": {
+                L: {"preventable_value_cents": 1.0,
+                    "preventable_shares": 1.0}}}, "NON_BOOLEAN_GATE")):
+        try:
+            signed_v_cancel(_r)
+            ok(False, f"A1.3 REFUSES a malformed row: {_lbl}")
+        except MalformedRow as _e:
+            ok(_e.status == _st,
+               f"A1.3 REFUSES a malformed row: {_lbl} -> {_e.status}")
+    ok(signed_v_cancel(row(5.0)) == 5.0,
+       "A1.3 ACCEPTS a well-formed row (strictness is not a wall)")
+    ok(not preventable(row(5.0, shares=0.0, v_override=0.0)),
+       "zero preventable shares with zero value is NOT a preventable fill")
 
     # --- populations partition, no silent drops ---
     rows = [row(5.0), row(-3.0), row(0.0), row(2.0, fill=False)]
     pops = head_populations(rows)
     c = pops["counts"]
     ok(c["preventable"] == 3, "the no-fill row is excluded from the base")
+    _g = (row(5.0) for _ in range(3))
+    ok(head_populations(_g)["counts"]["preventable"] == 3,
+       "A1.3 head_populations builds ONCE: a GENERATOR input is not "
+       "double-consumed (it previously yielded preventable=0 from 3 rows)")
+    _mixed = head_populations([row(5.0), {"any_fill_ahead": True}, row(-2.0)])
+    ok(_mixed["counts"]["refused_malformed"] == 1
+       and _mixed["refused_by_status"] == {"MISSING_LATENCY": 1},
+       "A1.3 malformed rows are COUNTED BY STATUS, never silently dropped "
+       "(rule 4)")
     ok(c["v_positive"] + c["v_negative"] + c["v_zero"] == c["preventable"],
        "harm/good/zero PARTITION the preventable base (rule 4: no silent drops)")
 
@@ -294,8 +418,15 @@ def selftest() -> int:
         ok(False, "the fence REFUSES an outcome feature (markout)")
     except RuntimeError:
         ok(True, "the fence REFUSES an outcome feature (markout)")
+    try:
+        assert_no_fill_conditioned_features(["spread", "any_fill_ahead"])
+        ok(False, "A1.2 the fence NAME-BANS any_fill_ahead")
+    except RuntimeError:
+        ok(True, "A1.2 the fence NAME-BANS any_fill_ahead — it is an OUTCOME "
+                 "field, and 'it is the gate, not a feature' was true but not "
+                 "a defence")
     ok(assert_no_fill_conditioned_features(
-        ["spread", "imbalance", "queue_ahead", "any_fill_ahead"])["fence"]
+        ["spread", "imbalance", "queue_ahead"])["fence"]
        == "clean",
        "the fence PASSES a clean set and admits the gate by review "
        "(a fence that refuses everything is not a fence)")
