@@ -1,0 +1,124 @@
+{
+ "agreement_with_da_stub": {
+  "agree": true,
+  "first_difference": null,
+  "meaning": "independent implementations of the declared lifecycle producing identical events; measured, not assumed",
+  "n_be": 457268,
+  "n_da": 457268
+ },
+ "arms": {
+  "QR_CANCEL_HOLD_X_SKEW": {
+   "components": [
+    "cancel_hold",
+    "skew"
+   ],
+   "interaction": true,
+   "kinds": [
+    "PLACE"
+   ],
+   "n_events": 457268
+  },
+  "QR_SKEW_ONLY": {
+   "components": [
+    "skew"
+   ],
+   "interaction": false,
+   "kinds": [
+    "PLACE"
+   ],
+   "n_events": 457268
+  }
+ },
+ "artifacts": {
+  "QR_CANCEL_HOLD_X_SKEW": {
+   "bytes": 64259195,
+   "in_git": false,
+   "path": "data/pm_5min/derived/be_inert_trajectory_qr_cancel_hold_x_skew.json",
+   "sha256": "af878dff6d64ec5d538ca430fe68fc0fe5c15e5e5334d77c2e2cbab5e15932d7",
+   "why_not_in_git": "61MB each; CLAUDE.md keeps large data out of git. The HASH is committed here instead, so a future reader can verify the artifact they hold is the one this receipt describes (the verdict-never-in-git lesson, R-277)."
+  },
+  "QR_SKEW_ONLY": {
+   "bytes": 64259173,
+   "in_git": false,
+   "path": "data/pm_5min/derived/be_inert_trajectory_qr_skew_only.json",
+   "sha256": "818c71f6eb54287dd3d594b2087c02c32827d2f6fb068732cc45bea83ac9d19a",
+   "why_not_in_git": "61MB each; CLAUDE.md keeps large data out of git. The HASH is committed here instead, so a future reader can verify the artifact they hold is the one this receipt describes (the verdict-never-in-git lesson, R-277)."
+  }
+ },
+ "economics_in_output": false,
+ "memory_peak_note": "systemd reported 'Memory peak: 512.0K' for a run that built 914,536 events. That figure is NOT a measurement -- it is the unpopulated-field shape that already cost one diagnosis. CPU time 51.570s and the written artifacts are the evidence the work happened; this run therefore carries NO memory ceiling measurement.",
+ "parity": {
+  "cancel_disabled_equals_skew_only": {
+   "bit_identical": true,
+   "sha_cancel_held": "532fcc82cabe0337cdd2811a5756dc1ff8ddaebbe482a5f8052e47048a3ccda3",
+   "sha_skew_only": "532fcc82cabe0337cdd2811a5756dc1ff8ddaebbe482a5f8052e47048a3ccda3",
+   "why": "with the predictor inert the cancel arm must place exactly what the skew arm places; a difference is residue from machinery that is supposed to be off"
+  },
+  "crossed_hashseed": {
+   "identical": true,
+   "sha_by_seed": {
+    "0": "532fcc82cabe0337cdd2811a5756dc1ff8ddaebbe482a5f8052e47048a3ccda3",
+    "1": "532fcc82cabe0337cdd2811a5756dc1ff8ddaebbe482a5f8052e47048a3ccda3"
+   },
+   "why": "a canonical trajectory that moves with PYTHONHASHSEED was ordered by a set or a dict somewhere"
+  }
+ },
+ "populations": {
+  "n_actions": 457268,
+  "n_opportunities": 457268,
+  "rows_per_action": 1.3972,
+  "rows_seen": 638917
+ },
+ "predictor": {
+  "predictor": "none",
+  "predictor_active": false,
+  "why": "inert by construction; the arms differ in RULES"
+ },
+ "produced_by": "be_inert_arm_run.py (BE's own producer; DA's arm code is never imported into production)",
+ "submission": {
+  "QR_CANCEL_HOLD_X_SKEW": {
+   "lifecycle": {
+    "arm": "QR_CANCEL_HOLD_X_SKEW",
+    "effective": 0,
+    "identity_holds": true,
+    "n_events": 457268,
+    "no_double_cancel": true,
+    "no_fill_after_effective": true,
+    "no_unrequested_outcome": true,
+    "one_terminal_outcome_per_request": true,
+    "outcomes_after_their_request": true,
+    "pass": true,
+    "requested": 0,
+    "suppressed": 0
+   },
+   "loaded": true,
+   "n_events": 457268,
+   "predictor_active": false
+  },
+  "QR_SKEW_ONLY": {
+   "lifecycle": {
+    "arm": "QR_SKEW_ONLY",
+    "effective": 0,
+    "identity_holds": true,
+    "n_events": 457268,
+    "no_double_cancel": true,
+    "no_fill_after_effective": true,
+    "no_unrequested_outcome": true,
+    "one_terminal_outcome_per_request": true,
+    "outcomes_after_their_request": true,
+    "pass": true,
+    "requested": 0,
+    "suppressed": 0
+   },
+   "loaded": true,
+   "n_events": 457268,
+   "predictor_active": false
+  }
+ },
+ "tape": {
+  "bytes": 705063901,
+  "name": "harmful_exposure_rows_v3_topup.json",
+  "path": "/home/yuqing/ctaNew/data/pm_5min/derived/harmful_exposure_rows_v3_topup.json",
+  "sha256_prefix": "e75d0e210590e2a8"
+ }
+}
