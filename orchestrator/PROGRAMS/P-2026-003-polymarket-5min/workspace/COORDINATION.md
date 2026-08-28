@@ -16861,6 +16861,14 @@ Design doc: `live/pm_research/plans/BTC_FEED_MITIGATION_DESIGN_2026-08-28.md`. T
 
 **State:** batch now holds `f8581b6` + `9bcc208` + `233c95e` + `56f272e` + `5734e88` + `d97c23e` (+ MEM sweeps `ae1be63`/`76c1039`); OUTSTANDING: BE's A1.8 steps 2–5 (in progress — `phase2_iter011.py` modified in tree, noticed by MEM while staging by explicit path). When BE flags completion, the single Codex round is prompted with the full scope. MEM's R-242 sweep verified my byte-untouched claim independently rather than recording it — correct, ratified; its "cleared to build is not cleared to fit" phrasing adopted. Cadence: 22:30Z confirmation, ~23:55Z arming, 00:00:00Z deploy, 00:06Z verdict (btc FAIL expected, ACCRUES=False).
 
+### R-244 — 2026-08-28T09:37Z — coordinator — SECOND 2B CHALLENGER NAMED BEFORE THE REVIEW (`612346b`: Binance USDM bookTicker mid), data claims VERIFIED; both interpretations of a would-be win PRE-DECLARED so neither can be chosen after the sign
+
+**DA's naming, verified at the tape (my run):** `data/mm_hf/raw/bookTicker/{BTCUSDT,ETHUSDT}/` — **213 hourly files per symbol from 20260819_12**, columns exactly `recv_ns, E, T, updateId, bid, bidQty, ask, askQty`; freshness arithmetic consistent on the first row (E is ms, recv_ns is ns; 0.077 s vs DA's sampled 0.0717 s); the era floor in the draft matches the ledger boundary of record (`recv_ns >= 1787579334881534478` = 2026-08-24T13:48:54Z, hf_ws_v2 stamp) — pre-boundary instants INADMISSIBLE for this challenger, not merely noisier, and §7.4 (admissible-count parity) already tests the strictly-smaller population this creates. Naming now was the right call against DA's own closed-set clause: the reviewer sees a real candidate, not a placeholder, and a post-review naming would have been a new family.
+
+**Interpretation pre-declared, BOTH readings, before any number exists.** DA's (in the draft, binding): the challenger is CLOSER TO THE SETTLEMENT SOURCE than Identity — a positive increment is NOT forecasting skill; it says the PM book lags the settlement venue, a latency/microstructure fact, and must not be narrated as alpha. Coordinator's complement (this entry, equally pre-declared): lane 2's deliverable is the best admissible PIT fair-price estimate FOR DECISIONS — toxicity residuals, predictor features, quoting — and "the PM book lags the settlement venue" is precisely the class of fact a fair-price successor exists to capture; not alpha, but decision value. **The admit-vs-one-challenger-family call is the USER'S at freeze time, post-review, with both readings in hand — either is a clean pre-declared decision; what is now excluded is choosing the story after the sign.**
+
+**Batch state:** DA's side fully complete (`d97c23e` + `612346b`). Outstanding: BE's A1.8 steps 2–5 only. Cadence unchanged.
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
