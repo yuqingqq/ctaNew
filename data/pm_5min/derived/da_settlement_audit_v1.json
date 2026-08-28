@@ -1,46 +1,86 @@
 {
+  "as_of_utc": "2026-08-28T15:09:17.482596+00:00",
+  "equivalence": {
+    "all_match": true,
+    "conventions_compared": [
+      "S30(T) vs S30(t0)",
+      "S60(T) vs S30(t0)",
+      "S60(T) vs S60(t0)",
+      "meanS60[t0,T] vs S60(t0)"
+    ]
+  },
   "equivalence_control_all_days": {
     "S30(T) vs S30(t0)": {
-      "agree": 0.9482538448725779,
-      "agree_big": 0.9570527750951542,
+      "agree": 0.9483570676566743,
+      "agree_big": 0.9571404274618742,
       "gate_pass": false,
-      "knowledge_time_agree": 0.9528621398034535,
-      "n": 18011,
-      "n_big_margin": 17603
+      "knowledge_time_agree": 0.9529561700005541,
+      "n": 18047,
+      "n_big_margin": 17639
     },
     "S60(T) vs S30(t0)": {
-      "agree": 0.9620787296652046,
-      "agree_big": 0.9718822926745972,
+      "agree": 0.9621543746883139,
+      "agree_big": 0.971939789832434,
       "gate_pass": false,
-      "knowledge_time_agree": 0.9656876353339626,
-      "n": 18011,
-      "n_big_margin": 17569
+      "knowledge_time_agree": 0.9657560813431595,
+      "n": 18047,
+      "n_big_margin": 17605
     },
     "S60(T) vs S60(t0)": {
-      "agree": 0.9988340458608628,
-      "agree_big": 0.9996580612070439,
+      "agree": 0.9988363716961268,
+      "agree_big": 0.9996587613035318,
       "gate_pass": true,
-      "knowledge_time_agree": 0.9917827994003664,
-      "n": 18011,
-      "n_big_margin": 17547
+      "knowledge_time_agree": 0.9917991910012744,
+      "n": 18047,
+      "n_big_margin": 17583
     },
     "meanS60[t0,T] vs S60(t0)": {
-      "agree": 0.85597690300372,
-      "agree_big": 0.8726628730693299,
+      "agree": 0.8562087881642378,
+      "agree_big": 0.8728705527871132,
       "gate_pass": false,
-      "knowledge_time_agree": 0.8527011270890011,
-      "n": 18011,
-      "n_big_margin": 17222
+      "knowledge_time_agree": 0.8529395467390702,
+      "n": 18047,
+      "n_big_margin": 17258
     }
   },
+  "fresh_subset_agree": 0.9998734016964173,
   "gate": {
     "big": 0.995,
     "big_margin_bp": 0.5,
     "min_powered": 400,
     "pooled": 0.99
   },
-  "n_windows_all": 18011,
+  "loader_exclusions": {
+    "markets_no_slug": 0,
+    "markets_unparseable": 0,
+    "resolutions_open_or_no_winner": 8,
+    "resolutions_unparseable": 0
+  },
+  "n_windows_all": 18047,
   "n_windows_recent": 8022,
+  "original_module": "live.pm_research.exp_m6_settlement",
+  "original_table": {
+    "S30(T) vs S30(t0)": [
+      18047,
+      "94.8",
+      "95.7"
+    ],
+    "S60(T) vs S30(t0)": [
+      18047,
+      "96.2",
+      "97.2"
+    ],
+    "S60(T) vs S60(t0)": [
+      18047,
+      "99.9",
+      "100.0"
+    ],
+    "meanS60[t0,T] vs S60(t0)": [
+      18047,
+      "85.6",
+      "87.3"
+    ]
+  },
   "pre_registration": "Q-DA-145",
   "reading": "(i) A2 CONFIRMED on fresh data",
   "recent": {
@@ -82,5 +122,23 @@
     "2026-08-25",
     "2026-08-26",
     "2026-08-27"
-  ]
+  ],
+  "snapshot_dir": "/tmp/da_m6_snapshot_wq33fszh",
+  "snapshot_note": "both sides read one frozen copy of markets/resolutions; the tape grows during measurement (rule 8)",
+  "staleness_all": {
+    "fresh_hit": 17617,
+    "fresh_n": 17622,
+    "gt_1s": 108,
+    "gt_1s_disagree": 1,
+    "gt_2s": 317,
+    "gt_2s_disagree": 15
+  },
+  "staleness_recent": {
+    "fresh_hit": 7898,
+    "fresh_n": 7899,
+    "gt_1s": 32,
+    "gt_1s_disagree": 0,
+    "gt_2s": 91,
+    "gt_2s_disagree": 11
+  }
 }
