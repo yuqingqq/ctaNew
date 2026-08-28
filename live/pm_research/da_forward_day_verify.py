@@ -61,6 +61,119 @@ GAP_BAR_PER_HR = 15.0
 #: the refusal (the standing Class-C/D instruction).
 PER_COIN_RULE_FROM_DAY = "20260828"
 
+#: DAY_BAR_V2 (P1/P2/P3), governing days from this date. Declared in
+#: plans/DAY_BAR_V2_PREREGISTRATION.md (dfa0977, amended 368345b) BEFORE any
+#: day it judges. Class A and PROSPECTIVE-ONLY, same discipline as the per-coin
+#: boundary: moving it after a verdict is visible retro-judges a day under a
+#: bar chosen to change its answer.
+DAY_BAR_V2_FROM_DAY = "20260829"
+DAY_BAR_V2_DOC = "live/pm_research/plans/DAY_BAR_V2_PREREGISTRATION.md"
+DAY_BAR_V2_COMMITS = "dfa0977 (declared) + 368345b (amended pre-judgment)"
+#: CLASS A thresholds, transcribed from the doc. Not to be tuned here.
+P1_LOST_S_PER_HR_MAX = 120.0     # >= 3.33% coverage loss
+P2_MATERIAL_SPAN_S = 75.0        # >=25% of a 300s window in gap
+P2_MATERIAL_SHARE_MAX = 0.05     # <=14 of 288 windows
+P3_ROLLING_60MIN_LOST_S_MAX = 900.0
+
+
+def bar_regime(day_token: str) -> str:
+    """Which bar judges this day. A DATE predicate, no caller override."""
+    d = dt.datetime.strptime(day_token, "%Y%m%d")
+    if d >= dt.datetime.strptime(DAY_BAR_V2_FROM_DAY, "%Y%m%d"):
+        return "day_bar_v2"
+    return "count_bar_v1_frozen"
+
+
+def coin_gap_intervals(lo: int, hi: int, coin: str, path: Path | None = None
+                       ) -> list[tuple[float, float]]:
+    """COIN-LEVEL gap intervals overlapping [lo, hi), merged and sorted.
+
+    COIN-LEVEL is mandatory (R-191 scope, restated in the day-bar doc §4.2):
+    a gap logged against a NEIGHBOURING window still blinds this one. The
+    verifier's older per-slug figure is kept but RENAMED, because the two
+    definitions differ by construction on bad days and a bar set on one and
+    evaluated on the other is wrong by that difference.
+    """
+    src = PM_GAPS if path is None else path
+    iv = []
+    n_bad = 0
+    for line in src.read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        try:
+            r = json.loads(line)
+        except json.JSONDecodeError:
+            n_bad += 1
+            continue
+        if r.get("event") != "gap_closed" or r.get("coin") != coin:
+            continue
+        gs, ge = r.get("gap_start_ns"), r.get("gap_end_ns")
+        if not gs or not ge:
+            continue
+        a, b = gs / 1e9, ge / 1e9
+        if b > lo and a < hi:
+            iv.append((max(a, lo), min(b, hi)))
+    # REFUSE a malformed ledger (doc §4.3). Skipping bad lines and returning
+    # the intervals that survived is indistinguishable from a CLEAN DAY -- the
+    # exact shape where an unreadable input reads as a pass. An absent file
+    # already raises; an unreadable one must too, and say how much it lost.
+    if n_bad:
+        raise ValueError(
+            f"REFUSED: {n_bad} unparseable line(s) in {src.name}. A bar computed "
+            f"over the lines that happened to parse is not a bar over the day -- "
+            f"and zero intervals from a broken ledger reads exactly like a day "
+            f"with no gaps.")
+    iv.sort()
+    out: list[tuple[float, float]] = []
+    for a, b in iv:
+        if out and a <= out[-1][1]:
+            out[-1] = (out[-1][0], max(out[-1][1], b))
+        else:
+            out.append((a, b))
+    return out
+
+
+def day_bar_v2(lo: int, hi: int, coin: str, elapsed_h: float,
+               path: Path | None = None) -> dict[str, Any]:
+    """P1/P2/P3 for one coin-day, from COIN-LEVEL merged gap intervals."""
+    iv = coin_gap_intervals(lo, hi, coin, path)
+    lost = sum(b - a for a, b in iv)
+    # P1 severity: the doc divides by 24, so a PARTIAL day is not comparable.
+    p1_rate = lost / 24.0
+    # P2 materiality: windows with >=75s of their 300s span intersected
+    mat = 0
+    for i in range(WINDOWS_PER_DAY):
+        w0 = lo + i * WINDOW_S
+        w1 = w0 + WINDOW_S
+        cov = sum(min(b, w1) - max(a, w0) for a, b in iv if a < w1 and b > w0)
+        if cov >= P2_MATERIAL_SPAN_S:
+            mat += 1
+    # P3 concentration: worst rolling 60 minutes, stepped by window
+    worst = 0.0
+    for i in range(WINDOWS_PER_DAY):
+        h0 = lo + i * WINDOW_S
+        h1 = h0 + 3600
+        if h1 > hi:
+            break
+        worst = max(worst, sum(min(b, h1) - max(a, h0)
+                               for a, b in iv if a < h1 and b > h0))
+    return {
+        "coin_level_gap_intervals": len(iv),
+        "lost_seconds": round(lost, 1),
+        "P1_lost_s_per_hr": round(p1_rate, 2),
+        "P1_pass": p1_rate <= P1_LOST_S_PER_HR_MAX,
+        "P2_material_windows": mat,
+        "P2_material_share": round(mat / WINDOWS_PER_DAY, 4),
+        "P2_pass": (mat / WINDOWS_PER_DAY) <= P2_MATERIAL_SHARE_MAX,
+        "P3_worst_rolling_60min_lost_s": round(worst, 1),
+        "P3_pass": worst <= P3_ROLLING_60MIN_LOST_S_MAX,
+        "thresholds": {"P1_max_s_per_hr": P1_LOST_S_PER_HR_MAX,
+                       "P2_material_span_s": P2_MATERIAL_SPAN_S,
+                       "P2_max_share": P2_MATERIAL_SHARE_MAX,
+                       "P3_max_rolling_60min_s": P3_ROLLING_60MIN_LOST_S_MAX},
+    }
+
 
 def verdict_granularity(day_token: str) -> str:
     """Which rule judges this day. A DATE predicate, not a caller's flag.
@@ -236,9 +349,26 @@ def verify_day(day_token: str, freeze_epoch: float,
             tot_w += 1
             if gaps.get(slug):
                 aff += 1
+        # DUAL-REPORTED (day-bar doc §4.2). The historic field was PER-SLUG;
+        # the governing scope is COIN-LEVEL. They differ by construction on bad
+        # days -- a gap logged against a neighbouring window still blinds this
+        # one -- so a bar set on one and evaluated on the other is wrong by that
+        # difference. Both are named for what they are; neither is "the" number.
+        _iv = coin_gap_intervals(lo, hi, coin)
+        _cl = sum(1 for i in range(WINDOWS_PER_DAY)
+                  if any(a < lo + i * WINDOW_S + WINDOW_S and b > lo + i * WINDOW_S
+                         for a, b in _iv))
         affected[coin] = {
-            "era_covered_windows": tot_w, "gap_affected": aff,
-            "gap_affected_pct": round(100.0 * aff / tot_w, 1) if tot_w else None}
+            "era_covered_windows": tot_w,
+            "gap_affected_PER_SLUG": aff,
+            "gap_affected_pct_PER_SLUG": round(100.0 * aff / tot_w, 1) if tot_w else None,
+            "gap_affected_COIN_LEVEL": _cl,
+            "gap_affected_pct_COIN_LEVEL": round(100.0 * _cl / WINDOWS_PER_DAY, 1),
+            "scope_note": "COIN_LEVEL is the governing scope (R-191); PER_SLUG "
+                          "is retained for continuity and is NOT the bar's "
+                          "input. Raw breadth is a REPORTED DIAGNOSTIC with no "
+                          "bar -- O1 barely moves it, so a bar here would "
+                          "reject good post-fix days forever."}
 
     # --- R-211(3): PER-COIN verdicts, days >= PER_COIN_RULE_FROM_DAY only ---
     # Each coin is judged on ITS OWN completeness and ITS OWN hourly gap bars,
@@ -303,8 +433,39 @@ def verify_day(day_token: str, freeze_epoch: float,
         _day_all_pass = _day_all_pass and all(v["all_pass"]
                                               for v in per_coin.values())
 
+    regime = bar_regime(day_token)
+    bars_v2: dict[str, Any] = {}
+    if regime == "day_bar_v2":
+        for coin in coins:
+            b = day_bar_v2(lo, hi, coin, gs["hours_elapsed"])
+            b["all_pass"] = bool(b["P1_pass"] and b["P2_pass"] and b["P3_pass"])
+            b["partial_day"] = not calendar_closed
+            if not calendar_closed:
+                b["note"] = ("P1 divides lost seconds by 24 as declared, so on "
+                             "an OPEN day it is a LOWER BOUND, not the day's "
+                             "rate. The closing verdict is the one that judges.")
+            bars_v2[coin] = b
+            for k in ("P1", "P2", "P3"):
+                p(f"{k}_{coin}", b[f"{k}_pass"],
+                  {"P1": f"lost {b['lost_seconds']}s = {b['P1_lost_s_per_hr']}/hr "
+                         f"vs bar {P1_LOST_S_PER_HR_MAX}",
+                   "P2": f"{b['P2_material_windows']} windows >= "
+                         f"{P2_MATERIAL_SPAN_S}s in gap = "
+                         f"{100*b['P2_material_share']:.2f}% vs bar "
+                         f"{100*P2_MATERIAL_SHARE_MAX:.0f}%",
+                   "P3": f"worst rolling 60min {b['P3_worst_rolling_60min_lost_s']}s "
+                         f"vs bar {P3_ROLLING_60MIN_LOST_S_MAX}"}[k])
+
     return {
         "instrument": "da_forward_day_verify_v1",
+        "bar_regime": regime,
+        "day_bar_v2": bars_v2,
+        "day_bar_v2_governing": {
+            "from_day": DAY_BAR_V2_FROM_DAY, "doc": DAY_BAR_V2_DOC,
+            "commits": DAY_BAR_V2_COMMITS,
+            "applies_to_this_day": regime == "day_bar_v2",
+            "note": "days before the boundary are judged by the FROZEN count "
+                    "bar; the v2 bars are not applied retroactively"},
         "verdict_granularity": gran,
         "per_coin_rule_from_day": PER_COIN_RULE_FROM_DAY,
         "granularity_note": (
@@ -352,6 +513,68 @@ def _selftests() -> int:
     ok(day_bounds("20260826")[1] == lo,
        "consecutive days abut exactly -- no gap, no overlap at midnight")
     ok(WINDOWS_PER_DAY * WINDOW_S == 86400, "288 windows tile the day exactly")
+
+    # ---- DAY-BAR V2 falsifiers (doc §4.3): each bar must FIRE ------------
+    import tempfile as _tf3
+    lo9, hi9 = day_bounds("20260829")
+    def _ledger(td, spans):
+        f = Path(td) / "g.jsonl"
+        f.write_text("\n".join(json.dumps({
+            "event": "gap_closed", "coin": "btc", "slug": f"btc-{i}",
+            "gap_start_ns": int(a * 1e9), "gap_end_ns": int(b * 1e9)})
+            for i, (a, b) in enumerate(spans)), encoding="utf-8")
+        return f
+
+    ok(bar_regime("20260828") == "count_bar_v1_frozen"
+       and bar_regime("20260829") == "day_bar_v2",
+       "day-bar v2 governs from 20260829 and NOT before -- the bar is not "
+       "applied to days that closed under the frozen count bar")
+
+    with _tf3.TemporaryDirectory() as td:
+        # HIGH-LOSS day: many short gaps, no single window materially hit.
+        # 4000s over the day = 166.7 s/hr -> P1 must FAIL, P2 must still pass.
+        hi_loss = [(lo9 + 300 * i + 10, lo9 + 300 * i + 10 + 20) for i in range(200)]
+        r = day_bar_v2(lo9, hi9, "btc", 24.0, _ledger(td, hi_loss))
+        ok(not r["P1_pass"], f"synthetic HIGH-LOSS day FAILS P1 "
+                             f"({r['P1_lost_s_per_hr']}/hr vs {P1_LOST_S_PER_HR_MAX})")
+        ok(r["P2_pass"], "and still PASSES P2 -- severity and materiality are "
+                         "different questions, which is why both exist")
+
+        # LONG-OUTAGE day: one 90-minute outage. P2 and P3 must BOTH fail.
+        out = [(lo9 + 3600 * 5, lo9 + 3600 * 5 + 5400)]
+        r2 = day_bar_v2(lo9, hi9, "btc", 24.0, _ledger(td, out))
+        ok(not r2["P2_pass"], f"synthetic LONG-OUTAGE day FAILS P2 "
+                              f"({r2['P2_material_windows']} material windows)")
+        ok(not r2["P3_pass"], f"and FAILS P3 "
+                              f"({r2['P3_worst_rolling_60min_lost_s']}s in an hour)")
+        ok(not r2["P1_pass"] or r2["P1_lost_s_per_hr"] <= P1_LOST_S_PER_HR_MAX,
+           "P1 on that day is reported either way -- the bars are independent")
+
+        # POSITIVE CONTROL: a quiet day must pass all three, or the bars are
+        # unfalsifiable in the direction that matters for accepting a day.
+        quiet = [(lo9 + 3600 * i + 5, lo9 + 3600 * i + 15) for i in range(24)]
+        r3 = day_bar_v2(lo9, hi9, "btc", 24.0, _ledger(td, quiet))
+        ok(r3["P1_pass"] and r3["P2_pass"] and r3["P3_pass"],
+           "positive control: a QUIET day passes all three bars")
+
+        # MALFORMED ledger must REFUSE, never silently read as a clean day
+        bad = Path(td) / "bad.jsonl"
+        bad.write_text('{"event":"gap_closed","coin":"btc"\nnot json\n', encoding="utf-8")
+        try:
+            day_bar_v2(lo9, hi9, "btc", 24.0, bad)
+            ok(False, "a MALFORMED ledger must REFUSE, not read as a clean day")
+        except ValueError as e:
+            ok("unparseable" in str(e),
+               "a MALFORMED ledger REFUSES and names the count -- zero intervals "
+               "from a broken ledger would otherwise read exactly like a day "
+               "with no gaps, which is a pass obtained by failing to read")
+        miss = Path(td) / "absent.jsonl"
+        try:
+            day_bar_v2(lo9, hi9, "btc", 24.0, miss)
+            ok(False, "an ABSENT ledger must raise, not read as zero loss")
+        except FileNotFoundError:
+            ok(True, "an ABSENT ledger REFUSES (FileNotFoundError), never "
+                     "reading as a day with no gaps")
 
     # ---- R-211(3): the rule switch is PROSPECTIVE and date-driven ---------
     ok(verdict_granularity("20260827") == "aggregate_frozen",
