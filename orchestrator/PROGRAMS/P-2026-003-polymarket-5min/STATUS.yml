@@ -387,6 +387,22 @@ flags:
                              # post-step -- the slow-consumer story is refuted.
                              # Design is the coordinator's, ruling is the
                              # USER's; collectors stay outside DA (R-110).
+  collect_pm_working_tree_divergence: DELIBERATE-UNTIL-0000Z # 2026-08-28.
+                             # live/pm_research/collect_pm.py shows MODIFIED on
+                             # purpose: the v4 patch is COMMITTED (6786a02) but
+                             # the working file is held at clob_v3_1 until the
+                             # 00:00:00Z boundary, because Restart=always would
+                             # load v4 UNSTAMPED on any mid-day auto-restart --
+                             # manufacturing an unrecorded era boundary inside a
+                             # live day. DO NOT clean, sweep, checkout or
+                             # "restore" this file. Runbook:
+                             # plans/O1_DEPLOY_RUNBOOK_2026-08-29.md. Deploy is
+                             # coordinator-owned. Expect
+                             # data/pm_5min/collector_runs.jsonl at deploy
+                             # (mm_hf schema shape) carrying era_semantics: no
+                             # row-stamping change, distributional boundary,
+                             # plus the O1d understatement caveat (pre-boundary
+                             # never-connected gap durations are a LOWER BOUND).
   forward_day_verify_instrument: COMMITTED # 2026-08-26 DA, e9f8d89.
                              # live/pm_research/da_forward_day_verify.py --
                              # R-141(1) predicates, R-153(2) hard precondition.
