@@ -1,9 +1,109 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-08-28T06:25Z (MEM) — **R-232 execution CLOSED at R-233.** v2.3
-DA-verified 15/15 with self-attesting runtime identity; freeze live with its
-clock running; O1 held at v3_1 for tonight's 00:00:00Z boundary; 08-28 judged
-at 00:06Z under the old bar.
+Updated: 2026-08-28T06:56Z (MEM) — **blocker 7 CLOSED, and it closed by finding
+a real determinism defect.** Canonical null re-bound sight-unseen, survivors
+unchanged; the six-generation ~1e-11 delta finally explained and deliberately
+left unharmonized. O1 still held at v3_1 for tonight's 00:00:00Z boundary.
+
+## 2026-08-28 ~06:56Z (MEM) — blocker 7 closed by finding something; one residual flagged
+
+### The re-binding did its job by failing
+
+**R-234 (`8da983e`, ruling) → fix `e694511` → canonical receipt `163bd36` → DA
+close `81eb368` → R-235 (`7ec5f4e`).** Blocker 7 was bookkeeping — re-bind the
+null to the current chain. It surfaced a real defect instead, which is the
+argument for doing bookkeeping at all.
+
+**All 12 increments bit-identical (max |Δ| exactly 0), but 11 of 12 p-values
+moved** (max 0.0245) on the same declared design, same `PERM_SEED=20260827`,
+same `N_PERM=2000`, same data. **Mechanism verified, not inferred:**
+`sign_flip_p` assigns signs in *list* order; the list came from
+`set(cbw)|set(bbw)`; set-of-strings iteration order varies per process under an
+unpinned `PYTHONHASHSEED`. Reversed insertion order → same increment, different
+p (0.7964 vs 0.8184); three interpreters gave three orders.
+
+**The sentence worth keeping:** `PERM_SEED` pinned the RNG but **not the data
+order the RNG was applied to.** Every run was an independent Monte-Carlo draw
+(SE ≈ 0.011 at n=2000) while the pinned seed advertised exact reproducibility
+the instrument never delivered. A pinned seed beside an unpinned iteration order
+is not reproducibility; it looks exactly like it.
+
+### Why this was a repair and not a re-selection
+
+Rule 11 bars choosing after seeing, so the conditions were declared **before**
+the canonical run: `sorted(wins)` + pinned `PYTHONHASHSEED` (sorting is the
+*unique* canonical order, so the chooser cannot steer the draw — the fix is
+mechanically direction-blind); **acceptance pre-committed sight-unseen — the
+canonical p's become the numbers of record whatever they are, one run, no third
+look**; both prior draws preserved as independent MC estimates of the same true
+p; falsifier shipped (two different `PYTHONHASHSEED` values must now give
+identical p) and the reversed-insertion known-bad **kept live**, because it must
+keep showing p differing *without* the sort or the repair is untested.
+
+**Result: survivors unchanged** — btc LGBM @5 % Holm **0.00600**, @10 % Holm
+**0.03298**; 10 of 12 chance on the joint reading; state arm @10 % a near-miss
+again (raw 0.0090, Holm 0.0900). **DA's framing is the load-bearing part and is
+preserved verbatim in state: that nothing flipped was not knowable beforehand
+and is not why the run is accepted**, and it does not retroactively make the old
+draws reproducible. DA's refusal to make the one-line fix on its own judgment
+("not mine to make — a frozen instrument's numbers") is recorded as the model
+escalation for this class.
+
+### The ~1e-11 delta, explained after six appearances — and deliberately not fixed
+
+The persistent per-cell scorer delta DA had reported six times without
+explaining is **non-associative float addition over identical terms**: DA
+accumulates net in *row* order, BE in *score-descending* order
+(`harmful_action_eval.py:76`). 17,143 synthetic terms give 1.455e-10 between
+orderings of the same values (`fsum` exact at 3.6e-12) — the observed magnitude.
+Both orders deterministic, neither a defect, and **the six-generation agreement
+is tighter than the raw delta suggested.**
+
+**Standing instruction, ratified: the two orders stay different.** Harmonizing
+them would reduce the cross-check's independence — which is the entire value of
+a second implementation. It is in `STATUS.yml` as
+`verifier_delta_1e11: EXPLAINED-DO-NOT-HARMONIZE` precisely so a later reader
+does not tidy the two implementations into agreement and quietly delete the
+independence that makes six agreeing generations mean anything.
+
+### Also landed
+
+- **Blocker 6 → mechanism PROVEN, wiring scheduled.** BE's receipt-side merge
+  (`63d9c7e`) proves canon agreement on DA's **real committed sidecar bytes**
+  (both sides `7acbca07…`), implements DA's three amendment clauses, and
+  exercises live `BINDING_STALE` against the real receipt. Wiring into
+  `stage_score` is deferred by ruled **option (a)** — it rides the first
+  lattice-touching 011 commit so one fit8/score8 cycle pays for both. **Until
+  that ride lands the mechanism is not in the write path**, so a fresh
+  generation still drops the field. §0.1 now **6 of 7**.
+- **011 slices 1–2** (`77cc76c`, `e597630`+`2febf2d`): target builder + four
+  heads with 27 falsifiers, then head metrics each on its **own** population
+  with failures reported. **Fits nothing, scores nothing, advances nothing.**
+- **The 06:26Z `FIT_CODE_REF` refusal** is recorded as the R-228(1) guard firing
+  in production against a real mis-launch nobody staged — rule 15's opposite
+  case, evidence *for* the instrument rather than an incident.
+- **BE's positive control failed on first build a third time** (symmetric values
+  summing to zero saturated p at 1.0 both ways — a control that cannot fire
+  proves nothing); rebuilt asymmetric, it shows ~0.06 p-spread from iteration
+  order alone. **The habit is the record, not the instance.**
+
+### One residual I am flagging, not ruling — receipts are not my surface
+
+R-235 rules freeze-receipt impact **none**, and on verdict-bearing statements
+that is correct and I verified it: `increment_survives_joint_reading_at_0_05`
+reads true / true / false in `b3f7f9f` and stays true / true / false under the
+canonical draw. **The residual is narrower:** the freeze receipt also *quotes*
+p-values the canonical instrument no longer reproduces (`increment_holm_p`
+0.021989 @5 %, 0.017991 @10 %, vs canonical 0.00600 / 0.03298) **and resolves
+its declared null to `artifact_commit: e7caaeb`**, which `163bd36` supersedes.
+
+Rule 13's stated reason for superseding in-band is that **automated readers
+resolve receipt fields** — and `artifact_commit` is exactly such a field. The
+receipt is frozen and must not be edited, so if anything is owed it is a
+superseding freeze receipt v2, and that is BE's and the coordinator's call. It
+is in `STATUS.yml` as `freeze_receipt_null_pointer: FLAGGED-FOR-OWNER` so the
+divergence is discoverable from the state files instead of only by reading two
+artifacts side by side.
 
 ## 2026-08-28 ~06:25Z (MEM) — DA's v2.3 verification + R-233 swept; one earlier fact corrected
 
