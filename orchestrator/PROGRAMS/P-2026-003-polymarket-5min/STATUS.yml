@@ -150,10 +150,23 @@ flags:
                              # user's file and this flag remains the correction
                              # of record for the settlement claim -- which is
                              # ITSELF now superseded a second time, see
-                             # phase2b_challenger_family: the parenthetical is
-                             # wrong about Binance, and "Chainlink TWAP-vs-open"
-                             # is ALSO not the right replacement if the S60
-                             # reconstruction holds. EARLIER ENTRY (rule 13):
+                             # phase2b_challenger_family.
+                             # COMPOUNDING CAUGHT AND FIXED BEFORE THE EDIT
+                             # REACHED THE USER: the first drafted replacement
+                             # said "Chainlink TWAP-vs-open", which the S60
+                             # reconstruction challenges -- it would have fixed
+                             # one false claim with another, in the file that
+                             # seeds every fresh session. MEM flagged it; the
+                             # coordinator corrected the draft, and the version
+                             # now before the user states ONLY WHAT IS SETTLED:
+                             # Chainlink-not-Binance as the source, and
+                             # Identity-already-prices-the-event as rule 9's
+                             # operative door, with the exact window convention
+                             # EXPLICITLY UNDER AUDIT. Confirmed in-session
+                             # 2026-08-28T14:2xZ; NOT yet register-cited -- do
+                             # not report the draft as corrected on this line
+                             # alone, and DO NOT re-raise the compounding as
+                             # though it were still open. EARLIER ENTRY (rule 13):
                              # 2026-08-28 R-253.
                              # PROMINENT BY DESIGN -- read this before citing
                              # rule 9. CLAUDE.md line 130 says the target is
