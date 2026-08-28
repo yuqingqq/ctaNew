@@ -97,6 +97,7 @@ def coin_gap_intervals(lo: int, hi: int, coin: str, path: Path | None = None
     src = PM_GAPS if path is None else path
     iv = []
     n_bad = 0
+    n_structural_bad = 0
     for line in src.read_text(encoding="utf-8").splitlines():
         line = line.strip()
         if not line:
@@ -106,10 +107,19 @@ def coin_gap_intervals(lo: int, hi: int, coin: str, path: Path | None = None
         except json.JSONDecodeError:
             n_bad += 1
             continue
-        if r.get("event") != "gap_closed" or r.get("coin") != coin:
+        ev = r.get("event")
+        # (c) gap_open_at_exit is the NEVER-RECONNECTED class -- exactly what
+        # O1d exists for. Reading only gap_closed silently understates loss the
+        # moment such a record appears, and says nothing while doing it.
+        if ev not in ("gap_closed", "gap_open_at_exit") or r.get("coin") != coin:
             continue
         gs, ge = r.get("gap_start_ns"), r.get("gap_end_ns")
+        if ev == "gap_open_at_exit" and gs and not ge:
+            ge = int(hi * 1e9)          # open at exit: charged to the scope end
         if not gs or not ge:
+            # (c) rule 4: a structurally bad row is a STATUS, never a silent
+            # drop. Skipping it quietly shrinks measured loss invisibly.
+            n_structural_bad += 1
             continue
         a, b = gs / 1e9, ge / 1e9
         if b > lo and a < hi:
@@ -118,6 +128,11 @@ def coin_gap_intervals(lo: int, hi: int, coin: str, path: Path | None = None
     # the intervals that survived is indistinguishable from a CLEAN DAY -- the
     # exact shape where an unreadable input reads as a pass. An absent file
     # already raises; an unreadable one must too, and say how much it lost.
+    if n_structural_bad:
+        raise ValueError(
+            f"REFUSED: {n_structural_bad} gap record(s) in {src.name} lack a "
+            f"usable interval. Dropping them silently shrinks measured loss "
+            f"with no trace -- exclusions are statuses, never silent drops.")
     if n_bad:
         raise ValueError(
             f"REFUSED: {n_bad} unparseable line(s) in {src.name}. A bar computed "
@@ -134,8 +149,28 @@ def coin_gap_intervals(lo: int, hi: int, coin: str, path: Path | None = None
     return out
 
 
+def compose_all_pass(preds: list, per_coin: dict, bars_v2: dict,
+                     regime: str) -> bool:
+    """The day verdict, composed from EVERY input that governs it.
+
+    CALLABLE on purpose. The previous version computed all_pass inline BEFORE
+    the P1/P2/P3 predicates were appended, so stubbing the bars all-pass or
+    all-fail left the verdict IDENTICAL -- recorded, not enforced -- and no
+    test could drive the composition to show it. A verdict rule that cannot be
+    called cannot be falsified.
+    """
+    ok = all(x["pass"] for x in preds)
+    if per_coin:
+        ok = ok and all(v["all_pass"] for v in per_coin.values())
+    if regime == "day_bar_v2" and bars_v2:
+        ok = ok and all(bool(b.get("P1_pass")) and bool(b.get("P2_pass"))
+                        and bool(b.get("P3_pass")) for b in bars_v2.values())
+    return ok
+
+
 def day_bar_v2(lo: int, hi: int, coin: str, elapsed_h: float,
-               path: Path | None = None) -> dict[str, Any]:
+               path: Path | None = None,
+               coverage_observed: bool | None = None) -> dict[str, Any]:
     """P1/P2/P3 for one coin-day, from COIN-LEVEL merged gap intervals."""
     iv = coin_gap_intervals(lo, hi, coin, path)
     lost = sum(b - a for a, b in iv)
@@ -163,6 +198,25 @@ def day_bar_v2(lo: int, hi: int, coin: str, elapsed_h: float,
     # this programme has paid for more than once. Elapsed time is P1's
     # denominator and P2/P3's observation window, so below an hour there is
     # nothing to judge and the bars say so instead of passing.
+    # (b) AN EMPTY LEDGER IS NOT A FLAWLESS DAY. The not-yet-started guard
+    # below covers a day that has not begun; this covers the day that ELAPSED
+    # and produced NOTHING -- silence from a dead collector is byte-identical to
+    # silence from a perfect one. The bars may only be read where the day is
+    # independently known to have been OBSERVED (the tape's own completeness),
+    # so "no gaps" means "none happened" rather than "none were recorded".
+    if coverage_observed is False:
+        return {
+            "evaluable": False, "hours_elapsed": round(elapsed_h, 3),
+            "coin_level_gap_intervals": len(iv), "lost_seconds": round(lost, 1),
+            "P1_pass": False, "P2_pass": False, "P3_pass": False,
+            "why": "the day is NOT INDEPENDENTLY OBSERVED (tape coverage "
+                   "absent/short), so an empty gap ledger cannot be read as a "
+                   "clean day: silence from a dead collector and silence from a "
+                   "perfect one are the same bytes",
+            "thresholds": {"P1_max_s_per_hr": P1_LOST_S_PER_HR_MAX,
+                           "P2_material_span_s": P2_MATERIAL_SPAN_S,
+                           "P2_max_share": P2_MATERIAL_SHARE_MAX,
+                           "P3_max_rolling_60min_s": P3_ROLLING_60MIN_LOST_S_MAX}}
     if elapsed_h < 1.0:
         return {
             "evaluable": False, "hours_elapsed": round(elapsed_h, 3),
@@ -445,16 +499,14 @@ def verify_day(day_token: str, freeze_epoch: float,
     # so an un-updated reader fails safe and an updated one reads the coin it
     # actually wants (R-211(3): coin-days pass/fail independently, each coin's
     # >=5-day clock on its own passing days).
-    _day_all_pass = all(x["pass"] for x in preds)
-    if gran == "per_coin" and per_coin:
-        _day_all_pass = _day_all_pass and all(v["all_pass"]
-                                              for v in per_coin.values())
 
     regime = bar_regime(day_token)
     bars_v2: dict[str, Any] = {}
     if regime == "day_bar_v2":
         for coin in coins:
-            b = day_bar_v2(lo, hi, coin, gs["hours_elapsed"])
+            _cov = counts.get(coin, 0) > 0 and short.get(coin, 1) <= 0
+            b = day_bar_v2(lo, hi, coin, gs["hours_elapsed"],
+                           coverage_observed=_cov)
             b["all_pass"] = bool(b["P1_pass"] and b["P2_pass"] and b["P3_pass"])
             b["partial_day"] = not calendar_closed
             if not calendar_closed:
@@ -475,6 +527,15 @@ def verify_day(day_token: str, freeze_epoch: float,
                          f"{100*P2_MATERIAL_SHARE_MAX:.0f}%",
                    "P3": f"worst rolling 60min {b['P3_worst_rolling_60min_lost_s']}s "
                          f"vs bar {P3_ROLLING_60MIN_LOST_S_MAX}"}[k])
+
+    # (a) COMPUTED AFTER every predicate is appended, including P1/P2/P3.
+    # It used to be computed BEFORE the bars were added, so stubbing them
+    # all-pass or all-fail left all_pass IDENTICAL: the bars were recorded and
+    # did not govern. Recomputing here from the final table is the same
+    # discipline as the tape verdict's all_pass -- derive it from what is
+    # actually in the table, never from a snapshot taken earlier.
+    _day_all_pass = compose_all_pass(
+        preds, per_coin if gran == "per_coin" else {}, bars_v2, regime)
 
     return {
         "instrument": "da_forward_day_verify_v1",
@@ -533,6 +594,60 @@ def _selftests() -> int:
     ok(day_bounds("20260826")[1] == lo,
        "consecutive days abut exactly -- no gap, no overlap at midnight")
     ok(WINDOWS_PER_DAY * WINDOW_S == 86400, "288 windows tile the day exactly")
+
+    # ---- (b) an ELAPSED but UNOBSERVED day must not pass -----------------
+    import tempfile as _tfb
+    _lo, _hi = day_bounds("20260829")
+    with _tfb.TemporaryDirectory() as _td:
+        _e = Path(_td) / "empty.jsonl"; _e.write_text("", encoding="utf-8")
+        _unobs = day_bar_v2(_lo, _hi, "btc", 24.0, _e, coverage_observed=False)
+        ok(_unobs["evaluable"] is False and not _unobs["P1_pass"],
+           "(b) a FULLY ELAPSED day with an EMPTY ledger and NO observed "
+           "coverage does NOT pass -- silence from a dead collector and "
+           "silence from a perfect one are the same bytes")
+        _obs = day_bar_v2(_lo, _hi, "btc", 24.0, _e, coverage_observed=True)
+        ok(_obs["evaluable"] is True and _obs["P1_pass"],
+           "and the SAME empty ledger DOES pass when the day is independently "
+           "observed -- otherwise the guard would reject every clean day")
+
+        # ---- (c) open gaps counted; structurally bad rows REFUSE -----------
+        _open = Path(_td) / "open.jsonl"
+        _open.write_text(json.dumps({
+            "event": "gap_open_at_exit", "coin": "btc", "slug": "s",
+            "gap_start_ns": int((_lo + 3600) * 1e9)}), encoding="utf-8")
+        _r = day_bar_v2(_lo, _hi, "btc", 24.0, _open, coverage_observed=True)
+        ok(_r["lost_seconds"] > 0 and not _r["P1_pass"],
+           "(c) a gap_open_at_exit record (the NEVER-RECONNECTED class O1d "
+           "creates) is CHARGED to the scope end, not ignored -- reading only "
+           "gap_closed understates loss the moment that record type appears")
+        _bad = Path(_td) / "structurally_bad.jsonl"
+        _bad.write_text(json.dumps({"event": "gap_closed", "coin": "btc",
+                                    "slug": "s"}), encoding="utf-8")
+        try:
+            day_bar_v2(_lo, _hi, "btc", 24.0, _bad, coverage_observed=True)
+            ok(False, "(c) a gap record with no usable interval must REFUSE")
+        except ValueError as _ex:
+            ok("no trace" in str(_ex) or "usable interval" in str(_ex),
+               "(c) a structurally bad gap record REFUSES instead of being "
+               "silently dropped -- a silent drop shrinks measured loss with "
+               "no trace (rule 4)")
+
+    # ---- (a) the bars must GOVERN the verdict, isolated ------------------
+    _clean = [{"predicate": "x", "pass": True}, {"predicate": "y", "pass": True}]
+    _pass_bar = {"btc": {"P1_pass": True, "P2_pass": True, "P3_pass": True}}
+    _fail_bar = {"btc": {"P1_pass": True, "P2_pass": False, "P3_pass": True}}
+    ok(compose_all_pass(_clean, {}, _pass_bar, "day_bar_v2") is True,
+       "clean table + passing bars -> verdict PASSES (positive control)")
+    ok(compose_all_pass(_clean, {}, _fail_bar, "day_bar_v2") is False,
+       "clean table + ONE FAILING BAR -> verdict FAILS. This is the isolated "
+       "governance link: before the fix all_pass was computed BEFORE the bars "
+       "were appended, so it was identical whether every bar passed or failed")
+    ok(compose_all_pass([{"predicate": "x", "pass": False}], {}, _pass_bar,
+                        "day_bar_v2") is False,
+       "and a failing ordinary predicate still fails the day")
+    ok(compose_all_pass(_clean, {}, _fail_bar, "count_bar_v1_frozen") is True,
+       "a FAILING bar does NOT fail a day the v2 regime does not govern -- the "
+       "bars are not applied retroactively")
 
     # ---- DAY-BAR V2 falsifiers (doc §4.3): each bar must FIRE ------------
     import tempfile as _tf3
@@ -741,7 +856,15 @@ def main() -> int:
     ap.add_argument("cmd", nargs="?", choices=["verify"])
     ap.add_argument("--selftest", action="store_true")
     ap.add_argument("--day", default=None, help="YYYYMMDD, e.g. 20260827")
-    ap.add_argument("--freeze-epoch", type=float, default=1787583868.0)
+    # (e) NO SILENT DEFAULT. The old default (1787583868.0 = 2026-08-24T15:04Z)
+    # was 3.63 days stale against the live freeze commit b3f7f9f
+    # (2026-08-28T06:09Z), whose own receipt says the clock STARTS AT THE FREEZE
+    # COMMIT -- so pre-freeze days passed entirely_post_freeze and could count
+    # toward a clock that had not started. Which epoch governs is a RULING, not
+    # a default: the launcher must state it, and an unstated one refuses.
+    ap.add_argument("--freeze-epoch", type=float, default=None,
+                    help="REQUIRED. The governing freeze epoch; there is no "
+                         "default, because a stale one judged days silently.")
     ap.add_argument("--out", default=None)
     a = ap.parse_args()
     if a.selftest or not a.cmd:
@@ -753,6 +876,14 @@ def main() -> int:
     # the nightly log could not distinguish "day one is inadmissible" from
     # "the verifier never ran". R-153(2) makes this a HARD PRECONDITION, and a
     # precondition that can silently no-op is the failure it exists to prevent.
+    # (e) checked BEFORE the try: an unstated epoch is a launcher error, not an
+    # instrument failure, and must not be reported as one.
+    if a.freeze_epoch is None:
+        raise SystemExit(
+            "REFUSED: --freeze-epoch is required and has no default. It "
+            "selects which days count as post-freeze, so a stale value counts "
+            "days toward a clock that had not started. State the governing "
+            "epoch explicitly.")
     try:
         rep = verify_day(a.day, a.freeze_epoch)
     except Exception:
@@ -770,8 +901,13 @@ def main() -> int:
         print(f"  [{'PASS' if x['pass'] else 'FAIL'}] {x['predicate']}: {x['detail']}")
     print("\nWINDOWS GAP-AFFECTED (the number that decides it, Q-DA-69)")
     for c, v in sorted(rep["windows_gap_affected"].items()):
-        print(f"  {c}: {v['gap_affected']}/{v['era_covered_windows']} "
-              f"({v['gap_affected_pct']}%)")
+        # (d) the dual-report rename broke this line and the CLI raised
+        # KeyError. The library was validated against the doc's table and the
+        # ENTRY POINT was never run -- the consumer half of the same split.
+        print(f"  {c}: COIN-LEVEL {v.get('gap_affected_COIN_LEVEL')}/288 "
+              f"({v.get('gap_affected_pct_COIN_LEVEL')}%)  |  per-slug "
+              f"{v.get('gap_affected_PER_SLUG')}/{v.get('era_covered_windows')} "
+              f"({v.get('gap_affected_pct_PER_SLUG')}%)")
     if rep.get("verdict_granularity") == "per_coin" and rep.get("per_coin"):
         print("\nPER-COIN VERDICTS (R-211(3): coin-days pass/fail independently)")
         for c, v in sorted(rep["per_coin"].items()):

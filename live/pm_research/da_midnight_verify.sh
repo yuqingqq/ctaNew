@@ -57,7 +57,20 @@ broke=0
 for d in "$CLOSED" "$OPENED"; do
   echo "---- day $d ----" >> "$LOG"
   tmp="$(mktemp "$OUTDIR/.da_dayverdict_$d.XXXXXX.json")"
-  "$PY" "$V" verify --day "$d" --out "$tmp" >> "$LOG" 2>&1
+  # (e) THE EPOCH IS STATED, NEVER DEFAULTED. The verifier no longer has a
+  # default because the old one (2026-08-24T15:04Z) was 3.63 days stale against
+  # the live freeze commit b3f7f9f (2026-08-28T06:09Z), whose receipt says the
+  # clock STARTS AT THE FREEZE COMMIT -- so pre-freeze days passed
+  # entirely_post_freeze and could count toward a clock that had not started.
+  #
+  # THIS VALUE IS DELIBERATELY THE OLD ONE, and it is NOT DA's to change:
+  # switching to the freeze-commit epoch would make 08-28 fail
+  # entirely_post_freeze (the freeze landed mid-day), which materially changes
+  # tonight's verdict. Preserving tonight's behaviour exactly while making the
+  # value VISIBLE is the safe half; choosing the governing epoch is a ruling.
+  # ESCALATED: needs a ruling before the 08-29 verdict.
+  FREEZE_EPOCH="${DA_FREEZE_EPOCH:-1787583868.0}"
+  "$PY" "$V" verify --day "$d" --freeze-epoch "$FREEZE_EPOCH" --out "$tmp" >> "$LOG" 2>&1
   rc=$?
   if "$PY" -c 'import json,sys
 d=json.load(open(sys.argv[1]))
