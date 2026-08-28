@@ -16,7 +16,36 @@ price — as an estimate of `E[Y | state]`. Not whether it beats chance.
 ## 2. The closed set: at most TWO challengers
 
 1. **PM microprice** (size-weighted book price).
-2. **At most one cross-venue forecast.**
+2. **At most one cross-venue forecast.** **NAMED CANDIDATE (added before the
+   review so the reviewer sees a real candidate, not a placeholder):
+   the Binance USDM `bookTicker` mid for the matching symbol** — `BTCUSDT`,
+   `ETHUSDT`. Verified buildable against the tape rather than assumed:
+   `data/mm_hf/raw/bookTicker/<SYM>/YYYYMMDD_HH.csv.gz`, 213 hourly files per
+   symbol from 2026-08-19, columns `recv_ns, E, T, updateId, bid, bidQty, ask,
+   askQty`. **Both timestamps are producible**: `source_timestamp = E`
+   (exchange event time) and `local_knowledge_timestamp = recv_ns`, which
+   `collector_runs.jsonl` records as stamped
+   `IMMEDIATELY_AFTER_WS_RECV_BEFORE_JSON_PARSE`. Measured freshness on a
+   sample row: **0.0717 s**.
+
+   **Two constraints that must travel with it, both binding:**
+
+   - **ERA FLOOR.** The local-knowledge stamp is only trustworthy from the
+     `hf_ws_v2` boundary, `recv_ns >= 1787579334881534478`
+     (**2026-08-24T13:48:54Z**). Before it, rows were stamped post-parse and
+     carry up to ~0.6 s of backlog error concentrated in bursts. Under §3 that
+     makes pre-boundary instants **INADMISSIBLE for this challenger** — not
+     merely noisier. Its admissible population is therefore strictly smaller
+     than `Identity`'s, which §7.4 already tests.
+   - **IT IS CLOSER TO THE SETTLEMENT SOURCE THAN `Identity` IS, AND THAT
+     CHANGES WHAT A WIN MEANS.** PM binaries settle on a Binance-derived
+     price. This challenger reads that same venue. That is **not** look-ahead —
+     the current Binance mid is not the future settlement price, and the
+     as-of rule still binds — but it does mean a positive increment is **not
+     evidence of forecasting skill**. It would say *the PM book lags the
+     settlement venue*, which is a latency/microstructure fact about the two
+     venues, not alpha. **Declared now, before any number exists, so the
+     interpretation cannot be chosen after seeing the sign.**
 
 Declared **before** any comparison. **The set is closed at freeze**: adding a
 third later is a new family and restarts multiplicity, because choosing what to
