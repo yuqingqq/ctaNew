@@ -215,6 +215,18 @@ FAIRPRICE_ESTIMATORS = ("Identity", "pm_microprice", "bn_bookticker_mid")
 # invalidates the comparison it anchors. Only candidates can WIN.
 ROLES = ("candidate", "control")
 
+# R-262: controls do NOT enter the candidate count, as the standing default of
+# record -- a control is not a selectable hypothesis, and the null's
+# chance-wins are priced by the declared >=200-draw null distribution rather
+# than by taxing candidates for the null's presence.
+#
+# It is a DEFAULT, not a silence. The derivation records whether the value was
+# STATED by the caller or INHERITED here, so a freeze artifact can never read
+# as a stated policy that was actually inherited from a ruling made in another
+# context. The user may revisit at race freeze.
+CONTROLS_ARE_CANDIDATES_DEFAULT = False
+_UNSTATED = object()
+
 # Top-level keys of a submitted trajectory. Exact in both directions, as with
 # events: absent refuses, undeclared refuses.
 TRAJ_FIELDS = ("canon", "arm", "predictor", "predictor_active", "components",
@@ -808,7 +820,7 @@ def load_external_trajectory(obj: dict[str, Any]) -> Trajectory:
 
 def candidate_multiplicity(consumes_predictor: dict[str, bool],
                            roles: dict[str, str],
-                           *, controls_are_candidates: bool,
+                           *, controls_are_candidates: Any = _UNSTATED,
                            declared_absent: Iterable[str] = (),
                            arm_spec: dict[str, Any] | None = None,
                            predictors: Iterable[str] | None = None,
@@ -864,6 +876,26 @@ def candidate_multiplicity(consumes_predictor: dict[str, bool],
             f"REFUSED: {missing} have no consumes_predictor declaration. "
             f"Whether a composition consumes an estimate is a modelling fact "
             f"owned by the composition, not inferable from its name.")
+    # EXACT IN BOTH DIRECTIONS. A declaration naming an arm the spec does not
+    # know used to be ACCEPTED AND IGNORED (BE's observation): a real typo
+    # still fired through the missing side, but a FUTURE arm declared early
+    # passed silently and was not counted -- and a reader of an 8-name
+    # declaration beside a 14-candidate count would reasonably assume it was.
+    # The loader already refuses undeclared trajectory fields on the ground
+    # that ignoring one computes the digest over a PROJECTION of what the
+    # producer did; ignoring an extra declared arm computes multiplicity over
+    # a projection of what was declared. Same argument, so the same refusal.
+    unknown_cp = sorted(a for a in consumes_predictor if a not in spec)
+    if unknown_cp:
+        raise ParityRefused(
+            f"REFUSED: consumes_predictor declares {unknown_cp}, absent from "
+            f"ARM_SPEC. An arm the spec does not know is not silently "
+            f"ignored: it would be declared, uncounted, and indistinguishable "
+            f"from counted.")
+    unknown_r = sorted(a for a in roles if a not in spec)
+    if unknown_r:
+        raise ParityRefused(
+            f"REFUSED: roles declares {unknown_r}, absent from ARM_SPEC.")
     no_role = sorted(a for a in spec if a not in roles)
     if no_role:
         raise ParityRefused(
@@ -875,6 +907,11 @@ def candidate_multiplicity(consumes_predictor: dict[str, bool],
     if bad_role:
         raise ParityRefused(
             f"REFUSED: {bad_role} carry a role outside {ROLES}.")
+    if controls_are_candidates is _UNSTATED:
+        controls_are_candidates = CONTROLS_ARE_CANDIDATES_DEFAULT
+        controls_policy_source = "R-262 standing default (inherited, NOT stated)"
+    else:
+        controls_policy_source = "stated by caller"
     if controls_are_candidates is not True and controls_are_candidates is not False:
         raise ParityRefused(
             "REFUSED: controls_are_candidates must be a literal bool. Whether "
@@ -934,6 +971,7 @@ def candidate_multiplicity(consumes_predictor: dict[str, bool],
         "n_control_excluded": len(control_excluded),
         "control_excluded": control_excluded,
         "controls_are_candidates": controls_are_candidates,
+        "controls_policy_source": controls_policy_source,
         "roles": dict(sorted(roles.items())),
         "n_declared_absent": len(absent), "declared_absent": absent,
         "inputs": {"arms": sorted(spec), "predictors": list(preds),
@@ -1752,6 +1790,37 @@ def _selftests() -> int:
        f"check asserted `n_candidates < len(ARMS)*2`, which is 14 < 14 and "
        f"FALSE -- and the coincidence that 14 equals 7x2 here is precisely "
        f"the ambiguity the check exists to dispel")
+
+    # ---- R-262 wiring + BE's additive-unknown observation ---------------
+    _h8 = dict(_HYP, CONDVALUE_X_SKEW_X_HAZARD=True)
+    _r8 = dict(_ROL, CONDVALUE_X_SKEW_X_HAZARD="candidate")
+    ok(refuses(lambda: _mult(consumes_predictor=_h8, roles=_r8),
+               "absent from ARM_SPEC"),
+       "BE's OBSERVATION CLOSED: a declaration naming an arm ARM_SPEC does "
+       "not know now REFUSES. It was accepted and IGNORED -- a typo still "
+       "fired through the missing side, but a FUTURE arm declared early "
+       "passed silently and was not counted, and a reader of an 8-name "
+       "declaration beside a 14-candidate count would assume it was")
+    ok(refuses(lambda: _mult(roles=_r8), "absent from ARM_SPEC"),
+       "and the same refusal covers the ROLES declaration, not just "
+       "consumes_predictor -- fixing one side and leaving its twin is the "
+       "DB1 defect and I have shipped it before")
+    ok(_mult(consumes_predictor=_HYP, roles=_ROL)["n_candidates"]
+       == _m["n_candidates"],
+       "positive control: an exactly-matching declaration still computes")
+
+    _def = candidate_multiplicity(_HYP, _ROL)
+    ok(_def["controls_are_candidates"] is False
+       and "inherited" in _def["controls_policy_source"],
+       f"R-262 is wired as a DEFAULT, NOT A SILENCE: omitting the policy "
+       f"yields False and the derivation records "
+       f"{_def['controls_policy_source']!r}")
+    _sta = candidate_multiplicity(_HYP, _ROL, controls_are_candidates=False)
+    ok(_sta["controls_policy_source"] == "stated by caller"
+       and _sta["n_candidates"] == _def["n_candidates"],
+       "and a STATED value reaching the same number is recorded differently -- "
+       "a freeze artifact can never read as a stated policy that was actually "
+       "inherited from a ruling made in another context")
 
     # ---- determinism across processes ------------------------------------
     d = determinism_across_hashseed(here)
