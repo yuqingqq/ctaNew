@@ -1,9 +1,93 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-08-28T09:44Z (MEM) — fair-price Identity artifact **delivered and
-verified**; the 2B challenger **named before review** with **both** readings of
-a win pre-declared; resource cap and idle-seat dispatch now standing user
-directives. Both HOLDs still in force. **Boundary deploy ON for 00:00:00Z.**
+Updated: 2026-08-28T09:48Z (MEM) — lane-4 parity battery **delivered and
+verified**; **"bit-identical" now has a pinned definition**; **signed zero stays
+unnormalised by ruling**; the idle-dispatch narrow reading is **register-backed
+at R-247(1)**. Both HOLDs still in force. **Boundary deploy ON for 00:00:00Z**,
+runbook pre-checked.
+
+## 2026-08-28 ~09:48Z (MEM) — R-246/R-247: pinning what "identical" means, and refusing the first exemption
+
+### The lane-4 battery, and why its definition matters more than its count
+
+`da_replay_parity_battery.py` — **14 checks, 0 failing, reproduced in the
+coordinator's own run** (`7815c2f`). Typed synthetic stubs, zero filesystem
+reads, 0.10 s / 18 MB, **correctly self-classified as light class** under
+R-148(3), so no slice was needed.
+
+**"Bit-identical" is now defined over `replay_traj_canon_v1`** — sorted keys,
+compact separators, UTF-8, `allow_nan=False`, events ordered by `(t, seq)` and
+never dict order. This reuses the `annotation_canon_v1` recipe for the same
+reason: **an unpinned signature rule makes every valid comparison fail
+indistinguishably from a real difference.** The canonicalisation is
+semantic-preserving *in the direction that matters* — it removes only
+representation noise, while floats serialise by repr with **no tolerance**, so
+"differently ordered but wrong" still breaks parity.
+
+**The arm name is excluded from the canonical bytes, and that exclusion is
+asserted as its own check.** Including it would make the anchor **pass nothing
+and fail nothing** — the decorative-anchor trap the spec warned about.
+
+The falsifier structure is the part worth copying: the perturbation check (one
+extra cancel breaks parity) is **paired with a same-arm digest reproduction**, so
+a break is a *real difference* rather than run-to-run noise; an enabled predictor
+that cancels is proven non-identical, so the battery can tell a real difference
+from none; an uncancelled generation fills normally, so `STALE` is not simply
+what the harness always says; the matched control is checked **non-empty**;
+determinism is crossed over `PYTHONHASHSEED` so it cannot inherit blocker-7's
+class; and an empty run is **NOT EVALUABLE**, never seven passes. R-235
+separation held throughout — **DA built the checker, BE's arms remain the
+checked.**
+
+### Signed zero stays unnormalised — the first exemption is the one that counts
+
+`0.0` vs `−0.0` **stays unnormalised** in the parity canon (R-247(2), DA at
+`6b25b7e`, suite 14 → 18). Two reasons, both kept:
+
+1. Normalising it would be **a tolerance by another name** — the first exemption
+   in the one comparison whose entire value is admitting none.
+2. A signed-zero digest difference between real arms is **informative**: it
+   betrays a **different computational route to the same zero**, which is exactly
+   the coupling class the anchor exists to surface.
+
+The edge is **declared in-file and asserted in-suite**, so a future firing reads
+as a **finding, not a flake**. Verified claims behind the ruling: ULP-apart
+values digest differently, identical values reproduce, NaN refuses at
+serialisation. **The normalisation question is explicitly in scope for the Codex
+round** as a parity-contract matter — any change there is a *ruled contract
+change*, never a quiet loosening.
+
+### A standard worth carrying beyond this program
+
+**"A register entry citing a property of my code should have a check behind
+it."** The register had cited a property of DA's code; DA answered not by
+agreeing but by **asserting it in the suite**. That is rule 15's logic pushed up
+a level: **the register is an instrument too**, and a claim in it about code
+behaviour that no test pins can drift away from the code without either one
+noticing.
+
+### Provenance upgrade completed
+
+The idle-dispatch narrow reading (**coordinator dispatches; seats never
+self-dispatch; MEM acquires no plan work by being idle**) is now
+**register-backed at R-247(1)** — and I verified the entry exists and says so
+*before* upgrading the flag, which was the entire point of the line being
+upgraded. The superseded provenance line is kept as the record of how the claim
+was sourced. R-247(1) adopts the framing and ratifies the refusal to let an
+in-session confirmation stand as register-backed, as the R-14 pattern applied to
+MEM's own mandate.
+
+### Tonight
+
+**Runbook pre-checked ~14 h ahead** (R-246): working tree holds `clob_v3_1`,
+HEAD holds `clob_v4` — the deliberate hold, exactly as documented — and
+`pm-collector-clob.service` is active. Sequence, structural verification
+(within-cause, never a throughput A/B) and abort path all defined.
+
+**Batch:** DA has three deliveries complete (`d97c23e`, `612346b`, `7815c2f`)
+plus the signed-zero hardening, all riding this round. **Outstanding: BE's A1.8
+steps 2–5 only** (2, 2b, 3 landed; mid-flight on 4–5); idle-notify armed on BE;
+the Codex round prompt is pre-drafted so the round fires on BE's flag.
 
 ## 2026-08-28 ~09:44Z (MEM) — R-243..R-245: freeze-after-review, and a story that cannot be chosen later
 

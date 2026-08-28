@@ -4,6 +4,24 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-08-28T09:48Z (MEM): R-246 + R-247. LANE-4 PARITY BATTERY delivered and
+  verified in the coordinator's own run (14/14), with "bit-identical" now
+  DEFINED over replay_traj_canon_v1 -- an unpinned signature rule would make
+  every valid comparison fail indistinguishably from a real difference, so the
+  canon removes representation noise ONLY and floats serialise by repr with no
+  tolerance. The arm NAME is excluded from the canonical bytes and that
+  exclusion is asserted as its own check, because including it would make the
+  anchor pass nothing and fail nothing. SIGNED ZERO STAYS UNNORMALISED by
+  ruling: normalising it would be a tolerance by another name in the one
+  comparison whose whole value is admitting none, and a signed-zero difference
+  between real arms is INFORMATIVE -- it betrays a different computational
+  route to the same zero. DA's standard adopted: A REGISTER ENTRY CITING A
+  PROPERTY OF MY CODE SHOULD HAVE A CHECK BEHIND IT -- rule 15 pushed up a
+  level, the register being an instrument too. The idle-dispatch narrow reading
+  is now REGISTER-BACKED at R-247(1), verified in the register before the
+  upgrade; the superseded provenance line is kept as the record of how it was
+  sourced. Tonight's runbook PRE-CHECKED ~14 h ahead: tree holds clob_v3_1,
+  HEAD holds clob_v4, unit active. PRIOR:
   2026-08-28T09:44Z (MEM): R-243..R-245. DA's FAIR-PRICE IDENTITY ARTIFACT
   delivered and verified by the coordinator's own run (21 selftests), with the
   2B protocol draft RIDING THE BATCH so Codex reviews it BEFORE the user is
@@ -177,6 +195,36 @@ updated: >-
   hygiene + recv_ns measurement)
 
 flags:
+  parity_signed_zero: UNNORMALISED-BY-RULING # 2026-08-28 R-247(2), DA at
+                             # 6b25b7e (suite 14 -> 18). 0.0 vs -0.0 stays
+                             # UNNORMALISED in replay_traj_canon_v1. Two
+                             # reasons, both worth keeping: (i) normalising
+                             # signed zero would be A TOLERANCE BY ANOTHER NAME
+                             # -- the first exemption in the ONE comparison
+                             # whose entire value is admitting none; (ii) a
+                             # signed-zero digest difference between real arms
+                             # is INFORMATIVE, because it betrays a DIFFERENT
+                             # COMPUTATIONAL ROUTE to the same zero, which is
+                             # precisely the coupling class the anchor exists to
+                             # surface. The edge is DECLARED IN-FILE and
+                             # ASSERTED IN-SUITE, so a future firing reads as a
+                             # FINDING, not a flake. Verified claims behind the
+                             # ruling: ULP-apart values digest differently,
+                             # identical values reproduce, NaN REFUSES at
+                             # serialisation. The normalisation question is
+                             # EXPLICITLY IN SCOPE for the Codex round as a
+                             # parity-contract matter; any change there is a
+                             # RULED CONTRACT CHANGE, never a quiet loosening.
+  register_claims_need_a_check: STANDING-STANDARD # 2026-08-28 R-247(2), DA's
+                             # standard, adopted: "A REGISTER ENTRY CITING A
+                             # PROPERTY OF MY CODE SHOULD HAVE A CHECK BEHIND
+                             # IT." The register had cited a property of DA's
+                             # code; DA answered not by agreeing but by
+                             # ASSERTING it in the suite. This is rule 15's
+                             # logic pushed up a level: the register is an
+                             # instrument too, and a claim in it about code
+                             # behaviour that no test pins can drift away from
+                             # the code without either one noticing.
   phase2b_challenger_family: NAMED-PRE-REVIEW-BOTH-READINGS-DECLARED # 2026-08-28
                              # R-244 (612346b). Second challenger NAMED BEFORE
                              # the review: Binance USDM bookTicker mid. Naming
@@ -238,19 +286,29 @@ flags:
                              # directive ("you will launch jobs if the
                              # respective sessions are idle and have future
                              # jobs").
-                             # PROVENANCE OF THE NARROW READING BELOW, stated
-                             # precisely because it is a rule about the scope of
-                             # the seat that writes this file: MEM wrote it
-                             # first as its own reading; the COORDINATOR then
-                             # CONFIRMED it in-session at 2026-08-28T09:46Z as
-                             # the INTENDED one -- the user's "you will launch
-                             # jobs" addressed the coordinator -- and undertook
-                             # to record the confirmation in the next register
-                             # entry. AT THIS WRITE THE REGISTER CITE DOES NOT
-                             # YET EXIST: this is a cross-session confirmation,
-                             # not an artifact. UPGRADE THIS PROVENANCE LINE TO
-                             # THE R-ENTRY CITE once it lands, and until then do
-                             # not quote the narrow reading as register-backed.
+                             # PROVENANCE OF THE NARROW READING BELOW, now
+                             # REGISTER-BACKED: R-247(1), verified in the
+                             # register by MEM at 2026-08-28T09:48Z before this
+                             # upgrade -- the entry exists and says what was
+                             # relayed. The rule binds the COORDINATOR seat
+                             # (the user's "you will launch jobs if the
+                             # respective sessions are idle" addressed the
+                             # coordinator); it is not a seat self-dispatch
+                             # licence; MEM specifically does not acquire
+                             # plan-execution work by being idle. R-247(1)
+                             # adopts MEM's framing -- the seat that writes the
+                             # state files is the worst one to have drifting
+                             # scope, and a self-serving scope claim is the last
+                             # place to accept loose provenance -- and RATIFIES
+                             # MEM's refusal to let an in-session confirmation
+                             # stand as register-backed until the entry existed,
+                             # as the R-14 pattern applied to its own mandate.
+                             # SUPERSEDED PROVENANCE LINE (rule 13, kept because
+                             # it is the record of how this was sourced): MEM
+                             # wrote the narrow reading first as its own
+                             # reading; the coordinator confirmed it in-session
+                             # at 09:46Z; at that write the register cite did
+                             # not yet exist and the flag said so.
                              # NOTE THE SUBJECT: this is a standing
                              # practice for the COORDINATOR to dispatch idle
                              # seats onto the next admissible plan job. It is
@@ -264,7 +322,44 @@ flags:
                              # stated in the dispatch: lands before BE flags ->
                              # rides the current round; later -> opens the next
                              # batch; NO RUSHING HALF-WORK TO CATCH A BOUNDARY.
-  lane4_parity_stub_battery: DA-BUILDING-CHECKER-SIDE # 2026-08-28 R-245,
+  lane4_parity_stub_battery: DELIVERED-VERIFIED # ADVANCED 2026-08-28 R-246.
+                             # da_replay_parity_battery.py: 14 checks, 0
+                             # failing, REPRODUCED IN THE COORDINATOR'S OWN RUN;
+                             # typed synthetic stubs, zero filesystem reads,
+                             # 0.10 s / 18 MB -- correctly SELF-CLASSIFIED as
+                             # light class under R-148(3), so no slice needed.
+                             # "BIT-IDENTICAL" IS DEFINED OVER
+                             # replay_traj_canon_v1 (sorted keys, compact
+                             # separators, UTF-8, allow_nan=False, events
+                             # ordered by (t, seq) and NEVER dict order) --
+                             # the annotation_canon_v1 recipe reused for the
+                             # same reason: an UNPINNED signature rule makes
+                             # every valid comparison fail indistinguishably
+                             # from a real difference. The canonicalisation is
+                             # semantic-preserving in the direction that
+                             # matters -- it removes ONLY representation noise
+                             # (key order, whitespace), while floats serialise
+                             # by repr with NO TOLERANCE, so "differently
+                             # ordered but wrong" still breaks parity.
+                             # THE ARM NAME IS EXCLUDED FROM THE CANONICAL BYTES
+                             # and that exclusion is asserted as its own check:
+                             # including it would make the anchor pass nothing
+                             # and fail nothing -- the DECORATIVE-ANCHOR trap
+                             # the spec warns about.
+                             # Falsifier structure: the perturbation check (one
+                             # extra cancel breaks parity) is PAIRED with a
+                             # same-arm digest reproduction, so a break is a
+                             # REAL DIFFERENCE and not run-to-run noise; an
+                             # ENABLED predictor that cancels is proven
+                             # non-identical (the battery can tell a real
+                             # difference from none); an uncancelled generation
+                             # fills normally (STALE is not what the harness
+                             # always says); the matched control is checked
+                             # NON-EMPTY (no vacuous match); determinism crossed
+                             # over PYTHONHASHSEED values (cannot inherit
+                             # blocker-7's class); an empty run is NOT EVALUABLE,
+                             # never seven passes. ORIGINAL ENTRY (rule 13):
+                             # 2026-08-28 R-245,
                              # 7815c2f. Seven-arm replay parity STUB battery per
                              # DA's own spec (6fc96e2) and hazard plan sec 10
                              # item 6: typed stubs only, BIT-IDENTICAL anchor
