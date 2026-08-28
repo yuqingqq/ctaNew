@@ -32,6 +32,14 @@ BE_EVENT_FIELDS = ("t", "seq", "kind", "slug", "side", "gen", "qty", "price",
                    "note")
 BE_KINDS = ("PLACE", "PLACE_WITHHELD", "CANCEL_REQUESTED", "CANCEL_EFFECTIVE",
             "CANCEL_SUPPRESSED", "FILL", "FILL_STALE")
+# B2: identity is TWO-DIMENSIONAL (composition x predictor) and lives in
+# top-level fields, exact in both directions like the event fields.
+BE_TRAJ_FIELDS = ("canon", "arm", "predictor", "predictor_active",
+                  "components", "interaction", "fairprice_estimator",
+                  "events")
+# What BE claims each exportable composition IS. Declared independently; the
+# contract compares it to its own spec and refuses a mismatch.
+BE_COMPONENTS = {"CONDVALUE_NEUTRAL": ("condvalue",)}
 
 
 class ExportRefused(RuntimeError):
@@ -50,8 +58,11 @@ def make_event(t, seq, kind, slug, side, gen, qty, price, note="") -> dict:
             "price": float(price), "note": str(note)}
 
 
-def export_trajectory(arm: str, events: list) -> dict:
-    """A contract-shaped trajectory object.
+def export_trajectory(arm: str, events: list, predictor: str = "none",
+                      predictor_active: bool = False,
+                      components=None, interaction: bool = False,
+                      fairprice_estimator=None) -> dict:
+    """A contract-shaped trajectory object, B2 identity included.
 
     Refuses EMPTY, because the contract refuses it downstream and an empty
     trajectory is a producer bug rather than a population statement."""
@@ -66,7 +77,99 @@ def export_trajectory(arm: str, events: list) -> dict:
             raise ExportRefused(
                 f"event {i}: missing={missing} undeclared={extra}. The field "
                 f"set is exact in both directions.")
-    return {"canon": BE_CANON, "arm": arm, "events": list(events)}
+    obj = {"canon": BE_CANON, "arm": arm, "predictor": predictor,
+           "predictor_active": bool(predictor_active),
+           "components": list(components if components is not None
+                              else BE_COMPONENTS.get(arm, ())),
+           "interaction": bool(interaction),
+           "fairprice_estimator": fairprice_estimator,
+           "events": list(events)}
+    miss = [f for f in BE_TRAJ_FIELDS if f not in obj]
+    extra = [k for k in obj if k not in BE_TRAJ_FIELDS]
+    if miss or extra:
+        raise ExportRefused(
+            f"trajectory: missing={miss} undeclared={extra}. B2 identity "
+            f"fields are exact in both directions, like the event fields.")
+    return obj
+
+
+
+# --- BE's DECLARED MAPPING (amendment B2) ----------------------------------
+# WHICH composition each 011 predictor may export under, and with what
+# interaction claim. Stated FROM THE CODE, verified below, not from intent.
+#
+# BOTH 011 predictors implement NO SKEW INTERACTION today, and the evidence is
+# three independent readings:
+#   1. build_design (phase2_iter011_run.py:41-44) shows each predictor x as
+#      PM + fine + state. Both arms see the SAME features and differ only in
+#      MODEL CLASS (R-232 9.1).
+#   2. NO skew, inventory, net or front/reducing state reaches any of the three
+#      blocks. The 45 pinned features contain none; the only near-hits are
+#      queue_ahead_* , which is ORDER-BOOK POSITION at decision time, spatial
+#      rather than inventory. harmful_hazard_model.features/fine_feats mention
+#      none of skew/inventory/front/reducing at all.
+#   3. The state machine states the fence in its own words: "the skew rules'
+#      placement choices live entirely in this input; the predictor NEVER
+#      chooses placement" and, on repost, "ordinary skew rules, never the
+#      predictor" (harmful_stateful_policy.py:15-16, :43-45).
+#
+# So each predictor exports under CONDVALUE_NEUTRAL with interaction False, and
+# the X_SKEW / X_SKEW_X_FAIRPRICE compositions have NO VALID 011 EXPORTER until
+# the Phase-3 skew wiring exists. Those pairs are declared ABSENT, not emitted
+# with a label the code cannot support: a mislabelled arm is the one error the
+# contract structurally cannot catch, because the label is the thing it trusts.
+BE_PREDICTORS = ("composed_linear", "composed_lgbm")
+BE_EXPORTABLE_COMPOSITIONS = ("CONDVALUE_NEUTRAL",)
+BE_ABSENT_COMPOSITIONS = {
+    "CONDVALUE_X_SKEW": "no skew interaction is implemented in 011; awaiting "
+                        "Phase-3 skew wiring",
+    "CONDVALUE_X_SKEW_X_FAIRPRICE": "no skew interaction AND no fair-price "
+                                    "component in 011",
+}
+
+
+def declared_pairs() -> dict:
+    """The (composition x predictor) pairs BE can submit TODAY, and those it
+    cannot. Race multiplicity counts PAIRS (B2), so absent pairs must be
+    declared absent rather than silently uncounted."""
+    present = [(c, p) for c in BE_EXPORTABLE_COMPOSITIONS
+               for p in BE_PREDICTORS]
+    absent = [(c, p) for c in sorted(BE_ABSENT_COMPOSITIONS)
+              for p in BE_PREDICTORS]
+    return {"present_pairs": present, "n_present": len(present),
+            "absent_pairs": absent, "n_absent": len(absent),
+            "absent_reasons": dict(BE_ABSENT_COMPOSITIONS),
+            "interaction_claim": False,
+            "why_interaction_false": "both predictors see PM+fine+state and no "
+                                     "skew/inventory/front state reaches any "
+                                     "block; the predictor never chooses "
+                                     "placement (harmful_stateful_policy)"}
+
+
+def export_trajectory_b2(composition: str, predictor: str,
+                         events: list) -> dict:
+    """B2 export: identity is composition x predictor, stated not inferred.
+
+    REFUSES a composition BE cannot support today. The refusal is at the
+    PRODUCER because the contract cannot catch a wrong label -- the label is
+    what it trusts."""
+    if predictor not in BE_PREDICTORS:
+        raise ExportRefused(
+            f"unknown BE predictor {predictor!r}; declared: {BE_PREDICTORS}")
+    if composition in BE_ABSENT_COMPOSITIONS:
+        raise ExportRefused(
+            f"REFUSED: {composition} has NO valid 011 exporter -- "
+            f"{BE_ABSENT_COMPOSITIONS[composition]}. Emitting it would put a "
+            f"label on a trajectory the code cannot produce, which is the one "
+            f"error the contract cannot catch.")
+    if composition not in BE_EXPORTABLE_COMPOSITIONS:
+        raise ExportRefused(
+            f"REFUSED: {composition!r} is not a composition BE declares; "
+            f"exportable today: {BE_EXPORTABLE_COMPOSITIONS}")
+    return export_trajectory(
+        composition, events, predictor=predictor, predictor_active=True,
+        components=BE_COMPONENTS[composition], interaction=False,
+        fairprice_estimator=None)
 
 
 def agreement_with_contract() -> dict:
@@ -82,13 +185,23 @@ def agreement_with_contract() -> dict:
         disagreements["event_fields"] = (BE_EVENT_FIELDS, DA.EVENT_FIELDS)
     if tuple(sorted(BE_KINDS)) != tuple(sorted(DA.KINDS)):
         disagreements["kinds"] = (sorted(BE_KINDS), sorted(DA.KINDS))
+    if tuple(BE_TRAJ_FIELDS) != tuple(DA.TRAJ_FIELDS):
+        disagreements["traj_fields"] = (BE_TRAJ_FIELDS, DA.TRAJ_FIELDS)
+    for _c, _comp in BE_COMPONENTS.items():
+        _spec = DA.ARM_SPEC[_c]
+        if tuple(sorted(_comp)) != tuple(sorted(_spec["components"])):
+            disagreements[f"components:{_c}"] = (_comp, _spec["components"])
+        if _spec["interaction"] is not False:
+            disagreements[f"interaction:{_c}"] = _spec["interaction"]
     if disagreements:
         raise ExportRefused(
             f"BE's declaration DISAGREES with the contract: {disagreements}. "
             f"Two implementations that have never been shown to agree are not "
             f"a contract.")
     return {"agreed": True, "canon": BE_CANON,
-            "n_fields": len(BE_EVENT_FIELDS), "n_kinds": len(BE_KINDS),
+            "n_event_fields": len(BE_EVENT_FIELDS),
+            "n_traj_fields": len(BE_TRAJ_FIELDS), "n_kinds": len(BE_KINDS),
+            "components_agree": sorted(BE_COMPONENTS),
             "declared_independently": True}
 
 
@@ -197,6 +310,58 @@ def selftest() -> int:
     r4 = DA.external_lifecycle(DA.load_external_trajectory(clean))
     ok(all(v is not False for k, v in r4.items() if isinstance(v, bool)),
        "12 a CLEAN cancel lifecycle passes every invariant")
+
+    # ------------------------------------------------ B2: the MAPPING ------
+    _d = declared_pairs()
+    ok(_d["n_present"] == 2 and _d["n_absent"] == 4,
+       "B2 BE declares TWO submittable pairs today (CONDVALUE_NEUTRAL x each "
+       "predictor) and FOUR absent — race multiplicity counts PAIRS, so the "
+       "ones that cannot exist are DECLARED absent, not silently uncounted")
+    ok(_d["interaction_claim"] is False,
+       "B2 the interaction claim is FALSE, read from the code: no skew, "
+       "inventory, net or front state reaches any feature block")
+
+    _b2 = export_trajectory_b2("CONDVALUE_NEUTRAL", "composed_linear",
+                               [ev(1, "PLACE"), ev(2, "FILL")])
+    ok(_b2["predictor"] == "composed_linear" and _b2["interaction"] is False
+       and _b2["arm"] == "CONDVALUE_NEUTRAL",
+       "B2 a valid pair exports with identity as TOP-LEVEL fields")
+    ok(DA.load_external_trajectory(_b2).arm == "CONDVALUE_NEUTRAL",
+       "B2 and still loads through DA's real loader — identity fields sit "
+       "OUTSIDE the canonical bytes, so they do not disturb the digest")
+
+    for _c in ("CONDVALUE_X_SKEW", "CONDVALUE_X_SKEW_X_FAIRPRICE"):
+        try:
+            export_trajectory_b2(_c, "composed_lgbm", [ev(1, "PLACE")])
+            ok(False, f"B2 BE REFUSES to emit {_c} today")
+        except ExportRefused as _e:
+            ok("NO valid 011 exporter" in str(_e),
+               f"B2 BE REFUSES to emit {_c} today — a label the code cannot "
+               f"support is the ONE error the contract cannot catch, because "
+               f"the label is what it trusts")
+    try:
+        export_trajectory_b2("QR_SKEW_ONLY", "composed_linear",
+                             [ev(1, "PLACE")])
+        ok(False, "B2 BE refuses a composition it does not own")
+    except ExportRefused:
+        ok(True, "B2 BE refuses a composition it does not own (QR_SKEW_ONLY is "
+                 "the neutral reference, not a BE predictor arm)")
+    try:
+        export_trajectory_b2("CONDVALUE_NEUTRAL", "composed_magic",
+                             [ev(1, "PLACE")])
+        ok(False, "B2 an undeclared PREDICTOR is refused")
+    except ExportRefused:
+        ok(True, "B2 an undeclared PREDICTOR is refused")
+
+    # the mapping's evidence must remain TRUE of the code, not just asserted
+    import phase2_state_schema_freeze as _PIN
+    _f = _PIN.build_pin()["features_in_order"]
+    _bad = [x for x in _f if any(t in x.lower() for t in
+                                 ("skew", "invent", "_net", "net_", "front"))]
+    ok(not _bad,
+       f"B2 EVIDENCE HOLDS: no skew/inventory/net/front feature is in the "
+       f"pinned set (found {_bad}); if one ever is, interaction:False becomes "
+       f"a false claim and this falsifier fires")
 
     print(f"\n{'BE TRAJECTORY EXPORT SELFTEST GREEN' if not fails else 'RED'}: "
           f"{len(fails)} failing")
