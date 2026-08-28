@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import json
 import math
+import random as _rnd
 import sys
 from pathlib import Path
 
@@ -683,6 +684,69 @@ def selftest() -> int:
 
     print(f"\n{'ITER011 SELFTEST GREEN' if not fails else 'RED'}: "
           f"{len(fails)} failing")
+
+    # ---- prereg §5(1): the MATCHED-random null (I11-B2) --------------------
+    # Rule 15: the instrument ships a positive control it MUST flag and
+    # known-bads it MUST refuse. This null was added because Q1/Q2/Q3 carried
+    # p_value=None in a complete family; an instrument introduced to fill that
+    # hole must itself be shown able to fire and able to refuse.
+    _rr = _rnd.Random(4)
+    _sig = [_rr.random() for _ in range(400)]
+    _lab = [1 if v + _rr.gauss(0, 0.30) > 0.5 else 0 for v in _sig]
+    _str = [("BUY" if i % 2 else "SELL", i % 6) for i in range(400)]
+    _hit = matched_random_null(_sig, _lab, "probability", _str)
+    _noise = matched_random_null([_rr.random() for _ in range(400)], _lab,
+                                 "probability", _str)
+    ok(_hit["status"] == "OK" and _hit["p_value"] < 0.01,
+       f"POSITIVE CONTROL: a genuinely discriminating head is flagged by the "
+       f"matched-random null (p={_hit.get('p_value')})")
+    ok(_noise["status"] == "OK" and _noise["p_value"] > 0.10,
+       f"KNOWN-BAD: an UNINFORMATIVE head is NOT flagged (p="
+       f"{_noise.get('p_value')}); a null that fires on noise certifies "
+       f"nothing")
+    ok(_hit["n_draws"] >= MIN_DRAWS_011 and _hit["n_draws"] == N_RANDOM_011,
+       f"the null draws at least the declared minimum {MIN_DRAWS_011} "
+       f"(prereg §5: an under-sampled correct null flatters as much as a wrong "
+       f"one)")
+    _sing = matched_random_null(_sig[:8], _lab[:8], "probability",
+                                [(i, i) for i in range(8)])
+    ok(_sing["status"] == UNEVALUABLE_NULL and _sing["p_value"] is None,
+       "KNOWN-BAD: all-singleton strata make the permutation the IDENTITY, so "
+       "the null cannot move; it says so instead of returning p=1.0, which "
+       "would read as evidence of nothing rather than absence of a test")
+    try:
+        matched_random_null(_sig, _lab, "probability", _str, n_draws=10)
+        _floor = False
+    except ValueError:
+        _floor = True
+    ok(_floor, "KNOWN-BAD: fewer draws than the declared floor is REFUSED, not "
+               "quietly run")
+    try:
+        matched_random_null(_sig, _lab[:10], "probability", _str)
+        _mism = False
+    except ValueError:
+        _mism = True
+    ok(_mism, "KNOWN-BAD: a null matched on a DIFFERENT population than the "
+              "head is REFUSED; that is not a matched null")
+    # THE MATCHING MUST BIND. If the strata were ignored the comparator would be
+    # a free shuffle, which is a different (and more easily beaten) null. Rows
+    # are built so outcome is determined BY THE STRATUM: within a stratum there
+    # is nothing to permute, so a correctly-matched null cannot move, while an
+    # unstratified one would.
+    _cs = [("A" if i < 200 else "B", 0) for i in range(400)]
+    _cl = [0 if i < 200 else 1 for i in range(400)]
+    _cp = [0.2 if i < 200 else 0.8 for i in range(400)]
+    _bound = matched_random_null(_cp, _cl, "probability", _cs)
+    ok(_bound["p_value"] == 1.0 or _bound["status"] == UNEVALUABLE_NULL,
+       f"the STRATA BIND: when the outcome is constant within each stratum a "
+       f"matched permutation cannot move, so a perfect-looking AUC earns NO "
+       f"significance (got {_bound.get('p_value')}) — an unstratified shuffle "
+       f"would have called this a discovery")
+    _dup = matched_random_null(_sig, _lab, "probability", _str)
+    ok(_dup["p_value"] == _hit["p_value"],
+       "the null is DETERMINISTIC at a fixed seed, with strata consumed in "
+       "sorted order (R-234)")
+
     return 1 if fails else 0
 
 
@@ -696,6 +760,7 @@ def selftest() -> int:
 # travels with every number.
 
 UNDERPOWERED = "UNDERPOWERED"
+UNEVALUABLE_NULL = "NULL_UNEVALUABLE"
 UNEVALUABLE = "UNEVALUABLE"
 
 
@@ -751,14 +816,33 @@ def calibration_slope(pred, actual) -> float:
     return sxy / sxx
 
 
-def head_report(name, kind, pred, actual, min_n: int = UNDERPOWERED_MIN_N) -> dict:
+def head_report(name, kind, pred, actual, min_n: int = UNDERPOWERED_MIN_N,
+                strata=None, gen_keys=None) -> dict:
     """One head's metrics WITH its n and power status. Never omitted.
 
     prereg §3: a head with too few conditional observations is reported
     UNDERPOWERED, never dropped. Q3 is the head most likely to be silently
-    skipped, which is exactly why its absence must be representable."""
-    n = len(pred)
-    out = {"head": name, "kind": kind, "n": n, "min_n": min_n,
+    skipped, which is exactly why its absence must be representable.
+
+    A1.5 (I11-B3): "n for every reported head is the ACTION count, not the
+    prediction count. A head predicting on rows must state its action count
+    beside it." Measured 1.99 rows/fill (max 23), and the ratio DIFFERS BETWEEN
+    COINS -- so a row-level n does not merely inflate, it distorts comparisons
+    and it is the wrong denominator for a power judgement. When gen_keys are
+    supplied the ACTION count decides UNDERPOWERED; n_basis always says which
+    was used, so no reader has to infer it.
+
+    strata (prereg §5.1) carry the matched-random null with the head, where its
+    predictions and outcomes are both in hand. Computing it downstream would
+    mean re-deriving the population, which is how two definitions diverge.
+    """
+    n_rows = len(pred)
+    n_actions = len(set(gen_keys)) if gen_keys is not None else None
+    n = n_actions if n_actions is not None else n_rows
+    out = {"head": name, "kind": kind, "n": n, "n_rows": n_rows,
+           "n_actions": n_actions,
+           "n_basis": "ACTION (A1.5)" if n_actions is not None else "ROW",
+           "min_n": min_n,
            "status": UNDERPOWERED if n < min_n else "OK"}
     if kind == "probability":
         out["auc"] = auc(pred, actual)
@@ -798,6 +882,18 @@ def head_report(name, kind, pred, actual, min_n: int = UNDERPOWERED_MIN_N) -> di
                 "'calibrated'")
     else:
         raise RuntimeError(f"unknown head kind {kind!r}")
+    # prereg §5(1). Attached whatever the status: a head that is UNDERPOWERED
+    # still gets its null reported, because "we did not test it" and "we tested
+    # it and it did not separate" are different findings and the receipt must
+    # be able to tell them apart.
+    if strata is not None:
+        out["matched_random"] = matched_random_null(pred, actual, kind, strata)
+    else:
+        out["matched_random"] = {
+            "status": UNEVALUABLE_NULL, "p_value": None, "n_draws": 0,
+            "detail": "no strata supplied, so the decision variable (action "
+                      "count, side, hour) could not be matched; an UNMATCHED "
+                      "null is not the declared null (prereg §5.1)"}
     return out
 
 
@@ -839,6 +935,89 @@ HEADS_011 = ("Q1_arrival", "Q2_sign", "Q3_magnitudes", "Q4_combined_ev")
 BUDGETS_011 = tuple(f"{int(b * 100)}%" for b in D.BUDGETS)
 N_PERM_011 = 2000                                    # prereg §5: >= 1000
 PERM_SEED_011 = 20260828
+N_RANDOM_011 = 500                                   # prereg §5: >= 200
+MIN_DRAWS_011 = 200                                  # the declared floor
+
+# The value each metric takes under NO SKILL. The matched-random null is a
+# two-sided test about THIS point, not about zero: an AUC of 0.5 is no skill,
+# and 0.0 would be perfect inversion.
+_NO_SKILL = {"probability": 0.5, "magnitude": 0.0}
+
+
+def matched_random_null(pred, actual, kind: str, strata,
+                        n_draws: int = N_RANDOM_011,
+                        seed: int = PERM_SEED_011) -> dict:
+    """Prereg §5(1): the MATCHED-random null, per head.
+
+    "randoms matched on the decision variable (action count, side, hour) and
+    compared on that head's metric. Not on a proxy."
+
+    The comparator permutes OUTCOMES WITHIN each stratum, so every draw holds
+    the action count, the side mix and the hour mix exactly fixed and differs
+    only in which row received which outcome. An unstratified shuffle answers a
+    DIFFERENT question -- it also destroys the side/hour composition that the
+    decision variable pins, and rule 7 exists because that substitution was
+    made before.
+
+    Strata are consumed in SORTED order (R-234): a seed pins the RNG STREAM, it
+    does not pin what the stream is applied to, and dict order is not a
+    guarantee across runs.
+    """
+    if n_draws < MIN_DRAWS_011:
+        raise ValueError(
+            f"REFUSED: {n_draws} draws is below the declared minimum "
+            f"{MIN_DRAWS_011} (prereg §5). A null max is an extreme order "
+            f"statistic; an under-sampled correct null flatters as much as a "
+            f"wrong one (rule 6).")
+    if len(strata) != len(pred) or len(actual) != len(pred):
+        raise ValueError(
+            f"REFUSED: {len(pred)} predictions, {len(actual)} outcomes, "
+            f"{len(strata)} strata. A null matched on a DIFFERENT population "
+            f"than the head is not a matched null.")
+    metric = auc if kind == "probability" else calibration_slope
+    centre = _NO_SKILL[kind]
+    obs = metric(pred, actual)
+    if obs is None:
+        return {"status": UNEVALUABLE_NULL, "observed": None, "p_value": None,
+                "n_draws": 0, "detail": "the head's own metric is undefined, so "
+                                        "there is nothing for a null to compare"}
+    groups: dict = {}
+    for i, st in enumerate(strata):
+        groups.setdefault(st, []).append(i)
+    # A null that CANNOT MOVE is not a null. If every stratum is a singleton the
+    # permutation is the identity, every draw reproduces the observed metric,
+    # and p collapses to 1.0 -- a number that looks like evidence of nothing
+    # when it is really evidence of no test. Rule 15: an instrument that cannot
+    # fire must say so rather than return a value.
+    movable = sum(1 for idx in groups.values() if len(idx) > 1)
+    if movable == 0:
+        return {"status": UNEVALUABLE_NULL, "observed": obs, "p_value": None,
+                "n_draws": 0, "n_strata": len(groups),
+                "detail": f"all {len(groups)} strata are singletons, so a "
+                          f"within-stratum permutation is the identity and the "
+                          f"null cannot move off the observed value"}
+    rng = _rnd.Random(seed)
+    order = sorted(groups, key=lambda k: repr(k))     # R-234
+    ge = 0
+    for _ in range(n_draws):
+        shuffled = list(actual)
+        for k in order:
+            idx = groups[k]
+            if len(idx) < 2:
+                continue
+            vals = [actual[i] for i in idx]
+            rng.shuffle(vals)
+            for i, v in zip(idx, vals):
+                shuffled[i] = v
+        m = metric(pred, shuffled)
+        if m is not None and abs(m - centre) >= abs(obs - centre):
+            ge += 1
+    return {"status": "OK", "observed": obs,
+            "p_value": (1 + ge) / (1 + n_draws), "n_draws": n_draws,
+            "n_strata": len(groups), "n_movable_strata": movable,
+            "matched_on": "action count, side, hour (prereg §5.1)",
+            "detail": f"{ge}/{n_draws} matched-random draws reached or beat the "
+                      f"observed {kind} metric about no-skill {centre}"}
 
 
 def sign_flip_null(paired_by_unit: dict, n_perm: int = N_PERM_011,
@@ -931,6 +1110,14 @@ CELL_STATUS_OK = "OK"
 CELL_STATUS_UNDERPOWERED = "UNDERPOWERED"
 CELL_STATUS_NO_COUNTERPART = "NO_INCUMBENT_COUNTERPART"      # R-237
 CELL_STATUS_UNEVALUABLE = "UNEVALUABLE"
+# I11-B4: the declared family has NO coin dimension, but prereg 9.4 rules the
+# verdict regime PER COIN ("btc and eth accrue independently, and one coin
+# reaching the bar does not carry the other"). Collapsing coins into one cell
+# contradicts 9.4; adding a coin dimension breaks A1.4's frozen denominator of
+# 24. That is a STRUCTURAL GAP IN THE FROZEN TEXT, not a choice for BE to make
+# quietly, so a cell that would need an undeclared collapse says so and carries
+# the per-coin evidence for whoever rules.
+CELL_STATUS_AGG_UNDECLARED = "AGGREGATION_UNDECLARED"
 
 # A1.4 (FROZEN): ONE adjudicated statistic per head. Everything else is
 # reported and NEVER adjudicated — a metric that can be swapped into a cell

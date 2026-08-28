@@ -68,7 +68,16 @@ def head_targets(rows, latency_ms=None) -> dict:
             "idx_harm": idx_h, "idx_good": idx_g, "idx_zero": idx_z,
             "m_harm_target": [v[i] for i in idx_h],
             "m_good_target": [-v[i] for i in idx_g],
+            # A1.5: "n for every reported head is the ACTION count, not the
+            # prediction count. A head predicting on rows must state its action
+            # count beside it." Measured 1.99 rows/fill (max 23), and the ratio
+            # DIFFERS BETWEEN COINS, so a row-level n does not merely inflate --
+            # it distorts comparisons. Both are carried: n_rows stays the
+            # prediction population, n_actions is what a head reports.
             "counts": {"n_rows": len(rows), "n_preventable": len(idx_prev),
+                       "n_actions": I11.action_count(rows),
+                       "n_actions_preventable": I11.action_count(
+                           [rows[i] for i in idx_prev]),
                        "n_v_positive": len(idx_h), "n_v_negative": len(idx_g),
                        "n_v_zero": len(idx_z)}}
 
@@ -207,7 +216,8 @@ def apply_arm(fitres: dict, X, tg: dict) -> dict:
     return out
 
 
-def q4_economics(pred: dict, rows: list, budgets=None) -> dict:
+def q4_economics(pred: dict, rows: list, budgets=None,
+                 incumbent: dict = None) -> dict:
     """Q4's ECONOMICS per budget, at the ACTION unit. I11-2.
 
     apply_arm composed expected_cancel_value per action and report_arm threw it
@@ -221,33 +231,102 @@ def q4_economics(pred: dict, rows: list, budgets=None) -> dict:
         raise RuntimeError(
             f"REFUSED: {len(ecv)} composed values against {len(rows)} rows; "
             f"economics cannot be evaluated on a misaligned population.")
-    # A1.5: the unit is the ACTION. Rank generations by their MAX composed value.
+    inc_ecv = None
+    if incumbent is not None:
+        inc_ecv = incumbent["expected_cancel_value"]
+        if len(inc_ecv) != len(rows):
+            raise RuntimeError(
+                f"REFUSED: the incumbent carries {len(inc_ecv)} composed values "
+                f"against {len(rows)} rows. An increment is defined only on the "
+                f"IDENTICAL action population (prereg 5.2); comparing arms over "
+                f"different populations is the conflation that null exists to "
+                f"prevent.")
+
+    # A1.5: the unit is the ACTION, with FIRST-CROSSING dedup "as
+    # harmful_action_eval already does". That reference does TWO different
+    # things and the distinction is decision-bearing (I11-B3):
+    #   RANK   generations by their maximum score   (which actions get cancelled)
+    #   VALUE  next(i for i in gens[gk] if s[i] >= theta)   (the EARLIEST
+    #          crossing row, not the best-scoring one)
+    # A cancel fires the first time the score crosses; there is nothing left to
+    # cancel later, so the later row is counterfactually unreachable. Valuing at
+    # the generation's max row credits the policy with a decision it never made,
+    # and on a generation whose early row forfeits a good fill and whose late row
+    # avoids harm the two rules disagree in SIGN.
     gens = {}
     for i, r in enumerate(rows):
-        k = (r.get("slug"), r.get("side"), r.get("gen"))
-        if k not in gens or ecv[i] > ecv[gens[k]]:
-            gens[k] = i
-    order = sorted(gens, key=lambda k: -ecv[gens[k]])
+        gens.setdefault((r.get("slug"), r.get("side"), r.get("gen")), []).append(i)
+    for k in gens:
+        gens[k].sort(key=lambda i: (rows[i].get("t_start"), i))
+
+    def _rank(scores):
+        gmax = {k: max(scores[i] for i in idx) for k, idx in gens.items()}
+        return gmax, sorted(gens, key=lambda k: (-gmax[k], k))
+
+    def _cross(idx, theta, scores):
+        """The EARLIEST row in the generation whose score crosses theta."""
+        for i in idx:
+            if scores[i] >= theta:
+                return i
+        raise RuntimeError(
+            "REFUSED: a chosen generation contains no row at or above its own "
+            "budget threshold. It was selected by a maximum that no row "
+            "reproduces, so the selection and the valuation disagree.")
+
+    gmax, order = _rank(ecv)
+    i_gmax, i_order = _rank(inc_ecv) if inc_ecv is not None else (None, None)
+
+    def _net_by_window(scores, gm, orr, kk):
+        chosen = orr[:kk]
+        theta = gm[chosen[-1]]          # the budget's own cutoff score
+        bw = {}
+        for k in chosen:
+            i = _cross(gens[k], theta, scores)
+            bw[k[0]] = bw.get(k[0], 0.0) + I11.signed_v_cancel(rows[i])
+        return bw
+
     out = {}
     for b in budgets:
         frac = float(b.rstrip("%")) / 100.0
         kk = max(1, int(len(order) * frac))
-        chosen = order[:kk]
-        by_window, net = {}, 0.0
-        for k in chosen:
-            i = gens[k]
-            v = I11.signed_v_cancel(rows[i])
-            net += v
-            w = k[0]
-            by_window[w] = by_window.get(w, 0.0) + v
+        cand_bw = _net_by_window(ecv, gmax, order, kk)
+        net = sum(cand_bw.values())
+        if inc_ecv is None:
+            # NOT an increment. Named for what it is, so no caller can label a
+            # sign-flip of the candidate's own value "increment vs incumbent".
+            by_window, incumbent_net = cand_bw, None
+        else:
+            inc_bw = _net_by_window(inc_ecv, i_gmax, i_order, kk)
+            incumbent_net = sum(inc_bw.values())
+            by_window = {w: cand_bw.get(w, 0.0) - inc_bw.get(w, 0.0)
+                         for w in set(cand_bw) | set(inc_bw)}
         out[b] = {"budget": b, "n_actions_total": len(order),
                   "n_cancelled_actions": kk, "net_cents": net,
-                  "increment_by_window": by_window,
-                  "unit": "ACTION (first-crossing by max composed value)"}
+                  "incumbent_net_cents": incumbent_net,
+                  "paired_against_incumbent": inc_ecv is not None,
+                  ("increment_by_window" if inc_ecv is not None
+                   else "candidate_value_by_window"): by_window,
+                  "unit": "ACTION (first-crossing dedup, A1.5)"}
     return out
 
 
-def report_arm(pred: dict, tg: dict) -> dict:
+def _strata(rows, idx):
+    """The decision variable, per prereg §5.1: side and hour. Hour comes from
+    the row's OWN t_start, never a nearby proxy (rule 3)."""
+    out = []
+    for i in idx:
+        r = rows[i]
+        t = r.get("t_start")
+        out.append((r.get("side"), int((t // 3600) % 24) if t is not None else None))
+    return out
+
+
+def _gens(rows, idx):
+    return [(rows[i].get("slug"), rows[i].get("side"), rows[i].get("gen"))
+            for i in idx]
+
+
+def report_arm(pred: dict, tg: dict, rows: list) -> dict:
     """All heads, always, including failures (prereg §3).
 
     Each head's METRIC is computed on ITS OWN population — where its labels
@@ -255,16 +334,22 @@ def report_arm(pred: dict, tg: dict) -> dict:
     different domains and conflating them is what produced the unaligned
     vectors."""
     ip, ih, ig = tg["idx_prev"], tg["idx_harm"], tg["idx_good"]
+    _all = list(range(len(tg["y_fill"])))
     q1 = I11.head_report("Q1_arrival", "probability",
-                         pred["p_fill"], tg["y_fill"])
+                         pred["p_fill"], tg["y_fill"],
+                         strata=_strata(rows, _all), gen_keys=_gens(rows, _all))
     q2p = I11.head_report("Q2_p_pos", "probability",
-                          [pred["p_pos"][i] for i in ip], tg["y_pos"])
+                          [pred["p_pos"][i] for i in ip], tg["y_pos"],
+                          strata=_strata(rows, ip), gen_keys=_gens(rows, ip))
     q2n = I11.head_report("Q2_p_neg", "probability",
-                          [pred["p_neg"][i] for i in ip], tg["y_neg"])
+                          [pred["p_neg"][i] for i in ip], tg["y_neg"],
+                          strata=_strata(rows, ip), gen_keys=_gens(rows, ip))
     q3h = I11.head_report("Q3_m_harm", "magnitude",
-                          [pred["m_harm"][i] for i in ih], tg["m_harm_target"])
+                          [pred["m_harm"][i] for i in ih], tg["m_harm_target"],
+                          strata=_strata(rows, ih), gen_keys=_gens(rows, ih))
     q3g = I11.head_report("Q3_m_good", "magnitude",
-                          [pred["m_good"][i] for i in ig], tg["m_good_target"])
+                          [pred["m_good"][i] for i in ig], tg["m_good_target"],
+                          strata=_strata(rows, ig), gen_keys=_gens(rows, ig))
     # A1.4: Q2's adjudicated statistic is AUC. Under Option 1 there are TWO sign
     # heads and the cell takes the WORSE of them — a decomposition whose
     # negative side is uninformative has not established sign discrimination
@@ -356,8 +441,53 @@ def assert_receipt_has_all_cells(receipt: dict) -> dict:
             f"REFUSED: Holm denominator {fam.get('holm_denominator')} is not "
             f"the declared {len(declared)}; a shrinking denominator rewards "
             f"failing to measure.")
+    # I11-B4: the checks above compare KEY SETS. Twenty-four EMPTY DICTS carry
+    # exactly the declared keys and satisfied every one of them -- the same
+    # shape as the empty file_hashes map R-228(1) closed one level up, and the
+    # same lesson: a container that matches a declaration is not evidence that
+    # anything was put in it. Each cell must now carry what a cell IS.
+    REQUIRED_CELL_FIELDS = ("arm", "head", "budget", "status", "statistic",
+                            "p_value", "n_actions", "detail")
+    KNOWN = {I11.CELL_STATUS_OK, I11.CELL_STATUS_UNDERPOWERED,
+             I11.CELL_STATUS_NO_COUNTERPART, I11.CELL_STATUS_UNEVALUABLE,
+             I11.CELL_STATUS_AGG_UNDECLARED}
+    hollow, badstatus, unsupported = [], [], []
+    for key in sorted(declared):
+        c = fam["cells"][key]
+        if not isinstance(c, dict) or any(f not in c for f in REQUIRED_CELL_FIELDS):
+            hollow.append(key); continue
+        st = c.get("status")
+        if st not in KNOWN:
+            badstatus.append(f"{key}={st!r}")
+        elif st == I11.CELL_STATUS_OK:
+            # An OK cell asserts it was EVALUATED, so it must carry the
+            # evidence: a real statistic, a real population, and either a
+            # p-value or a status explaining its absence. An OK cell with
+            # statistic=None is a cell claiming a result it does not have.
+            if I11._num(c.get("statistic")) is None:
+                unsupported.append(f"{key}: status OK, statistic "
+                                   f"{c.get('statistic')!r}")
+            elif not isinstance(c.get("n_actions"), int) or c["n_actions"] <= 0:
+                unsupported.append(f"{key}: status OK, n_actions "
+                                   f"{c.get('n_actions')!r} (A1.5 requires a "
+                                   f"positive ACTION count)")
+            elif I11._num(c.get("p_value")) is None:
+                unsupported.append(f"{key}: status OK with no p_value; a cell "
+                                   f"with no null evidence is not OK, it is "
+                                   f"UNEVALUABLE")
+        elif not str(c.get("detail") or "").strip():
+            unsupported.append(f"{key}: status {st} with no detail; a "
+                               f"non-OK status must say WHY")
+    if hollow or badstatus or unsupported:
+        raise RuntimeError(
+            f"REFUSED: the receipt's cells match the declared keys but do not "
+            f"carry results. Hollow (missing required fields): {len(hollow)} "
+            f"{hollow[:4]}; unknown status: {badstatus[:4]}; unsupported: "
+            f"{len(unsupported)} {unsupported[:4]}. Matching a declaration is "
+            f"not evidence that anything was evaluated (I11-B4).")
     return {"cells_present": len(present), "declared": len(declared),
-            "holm_denominator": fam["holm_denominator"]}
+            "holm_denominator": fam["holm_denominator"],
+            "cells_validated": "contents"}
 
 
 def evaluate_family(coin_results: dict, populations: dict) -> dict:
@@ -404,8 +534,16 @@ def _one_cell(arm: str, head: str, budget: str, coin_results: dict,
     # Q1/Q2/Q3: the adjudicated statistic is a discrimination/calibration
     # figure, identical across budgets (budgets select CANCELLATIONS, not
     # predictions). It is reported in every budget slot so the declared family
-    # is complete; the p-value comes from the matched-random null on the
-    # decision side only, which is why these carry no incremental p.
+    # is complete.
+    #
+    # I11-B2: the sentence that stood here -- "the p-value comes from the
+    # matched-random null on the decision side only, which is why these carry no
+    # incremental p" -- was a RATIONALISATION of a missing null, printed beside
+    # p_value=None. Prereg §5(1) declares the matched-random null PER HEAD, not
+    # on the decision side only. It is now computed in head_report, beside each
+    # head's own population, and read here.
+    per_coin_ev = {c: {"statistic": None, "matched_random_p": _matched_p(r[arm], head)}
+                   for c, r in per_coin.items()}
     stats, statuses = [], []
     for c, r in per_coin.items():
         adj = r[arm]["adjudicated_statistics"]
@@ -419,6 +557,8 @@ def _one_cell(arm: str, head: str, budget: str, coin_results: dict,
             stats.append(adj.get("Q3_magnitudes"))
             statuses.append("OK" if adj.get("Q3_magnitudes") is not None
                             else I11.CELL_STATUS_UNEVALUABLE)
+    for (c, r), st in zip(per_coin.items(), stats):
+        per_coin_ev[c]["statistic"] = st
     good = [x for x in stats if x is not None]
     if not good:
         return I11.build_cell(
@@ -431,17 +571,108 @@ def _one_cell(arm: str, head: str, budget: str, coin_results: dict,
             arm, head, budget, statistic=min(good),
             status=I11.CELL_STATUS_UNDERPOWERED, n_actions=n_actions,
             detail=f"at least one coin is not OK: {statuses}")
+    # THE COLLAPSE IS ONLY UNAMBIGUOUS WHEN THERE IS NOTHING TO COLLAPSE.
+    # A single coin and a single sub-head need no undeclared rule, so those
+    # cells adjudicate normally. Anything wider needs a rule the frozen text
+    # does not give, and BE does not supply one (§9.5 "BE does not decide").
+    subs = _matched_p(next(iter(per_coin.values()))[arm], head)
+    ambiguous = []
+    if len(per_coin) > 1:
+        ambiguous.append(
+            f"{len(per_coin)} coins collapse into one cell, but §9.4 rules the "
+            f"verdict regime PER COIN -- 'btc and eth accrue independently, and "
+            f"one coin reaching the bar does not carry the other'. min() lets "
+            f"the worse coin decide for both, which is that carry with the sign "
+            f"reversed; the declared family has no coin dimension to hold them "
+            f"apart and A1.4 freezes the denominator at 24")
+    # Q2's two sides are NOT a gap: A1.4 carries a USER RULING (R-249) that
+    # under Option 1 the cell statistic is min(AUC(p_pos), AUC(p_neg)), the
+    # WORSE side. The null evidence for that statistic is therefore the worse
+    # side's own null -- a consequence of the ruling, not a fresh choice.
+    # Q3 has no such ruling: A1.4 names "calibration slope" for the cell while
+    # the parent table requires m_harm and m_good "each reported SEPARATELY"
+    # with a CI for each. One cell, two unreconciled judgements.
+    if head == "Q3_magnitudes" and len(subs) > 1:
+        ambiguous.append(
+            f"{head} spans {sorted(subs)}: A1.4 names a single 'calibration "
+            f"slope' for the cell, while the frozen table requires them 'each "
+            f"reported SEPARATELY' with 'calibration slope CI excludes 0 for "
+            f"each'. One cell cannot carry two separate slope-and-CI "
+            f"judgements, and unlike Q2 (R-249) no ruling says which wins")
+    ps = _cell_p(per_coin, arm, head)
+    if ambiguous:
+        return I11.build_cell(
+            arm, head, budget, statistic=min(good), p_value=None,
+            status=I11.CELL_STATUS_AGG_UNDECLARED, n_actions=n_actions,
+            detail="AGGREGATION UNDECLARED, stated for ruling rather than "
+                   "chosen (I11-B4): " + "; ".join(ambiguous) +
+                   f". The worst-coin statistic {min(good)!r} is carried as a "
+                   f"placeholder ONLY -- it is not adjudicated, p is withheld, "
+                   f"and the per-coin evidence is {per_coin_ev!r} so a ruling "
+                   f"can be applied without re-running.")
+    if head in ("Q2_sign", "Q3_magnitudes"):
+        return I11.build_cell(
+            arm, head, budget, statistic=min(good), p_value=(ps[0] if ps else None),
+            status=I11.CELL_STATUS_NO_COUNTERPART, n_actions=n_actions,
+            detail=f"R-237: the incumbent has no sign/magnitude head, so no "
+                   f"INCREMENTAL null exists for this head. The p reported is "
+                   f"the MATCHED-RANDOM null (prereg §5.1), which does apply; "
+                   f"the two nulls are named so neither is read as the other.")
     return I11.build_cell(
         arm, head, budget, statistic=min(good),
-        status=I11.CELL_STATUS_NO_COUNTERPART if head in ("Q2_sign",
-                                                          "Q3_magnitudes")
-        else I11.CELL_STATUS_OK,
+        p_value=(ps[0] if ps else None),
+        status=I11.CELL_STATUS_OK if ps else I11.CELL_STATUS_UNEVALUABLE,
         n_actions=n_actions,
-        detail=("R-237: the incumbent has no sign/magnitude head, so no "
-                "incremental null exists for this head; the matched-random "
-                "null is reported on the decision side"
-                if head in ("Q2_sign", "Q3_magnitudes")
-                else "adjudicated on the pooled worse-coin statistic"))
+        detail=(f"single coin, single head: adjudicated on its own "
+                f"matched-random null (prereg §5.1), {len(ps)} p available"
+                if ps else
+                "no matched-random null was computable for this head, so there "
+                "is no null evidence and the cell is not OK"))
+
+
+_CELL_SUBHEADS = {"Q1_arrival": ("Q1_arrival",),
+                  "Q2_sign": ("Q2_p_pos", "Q2_p_neg"),
+                  "Q3_magnitudes": ("Q3_m_harm", "Q3_m_good")}
+
+
+def _matched_p(r_arm: dict, head: str) -> dict:
+    """The matched-random p per sub-head, READ from where it was computed.
+
+    It is computed in head_report, beside the head's own predictions and
+    outcomes. Recomputing it here would mean re-deriving the population, which
+    is how two definitions of a population diverge."""
+    out = {}
+    for sub in _CELL_SUBHEADS.get(head, ()):
+        mr = (r_arm.get("heads", {}).get(sub) or {}).get("matched_random") or {}
+        out[sub] = mr.get("p_value")
+    return out
+
+
+def _cell_p(per_coin: dict, arm: str, head: str) -> list:
+    """The matched-random p that belongs to the cell's ADJUDICATED statistic.
+
+    For Q2 that is the WORSE side's p, because R-249 rules the cell statistic to
+    be min(AUC(p_pos), AUC(p_neg)): the null must describe the number the cell
+    actually reports, not a sibling of it."""
+    out = []
+    for r in per_coin.values():
+        heads = r[arm].get("heads", {})
+        subs = _CELL_SUBHEADS.get(head, ())
+        if head == "Q2_sign" and len(subs) > 1:
+            scored = [(heads.get(x, {}).get("auc"), x) for x in subs]
+            scored = [(a, x) for a, x in scored if a is not None]
+            if not scored:
+                continue
+            worse = min(scored)[1]
+            v = (heads.get(worse, {}).get("matched_random") or {}).get("p_value")
+        else:
+            v = None
+            for x in subs:
+                v = (heads.get(x, {}).get("matched_random") or {}).get("p_value")
+                break
+        if v is not None:
+            out.append(v)
+    return out
 
 
 def _q4_cell(arm: str, budget: str, per_coin: dict) -> tuple:
@@ -458,6 +689,21 @@ def _q4_cell(arm: str, budget: str, per_coin: dict) -> tuple:
             return (None, None, I11.CELL_STATUS_UNEVALUABLE,
                     f"no economics for {coin}@{budget}")
         net += econ["net_cents"]
+        # I11-B2: this key EXISTS ONLY when economics were paired against an
+        # incumbent. Previously the cell read the candidate's own value from
+        # `increment_by_window` and reported it as "increment vs incumbent" --
+        # a sign-flip of the candidate against ZERO, wearing the label of a
+        # comparison it never made. That is precisely the conflation prereg
+        # 5.2 was written to prevent ("beats random was mistaken for beats the
+        # incumbent for a full cycle"). No counterpart is a NAMED STATUS, not
+        # a number with an optimistic caption.
+        if not econ.get("paired_against_incumbent"):
+            return (net, None, I11.CELL_STATUS_NO_COUNTERPART,
+                    f"{coin}@{budget} economics were computed with no incumbent "
+                    f"counterpart, so no candidate-minus-incumbent statistic "
+                    f"exists on the identical action population (prereg 5.2). "
+                    f"Net {net:+.1f}c is the CANDIDATE'S OWN value and is not "
+                    f"an increment.")
         for w, v in econ["increment_by_window"].items():
             inc_by_window[f"{coin}/{w}"] = inc_by_window.get(f"{coin}/{w}", 0.0) + v
     if not inc_by_window:
@@ -515,7 +761,7 @@ def selftest() -> int:
         try:
             fr = fit_arm(arm, X, tg)
             pr = apply_arm(fr, X, tg)
-            rep = report_arm(pr, tg)
+            rep = report_arm(pr, tg, rows)
             n = len(rows)
             ok(all(len(pr[k]) == n for k in
                    ("p_fill", "p_pos", "p_neg", "m_harm", "m_good",
@@ -523,11 +769,19 @@ def selftest() -> int:
                f"{arm}: EVERY head predicts on EVERY action — row-aligned "
                f"(the reviewer measured 3/2/1/1 before this)")
             ok(rep["all_heads_reported"], f"{arm}: all heads reported")
-            ok(rep["heads"]["Q2_p_pos"]["n"] == c["n_preventable"],
+            # A1.5 (I11-B3): head "n" is now the ACTION count, so the DOMAIN
+            # check -- which is what these two assert -- reads n_rows, and the
+            # action property is asserted separately rather than conflated.
+            ok(rep["heads"]["Q2_p_pos"]["n_rows"] == c["n_preventable"],
                f"{arm}: Q2 is SCORED on the preventable base while PREDICTING "
                f"on all actions — different domains, kept separate")
-            ok(rep["heads"]["Q3_m_harm"]["n"] == c["n_v_positive"],
+            ok(rep["heads"]["Q3_m_harm"]["n_rows"] == c["n_v_positive"],
                f"{arm}: Q3 m_harm is scored on V>0 only")
+            ok(all(h["n"] == h["n_actions"] and h["n_basis"] == "ACTION (A1.5)"
+                   and h["n_actions"] <= h["n_rows"]
+                   for h in rep["heads"].values()),
+               f"{arm}: every head reports n as the ACTION count with its "
+               f"basis named, never the prediction count (A1.5)")
             ok(isinstance(pr["expected_cancel_value"][0], float),
                f"{arm}: Q4 composes per action (never fitted)")
             ok(rep["adjudicated_statistics"]["Q2_cell_rule"].startswith("min("),
@@ -569,7 +823,7 @@ def selftest() -> int:
     Xt = [[1.0, 0.5]] * 6
     frt = fit_arm("composed_linear", Xt, tgt)
     prt = apply_arm(frt, Xt, tgt)
-    rept = report_arm(prt, tgt)
+    rept = report_arm(prt, tgt, thin)
     ok(not frt["fitted"]["m_harm"] and not frt["fitted"]["m_good"],
        "a THIN magnitude population is not fitted (min_n respected)")
     ok(set(prt["unfitted_heads_neutralised"]) >= {"m_harm", "m_good"},
@@ -696,16 +950,34 @@ def selftest() -> int:
        "I11-2 a budget never cancels more actions than exist")
     ok(_ec["5%"]["n_cancelled_actions"] <= _ec["15%"]["n_cancelled_actions"],
        "I11-2 a larger budget cancels at least as many actions")
-    ok(all(_ec[b]["increment_by_window"] for b in _ec),
-       "I11-2 per-window increments are retained so the incremental null has "
-       "units to permute")
+    # I11-B2: this call passes NO incumbent, so there is no increment to
+    # retain. The per-window values are the CANDIDATE'S OWN, and the key now
+    # says so -- the previous name let _q4_cell read them as an increment.
+    ok(all(_ec[b]["candidate_value_by_window"] for b in _ec),
+       "I11-2 per-window values are retained so a null has units to permute")
+    ok(all("increment_by_window" not in _ec[b] for b in _ec),
+       "I11-B2 an UNPAIRED run emits NO increment_by_window key at all; a "
+       "caller cannot read the candidate's own value as an increment if the "
+       "key it would read does not exist")
 
-    # the family is BUILT and ADJUDICATED, not merely defined
+    # the family is BUILT and ADJUDICATED, not merely defined.
+    # I11-B2: the fixture now carries what a REAL result carries -- per-head
+    # matched-random nulls (prereg §5.1) and economics PAIRED against an
+    # incumbent -- because a fixture missing them made the family look complete
+    # while every cell was p-less.
+    _ecp = q4_economics(_pr2, _rows2, incumbent={
+        "expected_cancel_value": list(reversed(_pr2["expected_cancel_value"]))})
+    _mr = lambda pv: {"status": "OK", "p_value": pv, "n_draws": 500}
     _fake = {c: {a: {"adjudicated_statistics": {
                         "Q1_arrival": 0.7, "Q2_sign": 0.6,
                         "Q2_cell_status": "OK", "Q3_magnitudes": 1.0},
-                     "heads": {"Q1_arrival": {"status": "OK"}},
-                     "economics": _ec}
+                     "heads": {"Q1_arrival": {"status": "OK", "auc": 0.7,
+                                              "matched_random": _mr(0.004)},
+                               "Q2_p_pos": {"auc": 0.61, "matched_random": _mr(0.02)},
+                               "Q2_p_neg": {"auc": 0.60, "matched_random": _mr(0.31)},
+                               "Q3_m_harm": {"matched_random": _mr(0.05)},
+                               "Q3_m_good": {"matched_random": _mr(0.44)}},
+                     "economics": _ecp}
                  for a in I11.ARMS_011} for c in ("btc",)}
     _pops = {"btc": {"eval_n_actions": 500}}
     _fam = evaluate_family(_fake, _pops)
@@ -714,11 +986,26 @@ def selftest() -> int:
        "ZERO references in the runner for a whole batch)")
     ok(_fam["holm_denominator"] == 24,
        "I11-2 Holm runs over the declared denominator")
-    ok(any(c["p_value"] is not None for c in _fam["cells"].values()),
-       "I11-2 Q4 cells carry a PERMUTATION p-value from the incremental null")
+    ok(all(_fam["cells"][k]["p_value"] is not None
+           for k in _fam["cells"] if "/Q4_combined_ev/" in k),
+       "I11-2 Q4 cells carry a PERMUTATION p-value from the incremental null "
+       "WHEN AN INCUMBENT IS SUPPLIED")
     ok(all(_fam["cells"][k]["status"] == I11.CELL_STATUS_NO_COUNTERPART
-           for k in _fam["cells"] if "/Q2_sign/" in k or "/Q3_magnitudes/" in k),
-       "I11-2 Q2/Q3 incremental cells carry NO_INCUMBENT_COUNTERPART (R-237)")
+           for k in _fam["cells"] if "/Q2_sign/" in k),
+       "I11-2 Q2 incremental cells carry NO_INCUMBENT_COUNTERPART (R-237); its "
+       "two-sided collapse is RULED (R-249) so it is not an aggregation gap")
+    ok(_fam["cells"]["composed_linear/Q2_sign/5%"]["p_value"] == 0.31,
+       "I11-B2 Q2's null is the WORSE SIDE's (R-249 rules the statistic to be "
+       "min(AUC); the p must describe the number the cell reports, 0.31 not 0.02)")
+    ok(all(_fam["cells"][k]["status"] == I11.CELL_STATUS_AGG_UNDECLARED
+           for k in _fam["cells"] if "/Q3_magnitudes/" in k),
+       "I11-B4 Q3 cells state the AGGREGATION GAP rather than picking: A1.4 "
+       "names one slope, the frozen table requires m_harm and m_good each "
+       "reported SEPARATELY with a CI, and no ruling reconciles them")
+    ok(all(_fam["cells"][k]["p_value"] is None
+           for k in _fam["cells"] if "/Q3_magnitudes/" in k),
+       "I11-B4 a cell whose collapse is undeclared WITHHOLDS its p rather than "
+       "publishing one under a rule nobody declared")
 
     # output-level known-bad
     ok(assert_receipt_has_all_cells({"family": _fam})["cells_present"] == 24,
@@ -756,8 +1043,98 @@ def selftest() -> int:
        "this runner is NOT in the identity lattice — the standalone property "
        "is checked, not assumed")
 
+
+    # ============ I11-B2/B3/B4 (reviewer batch 2) — RED FIRST ==============
+    # Each encodes the FROZEN text, cited, and must fail against the code as it
+    # stood when they were written. A falsifier written after the fix proves the
+    # fix is self-consistent, not that the defect existed.
+
+    def _gr(slug, side, gen, t, v):
+        r = row(v)
+        r.update({"slug": slug, "side": side, "gen": gen, "t_start": t})
+        return r
+
+    # ---- B3(c): A1.5 freezes FIRST-CROSSING valuation ---------------------
+    # A1.5: "Q4 economics are evaluated at the action unit with first-crossing
+    # dedup, as harmful_action_eval already does." That reference RANKS
+    # generations by their max score but VALUES
+    #     cross = next(i for i in gens[gk] if scores[i] >= theta)
+    # -- the EARLIEST row that crosses the budget threshold, not the best one.
+    # Two generations so theta lands below gen1's max: gen1's earliest crossing
+    # row is worth -100c and its max-composed row +100c, on the SAME generation.
+    _rws = [_gr("W", "BUY", 1, 0.0, -100.0),    # ecv 0.60, crosses first
+            _gr("W", "BUY", 1, 1.0, +100.0),    # ecv 0.90, the max
+            _gr("W", "BUY", 2, 0.0, +10.0)]     # ecv 0.50, sets theta
+    _pred = {"expected_cancel_value": [0.60, 0.90, 0.50]}
+    try:
+        _net = q4_economics(_pred, _rws, budgets=["100%"])["100%"]["net_cents"]
+    except Exception as _ex:                       # noqa: BLE001
+        _net = f"raised {type(_ex).__name__}: {_ex}"
+    ok(_net == -90.0,
+       f"B3 Q4 values the FIRST CROSSING (A1.5): expected -90.0c "
+       f"(-100 + 10), max-composed rule gives +110.0c; got {_net!r}")
+
+    # ---- B3(c): the unit string must name ONE rule ------------------------
+    try:
+        _u = q4_economics(_pred, _rws, budgets=["100%"])["100%"]["unit"]
+    except Exception:                              # noqa: BLE001
+        _u = ""
+    ok(not ("first-crossing" in _u and "max composed" in _u),
+       f"B3 the emitted unit names ONE dedup rule, not two incompatible ones "
+       f"(got {_u!r})")
+
+    # ---- B3(a): n for every reported head is the ACTION count -------------
+    # A1.5: "n for every reported head is the ACTION count, not the prediction
+    # count. A head predicting on rows must state its action count beside it."
+    # 3 rows spanning 2 generations: a row-level n reads 3.
+    _tg = head_targets(_rws)
+    ok(_tg["counts"].get("n_actions") == 2,
+       f"B3 head counts state the ACTION count beside n_rows (A1.5): 3 rows / "
+       f"2 generations must report n_actions=2; got "
+       f"{_tg['counts'].get('n_actions')!r} beside n_rows="
+       f"{_tg['counts'].get('n_rows')!r}")
+    ok(_tg["counts"].get("n_actions", 10**9) <= _tg["counts"]["n_rows"],
+       "B3 no head reports an action count larger than its row count (A1.5)")
+
+    # ---- B2: Q4's increment is CANDIDATE MINUS INCUMBENT -------------------
+    # Prereg §5(2): "statistic = the head's metric minus the incumbent's on the
+    # IDENTICAL action population". q4_economics took no incumbent at all, so
+    # the cell reported a sign-flip of the candidate's OWN value under the label
+    # "increment vs incumbent" -- the exact conflation §5(2) exists to prevent
+    # ("beats random was mistaken for beats the incumbent for a full cycle").
+    _inc_same = {"expected_cancel_value": [0.60, 0.90, 0.50]}
+    _inc_diff = {"expected_cancel_value": [0.40, 0.90, 0.50]}
+    try:
+        _a = q4_economics(_pred, _rws, budgets=["100%"], incumbent=_inc_same)
+        _b = q4_economics(_pred, _rws, budgets=["100%"], incumbent=_inc_diff)
+        _sa = sum(_a["100%"]["increment_by_window"].values())
+        _sb = sum(_b["100%"]["increment_by_window"].values())
+    except TypeError as _ex:
+        _sa = _sb = f"raised {_ex}"
+    ok(_sa == 0.0,
+       f"B2 an incumbent IDENTICAL to the candidate yields increment 0 "
+       f"(positive control; got {_sa!r})")
+    ok(isinstance(_sb, float) and _sb != 0.0,
+       f"B2 a DIFFERENT incumbent moves the increment (falsifier; got {_sb!r})")
+
+    # ---- B4: the cell guard must validate CONTENTS, not keys ---------------
+    # assert_receipt_has_all_cells compared set(fam["cells"]) against the
+    # declaration, so 24 EMPTY dicts satisfied it -- the same shape as the
+    # empty file_hashes map that R-228(1) closed one level up.
+    _empty = {"family": {"cells": {k: {} for k in I11.declared_family()["cells"]},
+                         "holm_denominator": len(I11.declared_family()["cells"])}}
+    try:
+        assert_receipt_has_all_cells(_empty)
+        _refused = False
+    except RuntimeError:
+        _refused = True
+    ok(_refused,
+       "B4 a receipt whose 24 cells are EMPTY DICTS is REFUSED; matching the "
+       "declared key set is not evidence that anything was evaluated")
+
     print(f"\n{'ITER011 RUN SELFTEST GREEN' if not fails else 'RED'}: "
           f"{len(fails)} failing")
+
     return 1 if fails else 0
 
 
@@ -1032,7 +1409,7 @@ def main() -> int:
             t0 = time.time()
             fr = fit_arm(arm, Xf, tgf)
             ap = apply_arm(fr, Xe, tge)
-            rep = report_arm(ap, tge)
+            rep = report_arm(ap, tge, EVAL[coin]["kept"])
             rep["fit_seconds"] = round(time.time() - t0, 1)
             rep["evaluation"] = "OUT-OF-SAMPLE within development"
             # `ap` is apply_arm's output; this said `pr`, an undefined name.
