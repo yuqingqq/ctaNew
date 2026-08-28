@@ -1,0 +1,74 @@
+{
+ "btc": {
+  "all_arms_same_n": true,
+  "drops": {
+   "fine": 0,
+   "gap_at_cutoff_excluded": 97,
+   "no_archive": 0,
+   "no_level_history_excluded": 15,
+   "pm": 0,
+   "pre_window_excluded": 26227,
+   "state_join_failed": 0
+  },
+  "fitted_population": 577598,
+  "matches_ok_n": true,
+  "matches_registered_fitted_n": true,
+  "matches_registered_purge": true,
+  "n_arms": 4,
+  "n_arms_declared": 4,
+  "per_arm_n": {
+   "INCUMBENT_REWEIGHTED_ONLY": 577598,
+   "LGBM_PINNED": 577598,
+   "PLUS_PRED_STATE_V1": 577598,
+   "PM_PLUS_FINE": 577598
+  },
+  "population_pre_purge": 578917,
+  "preregistration_key": "c7ab02ebcf27d2fc",
+  "purge_reconciles": true,
+  "purged_rows_embargo": 1319,
+  "registered_embargo_purged": 1319,
+  "registered_fitted_n": 577598,
+  "registered_ok_n": 578917,
+  "registration_provenance": {
+   "embargo_purged": "RE-DECLARED post-observation, cause named (R-216)",
+   "fitted_n": "RE-DECLARED post-observation, cause named (R-216)",
+   "ok_n": "PRE-REGISTERED before any score existed (R-215(1))"
+  }
+ },
+ "eth": {
+  "all_arms_same_n": true,
+  "drops": {
+   "fine": 0,
+   "gap_at_cutoff_excluded": 0,
+   "no_archive": 0,
+   "no_level_history_excluded": 30,
+   "pm": 0,
+   "pre_window_excluded": 14099,
+   "state_join_failed": 0
+  },
+  "fitted_population": 505498,
+  "matches_ok_n": true,
+  "matches_registered_fitted_n": true,
+  "matches_registered_purge": true,
+  "n_arms": 4,
+  "n_arms_declared": 4,
+  "per_arm_n": {
+   "INCUMBENT_REWEIGHTED_ONLY": 505498,
+   "LGBM_PINNED": 505498,
+   "PLUS_PRED_STATE_V1": 505498,
+   "PM_PLUS_FINE": 505498
+  },
+  "population_pre_purge": 505904,
+  "preregistration_key": "c7ab02ebcf27d2fc",
+  "purge_reconciles": true,
+  "purged_rows_embargo": 406,
+  "registered_embargo_purged": 406,
+  "registered_fitted_n": 505498,
+  "registered_ok_n": 505904,
+  "registration_provenance": {
+   "embargo_purged": "RE-DECLARED post-observation, cause named (R-216)",
+   "fitted_n": "RE-DECLARED post-observation, cause named (R-216)",
+   "ok_n": "PRE-REGISTERED before any score existed (R-215(1))"
+  }
+ }
+}
