@@ -218,3 +218,33 @@ content differs.**
   declared dev top-up; DE Phase 3 state machine + parity; OPS heavy-run
   hygiene + recv_ns measurement)
 ```
+
+## Batch 2 — archived 2026-08-28T10:09Z (1 entry, rolling-window overflow)
+
+Moved in the same commit as the sweep that pushed it out of the window, per
+the ruling's point (3). Join rule as in batch 1.
+
+```yaml
+
+  2026-08-28T09:53Z (MEM): R-248 -- BATCH 1 COMPLETE, VERIFIED IN THE
+  COORDINATOR'S OWN RUN, AND THE CODEX ROUND HAS FIRED at e72dd4c with the
+  request filed under reviews/ (no state-file collision this time). FIT IS NOW
+  DOUBLE-BLOCKED and both gates must clear: Codex HOLD RELEASED, AND the USER's
+  ruling on Q2's cell statistic -- BE implemented min(AUC(p_pos), AUC(p_neg)),
+  the WORSE side, so half a working head cannot carry a cell, but the choice
+  fills a gap in a USER-FROZEN amendment and is therefore the user's, blocking
+  fit and NOT a review matter. The A1.1 bias algebra was hand-verified
+  independently, and the falsifier asserts BOTH directions -- with no zero mass
+  the amended and superseded forms AGREE, which is the real check: an amendment
+  that changed the answer everywhere would be a different estimand, not a
+  correction. TWO BE SELF-CATCHES recorded as one lesson: an old assertion
+  ("0, not a crash") was the DEFECT WRITTEN DOWN AS THE SPEC, now inverted into
+  a refusal test; and the runner's row() helper had been manufacturing the exact
+  malformed pair A1.3 bans, so every earlier test ran on impossible rows -- the
+  strictness caught its own harness on first contact. Falsifier counts recorded
+  FROM THE SCRIPT (81/38/15 = 134) against BE's messaged 126, over-delivery
+  direction, queried not blocking. MEM's proposed house rule was adopted:
+  SEAT_PROTOCOL rule 15, verified at the file. TONIGHT: the deploy is ON but
+  NOT unconditional -- an adverse O1-relevant Codex finding before ~23:55Z
+  arming postpones the boundary.
+```

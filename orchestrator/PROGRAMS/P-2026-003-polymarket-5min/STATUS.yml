@@ -4,6 +4,27 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-08-28T10:09Z (MEM): R-251 -- THE DEPLOY IS POSTPONED, AND IT POSTPONED
+  ITSELF. Codex's batch-1 filing is in, verified in full by the coordinator with
+  NO REVIEW ERRORS, and the pre-ruled adverse-finding condition FIRED on a
+  verified DB2: no user ask was needed because R-240/R-245 had already written
+  the condition before the finding existed. O1 MOVES TO 2026-08-30T00:00:00Z.
+  TONIGHT: NO ARMING, NO DEPLOY, the v3_1 hold UNCHANGED -- and unchanged is
+  correct, because the recommended fix is CONSUMER-SIDE, leaving committed v4
+  untouched. Tonight's 00:06Z old-bar verdict runs unaffected. Consequences
+  priced rather than discovered: 08-29 runs on the OLD collector so the post-O1
+  P1 band moves to 08-30, 08-29's v2 verdict is inadmissible under the hold, and
+  because the bar predates the day, re-verdicting after release is legitimate --
+  ACCRUAL PAUSES, IT DOES NOT VOID. BOTH HOLDS MAINTAINED: DB1 publishes a
+  coin-day PASS OVER A 4,000-SECOND OUTAGE (the recorded-not-enforced defect
+  recurring at the PER-COIN level after the whole-day path was closed); DB2 is
+  the seam NEITHER SIDE OWNED -- two green suites, and an integration that
+  always refuses when O1d fires; I11-1 is still live at HEAD as the same blocker
+  wearing a new face; I11-2 is a 24-cell evaluator that is unit-proven AND NEVER
+  INVOKED, which is a control that cannot RUN rather than one that cannot FAIL;
+  I11-3 lets a one-class head report OK. The 2B freeze is DEFERRED: a dollar mid
+  is not a probability, and FREEZE-AFTER-REVIEW IS NOW TWICE VINDICATED -- FP2
+  would have been frozen in. PRIOR:
   2026-08-28T10:00Z (MEM): R-250 CORRECTS A NUMBER THIS FILE TOLD READERS TO
   TRUST. The 134-vs-126 count was never an instrument disagreement: the
   pre-fix counting script requires a module argument, the coordinator's
@@ -46,28 +67,7 @@ updated: >-
   falsifier_count.sh could fall back to running the runner BARE -- main(), the
   heavy data path, from the session shell, against a now-binding resource cap.
   Fallback removed; a helper for counting tests must not be able to start a
-  research run. PRIOR:
-  2026-08-28T09:53Z (MEM): R-248 -- BATCH 1 COMPLETE, VERIFIED IN THE
-  COORDINATOR'S OWN RUN, AND THE CODEX ROUND HAS FIRED at e72dd4c with the
-  request filed under reviews/ (no state-file collision this time). FIT IS NOW
-  DOUBLE-BLOCKED and both gates must clear: Codex HOLD RELEASED, AND the USER's
-  ruling on Q2's cell statistic -- BE implemented min(AUC(p_pos), AUC(p_neg)),
-  the WORSE side, so half a working head cannot carry a cell, but the choice
-  fills a gap in a USER-FROZEN amendment and is therefore the user's, blocking
-  fit and NOT a review matter. The A1.1 bias algebra was hand-verified
-  independently, and the falsifier asserts BOTH directions -- with no zero mass
-  the amended and superseded forms AGREE, which is the real check: an amendment
-  that changed the answer everywhere would be a different estimand, not a
-  correction. TWO BE SELF-CATCHES recorded as one lesson: an old assertion
-  ("0, not a crash") was the DEFECT WRITTEN DOWN AS THE SPEC, now inverted into
-  a refusal test; and the runner's row() helper had been manufacturing the exact
-  malformed pair A1.3 bans, so every earlier test ran on impossible rows -- the
-  strictness caught its own harness on first contact. Falsifier counts recorded
-  FROM THE SCRIPT (81/38/15 = 134) against BE's messaged 126, over-delivery
-  direction, queried not blocking. MEM's proposed house rule was adopted:
-  SEAT_PROTOCOL rule 15, verified at the file. TONIGHT: the deploy is ON but
-  NOT unconditional -- an adverse O1-relevant Codex finding before ~23:55Z
-  arming postpones the boundary.
+  research run.
   ARCHIVED: entries older than these three are moved, never deleted, to
   workspace/STATUS_UPDATED_ARCHIVE.md (append-only). This field is a
   ROLLING WINDOW OF THREE by ruling (coordinator, 2026-08-28T10:02Z):
@@ -75,6 +75,50 @@ updated: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  defect_class_unit_proven_unwired: NAMED # 2026-08-28 R-251, I11-2, confirmed
+                                     # statically. THE FIXED 24-CELL EVALUATOR
+                                     # IS UNIT-PROVEN AND NEVER INVOKED: the
+                                     # runner contains ZERO references to
+                                     # build_cell / assemble_family /
+                                     # sign_flip_null / cluster_disclosure, and
+                                     # Q4 is composed then DISCARDED. Every test
+                                     # of that evaluator passes; none of it runs
+                                     # in the path that produces the artifact.
+                                     # This is ADJACENT TO rule 16 but DISTINCT
+                                     # and worth its own name: rule 16 is a
+                                     # control that CANNOT FAIL; this is a
+                                     # control that CANNOT RUN. Green suites
+                                     # prove the unit, not the wiring, and a
+                                     # coverage claim that counts tests rather
+                                     # than call sites cannot tell the two
+                                     # apart. Closure requires BOTH: wire it
+                                     # into main() AND an output known-bad that
+                                     # REFUSES a receipt lacking all 24 cells --
+                                     # the second is what makes the wiring
+                                     # self-policing rather than a one-time fix.
+  batch_2_routing: DA-SEAM-FIRST-BE-011-FIXES # 2026-08-28 R-251, Codex's
+                                     # minimum closure order adopted. DA:
+                                     # (1) DB2 consumer fix PLUS THE REAL SEAM
+                                     # TEST -- fake O1 socket -> actual emitted
+                                     # ledger row -> day_bar_v2 consumes it,
+                                     # which is the test whose absence let two
+                                     # green suites hide a broken integration;
+                                     # (2) DB1 per-coin P1/P2/P3 with the
+                                     # quality/accrual split in the per-coin
+                                     # artifact; (3) FP1 record-boundary
+                                     # invariants + known-bads; (4) the 2B
+                                     # amendment; (5) parity hardening (a real
+                                     # budget-matched random control that
+                                     # HONOURS cancels, evaluated battery
+                                     # receipt, zero-repost anchor, rate-limit
+                                     # accounting, training-reuse guard,
+                                     # external-arm interface). BE: I11-1 print
+                                     # path, I11-2 wiring + the output
+                                     # known-bad, I11-3 head-level one-class
+                                     # UNEVALUABLE status. ONE re-review when
+                                     # complete. Coordinator: O1 re-check after
+                                     # DA's seam test lands; the arming decision
+                                     # for 08-30 follows the NEXT filing.
   iter011_q2_statistic: RULED-BY-USER-MIN-BOTH-SIDES-REQUIRED # RULED
                              # 2026-08-28T09:56Z (R-249, c014399). The USER
                              # ruled Q2's cell statistic = min(AUC(p_pos),
@@ -122,7 +166,41 @@ flags:
                              # one-side-unevaluable path cannot let a single
                              # side carry the cell past the UNDERPOWERED
                              # machinery.
-  codex_round_1: FIRED-AT-e72dd4c # 2026-08-28 R-248. Scope request filed at
+  codex_round_1: FILED-VERIFIED-BOTH-HOLDS-MAINTAINED # OUTCOME 2026-08-28
+                             # R-251. Filing at reviews/
+                             # CODEX_REVIEW_BATCH1_2026-08-28.md (641e326,
+                             # merged 3ea72bc -- MERGE not rebase, so peer SHAs
+                             # stay register-citable). Coordinator verified every
+                             # claim before routing: NO CLAIM FAILED
+                             # VERIFICATION, NO REVIEW ERRORS. The reviewer also
+                             # independently confirmed BE's 126 and the R-250
+                             # count correction.
+                             # BOTH HOLDS MAINTAINED. Day-bar: DB1 -- per-coin
+                             # all_pass is computed BEFORE P1/P2/P3 attach, so A
+                             # COIN-DAY PUBLISHED **PASS** OVER A 4,000-SECOND
+                             # OUTAGE. Note this is the R-238(a)
+                             # recorded-not-enforced defect RECURRING AT THE
+                             # PER-COIN LEVEL after the whole-day path was
+                             # closed: fixing one path did not fix its sibling.
+                             # DB2 -- CONFIRMED BY EXECUTION: a producer-shaped
+                             # gap_open_at_exit row (finite gap_end_ns, exactly
+                             # what committed v4 emits) fed to day_bar_v2()
+                             # RAISES REFUSED. BOTH SUITES ARE GREEN IN
+                             # ISOLATION while the integration always refuses
+                             # when O1d fires -- THE SEAM NEITHER SIDE OWNED,
+                             # which is why it needed a third party to find.
+                             # 011: I11-1 the runner crashes before writing its
+                             # artifact (h['Q2_sign'] against a dict keyed
+                             # Q2_p_pos/Q2_p_neg, runner:666) and IS STILL LIVE
+                             # AT HEAD -- post-b3f082e it would AttributeError
+                             # where the tip KeyError'd, SAME BLOCKER NEW FACE;
+                             # I11-2 see defect_class_unit_proven_unwired;
+                             # I11-3 a one-class head reports status=OK.
+                             # Parity gaps also filed: matched_control IGNORES
+                             # its cancels argument (0/1/6/99 all yield 12),
+                             # battery() emits two anchors, no external-arm
+                             # interface. ORIGINAL ENTRY (rule 13): 2026-08-28
+                             # R-248. Scope request filed at
                              # workspace/reviews/REQUEST_BATCH1_2026-08-28.md --
                              # the R-239 location, and this time with NO
                              # state-file collision (the pre-fit filing had
@@ -500,7 +578,27 @@ flags:
                              # (empty diff) -- rule 13 held, the amendment is a
                              # SEPARATE document and the frozen one was not
                              # edited.
-  fair_price_lane_2b: DELIVERED-VERIFIED-DRAFT-RIDES-THE-BATCH # ADVANCED
+  fair_price_lane_2b: FREEZE-DEFERRED-NOT-FREEZABLE-AS-WRITTEN # 2026-08-28
+                             # R-251. DO NOT PRESENT THE DRAFT FOR FREEZE.
+                             # FP2: A DOLLAR MID IS NOT A PROBABILITY -- the
+                             # price->probability transformation must be PINNED
+                             # BEFORE freeze (reference/tie/horizon/vol
+                             # lookbacks), and the draft also leaves
+                             # decision-bearing terms unfrozen ("systematically
+                             # later", "materially below", budgets, min-n,
+                             # statistic, alpha, weighting), needs a declared
+                             # COMMON ELIGIBLE UNIVERSE for availability, and
+                             # needs a controlled synthetic fixture for the
+                             # constant-lag falsifier. FP1 CONFIRMED BY
+                             # EXECUTION: FairPrice(value=60000.0, status=OK)
+                             # constructs with NO invariant enforcement.
+                             # FREEZE-AFTER-REVIEW (R-243) IS NOW TWICE
+                             # VINDICATED AND THAT IS WORTH STATING: FP2 WOULD
+                             # HAVE BEEN FROZEN IN. The first vindication was
+                             # 011's Q4 algebra; this is the second, and both
+                             # were caught by a review of a DRAFT rather than an
+                             # amendment to a frozen document. ORIGINAL ENTRY
+                             # (rule 13): ADVANCED
                              # 2026-08-28 R-243 (d97c23e). Identity artifact
                              # da_fair_price_identity.py DELIVERED and verified
                              # by the coordinator's OWN RUN, not DA's report:
@@ -620,7 +718,35 @@ flags:
                              # effect tonight: zero (btc fails the day, eth has
                              # no candidate). 08-28 reports ACCRUES=False in its
                              # own field.
-  o1_deploy_conditions: BOTH-MET-DEPLOY-ON # 2026-08-28 R-240, met ~13.5 h
+  o1_deploy_conditions: POSTPONED-TO-2026-08-30T00:00:00Z # POSTPONED
+                             # 2026-08-28T10:07Z (R-251). THE PRE-RULED
+                             # ADVERSE-FINDING CONDITION FIRED. No user ask was
+                             # needed and none was made: R-240/R-245 had already
+                             # ruled the deploy "subject only to no adverse
+                             # Codex filing before arming", so a verified
+                             # adverse O1-relevant finding (DB2) postpones it
+                             # BY THE STANDING RULE. This is a pre-registration
+                             # paying off operationally -- the condition was
+                             # written before the finding existed, so nothing
+                             # was decided after seeing it.
+                             # TONIGHT: NO ARMING. NO DEPLOY. The v3_1 working-
+                             # tree hold STAYS EXACTLY AS IS -- and note WHY it
+                             # needs no change: Codex's recommended fix is
+                             # CONSUMER-SIDE (the validator accepts a validated
+                             # finite producer end), so committed v4 is
+                             # UNCHANGED and no new collector surface appears.
+                             # Tonight's 00:06Z verdict under the OLD bar runs
+                             # UNAFFECTED.
+                             # CONSEQUENCES PRICED, not discovered later:
+                             # 08-29 runs on the OLD collector, so the post-O1
+                             # P1-band expectation (~55-80 s/hr, and the <45 /
+                             # >120 branches with it) MOVES TO 08-30; under the
+                             # day-bar hold 08-29's v2 verdict is INADMISSIBLE
+                             # until release; re-verdicting 08-29 AFTER a
+                             # release is LEGITIMATE because the bar predates
+                             # the day and nothing is selected -- so THE ACCRUAL
+                             # CLOCK PAUSES, IT DOES NOT VOID. ORIGINAL ENTRY
+                             # (rule 13): 2026-08-28 R-240, met ~13.5 h
                              # early. (i) coordinator behavioral tests of the
                              # four new collector paths, 10/10, driving the REAL
                              # PMCollector._market from a GIT-EXTRACTED v4 copy

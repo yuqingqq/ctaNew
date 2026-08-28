@@ -1,9 +1,104 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-08-28T10:03Z (MEM) — `STATUS.yml`'s `updated:` field is now a
-**rolling window of three**, older chain archived (moved, never deleted). Count
-discrepancy closed as a mislabel. 011 fit still blocks on Codex `HOLD RELEASED`
-alone. Deploy ON for 00:00:00Z but **not unconditional**.
+Updated: 2026-08-28T10:09Z (MEM) — **THE DEPLOY IS POSTPONED to
+2026-08-30T00:00:00Z.** Tonight: **no arming, no deploy**, v3_1 hold unchanged;
+the 00:06Z old-bar verdict still runs. Both holds maintained; 2B freeze
+deferred.
+
+## 2026-08-28 ~10:09Z (MEM) — R-251: the deploy postponed itself
+
+### Tonight changed — read this before anything else
+
+**O1 moves to 2026-08-30T00:00:00Z.** Tonight there is **no arming and no
+deploy**. The `clob_v3_1` working-tree hold **stays exactly as is** — and
+unchanged is *correct*, not merely convenient: Codex's recommended fix is
+**consumer-side** (the validator accepts a validated finite producer end), so
+**committed v4 is untouched** and no new collector surface appears. **Tonight's
+00:06Z verdict under the old bar runs unaffected** (btc expected FAIL,
+`ACCRUES=False`).
+
+**No user ask was needed, and none was made.** R-240/R-245 had already ruled the
+deploy *"subject only to no adverse Codex filing before arming."* DB2 is a
+verified adverse O1-relevant finding, so the postponement follows **by the
+standing rule** — the condition was written before the finding existed, so
+nothing was decided after seeing it. **This is what a pre-registration looks like
+when it pays off operationally.**
+
+**Consequences priced, not discovered later:**
+
+- 08-29 runs on the **old collector**, so the post-O1 **P1 band expectation
+  (~55–80 s/hr, and its `<45` / `>120` branches) moves to 08-30**.
+- Under the day-bar hold, **08-29's v2 verdict is inadmissible** until release.
+- Re-verdicting 08-29 **after** a release is **legitimate** — the bar predates
+  the day and nothing is selected — so **the accrual clock pauses; it does not
+  void.**
+
+### Both holds maintained — and the findings are worth reading, not just counting
+
+**Filing** at `reviews/CODEX_REVIEW_BATCH1_2026-08-28.md` (`641e326`, merged
+`3ea72bc` — **merge not rebase**, so peer SHAs stay register-citable).
+**Coordinator verified every claim before routing: no claim failed verification,
+no review errors.** The reviewer also **independently confirmed BE's 126 and the
+R-250 correction.**
+
+- **DB1 — a coin-day published `PASS` over a 4,000-second outage.** Per-coin
+  `all_pass` is computed *before* P1/P2/P3 attach. This is the R-238(a)
+  recorded-not-enforced defect **recurring at the per-coin level after the
+  whole-day path was closed**: fixing one path did not fix its sibling.
+- **DB2 — the seam neither side owned.** Confirmed by execution: a
+  producer-shaped `gap_open_at_exit` row (finite `gap_end_ns`, *exactly what
+  committed v4 emits*) fed to `day_bar_v2()` **raises REFUSED**. **Both suites
+  are green in isolation** while the integration always refuses when O1d fires.
+  Neither owner's tests could see it; that is why it took a third party.
+- **I11-1 — still live at HEAD, same blocker with a new face.**
+  `h['Q2_sign'].get('auc')` at `runner:666` against a dict keyed
+  `Q2_p_pos`/`Q2_p_neg`; post-`b3f082e` it would `AttributeError` where the tip
+  `KeyError`'d.
+- **I11-2 — the 24-cell evaluator is unit-proven and never invoked.** Zero
+  references to `build_cell` / `assemble_family` / `sign_flip_null` /
+  `cluster_disclosure` in the runner; Q4 composed then **discarded**.
+- **I11-3 — a one-class head reports `status=OK`.**
+- **Parity gaps:** `matched_control` **ignores its `cancels` argument** (0/1/6/99
+  all yield 12); `battery()` emits two anchors; no external-arm interface.
+
+### A new defect class, adjacent to rule 16 but not the same
+
+**I11-2 is a control that cannot RUN, where rule 16 covers a control that cannot
+FAIL.** Every test of that evaluator passes; none of it executes in the path that
+produces the artifact. **Green suites prove the unit, not the wiring**, and a
+coverage claim that counts *tests* rather than *call sites* cannot tell those
+apart. Recorded as `defect_class_unit_proven_unwired`.
+
+Closure requires **both** halves: wire it into `main()` **and** ship an output
+known-bad that **refuses a receipt lacking all 24 cells**. The second is what
+makes the wiring self-policing instead of a one-time fix.
+
+### 2B freeze deferred — and freeze-after-review is now twice vindicated
+
+**Do not present the draft.** **FP2: a dollar mid is not a probability** — the
+price→probability transformation must be pinned before freeze (reference, tie,
+horizon, vol lookbacks). The draft also leaves decision-bearing terms unfrozen
+("systematically later", "materially below", budgets, min-n, statistic, alpha,
+weighting), needs a declared **common eligible universe**, and needs a controlled
+synthetic fixture for the constant-lag falsifier. **FP1** confirmed by execution:
+`FairPrice(value=60000.0, status=OK)` constructs with **no invariant
+enforcement**.
+
+**Worth stating plainly: FP2 would have been frozen in.** That is the second
+vindication of freeze-after-review (R-243) — the first was 011's Q4 algebra —
+and both were caught by reviewing a **draft** rather than amending a frozen
+document.
+
+### Batch 2 routed
+
+**DA, seam-first:** (1) DB2 consumer fix **plus the real seam test** — fake O1
+socket → actual emitted ledger row → `day_bar_v2` consumes it, which is exactly
+the test whose absence let two green suites hide a broken integration; (2) DB1
+per-coin P1/P2/P3 with the quality/accrual split in the per-coin artifact;
+(3) FP1 record-boundary invariants; (4) the 2B amendment; (5) parity hardening.
+**BE:** I11-1 print path, I11-2 wiring **plus** the output known-bad, I11-3
+head-level `UNEVALUABLE`. **One re-review when complete.** The **arming decision
+for 08-30 follows the next filing.**
 
 ## 2026-08-28 ~10:03Z (MEM) — standing convention: `updated:` is a rolling window of three
 
