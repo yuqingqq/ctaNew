@@ -1,8 +1,94 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-08-28T09:57Z (MEM) — the user ruled **Q2 = min**, so that gate is
-**satisfied** and **the 011 fit now blocks on Codex `HOLD RELEASED` alone**.
-Rule 16 adopted. Deploy ON for 00:00:00Z but **not unconditional**.
+Updated: 2026-08-28T10:00Z (MEM) — **count discrepancy CLOSED as a mislabel, and
+this file's own instruction about it was wrong** (superseded in-band, verified
+by re-running the instrument). 011 fit still blocks on Codex `HOLD RELEASED`
+alone. Deploy ON for 00:00:00Z but **not unconditional**.
+
+## 2026-08-28 ~10:00Z (MEM) — R-250: the count was never a disagreement, and my instruction was wrong
+
+### Correcting this file first
+
+The previous entry told a future reader to take the script's **134** and treat
+BE's **126** as a superseded hand figure. **That instruction was wrong and would
+have propagated the error.** It is superseded here; the old text stays as the
+record of a wrong instruction this file gave.
+
+**There was never an instrument disagreement about how many tests exist.** There
+were two *different measurements*, one mislabelled. The pre-fix
+`falsifier_count.sh` requires a module argument (`${1:?module}`); the
+coordinator's invocation passed none, the script **died at the arg check** with
+stderr suppressed by that command's own `2>/dev/null`, and its `||` fallback —
+`grep -c "known_bad\|ok("` over **source text** — produced 81/38/15, which was
+then recorded under the instrument's name. **Static source-grep and runtime PASS
+lines are different measurements.** BE's 126 (anchored `"^  PASS "`, executed)
+was correct at `e72dd4c`.
+
+**Current truth — verified by my own run of the fixed script at HEAD `1444f84`,
+not taken from the entry:**
+
+| module | falsifiers |
+|---|---|
+| `phase2_iter011.py` | 81 |
+| `phase2_iter011_run.py` | 39 |
+| `phase2_annotation_merge.py` | 11 |
+| **total** | **131** |
+
+The +5 on the runner are the new Q2 falsifiers.
+
+### My own miss, named
+
+I verified that the register **said** "by the counting script." I did not verify
+that the **script produced it** — and then wrote an instruction telling future
+readers which number to trust. **CLAUDE.md rule 16 says verify at the artifact
+the claim names**; the claim named the script, and I checked the entry citing
+it. **When a state file is about to tell readers which of two conflicting
+numbers to trust, run the instrument.** It took one command.
+
+### Two lessons adopted for both seats (R-250)
+
+- **A count without a commit ref is not a measurement** — 126 was quoted
+  unref'd, 134 was mislabelled.
+- **An instrument's name may only be attached to numbers the instrument actually
+  produced** — CLAUDE.md rule 16's "know what *kind* of document you are
+  reading," applied to one's own tool output.
+
+### BE's conduct is the part worth copying
+
+BE **refuted both natural explanations by measurement** — the unanchored-grep
+delta was exactly zero, and never-executed `ok(False)` branches fit one module
+while failing the runner at 43 ≠ 38 — and then **refused to put a
+plausible-sounding wrong reason into the register.** The true cause was
+*invisible from its environment*, because the other seat's command hid it.
+**Declining to supply a cause you cannot see is correct even when a plausible one
+is available.**
+
+The **"held open, already paid" framing stands**: chasing the wrong number is
+what put BE inside the helper where the bare fallback lived. And the **rule-15
+soft spot I flagged dissolves with the cause** — the register claim had not
+drifted from the code; it **named the wrong instrument**.
+
+### Q2 both-sides verified, and how it composes with the min ruling
+
+BE's fix is verified at `b3f082e`: the gap was real (p_pos 0.92 / p_neg `None`
+→ cell 0.92 before the fix). Now **min adjudicates only when both sides are
+measurable; otherwise the cell is UNEVALUABLE and still occupies its Holm slot.**
+That composition is the thing to quote — the ruling and the guard do different
+jobs and neither replaces the other.
+
+### The tooling shape, named
+
+**A helper built this morning to enforce discipline** — don't type counts from
+memory — **acquired the capability to start a research run nobody asked it to
+have, and was found by *use*, not by review.** Fallback removed; `--selftest`
+only, under a timeout.
+
+### Unchanged
+
+Codex round executes at `e72dd4c` as scoped; `b3f082e` closes the flagged `:231`
+path and is available for verification. Tonight: **ON but not unconditional**,
+22:30Z confirmation, arming ~23:55Z, 00:00:00Z deploy, 00:06Z verdict under the
+old bar.
 
 ## 2026-08-28 ~09:57Z (MEM) — R-249: one gate closes, and it closes by ruling
 

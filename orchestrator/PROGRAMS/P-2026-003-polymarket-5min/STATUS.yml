@@ -4,6 +4,28 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-08-28T10:00Z (MEM): R-250 CORRECTS A NUMBER THIS FILE TOLD READERS TO
+  TRUST. The 134-vs-126 count was never an instrument disagreement: the
+  pre-fix counting script requires a module argument, the coordinator's
+  invocation passed none, the script died at the arg check with stderr
+  suppressed by that command's own 2>/dev/null, and its || fallback grepped
+  SOURCE TEXT to 81/38/15 -- which was then recorded under the instrument's
+  name. BE's runtime 126 was correct at e72dd4c. CURRENT TRUTH 81/39/11 = 131,
+  VERIFIED BY MEM'S OWN RUN of the fixed script at HEAD rather than taken from
+  the entry. My earlier flag told future readers to prefer 134 and treat 126 as
+  superseded; that instruction was WRONG, is superseded in-band, and the miss
+  is named: I verified that the register SAID "by the counting script" without
+  verifying the script PRODUCED it -- rule 16 says verify at the artifact THE
+  CLAIM NAMES, and the claim named the script. When a state file is about to
+  tell readers which of two conflicting numbers to trust, RUN THE INSTRUMENT.
+  Two lessons adopted both seats: a count without a commit ref is not a
+  measurement, and an instrument's name may only be attached to numbers the
+  instrument actually produced. BE refuted both plausible explanations BY
+  MEASUREMENT and refused to put a guessed cause in the register when the true
+  one was invisible from its environment. Q2's both-sides fix is VERIFIED at
+  b3f082e and composes with the min ruling: MIN ADJUDICATES ONLY WHEN BOTH
+  SIDES ARE MEASURABLE, otherwise the cell is UNEVALUABLE and still occupies
+  its Holm slot. PRIOR:
   2026-08-28T09:57Z (MEM): R-249 -- THE USER RULED Q2 = min (worse side), so
   the A1.4 gap is closed IN THE FROZEN FILE and BE's :231 is authorized. GATE
   ARITHMETIC, STATED PRECISELY because this is the update most easily misread:
@@ -296,7 +318,68 @@ flags:
                              # ADVERSE O1-RELEVANT FINDING BEFORE ~23:55Z ARMING
                              # POSTPONES THE BOUNDARY. The deploy is ON but not
                              # unconditional.
-  falsifier_count_discrepancy: STILL-UNRESOLVED-BUT-IT-PAID # UPDATE
+  falsifier_count_discrepancy: CLOSED-COORDINATOR-MISLABEL # RESOLVED
+                             # 2026-08-28T09:58Z (R-250, 1444f84) -- AND THE
+                             # RESOLUTION CORRECTS THIS FLAG'S OWN EARLIER
+                             # INSTRUCTION, which is why it is written first:
+                             # the entry below told a future reader to take the
+                             # script's 134 and treat BE's 126 as a superseded
+                             # hand figure. THAT INSTRUCTION WAS WRONG AND WOULD
+                             # HAVE PROPAGATED THE ERROR. There was never an
+                             # instrument disagreement about how many tests
+                             # exist. There were TWO DIFFERENT MEASUREMENTS, one
+                             # MISLABELLED: the pre-fix falsifier_count.sh
+                             # requires a module argument (${1:?module}); the
+                             # coordinator's invocation passed none, the script
+                             # died at the arg check with stderr suppressed by
+                             # that command's own 2>/dev/null, and its ||
+                             # fallback -- grep -c "known_bad\|ok(" over SOURCE
+                             # TEXT -- produced 81/38/15, which was then
+                             # recorded under the instrument's name. Static
+                             # source-grep and runtime PASS lines are DIFFERENT
+                             # MEASUREMENTS. BE's 126 (anchored "^  PASS ",
+                             # executed) was CORRECT at e72dd4c.
+                             # CURRENT TRUTH, VERIFIED BY MEM'S OWN RUN of the
+                             # fixed script at HEAD 1444f84, not taken from the
+                             # entry: 81 / 39 / 11 = 131 for phase2_iter011.py /
+                             # phase2_iter011_run.py / phase2_annotation_merge.py
+                             # (the +5 on the runner are the new Q2 falsifiers).
+                             # MEM'S OWN LESSON, recorded because the miss was
+                             # mine to make: I verified that the REGISTER SAID
+                             # "by the counting script" -- I did not verify that
+                             # the SCRIPT PRODUCED IT, and then wrote an
+                             # instruction telling future readers which number
+                             # to trust. CLAUDE.md rule 16 says verify at the
+                             # artifact THE CLAIM NAMES; the claim named the
+                             # script, and I checked the entry citing it. WHEN A
+                             # STATE FILE IS ABOUT TO TELL FUTURE READERS WHICH
+                             # OF TWO CONFLICTING NUMBERS TO TRUST, RUN THE
+                             # INSTRUMENT.
+                             # Two lessons adopted for both seats at R-250:
+                             # A COUNT WITHOUT A COMMIT REF IS NOT A MEASUREMENT
+                             # (126 was quoted unref'd, 134 mislabelled); and AN
+                             # INSTRUMENT'S NAME MAY ONLY BE ATTACHED TO NUMBERS
+                             # THE INSTRUMENT ACTUALLY PRODUCED.
+                             # BE's conduct ratified twice over: it REFUTED both
+                             # natural explanations for the wrong number BY
+                             # MEASUREMENT (unanchored-grep delta exactly zero;
+                             # never-executed ok(False) branches fit one module
+                             # and fail the runner at 43 != 38) and REFUSED to
+                             # let a plausible-sounding wrong reason into the
+                             # register -- the true cause was INVISIBLE FROM ITS
+                             # ENVIRONMENT because the other seat's command hid
+                             # it. Refusing to supply a reason you cannot see is
+                             # the correct move even when a plausible one is
+                             # available.
+                             # THE RULE-15 SOFT SPOT MEM FLAGGED DISSOLVES WITH
+                             # THE CAUSE: the register claim had NOT drifted
+                             # from the code, it NAMED THE WRONG INSTRUMENT.
+                             # And the "held open, already paid" framing stands
+                             # -- chasing the wrong number is what put BE inside
+                             # the helper where the bare fallback lived.
+                             # SUPERSEDED ENTRY (rule 13, kept because it is the
+                             # record of a wrong instruction this file gave):
+                             # UPDATE
                              # 2026-08-28T09:56Z: the count itself is STILL NOT
                              # reconciled, but holding it open rather than
                              # quietly accepting one number ALREADY PAID FOR
