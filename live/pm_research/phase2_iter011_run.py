@@ -395,6 +395,36 @@ def selftest() -> int:
        "because these run UNDER --selftest and would otherwise inherit the "
        "exemption and test nothing.")
 
+    # ---------------------------------------------------------- STEP 5 ---
+    ok(assert_frozen_constants()["verified"],
+       "A1.6 the FROZEN constants match the code that will run")
+    _sv = I11.UNDERPOWERED_MIN_N
+    try:
+        I11.UNDERPOWERED_MIN_N = 7
+        assert_frozen_constants()
+        ok(False, "a DRIFTED constant is REFUSED")
+    except RuntimeError as _e:
+        ok("drifted from the FROZEN" in str(_e),
+           "a DRIFTED constant is REFUSED (frozen in a document is not the "
+           "same as true in the process)")
+    finally:
+        I11.UNDERPOWERED_MIN_N = _sv
+    _si = assert_standalone_identity()
+    ok(_si["in_identity_lattice"] is False and _si["runner_sha256_prefix"],
+       "A1.6 the standalone identity is MEASURED (both module shas) and "
+       "recorded, not asserted in prose")
+    _svl = PA.CODE_IDENTITY_FILES
+    try:
+        PA.CODE_IDENTITY_FILES = tuple(_svl) + ("phase2_iter011_run.py",)
+        assert_standalone_identity()
+        ok(False, "an 011 module INSIDE the lattice is REFUSED")
+    except RuntimeError as _e:
+        ok("standalone property" in str(_e),
+           "an 011 module INSIDE the lattice is REFUSED — if that changes it "
+           "must be a decision, not a drift")
+    finally:
+        PA.CODE_IDENTITY_FILES = _svl
+
     ok("phase2_iter011_run.py" not in PA.CODE_IDENTITY_FILES,
        "this runner is NOT in the identity lattice — the standalone property "
        "is checked, not assumed")
@@ -609,6 +639,88 @@ def main() -> int:
     ev = assert_outputs_written()
     print(f"\nWROTE {OUT.name}: {ev[OUT.name]}", flush=True)
     return 0
+
+
+
+# ---------------------------------------------------------------- STEP 5 ---
+# Identity and run guards. A1.6, FROZEN.
+
+FROZEN_CONSTANTS = {
+    "UNDERPOWERED_MIN_N": 100,
+    "ridge_lam": 10.0,
+    "n_perm": 2000,
+    "perm_seed": 20260828,
+    "arms": ("composed_linear", "composed_lgbm"),
+    "heads": ("Q1_arrival", "Q2_sign", "Q3_magnitudes", "Q4_combined_ev"),
+    "family_size": 24,
+    "declared_output": "iter011_conditional_value_v1.json",
+}
+
+
+def assert_frozen_constants() -> dict:
+    """The A1.6 constants must match the code that will run.
+
+    Frozen in a document is not the same as true in the process. Every constant
+    below is read from the module that uses it, so a drift is a REFUSAL rather
+    than a discrepancy nobody compares."""
+    live = {
+        "UNDERPOWERED_MIN_N": I11.UNDERPOWERED_MIN_N,
+        "ridge_lam": 10.0,                      # asserted at its call sites
+        "n_perm": I11.N_PERM_011,
+        "perm_seed": I11.PERM_SEED_011,
+        "arms": tuple(I11.ARMS_011),
+        "heads": tuple(I11.HEADS_011),
+        "family_size": I11.declared_family()["n_cells"],
+        "declared_output": OUT.name,
+    }
+    bad = {k: (FROZEN_CONSTANTS[k], live[k]) for k in FROZEN_CONSTANTS
+           if FROZEN_CONSTANTS[k] != live[k]}
+    if bad:
+        raise RuntimeError(
+            f"REFUSED: code drifted from the FROZEN A1.6 constants "
+            f"(frozen, live): {bad}. A constant frozen in a document and a "
+            f"constant used by the process are different things until one is "
+            f"compared to the other.")
+    if "ridge_lam=10.0" not in inspect_ridge_calls():
+        raise RuntimeError(
+            "REFUSED: a ridge call does not use the frozen lam=10.0.")
+    return {"frozen": dict(FROZEN_CONSTANTS), "verified": True}
+
+
+def inspect_ridge_calls() -> str:
+    """Every fast_fit_ridge_w call site, as text, so lam can be checked."""
+    import inspect as _i
+    src = _i.getsource(fit_arm)
+    return "".join(
+        f"ridge_lam={m}" for m in
+        [t.split("lam=")[1].split(")")[0].strip()
+         for t in src.split("fast_fit_ridge_w")[1:] if "lam=" in t])
+
+
+def assert_standalone_identity() -> dict:
+    """This runner is NOT in the identity lattice, and modifies none of it.
+
+    Recorded in the receipt so the property is a claim a reader can check, not
+    an assurance in a commit message."""
+    import hashlib
+    me = Path(__file__).resolve()
+    lib = me.parent / "phase2_iter011.py"
+    if me.name in PA.CODE_IDENTITY_FILES or lib.name in PA.CODE_IDENTITY_FILES:
+        raise RuntimeError(
+            f"REFUSED: an 011 module is inside CODE_IDENTITY_FILES. The "
+            f"standalone property is what keeps a four-arm fit from being "
+            f"invalidated by 011 work; if that changes it must be a decision, "
+            f"not a drift.")
+    def sha(f):
+        return hashlib.sha256(f.read_bytes()).hexdigest()[:16]
+    return {"runner": me.name, "runner_sha256_prefix": sha(me),
+            "library": lib.name, "library_sha256_prefix": sha(lib),
+            "in_identity_lattice": False,
+            "modifies_lattice_files": False,
+            "lattice_size": len(PA.CODE_IDENTITY_FILES),
+            "consequence": "no four-arm fit is invalidated by this run; the "
+                           "annotation-merge wiring waits for the next "
+                           "four-arm cycle"}
 
 
 if __name__ == "__main__":

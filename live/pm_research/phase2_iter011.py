@@ -424,15 +424,38 @@ def selftest() -> int:
 
     # --- empirical heads ---
     e = empirical_heads(head_populations([row(4.0), row(6.0), row(-2.0)]))
-    ok(abs(e["p_harm"] - 2 / 3) < 1e-12, "p_harm = P(V>0 | preventable)")
+    ok(abs(e["p_pos"] - 2 / 3) < 1e-12, "p_pos = P(V>0 | preventable)")
+    ok(abs(e["p_neg"] - 1 / 3) < 1e-12,
+       "A1.1 p_neg = P(V<0 | preventable), ESTIMATED not (1 - p_pos)")
     ok(abs(e["m_harm"] - 5.0) < 1e-12, "m_harm = E[V | V>0]")
     ok(abs(e["m_good"] - 2.0) < 1e-12, "m_good = E[-V | V<0], POSITIVE by defn")
     ok(abs(e["conditional_cancel_value"] - (2/3*5.0 - 1/3*2.0)) < 1e-12,
-       "conditional value composes per the FROZEN formula")
+       "conditional value composes per the AMENDED (Option 1) formula")
+    # with NO zero mass the two forms agree; the amendment changes nothing here
+    ok(abs(e["superseded_form_bias"]) < 1e-12,
+       "with NO zero mass the amended and superseded forms AGREE — the "
+       "amendment corrects a bias that only exists when P(V=0)>0")
+    # with zero mass they must DIFFER by exactly m_good * P(V=0)
+    ez = empirical_heads(head_populations(
+        [row(4.0), row(6.0), row(-2.0), row(0.0)]))
+    ok(abs(ez["superseded_form_bias"]
+           - ez["m_good"] * ez["p_zero_empirical"]) < 1e-12,
+       "with zero mass the bias is EXACTLY m_good * P(V=0), as the amendment's "
+       "algebra predicts")
 
     # --- Q4 is composed, and cannot be fitted from this module ---
-    ok(compose_expected_cancel_value(0.5, 0.6, 10.0, 4.0)
-       == 0.5 * (0.6 * 10.0 - 0.4 * 4.0), "Q4 composes from the four heads")
+    ok(compose_expected_cancel_value(0.5, 0.6, 0.3, 10.0, 4.0)
+       == 0.5 * (0.6 * 10.0 - 0.3 * 4.0),
+       "A1.1 Q4 composes with p_neg ESTIMATED (0.3), not (1 - p_pos) = 0.4")
+    ok(compose_expected_cancel_value(0.5, 0.6, 0.4, 10.0, 4.0)
+       != compose_expected_cancel_value(0.5, 0.6, 0.3, 10.0, 4.0),
+       "and the two differ, so the amendment is not cosmetic")
+    ok(abs(implied_p_zero(0.6, 0.3) - 0.1) < 1e-12,
+       "p_zero is IMPLIED and reported (1 - p_pos - p_neg)")
+    ok(implied_p_zero(0.7, 0.5) < 0,
+       "a NEGATIVE implied p_zero is returned RAW, not clamped — heads "
+       "disagreeing by more than the zero class can absorb is a diagnostic "
+       "worth seeing, not one to hide")
     ok(not any(n.startswith("fit_q4") or n == "fit_expected_cancel_value"
                for n in globals()),
        "there is NO direct Q4 fitter: composing IS the hypothesis under test")
@@ -586,6 +609,77 @@ def selftest() -> int:
        "p-values are OPTIMISTIC")
     ok(cluster_disclosure(6, "UTC day")["intervals_claimable"],
        "at G=6 on the ruled unit, intervals become claimable")
+
+    # ---------------------------------------------------------- STEP 4 ---
+    _rows = [{"slug": "s1", "side": "BUY_UP", "gen": 1},
+             {"slug": "s1", "side": "BUY_UP", "gen": 1},   # SAME action
+             {"slug": "s1", "side": "BUY_UP", "gen": 2},
+             {"slug": "s2", "side": "SELL_UP", "gen": 1}]
+    ok(action_count(_rows) == 3,
+       "A1.5 n is the ACTION count (3 distinct), not the row count (4)")
+    _w = generation_weights(_rows)
+    ok(abs(_w[0] - 0.5) < 1e-12 and abs(_w[2] - 1.0) < 1e-12
+       and abs(math.fsum(_w) - 3.0) < 1e-12,
+       "A1.5 generation weights are 1/rows_in_generation and sum to the ACTION "
+       "count, so a 2-row generation contributes once")
+
+    ok(assert_vectors_well_formed("t", [1.0, 2.0], [3.0, 4.0]) == 2,
+       "well-formed vectors PASS")
+    for _lbl, _vs in (("unequal lengths", ([1.0, 2.0], [3.0])),
+                      ("empty", ([], [])),
+                      ("NaN", ([1.0, float("nan")], [1.0, 2.0])),
+                      ("infinity", ([1.0, float("inf")], [1.0, 2.0])),
+                      ("non-numeric", ([1.0, "x"], [1.0, 2.0]))):
+        try:
+            assert_vectors_well_formed("t", *_vs)
+            ok(False, f"A1.4 malformed vectors REFUSE: {_lbl}")
+        except RuntimeError:
+            ok(True, f"A1.4 malformed vectors REFUSE: {_lbl}")
+
+    # the DENOMINATOR CANNOT SHRINK
+    _fam = declared_family()
+    _cells = {}
+    for i, k in enumerate(_fam["cells"]):
+        _a, _h, _b = k.split("/")
+        if i < 3:
+            _cells[k] = build_cell(_a, _h, _b, statistic=0.9,
+                                   p_value=0.001 * (i + 1), n_actions=500)
+        elif i < 6:
+            _cells[k] = build_cell(_a, _h, _b,
+                                   status=CELL_STATUS_NO_COUNTERPART)
+        else:
+            _cells[k] = build_cell(_a, _h, _b, status=CELL_STATUS_UNDERPOWERED)
+    _res = assemble_family(_cells)
+    ok(_res["holm_denominator"] == 24,
+       "A1.4 the Holm denominator is the DECLARED 24, not the 3 cells that "
+       "carry a p-value")
+    ok(_res["n_cells_without_p_value"] == 21,
+       "unevaluable cells OCCUPY their slots (21 of 24 here)")
+    _smallest = min(_res["cells"][k]["holm_p"] for k in _res["cells"]
+                    if _res["cells"][k]["holm_p"] is not None)
+    ok(abs(_smallest - 0.001 * 24) < 1e-12,
+       "the smallest p is scaled by 24, NOT by 3 — a shrinking denominator "
+       "would have rewarded failing to measure")
+    ok(all(_res["cells"][k]["survives_joint_reading_at_0_05"] is False
+           for k in _res["cells"] if _res["cells"][k]["p_value"] is None),
+       "a cell with no p-value cannot 'survive'")
+
+    # the family must match the DECLARATION exactly
+    _short = dict(list(_cells.items())[:-1])
+    try:
+        assemble_family(_short)
+        ok(False, "a family MISSING a declared cell is REFUSED")
+    except RuntimeError as _e:
+        ok("Missing" in str(_e), "a family MISSING a declared cell is REFUSED")
+    _extra = dict(_cells); _extra["ghost/Q1_arrival/5%"] = build_cell(
+        "ghost", "Q1_arrival", "5%")
+    try:
+        assemble_family(_extra)
+        ok(False, "an UNDECLARED cell is REFUSED")
+    except RuntimeError as _e:
+        ok("undeclared" in str(_e), "an UNDECLARED cell is REFUSED")
+    ok(set(ADJUDICATED_STATISTIC) == set(HEADS_011),
+       "A1.4 every head has exactly ONE declared adjudicated statistic")
 
     print(f"\n{'ITER011 SELFTEST GREEN' if not fails else 'RED'}: "
           f"{len(fails)} failing")
@@ -795,6 +889,131 @@ def cluster_disclosure(G_complete_utc_days: int, unit_used: str) -> dict:
                 f"independent, so these p-values are OPTIMISTIC — evidence, "
                 f"never a significance certificate."),
         "intervals_claimable": G_complete_utc_days >= 5,
+    }
+
+
+# ---------------------------------------------------------------- STEP 4 ---
+# The FIXED 24-cell evaluator. A1.4/A1.5, FROZEN.
+
+CELL_STATUS_OK = "OK"
+CELL_STATUS_UNDERPOWERED = "UNDERPOWERED"
+CELL_STATUS_NO_COUNTERPART = "NO_INCUMBENT_COUNTERPART"      # R-237
+CELL_STATUS_UNEVALUABLE = "UNEVALUABLE"
+
+# A1.4 (FROZEN): ONE adjudicated statistic per head. Everything else is
+# reported and NEVER adjudicated — a metric that can be swapped into a cell
+# after seeing results is a multiplicity leak.
+ADJUDICATED_STATISTIC = {
+    "Q1_arrival": "auc",
+    "Q2_sign": "auc",                 # min over the two Option-1 sign heads
+    "Q3_magnitudes": "calibration_slope",
+    "Q4_combined_ev": "net_cents",    # the DECISION metric (rule 7)
+}
+
+
+def action_count(rows) -> int:
+    """Distinct (slug, side, gen). A1.5: n is the ACTION count, never the
+    prediction count. Measured 1.99 rows/fill, max 23 — a row-level n inflates
+    by that factor and it differs BETWEEN COINS, so it also distorts
+    comparisons."""
+    return len({(r.get("slug"), r.get("side"), r.get("gen")) for r in rows})
+
+
+def generation_weights(rows) -> list:
+    """1 / rows_in_generation, so a generation contributes ONCE however many
+    decision rows it spans (A1.5)."""
+    n = {}
+    for r in rows:
+        k = (r.get("slug"), r.get("side"), r.get("gen"))
+        n[k] = n.get(k, 0) + 1
+    return [1.0 / n[(r.get("slug"), r.get("side"), r.get("gen"))] for r in rows]
+
+
+def assert_vectors_well_formed(name: str, *vectors) -> int:
+    """Equal length, non-empty, all finite reals. A1.4.
+
+    Metrics previously accepted unequal or malformed vectors and silently
+    zipped to the shorter one — which reports a number computed on a population
+    nobody declared."""
+    lens = [len(v) for v in vectors]
+    if not lens or len(set(lens)) != 1:
+        raise RuntimeError(
+            f"REFUSED: {name} vectors have unequal lengths {lens}. zip() would "
+            f"silently truncate to the shortest and report a number computed "
+            f"on a population nobody declared.")
+    if lens[0] == 0:
+        raise RuntimeError(f"REFUSED: {name} vectors are EMPTY.")
+    for i, v in enumerate(vectors):
+        for j, x in enumerate(v):
+            if isinstance(x, bool):
+                continue
+            if not isinstance(x, (int, float)) or not math.isfinite(float(x)):
+                raise RuntimeError(
+                    f"REFUSED: {name} vector {i} element {j} is {x!r}; a "
+                    f"non-finite value poisons every aggregate it enters.")
+    return lens[0]
+
+
+def build_cell(arm: str, head: str, budget: str, statistic=None,
+               p_value=None, status: str = CELL_STATUS_OK,
+               n_actions: int = None, detail: str = "") -> dict:
+    """One cell of the DECLARED family. A cell always exists, whatever its
+    status — that is what keeps the denominator from shrinking."""
+    return {"cell": cell_key(arm, head, budget), "arm": arm, "head": head,
+            "budget": budget,
+            "adjudicated_statistic_name": ADJUDICATED_STATISTIC.get(head),
+            "statistic": statistic, "p_value": p_value, "status": status,
+            "n_actions": n_actions, "detail": detail}
+
+
+def assemble_family(cells: dict) -> dict:
+    """Every declared cell present, then Holm over the FIXED denominator.
+
+    A1.4 (FROZEN): the denominator is the DECLARED family size, not the count
+    of cells that happen to carry a p-value. A cell that is UNDERPOWERED,
+    NO_INCUMBENT_COUNTERPART or otherwise unevaluable STILL OCCUPIES ITS SLOT.
+    Letting it shrink to the evaluable subset would make a family smaller by
+    failing to measure part of it — which rewards exactly the wrong thing."""
+    declared = declared_family()
+    missing = sorted(set(declared["cells"]) - set(cells))
+    extra = sorted(set(cells) - set(declared["cells"]))
+    if missing or extra:
+        raise RuntimeError(
+            f"REFUSED: the evaluated family does not match the declared one. "
+            f"Missing {missing}; undeclared {extra}. The 24-cell family is "
+            f"frozen (R-232 9.1) and neither shrinks nor grows with what the "
+            f"run managed to evaluate.")
+    m = declared["n_cells"]
+    scored = {k: c["p_value"] for k, c in cells.items()
+              if c["p_value"] is not None}
+    # Holm over m, NOT over len(scored)
+    order = sorted(scored, key=lambda k: scored[k])
+    adj, prev = {}, 0.0
+    for i, k in enumerate(order):
+        a = min(1.0, scored[k] * (m - i))
+        a = max(a, prev)
+        adj[k] = a
+        prev = a
+    for k, c in cells.items():
+        c["holm_p"] = adj.get(k)
+        c["survives_joint_reading_at_0_05"] = (
+            adj[k] < 0.05 if k in adj else False)
+    by_status = {}
+    for c in cells.values():
+        by_status[c["status"]] = by_status.get(c["status"], 0) + 1
+    return {
+        "declared_family_size": m,
+        "holm_denominator": m,
+        "holm_denominator_is_declared_not_evaluated": True,
+        "n_cells_with_p_value": len(scored),
+        "n_cells_without_p_value": m - len(scored),
+        "cells_by_status": dict(sorted(by_status.items())),
+        "surviving_cells": sorted(k for k, c in cells.items()
+                                  if c["survives_joint_reading_at_0_05"]),
+        "cells": cells,
+        "note": "Holm is computed over the DECLARED denominator; unevaluable "
+                "cells occupy their slots and cannot be dropped to make the "
+                "family smaller.",
     }
 
 
