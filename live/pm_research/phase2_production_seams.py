@@ -997,8 +997,34 @@ def main() -> int:
     seam("39c the stale three-arm declaration ref is GONE",
          '"declaration_commit": "d7082b6"' not in _src39,
          "d7082b6 has THREE arms and sat beside a four-arm receipt")
-    seam("39d the declaration is bound by MEASUREMENT",
-         "declaration_sha256_prefix" in _src39)
+    # 39d was `"declaration_sha256_prefix" in _src39` -- a SOURCE GREP, and it
+    # passed FOR THE WRONG REASON. That string occurs in stage_score only where
+    # the field is COPIED from the manifest into a receipt; the field itself is
+    # write-only (nothing compares it, here or in any other module). The
+    # declaration IS bound by measurement -- but through fit_code_sha256_prefix
+    # (= measured_code_identity()["combined"]), which IS in the REQUIRED tuple
+    # and DOES refuse. The grep would stay green with the real enforcement
+    # deleted, so drive the actual mechanism instead. Same conversion as 30a-c.
+    _mci = PA.measured_code_identity()
+
+    def _recombine(files: dict) -> str:
+        import hashlib
+        return hashlib.sha256(
+            "".join(f"{k}:{v}" for k, v in sorted(files.items())).encode()
+        ).hexdigest()[:16]
+
+    seam("39d the declaration file is INSIDE the measured identity",
+         "phase2_declaration.py" in _mci["files"],
+         "outside CODE_IDENTITY_FILES the combined hash cannot see it, and the "
+         "separate declaration_sha256_prefix field enforces nothing")
+    seam("39e combined REPRODUCES from the per-file hashes",
+         _recombine(_mci["files"]) == _mci["combined"],
+         "positive control: if this fails the perturbation below proves nothing")
+    seam("39f a CHANGED declaration CHANGES the ENFORCED identity",
+         _recombine({**_mci["files"], "phase2_declaration.py": "0" * 16})
+         != _mci["combined"],
+         "combined is the field REQUIRED compares; if a moved declaration left "
+         "it fixed, declaration drift would score silently")
 
     # ---- SEAM 40: the F1/F4/F5 instrument fixes ---------------------------
     _e40 = Path(PA._ROOT) / "phase2_embargo.py"
