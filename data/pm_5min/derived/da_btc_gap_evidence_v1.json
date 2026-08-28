@@ -1,0 +1,833 @@
+{
+ "artifact": "da_btc_gap_evidence_v1",
+ "as_of": {
+  "as_of_utc": "2026-08-28T01:13:10.392789+00:00",
+  "ledger_lines": 4162,
+  "ledger_sha256": "8a60e28a203d4fe82c73a33a1882f0ea666c7362a58178de96c958d6e8a1bc98",
+  "note": "the ledger is appended live; every count below is as-of this line count"
+ },
+ "audit_at_onset": {
+  "btc_post_step": {
+   "by_cause": {
+    "NO_CLOSE_FRAME": {
+     "lag_ms": {
+      "max": 64.3,
+      "median": 2.1,
+      "n": 491,
+      "p90": 8.9,
+      "p99": 23.0,
+      "total": 1775.6
+     },
+     "queue_depth": {
+      "max": 207,
+      "median": 79,
+      "n": 491,
+      "p90": 128,
+      "p99": 168,
+      "total": 39826
+     }
+    },
+    "PING_TIMEOUT": {
+     "lag_ms": {
+      "max": 78.9,
+      "median": 2.1,
+      "n": 944,
+      "p90": 2.3,
+      "p99": 24.8,
+      "total": 2845.5
+     },
+     "queue_depth": {
+      "max": 346,
+      "median": 86.0,
+      "n": 944,
+      "p90": 138,
+      "p99": 196,
+      "total": 89366
+     }
+    },
+    "SLOW_CONSUMER_1013": {
+     "lag_ms": {
+      "max": 54.0,
+      "median": 2.1,
+      "n": 299,
+      "p90": 5.8,
+      "p99": 13.9,
+      "total": 966.5
+     },
+     "queue_depth": {
+      "max": 207,
+      "median": 79,
+      "n": 299,
+      "p90": 135,
+      "p99": 200,
+      "total": 25490
+     }
+    }
+   },
+   "coin_msg_rate_hint": {
+    "max": 199622566,
+    "median": 48133219.0,
+    "n": 1734,
+    "p90": 190163348,
+    "p99": 197956760,
+    "total": 160448111946
+   },
+   "lag_ms_max_interval": {
+    "max": 78.9,
+    "median": 2.1,
+    "n": 1734,
+    "p90": 5.9,
+    "p99": 15.0,
+    "total": 5587.6
+   },
+   "n": 1734,
+   "ws_ever_paused_count": 0,
+   "ws_queue_depth_max": {
+    "max": 346,
+    "median": 80.0,
+    "n": 1734,
+    "p90": 134,
+    "p99": 191,
+    "total": 154682
+   }
+  },
+  "btc_pre_step": {
+   "by_cause": {
+    "CONNECTIONCLOSEDOK": {
+     "lag_ms": {
+      "max": 14.1,
+      "median": 1.95,
+      "n": 8,
+      "p90": 14.1,
+      "p99": 14.1,
+      "total": 25.6
+     },
+     "queue_depth": {
+      "max": 227,
+      "median": 144.0,
+      "n": 8,
+      "p90": 227,
+      "p99": 227,
+      "total": 1136
+     }
+    },
+    "NO_CLOSE_FRAME": {
+     "lag_ms": {
+      "max": 13.6,
+      "median": 2.0,
+      "n": 30,
+      "p90": 9.6,
+      "p99": 13.6,
+      "total": 88.4
+     },
+     "queue_depth": {
+      "max": 254,
+      "median": 74,
+      "n": 29,
+      "p90": 175,
+      "p99": 254,
+      "total": 2651
+     }
+    },
+    "PING_TIMEOUT": {
+     "lag_ms": {
+      "max": 12.6,
+      "median": 2.1,
+      "n": 58,
+      "p90": 3.0,
+      "p99": 12.6,
+      "total": 148.6
+     },
+     "queue_depth": {
+      "max": 270,
+      "median": 94.0,
+      "n": 56,
+      "p90": 163,
+      "p99": 270,
+      "total": 5940
+     }
+    },
+    "SLOW_CONSUMER_1013": {
+     "lag_ms": {
+      "max": 55.5,
+      "median": 1.9,
+      "n": 130,
+      "p90": 6.5,
+      "p99": 12.2,
+      "total": 375.3
+     },
+     "queue_depth": {
+      "max": 329,
+      "median": 135,
+      "n": 129,
+      "p90": 212,
+      "p99": 273,
+      "total": 17779
+     }
+    }
+   },
+   "coin_msg_rate_hint": {
+    "max": 159560941,
+    "median": 82265134.5,
+    "n": 226,
+    "p90": 152760105,
+    "p99": 159524901,
+    "total": 17864794986
+   },
+   "lag_ms_max_interval": {
+    "max": 55.5,
+    "median": 2.0,
+    "n": 226,
+    "p90": 3.6,
+    "p99": 13.6,
+    "total": 637.9
+   },
+   "n": 231,
+   "ws_ever_paused_count": 0,
+   "ws_queue_depth_max": {
+    "max": 329,
+    "median": 123.0,
+    "n": 222,
+    "p90": 203,
+    "p99": 270,
+    "total": 27506
+   }
+  },
+  "eth_post_step": {
+   "by_cause": {
+    "NO_CLOSE_FRAME": {
+     "lag_ms": {
+      "max": 2.1,
+      "median": 2.0,
+      "n": 3,
+      "p90": 2.1,
+      "p99": 2.1,
+      "total": 6.1
+     },
+     "queue_depth": {
+      "max": 43,
+      "median": 39,
+      "n": 3,
+      "p90": 43,
+      "p99": 43,
+      "total": 114
+     }
+    },
+    "PING_TIMEOUT": {
+     "lag_ms": {
+      "max": 2.1,
+      "median": 2.1,
+      "n": 1,
+      "p90": 2.1,
+      "p99": 2.1,
+      "total": 2.1
+     },
+     "queue_depth": {
+      "max": 51,
+      "median": 51,
+      "n": 1,
+      "p90": 51,
+      "p99": 51,
+      "total": 51
+     }
+    }
+   },
+   "coin_msg_rate_hint": {
+    "max": 48964147,
+    "median": 30659143.0,
+    "n": 4,
+    "p90": 48964147,
+    "p99": 48964147,
+    "total": 115689404
+   },
+   "lag_ms_max_interval": {
+    "max": 2.1,
+    "median": 2.05,
+    "n": 4,
+    "p90": 2.1,
+    "p99": 2.1,
+    "total": 8.2
+   },
+   "n": 4,
+   "ws_ever_paused_count": 0,
+   "ws_queue_depth_max": {
+    "max": 51,
+    "median": 41.0,
+    "n": 4,
+    "p90": 51,
+    "p99": 51,
+    "total": 165
+   }
+  }
+ },
+ "authority": "coordinator R-211(6) evidence request; measurement only, collectors outside DA's surface (R-110)",
+ "cause_by_day": {
+  "bnb": {
+   "08-20": {
+    "CONNECTIONCLOSEDOK": 1
+   },
+   "08-21": {
+    "CONNECTIONCLOSEDOK": 3
+   },
+   "08-22": {
+    "NO_CLOSE_FRAME": 3
+   },
+   "08-23": {
+    "CONNECTIONCLOSEDOK": 1
+   },
+   "08-24": {
+    "CONNECTIONCLOSEDOK": 1,
+    "NO_CLOSE_FRAME": 1
+   },
+   "08-25": {
+    "NO_CLOSE_FRAME": 3
+   },
+   "08-27": {
+    "NO_CLOSE_FRAME": 5
+   }
+  },
+  "btc": {
+   "08-20": {
+    "CONNECTIONCLOSEDOK": 1,
+    "NO_CLOSE_FRAME": 3,
+    "PING_TIMEOUT": 7,
+    "SLOW_CONSUMER_1013": 21
+   },
+   "08-21": {
+    "CONNECTIONCLOSEDOK": 1,
+    "NO_CLOSE_FRAME": 1,
+    "PING_TIMEOUT": 11,
+    "SLOW_CONSUMER_1013": 50
+   },
+   "08-22": {
+    "NO_CLOSE_FRAME": 2,
+    "PING_TIMEOUT": 2,
+    "SLOW_CONSUMER_1013": 19
+   },
+   "08-23": {
+    "NO_CLOSE_FRAME": 5,
+    "PING_TIMEOUT": 13,
+    "SLOW_CONSUMER_1013": 19
+   },
+   "08-24": {
+    "CONNECTIONCLOSEDOK": 6,
+    "NO_CLOSE_FRAME": 19,
+    "PING_TIMEOUT": 25,
+    "SLOW_CONSUMER_1013": 26
+   },
+   "08-25": {
+    "NO_CLOSE_FRAME": 204,
+    "PING_TIMEOUT": 349,
+    "SLOW_CONSUMER_1013": 112
+   },
+   "08-26": {
+    "NO_CLOSE_FRAME": 139,
+    "PING_TIMEOUT": 280,
+    "SLOW_CONSUMER_1013": 82
+   },
+   "08-27": {
+    "NO_CLOSE_FRAME": 144,
+    "PING_TIMEOUT": 290,
+    "SLOW_CONSUMER_1013": 99
+   },
+   "08-28": {
+    "NO_CLOSE_FRAME": 4,
+    "PING_TIMEOUT": 25,
+    "SLOW_CONSUMER_1013": 6
+   }
+  },
+  "doge": {
+   "08-20": {
+    "NO_CLOSE_FRAME": 1
+   },
+   "08-21": {
+    "CONNECTIONCLOSEDOK": 4,
+    "NO_CLOSE_FRAME": 2
+   },
+   "08-22": {
+    "NO_CLOSE_FRAME": 1
+   },
+   "08-23": {
+    "NO_CLOSE_FRAME": 1
+   },
+   "08-24": {
+    "CONNECTIONCLOSEDOK": 1,
+    "NO_CLOSE_FRAME": 2
+   },
+   "08-26": {
+    "NO_CLOSE_FRAME": 2
+   },
+   "08-27": {
+    "NO_CLOSE_FRAME": 2
+   }
+  },
+  "eth": {
+   "08-20": {
+    "CONNECTIONCLOSEDOK": 2,
+    "NO_CLOSE_FRAME": 1,
+    "SLOW_CONSUMER_1013": 1
+   },
+   "08-21": {
+    "CONNECTIONCLOSEDOK": 4,
+    "PING_TIMEOUT": 1
+   },
+   "08-23": {
+    "CONNECTIONCLOSEDOK": 1,
+    "NO_CLOSE_FRAME": 2
+   },
+   "08-24": {
+    "CONNECTIONCLOSEDOK": 1,
+    "NO_CLOSE_FRAME": 4
+   },
+   "08-25": {
+    "NO_CLOSE_FRAME": 2
+   },
+   "08-26": {
+    "PING_TIMEOUT": 1
+   },
+   "08-27": {
+    "NO_CLOSE_FRAME": 1
+   }
+  },
+  "hype": {
+   "08-22": {
+    "NO_CLOSE_FRAME": 1
+   },
+   "08-23": {
+    "CONNECTIONCLOSEDOK": 1,
+    "NO_CLOSE_FRAME": 3
+   },
+   "08-24": {
+    "CONNECTIONCLOSEDOK": 1,
+    "NO_CLOSE_FRAME": 2
+   },
+   "08-25": {
+    "NO_CLOSE_FRAME": 1
+   },
+   "08-26": {
+    "CONNECTIONCLOSEDOK": 1
+   },
+   "08-27": {
+    "NO_CLOSE_FRAME": 5
+   }
+  },
+  "sol": {
+   "08-20": {
+    "CONNECTIONCLOSEDOK": 2
+   },
+   "08-21": {
+    "CONNECTIONCLOSEDOK": 3
+   },
+   "08-22": {
+    "NO_CLOSE_FRAME": 3
+   },
+   "08-23": {
+    "CONNECTIONCLOSEDOK": 1,
+    "NO_CLOSE_FRAME": 1
+   },
+   "08-24": {
+    "CONNECTIONCLOSEDOK": 3,
+    "NO_CLOSE_FRAME": 2
+   },
+   "08-25": {
+    "NO_CLOSE_FRAME": 2
+   },
+   "08-26": {
+    "CONNECTIONCLOSEDOK": 1,
+    "NO_CLOSE_FRAME": 1
+   },
+   "08-27": {
+    "NO_CLOSE_FRAME": 2
+   }
+  },
+  "xrp": {
+   "08-20": {
+    "NO_CLOSE_FRAME": 2
+   },
+   "08-21": {
+    "CONNECTIONCLOSEDOK": 2
+   },
+   "08-22": {
+    "NO_CLOSE_FRAME": 2
+   },
+   "08-23": {
+    "CONNECTIONCLOSEDOK": 1
+   },
+   "08-24": {
+    "CONNECTIONCLOSEDOK": 2,
+    "NO_CLOSE_FRAME": 2
+   },
+   "08-26": {
+    "NO_CLOSE_FRAME": 1
+   },
+   "08-27": {
+    "CONNECTIONCLOSEDOK": 1,
+    "NO_CLOSE_FRAME": 4,
+    "PING_TIMEOUT": 1
+   }
+  }
+ },
+ "control_group_post_step": {
+  "bnb": {
+   "causes": {
+    "NO_CLOSE_FRAME": 8
+   },
+   "duration_s": {
+    "max": 39.059,
+    "median": 4.086,
+    "n": 8,
+    "p90": 39.059,
+    "p99": 39.059,
+    "total": 70.1
+   },
+   "n_gaps": 8,
+   "total_lost_s": 70.1
+  },
+  "btc": {
+   "causes": {
+    "NO_CLOSE_FRAME": 491,
+    "PING_TIMEOUT": 944,
+    "SLOW_CONSUMER_1013": 299
+   },
+   "duration_s": {
+    "max": 12.447,
+    "median": 2.755,
+    "n": 1734,
+    "p90": 11.337,
+    "p99": 11.481,
+    "total": 10012.0
+   },
+   "n_gaps": 1734,
+   "total_lost_s": 10012.0
+  },
+  "doge": {
+   "causes": {
+    "NO_CLOSE_FRAME": 4
+   },
+   "duration_s": {
+    "max": 18.38,
+    "median": 1.401,
+    "n": 4,
+    "p90": 18.38,
+    "p99": 18.38,
+    "total": 22.4
+   },
+   "n_gaps": 4,
+   "total_lost_s": 22.4
+  },
+  "eth": {
+   "causes": {
+    "NO_CLOSE_FRAME": 3,
+    "PING_TIMEOUT": 1
+   },
+   "duration_s": {
+    "max": 11.407,
+    "median": 1.864,
+    "n": 4,
+    "p90": 11.407,
+    "p99": 11.407,
+    "total": 16.4
+   },
+   "n_gaps": 4,
+   "total_lost_s": 16.4
+  },
+  "hype": {
+   "causes": {
+    "CONNECTIONCLOSEDOK": 1,
+    "NO_CLOSE_FRAME": 6
+   },
+   "duration_s": {
+    "max": 17.883,
+    "median": 5.964,
+    "n": 7,
+    "p90": 17.883,
+    "p99": 17.883,
+    "total": 49.5
+   },
+   "n_gaps": 7,
+   "total_lost_s": 49.5
+  },
+  "sol": {
+   "causes": {
+    "CONNECTIONCLOSEDOK": 1,
+    "NO_CLOSE_FRAME": 5
+   },
+   "duration_s": {
+    "max": 23.093,
+    "median": 1.661,
+    "n": 6,
+    "p90": 23.093,
+    "p99": 23.093,
+    "total": 33.0
+   },
+   "n_gaps": 6,
+   "total_lost_s": 33.0
+  },
+  "xrp": {
+   "causes": {
+    "CONNECTIONCLOSEDOK": 1,
+    "NO_CLOSE_FRAME": 5,
+    "PING_TIMEOUT": 1
+   },
+   "duration_s": {
+    "max": 37.993,
+    "median": 1.536,
+    "n": 7,
+    "p90": 37.993,
+    "p99": 37.993,
+    "total": 69.5
+   },
+   "n_gaps": 7,
+   "total_lost_s": 69.5
+  }
+ },
+ "detection_lag_s_by_cause": {
+  "btc_post_step": {
+   "NO_CLOSE_FRAME": {
+    "max": 0.131,
+    "median": 0.0,
+    "n": 491,
+    "p90": 0.002,
+    "p99": 0.094,
+    "total": 2.9
+   },
+   "PING_TIMEOUT": {
+    "max": 10.661,
+    "median": 10.005,
+    "n": 944,
+    "p90": 10.037,
+    "p99": 10.124,
+    "total": 7716.7
+   },
+   "SLOW_CONSUMER_1013": {
+    "max": 0.376,
+    "median": 0.0,
+    "n": 299,
+    "p90": 0.001,
+    "p99": 0.084,
+    "total": 1.0
+   }
+  },
+  "eth_post_step": {
+   "NO_CLOSE_FRAME": {
+    "max": 0.101,
+    "median": 0.0,
+    "n": 3,
+    "p90": 0.101,
+    "p99": 0.101,
+    "total": 0.1
+   },
+   "PING_TIMEOUT": {
+    "max": 10.024,
+    "median": 10.024,
+    "n": 1,
+    "p90": 10.024,
+    "p99": 10.024,
+    "total": 10.0
+   }
+  }
+ },
+ "detection_vs_reconnect_btc_post_step": {
+  "NO_CLOSE_FRAME": {
+   "detection_share_of_median_gap": 0.0,
+   "median_detection_s": 0.0,
+   "median_gap_s": 1.304,
+   "total_detection_s": 2.9,
+   "total_gap_s": 655.0
+  },
+  "PING_TIMEOUT": {
+   "detection_share_of_median_gap": 0.885,
+   "median_detection_s": 10.005,
+   "median_gap_s": 11.305,
+   "total_detection_s": 7716.7,
+   "total_gap_s": 8960.5
+  },
+  "SLOW_CONSUMER_1013": {
+   "detection_share_of_median_gap": 0.0,
+   "median_detection_s": 0.0,
+   "median_gap_s": 1.304,
+   "total_detection_s": 1.0,
+   "total_gap_s": 396.5
+  }
+ },
+ "gap_duration_s_by_cause": {
+  "btc_post_step": {
+   "NO_CLOSE_FRAME": {
+    "max": 4.775,
+    "median": 1.304,
+    "n": 491,
+    "p90": 1.357,
+    "p99": 2.347,
+    "total": 655.0
+   },
+   "PING_TIMEOUT": {
+    "max": 12.447,
+    "median": 11.305,
+    "n": 944,
+    "p90": 11.354,
+    "p99": 11.653,
+    "total": 8960.5
+   },
+   "SLOW_CONSUMER_1013": {
+    "max": 2.404,
+    "median": 1.304,
+    "n": 299,
+    "p90": 1.335,
+    "p99": 2.329,
+    "total": 396.5
+   }
+  },
+  "eth_post_step": {
+   "NO_CLOSE_FRAME": {
+    "max": 2.326,
+    "median": 1.402,
+    "n": 3,
+    "p90": 2.326,
+    "p99": 2.326,
+    "total": 5.0
+   },
+   "PING_TIMEOUT": {
+    "max": 11.407,
+    "median": 11.407,
+    "n": 1,
+    "p90": 11.407,
+    "p99": 11.407,
+    "total": 11.4
+   }
+  }
+ },
+ "generator": {
+  "note": "EMBEDDED rather than committed as a module: R-110 freezes the surface and a peer request cannot authorise a new one. Embedding keeps the result reproducible without adding a module. Committing it as live/pm_research/ code needs the user word.",
+  "sha256": "c62a93d62c2fff182623c1c74e6d16def132348b3197a476ad6b9c6f68be1364",
+  "source": "\"\"\"DA evidence pack for the btc collector failure (R-211(6)). MEASUREMENT ONLY.\n\nCollectors are outside DA's surface (R-110): nothing here reads, writes or\nproposes collector code. Every figure is stamped with the ledger as-of and line\ncount, because the ledger GROWS while it is measured.\n\nSources: data/pm_5min/collector_gaps.jsonl\n  gap_closed  -> cause, coin, duration_ms, gap_start_ns/gap_end_ns, slug\n  disconnect  -> cause, ws_queue_depth_max, coin_msg_rate_hint,\n                 lag_ms_max_interval/ever, ws_ever_paused, last_message_recv_ns\nPairing (verified 2073/2073): disconnect(slug, last_message_recv_ns)\n                              == gap_closed(slug, gap_start_ns)\nSo a gap BEGINS at the last message received, not when the drop was noticed:\ngap = detection lag + reconnect + resubscribe.\n\"\"\"\nimport json, collections, hashlib, datetime as dt, statistics as st\nfrom pathlib import Path\n\nLED = Path(\"/home/yuqing/ctaNew/data/pm_5min/collector_gaps.jsonl\")\nSTEP_DAY = \"08-25\"          # the step DA measured in Q-DA-99\nraw = LED.read_bytes()\nrows = [json.loads(l) for l in raw.decode().splitlines() if l.strip()]\nASOF = {\"ledger_sha256\": hashlib.sha256(raw).hexdigest(),\n        \"ledger_lines\": len(rows),\n        \"as_of_utc\": dt.datetime.now(dt.timezone.utc).isoformat(),\n        \"note\": \"the ledger is appended live; every count below is as-of this line count\"}\n\ndef day(ns):  return dt.datetime.fromtimestamp(ns/1e9, dt.timezone.utc).strftime(\"%m-%d\")\ndef hour(ns): return dt.datetime.fromtimestamp(ns/1e9, dt.timezone.utc).hour\n\ngc = [r for r in rows if r.get(\"event\") == \"gap_closed\"]\ndc = [r for r in rows if r.get(\"event\") == \"disconnect\"]\npair = {(r.get(\"slug\"), r[\"gap_start_ns\"]): r for r in gc}\njoined = []\nfor d in dc:\n    g = pair.get((d.get(\"slug\"), d.get(\"last_message_recv_ns\")))\n    if g:\n        joined.append((d, g))\n\ndef dist(v):\n    if not v: return None\n    v = sorted(v)\n    return {\"n\": len(v), \"median\": round(st.median(v), 3),\n            \"p90\": round(v[min(len(v)-1, int(.9*len(v)))], 3),\n            \"p99\": round(v[min(len(v)-1, int(.99*len(v)))], 3),\n            \"max\": round(max(v), 3), \"total\": round(sum(v), 1)}\n\nout = {\"artifact\": \"da_btc_gap_evidence_v1\", \"as_of\": ASOF,\n       \"authority\": \"coordinator R-211(6) evidence request; measurement only, \"\n                    \"collectors outside DA's surface (R-110)\",\n       \"pairing_verified\": f\"{len(joined)}/{len(dc)} disconnects paired to their gap\"}\n\n# ---- (1) cause histogram by day, per coin --------------------------------\nby_day = collections.defaultdict(lambda: collections.Counter())\nfor r in gc:\n    by_day[(r.get(\"coin\"), day(r[\"gap_start_ns\"]))][r.get(\"cause\", \"?\")] += 1\ndays = sorted({d for _c, d in by_day})\nout[\"cause_by_day\"] = {\n    coin: {d: dict(by_day[(coin, d)]) for d in days if (coin, d) in by_day}\n    for coin in sorted({r.get(\"coin\") for r in gc})}\n\n# ---- (1b) hour-of-day structure, btc, pre/post step ----------------------\ndef hourhist(coin, post):\n    h = collections.Counter()\n    for r in gc:\n        if r.get(\"coin\") != coin: continue\n        if (day(r[\"gap_start_ns\"]) >= STEP_DAY) != post: continue\n        h[hour(r[\"gap_start_ns\"])] += 1\n    return {str(k): h[k] for k in range(24)}\nout[\"hour_of_day\"] = {\"btc_post_step\": hourhist(\"btc\", True),\n                      \"btc_pre_step\": hourhist(\"btc\", False),\n                      \"eth_post_step\": hourhist(\"eth\", True)}\n\n# ---- (2)+(4) duration and detection lag per cause, btc post-step ---------\ndef durs(coin, post=True):\n    per = collections.defaultdict(list); det = collections.defaultdict(list)\n    for d, g in joined:\n        if g.get(\"coin\") != coin: continue\n        if (day(g[\"gap_start_ns\"]) >= STEP_DAY) != post: continue\n        c = g.get(\"cause\", \"?\")\n        per[c].append(g[\"duration_ms\"] / 1000.0)\n        det[c].append((d[\"recv_ns\"] - d[\"last_message_recv_ns\"]) / 1e9)\n    return ({c: dist(v) for c, v in per.items()},\n            {c: dist(v) for c, v in det.items()})\nd_btc, det_btc = durs(\"btc\", True)\nd_eth, det_eth = durs(\"eth\", True)\nout[\"gap_duration_s_by_cause\"] = {\"btc_post_step\": d_btc, \"eth_post_step\": d_eth}\nout[\"detection_lag_s_by_cause\"] = {\"btc_post_step\": det_btc, \"eth_post_step\": det_eth}\n# how much of the lost time is DETECTION rather than reconnect?\nshare = {}\nfor c in d_btc:\n    if d_btc[c] and det_btc.get(c):\n        share[c] = {\"median_gap_s\": d_btc[c][\"median\"],\n                    \"median_detection_s\": det_btc[c][\"median\"],\n                    \"detection_share_of_median_gap\":\n                        round(det_btc[c][\"median\"] / d_btc[c][\"median\"], 3)\n                        if d_btc[c][\"median\"] else None,\n                    \"total_gap_s\": d_btc[c][\"total\"],\n                    \"total_detection_s\": det_btc[c][\"total\"]}\nout[\"detection_vs_reconnect_btc_post_step\"] = share\n\n# ---- (3) inter-gap spacing: bursty or steady? ----------------------------\ndef spacing(coin, post=True):\n    ts = sorted(r[\"gap_start_ns\"]/1e9 for r in gc\n                if r.get(\"coin\") == coin\n                and (day(r[\"gap_start_ns\"]) >= STEP_DAY) == post)\n    gaps = [b - a for a, b in zip(ts, ts[1:])]\n    if not gaps: return None\n    d = dist(gaps)\n    d[\"within_60s_of_previous\"] = sum(1 for g in gaps if g <= 60)\n    d[\"within_60s_share\"] = round(d[\"within_60s_of_previous\"]/len(gaps), 3)\n    # Fano-like burstiness on 5-min bins\n    if ts:\n        bins = collections.Counter(int((t - ts[0])//300) for t in ts)\n        counts = list(bins.values())\n        m = st.mean(counts)\n        d[\"per_5min_bin_mean\"] = round(m, 3)\n        d[\"per_5min_bin_var_over_mean\"] = round(st.pvariance(counts)/m, 3) if m else None\n        d[\"burstiness_note\"] = (\"var/mean > 1 means clustered; == 1 is Poisson \"\n                                \"(steady random); < 1 is regular\")\n    return d\nout[\"inter_gap_spacing_s\"] = {\"btc_post_step\": spacing(\"btc\", True),\n                              \"btc_pre_step\": spacing(\"btc\", False),\n                              \"eth_post_step\": spacing(\"eth\", True)}\n\n# ---- (5) the control group: every coin, post-step ------------------------\nctrl = {}\nfor coin in sorted({r.get(\"coin\") for r in gc}):\n    sel = [g for _d, g in joined if g.get(\"coin\") == coin\n           and day(g[\"gap_start_ns\"]) >= STEP_DAY]\n    if not sel: continue\n    ctrl[coin] = {\"n_gaps\": len(sel),\n                  \"total_lost_s\": round(sum(g[\"duration_ms\"] for g in sel)/1000.0, 1),\n                  \"causes\": dict(collections.Counter(g.get(\"cause\") for g in sel)),\n                  \"duration_s\": dist([g[\"duration_ms\"]/1000.0 for g in sel])}\nout[\"control_group_post_step\"] = ctrl\n\n# ---- (6) audit correlates at gap onset ----------------------------------\ndef audit(coin, post=True):\n    q = []; rate = []; lagi = []; paused = 0; n = 0\n    percause = collections.defaultdict(lambda: {\"q\": [], \"lag\": []})\n    for d, g in joined:\n        if g.get(\"coin\") != coin: continue\n        if (day(g[\"gap_start_ns\"]) >= STEP_DAY) != post: continue\n        n += 1\n        if d.get(\"ws_queue_depth_max\") is not None:\n            q.append(d[\"ws_queue_depth_max\"]); percause[d.get(\"cause\")][\"q\"].append(d[\"ws_queue_depth_max\"])\n        if d.get(\"coin_msg_rate_hint\") is not None: rate.append(d[\"coin_msg_rate_hint\"])\n        if d.get(\"lag_ms_max_interval\") is not None:\n            lagi.append(d[\"lag_ms_max_interval\"]); percause[d.get(\"cause\")][\"lag\"].append(d[\"lag_ms_max_interval\"])\n        paused += 1 if d.get(\"ws_ever_paused\") else 0\n    return {\"n\": n, \"ws_queue_depth_max\": dist(q), \"lag_ms_max_interval\": dist(lagi),\n            \"coin_msg_rate_hint\": dist(rate),\n            \"ws_ever_paused_count\": paused,\n            \"by_cause\": {c: {\"queue_depth\": dist(v[\"q\"]), \"lag_ms\": dist(v[\"lag\"])}\n                         for c, v in percause.items()}}\nout[\"audit_at_onset\"] = {\"btc_post_step\": audit(\"btc\", True),\n                         \"btc_pre_step\": audit(\"btc\", False),\n                         \"eth_post_step\": audit(\"eth\", True)}\n\n# ---- prior record so the design does not re-walk it ----------------------\nout[\"prior_record_R181_R182\"] = {\n    \"refuted\": \"sharding does NOT halve per-connection bytes: price_change \"\n               \"frames bundle BOTH tokens and are delivered once per connection \"\n               \"regardless of which bundled asset was subscribed, and the DOWN \"\n               \"token appears in EVERY single-asset subscription. Measured \"\n               \"price_change ratio 1.068 and 0.918 across two interleaved runs \"\n               \"against a predicted ~2.0.\",\n    \"direction_survives\": \"each sharded connection still receives the full \"\n                          \"price_change stream, so two of them carry roughly \"\n                          \"TWICE today's aggregate to this IP -- direction \"\n                          \"structural, MAGNITUDE NOT ESTIMABLE (the 1.507 / \"\n                          \"'+33%' figures were withdrawn in-band, R-182).\",\n    \"instrument_warning\": \"ambient btc variance makes SHORT A/B throughput \"\n                          \"comparisons on this feed NON-VIABLE: identical \"\n                          \"phases drifted 136%, and a naive A-then-B returned \"\n                          \"2.13x purely from the market quieting. Any 'did the \"\n                          \"remedy work?' test needs long integration or a \"\n                          \"within-connection paired design -- NEVER a \"\n                          \"before/after.\",\n    \"state\": \"no patch built, no deploy (R-181); ping-tighten adjunct declined.\",\n    \"source\": \"Q-DA-81, artifact da_btc_shard_probe_v1.json, commit bb2e3ff\"}\n\nprint(json.dumps(out, indent=1, sort_keys=True))\n"
+ },
+ "hour_of_day": {
+  "btc_post_step": {
+   "0": 129,
+   "1": 90,
+   "10": 74,
+   "11": 51,
+   "12": 86,
+   "13": 122,
+   "14": 125,
+   "15": 80,
+   "16": 66,
+   "17": 72,
+   "18": 80,
+   "19": 56,
+   "2": 62,
+   "20": 66,
+   "21": 61,
+   "22": 86,
+   "23": 72,
+   "3": 53,
+   "4": 40,
+   "5": 45,
+   "6": 42,
+   "7": 39,
+   "8": 56,
+   "9": 81
+  },
+  "btc_pre_step": {
+   "0": 10,
+   "1": 8,
+   "10": 7,
+   "11": 7,
+   "12": 14,
+   "13": 10,
+   "14": 5,
+   "15": 14,
+   "16": 18,
+   "17": 16,
+   "18": 23,
+   "19": 19,
+   "2": 7,
+   "20": 10,
+   "21": 4,
+   "22": 15,
+   "23": 10,
+   "3": 3,
+   "4": 7,
+   "5": 6,
+   "6": 4,
+   "7": 6,
+   "8": 4,
+   "9": 4
+  },
+  "eth_post_step": {
+   "0": 1,
+   "1": 0,
+   "10": 0,
+   "11": 0,
+   "12": 0,
+   "13": 0,
+   "14": 0,
+   "15": 0,
+   "16": 0,
+   "17": 0,
+   "18": 0,
+   "19": 0,
+   "2": 0,
+   "20": 1,
+   "21": 1,
+   "22": 0,
+   "23": 0,
+   "3": 0,
+   "4": 1,
+   "5": 0,
+   "6": 0,
+   "7": 0,
+   "8": 0,
+   "9": 0
+  }
+ },
+ "inter_gap_spacing_s": {
+  "btc_post_step": {
+   "burstiness_note": "var/mean > 1 means clustered; == 1 is Poisson (steady random); < 1 is regular",
+   "max": 14813.054,
+   "median": 61.192,
+   "n": 1733,
+   "p90": 368.254,
+   "p99": 930.597,
+   "per_5min_bin_mean": 2.761,
+   "per_5min_bin_var_over_mean": 1.381,
+   "total": 263556.2,
+   "within_60s_of_previous": 850,
+   "within_60s_share": 0.49
+  },
+  "btc_pre_step": {
+   "burstiness_note": "var/mean > 1 means clustered; == 1 is Poisson (steady random); < 1 is regular",
+   "max": 14365.584,
+   "median": 756.103,
+   "n": 230,
+   "p90": 4468.078,
+   "p99": 13661.139,
+   "per_5min_bin_mean": 1.262,
+   "per_5min_bin_var_over_mean": 0.344,
+   "total": 376769.1,
+   "within_60s_of_previous": 38,
+   "within_60s_share": 0.165
+  },
+  "eth_post_step": {
+   "burstiness_note": "var/mean > 1 means clustered; == 1 is Poisson (steady random); < 1 is regular",
+   "max": 146019.359,
+   "median": 85160.409,
+   "n": 3,
+   "p90": 146019.359,
+   "p99": 146019.359,
+   "per_5min_bin_mean": 1,
+   "per_5min_bin_var_over_mean": 0.0,
+   "total": 244554.0,
+   "within_60s_of_previous": 0,
+   "within_60s_share": 0.0
+  }
+ },
+ "pairing_verified": "2074/2075 disconnects paired to their gap",
+ "prior_record_R181_R182": {
+  "direction_survives": "each sharded connection still receives the full price_change stream, so two of them carry roughly TWICE today's aggregate to this IP -- direction structural, MAGNITUDE NOT ESTIMABLE (the 1.507 / '+33%' figures were withdrawn in-band, R-182).",
+  "instrument_warning": "ambient btc variance makes SHORT A/B throughput comparisons on this feed NON-VIABLE: identical phases drifted 136%, and a naive A-then-B returned 2.13x purely from the market quieting. Any 'did the remedy work?' test needs long integration or a within-connection paired design -- NEVER a before/after.",
+  "refuted": "sharding does NOT halve per-connection bytes: price_change frames bundle BOTH tokens and are delivered once per connection regardless of which bundled asset was subscribed, and the DOWN token appears in EVERY single-asset subscription. Measured price_change ratio 1.068 and 0.918 across two interleaved runs against a predicted ~2.0.",
+  "source": "Q-DA-81, artifact da_btc_shard_probe_v1.json, commit bb2e3ff",
+  "state": "no patch built, no deploy (R-181); ping-tighten adjunct declined."
+ }
+}
