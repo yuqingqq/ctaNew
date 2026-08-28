@@ -42,11 +42,19 @@ CROSSED = "CROSSED"                        # best_bid >= best_ask
 ONE_SIDED = "ONE_SIDED"                    # a side is genuinely MISSING (None)
 OUT_OF_RANGE = "OUT_OF_RANGE"              # side present, finite, outside [0,1]
 NON_FINITE_SIDE = "NON_FINITE_SIDE"        # side present but NaN/inf
+NON_NUMERIC_SIDE = "NON_NUMERIC_SIDE"      # side present but not a real number
+                                           # (bool, str). ADDITIVE status,
+                                           # flagged for ratification. Folding
+                                           # bools into NON_FINITE_SIDE would
+                                           # break this module's own rule that
+                                           # a status must not misdescribe its
+                                           # cause: `False` is not NaN, it is a
+                                           # wiring error one type up.
 INSUFFICIENT_DEPTH = "INSUFFICIENT_DEPTH"  # below the declared minimum size
 STALE = "STALE"                            # freshness beyond the declared bound
 NO_INPUT = "NO_INPUT"                      # nothing to read at all
 STATUSES = (OK, NOT_READY, CROSSED, ONE_SIDED, OUT_OF_RANGE, NON_FINITE_SIDE,
-            INSUFFICIENT_DEPTH, STALE, NO_INPUT)
+            NON_NUMERIC_SIDE, INSUFFICIENT_DEPTH, STALE, NO_INPUT)
 
 #: A PM binary settles to 0 or 1, so its price IS a probability and must lie in
 #: [0,1]. This was UNBOUNDED: identity_from_book(best_bid=99, best_ask=100)
@@ -65,6 +73,22 @@ BN_BOOKTICKER = "bn_bookticker_mid"
 MIN_DEPTH_SHARES = 1.0
 MAX_FRESHNESS_S = 5.0
 COMPLEMENT_TOL = 0.02      # UP + DOWN should price to ~1 for a binary pair
+
+
+def _finite_real(v) -> bool:
+    """A real number, not a bool, not NaN/inf.
+
+    THREE SEPARATE DEFECTS TODAY CAME FROM THE TWO HALVES OF THIS PREDICATE,
+    so it exists once instead of being spelled out per field:
+      * `isinstance(True, int)` is True in Python, so bools passed every
+        numeric gate -- `value=True` satisfied `0 <= v <= 1`, `best_bid=False`
+        and `best_ask=True` produced a perfectly plausible mid of 0.5.
+      * every comparison against NaN is False, so `abs(freshness - (lk-src)) >
+        1e-9` was False and a NaN freshness passed the consistency check.
+    A guard written as `isinstance(v, (int, float))` admits both.
+    """
+    return (isinstance(v, (int, float)) and not isinstance(v, bool)
+            and math.isfinite(v))
 
 
 class Inadmissible(ValueError):
@@ -115,11 +139,12 @@ class FairPrice:
         if not self.estimator:
             bad("estimator must be named; an anonymous record cannot be "
                 "attributed to Identity or to a challenger")
-        for nm in ("source_timestamp", "local_knowledge_timestamp"):
+        for nm in ("source_timestamp", "local_knowledge_timestamp",
+                   "freshness_s"):
             v = getattr(self, nm)
-            if v is not None and (not isinstance(v, (int, float))
-                                  or not math.isfinite(v)):
-                bad(f"{nm} must be finite or None")
+            if v is not None and not _finite_real(v):
+                bad(f"{nm}={v!r} must be a finite real or None (a bool is not "
+                    f"a timestamp, and a NaN passes every comparison it is in)")
         src, lk = self.source_timestamp, self.local_knowledge_timestamp
         if src is not None and lk is not None:
             # ORDERING is enforced only where the value is USED. A non-OK
@@ -160,9 +185,10 @@ class FairPrice:
                     "freshness that disagrees with its own timestamps lets a "
                     "stale record present itself as fresh")
         if self.status == OK:
-            if self.value is None or not isinstance(self.value, (int, float)) \
-                    or not math.isfinite(self.value):
-                bad("an OK record must carry a finite value")
+            if self.value is None or not _finite_real(self.value):
+                bad(f"an OK record must carry a finite REAL value; got "
+                    f"{self.value!r}. `True` satisfies 0 <= v <= 1 and would "
+                    f"have been a perfectly plausible probability")
             if not (PROB_LO <= self.value <= PROB_HI):
                 bad(f"value {self.value} is outside [{PROB_LO},{PROB_HI}]: a PM "
                     f"binary price IS a probability, and a number outside the "
@@ -262,6 +288,15 @@ def identity_from_book(coin: str, window_start: int, outcome: str,
     # invalid-side shape used to report ONE_SIDED -- including a 99/100 dollar
     # book and a -0.1/1.2 book, both of which HAVE two sides. A status that
     # misdescribes its own cause sends the next reader after the wrong thing.
+    # NON-NUMERIC BEFORE NON-FINITE, because they are different faults and the
+    # status must name the right one. `False`/`True` is a perfectly plausible
+    # 0/1 book that mids to 0.5 -- a wiring error one type up, not a NaN.
+    _nn = [f"{n}={v!r}" for n, v in (("bid", best_bid), ("ask", best_ask))
+           if not isinstance(v, (int, float)) or isinstance(v, bool)]
+    if _nn:
+        return _bad(coin, window_start, outcome, NON_NUMERIC_SIDE,
+                    f"non-numeric book side(s): {_nn}", source_timestamp,
+                    local_knowledge_timestamp)
     _nf = [n for n, v in (("bid", best_bid), ("ask", best_ask))
            if not math.isfinite(v)]
     if _nf:
@@ -403,6 +438,14 @@ class PriceTick:
 
 @dataclass(frozen=True)
 class PartialTwap:
+    # A RECORD MUST IDENTIFY ITS SUBJECT. Without the bounds, a consumer cannot
+    # tell WHICH interval this integral is about -- and a hand-built
+    # PartialTwap(covered_s=999, span_s=999) was accepted by the s60 estimator
+    # and returned p=1.0 from fabricated numbers. Same rule the tape verdict
+    # already carries: an artifact that cannot name its subject can be replayed
+    # against another.
+    lo: float | None
+    hi: float | None
     integral: float | None             # A_t, price-seconds over the covered part
     covered_s: float
     span_s: float
@@ -472,7 +515,8 @@ def realized_integral(ticks: Iterable[PriceTick], t0: float, t: float, *,
         used.append(k)
     span = float(t - t0)
     if not used:
-        return PartialTwap(None, 0.0, span, TWAP_NO_INPUT, 0, n_fut, n_era,
+        return PartialTwap(float(t0), float(t), None, 0.0, span,
+                           TWAP_NO_INPUT, 0, n_fut, n_era,
                            n_stamp, n_out, 0.0, source,
                            "no admissible tick in the window")
     used.sort(key=lambda k: k.source_timestamp)
@@ -502,7 +546,7 @@ def realized_integral(ticks: Iterable[PriceTick], t0: float, t: float, *,
     status = (TWAP_OK if complete else TWAP_INCOMPLETE)
     if status == TWAP_OK and hold_max > MAX_FRESHNESS_S:
         status = TWAP_STALE_HOLD
-    return PartialTwap(integral, covered, span, status,
+    return PartialTwap(float(t0), float(t), integral, covered, span, status,
                        len(used), n_fut, n_era, n_stamp, n_out, hold_max,
                        source,
                        (f"first admissible tick at {start} is after t0={t0}: "
@@ -583,7 +627,7 @@ def bn_bookticker_s60_probability(*, spot: float, spot_as_of: float,
                                   t: float, T: float, window_s: float = 60.0,
                                   sigma: float, sigma_as_of: float,
                                   sigma_lookback_s: float,
-                                  reference: float,
+                                  reference: float, reference_as_of: float,
                                   reference_source: str) -> dict[str, Any]:
     """P(S60(T) >= S60(t0)) -- the A2 estimand. **BUILD ONLY, NOT SCORED.**
 
@@ -612,15 +656,27 @@ def bn_bookticker_s60_probability(*, spot: float, spot_as_of: float,
             f"relay (topic `crypto_prices_twap_sixty`); the `crypto_prices` "
             f"topic on the SAME subscription is a Binance-spot mirror and is "
             f"not the settlement source (Q-DA-117, one level down).")
-    for nm, v in (("sigma_as_of", sigma_as_of), ("spot_as_of", spot_as_of)):
+    # NaN AS-OF PASSED EVERY LOOK-AHEAD GUARD. `NaN > t` is False, so a NaN
+    # stamp cleared the check and returned an OK probability -- the same NaN
+    # trap that hit the depth gate and the predeclaration check today. Finite
+    # FIRST, then ordering.
+    for nm, v in (("sigma_as_of", sigma_as_of), ("spot_as_of", spot_as_of),
+                  ("reference_as_of", reference_as_of)):
+        if not _finite_real(v):
+            raise Inadmissible(
+                f"REFUSED: {nm}={v!r} is not a finite real. A NaN stamp passes "
+                f"every ordering comparison it appears in.")
         if v > t:
             raise Inadmissible(
                 f"REFUSED: {nm}={v} is AFTER the decision time t={t}.")
     if not (T > t):
         raise Inadmissible(f"REFUSED: need t < T, got {t}, {T}")
-    if not (isinstance(sigma, (int, float)) and math.isfinite(sigma)
-            and sigma > 0):
-        raise Inadmissible(f"REFUSED: sigma={sigma!r} must be finite and > 0")
+    for nm, v in (("sigma", sigma), ("spot", spot), ("reference", reference)):
+        if not _finite_real(v) or v <= 0:
+            # `spot=0` raised a raw `math domain error` out of log(m): a crash
+            # is not a status, and a caller cannot distinguish it from a bug.
+            raise Inadmissible(
+                f"REFUSED: {nm}={v!r} must be a finite positive real")
 
     w_start = T - window_s
     if t <= w_start:
@@ -638,6 +694,22 @@ def bn_bookticker_s60_probability(*, spot: float, spot_as_of: float,
                     "detail": "inside the terminal window the realized part is "
                               "required and must be complete; got "
                               f"{None if partial is None else partial.status}"}
+        # THE PARTIAL MUST BE THE RIGHT ONE, not merely well-formed. A partial
+        # built from `pm_microprice` ticks was accepted by the bookTicker
+        # challenger -- my own fairprice_estimator discipline, unenforced one
+        # level down -- and a hand-built one claiming span=covered=999 returned
+        # p=1.0 from numbers that described no interval at all.
+        if partial.source != BN_BOOKTICKER:
+            raise Inadmissible(
+                f"REFUSED: the realized partial was built from "
+                f"{partial.source!r}, not {BN_BOOKTICKER!r}. A challenger may "
+                f"not consume another estimator's realized state.")
+        if (partial.lo, partial.hi) != (float(w_start), float(t)):
+            raise Inadmissible(
+                f"REFUSED: the partial covers [{partial.lo}, {partial.hi}] but "
+                f"the terminal window requires [{w_start}, {t}]. A record that "
+                f"cannot be matched to its interval can be replayed against "
+                f"another.")
         a, length, realized = 0.0, T - t, float(partial.integral)
 
     k = reference * window_s - realized
@@ -657,6 +729,7 @@ def bn_bookticker_s60_probability(*, spot: float, spot_as_of: float,
             "regime": "pre-window" if t <= w_start else "terminal",
             "a": a, "length": length, "k": k, "realized": realized,
             "window_s": window_s, "sigma": sigma,
+            "reference_as_of": reference_as_of,
             "sigma_lookback_s": sigma_lookback_s,
             "reference_source": reference_source,
             "detail": "A2 endpoint estimand; BUILD ONLY, not scored"}
@@ -1133,6 +1206,16 @@ def _selftests() -> int:
     def _tk(vs):
         return [PriceTick(a_, a_, v) for a_, v in vs]
 
+    def _bn(segments, t0, T, dt=1.0):
+        """Dense ticks CARRYING recv_ns above the era floor. `bn_bookticker_mid`
+        is era-floored, so a fixture without stamps is inadmissible -- which is
+        the guard working, not a nuisance: the estimator now requires its
+        partial to come from its OWN source, and that source demands stamps."""
+        return [PriceTick(k.source_timestamp, k.local_knowledge_timestamp,
+                          k.value, recv_ns=HF_ERA_FLOOR_NS + 1
+                          + int(k.source_timestamp * 1_000_000_000))
+                for k in _step(segments, t0, T, dt)]
+
     def _step(segments, t0, T, dt=1.0):
         """Dense ticks from a legible STEP SPEC [(start, value), ...].
 
@@ -1419,11 +1502,39 @@ def _selftests() -> int:
                           100.0, 100.01, max_freshness_s=0.05).status == OK,
        "positive control: a STRICTER caller bound is accepted and applied")
 
+    # ===== round-3 (3): the bool/NaN family, closed ======================
+    ok(_ctor_refuses(freshness_s=float("nan")) != "",
+       "R3(3a) freshness_s=NaN REFUSES. It passed because "
+       "`abs(NaN - (lk-src)) > 1e-9` is False -- every comparison against NaN "
+       "is False, so the consistency check CONFIRMED a value it never compared")
+    ok(_ctor_refuses(value=True) != "",
+       "R3(3b) value=True REFUSES. `True` satisfies 0 <= v <= 1, so a bool was "
+       "a perfectly plausible probability")
+    ok(_ctor_refuses(source_timestamp=True, freshness_s=0.0) != "",
+       "R3(3c) a BOOL timestamp REFUSES -- isinstance(True, int) is True and "
+       "isfinite(True) is True, so it cleared both halves of the old guard")
+    _nn = identity_from_book("btc", 1787650200, "UP", False, True, 5.0, 5.0,
+                             100.0, 100.05)
+    ok(_nn.status == NON_NUMERIC_SIDE and _nn.value is None,
+       f"R3(3d) a BOOL book refuses as {NON_NUMERIC_SIDE}, not as "
+       f"NON_FINITE_SIDE: False/True is a plausible 0/1 book that mids to 0.5, "
+       f"and calling it non-finite would misdescribe its cause -- this "
+       f"module's own rule. THE SUITE HAD NO NON-NUMERIC-SIDE TEST AT ALL, "
+       f"which is why my first patch left the status constant UNDEFINED and "
+       f"every selftest still passed: the branch was never taken")
+    ok(identity_from_book("btc", 1787650200, "UP", float("nan"), 0.5, 5.0, 5.0,
+                          100.0, 100.05).status == NON_FINITE_SIDE,
+       "positive control: a genuine NaN side still reports NON_FINITE_SIDE, so "
+       "the two causes stay distinguishable")
+    ok(identity_from_book("btc", 1787650200, "UP", 0.40, 0.44, 5.0, 5.0,
+                          100.0, 100.05).status == OK,
+       "positive control: a valid book is unaffected")
+
     # ===== A2: the SIXTY-SECOND ENDPOINT estimand ========================
     _s60 = dict(spot=100.0, spot_as_of=100.0, partial=None, t=100.0, T=300.0,
                 window_s=60.0, sigma=0.02, sigma_as_of=99.0,
                 sigma_lookback_s=1800.0, reference=100.0,
-                reference_source=CHAINLINK_REF_SOURCE)
+                reference_as_of=0.0, reference_source=CHAINLINK_REF_SOURCE)
 
     def _s60_refuses(**kw):
         try:
@@ -1442,8 +1553,8 @@ def _selftests() -> int:
     # THE CORRECTION, MADE FALSIFIABLE: before the window opens the realized
     # past cannot matter. A1.3 claimed it always must.
     ok("cannot matter" in _s60_refuses(
-           partial=realized_integral(_step([(0.0, 500.0)], 0.0, 100.0),
-                                     0.0, 100.0, source=MICROPRICE)),
+           partial=realized_integral(_bn([(0.0, 500.0)], 0.0, 100.0),
+                                     0.0, 100.0, source=BN_BOOKTICKER)),
        "A2 CORRECTION, FALSIFIABLE: supplying a realized partial for a "
        "decision BEFORE the averaging window opens REFUSES. My A1.3 claimed a "
        "challenger must carry the realized average at EVERY instant; under "
@@ -1451,16 +1562,16 @@ def _selftests() -> int:
        "accepting one would let a past that cannot matter move the answer")
 
     # terminal regime: now the realized part DOES move it
-    _tick_hi = _step([(240.0, 101.0)], 240.0, 270.0)
-    _tick_lo = _step([(240.0, 99.0)], 240.0, 270.0)
+    _tick_hi = _bn([(240.0, 101.0)], 240.0, 270.0)
+    _tick_lo = _bn([(240.0, 99.0)], 240.0, 270.0)
     _ph = bn_bookticker_s60_probability(
         **{**_s60, "t": 270.0, "spot_as_of": 270.0,
            "partial": realized_integral(_tick_hi, 240.0, 270.0,
-                                        source=MICROPRICE)})
+                                        source=BN_BOOKTICKER)})
     _pl = bn_bookticker_s60_probability(
         **{**_s60, "t": 270.0, "spot_as_of": 270.0,
            "partial": realized_integral(_tick_lo, 240.0, 270.0,
-                                        source=MICROPRICE)})
+                                        source=BN_BOOKTICKER)})
     ok(_ph["regime"] == "terminal" and _pl["regime"] == "terminal"
        and _ph["probability"] > _pl["probability"],
        f"A2 TERMINAL regime: inside the last 60s the realized part MOVES the "
@@ -1474,8 +1585,8 @@ def _selftests() -> int:
        "with no number -- required exactly where it matters")
     _clinch = bn_bookticker_s60_probability(
         **{**_s60, "t": 270.0, "spot_as_of": 270.0,
-           "partial": realized_integral(_step([(240.0, 500.0)], 240.0, 270.0),
-                                        240.0, 270.0, source=MICROPRICE)})
+           "partial": realized_integral(_bn([(240.0, 500.0)], 240.0, 270.0),
+                                        240.0, 270.0, source=BN_BOOKTICKER)})
     ok(_clinch["probability"] == 1.0 and "clinched" in _clinch["detail"],
        "a terminal window already carried above the reference by its realized "
        "part alone returns exactly 1.0")
@@ -1501,6 +1612,46 @@ def _selftests() -> int:
     ok(_mono[0] < _mono[1] < _mono[2],
        f"monotone in spot under the endpoint estimand too "
        f"({_mono[0]:.4f} < {_mono[1]:.4f} < {_mono[2]:.4f})")
+
+    # ===== round-3 (2): the estimator boundary, closed ===================
+    _wrong_src = realized_integral(_step([(240.0, 100.0)], 240.0, 270.0),
+                                   240.0, 270.0, source=MICROPRICE)
+    ok("may not consume another estimator" in _s60_refuses(
+           t=270.0, spot_as_of=270.0, partial=_wrong_src),
+       "R3(2a) a partial built from `pm_microprice` is REFUSED by the "
+       "bookTicker challenger -- my own fairprice_estimator discipline, "
+       "unenforced one level down inside the accumulator path")
+    _forged = PartialTwap(lo=999.0, hi=999.0, integral=100.0 * 999,
+                          covered_s=999.0, span_s=999.0, status=TWAP_OK,
+                          n_used=1, n_future_knowledge=0, n_pre_era=0,
+                          n_missing_stamp=0, n_out_of_window=0, max_hold_s=1.0,
+                          source=BN_BOOKTICKER)
+    ok("cannot be matched to its interval" in _s60_refuses(
+           t=270.0, spot_as_of=270.0, partial=_forged),
+       "R3(2b) a FORGED partial claiming span=covered=999 is REFUSED. It "
+       "returned p=1.0 -- 'clinched' -- from numbers describing no interval at "
+       "all, because PartialTwap did not record WHICH interval it covered. It "
+       "does now: a record that cannot name its subject can be replayed "
+       "against another")
+    ok("not a finite real" in _s60_refuses(spot_as_of=float("nan"))
+       and "not a finite real" in _s60_refuses(sigma_as_of=float("nan"))
+       and "not a finite real" in _s60_refuses(reference_as_of=float("nan")),
+       "R3(2c) a NaN as-of on spot, sigma OR reference REFUSES. `NaN > t` is "
+       "False, so a NaN stamp cleared every look-ahead guard and returned an "
+       "OK probability -- the same NaN trap as the depth gate and the "
+       "predeclaration check, third instance today. Finite FIRST, then order")
+    ok("finite positive real" in _s60_refuses(spot=0.0),
+       "R3(2d) spot=0 returns a REFUSAL, not a raw `math domain error` out of "
+       "log(m). A crash is not a status and a caller cannot tell it from a bug")
+    import inspect as _i2
+    ok("reference_as_of" in _i2.signature(
+           bn_bookticker_s60_probability).parameters,
+       "R3(2e) the signature now carries a REFERENCE knowledge timestamp -- "
+       "S60(t0) was trusted with no as-of, so nothing established it was "
+       "knowable at the decision time")
+    ok(bn_bookticker_s60_probability(**_s60)["status"] == FP_OK,
+       "positive control: a correctly-sourced, correctly-bounded, "
+       "fully-stamped call still answers")
 
     print(f"\n{'FAIR-PRICE IDENTITY SELFTEST GREEN' if not fails else 'RED'}: "
           f"{len(fails)} failing, {checks} checks")

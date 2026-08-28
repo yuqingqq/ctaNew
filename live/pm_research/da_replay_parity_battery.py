@@ -1037,17 +1037,17 @@ def external_lifecycle(tr: Trajectory) -> dict[str, Any]:
     # the accounting identity was tested -- requested = effective + suppressed
     # then held on a trajectory that resolved one request twice. Multiplicity
     # that disappears before the check is multiplicity the check cannot see.
-    req: dict[tuple, list[float]] = {}
-    eff: dict[tuple, list[float]] = {}
-    sup: dict[tuple, list[float]] = {}
+    req: dict[tuple, list[tuple[float, int]]] = {}
+    eff: dict[tuple, list[tuple[float, int]]] = {}
+    sup: dict[tuple, list[tuple[float, int]]] = {}
     for e in ev:
         k = (e.slug, e.side, e.gen)
         if e.kind == "CANCEL_REQUESTED":
-            req.setdefault(k, []).append(e.t)
+            req.setdefault(k, []).append((e.t, e.seq))
         elif e.kind == "CANCEL_EFFECTIVE":
-            eff.setdefault(k, []).append(e.t)
+            eff.setdefault(k, []).append((e.t, e.seq))
         elif e.kind == "CANCEL_SUPPRESSED":
-            sup.setdefault(k, []).append(e.t)
+            sup.setdefault(k, []).append((e.t, e.seq))
     dbl = sorted(k for k, v in req.items() if len(v) > 1)
     # EXACTLY ONE TERMINAL OUTCOME PER REQUEST: a request either binds or is
     # suppressed, once. Two outcomes for one request is a producer accounting
@@ -1057,6 +1057,12 @@ def external_lifecycle(tr: Trajectory) -> dict[str, Any]:
     # TEMPORAL ORDER: a cancel that took EFFECT BEFORE IT WAS REQUESTED passed
     # cleanly -- nothing compared the two stamps. Measured against the EARLIEST
     # request for the generation, so a later duplicate cannot excuse it.
+    # ORDER IS (t, seq), NOT t. The canonical form orders by (t, seq) -- so a
+    # CANCEL_EFFECTIVE at (t=1, seq=0) precedes a CANCEL_REQUESTED at
+    # (t=1, seq=1) on the same generation, and comparing only `t` called that
+    # simultaneous and let it pass. The comparison must use the SAME order the
+    # canonical bytes are defined over, or the checker and the digest disagree
+    # about what "before" means.
     early = sorted((k, o) for k in set(eff) | set(sup) if k in req
                    for o in eff.get(k, []) + sup.get(k, []) if o < min(req[k]))
     # BOTH fill kinds. The first version checked only FILL, so a producer
@@ -1067,7 +1073,7 @@ def external_lifecycle(tr: Trajectory) -> dict[str, Any]:
     late = [(e.kind, e.slug, e.gen, e.t) for e in ev
             if e.kind in ("FILL", "FILL_STALE")
             and (e.slug, e.side, e.gen) in eff
-            and e.t >= min(eff[(e.slug, e.side, e.gen)])]
+            and (e.t, e.seq) >= min(eff[(e.slug, e.side, e.gen)])]
     # An OUTCOME without its REQUEST: an effective or suppressed cancel on a
     # generation that was never asked to cancel means the producer's
     # accounting is broken, and requested=effective+suppressed would then be
@@ -1638,6 +1644,20 @@ def _selftests() -> int:
        and _r_ok["outcomes_after_their_request"],
        "and both NEW predicates are present and true on a valid trajectory, "
        "so they are wired into `pass` rather than merely defined")
+
+    _seq_ev = [dict(t=1.0, seq=0, kind="CANCEL_EFFECTIVE", slug="s",
+                    side="BUY_UP", gen=1, qty=0.0, price=None, note=""),
+               dict(t=1.0, seq=1, kind="CANCEL_REQUESTED", slug="s",
+                    side="BUY_UP", gen=1, qty=0.0, price=None, note="")]
+    _seq_obj = {"canon": CANON, "arm": "QR_SKEW_ONLY", "predictor": "none",
+                "predictor_active": False, "components": ["skew"],
+                "interaction": False, "fairprice_estimator": None,
+                "events": _seq_ev}
+    ok(external_lifecycle(load_external_trajectory(_seq_obj))["pass"] is False,
+       "R3: an outcome ordered before its request BY SEQ at the SAME t now "
+       "fails. The canonical bytes order by (t, seq), but the check compared "
+       "only `t` and called them simultaneous -- the checker and the digest "
+       "disagreed about what 'before' means, and the digest is the contract")
 
     # ---- B2: identity is (composition x predictor) -----------------------
     _lin = trajectory_to_contract(ext_tr)

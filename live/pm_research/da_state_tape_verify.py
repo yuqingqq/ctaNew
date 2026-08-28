@@ -311,14 +311,16 @@ def locate_features(rows: list[dict[str, Any]], schema: dict[str, Any],
     # Found 2026-08-28 by applying the search lesson from Q-DA-135 ("head can
     # prove presence, never absence") to my own committed code.
     chosen = under if nest_hits > flat_hits else None
-    bad, first = _layout_nonconforming(rows, declared, chosen)
+    bad, first, _conf = _layout_nonconforming(rows, declared, chosen)
     if bad:
         raise GateRefused(
             f"HETEROGENEOUS LAYOUT: the {len(probe)}-row probe selected "
             f"{'nested under ' + repr(chosen) if chosen else 'FLAT'}, but "
-            f"{bad} of {len(rows)} rows carry NO declared feature under it "
-            f"while carrying features under the other layout (first at index "
-            f"{first[0]}: {first[1]}). REFUSING: those rows would have been "
+            f"{bad} of {len(rows)} rows FAIL per-row conformance "
+            f"({_conf['wrong_layout']} under the wrong layout, "
+            f"{_conf['no_declared_features']} carrying NO declared feature at "
+            f"all); first at index {first[0]}: {first[1]}. REFUSING: those "
+            f"rows would have been "
             f"iterated as empty and passed silently, which is the defect this "
             f"locator exists to prevent.")
     if chosen is not None:
@@ -329,15 +331,32 @@ def locate_features(rows: list[dict[str, Any]], schema: dict[str, Any],
 
 def _layout_nonconforming(rows, declared, under,
                           cands=("state", "features", "pred_state")):
-    """Rows that carry NO declared feature under the CHOSEN layout while
-    carrying one under another. Counted over EVERY row, not a probe -- the
-    whole point is that the probe cannot see these."""
-    bad, first = 0, None
+    """PER-ROW conformance. Two failure classes, and the second was invisible.
+
+    WRONG LAYOUT -- the row's features are under a different key. Caught since
+    Q-DA-136.
+
+    NO FEATURES AT ALL -- the row carries none of the declared features
+    ANYWHERE. This was blind: the check only flagged rows whose features lived
+    elsewhere, so a row whose whole `state` dict was DELETED had no `other` to
+    find and passed. Codex's executed fixture: 401 rows, empty row 401's state,
+    and every predicate still passed -- because `present` at the caller is the
+    UNION of all rows' keys, so 400 healthy rows carry the union past every
+    check while one row contributes nothing and is never missed.
+
+    A union answers "does any row have this field". A gate proof needs "does
+    every row", and those differ by exactly the rows that are broken.
+
+    Also returns the per-row declared-feature COUNT distribution, so a bound
+    can be set from what the tape actually contains rather than assumed.
+    """
+    wrong, none_at_all, first, dist = 0, 0, None, {}
     for i, r in enumerate(rows):
         if not isinstance(r, dict):
             continue
         here = declared & (set(r) if under is None
                            else set(r.get(under) or {}) | set(r))
+        dist[len(here)] = dist.get(len(here), 0) + 1
         if here:
             continue
         other = set()
@@ -348,10 +367,16 @@ def _layout_nonconforming(rows, declared, under,
             if isinstance(v, dict):
                 other |= declared & set(v)
         if other:
-            bad += 1
+            wrong += 1
             if first is None:
-                first = (i, sorted(other)[:4])
-    return bad, first
+                first = (i, "WRONG_LAYOUT", sorted(other)[:4])
+        else:
+            none_at_all += 1
+            if first is None:
+                first = (i, "NO_DECLARED_FEATURES", [])
+    return wrong + none_at_all, first, {
+        "wrong_layout": wrong, "no_declared_features": none_at_all,
+        "per_row_feature_count": dict(sorted(dist.items()))}
 
 
 def clock_of(r: dict[str, Any], schema: dict[str, Any],
