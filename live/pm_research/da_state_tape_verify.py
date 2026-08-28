@@ -96,6 +96,7 @@ def load_schema(path: Path = SCHEMA) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+HEADER_SCAN_CAP = 8 << 20   # declared; see read_header
 CHUNK = 1 << 23
 
 
@@ -109,10 +110,37 @@ def read_header(path: Path) -> dict[str, Any]:
     layout from a `state` key. Under-specified by me -- so the gate now reads
     the header first, and the schema wording is tightened to match.
     """
-    raw = path.open("r", encoding="utf-8").read(1 << 16)
-    i = raw.find('"rows"')
+    # A BOUNDED READ MAY NOT CONCLUDE ABSENCE. This read 64KB and, if `"rows"`
+    # was not inside it, returned {} -- an EMPTY header, silently. The gate
+    # then has no `features_under` or `clock_basis` declaration and falls back
+    # to GUESSING the layout, which is the exact behaviour this function's
+    # docstring says it was written to stop. A header merely LARGER than 64KB
+    # (more declared fields, a longer provenance block) was enough.
+    #
+    # So: scan forward to a declared cap, and distinguish the two reasons
+    # `"rows"` can be missing instead of collapsing them. A tape that is a BARE
+    # ARRAY is legitimately headerless; an OBJECT whose header cannot be
+    # located is unreadable and REFUSES. Fifth sibling of the Q-DA-135 class,
+    # found by re-sweeping with idioms my first sweep did not cover.
+    raw, i = "", -1
+    with path.open("r", encoding="utf-8") as fh:
+        while len(raw) < HEADER_SCAN_CAP:
+            chunk = fh.read(1 << 16)
+            if not chunk:
+                break
+            raw += chunk
+            i = raw.find('"rows"')
+            if i >= 0:
+                break
+    lead = raw.lstrip()[:1]
     if i < 0:
-        return {}
+        if lead == "[":
+            return {}          # bare array: legitimately headerless
+        raise GateRefused(
+            f"no `rows` key within the first {HEADER_SCAN_CAP} bytes of an "
+            f"OBJECT tape (leading char {lead!r}). REFUSING rather than "
+            f"returning an empty header: an empty header makes the gate guess "
+            f"the layout, which is what reading the header exists to prevent.")
     prefix = raw[:i].rstrip().rstrip(",")
     try:
         return json.loads(prefix + "}")
@@ -1587,6 +1615,38 @@ def _selftests() -> int:
         ok(not _try(other_na),
            "any OTHER N/A is refused -- the permitted set is a list of one, so "
            "a future exception needs a ruling rather than an argument")
+
+    # ---- a bounded header read may not conclude absence (Q-DA-137) ------
+    import tempfile as _tfh
+    with _tfh.TemporaryDirectory() as _td:
+        _pad = "x" * 100_000            # header LARGER than the old 64KB read
+        _big = Path(_td) / "big.json"
+        _big.write_text(json.dumps({"features_under": "state",
+                                    "note": _pad, "rows": [{"a": 1}]}),
+                        encoding="utf-8")
+        _h = read_header(_big)
+        ok(_h.get("features_under") == "state",
+           "A HEADER LARGER THAN 64KB IS NOW READ: the old bounded read took "
+           "64KB, missed `rows`, and returned an EMPTY header silently -- so "
+           "the gate lost `features_under` and fell back to GUESSING the "
+           "layout, which is what reading the header exists to prevent")
+        _bare = Path(_td) / "bare.json"
+        _bare.write_text(json.dumps([{"a": 1}]), encoding="utf-8")
+        ok(read_header(_bare) == {},
+           "positive control: a BARE ARRAY tape is legitimately headerless and "
+           "returns {} -- the two reasons `rows` can be missing are "
+           "distinguished, not collapsed")
+        _hdrless = Path(_td) / "obj.json"
+        _hdrless.write_text(json.dumps({"a": 1, "b": 2}), encoding="utf-8")
+        _ref = ""
+        try:
+            read_header(_hdrless)
+        except GateRefused as e:
+            _ref = str(e)
+        ok("REFUSING rather than returning an empty header" in _ref,
+           "and an OBJECT with no `rows` key REFUSES instead of returning an "
+           "empty header -- absence of a locatable header is unreadability, "
+           "not a headerless tape")
 
     # ---- the probe chose a layout it never verified (Q-DA-136) ----------
     _sch = {"emitted_fields": ["f_a", "f_b", "f_c"],
