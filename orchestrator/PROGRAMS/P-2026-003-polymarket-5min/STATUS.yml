@@ -4,6 +4,27 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-08-28T09:53Z (MEM): R-248 -- BATCH 1 COMPLETE, VERIFIED IN THE
+  COORDINATOR'S OWN RUN, AND THE CODEX ROUND HAS FIRED at e72dd4c with the
+  request filed under reviews/ (no state-file collision this time). FIT IS NOW
+  DOUBLE-BLOCKED and both gates must clear: Codex HOLD RELEASED, AND the USER's
+  ruling on Q2's cell statistic -- BE implemented min(AUC(p_pos), AUC(p_neg)),
+  the WORSE side, so half a working head cannot carry a cell, but the choice
+  fills a gap in a USER-FROZEN amendment and is therefore the user's, blocking
+  fit and NOT a review matter. The A1.1 bias algebra was hand-verified
+  independently, and the falsifier asserts BOTH directions -- with no zero mass
+  the amended and superseded forms AGREE, which is the real check: an amendment
+  that changed the answer everywhere would be a different estimand, not a
+  correction. TWO BE SELF-CATCHES recorded as one lesson: an old assertion
+  ("0, not a crash") was the DEFECT WRITTEN DOWN AS THE SPEC, now inverted into
+  a refusal test; and the runner's row() helper had been manufacturing the exact
+  malformed pair A1.3 bans, so every earlier test ran on impossible rows -- the
+  strictness caught its own harness on first contact. Falsifier counts recorded
+  FROM THE SCRIPT (81/38/15 = 134) against BE's messaged 126, over-delivery
+  direction, queried not blocking. MEM's proposed house rule was adopted:
+  SEAT_PROTOCOL rule 15, verified at the file. TONIGHT: the deploy is ON but
+  NOT unconditional -- an adverse O1-relevant Codex finding before ~23:55Z
+  arming postpones the boundary. PRIOR:
   2026-08-28T09:48Z (MEM): R-246 + R-247. LANE-4 PARITY BATTERY delivered and
   verified in the coordinator's own run (14/14), with "bit-identical" now
   DEFINED over replay_traj_canon_v1 -- an unpinned signature rule would make
@@ -195,6 +216,66 @@ updated: >-
   hygiene + recv_ns measurement)
 
 flags:
+  iter011_q2_statistic: WITH-THE-USER-BLOCKING-FIT # 2026-08-28 R-248. The one
+                             # design call A1.4 left open. BE implemented Q2's
+                             # cell statistic as min(AUC(p_pos), AUC(p_neg))
+                             # (phase2_iter011_run.py:231) -- THE WORSE SIDE, so
+                             # HALF A WORKING HEAD CANNOT CARRY A CELL:
+                             # pre-declared before any number, conservative,
+                             # family-preserving. THE CHOICE IS THE USER'S,
+                             # because it fills a gap in a USER-FROZEN
+                             # amendment: min / mean / separate cells (the last
+                             # would CHANGE THE 24-CELL FAMILY). This is
+                             # BLOCKING FIT CLEARANCE AND IS NOT A REVIEW
+                             # MATTER -- a Codex HOLD RELEASED does not by
+                             # itself clear the fit. Subtlety flagged INTO the
+                             # round: at :231 a side whose AUC is None DROPS OUT
+                             # of the min, so the reviewer must check that the
+                             # one-side-unevaluable path cannot let a single
+                             # side carry the cell past the UNDERPOWERED
+                             # machinery.
+  codex_round_1: FIRED-AT-e72dd4c # 2026-08-28 R-248. Scope request filed at
+                             # workspace/reviews/REQUEST_BATCH1_2026-08-28.md --
+                             # the R-239 location, and this time with NO
+                             # state-file collision (the pre-fit filing had
+                             # landed in STATUS/HANDOFF and collided with a MEM
+                             # sweep). Batch tip is the review commit. Contents:
+                             # DA's three deliveries + signed-zero hardening +
+                             # BE's five A1.8 steps. DEPLOY INTERACTION per
+                             # R-240, and this is the one to watch tonight: AN
+                             # ADVERSE O1-RELEVANT FINDING BEFORE ~23:55Z ARMING
+                             # POSTPONES THE BOUNDARY. The deploy is ON but not
+                             # unconditional.
+  falsifier_count_discrepancy: RECORDED-FROM-THE-SCRIPT-QUERIED # 2026-08-28
+                             # R-248. The COUNTING SCRIPT gives 81/38/15 = 134;
+                             # BE's message said 81+34+11 = 126. Recorded from
+                             # THE SCRIPT, per BE's own 001991c lesson (read the
+                             # count, never hand-type it). The script's numbers
+                             # are LARGER -- the over-delivery direction, which
+                             # is why this is queried rather than blocking. NOT
+                             # RESOLVED: if a later reader needs the count, take
+                             # it from the script and treat 126 as a superseded
+                             # hand figure.
+  defect_class_falsifier_enshrined_a_defect: NAMED # 2026-08-28 R-248, BE's own
+                             # catch, verified at the artifact. The old
+                             # assertion signed_v_cancel({}) == 0.0 -- filed as
+                             # "0, not a crash" -- WAS THE DEFECT WRITTEN DOWN
+                             # AS THE SPEC: a fail-open enshrined by the very
+                             # test that was supposed to police it. It is now
+                             # the DOCUMENTED DEFECT at phase2_iter011.py:371
+                             # and INVERTED INTO A REFUSAL TEST. This joins the
+                             # standing defect vocabulary beside "a fixture that
+                             # supplies what the code should have produced" and
+                             # the decorative-anchor / refusing-everything pair:
+                             # all four are a control that cannot fail being
+                             # mistaken for a control that passed.
+                             # BE's SECOND self-catch, same cycle: its runner's
+                             # row() helper MANUFACTURED the exact malformed
+                             # pair A1.3 bans (zero shares with nonzero value),
+                             # so every prior test had run on rows that CANNOT
+                             # OCCUR. The strictness caught its own test harness
+                             # on first contact -- which is the argument FOR the
+                             # strictness, not against it.
   parity_signed_zero: UNNORMALISED-BY-RULING # 2026-08-28 R-247(2), DA at
                              # 6b25b7e (suite 14 -> 18). 0.0 vs -0.0 stays
                              # UNNORMALISED in replay_traj_canon_v1. Two
@@ -215,7 +296,16 @@ flags:
                              # EXPLICITLY IN SCOPE for the Codex round as a
                              # parity-contract matter; any change there is a
                              # RULED CONTRACT CHANGE, never a quiet loosening.
-  register_claims_need_a_check: STANDING-STANDARD # 2026-08-28 R-247(2), DA's
+  register_claims_need_a_check: SEAT-PROTOCOL-RULE-15 # ADOPTED AS A HOUSE RULE
+                             # 2026-08-28 at e72dd4c (R-248), verified by MEM at
+                             # SEAT_PROTOCOL.md:66: "A register entry citing a
+                             # property of code carries a check behind it in
+                             # that code's suite" -- DA's standard, MEM's
+                             # proposal to make it a rule, coordinator's
+                             # adoption. It cites R-247 and is filed as
+                             # CONSOLIDATION, so the register stays
+                             # authoritative. ORIGINAL ENTRY (rule 13):
+                             # 2026-08-28 R-247(2), DA's
                              # standard, adopted: "A REGISTER ENTRY CITING A
                              # PROPERTY OF MY CODE SHOULD HAVE A CHECK BEHIND
                              # IT." The register had cited a property of DA's
@@ -723,7 +813,27 @@ flags:
                              # coordinator, not here. Recorded so the divergence
                              # is discoverable from the state files rather than
                              # only by re-reading two artifacts side by side.
-  iter011_development: HOLD-STANDS-A1-FROZEN-BE-BUILDING # UPDATED
+  iter011_development: BATCH-COMPLETE-IN-REVIEW-FIT-DOUBLE-BLOCKED # ADVANCED
+                             # 2026-08-28 R-248 (batch tip e72dd4c). BE's five
+                             # A1.8 steps landed (50277fb / 6f559fc / 9ace8c1 /
+                             # f9fb032 + frozen A1); all THREE suites green in
+                             # the COORDINATOR'S OWN RUN, not from BE's report.
+                             # FIT IS NOW BLOCKED ON TWO INDEPENDENT GATES and
+                             # both must clear -- do not treat either as the
+                             # only one: (i) Codex HOLD RELEASED at the batch
+                             # tip; (ii) the USER's Q2-statistic ruling (see
+                             # iter011_q2_statistic), which is blocking FIT
+                             # CLEARANCE and is NOT a review matter.
+                             # A1.1 Option-1 bias algebra INDEPENDENTLY
+                             # hand-verified by the coordinator: on 2 harm /
+                             # 1 good / 1 zero with m_good=2, p_zero=0.25 ->
+                             # bias = +0.5000 exactly (amended 2.0000 vs
+                             # superseded 1.5000). The falsifier asserts BOTH
+                             # DIRECTIONS -- with NO zero mass the two forms
+                             # AGREE -- which is the check that matters: an
+                             # amendment that changed the answer EVERYWHERE
+                             # would be a different estimand, not a correction.
+                             # EARLIER ENTRIES (rule 13): UPDATED
                              # 2026-08-28T09:29Z (R-242): the USER FROZE
                              # amendment A1, so BE is cleared into A1.8 steps
                              # 2-5 RED-FIRST -- but THE FIT/SCORE HOLD STILL

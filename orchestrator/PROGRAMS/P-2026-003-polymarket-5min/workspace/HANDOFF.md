@@ -1,10 +1,90 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-08-28T09:48Z (MEM) — lane-4 parity battery **delivered and
-verified**; **"bit-identical" now has a pinned definition**; **signed zero stays
-unnormalised by ruling**; the idle-dispatch narrow reading is **register-backed
-at R-247(1)**. Both HOLDs still in force. **Boundary deploy ON for 00:00:00Z**,
-runbook pre-checked.
+Updated: 2026-08-28T09:53Z (MEM) — **batch 1 complete and in review** (Codex
+round fired at `e72dd4c`). **The 011 fit is double-blocked**: Codex HOLD
+RELEASED *and* a user ruling on Q2's statistic. Deploy ON for 00:00:00Z but
+**not unconditional** — an adverse O1-relevant finding before arming postpones
+it.
+
+## 2026-08-28 ~09:53Z (MEM) — R-248: batch complete, and two gates that are not the same gate
+
+### The batch closed and the round fired
+
+BE's five A1.8 steps landed (`50277fb` / `6f559fc` / `9ace8c1` / `f9fb032` plus
+frozen A1); **all three suites green in the coordinator's own run**, not from
+BE's report. Batch tip `e72dd4c`; scope request filed at
+`workspace/reviews/REQUEST_BATCH1_2026-08-28.md` — the R-239 location, and **no
+state-file collision this time**.
+
+### Fit is blocked by TWO independent gates — do not treat either as the only one
+
+1. **Codex HOLD RELEASED** at the batch tip.
+2. **The user's ruling on Q2's cell statistic.**
+
+BE implemented Q2 as **`min(AUC(p_pos), AUC(p_neg))`** — the *worse* side, so
+**half a working head cannot carry a cell**. Pre-declared before any number,
+conservative, family-preserving. But the choice **fills a gap in a user-frozen
+amendment**, so it is the user's: min / mean / separate cells (the last would
+**change the 24-cell family**). It is **blocking fit clearance and is not a
+review matter** — a clean review does not by itself clear the fit.
+
+One subtlety was flagged *into* the round: at `:231` a side whose AUC is `None`
+**drops out of the min**, so the reviewer must check the one-side-unevaluable
+path cannot let a single side carry a cell past the `UNDERPOWERED` machinery.
+
+### The bias falsifier checks both directions — that is the part that matters
+
+The A1.1 Option-1 bias algebra was **independently hand-verified**: on 2 harm /
+1 good / 1 zero with `m_good=2`, `p_zero=0.25` → bias **+0.5000 exactly**
+(amended 2.0000 vs superseded 1.5000). And the falsifier asserts **both**
+directions — **with no zero mass the amended and superseded forms agree.**
+
+That second assertion is the real check. **An amendment that changed the answer
+everywhere would be a different estimand, not a correction.** A one-directional
+falsifier would have passed either way.
+
+### Two BE self-catches, one lesson
+
+- **A falsifier had enshrined a defect as the spec.** The old assertion
+  `signed_v_cancel({}) == 0.0`, filed as *"0, not a crash"*, **was the fail-open
+  written down as intended behaviour** — policed by the very test meant to catch
+  it. It is now the *documented defect* at `phase2_iter011.py:371`, **inverted
+  into a refusal test**.
+- **The runner's `row()` helper manufactured the exact malformed pair A1.3
+  bans** (zero shares with nonzero value), so **every prior test ran on rows that
+  cannot occur.** The strictness caught its own test harness on first contact —
+  **which is the argument for the strictness, not against it.**
+
+**Filed into the standing defect vocabulary**, because this is now the fourth
+face of one error: *a fixture that supplies what the code should have produced*;
+*a guard shown only to refuse may be refusing everything*; *an anchor that
+includes the arm name passes nothing and fails nothing*; and now *a falsifier
+that enshrines the defect as spec*. **All four are a control that cannot fail
+being mistaken for a control that passed.**
+
+### Counts recorded from the script, not the message
+
+Falsifier counts **by the counting script: 81 / 38 / 15 = 134.** BE's message
+said 81 + 34 + 11 = **126**. Recorded **from the script**, per BE's own
+`001991c` lesson — read the count, never hand-type it. The script's numbers are
+*larger* (the over-delivery direction), which is why this is **queried, not
+blocking**. **Unresolved:** a later reader takes the count from the script and
+treats 126 as a superseded hand figure.
+
+### House rule adopted
+
+**`SEAT_PROTOCOL` rule 15** — *"a register entry citing a property of code
+carries a check behind it in that code's suite"* (DA's standard, MEM's proposal
+to make it a rule, coordinator's adoption; cites R-247). Verified at
+`SEAT_PROTOCOL.md:66`. Filed as **consolidation** — the register stays
+authoritative.
+
+### Tonight
+
+**The deploy is ON but not unconditional.** Per R-240, **an adverse O1-relevant
+Codex finding before ~23:55Z arming postpones the boundary.** Otherwise
+unchanged: 22:30Z confirmation, arming ~23:55Z, 00:00:00Z deploy, 00:06Z verdict
+under the old bar (btc expected FAIL, `ACCRUES=False`).
 
 ## 2026-08-28 ~09:48Z (MEM) — R-246/R-247: pinning what "identical" means, and refusing the first exemption
 
