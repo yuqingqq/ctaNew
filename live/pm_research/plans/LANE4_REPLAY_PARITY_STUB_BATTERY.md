@@ -92,3 +92,160 @@ No scoring, no promotion, no forward clock. Any arm later evaluated on data
 starts its own ≥5 complete-UTC-day clock on unconsumed days; consumed days stay
 consumed. Whether any arm is adopted is a policy decision with its own priced
 trade-offs (rule 14) — the battery estimates, it never decides.
+
+---
+
+## AMENDMENT B1 — hardening round 2 (Codex batch 2, item 5)
+
+Five findings against the first build, plus four defects the hardening's own
+falsifiers found in the hardening. Instrument: `da_replay_parity_battery.py`,
+**62 checks, green**.
+
+### B1.1 The matched control did not match — it could not have failed
+
+`matched_control(opps, cancels)` took `cancels` and **ignored it**: 0, 1, 6 and
+99 all produced 12 cancels. Both arms cancelled every generation above a
+threshold, so the profiles agreed **by construction**, and every "matched: True"
+it ever reported was uninformative.
+
+**The fix is not to honour the argument — it is to delete it.** A matched
+control's action count is *determined* by the treated arm; a count the caller
+can choose is one that gets chosen after the numbers are visible. Same
+reasoning as the date-predicate granularity in `da_forward_day_verify`. The
+budget knob now lives one level down as a tested primitive:
+
+`budget_matched_selection(pool, budget, seed)` draws exactly `budget`
+generations uniformly without replacement from the cell's eligible pool.
+Budgets 0/1/6 return 0/1/6; **99 REFUSES** rather than clamping, because a
+control that silently drew fewer actions than the treatment is no longer
+matched on the decision variable and the shortfall would be invisible in the
+profile it reports.
+
+Two properties the draw must have, both checked red-first:
+- **order first, then draw** — the pool is sorted into a total order before the
+  RNG touches it, and shuffling the input does not change the selection.
+  Reproducibly sampling an unstably-ordered sequence is blocker-7's defect with
+  a seed bolted on.
+- **`selection_differs`** — the control must select *different* generations than
+  the treatment. A control reproducing the treated selection would match
+  perfectly and measure nothing. `strict_subset` likewise: matching an arm that
+  cancels everything is vacuous, so the treated arm must cancel some but not
+  all (6 of 12 on the fixture).
+
+The stub scorer is **sha256-derived, not builtin `hash()`** — `hash()` of a str
+is salted by `PYTHONHASHSEED`, so a scorer built on it would select a different
+cancel set per process.
+
+### B1.2 The receipt: enumerate, don't derive
+
+`battery()` ran two anchors and returned them. A reader could not tell which
+checks existed, which had run, or whether the top-level boolean covered all of
+them or the two that happened to be present.
+
+`all_pass` is now the conjunction over an enumerated `REQUIRED_CHECKS`, and **a
+required check ABSENT from the receipt makes it False** and is named in
+`missing_checks`. Absence is the failure mode that reads as success. The receipt
+also carries `fixture_sha256` and `battery_code_sha256`, and the fixture digest
+moves with the fixture — a parity result read six weeks later is verifiable at
+the artifact it claims (rule 16).
+
+### B1.3 The zero-repost anchor — the arm that wins by not trading
+
+An arm that cancels once and never reposts has no further adverse fills, and no
+further fills at all. On harm share, adverse-per-fill, or rho it **wins**. That
+degeneracy is invisible to any metric normalised by activity.
+
+`permanent_hold_anchor` measures **exposure, not harm**: withheld share against
+the declared `PERMANENT_HOLD_WITHHELD_SHARE = 0.25`. The holder is flagged
+(9/12 withheld) and takes 3 fills against the normal arm's 12; the normal arm is
+**not** flagged, so the flag is not simply what the anchor always reports.
+
+This requires a representational change: a withheld quote is a **status**
+(`PLACE_WITHHELD`), never a silent absence. An arm that just stopped emitting
+would be indistinguishable from one that ran out of opportunities (rule 4).
+
+### B1.4 Rate limits: requested ≠ effective
+
+A cancel **requested** is not a cancel **effective**. It binds only after
+`CANCEL_EFFECTIVE_LAG_S`, and only if the limiter let it through. A request the
+venue suppressed **prevented nothing**, and valuing it as prevented harm
+inflates the estimand — while looking, to any counter that reads
+`CANCEL_REQUESTED`, exactly like a request that bound.
+
+Evaluated as an identity: `requested = effective + suppressed` (12 = 3 + 9 on a
+run where the limiter actually bound, both sides non-zero). The load-bearing
+anchor: **under a limit of zero, the fills are bit-identical to the arm that
+never cancelled at all.** If they were not, suppression is being credited
+somewhere.
+
+Per-window effective counts are exact and enter the verdict, bucketed on the
+**request** time — the limiter admits or refuses at request, so bucketing the
+effective event would smear counts across the window boundary and report a
+limit that was never applied.
+
+### B1.5 The training-reuse guard (rule 11)
+
+`assert_no_training_reuse(train_days, score_days)` refuses on overlap, and
+refuses when scoring days are **not strictly later** than every fitting day —
+disjoint is not enough; validation is *later untouched* days, not merely other
+days.
+
+**It also refuses on two empty sets.** They are disjoint, so a guard testing
+only `train & score == ∅` would pass loudest exactly when it had nothing to
+check. This programme has already shipped an invariance check that compared two
+empty files and printed IDENTICAL.
+
+### B1.6 The external-arm interface — a data contract, not an import
+
+`load_external_trajectory` reads a declared-shape object and rebuilds the event
+list under DA's own canon. **It imports nothing from BE** (R-235): the moment it
+called BE's serializer, agreement would stop being evidence.
+
+Refusals, each with a red-first test: canon mismatch (trajectories under
+different canonical forms cannot be byte-compared); undeclared arm; empty
+trajectory (it would satisfy every invariant trivially); **missing field**
+(never defaulted — a checker that supplies what the producer failed to produce
+is testing its own defaults); **undeclared extra field** (ignoring it would take
+the digest over a *projection* of what the producer actually did); undeclared
+kind; duplicate `seq`; non-finite stamp.
+
+`external_lifecycle` then checks *behaviour*, because shape validity is not
+behavioural validity: a well-formed trajectory that cancels one generation twice
+loads cleanly and fails. Duplicate arm submissions are flagged — otherwise one
+arm could be scored twice and a missing arm go unnoticed.
+
+### B1.7 Four defects the falsifiers found in the hardening itself
+
+Recorded because they are the same class the battery exists to catch, and
+because three of the four were **decorative fields beside a verdict they did not
+enter** — a shape this programme has already paid for:
+
+1. `effective_within_limit` multiplied the limit by the number of windows
+   spanned (a loose bound) and **was not in `pass` at all**. Now exact and
+   load-bearing, with a falsifier proving it can return False on real output
+   (unlimited: one window carries 12 > 3).
+2. `no_fill_after_effective` checked only `FILL`, so a producer could relabel a
+   post-cancel fill as `FILL_STALE` and pass — and `FILL_STALE` is *defined* as
+   pre-effectiveness, so that is precisely the mislabel the check exists for.
+   Both kinds now checked.
+3. `matches_reference` was computed per arm and **left out of `pass`**, so a
+   submission could report `pass: True` beside a reference mismatch. It now
+   enters the verdict, and with no reference supplied the key is **absent, not
+   True** — an unrun comparison must not read as a passed one.
+4. The tightened signature check for the deleted `cancels` argument was written
+   with a clause that made it unsatisfiable; it **failed red on the first run**
+   and was fixed. Its predecessor (a `co_varnames` grep) would have passed while
+   proving less — the source-grep-vs-identity shape.
+
+Also fixed: `unrequested` was derived by iterating a set of string tuples, whose
+order is `PYTHONHASHSEED`-dependent; and an outcome without its request now
+fails, since `requested = effective + suppressed` could otherwise be satisfied
+by two compensating errors.
+
+### B1.8 What this still does not do
+
+Stubs only, plus a contract for external submissions. **No BE trajectory has
+been checked through it** — the interface is designed and tested against
+round-tripped stub output, and its first real use is the first thing that can
+falsify the contract. Nothing here is scored, no stub is ever a candidate, and
+the battery estimates rather than decides (rule 14).
