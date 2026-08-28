@@ -504,6 +504,122 @@ def arm_model_kind(arm: str) -> str:
             "LGBM_PINNED": "lgbm"}[arm]
 
 
+def acquire_fit_lock(lock: Path, pid: int = None) -> int:
+    """ATOMIC exclusive acquisition. R-225(3).
+
+    The previous form was check-then-write: `if lock.exists(): ...` followed by
+    `lock.write_text(pid)`. Two processes can both pass the check and both
+    write, so the lock did not exclude -- exactly the condition it existed to
+    prevent, and it would have failed silently with both runs writing.
+
+    O_CREAT|O_EXCL makes creation atomic: the kernel decides the winner. A lock
+    whose holder is DEAD is reclaimed, but reclamation is itself a race, so the
+    reclaimer re-attempts the atomic create rather than assuming it won."""
+    import os as _o, errno as _e
+    pid = _o.getpid() if pid is None else pid
+    for _attempt in range(3):
+        try:
+            fd = _o.open(str(lock), _o.O_CREAT | _o.O_EXCL | _o.O_WRONLY, 0o644)
+            with _o.fdopen(fd, "w") as fh:
+                fh.write(str(pid))
+            return pid
+        except FileExistsError:
+            try:
+                owner = int(lock.read_text().strip())
+                alive = Path(f"/proc/{owner}").exists()
+            except (ValueError, OSError):
+                owner, alive = None, False
+            if alive:
+                raise RuntimeError(
+                    f"REFUSED: fit lock {lock.name} held by LIVE pid {owner}. "
+                    f"Two fits writing one directory is how a partial run "
+                    f"becomes another run's input.")
+            print(f"  stale fit lock from dead pid {owner}; reclaiming",
+                  flush=True)
+            try:
+                lock.unlink()
+            except FileNotFoundError:
+                pass          # another reclaimer won; retry the atomic create
+    raise RuntimeError(
+        f"REFUSED: could not acquire {lock.name} after 3 attempts; it is being "
+        f"contended by other processes. Refusing rather than racing.")
+
+
+def release_fit_lock(lock: Path, pid: int = None) -> bool:
+    """Release ONLY if we still hold it. R-225(3).
+
+    The lock was never released at all, so every run left one behind for the
+    next to reclaim as stale -- which made 'a lock exists' carry no information
+    and trained the reclaim path to always fire. Ownership is checked so a slow
+    process cannot delete a lock that has since been reclaimed by someone
+    else."""
+    import os as _o
+    pid = _o.getpid() if pid is None else pid
+    try:
+        if int(lock.read_text().strip()) != pid:
+            return False
+        lock.unlink()
+        return True
+    except (FileNotFoundError, ValueError, OSError):
+        return False
+
+
+def assert_fit_absorption_within_bound(drops: dict, n_kept: int,
+                                       coin: str = "?",
+                                       bound: float = 0.01) -> dict:
+    """Fit-path absorption: per-status AND TOTAL. CALLABLE. R-225(2).
+
+    Mirrors the builder's guard, for the same reason: a per-status bound cannot
+    see a failure that arrives spread across names. Ten non-design categories at
+    0.9% each pass every per-status check and still absorb 9% of the
+    population. A total failure is under no obligation to use one name.
+
+    DESIGN exclusions (rows the tape itself marked unusable) are exempt BY NAME
+    from BOTH forms -- they are population statements, not absorbed failures.
+    Anything not on that list is bounded, so a new or unexpected drop can never
+    inherit an exemption it was never ruled into.
+
+    CALLABLE because the inline form could only be tested by seam 31e SEARCHING
+    ITS SOURCE TEXT for the word 'absorption'. A guard whose test greps for a
+    word has not been shown to fire."""
+    drops = dict(drops or {})
+    missing = [b for b in BOUNDED_DROPS if b not in drops]
+    if missing:
+        raise RuntimeError(
+            f"REFUSED: bounded drop counter(s) {missing} absent from the drops "
+            f"table. A renamed or deleted counter removes the only thing "
+            f"standing between a real join failure and a silent all-drop. "
+            f"Present: {sorted(drops)}")
+    total_in = n_kept + sum(drops.values())
+    bounded = {k: v for k, v in drops.items() if k not in DESIGN_EXCLUSIONS}
+    ev = {"coin": coin, "n_kept": n_kept, "total_input": total_in,
+          "bound": bound, "drops": drops,
+          "design_exempt": {k: v for k, v in drops.items()
+                            if k in DESIGN_EXCLUSIONS},
+          "bounded_drops": bounded, "bounded_total": sum(bounded.values()),
+          "per_status_fractions": {}, "bounded_total_fraction": 0.0}
+    if not total_in:
+        return ev
+    ev["bounded_total_fraction"] = sum(bounded.values()) / total_in
+    for k, n in sorted(bounded.items()):
+        frac = n / total_in
+        ev["per_status_fractions"][k] = frac
+        if frac > bound:
+            raise RuntimeError(
+                f"REFUSED: fit drop `{k}` covers {n:,} of {total_in:,} rows "
+                f"({frac:.1%}) for {coin}, above the {bound:.0%} absorption "
+                f"bound. Drops absorb row-level anomalies, never total input "
+                f"failures. All drops: {drops}")
+    if ev["bounded_total_fraction"] > bound:
+        raise RuntimeError(
+            f"REFUSED: fit drops TOTAL {sum(bounded.values()):,} of "
+            f"{total_in:,} rows ({ev['bounded_total_fraction']:.1%}) for "
+            f"{coin}, above the {bound:.0%} absorption bound. No single drop "
+            f"exceeded it; the failure arrived spread across {len(bounded)} "
+            f"names, which a per-status bound cannot see. Bounded: {bounded}")
+    return ev
+
+
 def _feature_pass(src: Path, population: str, TAPE=None) -> dict:
     """Build PM+fine+state features for every OK row of one population.
 
@@ -598,23 +714,7 @@ def _feature_pass(src: Path, population: str, TAPE=None) -> dict:
         # R-215: DESIGN exclusions (rows the tape itself marked unusable) are
         # exempt BY NAME. A blanket carve-out would let a real join failure
         # hide behind one; each name is listed, so anything unlisted is bounded.
-        _missing = [b for b in BOUNDED_DROPS if b not in drops]
-        if _missing:
-            raise RuntimeError(
-                f"REFUSED: bounded drop counter(s) {_missing} absent from the "
-                f"drops table. A renamed or deleted counter removes the only "
-                f"thing standing between a real join failure and a silent "
-                f"all-drop. Present: {sorted(drops)}")
-        _in = len(kept) + sum(drops.values())
-        for _k, _n in sorted(drops.items()):
-            if _k in DESIGN_EXCLUSIONS:
-                continue
-            if _in and _n / _in > 0.01:
-                raise RuntimeError(
-                    f"REFUSED: fit drop `{_k}` covers {_n:,} of {_in:,} rows "
-                    f"({_n/_in:.1%}) for {coin}, above the 1% absorption "
-                    f"bound. Drops absorb row-level anomalies, never total "
-                    f"input failures. All drops: {drops}")
+        assert_fit_absorption_within_bound(drops, len(kept), coin)
         out[coin] = {"PM": PM, "FN": FN, "ST": ST, "kept": kept, "drops": drops}
         print(f"  [{population}/{coin}] kept {len(kept)} rows, drops {drops}",
               flush=True)
@@ -922,16 +1022,42 @@ def assert_fit_complete_and_matching() -> dict:
     now = _tape_identity()
     # RECHECK EVERY BINDING, not just the tape. Each of these changes what the
     # scored numbers mean, and each is invisible in the numbers themselves.
-    for k, why in (
-            ("tape_sha256_prefix", "the fit was produced against a different tape"),
-            ("tape_bytes", "the tape changed size since the fit"),
-            ("verdict_path", "a different verdict artifact is in place"),
-            ("verdict_sha256_prefix", "the verdict CONTENT changed since the fit"),
-            ("gate_code_sha256_prefix", "a different GATE produced the verdict"),
-            ("fit_code_ref", "a different FIT CODE REF produced these artifacts")):
-        if m.get(k) != now.get(k):
+    #
+    # R-225(1): the previous form was `m.get(k) != now.get(k)`, which has TWO
+    # holes the user's audit found. (a) A key absent from the list was never
+    # compared at all -- fit_code_sha256_prefix and fragment_sha256_prefix were
+    # WRITTEN into the manifest and never ENFORCED, so a manifest carrying no
+    # measured identity was ACCEPTED. Proving a hash changes is not the same as
+    # proving scoring rejects a wrong one. (b) `.get() != .get()` passes
+    # VACUOUSLY when BOTH sides are missing: two Nones compare equal, so an
+    # absent binding read as agreement. Presence is now required explicitly,
+    # and "missing" is a different refusal from "mismatched".
+    REQUIRED = (
+        ("tape_sha256_prefix", "the fit was produced against a different tape"),
+        ("tape_bytes", "the tape changed size since the fit"),
+        ("verdict_path", "a different verdict artifact is in place"),
+        ("verdict_sha256_prefix", "the verdict CONTENT changed since the fit"),
+        ("gate_code_sha256_prefix", "a different GATE produced the verdict"),
+        ("fit_code_ref", "a different FIT CODE REF produced these artifacts"),
+        ("fit_code_sha256_prefix", "DIFFERENT FIT CODE produced these artifacts "
+                                   "(measured, not the env label)"),
+        ("fragment_sha256_prefix", "a different FRAGMENT defines the population"),
+    )
+    for k, why in REQUIRED:
+        if k not in m or m.get(k) is None:
             raise RuntimeError(
-                f"REFUSED: {why} ({k}: fit={m.get(k)!r} now={now.get(k)!r}). "
+                f"REFUSED: {FIT_MANIFEST} carries no {k}. A manifest that "
+                f"cannot state this binding cannot authorise scoring against "
+                f"it -- and an absent hash must never read as a matching one. "
+                f"Re-run the fit with code that records it.")
+        if now.get(k) is None:
+            raise RuntimeError(
+                f"REFUSED: cannot MEASURE {k} at score time, so the manifest's "
+                f"value cannot be checked. An uncheckable binding is not a "
+                f"binding.")
+        if m[k] != now[k]:
+            raise RuntimeError(
+                f"REFUSED: {why} ({k}: fit={m[k]!r} now={now[k]!r}). "
                 f"Scoring under bindings that differ from the fit's is not a "
                 f"comparison.")
     import hashlib
@@ -972,263 +1098,305 @@ def stage_fit() -> None:
     _run = FITDIR.parent / f"{FITDIR.name}.run-{int(_tm0.time())}-{_os0.getpid()}"
     _run.mkdir(parents=True, exist_ok=False)
     _lock = FITDIR.parent / f"{FITDIR.name}.lock"
-    if _lock.exists():
-        try:
-            _owner = int(_lock.read_text().strip())
-            _alive = Path(f"/proc/{_owner}").exists()
-        except (ValueError, OSError):
-            _owner, _alive = None, False
-        if _alive:
-            raise RuntimeError(
-                f"REFUSED: fit lock held by LIVE pid {_owner}. Two fits "
-                f"writing one directory is how a partial run becomes another "
-                f"run's input.")
-        print(f"  stale fit lock from dead pid {_owner}; reclaiming", flush=True)
-    _lock.write_text(str(_os0.getpid()))
-    _final = FITDIR
-    globals()["FITDIR"] = _run
-    print("  indexing rebuilt tape (train split)...", flush=True)
-    TP = tape_index("train")
-    print(f"  tape rows indexed: {len(TP):,}", flush=True)
-    FIT = _feature_pass(FRAGMENT, "fragment", TAPE=TP)
-    # The pre-registration is checked HERE, on the pre-purge population, because
-    # that is the stage it declares. Checked after the purge it compares two
-    # different quantities and refuses on their difference.
-    _ident = _tape_identity()
-    _tape_sha16 = _ident["tape_sha256_prefix"]
-    _prereg = assert_preregistered_population(FIT, _tape_sha16)
-    for _c, _e in sorted(_prereg.items()):
-        if _e["registered_ok_n"] is not None:
-            print(f"  [prereg/{_c}] pre-purge {_e['population_pre_purge']:,} == "
-                  f"registered ok_n {_e['registered_ok_n']:,} OK", flush=True)
-    # APPLY the purge -- recording a violation is not applying it (R-187 seam 3)
-    print("  indexing score split for the embargo boundary...", flush=True)
-    SP = tape_index("score")
-    score_probe = [{"t0": v["t0"], "t_start": v["t_start"]} for v in SP.values()]
-    empty_coins = []
-    for coin in list(FIT):
-        # A coin with ZERO kept rows is a NAMED outcome, not a crash. It
-        # previously fell through to assert_embargo and raised
-        # "empty side: embargo is undefined" -- a message about the embargo for
-        # a condition that has nothing to do with it. Surfaced by the
-        # production seam, which ran a population where one coin was absent.
-        if not FIT[coin]["kept"]:
-            # VACUOUS, not an error (rules 4 + 8). An empty side is a
-            # POPULATION STATEMENT: there is nothing to purge, and that fact is
-            # carried as an explicit per-side status rather than deleted. BE's
-            # first fix dropped the coin entirely, which loses the statement;
-            # enforcement of non-emptiness belongs to the GATE
-            # (dataset_non_empty), not to the purge.
-            empty_coins.append(coin)
+    acquire_fit_lock(_lock)
+    # R-225(4): capture the input identity BEFORE anything is loaded. Captured
+    # after the load, it describes whatever the inputs happened to be once
+    # reading finished -- so an input perturbed DURING the run is recorded as
+    # though it had always been that way, and the manifest attests to a state
+    # that never produced these numbers.
+    _ident_pre = _tape_identity()
+    print(f"  input identity captured BEFORE load: tape "
+          f"{_ident_pre['tape_sha256_prefix']} fragment "
+          f"{_ident_pre['fragment_sha256_prefix']}", flush=True)
+    # R-225(3): the lock is RELEASED in a finally. It was never released at
+    # all, so every run left one behind for the next to reclaim as stale --
+    # which made 'a lock exists' carry no information and trained the
+    # reclaim path to fire on every run.
+    try:
+        _final = FITDIR
+        globals()["FITDIR"] = _run
+        print("  indexing rebuilt tape (train split)...", flush=True)
+        TP = tape_index("train")
+        print(f"  tape rows indexed: {len(TP):,}", flush=True)
+        FIT = _feature_pass(FRAGMENT, "fragment", TAPE=TP)
+        # The pre-registration is checked HERE, on the pre-purge population, because
+        # that is the stage it declares. Checked after the purge it compares two
+        # different quantities and refuses on their difference.
+        _ident = _ident_pre            # the pre-load capture, not a re-read
+        _tape_sha16 = _ident["tape_sha256_prefix"]
+        _prereg = assert_preregistered_population(FIT, _tape_sha16)
+        for _c, _e in sorted(_prereg.items()):
+            if _e["registered_ok_n"] is not None:
+                print(f"  [prereg/{_c}] pre-purge {_e['population_pre_purge']:,} == "
+                      f"registered ok_n {_e['registered_ok_n']:,} OK", flush=True)
+        # APPLY the purge -- recording a violation is not applying it (R-187 seam 3)
+        print("  indexing score split for the embargo boundary...", flush=True)
+        SP = tape_index("score")
+        score_probe = [{"t0": v["t0"], "t_start": v["t_start"]} for v in SP.values()]
+        empty_coins = []
+        for coin in list(FIT):
+            # A coin with ZERO kept rows is a NAMED outcome, not a crash. It
+            # previously fell through to assert_embargo and raised
+            # "empty side: embargo is undefined" -- a message about the embargo for
+            # a condition that has nothing to do with it. Surfaced by the
+            # production seam, which ran a population where one coin was absent.
+            if not FIT[coin]["kept"]:
+                # VACUOUS, not an error (rules 4 + 8). An empty side is a
+                # POPULATION STATEMENT: there is nothing to purge, and that fact is
+                # carried as an explicit per-side status rather than deleted. BE's
+                # first fix dropped the coin entirely, which loses the statement;
+                # enforcement of non-emptiness belongs to the GATE
+                # (dataset_non_empty), not to the purge.
+                empty_coins.append(coin)
+                FIT[coin]["embargo_evidence"] = {
+                    "train_rows_before_purge": 0, "train_rows_after_purge": 0,
+                    "train_rows_dropped": 0, "purge_status": "VACUOUS_N_0",
+                    "purge_applicable": False,
+                    "note": "n=0 on the training side: nothing to purge. This is a "
+                            "population statement, not a satisfied embargo and not "
+                            "an error. Non-emptiness is the gate's predicate.",
+                    "EMBARGO_ENFORCED": None}
+                print(f"  [purge/{coin}] n=0, purge N/A (vacuous) -- carried as a "
+                      f"status, not an error", flush=True)
+                continue
+            before = len(FIT[coin]["kept"])
+            keep_idx = set()
+            kept, dropped = EMB.purge_training(FIT[coin]["kept"], score_probe)
+            keys = {(r["slug"], r["side"], r["gen"], r["t_start"]) for r in kept}
+            for n, r in enumerate(FIT[coin]["kept"]):
+                if (r["slug"], r["side"], r["gen"], r["t_start"]) in keys:
+                    keep_idx.add(n)
+            for fam in ("PM", "FN", "ST"):
+                FIT[coin][fam] = [v for n, v in enumerate(FIT[coin][fam]) if n in keep_idx]
+            FIT[coin]["kept"] = [v for n, v in enumerate(FIT[coin]["kept"]) if n in keep_idx]
+            FIT[coin]["purged_rows"] = before - len(FIT[coin]["kept"])
+            print(f"  [purge/{coin}] {before:,} -> {len(FIT[coin]['kept']):,} "
+                  f"({FIT[coin]['purged_rows']:,} rows dropped by the 60s embargo)",
+                  flush=True)
+            # R-189: the enforcement must be VISIBLE AS NUMBERS, not as the
+            # fixture's word. Both sides of the seam and the realized gap are
+            # recorded, and `gap >= 60` is evaluated rather than asserted in prose.
+            _gap = EMB.assert_embargo(FIT[coin]["kept"], score_probe)
             FIT[coin]["embargo_evidence"] = {
-                "train_rows_before_purge": 0, "train_rows_after_purge": 0,
-                "train_rows_dropped": 0, "purge_status": "VACUOUS_N_0",
-                "purge_applicable": False,
-                "note": "n=0 on the training side: nothing to purge. This is a "
-                        "population statement, not a satisfied embargo and not "
-                        "an error. Non-emptiness is the gate's predicate.",
-                "EMBARGO_ENFORCED": None}
-            print(f"  [purge/{coin}] n=0, purge N/A (vacuous) -- carried as a "
-                  f"status, not an error", flush=True)
-            continue
-        before = len(FIT[coin]["kept"])
-        keep_idx = set()
-        kept, dropped = EMB.purge_training(FIT[coin]["kept"], score_probe)
-        keys = {(r["slug"], r["side"], r["gen"], r["t_start"]) for r in kept}
-        for n, r in enumerate(FIT[coin]["kept"]):
-            if (r["slug"], r["side"], r["gen"], r["t_start"]) in keys:
-                keep_idx.add(n)
-        for fam in ("PM", "FN", "ST"):
-            FIT[coin][fam] = [v for n, v in enumerate(FIT[coin][fam]) if n in keep_idx]
-        FIT[coin]["kept"] = [v for n, v in enumerate(FIT[coin]["kept"]) if n in keep_idx]
-        FIT[coin]["purged_rows"] = before - len(FIT[coin]["kept"])
-        print(f"  [purge/{coin}] {before:,} -> {len(FIT[coin]['kept']):,} "
-              f"({FIT[coin]['purged_rows']:,} rows dropped by the 60s embargo)",
-              flush=True)
-        # R-189: the enforcement must be VISIBLE AS NUMBERS, not as the
-        # fixture's word. Both sides of the seam and the realized gap are
-        # recorded, and `gap >= 60` is evaluated rather than asserted in prose.
-        _gap = EMB.assert_embargo(FIT[coin]["kept"], score_probe)
-        FIT[coin]["embargo_evidence"] = {
-            "train_rows_before_purge": before,
-            "train_rows_after_purge": len(FIT[coin]["kept"]),
-            "train_rows_dropped": FIT[coin]["purged_rows"],
-            "score_rows_untouched": len(score_probe),
-            "score_side_trimmed": False,
-            "realized_gap_s": _gap["gap_s"],
-            "required_embargo_s": _gap["embargo_s"],
-            "last_train_label_exit": _gap["last_train_label_exit"],
-            "first_score_feature": _gap["first_score_feature"],
-            "EMBARGO_ENFORCED": _gap["gap_s"] >= _gap["embargo_s"],
-            "pre_purge_gap_s": -8.134101152420044,
-            "note": "the tape header records VIOLATED-unpurged by design; "
-                    "enforcement belongs to the run path and is shown here as "
-                    "numbers on both sides of the seam (R-189).",
-        }
-    del SP, score_probe
-    _parity: dict = {}
-    for coin in list(FIT):
-        f = FIT[coin]
-        if not f["kept"]:
+                "train_rows_before_purge": before,
+                "train_rows_after_purge": len(FIT[coin]["kept"]),
+                "train_rows_dropped": FIT[coin]["purged_rows"],
+                "score_rows_untouched": len(score_probe),
+                "score_side_trimmed": False,
+                "realized_gap_s": _gap["gap_s"],
+                "required_embargo_s": _gap["embargo_s"],
+                "last_train_label_exit": _gap["last_train_label_exit"],
+                "first_score_feature": _gap["first_score_feature"],
+                "EMBARGO_ENFORCED": _gap["gap_s"] >= _gap["embargo_s"],
+                "pre_purge_gap_s": -8.134101152420044,
+                "note": "the tape header records VIOLATED-unpurged by design; "
+                        "enforcement belongs to the run path and is shown here as "
+                        "numbers on both sides of the seam (R-189).",
+            }
+        del SP, score_probe
+        _parity: dict = {}
+        for coin in list(FIT):
+            f = FIT[coin]
+            if not f["kept"]:
+                (FITDIR / f"linear_{coin}.json").write_text(json.dumps(
+                    {"n_rows": 0, "purge_status": "VACUOUS_N_0",
+                     "embargo_evidence": f.get("embargo_evidence"),
+                     "fitted": False}))
+                continue
+            yF, tF = _labels(f["kept"])
+            # R-215(1): PARITY IS THE ESTIMAND -- same rows, different features. It
+            # is COMPUTED from each arm's actual design matrix, never assumed from
+            # the fact that they share a loop: measuring the thing that matters is
+            # the point, and a future edit that filters one arm's matrix must fail
+            # here rather than produce a quietly unpaired comparison.
+            _arm_n: dict = {}
+            XF = [f["PM"][i] + f["FN"][i] + f["ST"][i] for i in range(len(f["kept"]))]
+            Xf, mu, sd = fc.fast_zscale(XF, XF)
+            _arm_n["PLUS_PRED_STATE_V1"] = len(Xf)
+            sw = fc.fast_generation_weights(f["kept"])
+            _gk = [(r["slug"], r["side"], r["gen"]) for r in f["kept"]]
+            # arm A applied UNWEIGHTED on PM+fine, scored on the training side to
+            # obtain ITS OWN cutoff (the frozen model is not refitted)
+            _fz = json.loads(FROZEN.read_text())["fits"][coin]
+            _mA, _sA = _fz["norm_mu"], _fz["norm_sd"]
+            WA, WMA = _fz["hazard_weights"], _fz["value_weights"]
+            _w = len(f["PM"][0]) + len(f["FN"][0])
+            if _w != len(_mA):
+                raise RuntimeError(
+                    f"REFUSED: the frozen candidate expects {len(_mA)} PM+fine "
+                    f"features but this pipeline produces {_w}. A width mismatch "
+                    f"between the frozen artifact and the live feature builder "
+                    f"would otherwise surface as an IndexError deep in the fit, or "
+                    f"silently truncate if the frozen side were the shorter one.")
+            XfA = [[1.0] + [((f["PM"][i] + f["FN"][i])[k] - _mA[k]) / _sA[k]
+                            for k in range(len(_mA))]
+                   for i in range(len(f["kept"]))]
+            _arm_n["PM_PLUS_FINE"] = len(XfA)
+            W = fc.fast_fit_logistic_w(Xf, yF, sw)
+            ft = [i for i in range(len(yF)) if yF[i]]
+            WM = (fc.fast_fit_ridge_w([Xf[i] for i in ft], [tF[i] for i in ft],
+                                      [sw[i] for i in ft], lam=10.0)
+                  if len(ft) >= 100 else None)
+            # ARM D: incumbent features ONLY (PM+fine, no state), WITH the R-157
+            # weighting. This is a SEPARATE FIT persisted to a SEPARATE ARTIFACT.
+            # Sharing B's branch made D load B's weights and predict identically,
+            # so D-A and B-D were both meaningless (R-194 seam 12).
+            XD = [f["PM"][i] + f["FN"][i] for i in range(len(f["kept"]))]
+            _arm_n["INCUMBENT_REWEIGHTED_ONLY"] = len(XD)
+            Xd, mud, sdd = fc.fast_zscale(XD, XD)
+            Wd = fc.fast_fit_logistic_w(Xd, yF, sw)
+            WMd = (fc.fast_fit_ridge_w([Xd[i] for i in ft], [tF[i] for i in ft],
+                                       [sw[i] for i in ft], lam=10.0)
+                   if len(ft) >= 100 else None)
+            (FITDIR / f"linear_d_{coin}.json").write_text(json.dumps(
+                {"hazard_weights": list(Wd),
+                 "value_weights": list(WMd) if WMd else None,
+                 "norm_mu": list(mud), "norm_sd": list(sdd),
+                 "arm": "INCUMBENT_REWEIGHTED_ONLY",
+                 "features": "PM+fine only, NO state features",
+                 "causal_thresholds": freeze_thresholds(
+                     [fc.fast_predict_p(Wd, x) *
+                      (float(sum(a * b for a, b in zip(WMd, x))) if WMd else 0.0)
+                      for x in Xd], D.BUDGETS, gen_keys=_gk)}))
+            del XD, Xd
             (FITDIR / f"linear_{coin}.json").write_text(json.dumps(
-                {"n_rows": 0, "purge_status": "VACUOUS_N_0",
+                {"hazard_weights": list(W), "value_weights": list(WM) if WM else None,
+                 "norm_mu": list(mu), "norm_sd": list(sd),
+                 "n_rows": len(f["kept"]), "n_positive": sum(yF),
+                 "n_actions": len({(r["slug"], r["side"], r["gen"]) for r in f["kept"]}),
+                 "drops": f["drops"],
+                 "purged_rows_embargo": f.get("purged_rows", 0),
                  "embargo_evidence": f.get("embargo_evidence"),
-                 "fitted": False}))
-            continue
-        yF, tF = _labels(f["kept"])
-        # R-215(1): PARITY IS THE ESTIMAND -- same rows, different features. It
-        # is COMPUTED from each arm's actual design matrix, never assumed from
-        # the fact that they share a loop: measuring the thing that matters is
-        # the point, and a future edit that filters one arm's matrix must fail
-        # here rather than produce a quietly unpaired comparison.
-        _arm_n: dict = {}
-        XF = [f["PM"][i] + f["FN"][i] + f["ST"][i] for i in range(len(f["kept"]))]
-        Xf, mu, sd = fc.fast_zscale(XF, XF)
-        _arm_n["PLUS_PRED_STATE_V1"] = len(Xf)
-        sw = fc.fast_generation_weights(f["kept"])
-        _gk = [(r["slug"], r["side"], r["gen"]) for r in f["kept"]]
-        # arm A applied UNWEIGHTED on PM+fine, scored on the training side to
-        # obtain ITS OWN cutoff (the frozen model is not refitted)
-        _fz = json.loads(FROZEN.read_text())["fits"][coin]
-        _mA, _sA = _fz["norm_mu"], _fz["norm_sd"]
-        WA, WMA = _fz["hazard_weights"], _fz["value_weights"]
-        _w = len(f["PM"][0]) + len(f["FN"][0])
-        if _w != len(_mA):
+                 "causal_thresholds": freeze_thresholds(
+                     [fc.fast_predict_p(W, x) *
+                      (float(sum(a * b for a, b in zip(WM, x))) if WM else 0.0)
+                      for x in Xf], D.BUDGETS, gen_keys=_gk),
+                 # ARM A and ARM C need their own training-side cutoffs too: a
+                 # frozen threshold is per-MODEL, and reusing B's would compare
+                 # each arm against another arm's score distribution.
+                 "causal_thresholds_armA": freeze_thresholds(
+                     [fc.fast_predict_p(WA, x) *
+                      (float(sum(a * b for a, b in zip(WMA, x))) if WMA else 0.0)
+                      for x in XfA], D.BUDGETS, gen_keys=_gk)}))
+            A = np.asarray(Xf, dtype=np.float64); swa = np.asarray(sw)
+            _arm_n["LGBM_PINNED"] = int(A.shape[0])
+            clf = lgb.LGBMClassifier(**D.LGBM_PARAMS)
+            clf.fit(A, np.asarray(yF), sample_weight=swa)
+            clf.booster_.save_model(str(FITDIR / f"lgbm_haz_{coin}.txt"))
+            # arm C's OWN training thresholds, resolved AFTER its model exists
+            _pc = clf.predict_proba(A)[:, 1]
+            ftm = np.asarray(yF) == 1
+            if ftm.sum() >= 100:
+                reg = lgb.LGBMRegressor(**D.LGBM_VALUE_PARAMS)
+                reg.fit(A[ftm], np.asarray(tF)[ftm], sample_weight=swa[ftm])
+                reg.booster_.save_model(str(FITDIR / f"lgbm_val_{coin}.txt"))
+                _vc = reg.predict(A)
+            else:
+                _vc = np.zeros(len(A))
+            (FITDIR / f"lgbm_thresholds_{coin}.json").write_text(json.dumps(
+                freeze_thresholds((_pc * _vc).tolist(), D.BUDGETS, gen_keys=_gk)))
+            # ---- R-215(1): four-arms-one-n parity, COMPUTED ----
+            _expect = len(f["kept"])
+            _bad = {a: n for a, n in _arm_n.items() if n != _expect}
+            if set(_arm_n) != set(D.ARMS) or _bad:
+                raise RuntimeError(
+                    f"REFUSED: fit population parity broken for {coin}. Declared "
+                    f"population {_expect:,} rows; per-arm design matrices "
+                    f"{_arm_n}. Arms must be fitted on the SAME rows and differ "
+                    f"only in features -- an unpaired arm makes every between-arm "
+                    f"delta uninterpretable. Missing arms: "
+                    f"{sorted(set(D.ARMS) - set(_arm_n))}; mismatched: {_bad}.")
+            # STAGE 2: the fitted matrix and the purge reconciliation. Both the
+            # count and the arithmetic back to ok_n are asserted, so the gap
+            # between declared and fitted is attributed to a named step (rule 4).
+            _pp = _prereg.get(coin, {})
+            _fit_ev = assert_fitted_population(coin, _expect,
+                                               f.get("purged_rows", 0), _pp)
+            _parity[coin] = dict(_fit_ev)
+            _parity[coin].update({
+                "per_arm_n": dict(_arm_n),
+                "all_arms_same_n": (len(set(_arm_n.values())) == 1
+                                    and set(_arm_n) == set(D.ARMS)),
+                "n_arms": len(_arm_n), "n_arms_declared": len(D.ARMS),
+                "registered_ok_n": _pp.get("registered_ok_n"),
+                "matches_ok_n": _pp.get("matches_ok_n"),
+                "preregistration_key": _pp.get("preregistration_key"),
+                "registration_provenance": _pp.get("registration_provenance"),
+                "drops": dict(f["drops"])})
+            print(f"  [fit/{coin}] persisted linear + lgbm; rows {len(f['kept'])}, "
+                  f"positive {sum(yF)}; parity {len(_arm_n)}/{len(D.ARMS)} arms "
+                  f"@ fitted_n={_expect:,} (ok_n {_pp.get('population_pre_purge'):,} "
+                  f"- {f.get('purged_rows', 0):,} purged, reconciles)", flush=True)
+            del XF, Xf, A, FIT[coin]["PM"], FIT[coin]["FN"], FIT[coin]["ST"]
+        (FITDIR / "empty_coins.json").write_text(json.dumps(empty_coins))
+        if not FIT:
             raise RuntimeError(
-                f"REFUSED: the frozen candidate expects {len(_mA)} PM+fine "
-                f"features but this pipeline produces {_w}. A width mismatch "
-                f"between the frozen artifact and the live feature builder "
-                f"would otherwise surface as an IndexError deep in the fit, or "
-                f"silently truncate if the frozen side were the shorter one.")
-        XfA = [[1.0] + [((f["PM"][i] + f["FN"][i])[k] - _mA[k]) / _sA[k]
-                        for k in range(len(_mA))]
-               for i in range(len(f["kept"]))]
-        _arm_n["PM_PLUS_FINE"] = len(XfA)
-        W = fc.fast_fit_logistic_w(Xf, yF, sw)
-        ft = [i for i in range(len(yF)) if yF[i]]
-        WM = (fc.fast_fit_ridge_w([Xf[i] for i in ft], [tF[i] for i in ft],
-                                  [sw[i] for i in ft], lam=10.0)
-              if len(ft) >= 100 else None)
-        # ARM D: incumbent features ONLY (PM+fine, no state), WITH the R-157
-        # weighting. This is a SEPARATE FIT persisted to a SEPARATE ARTIFACT.
-        # Sharing B's branch made D load B's weights and predict identically,
-        # so D-A and B-D were both meaningless (R-194 seam 12).
-        XD = [f["PM"][i] + f["FN"][i] for i in range(len(f["kept"]))]
-        _arm_n["INCUMBENT_REWEIGHTED_ONLY"] = len(XD)
-        Xd, mud, sdd = fc.fast_zscale(XD, XD)
-        Wd = fc.fast_fit_logistic_w(Xd, yF, sw)
-        WMd = (fc.fast_fit_ridge_w([Xd[i] for i in ft], [tF[i] for i in ft],
-                                   [sw[i] for i in ft], lam=10.0)
-               if len(ft) >= 100 else None)
-        (FITDIR / f"linear_d_{coin}.json").write_text(json.dumps(
-            {"hazard_weights": list(Wd),
-             "value_weights": list(WMd) if WMd else None,
-             "norm_mu": list(mud), "norm_sd": list(sdd),
-             "arm": "INCUMBENT_REWEIGHTED_ONLY",
-             "features": "PM+fine only, NO state features",
-             "causal_thresholds": freeze_thresholds(
-                 [fc.fast_predict_p(Wd, x) *
-                  (float(sum(a * b for a, b in zip(WMd, x))) if WMd else 0.0)
-                  for x in Xd], D.BUDGETS, gen_keys=_gk)}))
-        del XD, Xd
-        (FITDIR / f"linear_{coin}.json").write_text(json.dumps(
-            {"hazard_weights": list(W), "value_weights": list(WM) if WM else None,
-             "norm_mu": list(mu), "norm_sd": list(sd),
-             "n_rows": len(f["kept"]), "n_positive": sum(yF),
-             "n_actions": len({(r["slug"], r["side"], r["gen"]) for r in f["kept"]}),
-             "drops": f["drops"],
-             "purged_rows_embargo": f.get("purged_rows", 0),
-             "embargo_evidence": f.get("embargo_evidence"),
-             "causal_thresholds": freeze_thresholds(
-                 [fc.fast_predict_p(W, x) *
-                  (float(sum(a * b for a, b in zip(WM, x))) if WM else 0.0)
-                  for x in Xf], D.BUDGETS, gen_keys=_gk),
-             # ARM A and ARM C need their own training-side cutoffs too: a
-             # frozen threshold is per-MODEL, and reusing B's would compare
-             # each arm against another arm's score distribution.
-             "causal_thresholds_armA": freeze_thresholds(
-                 [fc.fast_predict_p(WA, x) *
-                  (float(sum(a * b for a, b in zip(WMA, x))) if WMA else 0.0)
-                  for x in XfA], D.BUDGETS, gen_keys=_gk)}))
-        A = np.asarray(Xf, dtype=np.float64); swa = np.asarray(sw)
-        _arm_n["LGBM_PINNED"] = int(A.shape[0])
-        clf = lgb.LGBMClassifier(**D.LGBM_PARAMS)
-        clf.fit(A, np.asarray(yF), sample_weight=swa)
-        clf.booster_.save_model(str(FITDIR / f"lgbm_haz_{coin}.txt"))
-        # arm C's OWN training thresholds, resolved AFTER its model exists
-        _pc = clf.predict_proba(A)[:, 1]
-        ftm = np.asarray(yF) == 1
-        if ftm.sum() >= 100:
-            reg = lgb.LGBMRegressor(**D.LGBM_VALUE_PARAMS)
-            reg.fit(A[ftm], np.asarray(tF)[ftm], sample_weight=swa[ftm])
-            reg.booster_.save_model(str(FITDIR / f"lgbm_val_{coin}.txt"))
-            _vc = reg.predict(A)
-        else:
-            _vc = np.zeros(len(A))
-        (FITDIR / f"lgbm_thresholds_{coin}.json").write_text(json.dumps(
-            freeze_thresholds((_pc * _vc).tolist(), D.BUDGETS, gen_keys=_gk)))
-        # ---- R-215(1): four-arms-one-n parity, COMPUTED ----
-        _expect = len(f["kept"])
-        _bad = {a: n for a, n in _arm_n.items() if n != _expect}
-        if set(_arm_n) != set(D.ARMS) or _bad:
+                "REFUSED: every coin came back empty. A fit over no population is "
+                "not a null result, it is a broken input path.")
+        (FITDIR / "fit_population_parity.json").write_text(
+            json.dumps(_parity, indent=1, sort_keys=True))
+        (FITDIR / "fit_slugs.json").write_text(json.dumps(sorted(
+            {r["slug"] for c in FIT.values() for r in c["kept"]})))
+        # COMPLETION MANIFEST then ATOMIC PROMOTE. Written last, so its presence
+        # is the completion signal; promoted by rename, so a consumer never sees a
+        # half-populated directory.
+        import hashlib as _hh, shutil as _sh2, os as _os2
+        # R-225(4): RECHECK at write. The pre-load capture is only a claim
+        # until something verifies the inputs did not move while they were
+        # being read. A divergence here means the run's numbers describe a
+        # population that no longer exists, which is a refusal, not a warning.
+        _ident_post = _tape_identity()
+        _drift = {k: (_ident_pre.get(k), _ident_post.get(k))
+                  for k in ("tape_sha256_prefix", "tape_bytes",
+                            "fragment_sha256_prefix", "fragment_bytes",
+                            "verdict_sha256_prefix", "gate_code_sha256_prefix",
+                            "fit_code_sha256_prefix")
+                  if _ident_pre.get(k) != _ident_post.get(k)}
+        if _drift:
             raise RuntimeError(
-                f"REFUSED: fit population parity broken for {coin}. Declared "
-                f"population {_expect:,} rows; per-arm design matrices "
-                f"{_arm_n}. Arms must be fitted on the SAME rows and differ "
-                f"only in features -- an unpaired arm makes every between-arm "
-                f"delta uninterpretable. Missing arms: "
-                f"{sorted(set(D.ARMS) - set(_arm_n))}; mismatched: {_bad}.")
-        # STAGE 2: the fitted matrix and the purge reconciliation. Both the
-        # count and the arithmetic back to ok_n are asserted, so the gap
-        # between declared and fitted is attributed to a named step (rule 4).
-        _pp = _prereg.get(coin, {})
-        _fit_ev = assert_fitted_population(coin, _expect,
-                                           f.get("purged_rows", 0), _pp)
-        _parity[coin] = dict(_fit_ev)
-        _parity[coin].update({
-            "per_arm_n": dict(_arm_n),
-            "all_arms_same_n": (len(set(_arm_n.values())) == 1
-                                and set(_arm_n) == set(D.ARMS)),
-            "n_arms": len(_arm_n), "n_arms_declared": len(D.ARMS),
-            "registered_ok_n": _pp.get("registered_ok_n"),
-            "matches_ok_n": _pp.get("matches_ok_n"),
-            "preregistration_key": _pp.get("preregistration_key"),
-            "registration_provenance": _pp.get("registration_provenance"),
-            "drops": dict(f["drops"])})
-        print(f"  [fit/{coin}] persisted linear + lgbm; rows {len(f['kept'])}, "
-              f"positive {sum(yF)}; parity {len(_arm_n)}/{len(D.ARMS)} arms "
-              f"@ fitted_n={_expect:,} (ok_n {_pp.get('population_pre_purge'):,} "
-              f"- {f.get('purged_rows', 0):,} purged, reconciles)", flush=True)
-        del XF, Xf, A, FIT[coin]["PM"], FIT[coin]["FN"], FIT[coin]["ST"]
-    (FITDIR / "empty_coins.json").write_text(json.dumps(empty_coins))
-    if not FIT:
-        raise RuntimeError(
-            "REFUSED: every coin came back empty. A fit over no population is "
-            "not a null result, it is a broken input path.")
-    (FITDIR / "fit_population_parity.json").write_text(
-        json.dumps(_parity, indent=1, sort_keys=True))
-    (FITDIR / "fit_slugs.json").write_text(json.dumps(sorted(
-        {r["slug"] for c in FIT.values() for r in c["kept"]})))
-    # COMPLETION MANIFEST then ATOMIC PROMOTE. Written last, so its presence
-    # is the completion signal; promoted by rename, so a consumer never sees a
-    # half-populated directory.
-    import hashlib as _hh, shutil as _sh2, os as _os2
-    _hashes = {f.name: _hh.sha256(f.read_bytes()).hexdigest()[:16]
-               for f in sorted(_run.iterdir()) if f.is_file()}
-    _mani = dict(_ident)
-    _mani.update({"complete": True, "file_hashes": _hashes,
-                  "run_finished_utc": __import__("subprocess").run(
-                      ["date", "-u", "+%Y-%m-%dT%H:%M:%SZ"],
-                      capture_output=True, text=True).stdout.strip(),
-                  "arms": list(D.ARMS), "budgets": list(D.BUDGETS),
-                  "fit_population_parity": _parity})
-    (_run / FIT_MANIFEST).write_text(json.dumps(_mani, indent=1, sort_keys=True))
-    if _final.exists():
-        _sh2.rmtree(_final.with_suffix(".prev"), ignore_errors=True)
-        _final.rename(_final.with_suffix(".prev"))
-    _os2.replace(str(_run), str(_final))
-    globals()["FITDIR"] = _final
-    print(f"STAGE FIT COMPLETE -- promoted {len(_hashes)} artifacts", flush=True)
+                f"REFUSED: inputs CHANGED DURING the run: {_drift}. The "
+                f"artifacts just produced describe a population that no longer "
+                f"exists, and a manifest written now would attest to a state "
+                f"that never produced them. Re-run against a quiet tree.")
+        _hashes = {f.name: _hh.sha256(f.read_bytes()).hexdigest()[:16]
+                   for f in sorted(_run.iterdir()) if f.is_file()}
+        _mani = dict(_ident_post)
+        _mani["identity_captured_before_load"] = True
+        _mani["identity_rechecked_at_write"] = True
+        _mani.update({"complete": True, "file_hashes": _hashes,
+                      "run_finished_utc": __import__("subprocess").run(
+                          ["date", "-u", "+%Y-%m-%dT%H:%M:%SZ"],
+                          capture_output=True, text=True).stdout.strip(),
+                      "arms": list(D.ARMS), "budgets": list(D.BUDGETS),
+                      "fit_population_parity": _parity})
+        (_run / FIT_MANIFEST).write_text(json.dumps(_mani, indent=1, sort_keys=True))
+        if _final.exists():
+            _sh2.rmtree(_final.with_suffix(".prev"), ignore_errors=True)
+            _final.rename(_final.with_suffix(".prev"))
+        _os2.replace(str(_run), str(_final))
+        globals()["FITDIR"] = _final
+        print(f"STAGE FIT COMPLETE -- promoted {len(_hashes)} artifacts", flush=True)
+    finally:
+        if release_fit_lock(_lock):
+            print(f"  released {_lock.name}", flush=True)
+
+def _fit_identity_from_manifest() -> dict:
+    """The FIT's identity, READ from its manifest. R-225(1).
+
+    Never measured here: at score time `measured_code_identity()` measures the
+    SCORER. Reporting that under the fit's name is a category error that makes
+    a mismatched pair look matched."""
+    mf = FITDIR / FIT_MANIFEST
+    if not mf.exists():
+        return {"present": False, "why": f"{FIT_MANIFEST} absent"}
+    m = json.loads(mf.read_text())
+    return {"present": True, "source": FIT_MANIFEST,
+            "declared_env_ref": m.get("fit_code_ref"),
+            "measured_sha256_prefix": m.get("fit_code_sha256_prefix"),
+            "fragment_sha256_prefix": m.get("fragment_sha256_prefix"),
+            "fragment_bytes": m.get("fragment_bytes"),
+            "declaration_sha256_prefix": m.get("declaration_sha256_prefix"),
+            "note": "read from the fit's manifest, not measured at score time"}
 
 
 def _read_fit_parity() -> dict:
@@ -1320,12 +1488,16 @@ def stage_score() -> dict:
            # receipt that recomputes a predicate can disagree with the artifact
            # it claims to describe.
            "fit_population_parity": _read_fit_parity(),
-           "fit_code_identity": {
+           # R-225(1): these came from measured_code_identity() AT SCORE TIME,
+           # i.e. the SCORER's identity printed under the FIT's name. The fit's
+           # identity is a property of the fit and can only be read from its
+           # manifest; the scorer's is recorded separately, under its own name.
+           "fit_code_identity": _fit_identity_from_manifest(),
+           "score_code_identity": {
                "declared_env_ref": _tape_identity().get("fit_code_ref"),
                "measured_sha256_prefix": measured_code_identity()["combined"],
-               "note": "the env ref is a LABEL; the measured sha is the code "
-                       "that ran. They are recorded separately so a "
-                       "disagreement is visible rather than assumed away."}}
+               "note": "the code that produced the SCORES. Recorded beside the "
+                       "fit's own identity, never in place of it."}}
 
     _empty = json.loads((FITDIR / "empty_coins.json").read_text()) \
         if (FITDIR / "empty_coins.json").exists() else []

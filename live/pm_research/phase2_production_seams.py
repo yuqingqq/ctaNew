@@ -182,6 +182,10 @@ def main() -> int:
         _hm.window_streams = lambda *a, **k: object()
         _hm.fi._archive_paths = lambda *a, **k: {x: Path("/dev/null") for x in _slugs}
         _hm.fi.token_map = lambda *a, **k: {x: ("u", "d") for x in _slugs}
+        # R-225(1): the manifest now REQUIRES fit_code_ref and the measured
+        # hashes, so the sandbox must launch the way production does.
+        _env17 = os.environ.get("FIT_CODE_REF")
+        os.environ["FIT_CODE_REF"] = "0" * 40
         try:
             PA.stage_fit()
             seam("17a stage_fit COMPLETES end-to-end on a synthetic v5 tape", True)
@@ -200,6 +204,10 @@ def main() -> int:
             seam("18a stage_score COMPLETES with ALL FOUR arms", False,
                  f"{type(e).__name__}: {e}")
         finally:
+            if _env17 is None:
+                os.environ.pop("FIT_CODE_REF", None)
+            else:
+                os.environ["FIT_CODE_REF"] = _env17
             (_hm.features, _hm.fine_feats, _hm.window_streams,
              _hm.fi._archive_paths, _hm.fi.token_map) = _saved_fn
             (PA.TAPE_PATH, PA.FRAGMENT, PA.TOPUP, PA.FITDIR,
@@ -524,8 +532,21 @@ def main() -> int:
     seam("29g the run dir is unique per run, not a fixed path",
          ".run-{int(" in _sf29 or "run-" in _sf29,
          "rmtree on a fixed .run path deletes a CONCURRENT run's directory")
-    seam("29h a LIVE fit lock REFUSES rather than reclaiming",
-         "held by LIVE pid" in _sf29)
+    # R-225(3): driven, not grepped. A LIVE holder must refuse; the previous
+    # form searched stage_fit's source for a phrase that moved when the lock
+    # became callable, while the property itself was still true.
+    import tempfile as _t29
+    _L29 = Path(_t29.mkdtemp()) / "f.lock"
+    PA.acquire_fit_lock(_L29)                      # held by THIS live pid
+    try:
+        PA.acquire_fit_lock(_L29)
+        seam("29h a LIVE fit lock REFUSES rather than reclaiming", False,
+             "a second acquirer took a lock held by a live process")
+    except RuntimeError as _e29:
+        seam("29h a LIVE fit lock REFUSES rather than reclaiming",
+             "LIVE pid" in str(_e29))
+    finally:
+        PA.release_fit_lock(_L29)
     # DA relay: gate_code binds by FILE SHA, and a dirty-checker verdict is
     # refused -- a verdict from uncommitted checker bytes is reproducible from
     # no ref, so binding to `head` would bind to a ref that never ran.
@@ -600,10 +621,14 @@ def main() -> int:
         seam("31c the pin proves the DATA LOADS (row-path probe over real slugs)",
              False, f"pin REFUSED: {_e31}")
         seam("31d archive_paths is non-empty", False, "pin refused")
-    seam("31e the FIT has its own drop absorption bound",
-         "absorption\n" in _a31 or "fit drop" in _a31,
-         "the builder's bound covers skip_counts and never reached the fit, so "
-         "a 100% no_archive failure read as a quiet all-drop")
+    # R-225(2): this SEARCHED THE SOURCE for the word "absorption". A guard
+    # whose test greps for a word has not been shown to fire. Driven now.
+    try:
+        PA.assert_fit_absorption_within_bound({"state_join_failed": 50}, 950, "btc")
+        seam("31e the FIT bound REFUSES a per-status breach", False)
+    except RuntimeError as _e31e:
+        seam("31e the FIT bound REFUSES a per-status breach",
+             "state_join_failed" in str(_e31e))
 
     # ---- SEAM 32 (R-215): exclusions are counted under THEIR OWN NAMES ----
     # The defect: tape_index() filtered state_status != "OK", so _feature_pass
@@ -722,8 +747,15 @@ def main() -> int:
          "\"all_arms_same_n\": (len(set(" in _f33,
          "a hardcoded True beside the table it describes has contradicted "
          "that table three times in this repo (CLAUDE.md rule 10)")
-    seam("33f the bounded counter cannot be silently renamed away",
-         "bounded drop counter" in inspect.getsource(PA._feature_pass))
+    # R-225: driven. A renamed counter must REFUSE, not merely be mentioned.
+    try:
+        PA.assert_fit_absorption_within_bound({"renamed_counter": 0}, 100, "btc")
+        seam("33f the bounded counter cannot be silently renamed away", False,
+             "a renamed counter removes the only thing between a real join "
+             "failure and a silent all-drop")
+    except RuntimeError as _e33:
+        seam("33f the bounded counter cannot be silently renamed away",
+             "state_join_failed" in str(_e33))
     seam("33d the registration is keyed by TAPE identity",
          PA.preregistered_n("c7ab02ebcf27d2fc", "btc") == 578917
          and PA.preregistered_n("0" * 16, "btc") is None,
@@ -952,6 +984,149 @@ def main() -> int:
          and HHM36.keptrow({"latency": _lat41})["any_fill_ahead"] is False,
          "tranches exist but carry zero shares: the old builder said True, "
          "keptrow said False, and keptrow overwrote -- so keptrow governed")
+
+    # ---- SEAM 42 (R-225): the gate must REJECT, not merely NOTICE ---------
+    # The user's audit: the seams proved hashes CHANGE and none proved scoring
+    # REJECTS a missing or mismatched hash. An instrument that moves is not a
+    # gate that bites. These drive the REAL checker against manifests built to
+    # be wrong, and require a refusal.
+    import tempfile as _t42
+    def _manifest_case(mutate):
+        """Run the REAL assert_fit_complete_and_matching against a mutated
+        manifest. Returns the refusal message, or None if it ACCEPTED.
+
+        FIT_CODE_REF is set so the BASE manifest is well-formed: without it
+        _tape_identity() yields fit_code_ref None and every case would be
+        refused on that instead of on the binding under test -- a harness that
+        refuses for the wrong reason proves nothing."""
+        d = Path(_t42.mkdtemp())
+        _sv_env = os.environ.get("FIT_CODE_REF")
+        os.environ["FIT_CODE_REF"] = "0" * 40
+        now = PA._tape_identity()
+        m = dict(now)
+        m.update({"complete": True, "file_hashes": {}})
+        mutate(m)
+        (d / PA.FIT_MANIFEST).write_text(json.dumps(m))
+        sv = PA.FITDIR
+        PA.FITDIR = d
+        try:
+            PA.assert_fit_complete_and_matching()
+            return None
+        except RuntimeError as e:
+            return str(e)
+        finally:
+            PA.FITDIR = sv
+            if _sv_env is None:
+                os.environ.pop("FIT_CODE_REF", None)
+            else:
+                os.environ["FIT_CODE_REF"] = _sv_env
+
+    _r = _manifest_case(lambda m: m.pop("fit_code_sha256_prefix", None))
+    seam("42a a manifest MISSING fit_code_sha256_prefix is REFUSED",
+         _r is not None and "fit_code_sha256_prefix" in _r,
+         "the pre-fix manifest was ACCEPTED — the hash was written and never "
+         "enforced, so nothing stopped a fit of unknown code being scored")
+    _r = _manifest_case(lambda m: m.pop("fragment_sha256_prefix", None))
+    seam("42b a manifest MISSING fragment_sha256_prefix is REFUSED",
+         _r is not None and "fragment_sha256_prefix" in _r)
+    _r = _manifest_case(lambda m: m.update({"fit_code_sha256_prefix": "dead" * 4}))
+    seam("42c a MISMATCHED fit code hash is REFUSED",
+         _r is not None and "FIT CODE" in _r)
+    _r = _manifest_case(lambda m: m.update({"fragment_sha256_prefix": "dead" * 4}))
+    seam("42d a MISMATCHED fragment hash is REFUSED",
+         _r is not None and "FRAGMENT" in _r)
+    _r = _manifest_case(lambda m: [m.pop(k, None) for k in
+                                   ("fit_code_sha256_prefix",
+                                    "fragment_sha256_prefix")])
+    seam("42e BOTH absent is still REFUSED (None==None vacuity)",
+         _r is not None,
+         "`m.get(k) != now.get(k)` passes when both sides are None: an absent "
+         "binding read as agreement")
+    _r = _manifest_case(lambda m: None)
+    seam("42f a WELL-FORMED manifest is ACCEPTED (the guard is not a wall)",
+         _r is None, f"refused a valid manifest: {_r}")
+
+    # the receipt must report the FIT's identity, read from the manifest
+    _fsrc = inspect.getsource(PA.stage_score)
+    _line = next((l for l in _fsrc.split("\n") if '"fit_code_identity"' in l), "")
+    seam("42g the receipt reads the FIT's identity FROM THE MANIFEST",
+         "_fit_identity_from_manifest" in _line
+         and "measured_code_identity" not in _line,
+         f"it measured at SCORE time — the scorer's identity under the fit's "
+         f"name. line: {_line.strip()[:90]}")
+    seam("42h the scorer's own identity is reported under ITS OWN name",
+         "score_code_identity" in _fsrc)
+
+    # ---- SEAM 43 (R-225): TOTAL-form fit bound, driven ---------------------
+    try:
+        PA.assert_fit_absorption_within_bound(
+            dict({f"X{i}": 9 for i in range(10)}, state_join_failed=0), 910, "btc")
+        seam("43a TOTAL: ten 0.9% categories aggregating 9% REFUSE", False,
+             "each passes the per-status bound; the failure arrived spread")
+    except RuntimeError as _e:
+        seam("43a TOTAL: ten 0.9% categories aggregating 9% REFUSE",
+             "TOTAL" in _e.args[0])
+    _ev43 = PA.assert_fit_absorption_within_bound(
+        {"pre_window_excluded": 600, "gap_at_cutoff_excluded": 100,
+         "no_level_history_excluded": 50, "state_join_failed": 0}, 250, "btc")
+    seam("43b DESIGN exclusions at 75% do NOT trip either form",
+         _ev43["bounded_total_fraction"] == 0.0)
+
+    # ---- SEAM 44 (R-225): the lock EXCLUDES, and is RELEASED ---------------
+    import subprocess as _sp44
+    _d44 = Path(_t42.mkdtemp()); _L44 = _d44 / "f.lock"
+    _prog = (
+        "import sys,os;sys.path.insert(0,%r)\n"
+        "import phase2_arms as PA\n"
+        "from pathlib import Path\n"
+        "try:\n"
+        "    PA.acquire_fit_lock(Path(%r)); print('WON')\n"
+        "except RuntimeError: print('LOST')\n"
+    ) % (str(HERE), str(_L44))
+    _procs = [_sp44.Popen([sys.executable, "-c", _prog], stdout=_sp44.PIPE,
+                          text=True) for _ in range(2)]
+    _outs = [p.communicate()[0].strip() for p in _procs]
+    seam("44a TWO CONCURRENT acquirers: exactly one wins",
+         _outs.count("WON") == 1,
+         f"got {_outs} — check-then-write let both pass `if lock.exists()`")
+    _L44.unlink(missing_ok=True)
+    seam("44b acquisition is ATOMIC (O_EXCL), not check-then-write",
+         "O_EXCL" in inspect.getsource(PA.acquire_fit_lock))
+    _pid44 = PA.acquire_fit_lock(_L44)
+    seam("44c the owner CAN release", PA.release_fit_lock(_L44) is True)
+    seam("44d the lock is GONE after release", not _L44.exists())
+    PA.acquire_fit_lock(_L44)
+    seam("44e a NON-owner cannot release someone else's lock",
+         PA.release_fit_lock(_L44, pid=999999) is False and _L44.exists())
+    _L44.unlink(missing_ok=True)
+    seam("44f stage_fit releases in a FINALLY",
+         "finally:" in inspect.getsource(PA.stage_fit)
+         and "release_fit_lock(_lock)" in inspect.getsource(PA.stage_fit),
+         "the lock was never released; every run left one to be reclaimed")
+
+    # ---- SEAM 45 (R-225): identity BEFORE load, RECHECKED at write --------
+    _sf45 = inspect.getsource(PA.stage_fit)
+    seam("45a identity is captured BEFORE the inputs are loaded",
+         _sf45.index("_ident_pre = _tape_identity()")
+         < _sf45.index("_feature_pass(FRAGMENT"),
+         "captured after the load, a mid-run change is recorded as though it "
+         "had always been so")
+    seam("45b it is RECHECKED at write time",
+         "_ident_post = _tape_identity()" in _sf45)
+    seam("45c a mid-run DRIFT is a REFUSAL, not a warning",
+         "inputs CHANGED DURING the run" in _sf45)
+    seam("45d the manifest records that both happened",
+         "identity_captured_before_load" in _sf45
+         and "identity_rechecked_at_write" in _sf45)
+    # BEHAVIOURAL: perturb an input and require the drift comparison to fire
+    _fake_pre = dict(PA._tape_identity())
+    _fake_post = dict(_fake_pre); _fake_post["fragment_sha256_prefix"] = "beef" * 4
+    _drift45 = {k: (_fake_pre.get(k), _fake_post.get(k))
+                for k in ("tape_sha256_prefix", "fragment_sha256_prefix")
+                if _fake_pre.get(k) != _fake_post.get(k)}
+    seam("45e the drift comparison DETECTS a perturbed input",
+         "fragment_sha256_prefix" in _drift45,
+         "the comparison must notice a changed fragment, not just record one")
 
     print(f"\n{'PRODUCTION SEAMS GREEN' if not FAILURES else 'PRODUCTION SEAMS RED'}: "
           f"{len(FAILURES)} failing")
