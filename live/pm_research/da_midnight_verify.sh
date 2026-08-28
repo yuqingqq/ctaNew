@@ -91,7 +91,26 @@ for d in "$CLOSED" "$OPENED"; do
   # separately from day_quality_pass, so a healthy-but-early day reads as a
   # good day that does not count, never as a bad day.
   FREEZE_EPOCH="${DA_FREEZE_EPOCH:-1787897340}"
-  "$PY" "$V" verify --day "$d" --freeze-epoch "$FREEZE_EPOCH" --out "$tmp" >> "$LOG" 2>&1
+  # WHO and WHY, carried into the artifact. A systemd run identifies itself
+  # by INVOCATION_ID; a hand run of this launcher that states no reason is
+  # recorded as UNATTRIBUTED rather than refused -- refusing here would put
+  # the standing nightly duty at risk of an environment assumption, and an
+  # unattributed write that SAYS SO is already the honest status.
+  # IDENTITY, NOT PRESENCE. The first version tested `[ -n "$INVOCATION_ID" ]`
+  # -- but INVOCATION_ID is INHERITED by every child of any systemd unit, and
+  # this session's own shell has one, so a hand rehearsal stamped itself
+  # "scheduled nightly timer". A presence test on an inherited variable is the
+  # vocabulary-vs-identity mistake in an environment variable. The cgroup path
+  # names the unit this process is ACTUALLY running inside and cannot be
+  # inherited from a different one.
+  case ":$(cat /proc/self/cgroup 2>/dev/null):" in
+    */da-midnight-verify.service/*|*/da-midnight-verify.service:*)
+      REASON="scheduled unit run, da-midnight-verify.service (INVOCATION_ID=${INVOCATION_ID:-?})" ;;
+    *)
+      REASON="${DA_WRITE_REASON:-UNATTRIBUTED hand run of da_midnight_verify.sh}" ;;
+  esac
+  "$PY" "$V" verify --day "$d" --freeze-epoch "$FREEZE_EPOCH" \
+        --write-reason "$REASON" --out "$tmp" >> "$LOG" 2>&1
   rc=$?
   if "$PY" -c 'import json,sys
 d=json.load(open(sys.argv[1]))
@@ -106,7 +125,7 @@ sys.exit(0 if d.get("day_token")==sys.argv[2] and d.get("predicates") else 1)'  
     # the artifact's own as_of let a reader CHECK rather than assume.
     _sha="$(sha256sum "$OUTDIR/da_dayverdict_$d.json" | cut -c1-16)"
     _asof="$("$PY" -c 'import json,sys;print(json.load(open(sys.argv[1])).get("as_of_utc"))' "$OUTDIR/da_dayverdict_$d.json" 2>/dev/null)"
-    echo "exit=$rc for $d (verdict artifact written: sha256=$_sha as_of=$_asof)" >> "$LOG"
+    echo "exit=$rc for $d (verdict artifact written: sha256=$_sha as_of=$_asof reason=$REASON)" >> "$LOG"
   else
     rm -f "$tmp"
     broke=4

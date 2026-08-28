@@ -60,6 +60,8 @@ GAP_BAR_PER_HR = 15.0
 #: verdict is visible, would retro-judge a day under a rule chosen to change
 #: its answer. If asked to move it after a result is visible, REFUSE and record
 #: the refusal (the standing Class-C/D instruction).
+CANONICAL_VERDICT_DIR = Path(
+    "/home/yuqing/ctaNew/data/pm_5min/derived")  # see --write-reason
 PER_COIN_RULE_FROM_DAY = "20260828"
 
 #: DAY_BAR_V2 (P1/P2/P3), governing days from this date. Declared in
@@ -833,6 +835,17 @@ def _selftests() -> int:
             ok("--freeze-epoch" in _argv,
                "(1) the LAUNCHER passes --freeze-epoch explicitly (no default "
                "exists any more, so an omission would refuse at 00:06Z)")
+            ok("--write-reason" in _argv,
+               "(1) the LAUNCHER passes --write-reason explicitly -- a "
+               "canonical production write refuses without one, so an "
+               "omission here would break the nightly run rather than write "
+               "an unattributed artifact")
+            _wr = _argv[_argv.index("--write-reason") + 1]
+            ok(_wr.startswith("UNATTRIBUTED"),
+               f"(1) and a HAND run of the launcher stamps UNATTRIBUTED (got "
+               f"{_wr[:40]!r}) -- the unit check reads /proc/self/cgroup, not "
+               f"INVOCATION_ID, which is INHERITED by every child of any "
+               f"systemd unit and made a hand rehearsal call itself the timer")
             _ep = _argv[_argv.index("--freeze-epoch") + 1]
             ok(abs(float(_ep) - 1787897340.0) < 1.0,
                f"(1) and it passes the RULED freeze-commit epoch "
@@ -1220,6 +1233,14 @@ def main() -> int:
                     help="REQUIRED. The governing freeze epoch; there is no "
                          "default, because a stale one judged days silently.")
     ap.add_argument("--out", default=None)
+    ap.add_argument("--write-reason", default=None,
+                    help="WHO is writing this verdict and WHY. Required when "
+                         "writing a CANONICAL production verdict, because the "
+                         "verdict path is stable: any later write replaces the "
+                         "artifact a previous log line still describes, and a "
+                         "reader who finds an unexpected as_of has to "
+                         "reconstruct the reason from memory. Recorded in the "
+                         "artifact as `write_reason`.")
     a = ap.parse_args()
     if a.selftest or not a.cmd:
         return _selftests()
@@ -1232,6 +1253,23 @@ def main() -> int:
     # precondition that can silently no-op is the failure it exists to prevent.
     # (e) checked BEFORE the try: an unstated epoch is a launcher error, not an
     # instrument failure, and must not be reported as one.
+    # (f) A CANONICAL PRODUCTION WRITE MUST SAY WHO AND WHY. Checked here,
+    # beside the epoch check and BEFORE any computation, for the same reason:
+    # an unattributed write is a caller error, not an instrument failure. The
+    # nightly launcher always supplies one, so this bites only hand runs --
+    # exactly the population that needs attributing. Scratch and rehearsal
+    # paths are unaffected.
+    if a.out:
+        _op = Path(a.out).resolve()
+        if (_op.parent == CANONICAL_VERDICT_DIR
+                and _op.name.startswith("da_dayverdict_")
+                and _op.name.endswith(".json") and not a.write_reason):
+            raise SystemExit(
+                f"REFUSED: {_op.name} is a CANONICAL production verdict and "
+                f"--write-reason is required. The path is stable, so this "
+                f"write REPLACES the artifact the last log line describes; "
+                f"without a stated reason a future reader of `as_of_utc` has "
+                f"to reconstruct who regenerated it and why.")
     if a.freeze_epoch is None:
         raise SystemExit(
             "REFUSED: --freeze-epoch is required and has no default. It "
@@ -1246,6 +1284,10 @@ def main() -> int:
         print(f"\nINSTRUMENT FAILURE verifying {a.day}: NOTHING WAS VERIFIED. "
               f"This is exit 4, NOT a failing day -- no verdict was computed.")
         return 4
+    # Provenance, stamped AFTER the verdict: it is not a predicate and must
+    # never enter `all_pass`. Always present, so an unattributed write is a
+    # visible STATUS rather than a missing key (rule 4).
+    rep["write_reason"] = a.write_reason
     text = json.dumps(rep, indent=2, sort_keys=True)
     if a.out:
         Path(a.out).write_text(text, encoding="utf-8")
