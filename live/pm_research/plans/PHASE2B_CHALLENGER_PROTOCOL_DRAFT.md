@@ -248,3 +248,113 @@ admissible share is reported against that denominator.
    **≤ 0** skill.
 5. **`Identity` vs itself scores exactly 0** — the null the comparison rests on.
 6. **Missing `S_ref`** yields a **status**, never a substituted reference.
+
+---
+
+## AMENDMENT A2 — the estimand is a 60-SECOND ENDPOINT comparison, not the full-window mean
+
+**This is the second settlement correction in one day, and both were mine.** A1
+corrected the *venue* (Chainlink, not Binance). A2 corrects the *statistic*. Both
+pre-freeze, nothing scored on either.
+
+### A2.1 Read at the artifact the reviewer named
+
+`live/pm_research/EXP_RESULTS_2026-08-20.md:10-17`, EXP-M6, n = 1,465 windows:
+
+| convention | agree | agree (\|margin\| > 0.5 bp) |
+|---|---|---|
+| **S60(T) vs S60(t0)** | **99.8%** | **99.9%** |
+| S30(T) vs S30(t0) | 96.1% | 96.9% |
+| S60(T) vs S30(t0) | 96.5% | 97.4% |
+| **meanS60[t0,T] vs S60(t0)** | **86.9%** | 88.2% |
+
+Against a **pre-registered** gate of ≥99.0% pooled and ≥99.5% on the >0.5 bp
+subset. **Passed.** The artifact's own words: *"the averaging window is w = 60 s,
+not the full 300 s range — the full-range reading scores 86.9% and is refuted."*
+
+### A2.2 What that refutes is A1, not the reviewer
+
+**My A1.3 estimand — `P(mean over [t0,T] ≥ reference)` — is the 86.9% row.** It
+was reasoned from the market description's prose (*"the time-weighted average
+price … of the time range specified in the title"*), which reads as the full
+range. I corrected the venue by opening a market definition and then **took the
+same prose as authoritative for the statistic without checking it against a
+settlement reconstruction that already existed in this repo, and had already
+passed a pre-registered gate.**
+
+### A2.3 The corrected target
+
+**Up iff `S60(T) ≥ S60(t0)`**, where `S60(x)` is the 60-second Chainlink TWAP
+ending at `x`. Ties resolve **UP** — unchanged, still the venue's `>=`.
+
+`S60(t0)` is **fully realized before the window opens.** The reference requires
+no forecast at all.
+
+### A2.4 Part-realization is TERMINAL and much lighter
+
+Under the full-window reading, every instant contributed to the target and a
+challenger had to carry the realized integral across the whole window. Under the
+endpoint convention:
+
+- **`t ≤ T − 60`** — none of `S60(T)` is realized. `A_t` contributes **nothing**;
+  the target is a pure forecast of a 60-second average that has not begun.
+- **`t > T − 60`** — `[T−60, t]` is fixed and only `(t, T]` is stochastic.
+
+**So A1.3's structural claim was too strong.** "A challenger reading only the
+current price cannot compute the target" is **true only inside the final 60
+seconds**, not across the window. And **PM `Identity` / `pm_microprice` price the
+binary event directly**, so no path integral is forced on them at all — that
+requirement was an artifact of my full-window reading.
+
+### A2.5 The reader, pinned
+
+- **Feed**: `wss://ws-live-data.polymarket.com`, topic **`crypto_prices_twap_sixty`**
+  — the Chainlink RTDS TWAP relay, 1 s cadence, values **1e18-scaled**, carrying
+  `window_s` (`collect_pm_prices.py:34-50`).
+- **`crypto_prices` on the same subscription is a Binance-spot mirror and is NOT
+  the settlement source.** The Q-DA-117 error one level down: the wrong stream
+  sits three lines from the right one, in the same subscribe block.
+- **No replay exists.** Unsubscribed time is truth lost, so coverage over
+  `[T−60, T]` and `[t0−60, t0]` is an **admissibility precondition**, not a
+  quality note — a status, never an interpolation.
+
+### A2.6 The tension is STATED, not resolved
+
+**The description and the reconstruction disagree, and I cannot explain why.**
+The market text says the TWAP "of the time range specified in the title"; the
+settlements behave like 60-second endpoints. I adopt the reconstruction because
+it is **measured against 1,465 actual settlements and passed a pre-registered
+gate**, while the description is prose I have already misread once today. But
+adopting is not explaining, and at least three readings survive:
+
+1. the description is loose and always was;
+2. the venue's convention changed after 2026-08-20;
+3. the reconstruction's population is unrepresentative of current windows.
+
+**(2) and (3) are testable and (1) is not.** A fresh independent audit on
+**recent** windows, same grid, same pre-registered gate, would separate them —
+and that audit is a legitimate build rather than a precondition for this
+amendment.
+
+**This amendment holds UNLESS a new independent same-population audit supersedes
+it.** Named escape hatch, in band, so a later audit does not have to argue.
+
+### A2.7 Knowledge time, not event time
+
+The same artifact: reading the grid at knowledge time gives **99.3%** against
+**99.8%** at event time, and *"that 0.5 pp gap is the size of the look-ahead a
+careless backtest would bank."* Every S60 input is read at `local_knowledge ≤ t`,
+which the accumulator already enforces and counts.
+
+### A2.8 What survives the correction
+
+**The machinery transfers unchanged — only the window bounds move.** Verified:
+`realized_integral(ticks, t0−60, t0)` gives the reference and
+`realized_integral(ticks, T−60, min(t,T))` gives the partial target, with
+`covered_s` reporting exactly how much of the terminal 60 s is observed and
+`mean()` still refusing on incomplete coverage. The tie rule, the era floor, the
+exclusion classes and the point-in-time discipline are untouched.
+
+**`bn_bookticker_probability` as built prices the FULL-WINDOW event and is
+therefore superseded by this amendment** — marked in place, not deleted, and its
+first scored use was already blocked on the user's freeze.

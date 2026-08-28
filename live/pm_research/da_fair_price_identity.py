@@ -505,12 +505,127 @@ def _phi(z: float) -> float:
     return 0.5 * (1.0 + math.erf(z / math.sqrt(2.0)))
 
 
+def _asian_log_shape(sigma: float, a: float, length: float) -> float:
+    """`s2` for the lognormal moment-match of a time-average of driftless GBM
+    over `[t+a, t+a+length]`, in log space throughout.
+
+    E[R^2]/E[R]^2 = e^{sigma^2 a} * 2(e^x - 1 - x)/x^2 with x = sigma^2*length,
+    because e^{sigma^2 b} - e^{sigma^2 a} = e^{sigma^2 a} * expm1(x). The
+    deferral `a` enters as a clean multiplicative factor, so the A2 endpoint
+    convention needs no new derivation -- it is the same expression with a>0,
+    and reduces EXACTLY to the a=0 full-window case (asserted in the
+    selftests, so "generalisation" is a checked claim rather than a hope).
+    """
+    x = sigma * sigma * length
+    if x <= 0.0:
+        base = 0.0
+    elif x < 1e-8:
+        base = math.log1p(x / 3.0 + x * x / 12.0)
+    elif x < 500.0:
+        base = math.log(2.0 * (math.expm1(x) - x) / (x * x))
+    else:
+        base = x + math.log(2.0) - 2.0 * math.log(x)
+    return sigma * sigma * a + base
+
+
+def bn_bookticker_s60_probability(*, spot: float, spot_as_of: float,
+                                  partial: PartialTwap | None,
+                                  t: float, T: float, window_s: float = 60.0,
+                                  sigma: float, sigma_as_of: float,
+                                  sigma_lookback_s: float,
+                                  reference: float,
+                                  reference_source: str) -> dict[str, Any]:
+    """P(S60(T) >= S60(t0)) -- the A2 estimand. **BUILD ONLY, NOT SCORED.**
+
+    Settlement compares two SIXTY-SECOND endpoint averages, not the full-window
+    mean (`EXP_RESULTS_2026-08-20.md:10-17`: S60(T) vs S60(t0) agrees 99.8% on
+    1,465 windows against a pre-registered gate, while the full-range reading
+    scores 86.9% and is, in that artifact's words, "refuted").
+
+    TWO REGIMES, AND THE FIRST ONE IS THE CORRECTION:
+      * t <= T - 60 : the averaging window has not begun. `partial` MUST be
+        None and the realized past is IRRELEVANT -- a pure forecast. My A1.3
+        claimed a challenger must carry the realized average at every instant;
+        under the true convention that is false for all but the last minute,
+        and `s60_ignores_realized_past` in the selftests proves it by feeding
+        two different pasts and requiring the SAME answer.
+      * t >  T - 60 : `[T-60, t]` is fixed, only `(t, T]` is stochastic, and
+        `partial` is required.
+
+    `reference` is S60(t0), fully realized before the window opened -- the
+    reference needs no forecast at all.
+    """
+    if reference_source != CHAINLINK_REF_SOURCE:
+        raise Inadmissible(
+            f"REFUSED: reference_source {reference_source!r} is not "
+            f"{CHAINLINK_REF_SOURCE!r}. S60(t0) comes from the Chainlink RTDS "
+            f"relay (topic `crypto_prices_twap_sixty`); the `crypto_prices` "
+            f"topic on the SAME subscription is a Binance-spot mirror and is "
+            f"not the settlement source (Q-DA-117, one level down).")
+    for nm, v in (("sigma_as_of", sigma_as_of), ("spot_as_of", spot_as_of)):
+        if v > t:
+            raise Inadmissible(
+                f"REFUSED: {nm}={v} is AFTER the decision time t={t}.")
+    if not (T > t):
+        raise Inadmissible(f"REFUSED: need t < T, got {t}, {T}")
+    if not (isinstance(sigma, (int, float)) and math.isfinite(sigma)
+            and sigma > 0):
+        raise Inadmissible(f"REFUSED: sigma={sigma!r} must be finite and > 0")
+
+    w_start = T - window_s
+    if t <= w_start:
+        if partial is not None:
+            raise Inadmissible(
+                "REFUSED: a realized partial was supplied for a decision "
+                "BEFORE the averaging window opens. Nothing of S60(T) is "
+                "realized yet, so accepting one would let a past that cannot "
+                "matter move the answer.")
+        a, length, realized = w_start - t, window_s, 0.0
+    else:
+        if partial is None or partial.status != TWAP_OK:
+            return {"probability": None, "status": FP_NOT_READY,
+                    "estimator": BN_BOOKTICKER,
+                    "detail": "inside the terminal window the realized part is "
+                              "required and must be complete; got "
+                              f"{None if partial is None else partial.status}"}
+        a, length, realized = 0.0, T - t, float(partial.integral)
+
+    k = reference * window_s - realized
+    if k <= 0.0:
+        return {"probability": 1.0, "status": FP_OK, "estimator": BN_BOOKTICKER,
+                "regime": "terminal", "a": a, "k": k, "realized": realized,
+                "detail": "clinched by the realized part of the terminal window"}
+    m = spot * length
+    s2 = _asian_log_shape(sigma, a, length)
+    if s2 <= 0.0:
+        prob = 1.0 if m >= k else 0.0
+    else:
+        prob = _phi((math.log(m) - 0.5 * s2 - math.log(k)) / math.sqrt(s2))
+    if not (0.0 <= prob <= 1.0 and math.isfinite(prob)):
+        raise Inadmissible(f"REFUSED: produced {prob!r}, not a probability")
+    return {"probability": prob, "status": FP_OK, "estimator": BN_BOOKTICKER,
+            "regime": "pre-window" if t <= w_start else "terminal",
+            "a": a, "length": length, "k": k, "realized": realized,
+            "window_s": window_s, "sigma": sigma,
+            "sigma_lookback_s": sigma_lookback_s,
+            "reference_source": reference_source,
+            "detail": "A2 endpoint estimand; BUILD ONLY, not scored"}
+
+
 def bn_bookticker_probability(*, spot: float, spot_as_of: float,
                               partial: PartialTwap, t: float, T: float,
                               t0: float, sigma: float, sigma_as_of: float,
                               sigma_lookback_s: float, reference: float,
                               reference_source: str) -> dict[str, Any]:
-    """P(window TWAP >= window-open reference), the DECLARED transformation.
+    """**SUPERSEDED BY AMENDMENT A2 -- THIS PRICES THE WRONG EVENT.**
+
+    Kept in place rather than deleted (rule 13: the superseded text is
+    provenance). It computes P(full-window mean >= reference), which is the
+    86.9% row of `EXP_RESULTS_2026-08-20.md:10-17` -- the reading that artifact
+    calls refuted. Use `bn_bookticker_s60_probability`. Nothing was ever scored
+    with this.
+
+    P(window TWAP >= window-open reference), the DECLARED transformation.
 
     Driftless GBM for the residual path, the residual AVERAGE moment-matched to
     a lognormal (the standard Asian treatment), and the realized part carried
@@ -582,14 +697,7 @@ def bn_bookticker_probability(*, spot: float, spot_as_of: float,
     #            2(x^2/2 + x^3/6)/x^2 - 1 = x/3 + x^2/12.
     #   moderate the direct ratio.
     #   x large  e^x dominates: ln(ratio) -> x + ln 2 - 2 ln x, no overflow.
-    if x <= 0.0:
-        s2 = 0.0
-    elif x < 1e-8:
-        s2 = math.log1p(x / 3.0 + x * x / 12.0)
-    elif x < 500.0:
-        s2 = math.log(2.0 * (math.expm1(x) - x) / (x * x))
-    else:
-        s2 = x + math.log(2.0) - 2.0 * math.log(x)
+    s2 = _asian_log_shape(sigma, 0.0, tau)   # a=0: the full-window special case
     if s2 <= 0.0:
         # Degenerate limit (sigma*sqrt(tau) -> 0): the residual integral is
         # deterministic. Answer the limit exactly instead of dividing by zero.
@@ -1169,6 +1277,89 @@ def _selftests() -> int:
        "across 20 (sigma, tau) cells including the near-degenerate "
        "sigma*sqrt(tau) -> 0 limit, every output is a finite probability -- "
        "the limit is answered exactly rather than dividing by zero")
+
+    # ===== A2: the SIXTY-SECOND ENDPOINT estimand ========================
+    _s60 = dict(spot=100.0, spot_as_of=100.0, partial=None, t=100.0, T=300.0,
+                window_s=60.0, sigma=0.02, sigma_as_of=99.0,
+                sigma_lookback_s=1800.0, reference=100.0,
+                reference_source=CHAINLINK_REF_SOURCE)
+
+    def _s60_refuses(**kw):
+        try:
+            bn_bookticker_s60_probability(**{**_s60, **kw})
+        except Inadmissible as e:
+            return str(e)
+        return ""
+
+    _pre = bn_bookticker_s60_probability(**_s60)
+    ok(_pre["status"] == FP_OK and _pre["regime"] == "pre-window"
+       and _pre["a"] == 140.0 and _pre["length"] == 60.0,
+       f"A2 PRE-WINDOW regime: at t=100 with T=300 the averaging window opens "
+       f"at 240, so the deferral is a={_pre['a']} and the averaging length is "
+       f"{_pre['length']} -- not the 200s to expiry")
+
+    # THE CORRECTION, MADE FALSIFIABLE: before the window opens the realized
+    # past cannot matter. A1.3 claimed it always must.
+    ok("cannot matter" in _s60_refuses(
+           partial=realized_integral(_step([(0.0, 500.0)], 0.0, 100.0),
+                                     0.0, 100.0, source=MICROPRICE)),
+       "A2 CORRECTION, FALSIFIABLE: supplying a realized partial for a "
+       "decision BEFORE the averaging window opens REFUSES. My A1.3 claimed a "
+       "challenger must carry the realized average at EVERY instant; under "
+       "the true convention that is false for all but the last minute, and "
+       "accepting one would let a past that cannot matter move the answer")
+
+    # terminal regime: now the realized part DOES move it
+    _tick_hi = _step([(240.0, 101.0)], 240.0, 270.0)
+    _tick_lo = _step([(240.0, 99.0)], 240.0, 270.0)
+    _ph = bn_bookticker_s60_probability(
+        **{**_s60, "t": 270.0, "spot_as_of": 270.0,
+           "partial": realized_integral(_tick_hi, 240.0, 270.0,
+                                        source=MICROPRICE)})
+    _pl = bn_bookticker_s60_probability(
+        **{**_s60, "t": 270.0, "spot_as_of": 270.0,
+           "partial": realized_integral(_tick_lo, 240.0, 270.0,
+                                        source=MICROPRICE)})
+    ok(_ph["regime"] == "terminal" and _pl["regime"] == "terminal"
+       and _ph["probability"] > _pl["probability"],
+       f"A2 TERMINAL regime: inside the last 60s the realized part MOVES the "
+       f"answer ({_pl['probability']:.4f} -> {_ph['probability']:.4f}) -- so "
+       f"A_t is load-bearing exactly where the convention says it is, and "
+       f"nowhere else")
+    ok(bn_bookticker_s60_probability(
+           **{**_s60, "t": 270.0, "spot_as_of": 270.0, "partial": None}
+       )["status"] == FP_NOT_READY,
+       "and inside the terminal window a MISSING realized part is NOT_READY "
+       "with no number -- required exactly where it matters")
+    _clinch = bn_bookticker_s60_probability(
+        **{**_s60, "t": 270.0, "spot_as_of": 270.0,
+           "partial": realized_integral(_step([(240.0, 500.0)], 240.0, 270.0),
+                                        240.0, 270.0, source=MICROPRICE)})
+    ok(_clinch["probability"] == 1.0 and "clinched" in _clinch["detail"],
+       "a terminal window already carried above the reference by its realized "
+       "part alone returns exactly 1.0")
+
+    # THE GENERALISATION IS CHECKED, NOT HOPED: a=0 with length=tau must equal
+    # the full-window function exactly.
+    _fw = bn_bookticker_probability(**{**_args, "partial": _pt})["probability"]
+    _as_fw = bn_bookticker_s60_probability(
+        **{**_s60, "t": 60.0, "spot_as_of": 60.0, "sigma_as_of": 59.0,
+           "T": 300.0, "window_s": 240.0, "reference": 100.0})["probability"]
+    ok(abs(_fw - _as_fw) < 1e-12,
+       f"THE A2 FORM REDUCES EXACTLY to the full-window one when the averaging "
+       f"window IS the full window ({_fw!r} vs {_as_fw!r}) -- so calling it a "
+       f"generalisation is a checked claim, not a hope, and the superseded "
+       f"function and its replacement agree where they must")
+    ok("not the settlement source" in _s60_refuses(
+           reference_source="crypto_prices"),
+       "and the `crypto_prices` topic -- a Binance-spot mirror three lines "
+       "from the real one in the SAME subscribe block -- is refused as a "
+       "reference (Q-DA-117 one level down)")
+    _mono = [bn_bookticker_s60_probability(**{**_s60, "spot": v})["probability"]
+             for v in (95.0, 100.0, 105.0)]
+    ok(_mono[0] < _mono[1] < _mono[2],
+       f"monotone in spot under the endpoint estimand too "
+       f"({_mono[0]:.4f} < {_mono[1]:.4f} < {_mono[2]:.4f})")
 
     print(f"\n{'FAIR-PRICE IDENTITY SELFTEST GREEN' if not fails else 'RED'}: "
           f"{len(fails)} failing, {checks} checks")
