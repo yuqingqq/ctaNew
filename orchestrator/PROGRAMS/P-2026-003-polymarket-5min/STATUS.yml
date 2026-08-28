@@ -4,6 +4,27 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-08-28T09:57Z (MEM): R-249 -- THE USER RULED Q2 = min (worse side), so
+  the A1.4 gap is closed IN THE FROZEN FILE and BE's :231 is authorized. GATE
+  ARITHMETIC, STATED PRECISELY because this is the update most easily misread:
+  the fit was blocked by (a) HOLD RELEASED and (b) the user's ruling; (b) is
+  now SATISFIED -- ruled, not dissolved and not found unnecessary -- so fit
+  clearance blocks on (a) ALONE and a clean review DOES clear the fit. The
+  one-side flag MEM routed into the round WAS REAL and BE closed it (b3f082e):
+  report_arm had filtered None out and taken min() of what remained, so a p_pos
+  of 0.92 beside p_neg None produced a cell of 0.92 -- one side sailing past
+  the UNDERPOWERED machinery as though the pair had been measured. Q2 now
+  requires BOTH sides, with the rule carried in the ARTIFACT rather than a
+  commit message. MEM's four-instance consolidation is now SEAT_PROTOCOL RULE
+  16, verified at the file: a control that cannot fail must never be mistaken
+  for one that passed -- phrased control-side because the next instance will
+  wear a shape none of the four had, plus the coordinator's completing clause
+  that every control ships BOTH directions. And the count discrepancy held open
+  rather than reconciled ALREADY PAID: chasing it, BE found its own
+  falsifier_count.sh could fall back to running the runner BARE -- main(), the
+  heavy data path, from the session shell, against a now-binding resource cap.
+  Fallback removed; a helper for counting tests must not be able to start a
+  research run. PRIOR:
   2026-08-28T09:53Z (MEM): R-248 -- BATCH 1 COMPLETE, VERIFIED IN THE
   COORDINATOR'S OWN RUN, AND THE CODEX ROUND HAS FIRED at e72dd4c with the
   request filed under reviews/ (no state-file collision this time). FIT IS NOW
@@ -216,7 +237,36 @@ updated: >-
   hygiene + recv_ns measurement)
 
 flags:
-  iter011_q2_statistic: WITH-THE-USER-BLOCKING-FIT # 2026-08-28 R-248. The one
+  iter011_q2_statistic: RULED-BY-USER-MIN-BOTH-SIDES-REQUIRED # RULED
+                             # 2026-08-28T09:56Z (R-249, c014399). The USER
+                             # ruled Q2's cell statistic = min(AUC(p_pos),
+                             # AUC(p_neg)), the WORSE side; half a working head
+                             # cannot carry a cell; the family stays 24. The
+                             # ruling is recorded as a ruled block under A1.4 IN
+                             # THE FROZEN FILE, closing the gap there rather
+                             # than in a message, and BE's pre-ruling
+                             # implementation at phase2_iter011_run.py:231 is
+                             # AUTHORIZED.
+                             # THE ONE-SIDE FLAG MEM ROUTED INTO THE ROUND WAS
+                             # REAL AND IS NOW CLOSED (BE, b3f082e): report_arm
+                             # had filtered None out of the two sign-head AUCs
+                             # and taken min() OF WHAT REMAINED, so ONE side
+                             # could carry the cell. DEMONSTRATED BEFORE FIXING
+                             # -- p_pos AUC 0.92 with p_neg AUC None produced a
+                             # cell of 0.92, the surviving side sailing past the
+                             # UNDERPOWERED machinery as though the pair had
+                             # been measured. Sign discrimination NEEDS BOTH
+                             # SIDES: if either is missing or underpowered the
+                             # CELL is unevaluable, with the reason carried in
+                             # Q2_cell_status / Q2_cell_detail and the rule
+                             # stated in Q2_cell_rule SO IT TRAVELS IN THE
+                             # ARTIFACT rather than living in a commit message.
+                             # Four falsifiers, and note the fourth is the
+                             # rule-16 discipline applied on the spot: three
+                             # refusal cases plus BOTH-EVALUABLE YIELDING THE
+                             # WORSE SIDE (0.61 of 0.92/0.61), so the guard is
+                             # proven not to be a wall. ORIGINAL ENTRY
+                             # (rule 13): 2026-08-28 R-248. The one
                              # design call A1.4 left open. BE implemented Q2's
                              # cell statistic as min(AUC(p_pos), AUC(p_neg))
                              # (phase2_iter011_run.py:231) -- THE WORSE SIDE, so
@@ -246,7 +296,26 @@ flags:
                              # ADVERSE O1-RELEVANT FINDING BEFORE ~23:55Z ARMING
                              # POSTPONES THE BOUNDARY. The deploy is ON but not
                              # unconditional.
-  falsifier_count_discrepancy: RECORDED-FROM-THE-SCRIPT-QUERIED # 2026-08-28
+  falsifier_count_discrepancy: STILL-UNRESOLVED-BUT-IT-PAID # UPDATE
+                             # 2026-08-28T09:56Z: the count itself is STILL NOT
+                             # reconciled, but holding it open rather than
+                             # quietly accepting one number ALREADY PAID FOR
+                             # ITSELF. Investigating the delta, BE found a
+                             # WORSE defect in its own tooling (b3f082e):
+                             # falsifier_count.sh FELL BACK TO RUNNING A MODULE
+                             # BARE when --selftest produced no PASS lines --
+                             # and for the runner, bare means main(), THE HEAVY
+                             # DATA PATH, launched from the session shell, which
+                             # the R-148(3) resource rule forbids and which the
+                             # now-binding resource cap (R-245) makes a live
+                             # hazard. BE triggered it accidentally; it ran two
+                             # minutes before timing out; no stray process
+                             # survived, verified. The fallback is REMOVED --
+                             # the helper now only ever invokes --selftest,
+                             # under a timeout. The principle worth keeping: A
+                             # HELPER FOR COUNTING TESTS MUST NOT BE ABLE TO
+                             # START A RESEARCH RUN. ORIGINAL ENTRY (rule 13):
+                             # 2026-08-28
                              # R-248. The COUNTING SCRIPT gives 81/38/15 = 134;
                              # BE's message said 81+34+11 = 126. Recorded from
                              # THE SCRIPT, per BE's own 001991c lesson (read the
@@ -256,7 +325,24 @@ flags:
                              # RESOLVED: if a later reader needs the count, take
                              # it from the script and treat 126 as a superseded
                              # hand figure.
-  defect_class_falsifier_enshrined_a_defect: NAMED # 2026-08-28 R-248, BE's own
+  defect_class_falsifier_enshrined_a_defect: SEAT-PROTOCOL-RULE-16 # ADOPTED AS
+                             # A HOUSE RULE 2026-08-28 (R-249, c014399),
+                             # verified by MEM at SEAT_PROTOCOL.md:71: "A
+                             # control that cannot fail must never be mistaken
+                             # for a control that passed" -- MEM's consolidation
+                             # of the four named instances (a fixture supplying
+                             # what the code should produce; a guard shown only
+                             # to refuse, so boundary positive controls must
+                             # ADMIT; an anchor that includes the arm name and
+                             # therefore passes nothing and fails nothing; a
+                             # falsifier that enshrines the defect as spec).
+                             # PHRASED ON THE CONTROL SIDE DELIBERATELY: the
+                             # next instance will wear a shape none of these
+                             # four had. The coordinator's addition, which
+                             # completes it: EVERY CONTROL SHIPS BOTH DIRECTIONS
+                             # -- it fires on the bad case AND admits the good
+                             # one. ORIGINAL ENTRY (rule 13): 2026-08-28 R-248,
+                             # BE's own
                              # catch, verified at the artifact. The old
                              # assertion signed_v_cancel({}) == 0.0 -- filed as
                              # "0, not a crash" -- WAS THE DEFECT WRITTEN DOWN
@@ -813,7 +899,22 @@ flags:
                              # coordinator, not here. Recorded so the divergence
                              # is discoverable from the state files rather than
                              # only by re-reading two artifacts side by side.
-  iter011_development: BATCH-COMPLETE-IN-REVIEW-FIT-DOUBLE-BLOCKED # ADVANCED
+  iter011_development: FIT-BLOCKS-ON-HOLD-RELEASED-ALONE # GATE ARITHMETIC
+                             # UPDATED 2026-08-28T09:56Z (R-249). READ THIS
+                             # PRECISELY, because it is the one update that
+                             # could be misread as the collapse the earlier
+                             # entry was written against: the fit WAS blocked by
+                             # (a) Codex HOLD RELEASED and (b) the USER's Q2
+                             # ruling. (b) IS NOW SATISFIED -- it was RULED, not
+                             # dissolved, and not discovered to have been
+                             # unnecessary. So fit clearance now blocks on (a)
+                             # ALONE, and on nothing else: a clean review DOES
+                             # clear the fit. R-249 carries that sentence
+                             # explicitly so the next reader can neither
+                             # re-collapse the two gates into one that was never
+                             # there, nor re-split them and hold the fit against
+                             # a ruling the user already made. EARLIER ENTRIES
+                             # (rule 13): ADVANCED
                              # 2026-08-28 R-248 (batch tip e72dd4c). BE's five
                              # A1.8 steps landed (50277fb / 6f559fc / 9ace8c1 /
                              # f9fb032 + frozen A1); all THREE suites green in

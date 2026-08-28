@@ -1,10 +1,84 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-08-28T09:53Z (MEM) — **batch 1 complete and in review** (Codex
-round fired at `e72dd4c`). **The 011 fit is double-blocked**: Codex HOLD
-RELEASED *and* a user ruling on Q2's statistic. Deploy ON for 00:00:00Z but
-**not unconditional** — an adverse O1-relevant finding before arming postpones
-it.
+Updated: 2026-08-28T09:57Z (MEM) — the user ruled **Q2 = min**, so that gate is
+**satisfied** and **the 011 fit now blocks on Codex `HOLD RELEASED` alone**.
+Rule 16 adopted. Deploy ON for 00:00:00Z but **not unconditional**.
+
+## 2026-08-28 ~09:57Z (MEM) — R-249: one gate closes, and it closes by ruling
+
+### Gate arithmetic — read this precisely
+
+The 011 fit **was** blocked by **(a)** Codex `HOLD RELEASED` and **(b)** the
+user's Q2 ruling. **(b) is now satisfied** — *ruled*, not dissolved, and not
+discovered to have been unnecessary. So fit clearance now blocks on **(a) alone
+and nothing else: a clean review does clear the fit.**
+
+I am spelling that out because this is the update most easily misread. The
+previous entry was written *against* collapsing two gates into one; this entry
+closes one of them legitimately. R-249 carries the sentence explicitly so the
+next reader can neither **re-collapse** the gates into one that was never there,
+nor **re-split** them and hold the fit against a ruling the user already made.
+
+**The ruling:** Q2's cell statistic is `min(AUC(p_pos), AUC(p_neg))` — the worse
+side; half a working head cannot carry a cell; the family stays 24. Recorded as
+a ruled block under A1.4 **in the frozen file**, so the gap is closed where the
+design lives rather than in a message. BE's pre-ruling implementation at
+`phase2_iter011_run.py:231` is authorized.
+
+### The one-side flag was real — and BE's fix is rule 16 applied on the spot
+
+The subtlety routed into the round turned out to be a live defect (`b3f082e`).
+`report_arm` **filtered `None` out of the two sign-head AUCs and took `min()` of
+what remained**, so one side could carry the cell. **Demonstrated before
+fixing:** `p_pos` AUC 0.92 beside `p_neg` AUC `None` produced a cell of **0.92**
+— the surviving side sailing past the `UNDERPOWERED` machinery **as though the
+pair had been measured**.
+
+Sign discrimination needs **both** sides. If either is missing or underpowered
+the **cell** is unevaluable, with the reason in `Q2_cell_status` /
+`Q2_cell_detail` and the requirement stated in `Q2_cell_rule` **so it travels in
+the artifact rather than living in a commit message.**
+
+Four falsifiers — and the fourth is the new house rule applied immediately:
+three refusal cases (`p_neg` None, `p_pos` None, `p_neg` UNDERPOWERED → all
+`None`) **plus both-evaluable yielding the worse side** (0.61 of 0.92/0.61),
+**so the guard is proven not to be a wall.**
+
+### Rule 16 is adopted
+
+**`SEAT_PROTOCOL` rule 16: a control that cannot fail must never be mistaken for
+a control that passed** (verified at `SEAT_PROTOCOL.md:71`). It consolidates the
+four named instances — a fixture supplying what the code should produce; a guard
+shown only to refuse, so boundary positive controls must **admit**; an anchor
+that includes the arm name and therefore passes nothing and fails nothing; a
+falsifier that enshrines the defect as spec — and is **phrased on the control
+side deliberately, because the next instance will wear a shape none of these
+four had.** The coordinator's completing clause: **every control ships both
+directions — it fires on the bad case *and* admits the good one.**
+
+### The unresolved count discrepancy already paid for itself
+
+The 126-vs-134 count is **still not reconciled**. But holding it open instead of
+quietly accepting a number is what sent BE looking — and looking found **a worse
+defect in its own tooling**: `falsifier_count.sh` **fell back to running a module
+bare** when `--selftest` produced no PASS lines. For the runner, bare means
+`main()` — **the heavy data path, launched from the session shell**, which
+R-148(3) forbids and which the now-binding resource cap makes a live hazard. BE
+triggered it accidentally; it ran two minutes before timing out; no stray process
+survived, verified. The fallback is removed — the helper now only ever invokes
+`--selftest`, under a timeout.
+
+**The principle worth keeping: a helper for counting tests must not be able to
+start a research run.** And the meta-lesson: a small discrepancy held open is
+cheap, and this one bought a resource-cap violation path that nobody was looking
+for.
+
+### Tonight, unchanged
+
+**ON but not unconditional** — an adverse O1-relevant Codex finding before
+~23:55Z arming postpones the boundary. 22:30Z confirmation, arming ~23:55Z,
+00:00:00Z deploy, 00:06Z verdict under the old bar (btc expected FAIL,
+`ACCRUES=False`).
 
 ## 2026-08-28 ~09:53Z (MEM) — R-248: batch complete, and two gates that are not the same gate
 
