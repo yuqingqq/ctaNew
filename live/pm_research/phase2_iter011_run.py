@@ -630,6 +630,112 @@ def _one_cell(arm: str, head: str, budget: str, coin_results: dict,
                 "is no null evidence and the cell is not OK"))
 
 
+# ---------------------------------------------------------------------------
+# Q4's INCUMBENT: LOAD, VERIFY, APPLY  (R-280 ruling)
+# ---------------------------------------------------------------------------
+# prereg §5(2) needs "the head's metric minus THE INCUMBENT'S on the IDENTICAL
+# action population". The definite article names the COMMITTED incumbent, so:
+#   - never RE-FIT inside 011 -- a re-fit incumbent is a different incumbent and
+#     would silently answer a different question;
+#   - never load STALE SCORES -- scores over different rows are not the
+#     identical population, whatever their column names say;
+#   - LOAD the four-arm stack's artifact, VERIFY it by hash, APPLY it here.
+#
+# IDENTITY, CHECKED NOT ASSUMED: INCUMBENT_REWEIGHTED_ONLY is ARM D, whose model
+# is FITDIR/linear_d_<coin>.json. It is NOT harmful_reduced_fine_candidate_v1
+# .json -- that file is arm A's frozen linear (the manifest's
+# frozen_incumbent_sha256_prefix), and applying it here would be a different arm
+# wearing the incumbent's name.
+INCUMBENT_ARM = "INCUMBENT_REWEIGHTED_ONLY"
+
+
+def _sha16(p) -> str:
+    import hashlib
+    return hashlib.sha256(Path(p).read_bytes()).hexdigest()[:16]
+
+
+def load_verified_incumbent(coin: str, fitdir=None, manifest: dict = None) -> dict:
+    """The COMMITTED incumbent for `coin`, or a REFUSAL naming what failed."""
+    fitdir = Path(fitdir) if fitdir is not None else PA.FITDIR
+    art = fitdir / f"linear_d_{coin}.json"
+    if not art.exists():
+        raise RuntimeError(
+            f"REFUSED: no incumbent artifact at {art}. Q4's increment is "
+            f"defined against the COMMITTED incumbent; fitting one here would "
+            f"answer a different question (R-280).")
+    if manifest is None:
+        mf = fitdir / PA.FIT_MANIFEST
+        if not mf.exists():
+            raise RuntimeError(
+                f"REFUSED: no {PA.FIT_MANIFEST} beside {art.name}, so its "
+                f"identity cannot be verified. An UNVERIFIED incumbent is not "
+                f"the incumbent, it is a file with a familiar name.")
+        manifest = json.loads(mf.read_text())
+    want = (manifest.get("file_hashes") or {}).get(art.name)
+    if want is None:
+        raise RuntimeError(
+            f"REFUSED: the fit manifest does not bind {art.name}. A hash the "
+            f"manifest never recorded cannot be checked against it, and an "
+            f"absent binding must never read as a matching one (R-225(1b)).")
+    got = _sha16(art)
+    if got != want:
+        raise RuntimeError(
+            f"REFUSED: {art.name} is not the committed incumbent "
+            f"(manifest={want!r} now={got!r}). A DIFFERENT incumbent gives a "
+            f"different increment, and the numbers cannot show which was used.")
+    d = json.loads(art.read_text())
+    if d.get("arm") != INCUMBENT_ARM:
+        raise RuntimeError(
+            f"REFUSED: {art.name} identifies as arm {d.get('arm')!r}, not "
+            f"{INCUMBENT_ARM!r}. The prereg's increment names ONE arm.")
+    for k in ("norm_mu", "norm_sd", "hazard_weights", "value_weights"):
+        if k not in d:
+            raise RuntimeError(f"REFUSED: incumbent artifact has no {k!r}.")
+    nmu = len(d["norm_mu"])
+    if len(d["hazard_weights"]) != nmu + 1:
+        raise RuntimeError(
+            f"REFUSED: {len(d['hazard_weights'])} hazard weights against "
+            f"{nmu} scalers. The design carries ONE intercept, so those widths "
+            f"must differ by exactly one; anything else means the artifact and "
+            f"the design disagree about what a row is.")
+    # State what was verified AND what was NOT. This checks the ARTIFACT's
+    # identity, not the whole fit chain, and those are different claims.
+    d["_verified"] = {
+        "artifact": art.name, "sha256_prefix": got,
+        "bound_by": "fit_manifest.file_hashes",
+        "not_verified": "the manifest's OWN bindings (tape, gate, fit code) are "
+                        "checked by assert_fit_complete_and_matching, not here; "
+                        "this proves only that this file is the one the "
+                        "manifest recorded"}
+    return d
+
+
+def apply_incumbent(model: dict, block: dict, idx) -> dict:
+    """The incumbent's composed value on the SAME rows the candidate scored.
+
+    The arithmetic is COPIED from the four-arm apply path (phase2_arms.py, the
+    INCUMBENT_REWEIGHTED_ONLY branch) rather than reinvented: a second
+    implementation of a scoring rule IS a second rule, and the disagreement
+    would surface as an increment instead of as an error."""
+    import harmful_fast_compute as fc
+    mu, sd = model["norm_mu"], model["norm_sd"]
+    W, WM = model["hazard_weights"], model["value_weights"]
+    out = []
+    for j in idx:
+        raw = block["PM"][j] + block["FN"][j]          # NO state features
+        if len(raw) != len(mu):
+            raise RuntimeError(
+                f"REFUSED: row {j} has {len(raw)} PM+fine features but the "
+                f"incumbent was fitted on {len(mu)}. Applying weights to a "
+                f"differently-shaped vector yields a number, not a prediction.")
+        x = [1.0] + [(raw[i] - mu[i]) / sd[i] for i in range(len(mu))]
+        ph = fc.fast_predict_p(W, x)
+        vh = float(sum(a * b for a, b in zip(WM, x))) if WM else 0.0
+        out.append(ph * vh)
+    return {"expected_cancel_value": out, "arm": INCUMBENT_ARM, "n": len(out),
+            "provenance": model.get("_verified")}
+
+
 _CELL_SUBHEADS = {"Q1_arrival": ("Q1_arrival",),
                   "Q2_sign": ("Q2_p_pos", "Q2_p_neg"),
                   "Q3_magnitudes": ("Q3_m_harm", "Q3_m_good")}
@@ -714,6 +820,15 @@ def _q4_cell(arm: str, budget: str, per_coin: dict) -> tuple:
             f"increment vs incumbent {null['observed']:+.1f}c over "
             f"{null['n_units']} windows; {null['n_perm']} sign-flip "
             f"permutations, units consumed in SORTED order (R-234)")
+
+
+def _selftest_verdict(fails: list) -> int:
+    """Print the verdict and return the exit code, together and last."""
+    print(f"\n{'ITER011 RUN SELFTEST GREEN' if not fails else 'RED'}: "
+          f"{len(fails)} failing")
+    for f in fails:
+        print(f"  - {f}")
+    return 1 if fails else 0
 
 
 def selftest() -> int:
@@ -1132,10 +1247,124 @@ def selftest() -> int:
        "B4 a receipt whose 24 cells are EMPTY DICTS is REFUSED; matching the "
        "declared key set is not evidence that anything was evaluated")
 
-    print(f"\n{'ITER011 RUN SELFTEST GREEN' if not fails else 'RED'}: "
-          f"{len(fails)} failing")
 
-    return 1 if fails else 0
+
+    # ---- R-280: the Q4 incumbent LOAD-VERIFY-APPLY path -------------------
+    # Rule 15 on a path that has not run yet: it must be shown able to REFUSE
+    # before it is ever trusted to accept. Executes post-HOLD-RELEASE; these
+    # run now so the refusals are proven, not promised.
+    import tempfile as _tf, shutil as _sh
+    _fd = Path(_tf.mkdtemp())
+    _real = PA.FITDIR / "linear_d_btc.json"
+    _have_real = _real.exists() and (PA.FITDIR / PA.FIT_MANIFEST).exists()
+    ok(_have_real,
+       "R-280 the committed incumbent artifact and its manifest are present "
+       "(if this fails the checks below prove nothing)")
+    if _have_real:
+        _m = json.loads((PA.FITDIR / PA.FIT_MANIFEST).read_text())
+        _mod = load_verified_incumbent("btc")
+        ok(_mod["arm"] == INCUMBENT_ARM and
+           _mod["_verified"]["sha256_prefix"] == _m["file_hashes"]["linear_d_btc.json"],
+           "POSITIVE CONTROL: the COMMITTED incumbent loads and its hash equals "
+           "the one the fit manifest recorded")
+        ok("not_verified" in _mod["_verified"],
+           "R-280 the loader states what it did NOT verify; checking one "
+           "artifact's identity is not checking the fit chain, and a loader "
+           "that blurs those invites the second to be assumed from the first")
+
+        _sh.copy(_real, _fd / "linear_d_btc.json")
+        (_fd / PA.FIT_MANIFEST).write_text(json.dumps(_m))
+        # KNOWN-BAD 1: content changed, manifest unchanged.
+        _t = json.loads(_real.read_text())
+        _t["hazard_weights"] = [w + 1e-9 for w in _t["hazard_weights"]]
+        (_fd / "linear_d_btc.json").write_text(json.dumps(_t))
+        try:
+            load_verified_incumbent("btc", fitdir=_fd)
+            _r1 = ""
+        except RuntimeError as e:
+            _r1 = str(e)
+        ok("not the committed incumbent" in _r1,
+           f"KNOWN-BAD: a TAMPERED incumbent is refused by hash — a 1e-9 weight "
+           f"nudge is invisible in every number it produces (got {_r1[:60]!r})")
+        # KNOWN-BAD 2: right bytes, wrong arm.
+        _sh.copy(_real, _fd / "linear_d_btc.json")
+        _t2 = json.loads(_real.read_text()); _t2["arm"] = "LGBM_PINNED"
+        (_fd / "linear_d_btc.json").write_text(json.dumps(_t2))
+        (_fd / PA.FIT_MANIFEST).write_text(json.dumps(
+            {**_m, "file_hashes": {**_m["file_hashes"],
+                                   "linear_d_btc.json": _sha16(_fd / "linear_d_btc.json")}}))
+        try:
+            load_verified_incumbent("btc", fitdir=_fd)
+            _r2 = ""
+        except RuntimeError as e:
+            _r2 = str(e)
+        ok("names ONE arm" in _r2,
+           f"KNOWN-BAD: an artifact that hashes correctly but identifies as a "
+           f"DIFFERENT ARM is refused (got {_r2[:60]!r})")
+        # KNOWN-BAD 3: the manifest does not bind it at all.
+        _sh.copy(_real, _fd / "linear_d_btc.json")
+        (_fd / PA.FIT_MANIFEST).write_text(json.dumps({**_m, "file_hashes": {}}))
+        try:
+            load_verified_incumbent("btc", fitdir=_fd)
+            _r3 = ""
+        except RuntimeError as e:
+            _r3 = str(e)
+        ok("does not bind" in _r3,
+           f"KNOWN-BAD: an UNBOUND artifact is refused; an absent binding must "
+           f"never read as a matching one (got {_r3[:60]!r})")
+        # KNOWN-BAD 4: missing entirely.
+        try:
+            load_verified_incumbent("nosuchcoin", fitdir=_fd)
+            _r4 = ""
+        except RuntimeError as e:
+            _r4 = str(e)
+        ok("no incumbent artifact" in _r4,
+           "KNOWN-BAD: a missing incumbent REFUSES rather than falling back to "
+           "fitting one (R-280: a re-fit incumbent is a different incumbent)")
+
+        # APPLY: arm D is PM+fine with NO STATE FEATURES. That is its defining
+        # property and the reason (PLUS_PRED_STATE_V1 - INCUMBENT) isolates
+        # state, so it is asserted behaviourally: changing ST must not move a
+        # single value.
+        _n = len(_mod["norm_mu"])
+        _blk = {"PM": [[0.10] * (_n - 3) for _ in range(4)],
+                "FN": [[0.20] * 3 for _ in range(4)],
+                "ST": [[0.30] * 5 for _ in range(4)]}
+        _a1 = apply_incumbent(_mod, _blk, range(4))
+        _blk2 = dict(_blk, ST=[[99.0] * 5 for _ in range(4)])
+        _a2 = apply_incumbent(_mod, _blk2, range(4))
+        ok(_a1["expected_cancel_value"] == _a2["expected_cancel_value"],
+           "R-280 apply_incumbent ignores STATE features entirely: arm D is "
+           "PM+fine only, and that is exactly what makes "
+           "(PLUS_PRED_STATE_V1 - INCUMBENT) isolate state")
+        ok(len(_a1["expected_cancel_value"]) == 4 and
+           all(isinstance(v, float) for v in _a1["expected_cancel_value"]),
+           "R-280 apply_incumbent returns one composed value per requested row")
+        try:
+            apply_incumbent(_mod, {"PM": [[1.0]], "FN": [[1.0]],
+                                   "ST": [[0.0]]}, range(1))
+            _r5 = ""
+        except RuntimeError as e:
+            _r5 = str(e)
+        ok("differently-shaped vector" in _r5,
+           f"KNOWN-BAD: a WIDTH MISMATCH refuses rather than scoring a "
+           f"truncated row (got {_r5[:60]!r})")
+        # The increment is only defined on the IDENTICAL population, so the
+        # composed values must align row-for-row with the candidate's.
+        _cand = {"expected_cancel_value": [0.5] * 4}
+        ok(len(_a1["expected_cancel_value"]) == len(_cand["expected_cancel_value"]),
+           "R-280 the incumbent scores the SAME rows as the candidate, which is "
+           "what makes prereg §5.2's 'identical action population' true rather "
+           "than merely claimed")
+    _sh.rmtree(_fd, ignore_errors=True)
+
+    # THE VERDICT IS PRINTED BY THE RETURN, not by a line above it. Twice now a
+    # block appended before `return` has landed BELOW the summary, so the suite
+    # printed GREEN with failures listed underneath it -- rule 10 in the
+    # instrument itself. Binding the print to the return makes that
+    # unrepresentable: anything inserted before the return runs before the
+    # verdict, because the verdict IS the return.
+    return _selftest_verdict(fails)
 
 
 # ---- INCUMBENT COUNTERPARTS, and the two heads that have none --------------
