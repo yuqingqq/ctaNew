@@ -164,17 +164,23 @@ OUT = DERIVED / "phase2_four_arm_v2.json"
 # score changes fit_code_sha256_prefix and the manifest correctly refuses its
 # own score. Declaring them here means the closing cycle emits them, and a
 # reader never has to trust a hand-added field.
-PROTOCOL_VERSION = "v2.2"
-SUPERSEDED_RECEIPT = DERIVED / "phase2_four_arm_v2.SUPERSEDED_BY_v2_2.json"
+PROTOCOL_VERSION = "v2.3"
+SUPERSEDED_RECEIPT = DERIVED / "phase2_four_arm_v2.SUPERSEDED_BY_v2_3.json"
 SUPERSEDED_REASON = (
-    "R-228 enforcement rerun (audit #9). The v2.1 chain still failed OPEN in "
-    "four places: an EMPTY file_hashes map passed the completeness loop "
-    "vacuously, a manifest listing one artifact of fourteen passed while "
-    "thirteen went unverified, an all-zeros fit_code_ref matched an all-zeros "
-    "env value, and result-bearing code and data artifacts sat outside the "
-    "identity lattice. This receipt is produced under the closed chain. "
-    "Numbers expected identical; divergence would itself be a finding."
+    "R-230 enforcement rerun (audit #10). The v2.2 chain still failed OPEN in "
+    "three places: lgbm_val_{coin} was verified-when-present but never "
+    "required and scoring substituted ZEROS for a missing one, silently "
+    "degrading arm C to hazard-only ranking; the fit's at-write drift check "
+    "compared seven keys while the identity captured twenty-one, so the "
+    "topup / frozen-incumbent / topup-receipt bindings were captured and never "
+    "compared; and the module-root check covered four modules while the "
+    "lattice hashed twelve, so a wrong-tree import was attested as the repo "
+    "copy. This receipt is produced under the closed chain, and its "
+    "population/reach disclosure is generator-owned and COMPUTED rather than "
+    "attached by hand. Numbers expected identical; divergence would itself be "
+    "a finding."
 )
+
 
 
 class PopulationLeak(RuntimeError):
