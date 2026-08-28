@@ -307,3 +307,32 @@ Moved in the same commit as the sweep that pushed it out. Join rule as in batch 
   SIDES ARE MEASURABLE, otherwise the cell is UNEVALUABLE and still occupies
   its Holm slot.
 ```
+
+## Batch 5 — archived 2026-08-28T15:15Z (1 entry, rolling-window overflow)
+
+Moved in the same commit as the sweep that pushed it out. Join rule as in batch 1.
+
+```yaml
+
+  2026-08-28T10:09Z (MEM): R-251 -- THE DEPLOY IS POSTPONED, AND IT POSTPONED
+  ITSELF. Codex's batch-1 filing is in, verified in full by the coordinator with
+  NO REVIEW ERRORS, and the pre-ruled adverse-finding condition FIRED on a
+  verified DB2: no user ask was needed because R-240/R-245 had already written
+  the condition before the finding existed. O1 MOVES TO 2026-08-30T00:00:00Z.
+  TONIGHT: NO ARMING, NO DEPLOY, the v3_1 hold UNCHANGED -- and unchanged is
+  correct, because the recommended fix is CONSUMER-SIDE, leaving committed v4
+  untouched. Tonight's 00:06Z old-bar verdict runs unaffected. Consequences
+  priced rather than discovered: 08-29 runs on the OLD collector so the post-O1
+  P1 band moves to 08-30, 08-29's v2 verdict is inadmissible under the hold, and
+  because the bar predates the day, re-verdicting after release is legitimate --
+  ACCRUAL PAUSES, IT DOES NOT VOID. BOTH HOLDS MAINTAINED: DB1 publishes a
+  coin-day PASS OVER A 4,000-SECOND OUTAGE (the recorded-not-enforced defect
+  recurring at the PER-COIN level after the whole-day path was closed); DB2 is
+  the seam NEITHER SIDE OWNED -- two green suites, and an integration that
+  always refuses when O1d fires; I11-1 is still live at HEAD as the same blocker
+  wearing a new face; I11-2 is a 24-cell evaluator that is unit-proven AND NEVER
+  INVOKED, which is a control that cannot RUN rather than one that cannot FAIL;
+  I11-3 lets a one-class head report OK. The 2B freeze is DEFERRED: a dollar mid
+  is not a probability, and FREEZE-AFTER-REVIEW IS NOW TWICE VINDICATED -- FP2
+  would have been frozen in.
+```

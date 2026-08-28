@@ -1,10 +1,107 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-08-28T14:20Z (MEM) — **day-bar v2 RELEASED** (governs ≥08-29;
-released ≠ the day passes); **O1 CLEARED, boundary re-arms 08-30T00:00:00Z**;
-**the provenance chain on the committed result is OPEN** — v2.3 and the freeze
-receipt are not citable as gate-verified until the re-gate lands. **This
-morning's settlement estimand is itself superseded.** 011 stays dark.
+Updated: 2026-08-28T15:15Z (MEM) — **the chain RESTORES**: scientifically closed
+(re-gate IDENTICAL, independently confirmed), **not yet mechanically closed**
+(47j deliberately red until the fit-time re-stamp). The committed null has a
+two-sided defect **and its conclusion stands, conservatively**. Round 3 fired;
+tonight's 00:06Z is the **first governed verdict**.
+
+## 2026-08-28 ~15:15Z (MEM) — R-277..R-288: the chain restores, and a defect that was conservative
+
+### The chain restores — in two states, not one
+
+**Scientifically CLOSED:** the re-gate determination returned **IDENTICAL** on
+the branch pre-declared before it ran, independently confirmed in the
+coordinator's own run. **Not yet mechanically closed:** seam **47j stays
+deliberately red** until the fit-time re-stamp. **Both are true and they are not
+the same statement** — a red seam here is *a correct instrument reporting an
+unfinished mechanism*, not a live defect.
+
+**Restored:** v2.3, the freeze receipt and the increment-null stand **on the
+re-derivation**; the do-not-cite interim lifts; BE's trajectory hold lifts. The
+fit7 manifest stays **frozen and unedited**.
+
+**Three method marks worth copying:**
+
+- **Subject identity was checked first** — tape sha and byte count identical on
+  both sides. *Comparing verdicts about different tapes proves nothing.*
+- **The comparator was falsified before the answer arrived** — real-vs-real
+  DIFFERENT at 24 fields, one-mutation DIFFERENT at exactly 1, byte-copy
+  IDENTICAL at 0. **A comparison that cannot fail is not evidence** (rule 16,
+  again).
+- **Honest scope kept:** the two gate fixes are **not inert in general** — on a
+  heterogeneous or large-header tape the new gate *refuses where the old passed
+  silently*. tape6e is homogeneous with a small header, so they were correctly
+  invisible **here**. The chain closes **and** the fixes still matter; either
+  half alone misreports.
+
+**A finding rode along, worse than it sounds: the verdict the whole chain rests
+on was never in git.** 44 receipts tracked; the verdict cited *by sha* lived only
+in the working tree. Both sides are now committed **byte-unchanged** — and the
+distinction is stated: **committing preserves a frozen artifact; it does not
+edit it.**
+
+### The committed null: a real defect, and the conclusion stands
+
+`phase2_increment_null`'s `sign_flip_p` was **two-sided where one-sided was
+meant**, and it fed Holm across the canonical null's 12 cells — the numbers the
+freeze receipt cites. **Say this precisely, because "same bug, committed
+artifact" reads like an emergency until someone checks the sign:**
+
+**For positive effects the two-sided p is ~double the one-sided, so every
+surviving cell survives *more easily* under the correct test.** The defect was
+**conservative in the safe direction**; the committed "10 of 12 chance"
+conclusion **stands**.
+
+**Dependence checked three times independently** — BE first, the coordinator's
+four-line check, and mine at 15:15Z: 12 cells, three negative-increment cells at
+**p 0.2334 / 0.2774 / 0.4208**, and **zero negative cells under p<0.10**.
+
+**My first parse matched zero cells and would have reported "no negative
+significant cells" vacuously** — the rule-16 class appearing inside my own
+verification. The count falsifier (*must be 12*) is the only reason the check
+means anything.
+
+**BE did not touch the module** — editing it re-prices a committed receipt — and
+routed the decision instead. The fix plus a **superseding vN+1 receipt** queue to
+the first post-release cycle. **No summary may say "the canonical null was
+wrong."**
+
+### The post-release cycle is now four items
+
+(1) annotation-merge **wiring**; (2) the manifest **re-stamp** — what closes 47j
+mechanically; (3) the **tranches-persistence** decision; (4) the increment-null
+**one-sided supersession**. Each queued deliberately, not deferred by neglect.
+
+### Also on the record
+
+- **A2 (the 2B reconciliation) was corrected twice, then confirmed on fresh
+  data** — the settlement audit's **escape hatch did not fire**. The equivalence
+  control moved from **decorative to load-bearing** (frozen-snapshot confound
+  removed) and is now executing. An amendment corrected twice and then confirmed
+  on data it had not seen sits in a different evidential position from one
+  merely written well.
+- **The trajectory run completed: 457,268 events, every anchor holds** — under
+  the slice, parity/lifecycle only, economics excluded by the user's dispatch.
+  Two honesty marks kept: the independence agreement is reported **as a result**
+  rather than assumed, and the inputs are declared **easy** — a pass on easy
+  inputs is a pass on easy inputs.
+- **Two more user rulings landed in the A1 file** (Q3 gate-governs joins Q2 min).
+- **Six truncation-class siblings today**, the sixth found by reviewer patterns
+  as routed.
+
+### Board
+
+**Round 3 is FIRED at `a63d717`** (`REQUEST_BATCH3` under `reviews/`, scope
+everything since `4a3d457`). Its four asks: the **011 hold decision**, **2B
+freeze-fitness**, **O1-adverse flagging before tonight's arming** — the same
+pre-ruled condition that postponed the last boundary, **live again** — and
+re-execution of the pre-round-3 closures.
+
+**Tonight 00:06Z: the first verdict governed by released day-bar v2** (DA
+files). **Tomorrow 00:00Z: the O1 boundary**, coordinator cadence 22:30Z /
+23:56Z / 00:00Z on 08-29. **2B goes to the user for freeze after this filing if
+fit.**
 
 ## 2026-08-28 ~14:20Z (MEM) — R-254..R-276 swept: two releases, one open chain, and a second settlement correction
 

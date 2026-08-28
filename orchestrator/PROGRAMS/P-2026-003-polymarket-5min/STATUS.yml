@@ -4,6 +4,28 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-08-28T15:15Z (MEM): R-277..R-288. THE PROVENANCE CHAIN RESTORES -- and
+  the two states are different, so both are recorded: SCIENTIFICALLY CLOSED (the
+  re-gate determination returned IDENTICAL on its pre-declared branch,
+  independently confirmed) but NOT YET MECHANICALLY CLOSED (seam 47j stays
+  DELIBERATELY RED until the fit-time re-stamp -- a correct instrument reporting
+  an unfinished mechanism, not a live defect). v2.3, the freeze receipt and the
+  increment-null stand ON THE RE-DERIVATION; the do-not-cite interim and the
+  trajectory hold both LIFT. Method marks worth copying: subject identity
+  checked FIRST (comparing verdicts about different tapes proves nothing) and
+  THE COMPARATOR FALSIFIED BEFORE THE ANSWER ARRIVED. Honest scope kept: the
+  gate fixes are NOT inert in general -- they were correctly invisible on THIS
+  tape. A finding rode along: THE VERDICT THE WHOLE CHAIN RESTS ON WAS NEVER IN
+  GIT, now committed BYTE-UNCHANGED (committing preserves a frozen artifact; it
+  does not edit it). ON THE COMMITTED NULL: a two-sided/one-sided defect exists
+  in the module that fed the canonical null, AND THE CONCLUSION STANDS -- for
+  positive effects the two-sided p is ~double, so every surviving cell survives
+  MORE easily under the correct test. Dependence checked three times
+  independently, mine included (12 cells, three negative at p 0.23/0.28/0.42,
+  ZERO negative under p<0.10) -- and my FIRST parse matched zero cells and would
+  have passed VACUOUSLY, so the count falsifier is why the check counts. NO
+  SUMMARY MAY SAY THE CANONICAL NULL WAS WRONG. Round 3 is FIRED at a63d717 with
+  the O1-adverse condition LIVE AGAIN before tonight's arming. PRIOR:
   2026-08-28T14:20Z (MEM): SWEPT R-254..R-276 after a 23-entry gap. THREE
   THINGS MOVED THAT A SUMMARY WOULD GET WRONG. (1) DAY-BAR V2 IS RELEASED and
   governs coin-days >=08-29; the R-256 inadmissibility interim lifts and 08-29
@@ -48,28 +70,6 @@ updated: >-
   correction of record -- no seat may cite that parenthetical as fact.** Also:
   RULE 17 ADOPTED (suite-green is not pipeline-wired) after batch 2 DEMONSTRATED
   the both-halves closure, so it lands with a cite rather than an anecdote.
-  PRIOR:
-  2026-08-28T10:09Z (MEM): R-251 -- THE DEPLOY IS POSTPONED, AND IT POSTPONED
-  ITSELF. Codex's batch-1 filing is in, verified in full by the coordinator with
-  NO REVIEW ERRORS, and the pre-ruled adverse-finding condition FIRED on a
-  verified DB2: no user ask was needed because R-240/R-245 had already written
-  the condition before the finding existed. O1 MOVES TO 2026-08-30T00:00:00Z.
-  TONIGHT: NO ARMING, NO DEPLOY, the v3_1 hold UNCHANGED -- and unchanged is
-  correct, because the recommended fix is CONSUMER-SIDE, leaving committed v4
-  untouched. Tonight's 00:06Z old-bar verdict runs unaffected. Consequences
-  priced rather than discovered: 08-29 runs on the OLD collector so the post-O1
-  P1 band moves to 08-30, 08-29's v2 verdict is inadmissible under the hold, and
-  because the bar predates the day, re-verdicting after release is legitimate --
-  ACCRUAL PAUSES, IT DOES NOT VOID. BOTH HOLDS MAINTAINED: DB1 publishes a
-  coin-day PASS OVER A 4,000-SECOND OUTAGE (the recorded-not-enforced defect
-  recurring at the PER-COIN level after the whole-day path was closed); DB2 is
-  the seam NEITHER SIDE OWNED -- two green suites, and an integration that
-  always refuses when O1d fires; I11-1 is still live at HEAD as the same blocker
-  wearing a new face; I11-2 is a 24-cell evaluator that is unit-proven AND NEVER
-  INVOKED, which is a control that cannot RUN rather than one that cannot FAIL;
-  I11-3 lets a one-class head report OK. The 2B freeze is DEFERRED: a dollar mid
-  is not a probability, and FREEZE-AFTER-REVIEW IS NOW TWICE VINDICATED -- FP2
-  would have been frozen in.
   ARCHIVED: entries older than these three are moved, never deleted, to
   workspace/STATUS_UPDATED_ARCHIVE.md (append-only). This field is a
   ROLLING WINDOW OF THREE by ruling (coordinator, 2026-08-28T10:02Z):
@@ -77,7 +77,95 @@ updated: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
-  regate_determination: DA-QUEUE-HEAD # 2026-08-28 R-275, ABOVE round-2
+  committed_null_two_sided_defect: CONCLUSION-STANDS-FIX-QUEUED # 2026-08-28
+                             # R-288. SAY THIS PRECISELY, because "same bug,
+                             # committed artifact" reads like an emergency until
+                             # someone checks the sign: THE CANONICAL NULL'S
+                             # CONCLUSION IS NOT WRONG. phase2_increment_null's
+                             # sign_flip_p was TWO-SIDED where one-sided was
+                             # meant, and it fed Holm across the canonical null's
+                             # 12 cells (163bd36, the numbers the freeze receipt
+                             # cites). FOR POSITIVE EFFECTS THE TWO-SIDED p IS
+                             # ~DOUBLE THE ONE-SIDED, SO EVERY SURVIVING CELL
+                             # SURVIVES **MORE EASILY** UNDER THE CORRECT TEST.
+                             # The defect was CONSERVATIVE IN THE SAFE
+                             # DIRECTION and the committed "10 of 12 chance"
+                             # conclusion STANDS.
+                             # DEPENDENCE CHECKED THREE TIMES INDEPENDENTLY --
+                             # BE first, the coordinator's four-line check, and
+                             # MEM's own at 2026-08-28T15:15Z: 12 cells parsed
+                             # (with a count falsifier, because MEM's FIRST
+                             # parse matched zero cells and would have reported
+                             # "no negative significant cells" VACUOUSLY -- the
+                             # rule-16 class inside the verification itself);
+                             # three negative-increment cells at p 0.2334 /
+                             # 0.2774 / 0.4208; ZERO negative cells under
+                             # p<0.10. Reproduces the register exactly.
+                             # BE DID NOT TOUCH THE MODULE -- editing it
+                             # re-prices a committed receipt -- and routed the
+                             # decision instead. RULED: the fix plus a
+                             # SUPERSEDING vN+1 receipt QUEUE to the first
+                             # post-release cycle; rule 13's supersede-in-band
+                             # applies at the moment the recompute actually
+                             # runs. NO SUMMARY MAY SAY "THE CANONICAL NULL WAS
+                             # WRONG".
+  post_release_cycle: FOUR-ITEMS # 2026-08-28, as of R-288. Carried so the list
+                             # is not reassembled from memory later:
+                             # (1) annotation-merge WIRING (blocker 6's
+                             # mechanism is proven but still not in the write
+                             # path); (2) the manifest RE-STAMP (what closes 47j
+                             # mechanically); (3) the tranches-persistence
+                             # decision; (4) the increment-null ONE-SIDED
+                             # supersession (see
+                             # committed_null_two_sided_defect). Each is queued
+                             # deliberately, not deferred by neglect.
+  round_3: FIRED-AT-a63d717 # 2026-08-28. REQUEST_BATCH3 filed under
+                             # workspace/reviews/; scope is everything since
+                             # 4a3d457. Four asks: the 011 HOLD decision; 2B
+                             # FREEZE-FITNESS; O1-ADVERSE FLAGGING BEFORE
+                             # TONIGHT'S ARMING (the same pre-ruled condition
+                             # that postponed the last boundary -- it is live
+                             # again); and re-execution of the pre-round-3
+                             # closures. 2B goes to the USER for freeze after
+                             # this filing IF FIT.
+  a2_settlement_amendment: CONFIRMED-ON-FRESH-DATA # 2026-08-28 R-278/R-282.
+                             # The 2B reconciliation landed as amendment A2,
+                             # was CORRECTED TWICE, then CONFIRMED ON FRESH DATA
+                             # by a settlement audit in which THE ESCAPE HATCH
+                             # DID NOT FIRE. The equivalence control moved from
+                             # DECORATIVE TO LOAD-BEARING (frozen-snapshot
+                             # confound removed) and is now EXECUTING. Recorded
+                             # because the arc matters: an amendment corrected
+                             # twice and then confirmed on data it had not seen
+                             # is in a different evidential position from one
+                             # that was simply written well.
+  trajectory_run: COMPLETE-ALL-ANCHORS-HOLD # 2026-08-28 R-284/R-285. Fired
+                             # under the slice per the resource rule; 457,268
+                             # events; EVERY ANCHOR HOLDS. Two honesty marks
+                             # kept: the independence agreement is reported AS A
+                             # RESULT rather than assumed, and the run's inputs
+                             # are declared EASY -- a pass on easy inputs is a
+                             # pass on easy inputs. Parity/lifecycle only;
+                             # economics excluded by the user's own dispatch.
+  regate_determination: COMPLETE-IDENTICAL-BRANCH # CLOSED 2026-08-28T14:24Z
+                             # (R-277) on the IDENTICAL branch -- the branch
+                             # that was pre-declared before the run, so this is
+                             # a test that returned an answer, not a repair that
+                             # found one. See receipt_v2_3 for what restored and
+                             # what is still mechanically open.
+                             # THE FINDING THAT CAME WITH IT, recorded with its
+                             # class because it is worse than it sounds: THE
+                             # VERDICT THE WHOLE CHAIN RESTS ON WAS NEVER IN GIT
+                             # -- 44 receipts tracked, and the verdict cited BY
+                             # SHA existed only in the working tree. "A cited
+                             # artifact that isn't committed can't be checked by
+                             # a future reader" -- the same failure mode as the
+                             # manifest mismatch that started this, one layer
+                             # down. Both sides are now committed
+                             # BYTE-UNCHANGED, and the distinction is stated:
+                             # COMMITTING PRESERVES A FROZEN ARTIFACT, IT DOES
+                             # NOT EDIT IT. EARLIER ENTRY (rule 13): 2026-08-28
+                             # R-275, ABOVE round-2
                              # verification even if a filing lands mid-run. DA
                              # re-runs the gate END-TO-END at HEAD over tape6e,
                              # field-compares the verdict against the one fit7
@@ -1314,7 +1402,44 @@ flags:
                              # such a write, never treat it as a violation or
                              # revert it. Amendment sits with the coordinator to
                              # raise with the user.
-  receipt_v2_3: PROVENANCE-CHAIN-OPEN-NOT-GATE-VERIFIED # STATUS CHANGED
+  receipt_v2_3: CHAIN-RESTORED-SCIENTIFICALLY-NOT-YET-MECHANICALLY # RESTORED
+                             # 2026-08-28T14:24Z (R-277). THE TWO STATES ARE
+                             # DIFFERENT AND BOTH ARE TRUE -- do not collapse
+                             # them: SCIENTIFICALLY CLOSED (the re-gate
+                             # determination returned IDENTICAL and was
+                             # independently confirmed in the coordinator's own
+                             # run) but NOT YET MECHANICALLY CLOSED (seam 47j
+                             # stays DELIBERATELY RED until the fit-time
+                             # re-stamp). A red seam here is a correct instrument
+                             # reporting an unfinished mechanism, NOT a live
+                             # defect.
+                             # The determination (f0f94b8, artifacts 17d110f):
+                             # recursive field-compare of the fit7-consumed
+                             # verdict against the REGATE verdict, excluding
+                             # only as_of_utc and gate_code -> IDENTICAL.
+                             # METHOD MARKS WORTH COPYING: SUBJECT IDENTITY WAS
+                             # CHECKED FIRST (tape sha c7ab02ebcf27d2fc,
+                             # 3,170,987,711 bytes, identical both sides --
+                             # comparing verdicts ABOUT DIFFERENT TAPES proves
+                             # nothing); the invocation was reconstructed FROM
+                             # the artifact; and THE COMPARATOR WAS FALSIFIED
+                             # BEFORE THE ANSWER ARRIVED (real-vs-real DIFFERENT
+                             # at 24 fields, one-mutation DIFFERENT at exactly
+                             # 1, byte-copy IDENTICAL at 0) -- rule 16 again: a
+                             # comparison that cannot fail is not evidence.
+                             # HONEST SCOPE KEPT: the two gate fixes are NOT
+                             # INERT IN GENERAL -- on a heterogeneous or
+                             # large-header tape the new gate REFUSES where the
+                             # old passed silently. tape6e is homogeneous with a
+                             # small header, so they were correctly invisible
+                             # HERE. The chain closes AND the fixes still
+                             # matter; either half alone misreports.
+                             # RESTORED: v2.3, the freeze receipt and the
+                             # increment-null stand ON THE RE-DERIVATION; the
+                             # R-275 do-not-cite interim LIFTS; BE's trajectory
+                             # hold LIFTS. The fit7 manifest stays FROZEN and
+                             # UNEDITED. EARLIER ENTRIES (rule 13): STATUS
+                             # CHANGED
                              # 2026-08-28T14:11Z (R-275) and this SUPERSEDES the
                              # closed-chain reading below. BE's seam 47j fired:
                              # THE GATE THAT SIGNED FIT7'S TAPE VERDICT IS NOT
