@@ -68,3 +68,30 @@ first day they would judge.
 1. Approve O1 (ping 10→3) for boundary deploy 08-29T00:00Z — yes/no.
 2. Approve O2 in direction (I draft exact thresholds for pre-registration) — yes/no.
 3. O3 stays held — objection?
+
+## Addendum (01:25Z) — collector survey folds in (BE, read-only; Q-BE survey)
+
+Four additional client-side facts, each with a small fix candidate. To keep ONE
+era boundary instead of four, **O1 is amended to a single deployable PACKAGE**
+(all client-side, one stamped change, structural verification per item):
+
+- **O1a** ping_interval=10/ping_timeout=10 → **3/3** (worst-case dead-socket
+  blindness ~20s → ~6s; median PING_TIMEOUT gap 11.3s → ~4.3s).
+- **O1b** cause-aware backoff with jitter replacing the flat 1s retry
+  (persistent faults are currently hammered at 1 Hz — consistent with the
+  49%-within-60s burst clustering; network-type causes get exponential+jitter,
+  SLOW_CONSUMER does not get faster retries).
+- **O1c** subscribe CONFIRMATION probe: after re-subscribe, require a first
+  message or explicit ack within a bound, else re-subscribe and record a
+  distinct cause — today a silent no-subscribe is indistinguishable from a
+  quiet market (an invisible-hole class).
+- **O1d** gap-start stamping fix for never-connected sockets: stamp at
+  last-coverage (window/connection start), not at the error — today such gaps
+  are recorded SHORTER than they were, and this ledger is what the tape pins
+  and the gate counts.
+
+Unchanged and protected (per the survey): max_queue=2**16, the parse-free recv
+loop, the finally-emitted gap_open_at_exit accounting, per-window scope.
+
+Ask 1 becomes: approve the O1 PACKAGE (a–d) for one boundary deploy
+08-29T00:00Z with a single collector_runs stamp — or name a subset.
