@@ -33,6 +33,7 @@ import asyncio
 import gzip
 import json
 import os
+import random
 import shutil
 import signal
 import tempfile
@@ -62,7 +63,7 @@ RESOLVE_GIVEUP_S = 7200
 WRITE_BATCH = 2_000
 WRITE_QUEUE_MAX = 32
 GAP_LEDGER = ROOT / "collector_gaps.jsonl"
-COLLECTOR_VERSION = "clob_v3_1"
+COLLECTOR_VERSION = "clob_v4"
 
 # v3: disk work and HTTP work get SEPARATE executors. They shared the default
 # 20-worker pool, where four run_in_executor HTTP calls (urlopen, 15-25 s
@@ -138,7 +139,22 @@ def gzip_atomic(path: Path, dest: Path) -> None:
         raise
 
 
+class SubscribeUnconfirmed(Exception):
+    """O1c (R-232): no first message within SUBSCRIBE_CONFIRM_S of subscribe.
+
+    Before this, a silent no-subscribe was indistinguishable from a quiet
+    market — an invisible-hole class. The CLOB market channel sends a book
+    snapshot on subscribe, so a silent socket is a broken subscription, and
+    raising here re-enters the connect loop (which re-subscribes) under a
+    cause of its own."""
+
+
+SUBSCRIBE_CONFIRM_S = 10.0
+
+
 def ws_cause(ex: BaseException) -> str:
+    if isinstance(ex, SubscribeUnconfirmed):
+        return "SUBSCRIBE_UNCONFIRMED"
     text = str(ex).lower()
     if "1013" in text or "slow" in text:
         return "SLOW_CONSUMER_1013"
@@ -147,6 +163,20 @@ def ws_cause(ex: BaseException) -> str:
     if "no close" in text:
         return "NO_CLOSE_FRAME"
     return type(ex).__name__.upper()
+
+
+def reconnect_delay(attempt: int, cause: str, u: float) -> float:
+    """O1b (R-232): cause-aware backoff with full jitter, replacing flat 1 s.
+
+    Persistent faults were hammered at 1 Hz — consistent with the measured
+    49%-within-60s burst clustering. Exponential per consecutive FAILED
+    attempt (a connection that delivered messages resets the ladder), cap
+    30 s. SLOW_CONSUMER_1013 starts at 2 s so the venue's backoff signal is
+    never retried FASTER than network causes. `u` in [0,1) scales the delay
+    into (0.5..1.0]x so synchronized reconnect stampedes decorrelate."""
+    base = 2.0 if cause == "SLOW_CONSUMER_1013" else 1.0
+    d = min(30.0, base * (2 ** min(max(attempt - 1, 0), 5)))
+    return d * (0.5 + 0.5 * u)
 
 
 def is_final(m: dict) -> bool:
@@ -403,8 +433,24 @@ class PMCollector:
 
         async def receive(ws) -> None:
             nonlocal last_recv_ns, open_gap, qmax, ever_paused
+            confirmed = False
             while not self.stop:
-                raw = await ws.recv()
+                if confirmed:
+                    raw = await ws.recv()
+                else:
+                    # O1c (R-232): the FIRST message doubles as the subscribe
+                    # confirmation. The market channel sends a book snapshot on
+                    # subscribe, so silence here is a dead subscription, not a
+                    # quiet market. One bool branch; the steady-state recv path
+                    # above is unchanged.
+                    try:
+                        raw = await asyncio.wait_for(
+                            ws.recv(), timeout=SUBSCRIBE_CONFIRM_S)
+                    except asyncio.TimeoutError:
+                        raise SubscribeUnconfirmed(
+                            f"no first message within {SUBSCRIBE_CONFIRM_S}s "
+                            f"of subscribe")
+                    confirmed = True
                 recv_ns = time.time_ns()
                 if open_gap is not None:
                     self._audit({
@@ -449,15 +495,27 @@ class PMCollector:
                     await flush_buf()
 
         writer_ok = True
+        # O1d (R-232): coverage for this window-task begins HERE. A socket that
+        # never delivers a message has been blind since this instant, not since
+        # the moment its error surfaced — stamping gap_start at the error
+        # recorded such gaps SHORTER than they were, and this ledger is what
+        # the tape pins and the gate counts.
+        scope_start_ns = time.time_ns()
+        consec_fail = 0
         try:
             while not self.stop and time.time() < stop_at:
+                attempt_msgs = self.msg_by_coin.get(coin, 0)
                 try:
                     # max_queue: the default (32) makes the server drop us with
                     # 1013 "slow consumer" on hot markets — observed repeatedly on
                     # BTC, i.e. load-correlated loss on ~85% of notional. Deep queue
                     # + batched writes keep the recv loop free of blocking I/O.
-                    async with websockets.connect(WS_URL, ping_interval=10,
-                                                  ping_timeout=10, open_timeout=15,
+                    # O1a (R-232): ping 10/10 -> 3/3. 77.1% of btc lost seconds
+                    # was detection lag matching ping_interval+ping_timeout;
+                    # worst-case dead-socket blindness ~20s -> ~6s. Keepalive
+                    # cost ~2 bytes/ping — judged negligible, stated anyway.
+                    async with websockets.connect(WS_URL, ping_interval=3,
+                                                  ping_timeout=3, open_timeout=15,
                                                   max_queue=2 ** 16) as ws:
                         await ws.send(json.dumps({"assets_ids": toks, "type": "market"}))
                         try:
@@ -469,15 +527,20 @@ class PMCollector:
                             break
                 except Exception as ex:
                     cause = ws_cause(ex)
-                    err_ns = time.time_ns()
                     self.counts["retries"] += 1
                     self.retry_by_coin[coin] += 1
+                    if self.msg_by_coin.get(coin, 0) > attempt_msgs:
+                        consec_fail = 1        # that connection worked, then died
+                    else:
+                        consec_fail += 1       # never delivered a message
                     if cause == "SLOW_CONSUMER_1013":
                         self.counts["slow_drops"] += 1
                         self.slow_by_coin[coin] += 1
                     if open_gap is None:
+                        # O1d: fall back to last COVERAGE (scope start), never
+                        # to the error instant — see scope_start_ns above.
                         open_gap = {"cause": cause,
-                                    "gap_start_ns": last_recv_ns or err_ns}
+                                    "gap_start_ns": last_recv_ns or scope_start_ns}
                     self._audit({
                         "event": "disconnect", "slug": slug, "coin": coin,
                         "tokens": toks, "window_start": ts, "cause": cause,
@@ -493,9 +556,12 @@ class PMCollector:
                         "error": str(ex)[:240],
                     })
                     if time.time() < stop_at and not self.stop:
-                        print(f"[pm] {slug} ws: {type(ex).__name__} {str(ex)[:60]} — retry",
+                        # O1b: cause-aware exponential backoff with jitter.
+                        delay = reconnect_delay(consec_fail, cause, random.random())
+                        print(f"[pm] {slug} ws: {type(ex).__name__} {str(ex)[:60]}"
+                              f" — retry in {delay:.1f}s (fail #{consec_fail})",
                               flush=True)
-                        await asyncio.sleep(1)
+                        await asyncio.sleep(delay)
         finally:
             if open_gap is not None:
                 # An outage running to window end otherwise leaves a `disconnect`
