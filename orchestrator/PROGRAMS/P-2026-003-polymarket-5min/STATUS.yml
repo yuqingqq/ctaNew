@@ -199,6 +199,16 @@ flags:
                              # {GAP_AT_CUTOFF: 289}, zero disagreement both
                              # directions over 1.76M rows. Exactly 5 rows moved.
                              # This is the R-213 citation; seam 30 is not.
+  ruled_locator_is_load_bearing_now: DO-NOT-ARCHIVE-THROUGH-SCORE5 # 2026-08-28
+                             # da_tape_gate_verdict_v5.json holds tape6e's
+                             # ALL-PASS verdict and score5's assert_gate_passed
+                             # READS it -- the R-225 rerun re-fits/re-scores the
+                             # SAME certified tape. Archiving it early BREAKS
+                             # the rerun; it is not tidying. Archiving is STEP
+                             # ONE of a FUTURE tape's arming (tape7+), because
+                             # R-214 refuses rc 6 onto an occupied locator.
+                             # Byte-identical archive already exists:
+                             # da_verdict_tape6e_ed9d572.json.
   verdict_promotes_before_second_checker: R214-IMPLEMENTED-32fe17b # 2026-08-28
                              # CLOSED: gate writes to a staging path; promotion
                              # only when the WORST rc across both checkers is 0,

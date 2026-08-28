@@ -48,6 +48,19 @@ default-on refusal (rc 6) to arm onto an occupied locator. Seam 13/13.
 seam 30 rewritten to call the real function, the increment-null reconciliation
 refusal given a falsifier, plus R-225's four guard-wiring findings.
 
+**RUNBOOK — ARMING A FUTURE TAPE (tape7+). STEP ONE, BEFORE ANY ARM:**
+`da_await_gate.sh` REFUSES (rc 6) onto an occupied ruled locator, by design
+(R-214, ruled default-on). So the FIRST line of any future arming is to archive
+the incumbent verdict deliberately:
+`mv data/pm_5min/derived/da_tape_gate_verdict_v5.json \
+    data/pm_5min/derived/da_tape_gate_verdict_v5.SUPERSEDED-<tape>-<ref>.json`
+**NEVER before that moment, and never as tidying.** Through fit5/score5 the
+tape6e verdict at that locator is **LOAD-BEARING**: the rerun re-fits and
+re-scores THE SAME certified tape, and `score5`'s `assert_gate_passed` READS it.
+Archiving it early would break the rerun, not tidy up for it. A byte-identical
+archive already exists (`da_verdict_tape6e_ed9d572.json`), so when the moment
+does come the move loses nothing.
+
 **DA's NEXT ACTION.** When BE's superseding receipt lands after fit5/score5,
 **re-run the independent scorer** (`scratchpad/review/da_recompute*.py`);
 numbers should be identical to ~1e-11 and **any divergence is a finding**.
