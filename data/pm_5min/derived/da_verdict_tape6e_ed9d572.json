@@ -1,0 +1,164 @@
+{
+  "_dropped_check": "no unexpected field loss between verify() and this artifact",
+  "all_pass": true,
+  "as_of_utc": "2026-08-27T13:30:10.390764+00:00",
+  "fields_deliberately_omitted": [
+    "all_pass",
+    "gap_at_cutoff_rows",
+    "gate",
+    "tape"
+  ],
+  "gate_code": {
+    "dirty": false,
+    "file": "/home/yuqing/ctaNew/live/pm_research/da_state_tape_verify.py",
+    "head": "6a476a9",
+    "sha256": "1da60b56e1fb2801"
+  },
+  "load_bearing_asserted": [
+    "gap_count_matches_expected",
+    "provenance_matches_expected",
+    "dataset_non_empty",
+    "no_rows_skipped_by_builder",
+    "absorption_within_bound",
+    "half_open_containment_landed"
+  ],
+  "n_applicable": 17,
+  "n_rows": 1764206,
+  "not_applicable": [
+    "embargo_respected"
+  ],
+  "not_applicable_enforced_by": {
+    "embargo_respected": "enforced downstream: phase2_embargo.purge_training + assert_embargo, evidenced by the rerun receipt's per-side purge counts and a computed realized gap >= 60s (R-189/R-203)"
+  },
+  "note": "ALL_PASS is recomputed from the predicate table in this file, not carried in. A consumer should re-derive it rather than trust the headline, and should check tape_sha256_prefix against the artifact it is about to use -- a verdict that cannot identify its subject can be replayed against another.",
+  "predicates": [
+    {
+      "applicable": true,
+      "detail": "1764206 rows",
+      "pass": true,
+      "predicate": "dataset_non_empty"
+    },
+    {
+      "applicable": true,
+      "detail": "features located under 'state' (DECLARED in the tape header)",
+      "pass": true,
+      "predicate": "layout_matches_declaration"
+    },
+    {
+      "applicable": true,
+      "detail": "48 of 48 schema feature fields present; 3 DECLARED reductions via header features_in_order",
+      "pass": true,
+      "predicate": "no_undeclared_reduction"
+    },
+    {
+      "applicable": true,
+      "detail": "12 of 12 declared nullables present; orphaned: none",
+      "pass": true,
+      "predicate": "guard_beside_every_nullable"
+    },
+    {
+      "applicable": true,
+      "detail": "rows whose guard says MISSING while the value is PRESENT: none",
+      "pass": true,
+      "predicate": "no_zero_imputation"
+    },
+    {
+      "applicable": true,
+      "detail": "bn_feed_age_s distinct non-null values (capped at 64): 64",
+      "pass": true,
+      "predicate": "bn_recv_ns_was_supplied"
+    },
+    {
+      "applicable": true,
+      "detail": "state_status counts: {'PRE_WINDOW': 67688, 'OK': 1696164, 'NO_LEVEL_HISTORY': 65, 'GAP_AT_CUTOFF': 289}",
+      "pass": true,
+      "predicate": "state_status_present"
+    },
+    {
+      "applicable": true,
+      "detail": "GAP_AT_CUTOFF rows: 289; population carries 133 gapped slugs",
+      "pass": true,
+      "predicate": "gaps_were_supplied"
+    },
+    {
+      "applicable": true,
+      "detail": "GAP_AT_CUTOFF 289 vs pre-registered 289",
+      "pass": true,
+      "predicate": "gap_count_matches_expected"
+    },
+    {
+      "applicable": true,
+      "detail": "tape header provenance ed9d57299a809e40cdf0d597a3aaba8f7b54baf6 vs pre-registered ed9d572",
+      "pass": true,
+      "predicate": "provenance_matches_expected"
+    },
+    {
+      "applicable": true,
+      "detail": "builder-side exclusions read from 'pre_emission_skip_counts' (and any undeclared key in the row tally): none",
+      "pass": true,
+      "predicate": "no_rows_skipped_by_builder"
+    },
+    {
+      "applicable": true,
+      "detail": "excluded-before-emission 0 of 1764206 input rows = 0.00% (bound 1.00%)",
+      "pass": true,
+      "predicate": "absorption_within_bound"
+    },
+    {
+      "applicable": true,
+      "detail": "header ledger_sha256=6cb3a027e25fb5df... pinned=True vs expected 6cb3a027e25fb5df...",
+      "pass": true,
+      "predicate": "ledger_pin_matches"
+    },
+    {
+      "applicable": true,
+      "detail": "rows exactly at a gap g0: 4 present, 4 flagged GAP_AT_CUTOFF",
+      "pass": true,
+      "predicate": "at_g0_rows_all_flagged"
+    },
+    {
+      "applicable": true,
+      "detail": "rows exactly at a gap g1: 493 present, 0 flagged GAP_AT_CUTOFF",
+      "pass": true,
+      "predicate": "half_open_containment_landed"
+    },
+    {
+      "applicable": true,
+      "detail": "rows carrying an undeclared status: 0",
+      "pass": true,
+      "predicate": "statuses_are_declared_values"
+    },
+    {
+      "applicable": true,
+      "detail": "1764206 rows carried both fields; 0 violations",
+      "pass": true,
+      "predicate": "feature_asof_never_after_decision"
+    },
+    {
+      "applicable": false,
+      "detail": "ENFORCED-DOWNSTREAM, not applicable at the tape (R-189). The tape DECLARES its own state: 'VIOLATED (unpurged): gap -8.134s < 60.0s'. This gate does NOT certify the embargo; enforcement evidence is required at fixture seam 2 and in the rerun receipt (purge row-counts per side plus a computed `realized gap >= 60s`).",
+      "pass": false,
+      "predicate": "embargo_respected"
+    }
+  ],
+  "produced_by": "live/pm_research/da_state_tape_verify.py",
+  "schema_family": "PRED_STATE_V1",
+  "tape_bytes": 3170987711,
+  "tape_header_pins": {
+    "builder_ref": "ed9d57299a809e40cdf0d597a3aaba8f7b54baf6",
+    "built_from_schema": {
+      "n_emitted": 53,
+      "schema": "da_pred_state_v1_schema.json"
+    },
+    "clock_basis": {
+      "decision_time": "window_relative_seconds",
+      "decision_time_epoch": "absolute_epoch",
+      "label_exit_time": "absolute_epoch"
+    },
+    "features_under": "state",
+    "protocol": "PHASE2_STATE_TAPE_V5"
+  },
+  "tape_path": "/home/yuqing/ctaNew/data/pm_5min/derived/phase2_state_tape_v5.json",
+  "tape_sha256_prefix": "c7ab02ebcf27d2fc",
+  "verdict": "da_tape_gate_verdict_v1"
+}
