@@ -1,10 +1,50 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-08-28T06:58Z (MEM) — blocker 7 CLOSED by finding a real
-determinism defect; the ~1e-11 delta explained and deliberately left
-unharmonized; **the freeze-receipt citation residual is RULED — v2 in
-execution, clock unmoved.** O1 still held at v3_1 for tonight's 00:00:00Z
-boundary.
+Updated: 2026-08-28T08:37Z (MEM) — **TODO checkboxes trued up to artifacts;
+countable progress 39/113 (35%) with its definition recorded.** Blocker 7
+closed by finding a determinism defect; freeze-receipt v2 ruled with the clock
+unmoved. O1 still held at v3_1 for tonight's 00:00:00Z boundary.
+
+## 2026-08-28 ~08:37Z (MEM) — TODO trued up; progress recorded WITH its definition
+
+**`plans/STATEFUL_HARMFUL_CANCEL_TODO.md` trued up at `9669203`.** Six boxes
+ticked, all in §0.1, each carrying inline the commit or code line that proves
+it. **No prose edited, nothing un-ticked, no box ticked on judgment** — five
+ambiguous ones were reported to the coordinator instead and ruled there.
+
+**Countable progress: 39/113 = 35 %**, as of this entry.
+
+| section | done/total |
+|---|---|
+| §0.1 correctness blockers | 6/7 |
+| Phase 0 | 7/7 |
+| Phase 1 (+ correctness tests) | 8/9, 7/7 |
+| **Phase 2 core** | **6/6** |
+| Lanes 2A / 2B / 2C | 0/24 |
+| Phase 3 (+ parity, arms) | 0/23 |
+| Phase 4 · Phase 5 · §10 | 0/10 · 0/7 · 0/5 |
+
+**Two progress numbers now exist and they measure different things** — record
+which one is being quoted, because a figure without its definition is how a
+claim gets misquoted:
+
+- **39/113 countable** (this one) — literal ticked boxes in that one file, each
+  requiring an artifact. Unweighted by effort, importance or evidence strength.
+- **~55–60 % evidence-weighted** (coordinator's) — a different measure blending
+  evidence maturity with the file. Not a competing value for the same quantity.
+
+**Read the shape, not the ratio.** The original Phase-2 comparison is **complete
+at 6/6**. The 24 open lane boxes were **added by the user's own plan at
+`d506a06`** — the denominator grew, the work did not stall. A bare "Phase 2 =
+6/30" understates finished work and overstates the backlog's age; that framing
+was corrected on this basis and the correction goes to the user.
+
+**§0.1 item 5 stays open on purpose:** the annotation mechanism is proven on
+real sidecar bytes (`63d9c7e`) but wiring rides the first lattice-touching 011
+commit, so a fresh generation still drops the field. **Proven is not wired.**
+
+**Recount after any commit that ticks boxes** — the flag carries an as-of for
+exactly that reason.
 
 ## 2026-08-28 ~06:58Z (MEM) — the flagged residual is ruled: freeze receipt v2, clock unmoved
 

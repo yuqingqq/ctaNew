@@ -99,6 +99,37 @@ updated: >-
   hygiene + recv_ns measurement)
 
 flags:
+  todo_completion: 39-of-113-COUNTABLE-AS-OF-2026-08-28T08:37Z # MEM, trued up
+                             # at 9669203 against
+                             # plans/STATEFUL_HARMFUL_CANCEL_TODO.md.
+                             # DEFINITION MATTERS MORE THAN THE NUMBER, because
+                             # two different progress figures now exist and a
+                             # figure without its definition is how a claim gets
+                             # misquoted. THIS one is COUNTABLE: literal ticked
+                             # checkboxes over total checkboxes in that one
+                             # file, where a box is ticked ONLY when an artifact
+                             # proves it and the citation is appended inline. It
+                             # deliberately does NOT weight boxes by effort,
+                             # importance or evidence strength. The coordinator
+                             # separately carries an EVIDENCE-WEIGHTED estimate
+                             # (~55-60%) which is a DIFFERENT measure, not a
+                             # competing value for this one; the register holds
+                             # both with their definitions. Decomposition:
+                             # sec 0.1 6/7 (item 5 open -- annotation mechanism
+                             # PROVEN but not WIRED); Phase 0 7/7; Phase 1 8/9
+                             # plus tests 7/7; Phase 2 CORE 6/6; lanes 2A/2B/2C
+                             # 0/24; Phase 3 0/23; Phase 4 0/10; Phase 5 0/7;
+                             # sec 10 0/5. READ THE SHAPE, NOT THE RATIO: the
+                             # original Phase-2 comparison is COMPLETE at 6/6.
+                             # The 24 open lane boxes were ADDED by the user's
+                             # own plan at d506a06, so the denominator grew --
+                             # the work did not stall. A bare "Phase 2 = 6/30"
+                             # understates finished work and overstates the
+                             # backlog's age; coordinator's earlier
+                             # "doc lag" framing corrected on that basis and the
+                             # correction goes to the user. Recount after any
+                             # commit that ticks boxes; this figure carries an
+                             # as-of for that reason.
   verifier_delta_1e11: EXPLAINED-DO-NOT-HARMONIZE # 2026-08-28 DA (Q-DA-114,
                              # 81eb368), ratified R-235. The persistent ~1e-11
                              # per-cell scorer delta -- reported SIX TIMES
