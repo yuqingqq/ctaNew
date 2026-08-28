@@ -75,7 +75,27 @@ updated: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
-  defect_class_unit_proven_unwired: NAMED # 2026-08-28 R-251, I11-2, confirmed
+  defect_class_unit_proven_unwired: NAMED-CANDIDATE-RULE-17 # PROMOTION PENDING
+                                     # WITH A NAMED TRIGGER, recorded here so it
+                                     # is not lost with a session: the
+                                     # coordinator holds this class as CANDIDATE
+                                     # SEAT_PROTOCOL RULE 17, to be adopted
+                                     # WHEN BATCH 2 DEMONSTRATES THE BOTH-HALVES
+                                     # CLOSURE -- the evaluator wired into
+                                     # main() AND an output-level known-bad that
+                                     # REFUSES a 23-cell receipt. The reasoning
+                                     # is worth keeping with the trigger: A RULE
+                                     # EARNED BY A DEMONSTRATED CLOSURE PATTERN
+                                     # LANDS HARDER THAN ONE FILED FROM THE
+                                     # FINDING ALONE. Confirmed in-session
+                                     # 2026-08-28T10:11Z; NOT yet register-cited
+                                     # and NOT yet in SEAT_PROTOCOL -- do not
+                                     # quote it as a rule until it is. WHOEVER
+                                     # SWEEPS BATCH 2: check whether the closure
+                                     # landed in both halves, and if it did,
+                                     # expect rule 17 with the batch-2 cite.
+                                     # ORIGINAL ENTRY (rule 13): 2026-08-28
+                                     # R-251, I11-2, confirmed
                                      # statically. THE FIXED 24-CELL EVALUATOR
                                      # IS UNIT-PROVEN AND NEVER INVOKED: the
                                      # runner contains ZERO references to
