@@ -182,10 +182,28 @@ def main() -> int:
         _hm.window_streams = lambda *a, **k: object()
         _hm.fi._archive_paths = lambda *a, **k: {x: Path("/dev/null") for x in _slugs}
         _hm.fi.token_map = lambda *a, **k: {x: ("u", "d") for x in _slugs}
-        # R-225(1): the manifest now REQUIRES fit_code_ref and the measured
-        # hashes, so the sandbox must launch the way production does.
+        # R-225(1): the manifest REQUIRES fit_code_ref and the measured hashes,
+        # so the sandbox must launch the way production does.
+        # R-228(1): and the ref must now RESOLVE to a commit carrying the
+        # recorded code, so "0"*40 is correctly refused. A REAL ref is used, and
+        # the expected OUTCOME depends on whether the tree matches it -- both
+        # states are asserted, because both are correct behaviour and the dirty
+        # case is itself the guard doing its job.
         _env17 = os.environ.get("FIT_CODE_REF")
-        os.environ["FIT_CODE_REF"] = "0" * 40
+        import subprocess as _s17, hashlib as _h17
+        _ref17 = _s17.run(["git", "-C", str(HERE), "rev-parse", "HEAD"],
+                          capture_output=True, text=True).stdout.strip()
+        _pfx17 = _s17.run(["git", "-C", str(HERE), "rev-parse", "--show-prefix"],
+                          capture_output=True, text=True).stdout.strip()
+        os.environ["FIT_CODE_REF"] = _ref17
+        _clean17 = True
+        for _f in PA.CODE_IDENTITY_FILES:
+            _b = _s17.run(["git", "-C", str(HERE), "show",
+                           f"{_ref17}:{_pfx17}{_f}"], capture_output=True).stdout
+            _live = (HERE / _f).read_bytes() if (HERE / _f).exists() else b""
+            if _h17.sha256(_b).hexdigest() != _h17.sha256(_live).hexdigest():
+                _clean17 = False
+                break
         try:
             PA.stage_fit()
             seam("17a stage_fit COMPLETES end-to-end on a synthetic v5 tape", True)
@@ -199,10 +217,18 @@ def main() -> int:
         # ---- SEAM 18: stage_score END-TO-END, all four arms --------------
         try:
             PA.stage_score()
-            seam("18a stage_score COMPLETES with ALL FOUR arms", True)
+            seam("18a stage_score end-to-end: COMPLETES on a tree matching its ref",
+                 _clean17,
+                 "it COMPLETED against a DIRTY tree — the recorded code does not "
+                 "match the declared ref and scoring should have refused")
         except Exception as e:
-            seam("18a stage_score COMPLETES with ALL FOUR arms", False,
-                 f"{type(e).__name__}: {e}")
+            _msg18 = f"{type(e).__name__}: {e}"
+            if not _clean17 and "does not carry the recorded code" in str(e):
+                seam("18a stage_score end-to-end: REFUSES a tree that does not "
+                     "match its declared ref (R-228)", True)
+            else:
+                seam("18a stage_score end-to-end: COMPLETES on a tree matching "
+                     "its ref", False, _msg18)
         finally:
             if _env17 is None:
                 os.environ.pop("FIT_CODE_REF", None)
@@ -991,7 +1017,7 @@ def main() -> int:
     # gate that bites. These drive the REAL checker against manifests built to
     # be wrong, and require a refusal.
     import tempfile as _t42
-    def _manifest_case(mutate):
+    def _manifest_case(mutate, env_ref=None):
         """Run the REAL assert_fit_complete_and_matching against a mutated
         manifest. Returns the refusal message, or None if it ACCEPTED.
 
@@ -1001,11 +1027,44 @@ def main() -> int:
         refuses for the wrong reason proves nothing."""
         d = Path(_t42.mkdtemp())
         _sv_env = os.environ.get("FIT_CODE_REF")
-        os.environ["FIT_CODE_REF"] = "0" * 40
+        # R-228(1): a COMPLETE, genuinely valid base manifest. This used to set
+        # file_hashes:{} and assert the result was "well-formed" -- the positive
+        # control CERTIFIED the very vacuity the audit found. A guard's accept
+        # path must be exercised with something actually valid or it proves the
+        # hole, not the guard.
+        import hashlib as _h42, subprocess as _s42
+        _ref = _s42.run(["git", "-C", str(HERE), "rev-parse", "HEAD"],
+                        capture_output=True, text=True).stdout.strip()
+        _pfx = _s42.run(["git", "-C", str(HERE), "rev-parse", "--show-prefix"],
+                        capture_output=True, text=True).stdout.strip()
+        os.environ["FIT_CODE_REF"] = _ref
         now = PA._tape_identity()
         m = dict(now)
-        m.update({"complete": True, "file_hashes": {}})
+        m["complete"] = True
+        m["file_hashes"] = {}
+        (d / "empty_coins.json").write_text("[]")
+        m["file_hashes"]["empty_coins.json"] = _h42.sha256(b"[]").hexdigest()[:16]
+        for _n in tuple(PA.FIT_BASE_ARTIFACTS) + tuple(
+                t.format(c=c) for c in ("btc", "eth")
+                for t in PA.FIT_PER_COIN_ARTIFACTS):
+            if _n == "empty_coins.json":
+                continue
+            (d / _n).write_text("{}")
+            m["file_hashes"][_n] = _h42.sha256(b"{}").hexdigest()[:16]
+        # fit_code_files read FROM the commit, so the accept path is exercised
+        # even when the working tree is dirty
+        m["fit_code_ref"] = _ref
+        m["fit_code_files"] = {}
+        for _f in PA.CODE_IDENTITY_FILES:
+            _b = _s42.run(["git", "-C", str(HERE), "show", f"{_ref}:{_pfx}{_f}"],
+                          capture_output=True).stdout
+            m["fit_code_files"][_f] = _h42.sha256(_b).hexdigest()[:16]
         mutate(m)
+        if env_ref is not None:
+            # both sides zeroed, so the case reaches the RESOLUTION check
+            # instead of stopping at the earlier ref-equality comparison
+            os.environ["FIT_CODE_REF"] = env_ref
+            m["fit_code_ref"] = env_ref
         (d / PA.FIT_MANIFEST).write_text(json.dumps(m))
         sv = PA.FITDIR
         PA.FITDIR = d
@@ -1127,6 +1186,84 @@ def main() -> int:
     seam("45e the drift comparison DETECTS a perturbed input",
          "fragment_sha256_prefix" in _drift45,
          "the comparison must notice a changed fragment, not just record one")
+
+    # ---- SEAM 46 (R-228): the fail-open class, one level down --------------
+    # Audit #9: the guards added at R-225 still passed VACUOUSLY. The hash loop
+    # iterated whatever file_hashes held, so an EMPTY map verified nothing and
+    # read as success; a manifest listing one artifact of fourteen left thirteen
+    # unchecked; and fit_code_ref was only compared to the env value the scorer
+    # was launched with, so all-zeros matched all-zeros.
+    _r = _manifest_case(lambda m: m.update({"file_hashes": {}}))
+    seam("46a an EMPTY file_hashes map is REFUSED",
+         _r is not None and "EMPTY" in _r,
+         "zero iterations of the hash loop is not zero artifacts changed")
+    _r = _manifest_case(lambda m: m.update(
+        {"file_hashes": {k: v for k, v in list(m["file_hashes"].items())[:1]}}))
+    seam("46b a manifest covering only ONE artifact is REFUSED",
+         _r is not None and "required artifact" in _r,
+         "the loop verified what was listed; it never asked what SHOULD be")
+    _r = _manifest_case(lambda m: None, env_ref="0" * 40)
+    seam("46c an all-zeros fit_code_ref is REFUSED",
+         _r is not None and "does not resolve to a commit" in _r,
+         "a ref naming no commit attests to nothing")
+    _r = _manifest_case(lambda m: m["fit_code_files"].update(
+        {"phase2_arms.py": "dead" * 4}))
+    seam("46d a ref NOT CARRYING the recorded code is REFUSED",
+         _r is not None and "does not carry the recorded code" in _r,
+         "the label must name the commit whose content was measured")
+    _r = _manifest_case(lambda m: m.update({"fit_code_files": {}}))
+    seam("46e a manifest with NO fit_code_files is REFUSED",
+         _r is not None and "no fit_code_files" in _r,
+         "an unverifiable binding must not pass")
+
+    # the identity lattice must cover the result-bearing deps and artifacts
+    for _f in ("harmful_exposure_rows.py", "flow_intensity.py",
+               "flow_fill_development.py", "harmful_candidate_manifest.py"):
+        seam(f"46f lattice covers {_f}", _f in PA.CODE_IDENTITY_FILES,
+             "code that shapes a number but is not hashed makes a PARTIAL "
+             "identity read as a whole one")
+    _id46 = PA._tape_identity()
+    for _k in ("topup_sha256_prefix", "frozen_incumbent_sha256_prefix",
+               "topup_build_receipt_sha256_prefix"):
+        seam(f"46g identity binds {_k}", _id46.get(_k) is not None,
+             "these can change what the numbers MEAN while every previously "
+             "bound field stays identical")
+    _r = _manifest_case(lambda m: m.update({"topup_sha256_prefix": "dead" * 4}))
+    seam("46h a swapped SCORING TOP-UP is REFUSED",
+         _r is not None and "TOP-UP" in _r)
+    _r = _manifest_case(lambda m: m.update(
+        {"frozen_incumbent_sha256_prefix": "dead" * 4}))
+    seam("46i a swapped FROZEN INCUMBENT is REFUSED",
+         _r is not None and "FROZEN INCUMBENT" in _r)
+
+    # score-side identity, mirroring the fit's
+    _ss46 = inspect.getsource(PA.stage_score)
+    seam("46j the SCORE captures identity BEFORE load",
+         "_ident_pre = _tape_identity()" in _ss46,
+         "only the fit did; the stage producing the published numbers was the "
+         "unguarded one")
+    seam("46k the SCORE rechecks at write and REFUSES drift",
+         "inputs CHANGED DURING scoring" in _ss46)
+
+    # the lock finally must cover from ACQUISITION
+    _sf46 = inspect.getsource(PA.stage_fit)
+    _a46 = _sf46.index("acquire_fit_lock(_lock)")
+    _t46 = _sf46.index("\n    try:", _a46)
+    seam("46l nothing that can RAISE sits between acquire and try",
+         "_tape_identity()" not in _sf46[_a46:_t46],
+         "an identity failure after acquisition leaked a LIVE lock on exactly "
+         "the paths hardest to reproduce")
+
+    # supersession is generator-owned
+    seam("46m protocol_version is EMITTED by the generator",
+         '"protocol_version": PROTOCOL_VERSION' in _ss46,
+         "it was hand-added post-generation at v2.1")
+    seam("46n supersedes is EMITTED by the generator",
+         '"supersedes": _supersedes_block()' in _ss46)
+    seam("46o the supersedes block reports ABSENCE explicitly",
+         "present_at_write" in inspect.getsource(PA._supersedes_block),
+         "a receipt silently claiming to supersede nothing is "
+         "indistinguishable from one whose predecessor was deleted")
 
     print(f"\n{'PRODUCTION SEAMS GREEN' if not FAILURES else 'PRODUCTION SEAMS RED'}: "
           f"{len(FAILURES)} failing")

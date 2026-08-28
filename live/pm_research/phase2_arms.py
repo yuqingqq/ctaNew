@@ -128,6 +128,24 @@ FROZEN = DERIVED / "harmful_reduced_fine_candidate_v1.json"
 # production default went unexercised.
 OUT = DERIVED / "phase2_four_arm_v2.json"
 
+# R-228(5): the receipt's OWN version and supersession, emitted by the
+# generator. These were added POST-GENERATION at v2.1 because receipt schema is
+# a fit-time decision under R-225 -- editing phase2_arms.py between fit and
+# score changes fit_code_sha256_prefix and the manifest correctly refuses its
+# own score. Declaring them here means the closing cycle emits them, and a
+# reader never has to trust a hand-added field.
+PROTOCOL_VERSION = "v2.2"
+SUPERSEDED_RECEIPT = DERIVED / "phase2_four_arm_v2.SUPERSEDED_BY_v2_2.json"
+SUPERSEDED_REASON = (
+    "R-228 enforcement rerun (audit #9). The v2.1 chain still failed OPEN in "
+    "four places: an EMPTY file_hashes map passed the completeness loop "
+    "vacuously, a manifest listing one artifact of fourteen passed while "
+    "thirteen went unverified, an all-zeros fit_code_ref matched an all-zeros "
+    "env value, and result-bearing code and data artifacts sat outside the "
+    "identity lattice. This receipt is produced under the closed chain. "
+    "Numbers expected identical; divergence would itself be a finding."
+)
+
 
 class PopulationLeak(RuntimeError):
     """A scoring row came from the fitting population."""
@@ -931,7 +949,27 @@ CODE_IDENTITY_FILES = (
     "phase2_state_schema_freeze.py", "harmful_action_eval.py",
     "harmful_hazard_model.py", "harmful_fast_compute.py",
     "harmful_state_features.py",
+    # R-228(2): result-bearing dependencies that were OUTSIDE the lattice. Code
+    # that shapes a number but is not hashed means the identity attests to a
+    # subset of what produced the result -- a partial identity reads as a whole
+    # one, which is the fail-open shape one level down from the manifest.
+    "harmful_exposure_rows.py",        # owns any_fill_ahead + the latency cut
+    "flow_intensity.py",
+    "flow_fill_development.py",
+    "harmful_candidate_manifest.py",
 )
+
+# Result-bearing DATA artifacts, bound by content. R-228(2). The code lattice
+# says which program ran; these say what it ran ON. A frozen incumbent or a
+# scoring population that can be swapped without detection makes every
+# between-arm comparison unattributable.
+DATA_IDENTITY_ARTIFACTS = {
+    "fragment": lambda: FRAGMENT,
+    "topup": lambda: TOPUP,
+    "frozen_incumbent": lambda: FROZEN,
+    "topup_build_receipt": lambda: DERIVED / "da_development_topup_v3.json",
+    "verdict": lambda: DA_VERDICT,
+}
 
 
 def measured_code_identity() -> dict:
@@ -992,6 +1030,16 @@ def _tape_identity() -> dict:
             "fragment_path": str(FRAGMENT),
             "fragment_sha256_prefix": _file_sha16(FRAGMENT),
             "fragment_bytes": FRAGMENT.stat().st_size if FRAGMENT.exists() else None,
+            # R-228(2): the SCORED population, the FROZEN incumbent, and the
+            # top-up's own build receipt. Each of these can change what the
+            # numbers mean while every previously-bound field stays identical.
+            "topup_path": str(TOPUP),
+            "topup_sha256_prefix": _file_sha16(TOPUP),
+            "topup_bytes": TOPUP.stat().st_size if TOPUP.exists() else None,
+            "topup_build_receipt_sha256_prefix": _file_sha16(
+                DERIVED / "da_development_topup_v3.json"),
+            "frozen_incumbent_path": str(FROZEN),
+            "frozen_incumbent_sha256_prefix": _file_sha16(FROZEN),
             "tape_bytes": TAPE_PATH.stat().st_size,
             "verdict_kind": v.get("verdict"),
             "verdict_tape_sha256_prefix": v.get("tape_sha256_prefix"),
@@ -999,6 +1047,96 @@ def _tape_identity() -> dict:
             "verdict_sha256_prefix": vh,
             "gate_code_sha256_prefix": gate_id,
             "fit_code_ref": fit_ref}
+
+
+# The artifacts a COMPLETE fit produces. Declared, so completeness is a
+# question the checker can ask -- not inferred from what a manifest happens to
+# list. lgbm_val_{coin} is CONDITIONAL (written only when a coin has >=100
+# positives), so it is verified when present and never required.
+FIT_BASE_ARTIFACTS = ("empty_coins.json", "fit_slugs.json",
+                      "fit_population_parity.json")
+FIT_PER_COIN_ARTIFACTS = ("linear_{c}.json", "linear_d_{c}.json",
+                          "lgbm_haz_{c}.txt", "lgbm_thresholds_{c}.json")
+
+
+def expected_fit_artifacts(m: dict) -> set:
+    """The exact set a complete fit must have hashed. R-228(1).
+
+    Coins come from empty_coins.json, which is ITSELF in the required set and
+    hash-verified -- so shrinking the expected set by forging that file breaks
+    its own hash. At least one coin must be fitted; a manifest claiming every
+    coin empty describes no fit at all."""
+    empty = []
+    ec = FITDIR / "empty_coins.json"
+    if ec.exists():
+        try:
+            empty = list(json.loads(ec.read_text()))
+        except (ValueError, OSError):
+            empty = []
+    coins = [c for c in ("btc", "eth") if c not in empty]
+    if not coins:
+        raise RuntimeError(
+            "REFUSED: empty_coins.json marks every coin empty. A fit over no "
+            "population is not a null result, it is a broken input path.")
+    out = set(FIT_BASE_ARTIFACTS)
+    for c in coins:
+        out |= {t.format(c=c) for t in FIT_PER_COIN_ARTIFACTS}
+    return out
+
+
+def assert_ref_resolves_to_recorded_code(m: dict) -> dict:
+    """The declared ref must be a REAL commit carrying the RECORDED bytes.
+
+    R-228(1). fit_code_ref was only ever compared to the env value the scorer
+    was launched with, so an all-zeros ref matched an all-zeros ref and the
+    manifest attested to a commit that does not exist. The label is now checked
+    against the content it claims: every file in the recorded fit_code_files
+    must hash, AT THAT COMMIT, to the value the manifest recorded.
+
+    FAIL-CLOSED. A git failure is a REFUSAL, never a skip -- an unverifiable
+    binding that passes is exactly the shape this audit is about."""
+    import subprocess, hashlib
+    ref = m.get("fit_code_ref")
+    files = m.get("fit_code_files") or {}
+    if not ref or not isinstance(ref, str) or len(ref) != 40 \
+            or any(c not in "0123456789abcdef" for c in ref.lower()):
+        raise RuntimeError(
+            f"REFUSED: fit_code_ref {ref!r} is not a 40-hex commit ref.")
+    if not files:
+        raise RuntimeError(
+            "REFUSED: the manifest records no fit_code_files, so its ref "
+            "cannot be checked against the code it names.")
+    r = subprocess.run(["git", "-C", _ROOT, "cat-file", "-t", ref],
+                       capture_output=True, text=True)
+    if r.returncode != 0 or r.stdout.strip() != "commit":
+        raise RuntimeError(
+            f"REFUSED: fit_code_ref {ref} does not resolve to a commit "
+            f"(git said {r.stdout.strip()!r} / {r.stderr.strip()[:80]!r}). A "
+            f"ref naming no commit attests to nothing.")
+    rel = subprocess.run(["git", "-C", _ROOT, "rev-parse", "--show-prefix"],
+                         capture_output=True, text=True)
+    if rel.returncode != 0:
+        raise RuntimeError("REFUSED: cannot locate the code tree in git; the "
+                           "recorded ref cannot be verified and an "
+                           "unverifiable binding must not pass.")
+    prefix = rel.stdout.strip()
+    bad = {}
+    for name, want in sorted(files.items()):
+        blob = subprocess.run(
+            ["git", "-C", _ROOT, "show", f"{ref}:{prefix}{name}"],
+            capture_output=True)
+        if blob.returncode != 0:
+            bad[name] = f"absent at {ref[:7]}"
+            continue
+        got = hashlib.sha256(blob.stdout).hexdigest()[:16]
+        if got != want:
+            bad[name] = f"{got} != recorded {want}"
+    if bad:
+        raise RuntimeError(
+            f"REFUSED: fit_code_ref {ref[:7]} does not carry the recorded "
+            f"code: {bad}. The ref is a LABEL; it must name the commit whose "
+            f"content was actually measured, or it is decoration.")
+    return {"ref": ref, "files_verified": len(files)}
 
 
 def assert_fit_complete_and_matching() -> dict:
@@ -1042,6 +1180,11 @@ def assert_fit_complete_and_matching() -> dict:
         ("fit_code_sha256_prefix", "DIFFERENT FIT CODE produced these artifacts "
                                    "(measured, not the env label)"),
         ("fragment_sha256_prefix", "a different FRAGMENT defines the population"),
+        ("topup_sha256_prefix", "a different TOP-UP is the scored population"),
+        ("frozen_incumbent_sha256_prefix",
+         "a different FROZEN INCUMBENT is arm A's model"),
+        ("topup_build_receipt_sha256_prefix",
+         "the top-up's own build receipt changed"),
     )
     for k, why in REQUIRED:
         if k not in m or m.get(k) is None:
@@ -1061,7 +1204,26 @@ def assert_fit_complete_and_matching() -> dict:
                 f"Scoring under bindings that differ from the fit's is not a "
                 f"comparison.")
     import hashlib
-    for name, want in (m.get("file_hashes") or {}).items():
+    # R-228(1): the loop below verifies whatever file_hashes HOLDS. An EMPTY map
+    # iterates zero times and passes -- a manifest asserting nothing was read as
+    # a manifest asserting everything. It also never asked what SHOULD be there,
+    # so a manifest listing one artifact of fourteen passed while thirteen went
+    # unverified. Completeness is now required against an EXPECTED set.
+    fh = m.get("file_hashes") or {}
+    if not fh:
+        raise RuntimeError(
+            "REFUSED: the fit manifest's file_hashes is EMPTY. Zero artifacts "
+            "verified is not zero artifacts changed; an empty map must never "
+            "read as a satisfied check.")
+    expected = expected_fit_artifacts(m)
+    missing = sorted(expected - set(fh))
+    if missing:
+        raise RuntimeError(
+            f"REFUSED: the fit manifest does not cover {len(missing)} required "
+            f"artifact(s): {missing}. Verifying only what a manifest chooses to "
+            f"list lets anything it omits change unobserved. Listed: "
+            f"{sorted(fh)}")
+    for name, want in fh.items():
         f = FITDIR / name
         if not f.exists():
             raise RuntimeError(f"REFUSED: manifest lists {name}, which is absent.")
@@ -1070,6 +1232,7 @@ def assert_fit_complete_and_matching() -> dict:
             raise RuntimeError(
                 f"REFUSED: {name} hash {got} != manifest {want}; the fit "
                 f"directory changed after the run completed.")
+    assert_ref_resolves_to_recorded_code(m)
     return m
 
 
@@ -1099,20 +1262,26 @@ def stage_fit() -> None:
     _run.mkdir(parents=True, exist_ok=False)
     _lock = FITDIR.parent / f"{FITDIR.name}.lock"
     acquire_fit_lock(_lock)
-    # R-225(4): capture the input identity BEFORE anything is loaded. Captured
-    # after the load, it describes whatever the inputs happened to be once
-    # reading finished -- so an input perturbed DURING the run is recorded as
-    # though it had always been that way, and the manifest attests to a state
-    # that never produced these numbers.
-    _ident_pre = _tape_identity()
-    print(f"  input identity captured BEFORE load: tape "
-          f"{_ident_pre['tape_sha256_prefix']} fragment "
-          f"{_ident_pre['fragment_sha256_prefix']}", flush=True)
     # R-225(3): the lock is RELEASED in a finally. It was never released at
     # all, so every run left one behind for the next to reclaim as stale --
     # which made 'a lock exists' carry no information and trained the
     # reclaim path to fire on every run.
     try:
+        # R-228(4): the identity capture moved INSIDE the try. It was between
+        # acquisition and the try block, so an identity failure -- an
+        # unreadable tape, a vanished fragment -- raised with the lock HELD and
+        # never released, leaving a live lock behind on exactly the paths that
+        # are hardest to reproduce. The finally now covers everything after
+        # acquisition.
+        # R-225(4): captured BEFORE anything is loaded. Captured after, it
+        # describes whatever the inputs happened to be once reading finished,
+        # so an input perturbed DURING the run is recorded as though it had
+        # always been that way.
+        _ident_pre = _tape_identity()
+        print(f"  input identity captured BEFORE load: tape "
+              f"{_ident_pre['tape_sha256_prefix']} fragment "
+              f"{_ident_pre['fragment_sha256_prefix']} topup "
+              f"{_ident_pre['topup_sha256_prefix']}", flush=True)
         _final = FITDIR
         globals()["FITDIR"] = _run
         print("  indexing rebuilt tape (train split)...", flush=True)
@@ -1380,6 +1549,27 @@ def stage_fit() -> None:
         if release_fit_lock(_lock):
             print(f"  released {_lock.name}", flush=True)
 
+def _supersedes_block() -> dict:
+    """What this receipt replaces, emitted BY THE GENERATOR. R-228(5).
+
+    The superseded artifact is hashed at write time if it is present. Its
+    ABSENCE is reported as an explicit status rather than an empty field: a
+    receipt that silently claims to supersede nothing is indistinguishable from
+    one whose predecessor was deleted."""
+    present = SUPERSEDED_RECEIPT.exists()
+    return {
+        "path": str(SUPERSEDED_RECEIPT.name),
+        "present_at_write": present,
+        "sha256_prefix": _file_sha16(SUPERSEDED_RECEIPT) if present else None,
+        "bytes": SUPERSEDED_RECEIPT.stat().st_size if present else None,
+        "reason": SUPERSEDED_REASON,
+        "note": ("preserve-then-write: the superseded receipt is renamed to "
+                 "this path and committed BEFORE this run, so it survives "
+                 "unedited at a resolvable path (rule 13). present_at_write "
+                 "false means that preservation step did not happen."),
+    }
+
+
 def _fit_identity_from_manifest() -> dict:
     """The FIT's identity, READ from its manifest. R-225(1).
 
@@ -1447,6 +1637,16 @@ def stage_score() -> dict:
     _fm = assert_fit_complete_and_matching()   # a partial fit cannot be scored
     print(f"  fit manifest OK: {len(_fm.get('file_hashes') or {})} artifacts, "
           f"tape {_fm.get('tape_sha256_prefix')}", flush=True)
+    # R-228(2): the SCORE side captures identity BEFORE load and RECHECKS at
+    # write, mirroring the fit. Only the fit did this, so an input perturbed
+    # during SCORING -- the stage that produces the published numbers -- was
+    # invisible. The asymmetry meant the more consequential half was the
+    # unguarded one.
+    _ident_pre = _tape_identity()
+    print(f"  score-side identity captured BEFORE load: tape "
+          f"{_ident_pre['tape_sha256_prefix']} topup "
+          f"{_ident_pre['topup_sha256_prefix']} frozen "
+          f"{_ident_pre['frozen_incumbent_sha256_prefix']}", flush=True)
     frozen = json.loads(FROZEN.read_text())
     fit_slugs = set(json.loads((FITDIR / "fit_slugs.json").read_text()))
     print("  indexing rebuilt tape (score split)...", flush=True)
@@ -1458,6 +1658,9 @@ def stage_score() -> dict:
           flush=True)
 
     out = {"protocol": "PHASE2_FOUR_ARM_V2",
+           # R-228(5): generator-owned, not hand-added after the fact.
+           "protocol_version": PROTOCOL_VERSION,
+           "supersedes": _supersedes_block(),
            "supersedes_label": "PHASE2_THREE_ARM_V1 (stale: four arms since arm D)", "arms": {}, "population": {},
            # BE F2: this was the literal "d7082b6" -- a ref whose ARMS has
            # THREE entries, beside a four-arm receipt. The governing
@@ -1668,6 +1871,30 @@ def stage_score() -> dict:
         raise RuntimeError(
             f"REFUSED: arms were evaluated under DIFFERENT threshold modes: "
             f"{_modes}. A paired comparison across modes is not a comparison.")
+    # R-228(2): RECHECK at write. A capture nobody re-verifies is a claim.
+    _ident_post = _tape_identity()
+    _drift = {k: (_ident_pre.get(k), _ident_post.get(k))
+              for k in ("tape_sha256_prefix", "tape_bytes",
+                        "topup_sha256_prefix", "topup_bytes",
+                        "fragment_sha256_prefix", "frozen_incumbent_sha256_prefix",
+                        "topup_build_receipt_sha256_prefix",
+                        "verdict_sha256_prefix", "gate_code_sha256_prefix",
+                        "fit_code_sha256_prefix")
+              if _ident_pre.get(k) != _ident_post.get(k)}
+    if _drift:
+        raise RuntimeError(
+            f"REFUSED: inputs CHANGED DURING scoring: {_drift}. The numbers "
+            f"just produced describe inputs that no longer exist, and writing "
+            f"a receipt now would publish them as though they did.")
+    out["score_input_identity"] = {
+        "captured_before_load": True, "rechecked_at_write": True,
+        "tape_sha256_prefix": _ident_post.get("tape_sha256_prefix"),
+        "topup_sha256_prefix": _ident_post.get("topup_sha256_prefix"),
+        "frozen_incumbent_sha256_prefix":
+            _ident_post.get("frozen_incumbent_sha256_prefix"),
+        "topup_build_receipt_sha256_prefix":
+            _ident_post.get("topup_build_receipt_sha256_prefix"),
+    }
     import os, tempfile
     fd, tmp = tempfile.mkstemp(dir=str(OUT.parent), suffix=".tmp")
     with os.fdopen(fd, "w") as fh:
