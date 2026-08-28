@@ -17023,6 +17023,14 @@ Design doc: `live/pm_research/plans/BTC_FEED_MITIGATION_DESIGN_2026-08-28.md`. T
 
 **Board at 11:53Z:** batch 3 = skew freeze draft (`f5ebc49`) + catch-up widening (`3ce5bbb`) + export path (`a3e8382`) + mapping (`12a408c`) + B2–B5 (`683bc26` `20dff3b` `9217179` `2aef268` `316ef0d`) + declaration (`b25ad0a`) + flip (`8f28d6d`) + timer persistence (`684d84e`) + write-reason/cgroup (`eb9991a`) + rulings R-255..R-263. Round 2 quota-stalled, resumes ~13:32Z; batch 3 rides round 3 after it. Tonight: 00:06Z old-bar verdict; no deploy; O1 at 08-30 pending the round-2 re-check.
 
+### R-264 — 2026-08-28T11:57Z — coordinator — USER DIRECTIVE: plan steps OUTSIDE the holds proceed during the review stall — two dispatched WITH THEIR ADMISSIBILITY GROUNDS RECORDED (real inert-arm trajectories = reproduction-class on consumed data, zero estimates; estimator builds = building ≠ scoring, the Identity precedent)
+
+**BE → real trajectories for the two INERT arms through DA's external interface.** Admissibility: QR_SKEW_ONLY and QR_CANCEL_HOLD_X_SKEW consume NO predictor estimate (BE's own ruled declaration), so producing their trajectories from the v3.4 exposure dataset fits nothing, scores nothing, selects nothing — the reproduction/correctness class the standing rules allow on consumed development data; predictor_active=False everywhere, no model artifact read, NO ECONOMICS emitted (parity/lifecycle only — a net_cents in output is out of scope). First REAL exercise of the trajectory contract (both seats' stated first-falsifier); the TODO §6 disabled-predictor anchor moves from stubs to the real substrate. Heavy-run rule in the dispatch (1.1M rows under the slice).
+
+**DA → the remaining fair-price machinery, pre-freeze.** Admissibility: the 2B freeze gates SCORING, not BUILDING — Identity itself was built pre-freeze on exactly this basis; no skill number is read anywhere (a Brier in output is out of scope this pass). Scope: pm_microprice estimator (same invariant/status discipline, ratified identifier); THE A_t PARTIAL-TWAP ACCUMULATOR (PIT realized integral, admissible records only, era floor enforced for bn_bookticker_mid inputs) with the amendment's three estimand falsifiers implemented AS CODE; then the bn_bookticker_mid skeleton, build-only, first scored use waits on the USER's protocol freeze.
+
+**Flagged to the USER, not actioned (R-110 — new collector surface is theirs):** the settlement reference is the Chainlink TWAP stream, and no instrument of ours reads Chainlink. Collecting it would give the fair-price lane the actual settlement path (and the only exact A_t for settlement purposes vs our Binance/PM approximations). That is a NEW COLLECTOR — user ruling + boundary deploy + era stamp if wanted; stated once here, no seat builds it unprompted.
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
