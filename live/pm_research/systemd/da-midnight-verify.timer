@@ -1,0 +1,20 @@
+# Nightly at 00:06Z. See the .service for why this is persistent.
+[Unit]
+Description=DA forward-day verdict (P-2026-003) -- 00:06Z daily
+
+[Timer]
+OnCalendar=*-*-* 00:06:00 UTC
+AccuracySec=5s
+# KNOWN AND STATED LIMITATION (R-255(4)). Persistent=true makes systemd run a
+# window missed while the machine was down -- but the launcher selects days as
+# `date -u -d yesterday` and `date -u`, RELATIVE TO WHEN IT RUNS. So a single
+# missed night is recovered (boot on day D re-runs D-1 and D), while an outage
+# of TWO OR MORE days permanently loses the earlier ones: the catch-up fires
+# once and its "yesterday" is the wrong day. Widening this to derive the
+# unverified days from what is on disk is follow-on work, not a precondition.
+# A catch-up run's late `as_of` plus its `write_reason` is the honest record
+# that the verdict was produced late.
+Persistent=true
+
+[Install]
+WantedBy=timers.target

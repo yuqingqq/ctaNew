@@ -1,0 +1,30 @@
+# DA forward-day verdict, nightly. PERSISTENT replacement for the transient
+# unit created by systemd-run, which lived in /run/user/1001/systemd/transient
+# on tmpfs and therefore did NOT survive a reboot: the nightly verdict would
+# have stopped silently -- no failure, no log line, no artifact, because
+# nothing runs to report that nothing ran (Q-DA-122, authorised R-255).
+#
+# Install:
+#   install -Dm644 live/pm_research/systemd/da-midnight-verify.service \
+#       ~/.config/systemd/user/da-midnight-verify.service
+#   install -Dm644 live/pm_research/systemd/da-midnight-verify.timer \
+#       ~/.config/systemd/user/da-midnight-verify.timer
+#   systemctl --user stop da-midnight-verify.timer   # drop the transient pair
+#   systemctl --user daemon-reload
+#   systemctl --user enable --now da-midnight-verify.timer
+#
+# The script identifies this unit by /proc/self/cgroup and stamps
+# `write_reason` into every verdict it writes (Q-DA-121). Do not add
+# Environment=DA_WRITE_REASON here: the cgroup check is an identity test and
+# an env var would be an assertion.
+[Unit]
+Description=DA forward-day verdict (P-2026-003) -- nightly day-quality verification
+
+[Service]
+# Type=oneshot, stated as a DELIBERATE difference from the transient unit
+# (which defaulted to simple): the script runs to completion and exits, so
+# systemd should wait for it and report its status rather than treat launch as
+# success.
+Type=oneshot
+OOMScoreAdjust=1000
+ExecStart=/home/yuqing/ctaNew/live/pm_research/da_midnight_verify.sh
