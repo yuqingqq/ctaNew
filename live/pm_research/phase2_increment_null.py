@@ -115,6 +115,15 @@ def per_window_net(rows, scores, theta):
     return by_window, total, n_cancelled
 
 
+def ordered_windows(a: dict, b: dict) -> list:
+    """The permutation's window order, DETERMINISTIC and callable.
+
+    R-234. Order must be a function of the DATA, never of set iteration: a
+    fixed RNG seed applied to a process-dependent order reproduces nothing.
+    """
+    return sorted(set(a) | set(b))
+
+
 def sign_flip_p(inc_by_window: dict, n_perm: int = N_PERM, seed: int = PERM_SEED):
     """Two-sided p from a window-level sign-flip permutation.
 
@@ -203,6 +212,44 @@ def selftest() -> int:
     r2 = sign_flip_p(alt, n_perm=500, seed=1)
     ok(r2["p_two_sided"] > 0.2, "sign-flip does NOT flag a balanced null")
     ok(r1["p_two_sided"] > 0, "p is never exactly 0 ((ge+1)/(n+1))")
+
+    # ---- R-234 determinism falsifiers -----------------------------------
+    # KNOWN-BAD (DA's reversed-insertion demo): the permutation IS order
+    # dependent, which is why the order must be pinned. If this ever stops
+    # differing, the falsifier has gone blind and the repair proves nothing.
+    _d1 = {"w1": 100.0, "w2": -50.0, "w3": 25.0, "w4": -10.0, "w5": 60.0, "w6": -80.0}
+    _d2 = {k: _d1[k] for k in reversed(list(_d1))}
+    _r1, _r2 = sign_flip_p(_d1, n_perm=500, seed=1), sign_flip_p(_d2, n_perm=500, seed=1)
+    ok(_r1["observed_increment_cents"] == _r2["observed_increment_cents"],
+       "known-bad: the observed increment is order-INdependent (a sum)")
+    ok(_r1["p_two_sided"] != _r2["p_two_sided"],
+       "known-bad: the permutation p IS order-dependent -- this is the defect "
+       "the sort repairs, and it must keep firing or the repair is untested")
+    # THE REPAIR: ordered_windows is a function of the DATA, not of insertion
+    ok(ordered_windows(_d1, {}) == ordered_windows(_d2, {}) == sorted(_d1),
+       "ordered_windows is identical under any insertion order")
+    ok(sign_flip_p({k: _d1[k] for k in ordered_windows(_d1, {})}, n_perm=500, seed=1)
+       ["p_two_sided"]
+       == sign_flip_p({k: _d2[k] for k in ordered_windows(_d2, {})}, n_perm=500, seed=1)
+       ["p_two_sided"],
+       "after ordering, p is IDENTICAL from either insertion order")
+    # END-TO-END: two interpreters under DIFFERENT PYTHONHASHSEED must agree
+    import subprocess as _sp, os as _os, sys as _sys
+    _prog = ("import sys;sys.path.insert(0,%r)\n"
+             "import phase2_increment_null as M\n"
+             "d={('w%%02d'%%i):(i*7%%13)-6.0 for i in range(40)}\n"
+             "w=M.ordered_windows(d,{})\n"
+             "print(M.sign_flip_p({k:d[k] for k in w},n_perm=400,seed=5)['p_two_sided'])"
+             % str(Path(__file__).resolve().parent))
+    _outs = []
+    for _hs in ("0", "12345"):
+        _e = dict(_os.environ, PYTHONHASHSEED=_hs)
+        _outs.append(_sp.run([_sys.executable, "-c", _prog], capture_output=True,
+                             text=True, env=_e).stdout.strip())
+    ok(_outs[0] and _outs[0] == _outs[1],
+       f"two interpreters under DIFFERENT PYTHONHASHSEED agree exactly "
+       f"({_outs[0]} == {_outs[1]}) -- the repair holds across processes, "
+       f"which the seed alone never did")
 
     # per_window_net: the evaluator's semantics, on a hand-built case
     L = str(D.TARGET_LATENCY_MS)
@@ -357,7 +404,17 @@ def main() -> int:
                     got, receipt["arms"][coin][arm]["gate"]["budgets"][key]["net_cents"],
                     f"{coin}/{arm}@{key}")
                     for arm, got in ((cand, ctot), (BASELINE, btot))]
-                wins = set(cbw) | set(bbw)
+                # R-234 DETERMINISM REPAIR (DA blocker-7 finding). This was
+                # `for w in set(cbw) | set(bbw)`. sign_flip_p assigns signs in
+                # LIST ORDER, and a set of window-key strings iterates in an
+                # order that varies per process (string hashing is randomised
+                # and PYTHONHASHSEED was unpinned). So PERM_SEED pinned the RNG
+                # but NOT the data the RNG was applied to: every run was an
+                # INDEPENDENT DRAW, not a reproduction. Measured across two
+                # runs: increments bit-identical, 11 of 12 p-values moved, up
+                # to 0.0245 -- the scale of Monte-Carlo error at n_perm=2000.
+                # Sorting makes the draw a function of the data alone.
+                wins = ordered_windows(cbw, bbw)
                 inc = {w: cbw.get(w, 0.0) - bbw.get(w, 0.0) for w in wins}
                 res = sign_flip_p(inc)
                 res.update({
@@ -403,6 +460,23 @@ def main() -> int:
         "null": "window-level sign-flip permutation of per-window paired "
                 "increment sums",
         "n_perm": N_PERM, "perm_seed": PERM_SEED,
+        "determinism": {
+            "ruling": "R-234 (8da983e) -- determinism repair, not re-selection",
+            "window_order": "sorted(set(candidate)|set(baseline)) via "
+                            "ordered_windows(); previously raw set iteration",
+            "pythonhashseed": __import__("os").environ.get("PYTHONHASHSEED"),
+            "why": "sign_flip_p assigns signs in LIST ORDER, so a fixed "
+                   "PERM_SEED over a process-dependent order is an "
+                   "INDEPENDENT DRAW each run, not a reproduction",
+            "prior_draws_are_provenance": (
+                "two independent MC estimates of the same true p exist: "
+                "e7caaeb (R-217) and the 2026-08-28 re-binding preserved at "
+                "phase2_increment_null_v1.SUPERSEDED_BY_v2.json. Increments "
+                "were bit-identical across both; 11 of 12 p-values moved, max "
+                "0.0245, consistent with MC error at n_perm=2000 (SE~0.0112)"),
+            "acceptance": "PRE-COMMITTED: this run's p-values are the numbers "
+                          "of record whatever they are; a Holm survival flip "
+                          "IS the result, reported never reconciled. One run."},
         "n_cells": m, "cells_read": "JOINTLY",
         "multiplicity": {
             "n_cells": m,
