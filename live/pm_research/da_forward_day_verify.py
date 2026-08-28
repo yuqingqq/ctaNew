@@ -149,6 +149,36 @@ def coin_gap_intervals(lo: int, hi: int, coin: str, path: Path | None = None
     return out
 
 
+#: R-240: the freeze epoch governs RACE-CLOCK ACCRUAL, not feed health. Those
+#: are two different questions and `entirely_post_freeze` answers only the
+#: second: a day can be perfectly healthy and still not count, because the
+#: candidate's clock had not started. Reporting one number for both makes a
+#: good-but-early day read as a bad day.
+ACCRUAL_PREDICATE = "entirely_post_freeze"
+
+
+def split_verdict(preds: list) -> dict:
+    """Separate DAY QUALITY (feed health) from RACE ACCRUAL (eligibility).
+
+    CALLABLE, so the split can be driven directly rather than inferred from a
+    composed boolean -- the lesson from all_pass being computed before the bars
+    were appended.
+    """
+    quality = [x for x in preds if x["predicate"] != ACCRUAL_PREDICATE]
+    accrual = [x for x in preds if x["predicate"] == ACCRUAL_PREDICATE]
+    q_ok = bool(quality) and all(x["pass"] for x in quality)
+    a_ok = bool(accrual) and all(x["pass"] for x in accrual)
+    return {
+        "day_quality_pass": q_ok,
+        "post_freeze_pass": a_ok,
+        # a day accrues only if it is BOTH healthy and after the clock started
+        "race_accrual_eligible": q_ok and a_ok,
+        "why": "feed health and clock eligibility are separate questions; a "
+               "healthy day BEFORE the freeze commit is a good day that does "
+               "not count, not a bad day",
+    }
+
+
 def compose_all_pass(preds: list, per_coin: dict, bars_v2: dict,
                      regime: str) -> bool:
     """The day verdict, composed from EVERY input that governs it.
@@ -537,8 +567,12 @@ def verify_day(day_token: str, freeze_epoch: float,
     _day_all_pass = compose_all_pass(
         preds, per_coin if gran == "per_coin" else {}, bars_v2, regime)
 
+    _split = split_verdict(preds)
+
     return {
         "instrument": "da_forward_day_verify_v1",
+        "verdict_split": _split,
+        "race_accrual_eligible": _split["race_accrual_eligible"],
         "bar_regime": regime,
         "day_bar_v2": bars_v2,
         "day_bar_v2_governing": {
@@ -631,6 +665,25 @@ def _selftests() -> int:
                "(c) a structurally bad gap record REFUSES instead of being "
                "silently dropped -- a silent drop shrinks measured loss with "
                "no trace (rule 4)")
+
+    # ---- R-240: the epoch governs ACCRUAL, not feed health ---------------
+    _healthy_early = [{"predicate": "complete_tape", "pass": True},
+                      {"predicate": "gap_rate_under_bar", "pass": True},
+                      {"predicate": ACCRUAL_PREDICATE, "pass": False}]
+    _sv = split_verdict(_healthy_early)
+    ok(_sv["day_quality_pass"] is True and _sv["race_accrual_eligible"] is False,
+       "a day STRADDLING the freeze is day-quality GOOD but does NOT accrue -- "
+       "the epoch's whole job, and reporting one number for both would make a "
+       "good-but-early day read as a bad day")
+    _healthy_late = [dict(x, **({"pass": True} if x["predicate"] == ACCRUAL_PREDICATE else {}))
+                     for x in _healthy_early]
+    ok(split_verdict(_healthy_late)["race_accrual_eligible"] is True,
+       "a healthy day ENTIRELY AFTER the freeze DOES accrue (positive control)")
+    _sick_late = [{"predicate": "gap_rate_under_bar", "pass": False},
+                  {"predicate": ACCRUAL_PREDICATE, "pass": True}]
+    ok(split_verdict(_sick_late)["race_accrual_eligible"] is False,
+       "and an UNHEALTHY day after the freeze does not accrue either -- "
+       "accrual needs both halves")
 
     # ---- (a) the bars must GOVERN the verdict, isolated ------------------
     _clean = [{"predicate": "x", "pass": True}, {"predicate": "y", "pass": True}]

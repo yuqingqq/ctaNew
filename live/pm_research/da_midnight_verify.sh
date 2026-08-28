@@ -69,7 +69,14 @@ for d in "$CLOSED" "$OPENED"; do
   # tonight's verdict. Preserving tonight's behaviour exactly while making the
   # value VISIBLE is the safe half; choosing the governing epoch is a ruling.
   # ESCALATED: needs a ruling before the 08-29 verdict.
-  FREEZE_EPOCH="${DA_FREEZE_EPOCH:-1787583868.0}"
+  # R-240 RULED: the FREEZE-COMMIT epoch governs. b3f7f9f = 2026-08-28T06:09:00Z
+  # = 1787897340. The receipt's own clause is "clock_starts: at the freeze
+  # commit", so a mid-day freeze means 08-28 is NOT entirely post-freeze and
+  # must not count toward the btc candidate's five days.
+  # This changes the ACCRUAL flag only: race_accrual_eligible is reported
+  # separately from day_quality_pass, so a healthy-but-early day reads as a
+  # good day that does not count, never as a bad day.
+  FREEZE_EPOCH="${DA_FREEZE_EPOCH:-1787897340}"
   "$PY" "$V" verify --day "$d" --freeze-epoch "$FREEZE_EPOCH" --out "$tmp" >> "$LOG" 2>&1
   rc=$?
   if "$PY" -c 'import json,sys
