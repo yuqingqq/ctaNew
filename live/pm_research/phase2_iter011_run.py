@@ -214,8 +214,11 @@ def selftest() -> int:
     L = str(D.TARGET_LATENCY_MS)
 
     def row(v, fill=True, shares=1.0):
+        """A1.3: rows must be CONSISTENT. A no-fill row carries value 0 as well
+        as zero shares — the previous helper zeroed shares while keeping a
+        non-zero value, which is now correctly refused as VALUE_WITHOUT_SHARES."""
         return {"any_fill_ahead": fill,
-                "latency": {L: {"preventable_value_cents": v,
+                "latency": {L: {"preventable_value_cents": v if fill else 0.0,
                                 "preventable_shares": shares if fill else 0.0,
                                 "stale_shares": 0.0}}}
 
