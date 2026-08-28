@@ -4,7 +4,12 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
-  2026-08-28 (BE): R-225 enforcement chain CLOSED. Receipt v2.1 committed
+  2026-08-28 (BE): R-228 chain CLOSED. Receipt v2.2 (c47eb83) from
+  fit6/score6 at 97b7183; replication BIT-EXACT vs v2.1 (1,046 shared
+  leaves, max abs delta 0.000e+00; sole differing leaf da_caveat_field,
+  predicted). Fit manifest + parity committed (ff80ebd). Five fits agree.
+  Battery 476 checks, 0 failing. Freeze remains WITH THE USER.
+  PRIOR: 2026-08-28 (BE): R-225 enforcement chain CLOSED. Receipt v2.1 committed
   (2fbf233) from fit5/score5 at 43f777d under a guard-ENFORCED provenance
   chain; numbers IDENTICAL to the superseded v2 (980 leaves, max abs delta
   8.327e-17). v2 preserved by rename at
@@ -20,6 +25,35 @@ updated: >-
   hygiene + recv_ns measurement)
 
 flags:
+  fail_open_class_closed_two_levels: yes # 2026-08-28 BE, R-228 (97b7183).
+                             # Audit #9 found R-225's own guards passing
+                             # VACUOUSLY: an EMPTY file_hashes map ran zero
+                             # iterations and read as satisfied; a manifest
+                             # listing 1 of 14 artifacts left 13 unverified;
+                             # an all-zeros fit_code_ref matched an all-zeros
+                             # env value. Now: expected-set completeness, ref
+                             # must RESOLVE to a commit CARRYING the recorded
+                             # bytes, fail-closed on git failure.
+  positive_seam_certified_the_hole: FIXED # 2026-08-28 BE. Seam 42f asserted
+                             # "a WELL-FORMED manifest is ACCEPTED" using
+                             # file_hashes:{} -- the exact vacuity the audit
+                             # found. The accept-path control BLESSED the
+                             # defect as the definition of well-formed. A
+                             # guard's positive control must be exercised with
+                             # something actually valid.
+  generator_owns_disclosure: DEBT # 2026-08-28 BE. protocol_version and
+                             # supersedes are generator-owned; the
+                             # population/reach disclosure (development-not-
+                             # test, G=0, not-a-validation) is NOT and has been
+                             # re-attached BY HAND for three consecutive
+                             # cycles. These are exactly the fields a fresh
+                             # generation drops and exactly the ones whose
+                             # silent absence converts a development result
+                             # into an apparent validation. TOP next-cycle debt.
+  peer_annotation_survives_no_regeneration: DEBT # 2026-08-28. da_caveat_field
+                             # resets to RESERVED on every fresh generation, so
+                             # DA's Q-DA-79 block must be re-applied each time.
+                             # Needs a MECHANISM, not a reminder.
   provenance_chain_enforced: yes # 2026-08-28 BE, R-225 (43f777d). Audit #8:
                              # BE's seams proved hashes CHANGE; none proved
                              # scoring REJECTS a missing or mismatched hash. An

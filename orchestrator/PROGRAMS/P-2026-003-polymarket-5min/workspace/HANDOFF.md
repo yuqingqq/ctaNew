@@ -2,6 +2,82 @@
 
 Updated: 2026-08-28 (DA) — **receipt VALIDATED 15/15; increment-null 10-of-12 chance; 08-27 EXCLUDED; per-coin live; btc evidence pack delivered; freeze awaits the user.**
 
+## 2026-08-28 (BE, ~04:35Z) — R-228 chain CLOSED; receipt v2.2, replication BIT-EXACT
+
+**AUDIT #9: the fail-open class one level down.** R-225's guards were added and
+still passed VACUOUSLY. Four fixes at `97b7183`, eleven behavioural known-bads
+RED pre-fix and green after:
+
+1. **Completeness.** The hash loop iterated whatever `file_hashes` held, so an
+   EMPTY map ran zero iterations and read as a satisfied check; a manifest
+   listing one artifact of fourteen left thirteen unverified. Now checked
+   against an EXPECTED set derived from `empty_coins.json`, which is itself in
+   that set and hash-verified. And `fit_code_ref` must RESOLVE to a real commit
+   CARRYING the recorded bytes — it had only ever been compared to the env value
+   the scorer was launched with, so all-zeros matched all-zeros. FAIL-CLOSED: a
+   git failure refuses, never skips.
+2. **Identity lattice.** Four result-bearing modules sat outside it, including
+   `harmful_exposure_rows` — which owns BOTH `any_fill_ahead` (the valuation
+   gate) and the latency cut (the estimand). A PARTIAL identity read as a whole
+   one. Bound alongside: the scoring top-up, its build receipt, the frozen
+   incumbent. The SCORE side now captures and rechecks identity like the fit;
+   only the fit did, so the stage producing the published numbers was the
+   unguarded half.
+4. **Lock leak.** The identity capture sat between acquisition and the `try`, so
+   an identity failure raised with the lock HELD.
+5. **Supersession is GENERATOR-OWNED** (protocol_version, supersedes), and the
+   block reports a missing predecessor explicitly.
+
+**RESULT: v2.2 (`c47eb83`), REPLICATION BIT-EXACT.** 1,046 shared leaves, max
+absolute numeric delta **0.000e+00** — the v2.1 rerun gave 8.3e-17; this is
+zero. Sole differing leaf `da_caveat_field`, predicted before the run. Fit
+manifest + parity + empty_coins committed at `ff80ebd` so the chain verifies at
+committed artifacts (rule 12). v2.1 preserved unedited at
+`phase2_four_arm_v2.SUPERSEDED_BY_v2_2.json` (`974a1bf`) before anything ran.
+
+**FIVE FITS AGREE**: ef9b775 / 19b0611 / 43f777d / 97b7183 on every drop cell
+and both purge deltas; the last three on every scored number. Four consecutive
+pre-registration matches at 578,917 / 505,904.
+
+**GUARDS CONFIRMED IN PRODUCTION**, not only in seams: `fit manifest OK: 13
+artifacts`; score-side identity captured before load; `released
+phase2_fits.lock` (third consecutive run leaving none); `supersedes
+present_at_write True` — the generator VERIFIED its predecessor rather than
+asserting it.
+
+**MY POSITIVE SEAM WAS CERTIFYING THE HOLE.** Seam 42f asserted "a WELL-FORMED
+manifest is ACCEPTED" using `file_hashes: {}` — the exact vacuity the audit
+found. I wrote that seam so the guard would be a gate and not a wall, and in
+doing so blessed the defect as the DEFINITION of well-formed. A guard's accept
+path must be exercised with something actually valid, or the positive control
+certifies whatever hole it contains.
+
+**HAND-ATTACHED DISCLOSURE, third cycle running.** Generator ownership covers
+protocol_version and supersedes ONLY. `be_receipt_notes` — carrying
+development-not-test, G=0, not-a-validation — was re-added BY HAND, marked
+`ADDED_POST_GENERATION`. Kept because a receipt without it can be misread as
+validation, which is worse than a hand-added field that admits what it is.
+**Top next-cycle debt: the generator must own the population/reach fields** —
+they are precisely what a fresh generation drops and precisely what their
+silent absence would convert into an apparent validation.
+
+**TELEMETRY CAVEAT, so no false improvement enters the record**: fit6's unit
+reported `2.2M memory peak`, impossible for a job holding a 1.1M-row index
+(score5 reported the same). cgroup peak-accounting artifact; the real peak is
+~14G as measured throughout.
+
+**FOR DA**: `da_caveat_field` is RESERVED again. Q-DA-79 must be re-applied by
+DA, and the deeper problem — a peer's annotation survives no regeneration by
+construction — needs a MECHANISM, not a reminder. On the debt list.
+
+**UNCHANGED AND STILL GOVERNING**: `da_development_topup` is DEVELOPMENT not
+test; G = 0 complete UTC days on one 14.4-hour span inside the consumed range;
+no interval claimable; **THIS IS NOT A VALIDATION**. R-225 and R-228 hardened
+provenance, not reach. The increment null (`e7caaeb`) stands: 10 of 12 cells
+chance, `PLUS_PRED_STATE_V1` surviving nowhere.
+
+**NEXT**: DA verifies both coins against v2.2; freeze remains **with the USER**.
+
 ## 2026-08-28 (BE, ~02:53Z) — R-225 enforcement chain CLOSED; receipt v2.1, numbers identical
 
 **AUDIT #8's CRITIQUE AND WHAT IT COST.** The user's finding: BE's seams proved
