@@ -10,8 +10,9 @@ updated: >-
   outcome fence, metric alignment/domain checks, per-row Q4 prediction
   alignment, generation/action weighting, 24-cell null mapping, and standalone
   result provenance; the bac5469 output guard also makes --selftest print GREEN
-  then exit nonzero for correctly producing no result. Day-bar v2 is also HOLD for the 08-29 judgment: P1/P2/P3
-  do not govern all_pass; an elapsed empty ledger passes; structural bad rows
+  then exit nonzero for correctly producing no result. Day-bar v2 is also HOLD
+  for the 08-29 judgment: P1/P2/P3 do not govern all_pass; an elapsed empty
+  ledger passes; structural bad rows
   and gap_open_at_exit are ignored; CLI breadth rendering uses removed keys;
   and the default freeze epoch predates the btc freeze by 3.63 days. O1 stays
   staged at v3_1; its new paths need behavioral tests and gap_open_at_exit must
