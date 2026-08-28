@@ -414,3 +414,74 @@ gives no machine names. **Membership is the draft's; spelling is mine** — rena
 freely, and a rename is a contract amendment rather than a submission.
 
 **6 new red-first checks; battery at 79.**
+
+---
+
+## AMENDMENT B4 — multiplicity is COMPUTED, not transcribed
+
+R-260 tightened B3's ASK by applying B3's own generalization one level up:
+adopting `14` was a count **spelled out** from the then-visible axes, and `18`
+would repeat it. That is correct, and `18` is not the answer — it is the **size
+of the space**. A race counts **candidates**.
+
+### B4.1 Why a function and not a number
+
+The count has been wrong three times, each time for the same reason:
+
+| said | from | missed |
+|---|---|---|
+| 7 | compositions | the predictor axis |
+| 14 | + predictor | a ragged estimator axis |
+| 18 | + estimator | that space ≠ candidates |
+
+A transcribed integer cannot notice a new axis, a withdrawn candidate, or a
+collapse. **A derivation recomputed from its recorded inputs can** — rule 10.
+
+### B4.2 Three subtractions, each declared rather than inferred
+
+**1. Collapse.** An arm whose composition does not *consume* predictor output
+has no predictor axis: every predictor label over it names the same run, so
+they are one candidate, represented by `none` — an arm consuming no estimate
+*is* running without a predictor, and any other label records a dependency it
+does not have.
+
+`consumes_predictor` is **required and has no default**. Which components
+consume an estimate is a **modelling fact owned by whoever owns composition
+semantics** — not mine. Guessing it is precisely what BE correctly refused to
+do with the arm mapping, so **an arm missing from the mapping refuses.**
+
+**2. Absence.** A candidate nobody built is not a candidate — but it must be
+*declared* absent, never inferred from silence (rule 4). Declaring the absence
+of an identity that was never in the space **refuses**, or a typo would read as
+a subtraction and quietly shrink the count.
+
+**3. Nothing else.** No discretionary subtraction, because one would be a lever
+applied after the numbers are visible.
+
+### B4.3 A defect found by reading my own output
+
+The first version reported a "full space" of **21**: it counted each collapsed
+arm's `none` representative *on top of* the variants it replaced. The
+arithmetic was internally consistent and **externally unreproducible** — a
+reader computing `6 arms × 2 + 1 arm × 2 × 3` gets 18 and cannot get 21.
+
+That is exactly the failure a recorded derivation exists to prevent, produced
+*by the thing meant to prevent it*. The space is now the cross-product a reader
+computes, and a check asserts **the printed steps evaluate to the printed
+answer** — the check that would have caught it.
+
+### B4.4 Under a hypothesis, illustratively
+
+With three arms hypothesised not to consume an estimate:
+`18 − 6 + 3 − 0 = 15`. **This is an illustration, not a count.** The real
+`consumes_predictor` declaration is owed, and until it exists no number here is
+the record.
+
+### B4.5 What the freeze artifact carries
+
+Not an integer: the **inputs and the derivation**, so multiplicity is a computed
+predicate a reader can re-run. Verified by an anti-transcription check —
+recomputing from the recorded inputs reproduces both the count and the identity
+list exactly.
+
+**11 new red-first checks, one per subtraction and one per axis; battery at 90.**

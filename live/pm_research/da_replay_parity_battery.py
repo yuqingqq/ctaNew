@@ -796,6 +796,117 @@ def load_external_trajectory(obj: dict[str, Any]) -> Trajectory:
     return tr
 
 
+def candidate_multiplicity(consumes_predictor: dict[str, bool],
+                           declared_absent: Iterable[str] = (),
+                           *, arm_spec: dict[str, Any] | None = None,
+                           predictors: Iterable[str] | None = None,
+                           fp_estimators: Iterable[str] | None = None
+                           ) -> dict[str, Any]:
+    """COMPUTE the rule-12 multiplicity from the declared identity space.
+
+    WHY THIS IS A FUNCTION AND NOT A NUMBER. The count has now been wrong
+    three times, each time because it was SPELLED OUT from the axes visible at
+    the moment: 7 (compositions), then 14 (B2 added the predictor axis), then
+    18 (B3 added a ragged estimator axis). "18" is not the answer either -- it
+    is the SIZE OF THE SPACE, and a race counts CANDIDATES. A transcribed
+    integer cannot notice a new axis, a withdrawn candidate, or a collapse;
+    a derivation recomputed from its recorded inputs can (rule 10: compute
+    predicates, never print conclusions).
+
+    THREE SUBTRACTIONS, each declared rather than inferred:
+
+    1. COLLAPSE. An arm whose composition does not CONSUME predictor output
+       has no predictor axis: every predictor label over it produces the same
+       run, so those are ONE candidate, not len(predictors). This is the
+       inert-agreement clause as an identity fact.
+
+       `consumes_predictor` is REQUIRED and has no default. Which components
+       consume an estimate is a MODELLING fact owned by whoever owns
+       composition semantics -- not mine to guess. Guessing it here would be
+       exactly what BE correctly refused to do with the arm mapping, and an
+       arm missing from the mapping REFUSES.
+
+    2. ABSENCE. A candidate nobody built is not a candidate -- but it must be
+       DECLARED absent, never inferred from not being mentioned (rule 4:
+       exclusions are statuses, never silent drops). An identity that is
+       neither in the space nor declared absent refuses.
+
+    3. Nothing else. There is no discretionary subtraction, because one would
+       be a lever applied after the numbers are visible.
+
+    Returns the count AND its derivation, so a freeze artifact carries how the
+    number was reached and a reader can recompute it instead of trusting it.
+    """
+    spec = ARM_SPEC if arm_spec is None else arm_spec
+    preds = tuple(PREDICTORS if predictors is None else predictors)
+    fps = tuple(FAIRPRICE_ESTIMATORS if fp_estimators is None else fp_estimators)
+    active = tuple(p for p in preds if p != "none")
+    if not active:
+        raise ParityRefused(
+            "REFUSED: no ACTIVE predictor declared; a space with only the "
+            "inert label has no candidates to race.")
+
+    missing = sorted(a for a in spec if a not in consumes_predictor)
+    if missing:
+        raise ParityRefused(
+            f"REFUSED: {missing} have no consumes_predictor declaration. "
+            f"Whether a composition consumes an estimate is a modelling fact "
+            f"owned by the composition, not inferable from its name.")
+
+    # THE SPACE IS THE CROSS-PRODUCT A READER WOULD COMPUTE. My first version
+    # reported a "full space" of 21 that no reader could reproduce: it counted
+    # each collapsed arm's `none` representative ON TOP of the variants it was
+    # replacing. The arithmetic was internally consistent and externally
+    # unreproducible, which is the defect a recorded derivation exists to
+    # prevent -- caught by reading my own output rather than by a test.
+    space, collapsed_from, collapsed_to = [], [], []
+    for arm in sorted(spec):
+        arm_fps = fps if "fairprice" in spec[arm]["components"] else (None,)
+        for p in active:
+            for f in arm_fps:
+                space.append(f"{arm}|{p}|{f}")
+        if not consumes_predictor[arm]:
+            # Every predictor label over this arm names the SAME run. They are
+            # one candidate, represented by `none`: an arm that consumes no
+            # estimate IS running without a predictor, and any other label
+            # would record a dependency it does not have.
+            collapsed_from.extend(f"{arm}|{p}|{f}" for p in active
+                                  for f in arm_fps)
+            collapsed_to.extend(f"{arm}|none|{f}" for f in arm_fps)
+
+    absent = sorted(set(declared_absent))
+    unknown = [i for i in absent if i not in space and i not in collapsed_to]
+    if unknown:
+        raise ParityRefused(
+            f"REFUSED: declared-absent identities not in the space: {unknown}. "
+            f"Declaring the absence of something that was never a candidate "
+            f"hides a typo as a subtraction.")
+    surviving = (set(space) - set(collapsed_from)) | set(collapsed_to)
+    candidates = sorted(surviving - set(absent))
+    return {
+        "n_candidates": len(candidates), "candidates": candidates,
+        "n_space": len(space),
+        "n_collapsed_from": len(collapsed_from),
+        "n_collapsed_to": len(collapsed_to),
+        "collapsed_from": sorted(collapsed_from),
+        "collapsed_to": sorted(collapsed_to),
+        "n_declared_absent": len(absent), "declared_absent": absent,
+        "inputs": {"arms": sorted(spec), "predictors": list(preds),
+                   "fairprice_estimators": list(fps),
+                   "consumes_predictor": dict(sorted(consumes_predictor.items()))},
+        "derivation": [
+            f"cross-product (arm x ACTIVE predictor x fairprice_estimator "
+            f"where the arm consumes one) = {len(space)}",
+            f"minus {len(collapsed_from)} identities on arms that consume no "
+            f"estimate (every predictor label names the same run)",
+            f"plus {len(collapsed_to)} `none`-labelled representative(s) for "
+            f"those arms",
+            f"minus {len(absent)} declared absent",
+            f"= {len(candidates)} candidates",
+        ],
+    }
+
+
 def trajectory_to_contract(tr: Trajectory) -> dict[str, Any]:
     """The submission shape. Provided so a producer has a REFERENCE, never so
     it can import one: BE writes its own exporter and agreement is proven by
@@ -1470,6 +1581,77 @@ def _selftests() -> int:
            "CONDVALUE_X_SKEW_X_FAIRPRICE|composed_lgbm|bn_bookticker_mid"],
        "the identity key is the FULL triple, so a reader can tell which "
        "estimator produced which result")
+
+    # ---- B4: multiplicity is COMPUTED, with a falsifier per subtraction --
+    _HYP = {"QR_SKEW_ONLY": False, "QR_CANCEL_HOLD_X_SKEW": False,
+            "HAZARD_ONLY_NEUTRAL": True, "CONDVALUE_NEUTRAL": True,
+            "CONDVALUE_X_SKEW": True, "CONDVALUE_X_SKEW_X_FAIRPRICE": True,
+            "RANDOM_MATCHED": False}      # HYPOTHESIS, not a declaration
+    _m = candidate_multiplicity(_HYP)
+    ok(_m["n_space"] == 18,
+       f"the cross-product is {_m['n_space']} -- the number a reader computes "
+       f"independently (6 non-fairprice arms x 2 predictors, plus the "
+       f"fairprice arm x 2 x 3), so the derivation is checkable and not just "
+       f"internally consistent")
+    ok(_m["n_space"] - _m["n_collapsed_from"] + _m["n_collapsed_to"]
+       - _m["n_declared_absent"] == _m["n_candidates"],
+       f"THE DERIVATION EVALUATES to the answer it prints: "
+       f"{_m['n_space']} - {_m['n_collapsed_from']} + {_m['n_collapsed_to']} "
+       f"- {_m['n_declared_absent']} = {_m['n_candidates']} (rule 10). My "
+       f"FIRST version printed a 'full space' of 21 that no reader could "
+       f"reproduce -- internally consistent, externally unreproducible")
+    ok(refuses(lambda: candidate_multiplicity(
+           {k: v for k, v in _HYP.items() if k != "CONDVALUE_X_SKEW"}),
+           "no consumes_predictor declaration"),
+       "an arm with NO consumes_predictor declaration REFUSES -- whether a "
+       "composition consumes an estimate is a MODELLING fact owned by the "
+       "composition, and guessing it here is what BE correctly refused to do "
+       "with the arm mapping")
+    _all_consume = dict.fromkeys(_HYP, True)
+    _mc = candidate_multiplicity(_all_consume)
+    ok(_mc["n_candidates"] == 18 and _mc["n_collapsed_from"] == 0,
+       f"COLLAPSE FALSIFIER: with every arm consuming an estimate nothing "
+       f"collapses and the count is the full {_mc['n_candidates']} -- so the "
+       f"collapse is driven by the DECLARATION, not by the function's mood")
+    ok(_m["n_candidates"] == 15 and _m["n_candidates"] != _mc["n_candidates"],
+       f"and flipping the declaration MOVES the answer ({_m['n_candidates']} "
+       f"vs {_mc['n_candidates']}) -- a transcribed integer cannot do that, "
+       f"which is why 7, 14 and 18 were each wrong in turn")
+    _one_absent = candidate_multiplicity(
+        _HYP, declared_absent=["CONDVALUE_X_SKEW|composed_lgbm|None"])
+    ok(_one_absent["n_candidates"] == _m["n_candidates"] - 1,
+       "ABSENCE FALSIFIER: a declared-absent candidate subtracts exactly one")
+    ok(refuses(lambda: candidate_multiplicity(
+           _HYP, declared_absent=["CONDVALUE_X_SKWE|composed_lgbm|None"]),
+           "not in the space"),
+       "and declaring the absence of an identity that was never in the space "
+       "REFUSES -- otherwise a TYPO reads as a subtraction and quietly "
+       "shrinks the count")
+    _p3 = candidate_multiplicity(_HYP, predictors=("none", "composed_linear",
+                                                   "composed_lgbm", "p3"))
+    ok(_p3["n_candidates"] > _m["n_candidates"],
+       f"AXIS FALSIFIER: adding a predictor raises the count "
+       f"({_m['n_candidates']} -> {_p3['n_candidates']}) -- the derivation "
+       f"notices a new axis, which is the failure mode that produced 7, 14 "
+       f"and 18")
+    _f4 = candidate_multiplicity(_HYP, fp_estimators=(
+        "Identity", "pm_microprice", "bn_bookticker_mid", "x4"))
+    ok(_f4["n_candidates"] == _m["n_candidates"] + 2,
+       f"and adding a fair-price estimator raises it by exactly the number of "
+       f"CONSUMING predictors on the ONE arm that uses it (+2) -- the RAGGED "
+       f"axis behaves raggedly, which is what made B3 invisible")
+    ok(refuses(lambda: candidate_multiplicity(_HYP, predictors=("none",)),
+               "no ACTIVE predictor"),
+       "a space with only the inert label REFUSES -- there is nothing to race")
+    _re = candidate_multiplicity(
+        _m["inputs"]["consumes_predictor"],
+        predictors=_m["inputs"]["predictors"],
+        fp_estimators=_m["inputs"]["fairprice_estimators"])
+    ok(_re["n_candidates"] == _m["n_candidates"]
+       and _re["candidates"] == _m["candidates"],
+       "ANTI-TRANSCRIPTION: recomputing from the RECORDED inputs reproduces "
+       "the count and the identities exactly -- so a freeze artifact carries "
+       "a derivation a reader can re-run, not an integer they must trust")
 
     # ---- determinism across processes ------------------------------------
     d = determinism_across_hashseed(here)
