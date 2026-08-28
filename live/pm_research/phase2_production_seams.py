@@ -598,14 +598,32 @@ def main() -> int:
     # comparison, which is now the only one.
     import build_state_tape_v2 as _B30
     _src30 = (HERE / "build_state_tape_v2.py").read_text()
-    seam("30a the builder owns ONE gap comparison",
-         "def gap_contains" in _src30,
-         "two comparisons (main + warm-up) disagreed at BOTH edges")
-    seam("30b features_at is given NO gaps (its path is retired)",
-         "gaps=()" in _src30,
-         "the window-relative comparison is the second path R-213 eliminates")
+    # 30a-c were SOURCE-TEXT greps ("def gap_contains" in _src30, "gaps=()",
+    # "T_abs"). They asserted that certain characters appear in a file, which is
+    # true of a comment, a docstring, or dead code, and says nothing about what
+    # the builder DOES. Driven now against the real predicate — the same
+    # conversion 30d-f already had when they folded into 36a-e.
+    seam("30a the builder owns ONE gap comparison, and it is CALLABLE",
+         callable(getattr(_B30, "gap_contains_at", None)),
+         "two comparisons (main + warm-up) disagreed at BOTH edges; a single "
+         "callable predicate makes a second path unrepresentable")
+    _g30a = {"btc": [(100.0, 200.0)], "eth": []}
+    seam("30b the ONE predicate answers for every caller, warm-up included",
+         _B30.gap_contains_at(150.0, "btc", _g30a) == (100.0, 200.0)
+         and _B30.gap_contains_at(-27.0, "btc", _g30a) is None
+         and _B30.gap_contains_at(150.0, "eth", _g30a) is None,
+         "a NEGATIVE t_start instant is answered by the SAME function, which "
+         "is what retires the window-relative path R-213 eliminated")
     seam("30c the comparison is on the ABSOLUTE instant, unprojected",
-         "T_abs" in _src30 and "a <= T_abs < b" in _src30)
+         _B30.gap_contains_at(1_000_000_000.0, "btc",
+                              {"btc": [(1_000_000_000.0, 1_000_000_001.0)]})
+         is not None
+         and _B30.gap_contains_at(1_000_000_001.0, "btc",
+                                  {"btc": [(1_000_000_000.0,
+                                            1_000_000_001.0)]}) is None,
+         "at 1e9 the ULP is ~2.4e-7s, so a projected comparison loses the "
+         "edges; the absolute one holds them exactly — lower-INCLUSIVE, "
+         "upper-EXCLUSIVE, at a magnitude where projection would fail")
     # behavioural: the ruled predicate at both edges, both t_start signs
     _g30 = [(1_000_000.0, 1_000_010.0)]
     def _hit30(T):
