@@ -696,6 +696,7 @@ def selftest() -> int:
 # travels with every number.
 
 UNDERPOWERED = "UNDERPOWERED"
+UNEVALUABLE = "UNEVALUABLE"
 
 
 def auc(scores, labels) -> float:
@@ -764,10 +765,37 @@ def head_report(name, kind, pred, actual, min_n: int = UNDERPOWERED_MIN_N) -> di
         out["brier"] = brier(pred, actual)
         out["n_positive"] = sum(1 for y in actual if y)
         out["one_class"] = out["auc"] is None
+        # I11-3: a ONE-CLASS head previously reported status=OK with auc=None —
+        # the head said it was fine while it had measured nothing, and the
+        # correction lived only downstream in the cell. A head must state its
+        # own unevaluability; the cell must not be the only place the meaning
+        # is repaired.
+        if out["one_class"]:
+            # UNDERPOWERED takes PRECEDENCE: "not enough data" precedes "the
+            # measurement is undefined", because the second is usually a
+            # CONSEQUENCE of the first and the first is the actionable fact.
+            # Both survive: unevaluable_reason is set either way.
+            out["unevaluable"] = True
+            if out["status"] != UNDERPOWERED:
+                out["status"] = UNEVALUABLE
+            out["unevaluable_reason"] = (
+                f"only one class present in {n} labels "
+                f"(n_positive={out['n_positive']}); AUC is undefined and no "
+                f"discrimination has been measured")
     elif kind == "magnitude":
         out["mae"] = mae(pred, actual)
         out["calibration_slope"] = calibration_slope(pred, actual)
         out["no_predictor_spread"] = out["calibration_slope"] is None
+        # same shape: a constant predictor has NO slope, so the head is
+        # unevaluable rather than OK-with-a-missing-number.
+        if out["no_predictor_spread"]:
+            out["unevaluable"] = True
+            if out["status"] != UNDERPOWERED:
+                out["status"] = UNEVALUABLE
+            out["unevaluable_reason"] = (
+                "the predictor is constant across this population, so it has "
+                "no calibration slope; 'no information to calibrate' is not "
+                "'calibrated'")
     else:
         raise RuntimeError(f"unknown head kind {kind!r}")
     return out
@@ -784,12 +812,16 @@ def four_head_report(q1, q2, q3h, q3g) -> dict:
              "Q3_m_harm": q3h, "Q3_m_good": q3g}
     underpowered = sorted(k for k, v in heads.items()
                           if v.get("status") == UNDERPOWERED)
+    unevaluable = sorted(k for k, v in heads.items()
+                         if v.get("unevaluable"))
     return {
         "heads": heads,
         "all_heads_reported": sorted(heads) == sorted(
             ["Q1_arrival", "Q2_sign", "Q3_m_harm", "Q3_m_good"]),
         "underpowered_heads": underpowered,
         "any_underpowered": bool(underpowered),
+        "unevaluable_heads": unevaluable,
+        "any_unevaluable": bool(unevaluable),
         "reporting_rule": "all four are reported whether or not they pass; a "
                           "strong hazard head does not establish toxicity "
                           "discrimination (parent §2.1)",

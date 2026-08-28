@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import json
 import math
+import re
 import os
 import sys
 import time
@@ -206,6 +207,46 @@ def apply_arm(fitres: dict, X, tg: dict) -> dict:
     return out
 
 
+def q4_economics(pred: dict, rows: list, budgets=None) -> dict:
+    """Q4's ECONOMICS per budget, at the ACTION unit. I11-2.
+
+    apply_arm composed expected_cancel_value per action and report_arm threw it
+    away, so budgets were metadata and no decision quantity ever reached a cell.
+    Here the composed value RANKS actions, a budget selects the top fraction,
+    and the realised signed value of those actions is the net — with per-window
+    increments retained so the incremental null has units to permute."""
+    budgets = budgets or I11.BUDGETS_011
+    ecv = pred["expected_cancel_value"]
+    if len(ecv) != len(rows):
+        raise RuntimeError(
+            f"REFUSED: {len(ecv)} composed values against {len(rows)} rows; "
+            f"economics cannot be evaluated on a misaligned population.")
+    # A1.5: the unit is the ACTION. Rank generations by their MAX composed value.
+    gens = {}
+    for i, r in enumerate(rows):
+        k = (r.get("slug"), r.get("side"), r.get("gen"))
+        if k not in gens or ecv[i] > ecv[gens[k]]:
+            gens[k] = i
+    order = sorted(gens, key=lambda k: -ecv[gens[k]])
+    out = {}
+    for b in budgets:
+        frac = float(b.rstrip("%")) / 100.0
+        kk = max(1, int(len(order) * frac))
+        chosen = order[:kk]
+        by_window, net = {}, 0.0
+        for k in chosen:
+            i = gens[k]
+            v = I11.signed_v_cancel(rows[i])
+            net += v
+            w = k[0]
+            by_window[w] = by_window.get(w, 0.0) + v
+        out[b] = {"budget": b, "n_actions_total": len(order),
+                  "n_cancelled_actions": kk, "net_cents": net,
+                  "increment_by_window": by_window,
+                  "unit": "ACTION (first-crossing by max composed value)"}
+    return out
+
+
 def report_arm(pred: dict, tg: dict) -> dict:
     """All heads, always, including failures (prereg §3).
 
@@ -284,6 +325,149 @@ def report_arm(pred: dict, tg: dict) -> dict:
         "advancement_rule": "Q4 alone may NOT advance a candidate; explicit "
                             "user sign-off required (R-232 9.2)",
     }
+
+
+def assert_receipt_has_all_cells(receipt: dict) -> dict:
+    """A receipt lacking the DECLARED 24 cells REFUSES. I11-2, output level.
+
+    The guards so far checked the family at ASSEMBLY. This checks the ARTIFACT,
+    because assembly can be skipped: the evaluator existed for a full batch and
+    was never called, and nothing at the output level noticed a receipt with no
+    cells in it at all. A run that writes a receipt without its declared family
+    has not evaluated anything, whatever else it contains."""
+    fam = receipt.get("family")
+    if not isinstance(fam, dict) or "cells" not in fam:
+        raise RuntimeError(
+            "REFUSED: the receipt carries no evaluated family. The 24-cell "
+            "evaluator exists; a receipt without its cells means it was never "
+            "invoked, which is exactly how a batch shipped with the evaluator "
+            "unwired (I11-2).")
+    declared = set(I11.declared_family()["cells"])
+    present = set(fam["cells"])
+    missing = sorted(declared - present)
+    extra = sorted(present - declared)
+    if missing or extra:
+        raise RuntimeError(
+            f"REFUSED: the receipt's family does not match the declaration. "
+            f"Missing {len(missing)} cell(s): {missing[:6]}...; undeclared: "
+            f"{extra}. The family is frozen at {len(declared)} (R-232 9.1).")
+    if fam.get("holm_denominator") != len(declared):
+        raise RuntimeError(
+            f"REFUSED: Holm denominator {fam.get('holm_denominator')} is not "
+            f"the declared {len(declared)}; a shrinking denominator rewards "
+            f"failing to measure.")
+    return {"cells_present": len(present), "declared": len(declared),
+            "holm_denominator": fam["holm_denominator"]}
+
+
+def evaluate_family(coin_results: dict, populations: dict) -> dict:
+    """Build and adjudicate the DECLARED 24-cell family. I11-2.
+
+    The evaluator existed and was NEVER CALLED: main() fitted both arms, wrote
+    per-head descriptive reports, and composed Q4 in apply_arm only to discard
+    it in report_arm. Budgets were metadata. Everything below is the machinery
+    that was already built, now actually invoked.
+
+    Q2/Q3 incremental cells carry NO_INCUMBENT_COUNTERPART (R-237): the
+    incumbent has a hazard head and a composed value but NO sign or magnitude
+    heads, so there is nothing to be incremental TO and inventing a baseline is
+    the inverse of rule 9."""
+    cells = {}
+    for arm in I11.ARMS_011:
+        for head in I11.HEADS_011:
+            for budget in I11.BUDGETS_011:
+                key = I11.cell_key(arm, head, budget)
+                cells[key] = _one_cell(arm, head, budget, coin_results,
+                                       populations)
+    fam = I11.assemble_family(cells)
+    fam["incumbent_null_applicability"] = incumbent_null_applicability()
+    return fam
+
+
+def _one_cell(arm: str, head: str, budget: str, coin_results: dict,
+              populations: dict) -> dict:
+    """One cell: its adjudicated statistic, its p-value, or a NAMED status."""
+    per_coin = {c: r for c, r in coin_results.items() if arm in r}
+    if not per_coin:
+        return I11.build_cell(arm, head, budget,
+                              status=I11.CELL_STATUS_UNEVALUABLE,
+                              detail=f"arm {arm} produced no result")
+    # pooled over coins at the ACTION unit (A1.5)
+    n_actions = sum(populations[c]["eval_n_actions"] for c in per_coin)
+
+    if head == "Q4_combined_ev":
+        # the DECISION metric, per budget, with BOTH declared nulls
+        stat, pval, status, detail = _q4_cell(arm, budget, per_coin)
+        return I11.build_cell(arm, head, budget, statistic=stat, p_value=pval,
+                              status=status, n_actions=n_actions, detail=detail)
+
+    # Q1/Q2/Q3: the adjudicated statistic is a discrimination/calibration
+    # figure, identical across budgets (budgets select CANCELLATIONS, not
+    # predictions). It is reported in every budget slot so the declared family
+    # is complete; the p-value comes from the matched-random null on the
+    # decision side only, which is why these carry no incremental p.
+    stats, statuses = [], []
+    for c, r in per_coin.items():
+        adj = r[arm]["adjudicated_statistics"]
+        if head == "Q1_arrival":
+            stats.append(adj.get("Q1_arrival"))
+            statuses.append(r[arm]["heads"]["Q1_arrival"]["status"])
+        elif head == "Q2_sign":
+            stats.append(adj.get("Q2_sign"))
+            statuses.append(adj.get("Q2_cell_status"))
+        else:
+            stats.append(adj.get("Q3_magnitudes"))
+            statuses.append("OK" if adj.get("Q3_magnitudes") is not None
+                            else I11.CELL_STATUS_UNEVALUABLE)
+    good = [x for x in stats if x is not None]
+    if not good:
+        return I11.build_cell(
+            arm, head, budget, status=I11.CELL_STATUS_UNEVALUABLE,
+            n_actions=n_actions,
+            detail=f"no coin produced an adjudicable statistic; per-coin "
+                   f"statuses {statuses}")
+    if any(st not in ("OK", None) for st in statuses):
+        return I11.build_cell(
+            arm, head, budget, statistic=min(good),
+            status=I11.CELL_STATUS_UNDERPOWERED, n_actions=n_actions,
+            detail=f"at least one coin is not OK: {statuses}")
+    return I11.build_cell(
+        arm, head, budget, statistic=min(good),
+        status=I11.CELL_STATUS_NO_COUNTERPART if head in ("Q2_sign",
+                                                          "Q3_magnitudes")
+        else I11.CELL_STATUS_OK,
+        n_actions=n_actions,
+        detail=("R-237: the incumbent has no sign/magnitude head, so no "
+                "incremental null exists for this head; the matched-random "
+                "null is reported on the decision side"
+                if head in ("Q2_sign", "Q3_magnitudes")
+                else "adjudicated on the pooled worse-coin statistic"))
+
+
+def _q4_cell(arm: str, budget: str, per_coin: dict) -> tuple:
+    """Q4's cell: net cents at the action unit, with the incremental null.
+
+    The incremental-over-incumbent null is the one iteration 010 lacked, and it
+    is the reason 'beats random' was mistaken for 'beats the incumbent' for a
+    full cycle."""
+    inc_by_window = {}
+    net = 0.0
+    for coin, r in per_coin.items():
+        econ = r[arm].get("economics", {}).get(budget)
+        if not econ:
+            return (None, None, I11.CELL_STATUS_UNEVALUABLE,
+                    f"no economics for {coin}@{budget}")
+        net += econ["net_cents"]
+        for w, v in econ["increment_by_window"].items():
+            inc_by_window[f"{coin}/{w}"] = inc_by_window.get(f"{coin}/{w}", 0.0) + v
+    if not inc_by_window:
+        return (net, None, I11.CELL_STATUS_UNEVALUABLE,
+                "no per-window increments to permute")
+    null = I11.sign_flip_null(inc_by_window)
+    return (net, null["p_two_sided"], I11.CELL_STATUS_OK,
+            f"increment vs incumbent {null['observed']:+.1f}c over "
+            f"{null['n_units']} windows; {null['n_perm']} sign-flip "
+            f"permutations, units consumed in SORTED order (R-234)")
 
 
 def selftest() -> int:
@@ -472,6 +656,90 @@ def selftest() -> int:
     finally:
         PA.CODE_IDENTITY_FILES = _svl
 
+    # ------------------------------------------------ I11-1 / I11-2 / I11-3 ---
+    # I11-1: the key main() prints must EXIST in what report_arm emits.
+    import inspect as _ins
+    # scan CODE, not comments: my first version matched the comment that
+    # QUOTES the old key and reported a false red against the fix itself.
+    _msrc = "\n".join(l.split("#", 1)[0] for l in
+                      _ins.getsource(main).split("\n"))
+    _keys = set(re.findall(r"h\['([A-Za-z0-9_]+)'\]", _msrc))
+    _emitted = set(rep["heads"])
+    ok(_keys <= _emitted,
+       f"I11-1 every heads key main() prints is EMITTED by report_arm "
+       f"(prints {sorted(_keys)}; emits {sorted(_emitted)}) — it printed "
+       f"'Q2_sign', which report_arm has never emitted, so the runner raised "
+       f"KeyError after the FIRST arm, BEFORE the artifact write")
+
+    # I11-2: Q4 economics per budget, at the ACTION unit.
+    _rows2 = [dict(r, slug=f"w{i//4}", side="BUY_UP", gen=i) for i, r in
+              enumerate(rows)]
+    _pr2 = apply_arm(fit_arm("composed_linear", X, tg), X, tg)
+    _ec = q4_economics(_pr2, _rows2)
+    ok(set(_ec) == set(I11.BUDGETS_011),
+       "I11-2 economics are produced for EVERY declared budget (they were "
+       "metadata: Q4 was composed in apply_arm and DISCARDED by report_arm)")
+    ok(all(_ec[b]["n_cancelled_actions"] <= _ec[b]["n_actions_total"]
+           for b in _ec),
+       "I11-2 a budget never cancels more actions than exist")
+    ok(_ec["5%"]["n_cancelled_actions"] <= _ec["15%"]["n_cancelled_actions"],
+       "I11-2 a larger budget cancels at least as many actions")
+    ok(all(_ec[b]["increment_by_window"] for b in _ec),
+       "I11-2 per-window increments are retained so the incremental null has "
+       "units to permute")
+
+    # the family is BUILT and ADJUDICATED, not merely defined
+    _fake = {c: {a: {"adjudicated_statistics": {
+                        "Q1_arrival": 0.7, "Q2_sign": 0.6,
+                        "Q2_cell_status": "OK", "Q3_magnitudes": 1.0},
+                     "heads": {"Q1_arrival": {"status": "OK"}},
+                     "economics": _ec}
+                 for a in I11.ARMS_011} for c in ("btc",)}
+    _pops = {"btc": {"eval_n_actions": 500}}
+    _fam = evaluate_family(_fake, _pops)
+    ok(_fam["declared_family_size"] == 24 and len(_fam["cells"]) == 24,
+       "I11-2 the DECLARED 24-cell family is actually BUILT (the evaluator had "
+       "ZERO references in the runner for a whole batch)")
+    ok(_fam["holm_denominator"] == 24,
+       "I11-2 Holm runs over the declared denominator")
+    ok(any(c["p_value"] is not None for c in _fam["cells"].values()),
+       "I11-2 Q4 cells carry a PERMUTATION p-value from the incremental null")
+    ok(all(_fam["cells"][k]["status"] == I11.CELL_STATUS_NO_COUNTERPART
+           for k in _fam["cells"] if "/Q2_sign/" in k or "/Q3_magnitudes/" in k),
+       "I11-2 Q2/Q3 incremental cells carry NO_INCUMBENT_COUNTERPART (R-237)")
+
+    # output-level known-bad
+    ok(assert_receipt_has_all_cells({"family": _fam})["cells_present"] == 24,
+       "I11-2 a COMPLETE receipt passes the output-level cell guard")
+    for _lbl, _bad in (("no family", {}), ("empty family", {"family": {}}),
+                       ("a cell missing", {"family": dict(
+                           _fam, cells={k: v for k, v in
+                                        list(_fam["cells"].items())[:-1]})})):
+        try:
+            assert_receipt_has_all_cells(_bad)
+            ok(False, f"I11-2 a receipt REFUSES when {_lbl}")
+        except RuntimeError:
+            ok(True, f"I11-2 a receipt REFUSES when {_lbl}")
+
+    # I11-3: the HEAD itself states unevaluability
+    _one = I11.head_report("Q2_p_neg", "probability", [0.4] * 300, [0] * 300)
+    ok(_one["status"] == I11.UNEVALUABLE and _one["auc"] is None,
+       "I11-3 a ONE-CLASS head reports UNEVALUABLE, not OK-with-auc-None — the "
+       "cell must not be the only place the meaning is corrected")
+    ok("only one class" in _one.get("unevaluable_reason", ""),
+       "I11-3 and it says WHY (unevaluable_reason survives even when "
+       "UNDERPOWERED takes precedence in status, so both facts are readable)")
+    _flat = I11.head_report("Q3_m_harm", "magnitude", [1.0] * 300,
+                            [float(i) for i in range(300)])
+    ok(_flat["status"] == I11.UNEVALUABLE,
+       "I11-3 a CONSTANT predictor head is UNEVALUABLE too (no slope is not a "
+       "slope of zero)")
+    _hp = I11.head_report("Q1_arrival", "probability",
+                          [i / 300 for i in range(300)],
+                          [i % 2 for i in range(300)])
+    ok(_hp["status"] == "OK",
+       "I11-3 a healthy head is still OK (the status is not a wall)")
+
     ok("phase2_iter011_run.py" not in PA.CODE_IDENTITY_FILES,
        "this runner is NOT in the identity lattice — the standalone property "
        "is checked, not assumed")
@@ -645,6 +913,8 @@ def main() -> int:
         popse = I11.head_populations(EVAL[coin]["kept"])
         out["populations"][coin] = {
             "fit": tgf["counts"], "eval": tge["counts"],
+            "eval_n_actions": I11.action_count(EVAL[coin]["kept"]),
+            "fit_n_actions": I11.action_count(FIT[coin]["kept"]),
             "fit_zero_mass": I11.zero_mass_diagnostic(popsf),
             "eval_zero_mass": I11.zero_mass_diagnostic(popse),
             "fit_empirical": I11.empirical_heads(popsf),
@@ -660,16 +930,30 @@ def main() -> int:
             rep = report_arm(ap, tge)
             rep["fit_seconds"] = round(time.time() - t0, 1)
             rep["evaluation"] = "OUT-OF-SAMPLE within development"
+            rep["economics"] = q4_economics(pr, EVAL[coin]["kept"])
             out["results"][coin][arm] = rep
             h = rep["heads"]
+            # I11-1: this printed h['Q2_sign'], a key report_arm has never
+            # emitted — the heads dict is keyed Q2_p_pos / Q2_p_neg. It raised
+            # KeyError after the FIRST fitted arm, BEFORE the artifact write, so
+            # no real development run could ever complete. The adjudicated Q2
+            # figure lives in adjudicated_statistics, not in heads.
+            _adj = rep["adjudicated_statistics"]
             print(f"  [{coin}/{arm}] Q1 auc {h['Q1_arrival'].get('auc')} | "
-                  f"Q2 auc {h['Q2_sign'].get('auc')} | "
+                  f"Q2 cell {_adj.get('Q2_sign')} ({_adj.get('Q2_cell_status')}) | "
                   f"Q3h slope {h['Q3_m_harm'].get('calibration_slope')} | "
                   f"Q3g slope {h['Q3_m_good'].get('calibration_slope')} | "
-                  f"underpowered {rep['underpowered_heads']}", flush=True)
+                  f"underpowered {rep['underpowered_heads']} | "
+                  f"unevaluable {rep.get('unevaluable_heads')}", flush=True)
             del fr, ap
         del Xf, Xe, FIT[coin]["PM"], FIT[coin]["FN"], FIT[coin]["ST"]
 
+    # I11-2: the DECLARED family, actually evaluated and adjudicated.
+    out["family"] = evaluate_family(out["results"], out["populations"])
+    out["cluster_disclosure"] = I11.cluster_disclosure(
+        min((p["eval_population_and_reach"]["G_complete_utc_days"]
+             for p in out["populations"].values()), default=0), "window")
+    assert_receipt_has_all_cells(out)
     out["development_evidence"] = {
         "is_a_validation": False,
         "computed_from": "per-coin eval_population_and_reach, which derives "
