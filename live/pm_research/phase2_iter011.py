@@ -373,6 +373,58 @@ def selftest() -> int:
     ok("may NOT advance" in fr["advancement_rule"],
        "the report carries R-232 9.2: Q4 alone cannot advance a candidate")
 
+    # ---------------------------------------------------------- SLICE 3 ---
+    # THE DETERMINISM PROPERTY, asserted as the INVERSE of the control that
+    # exposed R-234: two different insertion orders must now give IDENTICAL p.
+    base = {f"w{i}": v for i, v in enumerate(
+        [90.0, 70.0, 55.0, 40.0, 30.0, 25.0, 20.0, 15.0, 10.0, 8.0,
+         -5.0, -7.0, -9.0, -12.0, -14.0, -18.0, -22.0, -28.0, -35.0, -44.0])}
+    import random as _r
+    fwd = sign_flip_null(base, n_perm=400, seed=7)
+    rev = sign_flip_null(dict(reversed(list(base.items()))), n_perm=400, seed=7)
+    shuf = []
+    for _s in (1, 2, 3):
+        k = list(base); _r.Random(_s).shuffle(k)
+        shuf.append(sign_flip_null({x: base[x] for x in k},
+                                   n_perm=400, seed=7)["p_two_sided"])
+    ok(fwd["p_two_sided"] == rev["p_two_sided"] == shuf[0] == shuf[1] == shuf[2],
+       "sign-flip p is IDENTICAL across insertion orders (R-234 fixed AT "
+       "CONSTRUCTION: the seed pins the stream, sorting pins what it is "
+       "applied to)")
+    ok(fwd["observed"] == rev["observed"],
+       "the observed statistic was never order-dependent; only the NULL was")
+    ok(fwd["p_two_sided"] > 0, "permutation p is never exactly 0 ((ge+1)/(n+1))")
+
+    # the null must FIRE on a real effect and NOT on a balanced one
+    strong = sign_flip_null({f"w{i}": 100.0 for i in range(40)}, n_perm=400, seed=7)
+    bal = sign_flip_null({f"w{i}": (100.0 if i % 2 else -100.0)
+                          for i in range(40)}, n_perm=400, seed=7)
+    ok(strong["p_two_sided"] < 0.01, "the null FLAGS a 40-unit one-sided effect")
+    ok(bal["p_two_sided"] > 0.2, "the null does NOT flag a balanced sample")
+
+    # Holm across the declared family
+    fam = declared_family()
+    ok(fam["n_cells"] == 24 and len(set(fam["cells"])) == 24,
+       "the declared family is 2 arms x 4 heads x 3 budgets = 24 DISTINCT cells "
+       "(R-232 9.1)")
+    h = holm({"a": 0.001, "b": 0.02, "c": 0.5})
+    ok(abs(h["a"] - 0.003) < 1e-12 and abs(h["b"] - 0.04) < 1e-12,
+       "Holm scales by (m - rank), not uniformly by m")
+    hm = holm({"a": 0.02, "b": 0.021, "c": 0.9})
+    ok(hm["a"] <= hm["b"] <= hm["c"],
+       "Holm is MONOTONE step-down (an unenforced version can invert)")
+    ok(all(v <= 1.0 for v in holm({"a": 0.9, "b": 0.95}).values()),
+       "Holm never exceeds 1.0")
+
+    # cluster disclosure must say WEAKER when it is weaker
+    cd = cluster_disclosure(0, "window")
+    ok(cd["weaker_than_ruled"] and not cd["intervals_claimable"]
+       and "OPTIMISTIC" in cd["why"],
+       "at G=0 the disclosure says the unit is WEAKER than ruled and the "
+       "p-values are OPTIMISTIC")
+    ok(cluster_disclosure(6, "UTC day")["intervals_claimable"],
+       "at G=6 on the ruled unit, intervals become claimable")
+
     print(f"\n{'ITER011 SELFTEST GREEN' if not fails else 'RED'}: "
           f"{len(fails)} failing")
     return 1 if fails else 0
@@ -487,6 +539,100 @@ def four_head_report(q1, q2, q3h, q3g) -> dict:
                           "discrimination (parent §2.1)",
         "advancement_rule": "Q4 alone may NOT advance a candidate; explicit "
                             "user sign-off required at that time (R-232 9.2)",
+    }
+
+
+# ---------------------------------------------------------------- SLICE 3 ---
+# Evaluation harness: the four questions against their DECLARED nulls
+# (prereg §5). Nothing here fits or scores; it assembles and adjudicates.
+
+ARMS_011 = ("composed_linear", "composed_lgbm")      # R-232 9.1: TWO arms
+HEADS_011 = ("Q1_arrival", "Q2_sign", "Q3_magnitudes", "Q4_combined_ev")
+BUDGETS_011 = tuple(f"{int(b * 100)}%" for b in D.BUDGETS)
+N_PERM_011 = 2000                                    # prereg §5: >= 1000
+PERM_SEED_011 = 20260828
+
+
+def sign_flip_null(paired_by_unit: dict, n_perm: int = N_PERM_011,
+                   seed: int = PERM_SEED_011) -> dict:
+    """Window-level sign-flip permutation of per-unit paired differences.
+
+    R-234, APPLIED AT CONSTRUCTION RATHER THAN REPAIRED LATER. The units are
+    consumed in SORTED KEY ORDER, not dict/set order. A seed pins the RNG
+    STREAM; it does not pin WHAT THE STREAM IS APPLIED TO. The predecessor
+    instrument derived its order from a set of string keys under an unpinned
+    PYTHONHASHSEED, so every run applied the same seeded sign sequence to a
+    different data order and was an independent Monte-Carlo draw rather than a
+    replay. Sorting the keys is the whole fix and it belongs here, at the point
+    of consumption, where it cannot be undone by a caller's iteration order."""
+    import random
+    keys = sorted(paired_by_unit)                    # <- the fix
+    vals = [float(paired_by_unit[k]) for k in keys]
+    obs = math.fsum(vals)
+    rng = random.Random(seed)
+    ge = 0
+    for _ in range(n_perm):
+        t = math.fsum(v if rng.getrandbits(1) else -v for v in vals)
+        if abs(t) >= abs(obs):
+            ge += 1
+    return {
+        "observed": obs, "n_units": len(vals),
+        "n_units_positive": sum(1 for v in vals if v > 0),
+        "n_units_negative": sum(1 for v in vals if v < 0),
+        "n_perm": n_perm, "perm_seed": seed,
+        # (ge+1)/(n+1): the observed arrangement is itself one arrangement
+        # under H0, so a permutation p can never be exactly zero.
+        "p_two_sided": (ge + 1) / (n_perm + 1),
+        "unit_order": "SORTED KEYS — pinned at consumption (R-234)",
+    }
+
+
+def holm(pvals: dict) -> dict:
+    """Holm-Bonferroni across the WHOLE family, monotonicity enforced."""
+    items = sorted(pvals.items(), key=lambda kv: kv[1])
+    m = len(items)
+    out, prev = {}, 0.0
+    for i, (k, p) in enumerate(items):
+        adj = min(1.0, p * (m - i))
+        adj = max(adj, prev)                          # step-down monotonicity
+        out[k] = adj
+        prev = adj
+    return out
+
+
+def cell_key(arm: str, head: str, budget: str) -> str:
+    return f"{arm}/{head}/{budget}"
+
+
+def declared_family() -> dict:
+    """The multiplicity family, DECLARED and counted before any result.
+
+    R-232 9.1: 2 arms x 4 heads x 3 budgets = 24 cells, read JOINTLY. Counted
+    whether or not a head fails — a four-head decomposition quadruples the
+    family, and that cost must not be paid for by reporting only the head that
+    won (prereg §5(4))."""
+    cells = [cell_key(a, h, b) for a in ARMS_011
+             for h in HEADS_011 for b in BUDGETS_011]
+    return {"cells": cells, "n_cells": len(cells),
+            "arms": list(ARMS_011), "heads": list(HEADS_011),
+            "budgets": list(BUDGETS_011),
+            "read": "JOINTLY, Holm-Bonferroni across the whole family",
+            "counted_including_failing_heads": True}
+
+
+def cluster_disclosure(G_complete_utc_days: int, unit_used: str) -> dict:
+    """prereg §5(3). Below the ruled unit, say so IN the artifact."""
+    ruled = "UTC day"
+    return {
+        "ruled_unit": ruled, "unit_used": unit_used,
+        "G_complete_utc_days": G_complete_utc_days,
+        "weaker_than_ruled": unit_used != ruled,
+        "why": (f"G={G_complete_utc_days} complete UTC days, so the ruled unit "
+                f"has too few replicates; {unit_used} is the finest plausibly-"
+                f"exchangeable substitute. Units within a day are NOT "
+                f"independent, so these p-values are OPTIMISTIC — evidence, "
+                f"never a significance certificate."),
+        "intervals_claimable": G_complete_utc_days >= 5,
     }
 
 
