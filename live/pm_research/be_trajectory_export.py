@@ -172,6 +172,87 @@ def export_trajectory_b2(composition: str, predictor: str,
         fairprice_estimator=None)
 
 
+# --- BE's COMPOSITION-SEMANTICS DECLARATION (B4 / R-261) --------------------
+# DA's multiplicity derivation REFUSES until the owner of composition semantics
+# declares, per composition: does it CONSUME A PREDICTOR ESTIMATE, and is it a
+# CANDIDATE (adoptable) or a CONTROL (null apparatus)?
+#
+# CITATION NOTE, stated because the ask specified plan text: the seven arms are
+# NOT enumerated by name in STATEFUL_HARMFUL_CANCEL_TODO. Its section 9 item 5
+# names "seven-arm offline replay" and section 10 sequences it, but the NAMES
+# and their components exist only in code (da_replay_parity_battery.ARM_SPEC).
+# So every entry below is cited to CODE; where the plan is silent and the code
+# does not settle it, the entry is a QUESTION, not a resolution.
+#
+# consumes_predictor is READ OFF THE COMPONENTS, which are code:
+#   a composition consumes an estimate iff "hazard" or "condvalue" is among its
+#   components. "skew", "cancel_hold" and "random_matched" are RULES, not
+#   estimators -- skew is _target_front(net, band) (placement_skew.py:64-80),
+#   cancel_hold is the rule arm _qr_spec(..., cancel=True)
+#   (policy_optimizer_queue_realistic.py:66-67), and random_matched is the
+#   matched-random apparatus in harmful_action_eval (randoms "matched within
+#   (side x hour) strata", :51-52).
+BE_CONSUMES_PREDICTOR = {
+    "QR_SKEW_ONLY":                 False,   # components ("skew",) -- a rule
+    "QR_CANCEL_HOLD_X_SKEW":        False,   # cancel_hold is a RULE cancel
+    "HAZARD_ONLY_NEUTRAL":          True,    # "hazard" IS an estimate
+    "CONDVALUE_NEUTRAL":            True,    # "condvalue" IS an estimate
+    "CONDVALUE_X_SKEW":             True,
+    "CONDVALUE_X_SKEW_X_FAIRPRICE": True,
+    "RANDOM_MATCHED":               False,   # random by construction
+}
+
+# ROLE. DA's own words at da_replay_parity_battery.py:208-213: "BEING IN THE
+# PARITY SPACE AND BEING IN THE CANDIDATE SPACE ARE DIFFERENT". RANDOM_MATCHED
+# is the null apparatus -- harmful_action_eval builds it as the CONTROL the
+# decision metric is compared against -- so it runs in the replay and is not a
+# selectable winner.
+BE_ROLE = {
+    "HAZARD_ONLY_NEUTRAL":          "candidate",
+    "CONDVALUE_NEUTRAL":            "candidate",
+    "CONDVALUE_X_SKEW":             "candidate",
+    "CONDVALUE_X_SKEW_X_FAIRPRICE": "candidate",
+    "RANDOM_MATCHED":               "control",
+    # the two rule arms: see BE_ROLE_QUESTIONS. Declared "candidate" pending a
+    # ruling, because that is the ANSWER THAT COUNTS THEM, and a multiplicity
+    # that is too large is conservative while one that is too small is not.
+    "QR_SKEW_ONLY":                 "candidate",
+    "QR_CANCEL_HOLD_X_SKEW":        "candidate",
+}
+
+BE_ROLE_QUESTIONS = {
+    "QR_SKEW_ONLY":
+        "GENUINELY OPEN. It is the NEUTRAL INTEGRATION REFERENCE (my "
+        "skew-lane draft freezes it as the no-cancel shadow every arm is "
+        "measured against), which argues CONTROL. But 'do not cancel at all' "
+        "is also an adoptable policy, and if no cancel arm beats it the race's "
+        "honest answer IS this arm -- which argues CANDIDATE. Being the "
+        "reference and being adoptable are not exclusive, and the code does "
+        "not settle which the race means. Declared candidate pending a ruling "
+        "because that choice is the conservative one for multiplicity.",
+    "QR_CANCEL_HOLD_X_SKEW":
+        "GENUINELY OPEN. A RULE-based cancel arm with no estimator "
+        "(_qr_spec cancel=True). It is adoptable, which argues CANDIDATE; it "
+        "is also the natural incumbent comparator for the predictor arms, "
+        "which is a CONTROL-like use. The code says what it IS, not what the "
+        "race intends it FOR.",
+}
+
+
+def composition_semantics() -> dict:
+    """BE's declaration for DA's multiplicity derivation (B4)."""
+    return {"consumes_predictor": dict(BE_CONSUMES_PREDICTOR),
+            "role": dict(BE_ROLE),
+            "open_questions": dict(BE_ROLE_QUESTIONS),
+            "citation_note": "the seven arm NAMES are not in the plan text; "
+                             "they exist in da_replay_parity_battery.ARM_SPEC, "
+                             "so every entry is cited to CODE",
+            "derivation_rule": "consumes_predictor is TRUE iff 'hazard' or "
+                               "'condvalue' is among the composition's "
+                               "components; skew / cancel_hold / "
+                               "random_matched are rules, not estimators"}
+
+
 def agreement_with_contract() -> dict:
     """PROVE that BE's independent declaration matches DA's. Not assume it.
 
@@ -362,6 +443,83 @@ def selftest() -> int:
        f"B2 EVIDENCE HOLDS: no skew/inventory/net/front feature is in the "
        f"pinned set (found {_bad}); if one ever is, interaction:False becomes "
        f"a false claim and this falsifier fires")
+
+    # ------------------------------------------------ B4 semantics --------
+    _cs = composition_semantics()
+    ok(set(_cs["consumes_predictor"]) == set(DA.ARM_SPEC),
+       "B4 the declaration covers EVERY declared composition, none extra")
+    _derived = {a: bool(set(sp["components"]) & {"hazard", "condvalue"})
+                for a, sp in DA.ARM_SPEC.items()}
+    ok(_cs["consumes_predictor"] == _derived,
+       "B4 consumes_predictor agrees with an INDEPENDENT derivation from the "
+       "components (hazard|condvalue are estimates; skew, cancel_hold and "
+       "random_matched are rules) — the declaration is not free-hand")
+    ok(_cs["role"]["RANDOM_MATCHED"] == "control",
+       "B4 RANDOM_MATCHED is a CONTROL — the null apparatus, not a selectable "
+       "winner (DA: being in the parity space and the candidate space differ)")
+    ok(set(_cs["role"].values()) <= set(DA.ROLES),
+       f"B4 every role is one DA declares {DA.ROLES}")
+    ok(set(_cs["open_questions"]) == {"QR_SKEW_ONLY", "QR_CANCEL_HOLD_X_SKEW"},
+       "B4 the two RULE arms are flagged as GENUINELY OPEN rather than "
+       "resolved by resemblance — the code says what they ARE, not what the "
+       "race intends them FOR")
+
+    # RED-FIRST: DA's derivation must REFUSE a bad declaration.
+    #
+    # MY FIRST VERSION OF THESE TWO PASSED FOR THE WRONG REASON. It omitted the
+    # keyword-only controls_are_candidates, so BOTH cases raised TypeError from
+    # the missing argument — never reaching the typo or the omission they claim
+    # to test. A test that passes because the call could not be made has tested
+    # the call signature, not the guard. Every case below now supplies a
+    # COMPLETE call and asserts the refusal is the RIGHT one.
+    _CAC = False        # see BE_ROLE_QUESTIONS; a ruling, not BE's to make
+    _base = dict(consumes_predictor=_cs["consumes_predictor"],
+                 roles=_cs["role"], controls_are_candidates=_CAC)
+    _m = DA.candidate_multiplicity(**_base)
+    ok(isinstance(_m, dict) and _m,
+       f"B4 a COMPLETE declaration DERIVES a multiplicity rather than "
+       f"asserting one: {sorted(_m)[:5]}")
+
+    # A REAL TYPO both removes and adds, so the MISSING side catches it —
+    # measured, not assumed:
+    _typo = {("RANDOM_MATCHD" if k == "RANDOM_MATCHED" else k): v
+             for k, v in _cs["consumes_predictor"].items()}
+    try:
+        DA.candidate_multiplicity(**dict(_base, consumes_predictor=_typo))
+        ok(False, "B4 a deliberate TYPO is REFUSED")
+    except TypeError as _e:
+        ok(False, f"B4 typo case raised TypeError — guard not reached: {_e}")
+    except Exception as _e:
+        ok("RANDOM_MATCHED" in str(_e),
+           "B4 a deliberate TYPO is REFUSED — it removes the real arm as well "
+           "as adding a fake one, and the MISSING side is what catches it")
+
+    # OBSERVATION, reported not asserted as a defect: a PURELY ADDITIVE unknown
+    # arm is accepted and ignored. The candidate list is identical with and
+    # without it, so nothing is miscounted today; but a declaration naming a
+    # composition the contract does not have passes silently, which would
+    # matter if someone declared a future arm early and assumed it was counted.
+    _extra = DA.candidate_multiplicity(
+        **dict(_base, consumes_predictor=dict(_cs["consumes_predictor"],
+                                              FUTURE_ARM=True)))
+    ok(sorted(_extra["candidates"]) == sorted(_m["candidates"]),
+       "B4 a purely ADDITIVE unknown arm changes NO candidate (it is ignored, "
+       "not counted) — reported to DA as an observation, since a declaration "
+       "naming a non-existent composition passes silently")
+
+    try:
+        DA.candidate_multiplicity(
+            **dict(_base, consumes_predictor={
+                k: v for k, v in _cs["consumes_predictor"].items()
+                if k != "RANDOM_MATCHED"}))
+        ok(False, "B4 a MISSING arm declaration is REFUSED")
+    except TypeError as _e:
+        ok(False, f"B4 missing-arm case raised TypeError — guard not reached: {_e}")
+    except Exception as _e:
+        ok("RANDOM_MATCHED" in str(_e),
+           "B4 a MISSING arm declaration is REFUSED, naming it — the "
+           "derivation has no default, so an unstated composition cannot be "
+           "silently counted")
 
     print(f"\n{'BE TRAJECTORY EXPORT SELFTEST GREEN' if not fails else 'RED'}: "
           f"{len(fails)} failing")
