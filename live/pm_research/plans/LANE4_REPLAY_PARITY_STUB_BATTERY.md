@@ -485,3 +485,55 @@ recomputing from the recorded inputs reproduces both the count and the identity
 list exactly.
 
 **11 new red-first checks, one per subtraction and one per axis; battery at 90.**
+
+---
+
+## AMENDMENT B5 — ROLE, and the policy that is not mine either (R-261)
+
+R-261 routed a second declaration into the same channel: per-composition
+**role**, candidate vs control. `RANDOM_MATCHED` is the null apparatus, not a
+selectable winner — and, correctly, *not something the derivation may assume*.
+
+### B5.1 Two declarations, two owners
+
+- **`roles[arm]` ∈ {candidate, control}** — owned by the seat that owns the arm
+  implementations, alongside `consumes_predictor`. An undeclared arm **refuses**.
+  `RANDOM_MATCHED` merely *looks* like a control; resolving it from the name is
+  the resemblance move BE refused on the mapping.
+- **`controls_are_candidates`** — a separate **policy** declaration, required,
+  keyword-only, **no default**, and an unstated value refuses rather than
+  defaulting to the flattering one.
+
+The second is not a modelling fact. A control **cannot be adopted** — but it
+**can be drawn from the null and look best by chance**, so whether it carries
+multiple-comparison burden is a priced trade-off (rule 14), not an inference.
+Both branches are implemented; the declaration picks one, and the derivation
+names which.
+
+### B5.2 Parity space ≠ candidate space
+
+Every arm is parity-checked, **controls included** — a broken control
+invalidates the comparison it anchors. Only candidates can win. Conflating the
+two is another way to reach a wrong count, and the check now asserts exactly
+that: `RANDOM_MATCHED` is in `ARMS` and in the anchor, and **absent from the
+candidate compositions**.
+
+### B5.3 A sloppy predicate, caught red
+
+The first version of that check asserted `n_candidates < len(ARMS) * 2` — which
+is `14 < 14`, false. Worse than a typo: **14 equals 7 × 2 by coincidence here**,
+which is precisely the ambiguity the check exists to dispel. A predicate written
+loosely enough to be satisfied by a coincidence proves nothing when it passes.
+Replaced with the identity claim.
+
+### B5.4 Under both policies, illustratively
+
+| `controls_are_candidates` | derivation | candidates |
+|---|---|---|
+| false | 18 − 6 + 3 − 1 − 0 | **14** |
+| true | 18 − 6 + 3 − 0 | **15** |
+
+**Both are illustrations, not counts.** `consumes_predictor` and `roles` are
+both owed; until they are declared, no number here is the record.
+
+**6 new red-first checks; battery at 96.**

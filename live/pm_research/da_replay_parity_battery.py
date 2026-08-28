@@ -205,6 +205,16 @@ PREDICTORS = ("none", "composed_linear", "composed_lgbm")
 # names. Membership is the draft's, spelling is mine -- rename freely.
 FAIRPRICE_ESTIMATORS = ("Identity", "pm_microprice", "bn_bookticker_mid")
 
+# ROLE (R-261). A composition is a CANDIDATE (something that could be adopted)
+# or a CONTROL (null apparatus). RANDOM_MATCHED is the null, not a selectable
+# winner. Declared per composition by the seat that owns the implementations.
+#
+# BEING IN THE PARITY SPACE AND BEING IN THE CANDIDATE SPACE ARE DIFFERENT
+# QUESTIONS, and conflating them is another way to get the count wrong: every
+# arm -- controls included -- must be parity-checked, because a broken control
+# invalidates the comparison it anchors. Only candidates can WIN.
+ROLES = ("candidate", "control")
+
 # Top-level keys of a submitted trajectory. Exact in both directions, as with
 # events: absent refuses, undeclared refuses.
 TRAJ_FIELDS = ("canon", "arm", "predictor", "predictor_active", "components",
@@ -797,8 +807,10 @@ def load_external_trajectory(obj: dict[str, Any]) -> Trajectory:
 
 
 def candidate_multiplicity(consumes_predictor: dict[str, bool],
+                           roles: dict[str, str],
+                           *, controls_are_candidates: bool,
                            declared_absent: Iterable[str] = (),
-                           *, arm_spec: dict[str, Any] | None = None,
+                           arm_spec: dict[str, Any] | None = None,
                            predictors: Iterable[str] | None = None,
                            fp_estimators: Iterable[str] | None = None
                            ) -> dict[str, Any]:
@@ -852,6 +864,24 @@ def candidate_multiplicity(consumes_predictor: dict[str, bool],
             f"REFUSED: {missing} have no consumes_predictor declaration. "
             f"Whether a composition consumes an estimate is a modelling fact "
             f"owned by the composition, not inferable from its name.")
+    no_role = sorted(a for a in spec if a not in roles)
+    if no_role:
+        raise ParityRefused(
+            f"REFUSED: {no_role} have no ROLE declaration (R-261). Whether a "
+            f"composition is a candidate or the null apparatus is declared by "
+            f"the seat that owns it, not inferred from its name -- "
+            f"'RANDOM_MATCHED' merely LOOKS like a control.")
+    bad_role = sorted(a for a, r in roles.items() if r not in ROLES)
+    if bad_role:
+        raise ParityRefused(
+            f"REFUSED: {bad_role} carry a role outside {ROLES}.")
+    if controls_are_candidates is not True and controls_are_candidates is not False:
+        raise ParityRefused(
+            "REFUSED: controls_are_candidates must be a literal bool. Whether "
+            "a control enters the candidate count is a POLICY declaration -- a "
+            "control cannot be adopted, but it can be drawn from the null and "
+            "look best by chance, so the multiple-comparison burden is a "
+            "priced trade-off and not mine to assume (rule 14).")
 
     # THE SPACE IS THE CROSS-PRODUCT A READER WOULD COMPUTE. My first version
     # reported a "full space" of 21 that no reader could reproduce: it counted
@@ -874,6 +904,12 @@ def candidate_multiplicity(consumes_predictor: dict[str, bool],
                                   for f in arm_fps)
             collapsed_to.extend(f"{arm}|none|{f}" for f in arm_fps)
 
+    control_excluded = []
+    if not controls_are_candidates:
+        control_excluded = sorted(
+            i for i in (set(space) - set(collapsed_from)) | set(collapsed_to)
+            if roles[i.split("|", 1)[0]] == "control")
+
     absent = sorted(set(declared_absent))
     unknown = [i for i in absent if i not in space and i not in collapsed_to]
     if unknown:
@@ -881,8 +917,13 @@ def candidate_multiplicity(consumes_predictor: dict[str, bool],
             f"REFUSED: declared-absent identities not in the space: {unknown}. "
             f"Declaring the absence of something that was never a candidate "
             f"hides a typo as a subtraction.")
-    surviving = (set(space) - set(collapsed_from)) | set(collapsed_to)
+    surviving = ((set(space) - set(collapsed_from)) | set(collapsed_to)) \
+        - set(control_excluded)
     candidates = sorted(surviving - set(absent))
+    if not candidates:
+        raise ParityRefused(
+            "REFUSED: the declarations leave ZERO candidates -- a race with "
+            "nothing that could win is not a race.")
     return {
         "n_candidates": len(candidates), "candidates": candidates,
         "n_space": len(space),
@@ -890,9 +931,15 @@ def candidate_multiplicity(consumes_predictor: dict[str, bool],
         "n_collapsed_to": len(collapsed_to),
         "collapsed_from": sorted(collapsed_from),
         "collapsed_to": sorted(collapsed_to),
+        "n_control_excluded": len(control_excluded),
+        "control_excluded": control_excluded,
+        "controls_are_candidates": controls_are_candidates,
+        "roles": dict(sorted(roles.items())),
         "n_declared_absent": len(absent), "declared_absent": absent,
         "inputs": {"arms": sorted(spec), "predictors": list(preds),
                    "fairprice_estimators": list(fps),
+                   "controls_are_candidates": controls_are_candidates,
+                   "roles": dict(sorted(roles.items())),
                    "consumes_predictor": dict(sorted(consumes_predictor.items()))},
         "derivation": [
             f"cross-product (arm x ACTIVE predictor x fairprice_estimator "
@@ -901,6 +948,9 @@ def candidate_multiplicity(consumes_predictor: dict[str, bool],
             f"estimate (every predictor label names the same run)",
             f"plus {len(collapsed_to)} `none`-labelled representative(s) for "
             f"those arms",
+            (f"minus {len(control_excluded)} control-role identities "
+             f"(declared not selectable)" if not controls_are_candidates
+             else "controls INCLUDED as candidates by declaration"),
             f"minus {len(absent)} declared absent",
             f"= {len(candidates)} candidates",
         ],
@@ -1587,64 +1637,74 @@ def _selftests() -> int:
             "HAZARD_ONLY_NEUTRAL": True, "CONDVALUE_NEUTRAL": True,
             "CONDVALUE_X_SKEW": True, "CONDVALUE_X_SKEW_X_FAIRPRICE": True,
             "RANDOM_MATCHED": False}      # HYPOTHESIS, not a declaration
-    _m = candidate_multiplicity(_HYP)
+    _ROL = {a: ("control" if a == "RANDOM_MATCHED" else "candidate")
+            for a in ARM_SPEC}          # HYPOTHESIS, not a declaration
+    def _mult(**kw):
+        kw.setdefault("roles", _ROL)
+        kw.setdefault("controls_are_candidates", False)
+        cp = kw.pop("consumes_predictor", _HYP)
+        return candidate_multiplicity(cp, **kw)
+    _m = _mult()
     ok(_m["n_space"] == 18,
        f"the cross-product is {_m['n_space']} -- the number a reader computes "
        f"independently (6 non-fairprice arms x 2 predictors, plus the "
        f"fairprice arm x 2 x 3), so the derivation is checkable and not just "
        f"internally consistent")
     ok(_m["n_space"] - _m["n_collapsed_from"] + _m["n_collapsed_to"]
-       - _m["n_declared_absent"] == _m["n_candidates"],
+       - _m["n_control_excluded"] - _m["n_declared_absent"]
+       == _m["n_candidates"],
        f"THE DERIVATION EVALUATES to the answer it prints: "
        f"{_m['n_space']} - {_m['n_collapsed_from']} + {_m['n_collapsed_to']} "
-       f"- {_m['n_declared_absent']} = {_m['n_candidates']} (rule 10). My "
+       f"- {_m['n_control_excluded']} - {_m['n_declared_absent']} = "
+       f"{_m['n_candidates']} (rule 10). My "
        f"FIRST version printed a 'full space' of 21 that no reader could "
        f"reproduce -- internally consistent, externally unreproducible")
-    ok(refuses(lambda: candidate_multiplicity(
-           {k: v for k, v in _HYP.items() if k != "CONDVALUE_X_SKEW"}),
+    ok(refuses(lambda: _mult(consumes_predictor={
+           k: v for k, v in _HYP.items() if k != "CONDVALUE_X_SKEW"}),
            "no consumes_predictor declaration"),
        "an arm with NO consumes_predictor declaration REFUSES -- whether a "
        "composition consumes an estimate is a MODELLING fact owned by the "
        "composition, and guessing it here is what BE correctly refused to do "
        "with the arm mapping")
     _all_consume = dict.fromkeys(_HYP, True)
-    _mc = candidate_multiplicity(_all_consume)
+    _mc = _mult(consumes_predictor=_all_consume,
+                controls_are_candidates=True)
     ok(_mc["n_candidates"] == 18 and _mc["n_collapsed_from"] == 0,
        f"COLLAPSE FALSIFIER: with every arm consuming an estimate nothing "
        f"collapses and the count is the full {_mc['n_candidates']} -- so the "
        f"collapse is driven by the DECLARATION, not by the function's mood")
-    ok(_m["n_candidates"] == 15 and _m["n_candidates"] != _mc["n_candidates"],
+    ok(_m["n_candidates"] == 14 and _m["n_candidates"] != _mc["n_candidates"],
        f"and flipping the declaration MOVES the answer ({_m['n_candidates']} "
        f"vs {_mc['n_candidates']}) -- a transcribed integer cannot do that, "
        f"which is why 7, 14 and 18 were each wrong in turn")
-    _one_absent = candidate_multiplicity(
-        _HYP, declared_absent=["CONDVALUE_X_SKEW|composed_lgbm|None"])
+    _one_absent = _mult(
+        declared_absent=["CONDVALUE_X_SKEW|composed_lgbm|None"])
     ok(_one_absent["n_candidates"] == _m["n_candidates"] - 1,
        "ABSENCE FALSIFIER: a declared-absent candidate subtracts exactly one")
-    ok(refuses(lambda: candidate_multiplicity(
-           _HYP, declared_absent=["CONDVALUE_X_SKWE|composed_lgbm|None"]),
+    ok(refuses(lambda: _mult(
+           declared_absent=["CONDVALUE_X_SKWE|composed_lgbm|None"]),
            "not in the space"),
        "and declaring the absence of an identity that was never in the space "
        "REFUSES -- otherwise a TYPO reads as a subtraction and quietly "
        "shrinks the count")
-    _p3 = candidate_multiplicity(_HYP, predictors=("none", "composed_linear",
-                                                   "composed_lgbm", "p3"))
+    _p3 = _mult(predictors=("none", "composed_linear", "composed_lgbm",
+                            "p3"))
     ok(_p3["n_candidates"] > _m["n_candidates"],
        f"AXIS FALSIFIER: adding a predictor raises the count "
        f"({_m['n_candidates']} -> {_p3['n_candidates']}) -- the derivation "
        f"notices a new axis, which is the failure mode that produced 7, 14 "
        f"and 18")
-    _f4 = candidate_multiplicity(_HYP, fp_estimators=(
-        "Identity", "pm_microprice", "bn_bookticker_mid", "x4"))
+    _f4 = _mult(fp_estimators=("Identity", "pm_microprice",
+                               "bn_bookticker_mid", "x4"))
     ok(_f4["n_candidates"] == _m["n_candidates"] + 2,
        f"and adding a fair-price estimator raises it by exactly the number of "
        f"CONSUMING predictors on the ONE arm that uses it (+2) -- the RAGGED "
        f"axis behaves raggedly, which is what made B3 invisible")
-    ok(refuses(lambda: candidate_multiplicity(_HYP, predictors=("none",)),
-               "no ACTIVE predictor"),
+    ok(refuses(lambda: _mult(predictors=("none",)), "no ACTIVE predictor"),
        "a space with only the inert label REFUSES -- there is nothing to race")
     _re = candidate_multiplicity(
-        _m["inputs"]["consumes_predictor"],
+        _m["inputs"]["consumes_predictor"], _m["inputs"]["roles"],
+        controls_are_candidates=_m["inputs"]["controls_are_candidates"],
         predictors=_m["inputs"]["predictors"],
         fp_estimators=_m["inputs"]["fairprice_estimators"])
     ok(_re["n_candidates"] == _m["n_candidates"]
@@ -1652,6 +1712,46 @@ def _selftests() -> int:
        "ANTI-TRANSCRIPTION: recomputing from the RECORDED inputs reproduces "
        "the count and the identities exactly -- so a freeze artifact carries "
        "a derivation a reader can re-run, not an integer they must trust")
+
+    # ---- R-261: ROLE is declared, and its POLICY is declared separately ---
+    ok(refuses(lambda: _mult(roles={k: v for k, v in _ROL.items()
+                                    if k != "RANDOM_MATCHED"}),
+               "no ROLE declaration"),
+       "an arm with NO role declaration REFUSES -- whether a composition is a "
+       "candidate or the null apparatus is declared by the seat that owns it. "
+       "'RANDOM_MATCHED' merely LOOKS like a control, and resolving it from "
+       "the name is the resemblance move BE refused on the mapping")
+    ok(refuses(lambda: _mult(roles=dict(_ROL, RANDOM_MATCHED="null_ish")),
+               "outside"),
+       "an out-of-vocabulary role refuses")
+    _inc = _mult(controls_are_candidates=True)
+    ok(_inc["n_candidates"] == _m["n_candidates"] + 1
+       and _m["n_control_excluded"] == 1,
+       f"CONTROL-POLICY FALSIFIER: including controls moves the count "
+       f"({_m['n_candidates']} -> {_inc['n_candidates']}). Whether a control "
+       f"enters the count is a POLICY declaration, not an assumption: a "
+       f"control cannot be ADOPTED, but it can be drawn from the null and "
+       f"look best by chance, so the multiple-comparison burden is a priced "
+       f"trade-off (rule 14)")
+    ok(refuses(lambda: _mult(controls_are_candidates=None), "literal bool"),
+       "and the policy must be STATED -- an unstated control policy refuses "
+       "rather than defaulting to the flattering one")
+    ok(refuses(lambda: _mult(roles=dict.fromkeys(ARM_SPEC, "control")),
+               "ZERO candidates"),
+       "an all-control space REFUSES: a race with nothing that could win is "
+       "not a race")
+    _cand_arms = {i.split("|", 1)[0] for i in _m["candidates"]}
+    ok("RANDOM_MATCHED" in ARMS
+       and anchor_parity(opps)["n_arms"] == len(ARMS)
+       and "RANDOM_MATCHED" not in _cand_arms,
+       f"BEING IN THE PARITY SPACE AND BEING A CANDIDATE ARE DIFFERENT "
+       f"QUESTIONS: the control is parity-checked with all "
+       f"{anchor_parity(opps)['n_arms']} arms -- a broken control "
+       f"invalidates the comparison it anchors -- yet it is ABSENT from the "
+       f"{len(_cand_arms)} candidate compositions. My first version of this "
+       f"check asserted `n_candidates < len(ARMS)*2`, which is 14 < 14 and "
+       f"FALSE -- and the coincidence that 14 equals 7x2 here is precisely "
+       f"the ambiguity the check exists to dispel")
 
     # ---- determinism across processes ------------------------------------
     d = determinism_across_hashseed(here)
