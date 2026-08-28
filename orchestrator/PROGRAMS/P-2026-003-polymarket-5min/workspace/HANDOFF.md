@@ -1,10 +1,87 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-08-28T09:24Z (MEM) — **two HOLDs in force** (011 fit; day-bar v2
-judging 08-29), a system reviewer now designated by the user, race accrual
-governed by the freeze-commit epoch, and the **boundary deploy ON for
-00:00:00Z** with both O1 conditions met early. O1 still held at v3_1 until the
-boundary.
+Updated: 2026-08-28T09:31Z (MEM) — **the user froze amendment A1**, so 011's
+algebra flaw is corrected before any 011 number exists; BE builds, but the
+fit/score HOLD stands. Day-bar v2 still held for 08-29. DA dispatched to the
+fair-price lane. **Boundary deploy ON for 00:00:00Z.**
+
+## 2026-08-28 ~09:31Z (MEM) — R-242: A1 frozen before the first number; DA to fair price
+
+### The sequencing is the result here
+
+The R-238 blocker-1 **Q4 algebra flaw was data-independent** — it could be
+established as wrong from the estimand alone, with no data read. So it was
+fixed by a **user-frozen amendment before any iteration-011 number existed**,
+rather than discovered afterwards and argued over. That ordering is the whole
+reason the pre-fit review was worth running.
+
+**Amendment A1 FROZEN by the user** (R-242, 09:29Z;
+`plans/ITER011_PREREG_AMENDMENT_A1.md`). Drafted by BE, **frozen by the user and
+only the user** — BE does not amend a frozen document it authored, and it
+committed-but-did-not-push a user-facing draft without the user's word, recorded
+as correct boundary conduct.
+
+- **§A1.1 = OPTION 1:** separate `p_positive` / `p_negative` heads,
+  `value = p_pos·m_harm − p_neg·m_good`, `p_zero` implied and reported. The
+  frozen form's bias was `m_good·P(V=0)`, downward — hand-checked by the
+  coordinator, matching the reviewer.
+- **The Holm denominator is FIXED at 24, and unevaluable cells occupy their
+  slots.** That is what actually closes the shrinkable-family blocker: a cell
+  that cannot be evaluated still costs its share of the correction.
+- **`PERM_SEED=20260828` with sorted-key consumption (R-234)** — blocker 7's
+  determinism lesson carried *into the new design*, not left behind as a one-off
+  repair on the old instrument.
+- Feature fence **name-bans `any_fill_ahead`** (BE recorded its own earlier
+  `FENCE_REVIEWED` admission as wrong); strict-refuse target construction;
+  action-unit `n` with `1/rows_in_generation` weighting;
+  `UNDERPOWERED_MIN_N=100`, ridge 10.0.
+- Arms, heads and family unchanged (2 × 4 × 3 = 24). **No clock effect:** 011
+  has no forward clock, and the hazard candidate's race clock (`b3f7f9f`) is
+  untouched.
+
+**Verified here, not accepted:** the frozen preregistration is **byte-untouched
+since `3b71d3e`** — `git diff` is empty. The amendment is a separate document
+and rule 13 held.
+
+### Cleared to build is not cleared to fit
+
+BE proceeds **A1.8 steps 2–5 red-first**. The **fit/score hold still stands** and
+lifts only on Codex's **HOLD RELEASED** at step 6. Same distinction as the
+day-bar hold below: permission to work on a thing is not permission to produce a
+number with it.
+
+### DA dispatched to the fair-price lane
+
+On the user's directive that the hazard line proceeds per
+`HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md`, DA turns its own lane-2 spec (`6fc96e2`,
+ruled safe-as-spec) into the **typed Identity artifact** — dual timestamps
+(source vs local-knowledge, **whose gap is exactly where look-ahead enters**),
+strictly-as-of consumption, admissibility statuses, red-first selftests — and
+**drafts** the 2B challenger protocol (≤2 predeclared challengers, incremental
+to Identity, multiplicity recorded) as **DRAFT-FOR-USER-FREEZE**. **No challenger
+scoring until frozen.** A challenger that cannot produce both timestamps is
+**inadmissible, not degraded** — absence must never read as zero freshness.
+
+### Housekeeping that matters for whoever writes these files next
+
+- **The reviews directory now has its first filing**
+  (`workspace/reviews/CODEX_REREVIEW_DAYBAR_V2_2026-08-28.md`). The R-239
+  location works and the next round's prompt names it explicitly, so the
+  collision that interrupted my previous sweep has a home. Reviewer text already
+  inside these files stays **verbatim**.
+- **The seat-handoff identity check is ratified as a standing pattern** and binds
+  future MEM sessions: **a state-writer confirms rather than assumes across a
+  seat handoff.** A sweep request from an unfamiliar sender is executed only
+  after the seat and the cited artifacts are confirmed. The check is cheap; a
+  state file written from an unverified claim is the failure this programme
+  keeps eliminating everywhere else.
+
+### Unchanged and still true
+
+Day-bar v2 remains **held** for 08-29 (**fixes verified is not hold released**).
+Tonight: 22:30Z confirmation, ~23:55Z arming, **00:00:00Z deploy**, 00:06Z
+verdict under the **old** bar with btc expected to FAIL and **`ACCRUES=False`**.
+`collect_pm.py` stays held at `clob_v3_1` until the boundary.
 
 ## 2026-08-28 ~09:24Z (MEM) — R-236..R-241 swept: a reviewer, two HOLDs, and an epoch
 

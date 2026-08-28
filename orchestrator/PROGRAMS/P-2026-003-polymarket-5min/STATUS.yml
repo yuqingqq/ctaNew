@@ -4,6 +4,24 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-08-28T09:31Z (MEM): R-242 -- THE USER FROZE AMENDMENT A1, and the
+  sequencing is the point: the Q4 algebra flaw was DATA-INDEPENDENT, so it was
+  corrected by a user-frozen amendment BEFORE any 011 number existed rather
+  than argued about after one. §A1.1 OPTION 1 (separate p_positive/p_negative,
+  exact under zero mass); the Holm DENOMINATOR IS FIXED AT 24 with unevaluable
+  cells OCCUPYING THEIR SLOTS, which is what closes the shrinkable-family
+  blocker; PERM_SEED 20260828 with SORTED-KEY consumption, so blocker 7's
+  determinism lesson is carried into the new design instead of staying a
+  one-off repair. MEM verified the frozen preregistration is BYTE-UNTOUCHED
+  since 3b71d3e (empty diff): the amendment is a separate document, rule 13
+  held. BE is cleared into A1.8 steps 2-5 red-first, but CLEARED TO BUILD IS
+  NOT CLEARED TO FIT -- the fit/score hold lifts only on Codex's HOLD RELEASED.
+  The USER also directed the hazard line to proceed, so DA is dispatched to the
+  fair-price lane: typed Identity artifact plus a 2B challenger protocol as
+  DRAFT-FOR-USER-FREEZE, with NO challenger scoring until frozen. The R-239
+  reviews/ directory now holds its first filing, so the collision that hit my
+  last sweep has a home. MEM's seat-handoff identity check is RATIFIED as a
+  standing pattern binding future MEM sessions. PRIOR:
   2026-08-28T09:24Z (MEM): SWEPT R-236..R-241, and the shape of the gap matters
   more than its size. THE USER DESIGNATED CODEX AS SYSTEM REVIEWER (R-238); a
   standing protocol now governs -- build, commit+push, Codex reviews,
@@ -138,6 +156,88 @@ updated: >-
   hygiene + recv_ns measurement)
 
 flags:
+  iter011_amendment_a1: FROZEN-BY-USER # 2026-08-28T09:29Z, R-242.
+                             # plans/ITER011_PREREG_AMENDMENT_A1.md. Drafted by
+                             # BE, FROZEN BY THE USER AND ONLY THE USER -- BE
+                             # does not amend a frozen document it authored, and
+                             # committed-but-did-not-push a user-facing draft
+                             # without the user's word, recorded as correct
+                             # boundary conduct.
+                             # §A1.1 ruled OPTION 1: separate p_positive /
+                             # p_negative heads, value = p_pos*m_harm -
+                             # p_neg*m_good, p_zero implied and reported. This
+                             # is the fix for the R-238 blocker-1 algebra flaw,
+                             # which was DATA-INDEPENDENT and therefore
+                             # correctable BEFORE any number existed -- the
+                             # frozen form's bias is m_good*P(V=0), downward,
+                             # hand-checked by the coordinator and matching the
+                             # reviewer.
+                             # §A1.2-A1.6 frozen as drafted: the feature fence
+                             # NAME-BANS any_fill_ahead (BE's own
+                             # FENCE_REVIEWED admission recorded by BE as
+                             # wrong); strict-refuse target construction; ONE
+                             # declared statistic per cell with THE HOLM
+                             # DENOMINATOR FIXED AT 24 -- unevaluable cells
+                             # OCCUPY THEIR SLOTS, which is what closes the
+                             # shrinkable-family blocker; action-unit n with
+                             # 1/rows_in_generation weighting; constants
+                             # UNDERPOWERED_MIN_N=100, ridge 10.0, n_perm=2000,
+                             # PERM_SEED=20260828 with SORTED-KEY CONSUMPTION
+                             # (R-234) -- the blocker-7 determinism lesson
+                             # carried into the new design rather than left as a
+                             # one-off repair. Q2's cell statistic is AUC.
+                             # Arms/heads/family UNCHANGED (2 x 4 x 3 = 24).
+                             # NO CLOCK EFFECT: 011 has no forward clock and the
+                             # hazard candidate's race clock (b3f7f9f) is
+                             # untouched; multiplicity unchanged.
+                             # VERIFIED BY MEM at 09:31Z: the frozen
+                             # preregistration is BYTE-UNTOUCHED since 3b71d3e
+                             # (empty diff) -- rule 13 held, the amendment is a
+                             # SEPARATE document and the frozen one was not
+                             # edited.
+  fair_price_lane_2b: DISPATCHED-DA-BUILD-AND-DRAFT-ONLY # 2026-08-28 R-242,
+                             # on the USER's directive that the hazard line
+                             # proceeds per HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md.
+                             # DA turns its own lane-2 spec (6fc96e2, ruled
+                             # SAFE-as-spec) into the TYPED IDENTITY ARTIFACT --
+                             # dual timestamps (source vs local-knowledge, whose
+                             # GAP is exactly where look-ahead enters),
+                             # strictly-as-of consumption, admissibility
+                             # statuses, red-first selftests (future-event
+                             # invariance, stale-feed, crossed/one-sided/
+                             # insufficient-depth, convention/complement) -- and
+                             # DRAFTS the 2B challenger protocol (<=2
+                             # predeclared challengers, incremental-to-Identity,
+                             # multiplicity recorded) as DRAFT-FOR-USER-FREEZE.
+                             # NO CHALLENGER SCORING UNTIL FROZEN (TODO sec 10
+                             # gate). A challenger that cannot produce BOTH
+                             # timestamps is INADMISSIBLE, not degraded --
+                             # absence must never read as zero freshness.
+  seat_handoff_identity_check: RATIFIED-STANDING-PATTERN # 2026-08-28 R-242.
+                             # A STATE-WRITER CONFIRMS RATHER THAN ASSUMES
+                             # ACROSS A SEAT HANDOFF. Ratified after MEM
+                             # verified a relaunched coordinator session (new
+                             # socket, new default name, same pm-co seat) via
+                             # ListAgents AND checked every commit it named at
+                             # the artifacts BEFORE writing state. This binds
+                             # future MEM sessions: a sweep request from an
+                             # unfamiliar sender is executed only after the seat
+                             # and the cited artifacts are confirmed -- the
+                             # verification is cheap, and a state file written
+                             # from an unverified claim is exactly the failure
+                             # this programme keeps eliminating elsewhere.
+  review_filings_location: workspace/reviews/ # 2026-08-28 R-239, first filing
+                             # landed 09:10Z: reviews/
+                             # CODEX_REREVIEW_DAYBAR_V2_2026-08-28.md. The
+                             # R-239 location WORKS and the next round's prompt
+                             # names the directory explicitly. Reviews do NOT go
+                             # into STATUS.yml / HANDOFF.md: the pre-fit filing
+                             # (df1ef73) did, and that collided with a MEM
+                             # sweep in progress. Where a reviewer's text is
+                             # already in these files it stays VERBATIM
+                             # (iter011_prefit_review, day_bar_v2_judgment, and
+                             # the 08:46Z HANDOFF section) -- superseding state
+                             # sits beside it, never over it.
   codex_system_reviewer: DESIGNATED-BY-USER # 2026-08-28 R-238/R-239/R-240.
                              # The USER designated the Codex session (tmux
                              # pm-codex, gpt-5.6-sol) as SYSTEM REVIEWER; pm-co
@@ -361,7 +461,14 @@ flags:
                              # coordinator, not here. Recorded so the divergence
                              # is discoverable from the state files rather than
                              # only by re-reading two artifacts side by side.
-  iter011_development: HOLD-NO-FIT-NO-SCORE # HOLD 2026-08-28 (R-238 Codex
+  iter011_development: HOLD-STANDS-A1-FROZEN-BE-BUILDING # UPDATED
+                             # 2026-08-28T09:29Z (R-242): the USER FROZE
+                             # amendment A1, so BE is cleared into A1.8 steps
+                             # 2-5 RED-FIRST -- but THE FIT/SCORE HOLD STILL
+                             # STANDS and lifts only on Codex's HOLD RELEASED at
+                             # step 6. Cleared to build is not cleared to fit.
+                             # See iter011_amendment_a1. EARLIER ENTRY
+                             # (rule 13): HOLD 2026-08-28 (R-238 Codex
                              # pre-fit review; the reviewer's own as-of
                              # statement lives in the iter011_prefit_review
                              # flag, filed verbatim and NOT edited here).
