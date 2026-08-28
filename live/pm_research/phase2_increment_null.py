@@ -64,6 +64,28 @@ PERM_SEED = 20260827
 RECON_TOL = 1e-6                   # cents; identity, not approximation
 
 
+def _self_sha16() -> str:
+    """Content identity of THIS analysis file -- measured, not a passed label."""
+    import hashlib
+    return hashlib.sha256(Path(__file__).resolve().read_bytes()).hexdigest()[:16]
+
+
+def assert_reconciles(got: float, want: float, label: str,
+                      tol: float = RECON_TOL) -> float:
+    """Return |got - want|, refusing above tol. CALLABLE, so a probe can drive it.
+
+    DA F2: the check was inline in main() and could not be exercised, so the
+    guard's own behaviour was asserted in prose rather than demonstrated."""
+    delta = abs(got - want)
+    if delta > tol:
+        raise RuntimeError(
+            f"REFUSED: re-derived net for {label} is {got!r} but the committed "
+            f"receipt says {want!r} (delta {got - want:+.6f}c, tol {tol}). A "
+            f"null computed on a different statistic than the one reported is "
+            f"worse than no null.")
+    return delta
+
+
 def per_window_net(rows, scores, theta):
     """EXACT replication of evaluate_policy's causal net, tallied per window.
 
@@ -207,6 +229,16 @@ def selftest() -> int:
     bwr, totr, _ = per_window_net(rows_rev, [0.9, 0.9], theta=0.5)
     ok(totr == 3.0, "rows are ordered by t_start, not by list position")
 
+    # assert_reconciles: must PASS inside tol and REFUSE outside it
+    ok(assert_reconciles(1.0, 1.0, "x") == 0.0, "reconciliation passes on identity")
+    ok(assert_reconciles(1.0, 1.0 + RECON_TOL / 2, "x") > 0,
+       "reconciliation returns the MEASURED delta, not a boolean")
+    try:
+        assert_reconciles(1.0, 2.0, "known-bad")
+        ok(False, "reconciliation REFUSES a mismatch")
+    except RuntimeError as e:
+        ok("known-bad" in str(e), "reconciliation REFUSES a mismatch")
+
     print(f"\n{'INCREMENT-NULL SELFTEST GREEN' if not fails else 'RED'}: "
           f"{len(fails)} failing")
     return 1 if fails else 0
@@ -318,15 +350,13 @@ def main() -> int:
                 cbw, ctot, cnc = per_window_net(srows, c_ecv, float(c_thr[key]))
                 bbw, btot, bnc = base_by_budget[key]
                 # RECONCILE against the committed receipt before anything else.
-                for arm, got in ((cand, ctot), (BASELINE, btot)):
-                    want = receipt["arms"][coin][arm]["gate"]["budgets"][key]["net_cents"]
-                    if abs(got - want) > RECON_TOL:
-                        raise RuntimeError(
-                            f"REFUSED: re-derived net for {coin}/{arm}@{key} is "
-                            f"{got!r} but the committed receipt says {want!r} "
-                            f"(delta {got - want:+.6f}c). A null computed on a "
-                            f"different statistic than the one reported is "
-                            f"worse than no null.")
+                # DA F1: this recorded a hardcoded True beside the numbers it
+                # claimed to describe. The MEASURED worst-case delta is
+                # recorded instead, so the claim is the evidence.
+                _deltas = [assert_reconciles(
+                    got, receipt["arms"][coin][arm]["gate"]["budgets"][key]["net_cents"],
+                    f"{coin}/{arm}@{key}")
+                    for arm, got in ((cand, ctot), (BASELINE, btot))]
                 wins = set(cbw) | set(bbw)
                 inc = {w: cbw.get(w, 0.0) - bbw.get(w, 0.0) for w in wins}
                 res = sign_flip_p(inc)
@@ -336,7 +366,9 @@ def main() -> int:
                     "candidate_net_cents": ctot, "baseline_net_cents": btot,
                     "candidate_cancellations": cnc,
                     "baseline_cancellations": bnc,
-                    "reconciles_with_receipt": True,
+                    "max_abs_delta_cents": max(_deltas),
+                    "reconciliation_tolerance_cents": RECON_TOL,
+                    "reconciles_with_receipt": max(_deltas) <= RECON_TOL,
                     "threshold_mode": "CAUSAL_FROZEN_FROM_TRAIN"})
                 cells[f"{coin}/{cand}/{key}"] = res
                 print(f"  {coin}/{cand}@{key}: inc {res['observed_increment_cents']:+9.1f}c  "
@@ -387,7 +419,10 @@ def main() -> int:
                    "so these p-values are OPTIMISTIC and are evidence, not a "
                    "significance certificate."},
         "reconciliation": {
-            "every_cell_reconciled_to_receipt": True,
+            "every_cell_reconciled_to_receipt": all(
+                c["reconciles_with_receipt"] for c in cells.values()),
+            "max_abs_delta_cents_over_all_cells": max(
+                (c["max_abs_delta_cents"] for c in cells.values()), default=None),
             "tolerance_cents": RECON_TOL,
             "receipt": RECEIPT.name,
             "why": "the null must be computed on the SAME statistic the "
@@ -397,7 +432,11 @@ def main() -> int:
             "fit_code_ref": _mani.get("fit_code_ref"),
             "verdict_sha256_prefix": _mani.get("verdict_sha256_prefix"),
             "gate_code_sha256_prefix": _mani.get("gate_code_sha256_prefix"),
-            "receipt_commit_note": "receipt committed at 288df3f"},
+            "receipt_commit_note": "receipt committed at 288df3f",
+            # the fit ref names the FIT; it does not name the analysis code
+            # that produced these numbers. Both are recorded.
+            "analysis_code_ref": os.environ.get("ANALYSIS_CODE_REF", "").strip() or None,
+            "analysis_code_sha256_prefix": _self_sha16()},
         "populations": populations,
         "cells": cells,
         "holm_adjusted_p": holm,

@@ -1296,12 +1296,16 @@ def run_fine(era: bool = True, lead: bool = False) -> dict[str, Any]:
     return out
 
 
+from harmful_exposure_rows import any_fill_ahead as _any_fill_ahead  # DA F3
+
+
 def keptrow(r: dict) -> dict:
     r2 = dict(r)
     lat = r2.get("latency") or {}
     L = str(TARGET_LATENCY_MS)
-    r2["any_fill_ahead"] = lat.get(L, {}).get("preventable_shares", 0.0) > 0         or any(v.get("preventable_shares", 0.0) > 0 or v.get("stale_shares", 0.0) > 0
-               for v in lat.values())
+    # DA F3: ONE definition, imported at module scope. This expression and the
+    # builder's bool(fut) were two rules for the same valuation gate.
+    r2["any_fill_ahead"] = _any_fill_ahead(lat)
     return r2
 
 

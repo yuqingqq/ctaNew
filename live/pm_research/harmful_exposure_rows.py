@@ -44,6 +44,30 @@ import inventory_walk as iw
 OUT = qr.base.fi.PM / "derived/harmful_exposure_rows_v3.json"
 OUT_ERA = qr.base.fi.PM / "derived/harmful_exposure_rows_v3_eraB.json"
 LATENCY_GRID_MS = (5, 10, 20, 30, 50, 75, 100, 150, 250)
+
+def any_fill_ahead(latency: dict) -> bool:
+    """THE single definition of any_fill_ahead. DA F3.
+
+    There were TWO, and they could disagree:
+      builder  : bool(fut)        -- any future tranche EXISTS
+      keptrow  : derived from the latency dict -- any bucket has preventable
+                 or stale shares > 0
+    They differ exactly when future tranches exist but ALL carry zero shares.
+    That matters because the evaluator's val() GATES ON THIS FLAG: a row with
+    any_fill_ahead false is valued 0 regardless of its preventable value. Two
+    definitions of a valuation gate is one too many.
+
+    keptrow's semantics are kept as THE definition because keptrow OVERWRITES
+    the builder's value at fit/score time, so this is the rule that actually
+    governed every committed result. Unifying therefore changes no number; it
+    removes the possibility of the two drifting apart.
+    """
+    lat = latency or {}
+    return any(v.get("preventable_shares", 0.0) > 0
+               or v.get("stale_shares", 0.0) > 0
+               for v in lat.values())
+
+
 # AUDIT 4: the plan's declared target is fills in [t+L, t+H]; v3.1 had silently
 # changed it to "until generation end" via a source comment. RESTORED: the
 # label window is [t_start + L, min(t_start + H, generation end)] — the cap by
@@ -335,7 +359,6 @@ def label_rows(segments: Sequence[dict], gens: dict, wf: Any,
         if any(t["markout_cents_per_share"] is None for t in fut):
             row["status"] = "NO_FUTURE_MID"
             rows.append(row); continue
-        row["any_fill_ahead"] = bool(fut)
         lat = {}
         for L in LATENCY_GRID_MS:
             cut = s["t_start"] + L / 1000.0
@@ -347,6 +370,8 @@ def label_rows(segments: Sequence[dict], gens: dict, wf: Any,
                 "stale_shares": sum(t["shares"] for t in fut if t["t"] < cut),
             }
         row["latency"] = lat
+        # set from THE single definition, after lat exists (DA F3)
+        row["any_fill_ahead"] = any_fill_ahead(lat)
         rows.append(row)
     return rows
 

@@ -691,9 +691,17 @@ def assert_gate_passed() -> dict:
     # So each load-bearing predicate must be ASSERTED (present, not N/A) AND
     # passing. Only `embargo_respected` may legitimately be N/A -- it is
     # ENFORCED-DOWNSTREAM by the purge, which the receipt evidences separately.
+    # BE F3: this set was hardcoded while the VERDICT declares its own
+    # load_bearing_asserted -- six entries, adding half_open_containment_landed.
+    # A consumer that ignores the producer's declaration can accept a verdict
+    # where a predicate the producer called load-bearing is N/A or absent. The
+    # required set is now the UNION: this file's floor, plus whatever the
+    # verdict itself says is load-bearing.
     LOAD_BEARING = ("gap_count_matches_expected", "provenance_matches_expected",
                     "dataset_non_empty", "no_rows_skipped_by_builder",
                     "absorption_within_bound")
+    LOAD_BEARING = tuple(sorted(set(LOAD_BEARING)
+                                | set(v.get("load_bearing_asserted") or ())))
     NA_WHITELIST = ("embargo_respected",)
     _by_name = {}
     if isinstance(table, dict):
@@ -801,6 +809,55 @@ def assert_verdict_subject_is(tape: Path, v: dict) -> None:
 FIT_MANIFEST = "fit_manifest.json"
 
 
+def _file_sha16(path) -> str:
+    """sha256 prefix of a file, or None if it is absent."""
+    import hashlib
+    from pathlib import Path as _P
+    path = _P(path)
+    if not path.exists():
+        return None
+    h = hashlib.sha256()
+    with path.open("rb") as fh:
+        for chunk in iter(lambda: fh.read(1 << 20), b""):
+            h.update(chunk)
+    return h.hexdigest()[:16]
+
+
+# The modules whose CONTENT defines a fit/score run. Declared explicitly so the
+# identity is deterministic across entry points and a new dependency is an
+# explicit decision rather than a silent change of meaning.
+CODE_IDENTITY_FILES = (
+    "phase2_arms.py", "phase2_declaration.py", "phase2_embargo.py",
+    "phase2_state_schema_freeze.py", "harmful_action_eval.py",
+    "harmful_hazard_model.py", "harmful_fast_compute.py",
+    "harmful_state_features.py",
+)
+
+
+def measured_code_identity() -> dict:
+    """The code that IS RUNNING, by content -- never by a passed label.
+
+    R-216 debt 3. FIT_CODE_REF is supplied by the launcher, so a manifest that
+    records only it verifies that someone passed a string. This hashes the
+    modules actually imported from _ROOT, so the manifest states a measured
+    fact. Recorded BESIDE the env label, not instead of it: the label stays
+    the human-readable ref, and a disagreement between them is detectable."""
+    import hashlib
+    from pathlib import Path as _P
+    root = _P(_ROOT).resolve()
+    # A DECLARED file list, not "whatever happens to be imported". Hashing the
+    # live sys.modules made the identity depend on entry point -- stage_fit and
+    # stage_score would report different shas for the SAME tree, which is the
+    # opposite of an identity. Absent files hash to None and are visible.
+    files = {n: _file_sha16(root / n) for n in CODE_IDENTITY_FILES}
+    combined = hashlib.sha256(
+        "".join(f"{k}:{v}" for k, v in sorted(files.items())).encode()
+    ).hexdigest()[:16]
+    decl = root / "phase2_declaration.py"
+    return {"combined": combined, "files": files,
+            "declaration": _file_sha16(decl), "n_files": len(files)}
+
+
 def _tape_identity() -> dict:
     """Everything this fit is bound to: tape, verdict, gate code, fit code."""
     import hashlib, os
@@ -820,6 +877,21 @@ def _tape_identity() -> dict:
                if gate_src.exists() else None)
     fit_ref = os.environ.get("FIT_CODE_REF", "").strip() or None
     return {"tape_path": str(TAPE_PATH), "tape_sha256_prefix": h.hexdigest()[:16],
+            # R-216 debt 3: fit_ref is DECLARED (env). The manifest therefore
+            # verified that a LABEL was passed, not that the code ran -- one
+            # could score from a different tree, pass the right label, and the
+            # check would pass clean. gate_code was already bound by CONTENT;
+            # the fit now is too, and both travel so a reader can compare them.
+            "fit_code_sha256_prefix": measured_code_identity()["combined"],
+            "fit_code_files": measured_code_identity()["files"],
+            "declaration_sha256_prefix": measured_code_identity()["declaration"],
+            # R-216 debt 4: the FRAGMENT defines the population ok_n registers,
+            # and nothing bound it. A regenerated fragment would move ok_n (and
+            # correctly refuse) but the receipt could not say WHICH fragment
+            # produced the number.
+            "fragment_path": str(FRAGMENT),
+            "fragment_sha256_prefix": _file_sha16(FRAGMENT),
+            "fragment_bytes": FRAGMENT.stat().st_size if FRAGMENT.exists() else None,
             "tape_bytes": TAPE_PATH.stat().st_size,
             "verdict_kind": v.get("verdict"),
             "verdict_tape_sha256_prefix": v.get("tape_sha256_prefix"),
@@ -1159,6 +1231,25 @@ def stage_fit() -> None:
     print(f"STAGE FIT COMPLETE -- promoted {len(_hashes)} artifacts", flush=True)
 
 
+def _read_fit_parity() -> dict:
+    """The parity block, READ from the fit artifact, never recomputed.
+
+    R-216 debt 5. Recomputing it here could produce a receipt that disagrees
+    with the artifact it describes; reading it means the receipt reports what
+    the fit actually recorded, and says so when the file is absent."""
+    fp = FITDIR / "fit_population_parity.json"
+    if not fp.exists():
+        return {"present": False,
+                "why": f"{fp.name} absent from the fit directory; parity is "
+                       f"resolvable only via the completion manifest"}
+    d = json.loads(fp.read_text())
+    return {"present": True, "source": fp.name,
+            "all_coins_parity_holds": all(
+                bool(c.get("all_arms_same_n")) and bool(c.get("purge_reconciles"))
+                for c in d.values()),
+            "per_coin": d}
+
+
 def stage_score() -> dict:
     """STAGE 2: score all three arms on the top-up. Never loads the fragment."""
     import harmful_hazard_model as hm
@@ -1200,7 +1291,17 @@ def stage_score() -> dict:
 
     out = {"protocol": "PHASE2_FOUR_ARM_V2",
            "supersedes_label": "PHASE2_THREE_ARM_V1 (stale: four arms since arm D)", "arms": {}, "population": {},
-           "declaration_commit": "d7082b6",
+           # BE F2: this was the literal "d7082b6" -- a ref whose ARMS has
+           # THREE entries, beside a four-arm receipt. The governing
+           # declaration is the v2 amendment (arm D, causal thresholds, five
+           # head diagnostics, EMBARGO_S) introduced at 1cc2163. The MEASURED
+           # sha is authoritative; the label is human-readable and must be
+           # verifiable against it, which is why both travel.
+           "declaration_commit_declared": "1cc2163",
+           "declaration_commit_superseded_label": "d7082b6 (v1, THREE arms — "
+                                                  "wrong for this receipt)",
+           "declaration_sha256_prefix": measured_code_identity()["declaration"],
+           "declaration_arms": list(D.ARMS),
            # rule 10: COMPUTED from the declaration, never written as a
            # literal beside it. A hardcoded count has contradicted its own
            # declaration before.
@@ -1212,7 +1313,19 @@ def stage_score() -> dict:
            "staged_because": "the single-process run was oom-killed at 14G after "
                              "all four feature passes succeeded; fit and score "
                              "are now separate processes (the daily-refit shape)",
-           "da_caveat_field": "RESERVED for Q-DA-79 post-gap queue-validity finding"}
+           "da_caveat_field": "RESERVED for Q-DA-79 post-gap queue-validity finding",
+           # R-216 debt 5: parity was resolvable only by following the manifest
+           # chain. Automated readers resolve receipt FIELDS, so it is a field.
+           # Read from the fit's own artifact, never recomputed here -- a
+           # receipt that recomputes a predicate can disagree with the artifact
+           # it claims to describe.
+           "fit_population_parity": _read_fit_parity(),
+           "fit_code_identity": {
+               "declared_env_ref": _tape_identity().get("fit_code_ref"),
+               "measured_sha256_prefix": measured_code_identity()["combined"],
+               "note": "the env ref is a LABEL; the measured sha is the code "
+                       "that ran. They are recorded separately so a "
+                       "disagreement is visible rather than assumed away."}}
 
     _empty = json.loads((FITDIR / "empty_coins.json").read_text()) \
         if (FITDIR / "empty_coins.json").exists() else []

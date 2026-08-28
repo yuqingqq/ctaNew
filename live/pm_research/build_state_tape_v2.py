@@ -35,6 +35,74 @@ import phase2_state_schema_freeze as PIN
 import phase2_embargo as EMB
 
 
+def gap_contains_at(T_abs: float, coin: str, coin_gaps_abs: dict):
+    """THE ruled predicate, and the ONLY gap comparison in this builder.
+
+        [g_start, g_end) -- lower-INCLUSIVE, upper-EXCLUSIVE -- evaluated on
+        the ABSOLUTE instant at FULL PRECISION. No projection.
+
+        R-213: there were TWO comparisons (main path and warm-up/shifted path)
+        and they disagreed at both edges: all 4 rows at exactly T==g_start were
+        unflagged (effectively strictly-exclusive lower bound), while the one
+        negative-t_start row at T==g_end WAS flagged (effectively inclusive
+        upper bound). Projecting gaps into window-relative form by subtracting
+        t0 from values near 1.79e9 is lossy -- ULP there is 2.4e-7 s -- so
+        exact equality survives for some values and not others. Comparing in
+        the absolute basis removes the projection, and routing BOTH paths
+        through this one function removes the divergence categorically rather
+        than by diagnosing either edge."""
+    for a, b in coin_gaps_abs.get(coin, ()):
+        if a <= T_abs < b:
+            return (a, b)
+    return None
+
+
+def assert_absorption_within_bound(skip_counts: dict, n_rows: int,
+                                   status_counts: dict = None,
+                                   bound: float = 0.01) -> dict:
+    """PRE-EMISSION skips, bounded per-status AND in TOTAL.
+
+    CALLABLE, because an inline `raise SystemExit` inside main() cannot be
+    exercised by a probe -- DA could not drive the previous form at all, so the
+    guard's own behaviour was never demonstrated, only asserted in prose.
+
+    TOTAL-FORM as well as per-status: ten distinct skip reasons at 0.9% each
+    pass every per-status check and still absorb 9% of the input. The bound
+    exists to stop a total failure being absorbed, and a total failure does not
+    have to arrive under one name.
+
+    The bound applies ONLY to rows that never entered the tape. Rows that are
+    IN the tape under a status are POPULATION STATEMENTS and are never bounded:
+    an earlier version iterated emitted statuses too and would have refused the
+    VALID population on PRE_WINDOW at 3.85%, after ~75 minutes of work."""
+    skip_counts = dict(skip_counts or {})
+    total_in = n_rows + sum(skip_counts.values())
+    ev = {"n_rows_emitted": n_rows, "n_skipped": sum(skip_counts.values()),
+          "total_input": total_in, "bound": bound, "skip_counts": skip_counts,
+          "per_status_fractions": {}, "total_fraction": 0.0}
+    if total_in == 0:
+        return ev
+    ev["total_fraction"] = sum(skip_counts.values()) / total_in
+    for st, n in sorted(skip_counts.items()):
+        frac = n / total_in
+        ev["per_status_fractions"][st] = frac
+        if frac > bound:
+            raise SystemExit(
+                f"REFUSED: PRE-EMISSION SKIP {st} covers {n:,} of "
+                f"{total_in:,} input rows ({frac:.1%}), above the "
+                f"{bound:.0%} absorption bound. Skips absorb row-level "
+                f"anomalies, never total failures. Skips: {skip_counts}; "
+                f"emitted statuses (NOT bounded): {status_counts}")
+    if ev["total_fraction"] > bound:
+        raise SystemExit(
+            f"REFUSED: PRE-EMISSION SKIPS TOTAL {sum(skip_counts.values()):,} "
+            f"of {total_in:,} input rows ({ev['total_fraction']:.1%}), above "
+            f"the {bound:.0%} absorption bound. No single status exceeded it; "
+            f"the failure arrived spread across {len(skip_counts)} names, "
+            f"which a per-status bound cannot see. Skips: {skip_counts}")
+    return ev
+
+
 def assert_modules_under_root() -> None:
     """Every pinned module must have loaded from THIS tree, not another.
 
@@ -220,25 +288,11 @@ def main() -> int:
           flush=True)
 
     def gap_contains(T_abs: float, coin: str):
-        """THE ruled predicate, and the ONLY gap comparison in this builder.
-
-        [g_start, g_end) -- lower-INCLUSIVE, upper-EXCLUSIVE -- evaluated on
-        the ABSOLUTE instant at FULL PRECISION. No projection.
-
-        R-213: there were TWO comparisons (main path and warm-up/shifted path)
-        and they disagreed at both edges: all 4 rows at exactly T==g_start were
-        unflagged (effectively strictly-exclusive lower bound), while the one
-        negative-t_start row at T==g_end WAS flagged (effectively inclusive
-        upper bound). Projecting gaps into window-relative form by subtracting
-        t0 from values near 1.79e9 is lossy -- ULP there is 2.4e-7 s -- so
-        exact equality survives for some values and not others. Comparing in
-        the absolute basis removes the projection, and routing BOTH paths
-        through this one function removes the divergence categorically rather
-        than by diagnosing either edge."""
-        for a, b in coin_gaps_abs.get(coin, ()):
-            if a <= T_abs < b:
-                return (a, b)
-        return None
+        """Bound to THIS build's gaps; the predicate itself is module-level so a
+        probe can call the REAL function with inputs of its own choosing. An
+        inline closure could only ever be tested by re-implementing it, which is
+        how two comparisons came to disagree at both edges (R-213)."""
+        return gap_contains_at(T_abs, coin, coin_gaps_abs)
 
     def gaps_for(slug: str, coin: str, t0: float):
         """Project the COIN's absolute gaps into THIS window's basis.
@@ -360,18 +414,7 @@ def main() -> int:
     # statement about warm-up rows -- would have REFUSED the VALID population
     # at completion, after ~75 minutes of work. A row that is IN the tape and
     # labelled is not an absorbed failure; a row that never entered is.
-    _total_in = n_rows + sum(skip_counts.values())
-    for _st, _n in sorted(skip_counts.items()):
-        if _total_in == 0:
-            continue
-        _frac = _n / _total_in
-        if _frac > 0.01:
-            raise SystemExit(
-                f"REFUSED: PRE-EMISSION SKIP {_st} covers {_n:,} of "
-                f"{_total_in:,} input rows ({_frac:.1%}), above the 1% "
-                f"absorption bound. Skips absorb row-level anomalies, never "
-                f"total failures. Skips: {skip_counts}; emitted statuses "
-                f"(NOT bounded): {status_counts}")
+    assert_absorption_within_bound(skip_counts, n_rows, status_counts)
     # embargo from the running extremes -- no second pass over the rows
     gap = sc_first_feat - tr_last_exit
     emb = {"gap_s": gap, "embargo_s": EMB.EMBARGO_S,

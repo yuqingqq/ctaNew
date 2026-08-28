@@ -200,11 +200,44 @@ def selftest() -> int:
     return 0
 
 
+def verify_against_committed(pin: dict = None) -> dict:
+    """BE F5: VERIFY the pin against the artifact on disk; never rewrite it.
+
+    The default entry previously REGENERATED this tracked artifact, so a test
+    run silently updated its own reference. A suite that regenerates what it is
+    meant to check cannot detect drift IN that reference: had DA's schema
+    moved, the run would have rewritten the pin to match and still reported
+    every check OK. Regeneration now requires --write, explicitly."""
+    pin = pin or build_pin()
+    if not OUT.exists():
+        return {"verified": False, "reason": "NO_COMMITTED_PIN",
+                "detail": f"{OUT.name} absent; run with --write to create it"}
+    on_disk = json.loads(OUT.read_text())
+    a = on_disk.get("features_in_order"), on_disk.get("n_features")
+    b = pin.get("features_in_order"), pin.get("n_features")
+    if a != b:
+        only_disk = [x for x in (a[0] or []) if x not in (b[0] or [])]
+        only_live = [x for x in (b[0] or []) if x not in (a[0] or [])]
+        return {"verified": False, "reason": "PIN_DRIFT",
+                "n_features_on_disk": a[1], "n_features_derived": b[1],
+                "only_in_committed_pin": only_disk[:20],
+                "only_in_derived_pin": only_live[:20]}
+    return {"verified": True, "n_features": b[1]}
+
+
 def main() -> int:
     if "--selftest" in sys.argv:
         return selftest()
     selftest()
     pin = build_pin()
+    if "--write" not in sys.argv:
+        v = verify_against_committed(pin)
+        if not v["verified"]:
+            print(f"REFUSED: committed pin does not match the derived schema: {v}")
+            return 1
+        print(f"VERIFIED {OUT.name}: {v['n_features']} features match the "
+              f"committed pin (pass --write to regenerate)")
+        return 0
     import os, tempfile
     fd, tmp = tempfile.mkstemp(dir=str(OUT.parent), suffix=".tmp")
     with os.fdopen(fd, "w") as fh:

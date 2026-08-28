@@ -27,6 +27,16 @@ import bisect, collections, json, sys
 from pathlib import Path
 
 LEDGER = Path("/home/yuqing/ctaNew/data/pm_5min/collector_gaps.jsonl")
+# BE F4: the LIVE ledger is APPENDED CONTINUOUSLY by the collectors, so a count
+# taken against it is a count against an unrecorded moment. The pinned snapshot
+# is the ledger the tape was built from; prefer it, and record the sha either
+# way so the count can always name what it counted.
+LEDGER_PIN = Path("/home/yuqing/ctaNew/data/pm_5min/derived/ledger_pin_tape6e.jsonl")
+
+
+def ledger_sha256(path: Path) -> str:
+    import hashlib
+    return hashlib.sha256(path.read_bytes()).hexdigest()[:16]
 POPULATIONS = (
     ("train", Path("/home/yuqing/ctaNew/data/pm_5min/derived/harmful_exposure_rows_v3_eraB.json")),
     ("score", Path("/home/yuqing/ctaNew/data/pm_5min/derived/harmful_exposure_rows_v3_topup.json")),
@@ -103,7 +113,10 @@ def count(populations=POPULATIONS, ledger: Path = LEDGER) -> dict:
                               "matched_gap": [round(m[0], 6), round(m[1], 6)],
                               "gap_len_s": round(m[1] - m[0], 6),
                               "split": split})
-    return {"definition": "T = t0 + t_start in [g_start, g_end) of ANY gap for "
+    return {"ledger_path": str(ledger),
+            "ledger_sha256_prefix": ledger_sha256(ledger),
+            "ledger_is_the_pinned_snapshot": ledger.resolve() == LEDGER_PIN.resolve(),
+            "definition": "T = t0 + t_start in [g_start, g_end) of ANY gap for "
                           "that COIN in the collector-gaps ledger",
             "source": ledger.name, "unit": "rows", "universe": "all OK tape rows",
             "total": total, "by_coin": dict(per_coin), "by_split": dict(per_split),

@@ -138,4 +138,9 @@ def selftest() -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(selftest() if "--selftest" in sys.argv else 0)
+    # BE F1: this previously read `selftest() if "--selftest" in sys.argv else 0`,
+    # so `python3 -m phase2_embargo` ran NOTHING and exited 0. Four commit
+    # messages cited that silent rc=0 as "GREEN". A suite whose default entry
+    # point is vacuous is worse than no suite: it manufactures evidence of
+    # coverage. The default now RUNS the checks.
+    raise SystemExit(selftest())

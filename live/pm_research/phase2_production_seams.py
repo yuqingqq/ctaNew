@@ -289,9 +289,25 @@ def main() -> int:
     seam("25a skips are tallied SEPARATELY from emitted statuses",
          "skip_counts" in b25 and "pre_emission_skip_counts" in b25,
          "one tally meant PRE_WINDOW at 3.85% would refuse a VALID population")
-    seam("25b the 1% bound iterates skips, not statuses",
-         "for _st, _n in sorted(skip_counts.items())" in b25,
-         "iterating status_counts refuses the good build at completion")
+    # BEHAVIOURAL, not a source grep. The previous form matched text at the
+    # inline loop and broke the moment the guard became callable -- while the
+    # property it cares about was still true. Source-text assertions have
+    # misreported here seven times; this one DRIVES the guard.
+    #   PRE_WINDOW at 3.85% is an EMITTED status: it must NOT refuse.
+    #   The same magnitude as a pre-emission SKIP must refuse.
+    try:
+        B25 = __import__("build_state_tape_v2")
+        B25.assert_absorption_within_bound({}, 96150, {"PRE_WINDOW": 38500})
+        seam("25b an EMITTED status at 3.85% does NOT refuse", True)
+    except SystemExit as _e25:
+        seam("25b an EMITTED status at 3.85% does NOT refuse", False,
+             f"emitted statuses are population statements, never bounded: {_e25}")
+    try:
+        B25.assert_absorption_within_bound({"PRE_WINDOW": 38500}, 961500)
+        seam("25b2 the SAME magnitude as a pre-emission SKIP DOES refuse", False,
+             "the bound must still fire on rows that never entered the tape")
+    except SystemExit:
+        seam("25b2 the SAME magnitude as a pre-emission SKIP DOES refuse", True)
 
     # 25c: a fabricated verdict must be REFUSED
     import tempfile as _t25, json as _j25
@@ -803,6 +819,139 @@ def main() -> int:
          inspect.getsource(PA.stage_fit).index("assert_preregistered_population")
          < inspect.getsource(PA.stage_fit).index("EMB.purge_training"),
          "checked after the purge, it compares two different stages -- be-fit3")
+
+    # ---- SEAM 36 (debts): the guards are CALLABLE, and are called ----------
+    import build_state_tape_v2 as B36
+    import gap_at_cutoff_count as GC36
+    import phase2_state_schema_freeze as SF36
+    import phase2_increment_null as IN36
+    import harmful_exposure_rows as HER36
+    import harmful_hazard_model as HHM36
+
+    # 30d-f: drive the REAL predicate with inputs of the probe's choosing.
+    _g = {"btc": [(100.0, 200.0)], "eth": []}
+    seam("36a/30d gap_contains_at is MODULE-level and callable",
+         callable(getattr(B36, "gap_contains_at", None)),
+         "an inline closure can only be tested by reimplementing it, which is "
+         "how two comparisons came to disagree at both edges (R-213)")
+    seam("36b/30e lower bound is INCLUSIVE (T exactly at g0 flags)",
+         B36.gap_contains_at(100.0, "btc", _g) == (100.0, 200.0))
+    seam("36c/30f upper bound is EXCLUSIVE (T exactly at g1 does NOT flag)",
+         B36.gap_contains_at(200.0, "btc", _g) is None)
+    seam("36d a NEGATIVE absolute instant is answered, not crashed",
+         B36.gap_contains_at(-27.0, "btc", _g) is None)
+    seam("36e a coin with no gaps never flags",
+         B36.gap_contains_at(150.0, "eth", _g) is None)
+
+    # absorption guard: callable, per-status AND total-form
+    seam("36f the absorption guard is a CALLABLE entry point",
+         callable(getattr(B36, "assert_absorption_within_bound", None)))
+    try:
+        B36.assert_absorption_within_bound({f"S{i}": 9 for i in range(10)}, 910)
+        seam("36g TOTAL-FORM: 10 statuses at 0.9% each REFUSE (9% total)", False,
+             "a total failure does not have to arrive under one name; a "
+             "per-status bound cannot see it spread")
+    except SystemExit as e:
+        seam("36g TOTAL-FORM: 10 statuses at 0.9% each REFUSE (9% total)",
+             "TOTAL" in str(e))
+    try:
+        B36.assert_absorption_within_bound({"ONE": 50}, 950)
+        seam("36h per-status bound still REFUSES", False)
+    except SystemExit as e:
+        seam("36h per-status bound still REFUSES", "PRE-EMISSION SKIP" in str(e))
+    _ev36 = B36.assert_absorption_within_bound({"ONE": 5}, 995)
+    seam("36i a legitimate small skip PASSES and reports its fractions",
+         _ev36["total_fraction"] == 0.005 and "ONE" in _ev36["per_status_fractions"])
+
+    # ---- SEAM 37: identity is MEASURED, not a passed label -----------------
+    _mi = PA.measured_code_identity()
+    seam("37a the fit code is bound by CONTENT, not only the env label",
+         isinstance(_mi.get("combined"), str) and len(_mi["combined"]) == 16,
+         "the manifest verified that a LABEL was passed, not that code ran")
+    seam("37b the identity is DETERMINISTIC (declared file list, not sys.modules)",
+         set(_mi["files"]) == set(PA.CODE_IDENTITY_FILES),
+         "hashing live imports made stage_fit and stage_score disagree for the "
+         "SAME tree, which is the opposite of an identity")
+    # NOT "a dirty tree changes it" -- that is 37d. This asserts the property
+    # 37d needs in order to mean anything: on an UNCHANGED tree, repeated calls
+    # agree. Without stability, 37d's inequality would prove nothing.
+    seam("37c repeated calls on an UNCHANGED tree agree (stability)",
+         PA.measured_code_identity()["combined"] == _mi["combined"])
+    import tempfile as _tf37, hashlib as _h37
+    _p37 = Path(PA._ROOT) / "phase2_declaration.py"
+    _orig37 = _p37.read_bytes()
+    try:
+        _p37.write_bytes(_orig37 + b"\n# seam 37 dirt\n")
+        seam("37d a dirty tree is DETECTED (the falsifier)",
+             PA.measured_code_identity()["combined"] != _mi["combined"],
+             "an identity that cannot notice an edit is not an identity")
+    finally:
+        _p37.write_bytes(_orig37)
+    seam("37e restoring the tree restores the identity",
+         PA.measured_code_identity()["combined"] == _mi["combined"])
+    seam("37f the FRAGMENT is bound by sha in the identity block",
+         "fragment_sha256_prefix" in PA._tape_identity(),
+         "the fragment DEFINES the population ok_n registers and was unbound")
+
+    # ---- SEAM 38: consumer honours the PRODUCER's load-bearing list --------
+    _src38 = inspect.getsource(PA.assert_gate_passed)
+    seam("38a the consumer reads the verdict's OWN load_bearing_asserted",
+         "load_bearing_asserted" in _src38,
+         "a hardcoded consumer set can accept a verdict where a predicate the "
+         "PRODUCER called load-bearing is N/A or absent")
+    seam("38b the required set is the UNION, never a replacement",
+         "|" in _src38.split("load_bearing_asserted")[0].rsplit("LOAD_BEARING", 1)[-1]
+         or "set(LOAD_BEARING)" in _src38)
+
+    # ---- SEAM 39: parity is a RECEIPT FIELD; declaration ref is measured ---
+    _src39 = inspect.getsource(PA.stage_score)
+    seam("39a parity is a receipt FIELD, not only a manifest-chain artifact",
+         "fit_population_parity" in _src39)
+    seam("39b parity is READ from the fit artifact, never recomputed here",
+         "_read_fit_parity" in _src39 and "read_text" in inspect.getsource(PA._read_fit_parity))
+    seam("39c the stale three-arm declaration ref is GONE",
+         '"declaration_commit": "d7082b6"' not in _src39,
+         "d7082b6 has THREE arms and sat beside a four-arm receipt")
+    seam("39d the declaration is bound by MEASUREMENT",
+         "declaration_sha256_prefix" in _src39)
+
+    # ---- SEAM 40: the F1/F4/F5 instrument fixes ---------------------------
+    _e40 = Path(PA._ROOT) / "phase2_embargo.py"
+    seam("40a the embargo suite's DEFAULT entry runs its checks",
+         "SystemExit(selftest())" in _e40.read_text(),
+         "the default entry ran NOTHING and exited 0; four commits cited that "
+         "silent rc=0 as GREEN")
+    seam("40b the gap counter records WHICH ledger it counted",
+         callable(getattr(GC36, "ledger_sha256", None))
+         and "ledger_sha256_prefix" in inspect.getsource(GC36.count))
+    seam("40c the counter offers the PINNED ledger, not only the live one",
+         hasattr(GC36, "LEDGER_PIN"),
+         "the live ledger is appended continuously by the collectors")
+    seam("40d the schema suite VERIFIES its reference instead of rewriting it",
+         callable(getattr(SF36, "verify_against_committed", None))
+         and "--write" in inspect.getsource(SF36.main),
+         "a test that regenerates its own reference cannot detect drift in it")
+
+    # ---- SEAM 41: increment-null measured delta; ONE any_fill_ahead --------
+    seam("41a the reconciliation guard is CALLABLE",
+         callable(getattr(IN36, "assert_reconciles", None)))
+    try:
+        IN36.assert_reconciles(1.0, 2.0, "known-bad")
+        seam("41b it REFUSES a known-bad input", False)
+    except RuntimeError:
+        seam("41b it REFUSES a known-bad input", True)
+    seam("41c it returns a MEASURED delta, not a hardcoded boolean",
+         IN36.assert_reconciles(1.0, 1.0, "identity") == 0.0
+         and "max_abs_delta_cents" in inspect.getsource(IN36.main))
+    seam("41d any_fill_ahead has ONE definition",
+         HHM36._any_fill_ahead is HER36.any_fill_ahead,
+         "two rules for the same valuation gate is one too many")
+    _lat41 = {"50": {"preventable_shares": 0.0, "stale_shares": 0.0}}
+    seam("41e the divergence case resolves under the GOVERNING rule",
+         HER36.any_fill_ahead(_lat41) is False
+         and HHM36.keptrow({"latency": _lat41})["any_fill_ahead"] is False,
+         "tranches exist but carry zero shares: the old builder said True, "
+         "keptrow said False, and keptrow overwrote -- so keptrow governed")
 
     print(f"\n{'PRODUCTION SEAMS GREEN' if not FAILURES else 'PRODUCTION SEAMS RED'}: "
           f"{len(FAILURES)} failing")
