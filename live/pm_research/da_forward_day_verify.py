@@ -158,7 +158,24 @@ def day_bar_v2(lo: int, hi: int, coin: str, elapsed_h: float,
             break
         worst = max(worst, sum(min(b, h1) - max(a, h0)
                                for a, b in iv if a < h1 and b > h0))
+    # NOT-YET-EVALUABLE is not a PASS. A day that has not started has no gaps,
+    # so all three bars would read "pass" on zero data -- the empty-set trap
+    # this programme has paid for more than once. Elapsed time is P1's
+    # denominator and P2/P3's observation window, so below an hour there is
+    # nothing to judge and the bars say so instead of passing.
+    if elapsed_h < 1.0:
+        return {
+            "evaluable": False, "hours_elapsed": round(elapsed_h, 3),
+            "coin_level_gap_intervals": len(iv), "lost_seconds": round(lost, 1),
+            "P1_pass": False, "P2_pass": False, "P3_pass": False,
+            "why": f"only {elapsed_h:.3f}h elapsed: NOT YET EVALUABLE, and "
+                   f"zero gaps on a day that has not happened is not a clean day",
+            "thresholds": {"P1_max_s_per_hr": P1_LOST_S_PER_HR_MAX,
+                           "P2_material_span_s": P2_MATERIAL_SPAN_S,
+                           "P2_max_share": P2_MATERIAL_SHARE_MAX,
+                           "P3_max_rolling_60min_s": P3_ROLLING_60MIN_LOST_S_MAX}}
     return {
+        "evaluable": True, "hours_elapsed": round(elapsed_h, 3),
         "coin_level_gap_intervals": len(iv),
         "lost_seconds": round(lost, 1),
         "P1_lost_s_per_hr": round(p1_rate, 2),
@@ -446,6 +463,9 @@ def verify_day(day_token: str, freeze_epoch: float,
                              "rate. The closing verdict is the one that judges.")
             bars_v2[coin] = b
             for k in ("P1", "P2", "P3"):
+                if not b.get("evaluable"):
+                    p(f"{k}_{coin}", False, b.get("why", "not evaluable"))
+                    continue
                 p(f"{k}_{coin}", b[f"{k}_pass"],
                   {"P1": f"lost {b['lost_seconds']}s = {b['P1_lost_s_per_hr']}/hr "
                          f"vs bar {P1_LOST_S_PER_HR_MAX}",
@@ -556,6 +576,14 @@ def _selftests() -> int:
         r3 = day_bar_v2(lo9, hi9, "btc", 24.0, _ledger(td, quiet))
         ok(r3["P1_pass"] and r3["P2_pass"] and r3["P3_pass"],
            "positive control: a QUIET day passes all three bars")
+
+        # a day that has NOT HAPPENED must not pass on zero data
+        _fut = day_bar_v2(lo9, hi9, "btc", 0.0, _ledger(td, quiet))
+        ok(_fut["evaluable"] is False and not _fut["P1_pass"]
+           and not _fut["P2_pass"] and not _fut["P3_pass"],
+           "a day with nothing elapsed is NOT-YET-EVALUABLE and does NOT pass "
+           "-- zero elapsed hours is not a clean day, and the same bars that "
+           "pass a quiet day must refuse an empty one")
 
         # MALFORMED ledger must REFUSE, never silently read as a clean day
         bad = Path(td) / "bad.jsonl"
