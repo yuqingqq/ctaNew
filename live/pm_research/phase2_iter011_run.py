@@ -273,6 +273,30 @@ def selftest() -> int:
     ok(set(rept["underpowered_heads"]) >= {"Q3_m_harm", "Q3_m_good"},
        "and the unfitted magnitude heads are REPORTED UNDERPOWERED, not dropped")
 
+    import tempfile as _tf
+    _d = Path(_tf.mkdtemp())
+    try:
+        assert_outputs_written((_d / "never_written.json",))
+        ok(False, "a run that writes NOTHING must not exit 0")
+    except RuntimeError as e:
+        ok("silent-success" in str(e),
+           "a run that writes NOTHING must not exit 0 (the clean-exit-no-output "
+           "shape is refused by name)")
+    _z = _d / "z.json"; _z.write_text("")
+    try:
+        assert_outputs_written((_z,)); ok(False, "a ZERO-BYTE output is refused")
+    except RuntimeError as e:
+        ok("does not parse" in str(e), "a ZERO-BYTE output is refused")
+    _e = _d / "e.json"; _e.write_text("{}")
+    try:
+        assert_outputs_written((_e,)); ok(False, "an EMPTY object is refused")
+    except RuntimeError as e:
+        ok("artifact identity" in str(e),
+           "an EMPTY object is refused (existence alone is not a result)")
+    _g = _d / "g.json"; _g.write_text(json.dumps({"artifact": "x", "a": 1}))
+    ok(assert_outputs_written((_g,))[_g.name]["artifact"] == "x",
+       "a well-formed output PASSES (the guard is not a wall)")
+
     ok("phase2_iter011_run.py" not in PA.CODE_IDENTITY_FILES,
        "this runner is NOT in the identity lattice — the standalone property "
        "is checked, not assumed")
@@ -320,6 +344,41 @@ def incumbent_null_applicability() -> dict:
                     "USER amends the preregistration.",
     }
 
+DECLARED_OUTPUTS = (OUT,)
+
+
+def assert_outputs_written(outputs=DECLARED_OUTPUTS) -> dict:
+    """A run that writes NOTHING must not exit 0.
+
+    The silent-success shape: a clean exit obtained by not doing the work. It is
+    indistinguishable from a completed run at the exit code, and the exit code
+    is what an operator reads first. Every declared output must exist, parse,
+    and carry its artifact identity — existence alone would pass a zero-byte
+    file, and parsing alone would pass an empty object."""
+    ev = {}
+    for o in outputs:
+        if not o.exists():
+            raise RuntimeError(
+                f"REFUSED: declared output {o.name} was never written, yet the "
+                f"run reached its exit. A clean exit that produced nothing is "
+                f"the silent-success shape: it looks identical to a completed "
+                f"run at the exit code.")
+        b = o.stat().st_size
+        try:
+            d = json.loads(o.read_text())
+        except ValueError as e:
+            raise RuntimeError(
+                f"REFUSED: declared output {o.name} does not parse ({e}); a "
+                f"file that exists is not a result.")
+        if not isinstance(d, dict) or not d.get("artifact"):
+            raise RuntimeError(
+                f"REFUSED: {o.name} carries no artifact identity; an empty "
+                f"object would otherwise pass an existence check.")
+        ev[o.name] = {"bytes": b, "artifact": d["artifact"],
+                      "top_level_keys": len(d)}
+    return ev
+
+
 
 def main() -> int:
     """The 011 DEVELOPMENT run. Known-bads first: selftest gates the run."""
@@ -342,10 +401,12 @@ def main() -> int:
 
     print("  indexing train split...", flush=True)
     TP = PA.tape_index("train")
+    print(f"  train split indexed: {len(TP):,} rows", flush=True)
     FIT = PA._feature_pass(PA.FRAGMENT, "fragment", TAPE=TP)
     del TP
     print("  indexing score split for the embargo boundary...", flush=True)
     SP = PA.tape_index("score")
+    print(f"  score split indexed: {len(SP):,} rows", flush=True)
     probe = [{"t0": v["t0"], "t_start": v["t_start"]} for v in SP.values()]
     for coin in list(FIT):
         if not FIT[coin]["kept"]:
@@ -431,9 +492,16 @@ def main() -> int:
     with OUT.open("w") as fh:
         json.dump(out, fh, indent=1, sort_keys=True, default=str)
         fh.flush(); os.fsync(fh.fileno())
-    print(f"\nWROTE {OUT.name}", flush=True)
+    ev = assert_outputs_written()
+    print(f"\nWROTE {OUT.name}: {ev[OUT.name]}", flush=True)
     return 0
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    # BELT AND BRACES: exit 0 REQUIRES the declared outputs. main() asserts them
+    # too; this catches an early `return 0` added later, which is exactly how a
+    # silent success gets introduced by a well-meaning edit.
+    _rc = main()
+    if _rc == 0:
+        assert_outputs_written()
+    raise SystemExit(_rc)
