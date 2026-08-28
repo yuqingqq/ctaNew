@@ -68,6 +68,14 @@ except where marked USER-ONLY.
     claim about code behaviour drifts from the code without either the entry
     or the code noticing — rule 15 of CLAUDE.md applied to the register
     itself.
+16. **A control that cannot fail must never be mistaken for a control that
+    passed** (R-249; MEM's consolidation of four named instances: a fixture
+    supplying what the code should produce; a guard shown only to refuse —
+    boundary positive controls must ADMIT; an anchor that includes the arm
+    name — it passes nothing and fails nothing; a falsifier that enshrines
+    the defect as spec). Phrased on the control side deliberately: the next
+    instance will wear a shape none of these four had. Every control ships
+    both directions — it fires on the bad case AND admits the good one.
 
 ## Cadences
 

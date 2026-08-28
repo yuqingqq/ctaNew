@@ -158,6 +158,15 @@ slope). Undefined, this is resolved by whoever writes the evaluator.
 Every other metric is **reported and never adjudicated**. A metric that can be
 swapped into a cell after seeing results is a multiplicity leak.
 
+> **RULED 2026-08-28T09:56Z (USER, structured answer via the coordinator,
+> R-249): under Option 1, Q2's cell statistic is `min(AUC(p_pos), AUC(p_neg))`
+> — the WORSE side.** A decomposition whose negative side is uninformative has
+> not established sign discrimination even if its positive side has; half a
+> working head cannot carry a cell. Family stays 24. This fills the two-sided
+> gap this section left open under Option 1; BE's pre-ruling implementation
+> (`phase2_iter011_run.py:231`) is hereby authorized, subject to the
+> one-side-unevaluable path flagged to the reviewer (R-248).
+
 **The denominator is FIXED at 24.** Holm must be computed over the declared
 family, not over the cells that happen to have p-values. A cell that is
 `UNDERPOWERED`, `NO_INCUMBENT_COUNTERPART` (R-237), or otherwise unevaluable
