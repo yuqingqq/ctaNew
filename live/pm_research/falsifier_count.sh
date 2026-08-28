@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-# Print ONLY the verified falsifier count for a module, on stdout, nothing else.
-# Use its output in a commit message; do not type a count from memory.
-# The first version let the module's own stdout leak when the selftest path was
-# taken via the fallback, which put a stray count line into a commit message.
+# Print ONLY the verified falsifier count for a module.
+#
+# NEVER falls back to running a module bare. The previous fallback ran
+# `python3 <module>` with no flag when --selftest produced no PASS lines, and
+# for a runner that means main() — the HEAVY data path, launched from the
+# session shell, which the resource rule forbids. A helper for counting tests
+# must not be able to start a research run.
 set -uo pipefail
 m="${1:?module}"
-n=$(python3 "$m" --selftest 2>/dev/null | grep -c "^  PASS " || true)
-if [ "${n:-0}" -eq 0 ]; then
-  n=$(python3 "$m" 2>/dev/null | grep -c "^  PASS " || true)
-fi
+n=$(timeout 120 python3 "$m" --selftest 2>/dev/null | grep -c "^  PASS " || true)
 printf '%s\n' "${n:-0}"

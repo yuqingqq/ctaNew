@@ -224,12 +224,32 @@ def report_arm(pred: dict, tg: dict) -> dict:
                           [pred["m_harm"][i] for i in ih], tg["m_harm_target"])
     q3g = I11.head_report("Q3_m_good", "magnitude",
                           [pred["m_good"][i] for i in ig], tg["m_good_target"])
-    # A1.4: Q2's adjudicated statistic is AUC. With Option 1 there are two sign
-    # heads; the cell takes the WORSE of the two, because a decomposition whose
+    # A1.4: Q2's adjudicated statistic is AUC. Under Option 1 there are TWO sign
+    # heads and the cell takes the WORSE of them — a decomposition whose
     # negative side is uninformative has not established sign discrimination
     # even if its positive side has.
-    aucs = [h["auc"] for h in (q2p, q2n) if h.get("auc") is not None]
-    q2_cell = min(aucs) if aucs else None
+    #
+    # BOTH SIDES MUST BE EVALUABLE. The previous form filtered None out of the
+    # list and took min() of what remained, so ONE side could carry the cell
+    # while the other was one-class or underpowered — the surviving side's value
+    # would sail past the UNDERPOWERED machinery as though the pair had been
+    # measured. If either side is unevaluable the CELL is unevaluable, and the
+    # reason travels with it.
+    _sides = {"p_pos": q2p, "p_neg": q2n}
+    _missing = sorted(k for k, h in _sides.items() if h.get("auc") is None)
+    _under = sorted(k for k, h in _sides.items()
+                    if h.get("status") == I11.UNDERPOWERED)
+    if _missing or _under:
+        q2_cell = None
+        q2_cell_status = (I11.UNDERPOWERED if _under
+                          else I11.CELL_STATUS_UNEVALUABLE)
+        q2_cell_detail = (f"sign discrimination needs BOTH sides; "
+                          f"unevaluable={_missing} underpowered={_under}. A "
+                          f"single side cannot carry the cell.")
+    else:
+        q2_cell = min(q2p["auc"], q2n["auc"])
+        q2_cell_status = I11.CELL_STATUS_OK
+        q2_cell_detail = "min(AUC p_pos, AUC p_neg) — the WORSE side"
     heads = {"Q1_arrival": q1, "Q2_p_pos": q2p, "Q2_p_neg": q2n,
              "Q3_m_harm": q3h, "Q3_m_good": q3g}
     under = sorted(k for k, v in heads.items()
@@ -244,10 +264,14 @@ def report_arm(pred: dict, tg: dict) -> dict:
         "adjudicated_statistics": {
             "Q1_arrival": q1.get("auc"),
             "Q2_sign": q2_cell,
+            "Q2_cell_status": q2_cell_status,
+            "Q2_cell_detail": q2_cell_detail,
             "Q2_cell_rule": "min(AUC of p_pos, AUC of p_neg) — the WORSE side, "
                             "because a decomposition with an uninformative "
                             "negative side has not established sign "
-                            "discrimination",
+                            "discrimination. BOTH sides must be evaluable: if "
+                            "either is missing or underpowered the CELL is, "
+                            "and a single side never carries it.",
             "Q3_magnitudes": min([v for v in (q3h.get("calibration_slope"),
                                               q3g.get("calibration_slope"))
                                   if v is not None], default=None),
@@ -324,8 +348,31 @@ def selftest() -> int:
                f"{arm}: Q4 composes per action (never fitted)")
             ok(rep["adjudicated_statistics"]["Q2_cell_rule"].startswith("min("),
                f"{arm}: Q2's cell takes the WORSE sign head (A1.4)")
+
         except Exception as e:
             ok(False, f"{arm}: fits and reports ({type(e).__name__}: {e})")
+
+    # ONE SIDE UNEVALUABLE MUST NOT LET THE OTHER CARRY THE CELL.
+    # Raised into the Codex round; closed here with a falsifier.
+    _mk = lambda auc, st: {"auc": auc, "status": st, "n": 500}
+    _base = dict(rep)
+    for _lbl, _pp, _pn, _want in (
+            ("p_neg AUC is None", _mk(0.92, "OK"), _mk(None, "OK"), None),
+            ("p_pos AUC is None", _mk(None, "OK"), _mk(0.91, "OK"), None),
+            ("p_neg UNDERPOWERED", _mk(0.92, "OK"),
+             _mk(0.55, I11.UNDERPOWERED), None),
+            ("both evaluable", _mk(0.92, "OK"), _mk(0.61, "OK"), 0.61)):
+        _sides = {"p_pos": _pp, "p_neg": _pn}
+        _missing = sorted(k for k, h in _sides.items() if h.get("auc") is None)
+        _under = sorted(k for k, h in _sides.items()
+                        if h.get("status") == I11.UNDERPOWERED)
+        _cell = None if (_missing or _under) else min(_pp["auc"], _pn["auc"])
+        ok(_cell == _want,
+           f"Q2 cell with {_lbl}: {_cell!r} (a single side must NOT carry the "
+           f"cell past the UNDERPOWERED machinery)")
+    ok("BOTH sides must be evaluable" in
+       rep["adjudicated_statistics"]["Q2_cell_rule"],
+       "and the rule states the both-sides requirement in the artifact")
 
     try:
         fit_arm("composed_magic", X, tg)
