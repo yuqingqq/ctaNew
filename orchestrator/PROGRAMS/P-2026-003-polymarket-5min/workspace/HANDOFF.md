@@ -1,9 +1,36 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-08-28T10:00Z (MEM) — **count discrepancy CLOSED as a mislabel, and
-this file's own instruction about it was wrong** (superseded in-band, verified
-by re-running the instrument). 011 fit still blocks on Codex `HOLD RELEASED`
+Updated: 2026-08-28T10:03Z (MEM) — `STATUS.yml`'s `updated:` field is now a
+**rolling window of three**, older chain archived (moved, never deleted). Count
+discrepancy closed as a mislabel. 011 fit still blocks on Codex `HOLD RELEASED`
 alone. Deploy ON for 00:00:00Z but **not unconditional**.
+
+## 2026-08-28 ~10:03Z (MEM) — standing convention: `updated:` is a rolling window of three
+
+**Ruled by the coordinator after MEM raised it and did not execute it.** The
+`updated:` field had reached **255 lines / 18.7 KB with 15 PRIOR generations**
+(10 written in one day), so a cold reader met `flags:` at **line 261 of 3225**.
+It had become a second narrative history duplicating these HANDOFF sections, in
+front of everything else in the file.
+
+**The convention, binding on every future sweep:**
+
+1. `updated:` keeps the **newest three** entries.
+2. Older entries move to **`workspace/STATUS_UPDATED_ARCHIVE.md`** — **moved,
+   never deleted**.
+3. **On each sweep, move the overflow in the same commit**, so the field never
+   regrows.
+4. The archive is **append-only**, one dated batch per move.
+
+**Effect of batch 1:** `flags:` now begins at **line 77 of 3041**; the field is
+5.0 KB instead of 18.7 KB. 13 entries archived.
+
+**Nothing was lost, and that is checked rather than asserted:** the archive
+documents the exact join rule, and reconstructing the field as it stood at
+`1bc65cc` from the kept entries plus the archive body reproduces it
+**byte-for-byte (18,709 = 18,709 chars)**. If an automated reader turns out to
+need the full chain, it is in the archive and in git history — that recovery
+path is why moved-never-deleted was the design rather than trimming.
 
 ## 2026-08-28 ~10:00Z (MEM) — R-250: the count was never a disagreement, and my instruction was wrong
 
