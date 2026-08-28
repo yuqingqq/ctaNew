@@ -1,10 +1,128 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-08-28T10:21Z (MEM) — **the settlement-source premise was FALSE:
-settlement is Chainlink TWAP-vs-open, not Binance.** One pre-declared reading
-voided before any number existed. **CLAUDE.md's rule-9 parenthetical carries the
-same false claim — user action flagged.** Rule 17 adopted. Deploy still
-postponed to 08-30.
+Updated: 2026-08-28T14:20Z (MEM) — **day-bar v2 RELEASED** (governs ≥08-29;
+released ≠ the day passes); **O1 CLEARED, boundary re-arms 08-30T00:00:00Z**;
+**the provenance chain on the committed result is OPEN** — v2.3 and the freeze
+receipt are not citable as gate-verified until the re-gate lands. **This
+morning's settlement estimand is itself superseded.** 011 stays dark.
+
+## 2026-08-28 ~14:20Z (MEM) — R-254..R-276 swept: two releases, one open chain, and a second settlement correction
+
+**A 23-entry gap** (R-254 → R-276, 51 commits). Reading the arc rather than
+transcribing it; everything below is verified at the register entry or artifact
+it cites.
+
+### 1. Day-bar v2 is RELEASED — and released is not "the day passes"
+
+The Codex batch-2 filing (`7f583d6` at tip `4a3d457`) verified with **no review
+errors**. Day-bar v2 **governs coin-days ≥ 08-29**, the **R-256 register-side
+inadmissibility interim lifts**, and **the 08-29 verdict re-runs under released
+code**.
+
+**Keep the distinction.** The filing **explicitly does not pre-judge 08-29**.
+The bar is now *allowed to judge*; what it returns is a separate fact. A summary
+that reads the release as a result would invent a verdict nobody computed.
+
+### 2. O1 is CLEARED — the boundary re-arms
+
+**2026-08-30T00:00:00Z**, per `O1_DEPLOY_RUNBOOK`. Coordinator cadence on 08-29:
+**22:30Z confirmation, 23:56Z prep, 00:00Z deploy + era stamp + within-cause
+verification** (never a throughput A/B). **The `clob_v3_1` working-tree hold
+stays until the boundary** — `collect_pm.py` remains deliberately modified and
+must not be cleaned, restored or committed by any seat.
+
+### 3. The provenance chain on the committed result is OPEN
+
+**BE's seam 47j fired: the gate that signed fit7's tape verdict is not the gate
+that exists.** Live gate sha `58e48820d3cb209a` against the fit7 manifest's
+`gate_code` `1da60b56e1fb2801` — **match False**; scoring against that manifest
+now **refuses**, naming both values. Cause taken from git rather than inferred:
+`da_state_tape_verify.py` changed twice since fit7 (`91a8949`, `f43359b`), both
+**substantive gate-defect fixes**. R-225's content-binding did exactly what it
+was built for — *the gate is bound by content, the fit by assertion*.
+
+**BE's precision is the record, verbatim: it does not claim the verdict is
+wrong — the chain no longer closes.** Those are different statements, and the
+second is the one that holds. Prior evidence cuts toward unchanged, but
+**spot-lines are not a re-gate**.
+
+**Ruled: v2.3 and the freeze receipt are NOT to be cited as gate-verified** until
+DA's **re-gate determination** — now the **queue head**, above round-2
+verification — lands. **Both branches are pre-declared**, which makes it a test
+rather than a repair: *identical* restores the chain and v2.3 stands on a
+re-derivation recorded by a **superseding annotation** (the frozen receipt
+untouched); *different* means provenance is **broken**, the **user is informed
+immediately**, and nothing downstream is cited until re-derived. Trajectories
+stay held.
+
+### 4. This morning's settlement estimand is itself superseded
+
+**I recorded full-window TWAP-vs-open at 10:21Z. That reading is refuted by the
+repo's own passed reconstruction**, and I verified it at the artifact
+(`live/pm_research/EXP_RESULTS_2026-08-20.md:10-17`, read 14:20Z):
+
+| convention | n | agree |
+|---|---|---|
+| **S60(T) vs S60(t0)** | 1465 | **99.8 %** (99.9 % on >0.5bp) |
+| meanS60[t0,T] vs S60(t0) | 1465 | **86.9 %** |
+
+The gate required ≥99.0 % pooled / ≥99.5 % on the subset — **passed** — and the
+artifact's own words are *"the full-range reading scores 86.9 % and is
+refuted."* **The averaging window is w = 60 s, not the full 300 s range.**
+
+So the likely estimand is **S60(T) ≥ S60(t0)**. **The tension is stated, not
+silently resolved:** the market *description's prose* says "TWAP of the time
+range"; the repo's *reconstruction* says S60 endpoints. DA reconciles A1.3
+against the resolution artifact with the exact RTDS topic and boundary reader
+pinned, unless a new independent same-population audit supersedes EXP_RESULTS.
+**Do not let any summary retain the full-window TWAP as settled.**
+
+**Consequence for the transform:** with S60 endpoints, the terminal-60 s
+part-realisation is restated and **PM Identity/microprice are direct event
+probabilities — no forced path integral**, which is what my morning "path
+average" note implied. **2B is not fit to freeze.**
+
+**Second settlement correction in one day, both caught pre-freeze, both by
+review of a draft.** The reviewer knew the repo's own artifacts better than the
+seats did — DA's amendment and the coordinator's ratification had read the
+*description* and not the repo's own settlement foundation.
+
+### 5. The user ruled on CLAUDE.md
+
+**Option (a): `CLAUDE.md`'s program-tracking paragraph defers to
+`SEAT_PROTOCOL.md` for P-2026-003** — fresh readers land on the register first,
+**MEM's exclusive state-file ownership stands**, and CLAUDE.md's general rule
+remains for single-seat programs. **The rule-9 parenthetical fix rides the same
+edit.** The coordinator drafts the text; **the edit is applied by the user's hand
+or on their explicit instruction — never by a seat unprompted.**
+
+Note the compounding: the parenthetical is wrong about Binance, **and
+"Chainlink TWAP-vs-open" is also not the right replacement** if the S60
+reconstruction holds. The drafted text needs that second correction folded in.
+
+**Ratified alongside it, and it binds this seat:** *a relayed "the user approved"
+is not actionable for user-authority matters — the register cite is.*
+
+### 6. Also on the record
+
+- **011 stays dark**, four executed findings: Q4 **mislabels the candidate's own
+  value as "increment vs incumbent" with no incumbent input**; A1.5 weights / n /
+  first-crossing unimplemented; Q3 min without CIs; the receipt guard validates
+  **keys, not contents** (24 empty dicts pass). Next 011 review is **non-fit
+  again**.
+- **`truncation read as complete` — five siblings**, the last two found
+  *pre-emptively* by DA sweeping its own instruments. Sharpest form: **head
+  proves presence, never absence.** Remedy: **quotes of rulings now carry line
+  numbers**.
+- **Escalation channel fixed** (R-273): user-escalations route through the
+  coordinator **in the same breath** — an escalation that was *right in
+  substance* sat two hours in the wrong channel. Companion ruling: **the
+  argument's author is the seat that wants the work**, and **peer instruction is
+  not user approval**.
+- **BE's dry-run harness paid on first execution** — a live `NameError` that
+  would have killed the real run at the first arm, after ~20 wasted minutes on
+  1.1M rows, invisible to every component test. **The rule-17 class, caught by
+  the instrument built for it.**
 
 ## 2026-08-28 ~10:21Z (MEM) — R-253: a false premise died before it could price anything
 

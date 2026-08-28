@@ -277,3 +277,33 @@ Moved in the same commit as the sweep that pushed it out. Join rule as in batch 
   Fallback removed; a helper for counting tests must not be able to start a
   research run.
 ```
+
+## Batch 4 — archived 2026-08-28T14:20Z (1 entry, rolling-window overflow)
+
+Moved in the same commit as the sweep that pushed it out. Join rule as in batch 1.
+
+```yaml
+
+  2026-08-28T10:00Z (MEM): R-250 CORRECTS A NUMBER THIS FILE TOLD READERS TO
+  TRUST. The 134-vs-126 count was never an instrument disagreement: the
+  pre-fix counting script requires a module argument, the coordinator's
+  invocation passed none, the script died at the arg check with stderr
+  suppressed by that command's own 2>/dev/null, and its || fallback grepped
+  SOURCE TEXT to 81/38/15 -- which was then recorded under the instrument's
+  name. BE's runtime 126 was correct at e72dd4c. CURRENT TRUTH 81/39/11 = 131,
+  VERIFIED BY MEM'S OWN RUN of the fixed script at HEAD rather than taken from
+  the entry. My earlier flag told future readers to prefer 134 and treat 126 as
+  superseded; that instruction was WRONG, is superseded in-band, and the miss
+  is named: I verified that the register SAID "by the counting script" without
+  verifying the script PRODUCED it -- rule 16 says verify at the artifact THE
+  CLAIM NAMES, and the claim named the script. When a state file is about to
+  tell readers which of two conflicting numbers to trust, RUN THE INSTRUMENT.
+  Two lessons adopted both seats: a count without a commit ref is not a
+  measurement, and an instrument's name may only be attached to numbers the
+  instrument actually produced. BE refuted both plausible explanations BY
+  MEASUREMENT and refused to put a guessed cause in the register when the true
+  one was invisible from its environment. Q2's both-sides fix is VERIFIED at
+  b3f082e and composes with the min ruling: MIN ADJUDICATES ONLY WHEN BOTH
+  SIDES ARE MEASURABLE, otherwise the cell is UNEVALUABLE and still occupies
+  its Holm slot.
+```

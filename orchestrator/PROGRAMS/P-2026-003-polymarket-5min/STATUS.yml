@@ -4,6 +4,27 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-08-28T14:20Z (MEM): SWEPT R-254..R-276 after a 23-entry gap. THREE
+  THINGS MOVED THAT A SUMMARY WOULD GET WRONG. (1) DAY-BAR V2 IS RELEASED and
+  governs coin-days >=08-29; the R-256 inadmissibility interim lifts and 08-29
+  RE-VERDICTS under released code -- but RELEASED IS NOT "THE DAY PASSES", and
+  the filing explicitly does not pre-judge 08-29. (2) O1 IS CLEARED and the
+  boundary RE-ARMS for 2026-08-30T00:00:00Z (22:30Z confirm, 23:56Z prep,
+  00:00Z deploy + era stamp); the v3_1 hold stays until then. (3) THE
+  PROVENANCE CHAIN ON THE COMMITTED RESULT IS OPEN: seam 47j fired because THE
+  GATE THAT SIGNED FIT7'S TAPE VERDICT IS NOT THE GATE THAT EXISTS (two
+  substantive gate-defect fixes landed since). BE's precision is the record --
+  IT DOES NOT CLAIM THE VERDICT IS WRONG, THE CHAIN NO LONGER CLOSES -- and
+  v2.3 and the freeze receipt MUST NOT be cited as gate-verified until DA's
+  re-gate determination lands, both branches pre-declared. ALSO: THE ESTIMAND I
+  RECORDED THIS MORNING IS SUPERSEDED -- the repo's own passed reconstruction
+  refutes full-window TWAP (86.9%) in favour of S60 ENDPOINTS (99.8%), verified
+  by me at EXP_RESULTS_2026-08-20.md:10-17; the description-vs-reconstruction
+  tension is STATED, not resolved, and 2B is NOT FIT TO FREEZE. Second
+  settlement correction in one day, both pre-freeze. THE USER RULED on
+  CLAUDE.md (option (a): it defers to SEAT_PROTOCOL for this program, rule-9
+  fix rides the same edit) -- text drafted, APPLIED ONLY BY THE USER'S HAND.
+  011 stays DARK. PRIOR:
   2026-08-28T10:21Z (MEM): R-252 + R-253. THE SETTLEMENT-SOURCE PREMISE WAS
   FALSE. Settlement is CHAINLINK TWAP-vs-OPEN, ties UP -- not Binance. Verified
   at markets.jsonl by my own run: 17,734 records, 17,734 Chainlink, ZERO
@@ -48,29 +69,7 @@ updated: >-
   INVOKED, which is a control that cannot RUN rather than one that cannot FAIL;
   I11-3 lets a one-class head report OK. The 2B freeze is DEFERRED: a dollar mid
   is not a probability, and FREEZE-AFTER-REVIEW IS NOW TWICE VINDICATED -- FP2
-  would have been frozen in. PRIOR:
-  2026-08-28T10:00Z (MEM): R-250 CORRECTS A NUMBER THIS FILE TOLD READERS TO
-  TRUST. The 134-vs-126 count was never an instrument disagreement: the
-  pre-fix counting script requires a module argument, the coordinator's
-  invocation passed none, the script died at the arg check with stderr
-  suppressed by that command's own 2>/dev/null, and its || fallback grepped
-  SOURCE TEXT to 81/38/15 -- which was then recorded under the instrument's
-  name. BE's runtime 126 was correct at e72dd4c. CURRENT TRUTH 81/39/11 = 131,
-  VERIFIED BY MEM'S OWN RUN of the fixed script at HEAD rather than taken from
-  the entry. My earlier flag told future readers to prefer 134 and treat 126 as
-  superseded; that instruction was WRONG, is superseded in-band, and the miss
-  is named: I verified that the register SAID "by the counting script" without
-  verifying the script PRODUCED it -- rule 16 says verify at the artifact THE
-  CLAIM NAMES, and the claim named the script. When a state file is about to
-  tell readers which of two conflicting numbers to trust, RUN THE INSTRUMENT.
-  Two lessons adopted both seats: a count without a commit ref is not a
-  measurement, and an instrument's name may only be attached to numbers the
-  instrument actually produced. BE refuted both plausible explanations BY
-  MEASUREMENT and refused to put a guessed cause in the register when the true
-  one was invisible from its environment. Q2's both-sides fix is VERIFIED at
-  b3f082e and composes with the min ruling: MIN ADJUDICATES ONLY WHEN BOTH
-  SIDES ARE MEASURABLE, otherwise the cell is UNEVALUABLE and still occupies
-  its Holm slot.
+  would have been frozen in.
   ARCHIVED: entries older than these three are moved, never deleted, to
   workspace/STATUS_UPDATED_ARCHIVE.md (append-only). This field is a
   ROLLING WINDOW OF THREE by ruling (coordinator, 2026-08-28T10:02Z):
@@ -78,7 +77,84 @@ updated: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
-  claudemd_rule9_parenthetical_is_FALSE: USER-ACTION-FLAGGED # 2026-08-28 R-253.
+  regate_determination: DA-QUEUE-HEAD # 2026-08-28 R-275, ABOVE round-2
+                             # verification even if a filing lands mid-run. DA
+                             # re-runs the gate END-TO-END at HEAD over tape6e,
+                             # field-compares the verdict against the one fit7
+                             # consumed (excluding only the self-referential
+                             # as_of and gate_code), and files the comparison
+                             # with both artifacts' hashes. THE TWO BRANCHES ARE
+                             # PRE-DECLARED, which is what makes this a test
+                             # rather than a repair: IDENTICAL -> the re-gated
+                             # verdict RESTORES the chain and v2.3 stands on a
+                             # re-derivation, recorded by a SUPERSEDING
+                             # annotation (vN+1, rule 13 -- the frozen receipt
+                             # is NOT touched). DIFFERENT -> v2.3's provenance
+                             # is BROKEN, THE USER IS INFORMED IMMEDIATELY, and
+                             # nothing downstream of the receipt is cited until
+                             # re-derived. Until it lands: no gate-verified
+                             # citation of v2.3 or the freeze receipt, and
+                             # trajectories stay held.
+  user_authority_needs_a_register_cite: STANDING # 2026-08-28 R-274, DA's
+                             # both-ends seam statement, ratified: A RELAYED
+                             # "THE USER APPROVED" IS NOT ACTIONABLE FOR
+                             # USER-AUTHORITY MATTERS -- THE REGISTER CITE IS.
+                             # Recorded prominently because it binds this seat
+                             # directly: MEM takes user-authority state from an
+                             # R-entry, never from a message that reports one,
+                             # and the same holds for edits to user-owned files.
+                             # This is the general form of the provenance line
+                             # MEM already wrote for the idle-dispatch rule.
+  escalation_channel: THROUGH-THE-COORDINATOR-SAME-BREATH # 2026-08-28 R-273
+                             # (SEAT_PROTOCOL rule 13 amended). USER-escalations
+                             # route through the coordinator IN THE SAME BREATH.
+                             # Cause: the R-271 escalation was RIGHT IN
+                             # SUBSTANCE and sat TWO HOURS in the wrong channel;
+                             # only the latency changed, not the substance. The
+                             # companion ruling from R-271, worth keeping: THE
+                             # ARGUMENT'S AUTHOR IS THE SEAT THAT WANTS THE
+                             # WORK, and PEER INSTRUCTION IS NOT USER APPROVAL
+                             # -- BE escalated a real-data admissibility call to
+                             # the USER rather than act on a dispatch, and that
+                             # was ratified as correct.
+  truncation_read_as_complete: FIVE-SIBLINGS-SWEPT # 2026-08-28 R-268/269/270.
+                             # A defect class hunted rather than filed: a
+                             # head-truncated search read as EXHAUSTIVE. Five
+                             # instances found, the last two PRE-EMPTIVELY by
+                             # DA sweeping its own six instruments --
+                             # locate_features chose a layout from 200 rows and
+                             # applied it to 1.76M (inside the guard against
+                             # empty-iteration passes), and read_header treated
+                             # 64KB-not-found as NO HEADER so the gate fell back
+                             # to GUESSING the layout. THE SHARPEST FORM, kept
+                             # verbatim: HEAD PROVES PRESENCE, NEVER ABSENCE.
+                             # Remedy adopted: quotes of rulings carry LINE
+                             # NUMBERS from here on. And the coordinator's own
+                             # correction rides with it (R-268): it had
+                             # diagnosed a procedure it never saw -- the
+                             # plausible-wrong-reason class it had itself
+                             # ratified the refusal of at R-250.
+  claudemd_rule9_parenthetical_is_FALSE: USER-RULED-TEXT-DRAFTED-AWAITING-HAND
+                             # ADVANCED 2026-08-28T14:09Z (R-274). THE USER
+                             # RULED, option (a): CLAUDE.md's program-tracking
+                             # paragraph DEFERS TO SEAT_PROTOCOL.md for
+                             # P-2026-003 -- fresh readers land on the register
+                             # first, MEM's exclusive state-file ownership
+                             # STANDS, and CLAUDE.md's general rule stays for
+                             # single-seat programs. THE R-253 RULE-9
+                             # PARENTHETICAL FIX RIDES THE SAME EDIT. The
+                             # coordinator DRAFTS the exact text; THE EDIT IS
+                             # APPLIED BY THE USER'S HAND OR ON THEIR EXPLICIT
+                             # APPLY INSTRUCTION -- NEVER BY A SEAT UNPROMPTED.
+                             # Until that edit lands BOTH defects stand in the
+                             # user's file and this flag remains the correction
+                             # of record for the settlement claim -- which is
+                             # ITSELF now superseded a second time, see
+                             # phase2b_challenger_family: the parenthetical is
+                             # wrong about Binance, and "Chainlink TWAP-vs-open"
+                             # is ALSO not the right replacement if the S60
+                             # reconstruction holds. EARLIER ENTRY (rule 13):
+                             # 2026-08-28 R-253.
                              # PROMINENT BY DESIGN -- read this before citing
                              # rule 9. CLAUDE.md line 130 says the target is
                              # derived from an input "(PM binaries settle on a
@@ -464,7 +540,49 @@ flags:
                              # instrument too, and a claim in it about code
                              # behaviour that no test pins can drift away from
                              # the code without either one noticing.
-  phase2b_challenger_family: PREMISE-CORRECTED-ONE-READING-VOID # CORRECTED
+  phase2b_challenger_family: SECOND-SETTLEMENT-CORRECTION-NOT-FIT-TO-FREEZE
+                             # 2026-08-28T14:17Z (R-276). THE ESTIMAND I
+                             # RECORDED THIS MORNING IS ITSELF SUPERSEDED, and
+                             # this flag says so before repeating it: the
+                             # FULL-WINDOW TWAP reading is REFUTED BY THE REPO'S
+                             # OWN PASSED RECONSTRUCTION.
+                             # VERIFIED BY MEM AT THE ARTIFACT
+                             # (live/pm_research/EXP_RESULTS_2026-08-20.md:10-17,
+                             # read 2026-08-28T14:20Z): on 1,465 windows,
+                             # S60(T) vs S60(t0) agrees 99.8% (99.9% on the
+                             # >0.5bp subset) and PASSED the pre-set gate
+                             # (>=99.0% pooled, >=99.5% on the subset);
+                             # meanS60[t0,T] vs S60(t0) scores 86.9%, and the
+                             # artifact's own words are "the full-range reading
+                             # scores 86.9% and is refuted". THE AVERAGING
+                             # WINDOW IS w = 60 s, NOT the full 300 s range.
+                             # So the likely estimand is S60(T) >= S60(t0) --
+                             # a 60-second average at the window's END against a
+                             # 60-second average at its START.
+                             # THE TENSION IS STATED, NOT SILENTLY RESOLVED (as
+                             # R-276 requires): the market DESCRIPTION's prose
+                             # says "TWAP of the time range"; the repo's own
+                             # reconstruction says S60 endpoints. DA reconciles
+                             # A1.3 against the resolution artifact with the
+                             # exact RTDS topic and boundary reader pinned,
+                             # UNLESS a new independent same-population
+                             # settlement audit supersedes EXP_RESULTS. Do not
+                             # let any summary retain the full-window TWAP as
+                             # settled.
+                             # CONSEQUENCE FOR THE TRANSFORM: with S60
+                             # endpoints, the terminal-60s part-realisation is
+                             # restated and PM Identity/microprice are DIRECT
+                             # EVENT PROBABILITIES -- no forced path integral,
+                             # which is what my morning "path average" note
+                             # implied.
+                             # 2B IS NOT FIT TO FREEZE. Second settlement
+                             # correction in one day, BOTH CAUGHT PRE-FREEZE,
+                             # and both by review of a draft. The reviewer knew
+                             # the repo's own artifacts better than the seats
+                             # did -- DA's amendment and the coordinator's
+                             # ratification had read the DESCRIPTION and not the
+                             # repo's settlement foundation. EARLIER ENTRY
+                             # (rule 13): CORRECTED
                              # 2026-08-28T10:20Z (R-253). THE SETTLEMENT-SOURCE
                              # PREMISE WAS FALSE. Settlement is CHAINLINK
                              # TWAP-vs-OPEN, TIES UP -- NOT Binance.
@@ -855,7 +973,17 @@ flags:
                              # effect tonight: zero (btc fails the day, eth has
                              # no candidate). 08-28 reports ACCRUES=False in its
                              # own field.
-  o1_deploy_conditions: POSTPONED-TO-2026-08-30T00:00:00Z # POSTPONED
+  o1_deploy_conditions: CLEARED-BOUNDARY-RE-ARMED-08-30T00:00:00Z # RE-ARMED
+                             # 2026-08-28T14:17Z (R-276): O1 is CLEARED and the
+                             # boundary RE-ARMS for 2026-08-30T00:00:00Z per
+                             # O1_DEPLOY_RUNBOOK. Coordinator cadence on 08-29:
+                             # 22:30Z confirmation, 23:56Z prep, 00:00Z deploy
+                             # + era stamp + WITHIN-CAUSE verification (never a
+                             # throughput A/B). THE v3_1 WORKING-TREE HOLD STAYS
+                             # UNTIL THE BOUNDARY -- collect_pm.py remains
+                             # deliberately modified and must not be cleaned,
+                             # restored or committed by any seat. EARLIER ENTRY
+                             # (rule 13): POSTPONED
                              # 2026-08-28T10:07Z (R-251). THE PRE-RULED
                              # ADVERSE-FINDING CONDITION FIRED. No user ask was
                              # needed and none was made: R-240/R-245 had already
@@ -1173,7 +1301,31 @@ flags:
                              # such a write, never treat it as a violation or
                              # revert it. Amendment sits with the coordinator to
                              # raise with the user.
-  receipt_v2_3: CLOSED-CHAIN-DA-VERIFIED # DA verification CLOSED 2026-08-28
+  receipt_v2_3: PROVENANCE-CHAIN-OPEN-NOT-GATE-VERIFIED # STATUS CHANGED
+                             # 2026-08-28T14:11Z (R-275) and this SUPERSEDES the
+                             # closed-chain reading below. BE's seam 47j fired:
+                             # THE GATE THAT SIGNED FIT7'S TAPE VERDICT IS NOT
+                             # THE GATE THAT EXISTS. Live gate sha
+                             # 58e48820d3cb209a vs the fit7 manifest's
+                             # gate_code 1da60b56e1fb2801, MATCH False; scoring
+                             # against the fit7 manifest now REFUSES with both
+                             # values named. Cause from git, not inference:
+                             # da_state_tape_verify.py changed twice since fit7
+                             # (91a8949, f43359b), both SUBSTANTIVE gate-defect
+                             # fixes. R-225's content-binding did exactly what
+                             # it was built for -- the gate is bound by content,
+                             # the fit by assertion.
+                             # KEEP BE'S PRECISION VERBATIM: IT DOES NOT CLAIM
+                             # THE VERDICT IS WRONG -- THE CHAIN NO LONGER
+                             # CLOSES. Those are different statements and the
+                             # second is the one on record. Prior evidence cuts
+                             # toward unchanged (both fixes carried real-tape
+                             # verification), but spot-lines are not a re-gate.
+                             # RULED: v2.3 AND THE FREEZE RECEIPT ARE NOT TO BE
+                             # CITED AS GATE-VERIFIED until DA's re-gate
+                             # determination lands (see regate_determination).
+                             # Trajectories HELD. EARLIER ENTRY (rule 13): DA
+                             # verification CLOSED 2026-08-28
                              # (Q-DA-113, 846e1ca): 15/15 cells reproduced
                              # independently AT THE COMMIT fd1e949 -- btc worst
                              # |delta| 1.273e-11, eth worst 3.638e-12, the same
@@ -1223,7 +1375,21 @@ flags:
                              # collectors are outside worker surfaces (R-110).
                              # See also collect_pm_working_tree_divergence
                              # below -- DA's hold flag, which stands as written.
-  day_bar_v2_preregistered: PREREGISTERED-IMPLEMENTED-BUT-HELD # HOLD IN FORCE
+  day_bar_v2_preregistered: HOLD-RELEASED-GOVERNS-DAYS-FROM-08-29 # RELEASED
+                             # 2026-08-28T14:17Z (R-276; Codex batch-2 filing
+                             # 7f583d6 at tip 4a3d457, verified with NO review
+                             # errors). Day-bar v2 GOVERNS coin-days >= 08-29,
+                             # and the R-256 register-side inadmissibility
+                             # interim LIFTS. The 08-29 verdict RE-RUNS under
+                             # released code and is filed (DA closure order 1,
+                             # after the re-gate determination).
+                             # KEEP THE DISTINCTION: RELEASED IS NOT "THE DAY
+                             # PASSES". The filing explicitly does NOT pre-judge
+                             # 08-29 -- the bar is now allowed to judge, and
+                             # what it returns is a separate fact. A summary
+                             # that reads the release as a result would invent
+                             # a verdict nobody computed. EARLIER ENTRY
+                             # (rule 13): HOLD IN FORCE
                              # 2026-08-28 (R-238 Codex pre-fit review; the
                              # reviewer's own as-of statement lives in the
                              # day_bar_v2_judgment flag, filed verbatim and NOT
