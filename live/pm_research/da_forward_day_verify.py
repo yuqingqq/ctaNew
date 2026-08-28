@@ -105,6 +105,7 @@ def coin_gap_intervals(lo: int, hi: int, coin: str, path: Path | None = None,
     n_bad = 0
     n_structural_bad = 0
     synthesized_ends = 0
+    producer_ends = 0
     for line in src.read_text(encoding="utf-8").splitlines():
         line = line.strip()
         if not line:
@@ -141,9 +142,17 @@ def coin_gap_intervals(lo: int, hi: int, coin: str, path: Path | None = None,
                     n_structural_bad += 1
                     continue
             elif _ge is not None:
-                # an open-at-exit record must NOT carry an end
-                n_structural_bad += 1
-                continue
+                # DB2. The committed O1 producer STAMPS a task-exit end on
+                # gap_open_at_exit; refusing it made both suites green in
+                # isolation while their integration refused the moment O1d
+                # fired. A producer-supplied end is USED when it is finite and
+                # ordered -- it is better evidence than anything the consumer
+                # can synthesize, because the producer knows when the task
+                # actually exited.
+                if (not isinstance(_ge, (int, float)) or not math.isfinite(_ge)
+                        or _ge <= _gs):
+                    n_structural_bad += 1
+                    continue
         # (c) gap_open_at_exit is the NEVER-RECONNECTED class -- exactly what
         # O1d exists for. Reading only gap_closed silently understates loss the
         # moment such a record appears, and says nothing while doing it.
@@ -151,10 +160,14 @@ def coin_gap_intervals(lo: int, hi: int, coin: str, path: Path | None = None,
             continue
         gs, ge = r.get("gap_start_ns"), r.get("gap_end_ns")
         if ev == "gap_open_at_exit":
-            # ONLY this event may synthesise an end, and the scope end it is
-            # charged to is recorded explicitly rather than left implicit.
-            ge = int(hi * 1e9)
-            synthesized_ends += 1
+            if ge is None:
+                # SYNTHESIS IS THE FALLBACK, NOT THE RULE: only when the
+                # producer supplied no end at all. The scope end charged to is
+                # recorded explicitly rather than left implicit.
+                ge = int(hi * 1e9)
+                synthesized_ends += 1
+            else:
+                producer_ends += 1
         a, b = gs / 1e9, ge / 1e9
         if b > lo and a < hi:
             iv.append((max(a, lo), min(b, hi)))
@@ -175,6 +188,7 @@ def coin_gap_intervals(lo: int, hi: int, coin: str, path: Path | None = None,
             f"with no gaps.")
     if diag is not None:
         diag["synthesized_ends_charged_to_scope_end"] = synthesized_ends
+        diag["producer_supplied_ends_used"] = producer_ends
         diag["scope_end_utc"] = hi
     iv.sort()
     out: list[tuple[float, float]] = []
@@ -594,9 +608,29 @@ def verify_day(day_token: str, freeze_epoch: float,
                 if _gs["rate_estimable"] else
                 f"NOT ESTIMABLE -- {_gs['rate_note']}")
 
-            _gov_cp = governing_predicates(cp, bar_regime(day_token))
+            _reg = bar_regime(day_token)
+            # DB1. The per-coin verdict used to be composed BEFORE P1/P2/P3
+            # existed, so a coin-day PASSED over a 4,000s outage while its own
+            # bar failed -- and PER-COIN VERDICTS FEED PER-COIN CLOCKS, so that
+            # day would have accrued. The same ordering defect as the global
+            # all_pass: I fixed one consumer and left its twin. The coin's bars
+            # are computed HERE and appended to its own table before anything
+            # is composed.
+            _cov_c = counts.get(coin, 0) > 0 and short.get(coin, 1) <= 0
+            _cb = (day_bar_v2(lo, hi, coin, gs["hours_elapsed"],
+                              coverage_observed=_cov_c)
+                   if _reg == "day_bar_v2" else None)
+            if _cb is not None:
+                for _k in ("P1", "P2", "P3"):
+                    cpp(f"{_k}_bar", _cb.get(f"{_k}_pass", False),
+                        _cb.get("why") or f"{_k} on this coin's own gaps")
+            _gov_cp = governing_predicates(cp, _reg)
+            _csplit = split_verdict(cp, _reg)
             per_coin[coin] = {
                 "predicates": cp,
+                "day_bar_v2": _cb,
+                "verdict_split": _csplit,
+                "race_accrual_eligible": _csplit["race_accrual_eligible"],
                 "governing_predicates": [x["predicate"] for x in _gov_cp],
                 "superseded_not_governing": [x["predicate"] for x in cp
                                              if x not in _gov_cp],
@@ -858,9 +892,9 @@ def _selftests() -> int:
                "gap_end_ns": int((_lo9 + 20) * 1e9)}],
              "a NON-FINITE stamp"),
             ([{"event": "gap_open_at_exit", "coin": "btc", "slug": "s",
-               "gap_start_ns": int((_lo9 + 10) * 1e9),
-               "gap_end_ns": int((_lo9 + 20) * 1e9)}],
-             "an open-at-exit record that CARRIES an end"),
+               "gap_start_ns": int((_lo9 + 20) * 1e9),
+               "gap_end_ns": int((_lo9 + 10) * 1e9)}],
+             "an open-at-exit record whose producer end PRECEDES its start"),
         ]
         for _i, (_recs, _lbl) in enumerate(_bad_cases):
             try:
@@ -872,6 +906,35 @@ def _selftests() -> int:
                 ok(True, f"(4) {_lbl} REFUSES -- validated BEFORE coin "
                          f"filtering, so corruption cannot hide behind another "
                          f"coin's records")
+        # ---- DB2: the PRODUCER's shape must be consumed, not refused -------
+        _prod = {"event": "gap_open_at_exit", "coin": "btc", "slug": "s",
+                 "window_start": _lo9, "cause": "PING_TIMEOUT",
+                 "gap_start_ns": int((_lo9 + 3600) * 1e9),
+                 "gap_end_ns": int((_lo9 + 3900) * 1e9),
+                 "duration_ms": 300000.0,
+                 "note": "outage ran to window end; never reconnected"}
+        _d2: dict = {}
+        _iv2 = coin_gap_intervals(_lo9, _hi9, "btc",
+                                  _wr(_td, [_prod], "producer.jsonl"), diag=_d2)
+        ok(len(_iv2) == 1 and abs((_iv2[0][1] - _iv2[0][0]) - 300.0) < 1e-6,
+           "DB2: a row in the COMMITTED PRODUCER's exact shape (gap_open_at_exit "
+           "WITH a finite task-exit end) is CONSUMED and charged its real 300s "
+           "-- refusing it made both suites green while the integration always "
+           "refused the moment O1d fired")
+        ok(_d2.get("producer_supplied_ends_used") == 1
+           and _d2.get("synthesized_ends_charged_to_scope_end") == 0,
+           "DB2: the PRODUCER's end is USED and counted as such; synthesis did "
+           "NOT fire -- the producer knows when its task exited, the consumer "
+           "does not")
+        _noend = dict(_prod); _noend.pop("gap_end_ns")
+        _d3: dict = {}
+        _iv3 = coin_gap_intervals(_lo9, _hi9, "btc",
+                                  _wr(_td, [_noend], "noend.jsonl"), diag=_d3)
+        ok(_d3.get("synthesized_ends_charged_to_scope_end") == 1
+           and _iv3 and _iv3[0][1] == float(_hi9),
+           "DB2: synthesis is the FALLBACK, firing only when the producer "
+           "supplied no end at all, and the scope end is recorded")
+
         # positive control + explicit scope end for the ONLY synthesising event
         _diag: dict = {}
         _iv = coin_gap_intervals(_lo9, _hi9, "btc",
