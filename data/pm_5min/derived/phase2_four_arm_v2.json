@@ -1,0 +1,1376 @@
+{
+ "arms": {
+  "btc": {
+   "INCUMBENT_REWEIGHTED_ONLY": {
+    "causal_thresholds": {
+     "10%": 0.43525926488298716,
+     "15%": 0.31989165625975907,
+     "5%": 0.6355598921658109
+    },
+    "gate": {
+     "budgets": {
+      "10%": {
+       "beats_random_max_on_NET": true,
+       "concentration": {
+        "max_single_hour_net_cents": 1138.6530344999994,
+        "max_single_hour_share_of_net": 0.16148429877372172,
+        "n_hours_net_positive": 15,
+        "n_hours_with_cancellations": 15,
+        "net_by_hour": {
+         "10": 443.58,
+         "11": 1138.65,
+         "12": 807.5,
+         "13": 237.72,
+         "14": 584.0,
+         "15": 453.16,
+         "16": 676.92,
+         "17": 699.13,
+         "18": 295.24,
+         "19": 143.86,
+         "20": 143.85,
+         "21": 158.11,
+         "22": 313.86,
+         "23": 840.31,
+         "9": 115.28
+        },
+        "net_excluding_best_hour": 5912.52,
+        "positive_without_best_hour": true
+       },
+       "harm_avoided_cents": 20821.887696949998,
+       "n_cancelled_generations": 15350,
+       "net_cents": 7051.168708950004,
+       "random_net_max": -59.73128655000003,
+       "random_net_mean": -2735.16407225625,
+       "random_net_p95": -1013.0996629500014,
+       "rho_captured_over_sacrificed": 1.512040708629265,
+       "sacrifice_cents": 13770.718988,
+       "threshold_mode": "CAUSAL_FROZEN_FROM_TRAIN"
+      },
+      "15%": {
+       "beats_random_max_on_NET": true,
+       "concentration": {
+        "max_single_hour_net_cents": 1369.2287289999997,
+        "max_single_hour_share_of_net": 0.12774801698298016,
+        "n_hours_net_positive": 15,
+        "n_hours_with_cancellations": 15,
+        "net_by_hour": {
+         "10": 797.04,
+         "11": 1369.23,
+         "12": 1186.92,
+         "13": 281.87,
+         "14": 560.2,
+         "15": 1.72,
+         "16": 867.07,
+         "17": 1065.19,
+         "18": 615.14,
+         "19": 525.55,
+         "20": 614.94,
+         "21": 808.18,
+         "22": 677.02,
+         "23": 1197.16,
+         "9": 150.96
+        },
+        "net_excluding_best_hour": 9348.97,
+        "positive_without_best_hour": true
+       },
+       "harm_avoided_cents": 32819.227708449995,
+       "n_cancelled_generations": 24740,
+       "net_cents": 10718.199478450011,
+       "random_net_max": -314.5733410000004,
+       "random_net_mean": -4572.65501105,
+       "random_net_p95": -2242.8894180000007,
+       "rho_captured_over_sacrificed": 1.484963838193785,
+       "sacrifice_cents": 22101.02823,
+       "threshold_mode": "CAUSAL_FROZEN_FROM_TRAIN"
+      },
+      "5%": {
+       "beats_random_max_on_NET": true,
+       "concentration": {
+        "max_single_hour_net_cents": 884.3032835,
+        "max_single_hour_share_of_net": 0.19169775871245415,
+        "n_hours_net_positive": 14,
+        "n_hours_with_cancellations": 15,
+        "net_by_hour": {
+         "10": 493.95,
+         "11": 884.3,
+         "12": 630.09,
+         "13": 217.23,
+         "14": 366.36,
+         "15": 222.94,
+         "16": 407.91,
+         "17": 257.0,
+         "18": 274.13,
+         "19": 213.99,
+         "20": 187.95,
+         "21": -395.24,
+         "22": 264.96,
+         "23": 410.48,
+         "9": 176.96
+        },
+        "net_excluding_best_hour": 3728.7,
+        "positive_without_best_hour": true
+       },
+       "harm_avoided_cents": 10765.400584500001,
+       "n_cancelled_generations": 6921,
+       "net_cents": 4613.0079425,
+       "random_net_max": 169.42098749999928,
+       "random_net_mean": -1166.7390308845002,
+       "random_net_p95": -72.76014800000044,
+       "rho_captured_over_sacrificed": 1.7497908880211552,
+       "sacrifice_cents": 6152.392642,
+       "threshold_mode": "CAUSAL_FROZEN_FROM_TRAIN"
+      }
+     },
+     "latency_ms": 50,
+     "n_actions": 177674,
+     "n_generations": 177674,
+     "n_rows": 311640,
+     "rows_per_action": 1.7539988968560398,
+     "threshold_mode": "CAUSAL_FROZEN_FROM_TRAIN",
+     "unit": "ACTION"
+    },
+    "head_diagnostics": {
+     "conditional_value_calibration_slope": 0.9466678228058556,
+     "conditional_value_mae": 19.627777429503066,
+     "harmful_sign_discrimination": 0.5530607985210365,
+     "hazard_auc": 0.7139077229218406,
+     "hazard_brier": 0.09352617120690553
+    },
+    "model_kind": "weighted_linear",
+    "threshold_source": "linear_d_{coin}.json"
+   },
+   "LGBM_PINNED": {
+    "causal_thresholds": {
+     "10%": 0.32450609461933483,
+     "15%": 0.17927215156143955,
+     "5%": 0.7075066259173506
+    },
+    "gate": {
+     "budgets": {
+      "10%": {
+       "beats_random_max_on_NET": true,
+       "concentration": {
+        "max_single_hour_net_cents": 2082.6529385000003,
+        "max_single_hour_share_of_net": 0.15246641396923022,
+        "n_hours_net_positive": 15,
+        "n_hours_with_cancellations": 15,
+        "net_by_hour": {
+         "10": 1061.34,
+         "11": 577.53,
+         "12": 550.68,
+         "13": 176.75,
+         "14": 465.25,
+         "15": 128.88,
+         "16": 535.63,
+         "17": 1972.73,
+         "18": 1569.12,
+         "19": 129.47,
+         "20": 1226.18,
+         "21": 1362.4,
+         "22": 641.67,
+         "23": 2082.65,
+         "9": 1179.44
+        },
+        "net_excluding_best_hour": 11577.1,
+        "positive_without_best_hour": true
+       },
+       "harm_avoided_cents": 44567.88230945003,
+       "n_cancelled_generations": 17143,
+       "net_cents": 13659.74895244999,
+       "random_net_max": -408.73984399999904,
+       "random_net_mean": -2839.1218554985007,
+       "random_net_p95": -858.6186930000001,
+       "rho_captured_over_sacrificed": 1.4419467456890727,
+       "sacrifice_cents": 30908.133357000006,
+       "threshold_mode": "CAUSAL_FROZEN_FROM_TRAIN"
+      },
+      "15%": {
+       "beats_random_max_on_NET": true,
+       "concentration": {
+        "max_single_hour_net_cents": 1837.6851260000008,
+        "max_single_hour_share_of_net": 0.1561076003953926,
+        "n_hours_net_positive": 12,
+        "n_hours_with_cancellations": 15,
+        "net_by_hour": {
+         "10": 1288.54,
+         "11": 741.47,
+         "12": 412.94,
+         "13": -10.41,
+         "14": -29.13,
+         "15": 26.23,
+         "16": 767.74,
+         "17": 1810.03,
+         "18": 1039.67,
+         "19": -514.89,
+         "20": 1330.97,
+         "21": 1223.52,
+         "22": 600.83,
+         "23": 1837.69,
+         "9": 1246.69
+        },
+        "net_excluding_best_hour": 9934.23,
+        "positive_without_best_hour": true
+       },
+       "harm_avoided_cents": 53586.11102495004,
+       "n_cancelled_generations": 25423,
+       "net_cents": 11771.91322744999,
+       "random_net_max": -92.3271520000005,
+       "random_net_mean": -4099.97375591225,
+       "random_net_p95": -1896.6661440000005,
+       "rho_captured_over_sacrificed": 1.2815290941239543,
+       "sacrifice_cents": 41814.19779750002,
+       "threshold_mode": "CAUSAL_FROZEN_FROM_TRAIN"
+      },
+      "5%": {
+       "beats_random_max_on_NET": true,
+       "concentration": {
+        "max_single_hour_net_cents": 1361.6594309999994,
+        "max_single_hour_share_of_net": 0.13890435929180467,
+        "n_hours_net_positive": 14,
+        "n_hours_with_cancellations": 15,
+        "net_by_hour": {
+         "10": 632.28,
+         "11": 497.24,
+         "12": 616.56,
+         "13": 328.08,
+         "14": 587.49,
+         "15": 416.32,
+         "16": 775.73,
+         "17": 1361.66,
+         "18": 1246.57,
+         "19": -140.11,
+         "20": 644.44,
+         "21": 944.96,
+         "22": 395.18,
+         "23": 892.45,
+         "9": 604.0
+        },
+        "net_excluding_best_hour": 8441.2,
+        "positive_without_best_hour": true
+       },
+       "harm_avoided_cents": 27909.748795450025,
+       "n_cancelled_generations": 8745,
+       "net_cents": 9802.855993450003,
+       "random_net_max": 540.2150225000004,
+       "random_net_mean": -1421.2900719425002,
+       "random_net_p95": 115.44501100000036,
+       "rho_captured_over_sacrificed": 1.541388083568223,
+       "sacrifice_cents": 18106.892801999995,
+       "threshold_mode": "CAUSAL_FROZEN_FROM_TRAIN"
+      }
+     },
+     "latency_ms": 50,
+     "n_actions": 177674,
+     "n_generations": 177674,
+     "n_rows": 311640,
+     "rows_per_action": 1.7539988968560398,
+     "threshold_mode": "CAUSAL_FROZEN_FROM_TRAIN",
+     "unit": "ACTION"
+    },
+    "head_diagnostics": {
+     "conditional_value_calibration_slope": 0.7211838985796969,
+     "conditional_value_mae": 19.60618371383879,
+     "harmful_sign_discrimination": 0.5584578227032829,
+     "hazard_auc": 0.8304621265070625,
+     "hazard_brier": 0.08127798458936666
+    },
+    "model_kind": "lgbm",
+    "threshold_source": "lgbm_thresholds_{coin}.json"
+   },
+   "PLUS_PRED_STATE_V1": {
+    "causal_thresholds": {
+     "10%": 0.45813789288650786,
+     "15%": 0.3063053992313116,
+     "5%": 0.7469145188020561
+    },
+    "gate": {
+     "budgets": {
+      "10%": {
+       "beats_random_max_on_NET": true,
+       "concentration": {
+        "max_single_hour_net_cents": 1874.1703194999996,
+        "max_single_hour_share_of_net": 0.17299803323220686,
+        "n_hours_net_positive": 14,
+        "n_hours_with_cancellations": 15,
+        "net_by_hour": {
+         "10": 1062.01,
+         "11": 730.14,
+         "12": 1047.79,
+         "13": 638.36,
+         "14": 481.64,
+         "15": -214.0,
+         "16": 512.19,
+         "17": 1874.17,
+         "18": 1065.49,
+         "19": 236.73,
+         "20": 903.1,
+         "21": 887.41,
+         "22": 175.25,
+         "23": 1004.41,
+         "9": 428.77
+        },
+        "net_excluding_best_hour": 8959.31,
+        "positive_without_best_hour": true
+       },
+       "harm_avoided_cents": 34980.83688795003,
+       "n_cancelled_generations": 18623,
+       "net_cents": 10833.47760944999,
+       "random_net_max": -498.32949250000024,
+       "random_net_mean": -3213.6093433842507,
+       "random_net_p95": -1287.748862,
+       "rho_captured_over_sacrificed": 1.4486402626682156,
+       "sacrifice_cents": 24147.35927850001,
+       "threshold_mode": "CAUSAL_FROZEN_FROM_TRAIN"
+      },
+      "15%": {
+       "beats_random_max_on_NET": true,
+       "concentration": {
+        "max_single_hour_net_cents": 1724.6157199999996,
+        "max_single_hour_share_of_net": 0.13738697176101358,
+        "n_hours_net_positive": 14,
+        "n_hours_with_cancellations": 15,
+        "net_by_hour": {
+         "10": 835.63,
+         "11": 1202.23,
+         "12": 1088.75,
+         "13": 705.94,
+         "14": 406.77,
+         "15": -450.3,
+         "16": 890.76,
+         "17": 1724.62,
+         "18": 843.61,
+         "19": 266.8,
+         "20": 1113.39,
+         "21": 1134.1,
+         "22": 439.26,
+         "23": 1344.22,
+         "9": 1007.2
+        },
+        "net_excluding_best_hour": 10828.36,
+        "positive_without_best_hour": true
+       },
+       "harm_avoided_cents": 47324.109071950006,
+       "n_cancelled_generations": 27801,
+       "net_cents": 12552.978625949978,
+       "random_net_max": -772.1662269999995,
+       "random_net_mean": -4945.258381258751,
+       "random_net_p95": -2653.1446734499996,
+       "rho_captured_over_sacrificed": 1.3610172710790902,
+       "sacrifice_cents": 34771.13044600001,
+       "threshold_mode": "CAUSAL_FROZEN_FROM_TRAIN"
+      },
+      "5%": {
+       "beats_random_max_on_NET": true,
+       "concentration": {
+        "max_single_hour_net_cents": 982.7695495,
+        "max_single_hour_share_of_net": 0.13284490300688548,
+        "n_hours_net_positive": 14,
+        "n_hours_with_cancellations": 15,
+        "net_by_hour": {
+         "10": 755.31,
+         "11": 394.18,
+         "12": 744.88,
+         "13": 651.66,
+         "14": 377.61,
+         "15": -44.53,
+         "16": 573.92,
+         "17": 982.77,
+         "18": 771.41,
+         "19": 72.84,
+         "20": 628.05,
+         "21": 610.86,
+         "22": 313.33,
+         "23": 447.51,
+         "9": 118.07
+        },
+        "net_excluding_best_hour": 6415.1,
+        "positive_without_best_hour": true
+       },
+       "harm_avoided_cents": 19432.64092595001,
+       "n_cancelled_generations": 9353,
+       "net_cents": 7397.871707949996,
+       "random_net_max": 587.7359325500001,
+       "random_net_mean": -1662.1931085285003,
+       "random_net_p95": -5.1702464999998625,
+       "rho_captured_over_sacrificed": 1.6147082319522388,
+       "sacrifice_cents": 12034.769218000001,
+       "threshold_mode": "CAUSAL_FROZEN_FROM_TRAIN"
+      }
+     },
+     "latency_ms": 50,
+     "n_actions": 177674,
+     "n_generations": 177674,
+     "n_rows": 311640,
+     "rows_per_action": 1.7539988968560398,
+     "threshold_mode": "CAUSAL_FROZEN_FROM_TRAIN",
+     "unit": "ACTION"
+    },
+    "head_diagnostics": {
+     "conditional_value_calibration_slope": 0.8302192982729993,
+     "conditional_value_mae": 19.734355072071523,
+     "harmful_sign_discrimination": 0.5508542803470794,
+     "hazard_auc": 0.7733252463330387,
+     "hazard_brier": 0.08975229733688199
+    },
+    "model_kind": "weighted_linear",
+    "threshold_source": "linear_{coin}.json"
+   },
+   "PM_PLUS_FINE": {
+    "causal_thresholds": {
+     "10%": 0.7264675156009432,
+     "15%": 0.5284641189545762,
+     "5%": 1.0870835686716358
+    },
+    "gate": {
+     "budgets": {
+      "10%": {
+       "beats_random_max_on_NET": true,
+       "concentration": {
+        "max_single_hour_net_cents": 1202.7918459999999,
+        "max_single_hour_share_of_net": 0.16238908658727125,
+        "n_hours_net_positive": 15,
+        "n_hours_with_cancellations": 15,
+        "net_by_hour": {
+         "10": 835.01,
+         "11": 1202.79,
+         "12": 354.66,
+         "13": 114.2,
+         "14": 847.21,
+         "15": 90.32,
+         "16": 1031.5,
+         "17": 510.61,
+         "18": 262.88,
+         "19": 452.65,
+         "20": 90.72,
+         "21": 102.14,
+         "22": 347.15,
+         "23": 829.16,
+         "9": 335.84
+        },
+        "net_excluding_best_hour": 6204.06,
+        "positive_without_best_hour": true
+       },
+       "harm_avoided_cents": 19874.78170700001,
+       "n_cancelled_generations": 13110,
+       "net_cents": 7406.851478000003,
+       "random_net_max": 384.94780699999995,
+       "random_net_mean": -2332.26374910825,
+       "random_net_p95": -411.71859200000085,
+       "rho_captured_over_sacrificed": 1.594072259144658,
+       "sacrifice_cents": 12467.930229000003,
+       "threshold_mode": "CAUSAL_FROZEN_FROM_TRAIN"
+      },
+      "15%": {
+       "beats_random_max_on_NET": true,
+       "concentration": {
+        "max_single_hour_net_cents": 1177.8963124999996,
+        "max_single_hour_share_of_net": 0.12390819747959661,
+        "n_hours_net_positive": 15,
+        "n_hours_with_cancellations": 15,
+        "net_by_hour": {
+         "10": 963.09,
+         "11": 1177.9,
+         "12": 938.62,
+         "13": 6.06,
+         "14": 580.97,
+         "15": 202.98,
+         "16": 897.06,
+         "17": 870.99,
+         "18": 499.18,
+         "19": 628.92,
+         "20": 266.8,
+         "21": 328.68,
+         "22": 597.15,
+         "23": 1116.36,
+         "9": 431.44
+        },
+        "net_excluding_best_hour": 8328.31,
+        "positive_without_best_hour": true
+       },
+       "harm_avoided_cents": 31179.375886450034,
+       "n_cancelled_generations": 21953,
+       "net_cents": 9506.201659450006,
+       "random_net_max": 68.93905399999957,
+       "random_net_mean": -3815.1929603722506,
+       "random_net_p95": -1659.5188295000005,
+       "rho_captured_over_sacrificed": 1.4386160310383793,
+       "sacrifice_cents": 21673.174227,
+       "threshold_mode": "CAUSAL_FROZEN_FROM_TRAIN"
+      },
+      "5%": {
+       "beats_random_max_on_NET": true,
+       "concentration": {
+        "max_single_hour_net_cents": 612.46958,
+        "max_single_hour_share_of_net": 0.15186060914618896,
+        "n_hours_net_positive": 14,
+        "n_hours_with_cancellations": 15,
+        "net_by_hour": {
+         "10": 463.57,
+         "11": 612.47,
+         "12": 430.33,
+         "13": 141.01,
+         "14": 289.48,
+         "15": 224.13,
+         "16": 528.22,
+         "17": 322.97,
+         "18": 219.34,
+         "19": 233.63,
+         "20": 95.97,
+         "21": -464.4,
+         "22": 137.44,
+         "23": 529.39,
+         "9": 269.55
+        },
+        "net_excluding_best_hour": 3420.63,
+        "positive_without_best_hour": true
+       },
+       "harm_avoided_cents": 9039.147986000004,
+       "n_cancelled_generations": 5505,
+       "net_cents": 4033.1036694999966,
+       "random_net_max": 1297.5457185000002,
+       "random_net_mean": -933.3453460857501,
+       "random_net_p95": 284.9929544999997,
+       "rho_captured_over_sacrificed": 1.805646817030131,
+       "sacrifice_cents": 5006.044316500001,
+       "threshold_mode": "CAUSAL_FROZEN_FROM_TRAIN"
+      }
+     },
+     "latency_ms": 50,
+     "n_actions": 177674,
+     "n_generations": 177674,
+     "n_rows": 311640,
+     "rows_per_action": 1.7539988968560398,
+     "threshold_mode": "CAUSAL_FROZEN_FROM_TRAIN",
+     "unit": "ACTION"
+    },
+    "head_diagnostics": {
+     "conditional_value_calibration_slope": 0.882830607709423,
+     "conditional_value_mae": 19.630373267478113,
+     "harmful_sign_discrimination": 0.5488863046784149,
+     "hazard_auc": 0.718284469242299,
+     "hazard_brier": 0.0908867702562661
+    },
+    "model_kind": "frozen_linear_applied",
+    "threshold_source": "frozen candidate artifact"
+   }
+  },
+  "eth": {
+   "INCUMBENT_REWEIGHTED_ONLY": {
+    "causal_thresholds": {
+     "10%": 0.08987090319081104,
+     "15%": 0.06426301191384683,
+     "5%": 0.13579983017065284
+    },
+    "gate": {
+     "budgets": {
+      "10%": {
+       "beats_random_max_on_NET": true,
+       "concentration": {
+        "max_single_hour_net_cents": 1006.9261975000001,
+        "max_single_hour_share_of_net": 0.3552043100581005,
+        "n_hours_net_positive": 11,
+        "n_hours_with_cancellations": 15,
+        "net_by_hour": {
+         "10": 415.99,
+         "11": 0.14,
+         "12": 433.32,
+         "13": 373.62,
+         "14": 1006.93,
+         "15": -99.05,
+         "16": 250.47,
+         "17": -99.33,
+         "18": 408.36,
+         "19": -65.04,
+         "20": 94.08,
+         "21": 165.9,
+         "22": 32.81,
+         "23": -114.82,
+         "9": 31.42
+        },
+        "net_excluding_best_hour": 1827.85,
+        "positive_without_best_hour": true
+       },
+       "harm_avoided_cents": 7606.1059875,
+       "n_cancelled_generations": 21009,
+       "net_cents": 2834.7803475000005,
+       "random_net_max": 999.7552005000003,
+       "random_net_mean": -327.31829025,
+       "random_net_p95": 607.2754615000001,
+       "rho_captured_over_sacrificed": 1.594128458501105,
+       "sacrifice_cents": 4771.325640000001,
+       "threshold_mode": "CAUSAL_FROZEN_FROM_TRAIN"
+      },
+      "15%": {
+       "beats_random_max_on_NET": true,
+       "concentration": {
+        "max_single_hour_net_cents": 782.280787,
+        "max_single_hour_share_of_net": 0.33751043145549187,
+        "n_hours_net_positive": 8,
+        "n_hours_with_cancellations": 15,
+        "net_by_hour": {
+         "10": 452.47,
+         "11": 34.6,
+         "12": 338.94,
+         "13": 492.36,
+         "14": 782.28,
+         "15": -241.07,
+         "16": 271.45,
+         "17": -49.51,
+         "18": 444.8,
+         "19": -33.49,
+         "20": 158.67,
+         "21": -74.2,
+         "22": -66.16,
+         "23": -102.55,
+         "9": -90.8
+        },
+        "net_excluding_best_hour": 1535.52,
+        "positive_without_best_hour": true
+       },
+       "harm_avoided_cents": 10037.118265000001,
+       "n_cancelled_generations": 32236,
+       "net_cents": 2317.7973599999996,
+       "random_net_max": 1253.5063789999997,
+       "random_net_mean": -483.57764584750004,
+       "random_net_p95": 619.933135,
+       "rho_captured_over_sacrificed": 1.3002592311583652,
+       "sacrifice_cents": 7719.320905000004,
+       "threshold_mode": "CAUSAL_FROZEN_FROM_TRAIN"
+      },
+      "5%": {
+       "beats_random_max_on_NET": true,
+       "concentration": {
+        "max_single_hour_net_cents": 710.0476204999999,
+        "max_single_hour_share_of_net": 0.404556057328866,
+        "n_hours_net_positive": 10,
+        "n_hours_with_cancellations": 15,
+        "net_by_hour": {
+         "10": 230.21,
+         "11": 149.29,
+         "12": 249.72,
+         "13": 166.19,
+         "14": 710.05,
+         "15": 82.96,
+         "16": -28.93,
+         "17": -69.33,
+         "18": 161.6,
+         "19": 2.01,
+         "20": -18.13,
+         "21": 151.7,
+         "22": 104.24,
+         "23": -132.18,
+         "9": -4.28
+        },
+        "net_excluding_best_hour": 1045.08,
+        "positive_without_best_hour": true
+       },
+       "harm_avoided_cents": 4676.6911085,
+       "n_cancelled_generations": 10207,
+       "net_cents": 1755.1278930000005,
+       "random_net_max": 1085.0560094999998,
+       "random_net_mean": -92.7371342525,
+       "random_net_p95": 572.1006939999997,
+       "rho_captured_over_sacrificed": 1.6007495862791472,
+       "sacrifice_cents": 2921.5632155000003,
+       "threshold_mode": "CAUSAL_FROZEN_FROM_TRAIN"
+      }
+     },
+     "latency_ms": 50,
+     "n_actions": 260602,
+     "n_generations": 260602,
+     "n_rows": 299703,
+     "rows_per_action": 1.150041058779288,
+     "threshold_mode": "CAUSAL_FROZEN_FROM_TRAIN",
+     "unit": "ACTION"
+    },
+    "head_diagnostics": {
+     "conditional_value_calibration_slope": 0.31627467611439714,
+     "conditional_value_mae": 22.04426357147855,
+     "harmful_sign_discrimination": 0.5436740207113913,
+     "hazard_auc": 0.7577390256761771,
+     "hazard_brier": 0.01463035690744505
+    },
+    "model_kind": "weighted_linear",
+    "threshold_source": "linear_d_{coin}.json"
+   },
+   "LGBM_PINNED": {
+    "causal_thresholds": {
+     "10%": 0.06860842745659537,
+     "15%": 0.044499127463727646,
+     "5%": 0.12077400100520404
+    },
+    "gate": {
+     "budgets": {
+      "10%": {
+       "beats_random_max_on_NET": true,
+       "concentration": {
+        "max_single_hour_net_cents": 724.2167779999999,
+        "max_single_hour_share_of_net": 0.4752201624500651,
+        "n_hours_net_positive": 10,
+        "n_hours_with_cancellations": 15,
+        "net_by_hour": {
+         "10": 133.36,
+         "11": -501.15,
+         "12": 154.49,
+         "13": 724.22,
+         "14": 409.51,
+         "15": 107.78,
+         "16": 461.31,
+         "17": 49.98,
+         "18": 579.63,
+         "19": -129.12,
+         "20": 408.23,
+         "21": -423.75,
+         "22": -419.58,
+         "23": -245.63,
+         "9": 214.69
+        },
+        "net_excluding_best_hour": 799.74,
+        "positive_without_best_hour": true
+       },
+       "harm_avoided_cents": 11614.123118499998,
+       "n_cancelled_generations": 24708,
+       "net_cents": 1523.9605454999996,
+       "random_net_max": 1139.117763,
+       "random_net_mean": -277.72892457,
+       "random_net_p95": 712.6117744999997,
+       "rho_captured_over_sacrificed": 1.1510342905254989,
+       "sacrifice_cents": 10090.162573,
+       "threshold_mode": "CAUSAL_FROZEN_FROM_TRAIN"
+      },
+      "15%": {
+       "beats_random_max_on_NET": false,
+       "concentration": {
+        "max_single_hour_net_cents": 850.829668,
+        "max_single_hour_share_of_net": 0.8217958364101392,
+        "n_hours_net_positive": 9,
+        "n_hours_with_cancellations": 15,
+        "net_by_hour": {
+         "10": 230.39,
+         "11": -666.91,
+         "12": 376.63,
+         "13": 850.83,
+         "14": 420.48,
+         "15": -233.32,
+         "16": 368.7,
+         "17": 23.92,
+         "18": 375.32,
+         "19": -118.62,
+         "20": 307.4,
+         "21": -270.03,
+         "22": -514.37,
+         "23": -281.32,
+         "9": 166.23
+        },
+        "net_excluding_best_hour": 184.5,
+        "positive_without_best_hour": true
+       },
+       "harm_avoided_cents": 13833.5408205,
+       "n_cancelled_generations": 36482,
+       "net_cents": 1035.329738,
+       "random_net_max": 1751.0016644999998,
+       "random_net_mean": -424.0063721,
+       "random_net_p95": 934.7128720000003,
+       "rho_captured_over_sacrificed": 1.0808964418015954,
+       "sacrifice_cents": 12798.211082500005,
+       "threshold_mode": "CAUSAL_FROZEN_FROM_TRAIN"
+      },
+      "5%": {
+       "beats_random_max_on_NET": false,
+       "concentration": {
+        "max_single_hour_net_cents": 596.176778,
+        "max_single_hour_share_of_net": 0.6566867106779116,
+        "n_hours_net_positive": 9,
+        "n_hours_with_cancellations": 15,
+        "net_by_hour": {
+         "10": 147.01,
+         "11": -529.37,
+         "12": 65.12,
+         "13": 596.18,
+         "14": 576.41,
+         "15": 221.11,
+         "16": 138.26,
+         "17": -61.98,
+         "18": 393.53,
+         "19": -142.82,
+         "20": 95.94,
+         "21": -105.68,
+         "22": -262.06,
+         "23": -292.73,
+         "9": 68.96
+        },
+        "net_excluding_best_hour": 311.68,
+        "positive_without_best_hour": true
+       },
+       "harm_avoided_cents": 8261.1765185,
+       "n_cancelled_generations": 12672,
+       "net_cents": 907.8557069999998,
+       "random_net_max": 1022.0344609999999,
+       "random_net_mean": -138.7278712575,
+       "random_net_p95": 616.0592665000001,
+       "rho_captured_over_sacrificed": 1.1234620017639085,
+       "sacrifice_cents": 7353.320811500002,
+       "threshold_mode": "CAUSAL_FROZEN_FROM_TRAIN"
+      }
+     },
+     "latency_ms": 50,
+     "n_actions": 260602,
+     "n_generations": 260602,
+     "n_rows": 299703,
+     "rows_per_action": 1.150041058779288,
+     "threshold_mode": "CAUSAL_FROZEN_FROM_TRAIN",
+     "unit": "ACTION"
+    },
+    "head_diagnostics": {
+     "conditional_value_calibration_slope": 0.3625274193667451,
+     "conditional_value_mae": 21.950030409130637,
+     "harmful_sign_discrimination": 0.5229626294461954,
+     "hazard_auc": 0.825161351186829,
+     "hazard_brier": 0.01431029473808043
+    },
+    "model_kind": "lgbm",
+    "threshold_source": "lgbm_thresholds_{coin}.json"
+   },
+   "PLUS_PRED_STATE_V1": {
+    "causal_thresholds": {
+     "10%": 0.09726156427734783,
+     "15%": 0.06702773175925528,
+     "5%": 0.15371788746026388
+    },
+    "gate": {
+     "budgets": {
+      "10%": {
+       "beats_random_max_on_NET": true,
+       "concentration": {
+        "max_single_hour_net_cents": 960.8843475000001,
+        "max_single_hour_share_of_net": 0.3243982111751836,
+        "n_hours_net_positive": 11,
+        "n_hours_with_cancellations": 15,
+        "net_by_hour": {
+         "10": 475.24,
+         "11": 366.64,
+         "12": 88.89,
+         "13": 681.49,
+         "14": 960.88,
+         "15": 79.05,
+         "16": 378.91,
+         "17": 165.85,
+         "18": 216.44,
+         "19": -113.61,
+         "20": 69.67,
+         "21": -86.06,
+         "22": -156.4,
+         "23": -190.53,
+         "9": 25.61
+        },
+        "net_excluding_best_hour": 2001.17,
+        "positive_without_best_hour": true
+       },
+       "harm_avoided_cents": 9232.654629499999,
+       "n_cancelled_generations": 21902,
+       "net_cents": 2962.05193,
+       "random_net_max": 1787.227766,
+       "random_net_mean": -226.720999805,
+       "random_net_p95": 768.4921680000002,
+       "rho_captured_over_sacrificed": 1.4723711693991044,
+       "sacrifice_cents": 6270.602699500002,
+       "threshold_mode": "CAUSAL_FROZEN_FROM_TRAIN"
+      },
+      "15%": {
+       "beats_random_max_on_NET": true,
+       "concentration": {
+        "max_single_hour_net_cents": 1119.262535,
+        "max_single_hour_share_of_net": 0.4238356661633413,
+        "n_hours_net_positive": 9,
+        "n_hours_with_cancellations": 15,
+        "net_by_hour": {
+         "10": 713.36,
+         "11": 134.08,
+         "12": 84.08,
+         "13": 667.62,
+         "14": 1119.26,
+         "15": -18.75,
+         "16": 334.52,
+         "17": -111.15,
+         "18": 142.43,
+         "19": -176.11,
+         "20": 158.81,
+         "21": -208.44,
+         "22": -177.42,
+         "23": -105.07,
+         "9": 83.59
+        },
+        "net_excluding_best_hour": 1521.53,
+        "positive_without_best_hour": true
+       },
+       "harm_avoided_cents": 11692.367770500005,
+       "n_cancelled_generations": 33080,
+       "net_cents": 2640.7936479999994,
+       "random_net_max": 1143.2344305000001,
+       "random_net_mean": -424.98203245999997,
+       "random_net_p95": 626.4744619999999,
+       "rho_captured_over_sacrificed": 1.291749657270732,
+       "sacrifice_cents": 9051.574122500002,
+       "threshold_mode": "CAUSAL_FROZEN_FROM_TRAIN"
+      },
+      "5%": {
+       "beats_random_max_on_NET": true,
+       "concentration": {
+        "max_single_hour_net_cents": 554.9124870000002,
+        "max_single_hour_share_of_net": 0.2913196860546164,
+        "n_hours_net_positive": 10,
+        "n_hours_with_cancellations": 15,
+        "net_by_hour": {
+         "10": 285.96,
+         "11": 236.46,
+         "12": -32.13,
+         "13": 554.91,
+         "14": 427.34,
+         "15": 22.1,
+         "16": 275.85,
+         "17": 202.41,
+         "18": 122.34,
+         "19": -48.59,
+         "20": 57.72,
+         "21": -87.36,
+         "22": -87.3,
+         "23": -36.3,
+         "9": 11.41
+        },
+        "net_excluding_best_hour": 1349.91,
+        "positive_without_best_hour": true
+       },
+       "harm_avoided_cents": 5786.446558499999,
+       "n_cancelled_generations": 11066,
+       "net_cents": 1904.8231669999993,
+       "random_net_max": 845.403453,
+       "random_net_mean": -165.712840575,
+       "random_net_p95": 577.3530145000002,
+       "rho_captured_over_sacrificed": 1.4907284851928677,
+       "sacrifice_cents": 3881.6233915000016,
+       "threshold_mode": "CAUSAL_FROZEN_FROM_TRAIN"
+      }
+     },
+     "latency_ms": 50,
+     "n_actions": 260602,
+     "n_generations": 260602,
+     "n_rows": 299703,
+     "rows_per_action": 1.150041058779288,
+     "threshold_mode": "CAUSAL_FROZEN_FROM_TRAIN",
+     "unit": "ACTION"
+    },
+    "head_diagnostics": {
+     "conditional_value_calibration_slope": 0.26876022477684497,
+     "conditional_value_mae": 22.27945665563082,
+     "harmful_sign_discrimination": 0.5321927059882936,
+     "hazard_auc": 0.7866764324057628,
+     "hazard_brier": 0.014558978925477365
+    },
+    "model_kind": "weighted_linear",
+    "threshold_source": "linear_{coin}.json"
+   },
+   "PM_PLUS_FINE": {
+    "causal_thresholds": {
+     "10%": 0.10402337973224618,
+     "15%": 0.07425887333104794,
+     "5%": 0.1558763016087947
+    },
+    "gate": {
+     "budgets": {
+      "10%": {
+       "beats_random_max_on_NET": true,
+       "concentration": {
+        "max_single_hour_net_cents": 778.4663275,
+        "max_single_hour_share_of_net": 0.30329389941451357,
+        "n_hours_net_positive": 11,
+        "n_hours_with_cancellations": 15,
+        "net_by_hour": {
+         "10": 118.24,
+         "11": 95.01,
+         "12": 355.57,
+         "13": 353.95,
+         "14": 778.47,
+         "15": 154.98,
+         "16": 280.52,
+         "17": 54.24,
+         "18": 423.8,
+         "19": -79.16,
+         "20": -17.81,
+         "21": 155.2,
+         "22": 39.5,
+         "23": -94.16,
+         "9": -51.63
+        },
+        "net_excluding_best_hour": 1788.24,
+        "positive_without_best_hour": true
+       },
+       "harm_avoided_cents": 7534.831851500001,
+       "n_cancelled_generations": 21367,
+       "net_cents": 2566.7061849999996,
+       "random_net_max": 1480.5522490000005,
+       "random_net_mean": -348.66789847250004,
+       "random_net_p95": 683.6732665000002,
+       "rho_captured_over_sacrificed": 1.5166347144371293,
+       "sacrifice_cents": 4968.125666500001,
+       "threshold_mode": "CAUSAL_FROZEN_FROM_TRAIN"
+      },
+      "15%": {
+       "beats_random_max_on_NET": true,
+       "concentration": {
+        "max_single_hour_net_cents": 729.0593485,
+        "max_single_hour_share_of_net": 0.25861486981422377,
+        "n_hours_net_positive": 11,
+        "n_hours_with_cancellations": 15,
+        "net_by_hour": {
+         "10": 169.62,
+         "11": 212.26,
+         "12": 408.72,
+         "13": 316.23,
+         "14": 729.06,
+         "15": 2.98,
+         "16": 263.81,
+         "17": 314.93,
+         "18": 510.5,
+         "19": -42.49,
+         "20": 49.52,
+         "21": 239.32,
+         "22": -93.65,
+         "23": -160.75,
+         "9": -100.96
+        },
+        "net_excluding_best_hour": 2090.03,
+        "positive_without_best_hour": true
+       },
+       "harm_avoided_cents": 10139.4726455,
+       "n_cancelled_generations": 32581,
+       "net_cents": 2819.092919999998,
+       "random_net_max": 1384.0031105000005,
+       "random_net_mean": -446.514239575,
+       "random_net_p95": 669.9003420000001,
+       "rho_captured_over_sacrificed": 1.3851020064136697,
+       "sacrifice_cents": 7320.379725500002,
+       "threshold_mode": "CAUSAL_FROZEN_FROM_TRAIN"
+      },
+      "5%": {
+       "beats_random_max_on_NET": true,
+       "concentration": {
+        "max_single_hour_net_cents": 389.073008,
+        "max_single_hour_share_of_net": 0.27536107817890404,
+        "n_hours_net_positive": 10,
+        "n_hours_with_cancellations": 15,
+        "net_by_hour": {
+         "10": 87.7,
+         "11": 105.89,
+         "12": 299.63,
+         "13": 167.65,
+         "14": 389.07,
+         "15": 139.58,
+         "16": -25.68,
+         "17": 94.34,
+         "18": 251.1,
+         "19": -65.6,
+         "20": -43.3,
+         "21": -73.3,
+         "22": 90.41,
+         "23": 2.24,
+         "9": -6.78
+        },
+        "net_excluding_best_hour": 1023.88,
+        "positive_without_best_hour": true
+       },
+       "harm_avoided_cents": 4242.0729055,
+       "n_cancelled_generations": 10399,
+       "net_cents": 1412.955711,
+       "random_net_max": 874.373234,
+       "random_net_mean": -143.0531978775,
+       "random_net_p95": 475.44839399999984,
+       "rho_captured_over_sacrificed": 1.499433432360767,
+       "sacrifice_cents": 2829.117194500001,
+       "threshold_mode": "CAUSAL_FROZEN_FROM_TRAIN"
+      }
+     },
+     "latency_ms": 50,
+     "n_actions": 260602,
+     "n_generations": 260602,
+     "n_rows": 299703,
+     "rows_per_action": 1.150041058779288,
+     "threshold_mode": "CAUSAL_FROZEN_FROM_TRAIN",
+     "unit": "ACTION"
+    },
+    "head_diagnostics": {
+     "conditional_value_calibration_slope": 0.3880162037189873,
+     "conditional_value_mae": 21.730376428276713,
+     "harmful_sign_discrimination": 0.5454750112561909,
+     "hazard_auc": 0.7576888507084022,
+     "hazard_brier": 0.014574001022901762
+    },
+    "model_kind": "frozen_linear_applied",
+    "threshold_source": "frozen candidate artifact"
+   }
+  }
+ },
+ "be_receipt_notes": {
+  "ADDED_POST_GENERATION": true,
+  "added_by": "BE at commit time; NOT produced by stage_score",
+  "da_caveat_field_status": "RESERVED placeholder. DA's Q-DA-79 block, re-applied population-fenced into v2.1 at 4c83552, is NOT carried into this fresh generation and must be re-applied BY DA. BE has not copied or reconstructed it. This is the ONLY leaf that differs from v2.1 and it was predicted before the run.",
+  "generating_code_ref": "97b71838733ea1f3a885f7b714a0bb105d28c842",
+  "generating_code_sha256_prefix": "71206f34a8bbf9b9",
+  "increment_null_still_stands": "phase2_increment_null_v1.json (e7caaeb) reconciles to the net_cents this receipt reports, and those are bit-identical to v2.1's. 10 of 12 cells are chance under the declared joint reading; PLUS_PRED_STATE_V1 survives NOWHERE (best Holm 0.0700); only btc LGBM_PINNED at 5/10% survives, against an optimistic window-level null, and both btc arms collapse at 15%.",
+  "known_debts_next_cycle": [
+   "the generator should own the population/reach disclosures too \u2014 they are the fields most likely to be dropped by a fresh generation and are exactly the ones a misreading would turn into a false validation claim",
+   "da_caveat_field survives no regeneration by construction; carrying a peer's annotation across generations needs a mechanism, not a reminder",
+   "phase2_increment_null re-run against this receipt for a same-chain artifact"
+  ],
+  "population_and_reach_UNCHANGED": "The scoring surface is phase2_declaration.POPULATION == 'da_development_topup' \u2014 DEVELOPMENT, not test. G = 0 complete UTC days on both coins: one 14.4-hour span on 2026-08-25, a day inside the consumed range 08-20..25 (rule 11). No interval is claimable and THIS IS NOT A VALIDATION. Nothing in R-225 or R-228 changed this; they hardened provenance, not reach.",
+  "replication_vs_v2_1": "1,046 leaves compared against the superseded v2.1 receipt; max absolute numeric delta 0.000e+00 \u2014 EXACTLY zero, not merely within tolerance. The only differing leaf is da_caveat_field (below). Five fits now agree: fit3 ef9b775, fit4 19b0611, fit5 43f777d, fit6 97b7183 on drop cells and purge deltas; fit4/5/6 additionally on every scored number.",
+  "scope_note": "protocol_version and supersedes are now GENERATOR-OWNED (R-228(5)) and are NOT in this block. What remains here are the population and reach disclosures the generator still does not emit \u2014 filed as a debt below. They are kept because a receipt without them can be misread as validation, which is a worse failure than a hand-added field that says it is one."
+ },
+ "da_caveat_field": "RESERVED for Q-DA-79 post-gap queue-validity finding",
+ "decision_metric": "net_cents",
+ "declaration_arms": [
+  "PM_PLUS_FINE",
+  "PLUS_PRED_STATE_V1",
+  "LGBM_PINNED",
+  "INCUMBENT_REWEIGHTED_ONLY"
+ ],
+ "declaration_commit_declared": "1cc2163",
+ "declaration_commit_superseded_label": "d7082b6 (v1, THREE arms \u2014 wrong for this receipt)",
+ "declaration_sha256_prefix": "aa866f8261677d79",
+ "evaluation_mode_check": {
+  "ALL_ARMS_SAME_MODE": true,
+  "distinct_modes": [
+   "CAUSAL_FROZEN_FROM_TRAIN"
+  ],
+  "mode": "CAUSAL_FROZEN_FROM_TRAIN",
+  "per_arm": {
+   "btc/INCUMBENT_REWEIGHTED_ONLY": "CAUSAL_FROZEN_FROM_TRAIN",
+   "btc/LGBM_PINNED": "CAUSAL_FROZEN_FROM_TRAIN",
+   "btc/PLUS_PRED_STATE_V1": "CAUSAL_FROZEN_FROM_TRAIN",
+   "btc/PM_PLUS_FINE": "CAUSAL_FROZEN_FROM_TRAIN",
+   "eth/INCUMBENT_REWEIGHTED_ONLY": "CAUSAL_FROZEN_FROM_TRAIN",
+   "eth/LGBM_PINNED": "CAUSAL_FROZEN_FROM_TRAIN",
+   "eth/PLUS_PRED_STATE_V1": "CAUSAL_FROZEN_FROM_TRAIN",
+   "eth/PM_PLUS_FINE": "CAUSAL_FROZEN_FROM_TRAIN"
+  },
+  "why": "arms evaluated under different threshold modes are not comparable, and each arm's numbers still look normal alone"
+ },
+ "fit_code_identity": {
+  "declaration_sha256_prefix": "aa866f8261677d79",
+  "declared_env_ref": "97b71838733ea1f3a885f7b714a0bb105d28c842",
+  "fragment_bytes": 1241115096,
+  "fragment_sha256_prefix": "19a50195c34d0af2",
+  "measured_sha256_prefix": "71206f34a8bbf9b9",
+  "note": "read from the fit's manifest, not measured at score time",
+  "present": true,
+  "source": "fit_manifest.json"
+ },
+ "fit_population_parity": {
+  "all_coins_parity_holds": true,
+  "per_coin": {
+   "btc": {
+    "all_arms_same_n": true,
+    "drops": {
+     "fine": 0,
+     "gap_at_cutoff_excluded": 97,
+     "no_archive": 0,
+     "no_level_history_excluded": 15,
+     "pm": 0,
+     "pre_window_excluded": 26227,
+     "state_join_failed": 0
+    },
+    "fitted_population": 577598,
+    "matches_ok_n": true,
+    "matches_registered_fitted_n": true,
+    "matches_registered_purge": true,
+    "n_arms": 4,
+    "n_arms_declared": 4,
+    "per_arm_n": {
+     "INCUMBENT_REWEIGHTED_ONLY": 577598,
+     "LGBM_PINNED": 577598,
+     "PLUS_PRED_STATE_V1": 577598,
+     "PM_PLUS_FINE": 577598
+    },
+    "population_pre_purge": 578917,
+    "preregistration_key": "c7ab02ebcf27d2fc",
+    "purge_reconciles": true,
+    "purged_rows_embargo": 1319,
+    "registered_embargo_purged": 1319,
+    "registered_fitted_n": 577598,
+    "registered_ok_n": 578917,
+    "registration_provenance": {
+     "embargo_purged": "RE-DECLARED post-observation, cause named (R-216)",
+     "fitted_n": "RE-DECLARED post-observation, cause named (R-216)",
+     "ok_n": "PRE-REGISTERED before any score existed (R-215(1))"
+    }
+   },
+   "eth": {
+    "all_arms_same_n": true,
+    "drops": {
+     "fine": 0,
+     "gap_at_cutoff_excluded": 0,
+     "no_archive": 0,
+     "no_level_history_excluded": 30,
+     "pm": 0,
+     "pre_window_excluded": 14099,
+     "state_join_failed": 0
+    },
+    "fitted_population": 505498,
+    "matches_ok_n": true,
+    "matches_registered_fitted_n": true,
+    "matches_registered_purge": true,
+    "n_arms": 4,
+    "n_arms_declared": 4,
+    "per_arm_n": {
+     "INCUMBENT_REWEIGHTED_ONLY": 505498,
+     "LGBM_PINNED": 505498,
+     "PLUS_PRED_STATE_V1": 505498,
+     "PM_PLUS_FINE": 505498
+    },
+    "population_pre_purge": 505904,
+    "preregistration_key": "c7ab02ebcf27d2fc",
+    "purge_reconciles": true,
+    "purged_rows_embargo": 406,
+    "registered_embargo_purged": 406,
+    "registered_fitted_n": 505498,
+    "registered_ok_n": 505904,
+    "registration_provenance": {
+     "embargo_purged": "RE-DECLARED post-observation, cause named (R-216)",
+     "fitted_n": "RE-DECLARED post-observation, cause named (R-216)",
+     "ok_n": "PRE-REGISTERED before any score existed (R-215(1))"
+    }
+   }
+  },
+  "present": true,
+  "source": "fit_population_parity.json"
+ },
+ "lgbm_params": {
+  "colsample_bytree": 0.7,
+  "learning_rate": 0.05,
+  "max_depth": 4,
+  "min_child_samples": 200,
+  "n_estimators": 200,
+  "n_jobs": 4,
+  "num_leaves": 15,
+  "objective": "binary",
+  "random_state": 20260826,
+  "reg_lambda": 10.0,
+  "subsample": 0.7,
+  "subsample_freq": 1,
+  "verbose": -1
+ },
+ "multiplicity_after": 5,
+ "multiplicity_before": 2,
+ "multiplicity_scored_arms": [
+  "PLUS_PRED_STATE_V1",
+  "LGBM_PINNED",
+  "INCUMBENT_REWEIGHTED_ONLY"
+ ],
+ "n_random": 200,
+ "population": {
+  "btc": {
+   "embargo_evidence": {
+    "EMBARGO_ENFORCED": true,
+    "first_score_feature": 1787650443.9912329,
+    "last_train_label_exit": 1787650383.6817808,
+    "note": "the tape header records VIOLATED-unpurged by design; enforcement belongs to the run path and is shown here as numbers on both sides of the seam (R-189).",
+    "pre_purge_gap_s": -8.134101152420044,
+    "realized_gap_s": 60.309452056884766,
+    "required_embargo_s": 60.0,
+    "score_rows_untouched": 638917,
+    "score_side_trimmed": false,
+    "train_rows_after_purge": 577598,
+    "train_rows_before_purge": 578917,
+    "train_rows_dropped": 1319
+   },
+   "fit_actions": 336082,
+   "fit_drops": {
+    "fine": 0,
+    "gap_at_cutoff_excluded": 97,
+    "no_archive": 0,
+    "no_level_history_excluded": 15,
+    "pm": 0,
+    "pre_window_excluded": 26227,
+    "state_join_failed": 0
+   },
+   "fit_positive": 56977,
+   "fit_rows": 577598,
+   "score_actions": 177674,
+   "score_drops": {
+    "fine": 0,
+    "gap_at_cutoff_excluded": 192,
+    "no_archive": 0,
+    "no_level_history_excluded": 11,
+    "pm": 0,
+    "pre_window_excluded": 18359,
+    "state_join_failed": 0
+   },
+   "score_rows": 311640,
+   "score_windows": 166
+  },
+  "eth": {
+   "embargo_evidence": {
+    "EMBARGO_ENFORCED": true,
+    "first_score_feature": 1787650443.9912329,
+    "last_train_label_exit": 1787650383.8650298,
+    "note": "the tape header records VIOLATED-unpurged by design; enforcement belongs to the run path and is shown here as numbers on both sides of the seam (R-189).",
+    "pre_purge_gap_s": -8.134101152420044,
+    "realized_gap_s": 60.12620306015015,
+    "required_embargo_s": 60.0,
+    "score_rows_untouched": 638917,
+    "score_side_trimmed": false,
+    "train_rows_after_purge": 505498,
+    "train_rows_before_purge": 505904,
+    "train_rows_dropped": 406
+   },
+   "fit_actions": 452295,
+   "fit_drops": {
+    "fine": 0,
+    "gap_at_cutoff_excluded": 0,
+    "no_archive": 0,
+    "no_level_history_excluded": 30,
+    "pm": 0,
+    "pre_window_excluded": 14099,
+    "state_join_failed": 0
+   },
+   "fit_positive": 6271,
+   "fit_rows": 505498,
+   "score_actions": 260602,
+   "score_drops": {
+    "fine": 0,
+    "gap_at_cutoff_excluded": 0,
+    "no_archive": 0,
+    "no_level_history_excluded": 9,
+    "pm": 0,
+    "pre_window_excluded": 9003,
+    "state_join_failed": 0
+   },
+   "score_rows": 299703,
+   "score_windows": 171
+  }
+ },
+ "protocol": "PHASE2_FOUR_ARM_V2",
+ "protocol_version": "v2.2",
+ "score_code_identity": {
+  "declared_env_ref": "97b71838733ea1f3a885f7b714a0bb105d28c842",
+  "measured_sha256_prefix": "71206f34a8bbf9b9",
+  "note": "the code that produced the SCORES. Recorded beside the fit's own identity, never in place of it."
+ },
+ "score_input_identity": {
+  "captured_before_load": true,
+  "frozen_incumbent_sha256_prefix": "cfc454d62f521d9a",
+  "rechecked_at_write": true,
+  "tape_sha256_prefix": "c7ab02ebcf27d2fc",
+  "topup_build_receipt_sha256_prefix": "efa52fbd092485d2",
+  "topup_sha256_prefix": "e75d0e210590e2a8"
+ },
+ "staged_because": "the single-process run was oom-killed at 14G after all four feature passes succeeded; fit and score are now separate processes (the daily-refit shape)",
+ "supersedes": {
+  "bytes": 49715,
+  "note": "preserve-then-write: the superseded receipt is renamed to this path and committed BEFORE this run, so it survives unedited at a resolvable path (rule 13). present_at_write false means that preservation step did not happen.",
+  "path": "phase2_four_arm_v2.SUPERSEDED_BY_v2_2.json",
+  "present_at_write": true,
+  "reason": "R-228 enforcement rerun (audit #9). The v2.1 chain still failed OPEN in four places: an EMPTY file_hashes map passed the completeness loop vacuously, a manifest listing one artifact of fourteen passed while thirteen went unverified, an all-zeros fit_code_ref matched an all-zeros env value, and result-bearing code and data artifacts sat outside the identity lattice. This receipt is produced under the closed chain. Numbers expected identical; divergence would itself be a finding.",
+  "sha256_prefix": "fa6af169927eddf6"
+ },
+ "supersedes_label": "PHASE2_THREE_ARM_V1 (stale: four arms since arm D)"
+}
