@@ -62,6 +62,105 @@ GAP_BAR_PER_HR = 15.0
 #: the refusal (the standing Class-C/D instruction).
 CANONICAL_VERDICT_DIR = Path(
     "/home/yuqing/ctaNew/data/pm_5min/derived")  # see --write-reason
+MAX_CATCHUP_DAYS = 32          # declared; see days_needing_verdict
+
+
+def _artifact_closed(path: Path) -> bool | None:
+    """True if this artifact was written when its day was already CLOSED.
+
+    None means the file exists but cannot be trusted to answer (unreadable,
+    unparseable, wrong day, or the field absent). None is NOT False and NOT
+    True: it means RE-VERDICT, because a file that cannot say whether it
+    judged a closed day is not evidence that it did.
+    """
+    try:
+        d = json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+    if not isinstance(d, dict) or "day_closed_calendar" not in d:
+        return None
+    v = d["day_closed_calendar"]
+    return True if v is True else (False if v is False else None)
+
+
+def days_needing_verdict(outdir: Path, closed_token: str,
+                         opened_token: str) -> dict[str, Any]:
+    """Which days tonight's run must verdict.
+
+    THE LIMITATION THIS CLOSES (R-255(4)). The launcher verified exactly
+    `date -u -d yesterday` and `date -u`, RELATIVE TO RUN TIME. A single missed
+    night was recovered by Persistent=true; an outage of two or more days
+    permanently lost the earlier ones, because the catch-up fires once and its
+    "yesterday" is the wrong day. The day list is now DERIVED FROM DISK.
+
+    THE FLOOR IS DERIVED, NOT HARDCODED -- and deriving it wrongly is the
+    whole risk here. The obvious rule, "closed days that have tape but no
+    verdict", would tonight mint SIX retroactive verdicts (08-20..08-25): the
+    gap ledger reaches back to 08-20 while verdicts begin at 08-26, and those
+    earlier days are CONSUMED (rule 11). So the floor is the EARLIEST DAY THAT
+    ALREADY HAS A VERDICT: catch-up fills holes INSIDE the range we have been
+    verdicting and can never invent a backlog behind it. With no verdicts at
+    all -- a fresh install -- it falls back to closed+opened rather than
+    verdicting all of history.
+
+    A day inside the range needs verdicting when it has no artifact, or when
+    its artifact was written while the day was still OPEN. That second case is
+    not hypothetical: tonight 08-28's artifact reads
+    `day_closed_calendar=False`, because it was last written at 10:48Z with the
+    day still running. Without it, a missed night would leave a PARTIAL verdict
+    standing as a closed day's final record.
+
+    Tape is deliberately NOT consulted. A day inside the range with no tape
+    verdicts as a `complete_tape` FAILURE, which is the correct and informative
+    outcome -- skipping it would be a silent drop (rule 4).
+    """
+    outdir = Path(outdir)
+    have: dict[str, bool | None] = {}
+    for f in sorted(outdir.glob("da_dayverdict_*.json")):
+        tok = f.name[len("da_dayverdict_"):-len(".json")]
+        if len(tok) == 8 and tok.isdigit():
+            have[tok] = _artifact_closed(f)
+
+    base = [(closed_token, "closed_today"), (opened_token, "open_today")]
+    if not have:
+        return {"days": base, "floor": None, "truncated": [],
+                "why": "no verdict artifacts exist: falling back to "
+                       "closed+opened rather than minting a backlog"}
+
+    floor = min(have)
+    d0 = dt.datetime.strptime(floor, "%Y%m%d")
+    d1 = dt.datetime.strptime(closed_token, "%Y%m%d")
+    catchup: list[tuple[str, str]] = []
+    d = d0
+    while d <= d1:
+        tok = d.strftime("%Y%m%d")
+        if tok not in (closed_token, opened_token):
+            st = have.get(tok, "absent")
+            if st is not True:
+                catchup.append((tok, "catchup_absent" if st == "absent"
+                                else ("catchup_unreadable" if st is None
+                                      else "catchup_was_open")))
+        d += dt.timedelta(days=1)
+
+    truncated: list[str] = []
+    if len(catchup) > MAX_CATCHUP_DAYS:
+        # NEVER a silent cap. The dropped days are named in the result and the
+        # launcher logs them, because a bounded run that reads as complete is
+        # the failure mode a cap introduces.
+        truncated = [t for t, _ in catchup[:-MAX_CATCHUP_DAYS]]
+        catchup = catchup[-MAX_CATCHUP_DAYS:]
+
+    seen, days = set(), []
+    for tok, kind in sorted(catchup + base):
+        if tok not in seen:
+            seen.add(tok)
+            days.append((tok, kind))
+    return {"days": days, "floor": floor, "truncated": truncated,
+            "n_catchup": len(catchup),
+            "why": f"floor {floor} = earliest existing verdict; "
+                   f"{len(catchup)} day(s) to catch up"}
+
+
 PER_COIN_RULE_FROM_DAY = "20260828"
 
 #: DAY_BAR_V2 (P1/P2/P3), governing days from this date. Declared in
@@ -1214,13 +1313,117 @@ def _selftests() -> int:
     finally:
         PM_GAPS = real
 
+    # ---- R-255(4): CATCH-UP DAY DERIVATION, red-first ------------------
+    import tempfile as _tfd
+
+    def _mkdir_verdicts(td, spec):
+        """spec: {day_token: True|False|None|"bad"}; True/False = the artifact's
+        day_closed_calendar, None = field absent, "bad" = unparseable."""
+        for tok, v in spec.items():
+            f = Path(td) / f"da_dayverdict_{tok}.json"
+            if v == "bad":
+                f.write_text("{not json", encoding="utf-8")
+            else:
+                d = {"day_token": tok}
+                if v is not None:
+                    d["day_closed_calendar"] = v
+                f.write_text(json.dumps(d), encoding="utf-8")
+
+    def _toks(r):
+        return [t for t, _ in r["days"]]
+
+    with _tfd.TemporaryDirectory() as td:
+        # THE KNOWN-BAD, stated as the thing that must change. Machine down for
+        # 08-29 and 08-30, boots 08-31. Verdicts exist through 08-28.
+        _mkdir_verdicts(td, {"20260826": True, "20260827": True,
+                             "20260828": True})
+        _old = ["20260830", "20260831"]          # date -d yesterday, date
+        _new = _toks(days_needing_verdict(Path(td), "20260830", "20260831"))
+        ok("20260829" not in _old,
+           "KNOWN-BAD reproduced: after a TWO-day outage the old rule "
+           "(yesterday + today) verdicts 20260830+20260831 and 20260829 is "
+           "LOST FOREVER -- the catch-up fires once and its 'yesterday' is the "
+           "wrong day")
+        ok(_new == ["20260829", "20260830", "20260831"],
+           f"and the derived list recovers BOTH missing days: {_new}")
+
+    with _tfd.TemporaryDirectory() as td:
+        # POSITIVE CONTROL: tonight's real shape. 08-28's artifact was written
+        # while the day was still OPEN, so it is the closed-day run's job.
+        _mkdir_verdicts(td, {"20260826": True, "20260827": True,
+                             "20260828": False})
+        _n = _toks(days_needing_verdict(Path(td), "20260828", "20260829"))
+        ok(_n == ["20260828", "20260829"],
+           f"NO-GAP POSITIVE CONTROL: a normal morning verdicts exactly "
+           f"yesterday+today ({_n}) -- tonight's behaviour is UNCHANGED")
+
+    with _tfd.TemporaryDirectory() as td:
+        # THE FLOOR. Verdicts begin 08-26; the tape reaches back to 08-20 and
+        # those days are CONSUMED (rule 11). Catch-up must not reach behind
+        # the earliest verdict.
+        _mkdir_verdicts(td, {"20260826": True, "20260827": True})
+        _f = days_needing_verdict(Path(td), "20260828", "20260829")
+        ok(_f["floor"] == "20260826"
+           and all(t >= "20260826" for t in _toks(_f)),
+           f"THE FLOOR IS DERIVED from the earliest existing verdict "
+           f"({_f['floor']}), so catch-up fills holes INSIDE the verdicted "
+           f"range and can never mint a backlog behind it -- the naive 'tape "
+           f"but no verdict' rule would tonight have minted SIX retroactive "
+           f"verdicts over CONSUMED days")
+
+    with _tfd.TemporaryDirectory() as td:
+        # A PARTIAL artifact for an OLDER day must be re-verdicted once closed.
+        _mkdir_verdicts(td, {"20260826": True, "20260827": False,
+                             "20260828": True})
+        _pt = _toks(days_needing_verdict(Path(td), "20260829", "20260830"))
+        ok("20260827" in _pt,
+           "a day whose artifact was written while it was still OPEN is "
+           "re-verdicted once closed -- otherwise a missed night leaves a "
+           "PARTIAL verdict standing as a closed day's final record")
+        _mkdir_verdicts(td, {"20260827": True})
+        ok("20260827" not in _toks(
+               days_needing_verdict(Path(td), "20260829", "20260830")),
+           "positive control: once its artifact says the day was closed, it is "
+           "NOT re-verdicted (so the rule is not simply 'redo everything')")
+
+    with _tfd.TemporaryDirectory() as td:
+        _mkdir_verdicts(td, {"20260826": True, "20260827": "bad",
+                             "20260828": None})
+        _u = _toks(days_needing_verdict(Path(td), "20260829", "20260830"))
+        ok("20260827" in _u and "20260828" in _u,
+           "an UNPARSEABLE artifact and one MISSING day_closed_calendar both "
+           "need re-verdicting -- a file that cannot say whether it judged a "
+           "closed day is not evidence that it did (None is not True)")
+
+    with _tfd.TemporaryDirectory() as td:
+        _r0 = days_needing_verdict(Path(td), "20260828", "20260829")
+        ok(_toks(_r0) == ["20260828", "20260829"] and _r0["floor"] is None,
+           "with NO artifacts at all -- a fresh install -- it falls back to "
+           "closed+opened rather than verdicting all of history")
+
+    with _tfd.TemporaryDirectory() as td:
+        _spec = {"20260101": True}
+        _lots = days_needing_verdict(Path(td.__str__()), "20260301", "20260302")
+        _mkdir_verdicts(td, _spec)
+        _cap = days_needing_verdict(Path(td), "20260301", "20260302")
+        ok(len(_cap["days"]) <= MAX_CATCHUP_DAYS + 2
+           and len(_cap["truncated"]) > 0
+           and all(t < _cap["days"][0][0] for t in _cap["truncated"]),
+           f"a very long outage is CAPPED at {MAX_CATCHUP_DAYS} catch-up days "
+           f"and the {len(_cap['truncated'])} dropped days are NAMED in "
+           f"`truncated` -- a bounded run that reads as complete is the "
+           f"failure a silent cap introduces (rule 4)")
+
     print(f"da_forward_day_verify selftests: {checks} checks passed")
     return 0
 
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("cmd", nargs="?", choices=["verify"])
+    ap.add_argument("cmd", nargs="?", choices=["verify", "days"])
+    ap.add_argument("--outdir", default=None)
+    ap.add_argument("--closed", default=None)
+    ap.add_argument("--opened", default=None)
     ap.add_argument("--selftest", action="store_true")
     ap.add_argument("--day", default=None, help="YYYYMMDD, e.g. 20260827")
     # (e) NO SILENT DEFAULT. The old default (1787583868.0 = 2026-08-24T15:04Z)
@@ -1244,6 +1447,22 @@ def main() -> int:
     a = ap.parse_args()
     if a.selftest or not a.cmd:
         return _selftests()
+    if a.cmd == "days":
+        # Emits `<day>\t<kind>` lines for the launcher, plus `#` diagnostics it
+        # copies into the nightly log. Printing the DERIVATION, not just its
+        # result, is what lets a reader of the log see WHY a night verdicted
+        # the days it did.
+        if not (a.outdir and a.closed and a.opened):
+            raise SystemExit("REFUSED: days needs --outdir --closed --opened")
+        r = days_needing_verdict(Path(a.outdir), a.closed, a.opened)
+        print(f"# floor={r['floor']} {r['why']}")
+        if r["truncated"]:
+            print(f"# TRUNCATED {len(r['truncated'])} day(s) beyond the "
+                  f"{MAX_CATCHUP_DAYS}-day cap, NOT verdicted: "
+                  f"{','.join(r['truncated'])}")
+        for tok, kind in r["days"]:
+            print(f"{tok}\t{kind}")
+        return 0
     if not a.day:
         raise SystemExit("--day YYYYMMDD is required; refusing to guess a day")
     # A DAY THAT FAILS AND AN INSTRUMENT THAT BROKE MUST NOT SHARE AN EXIT

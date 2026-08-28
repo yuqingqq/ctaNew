@@ -68,8 +68,37 @@ if { [ -n "${DA_MIDNIGHT_LOG:-}" ] && [ -z "${DA_MIDNIGHT_OUTDIR:-}" ]; } || \
 fi
 mkdir -p "$OUTDIR"
 broke=0
-for d in "$CLOSED" "$OPENED"; do
-  echo "---- day $d ----" >> "$LOG"
+# R-255(4): WHICH DAYS. Persistent=true recovers a missed night, but the day
+# list used to be exactly `date -d yesterday` and `date -d today` RELATIVE TO
+# RUN TIME -- so a two-day outage lost the earlier day permanently: the
+# catch-up fires once and its "yesterday" is the wrong day. The list is now
+# DERIVED FROM DISK (days_needing_verdict), floored at the earliest existing
+# verdict so it fills holes inside the verdicted range and can never mint a
+# backlog behind it.
+DAYS=(); KINDS=()
+if DAYS_OUT="$("$PY" "$V" days --outdir "$OUTDIR" --closed "$CLOSED" \
+                    --opened "$OPENED" 2>>"$LOG")" && [ -n "$DAYS_OUT" ]; then
+  while IFS=$'\t' read -r _d _k; do
+    case "$_d" in "") continue ;; \#*) echo "$_d $_k" >> "$LOG"; continue ;; esac
+    DAYS+=("$_d"); KINDS+=("$_k")
+  done <<< "$DAYS_OUT"
+fi
+if [ "${#DAYS[@]}" -eq 0 ]; then
+  # FALL BACK, BUT GO RED. The duty still runs on the two days it always did,
+  # so a broken derivation cannot cost a night's verdict -- and `broke=4` makes
+  # the unit fail anyway, because a derivation that silently degraded to the
+  # old behaviour is the failure this whole change exists to remove.
+  echo "DERIVATION FAILURE: could not derive the day list; falling back to" \
+       "$CLOSED $OPENED and FAILING the unit so it is looked at" >> "$LOG"
+  DAYS=("$CLOSED" "$OPENED"); KINDS=("closed_today" "open_today")
+  broke=4
+fi
+NCATCH=0
+for _k in "${KINDS[@]}"; do case "$_k" in catchup*) NCATCH=$((NCATCH+1));; esac; done
+echo "days to verdict: ${DAYS[*]} (catch-up: $NCATCH)" >> "$LOG"
+for _i in "${!DAYS[@]}"; do
+  d="${DAYS[$_i]}"; kind="${KINDS[$_i]}"
+  echo "---- day $d ($kind) ----" >> "$LOG"
   tmp="$(mktemp "$OUTDIR/.da_dayverdict_$d.XXXXXX.json")"
   # (e) THE EPOCH IS STATED, NEVER DEFAULTED. The verifier no longer has a
   # default because the old one (2026-08-24T15:04Z) was 3.63 days stale against
@@ -108,6 +137,12 @@ for d in "$CLOSED" "$OPENED"; do
       REASON="scheduled unit run, da-midnight-verify.service (INVOCATION_ID=${INVOCATION_ID:-?})" ;;
     *)
       REASON="${DA_WRITE_REASON:-UNATTRIBUTED hand run of da_midnight_verify.sh}" ;;
+  esac
+  # A CATCH-UP DAY SAYS SO IN ITS OWN ARTIFACT. Lateness stays self-documenting
+  # (Q-DA-121): the late `as_of` records WHEN, and this records WHY, so a
+  # verdict produced days after its day never reads as a timely one.
+  case "$kind" in
+    catchup*) REASON="$REASON [catch-up after outage, $NCATCH day(s) missed; this day recovered as $kind]" ;;
   esac
   "$PY" "$V" verify --day "$d" --freeze-epoch "$FREEZE_EPOCH" \
         --write-reason "$REASON" --out "$tmp" >> "$LOG" 2>&1
