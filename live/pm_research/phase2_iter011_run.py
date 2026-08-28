@@ -57,11 +57,13 @@ def head_targets(rows, latency_ms=None) -> dict:
         if p:
             idx_prev.append(i)
     v = {i: I11.signed_v_cancel(rows[i], L) for i in idx_prev}
-    y_harm = [1 if v[i] > 0 else 0 for i in idx_prev]
+    y_pos = [1 if v[i] > 0 else 0 for i in idx_prev]
+    y_neg = [1 if v[i] < 0 else 0 for i in idx_prev]   # A1.1 Option 1: ESTIMATED
     idx_h = [i for i in idx_prev if v[i] > 0]
     idx_g = [i for i in idx_prev if v[i] < 0]
     idx_z = [i for i in idx_prev if v[i] == 0.0]
-    return {"y_fill": y_fill, "idx_prev": idx_prev, "y_harm": y_harm,
+    return {"y_fill": y_fill, "idx_prev": idx_prev,
+            "y_pos": y_pos, "y_neg": y_neg,
             "idx_harm": idx_h, "idx_good": idx_g, "idx_zero": idx_z,
             "m_harm_target": [v[i] for i in idx_h],
             "m_good_target": [-v[i] for i in idx_g],
@@ -71,135 +73,193 @@ def head_targets(rows, latency_ms=None) -> dict:
 
 
 def fit_arm(arm: str, X, tg: dict, seed_note: str = "") -> dict:
-    """Fit the FOUR heads for one arm. Q4 is composed, never fitted."""
+    """Fit the heads for one arm. Q4 is composed, never fitted.
+
+    HEADS ARE FITTED ON THEIR CONDITIONAL POPULATIONS -- that is what the
+    estimands say -- but they are FUNCTIONS OF x and must PREDICT on every
+    action. The previous version predicted only on the training subset, so the
+    four vectors had different lengths (the reviewer measured 3/2/1/1) and
+    action-time Q4 could not compose at all. Fitting domain and prediction
+    domain are different things and are now kept separate."""
     import harmful_fast_compute as fc
     if arm not in I11.ARMS_011:
         raise RuntimeError(f"REFUSED: unknown arm {arm!r}; the frozen "
                            f"preregistration declares {I11.ARMS_011}")
-    Xp = [X[i] for i in tg["idx_prev"]]
-    Xh = [X[i] for i in tg["idx_harm"]]
-    Xg = [X[i] for i in tg["idx_good"]]
+    MIN = I11.UNDERPOWERED_MIN_N
+    ip, ih, ig = tg["idx_prev"], tg["idx_harm"], tg["idx_good"]
 
     if arm == "composed_linear":
         Z, mu, sd = fc.fast_zscale(X, X)
-        w_fill = fc.fast_fit_logistic_w(Z, tg["y_fill"],
-                                        [1.0] * len(tg["y_fill"]))
-        p_fill = [fc.fast_predict_p(w_fill, z) for z in Z]
-        Zp = [Z[i] for i in tg["idx_prev"]]
-        w_harm = (fc.fast_fit_logistic_w(Zp, tg["y_harm"], [1.0] * len(Zp))
-                  if Zp else None)
-        p_harm = [fc.fast_predict_p(w_harm, z) for z in Zp] if w_harm else []
-        Zh = [Z[i] for i in tg["idx_harm"]]
-        Zg = [Z[i] for i in tg["idx_good"]]
-        wmh = (fc.fast_fit_ridge_w(Zh, tg["m_harm_target"],
-                                   [1.0] * len(Zh), lam=10.0)
-               if len(Zh) >= I11.UNDERPOWERED_MIN_N else None)
-        wmg = (fc.fast_fit_ridge_w(Zg, tg["m_good_target"],
-                                   [1.0] * len(Zg), lam=10.0)
-               if len(Zg) >= I11.UNDERPOWERED_MIN_N else None)
-        m_harm = [float(sum(a * b for a, b in zip(wmh, z))) for z in Zh] if wmh else []
-        m_good = [float(sum(a * b for a, b in zip(wmg, z))) for z in Zg] if wmg else []
-        return {"arm": arm, "p_fill": p_fill, "p_harm": p_harm,
-                "m_harm": m_harm, "m_good": m_good,
-                "m_harm_fitted": wmh is not None,
-                "m_good_fitted": wmg is not None,
+        def sub(idx):
+            return [Z[i] for i in idx]
+        w_fill = fc.fast_fit_logistic_w(Z, tg["y_fill"], [1.0] * len(Z))
+        w_pos = (fc.fast_fit_logistic_w(sub(ip), tg["y_pos"], [1.0] * len(ip))
+                 if len(ip) >= MIN and len(set(tg["y_pos"])) > 1 else None)
+        w_neg = (fc.fast_fit_logistic_w(sub(ip), tg["y_neg"], [1.0] * len(ip))
+                 if len(ip) >= MIN and len(set(tg["y_neg"])) > 1 else None)
+        wmh = (fc.fast_fit_ridge_w(sub(ih), tg["m_harm_target"],
+                                   [1.0] * len(ih), lam=10.0)
+               if len(ih) >= MIN else None)
+        wmg = (fc.fast_fit_ridge_w(sub(ig), tg["m_good_target"],
+                                   [1.0] * len(ig), lam=10.0)
+               if len(ig) >= MIN else None)
+        return {"arm": arm,
                 "model": {"kind": "linear", "mu": mu, "sd": sd,
-                          "w_fill": w_fill, "w_harm": w_harm,
+                          "w_fill": w_fill, "w_pos": w_pos, "w_neg": w_neg,
                           "wmh": wmh, "wmg": wmg},
-                "model_class": "logistic (hazard/sign) + ridge lam=10 (magnitudes)"}
+                "fitted": {"p_fill": True, "p_pos": w_pos is not None,
+                           "p_neg": w_neg is not None,
+                           "m_harm": wmh is not None, "m_good": wmg is not None},
+                "model_class": "logistic (arrival/sign) + ridge lam=10 "
+                               "(magnitudes); A1.6 pinned"}
 
     import lightgbm as lgb
     import numpy as np
     A = np.asarray(X, dtype=np.float64)
     clf = lgb.LGBMClassifier(**D.LGBM_PARAMS)
     clf.fit(A, np.asarray(tg["y_fill"]))
-    p_fill = clf.predict_proba(A)[:, 1].tolist()
-    Ap = A[tg["idx_prev"]] if tg["idx_prev"] else A[:0]
-    p_harm = []
-    if len(Ap) and len(set(tg["y_harm"])) > 1:
-        c2 = lgb.LGBMClassifier(**D.LGBM_PARAMS)
-        c2.fit(Ap, np.asarray(tg["y_harm"]))
-        p_harm = c2.predict_proba(Ap)[:, 1].tolist()
-    m_harm, m_good, fh, fg = [], [], False, False
-    _reg_h = _reg_g = None
-    for idx, tgt, out in ((tg["idx_harm"], tg["m_harm_target"], "h"),
-                          (tg["idx_good"], tg["m_good_target"], "g")):
-        if len(idx) >= I11.UNDERPOWERED_MIN_N:
-            reg = lgb.LGBMRegressor(**D.LGBM_VALUE_PARAMS)
-            reg.fit(A[idx], np.asarray(tgt))
-            pred = reg.predict(A[idx]).tolist()
-            if out == "h":
-                m_harm, fh, _reg_h = pred, True, reg
-            else:
-                m_good, fg, _reg_g = pred, True, reg
-    return {"arm": arm, "p_fill": p_fill, "p_harm": p_harm,
-            "m_harm": m_harm, "m_good": m_good,
-            "m_harm_fitted": fh, "m_good_fitted": fg,
+    def cls(idx, y):
+        if len(idx) < MIN or len(set(y)) < 2:
+            return None
+        m = lgb.LGBMClassifier(**D.LGBM_PARAMS)
+        m.fit(A[idx], np.asarray(y))
+        return m
+    def reg(idx, t):
+        if len(idx) < MIN:
+            return None
+        m = lgb.LGBMRegressor(**D.LGBM_VALUE_PARAMS)
+        m.fit(A[idx], np.asarray(t))
+        return m
+    return {"arm": arm,
             "model": {"kind": "lgbm", "clf": clf,
-                      "c2": locals().get("c2"),
-                      "reg_h": locals().get("_reg_h"),
-                      "reg_g": locals().get("_reg_g")},
-            "model_class": "LGBM classifier (hazard/sign) + LGBM regressor "
-                           "(magnitudes), params PINNED in phase2_declaration"}
+                      "c_pos": cls(ip, tg["y_pos"]),
+                      "c_neg": cls(ip, tg["y_neg"]),
+                      "r_harm": reg(ih, tg["m_harm_target"]),
+                      "r_good": reg(ig, tg["m_good_target"])},
+            "fitted": {"p_fill": True,
+                       "p_pos": cls(ip, tg["y_pos"]) is not None,
+                       "p_neg": cls(ip, tg["y_neg"]) is not None,
+                       "m_harm": reg(ih, tg["m_harm_target"]) is not None,
+                       "m_good": reg(ig, tg["m_good_target"]) is not None},
+            "model_class": "LGBM classifier (arrival/sign) + LGBM regressor "
+                           "(magnitudes), params PINNED (A1.6)"}
 
 
 def apply_arm(fitres: dict, X, tg: dict) -> dict:
-    """Apply FITTED heads to a NEW population. Out-of-sample by construction.
+    """Predict EVERY head on EVERY action. Row-aligned by construction.
 
-    In-sample metrics on a boosted model are inflated to the point of being
-    misleading even when labelled as in-sample, so the heads are fitted on one
-    development population and reported on another. This is still DEVELOPMENT
-    evidence — both populations are development — but it is not self-graded."""
+    All five vectors have length len(X). A head that could not be fitted
+    predicts a declared NEUTRAL value, recorded as such -- so composition is
+    always possible and a missing head is visible in the receipt rather than
+    silently shortening a vector."""
     import harmful_fast_compute as fc
     m = fitres["model"]
-    Xp = [X[i] for i in tg["idx_prev"]]
-    Xh = [X[i] for i in tg["idx_harm"]]
-    Xg = [X[i] for i in tg["idx_good"]]
+    n = len(X)
     if m["kind"] == "linear":
         mu, sd = m["mu"], m["sd"]
-        def z(v):
-            return [1.0] + [(v[i] - mu[i]) / sd[i] for i in range(len(mu))]
-        p_fill = [fc.fast_predict_p(m["w_fill"], z(v)) for v in X]
-        p_harm = ([fc.fast_predict_p(m["w_harm"], z(v)) for v in Xp]
-                  if m["w_harm"] else [])
-        mh = ([float(sum(a * b for a, b in zip(m["wmh"], z(v)))) for v in Xh]
-              if m["wmh"] else [])
-        mg = ([float(sum(a * b for a, b in zip(m["wmg"], z(v)))) for v in Xg]
-              if m["wmg"] else [])
+        Z = [[1.0] + [(v[i] - mu[i]) / sd[i] for i in range(len(mu))] for v in X]
+        def pl(w):
+            return [fc.fast_predict_p(w, z) for z in Z] if w else None
+        def rl(w):
+            return ([float(sum(a * b for a, b in zip(w, z))) for z in Z]
+                    if w else None)
+        p_fill, p_pos, p_neg = pl(m["w_fill"]), pl(m["w_pos"]), pl(m["w_neg"])
+        m_harm, m_good = rl(m["wmh"]), rl(m["wmg"])
     else:
         import numpy as np
         A = np.asarray(X, dtype=np.float64)
         p_fill = m["clf"].predict_proba(A)[:, 1].tolist()
-        p_harm = (m["c2"].predict_proba(A[tg["idx_prev"]])[:, 1].tolist()
-                  if m["c2"] is not None and tg["idx_prev"] else [])
-        mh = (m["reg_h"].predict(A[tg["idx_harm"]]).tolist()
-              if m["reg_h"] is not None and tg["idx_harm"] else [])
-        mg = (m["reg_g"].predict(A[tg["idx_good"]]).tolist()
-              if m["reg_g"] is not None and tg["idx_good"] else [])
-    return {"arm": fitres["arm"], "p_fill": p_fill, "p_harm": p_harm,
-            "m_harm": mh, "m_good": mg,
-            "m_harm_fitted": fitres["m_harm_fitted"],
-            "m_good_fitted": fitres["m_good_fitted"],
-            "model_class": fitres["model_class"],
-            "evaluation": "OUT-OF-SAMPLE within development"}
+        p_pos = (m["c_pos"].predict_proba(A)[:, 1].tolist() if m["c_pos"] else None)
+        p_neg = (m["c_neg"].predict_proba(A)[:, 1].tolist() if m["c_neg"] else None)
+        m_harm = m["r_harm"].predict(A).tolist() if m["r_harm"] else None
+        m_good = m["r_good"].predict(A).tolist() if m["r_good"] else None
+
+    NEUTRAL = {"p_pos": 0.0, "p_neg": 0.0, "m_harm": 0.0, "m_good": 0.0}
+    unfitted = []
+    out = {"p_fill": p_fill}
+    for k, v in (("p_pos", p_pos), ("p_neg", p_neg),
+                 ("m_harm", m_harm), ("m_good", m_good)):
+        if v is None:
+            unfitted.append(k)
+            out[k] = [NEUTRAL[k]] * n
+        else:
+            out[k] = v
+    lens = {k: len(v) for k, v in out.items()}
+    if len(set(lens.values())) != 1 or set(lens.values()) != {n}:
+        raise RuntimeError(
+            f"REFUSED: head vectors are not row-aligned: {lens} against "
+            f"{n} actions. Unaligned heads cannot compose an action-time Q4 — "
+            f"this is the defect the reviewer measured as lengths 3/2/1/1.")
+    out["expected_cancel_value"] = [
+        I11.compose_expected_cancel_value(out["p_fill"][i], out["p_pos"][i],
+                                          out["p_neg"][i], out["m_harm"][i],
+                                          out["m_good"][i]) for i in range(n)]
+    out["p_zero_implied"] = [I11.implied_p_zero(out["p_pos"][i], out["p_neg"][i])
+                             for i in range(n)]
+    out.update({"arm": fitres["arm"], "n_actions": n,
+                "unfitted_heads_neutralised": unfitted,
+                "neutral_values": NEUTRAL,
+                "model_class": fitres["model_class"],
+                "fitted": fitres["fitted"],
+                "evaluation": "OUT-OF-SAMPLE within development",
+                "row_aligned": True})
+    return out
 
 
-def report_arm(fitres: dict, tg: dict) -> dict:
-    """All four heads, always, including failures (prereg §3)."""
+def report_arm(pred: dict, tg: dict) -> dict:
+    """All heads, always, including failures (prereg §3).
+
+    Each head's METRIC is computed on ITS OWN population — where its labels
+    exist — while its PREDICTIONS span every action so Q4 can compose. Those are
+    different domains and conflating them is what produced the unaligned
+    vectors."""
+    ip, ih, ig = tg["idx_prev"], tg["idx_harm"], tg["idx_good"]
     q1 = I11.head_report("Q1_arrival", "probability",
-                         fitres["p_fill"], tg["y_fill"])
-    q2 = I11.head_report("Q2_sign", "probability",
-                         fitres["p_harm"], tg["y_harm"])
+                         pred["p_fill"], tg["y_fill"])
+    q2p = I11.head_report("Q2_p_pos", "probability",
+                          [pred["p_pos"][i] for i in ip], tg["y_pos"])
+    q2n = I11.head_report("Q2_p_neg", "probability",
+                          [pred["p_neg"][i] for i in ip], tg["y_neg"])
     q3h = I11.head_report("Q3_m_harm", "magnitude",
-                          fitres["m_harm"], tg["m_harm_target"])
+                          [pred["m_harm"][i] for i in ih], tg["m_harm_target"])
     q3g = I11.head_report("Q3_m_good", "magnitude",
-                          fitres["m_good"], tg["m_good_target"])
-    rep = I11.four_head_report(q1, q2, q3h, q3g)
-    rep["arm"] = fitres["arm"]
-    rep["model_class"] = fitres["model_class"]
-    rep["magnitude_heads_fitted"] = {"m_harm": fitres["m_harm_fitted"],
-                                     "m_good": fitres["m_good_fitted"]}
-    return rep
+                          [pred["m_good"][i] for i in ig], tg["m_good_target"])
+    # A1.4: Q2's adjudicated statistic is AUC. With Option 1 there are two sign
+    # heads; the cell takes the WORSE of the two, because a decomposition whose
+    # negative side is uninformative has not established sign discrimination
+    # even if its positive side has.
+    aucs = [h["auc"] for h in (q2p, q2n) if h.get("auc") is not None]
+    q2_cell = min(aucs) if aucs else None
+    heads = {"Q1_arrival": q1, "Q2_p_pos": q2p, "Q2_p_neg": q2n,
+             "Q3_m_harm": q3h, "Q3_m_good": q3g}
+    under = sorted(k for k, v in heads.items()
+                   if v.get("status") == I11.UNDERPOWERED)
+    return {
+        "arm": pred["arm"], "model_class": pred["model_class"],
+        "heads": heads,
+        "all_heads_reported": True,
+        "underpowered_heads": under, "any_underpowered": bool(under),
+        "unfitted_heads_neutralised": pred["unfitted_heads_neutralised"],
+        "n_actions": pred["n_actions"], "row_aligned": pred["row_aligned"],
+        "adjudicated_statistics": {
+            "Q1_arrival": q1.get("auc"),
+            "Q2_sign": q2_cell,
+            "Q2_cell_rule": "min(AUC of p_pos, AUC of p_neg) — the WORSE side, "
+                            "because a decomposition with an uninformative "
+                            "negative side has not established sign "
+                            "discrimination",
+            "Q3_magnitudes": min([v for v in (q3h.get("calibration_slope"),
+                                              q3g.get("calibration_slope"))
+                                  if v is not None], default=None),
+            "Q3_cell_rule": "min |calibration slope deviation| side reported; "
+                            "both slopes carried",
+        },
+        "reporting_rule": "all heads reported whether or not they pass; a "
+                          "strong arrival head does not establish toxicity "
+                          "discrimination (parent §2.1)",
+        "advancement_rule": "Q4 alone may NOT advance a candidate; explicit "
+                            "user sign-off required (R-232 9.2)",
+    }
 
 
 def selftest() -> int:
@@ -246,18 +306,24 @@ def selftest() -> int:
     for arm in I11.ARMS_011:
         try:
             fr = fit_arm(arm, X, tg)
-            rep = report_arm(fr, tg)
-            ok(rep["all_heads_reported"], f"{arm}: ALL FOUR heads reported")
-            ok(len(fr["p_fill"]) == len(rows),
-               f"{arm}: p_fill covers every row")
-            ok(len(fr["p_harm"]) == c["n_preventable"],
-               f"{arm}: p_harm is on the PREVENTABLE base, not all rows")
-            ok(len(fr["m_harm"]) in (0, c["n_v_positive"]),
-               f"{arm}: m_harm is on V>0 only")
-            ecv = I11.compose_expected_cancel_value(
-                fr["p_fill"][0], 0.5,
-                (fr["m_harm"] or [1.0])[0], (fr["m_good"] or [1.0])[0])
-            ok(isinstance(ecv, float), f"{arm}: Q4 COMPOSES (never fitted)")
+            pr = apply_arm(fr, X, tg)
+            rep = report_arm(pr, tg)
+            n = len(rows)
+            ok(all(len(pr[k]) == n for k in
+                   ("p_fill", "p_pos", "p_neg", "m_harm", "m_good",
+                    "expected_cancel_value")),
+               f"{arm}: EVERY head predicts on EVERY action — row-aligned "
+               f"(the reviewer measured 3/2/1/1 before this)")
+            ok(rep["all_heads_reported"], f"{arm}: all heads reported")
+            ok(rep["heads"]["Q2_p_pos"]["n"] == c["n_preventable"],
+               f"{arm}: Q2 is SCORED on the preventable base while PREDICTING "
+               f"on all actions — different domains, kept separate")
+            ok(rep["heads"]["Q3_m_harm"]["n"] == c["n_v_positive"],
+               f"{arm}: Q3 m_harm is scored on V>0 only")
+            ok(isinstance(pr["expected_cancel_value"][0], float),
+               f"{arm}: Q4 composes per action (never fitted)")
+            ok(rep["adjudicated_statistics"]["Q2_cell_rule"].startswith("min("),
+               f"{arm}: Q2's cell takes the WORSE sign head (A1.4)")
         except Exception as e:
             ok(False, f"{arm}: fits and reports ({type(e).__name__}: {e})")
 
@@ -269,10 +335,19 @@ def selftest() -> int:
 
     thin = [row(5.0)] * 3 + [row(-4.0)] * 3
     tgt = head_targets(thin)
-    frt = fit_arm("composed_linear", [[1.0, 0.5]] * 6, tgt)
-    rept = report_arm(frt, tgt)
-    ok(not frt["m_harm_fitted"] and not frt["m_good_fitted"],
+    Xt = [[1.0, 0.5]] * 6
+    frt = fit_arm("composed_linear", Xt, tgt)
+    prt = apply_arm(frt, Xt, tgt)
+    rept = report_arm(prt, tgt)
+    ok(not frt["fitted"]["m_harm"] and not frt["fitted"]["m_good"],
        "a THIN magnitude population is not fitted (min_n respected)")
+    ok(set(prt["unfitted_heads_neutralised"]) >= {"m_harm", "m_good"},
+       "unfitted heads are NEUTRALISED and named, so composition still works "
+       "and the absence is visible rather than shortening a vector")
+    ok(all(len(prt[k]) == 6 for k in
+           ("p_fill", "p_pos", "p_neg", "m_harm", "m_good",
+            "expected_cancel_value")),
+       "row alignment holds even when heads could not be fitted")
     ok(set(rept["underpowered_heads"]) >= {"Q3_m_harm", "Q3_m_good"},
        "and the unfitted magnitude heads are REPORTED UNDERPOWERED, not dropped")
 

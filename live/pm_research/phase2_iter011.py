@@ -250,19 +250,50 @@ def empirical_heads(pops: dict, latency_ms: int = None) -> dict:
     prev = pops["q2_sign_base"]
     harm = [signed_v_cancel(r, L) for r in pops["q3_harm"]]
     good = [-signed_v_cancel(r, L) for r in pops["q3_good"]]
-    p_harm = (len(harm) / len(prev)) if prev else 0.0
+    n_prev = len(prev)
+    p_pos = (len(harm) / n_prev) if n_prev else 0.0
+    p_neg = (len(good) / n_prev) if n_prev else 0.0
     m_harm = (math.fsum(harm) / len(harm)) if harm else 0.0
     m_good = (math.fsum(good) / len(good)) if good else 0.0
-    return {"p_harm": p_harm, "m_harm": m_harm, "m_good": m_good,
+    return {"p_pos": p_pos, "p_neg": p_neg,
+            "p_zero_implied": implied_p_zero(p_pos, p_neg),
+            "p_zero_empirical": (pops["counts"]["v_zero"] / n_prev)
+                                if n_prev else 0.0,
+            "m_harm": m_harm, "m_good": m_good,
             "n_harm": len(harm), "n_good": len(good),
-            "conditional_cancel_value":
-                p_harm * m_harm - (1.0 - p_harm) * m_good}
+            # A1.1 Option 1: p_neg is ESTIMATED, not (1 - p_pos)
+            "conditional_cancel_value": p_pos * m_harm - p_neg * m_good,
+            "conditional_under_superseded_form": p_pos * m_harm
+                                                 - (1.0 - p_pos) * m_good,
+            "superseded_form_bias": (p_pos * m_harm - p_neg * m_good)
+                                    - (p_pos * m_harm - (1.0 - p_pos) * m_good)}
 
 
-def compose_expected_cancel_value(p_fill, p_harm, m_harm, m_good) -> float:
-    """Q4, COMPOSED from the heads. Never fitted (prereg §6)."""
-    return float(p_fill) * (float(p_harm) * float(m_harm)
-                            - (1.0 - float(p_harm)) * float(m_good))
+def compose_expected_cancel_value(p_fill, p_pos, p_neg, m_harm, m_good) -> float:
+    """Q4, COMPOSED from the heads. Never fitted (prereg §6).
+
+    AMENDMENT A1.1, FROZEN as OPTION 1 (user ruling R-242):
+
+        conditional = p_pos*m_harm - p_neg*m_good
+        expected    = p_fill * conditional
+
+    p_neg is ESTIMATED, not derived as (1 - p_pos). The frozen-before-amendment
+    form used (1 - p_harm), which is P(V<=0) and therefore weighted a V<0
+    magnitude by all NON-POSITIVE mass -- biasing the value DOWNWARD by
+    m_good*P(V=0) whenever zero-value preventable fills exist. Estimating both
+    sides makes the identity exact for any zero mass."""
+    return float(p_fill) * (float(p_pos) * float(m_harm)
+                            - float(p_neg) * float(m_good))
+
+
+def implied_p_zero(p_pos, p_neg) -> float:
+    """p_zero = 1 - p_pos - p_neg, reported (A1.1 Option 1).
+
+    Clamped at 0 only for reporting; a NEGATIVE implied mass means the two
+    probability heads disagree by more than the zero class can absorb, which is
+    a diagnostic worth seeing rather than hiding, so the raw value travels too."""
+    raw = 1.0 - float(p_pos) - float(p_neg)
+    return raw
 
 
 def assert_no_fill_conditioned_features(features) -> dict:
