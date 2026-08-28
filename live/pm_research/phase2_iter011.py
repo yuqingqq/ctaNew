@@ -747,6 +747,54 @@ def selftest() -> int:
        "the null is DETERMINISTIC at a fixed seed, with strata consumed in "
        "sorted order (R-234)")
 
+
+    # ==== Codex round-3: the null's DIRECTION and its ability to MOVE ======
+    # (3) The frozen gate says a head must BEAT the matched-random null. "Beat"
+    # is DIRECTIONAL. A two-sided test about no-skill scores |AUC - 0.5|, so an
+    # ANTI-PREDICTIVE head (AUC 0.0) earns the same p as a perfect one (AUC 1.0)
+    # and can survive Holm as a discovery. Measured before the fix: both 0.001996.
+    _r3 = _rnd.Random(7)
+    _y = [_r3.randint(0, 1) for _ in range(400)]
+    _sx = [("BUY", i % 4) for i in range(400)]      # labels VARY within stratum
+    _perf = [0.9 if y else 0.1 for y in _y]
+    _inv = [0.1 if y else 0.9 for y in _y]
+    _np, _ni = (matched_random_null(_perf, _y, "probability", _sx),
+                matched_random_null(_inv, _y, "probability", _sx))
+    ok(_np["p_value"] < 0.01,
+       f"POSITIVE CONTROL: a PERFECT head beats the matched-random null "
+       f"(p={_np['p_value']})")
+    ok(_ni["p_value"] > 0.5,
+       f"KNOWN-BAD: an INVERTED head (AUC 0.0) must NOT beat the null — the "
+       f"gate says BEATS, and a two-sided test certifies anti-prediction as "
+       f"strongly as prediction (got p={_ni['p_value']})")
+    ok(_np["p_value"] != _ni["p_value"],
+       "a perfect head and its exact inverse cannot earn the SAME p")
+    ok(_np.get("sided") == "one", "the null declares its SIDEDNESS in-band")
+
+    # (3b) A stratum with several rows but CONSTANT labels is as unmovable as a
+    # singleton: permuting identical values is the identity. Counting members
+    # rather than distinct outcomes let p collapse to 1.0 and read as a
+    # measured null result instead of "no test was possible".
+    _cy = [1 if i % 4 == 0 else (1 if i % 4 == 1 else 0) for i in range(400)]
+    _cs = [("BUY", i % 4) for i in range(400)]      # each stratum CONSTANT
+    _cn = matched_random_null([0.5] * 400, _cy, "probability", _cs)
+    ok(_cn["status"] == UNEVALUABLE_NULL and _cn["p_value"] is None,
+       f"KNOWN-BAD: strata that are non-singleton but CONSTANT-LABEL cannot "
+       f"move, so the null is UNEVALUABLE, never OK with p=1.0 "
+       f"(got status={_cn['status']} p={_cn['p_value']})")
+
+    # (7) Intervals are claimable ONLY on the ruled cluster unit. G>=5 on a
+    # WINDOW unit is not the ruled gate; rule 8 names the UTC day, and a
+    # disclosure that grants intervals on a substitute unit makes the gate
+    # unsatisfiable-but-passable.
+    ok(not cluster_disclosure(9, "window")["intervals_claimable"],
+       "KNOWN-BAD: G=9 on the WINDOW unit does NOT make intervals claimable — "
+       "rule 8 rules the UTC day, and the substitute unit is explicitly weaker")
+    ok(cluster_disclosure(9, "UTC day")["intervals_claimable"],
+       "POSITIVE CONTROL: G=9 on the RULED unit does")
+    ok(not cluster_disclosure(3, "UTC day")["intervals_claimable"],
+       "below G=5 the ruled unit still refuses intervals")
+
     return 1 if fails else 0
 
 
@@ -989,13 +1037,21 @@ def matched_random_null(pred, actual, kind: str, strata,
     # and p collapses to 1.0 -- a number that looks like evidence of nothing
     # when it is really evidence of no test. Rule 15: an instrument that cannot
     # fire must say so rather than return a value.
-    movable = sum(1 for idx in groups.values() if len(idx) > 1)
+    # A null that CANNOT MOVE is not a null, and MEMBER COUNT is the wrong test
+    # for that. A stratum with 200 rows that all carry the SAME outcome permutes
+    # to itself exactly like a singleton does; counting members let p collapse to
+    # 1.0 and read as "measured, not significant" when the truth is "no test was
+    # possible". What has to vary is the OUTCOME.
+    movable = sum(1 for idx in groups.values()
+                  if len({actual[i] for i in idx}) > 1)
     if movable == 0:
         return {"status": UNEVALUABLE_NULL, "observed": obs, "p_value": None,
-                "n_draws": 0, "n_strata": len(groups),
-                "detail": f"all {len(groups)} strata are singletons, so a "
-                          f"within-stratum permutation is the identity and the "
-                          f"null cannot move off the observed value"}
+                "n_draws": 0, "n_strata": len(groups), "n_movable_strata": 0,
+                "detail": f"none of the {len(groups)} strata contain two "
+                          f"different outcomes, so a within-stratum permutation "
+                          f"is the IDENTITY and the null cannot move off the "
+                          f"observed value; that is an absent test, not a "
+                          f"null result"}
     rng = _rnd.Random(seed)
     order = sorted(groups, key=lambda k: repr(k))     # R-234
     ge = 0
@@ -1010,14 +1066,27 @@ def matched_random_null(pred, actual, kind: str, strata,
             for i, v in zip(idx, vals):
                 shuffled[i] = v
         m = metric(pred, shuffled)
-        if m is not None and abs(m - centre) >= abs(obs - centre):
+        # ONE-SIDED, and the direction is the GATE'S OWN WORD: a head must BEAT
+        # the matched-random null. The previous form scored |m - centre| >=
+        # |obs - centre|, which is two-sided about no-skill and therefore
+        # certifies an ANTI-PREDICTIVE head exactly as strongly as a perfect
+        # one -- measured before the fix: AUC 1.00 and AUC 0.00 both p=0.001996,
+        # and the inverted head would have survived Holm as a discovery.
+        # Higher is better for both metrics here: AUC above 0.5 is
+        # discrimination, and a calibration slope above 0 is positive
+        # association (0 is the no-information null A1.4 names).
+        if m is not None and m >= obs:
             ge += 1
-    return {"status": "OK", "observed": obs,
+    return {"status": "OK", "observed": obs, "sided": "one",
+            "alternative": "greater",
             "p_value": (1 + ge) / (1 + n_draws), "n_draws": n_draws,
             "n_strata": len(groups), "n_movable_strata": movable,
+            "no_skill_value": centre,
             "matched_on": "action count, side, hour (prereg §5.1)",
-            "detail": f"{ge}/{n_draws} matched-random draws reached or beat the "
-                      f"observed {kind} metric about no-skill {centre}"}
+            "detail": f"{ge}/{n_draws} matched-random draws reached or BEAT the "
+                      f"observed {kind} metric ({obs:.6g}); one-sided because "
+                      f"the gate says BEATS, so an inverted head fails rather "
+                      f"than passes"}
 
 
 def sign_flip_null(paired_by_unit: dict, n_perm: int = N_PERM_011,
@@ -1099,7 +1168,17 @@ def cluster_disclosure(G_complete_utc_days: int, unit_used: str) -> dict:
                 f"exchangeable substitute. Units within a day are NOT "
                 f"independent, so these p-values are OPTIMISTIC — evidence, "
                 f"never a significance certificate."),
-        "intervals_claimable": G_complete_utc_days >= 5,
+        # Rule 8: intervals ONLY on the correct cluster unit. G>=5 counted on a
+        # SUBSTITUTE unit is not the ruled gate -- granting intervals there
+        # makes a gate that can never be satisfied still passable, which is
+        # worse than one that simply fails.
+        "intervals_claimable": (G_complete_utc_days >= 5
+                                and unit_used == ruled),
+        "why_intervals": ("the ruled unit with enough replicates"
+                          if (G_complete_utc_days >= 5 and unit_used == ruled)
+                          else f"G={G_complete_utc_days} on unit {unit_used!r} "
+                               f"(ruled: {ruled!r}); intervals require BOTH "
+                               f"G>=5 AND the ruled unit"),
     }
 
 

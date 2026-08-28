@@ -18,6 +18,7 @@ Both compose Q4 from the four heads. NEITHER fits Q4 (prereg §6).
 """
 from __future__ import annotations
 
+import inspect
 import json
 import math
 import re
@@ -74,6 +75,13 @@ def head_targets(rows, latency_ms=None) -> dict:
             # DIFFERS BETWEEN COINS, so a row-level n does not merely inflate --
             # it distorts comparisons. Both are carried: n_rows stays the
             # prediction population, n_actions is what a head reports.
+            # A1.5 (I11-B3b): "Head fitting weights each row by
+            # 1 / rows_in_generation, so a generation contributes once
+            # regardless of how many decision rows it spans." Carried WITH the
+            # targets so a head cannot be fitted without them -- the previous
+            # arrangement had generation_weights written, unit-tested, and
+            # reachable only from the test, while every fit passed unit weights.
+            "w_rows": I11.generation_weights(rows),
             "counts": {"n_rows": len(rows), "n_preventable": len(idx_prev),
                        "n_actions": I11.action_count(rows),
                        "n_actions_preventable": I11.action_count(
@@ -102,16 +110,30 @@ def fit_arm(arm: str, X, tg: dict, seed_note: str = "") -> dict:
         Z, mu, sd = fc.fast_zscale(X, X)
         def sub(idx):
             return [Z[i] for i in idx]
-        w_fill = fc.fast_fit_logistic_w(Z, tg["y_fill"], [1.0] * len(Z))
-        w_pos = (fc.fast_fit_logistic_w(sub(ip), tg["y_pos"], [1.0] * len(ip))
+        # A1.5: 1/rows_in_generation, so one generation contributes ONE unit of
+        # mass however many decision rows it spans. Refused rather than
+        # defaulted: a head fitted on unit weights answers a different question
+        # from the one A1.5 froze, and it would look identical.
+        W = tg.get("w_rows")
+        if W is None or len(W) != len(Z):
+            raise RuntimeError(
+                f"REFUSED: fitting weights absent or misaligned "
+                f"({None if W is None else len(W)} vs {len(Z)} rows). A1.5 "
+                f"freezes 1/rows_in_generation; silently substituting unit "
+                f"weights fits a different estimator under the same name.")
+
+        def wsub(idx):
+            return [W[i] for i in idx]
+        w_fill = fc.fast_fit_logistic_w(Z, tg["y_fill"], W)
+        w_pos = (fc.fast_fit_logistic_w(sub(ip), tg["y_pos"], wsub(ip))
                  if len(ip) >= MIN and len(set(tg["y_pos"])) > 1 else None)
-        w_neg = (fc.fast_fit_logistic_w(sub(ip), tg["y_neg"], [1.0] * len(ip))
+        w_neg = (fc.fast_fit_logistic_w(sub(ip), tg["y_neg"], wsub(ip))
                  if len(ip) >= MIN and len(set(tg["y_neg"])) > 1 else None)
         wmh = (fc.fast_fit_ridge_w(sub(ih), tg["m_harm_target"],
-                                   [1.0] * len(ih), lam=10.0)
+                                   wsub(ih), lam=10.0)
                if len(ih) >= MIN else None)
         wmg = (fc.fast_fit_ridge_w(sub(ig), tg["m_good_target"],
-                                   [1.0] * len(ig), lam=10.0)
+                                   wsub(ig), lam=10.0)
                if len(ig) >= MIN else None)
         return {"arm": arm,
                 "model": {"kind": "linear", "mu": mu, "sd": sd,
@@ -126,19 +148,29 @@ def fit_arm(arm: str, X, tg: dict, seed_note: str = "") -> dict:
     import lightgbm as lgb
     import numpy as np
     A = np.asarray(X, dtype=np.float64)
+    # A1.5 applies to EVERY head, not only the linear arm. LGBM took no
+    # sample_weight at all, so the two arms were weighted differently while
+    # being compared as though they differed only in model class (R-232 9.1).
+    Wl = tg.get("w_rows")
+    if Wl is None or len(Wl) != len(A):
+        raise RuntimeError(
+            f"REFUSED: fitting weights absent or misaligned "
+            f"({None if Wl is None else len(Wl)} vs {len(A)} rows). A1.5 "
+            f"freezes 1/rows_in_generation for head fitting.")
+    Wa = np.asarray(Wl, dtype=np.float64)
     clf = lgb.LGBMClassifier(**D.LGBM_PARAMS)
-    clf.fit(A, np.asarray(tg["y_fill"]))
+    clf.fit(A, np.asarray(tg["y_fill"]), sample_weight=Wa)
     def cls(idx, y):
         if len(idx) < MIN or len(set(y)) < 2:
             return None
         m = lgb.LGBMClassifier(**D.LGBM_PARAMS)
-        m.fit(A[idx], np.asarray(y))
+        m.fit(A[idx], np.asarray(y), sample_weight=Wa[idx])
         return m
     def reg(idx, t):
         if len(idx) < MIN:
             return None
         m = lgb.LGBMRegressor(**D.LGBM_VALUE_PARAMS)
-        m.fit(A[idx], np.asarray(t))
+        m.fit(A[idx], np.asarray(t), sample_weight=Wa[idx])
         return m
     return {"arm": arm,
             "model": {"kind": "lgbm", "clf": clf,
@@ -313,11 +345,19 @@ def q4_economics(pred: dict, rows: list, budgets=None,
 def _strata(rows, idx):
     """The decision variable, per prereg §5.1: side and hour. Hour comes from
     the row's OWN t_start, never a nearby proxy (rule 3)."""
+    # THE GOVERNING INSTANT IS t0 + t_start. t_start is an offset WITHIN a
+    # five-minute window, so t_start // 3600 is 0 for essentially every row and
+    # the side x hour match collapsed every real UTC hour into one bucket --
+    # matching on a constant is not matching (rule 7). Measured: two rows an
+    # hour apart in real time both landed in hour 0.
     out = []
     for i in idx:
         r = rows[i]
-        t = r.get("t_start")
-        out.append((r.get("side"), int((t // 3600) % 24) if t is not None else None))
+        t, t0 = r.get("t_start"), r.get("t0")
+        if t is None or t0 is None:
+            out.append((r.get("side"), None))
+            continue
+        out.append((r.get("side"), int(((float(t0) + float(t)) // 3600) % 24)))
     return out
 
 
@@ -456,6 +496,33 @@ def assert_receipt_has_all_cells(receipt: dict) -> dict:
         c = fam["cells"][key]
         if not isinstance(c, dict) or any(f not in c for f in REQUIRED_CELL_FIELDS):
             hollow.append(key); continue
+        # I11-B4(2): the guard checked PRESENCE and one NaN. A cell carrying
+        # every required key with arm/head/budget that disagree with its own
+        # key, p=0.0 and n_actions=-999 sailed through as "cells_validated".
+        # Identity first: a cell that misreports which cell it IS makes every
+        # value in it unattributable.
+        # EVERY problem in a cell is reported, not just the first. Stopping at
+        # the earliest defect hides the rest, so a reader fixes one thing,
+        # re-runs, and meets the next -- and a guard that names one fault in a
+        # cell with three understates how wrong the cell is.
+        _a, _h, _b = key.split("/")
+        _bad: list = []
+        if (c.get("arm"), c.get("head"), c.get("budget")) != (_a, _h, _b):
+            _bad.append(f"identity disagrees with its own key -- carries "
+                        f"arm={c.get('arm')!r} head={c.get('head')!r} "
+                        f"budget={c.get('budget')!r}")
+        _p = c.get("p_value")
+        if _p is not None and (I11._num(_p) is None or not 0.0 < _p <= 1.0):
+            _bad.append(f"p_value {_p!r} is outside (0, 1]; a permutation p is "
+                        f"(1+k)/(1+n) and can never be 0, so a zero p is a "
+                        f"computation that did not happen")
+        _na = c.get("n_actions")
+        if _na is not None and (not isinstance(_na, int) or isinstance(_na, bool)
+                                or _na < 0):
+            _bad.append(f"n_actions {_na!r} is not a non-negative count")
+        if _bad:
+            unsupported.append(f"{key}: " + "; ".join(_bad))
+            continue
         st = c.get("status")
         if st not in KNOWN:
             badstatus.append(f"{key}={st!r}")
@@ -736,6 +803,35 @@ def apply_incumbent(model: dict, block: dict, idx) -> dict:
             "provenance": model.get("_verified")}
 
 
+def apply_incumbent_hazard(model: dict, block: dict, idx) -> dict:
+    """The incumbent's HAZARD head on the same rows -- Q1's counterpart.
+
+    Q1's frozen gate is "beats the matched-random null AND beats the incumbent
+    hazard head". Unlike Q2/Q3, the incumbent HAS this head
+    (INCUMBENT_COMPARABLE["Q1_arrival"] is True), so R-237's
+    no-counterpart excuse does not reach Q1 and its incremental leg is
+    required rather than optional.
+
+    Same artifact, same verification, same arithmetic as apply_incumbent --
+    this returns the probability BEFORE it is multiplied by the value head,
+    because Q1 is about ARRIVAL, not about composed value."""
+    import harmful_fast_compute as fc
+    mu, sd = model["norm_mu"], model["norm_sd"]
+    W = model["hazard_weights"]
+    out = []
+    for j in idx:
+        raw = block["PM"][j] + block["FN"][j]          # NO state features
+        if len(raw) != len(mu):
+            raise RuntimeError(
+                f"REFUSED: row {j} has {len(raw)} PM+fine features but the "
+                f"incumbent hazard head was fitted on {len(mu)}.")
+        x = [1.0] + [(raw[i] - mu[i]) / sd[i] for i in range(len(mu))]
+        out.append(fc.fast_predict_p(W, x))
+    return {"p_fill": out, "arm": INCUMBENT_ARM, "n": len(out),
+            "head": "Q1_arrival",
+            "provenance": model.get("_verified")}
+
+
 _CELL_SUBHEADS = {"Q1_arrival": ("Q1_arrival",),
                   "Q2_sign": ("Q2_p_pos", "Q2_p_neg"),
                   "Q3_magnitudes": ("Q3_m_harm", "Q3_m_good")}
@@ -789,6 +885,8 @@ def _q4_cell(arm: str, budget: str, per_coin: dict) -> tuple:
     full cycle."""
     inc_by_window = {}
     net = 0.0
+    inc_net = 0.0
+    incumbent_net = 0.0
     for coin, r in per_coin.items():
         econ = r[arm].get("economics", {}).get(budget)
         if not econ:
@@ -810,16 +908,29 @@ def _q4_cell(arm: str, budget: str, per_coin: dict) -> tuple:
                     f"exists on the identical action population (prereg 5.2). "
                     f"Net {net:+.1f}c is the CANDIDATE'S OWN value and is not "
                     f"an increment.")
+        incumbent_net += econ.get("incumbent_net_cents") or 0.0
         for w, v in econ["increment_by_window"].items():
+            inc_net += v
             inc_by_window[f"{coin}/{w}"] = inc_by_window.get(f"{coin}/{w}", 0.0) + v
     if not inc_by_window:
         return (net, None, I11.CELL_STATUS_UNEVALUABLE,
                 "no per-window increments to permute")
     null = I11.sign_flip_null(inc_by_window)
-    return (net, null["p_two_sided"], I11.CELL_STATUS_OK,
+    # I11-B5: the STATISTIC is the INCREMENT, because the p describes the
+    # increment. The cell previously returned `net` -- the candidate's own
+    # realised value -- beside a p computed by sign-flipping per-window
+    # INCREMENTS, so Holm would have ranked the increment's evidence against
+    # the raw net's magnitude. A p that does not describe the number beside it
+    # is not evidence about that number. The raw nets are REPORTED, never
+    # adjudicated (A1.4: every other metric is reported and never adjudicated).
+    return (inc_net, null["p_two_sided"], I11.CELL_STATUS_OK,
             f"increment vs incumbent {null['observed']:+.1f}c over "
             f"{null['n_units']} windows; {null['n_perm']} sign-flip "
-            f"permutations, units consumed in SORTED order (R-234)")
+            f"permutations, units consumed in SORTED order (R-234). "
+            f"REPORTED not adjudicated: candidate_net_cents {net:+.1f}, "
+            f"incumbent_net_cents {incumbent_net:+.1f}; the adjudicated "
+            f"statistic is the INCREMENT {inc_net:+.1f}c, which is what this "
+            f"p describes.")
 
 
 def _selftest_verdict(fails: list) -> int:
@@ -1364,6 +1475,95 @@ def selftest() -> int:
     # instrument itself. Binding the print to the return makes that
     # unrepresentable: anything inserted before the return runs before the
     # verdict, because the verdict IS the return.
+
+    # ============ Codex round-3 findings (red-first) ======================
+    # (1) RULE 17 INSIDE BATCH-4, and it is mine. A1.5 freezes "Head fitting
+    # weights each row by 1 / rows_in_generation". generation_weights was
+    # WRITTEN and its only caller was a unit test; the fits passed [1.0]*len.
+    # So n was relabelled ACTION while the estimator stayed row-weighted --
+    # exactly the suite-green-is-not-pipeline-wired class I have been filing
+    # against others.
+    _wr = [_gr("W", "BUY", 1, 0.0, 5.0), _gr("W", "BUY", 1, 1.0, 5.0),
+           _gr("W", "BUY", 2, 0.0, -4.0)]
+    _tw = head_targets(_wr)
+    ok(_tw.get("w_rows") == [0.5, 0.5, 1.0],
+       f"B3(b) head_targets carries A1.5 fitting weights 1/rows_in_generation "
+       f"(2-row gen -> 0.5 each, 1-row gen -> 1.0); got {_tw.get('w_rows')!r}")
+    _fsrc = inspect.getsource(fit_arm)
+    ok("[1.0] * len" not in _fsrc and "[1.0]*len" not in _fsrc,
+       "B3(b) fit_arm no longer passes UNIT weights; A1.5's weighting reaches "
+       "the estimator, not just the report")
+    ok("w_rows" in _fsrc,
+       "B3(b) fit_arm consumes the declared weights")
+    ok(_tw["counts"]["n_actions"] == 2 and _tw["counts"]["n_rows"] == 3,
+       "the action count and the row count are BOTH stated, never conflated")
+
+    # (6) The stratum hour was WINDOW-RELATIVE. t_start is an offset within a
+    # 5-minute window, so t_start//3600 is 0 for essentially every row and
+    # side x hour matching collapsed every real UTC hour into one bucket. The
+    # governing instant is t0 + t_start.
+    _h = [{"slug": "s", "side": "BUY_UP", "gen": 1, "t_start": 0.0, "t0": 0},
+          {"slug": "s", "side": "BUY_UP", "gen": 2, "t_start": 0.0, "t0": 3600}]
+    ok(_strata(_h, [0, 1]) == [("BUY_UP", 0), ("BUY_UP", 1)],
+       f"B6 the stratum hour is the GOVERNING UTC hour (t0 + t_start), not the "
+       f"window-relative one; two rows an hour apart must not share a stratum "
+       f"(got {_strata(_h, [0, 1])})")
+
+    # (5) The Q4 cell returned `net` as its statistic while its p came from a
+    # sign-flip over INCREMENTS. A cell whose p describes a different quantity
+    # than its statistic cannot be read: Holm would rank the increment's
+    # evidence against the raw net's magnitude.
+    _q4rows = [_gr("W", "BUY", g, 0.0, 10.0 if g % 2 else -6.0) for g in range(1, 9)]
+    _q4p = {"expected_cancel_value": [0.9 - 0.1 * i for i in range(8)]}
+    _q4i = {"expected_cancel_value": [0.1 + 0.1 * i for i in range(8)]}
+    _pc = {"btc": {"composed_linear": {
+        "economics": q4_economics(_q4p, _q4rows, incumbent=_q4i),
+        "heads": {}, "adjudicated_statistics": {}}}}
+    _st, _pv, _stat, _det = _q4_cell("composed_linear", I11.BUDGETS_011[0], _pc)
+    _ec0 = _pc["btc"]["composed_linear"]["economics"][I11.BUDGETS_011[0]]
+    ok(_st == sum(_ec0["increment_by_window"].values()),
+       f"B5 the Q4 cell's STATISTIC is the INCREMENT its p describes, not the "
+       f"raw candidate net ({_st!r} vs increment "
+       f"{sum(_ec0['increment_by_window'].values())!r}, candidate net "
+       f"{_ec0['net_cents']!r})")
+    ok("candidate_net_cents" in _det and "incumbent_net_cents" in _det,
+       "B5 the raw candidate and incumbent nets are REPORTED beside the "
+       "adjudicated increment, never adjudicated in its place")
+
+    # (4) The receipt guard accepted substantive garbage: correct keys, but
+    # arm/head/budget disagreeing with the cell's own identity, a NaN
+    # statistic, p=0 and a negative action count.
+    _bad = {}
+    for k in I11.declared_family()["cells"]:
+        a, h, b = k.split("/")
+        _bad[k] = {"cell": k, "arm": "WRONG", "head": "WRONG", "budget": "WRONG",
+                   "statistic": float("nan"), "p_value": 0.0, "status": "OK",
+                   "n_actions": -999, "detail": "x",
+                   "adjudicated_statistic_name": None}
+    try:
+        assert_receipt_has_all_cells({"family": {
+            "cells": _bad, "holm_denominator": len(_bad)}})
+        _g4 = ""
+    except RuntimeError as e:
+        _g4 = str(e)
+    ok(_g4 != "",
+       "B4 a family whose cells carry the right KEYS but wrong arm/head/budget, "
+       "a NaN statistic, p=0 and n_actions=-999 is REFUSED; matching a "
+       "declaration is not carrying a result")
+    for token in ("arm", "n_actions", "p_value"):
+        ok(token in _g4,
+           f"B4 the refusal NAMES {token} rather than failing vaguely")
+
+    # (2) Q1's frozen gate is "beats the matched-random null AND beats the
+    # incumbent hazard head". The incumbent HAS a hazard head
+    # (INCUMBENT_COMPARABLE["Q1_arrival"] is True), so unlike Q2/Q3 there is a
+    # counterpart and R-237 does not excuse its absence.
+    ok(INCUMBENT_COMPARABLE["Q1_arrival"] is True,
+       "Q1 HAS an incumbent counterpart, so its incremental leg is required")
+    ok(callable(globals().get("apply_incumbent_hazard")),
+       "B2 a Q1 incumbent HAZARD comparator exists (the R-280 load-verify-"
+       "apply path extends to the hazard head, not only to composed value)")
+
     return _selftest_verdict(fails)
 
 
