@@ -1,6 +1,9 @@
 # Iteration 011 — conditional signed-value decomposition: PREREGISTRATION
 
-**STATUS: DRAFT-FOR-USER-FREEZE. Nothing here is frozen, fitted or scored.**
+**STATUS: FROZEN BY USER RULING (R-232). Nothing here is fitted or scored.**
+The design below — estimands, four questions and their gates, null designs
+and minimum samples, model classes, consumed-day list, multiplicity — is
+FIXED as of the ruling and predates every iteration-011 number.
 **Authored by:** BE. **Authorised by:** the user's four-lane plan (`d506a06`),
 lane 1. **Parent:** `plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md` §2.1–2.2, whose
 estimand definitions are reproduced verbatim below and are not restated in BE's
@@ -214,14 +217,51 @@ positive.
 
 ---
 
-## 9. Open items for the USER before freezing
+## 9. USER RULINGS (R-232) — settled, not open
 
-1. **Scope of candidates.** How many arms enter iteration 011? Every additional
-   arm multiplies the Holm family across four heads. A 3-arm × 4-head × 3-budget
-   design is 36 cells before any forward race.
-2. **Whether Q4 alone may advance a candidate** when Q2 or Q3 fails. §3 reports
-   it; policy on advancement is the user's, not BE's (rule 14).
-3. **Forward-race admission** — whether unvalidated candidates enter a race at
-   all, given iteration 010's outcome.
-4. **G bar for this line.** Rule 11 says ≥5 complete UTC days; the per-coin
-   verdict regime may make that per-coin. Confirm.
+All four were decided by the user before any iteration-011 number existed. They
+are recorded here as constraints on the work, not as preferences.
+
+**9.1 SCOPE = TWO ARMS.** Composed-linear and composed-LGBM. Both compose the
+heads per §1; neither fits Q4 directly (§6).
+
+  Holm family = 2 arms x 4 heads x 3 budgets = **24 cells**, read JOINTLY.
+  Recorded at freeze time and counted whether or not a head fails.
+
+**9.2 Q4 ALONE MAY NOT ADVANCE A CANDIDATE.** A candidate passing Q4 while
+failing Q2 or Q3 requires **explicit user sign-off at that time**; it does not
+advance on the strength of the composed number. It is **reported always**,
+including when it fails — the reporting duty is unconditional and separate from
+the advancement decision.
+
+  This is the parent plan's rule given teeth: *a strong hazard head does not
+  establish useful toxicity discrimination.* A composed EV that wins while its
+  sign or magnitude head fails is precisely the case where the decomposition has
+  not done what it was built to do, and it must not be able to advance quietly
+  on the aggregate.
+
+**9.3 NO AUTO-ENTRY TO ANY FORWARD RACE.** Iteration-011 candidates do not enter
+a race by performing well. Race admission is a **separate user decision**, taken
+with the numbers in front of them.
+
+**9.4 G BAR = >=5 COMPLETE UTC DAYS, PER COIN.** Per-coin under the live
+per-coin verdict regime — btc and eth accrue independently, and one coin
+reaching the bar does not carry the other. Below the bar, per coin: point
+estimate, **no interval**, G stated explicitly (generator-computed, R-230(4)).
+
+---
+
+## 10. What remains BE's to decide, and what does not
+
+**BE decides:** implementation, known-bads and their falsifiers, which module
+emits what, how the fence in §7 is asserted, how failures are surfaced.
+
+**BE does not decide:** whether any candidate advances (9.2), whether anything
+enters a race (9.3), or what a result means for the programme. Models estimate;
+they never decide (rule 14). Where a number is ambiguous BE reports the
+ambiguity rather than resolving it in either direction.
+
+**The reporting duty is unconditional.** If Q1-Q4 come back null across both
+arms, that is the result and it is delivered with the same prominence a positive
+would get. Nothing in the rulings above makes a null harder to report than a
+win, and if that ever appears to be the case, say so rather than soften it.
