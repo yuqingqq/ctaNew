@@ -25,7 +25,8 @@
   "linear_btc.json": "4a9a76ec011fad94",
   "linear_d_btc.json": "18701008c2bd18c6",
   "linear_d_eth.json": "fb371f6352214a92",
-  "linear_eth.json": "9723ba5fe87041ee"
+  "linear_eth.json": "9723ba5fe87041ee",
+  "val_models.json": "8ae8b253933f9877"
  },
  "fit_code_files": {
   "flow_fill_development.py": "d5f381cccdc4b7b6",
@@ -36,13 +37,13 @@
   "harmful_fast_compute.py": "86866fea2506cafa",
   "harmful_hazard_model.py": "58b8a2c08eea3cc9",
   "harmful_state_features.py": "75bd49303773c7d7",
-  "phase2_arms.py": "f45a40a15cc7c971",
+  "phase2_arms.py": "3249dfc61c31b8d2",
   "phase2_declaration.py": "aa866f8261677d79",
   "phase2_embargo.py": "2dbf1003a4aa1f7a",
   "phase2_state_schema_freeze.py": "fe0236b05bc38861"
  },
- "fit_code_ref": "97b71838733ea1f3a885f7b714a0bb105d28c842",
- "fit_code_sha256_prefix": "71206f34a8bbf9b9",
+ "fit_code_ref": "e12e2c70c133a0034336b6370f70cc3ab3aecc72",
+ "fit_code_sha256_prefix": "3d0b6c8c6dfe9466",
  "fit_population_parity": {
   "btc": {
    "all_arms_same_n": true,
@@ -125,7 +126,7 @@
  "gate_code_sha256_prefix": "1da60b56e1fb2801",
  "identity_captured_before_load": true,
  "identity_rechecked_at_write": true,
- "run_finished_utc": "2026-08-28T04:19:25Z",
+ "run_finished_utc": "2026-08-28T05:52:14Z",
  "tape_bytes": 3170987711,
  "tape_path": "/home/yuqing/ctaNew/data/pm_5min/derived/phase2_state_tape_v5.json",
  "tape_sha256_prefix": "c7ab02ebcf27d2fc",
