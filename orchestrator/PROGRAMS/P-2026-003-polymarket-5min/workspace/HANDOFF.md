@@ -4647,3 +4647,54 @@ Awaiting user: machine policy for heavy runs + freeze decision.
   the tranche persister is a candidate for the same slot.
 - The two stated gaps (Q3 slopes, per-coin collapse) go to the user with the
   round-3 review.
+
+### 2026-08-28 (later) — BE: round-3 findings, artifacts committed
+
+**DONE (adds to the entry above)**
+- **`edda820`** — the 14 artifacts the fit manifest cites by hash are now IN
+  GIT (1.15 MB; they fell under the blanket `data/` rule, never a size
+  judgement). Every staged blob was re-hashed out of the index against the
+  manifest's recorded prefix before committing: all 14 match. This closes the
+  hole under the R-280 incumbent loader, which could prove a file matched while
+  no later reader could obtain the file.
+- **`c3cd69c`** — seven review findings, red-first. **Two were defects shipped
+  earlier the same day:**
+  - `matched_random_null` was TWO-SIDED where the gate says *beats*. Measured:
+    AUC 1.00 -> p=0.001996 and AUC 0.00 -> p=0.001996, identical. An
+    anti-predictive head would have survived Holm as a discovery. Now
+    one-sided, with `sided` / `no_skill_value` declared in-band.
+  - **rule 17 inside batch-4:** `generation_weights` was written, unit-tested,
+    and reachable only from its unit test while every fit passed `[1.0]*len`.
+    So `n` was relabelled ACTION with a row-weighted estimator. LGBM took no
+    `sample_weight` at all — the two arms were weighted differently while being
+    compared as differing only in model class (R-232 9.1).
+  - plus: stratum hour was window-relative (two rows an hour apart shared a
+    stratum); the Q4 cell's p described increments while its statistic was raw
+    net; the receipt guard accepted `p=0` / `n_actions=-999` / mismatched
+    identity; intervals were claimable on a non-day unit; Q1's incumbent hazard
+    comparator was missing.
+- **`ca4fe7a`** — `sign_flip_null` had the SAME asymmetry (+120c and -120c both
+  p=0.000500). Now one-sided; `p_two_sided` demoted to a reported diagnostic.
+
+**CORRECTION TO `c3cd69c`'s OWN MESSAGE:** it claims the verdict-bound-to-the-
+return fix was applied to the library suite. It was NOT — the edit sat inside a
+guard that silently did not match, and the library was still printing
+`GREEN: 0 failing` mid-function with later checks running below it. Fixed for
+real in `ca4fe7a`. Found only because a falsifier refused to insert against the
+anchor the false claim named.
+
+**`phase2_increment_null.py` HAS THE SAME TWO-SIDED FLAW and produced a
+COMMITTED result — but the conclusion does not depend on it.** Checked, not
+assumed: every cell with p<0.10 has a POSITIVE increment; the only negative
+cells are eth/LGBM at 5/10/15% with p 0.42/0.23/0.28. A two-sided p is ~2x the
+one-sided one for a positive effect, so survivors would survive MORE easily
+under the correct test. "10 of 12 cells chance" stands and was conservative in
+the safe direction. NOT fixed here — re-pricing a committed artifact is a
+decision (rule 13), queued.
+
+**POST-RELEASE CYCLE now carries four items:** annotation-merge wiring, the
+manifest re-stamp (which clears seam 47j), the tranches decision, and the
+increment-null supersession.
+
+**STATE:** library 102 falsifiers, runner 98, seams 185 pass / 1 red (47j,
+deliberate). Nothing fitted, nothing scored.
