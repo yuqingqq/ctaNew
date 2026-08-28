@@ -89,6 +89,8 @@ class Event:
 class Trajectory:
     arm: str
     events: list[Event] = field(default_factory=list)
+    predictor: str = "none"
+    predictor_active: bool = False
 
     def add(self, **kw) -> None:
         self.events.append(Event(seq=len(self.events), **kw))
@@ -96,9 +98,19 @@ class Trajectory:
     def canonical_bytes(self) -> bytes:
         """Byte form the parity comparison is defined over.
 
-        The ARM NAME IS EXCLUDED. Two arms are compared on what they DID; if
-        the name were included every arm would trivially differ and the anchor
-        could never fail, which is the failure mode a decorative anchor has.
+        THE ARM NAME IS EXCLUDED, and so is the PREDICTOR. Two runs are
+        compared on what they DID; if identity were included every run would
+        trivially differ and the anchor could never fail, which is the failure
+        mode a decorative anchor has. The same argument covers the predictor
+        exactly: a per-event predictor string would make `composed_linear` and
+        `composed_lgbm` differ in every event and the inert anchor could never
+        pass.
+
+        So the split is: canonical bytes = WHAT WAS DONE; the trajectory-level
+        identity = WHO DID IT. Two submissions that are bit-identical but
+        differ in identity is the INTERESTING case (two predictors that
+        behaved identically); two with the SAME identity that differ is a
+        determinism failure. Both are checkable only because identity is out.
         """
         payload = [
             {"t": e.t, "seq": e.seq, "kind": e.kind, "slug": e.slug,
@@ -141,6 +153,46 @@ ARMS = (
     "CONDVALUE_X_SKEW_X_FAIRPRICE",
     "RANDOM_MATCHED",
 )
+
+# ---------------------------------------------------------------------------
+# IDENTITY IS TWO-DIMENSIONAL (amendment B2). ARMS name a policy COMPOSITION --
+# which components are active and whether they interact. A PREDICTOR is a
+# separate axis: which estimator produced the scores the composition consumed.
+# BE's 011 arms (composed_linear, composed_lgbm) are PREDICTOR candidates, not
+# compositions, and BE correctly REFUSED to guess the mapping rather than
+# label a run with the nearest-looking arm name.
+#
+# A run is therefore identified by the PAIR (arm, predictor), never by either
+# alone. The consequence that matters is not the field list: the count of
+# candidates in a forward race (rule 12 multiplicity, recorded at freeze time)
+# is the number of PAIRS. Seven compositions over two predictors is FOURTEEN
+# candidates, not seven.
+ARM_SPEC = {
+    "QR_SKEW_ONLY":                 {"components": ("skew",),
+                                     "interaction": False},
+    "QR_CANCEL_HOLD_X_SKEW":        {"components": ("cancel_hold", "skew"),
+                                     "interaction": True},
+    "HAZARD_ONLY_NEUTRAL":          {"components": ("hazard",),
+                                     "interaction": False},
+    "CONDVALUE_NEUTRAL":            {"components": ("condvalue",),
+                                     "interaction": False},
+    "CONDVALUE_X_SKEW":             {"components": ("condvalue", "skew"),
+                                     "interaction": True},
+    "CONDVALUE_X_SKEW_X_FAIRPRICE": {"components": ("condvalue", "skew",
+                                                    "fairprice"),
+                                     "interaction": True},
+    "RANDOM_MATCHED":               {"components": ("random_matched",),
+                                     "interaction": False},
+}
+
+# Declared predictors. "none" is the inert stub used by the anchor. An unknown
+# predictor REFUSES: adding one is a contract amendment, not a submission.
+PREDICTORS = ("none", "composed_linear", "composed_lgbm")
+
+# Top-level keys of a submitted trajectory. Exact in both directions, as with
+# events: absent refuses, undeclared refuses.
+TRAJ_FIELDS = ("canon", "arm", "predictor", "predictor_active", "components",
+               "interaction", "events")
 
 CANCEL_EFFECTIVE_LAG_S = 0.050      # declared; a cancel binds only after it
 RATE_LIMIT_WINDOW_S = 1.0           # declared limiter bucket
@@ -607,6 +659,17 @@ def load_external_trajectory(obj: dict[str, Any]) -> Trajectory:
     """
     if not isinstance(obj, dict):
         raise ParityRefused("REFUSED: external trajectory is not an object")
+    missing_top = [k for k in TRAJ_FIELDS if k not in obj]
+    if missing_top:
+        raise ParityRefused(
+            f"REFUSED: submission is MISSING top-level {missing_top}. "
+            f"Identity is two-dimensional -- a composition (arm) AND a "
+            f"predictor -- and neither is inferred here.")
+    extra_top = [k for k in obj if k not in TRAJ_FIELDS]
+    if extra_top:
+        raise ParityRefused(
+            f"REFUSED: submission carries UNDECLARED top-level {extra_top}; "
+            f"adding a field is a contract amendment, not a submission.")
     canon = obj.get("canon")
     if canon != CANON:
         raise ParityRefused(
@@ -617,13 +680,50 @@ def load_external_trajectory(obj: dict[str, Any]) -> Trajectory:
     arm = obj.get("arm")
     if arm not in ARMS:
         raise ParityRefused(f"REFUSED: unknown arm {arm!r}; declared: {ARMS}")
+    pred = obj.get("predictor")
+    if pred not in PREDICTORS:
+        raise ParityRefused(
+            f"REFUSED: unknown predictor {pred!r}; declared: {PREDICTORS}. "
+            f"Adding a predictor is a contract amendment.")
+    act = obj.get("predictor_active")
+    if act is not True and act is not False:
+        raise ParityRefused(
+            f"REFUSED: predictor_active={act!r} must be a literal bool.")
+    if pred == "none" and act is True:
+        raise ParityRefused(
+            "REFUSED: predictor_active=True with predictor 'none' -- an "
+            "active predictor must be named.")
+    # THE ARM NAME MUST BE CHECKABLE, NOT A LABEL. The producer states the
+    # composition it actually ran; the name is verified against the declared
+    # decomposition. This is the clause that forces BE's 011 question into the
+    # open instead of resolving it by resemblance: a run whose components do
+    # not decompose the way the name says REFUSES, and the mapping gets
+    # decided rather than guessed.
+    spec = ARM_SPEC[arm]
+    comps = obj.get("components")
+    if not isinstance(comps, list) or any(not isinstance(c, str)
+                                          for c in comps):
+        raise ParityRefused("REFUSED: components must be a list of strings")
+    if tuple(sorted(comps)) != tuple(sorted(spec["components"])):
+        raise ParityRefused(
+            f"REFUSED: arm {arm!r} declares components "
+            f"{sorted(spec['components'])} but the submission ran "
+            f"{sorted(comps)}. The arm name is a CLAIM about what ran, and a "
+            f"name that cannot be checked is a label.")
+    if obj.get("interaction") is not spec["interaction"]:
+        raise ParityRefused(
+            f"REFUSED: arm {arm!r} declares interaction="
+            f"{spec['interaction']} but the submission reports "
+            f"{obj.get('interaction')!r}. An X in the name is an INTERACTION "
+            f"claim; a composition that does not distinguish one may not "
+            f"carry the name.")
     events = obj.get("events")
     if not isinstance(events, list) or not events:
         raise ParityRefused(
             f"REFUSED: external arm {arm!r} carries no events. An empty "
             f"trajectory trivially matches nothing and must not be scored as "
             f"agreement.")
-    tr = Trajectory(arm=arm)
+    tr = Trajectory(arm=arm, predictor=pred, predictor_active=act)
     seen_seq: set[int] = set()
     for i, e in enumerate(events):
         if not isinstance(e, dict):
@@ -660,6 +760,22 @@ def load_external_trajectory(obj: dict[str, Any]) -> Trajectory:
             raise ParityRefused(f"REFUSED: event {i} price={e['price']!r}")
         tr.events.append(Event(**{f: e[f] for f in EVENT_FIELDS}))
     return tr
+
+
+def trajectory_to_contract(tr: Trajectory) -> dict[str, Any]:
+    """The submission shape. Provided so a producer has a REFERENCE, never so
+    it can import one: BE writes its own exporter and agreement is proven by
+    this loader refusing its malformed cases (R-235). Components come from the
+    declared spec here only because a stub IS its declared composition; a real
+    producer must state what it actually ran, which is the whole point of the
+    check."""
+    spec = ARM_SPEC[tr.arm]
+    return {"canon": CANON, "arm": tr.arm, "predictor": tr.predictor,
+            "predictor_active": tr.predictor_active,
+            "components": list(spec["components"]),
+            "interaction": spec["interaction"],
+            "events": [{f: getattr(e, f) for f in EVENT_FIELDS}
+                       for e in tr.events]}
 
 
 def external_lifecycle(tr: Trajectory) -> dict[str, Any]:
@@ -717,19 +833,44 @@ def check_external_arms(objs: list[dict[str, Any]],
     if not objs:
         return {"evaluable": False, "n_arms": 0, "pass": False,
                 "why": "no external trajectories submitted"}
-    out, arms = {}, []
+    # KEYED ON THE PAIR. Keying on the arm alone silently OVERWROTE one
+    # submission with another when two predictors ran the same composition --
+    # a whole candidate could vanish from the results and the count would
+    # still look right. Found by taking identity seriously (amendment B2).
+    out, ids, inert = {}, [], {}
     for o in objs:
         tr = load_external_trajectory(o)
-        arms.append(tr.arm)
+        key = f"{tr.arm}|{tr.predictor}"
+        ids.append(key)
         r = external_lifecycle(tr)
         r["digest"] = tr.digest()
+        r["arm"] = tr.arm
+        r["predictor"] = tr.predictor
+        r["predictor_active"] = tr.predictor_active
         if reference is not None:
             r["matches_reference"] = (r["digest"] == reference.digest())
-        out[tr.arm] = r
-    dup = len(arms) != len(set(arms))
-    res = {"evaluable": True, "n_arms": len(out), "per_arm": out,
-           "duplicate_arms": dup,
-           "lifecycle_pass": (not dup)
+        inert.setdefault(tr.predictor_active, set()).add(r["digest"])
+        out[key] = r
+    dup = len(ids) != len(set(ids))
+    # CONTRACT CLAUSE, checkable BECAUSE identity is out of the digest: every
+    # submission with predictor_active=False over the same opportunities must
+    # be bit-identical, whatever its arm or predictor. That is the inert
+    # anchor, generalised to submissions this harness did not build.
+    inactive_agree = len(inert.get(False, set())) <= 1
+    # And the converse, REPORTED rather than judged: a submission that claims
+    # an ACTIVE predictor yet is bit-identical to the inert set did nothing.
+    # Not necessarily an error (a threshold may never have been crossed) --
+    # but "we ran the model" must not read as "the model acted".
+    declared_active_but_inert = sorted(
+        k for k, v in out.items()
+        if v["predictor_active"] and v["digest"] in inert.get(False, set()))
+    res = {"evaluable": True, "n_submissions": len(out), "per_id": out,
+           "arms_seen": sorted({v["arm"] for v in out.values()}),
+           "predictors_seen": sorted({v["predictor"] for v in out.values()}),
+           "duplicate_ids": dup,
+           "inactive_predictors_agree": inactive_agree,
+           "declared_active_but_inert": declared_active_but_inert,
+           "lifecycle_pass": (not dup) and inactive_agree
                              and all(v["pass"] for v in out.values())}
     # When a reference IS supplied, bit-identity ENTERS the verdict. The first
     # version computed matches_reference per arm and left it out of `pass`, so
@@ -1064,9 +1205,8 @@ def _selftests() -> int:
     ext_tr = run_stub_arm("CONDVALUE_X_SKEW", opps, predictor_enabled=True,
                           cancel_threshold=0.5, rate_limit_per_window=1,
                           fill_at=0.010)
-    ext = {"canon": CANON, "arm": "CONDVALUE_X_SKEW",
-           "events": [{f: getattr(e, f) for f in EVENT_FIELDS}
-                      for e in ext_tr.events]}
+    ext_tr.predictor, ext_tr.predictor_active = "composed_linear", True
+    ext = trajectory_to_contract(ext_tr)
     back = load_external_trajectory(ext)
     ok(back.digest() == ext_tr.digest(),
        "EXTERNAL INTERFACE: a declared-shape trajectory round-trips to the "
@@ -1170,9 +1310,80 @@ def _selftests() -> int:
     ok(check_external_arms([ext])["pass"] is True,
        "positive control: a populated, valid external submission passes")
     ok(check_external_arms([ext, json.loads(json.dumps(ext))])[
-           "duplicate_arms"] is True,
-       "two submissions under the SAME arm name are flagged -- otherwise one "
-       "arm could be scored twice and a missing arm would go unnoticed")
+           "duplicate_ids"] is True,
+       "two submissions under the SAME (arm, predictor) pair are flagged -- "
+       "otherwise one candidate could be scored twice and a missing one go "
+       "unnoticed")
+
+    # ---- B2: identity is (composition x predictor) -----------------------
+    _lin = trajectory_to_contract(ext_tr)
+    _lgb = json.loads(json.dumps(_lin)); _lgb["predictor"] = "composed_lgbm"
+    ok(load_external_trajectory(_lin).digest()
+       == load_external_trajectory(_lgb).digest(),
+       "IDENTITY IS OUT OF THE DIGEST: two PREDICTORS that behaved identically "
+       "produce the same canonical bytes. Including the predictor per event "
+       "would make composed_linear and composed_lgbm differ everywhere and "
+       "the inert anchor could never pass -- the same argument as the arm name")
+    _both = check_external_arms([_lin, _lgb])
+    ok(_both["n_submissions"] == 2 and not _both["duplicate_ids"]
+       and _both["predictors_seen"] == ["composed_lgbm", "composed_linear"],
+       f"and BOTH survive as separate submissions ({_both['n_submissions']}) "
+       f"-- keyed on the PAIR. Keying on the arm alone silently OVERWROTE one "
+       f"with the other, so a whole candidate could vanish while the count "
+       f"still looked right")
+
+    ok(refuses(lambda: load_external_trajectory(_mut(predictor="lgbm_v9")),
+               "unknown predictor"),
+       "an UNDECLARED predictor refuses -- adding one is a contract "
+       "amendment, not a submission")
+    _na = json.loads(json.dumps(_lin))
+    _na["predictor"], _na["predictor_active"] = "none", True
+    ok(refuses(lambda: load_external_trajectory(_na), "must be named"),
+       "predictor_active=True with predictor 'none' refuses -- an active "
+       "predictor must be named")
+
+    # THE CLAUSE THAT FORCES BE'S 011 QUESTION INTO THE OPEN
+    _noint = json.loads(json.dumps(_lin)); _noint["interaction"] = False
+    ok(refuses(lambda: load_external_trajectory(_noint), "INTERACTION claim"),
+       "a run named CONDVALUE_X_SKEW that reports interaction=False REFUSES. "
+       "This is exactly BE's 011 case: an X in the name is an interaction "
+       "CLAIM, and a composition that does not distinguish one may not carry "
+       "the name -- so the mapping gets DECIDED, not resolved by resemblance")
+    _wrongc = json.loads(json.dumps(_lin))
+    _wrongc["components"] = ["condvalue", "hazard"]
+    ok(refuses(lambda: load_external_trajectory(_wrongc), "is a CLAIM"),
+       "and components that do not decompose the way the NAME says refuse -- "
+       "the arm name is a checkable claim about what ran, not a label")
+    ok(load_external_trajectory(_lin) is not None,
+       "positive control: the matching decomposition loads")
+
+    # the inert-anchor clause, generalised to submissions
+    _i1 = trajectory_to_contract(run_stub_arm("QR_SKEW_ONLY", opps))
+    _i2 = trajectory_to_contract(run_stub_arm("CONDVALUE_NEUTRAL", opps))
+    _i2["predictor"] = "composed_lgbm"
+    ok(check_external_arms([_i1, _i2])["inactive_predictors_agree"] is True,
+       "CONTRACT CLAUSE: every submission with predictor_active=False over "
+       "the same opportunities is BIT-IDENTICAL whatever its arm or "
+       "predictor -- the inert anchor, generalised to trajectories this "
+       "harness did not build. Checkable only because identity is out")
+    _i3 = json.loads(json.dumps(_i2))
+    _i3["events"] = _i3["events"][:-1]
+    ok(check_external_arms([_i1, _i3])["inactive_predictors_agree"] is False
+       and check_external_arms([_i1, _i3])["pass"] is False,
+       "and it FAILS when two inert submissions disagree -- with every "
+       "predictor off, a difference can only be the harness")
+    _act_inert = json.loads(json.dumps(_i1))
+    _act_inert["predictor"], _act_inert["predictor_active"] = \
+        "composed_linear", True
+    _r = check_external_arms([_i1, _act_inert])
+    ok(_r["declared_active_but_inert"] == ["QR_SKEW_ONLY|composed_linear"],
+       f"a submission claiming an ACTIVE predictor that is bit-identical to "
+       f"the inert set is REPORTED ({_r['declared_active_but_inert']}) -- not "
+       f"necessarily an error, since a threshold may never have been crossed, "
+       f"but \"we ran the model\" must not read as \"the model acted\"")
+    ok(check_external_arms([_i1, _lin])["declared_active_but_inert"] == [],
+       "positive control: an active predictor that DID something is not "
+       "reported as inert")
 
     # ---- determinism across processes ------------------------------------
     d = determinism_across_hashseed(here)

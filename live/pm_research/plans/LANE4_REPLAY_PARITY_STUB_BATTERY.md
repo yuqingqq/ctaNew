@@ -249,3 +249,98 @@ been checked through it** — the interface is designed and tested against
 round-tripped stub output, and its first real use is the first thing that can
 falsify the contract. Nothing here is scored, no stub is ever a candidate, and
 the battery estimates rather than decides (rule 14).
+
+---
+
+## AMENDMENT B2 — identity is two-dimensional (composition × predictor)
+
+Raised by BE against the external-arm contract (`a3e8382`), which **refused to
+guess the arm-name mapping** rather than label a run with the nearest-looking
+name. The refusal was correct and the contract was underspecified.
+
+### B2.1 The mismatch
+
+`ARMS` names **policy compositions** — which components are active and whether
+they interact. 011's `composed_linear` / `composed_lgbm` are **predictor
+candidates** — which estimator produced the scores a composition consumed.
+These are orthogonal axes, and one string cannot carry both.
+
+Worse, the axes are not independently nameable: `CONDVALUE_X_SKEW` asserts an
+**interaction** that 011's arms do not distinguish. Mapping `composed_linear`
+onto it would assert a composition BE did not implement — a claim the checker
+would then be structurally unable to falsify.
+
+### B2.2 THE CONSEQUENCE THAT IS NOT ABOUT FIELDS
+
+**A run is identified by the PAIR, so the count of candidates in a forward race
+— rule 12 multiplicity, recorded at freeze time — is the number of PAIRS.**
+Seven compositions over two predictors is **fourteen** candidates, not seven.
+Any multiplicity already recorded on an arm count is wrong by that factor, and
+a race is corrected before it starts or not at all.
+
+### B2.3 Predictor identity is trajectory-level and EXCLUDED from the digest
+
+Same argument that excludes the arm name, and it binds exactly as hard: a
+per-event predictor string would make `composed_linear` and `composed_lgbm`
+differ in **every event**, and the inert anchor — all arms bit-identical with
+every predictor disabled — could never pass. A parity anchor that cannot pass
+is not an anchor.
+
+So the split is: **canonical bytes = what was DONE; trajectory-level identity =
+who DID it.** Two consequences, both checkable *only because* identity is out:
+
+- two submissions that are bit-identical but differ in identity is the
+  **interesting** case — two predictors that behaved identically;
+- two with the **same** identity that differ is a determinism failure.
+
+### B2.4 A required field, not a manifest
+
+`predictor` and `predictor_active` are **required top-level keys**, exact in
+both directions like the event fields: absent refuses, undeclared refuses.
+
+Not a sidecar manifest, and today supplied the argument: a manifest is a second
+artifact that can drift from the thing it describes. The nightly log said
+`verdict artifact written` beside a file that had since been replaced, and the
+fix was to make the artifact **self-describing**. A trajectory that travels
+alone must still say what produced it.
+
+### B2.5 The arm name must be checkable, not a label
+
+The producer states the `components` it actually ran and whether they
+`interaction`; the loader verifies both against the declared `ARM_SPEC`
+decomposition. A mismatch **refuses**.
+
+This is the clause that **forces BE's 011 question into the open rather than
+resolving it by resemblance**: a run named `CONDVALUE_X_SKEW` reporting
+`interaction: false` is refused, so the mapping gets *decided* — by BE and the
+coordinator, on the record — instead of being inherited from a name that looked
+close enough. An `X` in the name is an interaction claim.
+
+### B2.6 Two contract clauses this makes enforceable
+
+- **inert agreement**: every submission with `predictor_active=False` over the
+  same opportunities must be bit-identical, whatever its arm or predictor. The
+  inert anchor, generalised to trajectories this harness did not build — with
+  every predictor off, a difference can only be the harness.
+- **declared-active-but-inert**: a submission claiming an active predictor that
+  is bit-identical to the inert set is **reported**. Not necessarily an error —
+  a threshold may never have been crossed — but *"we ran the model"* must not
+  read as *"the model acted"*.
+
+### B2.7 A defect this exposed in my own checker
+
+`check_external_arms` keyed its results on `tr.arm`, so **two predictors running
+the same composition silently overwrote each other** — a whole candidate could
+vanish from the results while the submission count still looked right. Now keyed
+on the pair, with duplicates flagged. Taking identity seriously found it; the
+one-dimensional contract concealed it.
+
+### B2.8 What this does NOT decide
+
+**Which 011 arm maps to which composition.** That is BE's to state and the
+coordinator's to rule. This amendment makes the mapping a **decision that must
+be made explicitly** rather than one that can happen by accident — and until it
+is made, a real trajectory cannot load. Which is the correct state to be in,
+since no trajectory may be scored under the standing hold anyway.
+
+**11 new red-first checks; battery at 73.**
