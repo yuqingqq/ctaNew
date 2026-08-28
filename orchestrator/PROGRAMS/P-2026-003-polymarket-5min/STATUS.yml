@@ -240,6 +240,40 @@ flags:
                              # ahead has two definitions across layers; measured
                              # harmless (0 suppressed in 330,202 rows).
                              # None touches a reported number.
+  increment_null_result: 10-OF-12-CHANCE # 2026-08-28 DA, R-217/e7caaeb,
+                             # verified Q-DA-106. Holm across 12 cells (2 cand
+                             # arms x 2 coins x 3 budgets), DA-recomputed to
+                             # 1e-9. ONLY btc/LGBM_PINNED @10% (0.01799) and
+                             # @5% (0.02199) survive at 0.05. eth increment is
+                             # NEGATIVE in point estimate and chance-
+                             # indistinguishable (-1310.82 @10%, p=0.24).
+                             # Cluster unit: G=0 complete UTC days, WINDOW used,
+                             # declared weaker-than-ruled and OPTIMISTIC --
+                             # evidence, not a significance certificate.
+  day_one_08_27: EXCLUDED-R222 # 2026-08-28 DA verdict, coordinator R-222.
+                             # ALL_PASS false: gap_rate 23.08/hr vs bar 15, 554
+                             # gaps, 17 of 24 hours over, 3297.2s lost. Complete
+                             # (288/288 all coins) and post-freeze otherwise --
+                             # it fails on the gap rate ALONE. eth lost with it
+                             # under the frozen whole-day rule; BE PROHIBITED
+                             # from scoring it; incumbent clock restarts at the
+                             # first per-coin-passing day.
+  per_coin_verdicts_live: YES-FROM-08-28 # 2026-08-28 DA. The prospective
+                             # boundary held: 08-27 judged whole-day under the
+                             # frozen rule, 08-28 got per-coin verdicts, and
+                             # 08-28's first run reported NOT-ESTIMABLE rather
+                             # than passing on an empty expectation.
+  btc_mitigation_evidence: DELIVERED-DESIGN-PENDING # 2026-08-28 DA, Q-DA-108,
+                             # artifact da_btc_gap_evidence_v1.json (91eb3f5).
+                             # 77.1% of btc post-step loss is DETECTION LAG not
+                             # reconnect (PING_TIMEOUT median gap 11.305s of
+                             # which 10.005s is detection; ping_interval=10).
+                             # Control: btc 1,734 gaps/10,012s vs 36 gaps/261s
+                             # for the other SIX coins combined, same process.
+                             # ws_ever_paused 0/1,734 and queue depth LOWER
+                             # post-step -- the slow-consumer story is refuted.
+                             # Design is the coordinator's, ruling is the
+                             # USER's; collectors stay outside DA (R-110).
   forward_day_verify_instrument: COMMITTED # 2026-08-26 DA, e9f8d89.
                              # live/pm_research/da_forward_day_verify.py --
                              # R-141(1) predicates, R-153(2) hard precondition.

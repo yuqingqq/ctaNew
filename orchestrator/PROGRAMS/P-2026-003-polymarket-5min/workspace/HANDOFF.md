@@ -1,6 +1,55 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-08-27 (DA) — **R-219 review CLOSED: 15/15 cells reproduced independently to <=1.3e-11c; freeze awaits the user.**
+Updated: 2026-08-28 (DA) — **receipt VALIDATED 15/15; increment-null 10-of-12 chance; 08-27 EXCLUDED; per-coin live; btc evidence pack delivered; freeze awaits the user.**
+
+## 2026-08-28 (DA, ~01:xxZ) — day one EXCLUDED; per-coin live; receipt validated; btc evidence pack delivered
+
+**WHERE THE PROGRAMME ACTUALLY STANDS** (the audit flagged this file stale —
+R-222..R-225 lived only in COORDINATION):
+
+**RESULT STATE.** The Phase-2 four-arm receipt is **VALIDATED**: DA reproduced
+**15 of 15 cells** (btc 6, eth 9 incl. incumbent) with an implementation sharing
+no scoring/thresholding/evaluation code — **worst delta 1.3e-11 cents**,
+populations, drops, cancellation counts and harm/sacrifice/rho all matching
+(Q-DA-107). **INCREMENT-NULL (R-217/e7caaeb): 10 of 12 cells are chance after
+joint reading.** Holm independently recomputed, all 12 agreeing to 1e-9;
+**only btc/LGBM_PINNED @10% (0.01799) and @5% (0.02199) survive at 0.05.**
+eth's increment is **negative in the point estimate and indistinguishable from
+chance** (−1310.82 @10%, p=0.24), rebuilt from DA's own numbers. **Cluster
+disclosure is honest: G=0 complete UTC days, window unit, declared
+weaker-than-ruled and OPTIMISTIC — evidence, not a significance certificate.**
+
+**FORWARD RACE.** **08-27 (day one) is EXCLUDED (R-222)** — verified FAIL on
+`gap_rate_under_bar` alone (554 gaps, 23.08/hr vs bar 15, 17 of 24 hours over,
+3297.2s lost); complete (288/288 every coin) and post-freeze otherwise. **eth is
+lost with it** under the frozen whole-day rule; **BE is prohibited from scoring
+it**; the incumbent's clock restarts at the first per-coin-passing day.
+**PER-COIN VERDICTS ARE LIVE from 08-28** — the prospective boundary held, and
+08-28's first run correctly reported NOT-ESTIMABLE rather than passing vacuously.
+
+**btc COLLECTOR — evidence delivered, design pending (Q-DA-108, `91eb3f5`).**
+**77.1% of btc's post-step lost time is DETECTION LAG, not reconnect**:
+PING_TIMEOUT median gap 11.305s of which **10.005s** elapses before the client
+notices (`ping_interval=10`); reconnect itself ~1.3s. **Control group decisive**:
+btc 1,734 gaps / 10,012s vs **36 gaps / 261s for the other SIX coins combined**
+in the same process, one connection per market; PING_TIMEOUT is btc-only.
+**Queue telemetry REFUTES the slow-consumer story**: `ws_ever_paused` 0 across
+all 1,734 disconnects, lag median 2.1ms, and depth LOWER post-step (80) than
+pre-step (123). This **refines DA's own earlier claim** — the trigger may be
+peer-side, but the COST is client-side detection latency. R-181/182 embedded in
+the artifact so the design does not re-walk the refuted shard premise.
+
+**FOUR THINGS OPEN, none of them DA's to decide.** (1) **The FREEZE — the
+user's word**, held. (2) **btc mitigation design** — coordinator drafts, user
+rules; no deploy, boundary-only if ever. (3) **R-214 staging-then-promote** —
+adopted, **UNIMPLEMENTED**, DA's, before the next arming (write-new + mv).
+(4) **BE's bound debts** — callable `gap_contains`, callable absorption guard,
+seam 30 rewritten to call the real function, the increment-null reconciliation
+refusal given a falsifier, plus R-225's four guard-wiring findings.
+
+**DA's NEXT ACTION.** When BE's superseding receipt lands after fit5/score5,
+**re-run the independent scorer** (`scratchpad/review/da_recompute*.py`);
+numbers should be identical to ~1e-11 and **any divergence is a finding**.
 
 ## 2026-08-27 (DA, ~17:xxZ) — R-219 adversarial review CLOSED: 15/15 cells reproduced independently
 
