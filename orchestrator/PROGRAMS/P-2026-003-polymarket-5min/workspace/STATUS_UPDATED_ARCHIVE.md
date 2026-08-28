@@ -248,3 +248,32 @@ the ruling's point (3). Join rule as in batch 1.
   NOT unconditional -- an adverse O1-relevant Codex finding before ~23:55Z
   arming postpones the boundary.
 ```
+
+## Batch 3 — archived 2026-08-28T10:21Z (1 entry, rolling-window overflow)
+
+Moved in the same commit as the sweep that pushed it out. Join rule as in batch 1.
+
+```yaml
+
+  2026-08-28T09:57Z (MEM): R-249 -- THE USER RULED Q2 = min (worse side), so
+  the A1.4 gap is closed IN THE FROZEN FILE and BE's :231 is authorized. GATE
+  ARITHMETIC, STATED PRECISELY because this is the update most easily misread:
+  the fit was blocked by (a) HOLD RELEASED and (b) the user's ruling; (b) is
+  now SATISFIED -- ruled, not dissolved and not found unnecessary -- so fit
+  clearance blocks on (a) ALONE and a clean review DOES clear the fit. The
+  one-side flag MEM routed into the round WAS REAL and BE closed it (b3f082e):
+  report_arm had filtered None out and taken min() of what remained, so a p_pos
+  of 0.92 beside p_neg None produced a cell of 0.92 -- one side sailing past
+  the UNDERPOWERED machinery as though the pair had been measured. Q2 now
+  requires BOTH sides, with the rule carried in the ARTIFACT rather than a
+  commit message. MEM's four-instance consolidation is now SEAT_PROTOCOL RULE
+  16, verified at the file: a control that cannot fail must never be mistaken
+  for one that passed -- phrased control-side because the next instance will
+  wear a shape none of the four had, plus the coordinator's completing clause
+  that every control ships BOTH directions. And the count discrepancy held open
+  rather than reconciled ALREADY PAID: chasing it, BE found its own
+  falsifier_count.sh could fall back to running the runner BARE -- main(), the
+  heavy data path, from the session shell, against a now-binding resource cap.
+  Fallback removed; a helper for counting tests must not be able to start a
+  research run.
+```

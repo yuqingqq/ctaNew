@@ -4,6 +4,30 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-08-28T10:21Z (MEM): R-252 + R-253. THE SETTLEMENT-SOURCE PREMISE WAS
+  FALSE. Settlement is CHAINLINK TWAP-vs-OPEN, ties UP -- not Binance. Verified
+  at markets.jsonl by my own run: 17,734 records, 17,734 Chainlink, ZERO
+  Binance (the register's 17,727 was right as of its run one minute earlier;
+  the file grew 7 records between -- rule 8's tape-grows-during-measurement,
+  live). THE ESTIMAND CHANGES WORK, not just wording: the settlement event is
+  P(TWAP over window >= the window's OWN OPEN) -- a PATH average, so any
+  transformation built on terminal price would PRICE THE WRONG EVENT; tie->UP
+  is pinned by the venue, not chosen by us. DA's R-244 venue-lag reading is
+  VOID, and note the direction -- a positive bookTicker increment would now be
+  a GENUINE CROSS-VENUE LEAD, a STRONGER claim than the voided reading allowed;
+  the decision-value complement survives. THE PRE-DECLARATION IS WHAT MADE THIS
+  CHEAP: both readings were on record before any number existed, so the false
+  one died with no sign to build a story around, and NOTHING WAS EVER SCORED ON
+  IT. Two facts kept separate: DA erred first AND corrected first; the
+  coordinator ratified the false reading at R-244 and CO-OWNS it. Rule 9 stands
+  through a corrected door -- the tautology was never Binance, it is that
+  IDENTITY ALREADY PRICES THE EVENT. **CLAUDE.md line 130 carries the same false
+  claim in the USER'S OWN FILE; no seat edits it, it is flagged to the user, and
+  until their edit lands the claudemd_rule9_parenthetical_is_FALSE flag is the
+  correction of record -- no seat may cite that parenthetical as fact.** Also:
+  RULE 17 ADOPTED (suite-green is not pipeline-wired) after batch 2 DEMONSTRATED
+  the both-halves closure, so it lands with a cite rather than an anecdote.
+  PRIOR:
   2026-08-28T10:09Z (MEM): R-251 -- THE DEPLOY IS POSTPONED, AND IT POSTPONED
   ITSELF. Codex's batch-1 filing is in, verified in full by the coordinator with
   NO REVIEW ERRORS, and the pre-ruled adverse-finding condition FIRED on a
@@ -46,28 +70,7 @@ updated: >-
   one was invisible from its environment. Q2's both-sides fix is VERIFIED at
   b3f082e and composes with the min ruling: MIN ADJUDICATES ONLY WHEN BOTH
   SIDES ARE MEASURABLE, otherwise the cell is UNEVALUABLE and still occupies
-  its Holm slot. PRIOR:
-  2026-08-28T09:57Z (MEM): R-249 -- THE USER RULED Q2 = min (worse side), so
-  the A1.4 gap is closed IN THE FROZEN FILE and BE's :231 is authorized. GATE
-  ARITHMETIC, STATED PRECISELY because this is the update most easily misread:
-  the fit was blocked by (a) HOLD RELEASED and (b) the user's ruling; (b) is
-  now SATISFIED -- ruled, not dissolved and not found unnecessary -- so fit
-  clearance blocks on (a) ALONE and a clean review DOES clear the fit. The
-  one-side flag MEM routed into the round WAS REAL and BE closed it (b3f082e):
-  report_arm had filtered None out and taken min() of what remained, so a p_pos
-  of 0.92 beside p_neg None produced a cell of 0.92 -- one side sailing past
-  the UNDERPOWERED machinery as though the pair had been measured. Q2 now
-  requires BOTH sides, with the rule carried in the ARTIFACT rather than a
-  commit message. MEM's four-instance consolidation is now SEAT_PROTOCOL RULE
-  16, verified at the file: a control that cannot fail must never be mistaken
-  for one that passed -- phrased control-side because the next instance will
-  wear a shape none of the four had, plus the coordinator's completing clause
-  that every control ships BOTH directions. And the count discrepancy held open
-  rather than reconciled ALREADY PAID: chasing it, BE found its own
-  falsifier_count.sh could fall back to running the runner BARE -- main(), the
-  heavy data path, from the session shell, against a now-binding resource cap.
-  Fallback removed; a helper for counting tests must not be able to start a
-  research run.
+  its Holm slot.
   ARCHIVED: entries older than these three are moved, never deleted, to
   workspace/STATUS_UPDATED_ARCHIVE.md (append-only). This field is a
   ROLLING WINDOW OF THREE by ruling (coordinator, 2026-08-28T10:02Z):
@@ -75,7 +78,54 @@ updated: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
-  defect_class_unit_proven_unwired: NAMED-CANDIDATE-RULE-17 # PROMOTION PENDING
+  claudemd_rule9_parenthetical_is_FALSE: USER-ACTION-FLAGGED # 2026-08-28 R-253.
+                             # PROMINENT BY DESIGN -- read this before citing
+                             # rule 9. CLAUDE.md line 130 says the target is
+                             # derived from an input "(PM binaries settle on a
+                             # Binance-derived price)". THAT PARENTHETICAL IS
+                             # FALSE: settlement is Chainlink TWAP-vs-open
+                             # (verified at data/pm_5min/markets.jsonl -- ratio
+                             # 100% Chainlink, 0% Binance, n and as-of in the
+                             # phase2b_challenger_family flag).
+                             # NO SEAT MAY CITE THE PARENTHETICAL AS FACT. The
+                             # RULE ITSELF IS UNAFFECTED and still binds --
+                             # only its example is wrong, and rule 9 reaches
+                             # this programme through a different door
+                             # (Identity, the PM book, already prices the
+                             # event).
+                             # CLAUDE.md IS THE USER'S FILE AND NO SEAT EDITS
+                             # IT -- not the coordinator, not MEM, and a peer
+                             # cannot authorise it. Flagged to the USER with
+                             # suggested replacement text: "(PM binaries settle
+                             # on Chainlink TWAP-vs-open; Identity -- the PM
+                             # book -- already prices the event)". Until the
+                             # user's own edit lands, this flag is the
+                             # correction of record.
+  defect_class_unit_proven_unwired: SEAT-PROTOCOL-RULE-17 # ADOPTED 2026-08-28
+                                     # (R-252 closure), verified by MEM at
+                                     # SEAT_PROTOCOL.md:79 -- "Suite-green is
+                                     # not pipeline-wired": a control that
+                                     # cannot RUN is distinct from rule 16's
+                                     # control that cannot FAIL; green suites
+                                     # prove the unit, not the wiring, and
+                                     # test-counting coverage cannot tell them
+                                     # apart (I11-2: six evaluator functions,
+                                     # all falsifier-proven, ZERO call sites;
+                                     # DB2: both suites green while the
+                                     # integration always refused). CLOSURE
+                                     # NEEDS BOTH HALVES -- the wiring AND an
+                                     # artifact-level guard refusing output
+                                     # produced without it -- PLUS a seam test
+                                     # that runs the integration the way
+                                     # production does. The trigger held: the
+                                     # rule was adopted only after batch 2
+                                     # DEMONSTRATED the closure (DA seam
+                                     # red->green with the producer's 100.0s
+                                     # charged; BE evaluator 0->12 refs with a
+                                     # receipt-level all-cells guard), which is
+                                     # why it lands with a cite instead of an
+                                     # anecdote. EARLIER ENTRIES (rule 13):
+                                     # PROMOTION PENDING
                                      # WITH A NAMED TRIGGER, recorded here so it
                                      # is not lost with a session: the
                                      # coordinator holds this class as CANDIDATE
@@ -116,7 +166,23 @@ flags:
                                      # REFUSES a receipt lacking all 24 cells --
                                      # the second is what makes the wiring
                                      # self-policing rather than a one-time fix.
-  batch_2_routing: DA-SEAM-FIRST-BE-011-FIXES # 2026-08-28 R-251, Codex's
+  batch_2_routing: GATING-HALVES-VERIFIED-REMAINDER-IN-FLIGHT # ADVANCED
+                                     # 2026-08-28 R-252 (f38f545). The two
+                                     # GATING halves are verified by the
+                                     # coordinator's own execution: DA's DB2 +
+                                     # DB1 (real seam test 7/7; a coordinator
+                                     # known-bad row went RED->GREEN with the
+                                     # producer's 100.0 s charged; THE COLLECTOR
+                                     # WAS NOT TOUCHED) and BE's I11-1/2/3
+                                     # (evaluator wired 0 -> 12 refs, plus the
+                                     # receipt-level all-cells guard). Batch 2
+                                     # COMPLETES on DA's FP1 (landed 3f69611) +
+                                     # the 2B amendment + parity hardening; a DA
+                                     # self-catch also landed (4ee0711: split a
+                                     # status that misdescribed its own cause,
+                                     # found by a coordinator probe). ONE
+                                     # re-review when complete. ORIGINAL ENTRY
+                                     # (rule 13): 2026-08-28 R-251, Codex's
                                      # minimum closure order adopted. DA:
                                      # (1) DB2 consumer fix PLUS THE REAL SEAM
                                      # TEST -- fake O1 socket -> actual emitted
@@ -398,7 +464,58 @@ flags:
                              # instrument too, and a claim in it about code
                              # behaviour that no test pins can drift away from
                              # the code without either one noticing.
-  phase2b_challenger_family: NAMED-PRE-REVIEW-BOTH-READINGS-DECLARED # 2026-08-28
+  phase2b_challenger_family: PREMISE-CORRECTED-ONE-READING-VOID # CORRECTED
+                             # 2026-08-28T10:20Z (R-253). THE SETTLEMENT-SOURCE
+                             # PREMISE WAS FALSE. Settlement is CHAINLINK
+                             # TWAP-vs-OPEN, TIES UP -- NOT Binance.
+                             # VERIFIED BY MEM AT data/pm_5min/markets.jsonl,
+                             # 2026-08-28T10:21Z: 17,734 records, 17,734 mention
+                             # Chainlink, ZERO mention Binance. (The register's
+                             # 17,727/17,727/0 was correct AS OF its own run
+                             # ~10:20Z; the file grew 7 records in the minute
+                             # between -- a live instance of rule 8's "every
+                             # quoted population carries its n AND as-of, the
+                             # tape grows during measurement". The RATIO is what
+                             # carries, not the integer.)
+                             # Verbatim rule: resolve Up iff the Chainlink TWAP
+                             # over the title's range is >= the price at the
+                             # BEGINNING of that range; otherwise Down.
+                             # ESTIMAND PRECISION, and this is the part that
+                             # changes work rather than wording: the settlement
+                             # event is P(TWAP over window >= open) -- A PATH
+                             # AVERAGE AGAINST THE WINDOW'S OWN OPEN, NOT a
+                             # terminal-price comparison. A transformation built
+                             # on terminal price would PRICE THE WRONG EVENT.
+                             # Tie -> UP is PINNED BY THE VENUE, not our choice.
+                             # DA's R-244 "closest to the settlement source"
+                             # reading is VOID, superseded in-band. Note the
+                             # direction: a positive increment from the
+                             # bookTicker challenger would now be a GENUINE
+                             # CROSS-VENUE LEAD -- a STRONGER claim than the
+                             # voided reading allowed. The coordinator's
+                             # decision-value complement SURVIVES UNCHANGED.
+                             # THE PRE-DECLARATION DISCIPLINE IS WHAT MADE THIS
+                             # CHEAP: both readings were on record BEFORE any
+                             # number existed, so the false one died while there
+                             # was still no sign to build a story around.
+                             # NOTHING WAS EVER SCORED ON THE FALSE PREMISE --
+                             # the draft was never frozen and no challenger ran.
+                             # TWO FACTS, KEPT SEPARATE ON PURPOSE: DA erred
+                             # first in the draft AND corrected first, filing
+                             # against its own rows; the coordinator RATIFIED
+                             # the false reading on the register at R-244 and so
+                             # CO-OWNS it, corrected in the same entry. Neither
+                             # fact cancels the other.
+                             # Rule 9 still applies, through a CORRECTED DOOR:
+                             # the tautology risk was never Binance -- it is
+                             # that IDENTITY (the PM book) ALREADY PRICES THIS
+                             # EVENT. Incremental-to-Identity stands with its
+                             # reason fixed.
+                             # Whether Binance flows into Chainlink's
+                             # AGGREGATION upstream is a mechanism question
+                             # about Chainlink's feed, NOT the settlement rule,
+                             # and no instrument of ours reads Chainlink at all.
+                             # ORIGINAL ENTRY (rule 13): 2026-08-28
                              # R-244 (612346b). Second challenger NAMED BEFORE
                              # the review: Binance USDM bookTicker mid. Naming
                              # it now was the right call against DA's own

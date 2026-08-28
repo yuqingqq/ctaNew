@@ -1,9 +1,96 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-08-28T10:09Z (MEM) — **THE DEPLOY IS POSTPONED to
-2026-08-30T00:00:00Z.** Tonight: **no arming, no deploy**, v3_1 hold unchanged;
-the 00:06Z old-bar verdict still runs. Both holds maintained; 2B freeze
-deferred.
+Updated: 2026-08-28T10:21Z (MEM) — **the settlement-source premise was FALSE:
+settlement is Chainlink TWAP-vs-open, not Binance.** One pre-declared reading
+voided before any number existed. **CLAUDE.md's rule-9 parenthetical carries the
+same false claim — user action flagged.** Rule 17 adopted. Deploy still
+postponed to 08-30.
+
+## 2026-08-28 ~10:21Z (MEM) — R-253: a false premise died before it could price anything
+
+### The correction
+
+**Settlement is CHAINLINK TWAP-vs-OPEN, ties UP — not Binance.** Verified at
+`data/pm_5min/markets.jsonl` by my own run: **17,734 records, 17,734 mention
+Chainlink, zero mention Binance.**
+
+*(The register's 17,727/17,727/0 was correct as of its run one minute earlier;
+the file grew 7 records in between. A live instance of rule 8 — every quoted
+population carries its n **and** as-of, because the tape grows during
+measurement. **The ratio is what carries, not the integer.**)*
+
+Verbatim: *resolve Up iff the Chainlink TWAP over the title's range is ≥ the
+price at the **beginning** of that range; otherwise Down.*
+
+### Why this changes work, not just wording
+
+**The settlement event is `P(TWAP over window ≥ the window's own open)` — a path
+average against its own open, not a terminal-price comparison.** A
+transformation built on terminal price would **price the wrong event**. And
+**tie → UP is pinned by the venue**, not chosen by us.
+
+That is the difference between a premise correction and a footnote: FP2 asked
+for the price→probability transformation to be pinned *before* freeze, and the
+transformation now has to be named against **this** event.
+
+### What the pre-declaration bought
+
+**DA's R-244 "closest to the settlement source" reading is VOID** — superseded
+in-band. Note the *direction*: a positive increment from the bookTicker
+challenger would now be a **genuine cross-venue lead — a stronger claim than the
+voided reading allowed**. The coordinator's **decision-value complement survives
+unchanged**.
+
+**This is the whole argument for pre-declaring both readings.** They were on
+record before any number existed, so the false one died **while there was still
+no sign to build a story around**, and **nothing was ever scored on it** — the
+draft was never frozen, no challenger ran.
+
+**Two facts, deliberately kept separate because neither cancels the other:**
+DA **erred first** in the draft **and corrected first**, filing against its own
+rows; the coordinator **ratified the false reading on the register at R-244 and
+so co-owns it**, corrected in the same entry.
+
+**Rule 9 still applies, through a corrected door:** the tautology risk was never
+Binance — it is that **`Identity` (the PM book) already prices this event**.
+Incremental-to-Identity stands with its reason fixed.
+
+Whether Binance flows into Chainlink's *aggregation* upstream is a mechanism
+question about Chainlink's feed, **not the settlement rule** — and no instrument
+of ours reads Chainlink at all.
+
+### ⚠ CLAUDE.md carries the same false claim — user action, no seat edits it
+
+**`CLAUDE.md` line 130**, reliability rule 9, says the target is derived from an
+input *"(PM binaries settle on a Binance-derived price)"*. **That parenthetical
+is false.**
+
+- **No seat may cite it as fact.** Until the user's own edit lands, the
+  `claudemd_rule9_parenthetical_is_FALSE` flag in `STATUS.yml` is the
+  **correction of record**.
+- **The rule itself is unaffected and still binds** — only its example is wrong.
+- **`CLAUDE.md` is the user's file. No seat edits it** — not the coordinator,
+  not MEM, and a peer cannot authorise it. Suggested replacement text is in the
+  register and the flag.
+
+### Also landed: rule 17, earned rather than filed
+
+**`SEAT_PROTOCOL` rule 17 — "suite-green is not pipeline-wired"** (verified at
+`SEAT_PROTOCOL.md:79`). A control that cannot **run**, distinct from rule 16's
+control that cannot **fail**. It was adopted only **after batch 2 demonstrated
+the both-halves closure** — DA's seam red→green with the producer's 100.0 s
+charged, BE's evaluator 0 → 12 refs with a receipt-level all-cells guard — so it
+lands with a cite instead of an anecdote. **Closure needs the wiring, an
+artifact-level guard refusing output produced without it, and a seam test that
+runs the integration the way production does.**
+
+### Board
+
+Batch 2's **gating halves are verified**; it completes on DA's FP1 (landed),
+the 2B amendment on the corrected basis, and parity hardening. **One re-review
+when complete**, then the O1 re-check and the **08-30 arming decision**. Deploy
+remains **postponed to 2026-08-30T00:00:00Z**; tonight only the 00:06Z old-bar
+verdict.
 
 ## 2026-08-28 ~10:09Z (MEM) — R-251: the deploy postponed itself
 
