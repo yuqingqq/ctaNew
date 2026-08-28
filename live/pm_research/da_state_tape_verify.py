@@ -270,10 +270,60 @@ def locate_features(rows: list[dict[str, Any]], schema: dict[str, Any],
             f"(identity fields excluded on purpose), flat "
             f"or under {under!r}. REFUSING rather than checking an empty "
             f"intersection -- an unreadable layout must not yield passes.")
-    if nest_hits > flat_hits:
+    # THE PROBE CHOSE THE LAYOUT; NOW PROVE THE CHOICE HOLDS ON EVERY ROW.
+    #
+    # This function exists to stop predicates iterating over an empty field set
+    # and PASSING -- and it decided from `rows[:200]` and applied the answer to
+    # all 1.76M, never checking. A probe can prove a layout is PRESENT; it can
+    # never prove the other layout is ABSENT later in the tape. So a tape whose
+    # first 200 rows are flat and whose later rows nest under `state` was
+    # returned unflattened, its features invisible, and the very defect named
+    # in this docstring would have run -- inside the guard written against it.
+    #
+    # Found 2026-08-28 by applying the search lesson from Q-DA-135 ("head can
+    # prove presence, never absence") to my own committed code.
+    chosen = under if nest_hits > flat_hits else None
+    bad, first = _layout_nonconforming(rows, declared, chosen)
+    if bad:
+        raise GateRefused(
+            f"HETEROGENEOUS LAYOUT: the {len(probe)}-row probe selected "
+            f"{'nested under ' + repr(chosen) if chosen else 'FLAT'}, but "
+            f"{bad} of {len(rows)} rows carry NO declared feature under it "
+            f"while carrying features under the other layout (first at index "
+            f"{first[0]}: {first[1]}). REFUSING: those rows would have been "
+            f"iterated as empty and passed silently, which is the defect this "
+            f"locator exists to prevent.")
+    if chosen is not None:
         return under, [dict(r.get(under) or {}, **{k: v for k, v in r.items()
                                                    if k != under}) for r in rows]
     return None, rows
+
+
+def _layout_nonconforming(rows, declared, under,
+                          cands=("state", "features", "pred_state")):
+    """Rows that carry NO declared feature under the CHOSEN layout while
+    carrying one under another. Counted over EVERY row, not a probe -- the
+    whole point is that the probe cannot see these."""
+    bad, first = 0, None
+    for i, r in enumerate(rows):
+        if not isinstance(r, dict):
+            continue
+        here = declared & (set(r) if under is None
+                           else set(r.get(under) or {}) | set(r))
+        if here:
+            continue
+        other = set()
+        for c in cands:
+            if c == under:
+                continue
+            v = r.get(c)
+            if isinstance(v, dict):
+                other |= declared & set(v)
+        if other:
+            bad += 1
+            if first is None:
+                first = (i, sorted(other)[:4])
+    return bad, first
 
 
 def clock_of(r: dict[str, Any], schema: dict[str, Any],
@@ -1537,6 +1587,44 @@ def _selftests() -> int:
         ok(not _try(other_na),
            "any OTHER N/A is refused -- the permitted set is a list of one, so "
            "a future exception needs a ruling rather than an argument")
+
+    # ---- the probe chose a layout it never verified (Q-DA-136) ----------
+    _sch = {"emitted_fields": ["f_a", "f_b", "f_c"],
+            "identity_fields": ["slug", "t0"]}
+    _flat = [{"slug": "s", "t0": 1, "f_a": 1.0, "f_b": 2.0} for _ in range(200)]
+    _nest = [{"slug": "s", "t0": 1, "state": {"f_a": 1.0, "f_b": 2.0}}
+             for _ in range(50)]
+    _u, _r = locate_features(list(_flat), _sch)
+    ok(_u is None and len(_r) == 200,
+       "positive control: a HOMOGENEOUS flat tape locates flat and is "
+       "returned untouched")
+    _u2, _r2 = locate_features(list(_nest) * 4, _sch)
+    ok(_u2 == "state" and "f_a" in _r2[0],
+       "positive control: a homogeneous NESTED tape locates `state` and is "
+       "flattened")
+    _mixed_refused = ""
+    try:
+        locate_features(list(_flat) + list(_nest), _sch)
+    except GateRefused as e:
+        _mixed_refused = str(e)
+    ok("HETEROGENEOUS LAYOUT" in _mixed_refused and "50 of 250" in _mixed_refused,
+       f"THE PROBE CHOSE A LAYOUT IT NEVER VERIFIED: 200 FLAT rows followed by "
+       f"50 NESTED ones now REFUSES, naming 50 of 250. Before this guard the "
+       f"probe read rows[:200], selected FLAT, and returned all 250 "
+       f"unflattened -- the 50 nested rows' features were invisible, "
+       f"predicates iterating 'present' fields found none, iterated over "
+       f"nothing, and PASSED. That is verbatim the defect `locate_features` "
+       f"exists to prevent, running INSIDE the guard written against it")
+    _rev_refused = ""
+    try:
+        locate_features(list(_nest) * 4 + [{"slug": "s", "t0": 1, "f_a": 1.0}],
+                        _sch)
+    except GateRefused as e:
+        _rev_refused = str(e)
+    ok(_rev_refused == "",
+       "and the REVERSE mix does NOT refuse: a flat row under a nested "
+       "selection still surfaces its fields when flattened, so it conforms -- "
+       "the guard fires on real invisibility, not on mere heterogeneity")
 
     print(f"da_state_tape_verify selftests: {checks} checks passed")
     return 0
