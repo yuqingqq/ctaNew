@@ -91,6 +91,7 @@ class Trajectory:
     events: list[Event] = field(default_factory=list)
     predictor: str = "none"
     predictor_active: bool = False
+    fairprice_estimator: str | None = None
 
     def add(self, **kw) -> None:
         self.events.append(Event(seq=len(self.events), **kw))
@@ -189,10 +190,25 @@ ARM_SPEC = {
 # predictor REFUSES: adding one is a contract amendment, not a submission.
 PREDICTORS = ("none", "composed_linear", "composed_lgbm")
 
+# A THIRD AXIS, inside ONE arm (amendment B3). `CONDVALUE_X_SKEW_X_FAIRPRICE`
+# names a `fairprice` component -- but WHICH fair-price estimator? The 2B
+# protocol declares a CLOSED SET: `Identity` (the executable book mid) plus at
+# most two challengers, the PM microprice and at most one cross-venue forecast
+# (the Binance USDM bookTicker mid). `da_fair_price_identity.FairPrice`
+# REQUIRES a named estimator and refuses an anonymous record -- while this
+# contract, which consumes fair prices, accepted a run that never said which
+# estimator produced them. Two of my own instruments disagreeing, and it is the
+# same shape B2 fixed one level up.
+#
+# THE IDENTIFIERS BELOW ARE MINE AND NEED RATIFICATION. The 2B draft describes
+# the estimators in prose and declares the set closed; it gives no machine
+# names. Membership is the draft's, spelling is mine -- rename freely.
+FAIRPRICE_ESTIMATORS = ("Identity", "pm_microprice", "bn_bookticker_mid")
+
 # Top-level keys of a submitted trajectory. Exact in both directions, as with
 # events: absent refuses, undeclared refuses.
 TRAJ_FIELDS = ("canon", "arm", "predictor", "predictor_active", "components",
-               "interaction", "events")
+               "interaction", "fairprice_estimator", "events")
 
 CANCEL_EFFECTIVE_LAG_S = 0.050      # declared; a cancel binds only after it
 RATE_LIMIT_WINDOW_S = 1.0           # declared limiter bucket
@@ -717,13 +733,31 @@ def load_external_trajectory(obj: dict[str, Any]) -> Trajectory:
             f"{obj.get('interaction')!r}. An X in the name is an INTERACTION "
             f"claim; a composition that does not distinguish one may not "
             f"carry the name.")
+    # REQUIRED KEY, NULL IFF THE ARM HAS NO FAIRPRICE COMPONENT. Always
+    # present, so the estimator can never be merely absent; and naming one on
+    # an arm that does not use it refuses too, because a run that reports an
+    # input it never consumed is as wrong as one that hides an input it did.
+    fpe = obj.get("fairprice_estimator")
+    if "fairprice" in spec["components"]:
+        if fpe not in FAIRPRICE_ESTIMATORS:
+            raise ParityRefused(
+                f"REFUSED: arm {arm!r} consumes a fair price but names "
+                f"estimator {fpe!r}; declared: {FAIRPRICE_ESTIMATORS}. "
+                f"`da_fair_price_identity` refuses an anonymous record and so "
+                f"does this: a frozen result whose artifact cannot say which "
+                f"estimator fed it is not reproducible (rules 12 and 16).")
+    elif fpe is not None:
+        raise ParityRefused(
+            f"REFUSED: arm {arm!r} has no fairprice component but names "
+            f"estimator {fpe!r} -- reporting an input that was never consumed.")
     events = obj.get("events")
     if not isinstance(events, list) or not events:
         raise ParityRefused(
             f"REFUSED: external arm {arm!r} carries no events. An empty "
             f"trajectory trivially matches nothing and must not be scored as "
             f"agreement.")
-    tr = Trajectory(arm=arm, predictor=pred, predictor_active=act)
+    tr = Trajectory(arm=arm, predictor=pred, predictor_active=act,
+                    fairprice_estimator=fpe)
     seen_seq: set[int] = set()
     for i, e in enumerate(events):
         if not isinstance(e, dict):
@@ -774,6 +808,9 @@ def trajectory_to_contract(tr: Trajectory) -> dict[str, Any]:
             "predictor_active": tr.predictor_active,
             "components": list(spec["components"]),
             "interaction": spec["interaction"],
+            "fairprice_estimator": (tr.fairprice_estimator
+                                    if "fairprice" in spec["components"]
+                                    else None),
             "events": [{f: getattr(e, f) for f in EVENT_FIELDS}
                        for e in tr.events]}
 
@@ -840,13 +877,18 @@ def check_external_arms(objs: list[dict[str, Any]],
     out, ids, inert = {}, [], {}
     for o in objs:
         tr = load_external_trajectory(o)
-        key = f"{tr.arm}|{tr.predictor}"
+        # THE FULL IDENTITY, not the pair. B2 fixed arm-keying because two
+        # predictors overwrote each other; the fairprice estimator is a third
+        # axis and pair-keying would lose a candidate the same way. My own fix
+        # was incomplete one level down.
+        key = f"{tr.arm}|{tr.predictor}|{tr.fairprice_estimator}"
         ids.append(key)
         r = external_lifecycle(tr)
         r["digest"] = tr.digest()
         r["arm"] = tr.arm
         r["predictor"] = tr.predictor
         r["predictor_active"] = tr.predictor_active
+        r["fairprice_estimator"] = tr.fairprice_estimator
         if reference is not None:
             r["matches_reference"] = (r["digest"] == reference.digest())
         inert.setdefault(tr.predictor_active, set()).add(r["digest"])
@@ -1376,7 +1418,7 @@ def _selftests() -> int:
     _act_inert["predictor"], _act_inert["predictor_active"] = \
         "composed_linear", True
     _r = check_external_arms([_i1, _act_inert])
-    ok(_r["declared_active_but_inert"] == ["QR_SKEW_ONLY|composed_linear"],
+    ok(_r["declared_active_but_inert"] == ["QR_SKEW_ONLY|composed_linear|None"],
        f"a submission claiming an ACTIVE predictor that is bit-identical to "
        f"the inert set is REPORTED ({_r['declared_active_but_inert']}) -- not "
        f"necessarily an error, since a threshold may never have been crossed, "
@@ -1384,6 +1426,50 @@ def _selftests() -> int:
     ok(check_external_arms([_i1, _lin])["declared_active_but_inert"] == [],
        "positive control: an active predictor that DID something is not "
        "reported as inert")
+
+    # ---- B3: the fair-price estimator is a THIRD axis, inside ONE arm ----
+    _fp_tr = run_stub_arm("CONDVALUE_X_SKEW_X_FAIRPRICE", opps,
+                          predictor_enabled=True, cancel_threshold=0.5,
+                          fill_at=0.010)
+    _fp_tr.predictor, _fp_tr.predictor_active = "composed_lgbm", True
+    _fp_tr.fairprice_estimator = "Identity"
+    _fp = trajectory_to_contract(_fp_tr)
+    ok(load_external_trajectory(_fp).fairprice_estimator == "Identity",
+       "an arm consuming a fair price NAMES its estimator (positive control)")
+    _anon = json.loads(json.dumps(_fp)); _anon["fairprice_estimator"] = None
+    ok(refuses(lambda: load_external_trajectory(_anon), "anonymous record"),
+       "an ANONYMOUS fair price REFUSES: `da_fair_price_identity` already "
+       "refuses an unnamed estimator, while THIS contract accepted a run that "
+       "never said which one fed it -- two of my own instruments disagreeing, "
+       "and a frozen result whose artifact cannot name its input is not "
+       "reproducible (rules 12 and 16)")
+    _unk = json.loads(json.dumps(_fp))
+    _unk["fairprice_estimator"] = "some_other_mid"
+    ok(refuses(lambda: load_external_trajectory(_unk), "declared:"),
+       "an UNDECLARED estimator refuses -- the 2B protocol declares a CLOSED "
+       "set (Identity plus at most two challengers), so adding one is a "
+       "protocol amendment")
+    _spur = trajectory_to_contract(run_stub_arm("QR_SKEW_ONLY", opps))
+    _spur["fairprice_estimator"] = "Identity"
+    ok(refuses(lambda: load_external_trajectory(_spur), "never consumed"),
+       "and naming an estimator on an arm with NO fairprice component refuses "
+       "too -- reporting an input that was never consumed is as wrong as "
+       "hiding one that was")
+
+    _fp_a = json.loads(json.dumps(_fp))
+    _fp_b = json.loads(json.dumps(_fp))
+    _fp_b["fairprice_estimator"] = "bn_bookticker_mid"
+    _tri = check_external_arms([_fp_a, _fp_b])
+    ok(_tri["n_submissions"] == 2 and not _tri["duplicate_ids"],
+       f"two runs differing ONLY in fair-price estimator survive as SEPARATE "
+       f"candidates ({_tri['n_submissions']}) -- B2 keyed on the PAIR, which "
+       f"would have silently overwritten one with the other. My own fix was "
+       f"incomplete one level down, and the same defect recurs per axis")
+    ok(sorted(_tri["per_id"]) == [
+           "CONDVALUE_X_SKEW_X_FAIRPRICE|composed_lgbm|Identity",
+           "CONDVALUE_X_SKEW_X_FAIRPRICE|composed_lgbm|bn_bookticker_mid"],
+       "the identity key is the FULL triple, so a reader can tell which "
+       "estimator produced which result")
 
     # ---- determinism across processes ------------------------------------
     d = determinism_across_hashseed(here)

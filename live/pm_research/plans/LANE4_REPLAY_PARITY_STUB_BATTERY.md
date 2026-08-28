@@ -344,3 +344,73 @@ is made, a real trajectory cannot load. Which is the correct state to be in,
 since no trajectory may be scored under the standing hold anyway.
 
 **11 new red-first checks; battery at 73.**
+
+---
+
+## AMENDMENT B3 — a THIRD axis, hiding inside one arm
+
+Found immediately after B2 was ratified, by asking what B2's own rule implies
+for the one arm that consumes a fair price.
+
+### B3.1 Two of my own instruments disagreed
+
+`da_fair_price_identity.FairPrice` **requires a named estimator** and refuses an
+anonymous record — that refusal is a red-first test there. Meanwhile this
+contract, which *consumes* fair prices, accepted a run named
+`CONDVALUE_X_SKEW_X_FAIRPRICE` that **never said which estimator produced
+them**. The producer of the record demanded a name; the consumer of the record
+did not.
+
+The 2B protocol declares a **closed set**: `Identity` (the executable book mid)
+plus at most two challengers — the PM microprice and at most one cross-venue
+forecast (the Binance USDM `bookTicker` mid). So `fairprice` is not one input.
+It is up to three.
+
+### B3.2 The multiplicity moves again
+
+| counted as | candidates |
+|---|---|
+| compositions (`ARMS`) | 7 |
+| composition × predictor (B2) | 14 |
+| composition × predictor × fair-price estimator | **18** |
+
+Six arms × 2 predictors = 12, plus `CONDVALUE_X_SKEW_X_FAIRPRICE` × 2
+predictors × 3 estimators = 6.
+
+**This is not the same finding as B2 restated.** B2 was a missing axis; B3 is
+that axis being **ragged** — it applies to one arm only, which is exactly why it
+survived B2's review. A uniform factor gets noticed; a factor that multiplies a
+single row does not.
+
+### B3.3 My own B2 fix was incomplete one level down
+
+B2 replaced arm-keying with **pair**-keying because two predictors running the
+same composition silently overwrote each other. With a third axis, pair-keying
+loses a candidate **the same way**: two runs differing only in fair-price
+estimator collapse to one, while the submission count still looks right.
+
+The key is now the full identity triple. The lesson generalises past this fix:
+**keying on a subset of identity is a defect per axis, not a defect once**, so
+the key must be *derived* from the declared identity rather than spelled out —
+which is what the next axis will test.
+
+### B3.4 The contract clause
+
+`fairprice_estimator` is a **required key, null iff the arm has no `fairprice`
+component.** Always present, so an estimator can never be merely absent. Both
+directions refuse:
+
+- an arm consuming a fair price with a null or undeclared estimator — **a frozen
+  result whose artifact cannot name its input is not reproducible** (rules 12
+  and 16);
+- an arm with **no** fairprice component that names one — reporting an input
+  that was never consumed is as wrong as hiding one that was.
+
+### B3.5 What needs ratification
+
+**The identifiers `Identity` / `pm_microprice` / `bn_bookticker_mid` are mine.**
+The 2B draft describes the estimators in prose and declares the set closed; it
+gives no machine names. **Membership is the draft's; spelling is mine** — rename
+freely, and a rename is a contract amendment rather than a submission.
+
+**6 new red-first checks; battery at 79.**
