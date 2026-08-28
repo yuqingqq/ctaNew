@@ -326,9 +326,168 @@ def selftest() -> int:
        "an EMPTY magnitude head is reported UNDERPOWERED with its n, "
        "not omitted (prereg §3)")
 
-    print(f"\n{'ITER011 SLICE-1 SELFTEST GREEN' if not fails else 'RED'}: "
+    # ---------------------------------------------------------- SLICE 2 ---
+    # A metric that cannot distinguish a perfect ranker from an inverted one is
+    # not a metric. Each is driven at both extremes and at chance.
+    ok(auc([0.1, 0.2, 0.3, 0.4], [0, 0, 1, 1]) == 1.0, "AUC: perfect = 1.0")
+    ok(auc([0.4, 0.3, 0.2, 0.1], [0, 0, 1, 1]) == 0.0,
+       "AUC: INVERTED = 0.0 (a metric blind to sign is not a metric)")
+    ok(auc([0.5, 0.5, 0.5, 0.5], [0, 0, 1, 1]) == 0.5,
+       "AUC: all-ties = 0.5 exactly, not a divide-by-zero")
+    ok(auc([0.1, 0.2], [1, 1]) is None,
+       "AUC: one-class returns None rather than a number nobody can read")
+    ok(brier([1.0, 0.0], [1, 0]) == 0.0, "Brier: perfect = 0")
+    ok(abs(brier([0.5, 0.5], [1, 0]) - 0.25) < 1e-12, "Brier: uninformative = 0.25")
+    ok(abs(mae([1.0, 2.0], [2.0, 4.0]) - 1.5) < 1e-12, "MAE")
+    ok(abs(calibration_slope([1.0, 2.0, 3.0], [1.0, 2.0, 3.0]) - 1.0) < 1e-12,
+       "calibration slope: y=x is 1.0")
+    ok(abs(calibration_slope([1.0, 2.0, 3.0], [2.0, 4.0, 6.0]) - 2.0) < 1e-12,
+       "calibration slope: y=2x is 2.0")
+    ok(calibration_slope([1.0, 1.0, 1.0], [1.0, 2.0, 3.0]) is None,
+       "calibration slope: a CONSTANT predictor has no slope -> None, not 0.0 "
+       "('no information to calibrate' is a different finding from 'badly "
+       "calibrated')")
+
+    # head_report: n travels with every number; underpowered is a STATUS
+    r = head_report("Q3_m_harm", "magnitude", [1.0] * 3, [1.0] * 3)
+    ok(r["status"] == UNDERPOWERED and r["n"] == 3,
+       "a thin magnitude head is reported UNDERPOWERED with its n, not dropped")
+    r2 = head_report("Q2_sign", "probability",
+                     [i / 200 for i in range(200)], [i % 2 for i in range(200)])
+    ok(r2["status"] == "OK" and r2["auc"] is not None,
+       "a powered probability head reports OK with its AUC")
+    try:
+        head_report("x", "not_a_kind", [1.0], [1.0]); ok(False, "unknown kind refuses")
+    except RuntimeError:
+        ok(True, "an unknown head kind REFUSES rather than silently reporting")
+
+    # the four-head report must carry FAILURES, not just winners
+    fr = four_head_report(
+        head_report("Q1_arrival", "probability", [0.1] * 300, [0] * 150 + [1] * 150),
+        head_report("Q2_sign", "probability", [0.1] * 5, [0, 1, 0, 1, 0]),
+        head_report("Q3_m_harm", "magnitude", [1.0] * 4, [1.0] * 4),
+        head_report("Q3_m_good", "magnitude", [1.0] * 400, [1.0] * 400))
+    ok(fr["all_heads_reported"], "ALL FOUR heads appear in the report")
+    ok(fr["underpowered_heads"] == ["Q2_sign", "Q3_m_harm"],
+       "the report NAMES which heads are underpowered rather than omitting them")
+    ok("may NOT advance" in fr["advancement_rule"],
+       "the report carries R-232 9.2: Q4 alone cannot advance a candidate")
+
+    print(f"\n{'ITER011 SELFTEST GREEN' if not fails else 'RED'}: "
           f"{len(fails)} failing")
     return 1 if fails else 0
+
+
+
+
+# ---------------------------------------------------------------- SLICE 2 ---
+# Head METRICS. Each head is scored on ITS OWN population (prereg §3): Q1 on all
+# rows, Q2 on the preventable base, Q3 on the sign-conditional subsets. A metric
+# computed on the wrong population is the quietest way to make a failed head
+# look like a working one, so the population is passed in explicitly and the n
+# travels with every number.
+
+UNDERPOWERED = "UNDERPOWERED"
+
+
+def auc(scores, labels) -> float:
+    """Rank-based AUC, O(n log n), ties averaged. Returns None if one-class."""
+    pairs = sorted(zip(scores, labels))
+    n = len(pairs)
+    npos = sum(1 for _, y in pairs if y)
+    nneg = n - npos
+    if npos == 0 or nneg == 0:
+        return None
+    ranks, i = [0.0] * n, 0
+    while i < n:
+        j = i
+        while j + 1 < n and pairs[j + 1][0] == pairs[i][0]:
+            j += 1
+        r = (i + j) / 2.0 + 1.0
+        for k in range(i, j + 1):
+            ranks[k] = r
+        i = j + 1
+    s = math.fsum(r for r, (_, y) in zip(ranks, pairs) if y)
+    return (s - npos * (npos + 1) / 2.0) / (npos * nneg)
+
+
+def brier(probs, labels) -> float:
+    if not probs:
+        return None
+    return math.fsum((p - (1.0 if y else 0.0)) ** 2 for p, y in
+                     zip(probs, labels)) / len(probs)
+
+
+def mae(pred, actual) -> float:
+    if not pred:
+        return None
+    return math.fsum(abs(p - a) for p, a in zip(pred, actual)) / len(pred)
+
+
+def calibration_slope(pred, actual) -> float:
+    """OLS slope of actual on pred. 1.0 = calibrated.
+
+    None when pred has no spread: a constant predictor has NO slope, and
+    returning 0.0 there would report 'badly calibrated' for what is actually
+    'no information to calibrate'. Those are different findings."""
+    n = len(pred)
+    if n < 2:
+        return None
+    mp = math.fsum(pred) / n
+    ma = math.fsum(actual) / n
+    sxx = math.fsum((p - mp) ** 2 for p in pred)
+    if sxx <= 0.0:
+        return None
+    sxy = math.fsum((p - mp) * (a - ma) for p, a in zip(pred, actual))
+    return sxy / sxx
+
+
+def head_report(name, kind, pred, actual, min_n: int = UNDERPOWERED_MIN_N) -> dict:
+    """One head's metrics WITH its n and power status. Never omitted.
+
+    prereg §3: a head with too few conditional observations is reported
+    UNDERPOWERED, never dropped. Q3 is the head most likely to be silently
+    skipped, which is exactly why its absence must be representable."""
+    n = len(pred)
+    out = {"head": name, "kind": kind, "n": n, "min_n": min_n,
+           "status": UNDERPOWERED if n < min_n else "OK"}
+    if kind == "probability":
+        out["auc"] = auc(pred, actual)
+        out["brier"] = brier(pred, actual)
+        out["n_positive"] = sum(1 for y in actual if y)
+        out["one_class"] = out["auc"] is None
+    elif kind == "magnitude":
+        out["mae"] = mae(pred, actual)
+        out["calibration_slope"] = calibration_slope(pred, actual)
+        out["no_predictor_spread"] = out["calibration_slope"] is None
+    else:
+        raise RuntimeError(f"unknown head kind {kind!r}")
+    return out
+
+
+def four_head_report(q1, q2, q3h, q3g) -> dict:
+    """All four heads, ALWAYS, including failures (prereg §3).
+
+    A candidate advancing on Q4 while failing Q2 must say so; that combination
+    is interesting, not disqualifying, but it must never be PRESENTED as
+    toxicity discrimination. Under R-232 9.2 it also cannot advance without
+    explicit user sign-off."""
+    heads = {"Q1_arrival": q1, "Q2_sign": q2,
+             "Q3_m_harm": q3h, "Q3_m_good": q3g}
+    underpowered = sorted(k for k, v in heads.items()
+                          if v.get("status") == UNDERPOWERED)
+    return {
+        "heads": heads,
+        "all_heads_reported": sorted(heads) == sorted(
+            ["Q1_arrival", "Q2_sign", "Q3_m_harm", "Q3_m_good"]),
+        "underpowered_heads": underpowered,
+        "any_underpowered": bool(underpowered),
+        "reporting_rule": "all four are reported whether or not they pass; a "
+                          "strong hazard head does not establish toxicity "
+                          "discrimination (parent §2.1)",
+        "advancement_rule": "Q4 alone may NOT advance a candidate; explicit "
+                            "user sign-off required at that time (R-232 9.2)",
+    }
 
 
 if __name__ == "__main__":
