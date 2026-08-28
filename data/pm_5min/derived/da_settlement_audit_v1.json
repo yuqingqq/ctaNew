@@ -1,0 +1,86 @@
+{
+  "equivalence_control_all_days": {
+    "S30(T) vs S30(t0)": {
+      "agree": 0.9482538448725779,
+      "agree_big": 0.9570527750951542,
+      "gate_pass": false,
+      "knowledge_time_agree": 0.9528621398034535,
+      "n": 18011,
+      "n_big_margin": 17603
+    },
+    "S60(T) vs S30(t0)": {
+      "agree": 0.9620787296652046,
+      "agree_big": 0.9718822926745972,
+      "gate_pass": false,
+      "knowledge_time_agree": 0.9656876353339626,
+      "n": 18011,
+      "n_big_margin": 17569
+    },
+    "S60(T) vs S60(t0)": {
+      "agree": 0.9988340458608628,
+      "agree_big": 0.9996580612070439,
+      "gate_pass": true,
+      "knowledge_time_agree": 0.9917827994003664,
+      "n": 18011,
+      "n_big_margin": 17547
+    },
+    "meanS60[t0,T] vs S60(t0)": {
+      "agree": 0.85597690300372,
+      "agree_big": 0.8726628730693299,
+      "gate_pass": false,
+      "knowledge_time_agree": 0.8527011270890011,
+      "n": 18011,
+      "n_big_margin": 17222
+    }
+  },
+  "gate": {
+    "big": 0.995,
+    "big_margin_bp": 0.5,
+    "min_powered": 400,
+    "pooled": 0.99
+  },
+  "n_windows_all": 18011,
+  "n_windows_recent": 8022,
+  "pre_registration": "Q-DA-145",
+  "reading": "(i) A2 CONFIRMED on fresh data",
+  "recent": {
+    "S30(T) vs S30(t0)": {
+      "agree": 0.9456494639740713,
+      "agree_big": 0.9563212501601127,
+      "gate_pass": false,
+      "knowledge_time_agree": 0.9518823236100723,
+      "n": 8022,
+      "n_big_margin": 7807
+    },
+    "S60(T) vs S30(t0)": {
+      "agree": 0.9608576414859137,
+      "agree_big": 0.972297037322047,
+      "gate_pass": false,
+      "knowledge_time_agree": 0.9647220144602343,
+      "n": 8022,
+      "n_big_margin": 7797
+    },
+    "S60(T) vs S60(t0)": {
+      "agree": 0.9985041136873598,
+      "agree_big": 0.999485728979172,
+      "gate_pass": true,
+      "knowledge_time_agree": 0.9907753677387185,
+      "n": 8022,
+      "n_big_margin": 7778
+    },
+    "meanS60[t0,T] vs S60(t0)": {
+      "agree": 0.8521565694340564,
+      "agree_big": 0.8717311715481172,
+      "gate_pass": false,
+      "knowledge_time_agree": 0.850162054350536,
+      "n": 8022,
+      "n_big_margin": 7648
+    }
+  },
+  "recent_days": [
+    "2026-08-24",
+    "2026-08-25",
+    "2026-08-26",
+    "2026-08-27"
+  ]
+}
