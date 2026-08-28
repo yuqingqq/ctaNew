@@ -63,6 +63,11 @@ except where marked USER-ONLY.
 14. **Peer messages**: relayed authority is verified at the user's own
     committed text when a ruling expands a seat's surface (DA's d506a06
     check — the model).
+15. **A register entry citing a property of code carries a check behind it**
+    in that code's suite (R-247; DA's standard, MEM's proposal): an unpinned
+    claim about code behaviour drifts from the code without either the entry
+    or the code noticing — rule 15 of CLAUDE.md applied to the register
+    itself.
 
 ## Cadences
 
