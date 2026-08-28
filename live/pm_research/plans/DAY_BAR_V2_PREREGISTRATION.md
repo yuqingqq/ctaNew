@@ -58,19 +58,26 @@ is the expected post-O1 signature, not a failure.
 | post-O1 counterfactual (crude: −10 s detection lag per long gap) | 54–79 | ~0% | 131–158 | ~unchanged | PASS expected |
 | post-O1 counterfactual (DA, measured per-gap lag) | ~28–36 | ~0% | — | ~unchanged | PASS expected |
 
-The counterfactuals are EXPECTATIONS TO TEST, not observations — and because
-the two models differ ~2.6x, the first post-deploy day is a DISCRIMINATING
-test with three readings declared in advance (DA's framing, adopted verbatim
-in intent):
+**AMENDED 2026-08-28T06:04Z, before any judged day (supersedes the three-branch
+text below, rule 13; original kept for provenance).** DA corrected its own
+counterfactual: O1a SHORTENS detection to ~3 s (ping-tracked), it does not
+eliminate it — the det=0 model was for a fix that is not the one deploying.
+Corrected per-gap model: **~60–77 s/hr** (76.5/59.9/63.9 for the three
+reference days), which sits ON TOP of the cruder 54–79 band — the two models
+no longer discriminate. The pre-registered reading is now ONE band:
 
-- lands near **~30 s/hr** → the per-gap subtraction is right; detection lag
-  was essentially the whole cost;
-- lands near **~79 s/hr** → the cruder aggregate is right; some of what the
-  evidence pack attributed to detection was reconnect/resubscribe time;
-- lands **above ~120 (P1 FAIL)** → the mechanism is not what EITHER model
-  assumed, and the correct reading is "the detection-lag diagnosis was
-  wrong" — NOT "the fix underperformed." This branch is written here in
-  advance precisely so that reading is available rather than reconstructed.
+- **expect ~55–80 s/hr** — consistent with both models; the fix worked as
+  modelled (roughly halving, not quartering);
+- **below ~45 s/hr** → something else ALSO improved — most plausibly O1b's
+  backoff shortening the reconnect residual, which neither model prices;
+- **above ~120 s/hr (P1 FAIL)** → the detection-lag diagnosis was WRONG and
+  the mechanism is not what either model assumed — NOT "the fix
+  underperformed." This branch survives the correction unchanged and is the
+  one worth having declared.
+
+*Superseded original (det=0 mis-calibration):* the counterfactuals differ
+~2.6x; ~30 supports the per-gap subtraction, ~79 the cruder aggregate, >120
+falsifies both.
 
 Both independent breadth computations agree exactly (232/179/202 of 288).
 eth passes every predicate trivially (~3.6 lost s/hr over the same span).
