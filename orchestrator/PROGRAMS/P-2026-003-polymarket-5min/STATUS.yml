@@ -4,6 +4,16 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-08-28T06:15Z (MEM): FIRST FROZEN CANDIDATE. The rule-12 freeze receipt
+  landed at b3f7f9f -- LGBM_PINNED, btc-only, MARKED UNVALIDATED, multiplicity
+  1, race clock running from the freeze commit against a bar of 5 later
+  complete passing btc UTC days. Verified at the artifact: all three btc
+  budgets carried (@15% is Holm 1.0000, indistinguishable from chance), eth
+  negative at every budget, and the null's cluster unit disclosed as WEAKER
+  than rule 8's ruled unit (window, not UTC day, because G=0 leaves the ruled
+  unit with no replicates) -- optimistic p-values, evidence not a certificate.
+  The programme now has something whose clock is running, which changes what a
+  lost forward day COSTS. PRIOR:
   2026-08-28T06:09Z (MEM state sweep; clock read as a separate command per
   R-214): STATE FILES BROUGHT CURRENT THROUGH R-232 AND RECEIPT v2.3. They had
   stopped at R-228 / d506a06 -- R-229, R-230, R-231, R-232, the O1 collector
@@ -144,7 +154,48 @@ flags:
                              # mandatory, falsifiers shipped with the checker
                              # (rule 15), verdict artifact naming this doc and
                              # its commit as the governing bar.
-  lgbm_freeze_receipt: PENDING-IN-FLIGHT # 2026-08-28, ruled by the USER at
+  lgbm_freeze_receipt: LANDED # 2026-08-28T06:09Z BE, b3f7f9f, artifact
+                             # data/pm_5min/derived/
+                             # harmful_phase2_lgbm_btc_freeze_v1.json
+                             # (kind RULE_12_FREEZE_RECEIPT; read at the
+                             # artifact, not from a report). status = FROZEN --
+                             # ADMITTED TO THE FORWARD RACE, MARKED UNVALIDATED.
+                             # Rule 12 satisfied IN the receipt: fit_code_ref
+                             # e12e2c7 + fit_code_sha256_prefix 3d0b6c8c6dfe9466,
+                             # freeze_commit_parent fd1e949 (= v2.3), pipeline
+                             # in repo, declared nulls inside, multiplicity at
+                             # freeze = 1. Race: clock starts AT THE FREEZE
+                             # COMMIT, bar = 5 later COMPLETE PASSING btc UTC
+                             # days, no auto-entry for other candidates.
+                             # THREE btc budgets carried, not the two that
+                             # survive: @5% +5189.8c Holm 0.0220 survives;
+                             # @10% +6608.6c Holm 0.0180 survives; @15%
+                             # +1053.7c Holm 1.0000 (raw p 0.6677)
+                             # INDISTINGUISHABLE FROM CHANCE. eth NEGATIVE at
+                             # every budget (-847c / -1311c / -1283c), so
+                             # btc-only scope is a CONSEQUENCE of the evidence,
+                             # not a restriction. TWO CAVEATS THE RECEIPT
+                             # REFUSES TO CONFLATE: (1) population --
+                             # development, G=0, 14.4 h span, covered by
+                             # "marked-unvalidated"; (2) BUDGET
+                             # NON-MONOTONICITY -- covered by NOTHING. An
+                             # advantage present at two budgets and absent at
+                             # the third, no mechanism offered. Sharpened in
+                             # the receipt: the arm beats MATCHED RANDOM at all
+                             # three budgets while beating the INCUMBENT at only
+                             # two -- the concrete form of "beating random is
+                             # not beating the incumbent". CLUSTER-UNIT
+                             # DISCLOSURE carried in the null: ruled unit is the
+                             # UTC day (rule 8) but the unit USED is the window,
+                             # weaker_than_ruled true, because G=0 leaves the
+                             # ruled unit with no replicates -- so the p-values
+                             # are OPTIMISTIC and are evidence, NOT a
+                             # significance certificate. Null-artifact pointer
+                             # carried FROM BIRTH (phase2_increment_null_v1.json,
+                             # e7caaeb), so the debt named against v2.3 was not
+                             # re-created here. ORIGINAL RULING ENTRY KEPT AS
+                             # PROVENANCE (rule 13): 2026-08-28, ruled by the
+                             # USER at
                              # R-232(3). LGBM_PINNED enters the forward race as
                              # a btc-only, MARKED-UNVALIDATED candidate. The
                              # state arm (PLUS_PRED_STATE_V1) stays OUT --

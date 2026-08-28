@@ -1,9 +1,66 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-08-28T06:12Z (MEM) — **state files swept current through R-232
-and receipt v2.3.** Provenance is closed; reach is unchanged (development
-population, G=0, NOT a validation). Collector v4 deploys tonight at
-00:00:00Z; day-bar v2 governs days ≥08-29.
+Updated: 2026-08-28T06:15Z (MEM) — **first frozen candidate: the rule-12
+freeze receipt landed at `b3f7f9f`.** LGBM_PINNED, btc-only, marked
+unvalidated, race clock running. Collector v4 deploys tonight at 00:00:00Z;
+day-bar v2 governs days ≥08-29.
+
+## 2026-08-28 ~06:15Z (MEM) — freeze receipt swept into state
+
+**Supersedes, in-band, the "not yet written" line in the 06:12Z entry below**
+(rule 13 — that entry stands unedited as provenance). The rule-12 freeze
+receipt landed at `b3f7f9f` while that sweep was being written.
+
+**Read at the artifact** (`data/pm_5min/derived/harmful_phase2_lgbm_btc_freeze_v1.json`,
+`kind: RULE_12_FREEZE_RECEIPT`), not from a report:
+
+- **`status`: FROZEN — ADMITTED TO THE FORWARD RACE, MARKED UNVALIDATED.**
+  Candidate = `LGBM_PINNED`, `coin_scope` btc, thresholds
+  `CAUSAL_FROZEN_FROM_TRAIN` per budget, frozen before scoring.
+- **Rule 12 satisfied inside the receipt:** `fit_code_ref` `e12e2c7` +
+  `fit_code_sha256_prefix` `3d0b6c8c6dfe9466`; `freeze_commit_parent`
+  `fd1e949` (= v2.3, so the chain is continuous); pipeline in repo; declared
+  nulls carried inline; **`multiplicity_at_freeze` = 1**.
+- **Race:** clock starts **at the freeze commit**; bar = **5 later complete,
+  passing btc UTC days** (per-coin, R-232 §9.4); `auto_entry_of_other_candidates`
+  false.
+- **All three btc budgets carried, not the two that survive:** @5 % +5,189.8 c
+  Holm 0.0220 survives; @10 % +6,608.6 c Holm 0.0180 survives; **@15 %
+  +1,053.7 c Holm 1.0000 (raw p 0.6677) — indistinguishable from chance.**
+- **eth negative at every budget** (−847 c / −1,311 c / −1,283 c), so the
+  btc-only scope reads as a consequence of the evidence rather than an
+  arbitrary restriction.
+
+**Two caveats the receipt deliberately refuses to conflate** — worth carrying
+forward verbatim, because one is covered and one is not:
+
+1. **Population** — development data, G=0 complete UTC days, one 14.4-hour
+   span inside the consumed range. *Covered by "marked-unvalidated".*
+2. **Budget non-monotonicity** — *covered by **nothing***. An advantage present
+   at two budgets and absent at the third, with no mechanism offered for why a
+   larger cancellation budget should erase it. Marked-unvalidated speaks to
+   where the evidence came from; it says nothing about an object that behaves
+   like this.
+
+**Sharpened in the receipt:** the arm beats **matched random** at all three
+budgets while beating the **incumbent** at only two — the concrete form of
+"beating random is not beating the incumbent" for this candidate.
+
+**Cluster-unit disclosure, carried in the null and easy to miss:** rule 8's
+ruled unit is the UTC day, but the unit *used* is the **window**
+(`weaker_than_ruled: true`), because G=0 leaves the ruled unit with no
+replicates. Windows within a day are not independent, so **these p-values are
+optimistic — evidence, not a significance certificate.** Quote the increments
+with that attached or not at all.
+
+**What changes operationally:** the programme now has a candidate whose clock
+is running, which raises the cost of a lost forward day from "slower" to
+"directly delaying a verdict". That is the same day the O1 deploy and day-bar
+v2 exist to protect.
+
+**Also fixed since the 06:12Z entry:** the stale day-bar citation in the O1
+runbook — superseded in-band at `6c59b75`, so what gets read at 00:00Z tonight
+now carries the single-band reading.
 
 ## 2026-08-28 ~06:12Z (MEM) — state sweep: STATUS.yml + HANDOFF current through R-232 + v2.3
 
