@@ -17081,6 +17081,10 @@ Design doc: `live/pm_research/plans/BTC_FEED_MITIGATION_DESIGN_2026-08-28.md`. T
 
 **BE's self-correction recorded:** its "queue complete except the review" was WRONG — (1) the annotation merge is BUILT AND PROVEN BUT NOT WIRED (zero references in phase2_arms.py; deferral legitimate — wiring changes the receipt schema and forces a fit/score cycle, so it rides the first lattice-touching commit post-release — but deferred ≠ done, and BE named it as the rule-17 shape in its own ledger); (2) the --dry-run rule-17 harness was offered, deferred, never built; (3) seams 30a-c remain SOURCE-TEXT greps (only 30d-f went behavioural). R-216's debt list verified genuinely closed. **Meanwhile-work dispatched: (2) and (3) are hold-compatible and touch no real data — BE takes them while the user's answer is pending; (1) stays correctly gated behind HOLD RELEASED.** Round 2 RESUMED at 14:00Z (quota window reset 13:32Z; resume on first wake, 28 min late — the killed timer's cost, noted).
 
+### R-272 — 2026-08-28T14:02Z — coordinator — **USER CONFIRMS the real-data inert-trajectory run** (structured answer via the coordinator, answering BE's R-271 escalation): BE proceeds under the dispatch as specified — heavy-run rule, parity/lifecycle only, economics excluded, first contract refusal filed as a finding
+
+The question BE escalated is ANSWERED BY THE USER: the two inert arms' real trajectories from the consumed v3.4 dataset proceed while the holds stand, on the recorded admissibility case (no predictor estimate consumed; nothing fitted, scored, or selected; reproduction-class on consumed data). The decision provenance is exactly what BE's escalation was for: the reasoning's author did not decide it — the USER did, once, visibly, with the alternative (defer to HOLD RELEASED) stated beside it. BE's meanwhile-work (dry-run harness, seams 30a-c) continues alongside or yields to the heavy run at BE's sequencing discretion; trajectories ride round 3 if they land before it fires.
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
