@@ -69,6 +69,20 @@ class Trajectory:
              "note": e.note}
             for e in sorted(self.events, key=lambda e: (e.t, e.seq))
         ]
+        # FLOATS CARRY NO TOLERANCE, verified: 1.0 vs 1.0+1ULP and 0.1+0.2 vs
+        # 0.3 produce different digests, so canonicalization removes
+        # REPRESENTATION noise only and R-236's bit-identical requirement
+        # survives it.
+        #
+        # ONE EDGE, recorded rather than silently normalised: 0.0 and -0.0 are
+        # IEEE-equal but distinct bit patterns and serialize as "0.0" vs
+        # "-0.0", so they DIFFER here. That is correct under
+        # bit-identical-no-tolerance -- but two harnesses computing the same
+        # zero by different routes would report a difference that is not one.
+        # NOT normalised, because normalising it would be a tolerance by
+        # another name, and the anchor exists to catch exactly the couplings a
+        # tolerance hides. If it ever fires on real arms, it is a REAL
+        # signed-zero difference in one of them and worth the investigation.
         return json.dumps({"canon": CANON, "events": payload},
                           sort_keys=True, separators=(",", ":"),
                           ensure_ascii=False, allow_nan=False).encode("utf-8")
@@ -268,6 +282,30 @@ def _selftests() -> int:
     ok(t1.digest() == t2.digest() and t1.arm != t2.arm,
        "the arm NAME is excluded from the canonical bytes -- including it "
        "would make every arm differ trivially and the anchor unfalsifiable")
+
+    # ---- floats carry NO tolerance, and the signed-zero edge is declared --
+    def _dig(v):
+        t = Trajectory(arm="x")
+        t.add(t=0.0, kind="FILL", slug="s", side="BUY_UP", gen=0, qty=v)
+        return t.digest()
+    ok(_dig(1.0) != _dig(1.0 + 2 ** -52) and _dig(0.1 + 0.2) != _dig(0.3),
+       "floats carry NO tolerance: one-ULP and 0.1+0.2-vs-0.3 differences are "
+       "VISIBLE, so canonicalization removes representation noise only")
+    ok(_dig(1.0) == _dig(1.0),
+       "and identical values reproduce exactly (positive control)")
+    ok(_dig(0.0) != _dig(-0.0),
+       "DECLARED EDGE: 0.0 and -0.0 are IEEE-equal but distinct bit patterns "
+       "and DIFFER here. Correct under bit-identical-no-tolerance, and NOT "
+       "normalised -- normalising would be a tolerance by another name")
+    nan_refused = False
+    try:
+        _dig(float("nan"))
+    except ValueError:
+        nan_refused = True
+    ok(nan_refused,
+       "NaN REFUSES at serialization -- bare NaN is not JSON, so some readers "
+       "reject it and others parse it differently, and that divergence would "
+       "surface as a spurious parity failure")
 
     # ---- corollary anchors ------------------------------------------------
     ok(infinite_threshold_parity(opps)["bit_identical"],
