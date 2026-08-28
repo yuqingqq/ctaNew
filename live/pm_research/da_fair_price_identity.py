@@ -39,11 +39,14 @@ from typing import Any
 OK = "OK"
 NOT_READY = "NOT_READY"                    # no full post-gap snapshot yet
 CROSSED = "CROSSED"                        # best_bid >= best_ask
-ONE_SIDED = "ONE_SIDED"                    # a side is missing
+ONE_SIDED = "ONE_SIDED"                    # a side is genuinely MISSING (None)
+OUT_OF_RANGE = "OUT_OF_RANGE"              # side present, finite, outside [0,1]
+NON_FINITE_SIDE = "NON_FINITE_SIDE"        # side present but NaN/inf
 INSUFFICIENT_DEPTH = "INSUFFICIENT_DEPTH"  # below the declared minimum size
 STALE = "STALE"                            # freshness beyond the declared bound
 NO_INPUT = "NO_INPUT"                      # nothing to read at all
-STATUSES = (OK, NOT_READY, CROSSED, ONE_SIDED, INSUFFICIENT_DEPTH, STALE, NO_INPUT)
+STATUSES = (OK, NOT_READY, CROSSED, ONE_SIDED, OUT_OF_RANGE, NON_FINITE_SIDE,
+            INSUFFICIENT_DEPTH, STALE, NO_INPUT)
 
 #: A PM binary settles to 0 or 1, so its price IS a probability and must lie in
 #: [0,1]. This was UNBOUNDED: identity_from_book(best_bid=99, best_ask=100)
@@ -206,17 +209,25 @@ def identity_from_book(coin: str, window_start: int, outcome: str,
         return _bad(coin, window_start, outcome, ONE_SIDED,
                     "a one-sided book has no executable mid",
                     source_timestamp, local_knowledge_timestamp)
-    if not (math.isfinite(best_bid) and math.isfinite(best_ask)):
-        return _bad(coin, window_start, outcome, ONE_SIDED,
-                    "non-finite book side", source_timestamp,
+    # THE STATUS IS THE EVIDENCE, so it must name the ACTUAL fault. Every
+    # invalid-side shape used to report ONE_SIDED -- including a 99/100 dollar
+    # book and a -0.1/1.2 book, both of which HAVE two sides. A status that
+    # misdescribes its own cause sends the next reader after the wrong thing.
+    _nf = [n for n, v in (("bid", best_bid), ("ask", best_ask))
+           if not math.isfinite(v)]
+    if _nf:
+        return _bad(coin, window_start, outcome, NON_FINITE_SIDE,
+                    f"non-finite book side(s): {_nf}", source_timestamp,
                     local_knowledge_timestamp)
-    for _nm, _v in (("best_bid", best_bid), ("best_ask", best_ask)):
-        if not (PROB_LO <= _v <= PROB_HI):
-            return _bad(coin, window_start, outcome, ONE_SIDED,
-                        f"{_nm}={_v} is outside [{PROB_LO},{PROB_HI}]: a PM "
-                        f"binary book prices a probability, so a side outside "
-                        f"the unit interval is not a PM book",
-                        source_timestamp, local_knowledge_timestamp)
+    _oor = [f"{n}={v}" for n, v in (("bid", best_bid), ("ask", best_ask))
+            if not (PROB_LO <= v <= PROB_HI)]
+    if _oor:
+        return _bad(coin, window_start, outcome, OUT_OF_RANGE,
+                    f"side(s) outside [{PROB_LO},{PROB_HI}]: {_oor}. A PM "
+                    f"binary book prices a PROBABILITY, so this is not a PM "
+                    f"book at all -- both sides may be present and it is still "
+                    f"not one-sided", source_timestamp,
+                    local_knowledge_timestamp)
     if best_bid >= best_ask:
         return _bad(coin, window_start, outcome, CROSSED,
                     f"crossed/locked book: bid {best_bid} >= ask {best_ask}",
@@ -401,7 +412,19 @@ def _selftests() -> int:
     ok(mk(ready=False).status == NOT_READY,
        "a book not re-established after a gap refuses (queue/price inference "
        "is invalid until a full snapshot arrives)")
-    ok(mk(best_bid=None).status == ONE_SIDED, "a one-sided book refuses")
+    ok(mk(best_bid=None).status == ONE_SIDED,
+       "a GENUINELY one-sided book (a side is None) reports ONE_SIDED")
+    ok(mk(best_bid=99.0, best_ask=100.0).status == OUT_OF_RANGE,
+       "the reviewer's probe: a both-sides DOLLAR book reports OUT_OF_RANGE, "
+       "not ONE_SIDED -- it has two sides, and a status that misdescribes its "
+       "own cause sends the next reader after the wrong thing")
+    ok(mk(best_bid=-0.1, best_ask=1.2).status == OUT_OF_RANGE,
+       "and a both-sides-out-of-range book likewise")
+    ok(mk(best_bid=float("nan")).status == NON_FINITE_SIDE,
+       "a NON-FINITE side is its own status, distinct from both")
+    ok(mk(best_bid=0.4, best_ask=0.6).status == OK,
+       "positive control: a valid in-range book still ADMITS, so the new "
+       "statuses are not simply rejecting more")
     ok(mk(best_bid=0.52, best_ask=0.48).status == CROSSED,
        "a CROSSED book refuses rather than returning a negative-spread mid")
     ok(mk(best_bid=0.50, best_ask=0.50).status == CROSSED,
