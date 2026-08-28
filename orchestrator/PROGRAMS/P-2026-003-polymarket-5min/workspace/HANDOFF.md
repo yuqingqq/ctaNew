@@ -41,8 +41,9 @@ the artifact so the design does not re-walk the refuted shard premise.
 
 **FOUR THINGS OPEN, none of them DA's to decide.** (1) **The FREEZE — the
 user's word**, held. (2) **btc mitigation design** — coordinator drafts, user
-rules; no deploy, boundary-only if ever. (3) **R-214 staging-then-promote** —
-adopted, **UNIMPLEMENTED**, DA's, before the next arming (write-new + mv).
+rules; no deploy, boundary-only if ever. (3) ~~R-214 staging-then-promote~~ **DONE 2026-08-28 (`32fe17b`)**: gate writes
+to staging, promotion only when the WORST rc across both checkers is 0, plus a
+default-on refusal (rc 6) to arm onto an occupied locator. Seam 13/13.
 (4) **BE's bound debts** — callable `gap_contains`, callable absorption guard,
 seam 30 rewritten to call the real function, the increment-null reconciliation
 refusal given a falsifier, plus R-225's four guard-wiring findings.

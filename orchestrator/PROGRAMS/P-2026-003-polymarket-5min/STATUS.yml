@@ -199,7 +199,14 @@ flags:
                              # {GAP_AT_CUTOFF: 289}, zero disagreement both
                              # directions over 1.76M rows. Exactly 5 rows moved.
                              # This is the R-213 citation; seam 30 is not.
-  verdict_promotes_before_second_checker: R214-ADOPTED-UNIMPLEMENTED # 2026-08-27
+  verdict_promotes_before_second_checker: R214-IMPLEMENTED-32fe17b # 2026-08-28
+                             # CLOSED: gate writes to a staging path; promotion
+                             # only when the WORST rc across both checkers is 0,
+                             # so a refusal by EITHER leaves the locator absent.
+                             # Plus a default-on refusal (rc 6) to arm onto an
+                             # OCCUPIED locator, stale verdict left for deliberate
+                             # archiving. Seam 8/8 -> 13/13. Original note follows:
+                             # (2026-08-27
                              # DA self-reported. The verdict promotes at the end
                              # of run_gate, so assert_gate_passed ACCEPTS while
                              # the independent counter is still running -- fit
