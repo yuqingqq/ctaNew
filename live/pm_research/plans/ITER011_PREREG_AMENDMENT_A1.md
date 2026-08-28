@@ -158,6 +158,14 @@ slope). Undefined, this is resolved by whoever writes the evaluator.
 Every other metric is **reported and never adjudicated**. A metric that can be
 swapped into a cell after seeing results is a multiplicity leak.
 
+> **RULED 2026-08-28T15:08Z (USER, structured answer via the coordinator,
+> R-286): the Q3 slope contradiction resolves GATE-GOVERNS — the adjudicated
+> null is the GATE's text ("calibration slope CI excludes 0"); this table's
+> "declared null at 1" is a REPORTED calibration diagnostic (distance from 1),
+> never adjudicated. Neither frozen text is edited; each keeps its natural
+> role. The implementation's `no_skill_value` in-band declaration is the
+> visibility mechanism of record.**
+
 > **RULED 2026-08-28T09:56Z (USER, structured answer via the coordinator,
 > R-249): under Option 1, Q2's cell statistic is `min(AUC(p_pos), AUC(p_neg))`
 > — the WORSE side.** A decomposition whose negative side is uninformative has
