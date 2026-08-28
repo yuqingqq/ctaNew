@@ -276,7 +276,7 @@ def selftest() -> int:
     import tempfile as _tf
     _d = Path(_tf.mkdtemp())
     try:
-        assert_outputs_written((_d / "never_written.json",))
+        assert_outputs_written((_d / "never_written.json",), argv=["prog"])
         ok(False, "a run that writes NOTHING must not exit 0")
     except RuntimeError as e:
         ok("silent-success" in str(e),
@@ -284,18 +284,38 @@ def selftest() -> int:
            "shape is refused by name)")
     _z = _d / "z.json"; _z.write_text("")
     try:
-        assert_outputs_written((_z,)); ok(False, "a ZERO-BYTE output is refused")
+        assert_outputs_written((_z,), argv=["prog"]); ok(False, "a ZERO-BYTE output is refused")
     except RuntimeError as e:
         ok("does not parse" in str(e), "a ZERO-BYTE output is refused")
     _e = _d / "e.json"; _e.write_text("{}")
     try:
-        assert_outputs_written((_e,)); ok(False, "an EMPTY object is refused")
+        assert_outputs_written((_e,), argv=["prog"]); ok(False, "an EMPTY object is refused")
     except RuntimeError as e:
         ok("artifact identity" in str(e),
            "an EMPTY object is refused (existence alone is not a result)")
+    ok(assert_outputs_written((_d / "nope2.json",),
+                              argv=["prog", "--selftest"]).get("exempt")
+       == "--selftest",
+       "an EXPLICIT --selftest run is EXEMPT (a selftest writes no artifact "
+       "by design; the guard must not punish it)")
+    try:
+        assert_outputs_written((_d / "nope3.json",), argv=["prog"])
+        ok(False, "the exemption is NOT reachable without the declared flag")
+    except RuntimeError:
+        ok(True, "the exemption is NOT reachable without the declared flag — "
+                 "it keys on the MODE, not on the outputs being missing")
+    try:
+        assert_outputs_written((_d / "nope4.json",),
+                               argv=["prog", "--stage-fit", "--selftestish"])
+        ok(False, "a LOOKALIKE flag does not grant the exemption")
+    except RuntimeError:
+        ok(True, "a LOOKALIKE flag (--selftestish) does not grant the exemption")
     _g = _d / "g.json"; _g.write_text(json.dumps({"artifact": "x", "a": 1}))
-    ok(assert_outputs_written((_g,))[_g.name]["artifact"] == "x",
-       "a well-formed output PASSES (the guard is not a wall)")
+    ok(assert_outputs_written((_g,), argv=["prog"])[_g.name]["artifact"] == "x",
+       "a well-formed output PASSES (the guard is not a wall). NOTE: every "
+       "falsifier of the ENFORCING path passes an explicit non-selftest argv, "
+       "because these run UNDER --selftest and would otherwise inherit the "
+       "exemption and test nothing.")
 
     ok("phase2_iter011_run.py" not in PA.CODE_IDENTITY_FILES,
        "this runner is NOT in the identity lattice — the standalone property "
@@ -345,9 +365,20 @@ def incumbent_null_applicability() -> dict:
     }
 
 DECLARED_OUTPUTS = (OUT,)
+SELFTEST_FLAG = "--selftest"
 
 
-def assert_outputs_written(outputs=DECLARED_OUTPUTS) -> dict:
+def is_selftest_mode(argv=None) -> bool:
+    """Declared selftest mode. A selftest CORRECTLY writes no artifact.
+
+    The exemption is tied to the DECLARED MODE, never to 'the outputs happen to
+    be missing' — the latter would be a bypass that excuses exactly the failure
+    the guard exists to catch. In every other mode the guard applies in full,
+    including when selftest() has been called internally as the run's gate."""
+    return SELFTEST_FLAG in (sys.argv if argv is None else argv)
+
+
+def assert_outputs_written(outputs=DECLARED_OUTPUTS, argv=None) -> dict:
     """A run that writes NOTHING must not exit 0.
 
     The silent-success shape: a clean exit obtained by not doing the work. It is
@@ -355,6 +386,11 @@ def assert_outputs_written(outputs=DECLARED_OUTPUTS) -> dict:
     is what an operator reads first. Every declared output must exist, parse,
     and carry its artifact identity — existence alone would pass a zero-byte
     file, and parsing alone would pass an empty object."""
+    if is_selftest_mode(argv):
+        return {"exempt": SELFTEST_FLAG,
+                "why": "a selftest run writes no artifact BY DESIGN; the "
+                       "exemption is on the DECLARED MODE, not on the outputs "
+                       "being absent"}
     ev = {}
     for o in outputs:
         if not o.exists():
@@ -503,5 +539,5 @@ if __name__ == "__main__":
     # silent success gets introduced by a well-meaning edit.
     _rc = main()
     if _rc == 0:
-        assert_outputs_written()
+        assert_outputs_written(argv=sys.argv)
     raise SystemExit(_rc)
