@@ -561,6 +561,43 @@ def selftest() -> int:
     import shutil as _sh; _sh.rmtree(_d, ignore_errors=True)
 
     _idn = PA.measured_code_identity()["combined"]
+    # ---- R-313: ragged rows refused INDEPENDENTLY of DA's gate -----------
+    import tempfile as _tf5, shutil as _sh5
+    import phase2_state_schema_freeze as _PIN5
+    _d5 = Path(_tf5.mkdtemp())
+    _fe = _PIN5.build_pin()["features_in_order"]
+
+    def _tape_with(state):
+        q = _d5 / "r.json"
+        q.write_text(json.dumps({"protocol": "PHASE2_STATE_TAPE_V5", "rows": [{
+            "slug": "btc-updown-5m-1787897400", "side": "BUY_UP", "gen": 1,
+            "t_start": 0.0, "t0": 1787897400.0, "split": "score",
+            "state_status": "OK", "state": state}]}))
+        return q
+
+    _ok = _index_tape(_tape_with({f: 1.0 for f in _fe}), split="score")
+    ok(len(_ok) == 1,
+       f"R-313 POSITIVE CONTROL: a row declaring all {len(_fe)} pinned fields is "
+       f"indexed — a check that refused everything would pass the known-bads")
+    for _label, _state in (("ONE field of 45", {_fe[0]: 1.0}),
+                           ("44 of 45 (one missing)",
+                            {f: 1.0 for f in _fe[:-1]}),
+                           ("46 (an undeclared extra)",
+                            dict({f: 1.0 for f in _fe}, not_a_feature=1.0))):
+        try:
+            _index_tape(_tape_with(_state), split="score"); _gr = ""
+        except DiagnosticRefused as e:
+            _gr = str(e)
+        ok("declares" in _gr and "not the pinned" in _gr,
+           f"R-313 KNOWN-BAD: a row declaring {_label} is REFUSED by MY indexer, "
+           f"independently of DA's gate")
+    _rag = _PIN5.encode_row({_fe[0]: 7.0}, _fe)
+    ok(_rag[1] == 0.0 and len(set(_rag)) == 2,
+       "R-313 the reason it matters, asserted not assumed: encode_row turns the "
+       "44 absent fields into 0.0 — and their guard flags into 0.0 too, i.e. "
+       "NOT MISSING. A ragged row does not degrade the score, it lies to it")
+    _sh5.rmtree(_d5, ignore_errors=True)
+
     # ---- R-310: the exclusion-list binding -------------------------------
     import tempfile as _tf4, shutil as _sh4
     _d4 = Path(_tf4.mkdtemp())
@@ -1082,12 +1119,36 @@ def _index_tape(path: Path, split: str = "train") -> dict:
     the eight lines drift from PA's, the suite says so."""
     import phase2_state_schema_freeze as _PIN
     feats = _PIN.build_pin()["features_in_order"]
+    _N_PINNED = len(feats)
     idx = {}
     for r in PA._stream_tape_rows(Path(path)):
         if r.get("split") != split:
             continue
         _st = str(r.get("state_status", "OK"))
         state = r.get("state") or {}
+        # R-313: DECLARED-FIELD COMPLETENESS, checked HERE and not delegated.
+        #
+        # A RAGGED ROW DOES NOT DEGRADE THE SCORE, IT LIES TO IT. encode_row
+        # appends 0.0 for any absent field -- and the GUARD FLAG for that field
+        # is itself absent, so it also encodes 0.0, meaning NOT MISSING. The
+        # model is then told the value is genuinely zero AND present, which is
+        # the exact distinction the guard pair exists to preserve. encode_row's
+        # docstring says such a row "is a schema break and it raises"; the code
+        # does not raise (filed to the identity queue -- the fix moves
+        # fit_code_sha256_prefix).
+        #
+        # This is the SECOND independent line on the point DA's gate is being
+        # repaired for. It is cheap, it is local, and it means the diagnostic
+        # stops trusting a certification for something it reads anyway. Measured
+        # on the real tape: every row of EVERY status declares all 45.
+        if len(state) != _N_PINNED:
+            raise DiagnosticRefused(
+                f"REFUSED: tape row {(r.get('slug'), r.get('side'), r.get('gen'))} "
+                f"declares {len(state)} state fields, not the pinned "
+                f"{_N_PINNED}. A ragged row is not a partial measurement -- "
+                f"absent fields encode as 0.0 with their guards ALSO 0.0, so "
+                f"the model reads them as confidently zero rather than "
+                f"unknown.")
         idx[(r["slug"], r["side"], r["gen"], r["t_start"])] = {
             "vec": tuple(_PIN.encode_row(state, feats)) if _st == "OK" else None,
             "status": _st,
