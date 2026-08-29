@@ -30,6 +30,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import da_forward_day_verify as V                      # noqa: E402
+import da_hf_pm_alignment as A                        # noqa: E402
 
 WINDOW_S = 300
 COIN = "btc"
@@ -41,6 +42,28 @@ HF_ERA_FLOOR_NS = 1787579334881534478        # hf_ws_v2 stamp boundary
 
 def utc(ts):
     return dt.datetime.fromtimestamp(ts, dt.timezone.utc).isoformat()[:19] + "Z"
+
+
+def observed_windows(first_full: int, last_full: int) -> int:
+    """btc windows ACTUALLY PRESENT in the tape over [first_full, last_full).
+
+    WITHOUT THIS THE RECEIPT COULD NOT TELL A CLEAN FRAGMENT FROM A DEAD
+    COLLECTOR. Everything else here is derived from the GAP LEDGER, and a
+    collector that never ran writes no gaps -- so an unobserved fragment would
+    have reported 0% affected and zero lost seconds: a perfect fragment. That
+    is the same "silence from a dead collector and silence from a perfect one
+    are the same bytes" rule the day-bar already enforces, and it was missing
+    from the receipt that gates the diagnostic.
+
+    On this data the answer is 214/214 and 39/39, so nothing reported changes
+    -- but it was true by luck rather than by check, and the next fragment is
+    the one where that matters.
+    """
+    days = sorted({dt.datetime.fromtimestamp(t, dt.timezone.utc)
+                   .strftime("%Y%m%d")
+                   for t in (first_full, max(first_full, last_full - 1))})
+    got = A.pm_windows(days).get(COIN, [])
+    return len([x for x in got if first_full <= x < last_full])
 
 
 def fragment_report(lo: int, hi: int, label: str) -> dict:
@@ -74,6 +97,7 @@ def fragment_report(lo: int, hi: int, label: str) -> dict:
             if cov > worst_lost:
                 worst_lost, worst_window = cov, utc(w0)
     span_h = (last_full - first_full) / 3600.0
+    observed = observed_windows(first_full, last_full)
     # BURST CONCENTRATION, MEASURED NOT ASSERTED. R-293's censoring statement
     # says the loss is burst-concentrated; a receipt that merely repeats that
     # is a printed conclusion beside a table (rule 10). So: what share of the
@@ -103,6 +127,15 @@ def fragment_report(lo: int, hi: int, label: str) -> dict:
         "bounds_utc": [utc(lo), utc(hi)],
         "bounds_epoch": [lo, hi],
         "contained_windows": n,
+        "windows_observed_in_tape": observed,
+        "windows_missing_from_tape": n - observed,
+        "coverage_verified": observed == n,
+        "coverage_note":
+            "every other number here derives from the GAP LEDGER, and a "
+            "collector that never ran writes no gaps -- so without this check "
+            "an unobserved fragment reports 0% affected and zero loss, i.e. a "
+            "perfect fragment. Zero missing means the unaffected windows were "
+            "genuinely OBSERVED, not merely unmentioned",
         "boundary_partial_windows": boundary_partial,
         "boundary_partial_note":
             "windows straddling a fragment edge are EXCLUDED from the "
@@ -231,6 +264,10 @@ def main() -> int:
               f"= {f['lost_s_per_hour']}/hr   worst window "
               f"{f['worst_window_utc']} at {f['worst_window_lost_s']}s")
         bc = f["burst_concentration"]
+        print(f"  coverage      : {f['windows_observed_in_tape']}/"
+              f"{f['contained_windows']} observed in tape, "
+              f"{f['windows_missing_from_tape']} missing "
+              f"-> verified={f['coverage_verified']}")
         print(f"  hours touched : {f['hours_touched']}")
         print(f"  BURST         : worst {bc['worst_decile_windows']} of "
               f"{bc['affected_windows']} affected windows hold "
@@ -244,5 +281,70 @@ def main() -> int:
     return 0
 
 
+def _selftests() -> int:
+    """Falsifiers for a receipt that gates a diagnostic (rule 15).
+
+    A receipt with no falsifier is an instrument that has never proved it can
+    fire, and this one carries numbers that are now in the register.
+    """
+    checks, fails = 0, []
+
+    def ok(c, label):
+        nonlocal checks
+        checks += 1
+        print(f"  {'PASS' if c else 'FAIL'}  {label}")
+        if not c:
+            fails.append(label)
+
+    lo, hi = 1787897340, 1787961600
+    a = fragment_report(lo, hi, "A")
+    ok(a["contained_windows"] == 214 and a["boundary_partial_windows"] == 1,
+       "fragment A contains 214 whole windows with 1 boundary-partial "
+       "EXCLUDED -- and 214 is the same count the day verdict derives "
+       "independently for entirely_post_freeze, so two instruments agree "
+       "without sharing the derivation")
+    ok(a["coverage_verified"] and a["windows_missing_from_tape"] == 0,
+       f"coverage is VERIFIED, not assumed: "
+       f"{a['windows_observed_in_tape']}/{a['contained_windows']} windows are "
+       f"present in the tape. Without this a dead collector -- which writes no "
+       f"gaps -- would have reported a PERFECT fragment")
+    ok(0 < a["windows_gap_affected"] < a["contained_windows"],
+       f"the affected count is a STRICT SUBSET "
+       f"({a['windows_gap_affected']} of {a['contained_windows']}) -- neither "
+       f"0 nor everything, so the interval arithmetic is discriminating "
+       f"rather than matching or missing every window")
+    ok(a["window_time_lost_pct"] < a["windows_gap_affected_pct"],
+       f"the two measures DIVERGE as they must "
+       f"({a['window_time_lost_pct']}% of time vs "
+       f"{a['windows_gap_affected_pct']}% of windows): many short outages "
+       f"touch many windows while removing little time, and a receipt "
+       f"reporting only one would mislead in a predictable direction")
+    # THE KEY REFUSAL: a range with no tape at all. My first attempt used
+    # 2026-08-23T15:46 assuming it was quiet -- it has 9/9 coverage and a real
+    # gap, so the test asserted a premise instead of a behaviour and went RED.
+    # The fixture was wrong, not the code; a probe found a genuinely
+    # unobserved range.
+    dead = fragment_report(1785000000, 1785000000 + 3000, "unobserved")
+    ok(dead["windows_gap_affected"] == 0 and dead["lost_seconds"] == 0.0,
+       f"an UNOBSERVED range ({dead['contained_windows']} calendar windows) "
+       f"reports zero gaps and zero lost seconds -- exactly what a PERFECT "
+       f"fragment reports, which is the whole danger")
+    ok(not dead["coverage_verified"]
+       and dead["windows_missing_from_tape"] == dead["contained_windows"],
+       f"...and coverage_verified=False with all "
+       f"{dead['windows_missing_from_tape']} windows missing SEPARATES them. "
+       f"Without it a dead collector -- which writes no gaps -- is "
+       f"indistinguishable from a flawless one")
+    live_ = fragment_report(1787300000, 1787300000 + 3000, "observed")
+    ok(live_["coverage_verified"] and live_["windows_gap_affected"] > 0,
+       "positive control: an OBSERVED range verifies coverage and still finds "
+       "its gaps, so the check is not simply refusing everything")
+    print(f"\n{'FRAGMENT RECEIPT GREEN' if not fails else 'RED'}: "
+          f"{len(fails)} failing, {checks} checks")
+    return 1 if fails else 0
+
+
 if __name__ == "__main__":
+    if "--selftest" in sys.argv:
+        raise SystemExit(_selftests())
     raise SystemExit(main())

@@ -1,6 +1,6 @@
 {
   "INADMISSIBLE_FOR_THE_RACE": true,
-  "as_of_utc": "2026-08-29T03:15:24.162341+00:00",
+  "as_of_utc": "2026-08-29T03:19:02.387522+00:00",
   "authorisation": "R-293 (user-ordered diagnostic; coordinator dispatch)",
   "censoring_measured_not_asserted": {
     "concentration": "worst decile of affected windows holds 25.2% (fragment A) / 18.0% (B) of lost seconds against ~10% under a uniform drizzle -- real concentration, about 2.5x and 1.8x, not extreme",
@@ -63,6 +63,8 @@
         "worst_decile_windows": 13
       },
       "contained_windows": 214,
+      "coverage_note": "every other number here derives from the GAP LEDGER, and a collector that never ran writes no gaps -- so without this check an unobserved fragment reports 0% affected and zero loss, i.e. a perfect fragment. Zero missing means the unaffected windows were genuinely OBSERVED, not merely unmentioned",
+      "coverage_verified": true,
       "gap_intervals": 333,
       "hours_touched": 18,
       "label": "A: 08-28 post-freeze (06:09:00Z -> 24:00:00Z)",
@@ -73,6 +75,8 @@
       "window_time_lost_pct": 2.84,
       "windows_gap_affected": 135,
       "windows_gap_affected_pct": 63.08,
+      "windows_missing_from_tape": 0,
+      "windows_observed_in_tape": 214,
       "worst_window_lost_s": 50.0,
       "worst_window_utc": "2026-08-28T14:05:00Z"
     },
@@ -103,6 +107,8 @@
         "worst_decile_windows": 1
       },
       "contained_windows": 39,
+      "coverage_note": "every other number here derives from the GAP LEDGER, and a collector that never ran writes no gaps -- so without this check an unobserved fragment reports 0% affected and zero loss, i.e. a perfect fragment. Zero missing means the unaffected windows were genuinely OBSERVED, not merely unmentioned",
+      "coverage_verified": true,
       "gap_intervals": 19,
       "hours_touched": 4,
       "label": "B: 08-29 00:00:00Z -> declared cutoff",
@@ -113,6 +119,8 @@
       "window_time_lost_pct": 1.05,
       "windows_gap_affected": 16,
       "windows_gap_affected_pct": 41.03,
+      "windows_missing_from_tape": 0,
+      "windows_observed_in_tape": 39,
       "worst_window_lost_s": 21.6,
       "worst_window_utc": "2026-08-29T00:40:00Z"
     }
