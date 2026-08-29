@@ -4963,16 +4963,29 @@ reading before any number existed, and the number came out positive.
 | exposure | `be_fragment_exposure_rows_v1.json` sha `0a3f2e0b2cf7f788…` |
 | gate | `da_verdict_fragment_v4.json` — 18/2/20, failing exactly the ruled pair |
 
-| budget | candidate | incumbent | increment | beats matched-random |
+| budget | candidate net | incumbent net | increment | candidate net beats matched-random |
 |---|---|---|---|---|
-| 5% | +13,661.1c | +6,864.7c | +6,796.4c | True |
-| 10% | +21,185.6c | +11,114.5c | +10,071.1c | True |
-| 15% | +24,551.9c | +17,349.8c | +7,202.1c | True |
+| 5% | +13,661.1c | +6,864.7c | +6,796.4c | True (vs rand_max +949.7) |
+| 10% | +21,185.6c | +11,114.5c | +10,071.1c | True (vs rand_max +196.1) |
+| 15% | +24,551.9c | +17,349.8c | +7,202.1c | True (vs rand_max −169.2) |
+
+**CORRECTED (R-326).** The last column is about the **CANDIDATE NET**, not the
+increment. My original heading sat beside the increment column and read as
+though the increment beat a null. **THE INCREMENT HAS NO NULL AND NO INTERVAL
+IN THIS RECEIPT** — a paired-delta null was neither preregistered nor computed.
+Verified at the artifact: no increment p_value exists.
 
 Population reconciles exactly (442,964 kept + 29,449 named drops = 472,413 =
 the exposure file's own OK count); `state_join_failed` 0; both arms alive; both
-`CAUSAL_FROZEN_FROM_TRAIN`; **gmax tie at the budget boundary FALSE everywhere**,
-so the order-sensitivity finding could not have bitten this population.
+`CAUSAL_FROZEN_FROM_TRAIN`.
+
+**"COULD NOT HAVE BITTEN" IS WITHDRAWN (R-326).** My tie check computes the
+boundary at the NOMINAL top-k index (11,232 / 22,464 / 33,697), but the causal
+policy cancelled by FROZEN THETA (9,782 / 19,921 / 29,774) — different indices,
+verified at the artifact. So `tie_at_boundary=false` answers a retrospective
+question about a threshold the policy never used, and it CANNOT show ties were
+absent at the actual one. What stands is what the artifact already said
+honestly: **deterministic via canonical sort, NOT order-independent.**
 
 **READ IT AS THE PROTOCOL RULED, NOT AS THE NUMBERS INVITE:** WEAK COMFORT ONLY.
 The censoring plausibly flatters. No admission, no re-freeze, no parameter, no
