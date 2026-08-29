@@ -253,7 +253,30 @@ def pin_data_root() -> None:
     print(f"  data root pinned; inputs {consumers}", flush=True)
 
 
-def main() -> int:
+def main(fragment_path: Path = None, topup_path: Path = None,
+         out_path: Path = None, allow_overwrite: bool = False) -> int:
+    """R-300: PURELY ADDITIVE parameters, defaulting to the module constants, so
+    a caller that passes nothing behaves exactly as before and a caller that
+    substitutes an input makes the substitution VISIBLE IN THE INVOCATION.
+    Monkeypatching these globals was refused for the opposite reason: a reader
+    of this file could not see what actually ran.
+
+    AND AN OVERWRITE GUARD, because the default OUT is the LIVE TAPE. A bare
+    invocation of this builder silently destroyed phase2_state_tape_v5.json --
+    the tape fit7 and receipt v2.3 rest on -- and nothing stopped it. That is a
+    loaded gun one command away from anyone told to "run the committed
+    builder". It now REFUSES an existing output unless overwriting is asked for
+    explicitly. The default behaviour on the default path changes from
+    silently-destroys to refuses, which needs no apology."""
+    FRAG = Path(fragment_path) if fragment_path is not None else FRAGMENT
+    TOP = Path(topup_path) if topup_path is not None else TOPUP
+    DEST = Path(out_path) if out_path is not None else OUT
+    if DEST.exists() and not allow_overwrite:
+        raise SystemExit(
+            f"REFUSED: {DEST} already exists. This builder's default output is "
+            f"the LIVE STATE TAPE, and overwriting it destroys the artifact the "
+            f"fit manifest binds by content. Pass allow_overwrite=True if that "
+            f"is genuinely intended, or choose another out_path.")
     _ref0 = assert_build_ref()
     assert_modules_under_root()
     pin_data_root()
@@ -312,7 +335,7 @@ def main() -> int:
     # 7.4G at 200/471 slugs. Rows are appended to a JSONL spool per slug and
     # the final artifact is streamed FROM the spool, so peak memory is one
     # slug's rows, not the population's.
-    spool_fd, spool_path = tempfile.mkstemp(dir=str(OUT.parent), suffix=".jsonl")
+    spool_fd, spool_path = tempfile.mkstemp(dir=str(DEST.parent), suffix=".jsonl")
     spool = os.fdopen(spool_fd, "w")
     n_rows = 0
     tr_last_exit = float("-inf"); sc_first_feat = float("inf")
@@ -320,7 +343,7 @@ def main() -> int:
     skip_counts: dict = {}        # PRE-EMISSION: the row never entered at all
     no_token_by_coin_day: dict = {}
     per_split: dict = {}
-    for split, src in (("train", FRAGMENT), ("score", TOPUP)):
+    for split, src in (("train", FRAG), ("score", TOP)):
         data = json.loads(src.read_text())
         rows = [r for r in data["rows"] if r["status"] == "OK"]
         bywin: dict = {}
@@ -382,7 +405,12 @@ def main() -> int:
                     "label_exit_time": EMB.label_exit_time(r),
                     "state": {k: fe.get(k) for k in pin["features_in_order"]},
                 }
-                spool.write(json.dumps(_row) + "\n")
+                # F2: allow_nan=False AT THE ARTIFACT BOUNDARY. Python writes
+                # NaN/Infinity as bare tokens that are NOT valid JSON -- the
+                # rehearsal tape contains `Infinity` and a strict parser REFUSES
+                # the file. An artifact other tools cannot read is not an
+                # artifact, and failing at the write names the offending row.
+                spool.write(json.dumps(_row, allow_nan=False) + "\n")
                 n_rows += 1
                 if split == "train":
                     tr_last_exit = max(tr_last_exit, _row["label_exit_time"])
@@ -415,13 +443,40 @@ def main() -> int:
     # at completion, after ~75 minutes of work. A row that is IN the tape and
     # labelled is not an absorbed failure; a row that never entered is.
     assert_absorption_within_bound(skip_counts, n_rows, status_counts)
-    # embargo from the running extremes -- no second pass over the rows
-    gap = sc_first_feat - tr_last_exit
-    emb = {"gap_s": gap, "embargo_s": EMB.EMBARGO_S,
-           "last_train_label_exit": tr_last_exit,
-           "first_score_feature": sc_first_feat}
-    emb_state = "CERTIFIED" if gap >= EMB.EMBARGO_S else (
-        f"VIOLATED (unpurged): gap {gap:.3f}s < {EMB.EMBARGO_S}s")
+    # F2: PER-SPLIT EMPTINESS IS DECIDED BEFORE THE ARITHMETIC, NOT BY IT.
+    # The n_rows==0 guard above catches a totally empty build, but NOT an empty
+    # SPLIT. With no train rows, tr_last_exit stays -inf, gap becomes +inf, and
+    # `inf >= 60.0` reports "CERTIFIED" -- an embargo certified against nothing.
+    # The rehearsal build did exactly that: gap_s Infinity,
+    # last_train_label_exit -Infinity, state CERTIFIED. A vacuous certificate is
+    # worse than an absent one, because it reads as a passed check.
+    _empty_splits = sorted(k for k, v in per_split.items()
+                           if not v.get("slugs"))
+    _finite = (tr_last_exit != float("-inf")
+               and sc_first_feat != float("inf"))
+    if _empty_splits or not _finite:
+        gap = None
+        emb = {"gap_s": None, "embargo_s": EMB.EMBARGO_S,
+               "last_train_label_exit": (None if tr_last_exit == float("-inf")
+                                         else tr_last_exit),
+               "first_score_feature": (None if sc_first_feat == float("inf")
+                                       else sc_first_feat),
+               "empty_splits": _empty_splits,
+               "why": (f"splits {_empty_splits} contain no slugs, so there is no "
+                       f"train label to embargo AGAINST. The comparison is not "
+                       f"satisfied and not violated -- it is UNDEFINED, and "
+                       f"reporting CERTIFIED here would certify against an "
+                       f"absent population.")}
+        emb_state = "NOT_APPLICABLE (empty split; admissible ONLY for a "
+        emb_state += "DIAGNOSTIC_NEVER_EVIDENCE artifact)"
+    else:
+        gap = sc_first_feat - tr_last_exit
+        emb = {"gap_s": gap, "embargo_s": EMB.EMBARGO_S,
+               "last_train_label_exit": tr_last_exit,
+               "first_score_feature": sc_first_feat,
+               "empty_splits": []}
+        emb_state = "CERTIFIED" if gap >= EMB.EMBARGO_S else (
+            f"VIOLATED (unpurged): gap {gap:.3f}s < {EMB.EMBARGO_S}s")
 
     # RULED PROVENANCE INTERFACE (R-199 seam 20): the LAUNCHER passes
     # BUILD_REF; the builder READS it and writes it VERBATIM. No git at
@@ -478,9 +533,19 @@ def main() -> int:
                     "rule": "label_exit_time + 60s < first score feature time"},
         "n_rows": n_rows,
     }
-    fd, tmp = tempfile.mkstemp(dir=str(OUT.parent), suffix=".tmp")
+    fd, tmp = tempfile.mkstemp(dir=str(DEST.parent), suffix=".tmp")
     with os.fdopen(fd, "w") as fh:
-        head = json.dumps(out)
+        try:
+            head = json.dumps(out, allow_nan=False)
+        except ValueError as _e:
+            # F2: a non-finite value in the HEADER is refused at the
+            # boundary. Infinity is not valid JSON, so the artifact would
+            # be unreadable by a strict parser -- and an Infinity in the
+            # embargo block means that check was VACUOUS, not passed.
+            raise SystemExit(
+                f"REFUSED: the tape header carries a non-finite value "
+                f"({_e}). Infinity/NaN are not JSON, and an Infinity in "
+                f"the embargo block means the check was vacuous.")
         fh.write(head[:-1] + ', "rows": [')      # splice the array in
         with open(spool_path) as sp:
             first = True
@@ -490,9 +555,9 @@ def main() -> int:
                 fh.write(line.rstrip("\n")); first = False
         fh.write("]}")
         fh.flush(); os.fsync(fh.fileno())
-    os.replace(tmp, OUT)
+    os.replace(tmp, DEST)
     Path(spool_path).unlink(missing_ok=True)
-    print(f"\nWROTE {OUT.name}: {n_rows:,} rows, "
+    print(f"\nWROTE {DEST.name}: {n_rows:,} rows, "
           f"statuses {status_counts}, embargo {emb_state[:44]}")
     return 0
 

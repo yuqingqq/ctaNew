@@ -157,7 +157,16 @@ def stream_ok_rows(path: Path, target_latency_ms: int,
                 i = _skip_ws(buf, end)
             buf = buf[i:]
             if not piece:
-                return
+                # T2: EOF WITHOUT THE CLOSING BRACKET. The previous form simply
+                # returned here, so a file truncated mid-array -- a killed
+                # writer, a full disk, an interrupted copy -- yielded a SHORT
+                # POPULATION AND NO ERROR. Every count downstream would then
+                # describe a population nobody chose, and it would look entirely
+                # normal. A partial input is not a small input.
+                raise RuntimeError(
+                    f"REFUSED: {path.name} ended without the closing ']' of its "
+                    f"rows array. The file is TRUNCATED, and a truncated array "
+                    f"read as complete silently shrinks the population.")
 
 
 def check_target_latency(rows_latency_key: str, wanted_ms: int) -> None:

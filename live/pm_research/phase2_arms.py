@@ -414,7 +414,21 @@ def _stream_tape_rows(path: Path):
             except ValueError:
                 chunk = fh.read(1 << 22)
                 if not chunk:
-                    return
+                    # FD-R7 (T2): EOF WITHOUT THE CLOSING ']'. This returned
+                    # silently, so a tape truncated mid-array -- a killed
+                    # writer, a full disk, an interrupted copy -- yielded a
+                    # SHORT POPULATION AND NO ERROR. Every count taken from it
+                    # would describe a population nobody chose, and the fit
+                    # would look entirely normal. PARSER-ONLY: the accepting
+                    # path is byte-for-byte unchanged, so a well-formed tape
+                    # streams exactly the rows it streamed before; only the
+                    # truncated case, which previously fabricated a clean end,
+                    # now refuses.
+                    raise RuntimeError(
+                        f"REFUSED: {path.name} ended without the closing ']' "
+                        f"of its rows array. The tape is TRUNCATED, and a "
+                        f"truncated array read as complete silently shrinks "
+                        f"the population.")
                 buf += chunk
                 continue
             yield obj

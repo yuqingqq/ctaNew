@@ -116,7 +116,16 @@ def stream_rows(path: Path, chunk: int = 1 << 24):
                 i = RL._skip_ws(buf, end)
             buf = buf[i:]
             if not piece:
-                return
+                # T2: EOF WITHOUT THE CLOSING BRACKET. The previous form simply
+                # returned here, so a file truncated mid-array -- a killed
+                # writer, a full disk, an interrupted copy -- yielded a SHORT
+                # POPULATION AND NO ERROR. Every count downstream would then
+                # describe a population nobody chose, and it would look entirely
+                # normal. A partial input is not a small input.
+                raise RuntimeError(
+                    f"REFUSED: {path.name} ended without the closing ']' of its "
+                    f"rows array. The file is TRUNCATED, and a truncated array "
+                    f"read as complete silently shrinks the population.")
 
 
 def opportunities(rows, limit: int | None = None) -> tuple[list, dict]:
@@ -452,6 +461,35 @@ def selftest() -> int:
     ok("carries no" in g2,
        "KNOWN-BAD: a row missing a field is REFUSED — an opportunity built "
        "from a missing field is a fabricated order")
+
+    # ---- T2: a TRUNCATED array must REFUSE, not read as complete --------
+    import tempfile as _tf2
+    _d2 = Path(_tf2.mkdtemp())
+    _rw = [{"slug": "s", "side": "BUY_UP", "gen": i, "t_start": float(i),
+            "resting": 5.0, "level": 0.5, "status": "OK", "t0": 1787897400,
+            "day": "2026-08-28",
+            "latency": {"50": {"preventable_value_cents": 1.0,
+                               "preventable_shares": 1.0, "stale_shares": 0.0}}}
+           for i in range(6)]
+    _fp = _d2 / "full.json"
+    _fp.write_text(json.dumps({"schema": RL.EXPECTED_SCHEMA, "rows": _rw}))
+    _nfull = sum(1 for _ in stream_rows(_fp))
+    ok(_nfull == 6,
+       f"POSITIVE CONTROL: a COMPLETE array streams every row ({_nfull}/6) — "
+       f"a reader that refused everything would pass the known-bad below")
+    _txt = _fp.read_text()
+    _tp = _d2 / "trunc.json"
+    _tp.write_text(_txt[:_txt.rindex('{"slug"')])      # cut mid-array, no ']'
+    try:
+        _ntr = sum(1 for _ in stream_rows(_tp)); _terr = ""
+    except RuntimeError as e:
+        _ntr, _terr = -1, str(e)
+    ok("TRUNCATED" in _terr,
+       f"T2 KNOWN-BAD: a TRUNCATED rows array REFUSES rather than returning a "
+       f"short population; before the fix it yielded {5} of {6} rows and no "
+       f"error, and every downstream count would have described a population "
+       f"nobody chose (got {_terr[:60]!r})")
+    import shutil as _sh2; _sh2.rmtree(_d2, ignore_errors=True)
 
     dup = [{"slug": "s", "side": "BUY_UP", "gen": 1, "t_start": 9.0,
             "resting": 5.0, "level": 0.5},

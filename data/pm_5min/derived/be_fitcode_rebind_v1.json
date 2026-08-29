@@ -1,0 +1,38 @@
+{
+ "artifact": "be_fitcode_rebind_v1",
+ "authority": "FD-R7 (coordinator ruling); the repair itself is a T2 fail-open fix",
+ "evidence": {
+  "known_bad": {
+   "truncated fixture": "REFUSED \u2014 'ended without the closing ] of its rows array'"
+  },
+  "positive_control": {
+   "complete fixture": "streams every row \u2014 a reader that refused indiscriminately would pass the known-bad and be useless"
+  },
+  "semantic_invariance": {
+   "digest_after": "ccbb470278cd724d61734db897030fb82a9d0082457b334e5c76ca9ff7c5ffdf",
+   "digest_before": "ccbb470278cd724d61734db897030fb82a9d0082457b334e5c76ca9ff7c5ffdf",
+   "digest_identical": true,
+   "method": "the FULL live tape streamed end-to-end before and after the repair; every row digested in order",
+   "rows_after": 1764206,
+   "rows_before": 1764206,
+   "rows_identical": true,
+   "tape": "phase2_state_tape_v5.json"
+  }
+ },
+ "fit_code_sha256_prefix": {
+  "after": "e27cab9e5f6ce8e5",
+  "before": "3d0b6c8c6dfe9466"
+ },
+ "kind": "CITATION_CLASS_REBIND",
+ "mechanical_closure_still_open": "the fit-time re-stamp remains the closure for the manifest binding (R-275/R-277); this artifact records the rebind, it does not perform it.",
+ "scope": "PARSER ONLY. The accepting path is byte-for-byte unchanged; only the truncated case, which previously fabricated a clean end, now refuses.",
+ "status": "EVIDENCE ARTIFACT \u2014 records a rebind, asserts no result",
+ "what_changed": "phase2_arms._stream_tape_rows now REFUSES on EOF-before-']'. Previously it returned silently, so a tape truncated mid-array yielded a SHORT POPULATION AND NO ERROR and every count taken from it described a population nobody chose.",
+ "what_did_not_change": [
+  "no verdict-bearing statement in any receipt",
+  "no re-fit, no re-freeze, no clock effect, multiplicity untouched",
+  "the tape itself is untouched (sha/bytes/mtime re-proved separately)",
+  "every row a well-formed tape yields is identical, proven not asserted"
+ ],
+ "why_a_rebind_was_required": "phase2_arms is in CODE_IDENTITY_FILES, so any edit moves fit_code_sha256_prefix and breaks the fit7 manifest binding. The ruling: a fail-open READER is not preserved by a zero-identity assertion. My earlier 'zero identity files touched' was a statement about hashes, not about correctness."
+}
