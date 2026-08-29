@@ -101,6 +101,47 @@ GATE_LOAD_BEARING = (
     "half_open_containment_landed",
 )
 GATE_GOVERNED_EMBARGO = "embargo_respected"
+
+# The EXACT state each governed name must be in. An exclusion permits a
+# predicate to FAIL; it never permits it to disappear, to be waived as N/A, or
+# to quietly PASS — the failed set must be exactly the ruled pair, no more and
+# no fewer. DA declares both_splits_populated ALWAYS-APPLICABLE and
+# NON-WAIVABLE, so accepting it as N/A was accepting a disappearance.
+#
+# embargo_respected's state is DA'S TO DECLARE, not mine to infer. Codex expects
+# applicable-and-failing; my v3 tape printed embargo NOT_APPLICABLE — but that
+# is the TAPE's embargo field, a different thing from the GATE predicate's
+# emitted state, and resolving the two by inference is exactly what R-302
+# forbids. Left None: the consumer REFUSES until DA declares it, because an
+# undeclared expectation defaulted into code is a guess wearing a constant's
+# clothes.
+GOVERNED_STATES = {
+    "both_splits_populated": {
+        "applicable": True, "pass": False,
+        "why": ("R-303 ruled the empty train split, so this predicate FAILS by "
+                "design. DA declares it always-applicable and non-waivable: "
+                "R-310 permits its FAILURE, never its disappearance.")},
+    GATE_GOVERNED_EMBARGO: {
+        "applicable": True, "pass": False,
+        "why": ("DECLARED BY DA (Q-DA-164), executed from the writer code, not "
+                "inferred. My tape header says 'embargo NOT_APPLICABLE' and I "
+                "would have guessed that state — WRONGLY. They are two "
+                "different objects wearing one phrase: the header is the "
+                "TAPE'S SELF-DECLARATION, while the gate keys applicability on "
+                "the substring 'unpurged' alone and does not honour a tape's "
+                "self-declared status (R-306: a tape may not earn a waiver by "
+                "declaring its own). My string lacks 'unpurged', so the gate "
+                "takes the APPLICABLE branch and the predicate fails.")},
+}
+
+# DA's structural pins for the v4 fragment population (empty train / score-only).
+# SCOPE, stated by DA and kept here: the applicability vector and these two named
+# states are STRUCTURAL and pinnable. DA is NOT pre-declaring pass/fail for the
+# DATA-DEPENDENT predicates (gap_count, at_g0, ledger_pin, containment) — a
+# declaration that guesses is not a pin. Those still must pass, but because the
+# failed set is pinned to exactly the two exclusions, not because their outcome
+# was predicted.
+GATE_NOT_APPLICABLE_MUST_BE_EMPTY = True
 GATE_REQUIRED_PREDICATES = frozenset(GATE_LOAD_BEARING) | {GATE_GOVERNED_EMBARGO}
 
 DIAGNOSTIC_PREDICATE_EXCLUSIONS = {
@@ -611,6 +652,35 @@ def selftest() -> int:
         c.update(kw)
         return {_LV: c}
 
+    # F3 SEAM (R-319): the validator must run BEFORE the reconstruction it
+    # guards. Every unit falsifier below calls assert_valuation_inputs DIRECTLY,
+    # so not one of them can see WIRING ORDER — and the validator was in fact
+    # wired AFTER the keptrow loop, so a scalar latency cell raised a raw
+    # AttributeError before the controlled refusal could fire. This pushes the
+    # malformed row through the REAL entry point.
+    import tempfile as _tf8
+    _d8 = Path(_tf8.mkdtemp())
+    _L8 = str(D.TARGET_LATENCY_MS)
+    _bad8 = {"slug": "w", "side": "BUY_UP", "gen": 1, "t_start": 0.0,
+             "status": "OK", "latency": {_L8: 7}}          # scalar cell
+    _e8 = _d8 / "e.json"
+    _e8.write_text(json.dumps({"schema": "be_fragment_exposure_v1",
+                               "rows": [_bad8]}))
+    _kept8 = [{k: _bad8.get(k) for k in ("slug", "day", "t0", "t_start",
+                                         "side", "gen", "latency", "coin")}]
+    try:
+        rejoin_source_fields(_kept8, _e8)
+        _r8 = "ACCEPTED"
+    except DiagnosticRefused as e:
+        _r8 = f"REFUSED:{e}"
+    except Exception as e:                                  # noqa: BLE001
+        _r8 = f"RAW:{type(e).__name__}"
+    ok(_r8.startswith("REFUSED:") and "malformed valuation input" in _r8,
+       f"F3 SEAM: a malformed row pushed through the REAL entry point raises a "
+       f"CONTROLLED DiagnosticRefused, not a raw AttributeError — the check now "
+       f"runs before the thing it guards ({_r8[:44]})")
+    import shutil as _sh8; _sh8.rmtree(_d8, ignore_errors=True)
+
     # THE STRUCTURAL CONTROL, first: a LEGITIMATE no-fill must still PASS.
     # Strictness that redefines absence-of-a-fill as malformed data would refuse
     # real populations — 29,129 PRE_WINDOW rows in this very tape are genuine.
@@ -865,6 +935,28 @@ def selftest() -> int:
                                  "rows": []}))
     _tsha = _sha16(_tape)
 
+    def _full_states(over=None):
+        rows = [{"predicate": n, "applicable": True,
+                 "pass": n not in DIAGNOSTIC_PREDICATE_EXCLUSIONS}
+                for n in sorted(GATE_REQUIRED_PREDICATES)]
+        for r in rows:
+            if over and r["predicate"] in over:
+                r.update(over[r["predicate"]])
+        return rows
+
+    def _try_preds_raw(rows, extra=None):
+        (_d4 / "da_verdict_probe.json").write_text(json.dumps(
+            {"predicates": rows + list(extra or []), "all_pass": False,
+             "tape_path": str(_tape), "tape_sha256_prefix": _tsha}))
+        _o = globals()["DERIVED"]
+        try:
+            globals()["DERIVED"] = _d4
+            load_gate_verdict(_tape, _expf); return ""
+        except DiagnosticRefused as e:
+            return str(e)
+        finally:
+            globals()["DERIVED"] = _o
+
     def _verdict(fails, names=None, extra=None):
         names = names or (sorted(GATE_REQUIRED_PREDICATES)
                           + ["whole_stream_conformance"])
@@ -879,13 +971,17 @@ def selftest() -> int:
         vp = _d4 / name
         vp.write_text(json.dumps(_verdict(fails)))
         _orig = globals()["DERIVED"]
+        _keep = GOVERNED_STATES[GATE_GOVERNED_EMBARGO]
         try:
             globals()["DERIVED"] = _d4          # test scope, visible here
+            GOVERNED_STATES[GATE_GOVERNED_EMBARGO] = {
+                "applicable": True, "pass": False, "why": "TEST-SCOPE ONLY"}
             return load_gate_verdict(_tape, _expf), ""
         except DiagnosticRefused as e:
             return None, str(e)
         finally:
             globals()["DERIVED"] = _orig
+            GOVERNED_STATES[GATE_GOVERNED_EMBARGO] = _keep
 
     _g, _e = _try(["both_splits_populated", "embargo_respected"])
     ok(_g is not None and set(_g["predicates_failed_and_EXCUSED_by_policy"]) ==
@@ -921,20 +1017,61 @@ def selftest() -> int:
     (_d4 / "da_verdict_probe.json").write_text(json.dumps(_verdict(
         ["both_splits_populated", "embargo_respected"])))
     _o = globals()["DERIVED"]
+    _k2 = GOVERNED_STATES[GATE_GOVERNED_EMBARGO]
     try:
         globals()["DERIVED"] = _d4
+        GOVERNED_STATES[GATE_GOVERNED_EMBARGO] = {
+            "applicable": True, "pass": False, "why": "TEST-SCOPE ONLY"}
         try:
             load_gate_verdict(_tape, _other); _ge = ""
         except DiagnosticRefused as e:
             _ge = str(e)
     finally:
         globals()["DERIVED"] = _o
+        GOVERNED_STATES[GATE_GOVERNED_EMBARGO] = _k2
     ok("DIFFERENT exposure file" in _ge,
        f"PR3-FD2 KNOWN-BAD: a DIFFERENT exposure file than the tape was built "
        f"from is REFUSED — hashing whatever the caller supplies and comparing "
        f"it against nothing accepted any file ({_ge[:44]})")
 
     # FD4: an OMITTED governed predicate refuses; a NEW passing one is fine
+    # The embargo state is DA's to declare and production REFUSES without it.
+    # The suite supplies a test-scope declaration so the rest of the machinery
+    # stays exercised — visible right here, never in production.
+    _TEST_EMBARGO_STATE = {"applicable": True, "pass": False,
+                           "why": "TEST-SCOPE ONLY — DA declares the real one"}
+
+    def _with_declared(fn):
+        _keep = GOVERNED_STATES[GATE_GOVERNED_EMBARGO]
+        GOVERNED_STATES[GATE_GOVERNED_EMBARGO] = _TEST_EMBARGO_STATE
+        try:
+            return fn()
+        finally:
+            GOVERNED_STATES[GATE_GOVERNED_EMBARGO] = _keep
+
+    _emb = GOVERNED_STATES[GATE_GOVERNED_EMBARGO]
+    ok(_emb is not None and _emb["applicable"] is True and _emb["pass"] is False,
+       "R-302 the embargo predicate's state is DECLARED BY DA (applicable, "
+       "failing) — and NOT inferred: my own tape header reads 'embargo "
+       "NOT_APPLICABLE', which is the TAPE'S self-declaration, a different "
+       "object from the GATE predicate's emitted state. Guessing from my "
+       "artifact would have pinned the wrong value")
+    ok("unpurged" in _emb["why"] and "self-declar" in _emb["why"].lower(),
+       "R-302 the declaration carries its MECHANISM — the gate keys "
+       "applicability on 'unpurged' and does not honour a tape's self-declared "
+       "status — so a later reader can check the reasoning, not just the value")
+    _keep_e = GOVERNED_STATES[GATE_GOVERNED_EMBARGO]
+    GOVERNED_STATES[GATE_GOVERNED_EMBARGO] = None
+    try:
+        _und = _try_preds_raw(_full_states())
+    finally:
+        GOVERNED_STATES[GATE_GOVERNED_EMBARGO] = _keep_e
+    ok("has not been DECLARED" in _und,
+       "R-302 KNOWN-BAD: with a governed state UNDECLARED, even a PERFECT "
+       "verdict is REFUSED — the refusal is the declaration's absence, not the "
+       "verdict's fault, and it keeps a future governed name from defaulting "
+       "silently")
+
     def _try_preds(preds, extra=None):
         (_d4 / "da_verdict_probe.json").write_text(json.dumps(
             {"predicates": [{"predicate": n, "applicable": True, "pass": q}
@@ -942,13 +1079,17 @@ def selftest() -> int:
              "all_pass": all(q for _, q in preds),
              "tape_path": str(_tape), "tape_sha256_prefix": _tsha}))
         _oo = globals()["DERIVED"]
+        _kk = GOVERNED_STATES[GATE_GOVERNED_EMBARGO]
         try:
             globals()["DERIVED"] = _d4
+            GOVERNED_STATES[GATE_GOVERNED_EMBARGO] = {
+                "applicable": True, "pass": False, "why": "TEST-SCOPE ONLY"}
             load_gate_verdict(_tape, _expf); return ""
         except DiagnosticRefused as e:
             return str(e)
         finally:
             globals()["DERIVED"] = _oo
+            GOVERNED_STATES[GATE_GOVERNED_EMBARGO] = _kk
     _EXC = set(DIAGNOSTIC_PREDICATE_EXCLUSIONS)
     _full = [(n, n not in _EXC) for n in sorted(GATE_REQUIRED_PREDICATES)]
     ok(_try_preds(_full) == "",
@@ -967,14 +1108,18 @@ def selftest() -> int:
          "all_pass": False, "tape_path": str(_tape),
          "tape_sha256_prefix": "short"}))
     _o2 = globals()["DERIVED"]
+    _k3 = GOVERNED_STATES[GATE_GOVERNED_EMBARGO]
     try:
         globals()["DERIVED"] = _d4
+        GOVERNED_STATES[GATE_GOVERNED_EMBARGO] = {
+            "applicable": True, "pass": False, "why": "TEST-SCOPE ONLY"}
         try:
             load_gate_verdict(_tape, _expf); _gh = ""
         except DiagnosticRefused as e:
             _gh = str(e)
     finally:
         globals()["DERIVED"] = _o2
+        GOVERNED_STATES[GATE_GOVERNED_EMBARGO] = _k3
     ok("well-formed tape_sha256_prefix" in _gh,
        "FD4 KNOWN-BAD: a malformed subject hash REFUSES — an unbound subject "
        "means the verdict could be about any tape")
@@ -1012,9 +1157,10 @@ def selftest() -> int:
                       if n != "gap_count_matches_expected"],
                      extra=[{"predicate": "gap_count_matches_expected",
                              "applicable": False, "pass": False}])
-    ok("NOT APPLICABLE" in _na,
-       "FD4 KNOWN-BAD: a required check marked applicable=false REFUSES — a "
-       "waiver is not a pass, and relabelling would let any check be skipped")
+    ok("not applicable" in _na.lower(),
+       "FD4 KNOWN-BAD: a required check marked applicable=false REFUSES — DA "
+       "pins the applicability vector ALL-TRUE for this population, so a "
+       "waiver is not a pass and relabelling cannot skip a check")
     _noapp = _try_preds([(n, q) for n, q in _full if n != "dataset_non_empty"],
                         extra=[{"predicate": "dataset_non_empty",
                                 "pass": False}])
@@ -1022,6 +1168,53 @@ def selftest() -> int:
        "FD4 KNOWN-BAD: a predicate emitted WITHOUT the applicable key defaults "
        "to TRUE as DA's writer does — my reader defaulted it to False, silently "
        "dropping a governed check from the denominator")
+
+    # F1 (R-319): an exclusion permits FAILURE, never disappearance or a pass
+    ok(_with_declared(lambda: _try_preds_raw(_full_states())) == "",
+       "F1 POSITIVE CONTROL: the exact ruled shape — both exclusions "
+       "applicable-and-FAILING, everything else applicable-and-passing — is "
+       "consumed")
+    _bs = _with_declared(lambda: _try_preds_raw(_full_states(
+        {"both_splits_populated": {"applicable": False, "pass": False}})))
+    ok("applicable=False" in _bs or "NOT APPLICABLE" in _bs or "declared state" in _bs,
+       f"F1 KNOWN-BAD: an EXCLUSION marked N/A is REFUSED — DA declares "
+       f"both_splits_populated always-applicable and non-waivable, so R-310 "
+       f"permits its FAILURE, not its DISAPPEARANCE ({_bs[:44]})")
+    _bp = _with_declared(lambda: _try_preds_raw(_full_states(
+        {"both_splits_populated": {"applicable": True, "pass": True}})))
+    ok(_bp != "",
+       "F1 KNOWN-BAD: an EXCLUSION that PASSES is REFUSED — the ruling "
+       "describes a specific expected shape, not a ceiling, and a surprise "
+       "pass is as much a surprise as a missing failure")
+    _ef = _with_declared(lambda: _try_preds_raw(_full_states(
+        {"dataset_non_empty": {"applicable": True, "pass": False}})))
+    ok("NOT on the policy exclusion list" in _ef,
+       "F1 KNOWN-BAD: an EXTRA failure beyond the ruled pair is REFUSED (by the "
+       "unexcused check, which reaches it first — the failed-set equality "
+       "catches the other direction, an exclusion that PASSES)")
+    ok(set(DIAGNOSTIC_PREDICATE_EXCLUSIONS) == {"both_splits_populated",
+                                                GATE_GOVERNED_EMBARGO},
+       "F1 the two checks together pin the failed set from BOTH sides: no extra "
+       "failures (unexcused) and no missing ones (failed-set equality)")
+
+    # F2: a NEW predicate declared N/A slipped through every earlier check
+    _nna = _with_declared(lambda: _try_preds_raw(
+        _full_states(), extra=[{"predicate": "brand_new_check",
+                                "applicable": False, "pass": False}]))
+    ok("N/A or" in _nna or "inert" in _nna,
+       "F2 KNOWN-BAD: a NON-GOVERNED predicate declared N/A is REFUSED — it is "
+       "not governed, so it was excluded from `applicable` and never reached "
+       "the failure check; additional may not mean inert")
+    _nnf = _with_declared(lambda: _try_preds_raw(
+        _full_states(), extra=[{"predicate": "brand_new_check",
+                                "applicable": True, "pass": False}]))
+    ok(_nnf != "",
+       "F2 KNOWN-BAD: a NON-GOVERNED predicate that FAILS is REFUSED")
+    ok(_with_declared(lambda: _try_preds_raw(
+        _full_states(), extra=[{"predicate": "brand_new_check",
+                                "applicable": True, "pass": True}])) == "",
+       "F2 POSITIVE CONTROL: a new predicate that is applicable AND passing is "
+       "allowed — the universe is a minimum, not a closed set")
 
     # FD3: the reconcile boolean is READ, not merely reported
     ok("recon[\"reconciles\"]" in inspect.getsource(score_stage),
@@ -1257,17 +1450,77 @@ def load_gate_verdict(tape_path: Path, exposure_path: Path) -> dict:
     # must be APPLICABLE and PASSING. A required check marked applicable=false
     # is a waiver, and a waiver is not a pass.
     by = {p.get("predicate"): p for p in preds}
-    illegal_na = sorted(
-        n for n in GATE_REQUIRED_PREDICATES
-        if not by[n].get("applicable", True)
-        and n not in DIAGNOSTIC_PREDICATE_EXCLUSIONS)
-    if illegal_na:
+    # F1: EXACT STATES. The previous form skipped the exclusions entirely when
+    # checking applicability, so an exclusion marked N/A was ACCEPTED — the list
+    # was acting as a WAIVER rather than as permission-to-fail. An exclusion
+    # that PASSED was accepted too, because the failed set was never pinned.
+    undeclared = sorted(n for n, st in GOVERNED_STATES.items() if st is None)
+    if undeclared:
         raise DiagnosticRefused(
-            f"REFUSED: governed predicate(s) {illegal_na} are marked "
-            f"NOT APPLICABLE. Only the ruled exclusions "
-            f"{sorted(DIAGNOSTIC_PREDICATE_EXCLUSIONS)} may be waived here; "
-            f"declaring a required check inapplicable would let any check be "
-            f"skipped by relabelling it.")
+            f"REFUSED: the required state of governed predicate(s) {undeclared} "
+            f"has not been DECLARED. Defaulting it here would be inference "
+            f"standing in for a declaration (R-302); the owner declares it.")
+    for n, st in GOVERNED_STATES.items():
+        got_app = by[n].get("applicable", True)
+        got_pass = by[n].get("pass")
+        if got_app != st["applicable"] or bool(got_pass) != st["pass"]:
+            raise DiagnosticRefused(
+                f"REFUSED: governed predicate {n!r} is "
+                f"applicable={got_app!r} pass={got_pass!r}, but its declared "
+                f"state is applicable={st['applicable']} pass={st['pass']}. "
+                f"{st['why']}")
+    # DA's pin: not_applicable must be an EMPTY LIST. A name parked there is a
+    # governed check that ran nowhere.
+    if GATE_NOT_APPLICABLE_MUST_BE_EMPTY and (v.get("not_applicable") or []):
+        raise DiagnosticRefused(
+            f"REFUSED: the verdict declares not_applicable="
+            f"{v.get('not_applicable')!r}, but DA pins it EMPTY for this "
+            f"population. A predicate parked in not_applicable is a governed "
+            f"check that ran nowhere.")
+    # DA's pin: EVERY governed predicate is applicable for this population.
+    non_applicable = sorted(n for n in GATE_REQUIRED_PREDICATES
+                            if not by[n].get("applicable", True))
+    if non_applicable:
+        raise DiagnosticRefused(
+            f"REFUSED: governed predicate(s) {non_applicable} are not "
+            f"applicable, but DA pins the applicability vector ALL-TRUE for the "
+            f"v4 fragment population. Both exclusions are APPLICABLE FAILURES, "
+            f"not waivers.")
+    non_excl_na = sorted(
+        n for n in GATE_REQUIRED_PREDICATES
+        if n not in GOVERNED_STATES and not by[n].get("applicable", True))
+    if non_excl_na:
+        raise DiagnosticRefused(
+            f"REFUSED: governed predicate(s) {non_excl_na} are marked NOT "
+            f"APPLICABLE. A waiver is not a pass, and relabelling would let any "
+            f"check be skipped.")
+    # The failed set must be EXACTLY the ruled pair — no more, and no fewer.
+    if set(failed) != set(DIAGNOSTIC_PREDICATE_EXCLUSIONS):
+        raise DiagnosticRefused(
+            f"REFUSED: the recomputed failed set is {sorted(failed)}, not "
+            f"exactly the ruled exclusions "
+            f"{sorted(DIAGNOSTIC_PREDICATE_EXCLUSIONS)}. An exclusion that "
+            f"PASSES is as much a surprise as one that is missing: the ruling "
+            f"describes a specific expected shape, not a ceiling.")
+    # F2: ADDITIONAL predicates must be unique, applicable and passing. One
+    # declared N/A slipped through every check — not governed, so excluded from
+    # `applicable`, so never reaching `unexcused`.
+    extra_bad = sorted(
+        p.get("predicate") for p in preds
+        if p.get("predicate") not in GATE_REQUIRED_PREDICATES
+        and (not p.get("applicable", True) or not p.get("pass")))
+    if extra_bad:
+        raise DiagnosticRefused(
+            f"REFUSED: non-governed predicate(s) {extra_bad} are N/A or "
+            f"failing. A predicate outside the governed set is still a check "
+            f"the gate chose to run; it may be additional, it may not be "
+            f"inert.")
+    extra_dupes = sorted(n for n, c in counts.items()
+                         if c > 1 and n not in GATE_REQUIRED_PREDICATES)
+    if extra_dupes:
+        raise DiagnosticRefused(
+            f"REFUSED: non-governed predicate(s) {extra_dupes} appear more than "
+            f"once.")
     # FD4: a well-formed subject hash is MANDATORY, not optional.
     if not isinstance(v.get("tape_sha256_prefix"), str) or \
             len(v["tape_sha256_prefix"]) < 16:
@@ -1478,6 +1731,14 @@ def rejoin_source_fields(kept: list, exposure_path: Path) -> dict:
     status=='OK' only.
     """
     import harmful_hazard_model as _hm
+    # F3: VALIDATE BEFORE ANY RECONSTRUCTION. The validator was wired AFTER the
+    # keptrow loop it exists to protect, so a malformed scalar latency cell
+    # raised a raw AttributeError ('int' object has no attribute 'get') before
+    # the controlled refusal could fire. Rule 17 verbatim in my own code: ten
+    # green falsifiers, every one calling the validator DIRECTLY, so not one of
+    # them could see the wiring order. A check placed after the thing it guards
+    # is not a check.
+    valinputs = assert_valuation_inputs(kept, D.TARGET_LATENCY_MS)
     src: dict = {}
     for r in PA._stream_tape_rows(Path(exposure_path)):
         if r.get("status") != "OK":
@@ -1505,8 +1766,6 @@ def rejoin_source_fields(kept: list, exposure_path: Path) -> dict:
         # Joining the raw field would have made a THIRD rule. `latency` IS in
         # the projection, so the canonical derivation is available here.
         row[VALUATION_GATE] = _hm.keptrow(row)[VALUATION_GATE]
-    # Validate the INPUTS before reconstructing the gate from them.
-    valinputs = assert_valuation_inputs(kept, D.TARGET_LATENCY_MS)
     seen_keys: dict = {}
     for row in kept:
         k = (row.get("slug"), row.get("side"), row.get("gen"),
