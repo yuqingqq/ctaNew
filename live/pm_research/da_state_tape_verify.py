@@ -61,6 +61,7 @@ EMBARGO_S = 60.0          # the manifest's declared split_embargo_s
 #: `all_pass: true` and the consumer accepted it. The third state built to
 #: avoid certifying the unchecked became the mechanism for certifying it.
 LOAD_BEARING = (
+    "both_splits_populated",
     "gap_count_matches_expected",
     "provenance_matches_expected",
     "dataset_non_empty",
@@ -725,6 +726,30 @@ def _predicates(schema, n_rows, under, present, statuses, bn_vals, pair_bad,
     # real defect. Reported as a THIRD verdict state, never as a pass: an N/A
     # that counted as a pass would be this gate certifying something it has not
     # checked, which is the failure it exists to prevent.
+    # BOTH SPLITS POPULATED -- a NON-WAIVABLE precondition, not a predicate
+    # the embargo's applicability can carry away.
+    #
+    # The embargo predicate already fails on an empty split -- but ONLY when it
+    # is applicable, and a tape declaring itself unpurged marks it N/A and
+    # drops it from all_pass. Nothing else looked at the split counts, so a
+    # tape with ZERO training rows and a declared-unpurged embargo certified.
+    # Verified by isolation rather than assumed: a zero-train fixture and a
+    # both-splits fixture failed on the IDENTICAL five unrelated predicates,
+    # so the gate could not tell them apart.
+    #
+    # An empty train side also makes the embargo margin VACUOUS -- there is no
+    # last training exit, so the gap is infinite and any bound is satisfied by
+    # having nothing to satisfy it with (the preflight's infinity-embargo).
+    #
+    # ALWAYS APPLICABLE, so it cannot be waived, and LOAD_BEARING so it cannot
+    # be quietly dropped.
+    p("both_splits_populated",
+      bool(split_seen["train"]) and bool(split_seen["score"]),
+      f"train {split_seen['train']} rows, score {split_seen['score']} rows. A "
+      f"tape missing either side cannot be CERTIFIED: the embargo margin is "
+      f"vacuous over an empty train side (no last exit, so any bound passes "
+      f"on nothing), and the embargo predicate that would have caught it goes "
+      f"N/A whenever the tape declares itself unpurged.")
     hdr_emb = (header or {}).get("embargo") or {}
     declared_unpurged = "unpurged" in str(hdr_emb.get("state", "")).lower()
     if declared_unpurged:
@@ -1701,6 +1726,63 @@ def _selftests() -> int:
         ok(not _try(other_na),
            "any OTHER N/A is refused -- the permitted set is a list of one, so "
            "a future exception needs a ruling rather than an argument")
+
+    # ---- CERTIFIED-over-empty-train is a refusal class (R-306) ----------
+    import tempfile as _tfe
+    _SCHE = DERIVED / "da_pred_state_v1_schema.json"
+    if _SCHE.exists():
+        _sce = json.loads(_SCHE.read_text())
+        _fte = [f for f in _sce["emitted_fields"]
+                if f not in set(_sce.get("identity_fields", []))]
+
+        def _re(i, split):
+            st = {f: (0.0 if f != "state_status" else "OK") for f in _fte}
+            for _n, _fl in _sce["nullable_fields_and_their_flags"].items():
+                st[_fl] = 0.0
+            return {"slug": "s", "t0": 1787650200, "gen": i, "split": split,
+                    "state": st}
+
+        _HE = {"features_under": "state", "protocol": "PHASE2_STATE_TAPE_V5",
+               "pre_emission_skip_counts": {},
+               "required_inputs_supplied": {"gaps": True, "bn_recv_ns": True},
+               # the tape DECLARES itself unpurged, which sends
+               # embargo_respected to N/A and out of all_pass
+               "embargo": {"state": "VIOLATED (unpurged): gap -8.1s < 60.0s"}}
+        with _tfe.TemporaryDirectory() as _td:
+            def _mk(name, rows):
+                f = Path(_td) / name
+                f.write_text(json.dumps(dict(_HE, rows=rows)), encoding="utf-8")
+                return verify(f, _SCHE)
+
+            _nt = _mk("notrain.json", [_re(i, "score") for i in range(5)])
+            _bs = _mk("both.json", [_re(0, "train"), _re(1, "score")])
+            _q = lambda v: [x for x in v["predicates"]
+                            if x["predicate"] == "both_splits_populated"][0]
+            _emb = lambda v: [x for x in v["predicates"]
+                              if x["predicate"] == "embargo_respected"][0]
+            ok(not _q(_nt)["pass"] and _q(_nt).get("applicable", True),
+               "CERTIFIED-OVER-EMPTY-TRAIN: a tape with ZERO training rows "
+               "fails `both_splits_populated`, and the predicate is ALWAYS "
+               "APPLICABLE so the embargo's N/A cannot carry it away")
+            ok(not _emb(_nt).get("applicable", True),
+               "...and that matters because on this very tape "
+               "`embargo_respected` IS N/A -- the tape declares itself "
+               "unpurged, so the one predicate that would have caught an empty "
+               "split is excluded from all_pass")
+            ok(_q(_bs)["pass"],
+               "positive control: a tape with BOTH splits populated passes it")
+            ok("both_splits_populated" in LOAD_BEARING,
+               "and it is LOAD_BEARING, so it cannot be quietly dropped from "
+               "the asserted set")
+            _fn = lambda v: {x["predicate"] for x in v["predicates"]
+                             if x.get("applicable", True) and not x["pass"]}
+            ok(_fn(_nt) != _fn(_bs),
+               f"THE GATE NOW DISTINGUISHES THEM. Before this, both fixtures "
+               f"failed on the IDENTICAL five unrelated predicates, so the "
+               f"empty-train case was only INCIDENTALLY caught by an "
+               f"incomplete fixture -- a real tape satisfying those five would "
+               f"have certified. Verified by isolation, not by reading the "
+               f"first False")
 
     # ---- T1/T2: the fix was BYPASSED, and EOF read as completion --------
     import tempfile as _tfp
