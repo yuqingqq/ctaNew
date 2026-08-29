@@ -4916,3 +4916,37 @@ pre-run re-review.
 
 **NEXT:** pre-run re-review → synthetic seam → the single `--score` run
 (`--reason` required, existing output refused).
+
+#### 2026-08-29 delta — ragged rows, and a docstring that lies
+
+**`encode_row` PROMISES A RAISE IT DOES NOT PERFORM** (`phase2_state_schema_freeze`,
+an **identity file** — filed, not fixed). Its docstring: *"If a None arrives with
+no guard, that is a schema break and it raises."* The code appends `0.0`
+unconditionally. Consequence, measured:
+
+```
+row declaring 1 of 45 fields -> 45-length vector, ZERO Nones
+bn_feed_age_s   = 0.0
+bn_feed_missing = 0.0      <- "NOT missing"
+```
+
+The guard flag is itself an absent field, so it also encodes 0.0. The model is
+told the value is genuinely zero **and** present — the exact distinction the
+guard pair exists to preserve. **A ragged row does not degrade the score, it lies
+to it.** Fixing it moves `fit_code_sha256_prefix`; it sits on the identity queue
+beside the `evaluate_policy` tie-order fix.
+
+**R-313 — the diagnostic no longer trusts the gate on this point.** `_index_tape`
+refuses any row whose declared field count ≠ the pinned 45. Base rate measured
+BEFORE choosing the predicate (120k rows: every status declares all 45, so strict
+equality cannot refuse a legitimate partial). Verified on the real tape:
+**472,413 entries indexed clean, no refusal** — it discriminates rather than
+refuses.
+
+**R-310 binding needs no change** — tested, not recalled: a new predicate that
+PASSES is accepted, one that FAILS refuses, the ruled pair alone is accepted.
+That *is* the ruled semantics. (I had claimed it was name-strict; it isn't.)
+
+**On re-binding a superseding verdict:** re-derive `all_pass` from the NEW
+predicate table; never diff against the old. An artifact that happens to agree
+with its predecessor is not thereby verified.
