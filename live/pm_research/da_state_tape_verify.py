@@ -61,6 +61,7 @@ EMBARGO_S = 60.0          # the manifest's declared split_embargo_s
 #: `all_pass: true` and the consumer accepted it. The third state built to
 #: avoid certifying the unchecked became the mechanism for certifying it.
 LOAD_BEARING = (
+    "per_row_conformance_exact",
     "both_splits_populated",
     "gap_count_matches_expected",
     "provenance_matches_expected",
@@ -210,7 +211,22 @@ def _stream_array(path: Path, key: str) -> Iterator[dict[str, Any]]:
                         keep = pos + 1
                         start = None
                 elif c == "]" and depth == 0:
+                    # T2-R1: THE ARRAY CLOSING IS NOT THE OBJECT CLOSING. This
+                    # returned the moment it saw `]`, so `{"rows":[...]` with
+                    # the outer `}` MISSING was accepted as complete -- the
+                    # same truncation the `]` check exists to catch, one
+                    # bracket further out. Trailing garbage after the object
+                    # was accepted too.
                     closed = True
+                    tail = buf[pos + 1:] + fh.read()
+                    if tail.strip() != "}":
+                        raise GateRefused(
+                            f"{path.name}: the rows array closed but the "
+                            f"OUTER OBJECT did not close cleanly -- expected "
+                            f"whitespace then '}}' then EOF, found "
+                            f"{tail.strip()[:40]!r}. A file that ends mid-object "
+                            f"or carries trailing bytes is not a complete "
+                            f"tape, and the array's `]` says nothing about it.")
                     return
                 pos += 1
     # EOF BEFORE THE CLOSING BRACKET IS TRUNCATION, NOT COMPLETION.
@@ -943,8 +959,36 @@ def verify(tape: Path, schema_path: Path = SCHEMA, ledger: Path | None = None,
     #
     # So conformance runs INCREMENTALLY over every streamed row -- one set
     # intersection per row, on a stream that already does more work than that.
+    # THE EXACT CARRIED SET, not "at least one". The whole-stream check tested
+    # `declared & row` NON-EMPTY, so a row carrying ONE field of 48 passed --
+    # and the distribution that PROVES the raggedness ({2:1, 48:400}) was
+    # REPORTED WITHOUT ENTERING THE VERDICT. A reported failure that does not
+    # enter the verdict is not a gate; that is the decorative-field defect I
+    # filed against my own parity battery, one notch further in.
+    #
+    # The set is DERIVED: schema features minus the reductions the header
+    # DECLARES via `features_in_order` -- the same derivation
+    # `no_undeclared_reduction` uses, so the row-level rule and the tape-level
+    # rule cannot disagree about what should be there.
     _declared = set(schema["emitted_fields"]) - set(
         schema.get("identity_fields", []))
+    _carried_hdr = (header or {}).get("features_in_order")
+    # NAMED `_exact_set`, not `_exact`: the streaming loop ALREADY binds
+    # `_exact` from GC.at_upper_edge (a BOOL). My first version reused the
+    # name, so the carried set was OVERWRITTEN BY A BOOLEAN on the first row
+    # carrying coin/t0/t_start -- and every synthetic fixture lacked those
+    # fields, so ONLY THE REAL-TAPE REGRESSION exposed it.
+    # `features_in_order` lists FEATURES ONLY. Every row also carries the
+    # STATUS and CLOCK fields, which are emitted and declared but are not
+    # features -- so `declared & features_in_order` under-counts by exactly
+    # {state_status, decision_time, feature_asof} and my first definition
+    # rejected all 1,764,206 rows of a known-good tape. Derived from the
+    # SCHEMA, never from the rows: taking the union over observed rows would
+    # define conformance as "whatever the tape contains", which is not a check.
+    _non_feature = ({schema["status_field"]}
+                    | set(schema.get("CLOCK_BASIS") or {})) & _declared
+    _exact_set = ((_declared & set(_carried_hdr)) | _non_feature
+                  if _carried_hdr else _declared)
     _nonconf, _first_nonconf, _featdist = 0, None, collections.Counter()
 
     import itertools
@@ -956,10 +1000,18 @@ def verify(tape: Path, schema_path: Path = SCHEMA, ledger: Path | None = None,
                      **{k: v for k, v in raw.items() if k != under})
         _here = _declared & set(r)
         _featdist[len(_here)] += 1
-        if not _here:
+        # EQUALITY, both directions. Missing fields AND unexpected extras are
+        # conformance failures; "non-empty" accepted a row with 2 of 48.
+        if _here != _exact_set:
             _nonconf += 1
             if _first_nonconf is None:
-                _first_nonconf = (n_rows - 1, sorted(set(raw))[:6])
+                _first_nonconf = {
+                    "row_index": n_rows - 1,
+                    "identity": {k: raw.get(k) for k in
+                                 ("slug", "t0", "gen", "split")},
+                    "n_carried": len(_here), "n_expected": len(_exact_set),
+                    "missing": sorted(_exact_set - _here)[:8],
+                    "extra": sorted(_here - _exact_set)[:8]}
         statuses[str(r.get(schema["status_field"], "__ABSENT__"))] += 1
         b = r.get("bn_feed_age_s")
         if b is not None and len(bn_vals) < 64:
@@ -1007,19 +1059,33 @@ def verify(tape: Path, schema_path: Path = SCHEMA, ledger: Path | None = None,
     if _nonconf:
         raise GateRefused(
             f"PER-ROW CONFORMANCE FAILED ON THE PRODUCTION STREAM: "
-            f"{_nonconf} of {n_rows} rows carry NO declared feature after "
-            f"flattening (first at index {_first_nonconf[0]}, keys "
-            f"{_first_nonconf[1]}). Feature-count distribution: "
-            f"{dict(sorted(_featdist.items()))}. REFUSING: those rows would "
-            f"have been iterated as empty and passed silently -- the defect "
-            f"the locator exists to prevent, reached through the streaming "
-            f"path that bypassed it.")
+            f"{_nonconf} of {n_rows} rows do not carry the EXACT declared "
+            f"feature set ({len(_exact_set)} fields). First offender: "
+            f"{json.dumps(_first_nonconf, sort_keys=True)}. Distribution: "
+            f"{dict(sorted(_featdist.items()))}. REFUSING: a row short of the "
+            f"declared set is iterated with fields silently absent, and the "
+            f"previous rule -- non-empty -- admitted a row carrying ONE field "
+            f"of {len(_exact_set)}.")
+    # AND AS A LOAD-BEARING PREDICATE. The refusal above stops a ragged tape;
+    # this makes the CLEAN case an ASSERTION in the table rather than the mere
+    # absence of a refusal -- "absence of a check is not a passed check".
+    _conformance_pred = {
+        "predicate": "per_row_conformance_exact", "applicable": True,
+        "pass": _nonconf == 0 and n_rows > 0
+                and set(_featdist) == {len(_exact_set)},
+        "detail": (f"every one of {n_rows} rows carries the EXACT declared set "
+                   f"of {len(_exact_set)} fields; distribution "
+                   f"{dict(sorted(_featdist.items()))}"
+                   if _nonconf == 0 else
+                   f"{_nonconf} of {n_rows} rows deviate; distribution "
+                   f"{dict(sorted(_featdist.items()))}")}
     preds = _predicates(schema, n_rows, under, present, statuses, bn_vals,
                         pair_bad, asof_checked, asof_viol, tr_max, sc_min,
                         split_seen, gapped_slugs_expected, header,
                         expect_gap_count, expect_provenance,
                         (at_g1_present, at_g1_flagged),
                         (at_g0_present, at_g0_flagged), expect_ledger_sha)
+    preds.insert(0, _conformance_pred)
     return {"gate": "da_state_tape_verify_v1", "tape": str(tape),
             "gate_code": gate_code_identity(),
             "schema_family": schema["family"], "n_rows": n_rows,
@@ -1726,6 +1792,142 @@ def _selftests() -> int:
         ok(not _try(other_na),
            "any OTHER N/A is refused -- the permitted set is a list of one, so "
            "a future exception needs a ruling rather than an argument")
+
+    # ---- T1 residual: EXACT set equality, and the outer close (R-312) ---
+    import tempfile as _tfx
+    _SCHX = DERIVED / "da_pred_state_v1_schema.json"
+    if _SCHX.exists():
+        _scx = json.loads(_SCHX.read_text())
+        _ftx = [f for f in _scx["emitted_fields"]
+                if f not in set(_scx.get("identity_fields", []))]
+
+        def _rx(i, only=None, status="OK"):
+            st = {f: (0.0 if f != "state_status" else status) for f in _ftx}
+            for _n, _fl in _scx["nullable_fields_and_their_flags"].items():
+                st[_fl] = 0.0
+            if only is not None:
+                st = {k: st[k] for k in list(st)[:only]}
+            return {"slug": "s", "t0": 1787650200, "gen": i,
+                    "split": "train" if i % 2 else "score", "state": st}
+
+        _HX = {"features_under": "state", "protocol": "PHASE2_STATE_TAPE_V5",
+               "pre_emission_skip_counts": {},
+               "required_inputs_supplied": {"gaps": True, "bn_recv_ns": True}}
+        with _tfx.TemporaryDirectory() as _td:
+            def _mkx(name, rows):
+                f = Path(_td) / name
+                f.write_text(json.dumps(dict(_HX, rows=rows)), encoding="utf-8")
+                return f
+
+            _rag = ""
+            try:
+                verify(_mkx("rag.json",
+                            [_rx(i) for i in range(400)] + [_rx(400, only=2)]),
+                       _SCHX)
+            except GateRefused as e:
+                _rag = str(e)
+            ok("EXACT declared feature set" in _rag and "carrying ONE field" in _rag,
+               "T1 RESIDUAL: a row with 2 of 48 fields now REFUSES. The rule "
+               "was `declared & row` NON-EMPTY, so one field of 48 passed -- "
+               "and the distribution that PROVED the raggedness ({2:1, 48:400}) "
+               "was REPORTED WITHOUT ENTERING THE VERDICT. A reported failure "
+               "that does not enter the verdict is not a gate")
+            # THE 45-FOR-48 SUBSTITUTION -- the exact mistake I made. Rows
+            # carrying only the 45 `features_in_order` entries, WITHOUT the
+            # status and clock fields, must refuse: the carried set is the
+            # features PLUS the non-feature emitted fields, derived from the
+            # schema. My first derivation used `declared & features_in_order`
+            # alone and rejected all 1,764,206 rows of a known-good tape --
+            # caught by the REAL-TAPE REGRESSION, not by any fixture.
+            _fio = [f for f in _ftx if f not in
+                    ({_scx["status_field"]} | set(_scx.get("CLOCK_BASIS") or {}))]
+
+            def _rfeat(i):
+                st = {f: 0.0 for f in _fio}
+                return {"slug": "s", "t0": 1787650200, "gen": i,
+                        "split": "train" if i % 2 else "score", "state": st}
+            _HF = dict(_HX, features_in_order=_fio)
+            _sub = Path(_td) / "sub.json"
+            _sub.write_text(json.dumps(dict(_HF, rows=[_rfeat(i) for i in range(3)])),
+                            encoding="utf-8")
+            _subr = ""
+            try:
+                verify(_sub, _SCHX)
+            except GateRefused as e:
+                _subr = str(e)
+            ok("EXACT declared feature set" in _subr and "missing" in _subr,
+               "45-FOR-48 SUBSTITUTION: rows carrying only the "
+               "`features_in_order` entries, WITHOUT status and clock, REFUSE "
+               "and the missing names are reported. The carried set is the "
+               "features PLUS the schema's non-feature emitted fields "
+               "(status_field, CLOCK_BASIS keys), derived from the SCHEMA -- "
+               "taking the union over observed rows would define conformance "
+               "as 'whatever the tape contains', which is not a check")
+            _full = Path(_td) / "full.json"
+            _full.write_text(json.dumps(dict(_HF, rows=[_rx(i) for i in range(3)])),
+                             encoding="utf-8")
+            ok(verify(_full, _SCHX)["per_row_feature_count"] == {len(_ftx): 3},
+               f"positive control: rows carrying all {len(_ftx)} declared "
+               f"fields pass against the same 45-entry features_in_order "
+               f"header -- so the rule distinguishes the two, which is what my "
+               f"first derivation could not")
+
+            _extra = ""
+            try:
+                _r = _rx(400)
+                _r["state"]["not_a_declared_field"] = 1.0
+                verify(_mkx("x.json", [_rx(i) for i in range(400)] + [_r]),
+                       _SCHX)
+            except GateRefused as e:
+                _extra = str(e)
+            ok(_extra == "",
+               "an UNDECLARED extra key is not a conformance failure -- the "
+               "rule is equality on the DECLARED set, and undeclared keys are "
+               "the loader's business, not this predicate's")
+            _clean = verify(_mkx("ok.json", [_rx(i) for i in range(401)]), _SCHX)
+            _cp = [x for x in _clean["predicates"]
+                   if x["predicate"] == "per_row_conformance_exact"][0]
+            ok(_cp["pass"] and _cp.get("applicable", True)
+               and "per_row_conformance_exact" in LOAD_BEARING,
+               "and the CLEAN case is an ASSERTION: per_row_conformance_exact "
+               "is in the table, always applicable, and LOAD_BEARING -- so a "
+               "pass is stated, not merely the absence of a refusal")
+            # POSITIVE CONTROLS FOR EVERY DECLARED NON-OK STATUS, rather than
+            # weakening the rule for them.
+            _statuses = ["PRE_WINDOW", "GAP_AT_CUTOFF", "NO_LEVEL_HISTORY"]
+            _mixed = verify(_mkx("mixed.json",
+                                 [_rx(i, status=_statuses[i % 3])
+                                  for i in range(402)]), _SCHX)
+            _mp = [x for x in _mixed["predicates"]
+                   if x["predicate"] == "per_row_conformance_exact"][0]
+            ok(_mp["pass"],
+               f"POSITIVE CONTROL PER STATUS: rows carrying "
+               f"{_statuses} all satisfy exact conformance. A non-OK row is "
+               f"still a FULL row -- the rule is not weakened for them, it is "
+               f"demonstrated on them")
+
+            _q = {}
+            _body = ",".join(json.dumps(_rx(i)) for i in range(2))
+            for _lbl, _txt in (("complete", '{"rows":[%s]}' % _body),
+                               ("missing_bracket", '{"rows":[%s' % _body),
+                               ("missing_brace", '{"rows":[%s]' % _body),
+                               ("trailing_garbage", '{"rows":[%s]} JUNK' % _body),
+                               ("ws_before_brace", '{"rows":[%s]  \n }' % _body)):
+                _f = Path(_td) / f"q_{_lbl}.json"
+                _f.write_text(_txt, encoding="utf-8")
+                try:
+                    _q[_lbl] = len(list(iter_tape(_f)))
+                except GateRefused:
+                    _q[_lbl] = "REFUSED"
+            ok(_q == {"complete": 2, "missing_bracket": "REFUSED",
+                      "missing_brace": "REFUSED",
+                      "trailing_garbage": "REFUSED", "ws_before_brace": 2},
+               f"T2-R1 QUARTET {_q}: the array's `]` says NOTHING about the "
+               f"OUTER object. `{{\"rows\":[...]` with the closing brace "
+               f"MISSING was accepted as complete -- the same truncation one "
+               f"bracket further out -- and trailing bytes were accepted too. "
+               f"Whitespace before the brace still passes, so the check did "
+               f"not become a wall")
 
     # ---- CERTIFIED-over-empty-train is a refusal class (R-306) ----------
     import tempfile as _tfe
