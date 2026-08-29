@@ -38,6 +38,7 @@ if sys.path and sys.path[0] != _ROOT:
     sys.path.insert(0, _ROOT)
 
 import phase2_arms as PA                              # noqa: E402
+import phase2_declaration as D                        # noqa: E402
 import harmful_exposure_rows as HER                   # noqa: E402
 import harmful_action_eval as HAE                     # noqa: E402
 
@@ -561,6 +562,93 @@ def selftest() -> int:
     import shutil as _sh; _sh.rmtree(_d, ignore_errors=True)
 
     _idn = PA.measured_code_identity()["combined"]
+    # ---- FD1 / R-315 / R-316: the SILENT ZERO cannot come back -----------
+    import tempfile as _tf6, shutil as _sh6
+    import harmful_hazard_model as _hm6
+    _d6 = Path(_tf6.mkdtemp())
+    _LK = str(D.TARGET_LATENCY_MS)
+
+    def _exp(rows):
+        q = _d6 / f"e{abs(hash(json.dumps(rows, sort_keys=True)))}.json"
+        q.write_text(json.dumps({"schema": "be_fragment_exposure_v1",
+                                 "rows": rows}))
+        return q
+
+    def _src(gen, v, shares=1.0, status="OK"):
+        return {"slug": "w", "side": "BUY_UP", "gen": gen, "t_start": float(gen),
+                "day": "d", "t0": 1787897400, "coin": "btc", "status": status,
+                "any_fill_ahead": bool(shares),
+                "latency": {_LK: {"preventable_value_cents": v,
+                                  "preventable_shares": shares,
+                                  "stale_shares": 0.0}}}
+
+    def _proj(r):                      # what _feature_pass actually hands back
+        return {k: r.get(k) for k in ("slug", "day", "t0", "t_start", "side",
+                                      "gen", "latency", "coin")}
+
+    _rows = [_src(1, 50.0), _src(2, -20.0)]
+    _kept = [_proj(r) for r in _rows]
+    ok(all("status" not in k and VALUATION_GATE not in k for k in _kept),
+       "FD1 the projection genuinely lacks BOTH fields — the fixture reproduces "
+       "_feature_pass's own output shape rather than assuming it")
+    _rj = rejoin_source_fields(_kept, _exp(_rows))
+    ok(all(k.get("status") == "OK" and isinstance(k.get(VALUATION_GATE), bool)
+           for k in _kept),
+       f"FD1 POSITIVE CONTROL: the re-join restores status AND a BOOLEAN "
+       f"valuation gate on every kept row ({_rj['valuation_gate_true']} true)")
+    _canon = _hm6.keptrow(_rows[0])[VALUATION_GATE]
+    ok(_kept[0][VALUATION_GATE] == _canon,
+       "FD1 the gate is the CANONICAL reconstruction (hm.keptrow), the same "
+       "composition stage_score runs — joining the raw field would have made a "
+       "THIRD rule for one quantity")
+
+    # THE SILENT ZERO ITSELF: without the gate every cent is 0.0.
+    _ev0 = HAE.evaluate_policy(_kept, [0.9, 0.1], latency_ms=D.TARGET_LATENCY_MS,
+                               budgets=(0.5,), n_random=200)
+    _b0 = list(_ev0["budgets"])[0]
+    _stripped = [{k: v for k, v in r.items() if k != VALUATION_GATE}
+                 for r in _kept]
+    _evz = HAE.evaluate_policy(_stripped, [0.9, 0.1],
+                               latency_ms=D.TARGET_LATENCY_MS,
+                               budgets=(0.5,), n_random=200)
+    ok(_ev0["budgets"][_b0]["net_cents"] != 0.0
+       and _evz["budgets"][_b0]["net_cents"] == 0.0,
+       f"FD1 THE MECHANISM, executed: with the gate net is "
+       f"{_ev0['budgets'][_b0]['net_cents']}, WITHOUT it exactly "
+       f"{_evz['budgets'][_b0]['net_cents']} — a receipt of zeros that reads as "
+       f"a measured negative")
+    try:
+        rejoin_source_fields([_proj(_src(1, 50.0, shares=0.0))],
+                             _exp([_src(1, 50.0, shares=0.0)])); _gz = ""
+    except DiagnosticRefused as e:
+        _gz = str(e)
+    ok("False on ALL" in _gz,
+       "FD1 KNOWN-BAD: a population whose valuation gate is False on EVERY row "
+       "REFUSES — uniformly zero cents is indistinguishable from a broken join "
+       "and must not be published as a negative result")
+    try:
+        rejoin_source_fields(_kept + [_proj(_src(9, 1.0))], _exp(_rows)); _gm = ""
+    except DiagnosticRefused as e:
+        _gm = str(e)
+    ok("NO source row" in _gm,
+       "FD1 KNOWN-BAD: a kept row with NO source row REFUSES rather than being "
+       "silently valued at zero")
+    try:
+        rejoin_source_fields([_kept[0], dict(_kept[0])], _exp(_rows)); _gd = ""
+    except DiagnosticRefused as e:
+        _gd = str(e)
+    ok("MORE THAN" in _gd,
+       "FD1/R-316 KNOWN-BAD: a DUPLICATED kept identity REFUSES — exactly one "
+       "source row per kept row, duplicates as well as misses")
+    try:
+        rejoin_source_fields(_kept, _exp(_rows + [_src(1, 99.0)])); _gs = ""
+    except DiagnosticRefused as e:
+        _gs = str(e)
+    ok("AMBIGUOUS" in _gs,
+       "FD1 KNOWN-BAD: a duplicated SOURCE identity REFUSES — attaching either "
+       "one would be a coin flip recorded as a measurement")
+    _sh6.rmtree(_d6, ignore_errors=True)
+
     # ---- R-313: ragged rows refused INDEPENDENTLY of DA's gate -----------
     import tempfile as _tf5, shutil as _sh5
     import phase2_state_schema_freeze as _PIN5
@@ -591,6 +679,27 @@ def selftest() -> int:
         ok("declares" in _gr and "not the pinned" in _gr,
            f"R-313 KNOWN-BAD: a row declaring {_label} is REFUSED by MY indexer, "
            f"independently of DA's gate")
+    # THE COUNT/IDENTITY GAP — none of the three above exercises it, because
+    # every one of them moves the field COUNT.
+    _sub_keep_guard = {f: 1.0 for f in _fe if f != "bn_feed_age_s"}
+    _sub_keep_guard["not_a_feature"] = 1.0
+    _sub_drop_guard = {f: 1.0 for f in _fe
+                       if f not in ("bn_feed_age_s", "bn_feed_missing")}
+    _sub_drop_guard["x1"] = 1.0
+    _sub_drop_guard["x2"] = 1.0
+    for _lbl, _st in (("value substituted, guard kept", _sub_keep_guard),
+                      ("value AND ITS GUARD substituted", _sub_drop_guard)):
+        ok(len(_st) == len(_fe), f"the {_lbl} fixture PRESERVES the count "
+                                 f"({len(_st)}) — otherwise it would be caught "
+                                 f"by the count alone and prove nothing")
+        try:
+            _index_tape(_tape_with(_st), split="score"); _gs = ""
+        except DiagnosticRefused as e:
+            _gs = str(e)
+        ok("MISSING" in _gs and "EXTRA" in _gs,
+           f"R-313/FD5 KNOWN-BAD: a COUNT-PRESERVING substitution ({_lbl}) is "
+           f"REFUSED, naming the missing and extra fields — counting the fields "
+           f"is not checking them")
     _rag = _PIN5.encode_row({_fe[0]: 7.0}, _fe)
     ok(_rag[1] == 0.0 and len(set(_rag)) == 2,
        "R-313 the reason it matters, asserted not assumed: encode_row turns the "
@@ -925,6 +1034,109 @@ def reconcile_population(kept: list, drops: dict, expected_rows: int) -> dict:
             "state_join_failed": drops.get("state_join_failed", 0)}
 
 
+VALUATION_GATE = "any_fill_ahead"
+
+
+def rejoin_source_fields(kept: list, exposure_path: Path) -> dict:
+    """FD1 (R-315): restore the fields _feature_pass drops.
+
+    _feature_pass returns a PROJECTION --
+      (slug, day, t0, t_start, side, gen, latency, coin)
+    -- which drops BOTH `status` and `any_fill_ahead`. The first is LOUD: the
+    status assertion refuses and the run stops. The second is SILENT and far
+    worse: harmful_action_eval's val() reads
+
+        r.get("any_fill_ahead") and "latency" in r
+
+    so WITHOUT that key every valuation returns 0.0. Measured on a projected
+    row: net_cents 0.0 against 123.0 for the same row carrying the gate. A run
+    in that state completes, writes a receipt, and reports NET ZERO AT EVERY
+    BUDGET -- which reads as "the candidate captured nothing", a clean negative
+    result born from a dropped dictionary key.
+
+    The loud half is what saved the run. This function exists so the quiet half
+    cannot come back.
+
+    HARNESS-SIDE RE-JOIN by row identity from our OWN exposure file: no identity
+    file moves and no rebind is needed. Soundness was MEASURED before this was
+    written -- 472,413 OK rows, all identity keys distinct, none missing either
+    field; only the excluded statuses (GAP_IN_HORIZON, TRUNCATED_HORIZON) lack
+    the gate, and those never reach the join because _feature_pass keeps
+    status=='OK' only.
+    """
+    import harmful_hazard_model as _hm
+    src: dict = {}
+    for r in PA._stream_tape_rows(Path(exposure_path)):
+        if r.get("status") != "OK":
+            continue
+        k = (r.get("slug"), r.get("side"), r.get("gen"), r.get("t_start"))
+        if k in src:
+            raise DiagnosticRefused(
+                f"REFUSED: exposure row identity {k} occurs more than once, so "
+                f"a re-join by identity is AMBIGUOUS. Attaching either one "
+                f"would be a coin flip recorded as a measurement.")
+        src[k] = r.get("status")
+    missed = []
+    for row in kept:
+        k = (row.get("slug"), row.get("side"), row.get("gen"),
+             row.get("t_start"))
+        if k not in src:
+            missed.append(k)
+            continue
+        row["status"] = src[k]
+        # THE GATE IS RECONSTRUCTED, NOT JOINED. hm.keptrow is the CANONICAL
+        # composition -- the same one stage_score runs, which is why the
+        # committed receipts were never affected by this defect. Its own comment
+        # records the prior finding: "ONE definition... this expression and the
+        # builder's bool(fut) were two rules for the same valuation gate."
+        # Joining the raw field would have made a THIRD rule. `latency` IS in
+        # the projection, so the canonical derivation is available here.
+        row[VALUATION_GATE] = _hm.keptrow(row)[VALUATION_GATE]
+    seen_keys: dict = {}
+    for row in kept:
+        k = (row.get("slug"), row.get("side"), row.get("gen"),
+             row.get("t_start"))
+        seen_keys[k] = seen_keys.get(k, 0) + 1
+    dup_kept = sorted(k for k, c in seen_keys.items() if c > 1)
+    if dup_kept:
+        raise DiagnosticRefused(
+            f"REFUSED: {len(dup_kept)} kept row identity/ies occur MORE THAN "
+            f"ONCE (e.g. {dup_kept[:3]}). Each kept row must match EXACTLY ONE "
+            f"source row; a duplicated identity means one outcome is attached "
+            f"to several rows (rule 2).")
+    if missed:
+        raise DiagnosticRefused(
+            f"REFUSED: {len(missed)} kept row(s) found NO source row in "
+            f"{Path(exposure_path).name} (e.g. {missed[:3]}). Every kept row "
+            f"must re-join to exactly one source row; a kept row with no source "
+            f"cannot be valued and must not be silently valued at zero.")
+    # THE SILENT-ZERO KNOWN-BAD, as a live assertion rather than a test-only one.
+    absent = sum(1 for r in kept if VALUATION_GATE not in r)
+    if absent:
+        raise DiagnosticRefused(
+            f"REFUSED: {absent} kept row(s) carry no {VALUATION_GATE!r} after "
+            f"the re-join. val() returns 0.0 without it, so the run would "
+            f"report NET ZERO at every budget and that zero would read as a "
+            f"measured negative rather than as an absent field.")
+    n_true = sum(1 for r in kept if r.get(VALUATION_GATE))
+    if n_true == 0:
+        raise DiagnosticRefused(
+            f"REFUSED: the valuation gate is False on ALL {len(kept):,} kept "
+            f"rows, so every cent would be 0.0 by construction. A uniformly "
+            f"zero receipt is indistinguishable from a broken join and must not "
+            f"be published as a negative result.")
+    return {"rejoined": len(kept), "source_rows_indexed": len(src),
+            "fields_restored": ["status (re-joined by identity)",
+                                VALUATION_GATE + " (RECONSTRUCTED via "
+                                "hm.keptrow — the canonical composition "
+                                "stage_score uses, not a second rule)"],
+            "valuation_gate_true": n_true,
+            "valuation_gate_false": len(kept) - n_true,
+            "why": ("_feature_pass returns a projection that drops both; "
+                    "without the gate every valuation is 0.0 and the receipt "
+                    "reads as a clean negative")}
+
+
 def score_stage(tape_path: Path, exposure_path: Path = None,
                 latency_ms: int = None) -> dict:
     """The diagnostic read. Gated on DA's verdict; both comparators on the
@@ -947,7 +1159,11 @@ def score_stage(tape_path: Path, exposure_path: Path = None,
             f"excluded, which reads as a null result and is an absent one.")
     blk = block_all[COIN]
     kept = blk["kept"]
+    # FD1: restore what the projection dropped BEFORE asserting on it.
+    rejoin = rejoin_source_fields(kept, exposure_path)
     assert_field_readable(kept, "status", str, "post-feature-pass rows")
+    assert_field_readable(kept, VALUATION_GATE, bool,
+                          "the VALUATION GATE — without it every cent is 0.0")
     assert_field_readable(kept, "t0", int, "ABSOLUTE clock component")
     assert_field_readable(kept, "t_start", float, "window-relative component")
 
@@ -1067,6 +1283,7 @@ def score_stage(tape_path: Path, exposure_path: Path = None,
         "candidate": model["verified"],
         "incumbent": inc_model.get("_verified"),
         "population": recon,
+        "rejoin": rejoin,
         "clock_basis_consumed": {
             "tape_declares": gate.get("tape_header_clock_basis"),
             "strata_hour": "ABSOLUTE — harmful_action_eval._hour reads "
@@ -1120,6 +1337,7 @@ def _index_tape(path: Path, split: str = "train") -> dict:
     import phase2_state_schema_freeze as _PIN
     feats = _PIN.build_pin()["features_in_order"]
     _N_PINNED = len(feats)
+    _PINNED_SET = set(feats)
     idx = {}
     for r in PA._stream_tape_rows(Path(path)):
         if r.get("split") != split:
@@ -1141,14 +1359,28 @@ def _index_tape(path: Path, split: str = "train") -> dict:
         # repaired for. It is cheap, it is local, and it means the diagnostic
         # stops trusting a certification for something it reads anyway. Measured
         # on the real tape: every row of EVERY status declares all 45.
-        if len(state) != _N_PINNED:
+        # EXACT SET EQUALITY, not a count. The first version of this check
+        # compared len(state) against the pinned count, and a COUNT-PRESERVING
+        # SUBSTITUTION walked straight through it: drop bn_feed_age_s AND
+        # bn_feed_missing, add two unknown keys, total still 45 -- ACCEPTED,
+        # with the value encoding 0.0 and its guard ALSO 0.0, i.e. "genuinely
+        # zero and present". That is precisely the anti-safe case this check
+        # exists to stop, reached through the gap between COUNT and IDENTITY.
+        # My three original falsifiers (1/45, 44/45, 46/45) all moved the COUNT,
+        # so none of them ever exercised identity: the green was real and the
+        # claim was wider than the green.
+        _have = set(state)
+        if _have != _PINNED_SET:
+            _missing = sorted(_PINNED_SET - _have)
+            _extra = sorted(_have - _PINNED_SET)
             raise DiagnosticRefused(
-                f"REFUSED: tape row {(r.get('slug'), r.get('side'), r.get('gen'))} "
-                f"declares {len(state)} state fields, not the pinned "
-                f"{_N_PINNED}. A ragged row is not a partial measurement -- "
-                f"absent fields encode as 0.0 with their guards ALSO 0.0, so "
-                f"the model reads them as confidently zero rather than "
-                f"unknown.")
+                f"REFUSED: tape row "
+                f"{(r.get('slug'), r.get('side'), r.get('gen'), r.get('t_start'))} "
+                f"declares a state field set that is not the pinned schema. "
+                f"MISSING {_missing}; EXTRA {_extra}. A missing required field "
+                f"encodes as 0.0 and its guard, if also missing, encodes 0.0 "
+                f"meaning NOT MISSING -- the model then reads it as genuinely "
+                f"zero and present. Counting the fields is not checking them.")
         idx[(r["slug"], r["side"], r["gen"], r["t_start"])] = {
             "vec": tuple(_PIN.encode_row(state, feats)) if _st == "OK" else None,
             "status": _st,
