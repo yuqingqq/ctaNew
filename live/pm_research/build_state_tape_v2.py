@@ -369,6 +369,12 @@ def main(fragment_path: Path = None, topup_path: Path = None,
     skip_counts: dict = {}        # PRE-EMISSION: the row never entered at all
     no_token_by_coin_day: dict = {}
     per_split: dict = {}
+    # R-318(3): HASH BEFORE CONSUMING. The stamp was computed at header-write,
+    # AFTER the inputs had been read, so a file rewritten mid-build would be
+    # consumed in one state and stamped in another -- the artifact would then
+    # certify bytes it never used. Hashed here, re-hashed after, and any change
+    # REFUSES rather than being recorded.
+    _in_before = {"train": _sha256_file(FRAG), "score": _sha256_file(TOP)}
     for split, src in (("train", FRAG), ("score", TOP)):
         data = json.loads(src.read_text())
         rows = [r for r in data["rows"] if r["status"] == "OK"]
@@ -504,6 +510,17 @@ def main(fragment_path: Path = None, topup_path: Path = None,
         emb_state = "CERTIFIED" if gap >= EMB.EMBARGO_S else (
             f"VIOLATED (unpurged): gap {gap:.3f}s < {EMB.EMBARGO_S}s")
 
+    _in_after = {"train": _sha256_file(FRAG), "score": _sha256_file(TOP)}
+    _moved = sorted(k for k in _in_before if _in_before[k] != _in_after[k])
+    if _moved:
+        raise SystemExit(
+            f"REFUSED: input(s) {_moved} CHANGED ON DISK during the build "
+            f"(before {[_in_before[k][:16] for k in _moved]} after "
+            f"{[_in_after[k][:16] for k in _moved]}). The rows consumed and the "
+            f"bytes stamped would be different states of the same file, and the "
+            f"artifact would certify inputs it never read.")
+    _in_verified = dict(_in_after)
+
     # RULED PROVENANCE INTERFACE (R-199 seam 20): the LAUNCHER passes
     # BUILD_REF; the builder READS it and writes it VERBATIM. No git at
     # runtime -- `git rev-parse HEAD` reported the MAIN tree's head AT
@@ -534,8 +551,9 @@ def main(fragment_path: Path = None, topup_path: Path = None,
         # against nothing will accept ANY exposure file -- two different ones
         # both "verified". The tape must say which inputs it was actually built
         # from, so the consumer can compare rather than merely compute.
-        "input_sha256": {
-            "train": _sha256_file(FRAG), "score": _sha256_file(TOP)},
+        "input_sha256": _in_verified,
+        "input_hash_protocol": ("hashed BEFORE consumption, re-hashed AFTER, "
+                                "equal or the build REFUSES (R-318(3))"),
         "input_paths": {"train": str(FRAG), "score": str(TOP)},
         "builder_file": Path(__file__).resolve().name,
         "ledger_path": _ledger or str(GC.LEDGER),

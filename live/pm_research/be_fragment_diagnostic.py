@@ -73,10 +73,35 @@ COIN = "btc"
 # R-310). An OMITTED governed predicate REFUSES -- otherwise a gate that simply
 # stopped emitting a check would look like a gate whose check passed, and the
 # consumer would never know the difference.
-GATE_UNIVERSE_VERSION = "fragment_v1"
-GATE_REQUIRED_PREDICATES = frozenset({
-    "dataset_non_empty", "both_splits_populated", "embargo_respected",
-})
+GATE_UNIVERSE_VERSION = "fragment_v2"
+# BIND TO THE SET'S IDENTITY, not to my transcription of its names and not to
+# the gate FILE's hash. DA publishes load_bearing_identity(): a sorted-set
+# sha256 over the load-bearing names, so it is order-independent by
+# construction. Why this and not the alternatives, from DA's own reasoning:
+#   * a transcribed name list goes STALE SILENTLY -- the load-bearing set moved
+#     TWICE TODAY (both_splits_populated under R-306, per_row_conformance_exact
+#     under R-312), so a pin written yesterday would already be wrong;
+#   * gate_code_identity hashes the FILE, so it moves on any comment and cannot
+#     distinguish "the asserted set changed" from "anything changed". A consumer
+#     bound to it either refuses every edit or learns to ignore it, and both
+#     habits end the same way.
+GATE_LOAD_BEARING_IDENTITY = "c499e4efd214a89f"
+# TRANSCRIBED from DA's LOAD_BEARING, not imported — the consumer declares what
+# it requires, and the suite PROVES agreement against DA's live list so drift
+# goes red instead of silently shrinking what this harness checks. Three names
+# was bypassable: DA declares eight load-bearing, so omitting five was ACCEPTED.
+GATE_LOAD_BEARING = (
+    "per_row_conformance_exact",
+    "both_splits_populated",
+    "gap_count_matches_expected",
+    "provenance_matches_expected",
+    "dataset_non_empty",
+    "no_rows_skipped_by_builder",
+    "absorption_within_bound",
+    "half_open_containment_landed",
+)
+GATE_GOVERNED_EMBARGO = "embargo_respected"
+GATE_REQUIRED_PREDICATES = frozenset(GATE_LOAD_BEARING) | {GATE_GOVERNED_EMBARGO}
 
 DIAGNOSTIC_PREDICATE_EXCLUSIONS = {
     "both_splits_populated":
@@ -655,6 +680,24 @@ def selftest() -> int:
            for c in _syn["cells"].values()),
        "R-314(3) the incumbent counterpart is computed on the SAME rows, so "
        "every cell carries a real increment rather than a None")
+    # R-318(2): THE CONTROL PASSED WITH A DEAD INCUMBENT. threshold_mode proves
+    # the PATH ran, not that the ARM did, and a non-None increment is perfectly
+    # compatible with subtracting a column of zeros. Both arms must be shown
+    # ALIVE: finite, NON-CONSTANT score vectors and NON-ZERO economics.
+    _incs = [c["incumbent_net_cents"] for c in _syn["cells"].values()]
+    ok(all(v is not None and v != 0.0 for v in _incs),
+       f"R-318(2) THE INCUMBENT ARM IS ALIVE: its economics are non-zero "
+       f"{_incs} — an all-zero incumbent left every previous assertion green "
+       f"while the arm did nothing")
+    ok(all(c["candidate_net_cents"] != c["incumbent_net_cents"]
+           for c in _syn["cells"].values()),
+       "R-318(2) the two arms DIFFER at every budget — identical columns would "
+       "mean one vector was standing in for both")
+    _sv = _syn.get("score_vectors_alive")
+    ok(_sv and _sv["candidate"]["distinct"] > 1 and _sv["incumbent"]["distinct"] > 1
+       and _sv["candidate"]["all_finite"] and _sv["incumbent"]["all_finite"],
+       f"R-318(2) BOTH score vectors are finite and NON-CONSTANT {_sv} — a "
+       f"constant vector ranks nothing and would still produce cells")
     ok(_syn["status"] == "SYNTHETIC_SELFTEST_NOT_A_RESULT"
        and _syn["provenance"]["real_data_read"] is False,
        "R-314(3) the synthetic receipt CANNOT masquerade as a measurement: it "
@@ -822,10 +865,12 @@ def selftest() -> int:
                                  "rows": []}))
     _tsha = _sha16(_tape)
 
-    def _verdict(fails):
+    def _verdict(fails, names=None, extra=None):
+        names = names or (sorted(GATE_REQUIRED_PREDICATES)
+                          + ["whole_stream_conformance"])
         preds = [{"predicate": n, "applicable": True, "pass": n not in fails}
-                 for n in ("dataset_non_empty", "both_splits_populated",
-                           "embargo_respected", "whole_stream_conformance")]
+                 for n in names]
+        preds += list(extra or [])
         return {"predicates": preds,
                 "all_pass": not fails,
                 "tape_path": str(_tape), "tape_sha256_prefix": _tsha}
@@ -890,10 +935,10 @@ def selftest() -> int:
        f"it against nothing accepted any file ({_ge[:44]})")
 
     # FD4: an OMITTED governed predicate refuses; a NEW passing one is fine
-    def _try_preds(preds):
+    def _try_preds(preds, extra=None):
         (_d4 / "da_verdict_probe.json").write_text(json.dumps(
             {"predicates": [{"predicate": n, "applicable": True, "pass": q}
-                            for n, q in preds],
+                            for n, q in preds] + list(extra or []),
              "all_pass": all(q for _, q in preds),
              "tape_path": str(_tape), "tape_sha256_prefix": _tsha}))
         _oo = globals()["DERIVED"]
@@ -904,8 +949,8 @@ def selftest() -> int:
             return str(e)
         finally:
             globals()["DERIVED"] = _oo
-    _full = [("dataset_non_empty", True), ("both_splits_populated", False),
-             ("embargo_respected", False)]
+    _EXC = set(DIAGNOSTIC_PREDICATE_EXCLUSIONS)
+    _full = [(n, n not in _EXC) for n in sorted(GATE_REQUIRED_PREDICATES)]
     ok(_try_preds(_full) == "",
        "FD4 POSITIVE CONTROL: the governed universe present -> consumed")
     ok(_try_preds(_full + [("brand_new_check", True)]) == "",
@@ -933,6 +978,50 @@ def selftest() -> int:
     ok("well-formed tape_sha256_prefix" in _gh,
        "FD4 KNOWN-BAD: a malformed subject hash REFUSES — an unbound subject "
        "means the verdict could be about any tape")
+
+    # FD4 (R-318): the pin AGREES WITH DA's live declaration, or goes red
+    import da_state_tape_verify as _G
+    _lbi = _G.load_bearing_identity()
+    ok(_lbi["sha256"] == GATE_LOAD_BEARING_IDENTITY,
+       f"FD4 AGREEMENT, RECOMPUTED LIVE: DA's load_bearing_identity is "
+       f"{_lbi['sha256']} and I am pinned to {GATE_LOAD_BEARING_IDENTITY}. A "
+       f"mismatch means the ASSERTED SET moved and my expectations are stale — "
+       f"which is a different fact from 'the gate file changed', and the reason "
+       f"binding to the file hash could not serve")
+    ok(set(GATE_LOAD_BEARING) == set(_G.LOAD_BEARING),
+       f"FD4 my own versioned name list still agrees with DA's live set "
+       f"({len(GATE_LOAD_BEARING)} vs {len(_G.LOAD_BEARING)}) — the identity "
+       f"hash says THAT it moved, the name list says WHICH names I require")
+    ok(_lbi["n"] == len(_G.LOAD_BEARING) == len(GATE_LOAD_BEARING),
+       "FD4 the identity's own count agrees with both lists")
+    import hashlib as _h4
+    _perm = _h4.sha256("\n".join(sorted(reversed(list(_G.LOAD_BEARING))))
+                       .encode()).hexdigest()[:16]
+    ok(_perm == _lbi["sha256"],
+       "FD4 the identity is ORDER-INDEPENDENT by construction (a reversed tuple "
+       "hashes the same), so I need not care how DA writes it")
+    ok(len(GATE_REQUIRED_PREDICATES) == len(_G.LOAD_BEARING) + 1,
+       "FD4 the governed universe is DA's load-bearing set PLUS the governed "
+       "embargo name")
+    _dup = _try_preds(_full, extra=[{"predicate": "dataset_non_empty",
+                                     "applicable": True, "pass": True}])
+    ok("MORE THAN ONCE" in _dup,
+       "FD4 KNOWN-BAD: a DUPLICATED governed predicate REFUSES — two rows for "
+       "one check means one of them decided and nothing says which")
+    _na = _try_preds([(n, q) for n, q in _full
+                      if n != "gap_count_matches_expected"],
+                     extra=[{"predicate": "gap_count_matches_expected",
+                             "applicable": False, "pass": False}])
+    ok("NOT APPLICABLE" in _na,
+       "FD4 KNOWN-BAD: a required check marked applicable=false REFUSES — a "
+       "waiver is not a pass, and relabelling would let any check be skipped")
+    _noapp = _try_preds([(n, q) for n, q in _full if n != "dataset_non_empty"],
+                        extra=[{"predicate": "dataset_non_empty",
+                                "pass": False}])
+    ok(_noapp != "",
+       "FD4 KNOWN-BAD: a predicate emitted WITHOUT the applicable key defaults "
+       "to TRUE as DA's writer does — my reader defaulted it to False, silently "
+       "dropping a governed check from the denominator")
 
     # FD3: the reconcile boolean is READ, not merely reported
     ok("recon[\"reconciles\"]" in inspect.getsource(score_stage),
@@ -1123,7 +1212,10 @@ def load_gate_verdict(tape_path: Path, exposure_path: Path) -> dict:
         raise DiagnosticRefused(
             f"REFUSED: {vpath.name} carries no predicate table; a verdict with "
             f"no evidence cannot be re-derived, only believed.")
-    applicable = [p for p in preds if p.get("applicable")]
+    # DA's writer DEFAULTS APPLICABLE TO TRUE; my reader defaulted it to False,
+    # so a predicate emitted without the key was silently dropped from the
+    # denominator — a contract mismatch that made a governed check vanish.
+    applicable = [p for p in preds if p.get("applicable", True)]
     failed = [p.get("predicate") for p in applicable if not p.get("pass")]
     recomputed = bool(applicable) and not failed
     if recomputed != bool(v.get("all_pass")):
@@ -1146,13 +1238,36 @@ def load_gate_verdict(tape_path: Path, exposure_path: Path) -> dict:
     # FD4: an OMITTED governed predicate refuses. A gate that stops emitting a
     # check is indistinguishable from one whose check passed, unless the
     # consumer declares what it requires to be present.
-    names = {p.get("predicate") for p in preds}
-    absent = sorted(GATE_REQUIRED_PREDICATES - names)
+    from collections import Counter as _C
+    counts = _C(p.get("predicate") for p in preds)
+    absent = sorted(GATE_REQUIRED_PREDICATES - set(counts))
     if absent:
         raise DiagnosticRefused(
             f"REFUSED: the verdict does not contain governed predicate(s) "
             f"{absent} (universe {GATE_UNIVERSE_VERSION}). A predicate that is "
             f"not emitted is not a predicate that passed.")
+    dupes = sorted(n for n in GATE_REQUIRED_PREDICATES if counts[n] > 1)
+    if dupes:
+        raise DiagnosticRefused(
+            f"REFUSED: governed predicate(s) {dupes} appear MORE THAN ONCE. "
+            f"Two rows for one check means one of them decided and nothing says "
+            f"which.")
+    # Each governed name must be in its PERMITTED applicability state. For this
+    # fragment: the two ruled exclusions may fail; every other governed name
+    # must be APPLICABLE and PASSING. A required check marked applicable=false
+    # is a waiver, and a waiver is not a pass.
+    by = {p.get("predicate"): p for p in preds}
+    illegal_na = sorted(
+        n for n in GATE_REQUIRED_PREDICATES
+        if not by[n].get("applicable", True)
+        and n not in DIAGNOSTIC_PREDICATE_EXCLUSIONS)
+    if illegal_na:
+        raise DiagnosticRefused(
+            f"REFUSED: governed predicate(s) {illegal_na} are marked "
+            f"NOT APPLICABLE. Only the ruled exclusions "
+            f"{sorted(DIAGNOSTIC_PREDICATE_EXCLUSIONS)} may be waived here; "
+            f"declaring a required check inapplicable would let any check be "
+            f"skipped by relabelling it.")
     # FD4: a well-formed subject hash is MANDATORY, not optional.
     if not isinstance(v.get("tape_sha256_prefix"), str) or \
             len(v["tape_sha256_prefix"]) < 16:
@@ -1221,6 +1336,8 @@ def load_gate_verdict(tape_path: Path, exposure_path: Path) -> dict:
             "exposure_sha256_prefix": exp_sha,
             "exposure_matches_tape_stamp": True,
             "gate_universe_version": GATE_UNIVERSE_VERSION,
+            "gate_load_bearing_identity": GATE_LOAD_BEARING_IDENTITY,
+            "governed_predicates_required": sorted(GATE_REQUIRED_PREDICATES),
             "tape_header_clock_basis": meta.get("clock_basis"),
             "tape_header_ledger_sha256": meta.get("ledger_sha256"),
             "how_all_pass_was_obtained": "RE-DERIVED from the predicate table, "
@@ -1552,6 +1669,27 @@ def score_stage(tape_path: Path, exposure_path: Path = None,
     # a cutoff resolved from the scored data, i.e. a look-ahead the candidate
     # was not given. That is not a fair comparison; it is a handicap match whose
     # numbers look entirely normal.
+    # R-318(2): a DEAD ARM produces cells too. A constant or non-finite score
+    # vector ranks nothing, yet threshold_mode still reports the frozen mode and
+    # the increment is still a number. Liveness is asserted on the VECTORS.
+    def _alive(v, nm):
+        fin = [x for x in v if isinstance(x, (int, float)) and math.isfinite(x)]
+        return {"n": len(v), "all_finite": len(fin) == len(v),
+                "distinct": len(set(fin)), "arm": nm}
+    alive = {"candidate": _alive(cand, "candidate"),
+             "incumbent": _alive(inc, INCUMBENT_ARM if False else "incumbent")}
+    for nm, a in alive.items():
+        if not a["all_finite"]:
+            raise DiagnosticRefused(
+                f"REFUSED: the {nm} score vector contains non-finite values; "
+                f"they compare False against every threshold and the arm would "
+                f"silently rank nothing.")
+        if a["distinct"] <= 1:
+            raise DiagnosticRefused(
+                f"REFUSED: the {nm} score vector is CONSTANT "
+                f"({a['distinct']} distinct value over {a['n']:,} rows). A "
+                f"constant score ranks nothing, so its cells would be an "
+                f"artifact of tie-breaking rather than a measurement.")
     thetas_c = model["causal_thresholds"]
     thetas_i = inc_model.get("causal_thresholds")
     if not thetas_i:
@@ -1655,6 +1793,7 @@ def score_stage(tape_path: Path, exposure_path: Path = None,
         "incumbent": inc_model.get("_verified"),
         "population": recon,
         "rejoin": rejoin,
+        "score_vectors_alive": alive,
         "clock_basis_consumed": {
             "tape_declares": gate.get("tape_header_clock_basis"),
             "strata_hour": "ABSOLUTE — harmful_action_eval._hour reads "
