@@ -67,6 +67,16 @@ COIN = "btc"
 #
 # SCOPE: this DIAGNOSTIC_NEVER_EVIDENCE binding only. A result-bearing binding
 # requires all_pass, full stop.
+# FD4: the MINIMUM predicate universe this consumer requires, versioned.
+# Additional predicates a newer gate introduces are ALLOWED (they must pass, per
+# R-310). An OMITTED governed predicate REFUSES -- otherwise a gate that simply
+# stopped emitting a check would look like a gate whose check passed, and the
+# consumer would never know the difference.
+GATE_UNIVERSE_VERSION = "fragment_v1"
+GATE_REQUIRED_PREDICATES = frozenset({
+    "dataset_non_empty", "both_splits_populated", "embargo_respected",
+})
+
 DIAGNOSTIC_PREDICATE_EXCLUSIONS = {
     "both_splits_populated":
         "R-303 RULED the empty train split. This diagnostic TRAINS NOTHING — "
@@ -562,6 +572,35 @@ def selftest() -> int:
     import shutil as _sh; _sh.rmtree(_d, ignore_errors=True)
 
     _idn = PA.measured_code_identity()["combined"]
+    # ---- R-314(3): THE END-TO-END POSITIVE CONTROL -----------------------
+    # Nothing called score_stage, so its entire downstream — scoring, the
+    # incumbent, the economics, the cells, the receipt — had never executed. A
+    # suite can be green over a path that cannot run, and this one was.
+    _syn = score_stage(tape_path=None, synthetic=True)
+    ok(bool(_syn.get("cells")) and len(_syn["cells"]) == 3,
+       f"R-314(3) END-TO-END: score_stage runs to RECEIPT CELLS "
+       f"({len(_syn.get('cells', {}))} budgets) — the path that had never "
+       f"executed now executes every suite run")
+    _cands = [c["candidate_net_cents"] for c in _syn["cells"].values()]
+    ok(all(v is not None and v != 0.0 for v in _cands),
+       f"R-314(3) THE CELLS ARE NON-ZERO {_cands} — a positive control that "
+       f"reached 'receipt cells' with every cell zero would PASS while proving "
+       f"nothing, which is the silent-zero failure it exists to detect")
+    ok(all(c["threshold_mode_candidate"] == CAUSAL_MODE
+           and c["threshold_mode_incumbent"] == CAUSAL_MODE
+           for c in _syn["cells"].values()),
+       f"R-314(3) BOTH ARMS ran {CAUSAL_MODE} end-to-end — the FD-R3 look-ahead "
+       f"cannot reappear silently")
+    ok(all(c["increment_vs_incumbent_cents"] is not None
+           for c in _syn["cells"].values()),
+       "R-314(3) the incumbent counterpart is computed on the SAME rows, so "
+       "every cell carries a real increment rather than a None")
+    ok(_syn["status"] == "SYNTHETIC_SELFTEST_NOT_A_RESULT"
+       and _syn["provenance"]["real_data_read"] is False,
+       "R-314(3) the synthetic receipt CANNOT masquerade as a measurement: it "
+       "says so in the status and in real_data_read, the fields a reader looks "
+       "at first")
+
     # ---- FD1 / R-315 / R-316: the SILENT ZERO cannot come back -----------
     import tempfile as _tf6, shutil as _sh6
     import harmful_hazard_model as _hm6
@@ -710,9 +749,17 @@ def selftest() -> int:
     # ---- R-310: the exclusion-list binding -------------------------------
     import tempfile as _tf4, shutil as _sh4
     _d4 = Path(_tf4.mkdtemp())
+    # a SEPARATE exposure fixture: a file cannot contain its own hash, and
+    # making the tape its own exposure input was circular by construction.
+    _expf = _d4 / "exposure.json"
+    _expf.write_text(json.dumps({"schema": "be_fragment_exposure_v1",
+                                 "rows_by_status": {"OK": 0}, "rows": []}))
+    _expsha = hashlib.sha256(_expf.read_bytes()).hexdigest()
     _tape = _d4 / "t.json"
     _tape.write_text(json.dumps({"protocol": "PHASE2_STATE_TAPE_V5",
-                                 "clock_basis": {}, "rows": []}))
+                                 "clock_basis": {},
+                                 "input_sha256": {"score": _expsha},
+                                 "rows": []}))
     _tsha = _sha16(_tape)
 
     def _verdict(fails):
@@ -729,7 +776,7 @@ def selftest() -> int:
         _orig = globals()["DERIVED"]
         try:
             globals()["DERIVED"] = _d4          # test scope, visible here
-            return load_gate_verdict(_tape, _tape), ""
+            return load_gate_verdict(_tape, _expf), ""
         except DiagnosticRefused as e:
             return None, str(e)
         finally:
@@ -762,6 +809,82 @@ def selftest() -> int:
        "read from the consumer's own declaration, never from the verdict or the "
        "tape's self-declaration (a shrinkable allowlist is a consumer choosing "
        "what it needs)")
+    # FD2 consumer: COMPARE the exposure stamp, do not merely compute it
+    _other = _d4 / "other_exposure.json"
+    _other.write_text(json.dumps({"schema": "be_fragment_exposure_v1",
+                                  "rows_by_status": {"OK": 1}, "rows": []}))
+    (_d4 / "da_verdict_probe.json").write_text(json.dumps(_verdict(
+        ["both_splits_populated", "embargo_respected"])))
+    _o = globals()["DERIVED"]
+    try:
+        globals()["DERIVED"] = _d4
+        try:
+            load_gate_verdict(_tape, _other); _ge = ""
+        except DiagnosticRefused as e:
+            _ge = str(e)
+    finally:
+        globals()["DERIVED"] = _o
+    ok("DIFFERENT exposure file" in _ge,
+       f"PR3-FD2 KNOWN-BAD: a DIFFERENT exposure file than the tape was built "
+       f"from is REFUSED — hashing whatever the caller supplies and comparing "
+       f"it against nothing accepted any file ({_ge[:44]})")
+
+    # FD4: an OMITTED governed predicate refuses; a NEW passing one is fine
+    def _try_preds(preds):
+        (_d4 / "da_verdict_probe.json").write_text(json.dumps(
+            {"predicates": [{"predicate": n, "applicable": True, "pass": q}
+                            for n, q in preds],
+             "all_pass": all(q for _, q in preds),
+             "tape_path": str(_tape), "tape_sha256_prefix": _tsha}))
+        _oo = globals()["DERIVED"]
+        try:
+            globals()["DERIVED"] = _d4
+            load_gate_verdict(_tape, _expf); return ""
+        except DiagnosticRefused as e:
+            return str(e)
+        finally:
+            globals()["DERIVED"] = _oo
+    _full = [("dataset_non_empty", True), ("both_splits_populated", False),
+             ("embargo_respected", False)]
+    ok(_try_preds(_full) == "",
+       "FD4 POSITIVE CONTROL: the governed universe present -> consumed")
+    ok(_try_preds(_full + [("brand_new_check", True)]) == "",
+       "FD4 a NEW predicate that PASSES is allowed — the universe is a MINIMUM, "
+       "not a closed set")
+    _om = _try_preds([p for p in _full if p[0] != "embargo_respected"])
+    ok("does not contain governed predicate" in _om,
+       f"FD4 KNOWN-BAD: an OMITTED governed predicate REFUSES — a gate that "
+       f"stops emitting a check is indistinguishable from one whose check "
+       f"passed ({_om[:44]})")
+    (_d4 / "da_verdict_probe.json").write_text(json.dumps(
+        {"predicates": [{"predicate": n, "applicable": True, "pass": q}
+                        for n, q in _full],
+         "all_pass": False, "tape_path": str(_tape),
+         "tape_sha256_prefix": "short"}))
+    _o2 = globals()["DERIVED"]
+    try:
+        globals()["DERIVED"] = _d4
+        try:
+            load_gate_verdict(_tape, _expf); _gh = ""
+        except DiagnosticRefused as e:
+            _gh = str(e)
+    finally:
+        globals()["DERIVED"] = _o2
+    ok("well-formed tape_sha256_prefix" in _gh,
+       "FD4 KNOWN-BAD: a malformed subject hash REFUSES — an unbound subject "
+       "means the verdict could be about any tape")
+
+    # FD3: the reconcile boolean is READ, not merely reported
+    ok("recon[\"reconciles\"]" in inspect.getsource(score_stage),
+       "FD3 score_stage READS the reconciliation boolean; a receipt field "
+       "nobody checks is a decoration")
+    _r3 = reconcile_population(
+        [{"slug": "s", "side": "BUY_UP", "gen": 1, "t_start": 0.0}],
+        {"state_join_failed": 0}, 2)
+    ok(_r3["reconciles"] is False,
+       "FD3 the boolean is FALSE when kept+drops (1) misses the declared OK "
+       "count (2) — the case score_stage now refuses on")
+
     _sh4.rmtree(_d4, ignore_errors=True)
 
     # ---- FD-R5: the CLI refuses rather than exiting clean ----------------
@@ -960,6 +1083,23 @@ def load_gate_verdict(tape_path: Path, exposure_path: Path) -> dict:
             f"tape that failed a conformance check. Excusing this would be a "
             f"consumer choosing what it needs.")
     excused = {f: DIAGNOSTIC_PREDICATE_EXCLUSIONS[f] for f in failed}
+    # FD4: an OMITTED governed predicate refuses. A gate that stops emitting a
+    # check is indistinguishable from one whose check passed, unless the
+    # consumer declares what it requires to be present.
+    names = {p.get("predicate") for p in preds}
+    absent = sorted(GATE_REQUIRED_PREDICATES - names)
+    if absent:
+        raise DiagnosticRefused(
+            f"REFUSED: the verdict does not contain governed predicate(s) "
+            f"{absent} (universe {GATE_UNIVERSE_VERSION}). A predicate that is "
+            f"not emitted is not a predicate that passed.")
+    # FD4: a well-formed subject hash is MANDATORY, not optional.
+    if not isinstance(v.get("tape_sha256_prefix"), str) or \
+            len(v["tape_sha256_prefix"]) < 16:
+        raise DiagnosticRefused(
+            f"REFUSED: the verdict carries no well-formed tape_sha256_prefix "
+            f"({v.get('tape_sha256_prefix')!r}). An unbound subject means the "
+            f"verdict could be about any tape.")
 
     # BIND the verdict's subject to THIS tape, by path and by content.
     if Path(str(v.get("tape_path"))).resolve() != Path(tape_path).resolve():
@@ -978,6 +1118,28 @@ def load_gate_verdict(tape_path: Path, exposure_path: Path) -> dict:
     meta = json.loads(head[:head.index('"rows"')].rstrip().rstrip(",") + "}")
     built_from = json.dumps(meta.get("per_split", {}))
     exp_sha = _sha16(exposure_path)
+    # PR3-FD2: COMPARE, do not merely compute. Hashing whatever exposure file
+    # the caller supplied and recording it proves nothing -- two different
+    # exposure files would both be "verified". The tape stamps the inputs it was
+    # actually built from; this asserts ours is that one.
+    stamped = (meta.get("input_sha256") or {}).get("score")
+    if stamped is None:
+        raise DiagnosticRefused(
+            f"REFUSED: {Path(tape_path).name} does not stamp the exposure input "
+            f"it was built from (input_sha256.score). Without it this harness "
+            f"could hash ANY exposure file and compare it against nothing — "
+            f"which is what it did before PR3-FD2.")
+    _full = hashlib.sha256()
+    with Path(exposure_path).open("rb") as _fh:
+        for _b in iter(lambda: _fh.read(1 << 22), b""):
+            _full.update(_b)
+    if _full.hexdigest() != stamped:
+        raise DiagnosticRefused(
+            f"REFUSED: the tape was built from exposure input {stamped[:16]} "
+            f"but this run supplies {_full.hexdigest()[:16]} "
+            f"({Path(exposure_path).name}). Scoring a tape against a DIFFERENT "
+            f"exposure file than it was built from joins two populations that "
+            f"were never the same one.")
     return {"verdict_file": vpath.name, "verdict_sha256_prefix": _sha16(vpath),
             "all_pass_recomputed": recomputed,
             "binding_rule": ("R-310: every applicable predicate must PASS "
@@ -997,6 +1159,8 @@ def load_gate_verdict(tape_path: Path, exposure_path: Path) -> dict:
             "tape_per_split": built_from,
             "exposure_input": Path(exposure_path).name,
             "exposure_sha256_prefix": exp_sha,
+            "exposure_matches_tape_stamp": True,
+            "gate_universe_version": GATE_UNIVERSE_VERSION,
             "tape_header_clock_basis": meta.get("clock_basis"),
             "tape_header_ledger_sha256": meta.get("ledger_sha256"),
             "how_all_pass_was_obtained": "RE-DERIVED from the predicate table, "
@@ -1035,6 +1199,10 @@ def reconcile_population(kept: list, drops: dict, expected_rows: int) -> dict:
 
 
 VALUATION_GATE = "any_fill_ahead"
+# The evaluator's OWN mode constants, transcribed. Comparing against a string
+# that does not exist refuses everything, which looks like strictness.
+CAUSAL_MODE = "CAUSAL_FROZEN_FROM_TRAIN"
+RETRO_MODE = "RETROSPECTIVE_TOPK"
 
 
 def rejoin_source_fields(kept: list, exposure_path: Path) -> dict:
@@ -1137,22 +1305,62 @@ def rejoin_source_fields(kept: list, exposure_path: Path) -> dict:
                     "reads as a clean negative")}
 
 
+def synthetic_population(n_actions: int = 240, seed: int = 20260829) -> tuple:
+    """A block shaped exactly like _feature_pass's output, no real data.
+
+    R-314(3): nothing called score_stage, so its whole downstream — scoring, the
+    incumbent, the economics, the cells, the receipt — had never executed. A
+    suite can be green over a path that cannot run. This exercises that path on
+    substituted inputs, and the receipt it produces is stamped so it can never
+    be mistaken for a measurement.
+
+    Values are built so the cells are NON-ZERO: a positive control that reached
+    'receipt cells' with every cell zero would pass while proving nothing —
+    which is exactly the silent-zero failure it exists to detect.
+    """
+    import random as _r
+    rr = _r.Random(seed)
+    PM, FN, ST, kept = [], [], [], []
+    L = str(D.TARGET_LATENCY_MS)
+    for i in range(n_actions):
+        PM.append([rr.gauss(0, 1) for _ in range(45)])
+        FN.append([rr.gauss(0, 1) for _ in range(15)])
+        ST.append([rr.gauss(0, 1) for _ in range(45)])
+        v = (60.0 if i % 3 == 0 else -25.0)          # both signs, NON-ZERO
+        kept.append({
+            "slug": f"btc-updown-5m-{1787897400 + 300 * (i // 12)}",
+            "side": "BUY_UP" if i % 2 else "SELL_UP", "gen": i,
+            "t_start": float(i % 12) - 6.0, "t0": 1787897400 + 300 * (i // 12),
+            "day": "2026-08-28", "coin": COIN, "status": "OK",
+            VALUATION_GATE: True,
+            "latency": {L: {"preventable_value_cents": v,
+                            "preventable_shares": 1.0, "stale_shares": 0.0}}})
+    return {"PM": PM, "FN": FN, "ST": ST, "kept": kept,
+            "drops": {"state_join_failed": 0}}, len(kept)
+
+
 def score_stage(tape_path: Path, exposure_path: Path = None,
-                latency_ms: int = None) -> dict:
+                latency_ms: int = None, synthetic: bool = False) -> dict:
     """The diagnostic read. Gated on DA's verdict; both comparators on the
     IDENTICAL rows; both held to their OWN frozen causal thresholds."""
     import phase2_iter011_run as R11        # reuse, never re-implement
     import phase2_declaration as _D
     exposure_path = Path(exposure_path or ROWS_OUT)
     da = da_bounds()
-    gate = load_gate_verdict(Path(tape_path), exposure_path)
+    gate = ({"SYNTHETIC": "no gate consumed; no real tape read"} if synthetic
+            else load_gate_verdict(Path(tape_path), exposure_path))
     model = load_frozen_candidate()
     L = int(_D.TARGET_LATENCY_MS if latency_ms is None else latency_ms)
 
     # FD: split is EXPLICIT. The fragments were built into the SCORE split
     # (R-303); indexing 'train' would silently return an empty index.
-    TAPE = _index_tape(Path(tape_path), split="score")
-    block_all = PA._feature_pass(exposure_path, "be_fragment", TAPE=TAPE)
+    if synthetic:
+        blk, _n_syn = synthetic_population()
+        block_all = {COIN: blk}
+        exp_meta = {"rows_by_status": {"OK": _n_syn}}
+    else:
+        TAPE = _index_tape(Path(tape_path), split="score")
+        block_all = PA._feature_pass(exposure_path, "be_fragment", TAPE=TAPE)
     if COIN not in block_all:
         raise DiagnosticRefused(
             f"REFUSED: the feature pass produced no {COIN} block; every row was "
@@ -1160,17 +1368,31 @@ def score_stage(tape_path: Path, exposure_path: Path = None,
     blk = block_all[COIN]
     kept = blk["kept"]
     # FD1: restore what the projection dropped BEFORE asserting on it.
-    rejoin = rejoin_source_fields(kept, exposure_path)
+    rejoin = ({"SYNTHETIC": "fields present by construction"} if synthetic
+              else rejoin_source_fields(kept, exposure_path))
     assert_field_readable(kept, "status", str, "post-feature-pass rows")
     assert_field_readable(kept, VALUATION_GATE, bool,
                           "the VALUATION GATE — without it every cent is 0.0")
     assert_field_readable(kept, "t0", int, "ABSOLUTE clock component")
     assert_field_readable(kept, "t_start", float, "window-relative component")
 
-    exp_head = exposure_path.open().read(1 << 16)
-    exp_meta = json.loads(exp_head[:exp_head.index('"rows"')].rstrip().rstrip(",") + "}")
+    if not synthetic:
+        exp_head = exposure_path.open().read(1 << 16)
+        exp_meta = json.loads(
+            exp_head[:exp_head.index('"rows"')].rstrip().rstrip(",") + "}")
     recon = reconcile_population(
         kept, blk["drops"], exp_meta["rows_by_status"].get("OK", -1))
+    # FD3: the boolean was COMPUTED AND NEVER READ. A reconciliation that
+    # reports `reconciles: false` in a receipt nobody checks is a decoration.
+    if not recon["reconciles"]:
+        raise DiagnosticRefused(
+            f"REFUSED: the population does not reconcile — kept "
+            f"{recon['rows_kept']:,} + drops "
+            f"{sum(recon['drops_by_named_status'].values()):,} = "
+            f"{recon['rows_accounted']:,}, but the exposure file declares "
+            f"{recon['rows_expected_from_exposure_OK']:,} OK rows. Rows that "
+            f"are neither scored nor named are unaccounted for, and a total "
+            f"that does not add up cannot be a population statement.")
 
     # CANONICAL ORDER (R-306(2)). evaluate_policy breaks gmax TIES by ARRIVAL
     # ORDER, so the decision metric moves with row order -- measured, a 110c
@@ -1213,11 +1435,23 @@ def score_stage(tape_path: Path, exposure_path: Path = None,
                                theta_frozen=thetas_i)
     for nm, ev in (("candidate", ev_c), ("incumbent", ev_i)):
         for b, d in ev["budgets"].items():
-            if d.get("threshold_mode") != "CAUSAL_FROZEN":
+            # The evaluator's own constants are CAUSAL_FROZEN_FROM_TRAIN and
+            # RETROSPECTIVE_TOPK. My first version compared against a string
+            # that does not exist ("CAUSAL_FROZEN"), so it would have REFUSED
+            # THE REAL RUN — found by the end-to-end synthetic on its first
+            # execution, which is the entire reason that control exists. The
+            # check now names both real constants: the frozen mode is required
+            # and the retrospective one is refused explicitly.
+            _mode = d.get("threshold_mode")
+            if _mode != CAUSAL_MODE:
                 raise DiagnosticRefused(
-                    f"REFUSED: {nm} budget {b} ran threshold_mode "
-                    f"{d.get('threshold_mode')!r}, not CAUSAL_FROZEN. A "
-                    f"retrospective cutoff is a look-ahead.")
+                    f"REFUSED: {nm} budget {b} ran threshold_mode {_mode!r}, "
+                    f"not {CAUSAL_MODE!r}"
+                    + (f" — {RETRO_MODE!r} resolves the cutoff FROM THE SCORED "
+                       f"DATA, which is a look-ahead granted to one arm."
+                       if _mode == RETRO_MODE else
+                       f". An unrecognised mode is not evidence of a frozen "
+                       f"threshold."))
 
     # TIE COUNT AT THE BUDGET BOUNDARY, measured from the real score vector.
     gens: dict = {}
@@ -1257,7 +1491,13 @@ def score_stage(tape_path: Path, exposure_path: Path = None,
             "gmax_tie_at_budget_boundary": ties.get(b)}
     return {
         "artifact": "be_fragment_diagnostic_v1",
-        "status": "DIAGNOSTIC_NEVER_EVIDENCE",
+        "status": ("SYNTHETIC_SELFTEST_NOT_A_RESULT" if synthetic
+                   else "DIAGNOSTIC_NEVER_EVIDENCE"),
+        "provenance": {"synthetic": bool(synthetic),
+                       "real_data_read": not synthetic,
+                       "why": ("a synthetic run must be unable to masquerade as "
+                               "a measurement, so it says so in the field a "
+                               "reader looks at first")},
         "this_is_a_MODEL_DIAGNOSTIC_not_strategy_performance": (
             "These cents are a MODEL DIAGNOSTIC on a censored, inadmissible "
             "fragment. They are NOT strategy performance, not a P&L, and not a "
@@ -1342,7 +1582,7 @@ def _index_tape(path: Path, split: str = "train") -> dict:
     for r in PA._stream_tape_rows(Path(path)):
         if r.get("split") != split:
             continue
-        _st = str(r.get("state_status", "OK"))
+        _st = str(r["state_status"])
         state = r.get("state") or {}
         # R-313: DECLARED-FIELD COMPLETENESS, checked HERE and not delegated.
         #
@@ -1369,6 +1609,21 @@ def _index_tape(path: Path, split: str = "train") -> dict:
         # My three original falsifiers (1/45, 44/45, 46/45) all moved the COUNT,
         # so none of them ever exercised identity: the green was real and the
         # claim was wider than the green.
+        # FD5: the state_status must be DECLARED, never defaulted. Reading a
+        # missing status as "OK" invents a population statement.
+        if "state_status" not in r:
+            raise DiagnosticRefused(
+                f"REFUSED: tape row "
+                f"{(r.get('slug'), r.get('side'), r.get('gen'))} declares no "
+                f"state_status. Defaulting an absent status to OK invents a "
+                f"population statement the tape never made.")
+        _idk = (r["slug"], r["side"], r["gen"], r["t_start"])
+        if _idk in idx:
+            raise DiagnosticRefused(
+                f"REFUSED: tape row identity {_idk} occurs MORE THAN ONCE. A "
+                f"duplicated key silently overwrites the earlier row, so the "
+                f"index would be smaller than the tape and nothing would say "
+                f"so.")
         _have = set(state)
         if _have != _PINNED_SET:
             _missing = sorted(_PINNED_SET - _have)

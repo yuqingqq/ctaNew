@@ -162,6 +162,17 @@ def bn_recv_for_window(coin: str, t0: float, span: float = 320.0) -> list:
     return out
 
 
+def _sha256_file(path) -> str:
+    """Content hash of an input, streamed. PR3-FD2: a tape that names its
+    inputs by PATH says nothing -- a path is a place, not a thing."""
+    import hashlib as _h
+    h = _h.sha256()
+    with Path(path).open("rb") as fh:
+        for b in iter(lambda: fh.read(1 << 22), b""):
+            h.update(b)
+    return h.hexdigest()
+
+
 def builder_content_sha256() -> str:
     """This builder's OWN bytes, hashed from its RESOLVED __file__.
 
@@ -518,6 +529,14 @@ def main(fragment_path: Path = None, topup_path: Path = None,
         # the binding instead of needing an external proof. The ref says WHICH
         # commit to look at; this says WHAT ACTUALLY RAN.
         "builder_sha256": builder_content_sha256(),
+        # PR3-FD2: the INPUTS are stamped too, by content. A consumer that
+        # hashes whatever exposure file its caller handed it and compares that
+        # against nothing will accept ANY exposure file -- two different ones
+        # both "verified". The tape must say which inputs it was actually built
+        # from, so the consumer can compare rather than merely compute.
+        "input_sha256": {
+            "train": _sha256_file(FRAG), "score": _sha256_file(TOP)},
+        "input_paths": {"train": str(FRAG), "score": str(TOP)},
         "builder_file": Path(__file__).resolve().name,
         "ledger_path": _ledger or str(GC.LEDGER),
         "ledger_sha256": _ledger_sha,
