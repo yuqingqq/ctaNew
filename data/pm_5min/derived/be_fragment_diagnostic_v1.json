@@ -1,0 +1,342 @@
+{
+ "artifact": "be_fragment_diagnostic_v1",
+ "candidate": {
+  "against": "harmful_phase2_lgbm_btc_freeze_v3 (DIRECT)",
+  "gate_binding": "SUPERSEDED FOR THIS DIAGNOSTIC ONLY by the R-277 determination (drift noticed, determined IDENTICAL). The R-225 refusal stands for the race scorer and the mechanical chain closure still awaits the fit-time re-stamp.",
+  "model_artifacts": {
+   "lgbm_haz_btc.txt": "ec52055214a01ed5",
+   "lgbm_thresholds_btc.json": "0fa2f1f7a5a4c58f",
+   "lgbm_val_btc.txt": "7ab34a39f2b3993f"
+  },
+  "scaler": {
+   "NOT_bound_by_freeze_receipt": false,
+   "bound_by": [
+    "freeze_receipt_v3 (primary)",
+    "fit_manifest.file_hashes (second, independent \u2014 both must agree)"
+   ],
+   "file": "linear_btc.json",
+   "gap_closed_by": "R-297 / freeze receipt v3. This diagnostic surfaced the gap (v2 pinned the model artifacts but not the scaler they are applied through); it is now closed AT ITS SOURCE rather than annotated here.",
+   "sha256_prefix": "4a9a76ec011fad94"
+  }
+ },
+ "cells": {
+  "10%": {
+   "beats_matched_random_on_NET": true,
+   "budget": "10%",
+   "candidate_net_cents": 21185.554898599985,
+   "concentration": {
+    "max_single_hour_net_cents": 2232.0503915,
+    "max_single_hour_share_of_net": 0.10535718333474003,
+    "n_hours_net_positive": 21,
+    "n_hours_with_cancellations": 22,
+    "net_by_hour": {
+     "0": 787.37,
+     "1": 1672.51,
+     "10": 876.5,
+     "11": 866.57,
+     "12": 1635.08,
+     "13": 1035.0,
+     "14": 272.72,
+     "15": 645.37,
+     "16": 497.5,
+     "17": 1905.24,
+     "18": 2232.05,
+     "19": 1435.42,
+     "2": 23.12,
+     "20": 558.68,
+     "21": 1318.08,
+     "22": 1161.58,
+     "23": 192.0,
+     "3": -250.49,
+     "6": 365.7,
+     "7": 1944.32,
+     "8": 898.41,
+     "9": 1112.82
+    },
+    "net_excluding_best_hour": 18953.5,
+    "positive_without_best_hour": true
+   },
+   "gmax_tie_at_budget_boundary": {
+    "k": 22464,
+    "n_equal_to_boundary": 1,
+    "tie_at_boundary": false
+   },
+   "harm_avoided_cents": 57239.73652500005,
+   "increment_vs_incumbent_cents": 10071.098195600003,
+   "incumbent_net_cents": 11114.456702999982,
+   "n_cancelled_generations": 19921,
+   "random_net_max": 196.1298965000002,
+   "random_net_p95": -772.272925399999,
+   "rho_captured_over_sacrificed": 1.5876032666093671,
+   "sacrifice_cents": 36054.18162639999,
+   "threshold_mode_candidate": "CAUSAL_FROZEN_FROM_TRAIN",
+   "threshold_mode_incumbent": "CAUSAL_FROZEN_FROM_TRAIN"
+  },
+  "15%": {
+   "beats_matched_random_on_NET": true,
+   "budget": "15%",
+   "candidate_net_cents": 24551.893293099976,
+   "concentration": {
+    "max_single_hour_net_cents": 2512.7835994999996,
+    "max_single_hour_share_of_net": 0.10234581787654581,
+    "n_hours_net_positive": 21,
+    "n_hours_with_cancellations": 22,
+    "net_by_hour": {
+     "0": 625.73,
+     "1": 1347.54,
+     "10": 1625.42,
+     "11": 1068.36,
+     "12": 1639.5,
+     "13": 1440.62,
+     "14": 425.06,
+     "15": 931.2,
+     "16": 610.04,
+     "17": 2512.78,
+     "18": 2151.24,
+     "19": 2034.72,
+     "2": 36.28,
+     "20": 513.07,
+     "21": 1039.22,
+     "22": 889.08,
+     "23": 649.07,
+     "3": -133.79,
+     "6": 206.37,
+     "7": 2084.16,
+     "8": 1145.97,
+     "9": 1710.27
+    },
+    "net_excluding_best_hour": 22039.11,
+    "positive_without_best_hour": true
+   },
+   "gmax_tie_at_budget_boundary": {
+    "k": 33697,
+    "n_equal_to_boundary": 1,
+    "tie_at_boundary": false
+   },
+   "harm_avoided_cents": 71937.06352500006,
+   "increment_vs_incumbent_cents": 7202.133478700009,
+   "incumbent_net_cents": 17349.759814399968,
+   "n_cancelled_generations": 29774,
+   "random_net_max": -169.19464150000056,
+   "random_net_p95": -1892.0998140000006,
+   "rho_captured_over_sacrificed": 1.5181345381465274,
+   "sacrifice_cents": 47385.17023189998,
+   "threshold_mode_candidate": "CAUSAL_FROZEN_FROM_TRAIN",
+   "threshold_mode_incumbent": "CAUSAL_FROZEN_FROM_TRAIN"
+  },
+  "5%": {
+   "beats_matched_random_on_NET": true,
+   "budget": "5%",
+   "candidate_net_cents": 13661.117648600002,
+   "concentration": {
+    "max_single_hour_net_cents": 1947.8622329999996,
+    "max_single_hour_share_of_net": 0.1425843977853172,
+    "n_hours_net_positive": 20,
+    "n_hours_with_cancellations": 22,
+    "net_by_hour": {
+     "0": 394.18,
+     "1": 837.78,
+     "10": 730.17,
+     "11": 774.96,
+     "12": 958.38,
+     "13": 858.8,
+     "14": 297.47,
+     "15": 391.6,
+     "16": 284.1,
+     "17": 1327.57,
+     "18": 1947.86,
+     "19": 861.82,
+     "2": 430.4,
+     "20": 437.94,
+     "21": 821.05,
+     "22": 663.8,
+     "23": 240.07,
+     "3": -117.81,
+     "6": -634.82,
+     "7": 1071.26,
+     "8": 288.37,
+     "9": 796.14
+    },
+    "net_excluding_best_hour": 11713.26,
+    "positive_without_best_hour": true
+   },
+   "gmax_tie_at_budget_boundary": {
+    "k": 11232,
+    "n_equal_to_boundary": 1,
+    "tie_at_boundary": false
+   },
+   "harm_avoided_cents": 34862.22339350003,
+   "increment_vs_incumbent_cents": 6796.369425600007,
+   "incumbent_net_cents": 6864.748222999995,
+   "n_cancelled_generations": 9782,
+   "random_net_max": 949.6532555000001,
+   "random_net_p95": -12.53987350000067,
+   "rho_captured_over_sacrificed": 1.644358733595124,
+   "sacrifice_cents": 21201.105744899978,
+   "threshold_mode_candidate": "CAUSAL_FROZEN_FROM_TRAIN",
+   "threshold_mode_incumbent": "CAUSAL_FROZEN_FROM_TRAIN"
+  }
+ },
+ "censoring_measured": {
+  "concentration": "worst decile of affected windows holds 25.2% (fragment A) / 18.0% (B) of lost seconds against ~10% under a uniform drizzle -- real concentration, about 2.5x and 1.8x, not extreme",
+  "note": "R-293's pre-registered wording says the loss is BURST-CONCENTRATED. Measured, that is TRUE BUT MILD, and the shape is different from what 'burst' usually implies -- so the measurement is reported rather than the wording repeated (rule 10). This QUALIFIES the pre-registered statement; it does not dispute the order, which is the user's to give.",
+  "outage_shape": "MANY SHORT outages, not few long ones: median 2.2s (A) / 8.7s (B), max 12.4s (A) / 11.4s (B). A 2.2s outage censors 0.7% of its 300s window",
+  "the_two_numbers": "63.1% of fragment-A windows are TOUCHED by loss while only 2.84% of window-TIME is lost. Both are true. The first is the worse shape for window-level admissibility, the second the milder one for data volume, and quoting either alone misleads in a predictable direction.",
+  "what_this_does_not_soften": "None of it makes the fragments admissible. The three inadmissibility reasons are structural -- incomplete days, a mid-day selected start, quantified loss -- and a mild censoring shape does not convert an inadmissible fragment into an admissible one."
+ },
+ "censoring_statement": "The bias direction is UNKNOWN and plausibly FLATTERING: a window lost while the feed was struggling is plausibly a window in which the policy faced its hardest decisions, and scoring only the surviving windows removes them. A positive read is weak comfort at best; a negative read is ambiguous rather than damning.",
+ "clock_basis_consumed": {
+  "canonical_sort_key": "(slug, side, gen, t_start, index)",
+  "strata_hour": "ABSOLUTE \u2014 harmful_action_eval._hour reads (t0 + t_start), verified by measurement",
+  "tape_declares": {
+   "decision_time": "window_relative_seconds",
+   "decision_time_epoch": "absolute_epoch",
+   "label_exit_time": "absolute_epoch"
+  },
+  "within_generation_order": "t_start, window-relative, valid because a generation never spans a window"
+ },
+ "da_receipt": {
+  "declared_cutoff_epoch": 1787973300,
+  "declared_cutoff_utc": "2026-08-29T03:15:00Z",
+  "file": "da_fragment_censoring_v1.json",
+  "sha256_prefix": "8b352a8b1ad65b0c"
+ },
+ "determinism": {
+  "canonically_sorted": true,
+  "deterministic": true,
+  "order_independent": false,
+  "underlying_fix_blocked_by": "harmful_action_eval is in CODE_IDENTITY_FILES",
+  "why": "evaluate_policy breaks gmax TIES by arrival order (measured: a 110c swing across row-order shuffles on an all-tied fixture). Canonical sorting makes THIS run reproducible; it does NOT make the function order-independent. The boundary-tie count above says whether the sensitivity could have bitten this population at all."
+ },
+ "gate": {
+  "all_pass_recomputed": false,
+  "binding_rule": "R-310: every applicable predicate must PASS except the policy-fixed exclusions below; any other failure REFUSES. Scope: this DIAGNOSTIC_NEVER_EVIDENCE binding only \u2014 a result-bearing binding requires all_pass.",
+  "exclusions_are": "REGISTER POLICY, hard-coded in the consumer \u2014 not read from the verdict, not from the tape's self-declaration",
+  "exposure_input": "be_fragment_exposure_rows_v1.json",
+  "exposure_matches_tape_stamp": true,
+  "exposure_sha256_prefix": "0a3f2e0b2cf7f788",
+  "gate_load_bearing_identity": "c499e4efd214a89f",
+  "gate_universe_version": "fragment_v2",
+  "governed_predicates_required": [
+   "absorption_within_bound",
+   "both_splits_populated",
+   "dataset_non_empty",
+   "embargo_respected",
+   "gap_count_matches_expected",
+   "half_open_containment_landed",
+   "no_rows_skipped_by_builder",
+   "per_row_conformance_exact",
+   "provenance_matches_expected"
+  ],
+  "how_all_pass_was_obtained": "RE-DERIVED from the predicate table, not read from the carried field",
+  "n_applicable": 20,
+  "n_predicates_failed": 2,
+  "n_predicates_passed": 18,
+  "not_applicable": [],
+  "predicates_failed_and_EXCUSED_by_policy": {
+   "both_splits_populated": "R-303 RULED the empty train split. This diagnostic TRAINS NOTHING \u2014 the candidate is frozen and the fragment population is SCORE-ONLY \u2014 so an empty train split is the truthful shape of what exists. Pointing both splits at the fragment rows was refused as double-counting the population and asserting training that never happened.",
+   "embargo_respected": "R-306 admits a NOT_APPLICABLE embargo for a DIAGNOSTIC_NEVER_EVIDENCE artifact ONLY. With no train rows there is no train label to embargo AGAINST, so the comparison is UNDEFINED rather than satisfied \u2014 which is why the builder now emits NOT_APPLICABLE instead of the vacuous CERTIFIED the rehearsal tape carries."
+  },
+  "tape_header_clock_basis": {
+   "decision_time": "window_relative_seconds",
+   "decision_time_epoch": "absolute_epoch",
+   "label_exit_time": "absolute_epoch"
+  },
+  "tape_header_ledger_sha256": "e1dcd4eb8a85a0b5b2f86ed0bf4f5d43ec40bf6b9ced713201b13240e639a2ae",
+  "tape_path": "/home/yuqing/ctaNew/data/pm_5min/derived/be_fragment_state_tape_v4.json",
+  "tape_per_split": "{\"train\": {\"slugs\": 0}, \"score\": {\"slugs\": 253}}",
+  "tape_sha256_prefix": "14f77d413022a6a4",
+  "verdict_file": "da_verdict_fragment_v4.json",
+  "verdict_sha256_prefix": "0c1969d342a64e85"
+ },
+ "inadmissibility_is_unconditional": [
+  "neither fragment is a COMPLETE UTC day, and the admission rule counts complete days (rule 8)",
+  "fragment A begins mid-day at the freeze epoch, so it is a SELECTED slice of a day whose remaining windows are excluded by construction",
+  "both carry quantified btc feed loss that is burst-concentrated"
+ ],
+ "incumbent": {
+  "artifact": "linear_d_btc.json",
+  "bound_by": "fit_manifest.file_hashes",
+  "not_verified": "the manifest's OWN bindings (tape, gate, fit code) are checked by assert_fit_complete_and_matching, not here; this proves only that this file is the one the manifest recorded",
+  "sha256_prefix": "18701008c2bd18c6"
+ },
+ "invocation": {
+  "argv": [
+   "--score",
+   "--tape",
+   "/home/yuqing/ctaNew/data/pm_5min/derived/be_fragment_state_tape_v4.json",
+   "--exposure",
+   "/home/yuqing/ctaNew/data/pm_5min/derived/be_fragment_exposure_rows_v1.json",
+   "--out",
+   "/home/yuqing/ctaNew/data/pm_5min/derived/be_fragment_diagnostic_v1.json",
+   "--reason",
+   "R-293 single authorized DIAGNOSTIC_NEVER_EVIDENCE fragment read; final pre-score hold released by CODEX_FINAL_PRERUN_FRAGMENT_SCORE_2026-08-29.md."
+  ],
+  "exposure": "/home/yuqing/ctaNew/data/pm_5min/derived/be_fragment_exposure_rows_v1.json",
+  "out": "/home/yuqing/ctaNew/data/pm_5min/derived/be_fragment_diagnostic_v1.json",
+  "tape": "/home/yuqing/ctaNew/data/pm_5min/derived/be_fragment_state_tape_v4.json"
+ },
+ "latency_ms": 50,
+ "one_run": "R-293 permits ONE run; a re-run requires its own written reason recorded before it.",
+ "population": {
+  "drops_by_named_status": {
+   "fine": 0,
+   "gap_at_cutoff_excluded": 307,
+   "no_archive": 0,
+   "no_level_history_excluded": 13,
+   "pm": 0,
+   "pre_window_excluded": 29129,
+   "state_join_failed": 0
+  },
+  "n_actions": 224648,
+  "reconciles": true,
+  "rows_accounted": 472413,
+  "rows_expected_from_exposure_OK": 472413,
+  "rows_kept": 442964,
+  "state_join_failed": 0
+ },
+ "provenance": {
+  "real_data_read": true,
+  "synthetic": false,
+  "why": "a synthetic run must be unable to masquerade as a measurement, so it says so in the field a reader looks at first"
+ },
+ "rejoin": {
+  "fields_restored": [
+   "status (re-joined by identity)",
+   "any_fill_ahead (RECONSTRUCTED via hm.keptrow \u2014 the canonical composition stage_score uses, not a second rule)"
+  ],
+  "rejoined": 442964,
+  "source_rows_indexed": 472413,
+  "valuation_gate_false": 378621,
+  "valuation_gate_true": 64343,
+  "valuation_inputs": {
+   "enforced_never_repaired": true,
+   "latency_bucket": "50",
+   "rows_validated": 442964,
+   "subfields_checked": [
+    "preventable_value_cents",
+    "preventable_shares",
+    "stale_shares"
+   ]
+  },
+  "why": "_feature_pass returns a projection that drops both; without the gate every valuation is 0.0 and the receipt reads as a clean negative"
+ },
+ "run_reason": "R-293 single authorized DIAGNOSTIC_NEVER_EVIDENCE fragment read; final pre-score hold released by CODEX_FINAL_PRERUN_FRAGMENT_SCORE_2026-08-29.md.",
+ "score_vectors_alive": {
+  "candidate": {
+   "all_finite": true,
+   "arm": "candidate",
+   "distinct": 441007,
+   "n": 442964
+  },
+  "incumbent": {
+   "all_finite": true,
+   "arm": "incumbent",
+   "distinct": 442964,
+   "n": 442964
+  }
+ },
+ "status": "DIAGNOSTIC_NEVER_EVIDENCE",
+ "this_is_a_MODEL_DIAGNOSTIC_not_strategy_performance": "These cents are a MODEL DIAGNOSTIC on a censored, inadmissible fragment. They are NOT strategy performance, not a P&L, and not a forward result. Reading them as what the policy 'would have made' is the single most likely misreading of this artifact.",
+ "what_this_cannot_do": "R-293 pre-registered the readings BEFORE any number existed: a POSITIVE result is WEAK COMFORT ONLY because the censoring plausibly flatters; a NEGATIVE result is AMBIGUOUS because censoring artifacts are indistinguishable from real failure at this coverage, and it specifically must NOT trigger a candidate change, which would be selection on a contaminated read. Under EVERY outcome the race admission rule, the frozen candidate and multiplicity (1) are untouched."
+}
