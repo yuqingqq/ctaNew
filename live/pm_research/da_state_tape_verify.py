@@ -161,7 +161,7 @@ def _stream_array(path: Path, key: str) -> Iterator[dict[str, Any]]:
     buf = ""
     pos = keep = depth = 0
     start = None
-    in_str = esc = started = False
+    in_str = esc = started = closed = False
     marker = f'"{key}"'
     with path.open("r", encoding="utf-8") as fh:
         while True:
@@ -209,8 +209,20 @@ def _stream_array(path: Path, key: str) -> Iterator[dict[str, Any]]:
                         keep = pos + 1
                         start = None
                 elif c == "]" and depth == 0:
+                    closed = True
                     return
                 pos += 1
+    # EOF BEFORE THE CLOSING BRACKET IS TRUNCATION, NOT COMPLETION.
+    # `{"rows":[{...},{...}` yielded both rows and returned normally, so a
+    # tape cut off mid-write -- a killed builder, a full disk, an interrupted
+    # copy -- read as a complete tape that happened to be short. Every count
+    # downstream would then be over a silently truncated population, which is
+    # the one thing a gate must never let past.
+    if not closed:
+        raise GateRefused(
+            f"{path.name}: the `{key}` array is NEVER CLOSED -- EOF reached "
+            f"with depth={depth} and no `]`. The tape is TRUNCATED, not "
+            f"complete, and a short read is not a short tape.")
 
 
 def iter_tape(path: Path) -> Iterator[dict[str, Any]]:
@@ -893,6 +905,22 @@ def verify(tape: Path, schema_path: Path = SCHEMA, ledger: Path | None = None,
     if buf:
         under, flat = locate_features(buf, schema, header)
         present = set().union(*(set(r) for r in flat))
+    # THE PER-ROW CONFORMANCE FIX WAS BYPASSED IN PRODUCTION. `locate_features`
+    # was hardened to check every row it is GIVEN -- and production gives it a
+    # 400-row BUFFER, then flattens the remaining millions inline below with no
+    # check at all. Codex's executed counterexample: 400 valid rows plus a
+    # 401st whose `state` dict is empty returns all_pass=true, because the
+    # buffer never sees row 401 and `present` is the union over the buffer.
+    #
+    # Rule 17 INSIDE the fix: the helper was correct, tested, and unreached.
+    # A fix that does not run on the production path is a fix the production
+    # path does not have.
+    #
+    # So conformance runs INCREMENTALLY over every streamed row -- one set
+    # intersection per row, on a stream that already does more work than that.
+    _declared = set(schema["emitted_fields"]) - set(
+        schema.get("identity_fields", []))
+    _nonconf, _first_nonconf, _featdist = 0, None, collections.Counter()
 
     import itertools
     for raw in itertools.chain(buf, stream):
@@ -901,6 +929,12 @@ def verify(tape: Path, schema_path: Path = SCHEMA, ledger: Path | None = None,
         if under:
             r = dict(raw.get(under) or {},
                      **{k: v for k, v in raw.items() if k != under})
+        _here = _declared & set(r)
+        _featdist[len(_here)] += 1
+        if not _here:
+            _nonconf += 1
+            if _first_nonconf is None:
+                _first_nonconf = (n_rows - 1, sorted(set(raw))[:6])
         statuses[str(r.get(schema["status_field"], "__ABSENT__"))] += 1
         b = r.get("bn_feed_age_s")
         if b is not None and len(bn_vals) < 64:
@@ -940,6 +974,21 @@ def verify(tape: Path, schema_path: Path = SCHEMA, ledger: Path | None = None,
             split_seen["score"] += 1
             if c is not None:
                 sc_min = c if sc_min is None else min(sc_min, c)
+    # REFUSE ON THE WHOLE-STREAM RESULT, not the buffer's. This is the check
+    # `locate_features` performs on what it is given; production gives it 400
+    # rows, so it has to be re-asserted over every row that was actually
+    # flattened -- otherwise the hardening stops at row 400 and the tape is
+    # certified on a sample.
+    if _nonconf:
+        raise GateRefused(
+            f"PER-ROW CONFORMANCE FAILED ON THE PRODUCTION STREAM: "
+            f"{_nonconf} of {n_rows} rows carry NO declared feature after "
+            f"flattening (first at index {_first_nonconf[0]}, keys "
+            f"{_first_nonconf[1]}). Feature-count distribution: "
+            f"{dict(sorted(_featdist.items()))}. REFUSING: those rows would "
+            f"have been iterated as empty and passed silently -- the defect "
+            f"the locator exists to prevent, reached through the streaming "
+            f"path that bypassed it.")
     preds = _predicates(schema, n_rows, under, present, statuses, bn_vals,
                         pair_bad, asof_checked, asof_viol, tr_max, sc_min,
                         split_seen, gapped_slugs_expected, header,
@@ -949,6 +998,11 @@ def verify(tape: Path, schema_path: Path = SCHEMA, ledger: Path | None = None,
     return {"gate": "da_state_tape_verify_v1", "tape": str(tape),
             "gate_code": gate_code_identity(),
             "schema_family": schema["family"], "n_rows": n_rows,
+            # THE DISTRIBUTION, not just all_pass: on tape6e it is
+            # {48: 1764206}. A reader can see whether every row carried the
+            # same feature set or whether the tape is ragged, which `all_pass`
+            # alone cannot express.
+            "per_row_feature_count": dict(sorted(_featdist.items())),
             # builder_ref included so the verdict CARRIES the ref it
             # certified: a reader can see WHICH bytes were gated without
             # opening a 3GB tape. Not a hole without it -- absence is accepted
@@ -1037,6 +1091,13 @@ def write_verdict(rep: dict[str, Any], tape: Path, out: Path) -> dict[str, Any]:
         "tape_bytes": tape.stat().st_size,
         "as_of_utc": dt.datetime.now(dt.timezone.utc).isoformat(),
         "n_rows": rep.get("n_rows"),
+        # CARRIED, not omitted: the distribution is the evidence that per-row
+        # conformance ran over the WHOLE stream rather than a 400-row buffer,
+        # and a verdict asserting conformance should show what it measured.
+        # (My own _OMITTED_ON_PURPOSE guard refused the verdict until this
+        # line existed -- upstream-present/downstream-absent, caught by the
+        # check built for exactly that.)
+        "per_row_feature_count": rep.get("per_row_feature_count"),
         "schema_family": rep.get("schema_family"),
         "tape_header_pins": rep.get("tape_header_pins"),
         # WHICH BYTES ISSUED THIS VERDICT. verify() computed this and
@@ -1640,6 +1701,75 @@ def _selftests() -> int:
         ok(not _try(other_na),
            "any OTHER N/A is refused -- the permitted set is a list of one, so "
            "a future exception needs a ruling rather than an argument")
+
+    # ---- T1/T2: the fix was BYPASSED, and EOF read as completion --------
+    import tempfile as _tfp
+    _SCH = DERIVED / "da_pred_state_v1_schema.json"
+    if _SCH.exists():
+        _sc = json.loads(_SCH.read_text())
+        _ft = [f for f in _sc["emitted_fields"]
+               if f not in set(_sc.get("identity_fields", []))]
+
+        def _r(i, empty=False):
+            st = {} if empty else {f: (0.0 if f != "state_status" else "OK")
+                                   for f in _ft}
+            if not empty:
+                for _n, _fl in _sc["nullable_fields_and_their_flags"].items():
+                    st[_fl] = 0.0
+            return {"slug": "btc-updown-5m-1787650200", "t0": 1787650200,
+                    "gen": i, "split": "train", "state": st}
+
+        _HDR = {"features_under": "state", "protocol": "PHASE2_STATE_TAPE_V5",
+                "pre_emission_skip_counts": {},
+                "required_inputs_supplied": {"gaps": True,
+                                             "bn_recv_ns": True}}
+        with _tfp.TemporaryDirectory() as _td:
+            _bad = Path(_td) / "bypass.json"
+            _bad.write_text(json.dumps(dict(
+                _HDR, rows=[_r(i) for i in range(400)] + [_r(400, True)])),
+                encoding="utf-8")
+            _refused = ""
+            try:
+                verify(_bad, _SCH)
+            except GateRefused as e:
+                _refused = str(e)
+            ok("PER-ROW CONFORMANCE FAILED ON THE PRODUCTION STREAM" in _refused,
+               "T1: 400 valid rows plus a 401st with an EMPTY state dict now "
+               "REFUSES. locate_features was hardened to check every row it is "
+               "GIVEN -- and production gives it a 400-row BUFFER, then "
+               "flattens the remaining millions inline with no check. RULE 17 "
+               "INSIDE THE FIX: the helper was correct, tested, and UNREACHED. "
+               "Conformance now runs incrementally over every streamed row")
+            _good = Path(_td) / "clean.json"
+            _good.write_text(json.dumps(dict(
+                _HDR, rows=[_r(i) for i in range(401)])), encoding="utf-8")
+            _v = verify(_good, _SCH)
+            ok(_v.get("per_row_feature_count") == {48: 401},
+               f"positive control: 401 uniformly-valid rows pass the stream "
+               f"check and the verdict CARRIES the distribution "
+               f"{_v.get('per_row_feature_count')} -- not just all_pass, so a "
+               f"reader can see whether the tape is uniform or ragged")
+            _tr = Path(_td) / "trunc.json"
+            _tr.write_text('{"rows":[' + json.dumps(_r(0)) + ","
+                           + json.dumps(_r(1)), encoding="utf-8")
+            _t2 = ""
+            try:
+                list(iter_tape(_tr))
+            except GateRefused as e:
+                _t2 = str(e)
+            ok("NEVER CLOSED" in _t2 and "TRUNCATED" in _t2,
+               "T2: EOF before the closing bracket now REFUSES. It yielded "
+               "both rows and returned normally, so a tape cut off mid-write "
+               "-- killed builder, full disk, interrupted copy -- read as a "
+               "COMPLETE tape that happened to be short, and every count "
+               "downstream would have been over a silently truncated "
+               "population")
+            _okf = Path(_td) / "closed.json"
+            _okf.write_text(json.dumps(dict(_HDR, rows=[_r(0), _r(1)])),
+                            encoding="utf-8")
+            ok(len(list(iter_tape(_okf))) == 2,
+               "positive control: a properly closed array still streams, so "
+               "the truncation check is not simply refusing every tape")
 
     # ---- a bounded header read may not conclude absence (Q-DA-137) ------
     import tempfile as _tfh
