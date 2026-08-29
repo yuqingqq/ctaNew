@@ -469,6 +469,22 @@ def day_bar_v2(lo: int, hi: int, coin: str, elapsed_h: float,
     }
 
 
+def closed_label(day_closed, calendar_closed: bool) -> str:
+    """Attribute the day-closed flag to WHOSE it is, and name a disagreement.
+
+    Extracted so BOTH branches are testable. The disagreement clause only
+    renders while the two differ -- which at 00:06Z they do and an hour later
+    they do not -- so an inline version would have shipped a branch no test
+    ever entered. That is exactly how `NON_NUMERIC_SIDE` reached the tree
+    undefined yesterday with a green suite.
+    """
+    out = f"selector day_closed={day_closed}"
+    if bool(day_closed) != bool(calendar_closed):
+        out += (f" (calendar says {calendar_closed}; the tape-derived "
+                f"predicate lags the boundary by up to one window)")
+    return out
+
+
 def verdict_granularity(day_token: str) -> str:
     """Which rule judges this day. A DATE predicate, not a caller's flag.
 
@@ -580,8 +596,16 @@ def verify_day(day_token: str, freeze_epoch: float,
         adm, tot = day["n_admissible_by_coin"], day["n_total_by_coin"]
         day_closed = day["day_closed"]
         allpost = bool(tot) and all(adm[c] == tot[c] for c in tot)
+        # SAY WHOSE FLAG IT IS. This printed a bare `day_closed=False` beside
+        # an artifact that separately carries `day_closed_selector=False` AND
+        # `day_closed_calendar=True` -- so a human reading the one line saw a
+        # closed day called open, while `complete_tape` two predicates down
+        # labelled the same disagreement explicitly. A machine reader had both
+        # fields; a person had one unattributed word. Observed on the 08-28
+        # final verdict (Q-DA-149).
         p("entirely_post_freeze", allpost,
-          f"day_closed={day_closed}; " + ", ".join(
+          closed_label(day_closed, now.timestamp() >= hi)
+          + "; " + ", ".join(
               f"{c} {adm.get(c)}/{tot.get(c)}" for c in sorted(tot)[:4])
           + (f" (+{len(tot)-4} more)" if len(tot) > 4 else ""))
 
@@ -1431,6 +1455,24 @@ def _selftests() -> int:
            f"and the {len(_cap['truncated'])} dropped days are NAMED in "
            f"`truncated` -- a bounded run that reads as complete is the "
            f"failure a silent cap introduces (rule 4)")
+
+    # ---- the day-closed label, BOTH branches (Q-DA-149 wrinkle) ---------
+    ok(closed_label(False, False) == "selector day_closed=False"
+       and closed_label(True, True) == "selector day_closed=True",
+       "the day-closed flag is ATTRIBUTED to the selector. It printed a bare "
+       "`day_closed=False` beside an artifact separately carrying "
+       "day_closed_selector AND day_closed_calendar, so a human reading the "
+       "one line saw a closed day called open")
+    _dis = closed_label(False, True)
+    ok("calendar says True" in _dis and "lags the boundary" in _dis,
+       f"and a DISAGREEMENT is named in the line itself: {_dis!r}. This branch "
+       f"renders only while the two differ -- true at 00:06Z, false an hour "
+       f"later -- so testing it inline would have shipped a branch no test "
+       f"ever entered, which is how an undefined status reached the tree "
+       f"yesterday under a green suite")
+    ok("calendar" not in closed_label(True, True),
+       "positive control: when they agree the line stays short and says "
+       "nothing about the calendar")
 
     print(f"da_forward_day_verify selftests: {checks} checks passed")
     return 0
