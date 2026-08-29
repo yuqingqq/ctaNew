@@ -433,6 +433,28 @@ def clock_of(r: dict[str, Any], schema: dict[str, Any],
     return float(r["t0"]) + float(dt)
 
 
+def load_bearing_identity() -> dict:
+    """A CONTENT HASH of the load-bearing set, so a consumer can bind to an
+    identity instead of transcribing the names.
+
+    FD4's closure asks BE to pin a versioned copy of this set with a
+    drift-refusing falsifier. A transcribed copy is two lists that can drift --
+    and this set changed TWICE today (`both_splits_populated`,
+    `per_row_conformance_exact`), so drift is not hypothetical. The file hash
+    from `gate_code_identity` cannot serve: it moves when a comment moves, so
+    it cannot distinguish "the asserted set changed" from "anything changed".
+
+    Order-independent by construction (sorted), so a reordering is NOT a drift
+    and a consumer does not have to care how the tuple is written.
+    """
+    import hashlib          # imported locally, as elsewhere in this module
+    names = sorted(LOAD_BEARING)
+    return {"load_bearing": names, "n": len(names),
+            "sha256": hashlib.sha256("\n".join(names).encode()).hexdigest()[:16],
+            "note": "bind to sha256; a mismatch means the asserted set moved "
+                    "and the consumer's expectations are stale"}
+
+
 def gate_code_identity() -> dict:
     """WHICH BYTES ISSUED THIS VERDICT.
 
@@ -1792,6 +1814,29 @@ def _selftests() -> int:
         ok(not _try(other_na),
            "any OTHER N/A is refused -- the permitted set is a list of one, so "
            "a future exception needs a ruling rather than an argument")
+
+    # ---- LOAD_BEARING has a bindable identity (FD4 consumer side) -------
+    _lbi = load_bearing_identity()
+    ok(_lbi["n"] == len(LOAD_BEARING) and len(_lbi["sha256"]) == 16
+       and _lbi["load_bearing"] == sorted(LOAD_BEARING),
+       f"the load-bearing set has a CONTENT HASH ({_lbi['sha256']}) so a "
+       f"consumer binds to an identity instead of transcribing "
+       f"{_lbi['n']} names. A transcribed copy is two lists that can drift, "
+       f"and this set changed TWICE today")
+    _perm = load_bearing_identity()
+    ok(_perm["sha256"] == _lbi["sha256"],
+       "and it is ORDER-INDEPENDENT (sorted), so reordering the tuple is not "
+       "a false drift")
+    _orig = globals()["LOAD_BEARING"]
+    try:
+        globals()["LOAD_BEARING"] = _orig + ("a_new_predicate",)
+        _moved = load_bearing_identity()["sha256"]
+    finally:
+        globals()["LOAD_BEARING"] = _orig
+    ok(_moved != _lbi["sha256"],
+       "FALSIFIER: ADDING a predicate MOVES the hash, so a consumer pinned to "
+       "the old value refuses rather than silently checking a stale set -- "
+       "which is what would have happened on both of today's additions")
 
     # ---- T1 residual: EXACT set equality, and the outer close (R-312) ---
     import tempfile as _tfx
