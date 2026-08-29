@@ -17230,6 +17230,12 @@ The R-271 escalation was RIGHT in substance and sat ~2h in the wrong CHANNEL: BE
 
 **The Q-DA-124 consequence, now concrete on a complete day: btc's 08-28 P1 = 114.1 s/hr vs the 120 bar — it would PASS v2 while FAILING the v1 count bar, on 5% headroom.** Diagnostic only (08-28 is judged frozen-v1), and the margin means btc's next bad day flips it — the regime switch's first governed day (08-29) decides on tonight's O1-improved feed. **Accrual zero, day four, both legs.** Both verdict artifacts COMMITTED with the filing (they were untracked — the R-277 class applied proactively by its author). Board: quiet until ~19:01Z (Codex quota) and tonight's boundary; the deploy stands on the batch-2 clearance; the coordinator's timed wakes were stopped externally, so the boundary executes on a user prompt or not at all tonight (stated to the user in-channel).
 
+### R-292 — 2026-08-29T02:48Z — coordinator — **USER PRE-APPROVES TONIGHT'S BOUNDARY EXECUTION** (no further prompt needed; the 22:20Z wake timer re-armed under that authority); the model-vs-data distinction stated for the record
+
+**The user's pre-approval (their words: "I am pre-approve now"), recorded as the authorization for the full cadence:** 22:30Z confirmation → Codex resume if round 3 remains unfiled → 23:56Z prep → 00:00:00Z O1 deploy per `O1_DEPLOY_RUNBOOK` with era stamp and within-cause verification. The wake timer (previously stopped externally, twice) is RE-ARMED under this authorization. The R-240-class adverse-filing condition REMAINS live: an adverse O1-relevant finding in any Codex filing landing before ~23:55Z arming postpones — pre-approval does not override the pre-ruled safety condition, and the user will be informed if it fires.
+
+**For the record, the distinction the user probed:** the failing days are FEED-INFRASTRUCTURE failures (collector-side), not model failures — **the frozen candidate has been scored on ZERO admissible forward days; its exam has not begun.** Day-bar failures make days inadmissible as TEST DAYS; the model's forward performance is entirely unmeasured; what is known remains development-only evidence, marked not-validation. The first possible test day is 08-30, the first full day on the repaired collector. Nothing in four zero-accrual days says anything about whether the model works.
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
