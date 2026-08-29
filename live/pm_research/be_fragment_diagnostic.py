@@ -28,6 +28,7 @@ measured before and after and asserted equal.
 from __future__ import annotations
 
 import hashlib
+import inspect
 import json
 import sys
 from pathlib import Path
@@ -52,6 +53,34 @@ COIN = "btc"
 # fit_code_sha256_prefix. Both values are kept and the rebind artifact is named,
 # because silently re-pinning this constant is exactly how an identity guard
 # stops guarding -- the next unexplained move must still go RED.
+# R-310: THE POLICY-FIXED PREDICATE EXCLUSIONS for this diagnostic binding.
+#
+# REGISTER POLICY, hard-coded here — never read from the tape's self-declaration
+# and never widened for a consumer's convenience. Two shapes were refused in
+# pure form when this was ruled: naming predicates alone risks a SHRINKABLE
+# ALLOWLIST (a consumer quietly excluding whatever it needs), and consuming a
+# failing verdict with the failures merely NAMED would let a conformance failure
+# through. So: every applicable predicate must PASS except exactly these two,
+# each carrying the ruling that admits it, and ANY OTHER failing predicate
+# REFUSES.
+#
+# SCOPE: this DIAGNOSTIC_NEVER_EVIDENCE binding only. A result-bearing binding
+# requires all_pass, full stop.
+DIAGNOSTIC_PREDICATE_EXCLUSIONS = {
+    "both_splits_populated":
+        "R-303 RULED the empty train split. This diagnostic TRAINS NOTHING — "
+        "the candidate is frozen and the fragment population is SCORE-ONLY — so "
+        "an empty train split is the truthful shape of what exists. Pointing "
+        "both splits at the fragment rows was refused as double-counting the "
+        "population and asserting training that never happened.",
+    "embargo_respected":
+        "R-306 admits a NOT_APPLICABLE embargo for a DIAGNOSTIC_NEVER_EVIDENCE "
+        "artifact ONLY. With no train rows there is no train label to embargo "
+        "AGAINST, so the comparison is UNDEFINED rather than satisfied — which "
+        "is why the builder now emits NOT_APPLICABLE instead of the vacuous "
+        "CERTIFIED the rehearsal tape carries.",
+}
+
 IDENTITY_BEFORE_FDR7 = "3d0b6c8c6dfe9466"
 IDENTITY_AT_BUILD = "e27cab9e5f6ce8e5"       # post-FD-R7 rebind
 IDENTITY_REBIND_ARTIFACT = "be_fitcode_rebind_v1.json"
@@ -532,6 +561,63 @@ def selftest() -> int:
     import shutil as _sh; _sh.rmtree(_d, ignore_errors=True)
 
     _idn = PA.measured_code_identity()["combined"]
+    # ---- R-310: the exclusion-list binding -------------------------------
+    import tempfile as _tf4, shutil as _sh4
+    _d4 = Path(_tf4.mkdtemp())
+    _tape = _d4 / "t.json"
+    _tape.write_text(json.dumps({"protocol": "PHASE2_STATE_TAPE_V5",
+                                 "clock_basis": {}, "rows": []}))
+    _tsha = _sha16(_tape)
+
+    def _verdict(fails):
+        preds = [{"predicate": n, "applicable": True, "pass": n not in fails}
+                 for n in ("dataset_non_empty", "both_splits_populated",
+                           "embargo_respected", "whole_stream_conformance")]
+        return {"predicates": preds,
+                "all_pass": not fails,
+                "tape_path": str(_tape), "tape_sha256_prefix": _tsha}
+
+    def _try(fails, name="da_verdict_probe.json"):
+        vp = _d4 / name
+        vp.write_text(json.dumps(_verdict(fails)))
+        _orig = globals()["DERIVED"]
+        try:
+            globals()["DERIVED"] = _d4          # test scope, visible here
+            return load_gate_verdict(_tape, _tape), ""
+        except DiagnosticRefused as e:
+            return None, str(e)
+        finally:
+            globals()["DERIVED"] = _orig
+
+    _g, _e = _try(["both_splits_populated", "embargo_respected"])
+    ok(_g is not None and set(_g["predicates_failed_and_EXCUSED_by_policy"]) ==
+       {"both_splits_populated", "embargo_respected"},
+       f"R-310 POSITIVE CONTROL: a verdict failing EXACTLY the ruled pair is "
+       f"consumed, and both appear in the receipt WITH their citations "
+       f"({_e[:50]})")
+    ok(_g and all(len(v) > 40 for v in
+                  _g["predicates_failed_and_EXCUSED_by_policy"].values()),
+       "R-310 each excused failure carries its RULING verbatim, not a bare name "
+       "— an exclusion without its citation is indistinguishable from a "
+       "convenience")
+    _g2, _e2 = _try(["whole_stream_conformance"])
+    ok(_g2 is None and "whole_stream_conformance" in _e2 and "REFUSED" in _e2,
+       f"R-310 KNOWN-BAD: a NON-EXCLUDED failing predicate REFUSES — consuming "
+       f"a verdict with a conformance failure merely 'named' would let it "
+       f"through ({_e2[:50]})")
+    _g3, _e3 = _try(["both_splits_populated", "whole_stream_conformance"])
+    ok(_g3 is None and "whole_stream_conformance" in _e3,
+       "R-310 KNOWN-BAD: an excluded failure alongside a non-excluded one still "
+       "REFUSES — the exclusion list does not widen to cover its neighbours")
+    ok("DIAGNOSTIC_PREDICATE_EXCLUSIONS" in inspect.getsource(load_gate_verdict)
+       and set(DIAGNOSTIC_PREDICATE_EXCLUSIONS) ==
+           {"both_splits_populated", "embargo_respected"},
+       "R-310 the exclusions are a POLICY CONSTANT of exactly the ruled two — "
+       "read from the consumer's own declaration, never from the verdict or the "
+       "tape's self-declaration (a shrinkable allowlist is a consumer choosing "
+       "what it needs)")
+    _sh4.rmtree(_d4, ignore_errors=True)
+
     # ---- FD-R5: the CLI refuses rather than exiting clean ----------------
     ok(main([]) == 2, "FD-R5 no arguments EXITS NON-ZERO")
     ok(main(["--not-a-mode"]) == 2,
@@ -716,11 +802,18 @@ def load_gate_verdict(tape_path: Path, exposure_path: Path) -> dict:
             f"REFUSED: {vpath.name} carries all_pass={v.get('all_pass')!r} but "
             f"its own predicate table recomputes to {recomputed}. The table is "
             f"the evidence; the field is a claim about it.")
-    if not recomputed:
+    # R-310: all_pass is NOT the bar for this binding; the bar is "every
+    # applicable predicate passes EXCEPT the policy-fixed pair".
+    unexcused = [f for f in failed if f not in DIAGNOSTIC_PREDICATE_EXCLUSIONS]
+    if unexcused:
         raise DiagnosticRefused(
-            f"REFUSED: DA's gate did not pass. Failing predicates: {failed}. "
-            f"A diagnostic may be inadmissible as evidence and still may not be "
-            f"computed on an ungated tape.")
+            f"REFUSED: DA's gate reports failing predicate(s) {unexcused} that "
+            f"are NOT on the policy exclusion list "
+            f"{sorted(DIAGNOSTIC_PREDICATE_EXCLUSIONS)}. A diagnostic may be "
+            f"inadmissible as evidence and still may not be computed over a "
+            f"tape that failed a conformance check. Excusing this would be a "
+            f"consumer choosing what it needs.")
+    excused = {f: DIAGNOSTIC_PREDICATE_EXCLUSIONS[f] for f in failed}
 
     # BIND the verdict's subject to THIS tape, by path and by content.
     if Path(str(v.get("tape_path"))).resolve() != Path(tape_path).resolve():
@@ -741,6 +834,17 @@ def load_gate_verdict(tape_path: Path, exposure_path: Path) -> dict:
     exp_sha = _sha16(exposure_path)
     return {"verdict_file": vpath.name, "verdict_sha256_prefix": _sha16(vpath),
             "all_pass_recomputed": recomputed,
+            "binding_rule": ("R-310: every applicable predicate must PASS "
+                             "except the policy-fixed exclusions below; any "
+                             "other failure REFUSES. Scope: this "
+                             "DIAGNOSTIC_NEVER_EVIDENCE binding only — a "
+                             "result-bearing binding requires all_pass."),
+            "predicates_failed_and_EXCUSED_by_policy": excused,
+            "n_predicates_failed": len(failed),
+            "n_predicates_passed": len(applicable) - len(failed),
+            "exclusions_are": ("REGISTER POLICY, hard-coded in the consumer — "
+                               "not read from the verdict, not from the tape's "
+                               "self-declaration"),
             "n_applicable": len(applicable),
             "not_applicable": v.get("not_applicable"),
             "tape_path": str(tape_path), "tape_sha256_prefix": got,
