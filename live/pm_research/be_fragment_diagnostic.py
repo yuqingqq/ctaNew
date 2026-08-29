@@ -30,6 +30,7 @@ from __future__ import annotations
 import hashlib
 import inspect
 import json
+import math
 import sys
 from pathlib import Path
 
@@ -572,6 +573,65 @@ def selftest() -> int:
     import shutil as _sh; _sh.rmtree(_d, ignore_errors=True)
 
     _idn = PA.measured_code_identity()["combined"]
+    # ---- FD1 residual: the valuation INPUTS, validated before the gate ----
+    _LV = str(D.TARGET_LATENCY_MS)
+
+    def _row(lat):
+        return {"slug": "w", "side": "BUY_UP", "gen": 1, "t_start": 0.0,
+                "latency": lat}
+
+    def _cell(**kw):
+        c = {"preventable_value_cents": 10.0, "preventable_shares": 1.0,
+             "stale_shares": 0.0}
+        c.update(kw)
+        return {_LV: c}
+
+    # THE STRUCTURAL CONTROL, first: a LEGITIMATE no-fill must still PASS.
+    # Strictness that redefines absence-of-a-fill as malformed data would refuse
+    # real populations — 29,129 PRE_WINDOW rows in this very tape are genuine.
+    _zero = _row(_cell(preventable_value_cents=0.0, preventable_shares=0.0))
+    _vz = assert_valuation_inputs([_zero], D.TARGET_LATENCY_MS)
+    ok(_vz["rows_validated"] == 1,
+       "FD1 STRUCTURAL CONTROL: a LEGITIMATE zero-fill row (value 0, shares 0) "
+       "PASSES — absence of a fill is an outcome, not malformed data, and a "
+       "check that refused it would refuse real populations")
+    import harmful_hazard_model as _hm7
+    ok(_hm7.keptrow(_zero)[VALUATION_GATE] is False,
+       "FD1 and that legitimate row reconstructs to gate FALSE — the SAME "
+       "answer every malformed shape gave, which is exactly why the inputs must "
+       "be validated rather than the output inspected")
+
+    for _lbl, _r in (
+            ("latency = None", _row(None)),
+            ("latency missing", {"slug": "w", "side": "BUY_UP", "gen": 1,
+                                 "t_start": 0.0}),
+            ("target bucket missing", _row({"999": {}})),
+            ("latency cell not a mapping", _row({_LV: 7})),
+            ("subfield missing", _row({_LV: {"preventable_shares": 1.0}})),
+            ("value is a BOOL", _row(_cell(preventable_value_cents=True))),
+            ("shares is NaN", _row(_cell(preventable_shares=float("nan")))),
+            ("value is Infinity", _row(_cell(
+                preventable_value_cents=float("inf")))),
+            ("shares NEGATIVE", _row(_cell(preventable_shares=-5.0)))):
+        try:
+            assert_valuation_inputs([_r], D.TARGET_LATENCY_MS); _gv = ""
+        except DiagnosticRefused as e:
+            _gv = str(e)
+        ok("malformed valuation input" in _gv,
+           f"FD1 KNOWN-BAD: {_lbl} is REFUSED — it would otherwise reconstruct "
+           f"to the same gate a genuine no-fill produces")
+
+    # a PARTIALLY malformed population: the all-false guard cannot see this
+    _mixed = [_row(_cell()), _row(None)]
+    try:
+        assert_valuation_inputs(_mixed, D.TARGET_LATENCY_MS); _gp = ""
+    except DiagnosticRefused as e:
+        _gp = str(e)
+    ok("1 malformed" in _gp,
+       "FD1 KNOWN-BAD: ONE malformed row beside a valid one is REFUSED — the "
+       "all-false guard only fires when EVERY row is false, so a partially "
+       "malformed population was invisible to it")
+
     # ---- R-314(3): THE END-TO-END POSITIVE CONTROL -----------------------
     # Nothing called score_stage, so its entire downstream — scoring, the
     # incumbent, the economics, the cells, the receipt — had never executed. A
@@ -1199,6 +1259,74 @@ def reconcile_population(kept: list, drops: dict, expected_rows: int) -> dict:
 
 
 VALUATION_GATE = "any_fill_ahead"
+VALUATION_SUBFIELDS = ("preventable_value_cents", "preventable_shares",
+                       "stale_shares")
+
+
+def assert_valuation_inputs(kept: list, latency_ms: int) -> dict:
+    """Validate the valuation INPUTS before the gate is reconstructed.
+
+    hm.keptrow computes `_any_fill_ahead(r.get("latency") or {})`. That `or {}`
+    turns EVERY malformed shape into a clean gate=False, which is
+    INDISTINGUISHABLE FROM A GENUINE NO-FILL. Executed on the real composition:
+
+        latency = None          -> gate False
+        latency missing         -> gate False
+        target key missing      -> gate False
+        shares = NaN            -> gate False
+        shares negative         -> gate False
+        LEGITIMATE zero-fill    -> gate False   <- the same answer
+
+    So a missing valuation INPUT is silently recorded as a no-fill OUTCOME, and
+    neither the all-false guard (which only fires when EVERY row is false) nor
+    the boolean assertion (keptrow always returns a bool) can see a PARTIALLY
+    malformed population. Worse in the other direction: a row missing
+    preventable_value_cents reconstructs to gate TRUE and would be valued.
+
+    Enforced, never repaired. A default here would re-create the defect one
+    layer up. The legitimate zero-fill row MUST still pass -- strictness that
+    redefines absence-of-a-fill as malformed data would refuse real
+    populations, which is why the suite keeps it as a structural control."""
+    L = str(latency_ms)
+    bad: list = []
+    for i, r in enumerate(kept):
+        ident = (r.get("slug"), r.get("side"), r.get("gen"), r.get("t_start"))
+        lat = r.get("latency")
+        if not isinstance(lat, dict):
+            bad.append(f"{ident}: latency is {type(lat).__name__}, not a mapping")
+            continue
+        if L not in lat:
+            bad.append(f"{ident}: no latency bucket {L!r} (has {sorted(lat)[:4]})")
+            continue
+        cell = lat[L]
+        if not isinstance(cell, dict):
+            bad.append(f"{ident}: latency[{L}] is {type(cell).__name__}")
+            continue
+        for f in VALUATION_SUBFIELDS:
+            if f not in cell:
+                bad.append(f"{ident}: latency[{L}] has no {f!r}")
+                continue
+            v = cell[f]
+            if isinstance(v, bool) or not isinstance(v, (int, float)):
+                bad.append(f"{ident}: {f} is {type(v).__name__} {v!r}, not a "
+                           f"number (a bool would arithmetic as 1/0)")
+            elif not math.isfinite(v):
+                bad.append(f"{ident}: {f} is {v!r}; a non-finite valuation "
+                           f"input compares False against every threshold")
+            elif f.endswith("shares") and v < 0:
+                bad.append(f"{ident}: {f} is negative ({v!r})")
+        if len(bad) > 40:
+            break
+    if bad:
+        raise DiagnosticRefused(
+            f"REFUSED: {len(bad)} malformed valuation input(s) among "
+            f"{len(kept):,} kept rows. A malformed input reconstructs to the "
+            f"SAME gate=False a genuine no-fill produces, so it would be scored "
+            f"as an outcome rather than refused as an absence. First: "
+            f"{bad[:4]}")
+    return {"rows_validated": len(kept), "latency_bucket": L,
+            "subfields_checked": list(VALUATION_SUBFIELDS),
+            "enforced_never_repaired": True}
 # The evaluator's OWN mode constants, transcribed. Comparing against a string
 # that does not exist refuses everything, which looks like strictness.
 CAUSAL_MODE = "CAUSAL_FROZEN_FROM_TRAIN"
@@ -1260,6 +1388,8 @@ def rejoin_source_fields(kept: list, exposure_path: Path) -> dict:
         # Joining the raw field would have made a THIRD rule. `latency` IS in
         # the projection, so the canonical derivation is available here.
         row[VALUATION_GATE] = _hm.keptrow(row)[VALUATION_GATE]
+    # Validate the INPUTS before reconstructing the gate from them.
+    valinputs = assert_valuation_inputs(kept, D.TARGET_LATENCY_MS)
     seen_keys: dict = {}
     for row in kept:
         k = (row.get("slug"), row.get("side"), row.get("gen"),
@@ -1294,6 +1424,7 @@ def rejoin_source_fields(kept: list, exposure_path: Path) -> dict:
             f"zero receipt is indistinguishable from a broken join and must not "
             f"be published as a negative result.")
     return {"rejoined": len(kept), "source_rows_indexed": len(src),
+            "valuation_inputs": valinputs,
             "fields_restored": ["status (re-joined by identity)",
                                 VALUATION_GATE + " (RECONSTRUCTED via "
                                 "hm.keptrow — the canonical composition "
