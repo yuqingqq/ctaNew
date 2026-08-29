@@ -1,0 +1,24 @@
+{
+ "artifact": "be_tape_v2_builder_binding_proof_v1",
+ "binding": {
+  "builder_content_sha256_at_that_commit": "028bc06928f3b9a85ce268b93e749ce7c32d997a5960544dfa43cd54be2bf7e7",
+  "builder_content_sha256_on_disk_at_build_time": "SEE NOTE",
+  "builder_content_sha256_verified": "028bc06928f3b9a8",
+  "builder_ref_in_artifact": "6fe1c2c4ae0925b8a8b4f4703e49843d758fb7dd",
+  "note": "the on-disk builder has since gained its R-309 self-stamp, so its current hash NO LONGER equals the build-time hash. The binding was verified AT THE TIME, before that edit: builder-at-commit was byte-identical to builder-on-disk, content sha 028bc06928f3b9a8. Recording the drift rather than hiding it -- a proof that silently re-derives itself later is not a proof.",
+  "ref_resolves_to_a_commit": true,
+  "verified_at_build_time": true
+ },
+ "kind": "EXTERNAL_BINDING_PROOF",
+ "status": "EVIDENCE ARTIFACT \u2014 records a binding, asserts no result",
+ "subject": {
+  "built_at_utc": "2026-08-29T05:22:34Z",
+  "bytes": 861494274,
+  "n_rows": 472413,
+  "tape": "be_fragment_state_tape_v2.json",
+  "tape_sha256": "a6e841e8644265fcc71e86ce5efff2ed7342c98945273615f4a2875616ce14c6"
+ },
+ "supersedes_need_for_this_check": "from the next build onward the tape carries builder_sha256 in its own header and this class of sidecar is unnecessary",
+ "tree_state_at_build": "git status EMPTY on all five producing files",
+ "why_this_exists": "R-309 accepted, for THIS DIAGNOSTIC_NEVER_EVIDENCE artifact only, that the tape records builder_REF without a builder CONTENT hash. A ref is a pointer: it names a commit to go look at, it does not establish that the file which ran matches it. This artifact supplies that proof EXTERNALLY so a reader who was not present can check it. It is strictly weaker than an in-band stamp, which is why the builder now self-stamps (same commit) and why in-band is mandatory for anything result-bearing."
+}

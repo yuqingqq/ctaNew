@@ -162,6 +162,21 @@ def bn_recv_for_window(coin: str, t0: float, span: float = 320.0) -> list:
     return out
 
 
+def builder_content_sha256() -> str:
+    """This builder's OWN bytes, hashed from its RESOLVED __file__.
+
+    R-309: builder_ref is a POINTER. A ref tells a reader which commit to go
+    look at; it does not tell them the file that ran matches it. The v2 tape
+    had to have that binding proved EXTERNALLY, which means a future reader
+    without that sidecar could not confirm it. Hashing the resolved __file__
+    (not an assumed path) makes every artifact self-carry the fact -- the
+    R-230(3) pattern, where the identity attests to the bytes that RAN rather
+    than to bytes at a path we assume were used.
+    """
+    import hashlib as _h
+    return _h.sha256(Path(__file__).resolve().read_bytes()).hexdigest()
+
+
 def assert_build_ref() -> str:
     """BUILD_REF must be present and well-formed BEFORE any work begins.
 
@@ -498,7 +513,12 @@ def main(fragment_path: Path = None, topup_path: Path = None,
         # ref travels ON the artifact. tape4 was launched 06:08:02Z from a
         # working tree mid-fix and produced GAP_AT_CUTOFF=286 -- an unknown
         # intermediate of six in-flight fixes, reconcilable to nothing.
-        "builder_ref": _ref,               # verbatim from the launcher
+        "builder_ref": _ref,                       # verbatim from the launcher
+        # R-309: the CONTENT hash beside the ref, so the artifact self-carries
+        # the binding instead of needing an external proof. The ref says WHICH
+        # commit to look at; this says WHAT ACTUALLY RAN.
+        "builder_sha256": builder_content_sha256(),
+        "builder_file": Path(__file__).resolve().name,
         "ledger_path": _ledger or str(GC.LEDGER),
         "ledger_sha256": _ledger_sha,
         "ledger_pinned": bool(_ledger),
