@@ -4950,3 +4950,56 @@ That *is* the ruled semantics. (I had claimed it was name-strict; it isn't.)
 **On re-binding a superseding verdict:** re-derive `all_pass` from the NEW
 predicate table; never diff against the old. An artifact that happens to agree
 with its predecessor is not thereby verified.
+
+### 2026-08-29 (late) — the R-293 fragment diagnostic RAN. Once. It is not evidence.
+
+**THE RUN HAPPENED AND CHANGES NOTHING.** That is not a hedge — R-293 fixed the
+reading before any number existed, and the number came out positive.
+
+| artifact | |
+|---|---|
+| receipt | `be_fragment_diagnostic_v1.json` sha `19286320e826d040…` |
+| tape | `be_fragment_state_tape_v4.json` sha `14f77d413022a6a4…` |
+| exposure | `be_fragment_exposure_rows_v1.json` sha `0a3f2e0b2cf7f788…` |
+| gate | `da_verdict_fragment_v4.json` — 18/2/20, failing exactly the ruled pair |
+
+| budget | candidate | incumbent | increment | beats matched-random |
+|---|---|---|---|---|
+| 5% | +13,661.1c | +6,864.7c | +6,796.4c | True |
+| 10% | +21,185.6c | +11,114.5c | +10,071.1c | True |
+| 15% | +24,551.9c | +17,349.8c | +7,202.1c | True |
+
+Population reconciles exactly (442,964 kept + 29,449 named drops = 472,413 =
+the exposure file's own OK count); `state_join_failed` 0; both arms alive; both
+`CAUSAL_FROZEN_FROM_TRAIN`; **gmax tie at the budget boundary FALSE everywhere**,
+so the order-sensitivity finding could not have bitten this population.
+
+**READ IT AS THE PROTOCOL RULED, NOT AS THE NUMBERS INVITE:** WEAK COMFORT ONLY.
+The censoring plausibly flatters. No admission, no re-freeze, no parameter, no
+schedule; race, frozen candidate, admission rule and multiplicity untouched.
+Three unconditional inadmissibility reasons stand (neither fragment is a complete
+UTC day; fragment A is a selected mid-day slice; both carry burst-concentrated
+feed loss). **This is a MODEL DIAGNOSTIC, not strategy performance** — reading
+those cents as what the policy would have made is the likeliest misreading.
+
+**REPRODUCIBILITY, measured:** tapes v2/v3/v4 have BYTE-IDENTICAL row content
+(`e71db7b5fc5923f8…`, 472,413 rows) across five commits that changed the parser,
+the embargo arithmetic, the stamps and the input-hash race — they differ only in
+headers. The ledger pin held while the archive grew 19,162 → 19,848 paths.
+
+**STILL OPEN (identity queue — each fix moves `fit_code_sha256_prefix`):**
+- `encode_row` docstring promises a raise it does not perform; a ragged row
+  reaches the model as confidently-zero rather than unknown.
+- `evaluate_policy` is row-order dependent at gmax ties (110c swing measured).
+  Canonical sort is the interim; it is deterministic, NOT order-independent.
+- the builder has no `--selftest`: an unrecognised argument RUNS THE BUILD.
+
+**METHOD NOTES THAT COST ME TIME TODAY:**
+- A check placed AFTER the thing it guards is not a check (validator wired after
+  `keptrow`; ten unit falsifiers could not see wiring order).
+- An assertion comparing against a string that does not exist refuses
+  everything, which is indistinguishable from strictness.
+- `pgrep -f <word>` MATCHES ITS OWN COMMAND LINE — a liveness check that
+  satisfies itself.
+- **For anything promised, check that the ARTIFACT APPEARED. Never wait on a
+  notification: a reaped wrapper produces silence identical to work in progress.**
