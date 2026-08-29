@@ -160,8 +160,15 @@ def check_post_restart(obs: dict, old_pid: int, start_row: dict | None) -> dict:
         raise Refused(f"declaring row has event="
                       f"{start_row.get('event')!r}, not 'collector_start' — "
                       f"only the start event itself declares the process")
-    if int(start_row.get("recv_ns") or 0) < BOUNDARY_EPOCH * 10**9:
-        raise Refused(f"declaration recv_ns {start_row.get('recv_ns')} is "
+    _rns = start_row.get("recv_ns")
+    if type(_rns) is not int:
+        raise Refused(f"declaration recv_ns has type "
+                      f"{type(_rns).__name__}, not int — a coercing int() "
+                      f"accepted 1.788048005e+18 end-to-end and would emit a "
+                      f"precision-lossy float into the era stamp (exact type; "
+                      f"bool excluded naturally since type(True) is bool)")
+    if _rns < BOUNDARY_EPOCH * 10**9:
+        raise Refused(f"declaration recv_ns {_rns} is "
                       f"BEFORE the boundary — a pre-boundary row cannot prove "
                       f"the post-boundary process (checker enforces this "
                       f"itself; it does not trust its observer's filter)")
@@ -304,6 +311,17 @@ def selftest() -> int:
             "cannot prove", "KNOWN-BAD: a PRE-BOUNDARY collector_start row "
             "REFUSES in the CHECKER itself (the observer's filter is not "
             "trusted)")
+    refuses(lambda: check_post_restart(good_post, 1048,
+                                       {**good_start,
+                                        "recv_ns": float(
+                                            (BOUNDARY_EPOCH + 5) * 10**9)}),
+            "not int", "KNOWN-BAD (narrow hold at 9ac0bd1): a FLOAT recv_ns "
+            "REFUSES — the prior int() coercion accepted 1.788048005e+18 "
+            "end-to-end and emitted it into the stamp")
+    refuses(lambda: check_post_restart(good_post, 1048,
+                                       {**good_start, "recv_ns": True}),
+            "not int", "KNOWN-BAD: a BOOL recv_ns REFUSES (type() is exact; "
+            "isinstance would have admitted the int subclass)")
 
     print(f"o1_boundary_preflight selftests: {n[0]} checks passed")
     return 0
