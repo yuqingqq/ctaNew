@@ -158,6 +158,20 @@ slope). Undefined, this is resolved by whoever writes the evaluator.
 Every other metric is **reported and never adjudicated**. A metric that can be
 swapped into a cell after seeing results is a multiplicity leak.
 
+> **RULED 2026-08-29T04:40Z (USER, structured answer via the coordinator,
+> R-306): Q3's TWO ruled slope gates compose into its single cell as
+> CONJUNCTION + WORSE SIDE — the cell PASSES only if BOTH slope CIs (m_harm,
+> m_good) exclude 0, and the cell's adjudicated p is the WORSE of the two
+> (the Q2-min logic: half a working head cannot carry a cell). Family stays
+> 24.**
+
+> **RULED 2026-08-29T04:40Z (USER, structured answer via the coordinator,
+> R-306): the COIN AXIS resolves as BTC-ONLY ADJUDICATION — the 24-cell
+> family adjudicates btc alone (matching the btc-only frozen candidate);
+> eth is REPORTED in full beside it and never adjudicated ("a btc pass does
+> not carry eth", and eth cannot enter a verdict it has no candidate for).
+> min()-across-coins stays rejected as the forbidden carry reversed.**
+
 > **RULED 2026-08-28T15:08Z (USER, structured answer via the coordinator,
 > R-286): the Q3 slope contradiction resolves GATE-GOVERNS — the adjudicated
 > null is the GATE's text ("calibration slope CI excludes 0"); this table's
