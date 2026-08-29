@@ -93,9 +93,10 @@ def observe_collector_start(new_pid: int, since_epoch: float) -> dict | None:
     with GAP_LEDGER.open() as fh:
         for ln in fh:
             if '"collector_start"' not in ln:
-                continue
+                continue  # cheap prefilter only; identity decided on the row
             row = json.loads(ln)
-            if row.get("recv_ns", 0) >= int(since_epoch * 1e9):
+            if row.get("event") == "collector_start" and \
+                    row.get("recv_ns", 0) >= int(since_epoch * 1e9):
                 found = row  # keep the newest qualifying row
     return found
 
@@ -152,6 +153,18 @@ def check_post_restart(obs: dict, old_pid: int, start_row: dict | None) -> dict:
     if start_row is None:
         raise Refused("no post-boundary collector_start audit row — the new "
                       "process has not declared itself; wait or ABORT")
+    # EXACT EVENT IDENTITY (re-review at 727130e): a heartbeat row with a
+    # collector_start NOTE must not stand in for the start declaration —
+    # match the Type.field, never the vocabulary (rule 16).
+    if start_row.get("event") != "collector_start":
+        raise Refused(f"declaring row has event="
+                      f"{start_row.get('event')!r}, not 'collector_start' — "
+                      f"only the start event itself declares the process")
+    if int(start_row.get("recv_ns") or 0) < BOUNDARY_EPOCH * 10**9:
+        raise Refused(f"declaration recv_ns {start_row.get('recv_ns')} is "
+                      f"BEFORE the boundary — a pre-boundary row cannot prove "
+                      f"the post-boundary process (checker enforces this "
+                      f"itself; it does not trust its observer's filter)")
     if start_row.get("collector_version") != "clob_v4":
         raise Refused(f"new process declares "
                       f"{start_row.get('collector_version')!r}, not clob_v4 — "
@@ -273,6 +286,24 @@ def selftest() -> int:
                                        1048, good_start),
             "before", "KNOWN-BAD: post-restart validation BEFORE the boundary "
             "REFUSES (nothing deploys early)")
+    refuses(lambda: check_post_restart(good_post, 1048,
+                                       {**good_start, "event": "heartbeat",
+                                        "note": "collector_start"}),
+            "only the start event", "KNOWN-BAD (727130e re-review): a "
+            "heartbeat row carrying 'collector_start' as a NOTE REFUSES — "
+            "exact event identity, not vocabulary")
+    refuses(lambda: check_post_restart(good_post, 1048,
+                                       {k: v for k, v in good_start.items()
+                                        if k != "event"}),
+            "only the start event", "KNOWN-BAD: a declaring row with NO event "
+            "field REFUSES")
+    refuses(lambda: check_post_restart(good_post, 1048,
+                                       {**good_start,
+                                        "recv_ns": (BOUNDARY_EPOCH - 60)
+                                        * 10**9}),
+            "cannot prove", "KNOWN-BAD: a PRE-BOUNDARY collector_start row "
+            "REFUSES in the CHECKER itself (the observer's filter is not "
+            "trusted)")
 
     print(f"o1_boundary_preflight selftests: {n[0]} checks passed")
     return 0
