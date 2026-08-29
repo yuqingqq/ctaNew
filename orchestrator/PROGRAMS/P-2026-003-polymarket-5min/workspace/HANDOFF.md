@@ -4858,3 +4858,61 @@ increment-null supersession.
 
 **STATE:** library 102 falsifiers, runner 98, seams 185 pass / 1 red (47j,
 deliberate). Nothing fitted, nothing scored.
+
+### 2026-08-29 — BE: the R-293 fragment diagnostic, built and gated (NOT yet run)
+
+**WHAT THIS IS.** A user-ordered DIAGNOSTIC on post-freeze btc fragments.
+`DIAGNOSTIC_NEVER_EVIDENCE`, ONE run permitted, readings pre-registered before
+any number existed (positive = weak comfort only; negative = ambiguous and must
+NOT trigger a candidate change). **It has not been run.** The last gate is a
+pre-run re-review.
+
+**ARTIFACT CHAIN (each bound to the next by content, not by name)**
+| artifact | key facts |
+|---|---|
+| `da_fragment_censoring_v1.json` | DA's; bounds, cutoff 1787973300, censoring statement |
+| `ledger_pin_fragment_v1.jsonl` | DA's pin, sha `e1dcd4eb8a85a0b5…`, mode 444 |
+| `be_fragment_exposure_rows_v1.json` | 253/253 windows, **0 reconciliation failures**, 482,224 rows (OK 472,413) |
+| `be_fragment_state_tape_v1.json` | **REHEARSAL — do not use.** builder_ref names a commit not containing its builder |
+| `be_fragment_state_tape_v2.json` | THE tape. sha `a6e841e8644265fc…`, 472,413 rows, embargo NOT_APPLICABLE |
+| `da_verdict_fragment_6fe1c2c4.json` | DA's gate: all_pass FALSE, 17/19, failing exactly the ruled pair |
+
+**KEY RULINGS ENCODED IN CODE (not just the register)**
+- **R-303** fragments enter the **score** split; train is empty *by declaration*.
+- **R-310** the gate binding is an **exclusion list**: every applicable predicate
+  must pass except exactly `both_splits_populated` + `embargo_respected`, each
+  carrying its citation in the consumer's own constant. Any other failure
+  refuses. **Scope: this diagnostic only — result-bearing requires all_pass.**
+- **R-306(2)** canonical row order is applied and labelled honestly:
+  `deterministic: true, order_independent: false`.
+
+**DEFECTS FOUND AND FIXED TODAY (all with falsifier pairs)**
+- **T2** three readers accepted a **truncated array as complete** — 5 of 6 rows,
+  no error. `harmful_rows_loader`, `be_inert_arm_run`, `phase2_arms`.
+- **FD-R7** the `phase2_arms` repair MOVED FIT IDENTITY
+  (`3d0b6c8c6dfe9466 → e27cab9e5f6ce8e5`) under ruling, with **semantic
+  invariance proven**: full 3.17 GB tape streamed before/after, 1,764,206 rows
+  and digest `ccbb470278cd724d…` identical. Evidence in
+  `be_fitcode_rebind_v1.json`.
+- **F2** the builder **certified an embargo against an empty split**
+  (`CERTIFIED`, `gap_s: inf`) and wrote **invalid JSON** (`Infinity`). v1 is its
+  own known-bad; v2 shows `NOT_APPLICABLE` and parses strictly.
+- **FD-R3** my own **look-ahead**: the incumbent ran `RETROSPECTIVE_TOPK` while
+  the candidate was frozen. Both arms now assert `CAUSAL_FROZEN`.
+
+**WATCH OUT FOR**
+- **`evaluate_policy` is row-order dependent at gmax ties** — measured 110c swing
+  across shuffles. The one-line fix is blocked: `harmful_action_eval` is in
+  `CODE_IDENTITY_FILES`. Canonical sorting is the interim.
+- **The builder has no `--selftest`**: an unrecognised argument RUNS THE BUILD.
+  Caught only by the overwrite guard on the default path. Unruled.
+- **`_index_tape` is a named 8-line fork** of `PA.tape_index` (which takes no
+  path). Equivalence asserted every suite run; retirement trigger in its
+  docstring.
+- Wrapper kills are routine here — **a dead watcher says nothing about a
+  detached systemd unit**. Check the unit, never infer from the notification.
+- systemd `MemoryPeak` reported 256.0K for runs that plainly worked, and 4.96 GB
+  for one that did. Populated-here-not-there is **OPEN, not explained**.
+
+**NEXT:** pre-run re-review → synthetic seam → the single `--score` run
+(`--reason` required, existing output refused).
