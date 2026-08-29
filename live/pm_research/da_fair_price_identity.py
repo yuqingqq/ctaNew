@@ -459,6 +459,39 @@ class PartialTwap:
     source: str
     detail: str = ""
 
+    def __post_init__(self) -> None:
+        """An OK record must describe a REAL interval it actually observed.
+
+        A hand-built `PartialTwap(covered_s=0, n_used=0, integral=0)` with
+        correct bounds was accepted by the estimator as a complete realized
+        part -- zero observed seconds treated as a measured average. The
+        factory never produces one; a CHALLENGER constructing this type
+        directly could, which is the same hole FP1 had and the same answer:
+        enforce it where the record is made, not where it is read.
+
+        Non-OK records are exempt on purpose -- they REPORT bad input and must
+        be able to carry it (the FairPrice rule).
+        """
+        if self.status != TWAP_OK:
+            return
+        def bad(m):
+            raise Inadmissible(f"REFUSED: invalid PartialTwap -- {m}")
+        for nm in ("lo", "hi", "integral", "covered_s", "span_s"):
+            v = getattr(self, nm)
+            if not _finite_real(v):
+                bad(f"{nm}={v!r} must be a finite real on an OK record")
+        if self.hi <= self.lo:
+            bad(f"empty or reversed interval [{self.lo}, {self.hi}]")
+        if self.covered_s <= 0:
+            bad(f"covered_s={self.covered_s} -- an OK record covering ZERO "
+                f"seconds is not a measurement, it is an absence wearing a "
+                f"status")
+        if self.n_used <= 0:
+            bad(f"n_used={self.n_used} -- no admissible tick was used, so the "
+                f"integral describes nothing that was observed")
+        if self.integral < 0:
+            bad(f"integral={self.integral} is negative over a price path")
+
     def mean(self) -> float | None:
         """The realized average so far. None unless coverage is COMPLETE: an
         average over part of the window is not the window's average, and
@@ -622,9 +655,19 @@ def _asian_log_shape(sigma: float, a: float, length: float) -> float:
     return sigma * sigma * a + base
 
 
+#: FROZEN, bound to the estimator's NAME. `window_s` used to be a caller
+#: argument with a default, so `window_s=-60` reached the maths -- and a
+#: negative averaging length makes the threshold k negative, which the
+#: already-clinched branch reads as "won" and returns **p = 1.0**. A nonsense
+#: parameter produced maximum confidence. The estimator is called `_s60`; its
+#: window is 60 and a caller may not say otherwise.
+S60_WINDOW_S = 60.0
+
+
 def bn_bookticker_s60_probability(*, spot: float, spot_as_of: float,
+                                  spot_source: str,
                                   partial: PartialTwap | None,
-                                  t: float, T: float, window_s: float = 60.0,
+                                  t: float, T: float,
                                   sigma: float, sigma_as_of: float,
                                   sigma_lookback_s: float,
                                   reference: float, reference_as_of: float,
@@ -649,6 +692,16 @@ def bn_bookticker_s60_probability(*, spot: float, spot_as_of: float,
     `reference` is S60(t0), fully realized before the window opened -- the
     reference needs no forecast at all.
     """
+    window_s = S60_WINDOW_S
+    # SPOT MUST BE ATTRIBUTED. It carried an as-of but no SOURCE, so a price
+    # from any feed -- including the PM book, or the Binance-spot mirror that
+    # is not the settlement venue -- could drive the challenger while the
+    # record claimed to be a bookTicker estimate. The partial already had to
+    # name its source; the spot did not, and it is the same input.
+    if spot_source != BN_BOOKTICKER:
+        raise Inadmissible(
+            f"REFUSED: spot_source {spot_source!r} is not {BN_BOOKTICKER!r}. "
+            f"The challenger's spot must come from the challenger's own feed.")
     if reference_source != CHAINLINK_REF_SOURCE:
         raise Inadmissible(
             f"REFUSED: reference_source {reference_source!r} is not "
@@ -728,7 +781,8 @@ def bn_bookticker_s60_probability(*, spot: float, spot_as_of: float,
     return {"probability": prob, "status": FP_OK, "estimator": BN_BOOKTICKER,
             "regime": "pre-window" if t <= w_start else "terminal",
             "a": a, "length": length, "k": k, "realized": realized,
-            "window_s": window_s, "sigma": sigma,
+            "window_s": window_s, "window_s_frozen": True,
+            "spot_source": spot_source, "sigma": sigma,
             "reference_as_of": reference_as_of,
             "sigma_lookback_s": sigma_lookback_s,
             "reference_source": reference_source,
@@ -1531,8 +1585,9 @@ def _selftests() -> int:
        "positive control: a valid book is unaffected")
 
     # ===== A2: the SIXTY-SECOND ENDPOINT estimand ========================
-    _s60 = dict(spot=100.0, spot_as_of=100.0, partial=None, t=100.0, T=300.0,
-                window_s=60.0, sigma=0.02, sigma_as_of=99.0,
+    _s60 = dict(spot=100.0, spot_as_of=100.0, spot_source=BN_BOOKTICKER,
+                partial=None, t=100.0, T=300.0,
+                sigma=0.02, sigma_as_of=99.0,
                 sigma_lookback_s=1800.0, reference=100.0,
                 reference_as_of=0.0, reference_source=CHAINLINK_REF_SOURCE)
 
@@ -1594,9 +1649,14 @@ def _selftests() -> int:
     # THE GENERALISATION IS CHECKED, NOT HOPED: a=0 with length=tau must equal
     # the full-window function exactly.
     _fw = bn_bookticker_probability(**{**_args, "partial": _pt})["probability"]
-    _as_fw = bn_bookticker_s60_probability(
-        **{**_s60, "t": 60.0, "spot_as_of": 60.0, "sigma_as_of": 59.0,
-           "T": 300.0, "window_s": 240.0, "reference": 100.0})["probability"]
+    # The reduction check needs a 240s window, which the FROZEN estimator no
+    # longer accepts -- correctly. It now goes through the shared shape
+    # function directly, which is what the two forms actually have in common.
+    _a_fw, _len_fw = 0.0, 240.0
+    _s2_fw = _asian_log_shape(0.02, _a_fw, _len_fw)
+    _m_fw, _k_fw = 100.0 * _len_fw, 100.0 * 240.0 - 0.0
+    _as_fw = _phi((math.log(_m_fw) - 0.5 * _s2_fw - math.log(_k_fw))
+                  / math.sqrt(_s2_fw))
     ok(abs(_fw - _as_fw) < 1e-12,
        f"THE A2 FORM REDUCES EXACTLY to the full-window one when the averaging "
        f"window IS the full window ({_fw!r} vs {_as_fw!r}) -- so calling it a "
@@ -1621,13 +1681,37 @@ def _selftests() -> int:
        "R3(2a) a partial built from `pm_microprice` is REFUSED by the "
        "bookTicker challenger -- my own fairprice_estimator discipline, "
        "unenforced one level down inside the accumulator path")
-    _forged = PartialTwap(lo=999.0, hi=999.0, integral=100.0 * 999,
-                          covered_s=999.0, span_s=999.0, status=TWAP_OK,
-                          n_used=1, n_future_knowledge=0, n_pre_era=0,
-                          n_missing_stamp=0, n_out_of_window=0, max_hold_s=1.0,
-                          source=BN_BOOKTICKER)
+    def _pt_refuses(**kw):
+        base = dict(lo=240.0, hi=270.0, integral=3000.0, covered_s=30.0,
+                    span_s=30.0, status=TWAP_OK, n_used=30,
+                    n_future_knowledge=0, n_pre_era=0, n_missing_stamp=0,
+                    n_out_of_window=0, max_hold_s=1.0, source=BN_BOOKTICKER)
+        try:
+            PartialTwap(**{**base, **kw})
+        except Inadmissible as e:
+            return str(e)
+        return ""
+
+    ok("empty or reversed interval" in _pt_refuses(lo=999.0, hi=999.0),
+       "R3-2: a forged partial whose interval is EMPTY now refuses AT "
+       "CONSTRUCTION -- the boundary moved from the consumer to the type, so "
+       "no consumer has to remember to check it")
+    ok("covering ZERO seconds" in _pt_refuses(covered_s=0.0),
+       "R3-2: a ZERO-COVERAGE partial refuses. It was ACCEPTED as a complete "
+       "realized part -- zero observed seconds read as a measured average, "
+       "'an absence wearing a status'")
+    ok("describes nothing that was observed" in _pt_refuses(n_used=0),
+       "and n_used=0 refuses too: an integral over no admissible tick "
+       "describes nothing that was observed")
+    ok(_pt_refuses() == "",
+       "positive control: a well-formed partial still constructs")
+    _forged_ok = PartialTwap(lo=999.0, hi=1099.0, integral=100.0 * 100,
+                             covered_s=100.0, span_s=100.0, status=TWAP_OK,
+                             n_used=100, n_future_knowledge=0, n_pre_era=0,
+                             n_missing_stamp=0, n_out_of_window=0,
+                             max_hold_s=1.0, source=BN_BOOKTICKER)
     ok("cannot be matched to its interval" in _s60_refuses(
-           t=270.0, spot_as_of=270.0, partial=_forged),
+           t=270.0, spot_as_of=270.0, partial=_forged_ok),
        "R3(2b) a FORGED partial claiming span=covered=999 is REFUSED. It "
        "returned p=1.0 -- 'clinched' -- from numbers describing no interval at "
        "all, because PartialTwap did not record WHICH interval it covered. It "
@@ -1652,6 +1736,29 @@ def _selftests() -> int:
     ok(bn_bookticker_s60_probability(**_s60)["status"] == FP_OK,
        "positive control: a correctly-sourced, correctly-bounded, "
        "fully-stamped call still answers")
+
+    # ===== 2B-R3-2: frozen window, attributed spot ======================
+    import inspect as _i3
+    _sig = _i3.signature(bn_bookticker_s60_probability).parameters
+    ok("window_s" not in _sig and S60_WINDOW_S == 60.0,
+       f"2B-R3-2: `window_s` is GONE from the signature and FROZEN at "
+       f"{S60_WINDOW_S} on the estimator's name. It was a caller argument with "
+       f"a default, so `window_s=-60` reached the maths -- and a NEGATIVE "
+       f"averaging length makes the threshold k negative, which the "
+       f"already-clinched branch reads as WON and returns p=1.0. A nonsense "
+       f"parameter produced MAXIMUM CONFIDENCE")
+    ok(bn_bookticker_s60_probability(**_s60)["window_s_frozen"] is True,
+       "and the artifact records that the window was frozen, not supplied")
+    ok("not" in _s60_refuses(spot_source=MICROPRICE)
+       and "own feed" in _s60_refuses(spot_source=MICROPRICE),
+       "2B-R3-2: SPOT IS ATTRIBUTED. It carried an as-of but no SOURCE, so a "
+       "price from any feed -- including the Binance-spot mirror that is NOT "
+       "the settlement venue -- could drive the challenger while the record "
+       "claimed to be a bookTicker estimate. The partial already had to name "
+       "its source; the spot is the same input and did not")
+    ok(bn_bookticker_s60_probability(**_s60)["spot_source"] == BN_BOOKTICKER,
+       "positive control: the challenger's own feed is accepted and recorded")
+
 
     print(f"\n{'FAIR-PRICE IDENTITY SELFTEST GREEN' if not fails else 'RED'}: "
           f"{len(fails)} failing, {checks} checks")
