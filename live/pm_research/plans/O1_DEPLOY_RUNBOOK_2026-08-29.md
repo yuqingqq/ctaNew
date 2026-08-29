@@ -1,5 +1,13 @@
 # O1 boundary deploy runbook — 2026-08-29T00:00:00Z
 
+> **SUPERSEDED — DO NOT EXECUTE.** This file predates the R-251/R-276
+> postponement and hard-codes the WRONG boundary (08-29) in its era stamp,
+> restart-gap attribution, and day-bar target, and its stamp order asks for a
+> PID that does not exist until after the restart
+> (CODEX_O1_FINAL_PREARM_REVIEW_2026-08-29.md, O1-RB1/RB2). The sole operating
+> authority is **`O1_DEPLOY_RUNBOOK_2026-08-30.md`** with
+> `o1_boundary_preflight.py`. This file is retained as provenance only.
+
 **Authority:** user ruling R-232 (O1 package a–d approved). Patch committed
 UNDEPLOYED at `6786a02`; working tree deliberately held at `clob_v3_1`
 (`collect_pm.py` modified vs HEAD) because `pm-collector-clob.service` has
