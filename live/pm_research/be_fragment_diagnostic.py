@@ -46,7 +46,15 @@ FREEZE = DERIVED / "harmful_phase2_lgbm_btc_freeze_v3.json"
 OUT = DERIVED / "be_fragment_diagnostic_v1.json"
 ROWS_OUT = DERIVED / "be_fragment_exposure_rows_v1.json"
 COIN = "btc"
-IDENTITY_AT_BUILD = "3d0b6c8c6dfe9466"   # measured before this file existed
+# The lattice identity this harness was built against. It MOVED ONCE, under an
+# explicit ruling (FD-R7): phase2_arms._stream_tape_rows was a fail-open reader
+# that accepted a truncated tape as complete, and repairing it necessarily moved
+# fit_code_sha256_prefix. Both values are kept and the rebind artifact is named,
+# because silently re-pinning this constant is exactly how an identity guard
+# stops guarding -- the next unexplained move must still go RED.
+IDENTITY_BEFORE_FDR7 = "3d0b6c8c6dfe9466"
+IDENTITY_AT_BUILD = "e27cab9e5f6ce8e5"       # post-FD-R7 rebind
+IDENTITY_REBIND_ARTIFACT = "be_fitcode_rebind_v1.json"
 
 
 class DiagnosticRefused(RuntimeError):
@@ -523,9 +531,14 @@ def selftest() -> int:
        "wrong (the vacuum shape at the index level)")
     import shutil as _sh; _sh.rmtree(_d, ignore_errors=True)
 
-    ok(PA.measured_code_identity()["combined"] == IDENTITY_AT_BUILD,
-       f"ZERO IDENTITY FILES TOUCHED: the lattice identity is still "
-       f"{IDENTITY_AT_BUILD} (checkable, not asserted)")
+    _idn = PA.measured_code_identity()["combined"]
+    ok(_idn == IDENTITY_AT_BUILD,
+       f"the lattice identity is the POST-REBIND value {IDENTITY_AT_BUILD} "
+       f"(was {IDENTITY_BEFORE_FDR7}; moved ONCE under FD-R7, evidenced in "
+       f"{IDENTITY_REBIND_ARTIFACT}). Measured {_idn}")
+    ok(_idn != IDENTITY_BEFORE_FDR7,
+       "the pre-rebind identity is NOT silently still in force — if the repair "
+       "were reverted this would catch it rather than passing quietly")
 
     print(f"\n{'BE FRAGMENT DIAGNOSTIC SELFTEST GREEN' if not fails else 'RED'}: "
           f"{len(fails)} failing")
