@@ -211,12 +211,32 @@ def snapshot_inputs() -> Path:
     about cost). The equivalence question is about the TALLY, and the tally
     reads the copied files.
     """
+    import hashlib
     import shutil
     import tempfile
     d = Path(tempfile.mkdtemp(prefix="da_m6_snapshot_"))
+    manifest = {}
     for f in ("markets.jsonl", "resolutions.jsonl"):
         shutil.copy2(PM / f, d / f)
-    (d / "prices").symlink_to(PM / "prices")
+        manifest[f] = hashlib.sha256((d / f).read_bytes()).hexdigest()[:16]
+    # THE PRICE DIRECTORY WAS A SYMLINK TO LIVE, so "both sides read one frozen
+    # snapshot" was true of the two small files and FALSE of the price streams
+    # -- which also grow, and which every convention is computed from. I wrote
+    # the symlink deliberately and justified it on copy cost; the justification
+    # was wrong, because the confound it leaves is exactly the one the snapshot
+    # exists to remove, and 394MB is seconds on local disk.
+    (d / "prices").mkdir()
+    for topic in ("crypto_prices_twap_sixty", "crypto_prices_twap_thirty"):
+        src, dst = PM / "prices" / topic, d / "prices" / topic
+        dst.mkdir(parents=True)
+        h = hashlib.sha256()
+        for f in sorted(src.glob("*")):
+            shutil.copy2(f, dst / f.name)
+            h.update(f.name.encode())
+            h.update(hashlib.sha256((dst / f.name).read_bytes()).digest())
+        manifest[f"prices/{topic}"] = h.hexdigest()[:16]
+    (d / "SOURCE_MANIFEST.json").write_text(
+        json.dumps(manifest, indent=1, sort_keys=True), encoding="utf-8")
     return d
 
 
@@ -269,9 +289,36 @@ def original_table(snap: Path) -> dict[str, tuple[int, str, str]]:
     return table_
 
 
+def consistent_hit_span(n: int, shown: str) -> int:
+    """How many DIFFERENT hit counts produce the same printed rate.
+
+    The original prints one decimal, so the comparison cannot distinguish
+    tallies closer than that -- at n=18,047 a printed 99.9% is consistent with
+    18 distinct hit counts, a 17-ROW AMBIGUITY. My previous filing said
+    "EQUIVALENCE ENFORCED ... all match", which overclaims: two harnesses
+    differing by up to 17 rows per convention would both print 99.9 and pass.
+
+    Reported rather than hidden, because a bound I can compute is a bound the
+    claim must carry (rule 10).
+    """
+    try:
+        v = float(shown)
+    except ValueError:
+        return -1
+    lo, hi = v - 0.05, v + 0.05
+    ks = [k for k in range(n + 1) if lo <= k / n * 100 < hi]
+    return (ks[-1] - ks[0]) if ks else -1
+
+
 def assert_equivalent(mine: dict, theirs: dict) -> dict:
     """REFUSE on any disagreement. An empty intersection also refuses: two
-    tables that share no convention agree vacuously."""
+    tables that share no convention agree vacuously.
+
+    EXACT ON WHAT IS EXACT, CALIBRATED ON WHAT IS NOT. `n` is an integer and
+    is compared exactly. The agreement RATE arrives as one printed decimal, so
+    the strongest honest statement is agreement to that precision, with the
+    residual row-ambiguity computed and returned.
+    """
     fmt = {k: (v["n"], f"{v['agree'] * 100:.1f}", f"{v['agree_big'] * 100:.1f}")
            for k, v in mine.items()}
     shared = sorted(set(fmt) & set(theirs))
@@ -285,7 +332,30 @@ def assert_equivalent(mine: dict, theirs: dict) -> dict:
         raise EquivalenceFailed(
             f"EQUIVALENCE FAILED -- the audit STOPS and no recent-window "
             f"number is read. differing={diffs} unmatched={missing}")
-    return {"conventions_compared": shared, "all_match": True}
+    amb = {k: consistent_hit_span(theirs[k][0], theirs[k][1]) for k in shared}
+    # AN UNREACHABLE RATE IS A DEFECT, NOT A CURIOSITY. -1 means NO integer
+    # hit-count at that n produces the printed rate -- so the two sides
+    # disagree about something structural (a different n, a different
+    # denominator, a mis-parse) even though the strings happened to match.
+    # Found because my own selftest fixture claimed 99.9% at n=10, which no
+    # integer can produce: the fixture asserted an impossible state, and the
+    # function was right to say so.
+    _unreachable = sorted(k for k, v in amb.items() if v < 0)
+    if _unreachable:
+        raise EquivalenceFailed(
+            f"UNREACHABLE RATE for {_unreachable}: no integer hit count at the "
+            f"stated n yields the printed rate, so the tables disagree "
+            f"structurally even though their strings matched.")
+    return {"conventions_compared": shared,
+            "n_exact_match": True,
+            "rate_match_to_printed_precision": True,
+            "residual_hit_ambiguity_rows": amb,
+            "claim":
+                "n matches EXACTLY; agreement rates match to the ONE DECIMAL "
+                "the original prints. Two tallies differing by up to the rows "
+                "listed above would print the same rate and pass, so this is "
+                "agreement to a stated precision -- NOT bit-equality. The "
+                "earlier 'all_match: True' overclaimed."}
 
 
 def main() -> int:
@@ -380,27 +450,46 @@ def _selftests() -> int:
             return needle in str(e)
         return False
 
-    mine = {"A": {"n": 10, "agree": 0.999, "agree_big": 1.0},
-            "B": {"n": 10, "agree": 0.856, "agree_big": 0.873}}
-    same = {"A": (10, "99.9", "100.0"), "B": (10, "85.6", "87.3")}
-    ok(assert_equivalent(mine, same)["all_match"] is True,
+    # n from the real audit, so the rounding slack is the REAL slack
+    mine = {"A": {"n": 18047, "agree": 0.9988, "agree_big": 1.0},
+            "B": {"n": 18047, "agree": 0.856, "agree_big": 0.873}}
+    same = {"A": (18047, "99.9", "100.0"), "B": (18047, "85.6", "87.3")}
+    _eq = assert_equivalent(mine, same)
+    ok(_eq["n_exact_match"] and _eq["rate_match_to_printed_precision"],
        "POSITIVE CONTROL: matching tables pass the equivalence gate")
+    ok(_eq["residual_hit_ambiguity_rows"]["A"] > 0
+       and "NOT bit-equality" in _eq["claim"],
+       f"AND THE CLAIM IS CALIBRATED, NOT ABSOLUTE: the original prints ONE "
+       f"decimal, so tallies differing by up to "
+       f"{_eq['residual_hit_ambiguity_rows']} rows print the same rate and "
+       f"pass. My earlier `all_match: True` OVERCLAIMED -- at n=18,047 the "
+       f"ambiguity is 17 rows per convention, and the gate now REPORTS the "
+       f"bound instead of hiding behind a boolean")
     ok(raises(lambda: assert_equivalent(
-           mine, dict(same, A=(999, "99.9", "100.0"))), "EQUIVALENCE FAILED"),
+           mine, dict(same, A=(99999, "99.9", "100.0"))), "EQUIVALENCE FAILED"),
        "FALSIFIER: a WRONG ROW COUNT (999) refuses. Codex monkeypatched "
        "exactly this and the old harness returned 0 and wrote 'A2 CONFIRMED' "
        "-- it PRINTED 'must match' and never compared")
     ok(raises(lambda: assert_equivalent(
            mine, dict(same, B=(10, "85.7", "87.3"))), "EQUIVALENCE FAILED"),
        "FALSIFIER: a one-tenth-of-a-point disagreement refuses too")
-    ok(raises(lambda: assert_equivalent(mine, {"Z": (1, "1.0", "1.0")}),
+    ok(raises(lambda: assert_equivalent(mine, {"Z": (18047, "1.0", "1.0")}),
               "empty comparison is not agreement"),
        "VACUITY: tables sharing NO convention refuse -- two tables that "
        "compare nothing agree vacuously")
-    ok(raises(lambda: assert_equivalent(mine, dict(same, C=(1, "1.0", "1.0"))),
+    ok(raises(lambda: assert_equivalent(mine, dict(same, C=(18047, "1.0", "1.0"))),
               "unmatched"),
        "an EXTRA convention on either side refuses: coverage must match, not "
        "merely overlap")
+    ok(raises(lambda: assert_equivalent(
+           {"A": {"n": 10, "agree": 0.999, "agree_big": 1.0}},
+           {"A": (10, "99.9", "100.0")}), "UNREACHABLE RATE"),
+       "AN UNREACHABLE RATE REFUSES: no integer hit count at n=10 yields "
+       "99.9%, so the tables disagree STRUCTURALLY even though their strings "
+       "matched. Found because my own fixture asserted exactly that "
+       "impossible state -- third time a fixture of mine encoded an "
+       "assumption, and this time the function was right and the fixture "
+       "wrong")
     print(f"\n{'AUDIT CHECKER GREEN' if not fails else 'RED'}: "
           f"{len(fails)} failing, {checks} checks")
     return 1 if fails else 0

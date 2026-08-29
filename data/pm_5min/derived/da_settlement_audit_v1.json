@@ -1,46 +1,54 @@
 {
-  "as_of_utc": "2026-08-28T15:09:17.482596+00:00",
+  "as_of_utc": "2026-08-29T04:59:47.111212+00:00",
   "equivalence": {
-    "all_match": true,
+    "claim": "n matches EXACTLY; agreement rates match to the ONE DECIMAL the original prints. Two tallies differing by up to the rows listed above would print the same rate and pass, so this is agreement to a stated precision -- NOT bit-equality. The earlier 'all_match: True' overclaimed.",
     "conventions_compared": [
       "S30(T) vs S30(t0)",
       "S60(T) vs S30(t0)",
       "S60(T) vs S60(t0)",
       "meanS60[t0,T] vs S60(t0)"
-    ]
+    ],
+    "n_exact_match": true,
+    "rate_match_to_printed_precision": true,
+    "residual_hit_ambiguity_rows": {
+      "S30(T) vs S30(t0)": 18,
+      "S60(T) vs S30(t0)": 18,
+      "S60(T) vs S60(t0)": 18,
+      "meanS60[t0,T] vs S60(t0)": 18
+    }
   },
   "equivalence_control_all_days": {
     "S30(T) vs S30(t0)": {
-      "agree": 0.9483570676566743,
-      "agree_big": 0.9571404274618742,
+      "agree": 0.9487192836318201,
+      "agree_big": 0.9577494805264,
       "gate_pass": false,
-      "knowledge_time_agree": 0.9529561700005541,
-      "n": 18047,
-      "n_big_margin": 17639
+      "knowledge_time_agree": 0.9531965847563515,
+      "n": 19208,
+      "n_big_margin": 18769
     },
     "S60(T) vs S30(t0)": {
-      "agree": 0.9621543746883139,
-      "agree_big": 0.971939789832434,
+      "agree": 0.9621511870054145,
+      "agree_big": 0.9721287842383469,
       "gate_pass": false,
-      "knowledge_time_agree": 0.9657560813431595,
-      "n": 18047,
-      "n_big_margin": 17605
+      "knowledge_time_agree": 0.9653790087463557,
+      "n": 19208,
+      "n_big_margin": 18729
     },
     "S60(T) vs S60(t0)": {
-      "agree": 0.9988363716961268,
-      "agree_big": 0.9996587613035318,
+      "agree": 0.9989067055393586,
+      "agree_big": 0.9996794015495591,
       "gate_pass": true,
-      "knowledge_time_agree": 0.9917991910012744,
-      "n": 18047,
-      "n_big_margin": 17583
+      "knowledge_time_agree": 0.9920345689296126,
+      "n": 19208,
+      "n_big_margin": 18715
     },
     "meanS60[t0,T] vs S60(t0)": {
-      "agree": 0.8562087881642378,
-      "agree_big": 0.8728705527871132,
+      "agree": 0.856570179092045,
+      "agree_big": 0.8735406437534097,
       "gate_pass": false,
-      "knowledge_time_agree": 0.8529395467390702,
-      "n": 18047,
-      "n_big_margin": 17258
+      "knowledge_time_agree": 0.8530299875052062,
+      "n": 19208,
+      "n_big_margin": 18330
     }
   },
   "fresh_subset_agree": 0.9998734016964173,
@@ -56,29 +64,29 @@
     "resolutions_open_or_no_winner": 8,
     "resolutions_unparseable": 0
   },
-  "n_windows_all": 18047,
+  "n_windows_all": 19208,
   "n_windows_recent": 8022,
   "original_module": "live.pm_research.exp_m6_settlement",
   "original_table": {
     "S30(T) vs S30(t0)": [
-      18047,
-      "94.8",
-      "95.7"
+      19208,
+      "94.9",
+      "95.8"
     ],
     "S60(T) vs S30(t0)": [
-      18047,
+      19208,
       "96.2",
       "97.2"
     ],
     "S60(T) vs S60(t0)": [
-      18047,
+      19208,
       "99.9",
       "100.0"
     ],
     "meanS60[t0,T] vs S60(t0)": [
-      18047,
-      "85.6",
-      "87.3"
+      19208,
+      "85.7",
+      "87.4"
     ]
   },
   "pre_registration": "Q-DA-145",
@@ -123,14 +131,14 @@
     "2026-08-26",
     "2026-08-27"
   ],
-  "snapshot_dir": "/tmp/da_m6_snapshot_wq33fszh",
+  "snapshot_dir": "/tmp/da_m6_snapshot__4jlnend",
   "snapshot_note": "both sides read one frozen copy of markets/resolutions; the tape grows during measurement (rule 8)",
   "staleness_all": {
-    "fresh_hit": 17617,
-    "fresh_n": 17622,
-    "gt_1s": 108,
+    "fresh_hit": 18750,
+    "fresh_n": 18755,
+    "gt_1s": 122,
     "gt_1s_disagree": 1,
-    "gt_2s": 317,
+    "gt_2s": 331,
     "gt_2s_disagree": 15
   },
   "staleness_recent": {
