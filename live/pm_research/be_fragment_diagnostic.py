@@ -532,6 +532,61 @@ def selftest() -> int:
     import shutil as _sh; _sh.rmtree(_d, ignore_errors=True)
 
     _idn = PA.measured_code_identity()["combined"]
+    # ---- FD-R5: the CLI refuses rather than exiting clean ----------------
+    ok(main([]) == 2, "FD-R5 no arguments EXITS NON-ZERO")
+    ok(main(["--not-a-mode"]) == 2,
+       "FD-R5 an UNKNOWN MODE exits non-zero — a mode typo that returns 0 is a "
+       "run that looks like it happened")
+    for bad, want in ((["--score"], "requires --tape"),
+                      (["--score", "--tape", "/nope", "--out", "/tmp/x.json",
+                        "--reason", "r"], "no tape at")):
+        try:
+            main(bad); _g = ""
+        except SystemExit as e:
+            _g = str(e)
+        ok(want in _g, f"FD-R5 KNOWN-BAD: {' '.join(bad)[:34]} -> REFUSED")
+    import tempfile as _tf3
+    _d3 = Path(_tf3.mkdtemp()); _ex = _d3 / "exists.json"; _ex.write_text("{}")
+    try:
+        main(["--score", "--tape", str(_ex), "--out", str(_ex),
+              "--reason", "r"]); _g2 = ""
+    except SystemExit as e:
+        _g2 = str(e)
+    ok("already exists" in _g2,
+       "FD-R5 KNOWN-BAD: an EXISTING output is refused — R-293 permits one run "
+       "and overwriting destroys the evidence the previous one happened")
+    try:
+        main(["--score", "--tape", str(_ex), "--out", str(_d3 / "fresh.json")])
+        _g3 = ""
+    except SystemExit as e:
+        _g3 = str(e)
+    ok("--reason is required" in _g3,
+       "FD-R5 KNOWN-BAD: a run with NO WRITTEN REASON is refused; a reason "
+       "supplied after the numbers is chosen with them in view")
+    import shutil as _sh3; _sh3.rmtree(_d3, ignore_errors=True)
+
+    # ---- FD-R6: the reconciliation refuses what it must ------------------
+    _rows = [{"slug": "s", "side": "BUY_UP", "gen": 1, "t_start": 0.0}]
+    try:
+        reconcile_population(_rows, {"state_join_failed": 3}, 4); _g4 = ""
+    except DiagnosticRefused as e:
+        _g4 = str(e)
+    ok("state_join_failed=3" in _g4,
+       "FD-R6 KNOWN-BAD: a non-zero state_join_failed REFUSES — the tape does "
+       "not cover the population, and a partial join reads as a clean small "
+       "result rather than a missing input")
+    try:
+        reconcile_population(_rows + _rows, {"state_join_failed": 0}, 2); _g5 = ""
+    except DiagnosticRefused as e:
+        _g5 = str(e)
+    ok("DUPLICATE" in _g5,
+       "FD-R6 KNOWN-BAD: duplicate decision rows REFUSE (rule 2: one outcome "
+       "attributed to several rows inflates every count)")
+    _r6 = reconcile_population(_rows, {"pm": 2, "state_join_failed": 0}, 3)
+    ok(_r6["reconciles"] and _r6["n_actions"] == 1,
+       "FD-R6 POSITIVE CONTROL: a clean population reconciles kept+drops to the "
+       "exposure OK count, with the ACTION count reported")
+
     ok(_idn == IDENTITY_AT_BUILD,
        f"the lattice identity is the POST-REBIND value {IDENTITY_AT_BUILD} "
        f"(was {IDENTITY_BEFORE_FDR7}; moved ONCE under FD-R7, evidenced in "
@@ -547,15 +602,65 @@ def selftest() -> int:
     return 1 if fails else 0
 
 
+USAGE = ("usage: be_fragment_diagnostic.py --selftest\n"
+         "       be_fragment_diagnostic.py --build-rows\n"
+         "       be_fragment_diagnostic.py --score --tape PATH "
+         "[--exposure PATH] --out PATH --reason TEXT")
+
+
 def main(argv=None) -> int:
+    """FD-R5: a REAL cli. An unknown mode EXITS NON-ZERO rather than printing
+    usage and returning 0 -- a mode typo that exits clean is a run that looks
+    like it happened."""
     argv = list(sys.argv[1:] if argv is None else argv)
-    if "--selftest" in argv:
+    if not argv:
+        print(USAGE, file=sys.stderr)
+        return 2
+    mode = argv[0]
+
+    def opt(name, required=True):
+        if name in argv:
+            k = argv.index(name)
+            if k + 1 < len(argv):
+                return argv[k + 1]
+        if required:
+            raise SystemExit(f"REFUSED: {mode} requires {name} PATH.\n{USAGE}")
+        return None
+
+    if mode == "--selftest":
         return selftest()
-    if "--build-rows" in argv:
+    if mode == "--build-rows":
         print(json.dumps(build_rows_stage(), indent=1, sort_keys=True)[:1600])
         return 0
-    print("usage: be_fragment_diagnostic.py --selftest | --build-rows")
-    return 0
+    if mode == "--score":
+        tape = Path(opt("--tape"))
+        out = Path(opt("--out"))
+        exposure = opt("--exposure", required=False)
+        reason = opt("--reason", required=False)
+        if not tape.exists():
+            raise SystemExit(f"REFUSED: no tape at {tape}.")
+        if out.exists():
+            raise SystemExit(
+                f"REFUSED: {out} already exists. R-293 permits ONE run; "
+                f"overwriting the artifact of a previous one destroys the "
+                f"evidence that it happened. Choose a fresh path.")
+        if not reason:
+            raise SystemExit(
+                "REFUSED: --reason is required. R-293 permits ONE run and a "
+                "re-run requires its own WRITTEN REASON RECORDED BEFORE IT; a "
+                "reason supplied after the numbers is chosen with them in view.")
+        res = score_stage(tape, exposure_path=exposure)
+        res["run_reason"] = reason
+        res["invocation"] = {"argv": argv, "tape": str(tape),
+                             "exposure": str(exposure or ROWS_OUT),
+                             "out": str(out)}
+        out.write_text(json.dumps(res, indent=1, sort_keys=True,
+                                  allow_nan=False))
+        print(f"[frag] wrote {out}", flush=True)
+        print(json.dumps(res["cells"], indent=1, sort_keys=True)[:1800])
+        return 0
+    print(f"REFUSED: unknown mode {mode!r}.\n{USAGE}", file=sys.stderr)
+    return 2
 
 
 
@@ -563,35 +668,164 @@ def main(argv=None) -> int:
 # ---------------------------------------------------------------------------
 # STAGE 3: score the frozen candidate on the fragment rows
 # ---------------------------------------------------------------------------
-def score_stage(tape_path: Path, latency_ms: int = None) -> dict:
-    """The diagnostic read. Bound to DA's receipt and cutoff throughout.
+def load_gate_verdict(tape_path: Path, exposure_path: Path) -> dict:
+    """FD-R1: DA's gate verdict is a REQUIRED INPUT, and it is RECOMPUTED.
 
-    Both comparators run on the IDENTICAL rows (R-293): the incumbent
-    counterpart is arm D applied to the same population, and matched-random is
-    evaluate_policy's own (side x hour)-matched control on the same rows. The
-    candidate's thresholds are its FROZEN causal thresholds, never re-derived
-    here -- re-deriving them on the scored data would make the read
-    retrospective and it would still look normal."""
+    The verdict file says so itself: "ALL_PASS is recomputed from the predicate
+    table in this file, not carried in. A consumer should re-derive it." A
+    consumer that reads the carried boolean trusts a field instead of the
+    evidence beside it, which is the shape that lets a stale or hand-edited
+    verdict authorise a score.
+
+    THREE BINDINGS, because a valid verdict about a DIFFERENT artifact is still
+    the wrong verdict: the verdict's subject must be THIS tape by path AND by
+    content hash, and the tape must have been built from THE EXACT exposure file
+    being scored."""
+    cands = sorted(Path(DERIVED).glob("da_*verdict*.json"))
+    hits = []
+    for c in cands:
+        try:
+            d = json.loads(c.read_text())
+        except Exception:                                   # noqa: BLE001
+            continue
+        if Path(str(d.get("tape_path", ""))).name == Path(tape_path).name:
+            hits.append((c, d))
+    if not hits:
+        raise DiagnosticRefused(
+            f"REFUSED: no DA gate verdict names {Path(tape_path).name}. The "
+            f"score read is GATED on DA's verdict (R-293); scoring an ungated "
+            f"tape is scoring a population nobody certified.")
+    if len(hits) > 1:
+        raise DiagnosticRefused(
+            f"REFUSED: {len(hits)} verdicts name this tape "
+            f"({[c.name for c, _ in hits]}). Choosing among them is a decision, "
+            f"not a lookup.")
+    vpath, v = hits[0]
+
+    # RECOMPUTE all_pass from the predicate table.
+    preds = v.get("predicates")
+    if not isinstance(preds, list) or not preds:
+        raise DiagnosticRefused(
+            f"REFUSED: {vpath.name} carries no predicate table; a verdict with "
+            f"no evidence cannot be re-derived, only believed.")
+    applicable = [p for p in preds if p.get("applicable")]
+    failed = [p.get("predicate") for p in applicable if not p.get("pass")]
+    recomputed = bool(applicable) and not failed
+    if recomputed != bool(v.get("all_pass")):
+        raise DiagnosticRefused(
+            f"REFUSED: {vpath.name} carries all_pass={v.get('all_pass')!r} but "
+            f"its own predicate table recomputes to {recomputed}. The table is "
+            f"the evidence; the field is a claim about it.")
+    if not recomputed:
+        raise DiagnosticRefused(
+            f"REFUSED: DA's gate did not pass. Failing predicates: {failed}. "
+            f"A diagnostic may be inadmissible as evidence and still may not be "
+            f"computed on an ungated tape.")
+
+    # BIND the verdict's subject to THIS tape, by path and by content.
+    if Path(str(v.get("tape_path"))).resolve() != Path(tape_path).resolve():
+        raise DiagnosticRefused(
+            f"REFUSED: the verdict certifies {v.get('tape_path')}, this run "
+            f"consumes {tape_path}.")
+    want = str(v.get("tape_sha256_prefix", ""))
+    got = _sha16(tape_path)
+    if want and want != got:
+        raise DiagnosticRefused(
+            f"REFUSED: verdict certifies tape {want}, on disk it is {got}. A "
+            f"valid verdict about different bytes is still the wrong verdict.")
+
+    # BIND the tape to the EXACT exposure input it was built from.
+    head = Path(tape_path).open().read(1 << 16)
+    meta = json.loads(head[:head.index('"rows"')].rstrip().rstrip(",") + "}")
+    built_from = json.dumps(meta.get("per_split", {}))
+    exp_sha = _sha16(exposure_path)
+    return {"verdict_file": vpath.name, "verdict_sha256_prefix": _sha16(vpath),
+            "all_pass_recomputed": recomputed,
+            "n_applicable": len(applicable),
+            "not_applicable": v.get("not_applicable"),
+            "tape_path": str(tape_path), "tape_sha256_prefix": got,
+            "tape_per_split": built_from,
+            "exposure_input": Path(exposure_path).name,
+            "exposure_sha256_prefix": exp_sha,
+            "tape_header_clock_basis": meta.get("clock_basis"),
+            "tape_header_ledger_sha256": meta.get("ledger_sha256"),
+            "how_all_pass_was_obtained": "RE-DERIVED from the predicate table, "
+                                         "not read from the carried field"}
+
+
+def reconcile_population(kept: list, drops: dict, expected_rows: int) -> dict:
+    """FD-R6: every row accounted for, every status declared, no duplicates.
+
+    state_join_failed MUST be zero: a row dropped because the tape lacks its key
+    is not an exclusion, it is a tape that does not cover the population -- the
+    exact failure that would otherwise present as a clean, smaller answer."""
+    if drops.get("state_join_failed", 0) != 0:
+        raise DiagnosticRefused(
+            f"REFUSED: state_join_failed={drops['state_join_failed']}. The state "
+            f"tape does not cover these rows, so the scored population is not "
+            f"the population -- and a partial join reads as a clean small "
+            f"result rather than as a missing input.")
+    keys = [(r.get("slug"), r.get("side"), r.get("gen"), r.get("t_start"))
+            for r in kept]
+    if len(set(keys)) != len(keys):
+        from collections import Counter
+        dup = [k for k, n in Counter(keys).items() if n > 1]
+        raise DiagnosticRefused(
+            f"REFUSED: {len(keys) - len(set(keys))} DUPLICATE decision rows "
+            f"(e.g. {dup[:3]}). One outcome attributed to several rows inflates "
+            f"every count taken from them (rule 2).")
+    accounted = len(kept) + sum(drops.values())
+    return {"rows_kept": len(kept), "drops_by_named_status": dict(drops),
+            "rows_accounted": accounted,
+            "rows_expected_from_exposure_OK": expected_rows,
+            "reconciles": accounted == expected_rows,
+            "n_actions": len({(r.get("slug"), r.get("side"), r.get("gen"))
+                              for r in kept}),
+            "state_join_failed": drops.get("state_join_failed", 0)}
+
+
+def score_stage(tape_path: Path, exposure_path: Path = None,
+                latency_ms: int = None) -> dict:
+    """The diagnostic read. Gated on DA's verdict; both comparators on the
+    IDENTICAL rows; both held to their OWN frozen causal thresholds."""
     import phase2_iter011_run as R11        # reuse, never re-implement
+    import phase2_declaration as _D
+    exposure_path = Path(exposure_path or ROWS_OUT)
     da = da_bounds()
+    gate = load_gate_verdict(Path(tape_path), exposure_path)
     model = load_frozen_candidate()
-    L = int(getattr(__import__("phase2_declaration"), "TARGET_LATENCY_MS")
-            if latency_ms is None else latency_ms)
+    L = int(_D.TARGET_LATENCY_MS if latency_ms is None else latency_ms)
 
-    TAPE = PA.tape_index("score") if tape_path is None else _index_tape(tape_path)
-    block_all = PA._feature_pass(ROWS_OUT, "be_fragment", TAPE=TAPE)
+    # FD: split is EXPLICIT. The fragments were built into the SCORE split
+    # (R-303); indexing 'train' would silently return an empty index.
+    TAPE = _index_tape(Path(tape_path), split="score")
+    block_all = PA._feature_pass(exposure_path, "be_fragment", TAPE=TAPE)
     if COIN not in block_all:
         raise DiagnosticRefused(
-            f"REFUSED: the feature pass produced no {COIN} block. Every row was "
+            f"REFUSED: the feature pass produced no {COIN} block; every row was "
             f"excluded, which reads as a null result and is an absent one.")
     blk = block_all[COIN]
     kept = blk["kept"]
     assert_field_readable(kept, "status", str, "post-feature-pass rows")
-    if not kept:
-        raise DiagnosticRefused(
-            f"REFUSED: zero rows survived the feature pass. drops={blk['drops']}. "
-            f"A state tape that does not cover these rows drops every one of "
-            f"them as state_join_failed and yields a clean, empty, wrong answer.")
+    assert_field_readable(kept, "t0", int, "ABSOLUTE clock component")
+    assert_field_readable(kept, "t_start", float, "window-relative component")
+
+    exp_head = exposure_path.open().read(1 << 16)
+    exp_meta = json.loads(exp_head[:exp_head.index('"rows"')].rstrip().rstrip(",") + "}")
+    recon = reconcile_population(
+        kept, blk["drops"], exp_meta["rows_by_status"].get("OK", -1))
+
+    # CANONICAL ORDER (R-306(2)). evaluate_policy breaks gmax TIES by ARRIVAL
+    # ORDER, so the decision metric moves with row order -- measured, a 110c
+    # swing on a 12-generation fixture. Sorting here makes THIS run
+    # reproducible. It does NOT make the function order-independent, and the
+    # receipt says so rather than letting one be read as the other.
+    order = sorted(range(len(kept)),
+                   key=lambda i: (kept[i].get("slug"), kept[i].get("side"),
+                                  kept[i].get("gen"), kept[i].get("t_start"), i))
+    kept = [kept[i] for i in order]
+    for fam in ("PM", "FN", "ST"):
+        blk[fam] = [blk[fam][i] for i in order]
     idx = range(len(kept))
 
     cand = score_rows(model, blk, idx)
@@ -600,17 +834,52 @@ def score_stage(tape_path: Path, latency_ms: int = None) -> dict:
     if not (len(cand) == len(inc) == len(kept)):
         raise DiagnosticRefused(
             f"REFUSED: {len(cand)} candidate / {len(inc)} incumbent scores "
-            f"against {len(kept)} rows. The comparison is only defined on the "
+            f"against {len(kept)} rows; the comparison is defined only on the "
             f"IDENTICAL population.")
 
-    thetas = model["causal_thresholds"]
-    budgets = [float(b.rstrip('%')) / 100.0 for b in sorted(thetas)]
+    # FD-R3: BOTH ARMS ON THEIR OWN FROZEN THRESHOLDS. The incumbent was
+    # previously evaluated with NO theta_frozen, so it ran RETROSPECTIVE_TOPK --
+    # a cutoff resolved from the scored data, i.e. a look-ahead the candidate
+    # was not given. That is not a fair comparison; it is a handicap match whose
+    # numbers look entirely normal.
+    thetas_c = model["causal_thresholds"]
+    thetas_i = inc_model.get("causal_thresholds")
+    if not thetas_i:
+        raise DiagnosticRefused(
+            "REFUSED: the incumbent artifact carries no causal_thresholds, so "
+            "it could only be evaluated retrospectively. A look-ahead cutoff "
+            "for one arm and a frozen one for the other is not a comparison.")
+    budgets = [float(b.rstrip("%")) / 100.0 for b in sorted(thetas_c)]
     ev_c = HAE.evaluate_policy(kept, cand, latency_ms=L, budgets=budgets,
-                               theta_frozen=thetas)
-    ev_i = HAE.evaluate_policy(kept, inc, latency_ms=L, budgets=budgets)
+                               theta_frozen=thetas_c)
+    ev_i = HAE.evaluate_policy(kept, inc, latency_ms=L, budgets=budgets,
+                               theta_frozen=thetas_i)
+    for nm, ev in (("candidate", ev_c), ("incumbent", ev_i)):
+        for b, d in ev["budgets"].items():
+            if d.get("threshold_mode") != "CAUSAL_FROZEN":
+                raise DiagnosticRefused(
+                    f"REFUSED: {nm} budget {b} ran threshold_mode "
+                    f"{d.get('threshold_mode')!r}, not CAUSAL_FROZEN. A "
+                    f"retrospective cutoff is a look-ahead.")
+
+    # TIE COUNT AT THE BUDGET BOUNDARY, measured from the real score vector.
+    gens: dict = {}
+    for i, r in enumerate(kept):
+        gens.setdefault((r.get("slug"), r.get("side"), r.get("gen")),
+                        []).append(i)
+    gmax = sorted((max(cand[i] for i in ix) for ix in gens.values()),
+                  reverse=True)
+    ties = {}
+    for b in budgets:
+        k = max(1, int(len(gmax) * b))
+        ties[f"{int(b*100)}%"] = {
+            "k": k,
+            "tie_at_boundary": (k < len(gmax) and gmax[k - 1] == gmax[k]),
+            "n_equal_to_boundary": sum(1 for g in gmax if g == gmax[k - 1])}
+
     cells = {}
-    for b in sorted(ev_c):
-        c, i = ev_c[b], ev_i.get(b, {})
+    for b in sorted(ev_c["budgets"]):                 # FD: ev['budgets'], not top
+        c, i = ev_c["budgets"][b], ev_i["budgets"].get(b, {})
         cells[b] = {
             "budget": b,
             "candidate_net_cents": c.get("net_cents"),
@@ -626,21 +895,26 @@ def score_stage(tape_path: Path, latency_ms: int = None) -> dict:
             "sacrifice_cents": c.get("sacrifice_cents"),
             "rho_captured_over_sacrificed": c.get("rho_captured_over_sacrificed"),
             "concentration": c.get("concentration"),
-            "threshold_mode": c.get("threshold_mode"),
-        }
+            "threshold_mode_candidate": c.get("threshold_mode"),
+            "threshold_mode_incumbent": i.get("threshold_mode"),
+            "gmax_tie_at_budget_boundary": ties.get(b)}
     return {
         "artifact": "be_fragment_diagnostic_v1",
         "status": "DIAGNOSTIC_NEVER_EVIDENCE",
+        "this_is_a_MODEL_DIAGNOSTIC_not_strategy_performance": (
+            "These cents are a MODEL DIAGNOSTIC on a censored, inadmissible "
+            "fragment. They are NOT strategy performance, not a P&L, and not a "
+            "forward result. Reading them as what the policy 'would have made' "
+            "is the single most likely misreading of this artifact."),
         "what_this_cannot_do": (
-            "This cannot admit, re-freeze, re-parameterise or re-schedule "
-            "anything. R-293 pre-registered the readings BEFORE any number "
-            "existed: a POSITIVE result is WEAK COMFORT ONLY because the "
-            "censoring plausibly flatters; a NEGATIVE result is AMBIGUOUS "
-            "because censoring artifacts are indistinguishable from real "
-            "failure at this coverage, and it specifically must NOT trigger a "
-            "candidate change, which would be selection on a contaminated "
-            "read. Under EVERY outcome the race admission rule, the frozen "
-            "candidate and multiplicity (1) are untouched."),
+            "R-293 pre-registered the readings BEFORE any number existed: a "
+            "POSITIVE result is WEAK COMFORT ONLY because the censoring "
+            "plausibly flatters; a NEGATIVE result is AMBIGUOUS because "
+            "censoring artifacts are indistinguishable from real failure at "
+            "this coverage, and it specifically must NOT trigger a candidate "
+            "change, which would be selection on a contaminated read. Under "
+            "EVERY outcome the race admission rule, the frozen candidate and "
+            "multiplicity (1) are untouched."),
         "inadmissibility_is_unconditional": da["inadmissibility_reasons"],
         "censoring_statement": da["censoring_statement"],
         "censoring_measured": da.get("censoring_measured_not_asserted"),
@@ -648,13 +922,29 @@ def score_stage(tape_path: Path, latency_ms: int = None) -> dict:
                        "sha256_prefix": _sha16(DA_RECEIPT),
                        "declared_cutoff_epoch": da["declared_cutoff_epoch"],
                        "declared_cutoff_utc": da["declared_cutoff_utc"]},
+        "gate": gate,
         "candidate": model["verified"],
         "incumbent": inc_model.get("_verified"),
-        "population": {"rows_scored": len(kept),
-                       "n_actions": len({(r.get("slug"), r.get("side"),
-                                          r.get("gen")) for r in kept}),
-                       "drops_are_counted_statuses": blk["drops"],
-                       "days": sorted({r.get("day") for r in kept})},
+        "population": recon,
+        "clock_basis_consumed": {
+            "tape_declares": gate.get("tape_header_clock_basis"),
+            "strata_hour": "ABSOLUTE — harmful_action_eval._hour reads "
+                           "(t0 + t_start), verified by measurement",
+            "within_generation_order": "t_start, window-relative, valid because "
+                                       "a generation never spans a window",
+            "canonical_sort_key": "(slug, side, gen, t_start, index)"},
+        "determinism": {
+            "canonically_sorted": True,
+            "deterministic": True,
+            "order_independent": False,
+            "why": "evaluate_policy breaks gmax TIES by arrival order (measured: "
+                   "a 110c swing across row-order shuffles on an all-tied "
+                   "fixture). Canonical sorting makes THIS run reproducible; it "
+                   "does NOT make the function order-independent. The "
+                   "boundary-tie count above says whether the sensitivity could "
+                   "have bitten this population at all.",
+            "underlying_fix_blocked_by": "harmful_action_eval is in "
+                                         "CODE_IDENTITY_FILES"},
         "latency_ms": L,
         "cells": cells,
         "one_run": "R-293 permits ONE run; a re-run requires its own written "
