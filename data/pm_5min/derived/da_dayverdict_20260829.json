@@ -1,0 +1,355 @@
+{
+  "all_pass": false,
+  "as_of_utc": "2026-08-29T00:06:02.963336+00:00",
+  "authorised_by": "R-141(1); DA-verifies-first restored as a hard precondition by R-153(2)",
+  "bar_regime": "day_bar_v2",
+  "day": "2026-08-29",
+  "day_bar_v2": {
+    "btc": {
+      "P1_pass": false,
+      "P2_pass": false,
+      "P3_pass": false,
+      "all_pass": false,
+      "coin_level_gap_intervals": 2,
+      "coverage_observed_arg": "False",
+      "evaluable": false,
+      "hours_elapsed": 0.101,
+      "lost_seconds": 12.7,
+      "note": "P1 divides lost seconds by 24 as declared, so on an OPEN day it is a LOWER BOUND, not the day's rate. The closing verdict is the one that judges.",
+      "partial_day": true,
+      "thresholds": {
+        "P1_max_s_per_hr": 120.0,
+        "P2_material_span_s": 75.0,
+        "P2_max_share": 0.05,
+        "P3_max_rolling_60min_s": 900.0
+      },
+      "why": "coverage evidence was not AFFIRMATIVELY supplied (only coverage_observed is True evaluates; False, None, omitted and malformed all refuse). The day is NOT INDEPENDENTLY OBSERVED (tape coverage absent/short), so an empty gap ledger cannot be read as a clean day: silence from a dead collector and silence from a perfect one are the same bytes"
+    },
+    "eth": {
+      "P1_pass": false,
+      "P2_pass": false,
+      "P3_pass": false,
+      "all_pass": false,
+      "coin_level_gap_intervals": 0,
+      "coverage_observed_arg": "False",
+      "evaluable": false,
+      "hours_elapsed": 0.101,
+      "lost_seconds": 0,
+      "note": "P1 divides lost seconds by 24 as declared, so on an OPEN day it is a LOWER BOUND, not the day's rate. The closing verdict is the one that judges.",
+      "partial_day": true,
+      "thresholds": {
+        "P1_max_s_per_hr": 120.0,
+        "P2_material_span_s": 75.0,
+        "P2_max_share": 0.05,
+        "P3_max_rolling_60min_s": 900.0
+      },
+      "why": "coverage evidence was not AFFIRMATIVELY supplied (only coverage_observed is True evaluates; False, None, omitted and malformed all refuse). The day is NOT INDEPENDENTLY OBSERVED (tape coverage absent/short), so an empty gap ledger cannot be read as a clean day: silence from a dead collector and silence from a perfect one are the same bytes"
+    }
+  },
+  "day_bar_v2_governing": {
+    "applies_to_this_day": true,
+    "commits": "dfa0977 (declared) + 368345b (amended pre-judgment)",
+    "doc": "live/pm_research/plans/DAY_BAR_V2_PREREGISTRATION.md",
+    "from_day": "20260829",
+    "note": "days before the boundary are judged by the FROZEN count bar; the v2 bars are not applied retroactively"
+  },
+  "day_closed_calendar": false,
+  "day_closed_selector": null,
+  "day_token": "20260829",
+  "decision_note": "This instrument STATES REASONS; it does not exclude. R-141(1): a day that fails DA's verification is EXCLUDED WITH A STATED REASON, and that exclusion is the coordinator's to rule, not a worker's boolean (rule 14). Note also that gaps/hour understates damage: day one ran 28.0/hr while 80.2% of btc windows carried a gap -- read windows_gap_affected beside it, never instead of it.",
+  "freeze_epoch": 1787897340.0,
+  "gap_series": {
+    "causes": {
+      "NO_CLOSE_FRAME": 1,
+      "PING_TIMEOUT": 1
+    },
+    "coin": null,
+    "gaps_per_hour": null,
+    "hours_elapsed": 0.101,
+    "hours_over_bar": [],
+    "hours_with_a_gap": 1,
+    "ledger_lines": 5090,
+    "ledger_unparseable": 0,
+    "lost_s": 12.7,
+    "n_gaps": 2,
+    "n_hours_over_bar": 0,
+    "per_hour": {
+      "0": 2
+    },
+    "rate_estimable": false,
+    "rate_note": "only 363s elapsed -- NO RATE REPORTED; 2 raw gaps so far",
+    "worst_hour": 2
+  },
+  "granularity_note": "R-211(3), declared 2026-08-27 while no 08-28 data existed. Days before the boundary are judged by the FROZEN whole-day rule; from the boundary each coin-day passes or fails on its own completeness and its own hourly gap bars. `all_pass` remains whole-day-strict under BOTH rules so an un-updated reader fails safe; per-coin verdicts are in `per_coin`.",
+  "instrument": "da_forward_day_verify_v1",
+  "per_coin": {
+    "btc": {
+      "all_pass": false,
+      "day_bar_v2": {
+        "P1_pass": false,
+        "P2_pass": false,
+        "P3_pass": false,
+        "coin_level_gap_intervals": 2,
+        "coverage_observed_arg": "False",
+        "evaluable": false,
+        "hours_elapsed": 0.101,
+        "lost_seconds": 12.7,
+        "thresholds": {
+          "P1_max_s_per_hr": 120.0,
+          "P2_material_span_s": 75.0,
+          "P2_max_share": 0.05,
+          "P3_max_rolling_60min_s": 900.0
+        },
+        "why": "coverage evidence was not AFFIRMATIVELY supplied (only coverage_observed is True evaluates; False, None, omitted and malformed all refuse). The day is NOT INDEPENDENTLY OBSERVED (tape coverage absent/short), so an empty gap ledger cannot be read as a clean day: silence from a dead collector and silence from a perfect one are the same bytes"
+      },
+      "gap_series": {
+        "causes": {
+          "NO_CLOSE_FRAME": 1,
+          "PING_TIMEOUT": 1
+        },
+        "coin": "btc",
+        "gaps_per_hour": null,
+        "hours_elapsed": 0.101,
+        "hours_over_bar": [],
+        "hours_with_a_gap": 1,
+        "ledger_lines": 5090,
+        "ledger_unparseable": 0,
+        "lost_s": 12.7,
+        "n_gaps": 2,
+        "n_hours_over_bar": 0,
+        "per_hour": {
+          "0": 2
+        },
+        "rate_estimable": false,
+        "rate_note": "only 363s elapsed -- NO RATE REPORTED; 2 raw gaps so far",
+        "worst_hour": 2
+      },
+      "governing_predicates": [
+        "entirely_post_freeze",
+        "complete_tape",
+        "P1_bar",
+        "P2_bar",
+        "P3_bar"
+      ],
+      "predicates": [
+        {
+          "detail": "2026-08-29 absent from the selector -- not verifiable",
+          "pass": false,
+          "predicate": "entirely_post_freeze"
+        },
+        {
+          "detail": "expect 1 (elapsed so far); btc 0 (short 1)",
+          "pass": false,
+          "predicate": "complete_tape"
+        },
+        {
+          "detail": "NOT ESTIMABLE -- only 363s elapsed -- NO RATE REPORTED; 2 raw gaps so far",
+          "pass": false,
+          "predicate": "gap_rate_under_bar"
+        },
+        {
+          "detail": "coverage evidence was not AFFIRMATIVELY supplied (only coverage_observed is True evaluates; False, None, omitted and malformed all refuse). The day is NOT INDEPENDENTLY OBSERVED (tape coverage absent/short), so an empty gap ledger cannot be read as a clean day: silence from a dead collector and silence from a perfect one are the same bytes",
+          "pass": false,
+          "predicate": "P1_bar"
+        },
+        {
+          "detail": "coverage evidence was not AFFIRMATIVELY supplied (only coverage_observed is True evaluates; False, None, omitted and malformed all refuse). The day is NOT INDEPENDENTLY OBSERVED (tape coverage absent/short), so an empty gap ledger cannot be read as a clean day: silence from a dead collector and silence from a perfect one are the same bytes",
+          "pass": false,
+          "predicate": "P2_bar"
+        },
+        {
+          "detail": "coverage evidence was not AFFIRMATIVELY supplied (only coverage_observed is True evaluates; False, None, omitted and malformed all refuse). The day is NOT INDEPENDENTLY OBSERVED (tape coverage absent/short), so an empty gap ledger cannot be read as a clean day: silence from a dead collector and silence from a perfect one are the same bytes",
+          "pass": false,
+          "predicate": "P3_bar"
+        }
+      ],
+      "race_accrual_eligible": false,
+      "superseded_not_governing": [
+        "gap_rate_under_bar"
+      ],
+      "verdict_split": {
+        "day_quality_pass": false,
+        "post_freeze_pass": false,
+        "race_accrual_eligible": false,
+        "why": "feed health and clock eligibility are separate questions; a healthy day BEFORE the freeze commit is a good day that does not count, not a bad day"
+      },
+      "windows_gap_affected": {
+        "era_covered_windows": 0,
+        "gap_affected_COIN_LEVEL": 1,
+        "gap_affected_PER_SLUG": 0,
+        "gap_affected_pct_COIN_LEVEL": 0.3,
+        "gap_affected_pct_PER_SLUG": null,
+        "scope_note": "COIN_LEVEL is the governing scope (R-191); PER_SLUG is retained for continuity and is NOT the bar's input. Raw breadth is a REPORTED DIAGNOSTIC with no bar -- O1 barely moves it, so a bar here would reject good post-fix days forever."
+      }
+    },
+    "eth": {
+      "all_pass": false,
+      "day_bar_v2": {
+        "P1_pass": false,
+        "P2_pass": false,
+        "P3_pass": false,
+        "coin_level_gap_intervals": 0,
+        "coverage_observed_arg": "False",
+        "evaluable": false,
+        "hours_elapsed": 0.101,
+        "lost_seconds": 0,
+        "thresholds": {
+          "P1_max_s_per_hr": 120.0,
+          "P2_material_span_s": 75.0,
+          "P2_max_share": 0.05,
+          "P3_max_rolling_60min_s": 900.0
+        },
+        "why": "coverage evidence was not AFFIRMATIVELY supplied (only coverage_observed is True evaluates; False, None, omitted and malformed all refuse). The day is NOT INDEPENDENTLY OBSERVED (tape coverage absent/short), so an empty gap ledger cannot be read as a clean day: silence from a dead collector and silence from a perfect one are the same bytes"
+      },
+      "gap_series": {
+        "causes": {},
+        "coin": "eth",
+        "gaps_per_hour": null,
+        "hours_elapsed": 0.101,
+        "hours_over_bar": [],
+        "hours_with_a_gap": 0,
+        "ledger_lines": 5090,
+        "ledger_unparseable": 0,
+        "lost_s": 0.0,
+        "n_gaps": 0,
+        "n_hours_over_bar": 0,
+        "per_hour": {},
+        "rate_estimable": false,
+        "rate_note": "only 363s elapsed -- NO RATE REPORTED; 0 raw gaps so far",
+        "worst_hour": 0
+      },
+      "governing_predicates": [
+        "entirely_post_freeze",
+        "complete_tape",
+        "P1_bar",
+        "P2_bar",
+        "P3_bar"
+      ],
+      "predicates": [
+        {
+          "detail": "2026-08-29 absent from the selector -- not verifiable",
+          "pass": false,
+          "predicate": "entirely_post_freeze"
+        },
+        {
+          "detail": "expect 1 (elapsed so far); eth 0 (short 1)",
+          "pass": false,
+          "predicate": "complete_tape"
+        },
+        {
+          "detail": "NOT ESTIMABLE -- only 363s elapsed -- NO RATE REPORTED; 0 raw gaps so far",
+          "pass": false,
+          "predicate": "gap_rate_under_bar"
+        },
+        {
+          "detail": "coverage evidence was not AFFIRMATIVELY supplied (only coverage_observed is True evaluates; False, None, omitted and malformed all refuse). The day is NOT INDEPENDENTLY OBSERVED (tape coverage absent/short), so an empty gap ledger cannot be read as a clean day: silence from a dead collector and silence from a perfect one are the same bytes",
+          "pass": false,
+          "predicate": "P1_bar"
+        },
+        {
+          "detail": "coverage evidence was not AFFIRMATIVELY supplied (only coverage_observed is True evaluates; False, None, omitted and malformed all refuse). The day is NOT INDEPENDENTLY OBSERVED (tape coverage absent/short), so an empty gap ledger cannot be read as a clean day: silence from a dead collector and silence from a perfect one are the same bytes",
+          "pass": false,
+          "predicate": "P2_bar"
+        },
+        {
+          "detail": "coverage evidence was not AFFIRMATIVELY supplied (only coverage_observed is True evaluates; False, None, omitted and malformed all refuse). The day is NOT INDEPENDENTLY OBSERVED (tape coverage absent/short), so an empty gap ledger cannot be read as a clean day: silence from a dead collector and silence from a perfect one are the same bytes",
+          "pass": false,
+          "predicate": "P3_bar"
+        }
+      ],
+      "race_accrual_eligible": false,
+      "superseded_not_governing": [
+        "gap_rate_under_bar"
+      ],
+      "verdict_split": {
+        "day_quality_pass": false,
+        "post_freeze_pass": false,
+        "race_accrual_eligible": false,
+        "why": "feed health and clock eligibility are separate questions; a healthy day BEFORE the freeze commit is a good day that does not count, not a bad day"
+      },
+      "windows_gap_affected": {
+        "era_covered_windows": 0,
+        "gap_affected_COIN_LEVEL": 0,
+        "gap_affected_PER_SLUG": 0,
+        "gap_affected_pct_COIN_LEVEL": 0.0,
+        "gap_affected_pct_PER_SLUG": null,
+        "scope_note": "COIN_LEVEL is the governing scope (R-191); PER_SLUG is retained for continuity and is NOT the bar's input. Raw breadth is a REPORTED DIAGNOSTIC with no bar -- O1 barely moves it, so a bar here would reject good post-fix days forever."
+      }
+    }
+  },
+  "per_coin_rule_from_day": "20260828",
+  "predicates": [
+    {
+      "detail": "2026-08-29 absent from the selector -- cannot be verified, not passed",
+      "pass": false,
+      "predicate": "entirely_post_freeze"
+    },
+    {
+      "detail": "expect 1 (elapsed so far); btc 0 (short 1), eth 0 (short 1)",
+      "pass": false,
+      "predicate": "complete_tape"
+    },
+    {
+      "detail": "NOT ESTIMABLE -- only 363s elapsed -- NO RATE REPORTED; 2 raw gaps so far",
+      "pass": false,
+      "predicate": "gap_rate_under_bar"
+    },
+    {
+      "detail": "coverage evidence was not AFFIRMATIVELY supplied (only coverage_observed is True evaluates; False, None, omitted and malformed all refuse). The day is NOT INDEPENDENTLY OBSERVED (tape coverage absent/short), so an empty gap ledger cannot be read as a clean day: silence from a dead collector and silence from a perfect one are the same bytes",
+      "pass": false,
+      "predicate": "P1_btc"
+    },
+    {
+      "detail": "coverage evidence was not AFFIRMATIVELY supplied (only coverage_observed is True evaluates; False, None, omitted and malformed all refuse). The day is NOT INDEPENDENTLY OBSERVED (tape coverage absent/short), so an empty gap ledger cannot be read as a clean day: silence from a dead collector and silence from a perfect one are the same bytes",
+      "pass": false,
+      "predicate": "P2_btc"
+    },
+    {
+      "detail": "coverage evidence was not AFFIRMATIVELY supplied (only coverage_observed is True evaluates; False, None, omitted and malformed all refuse). The day is NOT INDEPENDENTLY OBSERVED (tape coverage absent/short), so an empty gap ledger cannot be read as a clean day: silence from a dead collector and silence from a perfect one are the same bytes",
+      "pass": false,
+      "predicate": "P3_btc"
+    },
+    {
+      "detail": "coverage evidence was not AFFIRMATIVELY supplied (only coverage_observed is True evaluates; False, None, omitted and malformed all refuse). The day is NOT INDEPENDENTLY OBSERVED (tape coverage absent/short), so an empty gap ledger cannot be read as a clean day: silence from a dead collector and silence from a perfect one are the same bytes",
+      "pass": false,
+      "predicate": "P1_eth"
+    },
+    {
+      "detail": "coverage evidence was not AFFIRMATIVELY supplied (only coverage_observed is True evaluates; False, None, omitted and malformed all refuse). The day is NOT INDEPENDENTLY OBSERVED (tape coverage absent/short), so an empty gap ledger cannot be read as a clean day: silence from a dead collector and silence from a perfect one are the same bytes",
+      "pass": false,
+      "predicate": "P2_eth"
+    },
+    {
+      "detail": "coverage evidence was not AFFIRMATIVELY supplied (only coverage_observed is True evaluates; False, None, omitted and malformed all refuse). The day is NOT INDEPENDENTLY OBSERVED (tape coverage absent/short), so an empty gap ledger cannot be read as a clean day: silence from a dead collector and silence from a perfect one are the same bytes",
+      "pass": false,
+      "predicate": "P3_eth"
+    }
+  ],
+  "race_accrual_eligible": false,
+  "verdict_granularity": "per_coin",
+  "verdict_split": {
+    "day_quality_pass": false,
+    "post_freeze_pass": false,
+    "race_accrual_eligible": false,
+    "why": "feed health and clock eligibility are separate questions; a healthy day BEFORE the freeze commit is a good day that does not count, not a bad day"
+  },
+  "windows_gap_affected": {
+    "btc": {
+      "era_covered_windows": 0,
+      "gap_affected_COIN_LEVEL": 1,
+      "gap_affected_PER_SLUG": 0,
+      "gap_affected_pct_COIN_LEVEL": 0.3,
+      "gap_affected_pct_PER_SLUG": null,
+      "scope_note": "COIN_LEVEL is the governing scope (R-191); PER_SLUG is retained for continuity and is NOT the bar's input. Raw breadth is a REPORTED DIAGNOSTIC with no bar -- O1 barely moves it, so a bar here would reject good post-fix days forever."
+    },
+    "eth": {
+      "era_covered_windows": 0,
+      "gap_affected_COIN_LEVEL": 0,
+      "gap_affected_PER_SLUG": 0,
+      "gap_affected_pct_COIN_LEVEL": 0.0,
+      "gap_affected_pct_PER_SLUG": null,
+      "scope_note": "COIN_LEVEL is the governing scope (R-191); PER_SLUG is retained for continuity and is NOT the bar's input. Raw breadth is a REPORTED DIAGNOSTIC with no bar -- O1 barely moves it, so a bar here would reject good post-fix days forever."
+    }
+  },
+  "write_reason": "scheduled unit run, da-midnight-verify.service (INVOCATION_ID=ddc42d64ed724a949a0c4075f5ae4eba)"
+}
