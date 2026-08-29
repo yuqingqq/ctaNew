@@ -61,8 +61,10 @@ slower challenger — it is an unusable one.**
 
 ## 4. The score: PROPER, and INCREMENTAL TO IDENTITY
 
-- **Proper score:** Brier on the settled binary outcome, `(p - y)²`. Proper, so
-  the honest forecast maximises the expected score; a non-proper score rewards
+- **Proper score:** Brier on the settled binary outcome, `(p - y)²`. It is a
+  LOSS: proper, so the honest forecast **MINIMISES** its expectation
+  (corrected by amendment A3.1 — this said "maximises", which would have
+  inverted the objective); a non-proper score rewards
   hedging and would make a shaded challenger look skilful.
 - **Reported as skill vs `Identity`**, per day:
   `skill_d = 1 - BS(challenger)_d / BS(Identity)_d`.
@@ -92,8 +94,12 @@ difference explained by a latency difference is visible rather than inferred.
   sides** (rule 4) — a challenger that wins by being admissible less often has
   not won.
 - **Multiplicity recorded at freeze**: candidates in the race, budgets, and any
-  earlier look. Two challengers × the declared budgets is the family; the joint
-  reading is Holm across it, and a single uncorrected cell is not a result.
+  earlier look. **The family is the set of DISTINCT ESTIMATORS scored** — Brier
+  on the settled binary does not vary with the decision budget, so budget copies
+  of one challenger are one hypothesis written three times (corrected by A3.2;
+  this said "two challengers × the declared budgets"). Budgets are reported
+  beside the score, never multiplied into the family. The joint reading is Holm
+  across the family, and a single uncorrected cell is not a result.
 
 ## 7. Declared before the data: what would make a challenger PASS
 
@@ -358,3 +364,77 @@ exclusion classes and the point-in-time discipline are untouched.
 **`bn_bookticker_probability` as built prices the FULL-WINDOW event and is
 therefore superseded by this amendment** — marked in place, not deleted, and its
 first scored use was already blocked on the user's freeze.
+
+---
+
+## AMENDMENT A3 — four protocol corrections (batch-3, 2B-R3-3)
+
+Three are text; one is a **sign error in the scoring rule** that would have
+inverted the objective.
+
+### A3.1 Brier is MINIMISED — §3 said the opposite
+
+§3 read: *"Proper, so the honest forecast **maximises** the expected score."*
+**Brier is `(p − y)²`. It is a LOSS.** The honest forecast **MINIMISES** its
+expectation; that is what propriety means here.
+
+**A reader implementing §3 literally would have optimised toward the worst
+possible forecast** — and every downstream comparison built on it (`skill_d =
+1 − BS(challenger)/BS(Identity)`) would still have looked normal, because the
+skill formula is correct and only the prose describing the objective was
+inverted. **Corrected: the honest forecast minimises the expected Brier score,
+and skill is positive when the challenger's loss is LOWER.**
+
+### A3.2 The family is DERIVABLE, and budget-copies are not members
+
+§6 read: *"Two challengers × the declared budgets is the family."*
+
+**Brier on the settled binary does not vary with the decision budget.** The
+score is `(p − y)²` where `p` forecasts the settlement outcome and `y` is that
+outcome; the budget is a *decision-policy* parameter and enters neither. **So
+the budget copies of one challenger produce identical scores — they are one
+hypothesis written three times, not three hypotheses.**
+
+Inflating the family with copies makes Holm *stricter*, so the error is in the
+conservative direction and could not have manufactured a pass. It is still
+wrong, and it misdescribes the hypothesis space: **a family must be DERIVABLE
+from what actually varies the statistic.**
+
+**Corrected: the family is the set of DISTINCT ESTIMATORS scored** (at most
+two challengers plus `Identity` as the baseline, per §2's closed set).
+Budgets are reported beside the score, never multiplied into the family. If a
+future statistic *is* budget-specific, its family is derived again from what
+varies it — the rule is the derivation, not the number.
+
+### A3.3 The instant grid, stated exactly
+
+§4 said "paired on identical decision instants, matched by `(coin, window,
+outcome, decision time)`" without saying which instants exist. **A grid chosen
+after the data is a population chosen after the data.**
+
+**Declared:** for each `(coin, window)` in the common eligible universe, the
+decision instants are `t = window_start + k · 30 s` for `k = 0 … 9`, i.e. every
+30 s from the window's open to `T − 30 s` inclusive, evaluated on the `UP`
+outcome with `DOWN` as its complement. Ten instants per window, fixed, derivable
+from the window alone and independent of what either estimator produced.
+
+An instant enters the scored set only if **both** estimators return `OK` there
+(§4's pairing) — and the **admissible-instant counts on both sides are reported
+regardless**, because pairing equalises the scored counts and therefore cannot
+measure availability (A1.6).
+
+### A3.4 The null is at the UTC day, the cluster unit
+
+§6 fixes the cluster unit as the UTC day (rule 8) but §7 did not say at what
+unit the null is drawn. **A null permuted at the INSTANT level would treat ten
+instants inside one window as ten independent draws** — they are not, and such
+a null is anticonservative by roughly the within-day correlation.
+
+**Declared: the null resamples WHOLE UTC DAYS** (the cluster unit), ≥200 draws,
+with the draw count and seed recorded in the receipt before any statistic is
+read. Below G = 5 complete days: point estimate, no interval, and say so —
+unchanged from §6.
+
+**None of these four changes any number**, because nothing has been scored.
+A3.1 is the one that would have mattered most, and it would have mattered
+silently: an inverted objective in the prose beside a correct skill formula.
