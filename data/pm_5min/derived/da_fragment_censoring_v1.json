@@ -1,0 +1,130 @@
+{
+  "INADMISSIBLE_FOR_THE_RACE": true,
+  "as_of_utc": "2026-08-29T03:15:24.162341+00:00",
+  "authorisation": "R-293 (user-ordered diagnostic; coordinator dispatch)",
+  "censoring_measured_not_asserted": {
+    "concentration": "worst decile of affected windows holds 25.2% (fragment A) / 18.0% (B) of lost seconds against ~10% under a uniform drizzle -- real concentration, about 2.5x and 1.8x, not extreme",
+    "note": "R-293's pre-registered wording says the loss is BURST-CONCENTRATED. Measured, that is TRUE BUT MILD, and the shape is different from what 'burst' usually implies -- so the measurement is reported rather than the wording repeated (rule 10). This QUALIFIES the pre-registered statement; it does not dispute the order, which is the user's to give.",
+    "outage_shape": "MANY SHORT outages, not few long ones: median 2.2s (A) / 8.7s (B), max 12.4s (A) / 11.4s (B). A 2.2s outage censors 0.7% of its 300s window",
+    "the_two_numbers": "63.1% of fragment-A windows are TOUCHED by loss while only 2.84% of window-TIME is lost. Both are true. The first is the worse shape for window-level admissibility, the second the milder one for data volume, and quoting either alone misleads in a predictable direction.",
+    "what_this_does_not_soften": "None of it makes the fragments admissible. The three inadmissibility reasons are structural -- incomplete days, a mid-day selected start, quantified loss -- and a mild censoring shape does not convert an inadmissible fragment into an admissible one."
+  },
+  "censoring_statement": "The bias direction is UNKNOWN and plausibly FLATTERING: a window lost while the feed was struggling is plausibly a window in which the policy faced its hardest decisions, and scoring only the surviving windows removes them. A positive read is weak comfort at best; a negative read is ambiguous rather than damning.",
+  "coin": "btc",
+  "cutoff_rule": "last COMPLETE 300s window fully elapsed at this read; BE's declared cutoff must be <= this, or it scores windows that were still recording",
+  "declared_cutoff_epoch": 1787973300,
+  "declared_cutoff_utc": "2026-08-29T03:15:00Z",
+  "era": {
+    "both_fragments_after_boundary": true,
+    "hf_stamp_boundary_ns": 1787579334881534478,
+    "hf_stamp_boundary_utc": "2026-08-24T13:48:54Z",
+    "pm_collector_version_in_range": "clob_v3_1 (single version; no collector era change inside either fragment)",
+    "verdict": "ERA-PURE: both fragments lie wholly after the hf_ws_v2 stamp boundary and within one PM collector version, so no row is inadmissible on era grounds"
+  },
+  "fragments": [
+    {
+      "affected_windows_by_hour": {
+        "06": 2,
+        "07": 7,
+        "08": 5,
+        "09": 5,
+        "10": 7,
+        "11": 4,
+        "12": 5,
+        "13": 11,
+        "14": 10,
+        "15": 10,
+        "16": 11,
+        "17": 9,
+        "18": 10,
+        "19": 9,
+        "20": 7,
+        "21": 9,
+        "22": 7,
+        "23": 7
+      },
+      "boundary_partial_note": "windows straddling a fragment edge are EXCLUDED from the contained set and counted here, so the convention is named rather than inferred",
+      "boundary_partial_windows": 1,
+      "bounds_epoch": [
+        1787897340,
+        1787961600
+      ],
+      "bounds_utc": [
+        "2026-08-28T06:09:00Z",
+        "2026-08-29T00:00:00Z"
+      ],
+      "burst_concentration": {
+        "affected_windows": 135,
+        "interpretation_is_the_readers": "a uniform drizzle would put ~10% of lost seconds in the worst decile; this number is reported so the burst claim is checkable rather than repeated",
+        "max_interval_s": 12.35,
+        "median_interval_s": 2.2,
+        "uniform_would_be_pct": 10.0,
+        "worst_decile_share_of_lost_seconds_pct": 25.2,
+        "worst_decile_windows": 13
+      },
+      "contained_windows": 214,
+      "gap_intervals": 333,
+      "hours_touched": 18,
+      "label": "A: 08-28 post-freeze (06:09:00Z -> 24:00:00Z)",
+      "lost_s_per_hour": 102.2,
+      "lost_seconds": 1821.8,
+      "span_hours": 17.833,
+      "window_seconds_total": 64200,
+      "window_time_lost_pct": 2.84,
+      "windows_gap_affected": 135,
+      "windows_gap_affected_pct": 63.08,
+      "worst_window_lost_s": 50.0,
+      "worst_window_utc": "2026-08-28T14:05:00Z"
+    },
+    {
+      "affected_windows_by_hour": {
+        "00": 8,
+        "01": 3,
+        "02": 4,
+        "03": 1
+      },
+      "boundary_partial_note": "windows straddling a fragment edge are EXCLUDED from the contained set and counted here, so the convention is named rather than inferred",
+      "boundary_partial_windows": 0,
+      "bounds_epoch": [
+        1787961600,
+        1787973300
+      ],
+      "bounds_utc": [
+        "2026-08-29T00:00:00Z",
+        "2026-08-29T03:15:00Z"
+      ],
+      "burst_concentration": {
+        "affected_windows": 16,
+        "interpretation_is_the_readers": "a uniform drizzle would put ~10% of lost seconds in the worst decile; this number is reported so the burst claim is checkable rather than repeated",
+        "max_interval_s": 11.41,
+        "median_interval_s": 7.69,
+        "uniform_would_be_pct": 10.0,
+        "worst_decile_share_of_lost_seconds_pct": 17.6,
+        "worst_decile_windows": 1
+      },
+      "contained_windows": 39,
+      "gap_intervals": 19,
+      "hours_touched": 4,
+      "label": "B: 08-29 00:00:00Z -> declared cutoff",
+      "lost_s_per_hour": 37.8,
+      "lost_seconds": 122.8,
+      "span_hours": 3.25,
+      "window_seconds_total": 11700,
+      "window_time_lost_pct": 1.05,
+      "windows_gap_affected": 16,
+      "windows_gap_affected_pct": 41.03,
+      "worst_window_lost_s": 21.6,
+      "worst_window_utc": "2026-08-29T00:40:00Z"
+    }
+  ],
+  "freeze_epoch": 1787897340,
+  "freeze_epoch_utc": "2026-08-28T06:09:00Z",
+  "inadmissibility_is_unconditional": "These three are properties of the FRAGMENTS, not of any result. They hold whether the diagnostic reads positive, negative or null, and no outcome can change them.",
+  "inadmissibility_reasons": [
+    "neither fragment is a COMPLETE UTC day, and the admission rule counts complete days (rule 8)",
+    "fragment A begins mid-day at the freeze epoch, so it is a SELECTED slice of a day whose remaining windows are excluded by construction",
+    "both carry quantified btc feed loss that is burst-concentrated"
+  ],
+  "receipt": "da_fragment_censoring_v1",
+  "status": "DIAGNOSTIC_NEVER_EVIDENCE"
+}
