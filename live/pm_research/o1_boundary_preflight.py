@@ -101,6 +101,34 @@ def observe_collector_start(new_pid: int, since_epoch: float) -> dict | None:
     return found
 
 
+RUNBOOK = REPO / "live/pm_research/plans/O1_DEPLOY_RUNBOOK_2026-08-30.md"
+
+
+def check_runbook_consistency(text: str) -> None:
+    """O1-0530-R1: a banner-amended runbook whose BODY still carries a stale
+    instant is internally contradictory — an operator or abort path could
+    stamp the wrong boundary. Decision-bearing contexts must carry ONLY the
+    ruled instant; narrative history (the amendment blockquote) is exempt."""
+    if text.count(BOUNDARY_UTC) < 3:
+        raise Refused(f"runbook carries {text.count(BOUNDARY_UTC)} occurrences "
+                      f"of the ruled instant {BOUNDARY_UTC} (need >=3: header, "
+                      f"step-2, stamp-verify) — the body was not re-pointed")
+    for ln in text.splitlines():
+        if ln.lstrip().startswith(">"):
+            continue  # amendment-history blockquote: narrative, exempt
+        if "boundary_utc" in ln and BOUNDARY_UTC not in ln:
+            raise Refused(f"runbook line stamps a boundary_utc other than "
+                          f"{BOUNDARY_UTC}: {ln.strip()[:90]!r} — an abort row "
+                          f"from this text would carry a FALSE boundary")
+        if ln.startswith("2. **At ") and BOUNDARY_UTC[11:19] not in ln:
+            raise Refused(f"runbook deployment step names a different instant: "
+                          f"{ln.strip()[:80]!r}")
+        low = ln.lower()
+        if "day one" in low and "08-31" not in ln:
+            raise Refused(f"runbook names a day-one other than 08-31: "
+                          f"{ln.strip()[:90]!r} — 08-30 is MIXED-ERA (R-333)")
+
+
 # ---------------------------------------------------------------- pure checks
 def check_boundary_current(boundary_utc: str, boundary_epoch: int,
                            now_epoch: float, phase: str) -> None:
@@ -326,6 +354,31 @@ def selftest() -> int:
             "not int", "KNOWN-BAD: a BOOL recv_ns REFUSES (type() is exact; "
             "isinstance would have admitted the int subclass)")
 
+    # O1-0530-R1: banner-vs-body consistency, static, with its known-bads
+    check_runbook_consistency(RUNBOOK.read_text())
+    ok(True, "POSITIVE O1-0530-R1: the LIVE runbook body is consistent with "
+             "the ruled instant (checked the file, not a fixture)")
+    _stale = (f"# runbook\n> banner says {BOUNDARY_UTC}\n"
+              'append {"boundary_utc":"2026-08-30T00:00:00Z","aborted":true}\n'
+              f"{BOUNDARY_UTC} {BOUNDARY_UTC} {BOUNDARY_UTC}")
+    refuses(lambda: check_runbook_consistency(_stale),
+            "false boundary", "KNOWN-BAD O1-0530-R1: a banner-amended body "
+            "whose ABORT ROW stamps the stale instant REFUSES (the executed "
+            "finding shape: an abort would carry a FALSE boundary)")
+    refuses(lambda: check_runbook_consistency(
+                f"{BOUNDARY_UTC} {BOUNDARY_UTC} {BOUNDARY_UTC}\n"
+                "2. **At 00:00:00Z (deploy):**"),
+            "different instant", "KNOWN-BAD O1-0530-R1: a deployment step "
+            "naming the stale instant REFUSES")
+    refuses(lambda: check_runbook_consistency(
+                f"{BOUNDARY_UTC} {BOUNDARY_UTC} {BOUNDARY_UTC}\n"
+                "- **Day bar: 2026-08-30 is day one**"),
+            "other than 08-31", "KNOWN-BAD: a body naming 08-30 as day one "
+            "REFUSES (mixed-era, R-333)")
+    refuses(lambda: check_runbook_consistency("no instants here at all"),
+            "not re-pointed", "KNOWN-BAD: a body never naming the ruled "
+            "instant REFUSES")
+
     print(f"o1_boundary_preflight selftests: {n[0]} checks passed")
     return 0
 
@@ -339,6 +392,7 @@ def main() -> int:
     if a.selftest:
         return selftest()
     if a.pre_arm:
+        check_runbook_consistency(RUNBOOK.read_text())
         obs = observe_common()
         check_pre_arm(obs)
         print(f"PRE-ARM OK: hold v3_1 intact, HEAD is reviewed v4, unit "
