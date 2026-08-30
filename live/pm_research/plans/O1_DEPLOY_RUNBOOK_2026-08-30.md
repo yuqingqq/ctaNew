@@ -1,9 +1,14 @@
-# O1 boundary deploy runbook — 2026-08-30 (boundary amended to 02:30:00Z)
+# O1 boundary deploy runbook — 2026-08-30 (boundary amended to 05:30:00Z)
 
-> **RULED AMENDMENT 2026-08-30T02:00Z (USER, option 2, via the coordinator):**
+> **RULED AMENDMENT 2 — 2026-08-30T02:05Z (USER, via the coordinator):**
+> boundary moved 02:30:00Z → **05:30:00Z** because the reviewing seat
+> (pm-codex) is quota-blocked and the amended instant may not arm without
+> its narrow re-review clearing first (register R-334). Nothing else changes.
+>
+> **RULED AMENDMENT 1 — 2026-08-30T02:00Z (USER, option 2, via the coordinator):**
 > the 00:00:00Z instant passed UNEXECUTED (the 23:55Z wake's two coalesced
 > unordered timers left the instruction unsubmitted — register R-333). The
-> boundary is **2026-08-30T02:30:00Z**. Consequences, ruled with it:
+> boundary moved to a mid-day instant. Consequences, ruled with it:
 > **2026-08-30 is MIXED-ERA and inadmissible as a post-O1 day under any
 > field; the earliest complete post-O1 day is 2026-08-31.** Every other
 > element below — sequence, failure paths, verification, abort semantics —
