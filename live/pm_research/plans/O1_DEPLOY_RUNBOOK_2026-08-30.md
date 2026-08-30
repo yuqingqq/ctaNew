@@ -1,4 +1,14 @@
-# O1 boundary deploy runbook — 2026-08-30T00:00:00Z
+# O1 boundary deploy runbook — 2026-08-30 (boundary amended to 02:30:00Z)
+
+> **RULED AMENDMENT 2026-08-30T02:00Z (USER, option 2, via the coordinator):**
+> the 00:00:00Z instant passed UNEXECUTED (the 23:55Z wake's two coalesced
+> unordered timers left the instruction unsubmitted — register R-333). The
+> boundary is **2026-08-30T02:30:00Z**. Consequences, ruled with it:
+> **2026-08-30 is MIXED-ERA and inadmissible as a post-O1 day under any
+> field; the earliest complete post-O1 day is 2026-08-31.** Every other
+> element below — sequence, failure paths, verification, abort semantics —
+> is UNCHANGED; `o1_boundary_preflight.py` carries the amended instant as
+> its compile-time constant and remains the authority an operator executes.
 
 **SUPERSEDES `O1_DEPLOY_RUNBOOK_2026-08-29.md` in full** (that file carried the
 pre-postponement boundary in four decision-bearing places and an inexecutable

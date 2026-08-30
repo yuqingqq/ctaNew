@@ -42,8 +42,8 @@ UNIT = "pm-collector-clob.service"
 
 # The ruled boundary (R-251 postponement, R-276 re-arm, R-305 kept green).
 # A COMPILE-TIME constant: the stale 08-29 date physically cannot be stamped.
-BOUNDARY_UTC = "2026-08-30T00:00:00Z"
-BOUNDARY_EPOCH = 1788048000  # asserted against BOUNDARY_UTC in selftest
+BOUNDARY_UTC = "2026-08-30T02:30:00Z"  # MID-DAY boundary, USER ruling (missed 00:00Z wake)
+BOUNDARY_EPOCH = 1788057000  # asserted against BOUNDARY_UTC in selftest
 
 # Byte identities verified by CODEX_O1_FINAL_PREARM_REVIEW_2026-08-29.md.
 V3_1_SHA = "c0a52d3337022db3ad6686ae95a242b0f4800d067c919c6aadf74d1735d62203"
@@ -104,12 +104,12 @@ def observe_collector_start(new_pid: int, since_epoch: float) -> dict | None:
 # ---------------------------------------------------------------- pure checks
 def check_boundary_current(boundary_utc: str, boundary_epoch: int,
                            now_epoch: float, phase: str) -> None:
-    want = datetime(2026, 8, 30, tzinfo=timezone.utc)
-    if boundary_utc != "2026-08-30T00:00:00Z" or \
+    want = datetime(2026, 8, 30, 2, 30, tzinfo=timezone.utc)
+    if boundary_utc != "2026-08-30T02:30:00Z" or \
             boundary_epoch != int(want.timestamp()):
         raise Refused(f"stale/mismatched boundary {boundary_utc!r}/"
                       f"{boundary_epoch} — the ruled target is "
-                      f"2026-08-30T00:00:00Z (O1-RB1)")
+                      f"2026-08-30T02:30:00Z (O1-RB1)")
     if phase == "pre" and now_epoch >= boundary_epoch + 3600:
         raise Refused(f"pre-arm run {now_epoch - boundary_epoch:.0f}s past the "
                       f"boundary — this runbook's window is over; a new ruled "
@@ -193,7 +193,10 @@ def check_post_restart(obs: dict, old_pid: int, start_row: dict | None) -> dict:
         "authority": "R-232 user ruling; boundary R-251/R-276",
         "era_semantics": ("distributional only; NO row-stamping change; "
                           "pre-boundary never-connected gap durations are "
-                          "understated (O1d)"),
+                          "understated (O1d). MID-DAY boundary per USER "
+                          "ruling after the missed 00:00Z wake: 2026-08-30 "
+                          "is MIXED-ERA and inadmissible as a post-O1 day; "
+                          "earliest complete post-O1 day is 2026-08-31"),
         "pid": obs["main_pid"],
         "collector_start_recv_ns": start_row["recv_ns"],
         "stamp_written_ns": time.time_ns(),
@@ -241,7 +244,7 @@ def selftest() -> int:
        and stamp["collector_start_recv_ns"] == good_start["recv_ns"],
        "POSITIVE: exact Aug-30/new-PID/v4 shape passes and the emitted stamp "
        "carries the VERIFIED pid + the collector's own recv_ns")
-    ok(BOUNDARY_EPOCH == int(datetime(2026, 8, 30,
+    ok(BOUNDARY_EPOCH == int(datetime(2026, 8, 30, 2, 30,
                                       tzinfo=timezone.utc).timestamp()),
        "the epoch constant equals the ruled UTC boundary (derived, not "
        "trusted)")
