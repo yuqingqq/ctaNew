@@ -318,12 +318,83 @@ ACCRUAL_PREDICATE = "entirely_post_freeze"
 #: The FIELDS stay -- only the veto is removed.
 SUPERSEDED_ON_V2 = ("gap_rate_under_bar",)
 
+#: REPORTED, NEVER GOVERNING -- under every regime.
+#:
+#: `tape_density` measures a real hole `complete_tape` cannot see: that
+#: predicate counts WINDOWS, so a window holding 2 rows beside one holding
+#: 17,092 counts as present (measured, eth 08-29 20:10Z). A feed that thins
+#: without disconnecting writes no gap row and passes coverage.
+#:
+#: IT DOES NOT VETO, AND THAT IS DELIBERATE. The 5%-of-median threshold was
+#: chosen after seeing which days fail it, and 7 of 13 days fail -- including
+#: 08-29, the only day whose verdict reads all_pass. Letting it govern would
+#: re-judge already-judged days on a bar picked from their own data, which is
+#: rule 11 exactly. The measurement is real; retro-fitting a bar to it is not
+#: a measurement. A GOVERNING density bar needs pre-registration against days
+#: not yet seen, and that is a coordinator/USER act (rule 14) -- not something
+#: this instrument may grant itself by adding a conjunct.
+REPORTED_NOT_GOVERNING = ("tape_density",)
+
 
 def governing_predicates(preds: list, regime: str) -> list:
     """Predicates that GOVERN the verdict under this regime. Callable."""
+    out = [x for x in preds if x["predicate"] not in REPORTED_NOT_GOVERNING]
     if regime != "day_bar_v2":
-        return list(preds)
-    return [x for x in preds if x["predicate"] not in SUPERSEDED_ON_V2]
+        return out
+    return [x for x in out if x["predicate"] not in SUPERSEDED_ON_V2]
+
+
+#: The density receipt, MEASURED ELSEWHERE and consumed here. BE emits it,
+#: this reports it -- the same split as the era ledger and the contamination
+#: record: whoever measured emits, whoever judges consumes, neither does both.
+PM_TAPE_DENSITY = Path(
+    "/home/yuqing/ctaNew/data/pm_5min/derived/tape_density_v1.json")
+
+
+def tape_density_for(day_token: str, path: Path | None = None) -> dict:
+    """Per-coin thin-window counts for one day, or an explicit UNMEASURED.
+
+    A day the receipt does not cover is UNMEASURED -- never a clean zero.
+    Absence of measurement is not evidence of density (rule 4), and the
+    empty-set-passes trap already fired once on the 08-27 arm.
+    """
+    src = PM_TAPE_DENSITY if path is None else path
+    if not src.exists():
+        return {"status": "UNMEASURED", "why": f"no density receipt at {src}"}
+    try:
+        rows = json.loads(src.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError) as e:
+        return {"status": "UNMEASURED", "why": f"density receipt unreadable: {e}"}
+    hit = [r for r in rows if isinstance(r, dict) and r.get("day") == day_token]
+    if not hit:
+        return {"status": "UNMEASURED",
+                "why": f"density receipt covers {len(rows)} day(s), not "
+                       f"{day_token}"}
+    r = hit[-1]
+    coins = r.get("coins") or {}
+    per_coin = {c: {"n_thin_invisible": v.get("n_thin_invisible"),
+                    "n_thin_accounted": v.get("n_thin_accounted"),
+                    "n_windows": v.get("n_windows"),
+                    "status": v.get("status")}
+                for c, v in coins.items() if isinstance(v, dict)}
+    unjudgeable = sorted(c for c, v in per_coin.items()
+                         if v["status"] != "JUDGED")
+    return {
+        "status": "MEASURED",
+        "n_invisible": r.get("total_thin_invisible"),
+        "n_accounted": r.get("total_thin_accounted"),
+        "threshold_frac_of_median": r.get("thin_frac"),
+        "coins_unjudgeable": unjudgeable,
+        "per_coin": per_coin,
+        "source": str(src),
+        "governs": False,
+        "why_not": ("REPORTED, NOT GOVERNING: the threshold was chosen after "
+                    "seeing which days fail it, so letting it veto would "
+                    "re-judge judged days on a bar taken from their own data "
+                    "(rule 11). A governing bar needs pre-registration "
+                    "against unseen days, which is a policy act, not this "
+                    "instrument's to grant itself."),
+    }
 
 
 #: THE ERA LEDGER. Admission is keyed on this file, not on quality.
@@ -1063,6 +1134,23 @@ def verify_day(day_token: str, freeze_epoch: float,
          f"its tape-derived predicate lags the boundary by up to one window]"
          if disagree else ""))
 
+    # --- 2b. tape DENSITY (reported, never governing) -----------------------
+    # complete_tape counts WINDOWS. A window holding 2 rows beside one holding
+    # 17,092 counts as present, so a feed that thins without disconnecting
+    # writes no gap row and passes coverage. Measured elsewhere; reported here
+    # with its own n so a reader can see content as well as coverage.
+    _td = tape_density_for(day_token)
+    p("tape_density",
+      _td["status"] == "MEASURED" and _td.get("n_invisible") == 0,
+      (f"{_td['n_invisible']} thin window(s) with NO gap row covering them, "
+       f"{_td['n_accounted']} accounted for by the gap ledger, threshold "
+       f"{_td.get('threshold_frac_of_median')} of the per-coin median"
+       + (f"; coins not judgeable: {_td['coins_unjudgeable']}"
+          if _td.get("coins_unjudgeable") else "")
+       + " -- REPORTED ONLY, this predicate does NOT govern all_pass"
+       if _td["status"] == "MEASURED" else
+       f"UNMEASURED -- {_td['why']} (reported as a STATUS, never a clean zero)"))
+
     # --- 3. gap rate under bar ---------------------------------------------
     gs = gap_series(lo, hi, now.timestamp())
     p("gap_rate_under_bar",
@@ -1270,6 +1358,7 @@ def verify_day(day_token: str, freeze_epoch: float,
         "day_closed_calendar": now.timestamp() >= hi,
         "predicates": preds,
         "all_pass": _day_all_pass,
+        "tape_density": _td,
         "windows_gap_affected": affected,
         "gap_series": gs,
         "decision_note": (
@@ -2222,6 +2311,43 @@ def _selftests() -> int:
        "flagged reconstructed -- recovery is the exception, not the default")
 
     _self = _refusal([_v4, dict(_v5, supersedes="clob_v5")])
+    # ---- TAPE DENSITY: reported, never governing (BE R-362) ------------
+    _dense_fail = [{"predicate": "complete_tape", "pass": True},
+                   {"predicate": "tape_density", "pass": False}]
+    ok(compose_all_pass(_dense_fail, {}, _pass_bar, "day_bar_v2") is True,
+       "LOAD-BEARING: a day FAILING tape_density with everything else passing "
+       "still has all_pass TRUE. The 5%-of-median threshold was chosen after "
+       "seeing which days fail it -- 7 of 13, including 08-29, the only "
+       "all_pass day -- so letting it veto would re-judge judged days on a bar "
+       "taken from their own data (rule 11). The hole is real; retro-fitting a "
+       "bar to it is not a measurement")
+    ok(compose_all_pass([{"predicate": "complete_tape", "pass": False},
+                         {"predicate": "tape_density", "pass": True}],
+                        {}, _pass_bar, "day_bar_v2") is False,
+       "POSITIVE CONTROL: a GOVERNING predicate still decides -- "
+       "governing_predicates is filtering one name, not draining the set")
+    with _tfe.TemporaryDirectory() as _t6:
+        _dp = Path(_t6) / "density.json"
+        ok(tape_density_for("20260829", _dp)["status"] == "UNMEASURED",
+           "an ABSENT receipt is UNMEASURED, never a clean zero -- absence of "
+           "measurement is not evidence of density, and the empty-set-passes "
+           "trap already fired once on the 08-27 arm")
+        _dp.write_text(json.dumps([{"day": "20260829", "coins": {},
+                                    "total_thin_invisible": 0,
+                                    "total_thin_accounted": 0,
+                                    "thin_frac": 0.05}]))
+        ok(tape_density_for("20260830", _dp)["status"] == "UNMEASURED",
+           "and a receipt that covers OTHER days is UNMEASURED for this one -- "
+           "a non-empty file is not coverage of the day asked about")
+        ok(tape_density_for("20260829", _dp)["n_invisible"] == 0
+           and tape_density_for("20260829", _dp)["governs"] is False,
+           "POSITIVE CONTROL: a covered day reads MEASURED with its count, and "
+           "says in the artifact that it does not govern")
+        _dp.write_text("{not json")
+        ok(tape_density_for("20260829", _dp)["status"] == "UNMEASURED",
+           "an unreadable receipt is UNMEASURED rather than an exception -- a "
+           "reported diagnostic must not take the whole verdict down with it")
+
     # ---- ERA START = PROCESS START (BE Q-DA-180 item 1) ----------------
     _late = {"collector_schema_version": "clob_v5", "supersedes": "clob_v4",
              "transitioned": True, "boundary_utc": "2026-09-01T00:00:00Z",
