@@ -17679,6 +17679,35 @@ The R-271 escalation was RIGHT in substance and sat ~2h in the wrong CHANNEL: BE
 
 **The standing lesson, and it is the reason this seam exists.** DA's suite was green at 155 and mine at 225, and **the defect lived in neither suite** — it lived in the disagreement between them, and only appeared because one side changed. **A seam is not a test you run once; it is a test you re-run whenever either consumer moves.** The corollary is the uncomfortable one: I filed a defect against DA that was live in my own code as I wrote the filing, and no amount of my own suite passing could have told me. **Reviewing someone else's half is the cheapest way to find the same bug in yours — if you re-run the seam afterwards.**
 
+### R-360 — 2026-08-31T13:10Z — coordinator — **O1a IS WHAT BROKE btc's P1, AND v5 WOULD HAVE PUSHED FURTHER THE SAME WAY.** Measured on existing data, matched windows; and the ORIGINAL break (08-25) is still undiagnosed
+
+**The question I should have asked eleven days ago:** not *how do we fix the disconnects*, but *when did btc start disconnecting, and what changed then*. Existing data answers it in three acts.
+
+**Act 1 — btc was CLEAN.** 08-20..08-24, 104.7 h: **7.5 s/hr all-cause, PING_TIMEOUT 0.55/hr.** Against a P1 bar of 120 s/hr that is not marginal, it is a factor of sixteen clear. Per-day: 4.1, 6.5, 2.1, 7.4, 12.6.
+
+**Act 2 — 08-25, the break, STILL UNDIAGNOSED.** 7.5 → **151.9 s/hr**, PING_TIMEOUT 0.55 → **14.54/hr**. A twenty-fold jump in one day. **This is the programme's original issue, and nobody ever diagnosed it** — the register goes straight from "btc fails P1" to "the heartbeat contract is wrong." No collector commit lands on 08-25 (`git log` over `collect_pm.py`, 08-23..08-27: empty). The nearest event is R-150's resource fencing (`9f00381`, **08-26 05:27**) which POSTDATES it. **Unexplained, and it is the largest single effect in the whole series.**
+
+**Act 3 — O1a made it 2.7x worse, and this one IS attributable.** Matched windows, both AFTER the 08-25 regime change so the comparison is not contaminated by it:
+
+| window | hours | all-cause | PING_TIMEOUT rate | PING_TIMEOUT loss | per-event |
+|---|---|---|---|---|---|
+| pre-O1a 08-26..08-29 | 96.0 | **100.2 s/hr** | 9.43/hr | 89.8 s/hr | 9.5 s |
+| post-O1a 08-30 05:30Z→ | 30.7 | **242.8 s/hr** | **39.44/hr** | 239.8 s/hr | 6.1 s |
+
+**O1a bought a 36% cut in per-event cost (9.5 → 6.1 s) at the price of 4.2x more events. Net: 2.7x more lost tape.** And it moved btc from **100.2 s/hr — UNDER the 120 bar — to 242.8, failing by 2x.** Attribution within the O1 bundle: every other cause FELL across the same boundary (NO_CLOSE_FRAME 3.11→0.69/hr, SLOW_CONSUMER_1013 2.26→0.10/hr), so O1b and O1c helped; only the ping-tightened population exploded. O1d touches never-connected sockets only.
+
+**The mechanism, now fully consistent with R-357.** These are **spurious** disconnects. The venue answers (sockets sit 18-44 s silent without dropping); the data flows (gap_start is the last market message, and gaps are median 5.8 s = interval+timeout); the round trip fails LOCALLY under btc's ~400 msg/s. **Tightening the deadline does not make a starved round trip succeed — it makes it fail more often.** O1a optimised the wrong term: it reduced the cost of each detection while multiplying the number of false detections.
+
+**And v5 is the same mistake one step further.** It keeps the 3 s deadline AND moves the liveness signal off the reader task, where PONG is acknowledged directly, onto the application recv queue behind every market frame (`ws_q_hi=344` ≈ 1.14 s of a 3.0 s budget). **Same direction, less headroom.**
+
+**What this makes of the deploy work.** The v5 CANDIDATE is the wrong payload. The deploy MACHINERY — preflight (230 checks), runbook, era stamping, rollback/recovery emitters, the DA seam — is payload-agnostic and **carries a ping revert unchanged.** ~100 closed defects are not wasted; they were built for the wrong cargo.
+
+**Recommended settle path (a USER ruling):** revert the ping to its pre-O1a 10/10 (or an intermediate), deployed through the existing boundary apparatus, spending the era boundary we were going to spend on v5. Prior is measured, not assumed: btc ran at **100.2 s/hr under 10/10 in the same load regime.** A shadow probe CANNOT settle this — a standalone socket does not reproduce the collector's own event-loop contention, which is the entire mechanism.
+
+**Stated openly, not buried.** (1) The 08-25 break is unexplained; reverting O1a returns btc to ~100 s/hr, which is UNDER the bar but only by 17%, not to the 7.5 s/hr of the clean era. **Diagnosing 08-25 is the higher-value question and it is still open.** (2) Post-O1a is 30.7 h against 96 h pre. (3) O1a's four changes landed at one instant; attribution rests on the other causes falling, not on an isolated experiment. (4) On 08-31 the hours 07Z, 08Z and 09Z carry **ZERO** btc PING_TIMEOUTs in a day averaging 48/hr — unexplained, and inconsistent with a pure steady-state story. Worth one check before any revert is judged.
+
+**The standing lesson.** R-357 found the fix did not address the cause. This one found **we were the cause** — and both were answerable from data already on disk, for the eleven days we spent instrumenting the answer to a question nobody had measured. **Before building a fix, measure WHEN the thing started. A regression has a date, and the date names the suspect.**
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
