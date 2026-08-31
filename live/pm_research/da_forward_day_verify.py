@@ -455,7 +455,16 @@ CONTENT_LIVENESS_STATUSES = ("CONTENT_LIVE", "CONTENT_THIN_COLLECTOR",
                              "CONTENT_THIN_UPSTREAM",
                              "CONTENT_LIVENESS_UNRESOLVED")
 PM_COLLECTOR_LOG = Path("/home/yuqing/ctaNew/data/pm_5min/collector.log")
-_HB = re.compile(r"^\[pm\] (\d{2}):(\d{2}):(\d{2})Z .*?\bmsgs=(\d+)\b")
+#: BOTH stamp forms. From 2026-08-31T22:00Z the status line carries a full
+#: ISO date; before it, only HH:MM:SSZ. A DATED line needs no reconstruction
+#: and is not subject to the >24h blind spot; a dateless one is walked back
+#: from an anchor. Matching only the old form would have matched ZERO lines
+#: from tonight and reported "the log does not reach back that far" -- a
+#: format change read as ABSENCE, which is the density-receipt defect again,
+#: arriving on the night before the day this measure exists to judge.
+_HB = re.compile(r"^\[pm\] (?:(\d{4})-(\d{2})-(\d{2})T)?"
+                 r"(\d{2}):(\d{2}):(\d{2})Z .*?\bmsgs=(\d+)\b")
+_PM_LINE = re.compile(r"^\[pm\] ")
 
 
 def _heartbeats_dated(text: str, anchor_epoch: float) -> list[tuple[float, int]]:
@@ -474,23 +483,45 @@ def _heartbeats_dated(text: str, anchor_epoch: float) -> list[tuple[float, int]]
     the honest containment is that this measure is used only for days the log
     demonstrably covers with per-minute heartbeats.
     """
-    rows = []
+    entries, saw_pm = [], False
     for ln in text.splitlines():
+        if _PM_LINE.match(ln):
+            saw_pm = True
         m = _HB.match(ln)
-        if m:
-            hh, mm, ss, msgs = m.groups()
-            rows.append((int(hh) * 3600 + int(mm) * 60 + int(ss), int(msgs)))
-    if not rows:
+        if not m:
+            continue
+        y, mo, d, hh, mm, ss, msgs = m.groups()
+        sod = int(hh) * 3600 + int(mm) * 60 + int(ss)
+        exact = (dt.datetime(int(y), int(mo), int(d), int(hh), int(mm),
+                             int(ss), tzinfo=dt.timezone.utc).timestamp()
+                 if y else None)
+        entries.append((sod, int(msgs), exact))
+    if not entries:
+        if saw_pm:
+            raise ValueError(
+                "REFUSED: the log has [pm] lines but NOT ONE matches the "
+                "heartbeat shape. That is a FORMAT CHANGE, not an absence of "
+                "history, and reporting it as 'the log does not reach back' "
+                "would read a rename as missing data.")
         return []
-    out = []
-    day0 = int(anchor_epoch // 86400) * 86400
-    prev_sod = None
-    cur_day = day0
-    for sod, msgs in reversed(rows):
-        if prev_sod is not None and sod > prev_sod:
-            cur_day -= 86400          # wrapped backwards past midnight
-        prev_sod = sod
-        out.append((cur_day + sod, msgs))
+    # ONE backward walk over the whole file, in file order, because an
+    # append-only log's order IS time order. A DATED line fixes the clock
+    # exactly; a dateless one is placed on the day of the entry AFTER it,
+    # stepping back when that would put it later. Reconstructing the dateless
+    # block against its own anchor instead of against the dated block put a
+    # pre-22:00Z line on the FOLLOWING day -- caught by the transition-night
+    # test, which is the only night the mixed shape exists.
+    out, cur = [], None
+    for sod, msgs, exact in reversed(entries):
+        if exact is not None:
+            ts = exact
+        else:
+            ref = anchor_epoch if cur is None else cur
+            ts = int(ref // 86400) * 86400 + sod
+            if ts > ref:
+                ts -= 86400
+        out.append((ts, msgs))
+        cur = ts
     out.reverse()
     for i in range(1, len(out)):
         if out[i][0] <= out[i - 1][0]:
@@ -2608,6 +2639,32 @@ def _selftests() -> int:
                                 _anchor)["status"]
            == "CONTENT_LIVENESS_UNRESOLVED",
            "and no log at all is UNRESOLVED rather than an exception")
+        _mixed_log = Path(_t8) / "mixed.log"
+        _mixed_log.write_text(
+            "[pm] 21:00:23Z markets=1 msgs=10\n"
+            "[pm] 21:01:23Z markets=1 msgs=20\n"
+            "[pm] 2026-08-31T22:00:23Z markets=1 msgs=100\n"
+            "[pm] 2026-08-31T22:01:23Z markets=1 msgs=200\n")
+        _mx = content_liveness_for("20260831", _mixed_log, _anchor)
+        ok(_mx.get("n_intervals") == 3,
+           "THE TRANSITION NIGHT ITSELF: a log that is DATELESS before 22:00Z "
+           "and DATED after parses BOTH halves. Tonight is the only night this "
+           "shape exists, and it is the night before the day this measure "
+           "exists to judge")
+        _fmt = Path(_t8) / "fmt.log"
+        _fmt.write_text("[pm] 22:00:23Z markets=1 nomsgs=1\n"
+                        "[pm] 22:01:23Z markets=1 nomsgs=2\n")
+        _fr = content_liveness_for("20260831", _fmt, _anchor)
+        ok(_fr["status"] == "CONTENT_LIVENESS_UNRESOLVED"
+           and "FORMAT CHANGE" in _fr["why"],
+           "KNOWN-BAD: a log with [pm] lines where NONE matches the heartbeat "
+           "shape is reported as a FORMAT CHANGE, never as 'the log does not "
+           "reach back'. My regex required a DATELESS stamp; the status line "
+           "gains a full ISO date at 22:00Z tonight, so it would have matched "
+           "ZERO lines and reported the day as unmeasurable history -- a "
+           "format change read as ABSENCE, which is the density-receipt defect "
+           "arriving with four hours' warning instead of after the fact")
+
     _real = content_liveness_for("20260831")
     ok(_real["status"] == "CONTENT_LIVENESS_UNRESOLVED"
        and _real.get("median_msgs_per_s") is not None,
