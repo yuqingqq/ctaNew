@@ -62,6 +62,13 @@ BOUNDARY_EPOCH = 1788159600  # asserted against BOUNDARY_UTC in selftest
 # the start row within POST_START_WINDOW_S of the boundary, the emission
 # within POST_EMIT_WINDOW_S — a collector_start at boundary+3600 stamping
 # the boundary instant is a FALSE era boundary (re-review at 038a1b2).
+# audit F1: the unit is Restart=always/RestartSec=10, so if the collector
+# dies on its own between arming (T-5) and the restart (T), systemd boots it
+# with the NEW ExecStart and v5 goes live BEFORE the boundary. Every scan was
+# floored at BOUNDARY_EPOCH, so that start was invisible and the era stamp
+# would record a FALSE boundary. Not hypothetical here: collector.log shows
+# silent auto-restarts, including a 43-minute outage.
+EARLY_SCAN_LOOKBACK_S = 3600
 POST_START_WINDOW_S = 120
 POST_EMIT_WINDOW_S = 600
 # A recovery bundle reconstructs a span that ALREADY happened; if the append
@@ -145,6 +152,19 @@ def observe_common() -> dict:
                               "-p", "MainPID", "--value"]) or 0),
         "exec_start": _run(["systemctl", "--user", "show", OBS_UNIT,
                             "-p", "ExecStart", "--value"]),
+        # audit F3/F4/F6/F7: nothing distinguished "started and healthy" from
+        # "restarting every 10s", and the properties that decide what runs
+        # were unread.
+        "n_restarts": _run(["systemctl", "--user", "show", OBS_UNIT,
+                            "-p", "NRestarts", "--value"]),
+        "std_out": _run(["systemctl", "--user", "show", OBS_UNIT,
+                         "-p", "StandardOutput", "--value"]),
+        "slice": _run(["systemctl", "--user", "show", OBS_UNIT,
+                       "-p", "Slice", "--value"]),
+        "environment": _run(["systemctl", "--user", "show", OBS_UNIT,
+                             "-p", "Environment", "--value"]),
+        "exec_start_post": _run(["systemctl", "--user", "show", OBS_UNIT,
+                                 "-p", "ExecStartPost", "--value"]),
         # audit S10: the argv script token is RELATIVE, so WorkingDirectory
         # decides which file opens; ExecStartPre can run anything first and
         # never appears in -p ExecStart.
@@ -584,6 +604,7 @@ def check_system_safe(obs: dict, phase: str) -> None:
     if not obs["unit_active"] or obs["main_pid"] <= 0:
         raise Refused(f"unit not active (active={obs['unit_active']}, "
                       f"pid={obs['main_pid']})")
+    check_unit_environment(obs)
 
 
 def check_stage(stage: str) -> None:
@@ -633,6 +654,31 @@ def check_cadence_agreement(runbook_text: str) -> float:
                           f"receipt written from this text would record a "
                           f"cadence that never ran")
     return cand
+
+
+def check_unit_environment(obs: dict) -> None:
+    """The properties that decide WHAT RUNS and HOW IT RESTARTS, which the
+    gate read none of (audit F2/F3/F4/F6/F7). Five reads is not a unit."""
+    if obs.get("exec_start_post"):
+        raise Refused(f"unit declares ExecStartPost "
+                      f"({obs['exec_start_post'][:60]!r}) — it runs as the "
+                      f"same user in the same cwd and could append to the "
+                      f"ledgers; ExecStartPre was refused and this was not")
+    if obs.get("environment"):
+        raise Refused(f"unit declares Environment "
+                      f"({obs['environment'][:60]!r}) — the process "
+                      f"environment changes what imports resolve to, and "
+                      f"the byte check cannot see it")
+    if obs.get("slice") and obs["slice"] != "collectors.slice":
+        raise Refused(f"unit is in slice {obs['slice']!r}, not "
+                      f"collectors.slice — another slice can impose a memory "
+                      f"cap or OOM policy the collector is explicitly "
+                      f"exempted from")
+    if obs.get("std_out") and obs["std_out"] != "append":
+        raise Refused(f"StandardOutput is {obs['std_out']!r}, not append — "
+                      f"the counter check seeks to a byte offset in that "
+                      f"log, and a truncate-on-start mode reintroduces the "
+                      f"NUL-run bug the append mode was adopted to fix")
 
 
 def check_pre_arm(obs: dict, expect_flag: bool) -> None:
@@ -687,6 +733,22 @@ def check_pre_arm(obs: dict, expect_flag: bool) -> None:
 
 def check_post_restart(obs: dict, old_pid: int, start_row: dict | None,
                        known_v5_starts: list | None = None) -> dict:
+    # audit F1: this parameter existed in the signature and was NEVER read —
+    # declared for exactly this hazard and left dead. It carries every
+    # clob_v5 start seen from BEFORE the boundary.
+    if known_v5_starts:
+        _early = [r for r in known_v5_starts
+                  if type(r.get("recv_ns")) is int
+                  and r["recv_ns"] < BOUNDARY_EPOCH * 10**9]
+        if _early:
+            raise Refused(
+                f"a clob_v5 collector_start exists BEFORE the boundary "
+                f"(pid {_early[-1].get('pid')}, recv_ns "
+                f"{_early[-1]['recv_ns']}) — the unit auto-restarted after "
+                f"arming and v5 went live early, so a stamp claiming "
+                f"{BOUNDARY_UTC} would record a FALSE boundary; the era is "
+                f"impure from the earlier start and needs a new ruled "
+                f"instant")
     # audit S1: these legs used to run AFTER the idempotency return, so a
     # retry reported success while the unit was dead, reverted, or running
     # unreviewed bytes. "An append already landed" is evidence about the
@@ -2340,6 +2402,35 @@ def selftest() -> int:
             "proves the process ran before the attempt, not that it was "
             "restored after it")
 
+    # ---- audit F1/F2/F3/F4/F6/F7: the environment the gate could not see ----
+    refuses(lambda: check_post_restart(
+                good_post, 3687786, good_start,
+                [{"recv_ns": (BOUNDARY_EPOCH - 240) * 10**9, "pid": 4242,
+                  "collector_version": "clob_v5",
+                  "event": "collector_start"}]),
+            "BEFORE the boundary", "KNOWN-BAD (audit F1): a clob_v5 start "
+            "from the ARM WINDOW refuses — Restart=always boots the new "
+            "ExecStart if the collector dies after arming, every scan was "
+            "floored at the boundary so it was invisible, and the parameter "
+            "carrying it sat DEAD in the signature")
+    for _prop, _val, _frag in (
+            ("exec_start_post", "/bin/sh -c evil", "ExecStartPost"),
+            ("environment", "PYTHONPATH=/tmp/evil", "Environment"),
+            ("slice", "research.slice", "slice"),
+            ("std_out", "journal", "StandardOutput")):
+        refuses(lambda pr=_prop, vl=_val: check_unit_environment(
+                    {**good_pre, pr: vl}),
+                _frag, f"KNOWN-BAD (audit F2/F4/F6/F7): a unit declaring "
+                f"{_prop}={_val!r} REFUSES — the gate read five systemd "
+                f"facts and none of these, so an environment change could "
+                f"alter what executes with every byte check still passing")
+    check_unit_environment({**good_pre, "exec_start_post": "",
+                            "environment": "", "slice": "collectors.slice",
+                            "std_out": "append"})
+    ok(True, "POSITIVE: the REAL unit's environment shape is accepted "
+             "(collectors.slice, append logging, no Environment, no "
+             "ExecStartPost)")
+
     # V5-P5-1 (DA 3c81059): the rule DEMANDS rollback evidence for a return;
     # it does NOT forbid returning. Without the exemption my walk refused
     # every retry — and after a MULTI-HOP rollback it diverged from DA in
@@ -2642,6 +2733,10 @@ def main() -> int:
                          "Accepted only so scripted callers do not break.")
     ap.add_argument("--post-rollback", type=int, metavar="OLD_V5_PID",
                     default=None)
+    ap.add_argument("--nrestarts-at-arm", type=int, default=None,
+                    help="the NRESTARTS_AT_ARM value printed by --armed; the "
+                         "postflight refuses if the unit restarted more "
+                         "times than our own single restart (audit F3)")
     ap.add_argument("--v5-pid", type=int, default=None,
                     help="the recorded V5_PID (required by --post-recovery)")
     ap.add_argument("--abort-row", action="store_true",
@@ -2677,7 +2772,23 @@ def main() -> int:
             raise Refused("era stamps come only from the PRODUCTION unit — "
                           "the fixture override may not emit")
         row = observe_collector_start(BOUNDARY_EPOCH, obs["main_pid"])
-        stamp = check_post_restart(obs, a.post_restart, row)
+        _early_v5 = observe_starts_by_version(
+            BOUNDARY_EPOCH - EARLY_SCAN_LOOKBACK_S, "clob_v5")
+        # audit F3: nothing distinguished "started and healthy" from
+        # "restarting every 10s"; StartLimitIntervalUSec=0 means the unit can
+        # never enter failed, so it retries forever and looks active.
+        if a.nrestarts_at_arm is not None:
+            try:
+                _now_r = int(obs.get("n_restarts") or 0)
+            except ValueError:
+                _now_r = -1
+            if _now_r != a.nrestarts_at_arm + 1:
+                raise Refused(
+                    f"NRestarts is {_now_r}, expected "
+                    f"{a.nrestarts_at_arm + 1} (the arm-time value plus our "
+                    f"ONE restart) — the unit restarted on its own, so it is "
+                    f"flapping or it booted v5 before the boundary")
+        stamp = check_post_restart(obs, a.post_restart, row, _early_v5)
         if stamp.get("already_stamped"):
             print(stamp["note"], file=sys.stderr)
             print(f"V5_PID={stamp['row'].get('pid')}", file=sys.stderr)
@@ -2703,7 +2814,8 @@ def main() -> int:
         if obs.get("obs_unit_overridden"):
             raise Refused("abort rows come only from the PRODUCTION unit")
         _v4row = observe_collector_start(BOUNDARY_EPOCH, obs["main_pid"])
-        _v5rows = observe_starts_by_version(BOUNDARY_EPOCH, "clob_v5")
+        _v5rows = observe_starts_by_version(
+            BOUNDARY_EPOCH - EARLY_SCAN_LOOKBACK_S, "clob_v5")
         print(json.dumps(make_abort_row(obs, a.stage or "", _v4row,
                                         _v5rows)))
         return 0

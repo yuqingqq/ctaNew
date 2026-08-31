@@ -77,6 +77,7 @@ fails to find the script and can create a stray file (audit S4).
       typically <15 s), then:
       ```
       python3 live/pm_research/v5_boundary_preflight.py --post-restart OLD_PID \
+        --nrestarts-at-arm NRESTARTS_AT_ARM \
         >> data/pm_5min/collector_runs.jsonl
       ```
       REFUSES on: unchanged PID, non-candidate bytes, flag lost, a
