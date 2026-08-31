@@ -5016,3 +5016,66 @@ headers. The ledger pin held while the archive grew 19,162 → 19,848 paths.
   satisfies itself.
 - **For anything promised, check that the ARTIFACT APPEARED. Never wait on a
   notification: a reaped wrapper produces silence identical to work in progress.**
+
+---
+
+## 2026-08-31T12:00Z — coordinator — **THE v5 DEPLOY IS HELD. Its premise is falsified.** (R-357, R-358)
+
+**Read R-357 first.** Six Codex rounds and ~100 closed defects all audited
+*whether the transition would be stamped correctly*. None audited *whether the
+thing being deployed fixes anything.* It does not.
+
+**DONE**
+- **v5 held by me, not by Codex.** Nothing armed, no instant requested, v4 live
+  and continuous (pid 3687786). Round-7 batch and the Codex round SUSPENDED.
+- Premise falsified on four legs, each verified by execution — see R-357:
+  the library pings unconditionally (so surviving silence proves the venue
+  ANSWERS control Pongs); disconnects are 94.2% btc (a contract cannot be
+  coin-selective); btc gaps are median 5.8 s = exactly interval+timeout with
+  data flowing into them (local failure, not venue silence); and `PONG` is
+  acknowledged in the READER TASK while v5's text `PONG` queues behind market
+  frames — `ws_q_hi=344` at 301 msg/s is 1.14 s of a 3.0 s deadline, on the
+  one socket carrying 94% of the failures. **v5 is directionally wrong.**
+- Arithmetic nobody had done: **btc 230.1 s/hr vs a P1 bar of 120** — no
+  contract fix reaches it. **eth is 13.8 s/hr and already passes under v4**,
+  blocked only by the era ruling.
+- Four further defects closed at `d0f2deb` (R-358): a MIDNIGHT boundary made a
+  mixed-era day read pure and accruing; a near-midnight instant would have
+  rolled back a HEALTHY v5; the half-landed COMPLETION branch could brick the
+  append-only ledger permanently; the seen-set let a rolled-back version return
+  as a plain transition (4th divergence with DA, 3rd resolved in DA's favour).
+- **Q-DA-180 dispatched** — DA owns the consumer half of the era-purity gap and
+  a LIVE wrong verdict (`da_dayverdict_20260829.json` asserts accrual for a
+  `clob_v3_1` day; the `_v2` correction is unlinked in both directions, so no
+  automated reader can resolve it).
+
+**NEXT — a USER ruling, not a coordinator one**
+1. **Recommended:** run `collect_pm_v5_shadow_probe.py` against a **LIVE btc
+   slug at 3 s for ≥2 h**, alongside the running v4 collector. No boundary, no
+   restart, no drop-in, zero cost to the validation clock, ~74 expected events.
+   It settles the premise, the queue-ordering risk and the concurrent-flow
+   residual together. The longest run ever done is 125 s, at the superseded
+   10 s cadence, on an EXPIRED slug — i.e. exactly the condition where queue
+   contention cannot exist.
+2. Or re-aim at the **load** hypothesis (btc drain/parse cost, per-coin process
+   split, or accepting btc's 230 s/hr as a per-coin P1 failure while eth
+   accrues — `race_accrual_eligible` is already per-coin).
+3. Or overrule and deploy anyway.
+
+**WATCH OUT FOR**
+- **A review scoped by the coordinator can only find what the coordinator's
+  frame admits.** Every reviewer inherited "is the transition instrumented
+  correctly" because I wrote the request that way. The premise sat one grep
+  from the log for days. The finding came from the only question asked without
+  naming what to look at: *would you sign this off?*
+- **An artifact is finished where it is READ, not where it is written.** All
+  four R-358 defects live in the hop between my emitter and DA's verdicts —
+  the hop nobody owned end to end.
+- **A repair path deserves MORE guards than the path it repairs.** The
+  half-landed completion branch had fewer, and could brick what it existed to
+  save.
+- **A correction no reader can resolve is not a correction.** Rule 13's FORM
+  (a vN+1 receipt) was followed on 08-29; its FUNCTION (a field an automated
+  reader resolves) was not.
+- Do not cite the "98.22% of disconnects were local PING_TIMEOUTs" figure as
+  support for v5 again. The number is right; the inference from it was wrong.
