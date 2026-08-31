@@ -1352,13 +1352,20 @@ def _selftests() -> int:
             _run = Path(_ltd) / "run.sh"
             _run.write_text(
                 _sh.read_text(encoding="utf-8")
-                   .replace('V=/home/yuqing/ctaNew/live/pm_research/'
-                            'da_forward_day_verify.py', f'V={_spy}')
                    .replace('LOG="${DA_MIDNIGHT_LOG:-'
                             '/home/yuqing/ctaNew/data/pm_5min/derived/'
                             '.da_midnight_verify.log}"',
                             f'LOG="{Path(_ltd) / "log"}"'),
                 encoding="utf-8")
+            # The verifier is shimmed through the launcher's OWN documented
+            # override, not by string surgery on its source. The previous
+            # version replaced the literal `V=/home/...`; when that line
+            # gained a default-expansion the replace became a SILENT NO-OP and
+            # the seam ran the REAL verifier -- a shim that quietly stops
+            # shimming tests nothing and says so in no way at all.
+            assert str(Path(_ltd) / "log") in _run.read_text(encoding="utf-8"), (
+                "seam shim: the LOG redirect did not match the launcher's "
+                "text -- refusing to run a seam test against production paths")
             _run.chmod(0o755)
             # BOTH overrides, or none. This test redirected the LOG and left
             # OUTDIR pointing at production, so every run of the seam test
@@ -1370,7 +1377,8 @@ def _selftests() -> int:
             _out = Path(_ltd) / "out"
             _env = {"PATH": "/usr/bin:/bin",
                     "DA_MIDNIGHT_LOG": str(Path(_ltd) / "log"),
-                    "DA_MIDNIGHT_OUTDIR": str(_out)}
+                    "DA_MIDNIGHT_OUTDIR": str(_out),
+                    "DA_MIDNIGHT_VERIFY_BIN": str(_spy)}
             _pr = _sp.run(["bash", str(_run)], capture_output=True, env=_env)
             ok(_pr.returncode != 5,
                "(1) the seam run is FULLY isolated: log AND outdir both "
