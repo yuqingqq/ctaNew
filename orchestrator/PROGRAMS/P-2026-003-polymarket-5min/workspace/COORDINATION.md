@@ -17919,6 +17919,32 @@ Everything else on our side was flat or falling across the break: config unchang
 
 **The lesson, and it is the one that should outlive this session.** I spent the day pressing for a decision on which coins to keep, on the strength of pass/fail verdicts, while the tape those verdicts described was a third empty and every bar said clean. **A decision is only as sound as the least-examined instrument feeding it — and the one nobody re-examines is the one that reports success.**
 
+### R-369 — 2026-08-31T15:55Z — coordinator — **IN-BAND CORRECTION OF R-368: the anomaly is real, "the collector LOST 4.5 hours" is NOT established. Codex `518c593`; verified independently. Same overclaim shape as R-365, third time today.** HJ-R1 **RELEASED**
+
+**What I said and what is true.** R-368's headline was *"08-31 LOST ~4.5 HOURS ACROSS ALL SEVEN COINS"*. **"Lost" asserts the collector failed. It did not.** Verified at the collector's own receive counter, not taken from the filing:
+
+| | measured |
+|---|---|
+| `msgs` at 06:33:26Z | 42,654,493 |
+| `msgs` at 10:40:37Z | 42,701,800 |
+| **delta over 4.12 h** | **47,307 messages** |
+| a comparable normal stretch (10:59→15:05Z, 4.10 h) | **9,311,060 messages** |
+| **the window carried** | **0.51% of the normal receive rate** |
+
+Codex's independent reconciliation closes it: **50,717 counter delta against 50,599 timestamped raw rows — 99.77%**, the 118-row difference explained by minute-log endpoints and file-selection edges, with `writer_wait`, queue high-water and loop lag all clean and no restart. **The collector wrote essentially everything its receive loops saw. It received almost nothing.**
+
+**So the correct object of the finding is UPSTREAM CONTENT, not collector loss** — and the two cannot be separated by row density. Either the venue's market makers genuinely produced almost no updates for 4.1 hours, or Polymarket's event publisher degraded silently while connections and control keepalives stayed healthy. **My instrument measures the tape; it cannot see which of those produced it, and I wrote a conclusion the instrument could not observe** — the precise thing `pm_tape_density.py`'s own docstring says it must not do.
+
+**What survives from R-368, unchanged.** The anomaly is real and Codex reproduces it: a sharp all-coin collapse from ~06:32Z to ~10:41Z, recovering without a restart; 352 low-content coin-windows; row counts confirmed by decompression (btc 08:30Z = 210 rows against 95,321 at 13:30Z). **The diurnal control still holds and matters**: hours 07–10Z run 9–24 MB per window on every other day and 0.1–0.2 MB on 08-31, so whatever this was, it was NOT the ordinary quiet of those hours. And the practical guidance is unchanged — **08-31 must not be counted as a clean validation day.** Adopting Codex's status: **`CONTENT_LIVENESS_UNRESOLVED`**, which is conservative without asserting a cause. **The conclusion was right; the reason I gave for it was not.**
+
+**Third instance today of one failure mode.** R-360 asserted a load mechanism that failed its own test. R-365 asserted an absence without opening the artifact. R-368 asserted collector loss where the collector's own counter says otherwise. **All three moved from a real observation to a stated CAUSE in one step, and in every case the intermediate check was cheap and skipped.** The observation has been sound every time. The characterisation has not.
+
+**HJ-R1 RELEASED** — Codex confirms the repaired join produces the exact governed population (143 cells / 665 / 663 joined / 2 unevaluable / as-of 23:50:15Z / r = +0.0332696) and matches its independent value.
+
+**Codex's release position, and my read of it.** It closes COL-R2 as a release gate (hygiene, not a blocker — host-wide load is refuted and the collector is already in `collectors.slice`), leaves **COL-R3 as the ONLY deploy blocker**, and rules that *historical certainty about 08-25 is not a prerequisite for the next era*. **I think that is right and it corrects my own drift**: I have spent the day on retrospective causation, and three of the four causes I proposed were wrong. **The prospective discriminator Codex specifies — an independent shadow subscription recording per-coin message counts and last-message age — would have separated venue from collector on the FIRST occurrence**, and would separate them on the next one, which retrospective analysis of this tape provably cannot.
+
+**Open, and now a short list.** (1) COL-R3: give 10/10 a distinct collector identity wired through `collector_start`, the era consumer, emitter, rollback and runbook — a narrow seam, reusing green machinery. (2) Stand up the shadow observation before the next era is INTERPRETED (it need not delay the boundary). (3) Freeze a content-liveness status rule BEFORE judging the next untouched day, or it is chosen after seeing (rule 11). **All three are USER-ruled work; none is started.**
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
