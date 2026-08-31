@@ -69,8 +69,8 @@ RECOVERY_WINDOW_S = 86400
 # stopped `collect_pm.py` being edited between review and deploy, and the gate
 # would have certified a restart of unreviewed code while every other check
 # passed. Pinned here, asserted in check_pre_arm and again in make_stamp.
-CAND_SHA = "b4fca5a274a60fe01a5f8a0ae859daeb50e4ff4323e977dd20eb48f71085f4a2"
-CAND_COMMIT = "042b787"
+CAND_SHA = "4d15d2dde80a1b80ee6f2b1daaaaecff50e3b81e69a64d28938d4f19e6739128"
+CAND_COMMIT = "2b1ea0d"
 
 # RULED INSTANT — USER, 2026-08-31: "set as 9.1", read as MAKE 2026-09-01 THE
 # FIRST CLEAN v4_1 DAY. That needs the boundary BEFORE 09-01 begins, so the
