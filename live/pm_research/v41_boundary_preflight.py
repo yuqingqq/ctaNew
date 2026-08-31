@@ -17,10 +17,10 @@ argv checks — and specialises only what the target era changes.
 WHAT THE ROLLBACK IS AND IS NOT.
   * It removes a MEASURED amplifier: btc 318 s/hr at 3/3 against 114-131 s/hr
     on the days that ran 10/10, i.e. ~2.6x.
-  * It does NOT repair the 2026-08-25 btc break, whose cause is diagnosed as a
-    REMOTE per-connection throughput limit at the venue edge
-    (BTC_GAP_DIAGNOSIS_2026-08-26): our client is exonerated by its own
-    instrumentation, `ws_ever_paused=False` across 1,106 disconnects.
+  * It does NOT repair the 2026-08-25 btc break, whose cause remains UNKNOWN.
+    The later root-cause review explicitly supersedes the older remote-edge
+    diagnosis. 10/10 removes a measured amplifier; it does not identify the
+    underlying failure.
   * btc lands NEAR the P1 bar (~123 vs 120), not clear of it. Two of five
     post-break 10/10 days passed.
 
@@ -59,6 +59,9 @@ TARGET_ERA = "clob_v4_1"
 TARGET_MODE = "control-v4-slow"
 ARGV_TARGET = P.ARGV_V4 + ("--heartbeat-mode", TARGET_MODE)
 POST_START_WINDOW_S = P.POST_START_WINDOW_S
+HEALTH_TIMEOUT_S = 90.0
+HEALTH_POLL_S = 0.5
+RECOVERY_WINDOW_S = 86400
 
 # SELF-REVIEW FINDING (pre-Codex): the first version of this gate checked the
 # argv, the unit environment and the era chain — and NEVER THE BYTES. The v5
@@ -82,6 +85,23 @@ CAND_COMMIT = "2cb51f0"
 # The gate REFUSES while this is None — a boundary nobody ruled is one nobody
 # can be held to.
 BOUNDARY_UTC = "2026-08-31T22:00:00Z"
+
+
+def era_semantics() -> str:
+    """One truthful description shared by normal and recovered transitions."""
+    return (
+        "ROLLBACK of O1a's ping tightening; RFC control-ping cadence 10s/10s. "
+        "Removes a MEASURED amplifier (btc ~271 s/hr at 3/3 vs ~100 s/hr "
+        "in matched post-break 10/10 windows). Does NOT repair or diagnose "
+        "the 2026-08-25 btc break; its root cause remains UNKNOWN. btc is "
+        "expected NEAR the P1 bar, not safely clear of it. "
+        "MEASUREMENT-BASIS WARNING: clob_v4_1 gap statistics are NOT directly "
+        "comparable to clob_v4 ones — the CAUSE MIX shifts (~97% "
+        "PING_TIMEOUT at 3/3 vs ~54% at 10/10, the remainder being "
+        "instantly-detected causes), so a cross-boundary comparison reads a "
+        "measurement change as a regression. Admissibility of clob_v4_1 is "
+        "a separate USER ruling and is NOT asserted here."
+    )
 
 
 def _epoch(utc: str) -> int:
@@ -171,6 +191,21 @@ def era_state(era_rows: list) -> tuple:
     return P.current_era_and_open_v5(era_rows, target=TARGET_ERA)
 
 
+def target_admissibility() -> bool | None:
+    """Read the USER-ruled input from the consumer that will accrue days."""
+    import da_forward_day_verify as D                      # noqa: PLC0415
+    return D.ERA_ADMISSIBLE.get(TARGET_ERA)
+
+
+def require_target_admissible(value) -> None:
+    if value is not True:
+        state = "ABSENT" if value is None else repr(value)
+        raise Refused(f"{TARGET_ERA} admissibility is {state}, not USER-ruled "
+                      f"True in da_forward_day_verify. Deployment and forward-"
+                      f"day eligibility are separate decisions; the gate will "
+                      f"not infer one from the other")
+
+
 def check_pre_arm(obs: dict, expect_flag: bool) -> None:
     utc, ep = require_ruled_instant()
     check_boundary_current(utc, ep, obs["now_epoch"], "pre")
@@ -182,6 +217,7 @@ def check_pre_arm(obs: dict, expect_flag: bool) -> None:
                       f"({obs['exec_start_pre'][:60]!r})")
     P.check_unit_environment(obs)
     check_candidate_bytes(obs)
+    require_target_admissible(obs.get("target_admissible"))
     if not obs["unit_active"] or obs["main_pid"] <= 0:
         raise Refused(f"unit not active (active={obs['unit_active']}, "
                       f"pid={obs['main_pid']})")
@@ -210,6 +246,14 @@ def make_stamp(obs: dict, old_pid: int, start_row: dict) -> dict:
     """
     utc, ep = require_ruled_instant()
     check_boundary_current(utc, ep, obs["now_epoch"], "post")
+    if obs.get("obs_unit_overridden"):
+        raise Refused("era stamps come only from the PRODUCTION unit")
+    require_target_admissible(obs.get("target_admissible"))
+    if not obs.get("unit_active") or obs.get("main_pid", 0) <= 0:
+        raise Refused(f"unit not active at stamp time (active="
+                      f"{obs.get('unit_active')}, pid={obs.get('main_pid')})")
+    if type(old_pid) is not int or old_pid <= 0:
+        raise Refused(f"OLD_PID {old_pid!r} is not a real pid")
     if obs["main_pid"] == old_pid:
         raise Refused(f"main pid is still {old_pid} — the unit did not "
                       f"restart, so nothing transitioned")
@@ -242,6 +286,16 @@ def make_stamp(obs: dict, old_pid: int, start_row: dict) -> dict:
     P._refuse_cross_midnight(utc, ns)
     current, open_target = era_state(obs["era_rows"])
     if open_target is not None:
+        exact = [r for r in obs["era_rows"]
+                 if r.get("transitioned") is True
+                 and r.get("collector_schema_version") == TARGET_ERA
+                 and r.get("boundary_utc") == utc
+                 and r.get("pid") == obs["main_pid"]
+                 and r.get("collector_start_recv_ns") == ns]
+        if open_target == utc and exact:
+            return {"already_stamped": True, "row": exact[-1],
+                    "note": ("EXACT v4.1 transition already exists — "
+                             "idempotent success, NO new row emitted")}
         raise Refused(f"an OPEN {TARGET_ERA} era already exists at "
                       f"{open_target} — this stamp would fork it")
     if current != FROM_ERA:
@@ -257,20 +311,7 @@ def make_stamp(obs: dict, old_pid: int, start_row: dict) -> dict:
         "stamp_written_ns": time.time_ns(),
         "package": ["O1a ping 3/3 -> 10/10 ROLLBACK"],
         "authority": "USER ruling 2026-08-31 'redeploy v4_1 first'",
-        "era_semantics": (
-            "ROLLBACK of O1a's ping tightening; RFC control-ping cadence "
-            "10s/10s. Removes a MEASURED amplifier (btc ~318 s/hr at 3/3 vs "
-            "114-131 s/hr on days that ran 10/10). Does NOT repair the "
-            "2026-08-25 btc break, diagnosed as a REMOTE per-connection "
-            "throughput limit at the venue edge with the client exonerated "
-            "(ws_ever_paused=False across 1,106 disconnects). btc is expected "
-            "NEAR the P1 bar (~123 vs 120), not clear of it. "
-            "MEASUREMENT-BASIS WARNING: clob_v4_1 gap statistics are NOT "
-            "directly comparable to clob_v4 ones — the CAUSE MIX shifts "
-            "(~97% PING_TIMEOUT at 3/3 vs ~54% at 10/10, the remainder being "
-            "instantly-detected causes), so a cross-boundary comparison reads "
-            "a measurement change as a regression. Admissibility of "
-            "clob_v4_1 is a separate USER ruling and is NOT asserted here."),
+        "era_semantics": era_semantics(),
         "stamp_order": ("restart FIRST, pid/version VERIFIED from the new "
                         "process's own collector_start row, stamp appended "
                         "LAST"),
@@ -280,30 +321,106 @@ def make_stamp(obs: dict, old_pid: int, start_row: dict) -> dict:
 COINS = ("btc", "eth", "sol", "xrp", "doge", "bnb", "hype")
 
 
-def observe_coin_msgs(n: int = 2, gap_s: float = 30.0) -> list:
-    """Per-coin cumulative message counts, n samples gap_s apart."""
+def latest_coin_sample(text: str) -> tuple[str, dict] | None:
+    """Return the newest COMPLETE status line and its per-coin counters."""
     import re as _re
+    for line in reversed(text.splitlines()):
+        match = _re.search(r"msg_by_coin=(\{[^}]*\})", line)
+        if not match:
+            continue
+        counts = {c: int(v) for c, v in
+                  _re.findall(r"'([a-z]+)': (\d+)", match.group(1))}
+        if counts:
+            return line, counts
+    return None
+
+
+def _read_latest_coin_sample() -> tuple[str, dict] | None:
+    if not P.COLLECTOR_LOG.exists():
+        return None
+    with P.COLLECTOR_LOG.open("rb") as fh:
+        fh.seek(max(0, fh.seek(0, 2) - 40000))
+        return latest_coin_sample(fh.read().decode("utf-8", "replace"))
+
+
+def observe_coin_msgs(n: int = 2, timeout_s: float = HEALTH_TIMEOUT_S,
+                      poll_s: float = HEALTH_POLL_S, *, reader=None,
+                      sleeper=None, clock=None) -> list:
+    """Wait for ``n`` distinct status records; never resample one 60s line.
+
+    The collector emits ``msg_by_coin`` once per 60 seconds. The former health
+    gate slept 30 seconds and often read the SAME line twice, then ordered an
+    unnecessary rollback of a healthy process. Identity is the complete log
+    line: only a newly emitted status record becomes the next sample.
+    """
+    if n < 2:
+        raise Refused("health observation requires at least two distinct rows")
+    reader = reader or _read_latest_coin_sample
+    sleeper = sleeper or time.sleep
+    clock = clock or time.monotonic
+    deadline = clock() + timeout_s
     out = []
-    for k in range(n):
-        if k:
-            time.sleep(gap_s)
-        txt = ""
-        if P.COLLECTOR_LOG.exists():
-            with P.COLLECTOR_LOG.open("rb") as fh:
-                fh.seek(max(0, fh.seek(0, 2) - 40000))
-                txt = fh.read().decode("utf-8", "replace")
-        m = None
-        for ln in txt.splitlines():
-            g = _re.search(r"msg_by_coin=(\{[^}]*\})", ln)
-            if g:
-                m = g.group(1)
-        if m is None:
-            raise Refused("no msg_by_coin line in the collector log — the "
-                          "health check cannot report a clean result from a "
-                          "population it never read")
-        out.append({c: int(v) for c, v in
-                    _re.findall(r"'([a-z]+)': (\d+)", m)})
-    return out
+    last_line = None
+    while clock() < deadline:
+        sample = reader()
+        if sample is not None and sample[0] != last_line:
+            last_line, counts = sample
+            out.append(counts)
+            if len(out) >= n:
+                return out
+        sleeper(poll_s)
+    raise Refused(f"fewer than {n} DISTINCT msg_by_coin status records within "
+                  f"{timeout_s:.0f}s — the collector emits once per 60s; "
+                  f"re-reading one line is not a health delta")
+
+
+def check_health_identity(obs: dict, start_row: dict | None,
+                          expected_pid: int | None = None) -> int:
+    """Bind counter evidence to the live, stamped v4.1 process."""
+    if obs.get("obs_unit_overridden"):
+        raise Refused("health verification reads the PRODUCTION unit and log")
+    if not obs.get("unit_active") or obs.get("main_pid", 0) <= 0:
+        raise Refused(f"unit not active at health verification (active="
+                      f"{obs.get('unit_active')}, pid={obs.get('main_pid')})")
+    if expected_pid is not None and obs["main_pid"] != expected_pid:
+        raise Refused(f"MainPID changed during health verification "
+                      f"({expected_pid} -> {obs['main_pid']})")
+    if installed_mode_v41(obs["exec_start"]) != TARGET_MODE:
+        raise Refused(f"installed command is not the {TARGET_MODE} vector")
+    P.check_unit_environment(obs)
+    check_candidate_bytes(obs)
+    if start_row is None or start_row.get("event") != "collector_start" \
+            or start_row.get("collector_version") != TARGET_ERA \
+            or start_row.get("pid") != obs["main_pid"] \
+            or type(start_row.get("recv_ns")) is not int:
+        raise Refused("health evidence is not bound to the live unit's own "
+                      "clob_v4_1 collector_start declaration")
+    current, open_target = era_state(obs["era_rows"])
+    utc, _ = require_ruled_instant()
+    if current != TARGET_ERA or open_target != utc:
+        raise Refused(f"no OPEN stamped {TARGET_ERA} era at {utc} — health "
+                      f"cannot certify an unstamped process")
+    return obs["main_pid"]
+
+
+def check_restart_counter(nrestarts_at_arm: int | None, current_value) -> None:
+    """Require no automatic Restart= activation before or after the deploy."""
+    if nrestarts_at_arm is None:
+        raise Refused("--post-restart requires --nrestarts-at-arm from the "
+                      "armed read-back; omitting the flap leg is not allowed")
+    if type(nrestarts_at_arm) is not int or nrestarts_at_arm < 0:
+        raise Refused("--nrestarts-at-arm must be a non-negative integer")
+    try:
+        current = int(current_value or 0)
+    except (TypeError, ValueError):
+        raise Refused(f"live NRestarts value {current_value!r} is unreadable")
+    if nrestarts_at_arm != 0:
+        raise Refused(f"NRestarts was already {nrestarts_at_arm} at arm time "
+                      f"— the unit was not a clean stable baseline")
+    if current != 0:
+        raise Refused(f"NRestarts is {current}, expected 0 after the manual "
+                      f"boundary restart — the candidate auto-restarted and "
+                      f"may be flapping")
 
 
 def check_coin_progress(samples: list, unit_active: bool,
@@ -346,30 +463,208 @@ def check_coin_progress(samples: list, unit_active: bool,
     return {c: last[c] - first.get(c, 0) for c in COINS}
 
 
-def make_rollback(obs: dict, v4_start: dict, stage: str) -> dict:
-    """Return to clob_v4 when the post-restart checks refuse."""
-    utc, _ = require_ruled_instant()
+def _check_restored_v4(obs: dict, v4_start: dict | None, stage: str,
+                       old_target_pid: int | None = None) -> tuple[str, int]:
+    """Verify the live restoration before any abort/recovery receipt exists."""
+    utc, ep = require_ruled_instant()
+    P.check_stage(stage)
+    if obs.get("obs_unit_overridden"):
+        raise Refused("restoration receipts come only from the PRODUCTION unit")
+    now = obs.get("now_epoch")
+    if not isinstance(now, (int, float)) or now < ep:
+        raise Refused("restoration evidence predates the ruled boundary")
+    if now >= ep + RECOVERY_WINDOW_S:
+        raise Refused(f"restoration receipt is {now - ep:.0f}s after the "
+                      f"boundary (> {RECOVERY_WINDOW_S}s recovery window)")
+    if obs.get("working_dir") != str(REPO):
+        raise Refused(f"unit WorkingDirectory is {obs.get('working_dir')!r}, "
+                      f"not {str(REPO)!r}")
+    if obs.get("exec_start_pre"):
+        raise Refused("unit declares ExecStartPre during restoration")
+    P.check_unit_environment(obs)
+    check_candidate_bytes(obs)
+    if not obs.get("unit_active") or obs.get("main_pid", 0) <= 0:
+        raise Refused(f"unit not active after restoration (active="
+                      f"{obs.get('unit_active')}, pid={obs.get('main_pid')})")
     if installed_mode_v41(obs["exec_start"]) != "control-v4":
         raise Refused("installed command still carries the target vector — "
-                      "v4 is not restored; this is not the rollback case")
+                      "v4 is not restored")
+    if old_target_pid is not None:
+        if type(old_target_pid) is not int or old_target_pid <= 0:
+            raise Refused(f"old v4.1 pid {old_target_pid!r} is not a real pid")
+        if obs["main_pid"] == old_target_pid:
+            raise Refused(f"MainPID unchanged ({old_target_pid}) — the "
+                          "restoration restart did not produce a new process")
     if v4_start is None:
         raise Refused("no clob_v4 collector_start declaration to prove the "
                       "restoration ran")
+    if v4_start.get("event") != "collector_start":
+        raise Refused(f"restoration row has event={v4_start.get('event')!r}, "
+                      f"not 'collector_start'")
+    if v4_start.get("collector_version") != FROM_ERA:
+        raise Refused(f"restored process declares "
+                      f"{v4_start.get('collector_version')!r}, not {FROM_ERA}")
     if v4_start.get("pid") != obs["main_pid"]:
         raise Refused(f"the restoring process {v4_start.get('pid')} is not "
                       f"the live unit ({obs['main_pid']})")
     ns = v4_start.get("recv_ns")
     if type(ns) is not int or ns <= 0:
         raise Refused(f"restoration recv_ns={ns!r} is not a positive int")
+    if ns < ep * 10**9:
+        raise Refused("restoration collector_start predates the boundary — an "
+                      "old v4 process is not proof of post-attempt restoration")
+    if ns > (now + 5) * 10**9:
+        raise Refused("restoration collector_start is in the future relative "
+                      "to the system observation")
     resto = datetime.fromtimestamp(ns / 1e9, tz=timezone.utc).strftime(
         "%Y-%m-%dT%H:%M:%SZ")
-    if resto == utc:
-        raise Refused("restoration lands in the SAME SECOND as the boundary "
-                      "— a zero-width era is refused")
+    if resto <= utc:
+        raise Refused("restoration lands in/before the boundary's second — a "
+                      "zero- or negative-width era is refused")
+    return resto, ns
+
+
+def _rollback_row(obs: dict, resto: str, ns: int, stage: str) -> dict:
+    utc, _ = require_ruled_instant()
     return {"collector_schema_version": FROM_ERA, "supersedes": TARGET_ERA,
             "rollback": True, "closes_boundary_utc": utc,
             "boundary_utc": resto, "stage": stage, "pid": obs["main_pid"],
-            "collector_start_recv_ns": ns, "stamp_written_ns": time.time_ns()}
+            "collector_start_recv_ns": ns, "stamp_written_ns": time.time_ns(),
+            "stamp_order": ("v4 RESTORED and restarted FIRST, restoration "
+                            "VERIFIED from that process's own collector_start, "
+                            "rollback receipt appended LAST")}
+
+
+def make_rollback(obs: dict, old_target_pid: int, v4_start: dict | None,
+                  stage: str) -> dict:
+    """Close an already-stamped v4.1 era after verified v4 restoration."""
+    utc, _ = require_ruled_instant()
+    resto, ns = _check_restored_v4(obs, v4_start, stage, old_target_pid)
+    current, open_target = era_state(obs["era_rows"])
+    if open_target is None:
+        prior = [r for r in obs["era_rows"]
+                 if r.get("rollback") is True
+                 and r.get("closes_boundary_utc") == utc
+                 and r.get("collector_start_recv_ns") == ns]
+        if prior:
+            return {"already_stamped": True, "row": prior[-1],
+                    "note": ("EXACT v4.1 rollback already exists — "
+                             "idempotent success, NO new row emitted")}
+        raise Refused(f"no OPEN {TARGET_ERA} era in the ledger (era in force "
+                      f"{current!r}) — nothing to close. If v4.1 ran without "
+                      f"a stamp, use the recovery bundle, never a rollback-only "
+                      f"row")
+    if current != TARGET_ERA or open_target != utc:
+        raise Refused(f"open era is {current!r} at {open_target!r}, not "
+                      f"{TARGET_ERA!r} at {utc}")
+    row = _rollback_row(obs, resto, ns, stage)
+    era_state(list(obs["era_rows"]) + [row])
+    return row
+
+
+def make_abort_row(obs: dict, v4_start: dict | None,
+                   target_starts: list, stage: str) -> dict:
+    """Record a failed attempt only when evidence proves v4.1 never ran."""
+    utc, _ = require_ruled_instant()
+    _check_restored_v4(obs, v4_start, stage)
+    if target_starts:
+        raise Refused(f"the gap ledger carries {len(target_starts)} post-"
+                      f"boundary {TARGET_ERA} collector_start row(s) — v4.1 "
+                      f"RAN, so an abort would be false; use recovery")
+    current, open_target = era_state(obs["era_rows"])
+    if open_target is not None or current != FROM_ERA:
+        raise Refused(f"era state is current={current!r}, open="
+                      f"{open_target!r}; an abort requires unchanged {FROM_ERA}")
+    prior = [r for r in obs["era_rows"] if r.get("aborted") is True
+             and r.get("collector_schema_version") == TARGET_ERA
+             and r.get("boundary_utc") == utc and r.get("stage") == stage]
+    if prior:
+        return {"already_stamped": True, "row": prior[-1],
+                "note": ("EXACT aborted-attempt row already exists — "
+                         "idempotent success, NO new row emitted")}
+    row = {"collector_schema_version": TARGET_ERA, "supersedes": FROM_ERA,
+           "aborted": True, "boundary_utc": utc, "stage": stage,
+           "stamp_written_ns": time.time_ns(),
+           "stamp_order": ("PRE-STAMP abort: a fresh post-boundary v4 "
+                           "collector_start proves restoration and no v4.1 "
+                           "collector_start exists")}
+    era_state(list(obs["era_rows"]) + [row])
+    return row
+
+
+def make_recovery_bundle(obs: dict, old_target_pid: int,
+                         target_start: dict | None, v4_start: dict | None,
+                         stage: str) -> list:
+    """Reconstruct and close a v4.1 span that ran but was never stamped."""
+    utc, ep = require_ruled_instant()
+    resto, ns = _check_restored_v4(obs, v4_start, stage, old_target_pid)
+    if target_start is None:
+        raise Refused(f"no {TARGET_ERA} collector_start for pid "
+                      f"{old_target_pid} — nothing proves v4.1 ran")
+    if target_start.get("event") != "collector_start" \
+            or target_start.get("collector_version") != TARGET_ERA:
+        raise Refused("target recovery row is not an exact clob_v4_1 "
+                      "collector_start declaration")
+    if target_start.get("pid") != old_target_pid:
+        raise Refused(f"target start pid {target_start.get('pid')} does not "
+                      f"match recorded v4.1 pid {old_target_pid}")
+    target_ns = target_start.get("recv_ns")
+    if type(target_ns) is not int or target_ns <= 0:
+        raise Refused(f"target start recv_ns={target_ns!r} is not a positive int")
+    if target_ns < ep * 10**9 or \
+            target_ns > (ep + POST_START_WINDOW_S) * 10**9:
+        raise Refused("v4.1 start is outside the ruled boundary's 120-second "
+                      "start window")
+    if ns <= target_ns:
+        raise Refused("v4 restoration is not after the v4.1 start")
+    P._refuse_cross_midnight(utc, target_ns)
+
+    recovered = [r for r in obs["era_rows"]
+                 if r.get("recovered") is True
+                 and r.get("transitioned") is True
+                 and r.get("collector_schema_version") == TARGET_ERA
+                 and r.get("boundary_utc") == utc
+                 and r.get("collector_start_recv_ns") == target_ns]
+    closed = [r for r in obs["era_rows"]
+              if r.get("rollback") is True
+              and r.get("closes_boundary_utc") == utc]
+    current, open_target = era_state(obs["era_rows"])
+    if recovered and closed:
+        return [{"already_stamped": True, "row": recovered[-1],
+                 "note": ("EXACT recovery bundle already exists — "
+                          "idempotent success, NO new rows emitted")}]
+    if recovered and not closed:
+        row = _rollback_row(obs, resto, ns, stage)
+        era_state(list(obs["era_rows"]) + [row])
+        row["completes_half_landed_bundle"] = True
+        return [row]
+
+    if open_target is not None:
+        raise Refused(f"an OPEN {TARGET_ERA} era already exists at "
+                      f"{open_target}; use post-rollback, not recovery")
+    if current != FROM_ERA:
+        raise Refused(f"era in force is {current!r}, not {FROM_ERA!r}")
+    if any(r.get("transitioned") is True
+           and r.get("collector_schema_version") == TARGET_ERA
+           and r.get("boundary_utc") == utc for r in obs["era_rows"]):
+        raise Refused("this boundary was already opened by a non-matching "
+                      "transition; reconstruction would fork history")
+    transition = {
+        "collector_schema_version": TARGET_ERA, "supersedes": FROM_ERA,
+        "transitioned": True, "recovered": True, "boundary_utc": utc,
+        "stage": stage, "pid": old_target_pid,
+        "collector_start_recv_ns": target_ns,
+        "stamp_written_ns": time.time_ns(),
+        "package": ["O1a ping 3/3 -> 10/10 ROLLBACK"],
+        "authority": "USER ruling 2026-08-31 'redeploy v4_1 first'",
+        "era_semantics": era_semantics(),
+        "stamp_order": ("RECONSTRUCTED after v4.1 ran unstamped: both the "
+                        "v4.1 start and v4 restoration come from each "
+                        "process's own collector_start declaration")}
+    rollback = _rollback_row(obs, resto, ns, stage)
+    rows = [transition, rollback]
+    era_state(list(obs["era_rows"]) + rows)
+    return rows
 
 
 # ------------------------------------------------------------------ selftest
@@ -414,6 +709,7 @@ def selftest() -> int:
             "exec_start_post": "", "environment": "",
             "slice": "collectors.slice", "std_out": "append",
             "n_restarts": "0", "era_rows": [V4ROW],
+            "target_admissible": True,
             "tree_sha": CAND_SHA, "head_sha": CAND_SHA,
             "exec_start": es(P.ARGV_V4)}
     armed = {**base, "exec_start": es(ARGV_TARGET)}
@@ -442,6 +738,10 @@ def selftest() -> int:
             "what would slip between review and deploy")
     refuses(lambda: check_pre_arm({**base, "slice": "research.slice"}, False),
             "slice", "KNOWN-BAD: a unit outside collectors.slice refuses")
+    refuses(lambda: check_pre_arm({**base, "target_admissible": None}, False),
+            "not USER-ruled True",
+            "KNOWN-BAD: an absent v4.1 admissibility ruling blocks arming — "
+            "deployment does not silently choose forward-day eligibility")
     refuses(lambda: check_pre_arm({**base, "exec_start":
                                    es(P.ARGV_V4 + ("--heartbeat-mode",
                                                    "app-v5"))}, False),
@@ -506,10 +806,10 @@ def selftest() -> int:
     refuses(lambda: make_stamp(post, 3687786, None),
             "no clob_v4_1 collector_start",
             "KNOWN-BAD: no start row at all refuses")
-    refuses(lambda: make_stamp({**post, "era_rows": [V4ROW, row]}, 3687786,
-                               good_start),
-            "OPEN", "KNOWN-BAD: stamping twice refuses — the second would "
-                    "fork the era")
+    repeat = make_stamp({**post, "era_rows": [V4ROW, row]}, 3687786,
+                        good_start)
+    ok(repeat.get("already_stamped") is True,
+       "POSITIVE: an exact stamp retry is idempotent and emits no second row")
 
     BOUNDARY_UTC = "2026-09-01T00:00:00Z"
     refuses(lambda: make_stamp(
@@ -525,9 +825,10 @@ def selftest() -> int:
 
     rb_obs = {**base, "now_epoch": ep + 400, "main_pid": 5555,
               "era_rows": [V4ROW, row]}
-    rb = make_rollback(rb_obs, {"recv_ns": (ep + 300) * 10**9, "pid": 5555,
-                                "collector_version": "clob_v4"},
-                       "counters_refused")
+    v4_start = {"event": "collector_start",
+                "recv_ns": (ep + 300) * 10**9, "pid": 5555,
+                "collector_version": "clob_v4"}
+    rb = make_rollback(rb_obs, 4242, v4_start, "counters_refused")
     ok(rb["rollback"] is True and rb["closes_boundary_utc"] == BOUNDARY_UTC
        and rb["supersedes"] == TARGET_ERA,
        "POSITIVE: the rollback row closes the target era and returns to "
@@ -536,23 +837,100 @@ def selftest() -> int:
     ok(_cur2 == FROM_ERA and _open2 is None,
        "and after the rollback the walk reports clob_v4 in force with NO "
        "open target era")
-    refuses(lambda: make_rollback(rb_obs,
-                                  {"recv_ns": ep * 10**9, "pid": 5555,
-                                   "collector_version": "clob_v4"},
-                                  "s"),
-            "SAME SECOND",
+    refuses(lambda: make_rollback(
+                rb_obs, 4242,
+                {**v4_start, "recv_ns": ep * 10**9}, "same_second"),
+            "boundary's second",
             "KNOWN-BAD: a restoration in the boundary's own second refuses — "
             "a zero-width era bricks the append-only ledger")
     refuses(lambda: make_rollback({**rb_obs, "exec_start": es(ARGV_TARGET)},
-                                  {"recv_ns": (ep + 300) * 10**9,
-                                   "pid": 5555,
-                                   "collector_version": "clob_v4"}, "s"),
+                                  4242, v4_start, "still_armed"),
             "not restored",
             "KNOWN-BAD: rolling back while the target argv is STILL installed "
             "refuses — the ledger would claim a restoration that did not run")
+    refuses(lambda: make_rollback(
+                rb_obs, 4242,
+                {**v4_start, "collector_version": TARGET_ERA},
+                "wrong_restoration_version"),
+            "not clob_v4",
+            "KNOWN-BAD (review reproduction): a clob_v4_1 start may NOT prove "
+            "v4 restoration")
+    refuses(lambda: make_rollback(
+                {**rb_obs, "era_rows": [V4ROW]}, 4242, v4_start,
+                "no_open_transition"),
+            "no OPEN",
+            "KNOWN-BAD (review reproduction): rollback with no stamped v4.1 "
+            "era REFUSES instead of emitting a rollback-only malformed chain")
+    rb_repeat = make_rollback(
+        {**rb_obs, "era_rows": [V4ROW, row, rb]}, 4242, v4_start,
+        "counters_refused")
+    ok(rb_repeat.get("already_stamped") is True,
+       "POSITIVE: an exact rollback retry is idempotent")
+
+    rec_obs = {**rb_obs, "era_rows": [V4ROW]}
+    recovered = make_recovery_bundle(rec_obs, 4242, good_start, v4_start,
+                                     "postflight_refused_live")
+    ok(len(recovered) == 2 and recovered[0].get("recovered") is True
+       and recovered[1].get("rollback") is True,
+       "POSITIVE: an unstamped v4.1 process is represented by a two-row "
+       "recovery bundle, never a rollback-only row")
+    _cur3, _open3 = era_state([V4ROW] + recovered)
+    ok(_cur3 == FROM_ERA and _open3 is None,
+       "the recovery bundle is accepted by the real chain walk and closes")
+    refuses(lambda: make_recovery_bundle(
+                rec_obs, 4242, {**good_start, "collector_version": FROM_ERA},
+                v4_start, "wrong_target_version"),
+            "exact clob_v4_1",
+            "KNOWN-BAD: recovery cannot mint v4.1 from a v4 declaration")
+
+    abort = make_abort_row(rec_obs, v4_start, [], "restart_never_happened")
+    ok(abort.get("aborted") is True,
+       "POSITIVE: a proven no-v4.1 attempt emits an explicit aborted status")
+    refuses(lambda: make_abort_row(rec_obs, v4_start, [good_start],
+                                   "false_abort"),
+            "RAN", "KNOWN-BAD: abort refuses when any v4.1 start proves the "
+                   "candidate actually ran")
+
+    health_obs = {**post, "era_rows": [V4ROW, row]}
+    ok(check_health_identity(health_obs, good_start) == 4242,
+       "POSITIVE: health evidence binds to the live stamped v4.1 PID")
+    refuses(lambda: check_health_identity(
+                {**health_obs, "main_pid": 9999}, good_start, 4242),
+            "changed during", "KNOWN-BAD: a PID change during health sampling "
+                              "refuses even if counters advanced")
+    refuses(lambda: check_health_identity(
+                {**health_obs, "era_rows": [V4ROW]}, good_start),
+            "no OPEN stamped", "KNOWN-BAD: health cannot certify an unstamped "
+                               "v4.1 process")
+
+    check_restart_counter(0, "0")
+    ok(True, "POSITIVE: clean arm and zero automatic restarts pass")
+    refuses(lambda: check_restart_counter(None, "0"), "requires",
+            "KNOWN-BAD: omitting the NRestarts leg refuses")
+    refuses(lambda: check_restart_counter(0, "1"), "auto-restarted",
+            "KNOWN-BAD: one automatic candidate restart refuses as flapping")
 
     A = {c: 100 for c in COINS}
     B = {c: 200 for c in COINS}
+    sample_text = ("[pm] 22:01:19Z msg_by_coin=" + str(A) + "\n" +
+                   "[pm] 22:02:19Z msg_by_coin=" + str(B) + "\n")
+    parsed = latest_coin_sample(sample_text)
+    ok(parsed is not None and parsed[1] == B,
+       "POSITIVE: status parser selects the newest complete per-coin row")
+
+    # Exact regression for the live false rollback: a 30s poll sees the same
+    # 60s status line repeatedly. It must wait, not count that line twice.
+    seq = [("line-1", A), ("line-1", A), ("line-1", A), ("line-2", B)]
+    fake_t = [0.0]
+    def fake_read():
+        return seq.pop(0) if len(seq) > 1 else seq[0]
+    def fake_sleep(seconds):
+        fake_t[0] += seconds
+    observed = observe_coin_msgs(timeout_s=10, poll_s=1, reader=fake_read,
+                                 sleeper=fake_sleep, clock=lambda: fake_t[0])
+    ok(observed == [A, B],
+       "KNOWN-BAD FIXED: repeated reads of one 60s status line are ignored; "
+       "only a distinct line forms the second health sample")
     d = check_coin_progress([A, B], True, 4242)
     ok(all(v == 100 for v in d.values()),
        "POSITIVE: every coin advancing returns its per-coin delta")
@@ -591,12 +969,36 @@ def main() -> int:
     ap.add_argument("--armed", action="store_true")
     ap.add_argument("--post-restart", type=int, default=None)
     ap.add_argument("--nrestarts-at-arm", type=int, default=None)
+    ap.add_argument("--post-rollback", type=int, metavar="OLD_V41_PID",
+                    default=None)
+    ap.add_argument("--abort-row", action="store_true")
+    ap.add_argument("--post-recovery", action="store_true")
+    ap.add_argument("--v41-pid", type=int, default=None)
+    ap.add_argument("--stage", type=str, default=None)
+    ap.add_argument("--inspect-live", action="store_true",
+                    help="read-only failure classifier; run before restoring v4")
     ap.add_argument("--verify-health", action="store_true",
-                    help="two samples 30s apart; EVERY coin must advance")
+                    help="wait for two distinct 60s status rows; EVERY coin "
+                         "must advance and the live PID must stay fixed")
     a = ap.parse_args()
     if a.selftest:
         return selftest()
     obs = P.observe_common()
+    obs["target_admissible"] = target_admissibility()
+    if a.inspect_live:
+        utc, ep = require_ruled_instant()
+        start = P.observe_collector_start(ep - P.EARLY_SCAN_LOOKBACK_S,
+                                          unit_pid=obs["main_pid"])
+        try:
+            mode = installed_mode_v41(obs["exec_start"])
+        except Refused as ex:
+            mode = f"REFUSED: {ex}"
+        print(json.dumps({"unit_active": obs["unit_active"],
+                          "main_pid": obs["main_pid"],
+                          "n_restarts": obs.get("n_restarts"),
+                          "installed_mode": mode,
+                          "collector_start": start}, sort_keys=True))
+        return 0
     if a.pre_arm or a.armed:
         check_pre_arm(obs, expect_flag=bool(a.armed))
         print(f"OK {'armed' if a.armed else 'pre-arm'}: era in force "
@@ -606,30 +1008,87 @@ def main() -> int:
             print(f"NRESTARTS_AT_ARM={obs.get('n_restarts')}")
         return 0
     if a.verify_health:
-        d = check_coin_progress(observe_coin_msgs(), obs["unit_active"],
-                                obs["main_pid"])
-        print(f"OK health: per-coin message deltas over 30s {d}")
+        utc, ep = require_ruled_instant()
+        start = P.observe_collector_start(ep, unit_pid=obs["main_pid"])
+        pid = check_health_identity(obs, start)
+        samples = observe_coin_msgs()
+        obs_after = P.observe_common()
+        start_after = P.observe_collector_start(ep,
+                                                unit_pid=obs_after["main_pid"])
+        check_health_identity(obs_after, start_after, expected_pid=pid)
+        d = check_coin_progress(samples, True, pid)
+        print(f"OK health: pid {pid} stayed fixed; per-coin deltas across two "
+              f"distinct status records {d}")
         return 0
     if a.post_restart is not None:
         utc, ep = require_ruled_instant()
-        if a.nrestarts_at_arm is not None:
-            now_r = int(obs.get("n_restarts") or 0)
-            if now_r != a.nrestarts_at_arm + 1:
-                raise Refused(f"NRestarts is {now_r}, expected "
-                              f"{a.nrestarts_at_arm + 1} — the unit restarted "
-                              f"on its own; it is flapping or booted the "
-                              f"candidate before the boundary")
+        # NRestarts counts automatic Restart= activations, not the operator's
+        # manual `systemctl restart`. The manual restart begins a new activation;
+        # any positive value now means the candidate has already auto-restarted.
+        check_restart_counter(a.nrestarts_at_arm, obs.get("n_restarts"))
         start = P.observe_collector_start(ep - P.EARLY_SCAN_LOOKBACK_S,
                                           unit_pid=obs["main_pid"])
         row = make_stamp(obs, a.post_restart, start)
+        if row.get("already_stamped"):
+            print(row["note"], file=sys.stderr)
+            print(f"V41_PID={row['row'].get('pid')}", file=sys.stderr)
+            return 0
+        print(f"V41_PID={row['pid']}", file=sys.stderr)
         print(json.dumps(row))
         print("STAMP NOT APPENDED — append it with the runbook's command so "
               "the write is the operator's act, not this gate's",
               file=sys.stderr)
         return 0
-    ap.print_help(sys.stderr)
-    return 2
+    if a.post_rollback is not None:
+        utc, ep = require_ruled_instant()
+        start = P.observe_collector_start(ep, unit_pid=obs["main_pid"])
+        row = make_rollback(obs, a.post_rollback, start, a.stage or "")
+        if row.get("already_stamped"):
+            print(row["note"], file=sys.stderr)
+            return 0
+        print(json.dumps(row))
+        return 0
+    if a.abort_row:
+        utc, ep = require_ruled_instant()
+        v4_start = P.observe_collector_start(ep, unit_pid=obs["main_pid"])
+        target_starts = P.observe_starts_by_version(
+            ep - P.EARLY_SCAN_LOOKBACK_S, TARGET_ERA)
+        row = make_abort_row(obs, v4_start, target_starts, a.stage or "")
+        if row.get("already_stamped"):
+            print(row["note"], file=sys.stderr)
+            return 0
+        print(json.dumps(row))
+        return 0
+    if a.post_recovery:
+        utc, ep = require_ruled_instant()
+        if a.v41_pid is None or a.v41_pid <= 0:
+            raise Refused("--post-recovery requires a positive --v41-pid "
+                          "recorded before restoring v4")
+        targets = [r for r in P.observe_starts_by_version(ep, TARGET_ERA)
+                   if r.get("pid") == a.v41_pid]
+        v4s = [r for r in P.observe_starts_by_version(ep, FROM_ERA)
+               if r.get("pid") == obs["main_pid"]]
+        target_start = targets[0] if targets else None
+        v4_start = None
+        if target_start is not None:
+            later = [r for r in v4s
+                     if r.get("recv_ns", 0) > target_start.get("recv_ns", 0)]
+            v4_start = later[-1] if later else None
+        rows = make_recovery_bundle(obs, a.v41_pid, target_start, v4_start,
+                                    a.stage or "")
+        if rows and rows[0].get("already_stamped"):
+            print(rows[0]["note"], file=sys.stderr)
+            return 0
+        sys.stdout.write("".join(json.dumps(r) + "\n" for r in rows))
+        sys.stdout.flush()
+        return 0
+    ap.print_help(file=sys.stderr)
+    raise Refused("no mode selected — every mode is explicit")
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    try:
+        sys.exit(main())
+    except Refused as ex:
+        print(f"REFUSED: {ex}", file=sys.stderr)
+        sys.exit(2)

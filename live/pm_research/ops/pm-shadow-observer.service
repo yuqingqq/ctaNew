@@ -1,0 +1,17 @@
+[Unit]
+Description=Polymarket independent read-only shadow observer
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/yuqing/ctaNew
+ExecStart=/home/yuqing/pricer-sol/venv/bin/python3 live/pm_research/pm_shadow_observer.py --duration-s 0
+Restart=always
+RestartSec=10
+Slice=collectors.slice
+StandardOutput=append:/home/yuqing/ctaNew/data/pm_5min/shadow.log
+StandardError=append:/home/yuqing/ctaNew/data/pm_5min/shadow.log
+
+[Install]
+WantedBy=default.target
