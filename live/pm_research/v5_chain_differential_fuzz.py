@@ -114,6 +114,18 @@ CHAINS = [
      [LEGACY, transition("clob_v5", "clob_v4", 7),
       transition("clob_v6", "clob_v5", 8), rollback("clob_v6", 8, 9),
       transition("clob_v5", "clob_v4", 10)]),
+    # audit A3: emitter ACCEPTED and DA REFUSED here; unreachable with two
+    # versions, arms on the third. The open era is v6, created by a plain
+    # transition, so the retry exemption must NOT apply to the v5 return.
+    ("return after an INTERVENING version",
+     [LEGACY, transition("clob_v5", "clob_v4", 7), rollback("clob_v5", 7, 8),
+      transition("clob_v6", "clob_v4", 9),
+      transition("clob_v5", "clob_v6", 10)]),
+    ("return after two intervening versions",
+     [LEGACY, transition("clob_v5", "clob_v4", 7),
+      transition("clob_v6", "clob_v5", 8),
+      transition("clob_v7", "clob_v6", 9),
+      transition("clob_v5", "clob_v7", 10)]),
     ("retried bundle", [LEGACY, transition("clob_v5", "clob_v4", 7, True),
                         rollback("clob_v5", 7, 8),
                         transition("clob_v5", "clob_v4", 7, True)]),

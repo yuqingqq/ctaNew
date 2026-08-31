@@ -223,17 +223,28 @@ def observe_heartbeat_lines(since_epoch: float, log_offset: int) -> list:
         return out
     pat = re.compile(r"\[pm\] (\d\d):(\d\d):(\d\d)Z .*?msgs=(\d+) .*?"
                      r"app_ping=(\d+)\s+app_pong=(\d+)")
+    # audit A1b: the status line carries only HH:MM:SS, and this pinned every
+    # line to the BOUNDARY's UTC day. A boundary near midnight therefore
+    # misdated every post-midnight line by -86400 s; all fell below the
+    # evidence floor, all were skipped, and check_counters refused —
+    # runbook row 4, i.e. ROLLBACK OF A HEALTHY v5. Roll the day forward when
+    # the clock goes backwards instead of constraining what may be ruled.
     day0 = since_epoch - (since_epoch % 86400)
+    prev_sod = None
     with COLLECTOR_LOG.open("rb") as fh:
         fh.seek(max(0, log_offset))
         for ln in fh.read().decode("utf-8", "replace").splitlines():
             m = pat.search(ln)
             if m:
                 h, mi, sec = int(m.group(1)), int(m.group(2)), int(m.group(3))
+                sod = h * 3600 + mi * 60 + sec
+                if prev_sod is not None and sod < prev_sod:
+                    day0 += 86400          # the log crossed UTC midnight
+                prev_sod = sod
                 out.append({"app_ping": int(m.group(5)),
                             "app_pong": int(m.group(6)),
                             "msgs": int(m.group(4)),
-                            "line_epoch": day0 + h * 3600 + mi * 60 + sec})
+                            "line_epoch": day0 + sod})
     return out
 
 
@@ -570,6 +581,17 @@ def current_era_and_open_v5(era_rows: list) -> tuple:
         open_era, open_ver, open_row = b_raw, ver, r
         if current is not None:
             _seen_versions.add(current)
+        # audit A3: only the OUTGOING era was recorded, so a version that had
+        # held an era and been ROLLED BACK was absent from the seen-set and
+        # could return as a plain transition. Chain
+        # v4 -> v5 -> rollback(v4) -> v6 -> v5: this walk ACCEPTED, DA
+        # REFUSED, and DA is right — the open era at that point is v6, made
+        # by a transition, so the retry exemption does not apply and the
+        # return needs its own rollback evidence. Unreachable with two
+        # versions; it arms on the NEXT collector version, long after this
+        # deploy, in a ledger DA would then refuse forever. Record every
+        # version that has HELD an era, which is what DA does.
+        _seen_versions.add(ver)
         current = ver
         _current_from_rollback = False
     if open_era is not None and open_row is not None and \
@@ -729,6 +751,41 @@ def check_pre_arm(obs: dict, expect_flag: bool) -> None:
         raise Refused(f"pre-arm check: the INSTALLED command ALREADY carries "
                       f"the {mode} vector — an unplanned earlier arming; "
                       f"establish provenance before proceeding")
+
+
+def _refuse_cross_midnight(boundary_utc: str, start_recv_ns: int) -> None:
+    """Audit A1: the stamped era opens at the RULED instant, but the process
+    is observed starting later (POST_START_WINDOW_S allows 120 s, and a
+    restart that flushes every market archive routinely takes 1-2 min). If a
+    UTC MIDNIGHT falls between them the row asserts clob_v5 held a day it did
+    not: the day consumer reads the following day as era-pure and ACCRUING
+    while the row's own collector_start_recv_ns says the OLD collector served
+    its first seconds. That field is validated on `recovered` and `rollback`
+    rows and NOT on `transitioned` rows — the only kind that OPENS an
+    admissible era. This programme's stated preference is a MIDNIGHT
+    boundary, so the hole is one ruling away, not hypothetical."""
+    b = int(datetime.strptime(boundary_utc, "%Y-%m-%dT%H:%M:%SZ")
+            .replace(tzinfo=timezone.utc).timestamp())
+    st = start_recv_ns // 10**9
+    # The unserved interval is [boundary, observed_start). It is harmless
+    # inside a day the consumer already rules impure (a boundary lies in it).
+    # It is NOT harmless when a UTC midnight falls in it: the day beginning at
+    # that midnight is then ruled PURE and ACCRUING while its opening seconds
+    # were served by the OLD collector. Note the midnight boundary itself
+    # (00:00:00Z) is the worst case, not an exempt one.
+    _mid = b + (-b % 86400) if b % 86400 else b
+    if _mid <= st:
+        _f = "%Y-%m-%dT%H:%M:%SZ"
+        raise Refused(
+            f"a UTC midnight ({datetime.fromtimestamp(_mid, tz=timezone.utc).strftime(_f)}) "
+            f"falls between the ruled boundary {boundary_utc} and the "
+            f"OBSERVED collector start "
+            f"({datetime.fromtimestamp(st, tz=timezone.utc).strftime(_f)}) — "
+            f"the stamp would open the new era for a day whose first "
+            f"{_mid - b if _mid > b else st - b}s the OLD collector served, "
+            f"and the day consumer would read that day as era-pure and "
+            f"ACCRUING. Rule an instant at least {POST_START_WINDOW_S}s "
+            f"clear of a UTC midnight (audit A1)")
 
 
 def check_post_restart(obs: dict, old_pid: int, start_row: dict | None,
@@ -1205,15 +1262,32 @@ def check_post_recovery(obs: dict, v5_start: dict | None,
     _closed = [r for r in obs["era_rows"] if r.get("rollback") is True
                and r.get("closes_boundary_utc") == BOUNDARY_UTC]
     if _half and not _closed:
-        _rows_wo_half = [r for r in obs["era_rows"] if r is not _half[-1]]
-        _c2, _o2 = current_era_and_open_v5(_rows_wo_half)
         if v4_start is None:
             raise Refused("a half-landed recovery bundle is present but no "
                           "clob_v4 restoration declaration is available to "
                           "close it")
+        # audit A2: this branch was written to REPAIR a bricked authority and
+        # could brick it instead. The FULL branch below refuses a restoration
+        # landing in the boundary's own second (DA dcbcdd6(a)) and refuses a
+        # restoring process that is not the live unit; the completion branch
+        # carried NEITHER, so a sub-second v5->v4 emitted
+        # boundary == closes_boundary and the walk then refuses the ledger
+        # FOREVER -- append-only, and the only tool that could repair it is
+        # the one that refuses. Executed both ways before this guard existed.
+        if v4_start.get("pid") != obs["main_pid"]:
+            raise Refused(f"the restoring process {v4_start.get('pid')} is "
+                          f"not the live unit ({obs['main_pid']}) — the "
+                          f"completion row would close the era with a "
+                          f"foreign process's declaration")
         _resto = datetime.fromtimestamp(v4_start["recv_ns"] / 1e9,
                                         tz=timezone.utc
                                         ).strftime("%Y-%m-%dT%H:%M:%SZ")
+        if _resto == BOUNDARY_UTC:
+            raise Refused("completion of the half-landed bundle would emit a "
+                          "ZERO-WIDTH era (restoration lands in the "
+                          "boundary's own second) — the same refusal the full "
+                          "bundle carries; appending it would brick the "
+                          "append-only ledger for every day (audit A2)")
         return [{"collector_schema_version": "clob_v4",
                  "supersedes": "clob_v5", "rollback": True,
                  "closes_boundary_utc": BOUNDARY_UTC, "stage": stage,
@@ -2402,6 +2476,90 @@ def selftest() -> int:
             "proves the process ran before the attempt, not that it was "
             "restored after it")
 
+    # audit A1b: the counter-line parser pinned HH:MM:SS to the BOUNDARY's
+    # UTC day, so a near-midnight instant misdated every post-midnight line
+    # by -86400 s -> all below the evidence floor -> check_counters refuses
+    # -> runbook row 4 -> ROLLBACK OF A HEALTHY v5. Proven on a synthetic log
+    # because the real one has never crossed a boundary near midnight.
+    import tempfile as _tf
+    with _tf.TemporaryDirectory() as _td:
+        _lg = Path(_td) / "c.log"
+        _lg.write_text(
+            "[pm] 23:59:30Z markets=1 msgs=100 app_ping=10 app_pong=10\n"
+            "[pm] 00:00:30Z markets=1 msgs=200 app_ping=20 app_pong=20\n"
+            "[pm] 00:01:30Z markets=1 msgs=300 app_ping=30 app_pong=30\n")
+        _real, globals()["COLLECTOR_LOG"] = COLLECTOR_LOG, _lg
+        try:
+            _since = int(datetime.strptime("2026-08-31T23:59:00Z",
+                                           "%Y-%m-%dT%H:%M:%SZ")
+                         .replace(tzinfo=timezone.utc).timestamp())
+            _lines = observe_heartbeat_lines(_since, 0)
+        finally:
+            globals()["COLLECTOR_LOG"] = _real
+    ok(len(_lines) == 3 and all(l["line_epoch"] >= _since for l in _lines),
+       "audit A1b: counter lines crossing UTC midnight are dated FORWARD, "
+       "not -86400 s into the past — every line stays at/after the boundary "
+       f"(got {[l['line_epoch'] - _since for l in _lines]}s after it). The "
+       "old arithmetic put two of these 86400 s BELOW the evidence floor, "
+       "and an all-below-floor result is the refusal that rolls back a "
+       "HEALTHY deploy")
+    ok(_lines[1]["line_epoch"] - _lines[0]["line_epoch"] == 60
+       and _lines[2]["line_epoch"] - _lines[1]["line_epoch"] == 60,
+       "audit A1b: and the SPACING survives the rollover (60 s apart), so "
+       "the interval-based counter rates are computed on true elapsed time")
+
+    # ---- audit A1/A1b/A2: found by an END-TO-END pass through the DAY
+    # verdicts, which every earlier round had scoped away ----
+    _mid = "2026-09-01T00:00:00Z"
+    _mid_ep = int(datetime.strptime(_mid, "%Y-%m-%dT%H:%M:%SZ")
+                  .replace(tzinfo=timezone.utc).timestamp())
+    refuses(lambda: _refuse_cross_midnight(_mid, (_mid_ep + 119) * 10**9),
+            "falls between",
+            "KNOWN-BAD (audit A1): a MIDNIGHT boundary with a 119 s restart "
+            "— inside POST_START_WINDOW_S, an ordinary archive-flushing "
+            "shutdown — REFUSES. It used to emit, and the day consumer then "
+            "read a mixed-era day as pure and ACCRUING")
+    refuses(lambda: _refuse_cross_midnight(_mid, (_mid_ep + 5) * 10**9),
+            "falls between",
+            "KNOWN-BAD (audit A1): even a 5 s restart at a MIDNIGHT boundary "
+            "refuses — the unserved seconds sit at the head of a day the "
+            "consumer rules pure, so lateness is not the hazard, the DAY EDGE "
+            "is")
+    _refuse_cross_midnight("2026-08-31T23:58:00Z",
+                           (_mid_ep - 120 + 119) * 10**9)
+    ok(True, "POSITIVE: 23:58:00Z + 119 s lands at 23:59:59Z, same UTC day, "
+             "ACCEPTED — the band is not a blanket ban on late instants")
+
+    _b_ep = BOUNDARY_EPOCH
+    _half_row = {"collector_schema_version": "clob_v5",
+                 "supersedes": "clob_v4", "transitioned": True,
+                 "recovered": True, "boundary_utc": BOUNDARY_UTC,
+                 "stage": "recovery", "pid": 999,
+                 "collector_start_recv_ns": int(_b_ep * 1e9) + 100_000_000}
+    _half_obs = {**good_post, "main_pid": 999,
+                 "exec_start": good_pre["exec_start"],
+                 "era_rows": [V4_ROW, _half_row]}
+    refuses(lambda: check_post_recovery(
+                _half_obs, {"recv_ns": int(_b_ep * 1e9) + 100_000_000,
+                            "pid": 999},
+                {"recv_ns": int(_b_ep * 1e9) + 900_000_000, "pid": 999},
+                "counters_refused"),
+            "ZERO-WIDTH",
+            "KNOWN-BAD (audit A2): the COMPLETION branch for a half-landed "
+            "bundle refuses a sub-second v5->v4 restoration. It used to EMIT "
+            "boundary == closes_boundary, and appending that row bricked the "
+            "walk for EVERY day — on an append-only authority whose only "
+            "repair tool is the one that refuses. Executed both ways")
+    refuses(lambda: check_post_recovery(
+                _half_obs, {"recv_ns": int(_b_ep * 1e9) + 100_000_000,
+                            "pid": 999},
+                {"recv_ns": int(_b_ep * 1e9) + 900_000_000, "pid": 4242},
+                "counters_refused"),
+            "not the live unit",
+            "KNOWN-BAD (audit A2): the completion branch refuses a restoring "
+            "process that is not the live unit — the guard its sibling "
+            "carried and it did not")
+
     # ---- audit F1/F2/F3/F4/F6/F7: the environment the gate could not see ----
     refuses(lambda: check_post_restart(
                 good_post, 3687786, good_start,
@@ -2788,6 +2946,7 @@ def main() -> int:
                     f"{a.nrestarts_at_arm + 1} (the arm-time value plus our "
                     f"ONE restart) — the unit restarted on its own, so it is "
                     f"flapping or it booted v5 before the boundary")
+        _refuse_cross_midnight(BOUNDARY_UTC, row["recv_ns"])
         stamp = check_post_restart(obs, a.post_restart, row, _early_v5)
         if stamp.get("already_stamped"):
             print(stamp["note"], file=sys.stderr)
