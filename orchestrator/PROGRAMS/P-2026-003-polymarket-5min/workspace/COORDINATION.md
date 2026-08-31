@@ -17708,6 +17708,24 @@ The R-271 escalation was RIGHT in substance and sat ~2h in the wrong CHANNEL: BE
 
 **The standing lesson.** R-357 found the fix did not address the cause. This one found **we were the cause** — and both were answerable from data already on disk, for the eleven days we spent instrumenting the answer to a question nobody had measured. **Before building a fix, measure WHEN the thing started. A regression has a date, and the date names the suspect.**
 
+### R-361 — 2026-08-31T13:35Z — coordinator — **OPEN-ISSUE SWEEP, each VERIFIED by execution rather than carried over from a review.** Three live, three latent; the worst is not a v5 issue and never was
+
+**LIVE-1 — a day with silently THINNED data passes all three bars.** Three independent halves of one hole: the steady-state receive path is a bare `await ws.recv()` with **no timeout** (the only timeouts are `SUBSCRIBE_CONFIRM_S` on the first message and the heartbeat); `complete_tape` counts **WINDOWS, not ROWS**, so every window file present at half the ticks reads 100%; and `oldest_age_s` is computed and printed and **consumed by NOTHING** (it appears in `collect_pm.py` at 804-812 and 826, and nowhere else in the repo). A socket that stays open while its feed degrades therefore produces no gap row, full coverage, clean P1/P2/P3 — **and the day PASSES carrying less data.** This is the failure mode that looks like success, it is LIVE UNDER v4, and it has nothing to do with the heartbeat deploy.
+
+**LIVE-2 — `flow_intensity.ERA = "clob_v3_1"` is the DEFAULT argument to six functions** (`gaps_by_slug`, `covered_slugs`, `sample_days`, and three more), consumed by `state_gate_v1`, `policy_optimizer_queue_isolated`, `warning_window`, `skew_bound`, `da_topup_receipt`. `da_gap_at_cutoff_count.py` carries the same hardcode. **It does not fail loudly — it fails RICHLY:** `covered_slugs('clob_v3_1')` returns **19,047 slugs**, `covered_slugs('clob_v4')` returns 1,995. A caller taking the default gets a large, healthy-looking population that silently excludes everything since 2026-08-30T05:30Z. **The file's own comment twelve lines below that constant explains at length how the DAY LIST went stale four times in three days and was made derived.** The lesson was learned for one constant and not for the one immediately above it.
+
+**LIVE-3 — the deployed configuration includes an UNTRACKED file.** The installed base unit is byte-identical to `live/pm_research/ops/pm-collector-clob.service`; the only difference is `~/.config/systemd/user/pm-collector-clob.service.d/slice.conf`, setting `Slice=collectors.slice`, **not in git**. A reinstall from the repo silently drops the collector out of its protected slice — and given R-360 (btc's disconnects are load-induced), CPU protection is not cosmetic. The preflight's `check_unit_environment` guards the VALUE; nothing guards the FILE's existence.
+
+**LATENT-4 — `o1_boundary_preflight.py` is still runnable** and hardcodes a `clob_v4 supersedes clob_v3_1` stamp. Run by mistake it writes a FALSE era row into an append-only authority.
+
+**LATENT-5 — my gate runner proves the RUNNER detects red, not that each GATE can go red.** `--falsify` injects a failing gate and confirms the runner reports FAILED; it says nothing about whether an individual suite is capable of failing. Four of eight I have watched fail this session; four I have not. All eight exit correctly, so this is not DA's defect (`da_wrapper_seam_test.sh` had NO exit statement and returned 0 forever, including inside the sweep DA had been citing to me) — but it is the same CLASS, and the same fix applies: **a gate never seen to fail is not evidence that anything passed.**
+
+**LATENT-6 — `MIN_ANSWER_RATIO = 0.5` against a healthy ~100%,** applied process-wide, and the counter parser steps over `retries=`, `retry_by_coin`, `msg_by_coin`, `unseen` and `oldest_age_s` — every per-coin fact — to reach the three fields it wants. Moot while v5 is held; recorded because it is a gate structurally insensitive to the failure it guards.
+
+**Ranking, and it is not the order they were found in.** LIVE-1 first: it can corrupt every result the programme produces, silently, and the collector already computes the inputs a fix needs. LIVE-3 next, because it touches R-360's mechanism. Then LIVE-2. **USER ruled "go" on filing these and starting LIVE-1.**
+
+**Method note.** Every item here was re-derived by execution, not carried across from the review that raised it — two claims did not survive that (a "canonical_cause maps APP_HEARTBEAT_TIMEOUT to UNKNOWN" issue is moot because the cause string does not yet exist outside the v5 tests, and the `da_dayverdict` glob hazard was not live because the token filter sits two lines below the glob). **A finding inherited without re-execution is a rumour with a citation.**
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
