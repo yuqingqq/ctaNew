@@ -41,6 +41,8 @@ EMITTED by the instrument from verified observations, never hand-written.
    ```
    python3 live/pm_research/v5_boundary_preflight.py --armed      # must pass
    ```
+   Record `LOG_OFFSET` from the output — it anchors the counter evidence to
+   the post-arming log region (V5-0700-R2).
    `--armed` re-runs every pre-arm check AND requires the flag in the
    ExecStart **read back from systemd** — never trusted from what was
    written. (The running v4 process is untouched by the reload.)
@@ -63,13 +65,16 @@ EMITTED by the instrument from verified observations, never hand-written.
 
 4. **07:01–07:05Z verify:**
    ```
-   python3 live/pm_research/v5_boundary_preflight.py --verify-counters
+   python3 live/pm_research/v5_boundary_preflight.py --verify-counters \
+     --log-offset LOG_OFFSET
    ```
-   The newest heartbeat log line after the boundary must show `app_ping>0`
-   AND `app_pong>0` — pings without pongs is the v4 failure shape one layer
-   up and REFUSES. Also: unit active, fresh gap-ledger rows carry
-   `"collector_version":"clob_v5"`, market rows advancing. The prices
-   collector is NOT touched.
+   Requires TWO heartbeat lines after the armed-time offset (~2 min), each
+   post-boundary on its OWN stamp; pongs and market rows must ADVANCE over
+   the interval; unresolved PINGs (ping−pong) bounded at 2 — one answered
+   ping followed by silence is the v4 failure shape one layer up and
+   REFUSES. The same invocation checks unit-active, the newest gap-ledger
+   row declaring `"collector_version":"clob_v5"`, and market advance — the
+   seams live IN the instrument. The prices collector is NOT touched.
 
 ## Failure paths (each leaves the attempt VISIBLE — nothing silent)
 
@@ -78,9 +83,9 @@ EMITTED by the instrument from verified observations, never hand-written.
 | 2 armed-check refuses | Nothing restarted; remove the drop-in, daemon-reload, verify `--pre-arm` passes again; register; the boundary amends. No era row (no transition attempted). |
 | 3a restart fails / unit inactive | Append `{"collector_schema_version":"clob_v5","boundary_utc":"2026-08-31T07:00:00Z","aborted":true,"stage":"restart_failed","stamp_written_ns":<now>}`; remove the drop-in, daemon-reload, start the unit (boots v4 default), verify a `clob_v4` collector_start row; register the abort. |
 | 3b postflight REFUSES (unchanged PID / v4-declaring / flag lost / no row in 2 min) | Same abort path: aborted-row append (stage = the refusal's first clause), drop-in removed, v4 restarted and verified, refusal text registered verbatim. |
-| 3c stamp append fails | v5 LIVE but unstamped — may not persist. Retry (the instrument re-verifies). If unwritable within 5 min: abort path (an unstampable era must not run); register. |
-| 4 counters refuse (no pongs) | The contract is still wrong: abort path — drop-in removed, v4 restored and verified, aborted row appended (stage `counters_refused`), register. Candidate returns to review. |
-| Retry after an aborted row | Permitted: the preflight accepts `aborted:true` rows and refuses only a LIVE conflicting `clob_v5` row (supersession, rule 13). |
+| 3c stamp append fails | v5 LIVE but unstamped — may not persist. Retry (the instrument re-verifies). If unwritable within 5 min: the POST-STAMP rollback path below; register. |
+| 4 counters refuse (post-stamp) | The contract is still wrong: remove the drop-in, daemon-reload, restart (boots v4), then `--post-rollback V5_PID --stage counters_refused >> collector_runs.jsonl` — the emitted ROLLBACK RECEIPT (clob_v4, supersedes clob_v5, rollback:true) CLOSES the live v5 row after verifying the restoration from the restored process's own collector_start (V5-0700-R4: a bare aborted row after a real transition leaves the v5 era open forever). Register; candidate returns to review. |
+| Retry after an aborted row | Permitted: the preflight accepts `aborted:true` rows and refuses only a LIVE conflicting `clob_v5` row (supersession, rule 13). Pre-stamp failures append `aborted:true` rows (no transition happened — they must NOT enter era spans); post-stamp failures use the ROLLBACK RECEIPT (a transition happened — both real boundaries preserved). DA's era consumer distinguishes the two. |
 
 ## Era and admission consequences
 
