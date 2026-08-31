@@ -246,8 +246,10 @@ def classify_era_row(r: dict) -> str:
 
 
 def current_era_and_open_v5(era_rows: list) -> tuple:
-    """(version of the last EFFECTIVE row, whether a transitioned clob_v5 row
-    lacks a later rollback receipt closing it)."""
+    """(version of the last EFFECTIVE row, open v5 boundary or None) — and
+    the CHAIN is validated the way DA's consumer validates it, refusing what
+    DA refuses (round-3 #1: my tolerant walk returned (v4, None) on a chain
+    DA refuses — two consumers of one ledger must agree on malformed)."""
     current = None
     open_v5 = None
     for r in era_rows:
@@ -256,10 +258,40 @@ def current_era_and_open_v5(era_rows: list) -> tuple:
             continue  # never transitioned; never enters the era line
         ver = r.get("collector_schema_version")
         if role == "rollback":
-            if open_v5 is not None and                     r.get("closes_boundary_utc") == open_v5:
-                open_v5 = None
-        elif ver == "clob_v5":
-            open_v5 = r.get("boundary_utc")
+            if open_v5 is None:
+                raise Refused(f"rollback receipt with NO open era to close "
+                              f"(chain so far ends in {current!r}) — a "
+                              f"rollback-only chain is malformed; DA refuses "
+                              f"it and so do we")
+            if r.get("supersedes") != "clob_v5" or \
+                    r.get("closes_boundary_utc") != open_v5:
+                raise Refused(f"rollback receipt does not match the open era "
+                              f"(supersedes={r.get('supersedes')!r}, closes="
+                              f"{r.get('closes_boundary_utc')!r} vs open v5 "
+                              f"at {open_v5}) — malformed chain state")
+            if not str(r.get("stage") or "").strip():
+                raise Refused("rollback receipt carries no STAGE at "
+                              "consumption — DA refuses stage-less rollbacks "
+                              "and the walks must agree on malformed "
+                              "(equivalence found by the cross-consumer run "
+                              "itself: my fixture lacked stage, DA refused, "
+                              "I accepted)")
+            if type(r.get("collector_start_recv_ns")) is not int:
+                raise Refused("rollback receipt carries no verified "
+                              "restoration receipt (int "
+                              "collector_start_recv_ns) — nothing shows the "
+                              "clob_v4 process came back (DA's requirement, "
+                              "matched at consumption)")
+            open_v5 = None
+        else:  # transitioned
+            if current is not None and r.get("supersedes") != current:
+                raise Refused(f"transitioned row claims supersedes="
+                              f"{r.get('supersedes')!r} while the era in "
+                              f"force is {current!r} — a receipt may not "
+                              f"name any predecessor it likes (chain "
+                              f"identity, DA ce3fd29)")
+            if ver == "clob_v5":
+                open_v5 = r.get("boundary_utc")
         current = ver
     return current, open_v5
 
@@ -300,6 +332,18 @@ def check_pre_arm(obs: dict, expect_flag: bool) -> None:
 def check_post_restart(obs: dict, old_pid: int, start_row: dict | None) -> dict:
     check_boundary_current(BOUNDARY_UTC, BOUNDARY_EPOCH, obs["now_epoch"],
                            "post")
+    # IDEMPOTENCY (round-3 #3): if the ledger already carries the open v5
+    # stamp, a second emission would fork the chain — DA refuses the result,
+    # so the emitter refuses first.
+    _cur, _open = current_era_and_open_v5(obs["era_rows"])
+    if _open is not None:
+        raise Refused(f"the era ledger ALREADY carries the open clob_v5 "
+                      f"stamp (boundary {_open}) — this run was stamped; a "
+                      f"second emission would be a duplicate transition")
+    if _cur != "clob_v4":
+        raise Refused(f"the era in force per the ledger is {_cur!r}, not "
+                      f"clob_v4 — the stamp's supersedes claim would be "
+                      f"false")
     if obs["tree_sha"] != CAND_SHA:
         raise Refused(f"on-disk collector sha changed "
                       f"({obs['tree_sha'][:16]}) — the running process may "
@@ -397,9 +441,9 @@ def check_counters(first: dict | None, last: dict | None,
                           f"the boundary {BOUNDARY_EPOCH} — a stale line "
                           f"proves the OLD process, not the new one")
     if last is first or last["line_epoch"] <= first["line_epoch"]:
-        raise Refused("only ONE counter line so far — progress needs an "
-                      "INTERVAL (two heartbeat lines, ~60s apart); wait and "
-                      "re-run")
+        raise Refused("only ONE counter line so far; wait for a second "
+                      "heartbeat line (~60s) and re-run — progress cannot "
+                      "be measured from a single sample")
     if last["app_ping"] < first["app_ping"] or \
             last["app_pong"] < first["app_pong"]:
         raise Refused(f"counters DECREASED over the interval (ping "
@@ -419,9 +463,9 @@ def check_counters(first: dict | None, last: dict | None,
     if last["msgs"] <= first["msgs"]:
         raise Refused(f"market rows did NOT advance over the interval "
                       f"(msgs {first['msgs']} -> {last['msgs']})")
-    if last.get("app_ping", 0) <= 0 or last.get("app_pong", 0) <= 0:
-        raise Refused(f"counters not positive: {last} — pings without pongs "
-                      f"means the contract is STILL wrong, only quieter")
+    # (a "counters not positive" refusal stood here — DEAD: the advance
+    # checks above already force last ping/pong >= 1. Deleted rather than
+    # covered; there is no test to write for dead code.)
     # RECONCILIATION INVARIANT (declared): unresolved PINGs = ping - pong
     # may not exceed 2 — one in-flight heartbeat plus one boundary-clipped.
     unresolved = last["app_ping"] - last["app_pong"]
@@ -447,6 +491,17 @@ def check_post_rollback(obs: dict, old_v5_pid: int,
     if obs.get("obs_unit_overridden"):
         raise Refused("rollback receipts come only from the PRODUCTION unit "
                       "— the fixture override may not emit")
+    # PRECONDITION (round-3 #2): a rollback receipt CLOSES an open era; with
+    # no stamped v5 in the ledger there is nothing to close and the result
+    # is a rollback-only chain DA refuses. The stamp-unwritable path uses an
+    # ABORTED row instead (the attempt stays visible; nothing false enters
+    # the era line).
+    _cur, _open = current_era_and_open_v5(obs["era_rows"])
+    if _open is None:
+        raise Refused(f"no open clob_v5 era in the ledger (era in force: "
+                      f"{_cur!r}) — nothing to close; for an unstamped v5 "
+                      f"(stamp-unwritable path) append an aborted row, not "
+                      f"a rollback receipt")
     if not stage or not stage.strip():
         raise Refused("a rollback receipt must name its STAGE (which failure "
                       "path forced it) — an unexplained rollback is ambiguous "
@@ -600,7 +655,7 @@ def selftest() -> int:
     refuses(lambda: check_pre_arm({**good_pre, "era_rows": []}, False),
             "nothing well-defined to supersede",
             "KNOWN-BAD: a missing live clob_v4 era row REFUSES")
-    _V5T = {"collector_schema_version": "clob_v5",
+    _V5T = {"collector_schema_version": "clob_v5", "supersedes": "clob_v4",
             "boundary_utc": BOUNDARY_UTC, "transitioned": True}
     refuses(lambda: check_pre_arm({**good_pre,
                                    "era_rows": [V4_ROW, _V5T]}, False),
@@ -622,9 +677,11 @@ def selftest() -> int:
             "is THREE fields — right version+boundary with a WRONG "
             "supersedes is NOT the pinned row and refuses under the "
             "exactly-one contract")
-    _RB = {"collector_schema_version": "clob_v4", "rollback": True,
-           "closes_boundary_utc": BOUNDARY_UTC,
-           "boundary_utc": "2026-08-31T99:99:99Z"}
+    _RB = {"collector_schema_version": "clob_v4", "supersedes": "clob_v5",
+           "rollback": True, "closes_boundary_utc": BOUNDARY_UTC,
+           "stage": "test",
+           "collector_start_recv_ns": (BOUNDARY_EPOCH + 1200) * 10**9,
+           "boundary_utc": "2026-08-31T07:20:00Z"}
     check_pre_arm({**good_pre, "era_rows": [V4_ROW, _V5T, _RB]}, False)
     ok(True, "POSITIVE: a transitioned v5 CLOSED by a rollback receipt "
              "permits retry — the era line is v4 again")
@@ -708,8 +765,10 @@ def selftest() -> int:
             "REFUSE on their OWN stamps — the observer's filter is not the "
             "authority")
     refuses(lambda: check_counters(_HB1, _HB1, True, 4242, "clob_v5"),
-            "interval", "KNOWN-BAD: a single counter line REFUSES — progress "
-            "needs an interval")
+            "single sample", "KNOWN-BAD: a single counter line REFUSES — "
+            "progress cannot be measured from one sample (fragment made "
+            "DISTINCT: 'interval' also appeared in the advance refusal and "
+            "the overlap hid this site from mutation)")
     refuses(lambda: check_counters(_HB1, {**_HB2, "app_pong": 3},
                                    True, 4242, "clob_v5"),
             "did not advance", "KNOWN-BAD: static pong total over the "
@@ -725,7 +784,13 @@ def selftest() -> int:
             "not active", "KNOWN-BAD: inactive unit at verification REFUSES")
 
     # V5-0700-R4 emitter half: rollback receipt checker
-    _rb_obs = {**good_post, "main_pid": 5151, "exec_start": "/home/yuqing/pricer-sol/venv/bin/python3 live/pm_research/collect_pm.py"}
+    _V5OPEN = {"collector_schema_version": "clob_v5",
+               "supersedes": "clob_v4", "transitioned": True,
+               "boundary_utc": BOUNDARY_UTC}
+    _rb_obs = {**good_post, "main_pid": 5151,
+               "exec_start": "/home/yuqing/pricer-sol/venv/bin/python3 "
+                             "live/pm_research/collect_pm.py",
+               "era_rows": [V4_ROW, _V5OPEN]}
     _rb_start = {"recv_ns": (BOUNDARY_EPOCH + 900) * 10**9,
                  "collector_version": "clob_v4", "pid": 5151,
                  "event": "collector_start"}
@@ -848,6 +913,109 @@ def selftest() -> int:
                                    True, 4242, "clob_v5"),
             "sender itself", "KNOWN-BAD: pings static over the interval "
             "REFUSES — the sender is not at cadence")
+
+    # ---- the 16-survivor batch (harness controls A/B/C exposed these) ----
+    refuses(lambda: check_boundary_current(BOUNDARY_UTC, BOUNDARY_EPOCH,
+                                           BOUNDARY_EPOCH - 10, "post"),
+            "deploys early", "SURVIVOR-KB :186 — post validation BEFORE the "
+            "boundary refuses on now_epoch, not only on the row stamp")
+    refuses(lambda: check_pre_arm({**good_pre, "head_sha": "c" * 64}, False),
+            "foreign bytes", "SURVIVOR-KB :294 — HEAD/candidate mismatch "
+            "refuses (the O1 suite had this; the v5 adaptation lost it)")
+    refuses(lambda: check_pre_arm({**good_pre, "unit_active": False}, False),
+            "not active", "SURVIVOR-KB :297 — inactive unit at pre-arm")
+    refuses(lambda: check_post_restart({**good_post, "era_rows": []},
+                                       3687786, good_start),
+            "era in force", "SURVIVOR-KB :331 — an empty/None-era ledger at "
+            "post-restart refuses (supersedes claim would be false)")
+    refuses(lambda: check_post_restart({**good_post, "tree_sha": "d" * 64},
+                                       3687786, good_start),
+            "changed", "SURVIVOR-KB :335 — on-disk bytes changed between "
+            "arm and stamp refuses")
+    refuses(lambda: check_post_restart({**good_post, "unit_active": False},
+                                       3687786, good_start),
+            "abort path", "SURVIVOR-KB :342 — inactive unit post-restart")
+    refuses(lambda: check_post_restart(good_post, 3687786, None),
+            "not declared", "SURVIVOR-KB :347 — missing collector_start "
+            "(absence is not success; lost in the v5 adaptation)")
+    refuses(lambda: check_counters({**_HB1, "line_epoch": None}, _HB2,
+                                   True, 4242, "clob_v5"),
+            "no parseable", "SURVIVOR-KB :424 — an undatable counter line "
+            "refuses (lost in the interval rewrite)")
+    refuses(lambda: check_post_rollback({**_rb_obs, "unit_active": False},
+                                        4242, _rb_start, "x"),
+            "not active", "SURVIVOR-KB :501 — inactive unit after rollback")
+    refuses(lambda: check_post_rollback(_rb_obs, 4242, None, "x"),
+            "unverified", "SURVIVOR-KB :506 — missing restoration "
+            "declaration refuses")
+    refuses(lambda: check_post_rollback(_rb_obs, 4242,
+                                        {**_rb_start, "event": "heartbeat"},
+                                        "x"),
+            "exact identity", "SURVIVOR-KB :509 — wrong event identity on "
+            "the restoration row")
+    refuses(lambda: check_post_rollback(_rb_obs, 4242,
+                                        {**_rb_start,
+                                         "recv_ns": float(
+                                             (BOUNDARY_EPOCH + 900) * 10**9)},
+                                        "x"),
+            "not int", "SURVIVOR-KB :513 — float restoration recv_ns")
+    refuses(lambda: check_post_rollback(_rb_obs, 4242,
+                                        {**_rb_start,
+                                         "recv_ns": (BOUNDARY_EPOCH - 60)
+                                         * 10**9},
+                                        "x"),
+            "before the boundary", "SURVIVOR-KB :516 — pre-boundary "
+            "restoration row")
+    refuses(lambda: check_post_rollback(_rb_obs, 4242,
+                                        {**_rb_start, "pid": 777}, "x"),
+            "!= unit mainpid", "SURVIVOR-KB :523 — foreign restoration pid")
+
+    _V5MAL = {"collector_schema_version": "clob_v5",
+              "supersedes": "clob_v3_1", "transitioned": True,
+              "boundary_utc": BOUNDARY_UTC}
+    _RBOK = {"collector_schema_version": "clob_v4", "supersedes": "clob_v5",
+             "rollback": True, "closes_boundary_utc": BOUNDARY_UTC,
+             "stage": "test",
+             "collector_start_recv_ns": (BOUNDARY_EPOCH + 900) * 10**9,
+             "boundary_utc": "2026-08-31T07:15:00Z"}
+    refuses(lambda: current_era_and_open_v5([V4_ROW, _V5MAL, _RBOK]),
+            "any predecessor", "KNOWN-BAD (round-3 #1): the EXACT executed "
+            "chain — legacy + v5-supersedes-v3_1 + rollback — REFUSES here "
+            "as DA refuses it (cross-consumer equivalence; my tolerant walk "
+            "returned (v4, None))")
+    refuses(lambda: current_era_and_open_v5([V4_ROW, _RBOK]),
+            "rollback-only", "KNOWN-BAD: a rollback with NO open era "
+            "REFUSES in the walk itself")
+    refuses(lambda: current_era_and_open_v5(
+                [V4_ROW, {**_V5OPEN},
+                 {**_RBOK, "closes_boundary_utc": "2026-08-31T06:00:00Z"}]),
+            "does not match the open era", "KNOWN-BAD: a rollback closing "
+            "the WRONG boundary REFUSES (was: silently left open)")
+    refuses(lambda: current_era_and_open_v5(
+                [V4_ROW, {**_V5OPEN}, {**_RBOK, "stage": ""}]),
+            "no stage at consumption", "KNOWN-BAD (equivalence run): a "
+            "stage-less rollback refuses at CONSUMPTION, matching DA — "
+            "found because the cross-consumer run disagreed on my own "
+            "malformed fixture")
+    refuses(lambda: current_era_and_open_v5(
+                [V4_ROW, {**_V5OPEN},
+                 {k: v for k, v in _RBOK.items()
+                  if k != "collector_start_recv_ns"}]),
+            "no verified restoration", "KNOWN-BAD (equivalence run 2): a "
+            "rollback without the verified-restoration field refuses at "
+            "consumption — 'nothing shows the clob_v4 process came back' "
+            "(DA's words, matched)")
+    refuses(lambda: check_post_rollback({**_rb_obs, "era_rows": [V4_ROW]},
+                                        4242, _rb_start, "stamp_unwritable"),
+            "nothing to close", "KNOWN-BAD (round-3 #2): rollback emission "
+            "with NO stamped v5 REFUSES — the stamp-unwritable path takes "
+            "an aborted row, never a rollback-only chain")
+    refuses(lambda: check_post_restart({**good_post,
+                                        "era_rows": [V4_ROW, _V5OPEN]},
+                                       3687786, good_start),
+            "duplicate transition", "KNOWN-BAD (round-3 #3): re-emission "
+            "with the stamp already in the ledger REFUSES — idempotency at "
+            "the emitter, before DA has to refuse the fork")
 
     print(f"v5_boundary_preflight selftests: {n[0]} checks passed")
     return 0
