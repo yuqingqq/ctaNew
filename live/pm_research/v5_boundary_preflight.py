@@ -710,8 +710,9 @@ def selftest() -> int:
        "(DA b6d6f96 emitter finding 1)")
     refuses(lambda: check_post_rollback({**_rb_obs,
                                          "exec_start":
-                                         f"python3 collect_pm.py "
-                                         f"--heartbeat-mode app-v5"},
+                                         "python3 live/pm_research/"
+                                         "collect_pm.py "
+                                         "--heartbeat-mode app-v5"},
                                         4242, _rb_start, "x"),
             "still carries", "KNOWN-BAD: rollback with the drop-in still "
             "installed REFUSES — the next restart would boot v5 again")
