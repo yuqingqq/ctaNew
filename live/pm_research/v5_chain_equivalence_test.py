@@ -46,6 +46,15 @@ CASES = [
      "refuse"),
     ("double-open second transition", [LEGACY, V5OK,
      {**V5OK, "boundary_utc": "2026-08-31T09:00:00Z"}], "refuse"),
+    ("recovery bundle complete (DA 8bfcc9b shape)", [LEGACY,
+     {**V5OK, "recovered": True, "stage": "stamp_unwritable_recovery",
+      "collector_start_recv_ns": (B + 5) * 10**9}, RB], "ok"),
+    ("UNCLOSED recovered transition (half-written bundle)", [LEGACY,
+     {**V5OK, "recovered": True, "stage": "stamp_unwritable_recovery",
+      "collector_start_recv_ns": (B + 5) * 10**9}], "refuse"),
+    ("recovered without stage", [LEGACY,
+     {**V5OK, "recovered": True,
+      "collector_start_recv_ns": (B + 5) * 10**9}, RB], "refuse"),
 ]
 
 

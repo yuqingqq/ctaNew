@@ -284,6 +284,15 @@ def current_era_and_open_v5(era_rows: list) -> tuple:
                               "matched at consumption)")
             open_v5 = None
         else:  # transitioned
+            if r.get("recovered") is True:
+                # recovered qualifies transitioned (never a fourth state);
+                # a RECONSTRUCTED boundary carries its own evidence burden.
+                if not str(r.get("stage") or "").strip() or \
+                        type(r.get("collector_start_recv_ns")) is not int:
+                    raise Refused("recovered transition without stage or "
+                                  "verified collector_start_recv_ns — a "
+                                  "retroactive row carries MORE evidence, "
+                                  "not less (DA 8bfcc9b)")
             if r.get("supersedes") == ver:
                 raise Refused(f"row claims to supersede ITSELF "
                               f"({ver} supersedes {ver}) — a row naming "
@@ -301,6 +310,15 @@ def current_era_and_open_v5(era_rows: list) -> tuple:
             if ver == "clob_v5":
                 open_v5 = r.get("boundary_utc")
         current = ver
+    if open_v5 is not None:
+        _open_rows = [r for r in era_rows
+                      if r.get("boundary_utc") == open_v5
+                      and r.get("transitioned") is True]
+        if _open_rows and _open_rows[-1].get("recovered") is True:
+            raise Refused(f"an UNCLOSED recovered transition at {open_v5} — "
+                          f"a reconstruction may not stand as the open era; "
+                          f"a half-written recovery bundle must fail LOUD "
+                          f"(DA 8bfcc9b)")
     return current, open_v5
 
 
