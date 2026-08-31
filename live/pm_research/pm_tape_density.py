@@ -1,0 +1,371 @@
+#!/usr/bin/env python3
+"""Find windows the tape KEPT but barely FILLED — loss no gap row records.
+
+R-361 LIVE-1. Three halves of one hole:
+
+  * the collector's steady-state receive path is a bare `await ws.recv()`
+    with no timeout, so a socket whose feed degrades stays open;
+  * `complete_tape` counts WINDOWS, not ROWS, so a window present at 1% of
+    its normal content reads as complete;
+  * `oldest_age_s` is computed, printed, and consumed by nothing.
+
+A feed that thins without disconnecting therefore writes no gap row, leaves
+full window coverage, and passes P1/P2/P3 — **the day PASSES carrying less
+data.** That is not hypothetical. Executed on the tape as of 2026-08-31:
+
+  2026-08-30 18:00-18:20Z  ALL SEVEN coins at ~0.5-2% of their day median,
+                           ~20 minutes, ZERO gap rows.
+                           btc 18:05Z holds 532 rows; a normal btc window
+                           holds 70,284.
+  2026-08-29 20:10-22:45Z  10 windows across five coins at ~0.2% of median,
+                           ZERO gap rows — on the day whose verdict reads
+                           all_pass: true.
+
+WHAT THIS IS AND IS NOT. It is a DETECTOR over data already on disk: it
+computes a predicate and reports a population, and it decides nothing (repo
+rule 14). Whether a thinned window makes a day inadmissible is the day
+verdict's call, not this file's. It does not touch the collector and needs
+no deploy.
+
+MEASURE. Uncompressed byte count, read from each member's gzip trailer
+(ISIZE, the last 4 bytes) — exact and O(1) per file, so the whole 24k-file
+tape is a stat-and-seek rather than 24k decompressions. Bytes, not rows,
+because rows would cost a full decompress for the same ordering; the two are
+near-perfectly monotone within a coin and the reported ratios are to that
+coin's OWN median, never across coins.
+
+THINNESS IS RELATIVE TO (day, coin). Market activity varies by day and by
+coin over two orders of magnitude, so a global byte floor would flag every
+hype window and no btc window.
+
+Exclusions are STATUSES, never silent drops (rule 4): a day+coin cell with
+too few windows to have a median is reported as UNJUDGEABLE, not skipped,
+and a cell with no windows at all REFUSES rather than reporting zero
+thinned — 0 of 0 passing is the empty-set trap.
+
+    python3 live/pm_research/pm_tape_density.py
+    python3 live/pm_research/pm_tape_density.py --day 20260829
+    python3 live/pm_research/pm_tape_density.py --selftest   # rule 15
+"""
+from __future__ import annotations
+
+import argparse
+import collections
+import datetime as dt
+import json
+import os
+import re
+import statistics
+import struct
+import sys
+from pathlib import Path
+
+REPO = Path(__file__).resolve().parents[2]
+RAW = REPO / "data/pm_5min/raw"
+GAP_LEDGER = REPO / "data/pm_5min/collector_gaps.jsonl"
+
+WINDOW_S = 300
+# A window below this fraction of its (day, coin) median is THIN. Stated, not
+# tuned: at 0.05 the observed populations are bimodal by three orders of
+# magnitude (thin windows sit at 0.002-0.02 of median, healthy ones above
+# 0.3), so every value in [0.03, 0.25] returns the same set. --thin-frac
+# reports the sensitivity rather than hiding it.
+THIN_FRAC = 0.05
+MIN_WINDOWS_FOR_MEDIAN = 20
+
+_FN = re.compile(r"^([a-z]+)-updown-5m-(\d+)\.jsonl(?:\.\d+)?\.gz$")
+
+
+class Refused(Exception):
+    """A population this instrument must not summarise."""
+
+
+def uncompressed_size(path: Path) -> int:
+    """Bytes the member expands to, from the gzip trailer.
+
+    ISIZE is the last 4 bytes, little-endian, modulo 2**32. Our windows top
+    out near 12 MB so the wrap is unreachable; a file too short to hold a
+    trailer is reported as 0 rather than raising, because a truncated
+    archive IS a thin window and must be counted as one.
+    """
+    try:
+        sz = path.stat().st_size
+        if sz < 18:                      # header+trailer minimum
+            return 0
+        with path.open("rb") as fh:
+            fh.seek(-4, os.SEEK_END)
+            return struct.unpack("<I", fh.read(4))[0]
+    except OSError:
+        return 0
+
+
+def scan_day(day: str, raw_root: Path = RAW) -> dict:
+    """Aggregate uncompressed bytes per (coin, window) for one UTC day."""
+    d = raw_root / day
+    if not d.is_dir():
+        raise Refused(f"no raw directory for {day} — an absent day is not a "
+                      f"clean day, and reporting 0 thinned windows for it "
+                      f"would be the empty-set trap")
+    agg: dict[tuple[str, int], int] = collections.defaultdict(int)
+    for fn in os.listdir(d):
+        m = _FN.match(fn)
+        if m:
+            agg[(m.group(1), int(m.group(2)))] += uncompressed_size(d / fn)
+    if not agg:
+        raise Refused(f"{day} has a raw directory but NO window files — "
+                      f"refusing rather than reporting a clean day")
+    return agg
+
+
+def load_gaps(path: Path = GAP_LEDGER) -> dict[str, list[tuple[float, float]]]:
+    out: dict[str, list[tuple[float, float]]] = collections.defaultdict(list)
+    if not path.exists():
+        return out
+    for ln in path.read_text(errors="replace").splitlines():
+        ln = ln.strip()
+        if not ln:
+            continue
+        try:
+            r = json.loads(ln)
+        except ValueError:
+            continue
+        if r.get("gap_start_ns") and r.get("gap_end_ns") and r.get("coin"):
+            out[r["coin"]].append((r["gap_start_ns"] / 1e9,
+                                   r["gap_end_ns"] / 1e9))
+    return out
+
+
+def gap_overlaps(gaps, coin: str, w0: float, w1: float) -> bool:
+    return any(gs < w1 and ge > w0 for gs, ge in gaps.get(coin, ()))
+
+
+def judge_day(day: str, gaps=None, raw_root: Path = RAW,
+              thin_frac: float = THIN_FRAC) -> dict:
+    """Per (day, coin): the thin windows, split by whether a gap row knows.
+
+    The whole point is the second number. A thin window a gap row already
+    covers is ACCOUNTED loss — the ledger saw it and the bars charge for it.
+    A thin window with no gap row is INVISIBLE loss: no row, full coverage,
+    clean bars.
+    """
+    agg = scan_day(day, raw_root)
+    gaps = load_gaps() if gaps is None else gaps
+    per: dict[str, list[tuple[int, int]]] = collections.defaultdict(list)
+    for (c, w), b in agg.items():
+        per[c].append((w, b))
+
+    coins = {}
+    for c, wins in sorted(per.items()):
+        sizes = [b for _, b in wins]
+        if len(wins) < MIN_WINDOWS_FOR_MEDIAN:
+            coins[c] = {"status": "UNJUDGEABLE", "n_windows": len(wins),
+                        "why": f"{len(wins)} windows < "
+                               f"{MIN_WINDOWS_FOR_MEDIAN}: too few for a "
+                               f"median to mean anything"}
+            continue
+        med = statistics.median(sizes)
+        if med <= 0:
+            coins[c] = {"status": "UNJUDGEABLE", "n_windows": len(wins),
+                        "why": "median window is empty"}
+            continue
+        thin = [(w, b) for w, b in wins if b < med * thin_frac]
+        acct = [(w, b) for w, b in thin
+                if gap_overlaps(gaps, c, w, w + WINDOW_S)]
+        invis = [(w, b) for w, b in thin if (w, b) not in acct]
+        coins[c] = {
+            "status": "JUDGED", "n_windows": len(wins),
+            "median_bytes": int(med),
+            "n_thin": len(thin), "n_thin_accounted": len(acct),
+            "n_thin_invisible": len(invis),
+            "invisible_windows": [
+                {"window_start": w,
+                 "utc": dt.datetime.fromtimestamp(
+                     w, dt.timezone.utc).strftime("%H:%M:%SZ"),
+                 "bytes": b, "frac_of_median": round(b / med, 5)}
+                for w, b in sorted(invis)],
+        }
+    judged = [c for c, v in coins.items() if v["status"] == "JUDGED"]
+    total_invis = sum(coins[c]["n_thin_invisible"] for c in judged)
+    return {
+        "day": day, "coins": coins,
+        "n_coins_judged": len(judged),
+        "n_coins_unjudgeable": len(coins) - len(judged),
+        # the predicate, computed -- never a printed conclusion (rule 10)
+        "clean": len(judged) > 0 and total_invis == 0,
+        "total_thin_invisible": total_invis,
+        "total_thin_accounted": sum(coins[c]["n_thin_accounted"]
+                                    for c in judged),
+        "thin_frac": thin_frac,
+    }
+
+
+def all_days(raw_root: Path = RAW) -> list[str]:
+    """Derived from disk, never hardcoded — the day list in this repo went
+    stale four times in three days when it was a literal."""
+    if not raw_root.is_dir():
+        return []
+    return sorted(d for d in os.listdir(raw_root)
+                  if d.isdigit() and (raw_root / d).is_dir())
+
+
+# ---------------------------------------------------------------- falsifier
+def selftest() -> int:
+    """Rule 15: a positive control it MUST flag, a bad input it MUST refuse.
+
+    Built on a synthetic tape in a temp dir, because a detector proved only
+    against the real tape cannot show it would fire on data that has not
+    happened yet.
+    """
+    import gzip
+    import tempfile
+    checks = []
+
+    def ok(cond, label):
+        checks.append(cond)
+        print(f"  {'PASS' if cond else 'FAIL'}  {label}")
+        if not cond:
+            print(f"SELFTEST FAILED at check {len(checks)}")
+            raise SystemExit(1)
+
+    with tempfile.TemporaryDirectory() as td:
+        root = Path(td) / "raw"
+        day = "20260901"
+        (root / day).mkdir(parents=True)
+        base = int(dt.datetime(2026, 9, 1, tzinfo=dt.timezone.utc).timestamp())
+        # 40 healthy windows, then 2 deliberately thin ones
+        for i in range(40):
+            w = base + i * WINDOW_S
+            with gzip.open(root / day / f"btc-updown-5m-{w}.jsonl.gz",
+                           "wb") as fh:
+                fh.write(b'{"x":1}\n' * 5000)
+        thin_w = []
+        for i in (40, 41):
+            w = base + i * WINDOW_S
+            thin_w.append(w)
+            with gzip.open(root / day / f"btc-updown-5m-{w}.jsonl.gz",
+                           "wb") as fh:
+                fh.write(b'{"x":1}\n' * 3)
+
+        r = judge_day(day, gaps={}, raw_root=root)
+        ok(r["coins"]["btc"]["n_thin"] == 2,
+           "POSITIVE CONTROL: two deliberately thin windows among 40 healthy "
+           f"ones are FLAGGED (got {r['coins']['btc']['n_thin']}) — a "
+           "detector that has never fired is not a detector")
+        ok(r["total_thin_invisible"] == 2 and r["clean"] is False,
+           "and with NO gap row covering them they count as INVISIBLE, so "
+           "the day's computed `clean` predicate is False")
+
+        # the SAME tape, now with a gap row covering both -> accounted, not
+        # invisible. This is the leg that proves the detector distinguishes
+        # loss the ledger KNOWS from loss it does not.
+        g = {"btc": [(thin_w[0] - 1, thin_w[1] + WINDOW_S + 1)]}
+        r2 = judge_day(day, gaps=g, raw_root=root)
+        ok(r2["coins"]["btc"]["n_thin"] == 2
+           and r2["total_thin_invisible"] == 0
+           and r2["total_thin_accounted"] == 2 and r2["clean"] is True,
+           "DISCRIMINATION: the identical thin windows, once a gap row "
+           "COVERS them, are ACCOUNTED and not invisible — the instrument "
+           "measures what the ledger MISSED, not merely what was small")
+
+        # healthy-only tape must come back clean, or every alarm above is
+        # just the detector shouting at everything
+        r3 = judge_day(day, gaps={}, raw_root=root, thin_frac=1e-9)
+        ok(r3["total_thin_invisible"] == 0 and r3["clean"] is True,
+           "NEGATIVE CONTROL: with the threshold driven to ~0 nothing is "
+           "flagged and the day reads clean — the flags above come from the "
+           "data, not from the code flagging unconditionally")
+
+        # refusals: an absent day and an empty day are STATUSES, never a
+        # clean report (rule 4, and the empty-set-passes trap)
+        for bad, why in ((lambda: judge_day("20991231", gaps={},
+                                            raw_root=root),
+                          "an ABSENT day REFUSES rather than reporting 0 "
+                          "thinned windows"),
+                         (None, None)):
+            if bad is None:
+                continue
+            try:
+                bad()
+                ok(False, why)
+            except Refused:
+                ok(True, f"KNOWN-BAD: {why}")
+
+        empty = "20260902"
+        (root / empty).mkdir()
+        try:
+            judge_day(empty, gaps={}, raw_root=root)
+            ok(False, "an EMPTY day directory must refuse")
+        except Refused:
+            ok(True, "KNOWN-BAD: a day directory with NO window files "
+                     "REFUSES — 0 thinned of 0 windows is the empty-set trap "
+                     "that already passed once on the 08-27 arm")
+
+        # the trailer read must be exact, not approximate: assert it against
+        # a real decompress, or every number above rests on an assumption
+        p = root / day / f"btc-updown-5m-{base}.jsonl.gz"
+        ok(uncompressed_size(p) == len(gzip.open(p, "rb").read()),
+           "the gzip-trailer size EQUALS the true decompressed length — the "
+           "O(1) measure this whole scan rests on is exact, not a proxy")
+
+    print(f"pm_tape_density selftests: {len(checks)} checks passed")
+    return 0
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--day", help="one UTC day token (default: all on disk)")
+    ap.add_argument("--thin-frac", type=float, default=THIN_FRAC)
+    ap.add_argument("--json", action="store_true")
+    ap.add_argument("--selftest", action="store_true")
+    a = ap.parse_args()
+    if a.selftest:
+        return selftest()
+
+    days = [a.day] if a.day else all_days()
+    if not days:
+        print("no days on disk")
+        return 1
+    gaps = load_gaps()
+    out, dirty = [], 0
+    for d in days:
+        try:
+            r = judge_day(d, gaps=gaps, thin_frac=a.thin_frac)
+        except Refused as ex:
+            print(f"{d}  REFUSED: {ex}")
+            continue
+        out.append(r)
+        if not r["clean"]:
+            dirty += 1
+    if a.json:
+        print(json.dumps(out, indent=1))
+        return 0
+
+    print(f"thin = window below {a.thin_frac:.0%} of its (day, coin) median "
+          f"uncompressed size\n")
+    print(f"{'day':10} {'coins':>6} {'thin':>5} {'accounted':>10} "
+          f"{'INVISIBLE':>10}  verdict")
+    for r in out:
+        tot_thin = r["total_thin_accounted"] + r["total_thin_invisible"]
+        print(f"{r['day']:10} {r['n_coins_judged']:6d} {tot_thin:5d} "
+              f"{r['total_thin_accounted']:10d} "
+              f"{r['total_thin_invisible']:10d}  "
+              f"{'clean' if r['clean'] else 'INVISIBLE LOSS'}")
+    print()
+    for r in out:
+        if r["clean"]:
+            continue
+        print(f"{r['day']} — windows the gap ledger does NOT record:")
+        for c, v in sorted(r["coins"].items()):
+            if v["status"] != "JUDGED" or not v["invisible_windows"]:
+                continue
+            times = ", ".join(f"{w['utc']}({w['frac_of_median']:.3%})"
+                              for w in v["invisible_windows"][:6])
+            more = "" if len(v["invisible_windows"]) <= 6 \
+                else f" +{len(v['invisible_windows']) - 6} more"
+            print(f"  {c:5} {v['n_thin_invisible']:3d}  {times}{more}")
+    print(f"\n{dirty} of {len(out)} days carry loss no gap row records")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
