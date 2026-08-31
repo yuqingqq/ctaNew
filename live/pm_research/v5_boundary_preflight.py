@@ -840,6 +840,28 @@ def check_post_rollback(obs: dict, old_v5_pid: int,
     }
 
 
+def make_abort_row(obs: dict, stage: str) -> dict:
+    """Emit the PRE-STAMP abort row. Runbook rows 3a/3b used to instruct a
+    hand-written JSON row containing a literal `<now>` — a value the
+    operator invents — which contradicted the runbook's own headline and,
+    pasted literally, made BOTH consumers unreadable forever (runbook-audit
+    finding 3). Nothing in this chain is transcribed by a human."""
+    check_stage(stage)
+    _cur, _open = current_era_and_open_v5(obs["era_rows"])
+    if _open is not None:
+        raise Refused(f"an open clob_v5 era exists at {_open} — a transition "
+                      f"RAN, so an abort row would be untrue; the rollback "
+                      f"or recovery path applies")
+    if _cur != "clob_v4":
+        raise Refused(f"era in force is {_cur!r}, not clob_v4")
+    return {"collector_schema_version": "clob_v5", "supersedes": "clob_v4",
+            "aborted": True, "boundary_utc": BOUNDARY_UTC, "stage": stage,
+            "stamp_written_ns": time.time_ns(),
+            "stamp_order": ("PRE-STAMP abort: no transition was recorded; "
+                            "this row records the ATTEMPT and never enters "
+                            "the era line")}
+
+
 def check_post_recovery(obs: dict, v5_start: dict | None,
                         v4_start: dict | None, stage: str) -> list:
     """RECOVERY BUNDLE (V5-R3B): v5 RAN but its transition receipt could
@@ -941,17 +963,21 @@ def check_runbook_consistency(text: str) -> None:
     for ln in text.splitlines():
         if ln.lstrip().startswith(">"):
             continue  # amendment-history blockquote exempt
-        if "boundary_utc" in ln and BOUNDARY_UTC not in ln:
+        _stale = [m for m in re.findall(r"20\d\d-\d\d-\d\dT\d\d:\d\d:\d\dZ",
+                                        ln) if m != BOUNDARY_UTC]
+        if ("boundary_utc" in ln or "boundaryUtc" in ln) and _stale:
             raise Refused(f"runbook line stamps a boundary_utc other than "
                           f"{BOUNDARY_UTC}: {ln.strip()[:90]!r} — an abort row "
                           f"from this text would carry a FALSE boundary")
-        if re.match(r"\d+\. \*\*At ", ln):
+        if re.match(r"[-*#>\s]*\d*\.?\s*\*\*At ", ln.lstrip()) or \
+                re.match(r"#+\s*At \d", ln.lstrip()):
             _at_seen.append(ln)
             if BOUNDARY_UTC[11:19] not in ln:
                 raise Refused(f"runbook deployment step names a different "
                               f"instant: {ln.strip()[:80]!r}")
         low = ln.lower()
-        if "day one" in low and "09-01" not in ln:
+        _dates = set(re.findall(r"\b(\d\d-\d\d)\b", ln))
+        if "day one" in low and (_dates - {"09-01"}):
             raise Refused(f"runbook names a day-one other than 09-01: "
                           f"{ln.strip()[:90]!r} — 08-31 is MIXED-ERA (R-340)")
     if not _at_seen:
@@ -1189,6 +1215,29 @@ def selftest() -> int:
                 "5. **At 05:30:00Z (restart):**"),
             "different instant", "KNOWN-BAD: a stale At-step under ANY "
             "numbering REFUSES (the O1 checker matched only step 2)")
+    for _shape in ("  3. **At 05:30:00Z (restart):**",
+                   "- **At 05:30:00Z (restart):**",
+                   "### At 05:30:00Z restart"):
+        refuses(lambda sh=_shape: check_runbook_consistency(
+                    f"{BOUNDARY_UTC} {BOUNDARY_UTC} {BOUNDARY_UTC}\n" + sh),
+                "different instant", f"KNOWN-BAD (audit S6): a stale step "
+                f"written as {_shape.strip()[:18]!r} REFUSES — the match ran on "
+                f"the raw line while the blockquote exemption used lstrip, "
+                f"so indented/bulleted/heading steps were invisible")
+    refuses(lambda: check_runbook_consistency(
+                f"{BOUNDARY_UTC} {BOUNDARY_UTC} {BOUNDARY_UTC}\n"
+                "3. **At " + BOUNDARY_UTC[11:19] + " (restart):**\n"
+                'x {"boundary_utc":"2026-08-30T05:30:00Z"} for the '
+                + BOUNDARY_UTC + " attempt"),
+            "false boundary", "KNOWN-BAD (audit S6): a stale stamp RESCUED "
+            "by mentioning the ruled instant on the same line REFUSES — "
+            "which is exactly how a commented JSON row is written")
+    refuses(lambda: check_runbook_consistency(
+                f"{BOUNDARY_UTC} {BOUNDARY_UTC} {BOUNDARY_UTC}\n"
+                "3. **At " + BOUNDARY_UTC[11:19] + " (restart):**\n"
+                "- day one is 08-31, NOT 09-01"),
+            "other than 09-01", "KNOWN-BAD (audit S6): a line ASSERTING the "
+            "wrong day one passed because 09-01 appeared somewhere on it")
 
     check_runbook_consistency(RUNBOOK.read_text())
     ok(True, "POSITIVE: the LIVE runbook body is consistent with the ruled "
@@ -1676,6 +1725,23 @@ def selftest() -> int:
             "workingdirectory", "F6-KB (audit S10): a wrong WorkingDirectory "
             "at stamp time REFUSES")
 
+    _ab = make_abort_row({"era_rows": [V4_ROW]}, "restart_failed")
+    ok(_ab["aborted"] is True and _ab["boundary_utc"] == BOUNDARY_UTC
+       and "stamp_written_ns" in _ab and _ab["stage"] == "restart_failed",
+       "POSITIVE (runbook-audit 3): the abort row is EMITTED with a real "
+       "timestamp — the runbook used to instruct a hand-written row with a "
+       "literal <now>, which pasted literally breaks BOTH consumers forever")
+    refuses(lambda: make_abort_row({"era_rows": [V4_ROW, _V5OPEN]},
+                                   "restart_failed"),
+            "would be untrue", "KNOWN-BAD: an abort row while a transition "
+            "is OPEN REFUSES — the abort would misdescribe what happened")
+    refuses(lambda: make_abort_row({"era_rows": [V4_ROW]}, "x"),
+            "not a description", "KNOWN-BAD: an abort row without a real "
+            "stage REFUSES")
+    refuses(lambda: make_abort_row({"era_rows": []}, "restart_failed"),
+            "era in force", "KNOWN-BAD: an abort row over an empty/None-era "
+            "ledger REFUSES — the row asserts it supersedes clob_v4")
+
     # ---- audit F1/S4/S7/S13: the new consumer + commit refusals ----
     _OPEN = {**_V5OPEN}
     refuses(lambda: current_era_and_open_v5(
@@ -1747,6 +1813,8 @@ def main() -> int:
                     help="collector.log byte offset printed by --armed")
     ap.add_argument("--post-rollback", type=int, metavar="OLD_V5_PID",
                     default=None)
+    ap.add_argument("--abort-row", action="store_true",
+                    help="emit the pre-stamp abort row (never hand-write it)")
     ap.add_argument("--post-recovery", action="store_true",
                     help="emit the two-row recovery bundle (v5 ran but its "
                          "transition receipt was never appendable)")
@@ -1792,6 +1860,12 @@ def main() -> int:
             print(receipt["note"], file=sys.stderr)
             return 0  # NOTHING on stdout: `>> ledger` appends no row
         print(json.dumps(receipt))
+        return 0
+    if a.abort_row:
+        obs = observe_common()
+        if obs.get("obs_unit_overridden"):
+            raise Refused("abort rows come only from the PRODUCTION unit")
+        print(json.dumps(make_abort_row(obs, a.stage or "")))
         return 0
     if a.post_recovery:
         obs = observe_common()
