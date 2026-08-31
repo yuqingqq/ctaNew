@@ -17752,6 +17752,33 @@ The R-271 escalation was RIGHT in substance and sat ~2h in the wrong CHANNEL: BE
 
 **And it reframes R-360's open question.** 08-25 is when btc's disconnects jumped twenty-fold; **08-26 04:35Z is a contiguous 3 h 20 m of near-total data loss on every coin.** Two process-level events on consecutive days on the same machine, and R-150's resource fencing (`9f00381`) is timestamped **08-26 05:27 — inside the outage window.** I am not yet claiming a cause. I am recording that the three are adjacent and that **whatever explains 08-25 probably explains 08-26**, which makes diagnosing them one question rather than two.
 
+### R-363 — 2026-08-31T14:50Z — coordinator — **THE ISSUE, DOUBLE-CONFIRMED AND NARROWED TO ONE SENTENCE; THE FIX IS BUILT AND TESTED, NOT DEPLOYED. And double-confirming REFUTED my own R-360 mechanism** (`1b35aa4`, all 8 gates green)
+
+**The issue, exactly.** The clock cannot start before the freeze (`freeze_epoch` 2026-08-28T06:09Z). 08-29 passes quality but is `clob_v3_1` — era-inadmissible. 08-30 is mixed-era. **08-31 is the FIRST day that is both post-freeze and pure `clob_v4` — the first day that could ever count.** At 12.8 h elapsed, against a full-day budget of 2,880 lost seconds:
+
+| coin | lost so far | projects | verdict |
+|---|---|---|---|
+| **btc** | **3,315 s** | 6,235 s (259.8 s/hr) | **FAIL** |
+| eth | 195 | 367 (15.3 s/hr) | pass |
+| xrp | 195 | 368 (15.3) | pass |
+| sol / bnb | 66 | 125 (5.2) | pass |
+| doge | 31 | 59 (2.4) | pass |
+| hype | 7 | 13 (0.6) | pass |
+
+**btc alone fails, six coins pass by a factor of ten or more, the day is judged all-coins, so nothing accrues.** Twelve days collected, **zero validation days**. That is the whole problem and it has been the same problem throughout.
+
+**The double-confirmation refuted my own mechanism, and that is the substance of this entry.** R-360 asserted the timeouts were load-induced — "the round trip fails locally under btc's ~400 msg/s". **It does not survive its own test.** Joining gap events to the collector's own `rate_msg_s` on RECONSTRUCTED absolute timestamps (the log carries `HH:MM:SS` with no date; rolling the day forward on a backwards clock recovers it — the same repair as audit A1b), btc timeouts are **LEAST frequent when btc throughput is HIGHEST**: 0.054/min in the top load quintile against 0.266 in the second. **Opposite sign.** A first pass that pooled every day into one 1440-minute clock had already hinted at it; the dated join made it unambiguous. **I proposed a mechanism, tested it, and it failed — which is the only reason the real one was found.**
+
+**The real mechanism is PING COUNT.** O1a moved interval 10 s → 3 s, so pings/hr went **360 → 1200 (3.33x)**, while the **per-ping failure probability barely moved: 0.0262 → 0.0329 (1.25x)**. **~80% of the damage is simply 3.3x more draws at a roughly constant per-draw risk.** This also explains the coin-selectivity R-357 found: btc's per-ping failure rate is ~3% and the other coins' is near zero, so multiplying the draws multiplies the damage exactly where the per-draw risk already sat. And it explains the load anti-correlation — each ping is an independent draw, not a function of the minute's throughput (a dying socket also sends fewer messages, so the anti-correlation is partly reverse causation; the test is confounded in that direction and is therefore not evidence FOR load either).
+
+**The fix, and why this exact one.** `ping_interval`/`ping_timeout` reverted **3/3 → 10/10**. Not 3/10, which would give better detection on paper: **that is a setting this collector has never run.** 10/10 ran for 96 h in this load regime and produced 100.2 s/hr. **Reverting to a MEASURED configuration rather than inventing an optimum is the whole discipline here** — inventing one is what O1a did. Interval is the lever; timeout is the 1.25x minor term. Detection lag returns to ≤20 s, the price O1a should not have paid down.
+
+**Tests updated, not deleted, and one caught going slack.** The v4 behavioural test pins the new value with the reasoning. The v5 blindness check compared v5 against v4's bound — **v4's bound just moved 6 s → 20 s, so that check now passes with 14 s of slack and has stopped discriminating.** Marked as such in place and an ABSOLUTE bound added beside it: **a comparison against a value that itself moved is not a bound.** Found by changing the thing it compared to, which no amount of running it would have shown.
+
+**NOT DEPLOYED.** The running collector is untouched. This needs a **USER-ruled era boundary**: a ping change alters the gap statistics P1/P2/P3 are computed on, so a day spanning it is mixed. **Timing is nearly free right now — 08-31 has already failed on btc, so spending it as the mixed day costs nothing, and 09-01 becomes a clean day one WITH the fix.** The instant must sit clear of UTC midnight (audit A1 refuses a boundary whose unserved interval contains one); ~22:00Z is the natural choice.
+
+**The residual, stated rather than buried.** Even with the revert, btc's measured pre-O1a rate was **100.2 s/hr against a 120 bar — under it by 17%.** That is marginal, not comfortable, and two of the five pre-O1a days (08-25, 08-26, 08-27) were over it. **The revert makes btc plausible, not safe.** The independent second lever — ruling whether the clock requires btc at all, when six coins pass by 10x — remains open and is a USER act under rule 14, and it must be settled BEFORE 08-31 closes or the choice is made having seen the split (rule 11).
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
