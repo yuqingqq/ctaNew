@@ -1,0 +1,211 @@
+{
+  "as_of": "2026-08-31T05:33:46Z",
+  "coins": [
+    "bnb",
+    "btc",
+    "doge",
+    "eth",
+    "hype",
+    "sol",
+    "xrp"
+  ],
+  "estimated_lines_never_captured": 302941,
+  "files": [
+    {
+      "baseline_median_lines": 7714,
+      "coin": "bnb",
+      "lines_captured": 8004,
+      "retention_pct": 103.76,
+      "status": "INFLATED_DUPLICATE_ROWS",
+      "window": 1788153300
+    },
+    {
+      "baseline_median_lines": 93081,
+      "coin": "btc",
+      "lines_captured": 84397,
+      "retention_pct": 90.67,
+      "status": "TRUNCATED_BY_FOREIGN_PROCESS",
+      "window": 1788153300
+    },
+    {
+      "baseline_median_lines": 8098,
+      "coin": "doge",
+      "lines_captured": 6004,
+      "retention_pct": 74.14,
+      "status": "TRUNCATED_BY_FOREIGN_PROCESS",
+      "window": 1788153300
+    },
+    {
+      "baseline_median_lines": 26279,
+      "coin": "eth",
+      "lines_captured": 24004,
+      "retention_pct": 91.34,
+      "status": "TRUNCATED_BY_FOREIGN_PROCESS",
+      "window": 1788153300
+    },
+    {
+      "baseline_median_lines": 3074,
+      "coin": "hype",
+      "lines_captured": 2004,
+      "retention_pct": 65.19,
+      "status": "TRUNCATED_BY_FOREIGN_PROCESS",
+      "window": 1788153300
+    },
+    {
+      "baseline_median_lines": 19975,
+      "coin": "sol",
+      "lines_captured": 16005,
+      "retention_pct": 80.13,
+      "status": "TRUNCATED_BY_FOREIGN_PROCESS",
+      "window": 1788153300
+    },
+    {
+      "baseline_median_lines": 14919,
+      "coin": "xrp",
+      "lines_captured": 10004,
+      "retention_pct": 67.06,
+      "status": "TRUNCATED_BY_FOREIGN_PROCESS",
+      "window": 1788153300
+    },
+    {
+      "baseline_median_lines": 7714,
+      "coin": "bnb",
+      "lines_captured": 2635,
+      "retention_pct": 34.16,
+      "status": "TRUNCATED_BY_FOREIGN_PROCESS",
+      "window": 1788153600
+    },
+    {
+      "baseline_median_lines": 93081,
+      "coin": "btc",
+      "lines_captured": 34032,
+      "retention_pct": 36.56,
+      "status": "TRUNCATED_BY_FOREIGN_PROCESS",
+      "window": 1788153600
+    },
+    {
+      "baseline_median_lines": 8098,
+      "coin": "doge",
+      "lines_captured": 2648,
+      "retention_pct": 32.7,
+      "status": "TRUNCATED_BY_FOREIGN_PROCESS",
+      "window": 1788153600
+    },
+    {
+      "baseline_median_lines": 26279,
+      "coin": "eth",
+      "lines_captured": 16169,
+      "retention_pct": 61.53,
+      "status": "TRUNCATED_BY_FOREIGN_PROCESS",
+      "window": 1788153600
+    },
+    {
+      "baseline_median_lines": 3074,
+      "coin": "hype",
+      "lines_captured": 292,
+      "retention_pct": 9.5,
+      "status": "TRUNCATED_BY_FOREIGN_PROCESS",
+      "window": 1788153600
+    },
+    {
+      "baseline_median_lines": 19975,
+      "coin": "sol",
+      "lines_captured": 5115,
+      "retention_pct": 25.61,
+      "status": "TRUNCATED_BY_FOREIGN_PROCESS",
+      "window": 1788153600
+    },
+    {
+      "baseline_median_lines": 14919,
+      "coin": "xrp",
+      "lines_captured": 5198,
+      "retention_pct": 34.84,
+      "status": "TRUNCATED_BY_FOREIGN_PROCESS",
+      "window": 1788153600
+    },
+    {
+      "baseline_median_lines": 7714,
+      "coin": "bnb",
+      "lines_captured": 13,
+      "retention_pct": 0.17,
+      "status": "TRUNCATED_BY_FOREIGN_PROCESS",
+      "window": 1788153900
+    },
+    {
+      "baseline_median_lines": 93081,
+      "coin": "btc",
+      "lines_captured": 102,
+      "retention_pct": 0.11,
+      "status": "TRUNCATED_BY_FOREIGN_PROCESS",
+      "window": 1788153900
+    },
+    {
+      "baseline_median_lines": 8098,
+      "coin": "doge",
+      "lines_captured": 4,
+      "retention_pct": 0.05,
+      "status": "TRUNCATED_BY_FOREIGN_PROCESS",
+      "window": 1788153900
+    },
+    {
+      "baseline_median_lines": 26279,
+      "coin": "eth",
+      "lines_captured": 93,
+      "retention_pct": 0.35,
+      "status": "TRUNCATED_BY_FOREIGN_PROCESS",
+      "window": 1788153900
+    },
+    {
+      "baseline_median_lines": 3074,
+      "coin": "hype",
+      "lines_captured": 2,
+      "retention_pct": 0.07,
+      "status": "TRUNCATED_BY_FOREIGN_PROCESS",
+      "window": 1788153900
+    },
+    {
+      "baseline_median_lines": 19975,
+      "coin": "sol",
+      "lines_captured": 10,
+      "retention_pct": 0.05,
+      "status": "TRUNCATED_BY_FOREIGN_PROCESS",
+      "window": 1788153900
+    },
+    {
+      "baseline_median_lines": 14919,
+      "coin": "xrp",
+      "lines_captured": 34,
+      "retention_pct": 0.23,
+      "status": "TRUNCATED_BY_FOREIGN_PROCESS",
+      "window": 1788153900
+    }
+  ],
+  "files_affected": 21,
+  "incident": {
+    "authority": "R-351 coordinator self-report; scope corrected by DA measurement Q-DA-176, recorded R-352",
+    "cause": "a rehearsal fixture unit was created with the PRODUCTION ExecStart, starting a SECOND collector process (pid 281046) which finalized windows the live collector still had open",
+    "collector_runs_jsonl_touched": false,
+    "fixture_ran_utc": [
+      "2026-08-31T05:20:35Z",
+      "2026-08-31T05:21:02Z"
+    ],
+    "foreign_pid": 281046,
+    "loss_end_utc": "2026-08-31T05:31:30Z approx (each affected window kept writing to an unlinked inode until its own rollover)",
+    "production_interrupted": false,
+    "production_pid": 3687786
+  },
+  "method": {
+    "baseline": "per-coin median of the 3 windows immediately preceding the earliest affected window",
+    "caveat": "line volume varies with market activity; observed baseline spread is roughly +/-20%, so retention near 100% is not evidence of no damage, and only large deficits are load-bearing",
+    "retention": "gz/plain line count vs that baseline",
+    "scope_discovery": "collector's own gzip [Errno 2] failures"
+  },
+  "recoverable": false,
+  "recovery_note": "the foreign process finalized the file; the collector's handle then referred to an unlinked inode, so subsequent rows were written nowhere",
+  "schema": "pm5_contamination_v1",
+  "windows_affected": [
+    1788153300,
+    1788153600,
+    1788153900
+  ]
+}
