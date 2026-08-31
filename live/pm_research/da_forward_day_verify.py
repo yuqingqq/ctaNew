@@ -446,6 +446,23 @@ ERA_ADMISSIBLE = {
     "clob_v3_1": False,   # pre-O1
     "clob_v4": False,     # O1 package; ruled never admissible post-O1 (R-340)
     "clob_v5": True,      # heartbeat repair; admissible once its era starts
+    # USER RULING 2026-08-31 ("Yes, admit"), recorded not inferred. DA
+    # recommended ADMIT (Q-DA-188) on the ground that admissibility is a
+    # question about the DATA: clob_v4_1 changes ONLY the RFC control-ping
+    # cadence (3/3 -> 10/10), while row format, timestamps and sub-second
+    # validity are identical to clob_v4. Refusing it would exclude admissible
+    # data because a keepalive parameter moved.
+    #
+    # THE CAVEAT THAT TRAVELS WITH THE RULING, in view when it was made:
+    # clob_v4_1 gap statistics are NOT comparable to clob_v4 ones, because the
+    # CAUSE MIX shifts (~97% PING_TIMEOUT at 3/3 vs ~54% at 10/10, the rest
+    # being instantly-detected causes). A bar crossing AT the boundary is a
+    # measurement change, not a change in feed health. So a five-day window
+    # that SPANS this boundary is heterogeneous in its quality basis: the
+    # clock must record the ERA of every accrued day and never compare
+    # quality across eras. P1/P2/P3 are NOT adjusted to restore
+    # comparability -- recomputing a pre-registered bar voids it.
+    "clob_v4_1": True,    # ping 3/3 -> 10/10 rollback; USER 2026-08-31
 }
 
 
