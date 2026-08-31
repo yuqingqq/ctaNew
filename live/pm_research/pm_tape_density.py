@@ -402,6 +402,22 @@ def main() -> int:
             dirty += 1
     if a.json:
         print(json.dumps({
+            # A CONSUMER MUST BE ABLE TO TELL A RESHAPE FROM AN ABSENCE.
+            # This receipt shipped as a bare LIST, then became an object; DA's
+            # reader iterated it, got dict KEYS, matched no row, and reported
+            # "no measurement for this day" WHILE THE MEASUREMENT SAT IN THE
+            # FILE (312b121). It did not crash and did not refuse -- it
+            # reported absence, which is the worse failure because absence is
+            # a plausible answer. My defect: I reshaped a PUBLISHED artifact
+            # without a version, one message after asking DA to rename a
+            # field in it. A version makes the next reshape loud instead of
+            # silent, and it is the producer's job to supply it, not the
+            # consumer's to guess.
+            "schema": "pm_tape_density/2",
+            "schema_note": ("v1 was a bare JSON LIST of day objects. Any "
+                            "reader that does not recognise this string must "
+                            "report SCHEMA_UNRECOGNISED, never a clean zero "
+                            "and never UNMEASURED."),
             "days": out,
             "threshold_sensitivity": sensitivity(days, gaps),
             "note": ("the per-day window COUNTS are readings at "
