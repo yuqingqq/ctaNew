@@ -32,6 +32,7 @@ import collections
 import datetime as dt
 import json
 import math
+import re
 import sys
 from pathlib import Path
 from typing import Any, Sequence
@@ -383,6 +384,31 @@ LEGACY_ROWS_RULED_TRANSITIONED = {
 }
 
 
+#: ONE spelling, not several. `fromisoformat` accepts a bare date, a space
+#: separator, an explicit offset and fractional seconds -- and boundaries are
+#: then compared to each other as RAW STRINGS, so two spellings of one instant
+#: read as two different eras, while a bare "2026-08-31" silently means
+#: midnight and moves a transition by hours. Found by BE's differential fuzz.
+CANONICAL_INSTANT = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$")
+
+
+def _instant(value, field: str, lineno: int) -> float:
+    """Validate ONE canonical spelling and return its epoch."""
+    if not isinstance(value, str) or not CANONICAL_INSTANT.match(value):
+        raise ValueError(
+            f"REFUSED: era ledger row {lineno} has {field}={value!r}. The one "
+            f"accepted spelling is YYYY-MM-DDTHH:MM:SSZ -- boundaries are "
+            f"compared to each other as strings, so a second spelling of the "
+            f"same instant reads as a different era.")
+    try:
+        return dt.datetime.fromisoformat(
+            value.replace("Z", "+00:00")).timestamp()
+    except ValueError as e:
+        raise ValueError(
+            f"REFUSED: era ledger row {lineno} has {field}={value!r}, which is "
+            f"canonically SHAPED but not a real instant ({e})") from None
+
+
 def _ledger_rows(src: Path) -> list[tuple]:
     """Parse and VALIDATE every ledger row. Refuses rather than guessing."""
     out = []
@@ -395,6 +421,19 @@ def _ledger_rows(src: Path) -> list[tuple]:
             raise ValueError(
                 f"REFUSED: era ledger row {lineno} lacks boundary_utc or "
                 f"collector_schema_version: {ln[:120]}")
+        for _f, _val in (("collector_schema_version", v),
+                         ("supersedes", r.get("supersedes"))):
+            if _val is not None and not isinstance(_val, str):
+                raise ValueError(
+                    f"REFUSED: era ledger row {lineno} has {_f}={_val!r}, "
+                    f"which is {type(_val).__name__}, not a string. Era names "
+                    f"are sorted and set-compared together, so a non-string "
+                    f"raised a bare TypeError on any day touching two eras -- "
+                    f"an UNDECLARED exception where this module promises a "
+                    f"declared refusal.")
+        _instant(b, "boundary_utc", lineno)
+        if "closes_boundary_utc" in r:
+            _instant(r["closes_boundary_utc"], "closes_boundary_utc", lineno)
         # EVERY flag is read with `is True`, so a JSON int 1 or the string
         # "yes" reads as FALSE -- which for `recovered` waived the evidence
         # burden while the row still stood as the era of record, and for a
@@ -425,7 +464,7 @@ def _ledger_rows(src: Path) -> list[tuple]:
                     f"that never happened became an admissible era.")
             on = ["transitioned"]
         st = on[0]
-        if st in ("aborted", "rollback") and not r.get("stage"):
+        if st in ("aborted", "rollback") and not str(r.get("stage") or "").strip():
             raise ValueError(
                 f"REFUSED: {st} row {lineno} ({v} @ {b}) names no `stage` -- an "
                 f"attempt that will not say WHICH path it took is not auditable")
@@ -440,7 +479,7 @@ def _ledger_rows(src: Path) -> list[tuple]:
                     f"asserts {st!r}. Recovery records a transition that "
                     f"HAPPENED; an abort or a rollback is not a thing to "
                     f"recover")
-            if not r.get("stage"):
+            if not str(r.get("stage") or "").strip():
                 raise ValueError(
                     f"REFUSED: recovered row {lineno} ({v} @ {b}) names no "
                     f"`stage` -- a retroactive boundary must say WHY it could "
@@ -467,7 +506,7 @@ def _ledger_rows(src: Path) -> list[tuple]:
                 f"and costs a day off the validation clock for no era change. "
                 f"A same-version restart is not a transition; if one needs "
                 f"recording, it needs its own declared shape.")
-        ts = dt.datetime.fromisoformat(b.replace("Z", "+00:00")).timestamp()
+        ts = _instant(b, "boundary_utc", lineno)
         out.append((ts, b, v, r.get("supersedes"), st, r))
     return out
 
@@ -2116,6 +2155,42 @@ def _selftests() -> int:
        "flagged reconstructed -- recovery is the exception, not the default")
 
     _self = _refusal([_v4, dict(_v5, supersedes="clob_v5")])
+    # ---- differential-fuzz findings (BE, 17,729 ledgers) ---------------
+    for _spell in ("2026-08-31T07:00:00.500Z", "2026-08-31T07:00:00+00:00",
+                   "2026-08-31 07:00:00Z", "2026-08-31"):
+        ok("one accepted spelling is YYYY-MM-DDTHH:MM:SSZ" in _refusal(
+            [_v4, dict(_v5, boundary_utc=_spell)]),
+           f"KNOWN-BAD: boundary spelled {_spell!r} refuses. All four parsed "
+           f"before, and boundaries are compared to each other as RAW STRINGS "
+           f"-- so a second spelling of one instant read as a different era, "
+           f"and a bare date silently meant midnight, moving a transition by "
+           f"hours")
+    ok(_adm_of([_v4, _v5])["race_admissible_by_era"] is True,
+       "POSITIVE CONTROL: the canonical spelling still passes, and it is the "
+       "form the real ledger and the emitter already write")
+    ok("canonically SHAPED but not a real instant" in _refusal(
+        [_v4, dict(_v5, boundary_utc="2026-02-31T00:00:00Z")]),
+       "and a canonically-shaped IMPOSSIBLE date refuses with a declared "
+       "message -- an unparseable boundary used to leak fromisoformat's own "
+       "ValueError, which reads as a crash rather than a refusal")
+    _mixed_type = _refusal([_v4, {"collector_schema_version": 5,
+                                  "supersedes": "clob_v4", "transitioned": True,
+                                  "boundary_utc": "2026-08-31T07:00:00Z"}],
+                           "20260831")
+    ok("not a string" in _mixed_type and "UNDECLARED exception" in _mixed_type,
+       "KNOWN-BAD (a CRASH, not a wrong answer): a non-string era name raised "
+       "a bare TypeError from sorted() on any day touching TWO eras -- it was "
+       "invisible on a single-era day, where one element never gets compared")
+    ok("names no `stage`" in _refusal(
+        [_v4, _v5, dict(_rb, stage="   ")]),
+       "KNOWN-BAD: a whitespace-only `stage` refuses. It was TRUTHINESS-"
+       "checked, so '   ' satisfied a field whose entire purpose is to say "
+       "WHY -- a blank reason is not a reason")
+    ok("names no `stage`" in _refusal(
+        [_v4, {k: v for k, v in dict(_recv, stage=" ").items()}, _rb]),
+       "and the same on a recovered transition, where the stage explains why "
+       "the boundary could not be stamped at the time")
+
     _int = _refusal([_v4, dict(_v5, recovered=1)])
     ok("not a bool" in _int and "recovered=1" in _int,
        "KNOWN-BAD (cross-consumer divergence, BE's S7): `recovered: 1` was "
