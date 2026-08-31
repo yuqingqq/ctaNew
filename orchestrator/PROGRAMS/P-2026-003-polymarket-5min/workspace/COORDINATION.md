@@ -17945,6 +17945,37 @@ Codex's independent reconciliation closes it: **50,717 counter delta against 50,
 
 **Open, and now a short list.** (1) COL-R3: give 10/10 a distinct collector identity wired through `collector_start`, the era consumer, emitter, rollback and runbook — a narrow seam, reusing green machinery. (2) Stand up the shadow observation before the next era is INTERPRETED (it need not delay the boundary). (3) Freeze a content-liveness status rule BEFORE judging the next untouched day, or it is chosen after seeing (rule 11). **All three are USER-ruled work; none is started.**
 
+### R-370 — 2026-08-31T16:30Z — coordinator — **USER RULED "go and proceed to deploy". COL-R3's IDENTITY half is CLOSED (`168438a`); the shadow discriminator is BUILT (`eb2ad10`); 12 gates green. FOUR prerequisites remain and three are not mine to grant**
+
+**COL-R3 closed at the root, not patched.** The blocker was that HEAD's 10/10 behaviour and the resident 3/3 behaviour both declared `clob_v4`, so a restart would create a regime the era walk cannot express. Closed by making the era identity a **function of the data-generating configuration**, from ONE mapping:
+
+| mode | era | keepalive | what it is |
+|---|---|---|---|
+| `control-v4` | `clob_v4` | 3/3 | **what ACTUALLY ran** from 2026-08-30T05:30:01Z — reverted to 3/3 so historical reproduction stays exact |
+| `control-v4-slow` | `clob_v4_1` | 10/10 | the rollback candidate, under its own identity |
+| `app-v5` | `clob_v5` | none | held |
+
+`MODE_SPEC` is the single source for **both** identity and cadence, so the declared era and the behaviour producing it cannot drift; `PMCollector` no longer carries a parallel conditional. Six invariants assert what makes one mapping worth having — identities DISTINCT, coverage equals `HEARTBEAT_MODES`, `control-v4` reproduces what ran, and **the slow mode's cadence really differs** (a distinct identity over identical behaviour would be a lie in the ledger).
+
+**Verified end to end:** the chain `clob_v4 → clob_v4_1` is ACCEPTED by the preflight walk and DA rules the following day pure and admissible — **and DA REFUSES it while `clob_v4_1` carries no ruled admissibility.** That refusal is correct and it is the reason one prerequisite below is not mine.
+
+**The gate took ONE backward-compatible parameter, not a bulk retarget.** `current_era_and_open_v5(rows, target=...)` defaults to `clob_v5`, so all 230 selftests are untouched. **Mutating 72 literals inside the instrument that governs a production restart is precisely the risk this session has been about**, and the narrow seam is what Codex asked for.
+
+**The shadow discriminator is built and INERT BY CONSTRUCTION.** `guard_output()` REFUSES any path inside `data/pm_5min/raw` or the ledgers and refuses anything outside its one directory — **a guard, not a comment claiming read-only**, because the last "harmless" side process cost 302,941 lines of tape. Three known-bads prove it fires; a positive control proves it does not refuse everything. It also reports a never-delivering coin as `age=None`/SILENT rather than age 0, which would have made a dead coin read as the freshest in the sample.
+
+**Gate runner 8 → 12.** Tape density, host-load join, shadow observer and the git-extracted v4 behaviour suite were all committed instruments that no single command ran. **A gate nobody runs is not a gate.** ALL 12 PASS.
+
+**WHAT REMAINS BEFORE A RESTART CAN EXECUTE — and I am not proceeding past these.**
+
+1. **A RULED BOUNDARY INSTANT (USER).** `BOUNDARY_UTC` is baked into the gate and no instant is ruled. It must sit clear of UTC midnight — audit A1 refuses a boundary whose unserved interval contains one, and audit A1b's repair is what makes a near-midnight instant survivable at all.
+2. **`clob_v4_1` RULED ADMISSIBLE (USER/DA).** Verified refusing today. Dispatched to DA. **Models estimate; they never decide** — an admissibility entitlement is a policy act (rule 14) and I will not grant it by editing a table.
+3. **The BOUNDARY PACKAGE for v4_1 (mine, not yet built).** The walk is version-general but the EMITTERS still construct `clob_v5` rows, and there is no v4_1 runbook. This is the remaining half of COL-R3 and it is real work.
+4. **Codex's final narrow re-review** of the identity/boundary closure, which it named as the last pre-deploy gate.
+
+**And one that must be frozen BEFORE the next day is judged, not after:** a **content-liveness status rule**. 08-31 stands as `CONTENT_LIVENESS_UNRESOLVED`. If that rule is written after seeing 09-01's numbers it is chosen after seeing (rule 11), and the day is consumed.
+
+**Stated plainly because the instruction was "proceed to deploy":** I have closed everything I can close without a ruling, and I have not restarted anything. **v4 remains live, pid 3687786, continuous.** The next irreversible step needs items 1 and 2 from the USER, and I would not execute it tonight even with them — item 3 does not exist yet, and a deploy without its emitter is how a boundary gets spent on an unstampable transition.
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
