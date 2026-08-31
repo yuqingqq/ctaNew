@@ -345,34 +345,173 @@ ERA_ADMISSIBLE = {
 }
 
 
-def era_spans(path: Path | None = None) -> list[tuple[float, str]]:
-    """(start_epoch, era_name), ascending. The era in force BEFORE the first
-    recorded boundary is that entry's `supersedes` -- the ledger records
-    transitions, so the opening era is named only by what it replaced."""
-    src = PM_COLLECTOR_RUNS if path is None else path
-    rows = []
-    for ln in src.read_text().splitlines():
+#: ---------------------------------------------------------------------------
+#: THE TRANSITION/ROLLBACK RECEIPT CONTRACT (closes Codex V5-0700-R4)
+#: ---------------------------------------------------------------------------
+#: A ledger row records an ATTEMPT. AN ATTEMPT IS NOT AN ERA. The first guard
+#: read every row as an effective transition, so the runbook's own
+#: restart-failed row -- a v5 that never started -- minted an admissible v5 era
+#: for every later day. Codex executed exactly that.
+#:
+#: THE FIX IS NOT "ALSO CHECK `aborted`". An absent boolean is indistinguishable
+#: from false, so `r.get("aborted")` admits every row that omits the field, and
+#: the next failure shape the runbook invents is silently admissible again --
+#: the same defect one layer down, which is how this one was born. Every row
+#: must ASSERT what it is from a CLOSED vocabulary, and a row that asserts
+#: nothing REFUSES.
+#:
+#: EMITTER AND CONSUMER AGREE ON THIS SHAPE. It is declared here, not inferred.
+#: THE STATE MARKERS ARE THE EMITTER'S OWN (bc854d3), WITH ONE ADDITION:
+#: exactly ONE of these must be PRESENT AND TRUE on every non-legacy row.
+#: `transitioned` is the addition. Without it a plain transition is encoded by
+#: the ABSENCE of the other two -- and an absent boolean is indistinguishable
+#: from a forgotten one, which is precisely how a restart that never happened
+#: became an admissible era. Absence now REFUSES; so does asserting two.
+STATE_MARKERS = {
+    "transitioned": True,   # the new version RAN; contributes ONE boundary
+    "aborted":      False,  # never ran; contributes NO boundary; needs `stage`
+    "rollback":     True,   # ran and was REVERTED; contributes its OWN boundary
+                            # and needs `stage`, `closes_boundary_utc` and a
+                            # verified `collector_start_recv_ns`
+}
+
+#: Rows written before the markers existed, pinned BY IDENTITY. Silence is
+#: ruled 'transitioned' for exactly these and nothing else -- the same pattern
+#: as ERA_ADMISSIBLE, so no new row can inherit the exemption.
+LEGACY_ROWS_RULED_TRANSITIONED = {
+    ("clob_v4", "clob_v3_1", "2026-08-30T05:30:00Z"),
+}
+
+
+def _ledger_rows(src: Path) -> list[tuple]:
+    """Parse and VALIDATE every ledger row. Refuses rather than guessing."""
+    out = []
+    for lineno, ln in enumerate(src.read_text().splitlines(), 1):
         if not ln.strip():
             continue
         r = json.loads(ln)
-        b = r.get("boundary_utc")
-        if not b or not r.get("collector_schema_version"):
+        b, v = r.get("boundary_utc"), r.get("collector_schema_version")
+        if not b or not v:
             raise ValueError(
-                f"REFUSED: era ledger row lacks boundary_utc or "
+                f"REFUSED: era ledger row {lineno} lacks boundary_utc or "
                 f"collector_schema_version: {ln[:120]}")
+        on = [m for m in STATE_MARKERS if r.get(m) is True]
+        if len(on) > 1:
+            raise ValueError(
+                f"REFUSED: era ledger row {lineno} ({v} @ {b}) asserts {on} at "
+                f"once -- a row records ONE attempt with ONE outcome")
+        if not on:
+            if (v, r.get("supersedes"), b) not in LEGACY_ROWS_RULED_TRANSITIONED:
+                raise ValueError(
+                    f"REFUSED: era ledger row {lineno} ({v} @ {b}) asserts NO "
+                    f"state. A row records an ATTEMPT and an attempt is not an "
+                    f"era; it must carry exactly one of "
+                    f"{sorted(STATE_MARKERS)}=true. Absence is NOT "
+                    f"'transitioned' -- reading it that way is how a restart "
+                    f"that never happened became an admissible era.")
+            on = ["transitioned"]
+        st = on[0]
+        if st in ("aborted", "rollback") and not r.get("stage"):
+            raise ValueError(
+                f"REFUSED: {st} row {lineno} ({v} @ {b}) names no `stage` -- an "
+                f"attempt that will not say WHICH path it took is not auditable")
         ts = dt.datetime.fromisoformat(b.replace("Z", "+00:00")).timestamp()
-        rows.append((ts, r["collector_schema_version"], r.get("supersedes")))
+        out.append((ts, b, v, r.get("supersedes"), st, r))
+    return out
+
+
+def era_spans(path: Path | None = None) -> list[tuple[float, str]]:
+    """(start_epoch, era_name) for EFFECTIVE transitions only, ascending.
+
+    The era in force BEFORE the first recorded boundary is that entry's
+    `supersedes` -- the ledger records transitions, so the opening era is named
+    only by what it replaced. Attempts that never transitioned contribute
+    NOTHING, and an attempt state that cannot be read unambiguously REFUSES.
+    """
+    src = PM_COLLECTOR_RUNS if path is None else path
+    rows = _ledger_rows(src)
     if not rows:
         raise ValueError("REFUSED: era ledger is EMPTY -- with no recorded "
-                           "era, no day can be shown to lie inside one")
-    rows.sort()
-    spans = [(float("-inf"), rows[0][2])] if rows[0][2] else []
-    spans += [(t, name) for t, name, _ in rows]
+                         "era, no day can be shown to lie inside one")
+    for i in range(1, len(rows)):
+        if rows[i][0] < rows[i - 1][0]:
+            raise ValueError(
+                f"REFUSED: era ledger is OUT OF ORDER at {rows[i][1]} (after "
+                f"{rows[i-1][1]}). It is append-only and must be chronological; "
+                f"sorting it would silently reorder a rollback against the "
+                f"transition it closes.")
+    spans: list[tuple[float, str]] = []
+    open_era = open_since = prev_era = None
+    open_from_rollback = False
+    for ts, b, v, sup, st, r in rows:
+        if st == "aborted":
+            if open_era is not None and v == open_era:
+                raise ValueError(
+                    f"REFUSED: AMBIGUOUS attempt state -- an `aborted` row for "
+                    f"{v} at {b}, but {v} has been LIVE since {open_since}. A "
+                    f"transition that RAN cannot be retracted by an abort row; "
+                    f"it must be closed by a `rollback` row carrying a "
+                    f"verified restoration. (This is the runbook's stage-4 "
+                    f"instruction, and it leaves the live era open forever.)")
+            continue
+        if st == "rollback":
+            if open_era is None:
+                raise ValueError(
+                    f"REFUSED: rollback row at {b} closes nothing -- no era is "
+                    f"open for it to revert")
+            if r.get("closes_boundary_utc") != open_since or sup != open_era:
+                raise ValueError(
+                    f"REFUSED: rollback row at {b} says it reverts "
+                    f"{sup!r}@{r.get('closes_boundary_utc')!r}, but the OPEN era is "
+                    f"{open_era!r}@{open_since!r} -- a rollback must NAME the "
+                    f"transition it reverts")
+            if not r.get("stage"):
+                raise ValueError(
+                    f"REFUSED: rollback row at {b} names no `stage` -- an "
+                    f"unexplained rollback is ambiguous attempt state")
+            if ts <= dt.datetime.fromisoformat(
+                    open_since.replace("Z", "+00:00")).timestamp():
+                raise ValueError(
+                    f"REFUSED: rollback row at {b} is stamped at or BEFORE the "
+                    f"era it closes ({open_since}), giving {open_era!r} ZERO "
+                    f"WIDTH. The v5 era really ran; its boundary_utc must be "
+                    f"the RESTORATION instant, not a copy of the transition's.")
+            rec = r.get("collector_start_recv_ns")
+            if not isinstance(rec, int) or isinstance(rec, bool) or rec <= 0:
+                raise ValueError(
+                    f"REFUSED: rollback row at {b} carries no verified "
+                    f"restoration receipt (collector_start_recv_ns). Without one, nothing shows the {v} process came "
+                    f"back, and DA would name every later day from a version "
+                    f"that may not be running.")
+            if rec < int(dt.datetime.fromisoformat(
+                    open_since.replace("Z", "+00:00")).timestamp() * 1e9):
+                raise ValueError(
+                    f"REFUSED: rollback restoration receipt at {b} PREDATES the "
+                    f"era it reverts ({open_since}) -- a collector_start from "
+                    f"before the transition proves nothing about the restart")
+        elif st == "transitioned" and v == prev_era and not open_from_rollback:
+            raise ValueError(
+                f"REFUSED: AMBIGUOUS attempt state -- the row at {b} declares a "
+                f"plain `transitioned` back to {v}, which held the era before "
+                f"{open_era!r} opened at {open_since}, and {open_era!r} was "
+                f"never closed. A return to the previous version is a ROLLBACK: "
+                f"it must declare rollback=true with a "
+                f"restoration receipt, or it cannot be told apart from a fresh "
+                f"deploy of {v}.")
+        if not spans and sup:
+            spans.append((float("-inf"), sup))
+        spans.append((ts, v))
+        prev_era, open_era, open_since = open_era, v, b
+        open_from_rollback = (st == "rollback")
+    if not spans:
+        raise ValueError(
+            "REFUSED: the era ledger records attempts but NOT ONE EFFECTIVE "
+            "TRANSITION -- no era can be named, so no day lies inside one")
     return spans
 
 
 def day_era_admission(day_token: str, path: Path | None = None) -> dict:
-    """Is this UTC day ENTIRELY inside ONE ADMISSIBLE era?
+    """Is this UTC day ENTIRELY inside ONE ADMISSIBLE EFFECTIVE era?
 
     Two conditions, and BOTH are independent of day quality:
       * PURITY -- no era boundary falls strictly inside the day. A mid-day
@@ -1619,6 +1758,7 @@ def _selftests() -> int:
                               "boundary_utc": "2026-08-30T05:30:00Z"},
                              {"collector_schema_version": "clob_v5",
                               "supersedes": "clob_v4",
+                              "transitioned": True,
                               "boundary_utc": "2026-08-31T07:00:00Z"}])
         _a901 = day_era_admission("20260901", _adm)
         ok(_a901["era_pure"] and _a901["eras_touched"] == ["clob_v5"]
@@ -1638,6 +1778,7 @@ def _selftests() -> int:
            "still produced and PRESERVED as honest v4-storm evidence")
         _unk = _ledger(_td, [{"collector_schema_version": "clob_v9",
                               "supersedes": "clob_v4",
+                              "transitioned": True,
                               "boundary_utc": "2026-08-30T05:30:00Z"}])
         _refused = ""
         try:
@@ -1656,6 +1797,122 @@ def _selftests() -> int:
            "and OMITTING the era question REFUSES -- eligibility must not be "
            "obtainable by not asking, which is how the field got its value "
            "before the guard existed")
+
+    # ---- TRANSITION/ROLLBACK RECEIPT STATE MACHINE (Codex V5-0700-R4) ----
+    # An ATTEMPT IS NOT AN ERA. Every row below is a stage of the real v5
+    # runbook, executed through the real consumer.
+    _B = "2026-08-31T07:00:00Z"
+    _ns = lambda s: int(dt.datetime.fromisoformat(
+        s.replace("Z", "+00:00")).timestamp() * 1e9)
+    _v4 = {"collector_schema_version": "clob_v4", "supersedes": "clob_v3_1",
+           "boundary_utc": "2026-08-30T05:30:00Z"}          # the LEGACY row
+    _v5 = {"collector_schema_version": "clob_v5", "supersedes": "clob_v4",
+           "boundary_utc": _B, "transitioned": True}
+    _ab = lambda st: {"collector_schema_version": "clob_v5", "boundary_utc": _B,
+                      "aborted": True, "stage": st}
+    _rb = {"collector_schema_version": "clob_v4", "supersedes": "clob_v5",
+           "boundary_utc": "2026-08-31T07:20:00Z",
+           "rollback": True, "stage": "counters_refused", "closes_boundary_utc": _B,
+           "collector_start_recv_ns": _ns("2026-08-31T07:19:30Z")}
+
+    def _refusal(rows, day="20260901"):
+        with _tfe.TemporaryDirectory() as t:
+            try:
+                day_era_admission(day, _ledger(t, rows))
+                return ""
+            except ValueError as e:
+                return str(e)
+
+    def _adm_of(rows, day="20260901"):
+        with _tfe.TemporaryDirectory() as t:
+            return day_era_admission(day, _ledger(t, rows))
+
+    _a = _adm_of([_v4, _ab("restart_failed")])
+    ok(_a["eras_touched"] == ["clob_v4"]
+       and _a["race_admissible_by_era"] is False,
+       "KNOWN-BAD, THE EXECUTED ONE (Codex V5-0700-R4a): the runbook's own "
+       "restart-failed row -- a v5 that NEVER STARTED -- must not mint an era. "
+       "Before this it returned eras_touched=['clob_v5'], era_pure=True, "
+       "race_admissible=TRUE for every later day")
+    ok(_adm_of([_v4, _v5])["race_admissible_by_era"] is True,
+       "POSITIVE CONTROL on the same ledger: flip that one row to "
+       "'transitioned' and 09-01 IS admissible -- the guard reads what the row "
+       "ASSERTS, it does not just count rows or refuse everything")
+    ok("asserts NO state" in _refusal(
+        [_v4, {"collector_schema_version": "clob_v5", "supersedes": "clob_v4",
+               "boundary_utc": _B}]),
+       "and a row that asserts NOTHING refuses: an absent field is not "
+       "'transitioned'. Reading `aborted` alone would have admitted this "
+       "row -- the same defect one layer down")
+    _two = _refusal([_v4, dict(_v5, aborted=True)])
+    ok("at once" in _two and "transitioned" in _two and "aborted" in _two,
+       "and a row asserting TWO states refuses -- one attempt, one outcome")
+    ok("names no `stage`" in _refusal([_v4, {"collector_schema_version":
+        "clob_v5", "boundary_utc": _B, "aborted": True}]),
+       "an abort that will not say WHERE it stopped is not auditable")
+    ok("asserts NO state" in _refusal(
+        [_v4, dict(_v4, boundary_utc="2026-09-01T05:30:00Z")], "20260902"),
+       "the legacy exemption is pinned BY IDENTITY, not by position: a second "
+       "field-identical row at a different boundary still refuses, so no new "
+       "row can inherit the exemption")
+
+    ok("AMBIGUOUS attempt state" in _refusal([_v4, _v5, _ab("counters_refused")])
+       and "LIVE since" in _refusal([_v4, _v5, _ab("counters_refused")]),
+       "KNOWN-BAD (V5-0700-R4b), AND IT IS THE RUNBOOK'S OWN STAGE-4 "
+       "INSTRUCTION: once v5 is stamped LIVE, appending an `aborted` row does "
+       "not retract it -- the era stays open and DA calls every later day v5 "
+       "forever. The abort path cannot describe a transition that RAN")
+    _rbk = _adm_of([_v4, _v5, _rb])
+    ok(_rbk["eras_touched"] == ["clob_v4"]
+       and _rbk["race_admissible_by_era"] is False,
+       "VERIFIED ROLLBACK: a rolled_back row carrying a restoration receipt "
+       "closes the v5 era, and later days are v4 again -- inadmissible, which "
+       "is the whole point of closing it")
+    _b31 = _adm_of([_v4, _v5, _rb], "20260831")
+    ok(_b31["eras_touched"] == ["clob_v4", "clob_v5"]
+       and len(_b31["boundaries_inside_day"]) == 2,
+       "and BOTH REAL BOUNDARIES SURVIVE on the day it happened -- the v5 era "
+       "existed and is not erased by being reverted; 08-31 shows both")
+    ok("ZERO WIDTH" in _refusal([_v4, _v5, dict(_rb, boundary_utc=_B)]),
+       "KNOWN-BAD AGAINST THE EMITTER AS COMMITTED (bc854d3): its receipt sets "
+       "boundary_utc = BOUNDARY_UTC, the same instant it closes, so the v5 era "
+       "opens and shuts at one timestamp and the span that really ran vanishes. "
+       "The rollback's boundary is the RESTORATION instant")
+    ok("carries no verified restoration receipt" in _refusal(
+        [_v4, _v5, {k: v for k, v in _rb.items()
+                    if k != "collector_start_recv_ns"}]),
+       "a rollback with NO receipt refuses: without one nothing shows v4 came "
+       "back, and DA would name later days from a version that may not be "
+       "running")
+    ok("PREDATES the era it reverts" in _refusal([_v4, _v5, dict(_rb,
+        collector_start_recv_ns=_ns("2026-08-31T06:00:00Z"))]),
+       "a STALE receipt refuses -- a collector_start from before the "
+       "transition proves nothing about the restart that followed it")
+    ok("must NAME the transition it reverts" in _refusal([_v4, _v5, dict(_rb,
+        closes_boundary_utc="2026-08-30T05:30:00Z")]),
+       "and a rollback pointing at the wrong era refuses")
+    ok("AMBIGUOUS attempt state" in _refusal([_v4, _v5,
+        {"collector_schema_version": "clob_v4", "supersedes": "clob_v5",
+         "boundary_utc": "2026-08-31T07:20:00Z",
+         "transitioned": True}]),
+       "UNDECLARED ROLLBACK refuses: a plain return to the previous version "
+       "cannot be told apart from a fresh deploy of it")
+
+    ok(_adm_of([_v4, _ab("restart_failed"),
+                dict(_v5, boundary_utc="2026-08-31T09:00:00Z")]
+               )["race_admissible_by_era"] is True,
+       "RETRY AFTER ABORT is permitted and admissible from the retry's own "
+       "boundary -- the guard refuses failed attempts, not second attempts")
+    ok(_adm_of([_v4, _v5, _rb, dict(_v5, boundary_utc="2026-09-01T07:00:00Z")],
+               "20260902")["race_admissible_by_era"] is True,
+       "RETRY AFTER A VERIFIED ROLLBACK is admissible too: the earlier v5 era "
+       "was explicitly closed, so returning to v5 is unambiguous")
+    ok("OUT OF ORDER" in _refusal([_v4, dict(_v5, boundary_utc="2026-09-02T07:00:00Z"),
+                                   dict(_v5, boundary_utc="2026-09-01T07:00:00Z")],
+                                  "20260903"),
+       "a non-chronological append refuses. The old code SORTED, which both "
+       "reordered a rollback against the transition it closes and crashed with "
+       "a TypeError when two rows shared a boundary")
 
     print(f"da_forward_day_verify selftests: {checks} checks passed")
     return 0
