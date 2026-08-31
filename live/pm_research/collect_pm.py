@@ -712,6 +712,35 @@ class PMCollector:
                         "lag_ms_max_interval": round(self.lag_ms_max, 1),
                         "lag_ms_max_ever": round(self.lag_ms_max_ever, 1),
                         "coin_msg_rate_hint": self.msg_by_coin.get(coin, 0),
+                        # --- added 2026-08-31: every one of these had to be
+                        # reconstructed by hand for BTC_GAP_DIAGNOSIS_
+                        # 2026-08-26, and two of the three 2026-08 incidents
+                        # stayed unattributable for want of them.
+                        #
+                        # conn_msgs distinguishes "this socket worked then
+                        # died" from "it never delivered anything" -- the
+                        # difference between a mid-flow kill and a failed
+                        # subscription, which have opposite fixes.
+                        "conn_msgs": max(
+                            0, self.msg_by_coin.get(coin, 0) - attempt_msgs),
+                        # how long the socket LIVED. A choke shows as short
+                        # lifetimes on the hot coin only; a venue restart
+                        # shows as simultaneous deaths across coins.
+                        "conn_lifetime_s": round(
+                            (time.time_ns() - scope_start_ns) / 1e9, 3),
+                        # silence before the close is THE discriminator among
+                        # the three causes: ~ping_timeout means the pipe went
+                        # quiet and we killed it; ~0 means we were killed
+                        # mid-flow (venue 1013, or TCP death).
+                        "silence_before_close_s": (
+                            None if not last_recv_ns else
+                            round((time.time_ns() - last_recv_ns) / 1e9, 3)),
+                        # the keepalive settings IN FORCE, recorded per event
+                        # rather than inferred from the era later. The 08-30
+                        # cadence change had to be reconstructed from an era
+                        # ledger to interpret any of these numbers.
+                        "keepalive": connect_keepalive_kwargs(
+                            self.heartbeat_mode),
                         # clob_v3_1: were WE the slow consumer, or the venue?
                         "ws_queue_depth_max": qmax,
                         "ws_ever_paused": ever_paused,
@@ -840,7 +869,47 @@ class PMCollector:
                 else:
                     age = round((now_ns - recv_ns) / 1e9, 2)
                     oldest_age[coin] = max(oldest_age.get(coin, 0.0), age)
-            print(f"[pm] {time.strftime('%H:%M:%S', time.gmtime())}Z "
+            # A DATE. The status line carried HH:MM:SS only, and that is not
+            # cosmetic: it produced a real defect (audit A1b — counter lines
+            # after a near-midnight boundary were misdated by -86400s, fell
+            # below the evidence floor, and would have ROLLED BACK A HEALTHY
+            # DEPLOY), and every analysis of this log in 2026-08-31's
+            # investigations had to reconstruct dates by watching the clock
+            # run backwards. One field removes a whole class of error.
+            # (C) MACHINE-READABLE HEALTH ROW. `oldest_age_s` and the
+            # per-coin counters were computed every 60s, PRINTED, and consumed
+            # by NOTHING -- the single signal that would have caught all three
+            # of the 2026-08 incidents, discarded once a minute for weeks.
+            # Every instrument that wanted it had to regex a human log line
+            # with no date on it. This writes the same facts to the audit
+            # ledger where a consumer can read them at their own timestamp.
+            #
+            # Wrapped so a logging fault can NEVER take the collector down:
+            # observability that can kill the thing it observes is worse than
+            # none.
+            try:
+                self._audit({
+                    "event": "health_sample",
+                    "collector_version": self.collector_version,
+                    "msgs_total": self.counts["msgs"],
+                    "msg_by_coin": dict(self.msg_by_coin),
+                    "retry_by_coin": dict(self.retry_by_coin),
+                    "slow_by_coin": dict(self.slow_by_coin),
+                    # None means NEVER RECEIVED, which is not the same as old;
+                    # a coin that never delivered must not read as the
+                    # freshest one in the sample (rule 4).
+                    "oldest_age_s": {c: oldest_age.get(c) for c in COINS},
+                    "unseen_by_coin": {c: unseen.get(c, 0) for c in COINS},
+                    "active_by_coin": {c: active.get(c, 0) for c in COINS},
+                    "keepalive": connect_keepalive_kwargs(self.heartbeat_mode),
+                    "ws_queue_depth_max":
+                        self.counts["ws_queue_highwater"],
+                    "lag_ms_max_ever": round(self.lag_ms_max_ever, 1),
+                })
+            except Exception as _ex:                          # noqa: BLE001
+                print(f"[pm] health_sample emit failed (non-fatal): "
+                      f"{type(_ex).__name__}: {_ex}")
+            print(f"[pm] {time.strftime('%Y-%m-%dT%H:%M:%S', time.gmtime())}Z "
                   f"markets={self.counts['markets']} msgs={self.counts['msgs']} "
                   f"resolved={self.counts['resolved']} pending={len(self.pending_res)} "
                   f"retries={self.counts['retries']} slow={self.counts['slow_drops']} "
@@ -895,6 +964,30 @@ class PMCollector:
             print("[pm] stopped", flush=True)
 
 
+def _health_row_shape() -> dict:
+    """Build the health_sample payload from a real collector instance.
+
+    Exists so the suite FAILS on a renamed attribute. The emit site is
+    wrapped in try/except (a logging fault must never take the collector
+    down), and that wrapper would otherwise hide a permanent silent break.
+    """
+    c = PMCollector()
+    return {
+        "event": "health_sample",
+        "collector_version": c.collector_version,
+        "msgs_total": c.counts["msgs"],
+        "msg_by_coin": dict(c.msg_by_coin),
+        "retry_by_coin": dict(c.retry_by_coin),
+        "slow_by_coin": dict(c.slow_by_coin),
+        "oldest_age_s": {k: None for k in COINS},
+        "unseen_by_coin": {k: 0 for k in COINS},
+        "active_by_coin": {k: 0 for k in COINS},
+        "keepalive": connect_keepalive_kwargs(c.heartbeat_mode),
+        "ws_queue_depth_max": c.counts["ws_queue_highwater"],
+        "lag_ms_max_ever": round(c.lag_ms_max_ever, 1),
+    }
+
+
 def selftest() -> int:
     with tempfile.TemporaryDirectory() as d:
         raw = Path(d) / "raw.jsonl"
@@ -920,6 +1013,22 @@ def selftest() -> int:
         # worth anything — distinct identities per mode, and a cadence that
         # actually differs. A single mapping with duplicate values would look
         # like one source of truth while being none.
+        # The health row is emitted inside a try/except so a logging fault can
+        # never kill the collector — which ALSO means a renamed attribute
+        # would disable it SILENTLY and forever. Building the row here makes a
+        # rename fail the suite instead. (Caught during authoring: the first
+        # version referenced self.ws_qmax_ever, which does not exist.)
+        ("health_sample row builds from REAL attributes — a rename breaks "
+         "this check instead of silently disabling the only per-coin "
+         "staleness signal the collector emits",
+         _health_row_shape() is not None),
+        ("health_sample reports a never-received coin as None, not 0 — a "
+         "dead coin must not read as the freshest in the sample (rule 4)",
+         _health_row_shape()["oldest_age_s"]["hype"] is None),
+        ("health_sample carries the keepalive IN FORCE, so a cadence change "
+         "is readable per event rather than reconstructed from an era ledger",
+         _health_row_shape()["keepalive"]
+         == connect_keepalive_kwargs(HEARTBEAT_CONTROL_V4)),
         ("MODE_SPEC identities are DISTINCT",
          len({v[0] for v in MODE_SPEC.values()}) == len(MODE_SPEC)),
         ("MODE_SPEC covers exactly HEARTBEAT_MODES",
