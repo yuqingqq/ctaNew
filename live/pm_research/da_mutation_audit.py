@@ -15,6 +15,10 @@ corrected in this program (R-347), and how this file came to exist.
   CONTROL B  a CANARY refusal nothing tests must be reported SURVIVED, proving
              the harness can report a survivor before its zeros mean anything
   CONTROL C  an UNPARSEABLE mutant must NOT be counted as a kill
+  CONTROL D  every refusal-bearing function must be IN SCOPE or EXPLICITLY
+             excluded. A target list is chosen by hand, so a function left out
+             is audited by nobody while the report still says "no survivors" --
+             the clean sweep that is silent about what it never looked at.
 
 Mutants are written NEXT TO the original, never in a scratch directory: a module
 whose derived paths are relative to its own location behaves differently
@@ -87,9 +91,24 @@ def classify(rc: int, out: str, marker: str = ASSERT_MARKER) -> str:
             if tail and marker in tail[-1] else "killed-by-crash")
 
 
+def refusal_bearing(src: str) -> set[str]:
+    return {fn.name for fn in ast.walk(ast.parse(src))
+            if isinstance(fn, ast.FunctionDef)
+            and any(isinstance(n, ast.Raise) for n in ast.walk(fn))}
+
+
 def audit(module: Path, targets: set[str], suite_arg: str = "--selftest",
-          marker: str = ASSERT_MARKER) -> dict:
+          marker: str = ASSERT_MARKER, excluded: set[str] | None = None) -> dict:
     src = module.read_text(encoding="utf-8")
+
+    excluded = excluded or set()
+    unscoped = sorted(refusal_bearing(src) - targets - excluded)
+    if unscoped:
+        raise HarnessRefused(
+            f"REFUSED: CONTROL D -- refusal-bearing function(s) {unscoped} are "
+            f"neither in --targets nor explicitly excluded. They would be "
+            f"audited by NOBODY while this report says 'no survivors'. Name "
+            f"them or exclude them on purpose; silence is not a scope.")
 
     rc, out = _run(module, src, suite_arg)
     if rc != 0:
@@ -217,6 +236,23 @@ if __name__ == "__main__":
            "reported as 100% killed -- this is the exact false green that "
            "produced a 53/53 in this program (R-347)")
 
+        two = good.replace('def _s():',
+                           'def other():\n    raise ValueError("unscoped")\ndef _s():')
+        m.write_text(two)
+        d_ref = ""
+        try:
+            audit(m, {"check"})
+        except HarnessRefused as e:
+            d_ref = str(e)
+        ok("CONTROL D" in d_ref and "other" in d_ref,
+           "KNOWN-BAD: a refusal-bearing function left out of --targets "
+           "REFUSES. A target list is chosen by hand, so an omitted function "
+           "is audited by nobody while the report still reads 'no survivors' "
+           "-- the clean sweep that is silent about what it never looked at")
+        ok(audit(m, {"check"}, excluded={"other"})["sites"] == 2,
+           "and EXPLICITLY excluding it proceeds -- scope may be narrowed on "
+           "purpose, never by omission")
+
         m.write_text(good)
         base = audit(m, {"check"})
         ok(base["marker_observed"] is True
@@ -240,6 +276,9 @@ def main() -> int:
                     help="comma-separated function names to mutate")
     ap.add_argument("--suite-arg", default="--selftest")
     ap.add_argument("--marker", default=ASSERT_MARKER)
+    ap.add_argument("--exclude", default="",
+                    help="comma-separated refusal-bearing functions "
+                         "DELIBERATELY out of scope (control D)")
     ap.add_argument("--selftest", action="store_true")
     a = ap.parse_args()
     if a.selftest:
@@ -247,13 +286,15 @@ def main() -> int:
     if not a.module or not a.targets:
         ap.error("module and --targets are required")
     try:
-        r = audit(a.module, set(a.targets.split(",")), a.suite_arg, a.marker)
+        r = audit(a.module, set(a.targets.split(",")), a.suite_arg, a.marker,
+                  {x for x in a.exclude.split(",") if x})
     except HarnessRefused as e:
         print(e, file=sys.stderr)
         return 2
     print(f"{r['module']}  sites={r['sites']}  {r['tally']}")
     print(f"  controls: A unmutated passes / B canary reported survivor / "
-          f"C syntax error not a kill -- all green")
+          f"C syntax error not a kill / D every refusal-bearing function in "
+          f"scope -- all green")
     if r["marker_unverified"]:
         print(f"  WARNING: marker {a.marker!r} never matched a failure tail; "
               f"the assertion/crash split is NOT meaningful in this run")

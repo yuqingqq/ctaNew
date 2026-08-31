@@ -395,6 +395,20 @@ def _ledger_rows(src: Path) -> list[tuple]:
             raise ValueError(
                 f"REFUSED: era ledger row {lineno} lacks boundary_utc or "
                 f"collector_schema_version: {ln[:120]}")
+        # EVERY flag is read with `is True`, so a JSON int 1 or the string
+        # "yes" reads as FALSE -- which for `recovered` waived the evidence
+        # burden while the row still stood as the era of record, and for a
+        # second state marker slipped past the asserts-two check. A flag that
+        # is PRESENT must be a bool; a truthy non-bool is not a sloppy yes, it
+        # is a value this contract cannot read.
+        for _flag in (*STATE_MARKERS, "recovered"):
+            if _flag in r and not isinstance(r[_flag], bool):
+                raise ValueError(
+                    f"REFUSED: era ledger row {lineno} ({v} @ {b}) has "
+                    f"{_flag}={r[_flag]!r}, which is {type(r[_flag]).__name__}, "
+                    f"not a bool. Every flag here is read with `is True`, so a "
+                    f"truthy non-bool reads as FALSE and silently waives what "
+                    f"it looks like it is asserting.")
         on = [m for m in STATE_MARKERS if r.get(m) is True]
         if len(on) > 1:
             raise ValueError(
@@ -2102,6 +2116,25 @@ def _selftests() -> int:
        "flagged reconstructed -- recovery is the exception, not the default")
 
     _self = _refusal([_v4, dict(_v5, supersedes="clob_v5")])
+    _int = _refusal([_v4, dict(_v5, recovered=1)])
+    ok("not a bool" in _int and "recovered=1" in _int,
+       "KNOWN-BAD (cross-consumer divergence, BE's S7): `recovered: 1` was "
+       "ACCEPTED here -- read with `is True` it meant NOT recovered, so the "
+       "stage and collector_start_recv_ns burden was WAIVED *and* the era "
+       "counted for race accrual while its boundary was a reconstruction. "
+       "Worse than the emitter-side shape, which only waived the burden")
+    _ab1 = _refusal([_v4, dict(_v5, aborted=1)])
+    ok("not a bool" in _ab1,
+       "and the SAME defect one flag over, which the report did not name: "
+       "`aborted: 1` beside `transitioned: true` slipped past the asserts-two "
+       "check and stood as a plain transition. Fixed for EVERY flag, not just "
+       "the one that was found")
+    ok("not a bool" in _refusal([_v4, dict(_v5, transitioned="yes")]),
+       "a string flag refuses too -- a truthy non-bool is not a sloppy yes, it "
+       "is a value this contract cannot read")
+    ok(_adm_of([_v4, _v5])["race_admissible_by_era"] is True,
+       "POSITIVE CONTROL: real bools still pass; the check is on TYPE, not on "
+       "the flag's presence")
     ok("supersedes ITSELF" in _self,
        "KNOWN-BAD: a row superseding its OWN version refuses. It transitions "
        "nothing, yet it mints a boundary -- and the direction of the harm is "
