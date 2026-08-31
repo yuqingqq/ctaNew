@@ -2629,7 +2629,7 @@ def selftest() -> int:
     ok(_mix[1]["msgs"] == 200 and _mix[2]["app_pong"] == 30,
        "and the dated lines' FIELDS parse correctly, not merely their "
        "timestamps — matching the line is not the same as reading it")
-        ok(_lines[1]["line_epoch"] - _lines[0]["line_epoch"] == 60
+    ok(_lines[1]["line_epoch"] - _lines[0]["line_epoch"] == 60
        and _lines[2]["line_epoch"] - _lines[1]["line_epoch"] == 60,
        "audit A1b: and the SPACING survives the rollover (60 s apart), so "
        "the interval-based counter rates are computed on true elapsed time")
