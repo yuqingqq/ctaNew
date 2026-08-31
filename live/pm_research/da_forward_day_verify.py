@@ -352,24 +352,48 @@ PM_TAPE_DENSITY = Path(
 
 
 def tape_density_for(day_token: str, path: Path | None = None) -> dict:
-    """Per-coin thin-window counts for one day, or an explicit UNMEASURED.
+    """Per-coin thin-window counts for one day, or an explicit status.
 
-    A day the receipt does not cover is UNMEASURED -- never a clean zero.
-    Absence of measurement is not evidence of density (rule 4), and the
-    empty-set-passes trap already fired once on the 08-27 arm.
+    THREE OUTCOMES, AND THEY MUST NOT COLLAPSE INTO EACH OTHER:
+      MEASURED            -- the receipt covers this day
+      UNMEASURED          -- no receipt, or it genuinely does not cover the day
+      SCHEMA_UNRECOGNISED -- a receipt IS there and this cannot read it
+
+    The third was missing and the cost was immediate. The receipt changed from
+    a list of day rows to {days, note, threshold_sensitivity}; iterating a dict
+    yields its KEYS, no row matched, and this reported UNMEASURED -- "no
+    measurement for this day" while the measurement sat in the file. A reader
+    that turns a schema change into absence is worse than one that crashes,
+    because absence is a plausible answer.
+
+    THE WINDOW COUNTS ARE READINGS AT A THRESHOLD, NOT QUANTITIES. BE asserted
+    threshold-insensitivity, never computed it, and on measuring found the set
+    moves by 114 windows between 0.05 and 0.25. What survives is the DAY count,
+    stable at 7 across a tenfold range. So the threshold and the stability
+    range travel with every count reported here; a bare count would be the
+    conclusion-beside-a-number this whole instrument exists to refuse.
     """
     src = PM_TAPE_DENSITY if path is None else path
     if not src.exists():
         return {"status": "UNMEASURED", "why": f"no density receipt at {src}"}
     try:
-        rows = json.loads(src.read_text(encoding="utf-8"))
+        doc = json.loads(src.read_text(encoding="utf-8"))
     except (json.JSONDecodeError, OSError) as e:
         return {"status": "UNMEASURED", "why": f"density receipt unreadable: {e}"}
-    hit = [r for r in rows if isinstance(r, dict) and r.get("day") == day_token]
+    if not isinstance(doc, dict) or not isinstance(doc.get("days"), list):
+        return {"status": "SCHEMA_UNRECOGNISED",
+                "why": (f"density receipt at {src} is not "
+                        f"{{days: [...], ...}}: top level is "
+                        f"{type(doc).__name__} with "
+                        f"{sorted(doc)[:6] if isinstance(doc, dict) else 'n/a'}. "
+                        f"A shape this cannot read is NOT the same as no "
+                        f"measurement, and must not report as one.")}
+    hit = [r for r in doc["days"]
+           if isinstance(r, dict) and r.get("day") == day_token]
     if not hit:
         return {"status": "UNMEASURED",
-                "why": f"density receipt covers {len(rows)} day(s), not "
-                       f"{day_token}"}
+                "why": f"density receipt covers {len(doc['days'])} day(s), "
+                       f"not {day_token}"}
     r = hit[-1]
     coins = r.get("coins") or {}
     per_coin = {c: {"n_thin_invisible": v.get("n_thin_invisible"),
@@ -377,14 +401,22 @@ def tape_density_for(day_token: str, path: Path | None = None) -> dict:
                     "n_windows": v.get("n_windows"),
                     "status": v.get("status")}
                 for c, v in coins.items() if isinstance(v, dict)}
-    unjudgeable = sorted(c for c, v in per_coin.items()
-                         if v["status"] != "JUDGED")
+    curve = [x for x in (doc.get("threshold_sensitivity") or [])
+             if isinstance(x, dict)]
+    stable = sorted({x["threshold_frac_of_median"] for x in curve
+                     if x.get("days_with_invisible_loss")
+                     == max((y.get("days_with_invisible_loss") or 0)
+                            for y in curve if (y.get("threshold_frac_of_median")
+                                               or 1) <= 0.10)}) if curve else []
     return {
         "status": "MEASURED",
-        "n_invisible": r.get("total_thin_invisible"),
-        "n_accounted": r.get("total_thin_accounted"),
-        "threshold_frac_of_median": r.get("thin_frac"),
-        "coins_unjudgeable": unjudgeable,
+        "n_invisible_at_threshold": r.get("total_thin_invisible"),
+        "n_accounted_at_threshold": r.get("total_thin_accounted"),
+        "threshold_frac_of_median": r.get("threshold_frac_of_median"),
+        "threshold_sensitivity": curve,
+        "day_count_stable_over": [min(stable), max(stable)] if stable else None,
+        "coins_unjudgeable": sorted(c for c, v in per_coin.items()
+                                    if v["status"] != "JUDGED"),
         "per_coin": per_coin,
         "source": str(src),
         "governs": False,
@@ -1141,15 +1173,18 @@ def verify_day(day_token: str, freeze_epoch: float,
     # with its own n so a reader can see content as well as coverage.
     _td = tape_density_for(day_token)
     p("tape_density",
-      _td["status"] == "MEASURED" and _td.get("n_invisible") == 0,
-      (f"{_td['n_invisible']} thin window(s) with NO gap row covering them, "
-       f"{_td['n_accounted']} accounted for by the gap ledger, threshold "
-       f"{_td.get('threshold_frac_of_median')} of the per-coin median"
+      _td["status"] == "MEASURED" and _td.get("n_invisible_at_threshold") == 0,
+      (f"{_td['n_invisible_at_threshold']} thin window(s) with NO gap row "
+       f"covering them AT threshold={_td.get('threshold_frac_of_median')} of "
+       f"the per-coin median -- a READING AT A SETTING, not a quantity; the "
+       f"day-level verdict is stable over "
+       f"{_td.get('day_count_stable_over')}. "
+       f"{_td['n_accounted_at_threshold']} accounted for by the gap ledger"
        + (f"; coins not judgeable: {_td['coins_unjudgeable']}"
           if _td.get("coins_unjudgeable") else "")
        + " -- REPORTED ONLY, this predicate does NOT govern all_pass"
        if _td["status"] == "MEASURED" else
-       f"UNMEASURED -- {_td['why']} (reported as a STATUS, never a clean zero)"))
+       f"{_td['status']} -- {_td['why']}"))
 
     # --- 3. gap rate under bar ---------------------------------------------
     gs = gap_series(lo, hi, now.timestamp())
@@ -2332,14 +2367,15 @@ def _selftests() -> int:
            "an ABSENT receipt is UNMEASURED, never a clean zero -- absence of "
            "measurement is not evidence of density, and the empty-set-passes "
            "trap already fired once on the 08-27 arm")
-        _dp.write_text(json.dumps([{"day": "20260829", "coins": {},
+        _dp.write_text(json.dumps({"days": [{"day": "20260829", "coins": {},
                                     "total_thin_invisible": 0,
                                     "total_thin_accounted": 0,
-                                    "thin_frac": 0.05}]))
+                                    "threshold_frac_of_median": 0.05}],
+                                   "threshold_sensitivity": []}))
         ok(tape_density_for("20260830", _dp)["status"] == "UNMEASURED",
            "and a receipt that covers OTHER days is UNMEASURED for this one -- "
            "a non-empty file is not coverage of the day asked about")
-        ok(tape_density_for("20260829", _dp)["n_invisible"] == 0
+        ok(tape_density_for("20260829", _dp)["n_invisible_at_threshold"] == 0
            and tape_density_for("20260829", _dp)["governs"] is False,
            "POSITIVE CONTROL: a covered day reads MEASURED with its count, and "
            "says in the artifact that it does not govern")
@@ -2347,6 +2383,42 @@ def _selftests() -> int:
         ok(tape_density_for("20260829", _dp)["status"] == "UNMEASURED",
            "an unreadable receipt is UNMEASURED rather than an exception -- a "
            "reported diagnostic must not take the whole verdict down with it")
+
+    with _tfe.TemporaryDirectory() as _t7:
+        _dp2 = Path(_t7) / "d.json"
+        _dp2.write_text(json.dumps([{"day": "20260829", "coins": {},
+                                     "total_thin_invisible": 10}]))
+        _sr = tape_density_for("20260829", _dp2)
+        ok(_sr["status"] == "SCHEMA_UNRECOGNISED"
+           and "NOT the same as no measurement" in _sr["why"],
+           "KNOWN-BAD, AND IT HAPPENED: the receipt changed from a LIST of day "
+           "rows to {days, note, threshold_sensitivity}. Iterating a dict "
+           "yields its KEYS, no row matched, and this reported UNMEASURED -- "
+           "'no measurement for this day' while the measurement sat in the "
+           "file. A reader that turns a schema change into ABSENCE is worse "
+           "than one that crashes, because absence is a plausible answer")
+        _dp2.write_text(json.dumps({"days": [], "threshold_sensitivity": []}))
+        ok(tape_density_for("20260829", _dp2)["status"] == "UNMEASURED",
+           "and a receipt in the RIGHT shape that covers no days is UNMEASURED "
+           "-- the two statuses must not collapse into each other")
+        _dp2.write_text(json.dumps({"days": [
+            {"day": "20260829", "coins": {}, "total_thin_invisible": 10,
+             "total_thin_accounted": 0, "threshold_frac_of_median": 0.05}],
+            "threshold_sensitivity": [
+                {"threshold_frac_of_median": 0.01,
+                 "days_with_invisible_loss": 7, "invisible_windows": 249},
+                {"threshold_frac_of_median": 0.10,
+                 "days_with_invisible_loss": 7, "invisible_windows": 749}]}))
+        _ok = tape_density_for("20260829", _dp2)
+        ok(_ok["status"] == "MEASURED"
+           and _ok["n_invisible_at_threshold"] == 10
+           and _ok["day_count_stable_over"] == [0.01, 0.10],
+           "POSITIVE CONTROL: a covered day reads MEASURED, and the count is "
+           "named AT ITS THRESHOLD with the range over which the DAY verdict "
+           "is stable. BE asserted threshold-insensitivity without computing "
+           "it and the window set moves by 114 between 0.05 and 0.25 -- a bare "
+           "count would be the conclusion-beside-a-number this instrument "
+           "exists to refuse")
 
     # ---- ERA START = PROCESS START (BE Q-DA-180 item 1) ----------------
     _late = {"collector_schema_version": "clob_v5", "supersedes": "clob_v4",
