@@ -1,6 +1,8 @@
 # Coordinator review request — v4_1 boundary seam — 2026-08-31
 
-**Review tip:** see below. **Scope: the narrow identity/boundary seam you named
+**Review tip:** `c8061ac`. **This supersedes the version filed at `0065e00`** —
+the package changed materially after that (USER fixes + my review of them),
+and the sections below marked UPDATED are the delta. **Scope: the narrow identity/boundary seam you named
 as the final pre-deploy gate.** Not a re-audit of the historical cause.
 
 ## Ruled instant
@@ -75,10 +77,53 @@ regression. DA's caution is in the runbook: the 10/10 days also differ by storm
 and by the R-351 contamination, so **cadence is not established as the cause**
 of the s/hr difference.
 
-## Executed
+## UPDATED — USER fixes after the first filing, and my review of them
 
-All 13 gates pass. `--pre-arm` passes against the LIVE system (era `clob_v4`,
-pid 3687786, byte check green).
+The USER made substantial changes. I reviewed each; they hold, and **two are
+corrections to MY code that would have mattered**:
+
+1. **The shadow observer could never have run.** My `main()` called
+   `collect_pm.discover_current_slugs`, which does not exist — it always
+   resolved `{}` and exited 1. My selftest covered `guard_output` and
+   `summarise`: everything except the discovery the tool exists to do. **Same
+   defect class as HJ-R1, committed after you raised it.** Fixed by injecting
+   the collector's real read-only `gget`, with a discovery control.
+2. **My `NRestarts` expectation was wrong and would have BLOCKED a clean
+   deploy.** I required `nrestarts_at_arm + 1`, assuming a manual restart
+   increments it. It counts AUTOMATIC `Restart=` activations only. Verified on
+   the live unit: the 08-30T05:30Z boundary restart was manual and `NRestarts`
+   is still 0. The USER's version requires 0 on both sides.
+
+Also added and verified by execution: **admissibility is now MECHANISED**
+(`require_target_admissible` reads DA's `ERA_ADMISSIBLE`; the gate REFUSES
+while `clob_v4_1` is unruled — confirmed live), health identity bound to the
+expected pid/mode/era so health cannot be read off the wrong process, a health
+sampler that waits for DISTINCT status records rather than sleeping a fixed
+30s, a rollback-restoration verifier with idempotency, and a shadow systemd
+unit with `--verify-output` requiring a connected socket and fresh messages
+from every coin.
+
+**My own finding, added:** the runbook did not record that the shadow opens a
+connection from the **same host and IP** as the collector. `BTC_GAP_DIAGNOSIS_
+2026-08-26` is only MEDIUM on venue-infra vs network-path and does not rule out
+a per-IP component. The shadow starts 20 min before the boundary, so harm from
+it would be **confounded with the deploy and read as a v4_1 regression**.
+Recorded with the mitigation the step order already provides (step 0's verify
+runs before the drop-in, so a same-IP effect surfaces while still on plain v4)
+and an explicit stop rule.
+
+## Executed at `c8061ac`
+
+All 13 gates pass. Selftests: v4_1 gate **47**, shadow **13**. Byte pin
+verified against both tree and HEAD. `--pre-arm` against the LIVE system now
+REFUSES by name on the unruled admissibility — which is the mechanised
+precondition working, not a defect.
+
+## What I am asking you to look at
+
+The seam only: era identity, the boundary/rollback emitters, the health and
+identity checks, and whether the runbook's step order is safe. **Ruled instant
+`2026-08-31T22:00:00Z`, ~5h out.** Nothing armed; v4 live, pid 3687786.
 
 ## Known-open, not asking you to re-litigate
 
