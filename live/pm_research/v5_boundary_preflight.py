@@ -221,7 +221,21 @@ def observe_heartbeat_lines(since_epoch: float, log_offset: int) -> list:
     out = []
     if not COLLECTOR_LOG.exists():
         return out
-    pat = re.compile(r"\[pm\] (\d\d):(\d\d):(\d\d)Z .*?msgs=(\d+) .*?"
+    # The date prefix is OPTIONAL. From 2026-08-31T22:00Z the collector emits
+    # `[pm] YYYY-MM-DDTHH:MM:SSZ`; before it, `[pm] HH:MM:SSZ`. A dateless-only
+    # regex matches ZERO dated lines, and this function's caller reads that as
+    # "every counter line is below the evidence floor" -> check_counters
+    # refuses -> runbook row 4 -> ROLLBACK OF A HEALTHY DEPLOY. That is audit
+    # A1b's exact failure arriving by a different route: A1b was wrong DATES,
+    # this is no MATCH, and both end in a false rollback.
+    #
+    # Found by sweeping every status-line parser after DA (849825e) reported
+    # the identical break on their heartbeat regex. Their consumer and this
+    # one had the same defect from the same emitter change; theirs was caught
+    # because I announced the change in advance, and this one only because
+    # that prompted a sweep. THE ANNOUNCEMENT IS WHAT WORKED, not the review.
+    pat = re.compile(r"\[pm\] (?:\d{4}-\d{2}-\d{2}T)?"
+                     r"(\d\d):(\d\d):(\d\d)Z .*?msgs=(\d+) .*?"
                      r"app_ping=(\d+)\s+app_pong=(\d+)")
     # audit A1b: the status line carries only HH:MM:SS, and this pinned every
     # line to the BOUNDARY's UTC day. A boundary near midnight therefore
@@ -2586,7 +2600,36 @@ def selftest() -> int:
        "old arithmetic put two of these 86400 s BELOW the evidence floor, "
        "and an all-below-floor result is the refusal that rolls back a "
        "HEALTHY deploy")
-    ok(_lines[1]["line_epoch"] - _lines[0]["line_epoch"] == 60
+    # both stamp shapes, and the TRANSITION NIGHT where one file holds both
+    import tempfile as _tf2
+    with _tf2.TemporaryDirectory() as _td2:
+        _lg2 = Path(_td2) / "c.log"
+        _lg2.write_text(
+            "[pm] 21:58:00Z markets=1 msgs=100 app_ping=10 app_pong=10\n"
+            "[pm] 2026-08-31T22:01:00Z markets=1 msgs=200 app_ping=20 "
+            "app_pong=20\n"
+            "[pm] 2026-08-31T22:02:00Z markets=1 msgs=300 app_ping=30 "
+            "app_pong=30\n")
+        _real2, globals()["COLLECTOR_LOG"] = COLLECTOR_LOG, _lg2
+        try:
+            _since2 = int(datetime.strptime("2026-08-31T21:57:00Z",
+                                            "%Y-%m-%dT%H:%M:%SZ")
+                          .replace(tzinfo=timezone.utc).timestamp())
+            _mix = observe_heartbeat_lines(_since2, 0)
+        finally:
+            globals()["COLLECTOR_LOG"] = _real2
+    ok(len(_mix) == 3,
+       f"the DATE PREFIX IS OPTIONAL — one file holding both stamp shapes "
+       f"across the 22:00Z transition yields all 3 lines (got {len(_mix)}). A "
+       f"dateless-only regex matched ZERO dated lines, which this function's "
+       f"caller reads as 'every counter line is below the evidence floor' -> "
+       f"check_counters refuses -> ROLLBACK OF A HEALTHY DEPLOY. Audit A1b's "
+       f"failure arriving by a different route: A1b was wrong DATES, this is "
+       f"no MATCH, both end in a false rollback")
+    ok(_mix[1]["msgs"] == 200 and _mix[2]["app_pong"] == 30,
+       "and the dated lines' FIELDS parse correctly, not merely their "
+       "timestamps — matching the line is not the same as reading it")
+        ok(_lines[1]["line_epoch"] - _lines[0]["line_epoch"] == 60
        and _lines[2]["line_epoch"] - _lines[1]["line_epoch"] == 60,
        "audit A1b: and the SPACING survives the rollover (60 s apart), so "
        "the interval-based counter rates are computed on true elapsed time")
