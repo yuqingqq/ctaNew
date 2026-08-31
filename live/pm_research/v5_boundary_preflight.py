@@ -468,6 +468,28 @@ def current_era_and_open_v5(era_rows: list) -> tuple:
                           f"append-only authority read out of sequence "
                           f"describes a history that never happened")
         prev_instant = b_dt
+        # audit A4 (differential, after DA 8c86526): process evidence was
+        # validated on `recovered` rows here and NOWHERE ELSE, so a legacy or
+        # plain-transitioned row could carry collector_start_recv_ns=0 or a
+        # float and this walk ACCEPTED it while DA REFUSED — the SAME
+        # one-sided-validation defect I filed against DA as Q-DA-180 item 1,
+        # live on my side at the moment I filed it. DA's fix is more general
+        # than my emitter-side _refuse_cross_midnight (which only stops me
+        # WRITING such a row, and only at a day edge); this is the READ side,
+        # and the ledger is shared. Adopted verbatim in behaviour.
+        _cs = r.get("collector_start_recv_ns")
+        if _cs is not None:
+            if type(_cs) is not int or _cs <= 0:
+                raise Refused(f"era row {i} ({ver} @ {b_raw}) carries "
+                              f"collector_start_recv_ns={_cs!r}, which is not "
+                              f"a positive int — it is the evidence of when "
+                              f"this era ACTUALLY began, and an unreadable "
+                              f"value is not weaker evidence, it is none")
+            if _cs < int(b_dt.replace(tzinfo=timezone.utc).timestamp() * 1e9):
+                raise Refused(f"era row {i} ({ver} @ {b_raw}) declares a "
+                              f"collector_start BEFORE its own boundary — "
+                              f"the process cannot have served an era that "
+                              f"had not begun")
         role = classify_era_row(r)
         if role != "transitioned" and r.get("recovered") is True:
             raise Refused(f"era row {i} is `recovered` but asserts "
@@ -516,13 +538,16 @@ def current_era_and_open_v5(era_rows: list) -> tuple:
                               f"restoration receipt (positive int "
                               f"collector_start_recv_ns) — nothing shows the "
                               f"{r.get('supersedes')} process came back")
-            # against the era ACTUALLY being reverted, not this deployment's
-            # constant — the hardcoded form misfires on any later era.
+            # audit A4: `_rns PREDATES the era it reverts` USED to be checked
+            # here and is now IMPLIED — the general rule above pins
+            # _rns >= this row's own boundary, and the very next check pins
+            # that boundary strictly after the era it closes. Deleted rather
+            # than kept: a check that cannot fail is not a check, and one
+            # that LOOKS like coverage is worse than none. Its falsifier is
+            # RETAINED (it now fires one layer earlier) because the test pins
+            # a BEHAVIOUR — this ledger must be refused — not a layer. DA
+            # reached the same deletion independently on their side.
             _open_dt = _canonical_instant(open_era, "open era boundary")
-            if _rns < int(_open_dt.replace(tzinfo=timezone.utc).timestamp()
-                          * 10**9):
-                raise Refused(f"rollback row {i} restoration recv_ns {_rns} "
-                              f"PREDATES the era it reverts ({open_era})")
             if b_dt <= _open_dt:
                 raise Refused(f"rollback row {i} resume {b_raw} is not "
                               f"strictly AFTER the era it closes "
@@ -569,15 +594,15 @@ def current_era_and_open_v5(era_rows: list) -> tuple:
                 raise Refused(f"recovered row {i} names no 'stage' — a "
                               f"retroactive row carries MORE evidence, not "
                               f"less")
-            _rec = r.get("collector_start_recv_ns")
-            if type(_rec) is not int or _rec <= 0:
-                raise Refused(f"recovered row {i} carries no positive int "
-                              f"collector_start_recv_ns")
-            if _rec < int(b_dt.replace(tzinfo=timezone.utc).timestamp()
-                          * 10**9):
-                raise Refused(f"recovered row {i} collector_start "
-                              f"{_rec} PREDATES the boundary it "
-                              f"reconstructs ({b_raw})")
+            # audit A4: the type/positivity leg and the predates-own-boundary
+            # leg are both IMPLIED by the general rule above now. What is NOT
+            # implied is the REQUIREMENT that a recovered row carry the field
+            # at all — the general rule only fires when it is present — so
+            # that one stays, and only that one.
+            if r.get("collector_start_recv_ns") is None:
+                raise Refused(f"recovered row {i} carries no "
+                              f"collector_start_recv_ns — a RETROACTIVE row "
+                              f"carries MORE evidence, not less")
         open_era, open_ver, open_row = b_raw, ver, r
         if current is not None:
             _seen_versions.add(current)
@@ -2005,10 +2030,14 @@ def selftest() -> int:
                                        "collector_start_recv_ns":
                                        float(good_start["recv_ns"])}]},
                 3687786, good_start),
-            "different open", "KNOWN-BAD (DA b1): a FLOAT recv_ns in the "
-            "LEDGER row does not satisfy idempotency — the strict type rule "
-            "was applied to the observation but not to the artifact it is "
-            "compared against (16 of 4096 ns values round-trip exactly)")
+            "not a positive int", "KNOWN-BAD (DA b1, STRENGTHENED by audit "
+            "A4): a FLOAT recv_ns in the LEDGER row is now refused by the "
+            "CHAIN WALK, before the idempotency comparison it used to fall "
+            "through. The original defect — the strict type rule applied to "
+            "the observation but not to the artifact it is compared against "
+            "(16 of 4096 ns values round-trip exactly) — is subsumed: such a "
+            "row can no longer REACH the comparison. The refusal reason "
+            "changed on purpose; the row is still refused, one layer earlier")
     refuses(lambda: check_post_rollback(
                 {**_rb_obs, "era_rows": [V4_ROW, _MY_STAMP]}, 4242,
                 {**_rb_start, "recv_ns": (BOUNDARY_EPOCH * 10**9) + 10**6},
@@ -2476,6 +2505,55 @@ def selftest() -> int:
             "proves the process ran before the attempt, not that it was "
             "restored after it")
 
+    # audit A4: the seam caught ME. I filed one-sided validation of
+    # collector_start_recv_ns against DA (Q-DA-180 item 1) while my own walk
+    # validated it on `recovered` rows and nowhere else — the differential
+    # went red the moment DA generalised their side. Fourth divergence, third
+    # resolved in DA's favour.
+    refuses(lambda: current_era_and_open_v5(
+                [{**V4_ROW, "collector_start_recv_ns": 0}]),
+            "not a positive int",
+            "KNOWN-BAD (audit A4): a ZERO collector_start_recv_ns refuses "
+            "even on the PINNED LEGACY row — the legacy pin fixes an "
+            "IDENTITY, it is not an exemption from evidence, and the real "
+            "legacy row does carry this field")
+    refuses(lambda: current_era_and_open_v5(
+                [V4_ROW, {"collector_schema_version": "clob_v5",
+                          "supersedes": "clob_v4", "transitioned": True,
+                          "recovered": True, "stage": "recv",
+                          "boundary_utc": BOUNDARY_UTC},
+                 {"collector_schema_version": "clob_v4",
+                  "supersedes": "clob_v5", "rollback": True,
+                  "closes_boundary_utc": BOUNDARY_UTC, "stage": "s",
+                  "boundary_utc": "2026-08-31T07:15:00Z",
+                  "collector_start_recv_ns": (BOUNDARY_EPOCH + 900) * 10**9}]),
+            "carries no collector_start_recv_ns",
+            "KNOWN-BAD (audit A4): a RECOVERED row with the evidence field "
+            "ABSENT refuses. Deleting the two IMPLIED legs beside it was "
+            "right — the mutation audit confirms no survivor there — but the "
+            "leg I KEPT had no falsifier of its own, and the audit reported "
+            "it as a SURVIVOR. A check kept on the strength of an argument "
+            "is not covered by that argument")
+    refuses(lambda: current_era_and_open_v5(
+                [{**V4_ROW, "collector_start_recv_ns": 1.5}]),
+            "not a positive int",
+            "KNOWN-BAD (audit A4): a FLOAT collector_start_recv_ns refuses — "
+            "an unreadable value is not weaker evidence, it is none")
+    refuses(lambda: current_era_and_open_v5(
+                [{**V4_ROW, "collector_start_recv_ns":
+                  int(datetime.strptime(V4_ROW["boundary_utc"],
+                                        "%Y-%m-%dT%H:%M:%SZ")
+                      .replace(tzinfo=timezone.utc).timestamp() * 1e9) - 10**9}]),
+            "BEFORE its own boundary",
+            "KNOWN-BAD (audit A4): a collector_start ONE SECOND before its "
+            "own boundary refuses — the process cannot have served an era "
+            "that had not begun")
+    current_era_and_open_v5([V4_ROW])
+    ok(True, "POSITIVE (audit A4): the REAL legacy row shape — carrying its "
+             "genuine positive-int collector_start_recv_ns — still passes; "
+             "the new rule is about MALFORMED evidence, not about demanding "
+             "evidence the ledger does not have")
+
     # audit A1b: the counter-line parser pinned HH:MM:SS to the BOUNDARY's
     # UTC day, so a near-midnight instant misdated every post-midnight line
     # by -86400 s -> all below the evidence floor -> check_counters refuses
@@ -2719,15 +2797,19 @@ def selftest() -> int:
         ("re-open of the era already in force",
          [V4_ROW, {**_V5OPEN, "collector_schema_version": "clob_v4",
                    "supersedes": "clob_v4"}], "supersede ITSELF"),
+        # audit A4: RETAINED after the check that used to catch it was
+        # deleted as unreachable. The falsifier pins the BEHAVIOUR (this
+        # ledger must be refused); the general rule now catches it one layer
+        # earlier, which is why the expected fragment moved.
         ("rollback restoration predating the era it reverts",
          [V4_ROW, _V5OPEN, {**_RBOK,
                             "collector_start_recv_ns":
                             (BOUNDARY_EPOCH - 10) * 10**9}],
-         "PREDATES the era"),
+         "BEFORE its own boundary"),
         ("recovered collector_start predating its own boundary",
          [V4_ROW, {**_V5OPEN, "recovered": True, "stage": "recv",
                    "collector_start_recv_ns":
-                   (BOUNDARY_EPOCH - 60) * 10**9}], "PREDATES the boundary"),
+                   (BOUNDARY_EPOCH - 60) * 10**9}], "BEFORE its own boundary"),
     ]:
         refuses(lambda rr=_rows: current_era_and_open_v5(rr), _frag,
                 f"FUZZ-KB: {_name}")
@@ -2848,8 +2930,10 @@ def selftest() -> int:
             "REFUSES (the boundary-ordering leg reaches it first now)")
     refuses(lambda: current_era_and_open_v5(
                 [V4_ROW, _OPEN, {**_RBOK, "collector_start_recv_ns": 0}]),
-            "no verified restoration receipt", "KNOWN-BAD (audit S4): an epoch-0 "
-            "restoration recv_ns REFUSES")
+            "not a positive int", "KNOWN-BAD (audit S4): an epoch-0 "
+            "restoration recv_ns REFUSES (the general process-evidence rule "
+            "reaches it first now — audit A4; the rollback-specific leg it "
+            "used to hit was deleted as unreachable, this falsifier kept)")
     for _f in ("transitioned", "aborted", "rollback", "recovered"):
         refuses(lambda f=_f: classify_era_row({**_OPEN, f: 1}),
                 "is not a bool", f"KNOWN-BAD (audit S7 + DA 0355f98): a "
