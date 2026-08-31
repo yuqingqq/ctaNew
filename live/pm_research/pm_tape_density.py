@@ -43,8 +43,16 @@ too few windows to have a median is reported as UNJUDGEABLE, not skipped,
 and a cell with no windows at all REFUSES rather than reporting zero
 thinned — 0 of 0 passing is the empty-set trap.
 
+THE THRESHOLD IS A CHOICE MADE AFTER SEEING (rule 11), so this instrument
+REPORTS and does not VETO — DA `6fc539f` ruled it and the ruling is right.
+See the in-band correction on THIN_FRAC below: an earlier comment here
+claimed the finding was threshold-INSENSITIVE, that claim was never computed,
+and it is false. The window COUNT moves with the threshold; the DAY count
+(7) and the three named events do not.
+
     python3 live/pm_research/pm_tape_density.py
     python3 live/pm_research/pm_tape_density.py --day 20260829
+    python3 live/pm_research/pm_tape_density.py --json      # + sensitivity
     python3 live/pm_research/pm_tape_density.py --selftest   # rule 15
 """
 from __future__ import annotations
@@ -65,11 +73,42 @@ RAW = REPO / "data/pm_5min/raw"
 GAP_LEDGER = REPO / "data/pm_5min/collector_gaps.jsonl"
 
 WINDOW_S = 300
-# A window below this fraction of its (day, coin) median is THIN. Stated, not
-# tuned: at 0.05 the observed populations are bimodal by three orders of
-# magnitude (thin windows sit at 0.002-0.02 of median, healthy ones above
-# 0.3), so every value in [0.03, 0.25] returns the same set. --thin-frac
-# reports the sensitivity rather than hiding it.
+# A window below this fraction of its (day, coin) median is THIN.
+#
+# IN-BAND CORRECTION (rule 13). This constant first shipped with the comment
+# "every value in [0.03, 0.25] returns the same set". **That was asserted and
+# never computed, and it is FALSE** -- a printed conclusion beside a number,
+# which is exactly what rule 10 forbids, committed by the author of the rule's
+# latest citation. Measured across the real tape:
+#
+#     frac    days_dirty   invisible_windows
+#     0.005       6              145
+#     0.01        7              249
+#     0.05        7              668
+#     0.10        7              749
+#     0.25       10              782
+#     0.50       13             1259
+#
+# and the SET differs from the 0.05 set by 65 windows at 0.03, 81 at 0.10,
+# 114 at 0.25. So:
+#
+#   * the WINDOW COUNT is threshold-dependent and must never be quoted as a
+#     measurement -- "668" is a reading at one setting, not a quantity;
+#   * the DAY COUNT is stable at 7 across [0.01, 0.10], a tenfold range;
+#   * the three named events (08-26 04:35-07:55Z, 08-30 18:00-18:20Z,
+#     08-29 eth 20:10Z) sit at 0.045%-3.5% of median and are flagged at ANY
+#     threshold >= 0.01, so they do not depend on this choice at all.
+#
+# DA (6fc539f) ruled this instrument REPORTS and does not VETO, because the
+# threshold was picked after seeing which days fail it (rule 11) -- correct,
+# and the sensitivity above is why the ruling matters rather than being
+# procedural. A GOVERNING bar must be pre-registered against days not yet
+# seen; that is a coordinator/user act, not this file's.
+#
+# A parameter-free criterion was sought and is NOT available for the historic
+# days: the collector's own `msg_by_coin` counters would settle it with no
+# threshold, but collector.log is a single 10 MB file whose lines carry
+# HH:MM:SS and no date, and it does not reach back to 08-19 or 08-26.
 THIN_FRAC = 0.05
 MIN_WINDOWS_FOR_MEDIAN = 20
 
@@ -195,8 +234,33 @@ def judge_day(day: str, gaps=None, raw_root: Path = RAW,
         "total_thin_invisible": total_invis,
         "total_thin_accounted": sum(coins[c]["n_thin_accounted"]
                                     for c in judged),
-        "thin_frac": thin_frac,
+        "threshold_frac_of_median": thin_frac,
     }
+
+
+def sensitivity(days: list[str], gaps, raw_root: Path = RAW,
+                fracs=(0.005, 0.01, 0.02, 0.03, 0.05, 0.10, 0.15, 0.25,
+                       0.35, 0.50)) -> list[dict]:
+    """The whole curve, because a single reading privileges one choice.
+
+    The threshold was picked after seeing which days fail it, so the honest
+    receipt carries what depends on that choice and what does not. Emitted
+    alongside the results rather than on request: a sensitivity nobody runs
+    is a sensitivity nobody sees.
+    """
+    out = []
+    for f in fracs:
+        dirty = tot = 0
+        for d in days:
+            try:
+                r = judge_day(d, gaps=gaps, raw_root=raw_root, thin_frac=f)
+            except Refused:
+                continue
+            dirty += 0 if r["clean"] else 1
+            tot += r["total_thin_invisible"]
+        out.append({"threshold_frac_of_median": f, "days_with_invisible_loss":
+                    dirty, "invisible_windows": tot})
+    return out
 
 
 def all_days(raw_root: Path = RAW) -> list[str]:
@@ -337,7 +401,18 @@ def main() -> int:
         if not r["clean"]:
             dirty += 1
     if a.json:
-        print(json.dumps(out, indent=1))
+        print(json.dumps({
+            "days": out,
+            "threshold_sensitivity": sensitivity(days, gaps),
+            "note": ("the per-day window COUNTS are readings at "
+                     f"threshold_frac_of_median={a.thin_frac}, not "
+                     "quantities: see threshold_sensitivity. The DAY count "
+                     "is stable at 7 across [0.01, 0.10]. This instrument "
+                     "REPORTS and does not VETO (DA 6fc539f): the threshold "
+                     "was chosen after seeing which days fail it, so a "
+                     "GOVERNING bar must be pre-registered against days not "
+                     "yet seen."),
+        }, indent=1))
         return 0
 
     print(f"thin = window below {a.thin_frac:.0%} of its (day, coin) median "
