@@ -1,6 +1,6 @@
 # Coordinator review request — v4_1 boundary seam — 2026-08-31
 
-**Review tip:** `c8061ac`. **This supersedes the version filed at `0065e00`** —
+**Review tip:** `f5fff9e`. **16 commits since the `0587ab7` filing** — see UPDATED-2 at the end; the delta is material. **This supersedes the version filed at `0065e00`** —
 the package changed materially after that (USER fixes + my review of them),
 and the sections below marked UPDATED are the delta. **Scope: the narrow identity/boundary seam you named
 as the final pre-deploy gate.** Not a re-audit of the historical cause.
@@ -132,3 +132,81 @@ from a release gate; still open. The shadow observer is built and gated but
 **not yet running**; the runbook requires starting it after the deploy.
 
 Please file under `workspace/reviews/` and push.
+
+---
+
+# UPDATED-2 — the package as it now stands (f5fff9e)
+
+**Two USER rulings changed the shape after the earlier sections were written:**
+
+1. **`clob_v4_1` is RULED ADMISSIBLE** (`975b135`). The gate previously refused
+   on this and now passes live pre-arm. Recorded with DA's caveat written into
+   the table itself: v4_1 gap statistics are NOT comparable to v4 ones because
+   the CAUSE MIX shifts (~97% PING_TIMEOUT at 3/3 vs ~54% at 10/10), so a bar
+   crossing AT the boundary is a measurement change, not a change in feed
+   health.
+2. **The shadow observer is NOT part of this deploy, and your verdict does NOT
+   gate the launch.** The USER ruled launch at 22:00Z regardless; findings are
+   fixed after. Recorded in the runbook as a deliberate acceptance resting on
+   the tested rollback path and a boundary day (08-31) that has already failed.
+   **Please still review — we will act on what you find, just not before 22:00Z.**
+
+**The mutation audit you would have asked for, run and closed.** The v4_1 gate
+had 81 raise sites and no audit; the v5 gate it was modelled on holds 0 of 129.
+**54 survived**, concentrated in the FAILURE paths — rollback restoration
+14/14, recovery bundle 8/8, timing windows 5/5 — exactly what executes at a
+boundary when something has gone wrong. Now **0 real survivors**, selftests
+47 → 125, and the audit is a committed gate so it cannot regress silently. The
+one remaining survivor is ACCEPTED with proof (blanking it leaves the input
+refused by a downstream chain check, executed and captured), not with a note.
+
+**Writing one of those falsifiers found AUDIT A2 REPEATING:**
+`make_recovery_bundle` called `era_state()` before its half-landed branch, and
+that call REFUSES an unclosed `recovered` row — so the completion path written
+to repair a half-landed bundle was **dead code, and the walk refusing IS the
+brick it was meant to fix.** Fixed.
+
+**Two more rounds after that.** A runbook sequence walk found a **dead end**:
+four steps say "record V41_PID", none said how to recover it if you did not
+(it is in the process's own `collector_start` row). And a check of whether the
+gate would roll back a HEALTHY deploy during an upstream-quiet period,
+executed against the real 08-31 event, **passes at every sampled window** —
+worst case hype 13 msgs/2min. Thin but positive, and the thinness is recorded.
+
+**NEW COLLECTOR TELEMETRY SHIPS WITH THIS DEPLOY — the youngest code in the
+package and the thing most worth your attention:**
+- the `[pm]` status line now carries a **full ISO date** (its absence caused
+  audit A1b, a false-rollback defect);
+- disconnect rows gain `conn_msgs`, `conn_lifetime_s`,
+  `silence_before_close_s` and the `keepalive` in force — the four facts
+  `BTC_GAP_DIAGNOSIS_2026-08-26` had to reconstruct by hand;
+- a `health_sample` row per 60s to a **new** `collector_health.jsonl` carrying
+  per-coin counters and `oldest_age_s` — the signal computed every minute for
+  weeks and consumed by nothing. Split out of the gap ledger deliberately: at
+  one row per 60s it would have been ~17,280 rows against that ledger's 8,884.
+
+**The format change broke two consumers and we found both by ANNOUNCING it, not
+by reviewing it.** DA's heartbeat regex was dateless-only and would have read
+the change as absence of history on the night before the day it exists to judge
+(`849825e`). That prompted a sweep which found the same defect in
+`v5_boundary_preflight.observe_heartbeat_lines` (`26bada4`): zero matches read
+as "every counter line below the evidence floor" → refuse → **rollback of a
+healthy deploy**, audit A1b by a different route. The v4_1 gate's own health
+parser was checked and is format-agnostic, so tonight was never at risk.
+**Nothing in five review rounds had looked at the status line as a shared
+surface.**
+
+**Disclosed against myself:** `26bada4` was committed with an IndentationError
+that failed 6 of 14 gates — I ran the gates after the commit in the same
+command. Fixed at `f5fff9e`, gates verified before that commit.
+
+## Executed at f5fff9e
+
+**All 14 gates pass.** Preflight 232, v4_1 gate 125, v4_1 mutation audit 0 real
+survivors, DA 173. Live `--pre-arm`: OK, era clob_v4 in force, pid 3687786.
+
+## What I am asking
+
+The seam only: era identity, the boundary/rollback/abort/recovery emitters, the
+health and identity checks, the new telemetry, and whether the runbook's step
+order is safe. **Boundary 22:00:00Z, ~3.4h out.**
