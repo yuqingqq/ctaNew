@@ -489,15 +489,34 @@ def era_spans(path: Path | None = None) -> list[tuple[float, str]]:
                     f"REFUSED: rollback restoration receipt at {b} PREDATES the "
                     f"era it reverts ({open_since}) -- a collector_start from "
                     f"before the transition proves nothing about the restart")
-        elif st == "transitioned" and v == prev_era and not open_from_rollback:
-            raise ValueError(
-                f"REFUSED: AMBIGUOUS attempt state -- the row at {b} declares a "
-                f"plain `transitioned` back to {v}, which held the era before "
-                f"{open_era!r} opened at {open_since}, and {open_era!r} was "
-                f"never closed. A return to the previous version is a ROLLBACK: "
-                f"it must declare rollback=true with a "
-                f"restoration receipt, or it cannot be told apart from a fresh "
-                f"deploy of {v}.")
+        elif st == "transitioned":
+            # RECEIPT-CHAIN IDENTITY. `supersedes` must name the era ACTUALLY
+            # in force at append time -- the consumer does not trust the
+            # emitter to know which era is live. A row that supersedes an era
+            # that is not open is malformed chain state, whatever it says.
+            if open_era is None:
+                if not sup:
+                    raise ValueError(
+                        f"REFUSED: the first effective row ({v} @ {b}) names no "
+                        f"`supersedes` -- the ledger records transitions, so "
+                        f"the OPENING era has no other name")
+            elif sup != open_era:
+                raise ValueError(
+                    f"REFUSED: MALFORMED CHAIN -- the row at {b} claims to "
+                    f"supersede {sup!r}, but the era in force since "
+                    f"{open_since} is {open_era!r}. A transition receipt must "
+                    f"name the era it ACTUALLY replaces; superseding an era "
+                    f"that is not open means the writer and the ledger "
+                    f"disagree about what is running.")
+            if v == prev_era and not open_from_rollback:
+                raise ValueError(
+                    f"REFUSED: AMBIGUOUS attempt state -- the row at {b} "
+                    f"declares a plain `transitioned` back to {v}, which held "
+                    f"the era before {open_era!r} opened at {open_since}, and "
+                    f"{open_era!r} was never closed. A return to the previous "
+                    f"version is a ROLLBACK: it must declare rollback=true "
+                    f"with a restoration receipt, or it cannot be told apart "
+                    f"from a fresh deploy of {v}.")
         if not spans and sup:
             spans.append((float("-inf"), sup))
         spans.append((ts, v))
@@ -1898,6 +1917,30 @@ def _selftests() -> int:
        "UNDECLARED ROLLBACK refuses: a plain return to the previous version "
        "cannot be told apart from a fresh deploy of it")
 
+    _chain = _refusal([_v4, {"collector_schema_version": "clob_v5",
+                             "transitioned": True, "supersedes": "clob_v3_1",
+                             "boundary_utc": _B}])
+    ok("MALFORMED CHAIN" in _chain and "clob_v3_1" in _chain,
+       "KNOWN-BAD, THE EXECUTED ONE (round-2): a v5 row claiming it supersedes "
+       "clob_v3_1, appended after clob_v4 has been LIVE since 08-30. It was "
+       "ADMITTED and made 09-01 admissible -- `supersedes` was only ever "
+       "checked on the rollback path. A receipt must name the era it ACTUALLY "
+       "replaces; the consumer does not trust the emitter to know what is "
+       "running")
+    ok(_adm_of([_v4, _v5])["race_admissible_by_era"] is True,
+       "POSITIVE CONTROL for the chain: the SAME row with supersedes=clob_v4 "
+       "-- the era really in force -- is admitted, so the check reads the "
+       "claim rather than rejecting v5 rows")
+    ok("must NAME the transition it reverts" in _refusal(
+        [_v4, _v5, dict(_rb, supersedes="clob_v3_1")]),
+       "and a ROLLBACK receipt superseding the wrong version refuses too, "
+       "separately from its closes_boundary_utc -- both conjuncts of the "
+       "rollback's chain identity are load-bearing")
+    ok("names no `supersedes`" in _refusal(
+        [{"collector_schema_version": "clob_v4", "transitioned": True,
+          "boundary_utc": "2026-08-30T05:30:00Z"}]),
+       "a first effective row with no `supersedes` refuses: the ledger records "
+       "transitions, so the OPENING era has no other name")
     ok(_adm_of([_v4, _ab("restart_failed"),
                 dict(_v5, boundary_utc="2026-08-31T09:00:00Z")]
                )["race_admissible_by_era"] is True,
