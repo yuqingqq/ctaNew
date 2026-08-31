@@ -465,10 +465,6 @@ def era_spans(path: Path | None = None) -> list[tuple[float, str]]:
                     f"{sup!r}@{r.get('closes_boundary_utc')!r}, but the OPEN era is "
                     f"{open_era!r}@{open_since!r} -- a rollback must NAME the "
                     f"transition it reverts")
-            if not r.get("stage"):
-                raise ValueError(
-                    f"REFUSED: rollback row at {b} names no `stage` -- an "
-                    f"unexplained rollback is ambiguous attempt state")
             if ts <= dt.datetime.fromisoformat(
                     open_since.replace("Z", "+00:00")).timestamp():
                 raise ValueError(
@@ -1917,6 +1913,27 @@ def _selftests() -> int:
        "UNDECLARED ROLLBACK refuses: a plain return to the previous version "
        "cannot be told apart from a fresh deploy of it")
 
+    # Coverage found by mutation: each of these refusals could be DELETED with
+    # the suite still green, so none of them was a check yet.
+    ok("lacks boundary_utc" in _refusal(
+        [{"collector_schema_version": "clob_v5", "transitioned": True}]),
+       "a row with no boundary_utc refuses -- an era with no start instant "
+       "cannot bound any day")
+    ok("era ledger is EMPTY" in _refusal([]),
+       "an EMPTY ledger refuses rather than reading as 'no boundaries, so the "
+       "day is pure' -- absence of a recorded era is not purity")
+    ok("NOT ONE EFFECTIVE TRANSITION" in _refusal([_ab("restart_failed")]),
+       "a ledger of ONLY attempts refuses: rows exist, none of them ran, so no "
+       "era can be named -- the case that looks least like an error and most "
+       "like a quiet pass")
+    ok("closes nothing" in _refusal([_rb]),
+       "a rollback with no open era refuses -- it cannot revert a transition "
+       "that is not in the ledger")
+    ok("names no `stage`" in _refusal(
+        [_v4, _v5, {k: v for k, v in _rb.items() if k != "stage"}]),
+       "and a rollback with no `stage` refuses. Mutation found the era_spans "
+       "copy of this check to be DEAD -- _ledger_rows already refuses every "
+       "stage-less rollback -- so it was deleted; this exercises the live one")
     _chain = _refusal([_v4, {"collector_schema_version": "clob_v5",
                              "transitioned": True, "supersedes": "clob_v3_1",
                              "boundary_utc": _B}])
