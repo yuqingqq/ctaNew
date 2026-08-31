@@ -78,10 +78,15 @@ HEARTBEAT_MODES = (HEARTBEAT_CONTROL_V4, HEARTBEAT_APP_V5)
 # the exact metric O1a fixed, and it lands INSIDE the recorded gap durations
 # the day-quality gate accrues on. Observed PONG round-trip on the live BTC
 # channel is ~90 ms, so 3 s is ~33x the observed latency and still bounds
-# blindness at ~13 s (USER ruling 2026-08-31).
-# The documented cadence is a MINIMUM liveness expectation on the client —
-# sending MORE often is unobjectionable, sending less is not — so the
-# interval is ours to tighten as well. At 3 s + 3 s the worst-case blindness
+# blindness, which with the 3 s interval below is 6.0 s.
+# AUTHORITY (V5-C5-4): the venue documentation says "Client heartbeat — send
+# every 10 seconds." It does NOT call ten seconds a minimum and does not
+# authorize a faster cadence. 3 s is an EMPIRICALLY TESTED DEVIATION: live
+# shadow probes on the real BTC channel returned 24/24 and 8/8 PONGs with
+# zero disconnects, but both attached to an EXPIRED slug, so they establish
+# transport tolerance only — not concurrent-flow behaviour, not long-run
+# server policy. Residual accepted by USER ruling 2026-08-31.
+# At 3 s + 3 s the worst-case blindness
 # matches the v4 keepalive O1a tuned to (~6 s), which removes the detection
 # regression entirely rather than merely reducing it. Cost: one 4-byte text
 # frame per socket per 3 s (~7/s across ~21 sockets), against ~600 market

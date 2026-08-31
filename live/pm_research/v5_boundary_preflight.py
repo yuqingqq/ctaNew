@@ -72,7 +72,21 @@ RECOVERY_EMIT_WINDOW_S = 86400
 MIN_STAGE_LEN = 4  # audit S9: "." satisfied "names its stage"
 MAX_VERIFY_WINDOW_S = 21600      # counter checks run within 6h of the deploy
 MIN_VERIFY_SPAN_S = 45           # two heartbeat lines are ~60s apart
-APP_HEARTBEAT_CADENCE_S = 10     # collect_pm.APP_HEARTBEAT_INTERVAL_S
+def _candidate_cadence_s() -> float:
+    """Read the cadence from the CANDIDATE SOURCE rather than keeping a
+    second constant here. A silent copy let the gate certify a sender
+    running 3.3x slower than the reviewed candidate (V5-P5-2)."""
+    txt = COLLECTOR.read_text()
+    m = re.search(r"^APP_HEARTBEAT_INTERVAL_S\s*=\s*([0-9.]+)", txt,
+                  re.MULTILINE)
+    if not m:
+        raise Refused("cannot read APP_HEARTBEAT_INTERVAL_S from the "
+                      "candidate source — the gate's PING-rate floor is "
+                      "DERIVED from it and may not fall back to a guess")
+    return float(m.group(1))
+
+
+APP_HEARTBEAT_CADENCE_S = _candidate_cadence_s()
 MIN_ANSWER_RATIO = 0.5           # pongs per ping over the INTERVAL
 
 # The reviewed candidate (CODE/TEST HOLD RELEASED at df424de).
@@ -579,10 +593,31 @@ def check_candidate_commit() -> None:
                       f"not the reviewed candidate {CAND_SHA[:16]}")
 
 
+def check_cadence_agreement(runbook_text: str) -> float:
+    """Candidate, checker, runbook and the receipt text must all state ONE
+    cadence. The 193-check suite and the runbook consistency check both
+    passed a contradiction where the candidate said 3 s while the gate, the
+    runbook and the permanent transition receipt all said 10 s (V5-P5-2)."""
+    cand = _candidate_cadence_s()
+    if APP_HEARTBEAT_CADENCE_S != cand:
+        raise Refused(f"the gate's cadence {APP_HEARTBEAT_CADENCE_S}s is not "
+                      f"the candidate's {cand}s")
+    stale = re.findall(r"application heartbeat[^.\n]*?(\d+(?:\.\d+)?)\s*s",
+                       runbook_text, re.IGNORECASE)
+    for found in stale:
+        if abs(float(found) - cand) > 1e-9:
+            raise Refused(f"the runbook states a {found}s application "
+                          f"heartbeat while the candidate ships {cand}s — a "
+                          f"receipt written from this text would record a "
+                          f"cadence that never ran")
+    return cand
+
+
 def check_pre_arm(obs: dict, expect_flag: bool) -> None:
     check_boundary_current(BOUNDARY_UTC, BOUNDARY_EPOCH, obs["now_epoch"],
                            "pre")
     check_candidate_commit()
+    check_cadence_agreement(RUNBOOK.read_text())
     # audit C10: WorkingDirectory and ExecStartPre decide WHICH BYTES RUN,
     # and the drop-in the operator writes at step 2 is exactly where such a
     # directive would be introduced. Checking them only in the post-boundary
@@ -735,7 +770,9 @@ def check_post_restart(obs: dict, old_pid: int, start_row: dict | None,
         "supersedes": "clob_v4",
         "transitioned": True,
         "boundary_utc": BOUNDARY_UTC,
-        "package": ["v5 application text PING/PONG heartbeat (10s cadence) "
+        "app_heartbeat_interval_s": _candidate_cadence_s(),
+        "package": [f"v5 application text PING/PONG heartbeat "
+                    f"({_candidate_cadence_s():g}s cadence) "
                     "replacing RFC control-Pong liveness — the wrong contract "
                     "boundary (98.22% of v4 disconnects were local "
                     "PING_TIMEOUT)"],
@@ -776,10 +813,13 @@ def check_counters(samples: list, unit_active: bool, main_pid: int,
     if not unit_active or main_pid <= 0:
         raise Refused(f"unit not active at counter verification "
                       f"(active={unit_active}, pid={main_pid})")
-    if gap_tail_version != "clob_v5":
-        raise Refused(f"newest post-boundary gap-ledger row declares "
-                      f"{gap_tail_version!r}, not clob_v5 — the audit stream "
-                      f"is not the new process's")
+    # V5-P5-3: the newest gap row is written by ANY collector process and
+    # most rows carry no pid, so this could not be bound to the unit — a
+    # foreign writer (the R-351 class, made real once already) would refuse
+    # or roll back a HEALTHY unit. Version proof now rests solely on the
+    # PID-BOUND collector_start declaration the caller already verifies.
+    if gap_tail_version is not None and gap_tail_version != "clob_v5":
+        pass  # observed for the report only; never an authority
     if not samples:
         raise Refused("no app-heartbeat counter line after the armed-time "
                       "log offset — the repaired contract is not observably "
@@ -865,6 +905,13 @@ def check_counters(samples: list, unit_active: bool, main_pid: int,
                       f"too few; per-interval RATE is the health signal, "
                       f"since the absolute deficit grows with every socket "
                       f"teardown across 14-21 concurrent sockets")
+    # Return the EVALUATED population so the CLI reports what was judged.
+    # It printed hb[0]/hb[-1] from the UNFILTERED list, so a run that passed
+    # on two post-start rows could report ping_delta=-989 (audit repair 1).
+    return {"samples_evaluated": len(samples), "span_s": span_s,
+            "ping_delta": ping_d, "pong_delta": pong_d, "msgs_delta": msgs_d,
+            "first_line_epoch": first["line_epoch"],
+            "last_line_epoch": last["line_epoch"]}
 
 
 def check_post_rollback(obs: dict, old_v5_pid: int,
@@ -1815,11 +1862,14 @@ def selftest() -> int:
     _rb_obs = {**good_post, "main_pid": 5151,
                "exec_start": " ".join(ARGV_V4),
                "era_rows": [V4_ROW, _V5OPEN]}
-    _S1 = {"app_ping": 3, "app_pong": 3, "msgs": 1000,
+    # scaled to the SHIPPED 3s cadence: the rate floor is derived from the
+    # candidate, so fixtures built for the old 10s cadence now refuse — which
+    # is V5-P5-2 working (the gate used to accept a sender 3.3x too slow).
+    _S1 = {"app_ping": 30, "app_pong": 30, "msgs": 1000,
            "line_epoch": BOUNDARY_EPOCH + 65}
-    _S2 = {"app_ping": 9, "app_pong": 8, "msgs": 5000,
+    _S2 = {"app_ping": 90, "app_pong": 89, "msgs": 5000,
            "line_epoch": BOUNDARY_EPOCH + 125}
-    _S3 = {"app_ping": 15, "app_pong": 14, "msgs": 9000,
+    _S3 = {"app_ping": 150, "app_pong": 149, "msgs": 9000,
            "line_epoch": BOUNDARY_EPOCH + 185}
     _GOOD = [_S1, _S2, _S3]
     check_counters(_GOOD, True, 4242, "clob_v5")
@@ -1839,7 +1889,7 @@ def selftest() -> int:
             "the MIDDLE of the region REFUSES — endpoint-only sampling "
             "certified a crash-looping collector as healthy")
     refuses(lambda: check_counters(
-                [_S1, {**_S1, "app_ping": 4, "app_pong": 4, "msgs": 1001,
+                [_S1, {**_S1, "app_ping": 31, "app_pong": 31, "msgs": 1001,
                        "line_epoch": BOUNDARY_EPOCH + 7200}],
                 True, 4242, "clob_v5"),
             "not running at cadence", "KNOWN-BAD (audit S2): ONE ping over "
@@ -1861,17 +1911,17 @@ def selftest() -> int:
             "no parseable timestamp", "KNOWN-BAD: an undatable sample "
             "REFUSES")
     refuses(lambda: check_counters(
-                [_S1, {**_S2, "app_pong": 3}], True, 4242, "clob_v5"),
+                [_S1, {**_S2, "app_pong": 30}], True, 4242, "clob_v5"),
             "static total is history", "KNOWN-BAD: pongs not advancing "
             "REFUSES — the v4 failure shape one layer up")
     refuses(lambda: check_counters(
-                [_S1, {**_S2, "app_ping": 10, "app_pong": 40}],
+                [_S1, {**_S2, "app_ping": 100, "app_pong": 400}],
                 True, 4242, "clob_v5"),
             "more answers than questions", "KNOWN-BAD (audit A2-2): PONGs "
             "EXCEEDING pings REFUSES — the counter counts frames, not "
             "answered pings, so an unsolicited-PONG flood read as health")
     refuses(lambda: check_counters(
-                [_S1, {**_S2, "app_ping": 40, "app_pong": 4}],
+                [_S1, {**_S2, "app_ping": 400, "app_pong": 40}],
                 True, 4242, "clob_v5"),
             "answering too few", "KNOWN-BAD: a poor ANSWER RATE over the "
             "interval REFUSES — rate, not an absolute deficit that grows "
@@ -1880,9 +1930,13 @@ def selftest() -> int:
                 [_S1, {**_S2, "msgs": 1000}], True, 4242, "clob_v5"),
             "market rows did not advance", "KNOWN-BAD: market rows static "
             "REFUSES (the runbook seam, in the instrument)")
-    refuses(lambda: check_counters(_GOOD, True, 4242, "clob_v4"),
-            "not clob_v5", "KNOWN-BAD: an audit tail still declaring clob_v4 "
-            "REFUSES")
+    _ev_tail = check_counters(_GOOD, True, 4242, "clob_v4")
+    ok(_ev_tail["samples_evaluated"] == 3,
+       "POSITIVE (V5-P5-3): a foreign clob_v4 gap tail no longer refuses a "
+       "healthy unit — the tail is written by ANY collector and most rows "
+       "carry no pid, so it could never be bound to the unit; version proof "
+       "rests on the PID-BOUND collector_start instead (this is the R-351 "
+       "class the pid-aware observer was added to close)")
     refuses(lambda: check_counters(_GOOD, False, 4242, "clob_v5"),
             "unit not active", "KNOWN-BAD: inactive unit REFUSES")
     refuses(lambda: check_counters(_GOOD, True, 0, "clob_v5"),
@@ -2176,6 +2230,52 @@ def selftest() -> int:
             "proves the process ran before the attempt, not that it was "
             "restored after it")
 
+    # ---- V5-P5-2: candidate / checker / runbook / receipt must state ONE
+    # cadence. The 193-check suite AND the runbook consistency check both
+    # passed a contradiction where the candidate said 3s and the gate, the
+    # runbook and the permanent receipt all said 10s.
+    check_cadence_agreement(RUNBOOK.read_text())
+    ok(APP_HEARTBEAT_CADENCE_S == _candidate_cadence_s()
+       and APP_HEARTBEAT_CADENCE_S == 3.0,
+       f"POSITIVE (V5-P5-2): the gate's PING-rate floor is DERIVED from the "
+       f"candidate source ({APP_HEARTBEAT_CADENCE_S}s), not a second silent "
+       f"constant")
+    _sv_cad = APP_HEARTBEAT_CADENCE_S
+    try:
+        globals()["APP_HEARTBEAT_CADENCE_S"] = 10.0
+        refuses(lambda: check_cadence_agreement(RUNBOOK.read_text()),
+                "is not the candidate", "KNOWN-BAD (V5-P5-2): a gate cadence "
+                "that disagrees with the candidate source REFUSES — the "
+                "whole point is that there is no second silent constant")
+    finally:
+        globals()["APP_HEARTBEAT_CADENCE_S"] = _sv_cad
+    _sv_coll = COLLECTOR
+    try:
+        import tempfile as _tf
+        _f = _tf.NamedTemporaryFile("w", suffix=".py", delete=False)
+        _f.write("# a collector source with no cadence constant\n")
+        _f.close()
+        globals()["COLLECTOR"] = Path(_f.name)
+        refuses(_candidate_cadence_s, "may not fall back to a guess",
+                "KNOWN-BAD (V5-P5-2): a candidate source with no readable "
+                "cadence REFUSES rather than defaulting — the floor is "
+                "DERIVED, and a guess would silently restore the defect")
+    finally:
+        globals()["COLLECTOR"] = _sv_coll
+    refuses(lambda: check_cadence_agreement(
+                "the deployed application heartbeat is 10 s"),
+            "never ran", "KNOWN-BAD (V5-P5-2): a runbook stating a cadence "
+            "the candidate does not ship REFUSES — a receipt written from "
+            "that text would record a cadence that never ran")
+    _slow = [{"app_ping": 30, "app_pong": 30, "msgs": 1000,
+              "line_epoch": BOUNDARY_EPOCH + 65},
+             {"app_ping": 33, "app_pong": 33, "msgs": 5000,
+              "line_epoch": BOUNDARY_EPOCH + 125}]
+    refuses(lambda: check_counters(_slow, True, 4242, "clob_v5"),
+            "not running at cadence", "KNOWN-BAD (V5-P5-2): three PINGs over "
+            "60s REFUSES under the DERIVED 3s floor — the gate used to "
+            "certify a sender running 3.3x slower than the candidate")
+
     # ---- differential-fuzz repros, mirrored into the SUITE so the
     # mutation audit (which runs --selftest only) can see them ----
     _V6 = {"collector_schema_version": "clob_v6", "supersedes": "clob_v4",
@@ -2389,7 +2489,10 @@ def main() -> int:
     ap.add_argument("--post-restart", type=int, metavar="OLD_PID")
     ap.add_argument("--verify-counters", action="store_true")
     ap.add_argument("--log-offset", type=int, default=None,
-                    help="collector.log byte offset printed by --armed")
+                    help="IGNORED for production runs: the offset is taken "
+                         "from log_offset_at_stamp in the postflight's own "
+                         "stamp, which is machine-derived at restart time. "
+                         "Accepted only so scripted callers do not break.")
     ap.add_argument("--post-rollback", type=int, metavar="OLD_V5_PID",
                     default=None)
     ap.add_argument("--v5-pid", type=int, default=None,
@@ -2525,15 +2628,13 @@ def main() -> int:
             raise Refused("no collector_start from the live unit after the "
                           "boundary — counter evidence cannot be anchored to "
                           "the new process")
-        check_counters(hb, obs["unit_active"], obs["main_pid"],
-                       observe_gap_tail_version(BOUNDARY_EPOCH),
-                       _newstart["recv_ns"] / 1e9)
-        f, l = hb[0], hb[-1]
-        print(f"COUNTERS OK: {len(hb)} samples over "
-              f"{l['line_epoch'] - f['line_epoch']:.0f}s, no reset; "
-              f"ping +{l['app_ping'] - f['app_ping']}, "
-              f"pong +{l['app_pong'] - f['app_pong']}, "
-              f"msgs +{l['msgs'] - f['msgs']}")
+        _ev = check_counters(hb, obs["unit_active"], obs["main_pid"],
+                             observe_gap_tail_version(BOUNDARY_EPOCH),
+                             _newstart["recv_ns"] / 1e9)
+        print(f"COUNTERS OK: {_ev['samples_evaluated']} of {len(hb)} samples "
+              f"evaluated (the rest were below the new-process floor) over "
+              f"{_ev['span_s']:.0f}s, no reset; ping +{_ev['ping_delta']}, "
+              f"pong +{_ev['pong_delta']}, msgs +{_ev['msgs_delta']}")
         return 0
     ap.print_help(file=sys.stderr)
     raise Refused("no mode selected — every mode is explicit, and printing "

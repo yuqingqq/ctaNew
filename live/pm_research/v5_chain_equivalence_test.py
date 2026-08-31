@@ -143,6 +143,22 @@ FUZZ = [
     ("v4 -> v6 transition chain (no rollback, must be ACCEPTED)",
      [LEGACY, V6], "ok"),
 ]
+# V5-P5-1: the MULTI-HOP return. The one-hop v4->v5->v4 shape was covered;
+# this four-era chain was not, and the two consumers disagree on it. My walk
+# refuses a transition back to ANY previously-used version without rollback
+# evidence; DA refuses only a return to the immediately-previous era. Filed
+# to DA; left RED here until one rule is adopted on both sides, because a
+# green test would hide a real divergence.
+V6_MH = {"collector_schema_version": "clob_v6", "supersedes": "clob_v5",
+         "transitioned": True, "boundary_utc": "2026-08-31T08:00:00Z",
+         "stage": "post-restart",
+         "collector_start_recv_ns": (B + 3610) * 10**9}
+V4_RETURN = {"collector_schema_version": "clob_v4", "supersedes": "clob_v6",
+             "transitioned": True, "boundary_utc": "2026-08-31T09:00:00Z",
+             "stage": "post-restart",
+             "collector_start_recv_ns": (B + 7210) * 10**9}
+CASES.append(("V5-P5-1 multi-hop return v4->v5->v6->v4 with NO rollback "
+              "evidence", [LEGACY, V5OK, V6_MH, V4_RETURN], "refuse"))
 CASES.extend(FUZZ)
 
 

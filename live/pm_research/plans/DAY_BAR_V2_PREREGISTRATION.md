@@ -27,16 +27,25 @@ full-day figures (frozen 08-27T11:56Z — Q-DA source-trap note).
 > on a quantity whose measurement basis is the heartbeat cadence, and any
 > cadence change silently reinterprets all three.**
 >
-> Measured on 08-31 through 05:35Z (DA, Q-DA-179): 68.8 disconnects/hr,
-> median gap 5.85 s, 490 s/hr lost against a P1 bar of 120. At that rate
-> **every +1 s of detection lag adds ~68.8 s/hr.** The clob_v5 candidate as
-> first written would have carried ~20 s worst-case blindness against v4's
-> ~6 s — a term worth **~960 s/hr, eight times the entire P1 bar** — so every
-> post-deploy day would have failed P1 on a MEASUREMENT ARTIFACT and read as
-> "v5 did not work" while the collector was fine. The 2026-08-31 USER cadence
-> ruling (3 s + 3 s → 6.0 s, matching O1a) restores comparability with the
-> era the bars were written against; that is why it was necessary, not merely
-> an improvement.
+> **CORRECTED 2026-08-31 (V5-C5-3): these are WORST-CASE BOUNDS, not realized
+> loss.** `interval + timeout` bounds how long a dead socket can go unnoticed;
+> it is not a per-disconnect minimum, and the receive task can fail earlier
+> than the heartbeat task. So `68.8/hr × 6 s ≈ 413 s/hr` is an UPPER-BOUND
+> SENSITIVITY TERM under the stated model, **not a floor**, and
+> `68.8 × (20 − 6) ≈ 963 s/hr` prices the difference between two worst-case
+> bounds — **not loss that every post-deploy day "would have" incurred.**
+> A further reason not to read these as realized: `gap_start` is the last
+> MARKET MESSAGE, not the unobserved socket-death instant, so a recorded gap
+> can contain quiet-market time as well as detection time.
+>
+> Measured context (DA, Q-DA-179; 08-31 through 05:35Z): 68.8 disconnects/hr,
+> median gap 5.85 s, 490 s/hr lost against a P1 bar of 120.
+>
+> **What survives, in the narrower form that is actually supported:** matching
+> v4's ~6 s worst-case bound removes an avoidable MEASUREMENT-BASIS
+> REGRESSION, so post-deploy days are judged on the same basis the bars were
+> written against. That is why the 2026-08-31 USER cadence ruling
+> (3 s + 3 s → 6.0 s) was necessary rather than merely an improvement.
 >
 > Consequence to carry forward: **the bars are NOT cadence-independent.** A
 > future keepalive change requires re-declaring this premise and saying
@@ -44,13 +53,11 @@ full-day figures (frozen 08-27T11:56Z — Q-DA source-trap note).
 > are CHOSEN VALUES and days have already been judged against them, so they
 > are not touched here.
 >
-> Note on what P1 then IS: at 68.8 disconnects/hr even a 6 s lag leaves a
-> ~413 s/hr floor, still 3.4× over P1. So P1 is a joint constraint on
-> (disconnect rate × detection lag) + real outage, and it can only pass if
-> v5 collapses the RATE — which is its thesis, since 98.22% of v4 disconnects
-> were local PING_TIMEOUTs. **P1 is therefore close to a direct test of
-> whether v5 works, not an independent quality gate; a P1 failure after a
-> successful v5 deploy would be a real result, not an instrument artifact.**
+> **What must NOT be concluded from the bound alone (V5-C5-3):** that P1 can
+> pass only if the disconnect rate collapses. The sensitivity term is an
+> upper bound, so the realized lost-seconds at any given rate may be well
+> below it; whether P1 passes post-deploy is an EMPIRICAL question the first
+> complete post-v5 day answers, not one this arithmetic settles in advance.
 
 - **P1 — severity.** `lost_seconds / 24 ≤ 120 s/hr` (≡ ≤3.33% coverage loss).
 - **P2 — material contamination breadth.** Windows with **≥75 s** (25% of

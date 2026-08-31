@@ -15,8 +15,15 @@ additionally gated on the Codex pre-arm review of THIS runbook + instrument +
 DA's era-admission guard.
 
 **What deploys:** a keepalive CONTRACT change only — application text
-`PING`/`PONG` at 10 s replacing RFC control-Pong liveness (98.22% of v4's
-disconnects were local PING_TIMEOUT against the wrong contract). No
+application heartbeat at 3 s with a 3 s answer deadline, replacing
+RFC control-Pong liveness (98.22% of v4's
+disconnects were local PING_TIMEOUT against the wrong contract). The cadence
+was lowered from the venue-documented 10 s by USER ruling 2026-08-31 so that
+worst-case dead-socket blindness (interval + timeout) returns to the ~6 s the
+v4 keepalive was tuned to by O1a — detection lag is stamped inside recorded
+gap durations, which are the quantity the day bars are denominated in. It is
+an EMPIRICALLY TESTED deviation, not a documented one; the residual is
+recorded in the candidate source and in DAY_BAR_V2_PREREGISTRATION.md. No
 working-tree swap: the candidate is INERT on disk; activation is the
 installed unit command gaining `--heartbeat-mode app-v5`. No row-stamping
 change; no model, threshold, or policy moves.

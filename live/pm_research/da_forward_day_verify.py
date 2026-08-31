@@ -544,6 +544,7 @@ def era_timeline(path: Path | None = None) -> dict:
                 f"transition it closes.")
     spans: list[tuple[float, str]] = []
     recovered: set[float] = set()
+    seen: set[str] = set()   # versions that have HELD an effective era
     open_era = open_since = prev_era = None
     open_recovered = False
     open_from_rollback = False
@@ -608,21 +609,34 @@ def era_timeline(path: Path | None = None) -> dict:
                     f"name the era it ACTUALLY replaces; superseding an era "
                     f"that is not open means the writer and the ledger "
                     f"disagree about what is running.")
-            if v == prev_era and not open_from_rollback:
+            # A RETURN to ANY version that has already held an era -- not
+            # merely the immediately previous one. The harm is not the hop
+            # count: a plain `transitioned` row skips the ENTIRE rollback
+            # evidence contract, and v4->v5->v6->v4 skips it exactly as
+            # completely as v4->v5->v4. Multi-hop is worse in one respect --
+            # after two hops nobody remembers which era the missing evidence
+            # would have described. (BE V5-P5-1; their rule, adopted.)
+            #
+            # The one exemption is a RETRY: the era now open was itself
+            # restored by a rollback, so the version being returned to is the
+            # one that rollback closed, and the evidence already exists.
+            if v in seen and not open_from_rollback:
                 raise ValueError(
                     f"REFUSED: AMBIGUOUS attempt state -- the row at {b} "
-                    f"declares a plain `transitioned` back to {v}, which held "
-                    f"the era before {open_era!r} opened at {open_since}, and "
-                    f"{open_era!r} was never closed. A return to the previous "
-                    f"version is a ROLLBACK: it must declare rollback=true "
-                    f"with a restoration receipt, or it cannot be told apart "
-                    f"from a fresh deploy of {v}.")
+                    f"declares a plain `transitioned` back to {v}, which has "
+                    f"ALREADY HELD an era in this chain, and {open_era!r} "
+                    f"(open since {open_since}) was never closed. A return to "
+                    f"any previously-in-force version is a ROLLBACK: it must "
+                    f"declare rollback=true with a stage, a restoration "
+                    f"receipt and closes_boundary_utc, or it cannot be told "
+                    f"apart from a fresh deploy of {v}.")
         if not spans and sup:
             spans.append((float("-inf"), sup))
         spans.append((ts, v))
         if r.get("recovered") is True:
             recovered.add(ts)
         open_recovered = r.get("recovered") is True
+        seen.add(v)
         prev_era, open_era, open_since = open_era, v, b
         open_from_rollback = (st == "rollback")
     if not spans:
@@ -2166,6 +2180,46 @@ def _selftests() -> int:
        "flagged reconstructed -- recovery is the exception, not the default")
 
     _self = _refusal([_v4, dict(_v5, supersedes="clob_v5")])
+    # ---- MULTI-HOP RETURN (BE V5-P5-1) ---------------------------------
+    _T = lambda v, sup, b: {"collector_schema_version": v, "supersedes": sup,
+                            "transitioned": True, "boundary_utc": b}
+    _hop = [_v4, _T("clob_v5", "clob_v4", "2026-08-31T07:00:00Z"),
+            _T("clob_v6", "clob_v5", "2026-08-31T08:00:00Z"),
+            _T("clob_v4", "clob_v6", "2026-08-31T09:00:00Z")]
+    _hm = _refusal(_hop)
+    ok("ALREADY HELD an era" in _hm and "clob_v4" in _hm,
+       "KNOWN-BAD (V5-P5-1, BE's rule adopted): v4->v5->v6->v4 with no "
+       "rollback evidence was ACCEPTED here -- I only refused a return to the "
+       "IMMEDIATELY PREVIOUS era. The harm is not the hop count: a plain "
+       "transitioned row skips the ENTIRE rollback contract, and multi-hop is "
+       "worse in one way -- after two hops nobody remembers which era the "
+       "missing evidence would have described")
+    _tbl6 = {"clob_v3_1": False, "clob_v4": False, "clob_v5": True,
+             "clob_v6": True}
+    with _tfe.TemporaryDirectory() as _t4:
+        _ok_hop = _ledger(_t4, [_v4,
+                                _T("clob_v5", "clob_v4", "2026-08-31T07:00:00Z"),
+                                _T("clob_v6", "clob_v5", "2026-08-31T08:00:00Z"),
+                                {"collector_schema_version": "clob_v4",
+                                 "supersedes": "clob_v6", "rollback": True,
+                                 "stage": "counters_refused",
+                                 "closes_boundary_utc": "2026-08-31T08:00:00Z",
+                                 "boundary_utc": "2026-08-31T09:00:00Z",
+                                 "collector_start_recv_ns":
+                                     _ns("2026-08-31T09:00:04Z")}])
+        ok(day_era_admission("20260902", _ok_hop, _tbl6
+                             )["race_admissible_by_era"] is False,
+           "POSITIVE CONTROL: the SAME multi-hop shape WITH a rollback receipt "
+           "is accepted -- the rule demands evidence, it does not forbid "
+           "returning")
+    ok(_adm_of([_v4, _v5, _rb, dict(_v5, boundary_utc="2026-09-01T07:00:00Z")],
+               "20260902")["race_admissible_by_era"] is True,
+       "AND THE RETRY EXEMPTION SURVIVES: a v5 retry after its own verified "
+       "rollback returns to a previously-in-force version and is still "
+       "allowed. Read literally, 'any previous version is a return' would "
+       "have broken this -- the era now open was RESTORED by a rollback, so "
+       "the evidence already exists")
+
     _torn = _refusal([_v4], "20260901") or ""
     with _tfe.TemporaryDirectory() as _t3:
         _f = Path(_t3) / "runs.jsonl"

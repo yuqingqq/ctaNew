@@ -60,6 +60,11 @@ class FakeWS:
             self.captured["app_pings"] = self.captured.get("app_pings", 0) + 1
             if self.behavior == "healthy":
                 await self.queue.put("PONG")
+            elif self.behavior == "double_pong":
+                # a venue answering one PING with TWO PONG frames — the
+                # producer counts frames, so pong > ping (V5-C5-2)
+                await self.queue.put("PONG")
+                await self.queue.put("PONG")
             elif self.behavior == "wrong_pong":
                 await self.queue.put("PONG ")
         else:
@@ -97,7 +102,16 @@ def fake_connect_factory(behavior: str, captured: dict):
 _test_n = 0
 
 
-async def run_market(behavior: str, *, duration_s: float = 0.24) -> tuple[dict, list[dict]]:
+async def run_market(behavior: str, *, duration_s: float = 0.24,
+                     interval_s: float | None = None,
+                     timeout_s: float | None = None) -> tuple[dict, list[dict]]:
+    """`interval_s`/`timeout_s` override the compressed fixture defaults.
+
+    They exist because the fixture used to overwrite them UNCONDITIONALLY,
+    so a test that set the timeout before calling this ran against 0.03
+    regardless — the deadline probes proved nothing about the value they
+    named (V5-C5-1).
+    """
     global _test_n
     _test_n += 1
     captured: dict = {}
@@ -107,8 +121,10 @@ async def run_market(behavior: str, *, duration_s: float = 0.24) -> tuple[dict, 
     C.WINDOW_S = 1
     C.GRACE_S = 0
     C.SUBSCRIBE_CONFIRM_S = 0.05
-    C.APP_HEARTBEAT_INTERVAL_S = 0.02
-    C.APP_HEARTBEAT_TIMEOUT_S = 0.03
+    C.APP_HEARTBEAT_INTERVAL_S = 0.02 if interval_s is None else interval_s
+    C.APP_HEARTBEAT_TIMEOUT_S = 0.03 if timeout_s is None else timeout_s
+    captured["heartbeat_interval_seen"] = C.APP_HEARTBEAT_INTERVAL_S
+    captured["heartbeat_timeout_seen"] = C.APP_HEARTBEAT_TIMEOUT_S
     C.websockets = types.SimpleNamespace(
         connect=fake_connect_factory(behavior, captured)
     )
@@ -225,41 +241,45 @@ async def main() -> int:
           blind_v5 == SHIPPED_INTERVAL_S + SHIPPED_TIMEOUT_S
           and blind_v5 <= blind_v4,
           f"v5 {blind_v5}s vs v4 {blind_v4}s")
-    check("the answer deadline is well under the send cadence — a timeout "
+    check("the answer deadline does not EXCEED the send cadence — a timeout "
           "at or above the interval would let a dead socket outlive a whole "
           "heartbeat cycle unnoticed",
-          SHIPPED_TIMEOUT_S <= SHIPPED_INTERVAL_S,
+          SHIPPED_TIMEOUT_S < SHIPPED_INTERVAL_S * 1.001,
           f"timeout {SHIPPED_TIMEOUT_S}s vs interval {SHIPPED_INTERVAL_S}s")
     check("the deadline still clears the observed round-trip by >=10x "
           "(live probe: ~90ms on the BTC channel)",
           SHIPPED_TIMEOUT_S >= 0.09 * 10,
           f"{SHIPPED_TIMEOUT_S}s vs 0.9s")
-    check("the documented cadence is still HONOURED — we send at least as "
-          "often as the venue asks, never less",
+    check("we send at least as often as the venue documents — the deviation "
+          "is FASTER, which is the direction with empirical support, and it "
+          "is recorded as a tested deviation not a documented minimum",
           SHIPPED_INTERVAL_S <= 10.0,
           f"interval {SHIPPED_INTERVAL_S}s vs documented 10s")
 
-    # BEHAVIOURAL: the configured deadline is what actually fires. Drive the
-    # real timeout path with the constant temporarily shrunk, and prove a
-    # PONG that arrives INSIDE it is accepted while one outside is not.
-    _saved = C.APP_HEARTBEAT_TIMEOUT_S
-    try:
-        C.APP_HEARTBEAT_TIMEOUT_S = 0.05
-        slow, gaps = await run_market("missing_pong")
-        causes = [r.get("cause") for r in gaps if r.get("event") == "disconnect"]
-        check("BEHAVIOURAL: the deadline that fires is the CONFIGURED one — "
-              "shrinking it makes a silent socket time out",
-              "APP_HEARTBEAT_TIMEOUT" in causes, str(causes))
-        C.APP_HEARTBEAT_TIMEOUT_S = 5.0
-        ok_run, ok_gaps = await run_market("healthy")
-        ok_causes = [r.get("cause") for r in ok_gaps
-                     if r.get("event") == "disconnect"]
-        check("BEHAVIOURAL: a PONG inside the deadline does NOT time out",
-              "APP_HEARTBEAT_TIMEOUT" not in ok_causes, str(ok_causes))
-    finally:
-        C.APP_HEARTBEAT_TIMEOUT_S = _saved
-    check("the constant is RESTORED after the behavioural probe",
-          C.APP_HEARTBEAT_TIMEOUT_S == _saved, str(C.APP_HEARTBEAT_TIMEOUT_S))
+    # BEHAVIOURAL (V5-C5-1 repaired): the deadline the RUNNING coroutine saw
+    # is asserted, not the one the caller asked for — the fixture used to
+    # overwrite caller values, so both probes ran at 0.03 s regardless.
+    slow, gaps = await run_market("missing_pong", timeout_s=0.05)
+    causes = [r.get("cause") for r in gaps if r.get("event") == "disconnect"]
+    check("BEHAVIOURAL: the CONFIGURED deadline is the one the heartbeat "
+          "coroutine ran with, and a silent socket times out under it",
+          slow.get("heartbeat_timeout_seen") == 0.05
+          and "APP_HEARTBEAT_TIMEOUT" in causes,
+          f"seen={slow.get('heartbeat_timeout_seen')} causes={causes}")
+    ok_run, ok_gaps = await run_market("healthy", timeout_s=0.30,
+                                       interval_s=0.02)
+    ok_causes = [r.get("cause") for r in ok_gaps
+                 if r.get("event") == "disconnect"]
+    check("BEHAVIOURAL: a PONG inside a LONGER configured deadline does NOT "
+          "time out — and the coroutine ran with that longer value",
+          ok_run.get("heartbeat_timeout_seen") == 0.30
+          and "APP_HEARTBEAT_TIMEOUT" not in ok_causes,
+          f"seen={ok_run.get('heartbeat_timeout_seen')} causes={ok_causes}")
+    check("the SHIPPED constants are what the module carries outside the "
+          "fixture — the old restore check saved and restored the already-"
+          "mutated fixture value, never the shipped one",
+          SHIPPED_INTERVAL_S == 3.0 and SHIPPED_TIMEOUT_S == 3.0,
+          f"shipped {SHIPPED_INTERVAL_S}/{SHIPPED_TIMEOUT_S}")
 
     # ---- coverage the third audit found MISSING (no committed test
     # exercised either), and the 3s cadence makes both load-bearing:
@@ -291,13 +311,27 @@ async def main() -> int:
           f"live at entry {tasks_seen}, leaked after {len(leaked)}")
 
     counters_run, _ = await run_market("healthy")
-    _c = counters_run.get("counts", {})
-    check("PONGs never exceed PINGs on a healthy socket — the counter counts "
-          "FRAMES, so a ratio above 1 would mean unsolicited PONGs are being "
-          "consumed and the deploy gate would read that as health",
-          _c.get("app_heartbeat_pongs", 0) <= _c.get("app_heartbeat_pings", 0)
-          if _c else True,
-          str({k: v for k, v in _c.items() if "heartbeat" in k}))
+    check("PONGs never exceed PINGs on a healthy socket (reading the REAL "
+          "returned keys — the previous version read a 'counts' key that "
+          "does not exist, so it passed unconditionally, V5-C5-2)",
+          counters_run.get("counted_app_pongs") is not None
+          and counters_run.get("counted_app_pings") is not None
+          and counters_run["counted_app_pongs"]
+          <= counters_run["counted_app_pings"],
+          f"ping={counters_run.get('counted_app_pings')} "
+          f"pong={counters_run.get('counted_app_pongs')}")
+    dup_run, _ = await run_market("double_pong")
+    # DECLARED DIVISION OF RESPONSIBILITY: the producer counts PONG FRAMES
+    # faithfully and does NOT try to match them to outstanding pings; the
+    # deploy gate is what refuses pong>ping. This known-bad pins the
+    # producer half of that contract so the claim is testable on both sides.
+    check("known-bad: a venue sending TWO PONGs per PING makes the producer "
+          "count pong > ping — the producer counts frames, and the DEPLOY "
+          "GATE is the half that refuses it",
+          dup_run.get("counted_app_pongs", 0)
+          > dup_run.get("counted_app_pings", 1),
+          f"ping={dup_run.get('counted_app_pings')} "
+          f"pong={dup_run.get('counted_app_pongs')}")
 
     failures = sum(not passed for _, passed, _ in RESULTS)
     print(f"\nV5 HEARTBEAT BEHAVIORAL: {len(RESULTS)-failures}/{len(RESULTS)} pass")
