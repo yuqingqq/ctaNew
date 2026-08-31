@@ -63,7 +63,15 @@ RESOLVE_GIVEUP_S = 7200
 WRITE_BATCH = 2_000
 WRITE_QUEUE_MAX = 32
 GAP_LEDGER = ROOT / "collector_gaps.jsonl"
+# The service starts without arguments, so the reviewed v4 behavior remains
+# the restart-safe default until a separately stamped boundary opts into v5.
+# This prevents an unrelated process restart from creating an unrecorded era.
 COLLECTOR_VERSION = "clob_v4"
+HEARTBEAT_CONTROL_V4 = "control-v4"
+HEARTBEAT_APP_V5 = "app-v5"
+HEARTBEAT_MODES = (HEARTBEAT_CONTROL_V4, HEARTBEAT_APP_V5)
+APP_HEARTBEAT_INTERVAL_S = 10.0
+APP_HEARTBEAT_TIMEOUT_S = 10.0
 
 # v3: disk work and HTTP work get SEPARATE executors. They shared the default
 # 20-worker pool, where four run_in_executor HTTP calls (urlopen, 15-25 s
@@ -152,9 +160,80 @@ class SubscribeUnconfirmed(Exception):
 SUBSCRIBE_CONFIRM_S = 10.0
 
 
+class AppHeartbeatTimeout(Exception):
+    """The documented text PING didn't receive an exact text PONG in time."""
+
+
+def connect_keepalive_kwargs(heartbeat_mode: str) -> dict:
+    """Return explicit library keepalive settings for a collector era.
+
+    Polymarket's market-channel contract is an application message: send the
+    exact text ``PING`` every ten seconds and consume exact text ``PONG``.
+    ``websockets`` automatic keepalive is a different protocol mechanism (RFC
+    control frames).  v5 disables it rather than running two independent
+    liveness authorities on the same socket.
+    """
+    if heartbeat_mode == HEARTBEAT_CONTROL_V4:
+        return {"ping_interval": 3, "ping_timeout": 3}
+    if heartbeat_mode == HEARTBEAT_APP_V5:
+        return {"ping_interval": None, "ping_timeout": None}
+    raise ValueError(f"unknown heartbeat mode: {heartbeat_mode!r}")
+
+
+async def application_heartbeat(ws, subscription_ready: asyncio.Event,
+                                pong_received: asyncio.Event,
+                                counts=None) -> None:
+    """Send one documented heartbeat at a time after subscription confirms."""
+    await subscription_ready.wait()
+    await asyncio.sleep(APP_HEARTBEAT_INTERVAL_S)
+    while True:
+        sent_at = time.monotonic()
+        pong_received.clear()
+        await ws.send("PING")
+        if counts is not None:
+            counts["app_heartbeat_pings"] += 1
+        try:
+            await asyncio.wait_for(pong_received.wait(),
+                                   timeout=APP_HEARTBEAT_TIMEOUT_S)
+        except asyncio.TimeoutError as ex:
+            raise AppHeartbeatTimeout(
+                f"no exact text PONG within {APP_HEARTBEAT_TIMEOUT_S:.1f}s"
+            ) from ex
+        # Schedule from send time rather than response time. A normal 90 ms
+        # response must not slowly turn the documented 10 s cadence into 10.09,
+        # 10.18, ... across a long-lived connection.
+        elapsed = time.monotonic() - sent_at
+        await asyncio.sleep(max(0.0, APP_HEARTBEAT_INTERVAL_S - elapsed))
+
+
+async def run_with_application_heartbeat(ws, receive_coro,
+                                         subscription_ready: asyncio.Event,
+                                         pong_received: asyncio.Event,
+                                         counts=None) -> None:
+    """Run the sole receiver and heartbeat sender; propagate either failure."""
+    receive_task = asyncio.create_task(receive_coro)
+    heartbeat_task = asyncio.create_task(
+        application_heartbeat(ws, subscription_ready, pong_received, counts)
+    )
+    tasks = (receive_task, heartbeat_task)
+    try:
+        done, _ = await asyncio.wait(tasks, return_when=asyncio.FIRST_COMPLETED)
+        # Awaiting the completed task is what turns a heartbeat refusal into a
+        # classified reconnect. Merely noticing `done` would hide the error.
+        for task in done:
+            await task
+    finally:
+        for task in tasks:
+            if not task.done():
+                task.cancel()
+        await asyncio.gather(*tasks, return_exceptions=True)
+
+
 def ws_cause(ex: BaseException) -> str:
     if isinstance(ex, SubscribeUnconfirmed):
         return "SUBSCRIBE_UNCONFIRMED"
+    if isinstance(ex, AppHeartbeatTimeout):
+        return "APP_HEARTBEAT_TIMEOUT"
     text = str(ex).lower()
     if "1013" in text or "slow" in text:
         return "SLOW_CONSUMER_1013"
@@ -197,7 +276,13 @@ def is_final(m: dict) -> bool:
 
 
 class PMCollector:
-    def __init__(self):
+    def __init__(self, heartbeat_mode: str = HEARTBEAT_CONTROL_V4):
+        if heartbeat_mode not in HEARTBEAT_MODES:
+            raise ValueError(f"unknown heartbeat mode: {heartbeat_mode!r}")
+        self.heartbeat_mode = heartbeat_mode
+        self.collector_version = (
+            "clob_v5" if heartbeat_mode == HEARTBEAT_APP_V5 else COLLECTOR_VERSION
+        )
         self.stop = False
         self.known: set[str] = set()          # slugs with a running/finished market task
         self.pending_res: dict[str, tuple[int, str]] = {}  # slug → (window_end, conditionId)
@@ -278,7 +363,8 @@ class PMCollector:
     def _audit(self, obj: dict) -> None:
         try:
             jl_append(GAP_LEDGER, {"recv_ns": time.time_ns(),
-                                   "collector_version": COLLECTOR_VERSION, **obj})
+                                   "collector_version": self.collector_version,
+                                   **obj})
         except Exception as ex:
             self.counts["audit_errors"] += 1
             print(f"[pm] audit append: {type(ex).__name__} {str(ex)[:60]}", flush=True)
@@ -431,7 +517,8 @@ class PMCollector:
             self.counts["writer_queue_highwater"] = max(
                 self.counts["writer_queue_highwater"], write_q.qsize())
 
-        async def receive(ws) -> None:
+        async def receive(ws, subscription_ready: asyncio.Event | None = None,
+                          pong_received: asyncio.Event | None = None) -> None:
             nonlocal last_recv_ns, open_gap, qmax, ever_paused
             confirmed = False
             while not self.stop:
@@ -450,7 +537,17 @@ class PMCollector:
                         raise SubscribeUnconfirmed(
                             f"no first message within {SUBSCRIBE_CONFIRM_S}s "
                             f"of subscribe")
+                # v5 heartbeat frames are application TEXT messages, not RFC
+                # control frames. They share the one receive stream, so consume
+                # exact PONG here and never write it into the JSON market tape.
+                if pong_received is not None and raw == "PONG":
+                    pong_received.set()
+                    self.counts["app_heartbeat_pongs"] += 1
+                    continue
+                if not confirmed:
                     confirmed = True
+                    if subscription_ready is not None:
+                        subscription_ready.set()
                 recv_ns = time.time_ns()
                 if open_gap is not None:
                     self._audit({
@@ -510,19 +607,33 @@ class PMCollector:
                     # 1013 "slow consumer" on hot markets — observed repeatedly on
                     # BTC, i.e. load-correlated loss on ~85% of notional. Deep queue
                     # + batched writes keep the recv loop free of blocking I/O.
-                    # O1a (R-232): ping 10/10 -> 3/3. 77.1% of btc lost seconds
-                    # was detection lag matching ping_interval+ping_timeout;
-                    # worst-case dead-socket blindness ~20s -> ~6s. Keepalive
-                    # cost ~2 bytes/ping — judged negligible, stated anyway.
-                    async with websockets.connect(WS_URL, ping_interval=3,
-                                                  ping_timeout=3, open_timeout=15,
-                                                  max_queue=2 ** 16) as ws:
+                    # v4 O1a uses RFC control ping 3/3. The inert v5 candidate
+                    # instead disables that mechanism and runs the documented
+                    # text PING/PONG lifecycle in the single receive stream.
+                    keepalive = connect_keepalive_kwargs(self.heartbeat_mode)
+                    async with websockets.connect(WS_URL, open_timeout=15,
+                                                  max_queue=2 ** 16,
+                                                  **keepalive) as ws:
                         await ws.send(json.dumps({"assets_ids": toks, "type": "market"}))
                         try:
                             # Exactly one deadline timer per connection. The receive
                             # loop does no JSON parsing and never waits for a disk write.
-                            await asyncio.wait_for(receive(ws),
-                                                   timeout=max(0.0, stop_at - time.time()))
+                            if self.heartbeat_mode == HEARTBEAT_APP_V5:
+                                subscription_ready = asyncio.Event()
+                                pong_received = asyncio.Event()
+                                connection = run_with_application_heartbeat(
+                                    ws,
+                                    receive(ws, subscription_ready, pong_received),
+                                    subscription_ready,
+                                    pong_received,
+                                    self.counts,
+                                )
+                            else:
+                                connection = receive(ws)
+                            await asyncio.wait_for(
+                                connection,
+                                timeout=max(0.0, stop_at - time.time()),
+                            )
                         except asyncio.TimeoutError:
                             break
                 except Exception as ex:
@@ -682,6 +793,8 @@ class PMCollector:
                   f"markets={self.counts['markets']} msgs={self.counts['msgs']} "
                   f"resolved={self.counts['resolved']} pending={len(self.pending_res)} "
                   f"retries={self.counts['retries']} slow={self.counts['slow_drops']} "
+                  f"app_ping={self.counts['app_heartbeat_pings']} "
+                  f"app_pong={self.counts['app_heartbeat_pongs']} "
                   f"writer_wait={self.counts['writer_backpressure']} "
                   f"q_hi={self.counts['writer_queue_highwater']} "
                   f"lag_ms_max={self.lag_ms_max:.0f} "
@@ -699,7 +812,8 @@ class PMCollector:
     async def run(self) -> None:
         RAW.mkdir(parents=True, exist_ok=True)
         self._audit({"event": "collector_start", "pid": os.getpid()})
-        print(f"[pm] version={COLLECTOR_VERSION} coins={COINS} "
+        print(f"[pm] version={self.collector_version} "
+              f"heartbeat_mode={self.heartbeat_mode} coins={COINS} "
               f"window={WINDOW_S}s grace={GRACE_S}s", flush=True)
         for slug, ts, toks in self.resume:   # MUST-FIX iter-1: continue in-flight windows
             print(f"[pm] resuming in-flight {slug}", flush=True)
@@ -738,6 +852,11 @@ def selftest() -> int:
         gzip_atomic(raw, dest)
         atomic_ok = (not raw.exists() and gzip.open(dest, "rb").read() == b"one\ntwo\n"
                      and not list(Path(d).glob("*.tmp-*")))
+    try:
+        connect_keepalive_kwargs("unknown")
+        unknown_mode_refused = False
+    except ValueError:
+        unknown_mode_refused = True
     checks = [
         ("closed resolution is final", is_final({"closed": True})),
         ("give-up remains retryable", not is_final({"gave_up": True})),
@@ -747,6 +866,13 @@ def selftest() -> int:
          == "SLOW_CONSUMER_1013"),
         ("ping timeout classified", ws_cause(Exception("keepalive ping timeout"))
          == "PING_TIMEOUT"),
+        ("application heartbeat timeout classified by identity",
+         ws_cause(AppHeartbeatTimeout("no exact text PONG"))
+         == "APP_HEARTBEAT_TIMEOUT"),
+        ("v5 disables RFC control-frame liveness",
+         connect_keepalive_kwargs(HEARTBEAT_APP_V5)
+         == {"ping_interval": None, "ping_timeout": None}),
+        ("known-bad heartbeat mode is refused", unknown_mode_refused),
         ("gzip publish is atomic", atomic_ok),
     ]
     checks.extend(_async_checks())
@@ -870,10 +996,14 @@ def _async_checks() -> list[tuple[str, bool]]:
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--selftest", action="store_true")
+    ap.add_argument("--heartbeat-mode", choices=HEARTBEAT_MODES,
+                    default=HEARTBEAT_CONTROL_V4,
+                    help=("restart-safe default is reviewed clob_v4; app-v5 "
+                          "requires a separately stamped deployment boundary"))
     args = ap.parse_args()
     if args.selftest:
         raise SystemExit(selftest())
-    c = PMCollector()
+    c = PMCollector(heartbeat_mode=args.heartbeat_mode)
 
     def _sig(*_):
         print("[pm] shutdown signal", flush=True)
