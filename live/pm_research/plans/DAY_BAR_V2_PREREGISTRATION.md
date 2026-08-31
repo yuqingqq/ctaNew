@@ -18,6 +18,40 @@ regardless of which slug logged it. Source: the LIVE `collector_gaps.jsonl`
 with its as-of recorded; the tape6e ledger pin is NOT a valid source for
 full-day figures (frozen 08-27T11:56Z — Q-DA source-trap note).
 
+> **DECLARED PREMISE — added 2026-08-31, in-band, NO BAR CHANGED (rule 13).**
+> P1/P2/P3 are all denominated in LOST SECONDS, and a disconnect's recorded
+> gap includes the collector's own DETECTION LAG (`gap_start` is stamped from
+> the last message received, so the time spent noticing a dead socket sits
+> inside the measured quantity). The bars were pre-registered against v4-era
+> lost-seconds, which embed v4's keepalive lag — so **the bars are thresholds
+> on a quantity whose measurement basis is the heartbeat cadence, and any
+> cadence change silently reinterprets all three.**
+>
+> Measured on 08-31 through 05:35Z (DA, Q-DA-179): 68.8 disconnects/hr,
+> median gap 5.85 s, 490 s/hr lost against a P1 bar of 120. At that rate
+> **every +1 s of detection lag adds ~68.8 s/hr.** The clob_v5 candidate as
+> first written would have carried ~20 s worst-case blindness against v4's
+> ~6 s — a term worth **~960 s/hr, eight times the entire P1 bar** — so every
+> post-deploy day would have failed P1 on a MEASUREMENT ARTIFACT and read as
+> "v5 did not work" while the collector was fine. The 2026-08-31 USER cadence
+> ruling (3 s + 3 s → 6.0 s, matching O1a) restores comparability with the
+> era the bars were written against; that is why it was necessary, not merely
+> an improvement.
+>
+> Consequence to carry forward: **the bars are NOT cadence-independent.** A
+> future keepalive change requires re-declaring this premise and saying
+> explicitly whether the bars still mean what they meant. The bars themselves
+> are CHOSEN VALUES and days have already been judged against them, so they
+> are not touched here.
+>
+> Note on what P1 then IS: at 68.8 disconnects/hr even a 6 s lag leaves a
+> ~413 s/hr floor, still 3.4× over P1. So P1 is a joint constraint on
+> (disconnect rate × detection lag) + real outage, and it can only pass if
+> v5 collapses the RATE — which is its thesis, since 98.22% of v4 disconnects
+> were local PING_TIMEOUTs. **P1 is therefore close to a direct test of
+> whether v5 works, not an independent quality gate; a P1 failure after a
+> successful v5 deploy would be a real result, not an instrument artifact.**
+
 - **P1 — severity.** `lost_seconds / 24 ≤ 120 s/hr` (≡ ≤3.33% coverage loss).
 - **P2 — material contamination breadth.** Windows with **≥75 s** (25% of
   span) intersected by gap: **≤5% of windows** (≤14 of 288).
