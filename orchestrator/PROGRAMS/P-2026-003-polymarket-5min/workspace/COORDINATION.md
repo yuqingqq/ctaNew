@@ -17835,6 +17835,32 @@ Everything else on our side was flat or falling across the break: config unchang
 
 **The lesson.** The answer was in our own commit log for six days, one grep from anyone who asked *when* rather than *why*. **We flagged the hazard and filed it under the wrong heading** — "tape purity" instead of "this is why btc is disconnecting" — and a correct observation filed under the wrong question is invisible to everyone looking for the answer.
 
+### R-366 — 2026-08-31T16:10Z — coordinator — **IN-BAND WITHDRAWAL OF R-365. The root cause is NOT found. I asserted that no load telemetry existed; it existed, and it refutes me.** Codex `b04ff13` caught it; verified independently and the verdict stands (`pm_host_load_join.py`)
+
+**What R-365 claimed and why it is wrong.** R-365 concluded the 08-25 break was self-inflicted compute contention, and stated in terms that *"there is no load time-series. The journal does not retain 08-25."* **`/var/log/sysstat/sa25` exists** — 679,660 bytes, complete through 23:50Z — and so do sa23, sa24, sa26, sa27. **I asserted an absence without opening the artifact that would have carried it.** That is a rule-16 failure ("verify at the artifact a claim names — not a proxy, not memory") committed by the seat that has been citing rule 16 all day. Checking `journalctl` and concluding "no telemetry" is exactly the proxy the rule names.
+
+**The refutation, re-derived independently rather than accepted from the filing.**
+
+| | measured |
+|---|---|
+| 08-25 00:00–06:00Z btc disconnects | **210** (against **4** in the same hours of 08-24 — 52x) |
+| host idle over those six hours | **89.9%** |
+| Pearson r, host busy% vs disconnects, 08-25 (143 samples) | **+0.039** |
+| the same r on 08-23/24/26/27/29/30 | −0.129, −0.136, −0.169, −0.077, −0.183, −0.134 — **near zero and mostly NEGATIVE** |
+| 08-30: most disconnects of any day (751) | at the **LOWEST** mean busy% (2.73%) |
+
+**And the timing kills it outright.** The break is fully present in the FIRST HOUR of 08-25 (43 disconnects, 00Z) with precursor bursts from 08-24 18:45Z. **The "heavy runs on collector box" commit I cited as contemporaneous evidence is stamped 19:40/20:23 — roughly TWENTY HOURS LATER.** I read a note written at the end of the day as evidence for something that began at its start. **Same-day is not contemporaneous, and I did not check the hour.**
+
+**A second error inside the first.** R-365 called the "externally killed" I5 controls an OOM-killer signature. **R-149 already records the confirmed cause: `~/.bashrc` caps every shell at 12 GiB vmem and 10 GiB file size.** Verified in the register at line 14864. So I contradicted this programme's own earlier correction to manufacture support for a story the telemetry does not support. Codex flagged it; it is accurate.
+
+**Correct status: ROOT CAUSE UNKNOWN.** Compute contention survives only as a hypothesis for sub-ten-minute bursts sysstat cannot resolve — it is not the dominant cause and is not evidenced. What IS established and unaffected: the break is at 08-25 00:00Z, **btc-only** (non-btc disconnects FELL 14.6 → 9.8/day), **all three failure modes together**, with our config, socket count, message count, message size and volume all flat or falling. Those facts still rule out the venue-wide, network-wide, machine-wide and configuration explanations. They do not identify what remains.
+
+**Evidence is now CODE, not prose.** `pm_host_load_join.py` joins gap events to sysstat and ships a falsifier: positive controls that a perfectly linear relation returns r = 1.0 and an inverse returns −1.0 (**without which a near-zero r could be a broken estimator rather than an absent relation**), a zero-variance input returning None rather than a spurious 0.0, and a **refusal on an absent archive — the exact failure mode R-365 committed, so the instrument now cannot repeat it silently.** R-365's calculations lived only in prose; Codex was right to require this.
+
+**Codex's other findings, accepted.** **COL-R4 acted on now**: HEAD's `collect_pm.py` still asserted *"THE MECHANISM IS PING COUNT, NOT LOAD"* — a diagnosis superseded twice, sitting in production source. Rewritten to the narrow true statement: the revert removes a measured 2.07x amplification and **does not establish or repair the dominant break**; both earlier mechanisms are recorded as withdrawn. **COL-R3 stands and blocks any restart**: 10/10 would emit the same `clob_v4` event version as the running 3/3 process while changing the gap distribution, and the era consumers refuse a self-superseding `clob_v4 → clob_v4` row, so **no valid receipt can currently distinguish the two regimes.** The revert is committed and must not be deployed until it has its own collector identity. **COL-R2 stands**: `research.slice` binds only explicitly-launched commands, every agent scope sits under `app.slice`, and the collector's `Slice=` lives only in the untracked drop-in (already filed as R-361 LIVE-3).
+
+**The lesson, and it is the sharpest of the day.** R-357 found a fix that did not address the cause. R-360 proposed a mechanism that failed its own test. R-364 found the fix addressed a non-dominant cause. **R-365 announced a cause on evidence I had not checked for — and the checking took one `ls`.** The pattern across all four is the same and it is not carelessness about analysis: it is **declaring a conclusion at the exact moment the remaining work was cheapest.** "There is no data" is a claim about the world and requires looking, and it is the claim most likely to go unchallenged because it forecloses the search.
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited

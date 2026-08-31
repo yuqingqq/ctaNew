@@ -210,13 +210,31 @@ def connect_keepalive_kwargs(heartbeat_mode: str) -> dict:
         # boundary, so O1b/O1c helped and only the ping-tightened population
         # exploded.
         #
-        # THE MECHANISM IS PING COUNT, NOT LOAD. Pings/hr went 360 -> 1200
-        # (3.33x) while the PER-PING failure probability barely moved,
-        # 0.0262 -> 0.0329 (1.25x). So ~80% of the damage is simply 3.3x more
-        # draws at a roughly constant per-draw risk. A load-starvation story
-        # was proposed first and does NOT survive: btc's timeouts are LEAST
-        # frequent when btc's throughput is HIGHEST (0.054/min in the top
-        # load quintile vs 0.266 in the second), which is the opposite sign.
+        # WHAT THIS CHANGE DOES AND DOES NOT DO (Codex COL-R4). It removes a
+        # MEASURED AMPLIFICATION. It does not establish or repair the dominant
+        # 2026-08-25 break, whose cause is UNKNOWN.
+        #
+        # Amplification, measured on TOTAL disconnect rate rather than one
+        # cause: 43.6 -> 21.1 gaps/hr, 2.07x. Pings/hr went 360 -> 1200
+        # (3.33x) while the per-ping failure probability moved only
+        # 0.0262 -> 0.0329, so most of the added PING_TIMEOUTs are extra
+        # draws. But O1a also RECLASSIFIED: across the boundary btc's
+        # NO_CLOSE_FRAME fell 152 -> 13 and SLOW_CONSUMER_1013 fell 69 -> 6,
+        # because a 3 s deadline kills the socket before those modes fire.
+        # The 4.18x once quoted here was ONE CAUSE, not the effect.
+        #
+        # TWO EARLIER MECHANISMS WERE PROPOSED HERE AND BOTH ARE WITHDRAWN.
+        # (1) load starvation at the socket -- refuted by its own test.
+        # (2) "ping count, not load", stated as though it explained the
+        # break -- it explains the AMPLIFIER only. The break itself is
+        # 08-25 00:00Z, btc-only, all three failure modes at once, on a host
+        # that sysstat shows was 89.9% idle through those hours; see
+        # pm_host_load_join.py, r = +0.039 on that day and near zero or
+        # NEGATIVE on every other.
+        #
+        # Reverting is therefore a ROLLBACK OF A KNOWN-BAD CHANGE, not a fix:
+        # at 10/10 after the break btc passed 2 days in 5 and lands near
+        # 123 s/hr against a 120 bar.
         #
         # Reverted to the MEASURED configuration, not to an invented optimum:
         # 10/10 is a setting this collector actually ran at for 96 hours in
