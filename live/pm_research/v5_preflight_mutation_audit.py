@@ -26,7 +26,8 @@ SCRATCH_DIR = pathlib.Path(
     "c15cb459-fb27-4ea2-a613-58e6a633b127/scratchpad")
 CHECKERS = {"check_boundary_current", "installed_mode", "classify_era_row",
             "current_era_and_open_v5", "check_pre_arm", "check_post_restart",
-            "check_counters", "check_post_rollback",
+            "check_counters", "check_post_rollback", "check_post_recovery",
+            "check_system_safe", "check_stage", "check_candidate_commit",
             "check_runbook_consistency", "_canary_refusal"}
 CANARY = ("\n\ndef _canary_refusal():\n"
           "    raise Refused('CANARY: no test reaches this')\n")
@@ -76,8 +77,35 @@ def blank(text: str, lo: int, hi: int) -> str:
     return "\n".join(lines)
 
 
+def audit_scope(src: str) -> None:
+    """Control D (audit F6): every refusal-bearing function in the module
+    must be IN scope. `check_post_recovery` — the whole --post-recovery
+    path, 15 refusals — sat outside CHECKERS, 9 of them untested, and the
+    harness reported a clean run while saying nothing about the 18 sites it
+    skipped. A scope list that silently omits a checker is the stale-
+    mutation-list defect one level up."""
+    tree = ast.parse(src)
+    defined = {fn.name for fn in ast.walk(tree)
+               if isinstance(fn, ast.FunctionDef)
+               and any(isinstance(n, ast.Raise) for n in ast.walk(fn))}
+    missing = sorted(d for d in defined
+                     if d not in CHECKERS and not d.startswith("observe_")
+                     and d not in ("main", "selftest"))
+    if missing:
+        sys.exit(f"HARNESS INVALID: refusal-bearing function(s) {missing} "
+                 f"are NOT in CHECKERS — they would be audited by nothing "
+                 f"and the run would still report a clean sweep (control D)")
+    total = sum(1 for fn in ast.walk(tree)
+                if isinstance(fn, ast.FunctionDef)
+                for n in ast.walk(fn) if isinstance(n, ast.Raise))
+    covered = len(raise_sites(src))
+    print(f"control D: scope complete — {covered} of {total} module raise "
+          f"sites in scope (the rest are observers/CLI)")
+
+
 def main() -> int:
     src = SRC.read_text()
+    audit_scope(src)
 
     # Control A — the harness can tell a working copy from a broken one.
     verdict, _ = run_suite(src)

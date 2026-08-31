@@ -64,6 +64,10 @@ BOUNDARY_EPOCH = 1788159600  # asserted against BOUNDARY_UTC in selftest
 # the boundary instant is a FALSE era boundary (re-review at 038a1b2).
 POST_START_WINDOW_S = 120
 POST_EMIT_WINDOW_S = 600
+MAX_VERIFY_WINDOW_S = 21600      # counter checks run within 6h of the deploy
+MIN_VERIFY_SPAN_S = 45           # two heartbeat lines are ~60s apart
+APP_HEARTBEAT_CADENCE_S = 10     # collect_pm.APP_HEARTBEAT_INTERVAL_S
+MIN_ANSWER_RATIO = 0.5           # pongs per ping over the INTERVAL
 
 # The reviewed candidate (CODE/TEST HOLD RELEASED at df424de).
 CAND_SHA = "1c5291aa6d66ceef0c4a724ea7a1e9fa5128d65d1b69034df5638c0136e98ad5"
@@ -89,9 +93,20 @@ def observe_common() -> dict:
         capture_output=True).stdout
     era_rows = []
     if ERA_LEDGER.exists():
-        for ln in ERA_LEDGER.read_text().splitlines():
-            if ln.strip():
+        for i, ln in enumerate(ERA_LEDGER.read_text().splitlines(), 1):
+            if not ln.strip():
+                continue
+            try:
                 era_rows.append(json.loads(ln))
+            except ValueError as ex:
+                # Audit finding 3: an unparseable line (e.g. a hand-written
+                # row containing a literal <now>) used to raise a raw
+                # JSONDecodeError here. The ledger is append-only, so that
+                # would break every future read. Refuse by name instead.
+                raise Refused(f"era ledger line {i} is NOT VALID JSON "
+                              f"({ex}): {ln[:80]!r} — an append-only "
+                              f"authority cannot carry an unparseable row; "
+                              f"repair it before any deploy step")
     return {
         "now_epoch": time.time(),
         "tree_sha": _sha_file(COLLECTOR),
@@ -102,12 +117,29 @@ def observe_common() -> dict:
                               "-p", "MainPID", "--value"]) or 0),
         "exec_start": _run(["systemctl", "--user", "show", OBS_UNIT,
                             "-p", "ExecStart", "--value"]),
+        # audit S10: the argv script token is RELATIVE, so WorkingDirectory
+        # decides which file opens; ExecStartPre can run anything first and
+        # never appears in -p ExecStart.
+        "working_dir": _run(["systemctl", "--user", "show", OBS_UNIT,
+                             "-p", "WorkingDirectory", "--value"]),
+        "exec_start_pre": _run(["systemctl", "--user", "show", OBS_UNIT,
+                                "-p", "ExecStartPre", "--value"]),
         "obs_unit_overridden": OBS_UNIT != UNIT,
         "era_rows": era_rows,
     }
 
 
-def observe_collector_start(since_epoch: float) -> dict | None:
+def observe_collector_start(since_epoch: float,
+                            unit_pid: int | None = None) -> dict | None:
+    """Newest post-boundary collector_start row FROM THE UNIT'S PROCESS.
+
+    Audit finding 4: this used to keep the newest matching row with no pid
+    filter, and the gap ledger is written by any collector instance — a
+    foreign one did exactly that today (pid 281046, R-351/R-352). Reading a
+    stranger's row makes the checker refuse with text that is FALSE about
+    what happened ("declares clob_v4 ... wrong MODE is live"), routing a
+    healthy deploy to the abort path.
+    """
     if not GAP_LEDGER.exists():
         return None
     found = None
@@ -115,21 +147,28 @@ def observe_collector_start(since_epoch: float) -> dict | None:
         for ln in fh:
             if '"collector_start"' not in ln:
                 continue  # prefilter only; identity decided on the parsed row
-            row = json.loads(ln)
-            if row.get("event") == "collector_start" and \
-                    row.get("recv_ns", 0) >= int(since_epoch * 1e9):
-                found = row
+            try:
+                row = json.loads(ln)
+            except ValueError:
+                continue
+            if row.get("event") != "collector_start":
+                continue
+            if row.get("recv_ns", 0) < int(since_epoch * 1e9):
+                continue
+            if unit_pid is not None and row.get("pid") != unit_pid:
+                continue  # a foreign collector's row is not our declaration
+            found = row
     return found
 
 
-def observe_heartbeat_lines(since_epoch: float, log_offset: int) -> dict:
-    """FIRST and LAST app-heartbeat counter lines AFTER the armed-time byte
-    offset, each with its own HH:MM:SSZ stamp and msgs counter parsed. The
-    offset (recorded by --armed, before the restart) binds the evidence to
-    the post-arming log region; the per-line timestamp bound and the fact
-    that only app-v5 emits the counter fields bind it to the NEW process
-    (V5-0700-R2: evidence must be post-boundary AND process-bound)."""
-    out = {"first": None, "last": None}
+def observe_heartbeat_lines(since_epoch: float, log_offset: int) -> list:
+    """EVERY app-heartbeat counter line after the armed-time byte offset.
+
+    Audit S2: this used to return only the first and last, so a counter
+    RESET — which is what a restart looks like — was invisible in the
+    discarded middle, and a crash-looping collector certified as healthy.
+    """
+    out = []
     if not COLLECTOR_LOG.exists():
         return out
     pat = re.compile(r"\[pm\] (\d\d):(\d\d):(\d\d)Z .*?msgs=(\d+) .*?"
@@ -141,13 +180,10 @@ def observe_heartbeat_lines(since_epoch: float, log_offset: int) -> dict:
             m = pat.search(ln)
             if m:
                 h, mi, sec = int(m.group(1)), int(m.group(2)), int(m.group(3))
-                rec = {"app_ping": int(m.group(5)),
-                       "app_pong": int(m.group(6)),
-                       "msgs": int(m.group(4)),
-                       "line_epoch": day0 + h * 3600 + mi * 60 + sec}
-                if out["first"] is None:
-                    out["first"] = rec
-                out["last"] = rec
+                out.append({"app_ping": int(m.group(5)),
+                            "app_pong": int(m.group(6)),
+                            "msgs": int(m.group(4)),
+                            "line_epoch": day0 + h * 3600 + mi * 60 + sec})
     return out
 
 
@@ -193,6 +229,10 @@ def observe_gap_tail_version(since_epoch: float) -> str | None:
 # ---------------------------------------------------------------- pure checks
 def check_boundary_current(boundary_utc: str, boundary_epoch: int,
                            now_epoch: float, phase: str) -> None:
+    if phase not in ("pre", "post"):
+        raise Refused(f"unknown timing phase {phase!r} — both gates are "
+                      f"phase-keyed, so an unrecognised value would skip "
+                      f"BOTH silently (audit S12)")
     want = datetime(2026, 8, 31, 7, 0, tzinfo=timezone.utc)
     if boundary_utc != "2026-08-31T07:00:00Z" or \
             boundary_epoch != int(want.timestamp()):
@@ -221,9 +261,22 @@ ARGV_V4 = (PYTHON_ARGV0, COLLECTOR_ARGV_TOKEN)
 ARGV_V5 = ARGV_V4 + ("--heartbeat-mode", "app-v5")
 
 
+NBSP_CLASS = "".join(c for c in map(chr, range(0x2000, 0x2030)))
+
+
 def _argv_tokens(exec_start: str) -> list:
+    """Split ONLY on the ASCII space systemd splits on. str.split() also
+    splits U+00A0/U+2028/U+1680 — systemd does not — so an NBSP pasted from
+    a rendered runbook read as a valid flag while argparse would SystemExit
+    and the unit crash-loop (audit S3b)."""
     m = re.search(r"argv\[\]=(.*?) ; ", exec_start)
-    return (m.group(1) if m else exec_start).split()
+    seg = m.group(1) if m else exec_start
+    return [t for t in seg.split(" ") if t]
+
+
+def _exec_path(exec_start: str) -> str | None:
+    m = re.search(r"path=(\S+)", exec_start)
+    return m.group(1) if m else None
 
 
 def installed_mode(exec_start: str) -> str:
@@ -232,6 +285,22 @@ def installed_mode(exec_start: str) -> str:
     proven, the INTERPRETER never) and a trailing `--heartbeat-mode
     control-v4` after the pair — argparse takes the LAST occurrence, so the
     'armed' command would boot v4 (re-review at 97f3778, both executed)."""
+    # audit S3b: any non-ASCII whitespace anywhere in the property is
+    # refused outright — systemd would keep it inside one argv element.
+    for bad in ("\u00a0", "\u2028", "\u2029", "\u1680", "\t", "\u200b"):
+        if bad in exec_start:
+            raise Refused(f"installed command contains non-ASCII/!space "
+                          f"whitespace {bad!r} — systemd keeps it INSIDE an "
+                          f"argv element, argparse would SystemExit(2), and "
+                          f"the unit would crash-loop (audit S3b)")
+    # audit S3a: `path=` is the binary systemd EXECUTES; argv[0] is a label
+    # the unit file can set independently. Checking argv[0] alone left the
+    # interpreter leg open.
+    _p = _exec_path(exec_start)
+    if _p is not None and _p != PYTHON_ARGV0:
+        raise Refused(f"installed command EXECUTES {_p!r}, not "
+                      f"{PYTHON_ARGV0!r} — argv[0] can be set independently "
+                      f"of the real binary (audit S3a)")
     toks = tuple(_argv_tokens(exec_start))
     if toks == ARGV_V5:
         return "app-v5"
@@ -278,6 +347,20 @@ def current_era_and_open_v5(era_rows: list) -> tuple:
     for r in era_rows:
         role = classify_era_row(r)
         if role == "aborted":
+            # Audit finding 6: an `aborted` row for an era that is currently
+            # OPEN is ambiguous — an abort cannot retract a transition that
+            # ran. DA refuses this; my walk accepted it, so an operator
+            # following the abort path after a stamp landed got a green
+            # preflight and a ledger DA can never read again.
+            _av = r.get("collector_schema_version")
+            if (open_v5 is not None and _av == "clob_v5") or \
+                    (open_v5 is None and _av == current and
+                     current is not None):
+                raise Refused(f"AMBIGUOUS attempt state: an 'aborted' row "
+                              f"for {_av} while {_av} is the era IN FORCE — "
+                              f"an abort cannot retract a transition that "
+                              f"ran; the recovery/rollback path applies "
+                              f"(audit F1/D3 generalises this beyond v5)")
             continue  # never transitioned; never enters the era line
         ver = r.get("collector_schema_version")
         if role == "rollback":
@@ -286,6 +369,29 @@ def current_era_and_open_v5(era_rows: list) -> tuple:
                               f"(chain so far ends in {current!r}) — a "
                               f"rollback-only chain is malformed; DA refuses "
                               f"it and so do we")
+            _rb_b = r.get("boundary_utc")
+            if not isinstance(_rb_b, str) or not _rb_b:
+                raise Refused("rollback receipt carries no boundary_utc — "
+                              "the v4-RESUME instant defines the width of "
+                              "the v5 era that ran (audit S4)")
+            try:
+                _rb_t = datetime.strptime(_rb_b, "%Y-%m-%dT%H:%M:%SZ")
+                _cl_t = datetime.strptime(open_v5, "%Y-%m-%dT%H:%M:%SZ")
+            except ValueError:
+                raise Refused(f"rollback receipt boundary {_rb_b!r} or the "
+                              f"era it closes {open_v5!r} is not a parseable "
+                              f"instant (audit S4)")
+            if _rb_t <= _cl_t:
+                raise Refused(f"rollback resume {_rb_b} is not strictly "
+                              f"AFTER the era it closes ({open_v5}) — a "
+                              f"zero- or negative-width v5 span erases the "
+                              f"time that actually ran (audit S4)")
+            if type(r.get("collector_start_recv_ns")) is int and \
+                    r["collector_start_recv_ns"] < BOUNDARY_EPOCH * 10**9:
+                raise Refused(f"rollback restoration recv_ns "
+                              f"{r['collector_start_recv_ns']} predates the "
+                              f"boundary — it cannot be this deployment's "
+                              f"restoration (audit S4)")
             if r.get("supersedes") != "clob_v5" or \
                     r.get("closes_boundary_utc") != open_v5:
                 raise Refused(f"rollback receipt does not match the open era "
@@ -307,6 +413,12 @@ def current_era_and_open_v5(era_rows: list) -> tuple:
                               "matched at consumption)")
             open_v5 = None
         else:  # transitioned
+            if "recovered" in r and r["recovered"] is not True and \
+                    r["recovered"] is not False:
+                raise Refused(f"`recovered` is {r['recovered']!r}, not a "
+                              f"bool — every other role field is exact-True "
+                              f"strict, and a truthy 1 silently WAIVED the "
+                              f"recovery evidence burden (audit S7)")
             if r.get("recovered") is True:
                 # recovered qualifies transitioned (never a fourth state);
                 # a RECONSTRUCTED boundary carries its own evidence burden.
@@ -345,9 +457,62 @@ def current_era_and_open_v5(era_rows: list) -> tuple:
     return current, open_v5
 
 
+MIN_STAGE_LEN = 4  # audit S9: "." satisfied "names its stage"
+
+
+def check_system_safe(obs: dict, phase: str) -> None:
+    """The legs EVERY emitting mode must pass before it writes anything —
+    boundary currency, reviewed bytes, live unit, and the environment that
+    decides which file actually runs (audit S1/S9/S10)."""
+    check_boundary_current(BOUNDARY_UTC, BOUNDARY_EPOCH, obs["now_epoch"],
+                           phase)
+    if obs["tree_sha"] != CAND_SHA:
+        raise Refused(f"on-disk collector sha {obs['tree_sha'][:16]} != the "
+                      f"reviewed candidate {CAND_SHA[:16]}")
+    if obs.get("working_dir") and obs["working_dir"] != str(REPO):
+        raise Refused(f"unit WorkingDirectory is {obs['working_dir']!r}, not "
+                      f"{str(REPO)!r} — the argv script token is RELATIVE, "
+                      f"so a different cwd opens a different file than the "
+                      f"one whose bytes were verified (audit S10)")
+    if obs.get("exec_start_pre"):
+        raise Refused(f"unit declares ExecStartPre "
+                      f"({obs['exec_start_pre'][:60]!r}) — it runs before "
+                      f"the collector and never appears in ExecStart; "
+                      f"provenance is unproven (audit S10)")
+    if not obs["unit_active"] or obs["main_pid"] <= 0:
+        raise Refused(f"unit not active (active={obs['unit_active']}, "
+                      f"pid={obs['main_pid']})")
+
+
+def check_stage(stage: str) -> None:
+    if len(str(stage or "").strip()) < MIN_STAGE_LEN:
+        raise Refused(f"stage {stage!r} is not a description — a receipt's "
+                      f"stage must name the failure path (>= "
+                      f"{MIN_STAGE_LEN} chars; '.' passed before, audit S9)")
+
+
+def check_candidate_commit() -> None:
+    """audit S13: CAND_COMMIT is asserted in every stamp and was verified
+    nowhere — the receipt's commit ref must name bytes that exist and match
+    the reviewed candidate (rule 12)."""
+    blob = subprocess.run(
+        ["git", "-C", str(REPO), "show",
+         f"{CAND_COMMIT}:live/pm_research/collect_pm.py"],
+        capture_output=True)
+    if blob.returncode != 0:
+        raise Refused(f"candidate commit {CAND_COMMIT} is not resolvable in "
+                      f"this repo — the stamp would assert a commit ref "
+                      f"nothing verifies")
+    got = hashlib.sha256(blob.stdout).hexdigest()
+    if got != CAND_SHA:
+        raise Refused(f"the collector at {CAND_COMMIT} hashes {got[:16]}, "
+                      f"not the reviewed candidate {CAND_SHA[:16]}")
+
+
 def check_pre_arm(obs: dict, expect_flag: bool) -> None:
     check_boundary_current(BOUNDARY_UTC, BOUNDARY_EPOCH, obs["now_epoch"],
                            "pre")
+    check_candidate_commit()
     if obs["tree_sha"] != CAND_SHA:
         raise Refused(f"on-disk collector sha {obs['tree_sha'][:16]} != the "
                       f"reviewed candidate {CAND_SHA[:16]} — the bytes that "
@@ -378,9 +543,23 @@ def check_pre_arm(obs: dict, expect_flag: bool) -> None:
                       f"establish provenance before proceeding")
 
 
-def check_post_restart(obs: dict, old_pid: int, start_row: dict | None) -> dict:
-    check_boundary_current(BOUNDARY_UTC, BOUNDARY_EPOCH, obs["now_epoch"],
-                           "post")
+def check_post_restart(obs: dict, old_pid: int, start_row: dict | None,
+                       known_v5_starts: list | None = None) -> dict:
+    # audit S1: these legs used to run AFTER the idempotency return, so a
+    # retry reported success while the unit was dead, reverted, or running
+    # unreviewed bytes. "An append already landed" is evidence about the
+    # LEDGER, not about the SYSTEM.
+    check_system_safe(obs, "post")
+    if installed_mode(obs["exec_start"]) != "app-v5":
+        raise Refused("installed command is not the exact v5 vector — the "
+                      "restart lost the mode and booted v4 semantics")
+    if old_pid <= 0:
+        raise Refused(f"OLD_PID {old_pid!r} is not a real pid — the "
+                      f"restart-happened leg would be vacuous (audit S5); "
+                      f"take it from the --armed output")
+    if old_pid == obs["main_pid"]:
+        raise Refused(f"MainPID unchanged ({old_pid}) — no new process; the "
+                      f"running code and mode are UNPROVEN")
     # IDEMPOTENCY (round-3 #3): if the ledger already carries the open v5
     # stamp, a second emission would fork the chain — DA refuses the result,
     # so the emitter refuses first.
@@ -420,18 +599,6 @@ def check_post_restart(obs: dict, old_pid: int, start_row: dict | None) -> dict:
         raise Refused(f"the era in force per the ledger is {_cur!r}, not "
                       f"clob_v4 — the stamp's supersedes claim would be "
                       f"false")
-    if obs["tree_sha"] != CAND_SHA:
-        raise Refused(f"on-disk collector sha changed "
-                      f"({obs['tree_sha'][:16]}) — the running process may "
-                      f"not be the reviewed candidate")
-    if installed_mode(obs["exec_start"]) != "app-v5":
-        raise Refused(f"installed command is not the exact v5 vector — the "
-                      f"restart lost the mode and booted v4 semantics")
-    if not obs["unit_active"] or obs["main_pid"] <= 0:
-        raise Refused("unit not active after restart — ABORT path applies")
-    if obs["main_pid"] == old_pid:
-        raise Refused(f"MainPID unchanged ({old_pid}) — no new process; the "
-                      f"running code and mode are UNPROVEN")
     if start_row is None:
         raise Refused("no post-boundary collector_start audit row — the new "
                       "process has not declared itself; wait or ABORT")
@@ -490,11 +657,18 @@ def check_post_restart(obs: dict, old_pid: int, start_row: dict | None) -> dict:
     }
 
 
-def check_counters(first: dict | None, last: dict | None,
-                   unit_active: bool, main_pid: int,
+def check_counters(samples: list, unit_active: bool, main_pid: int,
                    gap_tail_version: str | None) -> None:
-    """V5-0700-R2 closure: interval progress + a declared reconciliation
-    invariant + the runbook's adjacent seams, all in the instrument."""
+    """V5-R3B/audit-S2 closure: EVERY sample in the post-arming region is
+    examined, not just the endpoints; a reset anywhere means a restart; the
+    interval must be a real one; and the answer RATE is the health signal.
+
+    The unresolved-ping deficit is deliberately NOT bounded absolutely: the
+    counters are process-wide across 14-21 concurrent sockets and each
+    teardown orphans an in-flight PING permanently, so the absolute deficit
+    grows monotonically and a fixed bound would falsely refuse a WORKING
+    deploy (runbook-audit finding 9).
+    """
     if not unit_active or main_pid <= 0:
         raise Refused(f"unit not active at counter verification "
                       f"(active={unit_active}, pid={main_pid})")
@@ -502,60 +676,67 @@ def check_counters(first: dict | None, last: dict | None,
         raise Refused(f"newest post-boundary gap-ledger row declares "
                       f"{gap_tail_version!r}, not clob_v5 — the audit stream "
                       f"is not the new process's")
-    if first is None or last is None:
-        raise Refused("fewer than one app-heartbeat counter line after the "
-                      "armed-time log offset — the repaired contract is not "
-                      "observably answering; wait a heartbeat interval or "
-                      "ABORT")
-    for tag, hb in (("first", first), ("last", last)):
+    if not samples:
+        raise Refused("no app-heartbeat counter line after the armed-time "
+                      "log offset — the repaired contract is not observably "
+                      "answering; wait a heartbeat interval or ABORT")
+    for i, hb in enumerate(samples):
         le = hb.get("line_epoch")
         if type(le) is not int and type(le) is not float:
-            raise Refused(f"{tag} counter line carries no parseable "
-                          f"timestamp: {hb}")
+            raise Refused(f"counter line {i} carries no parseable timestamp")
         if le < BOUNDARY_EPOCH:
-            raise Refused(f"{tag} counter line is stamped {le:.0f}, BEFORE "
-                          f"the boundary {BOUNDARY_EPOCH} — a stale line "
-                          f"proves the OLD process, not the new one")
-    if last is first or last["line_epoch"] <= first["line_epoch"]:
-        raise Refused("only ONE counter line so far; wait for a second "
-                      "heartbeat line (~60s) and re-run — progress cannot "
-                      "be measured from a single sample")
-    if last["app_ping"] < first["app_ping"] or \
-            last["app_pong"] < first["app_pong"]:
-        raise Refused(f"counters DECREASED over the interval (ping "
-                      f"{first['app_ping']}->{last['app_ping']}, pong "
-                      f"{first['app_pong']}->{last['app_pong']}) — totals "
-                      f"are monotonic within one process; a decrease means "
-                      f"the lines span a RESTART and prove nothing about one "
-                      f"process (re-review 038a1b2 false-accept 3)")
-    if last["app_ping"] <= first["app_ping"]:
-        raise Refused(f"pings did NOT advance over the interval "
-                      f"({first['app_ping']}->{last['app_ping']}) — the "
-                      f"sender itself is not running at cadence")
-    if last["app_pong"] <= first["app_pong"]:
+            raise Refused(f"counter line {i} is stamped {le:.0f}, BEFORE the "
+                          f"boundary {BOUNDARY_EPOCH} — a stale line proves "
+                          f"the OLD process (a next-day line also lands here, "
+                          f"since the clock has no date)")
+        if le > BOUNDARY_EPOCH + MAX_VERIFY_WINDOW_S:
+            raise Refused(f"counter line {i} is stamped "
+                          f"{le - BOUNDARY_EPOCH:.0f}s after the boundary "
+                          f"(> {MAX_VERIFY_WINDOW_S}s) — verification runs "
+                          f"minutes after the deploy, not days (audit S2)")
+    first, last = samples[0], samples[-1]
+    # A RESET anywhere in the region is a restart — invisible at endpoints.
+    for a, b in zip(samples, samples[1:]):
+        if b["app_ping"] < a["app_ping"] or b["app_pong"] < a["app_pong"] \
+                or b["msgs"] < a["msgs"]:
+            raise Refused(f"counters DECREASED between samples "
+                          f"(ping {a['app_ping']}->{b['app_ping']}, pong "
+                          f"{a['app_pong']}->{b['app_pong']}, msgs "
+                          f"{a['msgs']}->{b['msgs']}) — totals are monotonic "
+                          f"within one process, so a decrease means the "
+                          f"collector RESTARTED inside the window (audit S2)")
+    span_s = last["line_epoch"] - first["line_epoch"]
+    if span_s < MIN_VERIFY_SPAN_S:
+        raise Refused(f"only {span_s:.0f}s between the first and last "
+                      f"counter line (< {MIN_VERIFY_SPAN_S}s) — progress "
+                      f"needs a real interval; wait for another heartbeat "
+                      f"line and re-run")
+    ping_d = last["app_ping"] - first["app_ping"]
+    pong_d = last["app_pong"] - first["app_pong"]
+    msgs_d = last["msgs"] - first["msgs"]
+    # RATE floor: at the 10s cadence even ONE socket must produce this many
+    # pings; the real collector runs 14-21. One ping over a long span used
+    # to pass "interval progress proven" (audit S2).
+    need = max(1, int(span_s // (APP_HEARTBEAT_CADENCE_S * 2)))
+    if ping_d < need:
+        raise Refused(f"only {ping_d} PINGs over {span_s:.0f}s (need >= "
+                      f"{need} at a {APP_HEARTBEAT_CADENCE_S}s cadence) — "
+                      f"the sender is not running at cadence")
+    if pong_d <= 0:
         raise Refused(f"pongs did NOT advance over the interval "
-                      f"(first {first['app_pong']}, last {last['app_pong']}) "
-                      f"— a static total is history, not health")
-    if last["msgs"] <= first["msgs"]:
+                      f"({first['app_pong']} -> {last['app_pong']}) — a "
+                      f"static total is history, not health; pings without "
+                      f"pongs is the v4 failure shape one layer up")
+    if msgs_d <= 0:
         raise Refused(f"market rows did NOT advance over the interval "
                       f"(msgs {first['msgs']} -> {last['msgs']})")
-    # (a "counters not positive" refusal stood here — DEAD: the advance
-    # checks above already force last ping/pong >= 1. Deleted rather than
-    # covered; there is no test to write for dead code.)
-    # RECONCILIATION INVARIANT (declared): unresolved PINGs = ping - pong
-    # may not exceed 2 — one in-flight heartbeat plus one boundary-clipped.
-    unresolved = last["app_ping"] - last["app_pong"]
-    if unresolved < 0:
-        raise Refused(f"NEGATIVE unresolved-PING count: ping "
-                      f"{last['app_ping']} < pong {last['app_pong']} — more "
-                      f"answers than questions is a protocol impossibility "
-                      f"for one process; these lines are not one incarnation")
-    if unresolved > 2:
-        raise Refused(f"material unresolved-PING population: ping "
-                      f"{last['app_ping']} vs pong {last['app_pong']} "
-                      f"({unresolved} unresolved > 2 allowed in-flight) — "
-                      f"one answered ping followed by silence passed a >0 "
-                      f"check once")
+    if pong_d < ping_d * MIN_ANSWER_RATIO:
+        raise Refused(f"only {pong_d} PONGs for {ping_d} PINGs over the "
+                      f"interval ({pong_d / max(ping_d, 1):.0%} < "
+                      f"{MIN_ANSWER_RATIO:.0%}) — the contract is answering "
+                      f"too few; per-interval RATE is the health signal, "
+                      f"since the absolute deficit grows with every socket "
+                      f"teardown across 14-21 concurrent sockets")
 
 
 def check_post_rollback(obs: dict, old_v5_pid: int,
@@ -567,6 +748,10 @@ def check_post_rollback(obs: dict, old_v5_pid: int,
     if obs.get("obs_unit_overridden"):
         raise Refused("rollback receipts come only from the PRODUCTION unit "
                       "— the fixture override may not emit")
+    # audit S9: this mode emitted with NO boundary-currency and NO byte gate
+    # — a receipt could be written a day early or a week late over any bytes.
+    check_system_safe(obs, "post")
+    check_stage(stage)
     # PRECONDITION (round-3 #2): a rollback receipt CLOSES an open era; with
     # no stamped v5 in the ledger there is nothing to close and the result
     # is a rollback-only chain DA refuses. The stamp-unwritable path uses an
@@ -592,16 +777,10 @@ def check_post_rollback(obs: dict, old_v5_pid: int,
                       f"{_cur!r}) — nothing to close; for an unstamped v5 "
                       f"(stamp-unwritable path) the RECOVERY BUNDLE applies, "
                       f"never a rollback of a row that does not exist")
-    if not stage or not stage.strip():
-        raise Refused("a rollback receipt must name its STAGE (which failure "
-                      "path forced it) — an unexplained rollback is ambiguous "
-                      "attempt state")
     if installed_mode(obs["exec_start"]) != "control-v4":
         raise Refused("installed command STILL carries the app-v5 vector — "
                       "the drop-in was not removed; this would boot v5 again "
                       "on the next restart")
-    if not obs["unit_active"] or obs["main_pid"] <= 0:
-        raise Refused("unit not active after rollback restart")
     if obs["main_pid"] == old_v5_pid:
         raise Refused(f"MainPID unchanged ({old_v5_pid}) — the rollback "
                       f"restart did not produce a new process")
@@ -666,14 +845,11 @@ def check_post_recovery(obs: dict, v5_start: dict | None,
     DA's rule: a retroactive row carries MORE evidence, not less."""
     if obs.get("obs_unit_overridden"):
         raise Refused("recovery bundles come only from the PRODUCTION unit")
-    if not str(stage or "").strip():
-        raise Refused("a recovery bundle must name its STAGE")
+    check_system_safe(obs, "post")
+    check_stage(stage)
     if installed_mode(obs["exec_start"]) != "control-v4":
         raise Refused("installed command still carries the app-v5 vector — "
                       "v4 is not restored; this is not the recovery case")
-    if not obs["unit_active"] or obs["main_pid"] <= 0:
-        raise Refused("unit not active — restore v4 before recovering the "
-                      "record")
     _cur, _open = current_era_and_open_v5(obs["era_rows"])
     if _open is not None:
         raise Refused(f"an open clob_v5 era already exists at {_open} — the "
@@ -689,6 +865,18 @@ def check_post_recovery(obs: dict, v5_start: dict | None,
     if v4_start is None:
         raise Refused("no collector_start declaring clob_v4 after the v5 "
                       "start — the restoration is unverified")
+    # audit S8: the version claim was enforced only by the OBSERVER, so a
+    # hand-passed clob_v4 row could mint a reconstructed clob_v5 boundary.
+    if v5_start.get("collector_version") != "clob_v5":
+        raise Refused(f"the row offered as the v5 start declares "
+                      f"{v5_start.get('collector_version')!r}, not clob_v5 — "
+                      f"it does not show v5 ran (audit S8)")
+    if v4_start.get("collector_version") != "clob_v4":
+        raise Refused(f"the row offered as the v4 restoration declares "
+                      f"{v4_start.get('collector_version')!r}, not clob_v4")
+    if type(v5_start.get("pid")) is not int or v5_start["pid"] <= 0:
+        raise Refused("the v5 start row carries no usable pid — the "
+                      "reconstructed row would claim pid null")
     for tag, row in (("v5", v5_start), ("v4", v4_start)):
         if row.get("event") != "collector_start":
             raise Refused(f"{tag} declaring row has event="
@@ -818,11 +1006,6 @@ def selftest() -> int:
                                       tzinfo=timezone.utc).timestamp()),
        "the epoch constant equals the ruled UTC instant (derived, not "
        "trusted)")
-    _HB1 = {"app_ping": 3, "app_pong": 3, "msgs": 1000,
-            "line_epoch": BOUNDARY_EPOCH + 65}
-    _HB2 = {"app_ping": 9, "app_pong": 8, "msgs": 5000,
-            "line_epoch": BOUNDARY_EPOCH + 125}
-    check_counters(_HB1, _HB2, True, 4242, "clob_v5")
     ok(True, "POSITIVE: interval progress (pong 3->8, msgs advancing, one "
              "in-flight ping) with active unit and clob_v5 audit tail PASSES")
 
@@ -923,46 +1106,6 @@ def selftest() -> int:
     refuses(lambda: check_post_restart(good_post, 3687786,
                                        {**good_start, "pid": 9999}),
             "not the unit", "KNOWN-BAD: a foreign declaring pid REFUSES")
-    refuses(lambda: check_counters(None, None, True, 4242, "clob_v5"),
-            "not observably answering", "KNOWN-BAD: no counter line REFUSES "
-            "(absence is not success)")
-    refuses(lambda: check_counters(_HB1, {**_HB2, "app_pong": 0,
-                                          "app_ping": 0},
-                                   True, 4242, "clob_v5"),
-            "decreased", "KNOWN-BAD: zeroed last-line counters REFUSE (via "
-            "monotonicity — a reset means a restart)")
-    refuses(lambda: check_counters(_HB1, {**_HB2, "app_ping": 100,
-                                          "app_pong": 4},
-                                   True, 4242, "clob_v5"),
-            "unresolved", "KNOWN-BAD (V5-0700-R2 executed): 100 pings / few "
-            "pongs REFUSES under the DECLARED reconciliation invariant "
-            "(unresolved <= 2), not a >0 check")
-    refuses(lambda: check_counters({**_HB1,
-                                    "line_epoch": BOUNDARY_EPOCH - 86400},
-                                   {**_HB2,
-                                    "line_epoch": BOUNDARY_EPOCH - 86340},
-                                   True, 4242, "clob_v5"),
-            "before", "KNOWN-BAD (V5-0700-R2 executed): PRE-BOUNDARY lines "
-            "REFUSE on their OWN stamps — the observer's filter is not the "
-            "authority")
-    refuses(lambda: check_counters(_HB1, _HB1, True, 4242, "clob_v5"),
-            "single sample", "KNOWN-BAD: a single counter line REFUSES — "
-            "progress cannot be measured from one sample (fragment made "
-            "DISTINCT: 'interval' also appeared in the advance refusal and "
-            "the overlap hid this site from mutation)")
-    refuses(lambda: check_counters(_HB1, {**_HB2, "app_pong": 3},
-                                   True, 4242, "clob_v5"),
-            "did not advance", "KNOWN-BAD: static pong total over the "
-            "interval REFUSES — history is not health")
-    refuses(lambda: check_counters(_HB1, {**_HB2, "msgs": 1000},
-                                   True, 4242, "clob_v5"),
-            "market rows", "KNOWN-BAD: market rows not advancing REFUSES "
-            "(the runbook seam, wired into the instrument)")
-    refuses(lambda: check_counters(_HB1, _HB2, True, 4242, "clob_v4"),
-            "not clob_v5", "KNOWN-BAD: an audit tail still declaring clob_v4 "
-            "REFUSES (the seam is process-bound)")
-    refuses(lambda: check_counters(_HB1, _HB2, False, 0, "clob_v5"),
-            "not active", "KNOWN-BAD: inactive unit at verification REFUSES")
 
     # V5-0700-R4 emitter half: rollback receipt checker
     _V5OPEN = {"collector_schema_version": "clob_v5",
@@ -988,24 +1131,24 @@ def selftest() -> int:
        "(DA b6d6f96 emitter finding 1)")
     refuses(lambda: check_post_rollback({**_rb_obs,
                                          "exec_start": "/home/yuqing/pricer-sol/venv/bin/python3 live/pm_research/collect_pm.py --heartbeat-mode app-v5"},
-                                        4242, _rb_start, "x"),
+                                        4242, _rb_start, "test_stage"),
             "still carries", "KNOWN-BAD: rollback with the drop-in still "
             "installed REFUSES — the next restart would boot v5 again")
-    refuses(lambda: check_post_rollback(_rb_obs, 5151, _rb_start, "x"),
+    refuses(lambda: check_post_rollback(_rb_obs, 5151, _rb_start, "test_stage"),
             "unchanged", "KNOWN-BAD: rollback without a new process REFUSES")
     refuses(lambda: check_post_rollback(_rb_obs, 4242,
                                         {**_rb_start,
                                          "collector_version": "clob_v5"},
-                                        "x"),
+                                        "test_stage"),
             "did not take effect", "KNOWN-BAD: a restored process still "
             "declaring clob_v5 REFUSES — restoration is verified, not "
             "assumed")
     refuses(lambda: check_post_rollback(_rb_obs, 4242, _rb_start, ""),
-            "name its stage", "KNOWN-BAD: an unexplained rollback REFUSES — "
+            "not a description", "KNOWN-BAD: an unexplained rollback REFUSES — "
             "ambiguous attempt state")
     refuses(lambda: check_post_rollback({**_rb_obs,
                                          "obs_unit_overridden": True},
-                                        4242, _rb_start, "x"),
+                                        4242, _rb_start, "test_stage"),
             "production unit", "KNOWN-BAD: the fixture override may not emit "
             "a receipt")
     refuses(lambda: check_boundary_current(BOUNDARY_UTC, BOUNDARY_EPOCH,
@@ -1013,20 +1156,20 @@ def selftest() -> int:
             "arming must complete", "KNOWN-BAD (pre-arm review): pre-arm at "
             "boundary+1s REFUSES — the stamp may not claim an instant the "
             "restart missed")
-    _ES_BAD = ("{ path=x ; argv[]=/home/yuqing/pricer-sol/venv/bin/python3 live/pm_research/collect_pm.py "
+    _ES_BAD = ("{ path=" + PYTHON_ARGV0 + " ; argv[]=/home/yuqing/pricer-sol/venv/bin/python3 live/pm_research/collect_pm.py "
                "--heartbeat-mode app-v5x ; ignore_errors=no }")
     refuses(lambda: check_pre_arm({**good_armed, "exec_start": _ES_BAD},
                                   expect_flag=True),
             "neither", "KNOWN-BAD (pre-arm review): 'app-v5x' — a substring "
             "superset of the flag — REFUSES under exact-vector matching")
-    _ES_SPLIT = ("{ path=x ; argv[]=/home/yuqing/pricer-sol/venv/bin/python3 "
+    _ES_SPLIT = ("{ path=" + PYTHON_ARGV0 + " ; argv[]=/home/yuqing/pricer-sol/venv/bin/python3 "
                  "--heartbeat-mode live/pm_research/collect_pm.py app-v5 ; "
                  "ignore_errors=no }")
     refuses(lambda: check_pre_arm({**good_armed, "exec_start": _ES_SPLIT},
                                   expect_flag=True),
             "neither", "KNOWN-BAD: flag tokens present but NOT ADJACENT "
             "REFUSES — the argument would bind to the wrong option")
-    _ES_GOOD = ("{ path=x ; argv[]=/home/yuqing/pricer-sol/venv/bin/python3 live/pm_research/collect_pm.py --heartbeat-mode app-v5 ; ignore_errors=no }")
+    _ES_GOOD = ("{ path=" + PYTHON_ARGV0 + " ; argv[]=/home/yuqing/pricer-sol/venv/bin/python3 live/pm_research/collect_pm.py --heartbeat-mode app-v5 ; ignore_errors=no }")
     check_pre_arm({**good_armed, "exec_start": _ES_GOOD}, expect_flag=True)
     ok(True, "POSITIVE: the real systemd ExecStart property shape with the "
              "exact adjacent pair PASSES")
@@ -1073,27 +1216,13 @@ def selftest() -> int:
             "REFUSES")
     refuses(lambda: check_pre_arm({**good_armed,
                                    "exec_start":
-                                   "{ path=/x ; argv[]=/x/python3 "
-                                   "/tmp/not_collector.py --heartbeat-mode "
-                                   "app-v5 ; ignore_errors=no }"},
+                                   "{ path=" + PYTHON_ARGV0 + " ; argv[]=" +
+                                   PYTHON_ARGV0 + " /tmp/not_collector.py "
+                                   "--heartbeat-mode app-v5 ; "
+                                   "ignore_errors=no }"},
                                   expect_flag=True),
             "neither", "KNOWN-BAD (038a1b2 #2): the flag on a FOREIGN "
             "script REFUSES — an armed collector requires the collector")
-    refuses(lambda: check_counters({**_HB1, "app_ping": 3, "app_pong": 3},
-                                   {**_HB2, "app_ping": 1, "app_pong": 8},
-                                   True, 4242, "clob_v5"),
-            "decreased", "KNOWN-BAD (038a1b2 #3): ping 3->1 with pong 3->8 "
-            "REFUSES — totals are monotonic within one process; a decrease "
-            "spans a restart")
-    refuses(lambda: check_counters(_HB1, {**_HB2, "app_ping": 4,
-                                          "app_pong": 8},
-                                   True, 4242, "clob_v5"),
-            "impossibility", "KNOWN-BAD: negative unresolved (pong > ping) "
-            "REFUSES — more answers than questions is not one process")
-    refuses(lambda: check_counters(_HB1, {**_HB2, "app_ping": 3},
-                                   True, 4242, "clob_v5"),
-            "sender itself", "KNOWN-BAD: pings static over the interval "
-            "REFUSES — the sender is not at cadence")
 
     # ---- the 16-survivor batch (harness controls A/B/C exposed these) ----
     refuses(lambda: check_boundary_current(BOUNDARY_UTC, BOUNDARY_EPOCH,
@@ -1111,44 +1240,43 @@ def selftest() -> int:
             "post-restart refuses (supersedes claim would be false)")
     refuses(lambda: check_post_restart({**good_post, "tree_sha": "d" * 64},
                                        3687786, good_start),
-            "changed", "SURVIVOR-KB :335 — on-disk bytes changed between "
-            "arm and stamp refuses")
+            "reviewed candidate", "SURVIVOR-KB :335 — on-disk bytes changed "
+            "between arm and stamp refuses (fragment made DISTINCT: "
+            "'changed' is a substring of 'unchanged' and matched the "
+            "MainPID refusal too, audit F10)")
     refuses(lambda: check_post_restart({**good_post, "unit_active": False},
                                        3687786, good_start),
-            "abort path", "SURVIVOR-KB :342 — inactive unit post-restart")
+            "unit not active", "SURVIVOR-KB :342 — inactive unit "
+            "post-restart")
     refuses(lambda: check_post_restart(good_post, 3687786, None),
             "not declared", "SURVIVOR-KB :347 — missing collector_start "
             "(absence is not success; lost in the v5 adaptation)")
-    refuses(lambda: check_counters({**_HB1, "line_epoch": None}, _HB2,
-                                   True, 4242, "clob_v5"),
-            "no parseable", "SURVIVOR-KB :424 — an undatable counter line "
-            "refuses (lost in the interval rewrite)")
     refuses(lambda: check_post_rollback({**_rb_obs, "unit_active": False},
-                                        4242, _rb_start, "x"),
+                                        4242, _rb_start, "test_stage"),
             "not active", "SURVIVOR-KB :501 — inactive unit after rollback")
-    refuses(lambda: check_post_rollback(_rb_obs, 4242, None, "x"),
+    refuses(lambda: check_post_rollback(_rb_obs, 4242, None, "test_stage"),
             "unverified", "SURVIVOR-KB :506 — missing restoration "
             "declaration refuses")
     refuses(lambda: check_post_rollback(_rb_obs, 4242,
                                         {**_rb_start, "event": "heartbeat"},
-                                        "x"),
+                                        "test_stage"),
             "exact identity", "SURVIVOR-KB :509 — wrong event identity on "
             "the restoration row")
     refuses(lambda: check_post_rollback(_rb_obs, 4242,
                                         {**_rb_start,
                                          "recv_ns": float(
                                              (BOUNDARY_EPOCH + 900) * 10**9)},
-                                        "x"),
+                                        "test_stage"),
             "not int", "SURVIVOR-KB :513 — float restoration recv_ns")
     refuses(lambda: check_post_rollback(_rb_obs, 4242,
                                         {**_rb_start,
                                          "recv_ns": (BOUNDARY_EPOCH - 60)
                                          * 10**9},
-                                        "x"),
+                                        "test_stage"),
             "before the boundary", "SURVIVOR-KB :516 — pre-boundary "
             "restoration row")
     refuses(lambda: check_post_rollback(_rb_obs, 4242,
-                                        {**_rb_start, "pid": 777}, "x"),
+                                        {**_rb_start, "pid": 777}, "test_stage"),
             "!= unit mainpid", "SURVIVOR-KB :523 — foreign restoration pid")
 
     _V5MAL = {"collector_schema_version": "clob_v5",
@@ -1212,6 +1340,11 @@ def selftest() -> int:
             "stamp in the ledger REFUSES as a conflict")
     _MY_STAMP = {**_V5OPEN, "pid": 4242,
                  "collector_start_recv_ns": good_start["recv_ns"]}
+    _MY_RB = {"collector_schema_version": "clob_v4", "supersedes": "clob_v5",
+              "rollback": True, "closes_boundary_utc": BOUNDARY_UTC,
+              "stage": "test_rollback",
+              "collector_start_recv_ns": _rb_start["recv_ns"],
+              "boundary_utc": "2026-08-31T07:15:00Z"}
     _idem = check_post_restart({**good_post,
                                 "era_rows": [V4_ROW, _MY_STAMP]},
                                3687786, good_start)
@@ -1220,6 +1353,13 @@ def selftest() -> int:
        "idempotent already-stamped success — the retry seam must not poison "
        "an append-only authority, and a refusal there invites improvisation")
     # ---- DA dcbcdd6 findings against my emitter ----
+    _idem = check_post_restart({**good_post,
+                               "era_rows": [V4_ROW, _MY_STAMP]},
+                               3687786, good_start)
+    ok(_idem.get("already_stamped") is True,
+       "POSITIVE (V5-R3C): an EXACT already-present receipt returns "
+       "idempotent success — but only AFTER every safety leg passes "
+       "(audit S1 moved this behind them)")
     _CLOSED = {**_MY_STAMP}
     _OTHER_OPEN = {"collector_schema_version": "clob_v5",
                    "supersedes": "clob_v4", "transitioned": True,
@@ -1250,7 +1390,7 @@ def selftest() -> int:
     refuses(lambda: check_post_rollback(
                 {**_rb_obs, "era_rows": [V4_ROW, _MY_STAMP]}, 4242,
                 {**_rb_start, "recv_ns": (BOUNDARY_EPOCH * 10**9) + 10**6},
-                "x"),
+                "test_stage"),
             "same second", "KNOWN-BAD (DA a): a SUB-SECOND restoration "
             "refuses HERE — second-resolution truncation would emit a "
             "zero-width era that DA refuses later")
@@ -1298,42 +1438,294 @@ def selftest() -> int:
        "POSITIVE: the emitted bundle traverses my own chain walk to "
        "(clob_v4, closed) — the emitter cannot produce what the consumer "
        "refuses")
-    refuses(lambda: check_post_recovery(_rec_obs, None, _V4START, "s"),
+    refuses(lambda: check_post_recovery(_rec_obs, None, _V4START, "test_stage"),
             "nothing shows v5 ever ran", "KNOWN-BAD: recovery with NO v5 "
             "collector_start REFUSES — that is the pre-stamp abort case")
-    refuses(lambda: check_post_recovery(_rec_obs, _V5START, None, "s"),
+    refuses(lambda: check_post_recovery(_rec_obs, _V5START, None, "test_stage"),
             "restoration is unverified", "KNOWN-BAD: recovery without a v4 "
             "restoration row REFUSES")
     refuses(lambda: check_post_recovery(_rec_obs, _V5START,
                                         {**_V4START,
                                          "recv_ns": _V5START["recv_ns"] - 1},
-                                        "s"),
+                                        "test_stage"),
             "not after", "KNOWN-BAD: a restoration BEFORE the v5 start "
             "REFUSES — chronology")
     refuses(lambda: check_post_recovery(_rec_obs, _V5START, _V4START, ""),
-            "name its stage", "KNOWN-BAD: an unexplained recovery REFUSES")
+            "not a description", "KNOWN-BAD: an unexplained recovery REFUSES")
     refuses(lambda: check_post_recovery(
                 {**_rec_obs, "era_rows": [V4_ROW, _MY_STAMP]},
-                _V5START, _V4START, "s"),
+                _V5START, _V4START, "test_stage"),
             "was stamped", "KNOWN-BAD: recovery when the transition WAS "
             "stamped REFUSES — that is the rollback case")
     refuses(lambda: check_post_recovery(
                 {**_rec_obs, "exec_start": " ".join(ARGV_V5)},
-                _V5START, _V4START, "s"),
+                _V5START, _V4START, "test_stage"),
             "not restored", "KNOWN-BAD: recovery while the app-v5 vector is "
             "still installed REFUSES")
 
-    _MY_RB = {"collector_schema_version": "clob_v4", "supersedes": "clob_v5",
-              "rollback": True, "closes_boundary_utc": BOUNDARY_UTC,
-              "stage": "test",
-              "collector_start_recv_ns": _rb_start["recv_ns"],
-              "boundary_utc": "2026-08-31T07:15:00Z"}
     _idem2 = check_post_rollback({**_rb_obs,
                                   "era_rows": [V4_ROW, _MY_STAMP, _MY_RB]},
                                  4242, _rb_start, "counters_refused")
     ok(_idem2.get("already_stamped") is True,
        "POSITIVE (V5-R3C mirrored): an EXACT already-present rollback "
        "receipt returns idempotent success")
+
+    _V5OPEN = {"collector_schema_version": "clob_v5",
+               "supersedes": "clob_v4", "transitioned": True,
+               "boundary_utc": BOUNDARY_UTC}
+    _V5T = dict(_V5OPEN)
+    _RBOK = {"collector_schema_version": "clob_v4", "supersedes": "clob_v5",
+             "rollback": True, "closes_boundary_utc": BOUNDARY_UTC,
+             "stage": "test_rollback",
+             "collector_start_recv_ns": (BOUNDARY_EPOCH + 900) * 10**9,
+             "boundary_utc": "2026-08-31T07:15:00Z"}
+    _RB = dict(_RBOK)
+    _rb_start = {"recv_ns": (BOUNDARY_EPOCH + 900) * 10**9,
+                 "collector_version": "clob_v4", "pid": 5151,
+                 "event": "collector_start"}
+    _rb_obs = {**good_post, "main_pid": 5151,
+               "exec_start": " ".join(ARGV_V4),
+               "era_rows": [V4_ROW, _V5OPEN]}
+    _S1 = {"app_ping": 3, "app_pong": 3, "msgs": 1000,
+           "line_epoch": BOUNDARY_EPOCH + 65}
+    _S2 = {"app_ping": 9, "app_pong": 8, "msgs": 5000,
+           "line_epoch": BOUNDARY_EPOCH + 125}
+    _S3 = {"app_ping": 15, "app_pong": 14, "msgs": 9000,
+           "line_epoch": BOUNDARY_EPOCH + 185}
+    _GOOD = [_S1, _S2, _S3]
+    check_counters(_GOOD, True, 4242, "clob_v5")
+    ok(True, "POSITIVE: three post-boundary samples, monotonic, pongs and "
+             "msgs advancing at cadence, PASS")
+
+    refuses(lambda: check_counters([], True, 4242, "clob_v5"),
+            "not observably answering", "KNOWN-BAD: no counter line REFUSES "
+            "(absence is not success)")
+    refuses(lambda: check_counters([_S1], True, 4242, "clob_v5"),
+            "real interval", "KNOWN-BAD: a single sample REFUSES — progress "
+            "cannot be measured from one point")
+    refuses(lambda: check_counters(
+                [_S1, {**_S2, "app_ping": 1, "app_pong": 1, "msgs": 10},
+                 _S3], True, 4242, "clob_v5"),
+            "restarted inside", "KNOWN-BAD (audit S2): a counter RESET in "
+            "the MIDDLE of the region REFUSES — endpoint-only sampling "
+            "certified a crash-looping collector as healthy")
+    refuses(lambda: check_counters(
+                [_S1, {**_S1, "app_ping": 4, "app_pong": 4, "msgs": 1001,
+                       "line_epoch": BOUNDARY_EPOCH + 7200}],
+                True, 4242, "clob_v5"),
+            "not running at cadence", "KNOWN-BAD (audit S2): ONE ping over "
+            "two hours REFUSES — there was no rate floor at all")
+    refuses(lambda: check_counters(
+                [_S1, {**_S2, "line_epoch": BOUNDARY_EPOCH + 200000}],
+                True, 4242, "clob_v5"),
+            "not days", "KNOWN-BAD (audit S2): a line stamped far beyond the "
+            "verification window REFUSES (a year-2100 line passed before)")
+    refuses(lambda: check_counters(
+                [{**_S1, "line_epoch": BOUNDARY_EPOCH - 120}, _S2],
+                True, 4242, "clob_v5"),
+            "before the boundary", "KNOWN-BAD: a PRE-BOUNDARY sample REFUSES "
+            "on its own stamp")
+    refuses(lambda: check_counters(
+                [{**_S1, "line_epoch": None}, _S2], True, 4242, "clob_v5"),
+            "no parseable timestamp", "KNOWN-BAD: an undatable sample "
+            "REFUSES")
+    refuses(lambda: check_counters(
+                [_S1, {**_S2, "app_pong": 3}], True, 4242, "clob_v5"),
+            "static total is history", "KNOWN-BAD: pongs not advancing "
+            "REFUSES — the v4 failure shape one layer up")
+    refuses(lambda: check_counters(
+                [_S1, {**_S2, "app_ping": 40, "app_pong": 4}],
+                True, 4242, "clob_v5"),
+            "answering too few", "KNOWN-BAD: a poor ANSWER RATE over the "
+            "interval REFUSES — rate, not an absolute deficit that grows "
+            "with every socket teardown")
+    refuses(lambda: check_counters(
+                [_S1, {**_S2, "msgs": 1000}], True, 4242, "clob_v5"),
+            "market rows did not advance", "KNOWN-BAD: market rows static "
+            "REFUSES (the runbook seam, in the instrument)")
+    refuses(lambda: check_counters(_GOOD, True, 4242, "clob_v4"),
+            "not clob_v5", "KNOWN-BAD: an audit tail still declaring clob_v4 "
+            "REFUSES")
+    refuses(lambda: check_counters(_GOOD, False, 4242, "clob_v5"),
+            "unit not active", "KNOWN-BAD: inactive unit REFUSES")
+    refuses(lambda: check_counters(_GOOD, True, 0, "clob_v5"),
+            "unit not active", "KNOWN-BAD: main_pid<=0 REFUSES — the second "
+            "operand of the liveness guard, pinned separately (audit F7)")
+    refuses(lambda: check_boundary_current(BOUNDARY_UTC, BOUNDARY_EPOCH,
+                                           BOUNDARY_EPOCH + 10, "POST"),
+            "unknown timing phase", "KNOWN-BAD (audit S12): an unrecognised "
+            "phase REFUSES instead of skipping both gates")
+    refuses(lambda: installed_mode(
+                "{ path=/bin/true ; argv[]=" + " ".join(ARGV_V5) +
+                " ; ignore_errors=no }"),
+            "executes", "KNOWN-BAD (audit S3a): a WRONG path= with a correct "
+            "argv REFUSES — path= is the binary systemd runs")
+    refuses(lambda: installed_mode(" ".join(ARGV_V4) +
+                                   " --heartbeat-mode\u00a0app-v5"),
+            "non-ascii", "KNOWN-BAD (audit S3b): a NON-BREAKING SPACE in the "
+            "installed command REFUSES — str.split() saw a valid flag where "
+            "systemd would keep one argv element and argparse would exit 2")
+    refuses(lambda: check_system_safe(
+                {**good_pre, "working_dir": "/tmp",
+                 "now_epoch": BOUNDARY_EPOCH + 30}, "post"),
+            "workingdirectory", "KNOWN-BAD (audit S10): a WorkingDirectory "
+            "other than the repo REFUSES — the argv script token is relative")
+    refuses(lambda: check_system_safe(
+                {**good_pre, "exec_start_pre": "/bin/sh -c evil",
+                 "now_epoch": BOUNDARY_EPOCH + 30}, "post"),
+            "execstartpre", "KNOWN-BAD (audit S10): an ExecStartPre REFUSES "
+            "— it runs first and never appears in ExecStart")
+    refuses(lambda: check_stage("."),
+            "not a description", "KNOWN-BAD (audit S9): a one-character "
+            "stage REFUSES")
+
+    refuses(lambda: check_post_restart(good_post, 0, good_start),
+            "not a real pid", "KNOWN-BAD (audit S5): OLD_PID 0 REFUSES — a "
+            "mistyped or forgotten pid silently removed the "
+            "restart-happened leg and still emitted a full era stamp")
+
+    # ---- audit F6: the recovery checker was OUTSIDE the harness scope,
+    # so 13 of its refusals had never been exercised by anything ----
+    _RO = {**_rec_obs}
+    refuses(lambda: check_post_recovery({**_RO,
+                                         "obs_unit_overridden": True},
+                                        _V5START, _V4START, "test_stage"),
+            "production unit", "F6-KB: fixture override may not emit a "
+            "bundle")
+    refuses(lambda: check_post_recovery({**_RO, "unit_active": False},
+                                        _V5START, _V4START, "test_stage"),
+            "unit not active", "F6-KB: inactive unit at recovery REFUSES")
+    refuses(lambda: check_post_recovery({**_RO, "tree_sha": "f" * 64},
+                                        _V5START, _V4START, "test_stage"),
+            "reviewed candidate", "F6-KB (audit S9): non-candidate bytes at "
+            "recovery REFUSE — this mode had NO byte gate at all")
+    refuses(lambda: check_post_recovery({**_RO,
+                                         "now_epoch": BOUNDARY_EPOCH - 86400},
+                                        _V5START, _V4START, "test_stage"),
+            "deploys early", "F6-KB (audit S9): a recovery emitted a day "
+            "BEFORE the boundary REFUSES — this mode had no boundary "
+            "currency")
+    refuses(lambda: check_post_recovery({**_RO, "era_rows": []},
+                                        _V5START, _V4START, "test_stage"),
+            "era in force", "F6-KB: an empty ledger at recovery REFUSES")
+    refuses(lambda: check_post_recovery(
+                _RO, {**_V5START, "collector_version": "clob_v4"},
+                _V4START, "test_stage"),
+            "does not show v5 ran", "F6-KB (audit S8): a row declaring "
+            "clob_v4 offered as the v5 start REFUSES — the version claim was "
+            "enforced only by the OBSERVER")
+    refuses(lambda: check_post_recovery(
+                _RO, _V5START, {**_V4START, "collector_version": "clob_v5"},
+                "test_stage"),
+            "not clob_v4", "F6-KB (audit S8): a restoration row declaring "
+            "clob_v5 REFUSES")
+    refuses(lambda: check_post_recovery(
+                _RO, {**_V5START, "pid": None}, _V4START, "test_stage"),
+            "no usable pid", "F6-KB (audit S8): a v5 start without a pid "
+            "REFUSES — the emitted row would claim pid null")
+    refuses(lambda: check_post_recovery(
+                _RO, {**_V5START, "event": "heartbeat"}, _V4START,
+                "test_stage"),
+            "exact identity", "F6-KB: wrong event identity on the v5 row")
+    refuses(lambda: check_post_recovery(
+                _RO, _V5START, {**_V4START, "event": "heartbeat"},
+                "test_stage"),
+            "exact identity", "F6-KB: wrong event identity on the v4 row")
+    refuses(lambda: check_post_recovery(
+                _RO, {**_V5START, "recv_ns": float(_V5START["recv_ns"])},
+                _V4START, "test_stage"),
+            "not int", "F6-KB: a FLOAT v5 recv_ns REFUSES (the R-330 rule, "
+            "never exercised here before)")
+    refuses(lambda: check_post_recovery(
+                _RO, {**_V5START,
+                      "recv_ns": (BOUNDARY_EPOCH - 60) * 10**9},
+                _V4START, "test_stage"),
+            "predates the boundary", "F6-KB: a v5 start BEFORE the boundary "
+            "REFUSES")
+    refuses(lambda: check_post_recovery(
+                _RO, {**_V5START,
+                      "recv_ns": (BOUNDARY_EPOCH + 600) * 10**9},
+                _V4START, "test_stage"),
+            "did not start at the instant", "F6-KB: a v5 start far after the "
+            "boundary REFUSES")
+    refuses(lambda: check_post_recovery(
+                _RO, _V5START, {**_V4START, "pid": 999}, "test_stage"),
+            "not the live unit", "F6-KB: a restoration by a process that is "
+            "not the live unit REFUSES")
+    refuses(lambda: check_post_recovery(
+                _RO, {**_V5START, "recv_ns": BOUNDARY_EPOCH * 10**9},
+                {**_V4START, "recv_ns": BOUNDARY_EPOCH * 10**9 + 10**6},
+                "test_stage"),
+            "same second", "F6-KB: a same-second reconstructed span REFUSES")
+    refuses(lambda: check_post_rollback({**_rb_obs, "tree_sha": "a" * 64},
+                                        4242, _rb_start, "test_stage"),
+            "reviewed candidate", "F6-KB (audit S9): non-candidate bytes at "
+            "rollback REFUSE")
+    refuses(lambda: check_post_rollback(
+                {**_rb_obs, "now_epoch": BOUNDARY_EPOCH - 86400}, 4242,
+                _rb_start, "test_stage"),
+            "deploys early", "F6-KB (audit S9): a rollback emitted before "
+            "the boundary REFUSES")
+    refuses(lambda: check_post_restart({**good_post, "working_dir": "/tmp"},
+                                       3687786, good_start),
+            "workingdirectory", "F6-KB (audit S10): a wrong WorkingDirectory "
+            "at stamp time REFUSES")
+
+    # ---- audit F1/S4/S7/S13: the new consumer + commit refusals ----
+    _OPEN = {**_V5OPEN}
+    refuses(lambda: current_era_and_open_v5(
+                [V4_ROW, {"collector_schema_version": "clob_v4",
+                          "aborted": True, "stage": "test_stage",
+                          "boundary_utc": BOUNDARY_UTC}]),
+            "era in force", "KNOWN-BAD (audit F1/D3): an aborted row for the "
+            "era IN FORCE REFUSES — generalised beyond clob_v5")
+    refuses(lambda: current_era_and_open_v5(
+                [V4_ROW, _OPEN, {k: v for k, v in _RBOK.items()
+                                 if k != "boundary_utc"}]),
+            "no boundary_utc", "KNOWN-BAD (audit S4): a rollback with NO "
+            "resume instant REFUSES — that instant defines the width of the "
+            "v5 era that ran")
+    refuses(lambda: current_era_and_open_v5(
+                [V4_ROW, _OPEN, {**_RBOK, "boundary_utc": "not-an-instant"}]),
+            "not a parseable instant", "KNOWN-BAD (audit S4): an unparseable "
+            "rollback instant REFUSES")
+    refuses(lambda: current_era_and_open_v5(
+                [V4_ROW, _OPEN, {**_RBOK, "boundary_utc": BOUNDARY_UTC}]),
+            "not strictly after", "KNOWN-BAD (audit S4): a ZERO-WIDTH era "
+            "(resume == transition instant) REFUSES in the CONSUMER — the "
+            "emitter already refused it, but the consumer guards a ledger "
+            "anyone can append to")
+    refuses(lambda: current_era_and_open_v5(
+                [V4_ROW, _OPEN, {**_RBOK,
+                                 "boundary_utc": "2026-08-31T06:00:00Z"}]),
+            "not strictly after", "KNOWN-BAD (audit S4): a NEGATIVE-width "
+            "era REFUSES")
+    refuses(lambda: current_era_and_open_v5(
+                [V4_ROW, _OPEN, {**_RBOK, "collector_start_recv_ns": 0}]),
+            "predates the boundary", "KNOWN-BAD (audit S4): an epoch-0 "
+            "restoration recv_ns REFUSES")
+    refuses(lambda: current_era_and_open_v5([V4_ROW, {**_OPEN,
+                                                      "recovered": 1}]),
+            "not a bool", "KNOWN-BAD (audit S7): a TRUTHY-but-not-True "
+            "`recovered` REFUSES — 1 silently waived the whole recovery "
+            "evidence burden while every other role flag is exact-True")
+    _sv_c, _sv_s = CAND_COMMIT, CAND_SHA
+    try:
+        globals()["CAND_COMMIT"] = "0000000"
+        refuses(check_candidate_commit, "not resolvable",
+                "KNOWN-BAD (audit S13): an unresolvable candidate commit "
+                "REFUSES — the ref asserted in every stamp was verified "
+                "nowhere")
+        globals()["CAND_COMMIT"] = _sv_c
+        globals()["CAND_SHA"] = "e" * 64
+        refuses(check_candidate_commit, "not the reviewed candidate",
+                "KNOWN-BAD (audit S13): a candidate commit whose bytes do "
+                "not hash to the reviewed sha REFUSES")
+    finally:
+        globals()["CAND_COMMIT"], globals()["CAND_SHA"] = _sv_c, _sv_s
+    check_candidate_commit()
+    ok(True, "POSITIVE (audit S13): the real candidate commit resolves and "
+             "its collector bytes hash to the reviewed candidate")
 
     print(f"v5_boundary_preflight selftests: {n[0]} checks passed")
     return 0
@@ -1414,14 +1806,19 @@ def main() -> int:
                           "by --armed) — unanchored log evidence was the "
                           "V5-0700-R2 false accept")
         obs = observe_common()
+        if obs.get("obs_unit_overridden"):
+            raise Refused("counter verification reads PRODUCTION log and "
+                          "ledger — a fixture unit override would describe "
+                          "an unrelated unit's liveness (audit S11)")
         hb = observe_heartbeat_lines(BOUNDARY_EPOCH, a.log_offset)
-        check_counters(hb["first"], hb["last"], obs["unit_active"],
-                       obs["main_pid"],
+        check_counters(hb, obs["unit_active"], obs["main_pid"],
                        observe_gap_tail_version(BOUNDARY_EPOCH))
-        print(f"COUNTERS OK: interval progress proven "
-              f"(pong {hb['first']['app_pong']} -> {hb['last']['app_pong']}, "
-              f"msgs {hb['first']['msgs']} -> {hb['last']['msgs']}, "
-              f"unresolved {hb['last']['app_ping'] - hb['last']['app_pong']})")
+        f, l = hb[0], hb[-1]
+        print(f"COUNTERS OK: {len(hb)} samples over "
+              f"{l['line_epoch'] - f['line_epoch']:.0f}s, no reset; "
+              f"ping +{l['app_ping'] - f['app_ping']}, "
+              f"pong +{l['app_pong'] - f['app_pong']}, "
+              f"msgs +{l['msgs'] - f['msgs']}")
         return 0
     ap.print_help()
     return 2

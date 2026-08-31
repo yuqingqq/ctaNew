@@ -55,6 +55,22 @@ CASES = [
     ("recovered without stage", [LEGACY,
      {**V5OK, "recovered": True,
       "collector_start_recv_ns": (B + 5) * 10**9}, RB], "refuse"),
+    # Audit F1: three REALISTIC chains the fuzzer found where --pre-arm
+    # proceeded on a ledger DA refuses. The 12 original fixtures missed all
+    # three shapes; the walk now refuses them too.
+    ("F1/D1 rollback copies the TRANSITION instant (zero-width era)",
+     [LEGACY, V5OK, {**RB, "boundary_utc": V5OK["boundary_utc"]}], "refuse"),
+    ("F1/D2 rollback restoration PREDATES the era it reverts",
+     [LEGACY, V5OK, {**RB, "boundary_utc": "2026-08-31T06:00:00Z"}],
+     "refuse"),
+    ("F1/D3 aborted clob_v4 row while clob_v4 is LIVE",
+     [LEGACY, {"collector_schema_version": "clob_v4", "aborted": True,
+               "boundary_utc": "2026-08-31T07:00:00Z", "stage": "x"}],
+     "refuse"),
+    ("rollback with epoch-0 restoration recv_ns",
+     [LEGACY, V5OK, {**RB, "collector_start_recv_ns": 0}], "refuse"),
+    ("recovered as truthy 1, not bool (audit S7)",
+     [LEGACY, {**V5OK, "recovered": 1}], "refuse"),
 ]
 
 
@@ -67,11 +83,15 @@ def mine(rows):
 
 
 def da(rows, path):
+    """Only DA's DECLARED refusal (ValueError) counts as 'refuse'. Audit F3:
+    a bare `except Exception` scored crashes, missing files and injected
+    NameErrors as refusals, so two deliberately broken DA paths kept this
+    test 12/12 green."""
     path.write_text("".join(json.dumps(r) + "\n" for r in rows))
     try:
         D.day_era_admission("20260901", path)
         return "ok"
-    except Exception:
+    except ValueError:
         return "refuse"
 
 
