@@ -17779,6 +17779,36 @@ The R-271 escalation was RIGHT in substance and sat ~2h in the wrong CHANNEL: BE
 
 **The residual, stated rather than buried.** Even with the revert, btc's measured pre-O1a rate was **100.2 s/hr against a 120 bar — under it by 17%.** That is marginal, not comfortable, and two of the five pre-O1a days (08-25, 08-26, 08-27) were over it. **The revert makes btc plausible, not safe.** The independent second lever — ruling whether the clock requires btc at all, when six coins pass by 10x — remains open and is a USER act under rule 14, and it must be settled BEFORE 08-31 closes or the choice is made having seen the split (rule 11).
 
+### R-364 — 2026-08-31T15:20Z — coordinator — **IN-BAND CORRECTION OF R-363: NO, THE ISSUE IS NOT THE ONE I FIXED.** The ping revert is real and worth 2.07x — and it lands btc at **123 s/hr against a 120 bar**. USER asked "make sure the issue is exactly the fixed one"; it is not
+
+**The revert is correct and stays. It is not sufficient, and R-363 implied it was.**
+
+Normalised to full days (partials projected), bar 120 s/hr:
+
+| period | config | gaps/hr | s/hr | passing |
+|---|---|---|---|---|
+| 08-20..24 (before the break) | 10/10 | 1.0–3.2 | **4.1, 6.5, 2.1, 7.4, 12.6** | **5 of 5** |
+| 08-25..29 (after the break) | 10/10 | 5.7–27.7 | **151.9, 123.8, 130.6, 114.1, 32.3** | **2 of 5** |
+| 08-31 | 3/3 | 43.6 | **272.8** | 0 of 1 |
+
+**What the revert buys, measured on TOTAL disconnect rate rather than one cause:** 43.6 → 21.1 gaps/hr, **2.07x**, landing btc near **123 s/hr. The bar is 120.** It is a coin-flip, not a pass — and at 10/10 after the break btc passed **two days in five**.
+
+**Two regressions, and I fixed the smaller one.** The break moved btc from ~6.5 s/hr (**16x clear** of the bar) to ~124 (**at** it) — call it 19x. O1a then added 2.07x on top. **The 08-25 event is roughly an order of magnitude more important than the thing I fixed**, and R-363 named O1a as *the* issue.
+
+**R-363's mechanism also needs narrowing.** The "ping COUNT" story rested on PING_TIMEOUT alone. The full cause breakdown shows O1a **partly RECLASSIFIED** rather than purely added: across the boundary btc's NO_CLOSE_FRAME fell 152 → 13 and SLOW_CONSUMER_1013 fell 69 → 6, because a 3 s deadline now kills the socket *before* those modes fire. The total still rose 2.07x, so the direction holds and the revert is still right — but **4.18x was one cause, not the effect.** Quoting a per-cause ratio as the effect size is the same error as quoting a threshold-dependent count as a quantity (R-361), committed twice in one day.
+
+**08-25's signature, and it exonerates everything we control.** All three failure modes exploded together — **PING_TIMEOUT 25 → 349, NO_CLOSE_FRAME 19 → 204, SLOW_CONSUMER_1013 26 → 112.** A ping-config problem moves ONE cause. This moved all three, so the **connection itself** began failing.
+
+And it is **btc and only btc**: non-btc disconnects went **DOWN**, 14.6 → 9.8/day. That single fact rules out machine-wide load, network path to the venue, and our configuration — every one of which would have hit all seven coins.
+
+Everything else on our side was flat or falling across the break: config unchanged (10/10 both sides), socket count unchanged, **rows/window FELL 147,275 → 117,451**, **MB/window FELL 95.4 → 85.3**, bytes/row flat at ~700–740. **Nothing in our data or our configuration explains it.**
+
+**The hypothesis that fits, stated as a hypothesis.** `SLOW_CONSUMER_1013` is the venue closing us for not reading fast enough, and it was already present at 19–26/day on btc in the CLEAN era while every other coin sat near zero. btc carries ~10x the volume of any other stream, so **it is the only coin anywhere near a consumption limit — and a machine-wide slowdown would therefore surface on btc ALONE**, which is exactly the observed signature. R-150's resource fencing (`9f00381`, **08-26 05:27**, research capped at ≤60% RAM / ≤75% CPU) landed the next morning, consistent with resource pressure being noticed around then. **I CANNOT CONFIRM THIS from data on disk** — it needs machine load history the repo does not keep, and it is recorded as the leading candidate, not a finding.
+
+**What this means for the deploy question.** The revert is free and directionally right, so it stays; but **it does not make 09-01 a passing day for btc — it makes it a coin-flip.** The decision that actually starts the clock is therefore the OTHER lever: whether the race requires btc at all, when six coins pass by a factor of ten. That is a USER act under rule 14 and it must be settled before 08-31 closes (rule 11).
+
+**The lesson, and it is the third instance today.** R-357 found the fix did not address the cause. R-360 proposed a mechanism that failed its own test. **This one found the fix addressed a real cause that was not the DOMINANT one** — and the only reason it surfaced is that the USER asked whether the issue was exactly the fixed one. **"Is this the whole cause or a cause?" is a different question from "is this a cause?", and I had only answered the second.**
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
