@@ -415,6 +415,15 @@ def _ledger_rows(src: Path) -> list[tuple]:
             raise ValueError(
                 f"REFUSED: {st} row {lineno} ({v} @ {b}) names no `stage` -- an "
                 f"attempt that will not say WHICH path it took is not auditable")
+        if r.get("supersedes") == v:
+            raise ValueError(
+                f"REFUSED: era ledger row {lineno} ({v} @ {b}) supersedes "
+                f"ITSELF. The ledger records TRANSITIONS, and a row replacing "
+                f"its own version transitions nothing -- but it still mints a "
+                f"boundary, which silently makes the day it lands on impure "
+                f"and costs a day off the validation clock for no era change. "
+                f"A same-version restart is not a transition; if one needs "
+                f"recording, it needs its own declared shape.")
         ts = dt.datetime.fromisoformat(b.replace("Z", "+00:00")).timestamp()
         out.append((ts, b, v, r.get("supersedes"), st, r))
     return out
@@ -1959,6 +1968,15 @@ def _selftests() -> int:
                              )["race_admissible_by_era"] is True,
            "and against the SAME table a PURE day in one of those eras is "
            "admissible, so the check is purity and not blanket refusal")
+    _self = _refusal([_v4, dict(_v5, supersedes="clob_v5")])
+    ok("supersedes ITSELF" in _self,
+       "KNOWN-BAD: a row superseding its OWN version refuses. It transitions "
+       "nothing, yet it mints a boundary -- and the direction of the harm is "
+       "easy to miss: it makes the day it lands on IMPURE, so it fails SAFE on "
+       "admissibility while silently costing a day off the five-day clock")
+    ok(_adm_of([_v4, _v5])["race_admissible_by_era"] is True,
+       "POSITIVE CONTROL: the same row superseding a DIFFERENT version is "
+       "still admitted -- the check targets self-reference, not v5 rows")
     _chain = _refusal([_v4, {"collector_schema_version": "clob_v5",
                              "transitioned": True, "supersedes": "clob_v3_1",
                              "boundary_utc": _B}])
