@@ -73,6 +73,94 @@ updated: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  v5_heartbeat_deploy: HELD-BY-COORDINATOR-PREMISE-FALSIFIED
+                             # STATUS 2026-08-31T11:42Z (R-357). NOT a Codex
+                             # hold and NOT an instrument defect -- the DEPLOY'S
+                             # PREMISE is falsified by the live collector log,
+                             # verified on four legs by execution:
+                             # (1) websockets 15.0.1 keepalive() pings
+                             # UNCONDITIONALLY, so sockets sitting 18-44 s
+                             # silent (observed live) have had 6-14 consecutive
+                             # control Pongs ANSWERED -- the venue does answer
+                             # RFC Pongs; (2) disconnects are 94.2% btc
+                             # (880/934 on 08-31) and a protocol contract
+                             # cannot be coin-selective -- what separates the
+                             # coins is THROUGHPUT (btc 301 msg/s, hype 11.6);
+                             # (3) btc PING_TIMEOUT gaps are median 5.8 s /
+                             # max 11.3 s = exactly interval+timeout, ZERO
+                             # above 60 s, with market data flowing until
+                             # seconds before each close -- the round trip
+                             # fails LOCALLY while data flows; (4) PONG is
+                             # acknowledged in the READER TASK
+                             # (process_event -> acknowledge_pings) whereas
+                             # v5's TEXT PONG traverses the application recv
+                             # queue -- ws_q_hi=344 at 301 msg/s is 1.14 s of
+                             # a 3.0 s deadline, ON THE SOCKET CARRYING 94% OF
+                             # THE FAILURES. v5 moves the heartbeat onto the
+                             # contended resource and can make btc WORSE.
+                             # ARITHMETIC NOBODY HAD DONE: btc is 230.1 s/hr
+                             # against a P1 bar of 120; no contract fix
+                             # reaches it. eth is 13.8 s/hr and ALREADY PASSES
+                             # under v4, blocked only by the era ruling.
+                             # R-356's live probe cannot speak to leg 4: it
+                             # attached to an EXPIRED slug with ~0 market
+                             # flow, precisely where queue contention cannot
+                             # exist. NOTHING ARMED, no instant requested, v4
+                             # live and continuous (pid 3687786); round-7
+                             # batch and the Codex round SUSPENDED. THE NEXT
+                             # MOVE IS A USER RULING, not a coordinator one --
+                             # recommended: a >=2 h LIVE-btc shadow probe at
+                             # 3 s alongside the running collector (no
+                             # boundary, no restart, zero cost to the
+                             # validation clock, ~74 expected events), which
+                             # settles legs 1/3/4 together.
+  v5_preflight_instrument: GREEN-BUT-ITS-PURPOSE-IS-UNDER-REVIEW
+                             # STATUS 2026-08-31T12:00Z (R-358). The
+                             # instrument itself is sound and got sounder:
+                             # d0f2deb closed four defects found by the one
+                             # angle six rounds never took -- following the
+                             # artifacts DOWNSTREAM into DA's day verdicts.
+                             # A MIDNIGHT boundary made a mixed-era day read
+                             # PURE and ACCRUING (collector_start_recv_ns is
+                             # validated on `recovered`/`rollback` rows and
+                             # NOT on `transitioned` rows, the only kind that
+                             # OPENS an admissible era); a near-midnight
+                             # instant would have ROLLED BACK A HEALTHY v5
+                             # (HH:MM:SS lines pinned to the boundary's UTC
+                             # day, misdated -86400 s, all below the evidence
+                             # floor); the half-landed COMPLETION branch --
+                             # written to repair a bricked authority -- could
+                             # BRICK IT permanently, missing both guards its
+                             # sibling carries; and the seen-set let a
+                             # rolled-back version return as a plain
+                             # transition (4th cross-consumer divergence,
+                             # 3rd resolved in DA's favour). Gates: preflight
+                             # 225, mutation 0 survivors with all four
+                             # controls firing, equivalence 38/38, differential
+                             # 1,288 ledgers / 0 disagreements, v5 heartbeat
+                             # 26/26, deadline falsifier fires, DA 150.
+                             # CAND_SHA/CAND_COMMIT deliberately stale.
+  dayverdict_20260829_wrong_on_disk: OPEN-DISPATCHED-Q-DA-180
+                             # STATUS 2026-08-31T11:58Z (R-358). LIVE DATA
+                             # DEFECT, independent of the v5 hold.
+                             # da_dayverdict_20260829.json -- the canonical
+                             # path da_midnight_verify.sh:161 writes and
+                             # readers key on -- carries all_pass:true AND
+                             # race_accrual_eligible:true for a day lying
+                             # entirely in clob_v3_1, which ERA_ADMISSIBLE
+                             # rules False. The _v2 correction exists and the
+                             # vN+1 form is what rule 13 sanctions, but
+                             # NEITHER FILE CARRIES A FIELD NAMING THE
+                             # RELATION (v1 has no superseded_by, v2 has no
+                             # supersedes) -- and rule 13's stated REASON is
+                             # that automated readers resolve receipt FIELDS,
+                             # not sidecar annotations. The rule's form was
+                             # followed; its function was not. It also cannot
+                             # self-correct: days_needing_verdict filters to
+                             # len(tok)==8 so it never sees the _v2, and
+                             # _artifact_closed excludes the day from catch-up
+                             # permanently. 08-30 has the same unlinked shape
+                             # but both files agree there, so it is latent.
   verification_must_assert_it_read: VOCABULARY-RULE-18-HELD-TO-A-STATED-BAR
                              # STATUS 2026-08-28T15:21Z (R-290): ADOPTED AS
                              # STANDING VOCABULARY; the NUMBERED rule is HELD to
