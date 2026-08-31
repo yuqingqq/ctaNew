@@ -17885,6 +17885,40 @@ Everything else on our side was flat or falling across the break: config unchang
 
 **So the honest answer to "can we proceed" is: not with the collector change, and yes with the ruling — and those have been independent all day.** The deploy work has absorbed the attention while the free move sat open, which is the same pattern R-357 recorded about the v5 rounds: **the expensive path stayed visible because it was the one generating artifacts.**
 
+### R-368 — 2026-08-31T15:35Z — coordinator — **YES, ONE CRITICAL ISSUE, AND IT IS LIVE: 08-31 — the ONLY day that could ever have been day one — LOST ~4.5 HOURS ACROSS ALL SEVEN COINS, INVISIBLY. It invalidates the decision I have been pressing for all day**
+
+**The measurement, verified by decompression and not by file size.** Rows per 5-minute window on 08-31:
+
+| window | eth | sol | xrp | btc |
+|---|---|---|---|---|
+| 08:30Z | **168** | **84** | **70** | **210** |
+| 09:30Z | 108 | 140 | 66 | 148 |
+| 13:30Z (clean) | **53,551** | **34,573** | **20,461** | **95,321** |
+
+**~200 rows per window against 20,000–95,000. About 0.3% of normal, for four and a half hours, on every coin.** 352 invisible windows — **28–29% of EVERY coin's day.**
+
+**And the sockets were healthy throughout.** `active={'btc': 2, 'eth': 2, …}` on every coin at every 30-minute sample from 06:00Z to 10:30Z, `unseen={}`, and only 37 gap rows in the whole 4.5 hours. **Nothing disconnected. Nothing to record. Every quality bar reads that window as clean.**
+
+**Ruled out, each by execution rather than argument:**
+- **Diurnal market quiet** — the obvious alternative and the one that would have made this a false positive in my own detector. Hours 07–10Z on 08-25/26/27/28/29/30 run **9–24 MB per window**; 08-31 ran **0.1–0.2 MB**. A 100x drop unique to today, with the day normal at 00Z (23.7 MB) and 15Z (34.3 MB).
+- **Host load** — r = **−0.341** against thinned windows; busy% is flat 2.7–5.3% all day, and the worst hours had the LOWEST load. **So it is not my own heavy scanning either**, which was the first thing I checked and would have been the most embarrassing answer.
+- **`markets=0`** — I nearly filed this as the cause. The zero-market status lines exist, but reconstructing their dates puts all eleven on **08-20/08-21**, nothing to do with 08-31. `markets=` is CUMULATIVE (385 → 2,842 monotone), not a concurrent count. **Caught by dating the evidence before believing it — the discipline that R-365 lacked.**
+
+**Why this is THE critical issue and the others are not.** COL-R3 blocks a deploy of a fix we already know is insufficient. COL-R2 is hygiene on a hypothesis since refuted. **This one destroys the thing the whole programme is trying to produce.**
+
+**It invalidates the ruling I have been pressing for all day.** I have argued repeatedly that six coins pass the bar by 10x and the USER should decide whether the race needs btc, before 08-31 closes. **Those six coins passed a bar that cannot see a 29% hole in their own day.** Ruling btc out and accruing 08-31 would have banked a day that is nearly a third empty — and the receipt would have said `all_pass`. **The free move I was pressing was free because it was measured by the instrument that could not see the damage.**
+
+**Status of 08-31: NOT a day-one candidate for ANY coin**, independent of the btc question and independent of every Codex finding.
+
+**What still stands unresolved, now three distinct unexplained events:**
+1. **08-25 →** btc-only, disconnect-heavy, cause unknown (R-366).
+2. **08-26 04:35–07:55Z** — contiguous 3h20m, all coins, no gap rows (R-362).
+3. **08-31 06:00–10:30Z** — 4.5h, all coins, healthy sockets, no gap rows (this entry).
+
+**Events 2 and 3 are the same shape and neither is diurnal.** They are not disconnects and no instrument in this programme would have reported either one; both were found only by measuring CONTENT rather than coverage. **That is now a recurring, unexplained, ~4-hour all-coin blackout mode, and it has struck twice in six days.**
+
+**The lesson, and it is the one that should outlive this session.** I spent the day pressing for a decision on which coins to keep, on the strength of pass/fail verdicts, while the tape those verdicts described was a third empty and every bar said clean. **A decision is only as sound as the least-examined instrument feeding it — and the one nobody re-examines is the one that reports success.**
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
