@@ -195,7 +195,35 @@ def connect_keepalive_kwargs(heartbeat_mode: str) -> dict:
     liveness authorities on the same socket.
     """
     if heartbeat_mode == HEARTBEAT_CONTROL_V4:
-        return {"ping_interval": 3, "ping_timeout": 3}
+        # O1a set these 10/10 -> 3/3 to cut DETECTION LAG. Measured on the
+        # tape afterwards (R-360/R-363), matched windows both AFTER the 08-25
+        # regime change so the comparison is not contaminated by it:
+        #
+        #   pre-O1a  08-26..08-29, 96.0h : btc 100.2 s/hr lost, PING_TIMEOUT
+        #                                  9.43/hr, 9.5 s per event
+        #   post-O1a 08-30 05:30Z ->     : btc 242.8 s/hr lost, PING_TIMEOUT
+        #                                  39.44/hr, 6.1 s per event
+        #
+        # It bought a 36% cut per event and paid 4.18x more events. Net 2.7x
+        # MORE lost tape, and it moved btc from UNDER the P1 bar (100.2 vs
+        # 120) to failing by 2x. Every other gap cause FELL across the same
+        # boundary, so O1b/O1c helped and only the ping-tightened population
+        # exploded.
+        #
+        # THE MECHANISM IS PING COUNT, NOT LOAD. Pings/hr went 360 -> 1200
+        # (3.33x) while the PER-PING failure probability barely moved,
+        # 0.0262 -> 0.0329 (1.25x). So ~80% of the damage is simply 3.3x more
+        # draws at a roughly constant per-draw risk. A load-starvation story
+        # was proposed first and does NOT survive: btc's timeouts are LEAST
+        # frequent when btc's throughput is HIGHEST (0.054/min in the top
+        # load quintile vs 0.266 in the second), which is the opposite sign.
+        #
+        # Reverted to the MEASURED configuration, not to an invented optimum:
+        # 10/10 is a setting this collector actually ran at for 96 hours in
+        # this load regime. Interval is the lever (count); timeout is the
+        # minor term (1.25x). Detection lag returns to <=20 s, which is the
+        # price, and it is the price O1a should not have paid down.
+        return {"ping_interval": 10, "ping_timeout": 10}
     if heartbeat_mode == HEARTBEAT_APP_V5:
         return {"ping_interval": None, "ping_timeout": None}
     raise ValueError(f"unknown heartbeat mode: {heartbeat_mode!r}")

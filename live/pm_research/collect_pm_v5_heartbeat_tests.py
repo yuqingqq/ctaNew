@@ -266,12 +266,22 @@ async def main() -> int:
     blind_v5 = SHIPPED_INTERVAL_S + SHIPPED_TIMEOUT_S
     v4_kwargs = C.connect_keepalive_kwargs(C.HEARTBEAT_CONTROL_V4)
     blind_v4 = v4_kwargs["ping_interval"] + v4_kwargs["ping_timeout"]
+    # NOTE (R-363): v4's keepalive was REVERTED 3/3 -> 10/10, so blind_v4 went
+    # 6s -> 20s and this comparison is now satisfied with 14s of slack. A
+    # check that passes by a landslide has stopped discriminating, and saying
+    # so is cheaper than discovering it later: the BINDING constraint on v5's
+    # cadence is no longer parity with v4, it is the absolute bound below.
+    # Kept because it still fails if v5's constants regress past 20s, but it
+    # is no longer the leg that holds the deadline honest.
     check("worst-case dead-socket blindness is DERIVED and NO WORSE than the "
-          "v4 keepalive O1a tuned to — the detection regression is CLEARED, "
-          "not merely reduced",
+          "v4 keepalive — NOTE this is now slack (v4 reverted to 10/10 under "
+          "R-363), so the ABSOLUTE bound below is the binding check",
           blind_v5 == SHIPPED_INTERVAL_S + SHIPPED_TIMEOUT_S
           and blind_v5 <= blind_v4,
-          f"v5 {blind_v5}s vs v4 {blind_v4}s")
+          f"v5 {blind_v5}s vs v4 {blind_v4}s (slack {blind_v4 - blind_v5}s)")
+    check("v5 blindness is under an ABSOLUTE bound, not merely under v4's — "
+          "a comparison to a value that itself moved is not a bound",
+          blind_v5 <= 8.0, f"v5 {blind_v5}s vs absolute bound 8.0s")
     check("the answer deadline does not EXCEED the send cadence — a timeout "
           "at or above the interval would let a dead socket outlive a whole "
           "heartbeat cycle unnoticed",
