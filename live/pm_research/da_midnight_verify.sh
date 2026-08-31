@@ -152,7 +152,12 @@ for _i in "${!DAYS[@]}"; do
   case "$kind" in
     catchup*) REASON="$REASON [catch-up after outage, $NCATCH day(s) missed; this day recovered as $kind]" ;;
   esac
+  # Name the artifact being REPLACED. This path is a cache of the current
+  # verdict, not a receipt: a pre-guard verdict once stood here with nothing
+  # in it naming its own correction, and a log line saying "written" cannot
+  # be resolved by a reader.
   "$PY" "$V" verify --day "$d" --freeze-epoch "$FREEZE_EPOCH" \
+        --supersedes "$OUTDIR/da_dayverdict_$d.json" \
         --write-reason "$REASON" --out "$tmp" >> "$LOG" 2>&1
   rc=$?
   if "$PY" -c 'import json,sys

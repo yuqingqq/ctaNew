@@ -443,6 +443,24 @@ def _ledger_rows(src: Path) -> list[tuple]:
                     f"an UNDECLARED exception where this module promises a "
                     f"declared refusal.")
         _instant(b, "boundary_utc", lineno)
+        # THE ERA BEGINS WHEN THE PROCESS BEGINS, not when the ruling says so.
+        # This field was validated on `recovered` and `rollback` rows but NOT
+        # on plain `transitioned` rows -- the only kind that OPENS an
+        # admissible era. A boundary ruled at 00:00:00Z with an ordinary 119 s
+        # restart means the OLD version served the day's first 119 s, while the
+        # day read era_pure and race-admissible. (BE Q-DA-180 item 1.)
+        _cs = r.get("collector_start_recv_ns")
+        if _cs is not None:
+            if not isinstance(_cs, int) or isinstance(_cs, bool) or _cs <= 0:
+                raise ValueError(
+                    f"REFUSED: era ledger row {lineno} ({v} @ {b}) has "
+                    f"collector_start_recv_ns={_cs!r}, which is not a positive "
+                    f"int -- the evidence of when this era actually began")
+            if _cs < _instant(b, "boundary_utc", lineno) * 1e9:
+                raise ValueError(
+                    f"REFUSED: era ledger row {lineno} ({v} @ {b}) declares a "
+                    f"collector_start BEFORE its own boundary -- the process "
+                    f"it names was already running before the era it opens")
         if "closes_boundary_utc" in r:
             _instant(r["closes_boundary_utc"], "closes_boundary_utc", lineno)
         # EVERY flag is read with `is True`, so a JSON int 1 or the string
@@ -502,12 +520,6 @@ def _ledger_rows(src: Path) -> list[tuple]:
                     f"`collector_start_recv_ns`. Its boundary is a CLAIM about "
                     f"the past, not a stamp; without the {v} process's own "
                     f"start there is nothing to show the span ran at all")
-            if rec < dt.datetime.fromisoformat(
-                    b.replace("Z", "+00:00")).timestamp() * 1e9:
-                raise ValueError(
-                    f"REFUSED: recovered row {lineno} claims boundary {b} but "
-                    f"its collector_start PREDATES it -- the process it names "
-                    f"was already running before the era it opens")
         if r.get("supersedes") == v:
             raise ValueError(
                 f"REFUSED: era ledger row {lineno} ({v} @ {b}) supersedes "
@@ -545,6 +557,7 @@ def era_timeline(path: Path | None = None) -> dict:
     spans: list[tuple[float, str]] = []
     recovered: set[float] = set()
     seen: set[str] = set()   # versions that have HELD an effective era
+    unevidenced: set[float] = set()
     open_era = open_since = prev_era = None
     open_recovered = False
     open_from_rollback = False
@@ -584,12 +597,6 @@ def era_timeline(path: Path | None = None) -> dict:
                     f"restoration receipt (collector_start_recv_ns). Without one, nothing shows the {v} process came "
                     f"back, and DA would name every later day from a version "
                     f"that may not be running.")
-            if rec < int(dt.datetime.fromisoformat(
-                    open_since.replace("Z", "+00:00")).timestamp() * 1e9):
-                raise ValueError(
-                    f"REFUSED: rollback restoration receipt at {b} PREDATES the "
-                    f"era it reverts ({open_since}) -- a collector_start from "
-                    f"before the transition proves nothing about the restart")
         elif st == "transitioned":
             # RECEIPT-CHAIN IDENTITY. `supersedes` must name the era ACTUALLY
             # in force at append time -- the consumer does not trust the
@@ -632,9 +639,18 @@ def era_timeline(path: Path | None = None) -> dict:
                     f"apart from a fresh deploy of {v}.")
         if not spans and sup:
             spans.append((float("-inf"), sup))
-        spans.append((ts, v))
+        _cs = r.get("collector_start_recv_ns")
+        eff = (_cs / 1e9) if _cs is not None else ts
+        if spans and spans[-1][0] > eff:
+            raise ValueError(
+                f"REFUSED: the row at {b} has an effective start "
+                f"({dt.datetime.fromtimestamp(eff, dt.timezone.utc)}) BEFORE "
+                f"the era before it -- restart delays cannot reorder the chain")
+        spans.append((eff, v))
+        if _cs is None:
+            unevidenced.add(eff)
         if r.get("recovered") is True:
-            recovered.add(ts)
+            recovered.add(eff)
         open_recovered = r.get("recovered") is True
         seen.add(v)
         prev_era, open_era, open_since = open_era, v, b
@@ -651,7 +667,8 @@ def era_timeline(path: Path | None = None) -> dict:
             f"live yet was never stampable, which is not a state the runbook "
             f"can reach. A half-written recovery bundle refuses rather than "
             f"leaving the era open.")
-    return {"spans": spans, "recovered": recovered}
+    return {"spans": spans, "recovered": recovered,
+            "unevidenced": unevidenced}
 
 
 def era_spans(path: Path | None = None) -> list[tuple[float, str]]:
@@ -673,6 +690,7 @@ def day_era_admission(day_token: str, path: Path | None = None,
     lo, hi = day_bounds(day_token)
     _tl = era_timeline(path)
     spans, _recovered = _tl["spans"], _tl["recovered"]
+    _unev = _tl["unevidenced"]
     inside = [(t, n) for t, n in spans if lo < t < hi]
     covering = [n for i, (t, n) in enumerate(spans)
                 if t <= lo and (i + 1 == len(spans) or spans[i + 1][0] > lo)]
@@ -688,6 +706,10 @@ def day_era_admission(day_token: str, path: Path | None = None,
                                        if t <= lo and (i + 1 == len(spans)
                                                        or spans[i + 1][0] > lo)}
     reconstructed = bool(starts & _recovered)
+    # An era whose row carries NO process evidence cannot be shown to have
+    # begun when it claims, so its purity is unverifiable -- and assuming
+    # boundary == start is the assumption that produced the false accept.
+    unevidenced = bool(starts & _unev)
     pure = not inside and len(touched) == 1
     # A RECONSTRUCTED boundary is a claim about the past, not a stamp made at
     # the time. Era purity is a contemporaneous predicate -- the whole
@@ -695,7 +717,7 @@ def day_era_admission(day_token: str, path: Path | None = None,
     # day resting on a recovered boundary does not accrue, whatever its
     # quality. PROPOSED CONSERVATIVE DEFAULT, not a ruling: relaxing it is a
     # policy call with its own priced trade-off (rule 14).
-    admissible = (pure and not reconstructed
+    admissible = (pure and not reconstructed and not unevidenced
                   and all(tbl[n] is True for n in touched))
     return {
         "day": day_token, "eras_touched": touched,
@@ -704,6 +726,7 @@ def day_era_admission(day_token: str, path: Path | None = None,
             for t, _ in inside],
         "era_pure": pure,
         "era_reconstructed": reconstructed,
+        "era_unevidenced_start": unevidenced,
         "era_admissible_ruled": {n: tbl.get(n) for n in touched},
         "race_admissible_by_era": admissible,
         "why": ("a day not lying ENTIRELY inside ONE admissible era cannot "
@@ -1924,6 +1947,7 @@ def _selftests() -> int:
                              {"collector_schema_version": "clob_v5",
                               "supersedes": "clob_v4",
                               "transitioned": True,
+                              "collector_start_recv_ns": 1788159605000000000,
                               "boundary_utc": "2026-08-31T07:00:00Z"}])
         _a901 = day_era_admission("20260901", _adm)
         ok(_a901["era_pure"] and _a901["eras_touched"] == ["clob_v5"]
@@ -1971,14 +1995,19 @@ def _selftests() -> int:
         s.replace("Z", "+00:00")).timestamp() * 1e9)
     _v4 = {"collector_schema_version": "clob_v4", "supersedes": "clob_v3_1",
            "boundary_utc": "2026-08-30T05:30:00Z"}          # the LEGACY row
-    _v5 = {"collector_schema_version": "clob_v5", "supersedes": "clob_v4",
-           "boundary_utc": _B, "transitioned": True}
+    # Every transitioned fixture now carries the process evidence the contract
+    # requires: a start 5 s after its own boundary, an ordinary restart.
+    _v5at = lambda b: {"collector_schema_version": "clob_v5",
+                       "supersedes": "clob_v4", "boundary_utc": b,
+                       "transitioned": True,
+                       "collector_start_recv_ns": _ns(b) + 5 * 10**9}
+    _v5 = _v5at(_B)
     _ab = lambda st: {"collector_schema_version": "clob_v5", "boundary_utc": _B,
                       "aborted": True, "stage": st}
     _rb = {"collector_schema_version": "clob_v4", "supersedes": "clob_v5",
            "boundary_utc": "2026-08-31T07:20:00Z",
            "rollback": True, "stage": "counters_refused", "closes_boundary_utc": _B,
-           "collector_start_recv_ns": _ns("2026-08-31T07:19:30Z")}
+           "collector_start_recv_ns": _ns("2026-08-31T07:20:00Z") + 4 * 10**8}
 
     def _refusal(rows, day="20260901"):
         with _tfe.TemporaryDirectory() as t:
@@ -2049,10 +2078,13 @@ def _selftests() -> int:
        "a rollback with NO receipt refuses: without one nothing shows v4 came "
        "back, and DA would name later days from a version that may not be "
        "running")
-    ok("PREDATES the era it reverts" in _refusal([_v4, _v5, dict(_rb,
-        collector_start_recv_ns=_ns("2026-08-31T06:00:00Z"))]),
-       "a STALE receipt refuses -- a collector_start from before the "
-       "transition proves nothing about the restart that followed it")
+    ok("collector_start BEFORE its own boundary" in _refusal([_v4, _v5, dict(
+        _rb, collector_start_recv_ns=_ns("2026-08-31T06:00:00Z"))]),
+       "a STALE receipt refuses -- a collector_start from before the restart "
+       "proves nothing about it. This now fires one layer EARLIER, at the row "
+       "itself, and the old era-level check was SUBSUMED and DELETED rather "
+       "than kept as unreachable code: a start >= this row's boundary, which "
+       "the zero-width check already forces past the closed era's boundary")
     ok("must NAME the transition it reverts" in _refusal([_v4, _v5, dict(_rb,
         closes_boundary_utc="2026-08-30T05:30:00Z")]),
        "and a rollback pointing at the wrong era refuses")
@@ -2169,20 +2201,74 @@ def _selftests() -> int:
                if k != "collector_start_recv_ns"}, _rb]),
        "a recovered row with no process evidence refuses -- without the v5 "
        "process's own start there is nothing to show the span ran at all")
-    ok("collector_start PREDATES it" in _refusal(
+    ok("collector_start BEFORE its own boundary" in _refusal(
         [_v4, dict(_recv, collector_start_recv_ns=_ns("2026-08-31T06:00:00Z")),
          _rb]),
        "and one whose collector_start predates its own boundary refuses -- "
-       "that process was already running before the era it claims to open")
+       "that process was already running before the era it claims to open. "
+       "The recovery-specific copy of this check was DELETED as subsumed: "
+       "generalising it to every row made two special-case checks unreachable")
     ok(_adm_of([_v4, _v5])["race_admissible_by_era"] is True
        and _adm_of([_v4, _v5])["era_reconstructed"] is False,
        "POSITIVE CONTROL: a NORMALLY stamped v5 era is admissible and not "
        "flagged reconstructed -- recovery is the exception, not the default")
 
     _self = _refusal([_v4, dict(_v5, supersedes="clob_v5")])
+    # ---- ERA START = PROCESS START (BE Q-DA-180 item 1) ----------------
+    _late = {"collector_schema_version": "clob_v5", "supersedes": "clob_v4",
+             "transitioned": True, "boundary_utc": "2026-09-01T00:00:00Z",
+             "collector_start_recv_ns": _ns("2026-09-01T00:00:00Z")
+                                        + 119 * 10**9}
+    _tblv5 = {"clob_v3_1": False, "clob_v4": False, "clob_v5": True}
+    with _tfe.TemporaryDirectory() as _t5:
+        _l = _ledger(_t5, [_v4, _late])
+        _a = day_era_admission("20260901", _l, _tblv5)
+        ok(_a["era_pure"] is False and _a["race_admissible_by_era"] is False,
+           "KNOWN-BAD: a boundary ruled at 00:00:00Z with an ORDINARY 119 s "
+           "restart was era_pure and RACE-ADMISSIBLE, while the row's OWN "
+           "collector_start says the old version served the day's first 119 s. "
+           "collector_start_recv_ns was validated on `recovered` and "
+           "`rollback` rows but NOT on plain `transitioned` ones -- the only "
+           "kind that OPENS an admissible era")
+        _ctl = _ledger(_t5, [_v4, dict(
+            _late, boundary_utc="2026-08-31T23:58:00Z",
+            collector_start_recv_ns=_ns("2026-08-31T23:58:00Z") + 119 * 10**9)])
+        _c = day_era_admission("20260901", _ctl, _tblv5)
+        ok(_c["era_pure"] is True and _c["race_admissible_by_era"] is True,
+           "POSITIVE CONTROL (BE's, and it must keep passing): 23:58:00Z + "
+           "119 s = 23:59:59Z is SAME-DAY, so 09-01 is genuinely pure. The "
+           "rule is not 'restarts are suspicious', it is that the era begins "
+           "when the PROCESS begins")
+        _noev = day_era_admission("20260901", _ledger(_t5, [_v4, {
+            "collector_schema_version": "clob_v5", "supersedes": "clob_v4",
+            "transitioned": True, "boundary_utc": "2026-08-31T07:00:00Z"}]),
+            _tblv5)
+        ok(_noev["era_unevidenced_start"] is True
+           and _noev["race_admissible_by_era"] is False,
+           "and a transitioned row with NO process evidence cannot accrue: "
+           "its purity is UNVERIFIABLE, and assuming boundary == start is "
+           "exactly the assumption that produced the false accept")
+    ok("not a positive int" in _refusal(
+        [_v4, dict(_v5, collector_start_recv_ns=1.788e18)]),
+       "a non-int collector_start refuses -- float64 cannot hold a nanosecond "
+       "epoch exactly, and this is the evidence field the era start is read "
+       "from")
+    ok("restart delays cannot reorder the chain" in _refusal(
+        [_v4, {"collector_schema_version": "clob_v5", "supersedes": "clob_v4",
+               "transitioned": True, "boundary_utc": "2026-08-31T08:00:00Z",
+               "collector_start_recv_ns": _ns("2026-08-31T08:00:00Z")
+                                          + 60 * 10**9},
+         {"collector_schema_version": "clob_v6", "supersedes": "clob_v5",
+          "transitioned": True, "boundary_utc": "2026-08-31T08:00:30Z",
+          "collector_start_recv_ns": _ns("2026-08-31T08:00:30Z")}]),
+       "and an effective start landing BEFORE the era before it refuses: "
+       "boundaries order the chain, but restart delays must not silently "
+       "reorder the spans built from them")
+
     # ---- MULTI-HOP RETURN (BE V5-P5-1) ---------------------------------
     _T = lambda v, sup, b: {"collector_schema_version": v, "supersedes": sup,
-                            "transitioned": True, "boundary_utc": b}
+                            "transitioned": True, "boundary_utc": b,
+                            "collector_start_recv_ns": _ns(b) + 5 * 10**9}
     _hop = [_v4, _T("clob_v5", "clob_v4", "2026-08-31T07:00:00Z"),
             _T("clob_v6", "clob_v5", "2026-08-31T08:00:00Z"),
             _T("clob_v4", "clob_v6", "2026-08-31T09:00:00Z")]
@@ -2212,7 +2298,7 @@ def _selftests() -> int:
            "POSITIVE CONTROL: the SAME multi-hop shape WITH a rollback receipt "
            "is accepted -- the rule demands evidence, it does not forbid "
            "returning")
-    ok(_adm_of([_v4, _v5, _rb, dict(_v5, boundary_utc="2026-09-01T07:00:00Z")],
+    ok(_adm_of([_v4, _v5, _rb, _v5at("2026-09-01T07:00:00Z")],
                "20260902")["race_admissible_by_era"] is True,
        "AND THE RETRY EXEMPTION SURVIVES: a v5 retry after its own verified "
        "rollback returns to a previously-in-force version and is still "
@@ -2256,7 +2342,8 @@ def _selftests() -> int:
        "POSITIVE CONTROL: the canonical spelling still passes, and it is the "
        "form the real ledger and the emitter already write")
     ok("canonically SHAPED but not a real instant" in _refusal(
-        [_v4, dict(_v5, boundary_utc="2026-02-31T00:00:00Z")]),
+        [_v4, {"collector_schema_version": "clob_v5", "supersedes": "clob_v4",
+         "transitioned": True, "boundary_utc": "2026-02-31T00:00:00Z"}]),
        "and a canonically-shaped IMPOSSIBLE date refuses with a declared "
        "message -- an unparseable boundary used to leak fromisoformat's own "
        "ValueError, which reads as a crash rather than a refusal")
@@ -2330,16 +2417,16 @@ def _selftests() -> int:
        "a first effective row with no `supersedes` refuses: the ledger records "
        "transitions, so the OPENING era has no other name")
     ok(_adm_of([_v4, _ab("restart_failed"),
-                dict(_v5, boundary_utc="2026-08-31T09:00:00Z")]
+                _v5at("2026-08-31T09:00:00Z")]
                )["race_admissible_by_era"] is True,
        "RETRY AFTER ABORT is permitted and admissible from the retry's own "
        "boundary -- the guard refuses failed attempts, not second attempts")
-    ok(_adm_of([_v4, _v5, _rb, dict(_v5, boundary_utc="2026-09-01T07:00:00Z")],
+    ok(_adm_of([_v4, _v5, _rb, _v5at("2026-09-01T07:00:00Z")],
                "20260902")["race_admissible_by_era"] is True,
        "RETRY AFTER A VERIFIED ROLLBACK is admissible too: the earlier v5 era "
        "was explicitly closed, so returning to v5 is unambiguous")
-    ok("OUT OF ORDER" in _refusal([_v4, dict(_v5, boundary_utc="2026-09-02T07:00:00Z"),
-                                   dict(_v5, boundary_utc="2026-09-01T07:00:00Z")],
+    ok("OUT OF ORDER" in _refusal([_v4, _v5at("2026-09-02T07:00:00Z"),
+                                   _v5at("2026-09-01T07:00:00Z")],
                                   "20260903"),
        "a non-chronological append refuses. The old code SORTED, which both "
        "reordered a rollback against the transition it closes and crashed with "
@@ -2367,6 +2454,15 @@ def main() -> int:
                     help="REQUIRED. The governing freeze epoch; there is no "
                          "default, because a stale one judged days silently.")
     ap.add_argument("--out", default=None)
+    ap.add_argument("--supersedes", default=None,
+                    help="path of the artifact this run REPLACES. The verdict "
+                         "path is a CACHE of the current verdict, not a "
+                         "receipt -- the nightly mv -f's over it, which is how "
+                         "a pre-guard verdict stood at the canonical path with "
+                         "nothing naming its correction. Recording the "
+                         "replaced artifact's digest and verdict IN A FIELD "
+                         "makes the overwrite resolvable by a reader, which "
+                         "prose in a log is not.")
     ap.add_argument("--write-reason", default=None,
                     help="WHO is writing this verdict and WHY. Required when "
                          "writing a CANONICAL production verdict, because the "
@@ -2438,6 +2534,28 @@ def main() -> int:
     # never enter `all_pass`. Always present, so an unattributed write is a
     # visible STATUS rather than a missing key (rule 4).
     rep["write_reason"] = a.write_reason
+    # WHAT THIS RUN REPLACES, as a resolvable FIELD. Always present, so "this
+    # replaced nothing" is a stated status rather than a missing key.
+    rep["supersedes"] = None
+    if a.supersedes:
+        _prior = Path(a.supersedes)
+        if _prior.exists():
+            _bytes = _prior.read_bytes()
+            try:
+                _pj = json.loads(_bytes)
+            except json.JSONDecodeError:
+                _pj = {}
+            rep["supersedes"] = {
+                "path": str(_prior),
+                "sha256": __import__("hashlib").sha256(_bytes).hexdigest(),
+                "as_of_utc": _pj.get("as_of_utc"),
+                "race_accrual_eligible": _pj.get("race_accrual_eligible"),
+                "all_pass": _pj.get("all_pass"),
+                "note": ("the artifact this write replaced; its bytes remain "
+                         "in git history, which is the provenance -- this "
+                         "path is a CACHE of the current verdict, not a "
+                         "receipt"),
+            }
     text = json.dumps(rep, indent=2, sort_keys=True)
     if a.out:
         Path(a.out).write_text(text, encoding="utf-8")

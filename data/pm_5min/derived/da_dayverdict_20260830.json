@@ -1,23 +1,23 @@
 {
-  "all_pass": true,
-  "as_of_utc": "2026-08-31T11:57:00.282577+00:00",
+  "all_pass": false,
+  "as_of_utc": "2026-08-31T11:57:02.326719+00:00",
   "authorised_by": "R-141(1); DA-verifies-first restored as a hard precondition by R-153(2)",
   "bar_regime": "day_bar_v2",
-  "day": "2026-08-29",
+  "day": "2026-08-30",
   "day_bar_v2": {
     "btc": {
-      "P1_lost_s_per_hr": 32.29,
-      "P1_pass": true,
-      "P2_material_share": 0.0,
-      "P2_material_windows": 0,
+      "P1_lost_s_per_hr": 187.61,
+      "P1_pass": false,
+      "P2_material_share": 0.0208,
+      "P2_material_windows": 6,
       "P2_pass": true,
       "P3_pass": true,
-      "P3_worst_rolling_60min_lost_s": 118.6,
-      "all_pass": true,
-      "coin_level_gap_intervals": 136,
+      "P3_worst_rolling_60min_lost_s": 622.8,
+      "all_pass": false,
+      "coin_level_gap_intervals": 757,
       "evaluable": true,
       "hours_elapsed": 24.0,
-      "lost_seconds": 774.9,
+      "lost_seconds": 4502.5,
       "partial_day": false,
       "thresholds": {
         "P1_max_s_per_hr": 120.0,
@@ -27,18 +27,18 @@
       }
     },
     "eth": {
-      "P1_lost_s_per_hr": 0.44,
+      "P1_lost_s_per_hr": 3.83,
       "P1_pass": true,
       "P2_material_share": 0.0,
       "P2_material_windows": 0,
       "P2_pass": true,
       "P3_pass": true,
-      "P3_worst_rolling_60min_lost_s": 10.5,
+      "P3_worst_rolling_60min_lost_s": 24.1,
       "all_pass": true,
-      "coin_level_gap_intervals": 1,
+      "coin_level_gap_intervals": 21,
       "evaluable": true,
       "hours_elapsed": 24.0,
-      "lost_seconds": 10.5,
+      "lost_seconds": 92.0,
       "partial_day": false,
       "thresholds": {
         "P1_max_s_per_hr": 120.0,
@@ -56,20 +56,24 @@
     "note": "days before the boundary are judged by the FROZEN count bar; the v2 bars are not applied retroactively"
   },
   "day_closed_calendar": true,
-  "day_closed_selector": true,
-  "day_token": "20260829",
+  "day_closed_selector": false,
+  "day_token": "20260830",
   "decision_note": "This instrument STATES REASONS; it does not exclude. R-141(1): a day that fails DA's verification is EXCLUDED WITH A STATED REASON, and that exclusion is the coordinator's to rule, not a worker's boolean (rule 14). Note also that gaps/hour understates damage: day one ran 28.0/hr while 80.2% of btc windows carried a gap -- read windows_gap_affected beside it, never instead of it.",
   "era_admission": {
-    "boundaries_inside_day": [],
-    "day": "20260829",
+    "boundaries_inside_day": [
+      "2026-08-30T05:30:02.114727Z"
+    ],
+    "day": "20260830",
     "era_admissible_ruled": {
-      "clob_v3_1": false
+      "clob_v3_1": false,
+      "clob_v4": false
     },
-    "era_pure": true,
+    "era_pure": false,
     "era_reconstructed": false,
     "era_unevidenced_start": false,
     "eras_touched": [
-      "clob_v3_1"
+      "clob_v3_1",
+      "clob_v4"
     ],
     "race_admissible_by_era": false,
     "why": "a day not lying ENTIRELY inside ONE admissible era cannot accrue for ANY coin, whatever its quality -- era admission is a ruled property of the collector, not a measured property of the feed"
@@ -77,69 +81,85 @@
   "freeze_epoch": 1787897340.0,
   "gap_series": {
     "causes": {
-      "NO_CLOSE_FRAME": 48,
-      "PING_TIMEOUT": 76,
-      "SLOW_CONSUMER_1013": 20
+      "NO_CLOSE_FRAME": 17,
+      "PING_TIMEOUT": 760,
+      "SLOW_CONSUMER_1013": 6
     },
     "coin": null,
-    "gaps_per_hour": 6.0,
+    "gaps_per_hour": 32.62,
     "hours_elapsed": 24.0,
     "hours_over_bar": [
-      16
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23
     ],
     "hours_with_a_gap": 24,
     "ledger_lines": 7928,
     "ledger_unparseable": 0,
-    "lost_s": 1193.9,
-    "n_gaps": 144,
-    "n_hours_over_bar": 1,
+    "lost_s": 4860.6,
+    "n_gaps": 783,
+    "n_hours_over_bar": 17,
     "per_hour": {
-      "0": 9,
-      "1": 3,
-      "10": 3,
-      "11": 3,
-      "12": 3,
-      "13": 3,
-      "14": 10,
-      "15": 6,
-      "16": 16,
-      "17": 11,
-      "18": 12,
-      "19": 13,
-      "2": 6,
-      "20": 3,
-      "21": 7,
-      "22": 3,
-      "23": 9,
-      "3": 4,
-      "4": 2,
-      "5": 1,
-      "6": 2,
-      "7": 3,
-      "8": 8,
-      "9": 4
+      "0": 5,
+      "1": 5,
+      "10": 23,
+      "11": 20,
+      "12": 60,
+      "13": 57,
+      "14": 43,
+      "15": 64,
+      "16": 70,
+      "17": 40,
+      "18": 21,
+      "19": 41,
+      "2": 2,
+      "20": 53,
+      "21": 52,
+      "22": 64,
+      "23": 80,
+      "3": 1,
+      "4": 1,
+      "5": 7,
+      "6": 13,
+      "7": 17,
+      "8": 19,
+      "9": 25
     },
     "rate_estimable": true,
     "rate_note": null,
-    "worst_hour": 16
+    "worst_hour": 80
   },
   "granularity_note": "R-211(3), declared 2026-08-27 while no 08-28 data existed. Days before the boundary are judged by the FROZEN whole-day rule; from the boundary each coin-day passes or fails on its own completeness and its own hourly gap bars. `all_pass` remains whole-day-strict under BOTH rules so an un-updated reader fails safe; per-coin verdicts are in `per_coin`.",
   "instrument": "da_forward_day_verify_v1",
   "per_coin": {
     "btc": {
-      "all_pass": true,
+      "all_pass": false,
       "day_bar_v2": {
-        "P1_lost_s_per_hr": 32.29,
-        "P1_pass": true,
-        "P2_material_share": 0.0,
-        "P2_material_windows": 0,
+        "P1_lost_s_per_hr": 187.61,
+        "P1_pass": false,
+        "P2_material_share": 0.0208,
+        "P2_material_windows": 6,
         "P2_pass": true,
         "P3_pass": true,
-        "P3_worst_rolling_60min_lost_s": 118.6,
-        "coin_level_gap_intervals": 136,
+        "P3_worst_rolling_60min_lost_s": 622.8,
+        "coin_level_gap_intervals": 757,
         "evaluable": true,
         "hours_elapsed": 24.0,
-        "lost_seconds": 774.9,
+        "lost_seconds": 4502.5,
         "thresholds": {
           "P1_max_s_per_hr": 120.0,
           "P2_material_span_s": 75.0,
@@ -149,51 +169,67 @@
       },
       "gap_series": {
         "causes": {
-          "NO_CLOSE_FRAME": 42,
-          "PING_TIMEOUT": 74,
-          "SLOW_CONSUMER_1013": 20
+          "NO_CLOSE_FRAME": 13,
+          "PING_TIMEOUT": 738,
+          "SLOW_CONSUMER_1013": 6
         },
         "coin": "btc",
-        "gaps_per_hour": 5.67,
+        "gaps_per_hour": 31.54,
         "hours_elapsed": 24.0,
         "hours_over_bar": [
-          16
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23
         ],
         "hours_with_a_gap": 24,
         "ledger_lines": 7928,
         "ledger_unparseable": 0,
-        "lost_s": 774.9,
-        "n_gaps": 136,
-        "n_hours_over_bar": 1,
+        "lost_s": 4502.5,
+        "n_gaps": 757,
+        "n_hours_over_bar": 17,
         "per_hour": {
-          "0": 9,
-          "1": 3,
-          "10": 3,
-          "11": 3,
-          "12": 3,
-          "13": 3,
-          "14": 10,
-          "15": 6,
-          "16": 16,
-          "17": 11,
-          "18": 12,
-          "19": 13,
-          "2": 5,
-          "20": 3,
-          "21": 4,
-          "22": 3,
-          "23": 8,
-          "3": 3,
-          "4": 2,
-          "5": 1,
-          "6": 2,
-          "7": 3,
-          "8": 6,
-          "9": 4
+          "0": 5,
+          "1": 5,
+          "10": 23,
+          "11": 19,
+          "12": 57,
+          "13": 57,
+          "14": 43,
+          "15": 64,
+          "16": 68,
+          "17": 37,
+          "18": 18,
+          "19": 38,
+          "2": 2,
+          "20": 51,
+          "21": 49,
+          "22": 62,
+          "23": 78,
+          "3": 1,
+          "4": 1,
+          "5": 7,
+          "6": 13,
+          "7": 16,
+          "8": 19,
+          "9": 24
         },
         "rate_estimable": true,
         "rate_note": null,
-        "worst_hour": 16
+        "worst_hour": 78
       },
       "governing_predicates": [
         "entirely_post_freeze",
@@ -204,7 +240,7 @@
       ],
       "predicates": [
         {
-          "detail": "btc 288/288 admissible/total",
+          "detail": "btc 66/66 admissible/total",
           "pass": true,
           "predicate": "entirely_post_freeze"
         },
@@ -214,13 +250,13 @@
           "predicate": "complete_tape"
         },
         {
-          "detail": "136 btc gaps over 24.0h = 5.67/hr vs bar 15; 1 hours over; worst 16; 774.9s lost",
+          "detail": "757 btc gaps over 24.0h = 31.54/hr vs bar 15; 17 hours over; worst 78; 4502.5s lost",
           "pass": false,
           "predicate": "gap_rate_under_bar"
         },
         {
           "detail": "P1 on this coin's own gaps",
-          "pass": true,
+          "pass": false,
           "predicate": "P1_bar"
         },
         {
@@ -239,35 +275,35 @@
         "gap_rate_under_bar"
       ],
       "verdict_split": {
-        "day_quality_pass": true,
+        "day_quality_pass": false,
         "era_admissible": false,
         "post_freeze_pass": true,
         "race_accrual_eligible": false,
         "why": "feed health and clock eligibility are separate questions; a healthy day BEFORE the freeze commit is a good day that does not count, not a bad day"
       },
       "windows_gap_affected": {
-        "era_covered_windows": 288,
-        "gap_affected_COIN_LEVEL": 95,
-        "gap_affected_PER_SLUG": 93,
-        "gap_affected_pct_COIN_LEVEL": 33.0,
-        "gap_affected_pct_PER_SLUG": 32.3,
+        "era_covered_windows": 66,
+        "gap_affected_COIN_LEVEL": 203,
+        "gap_affected_PER_SLUG": 13,
+        "gap_affected_pct_COIN_LEVEL": 70.5,
+        "gap_affected_pct_PER_SLUG": 19.7,
         "scope_note": "COIN_LEVEL is the governing scope (R-191); PER_SLUG is retained for continuity and is NOT the bar's input. Raw breadth is a REPORTED DIAGNOSTIC with no bar -- O1 barely moves it, so a bar here would reject good post-fix days forever."
       }
     },
     "eth": {
       "all_pass": true,
       "day_bar_v2": {
-        "P1_lost_s_per_hr": 0.44,
+        "P1_lost_s_per_hr": 3.83,
         "P1_pass": true,
         "P2_material_share": 0.0,
         "P2_material_windows": 0,
         "P2_pass": true,
         "P3_pass": true,
-        "P3_worst_rolling_60min_lost_s": 10.5,
-        "coin_level_gap_intervals": 1,
+        "P3_worst_rolling_60min_lost_s": 24.1,
+        "coin_level_gap_intervals": 21,
         "evaluable": true,
         "hours_elapsed": 24.0,
-        "lost_seconds": 10.5,
+        "lost_seconds": 92.0,
         "thresholds": {
           "P1_max_s_per_hr": 120.0,
           "P2_material_span_s": 75.0,
@@ -277,24 +313,35 @@
       },
       "gap_series": {
         "causes": {
-          "NO_CLOSE_FRAME": 1
+          "NO_CLOSE_FRAME": 1,
+          "PING_TIMEOUT": 20
         },
         "coin": "eth",
-        "gaps_per_hour": 0.04,
+        "gaps_per_hour": 0.88,
         "hours_elapsed": 24.0,
         "hours_over_bar": [],
-        "hours_with_a_gap": 1,
+        "hours_with_a_gap": 11,
         "ledger_lines": 7928,
         "ledger_unparseable": 0,
-        "lost_s": 10.5,
-        "n_gaps": 1,
+        "lost_s": 92.0,
+        "n_gaps": 21,
         "n_hours_over_bar": 0,
         "per_hour": {
-          "21": 1
+          "11": 1,
+          "12": 3,
+          "16": 2,
+          "17": 3,
+          "19": 3,
+          "20": 2,
+          "21": 2,
+          "22": 2,
+          "23": 1,
+          "7": 1,
+          "9": 1
         },
         "rate_estimable": true,
         "rate_note": null,
-        "worst_hour": 1
+        "worst_hour": 3
       },
       "governing_predicates": [
         "entirely_post_freeze",
@@ -305,7 +352,7 @@
       ],
       "predicates": [
         {
-          "detail": "eth 288/288 admissible/total",
+          "detail": "eth 66/66 admissible/total",
           "pass": true,
           "predicate": "entirely_post_freeze"
         },
@@ -315,7 +362,7 @@
           "predicate": "complete_tape"
         },
         {
-          "detail": "1 eth gaps over 24.0h = 0.04/hr vs bar 15; 0 hours over; worst 1; 10.5s lost",
+          "detail": "21 eth gaps over 24.0h = 0.88/hr vs bar 15; 0 hours over; worst 3; 92.0s lost",
           "pass": true,
           "predicate": "gap_rate_under_bar"
         },
@@ -347,10 +394,10 @@
         "why": "feed health and clock eligibility are separate questions; a healthy day BEFORE the freeze commit is a good day that does not count, not a bad day"
       },
       "windows_gap_affected": {
-        "era_covered_windows": 288,
-        "gap_affected_COIN_LEVEL": 1,
+        "era_covered_windows": 66,
+        "gap_affected_COIN_LEVEL": 16,
         "gap_affected_PER_SLUG": 0,
-        "gap_affected_pct_COIN_LEVEL": 0.3,
+        "gap_affected_pct_COIN_LEVEL": 5.6,
         "gap_affected_pct_PER_SLUG": 0.0,
         "scope_note": "COIN_LEVEL is the governing scope (R-191); PER_SLUG is retained for continuity and is NOT the bar's input. Raw breadth is a REPORTED DIAGNOSTIC with no bar -- O1 barely moves it, so a bar here would reject good post-fix days forever."
       }
@@ -359,37 +406,37 @@
   "per_coin_rule_from_day": "20260828",
   "predicates": [
     {
-      "detail": "selector day_closed=True; bnb 288/288, btc 288/288, doge 288/288, eth 288/288 (+3 more)",
+      "detail": "selector day_closed=False (calendar says True; the tape-derived predicate lags the boundary by up to one window); bnb 66/66, btc 66/66, doge 66/66, eth 66/66 (+3 more)",
       "pass": true,
       "predicate": "entirely_post_freeze"
     },
     {
-      "detail": "expect 288 (closed day (calendar)); btc 288 (short 0), eth 288 (short 0)",
+      "detail": "expect 288 (closed day (calendar)); btc 288 (short 0), eth 288 (short 0)  [selector day_closed=False DISAGREES with the calendar; its tape-derived predicate lags the boundary by up to one window]",
       "pass": true,
       "predicate": "complete_tape"
     },
     {
-      "detail": "144 gaps over 24.0h elapsed = 6.0/hr vs bar 15; 1 hours over; worst 16; 1193.9s lost",
+      "detail": "783 gaps over 24.0h elapsed = 32.62/hr vs bar 15; 17 hours over; worst 80; 4860.6s lost",
       "pass": false,
       "predicate": "gap_rate_under_bar"
     },
     {
-      "detail": "lost 774.9s = 32.29/hr vs bar 120.0",
-      "pass": true,
+      "detail": "lost 4502.5s = 187.61/hr vs bar 120.0",
+      "pass": false,
       "predicate": "P1_btc"
     },
     {
-      "detail": "0 windows >= 75.0s in gap = 0.00% vs bar 5%",
+      "detail": "6 windows >= 75.0s in gap = 2.08% vs bar 5%",
       "pass": true,
       "predicate": "P2_btc"
     },
     {
-      "detail": "worst rolling 60min 118.6s vs bar 900.0",
+      "detail": "worst rolling 60min 622.8s vs bar 900.0",
       "pass": true,
       "predicate": "P3_btc"
     },
     {
-      "detail": "lost 10.5s = 0.44/hr vs bar 120.0",
+      "detail": "lost 92.0s = 3.83/hr vs bar 120.0",
       "pass": true,
       "predicate": "P1_eth"
     },
@@ -399,23 +446,23 @@
       "predicate": "P2_eth"
     },
     {
-      "detail": "worst rolling 60min 10.5s vs bar 900.0",
+      "detail": "worst rolling 60min 24.1s vs bar 900.0",
       "pass": true,
       "predicate": "P3_eth"
     }
   ],
   "race_accrual_eligible": false,
   "supersedes": {
-    "all_pass": true,
-    "as_of_utc": "2026-08-30T00:06:01.246972+00:00",
+    "all_pass": false,
+    "as_of_utc": "2026-08-31T00:06:01.237853+00:00",
     "note": "the artifact this write replaced; its bytes remain in git history, which is the provenance -- this path is a CACHE of the current verdict, not a receipt",
-    "path": "data/pm_5min/derived/da_dayverdict_20260829.json",
-    "race_accrual_eligible": true,
-    "sha256": "b808e603f3448a503d8ef72f8d1713bece20eda1d67a1e8f03162a59ecc0709e"
+    "path": "data/pm_5min/derived/da_dayverdict_20260830.json",
+    "race_accrual_eligible": false,
+    "sha256": "3a5fff8c2373a12b8837c5c65ab2b6fb68cf3c16f6dfec83e3adcbee1f3028ff"
   },
   "verdict_granularity": "per_coin",
   "verdict_split": {
-    "day_quality_pass": true,
+    "day_quality_pass": false,
     "era_admissible": false,
     "post_freeze_pass": true,
     "race_accrual_eligible": false,
@@ -423,18 +470,18 @@
   },
   "windows_gap_affected": {
     "btc": {
-      "era_covered_windows": 288,
-      "gap_affected_COIN_LEVEL": 95,
-      "gap_affected_PER_SLUG": 93,
-      "gap_affected_pct_COIN_LEVEL": 33.0,
-      "gap_affected_pct_PER_SLUG": 32.3,
+      "era_covered_windows": 66,
+      "gap_affected_COIN_LEVEL": 203,
+      "gap_affected_PER_SLUG": 13,
+      "gap_affected_pct_COIN_LEVEL": 70.5,
+      "gap_affected_pct_PER_SLUG": 19.7,
       "scope_note": "COIN_LEVEL is the governing scope (R-191); PER_SLUG is retained for continuity and is NOT the bar's input. Raw breadth is a REPORTED DIAGNOSTIC with no bar -- O1 barely moves it, so a bar here would reject good post-fix days forever."
     },
     "eth": {
-      "era_covered_windows": 288,
-      "gap_affected_COIN_LEVEL": 1,
+      "era_covered_windows": 66,
+      "gap_affected_COIN_LEVEL": 16,
       "gap_affected_PER_SLUG": 0,
-      "gap_affected_pct_COIN_LEVEL": 0.3,
+      "gap_affected_pct_COIN_LEVEL": 5.6,
       "gap_affected_pct_PER_SLUG": 0.0,
       "scope_note": "COIN_LEVEL is the governing scope (R-191); PER_SLUG is retained for continuity and is NOT the bar's input. Raw breadth is a REPORTED DIAGNOSTIC with no bar -- O1 barely moves it, so a bar here would reject good post-fix days forever."
     }
