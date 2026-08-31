@@ -69,6 +69,7 @@ POST_EMIT_WINDOW_S = 600
 # unstampable with no repair path (audit V5-R4-6). It is bounded only by the
 # day, and never permitted before the instant.
 RECOVERY_EMIT_WINDOW_S = 86400
+MIN_STAGE_LEN = 4  # audit S9: "." satisfied "names its stage"
 MAX_VERIFY_WINDOW_S = 21600      # counter checks run within 6h of the deploy
 MIN_VERIFY_SPAN_S = 45           # two heartbeat lines are ~60s apart
 APP_HEARTBEAT_CADENCE_S = 10     # collect_pm.APP_HEARTBEAT_INTERVAL_S
@@ -361,156 +362,172 @@ def classify_era_row(r: dict) -> str:
     return flags[0]
 
 
+def _canonical_instant(value, what: str):
+    """ONE canonical form, refused loudly otherwise.
+
+    Differential fuzz (17,729 ledgers) found my parser SKIPPED anything it
+    could not parse — the row escaped ordering AND was not refused — while
+    DA accepted several alternate ISO forms and then compared
+    closes_boundary_utc to the open boundary as a RAW STRING, so an
+    alternate-form rollback silently failed to match. Both consumers now
+    pin the same single form.
+    """
+    if not isinstance(value, str):
+        raise Refused(f"{what} is {type(value).__name__}, not a string — a "
+                      f"non-string instant used to raise a raw TypeError "
+                      f"instead of a named refusal")
+    try:
+        return datetime.strptime(value, "%Y-%m-%dT%H:%M:%SZ")
+    except ValueError:
+        raise Refused(f"{what} {value!r} is not the canonical "
+                      f"YYYY-MM-DDTHH:MM:SSZ form — alternate ISO spellings "
+                      f"compare unequal as raw strings, so a rollback in one "
+                      f"form silently fails to match the era it closes")
+
+
 def current_era_and_open_v5(era_rows: list) -> tuple:
-    """(version of the last EFFECTIVE row, open v5 boundary or None) — and
-    the CHAIN is validated the way DA's consumer validates it, refusing what
-    DA refuses (round-3 #1: my tolerant walk returned (v4, None) on a chain
-    DA refuses — two consumers of one ledger must agree on malformed)."""
+    """(version of the last EFFECTIVE row, open era boundary or None).
+
+    Validated the way DA validates, refusing what DA refuses — and now
+    VERSION-GENERAL: tracking only clob_v5 meant a rollback of any other
+    era was refused (blocking the next collector version permanently) while
+    an unclosed recovered row of another version was accepted.
+    """
+    _seen_versions = set()
     current = None
-    open_v5 = None
-    _prev_stamp = None
-    for r in era_rows:
-        # V5-R4-1: DA refuses an OUT-OF-ORDER ledger; my walk accepted one,
-        # which a retried recovery bundle produces (a 07:00 transition
-        # appended after a 07:03 rollback). Shared semantics must include
-        # sequence, not only row shape.
-        _b_ord = r.get("boundary_utc")
-        if isinstance(_b_ord, str):
-            try:
-                _bt = datetime.strptime(_b_ord, "%Y-%m-%dT%H:%M:%SZ")
-            except ValueError:
-                _bt = None
-            if _bt is not None:
-                if _prev_stamp is not None and _bt < _prev_stamp:
-                    raise Refused(f"era ledger is OUT OF ORDER: a row for "
-                                  f"{_b_ord} follows one for "
-                                  f"{_prev_stamp:%Y-%m-%dT%H:%M:%SZ} — an "
-                                  f"append-only authority read out of "
-                                  f"sequence describes a history that never "
-                                  f"happened (ordered on boundary_utc, the "
-                                  f"key DA reads; stamp_written_ns is "
-                                  f"CLOCK_REALTIME and an NTP step backwards "
-                                  f"would refuse a valid ledger forever)")
-                _prev_stamp = _bt
-        role = classify_era_row(r)
-        if role == "aborted":
-            # Audit finding 6: an `aborted` row for an era that is currently
-            # OPEN is ambiguous — an abort cannot retract a transition that
-            # ran. DA refuses this; my walk accepted it, so an operator
-            # following the abort path after a stamp landed got a green
-            # preflight and a ledger DA can never read again.
-            _av = r.get("collector_schema_version")
-            if (open_v5 is not None and _av == "clob_v5") or \
-                    (open_v5 is None and _av == current and
-                     current is not None):
-                raise Refused(f"AMBIGUOUS attempt state: an 'aborted' row "
-                              f"for {_av} while {_av} is the era IN FORCE — "
-                              f"an abort cannot retract a transition that "
-                              f"ran; the recovery/rollback path applies "
-                              f"(audit F1/D3 generalises this beyond v5)")
-            continue  # never transitioned; never enters the era line
+    open_era = None          # boundary_utc of the era awaiting a rollback
+    open_ver = None          # its version
+    open_row = None
+    prev_instant = None
+    for i, r in enumerate(era_rows, 1):
         ver = r.get("collector_schema_version")
+        if not isinstance(ver, str) or not ver:
+            raise Refused(f"era row {i} carries collector_schema_version "
+                          f"{ver!r} — every row must name its version as a "
+                          f"non-empty string")
+        b_raw = r.get("boundary_utc")
+        b_dt = _canonical_instant(b_raw, f"era row {i} boundary_utc")
+        if prev_instant is not None and b_dt < prev_instant:
+            raise Refused(f"era ledger is OUT OF ORDER at row {i}: "
+                          f"{b_raw} follows "
+                          f"{prev_instant:%Y-%m-%dT%H:%M:%SZ} — an "
+                          f"append-only authority read out of sequence "
+                          f"describes a history that never happened")
+        prev_instant = b_dt
+        role = classify_era_row(r)
+        if role != "transitioned" and r.get("recovered") is True:
+            raise Refused(f"era row {i} is `recovered` but asserts "
+                          f"{role!r} — recovered qualifies a TRANSITION; on "
+                          f"any other row it is an unreadable claim")
+        if r.get("supersedes") == ver:
+            raise Refused(f"era row {i} claims to supersede ITSELF "
+                          f"({ver} supersedes {ver}) — a row naming itself "
+                          f"replaces nothing")
+        if role == "aborted":
+            # Field validation must happen BEFORE the skip: an aborted row
+            # used to `continue` past every check, so a blank or absent
+            # stage was accepted here and refused by DA.
+            if len(str(r.get("stage") or "").strip()) < 1:
+                raise Refused(f"aborted row {i} names no 'stage' — an "
+                              f"unexplained attempt is ambiguous state")
+            # open_ver is only ever set alongside current, so these were
+            # redundant halves of one condition — one could be deleted with
+            # no test able to tell (mutation survivor). Merged.
+            if current is not None and ver == current:
+                raise Refused(f"AMBIGUOUS attempt state: an 'aborted' row "
+                              f"for {ver} while {ver} is the era IN FORCE"
+                              + (f" (LIVE since {open_era})"
+                                 if open_era is not None else "")
+                              + " — an abort cannot retract a transition "
+                                "that ran")
+            continue
         if role == "rollback":
-            if open_v5 is None:
-                raise Refused(f"rollback receipt with NO open era to close "
+            if open_era is None:
+                raise Refused(f"rollback row {i} has NO open era to close "
                               f"(chain so far ends in {current!r}) — a "
-                              f"rollback-only chain is malformed; DA refuses "
-                              f"it and so do we")
-            _rb_b = r.get("boundary_utc")
-            if not isinstance(_rb_b, str) or not _rb_b:
-                raise Refused("rollback receipt carries no boundary_utc — "
-                              "the v4-RESUME instant defines the width of "
-                              "the v5 era that ran (audit S4)")
-            try:
-                _rb_t = datetime.strptime(_rb_b, "%Y-%m-%dT%H:%M:%SZ")
-                _cl_t = datetime.strptime(open_v5, "%Y-%m-%dT%H:%M:%SZ")
-            except ValueError:
-                raise Refused(f"rollback receipt boundary {_rb_b!r} or the "
-                              f"era it closes {open_v5!r} is not a parseable "
-                              f"instant (audit S4)")
-            if _rb_t <= _cl_t:
-                raise Refused(f"rollback resume {_rb_b} is not strictly "
-                              f"AFTER the era it closes ({open_v5}) — a "
-                              f"zero- or negative-width v5 span erases the "
-                              f"time that actually ran (audit S4)")
-            if type(r.get("collector_start_recv_ns")) is int and \
-                    r["collector_start_recv_ns"] < BOUNDARY_EPOCH * 10**9:
-                raise Refused(f"rollback restoration recv_ns "
-                              f"{r['collector_start_recv_ns']} predates the "
-                              f"boundary — it cannot be this deployment's "
-                              f"restoration (audit S4)")
-            if r.get("supersedes") != "clob_v5" or \
-                    r.get("closes_boundary_utc") != open_v5:
-                raise Refused(f"rollback receipt does not match the open era "
-                              f"(supersedes={r.get('supersedes')!r}, closes="
-                              f"{r.get('closes_boundary_utc')!r} vs open v5 "
-                              f"at {open_v5}) — malformed chain state")
-            if not str(r.get("stage") or "").strip():
-                raise Refused("rollback receipt carries no STAGE at "
-                              "consumption — DA refuses stage-less rollbacks "
-                              "and the walks must agree on malformed "
-                              "(equivalence found by the cross-consumer run "
-                              "itself: my fixture lacked stage, DA refused, "
-                              "I accepted)")
-            if type(r.get("collector_start_recv_ns")) is not int:
-                raise Refused("rollback receipt carries no verified "
-                              "restoration receipt (int "
-                              "collector_start_recv_ns) — nothing shows the "
-                              "clob_v4 process came back (DA's requirement, "
-                              "matched at consumption)")
-            open_v5 = None
-        else:  # transitioned
-            if r.get("recovered") is True:
-                # recovered qualifies transitioned (never a fourth state);
-                # a RECONSTRUCTED boundary carries its own evidence burden.
-                if not str(r.get("stage") or "").strip() or \
-                        type(r.get("collector_start_recv_ns")) is not int:
-                    raise Refused("recovered transition without stage or "
-                                  "verified collector_start_recv_ns — a "
-                                  "retroactive row carries MORE evidence, "
-                                  "not less (DA 8bfcc9b)")
-            if r.get("supersedes") == ver:
-                raise Refused(f"row claims to supersede ITSELF "
-                              f"({ver} supersedes {ver}) — a row naming "
-                              f"itself replaces nothing, yet would mint an "
-                              f"era boundary that costs a complete day off "
-                              f"the five-day clock (DA 9ee4f44: a false "
-                              f"negative on a scarce resource is not a safe "
-                              f"error)")
-            if current is not None and r.get("supersedes") != current:
-                raise Refused(f"transitioned row claims supersedes="
-                              f"{r.get('supersedes')!r} while the era in "
-                              f"force is {current!r} — a receipt may not "
-                              f"name any predecessor it likes (chain "
-                              f"identity, DA ce3fd29)")
-            if ver == "clob_v5":
-                _b = r.get("boundary_utc")
-                # A boundary may be opened ONCE. The timestamp ordering
-                # check above only fires when rows CARRY stamp_written_ns —
-                # omitting it evaded ordering entirely (self-probe). This
-                # leg is positional and needs no timestamps: a retried
-                # bundle re-opens a boundary already opened, which is the
-                # out-of-order ledger DA refuses.
-                # (a duplicate open is unreachable here: the boundary
-                # ordering leg and the supersedes-chain leg both catch it
-                # first. Deleted rather than covered — no test for dead
-                # code. The EMITTERS enforce once-only, which is where it
-                # matters: they must not PRODUCE such a ledger.)
-                open_v5 = _b
+                              f"rollback-only chain is malformed")
+            if r.get("supersedes") != open_ver:
+                raise Refused(f"rollback row {i} supersedes "
+                              f"{r.get('supersedes')!r} but the open era is "
+                              f"{open_ver!r}")
+            if r.get("closes_boundary_utc") != open_era:
+                raise Refused(f"rollback row {i} closes "
+                              f"{r.get('closes_boundary_utc')!r} but the "
+                              f"open era began {open_era}")
+            if len(str(r.get("stage") or "").strip()) < 1:
+                raise Refused(f"rollback row {i} names no 'stage'")
+            _rns = r.get("collector_start_recv_ns")
+            if type(_rns) is not int or _rns <= 0:
+                raise Refused(f"rollback row {i} carries no verified "
+                              f"restoration receipt (positive int "
+                              f"collector_start_recv_ns) — nothing shows the "
+                              f"{r.get('supersedes')} process came back")
+            # against the era ACTUALLY being reverted, not this deployment's
+            # constant — the hardcoded form misfires on any later era.
+            _open_dt = _canonical_instant(open_era, "open era boundary")
+            if _rns < int(_open_dt.replace(tzinfo=timezone.utc).timestamp()
+                          * 10**9):
+                raise Refused(f"rollback row {i} restoration recv_ns {_rns} "
+                              f"PREDATES the era it reverts ({open_era})")
+            if b_dt <= _open_dt:
+                raise Refused(f"rollback row {i} resume {b_raw} is not "
+                              f"strictly AFTER the era it closes "
+                              f"({open_era}) — a zero- or negative-width "
+                              f"span erases the time that actually ran")
+            open_era = open_ver = open_row = None
+            current = ver
+            continue
+        # transitioned
+        if current is None and r.get("supersedes") is None:
+            raise Refused(f"the first effective row ({i}) names no "
+                          f"'supersedes' — it must declare the era it opens "
+                          f"against")
+        if current is not None and r.get("supersedes") != current:
+            raise Refused(f"transitioned row {i} claims supersedes="
+                          f"{r.get('supersedes')!r} while the era in force "
+                          f"is {current!r} — a receipt may not name any "
+                          f"predecessor it likes")
+        # (a transition with ver == current necessarily also has
+        # supersedes == ver, so the self-supersede refusal above always
+        # fires first. Deleted rather than covered — no test for dead code.)
+        # A RETURN to a version that was in force earlier is a ROLLBACK, and
+        # writing it as a plain `transitioned` row skipped the ENTIRE
+        # rollback evidence contract — stage, restoration receipt,
+        # closes_boundary_utc, strictly-after resume (fuzz A8, the worst of
+        # 735 disagreements: my walk even returned clob_v4 in force while
+        # clob_v5 was still open).
+        if ver in _seen_versions:
+            raise Refused(f"transitioned row {i} returns to {ver}, which was "
+                          f"in force earlier — a RETURN is a rollback and "
+                          f"must declare rollback=true with its restoration "
+                          f"receipt; as a plain transition it bypasses every "
+                          f"rollback guard")
+        if r.get("recovered") is True:
+            if len(str(r.get("stage") or "").strip()) < 1:
+                raise Refused(f"recovered row {i} names no 'stage' — a "
+                              f"retroactive row carries MORE evidence, not "
+                              f"less")
+            _rec = r.get("collector_start_recv_ns")
+            if type(_rec) is not int or _rec <= 0:
+                raise Refused(f"recovered row {i} carries no positive int "
+                              f"collector_start_recv_ns")
+            if _rec < int(b_dt.replace(tzinfo=timezone.utc).timestamp()
+                          * 10**9):
+                raise Refused(f"recovered row {i} collector_start "
+                              f"{_rec} PREDATES the boundary it "
+                              f"reconstructs ({b_raw})")
+        open_era, open_ver, open_row = b_raw, ver, r
+        if current is not None:
+            _seen_versions.add(current)
         current = ver
-    if open_v5 is not None:
-        _open_rows = [r for r in era_rows
-                      if r.get("boundary_utc") == open_v5
-                      and r.get("transitioned") is True]
-        if _open_rows and _open_rows[-1].get("recovered") is True:
-            raise Refused(f"an UNCLOSED recovered transition at {open_v5} — "
-                          f"a reconstruction may not stand as the open era; "
-                          f"a half-written recovery bundle must fail LOUD "
-                          f"(DA 8bfcc9b)")
-    return current, open_v5
-
-
-MIN_STAGE_LEN = 4  # audit S9: "." satisfied "names its stage"
+    if open_era is not None and open_row is not None and \
+            open_row.get("recovered") is True:
+        raise Refused(f"the recovered era {open_ver!r} opened {open_era} is "
+                      f"never CLOSED — a reconstruction may not stand as the "
+                      f"open era; a half-written bundle must fail LOUD")
+    # The WALK validates every version generally; the RETURN answers the
+    # question the emitters ask — is a clob_v5 era in force right now?
+    return current, (open_era if open_ver == "clob_v5" else None)
 
 
 def check_system_safe(obs: dict, phase: str) -> None:
@@ -734,6 +751,8 @@ def check_post_restart(obs: dict, old_pid: int, start_row: dict | None,
         "pid": obs["main_pid"],
         "collector_start_recv_ns": start_row["recv_ns"],
         "stamp_written_ns": time.time_ns(),
+        "log_offset_at_stamp": (COLLECTOR_LOG.stat().st_size
+                                if COLLECTOR_LOG.exists() else 0),
         "stamp_order": ("restart FIRST, mode/pid/version VERIFIED from the "
                         "new process's own collector_start row and the "
                         "INSTALLED command read back from systemd, stamp "
@@ -765,6 +784,7 @@ def check_counters(samples: list, unit_active: bool, main_pid: int,
         raise Refused("no app-heartbeat counter line after the armed-time "
                       "log offset — the repaired contract is not observably "
                       "answering; wait a heartbeat interval or ABORT")
+    _kept = []
     for i, hb in enumerate(samples):
         le = hb.get("line_epoch")
         if type(le) is not int and type(le) is not float:
@@ -779,17 +799,22 @@ def check_counters(samples: list, unit_active: bool, main_pid: int,
         _floor = BOUNDARY_EPOCH if start_epoch is None \
             else max(BOUNDARY_EPOCH, start_epoch)
         if le < _floor:
-            raise Refused(f"counter line {i} is stamped {le:.0f}, before the "
-                          f"evidence floor {_floor:.0f} — a stale line proves "
-                          f"the OLD process. On a RETRY the resident binary "
-                          f"is the candidate and DOES print app counters, so "
-                          f"the floor is the verified new process's start, "
-                          f"not the armed-time offset (V5-R4 retry defect)")
+            # audit CLI #5: SKIP below-floor lines rather than refusing —
+            # on a retry the resident binary is the candidate and prints the
+            # same counters, so refusing aborted a HEALTHY deploy. Refuse
+            # only if nothing survives.
+            continue
         if le > BOUNDARY_EPOCH + MAX_VERIFY_WINDOW_S:
             raise Refused(f"counter line {i} is stamped "
                           f"{le - BOUNDARY_EPOCH:.0f}s after the boundary "
                           f"(> {MAX_VERIFY_WINDOW_S}s) — verification runs "
                           f"minutes after the deploy, not days (audit S2)")
+        _kept.append(hb)
+    if not _kept:
+        raise Refused(f"every one of the {len(samples)} counter lines is "
+                      f"below the evidence floor — none of them was printed "
+                      f"by the new process; wait a heartbeat interval")
+    samples = _kept
     first, last = samples[0], samples[-1]
     # A RESET anywhere in the region is a restart — invisible at endpoints.
     for a, b in zip(samples, samples[1:]):
@@ -826,6 +851,13 @@ def check_counters(samples: list, unit_active: bool, main_pid: int,
     if msgs_d <= 0:
         raise Refused(f"market rows did NOT advance over the interval "
                       f"(msgs {first['msgs']} -> {last['msgs']})")
+    if pong_d > ping_d:
+        raise Refused(f"{pong_d} PONGs for {ping_d} PINGs over the interval "
+                      f"— more answers than questions is impossible under "
+                      f"the contract; the counter counts PONG FRAMES, so a "
+                      f"ratio above 1 means unsolicited PONGs are being "
+                      f"consumed and the gate would call that health "
+                      f"(audit A2-2)")
     if pong_d < ping_d * MIN_ANSWER_RATIO:
         raise Refused(f"only {pong_d} PONGs for {ping_d} PINGs over the "
                       f"interval ({pong_d / max(ping_d, 1):.0%} < "
@@ -988,6 +1020,23 @@ def make_abort_row(obs: dict, stage: str,
                       f"or recovery path applies")
     if _cur != "clob_v4":
         raise Refused(f"era in force is {_cur!r}, not clob_v4")
+    _row = {"collector_schema_version": "clob_v5", "supersedes": "clob_v4",
+            "aborted": True, "boundary_utc": BOUNDARY_UTC, "stage": stage,
+            "stamp_written_ns": time.time_ns()}
+    _dup = [r for r in obs["era_rows"] if r.get("aborted") is True
+            and r.get("boundary_utc") == BOUNDARY_UTC
+            and r.get("stage") == stage]
+    if _dup:
+        # audit CLI #9: the only non-idempotent emitter, in a runbook that
+        # tells the operator to retry uncertain appends.
+        return {"already_stamped": True, "row": _dup[-1],
+                "note": ("an identical abort row is already in the ledger — "
+                         "idempotent success, NO new row emitted")}
+    # audit CLI #2: the only emitter that never checked its own output
+    # against the chain. Its boundary is the ruled instant, which is EARLIER
+    # than a landed rollback's resume instant, so appending it produced an
+    # out-of-order ledger no mode could read.
+    current_era_and_open_v5(list(obs["era_rows"]) + [_row])
     return {"collector_schema_version": "clob_v5", "supersedes": "clob_v4",
             "aborted": True, "boundary_utc": BOUNDARY_UTC, "stage": stage,
             "stamp_written_ns": time.time_ns(),
@@ -1011,6 +1060,41 @@ def check_post_recovery(obs: dict, v5_start: dict | None,
     if installed_mode(obs["exec_start"]) != "control-v4":
         raise Refused("installed command still carries the app-v5 vector — "
                       "v4 is not restored; this is not the recovery case")
+    # audit CLI #1: the two-row bundle is printed to ONE stdout, so a short
+    # write can land row 1 alone — and the walk then refuses every mode,
+    # with the repair unreachable and append-only forbidding a delete. A
+    # MATCHING half-landed reconstruction is completable: emit the missing
+    # rollback row only.
+    _half = [r for r in obs["era_rows"]
+             if r.get("recovered") is True and r.get("transitioned") is True
+             and r.get("boundary_utc") == BOUNDARY_UTC
+             and type(r.get("collector_start_recv_ns")) is int
+             and v5_start is not None
+             and r.get("collector_start_recv_ns") == v5_start.get("recv_ns")]
+    _closed = [r for r in obs["era_rows"] if r.get("rollback") is True
+               and r.get("closes_boundary_utc") == BOUNDARY_UTC]
+    if _half and not _closed:
+        _rows_wo_half = [r for r in obs["era_rows"] if r is not _half[-1]]
+        _c2, _o2 = current_era_and_open_v5(_rows_wo_half)
+        if v4_start is None:
+            raise Refused("a half-landed recovery bundle is present but no "
+                          "clob_v4 restoration declaration is available to "
+                          "close it")
+        _resto = datetime.fromtimestamp(v4_start["recv_ns"] / 1e9,
+                                        tz=timezone.utc
+                                        ).strftime("%Y-%m-%dT%H:%M:%SZ")
+        return [{"collector_schema_version": "clob_v4",
+                 "supersedes": "clob_v5", "rollback": True,
+                 "closes_boundary_utc": BOUNDARY_UTC, "stage": stage,
+                 "boundary_utc": _resto, "pid": obs["main_pid"],
+                 "collector_start_recv_ns": v4_start["recv_ns"],
+                 "stamp_written_ns": time.time_ns(),
+                 "completes_half_landed_bundle": True,
+                 "stamp_order": ("COMPLETION of a half-landed recovery "
+                                 "bundle: row 1 was already in the ledger, "
+                                 "so only the closing rollback is emitted "
+                                 "(audit CLI #1 — the alternative was a "
+                                 "permanently unreadable authority)")}]
     _cur, _open = current_era_and_open_v5(obs["era_rows"])
     if _open is not None:
         raise Refused(f"an open clob_v5 era already exists at {_open} — the "
@@ -1251,7 +1335,8 @@ def selftest() -> int:
             "NO role flag REFUSES — an absent boolean is indistinguishable "
             "from a forgotten one")
     refuses(lambda: check_pre_arm({**good_pre, "era_rows": [
-                V4_ROW, {**_V5T, "aborted": True}]}, False),
+                V4_ROW, {**_V5T, "aborted": True,
+                         "stage": "test_abort"}]}, False),
             "exactly one", "KNOWN-BAD (DA contract): a row asserting TWO "
             "role flags REFUSES — ambiguous attempt state")
     refuses(lambda: check_pre_arm({**good_pre, "era_rows": [
@@ -1270,7 +1355,8 @@ def selftest() -> int:
              "permits retry — the era line is v4 again")
     check_pre_arm({**good_pre, "era_rows": [
         V4_ROW, {"collector_schema_version": "clob_v5",
-                 "boundary_utc": BOUNDARY_UTC, "aborted": True}]}, False)
+                 "boundary_utc": BOUNDARY_UTC, "aborted": True,
+                 "stage": "test_abort"}]}, False)
     ok(True, "POSITIVE: an aborted clob_v5 row does NOT block a retry (and "
              "never enters the era line)")
     refuses(lambda: check_pre_arm(good_pre, expect_flag=True),
@@ -1535,16 +1621,17 @@ def selftest() -> int:
             "as DA refuses it (cross-consumer equivalence; my tolerant walk "
             "returned (v4, None))")
     refuses(lambda: current_era_and_open_v5([V4_ROW, _RBOK]),
-            "rollback-only", "KNOWN-BAD: a rollback with NO open era "
-            "REFUSES in the walk itself")
+            "but the open era is", "KNOWN-BAD: a rollback naming an era "
+            "that is not the one in force REFUSES (version-general now: the "
+            "walk tracks whatever era is open, not only clob_v5)")
     refuses(lambda: current_era_and_open_v5(
                 [V4_ROW, {**_V5OPEN},
                  {**_RBOK, "closes_boundary_utc": "2026-08-31T06:00:00Z"}]),
-            "does not match the open era", "KNOWN-BAD: a rollback closing "
+            "but the open era began", "KNOWN-BAD: a rollback closing "
             "the WRONG boundary REFUSES (was: silently left open)")
     refuses(lambda: current_era_and_open_v5(
                 [V4_ROW, {**_V5OPEN}, {**_RBOK, "stage": ""}]),
-            "no stage at consumption", "KNOWN-BAD (equivalence run): a "
+            "names no 'stage'", "KNOWN-BAD (equivalence run): a "
             "stage-less rollback refuses at CONSUMPTION, matching DA — "
             "found because the cross-consumer run disagreed on my own "
             "malformed fixture")
@@ -1552,7 +1639,7 @@ def selftest() -> int:
                 [V4_ROW, {**_V5OPEN},
                  {k: v for k, v in _RBOK.items()
                   if k != "collector_start_recv_ns"}]),
-            "no verified restoration", "KNOWN-BAD (equivalence run 2): a "
+            "no verified restoration receipt", "KNOWN-BAD (equivalence run 2): a "
             "rollback without the verified-restoration field refuses at "
             "consumption — 'nothing shows the clob_v4 process came back' "
             "(DA's words, matched)")
@@ -1661,19 +1748,19 @@ def selftest() -> int:
                  "collector_start_recv_ns": (BOUNDARY_EPOCH + 5) * 10**9,
                  "boundary_utc": BOUNDARY_UTC}
     refuses(lambda: current_era_and_open_v5([V4_ROW, _REC_OPEN]),
-            "unclosed recovered", "KNOWN-BAD (audit survivor): an UNCLOSED "
+            "never CLOSED", "KNOWN-BAD (audit survivor): an UNCLOSED "
             "recovered transition REFUSES in the SUITE — a half-written "
             "bundle must fail loud (was covered only by the equivalence "
             "test, so the mutation audit reported it as a survivor)")
     refuses(lambda: current_era_and_open_v5(
                 [V4_ROW, {k: v for k, v in _REC_OPEN.items()
                           if k != "stage"}, _RBOK]),
-            "retroactive row carries more", "KNOWN-BAD (audit survivor): a "
+            "names no 'stage'", "KNOWN-BAD (audit survivor): a "
             "recovered row without stage REFUSES in the SUITE")
     refuses(lambda: current_era_and_open_v5(
                 [V4_ROW, {**_REC_OPEN,
                           "collector_start_recv_ns": 1.5}, _RBOK]),
-            "retroactive row carries more", "KNOWN-BAD: a recovered row "
+            "positive int", "KNOWN-BAD: a recovered row "
             "with a non-int recv_ns REFUSES")
     _eq = current_era_and_open_v5([V4_ROW] + _bundle)
     ok(_eq == ("clob_v4", None),
@@ -1763,10 +1850,12 @@ def selftest() -> int:
             "not days", "KNOWN-BAD (audit S2): a line stamped far beyond the "
             "verification window REFUSES (a year-2100 line passed before)")
     refuses(lambda: check_counters(
-                [{**_S1, "line_epoch": BOUNDARY_EPOCH - 120}, _S2],
+                [{**_S1, "line_epoch": BOUNDARY_EPOCH - 120},
+                 {**_S2, "line_epoch": BOUNDARY_EPOCH - 60}],
                 True, 4242, "clob_v5"),
-            "evidence floor", "KNOWN-BAD: a PRE-BOUNDARY sample REFUSES on "
-            "its own stamp")
+            "below the evidence floor", "KNOWN-BAD: PRE-BOUNDARY samples "
+            "are SKIPPED and, when none survive, REFUSE — skipping (not "
+            "refusing) is what lets a healthy retry through (audit CLI #5)")
     refuses(lambda: check_counters(
                 [{**_S1, "line_epoch": None}, _S2], True, 4242, "clob_v5"),
             "no parseable timestamp", "KNOWN-BAD: an undatable sample "
@@ -1775,6 +1864,12 @@ def selftest() -> int:
                 [_S1, {**_S2, "app_pong": 3}], True, 4242, "clob_v5"),
             "static total is history", "KNOWN-BAD: pongs not advancing "
             "REFUSES — the v4 failure shape one layer up")
+    refuses(lambda: check_counters(
+                [_S1, {**_S2, "app_ping": 10, "app_pong": 40}],
+                True, 4242, "clob_v5"),
+            "more answers than questions", "KNOWN-BAD (audit A2-2): PONGs "
+            "EXCEEDING pings REFUSES — the counter counts frames, not "
+            "answered pings, so an unsolicited-PONG flood read as health")
     refuses(lambda: check_counters(
                 [_S1, {**_S2, "app_ping": 40, "app_pong": 4}],
                 True, 4242, "clob_v5"),
@@ -1994,11 +2089,16 @@ def selftest() -> int:
        "POSITIVE (V5-R4-1): an EXACT already-landed recovery bundle returns "
        "idempotent success with NO rows — re-emitting appended a second "
        "bundle whose transition landed after the first rollback")
-    refuses(lambda: check_post_recovery(
-                {**_rec_obs, "era_rows": [V4_ROW, _rec_prior[0]]},
-                _V5START, _V4START, "test_stage"),
-            "unclosed recovered", "KNOWN-BAD (V5-R4-1): a HALF-landed bundle "
-            "REFUSES at the chain walk — completed, never re-emitted")
+    _completion = check_post_recovery(
+        {**_rec_obs, "era_rows": [V4_ROW, _rec_prior[0]]},
+        _V5START, _V4START, "test_stage")
+    ok(len(_completion) == 1
+       and _completion[0].get("completes_half_landed_bundle") is True
+       and _completion[0].get("rollback") is True,
+       "POSITIVE (audit CLI #1): a HALF-LANDED bundle is COMPLETED — only "
+       "the missing rollback row is emitted. Every mode used to refuse that "
+       "ledger with the repair unreachable, and append-only forbids "
+       "deleting the row that landed: a permanently bricked authority")
     refuses(lambda: check_system_safe({**good_pre, "working_dir": "",
                                        "now_epoch": BOUNDARY_EPOCH + 30},
                                       "post"),
@@ -2076,6 +2176,98 @@ def selftest() -> int:
             "proves the process ran before the attempt, not that it was "
             "restored after it")
 
+    # ---- differential-fuzz repros, mirrored into the SUITE so the
+    # mutation audit (which runs --selftest only) can see them ----
+    _V6 = {"collector_schema_version": "clob_v6", "supersedes": "clob_v4",
+           "transitioned": True, "boundary_utc": BOUNDARY_UTC,
+           "stage": "post-restart",
+           "collector_start_recv_ns": (BOUNDARY_EPOCH + 10) * 10**9}
+    for _name, _rows, _frag in [
+        ("return-transition bypassing the rollback contract",
+         [V4_ROW, _V5OPEN, {"collector_schema_version": "clob_v4",
+                            "supersedes": "clob_v5", "transitioned": True,
+                            "boundary_utc": "2026-08-31T07:03:00Z"}],
+         "returns to"),
+        ("unclosed recovered era of a NON-v5 version",
+         [V4_ROW, {**_V6, "recovered": True}], "never CLOSED"),
+        ("aborted row with no stage",
+         [V4_ROW, {"collector_schema_version": "clob_v5",
+                   "supersedes": "clob_v4", "aborted": True,
+                   "boundary_utc": BOUNDARY_UTC}], "names no 'stage'"),
+        ("recovered:true on an aborted row",
+         [V4_ROW, {"collector_schema_version": "clob_v5",
+                   "supersedes": "clob_v4", "aborted": True,
+                   "recovered": True, "stage": "abcd",
+                   "boundary_utc": BOUNDARY_UTC}], "recovered` but asserts"),
+        ("empty collector_schema_version",
+         [V4_ROW, {**_V5OPEN, "collector_schema_version": ""}],
+         "non-empty string"),
+        ("missing boundary_utc",
+         [V4_ROW, {k: v for k, v in _V5OPEN.items()
+                   if k != "boundary_utc"}], "not a string"),
+        ("first effective row with no supersedes",
+         [{k: v for k, v in _V5OPEN.items() if k != "supersedes"}],
+         "names no 'supersedes'"),
+        ("recovered row with epoch-0 evidence",
+         [V4_ROW, {**_V5OPEN, "recovered": True, "stage": "recv",
+                   "collector_start_recv_ns": 0}], "positive int"),
+        ("non-canonical boundary spelling",
+         [V4_ROW, {**_V5OPEN, "boundary_utc": "2026-08-31T07:00:00+00:00"}],
+         "canonical"),
+        ("non-string boundary_utc",
+         [V4_ROW, {**_V5OPEN, "boundary_utc": 20260831}], "not a string"),
+        ("self-supersede on an aborted row",
+         [V4_ROW, {"collector_schema_version": "clob_v5",
+                   "supersedes": "clob_v5", "aborted": True, "stage": "abcd",
+                   "boundary_utc": BOUNDARY_UTC}], "supersede ITSELF"),
+        ("re-open of the era already in force",
+         [V4_ROW, {**_V5OPEN, "collector_schema_version": "clob_v4",
+                   "supersedes": "clob_v4"}], "supersede ITSELF"),
+        ("rollback restoration predating the era it reverts",
+         [V4_ROW, _V5OPEN, {**_RBOK,
+                            "collector_start_recv_ns":
+                            (BOUNDARY_EPOCH - 10) * 10**9}],
+         "PREDATES the era"),
+        ("recovered collector_start predating its own boundary",
+         [V4_ROW, {**_V5OPEN, "recovered": True, "stage": "recv",
+                   "collector_start_recv_ns":
+                   (BOUNDARY_EPOCH - 60) * 10**9}], "PREDATES the boundary"),
+    ]:
+        refuses(lambda rr=_rows: current_era_and_open_v5(rr), _frag,
+                f"FUZZ-KB: {_name}")
+    refuses(lambda: current_era_and_open_v5(
+                [V4_ROW, _V5OPEN,
+                 {"collector_schema_version": "clob_v5",
+                  "supersedes": "clob_v4", "aborted": True,
+                  "stage": "abcd", "boundary_utc": "2026-08-31T07:05:00Z"}]),
+            "AMBIGUOUS attempt state", "FUZZ-KB: an aborted row for the era "
+            "that is currently OPEN refuses (distinct from the era merely "
+            "in force)")
+    refuses(lambda: current_era_and_open_v5([{**_RBOK}]),
+            "NO open era to close", "FUZZ-KB: a rollback-only ledger (no "
+            "transition ever) refuses")
+    refuses(lambda: current_era_and_open_v5(
+                [V4_ROW, _V5OPEN, _RBOK,
+                 {**_V5OPEN, "collector_schema_version": "clob_v4",
+                  "supersedes": "clob_v4",
+                  "boundary_utc": "2026-08-31T07:30:00Z"}]),
+            "supersede ITSELF", "FUZZ-KB: a transition re-opening the era "
+            "in force refuses (via self-supersede, which always fires "
+            "first — the separate re-open branch was dead and is deleted)")
+    refuses(lambda: check_post_recovery(
+                {**_rec_obs,
+                 "era_rows": [V4_ROW, {**_V5OPEN, "recovered": True,
+                                       "stage": "recv",
+                                       "collector_start_recv_ns":
+                                       _V5START["recv_ns"]}]},
+                _V5START, None, "test_stage"),
+            "no clob_v4 restoration declaration", "FUZZ-KB: completing a "
+            "half-landed bundle without a restoration declaration refuses")
+    ok(current_era_and_open_v5([V4_ROW, _V6])[0] == "clob_v6",
+       "POSITIVE (fuzz B1): a v4->v6 transition chain is ACCEPTED — the walk "
+       "used to track only clob_v5, refusing any other era's rollback and "
+       "stranding the next collector version permanently")
+
     # ---- audit-2 findings: the round-4 fixes attacked ----
     refuses(lambda: check_post_recovery(
                 {**_rec_obs, "era_rows": [V4_ROW,
@@ -2135,21 +2327,21 @@ def selftest() -> int:
                 [V4_ROW, {"collector_schema_version": "clob_v4",
                           "aborted": True, "stage": "test_stage",
                           "boundary_utc": BOUNDARY_UTC}]),
-            "era in force", "KNOWN-BAD (audit F1/D3): an aborted row for the "
-            "era IN FORCE REFUSES — generalised beyond clob_v5")
+            "AMBIGUOUS attempt state", "KNOWN-BAD (audit F1/D3): an aborted "
+            "row for the era IN FORCE REFUSES — generalised beyond clob_v5")
     refuses(lambda: current_era_and_open_v5(
                 [V4_ROW, _OPEN, {k: v for k, v in _RBOK.items()
                                  if k != "boundary_utc"}]),
-            "no boundary_utc", "KNOWN-BAD (audit S4): a rollback with NO "
+            "not a string", "KNOWN-BAD (audit S4): a rollback with NO "
             "resume instant REFUSES — that instant defines the width of the "
             "v5 era that ran")
     refuses(lambda: current_era_and_open_v5(
                 [V4_ROW, _OPEN, {**_RBOK, "boundary_utc": "not-an-instant"}]),
-            "not a parseable instant", "KNOWN-BAD (audit S4): an unparseable "
+            "canonical", "KNOWN-BAD (audit S4): an unparseable "
             "rollback instant REFUSES")
     refuses(lambda: current_era_and_open_v5(
                 [V4_ROW, _OPEN, {**_RBOK, "boundary_utc": BOUNDARY_UTC}]),
-            "not strictly after", "KNOWN-BAD (audit S4): a ZERO-WIDTH era "
+            "not strictly AFTER", "KNOWN-BAD (audit S4): a ZERO-WIDTH era "
             "(resume == transition instant) REFUSES in the CONSUMER — the "
             "emitter already refused it, but the consumer guards a ledger "
             "anyone can append to")
@@ -2160,7 +2352,7 @@ def selftest() -> int:
             "REFUSES (the boundary-ordering leg reaches it first now)")
     refuses(lambda: current_era_and_open_v5(
                 [V4_ROW, _OPEN, {**_RBOK, "collector_start_recv_ns": 0}]),
-            "predates the boundary", "KNOWN-BAD (audit S4): an epoch-0 "
+            "no verified restoration receipt", "KNOWN-BAD (audit S4): an epoch-0 "
             "restoration recv_ns REFUSES")
     for _f in ("transitioned", "aborted", "rollback", "recovered"):
         refuses(lambda f=_f: classify_era_row({**_OPEN, f: 1}),
@@ -2237,7 +2429,12 @@ def main() -> int:
         stamp = check_post_restart(obs, a.post_restart, row)
         if stamp.get("already_stamped"):
             print(stamp["note"], file=sys.stderr)
+            print(f"V5_PID={stamp['row'].get('pid')}", file=sys.stderr)
             return 0  # NOTHING on stdout: `>> ledger` appends no row
+        # audit CLI #7: V5_PID is required by two failure paths and was
+        # printed by no mode — the operator had to dig it out of another
+        # file, in a design whose principle is that nothing is transcribed.
+        print(f"V5_PID={stamp['pid']}", file=sys.stderr)
         print(json.dumps(stamp))
         return 0
     if a.post_rollback is not None:
@@ -2284,19 +2481,44 @@ def main() -> int:
         if rows and rows[0].get("already_stamped"):
             print(rows[0]["note"], file=sys.stderr)
             return 0  # nothing on stdout: the `>>` append is a no-op
-        for row in rows:
-            print(json.dumps(row))
+        # audit A1-1/A1-3: printed row-by-row, a SIGINT between the two
+        # prints (or PYTHONUNBUFFERED, which splits content from newline)
+        # left row 1 alone and bricked the authority. One write, one
+        # syscall under O_APPEND.
+        sys.stdout.write("".join(json.dumps(r) + "\n" for r in rows))
+        sys.stdout.flush()
         return 0
     if a.verify_counters:
-        if a.log_offset is None:
-            raise Refused("--verify-counters requires --log-offset (printed "
-                          "by --armed) — unanchored log evidence was the "
-                          "V5-0700-R2 false accept")
         obs = observe_common()
+        # audit CLI #4/#5: the offset is now taken from the STAMP the
+        # postflight wrote (machine-derived, at restart time), not from a
+        # value the operator carries from arm time. A hand-picked offset
+        # let a DAY-OLD log line pass as post-boundary evidence, because
+        # the line carries only HH:MM:SSZ and is dated into the boundary's
+        # day; an arm-time offset made a healthy retry refuse.
+        _stamps = [r for r in obs["era_rows"]
+                   if r.get("transitioned") is True
+                   and r.get("collector_schema_version") == "clob_v5"
+                   and r.get("boundary_utc") == BOUNDARY_UTC
+                   and type(r.get("log_offset_at_stamp")) is int]
+        if not _stamps:
+            raise Refused("no clob_v5 stamp carrying log_offset_at_stamp is "
+                          "in the ledger — counter evidence is anchored at "
+                          "the offset the POSTFLIGHT recorded, never at an "
+                          "operator-supplied one (audit CLI #4/#5)")
+        a.log_offset = _stamps[-1]["log_offset_at_stamp"]
         if obs.get("obs_unit_overridden"):
             raise Refused("counter verification reads PRODUCTION log and "
                           "ledger — a fixture unit override would describe "
                           "an unrelated unit's liveness (audit S11)")
+        # audit CLI #6: the step that authorizes "the deploy stands" ran NO
+        # system gate — it certified a rolled-back system with foreign bytes,
+        # a wrong cwd and an ExecStartPre.
+        check_system_safe(obs, "recovery")
+        if installed_mode(obs["exec_start"]) != "app-v5":
+            raise Refused("the installed command is not the v5 vector — "
+                          "counter verification would certify a system that "
+                          "is no longer running the deployed mode")
         hb = observe_heartbeat_lines(BOUNDARY_EPOCH, a.log_offset)
         _newstart = observe_collector_start(BOUNDARY_EPOCH, obs["main_pid"])
         if _newstart is None:
@@ -2313,8 +2535,10 @@ def main() -> int:
               f"pong +{l['app_pong'] - f['app_pong']}, "
               f"msgs +{l['msgs'] - f['msgs']}")
         return 0
-    ap.print_help()
-    return 2
+    ap.print_help(file=sys.stderr)
+    raise Refused("no mode selected — every mode is explicit, and printing "
+                  "usage to STDOUT appended 20 lines of help text into the "
+                  "era ledger through the runbook's `>>` (audit CLI #3)")
 
 
 if __name__ == "__main__":

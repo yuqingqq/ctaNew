@@ -86,6 +86,66 @@ CASES.append(("V5-R4-1 single recovery bundle in order", [LEGACY, REC,
                                                           RB_REC], "ok"))
 
 
+# Differential fuzz (17,729 ledgers, 735 disagreements at peak) — the classes
+# the 19 canonical cases never reached. Ported so the seam test covers the
+# space the fuzzer explored rather than the happy path with canonical stamps.
+V6 = {"collector_schema_version": "clob_v6", "supersedes": "clob_v4",
+      "transitioned": True, "boundary_utc": "2026-08-31T07:00:00Z",
+      "stage": "post-restart",
+      "collector_start_recv_ns": (B + 10) * 10**9}
+RB_V6 = {"collector_schema_version": "clob_v4", "supersedes": "clob_v6",
+         "rollback": True, "closes_boundary_utc": "2026-08-31T07:00:00Z",
+         "boundary_utc": "2026-08-31T07:03:00Z", "stage": "stage-4",
+         "collector_start_recv_ns": (B + 180) * 10**9}
+FUZZ = [
+    ("A8 return-transition bypassing the rollback contract",
+     [LEGACY, V5OK, {"collector_schema_version": "clob_v4",
+                     "supersedes": "clob_v5", "transitioned": True,
+                     "boundary_utc": "2026-08-31T07:03:00Z"}], "refuse"),
+    ("A9 unclosed recovered era of a NON-v5 version",
+     [LEGACY, {**V6, "recovered": True}], "refuse"),
+    ("A5 aborted row with no stage",
+     [LEGACY, {"collector_schema_version": "clob_v5",
+               "supersedes": "clob_v4", "aborted": True,
+               "boundary_utc": "2026-08-31T07:00:00Z"}], "refuse"),
+    ("A6 recovered:true on an aborted row",
+     [LEGACY, {"collector_schema_version": "clob_v5",
+               "supersedes": "clob_v4", "aborted": True, "recovered": True,
+               "stage": "s", "boundary_utc": "2026-08-31T07:00:00Z"}],
+     "refuse"),
+    ("A3 row with an empty collector_schema_version",
+     [LEGACY, {**V5OK, "collector_schema_version": ""}], "refuse"),
+    ("A3b row with no boundary_utc",
+     [LEGACY, {k: v for k, v in V5OK.items() if k != "boundary_utc"}],
+     "refuse"),
+    ("A7 first effective row with no supersedes",
+     [{k: v for k, v in V5OK.items() if k != "supersedes"}], "refuse"),
+    ("A10 recovered row with epoch-0 evidence",
+     [LEGACY, {**V5OK, "recovered": True, "stage": "rec",
+               "collector_start_recv_ns": 0}], "refuse"),
+    ("A4 non-canonical boundary spelling (offset form)",
+     [LEGACY, {**V5OK, "boundary_utc": "2026-08-31T07:00:00+00:00"}],
+     "refuse"),
+    ("A4b unparseable boundary",
+     [LEGACY, {**V5OK, "boundary_utc": "not-a-time"}], "refuse"),
+    ("C1 non-string boundary_utc",
+     [LEGACY, {**V5OK, "boundary_utc": 20260831}], "refuse"),
+    ("C2 non-string collector_schema_version",
+     [LEGACY, {**V5OK, "collector_schema_version": 5}], "refuse"),
+    ("A11 self-supersede on an aborted row",
+     [LEGACY, {"collector_schema_version": "clob_v5",
+               "supersedes": "clob_v5", "aborted": True, "stage": "s",
+               "boundary_utc": "2026-08-31T07:00:00Z"}], "refuse"),
+    ("B3 whitespace-only stage on a rollback",
+     [LEGACY, V5OK, {**RB, "stage": "   "}], "refuse"),
+    ("B1 rollback of a NON-v5 era (must be ACCEPTED — version-general)",
+     [LEGACY, V6, RB_V6], "ok"),
+    ("v4 -> v6 transition chain (no rollback, must be ACCEPTED)",
+     [LEGACY, V6], "ok"),
+]
+CASES.extend(FUZZ)
+
+
 def mine(rows):
     try:
         P.current_era_and_open_v5(rows)
@@ -101,7 +161,14 @@ def da(rows, path):
     test 12/12 green."""
     path.write_text("".join(json.dumps(r) + "\n" for r in rows))
     try:
-        D.day_era_admission("20260901", path)
+        # Admissibility (which eras are RULED usable) is a separate axis
+        # from chain validity; this seam compares MALFORMEDNESS only, so a
+        # permissive table is supplied. DA's own suite governs admissibility.
+        D.day_era_admission("20260901", path,
+                            admissible_table={"clob_v3_1": True,
+                                              "clob_v4": True,
+                                              "clob_v5": True,
+                                              "clob_v6": True})
         return "ok"
     except ValueError:
         return "refuse"

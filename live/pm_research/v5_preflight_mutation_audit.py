@@ -28,7 +28,7 @@ CHECKERS = {"check_boundary_current", "installed_mode", "classify_era_row",
             "current_era_and_open_v5", "check_pre_arm", "check_post_restart",
             "check_counters", "check_post_rollback", "check_post_recovery",
             "check_system_safe", "check_stage", "check_candidate_commit",
-            "make_abort_row",
+            "make_abort_row", "_canonical_instant",
             "check_runbook_consistency", "_canary_refusal"}
 CANARY = ("\n\ndef _canary_refusal():\n"
           "    raise Refused('CANARY: no test reaches this')\n")
