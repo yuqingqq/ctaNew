@@ -70,8 +70,17 @@ COLLECTOR_VERSION = "clob_v4"
 HEARTBEAT_CONTROL_V4 = "control-v4"
 HEARTBEAT_APP_V5 = "app-v5"
 HEARTBEAT_MODES = (HEARTBEAT_CONTROL_V4, HEARTBEAT_APP_V5)
+# The venue documents a TEN-SECOND PING/PONG cadence; that constrains how
+# often we SEND, not how long we wait for the answer, which is the client's
+# choice. Worst-case dead-socket blindness is interval + timeout, and the
+# v4 keepalive O1a tuned it to ~6 s (77.1% of btc lost seconds was detection
+# lag). A 10 s deadline would have restored ~20 s by a different mechanism —
+# the exact metric O1a fixed, and it lands INSIDE the recorded gap durations
+# the day-quality gate accrues on. Observed PONG round-trip on the live BTC
+# channel is ~90 ms, so 3 s is ~33x the observed latency and still bounds
+# blindness at ~13 s (USER ruling 2026-08-31).
 APP_HEARTBEAT_INTERVAL_S = 10.0
-APP_HEARTBEAT_TIMEOUT_S = 10.0
+APP_HEARTBEAT_TIMEOUT_S = 3.0
 
 # v3: disk work and HTTP work get SEPARATE executors. They shared the default
 # 20-worker pool, where four run_in_executor HTTP calls (urlopen, 15-25 s

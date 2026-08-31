@@ -24,6 +24,11 @@ assert spec and spec.loader
 C = importlib.util.module_from_spec(spec)
 sys.modules[spec.name] = C
 spec.loader.exec_module(C)
+# The harness shrinks the heartbeat constants for speed, so the SHIPPED
+# values must be captured here, before any test runs — asserting on the
+# live module later would test the fixture, not the candidate.
+SHIPPED_INTERVAL_S = C.APP_HEARTBEAT_INTERVAL_S
+SHIPPED_TIMEOUT_S = C.APP_HEARTBEAT_TIMEOUT_S
 
 TMP = Path(tempfile.mkdtemp(prefix="pm_hb_v5_"))
 OUT = TMP / "out"
@@ -205,6 +210,54 @@ async def main() -> int:
     check("known-bad: near-match 'PONG ' does not satisfy exact identity",
           "APP_HEARTBEAT_TIMEOUT" in causes,
           str(causes))
+
+    # ---- detection-latency contract (USER ruling 2026-08-31) ----
+    # The v5 repair fixes the CONTRACT (RFC control Pong -> documented text
+    # PING/PONG) but reintroduces detection LAG, the exact metric O1a tuned,
+    # and that lag is charged to the recorded gap durations the day-quality
+    # gate accrues on. These pin the deadline as a BEHAVIOUR, not a literal.
+    blind_v5 = SHIPPED_INTERVAL_S + SHIPPED_TIMEOUT_S
+    v4_kwargs = C.connect_keepalive_kwargs(C.HEARTBEAT_CONTROL_V4)
+    blind_v4 = v4_kwargs["ping_interval"] + v4_kwargs["ping_timeout"]
+    check("worst-case dead-socket blindness is DERIVED and bounded at 15s",
+          blind_v5 == SHIPPED_INTERVAL_S + SHIPPED_TIMEOUT_S
+          and blind_v5 <= 15.0,
+          f"v5 {blind_v5}s vs v4 {blind_v4}s")
+    check("the answer deadline is well under the send cadence — a timeout "
+          "at or above the interval would let a dead socket outlive a whole "
+          "heartbeat cycle unnoticed",
+          SHIPPED_TIMEOUT_S < SHIPPED_INTERVAL_S / 2,
+          f"timeout {SHIPPED_TIMEOUT_S}s vs interval {SHIPPED_INTERVAL_S}s")
+    check("the deadline still clears the observed round-trip by >=10x "
+          "(live probe: ~90ms on the BTC channel)",
+          SHIPPED_TIMEOUT_S >= 0.09 * 10,
+          f"{SHIPPED_TIMEOUT_S}s vs 0.9s")
+    check("the v5 regression against the v4 keepalive is STATED, not hidden "
+          "— this is a trade, and the register records it",
+          blind_v5 > blind_v4,
+          f"v5 {blind_v5}s is {blind_v5 / blind_v4:.1f}x v4's {blind_v4}s")
+
+    # BEHAVIOURAL: the configured deadline is what actually fires. Drive the
+    # real timeout path with the constant temporarily shrunk, and prove a
+    # PONG that arrives INSIDE it is accepted while one outside is not.
+    _saved = C.APP_HEARTBEAT_TIMEOUT_S
+    try:
+        C.APP_HEARTBEAT_TIMEOUT_S = 0.05
+        slow, gaps = await run_market("missing_pong")
+        causes = [r.get("cause") for r in gaps if r.get("event") == "disconnect"]
+        check("BEHAVIOURAL: the deadline that fires is the CONFIGURED one — "
+              "shrinking it makes a silent socket time out",
+              "APP_HEARTBEAT_TIMEOUT" in causes, str(causes))
+        C.APP_HEARTBEAT_TIMEOUT_S = 5.0
+        ok_run, ok_gaps = await run_market("healthy")
+        ok_causes = [r.get("cause") for r in ok_gaps
+                     if r.get("event") == "disconnect"]
+        check("BEHAVIOURAL: a PONG inside the deadline does NOT time out",
+              "APP_HEARTBEAT_TIMEOUT" not in ok_causes, str(ok_causes))
+    finally:
+        C.APP_HEARTBEAT_TIMEOUT_S = _saved
+    check("the constant is RESTORED after the behavioural probe",
+          C.APP_HEARTBEAT_TIMEOUT_S == _saved, str(C.APP_HEARTBEAT_TIMEOUT_S))
 
     failures = sum(not passed for _, passed, _ in RESULTS)
     print(f"\nV5 HEARTBEAT BEHAVIORAL: {len(RESULTS)-failures}/{len(RESULTS)} pass")
