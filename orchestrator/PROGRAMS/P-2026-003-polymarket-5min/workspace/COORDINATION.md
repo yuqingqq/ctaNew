@@ -18004,6 +18004,27 @@ The obvious objection to the rollback: 10/10 triples the detection lag (≤20 s 
 
 **Nothing changes about the prerequisites in R-370** — a ruled instant, a `clob_v4_1` admissibility ruling, the v4_1 boundary emitter and runbook (not built), Codex's final narrow review, and a content-liveness rule frozen before 09-01 is judged.
 
+### R-372 — 2026-08-31T17:45Z — coordinator — **GO/NO-GO after four review rounds: NO CRITICAL ISSUES in the deploy mechanics. Two named risks, neither blocking. And one expectation that must be corrected BEFORE the ruling, not after**
+
+**Rounds run, and what each found — recorded because the sequence is the point: every round found something the previous one structurally could not.**
+
+| round | angle | found |
+|---|---|---|
+| 1 | v4_1 gate vs what the v5 gate covers | **the gate never checked the BYTES** (v5 has 25 sha refs, this had 0 — it would have certified a restart of unreviewed code); literal U+2028 in source; a manual-grep health step |
+| 2 | mutation audit (81 raise sites, never run) | **54 survivors**, concentrated in the FAILURE paths — rollback 14/14, recovery 8/8, timing windows 5/5 all unprotected. And writing one falsifier found **audit A2 REPEATING**: the half-landed completion branch was DEAD CODE because `era_state` refused first |
+| 3 | walk the runbook as an operator SEQUENCE | a **dead end** — four steps say "record V41_PID", none says where to find it if you did not, though the process declared it in its own row |
+| 4 | would the gate roll back a HEALTHY deploy? | **No.** Executed against the real 08-31 quiet event: every coin advances at every sampled window, worst case hype 13 msgs/2min |
+
+**Round 4 in full, because it is the one that could have blocked.** `--verify-health` requires EVERY coin to advance, and the 08-31 event held the feed at 0.51% of normal rate for 4.1 hours. If the boundary landed in such an event, a healthy v4_1 could be rolled back for an upstream reason. Tested at 07:00, 08:00, 08:30, 09:00 and 10:00Z inside the event: **PASS at every one.** btc 72-176, hype 13-160 messages per 2 min. **The margin is thin but positive**, and thin is worth naming: an event ~10x deeper than any observed would stall hype and trigger a false rollback. Mitigation is that a rollback is reversible and the operator can re-run; this is a risk to state, not a defect to fix.
+
+**Second named risk: the same-IP confound.** The shadow opens a connection from the same host and IP as the collector 20 min before the boundary, and `BTC_GAP_DIAGNOSIS_2026-08-26` is only MEDIUM on venue-infra vs network-path. Harm from it would be confounded with the deploy. Mitigated by step order (step 0's verify runs BEFORE the drop-in) plus an explicit stop rule.
+
+**AND THE EXPECTATION THAT MUST BE CORRECTED BEFORE THE RULING.** All 10/10 evidence is from **08-26..08-29**. On those days btc passed P1 on **two of five** (151.9, 123.8, 130.6 FAIL; 114.1, 32.3 PASS). So the honest forecast is that **this deploy moves btc from ~0% to roughly 40% odds of passing on any given day — it does not make 09-01 a clean btc day.** Further, that evidence is five days old from a venue that has since produced a 4-hour behaviour we cannot explain, so even the 40% assumes a stationarity this programme has repeatedly found absent. **The rollback is worth doing because it undoes measured self-inflicted harm at negligible cost — not because it fixes btc.** btc's cause is remote and unaddressed by anything in this package.
+
+**Verdict: no critical issues found. The package is ready; the deploy is still gated on the USER's `clob_v4_1` admissibility ruling and Codex's seam verdict, and I will stop on a Codex HOLD rather than proceed.**
+
+**Standing note on my own conduct this round.** My first pass in round 3 reported "`--verify-health` refuses but exits 0" as a defect. It does not — my check piped through `tail`, so `$?` was tail's. **That is the exact defect I documented in `v5_deploy_gates.py` and fixed earlier today, committed again by me, inside the command verifying the guard against it.** Recorded because the lesson is evidently not learned by writing it down once: **a pipe silently replaces the exit code you meant to read, and I have now made that mistake in both directions in one day.**
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
