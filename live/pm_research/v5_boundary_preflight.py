@@ -193,6 +193,9 @@ def check_boundary_current(boundary_utc: str, boundary_epoch: int,
 
 
 COLLECTOR_ARGV_TOKEN = "live/pm_research/collect_pm.py"
+PYTHON_ARGV0 = "/home/yuqing/pricer-sol/venv/bin/python3"
+ARGV_V4 = (PYTHON_ARGV0, COLLECTOR_ARGV_TOKEN)
+ARGV_V5 = ARGV_V4 + ("--heartbeat-mode", "app-v5")
 
 
 def _argv_tokens(exec_start: str) -> list:
@@ -200,15 +203,21 @@ def _argv_tokens(exec_start: str) -> list:
     return (m.group(1) if m else exec_start).split()
 
 
-def exec_start_has_flag(exec_start: str) -> bool:
-    """Exact-token check on systemd's ExecStart property: the ADJACENT pair
-    ('--heartbeat-mode', 'app-v5') AND the collector script itself — a flag
-    on /tmp/not_collector.py is not an armed collector (re-review 038a1b2
-    false-accept 2). Substring checks accepted 'app-v5x' before that."""
-    toks = _argv_tokens(exec_start)
-    flag_ok = any(a == "--heartbeat-mode" and b == "app-v5"
-                  for a, b in zip(toks, toks[1:]))
-    return flag_ok and COLLECTOR_ARGV_TOKEN in toks
+def installed_mode(exec_start: str) -> str:
+    """ONLY the exact full argv vector proves the mode. Token/pair matching
+    accepted `/bin/echo <collector> --heartbeat-mode app-v5` (the flag
+    proven, the INTERPRETER never) and a trailing `--heartbeat-mode
+    control-v4` after the pair — argparse takes the LAST occurrence, so the
+    'armed' command would boot v4 (re-review at 97f3778, both executed)."""
+    toks = tuple(_argv_tokens(exec_start))
+    if toks == ARGV_V5:
+        return "app-v5"
+    if toks == ARGV_V4:
+        return "control-v4"
+    raise Refused(f"installed argv is NEITHER the exact v4 nor the exact v5 "
+                  f"command vector: {toks!r} — wrong interpreter, foreign "
+                  f"script, or extra/conflicting flags; the mode of an "
+                  f"unknown vector is UNPROVEN")
 
 
 # The one pre-vocabulary row, pinned by IDENTITY so nothing new inherits the
@@ -272,15 +281,16 @@ def check_pre_arm(obs: dict, expect_flag: bool) -> None:
     if current != "clob_v4":
         raise Refused(f"the current era per the ledger is {current!r}, not "
                       f"clob_v4 — there is nothing well-defined to supersede")
-    has_flag = exec_start_has_flag(obs["exec_start"])
-    if expect_flag and not has_flag:
-        raise Refused(f"armed check: the INSTALLED ExecStart does not carry "
-                      f"{FLAG!r} — the drop-in did not land or daemon-reload "
-                      f"did not run; restarting now would boot v4 again")
-    if not expect_flag and has_flag:
-        raise Refused(f"pre-arm check: ExecStart ALREADY carries {FLAG!r} — "
-                      f"an unplanned earlier arming; establish provenance "
-                      f"before proceeding")
+    mode = installed_mode(obs["exec_start"])
+    if expect_flag and mode != "app-v5":
+        raise Refused(f"armed check: the INSTALLED command vector is the "
+                      f"{mode} one — the drop-in did not land or daemon-"
+                      f"reload did not run; restarting now would boot v4 "
+                      f"again")
+    if not expect_flag and mode != "control-v4":
+        raise Refused(f"pre-arm check: the INSTALLED command ALREADY carries "
+                      f"the {mode} vector — an unplanned earlier arming; "
+                      f"establish provenance before proceeding")
 
 
 def check_post_restart(obs: dict, old_pid: int, start_row: dict | None) -> dict:
@@ -290,9 +300,9 @@ def check_post_restart(obs: dict, old_pid: int, start_row: dict | None) -> dict:
         raise Refused(f"on-disk collector sha changed "
                       f"({obs['tree_sha'][:16]}) — the running process may "
                       f"not be the reviewed candidate")
-    if not exec_start_has_flag(obs["exec_start"]):
-        raise Refused(f"installed ExecStart lost the exact {FLAG!r} token "
-                      f"pair — the restart booted v4 semantics")
+    if installed_mode(obs["exec_start"]) != "app-v5":
+        raise Refused(f"installed command is not the exact v5 vector — the "
+                      f"restart lost the mode and booted v4 semantics")
     if not obs["unit_active"] or obs["main_pid"] <= 0:
         raise Refused("unit not active after restart — ABORT path applies")
     if obs["main_pid"] == old_pid:
@@ -437,8 +447,8 @@ def check_post_rollback(obs: dict, old_v5_pid: int,
         raise Refused("a rollback receipt must name its STAGE (which failure "
                       "path forced it) — an unexplained rollback is ambiguous "
                       "attempt state")
-    if exec_start_has_flag(obs["exec_start"]):
-        raise Refused("installed ExecStart STILL carries the app-v5 flag — "
+    if installed_mode(obs["exec_start"]) != "control-v4":
+        raise Refused("installed command STILL carries the app-v5 vector — "
                       "the drop-in was not removed; this would boot v5 again "
                       "on the next restart")
     if not obs["unit_active"] or obs["main_pid"] <= 0:
@@ -541,11 +551,9 @@ def selftest() -> int:
               "boundary_utc": "2026-08-30T05:30:00Z"}
     good_pre = {"now_epoch": BOUNDARY_EPOCH - 300, "tree_sha": CAND_SHA,
                 "head_sha": CAND_SHA, "unit_active": True, "main_pid": 3687786,
-                "exec_start": "python3 live/pm_research/collect_pm.py",
+                "exec_start": "/home/yuqing/pricer-sol/venv/bin/python3 live/pm_research/collect_pm.py",
                 "era_rows": [V4_ROW]}
-    good_armed = {**good_pre,
-                  "exec_start": ("python3 live/pm_research/collect_pm.py "
-                                 f"{FLAG}")}
+    good_armed = {**good_pre, "exec_start": "/home/yuqing/pricer-sol/venv/bin/python3 live/pm_research/collect_pm.py --heartbeat-mode app-v5"}
     good_start = {"recv_ns": (BOUNDARY_EPOCH + 5) * 10**9,
                   "collector_version": "clob_v5", "pid": 4242,
                   "event": "collector_start"}
@@ -617,6 +625,21 @@ def selftest() -> int:
     refuses(lambda: check_pre_arm(good_pre, expect_flag=True),
             "did not land", "KNOWN-BAD: armed check without the installed "
             "flag REFUSES (restart would boot v4 again)")
+    refuses(lambda: check_pre_arm({**good_armed,
+                                   "exec_start":
+                                   "/bin/echo live/pm_research/"
+                                   "collect_pm.py --heartbeat-mode app-v5"},
+                                  expect_flag=True),
+            "neither", "KNOWN-BAD (97f3778 follow-up): the WRONG INTERPRETER "
+            "with the right script+flag REFUSES — /bin/echo runs nothing; "
+            "only the exact full vector proves the mode")
+    refuses(lambda: check_pre_arm({**good_armed,
+                                   "exec_start": good_armed["exec_start"] +
+                                   " --heartbeat-mode control-v4"},
+                                  expect_flag=True),
+            "neither", "KNOWN-BAD (97f3778 follow-up): a CONFLICTING later "
+            "--heartbeat-mode control-v4 REFUSES — argparse takes the LAST "
+            "occurrence, so the pair-matched command would boot v4")
     refuses(lambda: check_pre_arm(good_armed, expect_flag=False),
             "unplanned earlier arming", "KNOWN-BAD: flag already installed "
             "at pre-arm REFUSES (provenance first)")
@@ -624,8 +647,7 @@ def selftest() -> int:
                                        start_row=good_start),
             "unchanged", "KNOWN-BAD: an unchanged PID REFUSES")
     refuses(lambda: check_post_restart(
-                {**good_post,
-                 "exec_start": "python3 live/pm_research/collect_pm.py"},
+                {**good_post, "exec_start": "/home/yuqing/pricer-sol/venv/bin/python3 live/pm_research/collect_pm.py"},
                 3687786, good_start),
             "lost", "KNOWN-BAD: ExecStart without the flag post-restart "
             "REFUSES")
@@ -692,8 +714,7 @@ def selftest() -> int:
             "not active", "KNOWN-BAD: inactive unit at verification REFUSES")
 
     # V5-0700-R4 emitter half: rollback receipt checker
-    _rb_obs = {**good_post, "main_pid": 5151,
-               "exec_start": "python3 live/pm_research/collect_pm.py"}
+    _rb_obs = {**good_post, "main_pid": 5151, "exec_start": "/home/yuqing/pricer-sol/venv/bin/python3 live/pm_research/collect_pm.py"}
     _rb_start = {"recv_ns": (BOUNDARY_EPOCH + 900) * 10**9,
                  "collector_version": "clob_v4", "pid": 5151,
                  "event": "collector_start"}
@@ -709,10 +730,7 @@ def selftest() -> int:
        "instant — a zero-width v5 era vanished the span that really ran "
        "(DA b6d6f96 emitter finding 1)")
     refuses(lambda: check_post_rollback({**_rb_obs,
-                                         "exec_start":
-                                         "python3 live/pm_research/"
-                                         "collect_pm.py "
-                                         "--heartbeat-mode app-v5"},
+                                         "exec_start": "/home/yuqing/pricer-sol/venv/bin/python3 live/pm_research/collect_pm.py --heartbeat-mode app-v5"},
                                         4242, _rb_start, "x"),
             "still carries", "KNOWN-BAD: rollback with the drop-in still "
             "installed REFUSES — the next restart would boot v5 again")
@@ -738,24 +756,20 @@ def selftest() -> int:
             "arming must complete", "KNOWN-BAD (pre-arm review): pre-arm at "
             "boundary+1s REFUSES — the stamp may not claim an instant the "
             "restart missed")
-    _ES_BAD = ("{ path=/x/python3 ; argv[]=/x/python3 "
-               "live/pm_research/collect_pm.py "
+    _ES_BAD = ("{ path=x ; argv[]=/home/yuqing/pricer-sol/venv/bin/python3 live/pm_research/collect_pm.py "
                "--heartbeat-mode app-v5x ; ignore_errors=no }")
     refuses(lambda: check_pre_arm({**good_armed, "exec_start": _ES_BAD},
                                   expect_flag=True),
-            "did not land", "KNOWN-BAD (pre-arm review): 'app-v5x' — a "
-            "substring superset of the flag — REFUSES under exact-token "
-            "matching")
-    _ES_SPLIT = ("{ path=/x/python3 ; argv[]=/x/python3 --heartbeat-mode "
-                 "live/pm_research/collect_pm.py app-v5 ; "
+            "neither", "KNOWN-BAD (pre-arm review): 'app-v5x' — a substring "
+            "superset of the flag — REFUSES under exact-vector matching")
+    _ES_SPLIT = ("{ path=x ; argv[]=/home/yuqing/pricer-sol/venv/bin/python3 "
+                 "--heartbeat-mode live/pm_research/collect_pm.py app-v5 ; "
                  "ignore_errors=no }")
     refuses(lambda: check_pre_arm({**good_armed, "exec_start": _ES_SPLIT},
                                   expect_flag=True),
-            "did not land", "KNOWN-BAD: flag tokens present but NOT ADJACENT "
+            "neither", "KNOWN-BAD: flag tokens present but NOT ADJACENT "
             "REFUSES — the argument would bind to the wrong option")
-    _ES_GOOD = ("{ path=/x/python3 ; argv[]=/x/python3 "
-                "live/pm_research/collect_pm.py "
-                "--heartbeat-mode app-v5 ; ignore_errors=no }")
+    _ES_GOOD = ("{ path=x ; argv[]=/home/yuqing/pricer-sol/venv/bin/python3 live/pm_research/collect_pm.py --heartbeat-mode app-v5 ; ignore_errors=no }")
     check_pre_arm({**good_armed, "exec_start": _ES_GOOD}, expect_flag=True)
     ok(True, "POSITIVE: the real systemd ExecStart property shape with the "
              "exact adjacent pair PASSES")
@@ -806,7 +820,7 @@ def selftest() -> int:
                                    "/tmp/not_collector.py --heartbeat-mode "
                                    "app-v5 ; ignore_errors=no }"},
                                   expect_flag=True),
-            "did not land", "KNOWN-BAD (038a1b2 #2): the flag on a FOREIGN "
+            "neither", "KNOWN-BAD (038a1b2 #2): the flag on a FOREIGN "
             "script REFUSES — an armed collector requires the collector")
     refuses(lambda: check_counters({**_HB1, "app_ping": 3, "app_pong": 3},
                                    {**_HB2, "app_ping": 1, "app_pong": 8},
