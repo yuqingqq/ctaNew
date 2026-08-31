@@ -17809,6 +17809,32 @@ Everything else on our side was flat or falling across the break: config unchang
 
 **The lesson, and it is the third instance today.** R-357 found the fix did not address the cause. R-360 proposed a mechanism that failed its own test. **This one found the fix addressed a real cause that was not the DOMINANT one** — and the only reason it surfaced is that the USER asked whether the issue was exactly the fixed one. **"Is this the whole cause or a cause?" is a different question from "is this a cause?", and I had only answered the second.**
 
+### R-365 — 2026-08-31T15:45Z — coordinator — **THE 08-25 CAUSE IS FOUND, AND IT IS SELF-INFLICTED: our own research compute on the collector box starved the collector's socket reads. It was written down in our own commit log ON THE DAY and nobody connected it to btc**
+
+**The evidence, convergent and each measured.**
+
+1. **btc and ONLY btc.** Non-btc disconnects went DOWN across the break, 14.6 → 9.8/day, while btc went 46.2 → 463.4. That single fact rules out the venue, the network path, and our configuration — all of which hit seven coins, not one.
+2. **All three failure modes moved together** — PING_TIMEOUT 25 → 349, NO_CLOSE_FRAME 19 → 204, SLOW_CONSUMER_1013 26 → 112. A ping-config fault moves ONE cause. The **connection** was failing, not the heartbeat.
+3. **The venue's own verdict on us rose 4.4x per million messages.** `SLOW_CONSUMER_1013` is the venue closing a socket it judges we are not draining. Normalised by volume: 0.28–0.58 before the break, **1.85 on 08-25**, staying 1.3–1.8, and falling to **0.54 on 08-29 — the one post-break day btc RECOVERED (32.3 s/hr).** A within-period control, not merely a before/after.
+4. **Our internal queues were EMPTY throughout** — `writer_wait` 0, `q_hi` 1, `lag_ms_max` 2 ms, across the entire break. So the bottleneck was NOT the disk writer or the application pipeline. **Data was not arriving fast enough to queue.** Bottleneck at the socket read: the event loop was not being scheduled often enough to drain the kernel buffer, which is exactly what makes a venue call you a slow consumer while your own queues read clean.
+5. **Nothing about the data changed.** rows/window FELL 147,275 → 117,451; MB/window FELL 95.4 → 85.3; bytes/row flat at ~700–740. Volume cannot explain it.
+6. **And we wrote it down.** Commit `331ee5f`, **08-25 20:23**: *"I5 4b control killed externally twice (collectors untouched) … tape-purity concern flagged (**heavy runs on collector box during forward accumulation**)"*. Same day, `9dc4086` 10:32: *"era-scale **OOM fix**"*. Processes being killed externally is the OOM-killer's signature. **A seat flagged the exact hazard, on the exact day, and it was filed as a tape-purity concern rather than connected to btc's disconnects — which had begun that morning.**
+7. **And we responded to it.** R-150 (`9f00381`, **08-26 05:27**) fenced research to ≤60% RAM / ≤75% CPU the next morning. btc then improved 151.9 → 123.8 → 130.6 → 114.1 → 32.3. **The fencing helped and did not fix it** — ≤75% CPU still leaves the collector competing.
+
+**Why btc alone: it is the only stream near the limit.** btc carries ~10x the volume of any other coin (85 MB/window vs 5–10) and was the ONLY coin generating `SLOW_CONSUMER_1013` even in the clean era (19–26/day, others ~0). **A machine-wide slowdown therefore surfaces on btc and nothing else** — which is precisely the observed signature, and it is why every "is it the venue / the network / the protocol" hypothesis failed: they all predict seven coins.
+
+**What is NOT proven.** There is no load time-series. The journal does not retain 08-25, and **commit count is NOT a proxy — it fails outright**: 08-28 had 227 commits and the LOWEST post-break loss (114.1), 08-30 had 9 commits and the highest (187.6). Typing is not compute. So this is **strong convergent evidence and a contemporaneous first-hand record, not a controlled demonstration.**
+
+**Three consequences that matter more than the diagnosis.**
+
+**(a) The cause is OPERATIONAL, not a code defect.** No collector change fixes it. It recurs whenever heavy research runs on this box, and R-150's fence is the existing partial mitigation.
+
+**(b) It reframes the entire deploy thread.** R-357 held v5 because its premise was falsified; R-363 reverted O1a; R-364 found the revert insufficient. **All three were about the collector's protocol behaviour, and the cause was never in the collector.** btc's per-ping failure rate is ~3% while every other coin's is ~0 — that ratio is not a property of the ping, it is a property of a starved socket, and O1a merely multiplied the draws against it.
+
+**(c) The uncomfortable one: I have been running heavy scans on this box all day** — subagents, a 24,113-file tape scan, repeated mutation audits — during the accumulation of 08-31, the first day that could ever have counted. **I cannot cleanly attribute it** (08-31 also carries the 3/3 ping config, worth ~2x), so I am not claiming I caused today's number. **I am recording that the coordinator diagnosing a compute-contention problem was generating compute contention on the same box, and did not consider it until the cause was found.**
+
+**The lesson.** The answer was in our own commit log for six days, one grep from anyone who asked *when* rather than *why*. **We flagged the hazard and filed it under the wrong heading** — "tape purity" instead of "this is why btc is disconnecting" — and a correct observation filed under the wrong question is invisible to everyone looking for the answer.
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
