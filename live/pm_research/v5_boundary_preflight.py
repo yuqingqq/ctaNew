@@ -1005,6 +1005,14 @@ def selftest() -> int:
             "rollback without the verified-restoration field refuses at "
             "consumption — 'nothing shows the clob_v4 process came back' "
             "(DA's words, matched)")
+    refuses(lambda: current_era_and_open_v5(
+                [V4_ROW, {**_V5OPEN},
+                 {**_V5OPEN, "boundary_utc": "2026-08-31T09:00:00Z"}]),
+            "any predecessor", "KNOWN-BAD (predicate mutation): a SECOND "
+            "transitioned v5 claiming supersedes=clob_v4 while v5 is in "
+            "force REFUSES — the current-era-not-tracked mutant admitted a "
+            "double-open chain; found by mutating the DECIDING walk, not a "
+            "raise (DA's refusals-only blind-spot warning, confirmed here)")
     refuses(lambda: check_post_rollback({**_rb_obs, "era_rows": [V4_ROW]},
                                         4242, _rb_start, "stamp_unwritable"),
             "nothing to close", "KNOWN-BAD (round-3 #2): rollback emission "
