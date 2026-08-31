@@ -60,8 +60,10 @@ fails to find the script and can create a stray file (audit S4).
    ```
    python3 live/pm_research/v5_boundary_preflight.py --armed      # must pass
    ```
-   Record `LOG_OFFSET` from the output — it anchors the counter evidence to
-   the post-arming log region (V5-0700-R2).
+   **Record nothing from this output for step 4.** The counter evidence is
+   anchored by `log_offset_at_stamp`, which the POSTFLIGHT writes into the
+   transition receipt at restart time — machine-derived, never carried by
+   the operator (V5-P6-1: this line used to say the opposite).
    `--armed` re-runs every pre-arm check AND requires the flag in the
    ExecStart **read back from systemd** — never trusted from what was
    written. (The running v4 process is untouched by the reload.)
@@ -89,20 +91,26 @@ fails to find the script and can create a stray file (audit S4).
    after start and the check needs TWO at a 60 s cadence, so anything before
    ~T+2:05 refuses by construction; T+3 gives margin — audit S1):
    ```
-   python3 live/pm_research/v5_boundary_preflight.py --verify-counters --log-offset LOG_OFFSET
-   # LOG_OFFSET is a SCAN HINT only (any value at or before the restart is
-   # safe): counter samples are floored at the VERIFIED NEW PROCESS start,
-   # so a pre-restart line refuses on its own stamp rather than being
-   # silently included (audit C6 — the code and this runbook previously
-   # disagreed three ways about where the offset comes from)
+   python3 live/pm_research/v5_boundary_preflight.py --verify-counters
+   # No offset argument: the SOLE offset authority is log_offset_at_stamp,
+   # read from the clob_v5 transition receipt this deploy already wrote.
+   # (--log-offset still parses so scripted callers do not break, but the
+   # production path IGNORES it and overwrites it from the stamp.)
    ```
-   Requires TWO heartbeat lines after the armed-time offset (~2 min), each
-   post-boundary on its OWN stamp; pongs and market rows must ADVANCE over
-   the interval; unresolved PINGs (ping−pong) bounded at 2 — one answered
-   ping followed by silence is the v4 failure shape one layer up and
-   REFUSES. The same invocation checks unit-active, the newest gap-ledger
-   row declaring `"collector_version":"clob_v5"`, and market advance — the
-   seams live IN the instrument. The prices collector is NOT touched.
+   Requires TWO heartbeat lines after the stamped offset (~2 min), each
+   at or after the VERIFIED NEW PROCESS start on its own stamp; lines below
+   that floor are SKIPPED, and the check refuses only if none survive.
+   Pongs and market rows must ADVANCE over the interval, PONGs may not
+   EXCEED pings, and the answer RATE must hold at ≥50% of pings across the
+   interval — there is deliberately NO absolute unresolved-PING bound,
+   because the counters are process-wide across 14–21 sockets and every
+   teardown orphans an in-flight PING permanently, so a fixed bound would
+   refuse a WORKING deploy. The same invocation checks unit-active and
+   market advance. It does NOT read the gap-ledger tail as an authority:
+   that row can be written by ANY collector process and most rows carry no
+   pid, so a foreign writer would otherwise refuse a healthy unit (P5-3,
+   the R-351 class). Version proof rests on the PID-bound `collector_start`.
+   The prices collector is NOT touched.
 
 ## Stated residual — the armed branch cannot be rehearsed on an inert fixture
 

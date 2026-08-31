@@ -60,6 +60,14 @@ class FakeWS:
             self.captured["app_pings"] = self.captured.get("app_pings", 0) + 1
             if self.behavior == "healthy":
                 await self.queue.put("PONG")
+            elif self.behavior == "delayed_pong":
+                # PONG after DELAYED_PONG_S. A deadline BELOW that must time
+                # out and one ABOVE it must not, so a hard-coded deadline
+                # cannot survive both probes (V5-C6-1).
+                async def _late():
+                    await asyncio.sleep(DELAYED_PONG_S)
+                    await self.queue.put("PONG")
+                asyncio.get_running_loop().create_task(_late())
             elif self.behavior == "double_pong":
                 # a venue answering one PING with TWO PONG frames — the
                 # producer counts frames, so pong > ping (V5-C5-2)
@@ -100,6 +108,7 @@ def fake_connect_factory(behavior: str, captured: dict):
 
 
 _test_n = 0
+DELAYED_PONG_S = 0.10   # sits between the wrong (0.03) and requested deadlines
 
 
 async def run_market(behavior: str, *, duration_s: float = 0.24,
@@ -121,6 +130,7 @@ async def run_market(behavior: str, *, duration_s: float = 0.24,
     C.WINDOW_S = 1
     C.GRACE_S = 0
     C.SUBSCRIBE_CONFIRM_S = 0.05
+    _saved_globals = (C.APP_HEARTBEAT_INTERVAL_S, C.APP_HEARTBEAT_TIMEOUT_S)
     C.APP_HEARTBEAT_INTERVAL_S = 0.02 if interval_s is None else interval_s
     C.APP_HEARTBEAT_TIMEOUT_S = 0.03 if timeout_s is None else timeout_s
     captured["heartbeat_interval_seen"] = C.APP_HEARTBEAT_INTERVAL_S
@@ -159,6 +169,11 @@ async def run_market(behavior: str, *, duration_s: float = 0.24,
         )
         collector.disk_pool.shutdown(wait=False)
         collector.http_pool.shutdown(wait=False)
+        # V5-C6-1: the fixture used to LEAVE the module globals mutated, so
+        # after a run the module carried 0.02/0.30 rather than the shipped
+        # 3.0/3.0 and any later assertion read the fixture's value.
+        (C.APP_HEARTBEAT_INTERVAL_S,
+         C.APP_HEARTBEAT_TIMEOUT_S) = _saved_globals
     gaps = []
     if C.GAP_LEDGER.exists():
         gaps = [json.loads(line) for line in C.GAP_LEDGER.read_text().splitlines()]
@@ -256,30 +271,34 @@ async def main() -> int:
           SHIPPED_INTERVAL_S <= 10.0,
           f"interval {SHIPPED_INTERVAL_S}s vs documented 10s")
 
-    # BEHAVIOURAL (V5-C5-1 repaired): the deadline the RUNNING coroutine saw
-    # is asserted, not the one the caller asked for — the fixture used to
-    # overwrite caller values, so both probes ran at 0.03 s regardless.
-    slow, gaps = await run_market("missing_pong", timeout_s=0.05)
-    causes = [r.get("cause") for r in gaps if r.get("event") == "disconnect"]
-    check("BEHAVIOURAL: the CONFIGURED deadline is the one the heartbeat "
-          "coroutine ran with, and a silent socket times out under it",
-          slow.get("heartbeat_timeout_seen") == 0.05
-          and "APP_HEARTBEAT_TIMEOUT" in causes,
-          f"seen={slow.get('heartbeat_timeout_seen')} causes={causes}")
-    ok_run, ok_gaps = await run_market("healthy", timeout_s=0.30,
-                                       interval_s=0.02)
-    ok_causes = [r.get("cause") for r in ok_gaps
-                 if r.get("event") == "disconnect"]
-    check("BEHAVIOURAL: a PONG inside a LONGER configured deadline does NOT "
-          "time out — and the coroutine ran with that longer value",
-          ok_run.get("heartbeat_timeout_seen") == 0.30
-          and "APP_HEARTBEAT_TIMEOUT" not in ok_causes,
-          f"seen={ok_run.get('heartbeat_timeout_seen')} causes={ok_causes}")
-    check("the SHIPPED constants are what the module carries outside the "
-          "fixture — the old restore check saved and restored the already-"
-          "mutated fixture value, never the shipped one",
-          SHIPPED_INTERVAL_S == 3.0 and SHIPPED_TIMEOUT_S == 3.0,
-          f"shipped {SHIPPED_INTERVAL_S}/{SHIPPED_TIMEOUT_S}")
+    # BEHAVIOURAL (V5-C6-1): the previous pair could not tell a correct
+    # deadline from a hard-coded 0.03 — `missing_pong` timed out under BOTH,
+    # `healthy` succeeded under BOTH, and the "observed" value was copied
+    # from the global the fixture had just set, not from the coroutine.
+    # A DELAYED PONG at 0.10 s makes the deadline decide the outcome.
+    late_short, late_gaps = await run_market("delayed_pong", timeout_s=0.05,
+                                             interval_s=0.02)
+    short_causes = [r.get("cause") for r in late_gaps
+                    if r.get("event") == "disconnect"]
+    check("BEHAVIOURAL: a deadline BELOW the PONG delay times out — a "
+          "hard-coded LONGER deadline fails this",
+          "APP_HEARTBEAT_TIMEOUT" in short_causes, str(short_causes))
+    late_long, long_gaps = await run_market("delayed_pong", timeout_s=0.30,
+                                            interval_s=0.02)
+    long_causes = [r.get("cause") for r in long_gaps
+                   if r.get("event") == "disconnect"]
+    check("BEHAVIOURAL: a deadline ABOVE the same PONG delay does NOT time "
+          "out — a hard-coded SHORTER deadline fails this; the two probes "
+          "together pin the deadline from both sides",
+          "APP_HEARTBEAT_TIMEOUT" not in long_causes
+          and late_long.get("counted_app_pongs", 0) >= 1,
+          f"causes={long_causes} pongs={late_long.get('counted_app_pongs')}")
+    check("the fixture RESTORES the module globals — a run used to leave "
+          "them mutated, so later assertions read the fixture's values",
+          C.APP_HEARTBEAT_INTERVAL_S == SHIPPED_INTERVAL_S
+          and C.APP_HEARTBEAT_TIMEOUT_S == SHIPPED_TIMEOUT_S,
+          f"live {C.APP_HEARTBEAT_INTERVAL_S}/{C.APP_HEARTBEAT_TIMEOUT_S} "
+          f"vs shipped {SHIPPED_INTERVAL_S}/{SHIPPED_TIMEOUT_S}")
 
     # ---- coverage the third audit found MISSING (no committed test
     # exercised either), and the 3s cadence makes both load-bearing:

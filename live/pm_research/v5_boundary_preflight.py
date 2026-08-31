@@ -1283,6 +1283,29 @@ def check_runbook_consistency(text: str) -> None:
         if "day one" in low and (_dates - {"09-01"}):
             raise Refused(f"runbook names a day-one other than 09-01: "
                           f"{ln.strip()[:90]!r} — 08-31 is MIXED-ERA (R-340)")
+        # V5-P6-1: the runbook is the SOLE human-executed authority, and it
+        # kept describing three superseded seams while the consistency
+        # check waved them through. These phrases are now refused by name.
+        for _dead, _why in (
+                ("record `log_offset`",
+                 "the offset is written by the POSTFLIGHT into the "
+                 "transition receipt; nothing is carried by the operator"),
+                ("--log-offset log_offset",
+                 "the production path IGNORES the argument and overwrites "
+                 "it from log_offset_at_stamp"),
+                ("armed-time offset",
+                 "evidence is floored at the verified NEW PROCESS start, "
+                 "not at arm time"),
+                ("bounded at 2",
+                 "there is no absolute unresolved-PING bound: the counters "
+                 "are process-wide and every teardown orphans a ping, so a "
+                 "fixed bound would refuse a WORKING deploy"),
+                ("gap-ledger row declaring",
+                 "the gap tail is written by ANY collector and most rows "
+                 "carry no pid, so it is not an authority (P5-3)")):
+            if _dead in low:
+                raise Refused(f"runbook still describes a SUPERSEDED "
+                              f"authority ({_dead!r}): {_why}")
     if not _at_seen:
         raise Refused("runbook contains NO deployment 'At <instant>' step — "
                       "a check that matches nothing is vacuous (the O1 "
@@ -1584,6 +1607,18 @@ def selftest() -> int:
                 "- day one is 08-31"),
             "other than 09-01", "KNOWN-BAD: a body naming a day-one other "
             "than 09-01 REFUSES")
+    for _phrase in ("Record `LOG_OFFSET` from the output",
+                    "--log-offset LOG_OFFSET",
+                    "lines after the armed-time offset",
+                    "unresolved PINGs bounded at 2",
+                    "the newest gap-ledger row declaring clob_v5"):
+        refuses(lambda ph=_phrase: check_runbook_consistency(
+                    RUNBOOK.read_text() + "\n" + ph),
+                "superseded authority",
+                f"KNOWN-BAD (V5-P6-1): the runbook phrase "
+                f"{_phrase[:34]!r} REFUSES — the sole human-executed "
+                f"authority kept describing seams the code had already "
+                f"replaced, and the consistency check waved them through")
     refuses(lambda: check_runbook_consistency("no instants at all"),
             "not re-pointed", "KNOWN-BAD: a body never naming the instant "
             "REFUSES")
