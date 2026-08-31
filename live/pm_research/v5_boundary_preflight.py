@@ -223,12 +223,16 @@ def installed_mode(exec_start: str) -> str:
 # The one pre-vocabulary row, pinned by IDENTITY so nothing new inherits the
 # exemption (DA's contract, b6d6f96): every later row carries EXACTLY ONE of
 # transitioned/aborted/rollback PRESENT AND TRUE — absence refuses, two refuse.
-LEGACY_ROW_IDENTITY = ("clob_v4", "2026-08-30T05:30:00Z")
+# Three-field pin MATCHING DA's exactly (their flag, adopted): a row with the
+# legacy version+boundary but a DIFFERENT supersedes is NOT the pinned row —
+# "the pin is the one place where silence is still ruled admissible."
+LEGACY_ROW_IDENTITY = ("clob_v4", "clob_v3_1", "2026-08-30T05:30:00Z")
 _ROLE_FLAGS = ("transitioned", "aborted", "rollback")
 
 
 def classify_era_row(r: dict) -> str:
-    ident = (r.get("collector_schema_version"), r.get("boundary_utc"))
+    ident = (r.get("collector_schema_version"), r.get("supersedes"),
+             r.get("boundary_utc"))
     flags = [f for f in _ROLE_FLAGS if r.get(f) is True]
     if ident == LEGACY_ROW_IDENTITY and not flags:
         return "transitioned"  # the pinned legacy transition
@@ -548,6 +552,7 @@ def selftest() -> int:
         ok(False, f"{msg} — DID NOT REFUSE")
 
     V4_ROW = {"collector_schema_version": "clob_v4",
+              "supersedes": "clob_v3_1",
               "boundary_utc": "2026-08-30T05:30:00Z"}
     good_pre = {"now_epoch": BOUNDARY_EPOCH - 300, "tree_sha": CAND_SHA,
                 "head_sha": CAND_SHA, "unit_active": True, "main_pid": 3687786,
@@ -611,6 +616,12 @@ def selftest() -> int:
                 V4_ROW, {**_V5T, "aborted": True}]}, False),
             "exactly one", "KNOWN-BAD (DA contract): a row asserting TWO "
             "role flags REFUSES — ambiguous attempt state")
+    refuses(lambda: check_pre_arm({**good_pre, "era_rows": [
+                {**V4_ROW, "supersedes": "clob_v2"}]}, False),
+            "exactly one", "KNOWN-BAD (DA divergence flag): the legacy pin "
+            "is THREE fields — right version+boundary with a WRONG "
+            "supersedes is NOT the pinned row and refuses under the "
+            "exactly-one contract")
     _RB = {"collector_schema_version": "clob_v4", "rollback": True,
            "closes_boundary_utc": BOUNDARY_UTC,
            "boundary_utc": "2026-08-31T99:99:99Z"}
