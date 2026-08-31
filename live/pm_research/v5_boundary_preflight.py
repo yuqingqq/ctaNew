@@ -408,6 +408,7 @@ def current_era_and_open_v5(era_rows: list) -> tuple:
     an unclosed recovered row of another version was accepted.
     """
     _seen_versions = set()
+    _current_from_rollback = False
     current = None
     open_era = None          # boundary_utc of the era awaiting a rollback
     open_ver = None          # its version
@@ -490,6 +491,7 @@ def current_era_and_open_v5(era_rows: list) -> tuple:
                               f"span erases the time that actually ran")
             open_era = open_ver = open_row = None
             current = ver
+            _current_from_rollback = True
             continue
         # transitioned
         if current is None and r.get("supersedes") is None:
@@ -510,7 +512,14 @@ def current_era_and_open_v5(era_rows: list) -> tuple:
         # closes_boundary_utc, strictly-after resume (fuzz A8, the worst of
         # 735 disagreements: my walk even returned clob_v4 in force while
         # clob_v5 was still open).
-        if ver in _seen_versions:
+        # DA 3c81059: the rule is "a return needs rollback evidence", and
+        # when the CURRENT era was itself created by a rollback that
+        # evidence ALREADY EXISTS — so a retry is legal. Without this
+        # exemption my walk refused every second attempt, and after a
+        # MULTI-HOP rollback it diverged from DA in the direction where a
+        # green differential would have hidden it (the fuzz only surfaces
+        # disagreement, so this needs a POSITIVE control, not a fuzz run).
+        if ver in _seen_versions and not _current_from_rollback:
             raise Refused(f"transitioned row {i} returns to {ver}, which was "
                           f"in force earlier — a RETURN is a rollback and "
                           f"must declare rollback=true with its restoration "
@@ -534,6 +543,7 @@ def current_era_and_open_v5(era_rows: list) -> tuple:
         if current is not None:
             _seen_versions.add(current)
         current = ver
+        _current_from_rollback = False
     if open_era is not None and open_row is not None and \
             open_row.get("recovered") is True:
         raise Refused(f"the recovered era {open_ver!r} opened {open_era} is "
@@ -2229,6 +2239,43 @@ def selftest() -> int:
             "restoration row from a DAY BEFORE the boundary refuses — it "
             "proves the process ran before the attempt, not that it was "
             "restored after it")
+
+    # V5-P5-1 (DA 3c81059): the rule DEMANDS rollback evidence for a return;
+    # it does NOT forbid returning. Without the exemption my walk refused
+    # every retry — and after a MULTI-HOP rollback it diverged from DA in
+    # the direction a green fuzz would have hidden, because a fuzz surfaces
+    # only DISAGREEMENT. These are positive controls, not fuzz coverage.
+    _mh6 = {"collector_schema_version": "clob_v6", "supersedes": "clob_v5",
+            "transitioned": True, "boundary_utc": "2026-08-31T08:00:00Z",
+            "stage": "post-restart",
+            "collector_start_recv_ns": (BOUNDARY_EPOCH + 3610) * 10**9}
+    _mh_rb = {"collector_schema_version": "clob_v4", "supersedes": "clob_v6",
+              "rollback": True,
+              "closes_boundary_utc": "2026-08-31T08:00:00Z",
+              "boundary_utc": "2026-08-31T09:00:00Z", "stage": "counters",
+              "collector_start_recv_ns": (BOUNDARY_EPOCH + 7220) * 10**9}
+    _retry5 = {**_V5OPEN, "boundary_utc": "2026-08-31T10:00:00Z"}
+    ok(current_era_and_open_v5([V4_ROW, _V5OPEN, _RBOK,
+                                {**_V5OPEN,
+                                 "boundary_utc": "2026-08-31T09:00:00Z"}])[0]
+       == "clob_v5",
+       "POSITIVE (V5-P5-1): a RETRY after a verified rollback is LEGAL — the "
+       "evidence the return-rule demands already exists, and without this "
+       "every second attempt would be impossible")
+    ok(current_era_and_open_v5([V4_ROW, _V5OPEN, _mh6, _mh_rb,
+                                _retry5])[0] == "clob_v5",
+       "POSITIVE (V5-P5-1): a retry after a MULTI-HOP rollback is LEGAL — "
+       "this is where my emergent behaviour diverged from the agreed rule")
+    refuses(lambda: current_era_and_open_v5(
+                [V4_ROW, _V5OPEN, _mh6,
+                 {"collector_schema_version": "clob_v4",
+                  "supersedes": "clob_v6", "transitioned": True,
+                  "boundary_utc": "2026-08-31T09:00:00Z"}]),
+            "returns to", "KNOWN-BAD (V5-P5-1): a MULTI-HOP return with no "
+            "rollback evidence REFUSES — the harm is not the hop count, it "
+            "is that a plain transition skips the whole evidence contract, "
+            "and after two hops nobody remembers which era the missing "
+            "evidence would have described")
 
     # ---- V5-P5-2: candidate / checker / runbook / receipt must state ONE
     # cadence. The 193-check suite AND the runbook consistency check both

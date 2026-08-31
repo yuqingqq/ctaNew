@@ -157,8 +157,27 @@ V4_RETURN = {"collector_schema_version": "clob_v4", "supersedes": "clob_v6",
              "transitioned": True, "boundary_utc": "2026-08-31T09:00:00Z",
              "stage": "post-restart",
              "collector_start_recv_ns": (B + 7210) * 10**9}
+RB_MH = {"collector_schema_version": "clob_v4", "supersedes": "clob_v6",
+         "rollback": True, "closes_boundary_utc": "2026-08-31T08:00:00Z",
+         "boundary_utc": "2026-08-31T09:00:00Z", "stage": "counters_refused",
+         "collector_start_recv_ns": (B + 7220) * 10**9}
+V5_RETRY = {"collector_schema_version": "clob_v5", "supersedes": "clob_v4",
+            "transitioned": True, "boundary_utc": "2026-08-31T10:00:00Z",
+            "stage": "post-restart",
+            "collector_start_recv_ns": (B + 10810) * 10**9}
 CASES.append(("V5-P5-1 multi-hop return v4->v5->v6->v4 with NO rollback "
               "evidence", [LEGACY, V5OK, V6_MH, V4_RETURN], "refuse"))
+# POSITIVE CONTROLS (DA 3c81059): the rule DEMANDS evidence, it does not
+# forbid returning. The fuzz only surfaces DISAGREEMENT, so two consumers
+# agreeing on a WRONG rule — refusing every retry — is the one failure this
+# design structurally cannot detect. These are the guard against it.
+CASES.append(("retry after a verified rollback is LEGAL",
+              [LEGACY, V5OK, RB, {**V5_RETRY,
+                                  "boundary_utc": "2026-08-31T09:00:00Z",
+                                  "collector_start_recv_ns":
+                                  (B + 7210) * 10**9}], "ok"))
+CASES.append(("retry after a MULTI-HOP rollback is LEGAL",
+              [LEGACY, V5OK, V6_MH, RB_MH, V5_RETRY], "ok"))
 CASES.extend(FUZZ)
 
 
