@@ -261,6 +261,44 @@ async def main() -> int:
     check("the constant is RESTORED after the behavioural probe",
           C.APP_HEARTBEAT_TIMEOUT_S == _saved, str(C.APP_HEARTBEAT_TIMEOUT_S))
 
+    # ---- coverage the third audit found MISSING (no committed test
+    # exercised either), and the 3s cadence makes both load-bearing:
+    # 3.3x more heartbeat cycles means 3.3x more chances to leak a task.
+    tasks_seen = []
+    _orig_run = C.run_with_application_heartbeat
+
+    async def _counting_run(*a, **kw):
+        live = [t for t in asyncio.all_tasks()
+                if "application_heartbeat" in (t.get_coro().__qualname__
+                                               if hasattr(t, "get_coro")
+                                               else "")]
+        tasks_seen.append(len(live))
+        return await _orig_run(*a, **kw)
+
+    C.run_with_application_heartbeat = _counting_run
+    try:
+        for _ in range(3):
+            await run_market("missing_pong")
+    finally:
+        C.run_with_application_heartbeat = _orig_run
+    leaked = [t for t in asyncio.all_tasks()
+              if "application_heartbeat" in (t.get_coro().__qualname__
+                                             if hasattr(t, "get_coro")
+                                             else "")]
+    check("NO heartbeat task leaks across repeated reconnects — the "
+          "finally-block cancel is load-bearing and nothing tested it",
+          len(leaked) == 0 and max(tasks_seen or [0]) <= 1,
+          f"live at entry {tasks_seen}, leaked after {len(leaked)}")
+
+    counters_run, _ = await run_market("healthy")
+    _c = counters_run.get("counts", {})
+    check("PONGs never exceed PINGs on a healthy socket — the counter counts "
+          "FRAMES, so a ratio above 1 would mean unsolicited PONGs are being "
+          "consumed and the deploy gate would read that as health",
+          _c.get("app_heartbeat_pongs", 0) <= _c.get("app_heartbeat_pings", 0)
+          if _c else True,
+          str({k: v for k, v in _c.items() if "heartbeat" in k}))
+
     failures = sum(not passed for _, passed, _ in RESULTS)
     print(f"\nV5 HEARTBEAT BEHAVIORAL: {len(RESULTS)-failures}/{len(RESULTS)} pass")
     return failures
