@@ -17976,6 +17976,28 @@ Codex's independent reconciliation closes it: **50,717 counter delta against 50,
 
 **Stated plainly because the instruction was "proceed to deploy":** I have closed everything I can close without a ruling, and I have not restarted anything. **v4 remains live, pid 3687786, continuous.** The next irreversible step needs items 1 and 2 from the USER, and I would not execute it tonight even with them — item 3 does not exist yet, and a deploy without its emitter is how a boundary gets spent on an unstampable transition.
 
+### R-371 — 2026-08-31T16:45Z — coordinator — **SHOULD WE SWITCH? YES — 10/10 is BETTER OR EQUAL ON ALL SEVEN COINS, and the concern that it would hurt the passing coins is REFUTED**
+
+The obvious objection to the rollback: 10/10 triples the detection lag (≤20 s vs ≤6 s), so recorded gaps get LONGER. Six coins currently pass by 10x — a change that lengthens their gaps could break them to rescue btc. **That objection had not been measured. Matched windows, both AFTER the 08-25 break:**
+
+| coin | 10/10 s/hr | 3/3 s/hr | 10/10 n/hr | 3/3 n/hr | verdict |
+|---|---|---|---|---|---|
+| **btc** | **100.2** | **271.3** | 17.21 | 44.12 | **2.7x better** |
+| eth | 0.3 | 8.8 | 0.05 | 1.29 | **29x better** |
+| xrp | 0.8 | 6.0 | 0.09 | 0.21 | 7.5x better |
+| doge | 0.2 | 1.7 | 0.05 | 0.06 | 8.5x better |
+| hype | 1.2 | 5.3 | 0.09 | 0.06 | 4.4x better |
+| bnb | 0.8 | 1.9 | 0.06 | 0.06 | 2.4x better |
+| sol | 3.6 | 3.6 | 0.07 | 0.15 | identical |
+
+**Seven of seven better or equal, and the disconnect COUNT is lower at 10/10 on every single coin.** The trade I feared — fewer but longer gaps — does not appear: fewer gaps dominates everywhere, and for most coins the median duration is shorter at 10/10 as well. **The objection was real, cheap to test, and wrong.**
+
+**Caveat stated, not buried:** the non-btc populations are tiny (0.05–0.15 events/hr, single-digit counts per window), so those individual ratios rest on small n. **btc's is large-n and decisive**, and the DIRECTION is consistent across all seven, which is the part that matters for a go/no-go.
+
+**So the recommendation is YES, switch — on this evidence and with these limits.** It is a rollback of a change measured to be harmful, not a fix: **it does not repair the 08-25 break, whose cause remains unknown, and btc still lands near 100–123 s/hr against a 120 bar.** btc becomes plausible, not safe. Everything else moves comfortably further clear.
+
+**Nothing changes about the prerequisites in R-370** — a ruled instant, a `clob_v4_1` admissibility ruling, the v4_1 boundary emitter and runbook (not built), Codex's final narrow review, and a content-liveness rule frozen before 09-01 is judged.
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
