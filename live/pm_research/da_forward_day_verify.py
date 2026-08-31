@@ -415,6 +415,35 @@ def _ledger_rows(src: Path) -> list[tuple]:
             raise ValueError(
                 f"REFUSED: {st} row {lineno} ({v} @ {b}) names no `stage` -- an "
                 f"attempt that will not say WHICH path it took is not auditable")
+        if r.get("recovered") is True:
+            # A RECOVERED row is written after the fact, for a v5 that RAN but
+            # whose stamp could never be appended. It is the one row whose
+            # boundary is a RECONSTRUCTION rather than a contemporaneous stamp,
+            # so it must carry the evidence the stamp would have carried.
+            if st != "transitioned":
+                raise ValueError(
+                    f"REFUSED: row {lineno} ({v} @ {b}) is `recovered` but "
+                    f"asserts {st!r}. Recovery records a transition that "
+                    f"HAPPENED; an abort or a rollback is not a thing to "
+                    f"recover")
+            if not r.get("stage"):
+                raise ValueError(
+                    f"REFUSED: recovered row {lineno} ({v} @ {b}) names no "
+                    f"`stage` -- a retroactive boundary must say WHY it could "
+                    f"not be stamped at the time")
+            rec = r.get("collector_start_recv_ns")
+            if not isinstance(rec, int) or isinstance(rec, bool) or rec <= 0:
+                raise ValueError(
+                    f"REFUSED: recovered row {lineno} ({v} @ {b}) carries no "
+                    f"`collector_start_recv_ns`. Its boundary is a CLAIM about "
+                    f"the past, not a stamp; without the {v} process's own "
+                    f"start there is nothing to show the span ran at all")
+            if rec < dt.datetime.fromisoformat(
+                    b.replace("Z", "+00:00")).timestamp() * 1e9:
+                raise ValueError(
+                    f"REFUSED: recovered row {lineno} claims boundary {b} but "
+                    f"its collector_start PREDATES it -- the process it names "
+                    f"was already running before the era it opens")
         if r.get("supersedes") == v:
             raise ValueError(
                 f"REFUSED: era ledger row {lineno} ({v} @ {b}) supersedes "
@@ -429,7 +458,7 @@ def _ledger_rows(src: Path) -> list[tuple]:
     return out
 
 
-def era_spans(path: Path | None = None) -> list[tuple[float, str]]:
+def era_timeline(path: Path | None = None) -> dict:
     """(start_epoch, era_name) for EFFECTIVE transitions only, ascending.
 
     The era in force BEFORE the first recorded boundary is that entry's
@@ -450,7 +479,9 @@ def era_spans(path: Path | None = None) -> list[tuple[float, str]]:
                 f"sorting it would silently reorder a rollback against the "
                 f"transition it closes.")
     spans: list[tuple[float, str]] = []
+    recovered: set[float] = set()
     open_era = open_since = prev_era = None
+    open_recovered = False
     open_from_rollback = False
     for ts, b, v, sup, st, r in rows:
         if st == "aborted":
@@ -525,13 +556,29 @@ def era_spans(path: Path | None = None) -> list[tuple[float, str]]:
         if not spans and sup:
             spans.append((float("-inf"), sup))
         spans.append((ts, v))
+        if r.get("recovered") is True:
+            recovered.add(ts)
+        open_recovered = r.get("recovered") is True
         prev_era, open_era, open_since = open_era, v, b
         open_from_rollback = (st == "rollback")
     if not spans:
         raise ValueError(
             "REFUSED: the era ledger records attempts but NOT ONE EFFECTIVE "
             "TRANSITION -- no era can be named, so no day lies inside one")
-    return spans
+    if open_recovered:
+        raise ValueError(
+            f"REFUSED: the recovered era {open_era!r} opened at {open_since} is "
+            f"never CLOSED. Recovery exists for a version that ran and was then "
+            f"restored; an unclosed recovered row says that version is still "
+            f"live yet was never stampable, which is not a state the runbook "
+            f"can reach. A half-written recovery bundle refuses rather than "
+            f"leaving the era open.")
+    return {"spans": spans, "recovered": recovered}
+
+
+def era_spans(path: Path | None = None) -> list[tuple[float, str]]:
+    """(start_epoch, era_name) for EFFECTIVE transitions only, ascending."""
+    return era_timeline(path)["spans"]
 
 
 def day_era_admission(day_token: str, path: Path | None = None,
@@ -546,7 +593,8 @@ def day_era_admission(day_token: str, path: Path | None = None,
     """
     tbl = ERA_ADMISSIBLE if admissible_table is None else admissible_table
     lo, hi = day_bounds(day_token)
-    spans = era_spans(path)
+    _tl = era_timeline(path)
+    spans, _recovered = _tl["spans"], _tl["recovered"]
     inside = [(t, n) for t, n in spans if lo < t < hi]
     covering = [n for i, (t, n) in enumerate(spans)
                 if t <= lo and (i + 1 == len(spans) or spans[i + 1][0] > lo)]
@@ -557,14 +605,27 @@ def day_era_admission(day_token: str, path: Path | None = None,
             f"REFUSED: era(s) {unknown} touch {day_token} but carry NO ruled "
             f"admissibility. A collector version is not admissible by default "
             f"and silence is not a ruling.")
+    # Which era-starts does this day actually sit on or cross?
+    starts = {t for t, _ in inside} | {t for i, (t, n) in enumerate(spans)
+                                       if t <= lo and (i + 1 == len(spans)
+                                                       or spans[i + 1][0] > lo)}
+    reconstructed = bool(starts & _recovered)
     pure = not inside and len(touched) == 1
-    admissible = pure and all(tbl[n] is True for n in touched)
+    # A RECONSTRUCTED boundary is a claim about the past, not a stamp made at
+    # the time. Era purity is a contemporaneous predicate -- the whole
+    # discipline rests on the boundary being recorded when it happened -- so a
+    # day resting on a recovered boundary does not accrue, whatever its
+    # quality. PROPOSED CONSERVATIVE DEFAULT, not a ruling: relaxing it is a
+    # policy call with its own priced trade-off (rule 14).
+    admissible = (pure and not reconstructed
+                  and all(tbl[n] is True for n in touched))
     return {
         "day": day_token, "eras_touched": touched,
         "boundaries_inside_day": [dt.datetime.fromtimestamp(
             t, dt.timezone.utc).isoformat().replace("+00:00", "Z")
             for t, _ in inside],
         "era_pure": pure,
+        "era_reconstructed": reconstructed,
         "era_admissible_ruled": {n: tbl.get(n) for n in touched},
         "race_admissible_by_era": admissible,
         "why": ("a day not lying ENTIRELY inside ONE admissible era cannot "
@@ -1968,6 +2029,78 @@ def _selftests() -> int:
                              )["race_admissible_by_era"] is True,
            "and against the SAME table a PURE day in one of those eras is "
            "admissible, so the check is purity and not blanket refusal")
+    # ---- RECOVERY BUNDLE (Codex V5-R3B residual) -----------------------
+    # A v5 that RAN but could never be stamped. An `aborted` row cannot encode
+    # it -- the span existed -- and it is NOT a rollback of a row that does not
+    # exist. TWO rows, in order: the observed transition marked `recovered`,
+    # then the standard rollback receipt closing it.
+    _recv = dict(_v5, recovered=True, stage="stamp_unwritable_recovery",
+                 collector_start_recv_ns=_ns("2026-08-31T07:00:04Z"))
+    _bundle = [_v4, _recv, _rb]
+    _b = _adm_of(_bundle, "20260901")
+    ok(_b["eras_touched"] == ["clob_v4"]
+       and _b["race_admissible_by_era"] is False,
+       "RECOVERY BUNDLE lands: the v5 span that ran is recorded, closed by its "
+       "rollback, and later days are v4 again")
+    _bd = _adm_of(_bundle, "20260831")
+    ok(_bd["eras_touched"] == ["clob_v4", "clob_v5"]
+       and len(_bd["boundaries_inside_day"]) == 2
+       and _bd["era_reconstructed"] is True,
+       "and BOTH real boundaries survive on the day it happened -- the span is "
+       "recorded rather than erased, and flagged RECONSTRUCTED")
+    ok(_adm_of([_v4, dict(_recv, boundary_utc="2026-08-30T06:00:00Z",
+                          collector_start_recv_ns=_ns("2026-08-30T06:00:04Z")),
+                dict(_rb, closes_boundary_utc="2026-08-30T06:00:00Z",
+                     boundary_utc="2026-09-03T00:00:00Z",
+                     collector_start_recv_ns=_ns("2026-09-03T00:00:04Z"))],
+               "20260901")["race_admissible_by_era"] is False,
+       "A DAY LYING WHOLLY INSIDE A RECOVERED v5 SPAN DOES NOT ACCRUE. Its "
+       "boundary is a CLAIM about the past, not a stamp made at the time, and "
+       "era purity is a contemporaneous predicate. Conservative DEFAULT, not a "
+       "ruling -- relaxing it is a policy call (rule 14)")
+    ok("never CLOSED" in _refusal([_v4, _recv]),
+       "KNOWN-BAD (recovered-without-rollback): an unclosed recovered row "
+       "refuses. It would say v5 is still live yet was never stampable -- a "
+       "state the runbook cannot reach, and the shape a HALF-WRITTEN bundle "
+       "leaves behind when the ledger goes unwritable again mid-append")
+    ok("must NAME the transition it reverts" in _refusal([_v4, _rb]),
+       "KNOWN-BAD (rollback-without-recovered): a rollback naming a v5 "
+       "boundary that was NEVER WRITTEN refuses -- Codex's 'do not encode that "
+       "case as a rollback of a row that does not exist', enforced. (A "
+       "rollback as the very FIRST row hits a different refusal, `closes "
+       "nothing`, covered separately -- two distinct shapes, two messages)")
+    ok("OUT OF ORDER" in _refusal([_v4, _rb, _recv]),
+       "KNOWN-BAD (out-of-order bundle): the bundle's two rows APPENDED in the "
+       "wrong order -- rollback at 07:20 written before the 07:00 transition "
+       "it closes -- refuses. (My first fixture for this was wrong: I dated "
+       "the rollback EARLIER, which is chronologically consistent and trips a "
+       "different check. The append order is what the bundle must get right)")
+    ok("is `recovered` but asserts" in _refusal(
+        [_v4, _v5, {k: v for k, v in dict(_rb, recovered=True).items()}]),
+       "`recovered` on a rollback refuses: recovery records a transition that "
+       "HAPPENED, and an abort or rollback is not a thing to recover")
+    ok("names no `stage`" in _refusal(
+        [_v4, {k: v for k, v in _recv.items() if k != "stage"}, _rb]),
+       "a recovered row with no `stage` refuses -- a retroactive boundary must "
+       "say WHY it could not be stamped at the time. (The generic stage check "
+       "covers aborted and rollback rows only; a `transitioned` row needs "
+       "none, so recovery carries its own -- and mutation found this one "
+       "untested before it shipped)")
+    ok("carries no `collector_start_recv_ns`" in _refusal(
+        [_v4, {k: v for k, v in _recv.items()
+               if k != "collector_start_recv_ns"}, _rb]),
+       "a recovered row with no process evidence refuses -- without the v5 "
+       "process's own start there is nothing to show the span ran at all")
+    ok("collector_start PREDATES it" in _refusal(
+        [_v4, dict(_recv, collector_start_recv_ns=_ns("2026-08-31T06:00:00Z")),
+         _rb]),
+       "and one whose collector_start predates its own boundary refuses -- "
+       "that process was already running before the era it claims to open")
+    ok(_adm_of([_v4, _v5])["race_admissible_by_era"] is True
+       and _adm_of([_v4, _v5])["era_reconstructed"] is False,
+       "POSITIVE CONTROL: a NORMALLY stamped v5 era is admissible and not "
+       "flagged reconstructed -- recovery is the exception, not the default")
+
     _self = _refusal([_v4, dict(_v5, supersedes="clob_v5")])
     ok("supersedes ITSELF" in _self,
        "KNOWN-BAD: a row superseding its OWN version refuses. It transitions "
