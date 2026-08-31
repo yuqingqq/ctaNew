@@ -223,8 +223,13 @@ The boundary day is mixed after any real v4.1 start and does not count.
 
 ## After the deploy
 
-1. Keep `pm-shadow-observer.service` active and run `--verify-output` during
-   each day-quality check. It must be running **before** the next event.
+1. **The shadow observer is NOT running** (USER ruling; see the note above).
+   It is built, gated and committed, so starting it later is a one-command
+   change — but until it runs, an all-coin content collapse like 08-26 or
+   08-31 **cannot be attributed** to the venue rather than to us. That is a
+   known, accepted blind spot, not an oversight. If a fourth such event
+   occurs, start it before analysing, not after: every retrospective theory
+   this programme has produced about those events has been wrong.
 2. **Do not compare v4_1 day numbers to v4 ones.** See the measurement-basis
    warning above.
 3. **Freeze the content-liveness status rule before judging the first v4_1

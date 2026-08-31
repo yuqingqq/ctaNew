@@ -63,6 +63,14 @@ RESOLVE_GIVEUP_S = 7200
 WRITE_BATCH = 2_000
 WRITE_QUEUE_MAX = 32
 GAP_LEDGER = ROOT / "collector_gaps.jsonl"
+# Health samples get their OWN ledger, not the gap ledger. Found in review:
+# at one row per 60s they would have been ~17,280 rows against the gap
+# ledger's 8,884 over the same 12 days -- i.e. a file named `collector_gaps`
+# would have become MOSTLY health rows, and every consumer that scans it
+# (several load it whole) would pay ~3x the parse cost for rows it discards.
+# No existing consumer breaks either way -- checked, they filter by event or
+# only hash the file -- but a ledger should be named for what is in it.
+HEALTH_LEDGER = ROOT / "collector_health.jsonl"
 # The service starts without arguments, so the reviewed v4 behavior remains
 # the restart-safe default until a separately stamped boundary opts into v5.
 # This prevents an unrelated process restart from creating an unrecorded era.
@@ -410,6 +418,16 @@ class PMCollector:
         if self.known:
             print(f"[pm] resumed: {len(self.known)} known, "
                   f"{len(self.pending_res)} pending resolution", flush=True)
+
+    def _health(self, obj: dict) -> None:
+        """Health samples, to their OWN ledger. Never raises: observability
+        that can kill the thing it observes is worse than none."""
+        try:
+            jl_append(HEALTH_LEDGER, {"recv_ns": time.time_ns(),
+                                      "collector_version":
+                                          self.collector_version, **obj})
+        except Exception:                                     # noqa: BLE001
+            self.counts["health_errors"] += 1
 
     def _audit(self, obj: dict) -> None:
         try:
@@ -888,7 +906,7 @@ class PMCollector:
             # observability that can kill the thing it observes is worse than
             # none.
             try:
-                self._audit({
+                self._health({
                     "event": "health_sample",
                     "collector_version": self.collector_version,
                     "msgs_total": self.counts["msgs"],

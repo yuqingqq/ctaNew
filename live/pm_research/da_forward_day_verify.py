@@ -33,6 +33,7 @@ import datetime as dt
 import json
 import math
 import re
+import statistics
 import sys
 from pathlib import Path
 from typing import Any, Sequence
@@ -426,6 +427,133 @@ def tape_density_for(day_token: str, path: Path | None = None) -> dict:
                     "(rule 11). A governing bar needs pre-registration "
                     "against unseen days, which is a policy act, not this "
                     "instrument's to grant itself."),
+    }
+
+
+#: CONTENT LIVENESS -- structure frozen 2026-08-31, BEFORE 09-01 exists.
+#:
+#: complete_tape asks whether windows are present and tape_density asks whether
+#: they are full. Neither can say WHOSE fault a thin day is. The discriminator
+#: is received-vs-written: the collector's faithfulness (written/received) is
+#: independent of the upstream's liveness (received vs its own norm), so the
+#: two failures separate cleanly. 08-31 is the motivating case -- 0.51% of
+#: normal message rate for 4.1 h while 99.77% of what was seen was written.
+#:
+#: FOUR STATUSES, and the fourth is not a failure state:
+#:   CONTENT_LIVE            received within the day's normal band
+#:   CONTENT_THIN_COLLECTOR  thin AND written/received materially below 1
+#:   CONTENT_THIN_UPSTREAM   thin AND written/received ~= 1: tape faithful
+#:   CONTENT_LIVENESS_UNRESOLVED  received unavailable, or no ratified bar
+#:
+#: THE THRESHOLDS ARE DELIBERATELY ABSENT AND THIS CODE WILL NOT INVENT THEM.
+#: A band and a "materially below 1" are Class-C values; setting them from the
+#: days that motivated the rule is rule 11, and setting them after seeing
+#: 09-01 consumes 09-01. So the quantities are COMPUTED and REPORTED and the
+#: status stays UNRESOLVED until a bar is ratified. That is the honest state:
+#: the discriminator is frozen, the number is not mine.
+CONTENT_LIVENESS_STATUSES = ("CONTENT_LIVE", "CONTENT_THIN_COLLECTOR",
+                             "CONTENT_THIN_UPSTREAM",
+                             "CONTENT_LIVENESS_UNRESOLVED")
+PM_COLLECTOR_LOG = Path("/home/yuqing/ctaNew/data/pm_5min/collector.log")
+_HB = re.compile(r"^\[pm\] (\d{2}):(\d{2}):(\d{2})Z .*?\bmsgs=(\d+)\b")
+
+
+def _heartbeats_dated(text: str, anchor_epoch: float) -> list[tuple[float, int]]:
+    """(epoch, cumulative msgs) for heartbeat lines.
+
+    The log stamps HH:MM:SSZ with NO DATE, so dates are reconstructed by
+    walking BACKWARD from a known anchor and stepping the date at each
+    midnight wrap.
+
+    WHAT THIS CAN AND CANNOT CATCH, stated rather than implied. Reconstructed
+    epochs that fail to increase ARE caught and refuse. A silent gap of MORE
+    than 24 h is NOT detectable from dateless stamps at all: 12:00 followed by
+    12:00 two days later is indistinguishable from one day later, and no check
+    on the stamps can tell them apart. That limitation is real and is reported
+    rather than guarded, because a guard that cannot fire is not a guard --
+    the honest containment is that this measure is used only for days the log
+    demonstrably covers with per-minute heartbeats.
+    """
+    rows = []
+    for ln in text.splitlines():
+        m = _HB.match(ln)
+        if m:
+            hh, mm, ss, msgs = m.groups()
+            rows.append((int(hh) * 3600 + int(mm) * 60 + int(ss), int(msgs)))
+    if not rows:
+        return []
+    out = []
+    day0 = int(anchor_epoch // 86400) * 86400
+    prev_sod = None
+    cur_day = day0
+    for sod, msgs in reversed(rows):
+        if prev_sod is not None and sod > prev_sod:
+            cur_day -= 86400          # wrapped backwards past midnight
+        prev_sod = sod
+        out.append((cur_day + sod, msgs))
+    out.reverse()
+    for i in range(1, len(out)):
+        if out[i][0] <= out[i - 1][0]:
+            raise ValueError(
+                "REFUSED: heartbeat dates do not reconstruct monotonically "
+                "-- two stamps resolve to the same instant or step backward, "
+                "so their order in time is unknowable and a misdated "
+                "heartbeat would attribute one day's traffic to another")
+    return out
+
+
+def content_liveness_for(day_token: str, log_path: Path | None = None,
+                         anchor_epoch: float | None = None) -> dict:
+    """Received-rate evidence for one day. Computes; never classifies."""
+    src = PM_COLLECTOR_LOG if log_path is None else log_path
+    lo, hi = day_bounds(day_token)
+    if not src.exists():
+        return {"status": "CONTENT_LIVENESS_UNRESOLVED",
+                "why": f"no collector log at {src}"}
+    anchor = (src.stat().st_mtime if anchor_epoch is None else anchor_epoch)
+    try:
+        hb = _heartbeats_dated(src.read_text(errors="replace"), anchor)
+    except ValueError as e:
+        return {"status": "CONTENT_LIVENESS_UNRESOLVED", "why": str(e)}
+    day = [(t, m) for t, m in hb if lo <= t < hi]
+    if len(day) < 2:
+        return {"status": "CONTENT_LIVENESS_UNRESOLVED",
+                "why": (f"the log carries {len(day)} heartbeat(s) inside "
+                        f"{day_token}; received rate needs at least two to "
+                        f"difference. The log does not reach back far enough "
+                        f"for historic days -- this measure is PROSPECTIVE by "
+                        f"construction")}
+    rates = []
+    for i in range(1, len(day)):
+        dt_s = day[i][0] - day[i - 1][0]
+        dm = day[i][1] - day[i - 1][1]
+        if dt_s > 0 and dm >= 0:
+            rates.append(dm / dt_s)
+    if not rates:
+        return {"status": "CONTENT_LIVENESS_UNRESOLVED",
+                "why": "no usable heartbeat interval (counter reset or "
+                       "non-monotonic msgs)"}
+    med = statistics.median(rates)
+    low = [r for r in rates if med > 0 and r / med < 0.10]
+    return {
+        "status": "CONTENT_LIVENESS_UNRESOLVED",
+        "why": ("the discriminator is computed and frozen; NO ratified band "
+                "exists, and inventing one from the days that motivated the "
+                "rule -- or from 09-01 after seeing it -- is the error this "
+                "structure was declared early to avoid"),
+        "n_intervals": len(rates),
+        "median_msgs_per_s": round(med, 3),
+        "min_msgs_per_s": round(min(rates), 3),
+        "intervals_below_10pct_of_median": len(low),
+        "fraction_of_day_below_10pct": round(len(low) / len(rates), 4),
+        "note_10pct": ("10% is a REPORTING cut so the shape is visible, NOT a "
+                       "ratified bar and not used to classify anything"),
+        "written_received_ratio": None,
+        "written_received_note": ("the collector logs RECEIVED; WRITTEN comes "
+                                 "from the tape. Pairing them is the second "
+                                 "half of the discriminator and needs the "
+                                 "per-coin join, not shipped here"),
+        "governs": False,
     }
 
 
@@ -1411,6 +1539,9 @@ def verify_day(day_token: str, freeze_epoch: float,
         "predicates": preds,
         "all_pass": _day_all_pass,
         "tape_density": _td,
+        # A REPORT FIELD, not a predicate. A predicate carries pass/fail and
+        # this has no ratified bar, so a pass/fail here would be invented.
+        "content_liveness": content_liveness_for(day_token),
         "windows_gap_affected": affected,
         "gap_series": gs,
         "decision_note": (
@@ -2436,6 +2567,62 @@ def _selftests() -> int:
            "it and the window set moves by 114 between 0.05 and 0.25 -- a bare "
            "count would be the conclusion-beside-a-number this instrument "
            "exists to refuse")
+
+    # ---- CONTENT LIVENESS: structure frozen, thresholds absent ---------
+    with _tfe.TemporaryDirectory() as _t8:
+        _lg = Path(_t8) / "c.log"
+        _anchor = 1788220800.0            # 2026-09-01T00:00:00Z
+        _lg.write_text("".join(
+            f"[pm] {(23*3600 + 50*60 + i*60) // 3600 % 24:02d}:"
+            f"{((23*3600 + 50*60 + i*60) // 60) % 60:02d}:00Z markets=1 "
+            f"msgs={1000 + i*60000}\n" for i in range(20)))
+        _cl = content_liveness_for("20260831", _lg, _anchor)
+        ok(_cl["status"] == "CONTENT_LIVENESS_UNRESOLVED"
+           and _cl.get("n_intervals", 0) >= 1,
+           "heartbeats spanning MIDNIGHT are dated by walking backward from an "
+           "anchor -- the log stamps HH:MM:SSZ with NO DATE, so a line's day "
+           "is reconstructed, never assumed")
+        ok(all(x in CONTENT_LIVENESS_STATUSES
+               for x in (_cl["status"],)),
+           "and the status is drawn from the DECLARED four, not invented")
+        _lg.write_text("[pm] 12:00:00Z markets=1 msgs=100\n"
+                       "[pm] 12:00:00Z markets=1 msgs=200\n")
+        _amb = content_liveness_for("20260831", _lg, _anchor)
+        ok(_amb["status"] == "CONTENT_LIVENESS_UNRESOLVED"
+           and "unknowable" in _amb["why"],
+           "KNOWN-BAD: two stamps resolving to the SAME instant refuse -- "
+           "their order in time is unknowable and a misdated heartbeat "
+           "attributes one day's traffic to another. (My first fixture for "
+           "this stepped the stamps backward, which the backward walk resolves "
+           "cleanly: it tested nothing. And a >24h silent gap is NOT "
+           "detectable from dateless stamps at all -- that limit is DECLARED "
+           "in the docstring rather than guarded, because a guard that cannot "
+           "fire is not a guard)")
+        _lg.write_text("[pm] 12:00:00Z markets=1 msgs=100\n")
+        ok("PROSPECTIVE by construction" in
+           content_liveness_for("20260831", _lg, _anchor)["why"],
+           "a day with fewer than two heartbeats is UNRESOLVED and SAYS the "
+           "measure is prospective -- the log does not reach back, so absence "
+           "of evidence is reported as absence, never as liveness")
+        ok(content_liveness_for("20260831", Path(_t8) / "nope.log",
+                                _anchor)["status"]
+           == "CONTENT_LIVENESS_UNRESOLVED",
+           "and no log at all is UNRESOLVED rather than an exception")
+    _real = content_liveness_for("20260831")
+    ok(_real["status"] == "CONTENT_LIVENESS_UNRESOLVED"
+       and _real.get("median_msgs_per_s") is not None,
+       "LOAD-BEARING: on the REAL 08-31 log the quantities are COMPUTED and "
+       "the status is still UNRESOLVED. The discriminator is frozen and the "
+       "band is not mine to set -- a rule that classified here would be "
+       "choosing a bar from the day that motivated it")
+    ok(_real["fraction_of_day_below_10pct"] > 0.0
+       and content_liveness_for("20260829")["fraction_of_day_below_10pct"]
+       == 0.0,
+       "POSITIVE CONTROL: the measure SEPARATES -- 08-31 (the 4.1 h event) "
+       "shows a quarter of the day under a tenth of its own median rate while "
+       "08-29 shows none. It discriminates without classifying, which is "
+       "exactly the state a pre-registered rule should be in before its bar "
+       "is ratified")
 
     # ---- ERA START = PROCESS START (BE Q-DA-180 item 1) ----------------
     _late = {"collector_schema_version": "clob_v5", "supersedes": "clob_v4",
