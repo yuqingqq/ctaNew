@@ -191,10 +191,44 @@ def exec_start_has_flag(exec_start: str) -> bool:
                for a, b in zip(toks, toks[1:]))
 
 
-def _live_rows(era_rows: list, version: str) -> list:
-    return [r for r in era_rows
-            if r.get("collector_schema_version") == version
-            and not r.get("aborted")]
+# The one pre-vocabulary row, pinned by IDENTITY so nothing new inherits the
+# exemption (DA's contract, b6d6f96): every later row carries EXACTLY ONE of
+# transitioned/aborted/rollback PRESENT AND TRUE — absence refuses, two refuse.
+LEGACY_ROW_IDENTITY = ("clob_v4", "2026-08-30T05:30:00Z")
+_ROLE_FLAGS = ("transitioned", "aborted", "rollback")
+
+
+def classify_era_row(r: dict) -> str:
+    ident = (r.get("collector_schema_version"), r.get("boundary_utc"))
+    flags = [f for f in _ROLE_FLAGS if r.get(f) is True]
+    if ident == LEGACY_ROW_IDENTITY and not flags:
+        return "transitioned"  # the pinned legacy transition
+    if len(flags) != 1:
+        raise Refused(f"era row {ident} carries {len(flags)} of "
+                      f"{_ROLE_FLAGS} — the contract is EXACTLY ONE, because "
+                      f"an absent boolean is indistinguishable from a "
+                      f"forgotten one (DA b6d6f96); this row is AMBIGUOUS "
+                      f"attempt state")
+    return flags[0]
+
+
+def current_era_and_open_v5(era_rows: list) -> tuple:
+    """(version of the last EFFECTIVE row, whether a transitioned clob_v5 row
+    lacks a later rollback receipt closing it)."""
+    current = None
+    open_v5 = None
+    for r in era_rows:
+        role = classify_era_row(r)
+        if role == "aborted":
+            continue  # never transitioned; never enters the era line
+        ver = r.get("collector_schema_version")
+        if role == "rollback":
+            if open_v5 is not None and                     r.get("closes_boundary_utc") == open_v5:
+                open_v5 = None
+        elif ver == "clob_v5":
+            open_v5 = r.get("boundary_utc")
+        current = ver
+    return current, open_v5
 
 
 def check_pre_arm(obs: dict, expect_flag: bool) -> None:
@@ -210,13 +244,14 @@ def check_pre_arm(obs: dict, expect_flag: bool) -> None:
     if not obs["unit_active"] or obs["main_pid"] <= 0:
         raise Refused(f"unit not active (active={obs['unit_active']}, "
                       f"pid={obs['main_pid']})")
-    if len(_live_rows(obs["era_rows"], "clob_v4")) != 1:
-        raise Refused(f"era ledger does not carry exactly one live clob_v4 "
-                      f"row ({len(_live_rows(obs['era_rows'], 'clob_v4'))}) — "
-                      f"there is nothing well-defined to supersede")
-    if _live_rows(obs["era_rows"], "clob_v5"):
-        raise Refused("era ledger already carries a live clob_v5 row — a "
-                      "second stamp would fork the era")
+    current, open_v5 = current_era_and_open_v5(obs["era_rows"])
+    if open_v5 is not None:
+        raise Refused(f"era ledger carries an OPEN clob_v5 era (boundary "
+                      f"{open_v5}) with no rollback receipt closing it — a "
+                      f"second stamp would fork the era")
+    if current != "clob_v4":
+        raise Refused(f"the current era per the ledger is {current!r}, not "
+                      f"clob_v4 — there is nothing well-defined to supersede")
     has_flag = exec_start_has_flag(obs["exec_start"])
     if expect_flag and not has_flag:
         raise Refused(f"armed check: the INSTALLED ExecStart does not carry "
@@ -270,6 +305,7 @@ def check_post_restart(obs: dict, old_pid: int, start_row: dict | None) -> dict:
     return {
         "collector_schema_version": "clob_v5",
         "supersedes": "clob_v4",
+        "transitioned": True,
         "boundary_utc": BOUNDARY_UTC,
         "package": ["v5 application text PING/PONG heartbeat (10s cadence) "
                     "replacing RFC control-Pong liveness — the wrong contract "
@@ -387,13 +423,19 @@ def check_post_rollback(obs: dict, old_v5_pid: int,
     if start_row.get("pid") != obs["main_pid"]:
         raise Refused(f"collector_start pid {start_row.get('pid')} != unit "
                       f"MainPID {obs['main_pid']}")
+    _resto_utc = datetime.fromtimestamp(
+        start_row["recv_ns"] / 1e9, tz=timezone.utc
+    ).strftime("%Y-%m-%dT%H:%M:%SZ")
     return {
         "collector_schema_version": "clob_v4",
         "supersedes": "clob_v5",
         "rollback": True,
         "closes_boundary_utc": BOUNDARY_UTC,
         "stage": stage,
-        "boundary_utc": BOUNDARY_UTC,
+        # The v4-resume instant is the RESTORED PROCESS'S OWN START, not the
+        # v5 transition instant — copying BOUNDARY_UTC here made the v5 era
+        # zero-width and "the span that really ran vanishes" (DA b6d6f96).
+        "boundary_utc": _resto_utc,
         "pid": obs["main_pid"],
         "collector_start_recv_ns": start_row["recv_ns"],
         "stamp_written_ns": time.time_ns(),
@@ -475,9 +517,10 @@ def selftest() -> int:
     stamp = check_post_restart(good_post, old_pid=3687786,
                                start_row=good_start)
     ok(stamp["pid"] == 4242 and stamp["supersedes"] == "clob_v4"
-       and stamp["boundary_utc"] == BOUNDARY_UTC,
+       and stamp["boundary_utc"] == BOUNDARY_UTC
+       and stamp["transitioned"] is True,
        "POSITIVE: post-restart emits a truthful clob_v5-supersedes-clob_v4 "
-       "stamp from verified observations")
+       "stamp DECLARING its role (transitioned:True, DA contract)")
     ok(BOUNDARY_EPOCH == int(datetime(2026, 8, 31, 7, 0,
                                       tzinfo=timezone.utc).timestamp()),
        "the epoch constant equals the ruled UTC instant (derived, not "
@@ -500,14 +543,33 @@ def selftest() -> int:
     refuses(lambda: check_pre_arm({**good_pre, "era_rows": []}, False),
             "nothing well-defined to supersede",
             "KNOWN-BAD: a missing live clob_v4 era row REFUSES")
+    _V5T = {"collector_schema_version": "clob_v5",
+            "boundary_utc": BOUNDARY_UTC, "transitioned": True}
+    refuses(lambda: check_pre_arm({**good_pre,
+                                   "era_rows": [V4_ROW, _V5T]}, False),
+            "fork the era", "KNOWN-BAD: an OPEN transitioned clob_v5 era "
+            "REFUSES (no rollback receipt closes it)")
     refuses(lambda: check_pre_arm({**good_pre, "era_rows": [
-                V4_ROW, {"collector_schema_version": "clob_v5"}]}, False),
-            "fork the era", "KNOWN-BAD: an existing live clob_v5 row REFUSES "
-            "(an aborted one would not)")
+                V4_ROW, {"collector_schema_version": "clob_v5",
+                         "boundary_utc": BOUNDARY_UTC}]}, False),
+            "exactly one", "KNOWN-BAD (DA contract): a non-legacy row with "
+            "NO role flag REFUSES — an absent boolean is indistinguishable "
+            "from a forgotten one")
+    refuses(lambda: check_pre_arm({**good_pre, "era_rows": [
+                V4_ROW, {**_V5T, "aborted": True}]}, False),
+            "exactly one", "KNOWN-BAD (DA contract): a row asserting TWO "
+            "role flags REFUSES — ambiguous attempt state")
+    _RB = {"collector_schema_version": "clob_v4", "rollback": True,
+           "closes_boundary_utc": BOUNDARY_UTC,
+           "boundary_utc": "2026-08-31T99:99:99Z"}
+    check_pre_arm({**good_pre, "era_rows": [V4_ROW, _V5T, _RB]}, False)
+    ok(True, "POSITIVE: a transitioned v5 CLOSED by a rollback receipt "
+             "permits retry — the era line is v4 again")
     check_pre_arm({**good_pre, "era_rows": [
-        V4_ROW, {"collector_schema_version": "clob_v5", "aborted": True}]},
-        False)
-    ok(True, "POSITIVE: an aborted clob_v5 row does NOT block a retry")
+        V4_ROW, {"collector_schema_version": "clob_v5",
+                 "boundary_utc": BOUNDARY_UTC, "aborted": True}]}, False)
+    ok(True, "POSITIVE: an aborted clob_v5 row does NOT block a retry (and "
+             "never enters the era line)")
     refuses(lambda: check_pre_arm(good_pre, expect_flag=True),
             "did not land", "KNOWN-BAD: armed check without the installed "
             "flag REFUSES (restart would boot v4 again)")
@@ -593,9 +655,13 @@ def selftest() -> int:
                                    "counters_refused")
     ok(_receipt["rollback"] is True and _receipt["supersedes"] == "clob_v5"
        and _receipt["closes_boundary_utc"] == BOUNDARY_UTC
-       and _receipt["stage"] == "counters_refused",
-       "POSITIVE: a verified rollback emits a receipt that CLOSES the live "
-       "v5 row, names its stage, and binds the restored process")
+       and _receipt["stage"] == "counters_refused"
+       and _receipt["boundary_utc"] != _receipt["closes_boundary_utc"]
+       and _receipt["boundary_utc"] == "2026-08-31T07:15:00Z",
+       "POSITIVE: the rollback receipt's own boundary is the RESTORATION "
+       "instant (from the restored process's start), NOT the transition "
+       "instant — a zero-width v5 era vanished the span that really ran "
+       "(DA b6d6f96 emitter finding 1)")
     refuses(lambda: check_post_rollback({**_rb_obs,
                                          "exec_start":
                                          f"python3 collect_pm.py "
