@@ -1,10 +1,10 @@
 """O1 new-path BEHAVIORAL tests (R-238 condition i) — v4 code from HEAD, live process untouched.
 
 Drives PMCollector._market against fake websockets. Four paths:
-  O1a  connect kwargs carry ping_interval=10, ping_timeout=10
-       (REVERTED from 3/3 -- R-363: the tightening cost 2.7x MORE
-        lost tape by sending 3.33x more pings at a roughly constant
-        per-ping failure rate; 10/10 is the MEASURED configuration)
+  O1a  connect kwargs carry ping_interval=3, ping_timeout=3 -- this mode
+       reproduces WHAT ACTUALLY RAN from 2026-08-30T05:30:01Z and must stay
+       exact. The 10/10 rollback lives in `control-v4-slow` under its own era
+       identity `clob_v4_1` (Codex COL-R3), not inside this one.
   O1c  silent subscription -> SubscribeUnconfirmed within the bound, distinct
        cause in the gap ledger, reconnect attempted
   O1d  never-connected socket -> gap_start_ns == scope start (not error instant)
@@ -117,15 +117,12 @@ async def main():
           str([r.get("event") for r in gaps]))
     # O1a on every connect call
     kw = cap["connect_kwargs"][0]
-    check("O1a REVERTED (R-363): ping_interval=10 — the measured "
-          "configuration, not an invented optimum; 3/3 tripled the "
-          "ping COUNT and with it the spurious-timeout count",
-          kw.get("ping_interval") == 10, str(kw))
-    check("O1a REVERTED (R-363): ping_timeout=10 — the minor term "
-          "(per-ping failure moved only 1.25x); the COUNT was the "
-          "lever, and reverting both restores a setting this "
-          "collector actually ran for 96h in this load regime",
-          kw.get("ping_timeout") == 10, str(kw))
+    check("O1a: control-v4 still carries ping_interval=3 — the ROLLBACK "
+          "does not mutate this mode, because reproducing the era that ran "
+          "requires the bytes that ran (COL-R3)",
+          kw.get("ping_interval") == 3, str(kw))
+    check("O1a: control-v4 still carries ping_timeout=3",
+          kw.get("ping_timeout") == 3, str(kw))
 
     # ---- O1c: silent subscription -> SUBSCRIBE_UNCONFIRMED + reconnect ----
     cap = {}

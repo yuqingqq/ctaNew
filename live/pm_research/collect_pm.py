@@ -68,8 +68,32 @@ GAP_LEDGER = ROOT / "collector_gaps.jsonl"
 # This prevents an unrelated process restart from creating an unrecorded era.
 COLLECTOR_VERSION = "clob_v4"
 HEARTBEAT_CONTROL_V4 = "control-v4"
+HEARTBEAT_CONTROL_V4_SLOW = "control-v4-slow"
 HEARTBEAT_APP_V5 = "app-v5"
-HEARTBEAT_MODES = (HEARTBEAT_CONTROL_V4, HEARTBEAT_APP_V5)
+HEARTBEAT_MODES = (HEARTBEAT_CONTROL_V4, HEARTBEAT_CONTROL_V4_SLOW,
+                   HEARTBEAT_APP_V5)
+
+# ONE mapping from mode to (era identity, keepalive), so the declared era and
+# the behaviour that produces it CANNOT DRIFT APART (Codex COL-R3). The
+# blocker that made this necessary: reverting the ping inside `control-v4`
+# changed the gap-measurement regime while still declaring `clob_v4`, so a
+# restart would have produced an unidentifiable era — and the era walk
+# refuses `clob_v4 -> clob_v4` ("a row naming itself replaces nothing"), so
+# no valid receipt could have expressed it.
+#
+# `control-v4` KEEPS 3/3 and `clob_v4`: that is what actually ran from
+# 2026-08-30T05:30:01Z and historical reproduction must stay exact.
+# `control-v4-slow` is the 10/10 candidate under its OWN identity
+# `clob_v4_1`, so the chain reads clob_v4 -> clob_v4_1: a real transition
+# the consumers can express, admit, and roll back.
+MODE_SPEC = {
+    HEARTBEAT_CONTROL_V4:      ("clob_v4",   {"ping_interval": 3,
+                                              "ping_timeout": 3}),
+    HEARTBEAT_CONTROL_V4_SLOW: ("clob_v4_1", {"ping_interval": 10,
+                                              "ping_timeout": 10}),
+    HEARTBEAT_APP_V5:          ("clob_v5",   {"ping_interval": None,
+                                              "ping_timeout": None}),
+}
 # The venue documents a TEN-SECOND PING/PONG cadence; that constrains how
 # often we SEND, not how long we wait for the answer, which is the client's
 # choice. Worst-case dead-socket blindness is interval + timeout, and the
@@ -194,57 +218,17 @@ def connect_keepalive_kwargs(heartbeat_mode: str) -> dict:
     control frames).  v5 disables it rather than running two independent
     liveness authorities on the same socket.
     """
-    if heartbeat_mode == HEARTBEAT_CONTROL_V4:
-        # O1a set these 10/10 -> 3/3 to cut DETECTION LAG. Measured on the
-        # tape afterwards (R-360/R-363), matched windows both AFTER the 08-25
-        # regime change so the comparison is not contaminated by it:
-        #
-        #   pre-O1a  08-26..08-29, 96.0h : btc 100.2 s/hr lost, PING_TIMEOUT
-        #                                  9.43/hr, 9.5 s per event
-        #   post-O1a 08-30 05:30Z ->     : btc 242.8 s/hr lost, PING_TIMEOUT
-        #                                  39.44/hr, 6.1 s per event
-        #
-        # It bought a 36% cut per event and paid 4.18x more events. Net 2.7x
-        # MORE lost tape, and it moved btc from UNDER the P1 bar (100.2 vs
-        # 120) to failing by 2x. Every other gap cause FELL across the same
-        # boundary, so O1b/O1c helped and only the ping-tightened population
-        # exploded.
-        #
-        # WHAT THIS CHANGE DOES AND DOES NOT DO (Codex COL-R4). It removes a
-        # MEASURED AMPLIFICATION. It does not establish or repair the dominant
-        # 2026-08-25 break, whose cause is UNKNOWN.
-        #
-        # Amplification, measured on TOTAL disconnect rate rather than one
-        # cause: 43.6 -> 21.1 gaps/hr, 2.07x. Pings/hr went 360 -> 1200
-        # (3.33x) while the per-ping failure probability moved only
-        # 0.0262 -> 0.0329, so most of the added PING_TIMEOUTs are extra
-        # draws. But O1a also RECLASSIFIED: across the boundary btc's
-        # NO_CLOSE_FRAME fell 152 -> 13 and SLOW_CONSUMER_1013 fell 69 -> 6,
-        # because a 3 s deadline kills the socket before those modes fire.
-        # The 4.18x once quoted here was ONE CAUSE, not the effect.
-        #
-        # TWO EARLIER MECHANISMS WERE PROPOSED HERE AND BOTH ARE WITHDRAWN.
-        # (1) load starvation at the socket -- refuted by its own test.
-        # (2) "ping count, not load", stated as though it explained the
-        # break -- it explains the AMPLIFIER only. The break itself is
-        # 08-25 00:00Z, btc-only, all three failure modes at once, on a host
-        # that sysstat shows was 89.9% idle through those hours; see
-        # pm_host_load_join.py, r = +0.039 on that day and near zero or
-        # NEGATIVE on every other.
-        #
-        # Reverting is therefore a ROLLBACK OF A KNOWN-BAD CHANGE, not a fix:
-        # at 10/10 after the break btc passed 2 days in 5 and lands near
-        # 123 s/hr against a 120 bar.
-        #
-        # Reverted to the MEASURED configuration, not to an invented optimum:
-        # 10/10 is a setting this collector actually ran at for 96 hours in
-        # this load regime. Interval is the lever (count); timeout is the
-        # minor term (1.25x). Detection lag returns to <=20 s, which is the
-        # price, and it is the price O1a should not have paid down.
-        return {"ping_interval": 10, "ping_timeout": 10}
-    if heartbeat_mode == HEARTBEAT_APP_V5:
-        return {"ping_interval": None, "ping_timeout": None}
-    raise ValueError(f"unknown heartbeat mode: {heartbeat_mode!r}")
+    # Derived from MODE_SPEC so the cadence and the declared era identity
+    # cannot diverge (Codex COL-R3). See MODE_SPEC for the O1a history: 3/3
+    # amplified total post-break gaps 2.07x, and 10/10 rolls that amplifier
+    # back. NEITHER explains the 2026-08-25 btc break, whose cause is
+    # UNKNOWN; two mechanisms proposed here (load starvation, then "ping
+    # count") are both withdrawn, and the 08-31 all-coin collapse is
+    # CONTENT_LIVENESS_UNRESOLVED, not established collector loss.
+    try:
+        return dict(MODE_SPEC[heartbeat_mode][1])
+    except KeyError:
+        raise ValueError(f"unknown heartbeat mode: {heartbeat_mode!r}")
 
 
 async def application_heartbeat(ws, subscription_ready: asyncio.Event,
@@ -347,9 +331,9 @@ class PMCollector:
         if heartbeat_mode not in HEARTBEAT_MODES:
             raise ValueError(f"unknown heartbeat mode: {heartbeat_mode!r}")
         self.heartbeat_mode = heartbeat_mode
-        self.collector_version = (
-            "clob_v5" if heartbeat_mode == HEARTBEAT_APP_V5 else COLLECTOR_VERSION
-        )
+        # from MODE_SPEC, never a parallel conditional (COL-R3): a second
+        # place to state the identity is a second place for it to go stale.
+        self.collector_version = MODE_SPEC[heartbeat_mode][0]
         self.stop = False
         self.known: set[str] = set()          # slugs with a running/finished market task
         self.pending_res: dict[str, tuple[int, str]] = {}  # slug → (window_end, conditionId)
@@ -931,6 +915,30 @@ def selftest() -> int:
         ("open live prices are not final", not is_final({"outcomePrices": '[".4", ".6"]'})),
         ("slow close classified", ws_cause(Exception("received 1013 slow consumer"))
          == "SLOW_CONSUMER_1013"),
+        # COL-R3: the era identity and the behaviour that produces it come
+        # from ONE mapping, and these assert the properties that make that
+        # worth anything — distinct identities per mode, and a cadence that
+        # actually differs. A single mapping with duplicate values would look
+        # like one source of truth while being none.
+        ("MODE_SPEC identities are DISTINCT",
+         len({v[0] for v in MODE_SPEC.values()}) == len(MODE_SPEC)),
+        ("MODE_SPEC covers exactly HEARTBEAT_MODES",
+         set(MODE_SPEC) == set(HEARTBEAT_MODES)),
+        ("control-v4 reproduces what RAN (3/3, clob_v4)",
+         MODE_SPEC[HEARTBEAT_CONTROL_V4] == ("clob_v4", {"ping_interval": 3,
+                                                         "ping_timeout": 3})),
+        ("the 10/10 rollback has its OWN era identity, so the chain reads "
+         "clob_v4 -> clob_v4_1 and not the unexpressible clob_v4 -> clob_v4",
+         MODE_SPEC[HEARTBEAT_CONTROL_V4_SLOW]
+         == ("clob_v4_1", {"ping_interval": 10, "ping_timeout": 10})),
+        ("the slow mode's cadence really DIFFERS from control-v4 — a "
+         "distinct identity over identical behaviour would be a lie in the "
+         "ledger",
+         MODE_SPEC[HEARTBEAT_CONTROL_V4_SLOW][1]
+         != MODE_SPEC[HEARTBEAT_CONTROL_V4][1]),
+        ("PMCollector derives its version from MODE_SPEC for every mode",
+         all(PMCollector(m).collector_version == MODE_SPEC[m][0]
+             for m in HEARTBEAT_MODES)),
         ("ping timeout classified", ws_cause(Exception("keepalive ping timeout"))
          == "PING_TIMEOUT"),
         ("application heartbeat timeout classified by identity",

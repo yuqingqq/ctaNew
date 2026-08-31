@@ -438,7 +438,7 @@ def _canonical_instant(value, what: str):
                       f"form silently fails to match the era it closes")
 
 
-def current_era_and_open_v5(era_rows: list) -> tuple:
+def current_era_and_open_v5(era_rows: list, target: str = "clob_v5") -> tuple:
     """(version of the last EFFECTIVE row, open era boundary or None).
 
     Validated the way DA validates, refusing what DA refuses — and now
@@ -626,7 +626,12 @@ def current_era_and_open_v5(era_rows: list) -> tuple:
                       f"open era; a half-written bundle must fail LOUD")
     # The WALK validates every version generally; the RETURN answers the
     # question the emitters ask — is a clob_v5 era in force right now?
-    return current, (open_era if open_ver == "clob_v5" else None)
+    # `target` names the era THIS deploy is opening. The WALK is version-
+    # general (audit A3); only the second return value is deploy-specific.
+    # Defaulted to clob_v5 so every existing caller and all 230 selftests are
+    # unaffected — the v4_1 boundary passes target="clob_v4_1" rather than
+    # mutating 72 literals in the gate that governs a production restart.
+    return current, (open_era if open_ver == target else None)
 
 
 def check_system_safe(obs: dict, phase: str) -> None:
