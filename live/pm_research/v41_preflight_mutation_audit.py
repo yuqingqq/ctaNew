@@ -28,7 +28,7 @@ CHECKERS = {"check_boundary_current", "installed_mode_v41",
             "make_rollback", "_check_restored_v4", "check_health_identity",
             "check_restart_counter", "check_coin_progress",
             "observe_coin_msgs", "era_state", "make_abort_row",
-            "make_recovery_bundle", "ok", "_canary_refusal"}
+            "make_recovery_bundle", "_canary_refusal"}
 CANARY = ("\n\ndef _canary_refusal():\n"
           "    raise Refused('CANARY: no test reaches this')\n")
 
@@ -88,8 +88,13 @@ def audit_scope(src: str) -> None:
     defined = {fn.name for fn in ast.walk(tree)
                if isinstance(fn, ast.FunctionDef)
                and any(isinstance(n, ast.Raise) for n in ast.walk(fn))}
+    # `ok` is the SELFTEST'S OWN assertion helper, not a gate — auditing it
+    # measures the test harness, not the instrument. Excluded by name rather
+    # than by adding it to CHECKERS, which would have hidden a real gap
+    # behind a permanently-surviving fixture.
     missing = sorted(d for d in defined
-                     if d not in CHECKERS and not d.startswith("observe_")
+                     if d not in CHECKERS and d != "ok"
+                     and not d.startswith("observe_")
                      and d not in ("main", "selftest"))
     if missing:
         sys.exit(f"HARNESS INVALID: refusal-bearing function(s) {missing} "
@@ -155,8 +160,21 @@ def main() -> int:
         print(f"  crash-kills (loud but UNASSERTED — a later defensive "
               f"check elsewhere would silently delete this coverage): "
               f"{crash_kills}")
-    if survivors:
-        print(f"SURVIVORS: {survivors}")
+    # ACCEPTED SURVIVORS — each needs a PROVEN reason, not a note. Blanking
+    # make_recovery_bundle's "era in force" guard leaves the same input
+    # REFUSED by the chain validation of the assembled row ("transitioned row
+    # 3 claims supersedes='clob_v4' while the era in force is 'clob_v6'"),
+    # executed. The guard is kept anyway because it refuses EARLIER and names
+    # the era mismatch directly, which is the better operator message at a
+    # boundary; it is redundant for safety, not for legibility.
+    accepted = {("make_recovery_bundle", 658)}
+    real = [x for x in survivors if x not in accepted]
+    if survivors and not real:
+        print(f"SURVIVORS: {survivors} — ALL ACCEPTED with proven "
+              f"downstream coverage; see ACCEPTED SURVIVORS in this file")
+        return 0
+    if real:
+        print(f"SURVIVORS: {real}")
         return 1
     return 0
 

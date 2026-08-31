@@ -628,7 +628,19 @@ def make_recovery_bundle(obs: dict, old_target_pid: int,
     closed = [r for r in obs["era_rows"]
               if r.get("rollback") is True
               and r.get("closes_boundary_utc") == utc]
-    current, open_target = era_state(obs["era_rows"])
+    # AUDIT A2, REPEATING HERE — found by writing the falsifier for the
+    # branch below. era_state() REFUSES an unclosed `recovered` row ("a
+    # reconstruction may not stand as the open era"), so calling it here made
+    # the `recovered and not closed` branch DEAD CODE: the completion path
+    # written to repair a half-landed bundle could never run, and the walk
+    # refusing IS the brick it was meant to fix. The chain is therefore
+    # evaluated on the rows EXCLUDING a half-landed reconstruction, and the
+    # completed bundle is validated after assembly instead.
+    if recovered and not closed:
+        _rows_wo_half = [r for r in obs["era_rows"] if r is not recovered[-1]]
+        current, open_target = era_state(_rows_wo_half)
+    else:
+        current, open_target = era_state(obs["era_rows"])
     if recovered and closed:
         return [{"already_stamped": True, "row": recovered[-1],
                  "note": ("EXACT recovery bundle already exists — "
@@ -956,6 +968,384 @@ def selftest() -> int:
             "needs two")
     refuses(lambda: check_coin_progress([A, B], False, 4242), "not active",
             "KNOWN-BAD: a dead unit refuses regardless of the numbers")
+
+    # ---- MUTATION-AUDIT CLOSURE ------------------------------------------
+    # A final round found 54 of 81 refusals surviving mutation: the 47 checks
+    # above reach each function through ONE path and trip its FIRST failing
+    # guard, so every guard behind that one could be deleted unnoticed. The
+    # UNTESTED functions were the FAILURE paths — rollback restoration, the
+    # recovery bundle, and every timing window — i.e. exactly what runs at the
+    # boundary when something has gone wrong. These target one guard each.
+    B = "2026-08-31T22:00:00Z"
+    bep = _epoch(B)
+    for _ph in ("PRE", "arm", "", None, "recovery"):
+        refuses(lambda ph=_ph: check_boundary_current(B, bep, bep - 10, ph),
+                "unknown timing phase",
+                f"MUT: phase {_ph!r} refuses — audit S12's own lesson is that "
+                f"an unrecognised phase SKIPS every window silently, and that "
+                f"guard was mutation-unprotected")
+    refuses(lambda: check_boundary_current(B, bep + 1, bep - 10, "pre"),
+            "does not parse to",
+            "MUT: an epoch that disagrees with its own instant refuses — the "
+            "two must name the same moment or every window is measured "
+            "against a different one than the stamp records")
+    refuses(lambda: check_boundary_current(B, bep, bep, "pre"),
+            "AT/past the boundary",
+            "MUT: arming AT the instant refuses — arming must COMPLETE "
+            "before it, else the stamp claims B for a later restart")
+    refuses(lambda: check_boundary_current(B, bep, bep - 1, "post"),
+            "BEFORE the boundary",
+            "MUT: post validation one second early refuses — nothing deploys "
+            "before its own instant")
+    refuses(lambda: check_boundary_current(
+                B, bep, bep + P.POST_EMIT_WINDOW_S, "post"),
+            "would claim an instant the deploy missed",
+            "MUT: post validation at the emit-window edge refuses — a late "
+            "stamp would claim an instant the deploy did not hit")
+    check_boundary_current(B, bep, bep - 1, "pre")
+    check_boundary_current(B, bep, bep + 1, "post")
+    ok(True, "MUT POSITIVE: one second before (pre) and one second after "
+             "(post) are ACCEPTED — the windows refuse the right side, not "
+             "everything")
+
+    # ---- _check_restored_v4: 14/14 sites survived. This is the ROLLBACK
+    # path — it runs at the boundary when the deploy has already failed, and
+    # every one of its guards could have been deleted silently.
+    _RB_OBS = {**base, "now_epoch": bep + 400, "main_pid": 5555,
+               "exec_start": es(P.ARGV_V4), "era_rows": [V4ROW]}
+    _RB_START = {"recv_ns": (bep + 300) * 10**9, "pid": 5555,
+                 "collector_version": FROM_ERA, "event": "collector_start"}
+
+    def _r(**kw):
+        o = dict(_RB_OBS); o.update(kw.pop("obs", {}))
+        st = None if kw.get("start_none") else {**_RB_START,
+                                                **kw.pop("start", {})}
+        return lambda: _check_restored_v4(
+            o, st, kw.get("stage", "counters_refused"), kw.get("old_pid"))
+    _check_restored_v4(_RB_OBS, _RB_START, "counters_refused", 4242)
+    ok(True, "MUT POSITIVE: a well-formed restoration is ACCEPTED, so the "
+             "refusals below are discriminating rather than blanket")
+    for _kw, _frag, _why in (
+        ({"obs": {"obs_unit_overridden": True}}, "PRODUCTION unit",
+         "a receipt from an OVERRIDDEN unit refuses — a restoration proven "
+         "against a test unit proves nothing about production"),
+        ({"obs": {"now_epoch": bep - 1}}, "predates the ruled boundary",
+         "restoration evidence from BEFORE the boundary refuses"),
+        ({"obs": {"now_epoch": bep + RECOVERY_WINDOW_S}}, "recovery window",
+         "a receipt past the recovery window refuses — beyond a day the "
+         "reconstruction is no longer this deployment's"),
+        ({"obs": {"working_dir": "/tmp"}}, "WorkingDirectory",
+         "a wrong cwd refuses DURING restoration too — the argv token is "
+         "relative on the way back as well as the way out"),
+        ({"obs": {"exec_start_pre": "/bin/rm -rf /"}}, "ExecStartPre",
+         "an ExecStartPre appearing during restoration refuses"),
+        ({"obs": {"tree_sha": "0" * 64}}, "bytes that would start",
+         "restoring to UNREVIEWED bytes refuses — a rollback to the wrong "
+         "code is not a rollback"),
+        ({"obs": {"unit_active": False}}, "not active after restoration",
+         "a dead unit after restoration refuses"),
+        ({"obs": {"exec_start": es(ARGV_TARGET)}}, "still carries the target",
+         "the target argv still installed refuses — nothing was restored"),
+        ({"old_pid": 0}, "not a real pid",
+         "a non-positive old target pid refuses"),
+        ({"old_pid": 5555}, "MainPID unchanged",
+         "an unchanged MainPID refuses — the restoration restart produced no "
+         "new process"),
+        ({"start_none": True}, "no clob_v4 collector_start",
+         "no restoration declaration at all refuses"),
+        ({"start": {"event": "gap_closed"}}, "not 'collector_start'",
+         "a row of the WRONG EVENT TYPE refuses — a nearby row is not the "
+         "declaration"),
+        ({"start": {"collector_version": TARGET_ERA}}, "not clob_v4",
+         "a restored process still declaring the TARGET era refuses"),
+        ({"start": {"pid": 9999}}, "not the live unit",
+         "a foreign process's declaration refuses"),
+        ({"start": {"recv_ns": 0}}, "not a positive int",
+         "a zero recv_ns refuses"),
+        ({"start": {"recv_ns": (bep - 60) * 10**9}}, "predates the boundary",
+         "an OLD v4 start refuses — a process that was already running is "
+         "not proof of post-attempt restoration"),
+        ({"start": {"recv_ns": (bep + 100000) * 10**9}}, "in the future",
+         "a start in the future relative to the observation refuses"),
+        ({"obs": {"now_epoch": bep + 5}, "start": {"recv_ns": bep * 10**9}},
+         "zero- or negative-width",
+         "a restoration in the boundary's own second refuses — a zero-width "
+         "era bricks the append-only ledger"),
+    ):
+        refuses(_r(**_kw), _frag, f"MUT (rollback path): {_why}")
+
+    # ---- make_recovery_bundle: 8/8 sites survived. It reconstructs a v4.1
+    # span that RAN but was never stamped — the messiest state this deploy can
+    # reach, and it was entirely mutation-unprotected.
+    _TS = {"recv_ns": (bep + 5) * 10**9, "pid": 4242,
+           "collector_version": TARGET_ERA, "event": "collector_start"}
+    _rec_ok = make_recovery_bundle(_RB_OBS, 4242, _TS, _RB_START,
+                                   "counters_refused")
+    ok(len(_rec_ok) == 2
+       and _rec_ok[0]["recovered"] is True
+       and _rec_ok[0]["collector_schema_version"] == TARGET_ERA
+       and _rec_ok[1]["rollback"] is True
+       and _rec_ok[1]["closes_boundary_utc"] == B,
+       "MUT POSITIVE: a genuine unstamped-then-restored span produces the "
+       "TWO-row bundle (reconstructed transition + closing rollback), so the "
+       "refusals below discriminate rather than blanket-refuse")
+    _cur_r, _open_r = era_state([V4ROW] + _rec_ok)
+    ok(_cur_r == FROM_ERA and _open_r is None,
+       "MUT POSITIVE: and the bundle leaves clob_v4 in force with NO open "
+       "target era — a reconstruction that did not close would be worse than "
+       "none")
+
+    def _b(**kw):
+        ts = None if kw.get("ts_none") else {**_TS, **kw.pop("ts", {})}
+        v4s = {**_RB_START, **kw.pop("v4", {})}
+        return lambda: make_recovery_bundle(
+            {**_RB_OBS, **kw.get("obs", {})}, kw.get("old_pid", 4242), ts,
+            v4s, "counters_refused")
+    for _kw, _frag, _why in (
+        ({"ts_none": True}, "nothing proves v4.1 ran",
+         "no target collector_start refuses — a reconstruction needs the "
+         "process's OWN declaration, never the operator's memory"),
+        ({"ts": {"event": "gap_closed"}}, "exact clob_v4_1",
+         "a row of the wrong event type refuses"),
+        ({"ts": {"collector_version": FROM_ERA}}, "exact clob_v4_1",
+         "a target row declaring the OLD era refuses"),
+        ({"ts": {"pid": 7777}}, "does not match recorded",
+         "a target start whose pid is not the recorded v4.1 pid refuses"),
+        ({"ts": {"recv_ns": 0}}, "not a positive int",
+         "a zero target recv_ns refuses"),
+        ({"ts": {"recv_ns": (bep + 500) * 10**9}}, "120-second start window",
+         "a v4.1 start outside the boundary's start window refuses — it "
+         "belongs to some other attempt"),
+        # restoration moved INSIDE the start window so the window guard does
+        # not mask this one — the ordering guard needs its own reachable case
+        ({"ts": {"recv_ns": (bep + 100) * 10**9},
+          "v4": {"recv_ns": (bep + 50) * 10**9}},
+         "not after the v4.1 start",
+         "a restoration EARLIER than the v4.1 start refuses — the span would "
+         "run backwards, and the window guard masks this unless the "
+         "restoration is moved inside the window to reach it"),
+        ({"obs": {"era_rows": [V4ROW, row]}}, "OPEN clob_v4_1 era",
+         "recovery while the era is ALREADY OPEN refuses and names the "
+         "post-rollback path — recovery is for an UNSTAMPED span, and using "
+         "it on a stamped one would fork the era"),
+    ):
+        refuses(_b(**_kw), _frag, f"MUT (recovery bundle): {_why}")
+
+    _half = _rec_ok[0]
+    _hb = make_recovery_bundle({**_RB_OBS, "era_rows": [V4ROW, _half]}, 4242,
+                               _TS, _RB_START, "counters_refused")
+    ok(len(_hb) == 1 and _hb[0].get("completes_half_landed_bundle") is True,
+       "MUT POSITIVE: a HALF-LANDED bundle (row 1 written, stdout lost to a "
+       "SIGINT) COMPLETES with the closing row rather than bricking — the "
+       "failure mode audit A2 found in the v5 emitter, covered here before "
+       "it could repeat")
+    _idem = make_recovery_bundle({**_RB_OBS, "era_rows": [V4ROW] + _rec_ok},
+                                 4242, _TS, _RB_START, "counters_refused")
+    ok(_idem[0].get("already_stamped") is True,
+       "MUT POSITIVE: re-running a COMPLETE bundle is idempotent and emits "
+       "nothing — an operator re-running a command must not double-write an "
+       "append-only authority")
+
+    # ---- check_pre_arm and make_stamp: the MAIN path. Its known-bads each
+    # tripped the FIRST failing guard, so the ones behind them survived.
+    _V4OPEN = {"collector_schema_version": TARGET_ERA, "supersedes": FROM_ERA,
+               "transitioned": True, "boundary_utc": B, "stage": "post-restart",
+               "collector_start_recv_ns": (bep + 5) * 10**9}
+    # a VALID chain that leaves a DIFFERENT era in force, so the
+    # "era in force" guard is reached rather than masked by classify_era_row
+    _V6 = {"collector_schema_version": "clob_v6", "supersedes": FROM_ERA,
+           "transitioned": True, "boundary_utc": "2026-08-31T20:00:00Z",
+           "stage": "post-restart",
+           "collector_start_recv_ns": (bep - 7200 + 5) * 10**9}
+    for _kw, _frag, _why in (
+        ({"working_dir": "/tmp"}, "WorkingDirectory",
+         "a wrong cwd refuses at ARM time — the argv script token is "
+         "relative, so a different cwd opens a different file"),
+        ({"exec_start_pre": "/bin/false"}, "ExecStartPre",
+         "an ExecStartPre refuses at arm time — the drop-in the operator "
+         "writes is exactly where one would appear"),
+        ({"unit_active": False}, "unit not active",
+         "an inactive unit refuses before arming"),
+        ({"era_rows": [V4ROW, _V4OPEN]}, "already carries an OPEN",
+         "an ALREADY-OPEN target era refuses — a second stamp forks it"),
+        ({"era_rows": [V4ROW, _V6]}, "era in force",
+         "arming while a DIFFERENT era is in force refuses — this boundary "
+         "supersedes clob_v4 and nothing else"),
+    ):
+        refuses(lambda kw=_kw: check_pre_arm({**base, **kw}, False), _frag,
+                f"MUT (pre-arm): {_why}")
+    refuses(lambda: check_pre_arm({**base, "exec_start": es(P.ARGV_V4)}, True),
+            "expected the armed",
+            "MUT (pre-arm): --armed against an UNARMED unit refuses — the "
+            "read-back must show the flag actually installed, not assumed")
+
+    for _kw, _sr, _frag, _why in (
+        ({"obs_unit_overridden": True}, {}, "PRODUCTION unit",
+         "a stamp from an OVERRIDDEN unit refuses — an era row proven "
+         "against a test unit proves nothing about production"),
+        ({"unit_active": False}, {}, "not active at stamp time",
+         "a dead unit at stamp time refuses"),
+        ({}, {}, "not a real pid", "a non-positive OLD_PID refuses"),
+        ({"exec_start": es(P.ARGV_V4)}, {}, "is not the",
+         "stamping while the OLD argv is installed refuses — the running "
+         "process is not the candidate"),
+        ({}, {"recv_ns": "x"}, "not a positive int",
+         "a non-int collector_start recv_ns refuses"),
+        ({"era_rows": [V4ROW, _V4OPEN]}, {}, "already exists",
+         "stamping into an ALREADY-OPEN target era refuses"),
+        ({"era_rows": [V4ROW, _V6]}, {}, "era in force",
+         "stamping while a DIFFERENT era is in force refuses"),
+    ):
+        _pid = 0 if _frag == "not a real pid" else 3687786
+        refuses(lambda kw=_kw, sr=_sr, pid=_pid: make_stamp(
+                    {**post, **kw}, pid, {**good_start, **sr}), _frag,
+                f"MUT (stamp): {_why}")
+
+    for _es, _why in (
+        (es(P.ARGV_V4 + ("--extra",)), "an argv with an EXTRA token refuses "
+         "— argparse takes the LAST occurrence, so a trailing flag can "
+         "silently change the mode"),
+        ("{ path=/bin/echo ; argv[]=/bin/echo live/pm_research/collect_pm.py "
+         "--heartbeat-mode control-v4-slow ; ignore_errors=no }",
+         "a WRONG INTERPRETER with the right flag refuses — argv[0] can be "
+         "set independently of the binary systemd executes (audit S3a)"),
+    ):
+        refuses(lambda e=_es: installed_mode_v41(e),
+                "EXECUTES" if "echo" in _es else "NEITHER",
+                f"MUT (argv): {_why}")
+
+    for _n, _c, _frag, _why in (
+        (None, "0", "requires --nrestarts-at-arm",
+         "omitting the flap leg refuses rather than silently skipping it"),
+        ("2", "0", "non-negative integer", "a non-int arm value refuses"),
+        (1, "1", "already", "a unit that had ALREADY auto-restarted at arm "
+         "time refuses — it was never a clean baseline"),
+        (0, "3", "expected 0 after", "an auto-restart AFTER the manual "
+         "boundary restart refuses — the candidate may be flapping"),
+        (0, "x", "unreadable", "an unreadable NRestarts value refuses"),
+    ):
+        refuses(lambda n=_n, c=_c: check_restart_counter(n, c), _frag,
+                f"MUT (restart counter): {_why}")
+    check_restart_counter(0, "0")
+    ok(True, "MUT POSITIVE: 0 before and 0 after is ACCEPTED — verified "
+             "against the LIVE unit, whose 08-30 boundary restart was manual "
+             "and left NRestarts at 0")
+
+    # ---- the last survivors: health identity, the abort/rollback era
+    # guards, and the argv whitespace leg.
+    refuses(lambda: installed_mode_v41(
+                es(P.ARGV_V4).replace("collect_pm", "collect\u00a0pm")),
+            "non-ASCII whitespace",
+            "MUT (argv): a NON-BREAKING SPACE inside the command refuses — "
+            "systemd keeps it INSIDE an argv element, so the unit would "
+            "crash-loop on a path that merely LOOKS right")
+
+    _HOBS = {**post, "era_rows": [V4ROW, row]}
+    _HSTART = {**good_start, "pid": post["main_pid"]}
+    check_health_identity(_HOBS, _HSTART, post["main_pid"])
+    ok(True, "MUT POSITIVE: health evidence bound to the live stamped v4.1 "
+             "process is ACCEPTED")
+    for _kw, _sr, _pid, _frag, _why in (
+        ({"obs_unit_overridden": True}, {}, None, "PRODUCTION unit",
+         "health read from an OVERRIDDEN unit refuses — health proven on a "
+         "test unit proves nothing about production"),
+        ({"unit_active": False}, {}, None, "not active at health",
+         "a dead unit at health time refuses"),
+        ({}, {}, 9999, "MainPID changed",
+         "a MainPID that CHANGED during verification refuses — the interval "
+         "would span two processes and its delta mean nothing"),
+        ({"exec_start": es(P.ARGV_V4)}, {}, None, "not the control-v4-slow",
+         "health measured while the OLD argv is installed refuses — it would "
+         "certify the wrong process"),
+        ({}, {"pid": 9999}, None, "not bound to the live unit",
+         "a collector_start from a DIFFERENT pid refuses — the declaration "
+         "must be the live unit's own"),
+        ({}, {"collector_version": FROM_ERA}, None, "not bound to the live",
+         "a declaration of the OLD era refuses"),
+        ({}, {"event": "gap_closed"}, None, "not bound to the live",
+         "a row of the wrong event type refuses"),
+    ):
+        refuses(lambda kw=_kw, sr=_sr, pid=_pid: check_health_identity(
+                    {**_HOBS, **kw}, {**_HSTART, **sr}, pid), _frag,
+                f"MUT (health identity): {_why}")
+
+    # the target era OPEN AT A DIFFERENT INSTANT — the only way to reach the
+    # instant-mismatch guard, since era_state only reports an open era when
+    # its version already matches the target
+    _OTHER_INSTANT = {**row, "boundary_utc": "2026-08-31T21:00:00Z",
+                      "collector_start_recv_ns": (bep - 3600 + 5) * 10**9}
+    refuses(lambda: make_rollback({**rb_obs,
+                                   "era_rows": [V4ROW, _OTHER_INSTANT]}, 4242,
+                                  {"recv_ns": (bep + 300) * 10**9,
+                                   "pid": 5555,
+                                   "collector_version": FROM_ERA,
+                                   "event": "collector_start"},
+                                  "counters_refused"),
+            "open era is",
+            "MUT (rollback): rolling back against the target era open at a "
+            "DIFFERENT INSTANT refuses — the row would close a boundary it "
+            "does not name")
+    refuses(lambda: make_abort_row({**_RB_OBS, "era_rows": [V4ROW, row]},
+                                   _RB_START, [], "restart_failed"),
+            "an abort requires unchanged",
+            "MUT (abort): an abort while the target era is ALREADY OPEN "
+            "refuses — an abort asserts the transition never happened, and "
+            "the ledger says otherwise")
+    refuses(lambda: make_recovery_bundle(
+                {**_RB_OBS, "era_rows": [V4ROW, _V6]}, 4242, _TS, _RB_START,
+                "counters_refused"),
+            "era in force",
+            "MUT (recovery): a recovery bundle while a DIFFERENT era is in "
+            "force refuses — the reconstruction would attach to the wrong "
+            "chain")
+    _mismatch = {**row, "collector_start_recv_ns": (bep + 9) * 10**9}
+    refuses(lambda: make_recovery_bundle(
+                {**_RB_OBS, "era_rows": [V4ROW, _mismatch,
+                                         {"collector_schema_version": FROM_ERA,
+                                          "supersedes": TARGET_ERA,
+                                          "rollback": True,
+                                          "closes_boundary_utc": B,
+                                          "boundary_utc":
+                                              "2026-08-31T22:05:00Z",
+                                          "stage": "counters_refused",
+                                          "collector_start_recv_ns":
+                                              (bep + 300) * 10**9}]},
+                4242, _TS, _RB_START, "counters_refused"),
+            "already opened by a non-matching",
+            "MUT (recovery): a boundary already opened by a row whose "
+            "collector_start does NOT match refuses — reconstructing over a "
+            "different attempt's stamp would silently rewrite which process "
+            "held the era")
+
+    # ---- observe_coin_msgs: injected reader/sleeper/clock, so the sampler is
+    # testable without real time. Its own docstring records why it exists —
+    # the former gate slept 30s, often re-read the SAME 60s status line, and
+    # ordered an unnecessary rollback of a healthy process.
+    refuses(lambda: observe_coin_msgs(n=1), "at least two distinct rows",
+            "MUT (sampler): n<2 refuses — one reading reported as a delta is "
+            "not a delta")
+    _t = [0.0]
+    _same = ("[pm] 01:00:00Z ... msg_by_coin={'btc': 1}", {"btc": 1})
+    refuses(lambda: observe_coin_msgs(
+                n=2, timeout_s=5.0,
+                reader=lambda: _same,
+                sleeper=lambda _s: _t.__setitem__(0, _t[0] + 1),
+                clock=lambda: _t[0]),
+            "DISTINCT msg_by_coin",
+            "MUT (sampler): re-reading the SAME status line until timeout "
+            "refuses instead of returning a zero delta — that false zero "
+            "would have ordered a rollback of a HEALTHY process")
+    _seq = [("lineA", {"btc": 1}), ("lineA", {"btc": 1}),
+            ("lineB", {"btc": 9})]
+    _t2 = [0.0]
+    got = observe_coin_msgs(n=2, timeout_s=100.0,
+                            reader=lambda: _seq.pop(0) if _seq else _seq0,
+                            sleeper=lambda _s: _t2.__setitem__(0, _t2[0] + 1),
+                            clock=lambda: _t2[0])
+    ok(got == [{"btc": 1}, {"btc": 9}],
+       "MUT POSITIVE (sampler): a repeated line is SKIPPED and only a newly "
+       "emitted record becomes the next sample — the duplicate is not "
+       "counted, which is the whole repair")
 
     BOUNDARY_UTC = saved
     print(f"v41_boundary_preflight selftests: {len(checks)} checks passed")
