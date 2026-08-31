@@ -325,6 +325,17 @@ _ROLE_FLAGS = ("transitioned", "aborted", "rollback")
 def classify_era_row(r: dict) -> str:
     ident = (r.get("collector_schema_version"), r.get("supersedes"),
              r.get("boundary_utc"))
+    # DA 0355f98: every role flag is read with `is True`, so a truthy
+    # non-bool is not a sloppy yes — it is a value this contract CANNOT
+    # READ, and it reads as FALSE while looking like an assertion. Found on
+    # `recovered` by audit S7; the same gap was live and unnamed on the
+    # other three (an `aborted: 1` beside `transitioned: true` classified as
+    # a plain transition here, with the abort silently ignored).
+    for f in _ROLE_FLAGS + ("recovered",):
+        if f in r and r[f] is not True and r[f] is not False:
+            raise Refused(f"role flag {f}={r[f]!r} is not a bool — every "
+                          f"flag is read with `is True`, so this reads as "
+                          f"FALSE while looking like an assertion")
     flags = [f for f in _ROLE_FLAGS if r.get(f) is True]
     if ident == LEGACY_ROW_IDENTITY and not flags:
         return "transitioned"  # the pinned legacy transition
@@ -413,12 +424,6 @@ def current_era_and_open_v5(era_rows: list) -> tuple:
                               "matched at consumption)")
             open_v5 = None
         else:  # transitioned
-            if "recovered" in r and r["recovered"] is not True and \
-                    r["recovered"] is not False:
-                raise Refused(f"`recovered` is {r['recovered']!r}, not a "
-                              f"bool — every other role field is exact-True "
-                              f"strict, and a truthy 1 silently WAIVED the "
-                              f"recovery evidence burden (audit S7)")
             if r.get("recovered") is True:
                 # recovered qualifies transitioned (never a fourth state);
                 # a RECONSTRUCTED boundary carries its own evidence burden.
@@ -1704,11 +1709,12 @@ def selftest() -> int:
                 [V4_ROW, _OPEN, {**_RBOK, "collector_start_recv_ns": 0}]),
             "predates the boundary", "KNOWN-BAD (audit S4): an epoch-0 "
             "restoration recv_ns REFUSES")
-    refuses(lambda: current_era_and_open_v5([V4_ROW, {**_OPEN,
-                                                      "recovered": 1}]),
-            "not a bool", "KNOWN-BAD (audit S7): a TRUTHY-but-not-True "
-            "`recovered` REFUSES — 1 silently waived the whole recovery "
-            "evidence burden while every other role flag is exact-True")
+    for _f in ("transitioned", "aborted", "rollback", "recovered"):
+        refuses(lambda f=_f: classify_era_row({**_OPEN, f: 1}),
+                "is not a bool", f"KNOWN-BAD (audit S7 + DA 0355f98): a "
+                f"truthy non-bool `{_f}` REFUSES — it reads as FALSE while "
+                f"looking like an assertion; the gap was live on all four "
+                f"flags, not just the one the audit named")
     _sv_c, _sv_s = CAND_COMMIT, CAND_SHA
     try:
         globals()["CAND_COMMIT"] = "0000000"
