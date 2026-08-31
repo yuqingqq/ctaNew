@@ -367,6 +367,7 @@ def current_era_and_open_v5(era_rows: list) -> tuple:
     current = None
     open_v5 = None
     _prev_stamp = None
+    _seen_transitions = set()
     for r in era_rows:
         # V5-R4-1: DA refuses an OUT-OF-ORDER ledger; my walk accepted one,
         # which a retried recovery bundle produces (a 07:00 transition
@@ -472,7 +473,20 @@ def current_era_and_open_v5(era_rows: list) -> tuple:
                               f"name any predecessor it likes (chain "
                               f"identity, DA ce3fd29)")
             if ver == "clob_v5":
-                open_v5 = r.get("boundary_utc")
+                _b = r.get("boundary_utc")
+                # A boundary may be opened ONCE. The timestamp ordering
+                # check above only fires when rows CARRY stamp_written_ns —
+                # omitting it evaded ordering entirely (self-probe). This
+                # leg is positional and needs no timestamps: a retried
+                # bundle re-opens a boundary already opened, which is the
+                # out-of-order ledger DA refuses.
+                if _b in _seen_transitions:
+                    raise Refused(f"clob_v5 boundary {_b} is opened MORE "
+                                  f"THAN ONCE in this ledger — a duplicate "
+                                  f"transition (a retried bundle) describes "
+                                  f"a history that never happened")
+                _seen_transitions.add(_b)
+                open_v5 = _b
         current = ver
     if open_v5 is not None:
         _open_rows = [r for r in era_rows
@@ -907,6 +921,11 @@ def make_abort_row(obs: dict, stage: str,
             v4_start.get("pid") != obs["main_pid"]:
         raise Refused(f"the restoration declaration is not the live unit's "
                       f"own clob_v4 collector_start ({v4_start!r})")
+    if v4_start["recv_ns"] < BOUNDARY_EPOCH * 10**9:
+        raise Refused(f"the restoration declaration predates the boundary "
+                      f"({v4_start['recv_ns']}) — an OLD v4 start proves the "
+                      f"process was running BEFORE the attempt, not that it "
+                      f"was restored after it (self-probe)")
     _cur, _open = current_era_and_open_v5(obs["era_rows"])
     if _open is not None:
         raise Refused(f"an open clob_v5 era exists at {_open} — a transition "
@@ -1905,6 +1924,21 @@ def selftest() -> int:
     ok(True, "POSITIVE (V5-R4-6): recovery at boundary+601s is PERMITTED — "
              "the success-stamp deadline used to leave a real v5 span "
              "permanently unstampable with no repair path")
+
+    refuses(lambda: current_era_and_open_v5(
+                [V4_ROW, _V5OPEN, _RBOK, _V5OPEN]),
+            "more than once", "KNOWN-BAD (self-probe): a duplicate "
+            "transition for an ALREADY-OPENED boundary refuses WITHOUT "
+            "timestamps — the stamp_written_ns ordering check was evaded "
+            "entirely by omitting the field")
+    refuses(lambda: make_abort_row(_ab_obs, "restart_failed",
+                                   {**_V4RESTORE,
+                                    "recv_ns": (BOUNDARY_EPOCH - 86400)
+                                    * 10**9}),
+            "predates the boundary", "KNOWN-BAD (self-probe): a v4 "
+            "restoration row from a DAY BEFORE the boundary refuses — it "
+            "proves the process ran before the attempt, not that it was "
+            "restored after it")
 
     # ---- audit F1/S4/S7/S13: the new consumer + commit refusals ----
     _OPEN = {**_V5OPEN}
