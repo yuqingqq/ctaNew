@@ -69,10 +69,19 @@ POST_START_WINDOW_S = P.POST_START_WINDOW_S
 CAND_SHA = "08ecd9b72cc356c046b0e6fa50e482b87b18c927564e06ac11cca0c2065ea000"
 CAND_COMMIT = "2cb51f0"
 
-# Ruled instant. NOT set until the USER rules one; the gate refuses rather
-# than inventing a default, because a boundary nobody ruled is a boundary
-# nobody can be held to.
-BOUNDARY_UTC = None
+# RULED INSTANT — USER, 2026-08-31: "set as 9.1", read as MAKE 2026-09-01 THE
+# FIRST CLEAN v4_1 DAY. That needs the boundary BEFORE 09-01 begins, so the
+# mixed day is 08-31 — which has already failed on btc (~310 s/hr against a
+# 120 bar), so spending it costs nothing. An instant ON 09-01 would make
+# 09-01 the mixed day instead and push day one to 09-02.
+#
+# 22:00Z sits 2h clear of UTC midnight: audit A1 refuses a boundary whose
+# unserved interval contains one, and POST_START_WINDOW_S allows the observed
+# process start up to 120s after the instant.
+#
+# The gate REFUSES while this is None — a boundary nobody ruled is one nobody
+# can be held to.
+BOUNDARY_UTC = "2026-08-31T22:00:00Z"
 
 
 def _epoch(utc: str) -> int:
