@@ -23,7 +23,8 @@ import sys
 SRC = pathlib.Path(__file__).resolve().parent / "v41_boundary_preflight.py"
 SCRATCH_DIR = pathlib.Path("/tmp")
 CHECKERS = {"check_boundary_current", "installed_mode_v41",
-            "check_candidate_bytes", "require_target_admissible",
+            "check_candidate_bytes", "check_execution_context",
+            "require_target_admissible",
             "require_ruled_instant", "check_pre_arm", "make_stamp",
             "make_rollback", "_check_restored_v4", "check_health_identity",
             "check_restart_counter", "check_coin_progress",
@@ -167,8 +168,23 @@ def main() -> int:
     # executed. The guard is kept anyway because it refuses EARLIER and names
     # the era mismatch directly, which is the better operator message at a
     # boundary; it is redundant for safety, not for legibility.
-    accepted = {("make_recovery_bundle", 658)}
-    real = [x for x in survivors if x not in accepted]
+    # Keyed on the SOURCE LINE'S CONTENT, never its number. The first version
+    # pinned ("make_recovery_bundle", 658); adding code above it moved the
+    # guard to 720 and the allowance silently stopped applying -- and, worse,
+    # would have started applying to whatever guard landed on 658. A line
+    # number is not an identity.
+    ACCEPTED_SRC = {
+        'raise Refused(f"era in force is {current!r}, not {FROM_ERA!r}")',
+    }
+    _src = SRC.read_text().splitlines()
+
+    def _accepted(item) -> bool:
+        _fn, _lineno = item
+        if not (1 <= _lineno <= len(_src)):
+            return False
+        return _src[_lineno - 1].strip() in ACCEPTED_SRC
+
+    real = [x for x in survivors if not _accepted(x)]
     if survivors and not real:
         print(f"SURVIVORS: {survivors} — ALL ACCEPTED with proven "
               f"downstream coverage; see ACCEPTED SURVIVORS in this file")

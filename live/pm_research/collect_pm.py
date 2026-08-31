@@ -426,8 +426,20 @@ class PMCollector:
             jl_append(HEALTH_LEDGER, {"recv_ns": time.time_ns(),
                                       "collector_version":
                                           self.collector_version, **obj})
-        except Exception:                                     # noqa: BLE001
+        except Exception as ex:                               # noqa: BLE001
+            # Codex V41-F7: this swallowed every append failure and the
+            # counter was exposed nowhere, so the ONLY machine-readable
+            # staleness signal could be absent forever while the service
+            # looked clean -- "silence from a dead writer and silence from a
+            # perfect one are the same bytes". Stays NON-FATAL (observability
+            # must not kill what it observes) but becomes OBSERVABLE: first
+            # failure and every 60th are announced, and the count now rides
+            # the human status line.
             self.counts["health_errors"] += 1
+            n = self.counts["health_errors"]
+            if n == 1 or n % 60 == 0:
+                print(f"[pm] health ledger append FAILED (#{n}, non-fatal): "
+                      f"{type(ex).__name__}: {ex}")
 
     def _audit(self, obj: dict) -> None:
         try:
@@ -931,6 +943,7 @@ class PMCollector:
                   f"markets={self.counts['markets']} msgs={self.counts['msgs']} "
                   f"resolved={self.counts['resolved']} pending={len(self.pending_res)} "
                   f"retries={self.counts['retries']} slow={self.counts['slow_drops']} "
+                  f"health_err={self.counts['health_errors']} "
                   f"app_ping={self.counts['app_heartbeat_pings']} "
                   f"app_pong={self.counts['app_heartbeat_pongs']} "
                   f"writer_wait={self.counts['writer_backpressure']} "
@@ -980,6 +993,33 @@ class PMCollector:
             self.disk_pool.shutdown(wait=True)
             self.http_pool.shutdown(wait=False)
             print("[pm] stopped", flush=True)
+
+
+def _health_append_probe() -> tuple:
+    """(rows_written, errors_counted) — proves the writer writes AND that a
+    failure is counted rather than vanishing. Uses a temp ledger; never the
+    production path."""
+    import tempfile as _tf
+    global HEALTH_LEDGER, ROOT
+    _hl, _rt = HEALTH_LEDGER, ROOT
+    with _tf.TemporaryDirectory() as td:
+        ROOT = Path(td)
+        HEALTH_LEDGER = Path(td) / "h.jsonl"
+        try:
+            c = PMCollector()
+            c._health({"event": "health_sample"})
+            n = sum(1 for _ in HEALTH_LEDGER.open())
+            g = globals()
+            _real = g["jl_append"]
+            g["jl_append"] = lambda *a, **k: (_ for _ in ()).throw(
+                OSError("injected"))
+            try:
+                c._health({"event": "health_sample"})
+            finally:
+                g["jl_append"] = _real
+            return n, c.counts["health_errors"]
+        finally:
+            HEALTH_LEDGER, ROOT = _hl, _rt
 
 
 def _health_row_shape() -> dict:
@@ -1036,6 +1076,16 @@ def selftest() -> int:
         # would disable it SILENTLY and forever. Building the row here makes a
         # rename fail the suite instead. (Caught during authoring: the first
         # version referenced self.ws_qmax_ever, which does not exist.)
+        # Codex V41-F7 required BOTH: proof the append works, and proof its
+        # failure becomes externally observable. The old selftest built the
+        # payload and never wrote it, so a broken writer was indistinguishable
+        # from a working one.
+        ("health_sample APPEND actually writes a row (not merely builds one)",
+         _health_append_probe()[0] == 1),
+        ("an injected append failure is NON-FATAL, counted, and ANNOUNCED — "
+         "silence from a dead writer and silence from a perfect one are the "
+         "same bytes",
+         _health_append_probe()[1] == 1),
         ("health_sample row builds from REAL attributes — a rename breaks "
          "this check instead of silently disabling the only per-coin "
          "staleness signal the collector emits",

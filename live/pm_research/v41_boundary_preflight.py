@@ -174,6 +174,35 @@ def installed_mode_v41(exec_start: str) -> str:
                   f"{TARGET_ERA} command vector: {toks}")
 
 
+def check_execution_context(obs: dict, where: str) -> None:
+    """Everything that decides WHICH BYTES RUN, checked at EVERY stage.
+
+    Codex V41-F2: `check_pre_arm` verified WorkingDirectory and the absence of
+    ExecStartPre; `make_stamp` and `check_health_identity` did not. The argv
+    script token is RELATIVE, so WorkingDirectory is part of which file
+    executes, and ExecStartPre can alter state before it runs. A unit edit
+    after T-5 therefore invalidated the pre-arm evidence WITHOUT preventing
+    the post-restart receipt. Executed: a stamp was emitted with
+    WorkingDirectory=/tmp and ExecStartPre=/bin/foreign-prestart.
+
+    One checker, called at pre-arm, stamp, health and restoration, so the set
+    cannot drift between stages -- which is how it drifted in the first place.
+    """
+    if obs.get("obs_unit_overridden"):
+        raise Refused(f"{where}: receipts come only from the PRODUCTION unit")
+    if obs.get("working_dir") != str(REPO):
+        raise Refused(f"{where}: unit WorkingDirectory is "
+                      f"{obs.get('working_dir')!r}, not {str(REPO)!r} — the "
+                      f"argv script token is RELATIVE, so a different cwd "
+                      f"opens a different file than the bytes verified")
+    if obs.get("exec_start_pre"):
+        raise Refused(f"{where}: unit declares ExecStartPre "
+                      f"({str(obs.get('exec_start_pre'))[:60]!r}) — it runs "
+                      f"before the collector and never appears in ExecStart")
+    P.check_unit_environment(obs)
+    check_candidate_bytes(obs)
+
+
 def check_candidate_bytes(obs: dict) -> None:
     """The bytes that would START must be the reviewed ones (rule 12)."""
     if obs.get("tree_sha") != CAND_SHA:
@@ -246,8 +275,7 @@ def make_stamp(obs: dict, old_pid: int, start_row: dict) -> dict:
     """
     utc, ep = require_ruled_instant()
     check_boundary_current(utc, ep, obs["now_epoch"], "post")
-    if obs.get("obs_unit_overridden"):
-        raise Refused("era stamps come only from the PRODUCTION unit")
+
     require_target_admissible(obs.get("target_admissible"))
     if not obs.get("unit_active") or obs.get("main_pid", 0) <= 0:
         raise Refused(f"unit not active at stamp time (active="
@@ -260,8 +288,7 @@ def make_stamp(obs: dict, old_pid: int, start_row: dict) -> dict:
     if installed_mode_v41(obs["exec_start"]) != TARGET_MODE:
         raise Refused(f"installed argv is not the {TARGET_MODE} vector — the "
                       f"running process is not the candidate")
-    P.check_unit_environment(obs)
-    check_candidate_bytes(obs)
+    check_execution_context(obs, "stamp")
     if start_row is None:
         raise Refused(f"no {TARGET_ERA} collector_start row from the new "
                       f"process — version proof rests on the process's OWN "
@@ -377,8 +404,7 @@ def observe_coin_msgs(n: int = 2, timeout_s: float = HEALTH_TIMEOUT_S,
 def check_health_identity(obs: dict, start_row: dict | None,
                           expected_pid: int | None = None) -> int:
     """Bind counter evidence to the live, stamped v4.1 process."""
-    if obs.get("obs_unit_overridden"):
-        raise Refused("health verification reads the PRODUCTION unit and log")
+
     if not obs.get("unit_active") or obs.get("main_pid", 0) <= 0:
         raise Refused(f"unit not active at health verification (active="
                       f"{obs.get('unit_active')}, pid={obs.get('main_pid')})")
@@ -387,8 +413,7 @@ def check_health_identity(obs: dict, start_row: dict | None,
                       f"({expected_pid} -> {obs['main_pid']})")
     if installed_mode_v41(obs["exec_start"]) != TARGET_MODE:
         raise Refused(f"installed command is not the {TARGET_MODE} vector")
-    P.check_unit_environment(obs)
-    check_candidate_bytes(obs)
+    check_execution_context(obs, "health")
     if start_row is None or start_row.get("event") != "collector_start" \
             or start_row.get("collector_version") != TARGET_ERA \
             or start_row.get("pid") != obs["main_pid"] \
@@ -397,6 +422,43 @@ def check_health_identity(obs: dict, start_row: dict | None,
                       "clob_v4_1 collector_start declaration")
     current, open_target = era_state(obs["era_rows"])
     utc, _ = require_ruled_instant()
+    # Codex V41-F1: health bound itself to the CURRENT pid and called that the
+    # expected one, so it caught a PID change DURING sampling and not one
+    # ALREADY COMPLETED between the T+2 stamp and the T+6 health command. An
+    # automatic restart in that window passed as healthy: executed, a stamp
+    # for pid 222 with a live start for pid 333 at NRestarts=1 was ACCEPTED.
+    # Health must bind to the process THE STAMP NAMES, not to whichever
+    # process is alive when it looks.
+    _open_rows = [r for r in obs["era_rows"]
+                  if r.get("transitioned") is True
+                  and r.get("collector_schema_version") == TARGET_ERA
+                  and r.get("boundary_utc") == utc]
+    if _open_rows:
+        _stamped = _open_rows[-1]
+        if _stamped.get("pid") != obs["main_pid"]:
+            raise Refused(
+                f"the live process ({obs['main_pid']}) is NOT the one the "
+                f"stamp names ({_stamped.get('pid')}) — the candidate was "
+                f"REPLACED between the stamp and this check, so health here "
+                f"would certify a process the era row does not describe")
+        if start_row is not None and \
+                start_row.get("recv_ns") != \
+                _stamped.get("collector_start_recv_ns"):
+            raise Refused(
+                f"the live collector_start recv_ns "
+                f"{start_row.get('recv_ns')} != the stamped "
+                f"{_stamped.get('collector_start_recv_ns')} — same pid, "
+                f"different process start; a pid can be reused")
+        _nr = obs.get("n_restarts")
+        try:
+            _nri = int(_nr or 0)
+        except (TypeError, ValueError):
+            raise Refused(f"NRestarts {_nr!r} is unreadable at health time")
+        if _nri != 0:
+            raise Refused(
+                f"NRestarts is {_nri}, not 0, at health time — the candidate "
+                f"auto-restarted after the boundary; the stamped process is "
+                f"gone even if a healthy one stands in its place")
     if current != TARGET_ERA or open_target != utc:
         raise Refused(f"no OPEN stamped {TARGET_ERA} era at {utc} — health "
                       f"cannot certify an unstamped process")
@@ -1347,6 +1409,81 @@ def selftest() -> int:
        "emitted record becomes the next sample — the duplicate is not "
        "counted, which is the whole repair")
 
+    # ---- CODEX FINAL REVIEW: V41-F1 and V41-F2, each reproducing the
+    # known-bad Codex EXECUTED. Both were ABSENT guards -- which is exactly
+    # what a mutation audit cannot find, since deleting a `raise` that was
+    # never written discovers nothing. The 0-survivor result and these
+    # findings are not in conflict; they answer different questions.
+    for _kw, _frag, _why in (
+        ({"working_dir": "/tmp"}, "WorkingDirectory",
+         "V41-F2 (stamp): a unit edited to a DIFFERENT cwd after arming now "
+         "refuses AT STAMP TIME. It used to emit -- the argv script token is "
+         "relative, so cwd decides which file runs, and pre-arm evidence "
+         "does not survive a later edit"),
+        ({"exec_start_pre": "/bin/foreign-prestart"}, "ExecStartPre",
+         "V41-F2 (stamp): an ExecStartPre introduced after arming now "
+         "refuses at stamp time — it runs before the collector and never "
+         "appears in ExecStart"),
+    ):
+        refuses(lambda kw=_kw: make_stamp({**post, **kw}, 3687786, good_start),
+                _frag, f"KNOWN-BAD {_why}")
+    for _kw, _frag in (({"working_dir": "/tmp"}, "WorkingDirectory"),
+                       ({"exec_start_pre": "/bin/x"}, "ExecStartPre")):
+        refuses(lambda kw=_kw: check_health_identity(
+                    {**_HOBS, **kw}, _HSTART, None), _frag,
+                f"KNOWN-BAD V41-F2 (health): the SAME property refuses at "
+                f"health time too — one shared checker at every stage, "
+                f"because a set that differs per stage is how it drifted")
+
+    # V41-F1: the replacement-before-sampling case, Codex's exact fixture
+    _R222 = {**row, "pid": 222,
+             "collector_start_recv_ns": (bep + 5) * 10**9}
+    _live333 = {**good_start, "pid": 333,
+                "recv_ns": (bep + 40) * 10**9}
+    refuses(lambda: check_health_identity(
+                {**post, "main_pid": 333, "n_restarts": "1",
+                 "era_rows": [V4ROW, _R222]}, _live333, 333),
+            "NOT the one the stamp names",
+            "KNOWN-BAD V41-F1: a stamp naming pid 222 with pid 333 live is "
+            "REFUSED. It was ACCEPTED — health bound itself to whichever "
+            "process was alive when it looked, so an auto-restart BETWEEN "
+            "the T+2 stamp and the T+6 health passed as healthy. It caught a "
+            "change DURING sampling, never one already completed")
+    refuses(lambda: check_health_identity(
+                {**post, "main_pid": 222, "n_restarts": "0",
+                 "era_rows": [V4ROW, _R222]},
+                {**good_start, "pid": 222, "recv_ns": (bep + 40) * 10**9},
+                222),
+            "different process start",
+            "KNOWN-BAD V41-F1: SAME pid, DIFFERENT collector_start recv_ns "
+            "refuses — a pid can be reused, so identity is the pid AND the "
+            "start instant, never the pid alone")
+    refuses(lambda: check_health_identity(
+                {**post, "main_pid": 222, "n_restarts": "2",
+                 "era_rows": [V4ROW, _R222]},
+                {**good_start, "pid": 222,
+                 "recv_ns": (bep + 5) * 10**9}, 222),
+            "NRestarts is 2",
+            "KNOWN-BAD V41-F1: a nonzero NRestarts at health time refuses "
+            "even when pid and start match — the stamped process is gone "
+            "even if a healthy one stands in its place")
+    refuses(lambda: check_health_identity(
+                {**post, "main_pid": 222, "n_restarts": "not-a-number",
+                 "era_rows": [V4ROW, _R222]},
+                {**good_start, "pid": 222,
+                 "recv_ns": (bep + 5) * 10**9}, 222),
+            "unreadable at health time",
+            "KNOWN-BAD V41-F1: an UNREADABLE NRestarts refuses rather than "
+            "coercing to 0 — a value the contract cannot read must not pass "
+            "as the healthy value")
+    check_health_identity({**post, "main_pid": 222, "n_restarts": "0",
+                           "era_rows": [V4ROW, _R222]},
+                          {**good_start, "pid": 222,
+                           "recv_ns": (bep + 5) * 10**9}, 222)
+    ok(True, "POSITIVE V41-F1: the process the stamp NAMES, with matching "
+             "start instant and NRestarts=0, is ACCEPTED — the binding is to "
+             "identity, not a blanket refusal")
+
     BOUNDARY_UTC = saved
     print(f"v41_boundary_preflight selftests: {len(checks)} checks passed")
     return 0
@@ -1371,6 +1508,31 @@ def main() -> int:
                     help="wait for two distinct 60s status rows; EVERY coin "
                          "must advance and the live PID must stay fixed")
     a = ap.parse_args()
+    # Codex V41-F6: every mode was a separate flag and main() took the FIRST
+    # true branch, so `--inspect-live --pre-arm` printed inspect JSON and
+    # exited 0 instead of refusing. Under the runbook's
+    # `>> collector_runs.jsonl` shape, a combination like that appends a
+    # DIAGNOSTIC OBJECT to the append-only era authority. Modes are now
+    # mutually exclusive and an ambiguous request refuses with EMPTY STDOUT,
+    # because the redirect is what makes this dangerous.
+    _modes = [n for n, v in (("--selftest", a.selftest),
+                             ("--pre-arm", a.pre_arm),
+                             ("--armed", a.armed),
+                             ("--inspect-live", a.inspect_live),
+                             ("--verify-health", a.verify_health),
+                             ("--post-restart", a.post_restart is not None),
+                             ("--post-rollback", a.post_rollback is not None),
+                             ("--post-recovery", a.post_recovery),
+                             ("--abort-row", a.abort_row)) if v]
+    if len(_modes) > 1:
+        print(f"REFUSED: {len(_modes)} modes requested at once ({_modes}) — "
+              f"exactly one is allowed. A combined invocation under the "
+              f"runbook's `>> collector_runs.jsonl` redirect would append a "
+              f"non-era object to an append-only authority.", file=sys.stderr)
+        return 2
+    if not _modes:
+        ap.print_help(sys.stderr)
+        return 2
     if a.selftest:
         return selftest()
     obs = P.observe_common()
