@@ -105,10 +105,19 @@ WINDOW_S = 300
 # procedural. A GOVERNING bar must be pre-registered against days not yet
 # seen; that is a coordinator/user act, not this file's.
 #
-# A parameter-free criterion was sought and is NOT available for the historic
-# days: the collector's own `msg_by_coin` counters would settle it with no
-# threshold, but collector.log is a single 10 MB file whose lines carry
-# HH:MM:SS and no date, and it does not reach back to 08-19 or 08-26.
+# A parameter-free criterion exists and is only PARTLY available. The
+# collector's own `msg_by_coin` counters settle thinness with no threshold at
+# all. Corrected after DA `5b6582f` measured it: the log DOES reach the recent
+# days -- 1,438 usable intervals on 08-29 and 1,082 on 08-31 -- and only fails
+# to reach 08-19/08-26. So the threshold-free measure is live for anything
+# recent and prospective only for the old days, which matters because it means
+# 09-01 is measurable from its first minute rather than after retention
+# accumulates. DA's `content_liveness_for` is that measure; this file's
+# fraction-of-median threshold remains the only way to reach the OLD days.
+#
+# From 2026-08-31 the collector also emits a `health_sample` row per 60s to
+# `collector_health.jsonl` carrying per-coin counts and `oldest_age_s`, so
+# future days need neither this threshold nor a dateless-log reconstruction.
 THIN_FRAC = 0.05
 MIN_WINDOWS_FOR_MEDIAN = 20
 
