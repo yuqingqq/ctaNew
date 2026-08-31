@@ -1,0 +1,96 @@
+# clob_v5 deploy runbook — 2026-08-31T07:00:00Z
+
+**Authority:** USER ruling R-340 (mid-day boundary, recorded before
+execution); code/test release `CODEX_REVIEW_V5_HEARTBEAT_REPAIR_2026-08-31.md`
+(`df424de`, candidate `7aa9520`, collector sha `1c5291aa…`). Live deployment
+additionally gated on the Codex pre-arm review of THIS runbook + instrument +
+DA's era-admission guard.
+
+**What deploys:** a keepalive CONTRACT change only — application text
+`PING`/`PONG` at 10 s replacing RFC control-Pong liveness (98.22% of v4's
+disconnects were local PING_TIMEOUT against the wrong contract). No
+working-tree swap: the candidate is INERT on disk; activation is the
+installed unit command gaining `--heartbeat-mode app-v5`. No row-stamping
+change; no model, threshold, or policy moves.
+
+**Every decision below is checked by `v5_boundary_preflight.py`** (selftest:
+positive controls + refusals for stale instant, non-candidate bytes, missing
+or premature flag, missing/duplicate era rows, unchanged PID, wrong-MODE
+declaration, wrong event identity, float/pre-boundary timestamps, silent or
+one-sided heartbeat counters, and a stale runbook body). The era stamp is
+EMITTED by the instrument from verified observations, never hand-written.
+
+## Sequence (coordinator, at the boundary)
+
+1. **~06:50Z prep:**
+   ```
+   python3 live/pm_research/v5_boundary_preflight.py --selftest   # must pass
+   python3 live/pm_research/v5_boundary_preflight.py --pre-arm    # must pass
+   ```
+   Record `OLD_PID`. Any refusal → do NOT proceed; register it; the boundary
+   amends (no improvisation at 07:00:00Z).
+
+2. **~06:55Z arm the mode (inert until restart):** write the drop-in
+   `~/.config/systemd/user/pm-collector-clob.service.d/override.conf`:
+   ```
+   [Service]
+   ExecStart=
+   ExecStart=/home/yuqing/pricer-sol/venv/bin/python3 live/pm_research/collect_pm.py --heartbeat-mode app-v5
+   ```
+   then `systemctl --user daemon-reload`, then:
+   ```
+   python3 live/pm_research/v5_boundary_preflight.py --armed      # must pass
+   ```
+   `--armed` re-runs every pre-arm check AND requires the flag in the
+   ExecStart **read back from systemd** — never trusted from what was
+   written. (The running v4 process is untouched by the reload.)
+
+3. **At 07:00:00Z (restart FIRST, stamp LAST):**
+   a. `systemctl --user restart pm-collector-clob.service`.
+   b. Wait for the new process to declare itself (collector_start row,
+      typically <15 s), then:
+      ```
+      python3 live/pm_research/v5_boundary_preflight.py --post-restart OLD_PID \
+        >> data/pm_5min/collector_runs.jsonl
+      ```
+      REFUSES on: unchanged PID, non-candidate bytes, flag lost, a
+      `clob_v4`-declaring process (the flag not taking effect), wrong event
+      identity, float or pre-boundary `recv_ns`, foreign pid. On success the
+      emitted stamp carries `boundary_utc 2026-08-31T07:00:00Z`, the verified
+      pid, `clob_v5 supersedes clob_v4`, and the R-340 authority line.
+   c. `tail -1` the ledger; confirm the live MainPID and
+      `boundary_utc` = `2026-08-31T07:00:00Z` on one row.
+
+4. **07:01–07:05Z verify:**
+   ```
+   python3 live/pm_research/v5_boundary_preflight.py --verify-counters
+   ```
+   The newest heartbeat log line after the boundary must show `app_ping>0`
+   AND `app_pong>0` — pings without pongs is the v4 failure shape one layer
+   up and REFUSES. Also: unit active, fresh gap-ledger rows carry
+   `"collector_version":"clob_v5"`, market rows advancing. The prices
+   collector is NOT touched.
+
+## Failure paths (each leaves the attempt VISIBLE — nothing silent)
+
+| Failure | Action |
+|---|---|
+| 2 armed-check refuses | Nothing restarted; remove the drop-in, daemon-reload, verify `--pre-arm` passes again; register; the boundary amends. No era row (no transition attempted). |
+| 3a restart fails / unit inactive | Append `{"collector_schema_version":"clob_v5","boundary_utc":"2026-08-31T07:00:00Z","aborted":true,"stage":"restart_failed","stamp_written_ns":<now>}`; remove the drop-in, daemon-reload, start the unit (boots v4 default), verify a `clob_v4` collector_start row; register the abort. |
+| 3b postflight REFUSES (unchanged PID / v4-declaring / flag lost / no row in 2 min) | Same abort path: aborted-row append (stage = the refusal's first clause), drop-in removed, v4 restarted and verified, refusal text registered verbatim. |
+| 3c stamp append fails | v5 LIVE but unstamped — may not persist. Retry (the instrument re-verifies). If unwritable within 5 min: abort path (an unstampable era must not run); register. |
+| 4 counters refuse (no pongs) | The contract is still wrong: abort path — drop-in removed, v4 restored and verified, aborted row appended (stage `counters_refused`), register. Candidate returns to review. |
+| Retry after an aborted row | Permitted: the preflight accepts `aborted:true` rows and refuses only a LIVE conflicting `clob_v5` row (supersession, rule 13). |
+
+## Era and admission consequences
+
+- 08-30 (v3_1→v4) and **08-31 (v4→v5) are both MIXED-ERA and never
+  admissible as forward days**; no generic eligibility field may admit them
+  (DA's era-admission guard enforces this in code — a deploy blocker).
+- **08-31's close-time verdict is still computed and PRESERVED** — honest
+  v4-storm evidence, not suppressed by the boundary (Codex's guidance
+  honoured under the USER's mid-day ruling).
+- **Day one of the five-day validation clock: 2026-09-01 if it completes.**
+- Structural v5 verification over the coming hours, within-cause (R-182):
+  PING_TIMEOUT/`APP_HEARTBEAT_TIMEOUT` disconnect-rate collapse vs the
+  measured v4 baseline (~43/hour BTC), counters advancing, no queue pauses.
