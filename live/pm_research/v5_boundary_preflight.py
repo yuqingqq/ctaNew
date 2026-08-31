@@ -284,6 +284,14 @@ def current_era_and_open_v5(era_rows: list) -> tuple:
                               "matched at consumption)")
             open_v5 = None
         else:  # transitioned
+            if r.get("supersedes") == ver:
+                raise Refused(f"row claims to supersede ITSELF "
+                              f"({ver} supersedes {ver}) — a row naming "
+                              f"itself replaces nothing, yet would mint an "
+                              f"era boundary that costs a complete day off "
+                              f"the five-day clock (DA 9ee4f44: a false "
+                              f"negative on a scarce resource is not a safe "
+                              f"error)")
             if current is not None and r.get("supersedes") != current:
                 raise Refused(f"transitioned row claims supersedes="
                               f"{r.get('supersedes')!r} while the era in "
@@ -1005,6 +1013,12 @@ def selftest() -> int:
             "rollback without the verified-restoration field refuses at "
             "consumption — 'nothing shows the clob_v4 process came back' "
             "(DA's words, matched)")
+    refuses(lambda: current_era_and_open_v5(
+                [V4_ROW,
+                 {**_V5OPEN, "supersedes": "clob_v5"}]),
+            "supersede itself", "KNOWN-BAD (DA 9ee4f44, matched): "
+            "clob_v5-supersedes-clob_v5 REFUSES — fails safe on "
+            "admissibility but silently costs a day off the five-day clock")
     refuses(lambda: current_era_and_open_v5(
                 [V4_ROW, {**_V5OPEN},
                  {**_V5OPEN, "boundary_utc": "2026-08-31T09:00:00Z"}]),
