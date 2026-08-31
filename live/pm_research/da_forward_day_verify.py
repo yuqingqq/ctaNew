@@ -525,7 +525,8 @@ def era_spans(path: Path | None = None) -> list[tuple[float, str]]:
     return spans
 
 
-def day_era_admission(day_token: str, path: Path | None = None) -> dict:
+def day_era_admission(day_token: str, path: Path | None = None,
+                      admissible_table: dict | None = None) -> dict:
     """Is this UTC day ENTIRELY inside ONE ADMISSIBLE EFFECTIVE era?
 
     Two conditions, and BOTH are independent of day quality:
@@ -534,27 +535,28 @@ def day_era_admission(day_token: str, path: Path | None = None) -> dict:
         rows are homogeneous and per-coin quality cannot rescue it.
       * ADMISSIBILITY -- the single era it lies in is ruled admissible.
     """
+    tbl = ERA_ADMISSIBLE if admissible_table is None else admissible_table
     lo, hi = day_bounds(day_token)
     spans = era_spans(path)
     inside = [(t, n) for t, n in spans if lo < t < hi]
     covering = [n for i, (t, n) in enumerate(spans)
                 if t <= lo and (i + 1 == len(spans) or spans[i + 1][0] > lo)]
     touched = sorted({n for n in covering} | {n for _, n in inside})
-    unknown = [n for n in touched if n not in ERA_ADMISSIBLE]
+    unknown = [n for n in touched if n not in tbl]
     if unknown:
         raise ValueError(
             f"REFUSED: era(s) {unknown} touch {day_token} but carry NO ruled "
             f"admissibility. A collector version is not admissible by default "
             f"and silence is not a ruling.")
     pure = not inside and len(touched) == 1
-    admissible = pure and ERA_ADMISSIBLE.get(touched[0], False) is True
+    admissible = pure and all(tbl[n] is True for n in touched)
     return {
         "day": day_token, "eras_touched": touched,
         "boundaries_inside_day": [dt.datetime.fromtimestamp(
             t, dt.timezone.utc).isoformat().replace("+00:00", "Z")
             for t, _ in inside],
         "era_pure": pure,
-        "era_admissible_ruled": {n: ERA_ADMISSIBLE.get(n) for n in touched},
+        "era_admissible_ruled": {n: tbl.get(n) for n in touched},
         "race_admissible_by_era": admissible,
         "why": ("a day not lying ENTIRELY inside ONE admissible era cannot "
                 "accrue for ANY coin, whatever its quality -- era admission is "
@@ -1934,6 +1936,29 @@ def _selftests() -> int:
        "and a rollback with no `stage` refuses. Mutation found the era_spans "
        "copy of this check to be DEAD -- _ledger_rows already refuses every "
        "stage-less rollback -- so it was deleted; this exercises the live one")
+    # The PURITY conjunct is invisible to a refusal-only audit and, with the
+    # real ruled table, unfalsifiable: every mixed-era day happens to sort a
+    # NON-admissible era first, so dropping `pure` changes no verdict. That is
+    # an accident of the table's contents, not a property of the guard -- the
+    # moment a later era is ruled admissible, an impure day between two
+    # admissible eras would be admitted. Tested against a synthetic table.
+    _two_ok = {"clob_v4": True, "clob_v5": True}
+    _mix = _adm_of_tbl = None
+    with _tfe.TemporaryDirectory() as _t2:
+        _mixed_adm = _ledger(_t2, [_v4, _v5])
+        _impure = day_era_admission("20260831", _mixed_adm, _two_ok)
+        ok(_impure["era_pure"] is False
+           and _impure["era_admissible_ruled"] == {"clob_v4": True,
+                                                   "clob_v5": True}
+           and _impure["race_admissible_by_era"] is False,
+           "PURITY IS LOAD-BEARING ON ITS OWN: a day straddling TWO eras that "
+           "are BOTH ruled admissible is still inadmissible. The day's rows "
+           "still come from two collectors -- admissibility of both endpoints "
+           "does not make the day homogeneous")
+        ok(day_era_admission("20260901", _mixed_adm, _two_ok
+                             )["race_admissible_by_era"] is True,
+           "and against the SAME table a PURE day in one of those eras is "
+           "admissible, so the check is purity and not blanket refusal")
     _chain = _refusal([_v4, {"collector_schema_version": "clob_v5",
                              "transitioned": True, "supersedes": "clob_v3_1",
                              "boundary_utc": _B}])
