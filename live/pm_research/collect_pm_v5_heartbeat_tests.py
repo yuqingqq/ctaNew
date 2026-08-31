@@ -60,6 +60,17 @@ class FakeWS:
             self.captured["app_pings"] = self.captured.get("app_pings", 0) + 1
             if self.behavior == "healthy":
                 await self.queue.put("PONG")
+            elif self.behavior == "pong_then_silent":
+                # answers cycle 1 and then goes SILENT. This is the only
+                # shape that separates a re-armed event from a LATCHED one:
+                # with pong_received.clear() deleted the event stays set and
+                # every later wait returns instantly, so a dead socket is
+                # NEVER detected (audit F1) — and a heartbeat that runs only
+                # once per connection also survives without it (F2).
+                self.captured["pings_seen"] = (
+                    self.captured.get("pings_seen", 0) + 1)
+                if self.captured["pings_seen"] == 1:
+                    await self.queue.put("PONG")
             elif self.behavior == "delayed_pong":
                 # PONG after DELAYED_PONG_S. A deadline BELOW that must time
                 # out and one ABOVE it must not, so a hard-coded deadline
@@ -133,8 +144,6 @@ async def run_market(behavior: str, *, duration_s: float = 0.24,
     _saved_globals = (C.APP_HEARTBEAT_INTERVAL_S, C.APP_HEARTBEAT_TIMEOUT_S)
     C.APP_HEARTBEAT_INTERVAL_S = 0.02 if interval_s is None else interval_s
     C.APP_HEARTBEAT_TIMEOUT_S = 0.03 if timeout_s is None else timeout_s
-    captured["heartbeat_interval_seen"] = C.APP_HEARTBEAT_INTERVAL_S
-    captured["heartbeat_timeout_seen"] = C.APP_HEARTBEAT_TIMEOUT_S
     C.websockets = types.SimpleNamespace(
         connect=fake_connect_factory(behavior, captured)
     )
@@ -142,24 +151,36 @@ async def run_market(behavior: str, *, duration_s: float = 0.24,
     real_sleep = asyncio.sleep
 
     async def compressed_sleep(delay: float):
-        # Preserve heartbeat timing; compress only reconnect backoff.
-        await real_sleep(0.003 if delay > 0.4 else delay)
+        # audit F3: this compressed ANY delay > 0.4 s, and the shipped
+        # interval is 3.0 s — so a hard-coded interval was compressed to
+        # 0.003 and became unobservable. Compress by CALLER instead: the
+        # heartbeat's own sleeps run at their real duration, reconnect
+        # backoff is compressed.
+        caller = sys._getframe(1).f_code.co_name
+        if caller == "application_heartbeat":
+            await real_sleep(delay)
+        else:
+            await real_sleep(0.003 if delay > 0.4 else delay)
 
     C.asyncio = types.SimpleNamespace(
         **{name: getattr(asyncio, name) for name in dir(asyncio)
            if not name.startswith("_")}
     )
     C.asyncio.sleep = compressed_sleep
-    collector = C.PMCollector(heartbeat_mode=C.HEARTBEAT_APP_V5)
-    now = time.time()
-    ts = int(now) - 1
-    C.WINDOW_S = max(0.05, now - ts + duration_s)
     try:
+        collector = C.PMCollector(heartbeat_mode=C.HEARTBEAT_APP_V5)
+        now = time.time()
+        ts = int(now) - 1
+        C.WINDOW_S = max(0.05, now - ts + duration_s)
         await asyncio.wait_for(
             collector._market(f"btc-updown-5m-{ts}", ts, ["t1", "t2"]),
             timeout=3,
         )
     finally:
+        # audit F7: assignment used to sit OUTSIDE the try, so an exception
+        # in PMCollector.__init__ leaked the mutated globals.
+        (C.APP_HEARTBEAT_INTERVAL_S,
+         C.APP_HEARTBEAT_TIMEOUT_S) = _saved_globals
         captured["msgs"] = int(collector.counts.get("msgs", 0))
         captured["counted_app_pings"] = int(
             collector.counts.get("app_heartbeat_pings", 0)
@@ -169,11 +190,6 @@ async def run_market(behavior: str, *, duration_s: float = 0.24,
         )
         collector.disk_pool.shutdown(wait=False)
         collector.http_pool.shutdown(wait=False)
-        # V5-C6-1: the fixture used to LEAVE the module globals mutated, so
-        # after a run the module carried 0.02/0.30 rather than the shipped
-        # 3.0/3.0 and any later assertion read the fixture's value.
-        (C.APP_HEARTBEAT_INTERVAL_S,
-         C.APP_HEARTBEAT_TIMEOUT_S) = _saved_globals
     gaps = []
     if C.GAP_LEDGER.exists():
         gaps = [json.loads(line) for line in C.GAP_LEDGER.read_text().splitlines()]
@@ -293,6 +309,55 @@ async def main() -> int:
           "APP_HEARTBEAT_TIMEOUT" not in long_causes
           and late_long.get("counted_app_pongs", 0) >= 1,
           f"causes={long_causes} pongs={late_long.get('counted_app_pongs')}")
+    # F1/F2: a socket that answers ONCE and then goes silent. With the
+    # re-arm deleted the event latches and this NEVER times out; with a
+    # single-shot heartbeat it never beats again. Both leave every other
+    # check green, so this fixture is the only thing separating them.
+    silent, silent_gaps = await run_market("pong_then_silent",
+                                           timeout_s=0.05, interval_s=0.02)
+    silent_causes = [r.get("cause") for r in silent_gaps
+                     if r.get("event") == "disconnect"]
+    check("BEHAVIOURAL (audit F1/F2): a socket that PONGs once and then goes "
+          "SILENT is detected — deleting pong_received.clear() latches the "
+          "event and detection dies entirely (74 PINGs, never detected), and "
+          "a single-shot heartbeat stops beating; both used to pass 22/22",
+          "APP_HEARTBEAT_TIMEOUT" in silent_causes
+          and silent.get("counted_app_pongs", 0) >= 1,
+          f"causes={silent_causes} pongs={silent.get('counted_app_pongs')} "
+          f"pings={silent.get('counted_app_pings')}")
+
+    # F4: one bracket pins the deadline only to (1/3x, 2x). A SECOND scale
+    # narrows it — a *2 mutant makes real blindness 9s, above v4's 6s, and
+    # the constant-derived blindness check cannot see that.
+    global DELAYED_PONG_S
+    _sv_delay = DELAYED_PONG_S
+    try:
+        DELAYED_PONG_S = 0.02
+        # A SECOND bracket at a different scale. Chosen so a DOUBLED or
+        # HALVED deadline crosses the delay and is caught: one bracket alone
+        # pinned the deadline only to (1/3x, 2x), and the *2 survivor made
+        # real blindness 9s — above v4's 6s — while the constant-derived
+        # blindness check could not see it (audit F4).
+        tight, tight_gaps = await run_market("delayed_pong", timeout_s=0.012,
+                                             interval_s=0.02)
+        tight_causes = [r.get("cause") for r in tight_gaps
+                        if r.get("event") == "disconnect"]
+        check("BEHAVIOURAL (audit F4): at a second scale, 0.012 vs a 0.02s "
+              "delay TIMES OUT — a doubled deadline (0.024) would not, so "
+              "this catches the *2 mutant one bracket missed",
+              "APP_HEARTBEAT_TIMEOUT" in tight_causes, str(tight_causes))
+        wide, wide_gaps = await run_market("delayed_pong", timeout_s=0.03,
+                                           interval_s=0.02)
+        wide_causes = [r.get("cause") for r in wide_gaps
+                       if r.get("event") == "disconnect"]
+        check("BEHAVIOURAL (audit F4): at the same scale, 0.03 vs a 0.02s "
+              "delay does NOT time out — a halved deadline (0.015) would, "
+              "so the two together pin the deadline near its value rather "
+              "than to a 6x bracket",
+              "APP_HEARTBEAT_TIMEOUT" not in wide_causes, str(wide_causes))
+    finally:
+        DELAYED_PONG_S = _sv_delay
+
     check("the fixture RESTORES the module globals — a run used to leave "
           "them mutated, so later assertions read the fixture's values",
           C.APP_HEARTBEAT_INTERVAL_S == SHIPPED_INTERVAL_S
@@ -330,6 +395,17 @@ async def main() -> int:
           f"live at entry {tasks_seen}, leaked after {len(leaked)}")
 
     counters_run, _ = await run_market("healthy")
+    check("BEHAVIOURAL (audit F2): the heartbeat BEATS REPEATEDLY on ONE "
+          "healthy connection — a single-shot heartbeat sends one PING and "
+          "returns, which every other check tolerated because the reconnect "
+          "loop then supplies more pings and masks it",
+          counters_run.get("counted_app_pings", 0) >= 3
+          and len(counters_run.get("connect_kwargs", [])) == 1,
+          f"pings={counters_run.get('counted_app_pings')} over "
+          f"{len(counters_run.get('connect_kwargs', []))} connection(s) — a "
+          f"single-shot heartbeat RETURNS, which tears the connection down "
+          f"and reconnects, so ping COUNT alone is masked; the signature is "
+          f"that a healthy socket needs exactly ONE connection")
     check("PONGs never exceed PINGs on a healthy socket (reading the REAL "
           "returned keys — the previous version read a 'counts' key that "
           "does not exist, so it passed unconditionally, V5-C5-2)",

@@ -90,8 +90,16 @@ APP_HEARTBEAT_CADENCE_S = _candidate_cadence_s()
 MIN_ANSWER_RATIO = 0.5           # pongs per ping over the INTERVAL
 
 # The reviewed candidate (CODE/TEST HOLD RELEASED at df424de).
-CAND_SHA = "1c5291aa6d66ceef0c4a724ea7a1e9fa5128d65d1b69034df5638c0136e98ad5"
-CAND_COMMIT = "7aa9520"
+# RE-POINTED 2026-08-31 (audit F1). Leaving these at the 7aa9520 candidate
+# made the package UNTESTABLE, not merely stale: the byte gate demands the
+# OLD candidate on disk while the cadence gate — derived from whatever is on
+# disk — demands the runbook's 3 s. With the old candidate present the
+# cadence check refuses (10 s vs 3 s); with the current one present the byte
+# check refuses. NO on-disk state satisfied both. The candidate has been
+# unchanged since Codex's round-6 review named these exact bytes, so the
+# deliberate-staleness reason (do not chase per edit) no longer applies.
+CAND_SHA = "b219537abe3cb7ba2a8488c21cef7bb396dd58a58485d36227c0d71b3f838347"
+CAND_COMMIT = "9f886e2"
 
 
 class Refused(Exception):
@@ -612,8 +620,12 @@ def check_cadence_agreement(runbook_text: str) -> float:
     if APP_HEARTBEAT_CADENCE_S != cand:
         raise Refused(f"the gate's cadence {APP_HEARTBEAT_CADENCE_S}s is not "
                       f"the candidate's {cand}s")
-    stale = re.findall(r"application heartbeat[^.\n]*?(\d+(?:\.\d+)?)\s*s",
-                       runbook_text, re.IGNORECASE)
+    # audit F12: anchoring on the literal phrase let the ACTUAL historical
+    # bad body pass. Normalised, and matching any cadence/heartbeat wording.
+    _flat = " ".join(runbook_text.split())
+    stale = re.findall(
+        r"(?:application heartbeat|heartbeat cadence|keepalive)[^.]{0,40}?"
+        r"(\d+(?:\.\d+)?)\s*s\b", _flat, re.IGNORECASE)
     for found in stale:
         if abs(float(found) - cand) > 1e-9:
             raise Refused(f"the runbook states a {found}s application "
@@ -1283,29 +1295,47 @@ def check_runbook_consistency(text: str) -> None:
         if "day one" in low and (_dates - {"09-01"}):
             raise Refused(f"runbook names a day-one other than 09-01: "
                           f"{ln.strip()[:90]!r} — 08-31 is MIXED-ERA (R-340)")
-        # V5-P6-1: the runbook is the SOLE human-executed authority, and it
-        # kept describing three superseded seams while the consistency
-        # check waved them through. These phrases are now refused by name.
-        for _dead, _why in (
-                ("record `log_offset`",
-                 "the offset is written by the POSTFLIGHT into the "
-                 "transition receipt; nothing is carried by the operator"),
-                ("--log-offset log_offset",
-                 "the production path IGNORES the argument and overwrites "
-                 "it from log_offset_at_stamp"),
-                ("armed-time offset",
-                 "evidence is floored at the verified NEW PROCESS start, "
-                 "not at arm time"),
-                ("bounded at 2",
-                 "there is no absolute unresolved-PING bound: the counters "
-                 "are process-wide and every teardown orphans a ping, so a "
-                 "fixed bound would refuse a WORKING deploy"),
-                ("gap-ledger row declaring",
-                 "the gap tail is written by ANY collector and most rows "
-                 "carry no pid, so it is not an authority (P5-3)")):
-            if _dead in low:
-                raise Refused(f"runbook still describes a SUPERSEDED "
-                              f"authority ({_dead!r}): {_why}")
+    # V5-P6-1 (rebuilt after audit): the phrase list pinned STRINGS, not
+    # meaning, and failed in BOTH directions — it refused correct sentences
+    # ("bounded at 24 h" matched "bounded at 2"), it was evaded by cosmetic
+    # edits (the pre-patch runbook PASSED after five renames), it could not
+    # fire on the historical bad document at all because the phrase was
+    # HARD-WRAPPED across two lines, and the blockquote exemption let every
+    # superseded instruction through at the top of the file. Now: matched on
+    # WHITESPACE-NORMALISED text (survives reflow), with no blockquote
+    # exemption, word-bounded, negation-aware, and paired with REQUIRED
+    # statements so the runbook must say what the code does — banning old
+    # phrasings alone can never establish that.
+    flat = " ".join(text.split()).lower()
+    for _pat, _why in (
+            (r"--log-offset\s+\S+",
+             "the production path IGNORES the argument and overwrites it "
+             "from log_offset_at_stamp; no command may pass one"),
+            (r"record\s+`?log_offset`?\s+from",
+             "the offset is written by the POSTFLIGHT into the transition "
+             "receipt; nothing is carried by the operator"),
+            (r"(?<!no )(?<!not )armed-time offset",
+             "evidence is floored at the verified NEW PROCESS start"),
+            (r"(?<!not )bounded at 2\b",
+             "there is no absolute unresolved-PING bound: the counters are "
+             "process-wide and every teardown orphans a ping, so a fixed "
+             "bound would refuse a WORKING deploy"),
+            (r"(?<!no )gap[- ]ledger row declar",
+             "the gap tail is written by ANY collector and most rows carry "
+             "no pid, so it is not an authority (P5-3)")):
+        if re.search(_pat, flat):
+            raise Refused(f"runbook still describes a SUPERSEDED authority "
+                          f"(pattern {_pat!r}): {_why}")
+    for _need, _why in (
+            ("log_offset_at_stamp",
+             "the runbook must NAME the sole offset authority, not merely "
+             "omit the superseded one — a ban cannot establish what is true"),
+            ("collector_start",
+             "the runbook must name the PID-bound declaration that carries "
+             "version proof")):
+        if _need not in flat:
+            raise Refused(f"runbook does not state a REQUIRED current "
+                          f"authority ({_need!r}): {_why}")
     if not _at_seen:
         raise Refused("runbook contains NO deployment 'At <instant>' step — "
                       "a check that matches nothing is vacuous (the O1 "
@@ -1558,37 +1588,39 @@ def selftest() -> int:
     check_pre_arm({**good_armed, "exec_start": _ES_GOOD}, expect_flag=True)
     ok(True, "POSITIVE: the real systemd ExecStart property shape with the "
              "exact adjacent pair PASSES")
+    _REQ = " log_offset_at_stamp collector_start "
     refuses(lambda: check_runbook_consistency(
-                f"{BOUNDARY_UTC} {BOUNDARY_UTC} {BOUNDARY_UTC}\n"
-                "no deployment step here"),
+                f"{BOUNDARY_UTC} {BOUNDARY_UTC} {BOUNDARY_UTC}" + _REQ +
+                "\nno deployment step here"),
             "vacuous", "KNOWN-BAD (pre-arm review): a runbook with NO 'At "
             "<instant>' step REFUSES — a check that matches nothing is not a "
             "check")
     refuses(lambda: check_runbook_consistency(
-                f"{BOUNDARY_UTC} {BOUNDARY_UTC} {BOUNDARY_UTC}\n"
-                "5. **At 05:30:00Z (restart):**"),
+                f"{BOUNDARY_UTC} {BOUNDARY_UTC} {BOUNDARY_UTC}" + _REQ +
+                "\n5. **At 05:30:00Z (restart):**"),
             "different instant", "KNOWN-BAD: a stale At-step under ANY "
             "numbering REFUSES (the O1 checker matched only step 2)")
     for _shape in ("  3. **At 05:30:00Z (restart):**",
                    "- **At 05:30:00Z (restart):**",
                    "### At 05:30:00Z restart"):
         refuses(lambda sh=_shape: check_runbook_consistency(
-                    f"{BOUNDARY_UTC} {BOUNDARY_UTC} {BOUNDARY_UTC}\n" + sh),
+                    f"{BOUNDARY_UTC} {BOUNDARY_UTC} {BOUNDARY_UTC}" + _REQ +
+                    "\n" + sh),
                 "different instant", f"KNOWN-BAD (audit S6): a stale step "
                 f"written as {_shape.strip()[:18]!r} REFUSES — the match ran on "
                 f"the raw line while the blockquote exemption used lstrip, "
                 f"so indented/bulleted/heading steps were invisible")
     refuses(lambda: check_runbook_consistency(
-                f"{BOUNDARY_UTC} {BOUNDARY_UTC} {BOUNDARY_UTC}\n"
-                "3. **At " + BOUNDARY_UTC[11:19] + " (restart):**\n"
+                f"{BOUNDARY_UTC} {BOUNDARY_UTC} {BOUNDARY_UTC}" + _REQ +
+                "\n3. **At " + BOUNDARY_UTC[11:19] + " (restart):**\n"
                 'x {"boundary_utc":"2026-08-30T05:30:00Z"} for the '
                 + BOUNDARY_UTC + " attempt"),
             "false boundary", "KNOWN-BAD (audit S6): a stale stamp RESCUED "
             "by mentioning the ruled instant on the same line REFUSES — "
             "which is exactly how a commented JSON row is written")
     refuses(lambda: check_runbook_consistency(
-                f"{BOUNDARY_UTC} {BOUNDARY_UTC} {BOUNDARY_UTC}\n"
-                "3. **At " + BOUNDARY_UTC[11:19] + " (restart):**\n"
+                f"{BOUNDARY_UTC} {BOUNDARY_UTC} {BOUNDARY_UTC}" + _REQ +
+                "\n3. **At " + BOUNDARY_UTC[11:19] + " (restart):**\n"
                 "- day one is 08-31, NOT 09-01"),
             "other than 09-01", "KNOWN-BAD (audit S6): a line ASSERTING the "
             "wrong day one passed because 09-01 appeared somewhere on it")
@@ -1607,18 +1639,51 @@ def selftest() -> int:
                 "- day one is 08-31"),
             "other than 09-01", "KNOWN-BAD: a body naming a day-one other "
             "than 09-01 REFUSES")
-    for _phrase in ("Record `LOG_OFFSET` from the output",
-                    "--log-offset LOG_OFFSET",
+    _RB = RUNBOOK.read_text()
+    for _phrase in ("Record LOG_OFFSET from the output and carry it",
+                    "run --verify-counters --log-offset OFFSET",
+                    "run --verify-counters --log-offset $LOG_OFFSET",
                     "lines after the armed-time offset",
-                    "unresolved PINGs bounded at 2",
+                    "unresolved PINGs must be bounded at 2",
                     "the newest gap-ledger row declaring clob_v5"):
-        refuses(lambda ph=_phrase: check_runbook_consistency(
-                    RUNBOOK.read_text() + "\n" + ph),
+        refuses(lambda ph=_phrase: check_runbook_consistency(_RB + "\n" + ph),
                 "superseded authority",
-                f"KNOWN-BAD (V5-P6-1): the runbook phrase "
-                f"{_phrase[:34]!r} REFUSES — the sole human-executed "
-                f"authority kept describing seams the code had already "
-                f"replaced, and the consistency check waved them through")
+                f"KNOWN-BAD (V5-P6-1): {_phrase[:34]!r} REFUSES — note the "
+                f"RENAMED variable and dropped backticks: the first guard "
+                f"pinned strings, so the pre-patch runbook passed it after "
+                f"five cosmetic edits")
+    # the historical bad document itself, hard-wrapped — the first guard
+    # could not fire on it at all because the phrase spanned two lines
+    refuses(lambda: check_runbook_consistency(
+                _RB + "\n   ... the newest gap-ledger\n   row declaring "
+                '`"collector_version":"clob_v5"`, ...'),
+            "superseded authority", "KNOWN-BAD (audit F4): the phrase split "
+            "across a LINE WRAP still refuses — matching is on "
+            "whitespace-normalised text, so an ordinary reflow cannot "
+            "disarm the guard")
+    refuses(lambda: check_runbook_consistency(
+                _RB.replace("# clob_v5 deploy runbook",
+                            "> Record LOG_OFFSET from the output and carry "
+                            "it\n\n# clob_v5 deploy runbook", 1)),
+            "superseded authority", "KNOWN-BAD (audit F5): a superseded "
+            "instruction inside the amendment BLOCKQUOTE refuses — the "
+            "exemption used to cover exactly the text an operator reads "
+            "first")
+    for _ok in ("recovery is bounded at 24 h from the instant",
+                "the deficit is NOT bounded at 2 or any other constant",
+                "No gap-ledger row declaring a version is an authority"):
+        check_runbook_consistency(_RB + "\n" + _ok)
+    ok(True, "POSITIVE (audit F2): correct sentences that merely CONTAIN a "
+             "banned substring are ACCEPTED — 'bounded at 24 h', a negated "
+             "'NOT bounded at 2', and a negated gap-ledger clause all pass; "
+             "the first guard refused all three")
+    for _need in ("log_offset_at_stamp", "collector_start"):
+        refuses(lambda nd=_need: check_runbook_consistency(
+                    _RB.replace(nd, "REMOVED")),
+                "REQUIRED current authority",
+                f"KNOWN-BAD: a runbook that stops NAMING {_need!r} refuses — "
+                f"banning old phrasings can never establish what is true, so "
+                f"the guard also requires the current authority to be stated")
     refuses(lambda: check_runbook_consistency("no instants at all"),
             "not re-pointed", "KNOWN-BAD: a body never naming the instant "
             "REFUSES")
@@ -2602,8 +2667,9 @@ def main() -> int:
               f"row, flag {'INSTALLED' if a.armed else 'not yet installed'}, "
               f"{BOUNDARY_EPOCH - obs['now_epoch']:.0f}s to {BOUNDARY_UTC}")
         print(f"OLD_PID={obs['main_pid']}")
-        if a.armed:
-            print(f"LOG_OFFSET={COLLECTOR_LOG.stat().st_size if COLLECTOR_LOG.exists() else 0}")
+        # audit F7: --armed used to print LOG_OFFSET= while the runbook says
+        # to record nothing from it. The drift was removed from the text and
+        # left in the instrument; both now agree.
         return 0
     if a.post_restart is not None:
         obs = observe_common()

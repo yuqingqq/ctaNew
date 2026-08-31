@@ -10,7 +10,10 @@
 
 **Authority:** USER ruling R-340 (mid-day boundary, recorded before
 execution); code/test release `CODEX_REVIEW_V5_HEARTBEAT_REPAIR_2026-08-31.md`
-(`df424de`, candidate `7aa9520`, collector sha `1c5291aa…`). Live deployment
+(`df424de`) covered candidate `7aa9520`; the candidate has since changed
+under USER cadence ruling 2026-08-31 and is now `9f886e2`, collector sha
+`b219537a…` — the bytes Codex round 6 reviewed. **That candidate is still
+HELD; this runbook may not be executed until it is released.**. Live deployment
 additionally gated on the Codex pre-arm review of THIS runbook + instrument +
 DA's era-admission guard.
 
@@ -81,9 +84,11 @@ fails to find the script and can create a stray file (audit S4).
       identity, float or pre-boundary `recv_ns`, foreign pid. On success the
       emitted stamp carries `boundary_utc 2026-08-31T07:00:00Z`, the verified
       pid, `clob_v5 supersedes clob_v4`, and the R-340 authority line.
-   c. **Record `V5_PID`** (also required by `--post-recovery`) — `systemctl --user show pm-collector-clob.service
-      -p MainPID --value` — BEFORE any later step restarts the unit; after a
-      rollback restart that value is gone and rows 3c/4 need it.
+   c. **Record `V5_PID` from the `V5_PID=` line the postflight printed on
+      stderr in step 3b** — not from `systemctl -p MainPID`, which re-reads
+      LIVE state and would hand you a different pid after any restart.
+      Record it NOW: after a rollback restart the live value is gone, and
+      rows 3b'/3c/4 all need it.
    d. `tail -1` the ledger; confirm the live MainPID and
       `boundary_utc` = `2026-08-31T07:00:00Z` on one row.
 
@@ -94,8 +99,9 @@ fails to find the script and can create a stray file (audit S4).
    python3 live/pm_research/v5_boundary_preflight.py --verify-counters
    # No offset argument: the SOLE offset authority is log_offset_at_stamp,
    # read from the clob_v5 transition receipt this deploy already wrote.
-   # (--log-offset still parses so scripted callers do not break, but the
-   # production path IGNORES it and overwrites it from the stamp.)
+   # (the CLI still accepts an offset argument so scripted callers do not
+   # break, but the production path IGNORES it and overwrites it from the
+   # stamp — never pass one.)
    ```
    Requires TWO heartbeat lines after the stamped offset (~2 min), each
    at or after the VERIFIED NEW PROCESS start on its own stamp; lines below

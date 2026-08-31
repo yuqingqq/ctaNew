@@ -38,10 +38,20 @@ SITE = "timeout=APP_HEARTBEAT_TIMEOUT_S"
 WRONG = "timeout=0.03"
 
 
-def run_suite_in(workdir: pathlib.Path) -> int:
-    return subprocess.run([sys.executable, str(workdir / SUITE.name)],
-                          capture_output=True, text=True, timeout=300,
-                          cwd=str(workdir)).returncode
+# Every failure the mutant causes must be a DEADLINE check — that is what
+# distinguishes a real kill from a flaky or syntax-error red (audit F5).
+DEADLINE_MARKERS = ("a deadline ABOVE the same PONG delay",
+                    "a deadline BELOW the PONG delay",
+                    "at a second scale",
+                    "at the same scale")
+
+
+def run_suite_in(workdir: pathlib.Path):
+    r = subprocess.run([sys.executable, str(workdir / SUITE.name)],
+                       capture_output=True, text=True, timeout=300,
+                       cwd=str(workdir))
+    fails = [ln for ln in r.stdout.splitlines() if ln.startswith("  FAIL")]
+    return r.returncode, fails, r.stdout
 
 
 def main() -> int:
@@ -59,14 +69,28 @@ def main() -> int:
 
         # positive control first: the unmutated COPY must pass, or a red
         # result below would prove nothing about the mutation.
-        if run_suite_in(work) != 0:
+        rc0, _, out0 = run_suite_in(work)
+        if rc0 != 0 or "PASS" not in out0:
             print("FALSIFIER INVALID: the UNMUTATED copy does not pass, so a "
                   "red mutant would be meaningless")
             return 1
         print("control: unmutated copy passes")
 
-        (work / SOURCE.name).write_text(original.replace(SITE, WRONG, 1))
-        rc = run_suite_in(work)
+        # audit F6: replace() takes the FIRST textual occurrence, so a
+        # doc comment mentioning the site would redirect the mutation and
+        # produce a WRONG accusation ("the tests are insensitive") when the
+        # mutation never landed.
+        if original.count(SITE) != 1:
+            print(f"FALSIFIER INVALID: {SITE!r} occurs "
+                  f"{original.count(SITE)} times — the mutation would not "
+                  f"land where this control claims")
+            return 1
+        mutated = original.replace(SITE, WRONG, 1)
+        if mutated == original:
+            print("FALSIFIER INVALID: the mutation changed nothing")
+            return 1
+        (work / SOURCE.name).write_text(mutated)
+        rc, fails, out = run_suite_in(work)
 
     after = hashlib.sha256(SOURCE.read_text().encode()).hexdigest()
     if after != before:
@@ -78,7 +102,27 @@ def main() -> int:
         print("SURVIVOR: a hard-coded wrong deadline left the suite GREEN — "
               "the deadline tests are mutation-insensitive")
         return 1
-    print("falsifier fired: a hard-coded wrong deadline makes the suite RED")
+    # audit F5: a returncode alone cannot tell a real kill from an unrelated
+    # red — a flaky suite or a syntax-error mutant would both have been
+    # reported as "fired". Require the mutant to fail EXACTLY the deadline
+    # check, and require the run to have executed checks at all.
+    if "PASS" not in out:
+        print("FALSIFIER INVALID: the mutant run executed no checks (a "
+              "syntax error or import failure, not a deadline kill)")
+        return 1
+    if not fails:
+        print("FALSIFIER INVALID: the mutant run reported no FAIL line, so "
+              "its non-zero exit was not a check failure")
+        return 1
+    stray = [f for f in fails
+             if not any(m in f for m in DEADLINE_MARKERS)]
+    if stray:
+        print(f"FALSIFIER INVALID: the mutant failed {len(stray)} "
+              f"NON-deadline check(s), so the red is not attributable to "
+              f"the deadline: {stray[:1]}")
+        return 1
+    print(f"falsifier fired: a hard-coded wrong deadline fails "
+          f"{len(fails)} check(s), ALL of them deadline checks")
     return 0
 
 
