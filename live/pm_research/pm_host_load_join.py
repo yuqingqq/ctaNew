@@ -9,6 +9,15 @@ as are sa23/24/26/27. Codex `b04ff13` found it. Asserting an absence without
 opening the artifact that would carry it is a rule-16 failure by the author
 of that rule's latest citation.
 
+POPULATION (corrected under Codex HJ-R1; the first version mislabelled it).
+143 sysstat cells per full day, the first ANCHORED AT DAY START rather than
+discarded; the decision population is `event=disconnect` rows at their own
+`recv_ns`, not `gap_closed` rows binned at `gap_start_ns` (a nearby proxy,
+which rule 3 forbids); and events past the last sysstat endpoint are reported
+as UNEVALUABLE with an as-of, never dropped. On 08-25: 143 cells, 665 events,
+663 joined, 2 unevaluable, as-of 23:50:15Z, r = +0.033. The pre-repair run
+said "143 samples" while correlating over 142 and silently losing 11 events.
+
 Joining the two refutes the attribution:
 
   * 2026-08-25 00:00-06:00Z carried 210 btc disconnects against 4 in the same
@@ -87,9 +96,20 @@ def sar_cpu(day: int) -> list[tuple[int, float]]:
 
 
 def disconnects(day: int, coin: str = "btc") -> list[int]:
+    """The DECISION rows at their OWN timestamp (Codex HJ-R1).
+
+    The first version selected any row carrying `gap_start_ns` — which on
+    this ledger is the `gap_closed` row — and binned it at `gap_start_ns`,
+    the LAST MARKET MESSAGE time. That is a nearby proxy, not the event's own
+    clock, and repo rule 3 says timestamps come from the event that carries
+    them. On 08-25 the two populations happen to be equal (665 each) and no
+    event crosses a ten-minute bin, so the reported sign does not move; on
+    another day it would. Fixed at the definition rather than argued away.
+    """
     if not GAP_LEDGER.exists():
         raise Refused(f"{GAP_LEDGER} missing")
-    lo = dt.datetime(YEAR, MONTH, day, tzinfo=dt.timezone.utc).timestamp()
+    lo = int(dt.datetime(YEAR, MONTH, day,
+                         tzinfo=dt.timezone.utc).timestamp())
     hi = lo + 86400
     out = []
     for ln in GAP_LEDGER.read_text(errors="replace").splitlines():
@@ -100,11 +120,16 @@ def disconnects(day: int, coin: str = "btc") -> list[int]:
             r = json.loads(ln)
         except ValueError:
             continue
-        if r.get("coin") != coin or not r.get("gap_start_ns"):
+        if r.get("coin") != coin or r.get("event") != "disconnect":
             continue
-        t = r["gap_start_ns"] / 1e9
-        if lo <= t < hi:
-            out.append(int(t))
+        ns = r.get("recv_ns")
+        if type(ns) is not int or ns <= 0:
+            raise Refused(f"a {coin} disconnect row carries recv_ns={ns!r}, "
+                          f"not a positive int — REFUSING rather than "
+                          f"skipping it, because a silently dropped decision "
+                          f"row lowers every count in this table")
+        if lo <= ns // 10**9 < hi:
+            out.append(ns // 10**9)
     return out
 
 
@@ -123,17 +148,36 @@ def join(day: int, coin: str = "btc") -> dict:
     """Per sysstat interval: host busy-% and disconnects inside it."""
     samples = sar_cpu(day)
     ev = disconnects(day, coin)
+    day_start = int(dt.datetime(YEAR, MONTH, day,
+                                tzinfo=dt.timezone.utc).timestamp())
+    # Codex HJ-R1: starting at the SECOND row dropped the 00:00-00:10
+    # interval — the single most-cited control in R-366 ("9 disconnects while
+    # the host was 98.36% idle") was therefore absent from the correlation it
+    # was quoted beside. sar's first row is the ENDPOINT of the first
+    # interval, so anchor it at day start rather than discarding it.
     cells = []
-    for i in range(1, len(samples)):
-        t0, t1 = samples[i - 1][0], samples[i][0]
-        busy = 100.0 - samples[i][1]
-        cells.append({"start": t0, "end": t1, "busy_pct": busy,
-                      "n_disconnects": sum(1 for e in ev if t0 <= e < t1)})
+    prev = day_start
+    for end, idle in samples:
+        cells.append({"start": prev, "end": end, "busy_pct": 100.0 - idle,
+                      "n_disconnects": sum(1 for e in ev if prev <= e < end)})
+        prev = end
     inside = sum(c["n_disconnects"] for c in cells)
+    # rule 4: exclusions are STATUSES, never silent drops. 11 events used to
+    # vanish here with nothing said.
+    last_end = samples[-1][0]
+    after = [e for e in ev if e >= last_end]
+    before = [e for e in ev if e < day_start]
     return {
         "day": f"{YEAR}-{MONTH:02d}-{day:02d}", "coin": coin,
         "n_samples": len(cells), "n_events_total": len(ev),
         "n_events_joined": inside,
+        "n_events_after_last_sample": len(after),
+        "n_events_before_day_start": len(before),
+        "coverage_as_of_utc": dt.datetime.fromtimestamp(
+            last_end, dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "unevaluable_note": ("events at/after coverage_as_of_utc have no "
+                             "sysstat interval and are UNEVALUABLE, reported "
+                             "rather than dropped"),
         "mean_busy_pct": round(sum(c["busy_pct"] for c in cells)
                                / max(len(cells), 1), 2),
         "pearson_busy_vs_disconnects":
@@ -178,6 +222,43 @@ def selftest() -> int:
                  "reporting 'no load data' — R-365 asserted exactly that "
                  "absence without opening the file, and the file existed")
 
+    # THE JOIN CONTROL Codex HJ-R1 required, and the omission it names is the
+    # sharpest thing in that finding: this instrument was written to correct a
+    # rule-16 failure and shipped WITHOUT A CONTROL FOR ITS OWN CENTRAL
+    # OPERATION. The six original checks exercised Pearson arithmetic and the
+    # archive-absence refusal — everything EXCEPT the binning the tool exists
+    # to do. A falsifier that tests the scaffolding is not a falsifier for
+    # the mechanism.
+    _samples = [(1000, 90.0), (2000, 80.0), (3000, 70.0)]
+
+    def _bin(evts, day_start=0):
+        cells, prev = [], day_start
+        for end, idle in _samples:
+            cells.append({"start": prev, "end": end,
+                          "busy_pct": 100.0 - idle,
+                          "n_disconnects": sum(1 for e in evts
+                                               if prev <= e < end)})
+            prev = end
+        return cells
+    c = _bin([500, 1500, 1500, 2500])
+    ok([x["n_disconnects"] for x in c] == [1, 2, 1],
+       "JOIN CONTROL: events at 500/1500/1500/2500 land in intervals "
+       "[0,1000)/[1000,2000)/[2000,3000) as 1/2/1 — the binning is exercised, "
+       "not assumed")
+    ok(_bin([500])[0]["n_disconnects"] == 1,
+       "JOIN CONTROL: an event BEFORE the first sar endpoint is counted in "
+       "the anchored first interval. The pre-HJ-R1 code started at the "
+       "SECOND row and dropped it — and that interval held the single most "
+       "cited control in R-366 (9 disconnects at 98.36% idle)")
+    _shift = _bin([999])
+    ok(_shift[0]["n_disconnects"] == 1 and _shift[1]["n_disconnects"] == 0,
+       "JOIN CONTROL (off-by-one): an event one second inside a boundary "
+       "stays in the LEFT interval; shifting it would move the count and "
+       "this check would fail")
+    ok(_bin([3000])[-1]["n_disconnects"] == 0,
+       "JOIN CONTROL: an event AT the right edge is excluded from the last "
+       "half-open interval rather than double-counted")
+
     # and the real archive must actually parse, or every number is vacuous
     try:
         s = sar_cpu(25)
@@ -214,11 +295,12 @@ def main() -> int:
                          indent=1))
         return 0
     print(f"{a.coin} disconnects vs HOST busy%, per sysstat interval\n")
-    print(f"{'day':12} {'samples':>8} {'events':>7} {'mean busy%':>11} "
-          f"{'pearson r':>10}")
+    print(f"{'day':12} {'cells':>6} {'joined':>7} {'unevaluable':>12} "
+          f"{'mean busy%':>11} {'pearson r':>10}")
     for r in res:
         pr = r["pearson_busy_vs_disconnects"]
-        print(f"{r['day']:12} {r['n_samples']:8d} {r['n_events_joined']:7d} "
+        print(f"{r['day']:12} {r['n_samples']:6d} {r['n_events_joined']:7d} "
+              f"{r['n_events_after_last_sample']:12d} "
               f"{r['mean_busy_pct']:11.2f} "
               f"{'n/a' if pr is None else f'{pr:+.3f}':>10}")
     print("\nNEGATIVE FINDING: host load does not explain the 08-25 break. "
