@@ -46,10 +46,16 @@ def run_suite(text: str) -> tuple:
         scratch.unlink(missing_ok=True)
     if r.returncode == 0:
         return "green", ""
-    blob = (r.stdout + r.stderr)
-    if "SELFTEST FAILED" in blob:
-        return "assertion", blob.splitlines()[-1][:80]
-    return "crash", blob.splitlines()[-1][:80]
+    # Classify on the line that ENDED the run, not on the marker appearing
+    # ANYWHERE: a Python traceback echoes the offending source line, so a
+    # crash inside a suite whose source contains the marker text would read
+    # as an assertion-kill — the flattering direction (DA's classifier
+    # defect, found by DA building its own falsifier; adopted here).
+    tail = [ln for ln in (r.stdout + r.stderr).splitlines() if ln.strip()]
+    last = tail[-1] if tail else ""
+    if last.startswith("SELFTEST FAILED"):
+        return "assertion", last[:80]
+    return "crash", last[:80]
 
 
 def raise_sites(text: str) -> list:
