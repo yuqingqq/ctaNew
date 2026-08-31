@@ -33,8 +33,7 @@ so a cross-boundary comparison reads a measurement change as a regression.
 | 2 | The instant is **≥120s clear of UTC midnight** | the gate refuses otherwise (audit A1) |
 | 3 | `clob_v4_1` **ruled admissible** by the USER, in DA's table | DA's verifier refuses an unruled era by name |
 | 4 | All gates green | `python3 live/pm_research/v5_deploy_gates.py` |
-| 5 | Codex re-review of this seam | filed under `workspace/reviews/` |
-| 6 | Independent shadow is ACTIVE and receiving all seven coins | step 0 below passes |
+| 5 | ~~Codex re-review before launch~~ — **USER ruled 2026-08-31: launch at 22:00Z regardless; Codex reviews in parallel and findings are fixed AFTER.** Recorded as a deliberate acceptance, not an oversight: Codex has twice found what my own rounds missed, and the mitigation relied on is the tested rollback path plus a boundary day (08-31) that has already failed. | n/a |
 
 **Working directory for every command: `/home/yuqing/ctaNew`.**
 
@@ -42,40 +41,12 @@ so a cross-boundary comparison reads a measurement change as a regression.
 
 Times are relative to the ruled instant **T**.
 
-> **Risk accepted, and stated because it is a confound as well as a risk.**
-> The shadow opens a Polymarket WS connection from the **same host and IP** as
-> the live collector. `BTC_GAP_DIAGNOSIS_2026-08-26` is HIGH-confidence the
-> bottleneck is remote and per-connection but only MEDIUM on venue-infra vs
-> network-path, and **a per-IP component is not ruled out by its evidence**.
-> One extra connection against the hundreds already open is marginal — but it
-> starts 20 minutes before the boundary, so if it did harm, that harm would be
-> **confounded with the deploy** and read as a v4_1 regression.
->
-> Mitigation, and it is why step 0 sits where it does: the shadow's first
-> `--verify-output` runs BEFORE the drop-in is installed, so a same-IP effect
-> would show up in the collector's own per-coin counters while it is still
-> running plain v4. **If btc degrades between step 0 and step 1, stop and
-> remove the shadow rather than proceeding** — that ordering is the only thing
-> separating the two explanations.
-
-### 0. T−20min — start and prove the independent shadow
-
-Install the tracked read-only service, then give it at least one 60-second
-sample interval:
-
-```
-install -m 0644 live/pm_research/ops/pm-shadow-observer.service \
-    ~/.config/systemd/user/pm-shadow-observer.service
-systemctl --user daemon-reload
-systemctl --user enable --now pm-shadow-observer.service
-sleep 90
-python3 live/pm_research/pm_shadow_observer.py --verify-output
-```
-
-The last command must print `OK shadow` and requires a connected independent
-socket with fresh messages from **every** coin. If it refuses, stop. The shadow
-uses its own Gamma lookups and socket, rotates current+next tokens at every
-five-minute boundary, and can write only under `derived/shadow/`.
+> **The shadow observer is NOT part of this deploy (USER, 2026-08-31).**
+> It is built, gated and committed, but not started. Two consequences, stated
+> so neither is discovered later: the same-IP confound flagged earlier is
+> **gone** — nothing new connects from this host at the boundary — and the
+> next all-coin content-liveness event stays **unattributable**, because
+> nothing independent will be observing. That is the trade as ruled.
 
 ### 1. T−15min — pre-arm
 
