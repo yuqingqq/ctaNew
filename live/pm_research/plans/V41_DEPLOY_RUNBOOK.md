@@ -109,15 +109,19 @@ python3 live/pm_research/v41_boundary_preflight.py \
 tail -1 data/pm_5min/collector_runs.jsonl | python3 -m json.tool
 ```
 
-### 6. T+6min — verify counters, or roll back
-
-Confirm the new process is receiving on every coin:
+### 6. T+6min — verify health, or roll back
 
 ```
-grep -o "\[pm\] .*" data/pm_5min/collector.log | tail -1
+python3 live/pm_research/v41_boundary_preflight.py --verify-health
 ```
 
-`active=` must show sockets on all seven coins and `msgs=` must be advancing.
+Takes two samples 30s apart and requires **every one of the seven coins** to
+have advanced. A process-wide `msgs > 0` is satisfied by btc alone — including
+while six coins are dead — which after a restart is exactly the failure worth
+catching, because a subscription that never re-established looks identical to
+a quiet market in every process-wide number.
+
+**If it refuses, roll back.** It names which coins stalled.
 
 ## Failure table
 

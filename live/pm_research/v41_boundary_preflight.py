@@ -60,6 +60,15 @@ TARGET_MODE = "control-v4-slow"
 ARGV_TARGET = P.ARGV_V4 + ("--heartbeat-mode", TARGET_MODE)
 POST_START_WINDOW_S = P.POST_START_WINDOW_S
 
+# SELF-REVIEW FINDING (pre-Codex): the first version of this gate checked the
+# argv, the unit environment and the era chain — and NEVER THE BYTES. The v5
+# gate carries 25 references to the candidate sha; this had zero. Nothing
+# stopped `collect_pm.py` being edited between review and deploy, and the gate
+# would have certified a restart of unreviewed code while every other check
+# passed. Pinned here, asserted in check_pre_arm and again in make_stamp.
+CAND_SHA = "08ecd9b72cc356c046b0e6fa50e482b87b18c927564e06ac11cca0c2065ea000"
+CAND_COMMIT = "2cb51f0"
+
 # Ruled instant. NOT set until the USER rules one; the gate refuses rather
 # than inventing a default, because a boundary nobody ruled is a boundary
 # nobody can be held to.
@@ -123,7 +132,8 @@ def installed_mode_v41(exec_start: str) -> str:
     if _p is not None and _p != P.PYTHON_ARGV0:
         raise Refused(f"installed command EXECUTES {_p!r}, not "
                       f"{P.PYTHON_ARGV0!r}")
-    for bad in (" ", " ", " ", " ", "\t", "​"):
+    for bad in ("\u00a0", "\u2028", "\u2029", "\u1680", "\t",
+                "\u200b"):
         if bad in exec_start:
             raise Refused(f"installed command contains non-ASCII whitespace "
                           f"{bad!r} — systemd keeps it INSIDE an argv element")
@@ -133,6 +143,18 @@ def installed_mode_v41(exec_start: str) -> str:
         return "control-v4"
     raise Refused(f"installed argv is NEITHER the exact clob_v4 nor the exact "
                   f"{TARGET_ERA} command vector: {toks}")
+
+
+def check_candidate_bytes(obs: dict) -> None:
+    """The bytes that would START must be the reviewed ones (rule 12)."""
+    if obs.get("tree_sha") != CAND_SHA:
+        raise Refused(f"on-disk collector sha {str(obs.get('tree_sha'))[:16]} "
+                      f"!= the reviewed candidate {CAND_SHA[:16]} — the bytes "
+                      f"that would start are NOT what the release reviewed")
+    if obs.get("head_sha") != CAND_SHA:
+        raise Refused(f"HEAD collector sha {str(obs.get('head_sha'))[:16]} != "
+                      f"candidate {CAND_SHA[:16]} — uncommitted or foreign "
+                      f"bytes would start")
 
 
 def era_state(era_rows: list) -> tuple:
@@ -150,6 +172,7 @@ def check_pre_arm(obs: dict, expect_flag: bool) -> None:
         raise Refused(f"unit declares ExecStartPre "
                       f"({obs['exec_start_pre'][:60]!r})")
     P.check_unit_environment(obs)
+    check_candidate_bytes(obs)
     if not obs["unit_active"] or obs["main_pid"] <= 0:
         raise Refused(f"unit not active (active={obs['unit_active']}, "
                       f"pid={obs['main_pid']})")
@@ -185,6 +208,7 @@ def make_stamp(obs: dict, old_pid: int, start_row: dict) -> dict:
         raise Refused(f"installed argv is not the {TARGET_MODE} vector — the "
                       f"running process is not the candidate")
     P.check_unit_environment(obs)
+    check_candidate_bytes(obs)
     if start_row is None:
         raise Refused(f"no {TARGET_ERA} collector_start row from the new "
                       f"process — version proof rests on the process's OWN "
@@ -242,6 +266,75 @@ def make_stamp(obs: dict, old_pid: int, start_row: dict) -> dict:
                         "process's own collector_start row, stamp appended "
                         "LAST"),
     }
+
+
+COINS = ("btc", "eth", "sol", "xrp", "doge", "bnb", "hype")
+
+
+def observe_coin_msgs(n: int = 2, gap_s: float = 30.0) -> list:
+    """Per-coin cumulative message counts, n samples gap_s apart."""
+    import re as _re
+    out = []
+    for k in range(n):
+        if k:
+            time.sleep(gap_s)
+        txt = ""
+        if P.COLLECTOR_LOG.exists():
+            with P.COLLECTOR_LOG.open("rb") as fh:
+                fh.seek(max(0, fh.seek(0, 2) - 40000))
+                txt = fh.read().decode("utf-8", "replace")
+        m = None
+        for ln in txt.splitlines():
+            g = _re.search(r"msg_by_coin=(\{[^}]*\})", ln)
+            if g:
+                m = g.group(1)
+        if m is None:
+            raise Refused("no msg_by_coin line in the collector log — the "
+                          "health check cannot report a clean result from a "
+                          "population it never read")
+        out.append({c: int(v) for c, v in
+                    _re.findall(r"'([a-z]+)': (\d+)", m)})
+    return out
+
+
+def check_coin_progress(samples: list, unit_active: bool,
+                        main_pid: int) -> dict:
+    """EVERY coin must be receiving, not just the process-wide total.
+
+    Holistic-review finding: `msgs_d > 0` is process-wide, so btc alone
+    advancing satisfies it — and so does btc alone while six coins are dead.
+    After a restart that is exactly the failure worth catching, because a
+    subscription that never re-established looks identical to a quiet market
+    in every process-wide number.
+    """
+    if not unit_active or main_pid <= 0:
+        raise Refused(f"unit not active at health verification "
+                      f"(active={unit_active}, pid={main_pid})")
+    if len(samples) < 2:
+        raise Refused("fewer than two samples — a delta needs two readings, "
+                      "and one reading reported as health is not a delta")
+    first, last = samples[0], samples[-1]
+    missing = [c for c in COINS if c not in last]
+    if missing:
+        raise Refused(f"coins absent from the status line entirely: "
+                      f"{missing} — an absent coin is not a quiet one")
+    # BACKWARDS is checked BEFORE stalled, and the order is the whole point:
+    # a decrease also satisfies `<= 0`, so with stalled first the backwards
+    # branch could never fire and its known-bad failed. A check that cannot
+    # be reached is not a check — caught by writing the falsifier for it.
+    backwards = [c for c in COINS if last[c] < first.get(c, 0)]
+    if backwards:
+        raise Refused(f"per-coin counters went BACKWARDS ({backwards}) — the "
+                      f"process restarted during verification, so this "
+                      f"interval spans two processes and its delta means "
+                      f"nothing")
+    stalled = [c for c in COINS if last[c] - first.get(c, 0) <= 0]
+    if stalled:
+        raise Refused(f"coins with NO message progress across the interval: "
+                      f"{stalled} — a subscription that never re-established "
+                      f"is indistinguishable from a quiet market in every "
+                      f"process-wide counter, which is why this is per-coin")
+    return {c: last[c] - first.get(c, 0) for c in COINS}
 
 
 def make_rollback(obs: dict, v4_start: dict, stage: str) -> dict:
@@ -312,6 +405,7 @@ def selftest() -> int:
             "exec_start_post": "", "environment": "",
             "slice": "collectors.slice", "std_out": "append",
             "n_restarts": "0", "era_rows": [V4ROW],
+            "tree_sha": CAND_SHA, "head_sha": CAND_SHA,
             "exec_start": es(P.ARGV_V4)}
     armed = {**base, "exec_start": es(ARGV_TARGET)}
 
@@ -325,6 +419,18 @@ def selftest() -> int:
             "ALREADY installed",
             "KNOWN-BAD: the target flag present BEFORE arming refuses — "
             "something armed this unit outside the runbook")
+    refuses(lambda: check_pre_arm({**base, "tree_sha": "0" * 64}, False),
+            "bytes that would start",
+            "KNOWN-BAD (self-review): on-disk bytes that are NOT the reviewed "
+            "candidate REFUSE. The first version of this gate checked argv, "
+            "environment and the era chain and NEVER THE BYTES — it would "
+            "have certified a restart of unreviewed code with every other "
+            "check green")
+    refuses(lambda: check_pre_arm({**base, "head_sha": "0" * 64}, False),
+            "uncommitted or foreign",
+            "KNOWN-BAD (self-review): bytes on disk matching the candidate "
+            "while HEAD does NOT refuses — an uncommitted edit is exactly "
+            "what would slip between review and deploy")
     refuses(lambda: check_pre_arm({**base, "slice": "research.slice"}, False),
             "slice", "KNOWN-BAD: a unit outside collectors.slice refuses")
     refuses(lambda: check_pre_arm({**base, "exec_start":
@@ -356,6 +462,12 @@ def selftest() -> int:
        "the emitted row is ACCEPTED by the chain walk and opens the target "
        "era — the whole point of COL-R3, executed rather than asserted")
 
+    refuses(lambda: make_stamp({**post, "tree_sha": "0" * 64}, 3687786,
+                               good_start),
+            "bytes that would start",
+            "KNOWN-BAD (self-review): the byte check fires at STAMP time too "
+            "— arming and restarting are separate moments and the tree can "
+            "change between them")
     refuses(lambda: make_stamp({**post, "main_pid": 3687786}, 3687786,
                                good_start),
             "did not restart",
@@ -430,6 +542,34 @@ def selftest() -> int:
             "KNOWN-BAD: rolling back while the target argv is STILL installed "
             "refuses — the ledger would claim a restoration that did not run")
 
+    A = {c: 100 for c in COINS}
+    B = {c: 200 for c in COINS}
+    d = check_coin_progress([A, B], True, 4242)
+    ok(all(v == 100 for v in d.values()),
+       "POSITIVE: every coin advancing returns its per-coin delta")
+    refuses(lambda: check_coin_progress([A, {**B, "eth": 100}], True, 4242),
+            "NO message progress",
+            "KNOWN-BAD: ONE dead coin refuses even while six advance — "
+            "`msgs > 0` is process-wide, so btc alone satisfies it and so "
+            "does btc alone while six coins are dead")
+    refuses(lambda: check_coin_progress([A, {c: 200 for c in COINS
+                                             if c != "hype"}], True, 4242),
+            "absent from the status line",
+            "KNOWN-BAD: a coin missing ENTIRELY refuses — an absent coin is "
+            "not a quiet one (rule 4)")
+    refuses(lambda: check_coin_progress([B, A], True, 4242),
+            "went BACKWARDS",
+            "KNOWN-BAD: counters going backwards refuse with the RESTART "
+            "reason, not the generic stall one. Ordering matters: a decrease "
+            "also satisfies `<= 0`, so with the stall check first this branch "
+            "was UNREACHABLE and its falsifier failed — which is how it was "
+            "found")
+    refuses(lambda: check_coin_progress([A], True, 4242), "two samples",
+            "KNOWN-BAD: one reading reported as health refuses — a delta "
+            "needs two")
+    refuses(lambda: check_coin_progress([A, B], False, 4242), "not active",
+            "KNOWN-BAD: a dead unit refuses regardless of the numbers")
+
     BOUNDARY_UTC = saved
     print(f"v41_boundary_preflight selftests: {len(checks)} checks passed")
     return 0
@@ -442,6 +582,8 @@ def main() -> int:
     ap.add_argument("--armed", action="store_true")
     ap.add_argument("--post-restart", type=int, default=None)
     ap.add_argument("--nrestarts-at-arm", type=int, default=None)
+    ap.add_argument("--verify-health", action="store_true",
+                    help="two samples 30s apart; EVERY coin must advance")
     a = ap.parse_args()
     if a.selftest:
         return selftest()
@@ -453,6 +595,11 @@ def main() -> int:
         if a.armed:
             print(f"OLD_PID={obs['main_pid']}")
             print(f"NRESTARTS_AT_ARM={obs.get('n_restarts')}")
+        return 0
+    if a.verify_health:
+        d = check_coin_progress(observe_coin_msgs(), obs["unit_active"],
+                                obs["main_pid"])
+        print(f"OK health: per-coin message deltas over 30s {d}")
         return 0
     if a.post_restart is not None:
         utc, ep = require_ruled_instant()
