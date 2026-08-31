@@ -21,7 +21,12 @@ set -u
 # into the PRODUCTION gate log and I misread them as a real refusal -- a log
 # that cannot tell a rehearsal from the real thing is not evidence.
 LOG="${DA_MIDNIGHT_LOG:-/home/yuqing/ctaNew/data/pm_5min/derived/.da_midnight_verify.log}"
-V=/home/yuqing/ctaNew/live/pm_research/da_forward_day_verify.py
+# Overridable ONLY inside a FULLY isolated rehearsal (see the pair guard
+# below, which this joins). A stub verifier is the only way to exercise what
+# happens when the verifier exits non-zero while still leaving a well-formed
+# artifact -- the case the artifact-shape check cannot distinguish, and the
+# reason `rc` had to stop being decorative.
+V="${DA_MIDNIGHT_VERIFY_BIN:-/home/yuqing/ctaNew/live/pm_research/da_forward_day_verify.py}"
 PY=/home/yuqing/pricer-sol/venv/bin/python3
 cd /home/yuqing/ctaNew/live/pm_research || exit 3
 # THE PAIR GUARD RUNS BEFORE ANY WRITE. Codex batch-2 §7: with only OUTDIR
@@ -44,6 +49,14 @@ if { [ -n "${DA_MIDNIGHT_LOG:-}" ] && [ -z "${DA_MIDNIGHT_OUTDIR:-}" ]; } || \
   echo "REFUSED: DA_MIDNIGHT_LOG and DA_MIDNIGHT_OUTDIR must be overridden" \
        "TOGETHER or not at all. Overriding only one gives a rehearsal that" \
        "writes PRODUCTION verdicts while logging elsewhere." >&2
+  exit 5
+fi
+if [ -n "${DA_MIDNIGHT_VERIFY_BIN:-}" ] && \
+   { [ -z "${DA_MIDNIGHT_LOG:-}" ] || [ -z "${DA_MIDNIGHT_OUTDIR:-}" ]; }; then
+  echo "REFUSED: DA_MIDNIGHT_VERIFY_BIN may be set ONLY inside a fully" \
+       "isolated rehearsal, with DA_MIDNIGHT_LOG and DA_MIDNIGHT_OUTDIR both" \
+       "overridden. A stub verifier writing production verdicts is worse than" \
+       "no isolation at all." >&2
   exit 5
 fi
 mkdir -p "$OUTDIR"
@@ -160,7 +173,17 @@ for _i in "${!DAYS[@]}"; do
         --supersedes "$OUTDIR/da_dayverdict_$d.json" \
         --write-reason "$REASON" --out "$tmp" >> "$LOG" 2>&1
   rc=$?
-  if "$PY" -c 'import json,sys
+  # rc GOVERNS, it does not merely get printed. It was captured here and used
+  # only in the log line, so the install decision rested entirely on the
+  # artifact's SHAPE -- and a non-zero exit that still left a shaped file
+  # would have been installed under a log line reading "verdict artifact
+  # written" beside "exit=4". Only 0 (pass) and 1 (day failed) are verdict
+  # outcomes; every other code is an instrument failure, whatever is on disk.
+  if [ "$rc" -ne 0 ] && [ "$rc" -ne 1 ]; then
+    rm -f "$tmp"
+    broke=4
+    echo "exit=$rc for $d  <-- INSTRUMENT FAILURE: exit code is not a verdict outcome (0=pass, 1=day failed). NOTHING WAS VERIFIED." >> "$LOG"
+  elif "$PY" -c 'import json,sys
 d=json.load(open(sys.argv[1]))
 sys.exit(0 if d.get("day_token")==sys.argv[2] and d.get("predicates") else 1)'        "$tmp" "$d" 2>/dev/null; then
     mv -f "$tmp" "$OUTDIR/da_dayverdict_$d.json"

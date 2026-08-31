@@ -142,3 +142,60 @@ check "count rc 3 preserved-> WORST wins"       3 1 3
 echo
 echo "seam22: $pass passed, $fail failed"
 [ "$fail" = 0 ]
+
+# ==========================================================================
+# da_midnight_verify.sh: rc GOVERNS the install, it is not merely logged.
+# The install decision rested on the artifact's SHAPE alone while `rc` was
+# captured and only printed -- so a verifier exiting non-zero that still left
+# a well-formed file would have been installed under a log line reading
+# "verdict artifact written" beside "exit=4". A gate never seen to fail is not
+# evidence, so each case drives a STUB verifier that writes a good artifact
+# and exits with the code under test.
+# ==========================================================================
+echo "seam 23 -- midnight rc gate (stub verifier writes a GOOD artifact):"
+M="/home/yuqing/ctaNew/live/pm_research/da_midnight_verify.sh"
+rcgate() {  # rcgate <label> <stub_rc> <want_installed 0|1>
+  local label="$1" srb="$2" want="$3"
+  local d; d="$(mktemp -d)"
+  cat > "$d/stub.py" <<STUB
+import json, sys
+a = sys.argv
+out = a[a.index("--out") + 1]
+day = a[a.index("--day") + 1]
+json.dump({"day_token": day, "predicates": [{"predicate": "x", "pass": True}],
+           "all_pass": True, "day_closed_calendar": True,
+           "as_of_utc": "2026-08-31T00:00:00+00:00"}, open(out, "w"))
+sys.exit($srb)
+STUB
+  DA_MIDNIGHT_LOG="$d/log" DA_MIDNIGHT_OUTDIR="$d/out" \
+    DA_MIDNIGHT_VERIFY_BIN="$d/stub.py" bash "$M" >/dev/null 2>&1
+  local got=0; ls "$d/out"/da_dayverdict_*.json >/dev/null 2>&1 && got=1
+  if [ "$got" = "$want" ]; then pass=$((pass+1)); echo "  OK   $label"
+  else fail=$((fail+1)); echo "  FAIL $label: installed=$got want=$want"; fi
+  rm -rf "$d"
+}
+rcgate "rc=4 (instrument failure) is NOT installed even though the artifact is well-formed" 4 0
+rcgate "rc=3 (an exit code that is not a verdict outcome) is NOT installed" 3 0
+rcgate "POSITIVE CONTROL: rc=0 installs" 0 1
+rcgate "POSITIVE CONTROL: rc=1 (day FAILED its bars) is a verdict and installs" 1 1
+
+echo "seam 24 -- a stub verifier may not run half-isolated:"
+d="$(mktemp -d)"; : > "$d/stub.py"
+if DA_MIDNIGHT_VERIFY_BIN="$d/stub.py" DA_MIDNIGHT_LOG="$d/log" bash "$M" >/dev/null 2>&1; then
+  fail=$((fail+1)); echo "  FAIL a stub verifier ran without DA_MIDNIGHT_OUTDIR"
+else
+  pass=$((pass+1)); echo "  OK   a stub verifier without BOTH overrides REFUSES -- it would write production verdicts"
+fi
+rm -rf "$d"
+
+# THE RUNNER MUST BE ABLE TO FAIL. This file had NO exit statement: its status
+# was whatever the last command returned -- an `echo`, then an `rm` -- so it
+# reported "N failed" in text and exited 0 regardless. Every green run of it,
+# including as a gate in an all-gates sweep, was evidence of nothing. A gate
+# that cannot fail is not a gate.
+echo "seam total: $pass passed, $fail failed"
+if [ "$fail" -ne 0 ]; then
+  echo "SEAM TEST FAILED ($fail case(s))" >&2
+  exit 1
+fi
+exit 0
