@@ -17726,6 +17726,30 @@ The R-271 escalation was RIGHT in substance and sat ~2h in the wrong CHANNEL: BE
 
 **Method note.** Every item here was re-derived by execution, not carried across from the review that raised it — two claims did not survive that (a "canonical_cause maps APP_HEARTBEAT_TIMEOUT to UNKNOWN" issue is moot because the cause string does not yet exist outside the v5 tests, and the `da_dayverdict` glob hazard was not live because the token filter sits two lines below the glob). **A finding inherited without re-execution is a rumour with a citation.**
 
+### R-362 — 2026-08-31T14:05Z — coordinator — **LIVE-1 IS NOT A RISK, IT IS A MEASURED CONTAMINATION: 668 windows across 7 of 13 days hold near-zero data with NO gap row, and the ONE day whose verdict reads `all_pass: true` is among them** (`871baee`, `pm_tape_density.py`, receipt `derived/tape_density_v1.json`)
+
+**The instrument.** Uncompressed bytes per `(day, coin, window)`, read from each gzip member's **ISIZE trailer** — exact and O(1) per file, so the whole 24,113-file tape is a stat-and-seek rather than 24k decompressions (the CPU fence stands). Thinness is relative to the **(day, coin) median**, because activity varies by two orders of magnitude across coins and days, and a global byte floor would flag every hype window and no btc window. Thin windows are then split by the only question that matters: **does any gap row cover this window?** A thin window the ledger already records is ACCOUNTED — the bars charge for it. A thin window with no gap row is **INVISIBLE**: no row, full coverage, clean P1/P2/P3.
+
+**The result.** **7 of 13 days, 668 invisible windows.** Three verified at the artifact, not by file size:
+
+| day | what | ground truth |
+|---|---|---|
+| **2026-08-26** | 04:35Z → 07:55Z **CONTIGUOUS 3 h 20 m**, all seven coins at 0.05–3.5% of median | zero gap rows |
+| **2026-08-30** | 18:00–18:20Z, all seven coins | btc 18:05Z holds **532 rows**; a normal btc window holds **70,284** |
+| **2026-08-29** | 10 windows, five coins | eth 20:10Z holds **2 ROWS** against **23,565** in the window beside it |
+
+**08-29 is the one day in the entire tape whose verdict reads `all_pass: true`.** It passes every quality bar while carrying windows that are empty in all but name. That is the defect's exact prediction, realised, on the only day it could do the most damage.
+
+**The pattern is ALWAYS all seven coins simultaneously**, which rules out a per-socket feed stall and makes it process-level: the collector alive, files opening and closing on schedule, almost nothing arriving. Note what the gap ledger's silence means here — **it is correct**. No socket disconnected. There was nothing for it to record. **The ledger answered the question it was asked; nobody asked the other one.**
+
+**Why every earlier instrument missed it, stated as a class.** `complete_tape` counts the windows that EXIST; `gap_rate_under_bar` counts the disconnects that were RECORDED; `oldest_age_s` — the one signal that would have seen it, computed every 60 s on every coin — is printed to a log and **read by nothing**. **Three instruments, one blind spot, because all three measure the CONTAINER and none measures the CONTENT.**
+
+**Scope and what it does NOT decide (rule 14).** The instrument computes a predicate and reports a population; **whether a thinned window makes a day inadmissible is the day verdict's call**, and `complete_tape` is DA's artifact. Dispatched to DA as the consumer half. Falsifier per rule 15: a positive control it must flag, a **discrimination control** proving it separates loss the ledger KNOWS from loss it missed, a negative control at a ~0 threshold, and two refusals — an absent day and an empty day directory REFUSE rather than reporting a clean zero, **which is the empty-set-passes trap that already fired once on the 08-27 arm**. The trailer measure is asserted equal to a real decompress, so no number here rests on a proxy.
+
+**What this changes about everything upstream.** Every result computed on 08-19, 08-20, 08-22, 08-26, 08-29, 08-30 or 08-31 inherits this, and **no receipt anywhere states it**, because no receipt could — the population looked complete. This does not invalidate those results; it means **their denominators were never known**. Rule 8's "every quoted population carries its n AND as-of" has been satisfied in form and not in fact: the n counted windows that existed.
+
+**And it reframes R-360's open question.** 08-25 is when btc's disconnects jumped twenty-fold; **08-26 04:35Z is a contiguous 3 h 20 m of near-total data loss on every coin.** Two process-level events on consecutive days on the same machine, and R-150's resource fencing (`9f00381`) is timestamped **08-26 05:27 — inside the outage window.** I am not yet claiming a cause. I am recording that the three are adjacent and that **whatever explains 08-25 probably explains 08-26**, which makes diagnosing them one question rather than two.
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
