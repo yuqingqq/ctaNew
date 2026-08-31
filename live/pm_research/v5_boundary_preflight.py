@@ -58,6 +58,13 @@ FLAG = "--heartbeat-mode app-v5"
 BOUNDARY_UTC = "2026-08-31T07:00:00Z"
 BOUNDARY_EPOCH = 1788159600  # asserted against BOUNDARY_UTC in selftest
 
+# A post-restart declaration must be NEAR the instant the stamp claims:
+# the start row within POST_START_WINDOW_S of the boundary, the emission
+# within POST_EMIT_WINDOW_S — a collector_start at boundary+3600 stamping
+# the boundary instant is a FALSE era boundary (re-review at 038a1b2).
+POST_START_WINDOW_S = 120
+POST_EMIT_WINDOW_S = 600
+
 # The reviewed candidate (CODE/TEST HOLD RELEASED at df424de).
 CAND_SHA = "1c5291aa6d66ceef0c4a724ea7a1e9fa5128d65d1b69034df5638c0136e98ad5"
 CAND_COMMIT = "7aa9520"
@@ -178,17 +185,30 @@ def check_boundary_current(boundary_utc: str, boundary_epoch: int,
     if phase == "post" and now_epoch < boundary_epoch:
         raise Refused(f"post-restart validation at {now_epoch:.0f} is BEFORE "
                       f"the boundary {boundary_epoch} — nothing deploys early")
+    if phase == "post" and now_epoch >= boundary_epoch + POST_EMIT_WINDOW_S:
+        raise Refused(f"post-restart validation {now_epoch - boundary_epoch:.0f}s "
+                      f"after the boundary (> {POST_EMIT_WINDOW_S}s) — a stamp "
+                      f"emitted now would claim an instant the deploy missed; "
+                      f"abort path + a new ruled boundary")
+
+
+COLLECTOR_ARGV_TOKEN = "live/pm_research/collect_pm.py"
+
+
+def _argv_tokens(exec_start: str) -> list:
+    m = re.search(r"argv\[\]=(.*?) ; ", exec_start)
+    return (m.group(1) if m else exec_start).split()
 
 
 def exec_start_has_flag(exec_start: str) -> bool:
-    """Exact-token check on systemd's ExecStart property: extract the
-    argv[]= segment and require the ADJACENT exact pair
-    ('--heartbeat-mode', 'app-v5'). A substring check accepted 'app-v5x'
-    and flag-lookalikes (pre-arm review finding)."""
-    m = re.search(r"argv\[\]=(.*?) ; ", exec_start)
-    toks = (m.group(1) if m else exec_start).split()
-    return any(a == "--heartbeat-mode" and b == "app-v5"
-               for a, b in zip(toks, toks[1:]))
+    """Exact-token check on systemd's ExecStart property: the ADJACENT pair
+    ('--heartbeat-mode', 'app-v5') AND the collector script itself — a flag
+    on /tmp/not_collector.py is not an armed collector (re-review 038a1b2
+    false-accept 2). Substring checks accepted 'app-v5x' before that."""
+    toks = _argv_tokens(exec_start)
+    flag_ok = any(a == "--heartbeat-mode" and b == "app-v5"
+                  for a, b in zip(toks, toks[1:]))
+    return flag_ok and COLLECTOR_ARGV_TOKEN in toks
 
 
 # The one pre-vocabulary row, pinned by IDENTITY so nothing new inherits the
@@ -294,6 +314,12 @@ def check_post_restart(obs: dict, old_pid: int, start_row: dict | None) -> dict:
         raise Refused(f"declaration recv_ns {_rns} is BEFORE the boundary — "
                       f"a pre-boundary row cannot prove the post-boundary "
                       f"process")
+    if _rns >= (BOUNDARY_EPOCH + POST_START_WINDOW_S) * 10**9:
+        raise Refused(f"declaration recv_ns {_rns} is "
+                      f"{_rns / 1e9 - BOUNDARY_EPOCH:.0f}s after the boundary "
+                      f"(> {POST_START_WINDOW_S}s) — the restart did not "
+                      f"happen at the instant the stamp would claim "
+                      f"(re-review 038a1b2 false-accept 1)")
     if start_row.get("collector_version") != "clob_v5":
         raise Refused(f"new process declares "
                       f"{start_row.get('collector_version')!r}, not clob_v5 — "
@@ -360,6 +386,18 @@ def check_counters(first: dict | None, last: dict | None,
         raise Refused("only ONE counter line so far — progress needs an "
                       "INTERVAL (two heartbeat lines, ~60s apart); wait and "
                       "re-run")
+    if last["app_ping"] < first["app_ping"] or \
+            last["app_pong"] < first["app_pong"]:
+        raise Refused(f"counters DECREASED over the interval (ping "
+                      f"{first['app_ping']}->{last['app_ping']}, pong "
+                      f"{first['app_pong']}->{last['app_pong']}) — totals "
+                      f"are monotonic within one process; a decrease means "
+                      f"the lines span a RESTART and prove nothing about one "
+                      f"process (re-review 038a1b2 false-accept 3)")
+    if last["app_ping"] <= first["app_ping"]:
+        raise Refused(f"pings did NOT advance over the interval "
+                      f"({first['app_ping']}->{last['app_ping']}) — the "
+                      f"sender itself is not running at cadence")
     if last["app_pong"] <= first["app_pong"]:
         raise Refused(f"pongs did NOT advance over the interval "
                       f"(first {first['app_pong']}, last {last['app_pong']}) "
@@ -373,6 +411,11 @@ def check_counters(first: dict | None, last: dict | None,
     # RECONCILIATION INVARIANT (declared): unresolved PINGs = ping - pong
     # may not exceed 2 — one in-flight heartbeat plus one boundary-clipped.
     unresolved = last["app_ping"] - last["app_pong"]
+    if unresolved < 0:
+        raise Refused(f"NEGATIVE unresolved-PING count: ping "
+                      f"{last['app_ping']} < pong {last['app_pong']} — more "
+                      f"answers than questions is a protocol impossibility "
+                      f"for one process; these lines are not one incarnation")
     if unresolved > 2:
         raise Refused(f"material unresolved-PING population: ping "
                       f"{last['app_ping']} vs pong {last['app_pong']} "
@@ -501,7 +544,8 @@ def selftest() -> int:
                 "exec_start": "python3 live/pm_research/collect_pm.py",
                 "era_rows": [V4_ROW]}
     good_armed = {**good_pre,
-                  "exec_start": f"python3 collect_pm.py {FLAG}"}
+                  "exec_start": ("python3 live/pm_research/collect_pm.py "
+                                 f"{FLAG}")}
     good_start = {"recv_ns": (BOUNDARY_EPOCH + 5) * 10**9,
                   "collector_version": "clob_v5", "pid": 4242,
                   "event": "collector_start"}
@@ -580,7 +624,8 @@ def selftest() -> int:
                                        start_row=good_start),
             "unchanged", "KNOWN-BAD: an unchanged PID REFUSES")
     refuses(lambda: check_post_restart(
-                {**good_post, "exec_start": "python3 collect_pm.py"},
+                {**good_post,
+                 "exec_start": "python3 live/pm_research/collect_pm.py"},
                 3687786, good_start),
             "lost", "KNOWN-BAD: ExecStart without the flag post-restart "
             "REFUSES")
@@ -613,7 +658,8 @@ def selftest() -> int:
     refuses(lambda: check_counters(_HB1, {**_HB2, "app_pong": 0,
                                           "app_ping": 0},
                                    True, 4242, "clob_v5"),
-            "did not advance", "KNOWN-BAD: zeroed last-line counters REFUSE")
+            "decreased", "KNOWN-BAD: zeroed last-line counters REFUSE (via "
+            "monotonicity — a reset means a restart)")
     refuses(lambda: check_counters(_HB1, {**_HB2, "app_ping": 100,
                                           "app_pong": 4},
                                    True, 4242, "clob_v5"),
@@ -647,7 +693,7 @@ def selftest() -> int:
 
     # V5-0700-R4 emitter half: rollback receipt checker
     _rb_obs = {**good_post, "main_pid": 5151,
-               "exec_start": "python3 collect_pm.py"}
+               "exec_start": "python3 live/pm_research/collect_pm.py"}
     _rb_start = {"recv_ns": (BOUNDARY_EPOCH + 900) * 10**9,
                  "collector_version": "clob_v4", "pid": 5151,
                  "event": "collector_start"}
@@ -691,7 +737,8 @@ def selftest() -> int:
             "arming must complete", "KNOWN-BAD (pre-arm review): pre-arm at "
             "boundary+1s REFUSES — the stamp may not claim an instant the "
             "restart missed")
-    _ES_BAD = ("{ path=/x/python3 ; argv[]=/x/python3 collect_pm.py "
+    _ES_BAD = ("{ path=/x/python3 ; argv[]=/x/python3 "
+               "live/pm_research/collect_pm.py "
                "--heartbeat-mode app-v5x ; ignore_errors=no }")
     refuses(lambda: check_pre_arm({**good_armed, "exec_start": _ES_BAD},
                                   expect_flag=True),
@@ -699,12 +746,14 @@ def selftest() -> int:
             "substring superset of the flag — REFUSES under exact-token "
             "matching")
     _ES_SPLIT = ("{ path=/x/python3 ; argv[]=/x/python3 --heartbeat-mode "
-                 "collect_pm.py app-v5 ; ignore_errors=no }")
+                 "live/pm_research/collect_pm.py app-v5 ; "
+                 "ignore_errors=no }")
     refuses(lambda: check_pre_arm({**good_armed, "exec_start": _ES_SPLIT},
                                   expect_flag=True),
             "did not land", "KNOWN-BAD: flag tokens present but NOT ADJACENT "
             "REFUSES — the argument would bind to the wrong option")
-    _ES_GOOD = ("{ path=/x/python3 ; argv[]=/x/python3 collect_pm.py "
+    _ES_GOOD = ("{ path=/x/python3 ; argv[]=/x/python3 "
+                "live/pm_research/collect_pm.py "
                 "--heartbeat-mode app-v5 ; ignore_errors=no }")
     check_pre_arm({**good_armed, "exec_start": _ES_GOOD}, expect_flag=True)
     ok(True, "POSITIVE: the real systemd ExecStart property shape with the "
@@ -738,6 +787,41 @@ def selftest() -> int:
     refuses(lambda: check_runbook_consistency("no instants at all"),
             "not re-pointed", "KNOWN-BAD: a body never naming the instant "
             "REFUSES")
+
+    refuses(lambda: check_post_restart(good_post, 3687786,
+                                       {**good_start,
+                                        "recv_ns": (BOUNDARY_EPOCH + 3600)
+                                        * 10**9}),
+            "did not happen at the instant", "KNOWN-BAD (038a1b2 #1): a "
+            "collector_start at boundary+3600s REFUSES — the stamp may not "
+            "claim an instant the restart missed")
+    refuses(lambda: check_boundary_current(BOUNDARY_UTC, BOUNDARY_EPOCH,
+                                           BOUNDARY_EPOCH + 3600, "post"),
+            "missed", "KNOWN-BAD (038a1b2 #1): stamp emission an hour late "
+            "REFUSES")
+    refuses(lambda: check_pre_arm({**good_armed,
+                                   "exec_start":
+                                   "{ path=/x ; argv[]=/x/python3 "
+                                   "/tmp/not_collector.py --heartbeat-mode "
+                                   "app-v5 ; ignore_errors=no }"},
+                                  expect_flag=True),
+            "did not land", "KNOWN-BAD (038a1b2 #2): the flag on a FOREIGN "
+            "script REFUSES — an armed collector requires the collector")
+    refuses(lambda: check_counters({**_HB1, "app_ping": 3, "app_pong": 3},
+                                   {**_HB2, "app_ping": 1, "app_pong": 8},
+                                   True, 4242, "clob_v5"),
+            "decreased", "KNOWN-BAD (038a1b2 #3): ping 3->1 with pong 3->8 "
+            "REFUSES — totals are monotonic within one process; a decrease "
+            "spans a restart")
+    refuses(lambda: check_counters(_HB1, {**_HB2, "app_ping": 4,
+                                          "app_pong": 8},
+                                   True, 4242, "clob_v5"),
+            "impossibility", "KNOWN-BAD: negative unresolved (pong > ping) "
+            "REFUSES — more answers than questions is not one process")
+    refuses(lambda: check_counters(_HB1, {**_HB2, "app_ping": 3},
+                                   True, 4242, "clob_v5"),
+            "sender itself", "KNOWN-BAD: pings static over the interval "
+            "REFUSES — the sender is not at cadence")
 
     print(f"v5_boundary_preflight selftests: {n[0]} checks passed")
     return 0
