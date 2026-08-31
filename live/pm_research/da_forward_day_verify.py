@@ -415,7 +415,18 @@ def _ledger_rows(src: Path) -> list[tuple]:
     for lineno, ln in enumerate(src.read_text().splitlines(), 1):
         if not ln.strip():
             continue
-        r = json.loads(ln)
+        try:
+            r = json.loads(ln)
+        except json.JSONDecodeError as e:
+            # The raw error's coordinates are the FRAGMENT's, not the file's:
+            # it says "line 1 column 428" for ledger line 7, and an operator
+            # reads that as the first row. Name the real line, and refuse by
+            # name so both consumers of this ledger agree on malformed.
+            raise ValueError(
+                f"REFUSED: era ledger row {lineno} is not valid JSON ({e.msg} "
+                f"at column {e.colno} OF THAT ROW) -- a torn or concatenated "
+                f"line, e.g. an append interrupted mid-write: {ln[:80]!r}"
+            ) from None
         b, v = r.get("boundary_utc"), r.get("collector_schema_version")
         if not b or not v:
             raise ValueError(
@@ -2155,6 +2166,28 @@ def _selftests() -> int:
        "flagged reconstructed -- recovery is the exception, not the default")
 
     _self = _refusal([_v4, dict(_v5, supersedes="clob_v5")])
+    _torn = _refusal([_v4], "20260901") or ""
+    with _tfe.TemporaryDirectory() as _t3:
+        _f = Path(_t3) / "runs.jsonl"
+        _good = json.dumps(_v5)
+        for _label, _text, _row in (
+                ("truncated mid-object", json.dumps(_v4) + "\n" + _good[:60], 2),
+                ("two objects concatenated",
+                 json.dumps(_v4) + "\n" + _good + _good, 2)):
+            _f.write_text(_text, encoding="utf-8")
+            _msg = ""
+            try:
+                day_era_admission("20260901", _f)
+            except ValueError as e:
+                _msg = str(e)
+            ok("is not valid JSON" in _msg and f"row {_row}" in _msg
+               and "OF THAT ROW" in _msg,
+               f"KNOWN-BAD ({_label}): a malformed ledger line refuses BY NAME "
+               f"and names the REAL row. It used to leak json's own "
+               f"JSONDecodeError, whose 'line 1 column N' is the FRAGMENT's "
+               f"coordinate -- an operator reads that as ledger line 1 and "
+               f"looks at the wrong row")
+
     # ---- differential-fuzz findings (BE, 17,729 ledgers) ---------------
     for _spell in ("2026-08-31T07:00:00.500Z", "2026-08-31T07:00:00+00:00",
                    "2026-08-31 07:00:00Z", "2026-08-31"):
