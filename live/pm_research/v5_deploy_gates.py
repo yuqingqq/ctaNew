@@ -59,6 +59,8 @@ GATES: list[tuple[str, list[str]]] = [
                          "--selftest"]),
     ("v4 behaviour (git-extracted)",
      [PY, str(HERE / "collect_pm_v4_behavior_tests.py")]),
+    ("v4_1 boundary gate",
+     [PY, str(HERE / "v41_boundary_preflight.py"), "--selftest"]),
 ]
 
 # A gate whose script is missing must FAIL, not vanish from the tally.
