@@ -5079,3 +5079,57 @@ thing being deployed fixes anything.* It does not.
   reader resolves) was not.
 - Do not cite the "98.22% of disconnects were local PING_TIMEOUTs" figure as
   support for v5 again. The number is right; the inference from it was wrong.
+
+---
+
+## 2026-08-31T17:10Z — coordinator — **v4_1 MIGRATION SCHEDULED FOR 22:00:00Z. One USER ruling still blocks it.**
+
+**What is deployed:** ping 3/3 -> 10/10, as era `clob_v4_1`. A ROLLBACK of
+O1a, which was measured to have made btc ~2.6x worse. It does **NOT** repair
+the 08-25 break — that is a REMOTE per-connection throughput limit at the
+venue edge (`BTC_GAP_DIAGNOSIS_2026-08-26`), with our client exonerated
+(`ws_ever_paused=False` across 1,106 disconnects). **Expect btc NEAR the P1
+bar (~123 vs 120), not clear of it.** Cadence is not established as the cause
+of the s/hr difference — the 10/10 days also differ by storm and by the R-351
+contamination (DA's caution).
+
+**Instant `2026-08-31T22:00:00Z`** — USER ruled "set as 9.1", read as *make
+09-01 the first clean v4_1 day*, which needs the boundary BEFORE 09-01 begins.
+08-31 becomes the mixed day and has already failed on btc, so spending it
+costs nothing. 22:00Z is 2h clear of UTC midnight (audit A1).
+
+**BLOCKED ON — and the gate enforces both:**
+1. **`clob_v4_1` admissibility, USER ruling.** `require_target_admissible`
+   reads DA's `ERA_ADMISSIBLE` and REFUSES while it is absent (verified live).
+   **DA recommends ADMIT** (Q-DA-188): admissibility is about the DATA, and
+   v4_1 changes only the keepalive cadence — row format, timestamps and
+   sub-second validity are identical. **Do not edit that table to unblock a
+   deploy; DA refused that ruling for the right reason.**
+2. **Codex's final seam verdict.** Request filed (`0587ab7`); Codex was quota-
+   blocked until 18:26Z. Re-dispatch scheduled 18:32Z.
+
+**Scheduled (session-only, dies with this session):** 18:32Z re-dispatch Codex;
+21:38Z migration window.
+
+**Package state:** 13 gates green. v4_1 gate 47 selftests, shadow 13.
+Byte pin verified against tree AND HEAD. `--pre-arm` against the LIVE system
+refuses by name on the unruled admissibility — the mechanised precondition
+working, not a defect.
+
+**Watch-outs carried into the window:**
+- **Same-IP confound:** the shadow opens a connection from the SAME HOST AND
+  IP as the collector, and the 08-26 diagnosis does not rule out a per-IP
+  component. It starts 20 min before the boundary, so harm from it would be
+  CONFOUNDED with the deploy. Step 0's verify runs BEFORE the drop-in for
+  exactly this reason — **if btc degrades between step 0 and step 1, remove
+  the shadow and stop.**
+- **v4_1 numbers are NOT comparable to v4 ones.** The cause mix shifts (~97%
+  PING_TIMEOUT at 3/3 vs ~54% at 10/10), so a bar crossing at the boundary is
+  a measurement change, not a regression.
+- **The five-day clock must record the ERA of every accrued day** and never
+  compare quality across eras (DA Q-DA-188). Nothing reads
+  `race_accrual_eligible` yet, so this is a design input BEFORE that is built.
+- **Freeze the content-liveness status rule before 09-01 is judged**, not
+  after (rule 11). 08-31 stands `CONTENT_LIVENESS_UNRESOLVED`.
+- A missed boundary is cheap; a bad one is not. **08-31 is already a failed
+  day, so there is nothing to salvage by rushing.**
