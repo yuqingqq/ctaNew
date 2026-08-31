@@ -1,6 +1,6 @@
 {
   "all_pass": true,
-  "as_of_utc": "2026-08-30T00:06:01.246972+00:00",
+  "as_of_utc": "2026-08-31T03:19:23.244574+00:00",
   "authorised_by": "R-141(1); DA-verifies-first restored as a hard precondition by R-153(2)",
   "bar_regime": "day_bar_v2",
   "day": "2026-08-29",
@@ -56,9 +56,22 @@
     "note": "days before the boundary are judged by the FROZEN count bar; the v2 bars are not applied retroactively"
   },
   "day_closed_calendar": true,
-  "day_closed_selector": false,
+  "day_closed_selector": true,
   "day_token": "20260829",
   "decision_note": "This instrument STATES REASONS; it does not exclude. R-141(1): a day that fails DA's verification is EXCLUDED WITH A STATED REASON, and that exclusion is the coordinator's to rule, not a worker's boolean (rule 14). Note also that gaps/hour understates damage: day one ran 28.0/hr while 80.2% of btc windows carried a gap -- read windows_gap_affected beside it, never instead of it.",
+  "era_admission": {
+    "boundaries_inside_day": [],
+    "day": "20260829",
+    "era_admissible_ruled": {
+      "clob_v3_1": false
+    },
+    "era_pure": true,
+    "eras_touched": [
+      "clob_v3_1"
+    ],
+    "race_admissible_by_era": false,
+    "why": "a day not lying ENTIRELY inside ONE admissible era cannot accrue for ANY coin, whatever its quality -- era admission is a ruled property of the collector, not a measured property of the feed"
+  },
   "freeze_epoch": 1787897340.0,
   "gap_series": {
     "causes": {
@@ -73,7 +86,7 @@
       16
     ],
     "hours_with_a_gap": 24,
-    "ledger_lines": 5374,
+    "ledger_lines": 7386,
     "ledger_unparseable": 0,
     "lost_s": 1193.9,
     "n_gaps": 144,
@@ -145,7 +158,7 @@
           16
         ],
         "hours_with_a_gap": 24,
-        "ledger_lines": 5374,
+        "ledger_lines": 7386,
         "ledger_unparseable": 0,
         "lost_s": 774.9,
         "n_gaps": 136,
@@ -219,14 +232,15 @@
           "predicate": "P3_bar"
         }
       ],
-      "race_accrual_eligible": true,
+      "race_accrual_eligible": false,
       "superseded_not_governing": [
         "gap_rate_under_bar"
       ],
       "verdict_split": {
         "day_quality_pass": true,
+        "era_admissible": false,
         "post_freeze_pass": true,
-        "race_accrual_eligible": true,
+        "race_accrual_eligible": false,
         "why": "feed health and clock eligibility are separate questions; a healthy day BEFORE the freeze commit is a good day that does not count, not a bad day"
       },
       "windows_gap_affected": {
@@ -268,7 +282,7 @@
         "hours_elapsed": 24.0,
         "hours_over_bar": [],
         "hours_with_a_gap": 1,
-        "ledger_lines": 5374,
+        "ledger_lines": 7386,
         "ledger_unparseable": 0,
         "lost_s": 10.5,
         "n_gaps": 1,
@@ -319,14 +333,15 @@
           "predicate": "P3_bar"
         }
       ],
-      "race_accrual_eligible": true,
+      "race_accrual_eligible": false,
       "superseded_not_governing": [
         "gap_rate_under_bar"
       ],
       "verdict_split": {
         "day_quality_pass": true,
+        "era_admissible": false,
         "post_freeze_pass": true,
-        "race_accrual_eligible": true,
+        "race_accrual_eligible": false,
         "why": "feed health and clock eligibility are separate questions; a healthy day BEFORE the freeze commit is a good day that does not count, not a bad day"
       },
       "windows_gap_affected": {
@@ -342,12 +357,12 @@
   "per_coin_rule_from_day": "20260828",
   "predicates": [
     {
-      "detail": "selector day_closed=False (calendar says True; the tape-derived predicate lags the boundary by up to one window); bnb 288/288, btc 288/288, doge 288/288, eth 288/288 (+3 more)",
+      "detail": "selector day_closed=True; bnb 288/288, btc 288/288, doge 288/288, eth 288/288 (+3 more)",
       "pass": true,
       "predicate": "entirely_post_freeze"
     },
     {
-      "detail": "expect 288 (closed day (calendar)); btc 288 (short 0), eth 288 (short 0)  [selector day_closed=False DISAGREES with the calendar; its tape-derived predicate lags the boundary by up to one window]",
+      "detail": "expect 288 (closed day (calendar)); btc 288 (short 0), eth 288 (short 0)",
       "pass": true,
       "predicate": "complete_tape"
     },
@@ -387,12 +402,13 @@
       "predicate": "P3_eth"
     }
   ],
-  "race_accrual_eligible": true,
+  "race_accrual_eligible": false,
   "verdict_granularity": "per_coin",
   "verdict_split": {
     "day_quality_pass": true,
+    "era_admissible": false,
     "post_freeze_pass": true,
-    "race_accrual_eligible": true,
+    "race_accrual_eligible": false,
     "why": "feed health and clock eligibility are separate questions; a healthy day BEFORE the freeze commit is a good day that does not count, not a bad day"
   },
   "windows_gap_affected": {
@@ -413,5 +429,5 @@
       "scope_note": "COIN_LEVEL is the governing scope (R-191); PER_SLUG is retained for continuity and is NOT the bar's input. Raw breadth is a REPORTED DIAGNOSTIC with no bar -- O1 barely moves it, so a bar here would reject good post-fix days forever."
     }
   },
-  "write_reason": "scheduled unit run, da-midnight-verify.service (INVOCATION_ID=142596744fc3492283df4f1ceb3be3b2)"
+  "write_reason": "R-340 era-admission guard: superseding verdict; the original stays as provenance (rule 13)"
 }

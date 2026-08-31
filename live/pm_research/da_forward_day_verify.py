@@ -325,7 +325,92 @@ def governing_predicates(preds: list, regime: str) -> list:
     return [x for x in preds if x["predicate"] not in SUPERSEDED_ON_V2]
 
 
-def split_verdict(preds: list, regime: str = "count_bar_v1_frozen") -> dict:
+#: THE ERA LEDGER. Admission is keyed on this file, not on quality.
+PM_COLLECTOR_RUNS = Path("/home/yuqing/ctaNew/data/pm_5min/collector_runs.jsonl")
+
+#: ERA ADMISSIBILITY IS A RULED INPUT, NEVER DERIVED. A collector era is
+#: admissible for race accrual because a ruling says so -- not because its days
+#: happen to pass quality. Those are different questions and 08-30 is what
+#: happens when only the second one is asked: ETH passed quality on a MIXED-ERA
+#: day and was marked `race_accrual_eligible=true`, while the day as a whole
+#: read false only because BTC failed QUALITY. The eligibility was wrong for a
+#: reason quality can never see.
+#:
+#: An era absent from this table REFUSES. A new collector version is not
+#: admissible by default, and silence is not a ruling.
+ERA_ADMISSIBLE = {
+    "clob_v3_1": False,   # pre-O1
+    "clob_v4": False,     # O1 package; ruled never admissible post-O1 (R-340)
+    "clob_v5": True,      # heartbeat repair; admissible once its era starts
+}
+
+
+def era_spans(path: Path | None = None) -> list[tuple[float, str]]:
+    """(start_epoch, era_name), ascending. The era in force BEFORE the first
+    recorded boundary is that entry's `supersedes` -- the ledger records
+    transitions, so the opening era is named only by what it replaced."""
+    src = PM_COLLECTOR_RUNS if path is None else path
+    rows = []
+    for ln in src.read_text().splitlines():
+        if not ln.strip():
+            continue
+        r = json.loads(ln)
+        b = r.get("boundary_utc")
+        if not b or not r.get("collector_schema_version"):
+            raise ValueError(
+                f"REFUSED: era ledger row lacks boundary_utc or "
+                f"collector_schema_version: {ln[:120]}")
+        ts = dt.datetime.fromisoformat(b.replace("Z", "+00:00")).timestamp()
+        rows.append((ts, r["collector_schema_version"], r.get("supersedes")))
+    if not rows:
+        raise ValueError("REFUSED: era ledger is EMPTY -- with no recorded "
+                           "era, no day can be shown to lie inside one")
+    rows.sort()
+    spans = [(float("-inf"), rows[0][2])] if rows[0][2] else []
+    spans += [(t, name) for t, name, _ in rows]
+    return spans
+
+
+def day_era_admission(day_token: str, path: Path | None = None) -> dict:
+    """Is this UTC day ENTIRELY inside ONE ADMISSIBLE era?
+
+    Two conditions, and BOTH are independent of day quality:
+      * PURITY -- no era boundary falls strictly inside the day. A mid-day
+        transition means the day's rows come from two collectors, so no coin's
+        rows are homogeneous and per-coin quality cannot rescue it.
+      * ADMISSIBILITY -- the single era it lies in is ruled admissible.
+    """
+    lo, hi = day_bounds(day_token)
+    spans = era_spans(path)
+    inside = [(t, n) for t, n in spans if lo < t < hi]
+    covering = [n for i, (t, n) in enumerate(spans)
+                if t <= lo and (i + 1 == len(spans) or spans[i + 1][0] > lo)]
+    touched = sorted({n for n in covering} | {n for _, n in inside})
+    unknown = [n for n in touched if n not in ERA_ADMISSIBLE]
+    if unknown:
+        raise ValueError(
+            f"REFUSED: era(s) {unknown} touch {day_token} but carry NO ruled "
+            f"admissibility. A collector version is not admissible by default "
+            f"and silence is not a ruling.")
+    pure = not inside and len(touched) == 1
+    admissible = pure and ERA_ADMISSIBLE.get(touched[0], False) is True
+    return {
+        "day": day_token, "eras_touched": touched,
+        "boundaries_inside_day": [dt.datetime.fromtimestamp(
+            t, dt.timezone.utc).isoformat().replace("+00:00", "Z")
+            for t, _ in inside],
+        "era_pure": pure,
+        "era_admissible_ruled": {n: ERA_ADMISSIBLE.get(n) for n in touched},
+        "race_admissible_by_era": admissible,
+        "why": ("a day not lying ENTIRELY inside ONE admissible era cannot "
+                "accrue for ANY coin, whatever its quality -- era admission is "
+                "a ruled property of the collector, not a measured property of "
+                "the feed"),
+    }
+
+
+def split_verdict(preds: list, regime: str = "count_bar_v1_frozen",
+                  era_admissible: bool | None = None) -> dict:
     """Separate DAY QUALITY (feed health) from RACE ACCRUAL (eligibility).
 
     CALLABLE, so the split can be driven directly rather than inferred from a
@@ -337,11 +422,21 @@ def split_verdict(preds: list, regime: str = "count_bar_v1_frozen") -> dict:
     accrual = [x for x in gov if x["predicate"] == ACCRUAL_PREDICATE]
     q_ok = bool(quality) and all(x["pass"] for x in quality)
     a_ok = bool(accrual) and all(x["pass"] for x in accrual)
+    # ERA ADMISSION IS REQUIRED, NOT OPTIONAL. Passing None would let a caller
+    # obtain eligibility by not asking -- absence of a check is not a passed
+    # check, and this is the exact field that was wrong on 08-30.
+    if era_admissible is not True and era_admissible is not False:
+        raise ValueError(
+            "REFUSED: split_verdict needs an explicit era_admissible. "
+            "Eligibility must not be obtainable by omitting the era question.")
     return {
         "day_quality_pass": q_ok,
         "post_freeze_pass": a_ok,
-        # a day accrues only if it is BOTH healthy and after the clock started
-        "race_accrual_eligible": q_ok and a_ok,
+        "era_admissible": era_admissible,
+        # THREE conjuncts: healthy, after the clock started, AND inside one
+        # admissible era. The third was missing and 08-30's ETH is what that
+        # looked like.
+        "race_accrual_eligible": q_ok and a_ok and era_admissible,
         "why": "feed health and clock eligibility are separate questions; a "
                "healthy day BEFORE the freeze commit is a good day that does "
                "not count, not a bad day",
@@ -577,6 +672,10 @@ def verify_day(day_token: str, freeze_epoch: float,
     import policy_optimizer_queue_realistic as qr
 
     lo, hi = day_bounds(day_token)
+    # ERA ADMISSION, COMPUTED ONCE FOR THE DAY. A mixed-era day is mixed for
+    # EVERY coin; a coin cannot pass its way out of it, which is exactly what
+    # 08-30's ETH did before this guard existed.
+    _era = day_era_admission(day_token)
     iso = dt.datetime.fromtimestamp(lo, dt.timezone.utc).strftime("%Y-%m-%d")
     now = dt.datetime.now(dt.timezone.utc)
     preds: list[dict[str, Any]] = []
@@ -750,7 +849,9 @@ def verify_day(day_token: str, freeze_epoch: float,
                     cpp(f"{_k}_bar", _cb.get(f"{_k}_pass", False),
                         _cb.get("why") or f"{_k} on this coin's own gaps")
             _gov_cp = governing_predicates(cp, _reg)
-            _csplit = split_verdict(cp, _reg)
+            # SAME era admission for every coin: a mixed-era day is mixed
+            # for all of them, and a coin cannot pass its way out of it.
+            _csplit = split_verdict(cp, _reg, _era["race_admissible_by_era"])
             per_coin[coin] = {
                 "predicates": cp,
                 "day_bar_v2": _cb,
@@ -808,11 +909,12 @@ def verify_day(day_token: str, freeze_epoch: float,
     _day_all_pass = compose_all_pass(
         preds, per_coin if gran == "per_coin" else {}, bars_v2, regime)
 
-    _split = split_verdict(preds, regime)
+    _split = split_verdict(preds, regime, _era["race_admissible_by_era"])
 
     return {
         "instrument": "da_forward_day_verify_v1",
         "verdict_split": _split,
+        "era_admission": _era,
         "race_accrual_eligible": _split["race_accrual_eligible"],
         "bar_regime": regime,
         "day_bar_v2": bars_v2,
@@ -1125,18 +1227,18 @@ def _selftests() -> int:
     _healthy_early = [{"predicate": "complete_tape", "pass": True},
                       {"predicate": "gap_rate_under_bar", "pass": True},
                       {"predicate": ACCRUAL_PREDICATE, "pass": False}]
-    _sv = split_verdict(_healthy_early)
+    _sv = split_verdict(_healthy_early, era_admissible=True)
     ok(_sv["day_quality_pass"] is True and _sv["race_accrual_eligible"] is False,
        "a day STRADDLING the freeze is day-quality GOOD but does NOT accrue -- "
        "the epoch's whole job, and reporting one number for both would make a "
        "good-but-early day read as a bad day")
     _healthy_late = [dict(x, **({"pass": True} if x["predicate"] == ACCRUAL_PREDICATE else {}))
                      for x in _healthy_early]
-    ok(split_verdict(_healthy_late)["race_accrual_eligible"] is True,
+    ok(split_verdict(_healthy_late, era_admissible=True)["race_accrual_eligible"] is True,
        "a healthy day ENTIRELY AFTER the freeze DOES accrue (positive control)")
     _sick_late = [{"predicate": "gap_rate_under_bar", "pass": False},
                   {"predicate": ACCRUAL_PREDICATE, "pass": True}]
-    ok(split_verdict(_sick_late)["race_accrual_eligible"] is False,
+    ok(split_verdict(_sick_late, era_admissible=True)["race_accrual_eligible"] is False,
        "and an UNHEALTHY day after the freeze does not accrue either -- "
        "accrual needs both halves")
 
@@ -1473,6 +1575,87 @@ def _selftests() -> int:
     ok("calendar" not in closed_label(True, True),
        "positive control: when they agree the line stays short and says "
        "nothing about the calendar")
+
+    # ---- ERA-ADMISSION GUARD (R-340), red-first ------------------------
+    import tempfile as _tfe
+
+    def _ledger(td, rows):
+        f = Path(td) / "runs.jsonl"
+        f.write_text("\n".join(json.dumps(r) for r in rows), encoding="utf-8")
+        return f
+
+    with _tfe.TemporaryDirectory() as _td:
+        _mixed = _ledger(_td, [{"collector_schema_version": "clob_v4",
+                                "supersedes": "clob_v3_1",
+                                "boundary_utc": "2026-08-30T05:30:00Z"}])
+        _a30 = day_era_admission("20260830", _mixed)
+        ok(_a30["era_pure"] is False
+           and _a30["boundaries_inside_day"] == ["2026-08-30T05:30:00Z"]
+           and _a30["race_admissible_by_era"] is False,
+           "KNOWN-BAD (the 08-30 shape): an era boundary INSIDE the day makes "
+           "it era-impure and INADMISSIBLE -- the day's rows come from two "
+           "collectors, so no coin's rows are homogeneous")
+        # THE EXACT ETH SHAPE: quality-PASSING coin on the mixed-era day
+        _pass_preds = [{"predicate": "entirely_post_freeze", "pass": True},
+                       {"predicate": "complete_tape", "pass": True},
+                       {"predicate": "gap_rate_under_bar", "pass": True}]
+        _eth = split_verdict(_pass_preds, "count_bar_v1_frozen",
+                             _a30["race_admissible_by_era"])
+        ok(_eth["day_quality_pass"] is True
+           and _eth["race_accrual_eligible"] is False,
+           "AND THE 08-30 ETH SHAPE ITSELF: a coin that PASSES every quality "
+           "predicate on that day is now INELIGIBLE. Before this the same "
+           "inputs gave race_accrual_eligible=TRUE, and the whole day read "
+           "false only because BTC failed QUALITY -- eligibility wrong for a "
+           "reason quality can never see")
+        _a29 = day_era_admission("20260829", _mixed)
+        ok(_a29["era_pure"] is True
+           and _a29["eras_touched"] == ["clob_v3_1"]
+           and _a29["race_admissible_by_era"] is False,
+           "a day fully inside a NON-admissible era is era-pure but still "
+           "ineligible -- purity and admissibility are separate questions")
+        _adm = _ledger(_td, [{"collector_schema_version": "clob_v4",
+                              "supersedes": "clob_v3_1",
+                              "boundary_utc": "2026-08-30T05:30:00Z"},
+                             {"collector_schema_version": "clob_v5",
+                              "supersedes": "clob_v4",
+                              "boundary_utc": "2026-08-31T07:00:00Z"}])
+        _a901 = day_era_admission("20260901", _adm)
+        ok(_a901["era_pure"] and _a901["eras_touched"] == ["clob_v5"]
+           and _a901["race_admissible_by_era"] is True,
+           "POSITIVE CONTROL: a day fully inside the ADMISSIBLE v5 era is "
+           "admissible -- the guard is not simply refusing everything")
+        ok(split_verdict(_pass_preds, "count_bar_v1_frozen",
+                         _a901["race_admissible_by_era"]
+                         )["race_accrual_eligible"] is True,
+           "and a quality-passing coin on that day IS eligible, so the guard "
+           "gates on era rather than replacing the quality question")
+        _a831 = day_era_admission("20260831", _adm)
+        ok(_a831["era_pure"] is False
+           and _a831["race_admissible_by_era"] is False,
+           "BOUNDARY-DAY KNOWN-BAD: 08-31 carries the v5 transition at 07:00Z, "
+           "so it is mixed v4->v5 and ineligible -- and its quality verdict is "
+           "still produced and PRESERVED as honest v4-storm evidence")
+        _unk = _ledger(_td, [{"collector_schema_version": "clob_v9",
+                              "supersedes": "clob_v4",
+                              "boundary_utc": "2026-08-30T05:30:00Z"}])
+        _refused = ""
+        try:
+            day_era_admission("20260901", _unk)
+        except ValueError as e:
+            _refused = str(e)
+        ok("NO ruled admissibility" in _refused,
+           "an UNRULED era REFUSES: a collector version is not admissible by "
+           "default and silence is not a ruling")
+        _none = ""
+        try:
+            split_verdict(_pass_preds, "count_bar_v1_frozen", None)
+        except ValueError as e:
+            _none = str(e)
+        ok("needs an explicit era_admissible" in _none,
+           "and OMITTING the era question REFUSES -- eligibility must not be "
+           "obtainable by not asking, which is how the field got its value "
+           "before the guard existed")
 
     print(f"da_forward_day_verify selftests: {checks} checks passed")
     return 0
