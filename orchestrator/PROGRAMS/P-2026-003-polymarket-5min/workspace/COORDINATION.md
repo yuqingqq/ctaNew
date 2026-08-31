@@ -17861,6 +17861,30 @@ Everything else on our side was flat or falling across the break: config unchang
 
 **The lesson, and it is the sharpest of the day.** R-357 found a fix that did not address the cause. R-360 proposed a mechanism that failed its own test. R-364 found the fix addressed a non-dominant cause. **R-365 announced a cause on evidence I had not checked for — and the checking took one `ls`.** The pattern across all four is the same and it is not carelessness about analysis: it is **declaring a conclusion at the exact moment the remaining work was cheapest.** "There is no data" is a claim about the world and requires looking, and it is the claim most likely to go unchallenged because it forecloses the search.
 
+### R-367 — 2026-08-31T15:15Z — coordinator — **STATUS LEDGER on the Codex findings: 3 of 5 closed, 2 OPEN, and one of the two open is not a defect to fix but a DECISION to make.** Plus an in-band correction of R-366's own figure
+
+**In-band correction first, because R-366 is the entry a reader would cite.** It reports *"Pearson r … 08-25 (143 samples) | +0.039"*. **That label and that number do not belong to the same population** — the figure was computed over **142** cells, because the join dropped the first interval (Codex HJ-R1). Corrected: **143 cells, 665 events, 663 joined, 2 UNEVALUABLE past the last sysstat endpoint (as-of 23:50:15Z), r = +0.033.** The corrected value **matches Codex's independently computed +0.033 exactly**, which is the strongest available check that the repair converged rather than merely changed. **The conclusion is untouched: host load does not explain the break.**
+
+| finding | state | evidence |
+|---|---|---|
+| **COL-R1** — R-365's root cause unsupported | **CLOSED** | withdrawn in R-366; Codex re-review confirms |
+| **COL-R4** — superseded diagnosis in production source | **CLOSED** | `collect_pm.py` rewritten; Codex re-review confirms |
+| **HJ-R1** — join population inexact, no control for its own join | **FIXED, awaiting re-review** | `2669ef7`; all six stated closure requirements met; selftest 6 → 10 |
+| **COL-R2** — resource controls neither comprehensive nor durable | **OPEN** | verified by execution: every agent scope is `app.slice`, not `research.slice`; collector's `Slice=` only in the untracked drop-in |
+| **COL-R3** — 10/10 has no distinct collector identity | **OPEN — BLOCKS DEPLOY** | verified: `COLLECTOR_VERSION` is still `"clob_v4"`, and the walk refuses `clob_v4 supersedes clob_v4` ("a row naming itself replaces nothing") |
+
+**What HJ-R1 cost and why it is the instructive one.** The tool existed to correct a rule-16 failure and **shipped with no control for its own central operation** — its six checks covered Pearson arithmetic and the archive-absence refusal, i.e. everything except the binning it exists to do. **A falsifier that tests the scaffolding is not a falsifier for the mechanism.** And the interval it silently dropped was the one holding the most-quoted control in the very entry it supported. Four join controls now cover multi-event binning, an event before the first endpoint, an off-by-one at a boundary, and right-edge exclusion.
+
+**The two open findings are not the same KIND of thing, and conflating them would stall the programme for the wrong reason.**
+
+**COL-R3 is a genuine engineering blocker with a clear shape.** A 10/10 restart would change the gap-measurement regime while emitting the same `clob_v4` event identity as the running 3/3 process, and the era machinery cannot express `clob_v4 → clob_v4`. So the revert — committed, tested, all 8 gates green — **must not be deployed** until it has its own collector identity wired through collector-start rows, era admissibility, the boundary emitter and a runbook. That is real work and nobody should pretend otherwise.
+
+**COL-R2 is a standing operational condition, not a gate on this decision.** It matters and it is filed (also as R-361 LIVE-3), but R-366 established that host load is not the break's cause, so closing it is hygiene rather than a precondition.
+
+**AND NEITHER OF THEM BLOCKS THE ONE MOVE THAT IS ACTUALLY AVAILABLE.** The question of whether the five-day race requires btc — when six coins pass the bar by a factor of ten and `race_accrual_eligible` is already computed per coin — needs **no deploy, no era boundary, no restart, and no fix to any Codex finding**. It is a USER ruling under rule 14. **08-31 closes in 8.8 hours**, and a scope decided after that verdict is a decision taken having seen the split (rule 11).
+
+**So the honest answer to "can we proceed" is: not with the collector change, and yes with the ruling — and those have been independent all day.** The deploy work has absorbed the attention while the free move sat open, which is the same pattern R-357 recorded about the v5 rounds: **the expensive path stayed visible because it was the one generating artifacts.**
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
