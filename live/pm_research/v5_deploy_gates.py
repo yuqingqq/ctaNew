@@ -53,6 +53,12 @@ GATES: list[tuple[str, list[str]]] = [
      [PY, str(HERE / "v5_chain_differential_fuzz.py")]),
     ("preflight mutation audit",
      [PY, str(HERE / "v5_preflight_mutation_audit.py")]),
+    ("tape density", [PY, str(HERE / "pm_tape_density.py"), "--selftest"]),
+    ("host-load join", [PY, str(HERE / "pm_host_load_join.py"), "--selftest"]),
+    ("shadow observer", [PY, str(HERE / "pm_shadow_observer.py"),
+                         "--selftest"]),
+    ("v4 behaviour (git-extracted)",
+     [PY, str(HERE / "collect_pm_v4_behavior_tests.py")]),
 ]
 
 # A gate whose script is missing must FAIL, not vanish from the tally.
