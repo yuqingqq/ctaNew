@@ -345,9 +345,27 @@ def check_post_restart(obs: dict, old_pid: int, start_row: dict | None) -> dict:
     # so the emitter refuses first.
     _cur, _open = current_era_and_open_v5(obs["era_rows"])
     if _open is not None:
-        raise Refused(f"the era ledger ALREADY carries the open clob_v5 "
-                      f"stamp (boundary {_open}) — this run was stamped; a "
-                      f"second emission would be a duplicate transition")
+        # RETRY SEAM (V5-R3C): uncertainty about whether an append landed
+        # must not poison an append-only authority. An EXACT already-present
+        # receipt returns idempotent success (no second row); only a
+        # CONFLICTING open era refuses.
+        _mine = [r for r in obs["era_rows"]
+                 if r.get("transitioned") is True
+                 and r.get("collector_schema_version") == "clob_v5"
+                 and r.get("boundary_utc") == BOUNDARY_UTC
+                 and r.get("pid") == obs["main_pid"]
+                 and (start_row is not None
+                      and r.get("collector_start_recv_ns")
+                      == start_row.get("recv_ns"))]
+        if _mine:
+            return {"already_stamped": True,
+                    "row": _mine[-1],
+                    "note": ("EXACT receipt already in the ledger — "
+                             "idempotent success, NO new row emitted")}
+        raise Refused(f"the era ledger ALREADY carries a DIFFERENT open "
+                      f"clob_v5 stamp (boundary {_open}) — a second emission "
+                      f"would be a duplicate transition (conflict, not "
+                      f"retry)")
     if _cur != "clob_v4":
         raise Refused(f"the era in force per the ledger is {_cur!r}, not "
                       f"clob_v4 — the stamp's supersedes claim would be "
@@ -506,10 +524,23 @@ def check_post_rollback(obs: dict, old_v5_pid: int,
     # the era line).
     _cur, _open = current_era_and_open_v5(obs["era_rows"])
     if _open is None:
+        # Idempotent retry (V5-R3C, mirrored): if a rollback receipt
+        # matching THIS restoration already closed the era, success, no row.
+        _mine = [r for r in obs["era_rows"]
+                 if r.get("rollback") is True
+                 and r.get("closes_boundary_utc") == BOUNDARY_UTC
+                 and (start_row is not None
+                      and r.get("collector_start_recv_ns")
+                      == start_row.get("recv_ns"))]
+        if _mine:
+            return {"already_stamped": True,
+                    "row": _mine[-1],
+                    "note": ("EXACT rollback receipt already in the ledger "
+                             "— idempotent success, NO new row emitted")}
         raise Refused(f"no open clob_v5 era in the ledger (era in force: "
                       f"{_cur!r}) — nothing to close; for an unstamped v5 "
-                      f"(stamp-unwritable path) append an aborted row, not "
-                      f"a rollback receipt")
+                      f"(stamp-unwritable path) the RECOVERY BUNDLE applies, "
+                      f"never a rollback of a row that does not exist")
     if not stage or not stage.strip():
         raise Refused("a rollback receipt must name its STAGE (which failure "
                       "path forced it) — an unexplained rollback is ambiguous "
@@ -1031,13 +1062,32 @@ def selftest() -> int:
                                         4242, _rb_start, "stamp_unwritable"),
             "nothing to close", "KNOWN-BAD (round-3 #2): rollback emission "
             "with NO stamped v5 REFUSES — the stamp-unwritable path takes "
-            "an aborted row, never a rollback-only chain")
+            "the RECOVERY BUNDLE, never a rollback-only chain")
     refuses(lambda: check_post_restart({**good_post,
                                         "era_rows": [V4_ROW, _V5OPEN]},
                                        3687786, good_start),
-            "duplicate transition", "KNOWN-BAD (round-3 #3): re-emission "
-            "with the stamp already in the ledger REFUSES — idempotency at "
-            "the emitter, before DA has to refuse the fork")
+            "conflict, not retry", "KNOWN-BAD (round-3 #3): a DIFFERENT open "
+            "stamp in the ledger REFUSES as a conflict")
+    _MY_STAMP = {**_V5OPEN, "pid": 4242,
+                 "collector_start_recv_ns": good_start["recv_ns"]}
+    _idem = check_post_restart({**good_post,
+                                "era_rows": [V4_ROW, _MY_STAMP]},
+                               3687786, good_start)
+    ok(_idem.get("already_stamped") is True,
+       "POSITIVE (V5-R3C): an EXACT already-present receipt returns "
+       "idempotent already-stamped success — the retry seam must not poison "
+       "an append-only authority, and a refusal there invites improvisation")
+    _MY_RB = {"collector_schema_version": "clob_v4", "supersedes": "clob_v5",
+              "rollback": True, "closes_boundary_utc": BOUNDARY_UTC,
+              "stage": "test",
+              "collector_start_recv_ns": _rb_start["recv_ns"],
+              "boundary_utc": "2026-08-31T07:15:00Z"}
+    _idem2 = check_post_rollback({**_rb_obs,
+                                  "era_rows": [V4_ROW, _MY_STAMP, _MY_RB]},
+                                 4242, _rb_start, "counters_refused")
+    ok(_idem2.get("already_stamped") is True,
+       "POSITIVE (V5-R3C mirrored): an EXACT already-present rollback "
+       "receipt returns idempotent success")
 
     print(f"v5_boundary_preflight selftests: {n[0]} checks passed")
     return 0
@@ -1081,6 +1131,9 @@ def main() -> int:
                           "the fixture override may not emit")
         row = observe_collector_start(BOUNDARY_EPOCH)
         stamp = check_post_restart(obs, a.post_restart, row)
+        if stamp.get("already_stamped"):
+            print(stamp["note"], file=sys.stderr)
+            return 0  # NOTHING on stdout: `>> ledger` appends no row
         print(json.dumps(stamp))
         return 0
     if a.post_rollback is not None:
@@ -1088,6 +1141,9 @@ def main() -> int:
         row = observe_collector_start(BOUNDARY_EPOCH)
         receipt = check_post_rollback(obs, a.post_rollback, row,
                                       a.stage or "")
+        if receipt.get("already_stamped"):
+            print(receipt["note"], file=sys.stderr)
+            return 0  # NOTHING on stdout: `>> ledger` appends no row
         print(json.dumps(receipt))
         return 0
     if a.verify_counters:
