@@ -81,6 +81,27 @@ EMITTED by the instrument from verified observations, never hand-written.
    row declaring `"collector_version":"clob_v5"`, and market advance — the
    seams live IN the instrument. The prices collector is NOT touched.
 
+## Stated residual — the armed branch cannot be rehearsed on an inert fixture
+
+`installed_mode()` requires the exact full argv vector AND systemd's `path=`
+(the binary actually executed). A fixture unit that does not run the real
+collector therefore CANNOT pass `--armed` — verified: an inert `/bin/sleep`
+unit refuses on `path=`. So the app-v5 branch of the armed check is first
+exercised for real at step 2 of an actual deploy. **This is a deliberate
+trade: the property that makes a fixture rehearsal impossible is the same one
+that stops a foreign binary from passing as the collector, and it is what made
+the earlier fixture attempt dangerous (R-351).**
+
+Why the residual is acceptable rather than merely unavoidable:
+* `--armed` runs BEFORE any restart, so a defect there costs an ABORTED
+  deploy, never a wrong one — the failure direction is safe.
+* The property read and the parser are exercised against the PRODUCTION unit
+  on every `--pre-arm` run (currently returning `control-v4`), so only the
+  v5-direction return value is unexercised in production, not the plumbing.
+* The vector logic itself is pinned by known-bads for a wrong interpreter,
+  a foreign script, non-adjacent tokens, an `app-v5x` superset, a trailing
+  conflicting `control-v4`, and non-ASCII whitespace.
+
 ## Failure paths (each leaves the attempt VISIBLE — nothing silent)
 
 | Failure | Action |
