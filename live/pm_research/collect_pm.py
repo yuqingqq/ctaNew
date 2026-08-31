@@ -79,7 +79,14 @@ HEARTBEAT_MODES = (HEARTBEAT_CONTROL_V4, HEARTBEAT_APP_V5)
 # the day-quality gate accrues on. Observed PONG round-trip on the live BTC
 # channel is ~90 ms, so 3 s is ~33x the observed latency and still bounds
 # blindness at ~13 s (USER ruling 2026-08-31).
-APP_HEARTBEAT_INTERVAL_S = 10.0
+# The documented cadence is a MINIMUM liveness expectation on the client —
+# sending MORE often is unobjectionable, sending less is not — so the
+# interval is ours to tighten as well. At 3 s + 3 s the worst-case blindness
+# matches the v4 keepalive O1a tuned to (~6 s), which removes the detection
+# regression entirely rather than merely reducing it. Cost: one 4-byte text
+# frame per socket per 3 s (~7/s across ~21 sockets), against ~600 market
+# messages/s on the same connections.
+APP_HEARTBEAT_INTERVAL_S = 3.0
 APP_HEARTBEAT_TIMEOUT_S = 3.0
 
 # v3: disk work and HTTP work get SEPARATE executors. They shared the default
