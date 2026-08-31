@@ -60,7 +60,7 @@ EMITTED by the instrument from verified observations, never hand-written.
       identity, float or pre-boundary `recv_ns`, foreign pid. On success the
       emitted stamp carries `boundary_utc 2026-08-31T07:00:00Z`, the verified
       pid, `clob_v5 supersedes clob_v4`, and the R-340 authority line.
-   c. **Record `V5_PID`** — `systemctl --user show pm-collector-clob.service
+   c. **Record `V5_PID`** (also required by `--post-recovery`) — `systemctl --user show pm-collector-clob.service
       -p MainPID --value` — BEFORE any later step restarts the unit; after a
       rollback restart that value is gone and rows 3c/4 need it.
    d. `tail -1` the ledger; confirm the live MainPID and
@@ -70,6 +70,8 @@ EMITTED by the instrument from verified observations, never hand-written.
    start and the check needs TWO, so a 07:01 run refuses by construction):
    ```
    python3 live/pm_research/v5_boundary_preflight.py --verify-counters --log-offset LOG_OFFSET
+   # LOG_OFFSET: the byte size of data/pm_5min/collector.log captured
+   # immediately AFTER the restart in step 3a — never at arm time
    ```
    Requires TWO heartbeat lines after the armed-time offset (~2 min), each
    post-boundary on its OWN stamp; pongs and market rows must ADVANCE over
@@ -87,7 +89,7 @@ EMITTED by the instrument from verified observations, never hand-written.
 | 3a restart fails / unit inactive | A transition was ATTEMPTED but none ran. Remove the drop-in, `daemon-reload`, start the unit (boots v4 default), confirm a `clob_v4` collector_start row, then `python3 live/pm_research/v5_boundary_preflight.py --abort-row --stage restart_failed >> data/pm_5min/collector_runs.jsonl`. **Never hand-write the row** — the emitter supplies the timestamp and refuses if a transition actually ran (finding 3). |
 | 3b postflight REFUSES **and v5 is NOT live** (unchanged PID, flag lost, v4-declaring process) | Same as 3a with `--stage postflight_refused`; put the refusal text in the register verbatim. |
 | 3b' postflight REFUSES **while v5 IS live** (no collector_start within 2 min, start later than boundary+120 s, or emission later than boundary+600 s) | **NOT an abort — v5 is running.** The refusals for a late start and a late emission fire only after the new-pid, flag and unit-active legs have PASSED, so a v5 process is provably live (finding 5). Restore v4 (drop-in removed, `daemon-reload`, restart), then use the **recovery bundle** in 3c. An `aborted` row here would be untrue and the emitter refuses to write one. |
-| 3c stamp append fails | v5 LIVE but unstamped. Retry the append: a FAILED append left no row, and on an EXACT already-landed row the emitter returns idempotent success with no output. If unwritable within 5 min: restore v4, then once the ledger is writable run `python3 live/pm_research/v5_boundary_preflight.py --post-recovery --stage stamp_unwritable_recovery >> data/pm_5min/collector_runs.jsonl`, which EMITS the two-row bundle (reconstructed v5 transition + the rollback closing it) with both boundaries read from the processes' OWN collector_start rows. Never hand-compose those rows; never a rollback alone (a rollback of a row that does not exist). A half-written bundle fails LOUD: both consumers refuse an unclosed recovered transition. Days resting on a recovered boundary are NON-ACCRUING (DA default; USER ruling pending). |
+| 3c stamp append fails | v5 LIVE but unstamped. Retry the append: a FAILED append left no row, and on an EXACT already-landed row the emitter returns idempotent success with no output. If unwritable within 5 min: restore v4, then once the ledger is writable run `python3 live/pm_research/v5_boundary_preflight.py --post-recovery --v5-pid V5_PID --stage stamp_unwritable_recovery >> data/pm_5min/collector_runs.jsonl` (the recorded `V5_PID` is REQUIRED — reconstructing an era from any collector process that wrote the shared gap ledger is how a foreign row becomes history), which EMITS the two-row bundle (reconstructed v5 transition + the rollback closing it) with both boundaries read from the processes' OWN collector_start rows. Never hand-compose those rows; never a rollback alone (a rollback of a row that does not exist). A half-written bundle fails LOUD: both consumers refuse an unclosed recovered transition. Recovery is a historical reconstruction, so it is NOT governed by the success-stamp deadline: it is permitted from the instant up to +24 h (never earlier), which is why an append target unavailable past ten minutes no longer leaves the era permanently unstampable. Days resting on a recovered boundary are NON-ACCRUING (DA default; USER ruling pending). |
 | 4 counters refuse (post-stamp) | The contract is still wrong. Remove the drop-in, `daemon-reload`, restart (boots v4), then `python3 live/pm_research/v5_boundary_preflight.py --post-rollback V5_PID --stage counters_refused >> data/pm_5min/collector_runs.jsonl` — the emitted ROLLBACK RECEIPT closes the live v5 row after verifying the restoration from the restored process's own collector_start. Register; candidate returns to review. |
 | Retry after an aborted row | The ledger PREDICATE permits it (an `aborted` row never enters the era line). **Operationally it is only executable while `now < the ruled instant`** — every real abort happens at/after it, so in practice a retry means ruling a NEW boundary (finding 8). |
 

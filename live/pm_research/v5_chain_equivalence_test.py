@@ -74,6 +74,18 @@ CASES = [
 ]
 
 
+# V5-R4-1: the emitter's OWN output, retried — the case the 17-case set
+# omitted and the mutation audit cannot see (it tests rows, not sequences).
+REC = {**V5OK, "recovered": True, "stage": "stamp_unwritable_recovery",
+       "collector_start_recv_ns": (B + 5) * 10**9, "stamp_written_ns": 3000}
+RB_REC = {**RB, "stamp_written_ns": 4000}
+CASES.append(("V5-R4-1 retried recovery bundle (emitter output, appended "
+              "twice)", [LEGACY, REC, RB_REC,
+                         {**REC, "stamp_written_ns": 3500}], "refuse"))
+CASES.append(("V5-R4-1 single recovery bundle in order", [LEGACY, REC,
+                                                          RB_REC], "ok"))
+
+
 def mine(rows):
     try:
         P.current_era_and_open_v5(rows)
