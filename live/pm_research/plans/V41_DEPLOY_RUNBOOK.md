@@ -159,6 +159,27 @@ era must still match. Re-reading the same status line is never a delta.
 
 **If it refuses, roll back.** It names which coins stalled.
 
+## If you did not record `V41_PID`
+
+Four steps above say "record `V41_PID`", and under pressure that is exactly
+what gets skipped. **It is recoverable — the process declared it itself:**
+
+```
+python3 -c "
+import sys; sys.path.insert(0,'live/pm_research')
+import v5_boundary_preflight as P
+rows = P.observe_starts_by_version(0, 'clob_v4_1')
+print('V41_PID candidates (newest last):', [r.get('pid') for r in rows])
+print('newest recv_ns:', rows[-1].get('recv_ns') if rows else None)
+"
+```
+
+If that prints nothing, **v4.1 never started** — use the abort path, not
+recovery. If it prints a pid, that is `V41_PID` and the recovery path is open.
+**Do not guess it and do not hand-write a row**; every emitter cross-checks the
+pid against the process's own `collector_start` declaration and will refuse a
+transcribed one that does not match.
+
 ## Failure table
 
 | symptom | action |
