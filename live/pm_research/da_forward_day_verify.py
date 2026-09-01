@@ -1150,12 +1150,121 @@ def compose_all_pass(preds: list, per_coin: dict, bars_v2: dict,
     return ok
 
 
+#: Immediate-order 0h. BREADTH IS DISCLOSED, NEVER GATED.
+#:
+#: `count_bar_v1_frozen`'s gap-RATE predicate was the only bar that ever saw
+#: breadth, and `day_bar_v2` SUPERSEDED it (`SUPERSEDED_ON_V2`) in favour of
+#: three DURATION bars. 08-28 is the proof that the two come apart: 186/288
+#: btc windows carried a gap while P1/P2/P3 all passed. So a forward day can
+#: pass its governing bars and still be substantially gap-affected, with
+#: nothing in the governing set saying so.
+#:
+#: THIS DOES NOT CLOSE THAT WITH A NEW BAR. The bars are pre-registered and
+#: frozen and 09-01 is the first forward day; a threshold chosen now, knowing
+#: which days would pass it, is choosing after seeing (rule 11) and would void
+#: the race. A governing breadth predicate needs pre-registration against days
+#: not yet seen -- a coordinator/USER act (rule 14) -- and this instrument may
+#: not grant it to itself by adding a conjunct. Same disposition as
+#: `tape_density` under R-362: REPORTED_NOT_GOVERNING.
+DISCLOSURE_ROLE = "REPORTED_NOT_GOVERNING"
+
+
+def windows_affected_disclosure(lo: int, hi: int, coin: str,
+                                elapsed_h: float,
+                                path: Path | None = None,
+                                intervals: list | None = None,
+                                coverage_observed: bool | None = None
+                                ) -> dict[str, Any]:
+    """Windows touched by a COIN-LEVEL gap, carried beside P1/P2/P3.
+
+    WHAT THE COUNT IS: 5-minute windows whose span intersects at least one
+    merged coin-level gap interval. WHAT IT IS NOT: a count of contaminated
+    windows. A gap opens a blind interval and forces a modeled queue reset and
+    repost; the replay clears state, resynchronizes and re-anchors from the
+    next quote, and busy windows carry thousands of `book` snapshots, so an
+    overlap does not leave the rest of the window stale (HANDOFF 09:43Z
+    correction, which withdrew the opposite claim).
+
+    TWO DENOMINATORS, BOTH CARRIED, because they answer different questions and
+    one of them has already been misread: 52/113 (the live rate over windows
+    that have actually happened) and 52/288 (progress toward the complete-day
+    denominator) are the same numerator and mean different things. Only /288 is
+    the CLOSING-day denominator; on a closed day the two coincide.
+
+    ZERO IS NOT A CLEAN CLAIM. An empty gap ledger from a dead collector and
+    one from a perfect feed are the same bytes, so the disclosure carries the
+    interval count it actually read and flags a zero that arrives without
+    affirmative coverage evidence, rather than publishing a reassuring 0%.
+    """
+    iv = coin_gap_intervals(lo, hi, coin, path) if intervals is None \
+        else list(intervals)
+    aff = 0
+    for i in range(WINDOWS_PER_DAY):
+        w0 = lo + i * WINDOW_S
+        w1 = w0 + WINDOW_S
+        if any(a < w1 and b > w0 for a, b in iv):
+            aff += 1
+    # COMPLETE windows only. The in-flight window is excluded by construction:
+    # a window that has not finished cannot be judged, and counting it would
+    # make the live rate flap with where inside the window you look -- the
+    # same trap that made a partial day read HEALTHY then UNHEALTHY twenty
+    # minutes later.
+    elapsed_w = max(0, min(WINDOWS_PER_DAY, int(elapsed_h * 3600.0 // WINDOW_S)))
+    # A None, never a 0.0: no elapsed windows means the rate is UNDEFINED, and
+    # a 0.0 there would read as "no breadth" -- absence of a measurement
+    # wearing the shape of a clean one.
+    over_elapsed = (aff / elapsed_w) if elapsed_w else None
+    return {
+        "role": DISCLOSURE_ROLE,
+        "is_a_gate": False,
+        "has_threshold": False,
+        "governs_all_pass": False,
+        "windows_affected_COIN_LEVEL": aff,
+        "windows_complete_elapsed": elapsed_w,
+        "windows_total": WINDOWS_PER_DAY,
+        "affected_over_elapsed": None if over_elapsed is None
+        else round(over_elapsed, 4),
+        "affected_over_288": round(aff / WINDOWS_PER_DAY, 4),
+        "pct_of_elapsed": None if over_elapsed is None
+        else round(100.0 * over_elapsed, 1),
+        "pct_of_288": round(100.0 * aff / WINDOWS_PER_DAY, 1),
+        "coin_level_gap_intervals_read": len(iv),
+        "coverage_observed_arg": repr(coverage_observed),
+        "zero_affected_is_not_a_clean_claim": (
+            aff == 0 and coverage_observed is not True),
+        "denominator_note": (
+            "affected_over_elapsed is the LIVE rate over COMPLETE elapsed "
+            "windows; affected_over_288 is progress toward the complete-day "
+            "denominator and is the ONLY one a closing-day receipt quotes. "
+            "They coincide on a closed day."),
+        "meaning_note": (
+            "a DISCLOSURE COUNT of short blind intervals and modeled queue "
+            "resets -- NOT a count of contaminated windows, NOT a gate, and "
+            "NOT a threshold. The governing bars score DURATION (P1/P2/P3); "
+            "breadth is carried BESIDE them, never instead of them, because "
+            "v2 retired the only predicate that saw it (08-28: 186/288 "
+            "windows touched with all three duration bars passing)."),
+    }
+
+
+def _zero_probe_intervals(path: Path, lo: int, hi: int) -> int:
+    """Interval count on an arbitrary ledger -- used only to give the vacuity
+    control a THIRD, disagreeing fixture."""
+    return len(coin_gap_intervals(lo, hi, "btc", path))
+
+
 def day_bar_v2(lo: int, hi: int, coin: str, elapsed_h: float,
                path: Path | None = None,
                coverage_observed: bool | None = None) -> dict[str, Any]:
     """P1/P2/P3 for one coin-day, from COIN-LEVEL merged gap intervals."""
     iv = coin_gap_intervals(lo, hi, coin, path)
     lost = sum(b - a for a, b in iv)
+    # 0h: carried in EVERY branch, including the refusals. A disclosure that
+    # disappears exactly when the bar declines to evaluate is a disclosure the
+    # reader does not have on the days it most wants it.
+    _disc = windows_affected_disclosure(lo, hi, coin, elapsed_h, path,
+                                        intervals=iv,
+                                        coverage_observed=coverage_observed)
     # P1 severity: the doc divides by 24, so a PARTIAL day is not comparable.
     p1_rate = lost / 24.0
     # P2 materiality: windows with >=75s of their 300s span intersected
@@ -1210,6 +1319,7 @@ def day_bar_v2(lo: int, hi: int, coin: str, elapsed_h: float,
             "evaluable": False, "hours_elapsed": round(elapsed_h, 3),
             "coin_level_gap_intervals": len(iv), "lost_seconds": round(lost, 1),
             "P1_pass": False, "P2_pass": False, "P3_pass": False,
+            "windows_affected_disclosure": _disc,
             "coverage_observed_arg": repr(coverage_observed),
             "why": "coverage evidence was not AFFIRMATIVELY supplied (only "
                    "coverage_observed is True evaluates; False, None, omitted "
@@ -1227,6 +1337,7 @@ def day_bar_v2(lo: int, hi: int, coin: str, elapsed_h: float,
             "evaluable": False, "hours_elapsed": round(elapsed_h, 3),
             "coin_level_gap_intervals": len(iv), "lost_seconds": round(lost, 1),
             "P1_pass": False, "P2_pass": False, "P3_pass": False,
+            "windows_affected_disclosure": _disc,
             "why": f"only {elapsed_h:.3f}h elapsed: NOT YET EVALUABLE, and "
                    f"zero gaps on a day that has not happened is not a clean day",
             "thresholds": {"P1_max_s_per_hr": P1_LOST_S_PER_HR_MAX,
@@ -1244,11 +1355,63 @@ def day_bar_v2(lo: int, hi: int, coin: str, elapsed_h: float,
         "P2_pass": (mat / WINDOWS_PER_DAY) <= P2_MATERIAL_SHARE_MAX,
         "P3_worst_rolling_60min_lost_s": round(worst, 1),
         "P3_pass": worst <= P3_ROLLING_60MIN_LOST_S_MAX,
+        "windows_affected_disclosure": _disc,
         "thresholds": {"P1_max_s_per_hr": P1_LOST_S_PER_HR_MAX,
                        "P2_material_span_s": P2_MATERIAL_SPAN_S,
                        "P2_max_share": P2_MATERIAL_SHARE_MAX,
                        "P3_max_rolling_60min_s": P3_ROLLING_60MIN_LOST_S_MAX},
     }
+
+
+def assert_disclosure_carried(rep: dict) -> None:
+    """REFUSE a `day_bar_v2` receipt whose bars carry no 0h breadth disclosure.
+
+    Rule 17, the half a green suite cannot supply. `day_bar_v2` returning the
+    field proves the UNIT; it does not prove the RUNNER emits it, and this
+    programme has already shipped six falsifier-proven evaluators with zero
+    call sites (I11-2) and two green suites over an integration that always
+    refused (DB2). So the ARTIFACT refuses to exist without the field, in both
+    places a reader looks: the whole-day `day_bar_v2` block and every per-coin
+    block. A disclosure the receipt does not carry is not a disclosure.
+    """
+    if rep.get("bar_regime") != "day_bar_v2":
+        return
+    need = ("windows_affected_COIN_LEVEL", "windows_complete_elapsed",
+            "affected_over_elapsed", "affected_over_288", "role")
+    missing: list[str] = []
+    scopes = [("day_bar_v2", rep.get("day_bar_v2") or {})]
+    scopes.append(("per_coin", {c: (v or {}).get("day_bar_v2")
+                                for c, v in (rep.get("per_coin") or {}).items()
+                                if isinstance(v, dict)
+                                and v.get("day_bar_v2") is not None}))
+    n_checked = 0
+    for scope, blocks in scopes:
+        for coin, b in sorted(blocks.items()):
+            if not isinstance(b, dict):
+                missing.append(f"{scope}/{coin}: no bar block")
+                continue
+            n_checked += 1
+            d = b.get("windows_affected_disclosure")
+            if not isinstance(d, dict):
+                missing.append(f"{scope}/{coin}: disclosure absent")
+                continue
+            gone = [k for k in need if k not in d]
+            if gone:
+                missing.append(f"{scope}/{coin}: missing {gone}")
+    # AN EMPTY SET IS NOT A PASS. A v2-regime report with no bar blocks at all
+    # would satisfy a "nothing missing" test while disclosing nothing -- the
+    # empty-set trap this programme has paid for repeatedly.
+    if n_checked == 0:
+        raise SystemExit(
+            "REFUSED: a day_bar_v2 receipt with ZERO bar blocks checked. "
+            "Nothing missing from nothing is not a disclosure (rule 11/16).")
+    if missing:
+        raise SystemExit(
+            "REFUSED to emit: the 0h windows-affected disclosure is not "
+            "carried beside P1/P2/P3 -- " + "; ".join(missing)
+            + ". The governing bars score DURATION only; a receipt without "
+              "breadth beside them lets a substantially gap-affected day read "
+              "as unqualified.")
 
 
 def closed_label(day_closed, calendar_closed: bool) -> str:
@@ -1759,6 +1922,167 @@ def _selftests() -> int:
                "(c) a structurally bad gap record REFUSES instead of being "
                "silently dropped -- a silent drop shrinks measured loss with "
                "no trace (rule 4)")
+
+        # ---- 0h WINDOWS-AFFECTED DISCLOSURE -------------------------------
+        # Both directions, because a control that only ever refuses passes
+        # nothing and a control that only ever admits fails nothing (rule 16).
+        #
+        # POSITIVE CONTROL: it must ADMIT and report the RIGHT count. Three
+        # gaps placed inside windows 0, 100 and 287; one of them spans a
+        # window boundary and must therefore touch TWO windows, so the
+        # expected answer is 4 and a boundary-blind implementation says 3.
+        _w = WINDOW_S
+        _rows = [
+            {"event": "gap_closed", "coin": "btc", "slug": "s0",
+             "gap_start_ns": int((_lo + 10) * 1e9),
+             "gap_end_ns": int((_lo + 20) * 1e9)},
+            {"event": "gap_closed", "coin": "btc", "slug": "s1",
+             "gap_start_ns": int((_lo + 100 * _w + _w - 2) * 1e9),
+             "gap_end_ns": int((_lo + 101 * _w + 2) * 1e9)},
+            {"event": "gap_closed", "coin": "btc", "slug": "s2",
+             "gap_start_ns": int((_lo + 287 * _w + 5) * 1e9),
+             "gap_end_ns": int((_lo + 287 * _w + 9) * 1e9)},
+        ]
+        _f = Path(_td) / "disclosure.jsonl"
+        _f.write_text("\n".join(json.dumps(r) for r in _rows), encoding="utf-8")
+        _d = windows_affected_disclosure(_lo, _hi, "btc", 24.0, _f,
+                                         coverage_observed=True)
+        ok(_d["windows_affected_COIN_LEVEL"] == 4
+           and _d["windows_complete_elapsed"] == 288
+           and _d["affected_over_288"] == round(4 / 288, 4)
+           and _d["affected_over_elapsed"] == round(4 / 288, 4),
+           "0h positive control: the disclosure ADMITS and reports 4 touched "
+           "windows (the boundary-spanning gap touches two), with both "
+           "denominators agreeing on a CLOSED day")
+        ok(_d["coin_level_gap_intervals_read"] == 3,
+           "0h vacuity control: the disclosure records how many gap intervals "
+           "it actually READ -- a 0-affected report from a reader that read "
+           "nothing is the empty-set trap, not a clean day")
+
+        # THE LOAD-BEARING KNOWN-BAD: a disclosure that FAILS spectacularly
+        # must leave every governing verdict UNCHANGED. 288 hairline gaps put
+        # breadth at 100% while total lost time is 28.8s, so P1/P2/P3 all pass
+        # -- and they must, or breadth has quietly become a bar (rule 11).
+        _all = [{"event": "gap_closed", "coin": "btc", "slug": f"s{i}",
+                 "gap_start_ns": int((_lo + i * _w + 10) * 1e9),
+                 "gap_end_ns": int((_lo + i * _w + 10.1) * 1e9)}
+                for i in range(WINDOWS_PER_DAY)]
+        _fa = Path(_td) / "all_affected.jsonl"
+        _fa.write_text("\n".join(json.dumps(r) for r in _all), encoding="utf-8")
+        _b_wide = day_bar_v2(_lo, _hi, "btc", 24.0, _fa, coverage_observed=True)
+        _b_clean = day_bar_v2(_lo, _hi, "btc", 24.0, _e, coverage_observed=True)
+        ok(_b_wide["windows_affected_disclosure"]["pct_of_288"] == 100.0
+           and _b_wide["P1_pass"] and _b_wide["P2_pass"] and _b_wide["P3_pass"],
+           "0h known-bad: a 100%-BREADTH day still PASSES all three governing "
+           "duration bars -- the disclosure REPORTS and does not VETO")
+        _gov = ["P1_pass", "P2_pass", "P3_pass", "evaluable"]
+        ok([_b_wide[k] for k in _gov] == [_b_clean[k] for k in _gov],
+           "0h known-bad: 0% and 100% breadth produce IDENTICAL governing "
+           "outcomes, so no verdict depends on the disclosure")
+        _pp = [{"predicate": "complete_tape", "pass": True},
+               {"predicate": ACCRUAL_PREDICATE, "pass": True}]
+        ok(compose_all_pass(_pp, {}, {"btc": _b_wide}, "day_bar_v2") is True
+           and compose_all_pass(_pp, {}, {"btc": _b_clean}, "day_bar_v2") is True,
+           "0h known-bad: compose_all_pass reads P1/P2/P3 only -- the "
+           "100%-breadth day and the clean day both compose to True")
+        ok(_b_wide["windows_affected_disclosure"]["coin_level_gap_intervals_read"]
+           == WINDOWS_PER_DAY
+           and _d["coin_level_gap_intervals_read"] == 3
+           and _zero_probe_intervals(_e, _lo, _hi) == 0,
+           "0h vacuity control, SECOND fixture: the interval counter reads 3, "
+           "288 and 0 on three different ledgers. A single fixture lets a "
+           "hardcoded constant satisfy the check -- a mutation that pinned "
+           "this to 3 survived until the counts had to disagree")
+        ok(_b_wide["windows_affected_disclosure"]["is_a_gate"] is False
+           and _b_wide["windows_affected_disclosure"]["governs_all_pass"] is False
+           and _b_wide["windows_affected_disclosure"]["role"]
+           == "REPORTED_NOT_GOVERNING",
+           "0h: the disclosure names its own role, so a downstream reader "
+           "cannot mistake it for a predicate (R-362's class)")
+
+        # OPEN-DAY denominators must actually DIFFER, or carrying both is
+        # decoration. 9.4939h -> 113 COMPLETE windows (the in-flight one is
+        # excluded by construction).
+        _open_d = windows_affected_disclosure(_lo, _hi, "btc", 9.4939, _fa,
+                                              coverage_observed=True)
+        ok(_open_d["windows_complete_elapsed"] == 113
+           and _open_d["affected_over_elapsed"] != _open_d["affected_over_288"]
+           and _open_d["pct_of_288"] < _open_d["pct_of_elapsed"],
+           "0h: on an OPEN day the two denominators differ (affected/elapsed "
+           "vs affected/288) -- the pair that stops 52/113 being read as 52/288")
+
+        # A rate with no elapsed windows is UNDEFINED, never 0.0.
+        _zero = windows_affected_disclosure(_lo, _hi, "btc", 0.0, _e,
+                                            coverage_observed=True)
+        ok(_zero["affected_over_elapsed"] is None
+           and _zero["pct_of_elapsed"] is None
+           and _zero["windows_complete_elapsed"] == 0,
+           "0h known-bad: zero elapsed windows yields None, NOT 0.0 -- a 0.0 "
+           "there would read as 'no breadth measured clean'")
+
+        # ZERO AFFECTED IS NOT A CLEAN CLAIM without affirmative coverage.
+        _z_unobs = windows_affected_disclosure(_lo, _hi, "btc", 24.0, _e,
+                                               coverage_observed=None)
+        _z_obs = windows_affected_disclosure(_lo, _hi, "btc", 24.0, _e,
+                                             coverage_observed=True)
+        ok(_z_unobs["zero_affected_is_not_a_clean_claim"] is True
+           and _z_obs["zero_affected_is_not_a_clean_claim"] is False,
+           "0h: an empty ledger WITHOUT observed coverage is flagged, and the "
+           "same emptiness WITH coverage is not -- the flag discriminates "
+           "rather than firing on every zero")
+
+        # ---- 0h ARTIFACT-LEVEL GUARD (rule 17's second half) -----------
+        _rep_ok = {"bar_regime": "day_bar_v2", "day_bar_v2": {"btc": _b_wide},
+                   "per_coin": {"btc": {"day_bar_v2": _b_wide}}}
+        assert_disclosure_carried(_rep_ok)          # must NOT raise
+        ok(True, "0h guard positive control: a receipt that DOES carry the "
+                 "disclosure in both scopes is admitted")
+        ok(assert_disclosure_carried({"bar_regime": "count_bar_v1_frozen"})
+           is None,
+           "0h guard: a v1-regime day is out of scope and is not refused -- "
+           "the guard discriminates by regime rather than refusing everything")
+        import copy as _cp
+        for _scope in ("day_bar_v2", "per_coin"):
+            _bad_rep = _cp.deepcopy(_rep_ok)
+            _tgt = (_bad_rep["day_bar_v2"]["btc"] if _scope == "day_bar_v2"
+                    else _bad_rep["per_coin"]["btc"]["day_bar_v2"])
+            _tgt.pop("windows_affected_disclosure")
+            try:
+                assert_disclosure_carried(_bad_rep)
+                ok(False, f"0h guard known-bad ({_scope}) must REFUSE")
+            except SystemExit as _e:
+                ok("not carried beside P1/P2/P3" in str(_e)
+                   and _scope in str(_e),
+                   f"0h guard known-bad: a receipt missing the disclosure in "
+                   f"{_scope} REFUSES and names the scope")
+        _partial = _cp.deepcopy(_rep_ok)
+        _partial["day_bar_v2"]["btc"]["windows_affected_disclosure"].pop(
+            "affected_over_elapsed")
+        try:
+            assert_disclosure_carried(_partial)
+            ok(False, "0h guard known-bad: a HALF disclosure must REFUSE")
+        except SystemExit as _e:
+            ok("affected_over_elapsed" in str(_e),
+               "0h guard known-bad: carrying only one denominator refuses and "
+               "names the missing one -- 0h asks for BOTH")
+        try:
+            assert_disclosure_carried({"bar_regime": "day_bar_v2",
+                                       "day_bar_v2": {}, "per_coin": {}})
+            ok(False, "0h guard known-bad: ZERO bar blocks must REFUSE")
+        except SystemExit as _e:
+            ok("ZERO bar blocks" in str(_e),
+               "0h guard known-bad: an EMPTY v2 receipt refuses -- nothing "
+               "missing from nothing is not a disclosure (the empty-set trap)")
+
+        # CARRIED IN EVERY BRANCH, including the two refusals.
+        _nb1 = day_bar_v2(_lo, _hi, "btc", 24.0, _fa, coverage_observed=False)
+        _nb2 = day_bar_v2(_lo, _hi, "btc", 0.5, _fa, coverage_observed=True)
+        ok(_nb1["evaluable"] is False and _nb2["evaluable"] is False
+           and _nb1["windows_affected_disclosure"]["windows_affected_COIN_LEVEL"] == 288
+           and _nb2["windows_affected_disclosure"]["windows_affected_COIN_LEVEL"] == 288,
+           "0h: the disclosure is carried in BOTH non-evaluable branches -- a "
+           "disclosure that vanishes when the bar refuses is missing on the "
+           "days a reader most wants it")
 
     # ---- (1) SEAM: what the LAUNCHER actually passes, read from ARGV -----
     # The entry-point boundary, mechanized. Every one of the earlier findings
@@ -3217,6 +3541,8 @@ def main() -> int:
         print(f"\nINSTRUMENT FAILURE verifying {a.day}: NOTHING WAS VERIFIED. "
               f"This is exit 4, NOT a failing day -- no verdict was computed.")
         return 4
+    # 0h, ENFORCED AT THE ARTIFACT, not only in the unit that computes it.
+    assert_disclosure_carried(rep)
     # Provenance, stamped AFTER the verdict: it is not a predicate and must
     # never enter `all_pass`. Always present, so an unattributed write is a
     # visible STATUS rather than a missing key (rule 4).
@@ -3259,6 +3585,35 @@ def main() -> int:
               f"({v.get('gap_affected_pct_COIN_LEVEL')}%)  |  per-slug "
               f"{v.get('gap_affected_PER_SLUG')}/{v.get('era_covered_windows')} "
               f"({v.get('gap_affected_pct_PER_SLUG')}%)")
+    if rep.get("bar_regime") == "day_bar_v2" and rep.get("day_bar_v2"):
+        print("\nDAY BAR v2 (GOVERNING: duration) + BREADTH (DISCLOSURE ONLY)")
+        for c, b in sorted(rep["day_bar_v2"].items()):
+            d = b.get("windows_affected_disclosure") or {}
+            if not b.get("evaluable"):
+                print(f"  {c}: NOT EVALUABLE -- {b.get('why', '')[:70]}")
+            else:
+                print(f"  {c}: P1 {b['P1_lost_s_per_hr']}/{P1_LOST_S_PER_HR_MAX} "
+                      f"s/hr [{'PASS' if b['P1_pass'] else 'FAIL'}]  "
+                      f"P2 {b['P2_material_windows']} material "
+                      f"[{'PASS' if b['P2_pass'] else 'FAIL'}]  "
+                      f"P3 {b['P3_worst_rolling_60min_lost_s']}/"
+                      f"{P3_ROLLING_60MIN_LOST_S_MAX}s "
+                      f"[{'PASS' if b['P3_pass'] else 'FAIL'}]")
+            _oe = d.get("affected_over_elapsed")
+            print(f"      breadth (NOT A GATE): "
+                  f"{d.get('windows_affected_COIN_LEVEL')}/"
+                  f"{d.get('windows_complete_elapsed')} elapsed"
+                  f" ({d.get('pct_of_elapsed')}%)"
+                  if _oe is not None else
+                  f"      breadth (NOT A GATE): "
+                  f"{d.get('windows_affected_COIN_LEVEL')}/"
+                  f"{d.get('windows_complete_elapsed')} elapsed (rate "
+                  f"UNDEFINED -- no complete window yet)")
+            print(f"      breadth (NOT A GATE): "
+                  f"{d.get('windows_affected_COIN_LEVEL')}/288 closing-day "
+                  f"denominator ({d.get('pct_of_288')}%)"
+                  + ("  [zero is NOT a clean claim: coverage not observed]"
+                     if d.get("zero_affected_is_not_a_clean_claim") else ""))
     if rep.get("verdict_granularity") == "per_coin" and rep.get("per_coin"):
         print("\nPER-COIN VERDICTS (R-211(3): coin-days pass/fail independently)")
         for c, v in sorted(rep["per_coin"].items()):
