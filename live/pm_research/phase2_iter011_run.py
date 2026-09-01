@@ -1752,6 +1752,18 @@ def _selftest_coin_slice(ok):
        "(memory KNOWN-BAD) the tape index is never coin-sliced -- doing so "
        "starves the other coin's feature join and the absorption bound refuses")
 
+    # ---- the DECLARED OUTPUT must follow the MODE ----
+    ok(declared_outputs_for(["p"]) == DECLARED_OUTPUTS,
+       "(output) an unsliced run declares the full artifact")
+    _dbtc = declared_outputs_for(["p", "--coin", "btc"])
+    ok(len(_dbtc) == 1 and _dbtc[0].name.endswith("__coin_btc.json"),
+       f"(output) a --coin run declares the SLICED artifact "
+       f"(got {_dbtc[0].name})")
+    ok(_dbtc[0] != DECLARED_OUTPUTS[0],
+       "(output KNOWN-BAD) it does NOT declare the full artifact -- demanding "
+       "a file the mode never writes made a COMPLETED run refuse at its exit "
+       "after producing 96 KB of results")
+
     # ---- the valuation gate must be RESTORED, and by the canonical rule ----
     import harmful_exposure_rows as _HERt
     _lat_fill = {"5": {"preventable_shares": 2.0, "preventable_value_cents": 1.0}}
@@ -1862,7 +1874,29 @@ def is_selftest_mode(argv=None) -> bool:
     return any(f in a for f in NON_WRITING_MODES)
 
 
-def assert_outputs_written(outputs=DECLARED_OUTPUTS, argv=None) -> dict:
+def declared_outputs_for(argv=None) -> tuple:
+    """The outputs THIS invocation is required to produce.
+
+    A `--coin` run writes the sliced artifact and deliberately NOT the full
+    one, because a one-coin file at the whole run's path would be read as the
+    whole result. The guard must therefore ask for the file this MODE declares
+    -- checking for the unsliced name made a completed sliced run refuse at its
+    exit, having already written 96 KB of results.
+
+    The refusal itself was RIGHT and stays: "a clean exit that produced nothing
+    is the silent-success shape". Only the DECLARATION was wrong, and a guard
+    that demands the wrong artifact is a guard that cannot pass.
+    """
+    a = sys.argv if argv is None else argv
+    if "--coin" in a:
+        i = a.index("--coin")
+        if i + 1 < len(a) and not a[i + 1].startswith("-"):
+            return (OUT.with_name(f"{OUT.stem}__coin_{a[i + 1]}{OUT.suffix}"),)
+    return DECLARED_OUTPUTS
+
+
+def assert_outputs_written(outputs=None, argv=None) -> dict:
+    outputs = declared_outputs_for(argv) if outputs is None else outputs
     """A run that writes NOTHING must not exit 0.
 
     The silent-success shape: a clean exit obtained by not doing the work. It is
