@@ -1290,11 +1290,32 @@ def verify_day(day_token: str, freeze_epoch: float,
         preds.append({"predicate": name, "pass": bool(ok), "detail": detail})
 
     # --- 1. entirely post-freeze ------------------------------------------
-    sel = WW.select_holdout(freeze_epoch)
+    # THE SELECTOR ERA IS THE DAY'S OWN ERA, derived from the ledger directly
+    # above -- never a module constant. `warning_window` used to read
+    # `flow_intensity.ERA`, a literal pinned to `clob_v3_1`, an era that closed
+    # 2026-08-30T05:30:01Z; every later day was therefore absent from the
+    # selector and this predicate failed BY CONSTRUCTION, silently zeroing
+    # accrual for any feed quality whatsoever. Deriving it here also makes the
+    # verdict SELF-CONSISTENT: `era_admission` said 08-31 was clob_v4/v4_1
+    # while this predicate said the day did not exist, in one artifact.
+    # A mixed-era day has no single era, so there is nothing to load and
+    # nothing to pass -- it is refused BY NAME rather than by absence. Such a
+    # day already fails `era_admissible`, so this narrows no day's outcome.
+    _touched = _era.get("eras_touched") or []
+    _sel_era = _touched[0] if (_era.get("era_pure") and len(_touched) == 1) \
+        else None
+    if _sel_era is None:
+        sel = {"freeze_epoch": freeze_epoch, "era": None, "days": {}}
+    else:
+        sel = WW.select_holdout(freeze_epoch, era=_sel_era)
     day = sel["days"].get(iso)
     if day is None:
         p("entirely_post_freeze", False,
-          f"{iso} absent from the selector -- cannot be verified, not passed")
+          (f"{iso} spans eras {_touched} -- a mixed-era day has no single "
+           f"era whose windows could be loaded, so this cannot be verified, "
+           f"not passed" if _sel_era is None else
+           f"{iso} absent from the selector for its own era {_sel_era!r} -- "
+           f"cannot be verified, not passed"))
         adm = tot = {}
         day_closed = None
     else:
@@ -1375,8 +1396,18 @@ def verify_day(day_token: str, freeze_epoch: float,
 
     # --- the number Q-DA-69 showed actually decides it ---------------------
     fi = qr.base.fi
-    gaps = fi.gaps_by_slug(fi.ERA)
-    cov = fi.covered_slugs(fi.ERA)
+    # SAME CORRECTION AS THE SELECTOR, and the reason this one is a UNION: a
+    # mixed-era day's windows genuinely come from every era it touches, so
+    # taking one would drop the rest. Under the old `fi.ERA` literal both of
+    # these read the CLOSED clob_v3_1 era, which is why `era_covered_windows`
+    # reported 0 and `gap_affected_PER_SLUG` reported 0/None for 08-31 and
+    # 09-01 -- days holding 288 windows each. Neither governs the bar
+    # (COIN_LEVEL is the input, R-191, and it was always era-correct), so this
+    # fixes two REPORTED numbers that read as clean, not a verdict.
+    gaps, cov = {}, set()
+    for _e in (_touched or [fi.ERA]):
+        gaps.update(fi.gaps_by_slug(_e))
+        cov |= fi.covered_slugs(_e)
     affected: dict[str, dict[str, Any]] = {}
     for coin in coins:
         tot_w = aff = 0
@@ -1541,6 +1572,10 @@ def verify_day(day_token: str, freeze_epoch: float,
         "instrument": "da_forward_day_verify_v1",
         "verdict_split": _split,
         "era_admission": _era,
+        # The era whose windows the accrual predicate actually loaded. Carried
+        # because "which population was read" is the question the old literal
+        # made unanswerable from the artifact alone.
+        "selector_era": _sel_era,
         "race_accrual_eligible": _split["race_accrual_eligible"],
         "bar_regime": regime,
         "day_bar_v2": bars_v2,
@@ -2270,6 +2305,68 @@ def _selftests() -> int:
                          )["race_accrual_eligible"] is True,
            "and a quality-passing coin on that day IS eligible, so the guard "
            "gates on era rather than replacing the quality question")
+        # ---- the accrual predicate must read the DAY'S era, never a literal
+        # `fi.ERA` was `clob_v3_1`, closed 2026-08-30T05:30:01Z, so every later
+        # day was absent from the selector and `entirely_post_freeze` failed by
+        # construction. Two checks, because either alone is weak: the first
+        # proves the era REACHES the loaders, the second proves `verify_day`
+        # actually supplies one. A behavioural test alone would pass with
+        # `verify_day` still calling the bare constant.
+        import warning_window as _WW
+        _seen: list[str] = []
+
+        class _FakeFi:
+            ERA = "clob_LITERAL_must_not_be_used"
+
+            @staticmethod
+            def gaps_by_slug(era):
+                _seen.append(("gaps", era))
+                return {}
+
+            @staticmethod
+            def covered_slugs(era):
+                _seen.append(("cov", era))
+                return set()
+
+            @staticmethod
+            def _archive_paths():
+                return {}
+
+            @staticmethod
+            def token_map():
+                return {}
+
+        _real_fi = _WW.fi
+        try:
+            _WW.fi = _FakeFi
+            _out = _WW.select_holdout(0.0, era="clob_v4_1")
+            ok([e for _k, e in _seen] == ["clob_v4_1", "clob_v4_1"]
+               and _out["era"] == "clob_v4_1",
+               "(B1) an explicit era REACHES both window loaders and is "
+               "carried in the result -- the population is named, so a "
+               "selector that silently read a dead era is auditable")
+            _seen.clear()
+            _WW.select_holdout(0.0)
+            ok([e for _k, e in _seen] == ["clob_LITERAL_must_not_be_used"] * 2,
+               "(B1 CONTROL) omitting it still falls back to the module "
+               "constant, so historical consumers are unchanged -- and this "
+               "is exactly the path the accrual predicate must NOT take")
+        finally:
+            _WW.fi = _real_fi
+        _src = Path(__file__).read_text(encoding="utf-8")
+        _vd = _src[_src.index("def verify_day("):]
+        _vd = _vd[:_vd.index("\ndef ")]
+        ok("WW.select_holdout(freeze_epoch, era=" in _vd
+           and "WW.select_holdout(freeze_epoch)" not in _vd,
+           "(B1) verify_day calls the selector WITH an era and never bare -- "
+           "a revert to the literal reinstates a predicate that fails for "
+           "every day after the era it names, and reads as a data problem")
+        ok("fi.gaps_by_slug(fi.ERA)" not in _vd
+           and "fi.covered_slugs(fi.ERA)" not in _vd,
+           "(B1) and its windows_gap_affected reads the day's OWN eras, not "
+           "the literal -- that literal is why era_covered_windows reported 0 "
+           "on days holding 288 windows")
+
         _a831 = day_era_admission("20260831", _adm)
         ok(_a831["era_pure"] is False
            and _a831["race_admissible_by_era"] is False,

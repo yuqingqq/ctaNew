@@ -1,10 +1,183 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-08-28T15:19Z (MEM) — **two vacuous confirmations of the same check
-in one hour, one per seat, each vacuous a different way.** The conclusion was
-never in danger; the accounting of it was, and is corrected. Chain restored
-scientifically, not yet mechanically. Round 3 fired; tonight's 00:06Z is the
-**first governed verdict**.
+Updated: 2026-09-01T03:49:46Z — user-authorized documentation true-up.
+
+## READ FIRST — current project handoff
+
+The governing project TODO is
+`live/pm_research/plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md` §10. The
+stateful cancel x skew TODO is a subordinate implementation worksheet; its
+39/113 checkbox count is not total project completion.
+
+### Current model state
+
+- Dataset/PRED_STATE_V1 is complete and reproduced. The Phase-2 development
+  receipt exists; the separate BTC hazard seed is frozen but marked
+  unvalidated.
+- Iteration 011 conditional signed value is the next bounded model job. Its
+  preregistration and implementation exist, but the review hold remains:
+  nothing has been fitted or scored.
+- Typed fair-price Identity is built; the challenger protocol is not
+  freeze-ready and no challenger has been scored.
+- The skew freeze remains a draft. Seven-arm work is contracts, parity stubs
+  and inert trajectories only. Real queue-integrated replay, lifecycle
+  economics and the integrated candidate freeze remain open.
+
+### Current data and forward state
+
+- `clob_v4_1` has run since the ruled 2026-08-31T22:00Z boundary. At this
+  update the unit is active/running, PID 1108125, `NRestarts=0`.
+- 2026-08-29 is era-inadmissible. 2026-08-30 does not accrue. 2026-08-31 is
+  mixed `clob_v4`/`clob_v4_1` and BTC failed P1 at 298.52 s/hr.
+- 2026-09-01 is the first era-pure, admissible v4.1 day, but it is incomplete.
+  Forward reach remains `G=0/5` qualifying complete UTC days. Judge it only
+  after the closed-day verifier runs; live operation is not a quality verdict.
+
+### 2026-09-01 ~04:20Z (coordinator) — TWO BLOCKERS THE DOC TRUE-UP DID NOT SEE
+
+The 03:49Z true-up above is accurate about what it describes and **wrong about
+what is blocking**. It reads as "waiting for calendar days plus a clean btc."
+Both statements below were established by execution, not by reading.
+
+**B1 — the accrual predicate is wired to a DEAD ERA. A perfect 09-01 cannot
+accrue.** `race_accrual_eligible = day_quality_pass AND post_freeze_pass AND
+era_admissible`. `post_freeze_pass` is the `entirely_post_freeze` predicate,
+which asks `warning_window.select_holdout()`, which iterates
+`flow_intensity.covered_slugs(fi.ERA)` — and **`fi.ERA` is the module constant
+`"clob_v3_1"`, an era that closed 2026-08-30T05:30:01Z.** Any day after it is
+absent from the selector, so the predicate fails *by construction*, whatever
+the feed did. Measured:
+
+| `fi.ERA` | selector days |
+|---|---|
+| `clob_v3_1` (current) | 08-28, 08-29, 08-30 |
+| `clob_v4_1` (correct) | 08-31, **09-01** |
+
+Falsification run on the real day: `verify_day('20260901')` gives
+`entirely_post_freeze=False` ("absent from the selector") at `clob_v3_1` and
+**`True`, all seven coins 49/49**, at `clob_v4_1`. The pin is the whole cause.
+
+**Why it was invisible.** It went stale at the 08-30 boundary, but 08-30 and
+08-31 are mixed-era and fail `era_admissible` anyway — so the pin has been
+*masked* by other refusals for two days. **09-01 is the first day where it
+binds**, and its failure message ("absent from the selector") reads like a data
+problem, not a config one.
+
+Same pin also makes two REPORTED fields vacuous — `era_covered_windows` is `0`
+and `gap_affected_PER_SLUG` is `0`/`None` for 08-31 and 09-01, on days holding
+288 windows. **Neither governs:** `COIN_LEVEL` is the bar's input (R-191) and is
+era-correct (08-31 btc 214/288 = 74.3%). Misleading to a reader, not deciding.
+
+This is `_discover_days()`'s defect one identifier over. `DAYS` was converted
+from a literal to a derived value because it went stale four times in three
+days; **`ERA` sitting beside it was never converted.** Fixing the constant to
+`clob_v4_1` restores accrual now but goes stale again at the next boundary — so
+the fix is to derive it, or to make the verifier take an explicit era and refuse
+a stale one, exactly as it already refuses a missing `--freeze-epoch`.
+**Changing a gate mid-race is a ruling, not a repair: not done, awaiting USER.**
+
+**B2 — tier1:full and tier2 have been HARD-BLOCKED for 146 h by three trades.**
+`pm-evaluation-pipeline` crashes every run at `tier1_pipeline.py:1149`
+(`normalize_clob`): `ValueError: trade price must be strictly inside (0, 1)`.
+Cause located by a scan carrying its own falsifier (769,372 `last_trade_price`
+events parsed, so the population was genuinely read): **three SELL trades at
+price exactly `1.0`** (sizes 10, 0.1, 58.63) in `btc-updown-5m-1787635800`
+(2026-08-25T05:30:00Z). The lane retries hourly, dies on the same day, and can
+never advance past 08-25 — `newest_committed` has read 2026-08-24 for six days
+while `tier1:measurement` (a different path) is caught up to 08-30.
+
+A strict `0 < p < 1` on venue data is the wrong shape: a degenerate price is a
+STATUS, never a crash (rule 4). **Does not block the accrual clock** — that
+reads the raw tape — but it blocks all Tier-2 scoring, so the two blockers are
+independent and both must clear.
+
+**My first scan of this was VACUOUS and I nearly reported it.** The raw tape is
+`recv_ns \t payload`, not bare JSON; my parse failed on every line into an
+`except: continue`, and printed "0 out-of-range trades" — a clean bill of health
+from a check that read nothing. It was caught only by adding the parsed-event
+count. Same shape as R-289's matched pair, third instance in this programme.
+
+**Neither blocker appears anywhere in STATUS.yml, HANDOFF or the register.**
+
+### 2026-09-01 ~05:10Z (coordinator) — BOTH BLOCKERS FIXED ON USER RULING
+
+USER ruled both: B1 "point to 9.1 and use v4_1"; B2 "include both 0 and 1".
+
+**B1 — the era is now DERIVED PER DAY, not set to a new literal.** A better
+literal would go stale at the next boundary exactly as `clob_v3_1` did, so
+`verify_day` takes the day's OWN era from `day_era_admission` — already computed
+ten lines above for `era_admission` — and passes it to
+`select_holdout(freeze_epoch, era=...)`. For 09-01 that resolves to
+`clob_v4_1`, which is the ruling, and it cannot go stale. `fi.ERA` is
+**deliberately left at `clob_v3_1`**: six other modules read it, including
+`harmful_exposure_rows` (the harmful-fill dataset on the consumed 08-20..25
+days), and flipping a global era constant would silently re-populate frozen
+analyses. Mixed-era days are now refused **by name** ("spans eras [...]")
+rather than by absence. `selector_era` is recorded in every verdict.
+
+Measured, no patching: 09-01 `selector_era=clob_v4_1`, `post_freeze=True`,
+7 coins 58/58 → **`race_accrual_eligible=True`**. 08-31 correctly `None` /
+refused. 08-29 unchanged at `clob_v3_1`, still ineligible on era admission —
+so the change moves no historical verdict.
+
+Also fixed by the same derivation: `era_covered_windows` and
+`gap_affected_PER_SLUG`, which read 0/None on days holding 288 windows. Those
+are REPORTED, not governing (`COIN_LEVEL` is the bar's input, R-191), so this
+corrected two misleading numbers, not a verdict.
+
+**B2 — the bound is now closed `[0, 1]`, and the print is COUNTED.** New
+`ParseStats.settled_price_trades`. `evaluation_pipeline` already accepted
+`0 <= price_up <= 1` **inclusive**, so the two layers disagreed and the
+stricter, cruder one won by crashing — Tier-2 was always written for closed
+-interval prices. Verified safe at the bounds: `edge` is pure subtraction, and
+both `logit` implementations clamp to `1e-6` and read book mid, not trade price.
+
+**Both fixes ship falsifiers, and all mutants die.** B2: positive control
+(0.0/1.0 admitted, counted, price carried), negative control (interior-price
+fixture must count 0, so an always-on counter fails), known-bad refusal (1.5 and
+-0.1 still raise). B1: the era must REACH both loaders, the bare-call fallback
+still works for historical consumers, plus source guards. Six mutations run —
+revert-to-open-interval, counter-never-increments, raise-removed,
+verify_day-reverts-to-bare-call, gap-affected-reverts-to-literal,
+select_holdout-ignores-its-argument — **6/6 KILLED**, files byte-identical after.
+
+`tier1_pipeline --selftest` **added to `v5_deploy_gates`**: it held the check
+that blocked two lanes for 146 h and the suite never invoked it. **ALL 15 GATES
+PASS**; falsifier fires (exit 0, canary only).
+
+**Open, and it is a RULING not a repair — `race_accrual_eligible` does not
+require the day to be CLOSED.** With B1 fixed, 09-01 reads eligible at 4 h
+elapsed, because `complete_tape` compares against windows *elapsed so far*.
+The nightly verdicts the just-OPENED day too, so at 00:06Z on 09-02 it would
+write `race_accrual_eligible=true` for a six-minute-old day. Before B1 that
+read false only because the era pin was failing it — a wrong answer masking a
+second one. Nothing consumes the field yet (the clock is unbuilt), so no count
+is wrong today, and `day_closed_calendar` sits beside it in the same artifact.
+**Recommended: make `day_closed_calendar` a conjunct** — rule 8 already says
+accrual counts *complete* UTC days, so this enforces the stated policy rather
+than making new one. Not done: changing an eligibility gate is the policy
+layer's (rule 14).
+
+**Watch:** `v4 behaviour (git-extracted)` failed once under back-to-back suite
+runs and passes 3/3 standalone. Cause not established; it fails in the SAFE
+direction (false red, never false green). Pre-existing, unrelated to these fixes.
+
+### Immediate order
+
+0. ~~Rule B1~~ **DONE** — derived per day, 09-01 now accrues.
+   Rule the **day-closed conjunct** above before 00:06Z on 09-02.
+0b. Confirm the tier1:full lane actually clears 08-25 on the next timer run.
+   The fix is proven at unit level; end-to-end clearance is NOT yet observed,
+   and 08-26/08-27/08-30 carry the same prints behind it.
+1. Preserve the running collector and close the first full v4.1 UTC day.
+2. Obtain an independent re-review of HEAD `1aaac18`: it claims RR1/RR3
+   closure, but the latest filing reviewed its parent and did not release them.
+3. Resume hazard-plan §10 item 1/Iteration 011 correctness closure; do not fit
+   or score until the explicit review release.
+4. Keep fair-price, skew and replay work build/freeze-only behind their stated
+   gates. No PnL, capacity, promotion or forward verdict is claimable.
+
+Historical handoff entries follow unchanged.
 
 ## 2026-08-28 ~15:19Z (MEM) — R-289: the checker's chair has an empty-set trap too
 

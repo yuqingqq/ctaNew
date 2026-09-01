@@ -1,10 +1,34 @@
 # Harmful-fill hazard × toxicity optimization plan
 
-**Status:** ACTIVE / INITIAL VERSION RECORDED BEFORE IMPLEMENTATION / NOT FROZEN
+**Status:** ACTIVE / BTC HAZARD SEED FROZEN-UNVALIDATED / FULL ROUTE NOT FROZEN
 **Scope:** offline research only; no venue adapter, live cancellation path, or
 execution server  
 **Incentives:** maker rebates and liquidity rewards excluded from the primary
 economics, by current user direction
+
+**Role:** this is the governing project TODO. The stateful cancel x skew TODO is
+a subordinate implementation worksheet, not the overall progress tracker.
+
+**2026-09-01T03:49:46Z progress map (repository HEAD `1aaac18`):**
+
+| §10 item | Current state |
+|---|---|
+| 1. Receipt/runtime seams | Substantially built; final model-path wiring and identity closure remain before another result-bearing 011 run. |
+| 2. Dataset and `PRED_STATE_V1` | Complete and repeatedly reproduced. |
+| 3. Conditional-value lane | Iteration 011 preregistration and implementation exist; the review hold remains and nothing has been fitted or scored. |
+| 4. Fair-price lane | Typed `Identity` and build-only machinery exist; the challenger protocol is not freeze-ready and no challenger has been scored. |
+| 5. Skew lane | `QR_SKEW_ONLY` freeze draft exists; it is not user-frozen. |
+| 6. Common action-value/seven-arm replay | Contracts, parity stubs and inert trajectories exist; real queue-integrated replay is not complete. |
+| 7. Passing-module integration | Not started. |
+| 8. Stateful replay and latency/cost grids | Not started for the integrated candidate. |
+| 9. Freeze and forward validation | The separate BTC hazard seed is frozen but unvalidated; no integrated candidate is frozen; `G=0/5` qualifying complete UTC days. |
+| 10. Real execution latency | Not measured; remains outside this research-only repository if it requires a venue adapter. |
+
+The live data dependency is now `clob_v4_1`, running since the ruled
+2026-08-31T22:00Z boundary. The 2026-08-31 day is mixed-era and BTC failed its
+quality bar. 2026-09-01 is the first era-pure admissible v4.1 day, but it is
+incomplete and cannot accrue. Do not call collector operation a forward-test
+day until the closed-day verifier admits it.
 
 **2026-08-28 update:** Phases 0--2 have produced a reproducible development
 receipt and a BTC fill-hazard research seed, but no complete-UTC-day forward

@@ -63,6 +63,12 @@ GATES: list[tuple[str, list[str]]] = [
      [PY, str(HERE / "v41_boundary_preflight.py"), "--selftest"]),
     ("v4_1 mutation audit",
      [PY, str(HERE / "v41_preflight_mutation_audit.py")]),
+    # Tier-1 normalisation was NOT in this list while it held the check that
+    # hard-blocked tier1:full and tier2 for 146 h (`0 < price < 1` on real
+    # settlement-edge prints). Its selftest costs 0.4 s. A file this suite
+    # never invokes is a file this suite does not gate.
+    ("tier1 normalisation",
+     [PY, "-m", "live.pm_research.tier1_pipeline", "--selftest"]),
 ]
 
 # A gate whose script is missing must FAIL, not vanish from the tally.

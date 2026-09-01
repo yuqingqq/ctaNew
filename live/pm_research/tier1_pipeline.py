@@ -567,6 +567,25 @@ class ParseStats:
     reconciled_levels: int = 0
     invalidated_books: int = 0
     unknown_assets: int = 0
+    #: Trades printed at exactly 0.0 or 1.0 -- ADMITTED, and counted so the
+    #: admission is visible. These are real settlement-edge prints: a binary
+    #: Up/Down market settles at 0 or 1, so once a window's outcome is
+    #: effectively decided the winning token trades at 1.0 and the loser at
+    #: 0.0. A holder selling at 1.0 is cashing out a certain win.
+    #: This was a `raise` on the OPEN interval, and it HARD-BLOCKED the
+    #: tier1:full and tier2 lanes for 146 h from 2026-08-25 (three btc prints
+    #: at 1.0 in btc-updown-5m-1787635800). The catch-up runner always takes
+    #: the oldest uncommitted day, so it crashed on the same day every hour
+    #: and could never advance, while tier1:measurement -- which never calls
+    #: this normalizer -- stayed caught up and made it read as lag, not a stop.
+    #: Measured prevalence 2026-08-25..09-01: 13 prints in 4.51M trades
+    #: (1.0 and 0.0 both observed, btc and eth), so it recurs and a per-day
+    #: patch would only move the crash to the next day.
+    #: `evaluation_pipeline` already accepted `0 <= price_up <= 1` INCLUSIVE:
+    #: the two layers disagreed and the stricter, cruder one won by crashing.
+    #: Exclusions are statuses, never silent drops (repo rule 4) -- so this
+    #: admits the print and COUNTS it rather than dropping or dying.
+    settled_price_trades: int = 0
 
 
 def _open_text(path: Path):
@@ -1145,8 +1164,10 @@ def normalize_clob(
                     continue
                 price_token = _finite_float(message.get("price"), "trade.price")
                 size = _finite_float(message.get("size"), "trade.size")
-                if not 0 < price_token < 1:
-                    raise ValueError("trade price must be strictly inside (0, 1)")
+                if not 0 <= price_token <= 1:
+                    raise ValueError("trade price must be inside [0, 1]")
+                if price_token in (0.0, 1.0):
+                    stats.settled_price_trades += 1
                 if size <= 0:
                     raise ValueError("trade size must be positive")
                 side_raw = str(message.get("side", ""))
@@ -2034,7 +2055,78 @@ def selftest() -> None:
         assert stats.collapse_groups == stats.collapsed_rows == 1
         assert stats.top_checks == 4 and stats.top_matches == 2
         assert stats.reconciled_levels == 2 and stats.invalidated_books == 0
+        # NEGATIVE CONTROL for the settled-price counter: this fixture is all
+        # interior prices, so a counter that is merely always-on fails here.
+        assert stats.settled_price_trades == 0
         print("  PASS  CLOB replay, top reconciliation, dedup and parent collapse")
+
+        # --- settlement-edge trade prices: ADMITTED and COUNTED -------------
+        # Ships its own controls (repo rule 15). The `raise` this replaces
+        # hard-blocked tier1:full and tier2 for 146 h; a check that dies on
+        # real venue data is not a check, and a count nobody can see it fire
+        # is not a status.
+        for edge_price, want_up in (("1", 1.0), ("0", 0.0)):
+            edge_dir = root / f"settled-{edge_price}"
+            edge_dir.mkdir(exist_ok=True)
+            edge_path = edge_dir / "btc-updown-5m-1.jsonl.gz"
+            with gzip.open(edge_path, "wt") as handle:
+                handle.write(_wire_line(1_210_000_000, {
+                    "asset_id": "UP",
+                    "price": edge_price,
+                    "size": "10",
+                    "fee_rate_bps": "0",
+                    "side": "SELL",
+                    "timestamp": "1200",
+                    "event_type": "last_trade_price",
+                    "transaction_hash": f"tx-settled-{edge_price}",
+                }))
+            _q, edge_trades, edge_stats, _s = normalize_clob(
+                [edge_path],
+                day=date(1970, 1, 1),
+                coin="btc",
+                markets={market.slug: market},
+                ledger=ledger,
+            )
+            # POSITIVE CONTROL: the print the old check DIED on now survives,
+            # carries its price through, and is counted.
+            assert len(edge_trades) == 1, edge_trades
+            assert edge_trades[0]["price_up"] == want_up
+            assert edge_stats.settled_price_trades == 1, edge_stats
+
+        # KNOWN-BAD INPUT it must still REFUSE. Widening to the closed
+        # interval must not widen to "any float": 1.5 is not a settlement
+        # edge, it is corrupt, and admitting it would make the check vacuous.
+        for corrupt in ("1.5", "-0.1"):
+            bad_dir = root / f"corrupt-{corrupt}"
+            bad_dir.mkdir(exist_ok=True)
+            bad_path = bad_dir / "btc-updown-5m-1.jsonl.gz"
+            with gzip.open(bad_path, "wt") as handle:
+                handle.write(_wire_line(1_210_000_000, {
+                    "asset_id": "UP",
+                    "price": corrupt,
+                    "size": "10",
+                    "fee_rate_bps": "0",
+                    "side": "SELL",
+                    "timestamp": "1200",
+                    "event_type": "last_trade_price",
+                    "transaction_hash": f"tx-corrupt-{corrupt}",
+                }))
+            try:
+                normalize_clob(
+                    [bad_path],
+                    day=date(1970, 1, 1),
+                    coin="btc",
+                    markets={market.slug: market},
+                    ledger=ledger,
+                )
+            except ValueError as exc:
+                assert "inside [0, 1]" in str(exc), exc
+            else:
+                raise AssertionError(
+                    f"price {corrupt} was ADMITTED -- the widened bound no "
+                    f"longer refuses anything and the check is vacuous")
+        print("  PASS  settlement-edge prices 0.0/1.0 admitted and counted; "
+              "out-of-range still refused")
 
         price_ledger = CollectorLedger(root / "empty-price.jsonl", b"", subject_field="topic")
         resolution = ResolutionInfo(

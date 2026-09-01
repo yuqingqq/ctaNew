@@ -805,7 +805,8 @@ def window_admissible_forward(ws_epoch: float, freeze_epoch: float) -> bool:
 
 
 def select_holdout(freeze_epoch: float,
-                   cap_per_coin: int | None = None) -> dict[str, Any]:
+                   cap_per_coin: int | None = None,
+                   era: str | None = None) -> dict[str, Any]:
     """The R-129 selector: day-keyed ADMISSIBLE windows + DERIVED labels.
 
     - admissibility: `window_admissible_forward` per window — the predicate,
@@ -817,12 +818,31 @@ def select_holdout(freeze_epoch: float,
     - `holdout_complete` PER (day, coin): day_closed AND n_admissible > 0 —
       the count is whatever the timestamp filter yields; there is no
       per-coin target to "hit".
-    Returns {"freeze_epoch", "days": {day: {"day_closed", "windows":
+
+    `era` NAMES THE COLLECTOR ERA WHOSE WINDOWS ARE LOADED, and callers on the
+    accrual path MUST pass it. It used to be the module constant `fi.ERA`,
+    which is a LITERAL: it read `clob_v3_1` — an era that closed
+    2026-08-30T05:30:01Z — so every later day was absent from the selector and
+    `entirely_post_freeze` failed BY CONSTRUCTION, whatever the feed did. That
+    silently zeroed race accrual, and its message ("absent from the selector")
+    reads like a data problem rather than a config one. It was masked for two
+    days because 08-30 and 08-31 fail `era_admissible` on their own; 09-01 was
+    the first day it would have bound, and a perfect day would have failed.
+
+    This is `flow_intensity._discover_days()`'s defect one identifier over —
+    `DAYS` was converted from a literal to a derived value BECAUSE it went
+    stale four times in three days, and `ERA` beside it never was. The fix is
+    not a better literal: `da_forward_day_verify` derives this per-day from the
+    day's OWN ledger era, so it cannot go stale at the next boundary. `None`
+    keeps the old constant for the historical consumers that want a frozen era.
+
+    Returns {"freeze_epoch", "era", "days": {day: {"day_closed", "windows":
     [(slug, path, up, down, gaps)...], "n_admissible_by_coin"}}}.
     """
+    era = fi.ERA if era is None else era
     paths = fi._archive_paths()
     tokens = fi.token_map()
-    gaps = fi.gaps_by_slug(fi.ERA)
+    gaps = fi.gaps_by_slug(era)
     by_day: dict[str, list] = collections.defaultdict(list)
     per_day_coin: dict[str, collections.Counter] = collections.defaultdict(
         collections.Counter)
@@ -838,7 +858,7 @@ def select_holdout(freeze_epoch: float,
     n_adm_uncapped: dict[str, collections.Counter] = collections.defaultdict(
         collections.Counter)
     max_ws = 0
-    for slug in sorted(fi.covered_slugs(fi.ERA)):
+    for slug in sorted(fi.covered_slugs(era)):
         if slug not in paths or slug not in tokens:
             continue
         try:
@@ -876,7 +896,11 @@ def select_holdout(freeze_epoch: float,
             "n_admissible_by_coin": dict(sorted(per_day_coin[day].items())),
             "windows": by_day[day],
         }
-    return {"freeze_epoch": freeze_epoch, "predicate":
+    # NAME THE POPULATION IN THE RESULT. The era decides which windows exist
+    # at all, so a selector result that does not carry it cannot be audited
+    # for the exact failure above -- the days simply were not there, and
+    # nothing in the output said why.
+    return {"freeze_epoch": freeze_epoch, "era": era, "predicate":
             "ws - HOLDOUT_LEAD_S >= freeze_epoch (R-129)", "days": out_days}
 
 

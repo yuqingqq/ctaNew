@@ -367,3 +367,33 @@ Moved in the same commit as the sweep that pushed it out. Join rule as in batch 
   RULE 17 ADOPTED (suite-green is not pipeline-wired) after batch 2 DEMONSTRATED
   the both-halves closure, so it lands with a cite rather than an anecdote.
 ```
+
+## Batch 7 — archived 2026-09-01T03:49:46Z (1 entry, rolling-window overflow)
+
+Moved in the same documentation true-up that pushed it out. Join rule as in
+batch 1.
+
+```yaml
+
+  2026-08-28T14:20Z (MEM): SWEPT R-254..R-276 after a 23-entry gap. THREE
+  THINGS MOVED THAT A SUMMARY WOULD GET WRONG. (1) DAY-BAR V2 IS RELEASED and
+  governs coin-days >=08-29; the R-256 inadmissibility interim lifts and 08-29
+  RE-VERDICTS under released code -- but RELEASED IS NOT "THE DAY PASSES", and
+  the filing explicitly does not pre-judge 08-29. (2) O1 IS CLEARED and the
+  boundary RE-ARMS for 2026-08-30T00:00:00Z (22:30Z confirm, 23:56Z prep,
+  00:00Z deploy + era stamp); the v3_1 hold stays until then. (3) THE
+  PROVENANCE CHAIN ON THE COMMITTED RESULT IS OPEN: seam 47j fired because THE
+  GATE THAT SIGNED FIT7'S TAPE VERDICT IS NOT THE GATE THAT EXISTS (two
+  substantive gate-defect fixes landed since). BE's precision is the record --
+  IT DOES NOT CLAIM THE VERDICT IS WRONG, THE CHAIN NO LONGER CLOSES -- and
+  v2.3 and the freeze receipt MUST NOT be cited as gate-verified until DA's
+  re-gate determination lands, both branches pre-declared. ALSO: THE ESTIMAND I
+  RECORDED THIS MORNING IS SUPERSEDED -- the repo's own passed reconstruction
+  refutes full-window TWAP (86.9%) in favour of S60 ENDPOINTS (99.8%), verified
+  by me at EXP_RESULTS_2026-08-20.md:10-17; the description-vs-reconstruction
+  tension is STATED, not resolved, and 2B is NOT FIT TO FREEZE. Second
+  settlement correction in one day, both pre-freeze. THE USER RULED on
+  CLAUDE.md (option (a): it defers to SEAT_PROTOCOL for this program, rule-9
+  fix rides the same edit) -- text drafted, APPLIED ONLY BY THE USER'S HAND.
+  011 stays DARK.
+```

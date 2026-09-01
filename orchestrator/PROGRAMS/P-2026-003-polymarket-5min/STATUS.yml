@@ -4,6 +4,22 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-09-01T03:49:46Z (USER-AUTHORIZED CODEX DOC TRUE-UP): THE GOVERNING TODO
+  IS plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md §10, not the subordinate
+  stateful-cancel worksheet. Current map: dataset/PRED_STATE_V1 complete;
+  receipt/runtime seams substantially built with final model-path closure still
+  owed; Iteration 011 preregistration and implementation built but review-held,
+  nothing fitted or scored; typed fair-price Identity built but challenger
+  protocol not freeze-ready; skew freeze is a draft; seven-arm work is
+  stub/inert only; integrated replay/economics not complete. The separate BTC
+  hazard seed remains FROZEN-UNVALIDATED and the integrated candidate is not
+  frozen. Forward reach is G=0/5 qualifying complete UTC days. Collector v4.1
+  is live since the 2026-08-31T22:00Z boundary (PID 1108125, NRestarts=0 at
+  this as-of). 08-31 is mixed-era and BTC quality-failing; 09-01 is the first
+  era-pure admissible v4.1 day but is incomplete. HEAD/origin were equal at
+  1aaac18 before this documentation edit; that commit claims RR1/RR3 closure,
+  but the latest independent Codex filing reviewed its parent and a fresh
+  release has not yet been filed. PRIOR:
   2026-08-28T15:19Z (MEM): R-289 -- MY DISCLOSURE CAUGHT A SECOND VACUUM, AND
   IT WAS IN THE REGISTER. The coordinator's R-288 "independent confirmation" of
   the committed-null dependence check was ITSELF vacuous: its parse matched all
@@ -44,28 +60,7 @@ updated: >-
   ZERO negative under p<0.10) -- and my FIRST parse matched zero cells and would
   have passed VACUOUSLY, so the count falsifier is why the check counts. NO
   SUMMARY MAY SAY THE CANONICAL NULL WAS WRONG. Round 3 is FIRED at a63d717 with
-  the O1-adverse condition LIVE AGAIN before tonight's arming. PRIOR:
-  2026-08-28T14:20Z (MEM): SWEPT R-254..R-276 after a 23-entry gap. THREE
-  THINGS MOVED THAT A SUMMARY WOULD GET WRONG. (1) DAY-BAR V2 IS RELEASED and
-  governs coin-days >=08-29; the R-256 inadmissibility interim lifts and 08-29
-  RE-VERDICTS under released code -- but RELEASED IS NOT "THE DAY PASSES", and
-  the filing explicitly does not pre-judge 08-29. (2) O1 IS CLEARED and the
-  boundary RE-ARMS for 2026-08-30T00:00:00Z (22:30Z confirm, 23:56Z prep,
-  00:00Z deploy + era stamp); the v3_1 hold stays until then. (3) THE
-  PROVENANCE CHAIN ON THE COMMITTED RESULT IS OPEN: seam 47j fired because THE
-  GATE THAT SIGNED FIT7'S TAPE VERDICT IS NOT THE GATE THAT EXISTS (two
-  substantive gate-defect fixes landed since). BE's precision is the record --
-  IT DOES NOT CLAIM THE VERDICT IS WRONG, THE CHAIN NO LONGER CLOSES -- and
-  v2.3 and the freeze receipt MUST NOT be cited as gate-verified until DA's
-  re-gate determination lands, both branches pre-declared. ALSO: THE ESTIMAND I
-  RECORDED THIS MORNING IS SUPERSEDED -- the repo's own passed reconstruction
-  refutes full-window TWAP (86.9%) in favour of S60 ENDPOINTS (99.8%), verified
-  by me at EXP_RESULTS_2026-08-20.md:10-17; the description-vs-reconstruction
-  tension is STATED, not resolved, and 2B is NOT FIT TO FREEZE. Second
-  settlement correction in one day, both pre-freeze. THE USER RULED on
-  CLAUDE.md (option (a): it defers to SEAT_PROTOCOL for this program, rule-9
-  fix rides the same edit) -- text drafted, APPLIED ONLY BY THE USER'S HAND.
-  011 stays DARK.
+  the O1-adverse condition LIVE AGAIN before tonight's arming.
   ARCHIVED: entries older than these three are moved, never deleted, to
   workspace/STATUS_UPDATED_ARCHIVE.md (append-only). This field is a
   ROLLING WINDOW OF THREE by ruling (coordinator, 2026-08-28T10:02Z):
@@ -73,6 +68,32 @@ updated: >-
   never regrows. Nothing here is dropped -- if a reader needs the full
   chain it is in the archive and in git history.
 flags:
+  governing_todo: HARMFUL-FILL-HAZARD-TOXICITY-PLAN-SECTION-10
+                             # USER correction, documented 2026-09-01T03:49:46Z.
+                             # plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md is
+                             # the overall project order. The stateful cancel x
+                             # skew TODO is a subordinate implementation sheet;
+                             # 39/113 is not total project completion.
+  v41_collector_live: ACTIVE-RUNNING-FIRST-PURE-DAY-INCOMPLETE
+                             # As-of 2026-09-01T03:49:46Z: systemd active/
+                             # running, PID 1108125, NRestarts=0, start
+                             # 2026-08-31T22:00:01Z, clob_v4_1. 08-31 is
+                             # mixed clob_v4/clob_v4_1 and cannot accrue.
+                             # 09-01 is era-pure/admissible so far but is not a
+                             # complete UTC day and therefore is not evidence.
+  hazard_forward_reach: G-0-OF-5-COMPLETE-QUALIFYING-DAYS
+                             # The separate BTC hazard seed is frozen and
+                             # marked unvalidated. No integrated hazard x
+                             # conditional-value x skew candidate is frozen.
+                             # 08-29 is era-inadmissible; 08-30 and 08-31 do
+                             # not accrue; 09-01 remains incomplete.
+  v41_rr_closure: IMPLEMENTED-AT-1aaac18-PENDING-INDEPENDENT-REREVIEW
+                             # HEAD/origin matched at 1aaac18 before this docs
+                             # edit. That commit reports 14/14 gates and v4_1
+                             # 164 checks after addressing RR1/RR3. The latest
+                             # independent filing reviewed fc58d4d and held
+                             # RR1/RR3, so do not say HOLD RELEASED until a
+                             # filing reviews 1aaac18 explicitly.
   v5_heartbeat_deploy: HELD-BY-COORDINATOR-PREMISE-FALSIFIED
                              # STATUS 2026-08-31T11:42Z (R-357). NOT a Codex
                              # hold and NOT an instrument defect -- the DEPLOY'S
@@ -140,27 +161,15 @@ flags:
                              # 1,288 ledgers / 0 disagreements, v5 heartbeat
                              # 26/26, deadline falsifier fires, DA 150.
                              # CAND_SHA/CAND_COMMIT deliberately stale.
-  dayverdict_20260829_wrong_on_disk: OPEN-DISPATCHED-Q-DA-180
-                             # STATUS 2026-08-31T11:58Z (R-358). LIVE DATA
-                             # DEFECT, independent of the v5 hold.
-                             # da_dayverdict_20260829.json -- the canonical
-                             # path da_midnight_verify.sh:161 writes and
-                             # readers key on -- carries all_pass:true AND
-                             # race_accrual_eligible:true for a day lying
-                             # entirely in clob_v3_1, which ERA_ADMISSIBLE
-                             # rules False. The _v2 correction exists and the
-                             # vN+1 form is what rule 13 sanctions, but
-                             # NEITHER FILE CARRIES A FIELD NAMING THE
-                             # RELATION (v1 has no superseded_by, v2 has no
-                             # supersedes) -- and rule 13's stated REASON is
-                             # that automated readers resolve receipt FIELDS,
-                             # not sidecar annotations. The rule's form was
-                             # followed; its function was not. It also cannot
-                             # self-correct: days_needing_verdict filters to
-                             # len(tok)==8 so it never sees the _v2, and
-                             # _artifact_closed excludes the day from catch-up
-                             # permanently. 08-30 has the same unlinked shape
-                             # but both files agree there, so it is latent.
+  dayverdict_20260829_wrong_on_disk: CLOSED-SUPERSEDED-IN-BAND
+                             # Verified at the artifact 2026-09-01T03:49:46Z.
+                             # da_dayverdict_20260829.json now carries
+                             # race_accrual_eligible:false, era_pure:true,
+                             # eras_touched:[clob_v3_1], era admissibility
+                             # false, plus a supersedes block naming the prior
+                             # true-accrual cache. The old OPEN entry above is
+                             # retained in git/archive provenance, not current
+                             # state.
   verification_must_assert_it_read: VOCABULARY-RULE-18-HELD-TO-A-STATED-BAR
                              # STATUS 2026-08-28T15:21Z (R-290): ADOPTED AS
                              # STANDING VOCABULARY; the NUMBERED rule is HELD to
@@ -1353,7 +1362,11 @@ flags:
                              # any result-bearing artifact.
   iter011_prefit_review: HOLD-CORRECTNESS-BLOCKERS-AS-OF-2026-08-28T08:46Z
   day_bar_v2_judgment: HOLD-CORRECTNESS-BLOCKERS-AS-OF-2026-08-28T08:46Z
-  todo_completion: 39-of-113-COUNTABLE-AS-OF-2026-08-28T08:37Z # MEM, trued up
+  todo_completion: SUBORDINATE-WORKSHEET-39-OF-113-AS-OF-2026-08-28T08:37Z
+                             # NOT overall project completion. This count is
+                             # only for STATEFUL_HARMFUL_CANCEL_TODO.md, a
+                             # subordinate worksheet under the hazard plan.
+                             # MEM originally trued it up
                              # at 9669203 against
                              # plans/STATEFUL_HARMFUL_CANCEL_TODO.md.
                              # DEFINITION MATTERS MORE THAN THE NUMBER, because
@@ -3540,44 +3553,25 @@ flags:
                              # migration discipline remain authoritative.
 
 focus: >
-  Build and test the model, mechanism-first, no PnL/capacity estimation
-  (user, 2026-08-20 -- unchanged). Entry point is
-  live/pm_research/PM_ARCHITECTURE.md (prose baseline v12; the machine-readable
-  canonical contract is contracts/contracts.yaml at v24 -- both read at the
-  file today, 2026-08-28); the decision record is workspace/COORDINATION.md,
-  R-entries through R-232.
-  IMMEDIATE 2026-08-28: three things are live at once, and they are
-  independent. (1) PHASE-2 PROVENANCE IS CLOSED -- receipt v2.3 at fd1e949,
-  six fits agreeing, the disclosure generator-owned. What that hardened is
-  provenance, NOT reach: the population is still development, G=0 complete
-  UTC days, is_a_validation FALSE. Do not let the strength of the chain be
-  read as strength of the claim. (2) THE FORWARD CLOCK is the binding
-  constraint, exactly as calendar time was in August: per-coin verdicts
-  (R-211(3)), 08-26 FAIL, 08-27 EXCLUDED, 08-28 judged tonight at 00:06Z
-  under the OLD count bar, day-bar v2 (P1/P2/P3, dfa0977 + 368345b)
-  governing days >=08-29, and >=5 later complete PASSING UTC days per coin
-  before any candidate has a verdict. Collector v4 deploys at the same
-  instant (00:00:00Z, runbook cb85ebd) to stop losing those days to
-  detection lag. (3) BUILD/PREREGISTER ONLY on the four-lane conditional-
-  value plan (iterations 011-013, d506a06 adopted at R-231): outcome-driven
-  selection stays SERIALIZED, no scoring under lane 012, no new-feature
-  scoreboard on consumed days (08-20..25 are consumed and stay consumed),
-  and every changed candidate starts a NEW forward clock. Iteration-011 is
-  frozen by user ruling at 3b71d3e -- two arms, 24 Holm cells, nothing
-  fitted or scored. Probability-level use remains PRICING HOLD until the
-  frozen per-fit gates pass. PRIOR FOCUS (2026-08-21, superseded by this
-  entry, kept because its rules still bind): the sigma research pipeline is
-  engineered, supervised and frozen; route_a_v2 is pre-registered per symbol
-  and horizon and must not be refit, tuned or inspected on primary days
-  before its formal run; partial smokes and pre-freeze design data never
-  count as validation; keep two-day estimates descriptive and preserve
-  per-coin and dual-weighting reporting. Route A's counts are carried forward
-  UNVERIFIED at their 2026-08-21 as-of and have not been re-read since --
-  route_a_v1 at one of ten OOS test days with all 84 gates
-  INSUFFICIENT_EVIDENCE, route_a_v2 at 126 gates from 2026-08-22, G-FF1 v3
-  PASS and bound to Tier-2. The lane is dormant, not closed: it has not
-  appeared in the register since the 2026-08-23 build-order audit, so re-read
-  those numbers before quoting them rather than trusting this line.
+  As-of 2026-09-01T03:49:46Z, build and test the offline model mechanism-first
+  under plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md section 10. Do not use the
+  subordinate stateful-cancel TODO checkbox count as total progress. The
+  foundation is established: the action-level dataset and PRED_STATE_V1 are
+  reproduced, the Phase-2 development receipt exists, and a BTC hazard seed is
+  frozen but explicitly unvalidated. The next bounded model job remains
+  Iteration 011 conditional signed value. Its preregistration and code exist,
+  but the review hold remains and nothing has been fitted or scored. Fair-price
+  Identity is built, while the challenger protocol is not freeze-ready; the
+  skew document is still a user-freeze draft; the seven-arm path is stub/inert
+  only. Real queue-integrated replay, lifecycle economics and an integrated
+  candidate freeze remain downstream. The current operational dependency is
+  clean data collection: clob_v4_1 has run since 2026-08-31T22:00Z. 08-31 is a
+  mixed-era BTC quality failure. 09-01 is the first era-pure admissible v4.1
+  day, but it is incomplete. Forward reach is therefore G=0/5 complete
+  qualifying UTC days. Keep all 08-20..25 model-development days consumed;
+  the 08-29 fragment diagnostic is never evidence; never tune on a later day
+  and then score that same day. No PnL, capacity, promotion or forward verdict
+  is claimable yet.
 
 standing_rules:
   - CHECK THE DATA BEFORE USING IT, EVERY TIME — no lane is trusted by default.
@@ -3607,8 +3601,15 @@ tasks:
   - id: e0-collector
     phase: 0
     name: collect_pm.py — CLOB WS book/trades + Gamma metadata + CLOB resolutions
-    status: live-repaired-monitoring
+    status: v4_1-live-first-pure-day-monitoring
     notes: |
+      CURRENT 2026-09-01T03:49:46Z: clob_v4_1 is active/running at PID
+      1108125, NRestarts=0, since the ruled 2026-08-31T22:00Z transition.
+      08-31 is mixed-era and BTC quality-failing. 09-01 is era-pure and
+      admissible so far but incomplete; operational liveness is not a
+      closed-day quality verdict. Preserve the running collector while the
+      first complete v4.1 day accrues.
+      HISTORICAL FOUNDATION:
       LIVE 2026-08-19. Three bugs found and fixed: (1) Gamma outcomePrices is
       live prices not resolution (is_final guard); (2) Gamma DELETES resolved
       5-min markets — resolution source switched to
@@ -3772,7 +3773,42 @@ tasks:
       (unwarned share dominates) is deliberately tested first and cheaply.
       ActionSpace needs CANCEL as a first-class action when code starts
       (contracts change, flagged in plan §3). All DEVELOPMENT, no PnL claim.
+  - id: hazard-iter011
+    phase: 1
+    name: Hazard plan §10.3 — conditional signed-value Iteration 011
+    status: preregistered-and-built-review-hold-no-fit-no-score
+    notes: |
+      Frozen preregistration and implementation exist. The last authoritative
+      review disposition keeps 011 dark pending correctness/identity closure
+      and an explicit review release. Consumed days cannot be reused for model
+      selection.
+  - id: hazard-fair-price
+    phase: 1
+    name: Hazard plan §10.4 — timestamped fair-price lane
+    status: identity-built-challenger-protocol-not-freeze-ready
+    notes: |
+      Typed point-in-time Identity and build-only machinery exist. No
+      challenger is frozen or scored; Identity remains the supported baseline.
+  - id: hazard-skew
+    phase: 1
+    name: Hazard plan §10.5 — freeze QR_SKEW_ONLY neutral semantics
+    status: draft-not-user-frozen
+    notes: |
+      The freeze draft exists with unresolved semantics. Synthetic/inert work
+      does not substitute for the user freeze or real queue-reference parity.
+  - id: hazard-integrated-replay
+    phase: 2
+    name: Hazard plan §10.6-8 — action-value integration and stateful replay
+    status: contracts-and-stubs-only-real-integration-pending
+    notes: |
+      Seven-arm contracts, parity stubs and inert trajectories exist. There is
+      no completed real queue-integrated replay, latency/cost grid, or full
+      strategy-performance receipt.
   - id: e3-screen
     phase: 2
-    name: Run the pre-registered gates on >=2 weeks of windows
-    status: pending
+    name: Hazard plan §10.9 — unchanged forward scoring on >=5 complete days
+    status: blocked-awaiting-qualifying-complete-v4_1-days-G0-of-5
+    notes: |
+      The separate BTC hazard seed is frozen but marked unvalidated; no
+      integrated candidate is frozen. 08-29 is era-inadmissible, 08-30 and
+      08-31 do not accrue, and 09-01 is incomplete as of this update.

@@ -1,5 +1,9 @@
 # Stateful harmful-flow cancel x skew — TODO plan
 
+**Role:** subordinate implementation worksheet only. Overall project progress
+and ordering are governed by `HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md` §10; do not
+use this file's checkbox count as the total project completion figure.
+
 **Recorded:** 2026-08-26T02:43:12Z, after the I5 lead control completed  
 **Status:** ACTIVE / PHASE-2 DEVELOPMENT RECEIPT COMPLETE / NOT FROZEN
 **Parent plan:** `HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md`  
