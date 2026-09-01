@@ -225,15 +225,33 @@ Freeze one `COND_VALUE_V1` specification before reading a new result.
 - [ ] Define `V_cancel` from each fill/tranche's own event timestamp, resting
   level, shares and five-second markout; never proxy a fill timestamp with a
   nearby quote or resync event.
-- [ ] Keep no-fill hazard, harmful sign and signed magnitude as separately
+- [x] Keep no-fill hazard, harmful sign and signed magnitude as separately
   observable heads. No-fill rows train hazard; only latency-preventable fills
   enter the conditional heads.
-- [ ] Fit `P(harm | fill, x)` plus separate harmful and favourable magnitude
+  — done, `0b1f6bb`: the run's own artifact reports five heads separately
+  (`iter011_conditional_value_v1__coin_btc.json`, `results.btc.<arm>.heads`):
+  `Q1_arrival` on the whole population (n_actions 177,674 / n_rows 311,640),
+  `Q2_p_pos`/`Q2_p_neg` and `Q3_m_harm`/`Q3_m_good` on the latency-preventable
+  subset only (17,604 actions / 33,622 rows; magnitudes 7,988 and 9,617). The
+  gate is `phase2_iter011.preventable(row, latency_ms)`; `all_heads_reported` is
+  true and `reporting_rule` states a strong arrival head does not establish
+  toxicity discrimination.
+- [x] Fit `P(harm | fill, x)` plus separate harmful and favourable magnitude
   heads, and combine them as:
 
   ```text
   p_fill * (p_harm * m_harm - (1 - p_harm) * m_good).
   ```
+
+  — done, `0b1f6bb`, with the composition AMENDED under a frozen user ruling and
+  the printed form above superseded: `phase2_iter011.compose_expected_cancel_value`
+  uses `p_pos*m_harm - p_neg*m_good`, not `(1 - p_harm)`, because `(1 - p_harm)`
+  is `P(V<=0)` and counts zero-value rows into the good side, biasing the
+  composed value DOWNWARD by `m_good * P(V=0)` (A1.1 Option 1). The run measured
+  that mass rather than assuming it: `n_v_zero` 96 of 56,977 preventable (fit)
+  and 85 of 33,622 (eval) — 0.17% / 0.25% — and the artifact carries both forms
+  plus `superseded_form_bias` (0.0514 on btc eval). Ticking the substance (three
+  heads fitted and composed), NOT the algebra as printed here.
 
 - [ ] Compare exactly three conditional-value specifications: existing linear
   reference, one fixed-capacity sign-plus-magnitude model and one fixed-capacity
@@ -285,8 +303,18 @@ comparison is not an incremental fair-price result.
 
 Treat skew as inventory/risk control, not as a substitute alpha model.
 
-- [ ] Freeze `QR_SKEW_ONLY` placement, size, queue and inventory semantics as
+- [x] Freeze `QR_SKEW_ONLY` placement, size, queue and inventory semantics as
   the neutral integration reference.
+  — done, `908e8f0` (USER: "release and do skew freeze, proceed"):
+  `plans/SKEW_LANE_NEUTRAL_REFERENCE_FREEZE.md` records all four, each cited to
+  committed code — placement `QUEUE_REALISTIC_SKEW`
+  (`policy_optimizer_queue_realistic.py:48`), `size` 5.0 (`:59`),
+  `queue_realistic` True (`:52`) with skew changing intent and never an existing
+  queue position, and inventory-increasing/reducing via `_is_reducing`
+  (`harmful_stateful_policy.py:544-548`). It records semantics only: no fit, no
+  score, no code change. STILL OWED and NOT ticked by this: bit-identical
+  seven-arm replay parity is asserted by `da_replay_parity_battery` and has
+  never been RUN against a real seven-arm replay (the box at §5.3 below).
 - [ ] Do not select another band, hysteresis or skew threshold on 2026-08-20
   through 2026-08-25.
 - [ ] Define the policy interface through desired exposure, allowed placement,

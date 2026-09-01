@@ -1,7 +1,8 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-01T12:56:18Z — iteration 011 produced its first real 24-cell
-family; the 09:43Z "no result artifact" line is superseded in band below.
+Updated: 2026-09-01T13:05:51Z — iteration 011 produced its first real 24-cell
+family (the 09:43Z "no result artifact" line is superseded in band below), and
+the seats are running in parallel under R-373.
 
 ## READ FIRST — current project handoff
 
@@ -35,6 +36,40 @@ stateful cancel x skew TODO is a subordinate implementation worksheet; its
   parity stubs and inert trajectories; bit-identical parity against a real
   seven-arm replay, lifecycle economics and the integrated candidate freeze
   remain open.
+
+### Seats in parallel (as of 2026-09-01T13:05Z, R-373)
+
+All four seat contexts were cleared at ~12:52Z on USER order and re-loaded from
+files; anything assumed from pre-12:52Z conversation is void. Running now:
+
+| seat | working on |
+|---|---|
+| **BE** | the two 011 adjudication blockers — Q4 incumbent loading, then R-306's conjunction for Q3 (no refit; the per-coin evidence is preserved) |
+| **DA** | independent verification of the 011 artifact; item 0h (windows-affected disclosure in closing receipts); 00:06Z closed-day verifier readiness |
+| **coordinator** | item 0b (tier1:full clearance watch), item 0d (`pm-evaluation-pipeline` into `research.slice` when the backlog clears), and the item-2 re-review request |
+| **MEM** | this true-up; register sweep R-291..R-373 into the memory docs; TODO tick-with-citation |
+
+**One observation from the artifact sweep, filed for BE/the coordinator and NOT
+adjudicated here.** The 011 artifact reports the action unit **correctly at head
+level and inconsistently at arm level**: every head carries `n_actions` beside
+`n_rows` (Q1 177,674 / 311,640; Q2 17,604 / 33,622; Q3_m_harm 7,988 / 15,912),
+and the cells carry `n_actions` 177,674 — but
+`results.btc.<arm>.n_actions` reads **311,640**, which is the ROW count from
+`populations.btc.eval.n_rows`. The estimand looks right and one summary field
+looks mislabelled, but rule 2 is the rule this sits on, so it should be read at
+the code rather than accepted from this note.
+
+**TODO true-up in the same sweep** (`STATEFUL_HARMFUL_CANCEL_TODO.md`, 39 → 42
+ticked): §5.1 separately-observable heads (`0b1f6bb`, the artifact's own heads
+block), §5.1 the three-head composition (`0b1f6bb`, with A1.1's amendment noted
+because the code deliberately differs from the formula as printed), and §5.3 the
+`QR_SKEW_ONLY` freeze (`908e8f0`). Nothing else ticked: Q4's comparison, the
+BTC-and-ETH-independently box and the three-specification comparison all still
+fail their own text, and the reporting box asks for PR/lift, rank correlation,
+tail value captured and favourable-fill sacrifice, which the artifact does not
+carry. **`HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md` §10 has no checkboxes at all** —
+it is a numbered implementation order, and its state lives in STATUS/HANDOFF and
+the register, so there was nothing to tick there.
 
 ### Current data and forward state
 
