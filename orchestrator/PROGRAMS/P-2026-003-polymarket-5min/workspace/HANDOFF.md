@@ -1,12 +1,11 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-01T14:16Z — R-382..R-384 trued up, and **three items now wait
-on the USER** (see PENDING USER DECISIONS below; one carries a ~22:00Z deadline
-tonight). Prior line: the CLAUDE.md amendment is drafted
-(`workspace/DRAFT_CLAUDE_MD_AMENDMENT.md`), the TODO sweep is at 47/113, the
+Updated: 2026-09-01T17:24Z — **the review cycle is fully released and the 011
+result of record is 0/24 cells surviving the joint reading.** Five items now
+wait on the USER (see PENDING USER DECISIONS below); the two that waited this
+morning both landed on the USER's "Yea proceed" (R-386). Prior line: the
 reviewer seat is a Claude session, the resource rule is a mechanism,
-coordination is batched both directions, the DE seat is staffed, and the 011
-re-run was killed mid-fit rather than emit under a superseded predicate.
+coordination is batched both directions, and the DE seat is staffed.
 
 ## READ FIRST — current project handoff
 
@@ -18,29 +17,30 @@ two MEM sweeps, every tick behind a commit or an artifact).
 
 ### PENDING USER DECISIONS — nothing here can be decided by a seat
 
-Three drafts wait on the USER. They are gathered here so the asks are findable
-in one place instead of scattered across register entries; the register remains
-the authority on each. **Per R-383 these go up as ONE composed ask when the
-last of them lands — but no later than ~22:00Z tonight**, because the first
-item's clock is mechanical.
+**Five open.** Gathered here so the asks are findable in one place; the register
+remains the authority on each. Item 1 is the sharpest — it decides whether the
+only head with survivors keeps them.
 
-| # | ask | artifact | deadline | what happens if it slips |
-|---|---|---|---|---|
-| 1 | **Freeze the content-liveness rule** (Q-DA-199, R-370's open item) | `live/pm_research/da_content_liveness_rule.py` | **before 09-02 opens (~22:00Z)** | `EFFECTIVE_FROM_DAY = "20260902"` is enforced in code, not promised, and the rule may not be back-dated (rule 11). A freeze after 09-02 opens **costs its first governed day** — this is the only item with a real clock |
-| 2 | **Apply the `CLAUDE.md` amendment** (two hunks) | `workspace/DRAFT_CLAUDE_MD_AMENDMENT.md` | none | the state-file collision stays live (a fresh seat following `CLAUDE.md` keeps writing MEM's files and is *behaving correctly*), and rule 9 keeps asserting a settlement source that appears in **0 of 26,099** records |
-| 3 | **Freeze DE's Phase-4 grid protocol** | DE's draft, not yet landed | none, but it gates Phase-4 | no Phase-4 cell may be read before its protocol is frozen — declaring after seeing is what the draft exists to prevent |
+| # | ask | what it decides | cite |
+|---|---|---|---|
+| 1 | **Wire Q1's incumbent leg, or rule it out** | the six Q1 cells' `declared_gate` names an incumbent-hazard conjunct that was never evaluated (`apply_incumbent_hazard`, zero production call sites). Wiring it completes the gate and re-adjudicates; ruling it out amends the gate. **Either way this decides whether the published survivor count returns 0 → 6** | R-391 (RR2-1), R-392 |
+| 2 | **Q3 gate ruling** (the F-4 design half) | how Q3's declared gate composes now that `carries_incumbent_term: false` is recorded per cell | R-390 |
+| 3 | **Amendment A2 — one-sided vs two-sided**, now also carrying the **prospective-resolution declaration** | prereg §5(2) declares a TWO-SIDED p while the adjudicated p is ONE-SIDED per R-286/R-288; three options are drafted. The reviewer ruled the matched-random raise correctly refused, and the resolution for the NEXT run must be declared prospectively — that line rides A2 | R-390, R-391 |
+| 4 | **Freeze DE's Phase-4 protocol + the registry amendment** | no Phase-4 cell may be read before its protocol is frozen; the registry closes EV-Replay's gap | R-386 (deliberately deferred), R-389 |
+| 5 | **Per-seat worktrees** | whether seats get isolated worktrees rather than sharing one tree | R-390 |
 
-**Why item 1 governs nothing today, and that is deliberate:** `governs()` returns
-False unless **both** `FROZEN_BY_USER` and `day_token >= EFFECTIVE_FROM_DAY` —
-one function, both conditions, so a consumer cannot satisfy one and forget the
-other. `FROZEN_BY_USER` is `False` right now. Its thresholds were calibrated on
-consumed days ≤ 08-31 only, with `CALIBRATION_MAX_DAY < EFFECTIVE_FROM_DAY`
-enforced by a refusal rather than a comment, and **09-01 is deliberately not
-covered** — the rule was drafted while 09-01 was in flight, so applying it to
-that day would be choosing after seeing.
+**Closed this afternoon on the USER's "Yea proceed" (R-386), both verified here
+at their artifacts, not taken from the entry:**
 
-If items 2 and 3 miss the deadline, **item 1 escalates alone** and the rest
-follow in the next bundle.
+- **The content-liveness rule is FROZEN** — `FROZEN_BY_USER = True` with the
+  USER's words quoted in-file, and `EFFECTIVE_FROM_DAY = "20260902"`
+  **unchanged**, so the first governed day is tomorrow and 09-01 is neither
+  calibrated on nor judged. Flipping the switch surfaced three draft-state pins
+  in the rule's own selftest — each caught by the controls DA shipped, each the
+  class where a control asserts the OFF state instead of the invariant.
+- **The `CLAUDE.md` amendment LANDED, both hunks verbatim.** Rule 9 no longer
+  names Binance, and asserts no settlement statistic; the one-writer exception
+  is in force, which retires `SEAT_PROTOCOL` rule 6's standing caveat.
 
 ### Current model state
 
@@ -61,14 +61,18 @@ follow in the next bundle.
   implementation of R-306's already-ruled conjunction. The 09:43Z statement that
   the attempt "wrote no result artifact" described the stopped 09:34Z attempt
   and is superseded by the 12:56Z entry below; it stays as provenance.
-  **As of 13:53Z the two blockers are implemented and the artifact is
-  mid-rebuild.** `20d3c3a` wired Q4's incumbent and implemented R-306 for Q3;
-  `4438961` folded in Q-DA-197's F2/F1/F5/F6 and **killed the re-run mid-fit
-  rather than let it emit** under the superseded survivor predicate. So the
-  declared path still holds `0b1f6bb`'s artifact, `__as_verified_by_Q-DA-197`
-  preserves it byte-identically, a `__readjudicated_v2` exists from the
-  intermediate state, and **no artifact under the closed predicate exists yet —
-  Q4 still has no economic result.**
+  **THE RESULT OF RECORD, as of 17:24Z: 0 of 24 cells survive the joint
+  reading**, twice reproduced from independent recomputation and stable through
+  a full review cycle that is now fully released (R-393, `ebf0ad6`). Verified at
+  the artifact (142,609 B, as-of 16:57:01Z): `surviving_cells: []`,
+  `cells_by_status` = 6 `GATE_PARTIALLY_EVALUATED` + 12
+  `NO_INCUMBENT_COUNTERPART` + 6 `OK`, denominator 24. **Q4's increment is
+  POSITIVE in all six cells** (+278.6 to +3,867.1 net cents) **and clears no
+  family-wise bar under either null form** — best one-sided p 0.01999 → Holm
+  0.1199; the two-sided form is reported, never adjudicated. **Q1's two AUCs
+  (0.8303 lgbm / 0.7733 linear) are undecided**, pending the USER's Q1-leg
+  ruling. Nothing was deleted to reach zero: all six Q1 cells keep statistic, p
+  and Holm identical to the digit, and only their status moved.
 - Typed fair-price Identity is built; the challenger protocol is not
   freeze-ready and no challenger has been scored.
 - `QR_SKEW_ONLY` semantics are user-frozen. Seven-arm work remains contracts,
@@ -84,10 +88,10 @@ and two of them are new today.**
 
 | seat | round | working on |
 |---|---|---|
-| **BE** (pm-be) | **open** | Q4's incumbent and Q3's ruling are implemented (`20d3c3a`); the batch now also carries Q-DA-197's F2/F1/F5/F6 (`4438961`). Fits re-running in-slice; no artifact under the closed predicate exists yet |
+| **BE** (pm-be) | RR2 closed, RR3-1 dispatched | the review, re-review and re-re-review batches all landed (`d5b851c` → `2d29ddf` → `35893a4`). RR3-1 open: bind the coverage floor's expected set to the frozen prereg at `preregistration_commit` |
 | **DA** (pm-da) | **re-opened** | round 1 closed 3/3 (`c473b0e`). Round 2: the content-liveness rule as DRAFT-FOR-USER-FREEZE, the breadth-statistic reconciliation, and the real 09-01 verdict after 00:06Z — a HEALTHY fail is a recorded result, not a problem to fix |
 | **DE** (pm-de) | **open, first day** | staffed by the USER 2026-09-01 (R-379). Owns `harmful_stateful_policy.py`, `de_actionspace.py`, `de_constraints.py` per R-165's parking clause. First batch: real-data seven-arm parity, the EV-Replay registry-closure draft, the Phase-4 grid protocol as DRAFT-FOR-USER-FREEZE |
-| **Reviewer** (pm-codex) | **prep only** | now a CLAUDE session (R-375). Files nothing and holds nothing this round; baselining instruments at HEAD so round diffs are attributable. Its round opens on BE's pinned tip |
+| **Reviewer** (pm-codex) | **all holds released** | three filings today under `REVIEW_*` (R-387/R-391/R-393). It tried to DEFEAT its own accepted fix — dressing an unwired Q4 in `GATE_PARTIALLY_EVALUATED` — and the guard refused; its shrunk-coverage known-bad, admitted at 6 checks last round, now refuses |
 | **coordinator** (pm-co) | — | 0b and 0d closed at 13:02Z (R-374); the item-2 re-review still held until BE's batch commits, so one round covers `1aaac18`'s claims and today's batch at a single tip (rule 5) |
 | **MEM** (pm-memory) | closing | this sweep of R-374..R-381 |
 
@@ -145,6 +149,79 @@ the register, so there was nothing to tick there.
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-01 ~17:24Z (MEM) — THE REVIEW CYCLE CLOSED, AND THE NUMBER IT
+### PRODUCED IS ZERO
+
+**R-385..R-393, the arc in one line: the 011 family went from six published
+survivors to zero, and that is the artifact becoming honest rather than the
+result getting worse.** Verified at the artifact, not from the entries.
+
+**What the cycle found.** The six surviving cells' own `declared_gate` carried
+an incumbent conjunct **that was never evaluated** — `apply_incumbent_hazard`,
+built and falsifier-proven, with zero production call sites. That is defect
+I11-2's shape for the third time in this programme, and this time it sat in the
+**only surviving head**. BE found and escalated it itself (RR2-1, R-391). The
+fix makes the survivor predicate require every declared conjunct to be
+EVALUATED; cells that fail become `GATE_PARTIALLY_EVALUATED`, reported and never
+dropped, denominator still 24.
+
+**The result of record**, measured at the file (142,609 B, as-of 16:57:01Z):
+
+| | |
+|---|---|
+| `surviving_cells` | **`[]`** — 0 of 24 survive the joint reading |
+| `cells_by_status` | 6 `GATE_PARTIALLY_EVALUATED` · 12 `NO_INCUMBENT_COUNTERPART` · 6 `OK` |
+| **Q4** | increment **positive in all six cells** (+278.6 … +3,867.1 net cents) and clearing **no family-wise bar under either null**: best one-sided p 0.01999 → Holm 0.1199; two-sided reported, never adjudicated |
+| **Q1** | two AUCs, 0.8303 lgbm / 0.7733 linear — **undecided**, pending the USER's Q1-leg ruling |
+
+**Nothing was deleted to reach zero, and I checked rather than assumed:** all
+six Q1 cells carry statistic, `p_value` and `holm_p` **identical to the digit**
+against the pre-fix artifact; only `status` moved. The evidence is sitting in
+the file waiting for the ruling that decides whether those six return.
+
+**Q4's number also changed meaning, which is easy to misread.** This morning's
+`+12,333.5c` was the *candidate's own value*, explicitly not an increment,
+because the incumbent never loaded. It now loads: the cell records candidate
+`+12,333.5` and incumbent `+8,466.4` as REPORTED, and adjudicates the
+**increment** `+3,867.1c` over 166 windows against 2,000 sign-flip permutations.
+A reader comparing the two headline numbers across the day is comparing two
+different estimands.
+
+**Two rulings from the reviewer, both worth carrying.** BE's refusal to raise
+the matched-random draw count was **endorsed**: A1.6's 2,000 pins the *increment*
+null, §5(1)'s matched-random declares ≥200, so 500 satisfied the frozen design
+and raising it after seeing a one-draw margin would be rule 11. The resolution
+for the next run must instead be declared **prospectively**, and that line rides
+the A2 amendment. (BE refused a coordinator instruction and escalated — the
+protocol working against the coordinator, which is the correct direction.)
+
+**The reviewer attacked its own accepted fix.** It tried to defeat the new
+`GATE_PARTIALLY_EVALUATED` status by dressing an unwired Q4 in it, and the guard
+refused; its shrunk-coverage known-bad, admitted at 6 checks the round before,
+now refuses; removing either new rule kills the suite, and so does forcing every
+cell partial — the admit direction it most expected to be missing. For a
+same-model reviewer (R-375) that is exactly the ground the mitigation asks for:
+it ran the code rather than reading it.
+
+**Coordinator-side closures on the preflight suite:** RR2-3 at `9a53ea3`, then
+RR3-2/RR3-3 at `f72504d` — a reversed-ledger-order fixture kills a loosened `>=`
+at check 173, and a reused pid with no pin now REFUSES naming both candidate
+instants, so the doctrine and the default agree. **176 checks, 17 gates.**
+
+**Both of this morning's USER asks landed** (R-386): the content-liveness rule
+is frozen with `EFFECTIVE_FROM_DAY` unchanged, and the `CLAUDE.md` amendment
+applied verbatim — checked here by re-running the draft's own anchor test in
+reverse, so the claim rests on the file rather than on the entry. Five asks
+remain; see PENDING USER DECISIONS above.
+
+**One timestamp flag, for the coordinator, not adjudicated here.** R-393's
+header reads `2026-09-01T17:35Z` while the commit that created it (`8b80d83`)
+is stamped `17:22:09Z` — the entry is stamped ~13 minutes **ahead** of its own
+commit. `SEAT_PROTOCOL` rule 12 exists for this class ("clock read in a separate
+call BEFORE composing any entry", four slips on record); this one runs forward
+rather than stale. Nothing downstream depends on it, and the register is the
+coordinator's surface, so it is recorded here and left there.
 
 ### 2026-09-01 ~14:16Z (MEM) — R-382..R-384: A GUARD THAT WOULD HAVE FAILED
 ### TONIGHT'S FIRST FORWARD DAY, CAUGHT BEFORE IT RAN

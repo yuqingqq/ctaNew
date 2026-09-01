@@ -4,6 +4,68 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-09-01T17:24Z (MEM ROUND 6 -- THE REVIEW CYCLE IS FULLY RELEASED AND THE
+  011 RESULT OF RECORD IS ZERO SURVIVORS). Verified at the artifact, not from
+  the register. THE ARC, R-385..R-393: the family went from SIX published
+  survivors to ZERO, and that is the artifact becoming honest rather than the
+  result getting worse. The six surviving cells' own declared_gate carried an
+  incumbent conjunct THAT WAS NEVER EVALUATED -- apply_incumbent_hazard, built
+  and falsifier-proven, ZERO production call sites: defect I11-2's shape for the
+  third time in this programme, this time in the ONLY surviving head, found and
+  escalated by BE itself (RR2-1). The fix makes the survivor predicate require
+  every declared conjunct EVALUATED; failing cells become
+  GATE_PARTIALLY_EVALUATED, reported and never dropped, denominator still 24.
+  THE RESULT OF RECORD, measured at the file (142,609 B, as-of 16:57:01Z, and
+  that as-of NAMES the population-read instant): surviving_cells = [], 0 of 24
+  survive the joint reading; cells_by_status = 6 GATE_PARTIALLY_EVALUATED + 12
+  NO_INCUMBENT_COUNTERPART + 6 OK. Q4'S INCREMENT IS POSITIVE IN ALL SIX CELLS
+  (+278.6 to +3,867.1 net cents) AND CLEARS NO FAMILY-WISE BAR UNDER EITHER NULL
+  FORM -- best one-sided p 0.01999 -> Holm 0.1199, with the two-sided form
+  reported and never adjudicated. Q1's two AUCs (0.8303 lgbm / 0.7733 linear)
+  are UNDECIDED pending the USER's Q1-leg ruling. NOTHING WAS DELETED TO REACH
+  ZERO, and I checked rather than assumed: all six Q1 cells carry statistic,
+  p_value and holm_p IDENTICAL TO THE DIGIT against the pre-fix artifact, and
+  only status moved. Q4'S NUMBER ALSO CHANGED MEANING, which is easy to
+  misread: this morning's +12,333.5c was the CANDIDATE'S OWN value, explicitly
+  not an increment, because the incumbent never loaded; it now loads, so the
+  cell REPORTS candidate +12,333.5 and incumbent +8,466.4 and ADJUDICATES the
+  increment +3,867.1c over 166 windows against 2,000 sign-flip permutations --
+  a reader comparing the two headline numbers across the day is comparing two
+  different estimands. TWO REVIEWER RULINGS WORTH CARRYING: BE's refusal to
+  raise the matched-random draw count was ENDORSED (A1.6's 2,000 pins the
+  INCREMENT null; 5(1)'s matched-random declares >=200, so 500 satisfied the
+  frozen design and raising it after seeing a one-draw margin would be rule 11),
+  and the resolution for the NEXT run must be declared PROSPECTIVELY, a line
+  that rides the A2 amendment -- BE refused a coordinator instruction and
+  escalated instead, the protocol working against the coordinator, which is the
+  correct direction. AND THE REVIEWER ATTACKED ITS OWN ACCEPTED FIX: it tried to
+  defeat GATE_PARTIALLY_EVALUATED by dressing an unwired Q4 in it and the guard
+  refused; its shrunk-coverage known-bad, admitted at 6 checks the round before,
+  now REFUSES; removing either new rule kills the suite, and so does forcing
+  every cell partial -- the admit direction it most expected to be missing. For
+  a same-model reviewer (R-375) that is the ground the mitigation asks for: it
+  RAN the code rather than reading it. Coordinator-side: RR2-3 at 9a53ea3, then
+  RR3-2/RR3-3 at f72504d (a reversed-ledger-order fixture kills a loosened >= at
+  check 173; a reused pid with no pin now REFUSES naming both candidate
+  instants), 176 checks and 17 gates. BOTH OF THIS MORNING'S USER ASKS LANDED
+  (R-386, "Yea proceed"): the content-liveness rule is FROZEN with
+  FROZEN_BY_USER=True and EFFECTIVE_FROM_DAY unchanged at 20260902, so the first
+  governed day is tomorrow and 09-01 is neither calibrated on nor judged; and
+  the CLAUDE.md amendment LANDED with both hunks verbatim -- checked by
+  re-running my own draft's anchor test IN REVERSE, so the claim rests on the
+  file. Rule 9 no longer names Binance and asserts no settlement statistic, and
+  the one-writer exception retires SEAT_PROTOCOL rule 6's standing caveat. FIVE
+  ASKS NOW WAIT ON THE USER, gathered in HANDOFF's PENDING USER DECISIONS table:
+  (1) wire Q1's incumbent leg or rule it out -- the sharpest, it decides whether
+  the published survivor count returns 0 -> 6; (2) the Q3 gate ruling; (3)
+  amendment A2 plus the prospective-resolution declaration; (4) the Phase-4
+  protocol and registry freezes; (5) per-seat worktrees. ONE TIMESTAMP FLAG,
+  recorded not adjudicated: R-393's header reads 17:35Z while the commit that
+  created it (8b80d83) is stamped 17:22:09Z -- the entry runs ~13 minutes AHEAD
+  of its own commit, rule 12's class in the forward direction. Nothing
+  downstream depends on it and the register is the coordinator's surface.
+  UNCHANGED: the forward race waits on tonight's 00:06Z first accrual-eligible
+  verdict; G=0/5. PRIOR:
   2026-09-01T14:16Z (MEM ROUND 5 -- R-382..R-384, AND THREE ITEMS NOW WAIT ON
   THE USER). Verified at the artifacts, including by running the instrument.
   THE ONE THAT MATTERED MOST IS A LAUNCHER-SEMANTICS DEFECT CAUGHT BEFORE IT
@@ -137,74 +199,7 @@ updated: >-
   BE open (fits running in-slice), DE open (first batch), DA re-opened on its
   round 2, the reviewer on a prep batch that files nothing, MEM closing here.
   UNCHANGED AND WORTH SAYING: nothing about the forward race moved today --
-  09-01 is still the first possible forward day and reach is still G=0/5. PRIOR:
-  2026-09-01T12:56Z (MEM SWEEP -- ITERATION 011 HAS A REAL 24-CELL FAMILY;
-  THIS SUPERSEDES THE 09:43Z "STOPPED AT 09:42Z, NO RESULT ARTIFACT" LINE,
-  WHICH STAYS BELOW AS PROVENANCE). Verified at the artifacts (git show plus the
-  JSON on disk), never from the dispatch that ordered the true-up. THE THREE
-  COMMITS. 54f899d (10:20Z) fitted 011 inside the UNRAISED 12G cap by PACKING
-  THE DESIGN MATRIX: compact_design packs PM+FN+ST into one float64 array and
-  RELEASES the lists-of-lists (7.11 GB -> 0.45 GB for the same 578,917 rows), so
-  the topup pass allocates into space already held instead of growing past the
-  cap. Two of its own defects were caught by guards on the way -- a --coin slice
-  applied to the TAPE INDEX starved eth to 0 of 520,033 rows and the absorption
-  bound REFUSED it, and the source regression guard written to prevent its
-  return MATCHED ITS OWN string literal. e326782 (10:48Z) got THE FIRST REAL FIT
-  (12.0G peak, no oom-kill, both feature passes, score index and purge) and then
-  hit a seam defect only ever reachable once 011 was actually fitted:
-  phase2_arms._feature_pass projects kept rows to a FIXED field list that OMITS
-  any_fill_ahead, which the FROZEN phase2_iter011.validate_row requires
-  (MISSING_GATE) -- two frozen documents, each correct alone, that had never
-  met. RESTORED IN THE RUNNER, which declares itself OUTSIDE the lattice,
-  because phase2_arms.py is in CODE_IDENTITY_FILES and the frozen candidate
-  binds its hash; the restoration CALLS the canonical
-  harmful_exposure_rows.any_fill_ahead rather than reimplementing the predicate,
-  and stored-vs-derived agree on 1,125,289 fragment and 638,917 topup rows with
-  ZERO disagreements. 0b1f6bb (11:27Z) completed the science and fixed the
-  mode-aware output declaration: the guard demanded the unsliced filename from a
-  --coin run, so a guard that could not pass was refusing a run that had already
-  written its artifact. THE ARTIFACT, on disk at 11:23:34Z:
-  data/pm_5min/derived/iter011_conditional_value_v1__coin_btc.json, 96,707
-  bytes. ALL 24 DECLARED CELLS PRESENT (OK 6 / NO_INCUMBENT_COUNTERPART 12 /
-  AGGREGATION_UNDECLARED 6); the Holm denominator held at 24 and is DECLARED,
-  NOT EVALUATED, with unevaluable cells occupying their slots. Q1_arrival
-  SURVIVES Holm: auc 0.8303 lgbm / 0.7733 linear, p 0.001996, holm 0.0479.
-  Q2_sign is NO_INCUMBENT_COUNTERPART BY DESIGN (comparable:false -- the
-  incumbent has no sign head, so no incremental null exists; the p it carries is
-  the MATCHED-RANDOM null and must never be read as the other one).
-  Q3_magnitudes withholds p as AGGREGATION_UNDECLARED, AND THE RULING IT WAITS
-  FOR ALREADY EXISTS: R-306 (USER, 2026-08-29T04:40Z) ruled CONJUNCTION + WORSE
-  SIDE, recorded in the frozen plans/ITER011_PREREG_AMENDMENT_A1.md and never
-  implemented in code; the per-coin evidence is preserved so the ruling can be
-  applied without re-running (both matched_random_p 0.001996). Q4_combined_ev IS
-  THE DECISION METRIC AND IT IS UNADJUDICATED: 6,962.4 to 14,477.0 net cents is
-  the CANDIDATE'S OWN value, not an increment, while incumbent_null_applicability
-  declares Q4 comparable:true -- so the incumbent SHOULD have applied and did
-  not load. THERE IS NO ECONOMIC RESULT, and that is a defect to chase rather
-  than a design limit. TWO LIMITS GOVERN HOW ANY OF IT MAY BE READ. (1)
-  RESOLUTION: every surviving p is 0.001996 = 1/501, the FLOOR at 500
-  permutations, and holm is 24 x 0.001996 = 0.0479 -- the family only just
-  clears 0.05, and at 26 cells no cell could survive whatever the effect. (2)
-  STATUS: the artifact COMPUTES is_a_validation=false itself -- eval is the
-  da_development_topup population, 08-25 alone, 311,640 btc rows / 177,674
-  actions, G=0 complete UTC days, intervals not claimable, clustered on WINDOW
-  where the ruled unit is the UTC DAY, so the p-values are OPTIMISTIC. This is
-  DEVELOPMENT EVIDENCE (prereg 4: it selects, it never validates). No full
-  both-coin artifact exists: the slice records iter011_conditional_value_v1.json
-  as NOT WRITTEN, and eth is reported-only under btc-only adjudication (R-306).
-  Identity carried in the artifact: fit_code ad535550d366347d -- the post-09:00Z
-  DECLARED drift, not the freeze's 3d0b6c8c6dfe9466 -- tape c7ab02ebcf27d2fc,
-  fragment 19a50195c34d0af2, topup e75d0e210590e2a8, and
-  standalone.is_in_identity_lattice=false. MY OWN CHECK SHIPPED A FALSIFIER
-  (R-289, my own lesson): it REFUSES an emptied family and a
-  status-field-stripped copy and ADMITS the real artifact -- both directions,
-  because a count assertion alone would have caught only one of those two vacuum
-  shapes. OPEN, and neither is MEM's to close: the Q4 incumbent-loading defect
-  (no economics until it closes) and the unimplemented R-306 conjunction for Q3;
-  more permutations are needed before this design can carry a verdict at all.
-  EVERYTHING ELSE IN THE 09:43Z ENTRY BELOW STANDS UNCHANGED -- collector v4.1
-  live, 09-01 the first era-pure admissible day but incomplete, G=0/5 forward
-  reach, era as an interlock, breadth reported and not gated.
+  09-01 is still the first possible forward day and reach is still G=0/5.
   ARCHIVED: entries older than these three are moved, never deleted, to
   workspace/STATUS_UPDATED_ARCHIVE.md (append-only). This field is a
   ROLLING WINDOW OF THREE by ruling (coordinator, 2026-08-28T10:02Z):
@@ -3773,7 +3768,7 @@ flags:
                              # migration discipline remain authoritative.
 
 focus: >
-  As-of 2026-09-01T14:16Z, build and test the offline model mechanism-first
+  As-of 2026-09-01T17:24Z, build and test the offline model mechanism-first
   under plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md section 10. Do not use the
   subordinate stateful-cancel TODO checkbox count as total progress. The
   foundation is established: the action-level dataset and PRED_STATE_V1 are
@@ -3793,12 +3788,15 @@ focus: >
   is those two items, not a diagnosis of the stopped attempt. Both are now
   IMPLEMENTED (20d3c3a) and ride BE's open batch with the four Q-DA-197 findings
   (4438961); the re-run was KILLED mid-fit rather than allowed to emit under the
-  superseded survivor predicate, RELAUNCHED from the committed tree so
-  fit_code_ref names a non-dirty commit, and is mid-fit -- so no artifact under
-  the closed predicate exists yet and Q4 still has no economic result. THREE
-  DRAFTS WAIT ON THE USER (content-liveness rule, deadline ~22:00Z tonight; the
-  CLAUDE.md amendment; DE's Phase-4 protocol): see HANDOFF's PENDING USER
-  DECISIONS table. Fair-price
+  superseded survivor predicate and relaunched from the committed tree. THE
+  RESULT OF RECORD IS NOW SETTLED AND NEGATIVE: 0 of 24 cells survive the joint
+  reading; Q4's increment is positive in all six cells and clears no
+  family-wise bar under either null; Q1's two AUCs are undecided pending the
+  USER. The review cycle is FULLY RELEASED (R-393). FIVE ASKS WAIT ON THE USER
+  -- Q1-leg wiring, the Q3 gate ruling, amendment A2 with its prospective
+  resolution, the Phase-4 and registry freezes, and per-seat worktrees: see
+  HANDOFF's PENDING USER DECISIONS table. The content-liveness rule and the
+  CLAUDE.md amendment both LANDED this afternoon (R-386). Fair-price
   Identity is built while the challenger protocol is not freeze-ready;
   QR_SKEW_ONLY semantics are USER-FROZEN, while the seven-arm path remains
   stub/inert. Real queue-integrated replay, lifecycle economics and an
