@@ -1,0 +1,206 @@
+{
+  "aggregate_gate_digest": "b65b74e82010000987e70865a4ad6f88a62c5c62492455bd39caabeabd463ce7",
+  "all_gates_pass": true,
+  "arm_runnability": {
+    "CONDVALUE_NEUTRAL": "NO_NEUTRAL_REFERENCE",
+    "CONDVALUE_X_SKEW": "NO_RELEASED_PREDICTOR",
+    "CONDVALUE_X_SKEW_X_FAIRPRICE": "NO_RELEASED_PREDICTOR",
+    "HAZARD_ONLY_NEUTRAL": "NO_NEUTRAL_REFERENCE",
+    "QR_CANCEL_HOLD_X_SKEW": "RUNNABLE",
+    "QR_SKEW_ONLY": "RUNNABLE",
+    "RANDOM_MATCHED": "NO_CONTRACT_IDENTITY_FOR_AN_ACTING_CONTROL"
+  },
+  "as_of_utc": "2026-09-01T14:06:39Z",
+  "code_identity": {
+    "da_replay_parity_battery.py": "66a175fb7ca4ec06",
+    "de_lane4_real_parity.py": "942d74e927d389ef",
+    "harmful_exposure_rows.py": "1bbd8e7525fc27ac",
+    "harmful_stateful_policy.py": "83315157d7fd338d",
+    "policy_optimizer_queue_realistic.py": "ae13af2931bc33b8"
+  },
+  "code_identity_taken": "AT IMPORT, not at receipt-write time",
+  "contract_leg": {
+    "acting_lifecycle_by_stale_reading": {
+      "AS_SUPPRESSED": {
+        "arm": "QR_CANCEL_HOLD_X_SKEW",
+        "effective": 58,
+        "identity_holds": true,
+        "n_events": 1438,
+        "no_double_cancel": true,
+        "no_fill_after_effective": true,
+        "no_unrequested_outcome": true,
+        "one_terminal_outcome_per_request": true,
+        "outcomes_after_their_request": true,
+        "pass": true,
+        "requested": 111,
+        "suppressed": 53
+      },
+      "DROP": {
+        "arm": "QR_CANCEL_HOLD_X_SKEW",
+        "effective": 58,
+        "identity_holds": false,
+        "n_events": 1385,
+        "no_double_cancel": true,
+        "no_fill_after_effective": true,
+        "no_unrequested_outcome": true,
+        "one_terminal_outcome_per_request": true,
+        "outcomes_after_their_request": true,
+        "pass": false,
+        "requested": 111,
+        "suppressed": 0
+      }
+    },
+    "da_arms_match_ours": true,
+    "da_battery_canon": "replay_traj_canon_v1",
+    "inert_check": {
+      "arms_seen": [
+        "CONDVALUE_NEUTRAL",
+        "CONDVALUE_X_SKEW",
+        "CONDVALUE_X_SKEW_X_FAIRPRICE",
+        "HAZARD_ONLY_NEUTRAL",
+        "QR_CANCEL_HOLD_X_SKEW",
+        "QR_SKEW_ONLY",
+        "RANDOM_MATCHED"
+      ],
+      "declared_active_but_inert": [],
+      "duplicate_ids": false,
+      "evaluable": true,
+      "inactive_predictors_agree": true,
+      "lifecycle_pass": true,
+      "n_submissions": 7,
+      "pass": true,
+      "predictors_seen": [
+        "none"
+      ]
+    },
+    "inert_refusals": {},
+    "loaded": true,
+    "n_inert_arms_admitted": 7,
+    "repost_axis_diagnostic": {
+      "diagnosis_holds": false,
+      "no_repost_permanent_hold": {
+        "identity_holds": true,
+        "n_reposts": 0,
+        "no_fill_after_effective": true,
+        "pass": true
+      },
+      "reposting": {
+        "identity_holds": false,
+        "n_reposts": 58,
+        "no_fill_after_effective": true,
+        "pass": false
+      }
+    },
+    "slug": "btc-updown-5m-1787579400"
+  },
+  "declared_parameters": {
+    "active": {
+      "cancel_effective_latency_ms": 50.0,
+      "charge_reset_cost_at_generation_start": false,
+      "enable_reduce": false,
+      "max_cancels_per_minute": "inf",
+      "predictor_enabled": true,
+      "protection_mode": "ALL_ORDERS_OVERRIDE",
+      "queue_reset_cost_cents": 0.1,
+      "repost_dwell_s": 0.5,
+      "repost_fill_model": "REFERENCE_FILLS",
+      "theta_cancel": 0.9,
+      "theta_repost": 0.1
+    },
+    "permanent_hold_theta_repost": "-inf",
+    "stub": {
+      "early_frac": 0.25,
+      "late_frac": 0.75,
+      "late_score": 0.0,
+      "note": "sha256-derived STUB, not a model; no predictor is released for this use",
+      "salt": "de_lane4_real_parity_v1"
+    }
+  },
+  "elapsed_s": 1339.6,
+  "gates": {
+    "gate_cancel_and_hold_equivalent": {
+      "failing_slugs": [],
+      "n_failing_windows": 0,
+      "pass": true
+    },
+    "gate_disabled_bit_identical": {
+      "failing_slugs": [],
+      "n_failing_windows": 0,
+      "pass": true
+    },
+    "gate_inf_equals_disabled": {
+      "failing_slugs": [],
+      "n_failing_windows": 0,
+      "pass": true
+    },
+    "gate_infinite_threshold_bit_identical": {
+      "failing_slugs": [],
+      "n_failing_windows": 0,
+      "pass": true
+    },
+    "gate_invariants": {
+      "failing_slugs": [],
+      "n_failing_windows": 0,
+      "pass": true
+    },
+    "gate_lifecycle_closed": {
+      "failing_slugs": [],
+      "n_failing_windows": 0,
+      "pass": true
+    },
+    "gate_one_cancel_per_generation": {
+      "failing_slugs": [],
+      "n_failing_windows": 0,
+      "pass": true
+    },
+    "gate_rate_identity": {
+      "failing_slugs": [],
+      "n_failing_windows": 0,
+      "pass": true
+    },
+    "gate_stale_fills_inside_latency_window": {
+      "failing_slugs": [],
+      "n_failing_windows": 0,
+      "pass": true
+    }
+  },
+  "generation_status_counts": {
+    "ADMITTED": 826238,
+    "MULTI_LEVEL": 0,
+    "NONFINITE": 0,
+    "NO_LEVEL_SEGMENT": 0,
+    "OVERLAPS_PREVIOUS": 0,
+    "SHARES_EXCEED_DISPLAYED": 0,
+    "TRANCHE_OUTSIDE": 0,
+    "ZERO_LENGTH": 6
+  },
+  "n_admitted_generations": 826238,
+  "n_cancels_issued_active_stub": 35083,
+  "n_stale_charged_fills": 616,
+  "n_stub_score_events": 1652476,
+  "n_windows_where_the_policy_acted": 471,
+  "population": {
+    "coins": [
+      "btc",
+      "eth"
+    ],
+    "days": [
+      "2026-08-24",
+      "2026-08-25"
+    ],
+    "era": "clob_v3_1",
+    "n_days": 2,
+    "n_selected_windows": 471,
+    "name": "v3_4_consumed_fragment",
+    "windows_excluded_binance_gap": 3
+  },
+  "protocol": "de_lane4_real_parity_v1",
+  "status": "VERIFICATION_ONLY_NO_ECONOMICS_READ",
+  "window_status_counts": {
+    "ADMITTED": 471,
+    "NO_ADMITTED_GENERATION": 0,
+    "RECONCILIATION_FAILED": 0,
+    "REFERENCE_REFUSED": 0,
+    "REPLAY_NONE": 0
+  }
+}

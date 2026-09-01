@@ -98,7 +98,7 @@ statuses, never silent drops (rule 4).
 
     python3 live/pm_research/harmful_stateful_policy.py --selftest
 
-Selftest: 83 checks (EXPECTED_CHECKS below; the run asserts the count, so
+Selftest: 89 checks (EXPECTED_CHECKS below; the run asserts the count, so
 the claim is computed at run time, not remembered here).
 """
 from __future__ import annotations
@@ -107,7 +107,7 @@ import json
 import math
 from typing import Any, Sequence
 
-EXPECTED_CHECKS = 83          # asserted by selftest(); update together
+EXPECTED_CHECKS = 89          # asserted by selftest(); update together
 
 SIDES = ("BUY_UP", "SELL_UP")
 RANK_GEN_START, RANK_FILL, RANK_GEN_END, RANK_SCORE = 0, 1, 2, 3
@@ -504,7 +504,7 @@ class _SideRun:
 
     __slots__ = ("held", "hold_start", "holds", "below_since", "was_eligible",
                  "current_ref", "current_pol", "pending", "repost_seq",
-                 "recs_by_gen")
+                 "recs_by_gen", "missed_gens")
 
     def __init__(self) -> None:
         self.held = False
@@ -516,6 +516,11 @@ class _SideRun:
         self.current_pol: dict | None = None
         self.pending: dict | None = None       # rec with an unresolved cancel
         self.repost_seq = 0
+        # Generations whose START was missed because this side was HELD.  A
+        # GENERATION-LEVEL fact, deliberately not derived from the side's
+        # CURRENT held flag: the two disagree at a generation boundary, and
+        # the disagreement is what real data found (see _on_fill).
+        self.missed_gens: set = set()
         self.recs_by_gen: dict[int, list[dict]] = {}
 
 
@@ -734,6 +739,19 @@ class _SlugReplay:
 
     def _on_gen_start(self, side: str, g: dict, t: float) -> None:
         run = self.side_runs[side]
+        # SETTLE FIRST.  The header declares that derived effectiveness times
+        # "settle lazily at the next processed event"; a generation start IS
+        # a processed event, and this was the one handler that read `held`
+        # without settling.  Real data made it routine rather than exotic:
+        # consecutive generations abut (t1 of N == t0 of N+1) and GEN_START
+        # outranks GEN_END at equal times, so N+1's start is processed BEFORE
+        # N's end -- and when no fill or score of this side falls between the
+        # cancel's effectiveness and N's end, nothing had settled it.  The
+        # side then PLACED on N+1 during what should have been a hold, and
+        # every subsequent fill of N+1 was CHARGED to a policy that should
+        # have had no order there.  check_invariants passed throughout: the
+        # trajectory was internally consistent and economically wrong.
+        self._settle(run.pending, t)
         run.current_ref = g
         if g["status"] != OK:
             self.c["non_ok_generations"] += 1
@@ -755,6 +773,7 @@ class _SlugReplay:
             self._join(side, g, t, "REPOST_AT_GEN_START")
         else:
             self.c["gen_starts_missed_held"] += 1
+            run.missed_gens.add(g["gen"])
             self.traj.append({"kind": "GEN_START_MISSED_HELD", "t": t,
                               "slug": self.slug, "side": side,
                               "ref_gen": g["gen"]})
@@ -771,10 +790,25 @@ class _SlugReplay:
                 rec = r                       # latest join at/before t wins
         markout = tr["markout_cents_per_share"]
         if rec is None:
-            if not (run.held or run.was_eligible):
+            # THE LICENCE IS A FACT ABOUT THE GENERATION, NOT ABOUT THE SIDE.
+            # Real data (2026-09-01, btc-updown-5m-1787580000/BUY_UP/gen 449)
+            # found the disagreement: gen 449's only tranche lands at exactly
+            # its own t1, which is also gen 450's t0, and GEN_START outranks
+            # FILL at equal times -- so gen 450's start is processed FIRST,
+            # reposts (the side was newly eligible) and clears `held` and
+            # `was_eligible`.  The fill of 449 then arrives at a side that is
+            # no longer held, on a generation that was never joined, and the
+            # guard fired on a case that is entirely correct: 449 WAS missed
+            # while held.  The side flag is one event stale by construction;
+            # `missed_gens` records the fact at the unit it belongs to.
+            # The guard is NOT weakened -- a fill on a generation that was
+            # neither joined nor missed still raises (selftest group P).
+            if not (run.held or run.was_eligible
+                    or g["gen"] in run.missed_gens):
                 raise RuntimeError(
                     f"{self.slug}/{side}/gen {g['gen']}: fill at {t} has no "
-                    f"policy record and the side is not held -- machine bug")
+                    f"policy record, the side is not held, and the "
+                    f"generation was never missed-while-held -- machine bug")
             self._bucket("missed_while_held", tr["shares"], markout)
             self.traj.append({"kind": "FILL_MISSED_HELD", "t": t,
                               "slug": self.slug, "side": side,
@@ -1886,6 +1920,121 @@ def _selftest_more(ok, refuses, ref, scores, ena) -> None:
                      for v in iv_o["per_slug"].values())) < 1e-12,
        "inventory reported per slug; the top-level block equals the "
        "sum/max aggregate of the per-slug dicts (reporting-only)")
+
+    # ---- group P: the boundary fill REAL DATA found (2026-09-01, DE) -----
+    # A generation whose only tranche lands at exactly its own t1 -- which is
+    # also the NEXT generation's t0.  GEN_START outranks FILL at equal times,
+    # so the next generation's start is processed FIRST; if the side is HELD
+    # and has just become eligible, that start REPOSTS and clears `held` and
+    # `was_eligible`.  The missed generation's fill then arrives at a side
+    # that is no longer held, and the pre-fix guard raised "machine bug" on a
+    # case that was entirely correct.
+    # Found at btc-updown-5m-1787580000/BUY_UP/gen 449 (t1 = 198.186235413 =
+    # gen 450's t0) in the first real-data parity run; reduced to this
+    # fixture, which RAISES on the pre-fix code and is valued correctly after.
+    ref_p2 = {"w": {
+        "BUY_UP": [_gen(1, 0.0, 5.0, []),
+                   _gen(2, 5.0, 10.0, [(10.0, 1.0, -5.0)]),
+                   _gen(3, 10.0, 15.0, [])],
+        "SELL_UP": []}}
+    sc_p2 = [{"t": 1.0, "slug": "w", "side": "BUY_UP", "score": 0.99},
+             {"t": 2.0, "slug": "w", "side": "BUY_UP", "score": 0.5},
+             {"t": 6.0, "slug": "w", "side": "BUY_UP", "score": 0.0}]
+    p_p2 = _params(protection_mode="ALL_ORDERS_OVERRIDE",
+                   repost_dwell_s=0.5)
+    bnd = replay_policy(ref_p2, sc_p2, p_p2)
+    ok(bnd["counters"]["gen_starts_missed_held"] == 1
+       and abs(bnd["economics"]["not_received"]["missed_while_held"]["shares"]
+               - 1.0) < 1e-12
+       and bnd["counters"]["reposts_at_generation_start"] == 1
+       and all(check_invariants(bnd).values()),
+       "BOUNDARY FILL: a fill on a generation missed while held is valued "
+       "as missed_while_held even though the side reposted on the NEXT "
+       "generation at the same instant -- the licence is a fact about the "
+       "GENERATION, not the side's one-event-stale flag")
+    ok(any(e["kind"] == "GEN_START_MISSED_HELD" and e["ref_gen"] == 2
+           for e in bnd["trajectory"])
+       and any(e["kind"] == "REPOST" and e["ref_gen"] == 3
+               for e in bnd["trajectory"]),
+       "and the trajectory shows BOTH facts that collided: generation 2 "
+       "missed while held, generation 3 reposted at its own start")
+    # THE GUARD IS NOT WEAKENED: a fill on a generation that was neither
+    # joined nor missed still raises.  Driven at the unit, because the
+    # replay cannot legitimately reach it -- a control that could not fire
+    # would be worse than none (rule 16).
+    def _unreachable_fill():
+        counters = {k: 0 for k in _COUNTER_NAMES}
+        econ = {"queue_reset_cost_cents_total": 0.0,
+                "hold_seconds_total": 0.0, "hold_seconds_max": 0.0,
+                "holds": [],
+                "fills": {"reference_shares": 0.0, "received_shares": 0.0,
+                          "received_markout_cents": 0.0,
+                          "received_unvalued_shares": 0.0,
+                          "stale_shares": 0.0, "stale_markout_cents": 0.0},
+                "not_received": {b: {"shares": 0.0, "value_cents": 0.0,
+                                     "harm_avoided_cents": 0.0,
+                                     "sacrifice_cents": 0.0,
+                                     "unvalued_shares": 0.0}
+                                 for b in _NOT_RECEIVED_BUCKETS}}
+        inv = {"net": 0.0, "peak_abs_net": 0.0,
+               "received_increasing_shares": 0.0,
+               "received_reducing_shares": 0.0}
+        r = _SlugReplay("w", ref_p2["w"], [], validate_params(p_p2),
+                        counters, [], [], econ, inv)
+        ghost = _gen(99, 0.0, 1.0, [])
+        r._on_fill("BUY_UP", ghost,
+                   {"t": 0.5, "shares": 1.0,
+                    "markout_cents_per_share": -1.0}, 0.5)
+    refuses(RuntimeError, _unreachable_fill,
+            "POSITIVE CONTROL, both directions: a fill on a generation that "
+            "was NEITHER joined NOR missed-while-held still raises -- the "
+            "fix admits the real case without disarming the guard")
+
+    # ---- group Q: lazy settlement at a GENERATION START (2026-09-01, DE) --
+    # The header declares effectiveness settles "at the next processed
+    # event"; _on_gen_start was the one handler that read `held` without
+    # settling.  Consecutive generations abut and GEN_START outranks GEN_END
+    # at equal times, so when no fill or score of the side falls between a
+    # cancel's effectiveness and the generation's end, the side PLACED during
+    # what should have been a hold and CHARGED every fill of the next
+    # generation.  Pre-fix this fixture reported received_shares 1.0 and
+    # gen_starts_missed_held 0, with every invariant TRUE -- internally
+    # consistent and economically wrong.
+    ref_q = {"w": {"BUY_UP": [_gen(1, 0.0, 5.0, []),
+                              _gen(2, 5.0, 10.0, [(7.0, 1.0, -9.0)])],
+                   "SELL_UP": []}}
+    sc_q = [{"t": 1.0, "slug": "w", "side": "BUY_UP", "score": 0.99}]
+    q = replay_policy(ref_q, sc_q, _params(
+        protection_mode="ALL_ORDERS_OVERRIDE"))
+    ok(q["counters"]["gen_starts_missed_held"] == 1
+       and abs(q["fills"]["received_shares"]) < 1e-12
+       and abs(q["economics"]["not_received"]["missed_while_held"]["shares"]
+               - 1.0) < 1e-12,
+       "KNOWN-BAD (pre-fix: charged 1.0 share, 0 missed starts): a cancel "
+       "effective INSIDE a generation holds the side before the NEXT "
+       "generation starts, even with no fill or score in between")
+    kinds_q = [e["kind"] for e in q["trajectory"]]
+    ok(kinds_q.index("HOLD_START") < kinds_q.index("GEN_START_MISSED_HELD")
+       and all(q["trajectory"][i]["t"] <= q["trajectory"][i + 1]["t"] + EPS
+               for i in range(len(q["trajectory"]) - 1)),
+       "and the trajectory is now time-ordered through the settle: pre-fix "
+       "a PLACE at t=5 preceded the CANCEL_EFFECTIVE at t=2 it should have "
+       "been held by")
+    # POSITIVE CONTROL: settling early must not invent a hold where the
+    # cancel never became effective (t_effective at/after the generation end
+    # resolves STALE and removes nothing).
+    ref_q2 = {"w": {"BUY_UP": [_gen(1, 0.0, 1.5, []),
+                               _gen(2, 1.5, 10.0, [(7.0, 1.0, -9.0)])],
+                    "SELL_UP": []}}
+    q2 = replay_policy(ref_q2, sc_q, _params(
+        protection_mode="ALL_ORDERS_OVERRIDE"))
+    ok(q2["cancel_lifecycle"]["stale"] == 1
+       and q2["counters"]["gen_starts_missed_held"] == 0
+       and abs(q2["fills"]["received_shares"] - 1.0) < 1e-12,
+       "POSITIVE CONTROL: the same fixture with the cancel landing AFTER "
+       "its generation's end resolves STALE, holds nothing, and the next "
+       "generation is placed and charged normally -- the settle-first fix "
+       "does not manufacture holds")
 
 
 def main(argv: Sequence[str] | None = None) -> int:

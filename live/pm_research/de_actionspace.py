@@ -118,8 +118,13 @@ def contract_conformance(doc: dict[str, Any] | None = None) -> list[str]:
         bad.append("FeasibleSet §2a pin (VERB:SIDE / DEFAULT-DENY) not in contract notes")
     # RULED, NOT YET LANDED (R-72, Q-DE-13 closed): the enum is MINT|MERGE;
     # the applied v23 literal DEPOSIT|WITHDRAW was applier-chosen and has no
-    # ratification to defend. The v23→v24 change record is drafted in
-    # CONTRACTS_BATCH_v24.md and RIDES A BATCH, never an ad-hoc edit (R-35).
+    # ratification to defend. The change record is drafted in
+    # CONTRACTS_BATCH_v25.md §1 (M-1) and RIDES A BATCH, never an ad-hoc
+    # edit (R-35). CITATION CORRECTED 2026-09-01 (DE): this comment said
+    # CONTRACTS_BATCH_v24.md, and 459c3b1 -- the commit that RENAMED that
+    # file to v25 under R-121 -- edited this very function and left the
+    # pointer behind. Citation only: no number moves, no clock restarts
+    # (SEAT_PROTOCOL rule 3).
     # Until that batch lands, this check matches NEITHER side BY ORDER —
     # R-72: "it is the only thing holding the discrepancy visible; do not
     # turn it green." The ActionSpace never emits capital ops (Allocator-

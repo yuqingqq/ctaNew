@@ -98,6 +98,18 @@ reports the outcome either way.
   §6.2 batch", which landed as v23 without it (EV_REPLAY loop iteration 3,
   stale-carrier fix); enters by ruling when the plugin path first demands
   a module record.
+  **PROPOSAL FILED 2026-09-01 (DE, R-379 TASK 2), AWAITING A RULING —
+  `plans/DE_REGISTRY_AMENDMENT_PROPOSAL.md`.** The records are drafted
+  (types + module entry + `config_supplied` line + the DE-ActionSpace
+  reconciliation) and verified against the real registry by
+  `de_registry_amendment_check.py` (26 checks, falsifiers both directions).
+  **The ASK is that the TRIGGER ABOVE IS THE WRONG DEMAND:** the plugin path
+  is still NOT IN v1, so on the trigger as written the record never enters —
+  while Phase-4 economics already run inside the seam through a replay
+  dialect the plan's own census does not count. Proposed replacement
+  trigger: *a replay seam carries a result-bearing number.* **DE does not
+  rule on this accumulator's trigger; the entry is here so the proposal is
+  not invisible from the batch of record.**
 - **THE CLAIM LADDER — named debt with a named trigger (R-86, 2026-08-24).**
   `R-CLUSTER`, `R-WEIGHT`, `R-STRATA`, `estimand_kind`,
   `INSUFFICIENT_CLUSTERS`, `InferenceSpec` and `ClaimLadder` are ABSENT
