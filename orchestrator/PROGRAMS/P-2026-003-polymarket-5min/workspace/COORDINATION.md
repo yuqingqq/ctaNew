@@ -18041,6 +18041,18 @@ USER: *"can you clear the context of each session, tell them to re-load again"* 
 
 **Plan position, verified against `HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md` §10 before dispatching:** items 1–2 closed; **item 3 (conditional-value lane) is the live step and is blocked only by the two defects above**; items 4–6 remain parallel behind their own gates; item 9's forward clock starts only when a day closes accruing. Collector `clob_v4_1` verified live at dispatch time (PID 1108125, 14h47m, control-v4-slow).
 
+### R-374 — 2026-09-01T13:02Z — coordinator — **USER ORDERED ALL SEATS ONTO THE PLAN IN PARALLEL; dispatched under §10.1's parallel-lane rule with the ONE decision-blocking item unchanged (BE's Q4/Q3). Coordinator's own two Immediate-order items closed the same hour: tier1:full CLEARANCE VERIFIED and COL-R2's operative gap CLOSED.**
+
+**Dispatches (blocking discipline intact — everything below is non-blocking and on the owning seat's surface):**
+- **DA** (in flight): (1) independent contract-level verification of `iter011_conditional_value_v1__coin_btc.json` with its own reader — 24/24 denominator, statuses-in-slots, per-cell n, the 1/501 permutation-floor arithmetic, the Q4 `comparable:true`-vs-not-loaded contradiction as present IN the artifact, and sufficiency of the preserved per-coin Q3 evidence for applying R-306 without refit; parse must prove it read population AND fields (R-289); (2) Immediate-order 0h — windows-affected disclosure (affected/elapsed AND affected/288) beside P1/P2/P3 in the closing receipt, disclosure only, no new threshold (rule 11), falsifier + positive control; (3) 00:06Z closed-day-verifier readiness for 09-01, proven by execution on a past day.
+- **MEM** (queued behind its true-up turn): register sweep R-291..R-373 into the memory docs; TODO tick-with-citation true-up; HANDOFF note of this parallel round.
+
+**0b CLOSED — the tier1:full lane cleared its 146-hour block.** Journal evidence, not a report: after the B2 `[0,1]` fix, `pm-evaluation-pipeline` committed `target_day` 08-26..08-28 overnight-morning, **08-29 COMPLETE at 09:01:48Z, 08-30 COMPLETE at 10:01:55Z**, then **IDLE at 11:20 and 12:20** — caught up; 08-31 awaits its upstream (measurement-lane) trigger, mixed-era day, nothing hung.
+
+**0d DONE — `pm-evaluation-pipeline` is now INSIDE the aggregate guard (COL-R2's operative gap).** Precondition honored: unit is a oneshot, `inactive` at edit time, backlog cleared — nothing aborted. Edit: `Slice=research.slice` with an in-file comment; **per-unit `MemoryMax=16G` deliberately UNCHANGED** — lowering it to the documented 14G pattern could kill a lane that just recovered, and that is a separate decision, flagged not taken. Verified at config (`systemctl show`: Slice/MemoryMax/OOMScoreAdjust) AND by positive control: a manual start of the idempotent catch-up scan ran at 13:02Z in cgroup `…/research.slice/pm-evaluation-pipeline.service` and finished `IDLE`. Collectors untouched (`active` before and after). The R-148 aggregate guard now actually covers every known heavy research unit.
+
+**Item 2 (independent re-review of the `1aaac18` RR-closure claims) HELD DELIBERATELY, not forgotten:** rule 5 — one Codex round per COMPLETED batch, never piecemeal. BE's Q4/Q3 fixes are mid-flight; the review request goes out when that batch commits, so one round covers the `1aaac18` closure claims AND today's batch at a single pinned tip.
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
