@@ -45,43 +45,6 @@ RECEIPT_FAMILY = "ITER011_CONDITIONAL_VALUE"
 COINS_011 = ("btc", "eth")
 
 
-def _coin_slice(idx: dict, coin: str | None, what: str) -> dict:
-    """Restrict a TAPE INDEX to one coin, in the RUNNER.
-
-    WHY THIS EXISTS AND WHY IT IS HERE. Two full-population runs were OOM-
-    killed (10G, then 14G -- past the launch pattern's documented <=14G single-
-    job ceiling), both landing in `[topup/eth]` while holding FIT for both
-    coins, the 638,917-row score index and the embargo probe at once.
-
-    The obvious fix -- shrink `phase2_arms._feature_pass`, which hardcodes
-    `for coin in ("btc","eth")` and json-loads its whole source file -- is
-    FORBIDDEN: `phase2_arms.py` is in `CODE_IDENTITY_FILES`, the frozen btc
-    candidate binds `fit_code_sha256_prefix`, and hazard-plan 10.9 requires
-    scoring that candidate UNCHANGED. Editing it mid-race would make the
-    forward scoring a different program from the freeze.
-
-    THIS runner is explicitly NOT in the lattice (it says so in its own
-    receipt), so slicing belongs here. The tape index is a plain dict keyed by
-    `(slug, side, gen, t_start)` and the slug carries the coin, so one coin's
-    rows are selectable without touching any bound module.
-
-    NUMERICALLY IDENTICAL, not an approximation: the results loop is already
-    fully per-coin (design, targets, populations, fit, report all live inside
-    `for coin in (...)`), so a per-coin run computes the same numbers on the
-    same rows. This slices WORK, never the estimand.
-    """
-    if coin is None:
-        return idx
-    out = {k: v for k, v in idx.items() if str(k[0]).startswith(coin + "-")}
-    if not out:
-        raise RuntimeError(
-            f"REFUSED: --coin {coin!r} selected 0 of {len(idx):,} rows from "
-            f"the {what}. An empty population must never read as a small one.")
-    print(f"  [--coin {coin}] {what}: {len(idx):,} -> {len(out):,} rows",
-          flush=True)
-    return out
-
-
 def _coin_drop(blocks: dict, coin: str | None, what: str) -> dict:
     """Drop the non-selected coin's feature block the moment the pass returns.
 
@@ -99,9 +62,48 @@ def _coin_drop(blocks: dict, coin: str | None, what: str) -> dict:
     return blocks
 
 
+def compact_design(block: dict) -> dict:
+    """Pack PM+FN+ST into ONE float64 array and RELEASE the Python lists.
+
+    MEASURED, and this is where the memory actually was. `_feature_pass`
+    returns three parallel lists-of-lists per coin; at 105 features across
+    1.08M rows (both coins) that is ~8 GB of Python float OBJECTS -- 24 bytes
+    each, plus per-list headers -- against 0.45 GB for the identical numbers in
+    one packed array. Two runs were OOM-killed carrying that into the topup
+    pass, which is the peak.
+
+    NUMERICALLY IDENTICAL, not an approximation: a Python float IS a float64,
+    so `X[i].tolist()` returns exactly the values `PM[i] + FN[i] + ST[i]` did,
+    in the same order. `build_design` keeps returning a `list`, so every
+    downstream consumer sees the type it always saw.
+
+    Called AFTER the embargo purge, which reindexes the three families and
+    therefore needs them still to be lists.
+    """
+    import numpy as np
+    n = len(block.get("kept") or ())
+    if n == 0 or block.get("X") is not None:
+        return block
+    PM, FN, ST = block["PM"], block["FN"], block["ST"]
+    w = len(PM[0]) + len(FN[0]) + len(ST[0])
+    X = np.empty((n, w), dtype=np.float64)
+    for i in range(n):
+        X[i] = PM[i] + FN[i] + ST[i]
+    block["X"] = X
+    # Drop the references so the arenas are reusable by the NEXT pass. RSS is
+    # a high-water mark and CPython does not return arenas to the OS, so the
+    # win is not a smaller peak here -- it is that the topup pass allocates
+    # into space already held instead of growing past the cap.
+    block["PM"] = block["FN"] = block["ST"] = None
+    return block
+
+
 def build_design(block: dict, i: int) -> list:
     """x for row i: PM + fine + state. Both arms see the SAME features; they
     differ in model class, not in what they are shown (R-232 9.1)."""
+    X = block.get("X")
+    if X is not None:
+        return X[i].tolist()
     return block["PM"][i] + block["FN"][i] + block["ST"][i]
 
 
@@ -1693,33 +1695,56 @@ def incumbent_null_applicability() -> dict:
 DECLARED_OUTPUTS = (OUT,)
 def _selftest_coin_slice(ok):
     """Controls for the memory slicing. It must SELECT, and it must REFUSE."""
-    _idx = {("btc-updown-5m-1", "BUY_UP", 0, 1.0): {"v": 1},
-            ("btc-updown-5m-2", "BUY_UP", 0, 2.0): {"v": 2},
-            ("eth-updown-5m-1", "BUY_UP", 0, 3.0): {"v": 3}}
-    _b = _coin_slice(_idx, "btc", "t")
-    ok(len(_b) == 2 and all(k[0].startswith("btc-") for k in _b),
-       "(slice) --coin keeps exactly its own coin's rows")
-    ok(len(_coin_slice(_idx, None, "t")) == 3,
-       "(slice CONTROL) no --coin means NO restriction -- the unsliced path "
-       "is untouched, so a full run is unaffected by this code existing")
-    # KNOWN-BAD: a coin that matches nothing must REFUSE. An empty population
-    # reading as a small one is how a run reports numbers about nobody.
-    _r = ""
-    try:
-        _coin_slice(_idx, "doge", "t")
-    except RuntimeError as e:
-        _r = str(e)
-    ok("selected 0 of" in _r,
-       f"(slice KNOWN-BAD) a coin matching NO rows refuses by name: {_r[:60]}")
-    # And the prefix must be anchored: 'bt' must not match 'btc-...'.
-    _r2 = ""
-    try:
-        _coin_slice(_idx, "bt", "t")
-    except RuntimeError as e:
-        _r2 = str(e)
-    ok("selected 0 of" in _r2,
-       "(slice KNOWN-BAD) a PREFIX of a real coin matches nothing rather "
-       "than silently selecting it -- the separator is part of the identity")
+    # REGRESSION GUARD, red-first: the tape index must NEVER be coin-sliced.
+    # `_feature_pass` builds BOTH coins from it and refuses when a coin joins
+    # zero rows -- measured, slicing made eth fail 520,033 of 520,033 and the
+    # absorption bound REFUSED ("Drops absorb row-level anomalies, never total
+    # input failures"). The saving must come from what we CARRY downstream,
+    # never from what we index. A source check, because the failure is a
+    # DELETED line and no unit test can see one that is not there.
+    _src_r = Path(__file__).read_text(encoding="utf-8")
+    # ANCHOR ON THE DEFINITION, not on the substring: `.index("def main(")`
+    # matched THIS GUARD'S OWN string literal (it appears above the real
+    # function), so the slice began inside the selftest and the check read
+    # itself. A self-matching guard is the "expected value coincided with
+    # the mutant's output" defect wearing different clothes.
+    _m_r = _src_r[_src_r.index("\ndef main() -> int:"):]
+    ok('PA.tape_index("train")' in _m_r and 'PA.tape_index("score")' in _m_r,
+       "(memory) both tape indexes are built UNSLICED")
+    ok("_coin_slice(PA.tape_index" not in _m_r,
+       "(memory KNOWN-BAD) the tape index is never coin-sliced -- doing so "
+       "starves the other coin's feature join and the absorption bound refuses")
+
+    # ---- compact_design must be EXACTLY equivalent, and must free ----
+    import random as _rnd
+    _rnd.seed(11)
+    _nr = 40
+    _blk = {"kept": [{"i": i} for i in range(_nr)],
+            "PM": [[_rnd.uniform(-1e6, 1e6) for _ in range(3)] for _ in range(_nr)],
+            "FN": [[_rnd.uniform(-1, 1) for _ in range(2)] for _ in range(_nr)],
+            "ST": [[_rnd.uniform(0, 1e-9) for _ in range(4)] for _ in range(_nr)]}
+    _before = [build_design(_blk, i) for i in range(_nr)]
+    compact_design(_blk)
+    _after = [build_design(_blk, i) for i in range(_nr)]
+    ok(_before == _after,
+       "(memory) compact_design is EXACTLY equivalent -- bit-for-bit, across "
+       "large, tiny and negative magnitudes. A Python float IS a float64, so "
+       "packing changes the container and never the number")
+    ok(all(isinstance(r, list) for r in _after),
+       "(memory) build_design still returns a LIST after packing, so every "
+       "downstream consumer sees the type it always saw")
+    ok(_blk["PM"] is None and _blk["FN"] is None and _blk["ST"] is None,
+       "(memory) the Python lists are RELEASED -- packing that keeps both "
+       "representations alive saves nothing, which is the whole point")
+    ok(_blk["X"].dtype.name == "float64" and _blk["X"].shape == (_nr, 9),
+       f"(memory) the packed array is float64 and correctly shaped "
+       f"(got {_blk['X'].dtype.name}, {_blk['X'].shape})")
+    _empty = {"kept": [], "PM": [], "FN": [], "ST": []}
+    compact_design(_empty)
+    ok(_empty.get("X") is None,
+       "(memory CONTROL) an empty block is left alone rather than packed into "
+       "a zero-row array that would then read as compacted")
+
     _blocks = {"btc": {"kept": [1]}, "eth": {"kept": [2]}}
     _d = _coin_drop(dict(_blocks), "btc", "t")
     ok(list(_d) == ["btc"],
@@ -1735,7 +1760,7 @@ def _selftest_coin_slice(ok):
     # The probe must be freed BEFORE the topup pass, which is where both OOMs
     # landed. Source-level, because the ordering is the whole fix.
     _src = Path(__file__).read_text(encoding="utf-8")
-    _m = _src[_src.index("def main("):]
+    _m = _src[_src.index("\ndef main() -> int:"):]   # same anchoring fix
     ok(_m.index("del probe") < _m.index('PA._feature_pass(PA.TOPUP'),
        "(memory) the embargo probe is released BEFORE the topup pass, not "
        "after it -- holding ~640k dicts across the pass put them inside the "
@@ -1908,13 +1933,18 @@ def main() -> int:
               f"{ident['fragment_sha256_prefix']} topup "
               f"{ident['topup_sha256_prefix']}", flush=True)
         print("  indexing train split...", flush=True)
-        TP = _coin_slice(PA.tape_index("train"), _coin, "train index")
+        # NOT coin-sliced: `_feature_pass` builds BOTH coins from this index
+        # and refuses when a coin joins 0 rows -- "Drops absorb row-level
+        # anomalies, never total input failures". Slicing here made eth fail
+        # 520,033 of 520,033 and the absorption guard REFUSED, correctly.
+        # The saving has to come from what we CARRY, not from what we index.
+        TP = PA.tape_index("train")
         print(f"  train split indexed: {len(TP):,} rows", flush=True)
         FIT = _coin_drop(PA._feature_pass(PA.FRAGMENT, "fragment", TAPE=TP),
                          _coin, "fragment")
         del TP
         print("  indexing score split for the embargo boundary...", flush=True)
-        SP = _coin_slice(PA.tape_index("score"), _coin, "score index")
+        SP = PA.tape_index("score")   # same reason as the train index above
         print(f"  score split indexed: {len(SP):,} rows", flush=True)
     else:
         ident = {"tape_sha256_prefix": "DRY_RUN", "DRY_RUN": True,
@@ -1957,10 +1987,21 @@ def main() -> int:
     # and builds both coins' families -- put it inside the peak for no reason.
     # Measured: the OOM landed in `[topup/eth]`, holding FIT + SP + probe.
     del probe
+    # PACK FIT BEFORE THE TOPUP PASS ALLOCATES. This is the ordering that
+    # matters: the purge above is the last consumer of the three parallel
+    # lists, and the topup pass is the measured peak. Releasing ~4 GB of
+    # Python float objects here is what lets the next pass fit.
+    for _c in list(FIT):
+        compact_design(FIT[_c])
+    import gc as _gc
+    _gc.collect()
     if not _dry:
         EVAL = _coin_drop(PA._feature_pass(PA.TOPUP, "topup", TAPE=SP),
                           _coin, "topup")
     del SP
+    for _c in list(EVAL):
+        compact_design(EVAL[_c])
+    _gc.collect()
 
     out = {"artifact": "iter011_conditional_value_v1",
            "receipt_family": RECEIPT_FAMILY,

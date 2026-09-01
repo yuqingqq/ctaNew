@@ -4,22 +4,24 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
-  2026-09-01T03:49:46Z (USER-AUTHORIZED CODEX DOC TRUE-UP): THE GOVERNING TODO
-  IS plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md §10, not the subordinate
-  stateful-cancel worksheet. Current map: dataset/PRED_STATE_V1 complete;
-  receipt/runtime seams substantially built with final model-path closure still
-  owed; Iteration 011 preregistration and implementation built but review-held,
-  nothing fitted or scored; typed fair-price Identity built but challenger
-  protocol not freeze-ready; skew freeze is a draft; seven-arm work is
-  stub/inert only; integrated replay/economics not complete. The separate BTC
-  hazard seed remains FROZEN-UNVALIDATED and the integrated candidate is not
-  frozen. Forward reach is G=0/5 qualifying complete UTC days. Collector v4.1
-  is live since the 2026-08-31T22:00Z boundary (PID 1108125, NRestarts=0 at
-  this as-of). 08-31 is mixed-era and BTC quality-failing; 09-01 is the first
-  era-pure admissible v4.1 day but is incomplete. HEAD/origin were equal at
-  1aaac18 before this documentation edit; that commit claims RR1/RR3 closure,
-  but the latest independent Codex filing reviewed its parent and a fresh
-  release has not yet been filed. PRIOR:
+  2026-09-01T09:43:00Z (CRITERIA/LIVE-STATUS TRUE-UP): THE GOVERNING TODO IS
+  plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md §10. Dataset/PRED_STATE_V1 is
+  complete; Iteration 011 is USER-RELEASED, its earlier queue-contamination
+  halt is withdrawn. A memory-sliced BTC attempt started 09:34Z, was stopped at
+  09:42Z after indexing, and produced no result artifact or recorded fit/score
+  completion. QR_SKEW_ONLY semantics are USER-FROZEN; real
+  seven-arm parity, lifecycle economics and the integrated candidate remain
+  open. Forward reach remains G=0/5. On 09-01 at 09:29:39Z, all 113 elapsed
+  BTC/ETH windows were present and both coins passed governing day_bar_v2:
+  BTC 572.2s accumulated loss, pace-adjusted P1 about 60.3 vs 120, P2 zero
+  material windows, P3 185.2 vs 900. Collector v4.1 is active at PID 1108125
+  with NRestarts=0. The day is a PROVISIONAL QUALITY PASS but cannot accrue
+  until closed. Era is an interlock, not a quality grade. Breadth is reported,
+  not a gate: 52/113 elapsed BTC windows had some overlap, but replay clears,
+  resets and resynchronizes after a gap; the claim that a gap poisons the rest
+  of a window is withdrawn. The superseded v1 count predicate does not pass
+  09-01 because two hours exceeded 15, despite the average being below 15;
+  this has no effect on the governing v2 verdict. PRIOR:
   2026-08-28T15:19Z (MEM): R-289 -- MY DISCLOSURE CAUGHT A SECOND VACUUM, AND
   IT WAS IN THE REGISTER. The coordinator's R-288 "independent confirmation" of
   the committed-null dependence check was ITSELF vacuous: its parse matched all
@@ -75,18 +77,20 @@ flags:
                              # skew TODO is a subordinate implementation sheet;
                              # 39/113 is not total project completion.
   v41_collector_live: ACTIVE-RUNNING-FIRST-PURE-DAY-INCOMPLETE
-                             # As-of 2026-09-01T03:49:46Z: systemd active/
+                             # As-of 2026-09-01T09:29:39Z: systemd active/
                              # running, PID 1108125, NRestarts=0, start
                              # 2026-08-31T22:00:01Z, clob_v4_1. 08-31 is
                              # mixed clob_v4/clob_v4_1 and cannot accrue.
-                             # 09-01 is era-pure/admissible so far but is not a
-                             # complete UTC day and therefore is not evidence.
+                             # 09-01 is era-pure/admissible and provisionally
+                             # passes its governing v2 quality bars, but is not
+                             # a complete UTC day and therefore has not accrued.
   hazard_forward_reach: G-0-OF-5-COMPLETE-QUALIFYING-DAYS
                              # The separate BTC hazard seed is frozen and
                              # marked unvalidated. No integrated hazard x
                              # conditional-value x skew candidate is frozen.
-                             # 08-29 is era-inadmissible; 08-30 and 08-31 do
-                             # not accrue; 09-01 remains incomplete.
+                             # 08-29 remains seen/excluded prospectively;
+                             # 08-30 and 08-31 do not accrue; 09-01 is a
+                             # provisional quality pass but remains incomplete.
   v41_rr_closure: IMPLEMENTED-AT-1aaac18-PENDING-INDEPENDENT-REREVIEW
                              # HEAD/origin matched at 1aaac18 before this docs
                              # edit. That commit reports 14/14 gates and v4_1
@@ -3553,25 +3557,27 @@ flags:
                              # migration discipline remain authoritative.
 
 focus: >
-  As-of 2026-09-01T03:49:46Z, build and test the offline model mechanism-first
+  As-of 2026-09-01T09:43:00Z, build and test the offline model mechanism-first
   under plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md section 10. Do not use the
   subordinate stateful-cancel TODO checkbox count as total progress. The
   foundation is established: the action-level dataset and PRED_STATE_V1 are
   reproduced, the Phase-2 development receipt exists, and a BTC hazard seed is
-  frozen but explicitly unvalidated. The next bounded model job remains
-  Iteration 011 conditional signed value. Its preregistration and code exist,
-  but the review hold remains and nothing has been fitted or scored. Fair-price
-  Identity is built, while the challenger protocol is not freeze-ready; the
-  skew document is still a user-freeze draft; the seven-arm path is stub/inert
-  only. Real queue-integrated replay, lifecycle economics and an integrated
-  candidate freeze remain downstream. The current operational dependency is
-  clean data collection: clob_v4_1 has run since 2026-08-31T22:00Z. 08-31 is a
-  mixed-era BTC quality failure. 09-01 is the first era-pure admissible v4.1
-  day, but it is incomplete. Forward reach is therefore G=0/5 complete
-  qualifying UTC days. Keep all 08-20..25 model-development days consumed;
-  the 08-29 fragment diagnostic is never evidence; never tune on a later day
-  and then score that same day. No PnL, capacity, promotion or forward verdict
-  is claimable yet.
+  frozen but explicitly unvalidated. Iteration 011 conditional signed value is
+  USER-RELEASED; the gap-contamination halt is withdrawn. Its 09:34Z BTC-only
+  memory-sliced attempt was stopped at 09:42Z after indexing and produced no
+  artifact or recorded fit/score completion, so diagnose that stop before
+  retrying. Fair-price
+  Identity is built while the challenger protocol is not freeze-ready;
+  QR_SKEW_ONLY semantics are USER-FROZEN, while the seven-arm path remains
+  stub/inert. Real queue-integrated replay, lifecycle economics and an
+  integrated candidate freeze remain downstream. clob_v4_1 has run since
+  2026-08-31T22:00Z. 08-31 is a mixed-era BTC quality failure. 09-01 is the
+  first era-pure admissible v4.1 day and provisionally passes its governing v2
+  quality bars, but it is incomplete; forward reach is therefore G=0/5.
+  Collector era is an interlock, not a quality grade. Keep all 08-20..25
+  model-development days consumed; the 08-29 fragment diagnostic is never
+  evidence; never tune on a later day and then score that same day. No PnL,
+  capacity, promotion or forward verdict is claimable yet.
 
 standing_rules:
   - CHECK THE DATA BEFORE USING IT, EVERY TIME — no lane is trusted by default.
@@ -3776,7 +3782,7 @@ tasks:
   - id: hazard-iter011
     phase: 1
     name: Hazard plan §10.3 — conditional signed-value Iteration 011
-    status: released-2026-09-01-memory-sliced-ready-to-run-btc
+    status: released-2026-09-01-btc-attempt-stopped-no-artifact
     notes: |
       RELEASED by USER 2026-09-01. A1.8 steps 2-5 verified by execution (run
       selftest GREEN; --dry-run drives main()'s own path); step 6 was the
@@ -3799,6 +3805,13 @@ tasks:
       and a book snapshot restores level size but not queue position, so its
       behaviour across a gap is unverified. Check before the run, not a
       blocker. Consumed days cannot be reused for model selection.
+      LIVE STATUS 2026-09-01T09:43Z: the BTC-only attempt started at 09:34Z
+      under iter011-fit.service and was stopped at 09:42Z after indexing the
+      605,256-row train split. Its output contains no fit/score completion and
+      no declared iter011 result artifact exists. The wrapper now reads
+      Result=success only because it was stopped cleanly; that is not a model
+      success. Diagnose the stop before retrying. Completion requires the
+      artifact plus its identity and population checks.
   - id: hazard-fair-price
     phase: 1
     name: Hazard plan §10.4 — timestamped fair-price lane

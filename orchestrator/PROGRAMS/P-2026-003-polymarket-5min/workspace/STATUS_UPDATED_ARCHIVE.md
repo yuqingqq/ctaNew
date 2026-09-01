@@ -397,3 +397,28 @@ batch 1.
   fix rides the same edit) -- text drafted, APPLIED ONLY BY THE USER'S HAND.
   011 stays DARK.
 ```
+
+## Batch 8 — archived 2026-09-01T09:43:00Z (1 entry, rolling-window overflow)
+
+Moved in the same criteria/live-status true-up that superseded it. Join rule as
+in batch 1.
+
+```yaml
+
+  2026-09-01T03:49:46Z (USER-AUTHORIZED CODEX DOC TRUE-UP): THE GOVERNING TODO
+  IS plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md §10, not the subordinate
+  stateful-cancel worksheet. Current map: dataset/PRED_STATE_V1 complete;
+  receipt/runtime seams substantially built with final model-path closure still
+  owed; Iteration 011 preregistration and implementation built but review-held,
+  nothing fitted or scored; typed fair-price Identity built but challenger
+  protocol not freeze-ready; skew freeze is a draft; seven-arm work is
+  stub/inert only; integrated replay/economics not complete. The separate BTC
+  hazard seed remains FROZEN-UNVALIDATED and the integrated candidate is not
+  frozen. Forward reach is G=0/5 qualifying complete UTC days. Collector v4.1
+  is live since the 2026-08-31T22:00Z boundary (PID 1108125, NRestarts=0 at
+  this as-of). 08-31 is mixed-era and BTC quality-failing; 09-01 is the first
+  era-pure admissible v4.1 day but is incomplete. HEAD/origin were equal at
+  1aaac18 before this documentation edit; that commit claims RR1/RR3 closure,
+  but the latest independent Codex filing reviewed its parent and a fresh
+  release has not yet been filed.
+```

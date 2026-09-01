@@ -9,15 +9,15 @@ economics, by current user direction
 **Role:** this is the governing project TODO. The stateful cancel x skew TODO is
 a subordinate implementation worksheet, not the overall progress tracker.
 
-**2026-09-01T03:49:46Z progress map (repository HEAD `1aaac18`):**
+**2026-09-01T09:43:00Z progress map (repository HEAD `19cd9c7`):**
 
 | §10 item | Current state |
 |---|---|
-| 1. Receipt/runtime seams | Substantially built; final model-path wiring and identity closure remain before another result-bearing 011 run. |
+| 1. Receipt/runtime seams | Substantially built. The forward row selector now requires an explicit era and refuses an empty selection; forward receipts must disclose the frozen/current lattice hashes. |
 | 2. Dataset and `PRED_STATE_V1` | Complete and repeatedly reproduced. |
-| 3. Conditional-value lane | Iteration 011 preregistration and implementation exist; the review hold remains and nothing has been fitted or scored. |
+| 3. Conditional-value lane | Iteration 011 is user-released and its earlier queue-contamination halt is withdrawn. The memory-sliced BTC attempt started at 09:34Z, was stopped at 09:42Z after indexing the train split, and produced no result artifact or recorded fit/score completion. |
 | 4. Fair-price lane | Typed `Identity` and build-only machinery exist; the challenger protocol is not freeze-ready and no challenger has been scored. |
-| 5. Skew lane | `QR_SKEW_ONLY` freeze draft exists; it is not user-frozen. |
+| 5. Skew lane | `QR_SKEW_ONLY` semantics are user-frozen. Bit-identical parity against a real seven-arm replay remains unexecuted. |
 | 6. Common action-value/seven-arm replay | Contracts, parity stubs and inert trajectories exist; real queue-integrated replay is not complete. |
 | 7. Passing-module integration | Not started. |
 | 8. Stateful replay and latency/cost grids | Not started for the integrated candidate. |
@@ -29,6 +29,25 @@ The live data dependency is now `clob_v4_1`, running since the ruled
 quality bar. 2026-09-01 is the first era-pure admissible v4.1 day, but it is
 incomplete and cannot accrue. Do not call collector operation a forward-test
 day until the closed-day verifier admits it.
+
+**2026-09-01T09:29:39Z provisional day check:** collector PID `1108125` is
+active with `NRestarts=0`; all 113 elapsed BTC and ETH windows are present.
+Both coins pass the governing `day_bar_v2` predicates. BTC has 572.2 seconds
+lost so far: the verifier's open-day P1 lower bound is 23.84 s/hr, while the
+pace-adjusted closing projection is approximately 60.3 s/hr against the 120
+bar. BTC P2 is 0 material windows and P3 is 185.2 s against 900; ETH passes
+comfortably. This is a **provisional quality PASS**, not an accrued day, because
+the UTC day is open. Tape density is not yet measured for 09-01 and content
+liveness has no ratified bar; both remain reported diagnostics.
+
+**Breadth interpretation, corrected:** 52 of the 113 elapsed BTC windows had
+some coin-level gap overlap at that as-of. That is a disclosure count, not 52
+fully contaminated windows. On a gap the queue replay clears state and modeled
+positions, then resynchronizes and reposts from the next available snapshot;
+stale state does not persist to window end. The exact real queue rank cannot be
+recovered, so breadth stays visible beside P1/P2/P3, but the claim that one
+short gap "poisons the remainder of the window" is withdrawn. No new breadth
+gate is introduced after seeing the day.
 
 **2026-09-01 USER RULING — the accrual rule, and what the era conjunct means.**
 *"i dont care about collector version, as long as the data quality is good,

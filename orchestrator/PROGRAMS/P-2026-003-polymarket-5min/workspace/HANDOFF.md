@@ -1,6 +1,6 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-01T03:49:46Z — user-authorized documentation true-up.
+Updated: 2026-09-01T09:43:00Z — criteria and live-status true-up.
 
 ## READ FIRST — current project handoff
 
@@ -14,14 +14,18 @@ stateful cancel x skew TODO is a subordinate implementation worksheet; its
 - Dataset/PRED_STATE_V1 is complete and reproduced. The Phase-2 development
   receipt exists; the separate BTC hazard seed is frozen but marked
   unvalidated.
-- Iteration 011 conditional signed value is the next bounded model job. Its
-  preregistration and implementation exist, but the review hold remains:
-  nothing has been fitted or scored.
+- Iteration 011 conditional signed value is user-released. The earlier halt on
+  alleged gap-contaminated queue state is withdrawn: the modeled replay resets
+  and re-anchors after gaps, and the existing row exclusions fire. A
+  memory-sliced BTC attempt started at 09:34Z and was stopped at 09:42Z after
+  indexing the train split. It wrote no result artifact or recorded fit/score
+  completion.
 - Typed fair-price Identity is built; the challenger protocol is not
   freeze-ready and no challenger has been scored.
-- The skew freeze remains a draft. Seven-arm work is contracts, parity stubs
-  and inert trajectories only. Real queue-integrated replay, lifecycle
-  economics and the integrated candidate freeze remain open.
+- `QR_SKEW_ONLY` semantics are user-frozen. Seven-arm work remains contracts,
+  parity stubs and inert trajectories; bit-identical parity against a real
+  seven-arm replay, lifecycle economics and the integrated candidate freeze
+  remain open.
 
 ### Current data and forward state
 
@@ -30,8 +34,39 @@ stateful cancel x skew TODO is a subordinate implementation worksheet; its
 - 2026-08-29 is era-inadmissible. 2026-08-30 does not accrue. 2026-08-31 is
   mixed `clob_v4`/`clob_v4_1` and BTC failed P1 at 298.52 s/hr.
 - 2026-09-01 is the first era-pure, admissible v4.1 day, but it is incomplete.
-  Forward reach remains `G=0/5` qualifying complete UTC days. Judge it only
-  after the closed-day verifier runs; live operation is not a quality verdict.
+  At 09:29:39Z all 113 elapsed BTC/ETH windows were present and both coins
+  passed the governing P1/P2/P3 bars. BTC had 572.2 s accumulated loss, a
+  pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
+  windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
+  day only after the closed-day verifier runs.
+
+### 2026-09-01 ~09:43Z (Codex) — CRITERIA/LIVE-STATUS CORRECTION
+
+The 09:30Z criteria clarification is sound in its operative form: collector
+era is an interlock, not a quality grade; `clob_v4_1` satisfies it, and 09-01
+is judged by its own frozen `day_bar_v2` regime. The change is prospective and
+does not resurrect the seen 08-29 day. `da_forward_day_verify` passed 181/181
+selftests; `harmful_exposure_rows` passed 48/48.
+
+Two statements in the 09:45Z entry below are superseded:
+
+1. **A short gap does not poison the rest of a modeled window.** At a gap,
+   `policy_optimizer_queue_realistic` clears state and pending state, resets
+   both modeled positions, then resynchronizes and reposts from the next quote.
+   The real queue rank is unrecoverable, so breadth is a useful disclosure, but
+   stale modeled state does not persist to window end.
+2. **09-01 does not pass both bar families.** Its governing v2 family passes.
+   The superseded v1 count predicate fails because hours 7 and 8 each exceed 15
+   gaps, even though BTC's average is 10.95 gaps/hr. This has no effect on the
+   v2 verdict; it corrects the diagnostic claim only.
+
+At the 09:29:39Z check, 52/113 elapsed BTC windows had any coin-level gap
+overlap. The open-day artifact also prints 52/288 = 18.1%, because that report
+field always uses the complete-day denominator. Read `52/113` for live breadth
+and `52/288` only as progress toward the final complete-day denominator. A gap
+overlap is not a claim that the whole window or all of its rows are corrupt.
+No new breadth threshold is introduced after seeing 09-01; carry the count
+beside P1/P2/P3 in the closing receipt.
 
 ### 2026-09-01 ~04:20Z (coordinator) — TWO BLOCKERS THE DOC TRUE-UP DID NOT SEE
 
@@ -529,6 +564,12 @@ mine, and the correction of the 08-28 row is mine too.
 ### 2026-09-01 ~09:45Z (coordinator) — WHY 08-28 FAILS, AND THE HOLE IT EXPOSES
 ### IN day_bar_v2
 
+> **CORRECTED 09:43Z BY THE CURRENT READ-FIRST ENTRY:** the historical
+> measurement below stands, but “a gap poisons the rest of the window” and
+> “09-01 passes both families” do not. The replay resets/resynchronizes after a
+> gap, and the old count predicate fails on two hourly bins. Breadth remains a
+> reported diagnostic, not a new gate or a whole-window contamination label.
+
 08-28 fails on **exactly one** predicate — the gap **COUNT** rate — and passes
 every duration bar:
 
@@ -544,13 +585,14 @@ a gap.** 08-28 sits in the middle of the post-08-25 break. Its gaps are SHORT
 (median 11.9 s cumulative per affected window), so total lost time squeaks
 under the duration bar while two thirds of windows are touched.
 
-**THE HOLE: `day_bar_v2` HAS NO BREADTH PREDICATE.** `count_bar_v1_frozen`
+**THE DISCLOSURE GAP: `day_bar_v2` HAS NO BREADTH PREDICATE.** `count_bar_v1_frozen`
 caught breadth through the gap-count rate; v2 retired that (`SUPERSEDED_ON_V2 =
 ('gap_rate_under_bar',)`) and replaced it with three DURATION bars. So the
-v1→v2 migration loosened exactly the dimension that governs queue
-reconstruction — a gap early in a window poisons the rest of it regardless of
-how short it is. **08-28 is the proof case: 64.6% of windows affected, and it
-would pass all of day_bar_v2.**
+v1→v2 migration stopped governing on raw event breadth. A gap creates a blind
+interval and a modeled queue reset/repost, but it does **not** leave stale state
+through the rest of the window. **08-28 is the proof that high any-overlap
+breadth can coexist with passing duration bars; it is not proof that 64.6% of
+whole windows are corrupt.**
 
 **NOT a proposal to change the bars.** They are pre-registered and frozen, and
 09-01 is the first forward day — retuning a bar now, knowing which days pass,
@@ -561,24 +603,32 @@ gap-affected, and the receipt must carry windows-affected beside P1/P2/P3
 rather than instead of them (Q-DA-69's original point, now with a second
 instance).
 
-**09-01 currently passes BOTH families** — P1 60.8 s/hr (bar 120), count
-10.99/hr (bar 15), 51 windows touched at 9.37 h. So the hole is not yet biting
-the live race. Watch it: P1 has climbed 34.4 → 42.3 → 60.8 s/hr across the day.
+**09-01 currently passes its GOVERNING v2 family** — projected P1 60.8 s/hr
+(bar 120), with 51 windows touched at 9.37 h. Its superseded v1 count predicate
+does **not** pass: the average was 10.99/hr, but two individual hours exceeded
+15. This does not affect the live race. Watch the projected P1, which moved
+34.4 → 42.3 → 60.8 s/hr across the day.
 
 ### Immediate order
 
 0. ~~Rule B1~~ / ~~day-closed conjunct~~ **BOTH DONE.** The rule is one line in
    `ACCRUAL_RULE` and is enforced at the function AND the call path.
 0h. **Carry windows-affected in every forward receipt** beside P1/P2/P3 —
-   day_bar_v2 scores duration and has no breadth predicate.
+   as a disclosure count of short blind intervals/resets, not as a count of
+   fully contaminated windows. For an open day report both affected/elapsed
+   and affected/288; only the latter is the closing-day denominator.
 0g. **A forward tape build must NAME its era explicitly** — the default is
    still `clob_v3_1` and will refuse loudly on v4_1 windows rather than
    building empty. That refusal is the fix; passing `era="clob_v4_1"` is the
    caller's job, and the day range must not straddle a boundary.
 0f. **The lattice drift must be declared in any forward receipt** — freeze
-   `3d0b6c8c6dfe9466` vs current `e27cab9e5f6ce8e5`, one inert parser hunk.
-0e. **Rule the two 011 population questions** (gap-crossed rows; the undeclared
-   development population) before any 011 re-run. Nothing is fitted meanwhile.
+   `3d0b6c8c6dfe9466` vs current `ad535550d366347d`; the current development
+   artifacts remain content-bound and reproduced.
+0e. **Iteration 011 is released, but the 09:34Z BTC-only attempt was stopped at
+   09:42Z after indexing and produced no result artifact.** Determine why it
+   was stopped before retrying. Do not infer success from the service wrapper:
+   require the declared artifact and its own identity/population checks before
+   reading a number.
 0d. Move `pm-evaluation-pipeline` into `research.slice` once the tier1 backlog
    clears — the aggregate guard is incomplete until then (COL-R2).
 0b. Confirm the tier1:full lane actually clears 08-25. A rebuild under the new
@@ -588,8 +638,9 @@ the live race. Watch it: P1 has climbed 34.4 → 42.3 → 60.8 s/hr across the d
 1. Preserve the running collector and close the first full v4.1 UTC day.
 2. Obtain an independent re-review of HEAD `1aaac18`: it claims RR1/RR3
    closure, but the latest filing reviewed its parent and did not release them.
-3. Resume hazard-plan §10 item 1/Iteration 011 correctness closure; do not fit
-   or score until the explicit review release.
+3. Diagnose the stopped BTC-only Iteration 011 attempt, then retry through the
+   memory-sliced runner. Verify the declared artifact exists and clears its
+   identity/population gates before scoring or interpreting it.
 4. Keep fair-price, skew and replay work build/freeze-only behind their stated
    gates. No PnL, capacity, promotion or forward verdict is claimable.
 
