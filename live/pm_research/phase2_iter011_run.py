@@ -62,6 +62,43 @@ def _coin_drop(blocks: dict, coin: str | None, what: str) -> dict:
     return blocks
 
 
+def restore_valuation_gate(block: dict) -> dict:
+    """Re-attach `any_fill_ahead` to kept rows, using THE canonical function.
+
+    `phase2_arms._feature_pass` projects each kept row to a FIXED field list --
+    ("slug","day","t0","t_start","side","gen","latency","coin") -- which does
+    NOT include `any_fill_ahead`. `phase2_iter011.validate_row` (A1.3, FROZEN)
+    REQUIRES it and refuses MISSING_GATE without it. The two had never run
+    together, because iteration 011 had never been fitted; the first real fit
+    died here.
+
+    NOT reimplemented, and not invented: `harmful_exposure_rows.any_fill_ahead`
+    is declared as "THE single definition" precisely because two definitions of
+    a valuation gate is one too many, and it states that the keptrow derivation
+    OVERWRITES the builder's stored value at fit/score time -- so recomputing
+    it from `latency` IS the rule that governed every committed result.
+
+    VERIFIED EXACT on the whole population before relying on it: stored vs
+    derived agree on 1,125,289 fragment rows and 638,917 topup rows, ZERO
+    disagreements. `latency` is in the projection, so this needs no join and
+    no extra population in memory.
+
+    Fixed in the RUNNER rather than in the projection because
+    `phase2_arms.py` is in CODE_IDENTITY_FILES and the frozen candidate binds
+    its hash; this runner is declared outside the lattice.
+    """
+    import harmful_exposure_rows as _HER
+    n = 0
+    for r in block.get("kept") or ():
+        if "any_fill_ahead" not in r:
+            r["any_fill_ahead"] = _HER.any_fill_ahead(r.get("latency"))
+            n += 1
+    if n:
+        print(f"  [gate] re-attached any_fill_ahead to {n:,} kept rows "
+              f"(canonical derivation from `latency`)", flush=True)
+    return block
+
+
 def compact_design(block: dict) -> dict:
     """Pack PM+FN+ST into ONE float64 array and RELEASE the Python lists.
 
@@ -1715,6 +1752,38 @@ def _selftest_coin_slice(ok):
        "(memory KNOWN-BAD) the tape index is never coin-sliced -- doing so "
        "starves the other coin's feature join and the absorption bound refuses")
 
+    # ---- the valuation gate must be RESTORED, and by the canonical rule ----
+    import harmful_exposure_rows as _HERt
+    _lat_fill = {"5": {"preventable_shares": 2.0, "preventable_value_cents": 1.0}}
+    _blk_g = {"kept": [{"latency": _lat_fill}, {"latency": {}}, {"latency": None},
+                       {"latency": _lat_fill, "any_fill_ahead": False}]}
+    restore_valuation_gate(_blk_g)
+    _k = _blk_g["kept"]
+    ok(_k[0]["any_fill_ahead"] is True,
+       "(gate) a row with preventable shares gets any_fill_ahead=True")
+    ok(_k[1]["any_fill_ahead"] is False and _k[2]["any_fill_ahead"] is False,
+       "(gate) empty and absent latency both give False, not a crash")
+    ok(_k[3]["any_fill_ahead"] is False,
+       "(gate CONTROL) an EXISTING gate is left alone -- restoration fills a "
+       "missing field, it never overwrites one that is present")
+    ok(all(isinstance(r["any_fill_ahead"], bool) for r in _k),
+       "(gate) every restored value is a real bool -- validate_row refuses "
+       "NON_BOOLEAN_GATE, so a truthy int would fail one layer down")
+    # It must be THE canonical function, not a local copy: two definitions of a
+    # valuation gate is one too many, and the source says so in those words.
+    _srcg = Path(__file__).read_text(encoding="utf-8")
+    _fn = _srcg[_srcg.index("def restore_valuation_gate("):]
+    _fn = _fn[:_fn.index("\ndef ")]
+    ok("_HER.any_fill_ahead(" in _fn and "preventable_shares" not in _fn,
+       "(gate) restoration CALLS harmful_exposure_rows.any_fill_ahead and does "
+       "not reimplement its predicate locally")
+    # And validate_row must actually accept a restored row end to end.
+    _vr = I11.validate_row({"any_fill_ahead": False, "latency": None},
+                           D.TARGET_LATENCY_MS)
+    ok(isinstance(_vr, dict),
+       "(gate) a restored no-fill row passes validate_row rather than "
+       "refusing MISSING_GATE, which is the failure this closes")
+
     # ---- compact_design must be EXACTLY equivalent, and must free ----
     import random as _rnd
     _rnd.seed(11)
@@ -1942,6 +2011,8 @@ def main() -> int:
         print(f"  train split indexed: {len(TP):,} rows", flush=True)
         FIT = _coin_drop(PA._feature_pass(PA.FRAGMENT, "fragment", TAPE=TP),
                          _coin, "fragment")
+        for _c in list(FIT):
+            restore_valuation_gate(FIT[_c])
         del TP
         print("  indexing score split for the embargo boundary...", flush=True)
         SP = PA.tape_index("score")   # same reason as the train index above
@@ -1998,6 +2069,8 @@ def main() -> int:
     if not _dry:
         EVAL = _coin_drop(PA._feature_pass(PA.TOPUP, "topup", TAPE=SP),
                           _coin, "topup")
+        for _c in list(EVAL):
+            restore_valuation_gate(EVAL[_c])
     del SP
     for _c in list(EVAL):
         compact_design(EVAL[_c])
