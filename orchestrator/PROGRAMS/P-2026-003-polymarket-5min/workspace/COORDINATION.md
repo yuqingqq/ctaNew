@@ -18127,6 +18127,8 @@ Operative form, now `SEAT_PROTOCOL.md` rule 18:
 
 Also this entry: the coordination loop is now self-paced (commit monitor + heartbeat) per the USER's "auto proceed and push the plan"; register entries and pushes continue per act.
 
+### R-382 — 2026-09-01T13:58Z — coordinator — Loop tick: BE's CODE half landed (`4438961`, pushed, 23/23 mutants; run RELAUNCHED from the committed tree so `fit_code_ref` names a non-dirty commit — batch closes on the run's artifact + Q-BE filing, which opens the review round). MEM round 3 VERIFIED (`c31bb8f`, its three files only, pushed) and round 4 dispatched: the pending CLAUDE.md amendment as DRAFT-FOR-USER (rule-6 caveat + the FALSE rule-9 Binance parenthetical, exact hunks with register cites) + the full STATEFUL TODO tick-sweep with citations. DA/REV/DE mid-batch, untouched per rule 18.
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
