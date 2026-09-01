@@ -155,8 +155,24 @@ Use the printed **`v41_pid`** verbatim. Do **not** use the live PID from
 - **`pre_boundary_starts`** — the candidate booted during the arm window,
   which is a finding in itself.
 
-**If `v41_pid` is `null`, v4.1 never started in the window — use the ABORT
-path, not recovery.**
+**`v41_pid` is `null` ONLY when no clob_v4_1 start exists at all. That — and
+nothing else — is the abort case.**
+
+`recovery_kind` tells you which shape you have, and **all three are
+recoverable**:
+
+| `recovery_kind` | meaning | what recovery does |
+|---|---|---|
+| `in_window` | ordinary | stamps the reconstruction at the **ruled** instant |
+| `late` | the ruled instant was **missed** | stamps at the **observed** start |
+| `early` | the candidate booted during the **arm window** | stamps at the **observed** start |
+| `null` | v4.1 never ran | **abort** — the only abort case |
+
+> **Never route a real v4.1 span to abort.** Both era consumers skip aborted
+> rows entirely, so the evidence would sit in a field nobody reads while the
+> span vanished from the era timeline — a day on which clob_v4_1 demonstrably
+> ran would read `era_pure=true, eras_touched=['clob_v4']`. That is silent
+> contamination and it is worse than refusing outright (Codex V41-RR1).
 
 ## Failure table
 

@@ -177,6 +177,35 @@ def installed_mode_v41(exec_start: str) -> str:
 PROVENANCE_LEDGER = REPO / "data/pm_5min/collector_provenance.jsonl"
 
 
+def _verify_code_identity(commit, sha) -> str | None:
+    """None if (commit, sha) genuinely identify collector bytes; else why not.
+
+    V41-RR2: shape checks alone certified fabricated identity -- 000...000 is
+    hexadecimal and correctly sized. This RESOLVES the commit and HASHES the
+    collector blob it names. Shared by the inline and sidecar paths, because
+    two code paths for one question means the weaker one is the answer.
+    """
+    if not (isinstance(sha, str) and len(sha) == 64
+            and all(c in "0123456789abcdef" for c in sha)):
+        return f"collector_sha256 {str(sha)[:24]!r} is not a sha256 hex"
+    if not (isinstance(commit, str) and 7 <= len(commit) <= 40
+            and all(c in "0123456789abcdef" for c in commit)):
+        return f"collector_commit {str(commit)[:24]!r} is not a git object id"
+    import hashlib as _h2
+    import subprocess as _sp2
+    blob = _sp2.run(["git", "-C", str(REPO), "show",
+                     f"{commit}:live/pm_research/collect_pm.py"],
+                    capture_output=True)
+    if blob.returncode != 0:
+        return (f"collector_commit {commit[:12]} does not resolve in this "
+                f"repository — the record names a commit that does not exist")
+    got = _h2.sha256(blob.stdout).hexdigest()
+    if got != sha:
+        return (f"the collector at {commit[:12]} hashes {got[:16]}, not the "
+                f"claimed {sha[:16]} — commit and sha describe different bytes")
+    return None
+
+
 def provenance_for(boundary_utc: str) -> dict:
     """Resolve the code identity of a transition, inline or superseding.
 
@@ -210,7 +239,20 @@ def provenance_for(boundary_utc: str) -> dict:
     if not hit:
         return {"status": "NO_SUCH_TRANSITION", "boundary_utc": boundary_utc}
     row = hit[-1]
-    if row.get("collector_commit") and row.get("collector_sha256"):
+    if row.get("collector_commit") or row.get("collector_sha256"):
+        # V41-RR2: the inline branch RETURNED BEFORE every verification the
+        # sidecar branch performs, so a transition carrying commit 000...000
+        # and sha 000...000 came back status=INLINE. Neither object exists.
+        # One resolver now, for both, or the weaker path is the one an
+        # attacker (or a typo) uses.
+        why = _verify_code_identity(row.get("collector_commit"),
+                                    row.get("collector_sha256"))
+        if why:
+            return {"status": "IDENTITY_INVALID", "boundary_utc": boundary_utc,
+                    "why": why,
+                    "note": "the transition row names a code identity that "
+                            "does not verify; inline is not a shortcut past "
+                            "resolution"}
         return {"status": "INLINE", "boundary_utc": boundary_utc,
                 "collector_commit": row["collector_commit"],
                 "collector_sha256": row["collector_sha256"]}
@@ -237,6 +279,7 @@ def provenance_for(boundary_utc: str) -> dict:
         _pc = p_row.get("collector_commit")
         _ps = p_row.get("collector_sha256")
         why = None
+        _idw = _verify_code_identity(_pc, _ps)
         if p_row.get("collector_schema_version") != \
                 row.get("collector_schema_version"):
             why = (f"names era {p_row.get('collector_schema_version')!r}, "
@@ -247,30 +290,8 @@ def provenance_for(boundary_utc: str) -> dict:
         elif p_row.get("collector_start_recv_ns") != \
                 row.get("collector_start_recv_ns"):
             why = "names a different collector_start_recv_ns than the row"
-        elif not (isinstance(_ps, str) and len(_ps) == 64
-                  and all(c in "0123456789abcdef" for c in _ps)):
-            why = f"collector_sha256 {str(_ps)[:24]!r} is not a sha256 hex"
-        elif not (isinstance(_pc, str) and 7 <= len(_pc) <= 40
-                  and all(c in "0123456789abcdef" for c in _pc)):
-            why = f"collector_commit {str(_pc)[:24]!r} is not a git object id"
-        else:
-            # RESOLVE it. Shape alone certified fabricated identity: commit
-            # 000...000 with sha 000...000 is hexadecimal, correctly sized,
-            # and returned SUPERSEDED. A provenance checker that never opens
-            # the repository is checking punctuation.
-            import subprocess as _sp2, hashlib as _h2
-            _blob = _sp2.run(["git", "-C", str(REPO), "show",
-                              f"{_pc}:live/pm_research/collect_pm.py"],
-                             capture_output=True)
-            if _blob.returncode != 0:
-                why = (f"collector_commit {_pc[:12]} does not resolve in this "
-                       f"repository — the record names a commit that does "
-                       f"not exist")
-            elif _h2.sha256(_blob.stdout).hexdigest() != _ps:
-                why = (f"the collector at {_pc[:12]} hashes "
-                       f"{_h2.sha256(_blob.stdout).hexdigest()[:16]}, not the "
-                       f"claimed {_ps[:16]} — the record's commit and sha "
-                       f"describe different bytes")
+        elif _idw:
+            why = _idw
         if why:
             return {"status": "PROVENANCE_MISMATCH",
                     "boundary_utc": boundary_utc, "why": why,
@@ -315,12 +336,37 @@ def recovery_pid_candidates(starts: list | None = None) -> dict:
         else:
             late.append(r)
     in_win.sort(key=lambda r: r["recv_ns"])
+    late.sort(key=lambda r: r["recv_ns"])
+    early.sort(key=lambda r: r["recv_ns"])
+    # V41-RR1: this used to return v41_pid=null whenever the only start was
+    # out of window, and the runbook then routed the operator to ABORT --
+    # whose rows both era consumers SKIP, erasing a span that really ran. The
+    # emitter now reconstructs out-of-window starts at their OBSERVED instant,
+    # so discovery must NAME them. Fixing the function and leaving the
+    # operator path pointed at abort closed nothing.
+    _chosen = (in_win or late or early)
+    _kind = ("in_window" if in_win else
+             "late" if late else "early" if early else None)
     return {
         "boundary_utc": utc,
+        "recovery_kind": _kind,
+        "recovery_note": {
+            "in_window": "ordinary recovery; the reconstruction is stamped at "
+                         "the RULED instant",
+            "late": "the ruled instant was MISSED. Recovery reconstructs this "
+                    "span at its OBSERVED start; no row claims the ruled "
+                    "instant. Do NOT use abort — consumers skip aborted rows "
+                    "and the span would vanish from the era timeline.",
+            "early": "the candidate booted during the ARM WINDOW. The span is "
+                     "real and is reconstructed at its OBSERVED start. Do NOT "
+                     "use abort.",
+            None: "no clob_v4_1 start exists at all — v4.1 never ran. THIS is "
+                  "the abort case, and the only one.",
+        }[_kind],
         # THE value to pass as --v41-pid: earliest exact declaration inside
         # the ruled window. Never the newest, never the live one.
-        "v41_pid": in_win[0].get("pid") if in_win else None,
-        "v41_recv_ns": in_win[0].get("recv_ns") if in_win else None,
+        "v41_pid": _chosen[0].get("pid") if _chosen else None,
+        "v41_recv_ns": _chosen[0].get("recv_ns") if _chosen else None,
         "n_in_window": len(in_win),
         # reported, not dropped -- these are RESTART EVIDENCE and their
         # presence is itself a finding
@@ -328,11 +374,12 @@ def recovery_pid_candidates(starts: list | None = None) -> dict:
                          for r in late],
         "pre_boundary_starts": [{"pid": r.get("pid"),
                                  "recv_ns": r.get("recv_ns")} for r in early],
-        "note": ("v41_pid is the EARLIEST clob_v4_1 collector_start inside "
-                 "[T, T+120s]. later_starts are restart evidence, NOT "
-                 "candidates: the recovery gate refuses them. If v41_pid is "
-                 "null, v4.1 never started in the window — use the ABORT "
-                 "path, not recovery."),
+        "note": ("v41_pid is the EARLIEST clob_v4_1 collector_start, "
+                 "preferring one inside [T, T+120s]. If none is in window the "
+                 "earliest LATE start is chosen, then the earliest EARLY one: "
+                 "all three are RECOVERABLE and are reconstructed at their "
+                 "OBSERVED instant. v41_pid is null ONLY when no clob_v4_1 "
+                 "start exists at all, and that is the sole abort case."),
     }
 
 
@@ -932,18 +979,25 @@ def make_recovery_bundle(obs: dict, old_target_pid: int,
     # start, and it was reverted. Both consumers can express that -- it is an
     # ordinary transition/rollback pair at non-ruled instants -- and the day
     # then reads IMPURE, which it is.
-    _late = not (ep * 10**9 <= target_ns
-                 <= (ep + POST_START_WINDOW_S) * 10**9)
-    if target_ns < ep * 10**9:
-        raise Refused("v4.1 start PREDATES the ruled boundary — the candidate "
-                      "booted during the arm window; that is a false-boundary "
-                      "hazard, not a reconstruction")
-    _eff_utc = (utc if not _late else
+    # V41-RR1: EARLY starts are reconstructed at their observed instant too.
+    # Refusing them sent the operator to abort, and both consumers SKIP
+    # aborted rows -- so an arm-window boot, which is the more serious
+    # finding, vanished from the era timeline entirely. The span is real
+    # whenever a process ran; only "no start at all" is an abort.
+    _in_window = (ep * 10**9 <= target_ns
+                  <= (ep + POST_START_WINDOW_S) * 10**9)
+    _eff_utc = (utc if _in_window else
                 datetime.fromtimestamp(target_ns / 1e9, tz=timezone.utc)
                 .strftime("%Y-%m-%dT%H:%M:%SZ"))
+    _eff_ep = ep if _in_window else target_ns // 10**9
     if ns <= target_ns:
         raise Refused("v4 restoration is not after the v4.1 start")
-    P._refuse_cross_midnight(utc, target_ns)
+    # V41-RR1: this compared the RULED T with the target start, so a
+    # cross-midnight late start (T+3h) was REFUSED for a midnight the
+    # reconstruction does not span -- the row opens at the OBSERVED instant.
+    # A hard dead end, since abort then erased the span. The guard belongs on
+    # the boundary the row actually claims.
+    P._refuse_cross_midnight(_eff_utc, target_ns)
 
     recovered = [r for r in obs["era_rows"]
                  if r.get("recovered") is True
@@ -1444,10 +1498,11 @@ def selftest() -> int:
          "a target start whose pid is not the recorded v4.1 pid refuses"),
         ({"ts": {"recv_ns": 0}}, "not a positive int",
          "a zero target recv_ns refuses"),
-        ({"ts": {"recv_ns": (bep - 60) * 10**9}}, "PREDATES",
-         "a v4.1 start BEFORE the ruled instant refuses — the candidate "
-         "booted during the arm window, which is a false-boundary hazard, "
-         "not something to reconstruct"),
+        ({"ts": {"recv_ns": (bep + 100) * 10**9},
+          "v4": {"recv_ns": (bep + 50) * 10**9}},
+         "not after the v4.1 start",
+         "a restoration EARLIER than the v4.1 start refuses — the span "
+         "would run backwards"),
         # restoration moved INSIDE the start window so the window guard does
         # not mask this one — the ordering guard needs its own reachable case
         ({"ts": {"recv_ns": (bep + 100) * 10**9},
@@ -1767,10 +1822,15 @@ def selftest() -> int:
        "at the LIVE pid — 333 — which is the one the recovery gate REFUSES, "
        "and a late auto-restart is the natural shape when NRestarts is why "
        "postflight refused in the first place")
-    ok(recovery_pid_candidates([_S(333, 150)])["v41_pid"] is None,
-       "V41-F4: with NO in-window start the pid is None, which the note "
-       "maps to the ABORT path — not a late start silently promoted to a "
-       "recovery candidate")
+    _lo = recovery_pid_candidates([_S(333, 150)])
+    ok(_lo["v41_pid"] == 333 and _lo["recovery_kind"] == "late",
+       "V41-RR1: with ONLY a late start, discovery NAMES it (kind=late) — it "
+       "used to return None, and the runbook then sent the operator to "
+       "abort, whose rows both consumers skip")
+    _none = recovery_pid_candidates([])
+    ok(_none["v41_pid"] is None and _none["recovery_kind"] is None,
+       "V41-RR1: v41_pid is None ONLY when no clob_v4_1 start exists at all "
+       "— that is the sole abort case, and now it is the only one")
     _r4b = recovery_pid_candidates([_S(111, 3), _S(222, 5)])
     ok(_r4b["v41_pid"] == 111,
        "V41-F4: with two in-window starts the EARLIEST wins deterministically "
@@ -1853,6 +1913,43 @@ def selftest() -> int:
     ok(_c3 == FROM_ERA and _o3 is None,
        "and the late bundle leaves clob_v4 in force with no open era — the "
        "span is recorded AND closed")
+
+    # ---- V41-RR1.4: the ENTRY-POINT path, discovery -> emitted rows ->
+    # day_era_admission. Every earlier check exercised a function directly,
+    # which is exactly how a correct emitter stayed wired to an abort route
+    # that consumers erase.
+    import tempfile as _tf4
+    for _off, _kind, _lbl in ((150, "late", "same-day late T+150s"),
+                              (10800, "late", "cross-midnight T+3h"),
+                              (-60, "early", "early T-60s (arm window)")):
+        _tsr = {"recv_ns": (bep + _off) * 10**9, "pid": 333,
+                "collector_version": TARGET_ERA, "event": "collector_start"}
+        _disc = recovery_pid_candidates([_tsr])
+        ok(_disc["v41_pid"] == 333 and _disc["recovery_kind"] == _kind,
+           f"RR1 ENTRY POINT ({_lbl}): discovery NAMES pid 333 as the "
+           f"recovery pid, kind={_kind}. It used to return null and the "
+           f"runbook then routed to ABORT — whose rows both consumers skip, "
+           f"so a span that ran vanished from the era timeline")
+        _ro = {**_RB_OBS, "now_epoch": bep + _off + 400}
+        _rs = {**_RB_START, "recv_ns": (bep + _off + 300) * 10**9}
+        _rows2 = make_recovery_bundle(_ro, 333, _tsr, _rs, "counters_refused")
+        with _tf4.TemporaryDirectory() as _td4:
+            _f4 = Path(_td4) / "r.jsonl"
+            _f4.write_text("".join(json.dumps(r) + "\n"
+                                   for r in [V4ROW] + _rows2))
+            import da_forward_day_verify as _D
+            _day = datetime.fromtimestamp(bep + _off,
+                                          tz=timezone.utc).strftime("%Y%m%d")
+            _adm = _D.day_era_admission(
+                _day, _f4, admissible_table={"clob_v4": True,
+                                             TARGET_ERA: True,
+                                             "clob_v3_1": False})
+        ok(_adm.get("era_pure") is False
+           and TARGET_ERA in (_adm.get("eras_touched") or []),
+           f"RR1 ENTRY POINT ({_lbl}): the day reads IMPURE with "
+           f"{TARGET_ERA} in eras_touched — the span the process actually "
+           f"served is in the timeline, not an ignored field on a row the "
+           f"consumer skips")
 
     # ---- provenance must be IDENTITY-BOUND, not merely boundary-matched
     import tempfile as _tf3

@@ -1,11 +1,43 @@
 diff --git a/live/pm_research/collect_pm.py b/live/pm_research/collect_pm.py
-index be51023..4751501 100644
+index be51023..d44fc11 100644
 --- a/live/pm_research/collect_pm.py
 +++ b/live/pm_research/collect_pm.py
-@@ -181,6 +181,45 @@ def clob_market(condition_id: str):
+@@ -181,6 +181,77 @@ def clob_market(condition_id: str):
          return json.load(r)
  
  
++class AttemptState:
++    """Per-CONNECTION state: the producer and every consumer of it in one
++    object.
++
++    V41-RR3: with a free helper plus a hand-passed argument, the tests could
++    be green while PRODUCTION passed the coin-global delta -- Codex mutated
++    only the call site and the suite still exited 0. Encapsulating the state
++    means the same object that COUNTS the messages is the one the backoff and
++    the diagnostics read, so a call-site mutation has nothing coin-global to
++    reach for.
++    """
++
++    __slots__ = ("start_ns", "msgs", "last_recv_ns")
++
++    def __init__(self, start_ns: int) -> None:
++        self.start_ns = start_ns
++        self.msgs = 0
++        self.last_recv_ns = None
++
++    def record(self, recv_ns: int) -> None:
++        self.msgs += 1
++        self.last_recv_ns = recv_ns
++
++    def next_consec_fail(self, consec_fail: int) -> int:
++        """Backoff for the next reconnect, from THIS connection only."""
++        return 1 if self.msgs > 0 else consec_fail + 1
++
++    def diagnostics(self, now_ns: int) -> dict:
++        return connection_diagnostics(self.start_ns, self.msgs,
++                                      self.last_recv_ns, now_ns)
++
++
 +def next_consec_fail(consec_fail: int, conn_msgs: int) -> int:
 +    """Backoff counter for the NEXT reconnect, from ATTEMPT-LOCAL evidence.
 +
@@ -48,25 +80,24 @@ index be51023..4751501 100644
  def jl_append(path: Path, obj: dict) -> None:
      path.parent.mkdir(parents=True, exist_ok=True)
      with open(path, "a") as f:
-@@ -598,6 +637,8 @@ class PMCollector:
+@@ -598,6 +669,8 @@ class PMCollector:
              self.counts["writer_queue_highwater"] = max(
                  self.counts["writer_queue_highwater"], write_q.qsize())
  
-+        conn = {"msgs": 0, "last_recv_ns": None}   # attempt-local (V41-F3)
++        conn = AttemptState(time.time_ns())        # attempt-local (V41-F3)
 +
          async def receive(ws, subscription_ready: asyncio.Event | None = None,
                            pong_received: asyncio.Event | None = None) -> None:
              nonlocal last_recv_ns, open_gap, qmax, ever_paused
-@@ -630,6 +671,8 @@ class PMCollector:
+@@ -630,6 +703,7 @@ class PMCollector:
                      if subscription_ready is not None:
                          subscription_ready.set()
                  recv_ns = time.time_ns()
-+                conn["msgs"] += 1
-+                conn["last_recv_ns"] = recv_ns
++                conn.record(recv_ns)
                  if open_gap is not None:
                      self._audit({
                          "event": "gap_closed", "slug": slug, "coin": coin,
-@@ -683,6 +726,16 @@ class PMCollector:
+@@ -683,6 +757,14 @@ class PMCollector:
          try:
              while not self.stop and time.time() < stop_at:
                  attempt_msgs = self.msg_by_coin.get(coin, 0)
@@ -75,15 +106,13 @@ index be51023..4751501 100644
 +                # described the PREVIOUS connection's queue behaviour -- the
 +                # same defect, in the fields used to decide whether WE were
 +                # the slow consumer.
-+                conn_start_ns = time.time_ns()
-+                conn["msgs"] = 0
-+                conn["last_recv_ns"] = None
++                conn = AttemptState(time.time_ns())
 +                qmax = 0
 +                ever_paused = False
                  try:
                      # max_queue: the default (32) makes the server drop us with
                      # 1013 "slow consumer" on hot markets — observed repeatedly on
-@@ -721,10 +774,15 @@ class PMCollector:
+@@ -721,10 +803,15 @@ class PMCollector:
                      cause = ws_cause(ex)
                      self.counts["retries"] += 1
                      self.retry_by_coin[coin] += 1
@@ -99,11 +128,11 @@ index be51023..4751501 100644
 +                    # one -- was the least likely to back off correctly. Same
 +                    # defect as conn_msgs, in the field that decides RETRY
 +                    # PACING rather than only diagnosis.
-+                    consec_fail = next_consec_fail(consec_fail, conn["msgs"])
++                    consec_fail = conn.next_consec_fail(consec_fail)
                      if cause == "SLOW_CONSUMER_1013":
                          self.counts["slow_drops"] += 1
                          self.slow_by_coin[coin] += 1
-@@ -751,24 +809,9 @@ class PMCollector:
+@@ -751,24 +838,7 @@ class PMCollector:
                          # died" from "it never delivered anything" -- the
                          # difference between a mid-flow kill and a failed
                          # subscription, which have opposite fixes.
@@ -125,16 +154,145 @@ index be51023..4751501 100644
 -                        # rather than inferred from the era later. The 08-30
 -                        # cadence change had to be reconstructed from an era
 -                        # ledger to interpret any of these numbers.
-+                        **connection_diagnostics(
-+                            conn_start_ns, conn["msgs"],
-+                            conn["last_recv_ns"], time.time_ns()),
++                        **conn.diagnostics(time.time_ns()),
                          "keepalive": connect_keepalive_kwargs(
                              self.heartbeat_mode),
                          # clob_v3_1: were WE the slow consumer, or the venue?
-@@ -1086,6 +1129,32 @@ def selftest() -> int:
+@@ -995,6 +1065,97 @@ class PMCollector:
+             print("[pm] stopped", flush=True)
+ 
+ 
++def _market_wiring_probe(deliver: int = 0) -> dict:
++    """Drive the REAL _market() loop and read the emitted disconnect row.
++
++    V41-RR3: unit tests on AttemptState were green while the PRODUCTION call
++    site could be mutated back to the coin-global delta -- Codex changed only
++    the argument and the suite still exited 0. A test that never runs
++    `_market()` cannot see how `_market()` wires its own state.
++
++    This runs one market whose socket delivers NOTHING and dies, while the
++    coin-global counter is pre-loaded to simulate a HEALTHY SIBLING. The
++    emitted row must report conn_msgs == 0. Restore the coin-global
++    expression at the call site and this fails, because the sibling's count
++    is exactly what it would return.
++    """
++    import asyncio as _a
++    import tempfile as _tf
++    import types as _ty
++
++    class _WS:
++        """`deliver` messages, then die. deliver=0 is the silent case."""
++
++        def __init__(self, *a, **k):
++            self.left = _WS.deliver
++
++        async def __aenter__(self): return self
++        async def __aexit__(self, *a): return False
++        async def send(self, m): pass
++
++        async def recv(self):
++            if self.left > 0:
++                self.left -= 1
++                await _real_sleep(0.001)
++                return json.dumps({"event_type": "book", "asset_id": "t1"})
++            raise ConnectionResetError("died (probe)")
++
++    _WS.deliver = deliver
++    _real_sleep = _a.sleep
++    _delays = []
++
++    global RAW, GAP_LEDGER, ROOT, WINDOW_S, GRACE_S, SUBSCRIBE_CONFIRM_S
++    _sv = (RAW, GAP_LEDGER, ROOT, WINDOW_S, GRACE_S, SUBSCRIBE_CONFIRM_S,
++           globals().get("websockets"))
++    with _tf.TemporaryDirectory() as td:
++        ROOT = Path(td); RAW = Path(td) / "raw"
++        GAP_LEDGER = Path(td) / "gaps.jsonl"
++        WINDOW_S, GRACE_S, SUBSCRIBE_CONFIRM_S = 1, 0, 0.2
++        globals()["websockets"] = _ty.SimpleNamespace(connect=_WS)
++
++        async def _rec_sleep(d):
++            if d > 0.4:
++                _delays.append(round(d, 2))
++                d = 0.001
++            await _real_sleep(d)
++        _sv_sleep = _a.sleep
++        _a.sleep = _rec_sleep
++        try:
++            c = PMCollector()
++            # a HEALTHY SIBLING on the same coin has already delivered 7
++            c.msg_by_coin["btc"] = 7
++            ts = int(time.time())
++            _a.run(_a.wait_for(
++                c._market("btc-updown-5m-%d" % ts, ts, ["t1"]),
++                timeout=20))
++            rows = []
++            if GAP_LEDGER.exists():
++                for ln in GAP_LEDGER.read_text().splitlines():
++                    if ln.strip():
++                        rows.append(json.loads(ln))
++        finally:
++            _a.sleep = _sv_sleep
++            (RAW, GAP_LEDGER, ROOT, WINDOW_S, GRACE_S,
++             SUBSCRIBE_CONFIRM_S) = _sv[:6]
++            if _sv[6] is not None:
++                globals()["websockets"] = _sv[6]
++    d = [r for r in rows if r.get("event") == "disconnect"]
++    return {"n_disconnects": len(d),
++            "conn_msgs": d[0].get("conn_msgs") if d else None,
++            "all_conn_msgs": [r.get("conn_msgs") for r in d],
++            "delays": list(_delays),
++            # NOT delays[1] > delays[0]: the backoff is jittered, so two
++            # adjacent samples can rise by chance and a mutant pinning
++            # consec_fail=1 SURVIVED that assertion. Escalation means the
++            # sequence CLIMBS FAR above its own floor, which jitter around a
++            # fixed base cannot produce.
++            "escalating": (len(_delays) >= 4
++                           and max(_delays) >= 5 * min(_delays[:2])),
++            "delay_span": (round(min(_delays), 2), round(max(_delays), 2))
++            if _delays else None,
++            "coin_global": 7}
++
++
+ def _health_append_probe() -> tuple:
+     """(rows_written, errors_counted) — proves the writer writes AND that a
+     failure is counted rather than vanishing. Uses a temp ledger; never the
+@@ -1086,6 +1247,65 @@ def selftest() -> int:
           "silence from a dead writer and silence from a perfect one are the "
           "same bytes",
           _health_append_probe()[1] == 1),
++        # These drive the OBJECT production uses: record() is the producer,
++        # next_consec_fail and diagnostics are the consumers. A mutation to
++        # either call site now breaks the object the tests hold.
++        # THE PRODUCTION WIRING, not just the helper. Mutating the call site
++        # back to the coin-global delta makes this report 7, not 0.
++        # deliver=3: the mutant that DELETES the producer would report 0 here,
++        # so the earlier probe's expected 0 could not distinguish it.
++        ("V41-RR3 WIRING: a socket that DELIVERED 3 then died reports "
++         "conn_msgs=3 beside a sibling at 7 — neither 0 (producer removed) "
++         "nor 7 (coin-global)",
++         _market_wiring_probe(deliver=3)["conn_msgs"] == 3),
++        # the BACKOFF decision, observed through the reconnect delays the
++        # production loop actually sleeps: silent attempts must ESCALATE.
++        ("V41-RR3 WIRING: repeated SILENT connections escalate the reconnect "
++         "delay far above its own floor — the backoff CALL SITE is "
++         "exercised, not merely its helper; a mutant pinning consec_fail=1 "
++         "leaves the delay flat",
++         _market_wiring_probe(deliver=0)["escalating"] is True),
++        ("V41-RR3 WIRING: the real _market() loop, on a socket that delivered "
++         "NOTHING beside a sibling that delivered 7, emits conn_msgs=0 — "
++         "unit tests on the helper were green while the production ARGUMENT "
++         "could be mutated back to coin-global",
++         _market_wiring_probe()["conn_msgs"] == 0),
++        ("V41-RR3: a SILENT AttemptState escalates the backoff (3 -> 4) — the "
++         "producer and the consumer are the same object, so no coin-global "
++         "value can reach the call site",
++         AttemptState(0).next_consec_fail(3) == 4),
++        ("V41-RR3: an AttemptState that RECORDED a message resets to 1, and "
++         "the SAME object reports conn_msgs=1 — the backoff and the "
++         "diagnostics cannot disagree about whether the connection worked",
++         (lambda a: (a.record(5), a.next_consec_fail(3),
++                     a.diagnostics(10)["conn_msgs"]))(AttemptState(0))[1:]
++         == (1, 1)),
 +        ("V41-F3 backoff: a connection that delivered NOTHING escalates "
 +         "(3 -> 4), so a silent socket backs off",
 +         next_consec_fail(3, 0) == 4),
