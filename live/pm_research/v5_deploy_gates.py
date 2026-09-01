@@ -52,6 +52,8 @@ GATES: list[tuple[str, list[str]]] = [
     # sit committed and uninvoked; the rule GOVERNS nothing either way.
     ("DA content-liveness rule (DRAFT, governs nothing)",
      [PY, str(HERE / "da_content_liveness_rule.py"), "--selftest"]),
+    ("DA closed-day verdict checker",
+     [PY, str(HERE / "da_verdict_check.py"), "--selftest"]),
     ("chain equivalence (one fixture, two consumers)",
      [PY, str(HERE / "v5_chain_equivalence_test.py")]),
     ("chain differential fuzz",
