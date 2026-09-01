@@ -819,7 +819,16 @@ def make_abort_row(obs: dict, v4_start: dict | None,
                   if type(r.get("recv_ns")) is int
                   and _ep_w * 10**9 <= r["recv_ns"]
                   <= (_ep_w + POST_START_WINDOW_S) * 10**9]
-    _out_window = [r for r in target_starts if r not in _in_window]
+    # EARLY and LATE are different findings and must not share a field name.
+    # An early start means the candidate booted during the ARM WINDOW
+    # (audit F1's hazard); a late one means the ruled instant was missed.
+    # Filing both as "late_target_starts" would have mislabelled the more
+    # serious of the two.
+    _early_w = [r for r in target_starts
+                if type(r.get("recv_ns")) is int
+                and r["recv_ns"] < _ep_w * 10**9]
+    _out_window = [r for r in target_starts
+                   if r not in _in_window and r not in _early_w]
     if _in_window:
         raise Refused(f"the gap ledger carries {len(_in_window)} "
                       f"{TARGET_ERA} collector_start row(s) INSIDE the ruled "
@@ -831,6 +840,8 @@ def make_abort_row(obs: dict, v4_start: dict | None,
                       f"{open_target!r}; an abort requires unchanged {FROM_ERA}")
     _late_evidence = [{"pid": r.get("pid"), "recv_ns": r.get("recv_ns")}
                       for r in _out_window]
+    _early_evidence = [{"pid": r.get("pid"), "recv_ns": r.get("recv_ns")}
+                       for r in _early_w]
     prior = [r for r in obs["era_rows"] if r.get("aborted") is True
              and r.get("collector_schema_version") == TARGET_ERA
              and r.get("boundary_utc") == utc and r.get("stage") == stage]
@@ -844,6 +855,15 @@ def make_abort_row(obs: dict, v4_start: dict | None,
            "stamp_order": ("PRE-STAMP abort: a fresh post-boundary v4 "
                            "collector_start proves restoration and no "
                            "in-window v4.1 collector_start exists")}
+    if _early_evidence:
+        row["early_target_starts"] = _early_evidence
+        row["early_start_note"] = (
+            f"{len(_early_evidence)} {TARGET_ERA} collector_start row(s) "
+            f"exist BEFORE the ruled instant — the candidate booted during "
+            f"the ARM WINDOW (Restart=always boots the new ExecStart if the "
+            f"collector dies after arming). This is a DIFFERENT finding from "
+            f"a late start and a more serious one: the era stamp would have "
+            f"recorded a false boundary.")
     if _late_evidence:
         # Reported, never dropped. A late start means the RULED transition did
         # not happen AND some later process ran -- both facts belong in the
@@ -1747,6 +1767,17 @@ def selftest() -> int:
        "accepts it AND carries the late start as evidence. Both refusals "
        "were individually correct and together left an operator with a "
        "process that demonstrably ran and no way to record it")
+    _EARLY = {"recv_ns": (bep - 60) * 10**9, "pid": 777,
+              "collector_version": TARGET_ERA, "event": "collector_start"}
+    _ab2 = make_abort_row(_RB_OBS, _RB_START, [_EARLY, _LATE],
+                          "restart_failed")
+    ok([x["pid"] for x in _ab2.get("early_target_starts", [])] == [777]
+       and [x["pid"] for x in _ab2.get("late_target_starts", [])] == [333],
+       "EARLY and LATE starts are reported SEPARATELY — an early start means "
+       "the candidate booted during the ARM WINDOW (the more serious "
+       "finding: the era stamp would record a false boundary), a late one "
+       "means the instant was missed. Filing both under one name would have "
+       "mislabelled the worse of the two")
     refuses(lambda: make_abort_row(_RB_OBS, _RB_START, [_INW],
                                    "restart_failed"),
             "INSIDE the ruled window",
