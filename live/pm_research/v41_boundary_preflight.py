@@ -2184,6 +2184,35 @@ def selftest() -> int:
        "RR2-3 main() (WRONG INSTANT): a recv_ns matching no start of that "
        "pid REFUSES by name with empty stdout — the pair must identify one "
        "row, and a filter that cannot refuse cannot bind")
+    # RR3-2 (review ebf0ad6): the SAME pair of pins in the REVERSED ledger
+    # order. One fixtured order let a loosened `>=` comparison survive: under
+    # `>=` the early pin matched both rows and took the ledger-first one,
+    # which HAPPENED to be the early row. With the late row listed first,
+    # a `>=` filter selects the late row against an early pin and dies here.
+    _reuse_rev = [_T5(777, 150), _T5(777, -60), _V4S5]
+    _rc6c, _rows6c, _err6c = _drive(
+        ["--post-recovery", "--v41-pid", "777",
+         "--v41-recv-ns", str((bep - 60) * 10**9),
+         "--stage", "counters_refused"], _reuse_rev, 400)
+    ok(_rc6c == 0 and _err6c is None and len(_rows6c) >= 2
+       and _rows6c[0].get("boundary_utc") == _u5(-60),
+       "RR3-2 main() (REVERSED LEDGER ORDER, EARLY pinned): with the late "
+       "row listed FIRST, the early pin still selects the early start — "
+       "only exact equality does this; a loosened >= takes the ledger-first "
+       "late row and this check dies")
+    # RR3-3: a reused pid with NO pin must REFUSE, naming the candidates —
+    # the pinned path's own doctrine ("must identify ONE row") applied to
+    # the default. targets[0] was chosen silently before.
+    _rc6d, _rows6d, _err6d = _drive(
+        ["--post-recovery", "--v41-pid", "777",
+         "--stage", "counters_refused"], _reuse, 400)
+    ok(_err6d is not None and "no --v41-recv-ns was given" in _err6d
+       and str((bep - 60) * 10**9) in _err6d
+       and str((bep + 150) * 10**9) in _err6d and not _rows6d,
+       "RR3-3 main() (REUSED PID, NO PIN): two matching starts and no pin "
+       "REFUSES and prints BOTH candidate instants for the operator to "
+       "pass back — the doctrine and the default now agree; a silent "
+       "targets[0] choice can never survive this check")
 
     _rc5a, _rows5a, _err5a = _drive(
         ["--abort-row", "--stage", "restart_failed"], [_V4S5], 400)
@@ -2370,6 +2399,17 @@ def main() -> int:
                     f"recv_ns {a.v41_recv_ns} — the pid and the start instant "
                     f"must identify ONE row; pass the pair --recovery-pid "
                     f"printed")
+        # RR3-3 (review ebf0ad6): the doctrine and the default must agree.
+        # The pinned path refuses "the pid and the start instant must
+        # identify ONE row" — so the UNPINNED path may not silently take
+        # targets[0] when a reused pid matches several starts. Refuse and
+        # hand the operator the instants to pass back.
+        if a.v41_recv_ns is None and len(targets) > 1:
+            raise Refused(
+                f"pid {a.v41_pid} has {len(targets)} {TARGET_ERA} starts in "
+                f"the scan window and no --v41-recv-ns was given — the pid "
+                f"and the start instant must identify ONE row; candidates: "
+                + ", ".join(str(r.get("recv_ns")) for r in targets))
         v4s = [r for r in P.observe_starts_by_version(ep, FROM_ERA)
                if r.get("pid") == obs["main_pid"]]
         target_start = targets[0] if targets else None
