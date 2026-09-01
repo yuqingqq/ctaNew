@@ -3776,12 +3776,29 @@ tasks:
   - id: hazard-iter011
     phase: 1
     name: Hazard plan §10.3 — conditional signed-value Iteration 011
-    status: released-2026-09-01-HALTED-on-gap-contaminated-queue-feature
+    status: released-2026-09-01-memory-sliced-ready-to-run-btc
     notes: |
-      Frozen preregistration and implementation exist. The last authoritative
-      review disposition keeps 011 dark pending correctness/identity closure
-      and an explicit review release. Consumed days cannot be reused for model
-      selection.
+      RELEASED by USER 2026-09-01. A1.8 steps 2-5 verified by execution (run
+      selftest GREEN; --dry-run drives main()'s own path); step 6 was the
+      release. Two full-population runs were OOM-killed (10G, then 14G, past
+      the launch pattern's <=14G ceiling), so the runner gained a --coin slice:
+      numerically identical (--dry-run --coin btc reproduces the unsliced
+      digits exactly), memory roughly halved, and it lives in the RUNNER
+      because phase2_arms.py is in CODE_IDENTITY_FILES and editing it mid-race
+      would make forward scoring a different program from the freeze.
+      MY EARLIER HALT REASON IS WITHDRAWN. I reported a gap-contaminated queue
+      feature and 56.4% of btc rows suspect. Both wrong: queue_ahead_missing
+      fires on denom<=0 and is a STRUCTURAL zero here (every row has a resting
+      order), the empty-book condition IS represented as
+      queue_ahead_of_level=None on 18.9% of rows, and busy windows carry
+      2,700-4,900 book snapshots that re-anchor level state continuously.
+      The gap discipline that exists FIRES: GAP_IN_HORIZON excludes ~1% of
+      rows before features are built, GAP_AT_CUTOFF excludes 192 more. The
+      development data is sound.
+      ONE OPEN THREAD, narrow: qahead comes from the row (upstream generator)
+      and a book snapshot restores level size but not queue position, so its
+      behaviour across a gap is unverified. Check before the run, not a
+      blocker. Consumed days cannot be reused for model selection.
   - id: hazard-fair-price
     phase: 1
     name: Hazard plan §10.4 — timestamped fair-price lane
