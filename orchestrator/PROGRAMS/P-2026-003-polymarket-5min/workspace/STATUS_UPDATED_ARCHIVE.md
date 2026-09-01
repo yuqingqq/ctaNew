@@ -422,3 +422,34 @@ in batch 1.
   but the latest independent Codex filing reviewed its parent and a fresh
   release has not yet been filed.
 ```
+
+## Batch 9 — archived 2026-09-01T12:56Z (1 entry, rolling-window overflow)
+
+Moved in the MEM sweep that recorded iteration 011's first real 24-cell family.
+Join rule as in batch 1.
+
+```yaml
+
+  2026-08-28T15:15Z (MEM): R-277..R-288. THE PROVENANCE CHAIN RESTORES -- and
+  the two states are different, so both are recorded: SCIENTIFICALLY CLOSED (the
+  re-gate determination returned IDENTICAL on its pre-declared branch,
+  independently confirmed) but NOT YET MECHANICALLY CLOSED (seam 47j stays
+  DELIBERATELY RED until the fit-time re-stamp -- a correct instrument reporting
+  an unfinished mechanism, not a live defect). v2.3, the freeze receipt and the
+  increment-null stand ON THE RE-DERIVATION; the do-not-cite interim and the
+  trajectory hold both LIFT. Method marks worth copying: subject identity
+  checked FIRST (comparing verdicts about different tapes proves nothing) and
+  THE COMPARATOR FALSIFIED BEFORE THE ANSWER ARRIVED. Honest scope kept: the
+  gate fixes are NOT inert in general -- they were correctly invisible on THIS
+  tape. A finding rode along: THE VERDICT THE WHOLE CHAIN RESTS ON WAS NEVER IN
+  GIT, now committed BYTE-UNCHANGED (committing preserves a frozen artifact; it
+  does not edit it). ON THE COMMITTED NULL: a two-sided/one-sided defect exists
+  in the module that fed the canonical null, AND THE CONCLUSION STANDS -- for
+  positive effects the two-sided p is ~double, so every surviving cell survives
+  MORE easily under the correct test. Dependence checked three times
+  independently, mine included (12 cells, three negative at p 0.23/0.28/0.42,
+  ZERO negative under p<0.10) -- and my FIRST parse matched zero cells and would
+  have passed VACUOUSLY, so the count falsifier is why the check counts. NO
+  SUMMARY MAY SAY THE CANONICAL NULL WAS WRONG. Round 3 is FIRED at a63d717 with
+  the O1-adverse condition LIVE AGAIN before tonight's arming.
+```

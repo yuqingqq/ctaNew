@@ -1,6 +1,7 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-01T09:43:00Z — criteria and live-status true-up.
+Updated: 2026-09-01T12:56:18Z — iteration 011 produced its first real 24-cell
+family; the 09:43Z "no result artifact" line is superseded in band below.
 
 ## READ FIRST — current project handoff
 
@@ -16,10 +17,18 @@ stateful cancel x skew TODO is a subordinate implementation worksheet; its
   unvalidated.
 - Iteration 011 conditional signed value is user-released. The earlier halt on
   alleged gap-contaminated queue state is withdrawn: the modeled replay resets
-  and re-anchors after gaps, and the existing row exclusions fire. A
-  memory-sliced BTC attempt started at 09:34Z and was stopped at 09:42Z after
-  indexing the train split. It wrote no result artifact or recorded fit/score
-  completion.
+  and re-anchors after gaps, and the existing row exclusions fire. **The
+  memory-sliced BTC run has since COMPLETED and written its declared artifact**
+  — `data/pm_5min/derived/iter011_conditional_value_v1__coin_btc.json`, 96,707
+  bytes, 11:23:34Z, all 24 declared cells present (`54f899d` → `e326782` →
+  `0b1f6bb`). It is **development evidence**: the artifact computes
+  `is_a_validation=false`, G=0 complete UTC days, clustered on window where the
+  ruled unit is the UTC day. Q1 survives Holm at 0.0479; **Q4, the decision
+  metric, is UNADJUDICATED** because the incumbent it declares comparable did
+  not load, so no economic result exists; Q3's p is withheld pending
+  implementation of R-306's already-ruled conjunction. The 09:43Z statement that
+  the attempt "wrote no result artifact" described the stopped 09:34Z attempt
+  and is superseded by the 12:56Z entry below; it stays as provenance.
 - Typed fair-price Identity is built; the challenger protocol is not
   freeze-ready and no challenger has been scored.
 - `QR_SKEW_ONLY` semantics are user-frozen. Seven-arm work remains contracts,
@@ -39,6 +48,95 @@ stateful cancel x skew TODO is a subordinate implementation worksheet; its
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-01 ~12:56Z (MEM) — 011 FITTED: A REAL 24-CELL FAMILY, AND THE
+### DECISION METRIC IS NOT IN IT
+
+Doc true-up on USER order. Every claim below was verified at the artifact —
+`git show` on each commit, plus the JSON on disk — never from the dispatch that
+ordered the sweep.
+
+**The three commits, and what each one actually fixed.**
+
+| commit | time | what it did |
+|---|---|---|
+| `54f899d` | 10:20Z | fitted inside the **unraised** 12G cap by PACKING the design matrix |
+| `e326782` | 10:48Z | first real fit; then the **`any_fill_ahead` valuation gate** restored in the runner |
+| `0b1f6bb` | 11:27Z | first real 24-cell family; mode-aware output declaration fixed |
+
+`compact_design` packs PM+FN+ST into one float64 array and **releases** the
+lists-of-lists — 7.11 GB → 0.45 GB for the same 578,917 rows — so the topup pass
+allocates into space already held instead of growing past the cap. The cap was
+never raised. Two of its own defects were caught by guards on the way: a
+`--coin` slice applied to the **tape index** starved eth to 0 of 520,033 rows
+and the absorption bound refused it, and the source regression guard written to
+prevent its reintroduction matched its own string literal.
+
+**The gate defect was only ever reachable once 011 was actually fitted.**
+`phase2_arms._feature_pass` projects kept rows to a fixed field list that omits
+`any_fill_ahead`; frozen `phase2_iter011.validate_row` requires it and refuses
+`MISSING_GATE`. Two frozen documents, each correct alone, that had never met.
+Fixed **in the runner**, which declares itself outside the lattice, because
+`phase2_arms.py` is in `CODE_IDENTITY_FILES` and the frozen candidate binds its
+hash. The restoration **calls** `harmful_exposure_rows.any_fill_ahead` rather
+than reimplementing the predicate, and stored-vs-derived agree on **1,125,289
+fragment and 638,917 topup rows, zero disagreements**.
+
+**The artifact.** `data/pm_5min/derived/iter011_conditional_value_v1__coin_btc.json`,
+96,707 bytes, written 11:23:34Z. All **24 declared cells present** — OK 6 /
+`NO_INCUMBENT_COUNTERPART` 12 / `AGGREGATION_UNDECLARED` 6 — with the Holm
+denominator held at 24, declared and not evaluated.
+
+| head | statistic | p | holm | status |
+|---|---|---|---|---|
+| Q1_arrival | auc 0.8303 lgbm / 0.7733 linear | 0.001996 | **0.0479** | **OK, survives** |
+| Q2_sign | auc 0.6003 / 0.5824 | 0.001996 | 0.0479 | `NO_INCUMBENT_COUNTERPART` **by design** |
+| Q3_magnitudes | slope 0.6888 (placeholder) | withheld | — | `AGGREGATION_UNDECLARED` |
+| Q4_combined_ev | 6,962.4 – 14,477.0 net cents | withheld | — | `NO_INCUMBENT_COUNTERPART` |
+
+**Q2's status is designed, Q4's is a defect, and the artifact distinguishes
+them.** `incumbent_null_applicability.comparable` reads Q1 true, Q2 false, Q3
+false, **Q4 true** — the incumbent has no sign or magnitude head, so for Q2 no
+incremental null exists and the p it carries is the **matched-random** null (the
+cell names both so neither is read as the other). For Q4 the incumbent *should*
+have applied and **did not load**, so the +12,333.5c headline is the candidate's
+own value and not an increment. **There is no economic result**, and it is a
+defect to chase rather than a design limit.
+
+**Q3 waits on a ruling that already exists.** R-306 (USER, 2026-08-29T04:40Z)
+ruled Q3's two slope gates compose as **conjunction + worse side** — recorded in
+the frozen `plans/ITER011_PREREG_AMENDMENT_A1.md` and never implemented in code.
+The cell withholds p rather than guessing and preserves the per-coin evidence
+(both `matched_random_p` 0.001996) so the ruling applies without re-running.
+
+**Two limits govern how any of this may be read, and both are in the artifact.**
+
+1. **Resolution.** Every surviving p is 0.001996 = **1/501, the floor at 500
+   permutations**, and holm is 24 × 0.001996 = 0.0479. The family only just
+   clears 0.05; at 26 cells no cell could survive whatever the effect.
+2. **Status.** The artifact **computes** `is_a_validation=false` rather than
+   asserting it: eval is the `da_development_topup` population, 08-25 alone,
+   311,640 btc rows / 177,674 actions, **G=0** complete UTC days, intervals not
+   claimable, clustered on **window** where the ruled unit is the **UTC day** —
+   so the p-values are optimistic. Development evidence (prereg 4: it selects,
+   it never validates).
+
+**Scope and identity.** No full both-coin artifact exists: the slice records
+`iter011_conditional_value_v1.json` as NOT WRITTEN, and eth is reported-only
+under btc-only adjudication (R-306). The artifact carries fit_code
+`ad535550d366347d` — the post-09:00Z **declared** drift, not the freeze's
+`3d0b6c8c6dfe9466` — tape `c7ab02ebcf27d2fc`, fragment `19a50195c34d0af2`, topup
+`e75d0e210590e2a8`, and `standalone.is_in_identity_lattice=false`. Item 0f's
+disclosure obligation is unchanged and now has a concrete instance.
+
+**My own check shipped a falsifier** (R-289, my own lesson): it refuses an
+emptied family *and* a status-field-stripped copy, and admits the real artifact
+— both directions, because a count assertion alone would have caught only one of
+those two vacuum shapes.
+
+**Nothing else in the 09:43Z entry moves.** Collector v4.1 live, 09-01 the first
+era-pure admissible day but incomplete, G=0/5, era as an interlock, breadth
+reported and not gated.
 
 ### 2026-09-01 ~09:43Z (Codex) — CRITERIA/LIVE-STATUS CORRECTION
 
@@ -624,11 +722,18 @@ does **not** pass: the average was 10.99/hr, but two individual hours exceeded
 0f. **The lattice drift must be declared in any forward receipt** — freeze
    `3d0b6c8c6dfe9466` vs current `ad535550d366347d`; the current development
    artifacts remain content-bound and reproduced.
-0e. **Iteration 011 is released, but the 09:34Z BTC-only attempt was stopped at
-   09:42Z after indexing and produced no result artifact.** Determine why it
-   was stopped before retrying. Do not infer success from the service wrapper:
-   require the declared artifact and its own identity/population checks before
-   reading a number.
+0e. ~~Diagnose the stopped 09:34Z attempt~~ **DONE — the retry COMPLETED and
+   wrote its declared artifact** (`54f899d` → `e326782` → `0b1f6bb`;
+   `iter011_conditional_value_v1__coin_btc.json`, 11:23:34Z, 24/24 declared
+   cells). The two 011 items now open are both inside the result, not before it:
+   **the Q4 incumbent-loading defect** — Q4 is the decision metric,
+   `incumbent_null_applicability` declares it `comparable:true`, the incumbent
+   did not load, and until that closes there is **no economic result** — and
+   **implementing R-306's ruled conjunction + worse side for Q3**, which is
+   frozen in `plans/ITER011_PREREG_AMENDMENT_A1.md` and absent from the code.
+   The standing caution holds and was applied: do not infer success from the
+   service wrapper; the artifact and its own identity/population fields were
+   read before any number here was quoted.
 0d. Move `pm-evaluation-pipeline` into `research.slice` once the tier1 backlog
    clears — the aggregate guard is incomplete until then (COL-R2).
 0b. Confirm the tier1:full lane actually clears 08-25. A rebuild under the new
@@ -636,11 +741,18 @@ does **not** pass: the average was 10.99/hr, but two individual hours exceeded
    observed, and 08-26/08-27/08-30 carry the same prints behind it.
 0c. De-flake `v4 behaviour` — replace wall-clock margins with injected time.
 1. Preserve the running collector and close the first full v4.1 UTC day.
-2. Obtain an independent re-review of HEAD `1aaac18`: it claims RR1/RR3
-   closure, but the latest filing reviewed its parent and did not release them.
-3. Diagnose the stopped BTC-only Iteration 011 attempt, then retry through the
-   memory-sliced runner. Verify the declared artifact exists and clears its
-   identity/population gates before scoring or interpreting it.
+2. Obtain an independent re-review of `1aaac18`: it claims RR1/RR3 closure, but
+   the latest filing reviewed its parent and did not release them. **It is no
+   longer HEAD** — five commits have landed since (`54f899d`, `e326782`,
+   `0b1f6bb`, `e65c54f`); the re-review target is the commit, not the tip.
+3. Close the two 011 items the completed run exposed, in this order: **(a) the
+   Q4 incumbent-loading defect** (no economic result exists until it closes),
+   **(b) implement R-306's conjunction + worse side for Q3** — the ruling exists
+   and the per-coin evidence is preserved, so it applies without re-running.
+   Then **(c) raise the permutation count**: every surviving p sits at the 1/501
+   floor and holm is 24 × 0.001996 = 0.0479, so the design has no headroom to
+   carry a verdict. The result stays **development evidence** throughout — the
+   artifact computes `is_a_validation=false` at G=0 complete UTC days.
 4. Keep fair-price, skew and replay work build/freeze-only behind their stated
    gates. No PnL, capacity, promotion or forward verdict is claimable.
 

@@ -4,6 +4,73 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-09-01T12:56Z (MEM SWEEP -- ITERATION 011 HAS A REAL 24-CELL FAMILY;
+  THIS SUPERSEDES THE 09:43Z "STOPPED AT 09:42Z, NO RESULT ARTIFACT" LINE,
+  WHICH STAYS BELOW AS PROVENANCE). Verified at the artifacts (git show plus the
+  JSON on disk), never from the dispatch that ordered the true-up. THE THREE
+  COMMITS. 54f899d (10:20Z) fitted 011 inside the UNRAISED 12G cap by PACKING
+  THE DESIGN MATRIX: compact_design packs PM+FN+ST into one float64 array and
+  RELEASES the lists-of-lists (7.11 GB -> 0.45 GB for the same 578,917 rows), so
+  the topup pass allocates into space already held instead of growing past the
+  cap. Two of its own defects were caught by guards on the way -- a --coin slice
+  applied to the TAPE INDEX starved eth to 0 of 520,033 rows and the absorption
+  bound REFUSED it, and the source regression guard written to prevent its
+  return MATCHED ITS OWN string literal. e326782 (10:48Z) got THE FIRST REAL FIT
+  (12.0G peak, no oom-kill, both feature passes, score index and purge) and then
+  hit a seam defect only ever reachable once 011 was actually fitted:
+  phase2_arms._feature_pass projects kept rows to a FIXED field list that OMITS
+  any_fill_ahead, which the FROZEN phase2_iter011.validate_row requires
+  (MISSING_GATE) -- two frozen documents, each correct alone, that had never
+  met. RESTORED IN THE RUNNER, which declares itself OUTSIDE the lattice,
+  because phase2_arms.py is in CODE_IDENTITY_FILES and the frozen candidate
+  binds its hash; the restoration CALLS the canonical
+  harmful_exposure_rows.any_fill_ahead rather than reimplementing the predicate,
+  and stored-vs-derived agree on 1,125,289 fragment and 638,917 topup rows with
+  ZERO disagreements. 0b1f6bb (11:27Z) completed the science and fixed the
+  mode-aware output declaration: the guard demanded the unsliced filename from a
+  --coin run, so a guard that could not pass was refusing a run that had already
+  written its artifact. THE ARTIFACT, on disk at 11:23:34Z:
+  data/pm_5min/derived/iter011_conditional_value_v1__coin_btc.json, 96,707
+  bytes. ALL 24 DECLARED CELLS PRESENT (OK 6 / NO_INCUMBENT_COUNTERPART 12 /
+  AGGREGATION_UNDECLARED 6); the Holm denominator held at 24 and is DECLARED,
+  NOT EVALUATED, with unevaluable cells occupying their slots. Q1_arrival
+  SURVIVES Holm: auc 0.8303 lgbm / 0.7733 linear, p 0.001996, holm 0.0479.
+  Q2_sign is NO_INCUMBENT_COUNTERPART BY DESIGN (comparable:false -- the
+  incumbent has no sign head, so no incremental null exists; the p it carries is
+  the MATCHED-RANDOM null and must never be read as the other one).
+  Q3_magnitudes withholds p as AGGREGATION_UNDECLARED, AND THE RULING IT WAITS
+  FOR ALREADY EXISTS: R-306 (USER, 2026-08-29T04:40Z) ruled CONJUNCTION + WORSE
+  SIDE, recorded in the frozen plans/ITER011_PREREG_AMENDMENT_A1.md and never
+  implemented in code; the per-coin evidence is preserved so the ruling can be
+  applied without re-running (both matched_random_p 0.001996). Q4_combined_ev IS
+  THE DECISION METRIC AND IT IS UNADJUDICATED: 6,962.4 to 14,477.0 net cents is
+  the CANDIDATE'S OWN value, not an increment, while incumbent_null_applicability
+  declares Q4 comparable:true -- so the incumbent SHOULD have applied and did
+  not load. THERE IS NO ECONOMIC RESULT, and that is a defect to chase rather
+  than a design limit. TWO LIMITS GOVERN HOW ANY OF IT MAY BE READ. (1)
+  RESOLUTION: every surviving p is 0.001996 = 1/501, the FLOOR at 500
+  permutations, and holm is 24 x 0.001996 = 0.0479 -- the family only just
+  clears 0.05, and at 26 cells no cell could survive whatever the effect. (2)
+  STATUS: the artifact COMPUTES is_a_validation=false itself -- eval is the
+  da_development_topup population, 08-25 alone, 311,640 btc rows / 177,674
+  actions, G=0 complete UTC days, intervals not claimable, clustered on WINDOW
+  where the ruled unit is the UTC DAY, so the p-values are OPTIMISTIC. This is
+  DEVELOPMENT EVIDENCE (prereg 4: it selects, it never validates). No full
+  both-coin artifact exists: the slice records iter011_conditional_value_v1.json
+  as NOT WRITTEN, and eth is reported-only under btc-only adjudication (R-306).
+  Identity carried in the artifact: fit_code ad535550d366347d -- the post-09:00Z
+  DECLARED drift, not the freeze's 3d0b6c8c6dfe9466 -- tape c7ab02ebcf27d2fc,
+  fragment 19a50195c34d0af2, topup e75d0e210590e2a8, and
+  standalone.is_in_identity_lattice=false. MY OWN CHECK SHIPPED A FALSIFIER
+  (R-289, my own lesson): it REFUSES an emptied family and a
+  status-field-stripped copy and ADMITS the real artifact -- both directions,
+  because a count assertion alone would have caught only one of those two vacuum
+  shapes. OPEN, and neither is MEM's to close: the Q4 incumbent-loading defect
+  (no economics until it closes) and the unimplemented R-306 conjunction for Q3;
+  more permutations are needed before this design can carry a verdict at all.
+  EVERYTHING ELSE IN THE 09:43Z ENTRY BELOW STANDS UNCHANGED -- collector v4.1
+  live, 09-01 the first era-pure admissible day but incomplete, G=0/5 forward
+  reach, era as an interlock, breadth reported and not gated. PRIOR:
   2026-09-01T09:43:00Z (CRITERIA/LIVE-STATUS TRUE-UP): THE GOVERNING TODO IS
   plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md §10. Dataset/PRED_STATE_V1 is
   complete; Iteration 011 is USER-RELEASED, its earlier queue-contamination
@@ -40,29 +107,7 @@ updated: >-
   AND the fields it filters on; "found nothing" from a reader that touched
   nothing is the empty-set trap in the checker's chair. Note what the matched
   pair proves that one instance could not: A COUNT ASSERTION ALONE WOULD HAVE
-  CAUGHT MINE AND MISSED THE COORDINATOR'S. PRIOR:
-  2026-08-28T15:15Z (MEM): R-277..R-288. THE PROVENANCE CHAIN RESTORES -- and
-  the two states are different, so both are recorded: SCIENTIFICALLY CLOSED (the
-  re-gate determination returned IDENTICAL on its pre-declared branch,
-  independently confirmed) but NOT YET MECHANICALLY CLOSED (seam 47j stays
-  DELIBERATELY RED until the fit-time re-stamp -- a correct instrument reporting
-  an unfinished mechanism, not a live defect). v2.3, the freeze receipt and the
-  increment-null stand ON THE RE-DERIVATION; the do-not-cite interim and the
-  trajectory hold both LIFT. Method marks worth copying: subject identity
-  checked FIRST (comparing verdicts about different tapes proves nothing) and
-  THE COMPARATOR FALSIFIED BEFORE THE ANSWER ARRIVED. Honest scope kept: the
-  gate fixes are NOT inert in general -- they were correctly invisible on THIS
-  tape. A finding rode along: THE VERDICT THE WHOLE CHAIN RESTS ON WAS NEVER IN
-  GIT, now committed BYTE-UNCHANGED (committing preserves a frozen artifact; it
-  does not edit it). ON THE COMMITTED NULL: a two-sided/one-sided defect exists
-  in the module that fed the canonical null, AND THE CONCLUSION STANDS -- for
-  positive effects the two-sided p is ~double, so every surviving cell survives
-  MORE easily under the correct test. Dependence checked three times
-  independently, mine included (12 cells, three negative at p 0.23/0.28/0.42,
-  ZERO negative under p<0.10) -- and my FIRST parse matched zero cells and would
-  have passed VACUOUSLY, so the count falsifier is why the check counts. NO
-  SUMMARY MAY SAY THE CANONICAL NULL WAS WRONG. Round 3 is FIRED at a63d717 with
-  the O1-adverse condition LIVE AGAIN before tonight's arming.
+  CAUGHT MINE AND MISSED THE COORDINATOR'S.
   ARCHIVED: entries older than these three are moved, never deleted, to
   workspace/STATUS_UPDATED_ARCHIVE.md (append-only). This field is a
   ROLLING WINDOW OF THREE by ruling (coordinator, 2026-08-28T10:02Z):
@@ -92,6 +137,11 @@ flags:
                              # 08-30 and 08-31 do not accrue; 09-01 is a
                              # provisional quality pass but remains incomplete.
   v41_rr_closure: IMPLEMENTED-AT-1aaac18-PENDING-INDEPENDENT-REREVIEW
+                             # AS-OF TRUE-UP 2026-09-01T12:56Z (MEM): 1aaac18 is
+                             # NO LONGER THE TIP -- 54f899d, e326782, 0b1f6bb and
+                             # e65c54f have landed since. The re-review target is
+                             # the COMMIT, not HEAD; the status below is
+                             # unchanged. EARLIER (rule 13):
                              # HEAD/origin matched at 1aaac18 before this docs
                              # edit. That commit reports 14/14 gates and v4_1
                              # 164 checks after addressing RR1/RR3. The latest
@@ -1478,7 +1528,27 @@ flags:
                              # coordinator, not here. Recorded so the divergence
                              # is discoverable from the state files rather than
                              # only by re-reading two artifacts side by side.
-  iter011_development: FIT-BLOCKS-ON-HOLD-RELEASED-ALONE # GATE ARITHMETIC
+  iter011_development: FITTED-FIRST-24-CELL-FAMILY-DEVELOPMENT-ONLY
+                             # ADVANCED 2026-09-01T12:56Z (MEM), verified at the
+                             # artifacts. USER released 011 at ~07:15Z, and after
+                             # two OOMs the run FITTED inside the unraised 12G
+                             # cap: 54f899d packs the design matrix, e326782
+                             # restores the any_fill_ahead valuation gate IN THE
+                             # RUNNER (phase2_arms.py is in CODE_IDENTITY_FILES,
+                             # so the projection was not touched; stored-vs-
+                             # derived agree on 1,125,289 + 638,917 rows),
+                             # 0b1f6bb writes the artifact and fixes the
+                             # mode-aware output declaration. Result:
+                             # iter011_conditional_value_v1__coin_btc.json,
+                             # 24/24 declared cells, Q1 surviving Holm 0.0479,
+                             # Q2 NO_INCUMBENT_COUNTERPART by design, Q3 p
+                             # withheld on the unimplemented R-306 conjunction,
+                             # Q4 UNADJUDICATED -- the incumbent it declares
+                             # comparable did not load, so NO ECONOMIC RESULT.
+                             # Every surviving p sits at the 1/501 floor of 500
+                             # permutations. is_a_validation=false: this SELECTS,
+                             # it never validates. EARLIER ENTRIES (rule 13):
+                             # FIT-BLOCKS-ON-HOLD-RELEASED-ALONE, GATE ARITHMETIC
                              # UPDATED 2026-08-28T09:56Z (R-249). READ THIS
                              # PRECISELY, because it is the one update that
                              # could be misread as the collapse the earlier
@@ -3557,16 +3627,24 @@ flags:
                              # migration discipline remain authoritative.
 
 focus: >
-  As-of 2026-09-01T09:43:00Z, build and test the offline model mechanism-first
+  As-of 2026-09-01T12:56:18Z, build and test the offline model mechanism-first
   under plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md section 10. Do not use the
   subordinate stateful-cancel TODO checkbox count as total progress. The
   foundation is established: the action-level dataset and PRED_STATE_V1 are
   reproduced, the Phase-2 development receipt exists, and a BTC hazard seed is
   frozen but explicitly unvalidated. Iteration 011 conditional signed value is
-  USER-RELEASED; the gap-contamination halt is withdrawn. Its 09:34Z BTC-only
-  memory-sliced attempt was stopped at 09:42Z after indexing and produced no
-  artifact or recorded fit/score completion, so diagnose that stop before
-  retrying. Fair-price
+  USER-RELEASED; the gap-contamination halt is withdrawn. The 09:34Z BTC-only
+  attempt that was stopped at 09:42Z is superseded: after 54f899d (design-matrix
+  packing inside the unraised 12G cap) and e326782 (the any_fill_ahead valuation
+  gate restored in the runner, outside the frozen lattice), a memory-sliced BTC
+  run COMPLETED and wrote
+  data/pm_5min/derived/iter011_conditional_value_v1__coin_btc.json at 11:23:34Z
+  with all 24 declared cells present (0b1f6bb). It is DEVELOPMENT EVIDENCE and
+  the artifact computes is_a_validation=false. Q1 survives Holm at 0.0479; Q4 --
+  the decision metric -- is UNADJUDICATED because the incumbent it declares
+  comparable did not load, so no economic result exists; Q3's p is withheld
+  pending implementation of R-306's already-ruled conjunction. The open 011 work
+  is those two items, not a diagnosis of the stopped attempt. Fair-price
   Identity is built while the challenger protocol is not freeze-ready;
   QR_SKEW_ONLY semantics are USER-FROZEN, while the seven-arm path remains
   stub/inert. Real queue-integrated replay, lifecycle economics and an
@@ -3782,7 +3860,7 @@ tasks:
   - id: hazard-iter011
     phase: 1
     name: Hazard plan §10.3 — conditional signed-value Iteration 011
-    status: released-2026-09-01-btc-attempt-stopped-no-artifact
+    status: released-2026-09-01-btc-family-produced-development-only
     notes: |
       RELEASED by USER 2026-09-01. A1.8 steps 2-5 verified by execution (run
       selftest GREEN; --dry-run drives main()'s own path); step 6 was the
@@ -3805,13 +3883,44 @@ tasks:
       and a book snapshot restores level size but not queue position, so its
       behaviour across a gap is unverified. Check before the run, not a
       blocker. Consumed days cannot be reused for model selection.
-      LIVE STATUS 2026-09-01T09:43Z: the BTC-only attempt started at 09:34Z
-      under iter011-fit.service and was stopped at 09:42Z after indexing the
-      605,256-row train split. Its output contains no fit/score completion and
-      no declared iter011 result artifact exists. The wrapper now reads
-      Result=success only because it was stopped cleanly; that is not a model
-      success. Diagnose the stop before retrying. Completion requires the
-      artifact plus its identity and population checks.
+      LIVE STATUS 2026-09-01T12:56Z (MEM, verified at the artifacts): THE RUN
+      COMPLETED. 54f899d packed the design matrix (compact_design: PM+FN+ST into
+      one float64 array, 7.11 GB -> 0.45 GB) so the fit ran inside the UNRAISED
+      12G cap; e326782 got the first real fit at a 12.0G peak and restored the
+      any_fill_ahead valuation gate IN THE RUNNER -- phase2_arms._feature_pass
+      projects a fixed field list omitting it while frozen validate_row requires
+      it (MISSING_GATE), and phase2_arms.py is in CODE_IDENTITY_FILES, so the
+      runner (outside the lattice) calls the canonical
+      harmful_exposure_rows.any_fill_ahead; stored-vs-derived agree on 1,125,289
+      fragment and 638,917 topup rows, zero disagreements. 0b1f6bb wrote
+      data/pm_5min/derived/iter011_conditional_value_v1__coin_btc.json
+      (96,707 bytes, 11:23:34Z) and fixed the mode-aware output declaration.
+      ALL 24 DECLARED CELLS PRESENT (OK 6 / NO_INCUMBENT_COUNTERPART 12 /
+      AGGREGATION_UNDECLARED 6), Holm denominator 24 declared-not-evaluated.
+      Q1 auc 0.8303 lgbm / 0.7733 linear, p 0.001996, holm 0.0479, SURVIVES.
+      Q2 NO_INCUMBENT_COUNTERPART BY DESIGN (comparable:false; its p is the
+      MATCHED-RANDOM null, never an incremental one). Q3 p WITHHELD as
+      AGGREGATION_UNDECLARED -- R-306 already ruled conjunction + worse side in
+      the frozen A1.4 amendment and it is unimplemented; per-coin evidence is
+      preserved so no refit is needed. Q4 IS THE DECISION METRIC AND IS
+      UNADJUDICATED: 6,962.4-14,477.0 net cents is the candidate's own value,
+      not an increment, while incumbent_null_applicability declares Q4
+      comparable:true -- the incumbent did not load, so THERE IS NO ECONOMIC
+      RESULT. Every surviving p is 0.001996 = 1/501, the floor at 500
+      permutations, and holm = 24 x 0.001996 = 0.0479: no headroom at this
+      resolution. The artifact COMPUTES is_a_validation=false (da_development_
+      topup, 08-25 alone, 311,640 btc rows / 177,674 actions, G=0 complete UTC
+      days, clustered on window where the ruled unit is the UTC day), so the
+      p-values are optimistic and this SELECTS, it never validates. Open, and
+      dispatched to BE under R-373: the Q4 incumbent-loading defect and the R-306
+      implementation. EARLIER (rule 13, kept as provenance): LIVE STATUS
+      2026-09-01T09:43Z reported the 09:34Z attempt stopped at 09:42Z after
+      indexing the 605,256-row train split with no fit/score completion and no
+      declared artifact, and said to diagnose the stop before retrying. That
+      described the STOPPED attempt; the retry above supersedes it. The caution
+      it carried still holds and was applied here: the wrapper's Result=success
+      is not a model success, and completion requires the artifact plus its
+      identity and population checks.
   - id: hazard-fair-price
     phase: 1
     name: Hazard plan §10.4 — timestamped fair-price lane
