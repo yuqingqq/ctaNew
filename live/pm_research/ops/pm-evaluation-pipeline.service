@@ -6,6 +6,14 @@ OnFailure=pm-alert@%n.service
 
 [Service]
 Type=oneshot
+# COL-R2 closure (2026-09-01, R-373 era): this is a heavy research batch and
+# belongs under the R-148/R-150 AGGREGATE guard like every other heavy job.
+# It ran in app.slice, so its 16G sat OUTSIDE the 60% research budget and the
+# aggregate cap could not bound the sum. Moved once the tier1 backlog cleared
+# (08-26..08-30 committed this morning; unit idle at edit time). Per-unit
+# MemoryMax stays 16G UNCHANGED — inside the slice the 18.4G aggregate now
+# also binds, and a cap hit remains a FINDING, not a reason to raise anything.
+Slice=research.slice
 WorkingDirectory=/home/yuqing/ctaNew
 ExecStart=/home/yuqing/pricer-sol/venv/bin/python3 -m live.pm_research.evaluation_pipeline --catch-up --since 2026-08-20 --max-days 1 --scheduled --json
 # R-22. The collectors capture LIVE venue tape: lost capture is gone for

@@ -13,7 +13,7 @@ except where marked USER-ONLY.
 | **BE** (pm-be) | ctanew-fe | phase2/011 model code, fit/score runs, receipts, freeze receipts | STATUS/HANDOFF (R-233); collectors; DA's instruments |
 | **DA** (pm-da) | ctanew-1e | independent verification stack, tape gate, day-verdict tool, its Q-filings, peer annotations (sidecar owner) | STATUS/HANDOFF (R-233); collectors; BE's generators (reads, never edits — separate implementations are the point, R-235: do-not-harmonize) |
 | **MEM** (pm-memory) | ctanew-ba | STATUS.yml, HANDOFF.md, memory docs, TODO checkbox true-ups (tick-with-citation only) | prose of plans; register; receipts; any result-bearing artifact |
-| **CODEX reviewer** (pm-codex) | user's Codex session | review filings under `workspace/reviews/` (commit+push); holds and releases | fixing code itself; state files (first filing predates this rule) |
+| **Reviewer** (pm-codex) | Claude session (was the user's Codex session until 2026-09-01 — quota exhausted; seat continued as Claude by USER order, R-375. Same-model caveat and mitigations in R-375; new filings `REVIEW_*`, legacy `CODEX_*` untouched) | review filings under `workspace/reviews/` (commit); holds and releases | fixing code itself; state files (first filing predates this rule) |
 | **USER** | — | freezes (rule 12); frozen-doc amendments; CLAUDE.md; collector deploy approval; race admission; anything marked USER-ONLY | — |
 
 ## Standing rules (with their register cites)

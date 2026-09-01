@@ -14,6 +14,10 @@ OnSuccess=pm-evaluation-pipeline.service
 
 [Service]
 Type=oneshot
+# R-376 (2026-09-01): same COL-R2 class as the evaluation unit — a heavy
+# research batch whose 16G sat OUTSIDE the R-148/R-150 aggregate guard.
+# Moved while idle (oneshot, inactive); per-unit MemoryMax UNCHANGED.
+Slice=research.slice
 WorkingDirectory=/home/yuqing/ctaNew
 # Catch up exactly one oldest uncommitted day per invocation. A blocked or idle
 # closed-day boundary is expected while the collector is still rotating inputs,

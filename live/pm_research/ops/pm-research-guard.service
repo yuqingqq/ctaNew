@@ -1,0 +1,16 @@
+[Unit]
+Description=P-2026-003 research resource-guard watchdog (R-148 enforcement, R-376)
+Documentation=file:///home/yuqing/ctaNew/live/pm_research/ops/pm_research_guard.py
+OnFailure=pm-alert@%n.service
+
+[Service]
+Type=oneshot
+WorkingDirectory=/home/yuqing/ctaNew
+ExecStart=/home/yuqing/pricer-sol/venv/bin/python3 live/pm_research/ops/pm_research_guard.py
+# Deliberately OUTSIDE research.slice: a memory-saturated slice must not be
+# able to stall its own watchdog. The guard skips its own pid; ~20 MB, <1 s.
+# Enforcing defaults: FLAG >=2G outside the slice (exit 3 -> pm-alert@),
+# KILL >=8G outside the slice (Q-BE-111: 8.8G measured 1-2 min before the
+# 08-26 box death). Collectors exempt wherever they live (pm-collector-*,
+# collectors.slice). Kernel enforces INSIDE research.slice; this guard
+# exists for what launches OUTSIDE it.
