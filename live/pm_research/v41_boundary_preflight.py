@@ -2059,6 +2059,115 @@ def selftest() -> int:
        "V41-F5: the emitted transition CARRIES its code identity — an "
        "append-only receipt that cannot name its own bytes fails rule 12")
 
+    # ---- V41-RR1.5 (review 0bf80f3, F on RR1): main() DRIVEN AS THE
+    # OPERATOR RUNS IT. Every earlier "entry-point" check called the
+    # functions main() wires together; the reviewer's two executed mutants
+    # (either scan window reverted to `ep`) left all of that GREEN because
+    # the wiring itself was never on trial. Here the observation layer is a
+    # fixture and the EMITTERS ARE REAL, so the scan-window arguments main()
+    # actually passes become load-bearing: an early start exists in the
+    # fixture strictly between ep-EARLY_SCAN_LOOKBACK_S and ep, and only a
+    # main() that scans early-inclusive can see it. The acceptance test IS
+    # the reviewer's mutants: revert either scan to `ep` and these checks
+    # fail; the same-day-late scenario still passes, so the battery
+    # discriminates rather than refusing everything (rule 16).
+    import contextlib as _ctl
+    import io as _io
+
+    def _drive(argv, starts, now_off):
+        _sv = {"argv": sys.argv,
+               "osv": P.observe_starts_by_version,
+               "oc": P.observe_common,
+               "ocs": P.observe_collector_start,
+               "ta": globals()["target_admissibility"]}
+        _obs5 = {**_RB_OBS, "now_epoch": bep + now_off}
+
+        def _osv(since_epoch, version):
+            # mirrors the real filter exactly (recv_ns >= since, version
+            # match, ledger order) so the SINCE argument is what decides
+            return [r for r in starts
+                    if r.get("collector_version") == version
+                    and r["recv_ns"] >= int(since_epoch * 1e9)]
+        try:
+            sys.argv = ["v41_boundary_preflight.py"] + argv
+            P.observe_starts_by_version = _osv
+            P.observe_common = lambda: dict(_obs5)
+            P.observe_collector_start = lambda *a, **k: dict(_RB_START)
+            globals()["target_admissibility"] = lambda: True
+            _out = _io.StringIO()
+            with _ctl.redirect_stdout(_out), \
+                    _ctl.redirect_stderr(_io.StringIO()):
+                try:
+                    _rc = main()
+                    _err = None
+                except Refused as ex:
+                    _rc, _err = 2, str(ex)
+            _rows = [json.loads(ln) for ln in _out.getvalue().splitlines()
+                     if ln.strip().startswith("{")]
+            return _rc, _rows, _err
+        finally:
+            sys.argv = _sv["argv"]
+            P.observe_starts_by_version = _sv["osv"]
+            P.observe_common = _sv["oc"]
+            P.observe_collector_start = _sv["ocs"]
+            globals()["target_admissibility"] = _sv["ta"]
+
+    def _u5(off):
+        return datetime.fromtimestamp(bep + off, tz=timezone.utc).strftime(
+            "%Y-%m-%dT%H:%M:%SZ")
+
+    _V4S5 = {"recv_ns": (bep + 300) * 10**9, "pid": 5555,
+             "collector_version": FROM_ERA, "event": "collector_start"}
+    _T5 = lambda pid, off: {"pid": pid, "recv_ns": (bep + off) * 10**9,
+                            "collector_version": TARGET_ERA,
+                            "event": "collector_start"}
+    for _argv5, _starts5, _off5, _lbl5 in (
+            (["--post-recovery", "--v41-pid", "777",
+              "--stage", "counters_refused"],
+             [_T5(777, -60), _V4S5], -60,
+             "EARLY-ONLY T-60s (arm-window boot)"),
+            (["--post-recovery", "--v41-pid", "777",
+              "--v41-recv-ns", str((bep - 60) * 10**9),
+              "--stage", "counters_refused"],
+             [_T5(777, -60), _T5(222, 5), _V4S5], -60,
+             "EARLY+IN-WINDOW, recv_ns-bound to the early start"),
+            (["--post-recovery", "--v41-pid", "333",
+              "--stage", "counters_refused"],
+             [_T5(333, 150), _V4S5], 150, "SAME-DAY LATE T+150s"),
+            (["--post-recovery", "--v41-pid", "333",
+              "--stage", "counters_refused"],
+             [_T5(333, 10800),
+              {**_V4S5, "recv_ns": (bep + 11100) * 10**9}], 10800,
+             "CROSS-MIDNIGHT LATE T+3h")):
+        _rc5, _rows5, _err5 = _drive(_argv5, _starts5, _off5 + 400)
+        ok(_rc5 == 0 and _err5 is None and len(_rows5) >= 2
+           and _rows5[0].get("boundary_utc") == _u5(_off5)
+           and _rows5[1].get("closes_boundary_utc") == _u5(_off5),
+           f"RR1.5 main() ({_lbl5}): --post-recovery THROUGH the entry "
+           f"point retrieves the start and the bundle opens AND closes at "
+           f"the observed instant {_u5(_off5)}. A main() whose scan begins "
+           f"at ep cannot see the early cases (rc={_rc5}, rows="
+           f"{len(_rows5)}, err={_err5!r})")
+    ok(_u5(10800).startswith("2026-09-01"),
+       "RR1.5: the cross-midnight scenario really crosses the UTC day "
+       "boundary — a same-day fixture here would test nothing extra")
+    _rc5a, _rows5a, _err5a = _drive(
+        ["--abort-row", "--stage", "restart_failed"], [_V4S5], 400)
+    ok(_rc5a == 0 and _err5a is None and len(_rows5a) == 1
+       and _rows5a[0].get("aborted") is True,
+       "RR1.5 main() (NO-START ABORT): with no v4.1 start at all the abort "
+       "row emits through the entry point — the one true abort case")
+    _rc5b, _rows5b, _err5b = _drive(
+        ["--abort-row", "--stage", "restart_failed"],
+        [_T5(777, -60), _V4S5], 400)
+    ok(_err5b is not None and "an abort would be FALSE" in _err5b
+       and not _rows5b,
+       "RR1.5 main() (ABORT FAIL-CLOSED): an EARLY start reaches the abort "
+       "branch THROUGH main() and the abort REFUSES with empty stdout. A "
+       "main() whose abort scan begins at ep cannot see this start and "
+       "would emit aborted:true over a span that ran — the reviewer's "
+       "second mutant, and this check is what kills it")
+
     BOUNDARY_UTC = saved
     print(f"v41_boundary_preflight selftests: {len(checks)} checks passed")
     return 0
