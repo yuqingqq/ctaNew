@@ -262,10 +262,77 @@ form — *record what code contains, invent nothing* — and each is CORRECTABLE
 ASSERTED by `da_replay_parity_battery` but never RUN against a seven-arm replay.
 The freeze fixes semantics; it does not evidence parity. Do not read it as both.
 
+### 2026-09-01 ~07:50Z (coordinator) — 011 HALTED: A FLAG THAT NEVER FIRES,
+### AND TWO OOMs
+
+USER asked why we use 08-26+ data given the quality. **We do not** — and the
+question found something a day earlier instead.
+
+**The 011 tape holds TWO days.** `phase2_state_tape_v5.json` (built 08-27):
+train = 08-24 (582,773) + 08-25 (542,516); score = 08-25 (638,917). Nothing
+from 08-26 on is in it. The 08-26..08-30 lane work is DERIVATION (raw tape →
+Tier-1 partitions), not model input, and those days cannot accrue anyway.
+
+**`queue_ahead_missing` NEVER FIRES.** On the 311,640 clean btc score rows of
+08-25 it is False on **every single row**, while **56.4% (175,793)** have a
+data gap between window start and their decision cutoff — the exact interval
+over which queue position is rebuilt by replaying adds/cancels/fills. So the
+model is handed a confident `queue_ahead_of_level` flagged as KNOWN on 175,793
+rows whose book replay crossed a hole in the tape. **A flag that cannot fire is
+not a flag**, and queue position is the central feature of a queue-harm model.
+
+The exclusion that does exist is ENDPOINT-ONLY: `GAP_AT_CUTOFF` marks the 192
+rows (0.06%) whose cutoff INSTANT sits in a gap. Same shape as the convexity-v4
+audit's "endpoint-only fix". Short-lookback rate features (50/250/1000 ms) are
+genuinely fine — only 1.3% have a gap that close.
+
+| btc score rows, 08-25 | share |
+|---|---|
+| window contains a gap | 79.2% |
+| **gap BEFORE cutoff (queue-position interval)** | **56.4%** |
+| gap within 1 s of cutoff (rate features) | 1.3% |
+| cutoff instant inside a gap (the only class excluded) | 0.08% |
+
+**This costs NO clock.** The defect is data-independent — found by intersecting
+gap intervals with row timestamps, not by looking at a result — and no 011
+number has been adjudicated. Fixing it now voids nothing, exactly the A1 class.
+
+**Recommended (not ruled):** (1) make `queue_ahead_missing` fire when the
+reconstruction crosses a gap, so the field stops being dead weight; AND (2)
+exclude gap-crossed rows from adjudication rather than trusting the model to
+learn around them — that still leaves 135,847 btc score rows. Rebuilding on
+cleaner days is the third option (08-24 is 16.3% window-affected vs 08-25's
+80.6%; eth is 0.7% but is reported-only under btc-only adjudication, R-306).
+
+**ALSO OPEN: the prereg never declares its development population.** §4 lists
+08-20..08-25 as CONSUMED and says "None may be used for selection *or*
+validation in iteration 011" — read literally that leaves 011 with no build
+population at all. It refers to "the declared development population" and never
+declares it; the implementation resolved it as train 08-24 / score 08-25. An
+undefined term settled by whoever implemented it first (§A1.0's own warning).
+
+**TWO OOM KILLS, and the retries are STOPPED.** 10 G → `oom-kill` at 10 min;
+14 G → `oom-kill` at 20 min, peak 14.0 G, past the launch pattern's documented
+`<=14G` single-job ceiling. Not retried at 18 G: the output is ALREADY
+non-adjudicable per the finding above, so climbing the cap would spend the
+budget to produce numbers that cannot be used — and 18 G alongside
+`pm-evaluation-pipeline`'s app.slice 16 G is the unbounded aggregate this
+guard exists to prevent. **Fix the contamination first, then run ONCE.**
+Memory is itself a live question: R-194 seam 15 already cut this index once
+(12 GB for 1.7M rows) and it is over the ceiling again.
+
+**MY MONITOR REPORTED THE FIRST OOM AS A SUCCESS.** `systemd-run --collect`
+deletes the unit on exit, after which `systemctl show` returns DEFAULTS —
+`Result=success`, `ExecMainStatus=0` — indistinguishable from a real success.
+Only the absent artifact contradicted it. Never read a result from a collected
+unit; keep the unit and read `Result`, or read the journal.
+
 ### Immediate order
 
 0. ~~Rule B1~~ / ~~day-closed conjunct~~ **BOTH DONE.** The rule is one line in
    `ACCRUAL_RULE` and is enforced at the function AND the call path.
+0e. **Rule the two 011 population questions** (gap-crossed rows; the undeclared
+   development population) before any 011 re-run. Nothing is fitted meanwhile.
 0d. Move `pm-evaluation-pipeline` into `research.slice` once the tier1 backlog
    clears — the aggregate guard is incomplete until then (COL-R2).
 0b. Confirm the tier1:full lane actually clears 08-25. A rebuild under the new

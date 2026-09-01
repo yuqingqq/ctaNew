@@ -3776,7 +3776,7 @@ tasks:
   - id: hazard-iter011
     phase: 1
     name: Hazard plan §10.3 — conditional signed-value Iteration 011
-    status: preregistered-and-built-review-hold-no-fit-no-score
+    status: released-2026-09-01-HALTED-on-gap-contaminated-queue-feature
     notes: |
       Frozen preregistration and implementation exist. The last authoritative
       review disposition keeps 011 dark pending correctness/identity closure
