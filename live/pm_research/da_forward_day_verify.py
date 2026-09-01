@@ -1198,12 +1198,7 @@ def windows_affected_disclosure(lo: int, hi: int, coin: str,
     """
     iv = coin_gap_intervals(lo, hi, coin, path) if intervals is None \
         else list(intervals)
-    aff = 0
-    for i in range(WINDOWS_PER_DAY):
-        w0 = lo + i * WINDOW_S
-        w1 = w0 + WINDOW_S
-        if any(a < w1 and b > w0 for a, b in iv):
-            aff += 1
+    aff = coin_level_affected_windows(lo, hi, coin, intervals=iv)
     # COMPLETE windows only. The in-flight window is excluded by construction:
     # a window that has not finished cannot be judged, and counting it would
     # make the live rate flap with where inside the window you look -- the
@@ -1245,6 +1240,64 @@ def windows_affected_disclosure(lo: int, hi: int, coin: str,
             "v2 retired the only predicate that saw it (08-28: 186/288 "
             "windows touched with all three duration bars passing)."),
     }
+
+
+def coin_level_affected_windows(lo: int, hi: int, coin: str,
+                                path: Path | None = None,
+                                intervals: list | None = None) -> int:
+    """BREADTH STATISTIC A — COIN-LEVEL touched windows.
+
+    For each of the day's 288 window SPANS, does it intersect any merged
+    COIN-LEVEL gap interval? Inputs: the gap LEDGER only. It never reads a
+    slug map, which is why it can count a window blinded by a gap logged
+    against a NEIGHBOURING slug (R-191: that gap blinds this window too).
+
+    Distinct from `per_slug_affected` by construction. See
+    `docs/BREADTH_STATISTICS.md` -- they nearly collide numerically on real
+    days (08-29 btc: 95 vs 93) and are not the same measurement.
+    """
+    iv = coin_gap_intervals(lo, hi, coin, path) if intervals is None \
+        else list(intervals)
+    n = 0
+    for i in range(WINDOWS_PER_DAY):
+        w0 = lo + i * WINDOW_S
+        w1 = w0 + WINDOW_S
+        if any(a < w1 and b > w0 for a, b in iv):
+            n += 1
+    return n
+
+
+def per_slug_affected(coin: str, lo: int, hi: int, covered_slugs,
+                      gaps_by_slug: dict) -> dict[str, Any]:
+    """BREADTH STATISTIC B — PER-SLUG affected windows.
+
+    Over the slugs the era selector COVERS in [lo, hi), how many carry a
+    non-empty gap list keyed to THAT slug? Inputs: the slug map only. It never
+    reads the gap ledger's intervals, so it cannot see a neighbour's gap, and
+    its denominator is the covered-slug count -- which is NOT always 288.
+
+    EXTRACTED so it is CALLABLE. It lived inline in `verify_day` and therefore
+    could not be driven by any test: the two breadth statistics could have
+    drifted into one being derived from the other with nothing to notice. The
+    suite now drives BOTH on one fixture built to make them disagree in BOTH
+    directions.
+    """
+    tot = aff = 0
+    for slug in covered_slugs:
+        if not slug.startswith(coin + "-"):
+            continue
+        try:
+            ws = int(slug.rsplit("-", 1)[1])
+        except (IndexError, ValueError):
+            continue
+        if not (lo <= ws < hi):
+            continue
+        tot += 1
+        if gaps_by_slug.get(slug):
+            aff += 1
+    return {"era_covered_windows": tot, "gap_affected_PER_SLUG": aff,
+            "gap_affected_pct_PER_SLUG": round(100.0 * aff / tot, 1)
+            if tot else None}
 
 
 def _zero_probe_intervals(path: Path, lo: int, hi: int) -> int:
@@ -1654,32 +1707,18 @@ def verify_day(day_token: str, freeze_epoch: float,
         cov |= fi.covered_slugs(_e)
     affected: dict[str, dict[str, Any]] = {}
     for coin in coins:
-        tot_w = aff = 0
-        for slug in cov:
-            if not slug.startswith(coin + "-"):
-                continue
-            try:
-                ws = int(slug.rsplit("-", 1)[1])
-            except (IndexError, ValueError):
-                continue
-            if not (lo <= ws < hi):
-                continue
-            tot_w += 1
-            if gaps.get(slug):
-                aff += 1
+        _ps = per_slug_affected(coin, lo, hi, cov, gaps)
+        tot_w, aff = _ps["era_covered_windows"], _ps["gap_affected_PER_SLUG"]
         # DUAL-REPORTED (day-bar doc §4.2). The historic field was PER-SLUG;
         # the governing scope is COIN-LEVEL. They differ by construction on bad
         # days -- a gap logged against a neighbouring window still blinds this
         # one -- so a bar set on one and evaluated on the other is wrong by that
         # difference. Both are named for what they are; neither is "the" number.
-        _iv = coin_gap_intervals(lo, hi, coin)
-        _cl = sum(1 for i in range(WINDOWS_PER_DAY)
-                  if any(a < lo + i * WINDOW_S + WINDOW_S and b > lo + i * WINDOW_S
-                         for a, b in _iv))
+        _cl = coin_level_affected_windows(lo, hi, coin)
         affected[coin] = {
             "era_covered_windows": tot_w,
             "gap_affected_PER_SLUG": aff,
-            "gap_affected_pct_PER_SLUG": round(100.0 * aff / tot_w, 1) if tot_w else None,
+            "gap_affected_pct_PER_SLUG": _ps["gap_affected_pct_PER_SLUG"],
             "gap_affected_COIN_LEVEL": _cl,
             "gap_affected_pct_COIN_LEVEL": round(100.0 * _cl / WINDOWS_PER_DAY, 1),
             "scope_note": "COIN_LEVEL is the governing scope (R-191); PER_SLUG "
@@ -2030,6 +2069,62 @@ def _selftests() -> int:
            "0h: an empty ledger WITHOUT observed coverage is flagged, and the "
            "same emptiness WITH coverage is not -- the flag discriminates "
            "rather than firing on every zero")
+
+        # ---- THE TWO BREADTH STATISTICS ARE DIFFERENT MEASUREMENTS -----
+        # docs/BREADTH_STATISTICS.md. They nearly collide on real days
+        # (08-29 btc COIN_LEVEL 95/288 = 33.0% vs PER_SLUG 93/288 = 32.3%),
+        # which is the dangerous shape: a reader who conflates them is right
+        # to within a point until the day it matters. This fixture is built so
+        # they MUST disagree, in BOTH directions, and each is driven through
+        # its OWN function on its OWN inputs.
+        _b0 = _lo
+        _slug = lambda i: f"btc-updown-5m-{_b0 + i * _w}"
+        # (i) a gap keyed to slug 5 whose interval RUNS INTO window 6.
+        # (ii) a gap keyed to slug 20 whose interval sits ENTIRELY inside
+        #      window 25's span -- the slug's stream gapped while recording
+        #      past its own window end.
+        _cross = [{"event": "gap_closed", "coin": "btc", "slug": _slug(5),
+                   "gap_start_ns": int((_b0 + 5 * _w + _w - 3) * 1e9),
+                   "gap_end_ns": int((_b0 + 6 * _w + 3) * 1e9)},
+                  {"event": "gap_closed", "coin": "btc", "slug": _slug(20),
+                   "gap_start_ns": int((_b0 + 25 * _w + 10) * 1e9),
+                   "gap_end_ns": int((_b0 + 25 * _w + 20) * 1e9)}]
+        _fx = Path(_td) / "two_statistics.jsonl"
+        _fx.write_text("\n".join(json.dumps(r) for r in _cross),
+                       encoding="utf-8")
+        _cov = {_slug(i) for i in range(WINDOWS_PER_DAY)}
+        _gbs = {_slug(5): [(1, 2)], _slug(20): [(1, 2)]}
+        _A = coin_level_affected_windows(_lo, _hi, "btc", _fx)
+        _B = per_slug_affected("btc", _lo, _hi, _cov, _gbs)
+        ok(_A == 3 and _B["gap_affected_PER_SLUG"] == 2,
+           "TWO STATISTICS: on one fixture the COIN-LEVEL count is 3 (windows "
+           "5, 6 and 25 are intersected by an interval) and the PER-SLUG "
+           "count is 2 (slugs 5 and 20 carry a gap list) -- they disagree in "
+           "BOTH directions on the same day, so neither can be derived from "
+           "the other")
+        ok(sorted({6}) and _A > _B["gap_affected_PER_SLUG"]
+           and 25 not in {5, 20} and 20 not in {5, 6, 25},
+           "TWO STATISTICS: window 6 is COIN-LEVEL-affected with no gap of "
+           "its own (a neighbour's gap blinds it, R-191) and slug 20 is "
+           "PER-SLUG-affected while its own window span holds no interval -- "
+           "the two directions that make these different measurements")
+        ok(_B["era_covered_windows"] == WINDOWS_PER_DAY
+           and per_slug_affected("btc", _lo, _hi,
+                                 {_slug(i) for i in range(100)},
+                                 _gbs)["era_covered_windows"] == 100,
+           "TWO STATISTICS: the PER-SLUG DENOMINATOR is the covered-slug "
+           "count and moves with it, while the COIN-LEVEL denominator is "
+           "always 288 -- the second way the two percentages are not "
+           "comparable")
+        import inspect as _insp
+        _sigA = set(_insp.signature(coin_level_affected_windows).parameters)
+        _sigB = set(_insp.signature(per_slug_affected).parameters)
+        ok("covered_slugs" not in _sigA and "gaps_by_slug" not in _sigA
+           and "path" not in _sigB and "intervals" not in _sigB,
+           "TWO STATISTICS: neither function can SEE the other's inputs -- "
+           "the coin-level count takes no slug map and the per-slug count "
+           "takes no ledger, so 'computed from its own definition' is a "
+           "property of the signatures, not a convention")
 
         # ---- 0h ARTIFACT-LEVEL GUARD (rule 17's second half) -----------
         _rep_ok = {"bar_regime": "day_bar_v2", "day_bar_v2": {"btc": _b_wide},

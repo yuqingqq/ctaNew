@@ -47,6 +47,11 @@ GATES: list[tuple[str, list[str]]] = [
      [PY, str(HERE / "v5_boundary_preflight.py"), "--selftest"]),
     ("DA day-verifier selftest",
      [PY, str(HERE / "da_forward_day_verify.py"), "--selftest"]),
+    # A GATE NOBODY RUNS IS NOT A GATE (R-370, which added four such
+    # instruments at once). Added with the rule itself so its selftest cannot
+    # sit committed and uninvoked; the rule GOVERNS nothing either way.
+    ("DA content-liveness rule (DRAFT, governs nothing)",
+     [PY, str(HERE / "da_content_liveness_rule.py"), "--selftest"]),
     ("chain equivalence (one fixture, two consumers)",
      [PY, str(HERE / "v5_chain_equivalence_test.py")]),
     ("chain differential fuzz",
