@@ -174,6 +174,75 @@ def installed_mode_v41(exec_start: str) -> str:
                   f"{TARGET_ERA} command vector: {toks}")
 
 
+def recovery_pid_candidates(starts: list | None = None) -> dict:
+    """Codex V41-F4: the runbook told the operator to record the LIVE pid from
+    `--inspect-live`, but `make_recovery_bundle` accepts only a target start
+    inside [T, T+120s]. Executed: with starts at T+5 (pid 222) and T+150
+    (pid 333), the runbook-directed live pid 333 was REFUSED and the earliest
+    in-window pid 222 produced the valid bundle -- and a late auto-restart is
+    the NATURAL shape when NRestarts is why postflight refused in the first
+    place. So the runbook pointed at the one pid the gate rejects.
+
+    One deterministic answer, plus the later starts reported SEPARATELY as
+    restart evidence rather than silently dropped (rule 4).
+    """
+    utc, ep = require_ruled_instant()
+    if starts is None:
+        starts = P.observe_starts_by_version(ep - P.EARLY_SCAN_LOOKBACK_S,
+                                             TARGET_ERA)
+    in_win, late, early = [], [], []
+    for r in starts:
+        ns = r.get("recv_ns")
+        if type(ns) is not int or ns <= 0:
+            continue
+        if ns < ep * 10**9:
+            early.append(r)
+        elif ns <= (ep + POST_START_WINDOW_S) * 10**9:
+            in_win.append(r)
+        else:
+            late.append(r)
+    in_win.sort(key=lambda r: r["recv_ns"])
+    return {
+        "boundary_utc": utc,
+        # THE value to pass as --v41-pid: earliest exact declaration inside
+        # the ruled window. Never the newest, never the live one.
+        "v41_pid": in_win[0].get("pid") if in_win else None,
+        "v41_recv_ns": in_win[0].get("recv_ns") if in_win else None,
+        "n_in_window": len(in_win),
+        # reported, not dropped -- these are RESTART EVIDENCE and their
+        # presence is itself a finding
+        "later_starts": [{"pid": r.get("pid"), "recv_ns": r.get("recv_ns")}
+                         for r in late],
+        "pre_boundary_starts": [{"pid": r.get("pid"),
+                                 "recv_ns": r.get("recv_ns")} for r in early],
+        "note": ("v41_pid is the EARLIEST clob_v4_1 collector_start inside "
+                 "[T, T+120s]. later_starts are restart evidence, NOT "
+                 "candidates: the recovery gate refuses them. If v41_pid is "
+                 "null, v4.1 never started in the window — use the ABORT "
+                 "path, not recovery."),
+    }
+
+
+def check_candidate_commit() -> None:
+    """Codex V41-F5: CAND_COMMIT was DECLARED and never READ. The gate pinned
+    the tree and HEAD bytes to CAND_SHA but never proved the named commit
+    resolves to them, so the constant could name anything -- executed,
+    replacing it with `definitely-not-a-commit` still allowed a stamp."""
+    import hashlib as _h
+    import subprocess as _sp
+    blob = _sp.run(["git", "-C", str(REPO), "show",
+                    f"{CAND_COMMIT}:live/pm_research/collect_pm.py"],
+                   capture_output=True)
+    if blob.returncode != 0:
+        raise Refused(f"candidate commit {CAND_COMMIT} is not resolvable in "
+                      f"this repo — the receipt would assert a commit ref "
+                      f"nothing verifies")
+    got = _h.sha256(blob.stdout).hexdigest()
+    if got != CAND_SHA:
+        raise Refused(f"the collector at {CAND_COMMIT} hashes {got[:16]}, "
+                      f"not the pinned candidate {CAND_SHA[:16]}")
+
+
 def check_execution_context(obs: dict, where: str) -> None:
     """Everything that decides WHICH BYTES RUN, checked at EVERY stage.
 
@@ -201,6 +270,7 @@ def check_execution_context(obs: dict, where: str) -> None:
                       f"before the collector and never appears in ExecStart")
     P.check_unit_environment(obs)
     check_candidate_bytes(obs)
+    check_candidate_commit()
 
 
 def check_candidate_bytes(obs: dict) -> None:
@@ -336,6 +406,11 @@ def make_stamp(obs: dict, old_pid: int, start_row: dict) -> dict:
         "pid": obs["main_pid"],
         "collector_start_recv_ns": ns,
         "stamp_written_ns": time.time_ns(),
+        # Codex V41-F5: neither a normal NOR a recovered transition recorded
+        # the code that produced it. An append-only receipt that cannot name
+        # its own bytes fails rule 12 ("a freeze is a commit").
+        "collector_commit": CAND_COMMIT,
+        "collector_sha256": CAND_SHA,
         "package": ["O1a ping 3/3 -> 10/10 ROLLBACK"],
         "authority": "USER ruling 2026-08-31 'redeploy v4_1 first'",
         "era_semantics": era_semantics(),
@@ -729,6 +804,11 @@ def make_recovery_bundle(obs: dict, old_target_pid: int,
         "stage": stage, "pid": old_target_pid,
         "collector_start_recv_ns": target_ns,
         "stamp_written_ns": time.time_ns(),
+        # Codex V41-F5: neither a normal NOR a recovered transition recorded
+        # the code that produced it. An append-only receipt that cannot name
+        # its own bytes fails rule 12 ("a freeze is a commit").
+        "collector_commit": CAND_COMMIT,
+        "collector_sha256": CAND_SHA,
         "package": ["O1a ping 3/3 -> 10/10 ROLLBACK"],
         "authority": "USER ruling 2026-08-31 'redeploy v4_1 first'",
         "era_semantics": era_semantics(),
@@ -1484,6 +1564,63 @@ def selftest() -> int:
              "start instant and NRestarts=0, is ACCEPTED — the binding is to "
              "identity, not a blanket refusal")
 
+    # ---- CODEX V41-F4 and V41-F5, each reproducing the executed known-bad
+    _S = lambda pid, off: {"pid": pid, "recv_ns": (bep + off) * 10**9,
+                           "collector_version": TARGET_ERA,
+                           "event": "collector_start"}
+    _r4 = recovery_pid_candidates([_S(222, 5), _S(333, 150)])
+    ok(_r4["v41_pid"] == 222 and _r4["n_in_window"] == 1
+       and [x["pid"] for x in _r4["later_starts"]] == [333],
+       "V41-F4: with starts at T+5 (pid 222) and T+150 (pid 333) the "
+       "deterministic answer is the EARLIEST IN-WINDOW pid 222, and 333 is "
+       "reported separately as restart evidence. The runbook used to point "
+       "at the LIVE pid — 333 — which is the one the recovery gate REFUSES, "
+       "and a late auto-restart is the natural shape when NRestarts is why "
+       "postflight refused in the first place")
+    ok(recovery_pid_candidates([_S(333, 150)])["v41_pid"] is None,
+       "V41-F4: with NO in-window start the pid is None, which the note "
+       "maps to the ABORT path — not a late start silently promoted to a "
+       "recovery candidate")
+    _r4b = recovery_pid_candidates([_S(111, 3), _S(222, 5)])
+    ok(_r4b["v41_pid"] == 111,
+       "V41-F4: with two in-window starts the EARLIEST wins deterministically "
+       "— 'newest last' was the ambiguity that made the runbook wrong")
+    ok(recovery_pid_candidates([_S(999, -60)])["pre_boundary_starts"][0]["pid"]
+       == 999,
+       "V41-F4: a PRE-BOUNDARY start is reported, not dropped — it means the "
+       "candidate booted during the arm window and is a finding in itself "
+       "(rule 4)")
+
+    _saved_c = globals()["CAND_COMMIT"]
+    globals()["CAND_COMMIT"] = "definitely-not-a-commit"
+    try:
+        refuses(check_candidate_commit, "not resolvable",
+                "V41-F5: an unresolvable CAND_COMMIT refuses. It was DECLARED "
+                "AND NEVER READ — the gate pinned tree and HEAD bytes but "
+                "never proved the named commit resolved to them, so the "
+                "constant could name anything and a stamp still emitted")
+    finally:
+        globals()["CAND_COMMIT"] = _saved_c
+    # a commit that RESOLVES but whose bytes DIFFER — the unresolvable case
+    # above trips the earlier guard, so this leg needs its own reachable
+    # fixture or it survives mutation (it did)
+    globals()["CAND_COMMIT"] = "042b787"
+    try:
+        refuses(check_candidate_commit, "hashes",
+                "V41-F5: a RESOLVABLE commit whose collector bytes do NOT "
+                "hash to the pinned candidate refuses. Naming a real commit "
+                "is not the same as naming the right one, and the "
+                "unresolvable case cannot reach this leg")
+    finally:
+        globals()["CAND_COMMIT"] = _saved_c
+    check_candidate_commit()
+    ok(True, "V41-F5 POSITIVE: the real CAND_COMMIT resolves and its collector "
+             "bytes hash to the pinned candidate")
+    ok(row.get("collector_commit") == CAND_COMMIT
+       and row.get("collector_sha256") == CAND_SHA,
+       "V41-F5: the emitted transition CARRIES its code identity — an "
+       "append-only receipt that cannot name its own bytes fails rule 12")
+
     BOUNDARY_UTC = saved
     print(f"v41_boundary_preflight selftests: {len(checks)} checks passed")
     return 0
@@ -1504,6 +1641,9 @@ def main() -> int:
     ap.add_argument("--stage", type=str, default=None)
     ap.add_argument("--inspect-live", action="store_true",
                     help="read-only failure classifier; run before restoring v4")
+    ap.add_argument("--recovery-pid", action="store_true",
+                    help="print the deterministic --v41-pid for recovery, "
+                         "plus later starts as separate restart evidence")
     ap.add_argument("--verify-health", action="store_true",
                     help="wait for two distinct 60s status rows; EVERY coin "
                          "must advance and the live PID must stay fixed")
@@ -1520,6 +1660,7 @@ def main() -> int:
                              ("--armed", a.armed),
                              ("--inspect-live", a.inspect_live),
                              ("--verify-health", a.verify_health),
+                             ("--recovery-pid", a.recovery_pid),
                              ("--post-restart", a.post_restart is not None),
                              ("--post-rollback", a.post_rollback is not None),
                              ("--post-recovery", a.post_recovery),
@@ -1558,6 +1699,9 @@ def main() -> int:
         if a.armed:
             print(f"OLD_PID={obs['main_pid']}")
             print(f"NRESTARTS_AT_ARM={obs.get('n_restarts')}")
+        return 0
+    if a.recovery_pid:
+        print(json.dumps(recovery_pid_candidates(), indent=1))
         return 0
     if a.verify_health:
         utc, ep = require_ruled_instant()

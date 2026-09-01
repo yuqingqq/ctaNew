@@ -24,6 +24,7 @@ SRC = pathlib.Path(__file__).resolve().parent / "v41_boundary_preflight.py"
 SCRATCH_DIR = pathlib.Path("/tmp")
 CHECKERS = {"check_boundary_current", "installed_mode_v41",
             "check_candidate_bytes", "check_execution_context",
+            "check_candidate_commit", "recovery_pid_candidates",
             "require_target_admissible",
             "require_ruled_instant", "check_pre_arm", "make_stamp",
             "make_rollback", "_check_restored_v4", "check_health_identity",
