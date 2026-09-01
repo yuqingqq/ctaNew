@@ -95,6 +95,16 @@ except where marked USER-ONLY.
     produced without it; plus a seam test that runs the integration the way
     the launcher runs it, on the producer's real emitted rows.
 
+18. **Dispatch is batched** (R-378, USER ruling; the coordinator-side twin of
+    R-377): the coordinator commits a seat's COMPLETE work batch in ONE
+    dispatch — never a trickle of follow-on tasks. While a seat's batch is in
+    flight the coordinator sends that seat nothing further (stop-the-line
+    hazards excepted); coordination resumes only when the seat reports its
+    batch done, and the next dispatch is again a complete batch. New work
+    that arises mid-flight queues in the coordinator's own notes for the
+    NEXT round, exactly as a reviewer's post-filing discovery waits for the
+    next round.
+
 ## Cadences
 
 - Day verdicts: 00:06Z per coin; 08-28 under the OLD count bar; 08-29+ under

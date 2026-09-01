@@ -18082,6 +18082,18 @@ Operative form, now in `SEAT_PROTOCOL.md` rule 5 (amended this entry):
 
 This completes, rather than changes, the R-239/R-240 line: "one round per completed batch" already forbade piecemeal review; this ruling makes the SYMMETRY explicit — the fixer's stream is as corrosive as the reviewer's, because each early fix moves the tip under the round in progress (a filing has already landed against a since-moved parent once: the `1aaac18` case now awaiting re-review). Relayed to the reviewer seat in one message; the coordinator's own dispatches were already bound to this by the 08-31 feedback that created the rule.
 
+### R-378 — 2026-09-01T13:22Z — coordinator — **USER RULING: COORDINATION ITSELF IS BATCHED — the R-377 discipline applied to the COORDINATOR's own dispatch loop.** Verbatim: *"when you coordinate, dont keep sending tasks, you commit all the tasks to each module, when they finish that, you coordinate again."*
+
+Operative form, now `SEAT_PROTOCOL.md` rule 18:
+
+1. A seat receives its COMPLETE work batch in ONE dispatch. Composing the batch means settling scope FIRST — everything the round needs, ordered, with acceptance criteria — not sending the first task and discovering the rest at the seat's expense.
+2. While a seat's batch is in flight, the coordinator sends that seat NOTHING further. Stop-the-line hazards are the only exception (the same carve-out R-377 gives the reviewer).
+3. Work that arises mid-flight queues in the coordinator's notes for the NEXT round. The seat's "batch done" report is what re-opens coordination for that seat.
+
+**Why this is the same law as R-377 and not a new one:** a trickle of coordinator tasks does to a seat exactly what a trickle of findings does to a fixer — it moves the target under work in progress, forces context switches inside a settled plan, and makes "done" undecidable because the batch has no fixed edge. The register already shows the cost pattern: the seats' best work today (BE's Q4/Q3 wiring, DA's three-task filing) came from single complete dispatches. **NOT retroactive noise:** no in-flight seat is being messaged about this ruling — the protocol file carries it, and every seat re-reads that file at reload (the reviewer already acknowledged its half under R-377).
+
+**Current round edges, recorded so "finished" is checkable:** BE — tie patch + readjudication of the fresh artifact, closes with its batch commit+push and one-line report. DA — three-task batch (011 reader / 0h disclosure / 00:06Z verifier readiness), two committed at `c473b0e`, closes on task 3's report. MEM — sweep + true-up batch, committed (`29a06db`, `8edfc5f`); round closed. Reviewer — standing by; its round opens with the ONE notification naming BE's pinned tip.
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
