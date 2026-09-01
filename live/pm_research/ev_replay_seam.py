@@ -72,6 +72,12 @@ INPUT_STATUSES = (
     "NO_RELEASED_PREDICTOR",         # conditional value / hazard scores
     "NO_RELEASED_FAIRPRICE",         # the 2B challenger protocol
     "UNMEASURED_AT_THIS_VENUE",      # OP-LatencyBudget leg 4 (ack)
+    # ADDITIVE, round 3: a policy that EXISTS and runs but has not been
+    # forward-validated.  `NO_RELEASED_POLICY` would say no policy exists,
+    # which stopped being true when RulePolicy_v1 landed; reusing it would be
+    # the name-is-not-the-definition defect.  It is UNRELEASED, so the
+    # economics guard still refuses.
+    "RULE_POLICY_UNVALIDATED",
     "RELEASED",                      # nothing is, today; see RELEASED_INPUTS
 )
 # WHICH STATUSES MEAN "THIS INPUT DOES NOT EXIST YET".  Enumerated, NOT
@@ -85,6 +91,7 @@ UNRELEASED_STATUSES = (
     "NO_RELEASED_PREDICTOR",
     "NO_RELEASED_FAIRPRICE",
     "UNMEASURED_AT_THIS_VENUE",
+    "RULE_POLICY_UNVALIDATED",
 )
 RELEASED_INPUTS: tuple[str, ...] = ()          # deliberately empty
 

@@ -1,0 +1,179 @@
+{
+  "all_gates_pass": true,
+  "code_binding": {
+    "de_actionspace.py": {
+      "blob": "7357772cd967607e927ced978b3d9b2481763fbf",
+      "carrying_commit": "a3e7fc834211cd848421c9dbf6ef1ec4ab37a477",
+      "sha256_16": "057d99296cd5140f",
+      "status": "BOUND"
+    },
+    "de_constraints.py": {
+      "blob": "8f23cf1d62bfcff0d8e131a42bf959a350fd15a3",
+      "carrying_commit": "ee152408272b33786e2dc7b3ac2ed28e307995ff",
+      "sha256_16": "3834d236f0a6a2af",
+      "status": "BOUND"
+    },
+    "ev_replay_seam.py": {
+      "blob": "c9c5f50147cd8e720ed86e73ff82e7263c752c61",
+      "carrying_commit": "6564cbbd8385a57ec8d13a15c025479ab0a16ce0",
+      "sha256_16": "1b384e33ab76ab8f",
+      "status": "DIRTY_AT_EMISSION"
+    },
+    "harmful_stateful_policy.py": {
+      "blob": "e6f910a8fd10dc36b4a51ec2d0f6aebe21b4b59a",
+      "carrying_commit": "a3e7fc834211cd848421c9dbf6ef1ec4ab37a477",
+      "sha256_16": "83315157d7fd338d",
+      "status": "BOUND"
+    },
+    "rule_policy_v1.py": {
+      "blob": null,
+      "carrying_commit": "",
+      "sha256_16": "e1479f728a751c9a",
+      "status": "UNCOMMITTED_AT_EMISSION"
+    }
+  },
+  "duals": "DECLARED EMPTY for a rule policy",
+  "economics_emittable": false,
+  "engine_identity": {
+    "de_actionspace.py": "057d99296cd5140f",
+    "de_constraints.py": "3834d236f0a6a2af",
+    "ev_replay_seam.py": "1b384e33ab76ab8f",
+    "harmful_stateful_policy.py": "83315157d7fd338d",
+    "rule_policy_v1.py": "e1479f728a751c9a"
+  },
+  "gates": {
+    "cancel_rule_differs": true,
+    "leak_refused_at_registration": true,
+    "manifest_revealed_clean": true,
+    "no_cancel_bit_identical_through_da_contract": true,
+    "no_cancel_reduces_to_qr_skew_only": true,
+    "no_economics_emitted": true,
+    "quiet_leak_refused_at_registration": true,
+    "self_trade_sequencing": true,
+    "sizing_within_feasible_set": true,
+    "terminal_schedule_regimes": true,
+    "unavailable_policy_validated": true,
+    "utility_none_is_a_typed_refusal": true
+  },
+  "incentive": "incentive_none",
+  "inputs": {
+    "action_value_policy": "RULE_POLICY_UNVALIDATED",
+    "fair_price": "NO_RELEASED_FAIRPRICE",
+    "harm_predictor": "NO_RELEASED_PREDICTOR",
+    "latency_budget_ack": "UNMEASURED_AT_THIS_VENUE",
+    "queue_reset_cost": "DECLARED_PARAMETER",
+    "reference_trajectory": "FROZEN_REFERENCE"
+  },
+  "manifest": [
+    "view",
+    "self",
+    "actions",
+    "portfolio",
+    "risk_scenarios",
+    "constraints",
+    "horizon"
+  ],
+  "manifest_check": "REVELATION at registration, not assertion",
+  "non_manifest": [
+    "belief",
+    "competition",
+    "outcomes",
+    "incentives",
+    "coupling"
+  ],
+  "produced_at": {
+    "dirty_paths": [
+      "live/pm_research/ev_replay_seam.py",
+      "live/pm_research/ev_replay_seam_test.py",
+      "live/pm_research/phase2_iter011.py",
+      "live/pm_research/phase2_iter011_run.py",
+      "live/pm_research/plans/ITER011_PREREG_AMENDMENT_A2_DRAFT.md",
+      "live/pm_research/rule_policy_v1.py"
+    ],
+    "git_readable": true,
+    "n_dirty_paths": 6,
+    "note": "produced_at_commit is the commit the PRODUCER ran at; the carrying commit does not exist at emission. Bind by re-hashing engine_identity at this commit.",
+    "produced_at_commit": "e252b8e91a2261d9aa6ec9da6892a5fdf59f2c43",
+    "working_tree_dirty": true
+  },
+  "protocol": "rule_policy_v1",
+  "rationale_normal_regime": {
+    "adding_side": "BID_UP",
+    "menu_size": 9,
+    "n_star_diagnostic": null,
+    "n_star_is_a_diagnostic": "the side-aware scenario cap binds independently and wins every conflict; N* never authorises a CROSS by itself",
+    "net": 8.0,
+    "oracle_state": "RUNNING",
+    "placement": {
+      "ASK_UP": "FRONT_ON_FORMATION",
+      "BID_UP": "JOIN"
+    },
+    "reducing_side": "ASK_UP",
+    "regime": "NORMAL",
+    "rules_fired": [
+      "skew:BID_UP:JOIN",
+      "skew:ASK_UP:FRONT_ON_FORMATION"
+    ]
+  },
+  "records": [
+    {
+      "n_events": 12,
+      "policy": "RULE_POLICY_V1",
+      "policy_status": "RULE_POLICY_UNVALIDATED",
+      "record_hash": "e747591a91056d901b9c86c1528ed86110f70c0576b88cbb99c6efb60e9e44ba"
+    },
+    {
+      "n_events": 21,
+      "policy": "RULE_POLICY_V1",
+      "policy_status": "RULE_POLICY_UNVALIDATED",
+      "record_hash": "7ff8ae36bfa3ef2d6ec451ba18c04a2e83baae122eb7c741867b7c6d9dd4047b"
+    }
+  ],
+  "regimes": {
+    "10.0": "REDUCING_ONLY",
+    "60.0": "DECISION_POINT",
+    "300.0": "NORMAL"
+  },
+  "registered_beside": [
+    "ClosedFormGLFT",
+    "PerLevel",
+    "HJBQVI"
+  ],
+  "revelation_probe": {
+    "decide_error": null,
+    "keys_read": [
+      "actions",
+      "constraints",
+      "horizon",
+      "portfolio",
+      "risk_scenarios",
+      "self",
+      "view"
+    ],
+    "manifest_keys_read": [
+      "actions",
+      "constraints",
+      "horizon",
+      "portfolio",
+      "risk_scenarios",
+      "self",
+      "view"
+    ],
+    "non_manifest_keys_read": [],
+    "sentinels_touched": []
+  },
+  "run_hash": "c3ffacabb83ae6ffc67e873ae3330e5292e98113f6a9fdd49f268bf6152104f0",
+  "solver": "RulePolicy_v1",
+  "status": "RESEARCH_ONLY_NOT_DECISION_ELIGIBLE",
+  "unavailable_policy": {
+    "risk_scenarios": "Halt"
+  },
+  "unreleased_inputs": [
+    "action_value_policy",
+    "fair_price",
+    "harm_predictor",
+    "latency_budget_ack"
+  ],
+  "unwrap_policy": {},
+  "utility": "utility_none"
+}
