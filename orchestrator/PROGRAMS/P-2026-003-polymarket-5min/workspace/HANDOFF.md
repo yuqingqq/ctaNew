@@ -526,10 +526,51 @@ as a conjunct and described it as one. Recorded so the register does not carry
 a ruling under the wrong seat; the ruling is the USER's, the clarification is
 mine, and the correction of the 08-28 row is mine too.
 
+### 2026-09-01 ~09:45Z (coordinator) — WHY 08-28 FAILS, AND THE HOLE IT EXPOSES
+### IN day_bar_v2
+
+08-28 fails on **exactly one** predicate — the gap **COUNT** rate — and passes
+every duration bar:
+
+| bar | 08-28 | bar | verdict |
+|---|---|---|---|
+| P1 lost s/hr | 113.89 | 120 | PASS (5% margin) |
+| P2 windows ≥75 s | 0.00% | 5% | PASS |
+| P3 worst 60 min | 291 s | 900 s | PASS |
+| **gap count/hr** | **20.08** | **15** | **FAIL** ← its governing bar (v1) |
+
+**The data issue is real, not a bar artifact: 186/288 btc windows (64.6%) carry
+a gap.** 08-28 sits in the middle of the post-08-25 break. Its gaps are SHORT
+(median 11.9 s cumulative per affected window), so total lost time squeaks
+under the duration bar while two thirds of windows are touched.
+
+**THE HOLE: `day_bar_v2` HAS NO BREADTH PREDICATE.** `count_bar_v1_frozen`
+caught breadth through the gap-count rate; v2 retired that (`SUPERSEDED_ON_V2 =
+('gap_rate_under_bar',)`) and replaced it with three DURATION bars. So the
+v1→v2 migration loosened exactly the dimension that governs queue
+reconstruction — a gap early in a window poisons the rest of it regardless of
+how short it is. **08-28 is the proof case: 64.6% of windows affected, and it
+would pass all of day_bar_v2.**
+
+**NOT a proposal to change the bars.** They are pre-registered and frozen, and
+09-01 is the first forward day — retuning a bar now, knowing which days pass,
+is choosing after seeing (rule 11) and would void the race. This is a
+**DISCLOSURE item for the forward receipt**: the governing bar set scores
+duration, not breadth, so a passing forward day can still be substantially
+gap-affected, and the receipt must carry windows-affected beside P1/P2/P3
+rather than instead of them (Q-DA-69's original point, now with a second
+instance).
+
+**09-01 currently passes BOTH families** — P1 60.8 s/hr (bar 120), count
+10.99/hr (bar 15), 51 windows touched at 9.37 h. So the hole is not yet biting
+the live race. Watch it: P1 has climbed 34.4 → 42.3 → 60.8 s/hr across the day.
+
 ### Immediate order
 
 0. ~~Rule B1~~ / ~~day-closed conjunct~~ **BOTH DONE.** The rule is one line in
    `ACCRUAL_RULE` and is enforced at the function AND the call path.
+0h. **Carry windows-affected in every forward receipt** beside P1/P2/P3 —
+   day_bar_v2 scores duration and has no breadth predicate.
 0g. **A forward tape build must NAME its era explicitly** — the default is
    still `clob_v3_1` and will refuse loudly on v4_1 windows rather than
    building empty. That refusal is the fix; passing `era="clob_v4_1"` is the
