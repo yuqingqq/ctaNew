@@ -30,11 +30,15 @@ except where marked USER-ONLY.
    correction never restarts a clock (freeze v2, R-236/R-238-adjacent).
 4. **Frozen docs are amended only by the USER** — seats draft
    DRAFT-FOR-USER-FREEZE; nobody amends a design after seeing it (R-237).
-5. **Review protocol** (R-239, refined R-240): build → commit+push →
-   **one Codex review round per COMPLETED batch** (never piecemeal) → Codex
-   commits+pushes its filing → coordinator verifies claims → fixes red-first
-   accumulate into the next batch → re-review executes the exact batch commit.
-   A hold releases only on the reviewer's explicit HOLD RELEASED.
+5. **Review protocol** (R-239, refined R-240, completed R-377 — USER ruling):
+   build → commit+push → **one review round per COMPLETED batch** (never
+   piecemeal) → the reviewer files **ONCE, one complete filing per round,
+   never a stream of findings**, commits+pushes it → coordinator verifies
+   claims → **ALL fixes are applied as one batch — never sent or landed one
+   at a time — committed AND pushed together, and the reviewer then gets
+   exactly ONE notification naming the pinned tip** → re-review executes
+   that exact batch commit. A hold releases only on the reviewer's explicit
+   HOLD RELEASED.
 6. **State-file ownership**: MEM writes STATUS/HANDOFF; BE/DA commit artifacts
    and file facts (R-233). CAVEAT: CLAUDE.md still instructs every session to
    update these files — a USER-ONLY amendment is pending; until it lands, a

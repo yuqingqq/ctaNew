@@ -18073,6 +18073,15 @@ Onboarded at ~13:08Z (tmux `pm-codex:@6.%6`, session ref 3d2448) with the seat's
 
 **Residual, named:** the guard cannot see a heavy job in its first ~60 s, and FLAG relies on `pm-alert@` being read. It bounds damage; the launch pattern remains the rule.
 
+### R-377 — 2026-09-01T13:18Z — coordinator — **USER RULING: the review cycle is BATCH-COMPLETE IN BOTH DIRECTIONS.** Verbatim: *"when reviewing, dont send a stream of things, do it once, when review is done, do the fix and dont send one fix at a time, and when all the fixs done, send to review again. you commit/push all the fixs and just notify the reviewer."*
+
+Operative form, now in `SEAT_PROTOCOL.md` rule 5 (amended this entry):
+
+1. **Reviewer side:** one COMPLETE filing per round, filed once when the whole review is done. Never a stream of findings; a finding discovered after filing waits for the next round unless it is a stop-the-line hazard.
+2. **Fix side:** findings are fixed as ONE batch — never landed or announced one at a time. The full fix set is **committed AND pushed together**, and the reviewer receives **exactly ONE notification naming the pinned tip**. Re-review executes that exact commit.
+
+This completes, rather than changes, the R-239/R-240 line: "one round per completed batch" already forbade piecemeal review; this ruling makes the SYMMETRY explicit — the fixer's stream is as corrosive as the reviewer's, because each early fix moves the tip under the round in progress (a filing has already landed against a since-moved parent once: the `1aaac18` case now awaiting re-review). Relayed to the reviewer seat in one message; the coordinator's own dispatches were already bound to this by the 08-31 feedback that created the rule.
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
