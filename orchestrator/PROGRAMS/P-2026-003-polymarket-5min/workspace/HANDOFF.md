@@ -1,9 +1,11 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-01T13:53:18Z — R-374..R-381 swept in: the reviewer seat is a
-Claude session, the resource rule is a mechanism, coordination is batched in
-both directions, and the DE seat is staffed. The 011 re-run was killed mid-fit
-rather than emit under a superseded predicate.
+Updated: 2026-09-01T14:05Z — the pending CLAUDE.md amendment is drafted for the
+USER (`workspace/DRAFT_CLAUDE_MD_AMENDMENT.md`), and the TODO sweep is at
+47/113. Prior line: R-374..R-381 swept in — reviewer seat is a Claude session,
+the resource rule is a mechanism, coordination is batched both directions, the
+DE seat is staffed, and the 011 re-run was killed mid-fit rather than emit
+under a superseded predicate.
 
 ## READ FIRST — current project handoff
 
@@ -115,6 +117,50 @@ the register, so there was nothing to tick there.
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-01 ~14:05Z (MEM) — THE CLAUDE.md AMENDMENT IS DRAFTED, AND ONE
+### PREVIOUSLY-SUGGESTED FIX WOULD HAVE INSTALLED A SECOND CONTESTED CLAIM
+
+**`workspace/DRAFT_CLAUDE_MD_AMENDMENT.md`** — two hunks, each with current text
+verbatim, replacement verbatim, and its register citation. `CLAUDE.md` is
+USER-owned: nothing is applied, and the USER applies it by their own hand
+(R-274).
+
+**Hunk A closes a collision that has been live since 2026-08-28.**
+`SEAT_PROTOCOL` rule 6 concedes that a fresh seat following `CLAUDE.md` writes
+MEM's two state files and is *behaving correctly* — which is why the
+instruction, not the seat, has to change. The USER already ruled the substance
+(R-274, option (a) on Q-DA-138); the text was drafted then and never landed.
+
+**Hunk B removes rule 9's false parenthetical — and does NOT use the wording
+R-253 suggested for it.** That suggestion (*"Chainlink TWAP-vs-open"*) predates
+Q-DA-142's amendment A2 by hours, and A2 — confirmed by Q-DA-146 on a fresh
+n=8,022 population — puts the settlement statistic at **60-second endpoints**
+(99.85%, passing its pre-registered gate) with the **full-window mean refuted**
+(85.2%). Meanwhile the venue's own prose says full-range TWAP, in all 26,099
+records. **Pasting R-253's suggestion would have replaced one contested claim
+with another**, in the file whose purpose is rules that hold. The draft fixes
+the venue — Chainlink, never Binance — and says nothing about the statistic.
+
+**Re-verified rather than cited:** `markets.jsonl` now holds **26,099 records,
+26,099 Chainlink, 0 Binance**. R-253 measured 17,727/17,727; the population is
+47% larger and the ratio is unchanged. The count asserts it read a non-empty
+population, so the zero cannot be a vacuous parse.
+
+**Both hunks anchor exactly**, checked in both directions: a corrupted copy of
+hunk B is not found, and both replacements are confirmed absent — the check
+proves the draft applies AND that nothing has been applied yet.
+
+**TODO sweep: 42 → 47 of 113**, every tick behind a commit or an artifact —
+`V_cancel` valued at each tranche's own time/level/shares with a 5 s markout
+(`c4b235f`), the typed `FairPrice` record and `Identity` as mandatory baseline
+(`d97c23e`, with the fallback half named as protocol-not-yet-exercised), the
+freeze stamp `b3f7f9f` = epoch 1787897340 pinned by its own selftest, and
+`ACCRUAL_RULE` (`ab2f984`).
+
+**Three sections gained an OWNER line and no ticks** — §5.3, §6 and §7 moved to
+the DE seat under R-379. Those boxes changed owner, not state, and saying so is
+the point: a reader scanning for progress must not read a transfer as advance.
 
 ### 2026-09-01 ~13:53Z (MEM) — R-374..R-381: THE REVIEWER IS A CLAUDE SESSION,
 ### THE RESOURCE RULE IS A MECHANISM, AND THE 011 RE-RUN WAS KILLED ON PURPOSE
@@ -932,6 +978,12 @@ does **not** pass: the average was 10.99/hr, but two individual hours exceeded
    artifact computes `is_a_validation=false` at G=0 complete UTC days.
 4. Keep fair-price, skew and replay work build/freeze-only behind their stated
    gates. No PnL, capacity, promotion or forward verdict is claimable.
+5. **USER-ONLY, waiting on the USER's hand:** apply
+   `workspace/DRAFT_CLAUDE_MD_AMENDMENT.md` to `CLAUDE.md` — the state-file
+   ownership exception (R-274, ruled 2026-08-28 and never landed) and rule 9's
+   false Binance parenthetical (R-253). No seat may make this edit. When hunk A
+   lands, `SEAT_PROTOCOL` rule 6's "amendment is pending" clause comes out —
+   coordinator's edit, and not before the amendment is actually in the file.
 
 Historical handoff entries follow unchanged.
 

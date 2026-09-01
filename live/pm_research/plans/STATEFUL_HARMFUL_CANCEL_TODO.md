@@ -222,9 +222,17 @@ in one hour or a handful of fills. AUC alone cannot pass the gate.
 
 Freeze one `COND_VALUE_V1` specification before reading a new result.
 
-- [ ] Define `V_cancel` from each fill/tranche's own event timestamp, resting
+- [x] Define `V_cancel` from each fill/tranche's own event timestamp, resting
   level, shares and five-second markout; never proxy a fill timestamp with a
   nearby quote or resync event.
+  — done, `c4b235f`: each tranche is recorded at its OWN `f["t"]`, its own
+  `level` and its own `shares`, with the markout read at `f["t"] + MARKOUT_S`
+  and `MARKOUT_S = 5.0` (`harmful_exposure_rows.py:308-313`, `:77`). No fill
+  time is proxied — CLAUDE.md rule 3's resync-clock error (22–162 ms of label
+  error) is the defect this closes. Reconciliation against the generating
+  engine runs beside it: `reconciliation_failures` is counted, affected rows
+  are statused `RECONCILIATION_FAILED`, and `_feature_pass` keeps only
+  `status == "OK"`, so a failed reconciliation cannot reach features.
 - [x] Keep no-fill hazard, harmful sign and signed magnitude as separately
   observable heads. No-fill rows train hazard; only latency-preventable fills
   enter the conditional heads.
@@ -276,10 +284,23 @@ without better harm/value selection does not pass.
 Do not edit or implement the refuted `BE_BELIEF_PLAN.md`. Write a short
 successor contract that carries only its surviving ownership rules.
 
-- [ ] Define a typed point-in-time output containing coin/window, side or
+- [x] Define a typed point-in-time output containing coin/window, side or
   outcome convention, fair value, source-event time, local-knowledge time,
   freshness and book-admissibility status.
-- [ ] Use executable-book `Identity` as the mandatory baseline and fallback.
+  — done, `d97c23e`: the frozen `FairPrice` record
+  (`da_fair_price_identity.py:99`) carries every field this box names — `coin`,
+  `window_start`, `outcome` (the convention, explicit), `value`,
+  `source_timestamp`, `local_knowledge_timestamp`, `freshness_s`, `status` —
+  and validates its invariants AT THE RECORD BOUNDARY, so an inadmissible
+  record cannot be constructed rather than being caught downstream.
+- [x] Use executable-book `Identity` as the mandatory baseline and fallback.
+  — done for the BASELINE half, `d97c23e`: `Identity` is implemented as THE
+  MANDATORY BASELINE (`da_fair_price_identity.py:240`) and **always returns a
+  record** — a refusal is a record with `value=None` and a status naming why,
+  never a zero and never a silently-dropped row, with the check order fixed so
+  the reported cause is the FIRST thing wrong. The FALLBACK half is protocol,
+  not yet exercised: no challenger has been scored, so "if none passes, keep
+  `Identity`" (the last box in this section) has never had to fire.
 - [ ] Predeclare at most two challengers: PM microprice and one cross-venue
   forecast. Do not reuse fill outcomes to construct either forecast.
 - [ ] Score each challenger incrementally to `Identity` using a proper forecast
@@ -300,6 +321,12 @@ failing timestamp/admissibility checks. Similarity to settlement or a base-rate
 comparison is not an incremental fair-price result.
 
 ### 5.3 Phase 2C — frozen skew lane (parallel)
+
+**OWNER: DE seat since 2026-09-01 (R-379).** The USER staffed `pm-de` and
+R-165's parking clause executed: `harmful_stateful_policy.py`,
+`de_actionspace.py` and `de_constraints.py` transferred from the coordinator to
+DE. The unticked boxes below changed OWNER, not state — none is closer to done
+than it was yesterday.
 
 Treat skew as inventory/risk control, not as a substitute alpha model.
 
@@ -332,6 +359,12 @@ and declared inventory/traffic bounds. It is not promoted as alpha merely for
 reducing inventory.
 
 ## 6. Phase 3 — stateful cancel x skew replay
+
+**OWNER: DE seat since 2026-09-01 (R-379)**, with the parity battery in its
+first batch. Note what is and is not evidenced: seven-arm queue-reference parity
+is ASSERTED by `da_replay_parity_battery` and has never been RUN against a real
+seven-arm replay — the first real run is the first thing that can falsify the
+contract. Owner change only; no box below advanced.
 
 Implement a research-only state machine per `(slug, side, generation)`:
 
@@ -395,6 +428,11 @@ placement; the state machine owns cancel, hold and repost lifecycle.
 
 ## 7. Phase 4 — economic and latency gates
 
+**OWNER: DE seat since 2026-09-01 (R-379)**, which is drafting the Phase-4 grid
+protocol as DRAFT-FOR-USER-FREEZE — declared before any cell is read. Owner
+change only; every box below is still open, and none may be reported before
+that protocol is frozen.
+
 Evaluate the unchanged score at assumed cancel-effective latencies:
 
 `5, 10, 20, 30, 50, 75, 100, 150, 250 ms`.
@@ -436,10 +474,26 @@ if its very small per-cancel margin cannot survive the cost grid.
   currently promotable.
 - [ ] Refit each chosen candidate once on all declared development/training
   data and write a complete immutable manifest.
-- [ ] Stamp the freeze commit and UTC instant before admitting any forward
+- [x] Stamp the freeze commit and UTC instant before admitting any forward
   window.
-- [ ] Admit only complete UTC days whose earliest required receipt is after the
+  — done, freeze commit `b3f7f9f` = epoch **1787897340** (2026-08-28T06:09:00Z),
+  recorded in `harmful_phase2_lgbm_btc_freeze_v3.json`
+  (`race.clock_starts = "at the freeze commit"`, `race_clock_start_commit`) and
+  PINNED IN CODE with its own selftest — `da_forward_day_verify.py:2271` asserts
+  the epoch equals 1787897340 and names `b3f7f9f`. The stamp precedes every
+  admission by construction: no forward window has been admitted (G=0/5).
+- [x] Admit only complete UTC days whose earliest required receipt is after the
   freeze. UTC day is the cluster unit.
+  — done, `ab2f984`: `ACCRUAL_RULE` (`da_forward_day_verify.py:1066`) states it
+  once — *a day accrues iff FINISHED (closed UTC day) AND AFTER (post freeze
+  commit) AND ADMISSIBLE AND HEALTHY* — and every verdict carries the rule text
+  beside the boolean (`:1117`). FINISHED is explicit because `complete_tape`
+  measures against windows elapsed SO FAR and passes mid-day; `split_verdict`
+  REFUSES a missing `day_closed`; and the rule is enforced at the function AND
+  the call path, after a mutant hardcoding `day_closed=True` in `verify_day`
+  survived the first pass. The ruled cluster unit is the UTC day (rule 8),
+  which artifacts DISCLOSE rather than assume — see the 011 receipt's
+  `cluster_disclosure.ruled_unit`.
 - [ ] Score candidates without refitting for at least five complete untouched
   UTC days.
 - [ ] Report candidate multiplicity and day-level results; no window-level
