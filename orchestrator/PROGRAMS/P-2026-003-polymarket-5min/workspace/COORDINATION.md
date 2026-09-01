@@ -18111,6 +18111,14 @@ Operative form, now `SEAT_PROTOCOL.md` rule 18:
 
 **Net answer to the USER:** the system was missing one SEAT (DE — now staffed) and one REGISTERED MODULE on the critical path (EV-Replay — closure drafted in DE's batch). Everything else absent from v24 is absent by the demand-driven build order, with its trigger on record.
 
+### R-380 — 2026-09-01T13:44Z — coordinator — **ROUND STATUS at 13:44Z, and ONE stop-the-line routing: Q-DA-197's F2 goes into BE's OPEN batch before the re-run's artifact is emitted — the rule-18 exception used for the case it exists for.**
+
+**DA's round CLOSED (3/3, `c473b0e`, pushed), and the filings are verified as filings of record:** Q-DA-197 — independent reader (own code, R-235), 23 predicates, both R-289 vacuity directions falsified; confirms all four dispatch items (24/24 denominator, permutation floor exact with the one-draw-wide margin named, the Q4 contradiction real on four fields, R-306 partially applicable with the CI conjunct UNOBTAINABLE at G=0 — a substitution must be disclosed, and BE's v2 discloses it). Findings F1–F6; F3/F4 already cleared by BE's `20d3c3a`; supplementary run on `__readjudicated_v2` confirms Q4-unchanged-as-declared. Q-DA-198 — 0h breadth disclosure shipped (REPORTED_NOT_GOVERNING, both denominators, refusal-carried; its own M7 fixture-mirror mutant found and killed), and tonight's 00:06Z path proven by execution on closed 08-29, reproducing the HANDOFF row and B1's era derivation independently. No rulings sought; none needed.
+
+**The routing:** **F2 — survivor predicate is Holm ALONE, and it WIDENED in v2** (non-OK survivors 6→12, `surviving_cells` 12→18; `NO_INCUMBENT_COUNTERPART` cells published as surviving). BE's re-run fits are still running and the adjudicated artifact does not exist yet, so fixing F2 after emission would mint a THIRD version of the same artifact. Dispatched into BE's open batch as one complete addendum (USER-initiated: *"fix F2: conjunct status with Holm before the re-run"*): survivor = (status==OK) AND Holm, red-first both directions; F1 (statistic-n beside arrival-n), F5 (`fit_code_ref` names the commit), F6 (`as_of`) ride the SAME emission fix so no further superseding version is needed; DA's Holm-vs-Bonferroni untied-p generator check optional in the same pass.
+
+**Round edges now:** BE — open (tie patch + F2/F1/F5/F6 + re-run readjudication), fits running healthy in-slice (12.7 G of 18.4 G aggregate). DA — closed. MEM — closed. DE — open, first batch in progress (probes running through the launch pattern: `de-probe2.service` in-slice, the R-148 discipline holding on its first day). Reviewer — standing by; its round opens on BE's pinned tip.
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
