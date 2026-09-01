@@ -133,23 +133,30 @@ era must still match. Re-reading the same status line is never a delta.
 ## If you did not record `V41_PID`
 
 Four steps above say "record `V41_PID`", and under pressure that is exactly
-what gets skipped. **It is recoverable — the process declared it itself:**
+what gets skipped. **It is recoverable, and there is ONE right answer:**
 
 ```
-python3 -c "
-import sys; sys.path.insert(0,'live/pm_research')
-import v5_boundary_preflight as P
-rows = P.observe_starts_by_version(0, 'clob_v4_1')
-print('V41_PID candidates (newest last):', [r.get('pid') for r in rows])
-print('newest recv_ns:', rows[-1].get('recv_ns') if rows else None)
-"
+python3 live/pm_research/v41_boundary_preflight.py --recovery-pid
 ```
 
-If that prints nothing, **v4.1 never started** — use the abort path, not
-recovery. If it prints a pid, that is `V41_PID` and the recovery path is open.
-**Do not guess it and do not hand-write a row**; every emitter cross-checks the
-pid against the process's own `collector_start` declaration and will refuse a
-transcribed one that does not match.
+Use the printed **`v41_pid`** verbatim. Do **not** use the live PID from
+`--inspect-live` and do **not** take the newest of a list.
+
+> **Why this replaced the old instruction.** It used to print all candidates
+> "newest last" and the failure table told you to record the *live* PID. But
+> `make_recovery_bundle` accepts only a start inside **[T, T+120s]**, and a
+> late auto-restart is the NATURAL shape when `NRestarts` is *why* postflight
+> refused — so the old instruction named the one PID the gate rejects
+> (Codex V41-F4, executed: starts at T+5 pid 222 and T+150 pid 333; the
+> runbook-directed 333 was refused, 222 produced the valid bundle).
+
+`--recovery-pid` also reports, separately and without dropping them:
+- **`later_starts`** — restart evidence, **not** recovery candidates.
+- **`pre_boundary_starts`** — the candidate booted during the arm window,
+  which is a finding in itself.
+
+**If `v41_pid` is `null`, v4.1 never started in the window — use the ABORT
+path, not recovery.**
 
 ## Failure table
 
@@ -158,7 +165,7 @@ transcribed one that does not match.
 | `--pre-arm` refuses | **stop, do not arm.** Fix the named cause; re-run. |
 | `--armed` shows a different `OLD_PID` than step 1 | **stop.** v4_1 booted early; rule a new instant. |
 | restart hangs past 180s | `systemctl --user status`; do **not** emit a stamp. Restore v4, then use the abort or recovery path below according to whether a v4.1 `collector_start` exists. |
-| `--post-restart` refuses | **Do not hand-write a row. Run `python3 live/pm_research/v41_boundary_preflight.py --inspect-live` and record the live candidate PID before restoring it.** If v4.1 ran, use recovery; if it never ran, use abort. |
+| `--post-restart` refuses | **Do not hand-write a row.** Run `--recovery-pid` and record the printed `v41_pid` BEFORE restoring v4 — **not** the live PID from `--inspect-live`, which the recovery gate refuses when it falls outside [T, T+120s]. If `v41_pid` is non-null, use recovery; if null, use abort. |
 | stamp appended twice | the walk will refuse the ledger. Stop and report — the ledger is append-only and this needs a superseding decision, not an edit. |
 | stamp append fails | v4.1 is live but unstamped. Retry the exact append. If still unwritable, record `V41_PID`, restore v4, then emit the recovery bundle. |
 | health refuses after the stamp landed | record `V41_PID`, restore v4, then emit the rollback receipt. |

@@ -174,6 +174,71 @@ def installed_mode_v41(exec_start: str) -> str:
                   f"{TARGET_ERA} command vector: {toks}")
 
 
+PROVENANCE_LEDGER = REPO / "data/pm_5min/collector_provenance.jsonl"
+
+
+def provenance_for(boundary_utc: str) -> dict:
+    """Resolve the code identity of a transition, inline or superseding.
+
+    Codex: a provenance ledger with NO CONSUMER is not an in-band
+    supersession -- it is a note filed beside the receipt, which is exactly
+    what rule 13 says does not work ("automated readers resolve receipt
+    fields, not sidecar annotations"). This is the reader that makes it one.
+
+    Transitions emitted from now on carry `collector_commit`/
+    `collector_sha256` INLINE. The 2026-08-31T22:00:00Z row predates that and
+    carries neither, so its provenance lives in the separate ledger -- a row
+    the era ledger itself cannot hold, because both consumers REFUSE a
+    non-era row there (executed before writing it).
+
+    Returns a STATUS, never a silent None: an unresolvable provenance and an
+    absent one are different answers.
+    """
+    era_rows = P.observe_era_rows() if hasattr(P, "observe_era_rows") else []
+    if not era_rows and ERA_LEDGER.exists():
+        era_rows = []
+        for ln in ERA_LEDGER.read_text(errors="replace").splitlines():
+            ln = ln.strip()
+            if ln:
+                try:
+                    era_rows.append(json.loads(ln))
+                except ValueError:
+                    pass
+    hit = [r for r in era_rows
+           if r.get("boundary_utc") == boundary_utc
+           and r.get("transitioned") is True]
+    if not hit:
+        return {"status": "NO_SUCH_TRANSITION", "boundary_utc": boundary_utc}
+    row = hit[-1]
+    if row.get("collector_commit") and row.get("collector_sha256"):
+        return {"status": "INLINE", "boundary_utc": boundary_utc,
+                "collector_commit": row["collector_commit"],
+                "collector_sha256": row["collector_sha256"]}
+    if not PROVENANCE_LEDGER.exists():
+        return {"status": "UNRESOLVED", "boundary_utc": boundary_utc,
+                "why": "row carries no code identity and no provenance "
+                       "ledger exists"}
+    for ln in PROVENANCE_LEDGER.read_text(errors="replace").splitlines():
+        ln = ln.strip()
+        if not ln:
+            continue
+        try:
+            p_row = json.loads(ln)
+        except ValueError:
+            continue
+        if p_row.get("supersedes_boundary_utc") == boundary_utc \
+                and p_row.get("collector_commit") \
+                and p_row.get("collector_sha256"):
+            return {"status": "SUPERSEDED", "boundary_utc": boundary_utc,
+                    "collector_commit": p_row["collector_commit"],
+                    "collector_sha256": p_row["collector_sha256"],
+                    "why": "the transition row predates inline provenance; "
+                           "resolved from the provenance ledger"}
+    return {"status": "UNRESOLVED", "boundary_utc": boundary_utc,
+            "why": "row carries no code identity and the provenance ledger "
+                   "has no matching record"}
+
+
 def recovery_pid_candidates(starts: list | None = None) -> dict:
     """Codex V41-F4: the runbook told the operator to record the LIVE pid from
     `--inspect-live`, but `make_recovery_bundle` accepts only a target start
@@ -605,21 +670,24 @@ def _check_restored_v4(obs: dict, v4_start: dict | None, stage: str,
     """Verify the live restoration before any abort/recovery receipt exists."""
     utc, ep = require_ruled_instant()
     P.check_stage(stage)
-    if obs.get("obs_unit_overridden"):
-        raise Refused("restoration receipts come only from the PRODUCTION unit")
+    # the shared checker owns obs_unit_overridden; keeping a local copy made
+    # both survive mutation (each caught what the other missed). Called here,
+    # before the timing legs, so the override refuses at the same point it
+    # always did.
+    check_execution_context(obs, "restoration")
     now = obs.get("now_epoch")
     if not isinstance(now, (int, float)) or now < ep:
         raise Refused("restoration evidence predates the ruled boundary")
     if now >= ep + RECOVERY_WINDOW_S:
         raise Refused(f"restoration receipt is {now - ep:.0f}s after the "
                       f"boundary (> {RECOVERY_WINDOW_S}s recovery window)")
-    if obs.get("working_dir") != str(REPO):
-        raise Refused(f"unit WorkingDirectory is {obs.get('working_dir')!r}, "
-                      f"not {str(REPO)!r}")
-    if obs.get("exec_start_pre"):
-        raise Refused("unit declares ExecStartPre during restoration")
-    P.check_unit_environment(obs)
-    check_candidate_bytes(obs)
+    # Codex F5 follow-up: this path kept its OWN inline copies of the
+    # execution-context checks, so it never reached check_candidate_commit --
+    # the rollback, abort and recovery emitters were all exempt from the one
+    # check that proves the named commit is the running code, and a known-bad
+    # emitted collector_commit=definitely-not-a-commit through here. The
+    # whole point of the shared checker was that a per-stage set drifts; I
+    # made it shared and then left one stage out of it.
     if not obs.get("unit_active") or obs.get("main_pid", 0) <= 0:
         raise Refused(f"unit not active after restoration (active="
                       f"{obs.get('unit_active')}, pid={obs.get('main_pid')})")
@@ -1591,6 +1659,42 @@ def selftest() -> int:
        "candidate booted during the arm window and is a finding in itself "
        "(rule 4)")
 
+    # the recovery/abort emitters were EXEMPT from the commit check because
+    # _check_restored_v4 carried its own inline copies. Codex emitted a
+    # recovery bundle carrying collector_commit=definitely-not-a-commit.
+    ok(provenance_for("2026-08-31T22:00:00Z")["status"] == "SUPERSEDED",
+       "V41-F5: the 22:00Z transition's code identity RESOLVES from the "
+       "provenance ledger. A provenance file with no consumer is not an "
+       "in-band supersession — it is the sidecar annotation rule 13 says "
+       "automated readers do not resolve. This is the reader")
+    ok(provenance_for("2099-01-01T00:00:00Z")["status"] == "NO_SUCH_TRANSITION",
+       "V41-F5: an unknown boundary returns a STATUS, not a silent None — "
+       "absent and unresolvable are different answers (rule 4)")
+
+    _sc2 = globals()["CAND_COMMIT"]
+    globals()["CAND_COMMIT"] = "definitely-not-a-commit"
+    try:
+        refuses(lambda: make_recovery_bundle(_RB_OBS, 4242, _TS, _RB_START,
+                                             "counters_refused"),
+                "not resolvable",
+                "V41-F5 follow-up: the RECOVERY path refuses an unresolvable "
+                "commit. It did not — _check_restored_v4 kept inline copies "
+                "of the execution-context checks and so never reached "
+                "check_candidate_commit, leaving rollback, abort AND "
+                "recovery exempt from the one check that proves the named "
+                "commit is the running code")
+        refuses(lambda: make_rollback(rb_obs, 4242,
+                                      {"recv_ns": (bep + 300) * 10**9,
+                                       "pid": 5555,
+                                       "collector_version": FROM_ERA,
+                                       "event": "collector_start"},
+                                      "counters_refused"),
+                "not resolvable",
+                "V41-F5 follow-up: and the ROLLBACK path too — a shared "
+                "checker that one stage does not call is not shared")
+    finally:
+        globals()["CAND_COMMIT"] = _sc2
+
     _saved_c = globals()["CAND_COMMIT"]
     globals()["CAND_COMMIT"] = "definitely-not-a-commit"
     try:
@@ -1641,6 +1745,9 @@ def main() -> int:
     ap.add_argument("--stage", type=str, default=None)
     ap.add_argument("--inspect-live", action="store_true",
                     help="read-only failure classifier; run before restoring v4")
+    ap.add_argument("--provenance", metavar="BOUNDARY_UTC",
+                    help="resolve a transition's code identity, inline or "
+                         "from the provenance ledger")
     ap.add_argument("--recovery-pid", action="store_true",
                     help="print the deterministic --v41-pid for recovery, "
                          "plus later starts as separate restart evidence")
@@ -1661,6 +1768,7 @@ def main() -> int:
                              ("--inspect-live", a.inspect_live),
                              ("--verify-health", a.verify_health),
                              ("--recovery-pid", a.recovery_pid),
+                             ("--provenance", a.provenance is not None),
                              ("--post-restart", a.post_restart is not None),
                              ("--post-rollback", a.post_rollback is not None),
                              ("--post-recovery", a.post_recovery),
@@ -1699,6 +1807,9 @@ def main() -> int:
         if a.armed:
             print(f"OLD_PID={obs['main_pid']}")
             print(f"NRESTARTS_AT_ARM={obs.get('n_restarts')}")
+        return 0
+    if a.provenance is not None:
+        print(json.dumps(provenance_for(a.provenance), indent=1))
         return 0
     if a.recovery_pid:
         print(json.dumps(recovery_pid_candidates(), indent=1))

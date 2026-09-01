@@ -1,112 +1,119 @@
-diff --git a/live/pm_research/collect_pm.py b/live/pm_research/collect_pm.py
-index be51023..65a4bce 100644
---- a/live/pm_research/collect_pm.py
-+++ b/live/pm_research/collect_pm.py
-@@ -598,6 +598,10 @@ class PMCollector:
+--- live/pm_research/collect_pm.py	2026-09-01 02:22:52.407165758 +0000
++++ /tmp/claude-1001/-home-yuqing-ctaNew/c15cb459-fb27-4ea2-a613-58e6a633b127/scratchpad/f3/collect_pm.py	2026-09-01 02:29:41.539663590 +0000
+@@ -181,6 +181,29 @@
+         return json.load(r)
+ 
+ 
++def connection_diagnostics(conn_start_ns: int, conn_msgs: int,
++                           conn_last_recv_ns: int | None,
++                           now_ns: int) -> dict:
++    """Per-CONNECTION disconnect fields, from ATTEMPT-LOCAL state only.
++
++    Codex V41-F3 twice. First: computed from coin-global counters, so
++    overlapping current/next market tasks let a HEALTHY SIBLING socket credit
++    the failing one -- conn_msgs=7 for a socket that received zero. Then: the
++    fix was right but its test built its own dict and never touched
++    production, so a mutant restoring the broken expression PASSED.
++
++    Extracted so production and the test call the SAME code. A test that
++    cannot see the code it certifies is not a test.
++    """
++    return {
++        "conn_msgs": conn_msgs,
++        "conn_lifetime_s": round((now_ns - conn_start_ns) / 1e9, 3),
++        "silence_before_close_s": (
++            None if not conn_last_recv_ns else
++            round((now_ns - conn_last_recv_ns) / 1e9, 3)),
++    }
++
++
+ def jl_append(path: Path, obj: dict) -> None:
+     path.parent.mkdir(parents=True, exist_ok=True)
+     with open(path, "a") as f:
+@@ -598,6 +621,8 @@
              self.counts["writer_queue_highwater"] = max(
                  self.counts["writer_queue_highwater"], write_q.qsize())
  
-+        # attempt-local counters the receive closure can write without a
-+        # nonlocal chain through the reconnect loop (V41-F3)
-+        nonlocal_conn = {"msgs": 0, "last_recv_ns": None}
++        conn = {"msgs": 0, "last_recv_ns": None}   # attempt-local (V41-F3)
 +
          async def receive(ws, subscription_ready: asyncio.Event | None = None,
                            pong_received: asyncio.Event | None = None) -> None:
              nonlocal last_recv_ns, open_gap, qmax, ever_paused
-@@ -630,6 +634,8 @@ class PMCollector:
+@@ -630,6 +655,8 @@
                      if subscription_ready is not None:
                          subscription_ready.set()
                  recv_ns = time.time_ns()
-+                nonlocal_conn["msgs"] += 1
-+                nonlocal_conn["last_recv_ns"] = recv_ns
++                conn["msgs"] += 1
++                conn["last_recv_ns"] = recv_ns
                  if open_gap is not None:
                      self._audit({
                          "event": "gap_closed", "slug": slug, "coin": coin,
-@@ -683,6 +689,26 @@ class PMCollector:
+@@ -683,6 +710,16 @@
          try:
              while not self.stop and time.time() < stop_at:
                  attempt_msgs = self.msg_by_coin.get(coin, 0)
-+                # Codex V41-F3: the "per-connection" diagnostics were not
-+                # connection-local, so they described the wrong thing.
-+                #   conn_msgs subtracted two reads of the COIN-GLOBAL
-+                #     msg_by_coin. Discovery keeps overlapping current/next
-+                #     market tasks per coin, so a HEALTHY SIBLING socket
-+                #     incremented it while the failing socket received
-+                #     nothing -- Codex's fixture reported conn_msgs=7 for a
-+                #     socket that got zero, falsely classifying it as having
-+                #     worked. That is the exact distinction the field exists
-+                #     to make.
-+                #   conn_lifetime_s subtracted scope_start_ns, set ONCE for
-+                #     the whole market task outside this loop -- a task
-+                #     lifetime on every reconnect, not a socket lifetime.
-+                #   silence_before_close_s used last_recv_ns, retained across
-+                #     reconnects, so a connection that never delivered
-+                #     reported silence since the PREVIOUS connection.
-+                # These are ATTEMPT-LOCAL and reset here, once per iteration.
++                # ATTEMPT-LOCAL, reset per reconnect. qmax and ever_paused too:
++                # Codex noted they were task-scoped, so after a reconnect they
++                # described the PREVIOUS connection's queue behaviour -- the
++                # same defect, in the fields used to decide whether WE were
++                # the slow consumer.
 +                conn_start_ns = time.time_ns()
-+                nonlocal_conn["msgs"] = 0
-+                nonlocal_conn["last_recv_ns"] = None
++                conn["msgs"] = 0
++                conn["last_recv_ns"] = None
++                qmax = 0
++                ever_paused = False
                  try:
                      # max_queue: the default (32) makes the server drop us with
                      # 1013 "slow consumer" on hot markets — observed repeatedly on
-@@ -751,20 +777,20 @@ class PMCollector:
+@@ -751,24 +788,9 @@
                          # died" from "it never delivered anything" -- the
                          # difference between a mid-flow kill and a failed
                          # subscription, which have opposite fixes.
 -                        "conn_msgs": max(
 -                            0, self.msg_by_coin.get(coin, 0) - attempt_msgs),
-+                        "conn_msgs": nonlocal_conn["msgs"],
-                         # how long the socket LIVED. A choke shows as short
-                         # lifetimes on the hot coin only; a venue restart
-                         # shows as simultaneous deaths across coins.
-                         "conn_lifetime_s": round(
+-                        # how long the socket LIVED. A choke shows as short
+-                        # lifetimes on the hot coin only; a venue restart
+-                        # shows as simultaneous deaths across coins.
+-                        "conn_lifetime_s": round(
 -                            (time.time_ns() - scope_start_ns) / 1e9, 3),
-+                            (time.time_ns() - conn_start_ns) / 1e9, 3),
-                         # silence before the close is THE discriminator among
-                         # the three causes: ~ping_timeout means the pipe went
-                         # quiet and we killed it; ~0 means we were killed
-                         # mid-flow (venue 1013, or TCP death).
-                         "silence_before_close_s": (
+-                        # silence before the close is THE discriminator among
+-                        # the three causes: ~ping_timeout means the pipe went
+-                        # quiet and we killed it; ~0 means we were killed
+-                        # mid-flow (venue 1013, or TCP death).
+-                        "silence_before_close_s": (
 -                            None if not last_recv_ns else
 -                            round((time.time_ns() - last_recv_ns) / 1e9, 3)),
-+                            None if not nonlocal_conn["last_recv_ns"] else
-+                            round((time.time_ns()
-+                                   - nonlocal_conn["last_recv_ns"]) / 1e9, 3)),
-                         # the keepalive settings IN FORCE, recorded per event
-                         # rather than inferred from the era later. The 08-30
-                         # cadence change had to be reconstructed from an era
-@@ -995,6 +1021,20 @@ class PMCollector:
-             print("[pm] stopped", flush=True)
- 
- 
-+def _conn_local_probe() -> tuple:
-+    """(failing_socket_conn_msgs, sibling_coin_global) for one coin.
-+
-+    The old field subtracted two reads of the coin-global counter, so the
-+    sibling's traffic appeared as the failing socket's own. Attempt-local
-+    state cannot do that by construction; this pins it.
-+    """
-+    c = PMCollector()
-+    failing = {"msgs": 0, "last_recv_ns": None}     # this socket got nothing
-+    for _ in range(7):                              # a healthy SIBLING did
-+        c.msg_by_coin["btc"] += 1
-+    return failing["msgs"], c.msg_by_coin["btc"]
-+
-+
- def _health_append_probe() -> tuple:
-     """(rows_written, errors_counted) — proves the writer writes AND that a
-     failure is counted rather than vanishing. Uses a temp ledger; never the
-@@ -1076,6 +1116,13 @@ def selftest() -> int:
-         # would disable it SILENTLY and forever. Building the row here makes a
-         # rename fail the suite instead. (Caught during authoring: the first
-         # version referenced self.ws_qmax_ever, which does not exist.)
-+        # Codex V41-F3: the sibling-socket case. Two market tasks for one
-+        # coin overlap by design, so a COIN-GLOBAL delta credits the failing
-+        # socket with a healthy sibling's messages. Codex's fixture reported
-+        # conn_msgs=7 for a socket that received zero.
-+        ("V41-F3: conn_msgs is ATTEMPT-LOCAL — a sibling socket's 7 messages "
-+         "do NOT credit a failing socket that received none",
-+         _conn_local_probe() == (0, 7)),
-         # Codex V41-F7 required BOTH: proof the append works, and proof its
-         # failure becomes externally observable. The old selftest built the
-         # payload and never wrote it, so a broken writer was indistinguishable
+-                        # the keepalive settings IN FORCE, recorded per event
+-                        # rather than inferred from the era later. The 08-30
+-                        # cadence change had to be reconstructed from an era
+-                        # ledger to interpret any of these numbers.
++                        **connection_diagnostics(
++                            conn_start_ns, conn["msgs"],
++                            conn["last_recv_ns"], time.time_ns()),
+                         "keepalive": connect_keepalive_kwargs(
+                             self.heartbeat_mode),
+                         # clob_v3_1: were WE the slow consumer, or the venue?
+@@ -1086,6 +1108,23 @@
+          "silence from a dead writer and silence from a perfect one are the "
+          "same bytes",
+          _health_append_probe()[1] == 1),
++        # These call connection_diagnostics -- THE PRODUCTION FUNCTION -- so
++        # a mutant in its expression fails here.
++        ("V41-F3: conn_msgs comes from ATTEMPT-LOCAL state via the SAME "
++         "function production calls; the coin-global counter is not an input",
++         connection_diagnostics(10**9, 0, None, 4*10**9)["conn_msgs"] == 0),
++        ("V41-F3: conn_lifetime_s measures THIS connection (3.0s), not the "
++         "market task's age",
++         connection_diagnostics(10**9, 5, None,
++                                4*10**9)["conn_lifetime_s"] == 3.0),
++        ("V41-F3: a connection that NEVER delivered reports silence None, "
++         "not silence since the PREVIOUS connection",
++         connection_diagnostics(10**9, 0, None,
++                                4*10**9)["silence_before_close_s"] is None),
++        ("V41-F3: and when it did deliver, silence is from ITS own last "
++         "message (2.0s)",
++         connection_diagnostics(10**9, 5, 2*10**9,
++                                4*10**9)["silence_before_close_s"] == 2.0),
+         ("health_sample row builds from REAL attributes — a rename breaks "
+          "this check instead of silently disabling the only per-coin "
+          "staleness signal the collector emits",
