@@ -1248,6 +1248,38 @@ CELL_STATUS_AGG_UNDECLARED = "AGGREGATION_UNDECLARED"
 # A1.4 (FROZEN): ONE adjudicated statistic per head. Everything else is
 # reported and NEVER adjudicated — a metric that can be swapped into a cell
 # after seeing results is a multiplicity leak.
+# prereg 3's per-head gates, TRANSCRIBED not paraphrased. They are NOT
+# uniform: Q1 and Q2 carry an incumbent term, Q3 does NOT, and Q4 is the
+# decision metric. F-4: the artifact must be able to answer "did this head
+# pass ITS OWN gate?" separately from the family-wide joint reading.
+DECLARED_GATES = {
+    "Q1_arrival": {
+        "gate": "beats the matched-random null AND beats the incumbent "
+                "hazard head",
+        "conjuncts": ("matched_random", "incumbent_hazard"),
+        "carries_incumbent_term": True},
+    "Q2_sign": {
+        "gate": "beats the matched-random null AND beats the incumbent, on "
+                "the fill-conditional population",
+        "conjuncts": ("matched_random", "incumbent"),
+        "carries_incumbent_term": True},
+    "Q3_magnitudes": {
+        "gate": "calibration slope CI excludes 0 for each, reported "
+                "separately",
+        "conjuncts": ("slope_excludes_zero_m_harm",
+                      "slope_excludes_zero_m_good"),
+        "carries_incumbent_term": False,
+        "note": "NO incumbent term. A NO_INCUMBENT_COUNTERPART status "
+                "therefore blocks this head for a reason its own frozen gate "
+                "never had (F-4). Whether that status should attach here is a "
+                "DESIGN question routed to the USER, not settled in code."},
+    "Q4_combined_ev": {
+        "gate": "net value increment over the incumbent on the identical "
+                "action population",
+        "conjuncts": ("increment_beats_incumbent",),
+        "carries_incumbent_term": True},
+}
+
 ADJUDICATED_STATISTIC = {
     "Q1_arrival": "auc",
     "Q2_sign": "auc",                 # min over the two Option-1 sign heads
@@ -1303,7 +1335,9 @@ def build_cell(arm: str, head: str, budget: str, statistic=None,
                p_value=None, status: str = CELL_STATUS_OK,
                n_actions: int = None, detail: str = "",
                arrival_n: int = None, statistic_n: int = None,
-               statistic_n_basis: str = "") -> dict:
+               statistic_n_basis: str = "", statistic_n_unit: str = "",
+               p_two_sided: float = None,
+               declared_gate: dict = None) -> dict:
     """One cell of the DECLARED family. A cell always exists, whatever its
     status — that is what keeps the denominator from shrinking.
 
@@ -1321,7 +1355,7 @@ def build_cell(arm: str, head: str, budget: str, statistic=None,
     than the widest one available; `arrival_n` keeps the wider figure
     addressable instead of deleting it."""
     n_stat = statistic_n if statistic_n is not None else n_actions
-    return {"cell": cell_key(arm, head, budget), "arm": arm, "head": head,
+    cell = {"cell": cell_key(arm, head, budget), "arm": arm, "head": head,
             "budget": budget,
             "adjudicated_statistic_name": ADJUDICATED_STATISTIC.get(head),
             "statistic": statistic, "p_value": p_value, "status": status,
@@ -1331,7 +1365,48 @@ def build_cell(arm: str, head: str, budget: str, statistic=None,
             "statistic_n_basis": statistic_n_basis or (
                 "NOT STATED: this cell carries no statistic-specific n, so "
                 "n_actions falls back to the arrival population and must not "
-                "be read as the statistic's own")}
+                "be read as the statistic's own"),
+            # F-5: the FIELD NAME asserts a unit the VALUE does not always
+            # have. Q4's statistic is a sum over WINDOWS and its n is 166
+            # windows, while the other eighteen cells carry actions; A1.5 says
+            # "n for every reported head is the ACTION count", so a reader
+            # comparing n_actions across cells compares windows to actions.
+            # The unit now travels with the number.
+            "statistic_n_unit": statistic_n_unit or (
+                "UNSTATED: do not compare this n across heads without one"),
+            # F-2: the FROZEN form's p, reported and never adjudicated.
+            # prereg 5(2) declares two-sided; R-286/R-288 adjudicate one-sided.
+            # Until the USER rules amendment A2 both travel, so a reader
+            # resolving this artifact against the frozen text can recover it.
+            "p_two_sided_REPORTED_NOT_ADJUDICATED": p_two_sided,
+            # F-4 mitigation: this head's OWN declared gate, separate from the
+            # family-wide joint reading. Prereg 3's gates are NOT uniform --
+            # Q3's carries no incumbent term at all -- so "survives" and
+            # "passed its declared gate" are different questions and a reader
+            # taking one for the other reads Q3 as failed.
+            "declared_gate": declared_gate or DECLARED_GATES.get(head)}
+    return cell
+
+
+def _distinct_results(cells: dict) -> dict:
+    """How many DISTINCT (statistic, p) pairs the declared cells carry. F-6."""
+    def pair(c):
+        return (c.get("statistic"), c.get("p_value"))
+    per_head: dict = {}
+    for c in cells.values():
+        per_head.setdefault(c["head"], set()).add(pair(c))
+    surv = {k: c for k, c in cells.items()
+            if c.get("survives_joint_reading_at_0_05")}
+    return {
+        "declared_cells": len(cells),
+        "distinct_overall": len({pair(c) for c in cells.values()}),
+        "distinct_per_head": {h: len(v) for h, v in sorted(per_head.items())},
+        "surviving_cells": len(surv),
+        "distinct_surviving_results": len({pair(c) for c in surv.values()}),
+        "why": "budgets select cancellations, not predictions, so Q1/Q2/Q3 "
+               "carry one statistic replicated across three budgets and only "
+               "Q4 varies by budget. Read the survivor count as DISTINCT "
+               "RESULTS, not as independent evidence."}
 
 
 def assemble_family(cells: dict) -> dict:
@@ -1396,6 +1471,15 @@ def assemble_family(cells: dict) -> dict:
         "cells_by_status": dict(sorted(by_status.items())),
         "surviving_cells": sorted(k for k, c in cells.items()
                                   if c["survives_joint_reading_at_0_05"]),
+        # F-6: 24 DECLARED cells do not carry 24 distinct results. Q1/Q2/Q3
+        # statistics are budget-invariant (budgets select CANCELLATIONS, not
+        # predictions), so each is ONE number replicated across three budgets;
+        # only Q4 varies by budget. "six of 24 survive" is therefore TWO AUCs
+        # counted three times each. The frozen design is conservative for Holm
+        # -- a larger denominator makes survival harder -- but the headline
+        # reads as more evidential breadth than exists, so the distinct count
+        # travels beside the cell count.
+        "distinct_results": _distinct_results(cells),
         "survivor_rule": survivor_rule,
         "cells_passing_holm_but_not_OK": sorted(
             k for k, c in cells.items()

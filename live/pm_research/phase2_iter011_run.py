@@ -711,11 +711,13 @@ def _one_cell(arm: str, head: str, budget: str, coin_results: dict,
 
     if head == "Q4_combined_ev":
         # the DECISION metric, per budget, with BOTH declared nulls
-        stat, pval, status, sn, snb, detail = _q4_cell(arm, budget, per_coin)
+        stat, pval, status, sn, snb, detail, p2 = _q4_cell(arm, budget,
+                                                            per_coin)
         return I11.build_cell(arm, head, budget, statistic=stat, p_value=pval,
                               status=status, n_actions=n_actions, detail=detail,
                               arrival_n=n_actions, statistic_n=sn,
-                              statistic_n_basis=snb)
+                              statistic_n_basis=snb, p_two_sided=p2,
+                              statistic_n_unit="windows")
 
     if head == "Q3_magnitudes" and len(per_coin) == 1:
         # R-306 RULED THIS AND THE CODE HAD NEVER IMPLEMENTED IT. The cell
@@ -729,7 +731,8 @@ def _one_cell(arm: str, head: str, budget: str, coin_results: dict,
         return I11.build_cell(arm, head, budget, statistic=stat, p_value=pval,
                               status=status, n_actions=n_actions, detail=detail,
                               arrival_n=n_actions, statistic_n=sn,
-                              statistic_n_basis=snb)
+                              statistic_n_basis=snb,
+                              statistic_n_unit="actions")
 
     # Q1/Q2/Q3: the adjudicated statistic is a discrimination/calibration
     # figure, identical across budgets (budgets select CANCELLATIONS, not
@@ -792,6 +795,7 @@ def _one_cell(arm: str, head: str, budget: str, coin_results: dict,
             arm, head, budget, statistic=min(good),
             status=I11.CELL_STATUS_UNDERPOWERED, n_actions=n_actions,
             arrival_n=n_actions, statistic_n=_sn, statistic_n_basis=_snb,
+            statistic_n_unit="actions",
             detail=f"at least one coin is not OK: {statuses}")
     # THE COLLAPSE IS ONLY UNAMBIGUOUS WHEN THERE IS NOTHING TO COLLAPSE.
     # A single coin and a single sub-head need no undeclared rule, so those
@@ -822,6 +826,7 @@ def _one_cell(arm: str, head: str, budget: str, coin_results: dict,
             arm, head, budget, statistic=min(good), p_value=None,
             status=I11.CELL_STATUS_AGG_UNDECLARED, n_actions=n_actions,
             arrival_n=n_actions, statistic_n=_sn, statistic_n_basis=_snb,
+            statistic_n_unit="actions",
             detail="AGGREGATION UNDECLARED, stated for ruling rather than "
                    "chosen (I11-B4): " + "; ".join(ambiguous) +
                    f". The worst-coin statistic {min(good)!r} is carried as a "
@@ -833,6 +838,7 @@ def _one_cell(arm: str, head: str, budget: str, coin_results: dict,
             arm, head, budget, statistic=min(good), p_value=(ps[0] if ps else None),
             status=I11.CELL_STATUS_NO_COUNTERPART, n_actions=n_actions,
             arrival_n=n_actions, statistic_n=_sn, statistic_n_basis=_snb,
+            statistic_n_unit="actions",
             detail=f"R-237: the incumbent has no sign/magnitude head, so no "
                    f"INCREMENTAL null exists for this head. The p reported is "
                    f"the MATCHED-RANDOM null (prereg §5.1), which does apply; "
@@ -842,7 +848,7 @@ def _one_cell(arm: str, head: str, budget: str, coin_results: dict,
         p_value=(ps[0] if ps else None),
         status=I11.CELL_STATUS_OK if ps else I11.CELL_STATUS_UNEVALUABLE,
         n_actions=n_actions, arrival_n=n_actions,
-        statistic_n=_sn, statistic_n_basis=_snb,
+        statistic_n=_sn, statistic_n_basis=_snb, statistic_n_unit="actions",
         detail=(f"single coin, single head: adjudicated on its own "
                 f"matched-random null (prereg §5.1), {len(ps)} p available"
                 if ps else
@@ -1089,6 +1095,91 @@ def _head_n(r_arm: dict, sub: str):
     return n if isinstance(n, int) else None
 
 
+def _cell_n_draws(receipt: dict, cell: dict):
+    """The draw count behind THIS cell's adjudicated p, read from the heads.
+
+    Read, never assumed: Q4's p comes from the sign-flip null (n_perm) and
+    Q1/Q2/Q3's from the matched-random null (n_draws), and the two counts
+    DIFFER in this artifact -- which is itself part of what F-3 exposes."""
+    head, arm = cell.get("head"), cell.get("arm")
+    if head == "Q4_combined_ev":
+        return I11.N_PERM_011
+    subs = _CELL_SUBHEADS.get(head, ())
+    for arms in (receipt.get("results") or {}).values():
+        hs = ((arms.get(arm) or {}).get("heads")) or {}
+        for sub in subs:
+            n = ((hs.get(sub) or {}).get("matched_random") or {}).get("n_draws")
+            if n:
+                return n
+    return None
+
+
+def attach_floor_disclosure(receipt: dict) -> dict:
+    """Every cell at its null's floor SAYS SO -- above all a surviving one."""
+    cells = ((receipt.get("family") or {}).get("cells")) or {}
+    m = (receipt.get("family") or {}).get("holm_denominator") or 24
+    at, seen = [], 0
+    for key, c in cells.items():
+        nd = _cell_n_draws(receipt, c)
+        d = permutation_floor_disclosure(c.get("p_value"), nd, m)
+        c["permutation_floor"] = d
+        seen += 1
+        if d.get("at_permutation_floor"):
+            at.append(key)
+    surv_at = sorted(k for k in at
+                     if cells[k].get("survives_joint_reading_at_0_05"))
+    receipt["family"]["permutation_floor_summary"] = {
+        "cells_read": seen, "cells_at_floor": len(at),
+        "SURVIVING_cells_at_floor": surv_at,
+        "draw_counts_are_not_uniform": sorted(
+            {_cell_n_draws(receipt, c) for c in cells.values()}
+            - {None}),
+        "why": "F-3: a surviving cell sitting on its null's floor survives by "
+               "ONE DRAW. The draw counts differ by head in this artifact "
+               "(the increment null runs at the A1.6-pinned n_perm; the "
+               "matched-random null runs at its own declared constant), so "
+               "the head that survives and the head that fails were not "
+               "measured at the same resolution -- stated, not corrected: "
+               "changing a declared constant after seeing the result is "
+               "rule 11's territory and is ESCALATED, not done here."}
+    return receipt["family"]["permutation_floor_summary"]
+
+
+def permutation_floor_disclosure(p_value, n_draws, m: int = 24) -> dict:
+    """Is this cell's p the SMALLEST its null can produce, and by what margin?
+
+    F-3. Every Q1/Q2/Q3 cell sits at p = 1/501 EXACTLY -- 0 of 500 draws beat
+    the observed -- and Q1, the head that SURVIVES, carried no floor language
+    at all while Q3, which decides nothing, carried it on all six cells. The
+    disclosure was present exactly where it did not matter.
+
+    The margin is the point and it is arithmetic, not rhetoric: at the floor
+    the family clears the bar at holm = m/(n+1); had ONE draw of the n beaten
+    the observed, p = 2/(n+1) and holm doubles. Stated per cell so a reader of
+    a SURVIVING cell sees how wide its survival is."""
+    if p_value is None or not n_draws:
+        return {"at_permutation_floor": False,
+                "why": "no p or no draw count, so the floor is undefined here"}
+    floor = 1.0 / (n_draws + 1)
+    at = abs(p_value - floor) < 1e-15
+    nxt = 2.0 / (n_draws + 1)
+    return {
+        "at_permutation_floor": at,
+        "n_draws": n_draws,
+        "floor_p": floor,
+        "holm_at_floor": min(1.0, m * floor),
+        "next_attainable_p": nxt,
+        "holm_if_ONE_draw_had_beaten_the_observed": min(1.0, m * nxt),
+        "margin_in_draws": 1 if at else None,
+        "why": ("AT THE FLOOR: 0 of {n} draws reached the observed, so this p "
+                "is the smallest this null can express and the result is "
+                "RESOLUTION-LIMITED. One draw the other way moves holm from "
+                "{a:.4f} to {b:.4f}. A p at the floor is a bound, not a "
+                "measurement.").format(n=n_draws, a=min(1.0, m * floor),
+                                       b=min(1.0, m * nxt))
+        if at else "not at the floor; the null had room to express this p"}
+
+
 def _q3_compose(arm: str, per_coin: dict) -> tuple:
     """Q3's cell under R-306: CONJUNCTION + WORSE SIDE.
 
@@ -1258,7 +1349,7 @@ def _q4_cell(arm: str, budget: str, per_coin: dict) -> tuple:
         econ = r[arm].get("economics", {}).get(budget)
         if not econ:
             return (None, None, I11.CELL_STATUS_UNEVALUABLE, None, "",
-                    f"no economics for {coin}@{budget}")
+                    f"no economics for {coin}@{budget}", None)
         net += econ["net_cents"]
         # I11-B2: this key EXISTS ONLY when economics were paired against an
         # incumbent. Previously the cell read the candidate's own value from
@@ -1277,7 +1368,7 @@ def _q4_cell(arm: str, budget: str, per_coin: dict) -> tuple:
                     f"counterpart, so no candidate-minus-incumbent statistic "
                     f"exists on the identical action population (prereg 5.2). "
                     f"Net {net:+.1f}c is the CANDIDATE'S OWN value and is not "
-                    f"an increment.")
+                    f"an increment.", None)
         incumbent_net += econ.get("incumbent_net_cents") or 0.0
         _n_ranked += econ.get("n_actions_total") or 0
         for w, v in econ["increment_by_window"].items():
@@ -1285,7 +1376,7 @@ def _q4_cell(arm: str, budget: str, per_coin: dict) -> tuple:
             inc_by_window[f"{coin}/{w}"] = inc_by_window.get(f"{coin}/{w}", 0.0) + v
     if not inc_by_window:
         return (net, None, I11.CELL_STATUS_UNEVALUABLE, None, "",
-                "no per-window increments to permute")
+                "no per-window increments to permute", None)
     null = I11.sign_flip_null(inc_by_window)
     # I11-B5: the STATISTIC is the INCREMENT, because the p describes the
     # increment. The cell previously returned `net` -- the candidate's own
@@ -1302,6 +1393,13 @@ def _q4_cell(arm: str, budget: str, per_coin: dict) -> tuple:
     # sign-flip over those same windows, so the n behind the number is the
     # WINDOW count, not the action count -- naming the action count here
     # would overstate the unit the interval-free claim rests on (rule 8).
+    # F-2: R-288 promised p_two_sided "stays as a REPORTED diagnostic so
+    # nothing citing it breaks" and it occurred ZERO times in the artifact,
+    # so the FROZEN form's p could not be recovered from the emission at all.
+    # The frozen prereg 5(2) says two-sided; the adjudicated p is one-sided
+    # (R-286/R-288) and only the USER amends a frozen design (rule 4), so the
+    # frozen form travels beside the adjudicated one until A2 is ruled.
+    _two = null.get("p_two_sided")
     return (inc_net, null["p_value"], I11.CELL_STATUS_OK, null["n_units"],
             f"windows carrying a candidate-minus-incumbent increment "
             f"(sign-flip units, R-234 sorted order); the action population "
@@ -1312,7 +1410,14 @@ def _q4_cell(arm: str, budget: str, per_coin: dict) -> tuple:
             f"REPORTED not adjudicated: candidate_net_cents {net:+.1f}, "
             f"incumbent_net_cents {incumbent_net:+.1f}; the adjudicated "
             f"statistic is the INCREMENT {inc_net:+.1f}c, which is what this "
-            f"p describes.")
+            f"p describes. FROZEN-FORM DIAGNOSTIC (F-2): prereg 5(2) declares "
+            f"a TWO-SIDED p and the adjudicated p here is ONE-SIDED per "
+            f"R-286/R-288 (a two-sided test scores |sum|, so a candidate "
+            f"LOSING by 120c earns the p of one WINNING by 120c). The frozen "
+            f"form is p_two_sided={_two!r}; it is REPORTED and never "
+            f"adjudicated, and amendment A2 is DRAFT-FOR-USER-FREEZE because "
+            f"only the USER amends a frozen design (rule 4).",
+            _two)
 
 
 def _selftest_verdict(fails: list) -> int:
@@ -1918,7 +2023,7 @@ def selftest() -> int:
     _pc = {"btc": {"composed_linear": {
         "economics": q4_economics(_q4p, _q4rows, incumbent=_q4i),
         "heads": {}, "adjudicated_statistics": {}}}}
-    _st, _pv, _stat, _sn4, _snb4, _det = _q4_cell(
+    _st, _pv, _stat, _sn4, _snb4, _det, _p2a = _q4_cell(
         "composed_linear", I11.BUDGETS_011[0], _pc)
     _ec0 = _pc["btc"]["composed_linear"]["economics"][I11.BUDGETS_011[0]]
     ok(_st == sum(_ec0["increment_by_window"].values()),
@@ -1972,7 +2077,7 @@ def selftest() -> int:
     _lpc = {"btc": {"composed_linear": {
         "economics": q4_economics(_lp, _lose, incumbent=_li),
         "heads": {}, "adjudicated_statistics": {}}}}
-    _ls, _lpv, _lst, _lsn, _lsnb, _ld = _q4_cell(
+    _ls, _lpv, _lst, _lsn, _lsnb, _ld, _lp2 = _q4_cell(
         "composed_linear", I11.BUDGETS_011[0], _lpc)
     _inc = sum(_lpc["btc"]["composed_linear"]["economics"]
                [I11.BUDGETS_011[0]]["increment_by_window"].values())
@@ -1988,8 +2093,318 @@ def selftest() -> int:
     _selftest_q3_r306(ok)
     _selftest_incumbent_wiring(ok)
     _selftest_survivor_and_provenance(ok)
+    _selftest_artifact_wiring_guard(ok)
+    _selftest_review_batch_f2_f7(ok)
 
     return _selftest_verdict(fails)
+
+
+def _selftest_review_batch_f2_f7(ok):
+    """F-2..F-7 from the reviewer's filing. Each must fire AND admit."""
+    # ---- F-3 the floor disclosure -------------------------------------
+    _f = permutation_floor_disclosure(1 / 501, 500, 24)
+    ok(_f["at_permutation_floor"] is True
+       and abs(_f["holm_at_floor"] - 24 / 501) < 1e-15
+       and abs(_f["holm_if_ONE_draw_had_beaten_the_observed"] - 48 / 501) < 1e-15
+       and _f["margin_in_draws"] == 1,
+       f"F-3 a p at 1/(n+1) is NAMED as the floor with the one-draw margin "
+       f"computed: holm {_f['holm_at_floor']:.4f} -> "
+       f"{_f['holm_if_ONE_draw_had_beaten_the_observed']:.4f}")
+    _nf = permutation_floor_disclosure(2 / 501, 500, 24)
+    ok(_nf["at_permutation_floor"] is False and _nf["margin_in_draws"] is None,
+       "F-3 KNOWN-BAD: a p ONE draw off the floor is NOT reported as at it — "
+       "a disclosure that fired on every cell would say nothing")
+    ok(permutation_floor_disclosure(None, 500)["at_permutation_floor"] is False
+       and permutation_floor_disclosure(0.5, None)["at_permutation_floor"]
+       is False,
+       "F-3 a missing p or a missing draw count leaves the floor UNDEFINED "
+       "rather than defaulting to a claim either way")
+    # it must reach the SURVIVING cells, which is the whole finding
+    _rc = {"family": {"cells": {}, "holm_denominator": 24},
+           "results": {"btc": {"composed_linear": {"heads": {
+               "Q1_arrival": {"matched_random": {"n_draws": 500}}}}}}}
+    _rc["family"]["cells"]["composed_linear/Q1_arrival/5%"] = I11.build_cell(
+        "composed_linear", "Q1_arrival", "5%", statistic=0.83,
+        p_value=1 / 501, n_actions=10)
+    _rc["family"]["cells"]["composed_linear/Q1_arrival/5%"][
+        "survives_joint_reading_at_0_05"] = True
+    _sm = attach_floor_disclosure(_rc)
+    ok(_sm["cells_at_floor"] == 1
+       and _sm["SURVIVING_cells_at_floor"] == ["composed_linear/Q1_arrival/5%"],
+       f"F-3 the disclosure reaches the SURVIVING cell — it was present on "
+       f"all six Q3 cells, which decide nothing, and on ZERO Q1 cells, which "
+       f"are the head that survives (got {_sm['SURVIVING_cells_at_floor']})")
+
+    # ---- F-4 the head's OWN declared gate ------------------------------
+    _c3 = I11.build_cell("composed_linear", "Q3_magnitudes", "5%", n_actions=1)
+    _c1 = I11.build_cell("composed_linear", "Q1_arrival", "5%", n_actions=1)
+    ok(_c3["declared_gate"]["carries_incumbent_term"] is False
+       and _c1["declared_gate"]["carries_incumbent_term"] is True,
+       "F-4 each cell carries its head's OWN frozen gate, and the field "
+       "DISCRIMINATES: Q3's gate has no incumbent term, Q1's does — so "
+       "'survives' and 'passed its declared gate' are separable questions")
+    ok("CI excludes 0" in _c3["declared_gate"]["gate"]
+       and "no incumbent term" in _c3["declared_gate"]["note"].lower()
+       or "NO incumbent term" in _c3["declared_gate"]["note"],
+       "F-4 and Q3's cell states WHY a NO_INCUMBENT_COUNTERPART status is a "
+       "question for the USER rather than a settled verdict")
+
+    # ---- F-5 the unit travels with the number --------------------------
+    _cw = I11.build_cell("composed_linear", "Q4_combined_ev", "5%",
+                         n_actions=166, statistic_n=166,
+                         statistic_n_unit="windows")
+    _ca = I11.build_cell("composed_linear", "Q2_sign", "5%", n_actions=17604,
+                         statistic_n=17604, statistic_n_unit="actions")
+    ok(_cw["statistic_n_unit"] == "windows"
+       and _ca["statistic_n_unit"] == "actions",
+       "F-5 the unit travels with the n: Q4's 166 are WINDOWS while the other "
+       "cells carry ACTIONS, and the field name asserts the wrong one")
+    ok("UNSTATED" in I11.build_cell("a", "b", "c")["statistic_n_unit"],
+       "F-5 KNOWN-BAD: an unstated unit says UNSTATED rather than defaulting "
+       "to 'actions', which would be a claim nobody made")
+
+    # ---- F-2 the frozen-form p is REPORTED -----------------------------
+    _cp = I11.build_cell("composed_linear", "Q4_combined_ev", "5%",
+                         p_value=0.02, p_two_sided=0.0499)
+    ok(_cp["p_two_sided_REPORTED_NOT_ADJUDICATED"] == 0.0499
+       and _cp["p_value"] == 0.02,
+       "F-2 the FROZEN two-sided form travels beside the adjudicated "
+       "one-sided p (R-288 promised it and it occurred ZERO times)")
+    ok(I11.build_cell("a", "b", "c")["p_two_sided_REPORTED_NOT_ADJUDICATED"]
+       is None,
+       "F-2 KNOWN-BAD: a cell with no incremental null carries None, not a "
+       "fabricated diagnostic")
+
+    # ---- F-6 distinct results beside the cell count --------------------
+    def famcells(q4_varies):
+        cs = {}
+        for a in I11.ARMS_011:
+            for h in I11.HEADS_011:
+                for i, b in enumerate(I11.BUDGETS_011):
+                    st = (1.0 + i if (q4_varies and h == "Q4_combined_ev")
+                          else 1.0)
+                    cs[I11.cell_key(a, h, b)] = I11.build_cell(
+                        a, h, b, statistic=st, p_value=0.01, n_actions=1)
+        return cs
+    _d = I11._distinct_results(famcells(True))
+    # 3, not 4: Q1/Q2/Q3 all share (1.0, 0.01) in this fixture, so the
+    # DISTINCT PAIRS are Q4's three. My first expectation counted heads
+    # instead of pairs and the control caught it.
+    ok(_d["declared_cells"] == 24 and _d["distinct_overall"] == 3
+       and _d["distinct_per_head"]["Q1_arrival"] == 1
+       and _d["distinct_per_head"]["Q4_combined_ev"] == 3,
+       f"F-6 the DISTINCT result count is stated beside the cell count: "
+       f"budget-invariant heads carry ONE number replicated three times "
+       f"(got {_d['distinct_overall']} distinct over 24 cells)")
+    _d2 = I11._distinct_results(famcells(False))
+    ok(_d2["distinct_overall"] == 1 and _d2["distinct_per_head"][
+        "Q4_combined_ev"] == 1,
+       "F-6 KNOWN-BAD: with Q4 also invariant the count falls to 1 — the "
+       "field measures the replication rather than restating the cell count")
+
+    # ---- F-7 tri-state, named paths, carrying_commit -------------------
+    # THE UNREADABLE-GIT BRANCH, EXECUTED. Injecting the failure is the only
+    # way to reach it on a working machine, and without it a mutant deleting
+    # the tri-state survived a green suite.
+    _unk = producing_code_provenance(_git_runner=lambda *a: None)
+    ok(_unk["working_tree_dirty"] == "unknown"
+       and _unk["producing_code_was_clean"] is None
+       and _unk["dirty_paths"] is None,
+       f"F-7 KNOWN-BAD: an UNREADABLE git status reports dirty='unknown', not "
+       f"False — rule 11 applies to the FLAG, not to a note beside it (got "
+       f"{_unk['working_tree_dirty']!r})")
+    ok(_unk["fit_code_ref_resolved"] is False
+       and "UNAVAILABLE" in _unk["fit_code_ref"],
+       "F-7 and the ref is a NAMED absence in the same failure, so neither "
+       "field silently reads as a pass")
+    _pv = producing_code_provenance()
+    ok(_pv["working_tree_dirty"] in (True, False, "unknown")
+       and _pv["working_tree_dirty"] != "unknown",
+       f"F-7 the dirty flag is TRI-STATE (got "
+       f"{_pv['working_tree_dirty']!r}); an unreadable git status is never "
+       f"reported as clean")
+    ok(_pv.get("carrying_commit") and _pv["carrying_commit"] == _pv["fit_code_ref"],
+       "F-7 every result-bearing receipt gains a carrying_commit field")
+    if _pv["working_tree_dirty"] is True:
+        ok(isinstance(_pv["dirty_paths"], list) and _pv["dirty_paths"],
+           f"F-7 a DIRTY tree NAMES its paths, so a reader need not use git "
+           f"to learn whether the dirt touched the producing code (got "
+           f"{len(_pv['dirty_paths'])} paths)")
+        ok(_pv["producing_code_was_clean"] is (not _pv[
+            "dirty_paths_touching_the_producing_code"]),
+           "F-7 and it states whether any dirty path touched the 011 modules "
+           "or the lattice — computed, not asserted")
+    else:
+        ok(_pv["dirty_paths"] == [] or _pv["dirty_paths"] is None,
+           "F-7 a clean (or unreadable) tree names no paths")
+
+
+def _selftest_artifact_wiring_guard(ok):
+    """F-1: the guard that sees a value NOT FLOWING, which source text cannot."""
+    def receipt(paired=True, q4_status=I11.CELL_STATUS_OK, comparable=True):
+        cells = {}
+        for a in I11.ARMS_011:
+            for h in I11.HEADS_011:
+                for b in I11.BUDGETS_011:
+                    cells[I11.cell_key(a, h, b)] = I11.build_cell(
+                        a, h, b, statistic=1.0, p_value=0.01,
+                        status=(q4_status if h == "Q4_combined_ev"
+                                else I11.CELL_STATUS_OK),
+                        n_actions=10, detail="fixture")
+        econ = {b: {"paired_against_incumbent": paired,
+                    "incumbent_net_cents": (1.0 if paired else None),
+                    "n_actions_total": 10} for b in I11.BUDGETS_011}
+        return {"family": {"cells": cells},
+                "incumbent_null_applicability": {"comparable": {
+                    "Q1_arrival": True, "Q2_sign": False,
+                    "Q3_magnitudes": False,
+                    "Q4_combined_ev": comparable}},
+                "results": {"btc": {a: {"economics": econ}
+                                    for a in I11.ARMS_011}}}
+
+    # POSITIVE CONTROL, and it must ADMIT: a properly wired receipt passes.
+    _ev = assert_incumbent_applicability_honoured(receipt())
+    ok(_ev["checks"] > 0 and "Q4_combined_ev" in _ev["comparable_heads"],
+       f"F-1 POSITIVE CONTROL: a correctly wired receipt is ADMITTED and the "
+       f"guard reports how much it read ({_ev['checks']} checks)")
+
+    # THE REVIEWER'S MUTANT A, at the artifact: comparable true, cells saying
+    # NO_INCUMBENT_COUNTERPART, economics unpaired. Every source-text guard
+    # still passes on that code, which is exactly why this one reads OUTPUT.
+    # EACH KNOWN-BAD ISOLATES ONE CONDITION. My first set triggered two at
+    # once, so disabling either check left the other still firing and three
+    # mutants survived a suite that looked thorough. A known-bad that trips
+    # two guards proves neither.
+    def econ_only(paired, net):
+        return {**receipt(), "results": {"btc": {a: {"economics": {
+            b: {"paired_against_incumbent": paired,
+                "incumbent_net_cents": net} for b in I11.BUDGETS_011}}
+            for a in I11.ARMS_011}}}
+
+    for _lbl, _r in (
+            # status alone: economics fully paired, only the cells disagree
+            ("cells say no counterpart, economics FINE",
+             {**econ_only(True, 1.0), "family": receipt(
+                 q4_status=I11.CELL_STATUS_NO_COUNTERPART)["family"]}),
+            # paired alone: net present, so only the paired flag is wrong
+            ("economics UNPAIRED but net present", econ_only(False, 1.0)),
+            # net alone: paired true, so only the null net is wrong
+            ("paired but incumbent_net_cents null", econ_only(True, None))):
+        try:
+            assert_incumbent_applicability_honoured(_r)
+            ok(False, f"F-1 KNOWN-BAD ({_lbl}) must REFUSE")
+        except RuntimeError as e:
+            ok("DECLARED comparable" in str(e),
+               f"F-1 KNOWN-BAD ({_lbl}): the artifact-level guard FIRES where "
+               f"the source-text guard cannot — a call whose result never "
+               f"reaches the consumer leaves every guarded string intact")
+
+    # ...and it must not fire on a head that was never declared comparable,
+    # or it is a guard that refuses universally rather than discriminating.
+    _nc = receipt(paired=False, q4_status=I11.CELL_STATUS_NO_COUNTERPART,
+                  comparable=False)
+    _nc["results"] = {"btc": {a: {"economics": {}} for a in I11.ARMS_011}}
+    _ev2 = assert_incumbent_applicability_honoured(_nc)
+    ok(_ev2["checks"] > 0 and "Q4_combined_ev" not in _ev2["comparable_heads"],
+       "F-1 CONTROL: a head declared NOT comparable may carry "
+       "NO_INCUMBENT_COUNTERPART without refusing — the guard discriminates "
+       "on the declaration, it does not refuse universally")
+
+    # BOTH HALVES, and neither is sufficient alone (rule 17). The
+    # artifact-level guard proves a value FLOWED -- that is the half the
+    # reviewer's MUTANT A defeated. This source check proves the seam is
+    # still CALLED, which is the half no artifact can show: a deleted line
+    # leaves nothing behind to inspect, and on a healthy pipeline removing a
+    # guard changes no output at all. Measured: a mutant deleting
+    # `assert_dry_run_family(out)` survived every other instrument here.
+    # Anchored on the definition, never on the bare substring.
+    _srcm = Path(__file__).read_text(encoding="utf-8")
+    _mainsrc = _srcm[_srcm.index("\ndef main() -> int:"):]
+    ok("assert_dry_run_family(out)" in _mainsrc,
+       "F-1(2) main()'s dry path still CALLS assert_dry_run_family — a source "
+       "check because the failure mode is a DELETED line, which no artifact "
+       "and no unit test can see; it complements the artifact guard rather "
+       "than substituting for it")
+    ok(_mainsrc.count("assert_incumbent_applicability_honoured(out)") >= 1,
+       "F-1 and main() still CALLS the artifact-level guard on the real path")
+    _rj = _srcm[_srcm.index("\ndef readjudicate("):
+                _srcm.index("\ndef declared_outputs_for(")]
+    ok("assert_incumbent_applicability_honoured(out)" in _rj
+       and "attach_floor_disclosure(out)" in _rj,
+       "F-1 --readjudicate carries the SAME guarantees; a mode that skipped "
+       "them would be a second door into the same room")
+
+    # An EMPTY read must refuse, never pass (R-289, the checker's chair).
+    for _lbl, _bad, _want in (
+            ("no cells", {"incumbent_null_applicability":
+                          {"comparable": {"Q4_combined_ev": True}}},
+             "empty read"),
+            ("no declaration", {"family": {"cells": {"x": {}}}}, "empty read"),
+            # THE ZERO-VISIT CASE, isolated: cells and declarations both
+            # present and non-empty, but NOTHING matches -- so the loop body
+            # never runs. The two above are caught by the entry check and
+            # left the `checked == 0` refusal untested; a mutant deleting it
+            # survived.
+            ("declared head no cell carries",
+             {"family": {"cells": {"k": {"head": "Q1_arrival",
+                                         "status": "OK"}}},
+              "incumbent_null_applicability": {"comparable": {"Q9_absent": True}},
+              "results": {}},
+             "ZERO cells")):
+        try:
+            assert_incumbent_applicability_honoured(_bad)
+            ok(False, f"F-1 an empty read ({_lbl}) must REFUSE")
+        except RuntimeError as e:
+            ok(_want.lower() in str(e).lower(),
+               f"F-1 KNOWN-BAD ({_lbl}): a guard that runs on an empty read "
+               f"reports a pass it never established (wanted {_want!r})")
+
+    # The dry seam's own assertion, in all four directions. It asserts the
+    # OUTPUT, and it also asserts that the guards LEFT EVIDENCE -- because a
+    # guard REMOVED from main() cannot be caught by running a healthy
+    # pipeline: it only fires when something else is broken too.
+    def emitted(**kw):
+        r = receipt(**kw)
+        r["incumbent_applicability_guard"] = {"checks": 18}
+        for c in r["family"]["cells"].values():
+            c["permutation_floor"] = {"at_permutation_floor": False}
+        return r
+
+    ok(assert_dry_run_family(emitted())["all_carry_an_increment"],
+       "F-1(2) POSITIVE CONTROL: --dry-run's family assertion ADMITS a wired "
+       "family that carries its guards' evidence")
+    for _lbl, _r, _want in (
+            ("Q4 carries no increment",
+             emitted(paired=False,
+                     q4_status=I11.CELL_STATUS_NO_COUNTERPART),
+             "no increment"),
+            ("the applicability guard left NO evidence",
+             {**emitted(), "incumbent_applicability_guard": {}},
+             "was not called"),
+            ("the floor disclosure never reached the cells",
+             {**emitted(), "family": receipt()["family"]},
+             "permutation_floor")):
+        try:
+            assert_dry_run_family(_r)
+            ok(False, f"F-1(2) the dry seam must REFUSE ({_lbl})")
+        except RuntimeError as e:
+            ok(_want in str(e),
+               f"F-1(2) KNOWN-BAD ({_lbl}): --dry-run REFUSES rather than "
+               f"exiting 0 — the harness that proves the wiring could not "
+               f"fail when the wiring was cut")
+
+    # The escalation field must SAY when a declared leg was never computed.
+    _legs = incumbent_legs_evaluated(receipt())
+    ok(_legs["Q1_arrival"]["declared_comparable"] is True
+       and _legs["Q1_arrival"]["incumbent_counterpart_computed"] is False
+       and "NO COUNTERPART COMPUTED" in _legs["Q1_arrival"]["note"],
+       "F-1 Q1 is declared comparable and its incumbent leg is NOT computed; "
+       "the artifact SAYS so rather than the guard's scoping hiding it")
+    ok(_legs["Q4_combined_ev"]["incumbent_counterpart_computed"] is True
+       and _legs["Q2_sign"]["declared_comparable"] is False,
+       "F-1 and the field discriminates: Q4's leg reads computed, Q2 reads "
+       "not-declared — a field that said the same thing everywhere would "
+       "report nothing")
 
 
 def _selftest_survivor_and_provenance(ok):
@@ -2692,6 +3107,13 @@ def readjudicate(src: Path) -> tuple:
     out["family"] = fam
     out["as_of"] = run_as_of()
     out["producing_code"] = producing_code_provenance()
+    # A RE-ADJUDICATION MUST CARRY THE SAME GUARANTEES AS AN EMISSION.
+    # Otherwise this mode becomes the way a receipt reaches a reader without
+    # the checks the main path enforces -- a second door into the same room.
+    attach_floor_disclosure(out)
+    out["incumbent_applicability_guard"] = \
+        assert_incumbent_applicability_honoured(out)
+    out["incumbent_legs_evaluated"] = incumbent_legs_evaluated(out)
     out["supersedes"] = {
         "source": str(src), "source_sha256_prefix":
             hashlib.sha256(src.read_bytes()).hexdigest()[:16],
@@ -2724,6 +3146,182 @@ def readjudicate(src: Path) -> tuple:
         json.dump(out, fh, indent=1, sort_keys=True, default=str)
         fh.flush(); os.fsync(fh.fileno())
     return out, dst
+
+
+# ---------------------------------------------------------------------------
+# F-1: THE ARTIFACT-LEVEL GUARD. A source guard cannot see a value that does
+# not flow.
+# ---------------------------------------------------------------------------
+# The reviewer's MUTANT A defeated the previous protection with ONE line
+# inserted immediately before the consumer:
+#
+#     inc_pred = None           # every guarded string left intact
+#     rep["economics"] = q4_economics(ap, EVAL[coin]["kept"], incumbent=inc_pred)
+#
+# selftest GREEN, --dry-run exit 0, the "[btc/incumbent] ... applied to 400
+# rows" line still printed (it is emitted BEFORE the unwiring), and the emitted
+# artifact reproduced the exact Q-DA-197 contradiction: comparable true, six
+# NO_INCUMBENT_COUNTERPART cells, and a q4_incumbent block still asserting the
+# incumbent was loaded and applied.
+#
+# Source-text assertions prove a LINE EXISTS. This proves the RESULT ARRIVED,
+# read off the emitted artifact, which is the only thing a reader has.
+
+
+def assert_dry_run_family(receipt: dict) -> dict:
+    """--dry-run must ASSERT its own family before exiting 0. F-1(2).
+
+    The dry run substitutes populations and runs everything else unchanged,
+    so it is the right instrument for wiring -- but it is exempt from the
+    output guard by declared mode and asserted nothing, so MUTANT A produced
+    a contradictory artifact through it and exited 0. At minimum Q4 must
+    carry an increment: that is the value the whole wiring exists to deliver,
+    and it is absent exactly when the wiring is cut."""
+    cells = ((receipt.get("family") or {}).get("cells")) or {}
+    q4 = {k: c for k, c in cells.items() if c.get("head") == "Q4_combined_ev"}
+    if not q4:
+        raise RuntimeError(
+            "REFUSED: --dry-run produced no Q4 cells at all, so it cannot "
+            "have exercised the path it exists to exercise.")
+    unpaired = sorted(k for k, c in q4.items()
+                      if c.get("status") == I11.CELL_STATUS_NO_COUNTERPART
+                      or c.get("p_value") is None)
+    if unpaired:
+        raise RuntimeError(
+            f"REFUSED: --dry-run reached its exit with {len(unpaired)} of "
+            f"{len(q4)} Q4 cells carrying no increment ({unpaired[:3]}). The "
+            f"dry harness exists to prove the incumbent wiring end to end; "
+            f"exiting 0 here is the silent-success shape one layer up.")
+    # AND THE GUARDS MUST HAVE RUN, not merely exist. A guard REMOVED from
+    # main() cannot be caught by running a healthy pipeline -- it only fires
+    # when something else is also broken -- so the seam asserts the guards'
+    # own EVIDENCE is present. This is how a deleted call site becomes
+    # visible without a source-text check.
+    ev = receipt.get("incumbent_applicability_guard") or {}
+    if not isinstance(ev.get("checks"), int) or ev["checks"] <= 0:
+        raise RuntimeError(
+            f"REFUSED: the artifact carries no evidence that the "
+            f"incumbent-applicability guard RAN ({ev!r}). A guard that was "
+            f"not called is indistinguishable from one that passed.")
+    nofloor = sorted(k for k, c in cells.items()
+                     if "permutation_floor" not in c)
+    if nofloor:
+        raise RuntimeError(
+            f"REFUSED: {len(nofloor)} cells carry no permutation_floor "
+            f"disclosure ({nofloor[:3]}). F-3's whole finding is that the "
+            f"disclosure was absent exactly on the cells that decide.")
+    return {"q4_cells": len(q4), "all_carry_an_increment": True,
+            "guard_evidence_checks": ev["checks"],
+            "cells_with_floor_disclosure": len(cells)}
+
+
+def assert_incumbent_applicability_honoured(receipt: dict) -> dict:
+    """A head declared comparable must SHOW its incumbent in the cells. F-1.
+
+    The declaration and the cells are two statements about the same fact and
+    nothing compared them: `incumbent_null_applicability.comparable[head]`
+    said the incumbent applies while every cell of that head said it had no
+    counterpart, for a whole batch, with the run exiting 0.
+
+    SCOPE, stated rather than silently chosen. Two different obligations:
+      * EVERY comparable head must carry status OK in all its cells -- that is
+        what a live counterpart looks like from the cell side;
+      * heads adjudicated FROM ECONOMICS (Q4) must additionally show
+        `paired_against_incumbent` and a non-null `incumbent_net_cents` in the
+        economics block behind every cell.
+    Q1_arrival is comparable and is NOT adjudicated from economics, so the
+    second obligation does not reach it. That is a real gap and it is
+    REPORTED, not silently scoped away -- see `incumbent_legs_evaluated`."""
+    fam = (receipt.get("family") or {})
+    cells = fam.get("cells") or {}
+    ina = receipt.get("incumbent_null_applicability") or {}
+    comparable = ina.get("comparable") or {}
+    if not cells or not comparable:
+        raise RuntimeError(
+            f"REFUSED: the incumbent-applicability guard read {len(cells)} "
+            f"cells and {len(comparable)} declarations. A guard that runs on "
+            f"an empty read reports a pass it never established (R-289).")
+    bad_status, bad_econ, checked = [], [], 0
+    for head, is_comp in comparable.items():
+        if not is_comp:
+            continue
+        for key, c in cells.items():
+            if c.get("head") != head:
+                continue
+            checked += 1
+            if c.get("status") != I11.CELL_STATUS_OK:
+                bad_status.append(f"{key}: comparable={head} but status "
+                                  f"{c.get('status')!r}")
+    if comparable.get("Q4_combined_ev"):
+        for coin, arms in (receipt.get("results") or {}).items():
+            for arm, rep in arms.items():
+                for b, econ in (rep.get("economics") or {}).items():
+                    checked += 1
+                    if not econ.get("paired_against_incumbent"):
+                        bad_econ.append(f"{coin}/{arm}/{b}: "
+                                        f"paired_against_incumbent is not true")
+                    elif econ.get("incumbent_net_cents") is None:
+                        bad_econ.append(f"{coin}/{arm}/{b}: "
+                                        f"incumbent_net_cents is null")
+    if checked == 0:
+        raise RuntimeError(
+            "REFUSED: the guard visited ZERO cells and ZERO economics blocks, "
+            "so it proved nothing. Absence must never read as a pass.")
+    if bad_status or bad_econ:
+        raise RuntimeError(
+            f"REFUSED: a head is DECLARED comparable to the incumbent and its "
+            f"cells do not show one. This is the Q-DA-197 contradiction, and "
+            f"it is what an unwired incumbent looks like at the artifact even "
+            f"when every source-text guard passes. Cells: {bad_status[:4]}; "
+            f"economics: {bad_econ[:4]}. ({len(bad_status)} cell(s), "
+            f"{len(bad_econ)} economics block(s) over {checked} checks.)")
+    return {"checks": checked, "comparable_heads":
+            sorted(h for h, v in comparable.items() if v),
+            "verified": "declared-comparable heads show OK cells; "
+                        "economics-adjudicated ones also show a paired "
+                        "incumbent with a non-null net"}
+
+
+def incumbent_legs_evaluated(receipt: dict) -> dict:
+    """Which comparable heads actually had an incumbent counterpart COMPUTED.
+
+    The guard above cannot demand economics from a head that is not
+    adjudicated from economics, so scoping it correctly would quietly hide
+    that Q1_arrival is declared comparable and its incremental leg is NOT
+    computed: `apply_incumbent_hazard` exists, is falsifier-proven, and has no
+    call site -- defect I11-2's shape, in the head that SURVIVES.
+
+    Reported, never acted on. Changing what Q1's cells claim is an
+    adjudication change on the only surviving head; models estimate, policy
+    decides (rule 14). BE files it; the USER rules it."""
+    ina = receipt.get("incumbent_null_applicability") or {}
+    comparable = ina.get("comparable") or {}
+    econ_backed = set()
+    for arms in (receipt.get("results") or {}).values():
+        for rep in arms.values():
+            if any((e or {}).get("paired_against_incumbent")
+                   for e in (rep.get("economics") or {}).values()):
+                econ_backed.add("Q4_combined_ev")
+    out = {}
+    for head, is_comp in comparable.items():
+        if not is_comp:
+            out[head] = {"declared_comparable": False,
+                         "incumbent_counterpart_computed": False,
+                         "note": "not declared comparable; no leg is owed"}
+            continue
+        done = head in econ_backed
+        out[head] = {
+            "declared_comparable": True,
+            "incumbent_counterpart_computed": done,
+            "note": ("the incumbent's own value is computed on the identical "
+                     "rows and enters the adjudicated statistic" if done else
+                     "DECLARED COMPARABLE, NO COUNTERPART COMPUTED. The "
+                     "frozen gate for this head carries an incumbent term and "
+                     "only the matched-random leg was evaluated; the cell's "
+                     "OK status therefore rests on one of its two declared "
+                     "conjuncts. `apply_incumbent_hazard` is built and "
+                     "unwired. ESCALATED, not silently corrected.")}
+    return out
 
 
 def declared_outputs_for(argv=None) -> tuple:
@@ -3145,10 +3743,15 @@ def main() -> int:
 
     # I11-2: the DECLARED family, actually evaluated and adjudicated.
     out["family"] = evaluate_family(out["results"], out["populations"])
+    attach_floor_disclosure(out)
     out["cluster_disclosure"] = I11.cluster_disclosure(
         min((p["eval_population_and_reach"]["G_complete_utc_days"]
              for p in out["populations"].values()), default=0), "window")
     assert_receipt_has_all_cells(out)
+    # F-1: the declaration and the cells must AGREE, checked at the artifact.
+    out["incumbent_applicability_guard"] = \
+        assert_incumbent_applicability_honoured(out)
+    out["incumbent_legs_evaluated"] = incumbent_legs_evaluated(out)
     out["development_evidence"] = {
         "is_a_validation": False,
         "computed_from": "per-coin eval_population_and_reach, which derives "
@@ -3177,6 +3780,12 @@ def main() -> int:
                                  "adjudicated, so an eth slice can never "
                                  "carry a verdict"}
     if _dry:
+        # F-1(2): THE SEAM MUST BE ABLE TO FAIL. The dry harness runs main()'s
+        # own path -- it is how the packing defect was found -- but it
+        # asserted NOTHING about its own output and is exempt from the output
+        # guard by declared mode, so it exited 0 with the wiring cut. A
+        # harness that cannot fail is not a harness (rule 16).
+        assert_dry_run_family(out)
         import tempfile as _tf_dry
         _out_path = Path(_tf_dry.mkdtemp()) / OUT.name
         out["DRY_RUN"] = {
@@ -3270,7 +3879,7 @@ def run_as_of() -> str:
     return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
-def producing_code_provenance() -> dict:
+def producing_code_provenance(_git_runner=None) -> dict:
     """The COMMIT this run is produced from, plus the bytes. Q-DA-197 F5.
 
     `identity.fit_code_ref` was null while the content identity was present
@@ -3287,6 +3896,13 @@ def producing_code_provenance() -> dict:
     import subprocess
 
     def git(*a):
+        # `_git_runner` exists so the UNREADABLE-GIT path can be executed.
+        # It injects the FAILURE (an input), never the answer -- a fixture
+        # that supplied the output would be the rule-16 trap. Without it the
+        # tri-state's "unknown" branch is unreachable on a healthy machine and
+        # a mutant deleting it survives, which is measured, not feared.
+        if _git_runner is not None:
+            return _git_runner(*a)
         try:
             r = subprocess.run(("git", *a), cwd=str(Path(__file__).resolve().parent),
                                capture_output=True, text=True, timeout=20)
@@ -3302,16 +3918,39 @@ def producing_code_provenance() -> dict:
 
     head = git("rev-parse", "HEAD")
     status = git("status", "--porcelain")
-    dirty = None if status is None else bool(status.strip())
+    # F-7 TRI-STATE. `bool(dirty)` reported an UNREADABLE git status as
+    # CLEAN, with the disclosure demoted to a separate field -- rule 11
+    # applies to the flag itself, not to a note beside it. "unknown" is now a
+    # value of the flag, so a reader who looks only at the flag cannot be
+    # told "clean" by a check that never ran.
+    if status is None:
+        dirty = "unknown"
+        paths, code_paths = None, None
+    else:
+        lines = [ln for ln in status.splitlines() if ln.strip()]
+        dirty = bool(lines)
+        paths = sorted(ln[3:].strip() for ln in lines)[:40]
+        # F-7: and WHICH paths, because "dirty: true" alone made a reader use
+        # git to establish that the dirt did not touch the producing code.
+        code_paths = sorted(x for x in (paths or [])
+                            if x.endswith(("phase2_iter011.py",
+                                           "phase2_iter011_run.py"))
+                            or Path(x).name in PA.CODE_IDENTITY_FILES)
     return {
         "fit_code_ref": head or "UNAVAILABLE: git rev-parse failed; the "
                                 "producing commit could not be read and is "
                                 "NOT being reported as absent-but-fine",
         "fit_code_ref_resolved": bool(head),
-        "working_tree_dirty": bool(dirty),
+        "working_tree_dirty": dirty,
+        "working_tree_dirty_is_tristate": "true | false | 'unknown'",
         "working_tree_status_read": status is not None,
+        "dirty_paths": paths,
+        "dirty_paths_touching_the_producing_code": code_paths,
+        "producing_code_was_clean": (None if status is None
+                                     else not code_paths),
         "runner": me.name, "runner_sha256_prefix": sha(me),
         "library": lib.name, "library_sha256_prefix": sha(lib),
+        "carrying_commit": head or "UNAVAILABLE",
         "why": "a content hash says WHAT ran; a commit ref says WHICH "
                "COMMIT. The artifact carried the first and null for the "
                "second (Q-DA-197 F5). If the tree is dirty the ref names "
