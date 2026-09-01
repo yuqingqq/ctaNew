@@ -18094,6 +18094,23 @@ Operative form, now `SEAT_PROTOCOL.md` rule 18:
 
 **Current round edges, recorded so "finished" is checkable:** BE — tie patch + readjudication of the fresh artifact, closes with its batch commit+push and one-line report. DA — three-task batch (011 reader / 0h disclosure / 00:06Z verifier readiness), two committed at `c473b0e`, closes on task 3's report. MEM — sweep + true-up batch, committed (`29a06db`, `8edfc5f`); round closed. Reviewer — standing by; its round opens with the ONE notification naming BE's pinned tip.
 
+### R-379 — 2026-09-01T13:28Z — coordinator — **THE DE SEAT IS STAFFED (USER act), taking the R-165 handoff; and the "missing modules" audit the USER asked for is answered AT THE REGISTRY, not from memory: ONE genuine gap on the critical path — EV-Replay has ZERO presence in contracts.yaml v24.**
+
+**Seat:** USER opened `pm-de` (tmux @7.%7, fresh Claude session); onboarded with its COMPLETE first batch per rule 18: (1) real-data seven-arm parity against the frozen `QR_SKEW_ONLY` trajectory on the v3.4 exposure dataset per the LANE4 spec — verification only, no economics; (2) the registry-closure draft below; (3) the Phase-4 grid protocol as DRAFT-FOR-USER-FREEZE, declared before any cell is read. Seat table amended (this entry). R-165's parking clause — "a user-staffed DE seat takes this module over whenever one appears; BE and DA do not touch it" — is hereby executed: `harmful_stateful_policy.py`, `de_actionspace.py`, `de_constraints.py` transfer to DE.
+
+**The audit, measured against `contracts.yaml` v24's modules block (28 modules) and the §6 build-readiness table:**
+
+| finding | state | verdict |
+|---|---|---|
+| **EV-Replay** | `EV_REPLAY_PLAN.md` exists; §6 called it "GAP — on the critical path"; Phase-4 grids run INSIDE it; **zero hits for "Replay" anywhere in v24 — no module, no types** | **THE gap. Demand arrives with DE's batch; DE drafts the amendment, coordinator/USER lands it** |
+| DE-ActionSpace | TYPE exists (`contracts.yaml:1201`), CODE exists (`de_actionspace.py`), module entry ABSENT (v24 registers only DE-Actuator/Allocator/Constraints) | registry inconsistency; reconciled in DE's same draft |
+| OP-LatencyBudget | zero hits in v24 | deferred-with-trigger, to be NAMED in the draft rather than silently absent (latency already enters every estimand per rule 7) |
+| BE-Belief / BE-Target / DE-DecisionScheme | types present (`BeliefProcess`, `TargetInterval`, `DecisionSchemeConfig`), modules unregistered | CORRECT — measurement-gated (§7); demand-driven build forbids registering ahead |
+| BE-Competition/-Aggregator, BE-ScenarioProvider, DA-Settlement adapter, EV-Attribution | deferred with named triggers (§7) | correct absences, triggers unchanged |
+| OPS seat | absorbed by the coordinator since consolidation; its surface is live (resource guard R-376, resource-monitor unit R-163, collector watch, slices) | conscious arrangement, works; staffing it is OPTIONAL and the USER's call |
+
+**Net answer to the USER:** the system was missing one SEAT (DE — now staffed) and one REGISTERED MODULE on the critical path (EV-Replay — closure drafted in DE's batch). Everything else absent from v24 is absent by the demand-driven build order, with its trigger on record.
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
