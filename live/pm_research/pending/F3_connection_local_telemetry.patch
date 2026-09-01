@@ -1,5 +1,5 @@
 diff --git a/live/pm_research/collect_pm.py b/live/pm_research/collect_pm.py
-index be51023..d44fc11 100644
+index be51023..806f96f 100644
 --- a/live/pm_research/collect_pm.py
 +++ b/live/pm_research/collect_pm.py
 @@ -181,6 +181,77 @@ def clob_market(condition_id: str):
@@ -158,7 +158,7 @@ index be51023..d44fc11 100644
                          "keepalive": connect_keepalive_kwargs(
                              self.heartbeat_mode),
                          # clob_v3_1: were WE the slow consumer, or the venue?
-@@ -995,6 +1065,97 @@ class PMCollector:
+@@ -995,6 +1065,106 @@ class PMCollector:
              print("[pm] stopped", flush=True)
  
  
@@ -191,6 +191,16 @@ index be51023..d44fc11 100644
 +        async def send(self, m): pass
 +
 +        async def recv(self):
++            # A CONCURRENT SIBLING on the same coin. Codex V41-RR3 round 2:
++            # the first fixture PRELOADED msg_by_coin before _market() began,
++            # so `attempt_msgs` snapshotted the same value and the OLD
++            # expression `msg_by_coin - attempt_msgs` still returned the
++            # target's own count. The defect only exists when the sibling
++            # increments DURING the attempt -- which is the live shape, since
++            # discovery keeps overlapping current/next tasks per coin. A
++            # fixture that looks like the scenario without its essential
++            # property tests nothing.
++            _WS.owner.msg_by_coin["btc"] += 1
 +            if self.left > 0:
 +                self.left -= 1
 +                await _real_sleep(0.001)
@@ -219,8 +229,7 @@ index be51023..d44fc11 100644
 +        _a.sleep = _rec_sleep
 +        try:
 +            c = PMCollector()
-+            # a HEALTHY SIBLING on the same coin has already delivered 7
-+            c.msg_by_coin["btc"] = 7
++            _WS.owner = c            # the sibling increments DURING attempts
 +            ts = int(time.time())
 +            _a.run(_a.wait_for(
 +                c._market("btc-updown-5m-%d" % ts, ts, ["t1"]),
@@ -250,13 +259,13 @@ index be51023..d44fc11 100644
 +                           and max(_delays) >= 5 * min(_delays[:2])),
 +            "delay_span": (round(min(_delays), 2), round(max(_delays), 2))
 +            if _delays else None,
-+            "coin_global": 7}
++            "coin_global": None}
 +
 +
  def _health_append_probe() -> tuple:
      """(rows_written, errors_counted) — proves the writer writes AND that a
      failure is counted rather than vanishing. Uses a temp ledger; never the
-@@ -1086,6 +1247,65 @@ def selftest() -> int:
+@@ -1086,6 +1256,65 @@ def selftest() -> int:
           "silence from a dead writer and silence from a perfect one are the "
           "same bytes",
           _health_append_probe()[1] == 1),

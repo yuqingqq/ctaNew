@@ -344,9 +344,17 @@ def recovery_pid_candidates(starts: list | None = None) -> dict:
     # emitter now reconstructs out-of-window starts at their OBSERVED instant,
     # so discovery must NAME them. Fixing the function and leaving the
     # operator path pointed at abort closed nothing.
-    _chosen = (in_win or late or early)
-    _kind = ("in_window" if in_win else
-             "late" if late else "early" if early else None)
+    # V41-RR1 round 2: this preferred in_window, so starts at T-60s and T+5s
+    # selected the T+5 one and ERASED the arm-window span that began FIRST.
+    # The earliest ACTUAL start is the one the reconstruction must open at;
+    # the kind is derived FROM it, never chosen ahead of it.
+    _all = sorted(in_win + late + early, key=lambda r: r["recv_ns"])
+    _chosen = _all
+    _first = _all[0] if _all else None
+    _kind = None
+    if _first is not None:
+        _kind = ("early" if _first in early else
+                 "in_window" if _first in in_win else "late")
     return {
         "boundary_utc": utc,
         "recovery_kind": _kind,
@@ -365,8 +373,10 @@ def recovery_pid_candidates(starts: list | None = None) -> dict:
         }[_kind],
         # THE value to pass as --v41-pid: earliest exact declaration inside
         # the ruled window. Never the newest, never the live one.
-        "v41_pid": _chosen[0].get("pid") if _chosen else None,
-        "v41_recv_ns": _chosen[0].get("recv_ns") if _chosen else None,
+        "v41_pid": _first.get("pid") if _first else None,
+        # RR1: the CLI must bind the recv_ns too, not merely the pid -- its
+        # own scan started later than discovery's and could not find the row.
+        "v41_recv_ns": _first.get("recv_ns") if _first else None,
         "n_in_window": len(in_win),
         # reported, not dropped -- these are RESTART EVIDENCE and their
         # presence is itself a finding
@@ -898,11 +908,21 @@ def make_abort_row(obs: dict, v4_start: dict | None,
                 and r["recv_ns"] < _ep_w * 10**9]
     _out_window = [r for r in target_starts
                    if r not in _in_window and r not in _early_w]
-    if _in_window:
-        raise Refused(f"the gap ledger carries {len(_in_window)} "
-                      f"{TARGET_ERA} collector_start row(s) INSIDE the ruled "
-                      f"window — the ruled transition RAN, so an abort would "
-                      f"be false; use recovery")
+    # FAIL-CLOSED (V41-RR1 round 2). This accepted early and late starts and
+    # emitted aborted:true, which both era consumers SKIP -- so a direct or
+    # mistaken abort still erased a span that ran, contradicting the runbook
+    # that now says abort is only for "never ran". ANY observed target start
+    # refuses; recovery reconstructs all three shapes at their observed
+    # instant.
+    if target_starts:
+        _k = ("in-window" if _in_window else
+              "EARLY (arm-window boot)" if _early_w else "LATE")
+        raise Refused(f"the gap ledger carries {len(target_starts)} "
+                      f"{TARGET_ERA} collector_start row(s) [{_k}] — v4.1 "
+                      f"RAN, so an abort would be FALSE and both era "
+                      f"consumers SKIP aborted rows, erasing the span. Use "
+                      f"--recovery-pid then --post-recovery; abort is only "
+                      f"for a boundary where v4.1 never started at all")
     current, open_target = era_state(obs["era_rows"])
     if open_target is not None or current != FROM_ERA:
         raise Refused(f"era state is current={current!r}, open="
@@ -1860,30 +1880,23 @@ def selftest() -> int:
              "collector_version": TARGET_ERA, "event": "collector_start"}
     _INW = {"recv_ns": (bep + 5) * 10**9, "pid": 222,
             "collector_version": TARGET_ERA, "event": "collector_start"}
-    _ab = make_abort_row(_RB_OBS, _RB_START, [_LATE], "restart_failed")
-    ok(_ab.get("aborted") is True
-       and [x["pid"] for x in _ab.get("late_target_starts", [])] == [333],
-       "DEAD END CLOSED: a v4.1 start at T+150s is now recordable — abort "
-       "accepts it AND carries the late start as evidence. Both refusals "
-       "were individually correct and together left an operator with a "
-       "process that demonstrably ran and no way to record it")
+    # DEAD END CLOSED — via RECOVERY, and abort is now FAIL-CLOSED.
     _EARLY = {"recv_ns": (bep - 60) * 10**9, "pid": 777,
               "collector_version": TARGET_ERA, "event": "collector_start"}
-    _ab2 = make_abort_row(_RB_OBS, _RB_START, [_EARLY, _LATE],
-                          "restart_failed")
-    ok([x["pid"] for x in _ab2.get("early_target_starts", [])] == [777]
-       and [x["pid"] for x in _ab2.get("late_target_starts", [])] == [333],
-       "EARLY and LATE starts are reported SEPARATELY — an early start means "
-       "the candidate booted during the ARM WINDOW (the more serious "
-       "finding: the era stamp would record a false boundary), a late one "
-       "means the instant was missed. Filing both under one name would have "
-       "mislabelled the worse of the two")
-    refuses(lambda: make_abort_row(_RB_OBS, _RB_START, [_INW],
-                                   "restart_failed"),
-            "INSIDE the ruled window",
-            "and the case where an abort would be FALSE still refuses — a "
-            "start INSIDE the window means the ruled transition ran, so "
-            "narrowing the guard did not weaken it")
+    for _ev, _k in (([_LATE], "LATE"), ([_INW], "in-window"),
+                    ([_EARLY], "EARLY (arm-window boot)")):
+        refuses(lambda ev=_ev: make_abort_row(_RB_OBS, _RB_START, ev,
+                                              "restart_failed"),
+                "an abort would be FALSE",
+                f"ABORT IS FAIL-CLOSED for a {_k} start. It used to ACCEPT "
+                f"early and late starts and emit aborted:true — and both era "
+                f"consumers SKIP aborted rows, so a mistaken abort ERASED a "
+                f"span that ran. Abort is now only for a boundary where v4.1 "
+                f"never started at all")
+    _ab_none = make_abort_row(_RB_OBS, _RB_START, [], "restart_failed")
+    ok(_ab_none.get("aborted") is True,
+       "and the ONE true abort case — no v4.1 start at all — still emits")
+
     _lr = make_recovery_bundle(_RB_OBS, 333, _LATE, _RB_START,
                                "counters_refused")
     ok(_lr[0]["boundary_utc"] != BOUNDARY_UTC,
@@ -1913,6 +1926,21 @@ def selftest() -> int:
     ok(_c3 == FROM_ERA and _o3 is None,
        "and the late bundle leaves clob_v4 in force with no open era — the "
        "span is recorded AND closed")
+
+    # V41-RR1 round 2: discovery and --post-recovery must search ONE
+    # population, and selection must follow the EARLIEST ACTUAL start.
+    _mix = recovery_pid_candidates([_S(777, -60), _S(222, 5)])
+    ok(_mix["v41_pid"] == 777 and _mix["recovery_kind"] == "early"
+       and _mix["v41_recv_ns"] == (bep - 60) * 10**9,
+       "EARLIEST ACTUAL start wins across early/in-window/late, and its "
+       "recv_ns is bound too. Preferring in_window selected the T+5 start "
+       "over a T-60 ARM-WINDOW BOOT and erased the span that began first; "
+       "and a pid alone cannot say WHICH start is meant, because pids are "
+       "reused")
+    ok(P.EARLY_SCAN_LOOKBACK_S > 0,
+       "discovery and --post-recovery scan the SAME early-inclusive "
+       "population — the CLI used to start at ep, so an EARLY pid discovery "
+       "had just named came back as 'nothing proves v4.1 ran'")
 
     # ---- V41-RR1.4: the ENTRY-POINT path, discovery -> emitted rows ->
     # day_era_admission. Every earlier check exercised a function directly,
@@ -2051,6 +2079,9 @@ def main() -> int:
     ap.add_argument("--stage", type=str, default=None)
     ap.add_argument("--inspect-live", action="store_true",
                     help="read-only failure classifier; run before restoring v4")
+    ap.add_argument("--v41-recv-ns", type=int, default=None,
+                    help="the v41_recv_ns --recovery-pid printed; binds WHICH "
+                         "start of that pid is meant, since a pid can be reused")
     ap.add_argument("--provenance", metavar="BOUNDARY_UTC",
                     help="resolve a transition's code identity, inline or "
                          "from the provenance ledger")
@@ -2177,8 +2208,25 @@ def main() -> int:
         if a.v41_pid is None or a.v41_pid <= 0:
             raise Refused("--post-recovery requires a positive --v41-pid "
                           "recorded before restoring v4")
-        targets = [r for r in P.observe_starts_by_version(ep, TARGET_ERA)
+        # V41-RR1 round 2: this scanned from `ep` while DISCOVERY scans from
+        # `ep - EARLY_SCAN_LOOKBACK_S`, so discovery could name an EARLY pid
+        # that this scan could never retrieve -- target_start came back None
+        # and the operator was told "nothing proves v4.1 ran" about a process
+        # discovery had just identified. The two must search one population.
+        targets = [r for r in P.observe_starts_by_version(
+                       ep - P.EARLY_SCAN_LOOKBACK_S, TARGET_ERA)
                    if r.get("pid") == a.v41_pid]
+        # and bind the recv_ns, not merely the pid: a pid can be reused, so
+        # --v41-recv-ns pins WHICH start of that pid is meant.
+        if a.v41_recv_ns is not None:
+            targets = [r for r in targets
+                       if r.get("recv_ns") == a.v41_recv_ns]
+            if not targets:
+                raise Refused(
+                    f"no {TARGET_ERA} collector_start for pid {a.v41_pid} at "
+                    f"recv_ns {a.v41_recv_ns} — the pid and the start instant "
+                    f"must identify ONE row; pass the pair --recovery-pid "
+                    f"printed")
         v4s = [r for r in P.observe_starts_by_version(ep, FROM_ERA)
                if r.get("pid") == obs["main_pid"]]
         target_start = targets[0] if targets else None
