@@ -1416,6 +1416,20 @@ def day_bar_v2(lo: int, hi: int, coin: str, elapsed_h: float,
     }
 
 
+class DisclosureNotCarried(Exception):
+    """The 0h guard's refusal.
+
+    DELIBERATELY NOT `SystemExit`. A bare SystemExit(str) exits 1, and in this
+    launcher rc=1 means "verified, and the day FAILS" -- a REAL RESULT. An
+    instrument refusing to emit is rc=4, NOTHING WAS VERIFIED. Shipping the
+    guard as SystemExit would have made a broken instrument indistinguishable
+    from a failing day, which is the defect this file already fixed once
+    (R-199 item 1) and I re-introduced with the guard on the same morning I
+    quoted the lesson. Being an `Exception` rather than a `BaseException` is
+    also what lets main()'s existing instrument-failure handler catch it.
+    """
+
+
 def assert_disclosure_carried(rep: dict) -> None:
     """REFUSE a `day_bar_v2` receipt whose bars carry no 0h breadth disclosure.
 
@@ -1455,11 +1469,11 @@ def assert_disclosure_carried(rep: dict) -> None:
     # would satisfy a "nothing missing" test while disclosing nothing -- the
     # empty-set trap this programme has paid for repeatedly.
     if n_checked == 0:
-        raise SystemExit(
+        raise DisclosureNotCarried(
             "REFUSED: a day_bar_v2 receipt with ZERO bar blocks checked. "
             "Nothing missing from nothing is not a disclosure (rule 11/16).")
     if missing:
-        raise SystemExit(
+        raise DisclosureNotCarried(
             "REFUSED to emit: the 0h windows-affected disclosure is not "
             "carried beside P1/P2/P3 -- " + "; ".join(missing)
             + ". The governing bars score DURATION only; a receipt without "
@@ -2070,6 +2084,56 @@ def _selftests() -> int:
            "same emptiness WITH coverage is not -- the flag discriminates "
            "rather than firing on every zero")
 
+        # ---- THE GUARD'S EXIT CODE, THROUGH THE REAL ENTRY POINT -------
+        # A DAY THAT FAILS AND AN INSTRUMENT THAT REFUSED MUST NOT SHARE AN
+        # EXIT CODE -- the lesson already written at the top of main(), which
+        # the first version of this guard broke by raising a bare SystemExit
+        # (rc 1 = "the day failed"). Driven through `main()` in a subprocess
+        # with verify_day stubbed, because the type alone does not prove the
+        # LAUNCHER sees 4: only running the entry point does.
+        import subprocess as _sp
+        _bar_ok = {"evaluable": True, "P1_pass": True, "P2_pass": True,
+                   "P3_pass": True, "P1_lost_s_per_hr": 1.0,
+                   "P2_material_windows": 0,
+                   "P3_worst_rolling_60min_lost_s": 0.0,
+                   "windows_affected_disclosure": {
+                       "role": "REPORTED_NOT_GOVERNING",
+                       "windows_affected_COIN_LEVEL": 0,
+                       "windows_complete_elapsed": 288,
+                       "affected_over_elapsed": 0.0, "affected_over_288": 0.0,
+                       "pct_of_elapsed": 0.0, "pct_of_288": 0.0}}
+        _stub = Path(_td) / "exitcode_seam.py"
+        _stub.write_text(
+            "import sys, json\n"
+            f"sys.path.insert(0, {str(Path(__file__).resolve().parent)!r})\n"
+            "import da_forward_day_verify as D\n"
+            "bar = json.loads(sys.argv[1])\n"
+            "carry = sys.argv[2] == 'carry'\n"
+            "if not carry: bar.pop('windows_affected_disclosure')\n"
+            "D.verify_day = lambda *a, **k: {'bar_regime': 'day_bar_v2',\n"
+            "    'day_bar_v2': {'btc': bar}, 'per_coin': {}, 'predicates': [],\n"
+            "    'all_pass': True, 'windows_gap_affected': {}, 'day': 'x',\n"
+            "    'verdict_granularity': 'whole_day'}\n"
+            "sys.argv = ['x', 'verify', '--day', '20260829',\n"
+            "            '--freeze-epoch', '1787897340']\n"
+            "raise SystemExit(D.main())\n", encoding="utf-8")
+        _rc = {}
+        for _mode in ("carry", "drop"):
+            _r = _sp.run([sys.executable, str(_stub), json.dumps(_bar_ok),
+                          _mode], capture_output=True, text=True)
+            _rc[_mode] = (_r.returncode, _r.stdout + _r.stderr)
+        ok(_rc["drop"][0] == 4 and "NOTHING WAS VERIFIED" in _rc["drop"][1],
+           "0h EXIT-CODE SEAM: a report missing the disclosure makes the real "
+           "entry point exit 4 (INSTRUMENT FAILURE), not 1 -- rc 1 in this "
+           "launcher means the DAY failed, which is a real result")
+        ok(_rc["carry"][0] == 0,
+           "0h EXIT-CODE SEAM POSITIVE CONTROL: the identical report WITH the "
+           "disclosure exits 0 -- the guard refuses the missing field, not "
+           "every run")
+        ok("REFUSED to emit" in _rc["drop"][1],
+           "0h EXIT-CODE SEAM: and the refusal SAYS what was missing, so an "
+           "operator reading the nightly log is not left with a bare 4")
+
         # ---- THE TWO BREADTH STATISTICS ARE DIFFERENT MEASUREMENTS -----
         # docs/BREADTH_STATISTICS.md. They nearly collide on real days
         # (08-29 btc COIN_LEVEL 95/288 = 33.0% vs PER_SLUG 93/288 = 32.3%),
@@ -2145,7 +2209,7 @@ def _selftests() -> int:
             try:
                 assert_disclosure_carried(_bad_rep)
                 ok(False, f"0h guard known-bad ({_scope}) must REFUSE")
-            except SystemExit as _e:
+            except DisclosureNotCarried as _e:
                 ok("not carried beside P1/P2/P3" in str(_e)
                    and _scope in str(_e),
                    f"0h guard known-bad: a receipt missing the disclosure in "
@@ -2156,7 +2220,7 @@ def _selftests() -> int:
         try:
             assert_disclosure_carried(_partial)
             ok(False, "0h guard known-bad: a HALF disclosure must REFUSE")
-        except SystemExit as _e:
+        except DisclosureNotCarried as _e:
             ok("affected_over_elapsed" in str(_e),
                "0h guard known-bad: carrying only one denominator refuses and "
                "names the missing one -- 0h asks for BOTH")
@@ -2164,7 +2228,7 @@ def _selftests() -> int:
             assert_disclosure_carried({"bar_regime": "day_bar_v2",
                                        "day_bar_v2": {}, "per_coin": {}})
             ok(False, "0h guard known-bad: ZERO bar blocks must REFUSE")
-        except SystemExit as _e:
+        except DisclosureNotCarried as _e:
             ok("ZERO bar blocks" in str(_e),
                "0h guard known-bad: an EMPTY v2 receipt refuses -- nothing "
                "missing from nothing is not a disclosure (the empty-set trap)")
@@ -3630,14 +3694,16 @@ def main() -> int:
             "epoch explicitly.")
     try:
         rep = verify_day(a.day, a.freeze_epoch)
+        # 0h, ENFORCED AT THE ARTIFACT -- and INSIDE this try on purpose, so a
+        # refusal to emit exits 4 (nothing verified) rather than 1 (the day
+        # failed). Those must never share an exit code.
+        assert_disclosure_carried(rep)
     except Exception:
         import traceback
         traceback.print_exc()
         print(f"\nINSTRUMENT FAILURE verifying {a.day}: NOTHING WAS VERIFIED. "
               f"This is exit 4, NOT a failing day -- no verdict was computed.")
         return 4
-    # 0h, ENFORCED AT THE ARTIFACT, not only in the unit that computes it.
-    assert_disclosure_carried(rep)
     # Provenance, stamped AFTER the verdict: it is not a predicate and must
     # never enter `all_pass`. Always present, so an unattributed write is a
     # visible STATUS rather than a missing key (rule 4).
