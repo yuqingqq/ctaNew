@@ -46,8 +46,19 @@ files; anything assumed from pre-12:52Z conversation is void. Running now:
 |---|---|
 | **BE** | the two 011 adjudication blockers — Q4 incumbent loading, then R-306's conjunction for Q3 (no refit; the per-coin evidence is preserved) |
 | **DA** | independent verification of the 011 artifact; item 0h (windows-affected disclosure in closing receipts); 00:06Z closed-day verifier readiness |
-| **coordinator** | item 0b (tier1:full clearance watch), item 0d (`pm-evaluation-pipeline` into `research.slice` when the backlog clears), and the item-2 re-review request |
+| **coordinator** | 0b and 0d both CLOSED at 13:02Z (R-374, `e9f4834`); the item-2 re-review is held deliberately until BE's Q4/Q3 batch commits, so one Codex round covers both at a single pinned tip (rule 5) |
 | **MEM** | this true-up; register sweep R-291..R-373 into the memory docs; TODO tick-with-citation |
+
+**A SECOND observation, on 0d, verified at the two files and filed for the
+coordinator.** R-374's closure is true of the LIVE unit — `systemctl show` reads
+`Slice=research.slice`, `MemoryMax=16G`, and the 13:02Z positive control ran in
+the `research.slice` cgroup. **But the edit exists only in the installed unit.**
+`~/.config/systemd/user/pm-evaluation-pipeline.service` carries the `Slice=` line
+and its eight-line comment; `live/pm_research/ops/pm-evaluation-pipeline.service`
+in git does not, and the working tree is clean. That is R-361 LIVE-3's shape one
+unit over: a reinstall from the repo silently drops this lane back out of the
+aggregate guard, and nothing would say so. The guard is live; it is not
+reproducible from the repository.
 
 **One observation from the artifact sweep, filed for BE/the coordinator and NOT
 adjudicated here.** The 011 artifact reports the action unit **correctly at head
@@ -769,11 +780,18 @@ does **not** pass: the average was 10.99/hr, but two individual hours exceeded
    The standing caution holds and was applied: do not infer success from the
    service wrapper; the artifact and its own identity/population fields were
    read before any number here was quoted.
-0d. Move `pm-evaluation-pipeline` into `research.slice` once the tier1 backlog
-   clears — the aggregate guard is incomplete until then (COL-R2).
-0b. Confirm the tier1:full lane actually clears 08-25. A rebuild under the new
-   `tier1_v4_r13` generation is RUNNING; end-to-end clearance is NOT yet
-   observed, and 08-26/08-27/08-30 carry the same prints behind it.
+0d. ~~Move `pm-evaluation-pipeline` into `research.slice`~~ **DONE at 13:02Z**
+   (R-374, `e9f4834`), verified here at the unit: `Slice=research.slice`,
+   `MemoryMax` unchanged at 16G, inactive at edit time. **Residual, not closed:**
+   the `Slice=` line lives only in the installed unit — the repo copy
+   `live/pm_research/ops/pm-evaluation-pipeline.service` has no `Slice=`, so the
+   guard is live but not reproducible from git (R-361 LIVE-3's shape).
+0b. ~~Confirm the tier1:full lane actually clears 08-25~~ **DONE — the 146-hour
+   block is cleared** (R-374, `e9f4834`): after the B2 `[0,1]` fix the lane
+   committed 08-26..08-28, then 08-29 COMPLETE at 09:01:48Z and 08-30 at
+   10:01:55Z. Confirmed here in the journal: the 11:20, 12:20 and 13:02Z runs all
+   finish `IDLE` — caught up, nothing hung. 08-31 waits on its upstream
+   measurement-lane trigger and is a mixed-era day.
 0c. De-flake `v4 behaviour` — replace wall-clock margins with injected time.
 1. Preserve the running collector and close the first full v4.1 UTC day.
 2. Obtain an independent re-review of `1aaac18`: it claims RR1/RR3 closure, but
