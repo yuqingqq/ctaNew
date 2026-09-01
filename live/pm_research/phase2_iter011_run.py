@@ -605,9 +605,13 @@ def assert_receipt_has_all_cells(receipt: dict) -> dict:
     # anything was put in it. Each cell must now carry what a cell IS.
     REQUIRED_CELL_FIELDS = ("arm", "head", "budget", "status", "statistic",
                             "p_value", "n_actions", "detail")
+    # RR2-1 adds GATE_PARTIALLY_EVALUATED. Registering it here is required
+    # and is not a formality: this guard REFUSED the first dry emission over
+    # an unknown status, which is the guard working -- a new status must be
+    # DECLARED, never absorbed.
     KNOWN = {I11.CELL_STATUS_OK, I11.CELL_STATUS_UNDERPOWERED,
              I11.CELL_STATUS_NO_COUNTERPART, I11.CELL_STATUS_UNEVALUABLE,
-             I11.CELL_STATUS_AGG_UNDECLARED}
+             I11.CELL_STATUS_AGG_UNDECLARED, I11.CELL_STATUS_GATE_PARTIAL}
     hollow, badstatus, unsupported = [], [], []
     for key in sorted(declared):
         c = fam["cells"][key]
@@ -2095,8 +2099,184 @@ def selftest() -> int:
     _selftest_survivor_and_provenance(ok)
     _selftest_artifact_wiring_guard(ok)
     _selftest_review_batch_f2_f7(ok)
+    _selftest_gate_evaluation_rr2(ok)
 
     return _selftest_verdict(fails)
+
+
+def _selftest_gate_evaluation_rr2(ok):
+    """RR2-1 both directions: the CURRENT shape must fail, a wired one pass."""
+    def artifact(leg_computed):
+        """A receipt shaped like the shipped one, differing ONLY in whether
+        Q1's incumbent leg was computed. One variable, so the control cannot
+        pass for a second reason."""
+        cells = {}
+        for a in I11.ARMS_011:
+            for h in I11.HEADS_011:
+                for b in I11.BUDGETS_011:
+                    cells[I11.cell_key(a, h, b)] = I11.build_cell(
+                        a, h, b, statistic=0.83, p_value=1 / 501,
+                        status=(I11.CELL_STATUS_OK
+                                if h in ("Q1_arrival", "Q4_combined_ev")
+                                else I11.CELL_STATUS_NO_COUNTERPART),
+                        n_actions=10, detail="fixture")
+        econ = {b: {"paired_against_incumbent": True, "net_cents": 5.0,
+                    "incumbent_net_cents": 1.0, "n_actions_total": 10,
+                    "increment_by_window": {f"w{i}": 1.0 for i in range(8)}}
+                for b in I11.BUDGETS_011}
+        r = {"family": I11.assemble_family(cells),
+             "incumbent_null_applicability": {"comparable": dict(
+                 INCUMBENT_COMPARABLE)},
+             "results": {"btc": {a: {
+                 "economics": econ,
+                 # ENOUGH FOR evaluate_family TO REBUILD, because
+                 # finalise_family rebuilds rather than reusing the cells --
+                 # a fixture that only supplied cells would exercise the
+                 # re-status and skip the rebuild it is meant to order.
+                 "adjudicated_statistics": {
+                     "Q1_arrival": 0.83, "Q2_sign": 0.60,
+                     "Q2_cell_status": "OK", "Q3_magnitudes": 0.69},
+                 "heads": {
+                     "Q1_arrival": {"status": "OK", "auc": 0.83,
+                                    "n_actions": 100,
+                                    "matched_random": {"status": "OK",
+                                                       "p_value": 1 / 501,
+                                                       "n_draws": 500}},
+                     "Q2_p_pos": {"auc": 0.61, "n_actions": 50,
+                                  "matched_random": {"status": "OK",
+                                                     "p_value": 1 / 501,
+                                                     "n_draws": 500}},
+                     "Q2_p_neg": {"auc": 0.60, "n_actions": 50,
+                                  "matched_random": {"status": "OK",
+                                                     "p_value": 1 / 501,
+                                                     "n_draws": 500}},
+                     "Q3_m_harm": {"status": "OK", "calibration_slope": 0.69,
+                                   "n_actions": 40,
+                                   "matched_random": {
+                                       "status": "OK", "p_value": 1 / 501,
+                                       "n_draws": 500, "no_skill_value": 0.0,
+                                       "alternative": "greater"}},
+                     "Q3_m_good": {"status": "OK", "calibration_slope": 0.91,
+                                   "n_actions": 45,
+                                   "matched_random": {
+                                       "status": "OK", "p_value": 1 / 501,
+                                       "n_draws": 500, "no_skill_value": 0.0,
+                                       "alternative": "greater"}}}}
+                 for a in I11.ARMS_011}}}
+        r["incumbent_legs_evaluated"] = {
+            h: {"declared_comparable": bool(v),
+                "incumbent_counterpart_computed": (
+                    leg_computed if h == "Q1_arrival" else bool(v)),
+                "note": "fixture"}
+            for h, v in INCUMBENT_COMPARABLE.items()}
+        return r
+
+    # DIRECTION 1 — THE SHIPPED SHAPE MUST FAIL. Q1's leg is NOT computed,
+    # so its six cells stop being published as surviving. This is the
+    # reviewer's "the current artifact must FAIL the new check".
+    _a = artifact(leg_computed=False)
+    _ge = apply_gate_evaluation_status(_a)
+    _a["family"] = I11.assemble_family(_a["family"]["cells"])
+    _q1 = [k for k, c in _a["family"]["cells"].items()
+           if c["head"] == "Q1_arrival"]
+    ok(len(_ge["cells_gate_partially_evaluated"]) == 6
+       and _ge["heads_affected"] == ["Q1_arrival"]
+       and all(_a["family"]["cells"][k]["status"]
+               == I11.CELL_STATUS_GATE_PARTIAL for k in _q1),
+       f"RR2-1 KNOWN-BAD (the SHIPPED shape): all six Q1 cells are re-statused "
+       f"GATE_PARTIALLY_EVALUATED because their gate names a counterpart that "
+       f"EXISTS and was not computed (got "
+       f"{len(_ge['cells_gate_partially_evaluated'])} cells, "
+       f"{_ge['heads_affected']})")
+    ok(not any(_a["family"]["cells"][k]["survives_joint_reading_at_0_05"]
+               for k in _q1),
+       "RR2-1 and NONE of them is published as surviving — the flag stops "
+       "asserting a joint reading the run did not complete")
+    ok(all(_a["family"]["cells"][k]["statistic"] is not None
+           and _a["family"]["cells"][k]["p_value"] is not None for k in _q1)
+       and len(_a["family"]["cells"]) == 24
+       and _a["family"]["holm_denominator"] == 24,
+       "RR2-1 REPORTED, NEVER DROPPED: the statistic and p are unchanged and "
+       "still carried, and the denominator stays 24 so a later ruling can be "
+       "applied without re-running")
+
+    # DIRECTION 2 — A WIRED ARTIFACT MUST PASS. Same fixture, one variable
+    # flipped. Without this the check is a predicate that only ever refuses.
+    _b = artifact(leg_computed=True)
+    _ge2 = apply_gate_evaluation_status(_b)
+    _b["family"] = I11.assemble_family(_b["family"]["cells"])
+    _q1b = [k for k, c in _b["family"]["cells"].items()
+            if c["head"] == "Q1_arrival"]
+    ok(_ge2["cells_gate_partially_evaluated"] == []
+       and all(_b["family"]["cells"][k]["status"] == I11.CELL_STATUS_OK
+               for k in _q1b),
+       "RR2-1 POSITIVE CONTROL: with Q1's leg COMPUTED, nothing is re-statused")
+    ok(all(_b["family"]["cells"][k]["survives_joint_reading_at_0_05"]
+           for k in _q1b),
+       "RR2-1 and the six cells DO survive again — the conjunct narrows the "
+       "claim, it does not disable the head")
+
+    # The three inputs must each be load-bearing, or the predicate is passing
+    # for a reason it does not name.
+    for _lbl, _mut in (
+            ("gate carries no incumbent term",
+             lambda r: [c.update({"declared_gate": dict(
+                 c["declared_gate"], carries_incumbent_term=False)})
+                 for c in r["family"]["cells"].values()
+                 if c["head"] == "Q1_arrival"]),
+            ("the head is not declared comparable",
+             lambda r: r["incumbent_null_applicability"]["comparable"].update(
+                 {"Q1_arrival": False}))):
+        _c = artifact(leg_computed=False)
+        _mut(_c)
+        ok(apply_gate_evaluation_status(_c)[
+               "cells_gate_partially_evaluated"] == [],
+           f"RR2-1 the predicate needs ALL THREE inputs: with '{_lbl}' it does "
+           f"NOT fire, so it is not simply refusing whenever a leg is missing")
+
+    # THE ORDERING, THROUGH finalise_family ITSELF. The control below proves
+    # the re-assembly matters; this one proves finalise_family DOES it. A
+    # mutant deleting the re-assembly survived until this existed, because
+    # the dry run's synthetic data produces no survivors and so no stale flag
+    # can arise there.
+    _fin = artifact(leg_computed=False)
+    _fin["populations"] = {"btc": {"eval_n_actions": 100}}
+    finalise_family(_fin)
+    _bad = [k for k, c in _fin["family"]["cells"].items()
+            if c["status"] == I11.CELL_STATUS_GATE_PARTIAL
+            and c.get("survives_joint_reading_at_0_05")]
+    ok(not _bad and _fin["family"]["gate_evaluation"]["cells_checked"] == 24,
+       f"RR2-1 finalise_family RE-ASSEMBLES after re-statusing: no cell is "
+       f"left GATE_PARTIALLY_EVALUATED while still flagged surviving (got "
+       f"{len(_bad)} such cells)")
+    ok(all(not c["survives_joint_reading_at_0_05"]
+           for c in _fin["family"]["cells"].values()
+           if c["head"] == "Q1_arrival"),
+       "RR2-1 and through the ORDERED path the six Q1 cells stop surviving — "
+       "which is the headline change this finding requires")
+
+    # ORDERING: re-statusing without RE-ASSEMBLING leaves the old verdict
+    # standing beside the new status. That is the step easiest to omit.
+    _d = artifact(leg_computed=False)
+    apply_gate_evaluation_status(_d)
+    _stale = [k for k, c in _d["family"]["cells"].items()
+              if c["status"] == I11.CELL_STATUS_GATE_PARTIAL
+              and c.get("survives_joint_reading_at_0_05")]
+    ok(bool(_stale),
+       "RR2-1 ORDERING CONTROL: without the re-assembly the re-statused cells "
+       "still carry survives=true — proving the re-assembly step in "
+       "finalise_family is load-bearing rather than decorative")
+    # A COMMENT IS NOT A CALL. This asserted the bare name `finalise_family`
+    # and matched the COMMENT one line above the call, so a mutant replacing
+    # the call with the ad-hoc sequence SURVIVED a guard written to catch
+    # exactly that. Match the call, and require the ad-hoc form to be absent.
+    _ms = Path(__file__).read_text(encoding="utf-8")
+    _ms = _ms[_ms.index("\ndef main() -> int:"):]
+    ok("finalise_family(out)" in _ms
+       and "out[\"family\"] = evaluate_family(" not in _ms,
+       "RR2-1 main() runs the ORDERED sequence: it CALLS finalise_family and "
+       "does NOT rebuild the family ad-hoc — matched on the call, because the "
+       "bare name also matches the comment beside it")
 
 
 def _selftest_review_batch_f2_f7(ok):
@@ -2299,16 +2479,86 @@ def _selftest_artifact_wiring_guard(ok):
                f"the source-text guard cannot — a call whose result never "
                f"reaches the consumer leaves every guarded string intact")
 
-    # ...and it must not fire on a head that was never declared comparable,
-    # or it is a guard that refuses universally rather than discriminating.
-    _nc = receipt(paired=False, q4_status=I11.CELL_STATUS_NO_COUNTERPART,
-                  comparable=False)
-    _nc["results"] = {"btc": {a: {"economics": {}} for a in I11.ARMS_011}}
-    _ev2 = assert_incumbent_applicability_honoured(_nc)
-    ok(_ev2["checks"] > 0 and "Q4_combined_ev" not in _ev2["comparable_heads"],
-       "F-1 CONTROL: a head declared NOT comparable may carry "
+    # ...and it must not fire on a head GENUINELY declared not comparable, or
+    # it is a guard that refuses universally rather than discriminating. The
+    # head used here is one INCUMBENT_COMPARABLE itself declares False
+    # (Q2_sign); using a FLIPPED Q4 -- as this control did -- is now refused
+    # by RR2-2's coverage floor, correctly, because that is the evasion.
+    _ev2 = assert_incumbent_applicability_honoured(receipt())
+    ok(_ev2["checks"] > 0
+       and "Q2_sign" not in _ev2["comparable_heads"]
+       and _ev2["coverage_is_complete"] is True,
+       "F-1 CONTROL: heads declared NOT comparable (Q2/Q3) carry "
        "NO_INCUMBENT_COUNTERPART without refusing — the guard discriminates "
        "on the declaration, it does not refuse universally")
+
+    # ---- the RR2-1 INTERACTION, both ways -----------------------------
+    # Loosening the status set is the kind of change that quietly disables a
+    # guard, so both halves are pinned. A DISCLOSED gap is admitted; the
+    # CONTRADICTION it must not be confused with is still refused.
+    _disc = receipt()
+    for _c in _disc["family"]["cells"].values():
+        if _c["head"] == "Q1_arrival":
+            _c["status"] = I11.CELL_STATUS_GATE_PARTIAL
+    _dv = assert_incumbent_applicability_honoured(_disc)
+    ok(len(_dv["cells_admitted_as_DISCLOSED_gaps"]) == 6,
+       f"RR2-1/F-1 a comparable head carrying GATE_PARTIALLY_EVALUATED is "
+       f"ADMITTED and recorded as a DISCLOSED gap — refusing it would make "
+       f"the honest disclosure unemittable and leave the false status as the "
+       f"only way to ship (got {len(_dv['cells_admitted_as_DISCLOSED_gaps'])})")
+    _contra = receipt()
+    for _c in _contra["family"]["cells"].values():
+        if _c["head"] == "Q1_arrival":
+            _c["status"] = I11.CELL_STATUS_NO_COUNTERPART
+    try:
+        assert_incumbent_applicability_honoured(_contra)
+        ok(False, "RR2-1/F-1 the CONTRADICTION must still refuse")
+    except RuntimeError as e:
+        ok("DECLARED comparable" in str(e),
+           "RR2-1/F-1 KNOWN-BAD: NO_INCUMBENT_COUNTERPART on a comparable "
+           "head still REFUSES — the loosened set admits the disclosure, not "
+           "the denial")
+    # AND MUTANT A MUST STILL DIE, now through the economics half, which no
+    # cell status can satisfy. Without this the loosening could have quietly
+    # reopened the HOLD.
+    _mutA = receipt(paired=False)
+    for _c in _mutA["family"]["cells"].values():
+        if _c["head"] == "Q4_combined_ev":
+            _c["status"] = I11.CELL_STATUS_GATE_PARTIAL
+    try:
+        assert_incumbent_applicability_honoured(_mutA)
+        ok(False, "F-1 MUTANT A must still be refused after the loosening")
+    except RuntimeError as e:
+        ok("paired_against_incumbent is not true" in str(e),
+           "F-1 KNOWN-BAD: an UNWIRED arm wearing the DISCLOSED-gap status is "
+           "still refused by the ECONOMICS half — the loosening did not "
+           "reopen the hold")
+
+    # ---- RR2-2: coverage must not SHRINK ------------------------------
+    # THE REVIEWER'S KNOWN-BAD, verbatim: Q4 unwired AND its `comparable`
+    # flipped to false, cells and economics made consistent with it. That was
+    # ADMITTED at 6 checks and one head, and the emitted `checks: 6` was the
+    # only trace anything had shrunk. Same rule A1.4 already applies to the
+    # Holm denominator: a set must not shrink to what was evaluable.
+    _shrunk = receipt(paired=False,
+                      q4_status=I11.CELL_STATUS_NO_COUNTERPART,
+                      comparable=False)
+    _shrunk["results"] = {"btc": {a: {"economics": {}} for a in I11.ARMS_011}}
+    try:
+        _r = assert_incumbent_applicability_honoured(_shrunk)
+        ok(False, f"RR2-2 the coverage-shrink receipt must REFUSE (was "
+                  f"ADMITTED at {_r.get('checks')} checks)")
+    except RuntimeError as e:
+        ok("Coverage SHRANK" in str(e) and "Q4_combined_ev" in str(e),
+           "RR2-2 KNOWN-BAD: a receipt that flips a declared-comparable head "
+           "to false is REFUSED by name — the expected set is a "
+           "PRODUCER-RECORDED fact from INCUMBENT_COMPARABLE, never inferred "
+           "from what the run happened to contain (R-230)")
+    ok(assert_incumbent_applicability_honoured(receipt())[
+           "expected_comparable_heads"] == ["Q1_arrival", "Q4_combined_ev"],
+       "RR2-2 POSITIVE CONTROL: the expected set is EMITTED, so a reader "
+       "compares realised coverage against a declared floor rather than "
+       "against nothing")
 
     # BOTH HALVES, and neither is sufficient alone (rule 17). The
     # artifact-level guard proves a value FLOWED -- that is the half the
@@ -2330,9 +2580,11 @@ def _selftest_artifact_wiring_guard(ok):
     _rj = _srcm[_srcm.index("\ndef readjudicate("):
                 _srcm.index("\ndef declared_outputs_for(")]
     ok("assert_incumbent_applicability_honoured(out)" in _rj
-       and "attach_floor_disclosure(out)" in _rj,
-       "F-1 --readjudicate carries the SAME guarantees; a mode that skipped "
-       "them would be a second door into the same room")
+       and "finalise_family(out)" in _rj,
+       "F-1/RR2-1 --readjudicate carries the SAME guarantees through the SAME "
+       "ordered sequence; a mode that skipped them would be a second door "
+       "into the same room, and one that re-statused without re-assembling "
+       "would leave the old verdict standing beside the new status")
 
     # An EMPTY read must refuse, never pass (R-289, the checker's chair).
     for _lbl, _bad, _want in (
@@ -2366,8 +2618,24 @@ def _selftest_artifact_wiring_guard(ok):
     def emitted(**kw):
         r = receipt(**kw)
         r["incumbent_applicability_guard"] = {"checks": 18}
+        r["family"]["gate_evaluation"] = {"cells_checked": 24,
+                                          "cells_gate_partially_evaluated": []}
         for c in r["family"]["cells"].values():
             c["permutation_floor"] = {"at_permutation_floor": False}
+        return r
+
+    def _strip_floor(r):
+        r = json.loads(json.dumps(r))
+        for c in r["family"]["cells"].values():
+            c.pop("permutation_floor", None)
+        return r
+
+    def _stale_receipt(r):
+        """A cell re-statused but never re-assembled — the ordering defect."""
+        r = json.loads(json.dumps(r))
+        k = next(iter(r["family"]["cells"]))
+        r["family"]["cells"][k]["status"] = I11.CELL_STATUS_GATE_PARTIAL
+        r["family"]["cells"][k]["survives_joint_reading_at_0_05"] = True
         return r
 
     ok(assert_dry_run_family(emitted())["all_carry_an_increment"],
@@ -2381,9 +2649,19 @@ def _selftest_artifact_wiring_guard(ok):
             ("the applicability guard left NO evidence",
              {**emitted(), "incumbent_applicability_guard": {}},
              "was not called"),
+            # built from `emitted()` and stripped of ONLY the floor keys, so
+            # the earlier gate/guard assertions still pass and this known-bad
+            # isolates the condition it names rather than tripping two.
             ("the floor disclosure never reached the cells",
-             {**emitted(), "family": receipt()["family"]},
-             "permutation_floor")):
+             _strip_floor(emitted()),
+             "permutation_floor"),
+            ("the gate-evaluation pass left NO evidence",
+             {**emitted(), "family": {**emitted()["family"],
+                                      "gate_evaluation": {}}},
+             "gate-evaluation pass RAN"),
+            ("a GATE_PARTIALLY_EVALUATED cell still flagged surviving",
+             _stale_receipt(emitted()),
+             "standing beside the new status")):
         try:
             assert_dry_run_family(_r)
             ok(False, f"F-1(2) the dry seam must REFUSE ({_lbl})")
@@ -3092,7 +3370,7 @@ def readjudicate(src: Path) -> tuple:
             f"would still build 24 cells and exit 0 -- 'found nothing' from a "
             f"reader that touched nothing is the empty-set trap (R-289).")
     before = ((d.get("family") or {}).get("cells")) or {}
-    fam = evaluate_family(res, pops)
+    fam = evaluate_family(res, pops)   # for the CHANGED-CELL diff below
     changed = {}
     for k, c in fam["cells"].items():
         b = before.get(k) or {}
@@ -3104,16 +3382,21 @@ def readjudicate(src: Path) -> tuple:
                           "now": {"status": now[0], "p_value": now[1],
                                   "statistic": now[2]}}
     out = dict(d)
-    out["family"] = fam
     out["as_of"] = run_as_of()
+    out["as_of_names"] = ("the RE-ADJUDICATION instant. No population was "
+                          "read: the source artifact's own as_of names the "
+                          "read this evidence came from, and is preserved in "
+                          "`supersedes.source`.")
     out["producing_code"] = producing_code_provenance()
     # A RE-ADJUDICATION MUST CARRY THE SAME GUARANTEES AS AN EMISSION.
     # Otherwise this mode becomes the way a receipt reaches a reader without
     # the checks the main path enforces -- a second door into the same room.
-    attach_floor_disclosure(out)
+    # Same ORDERED sequence, so a re-adjudicated cell cannot keep a survivor
+    # flag its final status contradicts.
+    finalise_family(out)
+    fam = out["family"]
     out["incumbent_applicability_guard"] = \
         assert_incumbent_applicability_honoured(out)
-    out["incumbent_legs_evaluated"] = incumbent_legs_evaluated(out)
     out["supersedes"] = {
         "source": str(src), "source_sha256_prefix":
             hashlib.sha256(src.read_bytes()).hexdigest()[:16],
@@ -3168,6 +3451,116 @@ def readjudicate(src: Path) -> tuple:
 # read off the emitted artifact, which is the only thing a reader has.
 
 
+def finalise_family(receipt: dict) -> dict:
+    """Build, re-status and re-assemble the family, IN ORDER. RR2-1.
+
+    The order is load-bearing and was wrong by construction before: survivors
+    were computed by `assemble_family` BEFORE anything knew which incumbent
+    legs had been evaluated, so no later pass could change the flag it had
+    already published. The sequence is now:
+
+      1. `incumbent_legs_evaluated` -- a property of the RUN, computed first;
+      2. `evaluate_family` -- cells, statuses, Holm;
+      3. `apply_gate_evaluation_status` -- re-status the half-evaluated gates;
+      4. RE-ASSEMBLE -- so `survives`, `surviving_cells`, `cells_by_status`
+         and `distinct_results` are all derived from the FINAL statuses.
+
+    Step 4 is the one that is easy to omit: re-statusing a cell without
+    re-deriving the flags leaves the old verdict standing beside the new
+    status, which is the contradiction this whole finding is about."""
+    receipt["incumbent_legs_evaluated"] = incumbent_legs_evaluated(receipt)
+    receipt["family"] = evaluate_family(receipt.get("results") or {},
+                                        receipt.get("populations") or {})
+    ge = apply_gate_evaluation_status(receipt)
+    cells = receipt["family"]["cells"]
+    carried = {k: v for k, v in receipt["family"].items()
+               if k in ("incumbent_null_applicability", "gate_evaluation")}
+    receipt["family"] = I11.assemble_family(cells)
+    receipt["family"].update(carried)
+    receipt["family"]["gate_evaluation"] = ge
+    attach_floor_disclosure(receipt)
+    return receipt["family"]
+
+
+def apply_gate_evaluation_status(receipt: dict) -> dict:
+    """RR2-1. A cell whose gate has an UNEVALUATED conjunct is re-statused.
+
+    THE PREDICATE, from the reviewer's filing, verbatim in code:
+
+        NOT (declared_gate.carries_incumbent_term
+             AND comparable[head]
+             AND NOT incumbent_counterpart_computed)
+
+    All three inputs were ALREADY IN THE ARTIFACT and nothing compared them,
+    so `survives = true` was printed beside the fields that contradict it --
+    rule 10, in the only surviving head.
+
+    THIS IS NOT THE F2 CONJUNCT AGAIN. F2 covered a counterpart that does NOT
+    EXIST. Here it EXISTS and was not computed, which is the stronger claim
+    and the weaker evidence. The cell is REPORTED under its own status and
+    never dropped: the denominator stays 24, and the statistic and p it
+    already carries stay readable so a later ruling can be applied without
+    re-running.
+
+    It does NOT wire the missing leg. Whether `apply_incumbent_hazard` runs
+    for Q1 is an estimand-adjacent change to the only surviving head and is
+    the USER's (rule 14); this function only stops the artifact asserting a
+    joint reading it did not complete."""
+    fam = receipt.get("family") or {}
+    cells = fam.get("cells") or {}
+    comparable = ((receipt.get("incumbent_null_applicability") or {})
+                  .get("comparable") or {})
+    legs = receipt.get("incumbent_legs_evaluated") or {}
+    if not cells or not comparable or not legs:
+        raise RuntimeError(
+            f"REFUSED: the gate-evaluation pass read {len(cells)} cells, "
+            f"{len(comparable)} declarations and {len(legs)} leg records. It "
+            f"must not report 'nothing to re-status' from a read that "
+            f"touched nothing (R-289).")
+    moved, checked = [], 0
+    for key, c in cells.items():
+        head = c.get("head")
+        gate = c.get("declared_gate") or {}
+        checked += 1
+        computed = (legs.get(head) or {}).get("incumbent_counterpart_computed")
+        partial = bool(gate.get("carries_incumbent_term")
+                       and comparable.get(head)
+                       and not computed)
+        c["gate_conjuncts_evaluated"] = not partial
+        if not partial:
+            continue
+        moved.append(key)
+        c["status_before_gate_check"] = c.get("status")
+        c["status"] = I11.CELL_STATUS_GATE_PARTIAL
+        c["detail"] = (
+            f"GATE PARTIALLY EVALUATED (RR2-1). This head's frozen gate is "
+            f"{gate.get('gate')!r} with conjuncts {list(gate.get('conjuncts') or ())}. "
+            f"The incumbent counterpart EXISTS (comparable={comparable.get(head)}) "
+            f"and was NOT COMPUTED, so only the matched-random conjunct was "
+            f"evaluated and the cell cannot be published as passing a JOINT "
+            f"reading. Its statistic and p are UNCHANGED and still carried, so "
+            f"a ruling can be applied without re-running. Previous status: "
+            f"{c['status_before_gate_check']!r}. " + str(c.get("detail") or ""))
+    if checked == 0:
+        raise RuntimeError(
+            "REFUSED: the gate-evaluation pass visited ZERO cells.")
+    fam["gate_evaluation"] = {
+        "cells_checked": checked,
+        "cells_gate_partially_evaluated": sorted(moved),
+        "predicate": "NOT (declared_gate.carries_incumbent_term AND "
+                     "comparable[head] AND NOT "
+                     "incumbent_counterpart_computed)",
+        "heads_affected": sorted({cells[k]["head"] for k in moved}),
+        "wiring_decision_is_the_USERS": (
+            "apply_incumbent_hazard is built and has no production call "
+            "site. Wiring it changes the adjudication of the only surviving "
+            "head, so it is escalated, not done here (rule 14)."),
+        "why": "all three inputs were already in the artifact and nothing "
+               "compared them; `survives = true` was printed beside the "
+               "fields that contradict it (rule 10)."}
+    return fam["gate_evaluation"]
+
+
 def assert_dry_run_family(receipt: dict) -> dict:
     """--dry-run must ASSERT its own family before exiting 0. F-1(2).
 
@@ -3203,6 +3596,29 @@ def assert_dry_run_family(receipt: dict) -> dict:
             f"REFUSED: the artifact carries no evidence that the "
             f"incumbent-applicability guard RAN ({ev!r}). A guard that was "
             f"not called is indistinguishable from one that passed.")
+    if receipt.get("as_of") and not receipt.get("as_of_names"):
+        raise RuntimeError(
+            "REFUSED: the artifact carries an as_of that does not say WHICH "
+            "INSTANT it names. as_of precedes written_at by the fit's "
+            "duration, and rule 8's as-of is the POPULATION READ instant; a "
+            "bare timestamp leaves a reader to infer which one it is.")
+    ge = ((receipt.get("family") or {}).get("gate_evaluation")) or {}
+    if not isinstance(ge.get("cells_checked"), int) or ge["cells_checked"] <= 0:
+        raise RuntimeError(
+            f"REFUSED: the artifact carries no evidence that the "
+            f"gate-evaluation pass RAN ({ge!r}). Without it a cell whose "
+            f"declared gate was half evaluated is published as surviving "
+            f"(RR2-1), and a pass that was not called is indistinguishable "
+            f"from one that found nothing.")
+    stale = sorted(k for k, c in cells.items()
+                   if c.get("status") == I11.CELL_STATUS_GATE_PARTIAL
+                   and c.get("survives_joint_reading_at_0_05"))
+    if stale:
+        raise RuntimeError(
+            f"REFUSED: {len(stale)} cells are GATE_PARTIALLY_EVALUATED and "
+            f"still flagged surviving ({stale[:3]}). The family was "
+            f"re-statused without being RE-ASSEMBLED, so the old verdict is "
+            f"standing beside the new status.")
     nofloor = sorted(k for k, c in cells.items()
                      if "permutation_floor" not in c)
     if nofloor:
@@ -3212,6 +3628,7 @@ def assert_dry_run_family(receipt: dict) -> dict:
             f"disclosure was absent exactly on the cells that decide.")
     return {"q4_cells": len(q4), "all_carry_an_increment": True,
             "guard_evidence_checks": ev["checks"],
+            "gate_evaluation_cells_checked": ge["cells_checked"],
             "cells_with_floor_disclosure": len(cells)}
 
 
@@ -3241,6 +3658,23 @@ def assert_incumbent_applicability_honoured(receipt: dict) -> dict:
             f"REFUSED: the incumbent-applicability guard read {len(cells)} "
             f"cells and {len(comparable)} declarations. A guard that runs on "
             f"an empty read reports a pass it never established (R-289).")
+    # RR2-2: THE EXPECTED SET IS DECLARED BY THE PRODUCER, NOT INFERRED FROM
+    # WHAT THE RUN HAPPENED TO CONTAIN. `checked == 0` catches an empty read
+    # and nothing caught COVERAGE SHRINKING: with Q4 unwired and its
+    # `comparable` flipped to false, the guard was ADMITTED at 6 checks and
+    # one head, and the emitted `checks: 6` was the only trace. Same rule
+    # A1.4 already applies to the Holm denominator -- a set must not shrink
+    # to what was evaluable (R-230: expected sets are producer-recorded
+    # facts, never checker assumptions).
+    expected = sorted(h for h, v in INCUMBENT_COMPARABLE.items() if v)
+    realised = sorted(h for h, v in comparable.items() if v)
+    if set(realised) < set(expected):
+        raise RuntimeError(
+            f"REFUSED: the artifact declares comparable heads {realised} but "
+            f"INCUMBENT_COMPARABLE -- which transcribes the frozen prereg 3 "
+            f"gates -- declares {expected}. Coverage SHRANK, and a smaller "
+            f"realised set would otherwise be reported as a smaller pass: "
+            f"missing {sorted(set(expected) - set(realised))}.")
     bad_status, bad_econ, checked = [], [], 0
     for head, is_comp in comparable.items():
         if not is_comp:
@@ -3249,7 +3683,20 @@ def assert_incumbent_applicability_honoured(receipt: dict) -> dict:
             if c.get("head") != head:
                 continue
             checked += 1
-            if c.get("status") != I11.CELL_STATUS_OK:
+            # RR2-1 INTERACTION, resolved on the DIFFERENCE THAT MATTERS.
+            # This guard exists to catch a cell that DENIES a counterpart the
+            # declaration says exists. GATE_PARTIALLY_EVALUATED does the
+            # opposite: it DISCLOSES that the counterpart exists and was not
+            # computed, which is precisely what RR2-1 requires the artifact
+            # to say. Refusing it would make the honest disclosure
+            # unemittable and leave NO_INCUMBENT_COUNTERPART -- the false
+            # one -- as the only way to ship.
+            #
+            # The contradiction is still refused, and so is MUTANT A: an
+            # unwired Q4 also fails the economics check below, which no
+            # status can satisfy. Verified in the suite, both ways.
+            if c.get("status") not in (I11.CELL_STATUS_OK,
+                                       I11.CELL_STATUS_GATE_PARTIAL):
                 bad_status.append(f"{key}: comparable={head} but status "
                                   f"{c.get('status')!r}")
     if comparable.get("Q4_combined_ev"):
@@ -3275,8 +3722,19 @@ def assert_incumbent_applicability_honoured(receipt: dict) -> dict:
             f"when every source-text guard passes. Cells: {bad_status[:4]}; "
             f"economics: {bad_econ[:4]}. ({len(bad_status)} cell(s), "
             f"{len(bad_econ)} economics block(s) over {checked} checks.)")
-    return {"checks": checked, "comparable_heads":
-            sorted(h for h, v in comparable.items() if v),
+    partial = sorted(k for k, c in cells.items()
+                     if c.get("status") == I11.CELL_STATUS_GATE_PARTIAL)
+    return {"checks": checked, "comparable_heads": realised,
+            "expected_comparable_heads": expected,
+            "coverage_is_complete": set(realised) >= set(expected),
+            "cells_admitted_as_DISCLOSED_gaps": partial,
+            "admitted_gap_rule": (
+                "a comparable head's cell may carry OK or "
+                "GATE_PARTIALLY_EVALUATED. The first says the counterpart was "
+                "computed; the second DISCLOSES that it exists and was not. "
+                "NO_INCUMBENT_COUNTERPART on a comparable head is the "
+                "CONTRADICTION this guard refuses, and an unwired arm also "
+                "fails the economics check, which no status can satisfy."),
             "verified": "declared-comparable heads show OK cells; "
                         "economics-adjudicated ones also show a paired "
                         "incumbent with a non-null net"}
@@ -3631,7 +4089,20 @@ def main() -> int:
             "why": "two sources named different commits; neither is dropped"}
     out = {"artifact": "iter011_conditional_value_v1",
            "receipt_family": RECEIPT_FAMILY,
+           # LOW (re-review): as_of precedes written_at by ~13 min and did not
+           # say which instant it names. Rule 8's as-of exists because the
+           # TAPE GROWS DURING MEASUREMENT, so the POPULATION READ instant is
+           # the meaningful one; `written_at` is the emission. Both travel,
+           # and the field now says which is which rather than leaving a
+           # reader to infer it from the ordering.
            "as_of": run_as_of(),
+           "as_of_names": "the POPULATION READ instant — the moment this run "
+                          "finished reading its populations and began "
+                          "composing results. It is the instant rule 8 asks "
+                          "for (the tape grows during measurement). "
+                          "`written_at` is the LATER emission instant; the "
+                          "gap between them is fit and adjudication time, "
+                          "not additional data.",
            "producing_code": _prov,
            "preregistration": "ITER011_CONDITIONAL_VALUE_PREREGISTRATION.md",
            "preregistration_commit": "3b71d3e",
@@ -3742,8 +4213,9 @@ def main() -> int:
         del inc_pred, Xf, Xe, FIT[coin]["PM"], FIT[coin]["FN"], FIT[coin]["ST"]
 
     # I11-2: the DECLARED family, actually evaluated and adjudicated.
-    out["family"] = evaluate_family(out["results"], out["populations"])
-    attach_floor_disclosure(out)
+    # RR2-1: ordered in `finalise_family`, because survivors used to be
+    # published before anything knew which incumbent legs had been evaluated.
+    finalise_family(out)
     out["cluster_disclosure"] = I11.cluster_disclosure(
         min((p["eval_population_and_reach"]["G_complete_utc_days"]
              for p in out["populations"].values()), default=0), "window")
@@ -3751,7 +4223,6 @@ def main() -> int:
     # F-1: the declaration and the cells must AGREE, checked at the artifact.
     out["incumbent_applicability_guard"] = \
         assert_incumbent_applicability_honoured(out)
-    out["incumbent_legs_evaluated"] = incumbent_legs_evaluated(out)
     out["development_evidence"] = {
         "is_a_validation": False,
         "computed_from": "per-coin eval_population_and_reach, which derives "

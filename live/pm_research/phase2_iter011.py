@@ -1244,6 +1244,12 @@ CELL_STATUS_UNEVALUABLE = "UNEVALUABLE"
 # quietly, so a cell that would need an undeclared collapse says so and carries
 # the per-coin evidence for whoever rules.
 CELL_STATUS_AGG_UNDECLARED = "AGGREGATION_UNDECLARED"
+# RR2-1: the head's declared gate has a conjunct that was never EVALUATED.
+# Distinct from every status above: the cell is not underpowered, not
+# unevaluable, and its counterpart is not missing -- the counterpart EXISTS
+# (comparable is true) and was simply not computed. Reported, never dropped;
+# the denominator stays 24.
+CELL_STATUS_GATE_PARTIAL = "GATE_PARTIALLY_EVALUATED"
 
 # A1.4 (FROZEN): ONE adjudicated statistic per head. Everything else is
 # reported and NEVER adjudicated — a metric that can be swapped into a cell
@@ -1450,11 +1456,30 @@ def assemble_family(cells: dict) -> dict:
     # declared 24 -- a non-OK cell occupies its slot and still consumes a step
     # (A1.4). Only the SURVIVAL claim now requires the cell's own status to be
     # OK as well.
+    # RR2-1: A GATE THAT WAS HALF EVALUATED CANNOT BE PUBLISHED AS PASSED.
+    # The F2 conjunct fixed the case where the declared counterpart does NOT
+    # EXIST. This is the other case: it exists (`comparable` true), the gate
+    # names it (`carries_incumbent_term` true), and it was NOT COMPUTED. The
+    # flag then asserts a JOINT reading of a gate only one conjunct of which
+    # was ever evaluated -- rule 10, with every input to the contradicting
+    # predicate already in the file. `gate_conjuncts_evaluated` is supplied by
+    # the caller because whether a leg was computed is a property of the RUN,
+    # not of the cell.
+    # The conjunct is carried BY THE STATUS: `apply_gate_evaluation_status`
+    # re-statuses a half-evaluated cell to GATE_PARTIALLY_EVALUATED, which is
+    # not OK, so `status == OK` already excludes it. A separate `partial`
+    # term here was DEAD CODE -- a mutation that deleted it changed no
+    # behaviour, which is how it was found. One predicate, one place.
     for k, c in cells.items():
         c["holm_p"] = adj.get(k)
         c["survives_joint_reading_at_0_05"] = bool(
             c.get("status") == CELL_STATUS_OK and k in adj and adj[k] < 0.05)
-    survivor_rule = ("status == OK AND holm_p < 0.05. Holm alone published "
+    survivor_rule = ("status == OK AND holm_p < 0.05, where OK now also "
+                     "requires every declared conjunct of the head's gate to "
+                     "have been EVALUATED (not passed -- evaluated); a cell "
+                     "whose gate names a counterpart that exists and was not "
+                     "computed carries GATE_PARTIALLY_EVALUATED (RR2-1). "
+                     "Holm alone published "
                      "cells whose own status says their declared null does "
                      "not exist (Q-DA-197 F2, USER ruling 2026-09-01); Holm "
                      "itself is unchanged and still runs over the declared "

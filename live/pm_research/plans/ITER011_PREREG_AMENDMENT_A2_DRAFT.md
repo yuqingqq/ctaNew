@@ -71,6 +71,28 @@ its cause, and that this amendment is a draft. R-288's promised diagnostic
 occurred **zero** times in the previous artifact, so the frozen-form p could
 not be recovered from the emission at all; it can now.
 
+## Carried recommendation — the matched-random resolution, declared PROSPECTIVELY
+
+**From the re-review's ruling on F-3 (2026-09-01), preserved here so it is not
+lost between batches.** The reviewer ruled BE's refusal right on both halves:
+A1.6's `n_perm = 2000` pins the **increment** null (§5(2), "≥1000 declared");
+the matched-random null is §5(1) at **≥200**, which 500 satisfies. There was no
+violated pin to repair, and raising 500 → 2000 after seeing that the survivors
+sit one draw from failing is outcome-dependent and directional — a p at exactly
+`1/(n+1)` can only move toward a smaller p as resolution rises, taking `holm`
+from 0.0479 to at best 0.0120. That is rule 11.
+
+**The recommendation, which costs nothing now:**
+
+> **Declare the matched-random resolution PROSPECTIVELY — before the next run,
+> for the next population.** This family stays adjudicated at **500 draws**,
+> with the floor disclosure it now carries (every at-floor cell names its
+> one-draw margin, and `draw_counts_are_not_uniform: [500, 2000]` is emitted).
+
+A prospective declaration is not a repair of this family and must not be read
+as one: it changes nothing here, and it removes the choice-after-seeing problem
+from the next family by making the resolution a pre-registered fact.
+
 ## Provenance
 
 - Raised by the reviewer (pm-codex seat) as **F-2** in
