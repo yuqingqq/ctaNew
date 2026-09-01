@@ -18150,6 +18150,18 @@ Also this entry: the coordination loop is now self-paced (commit monitor + heart
 
 **NOT done, per the same ruling's recommended course:** the Phase-4 protocol and registry amendment freezes wait for the review filing — both sit in the reviewed tip.
 
+### R-387 — 2026-09-01T14:56Z — coordinator — **THE REVIEW FILING IS IN (`0bf80f3`, one filing per R-377): HOLD on F-1 and V41-RR1; RR3 RELEASED; DE RELEASED with no findings; the 011 result VERIFIED independently. Fix batches dispatched; four items go to the USER.**
+
+**Filing verified before routing (rule 1):** spot-checks at the artifact reproduce the reviewer exactly — Q1's six cells all sit at p = 1/501 with ZERO floor language (Q3 carries it 6/6), and the 24 cells hold 12 distinct (head, statistic, p) results. The filing's own mutants are execution-backed; F-1's MUTANT A becomes BE's red-first known-bad, which completes reproduction.
+
+**Routing (all fixes one batch per seat, R-377):**
+- **BE fix batch dispatched** — F-1 (artifact-level comparable⇒paired guard + a dry-run that can fail; the HOLD), F-2 (emit `p_two_sided`; DRAFT amendment A2 for the USER), F-3 (floor disclosure on every floored cell + re-run the matched-random null at the PINNED `n_perm=2000` — A1.6's own pin; 500 was below the frozen design), F-4's mitigation (per-head declared-gate outcome field), F-5 (`statistic_n_unit`), F-6 (distinct-result count beside cell count), F-7 (tri-state dirty flag, named paths, `carrying_commit` in every receipt).
+- **V41-RR1 is MINE** (coordinator surface): drive `main()` for the five scenarios with the filing's two mutants as acceptance — next coordinator work item, starts immediately; the re-review gets ONE notification when BE's tip and mine both land.
+- **DE round 2 dispatched** (released, no findings): the EV-Replay HARNESS at synthetic level per `EV_REPLAY_PLAN.md` and §10.1's typed-stub authorization, with an artifact-level refusal on any economic emission from stubs.
+- **Interim mechanism adopted** (scope 4(b) second-best, coordinator act): explicit-pathspec commits + `carrying_commit` in every result-bearing receipt, effective now; the WORKTREE decision goes to the USER.
+
+**TO THE USER, four items:** (1) F-4 design ruling — should `NO_INCUMBENT_COUNTERPART` block a head (Q3) whose frozen gate carries no incumbent term? (2) amendment A2 freeze when BE's draft lands (one-sided null, no verdict changes — reviewer measured it). (3) Phase-4 protocol + registry amendment freezes — now unblocked by DE's release. (4) per-seat worktrees — reviewer's recommendation, removes the shared-index class structurally.
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
