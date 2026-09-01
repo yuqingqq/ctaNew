@@ -18028,6 +18028,19 @@ The obvious objection to the rollback: 10/10 triples the detection lag (≤20 s 
 
 **Standing note on my own conduct this round.** My first pass in round 3 reported "`--verify-health` refuses but exits 0" as a defect. It does not — my check piped through `tail`, so `$?` was tail's. **That is the exact defect I documented in `v5_deploy_gates.py` and fixed earlier today, committed again by me, inside the command verifying the guard against it.** Recorded because the lesson is evidently not learned by writing it down once: **a pipe silently replaces the exit code you meant to read, and I have now made that mistake in both directions in one day.**
 
+### R-373 — 2026-09-01T12:54Z — coordinator — **USER-ORDERED CONTEXT RESET OF ALL THREE SEATS; every seat's conversation history is GONE and the files are, as designed, the only state.** Coordinator seat is now session ctanew-7e (pm-co); prior coordinator context (session `01SEECKPoMDP6tMYiCjcDvpQ`, which produced R-351..R-372 and today's 011 commits) is not resident anywhere.
+
+USER: *"can you clear the context of each session, tell them to re-load again"* — executed at ~12:52Z: `/clear` sent to BE (pm-be/ctanew-fe), DA (pm-da/ctanew-1e), MEM (pm-memory/ctanew-ba), then one complete re-load dispatch pasted per seat (SEAT_PROTOCOL → HANDOFF through Immediate order → STATUS.yml head, plus the caution that both state files are as-of 09:43Z and superseded on the 011 lane by `54f899d`/`e326782`/`0b1f6bb`).
+
+**Why the register must carry this:** any seat behaviour that assumed shared conversational context before 12:52Z is void; a seat that appears to have "forgotten" an unfiled agreement has not regressed — the agreement was never filed, which is the interface working as declared. Anything worth keeping from the cleared contexts either already lives in files or is gone.
+
+**Dispatches issued with the reset:**
+- **BE** — confirmed re-load at HEAD `0b1f6bb`, then dispatched (USER-initiated, coordinator constraints appended) on the two defects blocking 011 adjudication: **(1) Q4 incumbent counterpart did not load though `incumbent_null_applicability` declares `comparable:true`** — diagnose before changing anything, then produce candidate-minus-incumbent on the identical action population (prereg 5.2); **(2) implement R-306 for Q3** exactly as the frozen A1.4 amendment records (conjunction + worse side) against the PRESERVED per-coin evidence, no refit. Fixes live in the runner or are declared lattice amendments; red-first; research.slice ≤12G, unit kept; development evidence only (prereg 4).
+- **MEM** — assigned the state-file true-up: STATUS.yml/HANDOFF (09:43Z) still say the 09:34Z sliced BTC attempt "produced no result artifact"; superseded by `54f899d`/`e326782`/`0b1f6bb` (fit completed inside the unraised 12G cap; artifact `iter011_conditional_value_v1__coin_btc.json`, 24/24 cells). Supersede in-band; 09:43Z record stays as provenance.
+- **DA** — re-load only, standing cadence unchanged (00:06Z closed-day verifier governs 09-01, the first possible forward day, G=0/5). Its pre-clear background monitor was noted in the dispatch for DA to inspect and keep or kill per its files.
+
+**Plan position, verified against `HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md` §10 before dispatching:** items 1–2 closed; **item 3 (conditional-value lane) is the live step and is blocked only by the two defects above**; items 4–6 remain parallel behind their own gates; item 9's forward clock starts only when a day closes accruing. Collector `clob_v4_1` verified live at dispatch time (PID 1108125, 14h47m, control-v4-slow).
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
