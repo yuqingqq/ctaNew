@@ -1026,9 +1026,52 @@ def day_era_admission(day_token: str, path: Path | None = None,
 #: Nothing here is redundant and nothing else is required. Any of the four
 #: false means the day does not count -- and NOT that the day was bad: (2) and
 #: (3) are properties of the clock and the collector, never of the feed.
+#:
+#: WHAT (3) DOES AND DOES NOT DECIDE -- USER RULING 2026-09-01, recorded here
+#: because it was previously ambiguous and read as a quality judgement:
+#:
+#:   *"i dont care about collector version, as long as the data quality is
+#:    good, then we can use to test the model"*
+#:
+#: ERA IS NOT A QUALITY VERDICT, AND IT NEVER GRADES THE FEED. Across
+#: clob_v3_1 -> clob_v4 -> clob_v4_1 the collector_runs ledger states its own
+#: semantics as "distributional only; NO row-stamping change": the rows that
+#: SURVIVE are recorded identically in every one of those eras. What differs is
+#: how much is lost and how the loss is labelled, never the fidelity of what is
+#: kept. So among RULED eras, QUALITY ALONE DECIDES -- which is exactly what
+#: happens today, because clob_v4_1 is ruled admissible and every forward day
+#: is era-pure clob_v4_1, so conjunct (3) is already satisfied and (4) governs.
+#:
+#: (3) SURVIVES AS AN INTERLOCK, NOT AS A GRADE. Its refusal text is "a
+#: collector version is not admissible by default and silence is not a ruling".
+#: Its job is the NEXT boundary: if a deploy introduces an era nobody has ruled
+#: on, days must not start accruing under an unvetted collector -- the checker
+#: refuses and NAMES the version instead. It costs nothing while every live era
+#: is ruled, and this programme deployed a collector change on 2026-08-31.
+#:
+#: CROSS-ERA QUALITY COMPARISON REMAINS INVALID, which is a different claim
+#: from the one above and must not be collapsed into it. P1/P2/P3 are
+#: era-DEPENDENT IN MAGNITUDE: at ping 3/3 a stall becomes a logged gap in ~3 s,
+#: at 10/10 sub-10 s stalls self-heal and are never logged at all (measured:
+#: 08-31 1,134 btc gaps / 27.3 s median cumulative; 09-01 84 / 9.7 s, same feed).
+#: So a day's bars are comparable to days in ITS OWN era and to its own bar
+#: regime, never across a boundary. Forward days are all clob_v4_1, so the
+#: forward comparison is internally valid; a historical cross-era table is not.
+#:
+#: AND THE BAR REGIME IS PART OF "HEALTHY", not a detail: days before
+#: 2026-08-29 are governed by `count_bar_v1_frozen` (gap_rate_under_bar), from
+#: 08-29 by `day_bar_v2` (P1/P2/P3, gap_rate SUPERSEDED). Reading a v2 bar
+#: against a v1-governed day is an anachronism and flips verdicts -- 2026-08-28
+#: passes P1 at 114.1 s/hr yet FAILS its actual bar at 20.29 gaps/hr.
 ACCRUAL_RULE = ("a day accrues iff FINISHED (closed UTC day) AND AFTER (post "
-                "freeze commit) AND ADMISSIBLE (one ruled era) AND HEALTHY "
-                "(quality bars). Four conjuncts, four different questions.")
+                "freeze commit) AND ADMISSIBLE (the era is RULED -- an "
+                "interlock against an unvetted collector, never a quality "
+                "grade) AND HEALTHY (the quality bars of that day's OWN bar "
+                "regime). Four conjuncts, four different questions. Among "
+                "ruled eras QUALITY ALONE DECIDES (USER 2026-09-01); era "
+                "carries no fidelity claim, since clob_v3_1/v4/v4_1 make NO "
+                "row-stamping change. Cross-era quality comparison stays "
+                "invalid: the bars are era-dependent in magnitude.")
 
 
 def split_verdict(preds: list, regime: str = "count_bar_v1_frozen",
@@ -1076,6 +1119,14 @@ def split_verdict(preds: list, regime: str = "count_bar_v1_frozen",
                "healthy day BEFORE the freeze commit is a good day that does "
                "not count, not a bad day -- and an UNFINISHED day is not yet "
                "a day at all",
+        "era_role": "INTERLOCK, NOT A QUALITY GRADE (USER 2026-09-01). Among "
+                    "RULED eras quality alone decides: clob_v3_1/v4/v4_1 make "
+                    "NO row-stamping change, so era carries no fidelity claim "
+                    "about the rows that survive. This conjunct exists to "
+                    "refuse an UNRULED collector at the next boundary, not to "
+                    "judge the feed. Cross-era quality COMPARISON stays "
+                    "invalid separately: the bars are era-dependent in "
+                    "magnitude.",
     }
 
 

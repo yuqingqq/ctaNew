@@ -470,6 +470,62 @@ reproduces them exactly. But any forward receipt MUST carry all three hashes
 and state why "unchanged" is still true — a receipt asserting it over a moved
 lattice hash is false on its face. ALL 15 GATES PASS.
 
+### 2026-09-01 ~09:30Z (coordinator) — ACCRUAL RULE CLARIFIED BY USER RULING
+
+USER: *"i dont care about collector version, as long as the data quality is
+good, then we can use to test the model"* → *"can we update the rule and
+corresponding docs"*. Updated in `ACCRUAL_RULE`, in `split_verdict`'s output
+(new `era_role` field, so every verdict carries it), and in the governing plan.
+
+**The rule is unchanged in form — FINISHED AND AFTER AND ADMISSIBLE AND
+HEALTHY — and clarified in meaning.** ERA IS NOT A QUALITY VERDICT. The ledger
+states `clob_v3_1 → v4 → v4_1` as *"distributional only; NO row-stamping
+change"*: surviving rows are recorded identically across all three, so era
+carries no fidelity claim about the data the model sees. **Among ruled eras,
+quality alone decides.**
+
+**No code behaviour changed, because that is ALREADY the operative behaviour.**
+`clob_v4_1` is ruled admissible and every forward day is era-pure `clob_v4_1`,
+so the era conjunct is satisfied from 09-01 and the quality bars govern. The
+conjunct was never blocking the forward race.
+
+**It survives as an INTERLOCK.** Its refusal — *"a collector version is not
+admissible by default and silence is not a ruling"* — fires at the NEXT
+boundary, so a deploy cannot start accruing days under an unvetted collector.
+Free while every live era is ruled; this programme deployed one yesterday.
+
+**Two things kept SEPARATE that I had collapsed:**
+1. *Using* a quality-passing day's data — era-independent, the USER's point.
+2. *Comparing* quality numbers across eras — still invalid. P1/P2/P3 are
+   era-dependent in magnitude: at 3/3 a stall is logged in ~3 s; at 10/10
+   sub-10 s stalls self-heal and never appear. Measured on the same feed:
+   08-31 → 1,134 btc gaps / 27.3 s median cumulative; 09-01 → 84 / 9.7 s.
+   I answered (2) when the USER was asking (1).
+
+**A TABLE CORRECTION, because it changes a conclusion.** The bar REGIME differs
+by day: `count_bar_v1_frozen` before 08-29 (`gap_rate_under_bar` governs),
+`day_bar_v2` from 08-29 (P1/P2/P3 govern, gap_rate superseded). Applying v2
+bars to v1-governed days is an anachronism that flips verdicts:
+
+| day | claimed | verified |
+|---|---|---|
+| 08-28 | Pass | **FAIL** — `gap_rate_under_bar` 20.29/hr vs 15, 12 h over. Its P1 *would* be 114.1 (passing) but P1 is not its bar |
+| 08-29 | Pass | **PASS** — `all_pass=True` under day_bar_v2 |
+
+So **08-29 is the ONLY quality-passing, era-pure, post-freeze day the era
+conjunct has ever excluded** — not 08-28 and 08-29.
+
+**PROSPECTIVE ONLY (rule 11), and the USER stated this first.** The
+clarification is issued while it is already known which days would pass, so it
+grants nothing retroactively. 08-29 stays excluded — it was seen and does not
+become forward validation. **09-01 remains the first possible forward day.**
+
+**Provenance note:** the era-as-metadata framing arrived attributed to me
+(*"under your intended rule"*). I did not state it — I implemented ADMISSIBLE
+as a conjunct and described it as one. Recorded so the register does not carry
+a ruling under the wrong seat; the ruling is the USER's, the clarification is
+mine, and the correction of the 08-28 row is mine too.
+
 ### Immediate order
 
 0. ~~Rule B1~~ / ~~day-closed conjunct~~ **BOTH DONE.** The rule is one line in

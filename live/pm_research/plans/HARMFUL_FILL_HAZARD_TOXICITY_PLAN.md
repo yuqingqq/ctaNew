@@ -30,6 +30,42 @@ quality bar. 2026-09-01 is the first era-pure admissible v4.1 day, but it is
 incomplete and cannot accrue. Do not call collector operation a forward-test
 day until the closed-day verifier admits it.
 
+**2026-09-01 USER RULING — the accrual rule, and what the era conjunct means.**
+*"i dont care about collector version, as long as the data quality is good,
+then we can use to test the model."* A day accrues iff **FINISHED** (closed UTC
+day) **AND AFTER** (post freeze commit) **AND ADMISSIBLE AND HEALTHY**.
+
+- **ERA IS NOT A QUALITY VERDICT.** Across `clob_v3_1 → clob_v4 → clob_v4_1`
+  the ledger states its own semantics as *"distributional only; NO row-stamping
+  change"* — the rows that SURVIVE are recorded identically in each. What
+  differs is how much is lost and how the loss is labelled, never the fidelity
+  of what is kept. **Among RULED eras, quality alone decides.** That is already
+  the operative behaviour: `clob_v4_1` is ruled admissible and every forward
+  day is era-pure `clob_v4_1`, so the era conjunct is satisfied and the quality
+  bars govern.
+- **The conjunct survives as an INTERLOCK, not a grade.** It refuses an era
+  nobody has ruled on — *"a collector version is not admissible by default and
+  silence is not a ruling"* — so a future deploy cannot start accruing days
+  under an unvetted collector. It costs nothing while every live era is ruled.
+- **Cross-era quality COMPARISON remains invalid**, which is a separate claim
+  and must not be collapsed into the one above. P1/P2/P3 are era-dependent in
+  magnitude: at ping 3/3 a stall becomes a logged gap in ~3 s; at 10/10 sub-10 s
+  stalls self-heal and are never logged (measured, same feed: 08-31 → 1,134 btc
+  gaps, 27.3 s median cumulative; 09-01 → 84 gaps, 9.7 s). Forward days are all
+  one era, so the forward comparison is internally valid; a historical
+  cross-era table is not.
+- **The bar regime is part of HEALTHY.** Days before 2026-08-29 are governed by
+  `count_bar_v1_frozen` (`gap_rate_under_bar`); from 08-29 by `day_bar_v2`
+  (P1/P2/P3, `gap_rate_under_bar` SUPERSEDED). Applying a v2 bar to a
+  v1-governed day is an anachronism that flips verdicts: **2026-08-28 passes P1
+  at 114.1 s/hr yet FAILS its actual governing bar at 20.29 gaps/hr.**
+- **PROSPECTIVE ONLY (rule 11).** This clarification is issued while it is
+  already known which historical days would pass, so it grants nothing
+  retroactively. **2026-08-29 is the only quality-passing, era-pure,
+  post-freeze day the era conjunct has ever excluded**; it stays excluded, it
+  was seen, and it does not become forward validation. **2026-09-01 remains the
+  first possible forward day.**
+
 **2026-08-28 update:** Phases 0--2 have produced a reproducible development
 receipt and a BTC fill-hazard research seed, but no complete-UTC-day forward
 validation. The main unresolved estimand is now conditional signed fill value,
