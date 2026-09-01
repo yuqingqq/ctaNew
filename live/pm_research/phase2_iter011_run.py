@@ -122,11 +122,18 @@ def compact_design(block: dict) -> dict:
     if n == 0 or block.get("X") is not None:
         return block
     PM, FN, ST = block["PM"], block["FN"], block["ST"]
-    w = len(PM[0]) + len(FN[0]) + len(ST[0])
+    w_pm, w_fn, w_st = len(PM[0]), len(FN[0]), len(ST[0])
+    w = w_pm + w_fn + w_st
     X = np.empty((n, w), dtype=np.float64)
     for i in range(n):
         X[i] = PM[i] + FN[i] + ST[i]
     block["X"] = X
+    # RECORD THE FAMILY WIDTHS, because packing DESTROYS the only thing that
+    # said where one family ends and the next begins. The incumbent scores
+    # PM+fine with NO state (arm D), so it needs the PM+FN PREFIX of this
+    # array -- and a prefix length that is inferred rather than recorded is a
+    # guess wearing an index. `_pm_fn_row` REFUSES a packed block without it.
+    block["w"] = {"PM": w_pm, "FN": w_fn, "ST": w_st}
     # Drop the references so the arenas are reusable by the NEXT pass. RSS is
     # a high-water mark and CPython does not return arenas to the OS, so the
     # win is not a smaller peak here -- it is that the topup pass allocates
@@ -540,8 +547,19 @@ def report_arm(pred: dict, tg: dict, rows: list) -> dict:
             "Q3_magnitudes": min([v for v in (q3h.get("calibration_slope"),
                                               q3g.get("calibration_slope"))
                                   if v is not None], default=None),
-            "Q3_cell_rule": "min |calibration slope deviation| side reported; "
-                            "both slopes carried",
+            # RULE 10: this string said "min |calibration slope deviation|
+            # side reported" beside code computing `min(slope)`. Those are
+            # different sides whenever the slopes straddle 1 -- measured on
+            # the 08-25 btc run, m_harm 0.6888 and m_good 0.9098 give
+            # min-slope m_harm and min-|deviation| m_good, so the label named
+            # the OTHER head's number. A conclusion printed beside a table
+            # that contradicts it, for the fourth time in this programme.
+            "Q3_cell_rule": "min(calibration slope of m_harm, m_good) — the "
+                            "WORSE side under a gate that reads distance "
+                            "from 0 (R-306's Q2-min logic); both slopes are "
+                            "carried in `heads`. Deviation from 1 is the "
+                            "REPORTED calibration diagnostic (R-286) and "
+                            "selects nothing.",
         },
         "reporting_rule": "all heads reported whether or not they pass; a "
                           "strong arrival head does not establish toxicity "
@@ -697,6 +715,18 @@ def _one_cell(arm: str, head: str, budget: str, coin_results: dict,
         return I11.build_cell(arm, head, budget, statistic=stat, p_value=pval,
                               status=status, n_actions=n_actions, detail=detail)
 
+    if head == "Q3_magnitudes" and len(per_coin) == 1:
+        # R-306 RULED THIS AND THE CODE HAD NEVER IMPLEMENTED IT. The cell
+        # below used to return AGGREGATION_UNDECLARED, correctly, because no
+        # ruling reconciled A1.4's single "calibration slope" with the parent
+        # table's two separately-gated slopes. R-306 (USER, 2026-08-29) is
+        # that ruling and it lives in the frozen A1.4 amendment; a gap that a
+        # ruling has closed is no longer a gap. The multi-coin case is a
+        # SEPARATE gap and still falls through to the generic path.
+        stat, pval, status, detail = _q3_compose(arm, per_coin)
+        return I11.build_cell(arm, head, budget, statistic=stat, p_value=pval,
+                              status=status, n_actions=n_actions, detail=detail)
+
     # Q1/Q2/Q3: the adjudicated statistic is a discrimination/calibration
     # figure, identical across budgets (budgets select CANCELLATIONS, not
     # predictions). It is reported in every budget slot so the declared family
@@ -755,16 +785,11 @@ def _one_cell(arm: str, head: str, budget: str, coin_results: dict,
     # under Option 1 the cell statistic is min(AUC(p_pos), AUC(p_neg)), the
     # WORSE side. The null evidence for that statistic is therefore the worse
     # side's own null -- a consequence of the ruling, not a fresh choice.
-    # Q3 has no such ruling: A1.4 names "calibration slope" for the cell while
-    # the parent table requires m_harm and m_good "each reported SEPARATELY"
-    # with a CI for each. One cell, two unreconciled judgements.
-    if head == "Q3_magnitudes" and len(subs) > 1:
-        ambiguous.append(
-            f"{head} spans {sorted(subs)}: A1.4 names a single 'calibration "
-            f"slope' for the cell, while the frozen table requires them 'each "
-            f"reported SEPARATELY' with 'calibration slope CI excludes 0 for "
-            f"each'. One cell cannot carry two separate slope-and-CI "
-            f"judgements, and unlike Q2 (R-249) no ruling says which wins")
+    # Q3's two sides are NOT a gap either, as of R-306 (USER, 2026-08-29):
+    # CONJUNCTION + WORSE SIDE, implemented in `_q3_compose` and reached
+    # above. What remains here is only the COIN axis, whose R-306 clause
+    # (btc-only adjudication) this runner does not implement -- so a
+    # multi-coin Q3 still says so rather than collapsing.
     ps = _cell_p(per_coin, arm, head)
     if ambiguous:
         return I11.build_cell(
@@ -876,6 +901,39 @@ def load_verified_incumbent(coin: str, fitdir=None, manifest: dict = None) -> di
     return d
 
 
+def _pm_fn_row(block: dict, j: int, n_expected: int) -> list:
+    """Row j's PM+fine features, from whichever representation the block holds.
+
+    THE PACK BROKE THIS PATH AND NOTHING SAW IT. `compact_design` sets
+    block["PM"] = block["FN"] = block["ST"] = None after packing, so the
+    arm-D arithmetic -- `block["PM"][j] + block["FN"][j]` -- raises
+    TypeError on any real block by the time the results loop runs. Every
+    falsifier for the incumbent path builds its own UNPACKED fixture, so the
+    suite could not see it: rule 17's shape again, one layer below the wiring.
+
+    The prefix is CHECKED, never assumed. `compact_design` records the family
+    widths; a packed block without them REFUSES rather than slicing by a
+    length inferred from the model, which would make a width mismatch look
+    like a correct read of a differently-shaped row."""
+    X = block.get("X")
+    if X is None:
+        return block["PM"][j] + block["FN"][j]          # NO state features
+    w = block.get("w")
+    if not w:
+        raise RuntimeError(
+            "REFUSED: a PACKED design block carries no family widths, so the "
+            "PM+fine prefix cannot be located. Slicing to the model's own "
+            "width would make a shape disagreement read as a correct row.")
+    k = w["PM"] + w["FN"]
+    if k != n_expected:
+        raise RuntimeError(
+            f"REFUSED: the packed block's PM+fine width is {k} "
+            f"({w['PM']}+{w['FN']}) but the incumbent was fitted on "
+            f"{n_expected}. The prefix and the model disagree about what a "
+            f"row is; a slice would still return {n_expected} numbers.")
+    return X[j, :k].tolist()
+
+
 def apply_incumbent(model: dict, block: dict, idx) -> dict:
     """The incumbent's composed value on the SAME rows the candidate scored.
 
@@ -888,7 +946,7 @@ def apply_incumbent(model: dict, block: dict, idx) -> dict:
     W, WM = model["hazard_weights"], model["value_weights"]
     out = []
     for j in idx:
-        raw = block["PM"][j] + block["FN"][j]          # NO state features
+        raw = _pm_fn_row(block, j, len(mu))            # NO state features
         if len(raw) != len(mu):
             raise RuntimeError(
                 f"REFUSED: row {j} has {len(raw)} PM+fine features but the "
@@ -919,7 +977,7 @@ def apply_incumbent_hazard(model: dict, block: dict, idx) -> dict:
     W = model["hazard_weights"]
     out = []
     for j in idx:
-        raw = block["PM"][j] + block["FN"][j]          # NO state features
+        raw = _pm_fn_row(block, j, len(mu))            # NO state features
         if len(raw) != len(mu):
             raise RuntimeError(
                 f"REFUSED: row {j} has {len(raw)} PM+fine features but the "
@@ -954,7 +1012,14 @@ def _cell_p(per_coin: dict, arm: str, head: str) -> list:
 
     For Q2 that is the WORSE side's p, because R-249 rules the cell statistic to
     be min(AUC(p_pos), AUC(p_neg)): the null must describe the number the cell
-    actually reports, not a sibling of it."""
+    actually reports, not a sibling of it.
+
+    For Q3 it is `max(p)` -- the WORSE of the two, ruled by R-306. This branch
+    took the FIRST sub-head's p (Q3_m_harm, by dict order), which is neither
+    side's ruled role: it happened to be right whenever m_harm was the weaker
+    side and silently wrong whenever it was not. `_q3_compose` is the
+    single-coin path and computes this itself; this keeps the two in step for
+    the multi-coin path, which still reports its own gap."""
     out = []
     for r in per_coin.values():
         heads = r[arm].get("heads", {})
@@ -966,6 +1031,14 @@ def _cell_p(per_coin: dict, arm: str, head: str) -> list:
                 continue
             worse = min(scored)[1]
             v = (heads.get(worse, {}).get("matched_random") or {}).get("p_value")
+        elif head == "Q3_magnitudes" and len(subs) > 1:
+            ps = [(heads.get(x, {}).get("matched_random") or {}).get("p_value")
+                  for x in subs]
+            ps = [x for x in ps if x is not None]
+            # CONJUNCTION: both sides or nothing. A cell whose second side has
+            # no null has not met the pass condition; taking the one p present
+            # would let half a head carry the cell.
+            v = max(ps) if len(ps) == len(subs) else None
         else:
             v = None
             for x in subs:
@@ -974,6 +1047,122 @@ def _cell_p(per_coin: dict, arm: str, head: str) -> list:
         if v is not None:
             out.append(v)
     return out
+
+
+def _q3_compose(arm: str, per_coin: dict) -> tuple:
+    """Q3's cell under R-306: CONJUNCTION + WORSE SIDE. Returns a cell tuple.
+
+    THE RULING, quoted from the frozen A1.4 amendment (USER, 2026-08-29):
+    "Q3's TWO ruled slope gates compose into its single cell as CONJUNCTION +
+    WORSE SIDE -- the cell PASSES only if BOTH slope CIs (m_harm, m_good)
+    exclude 0, and the cell's adjudicated p is the WORSE of the two (the
+    Q2-min logic: half a working head cannot carry a cell). Family stays 24."
+
+    Implemented as the ruling states it, in three separable parts:
+
+    CONJUNCTION.  Both sides must be EVALUABLE, or the CELL is -- the same
+    rule Q2 already carries ("a single side never carries it"). With both
+    evaluable, adjudicating on the WORSE p at a common alpha IS the
+    conjunction: it is the intersection-union p, which rejects only when both
+    sides do. So the p and the pass condition are one mechanism, not two.
+
+    WORSE SIDE.  Two things are named and they are computed separately,
+    because they need not come from the same side:
+      * the adjudicated p is `max(p_harm, p_good)` -- "the WORSE of the two",
+        the ruling's literal words, worse meaning weaker evidence;
+      * the reported statistic is `min(slope)` -- the Q2-min logic the
+        parenthetical invokes, under a gate that reads DISTANCE FROM 0, where
+        the smaller slope is the binding one for "both exclude 0".
+    When the two disagree about WHICH side is worse, the disagreement is
+    DISCLOSED in the detail rather than resolved by preference.
+
+    "CI EXCLUDES 0" IS TESTED IN ITS IMPLEMENTED FORM, AND THAT FORM IS
+    CHECKED, NOT ASSUMED.  R-286 ruled that the adjudicated null is the GATE's
+    text and that "the implementation's `no_skill_value` in-band declaration
+    is the visibility mechanism of record" -- the matched-random null with
+    `no_skill_value = 0.0`, one-sided `greater`. This function REFUSES a
+    sub-head whose null was declared against any other no-skill value or
+    alternative, because a p computed against 1.0 (the REPORTED calibration
+    diagnostic, never adjudicated per R-286) would be a different question
+    wearing the gate's name.
+
+    A LITERAL INTERVAL IS NOT CLAIMED AND MUST NOT BE READ IN. Rule 8 forbids
+    an interval below G=5 complete UTC days and this population is at G=0; the
+    disclosure travels in the cell's detail so "CI excludes 0" is never read
+    as an interval that was computed."""
+    if len(per_coin) != 1:
+        raise RuntimeError(
+            f"REFUSED: _q3_compose adjudicates ONE coin ({len(per_coin)} "
+            f"supplied). R-306's coin clause (btc-only adjudication) is not "
+            f"implemented in this runner; the multi-coin gap is reported by "
+            f"the generic path, never collapsed here.")
+    coin, r = next(iter(per_coin.items()))
+    heads = r[arm].get("heads", {})
+    subs = _CELL_SUBHEADS["Q3_magnitudes"]
+    ev, missing, under, wrongnull = {}, [], [], []
+    for sub in subs:
+        h = heads.get(sub) or {}
+        mr = h.get("matched_random") or {}
+        slope, pv = h.get("calibration_slope"), mr.get("p_value")
+        if h.get("status") == I11.UNDERPOWERED or mr.get("status") == I11.UNDERPOWERED:
+            under.append(sub)
+        if slope is None or pv is None:
+            missing.append(sub)
+            continue
+        nsv, alt = mr.get("no_skill_value"), mr.get("alternative")
+        if nsv != 0.0 or alt != "greater":
+            wrongnull.append(f"{sub}(no_skill_value={nsv!r}, "
+                             f"alternative={alt!r})")
+            continue
+        ev[sub] = {"calibration_slope": slope, "matched_random_p": pv}
+    # CONJUNCTION: a cell whose second side is absent has not been measured.
+    if under:
+        return (None, None, I11.CELL_STATUS_UNDERPOWERED,
+                f"R-306 CONJUNCTION: Q3 needs BOTH slope gates and "
+                f"{sorted(under)} is underpowered on {coin}. Half a working "
+                f"head cannot carry a cell, so the CELL is underpowered and "
+                f"its p is withheld; the per-side evidence is {ev!r}.")
+    if wrongnull:
+        return (None, None, I11.CELL_STATUS_UNEVALUABLE,
+                f"R-306/R-286: the adjudicated gate is 'calibration slope CI "
+                f"excludes 0', whose implemented form is the matched-random "
+                f"null at no_skill_value=0.0, one-sided 'greater'. These "
+                f"sub-heads declared a different null: {sorted(wrongnull)}. A "
+                f"p against another no-skill value answers another question "
+                f"and must not be adjudicated under this gate's name.")
+    if missing:
+        return (None, None, I11.CELL_STATUS_UNEVALUABLE,
+                f"R-306 CONJUNCTION: {sorted(missing)} carry no slope or no "
+                f"matched-random p on {coin}, so the conjunction cannot be "
+                f"evaluated and a single side never carries the cell. "
+                f"Per-side evidence: {ev!r}.")
+    sh, sg = ev[subs[0]], ev[subs[1]]
+    # WORSE SIDE, computed twice under the ruling's two names.
+    worse_p_side = max(subs, key=lambda k: ev[k]["matched_random_p"])
+    worse_stat_side = min(subs, key=lambda k: ev[k]["calibration_slope"])
+    pval = ev[worse_p_side]["matched_random_p"]
+    stat = ev[worse_stat_side]["calibration_slope"]
+    agree = worse_p_side == worse_stat_side
+    return (stat, pval, I11.CELL_STATUS_NO_COUNTERPART,
+            f"R-306 (USER, 2026-08-29, frozen A1.4): Q3's two slope gates "
+            f"compose as CONJUNCTION + WORSE SIDE. Both sides are evaluable, "
+            f"so the cell is adjudicated: statistic = min slope "
+            f"{stat!r} from {worse_stat_side}, p = the WORSE of the two "
+            f"{pval!r} from {worse_p_side}; the two worse-side readings "
+            f"{'AGREE' if agree else 'DISAGREE (disclosed, not resolved by preference)'}"
+            f". Adjudicating the worse p at a common alpha IS the conjunction "
+            f"(intersection-union), so the cell passes only if BOTH sides do. "
+            f"Per-side evidence on {coin}: "
+            f"Q3_m_harm slope {sh['calibration_slope']!r} p "
+            f"{sh['matched_random_p']!r}; Q3_m_good slope "
+            f"{sg['calibration_slope']!r} p {sg['matched_random_p']!r}. "
+            f"The gate's 'CI excludes 0' is tested in its R-286 implemented "
+            f"form -- matched-random null at no_skill_value=0.0, one-sided "
+            f"'greater', VERIFIED on both sides -- and NO literal interval is "
+            f"claimed: rule 8 forbids one at G=0 complete UTC days. Status is "
+            f"NO_INCUMBENT_COUNTERPART for the same reason as Q2 (R-237): the "
+            f"incumbent has no magnitude head, so the p reported is the "
+            f"MATCHED-RANDOM null, never an incremental one.")
 
 
 def _q4_cell(arm: str, budget: str, per_coin: dict) -> tuple:
@@ -1297,6 +1486,11 @@ def selftest() -> int:
     _ecp = q4_economics(_pr2, _rows2, incumbent={
         "expected_cancel_value": list(reversed(_pr2["expected_cancel_value"]))})
     _mr = lambda pv: {"status": "OK", "p_value": pv, "n_draws": 500}
+    # R-306: a Q3 sub-head carries a SLOPE and a null declared against
+    # no_skill_value 0.0 one-sided 'greater' (R-286's implemented form of
+    # "CI excludes 0"). The fixture must carry what a real head carries --
+    # a fixture missing them made the Q3 cells look merely undeclared.
+    _mr3 = lambda pv: dict(_mr(pv), no_skill_value=0.0, alternative="greater")
     _fake = {c: {a: {"adjudicated_statistics": {
                         "Q1_arrival": 0.7, "Q2_sign": 0.6,
                         "Q2_cell_status": "OK", "Q3_magnitudes": 1.0},
@@ -1304,8 +1498,12 @@ def selftest() -> int:
                                               "matched_random": _mr(0.004)},
                                "Q2_p_pos": {"auc": 0.61, "matched_random": _mr(0.02)},
                                "Q2_p_neg": {"auc": 0.60, "matched_random": _mr(0.31)},
-                               "Q3_m_harm": {"matched_random": _mr(0.05)},
-                               "Q3_m_good": {"matched_random": _mr(0.44)}},
+                               "Q3_m_harm": {"status": "OK",
+                                             "calibration_slope": 0.70,
+                                             "matched_random": _mr3(0.05)},
+                               "Q3_m_good": {"status": "OK",
+                                             "calibration_slope": 0.91,
+                                             "matched_random": _mr3(0.44)}},
                      "economics": _ecp}
                  for a in I11.ARMS_011} for c in ("btc",)}
     _pops = {"btc": {"eval_n_actions": 500}}
@@ -1326,15 +1524,23 @@ def selftest() -> int:
     ok(_fam["cells"]["composed_linear/Q2_sign/5%"]["p_value"] == 0.31,
        "I11-B2 Q2's null is the WORSE SIDE's (R-249 rules the statistic to be "
        "min(AUC); the p must describe the number the cell reports, 0.31 not 0.02)")
-    ok(all(_fam["cells"][k]["status"] == I11.CELL_STATUS_AGG_UNDECLARED
+    # R-306 INVERTS BOTH OF THESE, and they are kept as the record of what
+    # changed: the AGGREGATION_UNDECLARED refusal was correct until the ruling
+    # existed, and wrong after it. A gap a ruling has closed is no longer a gap.
+    ok(all(_fam["cells"][k]["status"] == I11.CELL_STATUS_NO_COUNTERPART
            for k in _fam["cells"] if "/Q3_magnitudes/" in k),
-       "I11-B4 Q3 cells state the AGGREGATION GAP rather than picking: A1.4 "
-       "names one slope, the frozen table requires m_harm and m_good each "
-       "reported SEPARATELY with a CI, and no ruling reconciles them")
-    ok(all(_fam["cells"][k]["p_value"] is None
+       "R-306 Q3 cells ADJUDICATE (conjunction + worse side) and carry Q2's "
+       "status for the same reason: the incumbent has no magnitude head, so "
+       "the p is the matched-random null, never an incremental one")
+    ok(all(_fam["cells"][k]["p_value"] == 0.44
            for k in _fam["cells"] if "/Q3_magnitudes/" in k),
-       "I11-B4 a cell whose collapse is undeclared WITHHOLDS its p rather than "
-       "publishing one under a rule nobody declared")
+       "R-306 Q3's adjudicated p is the WORSE of the two (0.44, m_good), NOT "
+       "the first sub-head's 0.05 -- the old `_cell_p` took m_harm by dict "
+       "order, which is right only when m_harm happens to be the weaker side")
+    ok(all(_fam["cells"][k]["statistic"] == 0.70
+           for k in _fam["cells"] if "/Q3_magnitudes/" in k),
+       "R-306 Q3's statistic is the min SLOPE (0.70) -- the binding side "
+       "under a gate that reads distance from 0")
 
     # output-level known-bad
     ok(assert_receipt_has_all_cells({"family": _fam})["cells_present"] == 24,
@@ -1687,8 +1893,244 @@ def selftest() -> int:
        "the Q4 cell's p is a real permutation p in (0, 1]")
 
     _selftest_coin_slice(ok)
+    _selftest_q3_r306(ok)
+    _selftest_incumbent_wiring(ok)
 
     return _selftest_verdict(fails)
+
+
+def _selftest_q3_r306(ok):
+    """R-306's conjunction + worse side: it must ADJUDICATE and it must REFUSE."""
+    def head(slope, pv, status="OK", nsv=0.0, alt="greater"):
+        return {"status": status, "calibration_slope": slope,
+                "matched_random": {"status": status, "p_value": pv,
+                                   "no_skill_value": nsv, "alternative": alt}}
+
+    def cell(harm, good, arm="composed_linear"):
+        """A compose that RAISES is a NAMED failure, never a traceback.
+
+        Measured: relaxing the conjunction makes `_q3_compose` read a
+        sub-head that is not there, and an uncaught KeyError aborts the whole
+        suite -- so the mutation looked killed while every control AFTER it
+        never ran, which is indistinguishable from them passing."""
+        try:
+            return _q3_compose(arm, {"btc": {arm: {"heads": {
+                "Q3_m_harm": harm, "Q3_m_good": good}}}})
+        except Exception as e:                       # noqa: BLE001
+            return (f"RAISED:{type(e).__name__}", f"RAISED:{e}",
+                    f"RAISED:{type(e).__name__}", f"RAISED: {e}")
+
+    # POSITIVE CONTROL, and it must ADMIT: both sides evaluable adjudicates.
+    _st, _p, _s, _d = cell(head(0.70, 0.05), head(0.91, 0.44))
+    ok(_s == I11.CELL_STATUS_NO_COUNTERPART and _p == 0.44 and _st == 0.70,
+       f"R-306 POSITIVE CONTROL: both sides evaluable -> the cell adjudicates, "
+       f"p = worse 0.44, statistic = min slope 0.70 (got {_s}, {_p}, {_st})")
+
+    # THE WORSE SIDE IS COMPUTED, NOT POSITIONAL. Both orderings, because a
+    # rule that reads the first sub-head passes one of them and fails the
+    # other -- which is exactly how the old `_cell_p` looked correct.
+    _, _p1, _, _ = cell(head(0.70, 0.05), head(0.91, 0.44))
+    _, _p2, _, _ = cell(head(0.70, 0.44), head(0.91, 0.05))
+    ok(_p1 == 0.44 and _p2 == 0.44,
+       f"R-306 the worse p is found by VALUE in both orderings (got {_p1}, "
+       f"{_p2}); a positional read gives 0.05 in one of them")
+    _s1, _, _, _ = cell(head(0.91, 0.05), head(0.70, 0.05))
+    ok(_s1 == 0.70,
+       f"R-306 the min slope is found by VALUE, not by sub-head position "
+       f"(got {_s1})")
+
+    # DISAGREEMENT IS DISCLOSED, NOT RESOLVED: worse-p and min-slope sides
+    # need not coincide, and a detail that never says so hides a choice.
+    _, _, _, _dd = cell(head(0.70, 0.05), head(0.91, 0.44))
+    ok("DISAGREE" in _dd,
+       "R-306 when the worse-p side and the min-slope side differ, the cell "
+       "DISCLOSES the disagreement rather than preferring one silently")
+    _, _, _, _da = cell(head(0.70, 0.44), head(0.91, 0.05))
+    ok("AGREE" in _da and "DISAGREE" not in _da,
+       "R-306 and it says AGREE when they coincide, so the disclosure "
+       "discriminates instead of always firing")
+
+    # KNOWN-BAD: half a head must never carry the cell (the CONJUNCTION).
+    for _lbl, _h, _g, _want in (
+            ("m_good absent", head(0.70, 0.05), {}, I11.CELL_STATUS_UNEVALUABLE),
+            ("m_harm no slope", {"status": "OK", "matched_random":
+                                 {"status": "OK", "p_value": 0.01,
+                                  "no_skill_value": 0.0,
+                                  "alternative": "greater"}},
+             head(0.91, 0.44), I11.CELL_STATUS_UNEVALUABLE),
+            ("m_good no p", head(0.70, 0.05),
+             {"status": "OK", "calibration_slope": 0.91,
+              "matched_random": {"status": "OK", "no_skill_value": 0.0,
+                                 "alternative": "greater"}},
+             I11.CELL_STATUS_UNEVALUABLE),
+            ("m_good underpowered", head(0.70, 0.05),
+             head(0.91, 0.44, status=I11.UNDERPOWERED),
+             I11.UNDERPOWERED)):
+        _st, _p, _s, _ = cell(_h, _g)
+        ok(_s == _want and _p is None,
+           f"R-306 KNOWN-BAD ({_lbl}): the CONJUNCTION needs both sides, so "
+           f"the cell is {_want} and WITHHOLDS its p (got {_s}, p={_p})")
+
+    # KNOWN-BAD: the gate is "excludes 0", so a null declared against any
+    # other no-skill value answers another question (R-286). This is the
+    # control that keeps the REPORTED deviation-from-1 diagnostic out of the
+    # adjudicated slot.
+    for _lbl, _bad in (("no_skill_value 1.0", head(0.91, 0.44, nsv=1.0)),
+                       ("two-sided", head(0.91, 0.44, alt="two-sided")),
+                       ("no_skill_value absent",
+                        {"status": "OK", "calibration_slope": 0.91,
+                         "matched_random": {"status": "OK", "p_value": 0.44,
+                                            "alternative": "greater"}})):
+        _st, _p, _s, _d = cell(head(0.70, 0.05), _bad)
+        ok(_s == I11.CELL_STATUS_UNEVALUABLE and _p is None
+           and "no_skill_value" in _d,
+           f"R-306/R-286 KNOWN-BAD ({_lbl}): a null declared against another "
+           f"no-skill value is REFUSED under this gate's name (got {_s})")
+
+    # The interval is NOT claimed. Rule 8 forbids one at G=0, and "CI excludes
+    # 0" must never be read as an interval that was computed.
+    ok("NO literal interval is claimed" in _d.replace("\n", " ")
+       or "NO literal interval" in cell(head(0.70, 0.05),
+                                        head(0.91, 0.44))[3],
+       "R-306 the cell states that no literal interval is claimed (rule 8 "
+       "forbids one at G=0 complete UTC days)")
+
+    # KNOWN-BAD at the boundary of its own competence: the coin axis is a
+    # SEPARATE R-306 clause this runner does not implement, so two coins must
+    # refuse here rather than be collapsed by a rule nobody wrote.
+    try:
+        _q3_compose("composed_linear", {
+            "btc": {"composed_linear": {"heads": {}}},
+            "eth": {"composed_linear": {"heads": {}}}})
+        ok(False, "R-306 _q3_compose must REFUSE two coins")
+    except RuntimeError as e:
+        ok("adjudicates ONE coin" in str(e),
+           "R-306 KNOWN-BAD: _q3_compose REFUSES a multi-coin call; the "
+           "coin clause is not implemented and must not be improvised")
+
+    # `_cell_p` is the multi-coin path's reader and must agree with the rule.
+    _pc = {"btc": {"composed_linear": {"heads": {
+        "Q3_m_harm": head(0.70, 0.05), "Q3_m_good": head(0.91, 0.44)}}}}
+    ok(_cell_p(_pc, "composed_linear", "Q3_magnitudes") == [0.44],
+       "R-306 _cell_p reads Q3's WORSE p (0.44), not the first sub-head's")
+    _pc2 = {"btc": {"composed_linear": {"heads": {
+        "Q3_m_harm": head(0.70, 0.05)}}}}
+    ok(_cell_p(_pc2, "composed_linear", "Q3_magnitudes") == [],
+       "R-306 KNOWN-BAD: with one side missing `_cell_p` yields NO p at all, "
+       "so half a head cannot carry the multi-coin cell either")
+
+
+def _selftest_incumbent_wiring(ok):
+    """The Q4 increment path: it must be CALLED, and it must survive PACKING."""
+    import numpy as _np
+    _w = {"PM": 4, "FN": 2, "ST": 3}
+    _rows = [{"slug": "w0", "side": "BUY_UP", "gen": i, "t_start": float(i),
+              "t0": 1787650200.0} for i in range(5)]
+    _PM = [[0.1 * (i + 1) + k for k in range(4)] for i in range(5)]
+    _FN = [[0.5 + i, 1.5 + i] for i in range(5)]
+    _ST = [[9.0 + i, 8.0 + i, 7.0 + i] for i in range(5)]
+    _model = {"norm_mu": [0.2] * 6, "norm_sd": [1.3] * 6,
+              "hazard_weights": [0.1] * 7, "value_weights": [0.3] * 7,
+              "_verified": {"artifact": "fixture"}}
+
+    def blk():
+        return {"kept": list(_rows), "PM": [list(r) for r in _PM],
+                "FN": [list(r) for r in _FN], "ST": [list(r) for r in _ST]}
+
+    # compact_design must RECORD the widths packing destroys.
+    _b = compact_design(blk())
+    ok(_b.get("w") == _w and _b["X"].shape == (5, 9),
+       f"compact_design records the family widths the pack destroys "
+       f"(got {_b.get('w')})")
+
+    def scored(fn, block, key):
+        """A read that RAISES is a NAMED failure, never a traceback.
+
+        This is the exact pre-fix behaviour -- `block["PM"][j]` on a packed
+        block raises TypeError -- so without this the mutation that restores
+        the defect takes the suite down and every control after it goes
+        unrun, which is indistinguishable from them passing."""
+        try:
+            return fn(_model, block, range(5))[key]
+        except Exception as e:                       # noqa: BLE001
+            return f"RAISED:{type(e).__name__}: {e}"
+
+    # THE DEFECT, red-first: pre-fix `apply_incumbent` read block["PM"], which
+    # packing sets to None -- TypeError on every real block, invisible to a
+    # suite whose fixtures are all unpacked.
+    _un = scored(apply_incumbent, blk(), "expected_cancel_value")
+    _pk = scored(apply_incumbent, _b, "expected_cancel_value")
+    ok(isinstance(_pk, list) and _pk == _un and len(_pk) == 5,
+       f"apply_incumbent gives BIT-IDENTICAL values on a PACKED and an "
+       f"unpacked block (packed {str(_pk)[:60]} vs unpacked {str(_un)[:60]})")
+    _h1 = scored(apply_incumbent_hazard, blk(), "p_fill")
+    _h2 = scored(apply_incumbent_hazard, _b, "p_fill")
+    ok(isinstance(_h2, list) and _h1 == _h2,
+       f"apply_incumbent_hazard too: packed == unpacked "
+       f"(packed {str(_h2)[:60]})")
+
+    # ARM D's DEFINING PROPERTY survives the slice: state features never enter.
+    _bs = blk(); _bs["ST"] = [[99.0, 98.0, 97.0] for _ in range(5)]
+    _p99 = scored(apply_incumbent, compact_design(_bs), "expected_cancel_value")
+    ok(isinstance(_p99, list) and _p99 == _pk,
+       "the PM+FN prefix is the right slice: moving every STATE feature to "
+       "99.0 moves NOTHING, which is what makes this the incumbent arm")
+
+    # KNOWN-BAD: a packed block with no widths must REFUSE, never guess.
+    _nw = compact_design(blk()); _nw.pop("w", None)
+    try:
+        apply_incumbent(_model, _nw, range(5))
+        ok(False, "a packed block with no widths must REFUSE")
+    except RuntimeError as e:
+        ok("no family widths" in str(e),
+           "KNOWN-BAD: a PACKED block without recorded widths REFUSES rather "
+           "than slicing to the model's own length, which would make a shape "
+           "disagreement read as a correct row")
+
+    # KNOWN-BAD: recorded widths that disagree with the model REFUSE.
+    _bw = compact_design(blk()); _bw["w"] = {"PM": 3, "FN": 2, "ST": 4}
+    try:
+        apply_incumbent(_model, _bw, range(5))
+        ok(False, "disagreeing widths must REFUSE")
+    except RuntimeError as e:
+        ok("disagree about what a row is" in str(e),
+           "KNOWN-BAD: a PM+fine width that disagrees with the incumbent's "
+           "REFUSES (the slice would still return the right COUNT of numbers)")
+
+    # SOURCE GUARD, because the defect is a call that is NOT THERE and no unit
+    # test can see a missing line. Anchored on the definition, not on the
+    # substring -- `.index("def main(")` matches this guard's own literal.
+    _src = Path(__file__).read_text(encoding="utf-8")
+    _mn = _src[_src.index("\ndef main() -> int:"):]
+    ok("load_verified_incumbent(" in _mn and "apply_incumbent(" in _mn,
+       "R-280 main() actually CALLS the load-verify-apply path (it was built "
+       "red-first with ELEVEN falsifiers and ZERO call sites, so every Q4 "
+       "cell reported NO_INCUMBENT_COUNTERPART -- defect I11-2's shape)")
+    ok("incumbent=inc_pred" in _mn,
+       "R-280 main() PASSES the applied incumbent to q4_economics; without "
+       "the kwarg the call is legal, silent, and unpaired")
+    ok("q4_economics(ap, EVAL[coin][\"kept\"])" not in _mn,
+       "KNOWN-BAD: the UNPAIRED call shape is gone from main(); it is legal "
+       "Python and produced twelve p-less cells")
+
+    # The dry harness's own instrument: a synthetic incumbent must pass the
+    # REAL loader (positive control), so the harness exercises the wiring
+    # rather than bypassing it.
+    _d = _dry_incumbent_fitdir("btc", 7)
+    _m = load_verified_incumbent("btc", fitdir=_d)
+    ok(_m.get("arm") == INCUMBENT_ARM and len(_m["norm_mu"]) == 7,
+       "the dry harness's synthetic incumbent loads through the REAL "
+       "verified loader; a harness that bypassed it would leave the hole it "
+       "exists to close")
+    (_d / "linear_d_btc.json").write_text(
+        (_d / "linear_d_btc.json").read_text().replace("\"arm\"", "\"Arm\"", 1))
+    try:
+        load_verified_incumbent("btc", fitdir=_d)
+        ok(False, "a tampered synthetic incumbent must be refused")
+    except RuntimeError as e:
+        ok("not the committed incumbent" in str(e),
+           "KNOWN-BAD: tampering with the synthetic artifact is caught by the "
+           "same hash binding, so the dry control can fail as well as pass")
 
 
 # ---- INCUMBENT COUNTERPARTS, and the two heads that have none --------------
@@ -1874,6 +2316,114 @@ def is_selftest_mode(argv=None) -> bool:
     return any(f in a for f in NON_WRITING_MODES)
 
 
+def _readjudicate_arg(argv=None):
+    """The artifact `--readjudicate` names, or None. Refuses a bare flag."""
+    a = sys.argv if argv is None else argv
+    if "--readjudicate" not in a:
+        return None
+    i = a.index("--readjudicate")
+    if i + 1 >= len(a) or a[i + 1].startswith("-"):
+        raise SystemExit("REFUSED: --readjudicate needs the artifact to "
+                         "re-adjudicate; a flag with no value must not read "
+                         "as 'the declared output'.")
+    return Path(a[i + 1])
+
+
+def readjudicated_path(src: Path) -> Path:
+    """Where a re-adjudication is written. NEVER over its source (rule 13)."""
+    return src.with_name(f"{src.stem}__readjudicated_v2{src.suffix}")
+
+
+def readjudicate(src: Path) -> tuple:
+    """Re-adjudicate a PRESERVED family from its own evidence. No refit.
+
+    `evaluate_family` is a pure function of `results` and `populations`, and
+    every 011 artifact carries both: per-head statistics, per-head
+    matched-random nulls, per-budget economics. So a RULING that changes only
+    how cells COMPOSE their heads can be applied to a completed run exactly,
+    without refitting anything -- which is the point, because refitting to
+    apply a composition rule would change the numbers being ruled on.
+
+    What it can and cannot reach is a real boundary, not a caveat: a rule that
+    needs evidence the run never computed (Q4's increment needs the
+    incumbent's own composed value on those rows) CANNOT be recovered here,
+    and the cell will keep saying so. Re-adjudication moves adjudication, not
+    measurement.
+
+    Rule 13: the source is never edited. The result is a SUPERSEDING artifact
+    naming its source by hash, and the source stays as provenance."""
+    import hashlib
+    if not src.exists():
+        raise RuntimeError(f"REFUSED: no artifact at {src}.")
+    d = json.loads(src.read_text())
+    if d.get("artifact") != "iter011_conditional_value_v1":
+        raise RuntimeError(
+            f"REFUSED: {src.name} identifies as {d.get('artifact')!r}, not an "
+            f"011 conditional-value artifact. Re-adjudicating a file of "
+            f"another shape would compose cells out of fields that mean "
+            f"something else.")
+    res, pops = d.get("results") or {}, d.get("populations") or {}
+    # R-289, THE CHECKER'S CHAIR: assert the parse actually READ the
+    # population AND the fields it composes on. A re-adjudication over an
+    # empty results block would rebuild 24 cells of UNEVALUABLE and exit 0,
+    # which is a vacuum wearing the shape of a completed correction.
+    n_arms = sum(len([a for a in r if a in I11.ARMS_011]) for r in res.values())
+    n_heads = sum(len((r[a].get("heads") or {})) for r in res.values()
+                  for a in r if a in I11.ARMS_011)
+    if not res or not pops or n_arms == 0 or n_heads == 0:
+        raise RuntimeError(
+            f"REFUSED: {src.name} yielded {len(res)} coins, {n_arms} arms and "
+            f"{n_heads} head reports. A re-adjudication that read nothing "
+            f"would still build 24 cells and exit 0 -- 'found nothing' from a "
+            f"reader that touched nothing is the empty-set trap (R-289).")
+    before = ((d.get("family") or {}).get("cells")) or {}
+    fam = evaluate_family(res, pops)
+    changed = {}
+    for k, c in fam["cells"].items():
+        b = before.get(k) or {}
+        was = (b.get("status"), b.get("p_value"), b.get("statistic"))
+        now = (c["status"], c["p_value"], c["statistic"])
+        if was != now:
+            changed[k] = {"was": {"status": was[0], "p_value": was[1],
+                                  "statistic": was[2]},
+                          "now": {"status": now[0], "p_value": now[1],
+                                  "statistic": now[2]}}
+    out = dict(d)
+    out["family"] = fam
+    out["supersedes"] = {
+        "source": str(src), "source_sha256_prefix":
+            hashlib.sha256(src.read_bytes()).hexdigest()[:16],
+        "source_untouched": True,
+        "mode": "READJUDICATION ONLY -- no refit, no rescore",
+        "what_moved": "cell COMPOSITION under a ruling that already existed; "
+                      "every head statistic, every matched-random null and "
+                      "every economics block is carried over BYTE-FOR-BYTE "
+                      "from the source",
+        "reason": "R-306 (USER, 2026-08-29, frozen A1.4) rules Q3's two slope "
+                  "gates as CONJUNCTION + WORSE SIDE; the code had never "
+                  "implemented it and withheld Q3's p as AGGREGATION_"
+                  "UNDECLARED. Rule 13: corrections supersede in-band.",
+        "n_cells_changed": len(changed), "cells_changed": changed,
+        "read_evidence": {"coins": sorted(res), "arm_reports": n_arms,
+                          "head_reports": n_heads,
+                          "why": "recorded so this correction cannot be a "
+                                 "vacuum that rebuilt cells from nothing"}}
+    out["readjudication_limits"] = {
+        "cannot_recover": "any cell needing evidence the source run never "
+                          "computed. Q4's increment needs the INCUMBENT's own "
+                          "composed value on the identical rows; the source "
+                          "ran unpaired, so those cells stay "
+                          "NO_INCUMBENT_COUNTERPART here and are closed only "
+                          "by a re-run.",
+        "development_evidence_only": True}
+    assert_receipt_has_all_cells(out)
+    dst = readjudicated_path(src)
+    with dst.open("w") as fh:
+        json.dump(out, fh, indent=1, sort_keys=True, default=str)
+        fh.flush(); os.fsync(fh.fileno())
+    return out, dst
+
+
 def declared_outputs_for(argv=None) -> tuple:
     """The outputs THIS invocation is required to produce.
 
@@ -1888,6 +2438,12 @@ def declared_outputs_for(argv=None) -> tuple:
     that demands the wrong artifact is a guard that cannot pass.
     """
     a = sys.argv if argv is None else argv
+    _rj = _readjudicate_arg(a)
+    if _rj is not None:
+        # A re-adjudication declares the SUPERSEDING file, never the source:
+        # demanding the source would pass on a run that wrote nothing, and
+        # demanding the full artifact is the mode-blind bug fixed at 0b1f6bb.
+        return (readjudicated_path(_rj),)
     if "--coin" in a:
         i = a.index("--coin")
         if i + 1 < len(a) and not a[i + 1].startswith("-"):
@@ -1976,6 +2532,37 @@ def synthetic_populations(n_per_coin: int = 400, seed: int = 20260828) -> tuple:
     return fit, ev
 
 
+def _dry_incumbent_fitdir(coin: str, width: int, seed: int = 20260901):
+    """A SYNTHETIC incumbent for --dry-run, written so the REAL loader reads it.
+
+    The dry harness must exercise the wiring, not bypass it: if the dry path
+    called `apply_incumbent` directly it would prove nothing about
+    `load_verified_incumbent`, and the whole reason this harness exists is
+    that a component suite cannot see an unwired main(). So this writes a
+    genuine artifact plus a genuine `fit_manifest.json` binding its hash, and
+    main() loads it through the same verified path a real run uses.
+
+    It reads NO real model artifact -- the dry run's declaration stays true --
+    and its width is taken from the synthetic block, so a shape drift refuses
+    here exactly as it would on real data."""
+    import hashlib
+    import random as _r
+    import tempfile as _tf
+    rr = _r.Random(seed)
+    d = Path(_tf.mkdtemp(prefix="iter011_dry_incumbent_"))
+    art = d / f"linear_d_{coin}.json"
+    art.write_text(json.dumps({
+        "arm": INCUMBENT_ARM,
+        "norm_mu": [rr.random() for _ in range(width)],
+        "norm_sd": [1.0 + rr.random() for _ in range(width)],
+        "hazard_weights": [rr.uniform(-1, 1) for _ in range(width + 1)],
+        "value_weights": [rr.uniform(-1, 1) for _ in range(width + 1)],
+        "SYNTHETIC": "dry-run only; not a fitted model"}, sort_keys=True))
+    (d / PA.FIT_MANIFEST).write_text(json.dumps({"file_hashes": {
+        art.name: hashlib.sha256(art.read_bytes()).hexdigest()[:16]}}))
+    return d
+
+
 def _synth_pair(n_per_coin: int = 400) -> tuple:
     """FIT and EVAL as two INDEPENDENT synthetic draws."""
     fit, _ = synthetic_populations(n_per_coin, seed=20260828)
@@ -1991,6 +2578,23 @@ def main() -> int:
         raise SystemExit("REFUSED: selftest RED; no numbers from an instrument "
                          "that has not shown it can fire.")
     import phase2_embargo as EMB
+
+    # --readjudicate: apply a COMPOSITION ruling to a completed run's own
+    # preserved evidence. It fits nothing and scores nothing, so it is not
+    # gated on memory or on the tape; it IS gated on the selftest above,
+    # because a re-adjudication is a number-bearing output like any other.
+    _rj = _readjudicate_arg()
+    if _rj is not None:
+        _o, _p = readjudicate(_rj)
+        _ch = _o["supersedes"]["n_cells_changed"]
+        print(f"\nREADJUDICATED {_rj.name} -> {_p.name}: {_ch} of 24 cells "
+              f"moved; source untouched", flush=True)
+        for _k, _v in sorted(_o["supersedes"]["cells_changed"].items()):
+            print(f"  {_k}: {_v['was']['status']} p={_v['was']['p_value']} "
+                  f"-> {_v['now']['status']} p={_v['now']['p_value']}",
+                  flush=True)
+        print(f"WROTE {_p.name}: {assert_outputs_written((_p,))}", flush=True)
+        return 0
 
     # RULE 17 HARNESS. --dry-run substitutes SYNTHETIC populations and runs
     # EVERYTHING ELSE IN THIS FUNCTION unchanged: both arms fitted, applied,
@@ -2132,6 +2736,44 @@ def main() -> int:
     for coin in ("btc", "eth"):
         if coin not in FIT or not FIT[coin]["kept"] or coin not in EVAL:
             continue
+        # PLACED BEFORE Xf/Xe ARE MATERIALISED, deliberately. Those two
+        # rebuild the Python lists `compact_design` just released and
+        # are the measured peak (12.0 G against a 12 G cap on the last
+        # run); the incumbent depends only on EVAL[coin] and its own
+        # artifact, so computing it here keeps it out of that window.
+        # It changes no number: same model, same rows, same order.
+        # ---- Q4's INCUMBENT: LOAD, VERIFY, APPLY -- now actually CALLED ----
+        # THE DEFECT THIS CLOSES. R-280 built this path red-first and its own
+        # commit says "not yet run": eleven falsifiers, a positive control, a
+        # tampered-hash known-bad -- and ZERO call sites in main(). The run
+        # therefore called `q4_economics(ap, rows)` with no incumbent, every
+        # Q4 cell reported NO_INCUMBENT_COUNTERPART, and the decision metric
+        # had no result. That is defect I11-2's shape exactly (rule 17:
+        # suite-green is not pipeline-wired), one batch later.
+        #
+        # Loaded ONCE per coin, because the incumbent does not depend on the
+        # arm, and applied to the SAME row range the candidate scored -- the
+        # identical action population prereg 5.2 requires. `q4_economics`
+        # refuses a length mismatch, so "identical" is checked, not asserted.
+        _incdir = (_dry_incumbent_fitdir(
+            coin, EVAL[coin]["w"]["PM"] + EVAL[coin]["w"]["FN"])
+            if _dry else None)
+        _incm = load_verified_incumbent(coin, fitdir=_incdir)
+        inc_pred = apply_incumbent(_incm, EVAL[coin],
+                                   range(len(EVAL[coin]["kept"])))
+        out.setdefault("q4_incumbent", {})[coin] = {
+            "arm": inc_pred["arm"], "n_scored": inc_pred["n"],
+            "provenance": inc_pred["provenance"],
+            "synthetic_dry_run": bool(_dry),
+            "why": "prereg 5.2's increment is candidate MINUS the COMMITTED "
+                   "incumbent on the IDENTICAL action population; the "
+                   "incumbent is loaded and hash-verified, never re-fitted "
+                   "(a re-fit incumbent is a different incumbent, R-280)"}
+        print(f"  [{coin}/incumbent] {inc_pred['arm']} applied to "
+              f"{inc_pred['n']:,} rows; "
+              f"{(inc_pred['provenance'] or {}).get('sha256_prefix')}",
+              flush=True)
+
         Xf = [build_design(FIT[coin], i) for i in range(len(FIT[coin]["kept"]))]
         Xe = [build_design(EVAL[coin], i) for i in range(len(EVAL[coin]["kept"]))]
         tgf = head_targets(FIT[coin]["kept"])
@@ -2149,6 +2791,7 @@ def main() -> int:
             "eval_population_and_reach":
                 PA.population_reach_disclosure(EVAL[coin]["kept"])}
         print(f"  [{coin}] fit {tgf['counts']} eval {tge['counts']}", flush=True)
+
         out["results"][coin] = {}
         for arm in I11.ARMS_011:
             t0 = time.time()
@@ -2162,7 +2805,8 @@ def main() -> int:
             # before any artifact — the same class as I11-1, and invisible to
             # every component test because they all call q4_economics directly.
             # Found by the --dry-run harness on its first execution.
-            rep["economics"] = q4_economics(ap, EVAL[coin]["kept"])
+            rep["economics"] = q4_economics(ap, EVAL[coin]["kept"],
+                                            incumbent=inc_pred)
             out["results"][coin][arm] = rep
             h = rep["heads"]
             # I11-1: this printed h['Q2_sign'], a key report_arm has never
@@ -2178,7 +2822,7 @@ def main() -> int:
                   f"underpowered {rep['underpowered_heads']} | "
                   f"unevaluable {rep.get('unevaluable_heads')}", flush=True)
             del fr, ap
-        del Xf, Xe, FIT[coin]["PM"], FIT[coin]["FN"], FIT[coin]["ST"]
+        del inc_pred, Xf, Xe, FIT[coin]["PM"], FIT[coin]["FN"], FIT[coin]["ST"]
 
     # I11-2: the DECLARED family, actually evaluated and adjudicated.
     out["family"] = evaluate_family(out["results"], out["populations"])
@@ -2218,7 +2862,14 @@ def main() -> int:
         _out_path = Path(_tf_dry.mkdtemp()) / OUT.name
         out["DRY_RUN"] = {
             "synthetic_populations": True, "real_data_read": False,
-            "model_artifacts_read": False, "output_path": str(_out_path),
+            "model_artifacts_read": False,
+            "synthetic_incumbent_written_and_loaded": True,
+            "why_synthetic_incumbent": "the Q4 increment path is WIRING, and "
+                                       "a harness that bypassed the loader "
+                                       "would leave exactly the hole this "
+                                       "harness exists to close; no real "
+                                       "model artifact is read",
+            "output_path": str(_out_path),
             "why": "exercises main()'s OWN path — a component suite cannot see "
                    "an unwired main(), which is defect I11-2"}
     with _out_path.open("w") as fh:
