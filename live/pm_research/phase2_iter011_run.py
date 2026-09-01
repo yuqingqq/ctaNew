@@ -39,6 +39,66 @@ OUT = PA.DERIVED / "iter011_conditional_value_v1.json"
 RECEIPT_FAMILY = "ITER011_CONDITIONAL_VALUE"
 
 
+#: Coins this runner knows. A `--coin` outside it REFUSES rather than silently
+#: producing an empty population, which is the shape that makes "no rows" and
+#: "wrong name" indistinguishable.
+COINS_011 = ("btc", "eth")
+
+
+def _coin_slice(idx: dict, coin: str | None, what: str) -> dict:
+    """Restrict a TAPE INDEX to one coin, in the RUNNER.
+
+    WHY THIS EXISTS AND WHY IT IS HERE. Two full-population runs were OOM-
+    killed (10G, then 14G -- past the launch pattern's documented <=14G single-
+    job ceiling), both landing in `[topup/eth]` while holding FIT for both
+    coins, the 638,917-row score index and the embargo probe at once.
+
+    The obvious fix -- shrink `phase2_arms._feature_pass`, which hardcodes
+    `for coin in ("btc","eth")` and json-loads its whole source file -- is
+    FORBIDDEN: `phase2_arms.py` is in `CODE_IDENTITY_FILES`, the frozen btc
+    candidate binds `fit_code_sha256_prefix`, and hazard-plan 10.9 requires
+    scoring that candidate UNCHANGED. Editing it mid-race would make the
+    forward scoring a different program from the freeze.
+
+    THIS runner is explicitly NOT in the lattice (it says so in its own
+    receipt), so slicing belongs here. The tape index is a plain dict keyed by
+    `(slug, side, gen, t_start)` and the slug carries the coin, so one coin's
+    rows are selectable without touching any bound module.
+
+    NUMERICALLY IDENTICAL, not an approximation: the results loop is already
+    fully per-coin (design, targets, populations, fit, report all live inside
+    `for coin in (...)`), so a per-coin run computes the same numbers on the
+    same rows. This slices WORK, never the estimand.
+    """
+    if coin is None:
+        return idx
+    out = {k: v for k, v in idx.items() if str(k[0]).startswith(coin + "-")}
+    if not out:
+        raise RuntimeError(
+            f"REFUSED: --coin {coin!r} selected 0 of {len(idx):,} rows from "
+            f"the {what}. An empty population must never read as a small one.")
+    print(f"  [--coin {coin}] {what}: {len(idx):,} -> {len(out):,} rows",
+          flush=True)
+    return out
+
+
+def _coin_drop(blocks: dict, coin: str | None, what: str) -> dict:
+    """Drop the non-selected coin's feature block the moment the pass returns.
+
+    `_feature_pass` builds BOTH coins whatever we ask for -- it is bound code
+    and cannot be told otherwise -- so the saving is in not CARRYING the other
+    coin through everything downstream."""
+    if coin is None:
+        return blocks
+    if coin not in blocks:
+        raise RuntimeError(
+            f"REFUSED: --coin {coin!r} absent from the {what} pass, which "
+            f"produced {sorted(blocks)}. A missing coin is not an empty one.")
+    for other in [c for c in list(blocks) if c != coin]:
+        blocks.pop(other, None)
+    return blocks
+
+
 def build_design(block: dict, i: int) -> list:
     """x for row i: PM + fine + state. Both arms see the SAME features; they
     differ in model class, not in what they are shown (R-232 9.1)."""
@@ -1587,6 +1647,8 @@ def selftest() -> int:
     ok(_lpv is None or 0.0 < _lpv <= 1.0,
        "the Q4 cell's p is a real permutation p in (0, 1]")
 
+    _selftest_coin_slice(ok)
+
     return _selftest_verdict(fails)
 
 
@@ -1629,6 +1691,57 @@ def incumbent_null_applicability() -> dict:
     }
 
 DECLARED_OUTPUTS = (OUT,)
+def _selftest_coin_slice(ok):
+    """Controls for the memory slicing. It must SELECT, and it must REFUSE."""
+    _idx = {("btc-updown-5m-1", "BUY_UP", 0, 1.0): {"v": 1},
+            ("btc-updown-5m-2", "BUY_UP", 0, 2.0): {"v": 2},
+            ("eth-updown-5m-1", "BUY_UP", 0, 3.0): {"v": 3}}
+    _b = _coin_slice(_idx, "btc", "t")
+    ok(len(_b) == 2 and all(k[0].startswith("btc-") for k in _b),
+       "(slice) --coin keeps exactly its own coin's rows")
+    ok(len(_coin_slice(_idx, None, "t")) == 3,
+       "(slice CONTROL) no --coin means NO restriction -- the unsliced path "
+       "is untouched, so a full run is unaffected by this code existing")
+    # KNOWN-BAD: a coin that matches nothing must REFUSE. An empty population
+    # reading as a small one is how a run reports numbers about nobody.
+    _r = ""
+    try:
+        _coin_slice(_idx, "doge", "t")
+    except RuntimeError as e:
+        _r = str(e)
+    ok("selected 0 of" in _r,
+       f"(slice KNOWN-BAD) a coin matching NO rows refuses by name: {_r[:60]}")
+    # And the prefix must be anchored: 'bt' must not match 'btc-...'.
+    _r2 = ""
+    try:
+        _coin_slice(_idx, "bt", "t")
+    except RuntimeError as e:
+        _r2 = str(e)
+    ok("selected 0 of" in _r2,
+       "(slice KNOWN-BAD) a PREFIX of a real coin matches nothing rather "
+       "than silently selecting it -- the separator is part of the identity")
+    _blocks = {"btc": {"kept": [1]}, "eth": {"kept": [2]}}
+    _d = _coin_drop(dict(_blocks), "btc", "t")
+    ok(list(_d) == ["btc"],
+       "(drop) the non-selected coin's block is released after the pass")
+    _r3 = ""
+    try:
+        _coin_drop({"eth": {}}, "btc", "t")
+    except RuntimeError as e:
+        _r3 = str(e)
+    ok("absent from" in _r3,
+       "(drop KNOWN-BAD) a coin the pass never produced refuses -- a missing "
+       "coin is not an empty one")
+    # The probe must be freed BEFORE the topup pass, which is where both OOMs
+    # landed. Source-level, because the ordering is the whole fix.
+    _src = Path(__file__).read_text(encoding="utf-8")
+    _m = _src[_src.index("def main("):]
+    ok(_m.index("del probe") < _m.index('PA._feature_pass(PA.TOPUP'),
+       "(memory) the embargo probe is released BEFORE the topup pass, not "
+       "after it -- holding ~640k dicts across the pass put them inside the "
+       "measured peak for no reason")
+
+
 SELFTEST_FLAG = "--selftest"
 DRY_RUN_FLAG = "--dry-run"
 # Modes that CORRECTLY do not write the declared output. Each is a DECLARED
@@ -1762,6 +1875,24 @@ def main() -> int:
     # assert_receipt_has_all_cells DIRECTLY, so they would all stay green if
     # someone unwired main() again. This drives main()'s OWN path.
     _dry = "--dry-run" in sys.argv
+    # --coin <name>: run ONE coin end to end. Memory, not estimand -- see
+    # `_coin_slice`. Unknown names refuse; a bare `--coin` with no value
+    # refuses too, rather than silently running the full population under a
+    # flag the operator believed had restricted it.
+    _coin = None
+    if "--coin" in sys.argv:
+        _i = sys.argv.index("--coin")
+        if _i + 1 >= len(sys.argv) or sys.argv[_i + 1].startswith("-"):
+            raise SystemExit("REFUSED: --coin needs a value "
+                             f"(one of {COINS_011}); a flag with no value "
+                             "must not read as 'no restriction'.")
+        _coin = sys.argv[_i + 1]
+        if _coin not in COINS_011:
+            raise SystemExit(f"REFUSED: --coin {_coin!r} is not one of "
+                             f"{COINS_011}.")
+        print(f"  COIN SLICE: {_coin} only. Same rows, same numbers, "
+              f"less resident memory -- the results loop was already "
+              f"per-coin. Output carries the slice in its name.", flush=True)
     if _dry:
         print("  DRY RUN: synthetic populations, no real data, throwaway "
               "output. Exercising main()'s own path.", flush=True)
@@ -1777,18 +1908,25 @@ def main() -> int:
               f"{ident['fragment_sha256_prefix']} topup "
               f"{ident['topup_sha256_prefix']}", flush=True)
         print("  indexing train split...", flush=True)
-        TP = PA.tape_index("train")
+        TP = _coin_slice(PA.tape_index("train"), _coin, "train index")
         print(f"  train split indexed: {len(TP):,} rows", flush=True)
-        FIT = PA._feature_pass(PA.FRAGMENT, "fragment", TAPE=TP)
+        FIT = _coin_drop(PA._feature_pass(PA.FRAGMENT, "fragment", TAPE=TP),
+                         _coin, "fragment")
         del TP
         print("  indexing score split for the embargo boundary...", flush=True)
-        SP = PA.tape_index("score")
+        SP = _coin_slice(PA.tape_index("score"), _coin, "score index")
         print(f"  score split indexed: {len(SP):,} rows", flush=True)
     else:
         ident = {"tape_sha256_prefix": "DRY_RUN", "DRY_RUN": True,
                  "fragment_sha256_prefix": "DRY_RUN",
                  "topup_sha256_prefix": "DRY_RUN"}
         FIT, EVAL = _synth_pair()
+        # THE DRY HARNESS MUST COVER THE SLICE TOO. Without this, --dry-run
+        # --coin btc ran BOTH coins and reported success, so the slicing would
+        # have reached a real run having never been exercised through main() --
+        # the exact hole this harness exists to close (defect I11-2).
+        FIT = _coin_drop(FIT, _coin, "dry fragment")
+        EVAL = _coin_drop(EVAL, _coin, "dry topup")
         SP = None
     # The embargo probe. In a dry run it is derived from the SYNTHETIC EVAL
     # rows, exactly as the real path derives it from the score split — an empty
@@ -1813,9 +1951,16 @@ def main() -> int:
         FIT[coin]["kept"] = [FIT[coin]["kept"][n] for n in keep]
         print(f"  [purge/{coin}] {before:,} -> {len(FIT[coin]['kept']):,}",
               flush=True)
+    # FREE THE PROBE BEFORE THE TOPUP PASS, NOT AFTER. It is finished the
+    # moment the purge loop above ends, and it is ~640k dicts. Holding it
+    # across `_feature_pass` -- which itself json-loads the whole topup file
+    # and builds both coins' families -- put it inside the peak for no reason.
+    # Measured: the OOM landed in `[topup/eth]`, holding FIT + SP + probe.
+    del probe
     if not _dry:
-        EVAL = PA._feature_pass(PA.TOPUP, "topup", TAPE=SP)
-    del SP, probe
+        EVAL = _coin_drop(PA._feature_pass(PA.TOPUP, "topup", TAPE=SP),
+                          _coin, "topup")
+    del SP
 
     out = {"artifact": "iter011_conditional_value_v1",
            "receipt_family": RECEIPT_FAMILY,
@@ -1904,6 +2049,22 @@ def main() -> int:
                      "validation set. Selection and validation require later "
                      "untouched complete UTC days (R-232 9.4, per coin)."}
     _out_path = OUT
+    if _coin is not None:
+        # A SLICED RUN MUST NOT CLAIM THE DECLARED OUTPUT. The artifact name is
+        # what a reader resolves; a one-coin file sitting at the full run's
+        # path would be read as the whole result, and the eth half's absence
+        # would be invisible. The slice travels in the NAME and in the body.
+        _out_path = OUT.with_name(f"{OUT.stem}__coin_{_coin}{OUT.suffix}")
+        out["COIN_SLICE"] = {
+            "coin": _coin, "is_partial_run": True,
+            "declared_output_not_written": OUT.name,
+            "why": "memory slicing, not an estimand change: the results loop "
+                   "is per-coin, so this file holds exactly the rows and "
+                   "numbers a full run would have produced for this coin",
+            "adjudication_note": "the 24-cell family adjudicates btc alone "
+                                 "(R-306); eth is reported and never "
+                                 "adjudicated, so an eth slice can never "
+                                 "carry a verdict"}
     if _dry:
         import tempfile as _tf_dry
         _out_path = Path(_tf_dry.mkdtemp()) / OUT.name

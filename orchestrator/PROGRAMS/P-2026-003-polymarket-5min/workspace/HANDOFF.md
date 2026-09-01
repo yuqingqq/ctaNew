@@ -327,10 +327,87 @@ deletes the unit on exit, after which `systemctl show` returns DEFAULTS —
 Only the absent artifact contradicted it. Never read a result from a collected
 unit; keep the unit and read `Result`, or read the journal.
 
+### 2026-09-01 ~08:20Z (coordinator) — MEMORY SLICED; AND THE CONTAMINATION
+### IS A FORWARD PROBLEM, NOT A DEVELOPMENT ONE
+
+USER: *"lets optimize the code to use less memory, or we truncate the data to
+do it slice by slice. then if data is not good, check if there is good data
+population to use. do check data before using."*
+
+**CHECKING FIRST STOPPED ME EDITING THE WRONG FILE.** The obvious memory fix is
+`phase2_arms._feature_pass` (hardcodes both coins, json-loads its whole source).
+**`phase2_arms.py` is in `CODE_IDENTITY_FILES`**, the frozen btc candidate binds
+`provenance.fit_code_sha256_prefix = 3d0b6c8c6dfe9466`, and hazard-plan §10.9
+requires scoring that candidate **UNCHANGED**. Editing it mid-race would make
+the forward scoring a different program from the freeze.
+
+**AND THE IDENTITY HAS ALREADY DRIFTED:** current `e27cab9e5f6ce8e5`. One file,
+one hunk — `2e1204f` added a refusal to `_stream_tape_rows` for a tape ending
+without its closing `]`. **Provably inert here:** its own commit states the
+accepting path is byte-for-byte unchanged, and our runs streamed all 1,764,206
+rows *without* raising, so that branch never fired; the tape hash also matches
+the freeze exactly (`c7ab02ebcf27d2fc`). Defensible, but it must be DECLARED in
+any forward receipt, not discovered later — a receipt claiming "unchanged" over
+a changed lattice hash is false on its face.
+
+**The slicing therefore lives in the RUNNER**, which declares itself outside the
+lattice. `--coin <name>` restricts the tape index (a plain dict keyed by slug),
+drops the other coin's block the moment each pass returns, and frees the embargo
+probe **before** the topup pass instead of after — both OOMs landed in
+`[topup/eth]` holding FIT for both coins + the 638,917-row score index + ~640k
+probe dicts simultaneously. Identity re-checked after the edit: **unchanged**.
+
+**Numerically identical, and proven so:** `--dry-run --coin btc` produces
+`Q1 auc 0.46386666666666665` — the same digits as the unsliced dry run. The
+results loop was already per-coin; this slices WORK, never the estimand.
+Seven controls added, including a KNOWN-BAD that a prefix (`bt`) matches
+nothing, and a source check that the probe is freed before the pass.
+**The dry harness did NOT cover the slice at first** — `--dry-run --coin btc`
+ran both coins and exited 0, so the slicing would have reached a real run never
+exercised through `main()`. That is exactly defect I11-2's shape; now wired.
+
+**THE POPULATION SURVEY — btc gap contamination by day.** Estimated share of
+decision rows with a gap between window start and cutoff (the interval queue
+position is rebuilt over). The estimator reads 63.4% on 08-25 against 56.4%
+measured, so it is slightly conservative and trustworthy for ranking:
+
+| day | windows w/ gap | est. rows gap-before-cutoff |
+|---|---|---|
+| 08-19 .. 08-24 | 0 – 15.6% | **0 – 10.9%** (clean) |
+| 08-25 | 80.2% | 63.4% |
+| 08-26 | 63.8% | 47.7% |
+| 08-27 | 70.1% | 52.8% |
+| 08-28 | 64.6% | 48.4% |
+| 08-29 | 32.3% | 18.8% |
+| 08-30 / 08-31 | 70.3% / 73.8% | 57.1% / 65.0% |
+| **09-01 (v4_1, live)** | 43.3% | **31.5%** |
+
+**The bind, stated plainly.** The CLEAN days (08-19..08-24) are exactly the
+days the prereg lists as CONSUMED. The AVAILABLE days (08-25 on) are all
+heavily contaminated. The current tape already uses the cleanest available day
+for training (08-24, 10.9%); the damage is concentrated in the SCORE split,
+which is 08-25 alone at 63.4%.
+
+**AND THIS IS NOT ONLY AN 011 PROBLEM — 09-01 IS 31.5% CONTAMINATED.** Every
+forward validation day carries the same defect, because the btc break is
+ongoing and `queue_ahead_missing` never fires on any of it. So fixing the flag
+is a PRECONDITION FOR THE FORWARD RACE, not a tidy-up for a development run:
+the frozen candidate is about to be scored on days where a third of btc rows
+have a queue position rebuilt across a hole, silently marked as known.
+
+**Recommended, still not ruled:** fix the flag first (it is dead weight today
+and cheap to make correct), then exclude gap-crossed rows from BOTH the 011
+development population and forward scoring. Excluding costs ~56% of 08-25 and
+~11% of 08-24 — the development population survives it. Re-freezing is NOT
+required for the flag fix per se, but the fix touches feature semantics, so
+whether it lands inside or outside the frozen lattice is a rule-12 question.
+
 ### Immediate order
 
 0. ~~Rule B1~~ / ~~day-closed conjunct~~ **BOTH DONE.** The rule is one line in
    `ACCRUAL_RULE` and is enforced at the function AND the call path.
+0f. **The lattice drift must be declared in any forward receipt** — freeze
+   `3d0b6c8c6dfe9466` vs current `e27cab9e5f6ce8e5`, one inert parser hunk.
 0e. **Rule the two 011 population questions** (gap-crossed rows; the undeclared
    development population) before any 011 re-run. Nothing is fitted meanwhile.
 0d. Move `pm-evaluation-pipeline` into `research.slice` once the tier1 backlog
