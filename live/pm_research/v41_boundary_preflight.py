@@ -2151,6 +2151,40 @@ def selftest() -> int:
     ok(_u5(10800).startswith("2026-09-01"),
        "RR1.5: the cross-midnight scenario really crosses the UTC day "
        "boundary — a same-day fixture here would test nothing extra")
+    # ---- RR2-3 (re-review 9f31acd): ONE PID AT TWO INSTANTS. The earlier
+    # recv_ns scenario used two different pids, so the pid alone already
+    # disambiguated and the binding never decided anything — "a fixture that
+    # looks like the scenario without its essential property tests nothing."
+    # Here pid 777 starts at T-60s AND T+150s (realistic ledger order, early
+    # first), so ONLY the recv_ns filter can select. Pinning the LATE start
+    # is the mutant-killer: with the filter disabled (the reviewer's
+    # `if False:` mutant) targets[0] is the EARLY row and the bundle opens at
+    # the wrong instant. Pinning the early one covers the other order, and a
+    # recv_ns matching no row must hit the existing Refused path.
+    _reuse = [_T5(777, -60), _T5(777, 150), _V4S5]
+    for _pin_off, _lbl6 in ((150, "REUSED PID, LATE instant pinned"),
+                            (-60, "REUSED PID, EARLY instant pinned")):
+        _rc6, _rows6, _err6 = _drive(
+            ["--post-recovery", "--v41-pid", "777",
+             "--v41-recv-ns", str((bep + _pin_off) * 10**9),
+             "--stage", "counters_refused"], _reuse, _pin_off + 400)
+        ok(_rc6 == 0 and _err6 is None and len(_rows6) >= 2
+           and _rows6[0].get("boundary_utc") == _u5(_pin_off),
+           f"RR2-3 main() ({_lbl6}): with pid 777 at BOTH T-60s and T+150s, "
+           f"--v41-recv-ns selects the pinned start and the bundle opens at "
+           f"{_u5(_pin_off)} — only the recv_ns binding can make this "
+           f"choice, so a disabled filter opens at the wrong instant "
+           f"(rc={_rc6}, rows={len(_rows6)}, err={_err6!r})")
+    _rc6b, _rows6b, _err6b = _drive(
+        ["--post-recovery", "--v41-pid", "777",
+         "--v41-recv-ns", str((bep + 999) * 10**9),
+         "--stage", "counters_refused"], _reuse, 400)
+    ok(_err6b is not None and "must identify ONE row" in _err6b
+       and not _rows6b,
+       "RR2-3 main() (WRONG INSTANT): a recv_ns matching no start of that "
+       "pid REFUSES by name with empty stdout — the pair must identify one "
+       "row, and a filter that cannot refuse cannot bind")
+
     _rc5a, _rows5a, _err5a = _drive(
         ["--abort-row", "--stage", "restart_failed"], [_V4S5], 400)
     ok(_rc5a == 0 and _err5a is None and len(_rows5a) == 1
