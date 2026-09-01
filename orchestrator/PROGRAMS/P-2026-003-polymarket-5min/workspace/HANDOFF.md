@@ -402,10 +402,82 @@ development population and forward scoring. Excluding costs ~56% of 08-25 and
 required for the flag fix per se, but the fix touches feature semantics, so
 whether it lands inside or outside the frozen lattice is a rule-12 question.
 
+### 2026-09-01 ~09:00Z (coordinator) — THE ERA LITERAL CLEARED IN THE ROW
+### GENERATOR, AND A CORRECTION TO MY OWN ALARM
+
+**FIRST, THE CORRECTION, because I raised an alarm and it was overstated.**
+I reported `queue_ahead_missing` as a flag that "cannot fire" and put 56.4% of
+btc rows under suspicion. Both were wrong:
+
+- `queue_ahead_missing` fires on `denom = qahead + resting <= 0`. Every row in
+  this population exists BECAUSE an order is resting, so `denom > 0` by
+  construction. It is a **structural zero**, not a silent failure — a flag for
+  a question this population cannot pose. **The USER identified this**, noting
+  empty books are expected once an outcome is decided.
+- The empty-book condition IS represented, by a different field:
+  `queue_ahead_of_level = None` on **58,893 rows (18.9%)** — exactly the rows
+  where `level_size` is empty. `terminal_window` is only 2.2%, so these are
+  decided-but-not-expiring markets, matching the USER's reading.
+- The 56.4% assumed corruption persists to window end. It does not: busy
+  windows carry **2,700–4,900 `book` snapshots**, applied via
+  `state.apply("book", …)`, so level state re-anchors continuously.
+
+**And the gap discipline that DOES exist, fires:** `GAP_IN_HORIZON` excludes
+10,456 fragment rows (0.92%) and 6,873 topup rows (1.06%) BEFORE features are
+built (`_feature_pass` keeps only `status == "OK"`); `GAP_AT_CUTOFF` excludes
+192 more. Labels and decision-instant state are both protected. **The data
+behind 011 is sound.** I was wrong to tell the USER to hold the lane on this.
+
+**WHAT WAS REAL, and is now fixed.** Both row selectors filtered the slug set
+AND the gap intervals through the `fi.ERA` literal (`clob_v3_1`, closed
+2026-08-30T05:30:01Z):
+
+```
+gaps = fi.gaps_by_slug(fi.ERA);  for slug in sorted(fi.covered_slugs(fi.ERA)):
+```
+
+On any later era that selects **nothing** — a forward tape would have built
+EMPTY and reported success, which is worse than unprotected.
+
+**NOT fixed by widening to "all eras", and the measurement is why.** All-era is
+inert for `select_v2_era` (1,666 slugs either way, and 0 of 808 slugs in the
+current artifacts change their gap list) but NOT for `select_stratified`:
+TRAIN_DAYS 08-20..08-22 span the clob_v2 → v2_1 → v3 → v3_1 transitions, where
+all-era gives 4,753 slugs against 4,543. There the era filter is doing real
+purity work, and widening it would silently admit three earlier collectors.
+
+So the fix is the `--freeze-epoch` pattern: **the era becomes an explicit
+parameter, its default unchanged, and an empty selection REFUSES by name.**
+Behaviour is inert BY CONSTRUCTION — the default passes the identical value —
+and the selectors still return 471 / 30 windows. Three checks added (48, was
+45): both selectors refuse a foreign era, plus a positive control that the
+default still selects, so the guard discriminates rather than refusing
+universally. My first pass wired the guard into only ONE selector and the
+falsifier caught it.
+
+**DECLARED LATTICE AMENDMENT (rule 12/13).** `harmful_exposure_rows.py` is in
+`CODE_IDENTITY_FILES`, so the combined identity moves again:
+
+| stage | combined | cause |
+|---|---|---|
+| freeze `b3f7f9f` | `3d0b6c8c6dfe9466` | — |
+| before today | `e27cab9e5f6ce8e5` | `2e1204f`, inert truncated-tape refusal |
+| **now** | **`ad535550d366347d`** | **this fix** (`harmful_exposure_rows.py` `c2e40100…` → `1bbd8e75…`) |
+
+**No frozen artifact changes**: fragment, topup and the model artifacts are
+DATA artifacts bound by content and are untouched; the default code path
+reproduces them exactly. But any forward receipt MUST carry all three hashes
+and state why "unchanged" is still true — a receipt asserting it over a moved
+lattice hash is false on its face. ALL 15 GATES PASS.
+
 ### Immediate order
 
 0. ~~Rule B1~~ / ~~day-closed conjunct~~ **BOTH DONE.** The rule is one line in
    `ACCRUAL_RULE` and is enforced at the function AND the call path.
+0g. **A forward tape build must NAME its era explicitly** — the default is
+   still `clob_v3_1` and will refuse loudly on v4_1 windows rather than
+   building empty. That refusal is the fix; passing `era="clob_v4_1"` is the
+   caller's job, and the day range must not straddle a boundary.
 0f. **The lattice drift must be declared in any forward receipt** — freeze
    `3d0b6c8c6dfe9466` vs current `e27cab9e5f6ce8e5`, one inert parser hunk.
 0e. **Rule the two 011 population questions** (gap-crossed rows; the undeclared

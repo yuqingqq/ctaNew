@@ -458,16 +458,55 @@ def binance_continuity_ok(t0: int, coin: str, bounds) -> bool:
     return not any(not (ge < a or gs > b) for gs, ge in idx["gaps"])
 
 
+def _era_or_refuse(fi, era: str | None, what: str) -> str:
+    """Name the era, and REFUSE a selection that comes back empty.
+
+    `fi.ERA` is a LITERAL pinned to `clob_v3_1`, an era that closed
+    2026-08-30T05:30:01Z. Every selector below filters BOTH the slug set
+    (`covered_slugs`) and the gap intervals (`gaps_by_slug`) through it, so on
+    any later era the selection returns NOTHING: no rows to build, and no gaps
+    to status them with. That is the same stale-literal defect already fixed in
+    the accrual path this morning, and it sits one identifier away from
+    `_discover_days()`, which exists precisely because a day list went stale
+    four times in three days.
+
+    NOT changed to "all eras": measured, that is inert for `select_v2_era`
+    (1,666 slugs either way) but NOT for `select_stratified`, whose TRAIN_DAYS
+    span the 08-20/08-21 clob_v2 -> v2_1 -> v3 -> v3_1 transitions (4,543 vs
+    4,753 slugs). There the era filter is doing real purity work and widening
+    it would silently admit windows from three earlier collectors.
+
+    So the era stays EXPLICIT and its default is unchanged -- every current
+    number is reproduced exactly -- and the silent-empty failure becomes a
+    refusal that names the era it filtered on.
+    """
+    era = fi.ERA if era is None else era
+    return era
+
+
+def _refuse_empty_selection(out: list, era: str, what: str) -> list:
+    if not out:
+        raise RuntimeError(
+            f"REFUSED: {what} selected 0 windows under era {era!r}. Either the "
+            f"population lies in a different collector era (the era literal is "
+            f"pinned to {era!r} and does not follow the collector), or the "
+            f"archive is absent. An empty population must never be built as "
+            f"though it were a small one.")
+    return out
+
+
 def select_stratified(per_coin_per_day: int,
                       days: Sequence[str] = TRAIN_DAYS,
-                      coins: Sequence[str] = ("btc", "eth")) -> list:
+                      coins: Sequence[str] = ("btc", "eth"),
+                      era: str | None = None) -> list:
     import collections, datetime as _dt
     fi = qr.base.fi
+    era = _era_or_refuse(fi, era, "select_stratified")
     paths = fi._archive_paths(); tokens = fi.token_map()
-    gaps = fi.gaps_by_slug(fi.ERA)
+    gaps = fi.gaps_by_slug(era)
     picked: collections.Counter = collections.Counter()
     out = []
-    for slug in sorted(fi.covered_slugs(fi.ERA)):
+    for slug in sorted(fi.covered_slugs(era)):
         coin = slug.split("-")[0]
         if coin not in coins or slug not in paths or slug not in tokens:
             continue
@@ -481,7 +520,7 @@ def select_stratified(per_coin_per_day: int,
         up, down = tokens[slug]
         out.append((slug, paths[slug], up, down, gaps.get(slug, [])))
         picked[(coin, day)] += 1
-    return out
+    return _refuse_empty_selection(out, era, "select_stratified")
 
 
 # --- era bounds: PINNED LITERALS, never derived (R-153(2), Q-DA-67) --------
@@ -661,13 +700,15 @@ def v2_era_bounds(population: str = "v3_4_consumed_fragment",
 
 
 def select_v2_era(coins: Sequence[str],
-                  population: str = "v3_4_consumed_fragment") -> tuple[list, int]:
+                  population: str = "v3_4_consumed_fragment",
+                  era: str | None = None) -> tuple[list, int]:
     fi = qr.base.fi
+    era = _era_or_refuse(fi, era, "select_v2_era")
     bounds = v2_era_bounds(population)
     paths = fi._archive_paths(); tokens = fi.token_map()
-    gaps = fi.gaps_by_slug(fi.ERA)
+    gaps = fi.gaps_by_slug(era)
     out = []; n_gap = 0
-    for slug in sorted(fi.covered_slugs(fi.ERA)):
+    for slug in sorted(fi.covered_slugs(era)):
         coin = slug.split("-")[0]
         if coin not in coins or slug not in paths or slug not in tokens:
             continue
@@ -686,6 +727,7 @@ def select_v2_era(coins: Sequence[str],
             continue
         up, down = tokens[slug]
         out.append((slug, paths[slug], up, down, gaps.get(slug, [])))
+    _refuse_empty_selection(out, era, "select_v2_era")
     return out, n_gap
 
 
@@ -1098,6 +1140,29 @@ def selftest() -> int:
     except UndeclaredInterval:
         ok(True, "an undeclared population RAISES rather than silently "
                  "inheriting the era floor as its lower bound")
+
+    # ---- the era literal must not fail SILENTLY (stale-constant guard) ----
+    # `fi.ERA` is pinned to clob_v3_1, closed 2026-08-30T05:30:01Z. Both
+    # selectors filter the slug set AND the gap intervals through it, so on any
+    # later era they returned an EMPTY selection: no rows to build and no gaps
+    # to status them with, reported as success. A forward tape built that way
+    # would be silently empty, not merely unprotected.
+    for _fn, _args, _name in ((select_v2_era, (("btc", "eth"),), "select_v2_era"),
+                              (select_stratified, (5,), "select_stratified")):
+        _r = ""
+        try:
+            _fn(*_args, era="clob_era_that_does_not_exist")
+        except RuntimeError as _e:
+            _r = str(_e)
+        ok("selected 0 windows under era" in _r and _name in _r,
+           f"({_name}) an era matching NO window REFUSES and names the era it "
+           f"filtered on -- an empty population must never build as a small one")
+    # POSITIVE CONTROL: the default era still selects, so the guard above is
+    # not passing merely because everything refuses.
+    ok(len(select_v2_era(("btc", "eth"))[0]) > 0
+       and len(select_stratified(5)) > 0,
+       "(CONTROL) the DEFAULT era still selects a non-empty population, so the "
+       "refusal is discriminating rather than universal")
 
     print(f"harmful_exposure_rows v3 selftest: {checks} checks OK")
     return 0
