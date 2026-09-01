@@ -1,18 +1,46 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-01T14:05Z — the pending CLAUDE.md amendment is drafted for the
-USER (`workspace/DRAFT_CLAUDE_MD_AMENDMENT.md`), and the TODO sweep is at
-47/113. Prior line: R-374..R-381 swept in — reviewer seat is a Claude session,
-the resource rule is a mechanism, coordination is batched both directions, the
-DE seat is staffed, and the 011 re-run was killed mid-fit rather than emit
-under a superseded predicate.
+Updated: 2026-09-01T14:16Z — R-382..R-384 trued up, and **three items now wait
+on the USER** (see PENDING USER DECISIONS below; one carries a ~22:00Z deadline
+tonight). Prior line: the CLAUDE.md amendment is drafted
+(`workspace/DRAFT_CLAUDE_MD_AMENDMENT.md`), the TODO sweep is at 47/113, the
+reviewer seat is a Claude session, the resource rule is a mechanism,
+coordination is batched both directions, the DE seat is staffed, and the 011
+re-run was killed mid-fit rather than emit under a superseded predicate.
 
 ## READ FIRST — current project handoff
 
 The governing project TODO is
 `live/pm_research/plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md` §10. The
 stateful cancel x skew TODO is a subordinate implementation worksheet; its
-39/113 checkbox count is not total project completion.
+**47/113** checkbox count is not total project completion (39 → 42 → 47 across
+two MEM sweeps, every tick behind a commit or an artifact).
+
+### PENDING USER DECISIONS — nothing here can be decided by a seat
+
+Three drafts wait on the USER. They are gathered here so the asks are findable
+in one place instead of scattered across register entries; the register remains
+the authority on each. **Per R-383 these go up as ONE composed ask when the
+last of them lands — but no later than ~22:00Z tonight**, because the first
+item's clock is mechanical.
+
+| # | ask | artifact | deadline | what happens if it slips |
+|---|---|---|---|---|
+| 1 | **Freeze the content-liveness rule** (Q-DA-199, R-370's open item) | `live/pm_research/da_content_liveness_rule.py` | **before 09-02 opens (~22:00Z)** | `EFFECTIVE_FROM_DAY = "20260902"` is enforced in code, not promised, and the rule may not be back-dated (rule 11). A freeze after 09-02 opens **costs its first governed day** — this is the only item with a real clock |
+| 2 | **Apply the `CLAUDE.md` amendment** (two hunks) | `workspace/DRAFT_CLAUDE_MD_AMENDMENT.md` | none | the state-file collision stays live (a fresh seat following `CLAUDE.md` keeps writing MEM's files and is *behaving correctly*), and rule 9 keeps asserting a settlement source that appears in **0 of 26,099** records |
+| 3 | **Freeze DE's Phase-4 grid protocol** | DE's draft, not yet landed | none, but it gates Phase-4 | no Phase-4 cell may be read before its protocol is frozen — declaring after seeing is what the draft exists to prevent |
+
+**Why item 1 governs nothing today, and that is deliberate:** `governs()` returns
+False unless **both** `FROZEN_BY_USER` and `day_token >= EFFECTIVE_FROM_DAY` —
+one function, both conditions, so a consumer cannot satisfy one and forget the
+other. `FROZEN_BY_USER` is `False` right now. Its thresholds were calibrated on
+consumed days ≤ 08-31 only, with `CALIBRATION_MAX_DAY < EFFECTIVE_FROM_DAY`
+enforced by a refusal rather than a comment, and **09-01 is deliberately not
+covered** — the rule was drafted while 09-01 was in flight, so applying it to
+that day would be choosing after seeing.
+
+If items 2 and 3 miss the deadline, **item 1 escalates alone** and the rest
+follow in the next bundle.
 
 ### Current model state
 
@@ -117,6 +145,55 @@ the register, so there was nothing to tick there.
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-01 ~14:16Z (MEM) — R-382..R-384: A GUARD THAT WOULD HAVE FAILED
+### TONIGHT'S FIRST FORWARD DAY, CAUGHT BEFORE IT RAN
+
+**The one that mattered most is `b32e7e3`, and it is a launcher-semantics
+defect in DA's own guard from this morning.** `assert_disclosure_carried()`
+raised a bare `SystemExit`, which exits **1** — and `da_midnight_verify.sh`
+reads rc 1 as *"verified, and the day FAILS"*, a real result, while an
+instrument that refused to emit is rc **4, NOTHING WAS VERIFIED**. So a guard
+refusal on **tonight's 09-01 verdict — the first day that can accrue** — would
+have been recorded as a failing day. Now a real `Exception` inside `main()`'s
+handler, proven at the **subprocess seam** rather than by exception type: the
+type alone cannot show what the launcher sees. 2 mutants killed, 205 checks,
+16 gates (R-384). DA records that it re-introduced the exact defect documented
+at the top of the same file (R-199 item 1) — **the class survived its own
+documentation, and the seam test is what actually holds it.**
+
+**Q-DA-199 — the content-liveness rule, drafted for USER freeze** (`f1e3f53`),
+closing R-370's open item. The hole it addresses: a feed that thins **without
+disconnecting** writes no gap row, keeps full window coverage and passes
+P1/P2/P3 — 08-31 held 0.51% of normal rate for ~4.1 h with zero gap rows, and
+668 invisible windows sit across 7 of 13 days. Verified by running it: **30
+checks pass, 2 positive controls executed**, detector unchanged from
+`pm_tape_density`, thresholds calibrated on consumed days ≤ 08-31 with
+`CALIBRATION_MAX_DAY < EFFECTIVE_FROM_DAY` enforced by a refusal. It **governs
+nothing today**: `governs()` returns False unless both `FROZEN_BY_USER` (now
+`False`) and `day_token >= "20260902"`. See PENDING USER DECISIONS above — this
+is the item with the real clock.
+
+**Q-DA-200 — two breadth statistics pulled apart** (`f1e3f53`). `per_slug_affected`
+lived inline in `verify_day` and could not be driven by any test, so the two
+could have drifted into one being derived from the other with nothing to notice.
+Both are callable now, each driven on a fixture built to make them **disagree in
+both directions**, plus a signature check that neither can see the other's
+inputs. The refactor is inert on real data (08-29 reproduces
+`windows_gap_affected` byte-identically; only `gap_series.ledger_lines` moved,
+9,682 → 9,718, because the ledger grew between runs). `docs/BREADTH_STATISTICS.md`
+names which receipt carries which — and the HANDOFF survey's own two columns are
+**different statistics**, one per-slug and one row-level.
+
+**BE's code half is in** (`4438961`, 23/23 mutants) and the run was **relaunched
+from the committed tree** so `fit_code_ref` names a non-dirty commit — verified:
+`phase2_iter011_run.py` is clean in the working tree and
+`iter011-fit-batch.service` has been active since 13:51:25Z. The batch closes on
+the run's artifact plus its Q-BE filing, which is what opens the review round.
+
+**One precision note on a count.** R-384 records the TODO sweep as "39→47". Both
+endpoints are right; the path was 39 → 42 (round 2, three ticks) → 47 (round 4,
+five ticks), across two sweeps rather than one.
 
 ### 2026-09-01 ~14:05Z (MEM) — THE CLAUDE.md AMENDMENT IS DRAFTED, AND ONE
 ### PREVIOUSLY-SUGGESTED FIX WOULD HAVE INSTALLED A SECOND CONTESTED CLAIM

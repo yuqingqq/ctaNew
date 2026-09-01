@@ -480,3 +480,29 @@ Moved in the MEM round-3 sweep of R-374..R-381. Join rule as in batch 1.
   pair proves that one instance could not: A COUNT ASSERTION ALONE WOULD HAVE
   CAUGHT MINE AND MISSED THE COORDINATOR'S.
 ```
+
+## Batch 11 — archived 2026-09-01T14:16Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-5 true-up of R-382..R-384. Join rule as in batch 1.
+
+```yaml
+
+  2026-09-01T09:43:00Z (CRITERIA/LIVE-STATUS TRUE-UP): THE GOVERNING TODO IS
+  plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md §10. Dataset/PRED_STATE_V1 is
+  complete; Iteration 011 is USER-RELEASED, its earlier queue-contamination
+  halt is withdrawn. A memory-sliced BTC attempt started 09:34Z, was stopped at
+  09:42Z after indexing, and produced no result artifact or recorded fit/score
+  completion. QR_SKEW_ONLY semantics are USER-FROZEN; real
+  seven-arm parity, lifecycle economics and the integrated candidate remain
+  open. Forward reach remains G=0/5. On 09-01 at 09:29:39Z, all 113 elapsed
+  BTC/ETH windows were present and both coins passed governing day_bar_v2:
+  BTC 572.2s accumulated loss, pace-adjusted P1 about 60.3 vs 120, P2 zero
+  material windows, P3 185.2 vs 900. Collector v4.1 is active at PID 1108125
+  with NRestarts=0. The day is a PROVISIONAL QUALITY PASS but cannot accrue
+  until closed. Era is an interlock, not a quality grade. Breadth is reported,
+  not a gate: 52/113 elapsed BTC windows had some overlap, but replay clears,
+  resets and resynchronizes after a gap; the claim that a gap poisons the rest
+  of a window is withdrawn. The superseded v1 count predicate does not pass
+  09-01 because two hours exceeded 15, despite the average being below 15;
+  this has no effect on the governing v2 verdict.
+```
