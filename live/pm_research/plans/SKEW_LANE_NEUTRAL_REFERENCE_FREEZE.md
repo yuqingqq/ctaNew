@@ -1,6 +1,18 @@
 # QR_SKEW_ONLY as the NEUTRAL INTEGRATION REFERENCE — freeze draft
 
-**STATUS: DRAFT-FOR-USER-FREEZE. Not frozen. No fit, no score, no code change.**
+**STATUS: FROZEN — USER RULING 2026-09-01 ("release and do skew freeze,
+proceed"). No fit, no score, no code change: this freeze RECORDS committed
+semantics and introduces nothing.**
+
+**Q1–Q3 of §7 were NOT answered in that ruling, and are resolved below by the
+COORDINATOR under its authorization — recorded as coordinator resolutions, not
+as user rulings, because this programme attributes rulings precisely and an
+unattributed resolution is how an implementation choice becomes a silent design
+decision (§A1.0 of the iteration-011 amendment).** All three take the same
+conservative form: **record what committed code contains, invent nothing** —
+which is this draft's own stated principle (§9: "It introduces no new number").
+**Each is CORRECTABLE by a one-line user ruling, superseding in-band (rule 13);
+none is load-bearing for any number, because nothing is fitted or scored here.**
 **Scope:** hazard plan §10 item 5 / STATEFUL_HARMFUL_CANCEL_TODO §5.3 Phase 2C.
 **Drafted by:** BE. **Frozen by:** the USER, after the reviewer has seen it.
 
@@ -137,12 +149,33 @@ object the code does not have would either invent it or quietly redefine it as
 "size". *Should the freeze name the pair, or should a single `desired_exposure`
 be introduced later as a declared change?*
 
+> **RESOLVED 2026-09-01 (COORDINATOR, under the USER's freeze authorization;
+> CORRECTABLE): NAME THE PAIR.** Desired exposure is frozen as the two
+> quantities the code actually has — `size` (5.0, `policy_optimizer_queue_
+> realistic.py:59`) together with the per-side front/back intent from
+> `_target_front` — and NOT as a single object. Introducing a
+> `desired_exposure` scalar now would either invent a quantity no caller
+> computes or silently redefine it as `size`, and the two are not the same:
+> `size` is how much, the intent is where. A single object remains available
+> later as a DECLARED change with its own preregistration, which is the only
+> route that keeps it from being back-fitted to whatever the code then does.
+
 **Q2 — "marginal inventory-risk value" is not a returned quantity.** The
 inversion it rests on is documented in `_target_front`'s docstring (NEW_BBO's
 "~9.4x inventory risk"), but that is a rationale in prose, not a computed value
 any caller receives. *Does the freeze record it as NOT-PRESENT (my
 recommendation, since the alternative is to freeze a number nobody computes), or
 is a implementation expected before the freeze?*
+
+> **RESOLVED 2026-09-01 (COORDINATOR, under the USER's freeze authorization;
+> CORRECTABLE): NOT-PRESENT, as BE recommended.** The interface records that no
+> marginal inventory-risk value is returned by any code path. The "~9.4x
+> inventory risk" in `_target_front`'s docstring is a RATIONALE IN PROSE and is
+> explicitly NOT frozen as a quantity — freezing it would put a number into the
+> interface that nothing computes and nothing can falsify, which is the precise
+> failure this draft's §9 forbids. A consumer needing it must first implement
+> and validate it as a declared change; until then, callers get the front/back
+> intent, which is the decision that rationale supports.
 
 **Q3 — the code already declares one ambiguity and refuses to guess.**
 `harmful_stateful_policy.py:46-49`: whether a repost landing exactly on a
@@ -152,8 +185,22 @@ ambiguous there and this module refuses to guess"*. That ambiguity is in the
 policy layer rather than the skew lane, but it touches the reference boundary.
 *Should the skew-lane freeze cite it as out-of-scope, or resolve it?*
 
-I have not answered any of these. Answering Q1 or Q2 in a draft would introduce
-a semantic that no committed code contains.
+> **RESOLVED 2026-09-01 (COORDINATOR, under the USER's freeze authorization;
+> CORRECTABLE): OUT OF SCOPE, cited not resolved.**
+> `charge_reset_cost_at_generation_start` is a POLICY-LAYER declared parameter
+> that already refuses to guess, which is the correct handling of a genuinely
+> ambiguous spec (rule 14: decisions live in the policy layer with their own
+> priced trade-offs). The skew lane defines the reference trajectory; what a
+> repost is CHARGED on landing is the policy layer's question. Resolving it
+> here would move a priced decision into an interface freeze and would settle
+> it without the trade-off ever being priced. It is cited so the boundary is
+> visible, and it must be ruled before any lifecycle-economics number is
+> claimed — it is a live obligation, not a closed one.
+
+BE answered none of these; answering Q1 or Q2 in the DRAFT would have
+introduced a semantic that no committed code contains. The resolutions above
+introduce none either: each records absence or an existing pair, and each is a
+coordinator resolution the user can overturn in one line.
 
 ## 8. NO-SELECTION CLAUSE
 

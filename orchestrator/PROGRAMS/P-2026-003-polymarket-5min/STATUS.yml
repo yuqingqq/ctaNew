@@ -3792,10 +3792,24 @@ tasks:
   - id: hazard-skew
     phase: 1
     name: Hazard plan §10.5 — freeze QR_SKEW_ONLY neutral semantics
-    status: draft-not-user-frozen
+    status: user-frozen-2026-09-01-q1q3-coordinator-resolved-correctable
     notes: |
-      The freeze draft exists with unresolved semantics. Synthetic/inert work
-      does not substitute for the user freeze or real queue-reference parity.
+      FROZEN by USER ruling 2026-09-01 ("release and do skew freeze, proceed").
+      The freeze RECORDS committed semantics and introduces no code change and
+      no new number. §7 Q1-Q3 were NOT answered in that ruling and are resolved
+      by the COORDINATOR under its authorization, recorded as coordinator
+      resolutions rather than user rulings, each CORRECTABLE in one line
+      (rule 13): Q1 desired exposure = NAME THE PAIR (size 5.0 + front/back
+      intent), no invented scalar; Q2 marginal inventory-risk value =
+      NOT-PRESENT (the "~9.4x" is prose rationale, deliberately not frozen as a
+      quantity); Q3 charge_reset_cost_at_generation_start = OUT OF SCOPE, cited
+      not resolved -- it is a policy-layer priced decision (rule 14) and remains
+      a LIVE obligation before any lifecycle-economics number is claimed.
+      All three take the same conservative form: record what committed code
+      contains, invent nothing. STILL OWED: real queue-reference parity
+      (bit-identical, da_replay_parity_battery) is asserted by the battery but
+      has NOT been run against a seven-arm replay -- the freeze fixes the
+      semantics, it does not evidence the parity.
   - id: hazard-integrated-replay
     phase: 2
     name: Hazard plan §10.6-8 — action-value integration and stateful replay

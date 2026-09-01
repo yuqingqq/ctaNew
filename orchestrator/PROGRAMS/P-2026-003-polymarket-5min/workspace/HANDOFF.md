@@ -210,10 +210,64 @@ mutation audits create. It fails in the SAFE direction (false red, never false
 green). Not fixed; recorded so a red there is not read as a code regression —
 and so it is not learned as a red to ignore.
 
+### 2026-09-01 ~07:15Z (coordinator) — 011 RELEASED, SKEW FROZEN, AND THE
+### RESOURCE GUARD WAS NOT BEING APPLIED
+
+USER: *"release and do skew freeze, proceed"*, then *"we have the memory/cpu
+limit right? do we apply that now"*.
+
+**The resource question first, because the answer was NO.** `research.slice`
+exists with `MemoryMax=60%`, `CPUQuota=1200%`, `CPUWeight=50`, `MemorySwapMax=0`
+and a documented launch pattern — written after the **2026-08-26 03:55Z box
+death from AGGREGATE memory exhaustion** (R-148/R-150), whose whole lesson is
+that a single-job cap cannot bound the sum. It was reading **`Tasks: 0`.**
+Nothing was in it. Every heavy job today ran in `app.slice` instead: my ad-hoc
+scans (4.5 GB gz), the mutation loops, the 011 dry run — **and
+`pm-evaluation-pipeline`, which is a heavy research job carrying only a
+per-unit `MemoryMax=16G` and sitting outside the aggregate guard entirely.**
+The guard was built, committed, documented, and then not used. This is Codex
+**COL-R2** — filed, downgraded from a release gate, and still open.
+
+The 011 fit is now launched through the documented pattern:
+`systemd-run --user --slice=research.slice -p MemoryMax=10G -p MemorySwapMax=0
+-p OOMScoreAdjust=1000 -p CPUWeight=50`. It yields to the collectors (weight
+500) by construction, so a fit can no longer starve the tape.
+**NOT changed: `pm-evaluation-pipeline`'s slice** — that needs a unit edit and
+a restart, and restarting it now would abort the 08-26 rebuild mid-flight. Do
+it when the backlog clears; until then the aggregate guard is still not whole.
+
+**Iteration 011 RELEASED.** §A1.8 step 6 was the only outstanding gate: steps
+2–5 are closed and prove it by execution — the run selftest is GREEN (0
+failing), and `main()`'s own path is exercised by `--dry-run` on synthetic
+populations (both arms fitted, applied, 24-cell family assembled and
+adjudicated, output guard enforced), which exists because a component suite
+cannot see an unwired `main()`. `main()` REFUSES to run on a red selftest, so
+the numbers cannot come from an instrument that has not shown it can fire.
+Fitting started 07:11Z; tape identity `c7ab02eb` / fragment `19a50195` / topup
+`e75d0e21` pinned and printed before any fit.
+
+**Skew lane FROZEN**, recording committed semantics only — no code change, no
+new number. **§7 Q1–Q3 were not in the user's ruling**, and are resolved by the
+coordinator under its authorization and labelled as such, because attributing
+them to the user would be inventing a ruling. Each takes the same conservative
+form — *record what code contains, invent nothing* — and each is CORRECTABLE:
+
+| Q | resolution |
+|---|---|
+| Q1 desired exposure | **NAME THE PAIR** (`size`=5.0 + front/back intent); no invented scalar |
+| Q2 marginal inventory-risk value | **NOT-PRESENT**; the "~9.4x" stays prose, never a frozen quantity |
+| Q3 `charge_reset_cost_at_generation_start` | **OUT OF SCOPE**, cited not resolved — policy-layer priced decision (rule 14), a LIVE obligation before any lifecycle-economics number |
+
+**Still owed on the skew lane:** bit-identical queue-reference parity has been
+ASSERTED by `da_replay_parity_battery` but never RUN against a seven-arm replay.
+The freeze fixes semantics; it does not evidence parity. Do not read it as both.
+
 ### Immediate order
 
 0. ~~Rule B1~~ / ~~day-closed conjunct~~ **BOTH DONE.** The rule is one line in
    `ACCRUAL_RULE` and is enforced at the function AND the call path.
+0d. Move `pm-evaluation-pipeline` into `research.slice` once the tier1 backlog
+   clears — the aggregate guard is incomplete until then (COL-R2).
 0b. Confirm the tier1:full lane actually clears 08-25. A rebuild under the new
    `tier1_v4_r13` generation is RUNNING; end-to-end clearance is NOT yet
    observed, and 08-26/08-27/08-30 carry the same prints behind it.
