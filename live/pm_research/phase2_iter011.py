@@ -1301,14 +1301,37 @@ def assert_vectors_well_formed(name: str, *vectors) -> int:
 
 def build_cell(arm: str, head: str, budget: str, statistic=None,
                p_value=None, status: str = CELL_STATUS_OK,
-               n_actions: int = None, detail: str = "") -> dict:
+               n_actions: int = None, detail: str = "",
+               arrival_n: int = None, statistic_n: int = None,
+               statistic_n_basis: str = "") -> dict:
     """One cell of the DECLARED family. A cell always exists, whatever its
-    status — that is what keeps the denominator from shrinking."""
+    status — that is what keeps the denominator from shrinking.
+
+    TWO n, NAMED SEPARATELY (Q-DA-197 F1, USER ruling 2026-09-01). Every cell
+    used to state the ARRIVAL population beside a statistic computed on a
+    CONDITIONAL sub-population — Q2 adjudicates on the preventable base while
+    the cell said 177,674. Rule 8 says every quoted population carries ITS n,
+    and one field cannot answer two questions:
+
+      arrival_n    the decision population the cell was selected from
+      statistic_n  the n the ADJUDICATED STATISTIC was actually computed on
+
+    `n_actions` remains and now carries `statistic_n` when one exists, so a
+    reader who asks a cell for "its n" gets the n behind its number rather
+    than the widest one available; `arrival_n` keeps the wider figure
+    addressable instead of deleting it."""
+    n_stat = statistic_n if statistic_n is not None else n_actions
     return {"cell": cell_key(arm, head, budget), "arm": arm, "head": head,
             "budget": budget,
             "adjudicated_statistic_name": ADJUDICATED_STATISTIC.get(head),
             "statistic": statistic, "p_value": p_value, "status": status,
-            "n_actions": n_actions, "detail": detail}
+            "n_actions": n_stat, "detail": detail,
+            "arrival_n": arrival_n if arrival_n is not None else n_actions,
+            "statistic_n": statistic_n,
+            "statistic_n_basis": statistic_n_basis or (
+                "NOT STATED: this cell carries no statistic-specific n, so "
+                "n_actions falls back to the arrival population and must not "
+                "be read as the statistic's own")}
 
 
 def assemble_family(cells: dict) -> dict:
@@ -1339,10 +1362,28 @@ def assemble_family(cells: dict) -> dict:
         a = max(a, prev)
         adj[k] = a
         prev = a
+    # THE SURVIVOR PREDICATE IS A CONJUNCTION, and it was Holm ALONE.
+    # USER ruling on Q-DA-197 F2 (2026-09-01). Holm answers "is this p small
+    # enough given the family?" -- it says nothing about whether the p is the
+    # null the cell's verdict needs. A NO_INCUMBENT_COUNTERPART cell carries
+    # the MATCHED-RANDOM p (prereg 5.1) while its declared incremental null
+    # does not exist, so publishing it as a survivor of the JOINT READING
+    # asserts a comparison the cell itself says was never made. Measured on
+    # the re-adjudicated artifact: 18 of 24 flagged, 12 of them non-OK.
+    #
+    # Holm still runs over EVERY scored cell and the denominator is still the
+    # declared 24 -- a non-OK cell occupies its slot and still consumes a step
+    # (A1.4). Only the SURVIVAL claim now requires the cell's own status to be
+    # OK as well.
     for k, c in cells.items():
         c["holm_p"] = adj.get(k)
-        c["survives_joint_reading_at_0_05"] = (
-            adj[k] < 0.05 if k in adj else False)
+        c["survives_joint_reading_at_0_05"] = bool(
+            c.get("status") == CELL_STATUS_OK and k in adj and adj[k] < 0.05)
+    survivor_rule = ("status == OK AND holm_p < 0.05. Holm alone published "
+                     "cells whose own status says their declared null does "
+                     "not exist (Q-DA-197 F2, USER ruling 2026-09-01); Holm "
+                     "itself is unchanged and still runs over the declared "
+                     "denominator of 24.")
     by_status = {}
     for c in cells.values():
         by_status[c["status"]] = by_status.get(c["status"], 0) + 1
@@ -1355,6 +1396,11 @@ def assemble_family(cells: dict) -> dict:
         "cells_by_status": dict(sorted(by_status.items())),
         "surviving_cells": sorted(k for k, c in cells.items()
                                   if c["survives_joint_reading_at_0_05"]),
+        "survivor_rule": survivor_rule,
+        "cells_passing_holm_but_not_OK": sorted(
+            k for k, c in cells.items()
+            if k in adj and adj[k] < 0.05
+            and c.get("status") != CELL_STATUS_OK),
         "cells": cells,
         "note": "Holm is computed over the DECLARED denominator; unevaluable "
                 "cells occupy their slots and cannot be dropped to make the "

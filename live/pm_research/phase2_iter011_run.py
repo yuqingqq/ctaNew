@@ -711,9 +711,11 @@ def _one_cell(arm: str, head: str, budget: str, coin_results: dict,
 
     if head == "Q4_combined_ev":
         # the DECISION metric, per budget, with BOTH declared nulls
-        stat, pval, status, detail = _q4_cell(arm, budget, per_coin)
+        stat, pval, status, sn, snb, detail = _q4_cell(arm, budget, per_coin)
         return I11.build_cell(arm, head, budget, statistic=stat, p_value=pval,
-                              status=status, n_actions=n_actions, detail=detail)
+                              status=status, n_actions=n_actions, detail=detail,
+                              arrival_n=n_actions, statistic_n=sn,
+                              statistic_n_basis=snb)
 
     if head == "Q3_magnitudes" and len(per_coin) == 1:
         # R-306 RULED THIS AND THE CODE HAD NEVER IMPLEMENTED IT. The cell
@@ -723,9 +725,11 @@ def _one_cell(arm: str, head: str, budget: str, coin_results: dict,
         # that ruling and it lives in the frozen A1.4 amendment; a gap that a
         # ruling has closed is no longer a gap. The multi-coin case is a
         # SEPARATE gap and still falls through to the generic path.
-        stat, pval, status, detail = _q3_compose(arm, per_coin)
+        stat, pval, status, sn, snb, detail = _q3_compose(arm, per_coin)
         return I11.build_cell(arm, head, budget, statistic=stat, p_value=pval,
-                              status=status, n_actions=n_actions, detail=detail)
+                              status=status, n_actions=n_actions, detail=detail,
+                              arrival_n=n_actions, statistic_n=sn,
+                              statistic_n_basis=snb)
 
     # Q1/Q2/Q3: the adjudicated statistic is a discrimination/calibration
     # figure, identical across budgets (budgets select CANCELLATIONS, not
@@ -755,17 +759,39 @@ def _one_cell(arm: str, head: str, budget: str, coin_results: dict,
                             else I11.CELL_STATUS_UNEVALUABLE)
     for (c, r), st in zip(per_coin.items(), stats):
         per_coin_ev[c]["statistic"] = st
+    # F1: the n behind THIS cell's statistic. Q1 scores every action; Q2's
+    # ruled statistic is the WORSE SIDE's AUC (R-249) and both sides are
+    # scored on the PREVENTABLE base, which is a different population from
+    # the arrival one the cell was selected from.
+    _sn, _snb = None, ""
+    if len(per_coin) == 1:
+        _c, _r = next(iter(per_coin.items()))
+        if head == "Q1_arrival":
+            _sn = _head_n(_r[arm], "Q1_arrival")
+            _snb = "Q1_arrival n_actions (the arrival population itself)"
+        elif head == "Q2_sign":
+            _hs = _r[arm].get("heads", {}) or {}
+            _sc = [(_hs.get(x, {}).get("auc"), x) for x in ("Q2_p_pos", "Q2_p_neg")]
+            _sc = [(a, x) for a, x in _sc if a is not None]
+            if _sc:
+                _ws = min(_sc)[1]
+                _sn = _head_n(_r[arm], _ws)
+                _snb = (f"Q2 worse side {_ws} n_actions (R-249): the "
+                        f"PREVENTABLE base, not the arrival population; both "
+                        f"sides "
+                        f"{ {x: _head_n(_r[arm], x) for _, x in _sc} }")
     good = [x for x in stats if x is not None]
     if not good:
         return I11.build_cell(
             arm, head, budget, status=I11.CELL_STATUS_UNEVALUABLE,
-            n_actions=n_actions,
+            n_actions=n_actions, arrival_n=n_actions,
             detail=f"no coin produced an adjudicable statistic; per-coin "
                    f"statuses {statuses}")
     if any(st not in ("OK", None) for st in statuses):
         return I11.build_cell(
             arm, head, budget, statistic=min(good),
             status=I11.CELL_STATUS_UNDERPOWERED, n_actions=n_actions,
+            arrival_n=n_actions, statistic_n=_sn, statistic_n_basis=_snb,
             detail=f"at least one coin is not OK: {statuses}")
     # THE COLLAPSE IS ONLY UNAMBIGUOUS WHEN THERE IS NOTHING TO COLLAPSE.
     # A single coin and a single sub-head need no undeclared rule, so those
@@ -795,6 +821,7 @@ def _one_cell(arm: str, head: str, budget: str, coin_results: dict,
         return I11.build_cell(
             arm, head, budget, statistic=min(good), p_value=None,
             status=I11.CELL_STATUS_AGG_UNDECLARED, n_actions=n_actions,
+            arrival_n=n_actions, statistic_n=_sn, statistic_n_basis=_snb,
             detail="AGGREGATION UNDECLARED, stated for ruling rather than "
                    "chosen (I11-B4): " + "; ".join(ambiguous) +
                    f". The worst-coin statistic {min(good)!r} is carried as a "
@@ -805,6 +832,7 @@ def _one_cell(arm: str, head: str, budget: str, coin_results: dict,
         return I11.build_cell(
             arm, head, budget, statistic=min(good), p_value=(ps[0] if ps else None),
             status=I11.CELL_STATUS_NO_COUNTERPART, n_actions=n_actions,
+            arrival_n=n_actions, statistic_n=_sn, statistic_n_basis=_snb,
             detail=f"R-237: the incumbent has no sign/magnitude head, so no "
                    f"INCREMENTAL null exists for this head. The p reported is "
                    f"the MATCHED-RANDOM null (prereg §5.1), which does apply; "
@@ -813,7 +841,8 @@ def _one_cell(arm: str, head: str, budget: str, coin_results: dict,
         arm, head, budget, statistic=min(good),
         p_value=(ps[0] if ps else None),
         status=I11.CELL_STATUS_OK if ps else I11.CELL_STATUS_UNEVALUABLE,
-        n_actions=n_actions,
+        n_actions=n_actions, arrival_n=n_actions,
+        statistic_n=_sn, statistic_n_basis=_snb,
         detail=(f"single coin, single head: adjudicated on its own "
                 f"matched-random null (prereg §5.1), {len(ps)} p available"
                 if ps else
@@ -1049,8 +1078,22 @@ def _cell_p(per_coin: dict, arm: str, head: str) -> list:
     return out
 
 
+def _head_n(r_arm: dict, sub: str):
+    """The ACTION count the sub-head `sub` was scored on, or None.
+
+    READ from where it was computed (head_report), never re-derived: two
+    derivations of a population is how the two n diverge in the first place.
+    """
+    h = (r_arm.get("heads", {}) or {}).get(sub) or {}
+    n = h.get("n_actions")
+    return n if isinstance(n, int) else None
+
+
 def _q3_compose(arm: str, per_coin: dict) -> tuple:
-    """Q3's cell under R-306: CONJUNCTION + WORSE SIDE. Returns a cell tuple.
+    """Q3's cell under R-306: CONJUNCTION + WORSE SIDE.
+
+    Returns `(statistic, p_value, status, statistic_n, statistic_n_basis,
+    detail)`.
 
     THE RULING, quoted from the frozen A1.4 amendment (USER, 2026-08-29):
     "Q3's TWO ruled slope gates compose into its single cell as CONJUNCTION +
@@ -1117,13 +1160,13 @@ def _q3_compose(arm: str, per_coin: dict) -> tuple:
         ev[sub] = {"calibration_slope": slope, "matched_random_p": pv}
     # CONJUNCTION: a cell whose second side is absent has not been measured.
     if under:
-        return (None, None, I11.CELL_STATUS_UNDERPOWERED,
+        return (None, None, I11.CELL_STATUS_UNDERPOWERED, None, "",
                 f"R-306 CONJUNCTION: Q3 needs BOTH slope gates and "
                 f"{sorted(under)} is underpowered on {coin}. Half a working "
                 f"head cannot carry a cell, so the CELL is underpowered and "
                 f"its p is withheld; the per-side evidence is {ev!r}.")
     if wrongnull:
-        return (None, None, I11.CELL_STATUS_UNEVALUABLE,
+        return (None, None, I11.CELL_STATUS_UNEVALUABLE, None, "",
                 f"R-306/R-286: the adjudicated gate is 'calibration slope CI "
                 f"excludes 0', whose implemented form is the matched-random "
                 f"null at no_skill_value=0.0, one-sided 'greater'. These "
@@ -1131,7 +1174,7 @@ def _q3_compose(arm: str, per_coin: dict) -> tuple:
                 f"p against another no-skill value answers another question "
                 f"and must not be adjudicated under this gate's name.")
     if missing:
-        return (None, None, I11.CELL_STATUS_UNEVALUABLE,
+        return (None, None, I11.CELL_STATUS_UNEVALUABLE, None, "",
                 f"R-306 CONJUNCTION: {sorted(missing)} carry no slope or no "
                 f"matched-random p on {coin}, so the conjunction cannot be "
                 f"evaluated and a single side never carries the cell. "
@@ -1142,14 +1185,49 @@ def _q3_compose(arm: str, per_coin: dict) -> tuple:
     worse_stat_side = min(subs, key=lambda k: ev[k]["calibration_slope"])
     pval = ev[worse_p_side]["matched_random_p"]
     stat = ev[worse_stat_side]["calibration_slope"]
-    agree = worse_p_side == worse_stat_side
-    return (stat, pval, I11.CELL_STATUS_NO_COUNTERPART,
+    # A TIE IS NOT A CONCURRENCE, and on this population it is the normal
+    # case: both sub-heads sit at the 1/(n_draws+1) permutation floor, so
+    # "the WORSE of the two" has no worse to name and `max` returns whichever
+    # side argument order puts first. Reporting that as AGREE would be a label
+    # that cannot distinguish two different situations -- rule 16's shape in
+    # a receipt field. The p VALUE is unaffected (both sides carry it), and
+    # saying so is the honest form of the ruling rather than a weaker one.
+    tied = ev[subs[0]]["matched_random_p"] == ev[subs[1]]["matched_random_p"]
+    floors = {k: (1.0 / (nd + 1) if (nd := (heads.get(k, {}).get(
+        "matched_random") or {}).get("n_draws")) else None) for k in subs}
+    at_floor = sorted(k for k in subs
+                      if floors[k] is not None
+                      and ev[k]["matched_random_p"] == floors[k])
+    if tied:
+        reading = (f"TIED ON p: both sides carry {pval!r}, so R-306's "
+                   f"worse-of-the-two does not discriminate here and the "
+                   f"adjudicated p is the same whichever side is named. The "
+                   f"side reported is argument order's and nothing turns on "
+                   f"it. This is NOT a concurrence")
+    elif worse_p_side == worse_stat_side:
+        reading = "AGREE"
+    else:
+        reading = "DISAGREE (disclosed, not resolved by preference)"
+    if at_floor:
+        reading += (f". At the PERMUTATION FLOOR on {at_floor}: p equals "
+                    f"1/(n_draws+1) exactly, so the null is resolution-"
+                    f"limited and more permutations are needed before this "
+                    f"cell's p can separate anything")
+    # F1: the cell's n is the BINDING side's -- the side whose slope the cell
+    # reports. Both sides' n travel in the detail so the pair stays visible.
+    _n_stat = _head_n(r[arm], worse_stat_side)
+    _n_both = {k: _head_n(r[arm], k) for k in subs}
+    return (stat, pval, I11.CELL_STATUS_NO_COUNTERPART, _n_stat,
+            f"Q3 binding side {worse_stat_side} n_actions (A1.5); "
+            f"both sides {_n_both}",
+            f"n behind this statistic: {_n_stat!r} actions on "
+            f"{worse_stat_side} (both sides {_n_both!r}). "
             f"R-306 (USER, 2026-08-29, frozen A1.4): Q3's two slope gates "
             f"compose as CONJUNCTION + WORSE SIDE. Both sides are evaluable, "
             f"so the cell is adjudicated: statistic = min slope "
             f"{stat!r} from {worse_stat_side}, p = the WORSE of the two "
             f"{pval!r} from {worse_p_side}; the two worse-side readings "
-            f"{'AGREE' if agree else 'DISAGREE (disclosed, not resolved by preference)'}"
+            f"{reading}"
             f". Adjudicating the worse p at a common alpha IS the conjunction "
             f"(intersection-union), so the cell passes only if BOTH sides do. "
             f"Per-side evidence on {coin}: "
@@ -1175,10 +1253,11 @@ def _q4_cell(arm: str, budget: str, per_coin: dict) -> tuple:
     net = 0.0
     inc_net = 0.0
     incumbent_net = 0.0
+    _n_ranked = 0
     for coin, r in per_coin.items():
         econ = r[arm].get("economics", {}).get(budget)
         if not econ:
-            return (None, None, I11.CELL_STATUS_UNEVALUABLE,
+            return (None, None, I11.CELL_STATUS_UNEVALUABLE, None, "",
                     f"no economics for {coin}@{budget}")
         net += econ["net_cents"]
         # I11-B2: this key EXISTS ONLY when economics were paired against an
@@ -1191,17 +1270,21 @@ def _q4_cell(arm: str, budget: str, per_coin: dict) -> tuple:
         # a number with an optimistic caption.
         if not econ.get("paired_against_incumbent"):
             return (net, None, I11.CELL_STATUS_NO_COUNTERPART,
+                    econ.get("n_actions_total"),
+                    "ranked generations (ACTION unit, first-crossing dedup, "
+                    "A1.5); no increment exists so no null unit count does",
                     f"{coin}@{budget} economics were computed with no incumbent "
                     f"counterpart, so no candidate-minus-incumbent statistic "
                     f"exists on the identical action population (prereg 5.2). "
                     f"Net {net:+.1f}c is the CANDIDATE'S OWN value and is not "
                     f"an increment.")
         incumbent_net += econ.get("incumbent_net_cents") or 0.0
+        _n_ranked += econ.get("n_actions_total") or 0
         for w, v in econ["increment_by_window"].items():
             inc_net += v
             inc_by_window[f"{coin}/{w}"] = inc_by_window.get(f"{coin}/{w}", 0.0) + v
     if not inc_by_window:
-        return (net, None, I11.CELL_STATUS_UNEVALUABLE,
+        return (net, None, I11.CELL_STATUS_UNEVALUABLE, None, "",
                 "no per-window increments to permute")
     null = I11.sign_flip_null(inc_by_window)
     # I11-B5: the STATISTIC is the INCREMENT, because the p describes the
@@ -1215,7 +1298,14 @@ def _q4_cell(arm: str, budget: str, per_coin: dict) -> tuple:
     # incumbent, and the two-sided form gave a candidate LOSING by 120c the
     # same p as one winning by 120c. p_two_sided remains in the null's output
     # as a reported diagnostic; it is not what decides a cell.
-    return (inc_net, null["p_value"], I11.CELL_STATUS_OK,
+    # F1: Q4's adjudicated statistic is a SUM OVER WINDOWS and its p is a
+    # sign-flip over those same windows, so the n behind the number is the
+    # WINDOW count, not the action count -- naming the action count here
+    # would overstate the unit the interval-free claim rests on (rule 8).
+    return (inc_net, null["p_value"], I11.CELL_STATUS_OK, null["n_units"],
+            f"windows carrying a candidate-minus-incumbent increment "
+            f"(sign-flip units, R-234 sorted order); the action population "
+            f"ranked at this budget is {_n_ranked!r}",
             f"increment vs incumbent {null['observed']:+.1f}c over "
             f"{null['n_units']} windows; {null['n_perm']} sign-flip "
             f"permutations, units consumed in SORTED order (R-234). "
@@ -1828,7 +1918,8 @@ def selftest() -> int:
     _pc = {"btc": {"composed_linear": {
         "economics": q4_economics(_q4p, _q4rows, incumbent=_q4i),
         "heads": {}, "adjudicated_statistics": {}}}}
-    _st, _pv, _stat, _det = _q4_cell("composed_linear", I11.BUDGETS_011[0], _pc)
+    _st, _pv, _stat, _sn4, _snb4, _det = _q4_cell(
+        "composed_linear", I11.BUDGETS_011[0], _pc)
     _ec0 = _pc["btc"]["composed_linear"]["economics"][I11.BUDGETS_011[0]]
     ok(_st == sum(_ec0["increment_by_window"].values()),
        f"B5 the Q4 cell's STATISTIC is the INCREMENT its p describes, not the "
@@ -1881,7 +1972,8 @@ def selftest() -> int:
     _lpc = {"btc": {"composed_linear": {
         "economics": q4_economics(_lp, _lose, incumbent=_li),
         "heads": {}, "adjudicated_statistics": {}}}}
-    _ls, _lpv, _lst, _ld = _q4_cell("composed_linear", I11.BUDGETS_011[0], _lpc)
+    _ls, _lpv, _lst, _lsn, _lsnb, _ld = _q4_cell(
+        "composed_linear", I11.BUDGETS_011[0], _lpc)
     _inc = sum(_lpc["btc"]["composed_linear"]["economics"]
                [I11.BUDGETS_011[0]]["increment_by_window"].values())
     if _inc < 0:
@@ -1895,16 +1987,178 @@ def selftest() -> int:
     _selftest_coin_slice(ok)
     _selftest_q3_r306(ok)
     _selftest_incumbent_wiring(ok)
+    _selftest_survivor_and_provenance(ok)
 
     return _selftest_verdict(fails)
 
 
+def _selftest_survivor_and_provenance(ok):
+    """Q-DA-197 F2/F5/F6, plus the Holm-vs-Bonferroni separation."""
+    def fam(spec):
+        """A 24-cell family from (status, p) per head, everything else fixed."""
+        cells = {}
+        for a in I11.ARMS_011:
+            for h in I11.HEADS_011:
+                st, pv = spec.get(h, ("OK", None))
+                for b in I11.BUDGETS_011:
+                    cells[I11.cell_key(a, h, b)] = I11.build_cell(
+                        a, h, b, statistic=1.0, p_value=pv, status=st,
+                        n_actions=10, detail="fixture")
+        return I11.assemble_family(cells)
+
+    # THE DEFECT, red-first. A NO_INCUMBENT_COUNTERPART cell with a tiny p
+    # was published as a survivor: Holm alone cannot see that the cell's own
+    # status says its declared null does not exist. Pre-fix this asserted
+    # False and the artifact said True (measured: 12 of 18).
+    _f = fam({"Q1_arrival": ("OK", 0.0001),
+              "Q2_sign": (I11.CELL_STATUS_NO_COUNTERPART, 0.0001),
+              "Q3_magnitudes": (I11.CELL_STATUS_NO_COUNTERPART, 0.0001),
+              "Q4_combined_ev": (I11.CELL_STATUS_OK, 0.0001)})
+    _nonok = [k for k, c in _f["cells"].items()
+              if c["survives_joint_reading_at_0_05"] and c["status"] != "OK"]
+    ok(not _nonok,
+       f"F2 KNOWN-BAD: a non-OK cell whose Holm p is 0.0024 must NOT be "
+       f"published as surviving the joint reading (got {len(_nonok)} such "
+       f"cells: {_nonok[:2]})")
+    # ...AND THE CONTROL MUST ADMIT, or it is a predicate that only ever
+    # refuses (rule 16): the OK cells at the same p still survive.
+    _oks = [k for k, c in _f["cells"].items()
+            if c["survives_joint_reading_at_0_05"]]
+    ok(len(_oks) == 12 and all(_f["cells"][k]["status"] == "OK" for k in _oks),
+       f"F2 POSITIVE CONTROL: OK cells at the same p DO survive (12 expected, "
+       f"got {len(_oks)}), so the conjunct narrows the claim rather than "
+       f"disabling it")
+    ok(sorted(_f["surviving_cells"]) == sorted(_oks),
+       "F2 the published LIST and the per-cell FLAG agree — two renderings "
+       "of one predicate must not be able to disagree")
+    ok(len(_f["cells_passing_holm_but_not_OK"]) == 12,
+       f"F2 the cells Holm alone would have passed are still REPORTED, so "
+       f"narrowing the claim does not hide what changed (got "
+       f"{len(_f['cells_passing_holm_but_not_OK'])})")
+    # An OK cell that FAILS Holm must not survive either — the other conjunct.
+    _g = fam({"Q1_arrival": ("OK", 0.40), "Q2_sign": ("OK", 0.40),
+              "Q3_magnitudes": ("OK", 0.40), "Q4_combined_ev": ("OK", 0.40)})
+    ok(not _g["surviving_cells"],
+       "F2 KNOWN-BAD the other way: OK status alone does not survive; both "
+       "conjuncts must hold")
+
+    # M17: the CARRIAGE, not just the computation. `_q3_compose` can return a
+    # perfect statistic_n and `build_cell` can still drop it on the floor --
+    # my first F1 controls tested only the former and a mutation that ignored
+    # statistic_n survived.
+    _bc = I11.build_cell("composed_linear", "Q2_sign", "5%", statistic=0.6,
+                         p_value=0.01, n_actions=177674, arrival_n=177674,
+                         statistic_n=17604, statistic_n_basis="worse side")
+    ok(_bc["n_actions"] == 17604 and _bc["arrival_n"] == 177674
+       and _bc["statistic_n"] == 17604,
+       f"F1 build_cell CARRIES the statistic's own n in n_actions (17604) and "
+       f"keeps the arrival population addressable as arrival_n (177674) -- "
+       f"got n_actions={_bc['n_actions']}, arrival_n={_bc['arrival_n']}")
+    _bn = I11.build_cell("composed_linear", "Q2_sign", "5%", n_actions=177674)
+    ok(_bn["n_actions"] == 177674 and _bn["statistic_n"] is None
+       and "NOT STATED" in _bn["statistic_n_basis"],
+       "F1 KNOWN-BAD: with no statistic_n the cell falls back to the arrival "
+       "n and SAYS SO, so a reader cannot mistake the fallback for a measured "
+       "statistic population")
+
+    # M19: the Q2 path specifically -- its statistic lives on the PREVENTABLE
+    # base, which is the mismatch DA measured (17,604 behind a cell saying
+    # 177,674). Driven through `_one_cell`, not through a helper.
+    def _q2h(auc, n, p):
+        return {"auc": auc, "n_actions": n, "status": "OK",
+                "matched_random": {"status": "OK", "p_value": p,
+                                   "n_draws": 500}}
+    _q2r = {"btc": {"composed_linear": {
+        "adjudicated_statistics": {"Q2_sign": 0.58, "Q2_cell_status": "OK"},
+        "heads": {"Q2_p_pos": _q2h(0.61, 17604, 0.02),
+                  "Q2_p_neg": _q2h(0.58, 17604, 0.30)}}}}
+    _q2c = _one_cell("composed_linear", "Q2_sign", "5%", _q2r,
+                     {"btc": {"eval_n_actions": 177674}})
+    ok(_q2c["statistic_n"] == 17604 and _q2c["arrival_n"] == 177674
+       and _q2c["n_actions"] == 17604,
+       f"F1 a Q2 cell states the PREVENTABLE base behind its AUC (17604), not "
+       f"the arrival population (177674) it was selected from (got "
+       f"n_actions={_q2c['n_actions']}, arrival_n={_q2c['arrival_n']})")
+    ok("Q2_p_neg" in _q2c["statistic_n_basis"],
+       "F1 and it NAMES the worse side the n came from, so the n and the "
+       "statistic can be checked to describe the same head")
+
+    # HOLM MUST ACTUALLY BE A STEP-DOWN. At the all-tied floor Holm and a
+    # flat Bonferroni are indistinguishable (monotonicity carries the first
+    # step across the ties), so the artifact cannot evidence WHICH ran --
+    # DA's point. Separated here on UNTIED p, where they must differ.
+    _h = fam({"Q1_arrival": ("OK", 0.001), "Q2_sign": ("OK", 0.002),
+              "Q3_magnitudes": ("OK", 0.003), "Q4_combined_ev": ("OK", 0.004)})
+    _ps = {k: c["p_value"] for k, c in _h["cells"].items()}
+    _holm = {k: c["holm_p"] for k, c in _h["cells"].items()}
+    _bonf = {k: min(1.0, v * 24) for k, v in _ps.items()}
+    _lower = [k for k in _holm if _holm[k] < _bonf[k] - 1e-12]
+    ok(_lower,
+       f"Holm is a STEP-DOWN, not a flat x24: on untied p at least one cell "
+       f"is adjusted by a smaller multiplier than Bonferroni's (got "
+       f"{len(_lower)} of 24)")
+    ok(all(_holm[k] <= _bonf[k] + 1e-12 for k in _holm),
+       "and Holm never EXCEEDS Bonferroni, which is the direction that would "
+       "mean the step-down was applied backwards")
+    _tied = fam({h: ("OK", 0.002) for h in I11.HEADS_011})
+    _th = {k: c["holm_p"] for k, c in _tied["cells"].items()}
+    ok(all(abs(_th[k] - min(1.0, 0.002 * 24)) < 1e-12 for k in _th),
+       "and at the ALL-TIED floor the two coincide exactly — stated so the "
+       "artifact's own numbers are never read as evidence of which procedure "
+       "ran (Q-DA-197)")
+
+    # F5/F6: the producing commit and the as-of are COMPUTED, not narrated.
+    _pv = producing_code_provenance()
+    # A TRUTHY STRING IS NOT A REF. My first version of this control asserted
+    # `bool(fit_code_ref)` and PASSED on the function's own
+    # "UNAVAILABLE: ..." placeholder -- a control that cannot distinguish the
+    # thing from its named absence (rule 16). Caught by mutation M21.
+    _ref = _pv.get("fit_code_ref")
+    _is_sha = (isinstance(_ref, str) and len(_ref) == 40
+               and all(ch in "0123456789abcdef" for ch in _ref))
+    ok(_is_sha and _pv.get("fit_code_ref_resolved") is True,
+       f"F5 the producing COMMIT is recorded as a real 40-hex sha AND flagged "
+       f"resolved -- not left null, and not satisfied by the placeholder this "
+       f"function emits when git fails (got {str(_ref)[:44]!r})")
+    ok(_pv["fit_code_ref"] != "" and "UNAVAILABLE" not in str(_ref),
+       "F5 KNOWN-BAD: the UNAVAILABLE placeholder must not read as a ref; it "
+       "exists so an unreadable git is a NAMED absence, never a silent one")
+    # And DIRTY must track reality, checked through a DIFFERENT git path than
+    # the one the function uses: two readings of one fact must agree.
+    import subprocess as _sp
+
+    def _git_rc(*a):
+        return _sp.run(("git", *a), cwd=str(Path(__file__).resolve().parent),
+                       capture_output=True, text=True, timeout=20)
+    _indep = (_git_rc("diff", "--quiet").returncode != 0
+              or _git_rc("diff", "--cached", "--quiet").returncode != 0
+              or bool(_git_rc("ls-files", "--others", "--exclude-standard")
+                      .stdout.strip()))
+    ok(isinstance(_pv.get("working_tree_dirty"), bool)
+       and _pv["working_tree_dirty"] == _indep,
+       f"F5 the DIRTY flag matches an INDEPENDENT read (diff/diff--cached/"
+       f"ls-files vs status --porcelain): a ref alone does not identify the "
+       f"bytes that ran when the tree has uncommitted edits (reported "
+       f"{_pv.get('working_tree_dirty')}, independently {_indep})")
+    ok(_pv.get("runner_sha256_prefix") and _pv.get("library_sha256_prefix"),
+       "F5 both 011 module content hashes ride along, so the ref is "
+       "checkable against bytes rather than trusted")
+    _t = run_as_of()
+    ok(isinstance(_t, str) and _t.endswith("Z") and _t[4] == "-",
+       f"F6 an as-of is produced in ISO-8601 UTC (rule 8: every quoted "
+       f"population carries its n AND its as-of); got {_t!r}")
+
+
 def _selftest_q3_r306(ok):
     """R-306's conjunction + worse side: it must ADJUDICATE and it must REFUSE."""
-    def head(slope, pv, status="OK", nsv=0.0, alt="greater"):
+    def head(slope, pv, status="OK", nsv=0.0, alt="greater", n_draws=500):
+        # n_draws travels because the FLOOR disclosure is computed from it:
+        # a control whose fixture omits the field the code reads cannot
+        # exercise that branch, and would pass by never reaching it.
         return {"status": status, "calibration_slope": slope,
                 "matched_random": {"status": status, "p_value": pv,
-                                   "no_skill_value": nsv, "alternative": alt}}
+                                   "no_skill_value": nsv, "alternative": alt,
+                                   "n_draws": n_draws}}
 
     def cell(harm, good, arm="composed_linear"):
         """A compose that RAISES is a NAMED failure, never a traceback.
@@ -1914,11 +2168,20 @@ def _selftest_q3_r306(ok):
         suite -- so the mutation looked killed while every control AFTER it
         never ran, which is indistinguishable from them passing."""
         try:
-            return _q3_compose(arm, {"btc": {arm: {"heads": {
+            _t = _q3_compose(arm, {"btc": {arm: {"heads": {
                 "Q3_m_harm": harm, "Q3_m_good": good}}}})
+            # _q3_compose returns (statistic, p, status, statistic_n, basis,
+            # detail); the controls below read the first three and the
+            # detail, so it is projected here rather than at every call.
+            return (_t[0], _t[1], _t[2], _t[5])
         except Exception as e:                       # noqa: BLE001
             return (f"RAISED:{type(e).__name__}", f"RAISED:{e}",
                     f"RAISED:{type(e).__name__}", f"RAISED: {e}")
+
+    def cell_full(harm, good, arm="composed_linear"):
+        """The WHOLE tuple, for the controls that read statistic_n (F1)."""
+        return _q3_compose(arm, {"btc": {arm: {"heads": {
+            "Q3_m_harm": harm, "Q3_m_good": good}}}})
 
     # POSITIVE CONTROL, and it must ADMIT: both sides evaluable adjudicates.
     _st, _p, _s, _d = cell(head(0.70, 0.05), head(0.91, 0.44))
@@ -1946,9 +2209,27 @@ def _selftest_q3_r306(ok):
        "R-306 when the worse-p side and the min-slope side differ, the cell "
        "DISCLOSES the disagreement rather than preferring one silently")
     _, _, _, _da = cell(head(0.70, 0.44), head(0.91, 0.05))
-    ok("AGREE" in _da and "DISAGREE" not in _da,
+    ok("AGREE" in _da and "DISAGREE" not in _da and "TIED" not in _da,
        "R-306 and it says AGREE when they coincide, so the disclosure "
        "discriminates instead of always firing")
+
+    # A TIE IS NOT A CONCURRENCE. On the real population BOTH sides sit at
+    # the permutation floor, so this is the normal case, not a corner one --
+    # and "AGREE" there would be a label that cannot tell two situations
+    # apart while reading as evidence.
+    _tp, _tpv, _ts, _dt = cell(head(0.70, 0.44), head(0.91, 0.44))
+    ok("TIED ON p" in _dt and "AGREE" not in _dt and _tpv == 0.44
+       and _ts == I11.CELL_STATUS_NO_COUNTERPART and _tp == 0.70,
+       f"R-306 equal p on both sides reports TIED, never AGREE: the ruling's "
+       f"worse-of-the-two cannot discriminate and the p is the same either "
+       f"way (got p={_tpv}, stat={_tp})")
+    ok("PERMUTATION FLOOR" not in _dt,
+       "R-306 and a tie AWAY from the floor does not claim the floor -- the "
+       "floor disclosure must discriminate, not decorate")
+    _, _, _, _df = cell(head(0.70, 1 / 501), head(0.91, 1 / 501))
+    ok("PERMUTATION FLOOR" in _df and "Q3_m_good" in _df and "Q3_m_harm" in _df,
+       "R-306 p exactly at 1/(n_draws+1) is NAMED as the permutation floor on "
+       "both sides: a resolution-limited null must not read as a measured one")
 
     # KNOWN-BAD: half a head must never carry the cell (the CONJUNCTION).
     for _lbl, _h, _g, _want in (
@@ -1994,6 +2275,25 @@ def _selftest_q3_r306(ok):
                                         head(0.91, 0.44))[3],
        "R-306 the cell states that no literal interval is claimed (rule 8 "
        "forbids one at G=0 complete UTC days)")
+
+    # F1: the cell's n is the BINDING SIDE's, not the arrival population.
+    # This is the defect DA measured: Q2 adjudicates on 17,604 while every
+    # cell stated 177,674, and one field cannot answer both questions.
+    def nhead(slope, pv, n):
+        return dict(head(slope, pv), n_actions=n)
+    _f = cell_full(nhead(0.70, 0.05, 7988), nhead(0.91, 0.44, 9617))
+    ok(_f[3] == 7988 and "Q3_m_harm" in _f[4] and "9617" in _f[4],
+       f"F1 Q3 carries the BINDING side's n (7988 on Q3_m_harm), and names "
+       f"both sides so the pair stays visible (got n={_f[3]}, "
+       f"basis={str(_f[4])[:70]!r})")
+    _f2 = cell_full(nhead(0.91, 0.05, 7988), nhead(0.70, 0.44, 9617))
+    ok(_f2[3] == 9617,
+       f"F1 KNOWN-BAD: swap which side binds and the n FOLLOWS the statistic "
+       f"(9617, not 7988) -- a positional read would return the same n twice "
+       f"(got {_f2[3]})")
+    ok(cell_full(head(0.70, 0.05), head(0.91, 0.44))[3] is None,
+       "F1 a head with no n_actions yields statistic_n None rather than a "
+       "fabricated count; build_cell then says so in statistic_n_basis")
 
     # KNOWN-BAD at the boundary of its own competence: the coin axis is a
     # SEPARATE R-306 clause this runner does not implement, so two coins must
@@ -2390,6 +2690,8 @@ def readjudicate(src: Path) -> tuple:
                                   "statistic": now[2]}}
     out = dict(d)
     out["family"] = fam
+    out["as_of"] = run_as_of()
+    out["producing_code"] = producing_code_provenance()
     out["supersedes"] = {
         "source": str(src), "source_sha256_prefix":
             hashlib.sha256(src.read_bytes()).hexdigest()[:16],
@@ -2714,8 +3016,25 @@ def main() -> int:
         compact_design(EVAL[_c])
     _gc.collect()
 
+    _prov = producing_code_provenance()
+    # F5: `_tape_identity` lives in `phase2_arms.py`, a LATTICE file the frozen
+    # candidate binds, so the ref is filled HERE rather than there. It is only
+    # ever FILLED, never overwritten: if the lattice ever starts recording its
+    # own ref, that one wins and the disagreement is reported instead of
+    # silently resolved.
+    if not ident.get("fit_code_ref"):
+        ident["fit_code_ref"] = _prov["fit_code_ref"]
+        ident["fit_code_ref_source"] = ("filled by the runner (outside the "
+                                        "lattice); phase2_arms._tape_identity "
+                                        "records content hashes only")
+    elif ident["fit_code_ref"] != _prov["fit_code_ref"]:
+        ident["fit_code_ref_disagreement"] = {
+            "lattice": ident["fit_code_ref"], "runner": _prov["fit_code_ref"],
+            "why": "two sources named different commits; neither is dropped"}
     out = {"artifact": "iter011_conditional_value_v1",
            "receipt_family": RECEIPT_FAMILY,
+           "as_of": run_as_of(),
+           "producing_code": _prov,
            "preregistration": "ITER011_CONDITIONAL_VALUE_PREREGISTRATION.md",
            "preregistration_commit": "3b71d3e",
            "preregistration_status": "FROZEN by user ruling R-232",
@@ -2872,6 +3191,10 @@ def main() -> int:
             "output_path": str(_out_path),
             "why": "exercises main()'s OWN path — a component suite cannot see "
                    "an unwired main(), which is defect I11-2"}
+    # BOTH ENDS OF A LONG RUN. `as_of` above is stamped when the results
+    # block is composed; this run takes ~45 min and the tape grows underneath
+    # it, so a single timestamp would silently stand for an interval.
+    out["written_at"] = run_as_of()
     with _out_path.open("w") as fh:
         json.dump(out, fh, indent=1, sort_keys=True, default=str)
         fh.flush(); os.fsync(fh.fileno())
@@ -2934,6 +3257,65 @@ def inspect_ridge_calls() -> str:
         f"ridge_lam={m}" for m in
         [t.split("lam=")[1].split(")")[0].strip()
          for t in src.split("fast_fit_ridge_w")[1:] if "lam=" in t])
+
+
+def run_as_of() -> str:
+    """This run's UTC wall-clock, ISO-8601. Q-DA-197 F6.
+
+    Rule 8: every quoted population carries its n AND its as-of, "the tape
+    grows during measurement". The artifact carried n throughout and no
+    timestamp anywhere, so two runs over a growing tape were indistinguishable
+    from each other at the artifact."""
+    from datetime import datetime, timezone
+    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def producing_code_provenance() -> dict:
+    """The COMMIT this run is produced from, plus the bytes. Q-DA-197 F5.
+
+    `identity.fit_code_ref` was null while the content identity was present
+    and verifiable, so the artifact could prove WHAT ran and never say WHICH
+    COMMIT it was. Filled here, in the runner, because `_tape_identity` lives
+    in `phase2_arms.py` -- a lattice file the frozen candidate binds.
+
+    A REF ALONE IS NOT AN IDENTITY. A dirty tree means the commit names bytes
+    that are not the bytes that ran, so `working_tree_dirty` travels with it
+    and both 011 module hashes ride along; the ref is then checkable rather
+    than trusted. A git failure is a NAMED absence, never a silent empty
+    string -- absence must not read as a pass (rule 11)."""
+    import hashlib
+    import subprocess
+
+    def git(*a):
+        try:
+            r = subprocess.run(("git", *a), cwd=str(Path(__file__).resolve().parent),
+                               capture_output=True, text=True, timeout=20)
+            return r.stdout.strip() if r.returncode == 0 else None
+        except Exception:                            # noqa: BLE001
+            return None
+
+    me = Path(__file__).resolve()
+    lib = me.parent / "phase2_iter011.py"
+
+    def sha(f):
+        return hashlib.sha256(f.read_bytes()).hexdigest()[:16]
+
+    head = git("rev-parse", "HEAD")
+    status = git("status", "--porcelain")
+    dirty = None if status is None else bool(status.strip())
+    return {
+        "fit_code_ref": head or "UNAVAILABLE: git rev-parse failed; the "
+                                "producing commit could not be read and is "
+                                "NOT being reported as absent-but-fine",
+        "fit_code_ref_resolved": bool(head),
+        "working_tree_dirty": bool(dirty),
+        "working_tree_status_read": status is not None,
+        "runner": me.name, "runner_sha256_prefix": sha(me),
+        "library": lib.name, "library_sha256_prefix": sha(lib),
+        "why": "a content hash says WHAT ran; a commit ref says WHICH "
+               "COMMIT. The artifact carried the first and null for the "
+               "second (Q-DA-197 F5). If the tree is dirty the ref names "
+               "bytes that are not these bytes, so both travel together."}
 
 
 def assert_standalone_identity() -> dict:
