@@ -36,6 +36,12 @@ import phase2_declaration as D
 import phase2_iter011 as I11
 
 OUT = PA.DERIVED / "iter011_conditional_value_v1.json"
+#: The FROZEN preregistration and the commit it was frozen at. RR3-1: the
+#: coverage floor's expected set must terminate at a document the USER froze,
+#: not at a constant a seat can edit, so this pair is read by the emission AND
+#: by the check that anchors the constants to it -- one value, not two.
+PREREG_DOC = "ITER011_CONDITIONAL_VALUE_PREREGISTRATION.md"
+PREREG_COMMIT = "3b71d3e"
 RECEIPT_FAMILY = "ITER011_CONDITIONAL_VALUE"
 
 
@@ -2100,8 +2106,139 @@ def selftest() -> int:
     _selftest_artifact_wiring_guard(ok)
     _selftest_review_batch_f2_f7(ok)
     _selftest_gate_evaluation_rr2(ok)
+    _selftest_frozen_prereg_anchor(ok)
 
     return _selftest_verdict(fails)
+
+
+def _selftest_frozen_prereg_anchor(ok):
+    """RR3-1: the premise must terminate at bytes no seat can edit."""
+    _g = _frozen_prereg_section3()
+    ok(len(_g) == 4 and _g["Q1_arrival"]["carries_incumbent_term"] is True
+       and _g["Q3_magnitudes"]["carries_incumbent_term"] is False,
+       f"RR3-1 the FROZEN section-3 gate table is read from git at "
+       f"{PREREG_COMMIT}, not from the working tree (4 rows; Q1 names an "
+       f"incumbent, Q3 does not)")
+    ok(_g["Q2_sign"]["inherited"] is True
+       and _g["Q2_sign"]["carries_incumbent_term"] is True,
+       "RR3-1 Q2's 'same' row is resolved as an INHERITANCE — read literally "
+       "it names no incumbent, and a parser that did so would report a "
+       "mismatch against a correct constant")
+
+    # POSITIVE CONTROL, and it must ADMIT the real pair.
+    _ev = assert_constants_match_frozen_prereg()
+    ok(_ev["heads_where_they_DIVERGE"] == ["Q2_sign"],
+       f"RR3-1 POSITIVE CONTROL: the real pair is ADMITTED and the REQUIRED "
+       f"divergence is exactly Q2 (got {_ev['heads_where_they_DIVERGE']})")
+    ok(_ev["incumbent_has_head"]["Q4_combined_ev"] is True
+       and _ev["gate_carries_incumbent_term"]["Q2_sign"] is True
+       and _ev["incumbent_has_head"]["Q2_sign"] is False,
+       "RR3-1 the two constants terminate in DIFFERENT places: the document "
+       "says Q2's gate names an incumbent, the hash-verified artifact says "
+       "the incumbent has no sign head")
+
+    # THE REVIEWER'S KNOWN-BAD: constant AND receipt edited together, which
+    # RR2-2's floor admitted at 6 checks with coverage_is_complete true.
+    _saved = dict(INCUMBENT_COMPARABLE)
+    try:
+        for _lbl, _mut, _want in (
+                ("Q4 flipped false (the reviewer's pair)",
+                 {"Q4_combined_ev": False}, "HASH-VERIFIED incumbent"),
+                ("Q2 flipped true (a counterpart invented)",
+                 {"Q2_sign": True}, "HASH-VERIFIED incumbent")):
+            INCUMBENT_COMPARABLE.clear()
+            INCUMBENT_COMPARABLE.update({**_saved, **_mut})
+            try:
+                assert_constants_match_frozen_prereg()
+                ok(False, f"RR3-1 KNOWN-BAD ({_lbl}) must REFUSE")
+            except RuntimeError as e:
+                ok(_want in str(e),
+                   f"RR3-1 KNOWN-BAD ({_lbl}): REFUSED — the expected set no "
+                   f"longer terminates at a line a seat can edit")
+    finally:
+        INCUMBENT_COMPARABLE.clear()
+        INCUMBENT_COMPARABLE.update(_saved)
+    ok(dict(INCUMBENT_COMPARABLE) == _saved,
+       "RR3-1 the control RESTORES the constant it mutated — a suite that "
+       "leaves a constant edited poisons every check after it")
+
+    # THE HARMONISATION GUARD, driven DIRECTLY. Inside the anchored function
+    # it is unreachable — the artifact check fires first on every input that
+    # would merge the two maps — so testing it through the constants would
+    # have been a control that cannot fail.
+    ok(assert_propositions_not_harmonised(
+        {"a": True, "b": True}, {"a": True, "b": False}) == ["b"],
+       "RR3-1 the harmonisation guard ADMITS maps that disagree, and names "
+       "where")
+    try:
+        assert_propositions_not_harmonised({"a": True, "b": False},
+                                           {"a": True, "b": False})
+        ok(False, "RR3-1 identical maps must REFUSE as harmonised")
+    except RuntimeError as e:
+        ok("HARMONISED" in str(e),
+           "RR3-1 KNOWN-BAD: two maps agreeing on every head are REFUSED as "
+           "harmonised — the Q2 difference is what RR2-1 rests on and must "
+           "not be tidied away")
+
+    # THE TRANSCRIPTION CHECK, driven DIRECTLY — on the real document the two
+    # already agree, so a mutant deleting it changed nothing and survived.
+    ok(assert_gate_terms_match({"a": True}, {"a": True})["heads_checked"] == ["a"],
+       "RR3-1 the transcription check ADMITS a faithful transcription")
+    for _lbl, _d, _c in (("a term the document does not have",
+                          {"a": False}, {"a": True}),
+                         ("a term the document has and the code drops",
+                          {"a": True}, {"a": False}),
+                         ("a head missing from the code", {"a": True}, {})):
+        try:
+            assert_gate_terms_match(_d, _c)
+            ok(False, f"RR3-1 transcription drift ({_lbl}) must REFUSE")
+        except RuntimeError as e:
+            ok("disagrees with the FROZEN" in str(e),
+               f"RR3-1 KNOWN-BAD ({_lbl}): DECLARED_GATES is REFUSED when it "
+               f"stops transcribing the frozen table")
+
+    # THE PARSE RULES, driven on synthetic bodies for the same reason.
+    _good = ("\n## 3.\n| # | q | h | m | gate |\n"
+             "| Q1 | a | b | c | beats the incumbent hazard head |\n"
+             "| Q2 | a | b | c | same, on the fill-conditional population |\n"
+             "| Q3 | a | b | c | calibration slope CI excludes 0 |\n"
+             "| Q4 | a | b | c | beats the incumbent by a null |\n## 4.\n")
+    _p = _parse_section3(_good, "fixture")
+    ok(len(_p) == 4 and _p["Q2_sign"]["carries_incumbent_term"] is True
+       and _p["Q3_magnitudes"]["carries_incumbent_term"] is False,
+       "RR3-1 the parser ADMITS a well-formed table and resolves 'same'")
+    for _lbl, _body, _want in (
+            ("only three rows", _good.replace(
+                "| Q4 | a | b | c | beats the incumbent by a null |\n", ""),
+             "expected 4"),
+            ("no section 3 at all", "## 9. something\n", "no section 3"),
+            ("'same' with nothing to inherit", _good.replace(
+                "| Q1 | a | b | c | beats the incumbent hazard head |\n", ""),
+             "no preceding row")):
+        try:
+            _parse_section3(_body, "fixture")
+            ok(False, f"RR3-1 the parser must REFUSE ({_lbl})")
+        except RuntimeError as e:
+            ok(_want in str(e),
+               f"RR3-1 KNOWN-BAD ({_lbl}): a partial or malformed parse "
+               f"REFUSES rather than anchoring the constants to a fragment")
+
+    # A document it cannot read is a REFUSAL, never a quiet pass.
+    for _lbl, _kw in (("an unknown commit", {"commit": "0000000"}),
+                      ("a missing document", {"doc": "NO_SUCH_DOC.md"})):
+        try:
+            _frozen_prereg_section3(**_kw)
+            ok(False, f"RR3-1 {_lbl} must REFUSE")
+        except RuntimeError as e:
+            # NAMED, not merely refused. Without the git check the empty
+            # stdout falls through to "no section 3", which is a TRUE
+            # statement about an unread file — a refusal for the wrong
+            # reason, and the mutant that removed the git check survived on
+            # a control that accepted any refusal at all.
+            ok("git show" in str(e),
+               f"RR3-1 KNOWN-BAD ({_lbl}): the GIT read failure is named as "
+               f"itself, not absorbed by a later branch reporting an empty "
+               f"parse of a file that was never read")
 
 
 def _selftest_gate_evaluation_rr2(ok):
@@ -2618,6 +2755,9 @@ def _selftest_artifact_wiring_guard(ok):
     def emitted(**kw):
         r = receipt(**kw)
         r["incumbent_applicability_guard"] = {"checks": 18}
+        r["frozen_prereg_anchor"] = {
+            "chain_terminates_at": "fixture",
+            "gate_carries_incumbent_term": {"Q1_arrival": True}}
         r["family"]["gate_evaluation"] = {"cells_checked": 24,
                                           "cells_gate_partially_evaluated": []}
         for c in r["family"]["cells"].values():
@@ -2655,6 +2795,9 @@ def _selftest_artifact_wiring_guard(ok):
             ("the floor disclosure never reached the cells",
              _strip_floor(emitted()),
              "permutation_floor"),
+            ("the frozen-prereg anchor left NO evidence",
+             {**emitted(), "frozen_prereg_anchor": {}},
+             "anchor RAN"),
             ("the gate-evaluation pass left NO evidence",
              {**emitted(), "family": {**emitted()["family"],
                                       "gate_evaluation": {}}},
@@ -3451,6 +3594,202 @@ def readjudicate(src: Path) -> tuple:
 # read off the emitted artifact, which is the only thing a reader has.
 
 
+def _frozen_prereg_section3(commit: str = None, doc: str = None) -> dict:
+    """The frozen section-3 gate table, READ FROM GIT at `commit`. RR3-1.
+
+    Not from the working tree: the whole point is to terminate at bytes the
+    USER froze. A working-tree read would move with the tree and prove
+    nothing, which is the regress this closes.
+
+    THE "same" ROW IS AN INHERITANCE AND IT IS EXPLICIT. Q2's gate reads
+    "same, on the fill-conditional population" -- it inherits Q1's gate, so a
+    parser that read it literally would find no incumbent term in Q2 and
+    report a mismatch against a correct constant. The rule is applied by name
+    and controlled, not assumed.
+    """
+    import subprocess
+    commit = commit or PREREG_COMMIT
+    doc = doc or PREREG_DOC
+    path = f"live/pm_research/plans/{doc}"
+    try:
+        r = subprocess.run(("git", "show", f"{commit}:{path}"),
+                           cwd=str(Path(__file__).resolve().parents[2]),
+                           capture_output=True, text=True, timeout=30)
+    except Exception as e:                           # noqa: BLE001
+        raise RuntimeError(
+            f"REFUSED: could not read the frozen preregistration "
+            f"({type(e).__name__}: {e}). A premise check that cannot read its "
+            f"premise must REFUSE, never pass quietly.")
+    if r.returncode != 0:
+        raise RuntimeError(
+            f"REFUSED: `git show {commit}:{path}` failed "
+            f"({r.stderr.strip()[:160]}). The artifact NAMES this commit as "
+            f"its preregistration; if it cannot be read the chain does not "
+            f"terminate anywhere.")
+    return _parse_section3(r.stdout, f"{doc}@{commit}")
+
+
+def _parse_section3(body: str, origin: str = "<body>") -> dict:
+    """The section-3 gate table, from raw text. Split out so the PARSE RULES
+    are drivable: with the real document every rule holds, so a mutant that
+    deleted one changed nothing and survived."""
+    try:
+        sec = body[body.index("\n## 3."):]
+        sec = sec[:sec.index("\n## 4.")]
+    except ValueError:
+        raise RuntimeError(
+            f"REFUSED: no section 3 found in {origin}. The gate table is the "
+            f"premise; its absence is a refusal, not an empty result.")
+    head_of = {"Q1": "Q1_arrival", "Q2": "Q2_sign",
+               "Q3": "Q3_magnitudes", "Q4": "Q4_combined_ev"}
+    gates, prev = {}, None
+    for line in sec.splitlines():
+        if not line.startswith("|"):
+            continue
+        cols = [c.strip() for c in line.strip().strip("|").split("|")]
+        if len(cols) < 5 or cols[0] not in head_of:
+            continue
+        gate = cols[-1]
+        # THE INHERITANCE, applied by name.
+        if gate.lower().startswith("same"):
+            if prev is None:
+                raise RuntimeError(
+                    "REFUSED: a gate row says 'same' with no preceding row to "
+                    "inherit from.")
+            resolved = f"{prev} [inherited via 'same'] ({gate})"
+            carries = "incumbent" in prev.lower()
+        else:
+            resolved = gate
+            carries = "incumbent" in gate.lower()
+            prev = gate
+        gates[head_of[cols[0]]] = {"gate_text": resolved,
+                                   "carries_incumbent_term": carries,
+                                   "inherited": gate is not resolved}
+    if len(gates) != 4:
+        raise RuntimeError(
+            f"REFUSED: parsed {len(gates)} gate rows from section 3 of "
+            f"{origin}, expected 4 ({sorted(gates)}). A partial parse would "
+            f"anchor the constants to a fragment.")
+    return gates
+
+
+def assert_gate_terms_match(doc_terms: dict, code_terms: dict) -> dict:
+    """`DECLARED_GATES` must transcribe the frozen document. RR3-1.
+
+    Explicit arguments for the same reason as the harmonisation guard: on the
+    real document the two already agree, so a mutant deleting this check
+    changed nothing and survived a suite that only ever drove it with
+    matching inputs."""
+    drift = {h: (doc_terms[h], code_terms.get(h)) for h in doc_terms
+             if doc_terms[h] != code_terms.get(h)}
+    if drift:
+        raise RuntimeError(
+            f"REFUSED: DECLARED_GATES disagrees with the FROZEN section-3 "
+            f"gate table (head: document, code): {drift}. The document is "
+            f"the premise; the constant transcribes it.")
+    return {"heads_checked": sorted(doc_terms)}
+
+
+def assert_propositions_not_harmonised(doc_terms: dict, comparable: dict) -> list:
+    """The two maps must DISAGREE somewhere, or they have been merged.
+
+    Split out and given explicit arguments so it is REACHABLE: inside
+    `assert_constants_match_frozen_prereg` the artifact anchor fires first on
+    every input that would harmonise them, so this branch could never be
+    driven and would have been a check that cannot fail (rule 16). It is
+    cheap insurance for the day the anchors change, and now it is testable."""
+    divergent = sorted(h for h in doc_terms
+                       if doc_terms[h] != bool(comparable.get(h)))
+    if not divergent:
+        raise RuntimeError(
+            "REFUSED: the gate-term map and the comparability map agree on "
+            "every head, which means the two propositions have been "
+            "HARMONISED. Q2 must differ -- its gate names an incumbent and "
+            "the incumbent has no sign head -- and that difference is what "
+            "RR2-1 rests on.")
+    return divergent
+
+
+def assert_constants_match_frozen_prereg(fitdir=None) -> dict:
+    """RR3-1. Terminate the coverage floor's premise at UNFORGEABLE things.
+
+    `INCUMBENT_COMPARABLE` was described as "transcribing the frozen prereg 3
+    gates" and the transcription was never checked, so editing the CONSTANT
+    and the receipt together was admitted with `coverage_is_complete: true`.
+
+    IT DOES NOT ANCHOR BOTH CONSTANTS TO ONE SOURCE, because they encode
+    DIFFERENT PROPOSITIONS and the reviewer is explicit that the difference is
+    load-bearing for RR2-1. They terminate in two different places, and
+    neither is a line a seat can edit:
+
+      DECLARED_GATES.carries_incumbent_term
+          <- the FROZEN DOCUMENT at the recorded commit: does this head's
+             gate NAME an incumbent?
+      INCUMBENT_COMPARABLE
+          <- the HASH-VERIFIED incumbent ARTIFACT: does the incumbent
+             actually HAVE this head?
+
+    Q2 is exactly why they cannot be merged: its gate names an incumbent
+    (`true` from the document) while the incumbent has no sign head
+    (`false` from the artifact). Harmonising them would delete that, so this
+    function REQUIRES the disagreement to persist rather than tolerating it.
+
+    The tie between them is the one implication the pair does support:
+    a counterpart can only be comparable for a head whose gate names one."""
+    gates = _frozen_prereg_section3()
+    doc_terms = {h: g["carries_incumbent_term"] for h, g in gates.items()}
+    code_terms = {h: bool((I11.DECLARED_GATES.get(h) or {})
+                          .get("carries_incumbent_term"))
+                  for h in gates}
+    assert_gate_terms_match(doc_terms, code_terms)
+
+    # WHICH HEADS THE INCUMBENT ACTUALLY HAS, read from the artifact whose
+    # identity `load_verified_incumbent` binds by hash. This is a property of
+    # the fitted model, not of the prereg, which is why it cannot come from
+    # the document.
+    model = load_verified_incumbent("btc", fitdir=fitdir)
+    has = {"Q1_arrival": bool(model.get("hazard_weights")),
+           "Q2_sign": bool(model.get("sign_weights")),
+           "Q3_magnitudes": bool(model.get("magnitude_weights")),
+           "Q4_combined_ev": bool(model.get("hazard_weights")
+                                  and model.get("value_weights"))}
+    cmp_drift = {h: (has[h], bool(INCUMBENT_COMPARABLE.get(h)))
+                 for h in has if has[h] != bool(INCUMBENT_COMPARABLE.get(h))}
+    if cmp_drift:
+        raise RuntimeError(
+            f"REFUSED: INCUMBENT_COMPARABLE disagrees with the HASH-VERIFIED "
+            f"incumbent artifact (head: artifact, constant): {cmp_drift}. "
+            f"Editing the constant and the receipt together used to be "
+            f"admitted with coverage_is_complete true; the expected set now "
+            f"terminates at the model's own weights (RR3-1).")
+
+    # The one implication the pair supports, and the disagreement it must keep.
+    bad_imp = sorted(h for h in gates
+                     if INCUMBENT_COMPARABLE.get(h) and not doc_terms[h])
+    if bad_imp:
+        raise RuntimeError(
+            f"REFUSED: {bad_imp} are declared comparable while the frozen "
+            f"gate names no incumbent term. A counterpart cannot be "
+            f"comparable for a gate that does not ask for one.")
+    divergent = assert_propositions_not_harmonised(doc_terms,
+                                                   dict(INCUMBENT_COMPARABLE))
+    return {"preregistration": PREREG_DOC, "preregistration_commit": PREREG_COMMIT,
+            "source_of_DECLARED_GATES": "the frozen section-3 gate table, read "
+                                        "from git at the recorded commit",
+            "source_of_INCUMBENT_COMPARABLE": "the hash-verified incumbent "
+                                              "artifact's own weight blocks",
+            "gate_carries_incumbent_term": doc_terms,
+            "incumbent_has_head": has,
+            "heads_where_they_DIVERGE": divergent,
+            "why_divergence_is_required": "the two encode different "
+                                          "propositions (gate names one vs "
+                                          "counterpart exists); harmonising "
+                                          "them would delete what RR2-1 "
+                                          "rests on",
+            "chain_terminates_at": "a USER-frozen document and a hash-bound "
+                                   "artifact, not at an editable constant"}
+
+
 def finalise_family(receipt: dict) -> dict:
     """Build, re-status and re-assemble the family, IN ORDER. RR2-1.
 
@@ -3602,6 +3941,14 @@ def assert_dry_run_family(receipt: dict) -> dict:
             "INSTANT it names. as_of precedes written_at by the fit's "
             "duration, and rule 8's as-of is the POPULATION READ instant; a "
             "bare timestamp leaves a reader to infer which one it is.")
+    fa = receipt.get("frozen_prereg_anchor") or {}
+    if not fa.get("chain_terminates_at") or not fa.get("gate_carries_incumbent_term"):
+        raise RuntimeError(
+            f"REFUSED: the artifact carries no evidence that the frozen-"
+            f"preregistration anchor RAN ({sorted(fa)}). Without it the "
+            f"coverage floor's expected set terminates at an editable "
+            f"constant (RR3-1), and a check not called is indistinguishable "
+            f"from one that passed.")
     ge = ((receipt.get("family") or {}).get("gate_evaluation")) or {}
     if not isinstance(ge.get("cells_checked"), int) or ge["cells_checked"] <= 0:
         raise RuntimeError(
@@ -4104,8 +4451,8 @@ def main() -> int:
                           "gap between them is fit and adjudication time, "
                           "not additional data.",
            "producing_code": _prov,
-           "preregistration": "ITER011_CONDITIONAL_VALUE_PREREGISTRATION.md",
-           "preregistration_commit": "3b71d3e",
+           "preregistration": PREREG_DOC,
+           "preregistration_commit": PREREG_COMMIT,
            "preregistration_status": "FROZEN by user ruling R-232",
            "standalone": {
                "is_in_identity_lattice": "phase2_iter011_run.py" in
@@ -4221,6 +4568,14 @@ def main() -> int:
              for p in out["populations"].values()), default=0), "window")
     assert_receipt_has_all_cells(out)
     # F-1: the declaration and the cells must AGREE, checked at the artifact.
+    # RR3-1: check the PREMISE where it is CONSUMED. The coverage floor below
+    # reads INCUMBENT_COMPARABLE, so the anchor runs in the emission chain and
+    # its evidence is emitted -- not only in the suite, where a reader of the
+    # artifact could not see it. In a dry run the synthetic fitdir supplies
+    # the incumbent, so the check exercises the same path without reading a
+    # real model artifact.
+    out["frozen_prereg_anchor"] = assert_constants_match_frozen_prereg(
+        fitdir=_incdir)
     out["incumbent_applicability_guard"] = \
         assert_incumbent_applicability_honoured(out)
     out["development_evidence"] = {
