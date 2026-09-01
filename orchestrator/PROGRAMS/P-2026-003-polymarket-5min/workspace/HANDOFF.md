@@ -162,13 +162,62 @@ layer's (rule 14).
 runs and passes 3/3 standalone. Cause not established; it fails in the SAFE
 direction (false red, never false green). Pre-existing, unrelated to these fixes.
 
+### 2026-09-01 ~05:40Z (coordinator) — THE ACCRUAL RULE, STATED ONCE
+
+USER: *"it looks a bit confusing, we can just make the rules simple and clean."*
+The confusion was that **FINISHED was implicit**. It is now explicit, and the
+whole rule lives in one named constant, `ACCRUAL_RULE`:
+
+> **A day accrues iff FINISHED (closed UTC day) AND AFTER (post freeze commit)
+> AND ADMISSIBLE (one ruled era) AND HEALTHY (quality bars).**
+
+Four conjuncts, four different questions, no redundancy. Any one false means
+the day does not count — and **not** that the day was bad: AFTER and
+ADMISSIBLE are properties of the clock and the collector, never of the feed.
+Every verdict now carries `day_closed` and the rule text beside the boolean.
+
+`split_verdict` **refuses** a missing `day_closed`, the same precedent as
+`era_admissible`: eligibility must not be obtainable by not asking.
+
+Reads cleanly on real days:
+
+| day | FINISHED | AFTER | ADMISSIBLE | HEALTHY | accrues |
+|---|---|---|---|---|---|
+| 09-01 | no | yes | yes | — | **no** |
+| 08-31 | yes | no | no | no | no |
+| 08-29 | yes | yes | no | yes | no |
+
+**Why FINISHED is not implied by HEALTHY**, which is the trap it closes:
+`complete_tape` measures against the windows elapsed SO FAR, so it passes
+mid-day. 09-01 read *eligible* at 4 h; twenty minutes later it read *unhealthy*
+because the in-flight 5-minute window made it 65 of 66. **Partial-day quality
+flaps pass/fail with where in the window you look** — judging accrual on it was
+never meaningful, and the nightly verdicts the just-OPENED day too, so at
+00:06Z it would have written eligible for a six-minute-old day.
+
+**Mutation-tested, and one survived first.** M4 (conjunct dropped) and M5
+(refusal disabled) died immediately. **M6 — `verify_day` hardcoding
+`day_closed=True` — SURVIVED**, because every `split_verdict` test supplies its
+own value: I had enforced the rule in the FUNCTION and left the CALL PATH
+open, the identical shape as the era literal. Added a path guard; M6 and M7
+(per-coin) now both die. 181 checks.
+
+**Known-flaky gate, pre-existing and unrelated to these changes.**
+`v4 behaviour (git-extracted)` fails **2 in 5 suite runs at 9/10**, and
+**0 in 28 standalone runs** — its checks carry wall-clock margins (a 0.4 s
+subscribe bound, real backoff sleeps) that miss under the load the suite's two
+mutation audits create. It fails in the SAFE direction (false red, never false
+green). Not fixed; recorded so a red there is not read as a code regression —
+and so it is not learned as a red to ignore.
+
 ### Immediate order
 
-0. ~~Rule B1~~ **DONE** — derived per day, 09-01 now accrues.
-   Rule the **day-closed conjunct** above before 00:06Z on 09-02.
-0b. Confirm the tier1:full lane actually clears 08-25 on the next timer run.
-   The fix is proven at unit level; end-to-end clearance is NOT yet observed,
-   and 08-26/08-27/08-30 carry the same prints behind it.
+0. ~~Rule B1~~ / ~~day-closed conjunct~~ **BOTH DONE.** The rule is one line in
+   `ACCRUAL_RULE` and is enforced at the function AND the call path.
+0b. Confirm the tier1:full lane actually clears 08-25. A rebuild under the new
+   `tier1_v4_r13` generation is RUNNING; end-to-end clearance is NOT yet
+   observed, and 08-26/08-27/08-30 carry the same prints behind it.
+0c. De-flake `v4 behaviour` — replace wall-clock margins with injected time.
 1. Preserve the running collector and close the first full v4.1 UTC day.
 2. Obtain an independent re-review of HEAD `1aaac18`: it claims RR1/RR3
    closure, but the latest filing reviewed its parent and did not release them.

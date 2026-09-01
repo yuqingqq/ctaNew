@@ -65,7 +65,21 @@ from live.pm_research.coverage_ledger import (
 REPO = Path(__file__).resolve().parents[2]
 PM = REPO / "data/pm_5min"
 DEFAULT_OUTPUT_ROOT = PM / "tier1"
-DISTILLER_VERSION = "tier1_v4_r12"
+#: r13 (2026-09-01): trade prices widened from the OPEN interval to the CLOSED
+#: one, so settlement-edge prints at exactly 0.0/1.0 are admitted and counted
+#: instead of killing the build. That is a NORMALISATION SEMANTICS change, so
+#: it must not be written into r12's address: the manifest binds
+#: `distiller_code_sha256`, and leaving the address fixed made every existing
+#: partition raise `distiller code mismatch` -- observed here, and it broke the
+#: lane at 08-24 (an already-built day) rather than at 08-25. Versioning the
+#: address is `_partition_dir`'s stated resolution: the amended generation is
+#: written alongside and the superseded one is simply kept.
+#: Consequence, stated so it is not discovered as a surprise: EVERY day
+#: rebuilds under r13, including 08-20..08-24 which were already built. Those
+#: five days are expected to be content-identical -- a 0.0/1.0 print would have
+#: crashed their build too, and none crashed -- but the guard is on CODE BYTES,
+#: not on content, and that is the correct thing for it to bind.
+DISTILLER_VERSION = "tier1_v4_r13"
 PRICE_SCALE = 1_000_000
 ROW_GROUP_SIZE = 65_536
 MAX_NS = (1 << 63) - 1

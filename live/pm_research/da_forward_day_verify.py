@@ -1015,13 +1015,30 @@ def day_era_admission(day_token: str, path: Path | None = None,
     }
 
 
+#: THE ACCRUAL RULE, in one place and in plain words. A day accrues when all
+#: FOUR are true, and each is a different question:
+#:
+#:   1. FINISHED    -- it is a closed UTC day
+#:   2. AFTER       -- it lies entirely after the freeze commit
+#:   3. ADMISSIBLE  -- it lies entirely inside ONE ruled-admissible era
+#:   4. HEALTHY     -- it passes the quality bars
+#:
+#: Nothing here is redundant and nothing else is required. Any of the four
+#: false means the day does not count -- and NOT that the day was bad: (2) and
+#: (3) are properties of the clock and the collector, never of the feed.
+ACCRUAL_RULE = ("a day accrues iff FINISHED (closed UTC day) AND AFTER (post "
+                "freeze commit) AND ADMISSIBLE (one ruled era) AND HEALTHY "
+                "(quality bars). Four conjuncts, four different questions.")
+
+
 def split_verdict(preds: list, regime: str = "count_bar_v1_frozen",
-                  era_admissible: bool | None = None) -> dict:
+                  era_admissible: bool | None = None,
+                  day_closed: bool | None = None) -> dict:
     """Separate DAY QUALITY (feed health) from RACE ACCRUAL (eligibility).
 
     CALLABLE, so the split can be driven directly rather than inferred from a
     composed boolean -- the lesson from all_pass being computed before the bars
-    were appended.
+    were appended. The rule it implements is `ACCRUAL_RULE` above.
     """
     gov = governing_predicates(preds, regime)
     quality = [x for x in gov if x["predicate"] != ACCRUAL_PREDICATE]
@@ -1035,17 +1052,30 @@ def split_verdict(preds: list, regime: str = "count_bar_v1_frozen",
         raise ValueError(
             "REFUSED: split_verdict needs an explicit era_admissible. "
             "Eligibility must not be obtainable by omitting the era question.")
+    # AND SO IS CLOSURE, for the same reason and by the same precedent.
+    # `complete_tape` compares against the windows elapsed SO FAR, so it passes
+    # mid-day -- which meant a four-hour-old day read eligible, and the nightly
+    # (which verdicts the just-OPENED day as well as the closed one) would have
+    # written eligible for a six-minute-old day. That was invisible while the
+    # stale-era pin was failing those days for an unrelated wrong reason: one
+    # wrong answer masking another.
+    if day_closed is not True and day_closed is not False:
+        raise ValueError(
+            "REFUSED: split_verdict needs an explicit day_closed. A day that "
+            "has not finished cannot have accrued, and eligibility must not "
+            "be obtainable by omitting the question.")
     return {
         "day_quality_pass": q_ok,
         "post_freeze_pass": a_ok,
         "era_admissible": era_admissible,
-        # THREE conjuncts: healthy, after the clock started, AND inside one
-        # admissible era. The third was missing and 08-30's ETH is what that
-        # looked like.
-        "race_accrual_eligible": q_ok and a_ok and era_admissible,
+        "day_closed": day_closed,
+        "race_accrual_eligible": q_ok and a_ok and era_admissible
+        and day_closed,
+        "rule": ACCRUAL_RULE,
         "why": "feed health and clock eligibility are separate questions; a "
                "healthy day BEFORE the freeze commit is a good day that does "
-               "not count, not a bad day",
+               "not count, not a bad day -- and an UNFINISHED day is not yet "
+               "a day at all",
     }
 
 
@@ -1508,7 +1538,8 @@ def verify_day(day_token: str, freeze_epoch: float,
             _gov_cp = governing_predicates(cp, _reg)
             # SAME era admission for every coin: a mixed-era day is mixed
             # for all of them, and a coin cannot pass its way out of it.
-            _csplit = split_verdict(cp, _reg, _era["race_admissible_by_era"])
+            _csplit = split_verdict(cp, _reg, _era["race_admissible_by_era"],
+                                    day_closed=now.timestamp() >= hi)
             per_coin[coin] = {
                 "predicates": cp,
                 "day_bar_v2": _cb,
@@ -1566,7 +1597,11 @@ def verify_day(day_token: str, freeze_epoch: float,
     _day_all_pass = compose_all_pass(
         preds, per_coin if gran == "per_coin" else {}, bars_v2, regime)
 
-    _split = split_verdict(preds, regime, _era["race_admissible_by_era"])
+    # CALENDAR closure, not the selector's -- the selector's `day_closed`
+    # depends on tape arriving, so a stalled collector would make a finished
+    # day look unfinished. The question here is only "has the UTC day ended".
+    _split = split_verdict(preds, regime, _era["race_admissible_by_era"],
+                           day_closed=now.timestamp() >= hi)
 
     return {
         "instrument": "da_forward_day_verify_v1",
@@ -1900,18 +1935,42 @@ def _selftests() -> int:
     _healthy_early = [{"predicate": "complete_tape", "pass": True},
                       {"predicate": "gap_rate_under_bar", "pass": True},
                       {"predicate": ACCRUAL_PREDICATE, "pass": False}]
-    _sv = split_verdict(_healthy_early, era_admissible=True)
+    _sv = split_verdict(_healthy_early, era_admissible=True, day_closed=True)
     ok(_sv["day_quality_pass"] is True and _sv["race_accrual_eligible"] is False,
        "a day STRADDLING the freeze is day-quality GOOD but does NOT accrue -- "
        "the epoch's whole job, and reporting one number for both would make a "
        "good-but-early day read as a bad day")
     _healthy_late = [dict(x, **({"pass": True} if x["predicate"] == ACCRUAL_PREDICATE else {}))
                      for x in _healthy_early]
-    ok(split_verdict(_healthy_late, era_admissible=True)["race_accrual_eligible"] is True,
+    ok(split_verdict(_healthy_late, era_admissible=True,
+                     day_closed=True)["race_accrual_eligible"] is True,
        "a healthy day ENTIRELY AFTER the freeze DOES accrue (positive control)")
     _sick_late = [{"predicate": "gap_rate_under_bar", "pass": False},
                   {"predicate": ACCRUAL_PREDICATE, "pass": True}]
-    ok(split_verdict(_sick_late, era_admissible=True)["race_accrual_eligible"] is False,
+    # ---- FINISHED is the fourth conjunct, and it is not implied by the others
+    # `complete_tape` measures against the windows elapsed SO FAR, so it PASSES
+    # mid-day. Without this, a four-hour-old day read eligible, and the nightly
+    # -- which verdicts the just-OPENED day as well as the closed one -- would
+    # have written eligible for a SIX-MINUTE-OLD day. KNOWN-BAD: identical
+    # inputs, only closure flipped.
+    ok(split_verdict(_healthy_late, era_admissible=True,
+                     day_closed=False)["race_accrual_eligible"] is False,
+       "an UNFINISHED day does NOT accrue, on inputs that accrue when closed "
+       "-- every quality bar passes and it is still not a day yet")
+    ok(split_verdict(_healthy_late, era_admissible=True,
+                     day_closed=False)["day_quality_pass"] is True,
+       "and its QUALITY verdict is untouched by that -- an unfinished day is "
+       "not a bad day, exactly as a pre-freeze day is not a bad day")
+    _nod = ""
+    try:
+        split_verdict(_healthy_late, era_admissible=True)
+    except ValueError as _e:
+        _nod = str(_e)
+    ok("needs an explicit day_closed" in _nod,
+       "and OMITTING closure REFUSES rather than defaulting -- absence of a "
+       "check is not a passed check, the same precedent as era_admissible")
+    ok(split_verdict(_sick_late, era_admissible=True,
+                     day_closed=True)["race_accrual_eligible"] is False,
        "and an UNHEALTHY day after the freeze does not accrue either -- "
        "accrual needs both halves")
 
@@ -2273,7 +2332,8 @@ def _selftests() -> int:
                        {"predicate": "complete_tape", "pass": True},
                        {"predicate": "gap_rate_under_bar", "pass": True}]
         _eth = split_verdict(_pass_preds, "count_bar_v1_frozen",
-                             _a30["race_admissible_by_era"])
+                             _a30["race_admissible_by_era"],
+                             day_closed=True)
         ok(_eth["day_quality_pass"] is True
            and _eth["race_accrual_eligible"] is False,
            "AND THE 08-30 ETH SHAPE ITSELF: a coin that PASSES every quality "
@@ -2301,7 +2361,7 @@ def _selftests() -> int:
            "POSITIVE CONTROL: a day fully inside the ADMISSIBLE v5 era is "
            "admissible -- the guard is not simply refusing everything")
         ok(split_verdict(_pass_preds, "count_bar_v1_frozen",
-                         _a901["race_admissible_by_era"]
+                         _a901["race_admissible_by_era"], day_closed=True
                          )["race_accrual_eligible"] is True,
            "and a quality-passing coin on that day IS eligible, so the guard "
            "gates on era rather than replacing the quality question")
@@ -2366,6 +2426,17 @@ def _selftests() -> int:
            "(B1) and its windows_gap_affected reads the day's OWN eras, not "
            "the literal -- that literal is why era_covered_windows reported 0 "
            "on days holding 288 windows")
+        # THE FOURTH CONJUNCT IS ONLY AS GOOD AS WHAT verify_day SUPPLIES.
+        # Mutation found this: hardcoding `day_closed=True` at the call site
+        # left every split_verdict test green, because they all pass their own
+        # value. Enforcing a rule inside the function while the caller feeds it
+        # a constant is a FUNCTION fixed and a PATH left open -- the same shape
+        # as the era literal two checks above.
+        ok(_vd.count("day_closed=now.timestamp() >= hi") == 2
+           and "day_closed=True" not in _vd,
+           "(RULE) verify_day supplies REAL calendar closure to both the "
+           "whole-day and the per-coin split, and never a constant -- "
+           "otherwise an unfinished day accrues no matter what the rule says")
 
         _a831 = day_era_admission("20260831", _adm)
         ok(_a831["era_pure"] is False
@@ -2387,7 +2458,8 @@ def _selftests() -> int:
            "default and silence is not a ruling")
         _none = ""
         try:
-            split_verdict(_pass_preds, "count_bar_v1_frozen", None)
+            split_verdict(_pass_preds, "count_bar_v1_frozen", None,
+                          day_closed=True)
         except ValueError as e:
             _none = str(e)
         ok("needs an explicit era_admissible" in _none,
