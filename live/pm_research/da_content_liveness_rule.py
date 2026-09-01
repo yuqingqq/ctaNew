@@ -54,7 +54,9 @@ WINDOWS_PER_DAY = 288
 #: THE FREEZE SWITCH. One constant, so ratifying the rule is a one-line USER
 #: act with a commit behind it -- and so nothing can start governing by
 #: accident. While this is False every consumer must read `governs: false`.
-FROZEN_BY_USER = False
+FROZEN_BY_USER = True  # USER ruling 2026-09-01 ("Yea proceed" on the coordinator's
+#: recommended course, R-386); frozen by coordinator commit on that authority.
+#: EFFECTIVE_FROM_DAY unchanged — first governed day is 2026-09-02.
 
 #: Prospective from here. NOT 09-01: the rule is drafted while 09-01 is in
 #: flight, so applying it to that day is choosing after seeing (rule 11).
@@ -386,11 +388,15 @@ def selftest() -> int:
        "and the first governed day — it neither informs the bars nor is "
        "judged by them")
 
-    # ---- governance is OFF, in both conditions ----------------------------
-    ok(governs("20260902") is False and governs("20260901") is False,
-       "GOVERNANCE: nothing governs while FROZEN_BY_USER is False")
+    # ---- governance follows the switch, in both conditions ----------------
+    # (Originally asserted the DRAFT state, FROZEN_BY_USER is False. The USER
+    # froze the rule 2026-09-01 (R-386), so the check now tests the INVARIANT
+    # on both sides of the switch instead of pinning one side as the state.)
     _saved = globals()["FROZEN_BY_USER"]
     try:
+        globals()["FROZEN_BY_USER"] = False
+        ok(governs("20260902") is False and governs("20260901") is False,
+           "GOVERNANCE: nothing governs while FROZEN_BY_USER is False")
         globals()["FROZEN_BY_USER"] = True
         ok(governs("20260902") is True and governs("20260901") is False
            and governs("20260831") is False,
@@ -400,8 +406,10 @@ def selftest() -> int:
            "switch, and one that reaches backwards would void rule 11")
     finally:
         globals()["FROZEN_BY_USER"] = _saved
-    ok(FROZEN_BY_USER is False,
-       "GOVERNANCE: the freeze flag is restored to False after the control")
+    ok(FROZEN_BY_USER is _saved,
+       "GOVERNANCE: the freeze flag is restored to its committed state after "
+       "the control (True since the R-386 USER freeze; the control never "
+       "leaks its toggle)")
 
     with tempfile.TemporaryDirectory() as td:
         root = Path(td) / "raw"
@@ -472,9 +480,14 @@ def selftest() -> int:
 
         # REFUSALS ARE STATUSES (rule 4), and neither is a pass.
         r_absent = measure_day("20991231", gaps={}, raw_root=root)
+        # governs=False here was a DRAFT-state pin (the fixture day is past
+        # EFFECTIVE_FROM_DAY, so under the R-386 freeze it truthfully governs).
+        # The invariant is the STATUS plus an honest governs field: an
+        # UNRESOLVED status under a governing rule is a refusal, never a pass.
         ok(r_absent["status"] == "CONTENT_LIVENESS_UNRESOLVED"
-           and r_absent.get("governs") is False,
-           "KNOWN-BAD: an ABSENT day is UNRESOLVED, never CONTENT_LIVE")
+           and r_absent.get("governs") == governs("20991231"),
+           "KNOWN-BAD: an ABSENT day is UNRESOLVED, never CONTENT_LIVE — and "
+           "its governs field reports the switch honestly")
         build("20260912", {i: 5000 for i in range(5)})
         r_few = measure_day("20260912", gaps={}, raw_root=root)
         ok(r_few["status"] == "CONTENT_LIVENESS_UNJUDGEABLE"

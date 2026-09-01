@@ -127,8 +127,13 @@ checkable requirements, not style.
    complete days: point estimate, no interval, say so. Every quoted population
    carries its n AND as-of — the tape grows during measurement.
 9. **A baseline must remove the tautology.** If the target is derived from an
-   input (PM binaries settle on a Binance-derived price), report skill only
-   incremental to that input; skill vs base rate is meaningless.
+   input, report skill only incremental to that input; skill vs base rate is
+   meaningless. (P-2026-003's PM binaries settle on **Chainlink**, never
+   Binance — verified in `data/pm_5min/markets.jsonl`. The exact settlement
+   statistic is contested and no form is asserted here; see R-253 and
+   Q-DA-142/146. Rule 9 binds that program through a different door: the PM
+   book — `Identity` — already prices the event, so skill there is reported
+   incremental to `Identity`, not to a base rate.)
 10. **Compute predicates, never print conclusions.** A hardcoded verdict string
     beside a table has contradicted the table three times. If a number is
     claimed ("2.4x", "excludes zero", "monotone"), the code must evaluate it.
@@ -184,6 +189,16 @@ completed step update that program's `STATUS.yml` (task statuses + flags) and
 `workspace/HANDOFF.md` (done / in-progress / next / watch-out-for)**. State
 lives there, not in conversation history — write it before context runs long,
 not after.
+
+**Exception — P-2026-003 is multi-seat and its state files have ONE writer.**
+Read `orchestrator/PROGRAMS/P-2026-003-polymarket-5min/workspace/SEAT_PROTOCOL.md`
+before writing anything there, and land on that program's register
+(`workspace/COORDINATION.md`) first; on any conflict, the register is the
+authority. In that program `STATUS.yml` and `workspace/HANDOFF.md` are written
+by the **MEM seat only**. Every other seat files its facts into
+`COORDINATION.md` — R-entries and the Q-filing table — and lets MEM sweep them
+into the state files. Two seats editing one state file is a collision, not
+redundancy. The paragraph above stays in force for single-seat programs.
 
 ## Where to read first
 
