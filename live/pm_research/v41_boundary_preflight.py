@@ -226,14 +226,44 @@ def provenance_for(boundary_utc: str) -> dict:
             p_row = json.loads(ln)
         except ValueError:
             continue
-        if p_row.get("supersedes_boundary_utc") == boundary_utc \
-                and p_row.get("collector_commit") \
-                and p_row.get("collector_sha256"):
-            return {"status": "SUPERSEDED", "boundary_utc": boundary_utc,
-                    "collector_commit": p_row["collector_commit"],
-                    "collector_sha256": p_row["collector_sha256"],
-                    "why": "the transition row predates inline provenance; "
-                           "resolved from the provenance ledger"}
+        if p_row.get("supersedes_boundary_utc") != boundary_utc:
+            continue
+        # IDENTITY-BOUND. The first version matched the boundary and merely
+        # NON-EMPTY commit/sha fields, so a sidecar naming the wrong era, the
+        # wrong pid, the wrong start instant and syntactically invalid hashes
+        # was returned as SUPERSEDED. A provenance record that does not have
+        # to match the row it supersedes can assert anything about it -- which
+        # is worse than no record, because it reads as resolved.
+        _pc = p_row.get("collector_commit")
+        _ps = p_row.get("collector_sha256")
+        why = None
+        if p_row.get("collector_schema_version") != \
+                row.get("collector_schema_version"):
+            why = (f"names era {p_row.get('collector_schema_version')!r}, "
+                   f"not the row's {row.get('collector_schema_version')!r}")
+        elif p_row.get("pid") != row.get("pid"):
+            why = (f"names pid {p_row.get('pid')!r}, not the row's "
+                   f"{row.get('pid')!r}")
+        elif p_row.get("collector_start_recv_ns") != \
+                row.get("collector_start_recv_ns"):
+            why = "names a different collector_start_recv_ns than the row"
+        elif not (isinstance(_ps, str) and len(_ps) == 64
+                  and all(c in "0123456789abcdef" for c in _ps)):
+            why = f"collector_sha256 {str(_ps)[:24]!r} is not a sha256 hex"
+        elif not (isinstance(_pc, str) and 7 <= len(_pc) <= 40
+                  and all(c in "0123456789abcdef" for c in _pc)):
+            why = f"collector_commit {str(_pc)[:24]!r} is not a git object id"
+        if why:
+            return {"status": "PROVENANCE_MISMATCH",
+                    "boundary_utc": boundary_utc, "why": why,
+                    "note": "a provenance record must be bound to the row it "
+                            "supersedes; an unbound one is worse than none, "
+                            "because it reads as resolved"}
+        return {"status": "SUPERSEDED", "boundary_utc": boundary_utc,
+                "collector_commit": _pc, "collector_sha256": _ps,
+                "why": "the transition row predates inline provenance; "
+                       "resolved from a record bound to its era, pid and "
+                       "start instant"}
     return {"status": "UNRESOLVED", "boundary_utc": boundary_utc,
             "why": "row carries no code identity and the provenance ledger "
                    "has no matching record"}
@@ -772,14 +802,35 @@ def make_abort_row(obs: dict, v4_start: dict | None,
     """Record a failed attempt only when evidence proves v4.1 never ran."""
     utc, _ = require_ruled_instant()
     _check_restored_v4(obs, v4_start, stage)
-    if target_starts:
-        raise Refused(f"the gap ledger carries {len(target_starts)} post-"
-                      f"boundary {TARGET_ERA} collector_start row(s) — v4.1 "
-                      f"RAN, so an abort would be false; use recovery")
+    # DEAD END, closed. This refused on ANY post-boundary target start while
+    # make_recovery_bundle accepts only a start inside [T, T+120s]. Executed:
+    # a start at T+150s was refused by BOTH -- recovery for being outside the
+    # window, abort for the start existing at all -- leaving an operator with
+    # an append-only ledger, a v4.1 process that demonstrably ran, and no
+    # command able to record either fact. Each refusal was correct alone.
+    #
+    # The narrower true statement: an abort is FALSE only if the RULED
+    # transition happened, i.e. a start inside the ruled window. A start
+    # outside it means the ruled boundary was MISSED -- some later process
+    # ran and was reverted -- which an abort records correctly, provided the
+    # late starts are carried as evidence rather than dropped (rule 4).
+    _ep_w = _epoch(utc)
+    _in_window = [r for r in target_starts
+                  if type(r.get("recv_ns")) is int
+                  and _ep_w * 10**9 <= r["recv_ns"]
+                  <= (_ep_w + POST_START_WINDOW_S) * 10**9]
+    _out_window = [r for r in target_starts if r not in _in_window]
+    if _in_window:
+        raise Refused(f"the gap ledger carries {len(_in_window)} "
+                      f"{TARGET_ERA} collector_start row(s) INSIDE the ruled "
+                      f"window — the ruled transition RAN, so an abort would "
+                      f"be false; use recovery")
     current, open_target = era_state(obs["era_rows"])
     if open_target is not None or current != FROM_ERA:
         raise Refused(f"era state is current={current!r}, open="
                       f"{open_target!r}; an abort requires unchanged {FROM_ERA}")
+    _late_evidence = [{"pid": r.get("pid"), "recv_ns": r.get("recv_ns")}
+                      for r in _out_window]
     prior = [r for r in obs["era_rows"] if r.get("aborted") is True
              and r.get("collector_schema_version") == TARGET_ERA
              and r.get("boundary_utc") == utc and r.get("stage") == stage]
@@ -791,8 +842,19 @@ def make_abort_row(obs: dict, v4_start: dict | None,
            "aborted": True, "boundary_utc": utc, "stage": stage,
            "stamp_written_ns": time.time_ns(),
            "stamp_order": ("PRE-STAMP abort: a fresh post-boundary v4 "
-                           "collector_start proves restoration and no v4.1 "
-                           "collector_start exists")}
+                           "collector_start proves restoration and no "
+                           "in-window v4.1 collector_start exists")}
+    if _late_evidence:
+        # Reported, never dropped. A late start means the RULED transition did
+        # not happen AND some later process ran -- both facts belong in the
+        # receipt, and the second is why this row is not simply "nothing
+        # happened".
+        row["late_target_starts"] = _late_evidence
+        row["late_start_note"] = (
+            f"{len(_late_evidence)} {TARGET_ERA} collector_start row(s) exist "
+            f"OUTSIDE the ruled [T, T+{POST_START_WINDOW_S}s] window. The "
+            f"ruled transition was MISSED; a later process ran and was "
+            f"reverted. Its span is NOT stamped as this boundary's era.")
     era_state(list(obs["era_rows"]) + [row])
     return row
 
@@ -1670,6 +1732,58 @@ def selftest() -> int:
     ok(provenance_for("2099-01-01T00:00:00Z")["status"] == "NO_SUCH_TRANSITION",
        "V41-F5: an unknown boundary returns a STATUS, not a silent None — "
        "absent and unresolvable are different answers (rule 4)")
+
+    # ---- DEAD END (High): a v4.1 start AFTER the ruled window was refused
+    # by recovery (outside [T,T+120s]) AND by abort (a target start exists),
+    # leaving no command able to record either fact on an append-only ledger.
+    _LATE = {"recv_ns": (bep + 150) * 10**9, "pid": 333,
+             "collector_version": TARGET_ERA, "event": "collector_start"}
+    _INW = {"recv_ns": (bep + 5) * 10**9, "pid": 222,
+            "collector_version": TARGET_ERA, "event": "collector_start"}
+    _ab = make_abort_row(_RB_OBS, _RB_START, [_LATE], "restart_failed")
+    ok(_ab.get("aborted") is True
+       and [x["pid"] for x in _ab.get("late_target_starts", [])] == [333],
+       "DEAD END CLOSED: a v4.1 start at T+150s is now recordable — abort "
+       "accepts it AND carries the late start as evidence. Both refusals "
+       "were individually correct and together left an operator with a "
+       "process that demonstrably ran and no way to record it")
+    refuses(lambda: make_abort_row(_RB_OBS, _RB_START, [_INW],
+                                   "restart_failed"),
+            "INSIDE the ruled window",
+            "and the case where an abort would be FALSE still refuses — a "
+            "start INSIDE the window means the ruled transition ran, so "
+            "narrowing the guard did not weaken it")
+    refuses(lambda: make_recovery_bundle(_RB_OBS, 333, _LATE, _RB_START,
+                                         "counters_refused"),
+            "outside the ruled",
+            "recovery still refuses the late start — it reconstructs the "
+            "RULED era, and a process that started 150s late did not serve it")
+
+    # ---- provenance must be IDENTITY-BOUND, not merely boundary-matched
+    import tempfile as _tf3
+    _bad = {"event": "transition_provenance",
+            "supersedes_boundary_utc": "2026-08-31T22:00:00Z",
+            "collector_schema_version": "clob_v9", "pid": 1,
+            "collector_start_recv_ns": 1,
+            "collector_commit": "not-a-commit", "collector_sha256": "zzz"}
+    for _mut, _lbl in (({}, "wrong era, pid, start AND invalid hashes"),
+                       ({"collector_schema_version": TARGET_ERA},
+                        "wrong pid"),):
+        with _tf3.TemporaryDirectory() as _td3:
+            _f3 = Path(_td3) / "p.jsonl"
+            _f3.write_text(json.dumps({**_bad, **_mut}) + "\n")
+            _op = globals()["PROVENANCE_LEDGER"]
+            globals()["PROVENANCE_LEDGER"] = _f3
+            try:
+                _res = provenance_for("2026-08-31T22:00:00Z")
+            finally:
+                globals()["PROVENANCE_LEDGER"] = _op
+        ok(_res["status"] == "PROVENANCE_MISMATCH",
+           f"KNOWN-BAD: a provenance sidecar with {_lbl} is REPORTED AS "
+           f"MISMATCH, not SUPERSEDED. It used to match on the boundary and "
+           f"merely NON-EMPTY fields, so an unbound record asserted anything "
+           f"about the row it claimed to supersede — worse than none, "
+           f"because it reads as resolved")
 
     _sc2 = globals()["CAND_COMMIT"]
     globals()["CAND_COMMIT"] = "definitely-not-a-commit"

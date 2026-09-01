@@ -1,6 +1,8 @@
---- live/pm_research/collect_pm.py	2026-09-01 02:22:52.407165758 +0000
-+++ /tmp/claude-1001/-home-yuqing-ctaNew/c15cb459-fb27-4ea2-a613-58e6a633b127/scratchpad/f3/collect_pm.py	2026-09-01 02:29:41.539663590 +0000
-@@ -181,6 +181,29 @@
+diff --git a/live/pm_research/collect_pm.py b/live/pm_research/collect_pm.py
+index be51023..679dac1 100644
+--- a/live/pm_research/collect_pm.py
++++ b/live/pm_research/collect_pm.py
+@@ -181,6 +181,29 @@ def clob_market(condition_id: str):
          return json.load(r)
  
  
@@ -30,7 +32,7 @@
  def jl_append(path: Path, obj: dict) -> None:
      path.parent.mkdir(parents=True, exist_ok=True)
      with open(path, "a") as f:
-@@ -598,6 +621,8 @@
+@@ -598,6 +621,8 @@ class PMCollector:
              self.counts["writer_queue_highwater"] = max(
                  self.counts["writer_queue_highwater"], write_q.qsize())
  
@@ -39,7 +41,7 @@
          async def receive(ws, subscription_ready: asyncio.Event | None = None,
                            pong_received: asyncio.Event | None = None) -> None:
              nonlocal last_recv_ns, open_gap, qmax, ever_paused
-@@ -630,6 +655,8 @@
+@@ -630,6 +655,8 @@ class PMCollector:
                      if subscription_ready is not None:
                          subscription_ready.set()
                  recv_ns = time.time_ns()
@@ -48,7 +50,7 @@
                  if open_gap is not None:
                      self._audit({
                          "event": "gap_closed", "slug": slug, "coin": coin,
-@@ -683,6 +710,16 @@
+@@ -683,6 +710,16 @@ class PMCollector:
          try:
              while not self.stop and time.time() < stop_at:
                  attempt_msgs = self.msg_by_coin.get(coin, 0)
@@ -65,7 +67,26 @@
                  try:
                      # max_queue: the default (32) makes the server drop us with
                      # 1013 "slow consumer" on hot markets — observed repeatedly on
-@@ -751,24 +788,9 @@
+@@ -721,8 +758,16 @@ class PMCollector:
+                     cause = ws_cause(ex)
+                     self.counts["retries"] += 1
+                     self.retry_by_coin[coin] += 1
+-                    if self.msg_by_coin.get(coin, 0) > attempt_msgs:
+-                        consec_fail = 1        # that connection worked, then died
++                    # consec_fail drives the reconnect BACKOFF, and it read
++                    # the COIN-GLOBAL counter: a healthy sibling socket's
++                    # traffic made a never-delivering connection look like one
++                    # that "worked, then died", resetting the backoff to 1.
++                    # So the coin most likely to have a sibling -- the busiest
++                    # one -- was the least likely to back off correctly. Same
++                    # defect as conn_msgs, in the field that decides RETRY
++                    # PACING rather than only diagnosis.
++                    if conn["msgs"] > 0:
++                        consec_fail = 1        # THIS connection worked, then died
+                     else:
+                         consec_fail += 1       # never delivered a message
+                     if cause == "SLOW_CONSUMER_1013":
+@@ -751,24 +796,9 @@ class PMCollector:
                          # died" from "it never delivered anything" -- the
                          # difference between a mid-flow kill and a failed
                          # subscription, which have opposite fixes.
@@ -93,7 +114,7 @@
                          "keepalive": connect_keepalive_kwargs(
                              self.heartbeat_mode),
                          # clob_v3_1: were WE the slow consumer, or the venue?
-@@ -1086,6 +1108,23 @@
+@@ -1086,6 +1116,23 @@ def selftest() -> int:
           "silence from a dead writer and silence from a perfect one are the "
           "same bytes",
           _health_append_probe()[1] == 1),
