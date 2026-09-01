@@ -453,3 +453,30 @@ Join rule as in batch 1.
   SUMMARY MAY SAY THE CANONICAL NULL WAS WRONG. Round 3 is FIRED at a63d717 with
   the O1-adverse condition LIVE AGAIN before tonight's arming.
 ```
+
+## Batch 10 — archived 2026-09-01T13:53Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-3 sweep of R-374..R-381. Join rule as in batch 1.
+
+```yaml
+
+  2026-08-28T15:19Z (MEM): R-289 -- MY DISCLOSURE CAUGHT A SECOND VACUUM, AND
+  IT WAS IN THE REGISTER. The coordinator's R-288 "independent confirmation" of
+  the committed-null dependence check was ITSELF vacuous: its parse matched all
+  12 cells but guessed the observed field name, so every cell defaulted to 0 and
+  the filter never fired -- a FIELD-LEVEL vacuum wearing the shape of a
+  confirmation, recorded as independent evidence. Mine, an hour earlier, was a
+  CELL-LEVEL vacuum (parse matched zero cells) caught by implausibility. SAME
+  FOUR-LINE CHECK, TWO SEATS, ONE HOUR, TWO VACUUMS, EACH VACUOUS A DIFFERENT
+  WAY -- and neither was visible from inside its own run. THE CONCLUSION WAS
+  NEVER IN DANGER: BE's original check was real, and the ledger now reads BE +
+  MEM's asserted check + the coordinator's CORRECTED check, agreeing exactly.
+  What was wrong was the ACCOUNTING of the evidence, which my own flag had
+  overstated as "checked three times independently" -- corrected in-band here,
+  original line kept. THE RULE THE PAIR DEMONSTRATES: a verification claim
+  entering the register must assert that its parse ACTUALLY READ the population
+  AND the fields it filters on; "found nothing" from a reader that touched
+  nothing is the empty-set trap in the checker's chair. Note what the matched
+  pair proves that one instance could not: A COUNT ASSERTION ALONE WOULD HAVE
+  CAUGHT MINE AND MISSED THE COORDINATOR'S.
+```

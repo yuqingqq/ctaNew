@@ -1,8 +1,9 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-01T13:05:51Z — iteration 011 produced its first real 24-cell
-family (the 09:43Z "no result artifact" line is superseded in band below), and
-the seats are running in parallel under R-373.
+Updated: 2026-09-01T13:53:18Z — R-374..R-381 swept in: the reviewer seat is a
+Claude session, the resource rule is a mechanism, coordination is batched in
+both directions, and the DE seat is staffed. The 011 re-run was killed mid-fit
+rather than emit under a superseded predicate.
 
 ## READ FIRST — current project handoff
 
@@ -30,6 +31,14 @@ stateful cancel x skew TODO is a subordinate implementation worksheet; its
   implementation of R-306's already-ruled conjunction. The 09:43Z statement that
   the attempt "wrote no result artifact" described the stopped 09:34Z attempt
   and is superseded by the 12:56Z entry below; it stays as provenance.
+  **As of 13:53Z the two blockers are implemented and the artifact is
+  mid-rebuild.** `20d3c3a` wired Q4's incumbent and implemented R-306 for Q3;
+  `4438961` folded in Q-DA-197's F2/F1/F5/F6 and **killed the re-run mid-fit
+  rather than let it emit** under the superseded survivor predicate. So the
+  declared path still holds `0b1f6bb`'s artifact, `__as_verified_by_Q-DA-197`
+  preserves it byte-identically, a `__readjudicated_v2` exists from the
+  intermediate state, and **no artifact under the closed predicate exists yet —
+  Q4 still has no economic result.**
 - Typed fair-price Identity is built; the challenger protocol is not
   freeze-ready and no challenger has been scored.
 - `QR_SKEW_ONLY` semantics are user-frozen. Seven-arm work remains contracts,
@@ -37,17 +46,29 @@ stateful cancel x skew TODO is a subordinate implementation worksheet; its
   seven-arm replay, lifecycle economics and the integrated candidate freeze
   remain open.
 
-### Seats in parallel (as of 2026-09-01T13:05Z, R-373)
+### Seats (as of 2026-09-01T13:53Z; R-373 reset, R-379 DE, R-381 no-idle)
 
-All four seat contexts were cleared at ~12:52Z on USER order and re-loaded from
-files; anything assumed from pre-12:52Z conversation is void. Running now:
+All seat contexts were cleared at ~12:52Z on USER order and re-loaded from
+files; anything assumed from pre-12:52Z conversation is void. **Six seats now,
+and two of them are new today.**
 
-| seat | working on |
-|---|---|
-| **BE** | the two 011 adjudication blockers — Q4 incumbent loading, then R-306's conjunction for Q3 (no refit; the per-coin evidence is preserved) |
-| **DA** | independent verification of the 011 artifact; item 0h (windows-affected disclosure in closing receipts); 00:06Z closed-day verifier readiness |
-| **coordinator** | 0b and 0d both CLOSED at 13:02Z (R-374, `e9f4834`); the item-2 re-review is held deliberately until BE's Q4/Q3 batch commits, so one Codex round covers both at a single pinned tip (rule 5) |
-| **MEM** | this true-up; register sweep R-291..R-373 into the memory docs; TODO tick-with-citation |
+| seat | round | working on |
+|---|---|---|
+| **BE** (pm-be) | **open** | Q4's incumbent and Q3's ruling are implemented (`20d3c3a`); the batch now also carries Q-DA-197's F2/F1/F5/F6 (`4438961`). Fits re-running in-slice; no artifact under the closed predicate exists yet |
+| **DA** (pm-da) | **re-opened** | round 1 closed 3/3 (`c473b0e`). Round 2: the content-liveness rule as DRAFT-FOR-USER-FREEZE, the breadth-statistic reconciliation, and the real 09-01 verdict after 00:06Z — a HEALTHY fail is a recorded result, not a problem to fix |
+| **DE** (pm-de) | **open, first day** | staffed by the USER 2026-09-01 (R-379). Owns `harmful_stateful_policy.py`, `de_actionspace.py`, `de_constraints.py` per R-165's parking clause. First batch: real-data seven-arm parity, the EV-Replay registry-closure draft, the Phase-4 grid protocol as DRAFT-FOR-USER-FREEZE |
+| **Reviewer** (pm-codex) | **prep only** | now a CLAUDE session (R-375). Files nothing and holds nothing this round; baselining instruments at HEAD so round diffs are attributable. Its round opens on BE's pinned tip |
+| **coordinator** (pm-co) | — | 0b and 0d closed at 13:02Z (R-374); the item-2 re-review still held until BE's batch commits, so one round covers `1aaac18`'s claims and today's batch at a single tip (rule 5) |
+| **MEM** (pm-memory) | closing | this sweep of R-374..R-381 |
+
+**BOTH observations below are now CLOSED; they stay as provenance.** The 0d
+mirror gap closed at `8b47dff` — `pm-evaluation-pipeline` and
+`pm-measurement-pipeline` are both byte-identical to their repo copies, verified
+by `diff` at 13:53Z, so the guard is reproducible from git and not merely live.
+The `n_actions` mislabel was independently found by DA as **Q-DA-197 F1** (the
+cell carries the arrival n in 12 of 24 cells — a 22× overstatement of the
+population behind the statistic) and rides BE's open batch; it was a disclosure
+defect, not a lost measurement, since the head-level n was preserved all along.
 
 **A SECOND observation, on 0d, verified at the two files and filed for the
 coordinator.** R-374's closure is true of the LIVE unit — `systemctl show` reads
@@ -94,6 +115,102 @@ the register, so there was nothing to tick there.
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-01 ~13:53Z (MEM) — R-374..R-381: THE REVIEWER IS A CLAUDE SESSION,
+### THE RESOURCE RULE IS A MECHANISM, AND THE 011 RE-RUN WAS KILLED ON PURPOSE
+
+Round-3 sweep. Each claim verified at its artifact by execution — the register
+entries, the commits, the units, the registry and the JSON — never from the
+dispatch that ordered it.
+
+**The reviewer seat changed hands, and what it cost is recorded** (R-375,
+`8b47dff`). Codex quota exhausted; the USER restarted `pm-codex` as a **Claude**
+session. Surface unchanged: filings under `workspace/reviews/`, holds and an
+explicit HOLD RELEASED, never fixes code, never touches state files. **The
+independence profile did not survive.** The reviewer is now the same model
+family as every seat it reviews — R-348's correlated-blind-spot finding turned
+on the review seat itself, and no prompt-side "be adversarial" removes it. The
+mitigation is **ground, not prompt**: committed artifacts at the pinned tip
+only, execution over reading, and agreement treated as consistency rather than
+confirmation. Filings go `REVIEW_*` from here; the `CODEX_*` files are the
+Codex-era record and are never edited, because the KIND of document has to stay
+identifiable.
+
+**The resource rule stopped being a discipline** (R-376, `8b47dff`). Verified
+live: `pm-research-guard.timer` on a 60-second cadence, last run 19 s before
+this sweep, and the guard runs **outside** `research.slice` on purpose — a
+memory-saturated slice must not stall its own guard.
+
+| class | rule | verified |
+|---|---|---|
+| `IN_SLICE` | report only; the kernel enforces | `classify()` at `pm_research_guard.py:95` |
+| `COLLECTOR` | **never touched, in either home** | matches `pm-collector*` **and** `collectors.slice` (`:100`) — the exemption was corrected by measurement after the first draft missed the P-2026-002 collectors |
+| `FLAG` | ≥ 2G outside the slice → alert | `FLAG_GB_DEFAULT = 2.0` |
+| `KILL` | ≥ 8G outside the slice → SIGTERM→SIGKILL | `KILL_GB_DEFAULT = 8.0`; 8G is measured territory — Q-BE-111 polled 8.8G one to two minutes before the box died |
+
+CPU is deliberately not killed on: weights already price contention, and on a
+swapless box memory is the failure that destroys. **`pm-measurement-pipeline`
+was the SECOND unguarded 16G unit**, found by looking for the class rather than
+the instance; both pipelines now read `Slice=research.slice` **and their repo
+mirrors are byte-identical to the installed units**, which closes my round-2
+finding that the guard was live but not reproducible from git. Residual, named
+in the entry itself: the guard cannot see a heavy job in its first ~60 s, and
+FLAG depends on `pm-alert@` being read — it bounds damage; the launch pattern
+is still the rule.
+
+**Coordination is batched in both directions.** R-377 (USER) makes the review
+cycle batch-complete: one filing per round, all fixes landed and pushed
+together, the reviewer notified exactly once at a pinned tip. R-378 (USER)
+applies the same law to the coordinator's own dispatch loop as `SEAT_PROTOCOL`
+rule 18 — a seat gets its complete batch in one dispatch and nothing further
+while it is in flight, stop-the-line excepted. R-381 (USER) adds the clause that
+**batching is about completeness, not idleness**: a closed round is followed
+promptly by the next complete batch, and a seat waiting between rounds is a
+coordination miss rather than a discipline.
+
+**The DE seat is staffed** (R-379, `d929031`), executing R-165's parking clause:
+`harmful_stateful_policy.py`, `de_actionspace.py` and `de_constraints.py`
+transfer to DE. **The module audit, verified by me at
+`live/pm_research/contracts/contracts.yaml` (version 24, 28 modules):**
+
+| module | registry state | verdict |
+|---|---|---|
+| **EV-Replay** | exact-case `Replay`: **zero hits** — no module, no type. The lowercase word appears twice, in prose bodies only (`:90`, `:210`) | **the one gap on the critical path.** A grep hit on vocabulary is not a reference (rule 16) |
+| DE-ActionSpace | TYPE at `:1201`, referenced at `:386`, code exists; module list registers only DE-Constraints / DE-Actuator / DE-Allocator | registry inconsistency, reconciled in DE's draft |
+| OP-LatencyBudget | zero hits | deferred-with-trigger — to be NAMED, not silently absent |
+
+**On the 011 lane, the artifact state is not what a reader would assume.** DA's
+Q-DA-197 ran an independent reader (`da_iter011_contract_verify.py`, no shared
+code with `phase2_iter011*`, R-235). **I reproduced its verdict by running it:**
+`14/23 contract checks hold; 9 FAIL` on `24 cells; 296 typed field reads`. The
+nine are disclosure and predicate defects, not a moved number — F1 the cell
+carries the arrival n in 12 of 24 cells (22× overstatement); **F2 the survivor
+predicate was Holm ALONE**, so `NO_INCUMBENT_COUNTERPART` cells published as
+surviving; F3 the declaration's handling never reaches Q3; F4 rule 10's fourth
+instance, found independently by BE and DA in the same hours (which is what
+R-235 exists for); F5 `fit_code_ref` null; F6 no `as_of`.
+
+**BE killed the re-run mid-fit rather than let it emit** (`4438961`), because F2
+changes a *published verdict field* and the artifact should be **born** under
+the closed predicate instead of superseded afterwards. State on disk at 13:53Z:
+
+| file | bytes | note |
+|---|---|---|
+| `…__coin_btc.json` | 96,707 | `0b1f6bb`'s original, untouched — the killed run never reached its write |
+| `…__as_verified_by_Q-DA-197.json` | 96,707 | byte-identical (sha256 `7d8437e6523ed32d` both) |
+| `…__readjudicated_v2.json` | 101,789 | the intermediate state DA ran its supplementary check on |
+
+`iter011-fit-batch.service` is active/running. **No artifact under the closed
+predicate exists yet, and Q4 still has no economic result.**
+
+**DA's other two shipped** (`c473b0e`): the 0h breadth disclosure as
+`REPORTED_NOT_GOVERNING` carrying both denominators with a refusal behind it —
+its own fixture-mirror mutant survived first and was killed — and tonight's
+00:06Z path proven **by execution** on closed 08-29, reproducing the HANDOFF row
+by a separate run.
+
+**Nothing about the forward race moved today.** 09-01 is still the first
+possible forward day; reach is still G=0/5.
 
 ### 2026-09-01 ~12:56Z (MEM) — 011 FITTED: A REAL 24-CELL FAMILY, AND THE
 ### DECISION METRIC IS NOT IN IT
@@ -786,6 +903,9 @@ does **not** pass: the average was 10.99/hr, but two individual hours exceeded
    the `Slice=` line lives only in the installed unit — the repo copy
    `live/pm_research/ops/pm-evaluation-pipeline.service` has no `Slice=`, so the
    guard is live but not reproducible from git (R-361 LIVE-3's shape).
+   **CLOSED at `8b47dff` (R-376):** both mirrors synced and verified identical
+   at 13:53Z, and the second unguarded 16G unit (`pm-measurement-pipeline`) was
+   found by looking for the class and moved too.
 0b. ~~Confirm the tier1:full lane actually clears 08-25~~ **DONE — the 146-hour
    block is cleared** (R-374, `e9f4834`): after the B2 `[0,1]` fix the lane
    committed 08-26..08-28, then 08-29 COMPLETE at 09:01:48Z and 08-30 at
@@ -796,8 +916,12 @@ does **not** pass: the average was 10.99/hr, but two individual hours exceeded
 1. Preserve the running collector and close the first full v4.1 UTC day.
 2. Obtain an independent re-review of `1aaac18`: it claims RR1/RR3 closure, but
    the latest filing reviewed its parent and did not release them. **It is no
-   longer HEAD** — five commits have landed since (`54f899d`, `e326782`,
-   `0b1f6bb`, `e65c54f`); the re-review target is the commit, not the tip.
+   longer HEAD**; the re-review target is the commit, not the tip. **Held
+   deliberately** until BE's batch commits, so one round covers both at a single
+   pinned tip (rule 5 as completed by R-377). **The reviewer is now a Claude
+   session** (R-375), so the round's weight rests on execution — suites,
+   mutation audits, known-bads, the operator walk — rather than on reading:
+   agreement from a same-model reviewer is consistency, not confirmation.
 3. Close the two 011 items the completed run exposed, in this order: **(a) the
    Q4 incumbent-loading defect** (no economic result exists until it closes),
    **(b) implement R-306's conjunction + worse side for Q3** — the ruling exists
