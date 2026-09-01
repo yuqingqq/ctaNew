@@ -1,0 +1,109 @@
+{
+  "all_gates_pass": true,
+  "canon": "ev_runrecord_canon_v1",
+  "declared_parameters": {
+    "cancel_effective_latency_ms": 50.0,
+    "charge_reset_cost_at_generation_start": false,
+    "enable_reduce": false,
+    "max_cancels_per_minute": "inf",
+    "predictor_enabled": true,
+    "protection_mode": "ALL_ORDERS_OVERRIDE",
+    "queue_reset_cost_cents": 0.1,
+    "repost_dwell_s": 0.5,
+    "repost_fill_model": "REFERENCE_FILLS",
+    "theta_cancel": 0.5,
+    "theta_repost": 0.1
+  },
+  "economics_emittable": false,
+  "engine_identity": {
+    "ev_replay_seam.py": "d08ab1fe4a8a9875",
+    "harmful_stateful_policy.py": "83315157d7fd338d"
+  },
+  "gates": {
+    "acting_policy_differs": true,
+    "counterfactual_rows_carried": true,
+    "determinism_across_hashseed": true,
+    "determinism_same_process": true,
+    "inert_policy_bit_identical": true,
+    "no_economics_emitted": true,
+    "no_fill_inside_unavailable": true,
+    "policy_interface_boundary": true,
+    "queue_bound_stamped": true,
+    "stub_statuses_named": true
+  },
+  "inputs": {
+    "action_value_policy": "NO_RELEASED_PREDICTOR",
+    "fair_price": "NO_RELEASED_FAIRPRICE",
+    "harm_predictor": "NO_RELEASED_PREDICTOR",
+    "latency_budget_ack": "UNMEASURED_AT_THIS_VENUE",
+    "queue_reset_cost": "DECLARED_PARAMETER",
+    "reference_trajectory": "FROZEN_REFERENCE"
+  },
+  "produced_at": {
+    "dirty_paths": [
+      "live/pm_research/ev_replay_seam.py",
+      "live/pm_research/ev_replay_seam_test.py",
+      "live/pm_research/phase2_iter011.py",
+      "live/pm_research/phase2_iter011_run.py",
+      "live/pm_research/plans/ITER011_PREREG_AMENDMENT_A2_DRAFT.md"
+    ],
+    "git_readable": true,
+    "n_dirty_paths": 5,
+    "note": "produced_at_commit is the commit the PRODUCER ran at; the carrying commit does not exist at emission. Bind by re-hashing engine_identity at this commit.",
+    "produced_at_commit": "3274ed710448849e7fd598c219a0c1a56d9dbe5a",
+    "working_tree_dirty": true
+  },
+  "protocol": "ev_replay_seam_v1",
+  "queue_bound": "BACK_DISPLAYED",
+  "records": [
+    {
+      "n_events": 12,
+      "n_unavailable_iv": 0,
+      "policy": "INERT",
+      "policy_status": "NO_RELEASED_POLICY",
+      "queue_bound": "BACK_DISPLAYED",
+      "record_hash": "0dd7aba425d205c68d75599fe0e7c05cd3a183ad957af9d7c0f9bea684c27f65",
+      "slug": "seam-fixture-w1"
+    },
+    {
+      "n_events": 19,
+      "n_unavailable_iv": 0,
+      "policy": "DECLARED_STUB",
+      "policy_status": "NO_RELEASED_PREDICTOR",
+      "queue_bound": "BACK_DISPLAYED",
+      "record_hash": "601f268b36cd735e130b560ab053fedc08f29d5bc5dd3a34c9a33436bd6abffe",
+      "slug": "seam-fixture-w1"
+    },
+    {
+      "n_events": 14,
+      "n_unavailable_iv": 0,
+      "policy": "DECLARED_STUB",
+      "policy_status": "NO_RELEASED_PREDICTOR",
+      "queue_bound": "BACK_DISPLAYED",
+      "record_hash": "89446087453472553c2d9b785a8333529d0825b534526ea05017d4a07d9158f3",
+      "slug": "seam-fixture-w1"
+    }
+  ],
+  "run_hash": "2e9e5ef87ac70ed18c77e39595764dba2408f9bca201e643cf2d74e9e7ed6de0",
+  "score_offset_fracs": [
+    0.25,
+    0.75
+  ],
+  "seam": "action-value policy -> stateful replay (plan 10.1)",
+  "seed": 20260901,
+  "status": "RESEARCH_ONLY_NOT_DECISION_ELIGIBLE",
+  "stub_salt": "ev_replay_seam_v1",
+  "unreleased_inputs": [
+    "action_value_policy",
+    "fair_price",
+    "harm_predictor",
+    "latency_budget_ack"
+  ],
+  "why_no_economics": "every economic quantity is refused while any declared input is a stub; the refusal is evaluated over the emitted bytes at emission, not asserted by a mode comment",
+  "windows": [
+    {
+      "inputs_hash": "0000000000000000",
+      "slug": "seam-fixture-w1"
+    }
+  ]
+}
