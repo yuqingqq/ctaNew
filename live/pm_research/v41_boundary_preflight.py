@@ -253,6 +253,24 @@ def provenance_for(boundary_utc: str) -> dict:
         elif not (isinstance(_pc, str) and 7 <= len(_pc) <= 40
                   and all(c in "0123456789abcdef" for c in _pc)):
             why = f"collector_commit {str(_pc)[:24]!r} is not a git object id"
+        else:
+            # RESOLVE it. Shape alone certified fabricated identity: commit
+            # 000...000 with sha 000...000 is hexadecimal, correctly sized,
+            # and returned SUPERSEDED. A provenance checker that never opens
+            # the repository is checking punctuation.
+            import subprocess as _sp2, hashlib as _h2
+            _blob = _sp2.run(["git", "-C", str(REPO), "show",
+                              f"{_pc}:live/pm_research/collect_pm.py"],
+                             capture_output=True)
+            if _blob.returncode != 0:
+                why = (f"collector_commit {_pc[:12]} does not resolve in this "
+                       f"repository — the record names a commit that does "
+                       f"not exist")
+            elif _h2.sha256(_blob.stdout).hexdigest() != _ps:
+                why = (f"the collector at {_pc[:12]} hashes "
+                       f"{_h2.sha256(_blob.stdout).hexdigest()[:16]}, not the "
+                       f"claimed {_ps[:16]} — the record's commit and sha "
+                       f"describe different bytes")
         if why:
             return {"status": "PROVENANCE_MISMATCH",
                     "boundary_utc": boundary_utc, "why": why,
@@ -759,10 +777,14 @@ def _check_restored_v4(obs: dict, v4_start: dict | None, stage: str,
     return resto, ns
 
 
-def _rollback_row(obs: dict, resto: str, ns: int, stage: str) -> dict:
+def _rollback_row(obs: dict, resto: str, ns: int, stage: str,
+                  closes_utc: str | None = None) -> dict:
+    """`closes_utc` defaults to the RULED instant, but a late-start
+    reconstruction opens its era at the OBSERVED start, and a rollback must
+    close the era that is actually open -- not the one that was ruled."""
     utc, _ = require_ruled_instant()
     return {"collector_schema_version": FROM_ERA, "supersedes": TARGET_ERA,
-            "rollback": True, "closes_boundary_utc": utc,
+            "rollback": True, "closes_boundary_utc": closes_utc or utc,
             "boundary_utc": resto, "stage": stage, "pid": obs["main_pid"],
             "collector_start_recv_ns": ns, "stamp_written_ns": time.time_ns(),
             "stamp_order": ("v4 RESTORED and restarted FIRST, restoration "
@@ -898,10 +920,27 @@ def make_recovery_bundle(obs: dict, old_target_pid: int,
     target_ns = target_start.get("recv_ns")
     if type(target_ns) is not int or target_ns <= 0:
         raise Refused(f"target start recv_ns={target_ns!r} is not a positive int")
-    if target_ns < ep * 10**9 or \
-            target_ns > (ep + POST_START_WINDOW_S) * 10**9:
-        raise Refused("v4.1 start is outside the ruled boundary's 120-second "
-                      "start window")
+    # OUT-OF-WINDOW starts are RECONSTRUCTED AT THEIR OBSERVED INSTANT, not
+    # refused. Refusing them forced the operator to the abort path, and an
+    # abort row is SKIPPED ENTIRELY by the day consumer -- so a day on which a
+    # clob_v4_1 process demonstrably ran read back `era_pure=True,
+    # eras_touched=['clob_v4']`. That is SILENT CONTAMINATION, and strictly
+    # worse than the dead end it replaced: a dead end is loud.
+    #
+    # The honest record is what actually happened: the RULED instant was
+    # missed (no row carries it), an UNRULED transition began at the observed
+    # start, and it was reverted. Both consumers can express that -- it is an
+    # ordinary transition/rollback pair at non-ruled instants -- and the day
+    # then reads IMPURE, which it is.
+    _late = not (ep * 10**9 <= target_ns
+                 <= (ep + POST_START_WINDOW_S) * 10**9)
+    if target_ns < ep * 10**9:
+        raise Refused("v4.1 start PREDATES the ruled boundary — the candidate "
+                      "booted during the arm window; that is a false-boundary "
+                      "hazard, not a reconstruction")
+    _eff_utc = (utc if not _late else
+                datetime.fromtimestamp(target_ns / 1e9, tz=timezone.utc)
+                .strftime("%Y-%m-%dT%H:%M:%SZ"))
     if ns <= target_ns:
         raise Refused("v4 restoration is not after the v4.1 start")
     P._refuse_cross_midnight(utc, target_ns)
@@ -910,11 +949,11 @@ def make_recovery_bundle(obs: dict, old_target_pid: int,
                  if r.get("recovered") is True
                  and r.get("transitioned") is True
                  and r.get("collector_schema_version") == TARGET_ERA
-                 and r.get("boundary_utc") == utc
+                 and r.get("boundary_utc") == _eff_utc
                  and r.get("collector_start_recv_ns") == target_ns]
     closed = [r for r in obs["era_rows"]
               if r.get("rollback") is True
-              and r.get("closes_boundary_utc") == utc]
+              and r.get("closes_boundary_utc") == _eff_utc]
     # AUDIT A2, REPEATING HERE — found by writing the falsifier for the
     # branch below. era_state() REFUSES an unclosed `recovered` row ("a
     # reconstruction may not stand as the open era"), so calling it here made
@@ -933,7 +972,7 @@ def make_recovery_bundle(obs: dict, old_target_pid: int,
                  "note": ("EXACT recovery bundle already exists — "
                           "idempotent success, NO new rows emitted")}]
     if recovered and not closed:
-        row = _rollback_row(obs, resto, ns, stage)
+        row = _rollback_row(obs, resto, ns, stage, _eff_utc)
         era_state(list(obs["era_rows"]) + [row])
         row["completes_half_landed_bundle"] = True
         return [row]
@@ -945,12 +984,12 @@ def make_recovery_bundle(obs: dict, old_target_pid: int,
         raise Refused(f"era in force is {current!r}, not {FROM_ERA!r}")
     if any(r.get("transitioned") is True
            and r.get("collector_schema_version") == TARGET_ERA
-           and r.get("boundary_utc") == utc for r in obs["era_rows"]):
+           and r.get("boundary_utc") == _eff_utc for r in obs["era_rows"]):
         raise Refused("this boundary was already opened by a non-matching "
                       "transition; reconstruction would fork history")
     transition = {
         "collector_schema_version": TARGET_ERA, "supersedes": FROM_ERA,
-        "transitioned": True, "recovered": True, "boundary_utc": utc,
+        "transitioned": True, "recovered": True, "boundary_utc": _eff_utc,
         "stage": stage, "pid": old_target_pid,
         "collector_start_recv_ns": target_ns,
         "stamp_written_ns": time.time_ns(),
@@ -965,7 +1004,7 @@ def make_recovery_bundle(obs: dict, old_target_pid: int,
         "stamp_order": ("RECONSTRUCTED after v4.1 ran unstamped: both the "
                         "v4.1 start and v4 restoration come from each "
                         "process's own collector_start declaration")}
-    rollback = _rollback_row(obs, resto, ns, stage)
+    rollback = _rollback_row(obs, resto, ns, stage, _eff_utc)
     rows = [transition, rollback]
     era_state(list(obs["era_rows"]) + rows)
     return rows
@@ -1405,9 +1444,10 @@ def selftest() -> int:
          "a target start whose pid is not the recorded v4.1 pid refuses"),
         ({"ts": {"recv_ns": 0}}, "not a positive int",
          "a zero target recv_ns refuses"),
-        ({"ts": {"recv_ns": (bep + 500) * 10**9}}, "120-second start window",
-         "a v4.1 start outside the boundary's start window refuses — it "
-         "belongs to some other attempt"),
+        ({"ts": {"recv_ns": (bep - 60) * 10**9}}, "PREDATES",
+         "a v4.1 start BEFORE the ruled instant refuses — the candidate "
+         "booted during the arm window, which is a false-boundary hazard, "
+         "not something to reconstruct"),
         # restoration moved INSIDE the start window so the window guard does
         # not mask this one — the ordering guard needs its own reachable case
         ({"ts": {"recv_ns": (bep + 100) * 10**9},
@@ -1784,11 +1824,35 @@ def selftest() -> int:
             "and the case where an abort would be FALSE still refuses — a "
             "start INSIDE the window means the ruled transition ran, so "
             "narrowing the guard did not weaken it")
-    refuses(lambda: make_recovery_bundle(_RB_OBS, 333, _LATE, _RB_START,
-                                         "counters_refused"),
-            "outside the ruled",
-            "recovery still refuses the late start — it reconstructs the "
-            "RULED era, and a process that started 150s late did not serve it")
+    _lr = make_recovery_bundle(_RB_OBS, 333, _LATE, _RB_START,
+                               "counters_refused")
+    ok(_lr[0]["boundary_utc"] != BOUNDARY_UTC,
+       "recovery ACCEPTS the late start and stamps it at the OBSERVED "
+       "instant, NOT the ruled one — the ruled boundary was missed and no "
+       "row may claim it, but the span that ran must still appear")
+
+    # LATE START: reconstructed at its OBSERVED instant so the span the
+    # consumer sees is the span that ran.
+    _lrows = make_recovery_bundle(_RB_OBS, 333,
+                                  {"recv_ns": (bep + 150) * 10**9, "pid": 333,
+                                   "collector_version": TARGET_ERA,
+                                   "event": "collector_start"},
+                                  _RB_START, "counters_refused")
+    _obs_utc = datetime.fromtimestamp(bep + 150,
+                                      tz=timezone.utc).strftime(
+                                          "%Y-%m-%dT%H:%M:%SZ")
+    ok(len(_lrows) == 2 and _lrows[0]["boundary_utc"] == _obs_utc
+       and _lrows[1]["closes_boundary_utc"] == _obs_utc,
+       "LATE START (High): a v4.1 start at T+150s is RECONSTRUCTED AT ITS "
+       "OBSERVED INSTANT and closed there. Routing it to abort instead "
+       "recorded evidence the day consumer SKIPS ENTIRELY — a day on which "
+       "clob_v4_1 demonstrably ran read back era_pure=True, "
+       "eras_touched=['clob_v4']. Silent contamination is worse than the "
+       "dead end it replaced, because a dead end is loud")
+    _c3, _o3 = era_state([V4ROW] + _lrows)
+    ok(_c3 == FROM_ERA and _o3 is None,
+       "and the late bundle leaves clob_v4 in force with no open era — the "
+       "span is recorded AND closed")
 
     # ---- provenance must be IDENTITY-BOUND, not merely boundary-matched
     import tempfile as _tf3
