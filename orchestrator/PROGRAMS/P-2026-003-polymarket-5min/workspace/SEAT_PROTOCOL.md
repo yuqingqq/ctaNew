@@ -104,7 +104,10 @@ except where marked USER-ONLY.
     batch done, and the next dispatch is again a complete batch. New work
     that arises mid-flight queues in the coordinator's own notes for the
     NEXT round, exactly as a reviewer's post-filing discovery waits for the
-    next round.
+    next round. **Batching is about completeness, not idleness (R-381, USER
+    directive): a closed round is followed promptly by the seat's next
+    complete batch — a seat waiting between rounds is a coordination miss,
+    not a discipline.**
 
 ## Cadences
 

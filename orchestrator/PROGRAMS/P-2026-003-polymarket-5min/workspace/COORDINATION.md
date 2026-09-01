@@ -18119,6 +18119,14 @@ Operative form, now `SEAT_PROTOCOL.md` rule 18:
 
 **Round edges now:** BE — open (tie patch + F2/F1/F5/F6 + re-run readjudication), fits running healthy in-slice (12.7 G of 18.4 G aggregate). DA — closed. MEM — closed. DE — open, first batch in progress (probes running through the launch pattern: `de-probe2.service` in-slice, the R-148 discipline holding on its first day). Reviewer — standing by; its round opens on BE's pinned tip.
 
+### R-381 — 2026-09-01T13:50Z — coordinator — **USER DIRECTIVE: NO IDLE SEATS — a closed round is followed promptly by the next complete batch.** Rule 18 gains the clause (*"batching is about completeness, not idleness"*), and the three between-rounds seats received their next batches at 13:50Z, each complete per rule 18:
+
+- **DA round 2:** (1) the **content-liveness rule** — R-370's still-open obligation (08-31 stands `CONTENT_LIVENESS_UNRESOLVED`) — as DRAFT-FOR-USER-FREEZE on the `tape_density` instrument, threshold calibrated ONLY on consumed days ≤08-31, prospective from 09-02, rule-11 statement inside the draft, no governing power until USER freeze; (2) the breadth-statistic reconciliation note (per-slug vs coin-level — the 32.3%/33.0% near-collision is Q-BE-175's dangerous-near-agreement class); (3) after 00:06Z, verify the REAL 09-01 closed-day verdict at its artifact and file the outcome either way — a HEALTHY fail is a recorded result, not a problem to fix.
+- **MEM round 3:** state-file true-up of R-374..R-380 (reviewer transition, enforcement mechanism, batching rulings, DE seat + module audit, DA filings, BE `20d3c3a`), seat listings updated, TODO ticks with citations — verified at artifacts, never from the dispatch.
+- **Reviewer prep batch (files nothing, holds nothing):** baseline the round's instruments at HEAD (deploy gates, 011 run selftest, DA's contract-verify selftest) so round diffs are attributable; read the frozen prereg/A1.4, Q-DA-197, and `1aaac18`+its parent-reviewed filing; prepare the round checklist (known-bads per claimed fix, a fresh mutation angle, the operator walk). The round itself still opens only on BE's pinned tip.
+
+Also this entry: the coordination loop is now self-paced (commit monitor + heartbeat) per the USER's "auto proceed and push the plan"; register entries and pushes continue per act.
+
 ## 6. Build-readiness audit — 2026-08-23
 
 Gate the user set: **every module has a good plan before it is built.** Audited
