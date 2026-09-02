@@ -39,7 +39,7 @@ import math
 import sys
 from pathlib import Path
 
-EXPECTED_CHECKS = 22
+EXPECTED_CHECKS = 31
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import de_score_stream as SS                     # noqa: E402
@@ -166,6 +166,78 @@ def score_lgbm(booster, width: int, raw: list[float]) -> float:
             f"the LGBM head refused the row it was handed ({exc}); the "
             f"width matched ({width}) so this is the model's own "
             f"objection, converted at its boundary") from exc
+
+
+def load_lgbm_normalisers(coin: str) -> dict:
+    """The z-scale the LGBM head was FITTED THROUGH, read off the fit.
+
+    `phase2_arms:1481-1482` builds `XF = PM + FN + ST` and then
+    `Xf, mu, sd = fc.fast_zscale(XF, XF)`; `:1550-1552` fits the booster on
+    `Xf` itself. `fast_zscale` PREPENDS a 1.0 intercept column
+    (`harmful_fast_compute:285-287`), so the booster's columns are
+    `[1.0] + (raw - mu) / sd`, and `mu`/`sd` are what arm B persisted to
+    `linear_{coin}.json` -- 105 long against 106 columns."""
+    f = FITS / f"linear_{coin}.json"
+    d = json.loads(f.read_text())
+    for k in ("norm_mu", "norm_sd"):
+        if k not in d:
+            # SITE: lgbmnorm#1
+            raise HeadRefused(
+                f"{f.name} carries no {k!r}: the LGBM head's input transform "
+                f"is arm B's z-scale, and without it the only vectors that "
+                f"could be handed to the booster are unscaled ones -- which "
+                f"are the RIGHT WIDTH and so refuse nothing")
+    if len(d["norm_mu"]) != len(d["norm_sd"]):
+        # SITE: lgbmnorm#2
+        raise HeadRefused(
+            f"{f.name}: {len(d['norm_mu'])} means against "
+            f"{len(d['norm_sd'])} sds")
+    return {"norm_mu": d["norm_mu"], "norm_sd": d["norm_sd"],
+            "n_raw": len(d["norm_mu"]), "source": f.name}
+
+
+def compose_head_inputs(pm, fn, st, *, norms, incumbent_width, lgbm_width):
+    """One feature triple -> the vector EACH head was fitted on.
+
+    THE TWO HEADS DO NOT TAKE THE SAME VECTOR, and neither takes the raw
+    concatenation:
+
+    | head | fit site | what it takes |
+    |---|---|---|
+    | `incumbent_linear_d` | `:1512`, applied `:1928` | raw `PM + FN` (60); `score_incumbent` prepends the intercept and z-scales |
+    | `q1_arrival_composed_lgbm` | `:1481`, fitted `:1552` | `[1.0] + (PM+FN+ST - mu)/sd` (106) |
+
+    THE SILENT ERROR THIS FUNCTION EXISTS TO PREVENT: `[1.0] + raw` is 106
+    columns too. It would satisfy `score_lgbm`'s width check, reach the
+    booster, and return a probability that is not a prediction -- the
+    round-33 failure with the traceback removed. So the scale is applied
+    HERE, from the fit's own normalisers, and every width is asserted
+    against an artifact rather than a literal."""
+    raw_d = list(pm) + list(fn)
+    raw_b = raw_d + list(st)
+    mu, sd = norms["norm_mu"], norms["norm_sd"]
+    if len(raw_d) != incumbent_width:
+        # SITE: compose#1
+        raise HeadRefused(
+            f"PM+fine is {len(raw_d)} wide and the incumbent was fitted on "
+            f"{incumbent_width} (PM {len(pm)} + fine {len(fn)})")
+    if len(raw_b) != len(mu):
+        # SITE: compose#2
+        raise HeadRefused(
+            f"PM+fine+state is {len(raw_b)} wide and {norms['source']} "
+            f"normalises {len(mu)} (PM {len(pm)} + fine {len(fn)} + state "
+            f"{len(st)})")
+    if len(mu) + 1 != lgbm_width:
+        # SITE: compose#3
+        raise HeadRefused(
+            f"{norms['source']} normalises {len(mu)} features and the "
+            f"booster was fitted on {lgbm_width} columns. The convention is "
+            f"`[1.0] + zscaled`, so these must differ by exactly the "
+            f"intercept -- if they do not, the two artifacts are from "
+            f"different fits and nothing composed here is that model's input")
+    return {"incumbent_linear_d": raw_d,
+            "q1_arrival_composed_lgbm":
+                [1.0] + [(raw_b[i] - mu[i]) / sd[i] for i in range(len(mu))]}
 
 
 def thresholds(coin: str, head: str, *, fits: Path | None = None,
@@ -352,6 +424,93 @@ def selftest() -> int:
         ok(thresholds("btc", "incumbent_linear_d") == ti,
            "POSITIVE CONTROL: the real fit still answers after that "
            "known-bad, which is what says the injection touched nothing")
+
+    # ---- the composition: what each head is actually fed (DE36 item 4) ----
+    _nb = load_lgbm_normalisers("btc")
+    _inc = load_incumbent("btc")
+    _b, _wl = load_lgbm("btc")
+    _iw, _nr = _inc["_n_features"], _nb["n_raw"]
+    ok(_iw == 60 and _nr == 105 and _wl == 106 and _nr + 1 == _wl,
+       f"MEASURED off the three artifacts, never assumed: the incumbent "
+       f"normalises {_iw} (PM+fine), {_nb['source']} normalises {_nr} "
+       f"(PM+fine+state) and the booster carries {_wl} columns -- so the "
+       f"state block is {_nr - _iw} wide and the booster's extra column is "
+       f"the intercept `fast_zscale` prepends, not a feature")
+    _pm = [0.5 + 0.01 * i for i in range(31)]
+    _fn = [1.0 - 0.02 * i for i in range(_iw - 31)]
+    _st = [0.25 * (i % 7) for i in range(_nr - _iw)]
+    _cmp = compose_head_inputs(_pm, _fn, _st, norms=_nb,
+                               incumbent_width=_iw, lgbm_width=_wl)
+    _rawb = _pm + _fn + _st
+    _mu, _sd = _nb["norm_mu"], _nb["norm_sd"]
+    ok(len(_cmp["incumbent_linear_d"]) == _iw
+       and _cmp["incumbent_linear_d"] == _pm + _fn
+       and len(_cmp["q1_arrival_composed_lgbm"]) == _wl
+       and _cmp["q1_arrival_composed_lgbm"][0] == 1.0
+       and all(abs(_cmp["q1_arrival_composed_lgbm"][k + 1]
+                   - (_rawb[k] - _mu[k]) / _sd[k]) < 1e-12
+               for k in range(_nr)),
+       f"and one feature triple composes to BOTH vectors: {_iw} raw for the "
+       f"incumbent (which z-scales inside `score_incumbent`) and {_wl} for "
+       f"the booster, intercept first, every remaining column equal to "
+       f"`(raw - mu)/sd` from {_nb['source']} to 1e-12")
+    _unscaled = [1.0] + _rawb
+    _ndiff = sum(1 for k in range(_nr)
+                 if abs(_unscaled[k + 1]
+                        - _cmp["q1_arrival_composed_lgbm"][k + 1]) > 1e-9)
+    _same = [k for k in range(_nr)
+             if abs(_unscaled[k + 1]
+                    - _cmp["q1_arrival_composed_lgbm"][k + 1]) <= 1e-9]
+    ok(len(_unscaled) == _wl and _ndiff > 0,
+       f"KNOWN-BAD, THE SILENT ONE: `[1.0] + raw` is ALSO {_wl} columns, so "
+       f"it passes `score_lgbm`'s width check, reaches the booster and "
+       f"returns a probability -- it differs from the composed vector in "
+       f"{_ndiff}/{_nr} columns ({len(_same)} agree, which is what a "
+       f"column with mu 0 and sd 1 looks like -- a guard flag the fit "
+       f"z-scaled to itself). No width guard can catch this shape; only "
+       f"applying the fit's own normalisers can, which is why the scale is "
+       f"applied HERE and not left to the caller")
+    _p_ok = score_lgbm(_b, _wl, _cmp["q1_arrival_composed_lgbm"])
+    _p_bad = score_lgbm(_b, _wl, _unscaled)
+    ok(0.0 <= _p_ok <= 1.0 and 0.0 <= _p_bad <= 1.0 and _p_ok != _p_bad,
+       f"DRIVEN through the REAL booster: the composed vector scores "
+       f"{_p_ok:.6f} and the unscaled one {_p_bad:.6f}. Both are "
+       f"probabilities and only one is a prediction -- the demonstration "
+       f"that this composition is not cosmetic (SHAPE probe: the input is a "
+       f"synthetic triple, so neither number means anything about a market)")
+    refuses(lambda: compose_head_inputs(_pm[:-1], _fn, _st, norms=_nb,
+                                        incumbent_width=_iw, lgbm_width=_wl),
+            "KNOWN-BAD: a PM block one short REFUSES at the incumbent width",
+            needle="the incumbent was fitted on")
+    refuses(lambda: compose_head_inputs(_pm, _fn, _st[:-1], norms=_nb,
+                                        incumbent_width=_iw, lgbm_width=_wl),
+            "KNOWN-BAD: a STATE block one short REFUSES against the fit's "
+            "normaliser count -- the width the booster would still accept "
+            "if the intercept were prepended blindly",
+            needle="normalises")
+    refuses(lambda: compose_head_inputs(_pm, _fn, _st, norms=_nb,
+                                        incumbent_width=_iw,
+                                        lgbm_width=_wl + 1),
+            "KNOWN-BAD: normalisers and a booster from DIFFERENT fits REFUSE "
+            "-- 105 normalisers against 107 columns is not the intercept "
+            "convention, and composing anyway would hand the booster a "
+            "vector no fit ever produced",
+            needle="differ by exactly the intercept")
+    with _tf.TemporaryDirectory() as d:
+        _bad = json.loads((FITS / "linear_btc.json").read_text())
+        _bad.pop("norm_mu")
+        (Path(d) / "linear_btc.json").write_text(json.dumps(_bad))
+        _sv = globals()["FITS"]
+        globals()["FITS"] = Path(d)
+        try:
+            refuses(lambda: load_lgbm_normalisers("btc"),
+                    "KNOWN-BAD: a fit carrying no `norm_mu` REFUSES rather "
+                    "than falling back to unscaled inputs, which are the "
+                    "right width and refuse nothing", needle="carries no")
+        finally:
+            globals()["FITS"] = _sv
+    ok(load_lgbm_normalisers("btc")["n_raw"] == _nr,
+       "POSITIVE CONTROL: the real fit still answers after that injection")
 
     ok(n[0] + 1 == EXPECTED_CHECKS,
        f"check count asserted at run time: {n[0] + 1} == {EXPECTED_CHECKS}")

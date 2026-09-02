@@ -32,30 +32,48 @@ end of hold]"` and the 1 s figure travels only beside the per-row table it
 belongs to. **No new number is introduced by this declaration** — it names
 what the frozen feed already produces.
 
-### 1a. What the null actually costs (EST-R2's other half, corrected)
+### 1a. What the null costs — one measured number, one floor
 
-Addendum v1 §d said 200 draws at one cell is "of order six hours", from
-LANE4's 1,339.6 s single-arm replay. **That was wrong by construction**: a
-null draw is not one replay. Each draw runs `arm_result`, which is the
-PRIMARY conjunction — **2 protection modes × 2 repost-fill models = 4
-replays** — so 200 draws is **800 replays**, not 200.
+Addendum v1 §d said 200 draws at one cell is "of order six hours". That
+priced a replay as LANE4's end-to-end pass, and it also missed that a draw
+is not one replay: each runs `arm_result`, the PRIMARY conjunction, so
+**200 draws is 800 replays** — with the (γ) rule, **plus the rejected
+attempts**, which the receipt now counts.
 
-**Measured, not estimated** (471 synthetic windows, this runner, both
-launchers cleared):
-
-| quantity | measured |
+| quantity | status |
 |---|---|
-| one `arm_result` (4 legs, 471 windows) | **0.03 s** → **0.007 s per replay** |
-| one null draw | 4 replays |
-| 200 draws at one cell | 800 replays ≈ **6 s** |
-| one cell without a null (5 arms × 4 legs = 20 replays) | ≈ **0.15 s** |
-| the whole grid (54 cells + 2 null cells) | **≈ 40 s of replay** |
+| the FEED for the §3 population, both coins | **MEASURED: ~28.6 min, once** (round 33, on the real population: selection 192.1 s btc / 187.5 s eth, then 4.34 s and 1.35 s per window) |
+| one `arm_result` (4 legs) | **UNMEASURED on real data.** The synthetic figure is **0.007 s per replay** on a fixture of **20 slugs × one generation × one tranche × one side** |
+| 200 accepted draws at one cell | ≈ 6 s **by that projection**, plus rejected attempts |
+| the FEATURE ASSEMBLY, once per run | **UNMEASURED, and it is not small**: a tape index over `phase2_state_tape_v5.json` (3,170,987,711 B) and `_feature_pass` over `harmful_exposure_rows_v3_eraB.json` (1,241,115,096 B, 1,135,943 rows). This is the fit's own per-run cost, paid again here |
 
-**So the replay is not the cost — the FEED is** (~28.6 min once, measured in
-round 33). The six-hour figure understated the per-draw work by 4× and
-overstated the total by three orders of magnitude, because it priced the
-replay as if it were LANE4's end-to-end pass. This paragraph is the
-correction; v1 is not edited.
+**The synthetic figure is a LOWER BOUND, not an estimate.** The fixture has
+one generation and one tranche per slug; the real population has many of
+both, and the replay's work scales with **generations × tranches**, not with
+slugs. Until a replay is measured on the real feed, the only defensible
+statement is: *the feed is measured at ~28.6 min and the replay is unmeasured
+with a floor of seconds*. The runner now publishes the feed's own
+`n_generations` and `rows_per_generation` per cell so that the first real run
+prices the replay instead of projecting it.
+
+**A third cost was missing from both the v1 estimate and the round-36
+version of this section: the run cannot score anything until the feature
+assembly has run.** The heads take vectors, not timestamps, and those
+vectors come from `phase2_arms._feature_pass` against the fit's tape — the
+same 3.2 GB index and 1.14M-row pass the fit paid for. It is wired as far as
+it can be without executing it (composition, per-generation statistic, and
+every cheap precondition, all falsified), and the runner REFUSES before the
+feed rather than discover it at the first cell.
+
+**And it raises a question this seat cannot answer (rule 4).** The §3
+population is 08-24/08-25, which spans **both** of the fit's splits — the
+tape carries 1,125,289 `train` rows and 638,917 `score` rows across those two
+days. Scoring the diagnostic's population therefore means scoring generations
+the heads were **fitted on**. For a diagnostic of the policy's *mechanics*
+that may be exactly right, and §3 already declares the population CONSUMED;
+for anything read as evidence about the heads it is not. **This addendum
+does not choose.** The run declares which splits it consumed, per cell, in
+the receipt, and the choice is put to the USER with the two §5 numbers.
 
 ## 2. `theta_repost` — a number I chose (EST-R3, re-read under §5)
 
@@ -76,17 +94,17 @@ value.
 | tight | `theta_cancel − ε` (ε = 1e-9) | repost as soon as the score falls at all: the least hysteresis the policy admits |
 | loose | `0.5 × theta_cancel` | the runner's current value, kept as the other end rather than as the answer |
 
-**DE35-R5 — does the tight rung move the control now?** Under §5 as revised,
-**yes, and for both arms together.** The control's stream *is* the treated
-arm's stream permuted, so every below-threshold event the head produced
-exists in both arms; a `theta_repost` at `theta_cancel − ε` therefore admits
-the same reposts on both sides and the pair is readable as a comparison.
-Under round 35's shape it was not: the control's only below-threshold event
-was an invented literal `0.0`, which sits under *every* candidate rung, so
-the tight rung moved the treated arm and left the control unchanged and the
-pair compared two different policies. **The pair is proposed only because
-§5 makes it readable; if the USER declines §5, this pair should be declined
-with it.**
+**DE35-R5 under the (γ) stream — re-read.** Yes, and now for a stronger
+reason than in round 36's draft. Under (γ) the control's stream is a
+permutation of the treated arm's **whole** stream: every below-threshold
+event the head produced exists in both arms, at the same generation's `t0`,
+and the above values are the head's own. A `theta_repost` at
+`theta_cancel − ε` therefore admits the same reposts on both sides, and the
+pair is readable as a comparison of policies rather than of constructions.
+Under round 35's shape it was not readable at all — the control's only
+below-threshold event was an invented literal `0.0`, which sits under every
+candidate rung. **The pair is proposed only because §5 makes it readable; if
+the USER declines §5, decline this pair with it.**
 
 ## 3. `REPOST_DWELL_S` — the second number I chose (EST-R3, DE35-R4)
 
@@ -121,34 +139,35 @@ reader can see that no cancellation was suppressed rather than take it on
 trust. The runner now carries all three counters per arm and evaluates the
 identity in code.
 
-## 5. The matched control's score stream (EST-R5, DE35-C1)
+## 5. The matched control's score stream (EST-R5, DE35-C1, ruled (γ))
 
-**Proposed declaration, in the reviewer's words:**
+**Proposed declaration, in the reviewer's ruling words:**
 
-> The acting control's score stream **is** the treated arm's stream with the
-> above-threshold assignments **permuted within `(side, hour)` strata**, so
-> that the control cancels exactly the drawn generations and **no event
-> exists in one arm that does not exist in the other**. Repost behaviour is
-> therefore identical in kind to the treated arm's and is never
-> manufactured; the control introduces no score value the head did not
-> produce.
+> The acting control's stream is the treated arm's stream with the
+> above-threshold score values **permuted within `(side, hour)` strata**:
+> one event per generation in both arms, the same score multiset per
+> stratum, and the drawn generations carrying the above-threshold values.
+> Because the policy is stateful, a permutation does not fix WHICH
+> generations act: the control is therefore matched on the frozen decision
+> variable — the **per-stratum realised action count** — with draws that
+> fail the match **rejected and redrawn**, and the attempts, acceptances
+> and rejections reported. No score value the head did not produce ever
+> enters either stream.
 
-**What this replaces.** Round 35 emitted, per drawn generation, a literal
-`1.0` at the generation's `t0` and a literal `0.0` one dwell later. That
-manufactures a policy rather than permuting one: the `0.0` is a score the
-head never produced, it sits below every candidate `theta_repost` (which is
-why §2's pair was unreadable — DE35-R5), and it made the control's repost
-behaviour a function of the DRAW where the treated arm's is a function of
-the HEAD.
-
-**This is a property, not a number**, and the runner already implements it:
-the above-threshold score VALUES are reassigned to the drawn generations and
-every below-threshold event is carried through untouched.
+**Why the earlier wording was false of any buildable stream.** The previous
+draft said the control "cancels exactly the drawn generations". Measured,
+that cannot be arranged: a HELD side suppresses later crossings, so a
+non-acting above event acts the moment the generation holding it stops
+cancelling, and the realised set is neither the treated set nor the drawn
+one. The frozen text asks for matching on **action count** (`DRAFT:147-156`),
+not on identity.
 
 **Reported with it (DE31-R2):** `n_strata`, `strata_with_room`,
-`n_distinct_draws`, and — where a stratum has no room — an explicit
-**POINT MASS** declaration, because a forced draw contributes a constant
-rather than a sample.
+`n_distinct_draws`, `n_draws_attempted`, `n_draws_accepted`,
+`n_rejected_by_stratum`, and an explicit **POINT MASS** declaration where a
+stratum has no room. Exhausting the attempt budget **refuses**: a null built
+from the draws that happened to match is matched on acceptance, not on the
+decision variable.
 
 ---
 
