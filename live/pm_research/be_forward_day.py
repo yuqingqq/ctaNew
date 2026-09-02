@@ -443,8 +443,69 @@ def present_from_ledger(day: str, path: Path = None) -> dict:
     return {c: sorted(v) for c, v in sorted(per.items())}
 
 
+def archive_windows_for_day(day: str) -> dict:
+    """The windows the TAPE/ARCHIVE index holds for `day`, per coin.
+
+    A SECOND, INDEPENDENT reading of the same day. The ledger says which
+    windows EXISTED; the archive index says which are REPLAYABLE. Read from
+    the tree's `flow_intensity` because the frozen anchors are not imported
+    until later in the sequence — and the receipt says so."""
+    import flow_intensity as fi
+    lo, hi = day_bounds(day)
+    per: dict[str, set] = collections.defaultdict(set)
+    for slug in fi._archive_paths():
+        try:
+            t0 = int(slug.rsplit("-", 1)[1])
+        except (ValueError, IndexError):
+            continue
+        if lo <= t0 < hi:
+            per[slug.split("-")[0]].add(t0)
+    return {c: sorted(v) for c, v in sorted(per.items())}
+
+
+def assert_ledger_matches_archive(day: str, present: dict,
+                                  archive: dict = None) -> dict:
+    """The ledger and the archive index must agree, per coin. R-424-adjacent.
+
+    An EMPTY index already refuses at the data-root probe; this is the
+    NON-EMPTY-BUT-WRONG case, which that probe cannot see. The population is
+    the ledger's, so a coin whose archive holds a different set is either a
+    window that existed and cannot be replayed, or one replayable that the
+    ledger never recorded — both are disagreements about what the day WAS,
+    and R-418 scores the complement WHOLE, so neither may be resolved by
+    quietly taking an intersection."""
+    arc = archive_windows_for_day(day) if archive is None else archive
+    rows, bad = {}, []
+    for coin in sorted(set(present) | set(arc)):
+        lw = set(present.get(coin) or ())
+        aw = set(arc.get(coin) or ())
+        rows[coin] = {"n_ledger": len(lw), "n_archive": len(aw),
+                      "n_ledger_not_archive": len(lw - aw),
+                      "n_archive_not_ledger": len(aw - lw)}
+        if lw != aw:
+            bad.append(
+                f"{coin}: ledger {len(lw)} vs archive {len(aw)} "
+                f"(ledger-only {len(lw - aw)}, archive-only {len(aw - lw)}; "
+                f"e.g. {sorted(lw ^ aw)[:3]})")
+    if bad:
+        raise ForwardDayRefused(
+            f"REFUSED: the market ledger and the archive index disagree about "
+            f"{day} — {'; '.join(bad)}. The ledger is the population's "
+            f"source and the archive is what can be replayed; a silent "
+            f"intersection would re-select the population R-418 fixes, and a "
+            f"silent union would score a window that was never recorded.")
+    return {"per_coin": rows, "coins": sorted(rows),
+            "archive_index_source": "flow_intensity (tree copy; the frozen "
+                                    "anchors are imported later in the "
+                                    "sequence)",
+            "agree": True}
+
+
 def population(day: str, present: dict = None) -> dict:
     pres = present_from_ledger(day) if present is None else present
+    # The ledger is the population's SOURCE; the archive index is what can be
+    # replayed. They must agree before either is used.
+    ledger_vs_archive = assert_ledger_matches_archive(day, pres)
     supply = AW.supply(day, pres)                    # refusals propagate
     # CO-5 / R-421 §4: `verified` ALONE reads absence as a pass. The PAIR is
     # required -- verified AND nothing unverifiable -- because a field the
@@ -453,11 +514,45 @@ def population(day: str, present: dict = None) -> dict:
     # The assertion's RESULT is recorded, so removing the call removes the
     # evidence: on a healthy day a bypassed pair-check changes no answer, and
     # a guard nothing can observe is a guard nothing protects.
+    # THE CHECKER'S OWN FAIL-CLOSED GATE FIRST. `require_verified` is the
+    # CONSUMER contract (verified AND nothing unverifiable AND not a
+    # provenance result); asserting the pair myself left the third conjunct
+    # unchecked and would let a FUTURE checker refusal be bypassed by a
+    # reader of one field. The local pair assertion stays as the EVIDENCE
+    # recorded in the receipt, not as the gate.
+    # MEASURED (round-5 audit, mutant H4): a `require_verified_called: True`
+    # flag written BESIDE the call survives deleting the call -- the same
+    # forgeable-evidence defect I named in `pair_asserted` last round, made
+    # again here. The evidence is now the checker's RETURN VALUE, so removing
+    # the call leaves `_rv` unbound and the driver cannot run at all.
+    _rv = RAT.require_verified(rat)
     rat["pair_asserted"] = assert_ratification_pair(rat)
+    rat["require_verified"] = {
+        "checker": "de_ratification_check.require_verified",
+        "returned_the_checked_object": _rv is rat,
+        "verified": bool(_rv.get("verified")),
+        "unverifiable": list(_rv.get("unverifiable") or ()),
+        "provenance_absent": not _rv.get("provenance"),
+        "checks_seen": len(_rv.get("checks") or ())}
     specs = SEAM.window_specs_from_supply(
         supply, ratification_ref=RATIFICATION_REF)   # refusals propagate
+    # MEASURED (mutant H6): stubbing this call with a literal `{"agree":
+    # True}` survived, because the controls exercised the function and nobody
+    # consumed its result. The record must reproduce the ledger it checked.
+    _lva = ledger_vs_archive.get("per_coin") or {}
+    _mismatch = sorted(c for c in pres
+                       if (_lva.get(c) or {}).get("n_ledger")
+                       != len(pres.get(c) or ()))
+    if not _lva or _mismatch:
+        raise ForwardDayRefused(
+            f"REFUSED: the ledger/archive record does not reproduce the "
+            f"ledger it claims to have checked (coins disagreeing or absent: "
+            f"{_mismatch or 'the per-coin block is empty'}). A record that "
+            f"cannot be tied back to the population is not evidence that the "
+            f"population was checked.")
     return {"present": pres, "supply": supply, "specs": specs,
-            "ratification": rat}
+            "ratification": rat, "ledger_vs_archive": ledger_vs_archive,
+            "r411_inputs": r411_inputs(supply)}
 
 
 def assert_ratification_pair(rat: dict) -> bool:
@@ -480,6 +575,48 @@ def assert_ratification_pair(rat: dict) -> bool:
     return {"asserted": True, "verified_seen": rat.get("verified"),
             "unverifiable_seen": list(rat.get("unverifiable") or []),
             "ref_seen": rat.get("ratification_ref")}
+
+
+def r411_inputs(supply: dict) -> dict:
+    """The INPUTS R-411 needs, per coin. ESTIMATES, never a decision.
+
+    R-411(i) sets the G floor at >=144/288 unmasked; R-411(ii) makes P1 "per
+    UNMASKED hour". Both are POLICY arithmetic, so this emits what they are
+    computed FROM — unmasked windows per UTC hour, the hours that carry any,
+    and the totals — and NOTHING that reads as a verdict. `counts_toward_G`
+    is deliberately absent and a post-condition refuses it (rule 14)."""
+    import da_blackout_mask as _DAM
+    out = {}
+    for coin, recs in sorted((supply.get("windows") or {}).items()):
+        starts = sorted(int(r["start"]) for r in recs)
+        by_hour: dict = collections.defaultdict(int)
+        for t in starts:
+            by_hour[dt.datetime.fromtimestamp(
+                t, dt.timezone.utc).strftime("%H")] += 1
+        cnt = (supply.get("counts") or {}).get(coin) or {}
+        out[coin] = {
+            "unmasked_windows_per_utc_hour": dict(sorted(by_hour.items())),
+            "n_hours_with_any_unmasked_window": len(by_hour),
+            "n_unmasked_windows": len(starts),
+            "n_present_windows": cnt.get("n_present"),
+            "n_masked_windows": cnt.get("n_masked_applied"),
+            # NOT a literal: R-411(i)'s denominator is DA's, so it is BOUND to
+            # DA's committed constant. A restated 288 could drift away from the
+            # producer's silently, and the emission would disagree with the
+            # artifact it is supposed to be read beside (RR3-1's discipline).
+            "calendar_windows_per_day": _DAM.WINDOWS_PER_DAY,
+            "calendar_windows_per_day_source":
+                "da_blackout_mask.WINDOWS_PER_DAY"}
+    return {"per_coin": out,
+            "for": {"R-411(i)": "the G floor is >=144/288 unmasked windows; "
+                                "the numerator and denominator are above",
+                    "R-411(ii)": "P1 is per UNMASKED hour; the hours carrying "
+                                 "any unmasked window are above"},
+            "these_are_ESTIMATES": "inputs only. No field here says whether "
+                                   "the day counts, is eligible or is "
+                                   "admissible — that is the policy layer's "
+                                   "act (rule 14), and a post-condition "
+                                   "refuses any decision-shaped key."}
 
 
 def counts_per_coin(pop: dict) -> dict:
@@ -768,9 +905,133 @@ def seal(day: str, outdir: Path, scored: dict, report: dict) -> dict:
                               "outside this file"}
 
 
+#: Decision-shaped vocabulary. Borrowed BY VALUE from
+#: `de_admissible_windows.DECISION_VOCAB` rather than restated, so the two
+#: cannot drift; the local additions are named.
+def _decision_vocab() -> tuple:
+    extra = ("counts_toward_g", "counts_toward_G", "g_contribution",
+             "qualifies", "admitted", "advance")
+    return tuple(AW.DECISION_VOCAB) + extra
+
+
+def _walk_keys(obj):
+    for _p, k, _v in _walk_paths(obj):
+        yield k
+
+
+def _walk_paths(obj, pre=""):
+    """(path, key, value) for every key, lists collapsed to `[]`.
+
+    PATHS, not bare keys, because the allowlist below has to bind to ONE
+    place. A bare-key allowlist would excuse the same word wherever it
+    appeared, which is precisely the smuggling route it must not open."""
+    if isinstance(obj, dict):
+        for k, v in obj.items():
+            path = f"{pre}.{k}" if pre else str(k)
+            yield path, str(k), v
+            yield from _walk_paths(v, path)
+    elif isinstance(obj, (list, tuple)):
+        for v in obj:
+            yield from _walk_paths(v, pre + "[]")
+
+
+# Decision-shaped words that are NOT entitlements at ONE path, each with the
+# reason. MEASURED: the real receipt carries `gates[].gate` -- a gate's NAME
+# -- and the borrowed vocabulary flagged it, so the post-condition would have
+# refused every real run. Narrowing the vocabulary was the wrong repair: the
+# word is fine THERE and nowhere else, and only a path can say that. The
+# value must still be a string, or `gates[].gate: true` would smuggle a
+# boolean through the exemption.
+DECISION_ALLOWLIST = {
+    "gates[].gate": ("the NAME of a gate this run ran (a string identifier), "
+                     "not a right to anything. Any non-string here refuses, "
+                     "and the same word at any other path refuses."),
+}
+
+
+def assert_no_decision_field(emission: dict) -> dict:
+    """Nothing decision-shaped may leave this driver (rule 14).
+
+    A POST-CONDITION on the emission, the idiom `de_admissible_windows` and
+    the replay seam already carry: the R-411 inputs below are ESTIMATES for
+    the policy layer to compute G from, and a driver that shipped
+    `counts_toward_G` would be making the decision instead of supplying its
+    inputs."""
+    vocab = {v.lower() for v in _decision_vocab()}
+    hits, excused = [], []
+    for path, k, v in _walk_paths(emission):
+        if k.lower() not in vocab:
+            continue
+        if path in DECISION_ALLOWLIST and isinstance(v, str):
+            excused.append(path)
+            continue
+        hits.append(f"{path}={v!r}" if path in DECISION_ALLOWLIST else path)
+    hits = sorted(set(hits))
+    if hits:
+        raise ForwardDayRefused(
+            f"REFUSED: the receipt carries decision-shaped field(s) {hits}. "
+            f"This driver SUPPLIES counts and refusals; whether a day counts "
+            f"toward G is the policy layer's (rule 14, R-411(i)).")
+    return {"checked_keys": len(set(_walk_keys(emission))),
+            "excused_paths": sorted(set(excused)),
+            "allowlist": DECISION_ALLOWLIST,
+            "vocabulary_size": len(vocab),
+            "vocabulary_source": "de_admissible_windows.DECISION_VOCAB, by "
+                                 "value, plus named local additions"}
+
+
+def receipt_path(outdir: Path, day: str) -> Path:
+    return outdir / f"be_forward_day_receipt_{day}.json"
+
+
 def _flush(rec: dict, outdir: Path, day: str) -> Path:
-    p = outdir / f"be_forward_day_receipt_{day}.json"
-    p.write_text(json.dumps(rec, indent=1, sort_keys=True, default=str))
+    """Write the receipt for THIS run, never over another run's.
+
+    MEASURED: a second run into an outdir that already held a receipt
+    OVERWROTE it -- the 12:49 receipt was lost that way, and the two runs
+    differed in exactly the fields a reader would have wanted to compare. A
+    receipt is evidence; evidence is not a scratch buffer. The FIRST write of
+    a run claims the canonical name and every later write in the SAME run
+    updates it (the durable-flush guarantee); a NEW run finding a receipt it
+    did not write takes a numbered successor and leaves the old file
+    byte-identical."""
+    # The post-condition's RESULT is recorded, not discarded: a check whose
+    # only trace is that nothing happened cannot be told apart from a check
+    # that was deleted. Computed on the receipt WITHOUT this block, then
+    # attached, so it describes what it actually examined.
+    rec["decision_field_check"] = assert_no_decision_field(
+        {k: v for k, v in rec.items()
+         if k not in ("_receipt_path", "decision_field_check")})
+    p = receipt_path(outdir, day)
+    claimed = rec.get("_receipt_path")
+    if claimed:
+        q = Path(claimed)
+        q.write_text(json.dumps(
+            {k: v for k, v in rec.items() if k != "_receipt_path"},
+            indent=1, sort_keys=True, default=str))
+        return q
+    if p.exists():
+        n = 1
+        while True:
+            q = outdir / f"be_forward_day_receipt_{day}.{n}.json"
+            if not q.exists():
+                break
+            n += 1
+        rec["supersedes_receipt"] = {
+            "path": str(p), "sha256": _sha_file(p),
+            "why": "an earlier run's receipt was already here. It is KEPT "
+                   "byte-identical and this run takes a numbered successor "
+                   "-- overwriting evidence loses the comparison a reader "
+                   "needs (rule 13)."}
+        rec["_receipt_path"] = str(q)
+        q.write_text(json.dumps(
+            {k: v for k, v in rec.items() if k != "_receipt_path"},
+            indent=1, sort_keys=True, default=str))
+        return q
+    rec["_receipt_path"] = str(p)
+    p.write_text(json.dumps(
+        {k: v for k, v in rec.items() if k != "_receipt_path"},
+        indent=1, sort_keys=True, default=str))
     return p
 
 
@@ -842,7 +1103,21 @@ def run_forward_day(day: str, outdir: Path) -> int:
         rec["population"]["ratification"] = {
             k: v for k, v in _r.items()
             if k in ("verified", "unverifiable", "day_in_scope",
-                     "ratification_ref", "pair_asserted")}
+                     "ratification_ref", "pair_asserted",
+                     "require_verified")}
+        _rvv = _r.get("require_verified") or {}
+        if not (_rvv.get("returned_the_checked_object") is True
+                and _rvv.get("verified") is True
+                and _rvv.get("unverifiable") == []
+                and _rvv.get("provenance_absent") is True
+                and _rvv.get("checks_seen", 0) > 0):
+            raise ForwardDayRefused(
+                "REFUSED: `de_ratification_check.require_verified` left no "
+                "evidence that it ran. It is the CONSUMER's fail-closed gate "
+                "(verified AND nothing unverifiable AND not provenance); a "
+                "local pair assertion is the evidence, not the gate.")
+        rec["population"]["ledger_vs_archive"] = pop["ledger_vs_archive"]
+        rec["r411_inputs"] = pop["r411_inputs"]
         # R-421 §2 / rule 12: EXECUTE THE FROZEN BYTES. Round 3 refused
         # because the TREE moved; the freeze's bytes exist at the commit and
         # this materialises them, verifies each sha BEFORE import, and
@@ -1339,6 +1614,191 @@ def selftest() -> int:
                "report a pass (R-289)")
         finally:
             FS.CANDIDATE = _sv
+
+    # ---- ROUND 5 (1): a receipt is EVIDENCE, never a scratch buffer -----
+    # MEASURED: a second run into an outdir that already held a receipt
+    # OVERWROTE it, and the two runs differed in exactly the fields a reader
+    # would have compared.
+    with _tf.TemporaryDirectory() as td7:
+        o7 = Path(td7)
+        r1 = {"protocol": "X", "day": "20260101", "n": 1}
+        p1 = _flush(dict(r1), o7, "20260101")
+        first = p1.read_bytes()
+        ok(p1.name == "be_forward_day_receipt_20260101.json",
+           "R5(1) the first run of a day claims the canonical receipt name")
+        r2 = {"protocol": "X", "day": "20260101", "n": 2}
+        p2 = _flush(r2, o7, "20260101")
+        ok(p2 != p1 and p2.exists(),
+           f"R5(1) KNOWN-BAD: a SECOND run into the same outdir takes a "
+           f"NUMBERED SUCCESSOR ({p2.name}) instead of overwriting")
+        ok(p1.read_bytes() == first,
+           "R5(1) and the FIRST receipt is byte-identical afterwards — "
+           "overwriting evidence loses the comparison a reader needs")
+        ok(r2["supersedes_receipt"]["sha256"] == _sha_file(p1),
+           "R5(1) the successor NAMES the receipt it did not overwrite, by "
+           "path and sha")
+        # ...and the SAME run's later flushes still update ITS OWN file, or
+        # the durable per-gate receipt would fan out into a numbered pile.
+        r2["n"] = 3
+        p3 = _flush(r2, o7, "20260101")
+        ok(p3 == p2 and json.loads(p3.read_text())["n"] == 3,
+           "R5(1) POSITIVE CONTROL: later flushes of the SAME run update its "
+           "own file — the per-gate durability guarantee is preserved")
+
+    # ---- ROUND 5 (3): require_verified is the GATE ----------------------
+    for _lbl, _bad in (
+            ("unverifiable remains", {"verified": True,
+                                      "unverifiable": ["x"],
+                                      "ratification_ref": "R-419"}),
+            ("not verified", {"verified": False, "unverifiable": [],
+                              "checks": {"a": False},
+                              "ratification_ref": "R-419"}),
+            ("a PROVENANCE result", {"verified": True, "unverifiable": [],
+                                     "provenance": {"stamped_at": "x"},
+                                     "ratification_ref": "R-418"})):
+        try:
+            RAT.require_verified(_bad)
+            ok(False, f"R5(3) require_verified must REFUSE ({_lbl})")
+        except Exception as e:                       # noqa: BLE001
+            ok("REFUSED" in str(e),
+               f"R5(3) KNOWN-BAD ({_lbl}): the CHECKER's own fail-closed gate "
+               f"refuses — asserting the pair myself left the provenance "
+               f"conjunct unchecked")
+    _rvv = _rat.get("require_verified") or {}
+    ok(_rvv.get("returned_the_checked_object") is True
+       and _rvv.get("verified") is True and _rvv.get("unverifiable") == []
+       and _rvv.get("provenance_absent") is True
+       and _rvv.get("checks_seen", 0) > 0,
+       f"R5(3) the population gate's evidence is the checker's RETURN VALUE "
+       f"({_rvv.get('checks_seen')} checks seen, object identity confirmed) "
+       f"— a `called: True` flag written beside the call survived deleting "
+       f"the call, so the flag is gone; the local pair assertion stays as "
+       f"evidence, not as the gate")
+
+    # ---- ROUND 5 (4): the ledger and the archive must agree -------------
+    _arc = archive_windows_for_day("20260901")
+    ok(_arc and all(len(v) > 0 for v in _arc.values()),
+       f"R5(4) the archive index is read independently of the ledger "
+       f"({ {c: len(v) for c, v in _arc.items()} })")
+    ok(assert_ledger_matches_archive("20260901", real, _arc)["agree"] is True,
+       "R5(4) POSITIVE CONTROL: on 09-01 the ledger and the archive AGREE, "
+       "per coin — the check discriminates rather than refusing universally")
+    _short = {c: (v[:-1] if c == "btc" else list(v))
+              for c, v in real.items()}
+    try:
+        assert_ledger_matches_archive("20260901", _short, _arc)
+        ok(False, "R5(4) a ledger missing a window must REFUSE")
+    except ForwardDayRefused as e:
+        ok("btc: ledger 287 vs archive 288" in str(e),
+           "R5(4) KNOWN-BAD: ONE window removed from the ledger REFUSES, "
+           "naming the coin and BOTH counts — the empty-index probe cannot "
+           "see this non-empty-but-wrong case")
+    _extra = {c: (list(v) + [max(v) + 300] if c == "eth" else list(v))
+              for c, v in real.items()}
+    try:
+        assert_ledger_matches_archive("20260901", _extra, _arc)
+        ok(False, "R5(4) a ledger with an extra window must REFUSE")
+    except ForwardDayRefused as e:
+        ok("eth: ledger 289 vs archive 288" in str(e),
+           "R5(4) and the OTHER direction too — a silent union would score a "
+           "window the archive never recorded")
+
+    # ---- ROUND 5 (5): R-411 inputs are ESTIMATES, never a decision ------
+    _r411 = r411_inputs(_pop["supply"])
+    _btc = _r411["per_coin"]["btc"]
+    ok(sum(_btc["unmasked_windows_per_utc_hour"].values())
+       == _btc["n_unmasked_windows"]
+       and _btc["n_present_windows"] - _btc["n_masked_windows"]
+       == _btc["n_unmasked_windows"],
+       f"R5(5) the R-411 inputs are ARITHMETICALLY CLOSED: the per-hour "
+       f"counts sum to the unmasked total, and present minus masked equals "
+       f"it ({_btc['n_present_windows']} - {_btc['n_masked_windows']} = "
+       f"{_btc['n_unmasked_windows']})")
+    import da_blackout_mask as _DAM_T
+    ok(_btc["calendar_windows_per_day"] == _DAM_T.WINDOWS_PER_DAY
+       and _btc["calendar_windows_per_day_source"]
+       == "da_blackout_mask.WINDOWS_PER_DAY",
+       f"R5(5) the denominator is BOUND to the producer's constant "
+       f"(da_blackout_mask.WINDOWS_PER_DAY = {_DAM_T.WINDOWS_PER_DAY}), not "
+       f"restated here — a local copy can drift from DA's without either "
+       f"side noticing")
+    _hrs = _btc["unmasked_windows_per_utc_hour"]
+    _per_h = _DAM_T.WINDOWS_PER_DAY // 24
+    ok(len(_hrs) == _btc["n_hours_with_any_unmasked_window"]
+       and all(k.isdigit() and len(k) == 2 and 0 <= int(k) <= 23
+               for k in _hrs)
+       and all(1 <= v <= _per_h for v in _hrs.values()),
+       f"R5(5) the breakdown is genuinely PER UTC HOUR — {len(_hrs)} "
+       f"two-digit hour keys, each holding 1..{_per_h} windows; collapsing it "
+       f"to one total still satisfies a sum check, so the sum alone is not "
+       f"evidence of a breakdown")
+    ok(_btc["n_hours_with_any_unmasked_window"] <= 24
+       and _btc["calendar_windows_per_day"] == _DAM_T.WINDOWS_PER_DAY,
+       "R5(5) and it carries R-411(ii)'s denominator (hours with any unmasked "
+       "window) beside R-411(i)'s (288 calendar windows)")
+    ok(not (set(_walk_keys(_r411)) & {v.lower() for v in _decision_vocab()}),
+       "R5(5) nothing decision-shaped is in the R-411 block — it supplies the "
+       "INPUTS and the policy layer computes G (rule 14)")
+    ok(assert_no_decision_field({"a": {"b": 1}})["checked_keys"] >= 2,
+       "R5(5) POSITIVE CONTROL: a clean emission passes the post-condition")
+    # MEASURED (mutant H10): exercising the function alone let the post-
+    # condition be DELETED FROM `_flush` and survive. The falsifier drives the
+    # real write path, so it fails if the emission stops being checked.
+    with _tf.TemporaryDirectory() as td8:
+        o8 = Path(td8)
+        for _k in ("counts_toward_G", "eligible", "admissible", "verdict",
+                   "qualifies"):
+            try:
+                _flush({"protocol": "X", "day": "20260101",
+                        "r411_inputs": {"per_coin": {"btc": {_k: True}}}},
+                       o8, "20260101")
+                ok(False, f"R5(5) a decision-shaped key ({_k}) must REFUSE")
+            except ForwardDayRefused as e:
+                ok("decision-shaped field" in str(e),
+                   f"R5(5) KNOWN-BAD: a receipt carrying `{_k}` REFUSES AT "
+                   f"THE WRITE — nested arbitrarily deep, and checked where "
+                   f"the emission actually leaves the driver (rule 14)")
+        ok(not list(o8.iterdir()),
+           "R5(5) and NOTHING was written — a receipt that refuses must not "
+           "leave a partial file behind for a reader to find")
+        # THE CONTROL THAT WAS MISSING. Fixtures said the post-condition
+        # worked; the REAL receipt carries `gates[].gate` and would have
+        # refused every run. 09-02 refuses at gate 1 in ~0 s, so a real
+        # emission is affordable here and the check now meets one.
+        _rc9 = run_forward_day("20260902", o8)
+        _r9 = json.loads(receipt_path(o8, "20260902").read_text())
+        ok(_rc9 != 0 and _r9["gates"][0]["result"] == "REFUSED"
+           and isinstance(_r9["gates"][0]["gate"], str),
+           f"R5(5) POSITIVE CONTROL ON A REAL EMISSION: the 09-02 run refuses "
+           f"at `{_r9['gates'][0]['gate']}` and its receipt WRITES — a "
+           f"fixture-only control let the post-condition refuse every real "
+           f"receipt without the suite noticing (rule 17)")
+        ok(_r9["decision_field_check"]["excused_paths"] == ["gates[].gate"],
+           "R5(5) and exactly ONE path is excused, named in the receipt with "
+           "its reason — an exemption a reader cannot see is not one")
+    # the exemption is a PATH, and it cannot be used to smuggle
+    for _lbl, _bad, _want in (
+            ("a boolean at the excused path",
+             {"gates": [{"gate": True}]}, "gates[].gate=True"),
+            ("an entitlement INSIDE the excused block",
+             {"gates": [{"gate": "g", "eligible": True}]}, "gates[].eligible"),
+            ("the same word at another path",
+             {"r411_inputs": {"gate": "g"}}, "r411_inputs.gate"),
+            ("the word at the top level",
+             {"gate": "g"}, "gate")):
+        try:
+            assert_no_decision_field(_bad)
+            ok(False, f"R5(5) must REFUSE ({_lbl})")
+        except ForwardDayRefused as e:
+            ok(_want in str(e),
+               f"R5(5) KNOWN-BAD ({_lbl}): REFUSED naming `{_want}` — the "
+               f"allowlist binds to ONE path and requires a string, so it "
+               f"excuses the gate's NAME and nothing else")
+    ok(assert_no_decision_field(
+        {"gates": [{"gate": "g", "result": "PASS"}]})["excused_paths"]
+       == ["gates[].gate"],
+       "R5(5) POSITIVE CONTROL: the real receipt's own shape passes, and the "
+       "excusing is reported rather than silent")
 
     # ---- F9: the prefix is the IMPORTED object, not a copy of its text --
     import da_governed_verdict_preflight as _PF
