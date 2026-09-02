@@ -917,6 +917,25 @@ def code_binding() -> dict:
     return out
 
 
+def commit_before_file(repo_file: str) -> str | None:
+    """The parent of the commit that ADDED a file -- a commit at which the
+    file provably does not exist.
+
+    THE CONTROL THIS REPLACES WAS ANCHORED TO `HEAD~50` AND DRIFTED. It was
+    true when written and became false as the branch advanced: fifty commits
+    back now lands AFTER this file was added, so the wrong-commit control
+    started verifying successfully and the known-bad stopped being one. A
+    relative ref is a moving target, and a control aimed at one silently
+    stops testing what it was written to test. This locates the boundary
+    instead of counting backwards from a tip."""
+    added = seam._git("log", "--diff-filter=A", "--format=%H", "--",
+                      f"live/pm_research/{repo_file}")
+    if not added:
+        return None
+    first = added.strip().split("\n")[-1]
+    return f"{first}^"
+
+
 def verify_binding(binding: dict, repo_file: str, commit: str) -> bool:
     """Recompute a file's hash AT a commit and compare.  This is what makes
     the binding a predicate rather than a stored string."""
@@ -1188,9 +1207,12 @@ def selftest() -> int:
                      for f in bound),
        f"POSITIVE CONTROL: every BOUND file re-hashes to its recorded value "
        f"at its own carrying commit ({len(bound)} files)")
-    ok(not verify_binding(cb, bound[0], "HEAD~50"),
-       "KNOWN-BAD: the same predicate returns False at the WRONG commit, so "
-       "the binding is a check and not a stored string")
+    pre = commit_before_file(bound[0])
+    ok(pre is not None and not verify_binding(cb, bound[0], pre),
+       f"KNOWN-BAD: the same predicate returns False at a commit where the "
+       f"file does not yet exist ({pre}) -- located, not counted backwards "
+       f"from the tip, because the previous form (HEAD~50) drifted past the "
+       f"file's own introduction and stopped being a known-bad")
 
     ok(n[0] + 1 == EXPECTED_CHECKS,
        f"check count asserted at run time: {n[0] + 1} == {EXPECTED_CHECKS}")

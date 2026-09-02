@@ -1,0 +1,713 @@
+"""DE-Admissible-Windows -- the explicit window list the EV-Replay seam takes.
+
+SURFACE AUTHORISATION (R-126, in-file): coordinator DE round-5 dispatch;
+EV_REPLAY_PLAN.md section 2 ("the env takes an EXPLICIT window list and stamps
+it, never chooses"); USER ruling R-409 (a day with a blackout accrues on its
+non-blackout complement; the blackout windows are masked as accounted loss);
+R-410/R-411/R-412 (a mask is CONSUMED when present for any day and REQUIRED
+from the governed day; the PRODUCER's committed artifact is the contract).
+RESEARCH-ONLY, OFFLINE: no venue port, no order path.
+
+WHAT IT DOES, AND THE ONE THING IT MUST NOT DO.  Given a UTC day, a calendar
+of PRESENT windows per coin, and DA's blackout mask, it emits
+`PRESENT - masked` as ReplayWindowSpec-shaped records.  It SUPPLIES and
+STAMPS.  It does not SELECT: window admission is an R-ADMISS decision the
+coordinator ratifies, and what this module produces is the thing that gets
+ratified, not the ratification.  So it reads NO day verdict, computes NO
+eligibility, and its emission carries a closed schema that REFUSES any
+decision-shaped field (rule 14: models estimate, policy decides).
+
+THE PRODUCER'S COMMITTED ARTIFACT IS THE CONTRACT (R-412 ruling 1).  The
+envelope asserted here is DA's as committed -- `artifact ==
+"da_blackout_mask_v1"`, `coins`, per-coin `masked_windows` / `n_masked` /
+`n_windows_total`, top-level `day_closed_calendar` -- and NOT a paraphrase of
+it.  RR8-1 is the reason that sentence is in this docstring: BE's adapter
+asserted `protocol`/`per_coin` against DA's `artifact`/`coins`, both suites
+green, and only a check that loaded the REAL committed file could fail.  The
+seam test below therefore loads the real 09-01 artifact, and takes its
+empty-mask control from DA's OWN producer rather than from a hand-built
+envelope -- a hand-built envelope is precisely what drifted.
+
+TWO READINGS OF ONE DISPATCH CLAUSE, BOTH IMPLEMENTED.  "a supplied window
+that the mask masks (contradiction -> refuse)" can mean the mask masks a
+window the caller did not supply, or the emitted list still contains a masked
+window.  The first would otherwise be a silent drop and the second a broken
+subtraction, so BOTH are guards here and neither reading is guessed away.
+The reading that would make masked-windows-in-PRESENT refuse is the one
+reading NOT taken, because it would make the subtraction unimplementable --
+recorded so the choice is visible and correctable.
+
+    python3 live/pm_research/de_admissible_windows.py --selftest
+    python3 live/pm_research/de_admissible_windows.py supply --day 20260901
+"""
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import sys
+from pathlib import Path
+from typing import Any, Callable, Iterable, Sequence
+
+PROTOCOL = "de_admissible_windows_v1"
+ROOT = Path(__file__).resolve().parents[2]
+
+# ---- CITED CONSTANTS.  Every one is read from a ruled text or the committed
+# artifact; none is chosen here, and a new one would be an escalation.
+MASK_ARTIFACT_KIND = "da_blackout_mask_v1"      # the committed envelope
+MASK_DIR = ROOT / "data/pm_5min/derived"
+MASK_STEM = "da_blackout_mask_{day}.json"       # R-412: the path already agrees
+MASK_GOVERNED_FROM_DAY = "20260902"             # R-410/R-412 EFFECTIVE_FROM_DAY
+SLUG_FORM = "{coin}-updown-5m-{start}"          # the repo's slug, not a new one
+
+REQUIRED_MASK_TOP = ("artifact", "day", "coins", "day_closed_calendar",
+                     "as_of_utc")
+REQUIRED_COIN_FIELDS = ("masked_windows", "n_masked", "n_windows_total")
+
+# A decision-shaped field must never appear in what this module emits.
+DECISION_VOCAB = ("verdict", "eligible", "race_accrual_eligible", "admissible",
+                  "accrues", "day_quality_pass", "decision_eligible", "pass",
+                  "all_pass", "gate", "promote", "winner")
+
+SPEC_KEYS = ("slug", "coin", "start", "inputs_hash")
+
+
+# Modules that produce or read a DAY VERDICT.  Importing one here would make
+# this supplier a decider; the check below is over the module's PARSED import
+# list rather than over its text, because a source grep can see a deleted
+# line and cannot see a value that arrived another way.
+VERDICT_MODULES = ("da_forward_day_verify", "da_dayverdict",
+                   "harmful_forward_scorer")
+
+
+def imported_modules(src: str) -> set[str]:
+    import ast
+    out: set[str] = set()
+    for node in ast.walk(ast.parse(src)):
+        if isinstance(node, ast.Import):
+            out |= {a.name.split(".")[0] for a in node.names}
+        elif isinstance(node, ast.ImportFrom) and node.module:
+            out.add(node.module.split(".")[0])
+    return out
+
+
+def reads_no_verdict(imports: Iterable[str]) -> bool:
+    return not (set(imports) & set(VERDICT_MODULES))
+
+
+class AdmissibleWindowsRefused(RuntimeError):
+    """An input this module will not guess at, or a contradiction between two
+    inputs.  Refusal is the product; a silent drop is not (rule 4)."""
+
+
+# ---------------------------------------------------------------------------
+# 1. the mask -- loaded and validated against the COMMITTED envelope
+# ---------------------------------------------------------------------------
+
+def mask_path(day: str) -> Path:
+    return MASK_DIR / MASK_STEM.format(day=day)
+
+
+def is_governed(day: str) -> bool:
+    """A day is GOVERNED from the frozen rule's EFFECTIVE_FROM_DAY onward.
+    Governance decides whether a mask is REQUIRED; PRESENCE decides whether
+    one is consumed (R-411's in-band amendment of R-410)."""
+    return str(day) >= MASK_GOVERNED_FROM_DAY
+
+
+def validate_mask(mask: Any, day: str) -> None:
+    """REFUSE anything that is not the producer's committed envelope."""
+    if not isinstance(mask, dict):
+        raise AdmissibleWindowsRefused("mask is not an object")
+    missing = [k for k in REQUIRED_MASK_TOP if k not in mask]
+    if missing:
+        raise AdmissibleWindowsRefused(
+            f"mask is MISSING top-level {missing}. The PRODUCER's committed "
+            f"artifact is the contract (R-412 ruling 1): the envelope is "
+            f"`artifact`/`coins`/`day_closed_calendar`, not `protocol`/"
+            f"`per_coin` -- asserting a paraphrase is RR8-1.")
+    if mask["artifact"] != MASK_ARTIFACT_KIND:
+        raise AdmissibleWindowsRefused(
+            f"mask declares artifact {mask['artifact']!r}, which does not "
+            f"identify as {MASK_ARTIFACT_KIND!r}")
+    if str(mask["day"]) != str(day):
+        raise AdmissibleWindowsRefused(
+            f"mask is for day {mask['day']!r}, not {day!r}. A mask read for "
+            f"the wrong day would mask real windows and unmask masked ones.")
+    if mask["day_closed_calendar"] is not True:
+        raise AdmissibleWindowsRefused(
+            f"mask carries day_closed_calendar={mask['day_closed_calendar']!r}. "
+            f"A partial mask lists only the windows that exist SO FAR, so "
+            f"supplying off one supplies the complement of a day that has not "
+            f"finished (the artifact's own consumer_note says exactly this).")
+    coins = mask["coins"]
+    if not isinstance(coins, dict) or not coins:
+        raise AdmissibleWindowsRefused("mask.coins must be a non-empty object")
+    for coin, body in coins.items():
+        miss = [k for k in REQUIRED_COIN_FIELDS if k not in body]
+        if miss:
+            raise AdmissibleWindowsRefused(
+                f"mask.coins[{coin!r}] is MISSING {miss}")
+        if not isinstance(body["masked_windows"], list):
+            raise AdmissibleWindowsRefused(
+                f"mask.coins[{coin!r}].masked_windows is not a list")
+        if len(body["masked_windows"]) != body["n_masked"]:
+            raise AdmissibleWindowsRefused(
+                f"mask.coins[{coin!r}]: n_masked={body['n_masked']} but "
+                f"{len(body['masked_windows'])} windows are listed -- the "
+                f"producer's own count and list disagree")
+
+
+def load_mask(day: str, path: Path | None = None) -> dict:
+    p = path or mask_path(day)
+    if not p.exists():
+        raise AdmissibleWindowsRefused(f"no mask artifact at {p}")
+    mask = json.loads(p.read_text())
+    validate_mask(mask, day)
+    return mask
+
+
+def mask_identity(mask: dict | None) -> dict:
+    """What `inputs_hash` must cover: the mask's IDENTITY, not its prose.
+
+    Two runs whose masks differ in which windows they mask must not produce
+    the same stamp, and two runs under the same mask must -- so the identity
+    is (artifact, day, as_of, per-coin masked starts) and nothing else."""
+    if mask is None:
+        return {"artifact": None, "day": None, "as_of_utc": None,
+                "masked": {}, "basis": "NO_MASK"}
+    return {
+        "artifact": mask["artifact"],
+        "day": str(mask["day"]),
+        "as_of_utc": mask["as_of_utc"],
+        "masked": {c: sorted(int(w) for w in b["masked_windows"])
+                   for c, b in sorted(mask["coins"].items())},
+        "basis": "MASK",
+    }
+
+
+def _sha(obj: Any) -> str:
+    return hashlib.sha256(json.dumps(obj, sort_keys=True,
+                                     separators=(",", ":")).encode()
+                          ).hexdigest()
+
+
+# ---------------------------------------------------------------------------
+# 2. the guards -- named, enumerated, and individually auditable
+# ---------------------------------------------------------------------------
+# Each guard is a NAMED predicate that raises.  They are a list rather than a
+# run of inline `if`s so the mutation audit can disable exactly one and prove
+# the corresponding known-bad stops firing -- a guard nobody can switch off is
+# a guard nobody has shown to be load-bearing (R-346's blank-each-refusal).
+
+def _g_mask_required(ctx) -> None:
+    if ctx["mask"] is None and is_governed(ctx["day"]):
+        raise AdmissibleWindowsRefused(
+            f"day {ctx['day']} is GOVERNED (>= {MASK_GOVERNED_FROM_DAY}) and "
+            f"no mask artifact was supplied; expected it at "
+            f"{mask_path(ctx['day'])}. Absence must mean 'the producer did "
+            f"not run', never 'nothing was thin' (R-412 ruling 2), so "
+            f"accrual on the complement cannot silently become no accrual.")
+
+
+def _g_coin_present_in_mask(ctx) -> None:
+    if ctx["mask"] is None:
+        return
+    absent = sorted(c for c in ctx["present"] if c not in ctx["mask"]["coins"])
+    if absent:
+        raise AdmissibleWindowsRefused(
+            f"coin(s) {absent} are PRESENT but carry no entry in the mask's "
+            f"`coins`. An absent coin is not a coin with nothing masked -- "
+            f"absence is not a pass, and treating it as one would supply a "
+            f"coin's whole day unmasked on the producer's silence.")
+
+
+def _g_masked_subset_of_present(ctx) -> None:
+    if ctx["mask"] is None:
+        return
+    for coin, starts in sorted(ctx["present"].items()):
+        body = ctx["mask"]["coins"].get(coin)
+        if body is None:
+            # NOT this guard's job: a coin absent from the mask is
+            # `coin_present_in_mask`'s refusal. Skipping keeps each guard to
+            # exactly one job -- the first version indexed blindly and, with
+            # the other guard disabled, raised a KeyError instead of
+            # refusing. A crash is not a refusal, and the mutation audit is
+            # what surfaced it.
+            continue
+        have = set(starts)
+        masked = {int(w) for w in body["masked_windows"]}
+        orphan = sorted(masked - have)
+        if orphan:
+            raise AdmissibleWindowsRefused(
+                f"{coin}: the mask masks {len(orphan)} window(s) that the "
+                f"supplied calendar does not contain (first {orphan[:3]}). "
+                f"The two inputs disagree about what EXISTS; dropping them "
+                f"silently is the rule-4 failure.")
+
+
+def _g_no_masked_window_emitted(ctx) -> None:
+    """Post-condition on this module's OWN output."""
+    if ctx["mask"] is None:
+        return
+    for coin, specs in sorted(ctx["emitted"].items()):
+        body = ctx["mask"]["coins"].get(coin)
+        if body is None:
+            continue
+        masked = {int(w) for w in body["masked_windows"]}
+        leaked = sorted(s["start"] for s in specs if s["start"] in masked)
+        if leaked:
+            raise AdmissibleWindowsRefused(
+                f"{coin}: {len(leaked)} MASKED window(s) survived the "
+                f"subtraction (first {leaked[:3]}) -- the emission "
+                f"contradicts the mask it was built from")
+
+
+def _g_no_decision_field(ctx) -> None:
+    """Nothing decision-shaped may leave here (rule 14)."""
+    hits = [k for k in _walk_keys(ctx["emission"]) if k in DECISION_VOCAB]
+    if hits:
+        raise AdmissibleWindowsRefused(
+            f"the emission carries decision-shaped field(s) {sorted(set(hits))}. "
+            f"This module SUPPLIES and STAMPS; admission is an R-ADMISS "
+            f"decision the coordinator ratifies, and a supplier that shipped "
+            f"a verdict would be making it.")
+
+
+def _walk_keys(obj: Any) -> Iterable[str]:
+    if isinstance(obj, dict):
+        for k, v in obj.items():
+            yield str(k)
+            yield from _walk_keys(v)
+    elif isinstance(obj, (list, tuple)):
+        for v in obj:
+            yield from _walk_keys(v)
+
+
+GUARDS: tuple[tuple[str, Callable], ...] = (
+    ("mask_required_on_governed_day", _g_mask_required),
+    ("coin_present_in_mask", _g_coin_present_in_mask),
+    ("masked_subset_of_present", _g_masked_subset_of_present),
+    ("no_masked_window_emitted", _g_no_masked_window_emitted),
+    ("no_decision_field", _g_no_decision_field),
+)
+GUARD_NAMES = tuple(n for n, _ in GUARDS)
+
+
+# ---------------------------------------------------------------------------
+# 3. supply
+# ---------------------------------------------------------------------------
+
+def window_spec(coin: str, start: int, ident_hash: str) -> dict:
+    """A ReplayWindowSpec-shaped record (contracts v25 `ReplayWindowSpec`:
+    slug + inputs_hash), carrying coin and start so a consumer never has to
+    re-parse the slug to get them back."""
+    return {"slug": SLUG_FORM.format(coin=coin, start=start),
+            "coin": coin, "start": int(start),
+            "inputs_hash": _sha({"mask_identity": ident_hash, "coin": coin,
+                                 "start": int(start)})}
+
+
+def supply(day: str, present: dict[str, Sequence[int]],
+           mask: dict | None = None, *, mask_path_override: Path | None = None,
+           load_if_present: bool = True,
+           skip_guard: str | None = None) -> dict:
+    """PRESENT - masked, per coin, as stamped window specs.
+
+    `mask` may be passed directly (the seam test does, from the producer);
+    otherwise it is loaded from the committed path when one exists.  A day at
+    or after the governed day REFUSES without one; before it, a mask is
+    consumed when present and permitted absent -- and the emission says
+    WHICH, because "no mask" and "empty mask" are different facts."""
+    if not isinstance(present, dict) or not present:
+        raise AdmissibleWindowsRefused(
+            "present must be a non-empty {coin: [window starts]} calendar; "
+            "this module never derives it -- deriving the calendar is "
+            "selecting, and it supplies")
+    for coin, starts in present.items():
+        if not isinstance(starts, (list, tuple)):
+            raise AdmissibleWindowsRefused(f"present[{coin!r}] is not a list")
+        if len(set(starts)) != len(starts):
+            raise AdmissibleWindowsRefused(
+                f"present[{coin!r}] carries duplicate window starts")
+    if mask is None and load_if_present:
+        p = mask_path_override or mask_path(day)
+        if p.exists():
+            mask = load_mask(day, p)
+    if mask is not None:
+        validate_mask(mask, day)
+
+    ident = mask_identity(mask)
+    ident_hash = _sha(ident)
+    emitted: dict[str, list] = {}
+    counts: dict[str, dict] = {}
+    ctx = {"day": str(day), "present": {c: list(s) for c, s in present.items()},
+           "mask": mask, "emitted": emitted, "emission": None}
+
+    for name, guard in GUARDS:
+        if name == skip_guard or guard is _g_no_masked_window_emitted \
+                or guard is _g_no_decision_field:
+            continue                      # post-conditions run after emission
+        guard(ctx)
+
+    for coin, starts in sorted(ctx["present"].items()):
+        masked = set()
+        if mask is not None and coin in mask["coins"]:
+            masked = {int(w) for w in mask["coins"][coin]["masked_windows"]}
+        keep = [s for s in sorted(int(x) for x in starts) if s not in masked]
+        emitted[coin] = [window_spec(coin, s, ident_hash) for s in keep]
+        counts[coin] = {"n_present": len(starts), "n_masked_applied":
+                        len(masked & set(int(x) for x in starts)),
+                        "n_supplied": len(keep)}
+
+    emission = {
+        "protocol": PROTOCOL,
+        "day": str(day),
+        "governed": is_governed(day),
+        "mask_consumed": mask is not None,
+        "mask_requirement_basis": (
+            f"GOVERNED from {MASK_GOVERNED_FROM_DAY} (R-410/R-412): a mask is "
+            f"REQUIRED" if is_governed(day) else
+            f"PRE-GOVERNED (< {MASK_GOVERNED_FROM_DAY}): a mask is CONSUMED "
+            f"when present and permitted absent (R-411)"),
+        "mask_identity": ident,
+        "mask_identity_hash": ident_hash,
+        "counts": counts,
+        "n_supplied_total": sum(v["n_supplied"] for v in counts.values()),
+        "windows": emitted,
+        "supplies_not_selects":
+            "window admission is an R-ADMISS decision the coordinator "
+            "ratifies; this emission is what gets ratified, not the "
+            "ratification",
+    }
+    ctx["emission"] = emission
+    for name, guard in GUARDS:
+        if name == skip_guard:
+            continue
+        if guard in (_g_no_masked_window_emitted, _g_no_decision_field):
+            guard(ctx)
+    return emission
+
+
+# ---------------------------------------------------------------------------
+# 4. selftest -- red-first, on the producer's REAL rows
+# ---------------------------------------------------------------------------
+REAL_DAY = "20260901"
+EMPTY_DAY = "20260827"
+EXPECTED_CHECKS = 30
+
+
+def _grid(day: str) -> list[int]:
+    """The day's 5-minute grid, from DA's OWN day bounds and window length --
+    not a convention invented here."""
+    import da_blackout_mask as M
+    lo, _hi = M.day_bounds(day)
+    return [lo + M.WINDOW_S * i for i in range(M.WINDOWS_PER_DAY)]
+
+
+def selftest() -> int:
+    n = [0]
+
+    def ok(cond, label):
+        if not cond:
+            raise SystemExit(f"[de_admissible_windows] FAIL: {label}")
+        n[0] += 1
+        print(f"  PASS  {label}")
+
+    def refuses(fn, label, needle=None):
+        try:
+            fn()
+        except AdmissibleWindowsRefused as exc:
+            if needle and needle not in str(exc):
+                raise SystemExit(
+                    f"[de_admissible_windows] FAIL: {label} -- refused, but "
+                    f"not for the stated reason ({exc})")
+            n[0] += 1
+            print(f"  PASS  {label}")
+            return
+        raise SystemExit(f"[de_admissible_windows] FAIL (no refusal): {label}")
+
+    # ---- the REAL committed artifact ----------------------------------
+    real_path = mask_path(REAL_DAY)
+    ok(real_path.exists(),
+       f"the producer's committed artifact is on disk at {real_path.name} -- "
+       f"the seam test reads it, not a fixture (RR8-1's only kind of check)")
+    real = load_mask(REAL_DAY)
+    ok(real["artifact"] == MASK_ARTIFACT_KIND and "coins" in real
+       and real["day_closed_calendar"] is True,
+       f"and it loads under the COMMITTED envelope: artifact "
+       f"{real['artifact']!r}, `coins`, day_closed_calendar true")
+
+    grid = _grid(REAL_DAY)
+    present = {c: list(grid) for c in real["coins"]}
+    em = supply(REAL_DAY, present, real)
+
+    # numbers READ from the artifact, never literalled
+    per_coin_ok = all(
+        len(em["windows"][c]) == real["coins"][c]["n_windows_total"]
+        - real["coins"][c]["n_masked"] for c in real["coins"])
+    ok(per_coin_ok,
+       "PER COIN, against the artifact's OWN numbers: len(window list) == "
+       "n_windows_total - n_masked for all "
+       f"{len(real['coins'])} coins "
+       f"({ {c: len(em['windows'][c]) for c in sorted(real['coins'])} })")
+    ok(em["n_supplied_total"]
+       == sum(v["n_windows_total"] - v["n_masked"]
+              for v in real["coins"].values())
+       and em["n_supplied_total"]
+       == len(grid) * len(real["coins"]) - real["total_masked_windows"],
+       f"and the total reconciles two independent ways: "
+       f"{em['n_supplied_total']} supplied = 288x{len(real['coins'])} - "
+       f"{real['total_masked_windows']} masked")
+    ok(all(s["start"] not in set(real["coins"][c]["masked_windows"])
+           for c, specs in em["windows"].items() for s in specs),
+       "no masked window survives the subtraction, checked over every "
+       "emitted record")
+    ok(em["mask_consumed"] is True and em["governed"] is False
+       and "PRE-GOVERNED" in em["mask_requirement_basis"],
+       "09-01 is PRE-GOVERNED and its mask is CONSUMED ANYWAY -- presence "
+       "consumes, governance requires (R-411's in-band amendment), and the "
+       "emission says which")
+
+    # ---- the stamp ----------------------------------------------------
+    spec = em["windows"]["btc"][0]
+    ok(set(spec) == set(SPEC_KEYS) and spec["slug"].startswith("btc-updown-5m-")
+       and len(spec["inputs_hash"]) == 64,
+       f"records are ReplayWindowSpec-shaped and stamped: {spec['slug']}")
+    ok(em["mask_identity"]["masked"]["btc"]
+       == sorted(real["coins"]["btc"]["masked_windows"])
+       and em["mask_identity"]["as_of_utc"] == real["as_of_utc"],
+       "the stamp's identity covers the artifact name, day, as_of and the "
+       "per-coin masked starts -- the mask's identity, not its prose")
+    moved = json.loads(json.dumps(real))
+    moved["coins"]["btc"]["masked_windows"] = \
+        moved["coins"]["btc"]["masked_windows"][:-1]
+    moved["coins"]["btc"]["n_masked"] -= 1
+    em2 = supply(REAL_DAY, present, moved)
+    ok(em2["mask_identity_hash"] != em["mask_identity_hash"]
+       and em2["windows"]["btc"][0]["inputs_hash"]
+       != em["windows"]["btc"][0]["inputs_hash"],
+       "KNOWN-BAD ON THE STAMP: unmasking ONE window changes the identity "
+       "hash AND every window's inputs_hash -- a stamp that did not move "
+       "would let two different masks produce the same provenance")
+    ok(supply(REAL_DAY, present, real)["mask_identity_hash"]
+       == em["mask_identity_hash"],
+       "POSITIVE CONTROL: the same mask stamps identically, so the hash is "
+       "sensitive to content and not to the run")
+
+    # ---- the empty mask, from DA's OWN producer ------------------------
+    import da_blackout_mask as M
+    empty = M.build_mask(EMPTY_DAY)
+    ok(empty["total_masked_windows"] == 0 and empty["artifact"]
+       == MASK_ARTIFACT_KIND and sorted(empty) == sorted(real),
+       f"the empty-mask control is the PRODUCER's own emission for "
+       f"{EMPTY_DAY} (0 masked, same envelope keys as the committed file) -- "
+       f"not a hand-built envelope, which is exactly what drifted in RR8-1")
+    grid_e = _grid(EMPTY_DAY)
+    em_e = supply(EMPTY_DAY, {c: list(grid_e) for c in empty["coins"]}, empty)
+    ok(all(len(em_e["windows"][c]) == len(grid_e) for c in empty["coins"])
+       and em_e["mask_consumed"] is True,
+       f"an EMPTY mask supplies the FULL list: "
+       f"{ {c: len(v) for c, v in sorted(em_e['windows'].items())} }")
+
+    # ---- refusals, each red-first, each with its positive control ------
+    refuses(lambda: supply("20260902", {"btc": [1]}, None, load_if_present=False),
+            "KNOWN-BAD: a GOVERNED day with no mask REFUSES and names the "
+            "expected path",
+            needle="da_blackout_mask_20260902.json")
+    ok(supply("20260901", {"btc": [1]}, None,
+              load_if_present=False)["mask_consumed"] is False,
+       "POSITIVE CONTROL: the same call on a PRE-GOVERNED day is permitted, "
+       "and the emission records mask_consumed false rather than implying an "
+       "empty mask -- 'no mask' and 'empty mask' are different facts")
+    partial = json.loads(json.dumps(real))
+    partial["day_closed_calendar"] = False
+    refuses(lambda: supply(REAL_DAY, present, partial),
+            "KNOWN-BAD: day_closed_calendar false REFUSES -- a partial mask "
+            "lists only the windows that exist so far",
+            needle="day_closed_calendar")
+    drift = json.loads(json.dumps(real))
+    drift["protocol"] = drift.pop("artifact")
+    drift["per_coin"] = drift.pop("coins")
+    refuses(lambda: supply(REAL_DAY, present, drift),
+            "KNOWN-BAD (RR8-1 in this seat): the `protocol`/`per_coin` "
+            "envelope REFUSES -- the producer's committed artifact is the "
+            "contract, and asserting a paraphrase is the defect",
+            needle="MISSING top-level")
+    wrongday = json.loads(json.dumps(real))
+    wrongday["day"] = "20260831"
+    refuses(lambda: supply(REAL_DAY, present, wrongday),
+            "KNOWN-BAD: a mask for another day REFUSES -- it would mask real "
+            "windows and unmask masked ones")
+    miscount = json.loads(json.dumps(real))
+    miscount["coins"]["eth"]["n_masked"] += 1
+    refuses(lambda: supply(REAL_DAY, present, miscount),
+            "KNOWN-BAD: the producer's own count and list disagreeing REFUSES")
+    refuses(lambda: supply(REAL_DAY, dict(present, newcoin=list(grid)), real),
+            "KNOWN-BAD: a coin PRESENT but absent from `coins` REFUSES -- "
+            "absence is not a coin with nothing masked",
+            needle="absence is not a pass")
+    short = {c: [s for s in grid
+                 if s != real["coins"][c]["masked_windows"][0]]
+             for c in real["coins"]}
+    refuses(lambda: supply(REAL_DAY, short, real),
+            "KNOWN-BAD: the mask masking a window the calendar does not "
+            "contain REFUSES -- the two inputs disagree about what EXISTS, "
+            "and dropping it silently is the rule-4 failure",
+            needle="disagree about what EXISTS")
+    refuses(lambda: supply(REAL_DAY, {}, real),
+            "KNOWN-BAD: an empty calendar REFUSES -- this module never "
+            "derives one, because deriving it would be selecting")
+    refuses(lambda: supply(REAL_DAY, {"btc": [1, 1]}, real),
+            "KNOWN-BAD: duplicate window starts REFUSE")
+
+    # ---- it supplies, it does not select -------------------------------
+    ok(not any(k in DECISION_VOCAB for k in _walk_keys(em)),
+       "the emission carries NO decision-shaped field -- checked over every "
+       "key at every depth, not asserted")
+    imps = imported_modules(Path(__file__).read_text())
+    ok(reads_no_verdict(imps),
+       f"and the module IMPORTS no verdict producer -- checked over its "
+       f"parsed import list {sorted(imps)}, not by grepping its own text for "
+       f"a word (a source grep can see a deleted line but not a value that "
+       f"arrived another way, which is the F-1 shape)")
+    ok(not reads_no_verdict(imps | {VERDICT_MODULES[0]}),
+       f"KNOWN-BAD: adding {VERDICT_MODULES[0]!r} to that same import list "
+       f"trips the predicate, so it is a check and not a constant")
+    leaky = dict(em, all_pass=True)
+    refuses(lambda: _g_no_decision_field({"emission": leaky}),
+            "KNOWN-BAD: a decision-shaped field in the emission REFUSES, so "
+            "the check above is a filter and not a blanket")
+
+    # ---- mutation audit: every guard blanked, one at a time -------------
+    audit = mutation_audit(real, present, grid)
+    ok(audit["all_load_bearing"],
+       f"MUTATION AUDIT: each of the {audit['n_input_guards']} INPUT guards "
+       f"was disabled in turn and its known-bad STOPPED refusing -- every one "
+       f"is load-bearing, none is decoration ({audit['survivors']} survivors)")
+    ok(all(v["kind"] == "POST_CONDITION"
+           for k, v in audit["per_guard"].items()
+           if k in ("no_masked_window_emitted", "no_decision_field"))
+       and audit["n_post_conditions"] == 2,
+       "and the two POST-CONDITIONS are reported as post-conditions, not "
+       "counted as killed mutants: they check this module's own emission and "
+       "no input can make them fire, so a mutation 'kill' there would be a "
+       "control that cannot fail wearing a kill's clothes")
+    ok(audit["n_guards"] == len(GUARDS) and set(audit["per_guard"])
+       == set(GUARD_NAMES),
+       f"and the audit covers every declared guard by name: "
+       f"{sorted(audit['per_guard'])}")
+
+    ok(n[0] + 1 == EXPECTED_CHECKS,
+       f"check count asserted at run time: {n[0] + 1} == {EXPECTED_CHECKS}")
+    print(f"[de_admissible_windows] selftest OK -- {n[0]} checks")
+    return 0
+
+
+def mutation_audit(real: dict, present: dict, grid: list) -> dict:
+    """Blank each INPUT guard in turn and confirm its known-bad stops firing.
+
+    A guard that refuses whether or not it runs is being done by something
+    else, and counting it would inflate the boundary (R-346: five of nineteen
+    refusals were invisible to a green suite; one was dead code).
+
+    THE FIRST VERSION OF THIS HARNESS WAS BROKEN and said so loudly enough to
+    be caught: its "live" run passed `skip_guard` too, so every guard was
+    measured with itself already disabled and three read as survivors. A
+    broken mutation harness and a perfectly-covered suite produce identical
+    output (R-347), which is why the live and disabled runs are now visibly
+    different calls.
+
+    POST-CONDITIONS ARE REPORTED SEPARATELY, NOT COUNTED AS MUTANTS. Two
+    guards check this module's OWN emission and cannot be made to fire by any
+    input -- only by a broken subtraction. Driving them at the unit is their
+    control (the selftest does), and calling that a killed mutant would be a
+    control that cannot fail wearing a kill's clothes."""
+    def _short_calendar():
+        return {c: [s for s in grid
+                    if s != real["coins"][c]["masked_windows"][0]]
+                for c in real["coins"]}
+
+    # (live call, disabled call) per INPUT guard -- visibly different calls
+    cases = {
+        "mask_required_on_governed_day": (
+            lambda: supply("20260902", {"btc": [1]}, None,
+                           load_if_present=False),
+            lambda: supply("20260902", {"btc": [1]}, None,
+                           load_if_present=False,
+                           skip_guard="mask_required_on_governed_day")),
+        "coin_present_in_mask": (
+            lambda: supply(REAL_DAY, dict(present, newcoin=list(grid)), real),
+            lambda: supply(REAL_DAY, dict(present, newcoin=list(grid)), real,
+                           skip_guard="coin_present_in_mask")),
+        "masked_subset_of_present": (
+            lambda: supply(REAL_DAY, _short_calendar(), real),
+            lambda: supply(REAL_DAY, _short_calendar(), real,
+                           skip_guard="masked_subset_of_present")),
+    }
+    per_guard: dict[str, dict] = {}
+    for name, (live, disabled) in cases.items():
+        try:
+            live()
+            refused_live = False
+        except AdmissibleWindowsRefused:
+            refused_live = True
+        try:
+            disabled()
+            refused_disabled = False
+        except AdmissibleWindowsRefused:
+            refused_disabled = True
+        per_guard[name] = {"kind": "INPUT",
+                           "refuses_when_live": refused_live,
+                           "refuses_when_disabled": refused_disabled,
+                           "load_bearing": refused_live and not refused_disabled}
+
+    # the two post-conditions, driven at the unit, reported as what they are
+    for name, drive in (
+            ("no_masked_window_emitted",
+             lambda: _g_no_masked_window_emitted({
+                 "mask": real,
+                 "emitted": {"btc": [window_spec(
+                     "btc", real["coins"]["btc"]["masked_windows"][0], "x")]}})),
+            ("no_decision_field",
+             lambda: _g_no_decision_field({"emission": {"all_pass": True}}))):
+        try:
+            drive()
+            fires = False
+        except AdmissibleWindowsRefused:
+            fires = True
+        per_guard[name] = {"kind": "POST_CONDITION",
+                           "fires_on_its_known_bad": fires,
+                           "load_bearing": fires}
+
+    survivors = sorted(k for k, v in per_guard.items()
+                       if not v["load_bearing"])
+    return {"n_guards": len(per_guard),
+            "n_input_guards": len(cases),
+            "n_post_conditions": len(per_guard) - len(cases),
+            "per_guard": per_guard, "survivors": survivors,
+            "all_load_bearing": not survivors}
+
+
+def main(argv=None) -> int:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--selftest", action="store_true")
+    ap.add_argument("cmd", nargs="?", choices=["supply"])
+    ap.add_argument("--day", default=REAL_DAY)
+    a = ap.parse_args(argv)
+    if a.selftest:
+        return selftest()
+    if a.cmd == "supply":
+        if selftest() != 0:
+            return 1
+        mask = load_mask(a.day)
+        em = supply(a.day, {c: list(_grid(a.day)) for c in mask["coins"]}, mask)
+        print(json.dumps({k: v for k, v in em.items() if k != "windows"},
+                         indent=2, sort_keys=True))
+        return 0
+    ap.print_help()
+    return 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
