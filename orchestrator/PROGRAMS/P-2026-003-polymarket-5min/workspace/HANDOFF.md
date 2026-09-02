@@ -1,11 +1,13 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-02T23:34Z — **THE ADDENDUM v2 PACKAGE IS FORWARDED TO THE USER**
-at `35452c0`, DRAFT **`cb693000880c3d94`** — released by the reviewer at
-`650569c`, forwarded per **R-484**. **Five asks are with the USER**, and
-**USER-pending items are now FOUR**. The DRAFT's delta is **+17 −0**: *the text
-the reviewer released is still, line for line, inside the text the USER reads.*
-DE round 40 executed at `35452c0` with every ruling driven. **Run: NO DATE.**
+Updated: 2026-09-02T23:41Z — **DE round 40 RELEASED (`c3f8743`)** — ruling (i)
+**YES**, (ii)+(iii) closed on a **21-field measurement (one moves)**, DE39-R1
+closed, DE39-R2 **closed in form**; three new LOW/LOW-MED findings → **round 41,
+in flight**. **And the reviewer PRICED the USER's ask (5) per answer:** MECHANICS
+= **one field, one refusal, one falsifier**; `score`-split = **a round AND a
+re-declaration that travels back to the USER.** *One branch of the answer ends in
+another question for the same person.* **Its estimate, nothing decided (rule
+14).** **Run: NO DATE.**
 
 ## READ FIRST — current project handoff
 
@@ -138,6 +140,14 @@ diagnostic**, below.
 > `inf` **plus the identity**; **§5** repost parity **with the
 > `enable_reduce` clause**; and **§1a** TRAIN/SCORE, **ruled WITH §2 and
 > §4**, not separately.
+>
+> **The reviewer has PRICED ask (5) per answer — its ESTIMATE, nothing decided
+> (rule 14), R-485 + `c3f8743`:** answering **MECHANICS** costs **one field,
+> one refusal, one falsifier**; answering **`score`-split** costs **a round
+> AND a re-declaration that travels BACK to the USER.** *One branch of the
+> answer ends in another question for the same person* — which is exactly the
+> kind of thing a decision-maker should know before answering rather than
+> after.
 >
 > **The delta is worth one line of its own: +17 −0.** The round that carried
 > the clause **added seventeen lines and removed none** — so **the text the
@@ -854,7 +864,8 @@ launchers at **235/19**.
 | **DE round 39** | **LANDED and EXECUTED** at `cd93663` (Q-DE-57) — counts **31/115/26/21/26/21/184/92**; **all four DE38-C1 rulings BUILT as ruled**, plus DE38-R1+C3, C2, R3, R4, R2 and §2(iii) — **every step driven**. Shas verified here: runner `2976b46e…` (3,201 lines), score-stream `f85be335…` (420), DRAFT `6a62569f…` (290) |
 | **DE round 39 review** | **RELEASED** (`650569c`, 194 lines, 22:55:56Z) — **EVERY DE38 closure CONFIRMED, each driven**; the **six literals verified at BOTH sides of `851edaf`** by the reviewer's own `_fn_asts`; counts reproduced. **DE39-C1 CONFIRMED (LOW) and RULED in three parts**; two new findings **DE39-R1 (LOW-MED)** and **DE39-R2 (LOW)** |
 | **DE round 40** | **EXECUTED** at `35452c0` (Q-DE-58) — counts **31/119/26/21/26/21/184/92**; rulings (i)(ii)(iii), **DE39-R1** and **DE39-R2** all **driven**, with the **in-suite reordering invariance**. Verified here: runner `3f4bf21da2dfa188` (**3,329** lines, `EXPECTED_CHECKS = 119`), DRAFT `cb693000880c3d94` (**307** lines, **+17 −0** vs `cd93663`) |
-| **DE round 41** | **WAITS on the reviewer's DE-40 filing**. **The reviewer's step 5 (the wiring's expensive half) stays USER-GATED and NOT dispatched** |
+| **DE round 40 review** | **RELEASED** (`c3f8743`, 166 lines, 23:38:26Z) — **ruling (i) YES**; (ii)+(iii) **CONFIRMED CLOSED** on a **21-field measurement (one moves)**; **DE39-R1 CONFIRMED CLOSED**, **DE39-R2 closed in form**; three findings **DE40-R1 (LOW-MED)**, **DE40-R2 (LOW)**, **DE40-R3 (LOW)**. `35452c0` is round 41's base |
+| **DE round 41** | **IN FLIGHT** at base `35452c0` — DE40-R1/R2/R3, three-step order. **The reviewer's step 5 (the wiring's expensive half) stays USER-GATED and NOT dispatched** |
 | **DE round 26** | the **DATA_ROOT split**, still behind DA's landing after 00:14Z |
 | **DA round 11** | **REVIEW RELEASED** (`a5e8b40`) for `e292439` as the content of **Q-DA-209**; all five DA10 findings close. Two new findings **DA11-R1/R2** → DA round 12 |
 | **DA round 12 review** | **RELEASED** (`852b9aa`) for `636a455` as Q-DA-209's content — DA11-R1/R2 close; **DA12-R1 (LOW-MED)** → DA round 14 |
@@ -926,8 +937,9 @@ artifact in the round-5 review, R1/R3/R4/R5 at `5e9ed91`;
 **DE33-C1..C9** (C1/C2/C3 **HIGH**) → **DE round 34, dispatched**;
 **BE9-C1 (HIGH) / BE9-C2 (MED) / BE9-C3 (LOW)** → **BE round 10, dispatched**;
 **BE8-R1 / BE8-R2** → **BE round 12**;
-**DE39-C1's three rulings, DE39-R1 and DE39-R2 ALL DRIVEN** at `35452c0`;
-nothing from DE is open pending the reviewer's DE-40 filing;
+**DE39-C1's rulings, DE39-R1 and DE39-R2 CONFIRMED CLOSED** by the reviewer;
+**DE40-R1 (LOW-MED)**, **DE40-R2 (LOW)** and **DE40-R3 (LOW)** → **DE round
+41, in flight**;
 **BE10-R1..R4** → **BE round 12** with BE8-R1/R2;
 **DE31-R1, DE31-R2, DE32-R2, DE32-R3, DE32-R4 still OPEN** at `6d04833` and in the
 round-34 dispatch; **DE32-R1 closed for the LGBM head ONLY**; **DE32-R5 closed in
@@ -955,9 +967,9 @@ the REGISTER's state, not of the instrument's own escalation history** — a
 distinction worth keeping, because a reader at 00:14Z has no way to know which
 questions this particular tool once asked.
 
-**The reviewer is on DE round 40** (`REQUEST_DE_ROUND_40_2026-09-02.md`).
-**Released so far** include BE rounds 9+10 (`a8e88de`) and DE rounds 37
-(`3f1d310`), 38 (`0a5a6a7`) and 39 (`650569c`). **Released so far**
+**The reviewer is on RECORDED STANDBY.** **Released so far** include BE rounds
+9+10 (`a8e88de`) and DE rounds 37 (`3f1d310`), 38 (`0a5a6a7`), 39 (`650569c`) and
+40 (`c3f8743`). **Released so far**
 include BE round 8 (`f804f33`), the **estimand reading** (`a23667b`), **DE rounds
 33+34** (`20bd233`) and **DE round 35** (`df123f2`).
 **Released so far** include BE rounds 6 (`03b5dca`) and 7 (`0f34aad`), DE rounds
@@ -1772,6 +1784,49 @@ than a clean zero (the density receipt covers 13 days, not this one).
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-02 ~23:41Z (MEM) — A COST ESTIMATE THAT INCLUDES "AND THEN WE ASK
+### YOU AGAIN"
+
+**R-485 and the DE-40 filing swept.** Nothing run; committed blobs only; no plan,
+review or request file touched.
+
+**The item worth the round is the reviewer pricing ask (5) per ANSWER, not per
+task.** Answering **MECHANICS** costs **one field, one refusal, one falsifier**.
+Answering **`score`-split** costs **a round — and a re-declaration that travels
+BACK to the USER.** So **one branch of this decision ends in another question for
+the same person**, and the other does not.
+
+**That is a different kind of estimate from the ones this file has been carrying
+all evening**, and better. The compute figures priced *the work*; this prices
+*each answer*, including the answer's own follow-on. **A decision-maker told only
+the total cost cannot see that one option buys a second interruption of their own
+time.** It is the reviewer's **estimate and nothing is decided** — rule 14, and I
+have written it into the bundle block as a quoted estimate rather than as a
+recommendation, because a cost attached to one branch reads as advice unless it is
+labelled.
+
+**The closures are clean and one of them is measured rather than asserted.**
+Ruling (i) is **YES**; (ii)+(iii) are confirmed closed on a **21-field
+measurement in which exactly one field moves** — *the discriminating count, not
+the reassuring one*: twenty fields staying put is what makes the one that moves
+meaningful. **DE39-R1 is confirmed closed**, and **DE39-R2 is closed IN FORM** —
+a phrase I have kept exactly as filed, because "closed in form" and "closed" are
+different claims and the difference is the whole reason to write it down.
+
+**The three new findings are all small and all the same species this programme
+keeps meeting.** **DE40-R1**: `_by_ca` has **no falsifier** — a check with nothing
+that makes it fail. **DE40-R2**: `null_status` derived **from absence rather than
+from request** — a status inferred from a missing thing rather than from what was
+asked for. **DE40-R3**: a **six-field enumeration where the block is wider** — a
+list that will be right until the block grows. **Three LOWs, three shapes this
+file already has names for**, and none of them holds the base: `35452c0` is round
+41's base, three-step order.
+
+**Nothing else moved.** The package stays **FORWARDED at `35452c0`**, DRAFT
+**`cb693000880c3d94`**; **USER-pending remains FOUR**; the **run has NO DATE**;
+**step 5 stays USER-gated**. **My round 63 verified.** DE round 41 is **in flight**
+and the **reviewer is on recorded standby**.
 
 ### 2026-09-02 ~23:34Z (MEM) — FORWARDED, AND THE DELTA IS +17 −0
 

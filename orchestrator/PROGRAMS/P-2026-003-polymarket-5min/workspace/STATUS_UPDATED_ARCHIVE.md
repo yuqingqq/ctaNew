@@ -4547,3 +4547,62 @@ Moved in the MEM round-63 true-up of R-484 and Q-DE-58. Join rule as in batch 1.
   G=1/5; the 011 family 12 of 24 with Q4 failing; the sequencing rule; R-419
   revocable.
 ```
+
+## Batch 70 — archived 2026-09-02T23:41Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-64 true-up of R-485 and the DE-40 filing. Join rule as in batch 1.
+
+```yaml
+  2026-09-02T22:52Z (MEM ROUND 61 -- A DEGENERATE NULL THAT REFUSES ITS OWN
+  INTERVAL). R-482 and Q-DE-57 swept; nothing run; committed blobs only. I
+  VERIFIED ALL THREE SHAS AND BOTH LINE COUNTS AT cd93663 -- runner
+  2976b46e1eb67a22 (3,201), score-stream f85be3354610e2ce (420), DRAFT
+  6a62569f536e460f (290) -- and EXPECTED_CHECKS = 115. THE BUILD IS THE ANSWER TO
+  LAST ROUND'S RULING AND THE BEST PART OF IT IS A REFUSAL: a null whose accepted
+  set holds ONE DISTINCT DRAW now emits null: DEGENERATE (n_distinct_accepted =
+  1) with NO QUANTILES, NO net_diff, and the predicate interval:
+  POINT_ESTIMATE_NO_INTERVAL. THE ARTIFACT DECLINES TO PRODUCE THE STATISTIC IT
+  CANNOT SUPPORT -- rarer and more valuable than producing it with a caveat,
+  because A CAVEAT TRAVELS SEPARATELY FROM THE NUMBER AND A MISSING FIELD DOES
+  NOT. And accepted_by_stratum comes BEFORE any section 3 number: ORDERING IS AN
+  ARGUMENT -- the reader meets the population before the estimate, so a
+  degenerate accepted set cannot be discovered after the figure has been read.
+  THE GUARD'S RETIREMENT WAS DONE PROPERLY -- ITS PARSE CERTIFICATE WAS INVERTED,
+  NOT DELETED: a retired control that simply disappears leaves a suite that once
+  proved something and now proves nothing with no record of the change, while
+  inverting the certificate keeps the fact of the retirement INSIDE the thing
+  that used to assert it. DE39-C1 IS THE ONE CANDIDATE AND I READ IT AT THE BLOB
+  BECAUSE "DECISION-INERT" IS EXACTLY THE PHRASE THAT BURIES FINDINGS: the
+  computation is SET IDENTITY (_e["distinct"].add(frozenset(_keys)) and if _keys
+  == _above_by_st.get(_st, set()), :1382-1386) while the comment two lines below
+  promises STREAM IDENTITY ("the control's stream is then the treated arm's,
+  exactly") -- THE CODE COMPARES SETS OF KEYS, THE PROSE ASSERTS THE STREAMS ARE
+  EQUAL. They coincide today at one theta with enable_reduce False, and that is
+  the point: A DEFINITION MISMATCH THAT IS DECISION-INERT TODAY IS A DORMANT
+  FINDING, NOT A RESOLVED ONE -- it starts costing the moment a second theta or a
+  live enable_reduce makes the definitions come apart. THE REVIEWER'S TO RULE;
+  recorded OPEN, with the measurement, NOT closed. THAT IS THIS EVENING'S CLASS
+  IN ITS MOST EASILY-LOST POSITION: the gap between prose and computation has
+  appeared FOUR times today -- false about the code, true while the code was
+  absent, promising what the implementation removed, and now DESCRIBING A
+  STRONGER PROPERTY THAN THE COMPUTATION DELIVERS IN A PLACE WHERE NOTHING
+  CURRENTLY DISAGREES. THE FIRST THREE WERE CAUGHT BECAUSE SOMETHING FAILED; THIS
+  ONE CAN ONLY BE CAUGHT BY READING. THE BUNDLE'S REMAINING REASONS NOW EACH NAME
+  A SEAT AND A TIP: DE39-C1 -> the reviewer's round; condition (i) -- MEASURED as
+  built by the coordinator, THE REVIEWER'S CONFIRMATION BEING THE CLOSURE, not
+  the measurement; (ii)-(iv) -- MET at dfd4c00, TO BE RE-STATED at cd93663. A
+  BLOCKER WITH AN OWNER IS A BLOCKER; ONE WITHOUT IS A BACKLOG. THE DRAFT'S SHA
+  ADVANCED A FOURTH TIME (6edefdfda909a897 -> ec1538f1545999d1 ->
+  a45b87624f72b567 -> 6a62569f536e460f), FOUR SUPERSESSIONS IN FOUR ROUNDS, NONE
+  OF THEM A CORRECTION -- the AS-OF framing has now been tested more thoroughly
+  than most of the code. UNCHANGED AND STATED: the PHASE-4 RUN HAS NO DATE;
+  preflight() STILL REFUSES AT THE SCORER. SEATS: the reviewer on DE 39 AS ONE
+  ROUND (REQUEST_DE_ROUND_39_2026-09-02.md); DE, BE and DA on RECORDED STANDBY.
+  MY ROUND 60 VERIFIED WITH NOTHING FOUND, archive batch 66 recorded verbatim.
+  TONIGHT UNCHANGED: 00:06Z verdict, 00:14Z preflight, coordinator wake after,
+  R-409 accrual with the R-411(ii) denominator, DA landing at e353119 (HOLD ->
+  3b7e10a), BE round 11 = the durable landing, CO-8, --require-no-skips,
+  DATA_ROOT split. USER: SEVEN RULED, THREE OPEN, none needed tonight. UNCHANGED:
+  G=1/5; the 011 family 12 of 24 with Q4 failing; the sequencing rule; R-419
+  revocable.
+```
