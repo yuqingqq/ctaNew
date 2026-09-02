@@ -1,13 +1,13 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-02T22:11Z — **DE38-C1 CONFIRMED, reproduced independently, and
-RULED — by ADMITTING the identity draw rather than excluding it**: count it
-(`n_accepted_identity`), **retire the guard**, move `n_distinct`/`point_mass` to
-the **ACCEPTED** set, and let an accepted set of one distinct draw be **`null:
-DEGENERATE` — no interval, point estimate, labelled.** **The frozen matching rule
-is untouched; the collapse re-opens REPORTING only.** **The stack shrank:**
-*unverified by the reviewer* is **closed**; (ii)–(iv) are **MET**; **(i) is not
-met as to the null's §5 promises**, and DE38-C1 is open. **Run: NO DATE.**
+Updated: 2026-09-02T22:52Z — **DE round 39 LANDED and EXECUTED at `cd93663`:
+every DE38 ruling BUILT and DRIVEN** — the identity **admitted and counted**, the
+guard **retired with its parse certificate inverted**, statistics on the
+**accepted** set, and a degenerate null that **refuses its own interval**
+(`POINT_ESTIMATE_NO_INTERVAL`, no quantiles, no `net_diff`). **One candidate
+remains, and it is dormant rather than resolved: DE39-C1 — the code computes SET
+identity while the prose promises STREAM identity**, decision-inert at one θ with
+`enable_reduce` False. **The reviewer's to rule.** **Run: NO DATE.**
 
 ## READ FIRST — current project handoff
 
@@ -125,12 +125,13 @@ diagnostic**, below.
 > **All of it lands in ONE addendum the USER freezes; none of it is decided by a
 > seat (rule 14). Nothing runs until it is settled, and the run has no date.**
 >
-> **STATUS: NOT FORWARDED. The stack has SHRUNK and one reason is CLOSED —
-> replaced, not carried:** *"unverified by the reviewer"* is **closed by the
-> DE-38 filing**. What remains: **DE38-C1 open** (→ round 39), and **condition
-> (i) NOT MET as to the null's §5 promises** — it **IS** met as to the stream
-> and the rejection accounting. **Conditions (ii), (iii) and (iv) are MET**,
-> verified by the reviewer at `dfd4c00`. The reviewer's sentence is the one to
+> **STATUS: NOT FORWARDED, and every remaining reason now names WHO closes it.**
+> **DE39-C1 open** — the reviewer's round. **Condition (i): the coordinator has
+> MEASURED §5's promises as BUILT at `cd93663`; the reviewer's confirmation is
+> the closure**, not the measurement. **Conditions (ii)–(iv): MET at
+> `dfd4c00`, to be RE-STATED by the reviewer at `cd93663`.** *Every line here
+> is now a named seat and a named tip, which is the difference between a
+> blocker and a backlog.* The reviewer's sentence is the one to
 > keep: ***"a USER reading §5 today would be adopting the words while the
 > artifact behind them produces a null that cannot differ."*** The four: **§5 gets either a
 > declared-vs-built sentence or (γ) built first**; **§5 must say what happens
@@ -141,9 +142,10 @@ diagnostic**, below.
 > what fails** — and **the package must not travel while the suite presents (γ)
 > as achieved on a fixture the run path cannot produce.** The **pin claim rests
 > on the seal** (DE37-C2). **The DRAFT's sha is `ec1538f1545999d1` AS OF
-> `dfd4c00`** — it was `ec1538f1545999d1` at `218509e` and `6edefdfda909a897`
-> at `27c1ccd`, **the third supersession in three rounds**, absorbed by the
-> AS-OF framing without a correction. **`a45b87624f72b567`** — it was `6edefdfda909a897` at `27c1ccd`, and **a living
+> `cd93663`** — `6edefdfda909a897` (`27c1ccd`) → `ec1538f1545999d1` (`218509e`)
+> → `a45b87624f72b567` (`dfd4c00`) → now **`6a62569f536e460f`**, **the fourth
+> supersession in four rounds**, each absorbed by the AS-OF framing without a
+> correction. **Verified at the blob here (290 lines).** — it was `6edefdfda909a897` at `27c1ccd`, and **a living
 > document's sha is a fact with an as-of, not a name** (my round-56 carry was
 > stale; this is the second supersession). **§5 is (γ) DECLARED in the DRAFT
 > and NOT REALISED on the run path** (DE37-C1, HIGH), and **the declaration
@@ -882,7 +884,8 @@ launchers at **235/19**.
 | **DE round 37 review** | **RELEASED** (`3f1d310`, 240 lines, 21:11:39Z) — **DE37-C1..C5 ALL CONFIRMED, none contested**; four findings **DE37-R1..R4**; `218509e` is round 38's base **because nothing can run — so no finding reaches an artifact** |
 | **DE round 38** | **EXECUTED** at `dfd4c00` (Q-DE-56) — counts **31/101/26/21/25/21/184/92** reproduce; **DE37-C1(a)(b)(c), C2..C5 and R1..R4 ALL CLOSED** — the seal is **six literals** (driven closed by the coordinator's own edit), **(γ) is built on the run path**, `gen` required at the adapter. Shas: runner `a49458a0…`, score-stream `4ccdadea…`, v2 DRAFT `a45b8762…` (all three verified here) |
 | **DE round 38 review** | **RELEASED** (`0a5a6a7`, 232 lines, 22:06:13Z) — **DE38-C1/C2/C3 CONFIRMED**, C1 **reproduced independently** (24/5 identity, **0/200 vs 65/200**, 3/False) and **RULED in four parts**; **DE37-C1..C5 and R1..R4 CONFIRMED CLOSED**, the seal driven closed by the **reviewer's own** edit; new **DE38-R1 (MED)** and **R2/R3/R4 (LOW)** |
-| **DE round 39** | **DISPATCHED** (Q-DE-57 expected, **one commit**) — six-step order: rulings 1–3 → R1 + C3 → C2 → ruling 4 → R3/R4/R2 → **the §5 reporting sentence last**. `dfd4c00` is its base |
+| **DE round 39** | **LANDED and EXECUTED** at `cd93663` (Q-DE-57) — counts **31/115/26/21/26/21/184/92**; **all four DE38-C1 rulings BUILT as ruled**, plus DE38-R1+C3, C2, R3, R4, R2 and §2(iii) — **every step driven**. Shas verified here: runner `2976b46e…` (3,201 lines), score-stream `f85be335…` (420), DRAFT `6a62569f…` (290) |
+| **DE round 40** | **WAITS on the reviewer's DE-39 filing** — **DE39-C1 (LOW)** open, the reviewer's to rule |
 | **DE round 26** | the **DATA_ROOT split**, still behind DA's landing after 00:14Z |
 | **DA round 11** | **REVIEW RELEASED** (`a5e8b40`) for `e292439` as the content of **Q-DA-209**; all five DA10 findings close. Two new findings **DA11-R1/R2** → DA round 12 |
 | **DA round 12 review** | **RELEASED** (`852b9aa`) for `636a455` as Q-DA-209's content — DA11-R1/R2 close; **DA12-R1 (LOW-MED)** → DA round 14 |
@@ -954,9 +957,9 @@ artifact in the round-5 review, R1/R3/R4/R5 at `5e9ed91`;
 **DE33-C1..C9** (C1/C2/C3 **HIGH**) → **DE round 34, dispatched**;
 **BE9-C1 (HIGH) / BE9-C2 (MED) / BE9-C3 (LOW)** → **BE round 10, dispatched**;
 **BE8-R1 / BE8-R2** → **BE round 12**;
-**DE37-C1..C5 and R1..R4 CONFIRMED CLOSED**; **DE38-C1 (HIGH) RULED and OPEN**,
-**DE38-C2 (LOW)**, **DE38-C3 CONFIRMED**, **DE38-R1 (MED)** and
-**DE38-R2/R3/R4 (LOW)** → **DE round 39, dispatched**;
+**DE38-C1 (all four rulings), C2, C3, R1, R2, R3, R4 and §2(iii) BUILT and
+VERIFIED** at `cd93663`; **DE39-C1 (LOW) OPEN — the REVIEWER's to rule, not
+closed**;
 **BE10-R1..R4** → **BE round 12** with BE8-R1/R2;
 **DE31-R1, DE31-R2, DE32-R2, DE32-R3, DE32-R4 still OPEN** at `6d04833` and in the
 round-34 dispatch; **DE32-R1 closed for the LGBM head ONLY**; **DE32-R5 closed in
@@ -984,9 +987,9 @@ the REGISTER's state, not of the instrument's own escalation history** — a
 distinction worth keeping, because a reader at 00:14Z has no way to know which
 questions this particular tool once asked.
 
-**The reviewer is on RECORDED STANDBY until Q-DE-57 lands.** **Released so far**
-include BE rounds 9+10 (`a8e88de`) and DE rounds 37 (`3f1d310`) and 38
-(`0a5a6a7`). **Released so far**
+**The reviewer is on DE round 39**, dispatched as **ONE round**
+(`REQUEST_DE_ROUND_39_2026-09-02.md`). **Released so far** include BE rounds 9+10
+(`a8e88de`) and DE rounds 37 (`3f1d310`) and 38 (`0a5a6a7`). **Released so far**
 include BE round 8 (`f804f33`), the **estimand reading** (`a23667b`), **DE rounds
 33+34** (`20bd233`) and **DE round 35** (`df123f2`).
 **Released so far** include BE rounds 6 (`03b5dca`) and 7 (`0f34aad`), DE rounds
@@ -1801,6 +1804,66 @@ than a clean zero (the density receipt covers 13 days, not this one).
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-02 ~22:52Z (MEM) — A DEGENERATE NULL THAT REFUSES ITS OWN INTERVAL
+
+**R-482 and Q-DE-57 swept.** Nothing run; committed blobs only. **I verified all
+three shas and both line counts at `cd93663`** — runner **`2976b46e1eb67a22`**
+(3,201), score-stream **`f85be3354610e2ce`** (420), DRAFT **`6a62569f536e460f`**
+(290) — and `EXPECTED_CHECKS = 115`.
+
+**The build is the answer to last round's ruling, and the best part of it is a
+refusal.** A null whose accepted set holds **one distinct draw** now emits **`null:
+DEGENERATE (n_distinct_accepted = 1)`** with **no quantiles, no `net_diff`**, and
+the predicate **`interval: POINT_ESTIMATE_NO_INTERVAL`**. **The artifact declines
+to produce the statistic it cannot support** — which is rarer and more valuable
+than producing it with a caveat, because a caveat travels separately from the
+number and a missing field does not.
+
+**And `accepted_by_stratum` comes before any §3 number.** *Ordering is an
+argument*: the reader meets the population before the estimate, so a degenerate
+accepted set cannot be discovered after the figure has already been read.
+
+**The guard's retirement was done properly — its parse certificate was INVERTED,
+not deleted.** A retired control that simply disappears leaves a suite that once
+proved something and now proves nothing, with no record of the change; inverting
+the certificate keeps the fact of the retirement inside the thing that used to
+assert it.
+
+**DE39-C1 is the one candidate, and I read it at the blob because "decision-inert"
+is exactly the phrase that buries findings.** The computation is **set identity**
+— `_e["distinct"].add(frozenset(_keys))` and `if _keys == _above_by_st.get(_st,
+set())` — while the comment two lines below promises **stream identity**: *"the
+control's stream is then the treated arm's, **exactly**"*. **The code compares
+sets of keys; the prose asserts the streams are equal.** They coincide today at
+one θ with `enable_reduce` False, and that is the point: **a definition mismatch
+that is decision-inert today is a DORMANT finding, not a resolved one** — it
+starts costing the moment a second θ or a live `enable_reduce` makes the two
+definitions come apart. **The reviewer's to rule; I have recorded it open, with
+the measurement, and not closed it.**
+
+**That is this evening's class in its most easily-lost position.** The gap between
+prose and computation has appeared four times today — false about the code, true
+while the code was absent, promising what the implementation removed, and now
+**describing a stronger property than the computation delivers, in a place where
+nothing currently disagrees.** *The first three were caught because something
+failed. This one can only be caught by reading.*
+
+**The bundle's remaining reasons now each name a seat and a tip**, which is the
+change worth having: **DE39-C1 → the reviewer's round**; **condition (i) —
+measured as built by the coordinator, and the reviewer's confirmation is the
+closure, not the measurement**; **(ii)–(iv) — MET at `dfd4c00`, to be RE-STATED at
+`cd93663`.** *A blocker with an owner is a blocker; one without is a backlog.*
+
+**The DRAFT's sha advanced a fourth time** — `6edefdfda909a897` →
+`ec1538f1545999d1` → `a45b87624f72b567` → **`6a62569f536e460f`** — **four
+supersessions in four rounds, none of them a correction.** The AS-OF framing has
+now been tested more thoroughly than most of the code.
+
+**Unchanged and stated:** **Phase-4 run has NO DATE**; **`preflight()` still
+refuses at the scorer**. **Seats:** reviewer on **DE 39 as one round**; DE, BE and
+DA on **recorded standby**. **My round 60 verified with nothing found**, archive
+**batch 66** recorded verbatim.
 
 ### 2026-09-02 ~22:11Z (MEM) — THE IDENTITY DRAW IS NOT A BUG TO EXCLUDE, IT IS
 ### A STATE TO COUNT

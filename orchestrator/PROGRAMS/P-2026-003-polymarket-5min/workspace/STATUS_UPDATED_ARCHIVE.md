@@ -4363,3 +4363,67 @@ Moved in the MEM round-60 true-up of R-481 and the DE-38 filing. Join rule as in
   SEVEN RULED, THREE OPEN, none needed tonight. UNCHANGED: G=1/5; the 011 family
   12 of 24 with Q4 failing; the sequencing rule; R-419 revocable.
 ```
+
+## Batch 67 — archived 2026-09-02T22:52Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-61 true-up of R-482 and Q-DE-57. Join rule as in batch 1.
+
+```yaml
+  2026-09-02T21:15Z (MEM ROUND 58 -- THE COMMENT PROMISES THE PROPERTY THE CODE
+  COMPUTES AWAY). R-479 swept; nothing run; committed blobs only. DE37-C1..C5 ALL
+  CONFIRMED, NONE CONTESTED -- the first round this evening where nothing the
+  coordinator raised was argued down. DE37-R1 IS C2 WITH THE INTENT MADE VISIBLE
+  AND I READ BOTH ENDS AT THE BLOB: at :155-161 the comment states the property
+  in as many words ("A later edit to either side RE-OPENS THE QUESTION instead of
+  inheriting this pass -- rule 12's shape applied to a declaration"), while at
+  :380-386 _seal_declarations() computes those shas AT IMPORT FROM THE SOURCES
+  THE COMPARISON READS -- so THE MODULE DOCUMENTS THE GUARANTEE IT COMPUTES AWAY,
+  an edit moving the compared value and its expected value together. Driven both
+  ways by the reviewer: an UNDECLARED edit to join_fills BLOCKS, a DECLARED edit
+  to select_v2_era PROCEEDS with the seal simply moving -- so THE THREE DECLARED
+  FUNCTIONS ARE A PERMANENT EXEMPTION, not a declaration that can expire. AND
+  THAT NAMES SOMETHING SEEN THREE TIMES IN ONE EVENING: DE36-R1 was PROSE IN A
+  DRAFT false about the code; DE37-C1 was PROSE IN A DRAFT true while the code
+  was absent; this is PROSE IN THE MODULE promising what the implementation
+  removes. THE THREE ARE ONE CLASS: A SENTENCE THAT DESCRIBES A PROPERTY NOBODY
+  COMPUTES. The ruled fix is the inverse move -- the seal becomes LITERALS IN THE
+  SOURCE (reason, sha_at_fit, sha_at_declaring_tip) with an edited function body
+  as the falsifier: STOP COMPUTING THE EXPECTED VALUE. DE37-R2 IS THE SHARPEST
+  SINGLE SENTENCE IN THE FILING: the (gamma) fixture at :2049-2051 calls
+  permuted_stream directly on a hand-built draw, so it SATISFIES THE DEMAND BY
+  CONSTRUCTION and is THE ONE STATE THE RUN PATH CANNOT PRODUCE -- a green suite
+  certifying a state that cannot occur. That is why ruling (b) reads as it does:
+  SECTION 5'S TEXT SURVIVES as the text the USER rules on, THE CODE IS WHAT
+  FAILS, and THE PACKAGE MUST NOT TRAVEL WHILE THE SUITE PRESENTS (gamma) AS
+  ACHIEVED. The document is not wrong; THE EVIDENCE FOR IT IS. R3 is small and
+  worth keeping for its shape: P3 filters the draw to the stream's keys so AN
+  EMPTY INTERSECTION IS VACUOUSLY TRUE -- a predicate that passes hardest exactly
+  when there is nothing to check; ruling (f) fixes the order, assert want subset
+  of keys(stream) FIRST. R4 IS MY OWN CATCH, CORROBORATED: the reviewer
+  independently reports Q-DE-55's prior count of 74 as 71, the same figure I
+  verified at EXPECTED_CHECKS last round and the SECOND CONSECUTIVE round of it,
+  filed as ROW HYGIENE -- two seats saying so rather than one. RELEASE 218509e
+  WITH ITS REASON ATTACHED BECAUSE THE REASON IS THE INTERESTING PART: nothing
+  can run, THE PREFLIGHT REFUSES AT THE SCORER, so NO FINDING REACHES AN
+  ARTIFACT -- a release granted BECAUSE THE CODE CANNOT PRODUCE ANYTHING is a
+  very different object from one granted because the code is right, and the state
+  files say which this is. FOUR CONDITIONS NOW STAND BETWEEN THE PACKAGE AND THE
+  USER: the declared-vs-built sentence (or (gamma) built first); section 5 saying
+  what happens to BELOW-threshold values with section 2 re-read; the seal's form
+  settled; and THE TWO NUMBERS TRAVELLING WITH THE SPLIT QUESTION -- a judgement
+  I would have got wrong, since the split question LOOKS like context and the
+  ruling makes it A DECISION THE USER IS GIVEN WITH THE SECTION 5 NUMBERS, NOT A
+  FOOTNOTE. MY ROUND 57 VERIFIED WITH NOTHING FOUND, and the round-56 LOW is
+  recorded CLOSED AT THE SOURCE -- the bundle field now carries its AS-OF rather
+  than a bare sha, which was the point of the correction rather than the sha
+  itself. SEATS: DE round 38 IN FLIGHT (Q-DE-56, dispatched 21:14Z, the
+  reviewer's six-step order); the REVIEWER on RECORDED STANDBY until Q-DE-56
+  lands, then DE 38 as ONE round; BE on RECORDED STANDBY (round 11 = THE DURABLE
+  LANDING after the 00:14Z read; round 12 = BE8-R1/R2 + BE10-R1..R4); DA standby
+  until 00:06Z / 00:14Z. THE PHASE-4 RUN HAS NO DATE; THE PACKAGE IS NOT
+  FORWARDED. TONIGHT UNCHANGED: 00:06Z verdict, 00:14Z preflight, coordinator
+  wake after, R-409 accrual with the R-411(ii) denominator, DA landing at
+  e353119 (HOLD -> 3b7e10a), CO-8, --require-no-skips, DATA_ROOT split. USER:
+  SEVEN RULED, THREE OPEN, none needed tonight. UNCHANGED: G=1/5; the 011 family
+  12 of 24 with Q4 failing; the sequencing rule; R-419 revocable.
+```
