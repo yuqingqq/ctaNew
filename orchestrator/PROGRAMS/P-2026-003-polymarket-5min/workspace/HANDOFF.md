@@ -1,13 +1,13 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-02T22:00Z — **Everything DE37 raised is CLOSED at `dfd4c00`**
-— the seal is **six literals**, **(γ) is built on the run path**, all nine items
-driven — **and the built (γ) immediately produced a HIGH.** **DE38-C1: on DE's own
-fixture every P4-ACCEPTED draw is the IDENTITY draw** — control stream **==**
-treated stream, null value **== 40.0**, `net_diff_vs_null_median_cents` **0.0** —
-and the identity guard **cannot fire** (0/200 handed the actions vs 65/200 handed
-the demand), while `n_distinct_draws` / `point_mass` are computed on the
-**attempted**, not the accepted, population. **The package is NOT forwarded.**
+Updated: 2026-09-02T22:11Z — **DE38-C1 CONFIRMED, reproduced independently, and
+RULED — by ADMITTING the identity draw rather than excluding it**: count it
+(`n_accepted_identity`), **retire the guard**, move `n_distinct`/`point_mass` to
+the **ACCEPTED** set, and let an accepted set of one distinct draw be **`null:
+DEGENERATE` — no interval, point estimate, labelled.** **The frozen matching rule
+is untouched; the collapse re-opens REPORTING only.** **The stack shrank:**
+*unverified by the reviewer* is **closed**; (ii)–(iv) are **MET**; **(i) is not
+met as to the null's §5 promises**, and DE38-C1 is open. **Run: NO DATE.**
 
 ## READ FIRST — current project handoff
 
@@ -125,8 +125,14 @@ diagnostic**, below.
 > **All of it lands in ONE addendum the USER freezes; none of it is decided by a
 > seat (rule 14). Nothing runs until it is settled, and the run has no date.**
 >
-> **STATUS: NOT FORWARDED — behind the reviewer's four conditions (i)–(iv),
-> UNVERIFIED by the reviewer, AND with DE38-C1 open.** The four: **§5 gets either a
+> **STATUS: NOT FORWARDED. The stack has SHRUNK and one reason is CLOSED —
+> replaced, not carried:** *"unverified by the reviewer"* is **closed by the
+> DE-38 filing**. What remains: **DE38-C1 open** (→ round 39), and **condition
+> (i) NOT MET as to the null's §5 promises** — it **IS** met as to the stream
+> and the rejection accounting. **Conditions (ii), (iii) and (iv) are MET**,
+> verified by the reviewer at `dfd4c00`. The reviewer's sentence is the one to
+> keep: ***"a USER reading §5 today would be adopting the words while the
+> artifact behind them produces a null that cannot differ."*** The four: **§5 gets either a
 > declared-vs-built sentence or (γ) built first**; **§5 must say what happens
 > to below-threshold values, with §2 re-read**; **the seal's form must be
 > settled**; and **the two numbers and the split question travel TOGETHER** —
@@ -875,7 +881,8 @@ launchers at **235/19**.
 | **DE round 37** | **EXECUTED** at `218509e` (Q-DE-55) — counts **31/85/26/21/24/21/184/92** reproduce; pin statuses **11 IDENTICAL + 1 ADDITIVE_DECLARED** over a **transitive** closure of **75 modules**; `--run` scratch **rc 2**, the preflight refusing **at the scorer, naming `PA.tape_index` / `PA._feature_pass`**. Five findings **DE37-C1..C5** |
 | **DE round 37 review** | **RELEASED** (`3f1d310`, 240 lines, 21:11:39Z) — **DE37-C1..C5 ALL CONFIRMED, none contested**; four findings **DE37-R1..R4**; `218509e` is round 38's base **because nothing can run — so no finding reaches an artifact** |
 | **DE round 38** | **EXECUTED** at `dfd4c00` (Q-DE-56) — counts **31/101/26/21/25/21/184/92** reproduce; **DE37-C1(a)(b)(c), C2..C5 and R1..R4 ALL CLOSED** — the seal is **six literals** (driven closed by the coordinator's own edit), **(γ) is built on the run path**, `gen` required at the adapter. Shas: runner `a49458a0…`, score-stream `4ccdadea…`, v2 DRAFT `a45b8762…` (all three verified here) |
-| **DE round 39** | **WAITS on the reviewer's DE-38 filing** — DE38-C1 (HIGH, open), C2 (LOW), C3 (a question) |
+| **DE round 38 review** | **RELEASED** (`0a5a6a7`, 232 lines, 22:06:13Z) — **DE38-C1/C2/C3 CONFIRMED**, C1 **reproduced independently** (24/5 identity, **0/200 vs 65/200**, 3/False) and **RULED in four parts**; **DE37-C1..C5 and R1..R4 CONFIRMED CLOSED**, the seal driven closed by the **reviewer's own** edit; new **DE38-R1 (MED)** and **R2/R3/R4 (LOW)** |
+| **DE round 39** | **DISPATCHED** (Q-DE-57 expected, **one commit**) — six-step order: rulings 1–3 → R1 + C3 → C2 → ruling 4 → R3/R4/R2 → **the §5 reporting sentence last**. `dfd4c00` is its base |
 | **DE round 26** | the **DATA_ROOT split**, still behind DA's landing after 00:14Z |
 | **DA round 11** | **REVIEW RELEASED** (`a5e8b40`) for `e292439` as the content of **Q-DA-209**; all five DA10 findings close. Two new findings **DA11-R1/R2** → DA round 12 |
 | **DA round 12 review** | **RELEASED** (`852b9aa`) for `636a455` as Q-DA-209's content — DA11-R1/R2 close; **DA12-R1 (LOW-MED)** → DA round 14 |
@@ -947,8 +954,9 @@ artifact in the round-5 review, R1/R3/R4/R5 at `5e9ed91`;
 **DE33-C1..C9** (C1/C2/C3 **HIGH**) → **DE round 34, dispatched**;
 **BE9-C1 (HIGH) / BE9-C2 (MED) / BE9-C3 (LOW)** → **BE round 10, dispatched**;
 **BE8-R1 / BE8-R2** → **BE round 12**;
-**DE37-C1..C5 and R1..R4 ALL CLOSED** at `dfd4c00`; **DE38-C1 (HIGH) OPEN**,
-**DE38-C2 (LOW)** and **DE38-C3 (a question)** → with the reviewer;
+**DE37-C1..C5 and R1..R4 CONFIRMED CLOSED**; **DE38-C1 (HIGH) RULED and OPEN**,
+**DE38-C2 (LOW)**, **DE38-C3 CONFIRMED**, **DE38-R1 (MED)** and
+**DE38-R2/R3/R4 (LOW)** → **DE round 39, dispatched**;
 **BE10-R1..R4** → **BE round 12** with BE8-R1/R2;
 **DE31-R1, DE31-R2, DE32-R2, DE32-R3, DE32-R4 still OPEN** at `6d04833` and in the
 round-34 dispatch; **DE32-R1 closed for the LGBM head ONLY**; **DE32-R5 closed in
@@ -976,10 +984,9 @@ the REGISTER's state, not of the instrument's own escalation history** — a
 distinction worth keeping, because a reader at 00:14Z has no way to know which
 questions this particular tool once asked.
 
-**The reviewer is on DE round 38**, dispatched 21:58Z with
-`workspace/reviews/REQUEST_DE_ROUND_38_2026-09-02.md`; **one filing expected**
-(`REVIEW_DE_ROUND_38_2026-09-02.md`). **Released so far** include BE rounds 9+10
-(`a8e88de`) and DE round 37 (`3f1d310`). **Released so far**
+**The reviewer is on RECORDED STANDBY until Q-DE-57 lands.** **Released so far**
+include BE rounds 9+10 (`a8e88de`) and DE rounds 37 (`3f1d310`) and 38
+(`0a5a6a7`). **Released so far**
 include BE round 8 (`f804f33`), the **estimand reading** (`a23667b`), **DE rounds
 33+34** (`20bd233`) and **DE round 35** (`df123f2`).
 **Released so far** include BE rounds 6 (`03b5dca`) and 7 (`0f34aad`), DE rounds
@@ -1794,6 +1801,70 @@ than a clean zero (the density receipt covers 13 days, not this one).
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-02 ~22:11Z (MEM) — THE IDENTITY DRAW IS NOT A BUG TO EXCLUDE, IT IS
+### A STATE TO COUNT
+
+**R-481 and the DE-38 filing swept.** Nothing run; committed blobs only.
+
+**The ruling on DE38-C1 is better than the fix I would have expected, and the
+difference is worth stating.** The obvious response to *"every accepted draw is
+the identity draw"* is to stop accepting it. **The ruling does the opposite:** the
+identity draw is **ADMITTED and COUNTED** — `n_accepted_identity` per stratum —
+the identity guard is **RETIRED for (γ)** with its parse assertion deleted,
+`n_distinct` and `point_mass` move onto the **ACCEPTED** set, and an accepted set
+of **one distinct draw** becomes **`null: DEGENERATE`: no interval, a point
+estimate, labelled as such.** *Excluding the identity draw would have manufactured
+a null that differs; counting it reports the truth that this null does not.*
+
+**And the boundary is drawn exactly where rule 13 requires.** The collapse
+**re-opens REPORTING only** — **the frozen matching rule (`DRAFT:147-156`) is
+untouched.** A finding does not get to reach back into a frozen document because
+it is inconvenient; it changes what the artifact *says about itself*.
+
+**The driven check is specified so it cannot pass on the degenerate case:** it
+must assert **an accepted draw whose control differs** *and* **`n_distinct_accepted
+≥ 2`**. That is the shape this programme keeps arriving at — **a control must
+demonstrate the state it claims to distinguish**, not merely run.
+
+**DE38-R1 I verified at the blob, and the mismatch is a population mismatch
+again.** `pool` is built over **the reference's generations** (`:1139`), while the
+**draw is over the stream's above-threshold events**; `_room` (`:1192`, `:1200`)
+and `strata_with_room` (`:1331`) are then computed on that pool. So the receipt
+reports **freedom the draw cannot use.** This is the third distinct instance
+tonight of *the number is real, the population under it is the wrong one* — after
+`n_distinct`/`point_mass` on the attempted set, and the identity guard handed the
+actions instead of the demand.
+
+**The reviewer confirmed DE37's closures independently, including by re-driving
+the seal with its own edit.** Two seats have now driven that falsifier from
+different trees. **A seal that only its author can break is not sealed;** this one
+has been broken twice, on purpose, and closed both times.
+
+**The condition-(i) verdict is a split I would have flattened, and should not
+have.** It **IS** met as to **the stream and the rejection accounting**; it is
+**NOT** met as to **the null's §5 promises** — with the sentence I have carried
+verbatim into the bundle status: ***"a USER reading §5 today would be adopting the
+words while the artifact behind them produces a null that cannot differ."***
+*A condition can be met in its mechanics and unmet in its meaning, and only the
+second one protects the USER.*
+
+**The stack shrank, and I replaced rather than carried.** *"Unverified by the
+reviewer"* is **closed by this filing** — so it is gone from the bundle status,
+not annotated as satisfied. What remains is **DE38-C1 open** and **condition (i)
+unmet as to §5**, with **(ii)–(iv) MET at `dfd4c00`**. **A reason list that only
+ever grows stops being read;** this one now says exactly what is left.
+
+**Unchanged and stated:** the **Phase-4 run has NO DATE**; **`preflight()` still
+refuses at the scorer**; the **bundle sha stays `a45b87624f72b567` @ `dfd4c00`**
+until round 39 moves the DRAFT. **`dfd4c00` is round 39's base**, dispatched with
+the six-step order — **the §5 reporting sentence LAST**, which is the right place
+for it: the words go in after the artifact behind them is true.
+
+**Seats.** DE round 39 dispatched (**Q-DE-57 expected, one commit**); the
+**reviewer on recorded standby until it lands**; **BE and DA on recorded
+standby**. **My round 59 verified with nothing found**, and the **archive batch-65
+move recorded verbatim.**
 
 ### 2026-09-02 ~22:00Z (MEM) — THE CONTROL WAS FINALLY BUILT, AND IT ACCEPTS
 ### ONLY THE DRAW THAT CHANGES NOTHING

@@ -4296,3 +4296,70 @@ Moved in the MEM round-59 true-up of R-480 and Q-DE-56. Join rule as in batch 1.
   tonight. UNCHANGED: G=1/5; the 011 family 12 of 24 with Q4 failing; the
   sequencing rule; R-419 revocable.
 ```
+
+## Batch 66 — archived 2026-09-02T22:11Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-60 true-up of R-481 and the DE-38 filing. Join rule as in batch 1.
+
+```yaml
+  2026-09-02T21:07Z (MEM ROUND 57 -- A VARIABLE ASSIGNED ONCE AND READ ZERO
+  TIMES). R-477 and R-478 swept; nothing run; committed blobs only. DE37-C1 IS
+  THE THIRD ACT OF THE STORY THIS FILE HAS BEEN TELLING ALL EVENING: round 36
+  ruled section 5's (gamma) wording, round 37 WROTE IT INTO THE DRAFT VERBATIM
+  and DID NOT BUILD IT ON THE RUN PATH -- the demand is still ACTIONS
+  (:1093-1094), permuted_stream returns ok=False and a TRUNCATED-ZIP stream,
+  _perm_ok is ASSIGNED ONCE AND READ ZERO TIMES, stream_predicates is
+  SELFTEST-ONLY, and measured, TWO OF THREE DRAWS FAIL P2 with the third failing
+  P3. So the document now says the right thing and the code does not do it, WHICH
+  IS EXACTLY DE36-R1'S FAILURE MODE IN THE OPPOSITE DIRECTION: in one round the
+  prose was FALSE about the code, in the next the prose is TRUE and the code is
+  ABSENT. A VARIABLE ASSIGNED ONCE AND READ ZERO TIMES IS THE CHEAPEST POSSIBLE
+  TELL, and it is the one a substring check would never find. DE37-C2 IS THE SAME
+  DISEASE IN THE SEAL: DECLARED_ADDITIVE_SHAS = {} is FILLED FROM THE CURRENT
+  FILE so the seal certifies whatever it is shown, and the coordinator DROVE it
+  -- an edited select_v2_era body still reads ADDITIVE_DECLARED with the seal
+  moving 3b34bdc86b1056ca -> 9a1158dd13713ad0. A DECLARATION THAT COMPUTES ITS
+  OWN EXPECTED VALUE IS NOT A DECLARATION, IT IS A MIRROR. BE ROUND 10 VERIFIED
+  AT 121/121 and the review released it AS ROUND 11'S BASE with the sentence that
+  matters: NOTHING PRECEDES THE LANDING. BE9-C1..C3 CONFIRMED CLOSED AT THE PASS
+  LINES, the 26-case audit green, nothing leaking; RUN B'S TREE ANSWERED FROM THE
+  REFLOG -- it was THE SHARED MAIN TREE, no checkout in the window -- and the
+  reviewer REPRODUCED RUN B'S CONDITION IN ITS OWN SCRATCH WORKTREE AT 874a041,
+  also 121/121. So Q-BE-234'S NUMBERS STAND AS HISTORY, NOT AS PROPERTIES OF THE
+  CODE: the count-versus-property distinction, settled by someone reproducing the
+  condition somewhere else. STANDING RULE 10 ADOPTED (9 -> 10) AND IT IS NOT RULE
+  9 RESTATED: RULE 9 SAYS WHERE YOU MAY READ, RULE 10 SAYS WHERE YOU MAY RUN and
+  what you owe if you must run elsewhere -- the run DECLARED IN THE ROW BEFORE IT
+  IS MADE (tree, HEAD, condition, and why no other tree produces it), NO WRITE
+  outside its own git-admin entries, VERIFIED AFTERWARDS FROM A THIRD TREE by git
+  worktree list + git status --short; and the first clause does the work: LOOK
+  FIRST FOR A COMMIT THAT REPRODUCES THE CONDITION IN YOUR OWN TREE. A LOW
+  AGAINST ME, AND THE FIX IS NOT THE NUMBER: I carried the DRAFT's sha as a BARE
+  NAME and it has moved twice (6edefdfda909a897 at 27c1ccd -> ec1538f1545999d1 at
+  218509e). A LIVING DOCUMENT'S SHA IS A FACT WITH AN AS-OF. I learned exactly
+  this for the register's line numbers -- RECOUNT, NEVER PIN -- and did not carry
+  it across to shas: HAVING A RULE AND APPLYING IT TO ONE DATATYPE IS HOW IT GETS
+  RELEARNED. The field now reads "sha ... AS OF 218509e". A PATTERN, NOT A SLIP,
+  AND I SAY SO BECAUSE IT IS THE SECOND: Q-DE-55 reports the runner "74 -> 85"
+  while EXPECTED_CHECKS reads 71 at 92c7da4 and 85 at 218509e, so 71 -> 85, +14;
+  last round it was "68 -> 71" for 67 -> 71. TWO CONSECUTIVE ROUNDS WHERE THE
+  PRIOR COUNT IS WRONG AND THE NEW ONE IS RIGHT -- the new count comes from the
+  run, the prior one from memory -- flagged as a pattern, not corrected twice in
+  silence. TWO ITEMS JOIN THE USER PACKAGE, both honest about their status: THE
+  SPLIT QUESTION (the section 3 population 08-24/08-25 SPANS BOTH FIT SPLITS and
+  the DRAFT DOES NOT CHOOSE -- raised rather than settled, the right instinct)
+  and A THIRD COST, UNMEASURED (tape 3,170,987,711 B + fragment 1,241,115,096 B,
+  BYTE COUNTS VERIFIED against the files, the row and split counts DE'S) --
+  recorded with that seam visible, because the last compute figure had to be
+  split for exactly this reason. SEATS: the reviewer is on the DE ROUND-37 FILING
+  (request REQUEST_DE_ROUND_37_2026-09-02.md at 2ca1c81, in flight); DE on
+  RECORDED STANDBY (round 38 = C1..C5 as ruled plus DE37-Rn); BE on RECORDED
+  STANDBY (round 11 = THE DURABLE LANDING after the 00:14Z read; round 12 =
+  BE10-R1..R4 with BE8-R1/R2, R2 FIRST if the file is opened before the landing);
+  DA standby until 00:06Z / 00:14Z. THE PHASE-4 RUN HAS NO DATE; THE PACKAGE IS
+  NOT FORWARDED. TONIGHT UNCHANGED: 00:06Z verdict, 00:14Z preflight, coordinator
+  wake after, R-409 accrual with the R-411(ii) denominator, DA landing at
+  e353119 (HOLD -> 3b7e10a), CO-8, --require-no-skips, DATA_ROOT split. USER:
+  SEVEN RULED, THREE OPEN, none needed tonight. UNCHANGED: G=1/5; the 011 family
+  12 of 24 with Q4 failing; the sequencing rule; R-419 revocable.
+```
