@@ -163,6 +163,59 @@ class GoverningRuleUnreadable(AdmissibleWindowsRefused):
     PERMISSION, which is CO-1's hole in this seat."""
 
 
+def patch_target(spelling: str = "da_content_liveness_rule"):
+    """The module object a CONTROL may patch -- and a REFUSAL if the named
+    spelling is not the object this code actually bound.
+
+    RR11-1. `da_content_liveness_rule` and
+    `live.pm_research.da_content_liveness_rule` are two DISTINCT module
+    objects for the same file with the same value, so patching one does not
+    reach the other. In production that cannot matter (both read the same
+    frozen file at import and nothing writes at runtime). In a CONTROL it
+    matters completely: a test that patched the other spelling would change
+    nothing, watch nothing move, and PASS -- testing nothing, loudly claiming
+    otherwise. Reproduced before this function existed: patching the package
+    object left `is_governed('20260901')` False.
+
+    So a control asks for its target here instead of naming one, and gets a
+    refusal if the object it would patch is not the bound one."""
+    mod = sys.modules.get(spelling)
+    if mod is None:
+        raise AdmissibleWindowsRefused(
+            f"no module {spelling!r} is loaded; a control cannot patch what "
+            f"is not there")
+    if RULE_MODULE is None:
+        raise GoverningRuleUnreadable(
+            f"this module bound no rule ({RULE_IMPORT_ERROR}); there is "
+            f"nothing for a control to patch")
+    if mod is not RULE_MODULE:
+        raise AdmissibleWindowsRefused(
+            f"REFUSED: patching {spelling!r} would NOT reach the object this "
+            f"module bound ({RULE_MODULE.__name__!r}). They are distinct "
+            f"module objects for the same file, so the control would change "
+            f"nothing and pass vacuously (RR11-1).")
+    return mod
+
+
+def patch_targets(src: str) -> list[str]:
+    """Module-constant patch targets in a source file: assignments of the
+    form `<Name>.<UPPER_CASE> = ...`.
+
+    Used to SWEEP the surface for the RR11-1 shape rather than to trust that
+    only one module has it -- over the parsed AST, so a mention in a comment
+    or a docstring is not a hit."""
+    import ast
+    out: list[str] = []
+    for node in ast.walk(ast.parse(src)):
+        if not isinstance(node, ast.Assign):
+            continue
+        for t in node.targets:
+            if (isinstance(t, ast.Attribute) and isinstance(t.value, ast.Name)
+                    and t.attr.isupper()):
+                out.append(f"{t.value.id}.{t.attr}")
+    return sorted(set(out))
+
+
 def governing_day() -> str:
     """The first GOVERNED day, read from the frozen rule at CALL TIME."""
     if RULE_MODULE is None:
@@ -479,7 +532,7 @@ def supply(day: str, present: dict[str, Sequence[int]],
 # ---------------------------------------------------------------------------
 REAL_DAY = "20260901"
 EMPTY_DAY = "20260827"
-EXPECTED_CHECKS = 39
+EXPECTED_CHECKS = 47
 
 
 def _grid(day: str) -> list[int]:
@@ -697,9 +750,16 @@ def selftest() -> int:
     # must FOLLOW. It follows because the attribute is read at CALL time; a
     # value copied at import would have pinned a snapshot and this control
     # would fail, which is exactly why it is not copied.
-    _orig = RULE_MODULE.EFFECTIVE_FROM_DAY
+    # RR11-1: ASK FOR THE TARGET, never name one. `patch_target` refuses if
+    # the object is not the one this module bound, so a control that reached
+    # for the other spelling fails loudly instead of testing nothing.
+    _tgt = patch_target()
+    ok(_tgt is RULE_MODULE and _tgt is sys.modules[RULE_MODULE.__name__],
+       f"RR11-1: the control's patch target IS the object under test "
+       f"({RULE_MODULE.__name__!r}), asserted before anything is patched")
+    _orig = _tgt.EFFECTIVE_FROM_DAY
     try:
-        RULE_MODULE.EFFECTIVE_FROM_DAY = "20260901"
+        _tgt.EFFECTIVE_FROM_DAY = "20260901"
         ok(is_governed("20260901") and governing_day() == "20260901",
            "KNOWN-BAD/FOLLOW-THE-RULE: with the rule patched to 20260901, "
            "09-01 becomes GOVERNED here immediately -- the supplier follows "
@@ -708,11 +768,11 @@ def selftest() -> int:
                                load_if_present=False),
                 "and the consequence propagates: 09-01 with no mask now "
                 "REFUSES, where a moment ago it was permitted")
-        RULE_MODULE.EFFECTIVE_FROM_DAY = "20261231"
+        _tgt.EFFECTIVE_FROM_DAY = "20261231"
         ok(not is_governed("20260902"),
            "POSITIVE CONTROL, the other direction: pushed to 20261231, "
            "09-02 stops being governed -- the binding tracks both ways")
-        RULE_MODULE.EFFECTIVE_FROM_DAY = None
+        _tgt.EFFECTIVE_FROM_DAY = None
         try:
             is_governed("20260902")
             unreadable_refuses = False
@@ -724,9 +784,84 @@ def selftest() -> int:
            "defaulting to it would turn the mask REQUIREMENT into "
            "PERMISSION (CO-1's hole, in this seat)")
     finally:
-        RULE_MODULE.EFFECTIVE_FROM_DAY = _orig
+        _tgt.EFFECTIVE_FROM_DAY = _orig
     ok(governing_day() == _orig and _orig == "20260902",
        f"and the rule is restored: governing_day() back to {_orig!r}")
+
+    # ---- RR11-1, red-first: the OTHER spelling is refused ---------------
+    # THE REPO ROOT GOES ON sys.path FOR THE DURATION OF THIS DEMONSTRATION
+    # AND COMES OFF AGAIN. Without it the package spelling is unimportable
+    # under the script-dir launch, the demonstration silently does not run,
+    # and the two launchers report DIFFERENT CHECK COUNTS -- which is CO-2's
+    # class reappearing in the check accounting. Inserted and removed so the
+    # dual-module-identity hazard (IMPORT_LAYOUT section 3) is not left
+    # standing for anything else.
+    import importlib
+    _pkg = None
+    _added = str(ROOT) not in sys.path
+    if _added:
+        sys.path.insert(0, str(ROOT))
+    try:
+        _pkg = importlib.import_module("live.pm_research."
+                                       "da_content_liveness_rule")
+    except Exception:                                # noqa: BLE001
+        pass
+    finally:
+        if _added and str(ROOT) in sys.path:
+            sys.path.remove(str(ROOT))
+    if _pkg is not None and _pkg is not RULE_MODULE:
+        _po = _pkg.EFFECTIVE_FROM_DAY
+        try:
+            _pkg.EFFECTIVE_FROM_DAY = "20260901"
+            ok(not is_governed("20260901"),
+               "KNOWN-BAD REPRODUCED: patching the PACKAGE spelling moves "
+               "NOTHING here -- a control written that way would watch a "
+               "value it did not change and PASS, testing nothing (RR11-1)")
+        finally:
+            _pkg.EFFECTIVE_FROM_DAY = _po
+        refuses(lambda: patch_target("live.pm_research."
+                                     "da_content_liveness_rule"),
+                "AND IT NOW FAILS LOUDLY: patch_target REFUSES that spelling "
+                "because it is not the object this module bound",
+                needle="would NOT reach the object")
+    else:
+        ok(False,
+           "the package spelling could not be loaded as a distinct object, "
+           "so the RR11-1 demonstration did not run -- reported as a FAILURE "
+           "rather than skipped, because a control that quietly does not run "
+           "is the vacuity this whole finding is about")
+        ok(False, "(second half of the same demonstration, likewise not run)")
+    refuses(lambda: patch_target("no_such_rule_module"),
+            "KNOWN-BAD: a control cannot patch a module that is not loaded")
+    ok(patch_target() is RULE_MODULE,
+       "POSITIVE CONTROL: the correct spelling is ADMITTED and returns the "
+       "bound object")
+
+    # ---- the SWEEP: all five launch-invariant modules -------------------
+    here = Path(__file__).resolve().parent
+    swept = {}
+    for _f in ("de_admissible_windows.py", "de_lane4_real_parity.py",
+               "rule_policy_v1.py", "ev_replay_seam.py", "de_actionspace.py"):
+        swept[_f] = patch_targets((here / _f).read_text())
+    ok(len(swept) == 5 and swept["de_admissible_windows.py"]
+       == ["_pkg.EFFECTIVE_FROM_DAY", "_tgt.EFFECTIVE_FROM_DAY"],
+       f"SWEEP of all five launch-invariant modules: the only module-constant "
+       f"patch targets on the whole surface are this module's TWO, and the "
+       f"sweep found the second one immediately -- `_tgt`, the handle "
+       f"`patch_target()` guards, and `_pkg`, the DELIBERATE wrong-spelling "
+       f"demonstration whose entire point is that it reaches nothing "
+       f"({swept['de_admissible_windows.py']}). Neither names a module "
+       f"directly, which is what RR11-1 asks for.")
+    ok(all(not v for f, v in swept.items()
+           if f != "de_admissible_windows.py"),
+       f"and the other four patch no module constant at all, so RR11-1's "
+       f"shape exists in exactly one place: "
+       f"{ {f: v for f, v in swept.items() if f != 'de_admissible_windows.py'} }")
+    ok(patch_targets("import m\nm.CONST = 1\n") == ["m.CONST"]
+       and patch_targets("# m.CONST = 1\nx = 2\n") == [],
+       "KNOWN-BAD/POSITIVE CONTROL on the sweep itself: it NAMES a real "
+       "patch and IGNORES one that is only mentioned in a comment, because "
+       "it reads the AST rather than the text")
 
     # ---- mutation audit: every guard blanked, one at a time -------------
     audit = mutation_audit(real, present, grid)
