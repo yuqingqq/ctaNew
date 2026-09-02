@@ -2469,3 +2469,66 @@ Moved in the MEM round-31 true-up of R-437. Join rule as in batch 1.
   with Q4 failing; development evidence; 1,344 of 1,875 supplied windows (71.7%)
   produce no score.
 ```
+
+## Batch 38 — archived 2026-09-02T14:10Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-32 true-up of R-438. Join rule as in batch 1.
+
+```yaml
+
+  2026-09-02T13:41Z (MEM ROUND 29 -- EXISTENCE IS CHECKED; ASSOCIATION IS NOT).
+  R-435 swept. DE ROUND 17 REVIEW VERIFIED AND RELEASED at a8093a5 (797ed9a, 225
+  lines, executed 13:33-13:37Z with round 18 not fetched or read), no hold:
+  DE15-R1..R4 close AT THE ARTIFACT WITH THE REVIEWER'S OWN MUTANTS -- a fifth
+  entry with and without a key, the eval row deleted, eval starting to catch,
+  compile starting to refuse, EACH RED AND NAMING THE ROW -- and the
+  meanings-swap that sat GREEN AT 104 two rounds ago now dies at "BINDING
+  PHRASES". ONE CHECK IN THAT REVIEW IS THE SCEPTICAL ONE WORTH MAKING EVERY
+  TIME: the AST call-site census is IDENTICAL at 829910e and a8093a5 (67 / 39 /
+  4, same loop lengths), so NO CHECK WAS REMOVED TO KEEP THE COUNT AT 132 -- a
+  stable count can mean "nothing changed" or "something was deleted to make
+  room", and only comparing the census tells them apart. After a week of counts
+  standing in for checks, a reviewer checking what a STABLE count conceals is
+  the right instinct. TWO FINDINGS, BOTH LOW, BOTH REPRODUCED BY THE COORDINATOR
+  ON FILE COPIES AT A TEMP TREE, AND BOTH THE SAME SHAPE ONE LEVEL UP:
+  MEMBERSHIP IS ASSERTED FOR EXISTENCE, NOT FOR ASSOCIATION. DE17-R1:
+  BLIND_ENTRY_ASSERTIONS is keyed by LIST POSITION, so swapping entries 0 and 2
+  with the map untouched gives "selftest OK -- 75 checks" at rc 0 while THE MAP
+  NOW CLAIMS THE RUNPY ASSERTIONS COVER THE GETATTR ENTRY and nothing notices;
+  only entry 3 is pinned by a token (:1109). Every closure this week has been
+  about a MEMBER being present or a COUNT being right; DE17-R1 IS ABOUT THE
+  MAPPING BETWEEN THEM, WHICH NO COUNT CAN SEE. DE17-R2: the OVER-CAUGHT
+  paragraph (:172-181) DELETED leaves 75 GREEN -- it is the one statement in the
+  block with NO CHECK BEHIND IT, and its own disposition asks for a "together"
+  ON TRUST that the blind list enforces structurally. That is CO-7's family
+  moved from a fix to a piece of documentation: THE BEHAVIOUR IS RIGHT, AND
+  NOTHING WOULD NOTICE IF THE CLAIM ABOUT IT STOPPED BEING TRUE. THE DIRECTION
+  CLAIM ITSELF HOLDS AND IS THE SAFE SIDE: the only outside consumer of
+  reads_no_verdict is a SELFTEST (ev_replay_seam.py:1484), so a false catch
+  REDDENS A SUITE AND NEVER ADMITS -- the finding is that a CORRECT claim is
+  UNGUARDED, not that it is wrong. Both are TWO LOW FINDINGS ABOUT THE GAP
+  BETWEEN BEING RIGHT AND BEING HELD RIGHT. CLOSURES DISPATCHED AS DE ROUND 19
+  (Q-DE-37, de_admissible_windows.py only, one batch): a STABLE TOKEN PER ENTRY
+  so a reorder goes red, and the OVER-CAUGHT binding phrase ASSERTED IN THE
+  DOCSTRING TEXT as de_ratification_check.py:1151 already does for stamped_at --
+  each with its own falsifier (the swap mutant dies by name; the deleted
+  paragraph dies by name), 75 -> N stated per check, and nothing else moving
+  (the seam's 1,875 specs, daw identity, R-419 True/[]). SEQUENCING NOTE: THE
+  DATA_ROOT SPLIT SLIPS AGAIN, from round 19 to ROUND 20, because it stays
+  behind DA round 11's landing -- three rounds of deferral, each time for the
+  same reason and each time STATED rather than quietly dropped. ASSERTED THIS
+  ROUND: ZERO FENCED RATIFICATION BLOCKS IN BOTH STATE FILES, checked after
+  every edit. REVIEWER QUEUE: DE round 18 at db039a3, then DA round 11 when
+  held, then DE round 19 when filed, then BE rounds 3-4 when BE files; DA round
+  10's and DE round 17's reviews are BOTH DONE, the first HELD and the second
+  RELEASED. DA ROUND 11 IS IN FLIGHT ON THE HELD COMMIT (3a89e6c, confirmed
+  still the worktree tip and unpushed) and BE'S CONFIRMING PAIR IS STILL RUNNING
+  into fwd5. OPEN FINDINGS: DE17-R1..R2 to DE round 19; DA10-R1..R5 to DA round
+  11 on the held commit; DE16-R1..R4 closed at db039a3 pending review; the
+  own-supersedes-nonentry residual with the reviewer; BE's landing commit still
+  owed. USER DECISIONS: FOUR RULED (R-424), ONE OPEN -- the freeze disposition
+  (R-424 section 6); the 09-02 accrual call MECHANICAL after 00:06Z. R-419
+  remains revocable by the USER. UNCHANGED: G=1/5; the 011 family is 12 of 24
+  surviving with Q4 failing; development evidence; 1,344 of 1,875 supplied
+  windows (71.7%) produce no score.
+```

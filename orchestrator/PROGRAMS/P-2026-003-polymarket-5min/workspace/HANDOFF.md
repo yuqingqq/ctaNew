@@ -1,10 +1,10 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-02T14:05Z — **DE round 20 closed DE18-R1..R3** (150 → **155**),
-and the round's own finding is a **positive control that passed only because its
-target was absent** — now the known-bad. **ONE USER decision open: the freeze
-disposition.** Prior line: the residual DE refused to rule came back as a ruled
-finding.
+Updated: 2026-09-02T14:10Z — **DA round 11 is RELEASED as the content of
+Q-DA-209**, all five DA10 findings closing — and its own new finding is a SKIP
+branch that **prints "not a clean pass" and then records a pass on the next
+line**. **ONE USER decision open: the freeze disposition.** Prior line: DE round
+20 closed DE18-R1..R3 at 155.
 
 ## READ FIRST — current project handoff
 
@@ -650,7 +650,8 @@ launchers at **235/19**.
 | **DE round 19** | **VERIFIED** at `2f6da2c` — **75 → 79** (reproduced here), DE17-R1/R2 closed, **nine coordinator mutants die by name**. **Two residuals measured and NOT ruled**, to the reviewer |
 | **DE round 20** | **VERIFIED** at `0778918` — DE18-R1..R3 and two rule-10 nits closed, **150 → 155** (reproduced here), four coordinator mutants dying by name. **Review request queued FOURTH** |
 | **DE round 21** | the **DATA_ROOT split**, behind DA's landing after 00:14Z |
-| **DA round 11** | **HELD** at `e292439` — verified here as **unpushed and on no remote branch**. Under review; **lands after the 00:14Z read as Q-DA-209** |
+| **DA round 11** | **REVIEW RELEASED** (`a5e8b40`) for `e292439` as the content of **Q-DA-209**; all five DA10 findings close. Two new findings **DA11-R1/R2** → DA round 12 |
+| **DA round 12** | **DISPATCHED and HELD** on top of `e292439`, five items. **Nothing moves for tonight**; Q-DA-209 lands after the 00:14Z read **with the round-12 tip** |
 | **BE** | **Q-BE-229 VERIFIED** at the artifacts; **round 5 dispatched** |
 | **DE round 17** | **STAGED** behind DA round 10: the DATA_ROOT split |
 | **DE round 16** | **STAGED** behind DA round 10's landing and the r14 review: the CODE_ROOT/DATA_ROOT split on the **three** DE-owned files in the class (`de_admissible_windows` :64/:77, `de_ratification_check` :43, `de_lane4_results_doc`) — **counted at the tree; five other DE files are not in the class** — following DA's `_resolve_data_root` convention so the split is written **once** |
@@ -687,7 +688,8 @@ ledger-vs-tape refusal, and `require_verified()`.
 **Open findings:** **DE18-R1..R3 CLOSED** at `0778918`, pending review;
 **DE round 19's two residuals** (A: prose paragraphs swapped inside the `#:` block leaves 79 green;
 B: a blank non-`#:` line above the heading) with the **reviewer, unruled**;
-**DA10-R1..R5** closed into DA round 11 (held);
+**DA11-R1..R2** → DA round 12 (held); **DA10-R1..R5 CLOSED** at `e292439`,
+review released;
 **DE16-R1..R4** closed at `db039a3`, pending review; the **own-supersedes-
 nonentry residual** with the reviewer; **BE's landing** — the counts satisfy the
 receipt condition and the coordinator holds a receipt copy, but
@@ -702,11 +704,11 @@ the REGISTER's state, not of the instrument's own escalation history** — a
 distinction worth keeping, because a reader at 00:14Z has no way to know which
 questions this particular tool once asked.
 
-**The reviewer's queue, in order:** **DA round 11** (in flight) → **DE round 19**
-→ **BE rounds 3–4** → **DE round 20** (queued fourth). **DE is on deliberate
-standby**: round 21 waits on DA's landing after 00:14Z, and **residuals A/B wait
-on the round-19 ruling.** **BE round 5 and the DA-11 review are in flight; DA is
-holding.**
+**The reviewer's queue, in order:** **DE round 19** (`2f6da2c`, in flight) →
+**BE rounds 3–4** → **DE round 20**. **DA round 11's review is done and
+released.** **DE is on deliberate standby**: round 21 waits on DA's landing after
+00:14Z, and **residuals A/B wait on the round-19 ruling.** **BE round 5 is in
+flight; DA is holding.**
 
 **Q-BE-229 verified at the artifacts, and its confirming run reproduces the
 superseded one exactly where it matters:** **68 numeric fields shared with the
@@ -734,6 +736,51 @@ remedy — *an outdir per run* — is in use rather than merely recommended. **D
 00:14Z.** **BE's confirming audit is still running and nothing has been sent**
 (rule 18); the shared tree still carries BE's dirty `be_forward_day.py`,
 untouched by any coordinator commit.
+
+### DA round 11 — RELEASED, and the new finding contradicts its own message
+
+**Released for `e292439` as the content of Q-DA-209.** All five DA10 findings and
+R-434 §2 close at the object, and the closure is the strong kind:
+**`ran + skipped == 247` asserted in every layout** (worktree 241 + 6; complete
+root 247 + 0; root minus only the log 241 + 6, rc 0 each), with **both falsifiers
+discriminating** — one check deleted → rc 1 *"246 … expected 247"*, and the
+pre-fix silent gate restored → **green with the log, red without it**, which is
+exactly where it was wrong.
+
+**DA11-R1 is the recurring class, inside the batch that closed it.** At
+`pm_tape_density.py:443` the SKIP branch prints —
+
+> *"an EMPTY data root is a status, not a clean pass"*
+
+— and **the very next statement is `checks.append(True)`**. I read it at the
+held object: the closing line then prints the same *"N checks passed"* for a
+complete root and an **empty** one. **The code states the rule in prose and
+breaks it on the following line** — rule 10's shape (a message beside a
+contradicting computation) fused with the control-that-ran-nothing class, **one
+module over from where the same defect was just fixed**.
+
+**DA11-R2** — the new `da_hf_pm_alignment` gate is spelled **by path**, and the
+roster is **21 gates by path and exactly one `-m`** — so the `-m` break that
+motivated DA10-R3 **would have sat uninvoked** in the gate added to catch it.
+
+**Both → DA round 12, dispatched and HELD on top of `e292439`, five items.
+Nothing moves for tonight**, and **Q-DA-209 lands after the 00:14Z read with the
+round-12 tip.**
+
+**One arithmetic reconciliation, and it is a transcription rather than a
+defect.** DA's pane read *"238 ran + 6 SKIPs"*; **`ran` is 241**, and the
+module's own printed line says **241 + 6 = 247**. **238 was round 10's figure**,
+carried forward into a round-11 sentence. **The 238 / 244 / 238 in my round-28
+entry belongs to round 10 and stands** — this correction is about the pane's
+reuse of that number, not about that record. Worth separating explicitly,
+because two rounds' measurements sharing a digit is exactly how a stale figure
+survives.
+
+**And one seat claim the reviewer could not reproduce:** DA reported *"21 of
+22"* gates; the reviewer **measured all 22 PASS** at `e292439`.
+
+**CO-8 confirmed as a resolver question on the coordinator's own surface**, for
+after tonight.
 
 ### DE round 20 — and a positive control that was passing for the wrong reason
 
@@ -1408,6 +1455,48 @@ than a clean zero (the density receipt covers 13 days, not this one).
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-02 ~14:10Z (MEM) — THE CODE SAYS "NOT A CLEAN PASS" AND THEN
+### RECORDS A PASS
+
+**R-438 swept.** DA round 11 is released as the content of Q-DA-209, and its new
+finding is the sharpest instance yet of a class this programme has now met in
+five places.
+
+**I read it at the held object rather than taking it.** The SKIP branch at
+`pm_tape_density.py:443` prints *"an EMPTY data root is a status, not a clean
+pass"* — and **the next statement is `checks.append(True)`**, so the closing line
+reports the same *"N checks passed"* for a complete root and an empty one.
+**The prose states the rule and the following line breaks it.** That is rule 10's
+shape — a message beside a computation that contradicts it — fused with the
+control-that-ran-nothing class, **one module over from where the same defect was
+just closed, in the batch that closed it.**
+
+**The closure it sits beside is genuinely strong, which is the contrast worth
+keeping.** `ran + skipped == 247` is asserted **in every layout**, and both
+falsifiers discriminate — one check deleted gives rc 1 naming the shortfall, and
+restoring the pre-fix silent gate goes **green with the log and red without it**,
+failing exactly where the old code was wrong. **A round can close its class
+rigorously in one module and re-commit it in the next.**
+
+**DA11-R2 has a quiet irony:** the new gate added for the `-m` break is spelled
+**by path**, and the roster is 21 by path with exactly one `-m` — so **the break
+it exists to catch would have sat uninvoked.**
+
+**One number needed separating rather than correcting.** DA's pane read *"238 ran
++ 6 SKIPs"*; `ran` is **241**, and 238 was **round 10's** figure carried into a
+round-11 sentence. **The 238 / 244 / 238 I recorded in round 28 belongs to round
+10 and stands.** I have said so explicitly in the section above, because two
+rounds' measurements sharing a digit is precisely how a stale figure survives a
+correction — and the safe move is to name which round a number belongs to, not
+to reflexively retract it.
+
+**And a seat claim that did not reproduce:** DA reported *"21 of 22"* gates; the
+reviewer **measured all 22 PASS**. Third non-reproducing seat/coordinator claim
+this week, and each time the checking cost less than the fix would have.
+
+**Nothing moves for tonight.** DA round 12 is held on top of `e292439`, and
+Q-DA-209 lands after the 00:14Z read with the round-12 tip.
 
 ### 2026-09-02 ~14:05Z (MEM) — A POSITIVE CONTROL THAT PASSED BECAUSE ITS
 ### TARGET WAS ABSENT
