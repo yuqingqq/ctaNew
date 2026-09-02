@@ -1,12 +1,10 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-02T13:33Z — **DA round 10 is HELD** on five findings, the first
-of which is the control-that-ran-nothing class **for the second time in the same
-suite**: the batch moved the path and **kept the gate**, so the six provenance
-checks it was written for **still skip silently**. Two claims **did not
-reproduce** — CO-8's worry and the request's own launcher expectation. **USER
-decisions unchanged: four RULED, one OPEN.** Prior line: DE round 18 closed four
-and left the fifth open on purpose.
+Updated: 2026-09-02T13:41Z — **DE round 17 RELEASED**, with two LOW findings
+that are both about **association rather than existence**: a map keyed by list
+**position**, so a reorder is invisible, and a documented claim with **no check
+behind it**. **USER decisions unchanged: four RULED, one OPEN.** Prior line: DA
+round 10 is held; the batch moved the path and kept the gate.
 
 ## READ FIRST — current project handoff
 
@@ -647,7 +645,9 @@ launchers at **235/19**.
 | **DE round 16 review** | **RELEASED** (`81e050b`, 13:03:51Z) — **sequencing SATISFIED**; four findings, each reproduced |
 | **DE round 17** | **VERIFIED** at `a8093a5` — DE15-R1..R4 closed, three mutants die by name. **Queued** for review behind DA round 10 |
 | **DE round 18** | **VERIFIED** at `db039a3` — **DE16-R1..R4 CLOSED**, ratification **132 → 150** (reproduced here), five coordinator mutants **die by name**, marker uniqueness asserted (28 markers / 28 names; 22 driven, six not, each named). **Review request written and queued.** One residual measured and **NOT ruled** — below |
-| **DE round 19** | the **DATA_ROOT split**, behind DA round 10 |
+| **DE round 17 review** | **RELEASED** (`797ed9a`) — DE15-R1..R4 closed at the artifact; **no check removed to keep 132** (AST census identical across both tips). Two LOW findings, **DE17-R1** and **DE17-R2**, both reproduced |
+| **DE round 19** | **DISPATCHED** (Q-DE-37): the two DE17 closures, each with its own falsifier |
+| **DE round 20** | the **DATA_ROOT split**, now behind **DA round 11's** landing |
 | **DE round 17** | **STAGED** behind DA round 10: the DATA_ROOT split |
 | **DE round 16** | **STAGED** behind DA round 10's landing and the r14 review: the CODE_ROOT/DATA_ROOT split on the **three** DE-owned files in the class (`de_admissible_windows` :64/:77, `de_ratification_check` :43, `de_lane4_results_doc`) — **counted at the tree; five other DE files are not in the class** — following DA's `_resolve_data_root` convention so the split is written **once** |
 | **DA round 10** | **BUILT AND HELD** at worktree `3a89e6c` — verified here as **unpushed and on no remote branch**, nothing landed, the shared tree carrying only BE's in-flight file. Lands after the 00:14Z read |
@@ -680,7 +680,8 @@ instrument under the run it is meant to read.
 mask block and **refuse if absent on a governed day**, the population-gate
 ledger-vs-tape refusal, and `require_verified()`.
 
-**Open findings:** **DA10-R1..R5** → DA round 11 (on the held commit);
+**Open findings:** **DE17-R1..R2** → DE round 19; **DA10-R1..R5** → DA round 11
+(on the held commit);
 **DE16-R1..R4** closed at `db039a3`, pending review; the **own-supersedes-
 nonentry residual** with the reviewer; **BE's landing** — the counts satisfy the
 receipt condition and the coordinator holds a receipt copy, but
@@ -695,9 +696,14 @@ the REGISTER's state, not of the instrument's own escalation history** — a
 distinction worth keeping, because a reader at 00:14Z has no way to know which
 questions this particular tool once asked.
 
-**The reviewer's queue, in order:** **DE round 17** at `a8093a5` → **DE round
-18** at `db039a3` → **DA round 11** (dispatched on the held commit) → **BE rounds
-3–4** when BE files. **DA round 10's review is done and HELD.**
+**The reviewer's queue, in order:** **DE round 18** at `db039a3` → **DA round
+11** when held → **DE round 19** when filed → **BE rounds 3–4** when BE files.
+**DA round 10's and DE round 17's reviews are both done** — the first HELD, the
+second RELEASED.
+
+**DA round 11 is in flight on the held commit** (`3a89e6c`, confirmed still the
+worktree tip and unpushed), and **BE's confirming pair is still running** into
+`fwd5`.
 
 **BE's confirming pair now runs into a NEW OUTDIR** (`fwd5`, unit
 `be-fwd-final4.service`), with **Q-BE-229 to follow**. **That closes the
@@ -708,6 +714,46 @@ remedy — *an outdir per run* — is in use rather than merely recommended. **D
 00:14Z.** **BE's confirming audit is still running and nothing has been sent**
 (rule 18); the shared tree still carries BE's dirty `be_forward_day.py`,
 untouched by any coordinator commit.
+
+### DE round 17 — RELEASED, and both findings are about ASSOCIATION
+
+**Released at `a8093a5`, no hold.** DE15-R1..R4 close **at the artifact with the
+reviewer's own mutants** — a fifth entry with and without a key, the eval row
+deleted, eval starting to catch, compile starting to refuse, each **red and
+naming the row** — and the meanings-swap that sat **green at 104** two rounds ago
+now dies at *"BINDING PHRASES"*.
+
+**One check I want on the record because it is the sceptical one:** the AST
+call-site census is **identical** at `829910e` and `a8093a5` (67 / 39 / 4, same
+loop lengths), so **no check was removed to keep the count at 132**. A stable
+count can mean *nothing changed* or *something was deleted to make room*, and the
+reviewer distinguished them rather than assuming.
+
+**Both findings are the same shape one level up: membership is asserted for
+EXISTENCE, not for ASSOCIATION.**
+
+- **DE17-R1 (LOW)** — `BLIND_ENTRY_ASSERTIONS` is keyed by **list position**.
+  Swap entries 0 and 2, leave the map untouched → *"selftest OK — 75 checks"*,
+  rc 0. **The map now claims the runpy assertions cover the getattr entry, and
+  nothing notices.** Only entry 3 is pinned by a token. The list is checked to
+  exist; **which assertion belongs to which entry is not checked at all.**
+- **DE17-R2 (LOW)** — the **OVER-CAUGHT paragraph** deleted → **75 green**. It is
+  *"the one statement in the block with no check behind it"*, and its own
+  disposition asks for a *"together"* on **trust** that the blind list enforces
+  structurally. **A true claim with no falsifier** — CO-7's family, applied to
+  documentation rather than a fix.
+
+**The direction claim itself HOLDS, and it is the safe side.** The only outside
+consumer of `reads_no_verdict` is a **selftest** (`ev_replay_seam.py:1484`), so
+**a false catch reddens a suite and never admits** anything. Worth stating
+plainly: the finding is that the claim is **unguarded**, not that it is wrong.
+
+**Closures dispatched as DE round 19** (Q-DE-37, `de_admissible_windows.py`
+only): a **stable token per entry** so a reorder goes red, and the OVER-CAUGHT
+binding phrase **asserted in the docstring text** — each with its own falsifier
+(the swap mutant dies by name; the deleted paragraph dies by name), `75 → N`
+stated per check, and nothing else moving. **The DATA_ROOT split slips to DE
+round 20**, still behind DA round 11's landing.
 
 ### DA round 10 — HELD, and the first finding is the same class twice
 
@@ -1255,6 +1301,43 @@ than a clean zero (the density receipt covers 13 days, not this one).
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-02 ~13:41Z (MEM) — EXISTENCE IS CHECKED; ASSOCIATION IS NOT
+
+**R-435 swept.** DE round 17 is released, and both of its findings are the same
+shape one level above the ones this programme has been closing all week.
+
+**The list is checked to exist. Which entry goes with which assertion is not
+checked at all.** `BLIND_ENTRY_ASSERTIONS` is keyed by **list position**, so
+swapping two entries and leaving the map alone gives *"selftest OK — 75
+checks"*, rc 0 — while **the map now claims the runpy assertions cover the
+getattr entry**. Only one entry is pinned by a token. Every closure this week has
+been about a *member* being present or a *count* being right; **DE17-R1 is about
+the mapping between them**, which no count can see.
+
+**And DE17-R2 is a true statement with no falsifier.** The OVER-CAUGHT paragraph
+can be **deleted and the suite stays green at 75** — it is the one claim in that
+block with nothing behind it, and its own disposition asks for a *"together"* on
+**trust**. That is CO-7's family moved from a fix to a piece of documentation:
+**the behaviour is right, and nothing would notice if the claim about it stopped
+being true.**
+
+**The direction claim itself holds, and the reviewer said so.** The only outside
+consumer of `reads_no_verdict` is a selftest, so a false catch **reddens a suite
+and never admits** — the safe side. Worth keeping the distinction sharp: the
+finding is that a correct claim is **unguarded**, not that it is wrong. **Two LOW
+findings that are both about the gap between being right and being held right.**
+
+**One check in that review is the sceptical one I would want made every time:**
+the AST call-site census is **identical** across both tips, so **no check was
+removed to keep the count at 132**. A stable count can mean *nothing changed* or
+*something was deleted to make room*, and only comparing the census tells them
+apart. After a week of counts standing in for checks, a reviewer checking what a
+**stable** count conceals is the right instinct.
+
+**Sequencing note:** the DATA_ROOT split slips again — round 19 → **round 20** —
+because it stays behind DA round 11's landing. Three rounds of deferral, each
+time for the same reason, and each time stated rather than quietly dropped.
 
 ### 2026-09-02 ~13:33Z (MEM) — THE BATCH MOVED THE PATH AND KEPT THE GATE
 

@@ -2243,3 +2243,74 @@ Moved in the MEM round-28 true-up of R-434. Join rule as in batch 1.
   R-419 remains revocable by the USER. UNCHANGED: G=1/5; the 011 family is 12 of
   24 surviving with Q4 failing; development evidence.
 ```
+
+## Batch 35 — archived 2026-09-02T13:41Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-29 true-up of R-435. Join rule as in batch 1.
+
+```yaml
+
+  2026-09-02T13:10Z (MEM ROUND 26 -- A RULE THAT BINDS MY OWN FILE, AND IT WAS
+  IN BREACH). R-431 and R-432 swept; the round's finding reaches into the state
+  files, so I checked it there before writing about it. DE16-R1 IS LIVE: A
+  FENCED ratification BLOCK QUOTED IN A LATER, NON-RATIFYING ENTRY IS READ AS
+  THAT ENTRY'S OWN, and the supersession is attributed to THE ENTRY'S HEADING
+  REF, NOT THE BLOCK'S. Reproduced on the real register plus an appended sweep
+  entry: a well-formed quoted block made R-419 read as "SUPERSEDED by R-999",
+  and an EMPTY supersedes in that quoted block made R-419's check REFUSE; the
+  plural form did the same. A SWEEP ENTRY THAT MERELY ILLUSTRATED A RATIFICATION
+  WOULD HAVE SUPERSEDED ONE -- CO-4's family moved from the prose era into the
+  block era, where the thing that looks like documentation is read as the thing
+  itself. THE COORDINATOR FORMAT RULE, in force from R-432 until DE round 18
+  lands (a format is the coordinator's; no number introduced): NO REGISTER ENTRY
+  OTHER THAN AN R-ADMISS ENTRY'S OWN MAY CONTAIN A FENCED ratification BLOCK;
+  spellings are quoted IN PROSE WITH INLINE BACKTICKS ONLY. THE RULE BINDS MEM'S
+  SWEEPS AND THE STATE FILES, AND HANDOFF WAS IN BREACH: my round-15 entry
+  carried a FENCED block to show what R-419 restated. REMOVED THIS ROUND, its
+  fields re-quoted inline; STATUS.yml never carried one; verified ZERO fenced
+  blocks in both state files. Recorded as a compliance check I FAILED AND FIXED
+  rather than a rule merely relayed, because THE BLOCK I WROTE WAS EXACTLY THE
+  SHAPE THE FINDING IS ABOUT. I ALSO CONFIRMED THE REGISTER IS CLEAN RATHER THAN
+  TRUSTING IT: it holds EXACTLY ONE real fenced block, R-419's own at :18329,
+  while the two other hits (:508 in a Q-DE-26 row, :18325 in R-419 section 4)
+  are INLINE PROSE MENTIONS of the fence that the block finder correctly does
+  not read -- which is the whole rule: SPELL THE FENCE, DON'T BUILD ONE. THE
+  OTHER THREE FINDINGS, ALL REPRODUCED: DE16-R2 (LOW-MEDIUM) shape-only
+  existence -- a supersedes naming a ref that EXISTS NOWHERE (R-9021, R-99999)
+  leaves the base ref verifying True with unverifiable [] SILENTLY; DE16-R3
+  (LOW-MEDIUM) TWO supersedes: LINES IN ONE BLOCK and bind_from_block takes
+  LAST-WINS, so the first target is DROPPED WITHOUT A WORD -- fail-open; and
+  DE16-R4 (LOW-MEDIUM) the three KNOWN-BAD comparisons after the coverage
+  assertion cannot fire on the case that matters, WITH A NUANCE THE COORDINATOR
+  MEASURED UNDER FOUR MAPS: they go red ONLY WHEN HARNESS AND MAP LEGITIMATELY
+  CO-MOVE, i.e. ON MAINTENANCE, NOT ON THE DEFECT -- a more useful statement
+  than "cannot fail", and one only running the four maps reveals. Also carried:
+  MARKER-NAME UNIQUENESS IS UNASSERTED (24 raises / 24 tagged / 19 driven; a
+  duplicated "# SITE:" name would merge two sites under one key). All four go to
+  DE ROUND 18 (Q-DE-36, dispatched 13:09Z); DE ROUND 19 is the DATA_ROOT split,
+  behind DA round 10. NEITHER OF THE TWO FAIL-OPEN FINDINGS PRODUCES A WRONG
+  ANSWER LOUDLY -- both produce a confident nothing-to-see-here, which is this
+  week's recurring signature. A CORRECTION THE COORDINATOR MADE AGAINST ITS OWN
+  ENTRY (rule 13, R-432 section 0): R-431 said the DE round 16 review was "in
+  flight" when it had LANDED at 81e050b, TWELVE SECONDS before R-431's own
+  commit -- the entry was composed before the pre-commit pull and not re-read
+  after it; nothing else in R-431 depends on the word. WORTH KEEPING AS A
+  MECHANISM RATHER THAN A SCOLDING: A PULL BETWEEN COMPOSITION AND COMMIT CAN
+  TURN A TRUE SENTENCE FALSE INSIDE THE INTERVAL, and only re-reading after the
+  pull catches it. DE ROUND 16 REVIEW RELEASED (81e050b, scope 829910e) with
+  SEQUENCING SATISFIED -- the reviewer found the one block, identical verdicts,
+  and the checker's call site in BE's in-flight driver -- and its suggestion
+  that BE's receipt carry the CHECKER's carrying commit goes to BE round 5. DE
+  ROUND 17 VERIFIED at a8093a5 (DE15-R1..R4 closed, three mutants die by name),
+  queued for review. THE REVIEWER'S QUEUE, IN ORDER: DA round 10 at 3a89e6c (in
+  flight from 13:10Z), then DE round 17 at a8093a5, then BE rounds 3-4 when BE
+  files. BE ROUND 4 IS STILL IN FLIGHT BY BE'S OWN AUDIT, and two things are
+  already evidenced: THE COORDINATOR HOLDS A COPY OF THE RECEIPT (sha256
+  68234320), so the landing condition's FIRST form is available after all, and
+  the 09-02 OPEN-DAY REFUSAL RECEIPT was evidenced at 12:53Z. USER DECISIONS:
+  FOUR RULED (R-424), ONE OPEN -- the freeze disposition (R-424 section 6); the
+  09-02 accrual call is MECHANICAL after 00:06Z on 09-03. R-419 remains
+  revocable by the USER. UNCHANGED: G=1/5; the 011 family is 12 of 24 surviving
+  with Q4 failing; development evidence; and BE's completed re-run still reports
+  1,344 of 1,875 supplied windows (71.7%) producing no score.
+```
