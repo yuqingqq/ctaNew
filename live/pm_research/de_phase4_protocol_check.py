@@ -139,7 +139,7 @@ def check(text: str) -> list[str]:
 #: it stands on is named.
 ADDENDUM = DRAFT.parent / "DE_PHASE4_DIAGNOSTIC_ADDENDUM_2026-09-02.md"
 
-EXPECTED_CHECKS = 21
+EXPECTED_CHECKS = 24
 
 
 def selftest() -> int:
@@ -248,6 +248,27 @@ def selftest() -> int:
        "axis) is not in the addendum, so this check goes red -- which is "
        "the point: a rung may not enter the code without entering the "
        "declaration first")
+
+    # ---- the 1-SECOND HORIZON: the frozen doc already fixes it ---------
+    # DE round 33 asked whether the cap needed a new dated addendum. It
+    # does not: the FROZEN document declares it (Cap 2) and requires the
+    # receipt to carry it, so the runner is bound by the freeze rather than
+    # by a second declaration -- and this check is what makes that binding
+    # checkable rather than a sentence in a filing.
+    ok("FILL_HORIZON_S = 1.0 s" in text
+       and "WITHIN ONE SECOND" in text.upper(),
+       "THE FROZEN PROTOCOL FIXES THE HORIZON ITSELF (Cap 2): the per-row "
+       "latency labels are capped at 1.0 s and any cell built on them "
+       "estimates value preventable WITHIN ONE SECOND -- so the cap needs "
+       "no new addendum, only a runner that carries it")
+    ok("estimand_horizon_s" in text,
+       "and the frozen document REQUIRES the receipt to carry "
+       "`estimand_horizon_s` beside the number, which is the field the "
+       "runner's feed block emits per cell")
+    ok(_RUN.FILL_HORIZON_S == 1.0,
+       f"and the runner imports that constant rather than restating it "
+       f"({_RUN.FILL_HORIZON_S}s), so a change to the cap cannot leave the "
+       f"runner estimating one thing and saying another")
 
     ok(n[0] + 1 == EXPECTED_CHECKS,
        f"check count asserted at run time: {n[0] + 1} == {EXPECTED_CHECKS}")
