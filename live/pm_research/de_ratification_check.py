@@ -56,9 +56,23 @@ POP_FULL = "FULL_SUPPLIED_COMPLEMENT"
 POP_SAMPLED = "SAMPLED_OR_CAPPED"
 KNOWN_POPULATIONS = (POP_FULL, POP_SAMPLED)
 
-#: The fields a ratification must pin for a supply to be checkable against it.
+#: EVERY field the ADOPTED block must carry (R-419 section 4). A block
+#: missing any of them REFUSES BY NAME.
+#:
+#: CO-5: this constant was DECLARED AND NEVER USED, and a block missing
+#: `scope_to` therefore came back `verified: True` with `day_in_scope: None`.
+#: The check was right -- absent is UNBINDABLE, never open -- but `verified`
+#: is the conjunction of DECIDED checks, so a consumer reading `verified`
+#: alone read the absence as a pass. A malformed block is now REFUSED rather
+#: than left undecided: undecided is a state a caller can mishandle, refused
+#: is not.
 RATIFICATION_FIELDS = ("ref", "kind", "population", "sampling",
-                       "present_source", "scope_days")
+                       "present_source", "scope_days", "scope_from",
+                       "scope_to", "revocable_by", "supersedes")
+
+#: `### R-419 — 2026-09-02T11:03Z — coordinator: …`
+HEADING_TS_RE = re.compile(
+    r"^### R-\d+ [—-]+ (\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2})?Z)")
 
 #: PROPOSED, NOT ADOPTED -- the coordinator's to take or leave (Q-DE-26).
 PROPOSED_BLOCK = """```ratification
@@ -90,6 +104,59 @@ def fixture_register(ref: str = "R-900", **over) -> str:
     body = "\n".join(f"{k}: {v}" for k, v in f.items())
     return (f"### {ref} — coordinator: R-ADMISS ratification for a fixture\n\n"
             "```ratification\n" + body + "\n```\n\n## next\n")
+
+
+class NotVerified(RuntimeError):
+    """A consumer asked for a verified ratification and did not get one."""
+
+
+def entry_timestamp(heading: str) -> str | None:
+    """The register timestamp in an entry's heading, or None."""
+    m = HEADING_TS_RE.match(heading)
+    return m.group(1) if m else None
+
+
+def _norm_ts(ts: str) -> str:
+    """Comparable form. Both sides are ISO-8601 Z, so lexical order is
+    chronological once seconds are normalised."""
+    ts = ts.strip().rstrip("Z")
+    return (ts if len(ts) > 16 else ts + ":00") + "Z"
+
+
+def day_end_utc(day: str) -> str:
+    """The instant a UTC day is FINISHED: the next day's 00:00:00Z."""
+    import datetime as dt
+    d = dt.datetime.strptime(str(day), "%Y%m%d").replace(
+        tzinfo=dt.timezone.utc) + dt.timedelta(days=1)
+    return d.strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def require_verified(res: dict) -> dict:
+    """The CONSUMER's gate. Raises unless the result is verified AND nothing
+    was left unverifiable.
+
+    CO-5's other half: `verified` alone is not the contract, because a check
+    this module could not decide is reported in `unverifiable` and a caller
+    reading one field would miss it. The third conjunct is mine and is
+    flagged as such -- a PROVENANCE result describes a run that already
+    happened and must never be used to start a new one, so it is refused
+    here too rather than left to the caller to notice."""
+    bad = []
+    if not res.get("verified"):
+        bad.append("verified is False: "
+                   + str(sorted(k for k, v in res.get("checks", {}).items()
+                                if v is False)))
+    if res.get("unverifiable"):
+        bad.append(f"unverifiable checks remain: {res['unverifiable']} -- "
+                   f"each is a question this module could not decide, not a "
+                   f"question it answered yes")
+    if res.get("provenance"):
+        bad.append("this result is PROVENANCE for a run stamped before the "
+                   "superseding entry; it may not start a new run")
+    if bad:
+        raise NotVerified(
+            f"REFUSED for {res.get('ratification_ref')!r}: " + "; ".join(bad))
+    return res
 
 
 class RatificationRefused(RuntimeError):
@@ -286,8 +353,21 @@ def day_in_scope(day: str, fields: dict, unbindable: Sequence[str]):
 
 
 def check(supplied: dict, ratification_ref: str,
-          register_text: str | None = None) -> dict:
-    """VERIFY / REFUSE / report-unbindable.  Decides nothing else."""
+          register_text: str | None = None, *,
+          now_utc: str | None = None,
+          stamped_at: str | None = None) -> dict:
+    """VERIFY / REFUSE / report-unbindable.  Decides nothing else.
+
+    `now_utc` is the clock the closure check reads -- injectable so a test
+    can place itself either side of a day boundary rather than waiting for
+    one.  `stamped_at` is the `as_of_utc` of an EXISTING receipt: supplied,
+    the supersession question becomes "was this ratification in force WHEN
+    THE RUN WAS STAMPED", and a run that predates its superseder is
+    PROVENANCE rather than a refusal.  Omitted, the run is a NEW one and a
+    superseded ref refuses."""
+    import datetime as _dt
+    now_utc = now_utc or _dt.datetime.now(
+        _dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     if register_text is None:
         register_text = REGISTER.read_text()
     entry = parse_entry(register_text, ratification_ref)
@@ -305,15 +385,51 @@ def check(supplied: dict, ratification_ref: str,
     # this; that distinction is the coordinator's to keep and this refusal
     # only ever speaks about a run being started now.
     supers = superseded_by(register_text, ratification_ref)
+    provenance = False
+    superseder_times: dict[str, str] = {}
     if supers:
-        raise RatificationRefused(
-            f"REFUSED FOR A NEW RUN: {ratification_ref} is SUPERSEDED by "
-            f"{', '.join(supers)}. A receipt already carrying "
-            f"{ratification_ref} is provenance and stays valid -- this "
-            f"refusal is about starting a run under a ratification that is "
-            f"no longer the one in force, not about rewriting history.")
+        entries = {e["ref"]: e for e in all_entries(register_text)}
+        for sref in supers:
+            ts = entry_timestamp(entries[sref]["heading"])
+            if ts is None:
+                raise RatificationRefused(
+                    f"REFUSED: {sref} supersedes {ratification_ref} but its "
+                    f"heading carries no parsable register timestamp, so "
+                    f"WHEN it took force cannot be computed. A supersession "
+                    f"whose instant is unknown cannot be weighed against a "
+                    f"receipt's stamp, and guessing the order is exactly "
+                    f"what a stamp exists to avoid.")
+            superseder_times[sref] = _norm_ts(ts)
+        if stamped_at is None:
+            raise RatificationRefused(
+                f"REFUSED FOR A NEW RUN: {ratification_ref} is SUPERSEDED by "
+                f"{', '.join(supers)}. A receipt already carrying "
+                f"{ratification_ref} is provenance -- pass its `as_of_utc` as "
+                f"`stamped_at` and this becomes a COMPUTED provenance "
+                f"finding rather than a sentence in a report (CO-R3).")
+        stamp = _norm_ts(stamped_at)
+        later = {r: t for r, t in superseder_times.items() if t > stamp}
+        if len(later) == len(superseder_times):
+            provenance = True          # every superseder postdates the stamp
+        else:
+            in_force = sorted(r for r, t in superseder_times.items()
+                              if t <= stamp)
+            raise RatificationRefused(
+                f"REFUSED: {ratification_ref} was ALREADY superseded by "
+                f"{in_force} at the stamped instant {stamp} -- the run did "
+                f"not predate its superseder, so this is not provenance")
 
     block = bind_from_block(entry)
+    if block is not None:
+        # CO-5: a MALFORMED block is refused BY NAME, not left undecided.
+        missing = [f for f in RATIFICATION_FIELDS if f not in block]
+        if missing:
+            raise RatificationRefused(
+                f"REFUSED: {ratification_ref}'s ratification block is MISSING "
+                f"{missing}. A missing field left the check UNDECIDED and "
+                f"`verified` -- the conjunction of DECIDED checks -- still "
+                f"read True, so a consumer reading that one field read an "
+                f"absence as a pass (CO-5). A malformed block is refused.")
     if block is None:
         # CO-4: prose binding survives for exactly one grandfathered ref.
         if ratification_ref not in GRANDFATHERED_PROSE_REFS:
@@ -394,11 +510,25 @@ def check(supplied: dict, ratification_ref: str,
         # not null and does not open the scope.
         "day_in_scope": day_in_scope(str(supplied["day"]), fields,
                                      unbindable),
+        # CO-R1: the ratified `present_source` is the market LEDGER, which
+        # runs AHEAD of the tape on an open day (measured 09-02 11:16Z:
+        # ledger 137 vs tape 135 per coin, the 14 ledger-only windows being
+        # the 11:15Z/11:20Z starts). The driver already refuses an open day
+        # and the bridge already refuses ledger-only windows; this module had
+        # NO notion of closure at all, so it would certify a population that
+        # is still growing. DECIDED, never None: a day is closed iff its own
+        # end instant has passed.
+        "day_closed": day_end_utc(str(supplied["day"])) <= now_utc,
     }
     return {
         "protocol": PROTOCOL,
         "refusal_scope": "a refusal here is about STARTING A RUN; a receipt "
                          "already carrying a ref keeps it as provenance",
+        "now_utc": now_utc,
+        "stamped_at": stamped_at,
+        "provenance": provenance,
+        "superseded_by": sorted(superseder_times),
+        "superseder_times": superseder_times,
         "ratification_ref": ratification_ref,
         "binding_source": source,
         "entry_heading": entry["heading"][:160],
@@ -408,6 +538,11 @@ def check(supplied: dict, ratification_ref: str,
         "supply_population": pop,
         "checks": checks,
         "verified": all(v for v in checks.values() if v is not None),
+        "verified_for_new_run": (all(v for v in checks.values()
+                                     if v is not None)
+                                 and not [k for k, v in checks.items()
+                                          if v is None]
+                                 and not provenance),
         "unverifiable": sorted(k for k, v in checks.items() if v is None),
         "decides": "nothing -- this reports; admission is the coordinator's "
                    "act and accrual is decided elsewhere (R-418)",
@@ -415,7 +550,7 @@ def check(supplied: dict, ratification_ref: str,
 
 
 # ---------------------------------------------------------------------------
-EXPECTED_CHECKS = 42
+EXPECTED_CHECKS = 58
 
 
 def selftest() -> int:
@@ -428,6 +563,15 @@ def selftest() -> int:
             raise SystemExit(f"[de_ratification_check] FAIL: {label}")
         n[0] += 1
         print(f"  PASS  {label}")
+
+    def refuses_nv(fn, label):
+        try:
+            fn()
+        except NotVerified:
+            n[0] += 1
+            print(f"  PASS  {label}")
+            return
+        raise SystemExit(f"[de_ratification_check] FAIL (no refusal): {label}")
 
     def refuses(fn, label, needle=None):
         try:
@@ -575,6 +719,93 @@ def selftest() -> int:
        "confirmed at the bridge: it accepts R-99999's shape, which is "
        "exactly the gap this module closes")
 
+    # ---- CO-5: a malformed block REFUSES, and the consumer gate ---------
+    noto2 = fixture_register().replace("scope_to: null\n", "")
+    refuses(lambda: check(sup, "R-900", noto2),
+            "CO-5 CLOSED: a block MISSING a required field REFUSES BY NAME "
+            "-- it used to leave the check undecided while `verified`, the "
+            "conjunction of DECIDED checks, still read True, so a consumer "
+            "reading that one field read an ABSENCE as a PASS",
+            needle="is MISSING ['scope_to']")
+    ok(len(RATIFICATION_FIELDS) == 10 and "scope_to" in RATIFICATION_FIELDS,
+       f"and the required-field list is now USED rather than declared: "
+       f"{len(RATIFICATION_FIELDS)} fields, the adopted format's own "
+       f"(it was a dead constant, which is why the gap existed)")
+    ok(require_verified(check(sup, "R-419")) is not None,
+       "CONSUMER GATE: `require_verified` ADMITS the real R-419 result")
+    refuses_nv(lambda: require_verified(
+        {"ratification_ref": "X", "verified": True,
+         "unverifiable": ["day_in_scope"], "checks": {}}),
+        "KNOWN-BAD: it REFUSES a result that is `verified` but leaves a "
+        "check UNVERIFIABLE -- the pair is the contract, not the one field")
+    refuses_nv(lambda: require_verified(
+        {"ratification_ref": "X", "verified": False, "unverifiable": [],
+         "checks": {"day_closed": False}}),
+        "and it refuses an unverified result, NAMING the failed check")
+    refuses_nv(lambda: require_verified(
+        {"ratification_ref": "X", "verified": True, "unverifiable": [],
+         "checks": {}, "provenance": True}),
+        "and a PROVENANCE result may not start a new run -- my own third "
+        "conjunct, flagged as an addition to the dispatched contract")
+
+    # ---- CO-R1: closure as a DECIDED check ------------------------------
+    ok(check(sup, "R-419")["checks"]["day_closed"] is True,
+       "CO-R1: 09-01 reads day_closed TRUE today -- the ratified "
+       "present_source is the market LEDGER, which runs AHEAD of the tape on "
+       "an open day, and this module had no notion of closure at all")
+    ok(day_end_utc("20260901") == "2026-09-02T00:00:00Z"
+       and day_end_utc("20260902") == "2026-09-03T00:00:00Z",
+       f"a day is FINISHED at its own end instant: "
+       f"{day_end_utc('20260901')}")
+    sup02 = dict(sup, day="20260902")
+    open_day = check(sup02, "R-419", now_utc="2026-09-02T11:16:00Z")
+    ok(open_day["checks"]["day_closed"] is False
+       and not open_day["verified"],
+       "KNOWN-BAD: 09-02 at 11:16Z reads day_closed FALSE and the result is "
+       "NOT verified -- the exact instant the reviewer measured ledger 137 "
+       "against tape 135")
+    closed_later = check(sup02, "R-419", now_utc="2026-09-03T00:00:00Z")
+    ok(closed_later["checks"]["day_closed"] is True,
+       "POSITIVE CONTROL: the same day at its own end instant reads TRUE "
+       "(<=, so the boundary itself closes it) -- the clock is injectable, "
+       "so the control does not wait for midnight")
+    refuses_nv(lambda: require_verified(open_day),
+               "and the consumer gate REFUSES the open day rather than "
+               "leaving closure to the caller to notice")
+
+    # ---- CO-R3: supersession against a STAMP ----------------------------
+    prov = check(sup, "R-418", stamped_at="2026-09-02T10:30:00Z")
+    ok(prov["provenance"] is True and prov["verified_for_new_run"] is False
+       and prov["binding_source"] == "PROSE_GRANDFATHERED",
+       f"CO-R3: R-418 stamped 10:30Z -- BEFORE R-419's "
+       f"{prov['superseder_times']['R-419']} -- is PROVENANCE, computed "
+       f"rather than asserted, and NEVER a new-run pass")
+    refuses(lambda: check(sup, "R-418", stamped_at="2026-09-02T11:30:00Z"),
+            "KNOWN-BAD: the same ref stamped 11:30Z, AFTER the superseder, "
+            "REFUSES -- the run did not predate its superseder, so it is not "
+            "provenance",
+            needle="ALREADY superseded")
+    refuses(lambda: check(sup, "R-418"),
+            "and with NO stamp the current refusal stands: a new run under a "
+            "superseded ratification, refused by name",
+            needle="SUPERSEDED by R-419")
+    ok(entry_timestamp("### R-419 — 2026-09-02T11:03Z — coordinator: x")
+       == "2026-09-02T11:03Z"
+       and entry_timestamp("### R-419 — coordinator: no timestamp") is None,
+       "the entry timestamp is PARSED from the heading, and a heading "
+       "without one parses to None rather than to a guess")
+    nots = (fixture_register("R-902").replace("\n\n## next\n", "\n\n")
+            .replace("### R-902 — coordinator",
+                     "### R-902 — coordinator")
+            + fixture_register("R-903", supersedes="R-902"))
+    refuses(lambda: check(sup, "R-902", nots,
+                          stamped_at="2026-09-02T10:00:00Z"),
+            "KNOWN-BAD: a superseder whose heading carries NO parsable "
+            "timestamp REFUSES -- a supersession whose instant is unknown "
+            "cannot be weighed against a stamp, and guessing the order is "
+            "what the stamp exists to avoid",
+            needle="no parsable register timestamp")
+
     # ---- scope_to, the heading ref, and self-contradiction --------------
     def _blk(**over):
         f = {"ref": "R-902", "kind": "R-ADMISS",
@@ -603,11 +834,13 @@ def selftest() -> int:
     early = check(sup, "R-902", _blk(scope_from="20260902"))
     ok(early["checks"]["day_in_scope"] is False,
        "and a day BEFORE scope_from is likewise False")
-    noto = _blk()
-    noto = noto.replace("scope_to: null\n", "")
-    ok(check(sup, "R-902", noto)["checks"]["day_in_scope"] is None,
-       "AN ABSENT scope_to IS NOT `null`: it reads UNBINDABLE, not open -- "
-       "absence must never be the permissive answer")
+    noto = _blk().replace("scope_to: null\n", "")
+    refuses(lambda: check(sup, "R-902", noto),
+            "AN ABSENT scope_to IS NOT `null` -- and after CO-5 it does not "
+            "even reach the UNBINDABLE reading: a malformed block REFUSES, "
+            "which is the stronger form of 'absence is never the permissive "
+            "answer'",
+            needle="is MISSING")
     refuses(lambda: check(sup, "R-902", _blk(ref="R-418")),
             "KNOWN-BAD: a block whose `ref` is not the heading's REFUSES -- "
             "a block copied from another entry would ratify under the wrong "
@@ -692,43 +925,76 @@ def mutation_audit(sup: dict) -> dict:
     good = fixture_register()
     bad_counts = json.loads(json.dumps(sup))
     bad_counts["n_supplied_total"] += 7
+    chain = sup_chain_fixture()
+    nots = (fixture_register("R-902").replace("\n\n## next\n", "\n\n")
+            + fixture_register("R-903", supersedes="R-902"))
+    stamped_chain = (
+        "### R-902 — 2026-09-02T09:00Z — coordinator: R-ADMISS\n\n"
+        "```ratification\nref: R-902\nkind: R-ADMISS\n"
+        f"population: {POP_FULL}\nsampling: NONE\n"
+        "present_source: data/pm_5min/markets.jsonl\n"
+        "scope_days: FORWARD_RACE_DAYS\nscope_from: 20260901\n"
+        "scope_to: null\nrevocable_by: USER\nsupersedes: null\n```\n\n"
+        "### R-903 — 2026-09-02T10:00Z — coordinator: R-ADMISS\n\n"
+        "```ratification\nref: R-903\nkind: R-ADMISS\n"
+        f"population: {POP_FULL}\nsampling: NONE\n"
+        "present_source: data/pm_5min/markets.jsonl\n"
+        "scope_days: FORWARD_RACE_DAYS\nscope_from: 20260901\n"
+        "scope_to: null\nrevocable_by: USER\nsupersedes: R-902\n```\n\n"
+        "## next\n")
+    # (bad args/kwargs, control args/kwargs)
     cases = {
-        "entry_absent": ((sup, "R-901", good), (sup, "R-900", good)),
-        "not_a_ratification": ((sup, "R-900",
-                                fixture_register(kind="STATUS_NOTE")),
-                               (sup, "R-900", good)),
-        "sampled_population": ((sup, "R-900",
-                                fixture_register(population=POP_SAMPLED)),
-                               (sup, "R-900", good)),
-        "no_block_not_grandfathered": ((sup, "R-905",
-                                        "### R-905 — coordinator: R-ADMISS "
-                                        "ratification, FULL supplied "
-                                        "complement, no sampling\n\nx\n"),
-                                       (sup, "R-900", good)),
-        "block_ref_mismatch": ((sup, "R-900",
-                                fixture_register(ref="R-900").replace(
-                                    "ref: R-900", "ref: R-777")),
-                               (sup, "R-900", good)),
-        "self_contradicting_sampling": ((sup, "R-900",
-                                         fixture_register(
-                                             sampling="STRATIFIED")),
-                                        (sup, "R-900", good)),
-        "superseded": ((sup, "R-902", sup_chain_fixture()),
-                       (sup, "R-903", sup_chain_fixture())),
-        "counts_do_not_sum": ((bad_counts, "R-900", good),
-                              (sup, "R-900", good)),
-        "selection_field": ((dict(sup, sampled=True), "R-900", good),
-                            (sup, "R-900", good)),
+        "entry_absent": (((sup, "R-901", good), {}),
+                         ((sup, "R-900", good), {})),
+        "not_a_ratification": (((sup, "R-900",
+                                 fixture_register(kind="STATUS_NOTE")), {}),
+                               ((sup, "R-900", good), {})),
+        "sampled_population": (((sup, "R-900",
+                                 fixture_register(population=POP_SAMPLED)),
+                                {}),
+                               ((sup, "R-900", good), {})),
+        "counts_do_not_sum": (((bad_counts, "R-900", good), {}),
+                              ((sup, "R-900", good), {})),
+        "selection_field": (((dict(sup, sampled=True), "R-900", good), {}),
+                            ((sup, "R-900", good), {})),
+        "no_block_not_grandfathered": (
+            ((sup, "R-905", "### R-905 — coordinator: R-ADMISS ratification, "
+                            "FULL supplied complement, no sampling\n\nx\n"),
+             {}),
+            ((sup, "R-900", good), {})),
+        "block_ref_mismatch": (
+            ((sup, "R-900", fixture_register().replace("ref: R-900",
+                                                       "ref: R-777")), {}),
+            ((sup, "R-900", good), {})),
+        "self_contradicting_sampling": (
+            ((sup, "R-900", fixture_register(sampling="STRATIFIED")), {}),
+            ((sup, "R-900", good), {})),
+        "superseded": (((sup, "R-902", chain), {}),
+                       ((sup, "R-903", chain), {})),
+        # --- round 10's three new refusals -----------------------------
+        "malformed_block_missing_field": (
+            ((sup, "R-900", fixture_register().replace("scope_to: null\n",
+                                                       "")), {}),
+            ((sup, "R-900", good), {})),
+        "superseder_timestamp_unparsable": (
+            ((sup, "R-902", nots), {"stamped_at": "2026-09-02T10:00:00Z"}),
+            ((sup, "R-902", stamped_chain),
+             {"stamped_at": "2026-09-02T09:30:00Z"})),
+        "already_superseded_at_stamp": (
+            ((sup, "R-902", stamped_chain),
+             {"stamped_at": "2026-09-02T10:30:00Z"}),
+            ((sup, "R-902", stamped_chain),
+             {"stamped_at": "2026-09-02T09:30:00Z"})),
     }
     per: dict[str, dict] = {}
-    for name, (bad, ctrl) in cases.items():
+    for name, ((bad_a, bad_k), (ctl_a, ctl_k)) in cases.items():
         try:
-            check(*bad)
+            check(*bad_a, **bad_k)
             live = False
         except RatificationRefused:
             live = True
         try:
-            check(*ctrl)
+            check(*ctl_a, **ctl_k)
             disabled = False
         except RatificationRefused:
             disabled = True
