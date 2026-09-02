@@ -347,15 +347,41 @@ def superseded_by(register_text: str, ref: str) -> list[str]:
     for e in entries:
         if e["line"] <= pos[ref]:
             continue
-        blk = bind_from_block(e)
-        if not blk:
-            continue
-        # THE LATER ENTRY'S OWN FIELD IS VALIDATED. It is never otherwise
-        # checked, and its value decides whether THIS ref may start a run.
-        named = validate_supersedes(blk.get("supersedes"),
-                                    f"{e['ref']} (a later entry)")
-        if named == ref:
-            out.append(e["ref"])
+        # DE16-R1: the entry's OWN block(s) only. `bind_from_block` reads the
+        # FIRST fence, so a sweep entry QUOTING a spelling was read as that
+        # sweep's ratification -- which is how a quoted `supersedes: R-419`
+        # made R-419 read superseded by an entry whose next sentence says it
+        # ratifies nothing, and how a quoted malformed one made every
+        # earlier ref REFUSE for a reason about somebody else's block.
+        for blk in own_ratification_blocks(e):
+            # THE LATER ENTRY'S OWN FIELD IS VALIDATED. It is never otherwise
+            # checked, and its value decides whether THIS ref may start a run.
+            named = validate_supersedes(blk.get("supersedes"),
+                                        f"{e['ref']} (a later entry)")
+            # DE16-R2: SHAPE IS NOT EXISTENCE. `R-9021` -- one digit from
+            # `R-902` -- is perfectly well-shaped, matched nothing, and left
+            # the ratification it meant to supersede verifying for new runs
+            # in silence. That is DE14-R1's own sentence ("a failed match
+            # says nothing") surviving the fix that quoted it, and `check#1`
+            # already refuses a ref that names no entry FOR THE SAME REASON:
+            # a well-formed ref to a missing entry looks exactly like a
+            # valid one. `pos` is already built over every entry.
+            #
+            # SCOPE, stated: this is the loop where the value DECIDES
+            # something. The entry under check's own `supersedes` is
+            # validated for SHAPE (check-side) and its target's existence
+            # becomes this question when someone checks that target.
+            if named is not None and named not in pos:
+                # SITE: superseded_by#1
+                raise RatificationRefused(
+                    f"REFUSED: {e['ref']} (a later entry) declares "
+                    f"`supersedes: {named}`, and NO ENTRY {named} exists in "
+                    f"this register. A well-shaped ref that names nothing "
+                    f"supersedes nothing SILENTLY -- the ratification it "
+                    f"was written to retire keeps verifying for new runs, "
+                    f"which is the fail-OPEN direction (DE16-R2).")
+            if named == ref:
+                out.append(e["ref"])
     return sorted(set(out))
 
 
@@ -404,19 +430,107 @@ def _undef_note(empty: list) -> str:
             f"line is absence in place, not a missing ratification field.")
 
 
-def bind_from_block(entry: dict) -> dict | None:
-    """The PROPOSED machine-readable form, if the entry carries one."""
-    m = re.search(r"```ratification\n(.*?)```", entry["heading"] + "\n"
-                  + entry["body"], re.S)
-    if not m:
-        return None
+#: DE16-R3: a block is parsed into a dict by `k, v = line.split(":", 1)`,
+#: so a REPEATED key was silently LAST-WINS. Two `supersedes:` lines naming
+#: `R-902` then `R-901` left the first target DROPPED WITHOUT A WORD and the
+#: earlier ratification verifying for new runs -- fail-OPEN, the direction
+#: DE14-R1 was about. Absence in place and presence twice are the two shapes
+#: of one defect and this module already refused the first, so the parse
+#: REPORTS the duplicates and the callers refuse them by name. It reports
+#: rather than raises because a QUOTED block's duplicates are not this
+#: module's business (DE16-R1) -- only an entry's OWN block is.
+def _parse_block(body: str) -> tuple[dict, list[str]]:
+    """(fields, keys that appeared MORE THAN ONCE) for one fenced block."""
     out: dict[str, Any] = {}
-    for line in m.group(1).split("\n"):
+    dups: list[str] = []
+    for line in body.split("\n"):
         line = line.split("#", 1)[0].strip()
         if not line or ":" not in line:
             continue
         k, v = line.split(":", 1)
-        out[k.strip()] = v.strip()
+        k = k.strip()
+        if k in out and k not in dups:
+            dups.append(k)
+        out[k] = v.strip()
+    return out, sorted(dups)
+
+
+def _fenced_blocks(entry: dict) -> list[tuple[dict, list[str]]]:
+    """EVERY fenced ratification block in the entry, in order.
+
+    `bind_from_block` reads the FIRST fence; that is what made a QUOTED
+    block indistinguishable from an entry's own (DE16-R1). Ownership needs
+    all of them, because the quotation may come first."""
+    text = entry["heading"] + "\n" + entry["body"]
+    return [_parse_block(m.group(1))
+            for m in re.finditer(r"```ratification\n(.*?)```", text, re.S)]
+
+
+def _heading_ref(entry: dict) -> str | None:
+    m = HEADING_RE.match(entry["heading"])
+    return m.group(1) if m else None
+
+
+#: DE16-R1: A BLOCK QUOTED INSIDE AN ENTRY IS NOT THAT ENTRY'S RATIFICATION.
+#: `superseded_by` validated the first fence of every later entry, so a
+#: coordinator sweep SHOWING a spelling -- which is exactly where these
+#: spellings get documented -- was read as the sweep's own ratification: a
+#: quoted `supersedes: R-419` made R-419 read SUPERSEDED BY THE SWEEP, and a
+#: quoted malformed one made every earlier ref's check REFUSE for a reason
+#: with nothing to do with the ref being checked. The rule is the one
+#: `check#8` already applies to the entry under check, one loop over: the
+#: block's `ref` must be the entry's OWN heading ref, and its `kind` must be
+#: R-ADMISS. Anything else is a quotation and is not read.
+def own_ratification_blocks(entry: dict) -> list[dict]:
+    """The entry's OWN ratification block(s) -- ref == heading ref and
+    kind == R-ADMISS.  More than one REFUSES: two ratifications under one
+    heading is a malformed entry, not a choice between them."""
+    ref = _heading_ref(entry)
+    own = [(blk, dups) for blk, dups in _fenced_blocks(entry)
+           if str(blk.get("ref", "")).strip() == ref
+           and str(blk.get("kind", "")).strip() == "R-ADMISS"]
+    if len(own) > 1:
+        # SITE: own_ratification_blocks#1
+        raise RatificationRefused(
+            f"REFUSED: {ref} carries {len(own)} ratification blocks of its "
+            f"OWN (ref == the heading, kind R-ADMISS). Two ratifications "
+            f"under one heading is a MALFORMED ENTRY, not a choice between "
+            f"them -- and taking the first is how a corrected block would "
+            f"be shadowed by the one it corrects. A correction supersedes "
+            f"in band, as its own entry (rule 13).")
+    for blk, dups in own:
+        if dups:
+            # SITE: own_ratification_blocks#2
+            raise RatificationRefused(
+                f"REFUSED: {ref}'s ratification block carries the key(s) "
+                f"{dups} MORE THAN ONCE. The parse is last-wins, so the "
+                f"earlier line is dropped in silence: `supersedes: R-902` "
+                f"followed by `supersedes: R-901` supersedes NEITHER "
+                f"(DE16-R3).")
+    return [blk for blk, _ in own]
+
+
+def bind_from_block(entry: dict) -> dict | None:
+    """The PROPOSED machine-readable form, if the entry carries one.
+
+    The FIRST fence, which is what the entry under check is bound from --
+    a foreign block there is refused by `check#8` rather than skipped,
+    because the entry under check is the one making the claim and a
+    fail-closed refusal is the right answer to an entry whose first
+    ratification block is somebody else's."""
+    blocks = _fenced_blocks(entry)
+    if not blocks:
+        return None
+    out, dups = blocks[0]
+    if dups:
+        # SITE: bind_from_block#1
+        raise RatificationRefused(
+            f"REFUSED: a ratification block carries the key(s) {dups} MORE "
+            f"THAN ONCE. `k, v = line.split(':', 1)` into a dict is "
+            f"LAST-WINS, so the earlier value is dropped without a word -- "
+            f"two `supersedes:` lines named two refs and superseded NEITHER, "
+            f"and the ratification kept verifying for new runs (DE16-R3). "
+            f"Presence twice is absence in place wearing the other face.")
     return out
 
 
@@ -633,6 +747,14 @@ def check(supplied: dict, ratification_ref: str,
                 f"not predate its superseder, so this is not provenance")
 
     block = bind_from_block(entry)
+    # DE16-R1's other half, on the entry under check: `bind_from_block`
+    # reads the FIRST fence, so an entry carrying two ratifications of its
+    # own would be bound from one of them with nothing said about the
+    # other. Ownership is evaluated here purely for that refusal; the
+    # BINDING stays the first fence, because a foreign block THERE is
+    # `check#8`'s fail-closed refusal rather than something to skip past --
+    # the entry under check is the one making the claim.
+    own_ratification_blocks(entry)
     if block is not None:
         # CO-5: a MALFORMED block is refused BY NAME, not left undecided.
         empty = sorted(f for f, v in block.items()
@@ -812,7 +934,7 @@ def check(supplied: dict, ratification_ref: str,
 
 
 # ---------------------------------------------------------------------------
-EXPECTED_CHECKS = 132
+EXPECTED_CHECKS = 150
 
 
 def selftest() -> int:
@@ -1381,6 +1503,144 @@ def selftest() -> int:
        "POSITIVE CONTROL: a WELL-SHAPED ref in that field still verifies, "
        "so the rule is about SHAPE and does not quietly require `null`")
 
+    # ---- DE16-R1: A QUOTED BLOCK IS NOT THE QUOTING ENTRY'S -----------
+    # The register is exactly where these spellings get documented, and one
+    # fence deeper the checker read the documentation as a ratification: a
+    # sweep entry quoting `supersedes: R-419` made R-419 read SUPERSEDED BY
+    # THE SWEEP, and a quoted malformed one made every earlier ref's check
+    # REFUSE for a reason about somebody else's block.
+    def _sweep(block_ref, sup_val, heading="R-999"):
+        """A later, NON-ratifying entry that QUOTES a block -- the shape a
+        coordinator sweep naturally takes when it reports a spelling."""
+        rows = [f"ref: {block_ref}", "kind: R-ADMISS",
+                f"population: {POP_FULL}", "sampling: NONE",
+                "present_source: data/pm_5min/markets.jsonl",
+                "scope_days: FORWARD_RACE_DAYS", "scope_from: 20260901",
+                "scope_to: null", "revocable_by: USER"]
+        if sup_val is not None:
+            rows.append(f"supersedes: {sup_val}")
+        return (f"\n### {heading} — 2026-09-02T14:00Z — coordinator: the "
+                f"spelling that used to pass silently\n\n```ratification\n"
+                + "\n".join(rows) + "\n```\n\nNothing here ratifies "
+                "anything.\n\n## next\n")
+
+    _real = REGISTER.read_text()
+    for _sv, _was in (("R-419", "made R-419 read SUPERSEDED BY THE SWEEP"),
+                      ("", "made R-419's own check REFUSE as EMPTY"),
+                      ("R-902, R-901", "REFUSED as MORE THAN ONE")):
+        # A REFUSAL here is the defect, so it is CAUGHT and turned into a
+        # named failure: an uncaught RatificationRefused would end the run
+        # in a traceback, and a crash is not a refusal -- nor a report of
+        # one (this module's own standard, applied to its own suite).
+        try:
+            _r = check(sup, "R-419", _real + _sweep("R-903", _sv))
+            _saw = ""
+        except RatificationRefused as _exc:
+            _r = {"verified": False, "unverifiable": ["<REFUSED>"],
+                  "superseded_by": []}
+            _saw = f" REFUSED INSTEAD: {str(_exc)[:110]}"
+        ok(_r["verified"] and _r["unverifiable"] == []
+           and _r["superseded_by"] == [] and not _saw,
+           f"DE16-R1 ON THE REAL REGISTER: a later sweep entry QUOTING a "
+           f"block (`ref: R-903`, `supersedes: {_sv!r}`) is NOT read as its "
+           f"own ratification -- R-419 still verifies "
+           f"{_r['verified']}, {_r['unverifiable']}, superseded_by "
+           f"{_r['superseded_by']}. Before this it {_was}{_saw}")
+    _own = superseded_by(_real + _sweep("R-999", "R-419"), "R-419")
+    ok(_own == ["R-999"],
+       f"POSITIVE CONTROL, SAME FIXTURE: when the later entry's block "
+       f"declares ITS OWN heading ref, the supersession IS read ({_own}) "
+       f"-- the rule skips QUOTATIONS, not supersessions, and without this "
+       f"control the three above could pass by seeing nothing at all")
+    refuses(lambda: check(sup, "R-419", _real + _sweep("R-999", "R-419")),
+            "and the end-to-end consequence follows: a REAL later "
+            "ratification makes R-419 refuse FOR A NEW RUN, which is the "
+            "verdict the quoted block was producing on no authority",
+            needle="is SUPERSEDED by R-999")
+    _note = _sweep("R-999", "R-419").replace("kind: R-ADMISS",
+                                             "kind: STATUS_NOTE")
+    ok(check(sup, "R-419", _real + _note)["superseded_by"] == [],
+       "and a block under its own heading that does NOT declare itself "
+       "R-ADMISS is not a ratification either -- ownership is ref AND "
+       "kind, the same pair `check#8` and `check#10` already apply to the "
+       "entry under check")
+    _two = (_real + _sweep("R-999", "R-419")
+            .replace("## next\n", "")
+            + "```ratification\nref: R-999\nkind: R-ADMISS\n"
+            f"population: {POP_FULL}\nsampling: NONE\n"
+            "present_source: data/pm_5min/markets.jsonl\n"
+            "scope_days: FORWARD_RACE_DAYS\nscope_from: 20260901\n"
+            "scope_to: null\nrevocable_by: USER\nsupersedes: null\n"
+            "```\n\n## next\n")
+    refuses(lambda: check(sup, "R-419", _two),
+            "KNOWN-BAD: an entry carrying TWO blocks of its OWN REFUSES by "
+            "name -- two ratifications under one heading is a malformed "
+            "entry, not a choice between them, and taking the first is how "
+            "a correction would be shadowed by the block it corrects",
+            needle="ratification blocks of its")
+
+    # ---- DE16-R2: shape is not existence -------------------------------
+    for _dangling, _why in (
+            ("R-9021", "one digit from R-902 and perfectly well-shaped"),
+            ("R-99999", "well-shaped and naming nothing at all"),
+            ("R-418", "a REAL ref elsewhere, absent from THIS register")):
+        refuses(lambda v=_dangling: check(sup, "R-902", _chain(v)),
+                f"KNOWN-BAD: a later entry declaring `supersedes: "
+                f"{_dangling}` REFUSES -- {_why}. It matched nothing and "
+                f"left R-902 verifying for new runs in SILENCE, which is "
+                f"DE14-R1's own sentence surviving the fix that quoted it: "
+                f"a failed match says nothing (DE16-R2)",
+                needle="exists in this register")
+    ok(superseded_by(_chain("R-902"), "R-902") == ["R-903"]
+       and check(sup, "R-903", _chain("R-902"))["verified"],
+       "POSITIVE CONTROL: an EXISTING target still supersedes, and the "
+       "superseder itself still verifies -- the existence rule refuses "
+       "dangling refs, not supersession")
+
+    # ---- DE16-R3: duplicate keys, no last-wins -------------------------
+    _dup = fixture_register("R-902", supersedes="R-902").replace(
+        "supersedes: R-902", "supersedes: R-902\nsupersedes: R-901")
+    refuses(lambda: check(sup, "R-902", _dup),
+            "KNOWN-BAD: TWO `supersedes:` lines in one block REFUSE -- the "
+            "parse is `k, v = line.split(':', 1)` into a dict, so "
+            "`R-902` then `R-901` superseded NEITHER: the first was "
+            "dropped in silence and the second matched nothing, while the "
+            "ratification kept verifying for new runs (fail-OPEN, DE16-R3)",
+            needle="MORE THAN ONCE")
+    refuses(lambda: check(sup, "R-900", fixture_register().replace(
+        "scope_to: null", "scope_to: null\nscope_to: 20260901")),
+            "and it is a property of the PARSE, not of `supersedes`: a "
+            "repeated `scope_to` refuses the same way, which is why the "
+            "guard reads keys rather than one field",
+            needle="MORE THAN ONCE")
+    ok(check(sup, "R-900", fixture_register())["verified"],
+       "POSITIVE CONTROL: a block with each key ONCE still verifies, so "
+       "the duplicate rule is a filter and not a wall")
+    # The ownership guard's OTHER refusal needs a quoted-first-fence entry:
+    # with two OWN blocks the count refuses first, so a duplicated key in
+    # an own block is only reachable when the first fence belongs to
+    # somebody else. Driven rather than left to be inferred.
+    _quoted_then_own = (
+        "### R-902 — 2026-09-02T09:00Z — coordinator: R-ADMISS, quoting "
+        "R-903 first\n\n```ratification\nref: R-903\nkind: R-ADMISS\n"
+        f"population: {POP_FULL}\nsampling: NONE\n"
+        "present_source: data/pm_5min/markets.jsonl\n"
+        "scope_days: FORWARD_RACE_DAYS\nscope_from: 20260901\n"
+        "scope_to: null\nrevocable_by: USER\nsupersedes: null\n```\n\n"
+        "and its own, below:\n\n```ratification\nref: R-902\n"
+        f"kind: R-ADMISS\npopulation: {POP_FULL}\nsampling: NONE\n"
+        "present_source: data/pm_5min/markets.jsonl\n"
+        "scope_days: FORWARD_RACE_DAYS\nscope_from: 20260901\n"
+        "scope_to: null\nscope_to: 20260901\nrevocable_by: USER\n"
+        "supersedes: null\n```\n\n## next\n")
+    refuses(lambda: check(sup, "R-902", _quoted_then_own),
+            "KNOWN-BAD: a duplicated key in the entry's OWN block refuses "
+            "even when the FIRST fence is a quotation -- the ownership "
+            "guard reads the entry's own blocks, not the first one it "
+            "finds, so the two refusals cover different entries rather "
+            "than one of them shadowing the other",
+            needle="MORE THAN ONCE")
+
     # ---- scope_to, the heading ref, and self-contradiction --------------
     def _blk(**over):
         f = {"ref": "R-902", "kind": "R-ADMISS",
@@ -1499,6 +1759,36 @@ def selftest() -> int:
        f"`expected`, which mutation_audit built as sorted(cases) -- derived "
        f"from the very dict it was compared to, so it could not fail "
        f"(DE14-R2)")
+    # ---- the marker NAMES must be unique, or two sites merge into one --
+    # A site is identified by its `# SITE:` name, so two raises carrying the
+    # SAME name are indistinguishable and a migration between them is
+    # invisible to the coverage map -- the map would be satisfied by the
+    # wrong raise. The 24 markers were unique and nothing said so; a
+    # uniqueness that holds by luck is not a property (the reviewer's
+    # residual on DE14-R2).
+    _names = _site_names()
+    ok(len(set(_names.values())) == len(_names),
+       f"THE {len(_names)} `# SITE:` MARKER NAMES ARE UNIQUE, asserted -- "
+       f"two raises under one name would merge into a single site key and "
+       f"a case migrating between them would satisfy EXPECTED_SITE while "
+       f"reaching the wrong raise")
+    import tempfile as _tf
+    _src = Path(__file__).read_text()
+    _dupname = _src.replace("# SITE: check#3", "# SITE: check#2", 1)
+    ok(_dupname != _src, "(the marker-rename mutant really changed the "
+                         "source it is built from)")
+    with _tf.TemporaryDirectory() as _d:
+        _cp = Path(_d) / "copy.py"
+        _cp.write_text(_dupname)
+        _bad = _site_names(_cp)
+    ok(len(set(_bad.values())) < len(_bad)
+       and sorted(_bad.values()).count("check#2") == 2,
+       f"KNOWN-BAD, ON A REAL COPY: renaming one marker to another's makes "
+       f"`check#2` name TWO raises ({len(_bad)} markers, "
+       f"{len(set(_bad.values()))} names) and the uniqueness assertion "
+       f"above goes red -- run through `_site_names` itself, on a file, "
+       f"not by editing the dict it returned (DE16-R4's lesson applied to "
+       f"its neighbour)")
     ok(all(v["file"] == "de_ratification_check.py" and v["lineno"] > 0
            and v["site"] != "<untagged>"
            for v in audit["raise_site_by_case"].values()),
@@ -1506,19 +1796,48 @@ def selftest() -> int:
        "TRACEBACK and resolved to its `# SITE:` name, so a raise that "
        "moves down the file keeps its identity while a raise that is "
        "deleted loses it")
-    # THE FALSIFIERS, all three directions of the same comparison.
-    ok({k: v for k, v in _reached.items() if k != "superseded"}
-       != EXPECTED_SITE,
-       "KNOWN-BAD: DELETING A CASE goes red -- the reviewer's test. Round "
-       "14's own new case could be removed and the suite stayed green")
-    ok(dict(_reached, some_new_case="check#1") != EXPECTED_SITE,
-       "KNOWN-BAD: an UNRECORDED case goes red too, so a case added "
-       "without recording where it must land is not silently absorbed")
-    ok(dict(_reached, superseded="check#9") != EXPECTED_SITE,
-       "KNOWN-BAD: a case that MIGRATES to another guard goes red -- which "
-       "is exactly what `superseded` and `unknown_population_value` did "
-       "unnoticed, one at a heading-timestamp guard and one at the VALUE "
-       "guard, both under names claiming otherwise")
+    # ---- THE FALSIFIERS, DRIVEN THROUGH THE AUDIT (DE16-R4) -----------
+    # These three used to take `_reached`, edit a COPY and assert it was
+    # `!= EXPECTED_SITE` -- two lines after `_reached == EXPECTED_SITE` was
+    # asserted and the suite exited if that failed. Evaluated under a
+    # correct map, a migrated one and a lost one they returned True, True,
+    # True: they asserted a property of dict equality and never drove the
+    # coverage assertion on a mutated input. They wore KNOWN-BAD labels in
+    # the round that closed "derived from the very dict it was compared to,
+    # so it could not fail" -- the same defect, one artefact over.
+    #
+    # Now the HARNESS is mutated and the map is recomputed from real
+    # tracebacks, which is what the copy-mutant outside the suite does. The
+    # hook is chosen over deleting the three and citing that mutant because
+    # rule 15 asks the checker to SHIP its falsifier: a mutant that lives
+    # in a filing is one nobody re-runs.
+    _dropped = mutation_audit(sup, _drop_case="superseded_new_run")
+    ok(not _dropped["coverage_matches_expected"]
+       and _dropped["n_cases"] == audit["n_cases"] - 1
+       and "superseded_new_run" not in _dropped["site_reached_by_case"],
+       f"KNOWN-BAD, DRIVEN: DELETING A CASE from the harness leaves "
+       f"{_dropped['n_cases']} cases and `coverage_matches_expected` "
+       f"{_dropped['coverage_matches_expected']} -- the reviewer's own test, "
+       f"run here rather than approximated by editing a dict the assertion "
+       f"had already passed")
+    _migrated = mutation_audit(
+        sup, _migrate_case=("superseded", "unknown_population_value"))
+    ok(not _migrated["coverage_matches_expected"]
+       and _migrated["site_reached_by_case"]["superseded"] == "check#9",
+       f"KNOWN-BAD, DRIVEN: a case given ANOTHER case's input lands at "
+       f"another site under its own name "
+       f"({_migrated['site_reached_by_case']['superseded']} where "
+       f"{EXPECTED_SITE['superseded']} is recorded) and the coverage "
+       f"assertion sees it -- which is exactly what `superseded` and "
+       f"`unknown_population_value` did unnoticed before the map existed")
+    _added = mutation_audit(sup, _add_case="a_case_nobody_recorded")
+    ok(not _added["coverage_matches_expected"]
+       and _added["n_cases"] == audit["n_cases"] + 1,
+       f"KNOWN-BAD, DRIVEN: a case nobody RECORDED is not silently absorbed "
+       f"({_added['n_cases']} cases, coverage "
+       f"{_added['coverage_matches_expected']}) -- the map is a producer "
+       f"act, so adding a case without recording where it must land is a "
+       f"change to the expectation and reads as one")
     ok(_reached["superseded"] == "check#2"
        and _reached["superseded_new_run"] == "check#3",
        f"and the two are now DISTINCT cases at DISTINCT sites: "
@@ -1586,6 +1905,9 @@ EXPECTED_SITE: dict[str, str] = {
     "unknown_population_value": "check#9",
     "population_unbindable_from_prose": "check#12",
     "later_entry_bad_supersedes": "validate_supersedes#5",
+    "later_entry_dangling_supersedes": "superseded_by#1",
+    "duplicate_block_key": "bind_from_block#1",
+    "two_own_blocks": "own_ratification_blocks#1",
     "under_check_bad_supersedes": "validate_supersedes#5",
     "not_a_ratification": "check#10",
     "counts_do_not_sum": "check#11",
@@ -1616,7 +1938,9 @@ def _site_names(path: Path | None = None) -> dict:
     return out
 
 
-def mutation_audit(sup: dict) -> dict:
+def mutation_audit(sup: dict, *, _drop_case: str | None = None,
+                   _migrate_case: tuple[str, str] | None = None,
+                   _add_case: str | None = None) -> dict:
     """Each refusal driven LIVE (must refuse) and against an input that
     should NOT trip it (must not) -- visibly different calls, round 5's
     lesson. There is no `skip_guard` here: the refusals are sequential in
@@ -1654,6 +1978,19 @@ def mutation_audit(sup: dict) -> dict:
         "### R-418 — coordinator: R-ADMISS ratification — the population "
         "is the FULL supplied complement, no sampling\n\nBody naming "
         "data/pm_5min/markets.jsonl for a forward-race day.\n\n## next\n")
+    # DE16-R1/R2/R3's three refusals, MEASURED here rather than only
+    # asserted in the selftest: each needs an input that trips it and one
+    # that must reach past it.
+    dangling = stamped_chain.replace("supersedes: R-902", "supersedes: R-9021")
+    dup_key = fixture_register("R-902").replace(
+        "scope_to: null", "scope_to: null\nscope_to: 20260901")
+    two_own = (fixture_register("R-902").replace("\n\n## next\n", "\n\n")
+               + "```ratification\nref: R-902\nkind: R-ADMISS\n"
+               f"population: {POP_FULL}\nsampling: NONE\n"
+               "present_source: data/pm_5min/markets.jsonl\n"
+               "scope_days: FORWARD_RACE_DAYS\nscope_from: 20260901\n"
+               "scope_to: null\nrevocable_by: USER\nsupersedes: null\n"
+               "```\n\n## next\n")
     # (bad args/kwargs, control args/kwargs)
     cases = {
         "entry_absent": (((sup, "R-901", good), {}),
@@ -1755,10 +2092,47 @@ def mutation_audit(sup: dict) -> dict:
         "under_check_bad_supersedes": (
             ((sup, "R-900", fixture_register(supersedes="WHATEVER")), {}),
             ((sup, "R-900", good), {})),
+        # --- DE16-R1/R2/R3 -----------------------------------------------
+        "later_entry_dangling_supersedes": (
+            ((sup, "R-902", dangling),
+             {"stamped_at": "2026-09-02T09:30:00Z"}),
+            ((sup, "R-902", stamped_chain),
+             {"stamped_at": "2026-09-02T09:30:00Z"})),
+        "duplicate_block_key": (((sup, "R-902", dup_key), {}),
+                                ((sup, "R-900", good), {})),
+        "two_own_blocks": (((sup, "R-902", two_own), {}),
+                           ((sup, "R-900", good), {})),
     }
+    # ---- DE16-R4: the TEST HOOKS, so the coverage assertion is driven
+    # from inside the suite rather than compared to a copy of itself.
+    # The three lines that used to follow the assertion took `_reached`,
+    # edited a copy and asserted it was `!= EXPECTED_SITE` -- two lines
+    # after `_reached == EXPECTED_SITE` had been asserted and the suite had
+    # exited if it failed. They were properties of dict equality: True
+    # under the correct map, True under a migrated one, True under a lost
+    # one. The exact wording of the finding is what the round they were
+    # written for had closed -- "derived from the very dict it was compared
+    # to, so it could not fail" -- and they carried KNOWN-BAD labels.
+    #
+    # These hooks MUTATE THE HARNESS ITSELF, so `raise_site_by_case` is
+    # recomputed from real tracebacks over mutated input and the real
+    # assertion sees a genuinely wrong map. `_drop_case` removes a case
+    # (the reviewer's test), `_migrate_case=(name, other)` gives one case
+    # ANOTHER case's input so it lands at another site under its own name,
+    # and `_add_case` runs a case nobody recorded.
+    if _drop_case is not None:
+        assert _drop_case in cases, _drop_case      # the hook itself fails
+        cases.pop(_drop_case)                       # loudly on a stale name
+    if _migrate_case is not None:
+        _from, _to = _migrate_case
+        assert _from in cases and _to in cases, _migrate_case
+        cases[_from] = (cases[_to][0], cases[_from][1])
+    if _add_case is not None:
+        assert _add_case not in cases, _add_case
+        cases[_add_case] = cases["entry_absent"]
     import traceback as _tb
     per: dict[str, dict] = {}
-    sites: dict[str, int] = {}
+    sites: dict[str, tuple] = {}
     for name, ((bad_a, bad_k), (ctl_a, ctl_k)) in cases.items():
         try:
             check(*bad_a, **bad_k)
