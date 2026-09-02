@@ -213,19 +213,58 @@ DECLARED_BLIND_SHAPES = (
 #: it is about. Before this, `>= 4` plus two `any(...)` substring probes
 #: stood in for membership, so an entry could be added, removed or reworded
 #: with nothing going red -- and the sentence printed beside that check
-#: enumerated four shapes that were not the list's four. Keyed by the
-#: entry's INDEX in DECLARED_BLIND_SHAPES, so an entry and the assertions
-#: that cover it live and die together.
+#: enumerated four shapes that were not the list's four.
 #:
-#: The empty tuple is the DECISION, not an omission: entry 4 is outside the
-#: source, so no source-reading assertion can address it, and the selftest
-#: asserts that the empty one is exactly that entry.
-BLIND_ENTRY_ASSERTIONS: dict[int, tuple[str, ...]] = {
-    0: ("runpy.run_path", "runpy.run_module"),
-    1: ("builtins.exec (attribute form)", "builtins.eval (attribute form)",
-        "builtins.compile (attribute form)"),
-    2: ("getattr-reached import_module",),
-    3: (),
+#: DE17-R1: AND IT WAS KEYED BY POSITION, which asserts EXISTENCE in both
+#: directions and ASSOCIATION in neither -- "cover" is an association word.
+#: Swapping entries 0 and 2 and leaving the map untouched left the suite
+#: green at 75 while the map claimed the runpy assertions covered the
+#: getattr entry. So the key is now a TOKEN THE ENTRY ITSELF CONTAINS: the
+#: association is content-based and cannot drift silently, and the selftest
+#: additionally asserts the tokens resolve ONE-TO-ONE and IN THE LIST'S OWN
+#: ORDER -- the docstring above runs in that order, so a reorder that left
+#: the prose behind would hand a reader the entries and their reasons in
+#: different sequences.
+#:
+#: The empty tuple is the DECISION, not an omission: the C-extension entry
+#: is outside the source, so no source-reading assertion can address it,
+#: and the selftest asserts that the empty one is exactly that entry.
+#: DE17-R2: THE DECLARATION ITSELF IS READ, so a paragraph and the checks
+#: that carry it fail together. Every blind entry is now bound to its
+#: assertions, but the OVER-CAUGHT paragraph was the one statement in the
+#: block with nothing behind it: deleting it left the suite green at 75,
+#: and its own disposition asks a maintainer to "delete the check and the
+#: OVER-CAUGHT paragraph together" -- the same "together" the blind list
+#: enforces structurally and this one asked for on trust.
+#:
+#: The text is returned NORMALISED (the `#:` prefix stripped, whitespace
+#: collapsed) so a phrase can be asserted across the line wraps it is
+#: written in, and it is scoped to the comment block IMMEDIATELY ABOVE
+#: `DECLARED_BLIND_SHAPES` -- not to the whole file, which would make the
+#: assertion satisfy itself out of its own message.
+_LIMIT_ANCHOR = "DECLARED_BLIND_SHAPES = ("
+
+
+def declared_limit_text(src: str | None = None) -> str:
+    """The declared-limit comment block above the list, normalised."""
+    lines = (src if src is not None
+             else Path(__file__).read_text()).split("\n")
+    i = next(n for n, ln in enumerate(lines) if ln.startswith(_LIMIT_ANCHOR))
+    block: list[str] = []
+    for ln in reversed(lines[:i]):
+        if not ln.startswith("#:"):
+            break
+        block.append(ln[2:].strip())
+    return " ".join(w for w in " ".join(reversed(block)).split() if w)
+
+
+BLIND_ENTRY_ASSERTIONS: dict[str, tuple[str, ...]] = {
+    "runpy": ("runpy.run_path", "runpy.run_module"),
+    "builtins.exec": ("builtins.exec (attribute form)",
+                      "builtins.eval (attribute form)",
+                      "builtins.compile (attribute form)"),
+    'getattr(importlib, "import_module")': ("getattr-reached import_module",),
+    "C extensions": (),
 }
 
 
@@ -740,7 +779,7 @@ def supply(day: str, present: dict[str, Sequence[int]],
 # ---------------------------------------------------------------------------
 REAL_DAY = "20260901"
 EMPTY_DAY = "20260827"
-EXPECTED_CHECKS = 75
+EXPECTED_CHECKS = 79
 
 
 def _grid(day: str) -> list[int]:
@@ -1072,6 +1111,35 @@ def selftest() -> int:
        "REFUSES; it can never ADMIT. Resolving the object is the different "
        "instrument this module declines to build, so the reach is written "
        "at the list rather than papered over with a bigger regex")
+    # ---- DE17-R2: the paragraph and its checks fail TOGETHER ----------
+    _limit = declared_limit_text()
+    _phrase = ("ANY object's `.__import__('literal')` contributes that "
+               "literal as a module")
+    ok("OVER-CAUGHT" in _limit and _phrase in _limit,
+       f"THE OVER-CAUGHT DECLARATION IS ASSERTED IN THE MODULE'S OWN LIMIT "
+       f"TEXT ({len(_limit)} chars, read from the comment block above the "
+       f"list and normalised across its line wraps): the two checks above "
+       f"drove the behaviour while NOTHING read the paragraph, so deleting "
+       f"it left the suite green at 75 -- the one statement in the block "
+       f"with nothing behind it, in the round whose thesis is that a "
+       f"statement about the predicate must be checked (DE17-R2)")
+    ok(all(w in _limit for w in ("os.environ", "not_a_module", "fails SAFE")),
+       "and the declaration names what the checks DRIVE -- `os.environ`, "
+       "`not_a_module` and the SAFE direction -- so the paragraph and the "
+       "two checks below cannot drift into describing different things; "
+       "this is the binding-phrase idiom `de_ratification_check` uses for "
+       "`stamped_at`, applied to a declaration that lives in a comment")
+    _cut = Path(__file__).read_text().replace(
+        "#:   OVER-CAUGHT -- stated because a limit list that names only "
+        "blindness is", "#:   (paragraph deleted by the mutant)", 1)
+    ok(_cut != Path(__file__).read_text()
+       and _phrase in declared_limit_text()
+       and "OVER-CAUGHT" not in declared_limit_text(_cut),
+       "KNOWN-BAD, DRIVEN THROUGH THE READER ITSELF: with the paragraph's "
+       "opening line replaced in a COPY of this source, the reader returns "
+       "text the assertion above cannot find OVER-CAUGHT in -- so the "
+       "check is about the declaration and not about its own message "
+       "(the trap a whole-file grep would fall into)")
     ok(reads_no_verdict(imported_modules(
         "import importlib\n"
         "getattr(importlib, 'import_module')('da_forward_day_verify')\n"))
@@ -1095,24 +1163,44 @@ def selftest() -> int:
     # claim and the evaluated predicate had no member in common. A verdict
     # string beside a check that does not evaluate it (rule 10), printed as
     # a PASS by the very suite that had just disproved it.
-    _covered = {i for i, v in BLIND_ENTRY_ASSERTIONS.items() if v}
-    _unasserted = {i for i, v in BLIND_ENTRY_ASSERTIONS.items() if not v}
-    ok(set(BLIND_ENTRY_ASSERTIONS) == set(range(len(DECLARED_BLIND_SHAPES)))
-       and _covered == {0, 1, 2} and _unasserted == {3},
-       f"THE LIMIT IS DECLARED AND ITS MEMBERSHIP IS ASSERTED: every one of "
-       f"the {len(DECLARED_BLIND_SHAPES)} entries is keyed in "
-       f"BLIND_ENTRY_ASSERTIONS, so adding or removing an entry without "
-       f"its assertion goes red. Entries with a source form: "
-       f"{sorted(_covered)}; with none: {sorted(_unasserted)}. The list "
-       f"itself, printed rather than paraphrased: "
+    # DE17-R1: the token each key names must RESOLVE to an entry, one to
+    # one. A key that matches nothing, an entry no key matches, or a token
+    # matching two entries all break the association the map claims -- and
+    # the association is what "covers" means.
+    _matches = {tok: [i for i, e in enumerate(DECLARED_BLIND_SHAPES)
+                      if tok in e]
+                for tok in BLIND_ENTRY_ASSERTIONS}
+    _at = {tok: (m[0] if len(m) == 1 else None) for tok, m in _matches.items()}
+    _covered = {tok for tok, v in BLIND_ENTRY_ASSERTIONS.items() if v}
+    _unasserted = {tok for tok, v in BLIND_ENTRY_ASSERTIONS.items() if not v}
+    ok(all(len(m) == 1 for m in _matches.values())
+       and sorted(_at.values()) == list(range(len(DECLARED_BLIND_SHAPES)))
+       and len(_unasserted) == 1,
+       f"THE LIMIT IS DECLARED AND ITS MEMBERSHIP IS ASSERTED BY CONTENT: "
+       f"each key is a token the entry itself contains, and the four "
+       f"resolve ONE-TO-ONE onto the four entries "
+       f"{ {t: i for t, i in _at.items()} }. Keyed by POSITION this held "
+       f"for existence and for nothing else: entries 0 and 2 swapped with "
+       f"the map untouched left the suite green at 75 while the map "
+       f"claimed the runpy assertions covered the getattr entry (DE17-R1). "
+       f"The list itself, printed rather than paraphrased: "
        f"{[x.split(' (')[0] for x in DECLARED_BLIND_SHAPES]}")
-    ok("C extensions" in DECLARED_BLIND_SHAPES[next(iter(_unasserted))],
+    ok(list(_at.values()) == list(range(len(DECLARED_BLIND_SHAPES))),
+       f"AND IN THE LIST'S OWN ORDER: the map's keys resolve to "
+       f"{list(_at.values())}, which is the order the entries are written "
+       f"in -- and the order the docstring's prose above runs in, since "
+       f"round 17 put it there. A REORDER is caught here and NAMED: the "
+       f"entries and their reasons would otherwise reach a reader in "
+       f"different sequences while every other check stayed green")
+    _uns = next(iter(_unasserted))
+    ok("C extensions" in DECLARED_BLIND_SHAPES[_at[_uns]],
        f"and the ONE entry carrying no assertion is exactly the one that "
-       f"cannot carry one -- {DECLARED_BLIND_SHAPES[3]!r} is outside the "
-       f"source, so there is no text for a source-reading assertion to "
-       f"read. NOT ASSERTABLE IN-PROCESS is a decision, recorded at the "
-       f"list and checked here; without this the empty row reads as an "
-       f"omission (DE15-R2)")
+       f"cannot carry one -- {DECLARED_BLIND_SHAPES[_at[_uns]]!r}, reached "
+       f"through its own key {_uns!r} rather than through an index, is "
+       f"outside the source, so there is no text for a source-reading "
+       f"assertion to read. NOT ASSERTABLE IN-PROCESS is a decision, "
+       f"recorded at the list and checked here; without this the empty row "
+       f"reads as an omission (DE15-R2)")
     _ran = {lbl for lbls in BLIND_ENTRY_ASSERTIONS.values() for lbl in lbls}
     ok(_ran == _blind_labels_run,
        f"AND THE MAP IS ASSERTED AGAINST THE LOOP THAT RAN, not against "
