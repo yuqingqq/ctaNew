@@ -1,12 +1,11 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-02T12:54Z — **BE's re-run COMPLETED with counts matching the
-first pass exactly**, so the landing condition is satisfiable in its second
-form — but the receipt reads **`working_tree_dirty: true`**, so the landing
-still needs the commit. **Its own numbers say 1,344 of 1,875 supplied windows —
-71.7% — produce no score**, because the frozen candidate fits btc and eth only.
-**USER decisions unchanged: four RULED, one OPEN.** Prior line: `supersedes` was
-matched raw and validated nowhere.
+Updated: 2026-09-02T13:10Z — **a fenced ratification block quoted in any later
+entry is read as that entry's own** (DE16-R1, live), so a **coordinator format
+rule** now forbids quoting one outside an R-ADMISS entry — **it binds these state
+files, and I removed the one this file was carrying.** **USER decisions
+unchanged: four RULED, one OPEN.** Prior line: BE's re-run completed with
+matching counts; 71.7% of the supplied population produces no score.
 
 ## READ FIRST — current project handoff
 
@@ -305,6 +304,44 @@ run leaves no trace of how far it got**. Both are the same shape — *state that
 exists only if the process exits normally* — and the fix is the same shape too:
 write as you go.
 
+### FORMAT RULE — no fenced ratification block outside an R-ADMISS entry
+
+**In force from R-432 until DE round 18 lands.** No register entry other than an
+R-ADMISS entry's own may contain a **fenced** `ratification` block; spellings are
+quoted **in prose with inline backticks only**. **The rule binds these state
+files too.**
+
+**Why it is not cosmetic — DE16-R1, reproduced and LIVE.** A fenced block quoted
+inside a **later, non-ratifying** entry is read as **that entry's own**, and the
+supersession is attributed to the **entry's heading ref, not the block's**. On
+the real register plus an appended sweep entry quoting a block, R-419 read as
+*"SUPERSEDED by R-999"*; an **empty** `supersedes` in that quoted block made
+R-419's check **refuse**. **A sweep entry that merely illustrated a ratification
+would have superseded one.** That is CO-4's family — *an entry about a
+ratification verifying as one* — moved from the prose era into the block era.
+
+**I checked this file against the rule and it was in breach.** The
+R-419-supersedes-R-418 section carried a **fenced** block from my round-15
+sweep. **Removed this round**, its fields re-quoted inline; `STATUS.yml` never
+carried one. Verified: **zero** fenced blocks in either state file.
+
+**And the register itself is clean, which I confirmed independently:** it holds
+**exactly one** fenced block — R-419's own at `:18329` — while the two other
+hits (`:508`, `:18325`) are **inline prose mentions** of the fence that the
+block finder correctly does not read.
+
+**The other three findings, all reproduced:** **DE16-R2** — a `supersedes`
+naming a ref that **exists nowhere** (`R-9021`, `R-99999`) leaves the base ref
+verifying `True, []` **silently**: shape-only existence. **DE16-R3** — **two
+`supersedes:` lines in one block** and `bind_from_block` takes **last-wins**, so
+the first target is dropped **without a word** — fail-open. **DE16-R4** — the
+three KNOWN-BAD comparisons after the coverage assertion **cannot fire on the
+case that matters**; the nuance the coordinator measured is that they go red
+only when harness and map **legitimately co-move** — *on maintenance, not on the
+defect*. Also carried: **marker-name uniqueness is unasserted** (24 raises / 24
+tagged / 19 driven — a duplicated `# SITE:` name would merge two sites under one
+key). All four → **DE round 18**.
+
 ### DE14-R1 — `supersedes` is matched raw and validated nowhere
 
 **The empty-value rule stopped one entry short of the field that matters most.**
@@ -458,18 +495,12 @@ population in prose. R-419 restates it in the newly **adopted `ratification`
 block format** and supersedes it in-band (rule 13 — R-418 stays as provenance,
 never edited):
 
-```ratification
-ref: R-419
-kind: R-ADMISS
-population: FULL_SUPPLIED_COMPLEMENT
-sampling: NONE
-present_source: data/pm_5min/markets.jsonl
-scope_days: FORWARD_RACE_DAYS
-scope_from: 20260901
-scope_to: null
-revocable_by: USER
-supersedes: R-418
-```
+> **Its fields, quoted inline rather than fenced** (see the format rule below —
+> a state file must never carry a fenced block): `ref: R-419` · `kind: R-ADMISS`
+> · `population: FULL_SUPPLIED_COMPLEMENT` · `sampling: NONE` ·
+> `present_source: data/pm_5min/markets.jsonl` · `scope_days: FORWARD_RACE_DAYS`
+> · `scope_from: 20260901` · `scope_to: null` · `revocable_by: USER` ·
+> `supersedes: R-418`.
 
 **The one field prose could not carry is now bound:** `scope_from 20260901` —
 the first accrued race day — stated as a restated fact rather than a new number,
@@ -603,7 +634,10 @@ launchers at **235/19**.
 | **DE round 14** | **RELEASED** (`b437e14`) with **four findings**, all reproduced at `0ca510e` — see below. **The falsifier round 13 owed is paid:** the reviewer's own pre-fix mutant now **dies by name** (check 46), and under it the audit surfaces `survivors ['unparsable_stamped_at_not_superseded']` with attribution going non-total (20 vs 21) |
 | **DE round 15** | **RELEASED** — and **the reviewer's in-band round-13 correction is ACCEPTED**, made in its own section as required. **DE15-R1..R4** reproduced by the coordinator → DE round 17. One of them is the familiar shape: **the swap-docstring mutant leaves 104 green** |
 | **DE round 16** | **VERIFIED** at `829910e` (Q-DE-34) and **UNDER REVIEW** — **132 checks** (reproduced here); **DE14-R1..R4 CLOSED**; **both coordinator mutants die by name**; the R-419 / R-418 verdicts are **unchanged from `0ca510e`**, which is the check that matters — a validation round that moved a verdict would have been a different change |
-| **DE round 17** | **DISPATCHED**: DE15-R1..R4, plus the DATA_ROOT split staged behind DA round 10 |
+| **DE round 16 review** | **RELEASED** (`81e050b`, 13:03:51Z) — **sequencing SATISFIED**; four findings, each reproduced |
+| **DE round 17** | **VERIFIED** at `a8093a5` — DE15-R1..R4 closed, three mutants die by name. **Queued** for review behind DA round 10 |
+| **DE round 18** | **DISPATCHED** (Q-DE-36): DE16-R1..R4 + marker-name uniqueness |
+| **DE round 19** | the **DATA_ROOT split**, behind DA round 10 |
 | **DE round 17** | **STAGED** behind DA round 10: the DATA_ROOT split |
 | **DE round 16** | **STAGED** behind DA round 10's landing and the r14 review: the CODE_ROOT/DATA_ROOT split on the **three** DE-owned files in the class (`de_admissible_windows` :64/:77, `de_ratification_check` :43, `de_lane4_results_doc`) — **counted at the tree; five other DE files are not in the class** — following DA's `_resolve_data_root` convention so the split is written **once** |
 | **DA round 10** | **BUILT AND HELD** at worktree `3a89e6c` — verified here as **unpushed and on no remote branch**, nothing landed, the shared tree carrying only BE's in-flight file. Lands after the 00:14Z read |
@@ -636,10 +670,26 @@ instrument under the run it is meant to read.
 mask block and **refuse if absent on a governed day**, the population-gate
 ledger-vs-tape refusal, and `require_verified()`.
 
-**Open findings:** **DE15-R1..R4** → DE round 17; **RR12-1** and **CO-R4** → DA
-round 10 (held); **CO-8** → the coordinator, after tonight; **BE's landing** —
-the counts now satisfy the receipt condition, but `working_tree_dirty: true`
-means the commit is still owed.
+**Open findings:** **DE16-R1..R4** → DE round 18; **RR12-1** and **CO-R4** → DA
+round 10; **CO-8** → the coordinator, after tonight; **BE's landing** — the
+counts satisfy the receipt condition, but `working_tree_dirty: true` means the
+commit is still owed.
+
+**The reviewer's queue, in order:** **DA round 10** at `3a89e6c` (in flight from
+13:10Z) → **DE round 17** at `a8093a5` → **BE rounds 3–4** when BE files.
+
+**BE round 4 is still in flight by BE's own audit**, and two things are already
+evidenced: the coordinator **holds a copy of the receipt** (sha256
+`68234320…`) — so the landing condition's first form is now available after all —
+and the **09-02 open-day refusal receipt** was evidenced at 12:53Z.
+
+**A correction the coordinator made against its own entry (rule 13):** R-431
+said the DE round 16 review was *"in flight"*. It had **landed** at `81e050b`,
+**twelve seconds** before R-431's own commit — the entry was composed before the
+pre-commit pull and not re-read after it. Nothing else in R-431 depends on the
+word. **Worth keeping as a mechanism, not a scolding:** a pull between
+composition and commit can make a true sentence false in the interval, and only
+re-reading after the pull catches it.
 
 **The reviewer's own correction landed in band and was accepted** — the round-13
 §3 claim about the five declared shapes, corrected in the round-15 review's own
@@ -1096,6 +1146,53 @@ than a clean zero (the density receipt covers 13 days, not this one).
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-02 ~13:10Z (MEM) — A RULE THAT BINDS MY OWN FILE, AND IT WAS IN
+### BREACH
+
+**R-431 and R-432 swept.** The round's finding reaches into this file, so I
+checked it here before writing about it elsewhere.
+
+**DE16-R1 is live: a fenced ratification block quoted in a later entry is read
+as that entry's own** — and the supersession is attributed to the **entry's
+heading ref, not the block's**. Reproduced on the real register plus a sweep
+entry: R-419 read as *"SUPERSEDED by R-999"*, and an empty `supersedes` in the
+quoted block made R-419's check **refuse**. **A sweep entry that merely
+illustrated a ratification would have superseded one.** CO-4's family, moved
+from the prose era into the block era: the thing that looks like documentation
+is read as the thing itself.
+
+**The format rule binds my sweeps, and this file was in breach.** My round-15
+entry carried a **fenced** block to show what R-419 restated. **Removed this
+round**, fields re-quoted inline; `STATUS.yml` never carried one; verified zero
+in both. I would rather record that as a compliance check I failed and fixed
+than let it read as a rule I merely relayed — **the block I wrote was exactly
+the shape the finding is about.**
+
+**I also confirmed the register is clean rather than trusting it:** one real
+block (R-419's own) and two **inline prose mentions** the block finder correctly
+does not read. That distinction is the whole rule — *spell the fence, don't
+build one.*
+
+**Two of the other three are fail-open in the plainest sense.** A `supersedes`
+naming a ref that **exists nowhere** leaves the base verifying `True, []`
+silently; **two `supersedes:` lines** in one block make `bind_from_block` take
+**last-wins**, dropping the first target **without a word**. Neither produces a
+wrong answer loudly — both produce a confident *nothing-to-see-here*, which is
+this week's recurring signature.
+
+**And DE16-R4 came with a nuance measured rather than asserted:** the three
+KNOWN-BAD comparisons go red **only when harness and map legitimately co-move**
+— on maintenance, not on the defect. That is a more useful statement than
+"cannot fail", and it is the sort of thing only running the four maps reveals.
+
+**One correction the coordinator made against itself, worth keeping as a
+mechanism:** R-431 called the round-16 review *"in flight"* when it had landed
+**twelve seconds** before R-431's own commit — composed before the pre-commit
+pull, not re-read after it. **A pull between composition and commit can turn a
+true sentence false inside the interval**, and only re-reading after the pull
+catches it. I take that one personally enough to note it: my own sweeps compose
+first and commit second, with a fetch in between.
 
 ### 2026-09-02 ~12:54Z (MEM) — THE RUN FINISHED, AND ITS OWN NUMBERS SAY 71.7%
 ### OF IT PRODUCES NO SCORE

@@ -2029,3 +2029,86 @@ Moved in the MEM round-25 true-up of R-430. Join rule as in batch 1.
   G=1/5; the 011 family is 12 of 24 surviving with Q4 failing; development
   evidence.
 ```
+
+## Batch 32 — archived 2026-09-02T13:10Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-26 true-up of R-431/R-432. Join rule as in batch 1.
+
+```yaml
+
+  2026-09-02T12:27Z (MEM ROUND 23 -- A LIMITATION THE CODE DID NOT HAVE, AND A
+  RECEIPT THAT DID NOT SURVIVE). R-428 swept; verified at the artifacts,
+  including one check the dispatch asked for that is answerable NOW. THE
+  DECLARED-BLIND LIST WAS WRONG IN THE RARE DIRECTION: IT CLAIMED A LIMITATION
+  THE CODE DID NOT HAVE. builtins.__import__('x') was listed as invisible to the
+  import checker and is in fact CAUGHT, because the matcher keys on the
+  attribute name -- and THE EXPECTED-BLIND ASSERTIONS FOUND IT ON THEIR FIRST
+  RUN, assertions that exist only because the round-13 reviewer argued that A
+  DECLARED LIMIT CAN BE TESTED FOR ITS CONSEQUENCE. Verified here:
+  DECLARED_BLIND_SHAPES is now FOUR entries (runpy, the attribute-form
+  exec/eval/compile with the re.compile reason attached, getattr(importlib,
+  "import_module"), and C extensions/import hooks) and builtins.__import__ is
+  GONE. A FALSE STATED BLINDNESS IS NOT HARMLESS MODESTY: it invites a
+  compensating control nobody needs while the genuine gaps sit beside it wearing
+  the same label. The remaining four now EACH ASSERT EXPECTED-BLIND, and the
+  consequence of a real blind shape -- that through the getattr form A VERDICT
+  PRODUCER WOULD PASS -- is written as a CHECK rather than left as prose. THE
+  REVIEWER'S OWN FILING CARRIED THE SAME FALSE CLAIM AND OWES AN IN-BAND
+  CORRECTION: the round-13 review said "I verified all five declared shapes
+  behave as declared", but its parenthetical ENUMERATED FIVE THINGS THAT ARE NOT
+  THE LIST'S FIVE ENTRIES (collapsing three builtins forms into what is one
+  entry), and builtins.__import__ APPEARS NOWHERE IN ITS EXECUTED EVIDENCE --
+  and it was the one that was not blind. A COUNT THAT MATCHED THE LIST'S LENGTH
+  STOOD IN FOR A CHECK OF THE LIST'S MEMBERS: R-289's family, in the reviewer's
+  chair, the third instance of that shape this week. Rule 16 binds reviewer
+  filings as it binds seats', and rule 13 puts the correction in the NEXT FILING
+  rather than a sidecar -- REQUIRED in the DE round 15 review. Stated fairly:
+  the review is RELEASED and the recommendation it made is exactly what found
+  the error. DE ALSO CORRECTED ITS OWN FALSE "documented" CLAIM WITH THE CAUSE
+  NAMED: a str.replace() on a NON-MATCHING ANCHOR is silently a NO-OP, and the
+  edit was reported done without re-reading the file; DE NOW ASSERTS ITS
+  ANCHORS. AN EDIT THAT CANNOT FAIL LOUDLY WILL EVENTUALLY REPORT SUCCESS FOR
+  WORK IT DID NOT DO. DE ROUND 15 VERIFIED (0ca510e, Q-DE-33): admissible 69,
+  ratification 104, seam 69, all reproduced here under both launchers, with
+  DE13-R2 CLOSED (docstring plus a stamp_fields emission note plus two
+  assertions). DE ROUND 16 IS STAGED behind DA round 10's landing and the r14
+  review: the CODE_ROOT/DATA_ROOT split on the THREE DE-owned files that derive
+  a data path from __file__ (de_admissible_windows :64/:77,
+  de_ratification_check :43, de_lane4_results_doc), COUNTED AT THE TREE, with
+  five other DE files NOT in the class, following DA's
+  pm_tape_density._resolve_data_root convention so THE SPLIT IS WRITTEN ONCE.
+  BE ROUND 4: THE 09-01 STREAMING PASS COMPLETED -- BE's report, to be verified
+  at landing: exit 0, 26 minutes, PEAK 5.9 G AGAINST THE UNRAISED 12 G CAP, TEN
+  GATES PASS, 1,875 == 1,875, 1,859 windows, 2,262,457 rows -> 1,847,824
+  actions, reconciliation clean -- and BE is RE-RUNNING with two receipt
+  disclosures. THE LANDING CHECK HAS AN ANSWER ALREADY AND IT IS NOT THE
+  COMFORTABLE ONE: it asks whether the first pass's receipt SURVIVES the re-run
+  (rule 13), and checked at the artifact at 12:27Z, IT DOES NOT -- the re-run
+  (be-fwd-0901d.service) writes to THE SAME OUTDIR, and
+  be_forward_day_receipt_20260901.json now carries as_of_utc 2026-09-02T12:23:29Z
+  with SIX gates, the re-run's early flush, so THE COMPLETED TEN-GATE RECEIPT IS
+  GONE, overwritten about two minutes after the run finished; the only other
+  receipts on disk are an unrelated 11:02 pair in a different directory. SCOPE,
+  STATED SO IT IS NOT READ AS LARGER THAN IT IS: this is SCRATCH, not derived/,
+  nothing canonical was touched, and BE may hold a copy I did not find -- I
+  checked the obvious places. NOT ADJUDICATED; recorded because the question was
+  asked and is answerable now rather than at landing, and because it is the
+  THIRD TIME IN ONE DAY that a record was lost to a SAME-PATH WRITE. The remedy
+  is already known here: an outdir per run, or supersede rather than overwrite.
+  TWO DISCLOSURES TO READ CAREFULLY RATHER THAN QUICKLY: n_masked 0 AT THE
+  SCORING SEAM DOES NOT MEAN NOTHING WAS MASKED -- the mask was applied at
+  SUPPLY, 141 windows gone BEFORE ANY ROW WAS BUILT, so a zero at the seam means
+  "nothing left to mask here", not "no masking happened"; and THE FROZEN
+  CANDIDATE FITS btc AND eth ONLY, with five coins supplied, replayed, counted
+  and UNSCORED -- a FACT FOR THE RECEIPT, while what it means for G-COUNTING is
+  a POLICY question (rule 14) that is the USER's and NOT a pending decision
+  until someone puts it to them. REVIEW TABLE: DE round 14 UNDER REVIEW; DE
+  round 15 VERIFIED with its review QUEUED and the reviewer's in-band correction
+  REQUIRED there; DE round 16 STAGED; DA round 10 HELD for the 00:14Z read; BE
+  round 4 IN FLIGHT on the re-run. OPEN: RR12-1 and CO-R4 to DA round 10; CO-8
+  to the coordinator after tonight; the round-13 review's in-band correction to
+  the reviewer. USER DECISIONS UNCHANGED: FOUR RULED, ONE OPEN (the freeze
+  disposition, R-424 section 6), the 09-02 accrual call MECHANICAL after 00:06Z.
+  R-419 remains revocable by the USER. UNCHANGED: G=1/5; the 011 family is 12 of
+  24 surviving with Q4 failing; development evidence.
+```
