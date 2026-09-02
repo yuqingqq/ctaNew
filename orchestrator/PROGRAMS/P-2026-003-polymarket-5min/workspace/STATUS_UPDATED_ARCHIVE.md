@@ -3712,3 +3712,59 @@ Moved in the MEM round-50 true-up of R-461, R-462 and R-463. Join rule as in bat
   UNCHANGED: G=1/5; the 011 family 12 of 24 with Q4 failing; the sequencing rule;
   Phase-4 gated; R-419 revocable.
 ```
+
+## Batch 57 — archived 2026-09-02T18:43Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-51 true-up of R-464. Join rule as in batch 1.
+
+```yaml
+  2026-09-02T17:18Z (MEM ROUND 48 -- SEVEN FINDINGS, AND A RULE MADE OUT OF MY
+  OWN MISTAKE). R-456 and R-457 swept in one batch. NOTHING WAS RUN FROM THE MAIN
+  TREE THIS ROUND: BE's round-8 WIP is sitting in live/pm_research/, so
+  everything was read from COMMITTED BLOBS (git show <tip>:<path>) or from the
+  safety copy of the race record -- the new rule applied to the round that
+  adopted it. MY CALL AS ASKED: the shared-tree class is a NINTH STANDING RULE,
+  NOT A CLAUSE UNDER THE EIGHTH -- the eighth is about CONTROLS (a guard that
+  needs mutating), this is about WHERE YOU ARE STANDING WHEN YOU MEASURE, and its
+  natural neighbour is R-446's pre-run cache clear; both are measurement hygiene
+  and both were bought with a wrong reading. It is in standing_rules (8 -> 9) and
+  in HANDOFF's standards section with the non-obvious part kept: HASHING
+  IMMEDIATELY BEFORE AND AFTER THE RUN IS NECESSARY BUT NOT SUFFICIENT, BECAUSE
+  THE WIP CAN BE PRESENT AT BOTH HASHES. THE REVIEWER'S BE ROUND 6 FILING
+  (03b5dca, 273 lines, committed 17:07:24Z) VERIFIED: RELEASE for 5e9ed91, seven
+  findings BE6-R1..R7. TWO OF THEM I VERIFIED AT THE BLOBS: BE6-R1 --
+  rec["refused_at"] = rec["gates"][-1]["gate"] if rec["gates"] else None is
+  present at 5e9ed91:1220 and UNCHANGED at fcafe9f:1246, and since a passing gate
+  appends {"gate": ..., "result": "PASS"}, a BARE RAISE leaves gates[-1] naming
+  THE LAST GATE THAT PASSED, so the receipt attributes a refusal to a check that
+  SUCCEEDED; BE6-R2 -- _launch_parity is `return rc == 0 and child == expect`, A
+  COUNT, so a byte-different tree with the same number of checks passes it. ONE
+  CITATION NEEDS FIXING AND I SAY SO RATHER THAN QUIETLY USING THE RIGHT ONE:
+  BE6-R2's second citation fcafe9f:2588-2590 DOES NOT RESOLVE -- the file at
+  fcafe9f is 2,580 lines -- the code being at :2481 (definition) and :2483 (the
+  rc-and-count line) with the paired ok at :2532-2534 where at_entry is compared,
+  the shape the ruling says stands. SAME CLASS AS THE ROUND-18 DIRTY-TREE LINE
+  NUMBERS: A CITATION THAT CARRIES A COMMIT MUST RESOLVE AT THAT COMMIT. BE6-R7
+  CORROBORATED FROM THE RECEIPT OF RECORD, WHICH MAKES THE FINDING SHARPER:
+  coin_coverage carries coins_supplied = 7 and coins_supplied_without_a_fit = 5
+  (bnb, doge, hype, sol, xrp), so the no-fit class is THE MAJORITY OF THE DAY and
+  THE DRIVER ALREADY NAMES IT IN ITS OWN RECEIPT while the
+  one-fixture-two-consumers check omits it -- a class the artifact reports and
+  the fixture does not exercise is a gap with its own evidence attached. THE
+  SECOND ADOPTED RULING IS THE ONE WORTH CARRYING FORWARD: the shipped audit must
+  COMPUTE verdict counts from verdict-initial lines, NEVER GREP VOCABULARY (rule
+  10 at the harness level), folded into CO-12's closure -- and it is the same
+  defect CO-12 names from the other side, CO-12 being attribution by substring
+  and this counting by substring, both a text search standing in for a
+  computation. SEQUENCING STATED SO NOTHING SLIDES: BE6-R1..R7 are THE BE ROUND
+  AFTER 8 with BE6-R2 AND BE6-R1 FIRST; THE DURABLE LANDING IS UNAFFECTED BY THE
+  SEVEN and stays the round after the 00:14Z read; the reviewer is on DE rounds
+  29+30 at 27d0d37. AND A CORRECTION OF RECORD CARRIED BECAUSE CORRECTIONS NOBODY
+  CARRIES ARE HOW A STALE NUMBER SURVIVES: R-456's "17:10Z" and "17:12Z" were
+  composed ahead of the clock; THE TIMES OF RECORD ARE 17:08-17:09Z FOR BOTH
+  EVENTS (R-457 section 3, in band), R-456 standing as provenance -- and the
+  reviewer's filing commit reads 17:07:24Z, which I checked, consistent with the
+  corrected window and not with the original. USER decisions SIX RULED, NONE
+  OPEN. Tonight unchanged. UNCHANGED: G=1/5; the 011 family 12 of 24 with Q4
+  failing; the sequencing rule; Phase-4 gated; R-419 revocable.
+```

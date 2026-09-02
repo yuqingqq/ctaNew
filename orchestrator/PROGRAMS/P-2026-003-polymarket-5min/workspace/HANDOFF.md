@@ -1,14 +1,13 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-02T18:28Z — **The runner is a SHELL, and the review says so:**
-`e52d183` is released as **declaration + three instruments**, **not as a
-producer** (`82126ca`), with **DE32-R1/R2 MEDIUM still open**. **Item 8 ruled at
-the protocol's own Cap 2 — and I verified both halves:** the **1-second horizon
-is in the frozen protocol** (`:41-45`, `tranche_table` refusing without
-`declare_cap=True`), **the addendum does not carry it (0 hits)**, and at
-`e52d183` the cap is a **recorded field checked against the constant it was
-imported from** while `tranche_table` **is never called**. **SEVEN RULED, TWO
-OPEN**, neither needed tonight.
+Updated: 2026-09-02T18:43Z — **DE round 33 found SHORT BY EXECUTION: nine
+findings, three HIGH.** **The Phase-4 run now has NO DATE** — *"earliest 09-03"
+is withdrawn.* **A THIRD USER decision is open**: the runner's two chosen numbers,
+**declared nowhere above the runner** (I grepped protocol, addendum and manifest —
+**zero hits in all three**). And the cap arc closed the way the wording invited:
+`tranche_table` went from **never called** to **called in the suite** and, on the
+production path, **assigned to `cap` and never used again.** **SEVEN RULED, THREE
+OPEN**, none needed tonight.
 
 ## READ FIRST — current project handoff
 
@@ -105,17 +104,25 @@ with R-411(ii) fixing the denominator), and the seventh is the **Phase-4
 diagnostic**, below.
 
 > **SUPERSEDES the "nothing is awaiting the USER" line this section carried
-> from R-442 until now.** Per R-460, **two USER decisions are open and
-> unblocked: the Phase-2 winner ruling, and the content-liveness v2 freeze.**
-> **Neither is needed for tonight.**
+> from R-442 until now.** **THREE USER decisions are open and unblocked** — the
+> **Phase-2 winner ruling** and the **content-liveness v2 freeze** (R-460), and
+> now **the runner's two chosen numbers (R-464 §5)**: `theta_repost =
+> theta_cancel / 2` (runner `:188`) and `HALF_SPREAD_CENTS = 0.5` (`:101`),
+> **declared nowhere above the runner** — I grepped the protocol, the addendum
+> and the manifest: **zero hits in all three**. **The coordinator's
+> recommendation, recorded not ruled:** carry the **measured mid** so (ii)
+> becomes a measurement with no number to rule; put (i) to the USER as **DE's
+> proposal in a dated addendum v2**, before any run, with the sensitivity
+> reported at ×1 and ×0.5. **Nothing runs until both are settled.** **None of
+> the three is needed tonight.**
 
 | # | ruled | at |
 |---|---|---|
 | **Phase-4 diagnostic** | *"Yes schedule this test"* — **ONE** diagnostic execution of the **frozen** protocol on its §3 **CONSUMED** population; head under test **`Q1_arrival` of `composed_lgbm`** vs the incumbent head; **full latency axis**; **all three budgets reported, none selected**; both coins. **No Phase-2 winner, no race admission, every output `DIAGNOSTIC_NEVER_EVIDENCE`.** R-409/R-424/R-442 unchanged | **R-459**, USER ~17:18–17:21Z |
 
-> **WHEN the run happens, stated so it cannot drift earlier:** the round **AFTER
-> DE round 33 lands AND the reviewer reads it** — **earliest 09-03**, after
-> tonight's landings — as a **coordinator dispatch** under
+> **WHEN the run happens — and it now has NO DATE.** *"Earliest 09-03" is
+> WITHDRAWN* (R-464 §6). It is the round **after DE round 34 lands, the reviewer
+> reads it, and §5 is settled** — as a **coordinator dispatch** under
 > `systemd-run --user --scope --slice=research.slice -p MemoryMax=12G`, writing
 > **into the declared OUTDIR only**. **Q-DE-50 built the runner's SHELL, not
 > "the runner"**, and `e52d183` is released as **declaration + instruments**,
@@ -790,7 +797,8 @@ launchers at **235/19**.
 | **DE round 31** | **VERIFIED** (Q-DE-49) — the **Phase-4 diagnostic DECLARED** and three instruments built (`de_rho_estimator` 21, `de_score_stream` 24, `de_matched_random_control` 20; ratification **184**, phase-4 check 15). **No run.** Declared limit **IR-R4: the runner is the fourth build item** |
 | **DE round 32** | **VERIFIED BY COUNT and FOUND SHORT** at `e52d183` (Q-DE-50 `03c5a23`) — **the runner's SHELL only, no run path**; five coordinator findings **DE32-C1..C5** → DE round 33 |
 | **DE rounds 31+32 review** | **RELEASED** (`82126ca`, 251 lines) — `e52d183` released as **declaration + three instruments**; **the runner is NOT released as a producer**. Seven findings; **item 8 RULED** at the protocol's own **Cap 2** |
-| **DE round 33** | **CODE tip `6d04833`** (18:20:40Z) — DE32-C1..C5 closed at the artifact. Its row **Q-DE-51 landed after the dispatch** (`2b72d02`): **FILED, not coordinator-verified** |
+| **DE round 33** | **VERIFIED BY COUNT and FOUND SHORT BY EXECUTION** at `6d04833` (Q-DE-51 `2b72d02`, now **VERIFIED-SHORT** — its counts, timing and no-economics statements stand) — **nine findings DE33-C1..C9**, three HIGH |
+| **DE round 34** | **DISPATCHED** 18:42Z (Q-DE-52) — DE33-C1..C9 **plus the five reviewer findings still open**; **the feature table is the object**; no §3 economics read; **one** timed feature build under the 12 G scope |
 | **DE round 26** | the **DATA_ROOT split**, still behind DA's landing after 00:14Z |
 | **DA round 11** | **REVIEW RELEASED** (`a5e8b40`) for `e292439` as the content of **Q-DA-209**; all five DA10 findings close. Two new findings **DA11-R1/R2** → DA round 12 |
 | **DA round 12 review** | **RELEASED** (`852b9aa`) for `636a455` as Q-DA-209's content — DA11-R1/R2 close; **DA12-R1 (LOW-MED)** → DA round 14 |
@@ -808,7 +816,7 @@ launchers at **235/19**.
 | **BE round 6 review** | **RELEASED** (`03b5dca`, 273 lines) for `5e9ed91` — **seven findings BE6-R1..R7**; two rulings adopted, including *the shipped audit must COMPUTE verdict counts, never grep vocabulary* (rule 10), folded into CO-12's closure |
 | **BE round 7 review** | **RELEASED** (`0f34aad`) for `fcafe9f` — CO-12/CO-13 **confirmed**; four findings **BE7-R1..R4**, with **R4 routed FIRST** to BE round 9 |
 | **BE round 8** | **VERIFIED** at `c54e48e` (Q-BE-233) — **CO-12 and CO-13 CLOSED**, 106/106 both launchers (the coordinator's count; I did not run it — rule 9) |
-| **BE round 9** | **IN FLIGHT** (Q-BE-234) — **BE7-R4 FIRST**, then BE6-R1..R7 and BE7-R1..R3 |
+| **BE round 9** | **LANDED** at `90638c3` + row Q-BE-234 (`07681d2`) — **FILED, coordinator verification pending**. The main tree is **clean at the tip** (checked) |
 | **BE — durable landing** | unchanged and **unaffected by the seven**: the round after the **00:14Z** read (R-442 §3(c)) |
 | **BE round 8** | the **durable landing** under `data/pm_5min/derived/`, **AFTER the 00:14Z read** (was round 7) |
 | **DA round 12** | **HELD and VERIFIED** at `636a455` on `e292439` (unpushed, four files) — DA11-R1/R2 closed, gates **22 → 36**. **Nothing moves for tonight**; Q-DA-209 lands after the 00:14Z read **with the round-12 tip** |
@@ -854,10 +862,10 @@ artifact in the round-5 review, R1/R3/R4/R5 at `5e9ed91`;
 **CO-11 CLOSED** at `27d0d37`; **CO-12 / CO-13 CLOSED** at `c54e48e`;
 **DE30-R1 CLOSED** in DE round 31;
 **BE7-R4** (FIRST), **BE6-R1..R7** and **BE7-R1..R3** → **BE round 9, in flight**;
-**DE32-R1 / DE32-R2 (MEDIUM)** → **OPEN, pending the round-33 landing check**;
-**DE31-R1 / DE32-R3** → **NOT in the round-33 dispatch** — round 34 unless the tip
-carries them; **DE32-R4 / DE31-R2 / DE32-R5 (LOW)** likewise; **DA17-R1 (LOW)** →
-behind DA's landing;
+**DE33-C1..C9** (C1/C2/C3 **HIGH**) → **DE round 34, dispatched**;
+**DE31-R1, DE31-R2, DE32-R2, DE32-R3, DE32-R4 still OPEN** at `6d04833` and in the
+round-34 dispatch; **DE32-R1 closed for the LGBM head ONLY**; **DE32-R5 closed in
+tense**; **DA17-R1 (LOW)** → behind DA's landing;
 **DA13-R1 / DA14-R1 / DA14-R2 CLOSED** at `8910701`; **CO-10 CLOSED and
 CONFIRMED** at `3b7e10a`; **DA16-R1 CLOSED** at `e353119` (held);
 **DE20-R1/R2 CLOSED** at `92fc615`, review released; **DE21-R1 CLOSED** at
@@ -881,8 +889,9 @@ the REGISTER's state, not of the instrument's own escalation history** — a
 distinction worth keeping, because a reader at 00:14Z has no way to know which
 questions this particular tool once asked.
 
-**The reviewer's queue, in order:** **BE round 8 at `c54e48e`** (dispatched, per
-`REQUEST_BE_ROUND_8_2026-09-02.md`) → then DE round 33 when its row is verified.
+**The reviewer's queue, in order:** **BE round 8 at `c54e48e`** (in flight) →
+**BE round 9** at `90638c3` → **DE rounds 33 + 34 as ONE filing at the round-34
+tip**.
 **Released so far** include BE rounds 6 (`03b5dca`) and 7 (`0f34aad`), DE rounds
 29+30 and **31+32** (`82126ca`), and **DA round 17** (`f4c7734`). **Released so far:**
 DE rounds 23 (`0b03618`), 24 (`304cd5f`), 25 (`a7860dc`) and 26+27 (`723271e`),
@@ -1695,6 +1704,76 @@ than a clean zero (the density receipt covers 13 days, not this one).
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-02 ~18:43Z (MEM) — "NEVER CALLED" WAS FIXED BY CALLING IT
+
+**R-464 swept.** Nothing was run; nothing was read from `~/ctaNew-wt-de` (DE round
+34 in flight). Everything below is a **committed blob** or a plan/manifest file.
+
+**The cap arc is now three rounds long and it is the clearest lesson of the
+week.** At `e52d183` I found `tranche_table` **named in a docstring and never
+called**. At `6d04833` it is called — **twice**, and I read both:
+
+- **`:979`, inside the selftest**, on a four-line hand-built `_rows` fixture,
+  with the check's own message reading *"DE32-C2 CLOSED: `tranche_table` is
+  CALLED (not merely named in a docstring)"*. **That asserts the fact of the
+  call** — which is precisely what the previous finding's wording made salient.
+- **`:1068`, on the production path**, inside the loop over coins × budgets ×
+  latency rungs: `cap = tranche_table(rows, L, declare_cap=True)` — and **the
+  name `cap` never appears again in the file.** Assigned, dropped.
+
+**So the defect survived its own fix by matching the words of the report.** *A
+call whose result is discarded is not enforcement; it is a call.* This is the
+round-46 standard — *every guard added to catch a class is itself a candidate for
+that class* — with a new edge: **a finding phrased as "X is never called" invites
+a fix that calls X.** The durable phrasing is the one DE33-C7 uses: **declared by
+an UNCONSUMED call.** When I write a finding from now on I will name **the
+consumption**, not the call.
+
+**Nine findings, and the three HIGH ones are about the object under test, not the
+plumbing.** **C1** — the heads are not scored on their own features, so **IR-R4
+is NOT closed**; **C2** — the incumbent's thresholds are read at the **wrong
+key**; **C3** — the acting control **does not act on the drawn generation**.
+Those three mean the runner would produce numbers that look like the estimand and
+are not it. **C4-C6** are the same family one layer down (a fixture forced null
+again, two of five arms never replayed with a default theta, rho's denominator a
+**declared constant**), and **C8/C9** are the reporting layer (tracebacks used as
+refusals, one key with two meanings, a silent tranche drop).
+
+**Q-DE-51's status is now VERIFIED-SHORT, and the distinction is worth keeping:
+its counts, its timing and its no-economics statements STAND.** *Found short by
+execution* is not *found wrong*. A round can be honest in everything it claims
+and still not have built what the next step needs.
+
+**The run has no date, and that is the right correction to carry loudly.**
+*"Earliest 09-03" is withdrawn.* It is now the round **after DE round 34 lands,
+the reviewer reads it, and §5 is settled** — and I have replaced the dated line
+beside the ruling rather than annotating it, because a withdrawn date left in
+place is exactly the kind of thing that gets quoted back as a commitment.
+
+**A third USER decision is open, and I checked its premise myself.** The runner
+chooses **`theta_repost = theta_cancel / 2`** (`:188`) and **`HALF_SPREAD_CENTS =
+0.5`** (`:101`). I grepped the **frozen protocol**, the **addendum** and the
+**manifest** for both names: **zero hits in all three** (the fits I did not
+check, and say so). So these are **policy constants chosen at the bottom of the
+stack**, in a file released as a shell — and `harmful_stateful_policy` refuses to
+default the first one *precisely because it encodes a policy choice*. **The
+recommendation is recorded, not ruled:** make (ii) a **measurement** by carrying
+the mid at fill, and put (i) to the USER as **DE's proposal in a dated addendum
+v2 before any run**, with sensitivity at ×1 and ×0.5.
+
+**Sequencing.** DE round 34 (Q-DE-52) is dispatched with **DE33-C1..C9 plus the
+five reviewer findings still open**, **the feature table as the object**, **no §3
+economics read**, and **one** timed feature build under the 12 G scope. The
+reviewer takes **DE 33 + 34 as one filing at the round-34 tip**, after **BE round
+8** (in flight) and **BE round 9** (`90638c3`, row `07681d2`) — which I record as
+**FILED, coordinator verification pending**, with the main tree **clean at the
+tip** (checked).
+
+**Tonight is unchanged.** 00:06Z, 00:14Z, the coordinator's wake, R-409 with the
+R-411(ii) denominator, DA at **`e353119`** (HOLD → `3b7e10a`), BE's durable
+landing the round after the read, then CO-8, `--require-no-skips`, the DATA_ROOT
+split.
 
 ### 2026-09-02 ~18:28Z (MEM) — THE CAP IS RECORDED, ASSERTED AGAINST ITSELF,
 ### AND NEVER ENFORCED

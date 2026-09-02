@@ -4,6 +4,64 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-09-02T18:43Z (MEM ROUND 51 -- "NEVER CALLED" WAS FIXED BY CALLING IT).
+  R-464 swept. Nothing run; ~/ctaNew-wt-de unread (DE round 34 in flight);
+  everything a committed blob or a plan/manifest file. THE CAP ARC IS NOW THREE
+  ROUNDS LONG AND IS THE CLEAREST LESSON OF THE WEEK: at e52d183 I found
+  tranche_table NAMED IN A DOCSTRING AND NEVER CALLED; at 6d04833 it is called
+  TWICE and I read both -- :979 INSIDE THE SELFTEST on a four-line hand-built
+  _rows fixture, its own message reading "DE32-C2 CLOSED: `tranche_table` is
+  CALLED (not merely named in a docstring)", which asserts THE FACT OF THE CALL,
+  precisely what the previous finding's wording made salient; and :1068 ON THE
+  PRODUCTION PATH inside the loop over coins x budgets x latency rungs, cap =
+  tranche_table(rows, L, declare_cap=True), where THE NAME `cap` NEVER APPEARS
+  AGAIN IN THE FILE -- assigned, dropped. SO THE DEFECT SURVIVED ITS OWN FIX BY
+  MATCHING THE WORDS OF THE REPORT: a call whose result is discarded is not
+  enforcement, it is a call. This is the round-46 standard with a new edge -- A
+  FINDING PHRASED AS "X IS NEVER CALLED" INVITES A FIX THAT CALLS X -- and the
+  durable phrasing is DE33-C7's: DECLARED BY AN UNCONSUMED CALL. From now on I
+  name THE CONSUMPTION, not the call. NINE FINDINGS, AND THE THREE HIGH ONES ARE
+  ABOUT THE OBJECT UNDER TEST, NOT THE PLUMBING: C1 the heads are not scored on
+  their own features so IR-R4 IS NOT CLOSED; C2 the incumbent's thresholds are
+  read at the WRONG KEY; C3 the acting control DOES NOT ACT on the drawn
+  generation -- together meaning the runner would produce numbers that LOOK like
+  the estimand and are not it. C4-C6 are the same family one layer down (a
+  fixture forced null again, two of five arms never replayed with a default
+  theta, rho's denominator a DECLARED CONSTANT); C8/C9 are the reporting layer
+  (tracebacks as refusals, one key with two meanings, a silent tranche drop).
+  Q-DE-51'S STATUS IS NOW VERIFIED-SHORT AND THE DISTINCTION IS WORTH KEEPING:
+  ITS COUNTS, TIMING AND NO-ECONOMICS STATEMENTS STAND -- found short by
+  execution is NOT found wrong, and a round can be honest in everything it claims
+  and still not have built what the next step needs. THE RUN HAS NO DATE:
+  "earliest 09-03" is WITHDRAWN (R-464 section 6); it is the round AFTER DE round
+  34 lands, the reviewer reads it, AND section 5 is settled -- and I REPLACED the
+  dated line beside the ruling rather than annotating it, because a withdrawn
+  date left in place is exactly what gets quoted back as a commitment. A THIRD
+  USER DECISION IS OPEN AND I CHECKED ITS PREMISE MYSELF: the runner chooses
+  theta_repost = theta_cancel / 2 (:188) and HALF_SPREAD_CENTS = 0.5 (:101), and
+  grepping the FROZEN PROTOCOL, the ADDENDUM and the MANIFEST for both names
+  returns ZERO HITS IN ALL THREE (the fits I did not check, and say so) -- POLICY
+  CONSTANTS CHOSEN AT THE BOTTOM OF THE STACK, in a file released as a shell, and
+  harmful_stateful_policy REFUSES to default the first one precisely because it
+  encodes a policy choice. The coordinator's recommendation is RECORDED, NOT
+  RULED: make (ii) a MEASUREMENT by carrying the mid at fill, and put (i) to the
+  USER as DE's proposal in a DATED ADDENDUM v2 BEFORE ANY RUN, with sensitivity
+  at x1 and x0.5; nothing runs until both are settled. SEVEN RULED, THREE OPEN
+  (the Phase-2 winner ruling, the content-liveness v2 freeze, and these two
+  numbers), NONE NEEDED TONIGHT. SEQUENCING: DE round 34 (Q-DE-52) dispatched
+  18:42Z with DE33-C1..C9 PLUS the five reviewer findings still open (DE31-R1,
+  DE31-R2, DE32-R2, DE32-R3, DE32-R4; DE32-R1 closed FOR THE LGBM HEAD ONLY,
+  DE32-R5 closed in tense), THE FEATURE TABLE AS THE OBJECT, no section 3
+  economics read, ONE timed feature build under the 12G scope; the reviewer takes
+  DE 33 + 34 AS ONE FILING at the round-34 tip, after BE round 8 (in flight at
+  c54e48e) and BE round 9 (90638c3, row Q-BE-234 07681d2) which I record as
+  FILED, COORDINATOR VERIFICATION PENDING, with the main tree CLEAN AT THE TIP
+  (checked). TONIGHT UNCHANGED: 00:06Z verdict, 00:14Z preflight, coordinator
+  wake after, R-409 accrual with the R-411(ii) denominator, DA landing at
+  e353119 (HOLD -> 3b7e10a), BE durable landing the round after the read, CO-8,
+  --require-no-skips, DATA_ROOT split after DA's landing. UNCHANGED: G=1/5; the
+  011 family 12 of 24 with Q4 failing; the sequencing rule; R-419 revocable.
+  PRIOR:
   2026-09-02T18:28Z (MEM ROUND 50 -- THE CAP IS RECORDED, ASSERTED AGAINST
   ITSELF, AND NEVER ENFORCED). R-461, R-462 and R-463 swept in one batch. Nothing
   run and nothing read from a forbidden surface: BE round 9 is open so
@@ -138,56 +196,6 @@ updated: >-
   the read; CO-8; --require-no-skips; DATA_ROOT split after DA's landing.
   UNCHANGED: G=1/5; the 011 family 12 of 24 with Q4 failing; the sequencing rule;
   R-419 revocable.
-  PRIOR:
-  2026-09-02T17:18Z (MEM ROUND 48 -- SEVEN FINDINGS, AND A RULE MADE OUT OF MY
-  OWN MISTAKE). R-456 and R-457 swept in one batch. NOTHING WAS RUN FROM THE MAIN
-  TREE THIS ROUND: BE's round-8 WIP is sitting in live/pm_research/, so
-  everything was read from COMMITTED BLOBS (git show <tip>:<path>) or from the
-  safety copy of the race record -- the new rule applied to the round that
-  adopted it. MY CALL AS ASKED: the shared-tree class is a NINTH STANDING RULE,
-  NOT A CLAUSE UNDER THE EIGHTH -- the eighth is about CONTROLS (a guard that
-  needs mutating), this is about WHERE YOU ARE STANDING WHEN YOU MEASURE, and its
-  natural neighbour is R-446's pre-run cache clear; both are measurement hygiene
-  and both were bought with a wrong reading. It is in standing_rules (8 -> 9) and
-  in HANDOFF's standards section with the non-obvious part kept: HASHING
-  IMMEDIATELY BEFORE AND AFTER THE RUN IS NECESSARY BUT NOT SUFFICIENT, BECAUSE
-  THE WIP CAN BE PRESENT AT BOTH HASHES. THE REVIEWER'S BE ROUND 6 FILING
-  (03b5dca, 273 lines, committed 17:07:24Z) VERIFIED: RELEASE for 5e9ed91, seven
-  findings BE6-R1..R7. TWO OF THEM I VERIFIED AT THE BLOBS: BE6-R1 --
-  rec["refused_at"] = rec["gates"][-1]["gate"] if rec["gates"] else None is
-  present at 5e9ed91:1220 and UNCHANGED at fcafe9f:1246, and since a passing gate
-  appends {"gate": ..., "result": "PASS"}, a BARE RAISE leaves gates[-1] naming
-  THE LAST GATE THAT PASSED, so the receipt attributes a refusal to a check that
-  SUCCEEDED; BE6-R2 -- _launch_parity is `return rc == 0 and child == expect`, A
-  COUNT, so a byte-different tree with the same number of checks passes it. ONE
-  CITATION NEEDS FIXING AND I SAY SO RATHER THAN QUIETLY USING THE RIGHT ONE:
-  BE6-R2's second citation fcafe9f:2588-2590 DOES NOT RESOLVE -- the file at
-  fcafe9f is 2,580 lines -- the code being at :2481 (definition) and :2483 (the
-  rc-and-count line) with the paired ok at :2532-2534 where at_entry is compared,
-  the shape the ruling says stands. SAME CLASS AS THE ROUND-18 DIRTY-TREE LINE
-  NUMBERS: A CITATION THAT CARRIES A COMMIT MUST RESOLVE AT THAT COMMIT. BE6-R7
-  CORROBORATED FROM THE RECEIPT OF RECORD, WHICH MAKES THE FINDING SHARPER:
-  coin_coverage carries coins_supplied = 7 and coins_supplied_without_a_fit = 5
-  (bnb, doge, hype, sol, xrp), so the no-fit class is THE MAJORITY OF THE DAY and
-  THE DRIVER ALREADY NAMES IT IN ITS OWN RECEIPT while the
-  one-fixture-two-consumers check omits it -- a class the artifact reports and
-  the fixture does not exercise is a gap with its own evidence attached. THE
-  SECOND ADOPTED RULING IS THE ONE WORTH CARRYING FORWARD: the shipped audit must
-  COMPUTE verdict counts from verdict-initial lines, NEVER GREP VOCABULARY (rule
-  10 at the harness level), folded into CO-12's closure -- and it is the same
-  defect CO-12 names from the other side, CO-12 being attribution by substring
-  and this counting by substring, both a text search standing in for a
-  computation. SEQUENCING STATED SO NOTHING SLIDES: BE6-R1..R7 are THE BE ROUND
-  AFTER 8 with BE6-R2 AND BE6-R1 FIRST; THE DURABLE LANDING IS UNAFFECTED BY THE
-  SEVEN and stays the round after the 00:14Z read; the reviewer is on DE rounds
-  29+30 at 27d0d37. AND A CORRECTION OF RECORD CARRIED BECAUSE CORRECTIONS NOBODY
-  CARRIES ARE HOW A STALE NUMBER SURVIVES: R-456's "17:10Z" and "17:12Z" were
-  composed ahead of the clock; THE TIMES OF RECORD ARE 17:08-17:09Z FOR BOTH
-  EVENTS (R-457 section 3, in band), R-456 standing as provenance -- and the
-  reviewer's filing commit reads 17:07:24Z, which I checked, consistent with the
-  corrected window and not with the original. USER decisions SIX RULED, NONE
-  OPEN. Tonight unchanged. UNCHANGED: G=1/5; the 011 family 12 of 24 with Q4
-  failing; the sequencing rule; Phase-4 gated; R-419 revocable.
 
   ARCHIVED: entries older than these three are moved, never deleted, to
   workspace/STATUS_UPDATED_ARCHIVE.md (append-only). This field is a
@@ -3798,6 +3806,12 @@ flags:
   phase4_run_when: "the round AFTER DE r33 lands AND the reviewer reads it; earliest 09-03; declared OUTDIR only"
   reviewer_da_r17_released: "e353119 (f4c7734); DA17-R1 behind DA landing"
   de_r33_code_tip: "6d04833 18:20:40Z; row Q-DE-51 landed at 2b72d02, FILED not verified"
+  de_r33_verified_short: "6d04833; nine findings DE33-C1..C9, three HIGH; Q-DE-51 = VERIFIED-SHORT"
+  de_r34_dispatched: "Q-DE-52 18:42Z; C1..C9 + five open reviewer findings; feature table as the object"
+  phase4_run_has_no_date: "earliest 09-03 WITHDRAWN (R-464 6); after DE r34 lands, reviewer reads, 5 settled"
+  user_open_runner_two_numbers: "R-464 5: theta_repost=theta_cancel/2 (:188), HALF_SPREAD_CENTS=0.5 (:101); zero hits in protocol/addendum/manifest"
+  be_r9_landed_pending_verification: "90638c3 + row 07681d2; main tree clean at the tip"
+  cap_unconsumed_call: "6d04833:1068 cap = tranche_table(...) assigned and never used; :979 call is in the selftest"
                              # v18-v19 added the daily pipeline and all-coin
                              # commit-last batch; v20 adds R-DERIVE, R-GROSS,
                              # R-DUAL and R-ONEROW plus Tier-2 markout,
@@ -3806,7 +3820,7 @@ flags:
                              # migration discipline remain authoritative.
 
 focus: >
-  As-of 2026-09-02T18:28Z, build and test the offline model mechanism-first
+  As-of 2026-09-02T18:43Z, build and test the offline model mechanism-first
   under plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md section 10. Do not use the
   subordinate stateful-cancel TODO checkbox count as total progress. The
   foundation is established: the action-level dataset and PRED_STATE_V1 are
