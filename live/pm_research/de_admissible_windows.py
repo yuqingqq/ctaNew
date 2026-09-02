@@ -111,19 +111,66 @@ VERDICT_MODULES = ("da_forward_day_verify", "da_dayverdict",
                    "harmful_forward_scorer")
 
 
+#: The dynamic-import call shapes this reader resolves.
+DYNAMIC_IMPORT_CALLS = ("import_module", "__import__")
+_UNRESOLVED = "<non-literal>"
+
+
 def imported_modules(src: str) -> set[str]:
+    """Every module a source file imports -- STATIC and DYNAMIC.
+
+    A dynamic import with a non-literal argument is reported as the sentinel
+    `<non-literal>` rather than dropped: the caller decides what to do about
+    an import it cannot name, and dropping it silently is what made the
+    predicate answerable at all."""
     import ast
+
+    def _segs(dotted: str) -> set[str]:
+        """FIRST and LAST segment of a dotted name.
+
+        First alone was another hole in the same predicate: a dynamic (or
+        static) `live.pm_research.da_forward_day_verify` contributes only
+        `live`, which is in no vocabulary, so the package spelling of a
+        verdict producer would have passed exactly as the dynamic call did.
+        Widening the set is the safe direction for a reads-NOTHING predicate.
+        """
+        parts = dotted.split(".")
+        return {parts[0], parts[-1]}
+
     out: set[str] = set()
     for node in ast.walk(ast.parse(src)):
         if isinstance(node, ast.Import):
-            out |= {a.name.split(".")[0] for a in node.names}
+            for a in node.names:
+                out |= _segs(a.name)
         elif isinstance(node, ast.ImportFrom) and node.module:
-            out.add(node.module.split(".")[0])
+            out |= _segs(node.module)
+        elif isinstance(node, ast.Call):
+            fn = node.func
+            name = (fn.attr if isinstance(fn, ast.Attribute)
+                    else fn.id if isinstance(fn, ast.Name) else None)
+            if name not in DYNAMIC_IMPORT_CALLS or not node.args:
+                continue
+            arg = node.args[0]
+            if isinstance(arg, ast.Constant) and isinstance(arg.value, str):
+                out |= _segs(arg.value)
+            else:
+                out.add(_UNRESOLVED)
     return out
 
 
 def reads_no_verdict(imports: Iterable[str]) -> bool:
-    return not (set(imports) & set(VERDICT_MODULES))
+    """REFUSES on an unresolvable import instead of answering True.
+
+    The old form returned a bool over whatever the reader happened to see,
+    so an import it could not see read as an import that was not there."""
+    imports = set(imports)
+    if _UNRESOLVED in imports:
+        raise ImportsUnresolvable(
+            f"REFUSED: this source contains a dynamic import whose argument "
+            f"is not a literal, so what it imports cannot be read. 'Cannot "
+            f"tell what this imports' is not 'imports nothing', and "
+            f"answering True here is what DE-R2 found.")
+    return not (imports & set(VERDICT_MODULES))
 
 
 def restated_day_literals(src: str, day: str) -> list[str]:
@@ -151,6 +198,18 @@ def restated_day_literals(src: str, day: str) -> list[str]:
 class AdmissibleWindowsRefused(RuntimeError):
     """An input this module will not guess at, or a contradiction between two
     inputs.  Refusal is the product; a silent drop is not (rule 4)."""
+
+
+class ImportsUnresolvable(AdmissibleWindowsRefused):
+    """A module's import list contains something this reader cannot resolve.
+
+    DE-R2: `imported_modules` saw only `import` and `from ... import`, so
+    `importlib.import_module('da_forward_day_verify')` produced an EMPTY set
+    and `reads_no_verdict` returned True -- a dynamic import defeated the
+    predicate entirely. Literal dynamic imports are now resolved; a
+    NON-LITERAL argument is UNRESOLVABLE and raises, because *cannot tell
+    what this imports* is not *imports nothing*, and the second is what the
+    old return value said."""
 
 
 class GoverningRuleUnreadable(AdmissibleWindowsRefused):
@@ -532,7 +591,7 @@ def supply(day: str, present: dict[str, Sequence[int]],
 # ---------------------------------------------------------------------------
 REAL_DAY = "20260901"
 EMPTY_DAY = "20260827"
-EXPECTED_CHECKS = 47
+EXPECTED_CHECKS = 53
 
 
 def _grid(day: str) -> list[int]:
@@ -724,6 +783,39 @@ def selftest() -> int:
     ok(not reads_no_verdict(imps | {VERDICT_MODULES[0]}),
        f"KNOWN-BAD: adding {VERDICT_MODULES[0]!r} to that same import list "
        f"trips the predicate, so it is a check and not a constant")
+    # ---- DE-R2: a dynamic import used to defeat the predicate ----------
+    dyn = ("import importlib\n"
+           "m = importlib.import_module('da_forward_day_verify')\n")
+    ok("da_forward_day_verify" in imported_modules(dyn)
+       and not reads_no_verdict(imported_modules(dyn)),
+       "DE-R2 CLOSED: `importlib.import_module('da_forward_day_verify')` is "
+       "RESOLVED and trips the predicate -- it used to produce an empty set "
+       "and answer True, so a dynamic import defeated the check entirely")
+    ok(not reads_no_verdict(imported_modules(
+        "__import__('da_forward_day_verify')\n")),
+       "and `__import__` with a literal is resolved the same way")
+    refuses(lambda: reads_no_verdict(imported_modules(
+                "import importlib\nm = importlib.import_module(name)\n")),
+            "KNOWN-BAD: a NON-LITERAL dynamic import REFUSES rather than "
+            "returning True -- 'cannot tell what this imports' is not "
+            "'imports nothing', and the second is what the old form said",
+            needle="is not 'imports nothing'")
+    ok(_UNRESOLVED in imported_modules(
+        "import importlib\nm = importlib.import_module(x)\n"),
+       "the unresolvable import is REPORTED as a sentinel rather than "
+       "dropped, so the caller decides what to do about what it cannot name")
+    ok(not reads_no_verdict(imported_modules(
+        "import live.pm_research.da_forward_day_verify\n")),
+       "AND A HOLE OF MY OWN, found while fixing this one: a DOTTED name "
+       "contributed only its FIRST segment, so the package spelling of a "
+       "verdict producer resolved to `live` and passed. First AND last "
+       "segment are taken now -- widening is the safe direction for a "
+       "reads-NOTHING predicate")
+    ok("da_content_liveness_rule" in imps,
+       "and this module's OWN dynamic import (the RR11-1 demonstration) "
+       "resolves to `da_content_liveness_rule` -- the frozen liveness rule, "
+       "not a verdict producer, which is what the predicate needed to be "
+       "able to say")
     leaky = dict(em, all_pass=True)
     refuses(lambda: _g_no_decision_field({"emission": leaky}),
             "KNOWN-BAD: a decision-shaped field in the emission REFUSES, so "

@@ -158,8 +158,8 @@ DECLARED_PARAM_NAMES = tuple(sorted(set(hsp._REQUIRED_PARAMS)
 RATIFICATION_REF_RE = re.compile(r"^R-\d+$")
 #: What a supply emission must carry before this seam will read it.
 SUPPLY_REQUIRED_KEYS = ("protocol", "day", "governed", "mask_consumed",
-                        "mask_identity_hash", "counts", "windows",
-                        "n_supplied_total")
+                        "mask_identity", "mask_identity_hash", "counts",
+                        "windows", "n_supplied_total")
 #: What each supplied record must already carry. The seam's own required
 #: keys are `slug` and `inputs_hash`; the supplier emits both.
 SUPPLIED_RECORD_KEYS = ("slug", "inputs_hash", "coin", "start")
@@ -471,6 +471,38 @@ def _b_record_keys(ctx) -> None:
                     f"cannot be stamped")
 
 
+def _b_mask_identity_hash_matches(ctx) -> None:
+    """DE-R1: the bridge COPIED both halves of the identity and never
+    compared them.
+
+    A supply whose `mask_identity_hash` was 64 zeroes was accepted and
+    emitted 1,875 specs carrying it -- every downstream reader would then
+    have bound provenance to a hash that describes nothing. The two halves
+    are `mask_identity` (the mask's artifact/day/as_of and per-coin masked
+    starts) and its digest; a copier that never checks them is carrying a
+    claim, not an identity.
+
+    RECOMPUTED WITH THE SUPPLIER'S OWN `_sha`, imported rather than
+    restated: a second implementation of the digest here would agree by
+    construction with nothing, and would drift the first time either side
+    changed its canonical form."""
+    sup = ctx["supplied"]
+    ident = sup.get("mask_identity")
+    if ident is None:
+        raise BridgeRefused(
+            "supply carries a mask_identity_hash but no mask_identity to "
+            "recompute it from")
+    got = daw._sha(ident)
+    if got != sup.get("mask_identity_hash"):
+        raise BridgeRefused(
+            f"REFUSED: the supply's mask_identity_hash "
+            f"{str(sup.get('mask_identity_hash'))[:16]}… does not match its "
+            f"own mask_identity, which digests to {got[:16]}…. The bridge "
+            f"copies both halves onto every spec; copying them without "
+            f"comparing them carries a claim rather than an identity "
+            f"(DE-R1).")
+
+
 def _b_slug_matches_record(ctx) -> None:
     sup = ctx["supplied"]
     for coin, recs in sorted(sup["windows"].items()):
@@ -496,6 +528,7 @@ BRIDGE_GUARDS: tuple[tuple[str, Any], ...] = (
     ("counts_match_lists", _b_counts_match_lists),
     ("record_keys", _b_record_keys),
     ("slug_matches_record", _b_slug_matches_record),
+    ("mask_identity_hash_matches", _b_mask_identity_hash_matches),
 )
 BRIDGE_GUARD_NAMES = tuple(n for n, _ in BRIDGE_GUARDS)
 
@@ -1076,7 +1109,7 @@ def run(out: Path | None = None) -> dict:
 
 
 # ---------------------------------------------------------------------------
-EXPECTED_CHECKS = 64
+EXPECTED_CHECKS = 69
 
 
 def selftest() -> int:
@@ -1088,10 +1121,14 @@ def selftest() -> int:
         n[0] += 1
         print(f"  PASS  {label}")
 
-    def refuses(exc, fn, label):
+    def refuses(exc, fn, label, needle=None):
         try:
             fn()
-        except exc:
+        except exc as _e:
+            if needle and needle not in str(_e):
+                raise SystemExit(
+                    f"[ev_replay_seam] FAIL: {label} -- refused, but not for "
+                    f"the stated reason ({_e})")
             n[0] += 1
             print(f"  PASS  {label}")
             return
@@ -1363,11 +1400,26 @@ def selftest() -> int:
             lambda: window_specs_from_supply(nokey,
                                              ratification_ref=FIXTURE_REF),
             "KNOWN-BAD: a record missing `inputs_hash` REFUSES BY NAME")
-    noenv = {k: v for k, v in sup.items() if k != "mask_identity_hash"}
+    noenv = {k: v for k, v in sup.items() if k != "protocol"}
     refuses(BridgeRefused,
             lambda: window_specs_from_supply(noenv,
                                              ratification_ref=FIXTURE_REF),
-            "KNOWN-BAD: a supply missing an envelope field REFUSES BY NAME")
+            "KNOWN-BAD: a supply missing an envelope field REFUSES BY NAME",
+            needle="MISSING ['protocol']")
+    _both = []
+    for _g in ("supply_envelope", "mask_identity_hash_matches"):
+        try:
+            window_specs_from_supply(
+                {k: v for k, v in sup.items() if k != "mask_identity_hash"},
+                ratification_ref=FIXTURE_REF, skip_guard=_g)
+        except BridgeRefused:
+            _both.append(_g)
+    ok(sorted(_both) == ["mask_identity_hash_matches", "supply_envelope"],
+       "MEASURED REDUNDANCY: a missing mask_identity_hash is now caught by "
+       "BOTH the envelope guard and the identity comparison -- disabling "
+       "either alone still refuses. The audit therefore drives each guard on "
+       "the case it uniquely owns, rather than reporting defence in depth as "
+       "a survivor")
     doctored = json.loads(json.dumps(sup))
     doctored["windows"]["sol"][0]["slug"] = "sol-updown-5m-1"
     refuses(BridgeRefused,
@@ -1375,6 +1427,36 @@ def selftest() -> int:
                                              ratification_ref=FIXTURE_REF),
             "KNOWN-BAD: a slug that does not reconstruct from its own "
             "coin/start REFUSES")
+    # DE-R1, both halves tampered in turn
+    zerohash = json.loads(json.dumps(sup))
+    zerohash["mask_identity_hash"] = "0" * 64
+    refuses(BridgeRefused,
+            lambda: window_specs_from_supply(zerohash,
+                                             ratification_ref=FIXTURE_REF),
+            "KNOWN-BAD (DE-R1, HASH half): a supply whose mask_identity_hash "
+            "is 64 zeroes REFUSES -- it used to be ACCEPTED and stamped onto "
+            "all 1,875 specs, so every downstream reader bound provenance to "
+            "a hash describing nothing",
+            needle="does not match its own mask_identity")
+    tamper = json.loads(json.dumps(sup))
+    tamper["mask_identity"]["masked"]["btc"] = \
+        tamper["mask_identity"]["masked"]["btc"][:-1]
+    refuses(BridgeRefused,
+            lambda: window_specs_from_supply(tamper,
+                                             ratification_ref=FIXTURE_REF),
+            "KNOWN-BAD (DE-R1, IDENTITY half): unmasking ONE window in the "
+            "identity while leaving the hash REFUSES too -- the guard "
+            "compares, it does not trust either side")
+    noident = {k: v for k, v in sup.items() if k != "mask_identity"}
+    refuses(BridgeRefused,
+            lambda: window_specs_from_supply(noident,
+                                             ratification_ref=FIXTURE_REF),
+            "KNOWN-BAD: a hash with no identity to recompute it from REFUSES")
+    ok(daw._sha(sup["mask_identity"]) == sup["mask_identity_hash"],
+       "POSITIVE CONTROL: the real supply's two halves AGREE under the "
+       "SUPPLIER's own `_sha`, imported rather than restated -- a second "
+       "implementation here would drift the first time either canonical "
+       "form changed")
 
     # ---- the specs are ACCEPTED where they are consumed ------------------
     sides_b, end_b = fixture_reference()
@@ -1470,8 +1552,14 @@ def bridge_mutation_audit(sup: dict, ref: str) -> dict:
         # builder.
         "ratification_declared": (sup, None),
         "ratification_shape": (sup, "ratified"),
+        # A CASE ONLY THIS GUARD OWNS. Dropping `mask_identity_hash` is now
+        # caught by `mask_identity_hash_matches` as well (the identity is
+        # present and the hash is not), so using it here reported a real
+        # defence-in-depth as a survivor. `protocol` is read only when a spec
+        # is built, so the envelope guard is the sole thing standing between
+        # its absence and a KeyError.
         "supply_envelope": ({k: v for k, v in sup.items()
-                             if k != "mask_identity_hash"}, ref),
+                             if k != "protocol"}, ref),
         "governed_implies_mask_consumed":
             (_mut(governed=True, mask_consumed=False), ref),
         "total_matches_lists": (_mut(n_supplied_total=sup["n_supplied_total"]
@@ -1479,6 +1567,7 @@ def bridge_mutation_audit(sup: dict, ref: str) -> dict:
         "counts_match_lists": (hand, ref),
         "record_keys": (nokey, ref),
         "slug_matches_record": (doctored, ref),
+        "mask_identity_hash_matches": (_mut(mask_identity_hash="0" * 64), ref),
     }
     per_guard: dict[str, dict] = {}
     for name, (bad_sup, bad_ref) in cases.items():

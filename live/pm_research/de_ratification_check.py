@@ -70,6 +70,34 @@ RATIFICATION_FIELDS = ("ref", "kind", "population", "sampling",
                        "present_source", "scope_days", "scope_from",
                        "scope_to", "revocable_by", "supersedes")
 
+#: DE-R3: the ADOPTED VOCABULARY each field's VALUE must come from.
+#: Round 10 made a MISSING field refuse; a NONSENSE VALUE still verified
+#: clean -- `present_source: /etc/passwd`, `scope_days: WHATEVER`,
+#: `revocable_by: DE` all returned verified True with unverifiable [].
+#: "A field nobody supplied", "a field this checker cannot decide" and "a
+#: field with a wrong value" are three different things and must never look
+#: alike; the refusal below says VALUE, never MISSING.
+LEDGER_PATH = "data/pm_5min/markets.jsonl"       # named once, R-419's own
+#: `kind` is DELIBERATELY NOT HERE. It already has its own refusal, and that
+#: refusal says something different: an entry whose kind is not R-ADMISS is
+#: NOT A RATIFICATION, which is not the same complaint as a ratification
+#: carrying a wrong value. Folding it in unified the message and lost the
+#: distinction -- caught by the reason-check on the existing known-bad, which
+#: is what those needles are for.
+FIELD_VOCABULARY: dict[str, tuple] = {
+    "population": KNOWN_POPULATIONS,
+    # LEGITIMATE sampling values, not just the one this programme uses today.
+    # Restricting this to ("NONE",) would have hardcoded that no sampled
+    # ratification can ever exist -- which contradicts KNOWN_POPULATIONS
+    # carrying SAMPLED_OR_CAPPED -- and it swallowed the SEMANTIC refusal
+    # below, whose complaint is different: a FULL population declaring
+    # sampling is CONTRADICTING ITSELF, not carrying an unknown word.
+    "sampling": ("NONE", "STRATIFIED", "CAPPED"),
+    "present_source": (LEDGER_PATH,),
+    "scope_days": ("FORWARD_RACE_DAYS",),
+    "revocable_by": ("USER",),
+}
+
 #: `### R-419 — 2026-09-02T11:03Z — coordinator: …`
 HEADING_TS_RE = re.compile(
     r"^### R-\d+ [—-]+ (\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2})?Z)")
@@ -458,6 +486,20 @@ def check(supplied: dict, ratification_ref: str,
         unbindable = [f for f in unbindable if f not in block]
         source = "BLOCK"
 
+    # DE-R3: VALUES against the adopted vocabulary, before any of them is
+    # believed. `population` is checked here for MEMBERSHIP and again below
+    # for which member -- the two questions are different and their refusals
+    # say so.
+    for _f, _allowed in FIELD_VOCABULARY.items():
+        if _f not in fields:
+            continue
+        if fields[_f] not in _allowed:
+            raise RatificationRefused(
+                f"REFUSED: {ratification_ref} field {_f!r} carries the VALUE "
+                f"{fields[_f]!r}, which is not in the adopted vocabulary "
+                f"{list(_allowed)}. This is a WRONG VALUE, not a missing "
+                f"field and not an undecidable one -- round 10 made absence "
+                f"refuse and left nonsense verifying clean (DE-R3).")
     if fields.get("kind") != "R-ADMISS":
         raise RatificationRefused(
             f"REFUSED: {ratification_ref} does not declare itself an R-ADMISS "
@@ -550,7 +592,7 @@ def check(supplied: dict, ratification_ref: str,
 
 
 # ---------------------------------------------------------------------------
-EXPECTED_CHECKS = 58
+EXPECTED_CHECKS = 66
 
 
 def selftest() -> int:
@@ -747,6 +789,48 @@ def selftest() -> int:
          "checks": {}, "provenance": True}),
         "and a PROVENANCE result may not start a new run -- my own third "
         "conjunct, flagged as an addition to the dispatched contract")
+
+    # ---- DE-R3: nonsense VALUES refuse, and the message says VALUE ------
+    for _f, _v in (("present_source", "/etc/passwd"),
+                   ("scope_days", "WHATEVER"),
+                   ("revocable_by", "DE")):
+        refuses(lambda f=_f, v=_v: check(sup, "R-900",
+                                         fixture_register(**{f: v})),
+                f"DE-R3 CLOSED ({_f}={_v!r}): a NONSENSE VALUE REFUSES -- it "
+                f"used to return verified True with unverifiable [], because "
+                f"round 10 made a MISSING field refuse and left a wrong one "
+                f"alone",
+                needle="carries the VALUE")
+    try:
+        check(sup, "R-900", fixture_register(present_source="/etc/passwd"))
+        _msg = ""
+    except RatificationRefused as _e:
+        _msg = str(_e)
+    ok("VALUE" in _msg and "MISSING" not in _msg,
+       "and the message says VALUE, never MISSING: 'a field nobody "
+       "supplied', 'a field this checker cannot decide' and 'a field with a "
+       "wrong value' are three different things that must not look alike")
+    ok(FIELD_VOCABULARY["present_source"] == (LEDGER_PATH,)
+       and LEDGER_PATH == "data/pm_5min/markets.jsonl"
+       and "kind" not in FIELD_VOCABULARY,
+       f"the ledger path is named ONCE ({LEDGER_PATH}); `kind` is "
+       f"deliberately NOT in the vocabulary loop, because 'this is not a "
+       f"ratification' is a different complaint from 'this value is wrong'")
+    ok(check(sup, "R-419")["verified"],
+       "POSITIVE CONTROL: the REAL R-419 still verifies against the "
+       "vocabulary -- the values it carries are the adopted ones")
+    ok(set(FIELD_VOCABULARY["sampling"]) == {"NONE", "STRATIFIED", "CAPPED"},
+       "and `sampling` admits the LEGITIMATE values, not just the one this "
+       "programme uses: restricting it to NONE would hardcode that no "
+       "sampled ratification can ever exist, and it swallowed the SEMANTIC "
+       "self-contradiction refusal whose complaint is different")
+
+    # ---- DE-R4: the unknown-population branch, driven -------------------
+    refuses(lambda: check(sup, "R-900",
+                          fixture_register(population="SOMETHING_NEW")),
+            "DE-R4: an UNKNOWN population REFUSES when driven -- the branch "
+            "existed and had NO control in the audit; it has one now",
+            needle="carries the VALUE")
 
     # ---- CO-R1: closure as a DECIDED check ------------------------------
     ok(check(sup, "R-419")["checks"]["day_closed"] is True,
@@ -980,6 +1064,13 @@ def mutation_audit(sup: dict) -> dict:
             ((sup, "R-902", nots), {"stamped_at": "2026-09-02T10:00:00Z"}),
             ((sup, "R-902", stamped_chain),
              {"stamped_at": "2026-09-02T09:30:00Z"})),
+        "unknown_population_value": (
+            ((sup, "R-900", fixture_register(population="SOMETHING_NEW")), {}),
+            ((sup, "R-900", good), {})),
+        "nonsense_field_value": (
+            ((sup, "R-900", fixture_register(present_source="/etc/passwd")),
+             {}),
+            ((sup, "R-900", good), {})),
         "already_superseded_at_stamp": (
             ((sup, "R-902", stamped_chain),
              {"stamped_at": "2026-09-02T10:30:00Z"}),
