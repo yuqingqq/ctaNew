@@ -4,6 +4,60 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-09-02T04:05Z (MEM ROUND 8 -- ALL FIVE USER DECISIONS EXECUTED, AND THE
+  FULLY-EVALUATED FAMILY IS THE RESULT OF RECORD: 12 SURVIVORS WITH THE DECISION
+  METRIC STILL FAILING). Verified at the artifacts, recomputed not read back.
+  THE FIVE (R-397, USER adopting each recommendation verbatim -- "we can proceed
+  the five decisions according to the recommendation"): (1) Q1's incumbent leg
+  WIRED; (2) the Q3 ruling -- each head is adjudicated against its OWN
+  declared_gate, and a conjunct nobody computed reads null, never false; (3)
+  amendment A2 FROZEN at Option 1 -- 5(2) amended to one-sided with R-286/R-288
+  as the recorded cause, p_two_sided retained as a diagnostic, and the
+  matched-random resolution DECLARED PROSPECTIVELY at 2,000 draws for the NEXT
+  run while THIS family stays at 500 with its floor disclosure (verified: the A2
+  file reads FROZEN -- IN FORCE); (4) the Phase-4 protocol FROZEN, declared
+  before any cell is read and with no Phase-4 cell existing at freeze, and the
+  registry APPLIED v24 -> v25 -> v26 (verified at contracts.yaml: version 26, 30
+  modules, EV-Replay and DE-ActionSpace registered, ReplayWindowSpec added,
+  config_supplied:ActionSet REMOVED under amendment E on BE's confirmation);
+  (5) worktrees ADOPTED in execution form -- four exist under SEAT_PROTOCOL rule
+  19, with the limitation STATED rather than papered over: git refuses one branch
+  in two worktrees, so LANDING stays in the shared tree under pathspec
+  discipline and the ledger keeps one writer path. THE RE-ADJUDICATED FAMILY
+  (157,455 B, as-of 2026-09-02T03:46:59Z): 12 of 24 cells survive the joint
+  reading -- recomputed from the cells here, not read off the summary --
+  cells_by_status 18 OK + 6 NO_INCUMBENT_COUNTERPART, denominator 24. Q1_ARRIVAL
+  EARNED ITS PASS: its gate has two conjuncts and BOTH are now computed --
+  candidate AUC 0.8303 lgbm / 0.7733 linear against the incumbent hazard head's
+  0.7139, increments +0.1164 / +0.0594, beats_incumbent_hazard_head true on both
+  arms, 166/166 windows, zero exclusions. Eleven hours earlier that same head
+  published six survivors on a gate half of which had never run; the number that
+  came back is the one the COMPLETE gate produces. Q3_MAGNITUDES PASSES ITS OWN
+  GATE (both slope conjuncts true) -- BUT THAT IS A WEAKER FACT THAN Q1'S, and
+  the artifact is careful about it: Q3's frozen gate carries NO incumbent term
+  (incumbent_counterpart_computed false), so it cleared a bar that never asked
+  for a comparison. Reading the twelve as one uniform result would flatten
+  exactly the distinction ruling 2 exists to preserve. Q2_SIGN correctly stays
+  NO_INCUMBENT_COUNTERPART. AND Q4_COMBINED_EV, THE DECISION METRIC, STILL
+  FAILS: all six increments positive (+278.6 to +3,867.1 net cents), all six
+  survives=false, best one-sided p 0.01999 -> Holm 0.1199. TWELVE SURVIVORS AND
+  NO ECONOMIC RESULT ARE THE SAME SENTENCE. Every surviving p also sits at the
+  1/501 floor, which the cells disclose as A BOUND, NOT A MEASUREMENT -- one
+  draw the other way moves Holm 0.0479 -> 0.0958. Development evidence only
+  (prereg 4: it selects, it never validates); the lattice is UNMOVED at
+  ad535550d366347d because neither 011 module is in CODE_IDENTITY_FILES.
+  ONE QUESTION NOW WAITS ON THE USER, and it is the largest this programme has
+  asked: DOES Q1'S FULL-GATE SURVIVAL CONSTITUTE THE PHASE-2 WINNER that, with
+  the frozen Phase-4 protocol, unblocks DE's latency x queue-reset-cost x budget
+  grids? Escalated by the coordinator (R-398), NOT decided. It became askable
+  only when the gate was completed, and it weighs against a FAILING decision
+  metric and development-only evidence. STILL OPEN AND NOT AMONG THE FIVE, so it
+  did not get resolved with them: DA's escalation that the content-liveness bar
+  now sits exactly where 09-01's events are (65 min fails, 60 passes), and that
+  the rule -- effective since today -- IS STILL UNWIRED. Re-checked at 04:05Z:
+  its only reference outside its own file remains v5_deploy_gates.py:54, which
+  runs its selftest, so governs() returns True and no verdict consumes it.
+  UNCHANGED: the forward race is at G=1/5 and 09-02 is accruing. PRIOR:
   2026-09-02T00:21Z (MEM ROUND 7 -- THE FORWARD RACE HAS ITS FIRST DAY:
   2026-09-01 ACCRUED, G = 1/5). Verified at the artifact
   (da_dayverdict_20260901.json, written by the 00:06:00Z timer, as-of
@@ -123,59 +177,7 @@ updated: >-
   of its own commit, rule 12's class in the forward direction. Nothing
   downstream depends on it and the register is the coordinator's surface.
   UNCHANGED: the forward race waits on tonight's 00:06Z first accrual-eligible
-  verdict; G=0/5. PRIOR:
-  2026-09-01T14:16Z (MEM ROUND 5 -- R-382..R-384, AND THREE ITEMS NOW WAIT ON
-  THE USER). Verified at the artifacts, including by running the instrument.
-  THE ONE THAT MATTERED MOST IS A LAUNCHER-SEMANTICS DEFECT CAUGHT BEFORE IT
-  RAN (b32e7e3, R-384): DA's own morning guard, assert_disclosure_carried(),
-  raised a bare SystemExit -- which exits 1, and da_midnight_verify.sh reads
-  rc 1 as "verified, and the day FAILS", a real result, while an instrument
-  that refused to emit is rc 4, NOTHING WAS VERIFIED. So a guard refusal on
-  TONIGHT'S 09-01 VERDICT -- the first day that can accrue -- would have been
-  logged as a failing day. Fixed to a real Exception inside main()'s handler and
-  PROVEN AT THE SUBPROCESS SEAM, because the exception type alone cannot show
-  what the launcher sees; 2 mutants killed, 205 checks, 16 gates. DA records
-  that it re-introduced the exact defect documented at the top of that same file
-  (R-199 item 1): the class survived its own documentation, and the seam test is
-  what holds it. Q-DA-199 -- THE CONTENT-LIVENESS RULE, DRAFTED FOR USER FREEZE
-  (f1e3f53), closing R-370's open item: a feed that thins WITHOUT disconnecting
-  writes no gap row, keeps full window coverage and passes P1/P2/P3, which is
-  how 08-31 held 0.51% of normal rate for ~4.1 h with zero gap rows and how 668
-  invisible windows sit across 7 of 13 days. I ran it: 30 checks pass, 2
-  positive controls executed; the detector is pm_tape_density's, unchanged;
-  thresholds are calibrated on consumed days <= 08-31 with CALIBRATION_MAX_DAY
-  < EFFECTIVE_FROM_DAY enforced by a refusal rather than a comment. IT GOVERNS
-  NOTHING TODAY BY CONSTRUCTION: governs() returns False unless BOTH
-  FROZEN_BY_USER (currently False) AND day_token >= "20260902", one function
-  holding both conditions so a consumer cannot satisfy one and forget the other;
-  09-01 is deliberately NOT covered, because the rule was drafted while 09-01
-  was in flight and applying it there would be choosing after seeing (rule 11).
-  Q-DA-200 -- TWO BREADTH STATISTICS PULLED APART (f1e3f53): per_slug_affected
-  lived inline in verify_day and could not be driven by any test, so the two
-  could have drifted into one being derived from the other with nothing to
-  notice. Both are callable now, each driven on a fixture built to make them
-  DISAGREE IN BOTH DIRECTIONS, plus a signature check that neither can see the
-  other's inputs; inert on real data (08-29 reproduces windows_gap_affected
-  byte-identically, and only gap_series.ledger_lines moved, 9,682 -> 9,718,
-  because the ledger grew between runs). docs/BREADTH_STATISTICS.md names which
-  receipt carries which -- and the HANDOFF survey's own two columns are
-  DIFFERENT statistics, one per-slug and one row-level. BE'S CODE HALF IS IN
-  (4438961, 23/23 mutants) and the run was RELAUNCHED FROM THE COMMITTED TREE so
-  fit_code_ref names a non-dirty commit; verified here that
-  phase2_iter011_run.py is clean in the working tree and iter011-fit-batch has
-  been active since 13:51:25Z. The batch closes on the run's artifact plus its
-  Q-BE filing, which opens the review round. THREE ITEMS NOW WAIT ON THE USER
-  and are gathered in HANDOFF's new PENDING USER DECISIONS table so the asks are
-  findable in one place: (1) FREEZE THE CONTENT-LIVENESS RULE, the only one with
-  a real clock -- a freeze after 09-02 opens costs its first governed day, so
-  ~22:00Z tonight (R-383); (2) apply the CLAUDE.md amendment, whose two hunks
-  are drafted at workspace/DRAFT_CLAUDE_MD_AMENDMENT.md; (3) freeze DE's Phase-4
-  grid protocol when it lands. Per R-383 they go up as ONE composed ask, and if
-  (2) and (3) miss the deadline then (1) escalates ALONE. ONE PRECISION NOTE:
-  R-384 records the TODO sweep as "39->47"; both endpoints are right, and the
-  path was 39 -> 42 (round 2, three ticks) -> 47 (round 4, five ticks), across
-  two sweeps rather than one. UNCHANGED: 09-01 is still the first possible
-  forward day and reach is still G=0/5, judged tonight at 00:06Z.
+  verdict; G=0/5.
   ARCHIVED: entries older than these three are moved, never deleted, to
   workspace/STATUS_UPDATED_ARCHIVE.md (append-only). This field is a
   ROLLING WINDOW OF THREE by ruling (coordinator, 2026-08-28T10:02Z):
@@ -3768,7 +3770,7 @@ flags:
                              # migration discipline remain authoritative.
 
 focus: >
-  As-of 2026-09-02T00:21Z, build and test the offline model mechanism-first
+  As-of 2026-09-02T04:05Z, build and test the offline model mechanism-first
   under plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md section 10. Do not use the
   subordinate stateful-cancel TODO checkbox count as total progress. The
   foundation is established: the action-level dataset and PRED_STATE_V1 are
@@ -3789,14 +3791,17 @@ focus: >
   IMPLEMENTED (20d3c3a) and ride BE's open batch with the four Q-DA-197 findings
   (4438961); the re-run was KILLED mid-fit rather than allowed to emit under the
   superseded survivor predicate and relaunched from the committed tree. THE
-  RESULT OF RECORD IS NOW SETTLED AND NEGATIVE: 0 of 24 cells survive the joint
-  reading; Q4's increment is positive in all six cells and clears no
-  family-wise bar under either null; Q1's two AUCs are undecided pending the
-  USER. The review cycle is FULLY RELEASED (R-393). FIVE ASKS WAIT ON THE USER
-  -- Q1-leg wiring, the Q3 gate ruling, amendment A2 with its prospective
-  resolution, the Phase-4 and registry freezes, and per-seat worktrees: see
-  HANDOFF's PENDING USER DECISIONS table. The content-liveness rule and the
-  CLAUDE.md amendment both LANDED this afternoon (R-386). Fair-price
+  RESULT OF RECORD, re-adjudicated with every gate fully evaluated: 12 of 24
+  cells survive the joint reading -- Q1 passes its COMPLETE gate (candidate AUC
+  0.8303/0.7733 vs the incumbent hazard head's 0.7139, both conjuncts computed,
+  166/166 windows), Q3 passes its own gate (which carries no incumbent term),
+  Q2 stays NO_INCUMBENT_COUNTERPART, and Q4 -- THE DECISION METRIC -- STILL
+  FAILS (all six increments positive, none surviving, best Holm 0.1199).
+  Development evidence only. ALL FIVE USER DECISIONS ARE RULED AND EXECUTED
+  (R-397); ONE QUESTION NOW WAITS: does Q1's full-gate survival constitute the
+  PHASE-2 WINNER that unblocks DE's grids (R-398, escalated not decided)? DA's
+  content-liveness bar escalation is still unruled and the rule is still
+  unwired. See HANDOFF's PENDING USER DECISIONS. Fair-price
   Identity is built while the challenger protocol is not freeze-ready;
   QR_SKEW_ONLY semantics are USER-FROZEN, while the seven-arm path remains
   stub/inert. Real queue-integrated replay, lifecycle economics and an

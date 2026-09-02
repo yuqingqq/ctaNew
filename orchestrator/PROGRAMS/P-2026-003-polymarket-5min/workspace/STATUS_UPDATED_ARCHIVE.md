@@ -673,3 +673,64 @@ Join rule as in batch 1.
   UNCHANGED AND WORTH SAYING: nothing about the forward race moved today --
   09-01 is still the first possible forward day and reach is still G=0/5.
 ```
+
+## Batch 14 — archived 2026-09-02T04:05Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-8 true-up of the executed five decisions and the
+fully-evaluated family. Join rule as in batch 1.
+
+```yaml
+
+  2026-09-01T14:16Z (MEM ROUND 5 -- R-382..R-384, AND THREE ITEMS NOW WAIT ON
+  THE USER). Verified at the artifacts, including by running the instrument.
+  THE ONE THAT MATTERED MOST IS A LAUNCHER-SEMANTICS DEFECT CAUGHT BEFORE IT
+  RAN (b32e7e3, R-384): DA's own morning guard, assert_disclosure_carried(),
+  raised a bare SystemExit -- which exits 1, and da_midnight_verify.sh reads
+  rc 1 as "verified, and the day FAILS", a real result, while an instrument
+  that refused to emit is rc 4, NOTHING WAS VERIFIED. So a guard refusal on
+  TONIGHT'S 09-01 VERDICT -- the first day that can accrue -- would have been
+  logged as a failing day. Fixed to a real Exception inside main()'s handler and
+  PROVEN AT THE SUBPROCESS SEAM, because the exception type alone cannot show
+  what the launcher sees; 2 mutants killed, 205 checks, 16 gates. DA records
+  that it re-introduced the exact defect documented at the top of that same file
+  (R-199 item 1): the class survived its own documentation, and the seam test is
+  what holds it. Q-DA-199 -- THE CONTENT-LIVENESS RULE, DRAFTED FOR USER FREEZE
+  (f1e3f53), closing R-370's open item: a feed that thins WITHOUT disconnecting
+  writes no gap row, keeps full window coverage and passes P1/P2/P3, which is
+  how 08-31 held 0.51% of normal rate for ~4.1 h with zero gap rows and how 668
+  invisible windows sit across 7 of 13 days. I ran it: 30 checks pass, 2
+  positive controls executed; the detector is pm_tape_density's, unchanged;
+  thresholds are calibrated on consumed days <= 08-31 with CALIBRATION_MAX_DAY
+  < EFFECTIVE_FROM_DAY enforced by a refusal rather than a comment. IT GOVERNS
+  NOTHING TODAY BY CONSTRUCTION: governs() returns False unless BOTH
+  FROZEN_BY_USER (currently False) AND day_token >= "20260902", one function
+  holding both conditions so a consumer cannot satisfy one and forget the other;
+  09-01 is deliberately NOT covered, because the rule was drafted while 09-01
+  was in flight and applying it there would be choosing after seeing (rule 11).
+  Q-DA-200 -- TWO BREADTH STATISTICS PULLED APART (f1e3f53): per_slug_affected
+  lived inline in verify_day and could not be driven by any test, so the two
+  could have drifted into one being derived from the other with nothing to
+  notice. Both are callable now, each driven on a fixture built to make them
+  DISAGREE IN BOTH DIRECTIONS, plus a signature check that neither can see the
+  other's inputs; inert on real data (08-29 reproduces windows_gap_affected
+  byte-identically, and only gap_series.ledger_lines moved, 9,682 -> 9,718,
+  because the ledger grew between runs). docs/BREADTH_STATISTICS.md names which
+  receipt carries which -- and the HANDOFF survey's own two columns are
+  DIFFERENT statistics, one per-slug and one row-level. BE'S CODE HALF IS IN
+  (4438961, 23/23 mutants) and the run was RELAUNCHED FROM THE COMMITTED TREE so
+  fit_code_ref names a non-dirty commit; verified here that
+  phase2_iter011_run.py is clean in the working tree and iter011-fit-batch has
+  been active since 13:51:25Z. The batch closes on the run's artifact plus its
+  Q-BE filing, which opens the review round. THREE ITEMS NOW WAIT ON THE USER
+  and are gathered in HANDOFF's new PENDING USER DECISIONS table so the asks are
+  findable in one place: (1) FREEZE THE CONTENT-LIVENESS RULE, the only one with
+  a real clock -- a freeze after 09-02 opens costs its first governed day, so
+  ~22:00Z tonight (R-383); (2) apply the CLAUDE.md amendment, whose two hunks
+  are drafted at workspace/DRAFT_CLAUDE_MD_AMENDMENT.md; (3) freeze DE's Phase-4
+  grid protocol when it lands. Per R-383 they go up as ONE composed ask, and if
+  (2) and (3) miss the deadline then (1) escalates ALONE. ONE PRECISION NOTE:
+  R-384 records the TODO sweep as "39->47"; both endpoints are right, and the
+  path was 39 -> 42 (round 2, three ticks) -> 47 (round 4, five ticks), across
+  two sweeps rather than one. UNCHANGED: 09-01 is still the first possible
+  forward day and reach is still G=0/5, judged tonight at 00:06Z.
+```

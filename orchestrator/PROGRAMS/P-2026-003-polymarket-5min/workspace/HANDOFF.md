@@ -1,9 +1,10 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-02T00:21Z — **THE FORWARD RACE HAS ITS FIRST DAY: 2026-09-01
-ACCRUED, G = 1/5**, with heavy honest disclosures beside it. Prior line: the
-review cycle is fully released and the 011 result of record is 0/24 cells
-surviving the joint reading; five items wait on the USER.
+Updated: 2026-09-02T04:05Z — **the five USER decisions are ruled and executed,
+and the fully-evaluated 011 family is the result of record: 12 survivors, with
+the DECISION METRIC (Q4) STILL FAILING.** One question now waits on the USER:
+is this the Phase-2 winner? Prior line: the forward race has its first day,
+2026-09-01 accrued, G = 1/5.
 
 ## READ FIRST — current project handoff
 
@@ -15,36 +16,35 @@ two MEM sweeps, every tick behind a commit or an artifact).
 
 ### PENDING USER DECISIONS — nothing here can be decided by a seat
 
-**Five open.** Gathered here so the asks are findable in one place; the register
-remains the authority on each. Item 1 is the sharpest — it decides whether the
-only head with survivors keeps them.
+**The five that stood here are RULED AND EXECUTED** (R-397, the USER adopting
+each recommendation verbatim: *"we can proceed the five decisions according to
+the recommendation"*). Verified at their artifacts, not from the entry:
 
-| # | ask | what it decides | cite |
-|---|---|---|---|
-| 1 | **Wire Q1's incumbent leg, or rule it out** | the six Q1 cells' `declared_gate` names an incumbent-hazard conjunct that was never evaluated (`apply_incumbent_hazard`, zero production call sites). Wiring it completes the gate and re-adjudicates; ruling it out amends the gate. **Either way this decides whether the published survivor count returns 0 → 6** | R-391 (RR2-1), R-392 |
-| 2 | **Q3 gate ruling** (the F-4 design half) | how Q3's declared gate composes now that `carries_incumbent_term: false` is recorded per cell | R-390 |
-| 3 | **Amendment A2 — one-sided vs two-sided**, now also carrying the **prospective-resolution declaration** | prereg §5(2) declares a TWO-SIDED p while the adjudicated p is ONE-SIDED per R-286/R-288; three options are drafted. The reviewer ruled the matched-random raise correctly refused, and the resolution for the NEXT run must be declared prospectively — that line rides A2 | R-390, R-391 |
-| 4 | **Freeze DE's Phase-4 protocol + the registry amendment** | no Phase-4 cell may be read before its protocol is frozen; the registry closes EV-Replay's gap | R-386 (deliberately deferred), R-389 |
-| 5 | **Per-seat worktrees** | whether seats get isolated worktrees rather than sharing one tree | R-390 |
+| # | ruling | verified |
+|---|---|---|
+| 1 | **Wire Q1's incumbent leg** | done — `apply_incumbent_hazard` has its production call site; the gate is fully evaluated and Q1 **passes it honestly** (below) |
+| 2 | **Q3 gate ruling** | each head is adjudicated against its OWN `declared_gate`; the cell carries the logic verbatim — *"a conjunct nobody computed reads null, never false"* |
+| 3 | **Amendment A2, Option 1** | `ITER011_PREREG_AMENDMENT_A2_DRAFT.md` reads **FROZEN — IN FORCE**: §5(2) one-sided with R-286/R-288 as the recorded cause, `p_two_sided` kept as a diagnostic, and the matched-random resolution declared **prospectively at 2,000 draws for the NEXT run** — this family stays at 500 with its floor disclosure |
+| 4 | **Phase-4 protocol + registry** | the protocol reads **FROZEN — IN FORCE**, declared before any cell is read and with **no Phase-4 cell existing at freeze**; `contracts.yaml` is at **v26** with 30 modules — EV-Replay and DE-ActionSpace registered, `ReplayWindowSpec` added, and `config_supplied:ActionSet` removed under amendment E on BE's confirmation |
+| 5 | **Worktrees** | four execution worktrees exist (`~/ctaNew-wt-{be,da,de,rev}`), `SEAT_PROTOCOL` rule 19. **Limitation stated rather than papered over:** git refuses one branch in two worktrees, so LANDING stays in the shared tree under pathspec discipline — isolation covers execution, and the ledger keeps one writer path |
 
-**Arrived overnight with Q-DA-201, not yet on the numbered list because the
-coordinator has not ruled whether it joins:** the content-liveness rule is
-ratified and effective from today, **but unwired** — its bar sits where 09-01's
-events actually are (65 min fails, 60 passes), and until a consumer calls
-`governs()` it changes no verdict. DA filed this as an escalation for the USER.
+**ONE QUESTION NOW WAITS, and it is the biggest one this programme has asked:**
 
-**Closed on the USER's "Yea proceed" (R-386), both verified here at their
-artifacts, not taken from the entry:**
+> **Does Q1's full-gate survival constitute the Phase-2 WINNER** that, together
+> with the now-frozen Phase-4 protocol, unblocks DE's latency × queue-reset-cost
+> × budget grids?
 
-- **The content-liveness rule is FROZEN** — `FROZEN_BY_USER = True` with the
-  USER's words quoted in-file, and `EFFECTIVE_FROM_DAY = "20260902"`
-  **unchanged**, so the first governed day is tomorrow and 09-01 is neither
-  calibrated on nor judged. Flipping the switch surfaced three draft-state pins
-  in the rule's own selftest — each caught by the controls DA shipped, each the
-  class where a control asserts the OFF state instead of the invariant.
-- **The `CLAUDE.md` amendment LANDED, both hunks verbatim.** Rule 9 no longer
-  names Binance, and asserts no settlement statistic; the one-writer exception
-  is in force, which retires `SEAT_PROTOCOL` rule 6's standing caveat.
+Escalated by the coordinator (R-398), **not decided**. What makes it askable for
+the first time is that Q1's gate is finally complete — and what should temper it
+is that **the decision metric still fails** and this remains development
+evidence (prereg 4: it selects, it never validates).
+
+**Still open from 09-01 and not among the five, so it did not get resolved with
+them:** DA's escalation that the content-liveness bar now sits exactly where the
+events are (65 min fails, 60 passes) — and that the rule, effective since today,
+**is still unwired**. Re-checked at 04:05Z: its only reference outside its own
+file remains `v5_deploy_gates.py:54`, which runs its selftest. `governs()`
+returns True and no verdict consumes it.
 
 ### Current model state
 
@@ -65,18 +65,24 @@ artifacts, not taken from the entry:**
   implementation of R-306's already-ruled conjunction. The 09:43Z statement that
   the attempt "wrote no result artifact" described the stopped 09:34Z attempt
   and is superseded by the 12:56Z entry below; it stays as provenance.
-  **THE RESULT OF RECORD, as of 17:24Z: 0 of 24 cells survive the joint
-  reading**, twice reproduced from independent recomputation and stable through
-  a full review cycle that is now fully released (R-393, `ebf0ad6`). Verified at
-  the artifact (142,609 B, as-of 16:57:01Z): `surviving_cells: []`,
-  `cells_by_status` = 6 `GATE_PARTIALLY_EVALUATED` + 12
-  `NO_INCUMBENT_COUNTERPART` + 6 `OK`, denominator 24. **Q4's increment is
-  POSITIVE in all six cells** (+278.6 to +3,867.1 net cents) **and clears no
-  family-wise bar under either null form** — best one-sided p 0.01999 → Holm
-  0.1199; the two-sided form is reported, never adjudicated. **Q1's two AUCs
-  (0.8303 lgbm / 0.7733 linear) are undecided**, pending the USER's Q1-leg
-  ruling. Nothing was deleted to reach zero: all six Q1 cells keep statistic, p
-  and Holm identical to the digit, and only their status moved.
+  **THE RESULT OF RECORD, re-adjudicated with every gate fully evaluated
+  (as-of 2026-09-02T03:46:59Z, 157,455 B): 12 of 24 cells survive the joint
+  reading** — recomputed from the cells here, not read off the summary.
+  `cells_by_status` = **18 OK + 6 NO_INCUMBENT_COUNTERPART**, denominator 24.
+  **Q1_arrival PASSES ITS COMPLETE GATE, both conjuncts computed**: candidate
+  AUC **0.8303** lgbm / **0.7733** linear against the incumbent hazard head's
+  **0.7139** — increments **+0.1164 / +0.0594**, `beats_incumbent_hazard_head`
+  true on both arms, 166/166 windows, zero exclusions. **Q3_magnitudes passes
+  its own gate** (both slope conjuncts true) — but note the difference: Q3's
+  frozen gate carries **no incumbent term**, so it passes a gate that never
+  required one (`incumbent_counterpart_computed: false`), which is not Q1's
+  achievement. **Q2_sign** correctly stays `NO_INCUMBENT_COUNTERPART`.
+  **Q4_combined_ev IS THE DECISION METRIC AND IT STILL FAILS**: all six
+  increments positive (+278.6 … +3,867.1 net cents), all six `survives: false`,
+  best one-sided p 0.01999 → Holm **0.1199**. Every surviving p sits at the
+  1/501 floor, which the cells disclose as **a bound, not a measurement** — one
+  draw the other way moves Holm 0.0479 → 0.0958. **Development evidence only**
+  (prereg 4: it selects, it never validates).
 - Typed fair-price Identity is built; the challenger protocol is not
   freeze-ready and no challenger has been scored.
 - `QR_SKEW_ONLY` semantics are user-frozen. Seven-arm work remains contracts,
@@ -84,7 +90,7 @@ artifacts, not taken from the entry:**
   seven-arm replay, lifecycle economics and the integrated candidate freeze
   remain open.
 
-### Seats (as of 2026-09-01T13:53Z; R-373 reset, R-379 DE, R-381 no-idle)
+### Seats (as of 2026-09-02T04:05Z; R-373 reset, R-379 DE, R-381 no-idle, R-397 worktrees)
 
 All seat contexts were cleared at ~12:52Z on USER order and re-loaded from
 files; anything assumed from pre-12:52Z conversation is void. **Six seats now,
@@ -92,9 +98,9 @@ and two of them are new today.**
 
 | seat | round | working on |
 |---|---|---|
-| **BE** (pm-be) | RR2 closed, RR3-1 dispatched | the review, re-review and re-re-review batches all landed (`d5b851c` → `2d29ddf` → `35893a4`). RR3-1 open: bind the coverage floor's expected set to the frozen prereg at `preregistration_commit` |
-| **DA** (pm-da) | **re-opened** | round 1 closed 3/3 (`c473b0e`). Round 2: the content-liveness rule as DRAFT-FOR-USER-FREEZE, the breadth-statistic reconciliation, and the real 09-01 verdict after 00:06Z — a HEALTHY fail is a recorded result, not a problem to fix |
-| **DE** (pm-de) | **open, first day** | staffed by the USER 2026-09-01 (R-379). Owns `harmful_stateful_policy.py`, `de_actionspace.py`, `de_constraints.py` per R-165's parking clause. First batch: real-data seven-arm parity, the EV-Replay registry-closure draft, the Phase-4 grid protocol as DRAFT-FOR-USER-FREEZE |
+| **BE** (pm-be) | R-397 batch closed | wired Q1's incumbent leg, applied ruling 2 to Q3, confirmed amendment E and re-emitted under frozen A2 (`32bf241` → `bd9bb44`). 71/71 mutants killed, 17 gates |
+| **DA** (pm-da) | round 2 closed | Q-DA-201 verified day one 8/8 and found the 115 invisible minutes. Its content-liveness bar escalation is still unruled |
+| **DE** (pm-de) | standby | its Phase-4 protocol and registry amendment are now FROZEN/APPLIED (R-397). Grids stay gated on a Phase-2 winner — the escalated question above |
 | **Reviewer** (pm-codex) | **all holds released** | three filings today under `REVIEW_*` (R-387/R-391/R-393). It tried to DEFEAT its own accepted fix — dressing an unwired Q4 in `GATE_PARTIALLY_EVALUATED` — and the guard refused; its shrunk-coverage known-bad, admitted at 6 checks last round, now refuses |
 | **coordinator** (pm-co) | — | 0b and 0d closed at 13:02Z (R-374); the item-2 re-review still held until BE's batch commits, so one round covers `1aaac18`'s claims and today's batch at a single tip (rule 5) |
 | **MEM** (pm-memory) | closing | this sweep of R-374..R-381 |
@@ -216,6 +222,56 @@ than a clean zero (the density receipt covers 13 days, not this one).
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-02 ~04:05Z (MEM) — TWELVE SURVIVORS, AND THE ONE THAT MATTERS
+### STILL FAILS
+
+**All five USER decisions are ruled and executed** (R-397, adopted verbatim),
+and the fully-evaluated family is the result of record (R-398). Verified at the
+artifacts: the A2 amendment and the Phase-4 protocol both read **FROZEN — IN
+FORCE**; `contracts.yaml` is at **v26** with 30 modules, EV-Replay and
+DE-ActionSpace registered, `ReplayWindowSpec` added and `config_supplied:ActionSet`
+removed under amendment E; four execution worktrees exist under rule 19.
+
+**The re-adjudicated family, recomputed from the cells rather than read off the
+summary** (157,455 B, as-of 03:46:59Z): **12 of 24 survive**, `cells_by_status`
+18 OK + 6 `NO_INCUMBENT_COUNTERPART`.
+
+**Q1 earned its pass.** Its gate has two conjuncts and both are now computed:
+candidate AUC 0.8303 lgbm / 0.7733 linear against the incumbent hazard head's
+0.7139 — increments +0.1164 / +0.0594, 166/166 windows, zero exclusions. Eleven
+hours ago that same head published six survivors on a gate half of which had
+never run; the number that came back is the one the complete gate produces.
+
+**Q3's pass is a weaker fact than Q1's, and the artifact is careful about it.**
+Q3 passes its **own** gate — both slope conjuncts true — but that gate carries
+no incumbent term at all (`incumbent_counterpart_computed: false`). It cleared a
+bar that never asked for a comparison. Reading the twelve as one uniform result
+would flatten exactly the distinction R-397's ruling 2 was made to preserve:
+*"a conjunct nobody computed reads null, never false."*
+
+**And the decision metric still fails.** Q4's increment is positive in all six
+cells (+278.6 … +3,867.1 net cents) and not one survives: best one-sided p
+0.01999 → Holm 0.1199. **Twelve survivors and no economic result are the same
+sentence.** Every surviving p also sits at the 1/501 floor, which the cells
+disclose as a bound rather than a measurement — one draw the other way moves
+Holm from 0.0479 to 0.0958.
+
+**What now waits on the USER is one question, and it is the largest this
+programme has asked:** does Q1's full-gate survival constitute the **Phase-2
+winner** that unblocks DE's grids? It became askable only when the gate was
+completed, and it should be weighed against a failing decision metric and
+development-only evidence.
+
+**A correction to my own edit, disclosed rather than quietly fixed.** My first
+pass at this round's pending-decisions rewrite sliced from the table's heading
+to the Forward-race heading and **deleted the "Current model state" and "Seats"
+sections in between.** Caught immediately, recovered from `HEAD`, updated and
+reinserted; a line-level diff against the previous commit now shows only lines I
+meant to change. The lesson is the repo's own: **do not slice a document by
+positional boundaries — anchor to exact strings**, which is written in
+`COORDINATION.md` §5 after two files were broken that way in one day. I did it
+in a state file this time.
 
 ### 2026-09-02 ~00:21Z (MEM) — DAY ONE ACCRUES, AND THE NUMBER QUOTED BESIDE
 ### IT BELONGS TO A DIFFERENT DAY
