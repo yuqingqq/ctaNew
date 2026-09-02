@@ -980,3 +980,83 @@ Moved in the MEM round-12 true-up of R-409..R-412. Join rule as in batch 1.
   accruing; DA's content-liveness bar escalation still unruled and the rule
   still unwired.
 ```
+
+## Batch 19 — archived 2026-09-02T10:45Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-13 true-up of R-413..R-416. Join rule as in batch 1.
+
+```yaml
+
+  2026-09-02T08:16Z (MEM ROUND 10 -- THE RULE WAS UNWIRED, THEN WIRED, THEN
+  PROVED BLIND; AND THE BLACKOUTS ARE THE VENUE'S). R-402..R-405, verified at
+  artifact and source, including by RUNNING the frozen rule. (1) THE FLAG I
+  CARRIED FOR THREE ROUNDS WAS REAL AND CLOSED THE SAME DAY: the frozen
+  content-liveness rule was NOT WIRED into the verdict path, found on its FIRST
+  GOVERNED DAY ~16 h before the first governed verdict --
+  da_forward_day_verify.py was still running a PRE-FREEZE INLINE COPY whose
+  emitted why said "NO ratified band exists", text written before the rule was
+  drafted. Rule 17's class on the GOVERNING instrument itself. Wired by DA the
+  same day (R-402 -> R-403, 3298a1d, review-released) and verified here at
+  source: CLR.governs(day_token) is called in the verdict path and the artifact
+  REFUSES TO EXIST without consulting the frozen rule (rc 4, never rc 1); the
+  veto is NOT adopted (content_thin_vetoes_HEALTHY false everywhere,
+  guard-refused otherwise) because the freeze resolved NONE of section 8 --
+  correctly escalated instead of chosen. (2) ITS FIRST GOVERNED DAY IS CARRYING
+  THE EXACT DEFECT IT EXISTS FOR: a 3 h 20 m ALL-COIN blackout, 01:35-04:55Z, NO
+  gap rows, which every legacy bar passes (btc P1 20.1 against 120). Measured by
+  running the rule: governs('20260902') True and governs('20260901') False;
+  09-02 reads CONTENT_THIN with btc L1 0.407 against the 0.08 bar and a
+  40-WINDOW RUN -- 40 x 5 min is the blackout exactly. (3) AND THE RULE CANNOT
+  SEE THE WORST VERSION OF WHAT IT WAS BUILT FOR. RR6-1, HIGH, against the
+  FROZEN rule: thinness is measured against the day's OWN MEDIAN, so past ~60%
+  dark the median crosses into the dark regime, every dark window stops being
+  thin, and a mostly-dark day reads CONTENT_LIVE at L1 = 0.0000, L2 run = 0 --
+  computed by the reviewer on real 09-02 bytes extended to 288 windows before
+  filing. A DETECTOR CALIBRATED ON A RATIO TO ITSELF CANNOT SEE THE CASE WHERE
+  THE DENOMINATOR MOVES WITH THE NUMERATOR, and it fails silently in the
+  safe-looking direction. DA's "L2 cannot shrink" was right under benign
+  continuations and wrong where it matters most. (4) THE CAUSE IS ESTABLISHED
+  AND IT IS NOT OURS (Q-DA-203 at 4f892de, design committed at 9785e5e BEFORE
+  any in-window rate was read): three events three-for-three -- E1 08-26
+  04:35-07:55Z PM thin 1.000 (195/195) 633.7 -> 1.23 msg/s; E2 08-31
+  06:40-10:40Z PM 1.000 (239/239) 475.0 -> 1.62; E3 09-02 01:35-04:55Z PM 1.000
+  (200/200) 335.5 -> 1.76 -- while Binance and Hyperliquid, SAME host, path and
+  seconds, did not thin in ONE interval of ~600 in-window minutes, with
+  Binance's rate RISING in-window in E3 (1347 -> 1518) and its receive latency
+  flat throughout (72/74/74 ms in-window vs 75 outside): POSITIVE evidence of a
+  healthy path, not absence of evidence. Every coin's run ends on ONE instant
+  per event while onsets stagger by up to 2h10m, and a per-coin cause cannot end
+  on a single instant. SETTLED: our collector, host and network are exonerated
+  for all three events. NOT SETTLED: whether the venue's markets traded normally
+  during the silence -- a harvestability question, open. THREE METHOD MARKS
+  WORTH COPYING, all DA's own disclosures: the host leg is PARTLY UNMEASURED and
+  says so (the R-163 journal reaches back only to 09-02T02:46:26Z, so E1/E2 have
+  no host record); a predicate that FIRED was reported as NOT-EVIDENCE because
+  it tests an absolute level against a standing baseline; and the POSITIVE
+  CONTROL FAILED FIRST -- Binance's predicate had never fired in 15 days, so its
+  0.000 proved nothing until injection on the venue's real series showed it CAN
+  fire on that data shape. A control that has never fired is not a control that
+  passed. THREE ITEMS NOW WAIT ON THE USER, in HANDOFF's table: (1) DOES A
+  CONTENT_THIN DAY ACCRUE, needed by ~00:06Z -- R-404's three closes supersede
+  R-403's flat projection: (a) THIN at close, recommend EXCLUDE per frozen
+  section 7's pre-declared mechanism, which predates seeing 09-02 and is the
+  least choose-after-seeing path; (b) genuinely LIVE, accrues with the blackout
+  disclosed; (c) LIVE-BY-MEDIAN-COLLAPSE, where the section-7 trigger never
+  fires because the instrument cannot see it, recommend the coordinator-exclusion
+  path with the reviewer's table as the stated reason. The KNOWN CAUSE
+  STRENGTHENS EXCLUDE-IF-THIN: the darkness is venue-inflicted, so the tape
+  genuinely lacks the venue's content. (2) THE PHASE-2 WINNER RULING, fully
+  unblocked (R-401, no reviewer hold open anywhere), with the reviewer's framing
+  verbatim: the COMPARISON is unit-invariant, the LEVEL is not (0.876 ranking /
+  0.790 valuing / 0.830 row-level between), survival sits on a 500-draw floor,
+  and Q4 STILL FAILS. (3) SOON, the rule-v2 freeze when DA's draft lands: an
+  ABSOLUTE floor beside the relative one -- what closes RR6-1 -- calibrated on
+  <=08-31 days only, anchored on the three measured events. NAMED RISK, AND ONE
+  NUMBER I WOULD NOT REPEAT AS GIVEN: the venue silence is recorded as recurring
+  "~weekly", but the three events are 08-26, 08-31 and 09-02 -- GAPS OF 5 AND 2
+  DAYS, three events in a 7-day span, MEAN 3.5 DAYS. On the observed rate the
+  forward race's 5-day set could take substantially longer than the calendar
+  suggests, and "weekly" would under-plan it. Stated as an observed rate on n=3,
+  never a forecast. UNCHANGED: G=1/5; the 011 family is 12 of 24 surviving with
+  Q4 failing; development evidence.
+```

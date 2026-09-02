@@ -4,6 +4,70 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-09-02T10:45Z (MEM ROUND 13 -- THE ONLY ACCRUED DAY GOT OVERWRITTEN, AND
+  WAS RECOVERED). R-413..R-416 with Q-BE-225/226, Q-DA-205/206, Q-DE-22/23/24;
+  verified at the artifacts, including by running both launchers. THE INCIDENT
+  IS THE ITEM: at 10:16:14Z and 10:16:17Z a reviewer hand run using the WRONG
+  ENVIRONMENT-VARIABLE NAMES (OUTDIR=/LOG= instead of the ones the launcher
+  reads) overwrote the canonical da_dayverdict_20260901.json and _20260902.json
+  with write_reason "UNATTRIBUTED hand run". Nothing governing moved, and that
+  is nearly beside the point: the canonical record of the ONLY day this forward
+  race has ever counted was replaced by a run nobody intended. IT WAS
+  RECOVERABLE BECAUSE OF SOMETHING BUILT FOR ANOTHER REASON: DA's launcher
+  echoes each verdict into its own log, so the originals came back BYTE-EXACT
+  from a source that exists to make runs auditable, not to survive overwrites.
+  VERIFIED AT THE ARTIFACTS RATHER THAN AT THE FILING: restored 09-01 sha
+  c087d507fe433210 and 09-02 sha 09a14a7392abe224, both mtime 10:29:25Z;
+  as_of 00:06:01.284484Z / 00:06:03.718835Z with write_reason "scheduled unit
+  run"; restored.recovered_content_sha256 f18724e37d8f1e3f / b1d67fcd9b189489
+  matching the coordinator's own 00:06Z captures; and 09-01 STILL READS ALL FOUR
+  CONJUNCTS TRUE with race_accrual_eligible true, so THE R-395/R-396 ACCRUAL
+  CHAIN IS INTACT AND G=1/5 STANDS. THE RESTORATION IS DELIBERATELY NOT
+  BYTE-IDENTICAL (rule 13): each file carries the 00:06Z CONTENT plus a
+  supersedes block naming what it replaced and a restored block naming where the
+  bytes came from -- A RESTORING WRITE THAT CARRIED NO RECORD OF WHAT IT
+  REPLACED WOULD BE THE SILENT VERSION OF THE SAME INCIDENT.
+  prior_bytes_tracked_in_git: false is stated rather than glossed, and the
+  overwritten bytes sit beside each file as
+  .superseded_20260902T1016....json. THE HOLE IS SHUT IN THE WAY THAT PREVENTS
+  RECURRENCE: both verdicts and both superseded copies are NOW GIT-TRACKED
+  (84ec1a1); they were not when the overwrite happened, which is why "recovered
+  from a log echo" was the best available option rather than "restored from
+  version control". THE LAUNCH-INVARIANCE CLASS (CO-1/2/3) IS CLOSED across BE
+  (1 module) and DE (5 modules, CO-2 closed AS A CLASS rather than per-module),
+  with DA's modules passing both launchers at 235/19. CO-1 IS THE ONE WORTH
+  REMEMBERING: the forward scorer imported the frozen rule bare, that import
+  fails under python3 -m, and an "except Exception: EFFECTIVE_FROM_DAY = None"
+  fallback made governed FALSE FOR EVERY DAY -- so a governed day with no mask
+  would have scored WHOLE, SILENTLY. Green under the script-dir launch BE used,
+  rc=1 under the package launch. A FALLBACK THAT CONVERTS A REQUIREMENT INTO
+  PERMISSION IS WORSE THAN A CRASH, because the crash is visible. Confirmed
+  closed by running both launches here: harmful_forward_scorer --selftest rc=0,
+  60 checks, each way. REVIEW AND ROUND STATE: DA round 1 (mask producer)
+  RELEASED with RR9-1/2/3 closed in round 7; BE round 2 (mask consumer) RELEASED
+  with RR10-1 (LOW) open and its fix batch dispatched; the DE round IN REVIEW at
+  21f4edf; DA round 2 QUEUED at 770e5ee. RR10-1 IS A CONTROL THAT CANNOT FAIL,
+  this programme's recurring shape: BE's pre-governed control asserts 09-01 "now
+  reads CONTENT_THIN", true when written and made FALSE by the 10:29Z
+  restoration, and swapping the control's day leaves the suite 60/60 green; the
+  closure anchors it to a FIXTURE verdict rather than a live day, which is the
+  only version that stays true. ONE MISS RECORDED AGAINST THE COORDINATOR'S OWN
+  SEAT (R-413): DE round 4 sat verified SIX HOURS LATE, named as a breach of
+  R-381's no-idle clause by the coordinator rather than a DE problem -- the
+  third coordinator self-correction in two days, after a premise corrected by
+  DA's measurement and a breadth figure corrected by mine. TONIGHT: the 00:06Z
+  09-03 run is the FIRST GOVERNED VERDICT (on 09-02) and the FIRST CANONICAL
+  MASK; BE REFUSES 09-02 ON GOVERNANCE until that mask lands -- governed, thin,
+  mask absent, refusing by name, which is the ruled behaviour and not a failure.
+  09-02 carries the 01:35-04:55Z Polymarket-side blackout (R-405) and ACCRUES ON
+  ITS COMPLEMENT per R-409, but THE ACCRUAL CALL IS THE USER'S. IN FLIGHT: BE's
+  RR10-1 fixture batch, DA round 8 (governed-verdict preflight, predicates
+  only), DE round 7 (supply-to-seam bridge with a parameter ratification ref),
+  and the reviewer on DE. Collector pid 1108125 alive as of the 10:44Z clock
+  read. USER DECISIONS PENDING, UNCHANGED AND FOUR: R-408(2) the Phase-2 winner,
+  R-408(3) the v2 freeze, R-411(i) the minimum complement for G-counting, and
+  R-411(ii) the P1 denominator on the complement. UNCHANGED: the 011 family is
+  12 of 24 surviving with Q4 failing; development evidence. PRIOR:
   2026-09-02T10:15Z (MEM ROUND 12 -- THE USER RULED THE ACCRUAL QUESTION, AND
   THE MASK BECAME A THREE-SEAT CONTRACT). R-409..R-412, verified at the
   artifacts. THE RULING WENT AGAINST THE COORDINATOR'S OWN RECOMMENDATION, and
@@ -153,79 +217,7 @@ updated: >-
   "## 6. Build-readiness audit". CALENDAR: 00:06Z 2026-09-03 is the FIRST
   GOVERNED VERDICT (v1 governs 09-02); the coordinator verifies it and files
   either way; race G=1/5 per coin; and the venue-silence rate stays as measured
-  -- 3 events in 7 days, n=3, an observed rate and never a forecast. PRIOR:
-  2026-09-02T08:16Z (MEM ROUND 10 -- THE RULE WAS UNWIRED, THEN WIRED, THEN
-  PROVED BLIND; AND THE BLACKOUTS ARE THE VENUE'S). R-402..R-405, verified at
-  artifact and source, including by RUNNING the frozen rule. (1) THE FLAG I
-  CARRIED FOR THREE ROUNDS WAS REAL AND CLOSED THE SAME DAY: the frozen
-  content-liveness rule was NOT WIRED into the verdict path, found on its FIRST
-  GOVERNED DAY ~16 h before the first governed verdict --
-  da_forward_day_verify.py was still running a PRE-FREEZE INLINE COPY whose
-  emitted why said "NO ratified band exists", text written before the rule was
-  drafted. Rule 17's class on the GOVERNING instrument itself. Wired by DA the
-  same day (R-402 -> R-403, 3298a1d, review-released) and verified here at
-  source: CLR.governs(day_token) is called in the verdict path and the artifact
-  REFUSES TO EXIST without consulting the frozen rule (rc 4, never rc 1); the
-  veto is NOT adopted (content_thin_vetoes_HEALTHY false everywhere,
-  guard-refused otherwise) because the freeze resolved NONE of section 8 --
-  correctly escalated instead of chosen. (2) ITS FIRST GOVERNED DAY IS CARRYING
-  THE EXACT DEFECT IT EXISTS FOR: a 3 h 20 m ALL-COIN blackout, 01:35-04:55Z, NO
-  gap rows, which every legacy bar passes (btc P1 20.1 against 120). Measured by
-  running the rule: governs('20260902') True and governs('20260901') False;
-  09-02 reads CONTENT_THIN with btc L1 0.407 against the 0.08 bar and a
-  40-WINDOW RUN -- 40 x 5 min is the blackout exactly. (3) AND THE RULE CANNOT
-  SEE THE WORST VERSION OF WHAT IT WAS BUILT FOR. RR6-1, HIGH, against the
-  FROZEN rule: thinness is measured against the day's OWN MEDIAN, so past ~60%
-  dark the median crosses into the dark regime, every dark window stops being
-  thin, and a mostly-dark day reads CONTENT_LIVE at L1 = 0.0000, L2 run = 0 --
-  computed by the reviewer on real 09-02 bytes extended to 288 windows before
-  filing. A DETECTOR CALIBRATED ON A RATIO TO ITSELF CANNOT SEE THE CASE WHERE
-  THE DENOMINATOR MOVES WITH THE NUMERATOR, and it fails silently in the
-  safe-looking direction. DA's "L2 cannot shrink" was right under benign
-  continuations and wrong where it matters most. (4) THE CAUSE IS ESTABLISHED
-  AND IT IS NOT OURS (Q-DA-203 at 4f892de, design committed at 9785e5e BEFORE
-  any in-window rate was read): three events three-for-three -- E1 08-26
-  04:35-07:55Z PM thin 1.000 (195/195) 633.7 -> 1.23 msg/s; E2 08-31
-  06:40-10:40Z PM 1.000 (239/239) 475.0 -> 1.62; E3 09-02 01:35-04:55Z PM 1.000
-  (200/200) 335.5 -> 1.76 -- while Binance and Hyperliquid, SAME host, path and
-  seconds, did not thin in ONE interval of ~600 in-window minutes, with
-  Binance's rate RISING in-window in E3 (1347 -> 1518) and its receive latency
-  flat throughout (72/74/74 ms in-window vs 75 outside): POSITIVE evidence of a
-  healthy path, not absence of evidence. Every coin's run ends on ONE instant
-  per event while onsets stagger by up to 2h10m, and a per-coin cause cannot end
-  on a single instant. SETTLED: our collector, host and network are exonerated
-  for all three events. NOT SETTLED: whether the venue's markets traded normally
-  during the silence -- a harvestability question, open. THREE METHOD MARKS
-  WORTH COPYING, all DA's own disclosures: the host leg is PARTLY UNMEASURED and
-  says so (the R-163 journal reaches back only to 09-02T02:46:26Z, so E1/E2 have
-  no host record); a predicate that FIRED was reported as NOT-EVIDENCE because
-  it tests an absolute level against a standing baseline; and the POSITIVE
-  CONTROL FAILED FIRST -- Binance's predicate had never fired in 15 days, so its
-  0.000 proved nothing until injection on the venue's real series showed it CAN
-  fire on that data shape. A control that has never fired is not a control that
-  passed. THREE ITEMS NOW WAIT ON THE USER, in HANDOFF's table: (1) DOES A
-  CONTENT_THIN DAY ACCRUE, needed by ~00:06Z -- R-404's three closes supersede
-  R-403's flat projection: (a) THIN at close, recommend EXCLUDE per frozen
-  section 7's pre-declared mechanism, which predates seeing 09-02 and is the
-  least choose-after-seeing path; (b) genuinely LIVE, accrues with the blackout
-  disclosed; (c) LIVE-BY-MEDIAN-COLLAPSE, where the section-7 trigger never
-  fires because the instrument cannot see it, recommend the coordinator-exclusion
-  path with the reviewer's table as the stated reason. The KNOWN CAUSE
-  STRENGTHENS EXCLUDE-IF-THIN: the darkness is venue-inflicted, so the tape
-  genuinely lacks the venue's content. (2) THE PHASE-2 WINNER RULING, fully
-  unblocked (R-401, no reviewer hold open anywhere), with the reviewer's framing
-  verbatim: the COMPARISON is unit-invariant, the LEVEL is not (0.876 ranking /
-  0.790 valuing / 0.830 row-level between), survival sits on a 500-draw floor,
-  and Q4 STILL FAILS. (3) SOON, the rule-v2 freeze when DA's draft lands: an
-  ABSOLUTE floor beside the relative one -- what closes RR6-1 -- calibrated on
-  <=08-31 days only, anchored on the three measured events. NAMED RISK, AND ONE
-  NUMBER I WOULD NOT REPEAT AS GIVEN: the venue silence is recorded as recurring
-  "~weekly", but the three events are 08-26, 08-31 and 09-02 -- GAPS OF 5 AND 2
-  DAYS, three events in a 7-day span, MEAN 3.5 DAYS. On the observed rate the
-  forward race's 5-day set could take substantially longer than the calendar
-  suggests, and "weekly" would under-plan it. Stated as an observed rate on n=3,
-  never a forecast. UNCHANGED: G=1/5; the 011 family is 12 of 24 surviving with
-  Q4 failing; development evidence.
+  -- 3 events in 7 days, n=3, an observed rate and never a forecast.
   ARCHIVED: entries older than these three are moved, never deleted, to
   workspace/STATUS_UPDATED_ARCHIVE.md (append-only). This field is a
   ROLLING WINDOW OF THREE by ruling (coordinator, 2026-08-28T10:02Z):
@@ -3818,7 +3810,7 @@ flags:
                              # migration discipline remain authoritative.
 
 focus: >
-  As-of 2026-09-02T10:15Z, build and test the offline model mechanism-first
+  As-of 2026-09-02T10:45Z, build and test the offline model mechanism-first
   under plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md section 10. Do not use the
   subordinate stateful-cancel TODO checkbox count as total progress. The
   foundation is established: the action-level dataset and PRED_STATE_V1 are
@@ -3861,7 +3853,12 @@ focus: >
   exclude-if-thin recommendation; the mask is a producer-to-consumer contract
   (R-410..R-412) and 09-01's carries 141 windows. FOUR items remain
   USER-pending: the Phase-2 winner, the v2 freeze, the minimum complement for
-  G-counting, and the P1 denominator on the complement. Fair-price
+  G-counting, and the P1 denominator on the complement. THE 10:16Z INCIDENT is
+  closed by recovery: two canonical 00:06Z verdicts were overwritten by a
+  mis-named hand run and restored byte-exact from DA's launcher log, with
+  supersedes+restored provenance rather than byte-identity (rule 13); the
+  R-395/R-396 accrual chain is INTACT and both verdicts plus both superseded
+  copies are now git-tracked. Fair-price
   Identity is built while the challenger protocol is not freeze-ready;
   QR_SKEW_ONLY semantics are USER-FROZEN, while the seven-arm path remains
   stub/inert. Real queue-integrated replay, lifecycle economics and an

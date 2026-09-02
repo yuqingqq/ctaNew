@@ -1,11 +1,11 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-02T10:15Z — **the USER ruled the accrual question (R-409): a
-day with a blackout accrues on its non-blackout complement, with the blackout
-windows masked as accounted loss.** The mask is now a producer→consumer contract
-across three seats. Four items remain USER-pending. Prior line: the blackout
-cause is POLYMARKET-SIDE; v2 is drafted and review-released; forward race at
-G = 1/5.
+Updated: 2026-09-02T10:45Z — **two canonical 00:06Z verdicts were overwritten by
+a mis-named hand run and recovered byte-exact from the launcher's own log**; the
+restoration is verified at the artifacts and the R-395/R-396 accrual chain is
+intact. The launch-invariance class (CO-1/2/3) is closed across BE and DE. Four
+items remain USER-pending, unchanged. Prior line: the USER ruled accrual on the
+non-blackout complement (R-409); forward race at G = 1/5.
 
 ## READ FIRST — current project handoff
 
@@ -104,10 +104,84 @@ recommendations, not rulings.**
 | **R-411(i)** | **minimum complement size for G-counting** — the frozen bars were pre-registered against a 288-window day and a small complement reads them on a population they were not registered for | for **G-counting only** (every good window is scored regardless), a coin-day counts toward the ≥5 bar only if its unmasked complement covers **≥50% of the calendar day** (≥144/288); anchored on v1's ~60%-dark blindness, so 50% sits inside the instrument's validity rather than at its edge |
 | **R-411(ii)** | **which P1 denominator governs "quality is good" on the complement** — DA carries both (btc 09-02: **93.01** s per unmasked hour vs **25.51** per calendar-24 h, a 3.6× spread) | **per unmasked hour** — it is loss per hour of *usable* feed; the calendar form dilutes the loss by the very blackout it is meant to exclude |
 
-**Review state: no hold is open anywhere** (R-407 stands). BE's mask-seam round
-is **RELEASED** at `3a1d475` with RR8-1 (HIGH), RR8-2 (MED) and RR8-3 (LOW)
-filed; BE's fix batch is in flight. DA's producer round is **in review now**
-(`reviews/REQUEST_DA_MASK_PRODUCER_2026-09-02.md`, tip `181b4fa`).
+**Review state has moved since — see "Review and round state" below.** The four
+USER asks above are unchanged and none of them is blocked by any of it.
+
+### THE 10:16Z INCIDENT — two canonical verdicts overwritten, and recovered
+
+**What happened.** At 10:16:14Z and 10:16:17Z a reviewer hand run using the
+**wrong environment variable names** (`OUTDIR=` / `LOG=` instead of the ones the
+launcher reads) wrote over canonical `da_dayverdict_20260901.json` and
+`_20260902.json` with `write_reason: UNATTRIBUTED hand run`. The governing
+values did not move, but the canonical files did.
+
+**Why it was recoverable at all: DA's launcher echoes the verdict into its own
+log.** The originals were reconstructed **byte-exact** from that echo — a
+recovery source nobody built for this purpose, and the reason an overwrite of
+the programme's only accrued day was a repairable incident rather than a
+permanent one.
+
+**The restoration is NOT byte-identical, by design (rule 13).** Verified at the
+artifacts rather than at the filing:
+
+| | 09-01 | 09-02 |
+|---|---|---|
+| restored file sha | `c087d507fe433210` | `09a14a7392abe224` |
+| `as_of_utc` | `00:06:01.284484Z` | `00:06:03.718835Z` |
+| `write_reason` | scheduled unit run | scheduled unit run |
+| `all_pass` / accrual | **True / True** | False / False (open-day snapshot) |
+| four conjuncts | **all True** | F, F, T, F |
+| `restored.recovered_content_sha256` | `f18724e37d8f1e3f…` | `b1d67fcd9b189489…` |
+| `supersedes` names | the 10:16:14Z write | the 10:16:17Z write |
+
+Each file carries the 00:06Z **content** plus a `supersedes` block naming what
+it replaced and a `restored` block naming where the bytes came from. **A
+restoring write that carried no record of what it replaced would be the silent
+version of the same incident** — so the deviation from byte-identity is the
+point, not a defect. `prior_bytes_tracked_in_git: false` is stated honestly, and
+the overwritten bytes are preserved beside each file as
+`.superseded_20260902T1016….json`.
+
+**The R-395/R-396 accrual chain is intact** — 09-01 still reads `all_pass: true`
+with all four conjuncts true and `race_accrual_eligible: true`, so **G = 1/5
+stands**. And the hole is shut: **both verdicts and both superseded copies are
+now git-tracked** (`84ec1a1`), which they were not when the overwrite happened.
+
+### The launch-invariance class (CO-1/2/3) — closed across two seats
+
+**CO-1 is the one worth remembering, because it turned a requirement into
+permission and only one launcher could see it.** The forward scorer imported the
+frozen rule bare; under `python3 -m` that import fails, and an
+`except Exception: EFFECTIVE_FROM_DAY = None` fallback made `governed` **False
+for every day** — so a governed day with no mask would have scored **whole,
+silently**. Green under the script-dir launch BE used; rc=1 under the package
+launch. **A missing frozen rule must refuse, never permit.**
+
+Closed and verified here by running both launches: `harmful_forward_scorer
+--selftest` is **rc=0, 60 checks** under *both* the script-dir and package
+launches. The class is closed across **BE (1 module)** and **DE (5 modules,
+CO-2 closed as a class rather than per-module)**; DA's modules pass both
+launchers at **235/19**.
+
+### Review and round state
+
+| round | state |
+|---|---|
+| **DA round 1** (mask producer) | **RELEASED** — RR9-1/2/3 closed in DA round 7 |
+| **BE round 2** (mask consumer) | **RELEASED** — RR8-1/2/3 and CO-1 closed on the real artifact across three launch modes; **RR10-1 (LOW) open**, fix batch dispatched |
+| **DE round** | **IN REVIEW** at `21f4edf` |
+| **DA round 2** | **QUEUED** at `770e5ee` |
+
+**RR10-1 is a control that cannot fail**, which is this programme's recurring
+shape: BE's pre-governed control scores 08-27 with a comment asserting 09-01
+"now reads CONTENT_THIN" — which the 10:29Z restoration made false, since 09-01
+is back to its 00:06Z bytes with no `content_liveness_rule` block. Swapping the
+control's day to 09-01 leaves the suite **60/60 green**. The closure anchors it
+to a fixture verdict instead of a live day.
+
+**A coordination miss recorded against the coordinator's own seat** (R-413): DE
+round 4 was verified **six hours late**, and the entry names that as a breach of
+R-381's no-idle clause by the coordinator rather than a DE problem.
 
 ### The blackouts are Polymarket's, and that is now established rather than suspected
 
@@ -255,14 +329,22 @@ the register, so there was nothing to tick there.
 
 ### Calendar and watch-out-for
 
-**Tonight, 00:06Z 2026-09-03 — the first GOVERNED verdict**, on 09-02. The
-frozen v1 rule governs that day, and this is the first closing verdict to carry
-a `content_liveness_rule` block (RR6-2). The coordinator verifies it and files
-either way; the run itself is unattended, and DA proved nothing governing moved
-— 00:06Z runs identically with or without this round's batches. Race stands at
-**G = 1/5 per coin** (09-01 accrued). The venue-silence rate stays as measured:
-**3 events in 7 days, n = 3** — an observed rate, not a forecast. **Collector
-alive** at pid 1108125, up 1 d 12 h, as of the 10:14Z clock read.
+**Tonight, 00:06Z 2026-09-03 — the first GOVERNED verdict**, on 09-02, and the
+**first canonical mask**. It is the first closing verdict to carry a
+`content_liveness_rule` block (RR6-2), and **BE refuses 09-02 on governance
+until that mask lands** — governed, thin, mask absent, refuses by name, which is
+the ruled behaviour and not a failure.
+
+**09-02 carries the 01:35–04:55Z Polymarket-side blackout** (R-405) and
+**accrues on its complement per R-409** — but **the accrual call itself is the
+USER's**. Race stands at **G = 1/5 per coin** (09-01 accrued, chain verified
+intact after the incident above). The venue-silence rate stays as measured: **3
+events in 7 days, n = 3** — an observed rate, not a forecast.
+
+**In flight this round:** BE's RR10-1 fixture batch; DA round 8 (governed-verdict
+preflight, predicates only); DE round 7 (supply → seam bridge with a parameter
+ratification ref); the reviewer on DE. **Collector alive** at pid 1108125 as of
+the 10:44Z clock read.
 
 **The on-disk 09-02 verdict is NOT the governed one.** Checked:
 `da_dayverdict_20260902.json` is the **00:06:03Z open-day snapshot** written by
@@ -358,6 +440,62 @@ than a clean zero (the density receipt covers 13 days, not this one).
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-02 ~10:45Z (MEM) — THE DAY THE ONLY ACCRUED DAY GOT OVERWRITTEN,
+### AND WHY IT WAS RECOVERABLE
+
+**R-413..R-416 plus Q-BE-225/226, Q-DA-205/206 and Q-DE-22/23/24.** Details are
+in the three new sections above; what belongs here is what the round shows.
+
+**The incident is the item.** A hand run with **wrong environment-variable
+names** overwrote the canonical verdicts for 09-01 — the programme's *only*
+accrued day — and 09-02, stamping them `UNATTRIBUTED hand run`. Nothing
+governing moved, and that is almost beside the point: the canonical record of
+the one day the forward race has ever counted was replaced by a run nobody
+intended.
+
+**It was recoverable because of something built for another reason entirely.**
+DA's launcher echoes each verdict into its own log, so the originals came back
+**byte-exact** from a source that exists to make runs auditable, not to survive
+overwrites. I verified the restoration at the artifacts rather than at the
+filing: `restored.recovered_content_sha256` matches the coordinator's own 00:06Z
+captures on both days, `as_of` and `write_reason` are the originals, and **09-01
+still reads all four conjuncts true with `race_accrual_eligible: true`** — the
+R-395/R-396 chain is intact and **G = 1/5 stands**.
+
+**The restoration is deliberately not byte-identical, and that is the right
+call.** Each file carries the 00:06Z content **plus** a `supersedes` block naming
+what it replaced and a `restored` block naming where the bytes came from. **A
+restoring write that carried no record of what it replaced would be the silent
+version of the same incident.** `prior_bytes_tracked_in_git: false` is stated
+rather than glossed, and the overwritten bytes sit beside each file.
+
+**The hole is shut in the way that actually prevents recurrence:** both verdicts
+and both superseded copies are **now git-tracked** (`84ec1a1`). They were not
+when the overwrite happened — which is why "recovered from a log echo" was the
+best available option rather than "restored from version control".
+
+**CO-1 is the technical finding of the round and it has a general shape.** The
+forward scorer's bare import of the frozen rule failed under `python3 -m`, and
+its `except Exception: … = None` fallback made `governed` **False for every
+day** — a governed day with no mask would have scored **whole, silently**. Green
+under one launcher, rc=1 under the other. **A fallback that converts a
+requirement into permission is worse than a crash**, because the crash is
+visible. I confirmed the closure by running both launches: rc=0, 60 checks each.
+The class is now closed across BE (1 module) and DE (5, closed as a class), with
+DA's at 235/19.
+
+**And RR10-1 is the same old shape once more:** a control that cannot fail. BE's
+pre-governed control asserted 09-01 "now reads CONTENT_THIN" — true when written,
+made false by the 10:29Z restoration — and swapping the control's day leaves the
+suite 60/60 green. The fix anchors it to a fixture rather than a live day, which
+is the only version that stays true.
+
+**One thing recorded against the coordinator's own seat** (R-413): DE round 4 sat
+verified six hours late, named as a breach of R-381's no-idle clause by the
+coordinator rather than a DE problem. Worth keeping because the register has now
+recorded three coordinator self-corrections in two days — a premise corrected by
+DA's measurement, a breadth figure corrected by mine, and this.
 
 ### 2026-09-02 ~10:15Z (MEM) — THE USER PICKED THE OTHER BRANCH, AND THE MASK
 ### BECAME A CONTRACT
