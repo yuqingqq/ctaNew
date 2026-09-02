@@ -1679,6 +1679,19 @@ def selftest() -> int:
            f"{_cl['n_not_frozen']} of {_cl['n_in_closure']}, each with its sha "
            f"at both commits; a closure that named none would let a reader "
            f"assume the whole of it was frozen")
+        # BE34-R5: the words must say what is COMPUTED, and the field that
+        # says it must EXIST. MEASURED: renaming `closure_method` away
+        # survived the audit, because adding a disclosure and asserting
+        # nothing about it leaves a reader trusting a key that can vanish.
+        ok("STATIC import walk" in _cl.get("closure_method", "")
+           and "not what this run observed executing" in _cl["closure_method"]
+           and "dynamic import" in _cl["closure_method"]
+           and "execute" not in _cl["why"] and "REACHABLE" in _cl["why"],
+           f"R-421(2)/BE34-R5 the closure DECLARES its method — a static "
+           f"ast walk, naming what it cannot see (a branch not taken is "
+           f"still listed; a dynamic import is not listed at all) — and the "
+           f"`why` no longer says these modules 'execute' at HEAD, which is "
+           f"more than an import walk can know")
         # the data-root probe must REFUSE when the symlink is absent
         _lnk = Path(m6["root"]) / "data"
         _lnk.unlink()
