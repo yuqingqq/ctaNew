@@ -768,12 +768,15 @@ def check(supplied: dict, ratification_ref: str,
                 f"MISSING field nor a wrong VALUE, and it used to read as "
                 f"open-ended for `scope_to` while the same absence written as "
                 f"a missing line refused (DE12-R2).{_undef_note(empty)}")
-        # The same shape rule on the entry under check: its own
-        # `supersedes` was unvalidated too (`WHATEVER`, `/etc/passwd`,
-        # `R-418` all verified).
-        if "supersedes" in block:
-            validate_supersedes(block["supersedes"],
-                                f"{ratification_ref}'s block")
+        # DE18-R2: the `supersedes` shape rule USED TO RUN HERE, on the
+        # FIRST fence, whoever it belonged to -- so an entry whose first
+        # fence was a QUOTATION carrying `supersedes: R-902, R-901` was
+        # refused with "R-999's block names MORE THAN ONE ref" while
+        # R-999's own block was well-formed. The refusal was right and the
+        # message sent a reader to fix a block that was fine. It now runs
+        # in the OWN-BLOCK branch below, AFTER `check#8`, so a foreign
+        # first fence is spoken for by the refusal that can name the
+        # mismatch and nothing else attributes it to an owner.
         missing = [f for f in RATIFICATION_FIELDS if f not in block]
         if missing:
             # SITE: check#6
@@ -807,6 +810,34 @@ def check(supplied: dict, ratification_ref: str,
                 f"{block.get('ref')!r} while the entry heading is "
                 f"{heading_ref!r}. A block copied from another entry would "
                 f"otherwise ratify under the wrong number.")
+        # The shape rule on the entry's OWN block: its `supersedes` was
+        # unvalidated too (`WHATEVER`, `/etc/passwd`, `R-418` all verified).
+        if "supersedes" in block:
+            own_named = validate_supersedes(block["supersedes"],
+                                            f"{ratification_ref}'s block")
+            # DE18-R1: SHAPE WAS NOT EXISTENCE HERE EITHER. `supersedes:
+            # R-777` in the entry's own block verified True, [] while the
+            # SAME STRING one entry over refused at `superseded_by#1`. The
+            # deferral -- "the target's existence becomes that question
+            # when someone checks the target" -- holds only if someone
+            # does, and nothing makes that happen: a run stamping the NEW
+            # ratification never causes the old one to be checked, so a
+            # supersession written as a typo is examined by nobody while
+            # both ends read clean. `check#1` already refuses this exact
+            # shape one field over, for the reason it states in its own
+            # message: a well-formed ref to an entry that does not exist
+            # looks exactly like a valid one.
+            if own_named is not None and own_named not in {
+                    e["ref"] for e in all_entries(register_text)}:
+                # SITE: check#16
+                raise RatificationRefused(
+                    f"REFUSED: {ratification_ref}'s own block declares "
+                    f"`supersedes: {own_named}`, and NO ENTRY {own_named} "
+                    f"exists in this register. A well-shaped ref that names "
+                    f"nothing supersedes nothing SILENTLY -- and this is "
+                    f"the end nobody checks later: the entry it meant to "
+                    f"retire keeps verifying for new runs and no run on "
+                    f"THIS one ever asks (DE18-R1).")
         fields, evidence, unbindable = bind_from_prose(entry)
         fields = {**fields, **block}
         evidence = {**evidence, **{k: "ratification block" for k in block}}
@@ -934,7 +965,7 @@ def check(supplied: dict, ratification_ref: str,
 
 
 # ---------------------------------------------------------------------------
-EXPECTED_CHECKS = 150
+EXPECTED_CHECKS = 155
 
 
 def selftest() -> int:
@@ -1482,6 +1513,26 @@ def selftest() -> int:
             "adopted block requires the field, and an absent one cannot be "
             "told from a supersession nobody wrote",
             needle="carries no `supersedes`")
+    # DE18-R3: `parse_day#1` was reached by NOTHING -- neutralising it left
+    # the suite green at 150, alone among the six markers the audit does
+    # not drive. It is unreachable through `check()` (block and prose
+    # values are always strings), so the choice was to drive it or to
+    # annotate it unreachable. DRIVEN, and the reason is the difference
+    # from `de_admissible_windows`'s C-extension entry: THAT one cannot be
+    # addressed by any in-process assertion, while this guard defends an
+    # EXPORTED function's contract against a direct caller -- and a direct
+    # call is exactly how the module already drives `validate_supersedes`'s
+    # non-string guard on the line below. An unreachable annotation would
+    # have declared a limit the module does not have (DE15's own lesson).
+    refuses(lambda: parse_day(20260901, "scope_from"),
+            "KNOWN-BAD, DIRECT CALL: `parse_day` refuses a NON-STRING day "
+            "naming the field and the value -- reachable only by a direct "
+            "caller, driven here because the guard defends the function's "
+            "contract rather than `check()`'s path (DE18-R3)",
+            needle="scope_from")
+    ok(parse_day("20260901", "scope_from").strftime("%Y%m%d") == "20260901",
+       "POSITIVE CONTROL on the same call: a well-formed day parses, so "
+       "the guard above is a filter and not a wall")
     refuses(lambda: validate_supersedes(902, "a fixture"),
             "a NON-STRING refuses naming its type -- the block is read "
             "from text today, but the validator is the contract and a "
@@ -1499,9 +1550,26 @@ def selftest() -> int:
                 f"KNOWN-BAD ON THE ENTRY UNDER CHECK: `supersedes: {_u!r}` "
                 f"({_lab}) REFUSES -- its own field was unvalidated too, "
                 f"and all three verified clean")
-    ok(check(sup, "R-900", fixture_register(supersedes="R-418"))["verified"],
-       "POSITIVE CONTROL: a WELL-SHAPED ref in that field still verifies, "
-       "so the rule is about SHAPE and does not quietly require `null`")
+    # DE18-R1: THIS FIXTURE MOVED, and the move is the finding. It used to
+    # read "a WELL-SHAPED ref still verifies" -- and it did, because
+    # `R-418` is not in the fixture register at all. The same string one
+    # entry over had refused since round 18.
+    refuses(lambda: check(sup, "R-900", fixture_register(supersedes="R-418")),
+            "KNOWN-BAD (the fixture that used to be a positive control): "
+            "`supersedes: R-418` in the entry's OWN block, against a "
+            "register that holds no R-418, now REFUSES -- it verified True, "
+            "[] while the identical string in a later entry refused, and "
+            "the deferral that permitted it ('someone will check the "
+            "target') rests on a check nothing performs (DE18-R1)",
+            needle="exists in this register")
+    _pair = (fixture_register("R-899").replace("\n\n## next\n", "\n\n")
+             + fixture_register("R-900", supersedes="R-899"))
+    _psup = check(sup, "R-900", _pair)
+    ok(_psup["verified"] and _psup["unverifiable"] == [],
+       f"POSITIVE CONTROL, REBUILT SO IT CAN FAIL: a well-shaped ref whose "
+       f"target EXISTS in the register still verifies "
+       f"({_psup['verified']}, {_psup['unverifiable']}) -- the rule is "
+       f"shape AND existence, and it does not quietly require `null`")
 
     # ---- DE16-R1: A QUOTED BLOCK IS NOT THE QUOTING ENTRY'S -----------
     # The register is exactly where these spellings get documented, and one
@@ -1553,8 +1621,8 @@ def selftest() -> int:
        f"-- the rule skips QUOTATIONS, not supersessions, and without this "
        f"control the three above could pass by seeing nothing at all")
     refuses(lambda: check(sup, "R-419", _real + _sweep("R-999", "R-419")),
-            "and the end-to-end consequence follows: a REAL later "
-            "ratification makes R-419 refuse FOR A NEW RUN, which is the "
+            f"and the end-to-end consequence follows: with {_own} really "
+            f"superseding it, R-419 refuses FOR A NEW RUN, which is the "
             "verdict the quoted block was producing on no authority",
             needle="is SUPERSEDED by R-999")
     _note = _sweep("R-999", "R-419").replace("kind: R-ADMISS",
@@ -1579,6 +1647,52 @@ def selftest() -> int:
             "a correction would be shadowed by the block it corrects",
             needle="ratification blocks of its")
 
+    # ---- DE18-R2: a malformed QUOTATION is not the entry's own block ---
+    _quoted_bad = (
+        "### R-999 — 2026-09-02T14:00Z — coordinator: showing a spelling\n\n"
+        "```ratification\nref: R-903\nkind: R-ADMISS\n"
+        f"population: {POP_FULL}\nsampling: NONE\n"
+        "present_source: data/pm_5min/markets.jsonl\n"
+        "scope_days: FORWARD_RACE_DAYS\nscope_from: 20260901\n"
+        "scope_to: null\nrevocable_by: USER\n"
+        "supersedes: R-902, R-901\n```\n\nand R-999's own, below:\n\n"
+        "```ratification\nref: R-999\nkind: R-ADMISS\n"
+        f"population: {POP_FULL}\nsampling: NONE\n"
+        "present_source: data/pm_5min/markets.jsonl\n"
+        "scope_days: FORWARD_RACE_DAYS\nscope_from: 20260901\n"
+        "scope_to: null\nrevocable_by: USER\nsupersedes: null\n```\n\n"
+        "## next\n")
+    try:
+        check(sup, "R-999", _quoted_bad)
+        _msg = "<NO REFUSAL>"
+    except RatificationRefused as _exc:
+        _msg = str(_exc)
+    ok("declares ref 'R-903'" in _msg and "R-999's block" not in _msg
+       and "MORE THAN ONE" not in _msg,
+       f"DE18-R2: an entry whose FIRST fence is a QUOTATION carrying "
+       f"`supersedes: R-902, R-901` still refuses -- fail-closed is the "
+       f"right answer to an entry whose first fence is somebody else's -- "
+       f"but the refusal now names THE FENCE: {_msg[:96]!r}... It used to "
+       f"read `R-999's block names MORE THAN ONE ref` while R-999's own "
+       f"block was WELL-FORMED, sending a reader to fix a block that was "
+       f"fine. The shape rule moved into the own-block branch, after "
+       f"`check#8`, so the only message that can fire here is the one that "
+       f"can name the mismatch")
+    # The other direction: with NO quotation in front of it, the entry's
+    # own malformed block is still caught AND still attributed to it. The
+    # move narrows which block the shape rule reads; it does not stop it
+    # reading. (A foreign first fence never reaches this rule at all now --
+    # `check#8` refuses first, which is the whole closure.)
+    try:
+        check(sup, "R-902", fixture_register("R-902",
+                                             supersedes="R-902, R-901"))
+        _omsg = "<NO REFUSAL>"
+    except RatificationRefused as _exc:
+        _omsg = str(_exc)
+    ok("MORE THAN ONE" in _omsg and "R-902's block" in _omsg,
+       f"and the OWN block's malformation is still caught and still "
+       f"attributed to ITS OWNER: {_omsg[:88]!r}...")
+
     # ---- DE16-R2: shape is not existence -------------------------------
     for _dangling, _why in (
             ("R-9021", "one digit from R-902 and perfectly well-shaped"),
@@ -1591,11 +1705,13 @@ def selftest() -> int:
                 f"DE14-R1's own sentence surviving the fix that quoted it: "
                 f"a failed match says nothing (DE16-R2)",
                 needle="exists in this register")
-    ok(superseded_by(_chain("R-902"), "R-902") == ["R-903"]
-       and check(sup, "R-903", _chain("R-902"))["verified"],
-       "POSITIVE CONTROL: an EXISTING target still supersedes, and the "
-       "superseder itself still verifies -- the existence rule refuses "
-       "dangling refs, not supersession")
+    _found = superseded_by(_chain("R-902"), "R-902")
+    _sup903 = check(sup, "R-903", _chain("R-902"))
+    ok(_found == ["R-903"] and _sup903["verified"],
+       f"POSITIVE CONTROL: an EXISTING target still supersedes ({_found}) "
+       f"and the superseder itself still verifies ({_sup903['verified']}, "
+       f"{_sup903['unverifiable']}) -- the existence rule refuses dangling "
+       f"refs, not supersession")
 
     # ---- DE16-R3: duplicate keys, no last-wins -------------------------
     _dup = fixture_register("R-902", supersedes="R-902").replace(
@@ -1909,6 +2025,7 @@ EXPECTED_SITE: dict[str, str] = {
     "duplicate_block_key": "bind_from_block#1",
     "two_own_blocks": "own_ratification_blocks#1",
     "under_check_bad_supersedes": "validate_supersedes#5",
+    "under_check_dangling_supersedes": "check#16",
     "not_a_ratification": "check#10",
     "counts_do_not_sum": "check#11",
     "sampled_population": "check#13",
@@ -2091,6 +2208,11 @@ def mutation_audit(sup: dict, *, _drop_case: str | None = None,
              {"stamped_at": "2026-09-02T09:30:00Z"})),
         "under_check_bad_supersedes": (
             ((sup, "R-900", fixture_register(supersedes="WHATEVER")), {}),
+            ((sup, "R-900", good), {})),
+        # DE18-R1: the same field, the other question -- shape passes and
+        # the target names no entry.
+        "under_check_dangling_supersedes": (
+            ((sup, "R-900", fixture_register(supersedes="R-777")), {}),
             ((sup, "R-900", good), {})),
         # --- DE16-R1/R2/R3 -----------------------------------------------
         "later_entry_dangling_supersedes": (
