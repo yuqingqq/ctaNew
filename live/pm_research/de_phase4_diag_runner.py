@@ -40,7 +40,7 @@ import sys
 import time
 from pathlib import Path
 
-EXPECTED_CHECKS = 115
+EXPECTED_CHECKS = 119
 
 ROOT = Path(__file__).resolve().parents[2]
 PLANS = Path(__file__).resolve().parent / "plans"
@@ -789,6 +789,17 @@ def evaluate_predicates(cells: list) -> dict:
             # label says what it is (§8, and the addendum's §d).
             "interval": ("NULL_QUANTILES" if c.get("null_quantiles")
                          else "POINT_ESTIMATE_NO_INTERVAL"),
+            # DE39-R1: WHY there is no interval. A cell whose null
+            # COLLAPSED and a cell that never ran one both read
+            # POINT_ESTIMATE_NO_INTERVAL with `beats_null_q95` None, and
+            # only the second is uninformative about the policy: the first
+            # is the measurement that every matched draw was the treated
+            # arm, which is a finding about the stratum, not an absence.
+            "null_status": (
+                "NULL_COLLAPSED" if str(c.get("null", "")).startswith(
+                    "DEGENERATE")
+                else "NULL_SAMPLED" if c.get("null_quantiles")
+                else "NO_NULL_REQUESTED"),
             "null_quantiles": c.get("null_quantiles"),
             "beats_null_q95": (
                 None if not c.get("null_quantiles")
@@ -1257,6 +1268,9 @@ def run_cell(reference: dict, scores_by_arm: dict, cell: dict, *,
         _accepted_draws: list = []
         _acc_by_st: dict = {}
         _identity_all = 0
+        _stream_differs = 0
+        _treated_map = {(e["slug"], e["side"], e.get("gen")): e["score"]
+                        for e in treated_scores}
         _rc_treated = _realised_by_stratum(per_arm[head], gidx)
         attempted = accepted = rejected = 0
         rej_by_stratum: dict = {}
@@ -1384,14 +1398,38 @@ def run_cell(reference: dict, scores_by_arm: dict, cell: dict, *,
                 _e["distinct"].add(frozenset(_keys))
                 if _keys == _above_by_st.get(_st, set()):
                     _e["n_identity"] += 1
-            # The IDENTITY as a property of the WHOLE draw: the control's
-            # stream is then the treated arm's, exactly. Summing the
-            # per-stratum counts would give draws x strata, which is not a
-            # count of anything a reader wants.
+            # The IDENTITY as a property of the WHOLE draw: THE SET OF
+            # ABOVE-CARRYING GENERATIONS IS THE TREATED ARM'S. It is SET
+            # identity, not stream identity -- the control's stream equals
+            # the treated arm's only when the above values also land back
+            # on their own generations, which happens exactly when they
+            # descend in time (DE39-C1). The set is what a decision reads:
+            # with `enable_reduce` False the score is compared against
+            # theta_cancel / theta_repost / theta_reduce and nothing else,
+            # so WHICH above value lands on WHICH above-carrying generation
+            # cannot change a decision -- measured, swapping two above
+            # values in time changes no accepted value, no quantile and no
+            # difference. With a reduce band enabled the magnitude enters
+            # the decision and this must be re-read as a stream property.
+            # Summing the per-stratum counts would give draws x strata,
+            # which is not a count of anything a reader wants.
             if set(drawn) == set().union(*_above_by_st.values()):
                 _identity_all += 1
+            # A SECOND, LABELLED STATISTIC -- how far the permutation
+            # moved the STREAM, not how far it moved a DECISION. It is
+            # informative about the permutation's reach and it is never
+            # the assertion: a decision-inert reordering of the above
+            # values changes this number and nothing a reader acts on
+            # (DE39-C1 ruling ii).
+            if {(e["slug"], e["side"], e.get("gen")): e["score"]
+                    for e in ctrl_scores} != _treated_map:
+                _stream_differs += 1
             if _draw_log is not None:
                 _draw_log[-1]["value"] = res["cost_adjusted_value_cents"]
+                # DE39-C1 ruling (iii): a null's audit trail names WHAT WAS
+                # DRAWN. Without it a reader (or a check) has to re-derive
+                # the draw and hope the derivation matches.
+                _draw_log[-1]["drawn"] = sorted(drawn)
             vals.append(res["cost_adjusted_value_cents"])
             if res["rho"] is not None:
                 rhos.append(res["rho"])
@@ -1444,6 +1482,15 @@ def run_cell(reference: dict, scores_by_arm: dict, cell: dict, *,
             # control stream IS the treated arm's. Per stratum it is in
             # `accepted_by_stratum` below (ruling 1 asks for both).
             "n_accepted_identity_whole_draw": _identity_all,
+            "n_accepted_stream_differs": _stream_differs,
+            "stream_differs_note": (
+                "counts accepted draws whose STREAM MAP differs from the "
+                "treated arm's -- stream maps, NOT decisions. With "
+                "`enable_reduce` False a permutation that moves an above "
+                "value onto another above-carrying generation changes this "
+                "count and changes no decision, no value and no quantile "
+                "(measured). Read it as the permutation's reach, never as "
+                "evidence that the null differs (DE39-C1)"),
             # DE38-C1 ruling (4): per stratum, BEFORE any §3 number -- how
             # big the accepted set is there, how many DISTINCT draws it
             # holds, how many of them were the identity, and whether it
@@ -1807,32 +1854,86 @@ def selftest() -> int:
         "n_distinct_accepted": 0, "n_distinct_attempted": 0,
         "n_accepted_identity_whole_draw": 0, "accepted_by_stratum": {},
         "pool_size": 0}
-    _fpool = [{"slug": f"{e['slug']}|{e['side']}|{e['gen']}",
-               "side": e["side"], "hour": _hour_of(e["slug"])} for e in _fsc]
-    _fabove = [{"slug": f"{e['slug']}|{e['side']}|{e['gen']}"}
-               for e in _fsc if e["score"] >= 0.5]
-    _tmap = {(e["slug"], e["side"], e["gen"]): e["score"] for e in _fsc}
-    _differs = 0
-    for _r in [r for r in _flog if r["accepted"]]:
-        _d = MRC.draw(_fpool, _fabove, seed=_r["seed"])
-        _cs, _ = permuted_stream(_fsc, _d, 0.5, _gen_index(_free))
-        if {(e["slug"], e["side"], e["gen"]): e["score"]
-                for e in _cs} != _tmap:
-            _differs += 1
-    ok(_np_free["n_distinct_accepted"] >= 2 and _differs >= 1
+    # DE39-C1 rulings (ii)+(iii): the property is asserted on the LOGGED
+    # ACCEPTED VALUES -- the decision metric -- and the recomputation of
+    # the draws is DELETED. It re-derived them from a pool in `_fsc` order
+    # against the runner's SORTED pool: coincident here, unasserted in
+    # general, and unnecessary now that the log carries both the value and
+    # the draw.
+    _acc_log = [r for r in _flog if r["accepted"]]
+    _tval = ((ncell or {}).get("per_arm", {})
+             .get("CONDVALUE_OVER_SKEWED_REF/q1_arrival_composed_lgbm", {})
+             .get("cost_adjusted_value_cents"))
+    _val_differs = sum(1 for r in _acc_log if r["value"] != _tval)
+    ok(_np_free["n_distinct_accepted"] >= 2 and _val_differs >= 1
        and _np_free["n_accepted_identity_whole_draw"] >= 1
        and _np_free["n_distinct_accepted"]
-       <= _np_free["n_distinct_attempted"],
-       f"DE38-C1 ruling (3): THE ACCEPTED SET IS A NULL, asserted on what "
-       f"was ACCEPTED -- {_np_free['n_distinct_accepted']} distinct "
-       f"accepted draws of {_np_free['n_distinct_attempted']} distinct "
-       f"attempted, {_differs} of the accepted draws carrying a control "
-       f"stream that DIFFERS from the treated one, and "
-       f"{_np_free['n_accepted_identity_whole_draw']} of them the "
-       f"IDENTITY draw, "
-       f"admitted and counted rather than refused. Round 38 asserted "
-       f"`accepted == 2` and `P4 > 0`, both true of a null that is the "
-       f"treated arm five times over (DE38-C1)")
+       <= _np_free["n_distinct_attempted"]
+       and all(r.get("drawn") for r in _acc_log),
+       f"DE38-C1 ruling (3), ASSERTED ON THE DECISION METRIC (DE39-C1 "
+       f"ruling ii): {_val_differs} of {len(_acc_log)} accepted draws "
+       f"carry a VALUE different from the treated arm's ({_tval}) -- that "
+       f"is what 'the accepted set is a null' means -- across "
+       f"{_np_free['n_distinct_accepted']} distinct accepted draws of "
+       f"{_np_free['n_distinct_attempted']} attempted, "
+       f"{_np_free['n_accepted_identity_whole_draw']} of them the SET "
+       f"identity, each logged with what it drew. Round 39 asserted a "
+       f"count of differing STREAM MAPS, which a decision-inert "
+       f"reordering of the above values moves")
+    ok(_np_free["n_accepted_stream_differs"] >= _val_differs
+       and "NOT decisions" in _np_free["stream_differs_note"],
+       f"and the stream-map count SURVIVES AS A LABELLED STATISTIC -- "
+       f"{_np_free['n_accepted_stream_differs']} of {len(_acc_log)} "
+       f"accepted draws moved the stream, against {_val_differs} that "
+       f"moved the VALUE -- with its note saying it counts stream maps, "
+       f"NOT decisions. It is informative about the permutation's reach "
+       f"and it is never the assertion")
+    # DE39-C1, THE REORDERING DRIVEN: the same fixture with the two above
+    # values swapped in time. Nothing a reader acts on may move.
+    _swapped = [dict(e, score=(0.8, 0.9, 0.2, 0.1)[i])
+                for i, e in enumerate(_fsc)]
+    _slog: list = []
+    _scell = run_cell(_free, {
+        "CONDVALUE_OVER_SKEWED_REF/q1_arrival_composed_lgbm": _swapped,
+        "CONDVALUE_OVER_SKEWED_REF/incumbent_linear_d": _fdumb},
+        good, draws=20, thetas={
+            "CONDVALUE_OVER_SKEWED_REF/q1_arrival_composed_lgbm": 0.5,
+            "CONDVALUE_OVER_SKEWED_REF/incumbent_linear_d": 0.5},
+        _draw_log=_slog)
+    _snp = _scell["null_population"]
+    _sacc = [r for r in _slog if r["accepted"]]
+    _sval_differs = sum(1 for r in _sacc if r["value"] != _tval)
+    ok(sorted(r["value"] for r in _sacc)
+       == sorted(r["value"] for r in _acc_log)
+       and _scell["null_quantiles"] == ncell["null_quantiles"]
+       and _scell["net_diff_vs_null_median_cents"]
+       == ncell["net_diff_vs_null_median_cents"]
+       and _snp["n_distinct_accepted"] == _np_free["n_distinct_accepted"]
+       and _snp["n_accepted_identity_whole_draw"]
+       == _np_free["n_accepted_identity_whole_draw"]
+       and _sval_differs == _val_differs and _sval_differs >= 1,
+       f"DE39-C1, THE REORDERING DRIVEN: swapping the two above values in "
+       f"time changes NOTHING a reader acts on -- the accepted value "
+       f"multiset, the quantiles (q50 "
+       f"{_scell['null_quantiles']['value_q50']}), the difference "
+       f"({_scell['net_diff_vs_null_median_cents']}), the distinct count "
+       f"({_snp['n_distinct_accepted']}) and the SET-identity count "
+       f"({_snp['n_accepted_identity_whole_draw']}) are all identical, and "
+       f"the count of accepted draws whose VALUE differs is INVARIANT "
+       f"under the reordering ({_sval_differs} == {_val_differs} of "
+       f"{len(_sacc)}) -- which is the property that makes it the right "
+       f"thing to assert. With `enable_reduce` False the score is read "
+       f"only "
+       f"against the thresholds, so WHICH above value lands on WHICH "
+       f"above-carrying generation cannot change a decision -- only the "
+       f"SET can")
+    ok(_snp["n_accepted_stream_differs"]
+       != _np_free["n_accepted_stream_differs"],
+       f"and the ONLY number that moves is the labelled stream-map count "
+       f"({_np_free['n_accepted_stream_differs']} -> "
+       f"{_snp['n_accepted_stream_differs']}) -- which is exactly why "
+       f"round 39's assertion rested on it and this round's does not "
+       f"(DE39-C1 ruling ii)")
     ok(_np_free["pool_size"] == len(_fsc)
        and sum(len(v[sd]) for v in _free.values() for sd in HSP.SIDES)
        == len(_fsc) + 1,
@@ -1898,6 +1999,22 @@ def selftest() -> int:
        f"estimate ({dcell.get('point_estimate_cents')} cents). Round 38 "
        f"published q50 and a 0.0 difference here, by construction")
     _dpred = evaluate_predicates([dcell])["by_cell"][0]
+    _npred = evaluate_predicates([ncell])["by_cell"][0]
+    _0pred = evaluate_predicates([cell])["by_cell"][0]
+    ok(_dpred["null_status"] == "NULL_COLLAPSED"
+       and _npred["null_status"] == "NULL_SAMPLED"
+       and _0pred["null_status"] == "NO_NULL_REQUESTED"
+       and _dpred["interval"] == _0pred["interval"]
+       == "POINT_ESTIMATE_NO_INTERVAL",
+       f"DE39-R1, DRIVEN on all three states: `null_status` separates a "
+       f"null that COLLAPSED ({_dpred['null_status']}) from one that was "
+       f"SAMPLED ({_npred['null_status']}) and from a cell that never ran "
+       f"one ({_0pred['null_status']}) -- the first two of which are "
+       f"different findings and the first and third of which had "
+       f"identical rows at `cd93663` (`interval` "
+       f"{_dpred['interval']}, `beats_null_q95` None for both). A "
+       f"collapsed null is a measurement about the stratum, not an "
+       f"absence of measurement")
     ok(_dpred["interval"] == "POINT_ESTIMATE_NO_INTERVAL"
        and _dpred["null_quantiles"] is None
        and _dpred["beats_null_q95"] is None
@@ -2482,25 +2599,36 @@ def selftest() -> int:
        f"{ {k[1]: DECLARED_ADDITIVE[k]['sha_at_declaring_tip'] for k in DECLARED_ADDITIVE} } "
        f"-- so the declaration describes the code that is actually there, "
        f"and the check above says it cannot describe itself")
-    _ca = sorted({DECLARED_ADDITIVE[k]["changed_at"]
-                  for k in DECLARED_ADDITIVE})
-    _at = _fn_asts(_git_show(_ca[0],
-                             "live/pm_research/harmful_exposure_rows.py") or "")
-    _before = _fn_asts(_git_show(f"{_ca[0]}^",
-                                 "live/pm_research/harmful_exposure_rows.py")
-                       or "")
-    ok(len(_ca) == 1
-       and all(DECLARED_ADDITIVE[k]["sha_at_declaring_tip"]
-               == _ast_sha(_at.get(k[1])) for k in DECLARED_ADDITIVE)
-       and all(DECLARED_ADDITIVE[k]["sha_at_fit"]
-               == _ast_sha(_before.get(k[1])) for k in DECLARED_ADDITIVE),
+    # DE39-R2: GROUPED BY `changed_at`, each group checked at ITS OWN
+    # commit and parent. Round 39 asserted `len(_ca) == 1`, which encoded
+    # today's single declaring commit into a correctness check -- the first
+    # genuine second declaration would have read as a pin failure rather
+    # than as the rework it is.
+    _by_ca: dict = {}
+    for _k in DECLARED_ADDITIVE:
+        _by_ca.setdefault(DECLARED_ADDITIVE[_k]["changed_at"], []).append(_k)
+    _ca_ok, _ca_seen = True, {}
+    for _c, _keys in sorted(_by_ca.items()):
+        _pth = f"live/pm_research/{_keys[0][0]}"
+        _at = _fn_asts(_git_show(_c, _pth) or "")
+        _before = _fn_asts(_git_show(f"{_c}^", _pth) or "")
+        _ca_seen[_c] = sorted(k[1] for k in _keys)
+        for _k in _keys:
+            if (DECLARED_ADDITIVE[_k]["sha_at_declaring_tip"]
+                    != _ast_sha(_at.get(_k[1]))
+                    or DECLARED_ADDITIVE[_k]["sha_at_fit"]
+                    != _ast_sha(_before.get(_k[1]))):
+                _ca_ok = False
+    ok(_ca_ok and _by_ca,
        f"DE38 §2(iii): each declaration NAMES THE COMMIT THAT CHANGED THE "
-       f"FUNCTION ({_ca[0]}) and the claim is CHECKED at both sides of it "
-       f"-- at that commit the three functions carry the declared TIP "
-       f"shas, and at its parent they carry the declared FIT shas (two of "
-       f"them absent). Prose cannot be pinned; the FACT the prose is "
-       f"about can be, and a re-declaration that moves the shas while "
-       f"keeping the old justification fails here")
+       f"FUNCTION and the claim is CHECKED at both sides of it, GROUPED BY "
+       f"THAT COMMIT ({_ca_seen}) -- at each commit its functions carry "
+       f"the declared TIP shas, and at its parent the declared FIT shas "
+       f"(two of them absent). Prose cannot be pinned; the FACT the prose "
+       f"is about can be, and a re-declaration that moves the shas while "
+       f"keeping the old justification fails here. A SECOND declaring "
+       f"commit is now a supported state rather than a pin failure "
+       f"(DE39-R2)")
     # DE37-C2 DRIVEN, ON A SOURCE EDIT: the known-bad is an edited FUNCTION
     # BODY in a copy of the module directory, not a tampered dict -- the
     # state round 37's falsifier could not produce.

@@ -199,6 +199,23 @@ rather than re-pointed: measured over 200 seeds on the proving fixture, it
 fired 0 times as written and would have fired 65 times if handed the demand
 — refusing exactly the sample points the null must contain.
 
+**The identity here is SET identity, and that holds because
+`enable_reduce` is off.** The counted identity is *the set of
+above-carrying generations equals the treated arm's* — not *the control's
+stream equals the treated arm's*, which is a stronger and different
+statement (the two coincide only when the above values happen to descend in
+time). This is the right unit **for this execution's grid** because with
+`enable_reduce = False` a score is read only against `theta_cancel`,
+`theta_repost` and `theta_reduce`, so which above value lands on which
+above-carrying generation cannot change a decision — measured: swapping two
+above values in time leaves every accepted value, the quantiles, the
+difference and the identity count unchanged, and moves only a labelled
+stream-map statistic. **With a reduce band enabled the score's magnitude
+enters the decision, and the identity must then be re-read as a stream
+property.** The clause is here because this programme has twice been bitten
+by a correctness rule that rested on a configuration which merely happened
+to hold.
+
 **What that exposed, and what this addendum now asks the USER to read.** On
 the fixture that proves (γ), *every accepted draw was the identity*: one
 generation per stratum leaves the identity as the only draw satisfying the
