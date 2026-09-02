@@ -40,7 +40,7 @@ import sys
 import time
 from pathlib import Path
 
-EXPECTED_CHECKS = 119
+EXPECTED_CHECKS = 124
 
 ROOT = Path(__file__).resolve().parents[2]
 PLANS = Path(__file__).resolve().parent / "plans"
@@ -504,6 +504,39 @@ def _git_show(ref: str, path: str) -> str | None:
     return r.stdout if r.returncode == 0 else None
 
 
+def declaration_groups(declared: dict | None = None) -> list:
+    """Every declaration group checked AT ITS OWN COMMIT and its parent.
+
+    One row per (`changed_at`, file): the functions declared there, and
+    whether each carries the declared TIP sha at that commit and the
+    declared FIT sha at its parent.
+
+    `declared` is injectable ONLY so the grouping can be DRIVEN on a
+    fixture with TWO groups (DE40-R1: with a single group in the real map,
+    "check only the first group" survived the suite -- a loop whose second
+    iteration never happens is not a loop anyone has tested). The run
+    always passes the real map."""
+    declared = DECLARED_ADDITIVE if declared is None else declared
+    by_ca: dict = {}
+    for k, v in declared.items():
+        by_ca.setdefault((v["changed_at"], k[0]), []).append(k)
+    out = []
+    for (commit, name), keys in sorted(by_ca.items()):
+        path = f"live/pm_research/{name}"
+        at = _fn_asts(_git_show(commit, path) or "")
+        before = _fn_asts(_git_show(f"{commit}^", path) or "")
+        bad = []
+        for k in sorted(keys):
+            if declared[k]["sha_at_declaring_tip"] != _ast_sha(at.get(k[1])):
+                bad.append(f"{k[1]}@{commit}")
+            if declared[k]["sha_at_fit"] != _ast_sha(before.get(k[1])):
+                bad.append(f"{k[1]}@{commit}^")
+        out.append({"changed_at": commit, "file": name,
+                    "functions": sorted(k[1] for k in keys),
+                    "mismatches": bad, "ok": not bad})
+    return out
+
+
 def pin_statuses(here: Path | None = None) -> list:
     """One computed status per manifest-pinned file (DE34-R7).
 
@@ -768,6 +801,37 @@ def validate_receipt(r: dict) -> dict:
     return r
 
 
+def _null_status(c: dict) -> str:
+    """The cell's null state, derived from WHAT IT REQUESTED (DE40-R2).
+
+    Round 40 read the absence of `null_quantiles`, so "no null was asked
+    for" and "a null was asked for and collapsed" were told apart only by
+    a second field, and the enumeration was exhaustive only because
+    `null#2` refuses a cell that requested draws and accepted too few.
+    That refusal stays exactly as it is; this derivation no longer leans
+    on it."""
+    if "n_draws_requested" not in c:
+        # SITE: pred#1
+        raise DiagRefused(
+            "a cell carries no `n_draws_requested`, so what it ASKED FOR "
+            "cannot be read: a null that was never requested and a null "
+            "that collapsed would be reported alike, from the absence of "
+            "the same field (DE40-R2)")
+    if not c["n_draws_requested"]:
+        return "NO_NULL_REQUESTED"
+    if str(c.get("null", "")).startswith("DEGENERATE"):
+        return "NULL_COLLAPSED"
+    if c.get("null_quantiles"):
+        return "NULL_SAMPLED"
+    # SITE: pred#2
+    raise DiagRefused(
+        f"a cell requested {c['n_draws_requested']} draws and carries "
+        f"neither quantiles nor a DEGENERATE declaration. `null#2` refuses "
+        f"the run when fewer draws are accepted than requested, so this "
+        f"state cannot arise from the runner -- and inventing a fourth "
+        f"label for it would report a state nobody computed")
+
+
 def evaluate_predicates(cells: list) -> dict:
     """Addendum §e, computed in code (rule 10)."""
     out: dict = {"rho_min": {}, "rho_min_below_1": {}, "by_cell": []}
@@ -795,11 +859,7 @@ def evaluate_predicates(cells: list) -> dict:
             # only the second is uninformative about the policy: the first
             # is the measurement that every matched draw was the treated
             # arm, which is a finding about the stratum, not an absence.
-            "null_status": (
-                "NULL_COLLAPSED" if str(c.get("null", "")).startswith(
-                    "DEGENERATE")
-                else "NULL_SAMPLED" if c.get("null_quantiles")
-                else "NO_NULL_REQUESTED"),
+            "null_status": _null_status(c),
             "null_quantiles": c.get("null_quantiles"),
             "beats_null_q95": (
                 None if not c.get("null_quantiles")
@@ -1141,6 +1201,14 @@ def run_cell(reference: dict, scores_by_arm: dict, cell: dict, *,
         per_arm[arm] = arm_result(reference, scores, c, theta=th[arm])
         per_arm[arm]["spec"] = ARM_SPEC.get(arm, {}).get("note")
     out = dict(c)
+    # DE40-R2: WHAT THE CELL REQUESTED, recorded by the cell. `null_status`
+    # used to be derived from the ABSENCE of quantiles, which is a fact
+    # about the output; "no null was asked for" and "a null was asked for
+    # and collapsed" are facts about the INPUT, and only `null#2`'s policy
+    # (refusing when `accepted < draws`) kept the two derivations
+    # agreeing. A cell that records its own request does not depend on
+    # that coincidence.
+    out["n_draws_requested"] = int(draws)
     # DE38-R4: a cell produced under a FALSIFIER INPUT carries that fact,
     # and `validate_receipt` refuses to publish it. The flags are inert by
     # default and their call sites are asserted from the parse -- this is
@@ -1903,17 +1971,37 @@ def selftest() -> int:
     _snp = _scell["null_population"]
     _sacc = [r for r in _slog if r["accepted"]]
     _sval_differs = sum(1 for r in _sacc if r["value"] != _tval)
-    ok(sorted(r["value"] for r in _sacc)
+    # DE40-R3: THE INVARIANCE IS ASSERTED OVER THE WHOLE BLOCK, with the
+    # one order-dependent statistic EXCLUDED BY NAME -- so a field added
+    # to `null_population` tomorrow is covered without editing this check.
+    # Round 40 enumerated six fields; the measured invariant is "every
+    # field but `n_accepted_stream_differs`".
+    _ORDER_DEPENDENT = ("n_accepted_stream_differs",)
+    _blk_a = {k: v for k, v in _np_free.items()
+              if k not in _ORDER_DEPENDENT}
+    _blk_b = {k: v for k, v in _snp.items() if k not in _ORDER_DEPENDENT}
+    try:
+        _pred_a = evaluate_predicates([ncell])["by_cell"][0]
+        _pred_b = evaluate_predicates([_scell])["by_cell"][0]
+        _prederr = ""
+    except DiagRefused as _e:
+        # The predicate row is part of the invariant, so a refusal while
+        # building it belongs to THIS check rather than to a traceback.
+        _pred_a = _pred_b = None
+        _prederr = f" -- PREDICATES REFUSED: {str(_e)[:90]}"
+    ok(_pred_a is not None and _blk_a == _blk_b and len(_blk_a) >= 20
+       and set(_np_free) == set(_snp)
+       and _pred_a == _pred_b
+       and sorted(r["value"] for r in _sacc)
        == sorted(r["value"] for r in _acc_log)
-       and _scell["null_quantiles"] == ncell["null_quantiles"]
-       and _scell["net_diff_vs_null_median_cents"]
-       == ncell["net_diff_vs_null_median_cents"]
-       and _snp["n_distinct_accepted"] == _np_free["n_distinct_accepted"]
-       and _snp["n_accepted_identity_whole_draw"]
-       == _np_free["n_accepted_identity_whole_draw"]
        and _sval_differs == _val_differs and _sval_differs >= 1,
-       f"DE39-C1, THE REORDERING DRIVEN: swapping the two above values in "
-       f"time changes NOTHING a reader acts on -- the accepted value "
+       f"DE39-C1 / DE40-R3, THE REORDERING DRIVEN OVER THE WHOLE BLOCK: "
+       f"swapping the two above values in time leaves ALL "
+       f"{len(_blk_a)} of the {len(_np_free)} `null_population` fields "
+       f"identical -- every field except the one excluded BY NAME, "
+       f"{list(_ORDER_DEPENDENT)} -- and the predicate row identical "
+       f"too{_prederr}. "
+       f"So the accepted value "
        f"multiset, the quantiles (q50 "
        f"{_scell['null_quantiles']['value_q50']}), the difference "
        f"({_scell['net_diff_vs_null_median_cents']}), the distinct count "
@@ -2001,6 +2089,28 @@ def selftest() -> int:
     _dpred = evaluate_predicates([dcell])["by_cell"][0]
     _npred = evaluate_predicates([ncell])["by_cell"][0]
     _0pred = evaluate_predicates([cell])["by_cell"][0]
+    ok(dcell.get("n_draws_requested") == 20
+       and ncell.get("n_draws_requested") == 20
+       and cell.get("n_draws_requested") == 0,
+       f"DE40-R2: the cell RECORDS WHAT IT REQUESTED -- "
+       f"{dcell.get('n_draws_requested')} "
+       f"draws for the degenerate cell, {ncell.get('n_draws_requested')} "
+       f"for the sampled one and {cell.get('n_draws_requested')} for the "
+       f"cell that "
+       f"asked for no null -- so the state below is read off the INPUT "
+       f"rather than off the absence of an output")
+    refuses(lambda: _null_status({k: v for k, v in dcell.items()
+                                  if k != "n_draws_requested"}),
+            "KNOWN-BAD: a cell with no `n_draws_requested` REFUSES at "
+            "`pred#1` rather than reading the absence of quantiles -- "
+            "which is how a never-requested null and a collapsed one came "
+            "to be the same row", needle="what it ASKED FOR")
+    refuses(lambda: _null_status({"n_draws_requested": 20}),
+            "KNOWN-BAD: a cell that requested draws and carries neither "
+            "quantiles nor a DEGENERATE declaration REFUSES at `pred#2` "
+            "-- `null#2` makes that state unreachable from the runner, and "
+            "a fourth label would report a state nobody computed",
+            needle="cannot arise from the runner")
     ok(_dpred["null_status"] == "NULL_COLLAPSED"
        and _npred["null_status"] == "NULL_SAMPLED"
        and _0pred["null_status"] == "NO_NULL_REQUESTED"
@@ -2599,36 +2709,52 @@ def selftest() -> int:
        f"{ {k[1]: DECLARED_ADDITIVE[k]['sha_at_declaring_tip'] for k in DECLARED_ADDITIVE} } "
        f"-- so the declaration describes the code that is actually there, "
        f"and the check above says it cannot describe itself")
-    # DE39-R2: GROUPED BY `changed_at`, each group checked at ITS OWN
-    # commit and parent. Round 39 asserted `len(_ca) == 1`, which encoded
-    # today's single declaring commit into a correctness check -- the first
-    # genuine second declaration would have read as a pin failure rather
-    # than as the rework it is.
-    _by_ca: dict = {}
-    for _k in DECLARED_ADDITIVE:
-        _by_ca.setdefault(DECLARED_ADDITIVE[_k]["changed_at"], []).append(_k)
-    _ca_ok, _ca_seen = True, {}
-    for _c, _keys in sorted(_by_ca.items()):
-        _pth = f"live/pm_research/{_keys[0][0]}"
-        _at = _fn_asts(_git_show(_c, _pth) or "")
-        _before = _fn_asts(_git_show(f"{_c}^", _pth) or "")
-        _ca_seen[_c] = sorted(k[1] for k in _keys)
-        for _k in _keys:
-            if (DECLARED_ADDITIVE[_k]["sha_at_declaring_tip"]
-                    != _ast_sha(_at.get(_k[1]))
-                    or DECLARED_ADDITIVE[_k]["sha_at_fit"]
-                    != _ast_sha(_before.get(_k[1]))):
-                _ca_ok = False
-    ok(_ca_ok and _by_ca,
+    # DE39-R2 / DE40-R1: GROUPED BY `changed_at`, each group checked at
+    # ITS OWN commit and parent -- and the grouping is DRIVEN ON TWO
+    # GROUPS, because with one group in the real map a loop that stops
+    # after the first is indistinguishable from one that does not.
+    _g = declaration_groups()
+    ok(_g and all(r["ok"] for r in _g),
        f"DE38 §2(iii): each declaration NAMES THE COMMIT THAT CHANGED THE "
-       f"FUNCTION and the claim is CHECKED at both sides of it, GROUPED BY "
-       f"THAT COMMIT ({_ca_seen}) -- at each commit its functions carry "
-       f"the declared TIP shas, and at its parent the declared FIT shas "
-       f"(two of them absent). Prose cannot be pinned; the FACT the prose "
-       f"is about can be, and a re-declaration that moves the shas while "
-       f"keeping the old justification fails here. A SECOND declaring "
-       f"commit is now a supported state rather than a pin failure "
-       f"(DE39-R2)")
+       f"FUNCTION and the claim is CHECKED at both sides of it, grouped by "
+       f"that commit: "
+       f"{[(r['changed_at'], r['functions']) for r in _g]} -- at each "
+       f"commit its functions carry the declared TIP shas, and at its "
+       f"parent the declared FIT shas (two of them absent). Prose cannot "
+       f"be pinned; the FACT the prose is about can be")
+    # TWO REAL GROUPS: the three declarations at 851edaf, and `label_rows`
+    # at 46ab455 -- a genuinely different commit of the same file, with
+    # its own before/after shas, measured.
+    _fixture = dict(DECLARED_ADDITIVE)
+    _fixture[("harmful_exposure_rows.py", "label_rows")] = {
+        "changed_at": "46ab455",
+        "sha_at_fit": "4a4403ee715d88f7",
+        "sha_at_declaring_tip": "905975dceed925f0",
+        "reason": "FIXTURE ONLY -- never a declaration. It exists so the "
+                  "grouping is exercised on a SECOND group (DE40-R1)"}
+    _fg = declaration_groups(_fixture)
+    ok(len(_fg) == 2 and all(r["ok"] for r in _fg)
+       and [r["changed_at"] for r in _fg] == ["46ab455", "851edaf"]
+       and _fg[0]["functions"] == ["label_rows"]
+       and len(_fg[1]["functions"]) == 3,
+       f"DE40-R1, DRIVEN ON TWO GROUPS: a fixture adding a real second "
+       f"declaring commit yields {len(_fg)} groups -- "
+       f"{[(r['changed_at'], r['functions']) for r in _fg]} -- and EACH is "
+       f"checked at its OWN commit and parent. A loop that leaves after "
+       f"the first group returns one row here and this goes red; at "
+       f"`35452c0` it survived the whole suite, because the real map has "
+       f"exactly one group")
+    _bad_fx = dict(_fixture)
+    _bad_fx[("harmful_exposure_rows.py", "label_rows")] = dict(
+        _fixture[("harmful_exposure_rows.py", "label_rows")],
+        sha_at_fit="deadbeefdeadbeef")
+    _bg = declaration_groups(_bad_fx)
+    ok(len(_bg) == 2 and not _bg[0]["ok"] and _bg[1]["ok"]
+       and _bg[0]["mismatches"] == ["label_rows@46ab455^"],
+       f"KNOWN-BAD on the SECOND group: a wrong parent sha there is caught "
+       f"and NAMED ({_bg[0]['mismatches']}) while the first group stays "
+       f"green -- so the check reaches past the group the real map "
+       f"happens to have")
     # DE37-C2 DRIVEN, ON A SOURCE EDIT: the known-bad is an edited FUNCTION
     # BODY in a copy of the module directory, not a tampered dict -- the
     # state round 37's falsifier could not produce.
