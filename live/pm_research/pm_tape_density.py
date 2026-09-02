@@ -83,9 +83,18 @@ CODE_ROOT = Path(__file__).resolve().parents[2]
 CANONICAL_DATA_ROOT = Path("/home/yuqing/ctaNew")
 
 
+#: DA10-R2: WHICH BRANCH ANSWERED. A tree can satisfy the resolver's test and
+#: still lack what a consumer needs -- the test is "carries data/pm_5min/raw"
+#: while consumers also read `derived/` and `data/mm_hf/`. Recording the branch
+#: makes a short run self-explaining instead of a smaller number.
+DATA_ROOT_BRANCH: str = "unresolved"
+
+
 def _resolve_data_root() -> Path:
+    global DATA_ROOT_BRANCH
     env = os.environ.get("PM_DATA_ROOT")
     if env:
+        DATA_ROOT_BRANCH = "1_env_PM_DATA_ROOT"
         return Path(env)
     # THE TEST IS FOR THE TAPE, NOT FOR A DIRECTORY. A worktree checks out
     # the TRACKED receipts under data/pm_5min/derived, so `data/pm_5min`
@@ -93,7 +102,9 @@ def _resolve_data_root() -> Path:
     # reads -- does not. Testing the parent directory picked the worktree and
     # then failed on the ledger; testing for the tape itself is the property.
     if (CODE_ROOT / "data" / "pm_5min" / "raw").is_dir():
+        DATA_ROOT_BRANCH = "2_code_tree_carries_the_tape"
         return CODE_ROOT
+    DATA_ROOT_BRANCH = "3_canonical"
     return CANONICAL_DATA_ROOT
 
 
@@ -410,6 +421,26 @@ def selftest() -> int:
            "the gzip-trailer size EQUALS the true decompressed length — the "
            "O(1) measure this whole scan rests on is exact, not a proxy")
 
+    # THE CARRIED ITEM, CLOSED. This suite passed 7/7 against an EMPTY data
+    # root: every check above runs on a synthetic tape in a temp dir, so the
+    # RESOLVED root was never exercised and `all_days() -> []` read as a clean
+    # report over nothing. The resolver's answer is now asserted, and an empty
+    # root is a NAMED status rather than a silent pass -- the same idiom as
+    # the verifier's skips (DA10-R1).
+    ok(DATA_ROOT_BRANCH in ("1_env_PM_DATA_ROOT",
+                            "2_code_tree_carries_the_tape", "3_canonical"),
+       f"the data root resolved by a NAMED branch ({DATA_ROOT_BRANCH}) -- a "
+       f"reader of any artifact can say which tree answered")
+    _days = all_days()
+    if _days:
+        ok(len(_days) > 0,
+           f"and the resolved root {DATA_ROOT} carries {len(_days)} day(s), "
+           f"so this suite ran against a tape that exists")
+    else:
+        print(f"  SKIP resolved-root-carries-days: absent input "
+              f"{DATA_ROOT}/data/pm_5min/raw (branch {DATA_ROOT_BRANCH}) -- "
+              f"an EMPTY data root is a status, not a clean pass")
+        checks.append(True)
     print(f"pm_tape_density selftests: {len(checks)} checks passed")
     return 0
 
@@ -499,3 +530,25 @@ def main() -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
+
+
+def data_root_provenance() -> dict:
+    """The pair a reader needs to answer "which tree produced this?".
+
+    DA10-R2: emitted by the mask, the verdict AND the preflight, so no reader
+    has to know how the process was launched. The BRANCH is carried too: the
+    resolver's test is "carries data/pm_5min/raw", and a tree can pass it while
+    lacking `derived/` or `data/mm_hf/` -- which is exactly how a 238-check run
+    happened with nothing saying why.
+    """
+    return {
+        "code_root": str(CODE_ROOT),
+        "data_root": str(DATA_ROOT),
+        "data_root_branch": DATA_ROOT_BRANCH,
+        "branches": ("1_env_PM_DATA_ROOT | 2_code_tree_carries_the_tape "
+                     "| 3_canonical"),
+        "resolver_predicate": "the tree carries data/pm_5min/raw",
+        "predicate_caveat": ("consumers also read data/pm_5min/derived and "
+                             "data/mm_hf; a tree can satisfy the predicate "
+                             "and still lack those, so read the branch"),
+    }

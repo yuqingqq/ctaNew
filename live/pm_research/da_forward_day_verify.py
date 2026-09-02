@@ -1831,8 +1831,14 @@ def _is_tracked(path: Path) -> bool | None:
     measured fact, not a sentence."""
     import subprocess
     try:
-        r = subprocess.run(["git", "-C", "/home/yuqing/ctaNew", "ls-files",
-                            "--error-unmatch", str(path)],
+        # DA10-R4: ASK THE TREE THE PATH LIVES IN. This hardcoded the
+        # canonical tree while the path is built from DATA_ROOT, so the same
+        # tracked file under any other worktree measured False -- a wrong
+        # "measured fact" in the direction that says provenance does not
+        # exist when it does. RR9-3(b) replaced a false sentence with a
+        # measurement; this makes the measurement ask the right repository.
+        r = subprocess.run(["git", "-C", str(Path(path).resolve().parent),
+                            "ls-files", "--error-unmatch", str(path)],
                            capture_output=True, text=True, timeout=20)
         return r.returncode == 0
     except Exception:                                        # pragma: no cover
@@ -2315,6 +2321,13 @@ def verify_day(day_token: str, freeze_epoch: float,
 
     return {
         "instrument": "da_forward_day_verify_v1",
+        # DA10-R2: WHICH TREE PRODUCED THIS. The verdict is the GOVERNING
+        # artifact; a reader must be able to answer that without knowing how
+        # the process was launched. The branch is carried too, because the
+        # resolver's test ("carries data/pm_5min/raw") can pass on a tree that
+        # lacks what a consumer reads -- which is how a 238-check run happened
+        # with nothing saying why.
+        "roots": _TDROOT.data_root_provenance(),
         "verdict_split": _split,
         "era_admission": _era,
         # The era whose windows the accrual predicate actually loaded. Carried
@@ -2376,14 +2389,28 @@ def verify_day(day_token: str, freeze_epoch: float,
     }
 
 
+#: DA10-R1: the suite's own total, asserted. A check that cannot run must be a
+#: STATUS naming the absent input, never a smaller number -- the module read
+#: 238 / 244 / 238 across three layouts at rc 0, with only the log's presence
+#: differing and nothing saying so. `ran + skipped` must equal this in EVERY
+#: layout, so a vanished check fails the suite instead of shrinking the count.
+EXPECTED_CHECKS = 247
+
+
 def _selftests() -> int:
     checks = 0
+    skipped: list[tuple[str, str]] = []
 
     def ok(c, label):
         nonlocal checks
         checks += 1
         if not c:
             raise AssertionError(f"selftest failed: {label}")
+
+    def skip(name, absent):
+        """Rule 4: name the check AND the input that is missing."""
+        skipped.append((name, str(absent)))
+        print(f"  SKIP {name}: absent input {absent}")
 
     lo, hi = day_bounds("20260827")
     ok(hi - lo == 86400, "a day is 86400s")
@@ -2687,8 +2714,22 @@ def _selftests() -> int:
         # WORKTREE it pointed at a log that does not exist and SIX provenance
         # checks silently skipped -- 235 in the main tree, 229 here, with
         # nothing saying why. A data path must come from the data root.
+        # DA10-R1: EVERY ONE OF THESE SIX IS EITHER RUN OR NAMED AS A SKIP.
+        # The gate used to be `if _lg_p.exists()` with a bare `continue`
+        # inside, so on a data root without the log the six vanished at rc 0.
+        # Absence is now a status carrying the path, and the total below is
+        # asserted over ran + skipped, so they cannot vanish again.
         _lg_p = REPO / "data/pm_5min/derived/.da_midnight_verify.log"
-        if _lg_p.exists():
+        _ECHO_NAMES = [f"LOG-ECHO PROVENANCE ({d})" for d in
+                       ("20260901", "20260902")] + \
+                      [f"LOG-ECHO KNOWN-BAD ({d})" for d in
+                       ("20260901", "20260902")] + \
+                      ["LOG-ECHO KNOWN-BAD (absent run)",
+                       "LOG-ECHO KNOWN-BAD (absent day)"]
+        if not _lg_p.exists():
+            for _n in _ECHO_NAMES:
+                skip(_n, _lg_p)
+        else:
             _lt = _lg_p.read_text(encoding="utf-8", errors="replace")
             for _d, _sha in (("20260901",
                               "f18724e37d8f1e3f3ff4e0e1a5b6b1e2"[:16]),
@@ -2697,7 +2738,12 @@ def _selftests() -> int:
                 try:
                     _txt, _got = recover_verdict_block(
                         _lt, _d, "======== fired 2026-09-02T00:06:00Z")
-                except ValueError:
+                except ValueError as _e:
+                    # A log that EXISTS but does not carry this run is a
+                    # different absence, and it is named too rather than
+                    # silently continued past.
+                    skip(f"LOG-ECHO PROVENANCE ({_d})", f"{_lg_p}: {_e}")
+                    skip(f"LOG-ECHO KNOWN-BAD ({_d})", f"{_lg_p}: {_e}")
                     continue
                 ok(_got[:16] == _sha,
                    f"LOG-ECHO PROVENANCE ({_d}): the 00:06Z block recovered "
@@ -2729,6 +2775,36 @@ def _selftests() -> int:
             ok("carries no block" in _bad2,
                "LOG-ECHO KNOWN-BAD: a day absent from a real run REFUSES -- "
                "an absent block is not an empty one")
+
+        # ---- DA10-R4: the tracked question asks the RIGHT repository ----
+        # A file that IS tracked must read True from every worktree that
+        # contains it. Before the fix the canonical path read True and the
+        # identical file under another worktree read False.
+        _tracked_rel = "data/pm_5min/derived/annotations/" \
+                       "phase2_four_arm_v2.da_caveat_field.json"
+        _canon = Path("/home/yuqing/ctaNew") / _tracked_rel
+        _alt = CODE_ROOT / _tracked_rel
+        if _canon.exists():
+            ok(_is_tracked(_canon) is True,
+               "DA10-R4: a genuinely tracked file reads True from the "
+               "canonical tree (the positive control -- a checker that "
+               "answered False everywhere would pass the next check too)")
+        if _alt.exists() and _alt.resolve() != _canon.resolve():
+            ok(_is_tracked(_alt) is True,
+               f"DA10-R4: the SAME tracked file under another worktree "
+               f"({CODE_ROOT}) also reads True -- the question now goes to "
+               f"the repository the path lives in, not to a hardcoded tree")
+        else:
+            skip("DA10-R4: same tracked file under another worktree",
+                 f"{_alt} (this run's code tree is the canonical one)")
+        _untracked = REPO / "data/pm_5min/collector_gaps.jsonl"
+        if _untracked.exists():
+            ok(_is_tracked(_untracked) is False,
+               "DA10-R4 KNOWN-BAD: a genuinely UNTRACKED file still reads "
+               "False -- the fix did not make the answer True everywhere")
+        else:
+            skip("DA10-R4 KNOWN-BAD: untracked file reads False",
+                 str(_untracked))
 
         # ---- R-424: THE v2 WIRING, AND THE CONTROL THAT IT MOVES NOTHING -
         import da_content_liveness_v2_check as _V2
@@ -4427,7 +4503,20 @@ def _selftests() -> int:
        "reordered a rollback against the transition it closes and crashed with "
        "a TypeError when two rows shared a boundary")
 
-    print(f"da_forward_day_verify selftests: {checks} checks passed")
+    # DA10-R1: ran + skipped must equal the declared total in EVERY layout.
+    # A complete data root has ZERO skips; a root without the launcher log
+    # has exactly six, each named above. Deleting a check fails here by name.
+    if checks + len(skipped) != EXPECTED_CHECKS:
+        raise AssertionError(
+            f"selftest failed: {checks} ran + {len(skipped)} skipped = "
+            f"{checks + len(skipped)}, expected {EXPECTED_CHECKS}. A check "
+            f"that neither ran nor named itself as a skip has VANISHED -- "
+            f"which is the defect this total exists to catch, not a smaller "
+            f"number to accept.")
+    print(f"da_forward_day_verify selftests: {checks} checks passed"
+          + (f" ({len(skipped)} SKIPPED, named above; ran+skipped="
+             f"{EXPECTED_CHECKS})" if skipped else
+             f" (0 skipped; ran+skipped={EXPECTED_CHECKS})"))
     return 0
 
 

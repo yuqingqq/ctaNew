@@ -260,6 +260,8 @@ def build_mask(day: str, raw_root: Path | None = None, gaps=None
             "carrying_commit": _head_commit(),
             "tree_dirty_on_producing_files": _tree_dirty(),
             "data_root": str(DATA_ROOT),
+            # DA10-R2: the BRANCH, so the pair is self-explaining.
+            "data_root_branch": TD.DATA_ROOT_BRANCH,
             "roots_note": ("code_root is where the running file lives; "
                            "data_root is where the tape and artifacts live. "
                            "They differ under a worktree, and only the first "
@@ -853,11 +855,26 @@ def selftest() -> int:
                    "because the worktree's producing files differ from its "
                    "own HEAD -- the flag answers about the tree that ran, "
                    "not about some other tree")
+                # DA10-R5: ASSERT THE PROPERTY, NOT THE ENVIRONMENT. This
+                # compared the child's data_root against the PARENT's, which
+                # only holds when the parent's own root is canonical -- so the
+                # control failed from any tree carrying the tape. The property
+                # is that the CHILD resolved its own roots and they DIFFER:
+                # the temp worktree carries no tape, so its data root cannot
+                # be itself.
                 ok(str(_wt_path) in _prod["code_root"]
-                   and _prod["data_root"] == str(DATA_ROOT),
-                   "RR12-1 CONTROL: and it NAMES both roots -- code_root is "
-                   "the worktree, data_root is the tree holding the tape, so "
-                   "a reader can see they differed")
+                   and _prod["data_root"] != _prod["code_root"]
+                   and _prod.get("data_root_branch")
+                   != "2_code_tree_carries_the_tape",
+                   f"RR12-1 CONTROL: the child NAMES both roots and they "
+                   f"DIFFER -- code_root is the throwaway worktree, and since "
+                   f"that tree carries no tape its resolver CANNOT take "
+                   f"branch 2 (got {_prod.get('data_root_branch')!r}). "
+                   f"Written this way twice over: asserting '3_canonical' "
+                   f"encoded the environment again -- a child inheriting "
+                   f"PM_DATA_ROOT resolves by branch 1, which is equally "
+                   f"correct. The property is that the child resolved its "
+                   f"OWN roots and they differ")
         finally:
             _sp.run(["git", "-C", str(CODE_ROOT), "worktree", "remove",
                      "--force", str(_wt_path)], capture_output=True)

@@ -62,6 +62,11 @@ GATES: list[tuple[str, list[str]]] = [
      [PY, str(HERE / "da_content_liveness_v2_check.py"), "--selftest"]),
     ("DA blackout mask + complement (R-409)",
      [PY, str(HERE / "da_blackout_mask.py"), "--selftest"]),
+    # DA10-R3: a launcher break cannot sit uninvoked (R-370). This module's
+    # `-m` launch was broken by round 10's import and no gate would have said
+    # so, because the module was not in this list.
+    ("DA hf/pm window alignment",
+     [PY, str(HERE / "da_hf_pm_alignment.py"), "--selftest"]),
     ("DA governed-verdict preflight (read-only)",
      [PY, str(HERE / "da_governed_verdict_preflight.py"), "--selftest"]),
     ("chain equivalence (one fixture, two consumers)",

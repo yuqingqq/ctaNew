@@ -73,6 +73,11 @@ from typing import Any, Iterable, Sequence
 # DATA, so its root is the tree holding the tape, resolved once in
 # `pm_tape_density` and imported rather than restated. Deriving it from
 # __file__ made every worktree run read an empty directory.
+# DA10-R3: this module was the ONLY one of the six with no sys.path
+# insert, so the import added in round 10 resolved by PATH LAUNCH and
+# failed under `python3 -m` -- a suite that passes because of how it was
+# started (CO-2). The line the other five already carry:
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 import pm_tape_density as _TDROOT  # noqa: E402
 CODE_ROOT = Path(__file__).resolve().parents[2]
 REPO = _TDROOT.DATA_ROOT

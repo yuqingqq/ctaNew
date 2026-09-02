@@ -366,6 +366,12 @@ def preflight(day: str, derived: Path | None = None) -> dict[str, Any]:
                      "beside it.",
         "R-408(3)": "the v2 absolute-floor freeze -- RULED at R-424 §2: "
                     "FROZEN, governing from 2026-09-03.",
+        # R-434 §2: mirror ALL FOUR of R-424 §7's rulings, not only the three
+        # that came from this instrument's own escalations. A reader of this
+        # block should see the same count the register does.
+        "R-408(2)": "the Phase-2 winner -- RULED at R-424 §3: the composed "
+                    "candidate DOES NOT ADVANCE, Q1_arrival is the surviving "
+                    "component of record, and there is NO race admission.",
     }
     esc["still_open"] = {
         "freeze_disposition": "R-421 §3 / R-424 §6 -- NOT reached by the "
@@ -385,6 +391,9 @@ def preflight(day: str, derived: Path | None = None) -> dict[str, Any]:
         "tool": "da_governed_verdict_preflight",
         "day": day,
         "read_only": True,
+        # DA10-R2: this is what the coordinator reads at 00:14Z, so it says
+        # which tree it read from and by which resolver branch.
+        "roots": _TDROOT.data_root_provenance(),
         "verdict_path": str(vpath), "verdict_sha256": vsha,
         "verdict_as_of_utc": asof,
         "mask_path": str(mpath) if mpath.exists() else None,
@@ -519,9 +528,12 @@ def selftest() -> int:
            == 40,
            "and the R-405 overlap is reported as a FACT for 09-02 -- all 40 "
            "fixture windows sit inside 01:35-04:55Z")
-        ok("R-411(i)" in r["open_decisions"]["ruled"]
+        ok(len(r["open_decisions"]["ruled"]) == 4
+           and "R-411(i)" in r["open_decisions"]["ruled"]
            and "R-411(ii)" in r["open_decisions"]["ruled"]
            and "R-408(3)" in r["open_decisions"]["ruled"]
+           and "R-408(2)" in r["open_decisions"]["ruled"]
+           and "NO race admission" in r["open_decisions"]["ruled"]["R-408(2)"]
            and "freeze_disposition" in r["open_decisions"]["still_open"]
            and "R-424" in r["open_decisions"]["ruled"]["R-411(i)"],
            "R-424: the output separates RULED decisions (citing the entry "
@@ -690,6 +702,9 @@ def main(argv=None) -> int:
             "day": a.day,
             "read_only": True,
             "classification": "REFUSED",
+            # DA10-R2: the REFUSED shape carries them too -- a refusal is
+            # exactly when "which tree did you look in?" is the question.
+            "roots": _TDROOT.data_root_provenance(),
             "refusal": str(e),
             "checked_at_utc": _iso(
                 dt.datetime.now(dt.timezone.utc).timestamp()),
