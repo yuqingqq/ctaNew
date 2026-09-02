@@ -3097,3 +3097,68 @@ Moved in the MEM round-41 true-up of R-449. Join rule as in batch 1.
   flight. USER decisions: SIX RULED, NONE OPEN. UNCHANGED: G=1/5; the 011 family
   12 of 24 with Q4 failing; the sequencing rule; Phase-4 gated; R-419 revocable.
 ```
+
+## Batch 48 — archived 2026-09-02T15:46Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-42 true-up of R-450. Join rule as in batch 1.
+
+```yaml
+  2026-09-02T15:28Z (MEM ROUND 39 -- THE NUMBERS THAT MOVE, AND THE ONE MESSAGE
+  THAT STILL DOES NOT SAY WHICH KIND IT PRINTS). R-447 swept. DE ROUND 24
+  VERIFIED at e0d1e9f: 168 checks reproduced here rc 0, the real register's R-6
+  REPORTED at 0-based 1782/9508 (grep -n shows the headings at 1783/9509) with
+  every live answer unchanged, require_verified() RETURNS on the reported
+  duplication, R-418 refuses for a new run naming R-419, FIRST occurrence kept
+  BY RULE and computed from the parse with no allowlist, and NO REGISTER EDIT.
+  THE RIGHT LESSON FROM THOSE NUMBERS IS THAT THEY MOVE: the Q-filing table sits
+  above line 1780, so EVERY ROW ANY SEAT FILES shifts both lines by one -- the
+  reviewer's 1780/9506, the coordinator's 1782/9508 and mine are ONE FACT AT
+  THREE AS-OFS, not three measurements disagreeing -- and DE's suite compares
+  the index against an INDEPENDENT RECOUNT rather than a pinned literal, which
+  is why it passed at 168 on an already-shifted register. A literal there would
+  have been a time bomb with a filing cadence for a fuse. MY ROUND-38 NOTE WAS
+  TAKEN UP AND I CAN SAY HOW FAR: every site DE added LABELS the convention in
+  the message itself (:398, :411, :425 all say "0-based lines", and the suite's
+  own assertion at :1811 says it too), which is the better fix than shifting the
+  numbers because parse and prose now describe ONE system; THE RESIDUAL IS
+  EXACTLY ONE MESSAGE -- check#18 at :967-970 still prints own_idx[ref]["line"]
+  RAW under the bare words "register line", unlabelled, so a reader following
+  that refusal still lands one line above the entry. Narrower than what I filed
+  last round; belongs to the round-24 review or round 25. DA ROUND 14 HELD at
+  801eb31 (chain 3a89e6c -> e292439 -> 636a455 -> e384792 -> 801eb31) and
+  RECOMPUTED RATHER THAN ACCEPTED: in a PARITY TREE the roster is 23 declared +
+  15 twins = 38, the excluded list holds 8 entries (seven behavioural gates with
+  NO OTHER LAUNCHER TO DERIVE plus tier1 normalisation by name), and the
+  synthetic-roster --selftest gives 6 checks rc 0. A CAVEAT ABOUT MY OWN
+  INSTRUMENT: my first attempt read 2 twins because the derivation anchors on
+  Path(argv[1]).parent == HERE and I ran a copy OUTSIDE live/pm_research/ -- the
+  measurement is PATH-SENSITIVE, recorded because the wrong number I nearly
+  reported was MINE, not DA's. The exclusion's reason reproduces at the source:
+  python3 live/pm_research/tier1_pipeline.py --selftest -> rc 1
+  ModuleNotFoundError: No module named 'live' (tier1_pipeline.py:55, a
+  package-absolute import) against rc 0 under -m; NAMED, NOT REPAIRED, and named
+  IN THE CODE (TWIN_EXCLUSIONS) with that reason so the next reader gets the fact
+  and not just the exclusion. THE SCOPE DEVIATION IS RECORDED AS ACCEPTED with
+  its open question attached: da_blackout_mask.py, ONE assertion in a selftest
+  region -- the RR12-1 control asserted tree_dirty_on_producing_files is True,
+  which held only while the fixture's copied files differed from the child's
+  HEAD, so it went red the first time a commit touched none of them (e384792
+  changed only the preflight); the expectation is now COMPUTED from the child
+  tree's own git status --porcelain, and the code names it the THIRD INSTANCE OF
+  THE DA10-R5 CLASS IN THE SAME CONTROL. A red control may not land, the hunk is
+  one assertion, the property is the right one -- accepted in-batch by the
+  coordinator; what it now discriminates (whether a constant-True and a
+  constant-False mutant can both be red on one fixture arrangement) is REVIEW
+  ITEM 8, a ROUND-15 CANDIDATE, NOT A HOLD. BE ROUND 6 IS CODE WITHOUT A ROW:
+  faaabdc is in the tree, Q-BE-231 is ABSENT (checked, not assumed), so nothing
+  about it is recorded as verified and nothing goes to BE while its batch is in
+  flight (rule 18). SEQUENCING: reviewer BE round 5 (in flight) -> DE 23
+  (a83083a) -> DE 24 (e0d1e9f) -> DA 13+14 (801eb31) -> BE 6 when its row lands;
+  all three requests filed. DE and DA on DELIBERATE standby (R-381). BE round 7,
+  the durable landing of the two receipts, is staged for AFTER the 00:14Z read,
+  and Q-DA-209/210/211 land together after that read with 801eb31 as their
+  content. Standing rules stay at 7; USER decisions SIX RULED, NONE OPEN.
+  UNCHANGED: G=1/5; the 011 family 12 of 24 with Q4 failing; the sequencing rule
+  (no second scoring day until BE34-R1/R2 close and are reviewed); Phase-4
+  gated; R-419 revocable.
+```

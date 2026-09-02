@@ -4,6 +4,70 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-09-02T15:46Z (MEM ROUND 42 -- A RULE THAT STOPPED LEANING ON A PROSE
+  CONVENTION). R-450 swept. DE ROUND 25 VERIFIED at 50a9113 and RE-RUN HERE with
+  the cache cleared first: EXPECTED_CHECKS = 91 at :839, 91 checks rc 0; on
+  in-memory copies the intact walk is first_read_line 139 / above_line 137 /
+  boundary True at 3,752 chars, and the three interruption shapes I drove last
+  round (plain #, indented #:, bare #) now read 1,975 with boundary FALSE where
+  they were TRUE at a83083a -- DE23-R1 closed exactly at the token I checked
+  before it landed (:301, not above.lstrip().startswith("#")). THE FOURTH SHAPE
+  IS NOW A DECLARATION RATHER THAN AN OMISSION: X = 1 still reads 1,975 with
+  boundary True and :279 says why in the docstring -- a code line inserted into
+  the run is indistinguishable from a real boundary because THE INTACT BOUNDARY
+  IS A CODE LINE -- stated, not chased, with the anchors still naming which
+  sections must be present so the residual is bounded rather than merely
+  admitted. DE23-R2's length conjunct is GONE (zero occurrences; the block length
+  printed, asserted nowhere), replaced by a POSITIVE CONTROL ON ONE SOURCE
+  (:1297): a contiguous paragraph above the head keeps the boundary True and
+  grows the block, the same copy with a blank between refuses. THREE INDEPENDENT
+  INSERTIONS NOW EXIST FOR THAT CASE -- DE's 3,811, the coordinator's 3,791,
+  mine 3,805 -- which is the invariance I recorded last round holding up in
+  public: the effect is invariant to the inserted text, the number is not; three
+  numbers, one behaviour, nothing to reconcile. THE RULING IS THE ROUND'S REAL
+  CONTENT AND IT IS A REFINEMENT, NOT A REVERSAL: R-446 section 3(a)(ii), "named
+  by any supersedes: in the register", now reads "named by the supersedes: of any
+  entry's OWN ratification block" (own_ratification_blocks). RECORDED IN BAND IN
+  THE STANDARDS SECTION OF HANDOFF WHERE R-446'S RULE LIVES, WITH R-446'S TEXT
+  LEFT STANDING AS PROVENANCE (rule 13) -- never rewritten. It is right because
+  the module already made this distinction: superseded_by reads own blocks only,
+  and DE16-R1 settled in round 18 that a QUOTED block is not the quoting entry's
+  ratification, so a quotation naming a duplicated ref CANNOT REACH AN ANSWER and
+  by R-446 section 3's OWN CRITERION belongs on the reporting side. WHAT THAT
+  BUYS IS WORTH NAMING: before the refinement the rule stayed sound only because
+  R-432 section 1 -- A FORMAT CONVENTION ABOUT PROSE -- kept quoted fences rare,
+  and A CORRECTNESS RULE RESTING ON A FORMATTING HABIT IS A RULE WITH AN
+  UNDECLARED DEPENDENCY; the refinement removes it, every answer-reaching case
+  still refuses, and none of it depends on how anyone writes an entry -- the same
+  move as computing an expectation instead of asserting today's arrangement (the
+  DA10-R5 shape), applied to a RULE instead of a control. Verified at the source:
+  `named` is built from _fenced_blocks(e) at :404-405 (every fence, owned or
+  quoted) while own_ratification_blocks exists separately at :580. DE24-R2 is the
+  residual I measured in round 41, now CONFIRMED AT THE ARTIFACT and accepted as
+  a finding: check#18 prints the 0-based field under the bare words "register
+  line" (:967) and "(line ...)" (:970) while FOUR sites say "0-based lines";
+  closure is those two words. It reached DE through the round-24 review's item 4
+  exactly as R-448 routed it -- recorded, never re-filed, and it arrives with the
+  reviewer's confirmation rather than mine alone. Both dispatched as DE ROUND 26
+  (Q-DE-44), de_ratification_check.py only, with the reviewer's quoted-block
+  fixture as a POSITIVE control (a quotation naming a duplicated ref must NOT
+  refuse) and an own block naming one as the KNOWN-BAD. THE RECOUNT IS NOW STATED
+  AS A RULE: R-6 sits at 0-based 1786/9512 at my as-of, matching the
+  coordinator's reading at 304cd5f -- the fifth as-of in the chain (1780/9506 ->
+  1781/9507 -> 1782/9508 -> 1783/9509 -> 1784/9510 -> 1786/9512) -- and THE
+  DURABLE FORM IS THE SENTENCE, NOT THE PAIR: every filed Q-row moves both lines
+  by one, the suite recounts; no number is pinned in these files. ONE COUNT
+  STATED PRECISELY BECAUSE I CHECKED IT: the round-24 review filing is 253 lines
+  by wc -l and 253 insertions by the diff where R-450 section 2 says 254 -- a
+  one-line difference with nothing resting on it, recorded rather than silently
+  normalised. Q-BE-231 IS STILL ABSENT (checked again, not assumed), so BE round
+  6 remains unverified here and its row-pending line stands. SEATS: reviewer on
+  DA rounds 13+14 at 801eb31 (held, in flight), then DE round 25 (REQUEST filed
+  at dc83580), then BE round 6 when its row lands, then BE round 7; DE round 26
+  in flight; DA on deliberate standby. USER decisions SIX RULED, NONE OPEN.
+  UNCHANGED: G=1/5; the 011 family 12 of 24 with Q4 failing; the sequencing rule;
+  Phase-4 gated; R-419 revocable.
+  PRIOR:
   2026-09-02T15:36Z (MEM ROUND 41 -- A GUARD THAT ASKS THE WRONG QUESTION, AND A
   KNOWN-BAD THAT WILL FAIL WHEN THE CODE IS RIGHT). R-449 swept. DE ROUND 23
   REVIEW RELEASED (0b03618, 227 lines) for a83083a, NO HOLD: DE21-R1 closed for
@@ -128,65 +192,6 @@ updated: >-
   flight) -> DE 24 -> DA 13+14 -> BE 6 -> BE 7. USER decisions SIX RULED, NONE
   OPEN. UNCHANGED: G=1/5; the 011 family 12 of 24 with Q4 failing; the
   sequencing rule; Phase-4 gated; R-419 revocable.
-  PRIOR:
-  2026-09-02T15:28Z (MEM ROUND 39 -- THE NUMBERS THAT MOVE, AND THE ONE MESSAGE
-  THAT STILL DOES NOT SAY WHICH KIND IT PRINTS). R-447 swept. DE ROUND 24
-  VERIFIED at e0d1e9f: 168 checks reproduced here rc 0, the real register's R-6
-  REPORTED at 0-based 1782/9508 (grep -n shows the headings at 1783/9509) with
-  every live answer unchanged, require_verified() RETURNS on the reported
-  duplication, R-418 refuses for a new run naming R-419, FIRST occurrence kept
-  BY RULE and computed from the parse with no allowlist, and NO REGISTER EDIT.
-  THE RIGHT LESSON FROM THOSE NUMBERS IS THAT THEY MOVE: the Q-filing table sits
-  above line 1780, so EVERY ROW ANY SEAT FILES shifts both lines by one -- the
-  reviewer's 1780/9506, the coordinator's 1782/9508 and mine are ONE FACT AT
-  THREE AS-OFS, not three measurements disagreeing -- and DE's suite compares
-  the index against an INDEPENDENT RECOUNT rather than a pinned literal, which
-  is why it passed at 168 on an already-shifted register. A literal there would
-  have been a time bomb with a filing cadence for a fuse. MY ROUND-38 NOTE WAS
-  TAKEN UP AND I CAN SAY HOW FAR: every site DE added LABELS the convention in
-  the message itself (:398, :411, :425 all say "0-based lines", and the suite's
-  own assertion at :1811 says it too), which is the better fix than shifting the
-  numbers because parse and prose now describe ONE system; THE RESIDUAL IS
-  EXACTLY ONE MESSAGE -- check#18 at :967-970 still prints own_idx[ref]["line"]
-  RAW under the bare words "register line", unlabelled, so a reader following
-  that refusal still lands one line above the entry. Narrower than what I filed
-  last round; belongs to the round-24 review or round 25. DA ROUND 14 HELD at
-  801eb31 (chain 3a89e6c -> e292439 -> 636a455 -> e384792 -> 801eb31) and
-  RECOMPUTED RATHER THAN ACCEPTED: in a PARITY TREE the roster is 23 declared +
-  15 twins = 38, the excluded list holds 8 entries (seven behavioural gates with
-  NO OTHER LAUNCHER TO DERIVE plus tier1 normalisation by name), and the
-  synthetic-roster --selftest gives 6 checks rc 0. A CAVEAT ABOUT MY OWN
-  INSTRUMENT: my first attempt read 2 twins because the derivation anchors on
-  Path(argv[1]).parent == HERE and I ran a copy OUTSIDE live/pm_research/ -- the
-  measurement is PATH-SENSITIVE, recorded because the wrong number I nearly
-  reported was MINE, not DA's. The exclusion's reason reproduces at the source:
-  python3 live/pm_research/tier1_pipeline.py --selftest -> rc 1
-  ModuleNotFoundError: No module named 'live' (tier1_pipeline.py:55, a
-  package-absolute import) against rc 0 under -m; NAMED, NOT REPAIRED, and named
-  IN THE CODE (TWIN_EXCLUSIONS) with that reason so the next reader gets the fact
-  and not just the exclusion. THE SCOPE DEVIATION IS RECORDED AS ACCEPTED with
-  its open question attached: da_blackout_mask.py, ONE assertion in a selftest
-  region -- the RR12-1 control asserted tree_dirty_on_producing_files is True,
-  which held only while the fixture's copied files differed from the child's
-  HEAD, so it went red the first time a commit touched none of them (e384792
-  changed only the preflight); the expectation is now COMPUTED from the child
-  tree's own git status --porcelain, and the code names it the THIRD INSTANCE OF
-  THE DA10-R5 CLASS IN THE SAME CONTROL. A red control may not land, the hunk is
-  one assertion, the property is the right one -- accepted in-batch by the
-  coordinator; what it now discriminates (whether a constant-True and a
-  constant-False mutant can both be red on one fixture arrangement) is REVIEW
-  ITEM 8, a ROUND-15 CANDIDATE, NOT A HOLD. BE ROUND 6 IS CODE WITHOUT A ROW:
-  faaabdc is in the tree, Q-BE-231 is ABSENT (checked, not assumed), so nothing
-  about it is recorded as verified and nothing goes to BE while its batch is in
-  flight (rule 18). SEQUENCING: reviewer BE round 5 (in flight) -> DE 23
-  (a83083a) -> DE 24 (e0d1e9f) -> DA 13+14 (801eb31) -> BE 6 when its row lands;
-  all three requests filed. DE and DA on DELIBERATE standby (R-381). BE round 7,
-  the durable landing of the two receipts, is staged for AFTER the 00:14Z read,
-  and Q-DA-209/210/211 land together after that read with 801eb31 as their
-  content. Standing rules stay at 7; USER decisions SIX RULED, NONE OPEN.
-  UNCHANGED: G=1/5; the 011 family 12 of 24 with Q4 failing; the sequencing rule
-  (no second scoring day until BE34-R1/R2 close and are reviewed); Phase-4
-  gated; R-419 revocable.
 
   ARCHIVED: entries older than these three are moved, never deleted, to
   workspace/STATUS_UPDATED_ARCHIVE.md (append-only). This field is a
@@ -3780,7 +3785,7 @@ flags:
                              # migration discipline remain authoritative.
 
 focus: >
-  As-of 2026-09-02T15:36Z, build and test the offline model mechanism-first
+  As-of 2026-09-02T15:46Z, build and test the offline model mechanism-first
   under plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md section 10. Do not use the
   subordinate stateful-cancel TODO checkbox count as total progress. The
   foundation is established: the action-level dataset and PRED_STATE_V1 are

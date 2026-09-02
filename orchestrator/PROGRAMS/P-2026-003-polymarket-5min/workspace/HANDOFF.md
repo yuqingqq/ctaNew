@@ -1,13 +1,13 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-02T15:36Z — **DE round 23 RELEASED (`0b03618`)**: DE21-R1 is
-closed for **both** cut shapes and the predicate is **prose-blind** — and it is
-**one token short.** Two LOW findings reproduced here from scratch: the boundary
-tests **`#:`-ness where "the run was not cut" is meant** (four interruption
-shapes each read **1,975 of 3,752** with boundary **True**), and an extent
-known-bad whose **length conjunct encodes today's layout** — I grew the block and
-watched the suite go red with nothing wrong. Both → **DE round 25, in flight.**
-**SIX RULED, none open.**
+Updated: 2026-09-02T15:46Z — **DE round 25 VERIFIED at `50a9113` (91)**: the
+three comment shapes now **refuse**, `X = 1` is a **DECLARED** limit rather than
+a chased one, and the length conjunct is **gone** — all re-run here. **DE round
+24 RELEASED** (`304cd5f`), with **R-446 §3(a)(ii) REFINED IN BAND to OWN
+ratification blocks** — recorded in the standards section above, R-446's text
+untouched. The `R-6` recount is stated **as a rule, not a number**: every filed
+Q-row moves both lines by one, and the suite recounts. **SIX RULED, none
+open.**
 
 ## READ FIRST — current project handoff
 
@@ -361,6 +361,23 @@ nobody reads.
    RESTORE — a falsifier credited without ever having fired.** A pre-run clear
    closes both directions; a post-run clear closes only one.
 
+**The duplicated-ref rule, as it now reads.** R-446 §3 ruled that the one index
+**refuses** a duplicated ref where the duplication can change an answer and
+**reports** it by name where it cannot, keeping the first occurrence **by rule,
+computed, never chosen** — and no register edit. **R-450 §3 REFINES condition
+(a)(ii) IN BAND** (rule 13 — R-446's text stands as provenance and is not
+rewritten):
+
+> *"(ii) is named by any `supersedes:` in the register"* now reads **"named by
+> the `supersedes:` of any entry's OWN ratification block"** (`own_ratification_blocks`).
+
+**Why the refinement is the same distinction the module already spent a round
+establishing:** `superseded_by` reads own blocks only, and DE16-R1 settled that a
+**quoted** block is not the quoting entry's ratification. So a quotation naming a
+duplicated ref cannot reach an answer, and by R-446 §3's **own criterion** it
+belongs on the reporting side. Every reachable case still refuses, and the rule
+stops depending on **R-432 §1, a format convention about prose**, to stay sound.
+
 ### FORMAT RULE — no fenced ratification block outside an R-ADMISS entry
 
 **Still in force. It now runs until the DE round 18 REVIEW is released** — not
@@ -713,8 +730,9 @@ launchers at **235/19**.
 | **DE round 21 review** | **RELEASED** (`533e38c`) — DE19-R1..R3 close; **DE21-R1 (LOW)** filed; **ruling adopted as the programme's standard: a subject-mutant THROUGH THE READER is what "driven" means** |
 | **DE round 22** | **RELEASED** (`8df60bf`) for `92fc615` — DE20-R1/R2 close; **two rulings adopted as PROGRAMME STANDARD**; **DE22-R1 (LOW-MED)** → DE round 24 |
 | **DE round 23** | **VERIFIED**, and its **review RELEASED** (`0b03618`) for `a83083a` — DE21-R1 closed for **both** cut shapes through the reader, the predicate **prose-blind**; two LOW findings **DE23-R1/R2** → DE round 25 |
-| **DE round 24** | **VERIFIED** at `e0d1e9f` (Q-DE-42) — ratification **168** (reproduced here, both launchers); the real register's `R-6` **REPORTED** at 0-based **1782/9508**, every live answer unchanged, `require_verified()` returns |
-| **DE round 25** | **IN FLIGHT** (Q-DE-43) — DE23-R1 (`#:`-ness tested where *the run was not cut* is meant) and DE23-R2 (a length conjunct that encodes today's layout) |
+| **DE round 24** | **VERIFIED** at `e0d1e9f` and its **review RELEASED** (`304cd5f`) — DE22-R1 closed at **both ends** of the reviewer's fixture, the census refinement RULED sound; two findings **DE24-R1/R2** → DE round 26 |
+| **DE round 25** | **VERIFIED** at `50a9113` (Q-DE-43) — admissible **91** (reproduced here); the three comment shapes now refuse, `X = 1` is a **DECLARED** limit, the length conjunct is **gone** |
+| **DE round 26** | **IN FLIGHT** (Q-DE-44) — DE24-R1 (`named` from OWN blocks) and DE24-R2 (the `check#18` label) |
 | **DE round 26** | the **DATA_ROOT split**, still behind DA's landing after 00:14Z |
 | **DA round 11** | **REVIEW RELEASED** (`a5e8b40`) for `e292439` as the content of **Q-DA-209**; all five DA10 findings close. Two new findings **DA11-R1/R2** → DA round 12 |
 | **DA round 12 review** | **RELEASED** (`852b9aa`) for `636a455` as Q-DA-209's content — DA11-R1/R2 close; **DA12-R1 (LOW-MED)** → DA round 14 |
@@ -762,7 +780,8 @@ ledger-vs-tape refusal, and `require_verified()`.
 in the round-5 review (three runs into one outdir → base/`.1`/`.2`, the base
 byte-identical throughout); **BE34-R1/R3/R4/R5** → **BE round 6** (row pending);
 **BE5-R1/R2/R3** → **BE round 7** (staged, before tonight's read);
-**DE23-R1/R2** → **DE round 25, in flight**;
+**DE23-R1/R2 CLOSED** at `50a9113`, queued for review;
+**DE24-R1/R2** → **DE round 26, in flight**;
 **DE20-R1/R2 CLOSED** at `92fc615`, review released; **DE21-R1 CLOSED** at
 `a83083a`; **DE22-R1 CLOSED** at `e0d1e9f`, queued for review; **DA12-R1** → DA round 14
 (held);
@@ -784,10 +803,10 @@ the REGISTER's state, not of the instrument's own escalation history** — a
 distinction worth keeping, because a reader at 00:14Z has no way to know which
 questions this particular tool once asked.
 
-**The reviewer's queue, in order:** **DE round 24** at `e0d1e9f` (in flight) →
-**DA rounds 13+14** at `801eb31` → **BE round 6** when its row lands → **BE round
-7** after that. **DE round 23's review is RELEASED** (`0b03618`), as is BE round
-5's (`d990162`). **Released so far:** BE rounds 3–4
+**The reviewer's queue, in order:** **DA rounds 13+14** at `801eb31` (in flight)
+→ **DE round 25** at `50a9113` → **BE round 6** when its row lands → **BE round
+7** after that. **DE round 24's review is RELEASED** (`304cd5f`), as are DE round
+23's (`0b03618`) and BE round 5's (`d990162`). **Released so far:** BE rounds 3–4
 (`1d9c543`), DA rounds 11 (`a5e8b40`) and 12 (`852b9aa`), DE rounds 19
 (`a558356`), 20 (`819d225`), 21 (`533e38c`) and 22 (`8df60bf`).
 
@@ -1592,6 +1611,82 @@ than a clean zero (the density receipt covers 13 days, not this one).
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-02 ~15:46Z (MEM) — A RULE THAT STOPPED LEANING ON A PROSE
+### CONVENTION
+
+**R-450 swept.** Two DE rounds verified and one ruling refined — the refinement
+being the part that will still matter in a month.
+
+**DE round 25 re-run here, cache cleared first.** `EXPECTED_CHECKS = 91` at
+`:839`, `91 checks` rc 0. On in-memory copies: the intact walk is
+`first_read_line 139` / `above_line 137` / boundary **True** at 3,752 chars; the
+three interruption shapes I drove last round — plain `#`, indented `#:`, bare `#`
+— now read 1,975 with boundary **False**, where they were **True** at `a83083a`.
+**DE23-R1 closed exactly at the token I checked before it landed** (`:301`,
+`not above.lstrip().startswith("#")`).
+
+**And the fourth shape is now a declaration rather than an omission.** `X = 1`
+still reads 1,975 with boundary **True**, and `:279` says why in the docstring:
+*a code line inserted into the run is indistinguishable from a real boundary
+here, because the intact boundary IS a code line.* **Stated, not chased** — with
+the note that the anchors still name which sections must be present, so the
+residual is bounded rather than merely admitted.
+
+**DE23-R2's length conjunct is gone** — zero occurrences, the block length now
+printed and asserted nowhere — replaced by a **positive control on one source**
+(`:1297`): a contiguous paragraph above the head keeps the boundary True and
+grows the block, and the same copy with a blank between refuses. **Three
+independent insertions now exist for that case — DE's 3,811, the coordinator's
+3,791, my 3,805** — which is the invariance I recorded last round holding up in
+public: *the effect is invariant to the inserted text; the number is not.* Three
+different numbers, one behaviour, and nobody needs to reconcile them.
+
+**The ruling is the round's real content, and it is a refinement, not a reversal.**
+R-446 §3(a)(ii) — *"named by any `supersedes:` in the register"* — now reads
+**"named by the `supersedes:` of any entry's OWN ratification block."** I have
+recorded it **in the standards section where R-446's rule lives, in band, with
+R-446's text left standing as provenance** (rule 13). The reason it is right is
+that the module already made this distinction: `superseded_by` reads own blocks
+only, and DE16-R1 settled in round 18 that a **quoted** block is not the quoting
+entry's ratification. So a quotation naming a duplicated ref **cannot reach an
+answer**, and by R-446 §3's **own criterion** it belongs on the reporting side.
+
+**What that buys is worth naming.** Before the refinement, the rule stayed sound
+only because **R-432 §1 — a FORMAT convention about prose** — kept quoted fences
+rare. **A correctness rule resting on a formatting habit is a rule with an
+undeclared dependency**, and the refinement removes it: every case that can
+change an answer still refuses, and none of it depends on how anyone writes an
+entry. That is the same move as computing an expectation instead of asserting
+today's arrangement — the DA10-R5 shape, applied to a rule instead of a control.
+
+**DE24-R2 is the residual I measured in round 41, now confirmed at the artifact
+and accepted as a finding.** `check#18` prints the 0-based field under the bare
+words *"register line"* (`:967`) and *"(line …)"* (`:970`) while **four** sites
+say *"0-based lines"*. Closure is those two words. It reached DE through the
+round-24 review's item 4 exactly as R-448 routed it — **recorded, never
+re-filed**, and it arrives with the reviewer's confirmation rather than mine
+alone.
+
+**The recount is now stated as a rule.** `R-6` sits at 0-based **1786/9512** at
+my as-of, matching the coordinator's reading at `304cd5f` — the fifth as-of in
+the chain (1780/9506 → 1781/9507 → 1782/9508 → 1783/9509 → 1784/9510 →
+1786/9512). **The durable form is the sentence, not the pair:** *every filed
+Q-row moves both lines by one; the suite recounts.* I have carried it that way
+and will not pin a number in these files.
+
+**One count, stated precisely because I checked it.** The round-24 review filing
+is **253 lines** by `wc -l` and 253 insertions by the diff, where R-450 §2 says
+254. A one-line difference in a length, nothing resting on it — recorded rather
+than silently normalised.
+
+**Q-BE-231 is still absent** — checked again, not assumed — so BE round 6 remains
+unverified here and its row-pending line stands.
+
+**Seats.** Reviewer: **DA rounds 13+14 at `801eb31`** (held) in flight, then **DE
+round 25** (`REQUEST_DE_ROUND_25` filed at `dc83580`), then BE round 6 when its
+row lands, then BE round 7. DE round 26 in flight. DA on deliberate standby.
+**SIX RULED, none open.**
 
 ### 2026-09-02 ~15:36Z (MEM) — A GUARD THAT ASKS THE WRONG QUESTION, AND A
 ### KNOWN-BAD THAT WILL FAIL WHEN THE CODE IS RIGHT
