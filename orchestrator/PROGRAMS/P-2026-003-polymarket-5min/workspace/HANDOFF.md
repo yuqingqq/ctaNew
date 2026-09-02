@@ -1,10 +1,10 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-02T14:10Z — **DA round 11 is RELEASED as the content of
-Q-DA-209**, all five DA10 findings closing — and its own new finding is a SKIP
-branch that **prints "not a clean pass" and then records a pass on the next
-line**. **ONE USER decision open: the freeze disposition.** Prior line: DE round
-20 closed DE18-R1..R3 at 155.
+Updated: 2026-09-02T14:16Z — **DE round 19 RELEASED, and both escalated
+residuals came back as findings** — the second is quantified: a **blank line**
+inside the limit block leaves **47% of it unread with the suite green**. That is
+**three for three** on questions DE declined to close itself. **ONE USER decision
+open: the freeze disposition.** Prior line: DA round 11 released as Q-DA-209.
 
 ## READ FIRST — current project handoff
 
@@ -647,9 +647,11 @@ launchers at **235/19**.
 | **DE round 18** | **VERIFIED** at `db039a3` — **DE16-R1..R4 CLOSED**, ratification **132 → 150** (reproduced here), five coordinator mutants **die by name**, marker uniqueness asserted (28 markers / 28 names; 22 driven, six not, each named). **Review request written and queued.** One residual measured and **NOT ruled** — below |
 | **DE round 17 review** | **RELEASED** (`797ed9a`) — DE15-R1..R4 closed at the artifact; **no check removed to keep 132** (AST census identical across both tips). Two LOW findings, **DE17-R1** and **DE17-R2**, both reproduced |
 | **DE round 18 review** | **RELEASED** (`3f4f2e5`) — DE16-R1..R4 close on the real register; **DE18-R1..R3** → DE round 20. Census corrected: **110 → 124** sites, and **three checks WERE removed** (tautological known-bads) |
-| **DE round 19** | **VERIFIED** at `2f6da2c` — **75 → 79** (reproduced here), DE17-R1/R2 closed, **nine coordinator mutants die by name**. **Two residuals measured and NOT ruled**, to the reviewer |
+| **DE round 19** | **VERIFIED** at `2f6da2c` and its **review RELEASED** — 75 → 79, DE17-R1/R2 closed, nine coordinator mutants dying by name. **Its two residuals came back RULED as findings** |
 | **DE round 20** | **VERIFIED** at `0778918` — DE18-R1..R3 and two rule-10 nits closed, **150 → 155** (reproduced here), four coordinator mutants dying by name. **Review request queued FOURTH** |
-| **DE round 21** | the **DATA_ROOT split**, behind DA's landing after 00:14Z |
+| **DE round 19 review** | **RELEASED** (`a558356`) — DE17-R1/R2 close; **both residuals RULED as findings** (DE19-R1, DE19-R2) plus **DE19-R3** filed |
+| **DE round 21** | **FILED** at `0255b60` (Q-DE-39) — DE19-R1..R3 closed, `de_admissible_windows.py` only, **79 → 84**. Landed after this dispatch; **not yet coordinator-verified** |
+| **DE round 22** | the **DATA_ROOT split**, behind DA's landing after 00:14Z |
 | **DA round 11** | **REVIEW RELEASED** (`a5e8b40`) for `e292439` as the content of **Q-DA-209**; all five DA10 findings close. Two new findings **DA11-R1/R2** → DA round 12 |
 | **DA round 12** | **DISPATCHED and HELD** on top of `e292439`, five items. **Nothing moves for tonight**; Q-DA-209 lands after the 00:14Z read **with the round-12 tip** |
 | **BE** | **Q-BE-229 VERIFIED** at the artifacts; **round 5 dispatched** |
@@ -686,8 +688,7 @@ mask block and **refuse if absent on a governed day**, the population-gate
 ledger-vs-tape refusal, and `require_verified()`.
 
 **Open findings:** **DE18-R1..R3 CLOSED** at `0778918`, pending review;
-**DE round 19's two residuals** (A: prose paragraphs swapped inside the `#:` block leaves 79 green;
-B: a blank non-`#:` line above the heading) with the **reviewer, unruled**;
+**DE19-R1..R3** → DE round 21 (the two residuals now **RULED as findings**);
 **DA11-R1..R2** → DA round 12 (held); **DA10-R1..R5 CLOSED** at `e292439`,
 review released;
 **DE16-R1..R4** closed at `db039a3`, pending review; the **own-supersedes-
@@ -704,11 +705,16 @@ the REGISTER's state, not of the instrument's own escalation history** — a
 distinction worth keeping, because a reader at 00:14Z has no way to know which
 questions this particular tool once asked.
 
-**The reviewer's queue, in order:** **DE round 19** (`2f6da2c`, in flight) →
-**BE rounds 3–4** → **DE round 20**. **DA round 11's review is done and
-released.** **DE is on deliberate standby**: round 21 waits on DA's landing after
-00:14Z, and **residuals A/B wait on the round-19 ruling.** **BE round 5 is in
-flight; DA is holding.**
+**The reviewer's queue, in order:** **BE rounds 3–4** at `248e99f` → **DE round
+20**. **DA round 11's and DE round 19's reviews are both done and released.**
+
+> **Item 1 of the BE 3–4 request is the one to watch:** the **"frozen bytes"
+> fact for the USER's open decision — *stated, not ruled*.** The freeze
+> disposition is the single open USER item, and its factual basis (code from the
+> commit; the data anchor bound only by its manifest sha) is being put on the
+> record by the reviewer rather than settled by it. **DE is on deliberate standby**: round 21 waits on DA's landing after
+00:14Z. **Residuals A/B are RULED** — now DE19-R1/R2, in round 21. **BE round 5
+is in flight; DA is holding.**
 
 **Q-BE-229 verified at the artifacts, and its confirming run reproduces the
 superseded one exactly where it matters:** **68 numeric fields shared with the
@@ -736,6 +742,50 @@ remedy — *an outdir per run* — is in use rather than merely recommended. **D
 00:14Z.** **BE's confirming audit is still running and nothing has been sent**
 (rule 18); the shared tree still carries BE's dirty `be_forward_day.py`,
 untouched by any coordinator commit.
+
+### Both residuals came back as findings — three for three
+
+**DE round 19 is RELEASED for `2f6da2c`**, and the two residuals DE **measured
+and refused to rule** were ruled by the reviewer — **as findings, both of them.**
+With round 18's residual before them, that is **three questions DE declined to
+close itself, and three that turned out to be real.**
+
+**DE19-R2 is the one with a number on it.** A **blank non-`#:` line** inside the
+limit block, above the OVER-CAUGHT paragraph, truncates `declared_limit_text()`
+from **3,754 to 1,975 characters — 1,779 unread, 47% of the block** — **with the
+suite green at 79.** What leaves every assertion's view is the heading
+`THE DECLARED LIMIT`, the **whole** `REFUSED (in the sets above)` section and the
+**whole** `DECLARED BLIND` section, because all three text checks live in the
+surviving lower half. **For the upper half the reader is a control that cannot
+fail** — R-249's class, reached by a stray blank line.
+
+**And the closure is specified as a STRUCTURAL anchor at the block's head, not a
+length pin.** That distinction is the valuable part: **a length pin would detect
+this instance and nothing else**, and would break on every legitimate edit. The
+anchor addresses *why* the reader stopped rather than *that* it stopped short.
+
+**DE19-R1 (LOW)** — the order check **cites the prose order and does not read
+it**: rule 10's shape one level up, a citation standing in for a reading. Closure
+is the four keys in list order.
+
+**DE19-R3, filed additionally (LOW)** — the declaration check is
+`"OVER-CAUGHT" in _limit and _phrase in _limit`, and its known-bad drives **only
+the first conjunct**; the phrase is asserted on the **uncut** text. **So the
+binding phrase has no in-suite falsifier** — a two-part condition with a
+one-part control.
+
+**What closed cleanly is worth stating too.** DE17-R1's map now **binds by
+content and catches a reorder from either side**, and an **ambiguous token fails
+loud** at the one-to-one check — the check **detects when tokens stop being
+unambiguous rather than depending on it**, which is the right shape for a fixture
+that must survive editing. DE17-R2's five mutants are red, including the
+whole-file-with-`#:`-stripped reader — *the one a person would actually write* —
+which reaches the known-bad as designed. **Census 70 → 74**, and the two removed
+`ok(` lines are **rewritten in place with no subject lost**, so *"nothing
+removed"* holds this round.
+
+**Sequencing: the DATA_ROOT split slips again, 21 → 22**, still behind DA's
+landing after 00:14Z. **Fourth deferral, stated each time.**
 
 ### DA round 11 — RELEASED, and the new finding contradicts its own message
 
@@ -1455,6 +1505,61 @@ than a clean zero (the density receipt covers 13 days, not this one).
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-02 ~14:19Z (MEM) — THREE FOR THREE: EVERY QUESTION DE DECLINED
+### TO CLOSE CAME BACK A FINDING
+
+**R-439 swept.** The reviewer RELEASED DE round 19 at `2f6da2c` (filing
+`a558356`), and the two residuals DE **measured but would not rule** came back
+**ruled — as findings.** With DE18's escalation that is **three for three**, and
+the pattern is now worth stating as a rule of thumb rather than a coincidence:
+**a residual a seat can measure but will not close is a finding more often than
+not.** Escalating instead of self-closing has been the right call every time.
+
+**DE19-R2 is the one that carries weight, because it is quantified.** A **blank
+line inside the limit block, above OVER-CAUGHT**, truncates the reader from
+**3,754 to 1,975 characters — 47% of the block unread, including the heading and
+both upper sections — with the suite green.** The reader stops at whitespace and
+nothing anywhere reports a short read. That is the *silently-truncated input*
+shape: not a control that cannot fail and not one that cannot run, but one that
+**ran on 53% of its input and said so nowhere.**
+
+**The reviewer also named the closure, and named what would NOT be a closure:** a
+**structural anchor at the block's head**, **not a length pin.** A pin on 3,754
+would go green on the day the block legitimately grows and red for the wrong
+reason; the anchor asserts the thing that must hold. Worth keeping as the general
+form — *close a truncation by binding to structure, never by asserting a size.*
+
+**DE19-R1 and R3 are both the same small class.** R1 (LOW): the order check
+**cites the prose and does not read it** — a reference standing in for a read.
+R3 (LOW): the declaration check's **phrase conjunct has no in-suite driver** —
+half a predicate no test exercises, so it could be anything. Neither is a live
+defect; both are a claim with nothing behind it, which is rule 15 applied to a
+conjunct rather than to a checker.
+
+**The closures are genuinely clean, and I checked the filing's own reasoning.**
+DE17-R1 closes because **the map binds by content and goes red from either
+side**, and an entry that merely MENTIONS another's token **fails loud rather
+than binding to the first match** — the right answer to an ambiguous substring
+key, not the convenient one. DE17-R2 closes on five discriminating mutants. The
+census moved **70 → 74** and **nothing was removed** — that clause holds here,
+and I say so as a checked fact rather than as a formula, because in round 18 the
+same clause did not hold.
+
+**Sequencing.** DE round 21 was dispatched on **`de_admissible_windows.py` only**
+— DE19-R1..R3 — and **has since FILED at `0255b60` (Q-DE-39), 79 → 84, while I
+was composing this: read there as FILED, NOT coordinator-verified.** The **DATA_ROOT split slips to round 22**, behind DA's landing after
+00:14Z: its **fourth deferral**, and still the correct call, since splitting a
+root while DA is mid-landing would collide two seats in one path. The reviewer's
+queue is **BE rounds 3–4 at `248e99f`, then DE round 20.**
+
+**One thing to watch in the BE 3–4 request.** Item 1 is the **"frozen bytes"
+fact for the USER's open decision — *stated, not ruled*.** The freeze
+disposition is the only open USER item, and the reviewer is putting its factual
+basis on the record without settling it. That is the correct division under rule
+12 — a freeze is the USER's act — but it means the fact will sit in a review
+filing, not a ruling, and a later reader could mistake its presence for a
+decision. It is recorded here as stated-not-ruled for exactly that reason.
 
 ### 2026-09-02 ~14:10Z (MEM) — THE CODE SAYS "NOT A CLEAN PASS" AND THEN
 ### RECORDS A PASS

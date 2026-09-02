@@ -2532,3 +2532,86 @@ Moved in the MEM round-32 true-up of R-438. Join rule as in batch 1.
   surviving with Q4 failing; development evidence; 1,344 of 1,875 supplied
   windows (71.7%) produce no score.
 ```
+
+## Batch 39 — archived 2026-09-02T14:19Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-33 true-up of R-439. Join rule as in batch 1.
+
+```yaml
+  2026-09-02T13:56Z (MEM ROUND 30 -- THE QUESTION DE REFUSED TO ANSWER CAME BACK
+  AS A FINDING). R-436 swept; DE's count reproduced and DA's hold verified at the
+  worktree. THE PROCESS PAID OUT: DE round 18 declined to close a fifth finding
+  by fiat -- an entry whose OWN block claims to supersede a NON-EXISTENT entry
+  still verifies -- and THE REVIEWER RULED IT A FINDING (DE18-R1, LOW-MEDIUM) on
+  three grounds: THE DEFERRAL RESTS ON A CHECK NOBODY TRIGGERS (DE's "the
+  target's existence becomes this question when someone checks that target"
+  assumes a later check no one performs); check#1 ALREADY REFUSES THE SAME SHAPE
+  ONE FIELD OVER, so the inconsistency is internal; and the predicate and pos are
+  ALREADY IN HAND, the closure being one "named not in pos" at the entry under
+  check. HAD DE CLOSED IT AS SCOPE, NOTHING WOULD HAVE LOOKED AGAIN -- which is
+  what measuring a boundary question and handing it on buys. TWO MORE FINDINGS,
+  BOTH LOW: DE18-R2, a quoted block placed FIRST with the own block second is
+  REFUSED FOR THE RIGHT REASON BUT NAMES THE WRONG OWNER; DE18-R3, parse_day#1
+  neutralised leaves 150 GREEN -- a guard REACHED BY NOTHING. Both to DE round
+  20 (Q-DE-38 pending). A CORRECTION THAT LANDS ON SOMETHING I PRAISED LAST
+  ROUND: I recorded the reviewer's "no check was removed to keep the count" as a
+  sceptical check worth making every time; applied to ROUND 18 the same check
+  came back POSITIVE -- the census is 110 -> 124 call sites and THREE CHECKS
+  WERE REMOVED, the tautological KNOWN-BADs of DE16-R4, confirmed in the diff --
+  so Q-DE-36's "none removed" was WRONG IN THE LETTER AND RIGHT IN SUBSTANCE.
+  THAT IS THE BETTER VERSION OF THE LESSON AND IT CORRECTS MY FRAMING: I
+  presented the check as one that CONFIRMS a stable count is honest, when its
+  real value is that IT CAN COME BACK POSITIVE -- and when it does, the removal
+  may still be legitimate, because "NOTHING LOAD-BEARING WAS REMOVED" and
+  "NOTHING WAS REMOVED" ARE DIFFERENT CLAIMS AND ONLY ONE OF THEM WAS TRUE. DE
+  ROUND 19 VERIFIED at 2f6da2c (Q-DE-37; de_admissible_windows.py only,
+  +117/-29; de_ratification_check.py byte-identical to db039a3): admissible 75
+  -> 79, reproduced here under both launchers, seam 69, n_supplied_total 1,875,
+  R-419 True/[]/[] on the real register. DE17-R1 CLOSED -- the map is now keyed
+  by A TOKEN THE ENTRY CONTAINS, with one-to-one and in-order asserted and the
+  C-extension entry reached through its own key; DE17-R2 CLOSED --
+  declared_limit_text() reads the "#:" block above the list, normalised, with the
+  OVER-CAUGHT heading, its binding phrase and the subjects the two checks drive
+  all asserted, and the reader driven on a cut copy. NINE COORDINATOR MUTANTS ON
+  A FILE COPY, EACH RED BY NAME, including the reader returning the whole file
+  NORMALISED, which dies at the known-bad DE itself named as a trap. TWO
+  RESIDUALS MEASURED AND NOT RULED, to the reviewer: (A) the PROSE paragraphs of
+  entries 0 and 2 swapped INSIDE the "#:" block, list and map untouched, leaves
+  79 GREEN because the order check cites the prose order and nothing reads it;
+  and (B) a blank non-"#:" line inserted above the OVER-CAUGHT heading. DE
+  escalating twice in three rounds rather than self-closing is now the pattern,
+  and round 18's outcome is the argument for it. THE FORMAT RULE R-432 SECTION 1
+  NARROWS ON EVIDENCE RATHER THAN CAUTION: quotations in NON-RATIFYING entries
+  proved harmless in EVERY SPELLING CONSTRUCTED, while a fenced block INSIDE a
+  ratifying entry BEFORE its own is not -- so AN R-ADMISS ENTRY CARRIES EXACTLY
+  ONE FENCED RATIFICATION BLOCK, ITS OWN, FIRST, while ANY OTHER ENTRY MAY QUOTE
+  and the checker ignores it. The coordinator keeps quoting spellings in prose
+  with inline backticks regardless, and THESE STATE FILES STILL CARRY ZERO
+  FENCED BLOCKS, asserted again this round after every edit. DA ROUND 11 IS HELD
+  at e292439 (DA10-R1..R5 plus R-434 section 2 on top of the round-10 batch),
+  verified here as UNPUSHED AND ON NO REMOTE BRANCH; it is under review and
+  LANDS AFTER THE 00:14Z READ AS Q-DA-209, with tonight running the shared
+  tree's v1 unchanged and DA's round-9 00:06Z standby armed separately. Q-BE-229
+  VERIFIED AT THE ARTIFACTS: the confirming 09-01 receipt shares 68 NUMERIC
+  FIELDS with the superseded 12:49 one and DIFFERS IN TWO -- n_archive_slugs
+  27,947 -> 28,031, the archive index having grown between runs and NOT a
+  population count, and wall_seconds -- so EVERY POPULATION COUNT IS IDENTICAL
+  (1,859 windows, 2,262,457 rows, 1,847,824 actions, btc 610,064 and eth 441,409
+  scored, 1,344 supplied without a fit, 141 excluded at supply); 09-02 REFUSED
+  AT GATE 1 BY NAME; derived/ untouched at 184 entries. AND A STALE LINE IN THAT
+  FILING, RECORDED BECAUSE THESE FILES ARE THE REFERENT: Q-BE-229's disposition
+  column says the four R-424 rulings are "USER-pending unchanged" when THEY ARE
+  RULED and THE ONLY OPEN USER DECISION IS THE FREEZE DISPOSITION; BE supersedes
+  the line in its next row (rule 13) with the old row untouched. R-424 SECTION 1
+  RESOLVED A RULING'S SCOPE BY READING THIS TABLE, which is precisely why a
+  stale pending-list anywhere else is worth catching rather than shrugging at.
+  BE round 5 is dispatched. REVIEWER QUEUE, ALL THREE REQUESTS COMMITTED: DA
+  round 11, then DE round 19, then BE rounds 3-4. OPEN FINDINGS: DE18-R1..R3 to
+  DE round 20; DE round 19's two residuals with the reviewer, unruled;
+  DA10-R1..R5 closed into the held DA round 11; BE's landing commit still owed.
+  USER DECISIONS: FOUR RULED (R-424), ONE OPEN -- THE FREEZE DISPOSITION ONLY
+  (R-424 section 6); the 09-02 accrual call MECHANICAL after 00:06Z. R-419
+  remains revocable by the USER. UNCHANGED: G=1/5; the 011 family is 12 of 24
+  surviving with Q4 failing; development evidence; 1,344 of 1,875 supplied
+  windows (71.7%) produce no score.
+```
