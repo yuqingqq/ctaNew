@@ -1,12 +1,14 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-02T17:18Z — **BE round 6 RELEASED (`03b5dca`) with SEVEN
-findings**, queued for the BE round after 8 (R2 then R1 first); the durable
-landing is **unaffected** by them. **The class my withdrawn count named is now a
-STANDING RULE (ninth):** *a suite run in the shared tree measures whatever is
-there at spawn time* — verify at the **committed tip in a worktree of your own**,
-because hashing before and after is **not sufficient**. Two times in R-456 are
-**corrected in band** (17:08–17:09Z). **SIX RULED, none open.**
+Updated: 2026-09-02T18:00Z — **THE USER RULED A SEVENTH TIME: *"Yes schedule
+this test"*** (R-459). **ONE** diagnostic execution of the **frozen** Phase-4
+protocol on its **CONSUMED** §3 population — Immediate-order item **4's execution
+hold is LIFTED for that execution only, and the item stands.** No Phase-2 winner,
+no race admission, every output **`DIAGNOSTIC_NEVER_EVIDENCE`**. **SEVEN RULED —
+and, per R-460, TWO now OPEN and unblocked** (the Phase-2 winner ruling; the
+content-liveness v2 freeze), **neither needed tonight.** BE round 8 verified
+(**CO-12/CO-13 CLOSED**); DE round 31 declared the diagnostic and built three
+instruments, **no run**.
 
 ## READ FIRST — current project handoff
 
@@ -93,13 +95,23 @@ defect of its own on real data before filing**: the first complement was
 `range(288) − masked`, which credited the still-open 09-02 with 248 unmasked
 windows out of 119 present; it is now `PRESENT − masked`.
 
-### ALL SIX USER DECISIONS RULED — none open (R-424 + R-442)
+### SEVEN USER DECISIONS RULED — and TWO now open (R-424 + R-442 + R-459)
 
-**The table's six asks are settled.** Four were adopted at R-424 (~11:49Z), the
-freeze disposition at **R-442 (~14:33Z)**, and the sixth — the 09-02 accrual
-call — is **not a separate decision**: R-409 already rules it as a principle and
-the coordinator applies it mechanically after the 00:06Z verdict, with R-411(ii)
-fixing which denominator that reading uses. **Nothing is awaiting the USER.**
+**The table's six asks are settled**, and a **seventh** was ruled at **R-459**.
+Four were adopted at R-424 (~11:49Z), the freeze disposition at **R-442
+(~14:33Z)**, the sixth — the 09-02 accrual call — is **not a separate decision**
+(R-409 rules it as a principle, applied mechanically after the 00:06Z verdict
+with R-411(ii) fixing the denominator), and the seventh is the **Phase-4
+diagnostic**, below.
+
+> **SUPERSEDES the "nothing is awaiting the USER" line this section carried
+> from R-442 until now.** Per R-460, **two USER decisions are open and
+> unblocked: the Phase-2 winner ruling, and the content-liveness v2 freeze.**
+> **Neither is needed for tonight.**
+
+| # | ruled | at |
+|---|---|---|
+| **Phase-4 diagnostic** | *"Yes schedule this test"* — **ONE** diagnostic execution of the **frozen** protocol on its §3 **CONSUMED** population; head under test **`Q1_arrival` of `composed_lgbm`** vs the incumbent head; **full latency axis**; **all three budgets reported, none selected**; both coins. **No Phase-2 winner, no race admission, every output `DIAGNOSTIC_NEVER_EVIDENCE`.** R-409/R-424/R-442 unchanged | **R-459**, USER ~17:18–17:21Z |
 
 | # | ruled | at |
 |---|---|---|
@@ -765,7 +777,10 @@ launchers at **235/19**.
 | **DE rounds 26+27 review** | **RELEASED** (`723271e`) for **both** `5e9dc8b` and `89aef8c` — the fixture matrix reproduces the register's table; three rulings adopted; **DE27-R1 (LOW)** → DE round 29 |
 | **DE round 28** | **VERIFIED** at `1480ab6` (Q-DE-46) — **DE25-R1 CLOSED**: `read_nothing` (`:319`) makes an empty read answer **False**; admissible **92** (reproduced here) |
 | **DE round 29** | **VERIFIED** at `ea3b525` (Q-DE-47) — **DE27-R1 CLOSED**: one ownership text, a **named** control for the `kind` conjunct, **180** both launchers (reproduced here), four mutants red **with zero tracebacks**. **CO-11 (LOW)** filed at the same tip |
+| **DE rounds 29+30 review** | **RELEASED** for `27d0d37` — **CO-11 CLOSED at both tips**; **DE30-R1 (LOW)** routed and **since closed in DE round 31** |
 | **DE round 30** | **VERIFIED** at `27d0d37` (Q-DE-48) — **CO-11 CLOSED**: the census keys on the **constant and the shape**, the renamed paste is **red**, the absent anchor **refuses by name**; **183** both launchers (reproduced here) |
+| **DE round 31** | **VERIFIED** (Q-DE-49) — the **Phase-4 diagnostic DECLARED** and three instruments built (`de_rho_estimator` 21, `de_score_stream` 24, `de_matched_random_control` 20; ratification **184**, phase-4 check 15). **No run.** Declared limit **IR-R4: the runner is the fourth build item** |
+| **DE round 32** | **IN FLIGHT** (Q-DE-50) — **the runner**, build only, **no run** |
 | **DE round 26** | the **DATA_ROOT split**, still behind DA's landing after 00:14Z |
 | **DA round 11** | **REVIEW RELEASED** (`a5e8b40`) for `e292439` as the content of **Q-DA-209**; all five DA10 findings close. Two new findings **DA11-R1/R2** → DA round 12 |
 | **DA round 12 review** | **RELEASED** (`852b9aa`) for `636a455` as Q-DA-209's content — DA11-R1/R2 close; **DA12-R1 (LOW-MED)** → DA round 14 |
@@ -780,8 +795,9 @@ launchers at **235/19**.
 | **BE round 6** | **VERIFIED** at `5e9ed91` (Q-BE-231) — BE34-R1/R3/R4/R5 closed, **95** both launchers, sha `957a9d3c…`, usage rc **2** (all reproduced here); three of BE's own corrections in band |
 | **BE round 7** | **VERIFIED** at `fcafe9f` (Q-BE-232) — BE5-R1/R2/R3 closed, **102** both launchers, sha `857819a7…` (confirmed here). Two findings **CO-12 / CO-13** at the same tip → BE round 8 |
 | **BE round 6 review** | **RELEASED** (`03b5dca`, 273 lines) for `5e9ed91` — **seven findings BE6-R1..R7**; two rulings adopted, including *the shipped audit must COMPUTE verdict counts, never grep vocabulary* (rule 10), folded into CO-12's closure |
-| **BE round 8** | **DISPATCHED** (Q-BE-233) — CO-12 (attribute on the `AssertionError` line, with a named control **both directions**) and CO-13 (the double count) |
-| **BE round 9** *(was the landing round)* | **BE6-R1..R7**, with **BE6-R2 and BE6-R1 first** — the round AFTER round 8 |
+| **BE round 7 review** | **RELEASED** (`0f34aad`) for `fcafe9f` — CO-12/CO-13 **confirmed**; four findings **BE7-R1..R4**, with **R4 routed FIRST** to BE round 9 |
+| **BE round 8** | **VERIFIED** at `c54e48e` (Q-BE-233) — **CO-12 and CO-13 CLOSED**, 106/106 both launchers (the coordinator's count; I did not run it — rule 9) |
+| **BE round 9** | **IN FLIGHT** (Q-BE-234) — **BE7-R4 FIRST**, then BE6-R1..R7 and BE7-R1..R3 |
 | **BE — durable landing** | unchanged and **unaffected by the seven**: the round after the **00:14Z** read (R-442 §3(c)) |
 | **BE round 8** | the **durable landing** under `data/pm_5min/derived/`, **AFTER the 00:14Z read** (was round 7) |
 | **DA round 12** | **HELD and VERIFIED** at `636a455` on `e292439` (unpushed, four files) — DA11-R1/R2 closed, gates **22 → 36**. **Nothing moves for tonight**; Q-DA-209 lands after the 00:14Z read **with the round-12 tip** |
@@ -824,8 +840,9 @@ artifact in the round-5 review, R1/R3/R4/R5 at `5e9ed91`;
 **DE23-R1/R2 CLOSED** at `50a9113`, queued for review;
 **DE24-R1/R2 CLOSED** at `89aef8c`; **CO-9 CLOSED** at `5e9dc8b`;
 **DE25-R1 CLOSED** at `1480ab6`; **DE27-R1 CLOSED** at `ea3b525`;
-**CO-11 CLOSED** at `27d0d37`; **CO-12 / CO-13** → **BE round 8**;
-**BE6-R1..R7** → **the BE round after 8** (R2, then R1 first);
+**CO-11 CLOSED** at `27d0d37`; **CO-12 / CO-13 CLOSED** at `c54e48e`;
+**DE30-R1 CLOSED** in DE round 31;
+**BE7-R4** (FIRST), **BE6-R1..R7** and **BE7-R1..R3** → **BE round 9, in flight**;
 **DA13-R1 / DA14-R1 / DA14-R2 CLOSED** at `8910701`; **CO-10 CLOSED and
 CONFIRMED** at `3b7e10a`; **DA16-R1 CLOSED** at `e353119` (held);
 **DE20-R1/R2 CLOSED** at `92fc615`, review released; **DE21-R1 CLOSED** at
@@ -849,9 +866,9 @@ the REGISTER's state, not of the instrument's own escalation history** — a
 distinction worth keeping, because a reader at 00:14Z has no way to know which
 questions this particular tool once asked.
 
-**The reviewer's queue, in order:** **DE rounds 29+30 as ONE filing at
-`27d0d37`** (in flight) → **BE round 7 (+8)** → **DA round 17 at `e353119`**.
-**BE round 6's review is RELEASED** (`03b5dca`). **Released so far:**
+**The reviewer's queue, in order:** **DA round 17 at `e353119`** (in flight) →
+**DE round 31**. **Released so far** include BE rounds 6 (`03b5dca`) and 7
+(`0f34aad`), and DE rounds 29+30. **Released so far:**
 DE rounds 23 (`0b03618`), 24 (`304cd5f`), 25 (`a7860dc`) and 26+27 (`723271e`),
 DA rounds 13+14 (`a2a1cf8`) and **15+16** (`5d9bfb8`), BE round 5 (`d990162`).
 
@@ -1662,6 +1679,94 @@ than a clean zero (the density receipt covers 13 days, not this one).
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-02 ~18:00Z (MEM) — A SEVENTH RULING, AND A CONSTANT THAT WAS FIXED
+### AT ONE CALL SITE
+
+**R-458, R-459 and R-460 swept, one batch.** Nothing was run: BE round 9 is in
+flight, so the main tree's `live/pm_research/` is BE's working surface again, and
+every check below is a **committed blob** or a **plan file** (the ninth rule,
+second round of use).
+
+**The ruling is the round.** *"Yes schedule this test"* — the seventh USER
+decision. I checked what it lifts at the artifact rather than from the entry:
+`DE_PHASE4_PROTOCOL_DRAFT.md:3` reads **FROZEN — IN FORCE**, and `:13-17` carries
+the gate in its own words — *"it may not be run until the hold is lifted by the
+USER"*. **That is the sentence this ruling answers, and it answers it once.** The
+protocol's own sha is **`ab07fd71c9fc2bff`**; DE's addendum
+(`DE_PHASE4_DIAGNOSTIC_ADDENDUM_2026-09-02.md`, **`35e8aba1381cfa4e`**) binds it
+by that sha and names R-459 — **so the thing being run is identified by content,
+not by title.**
+
+**What the ruling does not do is the part worth keeping legible.** The population
+is the protocol's own §3 fragment, and `:80-84` already says what it is:
+**CONSUMED**, `is_a_validation = false`, **G = 0**, no interval claimable, no
+forward verdict. So this run cannot become evidence by accident — **the frozen
+document refuses that on its own terms**, before any receipt field does. Latency
+is swept because `:101` says it is **NOT** a selection axis; budget is reported
+in all three rungs and **none selected** because it **IS** one.
+
+**A citation to fix, and it is the third in three rounds.** R-459 cites the budget
+axis at `:105`; `:105` is the **protection mode** row. **The budget row is
+`:103`** — *"| budget `b` | 5%, 10%, 15% | **YES** — someone chooses a budget |"*.
+The substance is exactly right and the pointer is two lines off. **Three drifted
+citations in three rounds** (`fcafe9f:2588-2590` out of range, `:405-406` vs
+`:404-405`, now `:105` vs `:103`) is no longer a run of bad luck: it is what
+happens when a line number is typed from a reading rather than re-derived at
+compose time. **Recorded as the citation of record, with R-459 standing as
+provenance.**
+
+**Immediate-order item 4 now carries its lift beside it**, not instead of it: the
+item stands, one execution is exempt, and everything else under it — no PnL, no
+capacity, no promotion, no forward verdict — is unchanged **including for that
+run**.
+
+**And the decisions section stops saying "nothing is awaiting the USER."** It has
+said that since R-442. Per R-460 **two decisions are open and unblocked** — the
+**Phase-2 winner ruling** and the **content-liveness v2 freeze** — **neither
+needed tonight.** I have superseded the line in band rather than editing it away,
+because a table that once said "none open" is exactly the kind of thing a later
+reader trusts without re-checking.
+
+**BE7-R4 I verified at the blob, and it has a root I can name.** `_provenance`
+(`fcafe9f:70`) runs `git rev-parse HEAD` and `git status --porcelain` with
+**`cwd=str(REPO)`**, and `REPO` is still **`Path("/home/yuqing/ctaNew")`
+hardcoded** at `c54e48e:37`. So a driver executing in **any** worktree records
+**the main tree's** commit and dirtiness. **That is the same constant BE34-R3 was
+about** — and round 6 fixed it **at the spawn site only** (`:2611` now uses
+`Path(__file__).resolve().parents[2]`), leaving the constant and its other
+readers in place. There is even an audit case named `"spawn root REPO vs
+parents[2]"` (`:1401`) — **the fix and its coverage are both scoped to the one
+call site.** *Fixing a use of a bad constant is not fixing the constant.*
+
+**One of the two remaining readers is benign, and saying which matters.** The
+frozen-blob reader at `:103` also uses `cwd=REPO`, but it runs `git show
+<sha>:<path>` — and worktrees **share the object database**, so those bytes are
+identical from anywhere. **`:79` reads per-worktree state (HEAD, status) and is
+the finding; `:103` reads object-store content and is not.** Two identical
+spellings, one defect.
+
+**Carried without independent measurement, and marked as such:** BE round 8's
+**106/106** and the DE round-31 instrument counts (21 / 24 / 20, ratification
+**184**, phase-4 check 15) are **the coordinator's counts** — running them would
+mean either the main tree (forbidden while BE round 9 is open) or a worktree of my
+own, and `git worktree list` stays **33**. **Structure verified, numbers carried.**
+
+**One layout fact from DE round 31 that will bite someone at 2 a.m.** A **bare
+detached worktree has no `data/`**, so the runner must mirror `data/pm_5min` per
+entry — or **the driver refuses at check 24, by design.** That refusal is the
+right behaviour and the note is what stops it being read as a break.
+
+**Sequencing for the diagnostic, and it is deliberately slow:** DE **declares**
+(done, round 31) → **reviewer reads the declaration** → DE **builds the runner**
+(round 32, in flight) → **reviewer reads** → **run**, earliest **09-03** →
+coordinator entry → USER. **Four gates between a ruling and a number**, which is
+the point of freezing the protocol first.
+
+**Tonight is unchanged** and is in the state files as such: 00:06Z verdict, 00:14Z
+preflight, the coordinator's wake after it, R-409 with the R-411(ii) denominator,
+DA landing **Q-DA-209..213 at `e353119`** (HOLD → `3b7e10a`), BE's durable landing
+the round after the read, then CO-8, `--require-no-skips`, the DATA_ROOT split.
 
 ### 2026-09-02 ~17:18Z (MEM) — SEVEN FINDINGS, AND A RULE MADE OUT OF MY OWN
 ### MISTAKE
@@ -5038,6 +5143,11 @@ does **not** pass: the average was 10.99/hr, but two individual hours exceeded
    artifact computes `is_a_validation=false` at G=0 complete UTC days.
 4. Keep fair-price, skew and replay work build/freeze-only behind their stated
    gates. No PnL, capacity, promotion or forward verdict is claimable.
+   **THE ITEM STANDS. Its execution hold is LIFTED for ONE execution only**
+   (R-459, USER, ~17:18–17:21Z): the single diagnostic run of the frozen
+   Phase-4 protocol on its §3 CONSUMED population. Everything else under this
+   item is unchanged, and that run claims no PnL, capacity, promotion or
+   forward verdict either — every cell carries `DIAGNOSTIC_NEVER_EVIDENCE`.
 5. **USER-ONLY, waiting on the USER's hand:** apply
    `workspace/DRAFT_CLAUDE_MD_AMENDMENT.md` to `CLAUDE.md` — the state-file
    ownership exception (R-274, ruled 2026-08-28 and never landed) and rule 9's

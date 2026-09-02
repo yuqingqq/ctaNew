@@ -3573,3 +3573,75 @@ Moved in the MEM round-48 true-up of R-456 and R-457. Join rule as in batch 1.
   NONE OPEN. UNCHANGED: G=1/5; the 011 family 12 of 24 with Q4 failing; the
   sequencing rule; Phase-4 gated; R-419 revocable.
 ```
+
+## Batch 55 — archived 2026-09-02T18:00Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-49 true-up of R-458, R-459 and R-460. Join rule as in batch 1.
+
+```yaml
+  2026-09-02T16:38Z (MEM ROUND 46 -- THE STANDARD EARNED ITS KEEP IN ONE ROUND).
+  R-454 swept; three landings. DE ROUND 29 VERIFIED at ea3b525 and RE-RUN HERE:
+  180 both launchers rc 0, census ok 93 -> 96, refuses 54. The closure is real --
+  own_blocks_quiet (:631-648) returns (block, duplicated keys) PAIRS and is the
+  ONE TEXT of the two conjuncts, own_ratification_blocks (:650-676) CONSUMES it
+  at :658 and adds only its two raises -- and the thing DE27-R1 was actually
+  about is fixed: a NAMED CONTROL (:2074-2107) now sits on the `kind` conjunct so
+  the drop is CAUGHT AND REPORTED rather than escaping as a traceback; four
+  mutants red by name, ZERO TRACEBACKS. CO-11 REPRODUCED HERE IN A PARITY TREE
+  AND IT REPRODUCES THE EXACT SHAPE I RECORDED LAST ROUND: _ownership_sites keys
+  the census on the VARIABLE NAME (getattr(n.func.value, "id", "") == "blk",
+  :2130), so pasting the filter back into the adjudicating reader with the loop
+  variable RENAMED (blk -> b) -- semantically the second text DE27-R1 removed --
+  leaves ONE OWNERSHIP TEXT saying PASS at stdout line 124, WHICH WAS ALSO THE
+  LAST LINE OF STDOUT. THE MESSAGE CLAIMS THE PREDICATE; THE CHECK ASSERTS THE
+  IDIOM. The secondary half fell out of the same run and I verified its cause
+  statically: the text `own = own_blocks_quiet(entry)` occurs TWICE in the module
+  -- the code at :658 and a STRING LITERAL at :2146 inside the census known-bad's
+  own .replace -- so with the code line renamed away the replace hits the
+  literal, the copy is left with an unterminated string, and the run dies
+  SyntaxError: unterminated string literal (detected at line 2148) ON STDERR: A
+  TRACEBACK WHERE A REFUSAL BY NAME BELONGS. SO: LAST STDOUT LINE "PASS", EXIT 1,
+  ONE ROUND AFTER THAT OBSERVATION WAS ADOPTED AS THE STANDARD AND INSIDE THE FIX
+  FOR THE FINDING IT WAS ADOPTED FOR. That is the argument for the standard being
+  a HABIT rather than a rule you remember when relevant: EVERY GUARD ADDED TO
+  CATCH A CLASS IS ITSELF A CANDIDATE FOR THAT CLASS, and the only routine that
+  catches it is capture both streams separately, read the exit code, and never
+  take the last line of stdout for the verdict. THE GENERAL LESSON BENEATH CO-11
+  IS NARROWER AND MORE USEFUL THAN "the census is weak": a drift guard's
+  known-bad exercised EXACTLY THE IDIOM THE GUARD KEYS ON, so the falsifier could
+  not fail by any other spelling -- RULE 15'S KNOWN-BAD NARROWER THAN THE CLAIM
+  IT IS DEFENDING. Round 30 (Q-DE-48) is the right shape: key on the CONSTANT AND
+  THE SHAPE, drive the known-bad under BOTH the same idiom and a renamed copy,
+  and assert the anchor so an absent line REFUSES BY NAME instead of crashing the
+  parser. DA ROUNDS 15+16 REVIEW RELEASED (5d9bfb8, 219 lines) for 3b7e10a, no
+  hold, CO-10 CONFIRMED CLOSED by the 2x2+1, and three carried facts of mine
+  RULED: the separate != _there line IS a control with its own falsifier (cell
+  4); "32 checks at 8910701" is HISTORY CORRECTLY SCOPED, NOT A STALE COUNT; and
+  DA14-R1's deletion-over-a-hook is the honest call with "a tripwire on a future
+  edit" the honest label. DA16-R1 IS THE SAME SPECIES AS CO-10 ONE LAYER UP AND
+  THE LOGIC IS CHECKABLE BY READING: with the identity conjunct dropped what
+  remains is carrying_commit != _here (:927-928) and != _there (:944), so a
+  producer answering HEAD~2 yields a FOURTH value -- neither -- BOTH NEGATIVES
+  HOLD AND THE SUITE GOES GREEN AT 34; the pair is jointly sufficient for THE
+  VALUE CO-10 WAS FOUND ON, not for THE PROPERTY THE CONTROL CLAIMS. I DID NOT
+  RUN THIS ONE: it needs a worktree on DA's chain and git worktree list reads 33
+  here as it should -- verified by reading, and said so. THE ROUTING IS THE PART
+  WORTH KEEPING: the closure is DRIVEN, NOT A FOURTH != -- another negative just
+  extends an enumerated set by one value and leaves the identity drop invisible
+  -- so state the control's predicate ONCE AS A FUNCTION OF THE EMISSION, run a
+  wrong-commit producer copy through _measure in the child and assert it REFUSED
+  by that predicate, so dropping the identity turns THAT FALSIFIER red; != _there
+  kept as ruled; a fourth-distinct-value precondition beside the third. THE
+  DA14-R2 SHAPE APPLIED TO A CONJUNCT: GIVE IT A DRIVER, NOT A COMPANION.
+  TONIGHT'S LANDING RULE AS RULED: the landing takes THE CHAIN'S TIP OF THE
+  MOMENT -- 3b7e10a is RELEASED, and a round-17 commit above it is SELFTEST-ONLY
+  and lands ONLY IF coordinator-verified at the artifact before the landing
+  dispatch, else the landing is at 3b7e10a; timers unchanged. The reviewer's pane
+  showed context at 100% after its filing; nothing was done about it and nothing
+  needs to be -- THE REQUESTS OF RECORD CARRY THE STATE, which is why they are
+  files rather than messages. SEATS: DE round 30, DA round 17 (held) and BE round
+  7 in flight; reviewer BE round 6 (5e9ed91) now, then DE round 29 (ea3b525),
+  then BE round 7, then DA round 17. USER decisions SIX RULED, NONE OPEN.
+  UNCHANGED: G=1/5; the 011 family 12 of 24 with Q4 failing; the sequencing rule;
+  Phase-4 gated; R-419 revocable.
+```

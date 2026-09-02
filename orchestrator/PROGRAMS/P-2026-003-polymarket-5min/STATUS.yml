@@ -4,6 +4,82 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-09-02T18:00Z (MEM ROUND 49 -- A SEVENTH RULING, AND A CONSTANT THAT WAS
+  FIXED AT ONE CALL SITE). R-458, R-459 and R-460 swept in one batch. NOTHING WAS
+  RUN: BE round 9 is in flight so the main tree's live/pm_research/ is BE's
+  working surface again, and every check was a COMMITTED BLOB or a PLAN FILE --
+  the ninth standing rule's second round of use. THE RULING IS THE ROUND: "Yes
+  schedule this test", the SEVENTH USER decision. I checked what it lifts at the
+  artifact rather than from the entry: DE_PHASE4_PROTOCOL_DRAFT.md:3 reads FROZEN
+  -- IN FORCE and :13-17 carries the gate in its own words ("it may not be run
+  until the hold is lifted by the USER") -- THAT IS THE SENTENCE THIS RULING
+  ANSWERS, AND IT ANSWERS IT ONCE. The protocol's sha is ab07fd71c9fc2bff and
+  DE's addendum (DE_PHASE4_DIAGNOSTIC_ADDENDUM_2026-09-02.md, 35e8aba1381cfa4e)
+  BINDS IT BY THAT SHA and names R-459, so THE THING BEING RUN IS IDENTIFIED BY
+  CONTENT, NOT BY TITLE. WHAT THE RULING DOES NOT DO IS THE PART WORTH KEEPING
+  LEGIBLE: the population is the protocol's own section 3 fragment and :80-84
+  already says what it is -- CONSUMED, is_a_validation = false, G = 0, no
+  interval claimable, no forward verdict -- so the run CANNOT BECOME EVIDENCE BY
+  ACCIDENT, the frozen document refusing that on its own terms before any receipt
+  field does; latency is swept because :101 says it is NOT a selection axis, and
+  budget is reported in all three rungs with NONE SELECTED because it IS one.
+  ONE ITEM 4 CHANGE, RECORDED BESIDE THE ITEM AND NOT INSTEAD OF IT: the
+  Immediate-order item STANDS and its EXECUTION HOLD IS LIFTED FOR THAT EXECUTION
+  ONLY; no PnL, capacity, promotion or forward verdict is claimable, INCLUDING
+  FOR THAT RUN, every output carrying DIAGNOSTIC_NEVER_EVIDENCE. AND THE
+  DECISIONS SECTION STOPS SAYING "NOTHING IS AWAITING THE USER", which it has
+  said since R-442: per R-460 TWO decisions are OPEN AND UNBLOCKED -- the Phase-2
+  winner ruling and the content-liveness v2 freeze -- NEITHER NEEDED TONIGHT;
+  superseded IN BAND rather than edited away, because a table that once said
+  "none open" is exactly what a later reader trusts without re-checking. A
+  CITATION TO FIX, THE THIRD IN THREE ROUNDS: R-459 cites the budget axis at :105
+  but :105 is the PROTECTION MODE row -- THE BUDGET ROW IS :103 ("| budget b |
+  5%, 10%, 15% | YES -- someone chooses a budget |"); the substance is exactly
+  right and the pointer is two lines off, and three drifted citations in three
+  rounds (fcafe9f:2588-2590 out of range, :405-406 vs :404-405, now :105 vs :103)
+  is not luck but WHAT HAPPENS WHEN A LINE NUMBER IS TYPED FROM A READING RATHER
+  THAN RE-DERIVED AT COMPOSE TIME. R-459 stands as provenance. BE7-R4 VERIFIED AT
+  THE BLOB, AND IT HAS A ROOT I CAN NAME: _provenance (fcafe9f:70) runs git
+  rev-parse HEAD and git status --porcelain with cwd=str(REPO), and REPO is STILL
+  Path("/home/yuqing/ctaNew") HARDCODED at c54e48e:37, so a driver executing in
+  ANY worktree records THE MAIN TREE'S commit and dirtiness -- THE SAME CONSTANT
+  BE34-R3 WAS ABOUT, round 6 having fixed it AT THE SPAWN SITE ONLY (:2611 now
+  uses Path(__file__).resolve().parents[2]) and left the constant and its other
+  readers in place, with an audit case named "spawn root REPO vs parents[2]"
+  (:1401) so THE FIX AND ITS COVERAGE ARE BOTH SCOPED TO THE ONE CALL SITE.
+  FIXING A USE OF A BAD CONSTANT IS NOT FIXING THE CONSTANT. AND ONE OF THE TWO
+  REMAINING READERS IS BENIGN, WHICH MATTERS: the frozen-blob reader at :103 also
+  uses cwd=REPO but runs git show <sha>:<path>, and worktrees SHARE THE OBJECT
+  DATABASE, so those bytes are identical from anywhere -- :79 reads PER-WORKTREE
+  STATE and is the finding, :103 reads OBJECT-STORE CONTENT and is not; two
+  identical spellings, one defect. CARRIED WITHOUT INDEPENDENT MEASUREMENT AND
+  MARKED AS SUCH: BE round 8's 106/106 and DE round 31's instrument counts (21 /
+  24 / 20, ratification 184, phase-4 check 15) are THE COORDINATOR'S COUNTS --
+  running them would mean the main tree (forbidden while BE round 9 is open) or a
+  worktree of my own, and git worktree list stays 33; structure verified, numbers
+  carried. ONE LAYOUT FACT FROM DE ROUND 31 THAT WILL BITE SOMEONE AT 2 A.M.: a
+  BARE DETACHED WORKTREE HAS NO data/, so the runner must mirror data/pm_5min per
+  entry (derived/ 173) or THE DRIVER REFUSES AT CHECK 24 BY DESIGN -- that
+  refusal is right and the note is what stops it being read as a break.
+  SEQUENCING FOR THE DIAGNOSTIC, DELIBERATELY SLOW: DE declares (done, r31) ->
+  reviewer reads the declaration -> DE builds the runner (r32, in flight) ->
+  reviewer reads -> run, earliest 09-03 -> coordinator entry -> USER: FOUR GATES
+  BETWEEN A RULING AND A NUMBER, which is the point of freezing the protocol
+  first. Also swept: R-458's DE 29+30 RELEASE for 27d0d37 with CO-11 CLOSED at
+  both tips and DE30-R1 since closed in r31, and its IN-BAND CORRECTION of
+  R-456 section 2's citation -- fcafe9f:2588-2590 does not resolve, the citation
+  of record being :2481/:2483 with the paired ok at :2532-2534, R-456 standing as
+  provenance. Filings of record: Q-BE-233, Q-DE-49, REVIEW_BE_ROUND_7 (0f34aad).
+  IN FLIGHT: BE r9 (Q-BE-234: BE7-R4 first, then BE6-R1..R7 and BE7-R1..R3),
+  reviewer on DA 17 at e353119 then DE 31, DE r32 (Q-DE-50, the runner, no run),
+  DA standby (R-381) until the 00:14Z read. TONIGHT UNCHANGED:
+  da-midnight-verify.timer 00:06Z (09-03), co-preflight-20260902.timer 00:14Z,
+  coordinator wake after; R-409 accrual with the R-411(ii) denominator; DA lands
+  Q-DA-209..213 at e353119 (HOLD -> 3b7e10a); BE durable landing the round after
+  the read; CO-8; --require-no-skips; DATA_ROOT split after DA's landing.
+  UNCHANGED: G=1/5; the 011 family 12 of 24 with Q4 failing; the sequencing rule;
+  R-419 revocable.
+  PRIOR:
   2026-09-02T17:18Z (MEM ROUND 48 -- SEVEN FINDINGS, AND A RULE MADE OUT OF MY
   OWN MISTAKE). R-456 and R-457 swept in one batch. NOTHING WAS RUN FROM THE MAIN
   TREE THIS ROUND: BE's round-8 WIP is sitting in live/pm_research/, so
@@ -112,72 +188,6 @@ updated: >-
   00:06Z verdict, 00:14Z preflight, the coordinator's wake after it, then DA's
   landing at the chain's tip of the moment, BE round 9, CO-8,
   --require-no-skips, the DATA_ROOT split. USER decisions SIX RULED, NONE OPEN.
-  UNCHANGED: G=1/5; the 011 family 12 of 24 with Q4 failing; the sequencing rule;
-  Phase-4 gated; R-419 revocable.
-  PRIOR:
-  2026-09-02T16:38Z (MEM ROUND 46 -- THE STANDARD EARNED ITS KEEP IN ONE ROUND).
-  R-454 swept; three landings. DE ROUND 29 VERIFIED at ea3b525 and RE-RUN HERE:
-  180 both launchers rc 0, census ok 93 -> 96, refuses 54. The closure is real --
-  own_blocks_quiet (:631-648) returns (block, duplicated keys) PAIRS and is the
-  ONE TEXT of the two conjuncts, own_ratification_blocks (:650-676) CONSUMES it
-  at :658 and adds only its two raises -- and the thing DE27-R1 was actually
-  about is fixed: a NAMED CONTROL (:2074-2107) now sits on the `kind` conjunct so
-  the drop is CAUGHT AND REPORTED rather than escaping as a traceback; four
-  mutants red by name, ZERO TRACEBACKS. CO-11 REPRODUCED HERE IN A PARITY TREE
-  AND IT REPRODUCES THE EXACT SHAPE I RECORDED LAST ROUND: _ownership_sites keys
-  the census on the VARIABLE NAME (getattr(n.func.value, "id", "") == "blk",
-  :2130), so pasting the filter back into the adjudicating reader with the loop
-  variable RENAMED (blk -> b) -- semantically the second text DE27-R1 removed --
-  leaves ONE OWNERSHIP TEXT saying PASS at stdout line 124, WHICH WAS ALSO THE
-  LAST LINE OF STDOUT. THE MESSAGE CLAIMS THE PREDICATE; THE CHECK ASSERTS THE
-  IDIOM. The secondary half fell out of the same run and I verified its cause
-  statically: the text `own = own_blocks_quiet(entry)` occurs TWICE in the module
-  -- the code at :658 and a STRING LITERAL at :2146 inside the census known-bad's
-  own .replace -- so with the code line renamed away the replace hits the
-  literal, the copy is left with an unterminated string, and the run dies
-  SyntaxError: unterminated string literal (detected at line 2148) ON STDERR: A
-  TRACEBACK WHERE A REFUSAL BY NAME BELONGS. SO: LAST STDOUT LINE "PASS", EXIT 1,
-  ONE ROUND AFTER THAT OBSERVATION WAS ADOPTED AS THE STANDARD AND INSIDE THE FIX
-  FOR THE FINDING IT WAS ADOPTED FOR. That is the argument for the standard being
-  a HABIT rather than a rule you remember when relevant: EVERY GUARD ADDED TO
-  CATCH A CLASS IS ITSELF A CANDIDATE FOR THAT CLASS, and the only routine that
-  catches it is capture both streams separately, read the exit code, and never
-  take the last line of stdout for the verdict. THE GENERAL LESSON BENEATH CO-11
-  IS NARROWER AND MORE USEFUL THAN "the census is weak": a drift guard's
-  known-bad exercised EXACTLY THE IDIOM THE GUARD KEYS ON, so the falsifier could
-  not fail by any other spelling -- RULE 15'S KNOWN-BAD NARROWER THAN THE CLAIM
-  IT IS DEFENDING. Round 30 (Q-DE-48) is the right shape: key on the CONSTANT AND
-  THE SHAPE, drive the known-bad under BOTH the same idiom and a renamed copy,
-  and assert the anchor so an absent line REFUSES BY NAME instead of crashing the
-  parser. DA ROUNDS 15+16 REVIEW RELEASED (5d9bfb8, 219 lines) for 3b7e10a, no
-  hold, CO-10 CONFIRMED CLOSED by the 2x2+1, and three carried facts of mine
-  RULED: the separate != _there line IS a control with its own falsifier (cell
-  4); "32 checks at 8910701" is HISTORY CORRECTLY SCOPED, NOT A STALE COUNT; and
-  DA14-R1's deletion-over-a-hook is the honest call with "a tripwire on a future
-  edit" the honest label. DA16-R1 IS THE SAME SPECIES AS CO-10 ONE LAYER UP AND
-  THE LOGIC IS CHECKABLE BY READING: with the identity conjunct dropped what
-  remains is carrying_commit != _here (:927-928) and != _there (:944), so a
-  producer answering HEAD~2 yields a FOURTH value -- neither -- BOTH NEGATIVES
-  HOLD AND THE SUITE GOES GREEN AT 34; the pair is jointly sufficient for THE
-  VALUE CO-10 WAS FOUND ON, not for THE PROPERTY THE CONTROL CLAIMS. I DID NOT
-  RUN THIS ONE: it needs a worktree on DA's chain and git worktree list reads 33
-  here as it should -- verified by reading, and said so. THE ROUTING IS THE PART
-  WORTH KEEPING: the closure is DRIVEN, NOT A FOURTH != -- another negative just
-  extends an enumerated set by one value and leaves the identity drop invisible
-  -- so state the control's predicate ONCE AS A FUNCTION OF THE EMISSION, run a
-  wrong-commit producer copy through _measure in the child and assert it REFUSED
-  by that predicate, so dropping the identity turns THAT FALSIFIER red; != _there
-  kept as ruled; a fourth-distinct-value precondition beside the third. THE
-  DA14-R2 SHAPE APPLIED TO A CONJUNCT: GIVE IT A DRIVER, NOT A COMPANION.
-  TONIGHT'S LANDING RULE AS RULED: the landing takes THE CHAIN'S TIP OF THE
-  MOMENT -- 3b7e10a is RELEASED, and a round-17 commit above it is SELFTEST-ONLY
-  and lands ONLY IF coordinator-verified at the artifact before the landing
-  dispatch, else the landing is at 3b7e10a; timers unchanged. The reviewer's pane
-  showed context at 100% after its filing; nothing was done about it and nothing
-  needs to be -- THE REQUESTS OF RECORD CARRY THE STATE, which is why they are
-  files rather than messages. SEATS: DE round 30, DA round 17 (held) and BE round
-  7 in flight; reviewer BE round 6 (5e9ed91) now, then DE round 29 (ea3b525),
-  then BE round 7, then DA round 17. USER decisions SIX RULED, NONE OPEN.
   UNCHANGED: G=1/5; the 011 family 12 of 24 with Q4 failing; the sequencing rule;
   Phase-4 gated; R-419 revocable.
 
@@ -3775,6 +3785,14 @@ flags:
   be6_r1_r7_open: "BE round after r8; R2 then R1 first"
   reviewer_on_de_29_30: 27d0d37
   r456_times_corrected_at_r457: "17:08-17:09Z for both events"
+  user_ruling_7_phase4_diagnostic: "R-459 'Yes schedule this test' -- ONE run, CONSUMED population, DIAGNOSTIC_NEVER_EVIDENCE"
+  item4_execution_hold_lifted_once: "for the Phase-4 diagnostic execution ONLY; the item stands"
+  user_open_phase2_winner_ruling: OPEN-UNBLOCKED-NOT-NEEDED-TONIGHT
+  user_open_content_liveness_v2_freeze: OPEN-UNBLOCKED-NOT-NEEDED-TONIGHT
+  be_r8_verified_co12_co13_closed: c54e48e
+  reviewer_be_r7_released: "fcafe9f (0f34aad); BE7-R1..R4, R4 first to r9"
+  de_r31_verified_diagnostic_declared: "addendum 35e8aba1381cfa4e binds protocol ab07fd71c9fc2bff"
+  r459_budget_axis_citation: ":103 (not :105, which is protection mode)"
                              # v18-v19 added the daily pipeline and all-coin
                              # commit-last batch; v20 adds R-DERIVE, R-GROSS,
                              # R-DUAL and R-ONEROW plus Tier-2 markout,
@@ -3783,7 +3801,7 @@ flags:
                              # migration discipline remain authoritative.
 
 focus: >
-  As-of 2026-09-02T17:18Z, build and test the offline model mechanism-first
+  As-of 2026-09-02T18:00Z, build and test the offline model mechanism-first
   under plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md section 10. Do not use the
   subordinate stateful-cancel TODO checkbox count as total progress. The
   foundation is established: the action-level dataset and PRED_STATE_V1 are
