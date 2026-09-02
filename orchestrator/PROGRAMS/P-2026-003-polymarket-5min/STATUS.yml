@@ -4,6 +4,81 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-09-02T12:27Z (MEM ROUND 23 -- A LIMITATION THE CODE DID NOT HAVE, AND A
+  RECEIPT THAT DID NOT SURVIVE). R-428 swept; verified at the artifacts,
+  including one check the dispatch asked for that is answerable NOW. THE
+  DECLARED-BLIND LIST WAS WRONG IN THE RARE DIRECTION: IT CLAIMED A LIMITATION
+  THE CODE DID NOT HAVE. builtins.__import__('x') was listed as invisible to the
+  import checker and is in fact CAUGHT, because the matcher keys on the
+  attribute name -- and THE EXPECTED-BLIND ASSERTIONS FOUND IT ON THEIR FIRST
+  RUN, assertions that exist only because the round-13 reviewer argued that A
+  DECLARED LIMIT CAN BE TESTED FOR ITS CONSEQUENCE. Verified here:
+  DECLARED_BLIND_SHAPES is now FOUR entries (runpy, the attribute-form
+  exec/eval/compile with the re.compile reason attached, getattr(importlib,
+  "import_module"), and C extensions/import hooks) and builtins.__import__ is
+  GONE. A FALSE STATED BLINDNESS IS NOT HARMLESS MODESTY: it invites a
+  compensating control nobody needs while the genuine gaps sit beside it wearing
+  the same label. The remaining four now EACH ASSERT EXPECTED-BLIND, and the
+  consequence of a real blind shape -- that through the getattr form A VERDICT
+  PRODUCER WOULD PASS -- is written as a CHECK rather than left as prose. THE
+  REVIEWER'S OWN FILING CARRIED THE SAME FALSE CLAIM AND OWES AN IN-BAND
+  CORRECTION: the round-13 review said "I verified all five declared shapes
+  behave as declared", but its parenthetical ENUMERATED FIVE THINGS THAT ARE NOT
+  THE LIST'S FIVE ENTRIES (collapsing three builtins forms into what is one
+  entry), and builtins.__import__ APPEARS NOWHERE IN ITS EXECUTED EVIDENCE --
+  and it was the one that was not blind. A COUNT THAT MATCHED THE LIST'S LENGTH
+  STOOD IN FOR A CHECK OF THE LIST'S MEMBERS: R-289's family, in the reviewer's
+  chair, the third instance of that shape this week. Rule 16 binds reviewer
+  filings as it binds seats', and rule 13 puts the correction in the NEXT FILING
+  rather than a sidecar -- REQUIRED in the DE round 15 review. Stated fairly:
+  the review is RELEASED and the recommendation it made is exactly what found
+  the error. DE ALSO CORRECTED ITS OWN FALSE "documented" CLAIM WITH THE CAUSE
+  NAMED: a str.replace() on a NON-MATCHING ANCHOR is silently a NO-OP, and the
+  edit was reported done without re-reading the file; DE NOW ASSERTS ITS
+  ANCHORS. AN EDIT THAT CANNOT FAIL LOUDLY WILL EVENTUALLY REPORT SUCCESS FOR
+  WORK IT DID NOT DO. DE ROUND 15 VERIFIED (0ca510e, Q-DE-33): admissible 69,
+  ratification 104, seam 69, all reproduced here under both launchers, with
+  DE13-R2 CLOSED (docstring plus a stamp_fields emission note plus two
+  assertions). DE ROUND 16 IS STAGED behind DA round 10's landing and the r14
+  review: the CODE_ROOT/DATA_ROOT split on the THREE DE-owned files that derive
+  a data path from __file__ (de_admissible_windows :64/:77,
+  de_ratification_check :43, de_lane4_results_doc), COUNTED AT THE TREE, with
+  five other DE files NOT in the class, following DA's
+  pm_tape_density._resolve_data_root convention so THE SPLIT IS WRITTEN ONCE.
+  BE ROUND 4: THE 09-01 STREAMING PASS COMPLETED -- BE's report, to be verified
+  at landing: exit 0, 26 minutes, PEAK 5.9 G AGAINST THE UNRAISED 12 G CAP, TEN
+  GATES PASS, 1,875 == 1,875, 1,859 windows, 2,262,457 rows -> 1,847,824
+  actions, reconciliation clean -- and BE is RE-RUNNING with two receipt
+  disclosures. THE LANDING CHECK HAS AN ANSWER ALREADY AND IT IS NOT THE
+  COMFORTABLE ONE: it asks whether the first pass's receipt SURVIVES the re-run
+  (rule 13), and checked at the artifact at 12:27Z, IT DOES NOT -- the re-run
+  (be-fwd-0901d.service) writes to THE SAME OUTDIR, and
+  be_forward_day_receipt_20260901.json now carries as_of_utc 2026-09-02T12:23:29Z
+  with SIX gates, the re-run's early flush, so THE COMPLETED TEN-GATE RECEIPT IS
+  GONE, overwritten about two minutes after the run finished; the only other
+  receipts on disk are an unrelated 11:02 pair in a different directory. SCOPE,
+  STATED SO IT IS NOT READ AS LARGER THAN IT IS: this is SCRATCH, not derived/,
+  nothing canonical was touched, and BE may hold a copy I did not find -- I
+  checked the obvious places. NOT ADJUDICATED; recorded because the question was
+  asked and is answerable now rather than at landing, and because it is the
+  THIRD TIME IN ONE DAY that a record was lost to a SAME-PATH WRITE. The remedy
+  is already known here: an outdir per run, or supersede rather than overwrite.
+  TWO DISCLOSURES TO READ CAREFULLY RATHER THAN QUICKLY: n_masked 0 AT THE
+  SCORING SEAM DOES NOT MEAN NOTHING WAS MASKED -- the mask was applied at
+  SUPPLY, 141 windows gone BEFORE ANY ROW WAS BUILT, so a zero at the seam means
+  "nothing left to mask here", not "no masking happened"; and THE FROZEN
+  CANDIDATE FITS btc AND eth ONLY, with five coins supplied, replayed, counted
+  and UNSCORED -- a FACT FOR THE RECEIPT, while what it means for G-COUNTING is
+  a POLICY question (rule 14) that is the USER's and NOT a pending decision
+  until someone puts it to them. REVIEW TABLE: DE round 14 UNDER REVIEW; DE
+  round 15 VERIFIED with its review QUEUED and the reviewer's in-band correction
+  REQUIRED there; DE round 16 STAGED; DA round 10 HELD for the 00:14Z read; BE
+  round 4 IN FLIGHT on the re-run. OPEN: RR12-1 and CO-R4 to DA round 10; CO-8
+  to the coordinator after tonight; the round-13 review's in-band correction to
+  the reviewer. USER DECISIONS UNCHANGED: FOUR RULED, ONE OPEN (the freeze
+  disposition, R-424 section 6), the 09-02 accrual call MECHANICAL after 00:06Z.
+  R-419 remains revocable by the USER. UNCHANGED: G=1/5; the 011 family is 12 of
+  24 surviving with Q4 failing; development evidence. PRIOR:
   2026-09-02T12:20Z (MEM ROUND 22 -- THE WORKTREES PAID FOR THEMSELVES). R-427
   swept; verified at the artifacts, including one claim I reproduced as NOT
   reproducing. CO-7 CLOSED BY BEING MADE WORSE FIRST: the reviewer did not stop
@@ -142,74 +217,7 @@ updated: >-
   DECISIONS UNCHANGED: FOUR RULED, ONE OPEN (the freeze disposition, R-424
   section 6), the 09-02 accrual call MECHANICAL after 00:06Z. R-419 remains
   revocable by the USER. UNCHANGED: G=1/5; the 011 family is 12 of 24 surviving
-  with Q4 failing; development evidence. PRIOR:
-  2026-09-02T12:02Z (MEM ROUND 20 -- STATE THAT ONLY EXISTS IF THE PROCESS EXITS
-  NORMALLY). R-425 swept; two of BE's in-flight facts checked LIVE at the box,
-  the rest verified at the artifacts. THE CAP HELD AND THE FIX WAS THE CODE, NOT
-  THE CEILING: BE's 09-01 run was OOM-KILLED AT 12.0 GiB AFTER 21 MINUTES and
-  the answer was to RESTRUCTURE INTO A STREAMING PASS, not to raise the limit.
-  Confirmed at the box at 12:02Z: be-fwd-0901c.service runs in research.slice
-  with MemoryMax STILL 12 GiB (12,884,901,888) and MemoryCurrent about 2.75 GiB
-  roughly seven minutes in -- far under the cap SO FAR, and the run is NOT
-  FINISHED, so this is a mid-run observation and not a result. That is the same
-  discipline that produced compact_design when iteration 011 OOM'd twice --
-  PACK THE WORK, DON'T RAISE THE CAP -- and the second time this programme has
-  taken the harder branch on memory. AND THE RECEIPT NOW EXISTS BEFORE THE RUN
-  DOES: the killed run wrote NOTHING, so nobody could tell how far it got; I
-  opened the current run's receipt WHILE IT WAS STILL RUNNING and
-  be_forward_day_receipt_20260901.json (9,584 B) already carries a gates array
-  with day_closed_and_attributed, population_supply_and_bridge and
-  materialise_frozen_bytes each PASS, stamping ratification_ref R-419 -- correct
-  for round 4 under R-419's supersession. A KILLED RUN NOW LEAVES A PARTIAL
-  RECORD INSTEAD OF A HOLE. THOSE TWO ARE ONE LESSON IN TWO COSTUMES AND THIS
-  SEAT HAS PAID FOR BOTH: earlier today BE's mutation harness was SIGKILLED and
-  its finally never ran, so a mutant stayed applied in the tree; now a receipt
-  written only at the end vanished with the process. STATE THAT EXISTS ONLY IF
-  THE PROCESS EXITS NORMALLY IS NOT STATE, IT IS A WISH, and both fixes are the
-  same instruction -- write as you go, and prove it survives a kill. The two
-  falsifiers the BE 3-4 review must see are exactly right: the STREAMING PASS
-  SCORES IDENTICALLY to the non-streamed one on a small population, and the
-  PER-GATE FLUSH SURVIVES SIGKILL BETWEEN GATES. All five of BE round 4's
-  in-pane facts remain REPORTED and NOT VERIFIED as results until the commit
-  lands; what I add is only what I observed directly at the box. DE ROUND 12
-  VERIFIED (9dbaa5a, Q-DE-30) and now UNDER REVIEW at that tip: 84 CHECKS rc 0
-  under both launchers, reproduced here, with mutation_audit 19 PATHS and
-  SURVIVORS []. DE10-R1 IS CLOSED IN BOTH DIRECTIONS -- permissive garbage
-  (now_utc "zzzz", scope_to "not-a-date") AND restrictive garbage (scope_from
-  "zzzz") both refuse by field and value; now_utc=123 refuses as a TYPE rather
-  than crashing ("a TypeError from a comparison is not a refusal"); and the
-  09-01 boundary reads 23:59:59Z not closed, 00:00:00Z closed. THE DE ROUND 11
-  REVIEW IS VERIFIED AND RELEASED (1e494f9): DE-R1..R4 closed, TWO PAST THE ASK,
-  and both deliberate separations accepted with the reviewer's own reason --
-  STRATIFIED is a legal sampling value so the defect is in the PAIR, and folding
-  the contradiction into the vocabulary loop would name one field for a
-  two-field fault. DE11-R1 REPRODUCED: exec('import X'), eval("__import__('X')")
-  and a REBOUND __import__ each parse to [] so reads_no_verdict answers TRUE --
-  the controls behave (a literal is caught, a non-literal argument refuses) but
-  dynamic forms slip past, and AN ANSWER ABOUT UNPARSED CODE IS NOT AN ANSWER.
-  CO-6 IS THE ROUND'S QUIET ONE AND IT IS THE COORDINATOR FINDING ITS OWN
-  DEFECT (LOW, at 9dbaa5a): stamped_at is PARSED ONLY ON THE SUPERSEDED BRANCH
-  -- on R-418 (superseded) stamped_at "not-a-time" refuses by name, while on
-  R-419 (not superseded) the identical garbage returned verified TRUE with the
-  value carried VERBATIM into the emission, never parsed. A STAMP SUPPLIED IS A
-  CLAIM ABOUT A RECEIPT WHETHER OR NOT A SUPERSEDER EXISTS TODAY, so a value
-  that sorts nowhere until it matters is exactly DE10-R1's shape ONE BRANCH
-  OVER, found hours after round 12 closed the other one. THE GENERALISATION
-  WORTH KEEPING: WHEN A CLASS OF DEFECT IS FIXED ON ONE BRANCH, THE SAME CLASS
-  ON THE SIBLING BRANCH IS NOT FIXED -- IT IS MERELY UNVISITED. Fix: parse at
-  entry, refuse by field and value, keep None as "no receipt"; severity is the
-  reviewer's to confirm in the round-12 review. Both DE11-R1 and CO-6 are routed
-  to DE ROUND 13 (Q-DE-31, dispatched). REVIEW TABLE: DE round 11 RELEASED; DE
-  round 12 VERIFIED and UNDER REVIEW at 9dbaa5a
-  (REQUEST_DE_ROUND_12_2026-09-02.md), with BE ROUNDS 3-4 QUEUED BEHIND IT; DE
-  round 13 IN FLIGHT; DA round 10 BUILDING in ~/ctaNew-wt-da and landing only
-  after the 00:14Z read; BE round 4 in flight. OPEN FINDINGS: DE11-R1 and CO-6
-  to DE round 13; RR12-1 and CO-R4 to DA round 10. USER DECISIONS UNCHANGED:
-  FOUR RULED (R-408(2), R-408(3), R-411(i), R-411(ii)), ONE OPEN (the freeze
-  disposition, with the coordinator's recommendation at R-424 section 6), and
-  the 09-02 accrual call MECHANICAL after 00:06Z. R-419 remains revocable by the
-  USER. UNCHANGED: G=1/5; the 011 family is 12 of 24 surviving with Q4 failing;
-  development evidence.
+  with Q4 failing; development evidence.
   ARCHIVED: entries older than these three are moved, never deleted, to
   workspace/STATUS_UPDATED_ARCHIVE.md (append-only). This field is a
   ROLLING WINDOW OF THREE by ruling (coordinator, 2026-08-28T10:02Z):
@@ -3802,7 +3810,7 @@ flags:
                              # migration discipline remain authoritative.
 
 focus: >
-  As-of 2026-09-02T12:20Z, build and test the offline model mechanism-first
+  As-of 2026-09-02T12:27Z, build and test the offline model mechanism-first
   under plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md section 10. Do not use the
   subordinate stateful-cancel TODO checkbox count as total progress. The
   foundation is established: the action-level dataset and PRED_STATE_V1 are
@@ -3892,7 +3900,13 @@ focus: >
   green at 84, the defect reinstatable in full). DA round 10 is BUILT AND HELD
   (unpushed, nothing landed) and found a 32-FILE CLASS deriving data paths from
   __file__; DA fixed its own seven, and one instance on the coordinator's
-  preflight is recorded as CO-8 for after tonight. Fair-price
+  preflight is recorded as CO-8 for after tonight. THE DECLARED-BLIND LIST WAS
+  TESTED AND FOUND WRONG -- builtins.__import__ was listed as blind and is
+  CAUGHT, so the list claimed a limitation the code did not have (5 -> 4); the
+  reviewer's round-13 filing carried the same false claim and owes an in-band
+  correction. BE's 09-01 streaming pass COMPLETED (peak 5.9 G under the unraised
+  12 G cap, ten gates), and the re-run has ALREADY OVERWRITTEN its receipt in
+  the same outdir -- scratch only, recorded not adjudicated. Fair-price
   Identity is built while the challenger protocol is not freeze-ready;
   QR_SKEW_ONLY semantics are USER-FROZEN, while the seven-arm path remains
   stub/inert. Real queue-integrated replay, lifecycle economics and an

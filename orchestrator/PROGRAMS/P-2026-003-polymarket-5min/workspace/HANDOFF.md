@@ -1,12 +1,12 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-02T12:20Z — **CO-7 sharpened from an absence to a
-demonstration: the pre-fix shape was restored and the suite stayed green — the
-defect was reinstatable in full.** Now closed. **DA round 10 is BUILT AND HELD**
-(unpushed, nothing landed) and found a **32-file class**, one instance of it on
-the coordinator's own surface (**CO-8**). **USER decisions unchanged: four
-RULED, one OPEN.** Prior line: a fix without its falsifier, and two corrections
-to my own reading.
+Updated: 2026-09-02T12:27Z — **the expected-blind assertions falsified the
+declared-blind list on their first run**: `builtins.__import__` was listed as
+blind and is actually **caught**, so the list claimed a limitation the code did
+not have (5 → 4). **BE's 09-01 streaming pass COMPLETED** — and, checked at the
+artifact, **the re-run has already overwritten its receipt**. **USER decisions
+unchanged: four RULED, one OPEN.** Prior line: the worktrees paid for themselves
+with a 32-file class.
 
 ## READ FIRST — current project handoff
 
@@ -149,7 +149,44 @@ next word can settle it:
 **Until it is ruled, BE round 4's output stays an estimate in scratch, not a
 race score.**
 
-### BE round 4 — IN FLIGHT: five facts REPORTED, two of them observed live
+### BE round 4 — the 09-01 pass COMPLETED, and the re-run has overwritten its receipt
+
+**The first streaming pass completed** (BE's report, to be verified at landing):
+exit 0, **26 min, peak 5.9 G against the unraised 12 G cap**, **ten gates PASS**,
+`1,875 == 1,875`, **1,859 windows**, **2,262,457 rows → 1,847,824 actions**,
+reconciliation clean. BE is **re-running** with two receipt disclosures added.
+
+**The landing check has an answer already, and it is not the comfortable one.**
+The check asks whether the first pass's receipt **survives** the re-run (rule
+13). Checked at the artifact at 12:27Z: **it does not.** The re-run
+(`be-fwd-0901d.service`) writes to **the same outdir**, and
+`be_forward_day_receipt_20260901.json` now carries `as_of_utc:
+2026-09-02T12:23:29Z` with **six** gates — the re-run's early flush. **The
+completed ten-gate receipt is gone**, overwritten about two minutes after the
+run finished; the only other receipts on disk are an unrelated 11:02 pair in a
+different directory.
+
+**Scope, stated so this is not read as larger than it is:** this is **scratch,
+not `derived/`**, nothing canonical was touched, and BE may hold the completed
+receipt somewhere I did not look — I checked the obvious places and found no
+copy. **Not adjudicated**; recorded because the question was asked and is
+answerable now rather than at landing. The remedy is the one this programme
+already knows: **an outdir per run, or supersede rather than overwrite.**
+
+**Two disclosures the re-run adds, both of which change how a reader must take
+the counts:**
+
+- **`n_masked: 0` at the scoring seam does not mean nothing was masked.** The
+  mask was applied at **SUPPLY** — **141 windows were gone before any row was
+  built** — so a zero at the seam is *"nothing left to mask here"*, not *"no
+  masking happened"*.
+- **The frozen candidate fits btc and eth ONLY.** Five coins are supplied,
+  replayed and counted — and **unscored**. That is a **fact for the receipt**;
+  what it means for **G-counting** is a **policy question** (rule 14), and it is
+  the USER's, not a seat's. It is **not** a new pending decision until someone
+  puts it to them.
+
+### BE round 4 — the earlier in-flight facts (REPORTED; two observed live)
 
 **Status first, because it governs how these read.** BE round 4 has **not
 landed**. What follows is BE's own pane report at 11:39Z — **a report, not an
@@ -211,6 +248,44 @@ not survive SIGKILL**. Now: a receipt written only at the end means **a killed
 run leaves no trace of how far it got**. Both are the same shape — *state that
 exists only if the process exits normally* — and the fix is the same shape too:
 write as you go.
+
+### THE DECLARED-BLIND LIST WAS WRONG, AND ITS OWN TEST FOUND IT
+
+**A limitation the code did not have.** `DECLARED_BLIND_SHAPES` named five
+shapes the import checker supposedly cannot see. The expected-blind assertions —
+added because the round-13 reviewer argued **a declared limit can be tested for
+its consequence** — falsified the list **on their first run**:
+`builtins.__import__('x')` is **CAUGHT**, because the matcher keys on the
+attribute name. Verified here: the list is now **four** entries and
+`builtins.__import__` is gone.
+
+**This is the rarer direction of a documentation defect.** The usual failure is
+code that falls short of its docs; here the **docs understated the code**, and
+the cost is real rather than cosmetic: a stated blindness is an invitation to
+build a compensating control somewhere else, and a *false* stated blindness
+invites a control nobody needs while the genuine gaps sit beside it unlabelled.
+The remaining four now each **assert expected-blind**, and the consequence of a
+real blind shape — that through the `getattr` form **a verdict producer would
+pass** — is written as a check rather than left as prose.
+
+**The reviewer's filing carried the same false claim, and owes an in-band
+correction.** The round-13 review stated *"I verified all five declared shapes
+behave as declared"* — but its parenthetical enumerated **five things that are
+not the list's five entries**, collapsing three `builtins` forms into what is
+one entry, and **`builtins.__import__` appears nowhere in its executed
+evidence.** It was the one that was not blind. **A count that matched the list's
+length stood in for a check of the list's members** — R-289's family, in the
+reviewer's chair, and the third instance of that shape this week. Rule 16 binds
+reviewer filings as it binds seats', and rule 13 puts the correction in the
+**next filing**, not a sidecar: **required in the DE round 15 review.** Note what
+is *not* being said — the review is released and the recommendation it made is
+exactly what found the error.
+
+**And DE corrected its own false "documented" claim with the cause named:** a
+`str.replace()` on a **non-matching anchor** is silently a **no-op**, and the
+edit was reported done without re-reading the file. **DE now asserts its
+anchors.** (Worth recording because the fix generalises: an edit that cannot fail
+loudly will eventually report success for work it did not do.)
 
 ### A "correction to the register" that did not reproduce — and what is true instead
 
@@ -431,7 +506,8 @@ launchers at **235/19**.
 | **DE round 12** | **RELEASED** (`dcb7036`) — DE10-R1 closed **at the root** (all five temporal sites compare datetimes). Two findings: **DE12-R1** = CO-6 confirmed and **widened to non-strings**, raised to **MEDIUM-LOW**; **DE12-R2 (new)** — an **empty** `scope_to` reads silently open-ended |
 | **DE round 13** | **RELEASED** (`b7ce7bb`) — DE11-R1 closed **wider than filed**: eight rebinding shapes of `__import__` all refuse, and the closure test that matters — `reads_no_verdict` True on DE's own three files, **False** on `be_forward_day`/`da_blackout_mask` because they import verdict producers. **DE13-R1** (CO-7 sharpened) and **DE13-R2** (new) |
 | **DE round 14** | **VERIFIED** (`194b5e9`) and **UNDER REVIEW**: **102 checks** both launchers (reproduced here). DE12-R2 and CO-7 **CLOSED**; the empty-value refusal is **GENERAL** and distinct from MISSING and VALUE; **`none` removed as a decision** because R-419 §4 adopted `null` only; audit reports **n_cases 21 / n_raise_sites 16, computed** rather than narrated |
-| **DE round 15** | **IN FLIGHT** (Q-DE-33): DE13-R2 + the expected-blind assertions |
+| **DE round 15** | **VERIFIED** (`0ca510e`), review **queued** — admissible **69** / ratification **104** / seam **69**, all reproduced here. DE13-R2 **CLOSED**; **the declared-blind list was tested and found wrong** (below). **The round-15 review must carry the reviewer's own in-band correction** |
+| **DE round 16** | **STAGED** behind DA round 10's landing and the r14 review: the CODE_ROOT/DATA_ROOT split on the **three** DE-owned files in the class (`de_admissible_windows` :64/:77, `de_ratification_check` :43, `de_lane4_results_doc`) — **counted at the tree; five other DE files are not in the class** — following DA's `_resolve_data_root` convention so the split is written **once** |
 | **DA round 10** | **BUILT AND HELD** at worktree `3a89e6c` — verified here as **unpushed and on no remote branch**, nothing landed, the shared tree carrying only BE's in-flight file. Lands after the 00:14Z read |
 | **the coordinator's own acts** | **REVIEWED** (`1384ec5`), no hold; CO-R1..R4 dispositioned |
 
@@ -915,6 +991,57 @@ than a clean zero (the density receipt covers 13 days, not this one).
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-02 ~12:27Z (MEM) — A LIMITATION THE CODE DID NOT HAVE, AND A
+### RECEIPT THAT DID NOT SURVIVE
+
+**R-428 swept.** Two findings and one thing I checked because the dispatch asked
+the question.
+
+**The declared-blind list was wrong in the rare direction: it claimed a
+limitation the code did not have.** `builtins.__import__` was listed as invisible
+to the import checker and is in fact **caught**. The expected-blind assertions
+found it **on their first run** — assertions that exist only because last round's
+reviewer argued a *declared limit can be tested for its consequence*. Verified
+here: the list is now four entries. **A false stated blindness is not harmless
+modesty** — it invites a compensating control nobody needs, while the genuine
+gaps sit beside it wearing the same label. The remaining four now assert
+expected-blind, and the consequence of a real one — a verdict producer passing
+through the `getattr` form — is a check rather than a sentence.
+
+**The reviewer's own filing carried the same false claim, and the correction is
+required in its next filing.** *"I verified all five declared shapes"* — but the
+parenthetical enumerated five things that are **not** the list's five entries,
+and `builtins.__import__` appears **nowhere in the executed evidence**. It was
+the one that was not blind. **A count that matched the list's length stood in for
+a check of the list's members.** That is R-289's shape in the reviewer's chair,
+and the third instance this week. Worth stating fairly: the review is released,
+and **the recommendation that review made is exactly what found the error.**
+
+**DE's own correction names a cause worth generalising:** a `str.replace()` on a
+**non-matching anchor is silently a no-op**, and the edit was reported done
+without re-reading. DE now asserts its anchors. **An edit that cannot fail loudly
+will eventually report success for work it did not do** — which is why every edit
+I make to these files asserts its anchor count before replacing, and why I diff
+against `HEAD` afterwards.
+
+**And the landing check has an answer now.** It asks whether BE's first pass's
+receipt survives the re-run. **It does not.** The re-run writes to the same
+outdir, and the receipt at that path is now stamped **12:23:29Z with six gates** —
+the re-run's early flush. **The completed ten-gate receipt was overwritten about
+two minutes after the run finished.** This is scratch, nothing canonical moved,
+and BE may hold a copy I did not find; I am not adjudicating it. But it is the
+third time in one day that **a record was lost to a same-path write**, and the
+remedy is already known here: an outdir per run, or supersede instead of
+overwrite.
+
+**One disclosure to read carefully rather than quickly:** `n_masked: 0` at the
+scoring seam means **the mask was applied earlier**, at supply — 141 windows gone
+before any row existed — not that no masking occurred. And the frozen candidate
+fits **btc and eth only**; five coins are supplied, replayed, counted and
+**unscored**. That is a fact for the receipt; what it means for G-counting is the
+USER's policy question, and **not a pending decision until someone puts it to
+them.**
 
 ### 2026-09-02 ~12:20Z (MEM) — THE WORKTREES PAID FOR THEMSELVES
 

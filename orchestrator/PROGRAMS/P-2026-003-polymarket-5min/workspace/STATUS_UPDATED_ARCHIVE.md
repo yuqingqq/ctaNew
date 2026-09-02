@@ -1799,3 +1799,78 @@ Moved in the MEM round-22 true-up of R-427. Join rule as in batch 1.
   review (1e494f9). UNCHANGED: G=1/5; the 011 family is 12 of 24 surviving with
   Q4 failing; development evidence.
 ```
+
+## Batch 29 — archived 2026-09-02T12:27Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-23 true-up of R-428. Join rule as in batch 1.
+
+```yaml
+
+  2026-09-02T12:02Z (MEM ROUND 20 -- STATE THAT ONLY EXISTS IF THE PROCESS EXITS
+  NORMALLY). R-425 swept; two of BE's in-flight facts checked LIVE at the box,
+  the rest verified at the artifacts. THE CAP HELD AND THE FIX WAS THE CODE, NOT
+  THE CEILING: BE's 09-01 run was OOM-KILLED AT 12.0 GiB AFTER 21 MINUTES and
+  the answer was to RESTRUCTURE INTO A STREAMING PASS, not to raise the limit.
+  Confirmed at the box at 12:02Z: be-fwd-0901c.service runs in research.slice
+  with MemoryMax STILL 12 GiB (12,884,901,888) and MemoryCurrent about 2.75 GiB
+  roughly seven minutes in -- far under the cap SO FAR, and the run is NOT
+  FINISHED, so this is a mid-run observation and not a result. That is the same
+  discipline that produced compact_design when iteration 011 OOM'd twice --
+  PACK THE WORK, DON'T RAISE THE CAP -- and the second time this programme has
+  taken the harder branch on memory. AND THE RECEIPT NOW EXISTS BEFORE THE RUN
+  DOES: the killed run wrote NOTHING, so nobody could tell how far it got; I
+  opened the current run's receipt WHILE IT WAS STILL RUNNING and
+  be_forward_day_receipt_20260901.json (9,584 B) already carries a gates array
+  with day_closed_and_attributed, population_supply_and_bridge and
+  materialise_frozen_bytes each PASS, stamping ratification_ref R-419 -- correct
+  for round 4 under R-419's supersession. A KILLED RUN NOW LEAVES A PARTIAL
+  RECORD INSTEAD OF A HOLE. THOSE TWO ARE ONE LESSON IN TWO COSTUMES AND THIS
+  SEAT HAS PAID FOR BOTH: earlier today BE's mutation harness was SIGKILLED and
+  its finally never ran, so a mutant stayed applied in the tree; now a receipt
+  written only at the end vanished with the process. STATE THAT EXISTS ONLY IF
+  THE PROCESS EXITS NORMALLY IS NOT STATE, IT IS A WISH, and both fixes are the
+  same instruction -- write as you go, and prove it survives a kill. The two
+  falsifiers the BE 3-4 review must see are exactly right: the STREAMING PASS
+  SCORES IDENTICALLY to the non-streamed one on a small population, and the
+  PER-GATE FLUSH SURVIVES SIGKILL BETWEEN GATES. All five of BE round 4's
+  in-pane facts remain REPORTED and NOT VERIFIED as results until the commit
+  lands; what I add is only what I observed directly at the box. DE ROUND 12
+  VERIFIED (9dbaa5a, Q-DE-30) and now UNDER REVIEW at that tip: 84 CHECKS rc 0
+  under both launchers, reproduced here, with mutation_audit 19 PATHS and
+  SURVIVORS []. DE10-R1 IS CLOSED IN BOTH DIRECTIONS -- permissive garbage
+  (now_utc "zzzz", scope_to "not-a-date") AND restrictive garbage (scope_from
+  "zzzz") both refuse by field and value; now_utc=123 refuses as a TYPE rather
+  than crashing ("a TypeError from a comparison is not a refusal"); and the
+  09-01 boundary reads 23:59:59Z not closed, 00:00:00Z closed. THE DE ROUND 11
+  REVIEW IS VERIFIED AND RELEASED (1e494f9): DE-R1..R4 closed, TWO PAST THE ASK,
+  and both deliberate separations accepted with the reviewer's own reason --
+  STRATIFIED is a legal sampling value so the defect is in the PAIR, and folding
+  the contradiction into the vocabulary loop would name one field for a
+  two-field fault. DE11-R1 REPRODUCED: exec('import X'), eval("__import__('X')")
+  and a REBOUND __import__ each parse to [] so reads_no_verdict answers TRUE --
+  the controls behave (a literal is caught, a non-literal argument refuses) but
+  dynamic forms slip past, and AN ANSWER ABOUT UNPARSED CODE IS NOT AN ANSWER.
+  CO-6 IS THE ROUND'S QUIET ONE AND IT IS THE COORDINATOR FINDING ITS OWN
+  DEFECT (LOW, at 9dbaa5a): stamped_at is PARSED ONLY ON THE SUPERSEDED BRANCH
+  -- on R-418 (superseded) stamped_at "not-a-time" refuses by name, while on
+  R-419 (not superseded) the identical garbage returned verified TRUE with the
+  value carried VERBATIM into the emission, never parsed. A STAMP SUPPLIED IS A
+  CLAIM ABOUT A RECEIPT WHETHER OR NOT A SUPERSEDER EXISTS TODAY, so a value
+  that sorts nowhere until it matters is exactly DE10-R1's shape ONE BRANCH
+  OVER, found hours after round 12 closed the other one. THE GENERALISATION
+  WORTH KEEPING: WHEN A CLASS OF DEFECT IS FIXED ON ONE BRANCH, THE SAME CLASS
+  ON THE SIBLING BRANCH IS NOT FIXED -- IT IS MERELY UNVISITED. Fix: parse at
+  entry, refuse by field and value, keep None as "no receipt"; severity is the
+  reviewer's to confirm in the round-12 review. Both DE11-R1 and CO-6 are routed
+  to DE ROUND 13 (Q-DE-31, dispatched). REVIEW TABLE: DE round 11 RELEASED; DE
+  round 12 VERIFIED and UNDER REVIEW at 9dbaa5a
+  (REQUEST_DE_ROUND_12_2026-09-02.md), with BE ROUNDS 3-4 QUEUED BEHIND IT; DE
+  round 13 IN FLIGHT; DA round 10 BUILDING in ~/ctaNew-wt-da and landing only
+  after the 00:14Z read; BE round 4 in flight. OPEN FINDINGS: DE11-R1 and CO-6
+  to DE round 13; RR12-1 and CO-R4 to DA round 10. USER DECISIONS UNCHANGED:
+  FOUR RULED (R-408(2), R-408(3), R-411(i), R-411(ii)), ONE OPEN (the freeze
+  disposition, with the coordinator's recommendation at R-424 section 6), and
+  the 09-02 accrual call MECHANICAL after 00:06Z. R-419 remains revocable by the
+  USER. UNCHANGED: G=1/5; the 011 family is 12 of 24 surviving with Q4 failing;
+  development evidence.
+```
