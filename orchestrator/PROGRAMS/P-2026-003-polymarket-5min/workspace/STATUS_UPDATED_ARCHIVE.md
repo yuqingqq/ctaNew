@@ -4229,3 +4229,70 @@ Moved in the MEM round-58 true-up of R-479. Join rule as in batch 1.
   tonight. UNCHANGED: G=1/5; the 011 family 12 of 24 with Q4 failing; the
   sequencing rule; R-419 revocable.
 ```
+
+## Batch 65 — archived 2026-09-02T22:00Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-59 true-up of R-480 and Q-DE-56. Join rule as in batch 1.
+
+```yaml
+  2026-09-02T20:09Z (MEM ROUND 56 -- THE GUARD KEEPS THE PROPOSAL FROM BEING
+  OBEYED; IT DOES NOT KEEP IT FROM BEING WRONG). R-475, R-476, Q-DE-54, Q-BE-235
+  and the reviewer's DE-36 filing swept; nothing run; committed blobs and plan
+  files only. DE36-R1 IS THE SHARPEST ITEM THIS WEEK AND IT LANDS ONE LAYER ABOVE
+  EVERY FINDING BEFORE IT: the addendum v2 DRAFT -- THE DOCUMENT THE USER IS
+  BEING ASKED TO FREEZE -- says at :144 "This is a property, not a number, and
+  the runner already implements it", THE REVIEWER RULES THAT FALSE, and IT MUST
+  NOT REACH THE USER; I read the line at the file. SET THAT BESIDE LAST ROUND'S
+  NEGATIVE CONTROL AND THE GAP IS EXACT: de_phase4_protocol_check.py proves
+  NOTHING CITES THE DRAFT AS AUTHORITY -- an excellent guard that says nothing
+  about whether THE DRAFT'S OWN PROSE IS TRUE. THE GUARD KEEPS A PROPOSAL FROM
+  BEING OBEYED; IT DOES NOT KEEP IT FROM BEING WRONG. A false sentence about the
+  code inside the document the USER freezes is worse than one in code: THE CODE
+  HAS A SUITE, THE PROSE HAS A READER. SECTION 5 IS NOW RULED IN FULL and the
+  (gamma) wording is a stronger object than what it replaces: TOTAL permutation
+  of ALL above-threshold values within (side, hour) strata with THE DRAW NAMING
+  WHICH GENERATIONS RECEIVE THEM; matched on the REALISED ACTION COUNT AFTER THE
+  REPLAY with failed draws REJECTED AND REDRAWN under a bound;
+  n_draws_attempted / n_draws_accepted / n_rejected_by_stratum IN THE RECEIPT;
+  control#2 WITHDRAWN; P1-P4 predicates REPLACING THE SUBSTRING CHECK. THE MATCH
+  MOVED FROM WHAT WAS INTENDED TO WHAT ACTUALLY HAPPENED -- a realised count
+  cannot be satisfied by a draw that failed, which is precisely how the previous
+  control flattered itself. AND C1 WAS CONFIRMED THE HARD WAY: MEASURED ON A
+  FIXTURE, WITH A TRUE SWAP SHOWN NOT TO FIX IT -- the obvious repair was tested
+  and rejected before the real one was ruled. DE36-R4 IS THE WEEK'S RECURRING
+  GENUS, THIRD INSTANCE: three checks assert SOURCE STRINGS -- ok("res =
+  arm_result(" in _null_src) at :1372, ok("preflight()" in _runsrc) at :1673, and
+  ok(... "_above = [e for e in treated_scores" in _ctrl_src) at :1733 -- which is
+  CO-11 (keyed on a spelling) and CO-12 (attribution by substring) in a third
+  costume: A CHECK THAT READS SOURCE TEXT INSTEAD OF RUNNING IT PASSES FOR A
+  RENAME AND FAILS FOR A REFORMATTING. Round 37 replaces them with predicates, in
+  the right order -- SECTION 5 FIRST, THE DRAFT'S TWO SENTENCES SECOND, the two
+  things that can reach the USER. THE COMPUTE FIGURE NOW TRAVELS HONESTLY SPLIT
+  and the reason matters more than the number: the FEED ~28.6 MIN IS MEASURED
+  (round 33) and travels; THE REPLAY IS UNMEASURED and its synthetic figure is A
+  FLOOR, the fixture being 20 SLUGS x ONE GENERATION x ONE TRANCHE x ONE SIDE,
+  NOT the "471 windows" a reader would assume; DE35-R2's 4x STANDS and the
+  "~1000x overstated in total" half is DE'S OWN AND NOT ESTABLISHED. A COST
+  ESTIMATE THAT MIXES ONE MEASURED HALF WITH ONE SYNTHETIC HALF IS NOT A RANGE,
+  IT IS TWO DIFFERENT CLAIMS WEARING ONE NUMBER. ONE TRANSCRIPTION SLIP CAUGHT AT
+  THE SOURCE: Q-DE-54 reports the runner "68 -> 71" while EXPECTED_CHECKS reads
+  67 at 27c1ccd and 71 at 92c7da4, so it is 67 -> 71 -- and the correction
+  matters because THE DELTA IS WHAT A READER USES: +4, NOT +3 (R-471 and Q-DE-53
+  both recorded 67). Q-BE-235 IS LANDED AND NOT VERIFIED, and I keep those two
+  words apart: BE9-C1..C3 closed, executed IN TWO TREES, a 26-CASE mutation
+  audit, with COORDINATOR VERIFICATION IN FLIGHT SINCE 20:01:48Z; RUN B'S TREE IS
+  A QUESTION FOR THE REVIEWER'S BE 9+10 ROUND, not a settled fact. The pin's
+  three rulings and called#1's falsifier are recorded, and THE THREE DECLARED
+  REASONS ARE TRUE -- checked by the reviewer, carried by me. The reviewer also
+  corrected IN BAND its own round-35 "asserted from the parse" label. RELEASE:
+  92c7da4 as ROUND 37'S BASE. SEATS: DE round 37 DISPATCHED at e791f4f (Q-DE-55
+  in flight); the REVIEWER on RECORDED STANDBY until R-477 (BE round 10
+  verified), then BE 9 + 10 AS ONE ROUND; BE on RECORDED STANDBY, round 11 being
+  the durable landing after the 00:14Z read; DA standby until 00:06Z / 00:14Z.
+  THE PHASE-4 RUN HAS NO DATE. TONIGHT UNCHANGED: 00:06Z verdict, 00:14Z
+  preflight, coordinator wake after, R-409 accrual with the R-411(ii)
+  denominator, DA landing at e353119 (HOLD -> 3b7e10a), CO-8,
+  --require-no-skips, DATA_ROOT split. USER: SEVEN RULED, THREE OPEN, none needed
+  tonight. UNCHANGED: G=1/5; the 011 family 12 of 24 with Q4 failing; the
+  sequencing rule; R-419 revocable.
+```

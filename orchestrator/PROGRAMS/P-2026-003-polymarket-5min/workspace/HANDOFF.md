@@ -1,14 +1,13 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-02T21:15Z — **DE37-C1..C5 ALL CONFIRMED, none contested**, and
-the reviewer adds four: **the three declared functions are a PERMANENT
-EXEMPTION** (driven both ways), and **the (γ) fixture satisfies the demand BY
-CONSTRUCTION — the one state the run path cannot produce.** **§5's TEXT survives;
-the CODE is what fails**, and **the package must not travel while the suite
-presents (γ) as achieved on a fixture the run path cannot produce.** **Four named
-conditions now stand between the package and the USER**, and **the split question
-travels WITH the two numbers — a decision the USER is given, not a footnote.**
-**The run has no date.**
+Updated: 2026-09-02T22:00Z — **Everything DE37 raised is CLOSED at `dfd4c00`**
+— the seal is **six literals**, **(γ) is built on the run path**, all nine items
+driven — **and the built (γ) immediately produced a HIGH.** **DE38-C1: on DE's own
+fixture every P4-ACCEPTED draw is the IDENTITY draw** — control stream **==**
+treated stream, null value **== 40.0**, `net_diff_vs_null_median_cents` **0.0** —
+and the identity guard **cannot fire** (0/200 handed the actions vs 65/200 handed
+the demand), while `n_distinct_draws` / `point_mass` are computed on the
+**attempted**, not the accepted, population. **The package is NOT forwarded.**
 
 ## READ FIRST — current project handoff
 
@@ -126,8 +125,8 @@ diagnostic**, below.
 > **All of it lands in ONE addendum the USER freezes; none of it is decided by a
 > seat (rule 14). Nothing runs until it is settled, and the run has no date.**
 >
-> **STATUS: NOT FORWARDED — and there are now FOUR named conditions between it
-> and the USER** (the reviewer's (i)–(iv)): **§5 gets either a
+> **STATUS: NOT FORWARDED — behind the reviewer's four conditions (i)–(iv),
+> UNVERIFIED by the reviewer, AND with DE38-C1 open.** The four: **§5 gets either a
 > declared-vs-built sentence or (γ) built first**; **§5 must say what happens
 > to below-threshold values, with §2 re-read**; **the seal's form must be
 > settled**; and **the two numbers and the split question travel TOGETHER** —
@@ -136,7 +135,9 @@ diagnostic**, below.
 > what fails** — and **the package must not travel while the suite presents (γ)
 > as achieved on a fixture the run path cannot produce.** The **pin claim rests
 > on the seal** (DE37-C2). **The DRAFT's sha is `ec1538f1545999d1` AS OF
-> `218509e`** — it was `6edefdfda909a897` at `27c1ccd`, and **a living
+> `dfd4c00`** — it was `ec1538f1545999d1` at `218509e` and `6edefdfda909a897`
+> at `27c1ccd`, **the third supersession in three rounds**, absorbed by the
+> AS-OF framing without a correction. **`a45b87624f72b567`** — it was `6edefdfda909a897` at `27c1ccd`, and **a living
 > document's sha is a fact with an as-of, not a name** (my round-56 carry was
 > stale; this is the second supersession). **§5 is (γ) DECLARED in the DRAFT
 > and NOT REALISED on the run path** (DE37-C1, HIGH), and **the declaration
@@ -873,7 +874,8 @@ launchers at **235/19**.
 | **DE round 36 review** | **RELEASED** (`aa1e44a`, 263 lines, 20:01:57Z) — **DE36-C1..C6 ALL CONFIRMED** (C1 **measured on a fixture**; **a TRUE swap does not fix it**); four findings **DE36-R1..R4**; `92c7da4` released **as round 37's base** |
 | **DE round 37** | **EXECUTED** at `218509e` (Q-DE-55) — counts **31/85/26/21/24/21/184/92** reproduce; pin statuses **11 IDENTICAL + 1 ADDITIVE_DECLARED** over a **transitive** closure of **75 modules**; `--run` scratch **rc 2**, the preflight refusing **at the scorer, naming `PA.tape_index` / `PA._feature_pass`**. Five findings **DE37-C1..C5** |
 | **DE round 37 review** | **RELEASED** (`3f1d310`, 240 lines, 21:11:39Z) — **DE37-C1..C5 ALL CONFIRMED, none contested**; four findings **DE37-R1..R4**; `218509e` is round 38's base **because nothing can run — so no finding reaches an artifact** |
-| **DE round 38** | **IN FLIGHT** (Q-DE-56, dispatched 21:14Z) — the reviewer's **six-step order**, C1..C5 as ruled plus DE37-R1..R4 |
+| **DE round 38** | **EXECUTED** at `dfd4c00` (Q-DE-56) — counts **31/101/26/21/25/21/184/92** reproduce; **DE37-C1(a)(b)(c), C2..C5 and R1..R4 ALL CLOSED** — the seal is **six literals** (driven closed by the coordinator's own edit), **(γ) is built on the run path**, `gen` required at the adapter. Shas: runner `a49458a0…`, score-stream `4ccdadea…`, v2 DRAFT `a45b8762…` (all three verified here) |
+| **DE round 39** | **WAITS on the reviewer's DE-38 filing** — DE38-C1 (HIGH, open), C2 (LOW), C3 (a question) |
 | **DE round 26** | the **DATA_ROOT split**, still behind DA's landing after 00:14Z |
 | **DA round 11** | **REVIEW RELEASED** (`a5e8b40`) for `e292439` as the content of **Q-DA-209**; all five DA10 findings close. Two new findings **DA11-R1/R2** → DA round 12 |
 | **DA round 12 review** | **RELEASED** (`852b9aa`) for `636a455` as Q-DA-209's content — DA11-R1/R2 close; **DA12-R1 (LOW-MED)** → DA round 14 |
@@ -945,8 +947,8 @@ artifact in the round-5 review, R1/R3/R4/R5 at `5e9ed91`;
 **DE33-C1..C9** (C1/C2/C3 **HIGH**) → **DE round 34, dispatched**;
 **BE9-C1 (HIGH) / BE9-C2 (MED) / BE9-C3 (LOW)** → **BE round 10, dispatched**;
 **BE8-R1 / BE8-R2** → **BE round 12**;
-**DE37-C1..C5 ALL CONFIRMED**, plus **DE37-R1 (MED-HIGH)**, **DE37-R2 (MED)**,
-**DE37-R3 (LOW-MED)** and **DE37-R4 (LOW)** → **DE round 38, in flight**;
+**DE37-C1..C5 and R1..R4 ALL CLOSED** at `dfd4c00`; **DE38-C1 (HIGH) OPEN**,
+**DE38-C2 (LOW)** and **DE38-C3 (a question)** → with the reviewer;
 **BE10-R1..R4** → **BE round 12** with BE8-R1/R2;
 **DE31-R1, DE31-R2, DE32-R2, DE32-R3, DE32-R4 still OPEN** at `6d04833` and in the
 round-34 dispatch; **DE32-R1 closed for the LGBM head ONLY**; **DE32-R5 closed in
@@ -974,9 +976,10 @@ the REGISTER's state, not of the instrument's own escalation history** — a
 distinction worth keeping, because a reader at 00:14Z has no way to know which
 questions this particular tool once asked.
 
-**The reviewer is on RECORDED STANDBY until Q-DE-56 lands**; then **DE round 38
-as one round**. **Released so far** include BE rounds 9+10 (`a8e88de`) and **DE
-round 37** (`3f1d310`). **Released so far**
+**The reviewer is on DE round 38**, dispatched 21:58Z with
+`workspace/reviews/REQUEST_DE_ROUND_38_2026-09-02.md`; **one filing expected**
+(`REVIEW_DE_ROUND_38_2026-09-02.md`). **Released so far** include BE rounds 9+10
+(`a8e88de`) and DE round 37 (`3f1d310`). **Released so far**
 include BE round 8 (`f804f33`), the **estimand reading** (`a23667b`), **DE rounds
 33+34** (`20bd233`) and **DE round 35** (`df123f2`).
 **Released so far** include BE rounds 6 (`03b5dca`) and 7 (`0f34aad`), DE rounds
@@ -1791,6 +1794,65 @@ than a clean zero (the density receipt covers 13 days, not this one).
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-02 ~22:00Z (MEM) — THE CONTROL WAS FINALLY BUILT, AND IT ACCEPTS
+### ONLY THE DRAW THAT CHANGES NOTHING
+
+**R-480 and Q-DE-56 swept.** Nothing run; committed blobs only.
+
+**First the good news, because it is real and it is complete.** At `dfd4c00`
+**every DE37 item closes**: C1's three parts, C2, C3, C4, C5 and R1..R4. **The
+seal is now six literals** — and it was **driven closed by the coordinator's own
+edit**, which is the falsifier the ruling asked for rather than the assertion that
+it works. **(γ) is built on the run path**, and `gen` is **required at the
+adapter**. Counts **31/101/26/21/25/21/184/92** reproduce. **I verified all three
+shas myself** — runner **`a49458a04253175d`**, score-stream
+**`4ccdadeafe982b87`**, v2 DRAFT **`a45b87624f72b567`**.
+
+**And the moment (γ) actually ran, it produced DE38-C1.** On **DE's own C1
+fixture**, **every P4-accepted draw is the identity draw**: the control stream
+**equals** the treated stream, the null value **equals** the treated value
+(**40.0**), and `net_diff_vs_null_median_cents` is **0.0**. **A control that is
+finally correct by construction can still be empty by selection.** The permutation
+is real; the acceptance rule keeps only the permutation that permutes nothing.
+
+**The guard that exists for exactly this cannot fire.** Handed **the actions**,
+under (γ) with a held above event, the identity guard fires **0 of 200**; handed
+**the demand**, it fires **65 of 200**. So the check is not weak — **it is looking
+at the wrong object**, and the difference is the whole finding.
+
+**And the two diagnostics that would have shown the collapse are measured on the
+wrong population**: `n_distinct_draws` and `point_mass` are computed over the
+**attempted** draws, not the **accepted** ones. **A diagnostic computed on the
+attempted set cannot report a collapse in the accepted set** — it will show
+healthy variety in draws that were all thrown away. That is this evening's
+recurring shape at the outcome layer: **the number is real, the population under
+it is the wrong one.**
+
+**Read the three rounds together and the arc is worth keeping.** Round 37
+**declared** (γ) and did not build it. Round 38 **built** it — and the built
+version **accepts only the draw that changes nothing**. *Each round's fix was
+correct and each exposed the next layer*, which is what a review loop is supposed
+to look like; the thing to resist is reading "all closed" as "done".
+
+**The draft's sha moved a third time, and the framing held.**
+`6edefdfda909a897` (`27c1ccd`) → `ec1538f1545999d1` (`218509e`) →
+**`a45b87624f72b567`** (`dfd4c00`). Last round I stopped carrying it as a bare
+name; this round it moved again **and needed no correction, only an as-of.** *That
+is what a good framing buys: the value changes and the record does not become
+wrong.*
+
+**The package is NOT forwarded, and the reasons now stack three deep:** the
+reviewer's four conditions (i)–(iv), **unverified by the reviewer**, **and DE38-C1
+open**. I have written all three into the bundle status rather than the newest one
+alone — a single stated blocker invites the reading that clearing it clears the
+way.
+
+**Unchanged and stated:** the **Phase-4 run has NO DATE**, and **`preflight()`
+still refuses at the scorer** — `PA.tape_index` / `PA._feature_pass` **not
+wired**. **Seats:** the reviewer has DE round 38 (request filed, **one** filing
+expected); **DE is on recorded standby**, round 39 waiting on that filing; **BE
+and DA on recorded standby**.
 
 ### 2026-09-02 ~21:15Z (MEM) — THE COMMENT PROMISES THE PROPERTY THE CODE
 ### COMPUTES AWAY
