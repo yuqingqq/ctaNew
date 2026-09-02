@@ -148,10 +148,16 @@ _REBOUND = "<rebound-import>"
 #:     runpy.run_module / run_path ... imports by executing a module; adding
 #:       it would refuse any file that legitimately runs another, and this
 #:       module's consumers do not. NAMED so its absence is a decision.
-#:     builtins.__import__ / getattr(importlib, "import_module") .... reached
-#:       through an attribute on an object this reader does not resolve;
-#:       catching them needs name resolution, which is a different
-#:       instrument, not a bigger regex.
+#:     getattr(importlib, "import_module") .... reached through a call this
+#:       reader does not resolve; catching it needs name resolution, which is
+#:       a different instrument, not a bigger regex.
+#:
+#:     NOT BLIND, and the list said otherwise until the expected-blind
+#:     assertions were written: `builtins.__import__('x')` IS CAUGHT. The
+#:     dynamic-import matcher keys on the ATTRIBUTE NAME, so the attribute
+#:     form of `__import__` resolves its literal exactly as the bare form
+#:     does. The declared limit claimed a blindness the code did not have --
+#:     which is the recommendation earning its keep on its first run.
 #:     a module imported by a C extension or an import hook .... outside the
 #:       source entirely.
 #:
@@ -164,7 +170,6 @@ DECLARED_BLIND_SHAPES = (
     "builtins.exec / builtins.eval / builtins.compile (attribute form: "
     "matching the bare name is what keeps `re.compile` from reading as an "
     "opaque exec)",
-    "builtins.__import__ (via the builtins module object)",
     'getattr(importlib, "import_module")(...)',
     "C extensions and import hooks (outside the source)",
 )
@@ -681,7 +686,7 @@ def supply(day: str, present: dict[str, Sequence[int]],
 # ---------------------------------------------------------------------------
 REAL_DAY = "20260901"
 EMPTY_DAY = "20260827"
-EXPECTED_CHECKS = 62
+EXPECTED_CHECKS = 69
 
 
 def _grid(day: str) -> list[int]:
@@ -929,6 +934,51 @@ def selftest() -> int:
         f"import importlib as il\nil.import_module('{_X}')\n")),
        "and so is the aliased-module form -- the call is matched on the "
        "attribute name, not on the module alias")
+    # ---- THE DECLARED LIMIT, TESTED FOR ITS OBSERVABLE CONSEQUENCE ------
+    # A shape one cannot see cannot be tested for directly -- but what CAN
+    # be asserted is that the predicate still behaves as DECLARED on it:
+    # the set does not grow (it did not start catching the shape) and no
+    # exception is raised (it did not start refusing it). Either change
+    # breaks the assertion, so a declared limit that silently stops being
+    # true is noticed in BOTH directions. Same construction as the audit's
+    # `refuses_on_the_control: false`, pointed the other way.
+    for _label, _src, _want in (
+            ("runpy.run_path", "import runpy\nrunpy.run_path('x')\n",
+             {"runpy"}),
+            ("runpy.run_module", "import runpy\nrunpy.run_module('x')\n",
+             {"runpy"}),
+            ("builtins.exec (attribute form)",
+             "import builtins\nbuiltins.exec('import x')\n", {"builtins"}),
+
+            ("getattr-reached import_module",
+             "import importlib\ngetattr(importlib, 'import_module')('x')\n",
+             {"importlib"})):
+        _got = imported_modules(_src)
+        ok(_got == _want,
+           f"EXPECTED-BLIND ({_label}): the predicate still sees exactly "
+           f"{sorted(_want)} and neither catches nor refuses the shape "
+           f"({sorted(_got)}) -- the declared limit holds, and this "
+           f"assertion fails if a later change starts doing either")
+    # AND ONE SHAPE THE LIST GOT WRONG, found by these very assertions.
+    ok(imported_modules(
+        "import builtins\nbuiltins.__import__('x')\n") == {"builtins", "x"},
+       "NOT BLIND AFTER ALL: `builtins.__import__('x')` IS CAUGHT -- the "
+       "dynamic-import matcher keys on the ATTRIBUTE NAME, so the attribute "
+       "form resolves its literal exactly as the bare form does. The "
+       "declared list claimed a blindness the code did not have, and the "
+       "expected-blind assertions found it on their FIRST RUN")
+    ok(not reads_no_verdict(imported_modules(
+        "import builtins\nbuiltins.__import__('da_forward_day_verify')\n")),
+       "so a verdict producer imported that way is CAUGHT, not passed")
+    ok(reads_no_verdict(imported_modules(
+        "import importlib\n"
+        "getattr(importlib, 'import_module')('da_forward_day_verify')\n"))
+       is True,
+       "AND THE CONSEQUENCE OF A REAL BLIND SHAPE, STATED PLAINLY: through "
+       "the getattr form a verdict producer WOULD pass. That is what "
+       "'declared blind' means, and writing it as a check is the difference "
+       "between a limit that is stated and one that is discovered")
+
     ok(len(DECLARED_BLIND_SHAPES) >= 4
        and any("runpy" in x for x in DECLARED_BLIND_SHAPES)
        and any("builtins" in x for x in DECLARED_BLIND_SHAPES),

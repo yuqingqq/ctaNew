@@ -458,7 +458,14 @@ def check(supplied: dict, ratification_ref: str,
 
     `now_utc` is the clock the closure check reads -- injectable so a test
     can place itself either side of a day boundary rather than waiting for
-    one.  `stamped_at` is the `as_of_utc` of an EXISTING receipt: supplied,
+    one.
+
+    THE EMISSION ECHOES THE STAMP TWICE: `stamped_at` is the CANONICAL PARSE
+    and `stamped_at_raw` is the value exactly as supplied -- so a receipt can
+    be matched against its own field while a reader still sees what was
+    handed in.  Both read None when no receipt was supplied.
+
+    `stamped_at` is the `as_of_utc` of an EXISTING receipt: supplied,
     the supersession question becomes "was this ratification in force WHEN
     THE RUN WAS STAMPED", and a run that predates its superseder is
     PROVENANCE rather than a refusal.  Omitted, the run is a NEW one and a
@@ -665,6 +672,10 @@ def check(supplied: dict, ratification_ref: str,
         "protocol": PROTOCOL,
         "refusal_scope": "a refusal here is about STARTING A RUN; a receipt "
                          "already carrying a ref keeps it as provenance",
+        "stamp_fields": "`stamped_at` is the CANONICAL PARSE of the supplied "
+                        "receipt stamp; `stamped_at_raw` is that value "
+                        "exactly as supplied; both are None when no receipt "
+                        "was supplied",
         "now_utc": now_utc,
         "now_utc_source": now_utc_source,
         "stamped_at": (stamped_dt.strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -695,7 +706,7 @@ def check(supplied: dict, ratification_ref: str,
 
 
 # ---------------------------------------------------------------------------
-EXPECTED_CHECKS = 102
+EXPECTED_CHECKS = 104
 
 
 def selftest() -> int:
@@ -982,6 +993,20 @@ def selftest() -> int:
         refuses(lambda v=_bad: check(sup, "R-419", stamped_at=v),
                 f"and a NON-STRING stamp ({_bad!r}) refuses there too",
                 needle="stamped_at")
+    # DE13-R2: THE CHECK THAT WOULD HAVE CAUGHT A FALSE FILING.
+    # Round 14 reported `stamped_at_raw` as "documented where check()
+    # describes its emission". It was not: the patch's anchor did not match,
+    # `str.replace` silently did nothing, and nothing asserted the result. A
+    # docstring assertion is cheap and it is the thing that fails when a
+    # claim about documentation stops being true.
+    ok("stamped_at_raw" in (check.__doc__ or "")
+       and "CANONICAL PARSE" in (check.__doc__ or ""),
+       "the emission's stamp fields are DOCUMENTED in check()'s docstring, "
+       "asserted rather than claimed")
+    ok("stamped_at_raw" in check(sup, "R-419").get("stamp_fields", ""),
+       "and the EMISSION carries the same note in the refusal_scope/decides "
+       "idiom, so a reader of the artifact alone is told too")
+
     _st = check(sup, "R-419", stamped_at="2026-09-02T10:30Z")
     ok(_st["verified"] and _st["stamped_at"] == "2026-09-02T10:30:00Z"
        and _st["stamped_at_raw"] == "2026-09-02T10:30Z",
