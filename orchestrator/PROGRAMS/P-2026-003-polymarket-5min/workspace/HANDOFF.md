@@ -1,12 +1,11 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-02T08:16Z — **the blackout cause is established and it is
-POLYMARKET-SIDE** (three events, three-for-three, on a design committed before
-the answer); the frozen content-liveness rule was found unwired on its first
-governed day and wired the same day; and the reviewer proved that same rule
-**blind to TOTAL blackouts**. Prior line: the winner question is answerable —
-the comparison is unit-invariant (4/4 both arms), the level is a range; Q4 still
-fails; forward race at G = 1/5.
+Updated: 2026-09-02T09:38Z — **three USER rulings are now briefed on the record
+(R-408) and nothing else in the programme waits on them**; the content-liveness
+v2 amendment is drafted and review-released, with its own blind spot measured
+and stated. No reviewer hold is open anywhere. Prior line: the blackout cause is
+established and POLYMARKET-SIDE; the v1 rule was wired same-day and then proved
+blind to total blackouts; forward race at G = 1/5.
 
 ## READ FIRST — current project handoff
 
@@ -30,58 +29,71 @@ the recommendation"*). Verified at their artifacts, not from the entry:
 | 4 | **Phase-4 protocol + registry** | the protocol reads **FROZEN — IN FORCE**, declared before any cell is read and with **no Phase-4 cell existing at freeze**; `contracts.yaml` is at **v26** with 30 modules — EV-Replay and DE-ActionSpace registered, `ReplayWindowSpec` added, and `config_supplied:ActionSet` removed under amendment E on BE's confirmation |
 | 5 | **Worktrees** | four execution worktrees exist (`~/ctaNew-wt-{be,da,de,rev}`), `SEAT_PROTOCOL` rule 19. **Limitation stated rather than papered over:** git refuses one branch in two worktrees, so LANDING stays in the shared tree under pathspec discipline — isolation covers execution, and the ledger keeps one writer path |
 
-**THREE ITEMS WAIT. The first has a deadline tonight.**
+**THREE ITEMS WAIT, ALL USER-ONLY, ALL BRIEFED ON THE RECORD AT R-408.** They
+existed only in the coordinator's chat until that entry; the citable anchor is
+now `COORDINATION.md` R-408 (2026-09-02T09:35Z). Options are as filed; the
+recommendation on each is the coordinator's. **Nothing else in the programme is
+blocked behind them, and tonight's 00:06Z verdict runs unattended either way.**
 
-**(1) Does a CONTENT_THIN day accrue? Needed by ~00:06Z.** 09-02 is the frozen
-rule's first governed day and it is carrying the exact defect class the rule
-exists for: a **3 h 20 m near-total blackout, 01:35–04:55Z, all seven coins,
-with no gap rows**, which every legacy bar passes (btc P1 20.1 against 120).
-Measured here by running the frozen rule: `governs('20260902')` is **True**,
-`governs('20260901')` **False**, and 09-02 currently reads **CONTENT_THIN** —
-btc L1 **0.407** against the 0.08 bar with a **40-window run**, which is the
-blackout itself (40 × 5 min = 200 min).
+---
 
-The freeze left §8 open, so the composition is genuinely undecided and DA
-correctly escalated rather than chose: `content_thin_vetoes_HEALTHY: false`
-everywhere, guard-refused otherwise. Three closes are possible (R-404, which
-supersedes R-403's flat "will read CONTENT_THIN"):
+**(1) Does day 09-02 accrue?** (R-404 scenarios, R-405 cause.) Three possible
+closes:
 
-| close | disposition |
-|---|---|
-| **(a) THIN at close** | exclude per frozen **§7**'s pre-declared mechanism — *"a day it fails becomes a day the COORDINATOR excludes with a stated reason, not a day the instrument rejects"*, written before 09-02 was seen, so it is the least choose-after-seeing path |
-| **(b) genuinely LIVE** | accrues, blackout disclosed |
-| **(c) LIVE-BY-MEDIAN-COLLAPSE** | **the §7 trigger never fires because the instrument cannot see it** — coordinator-exclusion with the reviewer's table as the stated reason |
+| close | disposition | recommendation |
+|---|---|---|
+| **(a)** CONTENT_THIN at close | frozen **§7** exclusion by coordinator act, with a stated reason | **EXCLUDE** |
+| **(b)** genuinely LIVE | accrues, blackout disclosed | **ACCRUE** |
+| **(c)** LIVE-by-median-collapse | the instrument **cannot fire**, so exclusion is a coordinator act resting on the reviewer's table | USER's call; **EXCLUDE** |
 
-**Scenario (c) exists because of RR6-1, the sharpest finding of the day and it
-is against the FROZEN rule:** thinness is measured against the day's **own
-median**, so the rule sees PARTIAL blackouts and is **structurally blind to
-TOTAL ones**. Past ~60% dark the median crosses into the dark regime, every
-dark window stops being thin, and the day reads **CONTENT_LIVE at L1 = 0.0000,
-L2 run = 0**. Computed by the reviewer on real 09-02 bytes extended to 288
-windows. **The known cause strengthens exclude-if-thin** (R-405): the darkness
-is venue-inflicted, so the tape genuinely lacks the venue's content.
+Carried with it, so every future 00:06Z is mechanical rather than re-argued:
+the v1 rule's own **§8 is still open** and is recommended **prospectively** —
+(a) L1/L2 **govern**; (b) **per-coin-day** granularity (R-211(3)); (c) a
+CONTENT_THIN day is **inadmissible via §7**, not merely disclosed.
 
-**(2) The Phase-2 winner ruling — fully unblocked** (R-401, no reviewer hold
-open anywhere). The reviewer's framing, verbatim to the USER: the **comparison**
-is unit-invariant, the **level** is not (0.876 ranking-convention / 0.790
-valuing-convention / 0.830 row-level between); survival sits on a 500-draw
-floor; and **Q4, the decision metric, still fails**.
+**(2) The Phase-2 winner.** (R-400/R-401; prereg §9.2/§9.3.) Q1's hazard head
+beats the incumbent's under **every** unit, collapse rule and arm (12 of 24
+survive Holm; the level is a range — 0.79–0.88 lgbm, 0.74–0.81 linear); Q3
+survives at its **own** gate only; **Q4, the decision metric, fails all six
+cells** (best Holm 0.12). **Recommendation: DO NOT ADVANCE** the composed
+candidate — §9.2 names this case — record **Q1 as the surviving component of
+record**, take **no race admission** for this family (§9.3), and run the next
+population under the frozen prospective 2,000-draw declaration (A2). Arm of
+record if any: **LGBM**.
 
-**(3) Soon — the rule-v2 freeze**, when DA's draft lands: an **absolute floor
-beside the relative one**, which is what closes RR6-1, calibrated on ≤08-31 days
-only per the draft's own rule-11 discipline, with the three measured events as
-its anchor.
+**(3) Freeze content-liveness v2?**
+(`plans/DA_CONTENT_LIVENESS_RULE_V2_AMENDMENT.md` §9, released R-407.) The
+open choices are **(e)** adopt L3 as drafted / different structural constants /
+reject; **(f)** whether `CONTENT_DARK` **governs** or is reported beside;
+**(g)** whether the 08-26 hype coin-day is **re-stated** under v2 or left as v1
+recorded it; **(h)** §8's original (a)/(b)/(c) remain open and unaffected.
+**Recommendation: adopt as drafted, GOVERNING, effective 2026-09-03** — tonight
+runs v1 only and no day is re-judged — with 08-26 left as recorded and the
+limit carried verbatim.
 
-**CLOSED, and it was my own standing flag:** for three rounds this section
-carried DA's escalation that the content-liveness rule was **effective but
-unwired** — I re-checked and re-reported it at 04:05Z and again at 05:38Z. It
-was found on the rule's first governed day, ~16 h before the first governed
-verdict, and **wired the same day** (R-402 → R-403, `3298a1d`, review-released).
-The wiring is verified here at source: `da_forward_day_verify.py` now calls
-`CLR.governs(day_token)` and the verdict **refuses to exist without consulting
-the frozen rule** (rc 4, never rc 1). DA's separate point — that the bar sat
-where the events are — is superseded by RR6-1's larger finding above and folds
-into the rule-v2 draft.
+**What v2 buys, and where it still stops — verified in the draft, not taken
+from the brief.** It turns *"any total blackout is invisible"* into *"a total
+blackout past the **fourth consecutive** dark day is invisible"*: with K = 7 and
+a median of priors, the reference itself turns dark once **4 of 7** trailing
+days are dark. A second declared limitation: **a coin whose true volume steps
+down permanently reads DARK until the trailing window catches up, at most 7
+days** — a false-positive mode, and the stated price of a reference the day
+cannot move. **The draft states both limits itself, which is the reason to trust
+the rest of it.** The v1 module is **byte-untouched** by the draft (`git diff
+3298a1d..509859f` on it is empty) — wiring follows a freeze, never precedes one.
+Its checker passes **12/12** in my run.
+
+**Review state: no hold is open anywhere.** The filing
+(`workspace/reviews/REVIEW_DA_FORENSICS_AND_V2_DRAFT_2026-09-02.md`, `98970c2`)
+**RELEASES DA rounds 4 and 5** and states it in those words. **RR7-1** (no
+per-venue regex check in the suite) and **RR7-2** (status vocabularies extend
+rather than map) are **FILED, not holding**, staged for DA's next round. The
+reviewer recomputed E3 from raw logs with its own regexes, dating and
+differencing and matched DA's artifact **to the digit**, and it discloses that
+only **one mutant** ran this round because the round's claims lived in
+recomputation rather than mutation.
+
+---
 
 ### The blackouts are Polymarket's, and that is now established rather than suspected
 
@@ -227,6 +239,34 @@ carry. **`HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md` §10 has no checkboxes at all** 
 it is a numbered implementation order, and its state lives in STATUS/HANDOFF and
 the register, so there was nothing to tick there.
 
+### Calendar and watch-out-for
+
+**Tonight, 00:06Z 2026-09-03 — the first GOVERNED verdict.** The frozen v1 rule
+governs 09-02, and this is the first closing verdict that will carry a
+`content_liveness_rule` block (RR6-2). The coordinator verifies it and files
+either way; the run itself is unattended. Race stands at **G = 1/5 per coin**
+(09-01 accrued). The venue-silence rate I recorded stays as measured: **3 events
+in 7 days, n = 3** — an observed rate, not a forecast.
+
+**The on-disk 09-02 verdict is NOT the governed one.** Checked:
+`da_dayverdict_20260902.json` is the **00:06:03Z open-day snapshot** written by
+the scheduled unit, and it carries the **legacy block only** — no
+`content_liveness_rule` key, `content_liveness.governs: false`. A reader picking
+it up before tomorrow's run will see a pre-wiring artifact; that is expected,
+not a defect.
+
+**Register housekeeping, disclosed and verified.** R-396..R-408 had been
+inserted **inside `## 7. Build order`** and were relocated to sit after R-395.
+**It is a pure move**: a multiset comparison of every line before and after
+(`fe27375` → `0fc4445`) shows **0 lines lost** and exactly **1 added** — the new
+R-408 header itself. **Future entries go AFTER the last R-entry and BEFORE
+`## 6. Build-readiness audit`.**
+
+**Seats are on standby by design, and the panes are not hiding work.** The
+`❯`-line text visible in each seat pane is Claude Code's **dimmed prompt
+suggestion** (verified `ESC[2m`), not an unsent dispatch — no batch is lost.
+**Collector alive**: pid 1108125, up 1 d 11 h, running `collect_pm.py`.
+
 ### Forward race — G = 1 of 5
 
 **2026-09-01 ACCRUED.** The first day the forward race has ever counted.
@@ -302,6 +342,49 @@ than a clean zero (the density receipt covers 13 days, not this one).
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-02 ~09:38Z (MEM) — THE THREE RULINGS GET AN ANCHOR, AND THE v2
+### DRAFT NAMES THE DAY IT GOES BLIND
+
+**R-406..R-408, each verified at its artifact.** The substance is in PENDING
+USER DECISIONS above; what belongs here is what I checked and what it showed.
+
+**The three pending rulings existed only in the coordinator's chat until
+R-408.** That is the finding worth keeping from this round, and it is a
+state-file problem rather than a coordination one: a fresh session reading these
+files would not have known the programme was waiting on anything. They now have
+a citable anchor, and the pending table carries options-as-filed plus the
+recommendation on each, so the next reader sees the decision without the chat.
+
+**The v2 draft is honest in the way that matters — it names where it stops.**
+Verified in the document rather than the brief: v2 converts *"any total blackout
+is invisible"* into *"invisible past the **fourth consecutive** dark day"*,
+because with K = 7 and a median of priors the reference itself turns dark once
+**4 of 7** trailing days are dark. And a coin whose true volume steps down
+permanently **reads DARK for up to 7 days** — a declared false-positive mode,
+not a bug found later. The draft's own §8 heading is *"Limitations, declared
+rather than guarded"*, and its reasoning is the one this programme keeps
+relearning: **a guard that cannot fire is not a guard, so state it rather than
+patch it.**
+
+**The v1 module is byte-untouched by the draft** — `git diff 3298a1d..509859f`
+on `da_content_liveness_rule.py` is empty. Wiring follows a freeze; it never
+precedes one. The draft's checker passes **12/12** in my run.
+
+**No reviewer hold is open anywhere**, in the filing's own words. RR7-1 and
+RR7-2 are filed **not holding**. Two things in that filing are worth copying:
+the reviewer **recomputed E3 from raw logs with its own regexes, its own
+backward-walk dating and its own differencing** and matched DA's artifact **to
+the digit** — that is what makes agreement evidence rather than an echo — and it
+**disclosed that only one mutant ran this round**, because the round's claims
+lived in recomputation, not mutation. A reviewer stating where its own effort
+did *not* go is rarer than one stating where it did.
+
+**The register relocation checks out as a pure move.** R-396..R-408 had been
+sitting inside `## 7. Build order`; a multiset comparison of all lines before
+and after shows **0 lost, 1 added** — the new R-408 header. Recorded in
+watch-out-for along with where future entries belong, because the same insertion
+anchor would do it again.
 
 ### 2026-09-02 ~08:16Z (MEM) — THE RULE WAS UNWIRED, THEN WIRED, THEN PROVED
 ### BLIND — AND THE BLACKOUTS TURN OUT TO BE THE VENUE'S

@@ -872,3 +872,65 @@ established blackout cause. Join rule as in batch 1.
   worktrees. The 011 result of record is unchanged and negative: 0 of 24 cells
   survive the joint reading.
 ```
+
+## Batch 17 — archived 2026-09-02T09:38Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-11 true-up of R-406..R-408. Join rule as in batch 1.
+
+```yaml
+
+  2026-09-02T04:05Z (MEM ROUND 8 -- ALL FIVE USER DECISIONS EXECUTED, AND THE
+  FULLY-EVALUATED FAMILY IS THE RESULT OF RECORD: 12 SURVIVORS WITH THE DECISION
+  METRIC STILL FAILING). Verified at the artifacts, recomputed not read back.
+  THE FIVE (R-397, USER adopting each recommendation verbatim -- "we can proceed
+  the five decisions according to the recommendation"): (1) Q1's incumbent leg
+  WIRED; (2) the Q3 ruling -- each head is adjudicated against its OWN
+  declared_gate, and a conjunct nobody computed reads null, never false; (3)
+  amendment A2 FROZEN at Option 1 -- 5(2) amended to one-sided with R-286/R-288
+  as the recorded cause, p_two_sided retained as a diagnostic, and the
+  matched-random resolution DECLARED PROSPECTIVELY at 2,000 draws for the NEXT
+  run while THIS family stays at 500 with its floor disclosure (verified: the A2
+  file reads FROZEN -- IN FORCE); (4) the Phase-4 protocol FROZEN, declared
+  before any cell is read and with no Phase-4 cell existing at freeze, and the
+  registry APPLIED v24 -> v25 -> v26 (verified at contracts.yaml: version 26, 30
+  modules, EV-Replay and DE-ActionSpace registered, ReplayWindowSpec added,
+  config_supplied:ActionSet REMOVED under amendment E on BE's confirmation);
+  (5) worktrees ADOPTED in execution form -- four exist under SEAT_PROTOCOL rule
+  19, with the limitation STATED rather than papered over: git refuses one branch
+  in two worktrees, so LANDING stays in the shared tree under pathspec
+  discipline and the ledger keeps one writer path. THE RE-ADJUDICATED FAMILY
+  (157,455 B, as-of 2026-09-02T03:46:59Z): 12 of 24 cells survive the joint
+  reading -- recomputed from the cells here, not read off the summary --
+  cells_by_status 18 OK + 6 NO_INCUMBENT_COUNTERPART, denominator 24. Q1_ARRIVAL
+  EARNED ITS PASS: its gate has two conjuncts and BOTH are now computed --
+  candidate AUC 0.8303 lgbm / 0.7733 linear against the incumbent hazard head's
+  0.7139, increments +0.1164 / +0.0594, beats_incumbent_hazard_head true on both
+  arms, 166/166 windows, zero exclusions. Eleven hours earlier that same head
+  published six survivors on a gate half of which had never run; the number that
+  came back is the one the COMPLETE gate produces. Q3_MAGNITUDES PASSES ITS OWN
+  GATE (both slope conjuncts true) -- BUT THAT IS A WEAKER FACT THAN Q1'S, and
+  the artifact is careful about it: Q3's frozen gate carries NO incumbent term
+  (incumbent_counterpart_computed false), so it cleared a bar that never asked
+  for a comparison. Reading the twelve as one uniform result would flatten
+  exactly the distinction ruling 2 exists to preserve. Q2_SIGN correctly stays
+  NO_INCUMBENT_COUNTERPART. AND Q4_COMBINED_EV, THE DECISION METRIC, STILL
+  FAILS: all six increments positive (+278.6 to +3,867.1 net cents), all six
+  survives=false, best one-sided p 0.01999 -> Holm 0.1199. TWELVE SURVIVORS AND
+  NO ECONOMIC RESULT ARE THE SAME SENTENCE. Every surviving p also sits at the
+  1/501 floor, which the cells disclose as A BOUND, NOT A MEASUREMENT -- one
+  draw the other way moves Holm 0.0479 -> 0.0958. Development evidence only
+  (prereg 4: it selects, it never validates); the lattice is UNMOVED at
+  ad535550d366347d because neither 011 module is in CODE_IDENTITY_FILES.
+  ONE QUESTION NOW WAITS ON THE USER, and it is the largest this programme has
+  asked: DOES Q1'S FULL-GATE SURVIVAL CONSTITUTE THE PHASE-2 WINNER that, with
+  the frozen Phase-4 protocol, unblocks DE's latency x queue-reset-cost x budget
+  grids? Escalated by the coordinator (R-398), NOT decided. It became askable
+  only when the gate was completed, and it weighs against a FAILING decision
+  metric and development-only evidence. STILL OPEN AND NOT AMONG THE FIVE, so it
+  did not get resolved with them: DA's escalation that the content-liveness bar
+  now sits exactly where 09-01's events are (65 min fails, 60 passes), and that
+  the rule -- effective since today -- IS STILL UNWIRED. Re-checked at 04:05Z:
+  its only reference outside its own file remains v5_deploy_gates.py:54, which
+  runs its selftest, so governs() returns True and no verdict consumes it.
+  UNCHANGED: the forward race is at G=1/5 and 09-02 is accruing.
+```
