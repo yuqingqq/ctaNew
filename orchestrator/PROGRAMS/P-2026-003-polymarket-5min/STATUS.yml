@@ -4,6 +4,67 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-09-02T12:38Z (MEM ROUND 24 -- THE RULE STOPPED ONE FIELD SHORT). R-429
+  swept; verified at the artifacts, with the central mechanism read at SOURCE
+  rather than taken. DE14-R1 (MEDIUM): DE12-R2 taught that AN EMPTY VALUE MUST
+  REFUSE, and DE14-R1 finds THE ONE FIELD IT DID NOT REACH -- supersedes.
+  superseded_by() compares str(blk.get("supersedes","")).strip() == ref
+  (de_ratification_check.py:279-292), so an ABSENT OR EMPTY value becomes "" and
+  simply FAILS TO MATCH; later entries' blocks are BOUND BUT NEVER VALIDATED, so
+  r-902 (wrong case), R-9O2 (letter O for zero) and "R-902, R-901" (two refs in
+  one field) are INVISIBLE the same way. THE FAILURE MODE IS THE QUIET ONE: not
+  a wrong answer but "nothing supersedes this", IN THE FIELD THAT DRIVES THE
+  CHECKER'S STRONGEST REFUSAL. BOUNDED, AND I CHECKED THE BOUND RATHER THAN
+  REPEATING IT: the register holds EXACTLY ONE ratification block, R-419 with
+  supersedes R-418, an exact match -- NOTHING SHIPPED IS WRONG and the exposure
+  is FORWARD, at BE's check() call site. That distinction is worth keeping: a
+  MEDIUM finding with no present instance is still worth fixing BEFORE the
+  second block exists, which is precisely when it stops being checkable by eye.
+  DE14-R2 (LOW-MEDIUM) IS THE WEEK'S MOST PERSISTENT SHAPE IN NEW CLOTHES: THE
+  AUDIT REPORTS COVERAGE IT DOES NOT ASSERT -- "superseded" refuses at the
+  HEADING-TIMESTAMP guard rather than the SUPERSEDED guard, and
+  unknown_population_value at VALUE rather than the line it names, so DELETING
+  ROUND 14'S OWN NEW CASE LEAVES THE SUITE GREEN. A coverage claim that names a
+  guard the case never reaches is the same thing as a count standing in for a
+  check, and this programme has now recorded that family IN THE CHECKER, IN THE
+  REVIEWER'S CHAIR, IN DA'S SUITE, and here IN AN AUDIT'S OWN ATTRIBUTION.
+  DE14-R3 (LOW): .lower() admits NULL/Null/nUlL while the module case-folds
+  nowhere else -- DECIDED BY THE COORDINATOR AS RESTORATION (exact null, code
+  matching R-419 section 4 as adopted), so NO SPEC CHANGE AND NO USER DECISION:
+  housekeeping rather than a manufactured seventh item, the same restraint that
+  kept the freeze disposition out of the four-item ruling. DE14-R4 (LOW):
+  n_guards still carries the case count. All four go to DE ROUND 16 (Q-DE-34, in
+  flight); DE ROUND 17 is the DATA_ROOT split, STAGED behind DA round 10. AND
+  THE FALSIFIER ROUND 13 OWED WAS PAID: the reviewer's own pre-fix mutant now
+  DIES BY NAME at check 46 under both launchers, and under it the audit surfaces
+  survivors ['unparsable_stamped_at_not_superseded'] with attribution going
+  NON-TOTAL (20 vs 21) -- a debt named two rounds ago, settled where it was
+  incurred. The round-14 closures were driven rather than read: every one of the
+  ten RATIFICATION_FIELDS present-and-empty refuses EMPTY, absent MISSING, wrong
+  VALUE, on their own cases; two empties report together; scope_from null
+  refuses "not a day"; the audit's numbers are COMPUTED from the physical raise
+  line; 84 -> 102 accounted (8 + 8 + 2); emptying the garbage loop fires 99 ==
+  102; 19 of 19 refusals interpolate, 0 constant. MY RECEIPT FINDING BECAME A
+  BE LANDING CONDITION rather than a note (R-429 section 4), and the form is
+  better than what I proposed: EITHER A COPY OF THE FIRST PASS'S RECEIPT EXISTS,
+  OR THE RE-RUN'S TEN-GATE RECEIPT IS THE ONLY RECEIPT AND THE FIRST PASS'S PANE
+  COUNTS MUST MATCH IT -- it does not pretend the bytes are recoverable, and it
+  makes the surviving artifact carry the burden of agreeing with what was
+  reported; it also rides the BE 3-4 review request. STILL LIVE AT 12:38Z: the
+  re-run is active, the receipt at that path still reads as_of 2026-09-02T12:23:
+  29Z with SIX gates, and NO TEN-GATE RECEIPT EXISTS YET, so the condition is
+  not yet satisfiable either way. REVIEW TABLE: DE round 14 RELEASED; DE round
+  15 VERIFIED and UNDER REVIEW at 0ca510e, with the round-13 section-3 IN-BAND
+  CORRECTION REQUIRED AS ITS OWN SECTION of that review; DE round 16 IN FLIGHT;
+  DE round 17 STAGED; DA round 10 HELD for the 00:14Z read; BE round 4 IN FLIGHT
+  on the re-run (~12:50Z expected). OPEN: DE14-R1..R4 to DE round 16; RR12-1 and
+  CO-R4 to DA round 10; CO-8 to the coordinator after tonight; the reviewer's
+  round-13 section-3 correction to the DE round 15 review; the first-pass
+  receipt to BE as a landing condition. USER DECISIONS UNCHANGED: FOUR RULED,
+  ONE OPEN (the freeze disposition, R-424 section 6), the 09-02 accrual call
+  MECHANICAL after 00:06Z. R-419 remains revocable by the USER. UNCHANGED:
+  G=1/5; the 011 family is 12 of 24 surviving with Q4 failing; development
+  evidence. PRIOR:
   2026-09-02T12:27Z (MEM ROUND 23 -- A LIMITATION THE CODE DID NOT HAVE, AND A
   RECEIPT THAT DID NOT SURVIVE). R-428 swept; verified at the artifacts,
   including one check the dispatch asked for that is answerable NOW. THE
@@ -147,77 +208,7 @@ updated: >-
   ONE OPEN (the freeze disposition, R-424 section 6), the 09-02 accrual call
   MECHANICAL after 00:06Z. R-419 remains revocable by the USER. UNCHANGED:
   G=1/5; the 011 family is 12 of 24 surviving with Q4 failing; development
-  evidence. PRIOR:
-  2026-09-02T12:11Z (MEM ROUND 21 -- A FIX WITHOUT ITS FALSIFIER, AND TWO
-  CORRECTIONS TO MY OWN READING). R-426 swept; verified at the artifacts and
-  live at the box. CO-7 (LOW, coordinator): THE CO-6 FIX IS CORRECT AND SHIPPED
-  WITHOUT A FALSIFIER. stamped_at is now parsed at entry and refuses garbage on
-  the branch that used to echo it -- but the diff added NO SELFTEST LINE, so the
-  count went 84 -> 84 and NOTHING ASSERTS either the refusal on that branch or
-  the echoed parsed value. Rule 15 says a checker ships its falsifier, and A
-  COUNT THAT DOES NOT MOVE IS THE TELL -- sharper for the timing: the round-12
-  review had just PROVED that assertion works by emptying a selftest loop and
-  watching the count assertion fail (82 == 84). THE INSTRUMENT THAT WOULD HAVE
-  CAUGHT CO-7 WAS DEMONSTRATED THREE COMMITS BEFORE CO-7 HAPPENED. Routed to DE
-  round 14 (Q-DE-32) with the audit's unparsable_stamped_at case to be driven on
-  the branch that used to be blind. TWO CORRECTIONS TO MY OWN ROUND-20 ENTRY,
-  BOTH MINE AND BOTH THE SHAPE I KEEP RECORDING ABOUT OTHERS. (a) I reported the
-  BE receipt as carrying THREE PASS gates; it carries SIX
-  (day_closed_and_attributed, population_supply_and_bridge,
-  materialise_frozen_bytes, import_closure_disclosure, import_anchors_from_run_
-  dir, selection_from_specs) -- my print TRUNCATED AT 220 CHARACTERS and I
-  described what it showed as though it were the whole array: A PARTIAL READ
-  REPORTED AS COMPLETE, committed by the seat that has recorded that class four
-  times this week. (b) I wrote that the receipt exists "while the run is still
-  going" in a way that reads as PROGRESSIVE flushing. IT IS NOT: all six gates
-  landed WITHIN ~4 s OF THE 11:55:06Z START and the file's mtime has not moved
-  since 11:55:10.29 through fifteen minutes of streaming scoring -- so a kill
-  during scoring would leave THE GATES AND NOTHING ABOUT SCORING PROGRESS. The
-  hole is SMALLER, NOT CLOSED. Both corrected in place in HANDOFF. AND ONE
-  THING I HAD NOT LOOKED AT CLOSELY ENOUGH TO GET WRONG YET: sealed: true in
-  that receipt means METRICS GO TO THE SEALED FILE ONLY (rule 11; the receipt
-  carries counts, identities and hashes and NO metric, and unsealing is the
-  coordinator's or the USER's act), NOT that the run finished -- mid-run,
-  "sealed" and "done" look identical to a careless reader and the sealing note
-  is what separates them. BE's run re-checked live at 12:10Z: still active,
-  MemoryMax 12 GiB UNRAISED, MemoryCurrent about 4.0 GiB (2.75 -> 4.0 over eight
-  minutes), climbing, far under the cap, and still NOT A RESULT. THE DE ROUND 12
-  REVIEW IS VERIFIED AND RELEASED (dcb7036): DE10-R1 closed AT THE ROOT (all
-  five temporal comparison sites compare datetimes, _norm_ts parses); DE12-R1
-  CONFIRMS CO-6 AND WIDENS IT -- on the non-superseded ref a NON-STRING stamp
-  (123) was also accepted and echoed, not only garbage strings -- raised to
-  MEDIUM-LOW with the reviewer's framing accepted: A STORED PROVENANCE FIELD THE
-  CHECKER WILL LATER REFUSE TO READ, the failure DEFERRED onto the day a
-  superseder appears; and DE12-R2 IS NEW -- SCOPE_OPEN_TOKENS = ('null','none',
-  '') means a scope_to: with NOTHING AFTER THE COLON reads open-ended, verified
-  True, unverifiable [], SILENTLY, so AN EDITING SLIP BECOMES AN UNBOUNDED
-  RATIFICATION with no sign in the emission (a tilde refuses; an absent field
-  reads MISSING; the hole is precisely the empty value, the one a human typo
-  produces). DE ROUND 13 VERIFIED (f04c06a, Q-DE-31): admissible 62, ratification
-  84, seam 69, rc 0 both launchers. DE11-R1 CLOSED -- exec('import X'),
-  eval("__import__('X')"), bare compile(...) and a rebound __import__ all refuse
-  by shape, seven controls hold, re.compile resolves to ['re'] and is NOT
-  refused, and DECLARED_BLIND_SHAPES NAMES FIVE shapes the checker cannot see,
-  which is the honest form of a limit. CO-6/DE12-R1 CLOSED AT ENTRY, non-strings
-  included -- the reviewer's widening covered UNSEEN, since round 13 predates
-  the review by three seconds. DE'S OWN FALSE POSITIVE IS RECORDED AS METHOD:
-  matching on the attribute name made re.compile look like an opaque exec and
-  THE SEAM REFUSED ITSELF -- caught by the dependent suite BEFORE IT SHIPPED.
-  TWO METHOD MARKS FROM THE REVIEW: its structural closure of "the control that
-  ran nothing" is the right kind of proof (emptying a loop FAILS the suite on the
-  count assertion, so a loop that runs zero times cannot pass); and its
-  audit-count note is accepted and forwarded -- 19 paths = 19 (input, refusal)
-  CASES over THREE raise sites, which is CALL-SITE COVERAGE OF A SHARED PARSER,
-  the right design, to be stated in the count's own emission rather than read as
-  nineteen independent guards. REVIEW TABLE: DE round 12 RELEASED; DE round 13
-  VERIFIED and UNDER REVIEW at f04c06a (REQUEST_DE_ROUND_13_2026-09-02.md), with
-  BE ROUNDS 3-4 QUEUED BEHIND IT; DE round 14 IN FLIGHT; DA round 10 BUILDING
-  and landing only after the 00:14Z read; BE round 4 in flight. OPEN FINDINGS:
-  DE12-R2 and CO-7 to DE round 14; RR12-1 and CO-R4 to DA round 10. USER
-  DECISIONS UNCHANGED: FOUR RULED, ONE OPEN (the freeze disposition, R-424
-  section 6), the 09-02 accrual call MECHANICAL after 00:06Z. R-419 remains
-  revocable by the USER. UNCHANGED: G=1/5; the 011 family is 12 of 24 surviving
-  with Q4 failing; development evidence.
+  evidence.
   ARCHIVED: entries older than these three are moved, never deleted, to
   workspace/STATUS_UPDATED_ARCHIVE.md (append-only). This field is a
   ROLLING WINDOW OF THREE by ruling (coordinator, 2026-08-28T10:02Z):
@@ -3810,7 +3801,7 @@ flags:
                              # migration discipline remain authoritative.
 
 focus: >
-  As-of 2026-09-02T12:27Z, build and test the offline model mechanism-first
+  As-of 2026-09-02T12:38Z, build and test the offline model mechanism-first
   under plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md section 10. Do not use the
   subordinate stateful-cancel TODO checkbox count as total progress. The
   foundation is established: the action-level dataset and PRED_STATE_V1 are
@@ -3906,7 +3897,13 @@ focus: >
   reviewer's round-13 filing carried the same false claim and owes an in-band
   correction. BE's 09-01 streaming pass COMPLETED (peak 5.9 G under the unraised
   12 G cap, ten gates), and the re-run has ALREADY OVERWRITTEN its receipt in
-  the same outdir -- scratch only, recorded not adjudicated. Fair-price
+  the same outdir -- scratch only, recorded not adjudicated, and now a BE
+  LANDING CONDITION (a copy exists, or the re-run's ten-gate receipt is the only
+  receipt and the first pass's pane counts must match it). DE14-R1: supersedes
+  is matched by RAW STRING EQUALITY and validated nowhere, so an empty or
+  malformed value one entry over is INVISIBLE -- DE12-R2's shape in the field
+  that drives the strongest refusal, bounded today (one block, exact) with the
+  exposure forward. Fair-price
   Identity is built while the challenger protocol is not freeze-ready;
   QR_SKEW_ONLY semantics are USER-FROZEN, while the seven-arm path remains
   stub/inert. Real queue-integrated replay, lifecycle economics and an

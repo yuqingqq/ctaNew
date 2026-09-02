@@ -1874,3 +1874,81 @@ Moved in the MEM round-23 true-up of R-428. Join rule as in batch 1.
   USER. UNCHANGED: G=1/5; the 011 family is 12 of 24 surviving with Q4 failing;
   development evidence.
 ```
+
+## Batch 30 — archived 2026-09-02T12:38Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-24 true-up of R-429. Join rule as in batch 1.
+
+```yaml
+
+  2026-09-02T12:11Z (MEM ROUND 21 -- A FIX WITHOUT ITS FALSIFIER, AND TWO
+  CORRECTIONS TO MY OWN READING). R-426 swept; verified at the artifacts and
+  live at the box. CO-7 (LOW, coordinator): THE CO-6 FIX IS CORRECT AND SHIPPED
+  WITHOUT A FALSIFIER. stamped_at is now parsed at entry and refuses garbage on
+  the branch that used to echo it -- but the diff added NO SELFTEST LINE, so the
+  count went 84 -> 84 and NOTHING ASSERTS either the refusal on that branch or
+  the echoed parsed value. Rule 15 says a checker ships its falsifier, and A
+  COUNT THAT DOES NOT MOVE IS THE TELL -- sharper for the timing: the round-12
+  review had just PROVED that assertion works by emptying a selftest loop and
+  watching the count assertion fail (82 == 84). THE INSTRUMENT THAT WOULD HAVE
+  CAUGHT CO-7 WAS DEMONSTRATED THREE COMMITS BEFORE CO-7 HAPPENED. Routed to DE
+  round 14 (Q-DE-32) with the audit's unparsable_stamped_at case to be driven on
+  the branch that used to be blind. TWO CORRECTIONS TO MY OWN ROUND-20 ENTRY,
+  BOTH MINE AND BOTH THE SHAPE I KEEP RECORDING ABOUT OTHERS. (a) I reported the
+  BE receipt as carrying THREE PASS gates; it carries SIX
+  (day_closed_and_attributed, population_supply_and_bridge,
+  materialise_frozen_bytes, import_closure_disclosure, import_anchors_from_run_
+  dir, selection_from_specs) -- my print TRUNCATED AT 220 CHARACTERS and I
+  described what it showed as though it were the whole array: A PARTIAL READ
+  REPORTED AS COMPLETE, committed by the seat that has recorded that class four
+  times this week. (b) I wrote that the receipt exists "while the run is still
+  going" in a way that reads as PROGRESSIVE flushing. IT IS NOT: all six gates
+  landed WITHIN ~4 s OF THE 11:55:06Z START and the file's mtime has not moved
+  since 11:55:10.29 through fifteen minutes of streaming scoring -- so a kill
+  during scoring would leave THE GATES AND NOTHING ABOUT SCORING PROGRESS. The
+  hole is SMALLER, NOT CLOSED. Both corrected in place in HANDOFF. AND ONE
+  THING I HAD NOT LOOKED AT CLOSELY ENOUGH TO GET WRONG YET: sealed: true in
+  that receipt means METRICS GO TO THE SEALED FILE ONLY (rule 11; the receipt
+  carries counts, identities and hashes and NO metric, and unsealing is the
+  coordinator's or the USER's act), NOT that the run finished -- mid-run,
+  "sealed" and "done" look identical to a careless reader and the sealing note
+  is what separates them. BE's run re-checked live at 12:10Z: still active,
+  MemoryMax 12 GiB UNRAISED, MemoryCurrent about 4.0 GiB (2.75 -> 4.0 over eight
+  minutes), climbing, far under the cap, and still NOT A RESULT. THE DE ROUND 12
+  REVIEW IS VERIFIED AND RELEASED (dcb7036): DE10-R1 closed AT THE ROOT (all
+  five temporal comparison sites compare datetimes, _norm_ts parses); DE12-R1
+  CONFIRMS CO-6 AND WIDENS IT -- on the non-superseded ref a NON-STRING stamp
+  (123) was also accepted and echoed, not only garbage strings -- raised to
+  MEDIUM-LOW with the reviewer's framing accepted: A STORED PROVENANCE FIELD THE
+  CHECKER WILL LATER REFUSE TO READ, the failure DEFERRED onto the day a
+  superseder appears; and DE12-R2 IS NEW -- SCOPE_OPEN_TOKENS = ('null','none',
+  '') means a scope_to: with NOTHING AFTER THE COLON reads open-ended, verified
+  True, unverifiable [], SILENTLY, so AN EDITING SLIP BECOMES AN UNBOUNDED
+  RATIFICATION with no sign in the emission (a tilde refuses; an absent field
+  reads MISSING; the hole is precisely the empty value, the one a human typo
+  produces). DE ROUND 13 VERIFIED (f04c06a, Q-DE-31): admissible 62, ratification
+  84, seam 69, rc 0 both launchers. DE11-R1 CLOSED -- exec('import X'),
+  eval("__import__('X')"), bare compile(...) and a rebound __import__ all refuse
+  by shape, seven controls hold, re.compile resolves to ['re'] and is NOT
+  refused, and DECLARED_BLIND_SHAPES NAMES FIVE shapes the checker cannot see,
+  which is the honest form of a limit. CO-6/DE12-R1 CLOSED AT ENTRY, non-strings
+  included -- the reviewer's widening covered UNSEEN, since round 13 predates
+  the review by three seconds. DE'S OWN FALSE POSITIVE IS RECORDED AS METHOD:
+  matching on the attribute name made re.compile look like an opaque exec and
+  THE SEAM REFUSED ITSELF -- caught by the dependent suite BEFORE IT SHIPPED.
+  TWO METHOD MARKS FROM THE REVIEW: its structural closure of "the control that
+  ran nothing" is the right kind of proof (emptying a loop FAILS the suite on the
+  count assertion, so a loop that runs zero times cannot pass); and its
+  audit-count note is accepted and forwarded -- 19 paths = 19 (input, refusal)
+  CASES over THREE raise sites, which is CALL-SITE COVERAGE OF A SHARED PARSER,
+  the right design, to be stated in the count's own emission rather than read as
+  nineteen independent guards. REVIEW TABLE: DE round 12 RELEASED; DE round 13
+  VERIFIED and UNDER REVIEW at f04c06a (REQUEST_DE_ROUND_13_2026-09-02.md), with
+  BE ROUNDS 3-4 QUEUED BEHIND IT; DE round 14 IN FLIGHT; DA round 10 BUILDING
+  and landing only after the 00:14Z read; BE round 4 in flight. OPEN FINDINGS:
+  DE12-R2 and CO-7 to DE round 14; RR12-1 and CO-R4 to DA round 10. USER
+  DECISIONS UNCHANGED: FOUR RULED, ONE OPEN (the freeze disposition, R-424
+  section 6), the 09-02 accrual call MECHANICAL after 00:06Z. R-419 remains
+  revocable by the USER. UNCHANGED: G=1/5; the 011 family is 12 of 24 surviving
+  with Q4 failing; development evidence.
+```

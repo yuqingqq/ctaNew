@@ -1,12 +1,11 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-02T12:27Z — **the expected-blind assertions falsified the
-declared-blind list on their first run**: `builtins.__import__` was listed as
-blind and is actually **caught**, so the list claimed a limitation the code did
-not have (5 → 4). **BE's 09-01 streaming pass COMPLETED** — and, checked at the
-artifact, **the re-run has already overwritten its receipt**. **USER decisions
-unchanged: four RULED, one OPEN.** Prior line: the worktrees paid for themselves
-with a 32-file class.
+Updated: 2026-09-02T12:38Z — **`supersedes` is matched by raw string equality
+and validated nowhere** (DE14-R1): an empty or malformed value one entry over is
+**invisible** — the shape DE12-R2 just closed, in the field that drives the
+strongest refusal. Bounded today, forward exposure. **USER decisions unchanged:
+four RULED, one OPEN.** Prior line: the declared-blind list claimed a limitation
+the code did not have; BE's completed receipt was overwritten by its re-run.
 
 ## READ FIRST — current project handoff
 
@@ -173,6 +172,17 @@ copy. **Not adjudicated**; recorded because the question was asked and is
 answerable now rather than at landing. The remedy is the one this programme
 already knows: **an outdir per run, or supersede rather than overwrite.**
 
+> **It is now a BE LANDING CONDITION** (R-429 §4) and rides the BE 3–4 review
+> request: **either a copy of the first pass's receipt exists, or the re-run's
+> ten-gate receipt is the only receipt and the first pass's pane counts must
+> match it.** That is the right disposition — it does not pretend the bytes are
+> recoverable, and it makes the surviving artifact carry the burden of agreeing
+> with what was reported.
+>
+> **Still true at 12:38Z:** the re-run is active, the receipt at that path still
+> reads `as_of 12:23:29Z` with six gates, and **no ten-gate receipt exists yet**
+> — so the condition is live, not yet satisfiable either way.
+
 **Two disclosures the re-run adds, both of which change how a reader must take
 the counts:**
 
@@ -248,6 +258,44 @@ not survive SIGKILL**. Now: a receipt written only at the end means **a killed
 run leaves no trace of how far it got**. Both are the same shape — *state that
 exists only if the process exits normally* — and the fix is the same shape too:
 write as you go.
+
+### DE14-R1 — `supersedes` is matched raw and validated nowhere
+
+**The empty-value rule stopped one entry short of the field that matters most.**
+`superseded_by()` collects later entries whose block declares a supersession —
+and it does so by **raw string equality**:
+
+```python
+blk = bind_from_block(e)
+if blk and str(blk.get("supersedes", "")).strip() == ref:
+```
+
+Read at source myself (`de_ratification_check.py:279-292`): an **absent or empty**
+`supersedes` becomes `""`, which never equals a ref, so it is **silently not a
+supersession rather than a refusal**. The later entries' blocks are **bound but
+never validated** — so `r-902` (wrong case), `R-9O2` (letter O for zero) and
+`R-902, R-901` (two refs in one field) are each **invisible** in the same way.
+
+**This is DE12-R2's shape one field over**, and it lands in the field that drives
+the **strongest** refusal in the checker: whether a ratification is superseded.
+An editing slip there does not produce a wrong answer loudly — it produces
+*"nothing supersedes this"*, quietly.
+
+**Bounded today, and I confirmed the bound rather than taking it:** the register
+holds **exactly one** ratification block — `R-419`, `supersedes: R-418`, an
+exact match. **Nothing shipped is wrong.** The exposure is **forward**, at BE's
+`check()` call site.
+
+**The other three, and one of them is the recurring one.** **DE14-R2
+(LOW-MEDIUM): the audit reports coverage it does not assert** — `superseded`
+refuses at the *heading-timestamp* guard rather than the SUPERSEDED guard, and
+`unknown_population_value` at VALUE rather than the line it names, so **deleting
+round 14's own new case leaves the suite green.** A coverage claim that names a
+guard the case never reaches is the same family as a count standing in for a
+check. **DE14-R3 (LOW): `.lower()` admits `NULL`/`Null`/`nUlL`** while the module
+case-folds nowhere else — **decided by the coordinator as restoration** (exact
+`null`, matching R-419 §4 as adopted): **no spec change, so no USER decision.**
+**DE14-R4 (LOW): `n_guards` still carries the case count.**
 
 ### THE DECLARED-BLIND LIST WAS WRONG, AND ITS OWN TEST FOUND IT
 
@@ -506,7 +554,10 @@ launchers at **235/19**.
 | **DE round 12** | **RELEASED** (`dcb7036`) — DE10-R1 closed **at the root** (all five temporal sites compare datetimes). Two findings: **DE12-R1** = CO-6 confirmed and **widened to non-strings**, raised to **MEDIUM-LOW**; **DE12-R2 (new)** — an **empty** `scope_to` reads silently open-ended |
 | **DE round 13** | **RELEASED** (`b7ce7bb`) — DE11-R1 closed **wider than filed**: eight rebinding shapes of `__import__` all refuse, and the closure test that matters — `reads_no_verdict` True on DE's own three files, **False** on `be_forward_day`/`da_blackout_mask` because they import verdict producers. **DE13-R1** (CO-7 sharpened) and **DE13-R2** (new) |
 | **DE round 14** | **VERIFIED** (`194b5e9`) and **UNDER REVIEW**: **102 checks** both launchers (reproduced here). DE12-R2 and CO-7 **CLOSED**; the empty-value refusal is **GENERAL** and distinct from MISSING and VALUE; **`none` removed as a decision** because R-419 §4 adopted `null` only; audit reports **n_cases 21 / n_raise_sites 16, computed** rather than narrated |
-| **DE round 15** | **VERIFIED** (`0ca510e`), review **queued** — admissible **69** / ratification **104** / seam **69**, all reproduced here. DE13-R2 **CLOSED**; **the declared-blind list was tested and found wrong** (below). **The round-15 review must carry the reviewer's own in-band correction** |
+| **DE round 14** | **RELEASED** (`b437e14`) with **four findings**, all reproduced at `0ca510e` — see below. **The falsifier round 13 owed is paid:** the reviewer's own pre-fix mutant now **dies by name** (check 46), and under it the audit surfaces `survivors ['unparsable_stamped_at_not_superseded']` with attribution going non-total (20 vs 21) |
+| **DE round 15** | **VERIFIED** (`0ca510e`) and **UNDER REVIEW** — admissible **69** / ratification **104** / seam **69**, all reproduced here. DE13-R2 **CLOSED**; the declared-blind list was tested and found wrong (below). **The round-13 §3 in-band correction is required as its own section of this review** |
+| **DE round 16** | **IN FLIGHT** (Q-DE-34): DE14-R1..R4 |
+| **DE round 17** | **STAGED** behind DA round 10: the DATA_ROOT split |
 | **DE round 16** | **STAGED** behind DA round 10's landing and the r14 review: the CODE_ROOT/DATA_ROOT split on the **three** DE-owned files in the class (`de_admissible_windows` :64/:77, `de_ratification_check` :43, `de_lane4_results_doc`) — **counted at the tree; five other DE files are not in the class** — following DA's `_resolve_data_root` convention so the split is written **once** |
 | **DA round 10** | **BUILT AND HELD** at worktree `3a89e6c` — verified here as **unpushed and on no remote branch**, nothing landed, the shared tree carrying only BE's in-flight file. Lands after the 00:14Z read |
 | **the coordinator's own acts** | **REVIEWED** (`1384ec5`), no hold; CO-R1..R4 dispositioned |
@@ -538,8 +589,10 @@ instrument under the run it is meant to read.
 mask block and **refuse if absent on a governed day**, the population-gate
 ledger-vs-tape refusal, and `require_verified()`.
 
-**Open findings:** **DE13-R2** → DE round 15; **RR12-1** and **CO-R4** → DA
-round 10 (held); **CO-8** → the coordinator, after tonight.
+**Open findings:** **DE14-R1..R4** → DE round 16; **RR12-1** and **CO-R4** → DA
+round 10 (held); **CO-8** → the coordinator, after tonight; the **round-13 §3
+in-band correction** → the reviewer, in the DE round 15 review; the **first-pass
+receipt** → BE, as a landing condition.
 
 **CO-7 got worse before it closed, and the sharpening is the lesson.** The
 reviewer did not merely note the missing check — it **restored the exact pre-fix
@@ -991,6 +1044,53 @@ than a clean zero (the density receipt covers 13 days, not this one).
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-02 ~12:38Z (MEM) — THE RULE STOPPED ONE FIELD SHORT
+
+**R-429 swept.** The round's finding is a rule that was applied everywhere except
+where it mattered most.
+
+**DE12-R2 taught that an empty value must refuse. DE14-R1 finds the one field it
+did not reach — and it is `supersedes`.** I read the mechanism at source rather
+than taking it: `superseded_by()` compares `str(blk.get("supersedes", "")).strip()
+== ref`, so an **absent or empty** value becomes `""` and simply **fails to
+match**. Later entries' blocks are bound but **never validated**, so `r-902`,
+`R-9O2` and `R-902, R-901` are invisible the same way. **The failure mode is the
+quiet one:** not a wrong answer, but *"nothing supersedes this"* — in the field
+that drives the checker's strongest refusal.
+
+**Bounded, and I checked the bound rather than repeating it:** the register holds
+**exactly one** ratification block, `R-419 → R-418`, an exact match. Nothing
+shipped is wrong; the exposure is forward, at BE's call site. **That distinction
+is worth keeping** — a MEDIUM finding with no present instance is still worth
+fixing before the second block exists, which is precisely when it stops being
+checkable by eye.
+
+**DE14-R2 is the week's most persistent shape wearing new clothes: the audit
+reports coverage it does not assert.** Two cases refuse at guards their names do
+not claim, and **deleting round 14's own new case leaves the suite green.** A
+coverage claim that names a guard the case never reaches is the same thing as a
+count standing in for a check — and this programme has now recorded that family
+in the checker, in the reviewer's chair, in DA's suite, and here in an audit's
+own attribution.
+
+**One decision was made and correctly not escalated.** `.lower()` admits
+`NULL`/`Null`; the fix is **restoration to exact `null`**, matching R-419 §4 as
+adopted. **No spec changes, so no USER decision** — the coordinator ruled it as
+housekeeping rather than manufacturing a seventh item. That restraint is the same
+judgement that kept the freeze disposition out of the four-item ruling.
+
+**And the falsifier round 13 owed was paid.** The reviewer's own pre-fix mutant
+now **dies by name** at check 46, and under it the audit surfaces the new case as
+a **survivor** with attribution going non-total (20 vs 21). A debt named two
+rounds ago, settled where it was incurred.
+
+**My receipt finding became a landing condition rather than a note**, and the
+form is better than what I proposed: either a copy exists, or **the re-run's
+ten-gate receipt is the only receipt and the first pass's pane counts must match
+it**. It does not pretend the bytes are recoverable; it makes the surviving
+artifact carry the burden of agreeing with what was reported. Still live at
+12:38Z — the re-run is going and no ten-gate receipt exists yet.
 
 ### 2026-09-02 ~12:27Z (MEM) — A LIMITATION THE CODE DID NOT HAVE, AND A
 ### RECEIPT THAT DID NOT SURVIVE
