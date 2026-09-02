@@ -39,7 +39,7 @@ import math
 import sys
 from pathlib import Path
 
-EXPECTED_CHECKS = 21
+EXPECTED_CHECKS = 22
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import de_score_stream as SS                     # noqa: E402
@@ -155,7 +155,17 @@ def score_lgbm(booster, width: int, raw: list[float]) -> float:
             f"`LightGBMError: The number of features in data (1) is not the "
             f"same as it was in training data ({width})` -- after the feed, "
             f"which is the worst place to learn it (DE33-C1)")
-    return float(booster.predict([list(raw)])[0])
+    # DE35-R3: the library's error is converted HERE, at the boundary that
+    # owns the call, rather than named in a CLI except-tuple far away --
+    # so any caller of this function gets the module's own refusal.
+    try:
+        return float(booster.predict([list(raw)])[0])
+    except Exception as exc:                       # pragma: no cover
+        # SITE: lgbm#3
+        raise HeadRefused(
+            f"the LGBM head refused the row it was handed ({exc}); the "
+            f"width matched ({width}) so this is the model's own "
+            f"objection, converted at its boundary") from exc
 
 
 def thresholds(coin: str, head: str, *, fits: Path | None = None,
@@ -176,14 +186,25 @@ def thresholds(coin: str, head: str, *, fits: Path | None = None,
             raise HeadRefused(
                 f"linear_d_{coin}.json carries no `causal_thresholds`: the "
                 f"thresholds live with the fit and are not defaulted here")
-        return {k: float(v) for k, v in got.items()}
-    if head == "q1_arrival_composed_lgbm":
+        out = {k: float(v) for k, v in got.items()}
+    elif head == "q1_arrival_composed_lgbm":
         if verify:
             SS.verify_head("q1_arrival_composed_lgbm", coin)
-        return {k: float(v) for k, v in json.loads(
+        out = {k: float(v) for k, v in json.loads(
             (d0 / f"lgbm_thresholds_{coin}.json").read_text()).items()}
-    # SITE: thresholds#2
-    raise HeadRefused(f"unknown head {head!r}")
+    else:
+        # SITE: thresholds#2
+        raise HeadRefused(f"unknown head {head!r}")
+    # DE35-R3: a threshold outside (0, 1) cancels everything or nothing,
+    # silently. Refused for EITHER head, wherever the number came from.
+    bad = sorted(k for k, v in out.items() if not (0.0 < v < 1.0))
+    if bad:
+        # SITE: thresholds#3
+        raise HeadRefused(
+            f"{head}/{coin} carries non-probability threshold(s) for "
+            f"{bad}: a cancel threshold outside (0, 1) either cancels "
+            f"everything or nothing, silently")
+    return out
 
 
 def selftest() -> int:
@@ -268,10 +289,17 @@ def selftest() -> int:
     ok(0.0 <= q <= 1.0,
        f"and it SCORES a real {width}-feature row: p {q:.6f}")
     _q2 = score_lgbm(booster, width, [0.5] * width)
-    ok(True,
-       f"and the two synthetic rows score {q:.6f} / {_q2:.6f} -- reported "
-       f"rather than asserted different, because a tree ensemble may "
-       f"legitimately map two synthetic rows to one leaf")
+    _q3 = score_lgbm(booster, width, [0.0] * width)
+    # DE34-R3: this was `ok(True, ...)` -- a check that could not fail. The
+    # property that CAN is determinism and range: the same row twice gives
+    # the same score, and both scores are probabilities. Two synthetic rows
+    # may legitimately land on one leaf, so difference is reported, not
+    # asserted.
+    ok(_q3 == q and 0.0 <= _q2 <= 1.0,
+       f"and the head is DETERMINISTIC and in range: the same row scores "
+       f"{q:.6f} twice and a second row {_q2:.6f} -- difference is "
+       f"reported rather than asserted, because a tree ensemble may map "
+       f"two synthetic rows to one leaf")
     for _bad in (1, 105, 107):
         refuses(lambda w=_bad: score_lgbm(booster, width, [0.0] * w),
                 f"KNOWN-BAD: a {_bad}-feature row REFUSES against the "
@@ -303,6 +331,16 @@ def selftest() -> int:
     with _tf.TemporaryDirectory() as d:
         _bad_fit = json.loads((FITS / "linear_d_btc.json").read_text())
         _bad_fit.pop("causal_thresholds")
+        (Path(d) / "linear_d_btc.json").write_text(json.dumps(_bad_fit))
+        _hi = json.loads((FITS / "linear_d_btc.json").read_text())
+        _hi["causal_thresholds"] = dict(_hi["causal_thresholds"], **{"10%": 1.5})
+        (Path(d) / "linear_d_btc_hi.json").write_text(json.dumps(_hi))
+        (Path(d) / "linear_d_btc.json").write_text(json.dumps(_hi))
+        refuses(lambda: thresholds("btc", "incumbent_linear_d",
+                                   fits=Path(d), verify=False),
+                "DE35-R3: a threshold OUTSIDE (0, 1) refuses -- 1.5 cancels "
+                "nothing and 0 cancels everything, either of them silently",
+                needle="non-probability threshold")
         (Path(d) / "linear_d_btc.json").write_text(json.dumps(_bad_fit))
         refuses(lambda: thresholds("btc", "incumbent_linear_d",
                                    fits=Path(d), verify=False),

@@ -40,7 +40,7 @@ import sys
 import time
 from pathlib import Path
 
-EXPECTED_CHECKS = 67
+EXPECTED_CHECKS = 71
 
 ROOT = Path(__file__).resolve().parents[2]
 PLANS = Path(__file__).resolve().parent / "plans"
@@ -111,40 +111,66 @@ NULL_CELLS = (("btc", 250, 0.10), ("eth", 250, 0.10))
 N_DRAWS = 200
 
 POPULATION_NAME = "v3_4_consumed_fragment"
-
-#: DE34-C4: THE PIN MUST COVER THE CODE THAT WILL BE CALLED, not the two
-#: files that happen to match. The feed and the assembly call
-#: `harmful_exposure_rows.py` (fit sha c2e40100ddf3f7a1) and
-#: `phase2_arms.py` (3249dfc61c31b8d2); BOTH have moved since the fit
-#: (1bbd8e75 at 851edaf; ab19f5c6 at 2e1204f, a parser-only change whose
-#: `_feature_pass` def bytes are identical by AST against the manifest's
-#: own `fit_code_ref`). So the design is stated rather than assumed:
-#:
-#:   * a called file whose CURRENT bytes match the manifest -> bound;
-#:   * a called file that has MOVED -> REFUSED unless the run supplies the
-#:     fit-commit bytes, because "the function I need is unchanged" is a
-#:     claim about a function and the manifest pins a FILE;
-#:   * the refusal names the file, both shas, and the commit the manifest
-#:     records, so the next step is `git show <fit_code_ref>:<file>` rather
-#:     than a judgement call.
-#:
-#: Nothing here weakens the pin to make the run possible: the run does not
-#: happen this round, and a pin that passes because it was narrowed is the
-#: shape this programme keeps removing.
-CALLED_FIT_CODE = ("harmful_exposure_rows.py", "phase2_arms.py")
-#: The repost dwell and the rate limit are DECLARED here with their reason,
-#: because the frozen protocol's axes (:88-99) contain neither: an
-#: undeclared default in a policy runner is a policy choice nobody made.
+#: EST-R3: BOTH of these are numbers I chose. `validate_params` refuses
+#: `theta_repost >= theta_cancel`, so some hysteresis must exist for the
+#: policy to load, and the TODO requires a DECLARED dwell without fixing
+#: one. They are proposed to the USER in the v2 DRAFT with sensitivity
+#: pairs that select neither; until that ruling they keep these values and
+#: nothing in the code cites the draft as authority.
 REPOST_DWELL_S = 2.0
-#: EST-R1: `HALF_SPREAD_CENTS` IS GONE. The frozen text settles what
-#: `spread` means -- DRAFT:212-213 requires "spread capture" reported per
-#: cell and rho as the retained-book ratio of it -- so the denominator is a
-#: MEASUREMENT, not a constant of this diagnostic. With a constant H the
-#: ratio was identically `-(size-weighted mean markout) / H`, i.e. a
-#: rescaled mean markout whose reading threshold WAS the constant. The mid
-#: at fill now comes from the feed per tranche (`wf.mid_at`), so no number
-#: of mine sits in the denominator.
+#: EST-R4 / DRAFT:71 (row 8 of the §2 parameter table, NOT :88-99 -- the
+#: axes table is :99-108): the rate limit is NAMED by the frozen protocol
+#: and asks for a per-cell declaration. `inf` is that declaration -- a
+#: declared value, not an absent one -- and the identity
+#: `requested = passed + suppressed` is reported per arm beside it.
 MAX_CANCELS_PER_MINUTE = float("inf")
+
+#: DE34-R7 (RULED) / DE35-R1: THE PIN IS COMPUTED, NOT LISTED, AND IT
+#: REPORTS A STATUS RATHER THAN BLOCKING ON A FILE THE RUN NEVER EXECUTES.
+#:
+#: Round 35 listed two files and refused when either had moved. One of
+#: them -- `phase2_arms.py` -- is not in this runner's import closure at
+#: all, so the pin blocked the run on code the diagnostic does not run;
+#: and a FILE sha cannot say that nine of ten called functions are
+#: byte-identical, which is the fact that decides whether the difference
+#: reaches this population. The called set is now COMPUTED from the import
+#: closure, the comparison is per FUNCTION against the fit-commit bytes,
+#: and the residue travels as a verdict:
+#:
+#:   IDENTICAL          -- every called function's AST dump matches the fit
+#:   ADDITIVE_DECLARED  -- some differ, named, with why the run's path is
+#:                         unaffected; the run PROCEEDS against the tip
+#:   BLOCKING           -- a called function differs in a way that reaches
+#:                         the number; the ONLY verdict that refuses
+#:   NOT_CALLED         -- pinned by the manifest, never imported here
+#:
+#: Running the fit-commit bytes instead would reinstate the silent-empty
+#: defect `851edaf` exists to remove and needs a materialised pinned import
+#: path this runner does not have (R-473).
+PIN_VERDICTS = ("IDENTICAL", "ADDITIVE_DECLARED", "BLOCKING", "NOT_CALLED")
+
+#: Differences the run has looked at and declared additive, with the reason
+#: each cannot reach the number. A function NOT in this map that differs is
+#: BLOCKING -- silence is never the additive answer.
+DECLARED_ADDITIVE = {
+    ("harmful_exposure_rows.py", "select_v2_era"):
+        "the `era` keyword now defaults to `fi.ERA` via `_era_or_refuse` "
+        "(the value this "
+        "population is selected under anyway) and an empty selection "
+        "REFUSES instead of returning nothing -- both make the same "
+        "selection for this population and turn a silent empty into a "
+        "refusal, which is the direction the fit-commit bytes lack",
+    ("harmful_exposure_rows.py", "_era_or_refuse"):
+        "NEW at 851edaf (absent from the fit bytes): it names the era from "
+        "`fi.ERA` -- the value this population is already selected under -- "
+        "and routes the empty case to the refusal below. It adds a refusal "
+        "and changes no selection that is non-empty, so for this "
+        "population the selected set is the fit's",
+    ("harmful_exposure_rows.py", "_refuse_empty_selection"):
+        "NEW at 851edaf: it exists only to RAISE on an empty selection, "
+        "so it cannot alter a selection that is non-empty -- and the "
+        "population this diagnostic runs on is 471 windows, measured",
+}
 
 BINDING_FIELDS = ("frozen_protocol_sha256", "addendum_sha256",
                   "head_manifest_shas", "incumbent_manifest_shas",
@@ -328,34 +354,149 @@ def build_reference(coin: str, *, population: str = POPULATION_NAME,
             "n_slugs": len(ref), "population": population}
 
 
-def verify_called_code() -> dict:
-    """The fit code the FEED and the ASSEMBLY call, against the manifest."""
+def import_closure(mod_path: Path | None = None) -> set:
+    """The modules this runner actually imports, from its own parse --
+    including the lazy imports inside functions, which is where
+    `harmful_exposure_rows` lives (`build_reference`)."""
+    src = (mod_path or Path(__file__)).read_text()
+    import ast as _a
+    out = set()
+    for nd in _a.walk(_a.parse(src)):
+        if isinstance(nd, _a.Import):
+            out.update(al.name.split(".")[0] for al in nd.names)
+        elif isinstance(nd, _a.ImportFrom) and nd.module:
+            out.add(nd.module.split(".")[0])
+    return out
+
+
+def called_functions(src: str, entries: set) -> set:
+    """The functions REACHABLE from `entries` inside one module's source.
+
+    The ruling says compare the CALLED functions, and "called" is
+    transitive: `select_v2_era` calls `_refuse_empty_selection`, so a
+    change there reaches the run even though the runner never names it.
+    Equally, `select_stratified` and `selftest` are in the file and on no
+    path from the entries, so a change there does not."""
+    import ast as _a
+    tree = _a.parse(src)
+    bodies = {nd.name: nd for nd in tree.body
+              if isinstance(nd, (_a.FunctionDef, _a.AsyncFunctionDef))}
+    seen, stack = set(), [e for e in entries if e in bodies]
+    while stack:
+        fn = stack.pop()
+        if fn in seen:
+            continue
+        seen.add(fn)
+        for nd in _a.walk(bodies[fn]):
+            if isinstance(nd, _a.Call):
+                nm = getattr(nd.func, "id", None) or getattr(
+                    nd.func, "attr", None)
+                if nm in bodies and nm not in seen:
+                    stack.append(nm)
+    return seen
+
+
+def module_entries(mod: str, src: str) -> set:
+    """The functions THIS runner calls on `mod`, from its own parse."""
+    import ast as _a
+    alias = {mod}
+    for nd in _a.walk(_a.parse(src)):
+        if isinstance(nd, _a.Import):
+            for al in nd.names:
+                if al.name == mod and al.asname:
+                    alias.add(al.asname)
+        elif isinstance(nd, _a.ImportFrom) and nd.module == mod:
+            pass
+    out = set()
+    for nd in _a.walk(_a.parse(src)):
+        if isinstance(nd, _a.Call) and isinstance(nd.func, _a.Attribute) \
+                and getattr(nd.func.value, "id", "") in alias:
+            out.add(nd.func.attr)
+    return out
+
+
+def _fn_asts(src: str) -> dict:
+    """name -> normalised AST dump for every top-level function."""
+    import ast as _a
+    out = {}
+    for nd in _a.parse(src).body:
+        if isinstance(nd, (_a.FunctionDef, _a.AsyncFunctionDef)):
+            out[nd.name] = _a.dump(nd, annotate_fields=True,
+                                   include_attributes=False)
+    return out
+
+
+def _git_show(ref: str, path: str) -> str | None:
+    import subprocess
+    r = subprocess.run(("git", "show", f"{ref}:{path}"),
+                       cwd=str(ROOT), capture_output=True, text=True)
+    return r.stdout if r.returncode == 0 else None
+
+
+def pin_statuses() -> list:
+    """One computed status per manifest-pinned file (DE34-R7)."""
     m = json.loads((FITS / "fit_manifest.json").read_text())
     codes = m.get("fit_code_files") or {}
-    ref = m.get("fit_code_ref")
+    ref = m.get("fit_code_ref") or ""
     here = Path(__file__).resolve().parent
-    moved = {}
-    for name in CALLED_FIT_CODE:
-        want = codes.get(name)
-        if want is None:
-            # SITE: called#1
-            raise DiagRefused(f"{name} is not pinned by the manifest, so "
-                              f"nothing says which bytes fitted with it")
-        got = hashlib.sha256((here / name).read_bytes()).hexdigest()[:16]
-        if got != want:
-            moved[name] = (got, want)
-    if moved:
-        # SITE: called#2
+    called = import_closure()
+    out = []
+    for name in sorted(codes):
+        mod = name[:-3]
+        f = here / name
+        sha_run = (hashlib.sha256(f.read_bytes()).hexdigest()[:16]
+                   if f.exists() else None)
+        row = {"path": name, "sha_at_fit": codes[name], "sha_at_run": sha_run,
+               "commit": ref, "functions_changed": [], "verdict": None}
+        if mod not in called:
+            row["verdict"] = "NOT_CALLED"
+            out.append(row)
+            continue
+        if sha_run == codes[name]:
+            row["verdict"] = "IDENTICAL"
+            out.append(row)
+            continue
+        fit_src = _git_show(ref, f"live/pm_research/{name}")
+        if fit_src is None:
+            row["verdict"] = "BLOCKING"
+            row["functions_changed"] = ["<fit bytes unavailable at "
+                                        f"{ref}>"]
+            out.append(row)
+            continue
+        a, b = _fn_asts(fit_src), _fn_asts(f.read_text())
+        entries = module_entries(mod, Path(__file__).read_text())
+        reach = (called_functions(f.read_text(), entries)
+                 | called_functions(fit_src, entries))
+        row["entry_points"] = sorted(entries)
+        row["n_functions_called"] = len(reach)
+        changed = sorted(n for n in reach if a.get(n) != b.get(n))
+        row["functions_changed"] = changed
+        undeclared = [n for n in changed
+                      if (name, n) not in DECLARED_ADDITIVE]
+        row["verdict"] = ("IDENTICAL" if not changed else
+                          "BLOCKING" if undeclared else "ADDITIVE_DECLARED")
+        row["declared"] = {n: DECLARED_ADDITIVE[(name, n)]
+                           for n in changed if (name, n) in DECLARED_ADDITIVE}
+        row["n_functions_in_file"] = len(set(a) | set(b))
+        out.append(row)
+    return out
+
+
+def verify_called_code() -> list:
+    """The statuses, refusing ONLY on BLOCKING (DE34-R7 ruled)."""
+    rows = pin_statuses()
+    bad = [r for r in rows if r["verdict"] == "BLOCKING"]
+    if bad:
+        # SITE: called#1
         raise DiagRefused(
-            f"the code this run CALLS has moved since the fit: "
-            f"{ {k: {'now': v[0], 'fit': v[1]} for k, v in moved.items()} } "
-            f"(manifest fit_code_ref {ref}). Round 34 pinned two files that "
-            f"match and called two that do not -- naming the files that "
-            f"agree is not a verification of the files that will run "
-            f"(DE34-C4). Supply the fit-commit bytes "
-            f"(`git show {ref}:live/pm_research/<file>`) or record a "
-            f"function-level equivalence the manifest can carry.")
-    return {n: codes[n] for n in CALLED_FIT_CODE}
+            f"BLOCKING pin status for "
+            f"{ {r['path']: r['functions_changed'] for r in bad} }: a "
+            f"CALLED function differs from the fit-commit bytes "
+            f"({rows[0]['commit']}) in a way nobody has declared additive. "
+            f"A file that merely moved is not blocking -- and a file the "
+            f"runner never imports is NOT_CALLED, which is what round 35 "
+            f"refused on (DE35-R1)")
+    return rows
 
 
 def validate_cell(cell: dict) -> dict:
@@ -766,45 +907,71 @@ def run_cell(reference: dict, scores_by_arm: dict, cell: dict, *,
                  "hour": _hour_of(slug)}
                 for slug, sides in sorted(reference.items())
                 for side in HSP.SIDES for g in sides[side]]
+        # DE35-C4: hoisted -- these were rebuilt inside the seed loop.
+        gidx = _gen_index(reference)
+        treated = [{"slug": f"{a['slug']}|{a['side']}|{a['gen']}"}
+                   for a in _treated_actions(per_arm[head])]
+        treated_scores = list(scores_by_arm[head])
         vals, rhos = [], []
+        # DE31-R2: the null's own population -- how many strata, how many
+        # had room, and how many DISTINCT draws the seeds produced. A
+        # stratum with no room contributes a point mass and the receipt
+        # says so rather than leaving a reader to infer it.
+        _strata = {}
+        for g in pool:
+            _strata[(g["side"], g["hour"])] = \
+                _strata.get((g["side"], g["hour"]), 0) + 1
+        _dem = {}
+        for t0 in treated:
+            _sl, _sd, _gn = t0["slug"].split("|")
+            _dem[(_sd, _hour_of(_sl))] = _dem.get((_sd, _hour_of(_sl)), 0) + 1
+        _room = {k: _strata.get(k, 0) - v for k, v in _dem.items()}
+        _seen_draws = set()
         for seed in range(draws):
             # The control is an ACTING arm: it cancels what the draw names,
             # and it is read on the same two numbers as every other arm.
-            treated = [{"slug": f"{a['slug']}|{a['side']}|{a['gen']}"}
-                       for a in _treated_actions(per_arm[head])]
             drawn = MRC.draw(pool, treated, seed=seed)
+            _seen_draws.add(tuple(drawn))
             MRC.refuse_if_not_random(drawn, treated, pool=pool)
             # The control ACTS: a score above any threshold on exactly the
             # generations the draw named, and nothing else.
-            # DE33-C3 / EST-R5: the control acts on the NAMED generation
-            # at ITS OWN decision time, and it reposts on the same
-            # hysteresis as the treated arm. Round 33 discarded the
-            # generation and emitted one score at t = 0.0 per drawn key,
-            # so the policy cancelled whichever generation was live at
-            # t = 0 (or none), collapsed same-(slug, side) draws into one
-            # action, and never reposted -- three ways the "matched"
-            # control was not matched.
-            ctrl_scores = []
-            for key in drawn:
-                slug, side, gen = key.split("|")
-                g0 = _gen_index(reference).get((slug, side, int(gen)))
+            # DE35-C1 / §5, as the reviewer words it: the control's score
+            # stream IS THE TREATED ARM'S STREAM with the above-threshold
+            # assignments PERMUTED within (side, hour), so the control
+            # cancels exactly the drawn generations and NO EVENT EXISTS IN
+            # ONE ARM THAT DOES NOT EXIST IN THE OTHER. Round 35 invented a
+            # literal 1.0 at t0 and a literal 0.0 one dwell later: that
+            # manufactures a policy rather than permuting one, and the
+            # invented repost made the control's behaviour depend on the
+            # draw in a way the treated arm's never was.
+            _above = [e for e in treated_scores
+                      if float(e["score"]) >= th[head]]
+            _below = [e for e in treated_scores
+                      if float(e["score"]) < th[head]]
+            _want_keys = [tuple(k.split("|")) for k in drawn]
+            _want = {(sl, sd, int(gn)) for sl, sd, gn in _want_keys}
+            # the SAME above-threshold score values, reassigned to the
+            # drawn generations; nothing invented, nothing dropped.
+            _vals = [float(e["score"]) for e in _above]
+            if len(_vals) < len(_want_keys):
+                _vals = (_vals * (len(_want_keys) // max(1, len(_vals)) + 1))
+            ctrl_scores = list(_below)
+            for (sl, sd, gn), v in zip(sorted(_want_keys), _vals):
+                g0 = gidx.get((sl, sd, int(gn)))
                 if g0 is None:
                     # SITE: control#1
                     raise DiagRefused(
-                        f"the draw named {key}, which is not a generation "
-                        f"of this reference: a control that cannot act on "
-                        f"what it drew is not the matched control")
-                ctrl_scores.append({"t": float(g0["t0"]), "slug": slug,
-                                    "side": side, "gen": int(gen),
-                                    "score": 1.0})
-                # repost parity: the same below-threshold event the treated
-                # arm's stream would produce, one dwell later.
-                ctrl_scores.append({"t": float(g0["t0"]) + REPOST_DWELL_S,
-                                    "slug": slug, "side": side,
-                                    "gen": int(gen), "score": 0.0})
+                        f"the draw named {(sl, sd, gn)}, which is not a "
+                        f"generation of this reference: a control that "
+                        f"cannot act on what it drew is not the matched "
+                        f"control")
+                ctrl_scores.append({"t": float(g0["t0"]), "slug": sl,
+                                    "side": sd, "gen": int(gn),
+                                    "score": v})
             ctrl_scores.sort(key=lambda e: e["t"])
-            res = arm_result(reference, ctrl_scores, c,
-                             theta=th[head] if head in th else 0.5)
+            # DE35-C5: no `else 0.5` -- the control is read at the
+            # treated arm's own threshold or not at all.
+            res = arm_result(reference, ctrl_scores, c, theta=th[head])
             # EST-R5: the cancel set must BE the drawn generations, and the
             # action count must survive the matching.
             _cancelled = {(x["slug"], x["side"], x["gen"])
@@ -823,6 +990,17 @@ def run_cell(reference: dict, scores_by_arm: dict, cell: dict, *,
                 rhos.append(res["rho"])
         vals.sort()
         rhos.sort()
+        out["null_population"] = {
+            "n_strata": len(_strata),
+            "strata_with_room": sum(1 for v in _room.values() if v > 0),
+            "strata_forced": sorted(f"{k[0]}|{k[1]}" for k, v in _room.items()
+                                    if v <= 0),
+            "n_distinct_draws": len(_seen_draws),
+            "point_mass": len(_seen_draws) == 1,
+            "note": ("a stratum with no room contributes a POINT MASS: the "
+                     "matched draw there is forced, so its contribution is "
+                     "a constant and not a sample (DE31-R2)"),
+        }
         out["null_quantiles"] = {
             "n": len(vals),
             "metric": "cost_adjusted_value_cents AND rho -- the DECISION "
@@ -1294,11 +1472,22 @@ def selftest() -> int:
     ok(_undeclared,
        "and the feed REFUSES to emit without `declare_cap=True`, so this "
        "runner cannot inherit the 1-second cap silently (R-165(2) item 5)")
-    ok("build_reference" in globals()
-       and "select_v2_era" in build_reference.__doc__,
-       "and the reference is built from `harmful_exposure_rows`' OWN "
-       "pieces -- its selection, replay, join and generation table -- "
-       "rather than a second copy of them")
+    # DE34-R2: a docstring grep proved nothing about the code. The call
+    # is read from the parse instead: `build_reference` must invoke the
+    # module's own selection and generation table, not a local copy.
+    _brs = _ast.get_source_segment(
+        Path(__file__).read_text(),
+        [f for f in _ast.walk(_ast.parse(Path(__file__).read_text()))
+         if isinstance(f, _ast.FunctionDef) and f.name == "build_reference"][0])
+    _her_calls = {nd.func.attr for nd in _ast.walk(_ast.parse(_brs))
+                  if isinstance(nd, _ast.Call)
+                  and isinstance(nd.func, _ast.Attribute)
+                  and getattr(nd.func.value, "id", "") == "HER"}
+    ok({"select_v2_era", "replay_with_recorder", "join_fills",
+        "generation_table", "label_rows"} <= _her_calls,
+       f"DE34-R2: `build_reference` CALLS the module's own pieces "
+       f"{sorted(_her_calls)} -- read from the parse, where the old check "
+       f"grepped its own docstring for the word `select_v2_era`")
 
     # ---- DE32-C3: rho is computed on RECEIVED fills ---------------------
     ok(cell["rho"] is not None
@@ -1336,12 +1525,24 @@ def selftest() -> int:
             "KNOWN-BAD: a budget with no threshold in the bound fit "
             "REFUSES rather than falling back on a number this file chose",
             needle="policy constant is an input")
-    ok(MAX_CANCELS_PER_MINUTE == float("inf")
-       and "the frozen protocol names no rate limit" in
-       (cell_params.__doc__ or "") + open(__file__).read(),
-       f"and `max_cancels_per_minute` is DECLARED unbounded with its "
-       f"reason -- the frozen protocol's axes carry no rate limit, so a "
-       f"finite one would be a policy axis the protocol does not have")
+    # DE35-C2: this check used to GREP this file for a sentence -- and it
+    # passed because the correction quotes that sentence in order to
+    # retract it, so the check survived on its own retraction while its
+    # message still asserted the retracted claim. It is now a predicate
+    # over what `arm_result` PRODUCES.
+    _legs_all = [v for arm in cell["per_arm"].values()
+                 for v in arm["legs"].values()]
+    ok(_legs_all
+       and all(v["max_cancels_per_minute"] == MAX_CANCELS_PER_MINUTE
+               for v in _legs_all)
+       and all(v["rate_identity_holds"] for v in _legs_all),
+       f"EST-R4 / DE35-C2: every one of the {len(_legs_all)} arm-legs in "
+       f"this cell carries its declared `max_cancels_per_minute` "
+       f"({MAX_CANCELS_PER_MINUTE}) and satisfies the frozen identity "
+       f"`requested = passed + suppressed` -- read from the OUTPUT, where "
+       f"the old check grepped this file for a sentence it had itself "
+       f"retracted. `DRAFT:71` names the rate limit and asks for a "
+       f"per-cell declaration; the axes table is :99-108")
 
     # ---- DE33-C2 / C5 / C8 / C9, driven -------------------------------
     _saw_ti = ""
@@ -1438,17 +1639,33 @@ def selftest() -> int:
             "then tracebacked at the first cell",
             needle="no feature assembly is wired")
     refuses(lambda: preflight(),
-            "and `preflight()` REFUSES before anything is built -- on this "
-            "tree it stops even earlier than the scorer, at DE34-C4: the "
-            "feed and assembly call `harmful_exposure_rows.py` and "
-            "`phase2_arms.py`, and BOTH have moved since the fit, so the "
-            "pin that matters refuses rather than passing on the two files "
-            "that happen to agree",
-            needle="has moved since the fit")
-    refuses(lambda: verify_called_code(),
-            "DE34-C4: and that refusal names BOTH shas and the manifest's "
-            "`fit_code_ref`, so the next step is `git show <ref>:<file>` "
-            "rather than a judgement call", needle="fit_code_ref")
+            "and `preflight()` REFUSES before anything is built -- at the "
+            "scorer, because the pin no longer blocks on a file the run "
+            "does not execute (DE35-R1)",
+            needle="no feature assembly is wired")
+    _pin = verify_called_code()          # PROCEEDS: no BLOCKING verdict
+    _pv = {r["path"]: r["verdict"] for r in _pin}
+    _her = [r for r in _pin if r["path"] == "harmful_exposure_rows.py"][0]
+    ok(_her["verdict"] == "ADDITIVE_DECLARED"
+       and _her["functions_changed"] == ["_era_or_refuse",
+                                         "_refuse_empty_selection",
+                                         "select_v2_era"]
+       and _her["n_functions_called"] == 17,
+       f"DE34-R7 / DE35-R1: THE PIN IS COMPUTED, AND IT NO LONGER BLOCKS. "
+       f"The called set is derived from this runner's own import closure "
+       f"and the entry points it calls, then closed transitively: "
+       f"{_her['n_functions_called']} of {_her['n_functions_in_file']} "
+       f"functions in `harmful_exposure_rows.py` are on the run's path, "
+       f"and the three that differ from the fit bytes "
+       f"({_her['functions_changed']}) are each DECLARED additive with "
+       f"their reason -> {_her['verdict']}. The run proceeds against the "
+       f"TIP, as R-473 rules")
+    ok(_pv.get("phase2_arms.py") == "NOT_CALLED"
+       and sum(1 for v in _pv.values() if v == "NOT_CALLED") == 11,
+       f"and `phase2_arms.py` reads NOT_CALLED -- the runner never imports "
+       f"it, so round 35's pin blocked the run on a file the diagnostic "
+       f"does not execute (DE35-R1). 11 of {len(_pv)} pinned files are "
+       f"NOT_CALLED, computed rather than listed")
     _runsrc = _ast.get_source_segment(
         Path(__file__).read_text(),
         [f for f in _ast.walk(_ast.parse(Path(__file__).read_text()))
@@ -1501,6 +1718,46 @@ def selftest() -> int:
        "REFUSES -- asserted from the parse, because forcing a mismatched "
        "cancel would mean mutating the policy the control replays. The "
        "null cell above exercises the passing direction on every draw")
+
+    # ---- §5: the control's stream IS the treated arm's, permuted -------
+    _ctrl_src = _ast.get_source_segment(
+        Path(__file__).read_text(),
+        [f for f in _ast.walk(_ast.parse(Path(__file__).read_text()))
+         if isinstance(f, _ast.FunctionDef) and f.name == "run_cell"][0])
+    _invented = [nd for nd in _ast.walk(_ast.parse(_ctrl_src))
+                 if isinstance(nd, _ast.Dict)
+                 and any(isinstance(k, _ast.Constant) and k.value == "score"
+                         for k in nd.keys if k is not None)
+                 and any(isinstance(v, _ast.Constant)
+                         and v.value in (1.0, 0.0) for v in nd.values)]
+    ok(not _invented and "_above = [e for e in treated_scores" in _ctrl_src
+       and "_below" in _ctrl_src,
+       "DE35-C1 / §5: the control's stream is the TREATED ARM'S with the "
+       "above-threshold assignments permuted -- no dict in `run_cell` "
+       "builds a score from a literal 1.0 or 0.0, asserted from the parse, "
+       "and every below-threshold event is carried through. Round 35 "
+       "invented both literals, which manufactured a policy and made the "
+       "control's reposting a function of the DRAW where the treated arm's "
+       "is a function of the HEAD")
+    # `.get` so a REMOVED block fails by name rather than by KeyError.
+    _npop = ncell.get("null_population") or {}
+    ok(_npop.get("n_strata", 0) >= 1
+       and _npop.get("n_distinct_draws", 0) >= 1
+       and isinstance(_npop.get("point_mass"), bool)
+       and "POINT MASS" in str(_npop.get("note", "")).upper(),
+       f"DE31-R2 AT THE RUN: the receipt carries the null's own population "
+       f"-- {_npop.get('n_strata')} strata, "
+       f"{_npop.get('strata_with_room')} with room, "
+       f"{_npop.get('n_distinct_draws')} distinct draws, point_mass "
+       f"{_npop.get('point_mass')} -- and a stratum with no room is "
+       f"DECLARED a "
+       f"point mass rather than left for a reader to infer")
+    ok(all(v["max_cancels_per_minute"] == MAX_CANCELS_PER_MINUTE
+           for arm in ncell["per_arm"].values()
+           for v in arm["legs"].values()),
+       "and the null cell's arms carry the same declared rate limit as "
+       "every other arm, so the control is read under the treated arm's "
+       "declaration and not another one")
 
     ok(n[0] + 1 == EXPECTED_CHECKS,
        f"check count asserted at run time: {n[0] + 1} == {EXPECTED_CHECKS}")

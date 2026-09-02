@@ -272,13 +272,28 @@ def selftest() -> int:
     # which EST-R2 shows was wrong and which is therefore NOT restored.
     # The third -- that the runner IMPORTS the constant rather than
     # restating it -- was never wrong and comes back here.
-    ok(_RUN.FILL_HORIZON_S == 1.0,
-       f"the runner IMPORTS `FILL_HORIZON_S` ({_RUN.FILL_HORIZON_S}s) from "
-       f"`phase4_generation_tables` rather than restating it, so a change "
-       f"to the cap cannot leave the runner saying one thing and computing "
-       f"another. The two checks REMOVED with it asserted that the frozen "
-       f"text made an addendum unnecessary -- EST-R2 shows that reading "
-       f"was wrong, so they are withdrawn rather than restored (DE34-C3)")
+    import ast as _a2
+    _rsrc = (DRAFT.parent.parent / "de_phase4_diag_runner.py").read_text()
+    _rtree = _a2.parse(_rsrc)
+    _imported = any(isinstance(nd, _a2.ImportFrom)
+                    and nd.module == "phase4_generation_tables"
+                    and any(al.name == "FILL_HORIZON_S" for al in nd.names)
+                    for nd in _a2.walk(_rtree))
+    _restated = any(isinstance(nd, _a2.Assign)
+                    and any(getattr(t, "id", "") == "FILL_HORIZON_S"
+                            for t in nd.targets)
+                    for nd in _rtree.body)
+    import phase4_generation_tables as _PGT
+    ok(_RUN.FILL_HORIZON_S == _PGT.FILL_HORIZON_S
+       and _imported and not _restated,
+       f"DE35-C3: the runner's `FILL_HORIZON_S` IS the feed's "
+       f"({_RUN.FILL_HORIZON_S} == {_PGT.FILL_HORIZON_S}) AND it arrives by "
+       f"`ImportFrom` with NO module-level assignment to that name -- read "
+       f"from the parse, so a restated constant that happens to equal 1.0 "
+       f"goes red where an equality check alone would pass. The two checks "
+       f"removed with the old one asserted that the frozen text made an "
+       f"addendum unnecessary; EST-R2 shows that reading was wrong, so "
+       f"they stay withdrawn (DE34-C3)")
     ok(_RUN.BINDING_FIELDS.count("value_horizon") == 1
        and "fill_horizon_s" not in _RUN.BINDING_FIELDS,
        f"and the receipt's BINDING field is now `value_horizon`, not "

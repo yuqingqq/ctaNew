@@ -32,7 +32,32 @@ end of hold]"` and the 1 s figure travels only beside the per-row table it
 belongs to. **No new number is introduced by this declaration** — it names
 what the frozen feed already produces.
 
-## 2. `theta_repost` — a number I chose (EST-R3)
+### 1a. What the null actually costs (EST-R2's other half, corrected)
+
+Addendum v1 §d said 200 draws at one cell is "of order six hours", from
+LANE4's 1,339.6 s single-arm replay. **That was wrong by construction**: a
+null draw is not one replay. Each draw runs `arm_result`, which is the
+PRIMARY conjunction — **2 protection modes × 2 repost-fill models = 4
+replays** — so 200 draws is **800 replays**, not 200.
+
+**Measured, not estimated** (471 synthetic windows, this runner, both
+launchers cleared):
+
+| quantity | measured |
+|---|---|
+| one `arm_result` (4 legs, 471 windows) | **0.03 s** → **0.007 s per replay** |
+| one null draw | 4 replays |
+| 200 draws at one cell | 800 replays ≈ **6 s** |
+| one cell without a null (5 arms × 4 legs = 20 replays) | ≈ **0.15 s** |
+| the whole grid (54 cells + 2 null cells) | **≈ 40 s of replay** |
+
+**So the replay is not the cost — the FEED is** (~28.6 min once, measured in
+round 33). The six-hour figure understated the per-draw work by 4× and
+overstated the total by three orders of magnitude, because it priced the
+replay as if it were LANE4's end-to-end pass. This paragraph is the
+correction; v1 is not edited.
+
+## 2. `theta_repost` — a number I chose (EST-R3, re-read under §5)
 
 **What it is:** the score below which a cancelled generation may be
 reposted. `harmful_stateful_policy.validate_params` REFUSES
@@ -44,26 +69,45 @@ requires a **declared** dwell, and no source of record fixes the value.
 mine, and it is in the code only because the policy will not load without a
 value.
 
-**Proposed instead — a declared sensitivity pair, selecting neither:**
+**Proposed — a declared sensitivity pair, selecting neither:**
 
 | rung | value | why |
 |---|---|---|
 | tight | `theta_cancel − ε` (ε = 1e-9) | repost as soon as the score falls at all: the least hysteresis the policy admits |
 | loose | `0.5 × theta_cancel` | the runner's current value, kept as the other end rather than as the answer |
 
-Both are reported for the PRIMARY cell; **neither is selected**, and the
-ladder rule applies (nobody picks by looking at the results).
+**DE35-R5 — does the tight rung move the control now?** Under §5 as revised,
+**yes, and for both arms together.** The control's stream *is* the treated
+arm's stream permuted, so every below-threshold event the head produced
+exists in both arms; a `theta_repost` at `theta_cancel − ε` therefore admits
+the same reposts on both sides and the pair is readable as a comparison.
+Under round 35's shape it was not: the control's only below-threshold event
+was an invented literal `0.0`, which sits under *every* candidate rung, so
+the tight rung moved the treated arm and left the control unchanged and the
+pair compared two different policies. **The pair is proposed only because
+§5 makes it readable; if the USER declines §5, this pair should be declined
+with it.**
 
-## 3. `REPOST_DWELL_S` — the second number I chose (EST-R3)
+## 3. `REPOST_DWELL_S` — the second number I chose (EST-R3, DE35-R4)
 
 **What it is:** how long a repost waits after the cancel becomes effective.
 The TODO requires a declared dwell and does not fix one; the runner uses
 **2.0 s**, which is mine.
 
-**Proposed instead:** the same shape — **0.5 s and 2.0 s**, both reported for
-the PRIMARY cell, neither selected. The lower rung is the smallest dwell that
-is still longer than the largest latency rung (250 ms), so the two are not
-measuring the same thing twice.
+**DE35-R4, answered plainly: there is no rule that yields 0.5 s.** Round
+35's draft said "the smallest dwell longer than 250 ms", which names no
+number — every value above 0.25 s satisfies it. Two honest options, and I
+propose the first:
+
+- **`2 × the largest latency rung` = 0.5 s** — a *stated rule* rather than a
+  taste: a repost that waits less than one round trip after the cancel is
+  racing the cancel it follows. If the USER adopts this, 0.5 s is derived
+  and not chosen.
+- Otherwise **0.5 s is CHOSEN**, and should be labelled so in whatever the
+  USER rules.
+
+**Proposed pair, selecting neither:** **0.5 s** (by the rule above) and
+**2.0 s** (the runner's current value).
 
 ## 4. `max_cancels_per_minute` (EST-R4)
 
@@ -77,19 +121,34 @@ reader can see that no cancellation was suppressed rather than take it on
 trust. The runner now carries all three counters per arm and evaluates the
 identity in code.
 
-## 5. Repost parity for the matched control (EST-R5)
+## 5. The matched control's score stream (EST-R5, DE35-C1)
 
-**Proposed declaration:** *the acting control reposts on the same hysteresis
-as the treated arm* — its score stream carries, for each drawn generation, a
-crossing at that generation's own decision time and a below-threshold event
-one dwell later, exactly as the treated arm's stream would.
+**Proposed declaration, in the reviewer's words:**
 
-The frozen text requires the control to be matched on action count, side and
-hour (`DRAFT:147-156`) and is **silent on reposting**. Silence is not
-permission to differ: a control that cancels and never reposts is a different
-policy from the one under test, and the difference flatters or punishes the
-treatment depending on the sign of the repost's value. This is a property,
-not a number.
+> The acting control's score stream **is** the treated arm's stream with the
+> above-threshold assignments **permuted within `(side, hour)` strata**, so
+> that the control cancels exactly the drawn generations and **no event
+> exists in one arm that does not exist in the other**. Repost behaviour is
+> therefore identical in kind to the treated arm's and is never
+> manufactured; the control introduces no score value the head did not
+> produce.
+
+**What this replaces.** Round 35 emitted, per drawn generation, a literal
+`1.0` at the generation's `t0` and a literal `0.0` one dwell later. That
+manufactures a policy rather than permuting one: the `0.0` is a score the
+head never produced, it sits below every candidate `theta_repost` (which is
+why §2's pair was unreadable — DE35-R5), and it made the control's repost
+behaviour a function of the DRAW where the treated arm's is a function of
+the HEAD.
+
+**This is a property, not a number**, and the runner already implements it:
+the above-threshold score VALUES are reassigned to the drawn generations and
+every below-threshold event is carried through untouched.
+
+**Reported with it (DE31-R2):** `n_strata`, `strata_with_room`,
+`n_distinct_draws`, and — where a stratum has no room — an explicit
+**POINT MASS** declaration, because a forced draw contributes a constant
+rather than a sample.
 
 ---
 
