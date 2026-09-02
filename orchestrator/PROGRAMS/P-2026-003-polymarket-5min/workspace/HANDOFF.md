@@ -1,10 +1,12 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-02T05:38Z — **the winner question is now ANSWERABLE**: Q1's
-action-unit number is in, and the incumbent comparison holds under every unit
-and collapse rule (4/4 on both arms). Prior line: the five USER decisions are
-executed and the fully-evaluated family is 12 survivors with the decision metric
-(Q4) still failing; the forward race is at G = 1/5.
+Updated: 2026-09-02T08:16Z — **the blackout cause is established and it is
+POLYMARKET-SIDE** (three events, three-for-three, on a design committed before
+the answer); the frozen content-liveness rule was found unwired on its first
+governed day and wired the same day; and the reviewer proved that same rule
+**blind to TOTAL blackouts**. Prior line: the winner question is answerable —
+the comparison is unit-invariant (4/4 both arms), the level is a range; Q4 still
+fails; forward race at G = 1/5.
 
 ## READ FIRST — current project handoff
 
@@ -28,51 +30,98 @@ the recommendation"*). Verified at their artifacts, not from the entry:
 | 4 | **Phase-4 protocol + registry** | the protocol reads **FROZEN — IN FORCE**, declared before any cell is read and with **no Phase-4 cell existing at freeze**; `contracts.yaml` is at **v26** with 30 modules — EV-Replay and DE-ActionSpace registered, `ReplayWindowSpec` added, and `config_supplied:ActionSet` removed under amendment E on BE's confirmation |
 | 5 | **Worktrees** | four execution worktrees exist (`~/ctaNew-wt-{be,da,de,rev}`), `SEAT_PROTOCOL` rule 19. **Limitation stated rather than papered over:** git refuses one branch in two worktrees, so LANDING stays in the shared tree under pathspec discipline — isolation covers execution, and the ledger keeps one writer path |
 
-**ONE QUESTION WAITS, and the measurement it was blocked on has now landed:**
+**THREE ITEMS WAIT. The first has a deadline tonight.**
 
-> **Does Q1's full-gate survival constitute the Phase-2 WINNER** that, together
-> with the now-frozen Phase-4 protocol, unblocks DE's latency × queue-reset-cost
-> × budget grids?
+**(1) Does a CONTENT_THIN day accrue? Needed by ~00:06Z.** 09-02 is the frozen
+rule's first governed day and it is carrying the exact defect class the rule
+exists for: a **3 h 20 m near-total blackout, 01:35–04:55Z, all seven coins,
+with no gap rows**, which every legacy bar passes (btc P1 20.1 against 120).
+Measured here by running the frozen rule: `governs('20260902')` is **True**,
+`governs('20260901')` **False**, and 09-02 currently reads **CONTENT_THIN** —
+btc L1 **0.407** against the 0.08 bar with a **40-window run**, which is the
+blackout itself (40 × 5 min = 200 min).
 
-Escalated by the coordinator (R-398), **not decided**. It was deferred on
-RR4-3 — Q1's AUC was computed over 311,640 **rows** while the cell's n was
-177,674 **actions** (1.754 rows/action), which is CLAUDE.md rule 2's exact class
-sitting in the surviving statistic. **That number now exists** (R-400), and the
-answer does not depend on it:
+The freeze left §8 open, so the composition is genuinely undecided and DA
+correctly escalated rather than chose: `content_thin_vetoes_HEALTHY: false`
+everywhere, guard-refused otherwise. Three closes are possible (R-404, which
+supersedes R-403's flat "will read CONTENT_THIN"):
 
-| | lgbm | linear |
-|---|---|---|
-| row level | 0.8303 | 0.7733 |
-| action unit, `first` | 0.7903 | 0.7353 |
-| action unit, `mean` | 0.8641 | 0.7978 |
-| action unit, `max` (designated primary) | **0.8760** | **0.8144** |
-| incumbent, best of any rule | 0.7418 | 0.7418 |
-| **beats the incumbent** | **4/4** | **4/4** |
+| close | disposition |
+|---|---|
+| **(a) THIN at close** | exclude per frozen **§7**'s pre-declared mechanism — *"a day it fails becomes a day the COORDINATOR excludes with a stated reason, not a day the instrument rejects"*, written before 09-02 was seen, so it is the least choose-after-seeing path |
+| **(b) genuinely LIVE** | accrues, blackout disclosed |
+| **(c) LIVE-BY-MEDIAN-COLLAPSE** | **the §7 trigger never fires because the instrument cannot see it** — coordinator-exclusion with the reviewer's table as the stated reason |
 
-**The comparison is unit-invariant** — the candidate beats the incumbent hazard
-head under every unit and every collapse rule on both arms, recomputed here from
-the artifact's own numbers, and that is the conjunct Q1's gate actually asks
-about. **The level is not invariant**: it is a *range*, not a replacement number,
-and the row-level figure sits inside it.
+**Scenario (c) exists because of RR6-1, the sharpest finding of the day and it
+is against the FROZEN rule:** thinness is measured against the day's **own
+median**, so the rule sees PARTIAL blackouts and is **structurally blind to
+TOTAL ones**. Past ~60% dark the median crosses into the dark regime, every
+dark window stops being thin, and the day reads **CONTENT_LIVE at L1 = 0.0000,
+L2 run = 0**. Computed by the reviewer on real 09-02 bytes extended to 288
+windows. **The known cause strengthens exclude-if-thin** (R-405): the darkness
+is venue-inflicted, so the tape genuinely lacks the venue's content.
 
-**Two things to weigh, both disclosed rather than found:** the designated primary
-collapse rule (`max`) is also the most favourable of the three, and under `first`
-the action-unit AUC (0.790) is *below* row level — so "deduplication raises it"
-holds for two rules of three and for the primary, not universally. Which rule
-adjudicates is explicitly a USER question. And **3.44% of generations (6,108 of
-177,674) carry disagreeing row labels**, counted and reported.
+**(2) The Phase-2 winner ruling — fully unblocked** (R-401, no reviewer hold
+open anywhere). The reviewer's framing, verbatim to the USER: the **comparison**
+is unit-invariant, the **level** is not (0.876 ranking-convention / 0.790
+valuing-convention / 0.830 row-level between); survival sits on a 500-draw
+floor; and **Q4, the decision metric, still fails**.
 
-**What should still temper the ruling is unchanged:** the decision metric (Q4)
-still fails, and this is development evidence (prereg 4: it selects, it never
-validates). **The last formality is the reviewer's winner-hold release**, whose
-round is open at pinned tip `c180061`.
+**(3) Soon — the rule-v2 freeze**, when DA's draft lands: an **absolute floor
+beside the relative one**, which is what closes RR6-1, calibrated on ≤08-31 days
+only per the draft's own rule-11 discipline, with the three measured events as
+its anchor.
 
-**Still open from 09-01 and not among the five, so it did not get resolved with
-them:** DA's escalation that the content-liveness bar now sits exactly where the
-events are (65 min fails, 60 passes) — and that the rule, effective since today,
-**is still unwired**. Re-checked at 04:05Z: its only reference outside its own
-file remains `v5_deploy_gates.py:54`, which runs its selftest. `governs()`
-returns True and no verdict consumes it.
+**CLOSED, and it was my own standing flag:** for three rounds this section
+carried DA's escalation that the content-liveness rule was **effective but
+unwired** — I re-checked and re-reported it at 04:05Z and again at 05:38Z. It
+was found on the rule's first governed day, ~16 h before the first governed
+verdict, and **wired the same day** (R-402 → R-403, `3298a1d`, review-released).
+The wiring is verified here at source: `da_forward_day_verify.py` now calls
+`CLR.governs(day_token)` and the verdict **refuses to exist without consulting
+the frozen rule** (rc 4, never rc 1). DA's separate point — that the bar sat
+where the events are — is superseded by RR6-1's larger finding above and folds
+into the rule-v2 draft.
+
+### The blackouts are Polymarket's, and that is now established rather than suspected
+
+Q-DA-203 (`4f892de`), on a design committed at `9785e5e` **before any in-window
+rate was read**. Three collectors, one host, one network path, three venues:
+
+| event | Polymarket | Binance | Hyperliquid |
+|---|---|---|---|
+| E1 08-26 04:35–07:55Z | thin **1.000** (195/195), 633.7 → 1.23 msg/s | 0.000 (0/160) | 0.000 (0/160) |
+| E2 08-31 06:40–10:40Z | thin **1.000** (239/239), 475.0 → 1.62, min 0.0 | 0.000 (0/240) | 0.000 (0/239) |
+| E3 09-02 01:35–04:55Z | thin **1.000** (200/200), 335.5 → 1.76 | 0.000 (0/200), rate **rose** 1347 → 1518 | 0.000 |
+
+Not one thin interval on the other two venues across ~600 in-window minutes,
+and Binance's receive-latency is flat throughout (72/74/74 ms in-window against
+75 ms outside) — **positive evidence of a healthy path, not an absence of
+evidence**. Every coin's run ends on **one instant** per event (07:55, 10:40,
+04:55Z) while onsets stagger by up to 2 h 10 m; a per-coin cause cannot end on a
+single instant.
+
+**What it settles:** our collector, host and network are exonerated for all
+three events. **What it does not:** whether the venue's markets traded normally
+during the silence — a harvestability question, open and not pursued.
+
+**Three method marks worth copying, all DA's own disclosures:** the host leg is
+**partly UNMEASURED and says so** (the R-163 journal reaches back only to
+09-02T02:46:26Z, so E1/E2 have no host record); DA's own swap predicate **fired
+and was reported as not-evidence** because it tests an absolute level against a
+standing baseline; and the **positive control FAILED first** — Binance's
+predicate had never fired in 15 days, so its 0.000 proved nothing until
+injection on the venue's real series showed the predicate can fire on that data
+shape. A control that has never fired is not a control that passed.
+
+### NAMED RISK — the venue silence is more frequent than "weekly"
+
+Three events on **08-26, 08-31, 09-02**: gaps of **5 and 2 days**, three events
+in a 7-day span, mean gap **3.5 days**. The forward race needs **5 complete
+qualifying days** and each event costs a day if the exclude path is taken, so
+the calendar arithmetic should not be planned on "~weekly" — on the observed
+rate a 5-day set could take substantially longer than 5 days. Recorded as an
+observed rate on n=3, not a forecast.
 
 ### Current model state
 
@@ -253,6 +302,58 @@ than a clean zero (the density receipt covers 13 days, not this one).
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-02 ~08:16Z (MEM) — THE RULE WAS UNWIRED, THEN WIRED, THEN PROVED
+### BLIND — AND THE BLACKOUTS TURN OUT TO BE THE VENUE'S
+
+Four register entries in twenty-three minutes, and they run in a sequence worth
+reading in order (R-402 → R-405). Details in PENDING USER DECISIONS and the two
+sections after it; what belongs here is what the sequence shows.
+
+**1. The flag I carried for three rounds was real, and it closed the same day.**
+The frozen content-liveness rule was **not wired into the verdict path** —
+found on its first governed day, ~16 h before the first governed verdict.
+`da_forward_day_verify.py` was still running a **pre-freeze inline copy** whose
+emitted `why` said *"NO ratified band exists"*, text written before the rule was
+drafted. That is rule 17's class on the **governing instrument** itself. Wired
+by DA the same day and review-released; verified here at source.
+
+**2. Its first governed day is carrying the exact defect it exists for.** A
+**3 h 20 m all-coin blackout, 01:35–04:55Z, no gap rows**, that every legacy bar
+passes (btc P1 20.1 against 120). I measured it by running the frozen rule:
+09-02 reads **CONTENT_THIN**, btc L1 **0.407** against 0.08 with a **40-window
+run** — 40 × 5 min is the blackout, exactly.
+
+**3. And the rule cannot see the worst version of what it was built for.**
+RR6-1, against the **frozen** rule: thinness is relative to the day's **own
+median**, so past ~60% dark the median moves into the dark regime, every dark
+window stops being thin, and a mostly-dark day reads **CONTENT_LIVE at
+L1 = 0.0000**. The reviewer computed it on real bytes before filing. **A
+detector calibrated on a ratio to itself cannot see the case where the
+denominator moves with the numerator** — and the failure is silent and in the
+safe-looking direction.
+
+**4. The cause is established, and it is not ours.** Three events,
+three-for-three: Polymarket collapses to 0.2–0.5% of its own median while
+Binance and Hyperliquid — same host, same path, same seconds — do not thin in
+**one interval out of ~600 in-window minutes**, with Binance's rate *rising*
+in-window in E3 and its latency flat throughout. Design committed **before** any
+in-window rate was read.
+
+**What I want carried forward from DA's method here, because it is the strongest
+filing this programme has produced:** the host leg is **partly unmeasured and
+says so**; a predicate that fired was **reported as not-evidence** because it
+tests an absolute level against a standing baseline; and the **positive control
+failed first** — Binance's predicate had never fired in 15 days, so its 0.000
+proved nothing until injection showed it *could* fire on that data shape. **A
+control that has never fired is not a control that passed**, and DA caught that
+in its own instrument before anyone else read it.
+
+**One number I would not repeat as given.** The risk is recorded as recurring
+"~weekly". The three events are 08-26, 08-31 and 09-02 — **gaps of 5 and 2 days,
+three events in a 7-day span, mean 3.5 days**. On the observed rate the forward
+race's 5-day set could take substantially longer than the calendar suggests, and
+"weekly" would under-plan it. Stated as an observed rate on n=3, not a forecast.
 
 ### 2026-09-02 ~05:38Z (MEM) — THE UNIT QUESTION ANSWERED, AND THE ANSWER DOES
 ### NOT DEPEND ON THE UNIT

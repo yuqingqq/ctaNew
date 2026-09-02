@@ -4,6 +4,78 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-09-02T08:16Z (MEM ROUND 10 -- THE RULE WAS UNWIRED, THEN WIRED, THEN
+  PROVED BLIND; AND THE BLACKOUTS ARE THE VENUE'S). R-402..R-405, verified at
+  artifact and source, including by RUNNING the frozen rule. (1) THE FLAG I
+  CARRIED FOR THREE ROUNDS WAS REAL AND CLOSED THE SAME DAY: the frozen
+  content-liveness rule was NOT WIRED into the verdict path, found on its FIRST
+  GOVERNED DAY ~16 h before the first governed verdict --
+  da_forward_day_verify.py was still running a PRE-FREEZE INLINE COPY whose
+  emitted why said "NO ratified band exists", text written before the rule was
+  drafted. Rule 17's class on the GOVERNING instrument itself. Wired by DA the
+  same day (R-402 -> R-403, 3298a1d, review-released) and verified here at
+  source: CLR.governs(day_token) is called in the verdict path and the artifact
+  REFUSES TO EXIST without consulting the frozen rule (rc 4, never rc 1); the
+  veto is NOT adopted (content_thin_vetoes_HEALTHY false everywhere,
+  guard-refused otherwise) because the freeze resolved NONE of section 8 --
+  correctly escalated instead of chosen. (2) ITS FIRST GOVERNED DAY IS CARRYING
+  THE EXACT DEFECT IT EXISTS FOR: a 3 h 20 m ALL-COIN blackout, 01:35-04:55Z, NO
+  gap rows, which every legacy bar passes (btc P1 20.1 against 120). Measured by
+  running the rule: governs('20260902') True and governs('20260901') False;
+  09-02 reads CONTENT_THIN with btc L1 0.407 against the 0.08 bar and a
+  40-WINDOW RUN -- 40 x 5 min is the blackout exactly. (3) AND THE RULE CANNOT
+  SEE THE WORST VERSION OF WHAT IT WAS BUILT FOR. RR6-1, HIGH, against the
+  FROZEN rule: thinness is measured against the day's OWN MEDIAN, so past ~60%
+  dark the median crosses into the dark regime, every dark window stops being
+  thin, and a mostly-dark day reads CONTENT_LIVE at L1 = 0.0000, L2 run = 0 --
+  computed by the reviewer on real 09-02 bytes extended to 288 windows before
+  filing. A DETECTOR CALIBRATED ON A RATIO TO ITSELF CANNOT SEE THE CASE WHERE
+  THE DENOMINATOR MOVES WITH THE NUMERATOR, and it fails silently in the
+  safe-looking direction. DA's "L2 cannot shrink" was right under benign
+  continuations and wrong where it matters most. (4) THE CAUSE IS ESTABLISHED
+  AND IT IS NOT OURS (Q-DA-203 at 4f892de, design committed at 9785e5e BEFORE
+  any in-window rate was read): three events three-for-three -- E1 08-26
+  04:35-07:55Z PM thin 1.000 (195/195) 633.7 -> 1.23 msg/s; E2 08-31
+  06:40-10:40Z PM 1.000 (239/239) 475.0 -> 1.62; E3 09-02 01:35-04:55Z PM 1.000
+  (200/200) 335.5 -> 1.76 -- while Binance and Hyperliquid, SAME host, path and
+  seconds, did not thin in ONE interval of ~600 in-window minutes, with
+  Binance's rate RISING in-window in E3 (1347 -> 1518) and its receive latency
+  flat throughout (72/74/74 ms in-window vs 75 outside): POSITIVE evidence of a
+  healthy path, not absence of evidence. Every coin's run ends on ONE instant
+  per event while onsets stagger by up to 2h10m, and a per-coin cause cannot end
+  on a single instant. SETTLED: our collector, host and network are exonerated
+  for all three events. NOT SETTLED: whether the venue's markets traded normally
+  during the silence -- a harvestability question, open. THREE METHOD MARKS
+  WORTH COPYING, all DA's own disclosures: the host leg is PARTLY UNMEASURED and
+  says so (the R-163 journal reaches back only to 09-02T02:46:26Z, so E1/E2 have
+  no host record); a predicate that FIRED was reported as NOT-EVIDENCE because
+  it tests an absolute level against a standing baseline; and the POSITIVE
+  CONTROL FAILED FIRST -- Binance's predicate had never fired in 15 days, so its
+  0.000 proved nothing until injection on the venue's real series showed it CAN
+  fire on that data shape. A control that has never fired is not a control that
+  passed. THREE ITEMS NOW WAIT ON THE USER, in HANDOFF's table: (1) DOES A
+  CONTENT_THIN DAY ACCRUE, needed by ~00:06Z -- R-404's three closes supersede
+  R-403's flat projection: (a) THIN at close, recommend EXCLUDE per frozen
+  section 7's pre-declared mechanism, which predates seeing 09-02 and is the
+  least choose-after-seeing path; (b) genuinely LIVE, accrues with the blackout
+  disclosed; (c) LIVE-BY-MEDIAN-COLLAPSE, where the section-7 trigger never
+  fires because the instrument cannot see it, recommend the coordinator-exclusion
+  path with the reviewer's table as the stated reason. The KNOWN CAUSE
+  STRENGTHENS EXCLUDE-IF-THIN: the darkness is venue-inflicted, so the tape
+  genuinely lacks the venue's content. (2) THE PHASE-2 WINNER RULING, fully
+  unblocked (R-401, no reviewer hold open anywhere), with the reviewer's framing
+  verbatim: the COMPARISON is unit-invariant, the LEVEL is not (0.876 ranking /
+  0.790 valuing / 0.830 row-level between), survival sits on a 500-draw floor,
+  and Q4 STILL FAILS. (3) SOON, the rule-v2 freeze when DA's draft lands: an
+  ABSOLUTE floor beside the relative one -- what closes RR6-1 -- calibrated on
+  <=08-31 days only, anchored on the three measured events. NAMED RISK, AND ONE
+  NUMBER I WOULD NOT REPEAT AS GIVEN: the venue silence is recorded as recurring
+  "~weekly", but the three events are 08-26, 08-31 and 09-02 -- GAPS OF 5 AND 2
+  DAYS, three events in a 7-day span, MEAN 3.5 DAYS. On the observed rate the
+  forward race's 5-day set could take substantially longer than the calendar
+  suggests, and "weekly" would under-plan it. Stated as an observed rate on n=3,
+  never a forecast. UNCHANGED: G=1/5; the 011 family is 12 of 24 surviving with
+  Q4 failing; development evidence. PRIOR:
   2026-09-02T05:38Z (MEM ROUND 9 -- THE UNIT QUESTION IS ANSWERED AND THE ANSWER
   DOES NOT DEPEND ON THE UNIT; THE WINNER RULING IS UNBLOCKED). Recomputed from
   the artifact, not read off its summary. R-399's hold was RIGHT and closing it
@@ -95,65 +167,7 @@ updated: >-
   the rule -- effective since today -- IS STILL UNWIRED. Re-checked at 04:05Z:
   its only reference outside its own file remains v5_deploy_gates.py:54, which
   runs its selftest, so governs() returns True and no verdict consumes it.
-  UNCHANGED: the forward race is at G=1/5 and 09-02 is accruing. PRIOR:
-  2026-09-02T00:21Z (MEM ROUND 7 -- THE FORWARD RACE HAS ITS FIRST DAY:
-  2026-09-01 ACCRUED, G = 1/5). Verified at the artifact
-  (da_dayverdict_20260901.json, written by the 00:06:00Z timer, as-of
-  2026-09-02T00:06:01Z), with the conjunction RECOMPUTED rather than read back:
-  FINISHED (day_closed true -- day_closed_calendar true, and the
-  day_closed_selector false sub-field is a stated reason, not the conjunct) AND
-  AFTER (post_freeze_pass) AND ADMISSIBLE (era_admissible, clob_v4_1,
-  era_role INTERLOCK) AND HEALTHY (day_quality_pass, with BOTH adjudicated coins
-  passing their governing day_bar_v2) -> race_accrual_eligible TRUE. btc P1 84.4
-  s/hr against 120, P2 0 material windows, P3 185.2 against 900; eth P1 6.9,
-  P3 107.9. I REPRODUCED DA'S INDEPENDENT CHECK BY RUNNING ITS INSTRUMENT:
-  da_verdict_check --day 20260901 gives 8/8, accrues=True, four scopes, both
-  denominators coinciding -- the check that catches an open-day elapsed count
-  inside a closed-day report. FOUR MORE ACCRUING DAYS REACH THE >=5-DAY BAR;
-  EARLIEST HONEST INTERVAL ~09-05, AND ONLY IF EVERY DAY ACCRUES.
-  A CORRECTION THAT MATTERS BECAUSE A STATE FILE IS WHERE A NUMBER BECOMES THE
-  RECORD: R-395 reports "the decision_note itself flags ~80% of btc windows
-  touched at 28.0 gaps/hr", and the round-7 dispatch repeats it as this day's
-  figure. IT IS NOT THIS DAY'S. That sentence lives inside decision_note as the
-  instrument's STANDING ILLUSTRATION, phrased about "day one" of an earlier era,
-  and it exists to argue that gaps/hour understates damage. 09-01's OWN btc
-  numbers, at the artifact: breadth 160/288 = 55.6% COIN_LEVEL (the governing
-  scope, R-191) and 159/288 = 55.2% PER_SLUG, at 14.38 gaps/hr with 345 gaps,
-  2,025.5 lost seconds, 23 of 24 hours carrying a gap, and 8 hours over the
-  SUPERSEDED v1 count bar (worst hour 31, governing nothing). The caution is
-  sound and still applies -- read windows_gap_affected beside gaps/hour, never
-  instead of it -- but the figures belong to a different day. Flagged for the
-  coordinator; the register is their surface. THE HEAVY DISCLOSURE: ~115 MINUTES
-  OF NEAR-TOTAL LOSS THAT NO GOVERNING BAR CAN SEE. DA's finding, two contiguous
-  outages -- 00:00-01:05Z (65 min) and 22:45-23:35Z (50 min) -- at 0.01-2.2% of
-  median window content, on ALL SEVEN COINS, with NO GAP ROWS. P1/P2/P3 pass
-  straight through both, because the duration bars charge only for time the
-  ledger knows about. TWO INDEPENDENT INSTRUMENTS AGREE TO ONE MINUTE: the
-  collector log's msgs/s measure reads 116 intervals below a tenth of median
-  (0.0806 of 1,439) and the raw gzip-trailer byte measure reads 115 -- different
-  inputs, different code, no shared term, which is what makes it a measurement
-  rather than one estimator's artifact. AND THE RULE WRITTEN FOR EXACTLY THIS
-  CLASS BECAME EFFECTIVE TODAY WHILE REMAINING UNWIRED. The content-liveness
-  rule is frozen (R-386) with EFFECTIVE_FROM_DAY = 20260902, so 09-02 is its
-  first governed day -- but governs() returning True CHANGES NO VERDICT: I
-  grepped it independently and the only reference outside its own file is
-  v5_deploy_gates.py:54, which runs its SELFTEST. No consumer calls governs() or
-  measure_day(). THAT IS RULE 17'S SHAPE TWICE IN TWELVE HOURS -- the Q1
-  incumbent leg that cost the 011 family its six survivors, and now a frozen
-  rule that governs nothing because nothing calls it. Both were built, both were
-  falsifier-proven, neither was reached: a guard's EXISTENCE and a guard's
-  WIRING are separate facts and only the second is load-bearing. DAY ONE'S
-  ACCRUAL IS UNAFFECTED by any of it: the rule does not govern 09-01, reads it
-  CONTENT_THIN on the margins (L1 0.07968 vs 0.08, L2 13 vs 12, three coins
-  failing L2 by one window), and the breadth figures are reported, never
-  governing. tape_density reads UNMEASURED for 09-01 -- correctly a status
-  rather than a clean zero. DA has escalated for the USER that the bar now sits
-  where the events are (65 min fails, 60 passes); the coordinator has not ruled
-  whether that joins the numbered list, so the FIVE USER DECISIONS ARE
-  UNCHANGED: Q1-leg wiring, the Q3 gate ruling, amendment A2 with its
-  prospective resolution, the Phase-4 and registry freezes, and per-seat
-  worktrees. The 011 result of record is unchanged and negative: 0 of 24 cells
-  survive the joint reading.
+  UNCHANGED: the forward race is at G=1/5 and 09-02 is accruing.
   ARCHIVED: entries older than these three are moved, never deleted, to
   workspace/STATUS_UPDATED_ARCHIVE.md (append-only). This field is a
   ROLLING WINDOW OF THREE by ruling (coordinator, 2026-08-28T10:02Z):
@@ -3746,7 +3760,7 @@ flags:
                              # migration discipline remain authoritative.
 
 focus: >
-  As-of 2026-09-02T05:38Z, build and test the offline model mechanism-first
+  As-of 2026-09-02T08:16Z, build and test the offline model mechanism-first
   under plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md section 10. Do not use the
   subordinate stateful-cancel TODO checkbox count as total progress. The
   foundation is established: the action-level dataset and PRED_STATE_V1 are
@@ -3778,9 +3792,12 @@ focus: >
   PHASE-2 WINNER that unblocks DE's grids (R-398, escalated not decided)? It is
   now ANSWERABLE -- the action-unit measurement RR4-3 asked for is in, and the
   comparison it tests is unit-invariant (4/4 on both arms), pending only the
-  reviewer's winner-hold release at c180061. DA's
-  content-liveness bar escalation is still unruled and the rule is still
-  unwired. See HANDOFF's PENDING USER DECISIONS. Fair-price
+  reviewer's winner-hold release at c180061 -- RELEASED at 05:42Z (R-401), so it
+  is fully unblocked. DA's
+  content-liveness escalation is superseded: the rule is now WIRED (R-402/R-403)
+  and the reviewer has shown it BLIND to total blackouts (RR6-1), which the
+  queued rule-v2 absolute-floor amendment is meant to close. See HANDOFF's
+  PENDING USER DECISIONS -- three items, one due by ~00:06Z tonight. Fair-price
   Identity is built while the challenger protocol is not freeze-ready;
   QR_SKEW_ONLY semantics are USER-FROZEN, while the seven-arm path remains
   stub/inert. Real queue-integrated replay, lifecycle economics and an

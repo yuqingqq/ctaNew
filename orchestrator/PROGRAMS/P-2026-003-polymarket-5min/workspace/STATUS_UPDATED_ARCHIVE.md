@@ -805,3 +805,70 @@ Join rule as in batch 1.
   UNCHANGED: the forward race waits on tonight's 00:06Z first accrual-eligible
   verdict; G=0/5.
 ```
+
+## Batch 16 — archived 2026-09-02T08:16Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-10 true-up of the wiring, the blindness finding and the
+established blackout cause. Join rule as in batch 1.
+
+```yaml
+
+  2026-09-02T00:21Z (MEM ROUND 7 -- THE FORWARD RACE HAS ITS FIRST DAY:
+  2026-09-01 ACCRUED, G = 1/5). Verified at the artifact
+  (da_dayverdict_20260901.json, written by the 00:06:00Z timer, as-of
+  2026-09-02T00:06:01Z), with the conjunction RECOMPUTED rather than read back:
+  FINISHED (day_closed true -- day_closed_calendar true, and the
+  day_closed_selector false sub-field is a stated reason, not the conjunct) AND
+  AFTER (post_freeze_pass) AND ADMISSIBLE (era_admissible, clob_v4_1,
+  era_role INTERLOCK) AND HEALTHY (day_quality_pass, with BOTH adjudicated coins
+  passing their governing day_bar_v2) -> race_accrual_eligible TRUE. btc P1 84.4
+  s/hr against 120, P2 0 material windows, P3 185.2 against 900; eth P1 6.9,
+  P3 107.9. I REPRODUCED DA'S INDEPENDENT CHECK BY RUNNING ITS INSTRUMENT:
+  da_verdict_check --day 20260901 gives 8/8, accrues=True, four scopes, both
+  denominators coinciding -- the check that catches an open-day elapsed count
+  inside a closed-day report. FOUR MORE ACCRUING DAYS REACH THE >=5-DAY BAR;
+  EARLIEST HONEST INTERVAL ~09-05, AND ONLY IF EVERY DAY ACCRUES.
+  A CORRECTION THAT MATTERS BECAUSE A STATE FILE IS WHERE A NUMBER BECOMES THE
+  RECORD: R-395 reports "the decision_note itself flags ~80% of btc windows
+  touched at 28.0 gaps/hr", and the round-7 dispatch repeats it as this day's
+  figure. IT IS NOT THIS DAY'S. That sentence lives inside decision_note as the
+  instrument's STANDING ILLUSTRATION, phrased about "day one" of an earlier era,
+  and it exists to argue that gaps/hour understates damage. 09-01's OWN btc
+  numbers, at the artifact: breadth 160/288 = 55.6% COIN_LEVEL (the governing
+  scope, R-191) and 159/288 = 55.2% PER_SLUG, at 14.38 gaps/hr with 345 gaps,
+  2,025.5 lost seconds, 23 of 24 hours carrying a gap, and 8 hours over the
+  SUPERSEDED v1 count bar (worst hour 31, governing nothing). The caution is
+  sound and still applies -- read windows_gap_affected beside gaps/hour, never
+  instead of it -- but the figures belong to a different day. Flagged for the
+  coordinator; the register is their surface. THE HEAVY DISCLOSURE: ~115 MINUTES
+  OF NEAR-TOTAL LOSS THAT NO GOVERNING BAR CAN SEE. DA's finding, two contiguous
+  outages -- 00:00-01:05Z (65 min) and 22:45-23:35Z (50 min) -- at 0.01-2.2% of
+  median window content, on ALL SEVEN COINS, with NO GAP ROWS. P1/P2/P3 pass
+  straight through both, because the duration bars charge only for time the
+  ledger knows about. TWO INDEPENDENT INSTRUMENTS AGREE TO ONE MINUTE: the
+  collector log's msgs/s measure reads 116 intervals below a tenth of median
+  (0.0806 of 1,439) and the raw gzip-trailer byte measure reads 115 -- different
+  inputs, different code, no shared term, which is what makes it a measurement
+  rather than one estimator's artifact. AND THE RULE WRITTEN FOR EXACTLY THIS
+  CLASS BECAME EFFECTIVE TODAY WHILE REMAINING UNWIRED. The content-liveness
+  rule is frozen (R-386) with EFFECTIVE_FROM_DAY = 20260902, so 09-02 is its
+  first governed day -- but governs() returning True CHANGES NO VERDICT: I
+  grepped it independently and the only reference outside its own file is
+  v5_deploy_gates.py:54, which runs its SELFTEST. No consumer calls governs() or
+  measure_day(). THAT IS RULE 17'S SHAPE TWICE IN TWELVE HOURS -- the Q1
+  incumbent leg that cost the 011 family its six survivors, and now a frozen
+  rule that governs nothing because nothing calls it. Both were built, both were
+  falsifier-proven, neither was reached: a guard's EXISTENCE and a guard's
+  WIRING are separate facts and only the second is load-bearing. DAY ONE'S
+  ACCRUAL IS UNAFFECTED by any of it: the rule does not govern 09-01, reads it
+  CONTENT_THIN on the margins (L1 0.07968 vs 0.08, L2 13 vs 12, three coins
+  failing L2 by one window), and the breadth figures are reported, never
+  governing. tape_density reads UNMEASURED for 09-01 -- correctly a status
+  rather than a clean zero. DA has escalated for the USER that the bar now sits
+  where the events are (65 min fails, 60 passes); the coordinator has not ruled
+  whether that joins the numbered list, so the FIVE USER DECISIONS ARE
+  UNCHANGED: Q1-leg wiring, the Q3 gate ruling, amendment A2 with its
+  prospective resolution, the Phase-4 and registry freezes, and per-seat
+  worktrees. The 011 result of record is unchanged and negative: 0 of 24 cells
+  survive the joint reading.
+```
