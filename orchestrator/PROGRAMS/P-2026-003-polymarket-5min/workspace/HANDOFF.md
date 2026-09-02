@@ -1,13 +1,13 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-02T18:50Z — **BE round 9 EXECUTED at its own tip and found
-short: 93 PASS then rc 1**, with **checks 95–117 unverifiable at that tip in any
-tree**. The failing check **depends on the BRANCH's git state**, not the driver —
-**the fourth symptom of one hardcoded constant**. **The durable landing moves to
-BE round 11**: a driver whose selftest fails at its tip cannot produce the
-artifact of record. **And a residual of mine is closed: the withdrawn "earliest
-09-03" is gone from THREE live places**, not the two I was shown. **SEVEN RULED,
-THREE OPEN**, none needed tonight.
+Updated: 2026-09-02T19:05Z — **The estimand reading is filed and verified
+(`a23667b`), and it moves the USER item rather than adding to it:** the Phase-4
+run now waits on **ONE dated addendum v2** carrying **three numbers and three
+declarations** — and **one of those declarations is the frozen text's own duty**,
+not a new ask. **rho's denominator is MEASURED in the frozen protocol
+(`DRAFT:212-213`), so a constant makes the reading threshold the constant.** DE
+round 34 executed at `47a2ba6`; **DE round 35 routed with the addendum DRAFT in
+it.** **The run has no date. SEVEN RULED, THREE OPEN**, none needed tonight.
 
 ## READ FIRST — current project handoff
 
@@ -106,15 +106,24 @@ diagnostic**, below.
 > **SUPERSEDES the "nothing is awaiting the USER" line this section carried
 > from R-442 until now.** **THREE USER decisions are open and unblocked** — the
 > **Phase-2 winner ruling** and the **content-liveness v2 freeze** (R-460), and
-> now **the runner's two chosen numbers (R-464 §5)**: `theta_repost =
-> theta_cancel / 2` (runner `:188`) and `HALF_SPREAD_CENTS = 0.5` (`:101`),
-> **declared nowhere above the runner** — I grepped the protocol, the addendum
-> and the manifest: **zero hits in all three**. **The coordinator's
-> recommendation, recorded not ruled:** carry the **measured mid** so (ii)
-> becomes a measurement with no number to rule; put (i) to the USER as **DE's
-> proposal in a dated addendum v2**, before any run, with the sensitivity
-> reported at ×1 and ×0.5. **Nothing runs until both are settled.** **None of
-> the three is needed tonight.**
+> now **ONE dated addendum v2 for the USER to freeze (R-464 §5, WIDENED by
+> R-468 §2)**. It carries **three numbers** and **three declarations**:
+>
+> **Numbers** — `theta_repost` (DE proposes `theta_cancel/2`, sensitivity at
+> `1.0×−ε` and `0.5×`, **select neither**); **`REPOST_DWELL_S`** (2.0 s, **no
+> proposal on record yet**); and `HALF_SPREAD_CENTS` **only if it is kept** —
+> DE's and the reviewer's recommendation coincide: **measure it and there is no
+> number to rule.**
+>
+> **Declarations, no numbers** — the **horizon the number actually has** (the
+> addendum declares **none today**: I grepped it for "horizon" and got **zero
+> hits**); **repost parity in the control**, which the estimand's logic requires
+> and the frozen text is silent on; and **`max_cancels_per_minute = inf` per
+> cell with the identity `requested = passed + suppressed` reported** — which is
+> **the frozen text's own duty** at `DRAFT:71`, not a new ask.
+>
+> **All of it lands in ONE addendum the USER freezes; none of it is decided by a
+> seat (rule 14). Nothing runs until it is settled, and the run has no date.**
 
 | # | ruled | at |
 |---|---|---|
@@ -798,7 +807,9 @@ launchers at **235/19**.
 | **DE round 32** | **VERIFIED BY COUNT and FOUND SHORT** at `e52d183` (Q-DE-50 `03c5a23`) — **the runner's SHELL only, no run path**; five coordinator findings **DE32-C1..C5** → DE round 33 |
 | **DE rounds 31+32 review** | **RELEASED** (`82126ca`, 251 lines) — `e52d183` released as **declaration + three instruments**; **the runner is NOT released as a producer**. Seven findings; **item 8 RULED** at the protocol's own **Cap 2** |
 | **DE round 33** | **VERIFIED BY COUNT and FOUND SHORT BY EXECUTION** at `6d04833` (Q-DE-51 `2b72d02`, now **VERIFIED-SHORT** — its counts, timing and no-economics statements stand) — **nine findings DE33-C1..C9**, three HIGH |
-| **DE round 34** | **DISPATCHED** 18:42Z (Q-DE-52) — DE33-C1..C9 **plus the five reviewer findings still open**; **the feature table is the object**; no §3 economics read; **one** timed feature build under the 12 G scope |
+| **DE round 34** | **EXECUTED** at `47a2ba6` (Q-DE-52 `68f63aa`) — **counts as filed**; four findings closed, **C1 half-closed**, five named open; **DE34-C1..C4** raised |
+| **Phase-4 estimand reading** | **FILED and VERIFIED** (`a23667b`) — four rulings, **five findings EST-R1..R5** (R1, R2 **HIGH**), every citation checked at the frozen line |
+| **DE round 35** | **ROUTED** (Q-DE-53) — DE34-C1..C4, **the feed change the five open findings share**, EST-R1/R2/R4/R5 in code, **and a DATED ADDENDUM v2 DRAFT for the USER** |
 | **DE round 26** | the **DATA_ROOT split**, still behind DA's landing after 00:14Z |
 | **DA round 11** | **REVIEW RELEASED** (`a5e8b40`) for `e292439` as the content of **Q-DA-209**; all five DA10 findings close. Two new findings **DA11-R1/R2** → DA round 12 |
 | **DA round 12 review** | **RELEASED** (`852b9aa`) for `636a455` as Q-DA-209's content — DA11-R1/R2 close; **DA12-R1 (LOW-MED)** → DA round 14 |
@@ -867,6 +878,9 @@ artifact in the round-5 review, R1/R3/R4/R5 at `5e9ed91`;
 **BE7-R4** (FIRST), **BE6-R1..R7** and **BE7-R1..R3** → **BE round 9, in flight**;
 **DE33-C1..C9** (C1/C2/C3 **HIGH**) → **DE round 34, dispatched**;
 **BE9-C1 (HIGH) / BE9-C2 (MED) / BE9-C3 (LOW)** → **BE round 10, dispatched**;
+**BE8-R1 / BE8-R2** → **BE round 12**;
+**EST-R1 / EST-R2 (HIGH), EST-R3 / EST-R4 / EST-R5 (MED)** and **DE34-C1..C4** →
+**DE round 35**;
 **DE31-R1, DE31-R2, DE32-R2, DE32-R3, DE32-R4 still OPEN** at `6d04833` and in the
 round-34 dispatch; **DE32-R1 closed for the LGBM head ONLY**; **DE32-R5 closed in
 tense**; **DA17-R1 (LOW)** → behind DA's landing;
@@ -893,9 +907,10 @@ the REGISTER's state, not of the instrument's own escalation history** — a
 distinction worth keeping, because a reader at 00:14Z has no way to know which
 questions this particular tool once asked.
 
-**The reviewer's queue, in order:** **BE rounds 9 + 10 as ONE filing at the
-round-10 tip** → **DE rounds 33 + 34 as ONE filing at the round-34 tip**. **BE
-round 8's review is RELEASED** (`f804f33`).
+**The reviewer's queue, in order:** **DE rounds 33 + 34 as ONE filing at
+`47a2ba6`** (request filed, `c70e8e2`) → **BE rounds 9 + 10 as ONE filing at the
+round-10 tip**. **BE round 8's review is RELEASED** (`f804f33`); the **estimand
+reading** is filed and verified (`a23667b`).
 **Released so far** include BE rounds 6 (`03b5dca`) and 7 (`0f34aad`), DE rounds
 29+30 and **31+32** (`82126ca`), and **DA round 17** (`f4c7734`). **Released so far:**
 DE rounds 23 (`0b03618`), 24 (`304cd5f`), 25 (`a7860dc`) and 26+27 (`723271e`),
@@ -1708,6 +1723,78 @@ than a clean zero (the density receipt covers 13 days, not this one).
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-02 ~19:05Z (MEM) — THE FROZEN TEXT ALREADY ASKED FOR TWO OF THE
+### THINGS THE RUNNER WOULD HAVE HAD TO INVENT
+
+**R-466, R-467 and R-468 swept.** Nothing run; frozen plan files and committed
+blobs only.
+
+**I checked the estimand filing's citations at the frozen lines, and the reading
+they support is stronger than "five findings".** `DRAFT:212-213` defines rho as
+the **retained-book adverse-cost / spread-capture ratio**, and `:68` row 5 fixes
+the feed as **generation-level tranche tables, never per-row latency labels**.
+So **EST-R1 is not a preference about denominators**: the frozen protocol already
+says the denominator is **measured**, which means a constant `HALF_SPREAD_CENTS`
+does not merely approximate it — **it makes the reading threshold the constant**
+(0.7 c/share closes the route at H = 0.5 and does not at H = 1.0). *A constant
+standing in for a measurement moves the verdict, not the precision.*
+
+**And EST-R2 lands on the receipt, not the number.** The over-the-hold value **is
+the frozen feed's** (`:68`), so what is wrong is the receipt **binding
+`fill_horizon_s` and an estimand note that declare a 1-second cap over it**. I
+checked the other half myself: **the addendum mentions "horizon" zero times.** So
+the governing document declares **no** horizon, the receipt declares **one**, and
+they are about different quantities — which is exactly why the closure is *"declare
+the horizon the number has, in addendum v2, before the run"* rather than *"fix the
+constant"*. This is the round-50 finding grown a layer: **the addendum omitted
+Cap 2; it also omits any horizon at all.**
+
+**Two of the six addendum items are not new asks — the frozen text already
+demands them.** `DRAFT:71` row 8 says `max_cancels_per_minute` is **declared per
+cell** with **requested / effective(passed) / suppressed** counts reported. So
+EST-R4's identity is **the protocol's own duty**, unmet, and the runner's stated
+reason for skipping it is false on both halves. Likewise
+`STATEFUL_HARMFUL_CANCEL_TODO.md:381-382` **requires** `theta_repost <
+theta_cancel` **for a declared dwell** — so `REPOST_DWELL_S` is a number the
+programme's own TODO demanded and **nobody has proposed** (2.0 s appears with no
+proposal on record). **The gap between "the document requires it" and "somebody
+chose it" is where all three numbers live.**
+
+**So the USER item widened without multiplying.** It is still **one** decision —
+**one dated addendum v2 the USER freezes** — now carrying **three numbers**
+(`theta_repost` with sensitivity and **neither selected**; `REPOST_DWELL_S`;
+`HALF_SPREAD_CENTS` **only if kept**, both DE and the reviewer recommending it be
+**measured away**) and **three declarations** (the horizon the number has; repost
+parity in the control, which the estimand's logic requires and the frozen text is
+silent on; and the rate-limit declaration with its identity). **Bundling them is
+the right shape**: six separate asks would arrive as six chances to answer
+partially.
+
+**EST-R5 is the one I would flag to a reader in a hurry.** The cancel set **must
+be the drawn generations** (`:147-156`), and the control at `:601-604` **discards
+`_gen` and collapses same-`(slug, side)` draws** — so **the action count is not
+preserved**. That is rule 2 of this programme's own reliability rules — *rows are
+actions* — appearing inside the matched control, where it silently changes what
+the control is matched on.
+
+**DE round 34 executed at `47a2ba6` and counts as filed**: four findings closed,
+**C1 half-closed**, five named open, and **DE34-C1..C4** raised. *Counts as filed*
+is the honest status — the round did what it said and named what it did not do.
+**DE round 35 is routed with the feed change the five open findings share**, the
+code halves of EST-R1/R2/R4/R5, and **the addendum v2 DRAFT for the USER** — the
+right ordering, because the draft is written by the seat that must implement it
+and frozen by the USER who must own the numbers.
+
+**Two in-band corrections are on the record and I carry both without flattening
+them:** R-467 corrected R-466's reading times, and **R-468 §0 corrects R-467
+§1's own "verified 18:53Z"**. A correction of a correction is not noise — it is
+the only way a time that was written ahead of the clock stops propagating.
+
+**BE8-R1/R2 go to BE round 12**; the reviewer takes **DE 33 + 34 as one filing at
+`47a2ba6`**, then BE 9 + 10 at the round-10 tip. **Tonight is unchanged**: 00:06Z
+verdict, 00:14Z preflight, and the **durable landing is BE round 11, after round
+10 lands**.
 
 ### 2026-09-02 ~18:50Z (MEM) — I REPLACED ONE OCCURRENCE AND CALLED IT REPLACED
 

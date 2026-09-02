@@ -3850,3 +3850,68 @@ Moved in the MEM round-52 true-up of R-465. Join rule as in batch 1.
   UNCHANGED: G=1/5; the 011 family 12 of 24 with Q4 failing; the sequencing rule;
   R-419 revocable.
 ```
+
+## Batch 59 — archived 2026-09-02T19:05Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-53 true-up of R-466, R-467 and R-468. Join rule as in batch 1.
+
+```yaml
+  2026-09-02T18:28Z (MEM ROUND 50 -- THE CAP IS RECORDED, ASSERTED AGAINST
+  ITSELF, AND NEVER ENFORCED). R-461, R-462 and R-463 swept in one batch. Nothing
+  run and nothing read from a forbidden surface: BE round 9 is open so
+  be_forward_day.py went untouched, DE round 33 is in flight so ~/ctaNew-wt-de
+  went unread and only its CODE TIP 6d04833 (18:20:40Z) is recorded; everything
+  else is a committed blob or a plan file. ITEM 8'S RULING IS THE ROUND AND BOTH
+  HALVES VERIFY: the one-second horizon is not an addendum choice but THE FROZEN
+  PROTOCOL'S OWN CAP 2 (DE_PHASE4_PROTOCOL_DRAFT.md:41-45) -- FILL_HORIZON_S =
+  1.0 s, every cell meaning "value preventable WITHIN ONE SECOND of the decision
+  row", and phase4_generation_tables.tranche_table REFUSING TO EMIT WITHOUT
+  declare_cap=True -- while THE ADDENDUM DOES NOT CARRY IT (grepped in five
+  spellings, ZERO hits). So the document that BINDS THE PROTOCOL BY SHA omits the
+  protocol's own semantic cap: BINDING BY CONTENT PROVES WHICH DOCUMENT, IT DOES
+  NOT CARRY THAT DOCUMENT'S OBLIGATIONS INTO YOURS. AND THE RUNNER'S TREATMENT OF
+  THE CAP IS THE SHARPER HALF: at e52d183 the cap is IMPORTED (:61), RECORDED in
+  the receipt (:205), EXPLAINED in prose (:207) and CHECKED at :438-440 by
+  asserting rec["fill_horizon_s"] == FILL_HORIZON_S and that "WITHIN ONE SECOND"
+  appears in the note THE SAME CODE WROTE -- BOTH SIDES OF THAT CHECK COME FROM
+  ONE SOURCE -- while tranche_table occurs EXACTLY ONCE IN THE FILE, ON LINE 26,
+  INSIDE THE DOCSTRING, AND IS NEVER CALLED. The protocol's actual enforcement,
+  the refusal, is NAMED IN PROSE AND NEVER INVOKED, and what runs is a field
+  compared to the constant it was copied from: A CHECK WHOSE TWO SIDES SHARE AN
+  ORIGIN IS A SPELLING TEST. That is why "verified by count and FOUND SHORT" is
+  the right verdict on round 32 and why the review's separation matters: e52d183
+  is released as DECLARATION + THREE INSTRUMENTS and THE RUNNER IS NOT RELEASED
+  AS A PRODUCER; Q-DE-50 BUILT THE RUNNER'S SHELL, not "the runner", and the
+  review table says it that way because the other phrasing would read as a
+  producer existing. FINDINGS WITH ROUTING KEPT HONEST ABOUT WHAT IS AND IS NOT
+  DISPATCHED: DE32-R1 and DE32-R2 (MEDIUM) stay OPEN pending the round-33 landing
+  check, remainder to round 34; DE31-R1 and DE32-R3 are NOT IN THE ROUND-33
+  DISPATCH -- round 34 unless the tip carries them, which the LANDING CHECK
+  decides, not the dispatch; DE32-R4 / DE31-R2 / DE32-R5 (LOW) likewise; DA17-R1
+  (LOW) sits behind DA's landing. RECORDING THE ABSENCE FROM A DISPATCH IS THE
+  PART THAT USUALLY GOES UNWRITTEN AND IS EXACTLY HOW A FINDING QUIETLY
+  DISAPPEARS. ONE TRUE-UP BEYOND THE DISPATCH: it says Q-DE-51 is PENDING; the
+  row LANDED AT 2b72d02 while this batch was composed, and I record it as FILED,
+  NOT COORDINATOR-VERIFIED -- same treatment as DE round 21 in round 33, because
+  a row landing is not a verification. THE RUN'S PRECONDITIONS ARE NOW WRITTEN
+  BESIDE THE RULING where a reader meets them: the round AFTER DE round 33 lands
+  AND the reviewer reads it, EARLIEST 09-03, after tonight's landings, by
+  coordinator dispatch under systemd-run --user --scope --slice=research.slice -p
+  MemoryMax=12G, INTO THE DECLARED OUTDIR ONLY -- four gates, with the protocol
+  frozen before any of them, which is the whole reason a diagnostic can be
+  scheduled without becoming evidence. R-461'S CORRECTION IS CARRIED AND IT WAS
+  MINE: R-459 section 2's budget-axis citation :105 -> :103, adopted in band with
+  R-459 standing as provenance; and BE7-R4's root -- REPO hardcoded at
+  c54e48e:37 -- is carried into BE ROUND 9'S LANDING CHECK, the right home for
+  it, since the finding was about one reader, the root is about the constant, and
+  a landing check is where a root gets tested rather than a symptom. Reviewer's
+  DA 17 filing f4c7734 (145 lines) RELEASE for e353119; DE 31+32 filing 82126ca
+  (251 lines); reviewer now on BE ROUND 8 at c54e48e per
+  REQUEST_BE_ROUND_8_2026-09-02.md. TONIGHT UNCHANGED: 00:06Z verdict timer,
+  00:14Z preflight, coordinator wake after, R-409 accrual with the R-411(ii)
+  denominator, DA landing at e353119 (HOLD -> 3b7e10a), BE durable landing the
+  round after the read, CO-8, --require-no-skips, DATA_ROOT split behind DA's
+  landing. USER: SEVEN RULED; TWO OPEN -- the Phase-2 winner ruling and the
+  content-liveness v2 freeze -- NEITHER NEEDED TONIGHT. UNCHANGED: G=1/5; the 011
+  family 12 of 24 with Q4 failing; the sequencing rule; R-419 revocable.
+```
