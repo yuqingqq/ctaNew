@@ -49,6 +49,7 @@ import hashlib
 import json
 import math
 import os
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -61,6 +62,17 @@ from typing import Any, Sequence
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import harmful_stateful_policy as hsp
+
+# THE BRIDGE LIVES HERE, AND THE PLANE ORDER IS WHY.
+# `de_admissible_windows` SUPPLIES the window list; this seam CONSUMES it.
+# EV reads all planes and is read by none, so EV may import DE -- but DE
+# importing EV is the plane-order violation R-32 ruled on when
+# `de_constraints` did exactly that (the constants were inlined rather than
+# imported: "a duplicated literal is a lesser evil than a plane-order
+# violation"). Putting the bridge in the supplier would have made the
+# supplier read its own consumer. So it is here, and the supplier stays
+# unaware of the seam.
+import de_admissible_windows as daw
 
 PROTOCOL = "ev_replay_seam_v1"
 CANON = "ev_runrecord_canon_v1"
@@ -143,8 +155,32 @@ DECLARED_PARAM_NAMES = tuple(sorted(set(hsp._REQUIRED_PARAMS)
                                     | set(hsp._OPTIONAL_PARAMS)))
 
 
+RATIFICATION_REF_RE = re.compile(r"^R-\d+$")
+#: What a supply emission must carry before this seam will read it.
+SUPPLY_REQUIRED_KEYS = ("protocol", "day", "governed", "mask_consumed",
+                        "mask_identity_hash", "counts", "windows",
+                        "n_supplied_total")
+#: What each supplied record must already carry. The seam's own required
+#: keys are `slug` and `inputs_hash`; the supplier emits both.
+SUPPLIED_RECORD_KEYS = ("slug", "inputs_hash", "coin", "start")
+#: The bridged spec: the seam's required keys PLUS the supply's identity, so
+#: a spec can never be read without knowing which supply and which
+#: ratification produced it.
+BRIDGED_SPEC_KEYS = ("slug", "inputs_hash", "coin", "start",
+                     "supply_protocol", "day", "governed", "mask_consumed",
+                     "mask_identity_hash", "ratification_ref")
+
+
 class SeamRefused(RuntimeError):
     """An input, a status or a stamp the seam refuses to guess."""
+
+
+class BridgeRefused(SeamRefused):
+    """A supply this seam will not turn into window specs.
+
+    A SUBCLASS, deliberately: the cause is specific and the disposition is
+    not -- a caller catches one concept, as with the supplier's own
+    `GoverningRuleUnreadable`."""
 
 
 class EconomicsRefused(RuntimeError):
@@ -340,6 +376,168 @@ class LeakyPolicy(ActionValuePolicy):
         ctx = dict(ctx, markout_cents_per_share=-9.0)
         validate_context(ctx)                     # must raise
         return 1.0
+
+
+# ---------------------------------------------------------------------------
+# 3b. the BRIDGE -- a supply emission becomes per-window ReplaySession specs
+# ---------------------------------------------------------------------------
+# THE SEAM STILL NEVER CHOOSES. It converts; it does not select, sample, cap
+# or rank. Which windows exist is the supplier's subtraction; whether they may
+# be raced is an R-ADMISS ratification the coordinator performs, and the
+# ratification enters here ONLY as a reference the caller passes in. It is
+# never derived and never defaulted, because a supplier that could mint its
+# own ratification would be performing the coordinator's act.
+
+def _b_ratification_declared(ctx) -> None:
+    ref = ctx["ratification_ref"]
+    if ref is None or not isinstance(ref, str) or not ref.strip():
+        raise BridgeRefused(
+            f"ratification_ref is {ref!r}. It is a PARAMETER passed from "
+            f"outside: R-ADMISS ratification is a coordinator act, and a "
+            f"seam that defaulted or derived one would be minting it.")
+
+
+def _b_ratification_shape(ctx) -> None:
+    ref = ctx["ratification_ref"]
+    if isinstance(ref, str) and not RATIFICATION_REF_RE.match(ref.strip()):
+        raise BridgeRefused(
+            f"ratification_ref {ref!r} does not match "
+            f"{RATIFICATION_REF_RE.pattern} -- a register entry is R-<n>, and "
+            f"a free-text ref would let anything look like a ratification")
+
+
+def _b_supply_envelope(ctx) -> None:
+    sup = ctx["supplied"]
+    if not isinstance(sup, dict):
+        raise BridgeRefused("supply emission is not an object")
+    missing = [k for k in SUPPLY_REQUIRED_KEYS if k not in sup]
+    if missing:
+        raise BridgeRefused(
+            f"supply emission is MISSING {missing} -- named, so a reader "
+            f"knows which field was absent rather than that 'something' was")
+
+
+def _b_governed_implies_mask_consumed(ctx) -> None:
+    sup = ctx["supplied"]
+    if sup.get("governed") is True and sup.get("mask_consumed") is not True:
+        raise BridgeRefused(
+            "supply declares governed=True with mask_consumed=False. The "
+            "supplier already refuses this, and the seam refuses it AGAIN on "
+            "purpose: a consumer that trusts its producer's guarantees has "
+            "no way to notice when the producer stops providing them.")
+
+
+def _b_total_matches_lists(ctx) -> None:
+    sup = ctx["supplied"]
+    listed = sum(len(v) for v in sup["windows"].values())
+    if listed != sup["n_supplied_total"]:
+        raise BridgeRefused(
+            f"supply declares n_supplied_total={sup['n_supplied_total']} but "
+            f"lists {listed} window(s); the two must agree or one of them is "
+            f"describing a different set")
+
+
+def _b_counts_match_lists(ctx) -> None:
+    """The hand-added-slug catcher, and the reason it is exercisable.
+
+    `counts` and `windows` are built by different paths in the supplier, so
+    comparing them is a cross-check rather than a restatement: a record added
+    to `windows` by hand shows up here as a per-coin disagreement."""
+    sup = ctx["supplied"]
+    bad = []
+    for coin, recs in sorted(sup["windows"].items()):
+        declared = (sup["counts"].get(coin) or {}).get("n_supplied")
+        if declared != len(recs):
+            bad.append(f"{coin}: counts={declared} list={len(recs)}")
+    if bad:
+        raise BridgeRefused(
+            f"per-coin counts disagree with the window lists ({bad}). A spec "
+            f"list is built ONLY from the supply's own records, so a slug "
+            f"added by hand is a disagreement here, not an extra window.")
+
+
+def _b_record_keys(ctx) -> None:
+    sup = ctx["supplied"]
+    for coin, recs in sorted(sup["windows"].items()):
+        for i, rec in enumerate(recs):
+            if not isinstance(rec, dict):
+                raise BridgeRefused(f"{coin}[{i}] is not an object")
+            miss = [k for k in SUPPLIED_RECORD_KEYS if k not in rec]
+            if miss:
+                raise BridgeRefused(
+                    f"{coin}[{i}] (slug {rec.get('slug')!r}) is MISSING "
+                    f"{miss} -- named, because `slug` and `inputs_hash` are "
+                    f"the seam's own required keys and a record without them "
+                    f"cannot be stamped")
+
+
+def _b_slug_matches_record(ctx) -> None:
+    sup = ctx["supplied"]
+    for coin, recs in sorted(sup["windows"].items()):
+        for rec in recs:
+            want = daw.SLUG_FORM.format(coin=rec["coin"], start=rec["start"])
+            if rec["slug"] != want:
+                raise BridgeRefused(
+                    f"record slug {rec['slug']!r} does not reconstruct from "
+                    f"its own coin/start ({want!r}) -- a doctored slug would "
+                    f"otherwise name a window the record is not about")
+            if rec["coin"] != coin:
+                raise BridgeRefused(
+                    f"record under coin {coin!r} declares coin "
+                    f"{rec['coin']!r}")
+
+
+BRIDGE_GUARDS: tuple[tuple[str, Any], ...] = (
+    ("ratification_declared", _b_ratification_declared),
+    ("ratification_shape", _b_ratification_shape),
+    ("supply_envelope", _b_supply_envelope),
+    ("governed_implies_mask_consumed", _b_governed_implies_mask_consumed),
+    ("total_matches_lists", _b_total_matches_lists),
+    ("counts_match_lists", _b_counts_match_lists),
+    ("record_keys", _b_record_keys),
+    ("slug_matches_record", _b_slug_matches_record),
+)
+BRIDGE_GUARD_NAMES = tuple(n for n, _ in BRIDGE_GUARDS)
+
+
+def window_specs_from_supply(supplied: dict, *, ratification_ref: str,
+                             skip_guard: str | None = None) -> list[dict]:
+    """One ReplaySession spec per SUPPLIED window, stamped with the supply's
+    identity and the ratification it was admitted under.
+
+    STRUCTURAL, and named as such because it cannot fail by input (rule 16):
+    the spec list is built by iterating `supplied["windows"]` and nothing
+    else. There is no parameter through which a window could be added, so
+    "a window not listed by the supply cannot enter" is a property of the
+    code's shape rather than a guard that fires. What IS exercisable is a
+    record added to the supply itself -- `counts_match_lists` catches that,
+    and its known-bad does fire."""
+    ctx = {"supplied": supplied, "ratification_ref": ratification_ref}
+    for name, guard in BRIDGE_GUARDS:
+        if name == skip_guard:
+            continue
+        guard(ctx)
+    ref = ratification_ref.strip()
+    out: list[dict] = []
+    for coin, recs in sorted(supplied["windows"].items()):
+        for rec in recs:
+            out.append({
+                "slug": rec["slug"],
+                "inputs_hash": rec["inputs_hash"],
+                "coin": rec["coin"],
+                "start": rec["start"],
+                "supply_protocol": supplied["protocol"],
+                "day": supplied["day"],
+                "governed": supplied["governed"],
+                "mask_consumed": supplied["mask_consumed"],
+                "mask_identity_hash": supplied["mask_identity_hash"],
+                "ratification_ref": ref,
+            })
+    for spec in out:
+        if set(spec) != set(BRIDGED_SPEC_KEYS):
+            raise BridgeRefused(
+                f"bridged spec schema is closed: {sorted(set(spec) ^ set(BRIDGED_SPEC_KEYS))}")
+    return out
 
 
 # ---------------------------------------------------------------------------
@@ -878,7 +1076,7 @@ def run(out: Path | None = None) -> dict:
 
 
 # ---------------------------------------------------------------------------
-EXPECTED_CHECKS = 41
+EXPECTED_CHECKS = 64
 
 
 def selftest() -> int:
@@ -1084,6 +1282,154 @@ def selftest() -> int:
        "exist at emission, and naming it so would be the "
        "name-is-not-the-definition defect")
 
+    # ---- 3b: the BRIDGE, on a REAL supply emission ----------------------
+    # FIXTURE REF, and named one: no live ratification exists and none is to
+    # be invented here. `R-0` is not and will never be a register entry.
+    FIXTURE_REF = "R-0"
+    sup_day = daw.REAL_DAY
+    m = daw.load_mask(sup_day)
+    sup = daw.supply(sup_day, {c: list(daw._grid(sup_day)) for c in m["coins"]},
+                     m)
+    specs = window_specs_from_supply(sup, ratification_ref=FIXTURE_REF)
+    ok(len(specs) == sup["n_supplied_total"] == 1875,
+       f"BRIDGE: one spec per supplied window, {len(specs)} == the supply's "
+       f"own n_supplied_total on the REAL {sup_day} mask")
+    ok(all(set(x) == set(BRIDGED_SPEC_KEYS) for x in specs),
+       "every bridged spec carries the seam's required keys PLUS the "
+       "supply's identity, under a CLOSED schema")
+    by_slug = {r["slug"]: r for recs in sup["windows"].values() for r in recs}
+    ok(all(x["inputs_hash"] == by_slug[x["slug"]]["inputs_hash"]
+           for x in specs),
+       "and each spec's inputs_hash is the SUPPLIED record's, carried "
+       "through rather than recomputed here")
+    ok(all(x["ratification_ref"] == FIXTURE_REF
+           and x["mask_identity_hash"] == sup["mask_identity_hash"]
+           and x["day"] == sup_day for x in specs),
+       f"with the supply's identity and the ratification ref on every one "
+       f"({FIXTURE_REF}, a FIXTURE — no live ratification exists)")
+
+    refuses(BridgeRefused,
+            lambda: window_specs_from_supply(sup, ratification_ref=""),
+            "KNOWN-BAD: an empty ratification_ref REFUSES -- it is a "
+            "parameter from outside, and a seam that defaulted one would be "
+            "minting a coordinator act")
+    refuses(BridgeRefused,
+            lambda: window_specs_from_supply(sup, ratification_ref="ratified"),
+            "KNOWN-BAD: a ref that is not R-<n> REFUSES, so free text cannot "
+            "look like a ratification")
+    refuses(BridgeRefused,
+            lambda: window_specs_from_supply(sup, ratification_ref=None),
+            "KNOWN-BAD: a None ref REFUSES -- and it is the case only the "
+            "DECLARED guard catches, since the shape guard skips a non-str "
+            "by construction")
+    _empty_both = []
+    for _g in ("ratification_declared", "ratification_shape"):
+        try:
+            window_specs_from_supply(sup, ratification_ref="", skip_guard=_g)
+        except BridgeRefused:
+            _empty_both.append(_g)
+    ok(sorted(_empty_both) == ["ratification_declared",
+                               "ratification_shape"],
+       "MEASURED REDUNDANCY, not assumed: the EMPTY ref is caught by BOTH "
+       "ref guards -- disabling either alone still refuses. Reporting that "
+       "as a survivor would have called a real defence-in-depth a hole, so "
+       "the audit uses the case each guard uniquely owns")
+    bad_gov = dict(sup, governed=True, mask_consumed=False)
+    refuses(BridgeRefused,
+            lambda: window_specs_from_supply(bad_gov,
+                                             ratification_ref=FIXTURE_REF),
+            "KNOWN-BAD: governed with mask_consumed False REFUSES AT THE "
+            "SEAM TOO -- defence in depth; the supplier already refuses it, "
+            "and a consumer that trusts that cannot notice if it stops")
+    bad_tot = dict(sup, n_supplied_total=sup["n_supplied_total"] + 1)
+    refuses(BridgeRefused,
+            lambda: window_specs_from_supply(bad_tot,
+                                             ratification_ref=FIXTURE_REF),
+            "KNOWN-BAD: n_supplied_total disagreeing with the lists REFUSES")
+    hand = json.loads(json.dumps(sup))
+    hand["windows"]["btc"].append(dict(hand["windows"]["btc"][0],
+                                       slug="btc-updown-5m-999",
+                                       start=999))
+    hand["n_supplied_total"] += 1
+    refuses(BridgeRefused,
+            lambda: window_specs_from_supply(hand,
+                                             ratification_ref=FIXTURE_REF),
+            "KNOWN-BAD: a slug ADDED BY HAND is refused -- it survives the "
+            "total check (the caller bumped it) and is caught by the "
+            "per-coin counts, which the supplier builds on a different path")
+    nokey = json.loads(json.dumps(sup))
+    del nokey["windows"]["eth"][0]["inputs_hash"]
+    refuses(BridgeRefused,
+            lambda: window_specs_from_supply(nokey,
+                                             ratification_ref=FIXTURE_REF),
+            "KNOWN-BAD: a record missing `inputs_hash` REFUSES BY NAME")
+    noenv = {k: v for k, v in sup.items() if k != "mask_identity_hash"}
+    refuses(BridgeRefused,
+            lambda: window_specs_from_supply(noenv,
+                                             ratification_ref=FIXTURE_REF),
+            "KNOWN-BAD: a supply missing an envelope field REFUSES BY NAME")
+    doctored = json.loads(json.dumps(sup))
+    doctored["windows"]["sol"][0]["slug"] = "sol-updown-5m-1"
+    refuses(BridgeRefused,
+            lambda: window_specs_from_supply(doctored,
+                                             ratification_ref=FIXTURE_REF),
+            "KNOWN-BAD: a slug that does not reconstruct from its own "
+            "coin/start REFUSES")
+
+    # ---- the specs are ACCEPTED where they are consumed ------------------
+    sides_b, end_b = fixture_reference()
+    one = specs[0]
+    sess = ReplaySession(one, sides_b, INERT_PARAMS, InertPolicy(),
+                         queue_bound="BACK_DISPLAYED", unavailable_iv=(),
+                         window_end=end_b, seed=20260902)
+    ok(sess.spec == one,
+       "a ReplaySession CONSTRUCTS from a bridged spec and stores it "
+       "UNCHANGED -- the supply's identity keys ride through the seam")
+    rec_b = sess.run()
+    rcpt = sess.receipt([rec_b], {g: True for g in REQUIRED_GATES})
+    ok(rcpt["windows"] == [{"slug": one["slug"],
+                            "inputs_hash": one["inputs_hash"]}],
+       "and the RECEIPT stamps that spec: slug and inputs_hash carried "
+       "through to the artifact")
+    ok(rcpt["windows"][0]["inputs_hash"]
+       == by_slug[one["slug"]]["inputs_hash"],
+       "the receipt's inputs_hash EQUALS the supplied record's -- the chain "
+       "mask -> supply -> spec -> receipt is one identity, end to end")
+    ok(rec_b["slug"] == one["slug"],
+       "and the RunRecord is keyed by the bridged slug")
+
+    # ---- reads-no-verdict still holds for THIS module --------------------
+    ok(daw.reads_no_verdict(daw.imported_modules(Path(__file__).read_text())),
+       "the seam still imports NO verdict producer after gaining the bridge "
+       "-- checked over its parsed import list, the predicate the supplier "
+       "ships")
+
+    # ---- mutation audit, live and disabled visibly different -------------
+    baudit = bridge_mutation_audit(sup, FIXTURE_REF)
+    ok(baudit["all_load_bearing"],
+       f"BRIDGE MUTATION AUDIT: each of the {baudit['n_guards']} guards was "
+       f"disabled in turn and its known-bad STOPPED refusing -- "
+       f"{baudit['survivors']} survivors")
+    ok(set(baudit["per_guard"]) == set(BRIDGE_GUARD_NAMES),
+       f"and it covers every declared bridge guard by name "
+       f"({len(BRIDGE_GUARD_NAMES)})")
+    ok(baudit["crash_when_disabled"] == ["ratification_declared",
+                                         "record_keys", "supply_envelope"],
+       f"AND A THIRD OUTCOME IS RECORDED AS NEITHER REFUSAL NOR PASS: "
+       f"disabling {baudit['crash_when_disabled']} makes the builder CRASH "
+       f"(AttributeError on a None ref; KeyError on a missing record or "
+       f"envelope field). That is precisely what those three guards are FOR "
+       f"-- turning a malformed input into a NAMED refusal -- and making the "
+       f"builder defensive instead would emit specs with a null identity, "
+       f"which is worse than stopping. Counted as its own bucket so the "
+       f"audit cannot read a crash as a kill")
+    ok(len(window_specs_from_supply(sup, ratification_ref=FIXTURE_REF,
+                                    skip_guard="counts_match_lists")) == 1875,
+       "RULE 16, STATED: the 'a window not listed by the supply cannot "
+       "enter' property is STRUCTURAL and cannot fail by input -- the list "
+       "is built by iterating the supply and there is no parameter to add "
+       "one. It is named here rather than counted as a killed mutant")
+
     # ---- the run refuses to write an artifact its gates did not pass ----
     ok(True, "the writer's refusal is exercised by the launcher seam test "
              "below, which runs main() the way a launcher runs it")
@@ -1092,6 +1438,83 @@ def selftest() -> int:
        f"check count asserted at run time: {n[0] + 1} == {EXPECTED_CHECKS}")
     print(f"[ev_replay_seam] selftest OK -- {n[0]} checks")
     return 0
+
+
+def bridge_mutation_audit(sup: dict, ref: str) -> dict:
+    """Blank each bridge guard in turn; its known-bad must stop refusing.
+
+    Live and disabled are VISIBLY DIFFERENT CALLS (round 5's lesson: a
+    harness whose "live" run also passed `skip_guard` measured every guard
+    with itself already disabled and read three as survivors)."""
+    def _mut(**kw):
+        d = json.loads(json.dumps(sup))
+        for k, v in kw.items():
+            d[k] = v
+        return d
+
+    hand = json.loads(json.dumps(sup))
+    hand["windows"]["btc"].append(dict(hand["windows"]["btc"][0],
+                                       slug="btc-updown-5m-999", start=999))
+    hand["n_supplied_total"] += 1
+    nokey = json.loads(json.dumps(sup))
+    del nokey["windows"]["eth"][0]["inputs_hash"]
+    doctored = json.loads(json.dumps(sup))
+    doctored["windows"]["sol"][0]["slug"] = "sol-updown-5m-1"
+
+    cases = {
+        # A CASE ONLY THIS GUARD CATCHES. The empty string "" is caught by
+        # BOTH this guard and `ratification_shape` (measured in the
+        # selftest), so using it here would report a real redundancy as a
+        # survivor. `None` is not a str, so the shape guard skips it by
+        # construction and only the declared guard stands between it and the
+        # builder.
+        "ratification_declared": (sup, None),
+        "ratification_shape": (sup, "ratified"),
+        "supply_envelope": ({k: v for k, v in sup.items()
+                             if k != "mask_identity_hash"}, ref),
+        "governed_implies_mask_consumed":
+            (_mut(governed=True, mask_consumed=False), ref),
+        "total_matches_lists": (_mut(n_supplied_total=sup["n_supplied_total"]
+                                     + 1), ref),
+        "counts_match_lists": (hand, ref),
+        "record_keys": (nokey, ref),
+        "slug_matches_record": (doctored, ref),
+    }
+    per_guard: dict[str, dict] = {}
+    for name, (bad_sup, bad_ref) in cases.items():
+        try:                                   # LIVE: no skip_guard
+            window_specs_from_supply(bad_sup, ratification_ref=bad_ref)
+            live = False
+        except SeamRefused:
+            live = True
+        crashed = None
+        try:                                   # DISABLED: this guard skipped
+            window_specs_from_supply(bad_sup, ratification_ref=bad_ref,
+                                     skip_guard=name)
+            disabled = False
+        except SeamRefused:
+            disabled = True
+        except Exception as exc:               # noqa: BLE001
+            # A CRASH IS NOT A REFUSAL, and it is not a pass either. With
+            # `supply_envelope` disabled the builder raises KeyError on the
+            # missing identity field -- which is exactly what that guard is
+            # FOR: it turns a malformed supply into a NAMED refusal. Making
+            # the builder defensive instead would let a malformed supply
+            # produce specs with a null identity, which is worse than
+            # stopping. Recorded as its own outcome rather than folded into
+            # either bucket.
+            disabled = False
+            crashed = f"{type(exc).__name__}: {exc}"
+        per_guard[name] = {"refuses_when_live": live,
+                           "refuses_when_disabled": disabled,
+                           "crashes_when_disabled": crashed,
+                           "load_bearing": live and not disabled}
+    survivors = sorted(k for k, v in per_guard.items()
+                       if not v["load_bearing"])
+    return {"n_guards": len(per_guard), "per_guard": per_guard,
+            "survivors": survivors, "all_load_bearing": not survivors,
+            "crash_when_disabled": sorted(
+                k for k, v in per_guard.items() if v["crashes_when_disabled"])}
 
 
 def main(argv: Sequence[str] | None = None) -> int:

@@ -112,7 +112,8 @@ def seamtest() -> dict:
 
         # ---- POSITIVE CONTROL: the launcher path, end to end ------------
         out = tmp / "receipt.json"
-        r = _launch(SEAM, ["run", "--out", str(out)], cwd=REPO)
+        r = _launch(SEAM, ["run", "--out", str(out)], cwd=REPO,
+                    env=_env_with_pm_research())
         receipt = json.loads(out.read_text()) if out.exists() else None
         results["positive_control"] = {
             "exit": r.returncode,
@@ -131,8 +132,13 @@ def seamtest() -> dict:
             ('"queue_bound_stamped": bound_stamped,',
              "# MUTANT M1: the gate is never computed"))
         o1 = tmp / "m1.json"
+        # PYTHONPATH so the mutant resolves its DEPENDENCIES from the real
+        # tree while its own module comes from the script dir. The seam
+        # gained an import (de_admissible_windows) in round 7, and without
+        # this M1 died on ImportError instead of SeamRefused -- the
+        # right-reason predicate caught it, which is what it is for.
         r1 = _launch(d1 / "ev_replay_seam.py", ["run", "--out", str(o1)],
-                     cwd=REPO)
+                     cwd=REPO, env=_env_with_pm_research())
         results["m1_unwired_gate"] = {
             "exit": r1.returncode, "artifact_written": o1.exists(),
             "refused_for_the_right_reason":
@@ -149,7 +155,7 @@ def seamtest() -> dict:
              '  # MUTANT M2: leak'))
         o2 = tmp / "m2.json"
         r2 = _launch(d2 / "ev_replay_seam.py", ["run", "--out", str(o2)],
-                     cwd=REPO)
+                     cwd=REPO, env=_env_with_pm_research())
         results["m2_leaked_economics"] = {
             "exit": r2.returncode, "artifact_written": o2.exists(),
             "refused_for_the_right_reason":
