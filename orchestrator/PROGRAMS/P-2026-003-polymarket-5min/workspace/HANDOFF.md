@@ -1,13 +1,13 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-02T15:57Z — **DE round 26 VERIFIED at `89aef8c` (171)** — a
-quotation now REPORTS, an own block still REFUSES, `check#18` says **"0-based"**.
-**CO-9 reproduced here at the mechanism**: the (ii) scan calls the *adjudicating*
-reader on every entry, so a malformed block in an entry that can supersede
-nothing refuses the subject's check — **and only while an unrelated duplicate
-exists.** Condition **(iii) is refined to OWN blocks in band** beside (ii); both
-now share one criterion. **DA rounds 13+14 RELEASED** (`a2a1cf8`) → DA round 15,
-held, before tonight. **SIX RULED, none open.**
+Updated: 2026-09-02T16:16Z — **FIVE LANDINGS.** **CO-9 is CLOSED** at
+`5e9dc8b` — I re-drove my own C/C2/C3/D/E fixtures at the tip: **C now returns
+and C3 still refuses, but on the PATH, not in the scan.** **BE34-R1..R5 are all
+closed** (`5e9ed91`, **95** both launchers, reproduced here). **DA round 15
+verified at `8910701`** with **CO-10** against it — a control **rewritten around
+a fixture change** into two negatives of one value, recorded beside the DA10-R5
+class. DE25-R1 reproduced: an anchor collision reads **0 chars and answers
+True.** **SIX RULED, none open.**
 
 ## READ FIRST — current project handoff
 
@@ -744,17 +744,20 @@ launchers at **235/19**.
 | **DE round 24** | **VERIFIED** at `e0d1e9f` and its **review RELEASED** (`304cd5f`) — DE22-R1 closed at **both ends** of the reviewer's fixture, the census refinement RULED sound; two findings **DE24-R1/R2** → DE round 26 |
 | **DE round 25** | **VERIFIED** at `50a9113` (Q-DE-43) — admissible **91** (reproduced here); the three comment shapes now refuse, `X = 1` is a **DECLARED** limit, the length conjunct is **gone** |
 | **DE round 26** | **VERIFIED** at `89aef8c` (Q-DE-44) — ratification **171** (reproduced here); `named` from `own_ratification_blocks` (`:422-423`), `check#18` now says **"0-based"** (`:987`/`:990`) |
-| **DE round 27** | **IN FLIGHT** (Q-DE-45) — **CO-9** (a quiet ownership filter for the (ii)/(iii) scans) and the **(iii) refinement**, with C/C2/C3 and D/E as controls |
+| **DE round 25 review** | **RELEASED** (`a7860dc`) for `50a9113` — three rulings adopted; **DE25-R1 (LOW)** → DE round 28 |
+| **DE round 27** | **VERIFIED** at `5e9dc8b` (Q-DE-45) — **CO-9 CLOSED**, ratification **177**; `own_blocks_quiet()` (`:631`) scans, `own_ratification_blocks` (`:639`) adjudicates on the path |
+| **DE round 28** | **IN FLIGHT** (Q-DE-46) — DE25-R1: name the **anchor-collision** shape and the composition's own condition in the `:279` limit paragraph |
 | **DE round 26** | the **DATA_ROOT split**, still behind DA's landing after 00:14Z |
 | **DA round 11** | **REVIEW RELEASED** (`a5e8b40`) for `e292439` as the content of **Q-DA-209**; all five DA10 findings close. Two new findings **DA11-R1/R2** → DA round 12 |
 | **DA round 12 review** | **RELEASED** (`852b9aa`) for `636a455` as Q-DA-209's content — DA11-R1/R2 close; **DA12-R1 (LOW-MED)** → DA round 14 |
 | **DA round 13** | **HELD** at `e384792` (chain `3a89e6c`→`e292439`→`636a455`→`e384792`) — preflight **39**; `freeze_disposition` moves to `ruled`, `still_open == {}`, and a **coherence guard** makes the contradiction unrepresentable |
 | **DA rounds 13+14 review** | **RELEASED** (`a2a1cf8`) for **both** `e384792` and `801eb31`, dispositions identical, no hold — three LOW/LOW-MED findings **DA13-R1, DA14-R1, DA14-R2** → DA round 15 |
-| **DA round 15** | **DISPATCHED and HELD** on the chain as its sixth commit, **before tonight** — selftest regions only, no real-day run |
+| **DA round 15** | **HELD and VERIFIED** at `8910701` — DA13-R1/DA14-R1/DA14-R2 closed (39 / 5 / 32 both launchers). **CO-10** filed at the same tip |
+| **DA round 16** | **DISPATCHED and HELD** (Q-DA-212) — CO-10, `da_blackout_mask.py` selftest region only, before tonight |
 | **DA round 14** | **HELD and VERIFIED** at `801eb31` — DA12-R1 closed, twinning **both directions**, **23 + 15 = 38** and `--falsify` 39 (recomputed here in a parity tree), the one exclusion **named with a reproduced reason**. A one-assertion scope deviation **ACCEPTED in-batch** |
 | **BE round 5 review** | **RELEASED** (`d990162`) for `baa986d` — **BE34-R2 CLOSED at the artifact**; two rulings adopted; three LOW-MED findings **BE5-R1/R2/R3** → BE round 7 |
-| **BE round 6** | code at `faaabdc`; **row Q-BE-231 PENDING** — not verified until the row lands (rule 18) |
-| **BE round 7** | **STAGED** — BE5-R1/R2/R3 as one batch, dispatched when the row lands, **BEFORE tonight's read** |
+| **BE round 6** | **VERIFIED** at `5e9ed91` (Q-BE-231) — BE34-R1/R3/R4/R5 closed, **95** both launchers, sha `957a9d3c…`, usage rc **2** (all reproduced here); three of BE's own corrections in band |
+| **BE round 7** | **DISPATCHED** (Q-BE-232) — BE5-R1/R2/R3, one batch, no real-day run |
 | **BE round 8** | the **durable landing** under `data/pm_5min/derived/`, **AFTER the 00:14Z read** (was round 7) |
 | **DA round 12** | **HELD and VERIFIED** at `636a455` on `e292439` (unpushed, four files) — DA11-R1/R2 closed, gates **22 → 36**. **Nothing moves for tonight**; Q-DA-209 lands after the 00:14Z read **with the round-12 tip** |
 | **BE** | **Q-BE-229 VERIFIED** at the artifacts; **round 5 dispatched** |
@@ -790,13 +793,13 @@ instrument under the run it is meant to read.
 mask block and **refuse if absent on a governed day**, the population-gate
 ledger-vs-tape refusal, and `require_verified()`.
 
-**Open findings:** **BE34-R2 CLOSED** at `90036b7` and **closed at the artifact**
-in the round-5 review (three runs into one outdir → base/`.1`/`.2`, the base
-byte-identical throughout); **BE34-R1/R3/R4/R5** → **BE round 6** (row pending);
+**Open findings:** **BE34-R1..R5 ALL CLOSED** — R2 at `90036b7` and at the
+artifact in the round-5 review, R1/R3/R4/R5 at `5e9ed91`;
 **BE5-R1/R2/R3** → **BE round 7** (staged, before tonight's read);
 **DE23-R1/R2 CLOSED** at `50a9113`, queued for review;
-**DE24-R1/R2 CLOSED** at `89aef8c`; **CO-9 + the (iii) refinement** → **DE round
-27, in flight**; **DA13-R1 / DA14-R1 / DA14-R2** → **DA round 15** (held);
+**DE24-R1/R2 CLOSED** at `89aef8c`; **CO-9 CLOSED** at `5e9dc8b`;
+**DE25-R1** → **DE round 28, in flight**; **DA13-R1 / DA14-R1 / DA14-R2 CLOSED**
+at `8910701`; **CO-10** → **DA round 16** (held);
 **DE20-R1/R2 CLOSED** at `92fc615`, review released; **DE21-R1 CLOSED** at
 `a83083a`; **DE22-R1 CLOSED** at `e0d1e9f`, queued for review; **DA12-R1** → DA round 14
 (held);
@@ -818,11 +821,11 @@ the REGISTER's state, not of the instrument's own escalation history** — a
 distinction worth keeping, because a reader at 00:14Z has no way to know which
 questions this particular tool once asked.
 
-**The reviewer's queue, in order:** **DE round 25** at `50a9113` (in flight) →
-**BE round 6** when its row lands → **BE round 7** → **DA round 15** when it
-files; **DE rounds 26+27 go as ONE filing** written when 27 lands. **DA rounds
-13+14's review is RELEASED** (`a2a1cf8`), as are DE rounds 24 (`304cd5f`) and 23
-(`0b03618`) and BE round 5 (`d990162`). **Released so far:** BE rounds 3–4
+**The reviewer's queue, in order:** **DE rounds 26+27** as ONE filing (in
+flight) → **DA round 15** at `8910701` → **BE round 6** at `5e9ed91` → then BE
+round 7 and DA round 16 when they file. **Released so far:** DE rounds 23
+(`0b03618`), 24 (`304cd5f`) and 25 (`a7860dc`), DA rounds 13+14 (`a2a1cf8`), BE
+round 5 (`d990162`). **Released so far:** BE rounds 3–4
 (`1d9c543`), DA rounds 11 (`a5e8b40`) and 12 (`852b9aa`), DE rounds 19
 (`a558356`), 20 (`819d225`), 21 (`533e38c`) and 22 (`8df60bf`).
 
@@ -1627,6 +1630,87 @@ than a clean zero (the density receipt covers 13 days, not this one).
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-02 ~16:16Z (MEM) — THE SCAN STOPPED ADJUDICATING, AND THE READER
+### THAT SHOULD STILL DOES
+
+**R-452 swept.** Five landings. The one I could check hardest is the one I
+raised the fixtures for, so I re-drove them rather than reading the result.
+
+**CO-9 is closed, and the closure separates cleanly along the line it was
+supposed to.** My own fixtures, at the round-27 tip:
+
+| fixture | `entry_index` | `superseded_by("R-419")` |
+|---|---|---|
+| the real register | **returns**, `duplicate_refs {'R-6': [1792, 9518]}` | — |
+| **C** — two own blocks, **earlier** than R-419 | **returns** *(refused at `89aef8c`)* | **`[]`** |
+| **C2** — same, duplicate `R-6` renamed away | **returns**, `{}` | — |
+| **C3** — same entry placed **later** | **returns** | **REFUSED** |
+| **D** — duplicate whose 2nd occurrence has a **quoted** block | **returns**, reported | — |
+| **E** — same with an **own** block naming `R-419` | **REFUSED** | — |
+
+**Read the C3 row carefully, because it is the whole point.** C3 refuses — but
+**in `superseded_by`, not in the scan.** The scan now answers ownership; the
+adjudicating reader still adjudicates, and only where the entry can reach the
+answer. `own_blocks_quiet()` (`:631`) is read by (ii) `:423` and (iii) `:446`;
+`own_ratification_blocks` (`:639`) stays on the path. **Same text, two readers,
+and now they have different jobs.**
+
+**DE's D2 is the round's best evidence and it is not DE's fix — it is DE's
+mutant.** With only D, dropping the `kind` conjunct from the quiet filter
+**passed**; D2 exists because the mutant was actually run. **A fixture set is
+sized by the mutants you run against it, not by the cases you thought of** — and
+the reviewer now has the reverse-direction question (the predicate exists twice,
+`:631` and `:639`) as item 1.
+
+**DE25-R1 reproduced to the digit.** A line at column 0 at the end of the module
+docstring — an anchor collision — makes `declared_limit_text` return **0 chars**
+with `stopped_at_a_real_boundary` **True**, `first_read_line 53`, `above_line
+52`, and **all three anchors absent**. The suite is red (the anchors check
+fires), so this is a **completeness point about the stated limit, not an
+exposure** — and it is worse *in kind* than `X = 1`: **a read of nothing that
+answers True.** Round 28 names the shape and the composition's own condition:
+*the anchors cover code cuts only while they remain the block's topmost
+content.*
+
+**CO-10 is the DA10-R5 class in its most expensive form, and I verified both
+ends.** At `801eb31` the control asserted **identity** — `carrying_commit ==
+_there` (`:847`), the child's HEAD. The round-15 fixture then commits in the
+child, moving that HEAD, so identity would no longer hold; the check was
+rewritten (`:902-903`) as `!= _here and != _root_git.stdout.strip()` — and
+**`_here` IS `_root_git.stdout.strip()` (`:802`)**. Two negatives of one value.
+**The first three instances encoded an arrangement; this one encoded an
+arrangement, had it invalidated by a fixture change, and was repaired into a
+tautology.** I have recorded it beside DA10-R5 in the form that generalises:
+**when a fixture change breaks a control, re-derive the property — do not weaken
+the assertion until it fits.**
+
+**DA's own first clean arrangement deserves the same billing.** Not copying the
+files ran the **child's committed code**, so a parent-side mutation never reached
+it and a hardcoded `True` survived. The fix — copy **and commit** in the scratch
+child — is the difference between *a fixture that looks isolated* and *one that
+actually is.*
+
+**BE round 6 verified here:** driver sha **`957a9d3cc38b3dde`**, **95** both
+launchers, usage rc **2**. BE34-R1/R3/R4/R5 closed, and **BE34-R1's closure is
+the one to keep** — one fixture through both consumers with scores **equal per
+coin**, the same featureless row dropped, and the scores **distinct and small**
+so a 1e9-scale value cannot hide a 1e-9 perturbation. BE also corrected three
+things of its own in band, including naming the in-place row rewrite as its
+fault, and settled the 5-vs-4 I narrowed two rounds ago: **two passes, `mr5`
+13/4 and `mall` 50 with six survivor lines but five distinct — H14 listed twice
+by the harness.** The number was never wrong about the code; the harness printed
+one mutant twice.
+
+**One disclosure of the coordinator's is worth keeping visible**, because it is
+the kind of thing that normally goes unrecorded: a compound command carried its
+`cd` into DA's worktree and ran `git pull --ff-only` there. It **aborted**, and
+nothing moved — verified from outside. **The aborted form is the only reason
+nothing moved**, which is exactly why it is written down rather than shrugged off.
+
+**Seats.** DE round 28, DA round 16 (held, before tonight) and BE round 7 all in
+flight; the reviewer takes **DE rounds 26+27 as one filing**, then DA round 15,
+then BE round 6. Tonight's timers are unchanged. **SIX RULED, none open.**
 
 ### 2026-09-02 ~15:57Z (MEM) — A REFUSAL THAT DEPENDS ON AN UNRELATED ENTRY
 ### SOMEWHERE ELSE IN THE FILE
@@ -2632,6 +2716,21 @@ loudly — but it asserts the child's `data_root` equals the **parent's**
 `DATA_ROOT`, so it fires from any non-canonical parent. **It encodes the
 environment rather than the property**, which is the failure mode that looks
 most like working correctly.
+
+> **CO-10 (2026-09-02T16:11Z, R-452 §4) is the same class in its most expensive
+> form — a control REWRITTEN around a fixture change that lost the property it
+> asserted.** At `801eb31` the carrying-commit control asserted **identity**:
+> `carrying_commit == _there` (`:847`), `_there` being the child's HEAD. DA's
+> round-15 fixture then *commits* in the child, which moves that HEAD — so the
+> identity would no longer hold, and the check was rewritten (`:902-903`) as
+> `!= _here and != _root_git.stdout.strip()`. **But `_here` IS
+> `_root_git.stdout.strip()` (`:802`): two negatives of one value, identity with
+> nothing.** Verified at both commits here. A producer changed to record
+> `HEAD~1` — a commit that never executed — is **red at `801eb31`** and **green
+> at `8910701`**. **The three earlier instances encoded an arrangement; this one
+> encoded an arrangement, had it invalidated, and was repaired into a
+> tautology** — so the class now reads: *when a fixture change breaks a control,
+> re-derive the property; do not weaken the assertion until it fits.*
 
 **And the outdir loop is closed.** BE's confirming pair now runs into **`fwd5`**,
 and I verified `fwd4`'s completed **ten-gate** receipt is still intact. The

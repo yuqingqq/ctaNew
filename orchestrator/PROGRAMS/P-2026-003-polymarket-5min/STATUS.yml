@@ -4,6 +4,71 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-09-02T16:16Z (MEM ROUND 44 -- THE SCAN STOPPED ADJUDICATING, AND THE
+  READER THAT SHOULD STILL DOES). R-452 swept; five landings. CO-9 IS CLOSED at
+  5e9dc8b and I RE-DROVE MY OWN FIXTURES at the tip rather than reading the
+  result: the real register returns (duplicate_refs {'R-6': [1792, 9518]} at my
+  as-of, the recount rule holding); C -- two own blocks EARLIER than R-419 --
+  now RETURNS from entry_index (it refused at 89aef8c) AND superseded_by(R-419)
+  returns []; C2 returns with {}; C3, the same entry placed LATER, RETURNS from
+  entry_index but REFUSES in superseded_by; D (duplicate whose second occurrence
+  carries a QUOTED block) RETURNS and is REPORTED; E (own block naming R-419)
+  REFUSES. READ THE C3 ROW CAREFULLY BECAUSE IT IS THE WHOLE POINT: C3 refuses
+  IN THE ADJUDICATING READER, NOT IN THE SCAN. own_blocks_quiet() (:631) is read
+  by (ii) :423 and (iii) :446; own_ratification_blocks (:639) stays on the path
+  -- SAME TEXT, TWO READERS, AND NOW THEY HAVE DIFFERENT JOBS. Ratification 177
+  both launchers (EXPECTED_CHECKS = 177 at :1167); the #3 message says "carries
+  an OWN ratification block" (:453). DE'S D2 IS THE ROUND'S BEST EVIDENCE AND IT
+  IS NOT DE'S FIX BUT DE'S MUTANT: with only D, dropping the `kind` conjunct
+  from the quiet filter PASSED, and D2 exists because the mutant was actually
+  run -- A FIXTURE SET IS SIZED BY THE MUTANTS YOU RUN AGAINST IT, NOT BY THE
+  CASES YOU THOUGHT OF. The reviewer has the reverse-direction question (the
+  predicate now exists twice, :631 and :639) as item 1. DE ROUND 25 REVIEW
+  RELEASED (a7860dc) for 50a9113 with three rulings adopted, and DE25-R1
+  REPRODUCED TO THE DIGIT: a line at column 0 at the end of the module docstring
+  -- an anchor collision -- makes declared_limit_text return 0 CHARS with
+  stopped_at_a_real_boundary TRUE, first_read_line 53, above_line 52, and ALL
+  THREE ANCHORS ABSENT; the suite is red because the anchors check fires, so it
+  is a COMPLETENESS POINT ABOUT THE STATED LIMIT, NOT AN EXPOSURE -- and worse
+  IN KIND than X = 1: A READ OF NOTHING THAT ANSWERS TRUE. DE round 28 (Q-DE-46)
+  names the shape and the composition's own condition (the anchors cover code
+  cuts only while they remain the block's topmost content). DA ROUND 15 VERIFIED
+  at the chain's 8910701 (39 / 5 / 32 both launchers): DA13-R1 closed with the
+  FORM at :635/:640, DA14-R1 closed BY DELETION with the reason in the comment
+  :236-252, DA14-R2 closed with BOTH arrangements :849-898 -- and DA's own first
+  clean arrangement deserves billing: NOT COPYING THE FILES RAN THE CHILD'S
+  COMMITTED CODE, so a parent-side mutation never reached it and a hardcoded
+  True SURVIVED; copy AND commit in the scratch child is the difference between a
+  fixture that LOOKS isolated and one that IS. CO-10 IS THE DA10-R5 CLASS IN ITS
+  MOST EXPENSIVE FORM AND I VERIFIED BOTH ENDS: at 801eb31 the carrying-commit
+  control asserted IDENTITY (carrying_commit == _there, :847, the child's HEAD);
+  the round-15 fixture commits in the child and moves that HEAD, so the check was
+  rewritten (:902-903) as != _here and != _root_git.stdout.strip() -- AND _here
+  IS _root_git.stdout.strip() (:802), two negatives of one value. The first three
+  instances ENCODED an arrangement; this one encoded one, had it INVALIDATED by a
+  fixture change, and was REPAIRED INTO A TAUTOLOGY. Recorded beside DA10-R5 in
+  the generalising form: WHEN A FIXTURE CHANGE BREAKS A CONTROL, RE-DERIVE THE
+  PROPERTY -- DO NOT WEAKEN THE ASSERTION UNTIL IT FITS. Dispatched as DA round
+  16 (Q-DA-212), held on the chain, before tonight. BE ROUND 6 VERIFIED at
+  5e9ed91: driver sha 957a9d3cc38b3dde, 95 both launchers, usage rc 2, all
+  reproduced here; BE34-R1/R3/R4/R5 closed and BE34-R1's closure is the one to
+  keep -- one fixture through both consumers, scores EQUAL per coin, the same
+  featureless row dropped, and the scores DISTINCT AND SMALL so a 1e9-scale value
+  cannot hide a 1e-9 perturbation. BE corrected three things of its own IN BAND,
+  including naming the in-place row rewrite as its fault, and SETTLED THE 5-VS-4
+  I NARROWED TWO ROUNDS AGO: two passes, mr5 13/4 and mall 50 with SIX survivor
+  lines but FIVE distinct -- H14 listed twice by the harness. The number was
+  never wrong about the code; the harness printed one mutant twice. ONE
+  DISCLOSURE OF THE COORDINATOR'S KEPT VISIBLE because it is the kind of thing
+  that normally goes unrecorded: a compound command carried its cd into DA's
+  worktree and ran git pull --ff-only there; it ABORTED and nothing moved,
+  verified from outside -- THE ABORTED FORM IS THE ONLY REASON NOTHING MOVED.
+  SEATS: DE round 28, DA round 16 (held) and BE round 7 (Q-BE-232, BE5-R1/R2/R3,
+  no real-day run) in flight; reviewer takes DE ROUNDS 26+27 AS ONE FILING, then
+  DA round 15, then BE round 6; three requests filed. Tonight's timers unchanged.
+  USER decisions SIX RULED, NONE OPEN. UNCHANGED: G=1/5; the 011 family 12 of 24
+  with Q4 failing; the sequencing rule; Phase-4 gated; R-419 revocable.
+  PRIOR:
   2026-09-02T15:57Z (MEM ROUND 43 -- A REFUSAL THAT DEPENDS ON AN UNRELATED
   ENTRY SOMEWHERE ELSE IN THE FILE). R-451 swept. DE ROUND 26 VERIFIED at
   89aef8c and RE-RUN HERE: EXPECTED_CHECKS = 171 (:1128), 171 rc 0; `named` is
@@ -128,69 +193,6 @@ updated: >-
   in flight; DA on deliberate standby. USER decisions SIX RULED, NONE OPEN.
   UNCHANGED: G=1/5; the 011 family 12 of 24 with Q4 failing; the sequencing rule;
   Phase-4 gated; R-419 revocable.
-  PRIOR:
-  2026-09-02T15:36Z (MEM ROUND 41 -- A GUARD THAT ASKS THE WRONG QUESTION, AND A
-  KNOWN-BAD THAT WILL FAIL WHEN THE CODE IS RIGHT). R-449 swept. DE ROUND 23
-  REVIEW RELEASED (0b03618, 227 lines) for a83083a, NO HOLD: DE21-R1 closed for
-  BOTH cut shapes through the reader, the predicate carrying ZERO anchor tokens
-  in its body (prose-blind as claimed), both _declaration_holds conjunct drops
-  red at the known-bad driving each half, declared_limit_boundary accepted as
-  new module surface BY DESIGN. The shared tree's de_admissible_windows.py is
-  BYTE-IDENTICAL to a83083a (checked). DE23-R1 REPRODUCED FROM SCRATCH: the
-  predicate at :281 is `not above.startswith("#:")`, testing #:-ness where the
-  property wanted is THE RUN WAS NOT CUT -- four different single lines inserted
-  above the OVER-CAUGHT paragraph (a plain # comment, an INDENTED #:
-  continuation, a bare #, and a code line X = 1) EACH read 1,975 of 3,752 chars,
-  47% unread, with stopped_at_a_real_boundary TRUE; same numbers as the
-  reviewer's and the coordinator's, arrived at independently. I ALSO DROVE THE
-  PROPOSED CLOSURE IN BOTH DIRECTIONS: not above.lstrip().startswith("#")
-  returns False -- correctly red -- for all three comment shapes and True for
-  X = 1, so it covers three of four and THE FOURTH IS NOT A GAP BUT AN IDENTITY:
-  the intact boundary IS a code line, so no predicate over that one line can
-  separate the legitimate stop from the mutant. A LIMIT THAT CANNOT BE CLOSED
-  SHOULD BE STATED, NOT APPROXIMATED -- the docstring, the module's own idiom.
-  DE23-R2 REPRODUCED AND THEN BUILT PROSPECTIVELY: the extent known-bad
-  (:1234-1248) asserts len(declared_limit_text(_above_head)) == len(_limit),
-  true only because TODAY the head is the run's topmost line so cutting above it
-  removes nothing; a CONTIGUOUS #: paragraph above the head -- the upward growth
-  the round cites as its reason -- leaves the predicate CORRECT (boundary True,
-  all three anchors present) while the block grows: 3,805 chars in my copy,
-  3,791 in the coordinator's, THE DIFFERENCE BEING ONLY THE TEXT EACH OF US
-  INSERTED (the effect is invariant to the text, the number is not -- said so
-  nobody later "corrects" one to the other). I then GREW THE MODULE AND RAN THE
-  GROWN MODULE'S OWN KNOWN-BAD AGAINST IT: the equality conjunct returns FALSE,
-  because _limit is the in-memory block (3,805) while the known-bad reads its
-  copy from Path(__file__).read_text() (3,752) -- THE SUITE GOES RED WITH
-  NOTHING WRONG. That is DE21-R1's shape one artefact over: the first was a
-  check that stayed GREEN when the world moved, this is a check that goes RED
-  when the world IMPROVES, and both come from comparing against A NUMBER instead
-  of against THE SAME SOURCE. TWO RULINGS ADOPTED: the shape is right and the
-  predicate is ONE TOKEN SHORT (a design can be correct and its implementation
-  still incomplete); and the round-21 ruling STANDS, REFINED -- lifting a
-  predicate converts ASSERTION into SUBJECT for everything inside it, so the
-  un-falsifiable surface shrinks to the ok(...) line alone, which is the general
-  answer to the assertion-mutant question raised in round 34: not
-  "assertion-mutants don't matter" but MAKE THE ASSERTION SMALLER UNTIL WHAT IT
-  CONTAINS IS SUBJECT. DE ROUND 25 (Q-DE-43) DISPATCHED with both closures,
-  de_admissible_windows.py only, de_ratification_check.py untouched while under
-  review. THE REGISTER MOVED AGAIN AND THIS TIME I MOVED IT: R-6 parses at
-  0-based 1784/9510 at my as-of against the coordinator's 1783/9509 at 1ba459c,
-  the shift being MY OWN Q-MEM-28 ROW landing in between -- fourth as-of in the
-  sequence (1780/9506 -> 1782/9508 -> 1783/9509 -> 1784/9510) and the cleanest
-  illustration of RECOUNT, NEVER PIN: the seat recording the number is one of
-  the things that moves it. BOTH ROUND-39 STATEMENTS RECORDED WHERE THEY BELONG,
-  NOT RE-FILED: the check#18 residual (:967-970, the raw field under the bare
-  words "register line") sits inside the ROUND-24 REVIEW'S ITEM 4 and reaches DE
-  through that review or round 25; and my own instrument caveat -- a relocated
-  copy of DA's runner derives fewer twins because _launch_twins anchors on
-  Path(argv[1]).parent == HERE -- is noted FOR THE DA ROUNDS 13+14 REVIEW as a
-  property of the runner, since the runner's own count assertion is what would
-  refuse such a copy. SEATS: DE round 25 in flight; BE round 6's row pending
-  (nothing to BE until Q-BE-231; round 7 staged with BE5-R1/R2/R3, round 8 the
-  durable landing after the read); DA on deliberate standby; reviewer DE 24
-  (e0d1e9f, in flight) -> DA 13+14 -> BE 6 -> BE 7. USER decisions SIX RULED,
-  NONE OPEN. UNCHANGED: G=1/5; the 011 family 12 of 24 with Q4 failing; the
-  sequencing rule; Phase-4 gated; R-419 revocable.
 
   ARCHIVED: entries older than these three are moved, never deleted, to
   workspace/STATUS_UPDATED_ARCHIVE.md (append-only). This field is a
@@ -3784,7 +3786,7 @@ flags:
                              # migration discipline remain authoritative.
 
 focus: >
-  As-of 2026-09-02T15:57Z, build and test the offline model mechanism-first
+  As-of 2026-09-02T16:16Z, build and test the offline model mechanism-first
   under plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md section 10. Do not use the
   subordinate stateful-cancel TODO checkbox count as total progress. The
   foundation is established: the action-level dataset and PRED_STATE_V1 are

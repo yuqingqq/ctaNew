@@ -3230,3 +3230,72 @@ Moved in the MEM round-43 true-up of R-451. Join rule as in batch 1.
   OPEN. UNCHANGED: G=1/5; the 011 family 12 of 24 with Q4 failing; the
   sequencing rule; Phase-4 gated; R-419 revocable.
 ```
+
+## Batch 50 — archived 2026-09-02T16:16Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-44 true-up of R-452. Join rule as in batch 1.
+
+```yaml
+  2026-09-02T15:36Z (MEM ROUND 41 -- A GUARD THAT ASKS THE WRONG QUESTION, AND A
+  KNOWN-BAD THAT WILL FAIL WHEN THE CODE IS RIGHT). R-449 swept. DE ROUND 23
+  REVIEW RELEASED (0b03618, 227 lines) for a83083a, NO HOLD: DE21-R1 closed for
+  BOTH cut shapes through the reader, the predicate carrying ZERO anchor tokens
+  in its body (prose-blind as claimed), both _declaration_holds conjunct drops
+  red at the known-bad driving each half, declared_limit_boundary accepted as
+  new module surface BY DESIGN. The shared tree's de_admissible_windows.py is
+  BYTE-IDENTICAL to a83083a (checked). DE23-R1 REPRODUCED FROM SCRATCH: the
+  predicate at :281 is `not above.startswith("#:")`, testing #:-ness where the
+  property wanted is THE RUN WAS NOT CUT -- four different single lines inserted
+  above the OVER-CAUGHT paragraph (a plain # comment, an INDENTED #:
+  continuation, a bare #, and a code line X = 1) EACH read 1,975 of 3,752 chars,
+  47% unread, with stopped_at_a_real_boundary TRUE; same numbers as the
+  reviewer's and the coordinator's, arrived at independently. I ALSO DROVE THE
+  PROPOSED CLOSURE IN BOTH DIRECTIONS: not above.lstrip().startswith("#")
+  returns False -- correctly red -- for all three comment shapes and True for
+  X = 1, so it covers three of four and THE FOURTH IS NOT A GAP BUT AN IDENTITY:
+  the intact boundary IS a code line, so no predicate over that one line can
+  separate the legitimate stop from the mutant. A LIMIT THAT CANNOT BE CLOSED
+  SHOULD BE STATED, NOT APPROXIMATED -- the docstring, the module's own idiom.
+  DE23-R2 REPRODUCED AND THEN BUILT PROSPECTIVELY: the extent known-bad
+  (:1234-1248) asserts len(declared_limit_text(_above_head)) == len(_limit),
+  true only because TODAY the head is the run's topmost line so cutting above it
+  removes nothing; a CONTIGUOUS #: paragraph above the head -- the upward growth
+  the round cites as its reason -- leaves the predicate CORRECT (boundary True,
+  all three anchors present) while the block grows: 3,805 chars in my copy,
+  3,791 in the coordinator's, THE DIFFERENCE BEING ONLY THE TEXT EACH OF US
+  INSERTED (the effect is invariant to the text, the number is not -- said so
+  nobody later "corrects" one to the other). I then GREW THE MODULE AND RAN THE
+  GROWN MODULE'S OWN KNOWN-BAD AGAINST IT: the equality conjunct returns FALSE,
+  because _limit is the in-memory block (3,805) while the known-bad reads its
+  copy from Path(__file__).read_text() (3,752) -- THE SUITE GOES RED WITH
+  NOTHING WRONG. That is DE21-R1's shape one artefact over: the first was a
+  check that stayed GREEN when the world moved, this is a check that goes RED
+  when the world IMPROVES, and both come from comparing against A NUMBER instead
+  of against THE SAME SOURCE. TWO RULINGS ADOPTED: the shape is right and the
+  predicate is ONE TOKEN SHORT (a design can be correct and its implementation
+  still incomplete); and the round-21 ruling STANDS, REFINED -- lifting a
+  predicate converts ASSERTION into SUBJECT for everything inside it, so the
+  un-falsifiable surface shrinks to the ok(...) line alone, which is the general
+  answer to the assertion-mutant question raised in round 34: not
+  "assertion-mutants don't matter" but MAKE THE ASSERTION SMALLER UNTIL WHAT IT
+  CONTAINS IS SUBJECT. DE ROUND 25 (Q-DE-43) DISPATCHED with both closures,
+  de_admissible_windows.py only, de_ratification_check.py untouched while under
+  review. THE REGISTER MOVED AGAIN AND THIS TIME I MOVED IT: R-6 parses at
+  0-based 1784/9510 at my as-of against the coordinator's 1783/9509 at 1ba459c,
+  the shift being MY OWN Q-MEM-28 ROW landing in between -- fourth as-of in the
+  sequence (1780/9506 -> 1782/9508 -> 1783/9509 -> 1784/9510) and the cleanest
+  illustration of RECOUNT, NEVER PIN: the seat recording the number is one of
+  the things that moves it. BOTH ROUND-39 STATEMENTS RECORDED WHERE THEY BELONG,
+  NOT RE-FILED: the check#18 residual (:967-970, the raw field under the bare
+  words "register line") sits inside the ROUND-24 REVIEW'S ITEM 4 and reaches DE
+  through that review or round 25; and my own instrument caveat -- a relocated
+  copy of DA's runner derives fewer twins because _launch_twins anchors on
+  Path(argv[1]).parent == HERE -- is noted FOR THE DA ROUNDS 13+14 REVIEW as a
+  property of the runner, since the runner's own count assertion is what would
+  refuse such a copy. SEATS: DE round 25 in flight; BE round 6's row pending
+  (nothing to BE until Q-BE-231; round 7 staged with BE5-R1/R2/R3, round 8 the
+  durable landing after the read); DA on deliberate standby; reviewer DE 24
+  (e0d1e9f, in flight) -> DA 13+14 -> BE 6 -> BE 7. USER decisions SIX RULED,
+  NONE OPEN. UNCHANGED: G=1/5; the 011 family 12 of 24 with Q4 failing; the
+  sequencing rule; Phase-4 gated; R-419 revocable.
+```
