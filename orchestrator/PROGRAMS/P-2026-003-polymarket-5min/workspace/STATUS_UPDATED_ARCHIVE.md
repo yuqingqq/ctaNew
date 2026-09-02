@@ -3507,3 +3507,69 @@ Moved in the MEM round-47 true-up of R-455. Join rule as in batch 1.
   USER decisions SIX RULED, NONE OPEN. UNCHANGED: G=1/5; the 011 family 12 of 24
   with Q4 failing; the sequencing rule; Phase-4 gated; R-419 revocable.
 ```
+
+## Batch 54 — archived 2026-09-02T17:18Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-48 true-up of R-456 and R-457. Join rule as in batch 1.
+
+```yaml
+  2026-09-02T16:28Z (MEM ROUND 45 -- THE SUITE'S LAST WORD WAS "PASS" AND THE
+  PROCESS EXITED 1). R-453 swept; four landings. DE ROUND 28 VERIFIED at 1480ab6
+  and RE-RUN HERE on the same collision fixture I built two rounds ago: 92
+  checks rc 0; intact 3,752 chars / first_read_line 139 / above_line 137 /
+  read_nothing False / boundary True; THE COLLISION now reads 0 CHARS with
+  read_nothing TRUE and boundary FALSE where the same fixture answered TRUE at
+  50a9113 -- DE25-R1 CLOSED, and the closure is the honest one: read_nothing =
+  first == i (:319) folded into the predicate so A READ OF NOTHING CAN NO LONGER
+  ANSWER TRUE. Growth control boundary True at 3,805 chars in my copy against
+  3,798 in the coordinator's -- the THIRD independent number for that case and
+  the third time the effect is invariant while the number is not. DE'S OWN
+  LAYERED MUTANT IS WORTH MORE THAN ITS FIX: it found a ZeroDivisionError in the
+  anchors known-bad's MESSAGE when _limit is empty -- A MESSAGE THAT CRASHES
+  BEFORE IT CAN NAME THE FAILURE, DE23-R2's family, the assertion right and the
+  reporting not, guarded at the right size ('?', not a rewrite). DE ROUNDS 26+27
+  REVIEW RELEASED (723271e, 218 lines) for BOTH 5e9dc8b and 89aef8c, no hold,
+  the reviewer's eight-fixture matrix reproducing the register's table exactly
+  and D2's discovery reproduced GREEN at 176. DE27-R1 REPRODUCED AT HEAD IN A
+  PARITY TREE, AND THE REPRODUCTION IS THE FINDING: the ownership predicate is
+  written twice (own_blocks_quiet :631, own_ratification_blocks :639); three of
+  the four conjunct drops die at a control AIMED AT THAT CONJUNCT; the fourth,
+  the adjudicating `kind` drop, exits RC 1 WITH AN UNCAUGHT RatificationRefused
+  ("REFUSED FOR A NEW RUN: R-419 is SUPERSEDED by R-999") -- a traceback on
+  stderr from INSIDE A POSITIVE CONTROL. AND THE PART THAT MAKES IT WORTH A
+  ROUND: with that mutant in place THE LAST LINE ON STDOUT IS "PASS", the
+  verdict living only in the exit code and on stderr, so A SEAT TAILING STDOUT
+  SEES A SUITE THAT PASSED. The finding is not that the mutant survives -- it
+  dies loudly -- it is that RED IS NOT THE SAME AS CAUGHT: the failure has no
+  name, no site and no line in the transcript a reader will look at. A MUTANT
+  THAT KILLS THE PROCESS IS NOT EVIDENCE THAT A CONTROL EXISTS. DE round 29
+  (Q-DE-47) is aimed at exactly that gap: ONE TEXT (the quiet filter returns the
+  (blk, dups) pairs and the adjudicating reader consumes it, adding only its two
+  raises), a NAMED control for the `kind` conjunct, the AST-census one-place
+  assertion if DE takes it, mutants re-driven, 177 -> N. THE CAPTURE NOTE
+  BELONGS IN EVERY SEAT'S HABITS AND THIS ROUND SHOWS WHY: da_blackout_mask's
+  FAIL line goes to STDOUT while de_admissible_windows' refusal is a SystemExit
+  on STDERR -- capture both streams TO SEPARATE FILES, since a single merged
+  capture would have shown a PASS-terminated log for a failing run. CO-10 CLOSED
+  ON THE CHAIN at 3b7e10a pending the reviewer, and I read the closure rather
+  than the claim: _child_head re-read from the child AFTER the fixture commit
+  (:885-887), a precondition asserting it is a THIRD value distinct from both
+  (:888), the control asserting carrying_commit == _child_head AND != _here
+  (:927-928) -- THE IDENTITY CONJUNCT IS BACK -- and != _there standing
+  SEPARATELY (:944), so dropping the identity alone leaves != _here satisfied by
+  an intact producer and BOTH LINES MUST GO for the hole to reopen; the HEAD~1
+  producer mutant is RED BY NAME at the CO-10 CONTROL; mask 32 -> 34, gates 5,
+  preflight 39, the redundant third run gone with one execution feeding the
+  assertions. THE ADDENDUM'S QUESTION IS THE RIGHT ONE TO LEAVE OPEN: identity
+  plus the precondition already implies both negatives, so is the separate !=
+  _there line a control WITH ITS OWN FALSIFIER or belt-and-braces carrying a
+  stale count in its message -- items 7-10, and the reviewer takes ROUNDS 15+16
+  AS ONE FILING at 3b7e10a. TONIGHT UNCHANGED: the 00:06Z verdict timer, the
+  00:14Z preflight timer, the coordinator's wake after it, R-409 with the
+  R-411(ii) denominator, then DA lands Q-DA-209..212 with the chain's tip, BE's
+  durable landing, then CO-8, --require-no-skips and the DATA_ROOT split. SEATS:
+  DE round 29 and BE round 7 in flight; DA on DELIBERATE standby (R-381), a
+  further finding at the tip re-opening as round 17. USER decisions SIX RULED,
+  NONE OPEN. UNCHANGED: G=1/5; the 011 family 12 of 24 with Q4 failing; the
+  sequencing rule; Phase-4 gated; R-419 revocable.
+```

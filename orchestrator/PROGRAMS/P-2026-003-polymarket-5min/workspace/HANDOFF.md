@@ -1,13 +1,12 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-02T17:12Z — **Four landings.** BE round 7 at `fcafe9f` (102),
-DE round 30 at `27d0d37` (**183**, CO-11 closed), DA round 17 at `e353119`
-(**DA16-R1 closed — the predicate is stated once and has its own falsifier**);
-**`e353119` is the tip that lands tonight, HOLD falls back to `3b7e10a`.** Two
-new findings at the BE tip, **CO-12 / CO-13 → BE round 8**. **My own attempted
-count of the BE suite measured BE's UNCOMMITTED round-8 WIP and is withdrawn** —
-recorded, because the tree moved between two of my own reads. **SIX RULED, none
-open.**
+Updated: 2026-09-02T17:18Z — **BE round 6 RELEASED (`03b5dca`) with SEVEN
+findings**, queued for the BE round after 8 (R2 then R1 first); the durable
+landing is **unaffected** by them. **The class my withdrawn count named is now a
+STANDING RULE (ninth):** *a suite run in the shared tree measures whatever is
+there at spawn time* — verify at the **committed tip in a worktree of your own**,
+because hashing before and after is **not sufficient**. Two times in R-456 are
+**corrected in band** (17:08–17:09Z). **SIX RULED, none open.**
 
 ## READ FIRST — current project handoff
 
@@ -360,6 +359,17 @@ nobody reads.
    leave the OLD bytecode executing. **The dangerous direction is the stale
    RESTORE — a falsifier credited without ever having fired.** A pre-run clear
    closes both directions; a post-run clear closes only one.
+
+4. **A suite run in the shared tree measures whatever is there at spawn time**
+   (R-457 §2, from my own withdrawn count; now `standing_rules`' ninth). **No
+   seat reads, runs or counts another seat's module from the main tree while
+   that seat's round is open** — verify at the **committed tip in a detached
+   worktree of your own**, where a hash is a hash of the artifact. Hashing
+   immediately before and after the run is **necessary but not sufficient**:
+   the WIP can be present at both hashes. **My call, as asked: a ninth rule,
+   not a clause under the eighth** — the eighth is about controls that need
+   mutating, this is about *where you are standing when you measure*, and it
+   belongs beside the pre-run cache clear.
 
 3. **Every guard added to catch a class is itself a candidate for that class**
    (R-455 §5, adopted from MEM's round-46 form; now in `STATUS.yml`'s
@@ -769,8 +779,10 @@ launchers at **235/19**.
 | **BE round 5 review** | **RELEASED** (`d990162`) for `baa986d` — **BE34-R2 CLOSED at the artifact**; two rulings adopted; three LOW-MED findings **BE5-R1/R2/R3** → BE round 7 |
 | **BE round 6** | **VERIFIED** at `5e9ed91` (Q-BE-231) — BE34-R1/R3/R4/R5 closed, **95** both launchers, sha `957a9d3c…`, usage rc **2** (all reproduced here); three of BE's own corrections in band |
 | **BE round 7** | **VERIFIED** at `fcafe9f` (Q-BE-232) — BE5-R1/R2/R3 closed, **102** both launchers, sha `857819a7…` (confirmed here). Two findings **CO-12 / CO-13** at the same tip → BE round 8 |
+| **BE round 6 review** | **RELEASED** (`03b5dca`, 273 lines) for `5e9ed91` — **seven findings BE6-R1..R7**; two rulings adopted, including *the shipped audit must COMPUTE verdict counts, never grep vocabulary* (rule 10), folded into CO-12's closure |
 | **BE round 8** | **DISPATCHED** (Q-BE-233) — CO-12 (attribute on the `AssertionError` line, with a named control **both directions**) and CO-13 (the double count) |
-| **BE round 9** | the **durable landing** under `data/pm_5min/derived/`, **after the 00:14Z read** (was round 8) |
+| **BE round 9** *(was the landing round)* | **BE6-R1..R7**, with **BE6-R2 and BE6-R1 first** — the round AFTER round 8 |
+| **BE — durable landing** | unchanged and **unaffected by the seven**: the round after the **00:14Z** read (R-442 §3(c)) |
 | **BE round 8** | the **durable landing** under `data/pm_5min/derived/`, **AFTER the 00:14Z read** (was round 7) |
 | **DA round 12** | **HELD and VERIFIED** at `636a455` on `e292439` (unpushed, four files) — DA11-R1/R2 closed, gates **22 → 36**. **Nothing moves for tonight**; Q-DA-209 lands after the 00:14Z read **with the round-12 tip** |
 | **BE** | **Q-BE-229 VERIFIED** at the artifacts; **round 5 dispatched** |
@@ -813,6 +825,7 @@ artifact in the round-5 review, R1/R3/R4/R5 at `5e9ed91`;
 **DE24-R1/R2 CLOSED** at `89aef8c`; **CO-9 CLOSED** at `5e9dc8b`;
 **DE25-R1 CLOSED** at `1480ab6`; **DE27-R1 CLOSED** at `ea3b525`;
 **CO-11 CLOSED** at `27d0d37`; **CO-12 / CO-13** → **BE round 8**;
+**BE6-R1..R7** → **the BE round after 8** (R2, then R1 first);
 **DA13-R1 / DA14-R1 / DA14-R2 CLOSED** at `8910701`; **CO-10 CLOSED and
 CONFIRMED** at `3b7e10a`; **DA16-R1 CLOSED** at `e353119` (held);
 **DE20-R1/R2 CLOSED** at `92fc615`, review released; **DE21-R1 CLOSED** at
@@ -836,9 +849,9 @@ the REGISTER's state, not of the instrument's own escalation history** — a
 distinction worth keeping, because a reader at 00:14Z has no way to know which
 questions this particular tool once asked.
 
-**The reviewer's queue, in order:** **BE round 6** at `5e9ed91` (in flight) →
-**DE rounds 29+30 as ONE filing at `27d0d37`** → **BE round 7 (+8)** → **DA round
-17 at `e353119`**. **Released so far:**
+**The reviewer's queue, in order:** **DE rounds 29+30 as ONE filing at
+`27d0d37`** (in flight) → **BE round 7 (+8)** → **DA round 17 at `e353119`**.
+**BE round 6's review is RELEASED** (`03b5dca`). **Released so far:**
 DE rounds 23 (`0b03618`), 24 (`304cd5f`), 25 (`a7860dc`) and 26+27 (`723271e`),
 DA rounds 13+14 (`a2a1cf8`) and **15+16** (`5d9bfb8`), BE round 5 (`d990162`).
 
@@ -1649,6 +1662,70 @@ than a clean zero (the density receipt covers 13 days, not this one).
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-02 ~17:18Z (MEM) — SEVEN FINDINGS, AND A RULE MADE OUT OF MY OWN
+### MISTAKE
+
+**R-456 and R-457 swept, in one batch.** Nothing was run from the main tree this
+round: **BE's round-8 WIP is sitting in `live/pm_research/`**, so everything below
+was read from **committed blobs** (`git show <tip>:<path>`) or from the safety
+copy of the race record. That is the new rule applied to the round that adopted
+it.
+
+**My call, as asked: the shared-tree class is a NINTH standing rule, not a clause
+under the eighth.** The eighth is about **controls** — a guard that needs
+mutating. This one is about **where you are standing when you measure**, and its
+natural neighbour is R-446's pre-run cache clear: both are measurement hygiene,
+and both were bought with a wrong reading. It is in `STATUS.yml` and in the
+standards section above, with the part that makes it non-obvious kept: **hashing
+immediately before and after the run is necessary but not sufficient, because the
+WIP can be present at both hashes.**
+
+**Two of the seven findings I could verify at the blobs, and did.** **BE6-R1** —
+`rec["refused_at"] = rec["gates"][-1]["gate"] if rec["gates"] else None` is
+present at **`5e9ed91:1220`** and, unchanged, at **`fcafe9f:1246`**. Since a
+passing gate appends `{"gate": …, "result": "PASS"}`, a **bare raise** leaves
+`gates[-1]` naming **the last gate that PASSED** — the receipt attributes a
+refusal to a check that succeeded. **BE6-R2** — `_launch_parity` is
+`return rc == 0 and child == expect`, **a count**: a byte-different tree with the
+same number of checks passes it.
+
+**One citation needs fixing, and I say so rather than quietly using the right
+one.** BE6-R2's second citation, `fcafe9f:2588-2590`, **does not resolve** — the
+file at `fcafe9f` is **2,580 lines**. The code is at **`:2481`** (the definition)
+and **`:2483`** (the `rc == 0 and child == expect` line), with the paired `ok` at
+**`:2532-2534`**, which is where `at_entry` is compared — the shape the ruling
+says stands. **Same class as the round-18 dirty-tree line numbers: a citation
+that carries a commit must resolve at that commit.**
+
+**BE6-R7 I corroborated from the receipt of record, and the receipt makes the
+finding sharper.** `coin_coverage` carries `coins_supplied` = **7** and
+`coins_supplied_without_a_fit` = **5** — `bnb, doge, hype, sol, xrp`. So the
+no-fit class is not merely present on 09-01, it is **the majority of the day**,
+and **the driver already names it in its own receipt** while the
+one-fixture-two-consumers check omits it. **A class the artifact reports and the
+fixture does not exercise** is a gap with its own evidence attached.
+
+**The second adopted ruling is the one worth carrying forward.** *The shipped
+audit must **compute** verdict counts from verdict-initial lines, never grep
+vocabulary* — rule 10 at the harness level, folded into CO-12's closure. It is
+the same defect CO-12 already names from the other side: **CO-12 is attribution
+by substring, this is counting by substring.** Both are a text search standing in
+for a computation.
+
+**Sequencing, stated so nothing slides.** BE6-R1..R7 are **the BE round after 8**,
+with **BE6-R2 and BE6-R1 first**; **the durable landing is unaffected by the
+seven** and stays the round after the **00:14Z** read. The reviewer is on **DE
+rounds 29+30 at `27d0d37`**.
+
+**And a correction of record I am carrying because corrections that nobody
+carries are how a stale number survives.** R-456's *"17:10Z"* and *"17:12Z"* were
+composed ahead of the clock; **the times of record are 17:08–17:09Z for both
+events** (R-457 §3, in band). R-456 stands as provenance. The reviewer's filing
+commit reads **17:07:24Z**, which I checked — consistent with the corrected
+window and not with the original one.
+
+**SIX RULED, none open.** Tonight unchanged.
 
 ### 2026-09-02 ~17:12Z (MEM) — I MEASURED THE WRONG FILE, AND THE ROUND BEFORE
 ### LAST IS WHY I NOTICED

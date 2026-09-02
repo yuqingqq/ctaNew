@@ -4,6 +4,56 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-09-02T17:18Z (MEM ROUND 48 -- SEVEN FINDINGS, AND A RULE MADE OUT OF MY
+  OWN MISTAKE). R-456 and R-457 swept in one batch. NOTHING WAS RUN FROM THE MAIN
+  TREE THIS ROUND: BE's round-8 WIP is sitting in live/pm_research/, so
+  everything was read from COMMITTED BLOBS (git show <tip>:<path>) or from the
+  safety copy of the race record -- the new rule applied to the round that
+  adopted it. MY CALL AS ASKED: the shared-tree class is a NINTH STANDING RULE,
+  NOT A CLAUSE UNDER THE EIGHTH -- the eighth is about CONTROLS (a guard that
+  needs mutating), this is about WHERE YOU ARE STANDING WHEN YOU MEASURE, and its
+  natural neighbour is R-446's pre-run cache clear; both are measurement hygiene
+  and both were bought with a wrong reading. It is in standing_rules (8 -> 9) and
+  in HANDOFF's standards section with the non-obvious part kept: HASHING
+  IMMEDIATELY BEFORE AND AFTER THE RUN IS NECESSARY BUT NOT SUFFICIENT, BECAUSE
+  THE WIP CAN BE PRESENT AT BOTH HASHES. THE REVIEWER'S BE ROUND 6 FILING
+  (03b5dca, 273 lines, committed 17:07:24Z) VERIFIED: RELEASE for 5e9ed91, seven
+  findings BE6-R1..R7. TWO OF THEM I VERIFIED AT THE BLOBS: BE6-R1 --
+  rec["refused_at"] = rec["gates"][-1]["gate"] if rec["gates"] else None is
+  present at 5e9ed91:1220 and UNCHANGED at fcafe9f:1246, and since a passing gate
+  appends {"gate": ..., "result": "PASS"}, a BARE RAISE leaves gates[-1] naming
+  THE LAST GATE THAT PASSED, so the receipt attributes a refusal to a check that
+  SUCCEEDED; BE6-R2 -- _launch_parity is `return rc == 0 and child == expect`, A
+  COUNT, so a byte-different tree with the same number of checks passes it. ONE
+  CITATION NEEDS FIXING AND I SAY SO RATHER THAN QUIETLY USING THE RIGHT ONE:
+  BE6-R2's second citation fcafe9f:2588-2590 DOES NOT RESOLVE -- the file at
+  fcafe9f is 2,580 lines -- the code being at :2481 (definition) and :2483 (the
+  rc-and-count line) with the paired ok at :2532-2534 where at_entry is compared,
+  the shape the ruling says stands. SAME CLASS AS THE ROUND-18 DIRTY-TREE LINE
+  NUMBERS: A CITATION THAT CARRIES A COMMIT MUST RESOLVE AT THAT COMMIT. BE6-R7
+  CORROBORATED FROM THE RECEIPT OF RECORD, WHICH MAKES THE FINDING SHARPER:
+  coin_coverage carries coins_supplied = 7 and coins_supplied_without_a_fit = 5
+  (bnb, doge, hype, sol, xrp), so the no-fit class is THE MAJORITY OF THE DAY and
+  THE DRIVER ALREADY NAMES IT IN ITS OWN RECEIPT while the
+  one-fixture-two-consumers check omits it -- a class the artifact reports and
+  the fixture does not exercise is a gap with its own evidence attached. THE
+  SECOND ADOPTED RULING IS THE ONE WORTH CARRYING FORWARD: the shipped audit must
+  COMPUTE verdict counts from verdict-initial lines, NEVER GREP VOCABULARY (rule
+  10 at the harness level), folded into CO-12's closure -- and it is the same
+  defect CO-12 names from the other side, CO-12 being attribution by substring
+  and this counting by substring, both a text search standing in for a
+  computation. SEQUENCING STATED SO NOTHING SLIDES: BE6-R1..R7 are THE BE ROUND
+  AFTER 8 with BE6-R2 AND BE6-R1 FIRST; THE DURABLE LANDING IS UNAFFECTED BY THE
+  SEVEN and stays the round after the 00:14Z read; the reviewer is on DE rounds
+  29+30 at 27d0d37. AND A CORRECTION OF RECORD CARRIED BECAUSE CORRECTIONS NOBODY
+  CARRIES ARE HOW A STALE NUMBER SURVIVES: R-456's "17:10Z" and "17:12Z" were
+  composed ahead of the clock; THE TIMES OF RECORD ARE 17:08-17:09Z FOR BOTH
+  EVENTS (R-457 section 3, in band), R-456 standing as provenance -- and the
+  reviewer's filing commit reads 17:07:24Z, which I checked, consistent with the
+  corrected window and not with the original. USER decisions SIX RULED, NONE
+  OPEN. Tonight unchanged. UNCHANGED: G=1/5; the 011 family 12 of 24 with Q4
+  failing; the sequencing rule; Phase-4 gated; R-419 revocable.
+  PRIOR:
   2026-09-02T17:12Z (MEM ROUND 47 -- I MEASURED THE WRONG FILE, AND THE ROUND
   BEFORE LAST IS WHY I NOTICED). R-455 swept; four landings, two new findings at
   the BE tip, and one failure of my own worth more than the checks that went
@@ -130,66 +180,6 @@ updated: >-
   then BE round 7, then DA round 17. USER decisions SIX RULED, NONE OPEN.
   UNCHANGED: G=1/5; the 011 family 12 of 24 with Q4 failing; the sequencing rule;
   Phase-4 gated; R-419 revocable.
-  PRIOR:
-  2026-09-02T16:28Z (MEM ROUND 45 -- THE SUITE'S LAST WORD WAS "PASS" AND THE
-  PROCESS EXITED 1). R-453 swept; four landings. DE ROUND 28 VERIFIED at 1480ab6
-  and RE-RUN HERE on the same collision fixture I built two rounds ago: 92
-  checks rc 0; intact 3,752 chars / first_read_line 139 / above_line 137 /
-  read_nothing False / boundary True; THE COLLISION now reads 0 CHARS with
-  read_nothing TRUE and boundary FALSE where the same fixture answered TRUE at
-  50a9113 -- DE25-R1 CLOSED, and the closure is the honest one: read_nothing =
-  first == i (:319) folded into the predicate so A READ OF NOTHING CAN NO LONGER
-  ANSWER TRUE. Growth control boundary True at 3,805 chars in my copy against
-  3,798 in the coordinator's -- the THIRD independent number for that case and
-  the third time the effect is invariant while the number is not. DE'S OWN
-  LAYERED MUTANT IS WORTH MORE THAN ITS FIX: it found a ZeroDivisionError in the
-  anchors known-bad's MESSAGE when _limit is empty -- A MESSAGE THAT CRASHES
-  BEFORE IT CAN NAME THE FAILURE, DE23-R2's family, the assertion right and the
-  reporting not, guarded at the right size ('?', not a rewrite). DE ROUNDS 26+27
-  REVIEW RELEASED (723271e, 218 lines) for BOTH 5e9dc8b and 89aef8c, no hold,
-  the reviewer's eight-fixture matrix reproducing the register's table exactly
-  and D2's discovery reproduced GREEN at 176. DE27-R1 REPRODUCED AT HEAD IN A
-  PARITY TREE, AND THE REPRODUCTION IS THE FINDING: the ownership predicate is
-  written twice (own_blocks_quiet :631, own_ratification_blocks :639); three of
-  the four conjunct drops die at a control AIMED AT THAT CONJUNCT; the fourth,
-  the adjudicating `kind` drop, exits RC 1 WITH AN UNCAUGHT RatificationRefused
-  ("REFUSED FOR A NEW RUN: R-419 is SUPERSEDED by R-999") -- a traceback on
-  stderr from INSIDE A POSITIVE CONTROL. AND THE PART THAT MAKES IT WORTH A
-  ROUND: with that mutant in place THE LAST LINE ON STDOUT IS "PASS", the
-  verdict living only in the exit code and on stderr, so A SEAT TAILING STDOUT
-  SEES A SUITE THAT PASSED. The finding is not that the mutant survives -- it
-  dies loudly -- it is that RED IS NOT THE SAME AS CAUGHT: the failure has no
-  name, no site and no line in the transcript a reader will look at. A MUTANT
-  THAT KILLS THE PROCESS IS NOT EVIDENCE THAT A CONTROL EXISTS. DE round 29
-  (Q-DE-47) is aimed at exactly that gap: ONE TEXT (the quiet filter returns the
-  (blk, dups) pairs and the adjudicating reader consumes it, adding only its two
-  raises), a NAMED control for the `kind` conjunct, the AST-census one-place
-  assertion if DE takes it, mutants re-driven, 177 -> N. THE CAPTURE NOTE
-  BELONGS IN EVERY SEAT'S HABITS AND THIS ROUND SHOWS WHY: da_blackout_mask's
-  FAIL line goes to STDOUT while de_admissible_windows' refusal is a SystemExit
-  on STDERR -- capture both streams TO SEPARATE FILES, since a single merged
-  capture would have shown a PASS-terminated log for a failing run. CO-10 CLOSED
-  ON THE CHAIN at 3b7e10a pending the reviewer, and I read the closure rather
-  than the claim: _child_head re-read from the child AFTER the fixture commit
-  (:885-887), a precondition asserting it is a THIRD value distinct from both
-  (:888), the control asserting carrying_commit == _child_head AND != _here
-  (:927-928) -- THE IDENTITY CONJUNCT IS BACK -- and != _there standing
-  SEPARATELY (:944), so dropping the identity alone leaves != _here satisfied by
-  an intact producer and BOTH LINES MUST GO for the hole to reopen; the HEAD~1
-  producer mutant is RED BY NAME at the CO-10 CONTROL; mask 32 -> 34, gates 5,
-  preflight 39, the redundant third run gone with one execution feeding the
-  assertions. THE ADDENDUM'S QUESTION IS THE RIGHT ONE TO LEAVE OPEN: identity
-  plus the precondition already implies both negatives, so is the separate !=
-  _there line a control WITH ITS OWN FALSIFIER or belt-and-braces carrying a
-  stale count in its message -- items 7-10, and the reviewer takes ROUNDS 15+16
-  AS ONE FILING at 3b7e10a. TONIGHT UNCHANGED: the 00:06Z verdict timer, the
-  00:14Z preflight timer, the coordinator's wake after it, R-409 with the
-  R-411(ii) denominator, then DA lands Q-DA-209..212 with the chain's tip, BE's
-  durable landing, then CO-8, --require-no-skips and the DATA_ROOT split. SEATS:
-  DE round 29 and BE round 7 in flight; DA on DELIBERATE standby (R-381), a
-  further finding at the tip re-opening as round 17. USER decisions SIX RULED,
-  NONE OPEN. UNCHANGED: G=1/5; the 011 family 12 of 24 with Q4 failing; the
-  sequencing rule; Phase-4 gated; R-419 revocable.
 
   ARCHIVED: entries older than these three are moved, never deleted, to
   workspace/STATUS_UPDATED_ARCHIVE.md (append-only). This field is a
@@ -3781,6 +3771,10 @@ flags:
   de_r30_verified_co11_closed: 27d0d37
   da_r17_verified_held_da16r1_closed: e353119
   landing_tip_tonight: "e353119 (HOLD -> 3b7e10a)"
+  reviewer_be_r6_released: "5e9ed91 (filing 03b5dca)"
+  be6_r1_r7_open: "BE round after r8; R2 then R1 first"
+  reviewer_on_de_29_30: 27d0d37
+  r456_times_corrected_at_r457: "17:08-17:09Z for both events"
                              # v18-v19 added the daily pipeline and all-coin
                              # commit-last batch; v20 adds R-DERIVE, R-GROSS,
                              # R-DUAL and R-ONEROW plus Tier-2 markout,
@@ -3789,7 +3783,7 @@ flags:
                              # migration discipline remain authoritative.
 
 focus: >
-  As-of 2026-09-02T17:12Z, build and test the offline model mechanism-first
+  As-of 2026-09-02T17:18Z, build and test the offline model mechanism-first
   under plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md section 10. Do not use the
   subordinate stateful-cancel TODO checkbox count as total progress. The
   foundation is established: the action-level dataset and PRED_STATE_V1 are
@@ -3948,6 +3942,13 @@ focus: >
   capacity, promotion or forward verdict is claimable yet.
 
 standing_rules:
+  - "PROGRAMME STANDARD (R-457 §2, from MEM's withdrawn count) — A SUITE RUN IN
+    THE SHARED TREE MEASURES WHATEVER IS THERE AT SPAWN TIME. No seat reads,
+    runs or counts another seat's module from the main tree while that seat's
+    round is open: verify at the COMMITTED TIP in a detached worktree of your
+    own, where a hash is a hash of the artifact. Hashing immediately before and
+    after the run is necessary but NOT sufficient -- the WIP can be present at
+    both hashes."
   - "PROGRAMME STANDARD (R-455 §5, MEM's form adopted) — EVERY GUARD ADDED TO
     CATCH A CLASS IS ITSELF A CANDIDATE FOR THAT CLASS. Two instances in
     consecutive rounds: CO-11, in the census guarding DE27-R1's one-text fix,
