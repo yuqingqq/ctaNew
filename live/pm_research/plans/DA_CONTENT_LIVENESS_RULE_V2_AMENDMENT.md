@@ -1,12 +1,25 @@
 # Content-liveness rule — v2 AMENDMENT: an absolute floor beside the relative one
 
-**DRAFT FOR USER FREEZE.** Seat: DA. Drafted 2026-09-02T08:20Z.
-**It governs nothing and is wired into nothing.** The frozen v1 rule
-(`da_content_liveness_rule.py`, USER-frozen R-386) is **not touched by this
-draft** — no constant, no status, no line. Wiring follows a freeze; it never
-precedes one (rule 14).
+**STATUS: FROZEN — GOVERNING FROM 2026-09-03. USER ruling 2026-09-02
+("Proceed according to your recommendation", ~11:49Z, in the coordinator's
+session; R-424) adopts R-408(3) as recommended: (e) L3 ADOPTED AS DRAFTED, no
+structural constant re-chosen (K = 7, ≥3 priors; the fraction and run bar are
+v1's); (f) `CONTENT_DARK` JOINS THE GOVERNING SET from `EFFECTIVE_FROM_DAY` =
+2026-09-03 — the 09-02 closing verdict (2026-09-03 00:06Z) runs v1 ONLY and no
+day is re-judged; (g) the 08-26 hype coin-day is LEFT AS v1 RECORDED IT and the
+difference (§6) stays reported. The §8(1) limit is carried verbatim: a total
+blackout past the fourth consecutive day is invisible. Frozen by coordinator
+commit on the USER ruling; drafted by DA 2026-09-02T08:20Z.** The frozen v1
+rule (`da_content_liveness_rule.py`, USER-frozen R-386) is **not touched** — no
+constant, no status, no line. **Wiring follows the freeze:** at freeze time the
+checker is imported by no verdict path; DA wires `governs()` into the closing
+verdict as a complete batch that lands AFTER the 09-02 verdict is verified and
+BEFORE the first governed verdict (2026-09-04 00:06Z).
 
-Checker: `live/pm_research/da_content_liveness_v2_check.py` (12 checks).
+Checker: `live/pm_research/da_content_liveness_v2_check.py` (19 checks at
+freeze; blob `893cde14`, sha256 `25d3d7fa79208730…`). Frozen constants:
+`FROZEN_BY_USER = True`, `EFFECTIVE_FROM_DAY = "20260903"`,
+`CONTENT_DARK_GOVERNS = True`, `RESTATE_20260826_HYPE = False`.
 
 ---
 

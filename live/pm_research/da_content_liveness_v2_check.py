@@ -1,11 +1,19 @@
 #!/usr/bin/env python3
-"""CONTENT-LIVENESS RULE v2 — the proposed ABSOLUTE FLOOR, and its checker.
+"""CONTENT-LIVENESS RULE v2 — the ABSOLUTE FLOOR beside v1's relative one.
 
-DRAFT-FOR-USER-FREEZE. See `plans/DA_CONTENT_LIVENESS_RULE_V2_AMENDMENT.md`.
-**This file governs nothing and wires into nothing.** It does not import or
-modify `da_content_liveness_rule`, and no verdict path calls it. Wiring
-follows the freeze, never precedes it (rule 14; and the dispatch says the
-draft is a document plus its checker).
+FROZEN BY USER RULING (R-424). See `plans/DA_CONTENT_LIVENESS_RULE_V2_AMENDMENT.md`.
+USER ruling 2026-09-02 ("Proceed according to your recommendation", ~11:49Z,
+in the coordinator's session) adopts R-408(3) as recommended: (e) L3 ADOPTED
+AS DRAFTED, no constant re-chosen; (f) CONTENT_DARK JOINS THE GOVERNING SET;
+(g) the 08-26 hype coin-day is LEFT AS v1 RECORDED IT, the difference reported.
+EFFECTIVE FROM `EFFECTIVE_FROM_DAY` = 2026-09-03: the 09-02 closing verdict
+(2026-09-03 00:06Z) runs v1 ONLY and no day is re-judged. The §8(1) limit is
+carried verbatim: a total blackout past the fourth consecutive day is invisible.
+
+**Wiring follows the freeze.** At freeze time this file is imported by no
+verdict path; `governs()` below is the predicate the verdict path consumes when
+DA wires it (a complete batch, landing AFTER the 09-02 verdict is verified).
+It does not import or modify `da_content_liveness_rule` (USER-frozen, R-386).
 
 WHAT IT CLOSES (reviewer RR6-1, quoted verbatim in the amendment): v1
 classifies a window as thin RELATIVE TO THE SAME DAY'S MEDIAN. Past roughly
@@ -58,10 +66,34 @@ V2_MIN_REFERENCE_DAYS = 3
 
 CALIBRATION_MAX_DAY = "20260831"
 
+#: THE FREEZE (rule 12 mechanics, same shape as v1's R-386 flip). Flipped by
+#: coordinator commit on the USER ruling quoted in the module docstring; no
+#: seat may flip it back. The first governed day is 2026-09-03; the 09-02
+#: verdict runs v1 only.
+FROZEN_BY_USER = True
+EFFECTIVE_FROM_DAY = "20260903"
+#: R-408(3)(f): CONTENT_DARK is a GOVERNING status from EFFECTIVE_FROM_DAY,
+#: not one reported beside the governing set.
+CONTENT_DARK_GOVERNS = True
+#: R-408(3)(g): the 08-26 hype coin-day stays as v1 recorded it (CONTENT_LIVE,
+#: run 3); v2's reading (CONTENT_DARK, run 40) is REPORTED, never restated.
+RESTATE_20260826_HYPE = False
+#: The declared limit, carried verbatim from the amendment's §8(1): with K=7
+#: and a median-of-priors reference, v2 is blind once 4 of the 7 trailing
+#: days are dark. Stated, not guarded.
+DECLARED_LIMIT_BLIND_AFTER_DARK_DAYS = 3
+
 #: Statuses EXTEND v1's vocabulary; none is replaced. A day carries its v1
 #: status AND its v2 status, and the composite is the more severe.
 STATUS_DARK = "CONTENT_DARK"
 STATUS_NO_REF = "CONTENT_LIVENESS_NO_REFERENCE"
+
+
+def governs(day_token: str) -> bool:
+    """Does v2 GOVERN this day's verdict? True from EFFECTIVE_FROM_DAY while
+    frozen. Before the effective day -- 09-02 included -- it reports beside v1
+    and decides nothing."""
+    return bool(FROZEN_BY_USER) and day_token >= EFFECTIVE_FROM_DAY
 
 
 class Refused(Exception):
@@ -193,11 +225,16 @@ def measure_v2(day: str, all_days: list[str], medians: dict, gaps=None,
             "(CONTENT_THIN vs CONTENT_DARK), so a naive string diff "
             "over-counts -- on 08-26 it reports 7 where the amendment makes "
             "1."),
-        "governs": False,
-        "frozen_by_user": False,
-        "note": ("v2 is a DRAFT. It governs nothing, wires into nothing, and "
-                 "does not alter v1's reading of any day -- it reports a "
-                 "SECOND status beside it."),
+        "governs": governs(day),
+        "frozen_by_user": FROZEN_BY_USER,
+        "effective_from_day": EFFECTIVE_FROM_DAY,
+        "content_dark_governs": CONTENT_DARK_GOVERNS and governs(day),
+        "restate_20260826_hype": RESTATE_20260826_HYPE,
+        "note": ("v2 is FROZEN (R-424) and GOVERNS from "
+                 f"{EFFECTIVE_FROM_DAY}. On an earlier day it reports a "
+                 "SECOND status beside v1 and alters no reading; on a "
+                 "governed day CONTENT_DARK is in the governing set. It never "
+                 "re-judges a day v1 already closed."),
     }
 
 
@@ -377,6 +414,46 @@ def selftest() -> int:
            "POINT-IN-TIME: adding a LATER (and fully dark) day does not move "
            "an earlier day's reference -- the reference reads only days "
            "strictly before the day under test")
+
+        # (8) THE FREEZE (R-424). Both sides of the invariant via the toggle,
+        # restoration to the COMMITTED state, and the effective boundary --
+        # the three draft-state pins R-386 found in v1's flip, pre-empted.
+        ok(CALIBRATION_MAX_DAY < EFFECTIVE_FROM_DAY
+           and "20260902" < EFFECTIVE_FROM_DAY,
+           "RULE 11 EDGE: the first governed day is AFTER both the calibration "
+           "boundary and the motivating day 09-02 -- the 09-02 verdict runs "
+           "v1 only and no day is re-judged")
+        _saved = globals()["FROZEN_BY_USER"]
+        try:
+            globals()["FROZEN_BY_USER"] = False
+            ok(governs("20260903") is False and governs("20991231") is False,
+               "GOVERNANCE: nothing governs while FROZEN_BY_USER is False")
+            globals()["FROZEN_BY_USER"] = True
+            ok(governs("20260902") is False and governs("20260903") is True
+               and governs("20260904") is True,
+               "GOVERNANCE POSITIVE CONTROL: with the freeze on, 09-02 does "
+               "NOT govern and 09-03 is the first day that does")
+        finally:
+            globals()["FROZEN_BY_USER"] = _saved
+        ok(FROZEN_BY_USER is _saved,
+           "GOVERNANCE: the freeze flag is restored to its committed state "
+           "after the toggle test")
+        ok(FROZEN_BY_USER is True and CONTENT_DARK_GOVERNS is True
+           and RESTATE_20260826_HYPE is False,
+           "THE RULED STATE (R-408(3) e/f/g, adopted R-424): frozen, "
+           "CONTENT_DARK governs, 08-26 hype left as v1 recorded it")
+        r_pre = measure_v2(dark, days, med, gaps={}, raw_root=root)
+        ok(r_pre["governs"] is False and r_pre["frozen_by_user"] is True
+           and r_pre["content_dark_governs"] is False
+           and r_pre["effective_from_day"] == EFFECTIVE_FROM_DAY,
+           "EMISSION: a pre-effective day carries frozen_by_user True but "
+           "governs False and content_dark_governs False -- reported beside "
+           "v1, deciding nothing")
+        ok(DECLARED_LIMIT_BLIND_AFTER_DARK_DAYS == 3
+           and V2_TRAILING_DAYS // 2 == DECLARED_LIMIT_BLIND_AFTER_DARK_DAYS,
+           "THE LIMIT IS COMPUTED, not narrated: a median of K=7 priors turns "
+           "dark once more than half are dark, so v2 is blind on the 4th "
+           "consecutive dark day -- carried verbatim from §8(1)")
 
     print(f"da_content_liveness_v2_check selftests: {checks} checks passed")
     return 0
