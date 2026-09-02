@@ -18229,6 +18229,8 @@ refuted, and its framing discouraged re-examining precisely those.
 amount of building helps. *Buildable* = nothing but work stands in the way. The
 programme's non-goals are unchanged: no live orders, no exchange adapters.
 
+
+### R-396 — 2026-09-02T00:40Z — coordinator — **IN-BAND CORRECTION OF R-395, caught by MEM's round-7 verification: the breadth figure I quoted beside day one is A DIFFERENT DAY'S.** R-395 reports "~80% of btc windows touched at 28.0 gaps/hr" as 09-01's disclosure. That sentence lives inside `decision_note` as the instrument's STANDING ILLUSTRATION about an earlier era's day one, arguing that gaps/hour understates damage — I read a general caution as this day's measurement, the know-what-KIND-of-text-you-are-reading failure (rule 16) in the coordinator's chair, hours after filing the same class against others. **09-01's own btc figures, from `windows_gap_affected`:** breadth **160/288 = 55.6% COIN_LEVEL** (the governing scope, R-191; PER_SLUG 159/288 = 55.2%), **14.38 gaps/hr, 345 gaps, 2,025.5 lost seconds**, 23 of 24 hours carrying a gap, 8 hours over the superseded v1 count bar. **Nothing about the verdict changes** — the conjuncts, both coins' bars, and the accrual were all verified at their own fields and reproduced by two independent instruments (DA's 8/8; MEM re-RAN DA's check rather than reading its filing). The caution the illustration makes remains sound; its figures were never this day's. R-395 stands as the record of the overstatement; this entry supersedes its breadth sentence.
 ### Proceeds now
 
 | # | work | owner | why it is unblocked |
