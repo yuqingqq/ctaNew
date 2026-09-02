@@ -2494,6 +2494,39 @@ def _selftest_action_unit_rr4(ok):
        f"RR4-3 all three collapse rules are reported, so a reader sees "
        f"whether the answer depends on the choice (got {_r3})")
 
+    # RR5-1: `first` MUST mean the earliest DECISION INSTANT, not list order.
+    # Executed known-bad from the filing: replacing the t_start key with
+    # `js[0]` left the suite GREEN, because every fixture happened to supply
+    # rows already in t_start order. This one does not.
+    _oo = [{"slug": "w", "side": "BUY_UP", "gen": 0, "t_start": 9.0},
+           {"slug": "w", "side": "BUY_UP", "gen": 0, "t_start": 1.0},
+           {"slug": "w", "side": "BUY_UP", "gen": 1, "t_start": 0.0}]
+    _r = action_unit_metrics([0.9, 0.1, 0.5], [1, 1, 0], _oo,
+                             "probability")["by_collapse_rule"]
+    ok(_r["first"] == I11.auc([0.1, 0.5], [1, 0]),
+       f"RR5-1 `first` picks the row with the EARLIEST t_start (0.1, at "
+       f"t_start 1.0), not the one that happens to be first in the list "
+       f"(0.9, at t_start 9.0) — got {_r['first']}")
+    ok(_r["first"] != _r["max"],
+       "RR5-1 and the fixture DISCRIMINATES: list order and decision order "
+       "disagree here, which is what makes the assertion evidence")
+
+    # RR5-2: `side` is part of the action key. Dropping it merges a
+    # generation's two sides into one "action", changing n_actions and every
+    # number derived from it — and the suite was GREEN with it dropped.
+    _bs = [{"slug": "w", "side": "BUY_UP", "gen": 0, "t_start": 0.0},
+           {"slug": "w", "side": "SELL_UP", "gen": 0, "t_start": 0.0}]
+    _m2 = action_unit_metrics([0.9, 0.1], [1, 0], _bs, "probability")
+    ok(_m2["n_actions"] == 2,
+       f"RR5-2 both SIDES of one (slug, gen) are SEPARATE actions — A1.5 "
+       f"defines the unit as distinct (slug, side, gen), and dropping side "
+       f"would merge them into one (got {_m2['n_actions']})")
+    ok(_m2["rows_per_action"] == 1.0
+       and _m2["generations_with_disagreeing_row_labels"] == 0,
+       "RR5-2 and with side in the key each is a one-row action, so nothing "
+       "is collapsed and no label disagreement is manufactured — which is "
+       "exactly what dropping side would have produced instead")
+
     # DISAGREEING ROW LABELS ARE COUNTED — if large, the shared-outcome
     # premise is itself wrong, and that is a finding not a detail.
     _d = action_unit_metrics([0.1, 0.9, 0.5], [1, 0, 0], _mix, "probability")
