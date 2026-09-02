@@ -42,7 +42,9 @@ from typing import Any
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import da_forward_day_verify as D                              # noqa: E402
 
-DERIVED = Path("/home/yuqing/ctaNew/data/pm_5min/derived")
+# RR12-1: the DATA root, resolved once in `pm_tape_density`.
+import pm_tape_density as _TDROOT  # noqa: E402
+DERIVED = _TDROOT.DATA_ROOT / "data/pm_5min/derived"
 
 CONJUNCTS = ("day_closed", "post_freeze_pass", "era_admissible",
              "day_quality_pass")

@@ -68,9 +68,39 @@ import struct
 import sys
 from pathlib import Path
 
-REPO = Path(__file__).resolve().parents[2]
-RAW = REPO / "data/pm_5min/raw"
-GAP_LEDGER = REPO / "data/pm_5min/collector_gaps.jsonl"
+#: RR12-1 -- CODE ROOT AND DATA ROOT ARE NOT THE SAME TREE, and this file
+#: reads DATA. Deriving the data root from `__file__` is right for code and
+#: wrong for data: `data/` is gitignored and exists ONCE, so a run from a
+#: worktree pointed at an empty directory. `scan_day` refuses an absent day,
+#: so it failed loudly rather than reporting a clean one -- but it made a
+#: worktree unable to measure anything at all, which is why the split is a
+#: precondition for proving a worktree run records its own commit.
+#:
+#: Resolution order, deterministic and stated: an explicit PM_DATA_ROOT wins;
+#: otherwise the tree holding this file IF it actually carries the tape;
+#: otherwise the canonical tree. A worktree therefore reads the real tape.
+CODE_ROOT = Path(__file__).resolve().parents[2]
+CANONICAL_DATA_ROOT = Path("/home/yuqing/ctaNew")
+
+
+def _resolve_data_root() -> Path:
+    env = os.environ.get("PM_DATA_ROOT")
+    if env:
+        return Path(env)
+    # THE TEST IS FOR THE TAPE, NOT FOR A DIRECTORY. A worktree checks out
+    # the TRACKED receipts under data/pm_5min/derived, so `data/pm_5min`
+    # exists there while `raw/` -- the gitignored tape this module actually
+    # reads -- does not. Testing the parent directory picked the worktree and
+    # then failed on the ledger; testing for the tape itself is the property.
+    if (CODE_ROOT / "data" / "pm_5min" / "raw").is_dir():
+        return CODE_ROOT
+    return CANONICAL_DATA_ROOT
+
+
+DATA_ROOT = _resolve_data_root()
+REPO = DATA_ROOT
+RAW = DATA_ROOT / "data/pm_5min/raw"
+GAP_LEDGER = DATA_ROOT / "data/pm_5min/collector_gaps.jsonl"
 
 WINDOW_S = 300
 # A window below this fraction of its (day, coin) median is THIN.

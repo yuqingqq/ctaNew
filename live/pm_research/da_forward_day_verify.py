@@ -41,7 +41,14 @@ from typing import Any, Sequence
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-REPO = Path(__file__).resolve().parents[2]
+# RR12-1 -- the SPLIT, applied here too. This module reads DATA (the gap
+# ledger, the tape, the derived artifacts), so its root must be the tree
+# that HOLDS the tape, not the tree the file lives in. The resolution is
+# imported from `pm_tape_density`, the lowest-level reader, so there is
+# ONE rule rather than two copies that can disagree.
+import pm_tape_density as _TDROOT  # noqa: E402
+CODE_ROOT = Path(__file__).resolve().parents[2]
+REPO = _TDROOT.DATA_ROOT
 PM_GAPS = REPO / "data/pm_5min/collector_gaps.jsonl"
 
 WINDOW_S = 300
@@ -775,6 +782,99 @@ def blackout_mask_and_complement(day_token: str) -> dict[str, Any]:
                               "agrees_with_frozen_L1_numerator")}
                          for c, v in m["coins"].items()},
         "complement_quality": cq,
+    }
+
+
+#: Severity, ordered. A composite must be the MORE SEVERE of the two readings,
+#: so the order has to exist somewhere; it exists here, once, and the
+#: non-passing statuses sit above the passing one by construction.
+_LIVENESS_SEVERITY = {
+    "CONTENT_LIVE": 0,
+    "CONTENT_THIN": 1,
+    "CONTENT_DARK": 2,
+    "CONTENT_LIVENESS_NO_REFERENCE": 3,
+    "CONTENT_LIVENESS_UNJUDGEABLE": 3,
+    "CONTENT_LIVENESS_UNRESOLVED": 3,
+}
+
+
+def content_liveness_v2_for(day_token: str) -> dict[str, Any]:
+    """The USER-FROZEN v2 absolute floor (R-424), consulted for every day.
+
+    v1 (`da_content_liveness_rule`, R-386) is NOT TOUCHED by this: no
+    constant, no status, no line. v2 is a separate frozen instrument and this
+    is its wiring, which R-402 taught has to exist and be demanded by the
+    artifact or the freeze governs nothing.
+
+    Whether it GOVERNS a given day is the v2 module's OWN predicate --
+    `governs(day_token)` -- never a date compared here. A date restated in a
+    consumer is a second source of truth waiting to drift.
+    """
+    try:
+        import da_content_liveness_v2_check as V2
+        import pm_tape_density as _TD
+    except Exception as e:                                   # pragma: no cover
+        return {"status": "CONTENT_LIVENESS_UNRESOLVED", "governs": None,
+                "why": f"the frozen v2 module could not be imported: {e!r}",
+                "wiring": "BROKEN"}
+    gov = V2.governs(day_token)
+    try:
+        days = [d for d in _TD.all_days() if d <= day_token]
+        out = V2.measure_v2(day_token, days, V2.day_medians(days))
+    except Exception as e:
+        return {"status": "CONTENT_LIVENESS_UNRESOLVED", "governs": gov,
+                "why": f"the frozen v2 rule raised while measuring: {e!r}",
+                "frozen_by_user": V2.FROZEN_BY_USER,
+                "effective_from_day": V2.EFFECTIVE_FROM_DAY}
+    return {
+        "status": out.get("status_v2"),
+        "status_v1_as_v2_saw_it": out.get("status_v1"),
+        "governs": gov,
+        "frozen_by_user": V2.FROZEN_BY_USER,
+        "effective_from_day": V2.EFFECTIVE_FROM_DAY,
+        "content_dark_governs": getattr(V2, "CONTENT_DARK_GOVERNS", None),
+        "worst_L3_v2": out.get("worst_L3_v2"),
+        "worst_L2_v1": out.get("worst_L2_v1"),
+        "n_coin_days_verdict_changed": out.get("n_coin_days_verdict_changed"),
+        "authority": "USER ruling 2026-09-02, R-424 (applying R-408(3))",
+        "coins": out.get("coins"),
+    }
+
+
+def content_liveness_composite(v1: dict, v2: dict,
+                               day_token: str) -> dict[str, Any]:
+    """The status of record: the MORE SEVERE of v1 and a GOVERNING v2.
+
+    On a day v2 does not govern, the composite IS v1's status and v2 rides
+    along REPORTED -- so the wiring cannot move a pre-effective day's reading.
+    On a governed day CONTENT_DARK joins v1's statuses in the governing set.
+
+    NO_REFERENCE IS NEVER A PASS. It sits at the same severity as the other
+    refusals: v2 saying "I could not build a reference" must not read as
+    "nothing was dark", which is the empty-set trap on the instrument that
+    exists to catch a total blackout.
+    """
+    s1 = v1.get("status")
+    s2 = v2.get("status")
+    gov = bool(v2.get("governs"))
+    contributors = ["v1"] + (["v2"] if gov else [])
+    pool = [s for s in ([s1] + ([s2] if gov else [])) if s]
+    worst = max(pool, key=lambda x: _LIVENESS_SEVERITY.get(x, 3)) if pool \
+        else None
+    return {
+        "status": worst,
+        "governing_contributors": contributors,
+        "v1_status": s1, "v2_status": s2, "v2_governs": gov,
+        "is_a_pass": _LIVENESS_SEVERITY.get(worst, 3) == 0,
+        "severity_order": ["CONTENT_LIVE", "CONTENT_THIN", "CONTENT_DARK",
+                           "(refusals: NO_REFERENCE / UNJUDGEABLE / "
+                           "UNRESOLVED -- never a pass)"],
+        "note": ("on a day v2 does not govern the composite IS v1's status "
+                 "and v2 is REPORTED beside it, so the wiring cannot move a "
+                 "pre-effective day. CONTENT_THIN and CONTENT_DARK are "
+                 "DISCLOSED and MASKED, not inadmissible (R-409); this status "
+                 "governs nothing on its own and `race_accrual_eligible` is "
+                 "untouched."),
     }
 
 
@@ -2168,6 +2268,8 @@ def verify_day(day_token: str, freeze_epoch: float,
     # actually wants (R-211(3): coin-days pass/fail independently, each coin's
     # >=5-day clock on its own passing days).
 
+    _v1_blk = content_liveness_rule_for(day_token)
+    _v2_blk = content_liveness_v2_for(day_token)
     regime = bar_regime(day_token)
     bars_v2: dict[str, Any] = {}
     if regime == "day_bar_v2":
@@ -2253,7 +2355,12 @@ def verify_day(day_token: str, freeze_epoch: float,
         # `content_liveness_rule` is the USER-FROZEN rule on the RAW TAPE and
         # is the only one with bars. Each names the other.
         "content_liveness": content_liveness_for(day_token),
-        "content_liveness_rule": content_liveness_rule_for(day_token),
+        "content_liveness_rule": _v1_blk,
+        # R-424: the USER-FROZEN v2 absolute floor, wired. It governs from its
+        # OWN effective day, by its OWN predicate; v1 is untouched.
+        "content_liveness_rule_v2": _v2_blk,
+        "content_liveness_composite": content_liveness_composite(
+            _v1_blk, _v2_blk, day_token),
         # R-409's REPORTED pair. Governs nothing; the disposition is the
         # coordinator's act with R-409 as the stated reason.
         "blackout_mask_and_complement": blackout_mask_and_complement(day_token),
@@ -2576,8 +2683,11 @@ def _selftests() -> int:
         # the launcher's own echo was the ONLY surviving copy. These pin that
         # recovery: the block for each day must hash to the sha the restored
         # artifact records, and a tampered block must NOT.
-        _lg_p = (Path(__file__).resolve().parents[2]
-                 / "data/pm_5min/derived/.da_midnight_verify.log")
+        # RR12-1 IN THE SUITE ITSELF: this was derived from __file__, so in a
+        # WORKTREE it pointed at a log that does not exist and SIX provenance
+        # checks silently skipped -- 235 in the main tree, 229 here, with
+        # nothing saying why. A data path must come from the data root.
+        _lg_p = REPO / "data/pm_5min/derived/.da_midnight_verify.log"
         if _lg_p.exists():
             _lt = _lg_p.read_text(encoding="utf-8", errors="replace")
             for _d, _sha in (("20260901",
@@ -2619,6 +2729,102 @@ def _selftests() -> int:
             ok("carries no block" in _bad2,
                "LOG-ECHO KNOWN-BAD: a day absent from a real run REFUSES -- "
                "an absent block is not an empty one")
+
+        # ---- R-424: THE v2 WIRING, AND THE CONTROL THAT IT MOVES NOTHING -
+        import da_content_liveness_v2_check as _V2
+        ok(_V2.FROZEN_BY_USER is True
+           and _V2.EFFECTIVE_FROM_DAY == "20260903"
+           and _V2.governs("20260903") is True
+           and _V2.governs("20260902") is False,
+           "R-424: the frozen v2 rule governs from its OWN effective day, by "
+           "its OWN predicate -- no date is restated in this consumer, "
+           "because a restated date is a second source of truth waiting to "
+           "drift")
+        # v1 IS UNTOUCHED. Asserted by content, not by intention.
+        import da_content_liveness_rule as _V1
+        ok(_V1.FROZEN_BY_USER is True and _V1.THIN_FRAC == 0.05
+           and _V1.L1_SEVERITY_MAX == 0.08 and _V1.L2_RUN_WINDOWS_MAX == 12
+           and _V1.EFFECTIVE_FROM_DAY == "20260902",
+           "R-424: v1's frozen constants are unchanged -- the wiring adds a "
+           "second instrument, it does not amend the first (R-386, rule 4)")
+
+        # THE NON-GOVERNED CONTROL, on real days: a day before the effective
+        # day takes its composite from v1 ALONE, so the wiring cannot move it.
+        for _d in ("20260901", "20260902"):
+            _b1 = content_liveness_rule_for(_d)
+            _b2 = content_liveness_v2_for(_d)
+            _cc = content_liveness_composite(_b1, _b2, _d)
+            ok(_b2["governs"] is False
+               and _cc["status"] == _b1["status"]
+               and _cc["governing_contributors"] == ["v1"],
+               f"R-424 CONTROL ({_d}): v2 does not govern, so the composite "
+               f"IS v1's status and v2 rides along REPORTED. On 09-02 v2 "
+               f"reads {_b2['status']!r} and the composite still reads "
+               f"{_cc['status']!r} -- the wiring cannot move the day the "
+               f"first governed verdict is about")
+
+        # AND IT LEAKS NOWHERE ELSE: the report with the two new keys removed
+        # is byte-identical whatever the v2 block says.
+        _saved_v2fn = globals()["content_liveness_v2_for"]
+        _NEW = ("content_liveness_rule_v2", "content_liveness_composite")
+        try:
+            _r_real = verify_day("20260829", 1787897340.0)
+            globals()["content_liveness_v2_for"] = lambda d: {
+                "status": "CONTENT_DARK", "governs": False,
+                "why": "stub for the leak control"}
+            _r_stub = verify_day("20260829", 1787897340.0)
+        finally:
+            globals()["content_liveness_v2_for"] = _saved_v2fn
+
+        def _strip(r):
+            return json.dumps({k: v for k, v in r.items()
+                               if k not in _NEW
+                               and k not in ("as_of_utc", "gap_series",
+                                             "per_coin", "content_liveness",
+                                             "blackout_mask_and_complement")},
+                              sort_keys=True)
+        ok(hashlib.sha256(_strip(_r_real).encode()).hexdigest()
+           == hashlib.sha256(_strip(_r_stub).encode()).hexdigest(),
+           "R-424 LEAK CONTROL: with the two new keys removed the verdict is "
+           "BYTE-IDENTICAL whatever the v2 block reports -- so the wiring "
+           "adds a reading and changes no other field (as-of-dependent and "
+           "separately-timed blocks excluded and named)")
+        ok(globals()["content_liveness_v2_for"] is _saved_v2fn,
+           "R-424: the v2 function is restored after the leak control")
+
+        # POSITIVE CONTROL: a GOVERNED, totally dark day reads CONTENT_DARK
+        # through the composite and is NOT a pass.
+        _gov_dark = content_liveness_composite(
+            {"status": "CONTENT_LIVE"},
+            {"status": "CONTENT_DARK", "governs": True}, "20260903")
+        ok(_gov_dark["status"] == "CONTENT_DARK"
+           and _gov_dark["is_a_pass"] is False
+           and _gov_dark["governing_contributors"] == ["v1", "v2"],
+           "R-424 POSITIVE CONTROL: on a GOVERNED day a 100%-dark reading "
+           "that v1 calls LIVE (RR6-1's blind spot) composes to CONTENT_DARK "
+           "and is not a pass -- which is the whole reason v2 was frozen")
+        # NO_REFERENCE IS NEVER A PASS.
+        _noref = content_liveness_composite(
+            {"status": "CONTENT_LIVE"},
+            {"status": "CONTENT_LIVENESS_NO_REFERENCE", "governs": True},
+            "20260903")
+        ok(_noref["status"] == "CONTENT_LIVENESS_NO_REFERENCE"
+           and _noref["is_a_pass"] is False,
+           "R-424: NO_REFERENCE is never a pass -- 'I could not build a "
+           "reference' must not read as 'nothing was dark', which is the "
+           "empty-set trap on the instrument that exists to catch a total "
+           "blackout")
+        ok(content_liveness_composite({"status": "CONTENT_LIVE"},
+                                      {"status": "CONTENT_DARK",
+                                       "governs": True},
+                                      "20260903")["status"] == "CONTENT_DARK"
+           and content_liveness_composite({"status": "CONTENT_THIN"},
+                                          {"status": "CONTENT_LIVE",
+                                           "governs": True},
+                                          "20260903")["status"]
+           == "CONTENT_THIN",
+           "R-424: the composite is the MORE SEVERE of the two in BOTH "
+           "directions -- v2 can raise it and v1 can raise it")
 
         # ---- W1: THE WIRING ITSELF, THROUGH THE REAL verify_day ---------
         # A mutation DELETING the report line survived everything above,

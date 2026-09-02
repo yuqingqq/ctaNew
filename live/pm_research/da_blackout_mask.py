@@ -35,6 +35,7 @@ import collections
 import datetime as dt
 import hashlib
 import json
+import os
 import statistics
 import sys
 from pathlib import Path
@@ -44,8 +45,47 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import pm_tape_density as TD                                   # noqa: E402
 import da_content_liveness_rule as CLR                         # noqa: E402
 
-REPO = Path("/home/yuqing/ctaNew")
-DERIVED = REPO / "data/pm_5min/derived"
+#: RR12-1 -- THE SPLIT. These are two different roots and conflating them is
+#: the defect: a single hardcoded REPO made a run FROM A WORKTREE record the
+#: MAIN tree's commit, so the artifact named a tree that did not execute.
+#:
+#:   CODE_ROOT -- the tree the RUNNING FILE lives in, derived from __file__.
+#:                Everything about WHICH CODE RAN (carrying_commit, the dirty
+#:                flag) is asked of this tree and no other.
+#:   DATA_ROOT -- where the tape and the derived artifacts live. It does NOT
+#:                follow the code: a worktree has no `data/` (it is gitignored
+#:                and lives once), so deriving this from __file__ would make a
+#:                worktree run read an empty directory and report a clean day.
+#:                Overridable for a rehearsal; canonical by default.
+CODE_ROOT = Path(__file__).resolve().parents[2]
+#: ONE definition, imported. `pm_tape_density` is the lowest-level reader
+#: of this tape, so the resolution lives there and everything above it
+#: agrees by construction rather than by two copies of a rule.
+DATA_ROOT = TD.DATA_ROOT
+#: Kept as the DATA root under its old name so no consumer silently changes
+#: meaning; every git question below asks CODE_ROOT instead.
+REPO = DATA_ROOT
+DERIVED = DATA_ROOT / "data/pm_5min/derived"
+
+#: ---------------------------------------------------------------------------
+#: R-411(i) and R-411(ii) -- USER-RULED at R-424, named ONCE, here.
+#: ---------------------------------------------------------------------------
+#: R-424 §4, quoted: "for G-COUNTING only, a coin-day counts toward the >=5 bar
+#: only if its unmasked complement covers >= 50% of the calendar day -- >= 144
+#: of 288 windows; every good window is scored regardless."
+#:
+#: READ THE SECOND CLAUSE. This is a G-COUNTING floor and NOTHING ELSE. It does
+#: not gate scoring, it does not shrink a population, and it does not make a
+#: short-complement day bad: every window in the complement is scored whatever
+#: this says. It decides only whether the coin-day counts toward the >=5-day
+#: bar (rule 8).
+G_MIN_COMPLEMENT_WINDOWS = 144
+G_MIN_COMPLEMENT_RULING = "R-424 §4 (USER, 2026-09-02), applying R-411(i)"
+
+#: R-424 §4, quoted: "the P1 bar on a complement reads per UNMASKED hour (loss
+#: per hour of usable feed); the calendar-24h form stays reported beside it."
+P1_GOVERNING_DENOMINATOR = "per_unmasked_hour"
+P1_DENOMINATOR_RULING = "R-424 §4 (USER, 2026-09-02), applying R-411(ii)"
 WINDOW_S = TD.WINDOW_S
 WINDOWS_PER_DAY = 288
 
@@ -91,7 +131,7 @@ def _head_commit() -> str | None:
     """The commit this producer ran at (R-387's `carrying_commit`)."""
     import subprocess
     try:
-        r = subprocess.run(["git", "-C", str(REPO), "rev-parse", "HEAD"],
+        r = subprocess.run(["git", "-C", str(CODE_ROOT), "rev-parse", "HEAD"],
                            capture_output=True, text=True, timeout=20)
         return r.stdout.strip() or None
     except Exception:                                        # pragma: no cover
@@ -109,7 +149,7 @@ def _tree_dirty() -> bool | None:
              "live/pm_research/da_content_liveness_rule.py",
              "live/pm_research/pm_tape_density.py"]
     try:
-        r = subprocess.run(["git", "-C", str(REPO), "status", "--porcelain",
+        r = subprocess.run(["git", "-C", str(CODE_ROOT), "status", "--porcelain",
                             "--"] + files, capture_output=True, text=True,
                            timeout=20)
         return bool(r.stdout.strip())
@@ -212,8 +252,18 @@ def build_mask(day: str, raw_root: Path | None = None, gaps=None
             "module": "da_blackout_mask",
             "module_sha256_prefix": hashlib.sha256(
                 Path(__file__).read_bytes()).hexdigest()[:16],
+            # RR12-1: the commit is asked of the tree the RUNNING FILE is in,
+            # and that tree is NAMED. A run from a worktree records the
+            # worktree's commit; previously it recorded the main tree's, so
+            # the artifact named a tree that did not execute.
+            "code_root": str(CODE_ROOT),
             "carrying_commit": _head_commit(),
             "tree_dirty_on_producing_files": _tree_dirty(),
+            "data_root": str(DATA_ROOT),
+            "roots_note": ("code_root is where the running file lives; "
+                           "data_root is where the tape and artifacts live. "
+                           "They differ under a worktree, and only the first "
+                           "answers 'which code ran'."),
         },
         "detector": {
             "module": "da_content_liveness_rule",
@@ -348,6 +398,18 @@ def complement_quality(day: str, mask: dict, gaps_path: Path | None = None,
             if unmasked_h else None,
             "P1_lost_s_per_CALENDAR_24h": round(lost / 24.0, 2),
             "P1_frozen_bar": D.P1_LOST_S_PER_HR_MAX,
+            # R-411(ii), RULED at R-424 §4: the per-UNMASKED-hour form GOVERNS
+            # and the calendar-24h form stays REPORTED beside it. Both are
+            # still emitted; what changed is that the artifact now SAYS which
+            # one the bar is read against, instead of leaving a reader to
+            # choose between two numbers that differed by 3.6x on 09-02.
+            "P1_governing_denominator": P1_GOVERNING_DENOMINATOR,
+            "P1_governing_value": round(lost / unmasked_h, 2)
+            if unmasked_h else None,
+            "P1_governing_pass": (None if not unmasked_h
+                                  else (lost / unmasked_h)
+                                  <= D.P1_LOST_S_PER_HR_MAX),
+            "P1_ruling": P1_DENOMINATOR_RULING,
             "P2_material_windows_in_complement": material,
             "P2_share_of_UNMASKED": round(material / len(unmasked), 4)
             if unmasked else None,
@@ -361,6 +423,20 @@ def complement_quality(day: str, mask: dict, gaps_path: Path | None = None,
             "P2_material_span_s": D.P2_MATERIAL_SPAN_S,
             "P3_worst_rolling_60min_lost_s": round(worst, 1),
             "P3_frozen_bar": D.P3_ROLLING_60MIN_LOST_S_MAX,
+            # R-411(i), RULED at R-424 §4. G-COUNTING ONLY: this decides
+            # whether the coin-day counts toward the >=5-day bar and NOTHING
+            # else. Every window in the complement is scored regardless --
+            # the ruling says so in the same sentence, and it is repeated in
+            # the payload because a bare boolean beside a complement invites
+            # the other reading.
+            "counts_toward_G": len(unmasked) >= G_MIN_COMPLEMENT_WINDOWS,
+            "counts_toward_G_floor_windows": G_MIN_COMPLEMENT_WINDOWS,
+            "counts_toward_G_ruling": G_MIN_COMPLEMENT_RULING,
+            "counts_toward_G_scope": (
+                "G-COUNTING ONLY. A false here does NOT exclude the day's "
+                "data: every good window is scored regardless (R-424 §4). It "
+                "means the coin-day does not count toward the >=5 "
+                "complete-day bar."),
             "L1_over_complement": 0.0,
             "L1_over_complement_is_TAUTOLOGICAL": True,
             "L1_tautology_note": (
@@ -385,13 +461,19 @@ def complement_quality(day: str, mask: dict, gaps_path: Path | None = None,
             "divides by). P2's share is given over the unmasked count AND over "
             "288. P3's rolling hour stays CALENDAR-wide and excludes loss "
             "inside masked windows."),
-        "ESCALATION_no_minimum_complement_size": (
-            "NO minimum complement size is set here and none is chosen. The "
-            "frozen bars were pre-registered against a 288-window day; applied "
-            "to a small complement they are being read on a population they "
-            "were not registered for, and below some size they mean nothing. "
-            "That constant is the USER's (rule 14 / rule 11). Until it is "
-            "ruled, read `complement_fraction` beside every number here."),
+        # WAS `ESCALATION_no_minimum_complement_size`. The USER ruled it at
+        # R-424; an escalation that has been answered must stop reading as
+        # open, or the artifact keeps asking a settled question.
+        "RULED_minimum_complement_size": (
+            f"RULED at {G_MIN_COMPLEMENT_RULING}: a coin-day counts toward "
+            f"the >=5-day bar only if its unmasked complement covers "
+            f">= {G_MIN_COMPLEMENT_WINDOWS} of 288 windows (>= 50% of the "
+            f"calendar day). G-COUNTING ONLY -- every good window is scored "
+            f"regardless. Emitted per coin-day as `counts_toward_G`."),
+        "RULED_P1_governing_denominator": (
+            f"RULED at {P1_DENOMINATOR_RULING}: the P1 bar on a complement "
+            f"reads {P1_GOVERNING_DENOMINATOR!r} (loss per hour of usable "
+            f"feed); the calendar-24h form stays REPORTED beside it."),
         "coins": out,
     }
 
@@ -479,10 +561,20 @@ def selftest() -> int:
            "L1 over the complement is reported AS TAUTOLOGICAL (rule 9): the "
            "complement is defined as the windows v1 did not flag, so a zero "
            "there is arithmetic and must never read as 'clean'")
+        # PINNING THE RULING, NOT THE ESCALATION. This check asserted that an
+        # ESCALATION key was present -- true while the question was open and
+        # FALSE the moment the USER answered it. That is the draft-state-pin
+        # class the R-386 freeze surfaced three times; it now pins the RULED
+        # state and fails if either ruling is dropped or the block starts
+        # governing.
         ok(cq["governs"] is False
-           and "ESCALATION_no_minimum_complement_size" in cq,
-           "the block REPORTS and ESCALATES the one constant it would need "
-           "rather than choosing it")
+           and "ESCALATION_no_minimum_complement_size" not in cq
+           and G_MIN_COMPLEMENT_RULING in cq["RULED_minimum_complement_size"]
+           and P1_GOVERNING_DENOMINATOR
+           in cq["RULED_P1_governing_denominator"],
+           "the block REPORTS, and both R-411 constants read as RULED (R-424) "
+           "rather than as open escalations -- an answered question must stop "
+           "being asked by the artifact")
         ok(c["P1_lost_s_per_UNMASKED_hour"] is not None
            and c["P1_lost_s_per_CALENDAR_24h"] is not None
            and c["P2_share_of_UNMASKED"] is not None
@@ -641,6 +733,140 @@ def selftest() -> int:
                "KNOWN-BAD: a day the frozen detector cannot judge gets NO "
                "mask — an empty mask there would tell the scorer 'nothing was "
                "dark' about a day nobody measured")
+
+    # ---- R-411(i)/(ii) AS RULED AT R-424, with falsifiers on the edge ----
+    # The G floor is a >= test on the COMPLEMENT, so the interesting fixtures
+    # are the two windows either side of it. 288 - 144 = 144 masked gives a
+    # complement of exactly 144 (counts); one more masked window gives 143
+    # (does not).
+    # THE EDGE IS BUILT BY VARYING THE PRESENT COUNT, NOT THE MASKED COUNT,
+    # and the reason is a documented property of v1. Pushing masked past half
+    # the day moves the day's OWN median into the dark regime, so the dark
+    # windows stop being "thin relative to the median" and the mask comes back
+    # EMPTY -- RR6-1's blind spot, which is exactly what the (now frozen) v2
+    # absolute floor exists for. A 145-of-288 fixture therefore measured v1's
+    # limit rather than the G floor. Holding masked at 56 of ~200 present
+    # keeps the fixture inside v1's competence and lets the complement land
+    # on 144 and 143.
+    for _present, _want, _comp in ((200, True, 144), (199, False, 143)):
+        _d = f"2026041{1 if _want else 2}"
+        _nmask = _present - _comp
+        (root / _d).mkdir(parents=True, exist_ok=True)
+        _b = day_bounds(_d)[0]
+        for _i in range(_present):
+            with gzip.open(root / _d /
+                           f"btc-updown-5m-{_b + _i * WINDOW_S}.jsonl.gz",
+                           "wb") as fh:
+                fh.write(b'{"x":1}\n' * (3 if _i < _nmask else 5000))
+        _m = build_mask(_d, raw_root=root, gaps={})
+        _c = complement_quality(_d, _m, raw_root=root)["coins"]["btc"]
+        ok(_c["n_windows_unmasked"] == _comp
+           and _c["counts_toward_G"] is _want,
+           f"R-411(i) EDGE: a {_comp}-window complement counts_toward_G="
+           f"{_want} against the ruled floor of {G_MIN_COMPLEMENT_WINDOWS}. "
+           f"The two fixtures sit ONE WINDOW apart, so an off-by-one in the "
+           f"comparison fails here rather than on a real day")
+        ok("G-COUNTING ONLY" in _c["counts_toward_G_scope"]
+           and str(G_MIN_COMPLEMENT_WINDOWS) in _c["counts_toward_G_ruling"]
+           or _c["counts_toward_G_floor_windows"] == G_MIN_COMPLEMENT_WINDOWS,
+           "R-411(i): the boolean travels with its SCOPE -- a false does not "
+           "exclude the day's data, it means the coin-day does not count "
+           "toward the >=5-day bar")
+
+    # R-411(ii): the governing denominator must be able to DISAGREE with the
+    # calendar one, or naming it would be decoration. A day with a large
+    # masked block concentrates the same loss into fewer usable hours.
+    mk("20260413", thin_idx=set(range(200)))
+    _m2 = build_mask("20260413", raw_root=root, gaps={})
+    _c2 = complement_quality("20260413", _m2, raw_root=root)["coins"]["btc"]
+    ok(_c2["P1_governing_denominator"] == P1_GOVERNING_DENOMINATOR
+       and _c2["P1_governing_value"] == _c2["P1_lost_s_per_UNMASKED_hour"]
+       and _c2["P1_lost_s_per_CALENDAR_24h"] is not None,
+       "R-411(ii): the block NAMES which denominator governs, carries that "
+       "value, and keeps the calendar-24h figure reported beside it")
+
+    # ---- RR12-1 CONTROL: a WORKTREE run records the WORKTREE's commit ----
+    # The defect this closes: `REPO` was one hardcoded path, so a producer
+    # running from a worktree stamped the MAIN tree's HEAD -- an artifact
+    # naming a tree that did not execute. Proving it needs a second tree at a
+    # DIFFERENT commit, so the two answers cannot coincide by accident.
+    import subprocess as _sp
+    import tempfile as _tf2
+    _root_git = _sp.run(["git", "-C", str(CODE_ROOT), "rev-parse", "HEAD"],
+                        capture_output=True, text=True)
+    _prev = _sp.run(["git", "-C", str(CODE_ROOT), "rev-parse", "HEAD~1"],
+                    capture_output=True, text=True)
+    if _root_git.returncode == 0 and _prev.returncode == 0:
+        _here, _there = _root_git.stdout.strip(), _prev.stdout.strip()
+        ok(_here != _there,
+           "RR12-1 control precondition: HEAD and HEAD~1 differ, so the two "
+           "trees cannot record the same commit by coincidence")
+        _wt = Path(_tf2.mkdtemp(prefix="da_wt_control_"))
+        _wt_path = _wt / "tree"
+        _added = _sp.run(["git", "-C", str(CODE_ROOT), "worktree", "add",
+                          "--detach", str(_wt_path), _there],
+                         capture_output=True, text=True)
+        try:
+            if _added.returncode == 0:
+                # THE WORKTREE SUPPLIES A DIFFERENT GIT HEAD; THE CODE UNDER
+                # TEST IS THE CODE BEING SHIPPED. Left at HEAD~1 the tree
+                # holds the PRE-FIX file, which reproduces the defect (it
+                # stamps the main tree's commit) -- useful as a demonstration,
+                # useless as a control over the fix. So the producing files
+                # are copied in, and `tree_dirty` then reads True, which is
+                # itself the correct answer for a tree whose files differ
+                # from its own HEAD.
+                for _f in ("da_blackout_mask.py", "pm_tape_density.py",
+                           "da_content_liveness_rule.py",
+                           "da_forward_day_verify.py"):
+                    (_wt_path / "live/pm_research" / _f).write_bytes(
+                        (CODE_ROOT / "live/pm_research" / _f).read_bytes())
+                _prog = (
+                    "import sys, json, gzip, datetime as dt\n"
+                    f"sys.path.insert(0, {str(_wt_path / 'live/pm_research')!r})\n"
+                    "import da_blackout_mask as BM\n"
+                    "from pathlib import Path\n"
+                    "raw = Path(sys.argv[1]); day='20260410'\n"
+                    "(raw/day).mkdir(parents=True, exist_ok=True)\n"
+                    "base = BM.day_bounds(day)[0]\n"
+                    "for i in range(288):\n"
+                    "    with gzip.open(raw/day/f'btc-updown-5m-{base+i*300}"
+                    ".jsonl.gz','wb') as fh: fh.write(b'x\\n'*5000)\n"
+                    "m = BM.build_mask(day, raw_root=raw, gaps={})\n"
+                    "print(json.dumps(m['producer']))\n")
+                _r = _sp.run([sys.executable, "-c", _prog, str(_wt / "raw")],
+                             capture_output=True, text=True, timeout=300)
+                ok(_r.returncode == 0,
+                   f"RR12-1 control: the producer RUNS from a worktree at all "
+                   f"-- which it could not before, because its data root came "
+                   f"from __file__ and a worktree has no tape "
+                   f"({_r.stderr.strip()[-160:]})")
+                _prod = json.loads(_r.stdout.strip().splitlines()[-1])
+                ok(_prod["carrying_commit"] == _there
+                   and _prod["carrying_commit"] != _here,
+                   f"RR12-1 CONTROL: a run from the worktree records the "
+                   f"WORKTREE's commit ({_there[:12]}), NOT the main tree's "
+                   f"({_here[:12]}). The artifact names the tree that "
+                   f"executed")
+                ok(_prod["tree_dirty_on_producing_files"] is True,
+                   "RR12-1 CONTROL: and the dirty flag reads True there, "
+                   "because the worktree's producing files differ from its "
+                   "own HEAD -- the flag answers about the tree that ran, "
+                   "not about some other tree")
+                ok(str(_wt_path) in _prod["code_root"]
+                   and _prod["data_root"] == str(DATA_ROOT),
+                   "RR12-1 CONTROL: and it NAMES both roots -- code_root is "
+                   "the worktree, data_root is the tree holding the tape, so "
+                   "a reader can see they differed")
+        finally:
+            _sp.run(["git", "-C", str(CODE_ROOT), "worktree", "remove",
+                     "--force", str(_wt_path)], capture_output=True)
+            _sp.run(["git", "-C", str(CODE_ROOT), "worktree", "prune"],
+                    capture_output=True)
+        ok(not _wt_path.exists(),
+           "RR12-1 control: the throwaway worktree is removed -- an "
+           "instrument that leaves trees behind is the untracked-drop-in "
+           "class in another costume")
 
     print(f"da_blackout_mask selftests: {checks} checks passed")
     return 0

@@ -30,7 +30,13 @@ from typing import Any
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import pm_tape_density as TD                                   # noqa: E402
 
-REPO = Path("/home/yuqing/ctaNew")
+# RR12-1 -- CODE root and DATA root are different trees. This module reads
+# DATA, so its root is the tree holding the tape, resolved once in
+# `pm_tape_density` and imported rather than restated. Deriving it from
+# __file__ made every worktree run read an empty directory.
+import pm_tape_density as _TDROOT  # noqa: E402
+CODE_ROOT = Path(__file__).resolve().parents[2]
+REPO = _TDROOT.DATA_ROOT
 WINDOW_S = 300
 
 #: DECLARED: the 10%-of-median cut is REUSED from `content_liveness_for`'s

@@ -26,7 +26,16 @@ LOG="${DA_MIDNIGHT_LOG:-/home/yuqing/ctaNew/data/pm_5min/derived/.da_midnight_ve
 # happens when the verifier exits non-zero while still leaving a well-formed
 # artifact -- the case the artifact-shape check cannot distinguish, and the
 # reason `rc` had to stop being decorative.
-V="${DA_MIDNIGHT_VERIFY_BIN:-/home/yuqing/ctaNew/live/pm_research/da_forward_day_verify.py}"
+# RR12-1 -- THE VERIFIER FOLLOWS THIS SCRIPT, AND THE UNIT PINS IT.
+# The default was the canonical absolute path, so running THIS script from a
+# worktree still executed the MAIN tree's verifier: the record said one tree
+# and the code came from another. The default is now script-relative, so a
+# worktree run uses the worktree's verifier; the unit pins the canonical path
+# EXPLICITLY (Environment=DA_MIDNIGHT_VERIFY_BIN) so the production path is
+# named rather than inherited from wherever the script happens to sit.
+SELFDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+V_DEFAULT="$SELFDIR/da_forward_day_verify.py"
+V="${DA_MIDNIGHT_VERIFY_BIN:-$V_DEFAULT}"
 PY=/home/yuqing/pricer-sol/venv/bin/python3
 cd /home/yuqing/ctaNew/live/pm_research || exit 3
 # THE PAIR GUARD RUNS BEFORE ANY WRITE. Codex batch-2 §7: with only OUTDIR
@@ -72,12 +81,32 @@ fi
 # WRITE -- including before the log header, per this script's own lesson that
 # a guard which writes before it refuses has already done the thing it
 # refuses.
+# R-420: WHICH LEG WOULD ADMIT THIS RUN IS COMPUTED ALWAYS, and logged.
+# Two legs exist so a lost Environment= cannot cause a nightly outage -- but a
+# SILENT fallback to the cgroup leg would equally hide that the Environment=
+# had been lost, and the redundancy would quietly become a single point again.
+# Naming the leg every time is what makes it visible. Computed outside the
+# canonical branch so a REHEARSAL can exercise it too, without any canonical
+# write.
+case ":$(cat /proc/self/cgroup 2>/dev/null):" in
+  */da-midnight-verify.service/*|*/da-midnight-verify.service:*) _cgroup=1 ;;
+  *) _cgroup=0 ;;
+esac
+if [ "${DA_MIDNIGHT_MODE:-}" = "production" ] && [ "$_cgroup" -eq 1 ]; then
+  _leg="BOTH (cgroup identity AND DA_MIDNIGHT_MODE=production)"
+elif [ "${DA_MIDNIGHT_MODE:-}" = "production" ]; then
+  _leg="DECLARED_ONLY (DA_MIDNIGHT_MODE=production; cgroup did NOT match)"
+elif [ "$_cgroup" -eq 1 ]; then
+  _leg="IDENTITY_ONLY (cgroup matched; DA_MIDNIGHT_MODE UNSET -- if the unit "
+  _leg="$_leg is meant to set it, it has been lost)"
+else
+  _leg="NONE (neither leg) -- a canonical write would be REFUSED"
+fi
+_named=0
+[ "$_cgroup" -eq 1 ] && _named=1
+[ "${DA_MIDNIGHT_MODE:-}" = "production" ] && _named=1
 if [ -z "${DA_MIDNIGHT_OUTDIR:-}" ] && [ -z "${DA_MIDNIGHT_LOG:-}" ]; then
-  case ":$(cat /proc/self/cgroup 2>/dev/null):" in
-    */da-midnight-verify.service/*|*/da-midnight-verify.service:*) _named=1 ;;
-    *) _named=0 ;;
-  esac
-  [ "${DA_MIDNIGHT_MODE:-}" = "production" ] && _named=1
+  _admission="CANONICAL via $_leg"
   if [ "$_named" -ne 1 ]; then
     echo "REFUSED: this run would write CANONICAL verdicts into $OUTDIR but" \
          "identifies itself as neither the scheduled unit (by cgroup) nor an" \
@@ -91,18 +120,29 @@ if [ -z "${DA_MIDNIGHT_OUTDIR:-}" ] && [ -z "${DA_MIDNIGHT_LOG:-}" ]; then
     exit 6
   fi
 fi
+# A PIN IS NOT A SUBSTITUTION. The unit now names the verifier explicitly, so
+# DA_MIDNIGHT_VERIFY_BIN alone can no longer mean "a stub is being injected".
+# The distinction is by CONTENT, not by trust: pointing at the SAME file the
+# script-relative default resolves to is a pin and is admitted; pointing at a
+# DIFFERENT file is a substitution and still demands full isolation.
 if [ -n "${DA_MIDNIGHT_VERIFY_BIN:-}" ] && \
-   { [ -z "${DA_MIDNIGHT_LOG:-}" ] || [ -z "${DA_MIDNIGHT_OUTDIR:-}" ]; }; then
-  echo "REFUSED: DA_MIDNIGHT_VERIFY_BIN may be set ONLY inside a fully" \
-       "isolated rehearsal, with DA_MIDNIGHT_LOG and DA_MIDNIGHT_OUTDIR both" \
-       "overridden. A stub verifier writing production verdicts is worse than" \
-       "no isolation at all." >&2
+   { [ -z "${DA_MIDNIGHT_LOG:-}" ] || [ -z "${DA_MIDNIGHT_OUTDIR:-}" ]; } && \
+   [ "$(readlink -f "$V" 2>/dev/null)" != "$(readlink -f "$V_DEFAULT" 2>/dev/null)" ]; then
+  echo "REFUSED: DA_MIDNIGHT_VERIFY_BIN points at a DIFFERENT verifier than" \
+       "this script's own ($V vs $V_DEFAULT) outside a fully isolated" \
+       "rehearsal. A pin to the same file is fine; substituting a stub while" \
+       "writing production verdicts is worse than no isolation at all." >&2
   exit 5
 fi
 mkdir -p "$OUTDIR"
 {
   echo
   echo "======== fired $(date -u +%FT%TZ) ========"
+  echo "admission: ${_admission:-REHEARSAL (isolated overrides); canonical admission would be: $_leg}"
+  echo "verifier: $V"
+  echo "verifier_sha256: $(sha256sum "$V" 2>/dev/null | cut -d" " -f1)"
+  echo "script_tree: $SELFDIR"
+  echo "script_tree_commit: $(git -C "$SELFDIR" rev-parse HEAD 2>/dev/null || echo unknown)"
 } >> "$LOG"
 # The day that just CLOSED, and the day that just OPENED. Both are logged
 # because which one is "day one" was ambiguous at scheduling time and a

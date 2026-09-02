@@ -69,7 +69,13 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Iterable, Sequence
 
-REPO = Path(__file__).resolve().parents[2]
+# RR12-1 -- CODE root and DATA root are different trees. This module reads
+# DATA, so its root is the tree holding the tape, resolved once in
+# `pm_tape_density` and imported rather than restated. Deriving it from
+# __file__ made every worktree run read an empty directory.
+import pm_tape_density as _TDROOT  # noqa: E402
+CODE_ROOT = Path(__file__).resolve().parents[2]
+REPO = _TDROOT.DATA_ROOT
 HF_RAW = REPO / "data/mm_hf/raw"
 HF_RUNS = REPO / "data/mm_hf/collector_runs.jsonl"
 PM_ROOT = REPO / "data/pm_5min"

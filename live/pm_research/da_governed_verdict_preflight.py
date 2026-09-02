@@ -43,8 +43,13 @@ if str(_HERE) not in sys.path:
 import da_content_liveness_rule as CLR                          # noqa: E402
 import harmful_forward_scorer as HFS                            # noqa: E402
 
-REPO = Path("/home/yuqing/ctaNew")
-DERIVED = REPO / "data/pm_5min/derived"
+# RR12-1 -- the SPLIT. This tool READS data, so its root is the tree holding
+# the tape, imported from the lowest-level reader rather than restated.
+CODE_ROOT = Path(__file__).resolve().parents[2]
+import pm_tape_density as _TDROOT                                # noqa: E402
+DATA_ROOT = _TDROOT.DATA_ROOT
+REPO = DATA_ROOT
+DERIVED = DATA_ROOT / "data/pm_5min/derived"
 
 #: The scheduled unit's identity string, as the launcher composes it. Matched
 #: by PREFIX on the whole field, not by `in` -- a substring test would accept
@@ -58,6 +63,18 @@ R405_DAY = "20260902"
 R405_FROM_UTC = "2026-09-02T01:35:00Z"
 R405_TO_UTC = "2026-09-02T04:55:00Z"
 
+
+#: CO-R4 -- EXIT CODES ARE THREE DIFFERENT STATEMENTS, not two.
+#:   0  every predicate passed
+#:   1  the artifacts were read and a PREDICATE DID NOT PASS -- a real result
+#:   3  REFUSED: the artifacts could not be read as this day's at all, so no
+#:      predicate was evaluated. Sharing rc 1 with a failing predicate would
+#:      tell a reader "the day failed" when nothing was checked, and the
+#:      timer's redirect would leave a ZERO-BYTE file with the reason only on
+#:      stderr. The refusal is therefore emitted as JSON on STDOUT.
+RC_ALL_PASSED = 0
+RC_PREDICATE_DID_NOT_PASS = 1
+RC_REFUSED = 3
 
 class PreflightRefused(Exception):
     """An input this preflight must not summarise."""
@@ -337,12 +354,28 @@ def preflight(day: str, derived: Path | None = None) -> dict[str, Any]:
     for k in cq:
         if k.startswith("ESCALATION"):
             esc[k] = cq[k]
-    esc["register_ids_transcribed"] = {
-        "R-411(i)": "minimum complement size for G -- USER",
-        "R-411(ii)": "which P1 denominator governs on the complement -- USER",
-        "v2_freeze": "the absolute-floor amendment -- USER; until then the "
-                     "mask's v2 seam refuses",
+    # RULED vs STILL OPEN, kept apart. Three of these were open questions and
+    # the USER answered them at R-424; an artifact that keeps listing an
+    # answered question as open is asking a settled thing forever.
+    esc["ruled"] = {
+        "R-411(i)": "minimum complement for G-COUNTING -- RULED at R-424 §4: "
+                    ">= 144 of 288 windows; every good window is scored "
+                    "regardless. Emitted per coin-day as `counts_toward_G`.",
+        "R-411(ii)": "the P1 denominator on a complement -- RULED at R-424 "
+                     "§4: per UNMASKED hour governs, calendar-24h reported "
+                     "beside it.",
+        "R-408(3)": "the v2 absolute-floor freeze -- RULED at R-424 §2: "
+                    "FROZEN, governing from 2026-09-03.",
     }
+    esc["still_open"] = {
+        "freeze_disposition": "R-421 §3 / R-424 §6 -- NOT reached by the "
+                              "R-424 ruling; a recommendation is now on "
+                              "record awaiting the USER's word.",
+    }
+    esc["note"] = ("`ruled` entries are settled and cite the entry that "
+                   "settled them; `still_open` is what remains the USER's. "
+                   "Any key beginning ESCALATION_ found in the artifact is "
+                   "carried above, unchanged, as the producer wrote it.")
     mseam = (json.loads(mpath.read_text()).get("v2_seam")
              if mpath.exists() else None)
 
@@ -486,10 +519,14 @@ def selftest() -> int:
            == 40,
            "and the R-405 overlap is reported as a FACT for 09-02 -- all 40 "
            "fixture windows sit inside 01:35-04:55Z")
-        ok(r["open_decisions"]["register_ids_transcribed"]["R-411(i)"]
-           and "ESCALATION_no_minimum_complement_size" in r["open_decisions"],
-           "and the output names whose decisions are still open, both from "
-           "the artifact and by register id")
+        ok("R-411(i)" in r["open_decisions"]["ruled"]
+           and "R-411(ii)" in r["open_decisions"]["ruled"]
+           and "R-408(3)" in r["open_decisions"]["ruled"]
+           and "freeze_disposition" in r["open_decisions"]["still_open"]
+           and "R-424" in r["open_decisions"]["ruled"]["R-411(i)"],
+           "R-424: the output separates RULED decisions (citing the entry "
+           "that settled them) from what is STILL the USER's -- an artifact "
+           "that lists an answered question as open asks it forever")
 
         # ---- PER-PREDICATE MUTANTS: each must FAIL BY NAME ---------------
         def remut(mutate) -> dict:
@@ -585,6 +622,34 @@ def selftest() -> int:
                "verified, rather than reporting predicates over a file that "
                "does not exist")
 
+    # ---- CO-R4: A REFUSAL IS MACHINE-READABLE, ON STDOUT, WITH ITS OWN RC
+    import subprocess as _sp
+    with tempfile.TemporaryDirectory() as _td2:
+        _empty = Path(_td2)
+        _prog = (f"import sys; sys.path.insert(0, {str(_HERE)!r});\n"
+                 "import da_governed_verdict_preflight as P;\n"
+                 f"P.DERIVED = __import__('pathlib').Path({str(_empty)!r});\n"
+                 "raise SystemExit(P.main(['--day','20260902']))\n")
+        _r = _sp.run([sys.executable, "-c", _prog], capture_output=True,
+                     text=True)
+        ok(_r.returncode == RC_REFUSED,
+           f"CO-R4: a refusal exits {RC_REFUSED}, DISTINCT from "
+           f"{RC_PREDICATE_DID_NOT_PASS} (a predicate that did not pass). "
+           f"Sharing one code would report 'the day failed' when nothing was "
+           f"checked (got {_r.returncode})")
+        ok(_r.stdout.strip() != "",
+           "CO-R4: stdout is NOT EMPTY on a refusal -- the timer redirects "
+           "stdout to preflight_<day>.json, and a zero-byte file cannot be "
+           "told from 'the tool never ran'")
+        _j = json.loads(_r.stdout)
+        ok(_j["classification"] == "REFUSED" and _j["exit_code"] == RC_REFUSED
+           and "REFUSED" in _j["refusal"] and _j["day"] == "20260902",
+           "CO-R4: and it PARSES as JSON carrying the refusal, the day and "
+           "the exit code -- machine-readable, not a traceback on stderr")
+        ok(len(_r.stdout.encode()) > 0 and _r.stdout.lstrip().startswith("{"),
+           "CO-R4: the redirected file would hold a JSON object, never zero "
+           "bytes")
+
     # ---- READ-ONLY, proven at RUNTIME, not by reading the source ---------
     if DERIVED.is_dir():
         before = {p.name: (p.stat().st_mtime_ns, p.stat().st_size)
@@ -614,7 +679,27 @@ def main(argv=None) -> int:
         return selftest()
     if not a.day:
         raise SystemExit("REFUSED: --day YYYYMMDD")
-    r = preflight(a.day)
+    try:
+        r = preflight(a.day)
+    except PreflightRefused as e:
+        # ON STDOUT, ALWAYS, AND AS JSON. A refusal that reaches only stderr
+        # leaves the timer's `> preflight_<day>.json` holding zero bytes --
+        # which a later reader cannot distinguish from "the tool never ran".
+        print(json.dumps({
+            "tool": "da_governed_verdict_preflight",
+            "day": a.day,
+            "read_only": True,
+            "classification": "REFUSED",
+            "refusal": str(e),
+            "checked_at_utc": _iso(
+                dt.datetime.now(dt.timezone.utc).timestamp()),
+            "exit_code": RC_REFUSED,
+            "note": ("REFUSED means NO predicate was evaluated -- it is not a "
+                     "failing day. rc 3 is distinct from rc 1 for exactly "
+                     "that reason."),
+        }, indent=1))
+        return RC_REFUSED
+    r = r
     if a.json:
         print(json.dumps(r, indent=1))
     else:
@@ -638,7 +723,8 @@ def main(argv=None) -> int:
         print(f"CLASSIFICATION: {r['classification']}  "
               f"({r['n_predicates'] - r['n_failing']}/{r['n_predicates']} "
               f"predicates passed)")
-    return 0 if r["n_failing"] == 0 else 1
+    return (RC_ALL_PASSED if r["n_failing"] == 0
+            else RC_PREDICATE_DID_NOT_PASS)
 
 
 if __name__ == "__main__":

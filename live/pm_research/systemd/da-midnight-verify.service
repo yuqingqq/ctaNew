@@ -42,5 +42,12 @@ Type=oneshot
 # were dropped here, every 00:06Z verdict would refuse and nothing
 # would run to say so.
 Environment=DA_MIDNIGHT_MODE=production
+# RR12-1: PIN THE VERIFIER. The script's own default is now
+# script-relative so a worktree run uses the worktree's verifier; the
+# production path is therefore NAMED here rather than inherited from
+# wherever the script happens to sit. The script admits this as a PIN
+# (same file as its own default) and still refuses a DIFFERENT binary
+# outside a fully isolated rehearsal.
+Environment=DA_MIDNIGHT_VERIFY_BIN=/home/yuqing/ctaNew/live/pm_research/da_forward_day_verify.py
 OOMScoreAdjust=1000
 ExecStart=/home/yuqing/ctaNew/live/pm_research/da_midnight_verify.sh
