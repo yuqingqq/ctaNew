@@ -1,12 +1,12 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-02T11:47Z — **BE round 4 is in flight and has surfaced that the
-freeze's DATA anchor is in no commit at all** (`data/` is gitignored; it is
-frozen by manifest sha only) — carried as **REPORTED, NOT VERIFIED**, and added
-to the record of the sixth USER decision. DE rounds 10–11 verified and released;
-DE10-R1 → DE round 12. **Six USER decisions, unchanged.** Prior line: a review
-"correction to the register" did not reproduce; the protection is real and in
-the wrong place.
+Updated: 2026-09-02T11:56Z — **THE USER RULED: "Proceed according to your
+recommendation."** Four decisions are ADOPTED and executed — content-liveness v2
+FROZEN and governing from 2026-09-03; the Phase-2 composed candidate **does not
+advance**, Q1 the surviving component of record, **no race admission**; the
+G-counting floor **≥144/288**; P1 **per unmasked hour**. **The freeze
+disposition is NOT reached** — it carried no recommendation — and now has one.
+**One decision open; the 09-02 accrual call is mechanical.**
 
 ## READ FIRST — current project handoff
 
@@ -93,35 +93,61 @@ defect of its own on real data before filing**: the first complement was
 `range(288) − masked`, which credited the still-open 09-02 with 248 unmasked
 windows out of 119 present; it is now `PRESENT − masked`.
 
-### PENDING USER DECISIONS — six, none decidable by a seat
+### RULED 2026-09-02 — "Proceed according to your recommendation"
 
-Options are as filed; **the recommendations below are the coordinator's
-recommendations, not rulings.**
+> *"Proceed according to your recommendation."* — USER, ~11:49Z, quoted verbatim
+> in R-424.
 
-| # | ask | coordinator's recommendation |
+**The ruling names no item, and the scope was resolved by reading this file.**
+R-424 §1 records the referent explicitly: the recommendations on record at the
+moment of the ruling were **this table** — *"PENDING USER DECISIONS — six"*, four
+rows each carrying *"coordinator's recommendation"* (`79f2db5`) — mirrored in
+R-408 and R-411. **Four adopted, one deliberately not reached.**
+
+| # | ruled | executed |
 |---|---|---|
-| **R-408(2)** | **the Phase-2 winner** — Q1's hazard head beats the incumbent's under every unit, collapse rule and arm; Q3 survives at its own gate only; **Q4, the decision metric, fails all six cells** (best Holm 0.12) | **do not advance** the composed candidate (§9.2 names this case); record **Q1 as the surviving component of record**; **no race admission** (§9.3); next population under the frozen prospective 2,000-draw declaration. Arm of record if any: LGBM |
-| **R-408(3)** | **freeze content-liveness v2** — now load-bearing for R-409, since masking a mostly-dark day needs v2's absolute floor | **adopt as drafted, GOVERNING, effective 2026-09-03**; 08-26 left as v1 recorded it; the limit carried verbatim |
-| **R-411(i)** | **minimum complement size for G-counting** — the frozen bars were pre-registered against a 288-window day and a small complement reads them on a population they were not registered for | for **G-counting only** (every good window is scored regardless), a coin-day counts toward the ≥5 bar only if its unmasked complement covers **≥50% of the calendar day** (≥144/288); anchored on v1's ~60%-dark blindness, so 50% sits inside the instrument's validity rather than at its edge |
-| **R-411(ii)** | **which P1 denominator governs "quality is good" on the complement** — DA carries both (btc 09-02: **93.01** s per unmasked hour vs **25.51** per calendar-24 h, a 3.6× spread) | **per unmasked hour** — it is loss per hour of *usable* feed; the calendar form dilutes the loss by the very blackout it is meant to exclude |
+| **R-408(2)** Phase-2 winner | the composed candidate **DOES NOT ADVANCE** (§9.2, Q4 fails); **Q1_arrival is the surviving component of record**; **NO race admission** (§9.3, multiplicity unchanged); the next population runs under A2 as frozen (**2,000 draws**, one-sided — this family stays at 500 with its floor disclosure); arm of record if one is ever named: `composed_lgbm`; **Phase-4 grids stay gated** | `plans/ITER011_PHASE2_ADJUDICATION_2026-09-02.md` — a **new** document; the frozen preregistration is **not edited** (rule 13, and §9.2/§9.3 call for exactly this in-band record) |
+| **R-408(3)** v2 freeze | **FROZEN, GOVERNING FROM 2026-09-03.** (e) adopted as drafted, no structural constant re-chosen; (f) `CONTENT_DARK` **joins the governing set** from the effective day; (g) 08-26 hype **left as v1 recorded it**; the §8(1) limit carried verbatim — **blind on the fourth consecutive dark day** | verified here: `FROZEN_BY_USER = True`, `EFFECTIVE_FROM_DAY = "20260903"`, `CONTENT_DARK_GOVERNS = True`, **19 checks rc 0**, and `governs("20260902")` is **False** while `governs("20260903")` is **True** |
+| **R-411(i)** G-counting floor | for **G-counting only**, a coin-day counts toward the ≥5 bar only if its unmasked complement covers **≥ 144 of 288 windows**. **Every good window is scored regardless** | a new constant in `da_blackout_mask.py` with the ruling quoted, consumed by BE's scorer (DA round 10) |
+| **R-411(ii)** P1 denominator | the P1 bar on a complement reads **per UNMASKED hour** — loss per hour of *usable* feed; **the calendar-24h form stays reported beside it** | same batch; the `ESCALATION_no_minimum_complement_size` block and the preflight's `open_decisions` entry become the ruled state naming R-424 |
 
-**A sixth ask is now open: the freeze disposition** (R-421 §3, escalated and
-**decided by no one**). Plan §10 step 9 says the frozen set is scored
-**unchanged**, and the frozen set is the commit's bytes. Two readings:
+**Tonight is untouched, and that was checked rather than assumed:** the v2
+checker is imported by **no verdict path** — not `da_forward_day_verify.py`, not
+`da_midnight_verify.sh`, not `da_governed_verdict_preflight.py`; only
+`v5_deploy_gates.py` runs its selftest — and `governs("20260902")` is False, so
+**the 09-02 closing verdict at 00:06Z runs v1 only.** Wiring lands in DA round 10
+*after* that verdict is verified and *before* 2026-09-04 00:06Z, the first
+governed v2 verdict.
 
-| option | what it means |
-|---|---|
-| **race on the frozen bytes at `1b53929`** | the plan's reading — BE round 4 materialises the bound bytes from that commit, verifies each sha **before import**, imports from the run dir and never from the tree, with the driver at HEAD as harness. **Output goes to scratch, sealed: an estimate, not a race score, until the USER rules.** **Now better specified** (BE round 4, reported): the **code** anchors come from the commit; the **data** anchor has **no commit at all** and is frozen **by manifest sha only** — see the in-flight section below |
-| **re-freeze at HEAD** | a **NEW candidate**, **multiplicity 3**, and a **new freeze commit** — which only the USER authorises (rule 12; R-409's "any other things need my decision") |
+**The 09-02 accrual call is not a fifth adoption.** R-409 already rules it as a
+principle; the coordinator applies it after the 00:06Z verdict as a §7-style act
+with R-409 as the stated reason, and **R-411(ii) now fixes which denominator
+that reading uses**.
 
-**A fifth ask lands tonight: the 09-02 accrual call.** The 00:06Z verdict
-decides nothing on its own — 09-02 carries the 01:35–04:55Z Polymarket-side
-blackout and accrues **on its complement** per R-409, but **the call itself is
-the USER's**, and R-418 is explicit that ratifying the population does not make
-it.
+### STILL OPEN — the freeze disposition, and why the ruling did not reach it
 
-**Review state has moved since — see "Review and round state" below.** The four
-asks above are unchanged and none of them is blocked by any of it.
+**It carried no recommendation, so there was nothing to proceed on.** This table
+described it as *"decided by no one"* with two options and no recommendation
+beside either — and R-424 §1 reads that as out of scope by construction rather
+than as adopted by default. **A recommendation now exists** (R-424 §6), so the
+next word can settle it:
+
+> **Recommended: race on the frozen bytes at `1b53929`** — the plan's reading
+> (§10 step 9: the frozen set is scored UNCHANGED). Code anchors materialised
+> from the commit and **sha-verified before import**; the data anchor
+> `harmful_exposure_rows_v3_eraB.json`, which **has no commit** (`data/` is
+> gitignored — BE fact (iii), **still unverified until round 4 lands**), bound by
+> the sha the frozen manifest (`eb8733da…`) records for it and **verified by
+> content with the source named**; the driver at HEAD as harness, with every
+> non-anchor module in the closure that moved since `1b53929` **named in the
+> receipt**.
+>
+> **Why not re-freeze:** a re-freeze is a **NEW candidate (multiplicity 3)** and
+> a new freeze commit **with no new evidence behind it** — it would let the
+> anchors' drift choose the candidate.
+
+**Until it is ruled, BE round 4's output stays an estimate in scratch, not a
+race score.**
 
 ### BE round 4 — IN FLIGHT: three facts REPORTED, none of them verified yet
 
@@ -370,10 +396,31 @@ launchers at **235/19**.
 | **the coordinator's own acts** | **REVIEWED** (`1384ec5`), no hold; CO-R1..R4 dispositioned |
 
 **In flight:** **BE round 4** (Q-BE-229) — the frozen-bytes execution, **not
-landed**; **DE round 12** (Q-DE-30) — DE10-R1; **the reviewer** on DE round 11
-(BE rounds 3–4 still queue behind it); **DA on standby** (Q-DA-208 after 00:06Z;
-round 10 after tonight). **BE round 5 queues** the population-gate
-ledger-vs-tape comparison and `require_verified()`.
+landed**; **DA round 10** (Q-DA-208) — **build now in `~/ctaNew-wt-da`, land only
+after the 00:06Z verdict is verified**; DE round 12 and the DE round 11 review
+have **landed** (`9dbaa5a`, `1e494f9`) and are verified in the next entry;
+**BE rounds 3–4** are the reviewer's next.
+
+**DA round 10 is one batch and its sequencing is the point:** (a) the RR12-1
+split — `REPO` from `__file__`, the verifier path pinned by the unit, the record
+proving **which tree ran**; (b) the identity-only admission log; (c) **CO-R4** —
+the preflight's refusal emitted as **JSON on stdout with a distinct rc**, since
+`rc 1` means *failing predicates* and a refusal is not that; (d) the R-411(i)/(ii)
+constants with falsifiers — **a 143-window complement does not count, 144 does**,
+and the per-unmasked-hour P1 governs with the calendar figure beside it; (e) the
+**v2 wiring** — on a governed day `CONTENT_DARK` joins the governing set beside
+v1's statuses, **`NO_REFERENCE` is never a pass**, the composite is the more
+severe, v1 untouched, with a control that the **09-02 verdict path is
+byte-identical with and without the wiring** and a positive control on a
+synthetic governed dark day.
+
+**Why it builds now and lands later:** the first governed verdict runs **the tree
+as it is** (R-402). Landing a batch between now and 00:06Z would change the
+instrument under the run it is meant to read.
+
+**BE round 5** (after the 3–4 review) adds: consume `counts_toward_G` from the
+mask block and **refuse if absent on a governed day**, the population-gate
+ledger-vs-tape refusal, and `require_verified()`.
 
 **Open findings:** DE10-R1 → DE round 12; RR12-1 and CO-R4 → DA round 10.
 
@@ -739,6 +786,51 @@ than a clean zero (the density receipt covers 13 days, not this one).
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-02 ~11:56Z (MEM) — THE RULING NAMED NO ITEM, AND THIS FILE WAS THE
+### REFERENT
+
+**R-424 swept. The USER ruled four decisions with six words**, and the reason the
+scope is unambiguous is worth recording plainly rather than modestly: **R-424 §1
+resolves "your recommendation" by naming this file** — the six-item table at
+`79f2db5`, four rows carrying an explicit *"coordinator's recommendation"* — and
+adopts exactly those four. **The freeze disposition was not reached because this
+table said it had none**, describing it as *"decided by no one"* with two options
+and no recommendation beside either.
+
+**That is the whole value of marking a recommendation as a recommendation.** Had
+the freeze row carried a suggestion in the same voice as the other four, a
+six-word ruling would have silently adopted a **new candidate, multiplicity 3,
+and a new freeze commit** — the one decision the register insists only the USER
+can make. The distinction between *"here is what I advise"* and *"here are your
+options and I am not advising"* did real work, and it did it days after it was
+written.
+
+**What is executed, verified here rather than accepted.** The v2 freeze reads
+`FROZEN_BY_USER = True`, `EFFECTIVE_FROM_DAY = "20260903"`,
+`CONTENT_DARK_GOVERNS = True`, **19 checks rc 0** — and, the part that matters
+tonight, **`governs("20260902")` is False** while `governs("20260903")` is True.
+The 09-02 closing verdict runs **v1 only**, and the v2 checker is imported by no
+verdict path. **A freeze that governs from tomorrow cannot reach tonight**, and
+that was checked rather than asserted.
+
+**The Phase-2 adjudication is a NEW document, not an edit.** The composed
+candidate does not advance, Q1 is the surviving component of record, and there
+is **no race admission**. The frozen preregistration is untouched — §9.2/§9.3
+call for an in-band record, which is what was written. **A negative result got
+the same ceremony as a positive one would have**, which is the only way the
+record stays worth reading.
+
+**Two numbers are now ruled and neither can quietly widen a population.**
+G-counting needs **≥144 of 288** unmasked windows — *for counting only; every
+good window is still scored* — and P1 reads **per unmasked hour**, with the
+calendar-24h figure kept beside it rather than replaced. DA round 10 ships both
+with falsifiers on the boundary itself: **143 does not count, 144 does.**
+
+**And the sequencing DA was given is the right shape:** build now in the
+worktree, land only after tonight's verdict is verified. **The first governed
+verdict runs the tree as it is** — landing a batch beforehand would change the
+instrument under the run it exists to read.
 
 ### 2026-09-02 ~11:47Z (MEM) — I CITED A DIRTY TREE, AND THE FREEZE HAS AN
 ### ANCHOR WITH NO COMMIT

@@ -1468,3 +1468,95 @@ Moved in the MEM round-18 true-up of R-423. Join rule as in batch 1.
   accrual call after tonight. UNCHANGED: G=1/5; the 011 family is 12 of 24
   surviving with Q4 failing; development evidence.
 ```
+
+## Batch 25 — archived 2026-09-02T11:56Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-19 true-up of R-424. Join rule as in batch 1.
+
+```yaml
+
+  2026-09-02T11:25Z (MEM ROUND 16 -- THE FREEZE IS A COMMIT, AND THE TREE WALKED
+  AWAY FROM IT). R-421 swept; verified at the artifacts. BE ROUND 3 IS VERIFIED
+  AND ITS REFUSAL IS THE FINDING: the frozen candidate
+  harmful_reduced_fine_candidate_v1.json binds manifest sha eb8733da2c8e2126 and
+  builder sha 0091fe75c38af79e, the manifest binds EIGHT reproducibility_anchor
+  entries plus collector_runs.jsonl as state_at_build, and EVERY BOUND SHA
+  EQUALS THE BLOB AT COMMIT 1b53929 (2026-08-26T10:49:55Z, "Authorised by the
+  user's explicit yes in BE's pane", MULTIPLICITY 2) -- THAT COMMIT IS THE
+  FREEZE (rule 12). THEN THE WORKING TREE MOVED THE ANCHORS IN NINE COMMITS:
+  f30cf26 (08-26 15:45Z), f46f350, a410c07, 3f538a3, b6168b9 (08-27), 46ab455
+  (08-28), 2e1204f (08-29), 851edaf (09-01 09:12Z), and the manifest's text at
+  608d71a (08-26 14:47Z). So the code in the tree is NOT the code the freeze
+  bound, and BE's gate is right to refuse; nothing is re-stamped and no frozen
+  artifact is edited (rule 13). THE MANIFEST'S PROSE STILL READS "NOT FROZEN" /
+  weights PENDING AND MUST BE LEFT ALONE: it was written BEFORE the freeze and
+  deliberately never re-stamped, because A FREEZE IS A COMMIT, NOT A STATUS
+  STRING (rule 12/13) -- the gate reads status from the CANDIDATE, which says
+  FROZEN. Recorded in watch-out-for as "carry these exactly", because it is
+  precisely the line a future sweep would tidy. The manifest's hashes block has
+  been BYTE-IDENTICAL since. THE FROZEN BYTES STILL EXIST, retrievable from
+  1b53929, which is why the disposition is a CHOICE rather than a loss -- AND IT
+  IS THE SIXTH USER DECISION, ESCALATED AND DECIDED BY NO ONE (R-421 section 3).
+  Plan section 10 step 9 says the frozen set is scored UNCHANGED and the frozen
+  set is the commit's bytes, so either (a) the race runs on the frozen bytes:
+  BE round 4 materialises them from 1b53929, verifies each sha BEFORE import,
+  imports from the run dir and never from the tree, with the driver at HEAD as
+  harness, the receipt recording frozen_commit, per-anchor shas, harness commit,
+  the transitive import closure and BY NAME every module in that closure that is
+  NOT an anchor and has moved since -- OUTPUT TO SCRATCH, SEALED, AN ESTIMATE
+  AND NOT A RACE SCORE; or (b) the candidate is RE-FROZEN AT HEAD, which is a
+  NEW CANDIDATE, MULTIPLICITY 3, and a NEW FREEZE COMMIT that only the USER
+  authorises (rule 12; R-409's "any other things need my decision"). A seat
+  choosing between those would be choosing the programme's own baseline. DE
+  ROUND 9 VERIFIED (b98421d, Q-DE-27): 42 checks both launchers; R-419 binds
+  from BLOCK with day_in_scope True and unverifiable []; R-418 refuses "FOR A NEW
+  RUN ... SUPERSEDED by R-419" with refusal_scope keeping receipts as
+  provenance; the R-9001 recap fixture refuses "no ratification block" -- CO-4
+  CLOSED. CO-5 (LOW) OPEN: a block with NO scope_to line returns verified True
+  with day_in_scope None and unverifiable ['day_in_scope'] -> DE round 10
+  (Q-DE-28, in flight). THE REVIEWER'S REVIEW OF THE COORDINATOR'S OWN ACTS
+  (1384ec5) IS VERIFIED, no hold, with four findings dispositioned. CO-R1
+  (MEDIUM, live, reproduced): on the OPEN day 09-02 the ledger runs AHEAD of the
+  tape -- 137 vs 135 windows per coin, the 14 ledger-only entries being the
+  11:15Z and 11:20Z starts -- while on the CLOSED 09-01 the two agree 288/288.
+  Already enforced (the driver refuses an open day at gate 1; the bridge refuses
+  any supplied window with no archive), and NO RESTATEMENT TONIGHT because
+  scope_days FORWARD_RACE_DAYS already binds FINISHED through the forward-race
+  rule and a new block would supersede R-419 hours before the first run that
+  stamps it; DE round 10 makes closure a DECIDED predicate. CO-R2 (MEDIUM)
+  STATED AND CLOSED: the format was declared at 11:03Z and enforced from 11:09Z,
+  and NO receipt stamped R-419 in that interval (round 3's stamp R-418 and are
+  sealed scratch) -- a window that turned out to be empty, STATED rather than
+  assumed empty. CO-R3 (MEDIUM) -> DE round 10: supersession evaluated against
+  the RECEIPT'S OWN STAMP (as_of_utc and harness commit), so a receipt written
+  before a superseding entry stays verified as provenance BY COMPUTATION, NOT BY
+  A SENTENCE. CO-R4 (LOW, reproduced with a correction) LANDS ON THE VERY TIMER
+  I VERIFIED LAST ROUND: on a day with no verdict the preflight raises
+  PreflightRefused UNCAUGHT from main(), the traceback goes to STDERR and STDOUT
+  IS EMPTY -- so preflight_20260902.json WOULD BE A ZERO-BYTE FILE if the
+  verdict is absent at 00:14Z -- and its rc 1 COLLIDES with the ordinary
+  n_failing > 0 return. A ZERO-BYTE JSON TOMORROW MORNING MEANS REFUSED, NOT
+  CLEAN, and the reason would be in the journal rather than the file; I have
+  attached that warning to the timer's own note, because the file is what a
+  reader finds first and an empty file reads like nothing happened. This is the
+  programme's standing shape -- absence reading as a pass -- arriving at the one
+  instrument added to close an audit gap. DA round 10 (after tonight) gives it a
+  JSON refusal object on stdout and a distinct rc. THE REVIEWER ALSO WITHDREW
+  ONE OF ITS OWN LEGS (the V-from-$0 leg), accepted: the RR12-1 fix SPLITS
+  provenance from execution -- provenance follows the bytes (REPO from __file__,
+  the run records which tree it exercised), execution stays on the code that
+  runs. REVIEW TABLE: DA rounds 1-2 RELEASED with RR12-1 to DA round 10; BE
+  round 2 RELEASED; BE ROUNDS 3-4 REVIEWED TOGETHER, DELIBERATELY, because the
+  run path is not finished until it executes the frozen bytes and reviewing the
+  refusing half alone would review a frame; DE rounds 4-6 RELEASED and DE rounds
+  7-9 REVIEW REQUEST FILED (REQUEST_DE_ROUNDS_7-9_2026-09-02.md, the reviewer on
+  it at b98421d); the coordinator's acts REVIEWED. IN FLIGHT: BE round 4
+  (Q-BE-229), DE round 10 (Q-DE-28), the reviewer on DE 7-9, DA on standby
+  (Q-DA-208 after 00:06Z; round 10 after tonight = the RR12-1 split,
+  identity-only admission log, and CO-R4). USER DECISIONS NOW SIX: R-408(2) the
+  Phase-2 winner, R-408(3) the v2 freeze, R-411(i) the minimum complement for
+  G-counting, R-411(ii) the P1 denominator, the 09-02 accrual call after 00:06Z,
+  AND THE FREEZE DISPOSITION. R-419 remains revocable by the USER. UNCHANGED:
+  G=1/5; the 011 family is 12 of 24 surviving with Q4 failing; development
+  evidence.
+```
