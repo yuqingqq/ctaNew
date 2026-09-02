@@ -1,11 +1,11 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-02T11:25Z — **BE's run path refuses on the real tree, correctly:
-the freeze's anchors moved in nine commits after the freeze commit, so the tree's
-bytes are not the frozen bytes.** The frozen bytes exist at `1b53929` and **the
-disposition is a SIXTH USER decision**. Prior line: R-419 supersedes R-418 in an
-adopted block format; CO-4 found that an entry merely *about* a ratification
-verifies from prose.
+Updated: 2026-09-02T11:36Z — **a review "correction to the register" did not
+reproduce**: the driver *does* refuse tape-less windows, and the true statement
+is narrower and now recorded exactly. DE round 10 verified (CO-5, CO-R1's
+checker half, CO-R3 closed); DE rounds 7–9 RELEASED. **Six USER decisions,
+unchanged.** Prior line: BE's run path refuses correctly because the freeze's
+anchors moved in nine commits after `1b53929`.
 
 ## READ FIRST — current project handoff
 
@@ -121,6 +121,49 @@ it.
 
 **Review state has moved since — see "Review and round state" below.** The four
 asks above are unchanged and none of them is blocked by any of it.
+
+### A "correction to the register" that did not reproduce — and what is true instead
+
+**Carry this precisely; it corrects a review, and it corrects one of my own
+lines.** The DE 7–9 review stated that R-421 §6's *"the driver already refuses …
+ledger-only windows"* **"does not hold at the artifact: no layer in the chain
+reads the tape."** Executed on the working tree at 11:32Z, that **does not
+reproduce**: `be_forward_day.selected_from_specs`, given two real 09-01 specs
+plus one for a ledger-only window with no archive yet, **REFUSES** —
+
+> *"1 supplied windows have no archive or no token map … R-418 scores the
+> complement WHOLE; dropping windows here would silently re-select"*
+
+— and the same for a slug that can never exist. **I verified the mechanism at
+source independently:** the gate reads the tape through `fi._archive_paths()` and
+`fi.token_map()` (`be_forward_day.py:491-506`, with the refusal asserted by a
+control at `:1055`).
+
+**Why the reviewer missed it is the transferable part.** Its search was for
+`scan_day` / `raw/`, and the archive **index** answers to neither name. **A grep
+for vocabulary is not a reference — in either direction.** This programme has
+recorded the forward version of that repeatedly (a vocabulary hit is not a
+reference); this is the mirror: **a vocabulary miss is not an absence.**
+
+**What the reviewer did establish is true and narrower**, and I confirmed both
+halves: **DE's `supply()` and the seam bridge do not read the tape** — no
+`_archive_paths`/`token_map`/`scan_day` in either module, so a tape-less window
+*is* supplied (1,876) — and **the driver's refusal sits at
+`selected_from_specs`, AFTER the frozen-contract gate**, which on the current
+tree has never been reached in a real run.
+
+**Disposition — the reviewer's recommendation accepted in its REFUSE form only.**
+BE round 5 moves the ledger-vs-tape comparison into the **population gate**
+(`present_from_ledger`, with the receipt carrying `ledger_minus_tape` per coin by
+name) and **REFUSES on any difference — it never intersects**, because
+intersecting would silently **re-select the population the ratification fixed**
+(R-418/R-419: the whole complement). **R-419's text is unchanged**; the USER may
+restate or revoke it. The checker's `day_closed` (DE round 10) stays as the
+visible half.
+
+**And it corrects me.** My round-16 entry wrote that *"the bridge refuses any
+supplied window with no archive"*. **The bridge does not; the driver does.** The
+line above has been corrected in place, with this section as its reason.
 
 ### THE FREEZE FACTS — carry these exactly; the run path refuses because of them
 
@@ -292,21 +335,24 @@ launchers at **235/19**.
 | **DE rounds 4–6** | **RELEASED** (`7a48333`, no hold, all seven scopes by execution); **RR11-1 (LOW) open** → DE round 8 |
 | **DA rounds 1–2** | **RELEASED** (round 2 verified at R-420); RR12-1 → DA round 10 |
 | **BE round 3** | **VERIFIED** — and it is reviewed **together with round 4, deliberately**: the run path is not finished until it executes the frozen bytes, and reviewing the refusing half alone would review a frame |
-| **DE rounds 7–9** | **REVIEW REQUEST FILED** (`REQUEST_DE_ROUNDS_7-9_2026-09-02.md`); the reviewer is on it at `b98421d`. Round 9 verified, CO-4 **CLOSED**; **CO-5 (LOW) open** → DE round 10 |
+| **DE rounds 7–9** | **RELEASED** (`b4da910`) — DE-R1..R4 reproduced at `2282e5c` → DE round 11. One register claim in that filing **did not reproduce**; see the section above |
+| **DE round 10** | **VERIFIED** (`2282e5c`, Q-DE-28): CO-5, CO-R1's checker half and CO-R3 all **CLOSED**, and DE's own addition — `require_verified` **refuses a PROVENANCE result** — **accepted**. Review request **FILED**; the reviewer is on it at `2282e5c` |
 | **the coordinator's own acts** | **REVIEWED** (`1384ec5`), no hold; CO-R1..R4 dispositioned |
 
 **In flight:** **BE round 4** (Q-BE-229) — the frozen-bytes execution, sha
-verified **before** import, output to scratch and sealed; **DE round 10**
-(Q-DE-28) — CO-5, CO-R3 and CO-R1's `day_closed` predicate; **the reviewer** on
-DE rounds 7–9; **DA on standby** (Q-DA-208 after 00:06Z, round 10 after tonight =
-the RR12-1 split, identity-only admission log, and CO-R4).
+verified **before** import, output to scratch and sealed; **DE round 11**
+(Q-DE-29) — DE-R1..R4; **the reviewer** on DE round 10; **DA on standby**
+(Q-DA-208 after 00:06Z, round 10 after tonight = the RR12-1 split, identity-only
+admission log, and CO-R4). **BE round 5 queues** §4's population-gate
+ledger-vs-tape comparison and `require_verified()`.
 
 **The coordinator's acts were reviewed, and the four findings are worth their
 lines.** **CO-R1 (live):** on the open day 09-02 the ledger runs **ahead** of the
 tape — 137 vs 135 windows per coin, the 14 ledger-only entries being the 11:15Z
 and 11:20Z starts — while on the closed 09-01 the two agree 288/288. It is
-already enforced (the driver refuses an open day at gate 1, and the bridge
-refuses any supplied window with no archive), and **no restatement is made
+already enforced (the driver refuses an open day at gate 1, and the **driver** —
+not the bridge; see the round-17 correction below — refuses any supplied window
+with no archive), and **no restatement is made
 tonight**: `scope_days: FORWARD_RACE_DAYS` already binds FINISHED through the
 forward-race rule, and a new block would supersede R-419 hours before the first
 run that stamps it. DE round 10 makes closure a **decided predicate**.
@@ -647,6 +693,47 @@ than a clean zero (the density receipt covers 13 days, not this one).
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-02 ~11:36Z (MEM) — A VOCABULARY MISS IS NOT AN ABSENCE
+
+**R-422 swept.** DE round 10 is verified (CO-5, CO-R1's checker half and CO-R3
+closed, and DE's own addition — `require_verified` refusing a **PROVENANCE**
+result — accepted), and DE rounds 7–9 are released with DE-R1..R4 reproduced.
+One thing in that round is worth more than the sweep.
+
+**A review claim was checked and did not reproduce, and the reason generalises.**
+The filing said no layer in the chain reads the tape, so the driver could not be
+refusing ledger-only windows. Executed, the driver **refuses** — and I confirmed
+the mechanism at source myself: `selected_from_specs` reads `fi._archive_paths()`
+and `fi.token_map()`, with the refusal asserted by its own control. The
+reviewer's search was for `scan_day` and `raw/`, and **the archive index answers
+to neither name**.
+
+**This programme has recorded "a vocabulary hit is not a reference" three times.
+This is the mirror, and it is the more dangerous half: a vocabulary MISS is not
+an absence.** A false positive from grep gets caught when someone opens the file;
+a false *negative* produces a confident "no layer does this", which reads like a
+finding and travels as one. It reached the register before it was executed
+against.
+
+**What survives is narrower and I verified both halves.** DE's `supply()` and the
+seam bridge genuinely do **not** read the tape — no hits for any of the three
+names in either module — so a tape-less window is supplied; and the driver's
+refusal sits **after** the frozen-contract gate, which on the current tree has
+never been reached in a real run. So the protection is real and it is in the
+wrong place, which is a different statement from "there is no protection".
+
+**The disposition keeps a distinction that matters more than it looks.** BE round
+5 moves the comparison into the population gate and **refuses on any difference —
+it never intersects.** Intersecting would look like the helpful fix and would
+**silently re-select the ratified population**; R-418/R-419 fixed the complement
+as *whole*, and a quiet intersection is exactly the kind of selection a
+ratification exists to forbid.
+
+**And it corrects one of my own lines.** My round-16 entry attributed the refusal
+to "the bridge". It is the driver. Corrected in place, with the section above as
+its reason — the attribution mattered here precisely because the residual finding
+turns on which layer reads what.
 
 ### 2026-09-02 ~11:25Z (MEM) — THE FREEZE IS A COMMIT, AND THE TREE WALKED
 ### AWAY FROM IT

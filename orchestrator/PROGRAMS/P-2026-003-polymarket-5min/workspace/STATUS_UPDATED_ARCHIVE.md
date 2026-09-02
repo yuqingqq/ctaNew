@@ -1298,3 +1298,86 @@ Moved in the MEM round-16 true-up of R-421. Join rule as in batch 1.
   R-411(ii) the P1 denominator on the complement. UNCHANGED: the 011 family is
   12 of 24 surviving with Q4 failing; development evidence.
 ```
+
+## Batch 23 — archived 2026-09-02T11:36Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-17 true-up of R-422. Join rule as in batch 1.
+
+```yaml
+
+  2026-09-02T10:55Z (MEM ROUND 14 -- A POPULATION RATIFIED, A DEVIATION
+  ACCEPTED, AND A SCHEDULER I COULD NOT FIND). R-417/R-418 with Q-BE-227,
+  Q-DA-207, Q-DE-25 and Q-MEM-1; verified at the artifacts, including by running
+  the suites. R-418 RATIFIES A POPULATION BY REFUSING TO CHOOSE ONE: for a
+  forward-race day the replay/scoring set is EVERY window
+  de_admissible_windows.supply(D, present) emits -- present read from the day's
+  own market ledger, minus the windows DA's committed mask masks -- WITH NO
+  STRATIFIED OR CAPPED SELECTION (select_stratified stays a research-day
+  instrument). That is the point: the set is a FUNCTION OF TWO COMMITTED
+  ARTIFACTS, fixed by the supply's mask_identity_hash, so a receipt stamped
+  ratification_ref R-418 reports WHICH WINDOWS IT RAN OVER rather than which it
+  picked. It is R-409 applied, introduces no number, is the coordinator's
+  R-ADMISS act under EV_REPLAY_PLAN section 2, and is USER-REVOCABLE -- and it
+  explicitly does NOT ratify the G-counting minimum (R-411(i)), the P1
+  denominator (R-411(ii)), any accrual call, or any Phase-2 admission
+  (R-408(2)), all of which stay the USER's. DE's bridge was built BEFORE the ref
+  existed and carries a fixture ref R-0 over 1,875 specs -- the same 1,875 =
+  288 x 7 - 141 the supplier produced on the real 09-01 mask; receipts carrying
+  R-418 re-stamp if the USER overrules any part of it. THE GAP NAMED IN R-417
+  SECTION 2 IS NOW CARRIED: DA's TWO-LEG ADMISSION DEVIATION IS ACCEPTED
+  (R-416 section 3(a)). DA was ordered to gate the nightly governed path on a
+  SINGLE declared variable and implemented TWO LEGS instead -- cgroup identity
+  OR DA_MIDNIGHT_MODE=production -- and the acceptance inverts the usual
+  direction: it WEAKENS NOTHING (the hand-run path is exactly the single-leg
+  form, and the identity leg is the same test write_reason already relies on)
+  and it REMOVES AN OUTAGE MODE THE ORDER WOULD HAVE INTRODUCED, namely a
+  nightly governed path that refuses when one new variable goes missing with
+  nothing running to say so. Red-first evidence on the incident's own shape: a
+  bare run gives rc 6; OUTDIR=/tmp/x LOG=/tmp/y -- the wrong names that caused
+  the 10:16Z overwrite -- gives rc 6; one of the pair gives rc 5 under the older
+  guard; AND THE LOG MTIME AND BOTH VERDICT SHAS WERE UNCHANGED AFTER ALL THREE,
+  so the refusal precedes the log header and a rejected run cannot touch the
+  artifacts. RR10-1 IS CLOSED (e56f70a) IN THE RIGHT SHAPE: the pre-governed
+  control is now a FIXTURE PAIR derived from the frozen rule's own
+  EFFECTIVE_FROM_DAY -- one day before passes, the same fixture on the governed
+  day refuses by name -- plus a member that makes the fixture load-bearing, so
+  it no longer depends on what any live day happens to read, which is exactly
+  what made the old version unfailable. Verified here: 63 checks, rc 0, under
+  both launchers. AND ONE THING I COULD NOT VERIFY, RECORDED RATHER THAN
+  SMOOTHED OVER: R-417 states that the 00:14Z governed-verdict preflight is
+  carried by "the cron one-shot". I looked. As of this clock read the user
+  crontab holds THREE non-comment entries (a convexity monthly retrain and two
+  okxSolver scans) and NONE mentions the preflight, pm_research, or a 00:14
+  slot; there is no at binary; and the only systemd timer in this family is
+  da-midnight-verify.timer at 00:06:00Z. THE VERDICT IS SCHEDULED; THE PREFLIGHT,
+  AS FAR AS THIS BOX SHOWS, IS NOT. It may simply be owed by DA round 9, whose
+  standby is described as carrying the 00:06Z timed task -- but "an instrument
+  that runs first" and "an instrument nothing runs" are different states, and
+  this programme has paid for that distinction three times (the unwired
+  content-liveness rule, the unwired incumbent loader, six evaluator functions
+  with no call sites). The preflight ITSELF is sound: da_governed_verdict_
+  preflight --selftest is 30 checks rc 0 here, it is read-only and
+  predicates-only, and it carries decides_nothing as a field. A DISAMBIGUATION
+  MADE ON REQUEST: the older HANDOFF paragraph "the edit exists only in the
+  installed unit" is provenance about pm-evaluation-pipeline.service and a SCOPE
+  NOTE now sits above it so no reader takes it for the midnight verifier, which
+  I re-checked independently -- da-midnight-verify.service installed is
+  BYTE-FOR-BYTE IDENTICAL to live/pm_research/systemd/da-midnight-verify.service,
+  stronger than the non-comment-lines claim, with
+  Environment=DA_MIDNIGHT_MODE=production, DropInPaths empty, and the timer next
+  elapsing 2026-09-03 00:06:00 UTC. REVIEW AND ROUND STATE: DA round 1 RELEASED;
+  BE round 2 RELEASED with RR10-1 CLOSED, the review riding BE round 3; DE
+  rounds 4-6 RELEASED (7a48333, no hold, all seven scopes by execution) with
+  RR11-1 LOW open to DE round 8; DA round 2 IN REVIEW at 770e5ee. IN FLIGHT: BE
+  round 3, the production run path with scores SEALED and counts and refusals
+  only (Q-BE-228); DE round 8, RR11-1 plus the ratification checker and the
+  proposed block format (Q-DE-26); DA round 9 on DELIBERATE STANDBY with the
+  00:06Z timed task (Q-DA-208); the reviewer on DA round 2. USER DECISIONS NOW
+  FIVE: R-408(2) the Phase-2 winner, R-408(3) the v2 freeze, R-411(i) the
+  minimum complement for G-counting, R-411(ii) the P1 denominator, AND THE 09-02
+  ACCRUAL CALL AFTER TONIGHT -- 09-02 carries the 01:35-04:55Z Polymarket-side
+  blackout and accrues on its complement per R-409, but THE CALL IS THE USER'S
+  and R-418 is explicit that ratifying the population does not make it.
+  Collector pid 1108125 alive as of this clock read. UNCHANGED: G=1/5; the 011
+  family is 12 of 24 surviving with Q4 failing; development evidence.
+```
