@@ -24,6 +24,7 @@ coefficient silently and produces plausible numbers.
 from __future__ import annotations
 
 import json, math, sys
+from datetime import datetime, timedelta
 from pathlib import Path
 
 REPO = Path("/home/yuqing/ctaNew")
@@ -983,17 +984,71 @@ def _selftest_blackout_mask(checks: int) -> int:
         # the refusal must reach the EXIT CODE, not only the log
         thin_v = Path(td) / "v.json"
         thin_v.write_text("{}")
-        # 08-27 is the genuinely empty day (R-411): no verdict block, and
-        # PRE-governed, so it scores whole. 09-01 no longer serves here —
-        # DA's rule block has LANDED and 09-01 now reads CONTENT_THIN, so
-        # refusing it without a mask is CORRECT, not a false positive.
-        r2 = subprocess.run(me + ["--score-day", "20260827",
-                                  "--actions", str(af),
-                                  "--mask", str(Path(td) / "absent.json")],
+        # ---- RR10-1: THE PAIR, ANCHORED TO A FIXTURE ------------------
+        # This read whatever verdict was on disk, so its answer moved when DA
+        # restored 09-01's bytes, and swapping its day changed nothing — a
+        # control that cannot fail. Both days are DERIVED from the frozen
+        # rule's EFFECTIVE_FROM_DAY (never restated here) and differ in ONE
+        # thing: which side of it they fall on. The verdict is a fixture with
+        # no rule block; the mask is absent for both. Run as a PAIR, adjacent,
+        # so the distinction the control exists to test is the only thing that
+        # can move the answer.
+        _e = datetime.strptime(governing_day(), "%Y%m%d")
+        _pre = (_e - timedelta(days=1)).strftime("%Y%m%d")
+        _gov = _e.strftime("%Y%m%d")
+        vfix = Path(td) / "verdict_no_rule_block.json"
+        vfix.write_text(json.dumps({"day": _pre, "all_pass": True}))
+        _absent = str(Path(td) / "absent.json")
+        r2 = subprocess.run(me + ["--score-day", _pre, "--actions", str(af),
+                                  "--mask", _absent, "--verdict", str(vfix)],
                             capture_output=True, text=True, timeout=120)
         ok(r2.returncode == 0,
-           "R-409 a PRE-GOVERNED day with no thin signal and no mask scores "
-           "normally (rc=0) — the refusal is targeted, not universal")
+           f"RR10-1 a PRE-GOVERNED day ({_pre}, one day before "
+           f"EFFECTIVE_FROM_DAY) with no rule block and no mask scores "
+           f"normally (rc=0) — the refusal is targeted, not universal")
+        r2b = subprocess.run(me + ["--score-day", _gov, "--actions", str(af),
+                                   "--mask", _absent, "--verdict", str(vfix)],
+                             capture_output=True, text=True, timeout=120)
+        ok(r2b.returncode != 0
+           and "GOVERNED" in (r2b.stdout + r2b.stderr),
+           f"RR10-1 FALSIFIER (paired): the SAME fixture on the GOVERNED day "
+           f"({_gov}) REFUSES (rc={r2b.returncode}) — one day apart, "
+           f"everything else identical, so the control can fail and what "
+           f"moves the answer is governance and nothing else")
+        # THE FIXTURE MUST BE LOAD-BEARING, or the control is still reading
+        # the repo. On the SAME pre-governed day, a fixture verdict saying
+        # CONTENT_THIN must REFUSE for want of a mask — and the on-disk
+        # verdict for that day says UNRESOLVED, so ignoring the fixture gives
+        # rc=0 and this fails. Measured: mutants that dropped `--verdict` or
+        # made the launcher ignore it SURVIVED until this existed, because
+        # the fixture agreed with the repo by coincidence.
+        vthin = Path(td) / "verdict_thin.json"
+        vthin.write_text(json.dumps({"day": _pre, "content_liveness_rule": {
+            "status": "CONTENT_THIN"}}))
+        r2d = subprocess.run(me + ["--score-day", _pre, "--actions", str(af),
+                                   "--mask", _absent, "--verdict", str(vthin)],
+                             capture_output=True, text=True, timeout=120)
+        ok(r2d.returncode != 0
+           and "reports thin windows" in (r2d.stdout + r2d.stderr),
+           f"RR10-1 the FIXTURE IS LOAD-BEARING: the same PRE-governed day "
+           f"({_pre}) with a fixture reading CONTENT_THIN REFUSES for want of "
+           f"a mask (rc={r2d.returncode}), while the on-disk verdict for that "
+           f"day is UNRESOLVED — so a launcher that ignored --verdict would "
+           f"score it and fail here")
+
+        # ...and governance refuses REGARDLESS of what the rule block says: a
+        # LIVE day still needs its mask, because absence means the producer
+        # did not run.
+        vlive = Path(td) / "verdict_live.json"
+        vlive.write_text(json.dumps({"day": _gov, "content_liveness_rule": {
+            "status": "CONTENT_LIVE"}}))
+        r2c = subprocess.run(me + ["--score-day", _gov, "--actions", str(af),
+                                   "--mask", _absent, "--verdict", str(vlive)],
+                             capture_output=True, text=True, timeout=120)
+        ok(r2c.returncode != 0 and "GOVERNED" in (r2c.stdout + r2c.stderr),
+           "RR10-1 and a GOVERNED day whose rule block reads CONTENT_LIVE "
+           "still REFUSES without a mask — governance requires regardless of "
+           "liveness, so removing the block cannot change the answer")
         # THE LIVE CASE, on real artifacts: 09-02 is GOVERNED and reads
         # CONTENT_THIN with its mask still absent. It must REFUSE by name.
         # This is the day the whole ruling is about, and it is checked
@@ -1081,9 +1136,21 @@ def main() -> int:
             k = sys.argv.index("--mask")
             if k + 1 < len(sys.argv) and not sys.argv[k + 1].startswith("-"):
                 mf = Path(sys.argv[k + 1])
+        # `--verdict <file>` injects a FIXTURE verdict, mirroring `--mask`.
+        # RR10-1: the pre-governed control read whatever verdict happened to
+        # be on disk, so its answer moved when DA restored 09-01's bytes and
+        # it could not fail on today's. A control whose subject changes twice
+        # in a day is not testing the code. Same shape as `--mask`, no new
+        # semantics: `score_day` already took a `verdict` argument.
+        vf = None
+        if "--verdict" in sys.argv:
+            k = sys.argv.index("--verdict")
+            if k + 1 < len(sys.argv) and not sys.argv[k + 1].startswith("-"):
+                vf = Path(sys.argv[k + 1])
         try:
+            _v = json.loads(vf.read_text()) if vf is not None else None
             rep = score_day(day, sw, da_verified=("--da-verified" in sys.argv),
-                            mask_file=mf)
+                            mask_file=mf, verdict=_v)
         except (MaskRequired, MaskSchemaDrift, EmptyScoring, NotFrozen) as e:
             print(str(e))
             return 1
@@ -1091,7 +1158,7 @@ def main() -> int:
         return 0
     print("usage: harmful_forward_scorer.py --selftest | "
           "--score-day <YYYYMMDD> --actions <file> [--mask <file>] "
-          "[--da-verified]")
+          "[--verdict <file>] [--da-verified]")
     return 0
 
 
