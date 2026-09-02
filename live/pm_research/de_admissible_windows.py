@@ -140,7 +140,13 @@ _REBOUND = "<rebound-import>"
 #: discovered is a finding). Per shape, REFUSED or DECLARED-BLIND:
 #:
 #:   REFUSED (in the sets above)
-#:     exec / eval / compile ......... any use at all, argument unread
+#:     exec / eval / compile ......... a BARE-NAME call, argument unread.
+#:       The ATTRIBUTE form (`builtins.exec(...)`) is DECLARED BLIND below,
+#:       and the distinction is the whole of DE11-R1: the call IS seen --
+#:       it contributes `builtins` -- and it is the ARGUMENT that goes
+#:       unread. Matching BARE NAMES ONLY is what keeps `re.compile` from
+#:       reading as an opaque exec, which is what made this module refuse
+#:       the seam.
 #:     a bare `__import__` reference not called with a literal
 #:     importlib.import_module / __import__ with a non-literal argument
 #:
@@ -148,23 +154,52 @@ _REBOUND = "<rebound-import>"
 #:     runpy.run_module / run_path ... imports by executing a module; adding
 #:       it would refuse any file that legitimately runs another, and this
 #:       module's consumers do not. NAMED so its absence is a decision.
+#:     builtins.exec / builtins.eval / builtins.compile (attribute form)
+#:       ...... the call is SEEN (it contributes `builtins`); what it
+#:       executes is the argument, and the argument is not read. All THREE
+#:       carry their own expected-blind assertion below: an entry naming
+#:       three shapes with one of them asserted is a count standing in for a
+#:       check, one level down (DE15-R2).
 #:     getattr(importlib, "import_module") .... reached through a call this
 #:       reader does not resolve; catching it needs name resolution, which is
 #:       a different instrument, not a bigger regex.
-#:
-#:     NOT BLIND, and the list said otherwise until the expected-blind
-#:     assertions were written: `builtins.__import__('x')` IS CAUGHT. The
-#:     dynamic-import matcher keys on the ATTRIBUTE NAME, so the attribute
-#:     form of `__import__` resolves its literal exactly as the bare form
-#:     does. The declared limit claimed a blindness the code did not have --
-#:     which is the recommendation earning its keep on its first run.
 #:     a module imported by a C extension or an import hook .... outside the
-#:       source entirely.
+#:       source entirely. NOT ASSERTABLE IN-PROCESS -- there is no source
+#:       text for an expected-blind assertion to read, so this entry carries
+#:       none, and that is a decision recorded here rather than a row
+#:       missing from a loop (DE15-R2).
 #:
-#: The blind list is a STATEMENT about what this predicate does not see. It
-#: is checked below only in the sense that the module asserts the list is
-#: non-empty and named -- there is no way to test for a shape one cannot see,
-#: and pretending otherwise would be the control that cannot fail.
+#:   OVER-CAUGHT -- stated because a limit list that names only blindness is
+#:   one-sided, and a reader debugging a spurious refusal has nothing to
+#:   read (DE15-R3). The dynamic-import call is matched on the ATTRIBUTE
+#:   NAME, so ANY object's `.__import__('literal')` contributes that literal
+#:   as a module. Measured: `os.environ.__import__('x')` -> {os, x};
+#:   `self.__import__('x')` -> {x}; a user class whose method is named
+#:   `__import__`, called with 'not_a_module' -> {not_a_module} -- a name
+#:   that is not a module at all. It fails SAFE: a false catch REFUSES and
+#:   never admits, which is the direction to err in. Resolving the object is
+#:   the different instrument this module declines to build.
+#:
+#:   NOT BLIND, and the list said otherwise until the expected-blind
+#:   assertions were written: `builtins.__import__('x')` IS CAUGHT. The
+#:   dynamic-import matcher keys on the ATTRIBUTE NAME, so the attribute
+#:   form of `__import__` resolves its literal exactly as the bare form
+#:   does. The declared limit claimed a blindness the code did not have --
+#:   the recommendation earning its keep on its first run. It is written
+#:   BELOW the list because it is NOT one of its members: spliced between
+#:   two entries it read as an example of them, and left the last blind
+#:   item trailing a paragraph headed NOT BLIND (DE15-R1).
+#:
+#: The blind list is a STATEMENT about what this predicate does not see, and
+#: the statement is CHECKED. Every entry with a source form carries an
+#: expected-blind assertion in BOTH directions -- it did not start catching
+#: the shape, and it did not start refusing it -- and the entry -> assertion
+#: map below is asserted against the list itself, so an entry and its check
+#: live and die together. The one entry with no source form is annotated
+#: above. IF ONE OF THOSE ASSERTIONS GOES RED BECAUSE THE SHAPE IS NOW
+#: CAUGHT, THAT IS A FIX: delete the entry and its assertion together. The
+#: blindness is never restored to keep the suite green -- that is how an
+#: assertion about a limit turns into a defect enshrined as spec.
 DECLARED_BLIND_SHAPES = (
     "runpy.run_module / runpy.run_path",
     "builtins.exec / builtins.eval / builtins.compile (attribute form: "
@@ -173,6 +208,25 @@ DECLARED_BLIND_SHAPES = (
     'getattr(importlib, "import_module")(...)',
     "C extensions and import hooks (outside the source)",
 )
+
+#: DE15-R1/R2: WHICH ASSERTION COVERS WHICH ENTRY, recorded beside the list
+#: it is about. Before this, `>= 4` plus two `any(...)` substring probes
+#: stood in for membership, so an entry could be added, removed or reworded
+#: with nothing going red -- and the sentence printed beside that check
+#: enumerated four shapes that were not the list's four. Keyed by the
+#: entry's INDEX in DECLARED_BLIND_SHAPES, so an entry and the assertions
+#: that cover it live and die together.
+#:
+#: The empty tuple is the DECISION, not an omission: entry 4 is outside the
+#: source, so no source-reading assertion can address it, and the selftest
+#: asserts that the empty one is exactly that entry.
+BLIND_ENTRY_ASSERTIONS: dict[int, tuple[str, ...]] = {
+    0: ("runpy.run_path", "runpy.run_module"),
+    1: ("builtins.exec (attribute form)", "builtins.eval (attribute form)",
+        "builtins.compile (attribute form)"),
+    2: ("getattr-reached import_module",),
+    3: (),
+}
 
 
 def imported_modules(src: str) -> set[str]:
@@ -686,7 +740,7 @@ def supply(day: str, present: dict[str, Sequence[int]],
 # ---------------------------------------------------------------------------
 REAL_DAY = "20260901"
 EMPTY_DAY = "20260827"
-EXPECTED_CHECKS = 69
+EXPECTED_CHECKS = 75
 
 
 def _grid(day: str) -> list[int]:
@@ -942,6 +996,7 @@ def selftest() -> int:
     # breaks the assertion, so a declared limit that silently stops being
     # true is noticed in BOTH directions. Same construction as the audit's
     # `refuses_on_the_control: false`, pointed the other way.
+    _blind_labels_run: set[str] = set()
     for _label, _src, _want in (
             ("runpy.run_path", "import runpy\nrunpy.run_path('x')\n",
              {"runpy"}),
@@ -949,11 +1004,28 @@ def selftest() -> int:
              {"runpy"}),
             ("builtins.exec (attribute form)",
              "import builtins\nbuiltins.exec('import x')\n", {"builtins"}),
-
+            # DE15-R2: entry 2 names THREE shapes and one of them was
+            # asserted. Four rows for four entries looked complete, which is
+            # the count-instead-of-a-check substitution one level down --
+            # the same shape as the reviewer's own round-13 correction.
+            ("builtins.eval (attribute form)",
+             "import builtins\nbuiltins.eval('__import__(\\'x\\')')\n",
+             {"builtins"}),
+            ("builtins.compile (attribute form)",
+             "import builtins\nbuiltins.compile('import x', '<s>', 'exec')\n",
+             {"builtins"}),
             ("getattr-reached import_module",
              "import importlib\ngetattr(importlib, 'import_module')('x')\n",
              {"importlib"})):
-        _got = imported_modules(_src)
+        try:
+            _got = imported_modules(_src)
+        except ImportsUnresolvable as _exc:
+            # THE REFUSING DIRECTION, NAMED. Unhandled, this is a loud red
+            # that does not say WHICH declared shape started refusing -- and
+            # a red nobody can attribute is read as flakiness.
+            raise ImportsUnresolvable(
+                f"EXPECTED-BLIND ({_label}) started REFUSING: {_exc}") from _exc
+        _blind_labels_run.add(_label)
         ok(_got == _want,
            f"EXPECTED-BLIND ({_label}): the predicate still sees exactly "
            f"{sorted(_want)} and neither catches nor refuses the shape "
@@ -970,6 +1042,36 @@ def selftest() -> int:
     ok(not reads_no_verdict(imported_modules(
         "import builtins\nbuiltins.__import__('da_forward_day_verify')\n")),
        "so a verdict producer imported that way is CAUGHT, not passed")
+    # ---- DE15-R3: where the SAME attribute key OVER-catches ------------
+    # The limit list named only blindness. The matcher keys on the
+    # attribute name, so the reach is two-sided and the other side had
+    # nowhere to be read: a reader debugging a spurious refusal would have
+    # had to derive it from the source.
+    _overcatch = ("class C:\n"
+                  "    def __import__(self, name):\n"
+                  "        return None\n"
+                  "C().__import__('not_a_module')\n")
+    ok(imported_modules(_overcatch) == {"not_a_module"},
+       f"OVER-CATCH, DECLARED: a USER CLASS whose method is named "
+       f"`__import__`, called with 'not_a_module', contributes that literal "
+       f"as an import ({sorted(imported_modules(_overcatch))}) -- a name "
+       f"that is not a module at all, from a file that imports nothing. "
+       f"Same key, same reason as the fix: the attribute name is matched "
+       f"without resolving the object. THE SAME DISPOSITION as the blind "
+       f"entries: if this ever goes red because the reach narrowed, that "
+       f"is a FIX -- delete the check and the OVER-CAUGHT paragraph "
+       f"together, never widen the matcher back to keep it green")
+    ok(imported_modules("import os\nos.environ.__import__("
+                        "'da_forward_day_verify')\n")
+       == {"os", "da_forward_day_verify"}
+       and not reads_no_verdict(imported_modules(
+           "import os\nos.environ.__import__('da_forward_day_verify')\n")),
+       "and the DIRECTION is the safe one: this file imports no verdict "
+       "producer -- the literal is an argument to a method on os.environ -- "
+       "and `reads_no_verdict` answers False all the same. An over-catch "
+       "REFUSES; it can never ADMIT. Resolving the object is the different "
+       "instrument this module declines to build, so the reach is written "
+       "at the list rather than papered over with a bigger regex")
     ok(reads_no_verdict(imported_modules(
         "import importlib\n"
         "getattr(importlib, 'import_module')('da_forward_day_verify')\n"))
@@ -977,17 +1079,48 @@ def selftest() -> int:
        "AND THE CONSEQUENCE OF A REAL BLIND SHAPE, STATED PLAINLY: through "
        "the getattr form a verdict producer WOULD pass. That is what "
        "'declared blind' means, and writing it as a check is the difference "
-       "between a limit that is stated and one that is discovered")
+       "between a limit that is stated and one that is discovered. IF THIS "
+       "CHECK EVER FLIPS -- if the shape becomes CAUGHT -- THAT IS A FIX: "
+       "delete this check and the list entry together. Restoring the "
+       "blindness to keep the suite green is how an assertion about a "
+       "limit turns into a defect enshrined as spec (DE15-R3 judgement)")
 
-    ok(len(DECLARED_BLIND_SHAPES) >= 4
-       and any("runpy" in x for x in DECLARED_BLIND_SHAPES)
-       and any("builtins" in x for x in DECLARED_BLIND_SHAPES),
-       f"THE LIMIT IS DECLARED, not discovered: {len(DECLARED_BLIND_SHAPES)} "
-       f"shapes this predicate does NOT see are named with their reasons "
-       f"(runpy, builtins.__import__, getattr-reached import_module, C "
-       f"extensions). There is no way to TEST for a shape one cannot see -- "
-       f"asserting otherwise would be the control that cannot fail -- so "
-       f"the assertion is that the list exists and names them")
+    # ---- DE15-R1: MEMBERSHIP, and a sentence that says only what is
+    # evaluated. The old check asserted `len >= 4` and two substring
+    # probes, then PRINTED an enumeration of four shapes that were not the
+    # list's four: it named `builtins.__import__` -- removed from the list
+    # this same round for being CAUGHT -- and omitted the exec/eval/compile
+    # entry that is really in it. The `any("builtins")` probe was satisfied
+    # by the exec entry, not by the one the sentence named, so the printed
+    # claim and the evaluated predicate had no member in common. A verdict
+    # string beside a check that does not evaluate it (rule 10), printed as
+    # a PASS by the very suite that had just disproved it.
+    _covered = {i for i, v in BLIND_ENTRY_ASSERTIONS.items() if v}
+    _unasserted = {i for i, v in BLIND_ENTRY_ASSERTIONS.items() if not v}
+    ok(set(BLIND_ENTRY_ASSERTIONS) == set(range(len(DECLARED_BLIND_SHAPES)))
+       and _covered == {0, 1, 2} and _unasserted == {3},
+       f"THE LIMIT IS DECLARED AND ITS MEMBERSHIP IS ASSERTED: every one of "
+       f"the {len(DECLARED_BLIND_SHAPES)} entries is keyed in "
+       f"BLIND_ENTRY_ASSERTIONS, so adding or removing an entry without "
+       f"its assertion goes red. Entries with a source form: "
+       f"{sorted(_covered)}; with none: {sorted(_unasserted)}. The list "
+       f"itself, printed rather than paraphrased: "
+       f"{[x.split(' (')[0] for x in DECLARED_BLIND_SHAPES]}")
+    ok("C extensions" in DECLARED_BLIND_SHAPES[next(iter(_unasserted))],
+       f"and the ONE entry carrying no assertion is exactly the one that "
+       f"cannot carry one -- {DECLARED_BLIND_SHAPES[3]!r} is outside the "
+       f"source, so there is no text for a source-reading assertion to "
+       f"read. NOT ASSERTABLE IN-PROCESS is a decision, recorded at the "
+       f"list and checked here; without this the empty row reads as an "
+       f"omission (DE15-R2)")
+    _ran = {lbl for lbls in BLIND_ENTRY_ASSERTIONS.values() for lbl in lbls}
+    ok(_ran == _blind_labels_run,
+       f"AND THE MAP IS ASSERTED AGAINST THE LOOP THAT RAN, not against "
+       f"itself: the {len(_blind_labels_run)} expected-blind rows executed "
+       f"above are exactly the labels the map claims. An entry whose "
+       f"assertion is deleted, or a row nobody recorded, goes red -- which "
+       f"is what 'the entry and its check live and die together' has to "
+       f"mean to be worth asserting")
 
     ok("da_content_liveness_rule" in imps,
        "and this module's OWN dynamic import (the RR11-1 demonstration) "

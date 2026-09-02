@@ -1139,13 +1139,27 @@ def selftest() -> int:
     # `str.replace` silently did nothing, and nothing asserted the result. A
     # docstring assertion is cheap and it is the thing that fails when a
     # claim about documentation stops being true.
-    ok("stamped_at_raw" in (check.__doc__ or "")
-       and "CANONICAL PARSE" in (check.__doc__ or ""),
-       "the emission's stamp fields are DOCUMENTED in check()'s docstring, "
-       "asserted rather than claimed")
-    ok("stamped_at_raw" in check(sup, "R-419").get("stamp_fields", ""),
-       "and the EMISSION carries the same note in the refusal_scope/decides "
-       "idiom, so a reader of the artifact alone is told too")
+    # DE15-R4: TOKEN PRESENCE IS NOT A BINDING. The first version asserted
+    # `"stamped_at_raw" in doc` and `"CANONICAL PARSE" in doc` separately,
+    # so a docstring that SWAPS the two meanings -- "`stamped_at_raw` is the
+    # CANONICAL PARSE and `stamped_at` is the value exactly as supplied" --
+    # kept both tokens and passed (the reviewer ran it: OK, 104 checks).
+    # This module's own rule about the register is the rule here: vocabulary
+    # hits are not references (rule 16). So the assertion is the PHRASE that
+    # binds each field to its meaning, as one string.
+    _doc = check.__doc__ or ""
+    ok("`stamped_at` is the CANONICAL PARSE" in _doc
+       and "`stamped_at_raw` is the value exactly as supplied" in _doc,
+       "the emission's stamp fields are DOCUMENTED in check()'s docstring "
+       "as BINDING PHRASES -- each field named together with what it is -- "
+       "so a docstring that keeps both tokens while reversing their "
+       "meanings goes red (DE15-R4)")
+    _sf = check(sup, "R-419").get("stamp_fields", "")
+    ok("`stamped_at` is the CANONICAL PARSE" in _sf
+       and "`stamped_at_raw` is that value exactly as supplied" in _sf,
+       "and the EMISSION carries the same BINDING, in the refusal_scope/"
+       "decides idiom, so a reader of the artifact alone is told which "
+       "field is which and not merely that both exist")
 
     _st = check(sup, "R-419", stamped_at="2026-09-02T10:30Z")
     ok(_st["verified"] and _st["stamped_at"] == "2026-09-02T10:30:00Z"
