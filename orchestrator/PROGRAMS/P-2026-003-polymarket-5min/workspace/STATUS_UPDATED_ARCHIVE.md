@@ -2386,3 +2386,86 @@ Moved in the MEM round-30 true-up of R-436. Join rule as in batch 1.
   development evidence; BE's completed re-run still reports 1,344 of 1,875
   supplied windows (71.7%) producing no score.
 ```
+
+## Batch 37 — archived 2026-09-02T14:05Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-31 true-up of R-437. Join rule as in batch 1.
+
+```yaml
+
+  2026-09-02T13:33Z (MEM ROUND 28 -- THE BATCH MOVED THE PATH AND KEPT THE
+  GATE). R-434 swept; the two non-reproducing claims and the new outdir checked
+  at the tree myself. DA ROUND 10 IS HELD at 3a89e6c on five findings, each
+  checked by the coordinator at the object, with the reviewer executing in
+  ~/ctaNew-wt-rev and derived/ IDENTICAL BEFORE AND AFTER EVERY STEP (184
+  entries), the log mtime unmoved, and the real launcher never run. NOTHING
+  LANDS BEFORE 00:14Z AND TONIGHT IS UNCHANGED EITHER WAY; the re-review
+  precedes the landing; DA round 11 is dispatched ON THE HELD COMMIT. DA10-R1
+  (MEDIUM) IS THE ONE TO READ TWICE: round 10 was dispatched partly BECAUSE six
+  of DA's checks silently skipped in a worktree, and THE BATCH MOVED THE PATH
+  (__file__ -> DATA_ROOT) AND KEPT THE GATE -- "if _lg_p.exists():" still fences
+  the six log-echo checks, there is NO EXPECTED_CHECKS anywhere in the module,
+  and the run PRINTS THE COUNT AND RETURNS 0; measured 238 / 244 / 238 across
+  three roots, rc 0 EVERY TIME. So the pane claim that "the count now asserts
+  over checks that RAN" DOES NOT EXIST AT THE ARTIFACT. I CARRIED THAT CLAIM IN
+  ROUND 22, SO PART OF THE CORRECTION IS MINE: I labelled it as DA's report
+  rather than as verified, which is the right label, but this is the SECOND TIME
+  THIS WEEK a pane fact reached these files ahead of its object, and the honest
+  lesson is that LABELLING A CLAIM AS UNVERIFIED DOES NOT STOP IT FROM BEING
+  READ. The root cause the reviewer names is the better keepsake: THE RESOLVER'S
+  PREDICATE ASKS "carries data/pm_5min/raw" WHILE ITS CONSUMERS READ derived/
+  AND data/mm_hf/ -- a resolver answering a different question from the one its
+  callers ask, which is why moving the path fixed nothing. THE OTHER FOUR, EACH
+  REPRODUCED AT THE OBJECT: R2, code_root and data_root are emitted BY THE MASK
+  ONLY (da_blackout_mask.py:259-262, zero occurrences in the verifier and the
+  preflight), so the governing artifact and the 00:14Z emission CANNOT SAY WHICH
+  TREE PRODUCED THEM; R3, da_hf_pm_alignment.py:76 imports pm_tape_density bare
+  with no sys.path.insert, so python3 -m raises ModuleNotFoundError while the
+  path launch passes 53 checks -- CO-2's class, and the module is NOT in
+  v5_deploy_gates.py; R4, _is_tracked() at :1834 asks git about
+  /home/yuqing/ctaNew while building the path from DATA_ROOT, so a tracked file
+  under any other worktree reports PROVENANCE ABSENT WHEN PRESENT; and R5, the
+  RR12-1 control at :856-857 asserts the CHILD worktree's data_root equals the
+  PARENT's DATA_ROOT, so the mask suite exits rc 1 from any non-canonical parent
+  -- LOUD, BUT ENCODING THE ENVIRONMENT RATHER THAN THE PROPERTY, which is the
+  failure mode that looks most like working correctly. AND TWO CLAIMS DID NOT
+  REPRODUCE, BOTH OF WHICH WOULD HAVE CREATED WORK: CO-8, the coordinator's own
+  worry that REPO = DATA_ROOT would propagate, IS DEAD -- v5_boundary_preflight
+  defines its own REPO, v41_boundary_preflight.py:53 keeps a CODE root, and NO
+  IMPORTER INHERITS THE REBOUND NAME (I confirmed at the tree that nothing
+  imports that symbol at all); and THE REQUEST'S EXPECTED LAUNCHER REFUSAL WAS
+  INVERTED AND THE CODE IS RIGHT -- under the full rehearsal pair a different
+  binary is ADMITTED BY DESIGN and the substitution guard is reachable only in a
+  named canonical run. A REVIEW THAT ONLY CONFIRMED FINDINGS WOULD HAVE SHIPPED
+  TWO FIXES FOR DEFECTS THAT WERE NOT THERE. ONE PREMISE CORRECTION KEPT:
+  ~/ctaNew-wt-rev carries a data/pm_5min/raw SYMLINK, the only seat worktree
+  that does, so it resolves branch 2 -- the TAPE-PRESENT / ARTIFACTS-ABSENT
+  layout the resolver's single test cannot see, and exactly where the six checks
+  skip. CLOSED IN THE SAME REVIEW: CO-R4 (rc 3, JSON, classification REFUSED,
+  distinct from rc 1, no collision in any single channel) and the R-411
+  CONSTANTS VERBATIM to R-424 section 4 WITH NO NEW NUMBER (144, 288,
+  per_unmasked_hour; counts_toward_G gates nothing yet); the v2 wiring reads
+  governs False / True / True for 09-02 / 03 / 04 with V2_TRAILING_DAYS // 2 ==
+  3 COMPUTED. AND THE OUTDIR LOOP IS CLOSED: BE's confirming pair now runs into
+  a NEW OUTDIR (fwd5, unit be-fwd-final4.service) with Q-BE-229 to follow, and I
+  verified fwd4's completed TEN-GATE receipt is still present and intact -- the
+  remedy I proposed two rounds ago, AN OUTDIR PER RUN, is in use rather than
+  merely recommended. A FORMAT RULING ON WHAT A READER MEETS AT 00:14Z: the
+  preflight's open_decisions.ruled carried THREE of R-424's rulings and omitted
+  R-408(2) by a stated scoping choice ("three of these were open questions of
+  this instrument"); ruled to MIRROR ALL FOUR, because the emission is A
+  STATEMENT OF THE REGISTER'S STATE, NOT OF THE INSTRUMENT'S OWN ESCALATION
+  HISTORY -- a reader at 00:14Z has no way to know which questions this
+  particular tool once asked. ASSERTED THIS ROUND: ZERO FENCED RATIFICATION
+  BLOCKS IN BOTH STATE FILES, checked after every edit. REVIEWER QUEUE: DE round
+  17 at a8093a5, then DE round 18 at db039a3, then DA round 11, then BE rounds
+  3-4 when BE files. OPEN FINDINGS: DA10-R1..R5 to DA round 11 on the held
+  commit; DE16-R1..R4 closed at db039a3 pending review; the own-supersedes-
+  nonentry residual with the reviewer; BE's landing commit still owed
+  (working_tree_dirty true), though the coordinator holds a receipt copy. USER
+  DECISIONS: FOUR RULED (R-424), ONE OPEN -- the freeze disposition (R-424
+  section 6); the 09-02 accrual call MECHANICAL after 00:06Z. R-419 remains
+  revocable by the USER. UNCHANGED: G=1/5; the 011 family is 12 of 24 surviving
+  with Q4 failing; development evidence; 1,344 of 1,875 supplied windows (71.7%)
+  produce no score.
+```

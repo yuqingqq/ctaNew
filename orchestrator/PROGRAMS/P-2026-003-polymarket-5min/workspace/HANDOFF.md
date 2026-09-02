@@ -1,10 +1,10 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-02T13:56Z — **DE round 18's residual came back from the
-reviewer as a RULED finding** (DE18-R1), vindicating DE's refusal to close it by
-fiat; the **format rule NARROWS**; and **Q-BE-229's "USER-pending unchanged" line
-is STALE** — four are ruled, **only the freeze disposition is open**. **ONE USER
-decision open.** Prior line: DE round 17 released on association-not-existence.
+Updated: 2026-09-02T14:05Z — **DE round 20 closed DE18-R1..R3** (150 → **155**),
+and the round's own finding is a **positive control that passed only because its
+target was absent** — now the known-bad. **ONE USER decision open: the freeze
+disposition.** Prior line: the residual DE refused to rule came back as a ruled
+finding.
 
 ## READ FIRST — current project handoff
 
@@ -648,7 +648,8 @@ launchers at **235/19**.
 | **DE round 17 review** | **RELEASED** (`797ed9a`) — DE15-R1..R4 closed at the artifact; **no check removed to keep 132** (AST census identical across both tips). Two LOW findings, **DE17-R1** and **DE17-R2**, both reproduced |
 | **DE round 18 review** | **RELEASED** (`3f4f2e5`) — DE16-R1..R4 close on the real register; **DE18-R1..R3** → DE round 20. Census corrected: **110 → 124** sites, and **three checks WERE removed** (tautological known-bads) |
 | **DE round 19** | **VERIFIED** at `2f6da2c` — **75 → 79** (reproduced here), DE17-R1/R2 closed, **nine coordinator mutants die by name**. **Two residuals measured and NOT ruled**, to the reviewer |
-| **DE round 20** | **DISPATCHED** (Q-DE-38 pending): DE18-R1..R3; the DATA_ROOT split still behind **DA round 11's** landing |
+| **DE round 20** | **VERIFIED** at `0778918` — DE18-R1..R3 and two rule-10 nits closed, **150 → 155** (reproduced here), four coordinator mutants dying by name. **Review request queued FOURTH** |
+| **DE round 21** | the **DATA_ROOT split**, behind DA's landing after 00:14Z |
 | **DA round 11** | **HELD** at `e292439` — verified here as **unpushed and on no remote branch**. Under review; **lands after the 00:14Z read as Q-DA-209** |
 | **BE** | **Q-BE-229 VERIFIED** at the artifacts; **round 5 dispatched** |
 | **DE round 17** | **STAGED** behind DA round 10: the DATA_ROOT split |
@@ -683,8 +684,8 @@ instrument under the run it is meant to read.
 mask block and **refuse if absent on a governed day**, the population-gate
 ledger-vs-tape refusal, and `require_verified()`.
 
-**Open findings:** **DE18-R1..R3** → DE round 20; **DE round 19's two
-residuals** (A: prose paragraphs swapped inside the `#:` block leaves 79 green;
+**Open findings:** **DE18-R1..R3 CLOSED** at `0778918`, pending review;
+**DE round 19's two residuals** (A: prose paragraphs swapped inside the `#:` block leaves 79 green;
 B: a blank non-`#:` line above the heading) with the **reviewer, unruled**;
 **DA10-R1..R5** closed into DA round 11 (held);
 **DE16-R1..R4** closed at `db039a3`, pending review; the **own-supersedes-
@@ -701,8 +702,11 @@ the REGISTER's state, not of the instrument's own escalation history** — a
 distinction worth keeping, because a reader at 00:14Z has no way to know which
 questions this particular tool once asked.
 
-**The reviewer's queue, in order:** **DA round 11** → **DE round 19** → **BE
-rounds 3–4** — **all three requests committed.**
+**The reviewer's queue, in order:** **DA round 11** (in flight) → **DE round 19**
+→ **BE rounds 3–4** → **DE round 20** (queued fourth). **DE is on deliberate
+standby**: round 21 waits on DA's landing after 00:14Z, and **residuals A/B wait
+on the round-19 ruling.** **BE round 5 and the DA-11 review are in flight; DA is
+holding.**
 
 **Q-BE-229 verified at the artifacts, and its confirming run reproduces the
 superseded one exactly where it matters:** **68 numeric fields shared with the
@@ -730,6 +734,45 @@ remedy — *an outdir per run* — is in use rather than merely recommended. **D
 00:14Z.** **BE's confirming audit is still running and nothing has been sent**
 (rule 18); the shared tree still carries BE's dirty `be_forward_day.py`,
 untouched by any coordinator commit.
+
+### DE round 20 — and a positive control that was passing for the wrong reason
+
+**DE18-R1..R3 closed at `0778918`, 150 → 155** (reproduced here), audit **29
+cases / 23 sites**, markers **29 unique**, R-419 `True, [], []` and R-418 still
+refused for a new run.
+
+**The finding inside the fix is the one to keep.** Closing DE18-R1 moved a
+fixture: `fixture_register(supersedes="R-418")` had been a **POSITIVE CONTROL**,
+and it **passed only because R-418 is absent from the fixture register**. Under
+the new rule it becomes the **KNOWN-BAD**, with the positive control rebuilt on a
+two-entry register **where the target actually exists**.
+
+**DE read the move as the finding rather than as bookkeeping, which is right.** A
+positive control demonstrating a *pass* for a reason unrelated to the property
+under test is the mirror of everything this week has been about: **a control that
+cannot fail, and a control that passes for the wrong reason, are the same
+defect seen from opposite ends.** When a fixture flips role under a new rule,
+**the flip is evidence about the old fixture.**
+
+**DE18-R2 closed by moving the shape rule** out of the first-fence branch into
+the own-block branch after `check#8` — so a quotation-first fixture is **refused
+as a quotation**, naming `ref 'R-903'` and **not** misnaming `R-999's block`.
+Asserted **on the message text, in both directions**.
+
+**DE18-R3 closed by DRIVING the guard, not annotating it** — and DE's reason is
+the week's lesson applied forward: the guard defends an exported function's
+contract against a direct caller, and **annotating it unreachable would declare a
+limit the module does not have.** That is exactly the declared-blind failure —
+a list claiming a limitation the code lacked — refused **before** it could be
+written.
+
+**Four coordinator mutants die by name**, including DE's own *"fair mutant"*
+(`parse_day` coercing) and a marker renamed onto another check, which the
+coverage assertion catches.
+
+**Residuals A and B are untouched by design — the reviewer rules first.** That is
+the third consecutive round in which DE has left a measured question open rather
+than closing it, and R-436 is the reason the discipline is worth its cost.
 
 ### The residual DE refused to rule came back as a finding
 
@@ -1365,6 +1408,44 @@ than a clean zero (the density receipt covers 13 days, not this one).
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-02 ~14:05Z (MEM) — A POSITIVE CONTROL THAT PASSED BECAUSE ITS
+### TARGET WAS ABSENT
+
+**R-437 swept.** DE round 20 closed DE18-R1..R3 at **155** — and the interesting
+thing is not the closure but what the closure disturbed.
+
+**A fixture changed sides, and DE read the change as evidence.**
+`fixture_register(supersedes="R-418")` had been a **positive control**. It
+passed **only because R-418 is absent from that fixture register** — nothing to
+do with the property it was supposed to demonstrate. Under the new
+existence rule it becomes the **known-bad**, and the positive control is rebuilt
+on a two-entry register **where the target exists**.
+
+**That is the week's class seen from the other end.** We have been finding
+controls that **cannot fail**; this is a control that **passed for the wrong
+reason**. Both are the same defect — *the check is not attached to the
+property* — and only one of them ever looks suspicious. **When a fixture flips
+role under a new rule, the flip is evidence about the old fixture**, and DE
+treated it that way rather than quietly re-labelling it.
+
+**DE18-R3's closure applies this week's biggest lesson prospectively.** The
+guard could have been annotated unreachable; DE **drove it instead**, on the
+ground that **annotating it would declare a limit the module does not have.**
+That is precisely the declared-blind failure — a list claiming a limitation the
+code lacked, found only when someone finally tested it — **refused before it
+could be written down.** A seat declining to create the exact defect the
+programme spent two rounds removing is worth a line.
+
+**DE18-R2 is the small, satisfying one:** the shape rule moved into the own-block
+branch, so a quotation-first fixture is now **refused as a quotation** and does
+not misname the owner — asserted **on the message text, in both directions**,
+because a refusal that names the wrong thing is still wrong.
+
+**And the standby is deliberate for the third round running.** Residuals A and B
+are **untouched by design**; round 21 waits on DA's landing. R-436 already showed
+what that discipline buys — the last question DE declined to close came back as a
+ruled finding.
 
 ### 2026-09-02 ~13:56Z (MEM) — THE QUESTION DE REFUSED TO ANSWER CAME BACK AS
 ### A FINDING
