@@ -1,13 +1,14 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-02T14:26Z — **DE round 21 VERIFIED at `0255b60` (84) and DA
-round 12 VERIFIED at the held object `636a455` (gates 22 → 36).** Both closures
-reproduce here. **One mutant stays green — the phrase conjunct neutralised in the
-declaration check's own ASSERTION** — reproduced independently and routed to the
-reviewer **as a question, not a finding**: a known-bad that falsifies the SUBJECT
-and one that mutates the ASSERTION prove different things. **ONE USER decision
-open: the freeze disposition.** Prior line: DE round 19 released, both residuals
-ruled findings.
+Updated: 2026-09-02T14:37Z — **BE rounds 3–4 RELEASED (`1d9c543`): `248e99f` is
+the confirming driver of record for the 09-01 score**, with five findings
+(BE34-R1..R5, two MEDIUM) and a **sequencing rule — no second scoring day until
+R1/R2 close and are reviewed.** **The "frozen bytes" fact for the USER's open
+decision is ON THE RECORD, stated and not ruled**, and reproduced here down to
+the hash: the manifest blob at `1b53929` **is** the `eb8733da…` the candidate
+binds, `select_by_day` is AST-identical at both commits, and the **1.24 GB data
+anchor is untracked — no commit can freeze it.** **ONE USER decision open: the
+freeze disposition.** Prior line: DE round 21 and DA round 12 verified.
 
 ## READ FIRST — current project handoff
 
@@ -635,6 +636,7 @@ launchers at **235/19**.
 | **BE round 2** (mask consumer) | **RELEASED**; **RR10-1 CLOSED** at `e56f70a` — the review rides BE round 3 |
 | **DE rounds 4–6** | **RELEASED** (`7a48333`, no hold, all seven scopes by execution); **RR11-1 (LOW) open** → DE round 8 |
 | **DA rounds 1–2** | **RELEASED** (round 2 verified at R-420); RR12-1 → DA round 10 |
+| **BE rounds 3–4 review** | **RELEASED** (`1d9c543`) — `248e99f` accepted as the **confirming driver of record** for the 09-01 score; five findings **BE34-R1..R5** (two MEDIUM) → BE round 6; the §1 frozen-bytes fact stated for the USER |
 | **BE round 3** | **VERIFIED** — and it is reviewed **together with round 4, deliberately**: the run path is not finished until it executes the frozen bytes, and reviewing the refusing half alone would review a frame |
 | **DE rounds 7–9** | **RELEASED** (`b4da910`) — DE-R1..R4 reproduced at `2282e5c` → DE round 11. One register claim in that filing **did not reproduce**; see the section above |
 | **DE round 10** | **RELEASED** (`922bff6`) — CO-5, CO-R1's checker half and CO-R3 closed; DE's addition (`require_verified` refuses a **PROVENANCE** result) accepted. **DE10-R1 (MEDIUM) stands → DE round 12** |
@@ -690,7 +692,8 @@ instrument under the run it is meant to read.
 mask block and **refuse if absent on a governed day**, the population-gate
 ledger-vs-tape refusal, and `require_verified()`.
 
-**Open findings:** **DE18-R1..R3 CLOSED** at `0778918`, pending review;
+**Open findings:** **BE34-R1..R5** → BE round 6 (staged behind round 5's row);
+**DE18-R1..R3 CLOSED** at `0778918`, in review;
 **DE19-R1..R3 CLOSED** at `0255b60`, queued for review;
 **DA11-R1..R2 CLOSED** at `636a455`, held and queued; **DA10-R1..R5 CLOSED** at `e292439`,
 review released;
@@ -708,16 +711,19 @@ the REGISTER's state, not of the instrument's own escalation history** — a
 distinction worth keeping, because a reader at 00:14Z has no way to know which
 questions this particular tool once asked.
 
-**The reviewer's queue, in order:** **BE rounds 3–4** at `248e99f` (in flight
-from 14:15Z) → **DE round 20** at `0778918` → **DE round 21** at `0255b60` →
-**DA round 12** at `636a455` → **BE round 5** (its request waits on the row).
-**DA round 11's and DE round 19's reviews are both done and released.**
+**The reviewer's queue, in order:** **DE round 20** at `0778918` (in flight from
+14:30Z) → **DE round 21** at `0255b60` → **DA round 12** at `636a455` → **BE
+round 5** (its request waits on the row). **BE rounds 3–4's review is RELEASED**
+(`1d9c543`) — as are DA round 11's and DE round 19's.
 
-> **Item 1 of the BE 3–4 request is the one to watch:** the **"frozen bytes"
-> fact for the USER's open decision — *stated, not ruled*.** The freeze
-> disposition is the single open USER item, and its factual basis (code from the
-> commit; the data anchor bound only by its manifest sha) is being put on the
-> record by the reviewer rather than settled by it. **DE is on deliberate standby** with rounds 16–21 complete and three reviews
+> **Item 1 landed: the "frozen bytes" fact is ON THE RECORD, *stated, not
+> ruled*** (`1d9c543` §1, notified to the USER 14:30Z). The freeze disposition
+> is still the single open USER item — the reviewer put its factual basis on the
+> record rather than settling it, which is rule 12 working as intended: **a
+> freeze is the USER's act.** What the fact says is in the 14:37Z entry, and one
+> half of it is load-bearing: **7 code anchors are frozen-by-commit; the 1.24 GB
+> data anchor is untracked, so no commit can ever freeze it** — it is identified
+> by content and disclosed as such. **DE is on deliberate standby** with rounds 16–21 complete and three reviews
 queued: **round 22** — the DATA_ROOT split — waits on DA's landing after 00:14Z.
 **DA is holding deliberately** for the 00:06Z/00:14Z reads with `636a455` in
 hand. **BE round 5 is in flight.**
@@ -1511,6 +1517,77 @@ than a clean zero (the density receipt covers 13 days, not this one).
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-02 ~14:37Z (MEM) — THE FACT THE USER'S DECISION TURNS ON, HASHED
+### RATHER THAN QUOTED
+
+**R-441 swept.** The reviewer RELEASED BE rounds 3–4 at `248e99f` as the
+**confirming driver of record for the 09-01 score**, filed five findings, and
+did the one thing that mattered most for the open USER item: it **stated the
+frozen-bytes fact without ruling on it.**
+
+**I re-derived §1 from the objects rather than reading it.** The candidate binds
+`manifest_sha256 = eb8733da2c8e2126…`; the manifest **blob at the freeze commit
+`1b53929`** hashes to **exactly that**. The manifest names **8 reproducibility
+anchors — 7 `.py` modules and 1 data file** — plus one non-anchor hash
+(`collector_runs.jsonl`). `warning_window` is imported at module level by
+`policy_bounds_v1:44`, and an **AST comparison of every function at both
+commits** returns exactly one difference — `select_holdout` — with nothing added
+or removed and **`select_by_day` AST-identical**. `tier1_pipeline`'s only import
+site is `layer2_v1.py:167`, inside `load_winners` (156–174), which nothing on
+the driver's path calls. Every clause of the fact reproduces.
+
+**One half of it is doing more work than the other, and the asymmetry is worth
+naming.** The 7 code anchors are frozen-by-commit. The data anchor,
+`harmful_exposure_rows_v3_eraB.json`, is **untracked and 1.24 GB** — so *no
+commit can ever freeze it*, and the reason is CLAUDE.md's own rule against large
+data files in git, not an oversight. Rule 12's "a freeze is a commit" therefore
+**cannot bind it**, and the receipt is right to call it a disclosure rather than
+a freeze. That distinction is the USER's to weigh; it is not a defect and I am
+not treating it as one.
+
+**And one fact of my own, which sharpens what "the frozen bytes execute" means.**
+The manifest has **moved since the freeze**: `03762753…` at `248e99f`, at HEAD
+and in the working tree. The driver does not paper over that — I ran it, and
+**§10(1) REFUSES**, with an independent re-reading agreeing that a bound input
+moved, **and a positive control proving a matching contract HOLDS** so the gate
+discriminates rather than refusing universally. The code's own comment records
+that a mutant disabling this drift check **once survived** — the falsifier was
+added afterwards. So the honest phrasing for a reader of R-424 §6: **the frozen
+bytes reach the run by materialisation from `1b53929`, not by reading today's
+tree**, and the contract against today's tree is *refused, by name*.
+
+**The five findings reproduce at their lines.** BE34-R1 (MEDIUM):
+`build_and_score()` at `:622` has no falsifier and `score_rows()` at `:707` has
+**zero call sites** — I grepped, the def line is the only hit, so streamed-vs-held
+cannot be compared and the 68-field cross-pass agreement demonstrates
+*determinism, not correctness*. BE34-R2 (MEDIUM): `outdir.mkdir(parents=True,
+exist_ok=True)` at `:783` with fixed-name writes at `:758`/`:773` — the same
+shape that destroyed the 12:49 receipt in `fwd4/`. BE34-R3 (LOW-MED):
+`REPO = Path("/home/yuqing/ctaNew")` at `:35`, spawned with `cwd=str(REPO)` at
+`:1420`. BE34-R4 (LOW): the usage branch returns 0 — at `:1438`, the print
+spanning 1436–1437. BE34-R5 (LOW): the closure is computed statically, and the
+receipt's wording **over-states HEAD exposure by one module — in BE's own
+disfavour.**
+
+**BE34-R3 is visible in the tree right now.** The review measured **46** checks
+at `248e99f`; the driver at HEAD runs **78** (rc 0), because BE's round-5 file
+landed at `90036b7` underneath it. That is precisely the finding: a child spawned
+at a hardcoded `REPO` runs the shared tree's file, not the worktree's, and the
+parity the launcher is named for is unasserted.
+
+**The sequencing rule is the coordinator's, not the USER's.** No 09-02 scoring
+run until BE34-R1 and R2 close **and are reviewed**; `be-fwd-final4.service` is
+inactive and the driver runs by hand, so nothing enforces it but the rule — worth
+saying plainly, because a rule with no interlock is a promise, and this one is
+being kept by a seat rather than by a unit.
+
+**Sequencing.** BE round 6 is **staged behind round 5's row** (rule 18 — BE's
+`90036b7` is in the tree with its `fwd6/` run and 50-mutant audit in flight).
+Reviewer: **DE 20 → DE 21 → DA 12 → BE 5.** One arithmetic check of my own: the
+gate roster is **21 at `248e99f` and 22 at `e292439`** — I loaded `GATES` from
+both — the same file at two commits, as the entry says. USER-open: the freeze
+disposition, now with its fact on the record.
 
 ### 2026-09-02 ~14:26Z (MEM) — A KNOWN-BAD THAT MOVES THE WORLD AND ONE THAT
 ### MOVES THE ASSERTION ARE DIFFERENT PROOFS

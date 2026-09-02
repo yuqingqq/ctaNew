@@ -2679,3 +2679,72 @@ Moved in the MEM round-34 true-up of R-440. Join rule as in batch 1.
   family is 12 of 24 surviving with Q4 failing; development evidence; 1,344 of
   1,875 supplied windows (71.7%) produce no score.
 ```
+
+## Batch 41 — archived 2026-09-02T14:37Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-35 true-up of R-441. Join rule as in batch 1.
+
+```yaml
+  2026-09-02T14:10Z (MEM ROUND 32 -- THE CODE SAYS "NOT A CLEAN PASS" AND THEN
+  RECORDS A PASS). R-438 swept; DA11-R1 read at the held object rather than
+  taken. DA ROUND 11 REVIEW VERIFIED AND RELEASED (a5e8b40, 289 lines) FOR
+  e292439 AS THE CONTENT OF Q-DA-209: all five DA10 findings and R-434 section 2
+  close at the object, and the closure is the strong kind -- ran + skipped == 247
+  ASSERTED IN EVERY LAYOUT (worktree 241 + 6; complete scratch root 247 + 0; the
+  root minus only the log 241 + 6, rc 0 each), with BOTH FALSIFIERS
+  DISCRIMINATING: one check deleted gives rc 1 naming "246 ... expected 247",
+  and the pre-fix silent "if _lg_p.exists():" gate restored goes GREEN WITH THE
+  LOG AND RED WITHOUT IT, failing exactly where the old code was wrong. Also
+  closed at the object: roots in the verdict, both preflight shapes including rc
+  3 REFUSED, the mask, one branch per launch; da_hf_pm_alignment 53/53 both
+  launchers; _is_tracked True/True/False; the mask suite 30 from the worktree
+  and 30 under scratch PM_DATA_ROOT; "ruled" carrying ALL FOUR R-424 rulings
+  each citing R-424 with still_open = freeze_disposition ALONE; constants
+  unchanged (144 / 288 / per_unmasked_hour; governs F/T/T for 09-02/03/04); the
+  shared tree's six files byte-identical to b75c9fe; derived/ 184 entries
+  identical before and after; the unit untouched with next elapse 2026-09-03
+  00:06:00 UTC. DA11-R1 (LOW-MED) IS THE RECURRING CLASS INSIDE THE BATCH THAT
+  CLOSED IT: at pm_tape_density.py:443 the SKIP branch PRINTS "an EMPTY data
+  root is a status, not a clean pass" AND THE VERY NEXT STATEMENT IS
+  checks.append(True), so the closing line reports the same "N checks passed"
+  for a complete root and an EMPTY one. THE CODE STATES THE RULE IN PROSE AND
+  BREAKS IT ON THE FOLLOWING LINE -- rule 10's shape, a message beside a
+  computation that contradicts it, fused with the control-that-ran-nothing
+  class, ONE MODULE OVER FROM WHERE THE SAME DEFECT WAS JUST FIXED. The contrast
+  is worth keeping: A ROUND CAN CLOSE ITS CLASS RIGOROUSLY IN ONE MODULE AND
+  RE-COMMIT IT IN THE NEXT. DA11-R2 (LOW-MED) HAS A QUIET IRONY: the new
+  da_hf_pm_alignment gate is spelled BY PATH, and the roster at e292439 is 21
+  gates by path and EXACTLY ONE -m (tier1_pipeline), so THE -m BREAK THAT
+  MOTIVATED DA10-R3 WOULD HAVE SAT UNINVOKED in the gate added to catch it. Both
+  go to DA ROUND 12, DISPATCHED AND HELD ON TOP OF e292439, five items, with
+  NOTHING MOVING FOR TONIGHT and Q-DA-209 LANDING AFTER THE 00:14Z READ WITH THE
+  ROUND-12 TIP. ONE ARITHMETIC RECONCILIATION, A TRANSCRIPTION RATHER THAN A
+  DEFECT: DA's pane read "238 ran + 6 SKIPs" when ran is 241 and the module's own
+  printed line says 241 + 6 = 247 -- 238 WAS ROUND 10'S FIGURE carried forward
+  into a round-11 sentence. THE 238 / 244 / 238 IN MY ROUND-28 ENTRY BELONGS TO
+  ROUND 10 AND STANDS; this correction is about the pane's REUSE of that number,
+  not about that record, and I have separated the two explicitly rather than
+  reflexively retracting, because TWO ROUNDS' MEASUREMENTS SHARING A DIGIT IS
+  PRECISELY HOW A STALE FIGURE SURVIVES A CORRECTION -- the safe move is to name
+  which round a number belongs to. ALSO RECORDED: the RR12-1 branch conjunct is
+  != and is satisfied by a missing key (an observation, not a finding); an opt-in
+  --require-no-skips strict mode is recommended since rc stays 0 on a skip by
+  default; AND A SEAT CLAIM THAT DID NOT REPRODUCE -- DA reported "21 of 22"
+  gates and the reviewer MEASURED ALL 22 PASS at e292439, the third
+  non-reproducing seat or coordinator claim this week, each time costing less to
+  check than the fix would have. CO-8 IS CONFIRMED as a resolver question on the
+  COORDINATOR'S OWN SURFACE, for after tonight. REVIEWER QUEUE: DE round 19
+  (2f6da2c) IN FLIGHT, then BE rounds 3-4, then DE round 20; DA round 11's
+  review is DONE AND RELEASED. DE remains on DELIBERATE STANDBY (round 21 = the
+  DATA_ROOT split behind DA's landing; residuals A/B await the round-19 ruling);
+  BE round 5 is in flight; DA is holding. ASSERTED THIS ROUND: ZERO FENCED
+  RATIFICATION BLOCKS IN BOTH STATE FILES, checked after every edit. OPEN
+  FINDINGS: DA11-R1..R2 to DA round 12 (held); DA10-R1..R5 CLOSED at e292439
+  with the review released; DE18-R1..R3 closed at 0778918 pending review; DE
+  round 19's two residuals with the reviewer, unruled; BE's landing commit still
+  owed. USER DECISIONS: FOUR RULED (R-424), ONE OPEN -- THE FREEZE DISPOSITION
+  ONLY (R-424 section 6); the 09-02 accrual call MECHANICAL after 00:06Z. R-419
+  remains revocable by the USER. UNCHANGED: G=1/5; the 011 family is 12 of 24
+  surviving with Q4 failing; development evidence; 1,344 of 1,875 supplied
+  windows (71.7%) produce no score.
+```
