@@ -27,6 +27,7 @@ import collections
 import datetime as dt
 import hashlib
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -257,11 +258,18 @@ def import_closure(frozen_root: Path, anchors: list) -> dict:
     return {"closure": closure, "n_in_closure": len(closure),
             "not_frozen_in_closure": moved,
             "n_not_frozen": len(moved),
-            "why": f"anchors execute from the run dir at {FROZEN_COMMIT}; "
-                   f"every module in their import closure that is NOT an "
-                   f"anchor executes at HEAD. Those whose bytes differ "
-                   f"between HEAD and the freeze are named here — this run "
-                   f"is not claiming they were frozen."}
+            "closure_method": "STATIC import walk (ast Import/ImportFrom, "
+                              "transitive) over the anchors' source. It is "
+                              "what the anchors can REACH, not what this run "
+                              "observed executing: a module reached only on a "
+                              "branch not taken is still listed, and a "
+                              "dynamic import (importlib, __import__) is NOT "
+                              "seen at all.",
+            "why": f"anchors are imported from the run dir at "
+                   f"{FROZEN_COMMIT}; every module STATICALLY REACHABLE from "
+                   f"them that is NOT an anchor resolves at HEAD. Those whose "
+                   f"bytes differ between HEAD and the freeze are named here "
+                   f"— this run is not claiming they were frozen."}
 
 
 def import_frozen_anchors(frozen_root: Path, anchors: list) -> dict:
@@ -1221,6 +1229,121 @@ def run_forward_day(day: str, outdir: Path) -> int:
     return rc
 
 
+# ---------------------------------------------------------------------------
+# BE34-R1: ONE fixture, TWO consumers
+# ---------------------------------------------------------------------------
+# `build_and_score` replaces `score_rows` -- it replays, labels and scores in
+# one streaming pass so the run stops carrying 1,875 windows of rows. Nothing
+# asserted the two agreed, and `score_rows` had become dead code that still
+# reads as the reference. The idiom is `v5_chain_equivalence_test.py`'s: ONE
+# fixture through BOTH consumers, asserting each side AND their agreement --
+# not two independently constructed approximations.
+#
+# Values are kept SMALL on purpose: a score of 1e9 cannot represent a 1e-9
+# perturbation in a double, so a fixture with large numbers would silently
+# pass the very mutant this exists to catch.
+
+_R1_W = [1.0, 2.0, 0.5, 3.0, 0.25]          # 3 window feats + 2 fine feats
+_R1_FROZEN = {"fits": {"btc": {"w": _R1_W},
+                       "eth": {"w": [x * 1.5 for x in _R1_W]}}}
+
+
+def _r1_windows(bad_window: str = None) -> tuple:
+    """(selected, rows) for a handful of windows with KNOWN features."""
+    selected, rows = [], []
+    for k, (coin, t0) in enumerate((("btc", 1788000000), ("eth", 1788000300),
+                                    ("btc", 1788000600), ("eth", 1788000900))):
+        slug = f"{coin}-updown-5m-{t0}"
+        selected.append((slug, f"/fixture/{slug}", "U", "D", ()))
+        for j in range(3):
+            rows.append({
+                "coin": coin, "slug": slug, "t0": t0,
+                "t_start": 10 * (j + 1) + k, "side": "up" if j % 2 else "dn",
+                "gen": j, "resting": 0.5 * j, "qahead": j,
+                # level -1 is the row whose features come back None: BOTH
+                # consumers must drop it, and neither may score it.
+                "level": -1 if (k == 1 and j == 2) else j})
+    return selected, rows
+
+
+def _r1_fakes(rows: list, bad_window: str = None) -> tuple:
+    """Fake HER/hm/FS collaborators. Deterministic, no data on disk."""
+    import types
+    by_slug: dict = collections.defaultdict(list)
+    for r in rows:
+        by_slug[r["slug"]].append(r)
+
+    def features(stream, t_start, side, level, resting, qahead):
+        if level == -1:
+            return None
+        return [float(t_start), 1.0 if side == "up" else -1.0,
+                float(len(stream[1]) % 97)]
+
+    def fine_feats(t_abs, side, coin):
+        return [float(t_abs % 997), 1.0 if coin == "btc" else 2.0]
+
+    def expected_cancel_value(fit, vec):
+        return sum(v * w for v, w in zip(vec, fit["w"]))
+
+    slugs = sorted(by_slug)
+    fi = types.SimpleNamespace(
+        _archive_paths=lambda: {sg: f"/fixture/{sg}" for sg in slugs},
+        token_map=lambda: {sg: ("U", "D") for sg in slugs})
+    hm = types.SimpleNamespace(
+        fi=fi, features=features, fine_feats=fine_feats,
+        window_streams=lambda path, up, dn: ("STREAM", path, up, dn))
+
+    def replay(path, up, down, wgaps, spec):
+        slug = path.rsplit("/", 1)[1]
+        arm = types.SimpleNamespace(
+            fill_log=slug, fills=slug, segments=slug,
+            consume_times=slug, unhooked_changes=0)
+        return arm, slug
+
+    def join_fills(fill_log, fills):
+        n = 1 if fill_log == bad_window else 0
+        return fill_log, {"count_mismatch": n, "tuple_mismatches": 0}
+
+    qr = types.SimpleNamespace(
+        QR_SKEW=None, _qr_spec=lambda skew, latency_ms, cancel: "SPEC",
+        base=types.SimpleNamespace(fi=types.SimpleNamespace(WINDOW_S=300)))
+    HER = types.SimpleNamespace(
+        qr=qr, replay_with_recorder=replay, join_fills=join_fills,
+        verify_boundary_times=lambda seg, joined: 0,
+        verify_consume_clock=lambda ct, trt: 0,
+        trade_receipt_times=lambda path, up, dn: [],
+        generation_table=lambda seg, joined, wf, w: (
+            seg, {"orphan_fills": 0, "wrong_generation_assignments": 0}),
+        label_rows=lambda seg, gens, wf, w: list(by_slug[seg]))
+    return HER, hm, features, fine_feats, expected_cancel_value
+
+
+class _r1_installed:
+    """Install the fakes for BOTH consumers, and put everything back."""
+
+    def __init__(self, rows, bad_window=None):
+        self.HER, self.hm, _f, _ff, self.ecv = _r1_fakes(rows, bad_window)
+
+    def __enter__(self):
+        self._saved_mods = {n: sys.modules.get(n) for n in
+                            ("harmful_exposure_rows", "harmful_hazard_model")}
+        sys.modules["harmful_exposure_rows"] = self.HER
+        sys.modules["harmful_hazard_model"] = self.hm
+        self._saved_fs = (FS.expected_cancel_value, FS.load_frozen)
+        FS.expected_cancel_value = self.ecv
+        FS.load_frozen = lambda: _R1_FROZEN
+        return self
+
+    def __exit__(self, *exc):
+        for n, m in self._saved_mods.items():
+            if m is None:
+                sys.modules.pop(n, None)
+            else:
+                sys.modules[n] = m
+        FS.expected_cancel_value, FS.load_frozen = self._saved_fs
+        return False
+
+
 def selftest() -> int:
     """Every named refusal, red-first, plus the launch-invariance check."""
     import os, subprocess, tempfile
@@ -1781,6 +1904,82 @@ def selftest() -> int:
         ok(_r9["decision_field_check"]["excused_paths"] == ["gates[].gate"],
            "R5(5) and exactly ONE path is excused, named in the receipt with "
            "its reason — an exemption a reader cannot see is not one")
+    # ---- BE34-R1: the streaming pass EQUALS the reference, per score -----
+    _sel, _rows = _r1_windows()
+    with _r1_installed(_rows):
+        _bs = build_and_score(_sel, _R1_FROZEN)
+        _sr = score_rows(_rows)
+    ok(_bs["scores"] == _sr,
+       f"BE34-R1 ONE fixture, TWO consumers: `build_and_score`'s streamed "
+       f"scores are EQUAL to `score_rows`'s on the same windows "
+       f"({ {c: len(v) for c, v in _sr.items()} }) — the streaming rewrite "
+       f"replaced the reference and nothing had ever compared them")
+    ok(sum(len(v) for v in _sr.values()) == 11 and _bs["n_rows"] == 12
+       and _bs["rows_without_features"] == 1,
+       f"BE34-R1 and BOTH drop the SAME row: 12 rows in, 11 scored, 1 "
+       f"without features (got {_bs['n_rows']}/"
+       f"{sum(len(v) for v in _sr.values())}/"
+       f"{_bs['rows_without_features']}) — an equality between two consumers "
+       f"that both dropped everything would also be an equality")
+    ok(_bs["n_windows"] == 4 and _bs["n_actions"] == 12
+       and _bs["n_windows_with_rows"] == 4,
+       f"BE34-R1 the counters the receipt publishes come from the same pass: "
+       f"4 windows, 12 actions (got {_bs['n_windows']}/{_bs['n_actions']})")
+    _vals = sorted(v for lst in _sr.values() for _, v in lst)
+    ok(len(set(_vals)) == len(_vals) and max(abs(v) for v in _vals) < 1e5,
+       f"BE34-R1 every fixture score is DISTINCT and small "
+       f"(|max| {max(abs(v) for v in _vals):.1f}) — equal-valued or huge "
+       f"scores would hide a perturbation instead of catching it")
+
+    # ---- BE34-R1: a reconciliation failure fails the DAY, by name --------
+    _selb, _rowsb = _r1_windows()
+    with _r1_installed(_rowsb, bad_window="eth-updown-5m-1788000300"):
+        _bad = build_and_score(_selb, _R1_FROZEN)
+    _eth_t0 = {t for t, _ in _bad["scores"].get("eth", ())}
+    ok(_bad["reconciliation_failures"] == 1 and _bad["n_windows"] == 4
+       and 1788000300 not in _eth_t0 and 1788000900 in _eth_t0
+       and _bad["n_rows"] == 12 and _bad["n_actions"] == 12,
+       f"BE34-R1 a window whose fills do not reconcile is COUNTED and ITS "
+       f"rows are not scored, while the OTHER window of the same coin still "
+       f"is ({_bad['reconciliation_failures']} of {_bad['n_windows']}; eth "
+       f"t0s {sorted(_eth_t0)}) — the v3 builder's STRICT condition, and the "
+       f"failure is scoped to the window, not spread to the coin")
+    with _tf.TemporaryDirectory() as tdr1:
+        _real_bas = globals()["build_and_score"]
+        globals()["build_and_score"] = lambda sel, fr: dict(_bad)
+        # MEASURED: driving the real chain IMPORTS THE FROZEN ANCHORS from the
+        # run dir into sys.modules, and the run dir is a tmpdir that is about
+        # to vanish. Left in place they shadow the tree's modules for every
+        # later check -- which is how this control first broke a round-5 one.
+        _mods = dict(sys.modules)
+        try:
+            _rc = run_forward_day("20260901", Path(tdr1))
+        finally:
+            globals()["build_and_score"] = _real_bas
+            for _k in [k for k in sys.modules if k not in _mods]:
+                del sys.modules[_k]
+            for _k, _v in _mods.items():
+                if sys.modules.get(_k) is not _v:
+                    sys.modules[_k] = _v
+        _recr = json.loads(receipt_path(Path(tdr1), "20260901").read_text())
+        _why = _recr.get("refusal", "")
+        ok(_rc != 0 and _recr["outcome"] == "REFUSED"
+           and "failed reconciliation" in _why and "fails the DAY" in _why
+           and _recr["refused_at"] == "rows_and_scores_streamed",
+           f"BE34-R1 KNOWN-BAD: the CALLER refuses the whole DAY by name "
+           f"(rc={_rc}) — driven through the real gate chain, so disabling "
+           f"the refusal is visible here; a mismatch is never absorbed")
+        ok(not any(g["gate"] == "reconciliation" and g["result"] == "PASS"
+                   for g in _recr["gates"]),
+           "BE34-R1 and no `reconciliation: PASS` is recorded for a day that "
+           "refused — a receipt that says PASS beside a refusal is the "
+           "hardcoded-verdict shape (rule 10)")
+
+    # ---- BE34-R4: a usage error is a refusal, not a success --------------
+    ok(main([]) == 2 and main(["--forward-day"]) == 2,
+       "BE34-R4 `main([])` returns 2, the code every other refusal here "
+       "uses — returning 0 let a misspelled flag look like a day that ran")
+
     # ---- ROUND 5, the AUDIT's own finding: five mutants survived --------
     # Every one of them was an edit that leaves a HEALTHY day's numbers
     # untouched -- the checker not called (its input already satisfies the
@@ -1952,37 +2151,53 @@ def _selftest_launch(checks: int, ok) -> int:
     if os.environ.get("BE_FORWARD_LAUNCH_CHECK") == "1":
         return checks
     env = dict(os.environ, BE_FORWARD_LAUNCH_CHECK="1")
+    # BE34-R3: the tree of THIS FILE, never a hardcoded root. `cwd=REPO` made
+    # every worktree spawn the SHARED tree's module, so the child checked a
+    # file the parent was not running and the launcher silently stopped being
+    # about the code under test.
+    tree = Path(__file__).resolve().parents[2]
     r = subprocess.run([sys.executable, "-m",
                         "live.pm_research.be_forward_day", "--selftest"],
-                       cwd=str(REPO), env=env, capture_output=True,
+                       cwd=str(tree), env=env, capture_output=True,
                        text=True, timeout=900)
-    # A FAILING SPAWN MUST SAY WHY. Reporting only the exit code turns a
-    # diagnosable child failure into a guess.
-    ok(r.returncode == 0,
-       f"launch: GREEN under the PACKAGE launch too (rc={r.returncode}) — a "
-       f"suite green under one launcher hid CO-1. Child tail: "
-       f"{(r.stdout + r.stderr).strip()[-400:]!r}")
+    m = re.search(r"be_forward_day selftest: (\d+) checks OK",
+                  r.stdout + r.stderr)
+    child = int(m.group(1)) if m else None
+    # ONE check, deliberately: rc AND parity together, so the child's count is
+    # exactly the parent's minus this very check -- which is the parity the
+    # guard is named for. Splitting it in two would make "minus one" false.
+    ok(r.returncode == 0 and child == checks,
+       f"launch: GREEN under the PACKAGE launch of {tree}, and the child "
+       f"counted {child} = this parent's {checks} (its total is ours minus "
+       f"this check) — an rc alone cannot tell a child running THIS file "
+       f"from one running another tree's. Child tail: "
+       f"{(r.stdout + r.stderr).strip()[-300:]!r}")
     checks += 1
     return checks
 
 
-def main() -> int:
-    if "--selftest" in sys.argv:
+def main(argv: list = None) -> int:
+    argv = list(sys.argv) if argv is None else list(argv)
+    if "--selftest" in argv:
         return selftest()
-    if "--forward-day" not in sys.argv:
+    if "--forward-day" not in argv:
+        # BE34-R4: 0 is what a SUCCESSFUL run returns. A caller that misspells
+        # the flag got "usage" on stdout and a success code, so a scripted
+        # invocation could record a day as run without running it. Every other
+        # refusal here returns 2; so does this one.
         print("usage: be_forward_day.py --selftest | "
               "--forward-day <YYYYMMDD> --outdir <dir>")
-        return 0
-    i = sys.argv.index("--forward-day")
-    if i + 1 >= len(sys.argv) or sys.argv[i + 1].startswith("-"):
+        return 2
+    i = argv.index("--forward-day")
+    if i + 1 >= len(argv) or argv[i + 1].startswith("-"):
         print("REFUSED: --forward-day needs a day token (YYYYMMDD)")
         return 2
-    day = sys.argv[i + 1]
+    day = argv[i + 1]
     outdir = None
-    if "--outdir" in sys.argv:
-        j = sys.argv.index("--outdir")
-        if j + 1 < len(sys.argv) and not sys.argv[j + 1].startswith("-"):
-            outdir = Path(sys.argv[j + 1])
+    if "--outdir" in argv:
+        j = argv.index("--outdir")
+        if j + 1 < len(argv) and not argv[j + 1].startswith("-"):
+            outdir = Path(argv[j + 1])
     if outdir is None:
         print("REFUSED: --outdir is required. Scores are SEALED (rule 11) and "
               "this driver writes nothing under data/pm_5min/derived/.")
