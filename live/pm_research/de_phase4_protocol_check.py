@@ -139,7 +139,7 @@ def check(text: str) -> list[str]:
 #: it stands on is named.
 ADDENDUM = DRAFT.parent / "DE_PHASE4_DIAGNOSTIC_ADDENDUM_2026-09-02.md"
 
-EXPECTED_CHECKS = 15
+EXPECTED_CHECKS = 21
 
 
 def selftest() -> int:
@@ -208,6 +208,46 @@ def selftest() -> int:
        "KNOWN-BAD/CONTROL on that binding: an unrelated sha is NOT in the "
        "addendum, so the check above is a comparison and not a substring "
        "that any hex would satisfy")
+
+    # ---- the RUNNER's declared grid IS the addendum's -------------------
+    # A grid widened in code and not in the declaration is the shape rule 11
+    # exists for: a rung nobody declared, produced by a runner that would
+    # happily compute it.
+    import sys as _sys
+    _sys.path.insert(0, str(DRAFT.resolve().parents[1]))
+    import de_phase4_diag_runner as _RUN
+    _rungs_in_add = [r for r in _RUN.LATENCY_RUNGS_MS
+                     if f"{r}" in _add.split("| latency `L`")[1].split("|")[1]]
+    ok(len(_rungs_in_add) == len(_RUN.LATENCY_RUNGS_MS) == 9,
+       f"THE RUNNER'S LATENCY AXIS IS THE ADDENDUM'S: all "
+       f"{len(_RUN.LATENCY_RUNGS_MS)} rungs {_RUN.LATENCY_RUNGS_MS} are "
+       f"named in the addendum's own §b row -- a rung added in code and "
+       f"not in the declaration would leave this check short")
+    ok(all(f"{int(b * 100)}%" in _add for b in _RUN.BUDGETS)
+       and len(_RUN.BUDGETS) == 3,
+       f"and the budget axis matches too: {_RUN.BUDGETS} against the "
+       f"addendum's 5% / 10% / 15%")
+    ok(_RUN.PRIMARY["latency_ms"] == 250 and _RUN.PRIMARY["budget"] == 0.10
+       and _RUN.PRIMARY["coin"] == "btc"
+       and _RUN.PRIMARY["enable_reduce"] is False
+       and _RUN.PRIMARY["charge_reset_cost_at_generation_start"] is False,
+       f"and the PRIMARY cell is the frozen one: {_RUN.PRIMARY}")
+    ok(set(_RUN.ARMS_NOT_RUN) == {"HAZARD_ONLY_NEUTRAL", "CONDVALUE_NEUTRAL",
+                                  "CONDVALUE_X_SKEW_X_FAIRPRICE"}
+       and all(a in _add for a in _RUN.ARMS_NOT_RUN),
+       f"and the arms the runner refuses to run are the arms the addendum "
+       f"declares unrunnable: {sorted(_RUN.ARMS_NOT_RUN)}")
+    ok("CONDVALUE_OVER_SKEWED_REF" in _add
+       and any("CONDVALUE_OVER_SKEWED_REF" in a for a in _RUN.ARMS),
+       "and the arm NAMED for this diagnostic appears in both -- the "
+       "resolution is in the declaration, not only in the code")
+    _widened = list(_RUN.LATENCY_RUNGS_MS) + [200]
+    ok(not all(f"{r}" in _add.split("| latency `L`")[1].split("|")[1]
+               for r in _widened),
+       "KNOWN-BAD: a WIDENED grid (a 200 ms rung added to the runner's "
+       "axis) is not in the addendum, so this check goes red -- which is "
+       "the point: a rung may not enter the code without entering the "
+       "declaration first")
 
     ok(n[0] + 1 == EXPECTED_CHECKS,
        f"check count asserted at run time: {n[0] + 1} == {EXPECTED_CHECKS}")

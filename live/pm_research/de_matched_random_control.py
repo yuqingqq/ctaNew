@@ -37,7 +37,7 @@ import random
 import sys
 from pathlib import Path
 
-EXPECTED_CHECKS = 20
+EXPECTED_CHECKS = 21
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from harmful_stateful_policy import SIDES        # noqa: E402
@@ -117,17 +117,35 @@ def draw(pool, treated_actions, seed: int, *, n_per_stratum=None) -> list:
     return sorted(out)
 
 
-def refuse_if_not_random(drawn, treated_actions, *, pool_size: int) -> None:
+def refuse_if_not_random(drawn, treated_actions, *, pool) -> None:
     """A draw identical to the treated arm's own actions is the arm under
-    test wearing the null's name."""
+    test wearing the null's name -- BUT ONLY WHERE THE DRAW HAD FREEDOM.
+
+    The freedom is PER STRATUM, not global.  With (side, hour) strata that
+    hold one eligible generation each, a matched draw MUST reproduce the
+    treated arm: equality is then arithmetic, not copying, and refusing it
+    would refuse the null for doing exactly what matching means.  A global
+    pool-size comparison gets this wrong -- it sees twenty eligible and two
+    drawn and calls a forced draw a copy (found by the runner's own
+    synthetic cell, where 20 slugs over 24 hours left every stratum with a
+    single member)."""
     t = sorted({a["slug"] for a in treated_actions})
-    if sorted(drawn) == t and pool_size > len(t):
+    if sorted(drawn) != t:
+        return
+    pool = list(pool)
+    by_slug = {g["slug"]: g for g in pool}
+    demand = demand_from_treated(treated_actions, pool)
+    avail: dict = {}
+    for g in pool:
+        avail[stratum(g)] = avail.get(stratum(g), 0) + 1
+    slack = {st: avail.get(st, 0) - k for st, k in demand.items()}
+    if any(v > 0 for v in slack.values()):
         # SITE: identity#1
         raise ControlRefused(
             f"the 'control' cancelled exactly the treated arm's own "
-            f"{len(t)} actions out of a pool of {pool_size}: that is the "
-            f"arm under test wearing the null's name, refused by identity "
-            f"rather than by taste")
+            f"{len(t)} actions while its strata had room to differ "
+            f"(slack {slack}): that is the arm under test wearing the "
+            f"null's name, refused by identity rather than by taste")
 
 
 def selftest() -> int:
@@ -214,20 +232,31 @@ def selftest() -> int:
 
     # ---- IDENTITY: a 'control' that reproduces the treated arm -----------
     refuses(lambda: refuse_if_not_random([a["slug"] for a in treated],
-                                         treated, pool_size=len(pool)),
+                                         treated, pool=pool),
             "KNOWN-BAD: a draw identical to the treated arm's OWN actions "
             "is refused BY IDENTITY -- it is the arm under test wearing the "
             "null's name", needle="wearing the null's name")
-    refuse_if_not_random(a1, treated, pool_size=len(pool))
+    refuse_if_not_random(a1, treated, pool=pool)
     ok(True,
        f"POSITIVE CONTROL: the real draw {a1} is not the treated arm's "
        f"{sorted(a['slug'] for a in treated)} and passes the identity "
        f"check, so the refusal above is a filter and not a wall")
-    refuse_if_not_random(["t0", "t1"], heavy, pool_size=2)
+    refuse_if_not_random(["t0", "t1"], heavy, pool=thin)
     ok(True,
-       "and when the pool IS the treated set -- two eligible, two acted -- "
-       "the identity check does not fire: with no freedom left, equality "
-       "is arithmetic rather than evidence of copying")
+       "and when the STRATUM has no freedom -- two eligible in one "
+       "(side, hour), two acted -- the identity check does not fire: a "
+       "matched draw MUST reproduce the treated arm there, so equality is "
+       "arithmetic rather than evidence of copying")
+    _forced = [{"slug": f"f{i}", "side": SIDES[i % 2], "hour": i}
+               for i in range(6)]
+    _ft = [{"slug": g["slug"]} for g in _forced]
+    refuse_if_not_random([g["slug"] for g in _forced], _ft, pool=_forced)
+    ok(True,
+       "AND THE FREEDOM IS PER STRATUM, NOT GLOBAL: six eligible in six "
+       "one-member strata, all six acted -- a global pool-size comparison "
+       "would see six eligible and six drawn and call the forced draw a "
+       "copy. The runner's own synthetic cell found this, where 20 slugs "
+       "over 24 hours left every stratum with a single member")
 
     # ---- THE PLANTED-HARM CONTROL (rule 15) ------------------------------
     # A treated arm that cancels the harmful generations must beat the
