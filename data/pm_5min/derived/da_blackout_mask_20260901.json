@@ -1,6 +1,6 @@
 {
  "artifact": "da_blackout_mask_v1",
- "as_of_utc": "2026-09-02T10:00:44Z",
+ "as_of_utc": "2026-09-02T10:34:15Z",
  "coins": {
   "bnb": {
    "agrees_with_frozen_L1_numerator": true,
@@ -332,6 +332,12 @@
  "disposition_rule": "R-409",
  "disposition_text": "USER R-409: a day with a blackout is not excluded; it accrues if the frozen bars pass on the non-blackout windows, and the blackout windows are masked as accounted loss. This artifact REPORTS the mask; it decides nothing (rule 14).",
  "n_coins": 7,
+ "producer": {
+  "carrying_commit": "84ec1a12a4c778399b1d95fa9d9d0820c160b681",
+  "module": "da_blackout_mask",
+  "module_sha256_prefix": "d191695dcff0546e",
+  "tree_dirty_on_producing_files": false
+ },
  "total_masked_windows": 141,
  "v2_seam": {
   "frozen_by_user": false,
