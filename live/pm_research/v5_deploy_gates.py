@@ -233,12 +233,23 @@ def _selftest() -> int:
        "and 'covered' must not look the same")
     ok(len(twins) + len(excluded) == len(roster),
        "every declared gate is either twinned or named as excluded")
-    # AND THE ACCOUNTING CAN FAIL: a roster entry that reaches neither list.
-    _t2, _e2 = twins[:-1], excluded
-    ok(len(_t2) + len(_e2) != len(roster),
-       "with one twin dropped the accounting no longer balances -- the "
-       "equation the runner asserts is able to be false, which is what makes "
-       "asserting it a check")
+    # DELETED, DELIBERATELY, AND THE REASON IS THE POINT (DA14-R1).
+    #
+    # A line here dropped one twin and asserted the totals no longer balanced.
+    # Given the invariant asserted immediately above -- every entry lands in
+    # exactly ONE list -- that expression is ARITHMETIC, true under every
+    # arrangement, and no change to `_launch_twins` could make it false. It
+    # read as a falsifier and tested nothing.
+    #
+    # WHICH CLOSURE, AND WHY: deleted rather than given a production test hook.
+    # The runner's `twins + excluded != len(GATES)` guard documents a
+    # STRUCTURAL invariant of `_launch_twins` (each branch appends to exactly
+    # one list), and the invariant ITSELF is tested two lines above. Adding a
+    # hook to production code so a structurally-impossible branch can be
+    # driven would buy a red for a state the function cannot reach, at the
+    # cost of surface that exists only for the test. The guard stays as a
+    # cheap tripwire on a FUTURE edit to that function -- which is what it is,
+    # not a checked behaviour, and this comment is the honest label.
     print(f"v5_deploy_gates selftests: {n} checks passed")
     return 0
 

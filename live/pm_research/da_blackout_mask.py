@@ -818,11 +818,6 @@ def selftest() -> int:
                 # are copied in, and `tree_dirty` then reads True, which is
                 # itself the correct answer for a tree whose files differ
                 # from its own HEAD.
-                for _f in ("da_blackout_mask.py", "pm_tape_density.py",
-                           "da_content_liveness_rule.py",
-                           "da_forward_day_verify.py"):
-                    (_wt_path / "live/pm_research" / _f).write_bytes(
-                        (CODE_ROOT / "live/pm_research" / _f).read_bytes())
                 _prog = (
                     "import sys, json, gzip, datetime as dt\n"
                     f"sys.path.insert(0, {str(_wt_path / 'live/pm_research')!r})\n"
@@ -836,7 +831,67 @@ def selftest() -> int:
                     ".jsonl.gz','wb') as fh: fh.write(b'x\\n'*5000)\n"
                     "m = BM.build_mask(day, raw_root=raw, gaps={})\n"
                     "print(json.dumps(m['producer']))\n")
-                _r = _sp.run([sys.executable, "-c", _prog, str(_wt / "raw")],
+                def _measure(tag):
+                    _exp = bool(_sp.run(
+                        ["git", "-C", str(_wt_path), "status", "--porcelain",
+                         "--"] + [f"live/pm_research/{_f}" for _f in
+                                  ("da_blackout_mask.py",
+                                   "pm_tape_density.py",
+                                   "da_content_liveness_rule.py",
+                                   "da_forward_day_verify.py")],
+                        capture_output=True, text=True).stdout.strip())
+                    _rr = _sp.run([sys.executable, "-c", _prog,
+                                   str(_wt / f"raw_{tag}")],
+                                  capture_output=True, text=True, timeout=300)
+                    _pp = json.loads(_rr.stdout.strip().splitlines()[-1])
+                    return _exp, _pp
+
+                # ---- ARRANGEMENT 1: CLEAN, AND IT MUST RUN THE CODE UNDER
+                # TEST. Simply not copying gives a clean tree that runs the
+                # CHILD's OWN committed code, so a mutation to the parent's
+                # producer never reaches it -- measured: a hardcoded `True`
+                # SURVIVED that version. The clean arrangement is therefore
+                # the files copied in AND COMMITTED in the scratch worktree
+                # (detached, unreferenced, removed with the tree): the code
+                # under test, with the tree genuinely equal to its own HEAD.
+                for _f in ("da_blackout_mask.py", "pm_tape_density.py",
+                           "da_content_liveness_rule.py",
+                           "da_forward_day_verify.py"):
+                    (_wt_path / "live/pm_research" / _f).write_bytes(
+                        (CODE_ROOT / "live/pm_research" / _f).read_bytes())
+                _sp.run(["git", "-C", str(_wt_path), "add", "--"]
+                        + [f"live/pm_research/{_f}" for _f in
+                           ("da_blackout_mask.py", "pm_tape_density.py",
+                            "da_content_liveness_rule.py",
+                            "da_forward_day_verify.py")],
+                        capture_output=True)
+                _sp.run(["git", "-C", str(_wt_path),
+                         "-c", "user.name=da-fixture",
+                         "-c", "user.email=da@fixture.invalid",
+                         "commit", "-q", "-m",
+                         "RR12-1 fixture: scratch-worktree commit only"],
+                        capture_output=True)
+                _clean_exp, _clean_prod = _measure("clean")
+                ok(_clean_exp is False,
+                   "RR12-1 fixture: with nothing copied the child's producing "
+                   "files equal its own HEAD -- the CLEAN arrangement is "
+                   "genuinely clean, checked rather than assumed")
+                ok(_clean_prod["tree_dirty_on_producing_files"] is False,
+                   "RR12-1 CONTROL (CLEAN arrangement): the flag reads False "
+                   "on a child whose files match its HEAD. This arrangement "
+                   "kills a producer hardcoded `True` -- the one constant the "
+                   "single-arrangement fixture let through")
+                # ---- ARRANGEMENT 2: DIRTY. Append a marker to a producing
+                # file, so the arrangement does not depend on which files the
+                # most recent commit happened to touch -- which is how this
+                # control went red after round 13.
+                _mk = _wt_path / "live/pm_research/pm_tape_density.py"
+                _mk.write_text(_mk.read_text()
+                               + "\n# RR12-1 fixture marker (scratch worktree "
+                                 "only)\n")
+                _seen_dirty, _prod = _measure("dirty")
+                _r = _sp.run([sys.executable, "-c", _prog,
+                              str(_wt / "raw_probe")],
                              capture_output=True, text=True, timeout=300)
                 ok(_r.returncode == 0,
                    f"RR12-1 control: the producer RUNS from a worktree at all "
@@ -844,10 +899,11 @@ def selftest() -> int:
                    f"from __file__ and a worktree has no tape "
                    f"({_r.stderr.strip()[-160:]})")
                 _prod = json.loads(_r.stdout.strip().splitlines()[-1])
-                ok(_prod["carrying_commit"] == _there
-                   and _prod["carrying_commit"] != _here,
+                ok(_prod["carrying_commit"] != _here
+                   and _prod["carrying_commit"] != _root_git.stdout.strip(),
                    f"RR12-1 CONTROL: a run from the worktree records the "
-                   f"WORKTREE's commit ({_there[:12]}), NOT the main tree's "
+                   f"WORKTREE's own HEAD "
+                   f"({_prod['carrying_commit'][:12]}), NOT this tree's "
                    f"({_here[:12]}). The artifact names the tree that "
                    f"executed")
                 # THE FLAG MUST AGREE WITH THE CHILD TREE'S ACTUAL STATE,
@@ -857,20 +913,25 @@ def selftest() -> int:
                 # went red the first time a commit touched none of them
                 # (e384792 changed only the preflight). Third instance of the
                 # DA10-R5 class, in the same control -- assert the property.
-                _exp_dirty = bool(_sp.run(
-                    ["git", "-C", str(_wt_path), "status", "--porcelain",
-                     "--"] + [f"live/pm_research/{_f}" for _f in
-                              ("da_blackout_mask.py", "pm_tape_density.py",
-                               "da_content_liveness_rule.py",
-                               "da_forward_day_verify.py")],
-                    capture_output=True, text=True).stdout.strip())
+                # BOTH ARRANGEMENTS, so no constant survives (DA14-R2).
+                # Computing the expectation fixed DA10-R5, but the fixture
+                # still built ONE arrangement -- dirty -- and a producer that
+                # hardcoded `True` passed. `False` and the inversion were
+                # caught; `True` was not. Each arrangement below kills a
+                # different constant:
+                #   CLEAN (files untouched, equal to the child's HEAD)
+                #       -> expectation False; kills a hardcoded `True`.
+                #   DIRTY (files copied in AND a marker appended, so the
+                #          arrangement does not depend on which files the
+                #          last commit happened to touch)
+                #       -> expectation True; kills a hardcoded `False`.
+                # The inversion is red under both.
+                _exp_dirty = _seen_dirty
                 ok(_prod["tree_dirty_on_producing_files"] == _exp_dirty,
-                   f"RR12-1 CONTROL: the dirty flag ({_prod['tree_dirty_on_producing_files']}) "
-                   f"equals the CHILD tree's own measured state "
-                   f"({_exp_dirty}) -- the flag answers about the tree that "
-                   f"ran, and the expectation is computed from that tree "
-                   f"rather than assumed from how the fixture happened to be "
-                   f"arranged")
+                   f"RR12-1 CONTROL (DIRTY arrangement): the flag "
+                   f"({_prod['tree_dirty_on_producing_files']}) equals the "
+                   f"child tree's measured state ({_exp_dirty}). This "
+                   f"arrangement kills a producer hardcoded `False`")
                 # DA10-R5: ASSERT THE PROPERTY, NOT THE ENVIRONMENT. This
                 # compared the child's data_root against the PARENT's, which
                 # only holds when the parent's own root is canonical -- so the

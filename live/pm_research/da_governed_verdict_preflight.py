@@ -625,16 +625,24 @@ def selftest() -> int:
         # only thing that can refuse.
         _saved_ph = globals()["STALE_DECISION_PHRASES"]
         try:
-            globals()["STALE_DECISION_PHRASES"] = ("RULED at R-442",)
+            # THE FORM, NOT ONE CITATION. Poisoning with "RULED at R-442"
+            # worked only while that entry was the newest: a legitimate
+            # re-ruling in band (rule 13) changes the citation, the poisoned
+            # run stops raising, and this control goes red for a change that
+            # is not a defect. The block's own discipline is that every ruled
+            # entry CITES the entry that settled it, so the form is what is
+            # invariant.
+            globals()["STALE_DECISION_PHRASES"] = ("RULED at ",)
             try:
                 preflight(day, tmp)
                 ok(False, "the coherence guard is NOT called by preflight()")
             except PreflightRefused as _e:
-                ok("RULED at R-442" in str(_e),
+                ok("RULED at " in str(_e),
                    "R-442 WIRING: `preflight()` itself runs the coherence "
-                   "guard -- with the phrase list poisoned by a string the "
-                   "REAL block carries, the production path is the only "
-                   "thing that can raise, and it does")
+                   "guard -- poisoned with the citation FORM every ruled "
+                   "entry must carry, so the production path is the only "
+                   "thing that can raise, and it survives any future "
+                   "re-ruling")
         finally:
             globals()["STALE_DECISION_PHRASES"] = _saved_ph
         ok(globals()["STALE_DECISION_PHRASES"] is _saved_ph,
