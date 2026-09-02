@@ -4161,3 +4161,71 @@ Moved in the MEM round-57 true-up of R-477 and R-478. Join rule as in batch 1.
   NO DATE. USER: SEVEN RULED, THREE OPEN, none needed tonight. UNCHANGED: G=1/5;
   the 011 family 12 of 24 with Q4 failing; the sequencing rule; R-419 revocable.
 ```
+
+## Batch 64 — archived 2026-09-02T21:15Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-58 true-up of R-479. Join rule as in batch 1.
+
+```yaml
+  2026-09-02T19:39Z (MEM ROUND 55 -- THE FINDING SURVIVED; ITS EXPLANATION DID
+  NOT). R-472, R-473 and the reviewer's DE-35 filing swept; nothing run; state
+  files only. R-473 SECTION 0 IS THE SHAPE WORTH LEARNING FROM AND IT IS NOT A
+  RETRACTION: R-471 section 2(a) explained DE35-C1 by saying the treated arm "is
+  HELD with no event to anchor a repost", and the reviewer's fixture shows that
+  is FALSE -- the treated arm DOES repost through a later generation's own
+  below-theta_repost score, measured TREATED 1 cancel / 1 repost / value 4.000
+  against CONTROL 2 / 2 / 0.000 on the same fixture. THE FINDING STANDS AND ITS
+  MECHANISM IS REPLACED: the defect is the control's INVENTED LITERAL-0.0 EVENT
+  at t0 + REPOST_DWELL_S (:802-804) whose PRESENCE AND TIMING DEPEND ON THE DRAW,
+  so the null's repost economics are AN ARTEFACT OF THE CONTROL'S CONSTRUCTION,
+  not of the scored stream. A FINDING CAN BE RIGHT ABOUT THE ASYMMETRY AND WRONG
+  ABOUT WHY, and the corrected version is the MORE damaging one: an artefact that
+  moves with the draw is worse than an absence. BOTH STRING CORRECTIONS MADE, AND
+  THE SECOND IS MINE TO OWN: the 19:2xZ in STATUS.yml:3801 and HANDOFF.md:923 was
+  THE COORDINATOR'S PLACEHOLDER WHICH I COPIED FAITHFULLY -- and faithfully is
+  the problem: A PLACEHOLDER COPIED IS A PLACEHOLDER PUBLISHED. The register's
+  stamps put the dispatch at 19:23:09-19:23:21Z so both now read 19:23Z, and the
+  lesson is that AN "x" IN A TIMESTAMP IS NOT A TRANSCRIPTION, IT IS AN
+  UNFINISHED FIELD -- resolve it or don't carry it. THE FIRST CORRECTION I
+  CHECKED AT THE BLOB RATHER THAN TAKING IT: HALF_SPREAD_CENTS IS GONE AT
+  27c1ccd, one mention surviving at :139 and it is THE COMMENT RECORDING THE
+  DELETION ("EST-R1: HALF_SPREAD_CENTS IS GONE") with DRAFT:212-213 cited as the
+  reason -- same shape as last round's addendum guard, THE SURVIVING STRING IS
+  THE RECORD OF THE ABSENCE. So the USER package is TWO NUMBERS, and
+  REPOST_DWELL_S = 2.0 now stands as a declared module constant with its own
+  reason beside it ("an undeclared default in a policy runner is a policy choice
+  nobody made"). A THIRD STALE OCCURRENCE EXISTS AND I AM DELIBERATELY NOT
+  CHANGING IT: HANDOFF.md:1834, inside my round-53 dated entry, still says
+  "HALF_SPREAD_CENTS only if kept" -- I checked the clocks, that entry was
+  committed 19:06:05Z and 27c1ccd landed 19:12:02Z, SIX MINUTES LATER, so the
+  sentence WAS TRUE WHEN WRITTEN. That is the line separating it from the
+  "earliest 09-03" case I mishandled two rounds ago: THAT was a forward
+  commitment that outlived its withdrawal, THIS is a dated observation accurate
+  at its stamp. CORRECT CURRENT-STATE STATEMENTS; LEAVE DATED STATEMENTS THAT
+  WERE TRUE WHEN STAMPED -- AND READ THE STAMP BEFORE DECIDING WHICH YOU HAVE.
+  THE REVIEWER SPLIT THE BUNDLE RATHER THAN BLOCKING IT, the more useful verdict:
+  SECTIONS 1 AND 4 MAY GO AHEAD OF 5; 2 AND 3 MAY NOT; 5 is restated by round 36
+  and the package then goes to the USER WHOLE, IN ONE NOTIFICATION (R-473 section
+  2). DE35-R2 TRAVELS WITH IT: each null draw is FOUR REPLAYS, ~800 PER CELL, so
+  v1 section d's "of order 6 hours" is UNDERSTATED BY ABOUT 4x -- a cost estimate
+  belongs in the package the USER freezes, not in the round that discovers it was
+  wrong. TWO RULINGS RECORDED AS RULINGS: section 5 becomes THE TREATED ARM'S OWN
+  STREAM PERMUTED WITHIN (side, hour) STRATA, so the control stops being invented
+  and starts being a permutation of the thing it controls; and DE34-R7 is run
+  AGAINST THE TIP with the called set COMPUTED and the residue CARRIED AS
+  STATUSES, phase2_arms.py NOT_CALLED -- statuses rather than silence, this
+  programme's rule 4 applied to arms. DE ROUND 35 REVIEW RELEASED (df123f2, 276
+  lines): DE35-C1..C5 ALL CONFIRMED with C4 CONTESTED AS A BLOCKER, NOT AS A
+  FINDING; five findings DE35-R1..R5; 27c1ccd released as ROUND 36'S BASE. SEATS:
+  DE round 36 DISPATCHED at this tip (Q-DE-54 in flight, its row NOT landed when
+  I filed -- checked; the scoring wiring is a LATER round with DE35-R3); the
+  REVIEWER on RECORDED STANDBY until BE round 10's row lands, then BE 9 + 10 as
+  ONE filing; BE round 10's row IN FLIGHT (code ff60d0a); DA on standby until
+  tonight's 00:06Z / 00:14Z reads. THE PHASE-4 RUN HAS NO DATE. TONIGHT
+  UNCHANGED: 00:06Z verdict, 00:14Z preflight, coordinator wake after, R-409
+  accrual with the R-411(ii) denominator, DA landing at e353119 (HOLD ->
+  3b7e10a), the durable landing BE ROUND 11 after round 10 lands, CO-8,
+  --require-no-skips, DATA_ROOT split. USER: SEVEN RULED, THREE OPEN, none needed
+  tonight. UNCHANGED: G=1/5; the 011 family 12 of 24 with Q4 failing; the
+  sequencing rule; R-419 revocable.
+```

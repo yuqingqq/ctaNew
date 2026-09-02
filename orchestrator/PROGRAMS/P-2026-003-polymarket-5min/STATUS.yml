@@ -4,6 +4,64 @@ phase: in-progress
 status: active
 branch: mm-research            # all work lives here, not main; pushed to origin
 updated: >-
+  2026-09-02T21:15Z (MEM ROUND 58 -- THE COMMENT PROMISES THE PROPERTY THE CODE
+  COMPUTES AWAY). R-479 swept; nothing run; committed blobs only. DE37-C1..C5 ALL
+  CONFIRMED, NONE CONTESTED -- the first round this evening where nothing the
+  coordinator raised was argued down. DE37-R1 IS C2 WITH THE INTENT MADE VISIBLE
+  AND I READ BOTH ENDS AT THE BLOB: at :155-161 the comment states the property
+  in as many words ("A later edit to either side RE-OPENS THE QUESTION instead of
+  inheriting this pass -- rule 12's shape applied to a declaration"), while at
+  :380-386 _seal_declarations() computes those shas AT IMPORT FROM THE SOURCES
+  THE COMPARISON READS -- so THE MODULE DOCUMENTS THE GUARANTEE IT COMPUTES AWAY,
+  an edit moving the compared value and its expected value together. Driven both
+  ways by the reviewer: an UNDECLARED edit to join_fills BLOCKS, a DECLARED edit
+  to select_v2_era PROCEEDS with the seal simply moving -- so THE THREE DECLARED
+  FUNCTIONS ARE A PERMANENT EXEMPTION, not a declaration that can expire. AND
+  THAT NAMES SOMETHING SEEN THREE TIMES IN ONE EVENING: DE36-R1 was PROSE IN A
+  DRAFT false about the code; DE37-C1 was PROSE IN A DRAFT true while the code
+  was absent; this is PROSE IN THE MODULE promising what the implementation
+  removes. THE THREE ARE ONE CLASS: A SENTENCE THAT DESCRIBES A PROPERTY NOBODY
+  COMPUTES. The ruled fix is the inverse move -- the seal becomes LITERALS IN THE
+  SOURCE (reason, sha_at_fit, sha_at_declaring_tip) with an edited function body
+  as the falsifier: STOP COMPUTING THE EXPECTED VALUE. DE37-R2 IS THE SHARPEST
+  SINGLE SENTENCE IN THE FILING: the (gamma) fixture at :2049-2051 calls
+  permuted_stream directly on a hand-built draw, so it SATISFIES THE DEMAND BY
+  CONSTRUCTION and is THE ONE STATE THE RUN PATH CANNOT PRODUCE -- a green suite
+  certifying a state that cannot occur. That is why ruling (b) reads as it does:
+  SECTION 5'S TEXT SURVIVES as the text the USER rules on, THE CODE IS WHAT
+  FAILS, and THE PACKAGE MUST NOT TRAVEL WHILE THE SUITE PRESENTS (gamma) AS
+  ACHIEVED. The document is not wrong; THE EVIDENCE FOR IT IS. R3 is small and
+  worth keeping for its shape: P3 filters the draw to the stream's keys so AN
+  EMPTY INTERSECTION IS VACUOUSLY TRUE -- a predicate that passes hardest exactly
+  when there is nothing to check; ruling (f) fixes the order, assert want subset
+  of keys(stream) FIRST. R4 IS MY OWN CATCH, CORROBORATED: the reviewer
+  independently reports Q-DE-55's prior count of 74 as 71, the same figure I
+  verified at EXPECTED_CHECKS last round and the SECOND CONSECUTIVE round of it,
+  filed as ROW HYGIENE -- two seats saying so rather than one. RELEASE 218509e
+  WITH ITS REASON ATTACHED BECAUSE THE REASON IS THE INTERESTING PART: nothing
+  can run, THE PREFLIGHT REFUSES AT THE SCORER, so NO FINDING REACHES AN
+  ARTIFACT -- a release granted BECAUSE THE CODE CANNOT PRODUCE ANYTHING is a
+  very different object from one granted because the code is right, and the state
+  files say which this is. FOUR CONDITIONS NOW STAND BETWEEN THE PACKAGE AND THE
+  USER: the declared-vs-built sentence (or (gamma) built first); section 5 saying
+  what happens to BELOW-threshold values with section 2 re-read; the seal's form
+  settled; and THE TWO NUMBERS TRAVELLING WITH THE SPLIT QUESTION -- a judgement
+  I would have got wrong, since the split question LOOKS like context and the
+  ruling makes it A DECISION THE USER IS GIVEN WITH THE SECTION 5 NUMBERS, NOT A
+  FOOTNOTE. MY ROUND 57 VERIFIED WITH NOTHING FOUND, and the round-56 LOW is
+  recorded CLOSED AT THE SOURCE -- the bundle field now carries its AS-OF rather
+  than a bare sha, which was the point of the correction rather than the sha
+  itself. SEATS: DE round 38 IN FLIGHT (Q-DE-56, dispatched 21:14Z, the
+  reviewer's six-step order); the REVIEWER on RECORDED STANDBY until Q-DE-56
+  lands, then DE 38 as ONE round; BE on RECORDED STANDBY (round 11 = THE DURABLE
+  LANDING after the 00:14Z read; round 12 = BE8-R1/R2 + BE10-R1..R4); DA standby
+  until 00:06Z / 00:14Z. THE PHASE-4 RUN HAS NO DATE; THE PACKAGE IS NOT
+  FORWARDED. TONIGHT UNCHANGED: 00:06Z verdict, 00:14Z preflight, coordinator
+  wake after, R-409 accrual with the R-411(ii) denominator, DA landing at
+  e353119 (HOLD -> 3b7e10a), CO-8, --require-no-skips, DATA_ROOT split. USER:
+  SEVEN RULED, THREE OPEN, none needed tonight. UNCHANGED: G=1/5; the 011 family
+  12 of 24 with Q4 failing; the sequencing rule; R-419 revocable.
+  PRIOR:
   2026-09-02T21:07Z (MEM ROUND 57 -- A VARIABLE ASSIGNED ONCE AND READ ZERO
   TIMES). R-477 and R-478 swept; nothing run; committed blobs only. DE37-C1 IS
   THE THIRD ACT OF THE STORY THIS FILE HAS BEEN TELLING ALL EVENING: round 36
@@ -122,68 +180,6 @@ updated: >-
   THE PHASE-4 RUN HAS NO DATE. TONIGHT UNCHANGED: 00:06Z verdict, 00:14Z
   preflight, coordinator wake after, R-409 accrual with the R-411(ii)
   denominator, DA landing at e353119 (HOLD -> 3b7e10a), CO-8,
-  --require-no-skips, DATA_ROOT split. USER: SEVEN RULED, THREE OPEN, none needed
-  tonight. UNCHANGED: G=1/5; the 011 family 12 of 24 with Q4 failing; the
-  sequencing rule; R-419 revocable.
-  PRIOR:
-  2026-09-02T19:39Z (MEM ROUND 55 -- THE FINDING SURVIVED; ITS EXPLANATION DID
-  NOT). R-472, R-473 and the reviewer's DE-35 filing swept; nothing run; state
-  files only. R-473 SECTION 0 IS THE SHAPE WORTH LEARNING FROM AND IT IS NOT A
-  RETRACTION: R-471 section 2(a) explained DE35-C1 by saying the treated arm "is
-  HELD with no event to anchor a repost", and the reviewer's fixture shows that
-  is FALSE -- the treated arm DOES repost through a later generation's own
-  below-theta_repost score, measured TREATED 1 cancel / 1 repost / value 4.000
-  against CONTROL 2 / 2 / 0.000 on the same fixture. THE FINDING STANDS AND ITS
-  MECHANISM IS REPLACED: the defect is the control's INVENTED LITERAL-0.0 EVENT
-  at t0 + REPOST_DWELL_S (:802-804) whose PRESENCE AND TIMING DEPEND ON THE DRAW,
-  so the null's repost economics are AN ARTEFACT OF THE CONTROL'S CONSTRUCTION,
-  not of the scored stream. A FINDING CAN BE RIGHT ABOUT THE ASYMMETRY AND WRONG
-  ABOUT WHY, and the corrected version is the MORE damaging one: an artefact that
-  moves with the draw is worse than an absence. BOTH STRING CORRECTIONS MADE, AND
-  THE SECOND IS MINE TO OWN: the 19:2xZ in STATUS.yml:3801 and HANDOFF.md:923 was
-  THE COORDINATOR'S PLACEHOLDER WHICH I COPIED FAITHFULLY -- and faithfully is
-  the problem: A PLACEHOLDER COPIED IS A PLACEHOLDER PUBLISHED. The register's
-  stamps put the dispatch at 19:23:09-19:23:21Z so both now read 19:23Z, and the
-  lesson is that AN "x" IN A TIMESTAMP IS NOT A TRANSCRIPTION, IT IS AN
-  UNFINISHED FIELD -- resolve it or don't carry it. THE FIRST CORRECTION I
-  CHECKED AT THE BLOB RATHER THAN TAKING IT: HALF_SPREAD_CENTS IS GONE AT
-  27c1ccd, one mention surviving at :139 and it is THE COMMENT RECORDING THE
-  DELETION ("EST-R1: HALF_SPREAD_CENTS IS GONE") with DRAFT:212-213 cited as the
-  reason -- same shape as last round's addendum guard, THE SURVIVING STRING IS
-  THE RECORD OF THE ABSENCE. So the USER package is TWO NUMBERS, and
-  REPOST_DWELL_S = 2.0 now stands as a declared module constant with its own
-  reason beside it ("an undeclared default in a policy runner is a policy choice
-  nobody made"). A THIRD STALE OCCURRENCE EXISTS AND I AM DELIBERATELY NOT
-  CHANGING IT: HANDOFF.md:1834, inside my round-53 dated entry, still says
-  "HALF_SPREAD_CENTS only if kept" -- I checked the clocks, that entry was
-  committed 19:06:05Z and 27c1ccd landed 19:12:02Z, SIX MINUTES LATER, so the
-  sentence WAS TRUE WHEN WRITTEN. That is the line separating it from the
-  "earliest 09-03" case I mishandled two rounds ago: THAT was a forward
-  commitment that outlived its withdrawal, THIS is a dated observation accurate
-  at its stamp. CORRECT CURRENT-STATE STATEMENTS; LEAVE DATED STATEMENTS THAT
-  WERE TRUE WHEN STAMPED -- AND READ THE STAMP BEFORE DECIDING WHICH YOU HAVE.
-  THE REVIEWER SPLIT THE BUNDLE RATHER THAN BLOCKING IT, the more useful verdict:
-  SECTIONS 1 AND 4 MAY GO AHEAD OF 5; 2 AND 3 MAY NOT; 5 is restated by round 36
-  and the package then goes to the USER WHOLE, IN ONE NOTIFICATION (R-473 section
-  2). DE35-R2 TRAVELS WITH IT: each null draw is FOUR REPLAYS, ~800 PER CELL, so
-  v1 section d's "of order 6 hours" is UNDERSTATED BY ABOUT 4x -- a cost estimate
-  belongs in the package the USER freezes, not in the round that discovers it was
-  wrong. TWO RULINGS RECORDED AS RULINGS: section 5 becomes THE TREATED ARM'S OWN
-  STREAM PERMUTED WITHIN (side, hour) STRATA, so the control stops being invented
-  and starts being a permutation of the thing it controls; and DE34-R7 is run
-  AGAINST THE TIP with the called set COMPUTED and the residue CARRIED AS
-  STATUSES, phase2_arms.py NOT_CALLED -- statuses rather than silence, this
-  programme's rule 4 applied to arms. DE ROUND 35 REVIEW RELEASED (df123f2, 276
-  lines): DE35-C1..C5 ALL CONFIRMED with C4 CONTESTED AS A BLOCKER, NOT AS A
-  FINDING; five findings DE35-R1..R5; 27c1ccd released as ROUND 36'S BASE. SEATS:
-  DE round 36 DISPATCHED at this tip (Q-DE-54 in flight, its row NOT landed when
-  I filed -- checked; the scoring wiring is a LATER round with DE35-R3); the
-  REVIEWER on RECORDED STANDBY until BE round 10's row lands, then BE 9 + 10 as
-  ONE filing; BE round 10's row IN FLIGHT (code ff60d0a); DA on standby until
-  tonight's 00:06Z / 00:14Z reads. THE PHASE-4 RUN HAS NO DATE. TONIGHT
-  UNCHANGED: 00:06Z verdict, 00:14Z preflight, coordinator wake after, R-409
-  accrual with the R-411(ii) denominator, DA landing at e353119 (HOLD ->
-  3b7e10a), the durable landing BE ROUND 11 after round 10 lands, CO-8,
   --require-no-skips, DATA_ROOT split. USER: SEVEN RULED, THREE OPEN, none needed
   tonight. UNCHANGED: G=1/5; the 011 family 12 of 24 with Q4 failing; the
   sequencing rule; R-419 revocable.
@@ -3808,7 +3804,7 @@ flags:
   be_durable_landing_is_round_11: "after the 00:14Z read AND after round 10 lands"
   repo_constant_four_symptoms: "BE34-R3, BE7-R4, BE9-C1, BE9-C2 all from REPO hardcoded; round 6 fixed a USE"
   reviewer_be_r8_released: "c54e48e (f804f33); CO-12 and CO-13 CONFIRMED CLOSED; two LOW"
-  user_addendum_v2_bundle: "NOT FORWARDED. DRAFT sha ec1538f1545999d1 AS OF 218509e (was 6edefdfda909a897 at 27c1ccd -- a living document's sha is a fact with an AS-OF, not a name). TWO numbers (theta_repost, REPOST_DWELL_S) + three declarations. 1 and 4 READY; 3 READY; 2 re-read against the (gamma) stream; 5 = (gamma) DECLARED in the DRAFT but NOT REALISED on the run path (DE37-C1 HIGH); the declaration seal is a TAUTOLOGY (DE37-C2). JOINING THE PACKAGE: the split question (the 3 population spans BOTH fit splits, the DRAFT does not choose) and a THIRD COST, UNMEASURED (tape 3,170,987,711 B + fragment 1,241,115,096 B; byte counts verified, row/split counts are DE's). Compute still SPLIT: feed MEASURED, replay an UNMEASURED floor; DE35-R2 4x stands, ~1000x not established. Package travels WHOLE in ONE notification; THE RUN HAS NO DATE"
+  user_addendum_v2_bundle: "NOT FORWARDED -- FOUR named conditions stand between it and the USER (reviewer (i)-(iv)): 5 gets a declared-vs-built sentence OR (gamma) built first; 5 says what happens to BELOW-threshold values with 2 re-read; the seal's form settled; and the TWO NUMBERS AND THE SPLIT QUESTION TRAVEL TOGETHER -- the split question is A DECISION THE USER IS GIVEN with the 5 numbers, NOT a footnote. 5's TEXT SURVIVES as the text the USER rules on; the CODE is what fails, and the package must not travel while the suite presents (gamma) as ACHIEVED on a fixture the run path cannot produce. The PIN CLAIM RESTS ON THE SEAL (DE37-C2). DRAFT sha ec1538f1545999d1 AS OF 218509e. Third cost UNMEASURED. THE RUN HAS NO DATE"
   est_r1_r5_open: "EST-R1/R2 HIGH, R3/R4/R5 MED -> DE round 35; rho denominator is MEASURED at DRAFT:212-213"
   addendum_declares_no_horizon: "grep horizon in the addendum = 0 hits; the receipt binds one, the addendum declares none"
   de_r34_executed_counts_as_filed: "47a2ba6 (Q-DE-52 68f63aa); four closed, C1 half-closed, five named open; DE34-C1..C4"
@@ -3839,6 +3835,12 @@ flags:
   de_prior_count_slips_pattern: "TWO CONSECUTIVE rounds: Q-DE-54 said 68 for 67, Q-DE-55 said 74 for 71 (71 -> 85 = +14). The NEW count comes from the run, the PRIOR one from memory -- a pattern, not a slip"
   reviewer_be_9_10_released: "a8e88de; BE9-C1/C2/C3 CONFIRMED closed; BE10-R1..R4 -> round 12 with BE8-R1/R2 (R2 first if the file is opened before the landing); ff60d0a is round 11 base, NOTHING PRECEDES THE LANDING"
   qbe234_numbers_are_history: "they stand as history, not as properties of the code (reviewer reproduced RUN B's condition elsewhere)"
+  reviewer_de_r37_released: "3f1d310 21:11:39Z, 240 lines; DE37-C1..C5 ALL CONFIRMED, NONE CONTESTED; DE37-R1..R4; 218509e = round 38 base BECAUSE NOTHING CAN RUN, so no finding reaches an artifact"
+  de37_r1_permanent_exemption: "driven both ways -- an UNDECLARED edit to join_fills BLOCKS, a DECLARED edit to select_v2_era PROCEEDS with the seal moving; the three declared functions are a PERMANENT EXEMPTION. The comment at :155-161 promises what _seal_declarations (:380-386) computes away"
+  de37_r2_fixture_unproducible: "the (gamma) fixture (:2049-2051) satisfies the demand BY CONSTRUCTION -- the one state the run path cannot produce; a green suite certifies a state that cannot occur"
+  de37_r3_vacuous_p3: "P3 filters the draw to the stream keys, so an EMPTY INTERSECTION is vacuously true; ruling (f): assert want subset-of keys(stream) FIRST"
+  de37_r4_row_hygiene: "the reviewer independently reports Q-DE-55 prior 74 = 71 -- the same figure MEM verified; TWO SEATS, second consecutive round"
+  de_r38_in_flight: "Q-DE-56 dispatched 21:14Z; the reviewer's six-step order; C1..C5 as ruled + DE37-R1..R4"
                              # v18-v19 added the daily pipeline and all-coin
                              # commit-last batch; v20 adds R-DERIVE, R-GROSS,
                              # R-DUAL and R-ONEROW plus Tier-2 markout,
@@ -3847,7 +3849,7 @@ flags:
                              # migration discipline remain authoritative.
 
 focus: >
-  As-of 2026-09-02T21:07Z, build and test the offline model mechanism-first
+  As-of 2026-09-02T21:15Z, build and test the offline model mechanism-first
   under plans/HARMFUL_FILL_HAZARD_TOXICITY_PLAN.md section 10. Do not use the
   subordinate stateful-cancel TODO checkbox count as total progress. The
   foundation is established: the action-level dataset and PRED_STATE_V1 are

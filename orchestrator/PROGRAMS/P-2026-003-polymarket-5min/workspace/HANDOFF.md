@@ -1,13 +1,14 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-02T21:07Z — **DE37-C1 (HIGH): (γ) is DECLARED in the DRAFT and
-NOT BUILT on the run path** — `_perm_ok` is assigned once and **read zero times**,
-the predicates are **selftest-only**, and two of three draws fail P2 with the
-third failing P3. **DE37-C2: the declaration seal is a tautology, DRIVEN.** **BE
-round 10 VERIFIED (121/121)** and **released as round 11's base — nothing
-precedes the landing.** **STANDING RULE 10 ADOPTED** (9 → 10): a seat's selftest
-runs in that seat's own worktree. **The run has no date; the package is NOT
-forwarded.**
+Updated: 2026-09-02T21:15Z — **DE37-C1..C5 ALL CONFIRMED, none contested**, and
+the reviewer adds four: **the three declared functions are a PERMANENT
+EXEMPTION** (driven both ways), and **the (γ) fixture satisfies the demand BY
+CONSTRUCTION — the one state the run path cannot produce.** **§5's TEXT survives;
+the CODE is what fails**, and **the package must not travel while the suite
+presents (γ) as achieved on a fixture the run path cannot produce.** **Four named
+conditions now stand between the package and the USER**, and **the split question
+travels WITH the two numbers — a decision the USER is given, not a footnote.**
+**The run has no date.**
 
 ## READ FIRST — current project handoff
 
@@ -125,7 +126,16 @@ diagnostic**, below.
 > **All of it lands in ONE addendum the USER freezes; none of it is decided by a
 > seat (rule 14). Nothing runs until it is settled, and the run has no date.**
 >
-> **STATUS: NOT FORWARDED. The DRAFT's sha is `ec1538f1545999d1` AS OF
+> **STATUS: NOT FORWARDED — and there are now FOUR named conditions between it
+> and the USER** (the reviewer's (i)–(iv)): **§5 gets either a
+> declared-vs-built sentence or (γ) built first**; **§5 must say what happens
+> to below-threshold values, with §2 re-read**; **the seal's form must be
+> settled**; and **the two numbers and the split question travel TOGETHER** —
+> *the split question is a decision the USER is GIVEN with the §5 numbers, not
+> a footnote.* **§5's TEXT survives as the text the USER rules on; the CODE is
+> what fails** — and **the package must not travel while the suite presents (γ)
+> as achieved on a fixture the run path cannot produce.** The **pin claim rests
+> on the seal** (DE37-C2). **The DRAFT's sha is `ec1538f1545999d1` AS OF
 > `218509e`** — it was `6edefdfda909a897` at `27c1ccd`, and **a living
 > document's sha is a fact with an as-of, not a name** (my round-56 carry was
 > stale; this is the second supersession). **§5 is (γ) DECLARED in the DRAFT
@@ -862,7 +872,8 @@ launchers at **235/19**.
 | **DE round 36** | **EXECUTED** at `92c7da4` (Q-DE-54 `2432aa5`) — counts and pin statuses reproduce, the run **blocked by the wiring only**; six findings **DE36-C1..C6**. Its row's *"runner 68 → 71"* is a **transcription slip: 67 → 71** (`EXPECTED_CHECKS` read at both blobs) |
 | **DE round 36 review** | **RELEASED** (`aa1e44a`, 263 lines, 20:01:57Z) — **DE36-C1..C6 ALL CONFIRMED** (C1 **measured on a fixture**; **a TRUE swap does not fix it**); four findings **DE36-R1..R4**; `92c7da4` released **as round 37's base** |
 | **DE round 37** | **EXECUTED** at `218509e` (Q-DE-55) — counts **31/85/26/21/24/21/184/92** reproduce; pin statuses **11 IDENTICAL + 1 ADDITIVE_DECLARED** over a **transitive** closure of **75 modules**; `--run` scratch **rc 2**, the preflight refusing **at the scorer, naming `PA.tape_index` / `PA._feature_pass`**. Five findings **DE37-C1..C5** |
-| **DE round 38** | **QUEUED** — DE37-C1..C5 as ruled, plus DE37-Rn from the reviewer's filing (in flight) |
+| **DE round 37 review** | **RELEASED** (`3f1d310`, 240 lines, 21:11:39Z) — **DE37-C1..C5 ALL CONFIRMED, none contested**; four findings **DE37-R1..R4**; `218509e` is round 38's base **because nothing can run — so no finding reaches an artifact** |
+| **DE round 38** | **IN FLIGHT** (Q-DE-56, dispatched 21:14Z) — the reviewer's **six-step order**, C1..C5 as ruled plus DE37-R1..R4 |
 | **DE round 26** | the **DATA_ROOT split**, still behind DA's landing after 00:14Z |
 | **DA round 11** | **REVIEW RELEASED** (`a5e8b40`) for `e292439` as the content of **Q-DA-209**; all five DA10 findings close. Two new findings **DA11-R1/R2** → DA round 12 |
 | **DA round 12 review** | **RELEASED** (`852b9aa`) for `636a455` as Q-DA-209's content — DA11-R1/R2 close; **DA12-R1 (LOW-MED)** → DA round 14 |
@@ -934,8 +945,8 @@ artifact in the round-5 review, R1/R3/R4/R5 at `5e9ed91`;
 **DE33-C1..C9** (C1/C2/C3 **HIGH**) → **DE round 34, dispatched**;
 **BE9-C1 (HIGH) / BE9-C2 (MED) / BE9-C3 (LOW)** → **BE round 10, dispatched**;
 **BE8-R1 / BE8-R2** → **BE round 12**;
-**DE36-C1..C6 CONFIRMED**; **DE37-C1 (HIGH)**, **DE37-C2 (MED-HIGH)**,
-**DE37-C3/C4 (MED)**, **DE37-C5 (LOW)** → **DE round 38 (queued)**;
+**DE37-C1..C5 ALL CONFIRMED**, plus **DE37-R1 (MED-HIGH)**, **DE37-R2 (MED)**,
+**DE37-R3 (LOW-MED)** and **DE37-R4 (LOW)** → **DE round 38, in flight**;
 **BE10-R1..R4** → **BE round 12** with BE8-R1/R2;
 **DE31-R1, DE31-R2, DE32-R2, DE32-R3, DE32-R4 still OPEN** at `6d04833` and in the
 round-34 dispatch; **DE32-R1 closed for the LGBM head ONLY**; **DE32-R5 closed in
@@ -963,9 +974,9 @@ the REGISTER's state, not of the instrument's own escalation history** — a
 distinction worth keeping, because a reader at 00:14Z has no way to know which
 questions this particular tool once asked.
 
-**The reviewer is on the DE round-37 filing** (request
-`REQUEST_DE_ROUND_37_2026-09-02.md`, `2ca1c81`), **in flight**. **BE rounds 9+10's
-review is RELEASED** (`a8e88de`). **Released so far**
+**The reviewer is on RECORDED STANDBY until Q-DE-56 lands**; then **DE round 38
+as one round**. **Released so far** include BE rounds 9+10 (`a8e88de`) and **DE
+round 37** (`3f1d310`). **Released so far**
 include BE round 8 (`f804f33`), the **estimand reading** (`a23667b`), **DE rounds
 33+34** (`20bd233`) and **DE round 35** (`df123f2`).
 **Released so far** include BE rounds 6 (`03b5dca`) and 7 (`0f34aad`), DE rounds
@@ -1780,6 +1791,77 @@ than a clean zero (the density receipt covers 13 days, not this one).
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-02 ~21:15Z (MEM) — THE COMMENT PROMISES THE PROPERTY THE CODE
+### COMPUTES AWAY
+
+**R-479 swept.** Nothing run; committed blobs only. **DE37-C1..C5 all confirmed,
+none contested** — the first round this evening where nothing the coordinator
+raised was argued down.
+
+**DE37-R1 is C2 with the intent made visible, and I read both ends at the blob.**
+At `:155-161` the comment states the property in as many words: *"A later edit to
+either side **re-opens the question** instead of inheriting this pass — rule 12's
+shape applied to a declaration."* At `:380-386`, `_seal_declarations()` computes
+those shas **at import, from the sources the comparison reads**. So **the module
+documents the guarantee it computes away**: an edit moves the compared value and
+its expected value together. Driven both ways by the reviewer — **an UNDECLARED
+edit to `join_fills` BLOCKS; a DECLARED edit to `select_v2_era` PROCEEDS with the
+seal simply moving** — which is the finding's real shape: **the three declared
+functions are a PERMANENT EXEMPTION**, not a declaration that can expire.
+
+**And that puts a name on something this file has now seen three times in one
+evening.** DE36-R1 was **prose in a draft** that was false about the code. DE37-C1
+was **prose in a draft** that was true while the code was absent. This is **prose
+in the module** promising what the implementation removes. *The three are one
+class: a sentence that describes a property nobody computes.* The ruled fix is
+exactly the inverse move — **the seal becomes LITERALS in the source** (reason,
+`sha_at_fit`, `sha_at_declaring_tip`), with **an edited function body as the
+falsifier**. **Stop computing the expected value.**
+
+**DE37-R2 is the sharpest single sentence in the filing.** The (γ) fixture at
+`:2049-2051` calls `permuted_stream` directly on a hand-built draw — so it
+**satisfies the demand by construction**, and it is **the one state the run path
+cannot produce**. A green suite therefore certifies a state that cannot occur.
+That is why ruling (b) reads the way it does: **§5's TEXT survives as the text the
+USER rules on; the CODE is what fails** — and **the package must not travel while
+the suite presents (γ) as achieved.** *The document is not wrong; the evidence
+for it is.*
+
+**R3 is small and worth keeping for its shape:** P3 filters the draw to the
+stream's keys, so **an empty intersection is vacuously true** — a predicate that
+passes hardest exactly when there is nothing to check. Ruling (f) fixes the order:
+**assert `want ⊆ keys(stream)` first.**
+
+**R4 is my own catch, corroborated.** The reviewer independently reports Q-DE-55's
+prior count of **74** as **71** — the same figure I verified at `EXPECTED_CHECKS`
+last round, and the **second consecutive round** of it. Filed as **row hygiene**,
+which is the right register: the new count comes from the run, the prior one from
+memory, and it is now two seats saying so rather than one.
+
+**RELEASE `218509e` with its reason attached, because the reason is the
+interesting part.** Nothing can run — **the preflight refuses at the scorer** — so
+**no finding reaches an artifact.** A release granted *because the code cannot
+produce anything* is a very different object from a release granted because the
+code is right, and the state files say which one this is.
+
+**Four conditions now stand between the package and the USER**, and I have written
+them where the bundle status lives: the **declared-vs-built sentence (or (γ) built
+first)**; **§5 saying what happens to below-threshold values, with §2 re-read**;
+**the seal's form settled**; and **the two numbers travelling with the split
+question**. That last one is a judgement I would have got wrong: the split
+question looks like context, and the ruling makes it **a decision the USER is
+GIVEN with the §5 numbers, not a footnote to them.**
+
+**My round 57 verified with nothing found**, and the round-56 LOW is recorded as
+**closed at the source** — the bundle field now carries its **AS-OF** rather than
+a bare sha, which was the point of the correction rather than the sha itself.
+
+**Seats.** DE round 38 is **in flight** (Q-DE-56, dispatched 21:14Z, running the
+reviewer's six-step order). The **reviewer is on recorded standby until Q-DE-56
+lands**, then **DE 38 as one round**. **BE is on recorded standby** — round 11 is
+**the durable landing after the 00:14Z read**, round 12 is **BE8-R1/R2 +
+BE10-R1..R4**. **DA standby until 00:06Z / 00:14Z.**
 
 ### 2026-09-02 ~21:07Z (MEM) — A VARIABLE ASSIGNED ONCE AND READ ZERO TIMES
 
