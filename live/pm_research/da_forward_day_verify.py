@@ -2397,7 +2397,7 @@ def verify_day(day_token: str, freeze_epoch: float,
 EXPECTED_CHECKS = 247
 
 
-def _selftests() -> int:
+def _selftests(require_no_skips: bool = False) -> int:
     checks = 0
     skipped: list[tuple[str, str]] = []
 
@@ -4517,6 +4517,19 @@ def _selftests() -> int:
           + (f" ({len(skipped)} SKIPPED, named above; ran+skipped="
              f"{EXPECTED_CHECKS})" if skipped else
              f" (0 skipped; ran+skipped={EXPECTED_CHECKS})"))
+    # OPT-IN ONLY (DA11 item 4). Default behaviour is unchanged: a skip is a
+    # rule-4 STATUS and stays visible at rc 0, because making every partial
+    # layout red would train a reader to ignore a red. The flag is for a
+    # caller that has DECLARED its layout complete -- a governed run would
+    # pass it so that "the log was missing" becomes a failure THERE, at the
+    # place that promised the input, rather than a quiet 241.
+    if require_no_skips and skipped:
+        print(f"REQUIRE-NO-SKIPS: {len(skipped)} check(s) did not run — "
+              + "; ".join(n for n, _ in skipped)
+              + ". Named above with their absent inputs. rc 1 because THIS "
+                "caller declared the layout complete; without the flag the "
+                "same run is rc 0 and the skips are still named.")
+        return 1
     return 0
 
 
@@ -4527,6 +4540,12 @@ def main() -> int:
     ap.add_argument("--closed", default=None)
     ap.add_argument("--opened", default=None)
     ap.add_argument("--selftest", action="store_true")
+    ap.add_argument("--require-no-skips", action="store_true",
+                    help="OPT-IN: exit 1 if any selftest check was SKIPPED "
+                         "for an absent input. Default (unset) leaves a skip "
+                         "as a visible status at rc 0 — rule 4. NOT wired "
+                         "into the gate roster; for a caller that has "
+                         "declared its data layout complete.")
     ap.add_argument("--day", default=None, help="YYYYMMDD, e.g. 20260827")
     # (e) NO SILENT DEFAULT. The old default (1787583868.0 = 2026-08-24T15:04Z)
     # was 3.63 days stale against the live freeze commit b3f7f9f
@@ -4557,7 +4576,7 @@ def main() -> int:
                          "artifact as `write_reason`.")
     a = ap.parse_args()
     if a.selftest or not a.cmd:
-        return _selftests()
+        return _selftests(require_no_skips=a.require_no_skips)
     if a.cmd == "days":
         # Emits `<day>\t<kind>` lines for the launcher, plus `#` diagnostics it
         # copies into the nightly log. Printing the DERIVATION, not just its

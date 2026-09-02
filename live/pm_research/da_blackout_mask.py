@@ -864,8 +864,14 @@ def selftest() -> int:
                 # be itself.
                 ok(str(_wt_path) in _prod["code_root"]
                    and _prod["data_root"] != _prod["code_root"]
-                   and _prod.get("data_root_branch")
-                   != "2_code_tree_carries_the_tape",
+                   # MEMBERSHIP, not `!=`: a MISSING key satisfies `!=`, so
+                   # deleting `data_root_branch` from the emission would have
+                   # passed this control. The child carries no tape, so its
+                   # own resolution must be branch 1 (an inherited
+                   # PM_DATA_ROOT) or branch 3 (canonical) -- and it must be
+                   # PRESENT.
+                   and _prod.get("data_root_branch") in (
+                       "1_env_PM_DATA_ROOT", "3_canonical"),
                    f"RR12-1 CONTROL: the child NAMES both roots and they "
                    f"DIFFER -- code_root is the throwaway worktree, and since "
                    f"that tree carries no tape its resolver CANNOT take "

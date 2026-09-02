@@ -89,6 +89,10 @@ CANONICAL_DATA_ROOT = Path("/home/yuqing/ctaNew")
 #: makes a short run self-explaining instead of a smaller number.
 DATA_ROOT_BRANCH: str = "unresolved"
 
+#: DA11-R1: this suite's own total, asserted over ran + skipped so an empty
+#: data root cannot produce the same summary line as a complete one.
+EXPECTED_CHECKS = 9
+
 
 def _resolve_data_root() -> Path:
     global DATA_ROOT_BRANCH
@@ -333,6 +337,19 @@ def selftest() -> int:
     import gzip
     import tempfile
     checks = []
+    skipped: list[tuple[str, str]] = []
+
+    def skip(name, absent):
+        """DA11-R1: a skip is a STATUS, never a pass.
+
+        This module used to `checks.append(True)` after printing the SKIP, so
+        a complete root and an EMPTY root produced the BYTE-IDENTICAL summary
+        `9 checks passed` -- and that summary is exactly the one line
+        `v5_deploy_gates` captures as the gate's result. The gate could not
+        tell the two apart. Same shape as the verifier's fix (DA10-R1).
+        """
+        skipped.append((name, str(absent)))
+        print(f"  SKIP {name}: absent input {absent}")
 
     def ok(cond, label):
         checks.append(cond)
@@ -437,11 +454,17 @@ def selftest() -> int:
            f"and the resolved root {DATA_ROOT} carries {len(_days)} day(s), "
            f"so this suite ran against a tape that exists")
     else:
-        print(f"  SKIP resolved-root-carries-days: absent input "
-              f"{DATA_ROOT}/data/pm_5min/raw (branch {DATA_ROOT_BRANCH}) -- "
-              f"an EMPTY data root is a status, not a clean pass")
-        checks.append(True)
-    print(f"pm_tape_density selftests: {len(checks)} checks passed")
+        skip("resolved-root-carries-days",
+             f"{DATA_ROOT}/data/pm_5min/raw (branch {DATA_ROOT_BRANCH})")
+    if len(checks) + len(skipped) != EXPECTED_CHECKS:
+        raise AssertionError(
+            f"pm_tape_density selftest FAILED: {len(checks)} ran + "
+            f"{len(skipped)} skipped = {len(checks) + len(skipped)}, expected "
+            f"{EXPECTED_CHECKS}. A check that neither ran nor named itself as "
+            f"a skip has VANISHED.")
+    print(f"pm_tape_density selftests: {len(checks)} checks passed"
+          + (f" ({len(skipped)} skipped; ran+skipped={EXPECTED_CHECKS})"
+             if skipped else f" (0 skipped; ran+skipped={EXPECTED_CHECKS})"))
     return 0
 
 

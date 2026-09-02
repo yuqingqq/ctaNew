@@ -116,9 +116,32 @@ def run_one(label: str, argv: list[str]) -> tuple[bool, str, float]:
         time.time() - t0
 
 
+#: DA11-R2: EVERY `--selftest` GATE RUNS UNDER BOTH LAUNCHERS.
+#: The roster was 21 path launches and one `-m` (`tier1_pipeline`), so the
+#: exact break DA10-R3 fixed -- a module that passes by path and dies under
+#: `python3 -m` -- would have sat uninvoked in the gate that was added to
+#: catch it. A gate that exercises one launcher is not a gate for the other
+#: (R-370: a gate nobody runs is not a gate).
+#:
+#: Derived rather than transcribed: a second roster of module names would go
+#: stale the first time a gate is added, which is the failure this closes.
+def _module_launch_twins(gates):
+    out = []
+    for label, argv in gates:
+        if (len(argv) == 3 and argv[0] == PY and "--selftest" in argv
+                and str(argv[1]).endswith(".py")
+                and Path(argv[1]).parent == HERE):
+            mod = Path(argv[1]).stem
+            out.append((f"{label} [-m]",
+                        [PY, "-m", f"live.pm_research.{mod}", "--selftest"]))
+    return out
+
+
 def main() -> int:
     falsify = "--falsify" in sys.argv
-    gates = list(GATES) + ([FAILING_CANARY] if falsify else [])
+    gates = list(GATES)
+    gates += _module_launch_twins(GATES)
+    gates += ([FAILING_CANARY] if falsify else [])
     if falsify:
         print("FALSIFIER MODE: a gate that MUST fail is injected. This run "
               "is expected to report FAILED; if it reports PASSED, the "
