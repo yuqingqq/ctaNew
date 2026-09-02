@@ -843,8 +843,10 @@ def selftest() -> int:
                     _rr = _sp.run([sys.executable, "-c", _prog,
                                    str(_wt / f"raw_{tag}")],
                                   capture_output=True, text=True, timeout=300)
-                    _pp = json.loads(_rr.stdout.strip().splitlines()[-1])
-                    return _exp, _pp
+                    _pp = (json.loads(_rr.stdout.strip().splitlines()[-1])
+                           if _rr.returncode == 0 and _rr.stdout.strip()
+                           else {})
+                    return _exp, _pp, _rr
 
                 # ---- ARRANGEMENT 1: CLEAN, AND IT MUST RUN THE CODE UNDER
                 # TEST. Simply not copying gives a clean tree that runs the
@@ -871,7 +873,26 @@ def selftest() -> int:
                          "commit", "-q", "-m",
                          "RR12-1 fixture: scratch-worktree commit only"],
                         capture_output=True)
-                _clean_exp, _clean_prod = _measure("clean")
+                # CO-10: THE CHILD'S HEAD, RE-READ AFTER THE FIXTURE COMMIT.
+                # The identity conjunct used to compare against `_there`
+                # (HEAD~1), which WAS the child's HEAD while it stayed
+                # detached there. The fixture commit above moves it, and the
+                # rewrite that followed compared against `_here` twice --
+                # `_here` IS `_root_git.stdout.strip()` -- so the control
+                # asserted "not the parent's" twice and identity with
+                # nothing. A producer answering `rev-parse HEAD~1`, a commit
+                # that did NOT execute, passed 32 checks.
+                _child_head = _sp.run(
+                    ["git", "-C", str(_wt_path), "rev-parse", "HEAD"],
+                    capture_output=True, text=True).stdout.strip()
+                ok(_child_head and _child_head not in (_here, _there),
+                   f"CO-10 precondition: after the fixture commit the child's "
+                   f"HEAD ({_child_head[:12]}) is a THIRD value, distinct "
+                   f"from this tree's ({_here[:12]}) and from HEAD~1 "
+                   f"({_there[:12]}) -- so the two conjuncts below compare "
+                   f"against DIFFERENT commits and neither can stand in for "
+                   f"the other")
+                _clean_exp, _clean_prod, _ = _measure("clean")
                 ok(_clean_exp is False,
                    "RR12-1 fixture: with nothing copied the child's producing "
                    "files equal its own HEAD -- the CLEAN arrangement is "
@@ -889,23 +910,43 @@ def selftest() -> int:
                 _mk.write_text(_mk.read_text()
                                + "\n# RR12-1 fixture marker (scratch worktree "
                                  "only)\n")
-                _seen_dirty, _prod = _measure("dirty")
-                _r = _sp.run([sys.executable, "-c", _prog,
-                              str(_wt / "raw_probe")],
-                             capture_output=True, text=True, timeout=300)
+                # TAKEN, not left: the third execution is gone. `_measure`
+                # already runs the producer and returns its emission, so the
+                # separate `raw_probe` run was a third child process producing
+                # a result equivalent to this one. `_measure` now returns the
+                # CompletedProcess too, so the "it runs at all" check reads
+                # the same execution the assertions read -- one run, one
+                # subject.
+                _seen_dirty, _prod, _r = _measure("dirty")
                 ok(_r.returncode == 0,
                    f"RR12-1 control: the producer RUNS from a worktree at all "
                    f"-- which it could not before, because its data root came "
                    f"from __file__ and a worktree has no tape "
                    f"({_r.stderr.strip()[-160:]})")
                 _prod = json.loads(_r.stdout.strip().splitlines()[-1])
-                ok(_prod["carrying_commit"] != _here
-                   and _prod["carrying_commit"] != _root_git.stdout.strip(),
-                   f"RR12-1 CONTROL: a run from the worktree records the "
-                   f"WORKTREE's own HEAD "
-                   f"({_prod['carrying_commit'][:12]}), NOT this tree's "
-                   f"({_here[:12]}). The artifact names the tree that "
-                   f"executed")
+                ok(_prod["carrying_commit"] == _child_head
+                   and _prod["carrying_commit"] != _here,
+                   f"CO-10 CONTROL: the run from the worktree records the "
+                   f"CHILD's own HEAD ({_child_head[:12]}) -- an IDENTITY "
+                   f"with the tree that executed -- and that value is NOT "
+                   f"this tree's HEAD ({_here[:12]}). Two conjuncts on two "
+                   f"DIFFERENT commits: the first is what a producer "
+                   f"answering some other commit fails, the second is what a "
+                   f"producer answering the parent's fails. Got "
+                   f"{_prod['carrying_commit'][:12]}")
+                # AND THE SPECIFIC WRONG COMMIT, ASSERTED SEPARATELY. Dropping
+                # the identity conjunct above leaves `!= _here` satisfied by an
+                # intact producer, so that mutation alone is silent -- and the
+                # HEAD~1 producer would then walk through again, which is
+                # exactly CO-10 returning. This names the commit a
+                # `rev-parse HEAD~1` producer would report, so the two
+                # assertions have to BOTH be removed for that hole to reopen.
+                ok(_prod["carrying_commit"] != _there,
+                   f"CO-10 KNOWN-BAD, held separately: the recorded commit is "
+                   f"NOT HEAD~1 ({_there[:12]}) -- the value a producer "
+                   f"asking `rev-parse HEAD~1` would report, which passed 32 "
+                   f"checks at 8910701 because the identity conjunct had been "
+                   f"lost")
                 # THE FLAG MUST AGREE WITH THE CHILD TREE'S ACTUAL STATE,
                 # which is COMPUTED here rather than assumed. Asserting `True`
                 # encoded the fixture's arrangement: it holds only while the
