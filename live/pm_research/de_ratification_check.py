@@ -138,25 +138,82 @@ class NotVerified(RuntimeError):
     """A consumer asked for a verified ratification and did not get one."""
 
 
+#: DE10-R1: EVERY temporal comparison in this module was LEXICOGRAPHIC on
+#: strings. One root cause, three symptoms, and none of them surfaced:
+#:   now_utc="zzzz"          -> day_closed True,  verified True   (permissive)
+#:   scope_to="not-a-date"   -> day_in_scope True, verified True  (permissive)
+#:   scope_from="not-a-date" -> day_in_scope False                (restrictive)
+#:   now_utc=123             -> TypeError, which is not a refusal
+#: Garbage sorted after "2026-…" reads as the future and garbage sorting
+#: before it reads as the past, so the SAME defect was permissive in two
+#: fields and restrictive in a third. Everything temporal is parsed to a
+#: datetime BEFORE any comparison now, and an unparsable or non-string value
+#: REFUSES naming the field AND the value.
+INSTANT_FORMATS = ("%Y-%m-%dT%H:%M:%SZ", "%Y-%m-%dT%H:%MZ")
+DAY_FORMAT = "%Y%m%d"
+
+
+def parse_instant(value, field: str):
+    """An ISO-8601 Z instant, or a REFUSAL naming the field and the value."""
+    import datetime as _dt
+    if not isinstance(value, str):
+        raise RatificationRefused(
+            f"REFUSED: {field} is {value!r} ({type(value).__name__}), not a "
+            f"string. A TypeError from a comparison is not a refusal -- it "
+            f"is a crash wearing one (DE10-R1).")
+    for fmt in INSTANT_FORMATS:
+        try:
+            return _dt.datetime.strptime(value.strip(), fmt).replace(
+                tzinfo=_dt.timezone.utc)
+        except ValueError:
+            continue
+    raise RatificationRefused(
+        f"REFUSED: {field} carries {value!r}, which is not an instant in "
+        f"{list(INSTANT_FORMATS)}. Compared as a STRING it would sort "
+        f"against real timestamps and read as the future or the past "
+        f"depending only on its first character (DE10-R1).")
+
+
+def parse_day(value, field: str):
+    """A YYYYMMDD day, or a REFUSAL naming the field and the value."""
+    import datetime as _dt
+    if not isinstance(value, str):
+        raise RatificationRefused(
+            f"REFUSED: {field} is {value!r} ({type(value).__name__}), not a "
+            f"string")
+    try:
+        return _dt.datetime.strptime(value.strip(), DAY_FORMAT).replace(
+            tzinfo=_dt.timezone.utc)
+    except ValueError:
+        raise RatificationRefused(
+            f"REFUSED: {field} carries {value!r}, which is not a day in "
+            f"{DAY_FORMAT}. Compared as a STRING it would sort against real "
+            f"days and silently open or close the scope (DE10-R1).")
+
+
 def entry_timestamp(heading: str) -> str | None:
     """The register timestamp in an entry's heading, or None."""
     m = HEADING_TS_RE.match(heading)
     return m.group(1) if m else None
 
 
-def _norm_ts(ts: str) -> str:
-    """Comparable form. Both sides are ISO-8601 Z, so lexical order is
-    chronological once seconds are normalised."""
-    ts = ts.strip().rstrip("Z")
-    return (ts if len(ts) > 16 else ts + ":00") + "Z"
+def _norm_ts(ts: str, field: str = "timestamp"):
+    """PARSED, not normalised. The name is kept so every call site changes
+    meaning at once: this used to pad seconds and return a string for a
+    lexical compare, which is the DE10-R1 defect."""
+    return parse_instant(ts, field)
+
+
+def day_end_instant(day: str, field: str = "supply.day"):
+    """The instant a UTC day is FINISHED: the next day's 00:00:00Z."""
+    import datetime as dt
+    return parse_day(str(day), field) + dt.timedelta(days=1)
 
 
 def day_end_utc(day: str) -> str:
-    """The instant a UTC day is FINISHED: the next day's 00:00:00Z."""
-    import datetime as dt
-    d = dt.datetime.strptime(str(day), "%Y%m%d").replace(
-        tzinfo=dt.timezone.utc) + dt.timedelta(days=1)
-    return d.strftime("%Y-%m-%dT%H:%M:%SZ")
+    """The same instant, rendered. Kept for readers and receipts; nothing
+    compares this string any more."""
+    return day_end_instant(day).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 def require_verified(res: dict) -> dict:
@@ -366,18 +423,21 @@ def supply_population(supplied: dict) -> dict:
 # ---------------------------------------------------------------------------
 
 def day_in_scope(day: str, fields: dict, unbindable: Sequence[str]):
-    """True / False / None(UNBINDABLE). Both ends evaluated."""
+    """True / False / None(UNBINDABLE). Both ends evaluated, both PARSED.
+
+    The open-ended token is read BEFORE parsing -- `null` is a declared word,
+    not a date -- and everything else is a day or a refusal."""
     if "scope_from" in unbindable or "scope_from" not in fields:
         return None
-    if day < str(fields["scope_from"]).strip():
+    d = parse_day(str(day), "supply.day")
+    if d < parse_day(fields["scope_from"], "block.scope_from"):
         return False
     to = fields.get("scope_to")
     if to is None:
         return None                       # absent is NOT null
-    to = str(to).strip()
-    if to.lower() in SCOPE_OPEN_TOKENS:
+    if isinstance(to, str) and to.strip().lower() in SCOPE_OPEN_TOKENS:
         return True                       # `null` = open, explicitly
-    return day <= to
+    return d <= parse_day(to, "block.scope_to")
 
 
 def check(supplied: dict, ratification_ref: str,
@@ -394,8 +454,17 @@ def check(supplied: dict, ratification_ref: str,
     PROVENANCE rather than a refusal.  Omitted, the run is a NEW one and a
     superseded ref refuses."""
     import datetime as _dt
-    now_utc = now_utc or _dt.datetime.now(
-        _dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    # AN EMPTY now_utc MAY MEAN THE WALL CLOCK ONLY IF THE EMISSION SAYS SO.
+    # Absent (None) is the wall clock and is RECORDED as such; anything else
+    # is injected and is parsed. An empty STRING is not absent -- it is an
+    # unparsable instant, and it refuses.
+    if now_utc is None:
+        now_dt = _dt.datetime.now(_dt.timezone.utc)
+        now_utc = now_dt.strftime("%Y-%m-%dT%H:%M:%SZ")
+        now_utc_source = "wall_clock"
+    else:
+        now_dt = parse_instant(now_utc, "now_utc")
+        now_utc_source = "injected"
     if register_text is None:
         register_text = REGISTER.read_text()
     entry = parse_entry(register_text, ratification_ref)
@@ -427,7 +496,8 @@ def check(supplied: dict, ratification_ref: str,
                     f"whose instant is unknown cannot be weighed against a "
                     f"receipt's stamp, and guessing the order is exactly "
                     f"what a stamp exists to avoid.")
-            superseder_times[sref] = _norm_ts(ts)
+            superseder_times[sref] = _norm_ts(
+                ts, f"heading timestamp of {sref}")
         if stamped_at is None:
             raise RatificationRefused(
                 f"REFUSED FOR A NEW RUN: {ratification_ref} is SUPERSEDED by "
@@ -435,7 +505,7 @@ def check(supplied: dict, ratification_ref: str,
                 f"{ratification_ref} is provenance -- pass its `as_of_utc` as "
                 f"`stamped_at` and this becomes a COMPUTED provenance "
                 f"finding rather than a sentence in a report (CO-R3).")
-        stamp = _norm_ts(stamped_at)
+        stamp = _norm_ts(stamped_at, "stamped_at")
         later = {r: t for r, t in superseder_times.items() if t > stamp}
         if len(later) == len(superseder_times):
             provenance = True          # every superseder postdates the stamp
@@ -560,17 +630,19 @@ def check(supplied: dict, ratification_ref: str,
         # NO notion of closure at all, so it would certify a population that
         # is still growing. DECIDED, never None: a day is closed iff its own
         # end instant has passed.
-        "day_closed": day_end_utc(str(supplied["day"])) <= now_utc,
+        "day_closed": day_end_instant(str(supplied["day"])) <= now_dt,
     }
     return {
         "protocol": PROTOCOL,
         "refusal_scope": "a refusal here is about STARTING A RUN; a receipt "
                          "already carrying a ref keeps it as provenance",
         "now_utc": now_utc,
+        "now_utc_source": now_utc_source,
         "stamped_at": stamped_at,
         "provenance": provenance,
         "superseded_by": sorted(superseder_times),
-        "superseder_times": superseder_times,
+        "superseder_times": {r: t.strftime("%Y-%m-%dT%H:%M:%SZ")
+                             for r, t in superseder_times.items()},
         "ratification_ref": ratification_ref,
         "binding_source": source,
         "entry_heading": entry["heading"][:160],
@@ -592,7 +664,7 @@ def check(supplied: dict, ratification_ref: str,
 
 
 # ---------------------------------------------------------------------------
-EXPECTED_CHECKS = 66
+EXPECTED_CHECKS = 84
 
 
 def selftest() -> int:
@@ -857,6 +929,75 @@ def selftest() -> int:
                "and the consumer gate REFUSES the open day rather than "
                "leaving closure to the caller to notice")
 
+    # ---- DE10-R1: every temporal comparison PARSED, both directions -----
+    # GARBAGE THAT WOULD HAVE SORTED PERMISSIVE and GARBAGE THAT WOULD HAVE
+    # SORTED RESTRICTIVE, per field. "zzzz" sorts AFTER "2026-…" and read as
+    # the future; "aaaa" sorts BEFORE and read as the past. The same defect
+    # was permissive in two fields and restrictive in a third, and neither
+    # face of it surfaced.
+    for _val in ("zzzz", "aaaa"):
+        refuses(lambda v=_val: check(sup, "R-419", now_utc=v),
+                f"DE10-R1 ({'permissive' if _val > '2' else 'restrictive'} "
+                f"direction): now_utc={_val!r} REFUSES -- lexically it read "
+                f"as {'the future, so day_closed was True' if _val > '2' else 'the past'}",
+                needle="not an instant")
+    for _val in ("zzzz", "aaaa"):
+        refuses(lambda v=_val: check(sup, "R-900",
+                                     fixture_register(scope_to=v)),
+                f"scope_to={_val!r} REFUSES in {'the permissive' if _val > '2' else 'the restrictive'} "
+                f"direction too",
+                needle="block.scope_to")
+        refuses(lambda v=_val: check(sup, "R-900",
+                                     fixture_register(scope_from=v)),
+                f"and scope_from={_val!r} likewise -- the field that used to "
+                f"go silently RESTRICTIVE",
+                needle="block.scope_from")
+    for _bad in (123, 20260901, ["2026-09-02T00:00:00Z"]):
+        refuses(lambda v=_bad: check(sup, "R-419", now_utc=v),
+                f"KNOWN-BAD: a NON-STRING now_utc ({_bad!r}) REFUSES BY NAME "
+                f"-- a TypeError from a comparison is a crash wearing a "
+                f"refusal's clothes",
+                needle="not a string")
+    ok(check(sup, "R-419")["now_utc_source"] == "wall_clock"
+       and check(sup, "R-419",
+                 now_utc="2026-09-02T00:00:00Z")["now_utc_source"]
+       == "injected",
+       "AN ABSENT now_utc MAY MEAN THE WALL CLOCK ONLY BECAUSE THE EMISSION "
+       "SAYS SO: `now_utc_source` reads wall_clock when it was defaulted and "
+       "injected when it was given")
+    refuses(lambda: check(sup, "R-419", now_utc=""),
+            "and an EMPTY STRING is NOT absent -- it is an unparsable "
+            "instant and refuses, rather than quietly becoming the clock",
+            needle="not an instant")
+    refuses(lambda: check(sup, "R-418", stamped_at="not-a-time"),
+            "KNOWN-BAD: an unparsable `stamped_at` REFUSES BY NAME",
+            needle="stamped_at")
+    badhead = ("### R-902 — 2026-09-02T09:00Z — coordinator: R-ADMISS\n\n"
+               + fixture_register("R-902").split("\n\n", 1)[1]
+               ).replace("\n\n## next\n", "\n\n") + (
+        "### R-903 — 2026-99-99T99:99Z — coordinator: R-ADMISS\n\n"
+        + fixture_register("R-903", supersedes="R-902").split("\n\n", 1)[1])
+    refuses(lambda: check(sup, "R-902", badhead,
+                          stamped_at="2026-09-02T10:00:00Z"),
+            "KNOWN-BAD: a superseder heading whose timestamp is well-SHAPED "
+            "but not a real instant (2026-99-99T99:99Z) REFUSES -- the "
+            "regex admits it and only parsing rejects it",
+            needle="not an instant")
+
+    # ---- the boundary, unchanged -----------------------------------------
+    ok(day_end_utc("20260901") == "2026-09-02T00:00:00Z",
+       f"the day-end instant is unchanged: {day_end_utc('20260901')}")
+    for _n, _want in (("2026-09-01T23:59:59Z", False),
+                      ("2026-09-02T00:00:00Z", True),
+                      ("2026-09-02T00:00:01Z", True)):
+        ok(check(sup, "R-419", now_utc=_n)["checks"]["day_closed"] is _want,
+           f"boundary held: now_utc {_n} -> day_closed {_want} "
+           f"(day+1 00:00:00Z <=, so -1s False, 0 True, +1s True)")
+    refuses(lambda: check(dict(sup, day="2026-09-01"), "R-419"),
+            "and the SUPPLY's own day is parsed too: a day that is not "
+            "YYYYMMDD refuses rather than sorting",
+            needle="supply.day")
+
     # ---- CO-R3: supersession against a STAMP ----------------------------
     prov = check(sup, "R-418", stamped_at="2026-09-02T10:30:00Z")
     ok(prov["provenance"] is True and prov["verified_for_new_run"] is False
@@ -1071,6 +1212,22 @@ def mutation_audit(sup: dict) -> dict:
             ((sup, "R-900", fixture_register(present_source="/etc/passwd")),
              {}),
             ((sup, "R-900", good), {})),
+        "unparsable_now_utc": (((sup, "R-419", None), {"now_utc": "zzzz"}),
+                               ((sup, "R-419", None),
+                                {"now_utc": "2026-09-02T00:00:00Z"})),
+        "non_string_now_utc": (((sup, "R-419", None), {"now_utc": 123}),
+                               ((sup, "R-419", None),
+                                {"now_utc": "2026-09-02T00:00:00Z"})),
+        "unparsable_scope_to": (
+            ((sup, "R-900", fixture_register(scope_to="zzzz")), {}),
+            ((sup, "R-900", good), {})),
+        "unparsable_scope_from": (
+            ((sup, "R-900", fixture_register(scope_from="aaaa")), {}),
+            ((sup, "R-900", good), {})),
+        "unparsable_stamped_at": (
+            ((sup, "R-418", None), {"stamped_at": "nope"}),
+            ((sup, "R-418", None),
+             {"stamped_at": "2026-09-02T10:30:00Z"})),
         "already_superseded_at_stamp": (
             ((sup, "R-902", stamped_chain),
              {"stamped_at": "2026-09-02T10:30:00Z"}),
