@@ -1,13 +1,12 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-02T16:16Z — **FIVE LANDINGS.** **CO-9 is CLOSED** at
-`5e9dc8b` — I re-drove my own C/C2/C3/D/E fixtures at the tip: **C now returns
-and C3 still refuses, but on the PATH, not in the scan.** **BE34-R1..R5 are all
-closed** (`5e9ed91`, **95** both launchers, reproduced here). **DA round 15
-verified at `8910701`** with **CO-10** against it — a control **rewritten around
-a fixture change** into two negatives of one value, recorded beside the DA10-R5
-class. DE25-R1 reproduced: an anchor collision reads **0 chars and answers
-True.** **SIX RULED, none open.**
+Updated: 2026-09-02T16:28Z — **DE25-R1 CLOSED at `1480ab6`**: my own collision
+fixture now reads **0 chars and answers FALSE**, where it answered True two
+rounds ago. **CO-10 CLOSED on the chain at `3b7e10a`** — the identity conjunct is
+back and the `HEAD~1` mutant is red by name. **DE27-R1 reproduced here in a
+parity tree:** dropping the adjudicating `kind` conjunct exits **rc 1 with an
+UNCAUGHT refusal — and the last line on stdout is a PASS.** Red is not the same
+as caught. **SIX RULED, none open.**
 
 ## READ FIRST — current project handoff
 
@@ -746,14 +745,16 @@ launchers at **235/19**.
 | **DE round 26** | **VERIFIED** at `89aef8c` (Q-DE-44) — ratification **171** (reproduced here); `named` from `own_ratification_blocks` (`:422-423`), `check#18` now says **"0-based"** (`:987`/`:990`) |
 | **DE round 25 review** | **RELEASED** (`a7860dc`) for `50a9113` — three rulings adopted; **DE25-R1 (LOW)** → DE round 28 |
 | **DE round 27** | **VERIFIED** at `5e9dc8b` (Q-DE-45) — **CO-9 CLOSED**, ratification **177**; `own_blocks_quiet()` (`:631`) scans, `own_ratification_blocks` (`:639`) adjudicates on the path |
-| **DE round 28** | **IN FLIGHT** (Q-DE-46) — DE25-R1: name the **anchor-collision** shape and the composition's own condition in the `:279` limit paragraph |
+| **DE rounds 26+27 review** | **RELEASED** (`723271e`) for **both** `5e9dc8b` and `89aef8c` — the fixture matrix reproduces the register's table; three rulings adopted; **DE27-R1 (LOW)** → DE round 29 |
+| **DE round 28** | **VERIFIED** at `1480ab6` (Q-DE-46) — **DE25-R1 CLOSED**: `read_nothing` (`:319`) makes an empty read answer **False**; admissible **92** (reproduced here) |
+| **DE round 29** | **IN FLIGHT** (Q-DE-47) — DE27-R1: **one text** for the ownership predicate, and a **named** control for the `kind` conjunct |
 | **DE round 26** | the **DATA_ROOT split**, still behind DA's landing after 00:14Z |
 | **DA round 11** | **REVIEW RELEASED** (`a5e8b40`) for `e292439` as the content of **Q-DA-209**; all five DA10 findings close. Two new findings **DA11-R1/R2** → DA round 12 |
 | **DA round 12 review** | **RELEASED** (`852b9aa`) for `636a455` as Q-DA-209's content — DA11-R1/R2 close; **DA12-R1 (LOW-MED)** → DA round 14 |
 | **DA round 13** | **HELD** at `e384792` (chain `3a89e6c`→`e292439`→`636a455`→`e384792`) — preflight **39**; `freeze_disposition` moves to `ruled`, `still_open == {}`, and a **coherence guard** makes the contradiction unrepresentable |
 | **DA rounds 13+14 review** | **RELEASED** (`a2a1cf8`) for **both** `e384792` and `801eb31`, dispositions identical, no hold — three LOW/LOW-MED findings **DA13-R1, DA14-R1, DA14-R2** → DA round 15 |
 | **DA round 15** | **HELD and VERIFIED** at `8910701` — DA13-R1/DA14-R1/DA14-R2 closed (39 / 5 / 32 both launchers). **CO-10** filed at the same tip |
-| **DA round 16** | **DISPATCHED and HELD** (Q-DA-212) — CO-10, `da_blackout_mask.py` selftest region only, before tonight |
+| **DA round 16** | **HELD and VERIFIED** at `3b7e10a` (Q-DA-212) — **CO-10 CLOSED on the chain**, pending the reviewer: the identity conjunct is back (`:927-928`), `_child_head` re-read after the fixture commit, the `HEAD~1` mutant **red by name**. Mask **32 → 34** |
 | **DA round 14** | **HELD and VERIFIED** at `801eb31` — DA12-R1 closed, twinning **both directions**, **23 + 15 = 38** and `--falsify` 39 (recomputed here in a parity tree), the one exclusion **named with a reproduced reason**. A one-assertion scope deviation **ACCEPTED in-batch** |
 | **BE round 5 review** | **RELEASED** (`d990162`) for `baa986d` — **BE34-R2 CLOSED at the artifact**; two rulings adopted; three LOW-MED findings **BE5-R1/R2/R3** → BE round 7 |
 | **BE round 6** | **VERIFIED** at `5e9ed91` (Q-BE-231) — BE34-R1/R3/R4/R5 closed, **95** both launchers, sha `957a9d3c…`, usage rc **2** (all reproduced here); three of BE's own corrections in band |
@@ -798,8 +799,9 @@ artifact in the round-5 review, R1/R3/R4/R5 at `5e9ed91`;
 **BE5-R1/R2/R3** → **BE round 7** (staged, before tonight's read);
 **DE23-R1/R2 CLOSED** at `50a9113`, queued for review;
 **DE24-R1/R2 CLOSED** at `89aef8c`; **CO-9 CLOSED** at `5e9dc8b`;
-**DE25-R1** → **DE round 28, in flight**; **DA13-R1 / DA14-R1 / DA14-R2 CLOSED**
-at `8910701`; **CO-10** → **DA round 16** (held);
+**DE25-R1 CLOSED** at `1480ab6`; **DE27-R1** → **DE round 29, in flight**;
+**DA13-R1 / DA14-R1 / DA14-R2 CLOSED** at `8910701`; **CO-10 CLOSED** at
+`3b7e10a`, pending the reviewer;
 **DE20-R1/R2 CLOSED** at `92fc615`, review released; **DE21-R1 CLOSED** at
 `a83083a`; **DE22-R1 CLOSED** at `e0d1e9f`, queued for review; **DA12-R1** → DA round 14
 (held);
@@ -821,11 +823,11 @@ the REGISTER's state, not of the instrument's own escalation history** — a
 distinction worth keeping, because a reader at 00:14Z has no way to know which
 questions this particular tool once asked.
 
-**The reviewer's queue, in order:** **DE rounds 26+27** as ONE filing (in
-flight) → **DA round 15** at `8910701` → **BE round 6** at `5e9ed91` → then BE
-round 7 and DA round 16 when they file. **Released so far:** DE rounds 23
-(`0b03618`), 24 (`304cd5f`) and 25 (`a7860dc`), DA rounds 13+14 (`a2a1cf8`), BE
-round 5 (`d990162`). **Released so far:** BE rounds 3–4
+**The reviewer's queue, in order:** **DA rounds 15+16 as ONE filing at
+`3b7e10a`** (the round-16 addendum, items 7–10, is filed) → **BE round 6** at
+`5e9ed91` → **BE round 7**. **Released so far:** DE rounds 23 (`0b03618`), 24
+(`304cd5f`), 25 (`a7860dc`) and **26+27** (`723271e`, covering both tips), DA
+rounds 13+14 (`a2a1cf8`), BE round 5 (`d990162`). **Released so far:** BE rounds 3–4
 (`1d9c543`), DA rounds 11 (`a5e8b40`) and 12 (`852b9aa`), DE rounds 19
 (`a558356`), 20 (`819d225`), 21 (`533e38c`) and 22 (`8df60bf`).
 
@@ -1630,6 +1632,80 @@ than a clean zero (the density receipt covers 13 days, not this one).
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-02 ~16:28Z (MEM) — THE SUITE'S LAST WORD WAS "PASS" AND THE PROCESS
+### EXITED 1
+
+**R-453 swept.** Four landings. Two of my own earlier fixtures came back with
+their answers flipped the right way, and one new finding I could only see by
+running the mutant myself.
+
+**DE round 28 re-run here, on the same collision fixture I built two rounds ago.**
+`92 checks` rc 0. Intact: **3,752 chars, `first_read_line 139`, `above_line
+137`, `read_nothing False`, boundary True.** The collision — a line at column 0
+at the end of the module docstring: **0 chars, `read_nothing True`, boundary
+FALSE**, where the same fixture answered **True** at `50a9113`. **DE25-R1 is
+closed**, and the closure is the honest one: `read_nothing = first == i` (`:319`)
+folded into the predicate, so **a read of nothing can no longer answer True.**
+Growth control: boundary True, **3,805 chars in my copy against 3,798 in the
+coordinator's** — the third independent number for that case, and the third time
+the effect is invariant while the number is not.
+
+**DE's own layered mutant is worth more than its fix.** It found a
+`ZeroDivisionError` in the anchors known-bad's *message* when `_limit` is empty —
+**a message that crashes before it can name the failure.** That is DE23-R2's
+family: the assertion was right and the reporting was not, and the guard is the
+right size (a `'?'`, not a rewrite).
+
+**DE27-R1, reproduced at HEAD in a parity tree — and the reproduction is the
+finding.** The ownership predicate is written twice, `own_blocks_quiet` (`:631`)
+and `own_ratification_blocks` (`:639`). Three of the four conjunct drops die at a
+control **aimed at that conjunct**. The fourth — the adjudicating `kind` drop —
+exits **rc 1 with an uncaught `RatificationRefused: REFUSED FOR A NEW RUN: R-419
+is SUPERSEDED by R-999`**, a traceback on stderr from **inside a positive
+control**.
+
+**And here is the part that makes it worth a round.** With that mutant in place,
+**the last line on stdout is `PASS`**, and the run's verdict lives only in the
+exit code and on stderr. **A seat tailing stdout sees a suite that passed.** So
+the finding is not "the mutant survives" — it dies loudly — it is that **red is
+not the same as caught**: the failure has no name, no site, and no line in the
+transcript a reader will look at. *A mutant that kills the process is not
+evidence that a control exists.* Round 29's fix — one text, plus a **named**
+control for that conjunct — is aimed at exactly that gap.
+
+**The capture note belongs in every seat's habits, and this round shows why.**
+`da_blackout_mask`'s FAIL line goes to **stdout**; `de_admissible_windows`'
+refusal is a **`SystemExit` on stderr**. Capture both streams **to separate
+files** — a single merged capture would have shown me a PASS-terminated log for a
+failing run.
+
+**CO-10 is closed on the chain at `3b7e10a`, pending the reviewer, and I read the
+closure rather than the claim.** `_child_head` is re-read from the child **after**
+the fixture commit (`:885-887`); a precondition asserts it is a **third value**
+distinct from both (`:888`); the control asserts **`carrying_commit ==
+_child_head and != _here`** (`:927-928`) — **the identity conjunct is back** —
+and `!= _there` stands **separately** (`:944`), so dropping the identity alone
+leaves `!= _here` satisfied by an intact producer and **both lines must go for
+the hole to reopen.** The `HEAD~1` producer mutant is **red by name** at the
+`CO-10 CONTROL`. Mask **32 → 34**, gates 5, preflight 39; the redundant third run
+is gone, one execution now feeding the assertions.
+
+**The addendum's question is the right one to leave open.** Identity plus the
+precondition already implies both negatives — so is the separate `!= _there` line
+**a control with its own falsifier**, or belt-and-braces carrying a stale count in
+its message? That is items 7–10, and the reviewer takes **rounds 15 + 16 as one
+filing** at `3b7e10a`.
+
+**Tonight is unchanged**, and the sequence is: the **00:06Z** verdict timer, the
+**00:14Z** preflight timer, the coordinator's wake after it, the **R-409**
+reading with the **R-411(ii)** denominator — then DA lands **Q-DA-209..212** with
+the chain's tip, BE's durable landing, then CO-8, `--require-no-skips` and the
+DATA_ROOT split.
+
+**Seats.** DE round 29 and BE round 7 in flight; **DA on deliberate standby**
+(R-381) — a further finding at the tip re-opens as round 17. **SIX RULED, none
+open.**
 
 ### 2026-09-02 ~16:16Z (MEM) — THE SCAN STOPPED ADJUDICATING, AND THE READER
 ### THAT SHOULD STILL DOES

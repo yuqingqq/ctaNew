@@ -3299,3 +3299,73 @@ Moved in the MEM round-44 true-up of R-452. Join rule as in batch 1.
   NONE OPEN. UNCHANGED: G=1/5; the 011 family 12 of 24 with Q4 failing; the
   sequencing rule; Phase-4 gated; R-419 revocable.
 ```
+
+## Batch 51 — archived 2026-09-02T16:28Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-45 true-up of R-453. Join rule as in batch 1.
+
+```yaml
+  2026-09-02T15:46Z (MEM ROUND 42 -- A RULE THAT STOPPED LEANING ON A PROSE
+  CONVENTION). R-450 swept. DE ROUND 25 VERIFIED at 50a9113 and RE-RUN HERE with
+  the cache cleared first: EXPECTED_CHECKS = 91 at :839, 91 checks rc 0; on
+  in-memory copies the intact walk is first_read_line 139 / above_line 137 /
+  boundary True at 3,752 chars, and the three interruption shapes I drove last
+  round (plain #, indented #:, bare #) now read 1,975 with boundary FALSE where
+  they were TRUE at a83083a -- DE23-R1 closed exactly at the token I checked
+  before it landed (:301, not above.lstrip().startswith("#")). THE FOURTH SHAPE
+  IS NOW A DECLARATION RATHER THAN AN OMISSION: X = 1 still reads 1,975 with
+  boundary True and :279 says why in the docstring -- a code line inserted into
+  the run is indistinguishable from a real boundary because THE INTACT BOUNDARY
+  IS A CODE LINE -- stated, not chased, with the anchors still naming which
+  sections must be present so the residual is bounded rather than merely
+  admitted. DE23-R2's length conjunct is GONE (zero occurrences; the block length
+  printed, asserted nowhere), replaced by a POSITIVE CONTROL ON ONE SOURCE
+  (:1297): a contiguous paragraph above the head keeps the boundary True and
+  grows the block, the same copy with a blank between refuses. THREE INDEPENDENT
+  INSERTIONS NOW EXIST FOR THAT CASE -- DE's 3,811, the coordinator's 3,791,
+  mine 3,805 -- which is the invariance I recorded last round holding up in
+  public: the effect is invariant to the inserted text, the number is not; three
+  numbers, one behaviour, nothing to reconcile. THE RULING IS THE ROUND'S REAL
+  CONTENT AND IT IS A REFINEMENT, NOT A REVERSAL: R-446 section 3(a)(ii), "named
+  by any supersedes: in the register", now reads "named by the supersedes: of any
+  entry's OWN ratification block" (own_ratification_blocks). RECORDED IN BAND IN
+  THE STANDARDS SECTION OF HANDOFF WHERE R-446'S RULE LIVES, WITH R-446'S TEXT
+  LEFT STANDING AS PROVENANCE (rule 13) -- never rewritten. It is right because
+  the module already made this distinction: superseded_by reads own blocks only,
+  and DE16-R1 settled in round 18 that a QUOTED block is not the quoting entry's
+  ratification, so a quotation naming a duplicated ref CANNOT REACH AN ANSWER and
+  by R-446 section 3's OWN CRITERION belongs on the reporting side. WHAT THAT
+  BUYS IS WORTH NAMING: before the refinement the rule stayed sound only because
+  R-432 section 1 -- A FORMAT CONVENTION ABOUT PROSE -- kept quoted fences rare,
+  and A CORRECTNESS RULE RESTING ON A FORMATTING HABIT IS A RULE WITH AN
+  UNDECLARED DEPENDENCY; the refinement removes it, every answer-reaching case
+  still refuses, and none of it depends on how anyone writes an entry -- the same
+  move as computing an expectation instead of asserting today's arrangement (the
+  DA10-R5 shape), applied to a RULE instead of a control. Verified at the source:
+  `named` is built from _fenced_blocks(e) at :404-405 (every fence, owned or
+  quoted) while own_ratification_blocks exists separately at :580. DE24-R2 is the
+  residual I measured in round 41, now CONFIRMED AT THE ARTIFACT and accepted as
+  a finding: check#18 prints the 0-based field under the bare words "register
+  line" (:967) and "(line ...)" (:970) while FOUR sites say "0-based lines";
+  closure is those two words. It reached DE through the round-24 review's item 4
+  exactly as R-448 routed it -- recorded, never re-filed, and it arrives with the
+  reviewer's confirmation rather than mine alone. Both dispatched as DE ROUND 26
+  (Q-DE-44), de_ratification_check.py only, with the reviewer's quoted-block
+  fixture as a POSITIVE control (a quotation naming a duplicated ref must NOT
+  refuse) and an own block naming one as the KNOWN-BAD. THE RECOUNT IS NOW STATED
+  AS A RULE: R-6 sits at 0-based 1786/9512 at my as-of, matching the
+  coordinator's reading at 304cd5f -- the fifth as-of in the chain (1780/9506 ->
+  1781/9507 -> 1782/9508 -> 1783/9509 -> 1784/9510 -> 1786/9512) -- and THE
+  DURABLE FORM IS THE SENTENCE, NOT THE PAIR: every filed Q-row moves both lines
+  by one, the suite recounts; no number is pinned in these files. ONE COUNT
+  STATED PRECISELY BECAUSE I CHECKED IT: the round-24 review filing is 253 lines
+  by wc -l and 253 insertions by the diff where R-450 section 2 says 254 -- a
+  one-line difference with nothing resting on it, recorded rather than silently
+  normalised. Q-BE-231 IS STILL ABSENT (checked again, not assumed), so BE round
+  6 remains unverified here and its row-pending line stands. SEATS: reviewer on
+  DA rounds 13+14 at 801eb31 (held, in flight), then DE round 25 (REQUEST filed
+  at dc83580), then BE round 6 when its row lands, then BE round 7; DE round 26
+  in flight; DA on deliberate standby. USER decisions SIX RULED, NONE OPEN.
+  UNCHANGED: G=1/5; the 011 family 12 of 24 with Q4 failing; the sequencing rule;
+  Phase-4 gated; R-419 revocable.
+```
