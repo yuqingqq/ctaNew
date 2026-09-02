@@ -1,13 +1,13 @@
 # HANDOFF — P-2026-003 Polymarket Crypto 5-min
 
-Updated: 2026-09-02T15:16Z — **THE REGISTER HAS A DUPLICATED REF TODAY**:
-`R-6` heads two entries (file lines **1781** and **9507**) and the one index
-answers **last-wins** — reproduced here on the real register (437 entries, 436
-distinct refs). **Latent, not live**: nothing declares `supersedes: R-6`, R-6
-carries no ratification block, and the live answers are unchanged. Closure RULED
-at R-446 §3 and in flight as DE round 24 — **no register edit**. Two reviewer
-rulings are now **PROGRAMME STANDARDS** (narrow caught-and-named refusals;
-pre-run `__pycache__` clear). **SIX RULED, none open.**
+Updated: 2026-09-02T15:28Z — **THE DUPLICATED REF IS CLOSED AS RULED**: DE round
+24 at `e0d1e9f` **reports** `R-6` (0-based **1782/9508**) instead of resolving it
+silently, keeps the FIRST occurrence **by rule**, and refuses only where a
+duplicate can reach an answer — **168 checks reproduced here, every live answer
+unchanged.** Those line numbers **MOVE with every filed Q-row and are recounted,
+never pinned.** DA round 14 held at `801eb31` (**23 + 15 = 38**, recomputed here);
+BE round 6's code is at `faaabdc` with its **row pending**. **SIX RULED, none
+open.**
 
 ## READ FIRST — current project handoff
 
@@ -713,12 +713,13 @@ launchers at **235/19**.
 | **DE round 21 review** | **RELEASED** (`533e38c`) — DE19-R1..R3 close; **DE21-R1 (LOW)** filed; **ruling adopted as the programme's standard: a subject-mutant THROUGH THE READER is what "driven" means** |
 | **DE round 22** | **RELEASED** (`8df60bf`) for `92fc615` — DE20-R1/R2 close; **two rulings adopted as PROGRAMME STANDARD**; **DE22-R1 (LOW-MED)** → DE round 24 |
 | **DE round 23** | **LANDED** at `a83083a` (Q-DE-41) — DE21-R1 closed by a structural predicate on the walk's stop, admissible **87** (reproduced here) |
-| **DE round 24** | **IN FLIGHT** (Q-DE-42) — the duplicated-ref closure: refuse where a duplicate can reach an answer, report by name where it cannot, first occurrence kept **by rule** |
+| **DE round 24** | **VERIFIED** at `e0d1e9f` (Q-DE-42) — ratification **168** (reproduced here, both launchers); the real register's `R-6` **REPORTED** at 0-based **1782/9508**, every live answer unchanged, `require_verified()` returns |
 | **DE round 25** | the **DATA_ROOT split**, still behind DA's landing after 00:14Z |
 | **DA round 11** | **REVIEW RELEASED** (`a5e8b40`) for `e292439` as the content of **Q-DA-209**; all five DA10 findings close. Two new findings **DA11-R1/R2** → DA round 12 |
 | **DA round 12 review** | **RELEASED** (`852b9aa`) for `636a455` as Q-DA-209's content — DA11-R1/R2 close; **DA12-R1 (LOW-MED)** → DA round 14 |
 | **DA round 13** | **HELD** at `e384792` (chain `3a89e6c`→`e292439`→`636a455`→`e384792`) — preflight **39**; `freeze_disposition` moves to `ruled`, `still_open == {}`, and a **coherence guard** makes the contradiction unrepresentable |
-| **DA round 14** | **DISPATCHED and HELD** (Q-DA-211) — DA12-R1, `v5_deploy_gates.py` only, builds on `e384792` |
+| **DA round 14** | **HELD and VERIFIED** at `801eb31` — DA12-R1 closed, twinning **both directions**, **23 + 15 = 38** and `--falsify` 39 (recomputed here in a parity tree), the one exclusion **named with a reproduced reason**. A one-assertion scope deviation **ACCEPTED in-batch** |
+| **BE round 6** | code at `faaabdc`; **row Q-BE-231 PENDING** — not verified until the row lands (rule 18) |
 | **DA round 12** | **HELD and VERIFIED** at `636a455` on `e292439` (unpushed, four files) — DA11-R1/R2 closed, gates **22 → 36**. **Nothing moves for tonight**; Q-DA-209 lands after the 00:14Z read **with the round-12 tip** |
 | **BE** | **Q-BE-229 VERIFIED** at the artifacts; **round 5 dispatched** |
 | **DE round 17** | **STAGED** behind DA round 10: the DATA_ROOT split |
@@ -757,7 +758,7 @@ ledger-vs-tape refusal, and `require_verified()`.
 byte-identical and the run takes a numbered successor carrying `supersedes_receipt`
 — verified here); **BE34-R1/R3/R4/R5** → **BE round 6, in flight**;
 **DE20-R1/R2 CLOSED** at `92fc615`, review released; **DE21-R1 CLOSED** at
-`a83083a`; **DE22-R1** → DE round 24, in flight; **DA12-R1** → DA round 14
+`a83083a`; **DE22-R1 CLOSED** at `e0d1e9f`, queued for review; **DA12-R1** → DA round 14
 (held);
 **DE18-R1..R3 CLOSED** at `0778918`, review released;
 **DE19-R1..R3 CLOSED** at `0255b60`, review released;
@@ -777,9 +778,9 @@ the REGISTER's state, not of the instrument's own escalation history** — a
 distinction worth keeping, because a reader at 00:14Z has no way to know which
 questions this particular tool once asked.
 
-**The reviewer's queue, in order:** **BE round 5** at `baa986d` (dispatched
-15:14Z) → **DE round 23** at `a83083a` → **DE round 24** when it lands → then DA
-rounds 13/14 as they clear the hold. **Released so far:** BE rounds 3–4
+**The reviewer's queue, in order:** **BE round 5** at `baa986d` (in flight) →
+**DE round 23** at `a83083a` → **DE round 24** at `e0d1e9f` → **DA rounds 13+14**
+at `801eb31` → **BE round 6** when its row lands. All three requests are filed. **Released so far:** BE rounds 3–4
 (`1d9c543`), DA rounds 11 (`a5e8b40`) and 12 (`852b9aa`), DE rounds 19
 (`a558356`), 20 (`819d225`), 21 (`533e38c`) and 22 (`8df60bf`).
 
@@ -1584,6 +1585,75 @@ than a clean zero (the density receipt covers 13 days, not this one).
   pace-adjusted projection of about 60.3 s/hr against 120, P2=0 material
   windows and P3=185.2 s against 900. Forward reach remains `G=0/5`: judge the
   day only after the closed-day verifier runs.
+
+### 2026-09-02 ~15:28Z (MEM) — THE NUMBERS THAT MOVE, AND THE ONE MESSAGE THAT
+### STILL DOES NOT SAY WHICH KIND IT PRINTS
+
+**R-447 swept.** Three landings verified. The register's duplicated ref is closed
+the way it was ruled — **reported, not resolved; first occurrence kept by rule;
+no register edit** — and the closure carries a property worth more than the fix.
+
+**Reproduced at HEAD:** `de_ratification_check` **168 checks**, rc 0. On the real
+register `R-6` parses at 0-based **1782 / 9508**, which is what the coordinator
+measured through `b27c1d7`, and `grep -n` puts the headings at **1783 / 9509**.
+
+**The right lesson from that pair of numbers is the one R-447 states: they
+move.** The Q-filing table sits above line 1780, so **every row any seat files
+shifts both lines by one** — the reviewer's 1780/9506, the coordinator's
+1782/9508 and mine are the same fact at three as-ofs, not three measurements
+disagreeing. DE's suite compares the index against an **independent recount**
+rather than a pinned literal, which is why it passed at 168 on an already-shifted
+register. **A literal there would have been a time bomb with a filing cadence for
+a fuse.**
+
+**My round-38 note was taken up, and I can say exactly how far.** Every site DE
+added labels the convention in the message itself — `:398`, `:411`, `:425` all
+say **"0-based lines"**, and the suite's own assertion at `:1811` says it too.
+That is the better fix than shifting the numbers, because the parse and the
+prose now describe one system. **The residual is exactly one message:**
+`check#18` at `:967-970` still prints `own_idx[ref]["line"]` raw under the bare
+words *"register line"*, unlabelled. **So within this module the new sites say
+which kind of number they print and the older one does not** — a reader who
+follows that particular refusal still lands one line above the entry. Narrower
+than what I filed last round, and it belongs to the round-24 review or round 25.
+
+**DA round 14, recomputed rather than accepted — including a caveat about my own
+instrument.** In a parity tree the roster is **23 declared + 15 twins = 38**, the
+excluded list holds **8** entries (seven behavioural gates that have *no other
+launcher to derive*, plus `tier1 normalisation` by name), and the synthetic-roster
+`--selftest` gives **6 checks, rc 0**. My first attempt read **2 twins**, because
+the derivation anchors on `Path(argv[1]).parent == HERE` and I ran a copy outside
+`live/pm_research/` — **the measurement is path-sensitive, and I record that
+because a wrong number I nearly reported was mine, not DA's.** The exclusion's
+reason reproduces at the source: `python3 live/pm_research/tier1_pipeline.py
+--selftest` → **rc 1, `ModuleNotFoundError: No module named 'live'`**, against
+rc 0 under `-m`. **Named, not repaired** — and named in `TWIN_EXCLUSIONS` with
+that reason in the code, so the next reader gets the fact and not just the
+exclusion.
+
+**The scope deviation is recorded as ACCEPTED, with its open question attached.**
+`da_blackout_mask.py`, **one assertion** in a selftest region: the RR12-1 control
+asserted `tree_dirty_on_producing_files is True`, which held only while the
+fixture's copied files differed from the child's HEAD — so it went red the first
+time a commit touched none of them. The expectation is now **computed from the
+child tree's own `git status --porcelain`**. The code says what that is: *"third
+instance of the DA10-R5 class, in the same control — assert the property."* **A
+red control may not land, the hunk is one assertion, and the property is the
+right one.** What it now discriminates — whether a constant-`True` and a
+constant-`False` mutant can both be red on one fixture arrangement — is **review
+item 8, a round-15 candidate, not a hold.**
+
+**BE round 6 is code without a row, and stays unverified until the row lands.**
+`faaabdc` is in the tree; **Q-BE-231 is absent** — I checked rather than assumed
+— so nothing about it is recorded here as verified, and nothing goes to BE while
+its batch is in flight (rule 18).
+
+**Sequencing.** Reviewer: **BE round 5 (in flight) → DE 23 → DE 24 → DA 13+14 →
+BE 6** when its row lands; all three requests are filed. **DE and DA are on
+deliberate standby** (R-381). **BE round 7 — the durable landing of the two
+receipts — is staged for AFTER the 00:14Z read**, and **Q-DA-209/210/211 land
+together after that read with `801eb31` as their content.** Standing rules stay
+at **7**; USER decisions **six RULED, none open**.
 
 ### 2026-09-02 ~15:16Z (MEM) — A DUPLICATE THE REGISTER ALREADY CARRIES, AND
 ### A LINE NUMBER THAT POINTS ONE SHORT

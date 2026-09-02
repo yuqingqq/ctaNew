@@ -2897,3 +2897,73 @@ Moved in the MEM round-38 true-up of R-446. Join rule as in batch 1.
   with its fact on the record. UNCHANGED: G=1/5; the 011 family is 12 of 24
   surviving with Q4 failing; development evidence.
 ```
+
+## Batch 45 — archived 2026-09-02T15:28Z (1 entry, rolling-window overflow)
+
+Moved in the MEM round-39 true-up of R-447. Join rule as in batch 1.
+
+```yaml
+  2026-09-02T14:44Z (MEM ROUND 36 -- THE WORD LANDED, AND THE THING IT MAKES
+  TRUE IS A SET OF HASHES). R-442 and R-443 swept. THE USER RULED THE FREEZE
+  DISPOSITION -- "Yes proceed according to recommendation", verbatim, ~14:33Z,
+  after the 14:30Z notification carrying the reviewer's section 1 fact: the race
+  runs on the FROZEN BYTES at 1b53929, NO re-freeze, multiplicity stays 2, and
+  the fwd5/ 09-01 receipt is THE 09-01 RACE SCORE OF RECORD, no longer an
+  estimate in scratch. ALL SIX USER DECISIONS ARE RULED; NONE IS OPEN (four at
+  R-424, the freeze disposition at R-442, and the 09-02 accrual call is not a
+  separate decision but R-409's principle applied mechanically after 00:06Z).
+  CHECKED AT THE BYTES, NOT AT THE ENTRY: all three record files re-hashed and
+  EQUAL -- receipt 4000106752f816e4 (14,022 B), sealed file aca22317ab06adbf
+  (54,213,086 B), 09-02 receipt 0907b0369e14d77b (1,123 B) -- and the safety
+  copy's SHA256SUMS verifies OK on four files. The receipt carries the ruled
+  shape field by field: frozen_commit 1b53929, manifest_sha256_bound
+  eb8733da2c8e2126, the data anchor compared true with materialised_to null and
+  its reason stated, n_not_frozen 2 naming tier1_pipeline and warning_window
+  WITH A SHA AT BOTH COMMITS, carrying_commit 248e99f, outcome SCORED,
+  coin_coverage.coins_with_a_frozen_fit = ['btc','eth']. THE SCORE STILL
+  REPRODUCES TODAY and one input is why that is not automatic: the untracked
+  1.24 GB data anchor hashes to 19a50195c34d0af2, exactly what the receipt
+  binds, and it is the ONE INPUT NO COMMIT HOLDS AND NO COPY HOLDS -- the safety
+  copy took the four small files, not the 1.24 GB anchor and not the
+  materialised frozen/ dir (the code anchors are reconstructible from 1b53929,
+  which is the point of freezing by commit). Its sha is its only binding,
+  checked on every run rather than assumed -- now a property of the RACE SCORE
+  OF RECORD, not a caveat about a scratch estimate. The 09-02 receipt is a
+  REFUSAL record and its gate has a NAME worth using instead of its ordinal:
+  refused_at = day_closed_and_attributed ("20260902 is not closed by calendar
+  ... Scoring an OPEN day scores a population that is still growing"). ONE
+  INSTRUCTION DID NOT SURVIVE CONTACT WITH THE ARTIFACT: R-442 section 5 asks
+  for STATUS.yml still_open to be emptied, and THERE IS NO still_open FIELD IN
+  STATUS.yml (searched the parsed document, not the text) -- the field lives in
+  DA's da_governed_verdict_preflight.py open_decisions block, and the ":97" in
+  the entry resolves to a line of my own prose QUOTING that artifact; the
+  six-ruled state is therefore recorded in the forms these files actually use.
+  AND THE REAL FIELD NEEDS A SEAT: at DA's held 636a455 the block reads
+  esc["still_open"] = {"freeze_disposition": "... awaiting the USER's word."}
+  AND A SELFTEST AT :537 ASSERTS "freeze_disposition" in
+  r["open_decisions"]["still_open"] -- so the staleness R-442 creates is not
+  silent, it is PINNED BY DA'S OWN SUITE, and when the held work lands after the
+  00:14Z read the artifact will assert a decision is open that the USER settled
+  at 14:33Z. DA's surface, not mine: recorded, not touched. TONIGHT IS
+  UNAFFECTED AND I CHECKED WHY: DA's e292439 and 636a455 are NOT ON
+  mm-research (ancestry tested; both subjects begin "HELD:"), the branch's last
+  commit touching that file is fadc986 at 10:49Z, and the working tree is clean
+  against it -- so the 00:14Z preflight runs fadc986, which has NO ruled /
+  still_open block at all and cannot carry the stale claim. That is the hold
+  working as designed (R-402), worth stating because "DA10-R1..R5 CLOSED at
+  e292439" reads like the fixes are in the tree; they are not, deliberately.
+  R-443: DE ROUND 20 RELEASED at 0778918 (819d225) -- DE18-R1/R2/R3 closed,
+  census 124 -> 129 with "nothing removed" HOLDING this round; both findings
+  reproduce, DE20-R1 being all_entries(register_text) at exactly three call
+  sites (:342, :714, :831; definition :263) and DE20-R2 that existence still
+  lacks DIRECTION so a self-supersession verifies; DE round 22 (Q-DE-40) in
+  flight on de_ratification_check.py carrying two Q-DE-38 accounting corrections
+  SUPERSEDED IN-BAND rather than edited; reviewer -> DE round 21. BE round 6 now
+  also carries R-442 section 3(c): both receipts land under
+  data/pm_5min/derived/ BYTE-IDENTICAL with shas asserted, no re-emission and no
+  new field, AFTER the 00:14Z read on 09-03; the sealed file stays external at
+  54 MB, identified by content. UNCHANGED: BE34-R1..R5 open; the sequencing rule
+  (no second scoring day until R1/R2 close AND are reviewed); tonight's units;
+  Phase-4 gated; R-419 revocable; G=1/5; the 011 family 12 of 24 with Q4
+  failing.
+```
