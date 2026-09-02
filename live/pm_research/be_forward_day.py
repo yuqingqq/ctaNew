@@ -35,6 +35,21 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 REPO = Path("/home/yuqing/ctaNew")
+
+
+def EXEC_TREE() -> Path:
+    """The tree THIS FILE is in — the root for CODE and ANCHORS.
+
+    BE9-C2: BE7-R4 fixed the receipt's commit and dirt but left every other
+    root absolute, so a receipt written from a worktree named that worktree's
+    HEAD while its anchors were compared against the MAIN tree's files and
+    the audit's children read the main tree's entries. Code and anchors now
+    resolve in the tree that executes; `data/` deliberately does NOT (a bare
+    worktree has no `data/`), and the receipt SAYS SO in `roots`."""
+    return Path(__file__).resolve().parents[2]
+
+
+# DELIBERATELY ABSOLUTE, and published as such: a worktree carries no data.
 DERIVED = REPO / "data/pm_5min/derived"
 MARKETS = REPO / "data/pm_5min/markets.jsonl"
 RATIFICATION_REF = "R-419"          # R-419 supersedes R-418 (DE round 9)
@@ -100,6 +115,16 @@ def _provenance(tree: Path = None) -> dict:
             "working_tree_dirty": ("unknown" if status is None
                                    else bool(status.strip())),
             "provenance_root": str(root),
+            "roots": {
+                "code_and_anchors": str(EXEC_TREE()),
+                "data": str(REPO / "data"),
+                "data_is_absolute_because":
+                    "a bare worktree carries no data/; the tape and the "
+                    "market ledger are the repo's, not the checkout's, and "
+                    "this receipt says so rather than implying one root",
+                "git_objects": "shared object store — `git show <ref>:<path>` "
+                               "resolves the freeze blobs from any worktree, "
+                               "so `_git_blob` needs no per-tree root"},
             "driver": me.name, "driver_sha256_prefix": _sha_file(me)[:16]}
 
 
@@ -216,8 +241,37 @@ def materialise_frozen(outdir: Path) -> dict:
                 c.get("manifest_sha256")}
 
 
+#: The anchor paths the LAST contract check actually read, recorded at the
+#: site so the root can be reported even when the contract REFUSES -- which
+#: it does today, on the known freeze drift (R-424 §6).
+_LAST_ANCHOR_PATHS: list = []
+
+
+def anchor_drift_root() -> str:
+    """The root the anchor-drift comparison ACTUALLY read from.
+
+    BE9-C2 needs this checkable from another tree, and it must be derived
+    from the paths the comparison used -- returning `EXEC_TREE()` directly
+    was a restatement, and the mutant that points the comparison back at a
+    fixed root survived it. This runs the contract and reports the common
+    prefix of the anchor paths it examined."""
+    import os as _os
+    try:
+        assert_frozen_contract()
+    except Exception:                                # noqa: BLE001
+        pass                # the refusal is expected; the PATHS are the point
+    ex = list(_LAST_ANCHOR_PATHS)
+    return _os.path.commonpath(ex) if ex else ""
+
+
+def roots_data_is_absolute() -> bool:
+    """The data root is REPO's on purpose, and that is a checkable claim."""
+    return str(DERIVED).startswith(str(REPO)) and not str(
+        DERIVED).startswith(str(EXEC_TREE())) or EXEC_TREE() == REPO
+
+
 def _repo_module_path(name: str) -> Path | None:
-    p = REPO / "live/pm_research" / f"{name}.py"
+    p = EXEC_TREE() / "live/pm_research" / f"{name}.py"
     return p if p.exists() else None
 
 
@@ -364,18 +418,24 @@ def assert_frozen_contract(candidate: Path = None) -> dict:
     ps = m.get("pin_semantics") or {}
     default = ps.get("_default", "reproducibility_anchor")
     anchors, checked = [], 0
+    examined: list = []
+    _LAST_ANCHOR_PATHS.clear()
     for k, want in sorted((m.get("hashes") or {}).items()):
         if ps.get(k, default) != "reproducibility_anchor":
             continue
         anchors.append(k)
-        p = REPO / k
+        # BE9-C2: the anchor drift is measured against the tree the receipt
+        # names, not a fixed one.
+        p = EXEC_TREE() / k
+        examined.append(str(p))
+        _LAST_ANCHOR_PATHS.append(str(p))
         now = _sha_file(p) if p.exists() else None
         checked += 1
         if now != want:
             drift.append(f"{k}: bound {want[:16]} now "
                          f"{(now or 'MISSING')[:16]}")
     bsha = c.get("builder_sha256")
-    bp = REPO / "live/pm_research/harmful_hazard_model.py"
+    bp = EXEC_TREE() / "live/pm_research/harmful_hazard_model.py"
     if bsha and bp.exists() and _sha_file(bp) != bsha:
         drift.append(f"builder harmful_hazard_model.py: bound {bsha[:16]} "
                      f"now {_sha_file(bp)[:16]}")
@@ -394,6 +454,7 @@ def assert_frozen_contract(candidate: Path = None) -> dict:
             f"would edit the thing being validated; that is the "
             f"coordinator's or the USER's act, not this driver's.")
     return {"candidate": cp.name, "candidate_sha256": _sha_file(cp),
+            "anchors_examined": examined,
             "manifest": mname, "manifest_sha256": msha,
             "anchors_checked": checked, "anchor_keys": anchors,
             "builder_sha256": bsha, "contract": "HOLDS"}
@@ -1493,6 +1554,30 @@ AUDIT_CASES = (
      '    root = Path(__file__).resolve().parents[2] if tree is None else Path(tree)',
      '    root = REPO if tree is None else Path(tree)',
      "BE7-R4 a receipt written from a WORKTREE names THAT worktree's HEAD"),
+    ("BE9-C1 the flip copies the running bytes again (a NO-OP whenever "
+     "the branch already carries this driver)",
+     '            _tgt.write_bytes(Path(__file__).read_bytes()\n'
+     '                             + b"\\n# BE7-R4 planted difference\\n")',
+     '            _tgt.write_bytes(Path(__file__).read_bytes())',
+     "BE7-R4 and it FLIPS with that tree"),
+    ("BE9-C1 the worktree's commit is read from the executing tree again",
+     '            _wt_head = _git_in(_wt, "rev-parse", "HEAD")',
+     '            _wt_head = _git_in(_me_tree, "rev-parse", "HEAD~1")',
+     "BE7-R4 a CLEAN worktree reads clean and names ITS OWN HEAD"),
+    ("BE9-C2 the anchors are compared against a fixed root again",
+     '        p = EXEC_TREE() / k', '        p = REPO / k',
+     "BE9-C2 code and ANCHORS resolve in the executing tree"),
+    ("BE9-C2 the audit tree links a fixed root's entries again",
+     '    for entry in EXEC_TREE().iterdir():', '    for entry in REPO.iterdir():',
+     "BE9-C2 the audit copy links the EXECUTING tree's entries"),
+    ("BE9-C3 the selftest prunes shared worktree state again",
+     '            _sp.run(("git", "worktree", "remove", "--force", str(_wt)),\n'
+     '                    cwd=str(_me_tree), capture_output=True, text=True)',
+     '            _sp.run(("git", "worktree", "remove", "--force", str(_wt)),\n'
+     '                    cwd=str(_me_tree), capture_output=True, text=True)\n'
+     '            _sp.run(("git", "worktree", "prune"), cwd=str(REPO),\n'
+     '                    capture_output=True, text=True)',
+     "BE9-C3 a STALE worktree entry"),
     ("BE7-R2 n_prior is off by one and nothing notices",
      '"is_base": stands_after == p, "n_prior": len(prior),',
      '"is_base": stands_after == p, "n_prior": len(prior) - 1,',
@@ -1618,12 +1703,21 @@ def _audit_tree(src: str, root: Path) -> Path:
     # which the copy provides -- is linked, so `data/` and the ratification
     # register resolve. Linked for READING: the suite writes only into its
     # own temp dirs, and nothing here writes under `data/`.
-    for entry in REPO.iterdir():
-        if entry.name == "live":
+    # BE9-C2: the audit's copy links the EXECUTING tree's entries, so a
+    # child reads what this run reads. `data` is the exception below.
+    for entry in EXEC_TREE().iterdir():
+        # `data` is NEVER taken from the walk: in a copy it is itself a link
+        # into the previous copy, and the chain drifts one hop per level.
+        # It is linked from the absolute root below, uniformly, in any tree.
+        if entry.name in ("live", "data"):
             continue
         lnk = root / entry.name
         if not lnk.exists():
             lnk.symlink_to(entry)
+    # `data/` is absolute by design and a worktree may not have one, so it is
+    # linked from REPO explicitly rather than inherited from the tree walk.
+    if not (root / "data").is_symlink():
+        (root / "data").symlink_to(REPO / "data")
     return pkg / me
 
 
@@ -2557,39 +2651,83 @@ def selftest() -> int:
                f"R5(5) KNOWN-BAD ({_lbl}): REFUSED naming `{_want}` — the "
                f"allowlist binds to ONE path and requires a string, so it "
                f"excuses the gate's NAME and nothing else")
+    # ---- BE9-C3: this selftest does not touch shared repo state ---------
+    # `git worktree prune` removes the admin entry of EVERY worktree whose
+    # directory is gone -- other sessions' included. A STALE entry is PLANTED
+    # HERE, BEFORE the block that creates and removes a worktree, and must
+    # still be listed AFTER it. Planted afterwards it survived trivially: a
+    # prune inside that block had already run, and the mutant lived.
+    import shutil as _sh2
+    import subprocess as _sp
+    _me_tree = Path(__file__).resolve().parents[2]
+    _gcd = _sp.run(("git", "rev-parse", "--git-common-dir"), cwd=str(_me_tree),
+                   capture_output=True, text=True).stdout.strip()
+    _gcd = Path(_gcd) if _gcd.startswith("/") else (_me_tree / _gcd).resolve()
+    _std = _tf.mkdtemp()
+    _stale = Path(_std) / "be-r10-c3-stale"
+    _sa = _sp.run(("git", "worktree", "add", "--detach", str(_stale), "HEAD"),
+                  cwd=str(_me_tree), capture_output=True, text=True)
+    _sh2.rmtree(_stale, ignore_errors=True)          # now PRUNABLE
+
     # ---- BE7-R4: the receipt names THE TREE THAT EXECUTED ---------------
     # Driven against a real detached worktree, because in the main tree the
     # hardcoded root and this file's tree are the SAME path and no in-tree
     # comparison can tell them apart -- BE34-R3's lesson, one function over.
-    import subprocess as _sp
-    _me_tree = Path(__file__).resolve().parents[2]
-    _main_head = _sp.run(("git", "rev-parse", "HEAD"), cwd=str(REPO),
-                         capture_output=True, text=True).stdout.strip()
-    _prev = _sp.run(("git", "rev-parse", "HEAD~1"), cwd=str(REPO),
-                    capture_output=True, text=True).stdout.strip()
+    def _git_in(root, *a):
+        """Every read below is of the EXECUTING tree, never a fixed one.
+
+        BE9-C3: reading HEAD from `REPO` made a selftest's verdict depend on
+        a tree it was not running in."""
+        return _sp.run(("git", *a), cwd=str(root), capture_output=True,
+                       text=True).stdout.strip()
+
+    _exec_head = _git_in(_me_tree, "rev-parse", "HEAD")
+    _prev1 = _git_in(_me_tree, "rev-parse", "HEAD~1")
+    # HEAD~2, NOT HEAD~1: at HEAD~1 the commit read FROM the worktree and the
+    # commit read as HEAD~1 OF THE EXECUTING TREE are the same string, so a
+    # mutant swapping one for the other is an equivalent substitution and the
+    # check cannot see it. Measured: that mutant survived the audit.
+    _prev = _git_in(_me_tree, "rev-parse", "HEAD~2")
     with _tf.TemporaryDirectory() as _wtd:
         _wt = Path(_wtd) / "wt"
+        # BE9-C3: created from the EXECUTING tree, removed by path, and
+        # NEVER pruned -- `git worktree prune` drops the admin entry of every
+        # worktree whose directory is gone, other sessions' included, which
+        # is not a selftest's business.
         _add = _sp.run(("git", "worktree", "add", "--detach", str(_wt), _prev),
-                       cwd=str(REPO), capture_output=True, text=True)
+                       cwd=str(_me_tree), capture_output=True, text=True)
         try:
             ok(_add.returncode == 0 and _wt.exists(),
-               f"BE7-R4 a detached scratch worktree at HEAD~1 exists to drive "
-               f"this against ({_add.returncode})")
-            # CLEAN first: a fresh worktree at HEAD~1 with nothing copied.
+               f"BE7-R4 a detached scratch worktree exists to drive this "
+               f"against, made from the EXECUTING tree ({_add.returncode})")
+            # The worktree's OWN HEAD, read from the worktree. BE9-C1: the
+            # old check compared against a commit read from the main tree.
+            _wt_head = _git_in(_wt, "rev-parse", "HEAD")
             _pv0 = _provenance(tree=_wt)
-            ok(_pv0["carrying_commit"] == _prev
+            ok(_pv0["carrying_commit"] == _wt_head and _wt_head != _exec_head
                and _pv0["working_tree_dirty"] is False,
-               f"BE7-R4 a CLEAN worktree reads clean and names HEAD~1 "
-               f"({_pv0['carrying_commit'][:12]}) — the flag and the commit "
-               f"are read from the tree asked about, not from a fixed root")
+               f"BE7-R4 a CLEAN worktree reads clean and names ITS OWN HEAD "
+               f"({_wt_head[:12]}), which differs from the executing tree's "
+               f"({_exec_head[:12]}) — commit and flag come from the tree "
+               f"asked about, not from a fixed root")
             _tgt = _wt / "live/pm_research" / Path(__file__).name
-            _tgt.write_bytes(Path(__file__).read_bytes())   # the CURRENT code
+            # BE9-C1: PLANT the difference. Copying the running bytes made
+            # this check a function of the BRANCH'S GIT STATE -- it dirtied
+            # the worktree only while the running bytes happened to differ
+            # from the bytes at that commit, which was true at the moment I
+            # wrote it and false from the first commit afterwards. Executed
+            # at the tip it failed after 93 checks, in a scratch worktree AND
+            # in the main tree. A marker line cannot be a no-op.
+            _tgt.write_bytes(Path(__file__).read_bytes()
+                             + b"\n# BE7-R4 planted difference\n")
             _pv1 = _provenance(tree=_wt)
             ok(_pv1["working_tree_dirty"] is True
-               and _pv1["carrying_commit"] == _prev,
-               "BE7-R4 and it FLIPS with that tree: copying this file in "
-               "makes THAT worktree dirty while its commit is unchanged — "
-               "the flag tracks the tree, not a fixed root")
+               and _pv1["carrying_commit"] == _wt_head
+               and _tgt.read_bytes().endswith(b"planted difference\n"),
+               "BE7-R4 and it FLIPS with that tree: a PLANTED byte "
+               "difference makes THAT worktree dirty while its commit is "
+               "unchanged — the flag tracks the tree, and the difference is "
+               "this check's to create, never the branch's to supply")
             _probe = (
                 "import sys, json;"
                 f"sys.path.insert(0, {str(_tgt.parent)!r});"
@@ -2598,21 +2736,48 @@ def selftest() -> int:
             _r = _sp.run((sys.executable, "-c", _probe), cwd=str(_wt),
                          capture_output=True, text=True, timeout=300)
             _pv = json.loads(_r.stdout.strip().splitlines()[-1])
-            ok(_pv["carrying_commit"] == _prev
-               and _pv["carrying_commit"] != _main_head
+            ok(_pv["carrying_commit"] == _wt_head
+               and _pv["carrying_commit"] != _exec_head
                and _pv["provenance_root"] == str(_wt.resolve()),
                f"BE7-R4 a receipt written from a WORKTREE names THAT "
                f"worktree's HEAD ({_pv['carrying_commit'][:12]}) and not the "
-               f"main tree's ({_main_head[:12]}) — with a hardcoded root the "
+               f"executing tree's ({_exec_head[:12]}) — with a hardcoded "
                f"receipt claimed a commit it did not carry while its driver "
                f"sha correctly named the file that ran")
             ok(_pv["working_tree_dirty"] is True
+               and _pv["driver_sha256_prefix"] == _sha_file(_tgt)[:16]
                and _pv["driver_sha256_prefix"]
-               == _sha_file(Path(__file__).resolve())[:16],
-               "BE7-R4 and the DEFAULT derivation is the running file's "
-               "tree: the child was given no `tree`, ran the same bytes, and "
-               "still reported the worktree — which is the case a hardcoded "
-               "root gets wrong and the main tree cannot distinguish")
+               != _sha_file(Path(__file__).resolve())[:16],
+               "BE7-R4 and the DEFAULT derivation is the RUNNING file's "
+               "tree: the child was given no `tree`, and its driver sha is "
+               "the PLANTED file's — not this one's — so the receipt names "
+               "the bytes and the tree that actually ran, which is the case "
+               "a hardcoded root gets wrong and one tree cannot distinguish")
+            # BE9-C2 driven IN THE WORKTREE: the anchor comparison must
+            # read the tree the receipt names. The worktree's copy of an
+            # anchor is REPLACED with different bytes; a check rooted at the
+            # main tree would not see it, and a check rooted at the executing
+            # tree must.
+            _anch = "live/pm_research/harmful_hazard_model.py"
+            _probe2 = (
+                "import sys, json;"
+                f"sys.path.insert(0, {str(_tgt.parent)!r});"
+                "import be_forward_day as M;"
+                "print(json.dumps({'root': str(M.EXEC_TREE()),"
+                f"   'anchor': str(M._repo_module_path('harmful_hazard_model')),"
+                "    'drift_root': M.anchor_drift_root(),"
+                "    'data': M.roots_data_is_absolute()}))")
+            _r3 = _sp.run((sys.executable, "-c", _probe2), cwd=str(_wt),
+                          capture_output=True, text=True, timeout=300)
+            _pv3 = json.loads(_r3.stdout.strip().splitlines()[-1])
+            ok(_pv3["root"] == str(_wt.resolve())
+               and _pv3["anchor"].startswith(str(_wt.resolve()))
+               and _pv3["drift_root"].startswith(str(_wt.resolve()))
+               and _pv3["data"] is True,
+               f"BE9-C2 code and ANCHORS resolve in the executing tree "
+               f"({_pv3['root']}), while `data/` stays absolute by design — "
+               f"a bare worktree carries no data/, and the receipt says so "
+               f"in `roots` rather than implying a single root")
             _blob = _git_blob(FROZEN_COMMIT,
                               "live/pm_research/harmful_hazard_model.py")
             ok(_blob is not None and len(_blob) > 0,
@@ -2620,10 +2785,46 @@ def selftest() -> int:
                "store is shared, so `git show <ref>:<path>` resolves the same "
                "bytes from any worktree")
         finally:
+            # ONLY this worktree, by path, from the executing tree. No prune.
             _sp.run(("git", "worktree", "remove", "--force", str(_wt)),
-                    cwd=str(REPO), capture_output=True, text=True)
-            _sp.run(("git", "worktree", "prune"), cwd=str(REPO),
-                    capture_output=True, text=True)
+                    cwd=str(_me_tree), capture_output=True, text=True)
+    # ...and it is GONE. A removal that quietly failed would leave this
+    # selftest littering the repo it runs in, one entry per run.
+    ok(str(_wt) not in _sp.run(
+        ("git", "worktree", "list", "--porcelain"), cwd=str(_me_tree),
+        capture_output=True, text=True).stdout,
+       f"BE9-C3 and the worktree this check made is REMOVED afterwards "
+       f"({_wt.name}) — the only git writes this selftest performs are the "
+       f"creation and removal of its own")
+
+    # BE9-C3 verified AFTER the worktree block: the planted stale entry is
+    # still registered, so nothing in it garbage-collected shared state.
+    _listed = _sp.run(("git", "worktree", "list", "--porcelain"),
+                      cwd=str(_me_tree), capture_output=True,
+                      text=True).stdout
+    _sh2.rmtree(_gcd / "worktrees" / _stale.name, ignore_errors=True)
+    _sh2.rmtree(_std, ignore_errors=True)
+    ok(_sa.returncode == 0 and str(_stale) in _listed,
+       "BE9-C3 a STALE worktree entry — one whose directory is gone, exactly "
+       "what `git worktree prune` collects — SURVIVES this selftest: nothing "
+       "here garbage-collects another session's state, and the entry is "
+       "planted BEFORE the worktree block so the claim can fail")
+
+    # BE9-C2: the audit's copy links the EXECUTING tree's entries, so a
+    # child reads what this run reads. Checked at the link's TARGET, since a
+    # fixed root produces links that resolve elsewhere — invisible to any
+    # assertion about EXEC_TREE() alone.
+    with _tf.TemporaryDirectory() as _atd:
+        _amod = _audit_tree(Path(__file__).read_text(), Path(_atd))
+        _lnk = [x for x in Path(_atd).iterdir()
+                if x.is_symlink() and x.name not in ("data",)]
+        ok(_lnk and all(str(Path(x).readlink()).startswith(str(EXEC_TREE()))
+                        for x in _lnk)
+           and str(Path(Path(_atd) / "data").readlink()).startswith(str(REPO)),
+           f"BE9-C2 the audit copy links the EXECUTING tree's entries "
+           f"({len(_lnk)} of them) while `data` is linked from the absolute "
+           f"root — a child of the audit therefore reads what this run "
+           f"reads, and the one deliberate exception is the one published")
 
     # ---- BE6-R2: the parity predicate is an IDENTITY, driven -------------
     ok(_launch_parity(0, 5, 5, "aa", "aa") is True
